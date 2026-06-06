@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/baddie_state.h"
 #include "main/objanim.h"
 #include "main/dll/texscroll2.h"
 
@@ -62,9 +63,9 @@ undefined4 FUN_80167d58(int param_1,int param_2)
   
   if (*(char *)(param_2 + 0x27b) != '\0') {
     iVar1 = *(int *)(param_1 + 0xb8);
-    *(undefined *)(iVar1 + 0x405) = 0;
-    GameBit_Set((int)*(short *)(iVar1 + 0x3f4),0);
-    GameBit_Set((int)*(short *)(iVar1 + 0x3f2),1);
+    ((GroundBaddieState *)iVar1)->unk405 = 0;
+    GameBit_Set((int)((GroundBaddieState *)iVar1)->gameBitB,0);
+    GameBit_Set((int)((GroundBaddieState *)iVar1)->gameBitA,1);
   }
   return 0;
 }
@@ -328,16 +329,16 @@ int fn_80167E3C(int obj, int p2)
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3090;
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+  if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
+    if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
       ObjAnim_SetCurrentMove(obj, 3, lbl_803E3060, 0);
-      *(u8 *)(p2 + 0x346) = 0;
+      ((GroundBaddieState *)p2)->baddie.moveDone = 0;
     }
     Sfx_PlayFromObject(obj, SFXsc_attack01);
   }
   *(s8 *)(p2 + 0x34d) = 3;
-  *(f32 *)(p2 + 0x2a0) = lbl_803E3090;
-  *(f32 *)(p2 + 0x280) = lbl_803E3060;
+  ((GroundBaddieState *)p2)->baddie.moveSpeed = lbl_803E3090;
+  ((GroundBaddieState *)p2)->baddie.animSpeedA = lbl_803E3060;
   return 0;
 }
 #pragma peephole reset
@@ -350,17 +351,17 @@ int fn_80167D10(int obj, int p2)
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3090;
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+  if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
+    if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
       ObjAnim_SetCurrentMove(obj, 8, lbl_803E3060, 0);
-      *(u8 *)(p2 + 0x346) = 0;
+      ((GroundBaddieState *)p2)->baddie.moveDone = 0;
     }
     Sfx_PlayFromObject(obj, SFXsc_attack01);
   }
   *(s16 *)(obj + 0) += 546;
   *(s8 *)(p2 + 0x34d) = 1;
-  *(f32 *)(p2 + 0x2a0) = lbl_803E3090;
-  *(f32 *)(p2 + 0x280) = lbl_803E3060;
+  ((GroundBaddieState *)p2)->baddie.moveSpeed = lbl_803E3090;
+  ((GroundBaddieState *)p2)->baddie.animSpeedA = lbl_803E3060;
   return 0;
 }
 #pragma peephole reset
@@ -374,15 +375,15 @@ int fn_80167EC4(int obj, int p2)
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3094;
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+  if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
     ObjHits_EnableObject(obj);
-    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+    if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
       ObjAnim_SetCurrentMove(obj, randomGetRange(6, 7), lbl_803E3060, 0);
-      *(u8 *)(p2 + 0x346) = 0;
+      ((GroundBaddieState *)p2)->baddie.moveDone = 0;
     }
   }
-  *(f32 *)(p2 + 0x2a0) = lbl_803E3094;
-  *(u8 *)(p2 + 0x34d) = 1;
+  ((GroundBaddieState *)p2)->baddie.moveSpeed = lbl_803E3094;
+  ((GroundBaddieState *)p2)->baddie.unk34D = 1;
   return 0;
 }
 #pragma peephole reset
@@ -397,15 +398,15 @@ int fn_80167DA4(int obj, int p2)
   extern f32 lbl_803E3060;
   int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+  if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
+    if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
       ObjAnim_SetCurrentMove(obj, *(s16 *)(lbl_803203F8 + 8), lbl_803E3060, 0);
-      *(u8 *)(p2 + 0x346) = 0;
+      ((GroundBaddieState *)p2)->baddie.moveDone = 0;
     }
     *(u8 *)(sub + 0x4a) = 4;
   }
-  *(f32 *)(p2 + 0x2a0) = lbl_80320404[(u32)*(u8 *)(sub + 0x4a)];
-  *(u8 *)(p2 + 0x34d) = 1;
+  ((GroundBaddieState *)p2)->baddie.moveSpeed = lbl_80320404[(u32)*(u8 *)(sub + 0x4a)];
+  ((GroundBaddieState *)p2)->baddie.unk34D = 1;
   return 0;
 }
 #pragma peephole reset
@@ -421,16 +422,16 @@ int fn_80167F58(int obj, int p2)
   extern f32 lbl_803E3060;
   int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+  if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
+    if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
       ObjAnim_SetCurrentMove(obj, lbl_803203F8[(s32)randomGetRange(0, 4)], lbl_803E3060, 0);
-      *(u8 *)(p2 + 0x346) = 0;
+      ((GroundBaddieState *)p2)->baddie.moveDone = 0;
     }
     ObjHits_EnableObject(obj);
     *(u8 *)(sub + 0x4a) = 4;
   }
-  *(f32 *)(p2 + 0x2a0) = lbl_80320404[(u32)*(u8 *)(sub + 0x4a)];
-  *(u8 *)(p2 + 0x34d) = 1;
+  ((GroundBaddieState *)p2)->baddie.moveSpeed = lbl_80320404[(u32)*(u8 *)(sub + 0x4a)];
+  ((GroundBaddieState *)p2)->baddie.unk34D = 1;
   return 0;
 }
 #pragma peephole reset
@@ -446,25 +447,25 @@ int fn_80168018(int obj, int p2)
   extern f32 lbl_803E307C;
   int state = *(int *)(obj + 0xb8);
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+  if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
+    if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
       ObjAnim_SetCurrentMove(obj, 5, lbl_803E3060, 0);
-      *(u8 *)(p2 + 0x346) = 0;
+      ((GroundBaddieState *)p2)->baddie.moveDone = 0;
     }
     ObjHits_DisableObject(obj);
-    *(f32 *)(p2 + 0x2a0) = lbl_803E307C;
-    *(f32 *)(p2 + 0x280) = lbl_803E3060;
+    ((GroundBaddieState *)p2)->baddie.moveSpeed = lbl_803E307C;
+    ((GroundBaddieState *)p2)->baddie.animSpeedA = lbl_803E3060;
   }
-  else if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
+  else if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveDone != 0) {
     GameBit_Set(*(s16 *)(state + 0x3f4), 0);
-    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+    if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
       ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0);
-      *(u8 *)(p2 + 0x346) = 0;
+      ((GroundBaddieState *)p2)->baddie.moveDone = 0;
     }
     *(u16 *)(state + 0x402) = 0;
   }
-  if ((s32)(*(u32 *)(p2 + 0x314) & 0x1000) != 0) {
-    *(u32 *)(p2 + 0x314) &= 0xffffefff;
+  if ((s32)(((GroundBaddieState *)p2)->baddie.eventFlags & 0x1000) != 0) {
+    ((GroundBaddieState *)p2)->baddie.eventFlags &= 0xffffefff;
     fn_80169360(obj, 2);
   }
   return 0;
@@ -483,22 +484,22 @@ int fn_80168118(int obj, int p2)
   extern f32 lbl_803E309C;
   int state = *(int *)(obj + 0xb8);
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+  if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
+    if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
       ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0);
-      *(u8 *)(p2 + 0x346) = 0;
+      ((GroundBaddieState *)p2)->baddie.moveDone = 0;
     }
     fn_80169360(obj, 1);
-    *(u8 *)(p2 + 0x25f) = 1;
+    ((GroundBaddieState *)p2)->baddie.unk25F = 1;
     GameBit_Set(*(s16 *)(state + 0x3f4), 1);
     *(u8 *)(obj + 0xaf) &= ~8;
     *(u8 *)(obj + 0x36) = 0xff;
-    *(u8 *)(p2 + 0x34d) = 1;
-    *(f32 *)(p2 + 0x2a0) =
+    ((GroundBaddieState *)p2)->baddie.unk34D = 1;
+    ((GroundBaddieState *)p2)->baddie.moveSpeed =
         lbl_803E3098 + ((f32)(u32)*(u8 *)(state + 0x406) / lbl_803E309C);
     ObjHits_EnableObject(obj);
   }
-  else if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
+  else if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveDone != 0) {
     *(u16 *)(state + 0x402) = 1;
   }
   return 0;
