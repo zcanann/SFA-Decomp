@@ -442,7 +442,10 @@ Heuristic:
     a cap); when target has a plain `bge`/`ble` and your `>=`/`<=` emits the cror,
     that 1-2 instr divergence is a genuine residual — leave it, and DON'T rewrite
     the clamp chasing it (a logically-correct rewrite of this pattern has been
-    confirmed to score *lower*).
+    confirmed to score *lower*). ⚠️ **SUPERSEDED by recipe #91** — the
+    strict-compare nested ternary (`*p = (v < lo) ? lo : ((v > hi) ? hi : v);`)
+    reproduces the cror-free `bge`/`ble` clamp; try #91 before leaving these
+    partial.
     **A MATERIALIZED float-bool (stored to a GPR) is NOT always a cap — two
     confirmed recipes, pick by the FORM target uses:** (a) **mfcr/srwi form** —
     target does `fcmpo … ; mfcr; rlwinm/srwi` to land 0/1 in a reg: reproduce with
@@ -940,6 +943,11 @@ Heuristic:
     instr per site). No C spelling fuses a user-written f64 subtract into
     fsubs. The real fix is splits/link-level (dedup our .sdata2 bias entries
     onto the auto_11 symbols) — out of recipe scope; don't grind it per-fn.
+    ⚠️ **PREMISE SUPERSEDED by recipe #70 (task #145)** — the @NNN reloc is
+    score-neutral, so there is no per-reference fuzzy penalty and no
+    splits/link-level fix is needed; any remaining deficit is ordinary codegen
+    divergence elsewhere. The manual-idiom negative result above (fsub+frsp
+    vs fused fsubs) remains valid — don't retry it.
 
 62. **`(int)`-cast the store base to defeat address-CSE with a later
     `(u8 *)p + off` call arg — restores the displacement-form store.** When a
@@ -1109,7 +1117,12 @@ Heuristic:
     pragma toggles and if-form variants all inert), foodbag *_func03
     family (sub-case d: long-lived `base+0x2a8` temp in r0 (volatile) in
     target vs r25 (saved) in current — naming/decl-order/pragma all
-    inert; see task #146).
+    inert; see task #146). ⚠️ **PARTIALLY SUPERSEDED (task #157 meta-audit):**
+    treasurechest_update → 100 (was a #67(b) import-guessed array size
+    `z[2]→z[1]` + a #62 arg launder), drawHudBox → 100 via recipe #83;
+    CameraModeCrawl improved via #83 ternary clamps (97.68→97.79, frame +
+    slot stream now exact) but still partial. Retry the others against
+    recipes #80-#83 before treating as threshold caps.
 
 68. **`mr rS,r3`-copy forward-prop into early derefs is a PEEPHOLE opt —
     `#pragma peephole off` makes pre-call derefs use the COPY, matching
@@ -1129,7 +1142,8 @@ Heuristic:
     copy, yours = r3/r4. CAVEAT: vecmath's vecRotateZXY/setMatrixFromObjectPos
     show the same signature but are ALREADY peephole-off — that variant
     (deref via the copy of a NON-r3 param) remains a cap. Supersedes the
-    "param-relocation cap class" note in the triage table below.
+    former "param-relocation cap class" triage-table note (since removed
+    from the table).
     **Where #68 does NOT apply — peephole-ON-target units (audio TUs etc.).**
     The recipe assumes the peephole pass is propping the copy and target
     compiled WITHOUT that prop. In a unit whose target compiles peephole-ON
@@ -1151,58 +1165,9 @@ Heuristic:
     NOTE the gotcha: the inversion is PER-COMPARE — flipping a different
     equivalent compare in the same fn regressed the already-matching one.
 
-70. **FbBuf/cmd-list stack-builder family (foodbag/pickup `dll_XX_func03`) —
-    the four-part recipe set.** These fns build a cmd buffer on the stack
-    via `FbCmd *e = buf.entries; FbCmd *p = e;` + `p->field = …; p++` walks.
-    Four distinct divergence classes, each with a proven fix:
-    (a) **`buf.cmds = buf.entries;` → re-derive as
-    `(FbCmd *)((u8 *)&buf + 0x60);`** when target shows `addi r0,r1,K;
-    stw r0` (fresh re-derive, no reg reuse). Batch-scan the unit's target for
-    that 2-instr signature and fix every site at once — 9 foodbag fns had it;
-    one batch took dll_8C 96.86→100 and lifted 6 siblings (+0.35 unit pts).
-    (b) **Per-branch `p = e + K;` in BOTH if/else arms** (the dll_A0 phi
-    pattern): identical assignments at a join defeat const-folding, so
-    post-merge `p[i]` stores stay reg-relative (scratch r12 materialization
-    per branch-end). dll_80 93.90→100.
-    (c) **v1.0-vs-v1.1 import bug: v1.1 ADDED missing trailing `p++` in
-    conditional arms.** When target's if-arm shows `stores; addi rX,rX,24;
-    stores; b merge` (bump BETWEEN entries, NONE at arm end) while the
-    else-arm ends with a bump, v1.0's source omitted the trailing `p++` (a
-    real overwrite bug fixed in v1.1, which the Ghidra import reflects).
-    Drop the trailing `p++` and rebase the count expr. dll_7F 95.73→100.
-    (d) **Volatile-reg e/p coloring follows decl order + init placement**:
-    declare the walker `FbCmd *p;` BEFORE `FbCmd *e = buf.entries;` and
-    assign `p = &e[1];` AFTER the e[0] direct stores — flips r7/r9 to match
-    target and places the addi where target has it. Part of the dll_7F 100%.
-
-71. **MWCC value-tracks stack addresses through EVERYTHING except CSE-temp
-    copies and phis — and the tracking dies at the first CALL for those.**
-    Mechanism notes from the foodbag dig (explains the int/float store
-    asymmetry: int header stores BEFORE the first `bl` fold to `K(r1)` and
-    match target; value stores AFTER calls stay `4/8/12(rX)` reg-relative in
-    target). Tested NEGATIVE fold-defeats (don't retry): lvalue cast chains
-    (`*(f32 *)((u8 *)p + 4)`), volatile deref, `(u32)`-domain address
-    laundering, `(FbCmd *)(u8 *)p` self-reassign (elided), declare-then-assign
-    vs initializer, inline-setter param laundering, `do { } while (0)` (loop
-    pruned before const-prop), e-invalidation after `p = e`. The only WORKING
-    source-level unfold triggers at -O4: (a) a JOIN feeding p (recipe #70b),
-    (b) making the walker the SOLE holder so the address expression's 2nd
-    occurrence (e.g. in the count expr `- buf.entries`) forces a CSE temp and
-    p becomes an untracked temp-copy — BUT form (b) costs an addi/mr
-    owner-swap (the temp wins r31) that can net-regress a high partial
-    (dll_8E: 99.63 tracked form beats 98.81 unfolded form). Read which
-    stores target folds before picking a form.
-
-72. **`#pragma optimization_level 0-4` IS accepted per-function by GC/2.0
-    mwcc** (silently — no warning; `#pragma opt_propagation` /
-    `global_optimizer` etc. are silently IGNORED). Levels ≤3 disable the
-    sp-displacement store folding of #71 but ALSO switch the register
-    allocator to creation-order priority (materialization owner gets r31,
-    copies get r30; use-count weighting lost) and weaken address-mode
-    selection (offset-0 member stores reuse a value-equal reg as `0(rX)`
-    instead of folding). Net-NEGATIVE on every foodbag fn tested — but the
-    pragma's existence is a real tool for fns whose target shows
-    creation-order coloring. A/B per fn and read the prologue.
+*(Numbering note: the FbBuf/cmd-list recipe set that previously sat here as a
+duplicate #70-72 — a numbering collision with the task-#145 set below — now
+lives as recipes #93-95 at the end of the numbered list.)*
 
 **Recipe #60 addendum — two more single-instruction real-bug signatures:**
 - **Missing vtable deref**: target `lwz r12,K(rX); mtctr; bctrl` vs current
@@ -1284,6 +1249,10 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   numbers swapped. ~10 fns in the tier (dll_127_init, Curve_SampleSegmentPoints,
   exploded_seedDebrisMotion, scarab fn_8015EA48, drawTexture, pi_dolphin
   fn_8004E0FC, magiccavetop fmr) — skip on sight.
+  ⚠️ **DECOMPOSED by recipe #82 — classify by web kind BEFORE skipping**:
+  symbol-CSE webs respond to the #81 launder (dll_127_init → 100%), named-local
+  pairs to a plain decl-order swap (fn_8015EA48 → 100%); only expression-temp
+  pairs remain a true cap. See #82 for the full taxonomy.
   **EXCEPTION (cracked sub-shape): decrement+clamp where the compare CONSUMES
   the fsubs/fmadds RESULT (no reload between store and fcmpo).** Write
   `f32 t = global - delta; global = t; if (t < lim) global = lim;` — the
@@ -1293,7 +1262,10 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   field before the fcmpo (lfs f1,off(rN) fresh load after the stfs), the cap
   stands — verified still-capped on fn_801CEA14, dim2icicle_update,
   cclevcontrol_update, wctemple_update. Read the target asm between the stfs
-  and the fcmpo to pick.
+  and the fcmpo to pick. ⚠️ **The reload case is since CRACKED by recipe #81**
+  (the `*(f32 *)&lbl` launder) — the four "still-capped" fns above are #81's
+  test set (5 of 6 → 100%). Use the same stfs/fcmpo read to pick temp_t vs
+  the #81 launder.
 - **`addi r0,rH,lo; mr rX,r0` vs direct `addi rX,rH,lo` — MOSTLY recipe #80
   in disguise, NOT a cap** (task #155). When the recipient is a SAVED reg and
   the fn mixes body offset-uses (`base + K`) with a plain `base` call-arg,
@@ -1319,14 +1291,18 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   INLINER re-folds constant masks to rlwinm (unlike the unroller, #28), so
   `static helper(p, flag){p->f &= ~flag;}` + auto-inline does NOT reproduce
   `li -K; and`. Both player_SeqFn residual families are allocator/codegen
-  caps pending a new recipe.
+  caps pending a new recipe. ⚠️ **PARTIALLY SUPERSEDED by recipe #74** — the
+  ~9 materialized-mask sites recovered via the LL-suffix spelling (see #74's
+  refinement note); the top-pair allocation-order cap above still stands.
 - **CAP — web-split reload coloring** (reloaded pointer gets a fresh saved
   reg where target reuses the original — MoonSeedPlantingSpot_setScale;
   decl-perms and second-local splits all regress) and **reverse-order saved
   pairs** (worldasteroids_init — recipe #16's documented reverse cap).
 - **CAP — materialized-mask `lis;or` for `|= 0x20000`** (warpDarkIceMines)
   — recipe #2 inverse re-confirmed; const-lift and expanded `x = x | K`
-  still fold to `oris`.
+  still fold to `oris`. ⚠️ **SUPERSEDED by recipe #74** — the LL-suffix
+  spelling (`x |= 0x20000LL;`) materializes the constant; warpDarkIceMines
+  recovered (see #74's refinement note).
 
 70. **@NNN-vs-named-lbl SDA21 relocs are SCORE-NEUTRAL — the "pool cap" was a
     misattribution; the deficit is always real codegen divergence elsewhere.**
@@ -1555,7 +1531,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     - SAME-MECHANISM SIBLING: a named `f32 t = *(f32 *)(p + 8);` local
       loads at the ASSIGN position while target loads lazily at first use
       (CSE temp) — inline the deref at every use and let MWCC CSE it
-      (dll_85 95.97->100, with per-arm `p += 3` phi (#146b) + s16-alias
+      (dll_85 95.97->100, with per-arm `p += 3` phi (#93b) + s16-alias
       (#30)). Mirror of the base-web story for FP loads. Pair with #66/#5
       (p-decl-BEFORE-e flips the e/p coloring — worked on dll_81/85 where
       decl swaps were inert BEFORE the web fix) and #30 (the alias must be
@@ -1569,7 +1545,10 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       re-materializes `li r0,-1` at ONE of two identical sites (dll_81
       99.86; spelling-insensitive: -1/0xffff/65535u/(s16)-1 all inert);
       `buf.cmds = e` storing via `mr r0,r31; stw r0` in target vs our
-      direct `stw r31` (dll_86 99.53; copy-var and call-parking inert);
+      direct `stw r31` (dll_86 99.53; copy-var and call-parking inert —
+      ⚠️ since CRACKED, task #157: the `(FbCmd *)((u8 *)&buf + 0x60)`
+      re-derive spelling (#93a/#62 family) reproduces the mr-r0;
+      dll_86 → 100);
       the `addi r0,rH,lo; mr rX,r0` saved-home materialization
       (dll_8B — pre-existing triage-table cap, NOT this class).
     - LOOP-INVARIANT variant (tumbleweedbush_update 97.43->99.06): when
@@ -1675,6 +1654,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     - Diagnostic: reduced /tmp probes do NOT reproduce these permutations —
       the coloring depends on whole-function web pressure; A/B in the real
       TU.
+
 83. **Fresh-slot paradox CRACKED (task #151) — MWCC's conversion-temp pool
     is flushed by STATEMENT-level control-flow joins, NOT by ternary
     expressions; plus the co-located CSE divergences that actually move the
@@ -1940,6 +1920,59 @@ compare's immediate and subtract 1 for the real case value.
     And `x -= timeDelta * (x * k);` compound gives `fnmsubs` with
     timeDelta-first load order where `x = -(timeDelta*(x*k) - x);` splits
     to fmsubs+fneg.
+
+93. **FbBuf/cmd-list stack-builder family (foodbag/pickup `dll_XX_func03`) —
+    the four-part recipe set.** These fns build a cmd buffer on the stack
+    via `FbCmd *e = buf.entries; FbCmd *p = e;` + `p->field = …; p++` walks.
+    Four distinct divergence classes, each with a proven fix:
+    (a) **`buf.cmds = buf.entries;` → re-derive as
+    `(FbCmd *)((u8 *)&buf + 0x60);`** when target shows `addi r0,r1,K;
+    stw r0` (fresh re-derive, no reg reuse). Batch-scan the unit's target for
+    that 2-instr signature and fix every site at once — 9 foodbag fns had it;
+    one batch took dll_8C 96.86→100 and lifted 6 siblings (+0.35 unit pts).
+    (b) **Per-branch `p = e + K;` in BOTH if/else arms** (the dll_A0 phi
+    pattern): identical assignments at a join defeat const-folding, so
+    post-merge `p[i]` stores stay reg-relative (scratch r12 materialization
+    per branch-end). dll_80 93.90→100.
+    (c) **v1.0-vs-v1.1 import bug: v1.1 ADDED missing trailing `p++` in
+    conditional arms.** When target's if-arm shows `stores; addi rX,rX,24;
+    stores; b merge` (bump BETWEEN entries, NONE at arm end) while the
+    else-arm ends with a bump, v1.0's source omitted the trailing `p++` (a
+    real overwrite bug fixed in v1.1, which the Ghidra import reflects).
+    Drop the trailing `p++` and rebase the count expr. dll_7F 95.73→100.
+    (d) **Volatile-reg e/p coloring follows decl order + init placement**:
+    declare the walker `FbCmd *p;` BEFORE `FbCmd *e = buf.entries;` and
+    assign `p = &e[1];` AFTER the e[0] direct stores — flips r7/r9 to match
+    target and places the addi where target has it. Part of the dll_7F 100%.
+
+94. **MWCC value-tracks stack addresses through EVERYTHING except CSE-temp
+    copies and phis — and the tracking dies at the first CALL for those.**
+    Mechanism notes from the foodbag dig (explains the int/float store
+    asymmetry: int header stores BEFORE the first `bl` fold to `K(r1)` and
+    match target; value stores AFTER calls stay `4/8/12(rX)` reg-relative in
+    target). Tested NEGATIVE fold-defeats (don't retry): lvalue cast chains
+    (`*(f32 *)((u8 *)p + 4)`), volatile deref, `(u32)`-domain address
+    laundering, `(FbCmd *)(u8 *)p` self-reassign (elided), declare-then-assign
+    vs initializer, inline-setter param laundering, `do { } while (0)` (loop
+    pruned before const-prop), e-invalidation after `p = e`. The only WORKING
+    source-level unfold triggers at -O4: (a) a JOIN feeding p (recipe #93b),
+    (b) making the walker the SOLE holder so the address expression's 2nd
+    occurrence (e.g. in the count expr `- buf.entries`) forces a CSE temp and
+    p becomes an untracked temp-copy — BUT form (b) costs an addi/mr
+    owner-swap (the temp wins r31) that can net-regress a high partial
+    (dll_8E: 99.63 tracked form beats 98.81 unfolded form). Read which
+    stores target folds before picking a form.
+
+95. **`#pragma optimization_level 0-4` IS accepted per-function by GC/2.0
+    mwcc** (silently — no warning; `#pragma opt_propagation` /
+    `global_optimizer` etc. are silently IGNORED). Levels ≤3 disable the
+    sp-displacement store folding of #94 but ALSO switch the register
+    allocator to creation-order priority (materialization owner gets r31,
+    copies get r30; use-count weighting lost) and weaken address-mode
+    selection (offset-0 member stores reuse a value-equal reg as `0(rX)`
+    instead of folding). Net-NEGATIVE on every foodbag fn tested — but the
+    pragma's existence is a real tool for fns whose target shows
+    creation-order coloring. A/B per fn and read the prologue.
 
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
