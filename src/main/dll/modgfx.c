@@ -12534,7 +12534,12 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f08 = 0x190;
         cfg.f60 = 0xff;
         cfg.f58 = 0;
-        cfg.f44 = 0x80480108;
+        cfg.f5a = 0;
+        cfg.f5c = 0;
+        cfg.f4c = 0;
+        cfg.f50 = 0;
+        cfg.f54 = 0;
+        cfg.f44 = 0x80280108;
         cfg.f48 = 0x20;
         cfg.f42 = 0x33;
         break;
@@ -12691,8 +12696,12 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f60 = 0xff;
         cfg.f61 = 0x10;
         cfg.f58 = 0xf82f;
+        cfg.f5a = 0xf447;
+        cfg.f5c = 0xffff;
+        cfg.f4c = 0xa7f8;
         cfg.f50 = 0;
-        cfg.f44 = (u32)((u8 *)ObjSeq_func20 + 0x90);
+        cfg.f54 = 0;
+        cfg.f44 = 0x80080610;
         cfg.f48 = 0x24;
         cfg.f42 = 0x1de;
         break;
@@ -13044,8 +13053,8 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f28 = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
         cfg.f2c = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
         cfg.f3c = lbl_803DFB74 * (f32)(s32)randomGetRange(0xc8, 0x3e8);
-        cfg.f08 = randomGetRange(0x64, 0xc8);
-        cfg.f30 = (f32)(s32)randomGetRange(0, 0x28);
+        cfg.f60 = (u8)(randomGetRange(0x64, 0xc8) + 0x37);
+        cfg.f08 = randomGetRange(0, 0x28) + 0x3c;
         cfg.f61 = 0x10;
         cfg.f44 = 0x81480204;
         cfg.f42 = 0x30;
@@ -13055,12 +13064,12 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f28 = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
         cfg.f2c = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
         cfg.f3c = lbl_803DFB74 * (f32)(s32)randomGetRange(0xc8, 0x3e8);
-        cfg.f08 = randomGetRange(0x64, 0xc8);
+        cfg.f60 = (u8)(randomGetRange(0x64, 0xc8) + 0x37);
+        cfg.f08 = randomGetRange(0, 0x28) + 0x3c;
         cfg.f61 = 0x10;
-        cfg.f42 = 0x5c;
-        cfg.f5c = 0;
-        cfg.f4c = 0x4e20;
-        cfg.f48 = 0x20;
+        cfg.f44 = 0x80280104;
+        cfg.f48 = 8;
+        cfg.f42 = 0x30;
         break;
     case 0x1ab:
         cfg.f30 = lbl_803DFB88 * (f32)(s32)randomGetRange(0, 0xffff);

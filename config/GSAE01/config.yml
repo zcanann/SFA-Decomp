@@ -106,3 +106,5 @@ block_relocations:
   end: 0x80080120
 - target: 0x80080208
   end: 0x80080214
+- target: 0x80080610
+  end: 0x80080614
