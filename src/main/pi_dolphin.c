@@ -1,3 +1,4 @@
+#include "dolphin/PPCArch.h"
 #include "main/pi_dolphin.h"
 
 extern undefined4 FUN_80003494();
@@ -10758,17 +10759,8 @@ void videoInit(void) {
     GXSetCurrentMtx(0);
     C_MTXOrtho(hudMatrix, lbl_803DEA94, lbl_803DEA98, lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
     GXSetMisc(1, 8);
-    {
-        register u32 v;
-        asm {
-            mfmsr v
-            ori v, v, 0x4
-            mtmsr v
-            mfspr v, 1008
-            ori v, v, 0x200
-            mtspr 1008, v
-        }
-    }
+    PPCMtmsr(PPCMfmsr() | MSR_PM);
+    PPCMthid0(PPCMfhid0() | HID0_SPD);
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -2,7 +2,7 @@
 #include "main/mapEvent.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/objHitReact.h"
-#include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -1271,7 +1271,6 @@ void FUN_801f1d3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 #pragma peephole off
 void fn_801F20D4(int obj)
 {
-  extern void ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, int n);
   extern void *Obj_GetPlayerObject(void);
   extern int *gGameUIInterface;
   extern int lbl_802C247C[];
@@ -1297,12 +1296,14 @@ void fn_801F20D4(int obj)
     if (*(s16 *)(obj + 0xa0) != 7) {
       ObjAnim_SetCurrentMove(obj, 7, lbl_803E5D98, 0);
     }
-    ObjAnim_AdvanceCurrentMove(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, 0);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+        (obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
   } else {
     if (*(s16 *)(obj + 0xa0) != 2) {
       ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
     }
-    ObjAnim_AdvanceCurrentMove(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, 0);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+        (obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
   }
   if ((*(u8 *)(obj + 0xaf) & 0x1) != 0 && GameBit_Get(763) == 0) {
     GameBit_Set(763, 1);
@@ -1470,7 +1471,6 @@ undefined4 FUN_801f26a8(int param_1,undefined4 param_2,int param_3)
 #pragma peephole off
 void fn_801F27E4(int obj)
 {
-  extern void ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, int n);
   extern void *Obj_GetPlayerObject(void);
   extern int fn_80296A14(void);
   extern int *gObjectTriggerInterface;
@@ -1487,7 +1487,8 @@ void fn_801F27E4(int obj)
   if (*(s16 *)(obj + 0xa0) != 2) {
     ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
   }
-  ObjAnim_AdvanceCurrentMove(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, 0);
+  ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+      (obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
   *(u8 *)(sub + 0x24) = 1;
   if (*(u8 *)(sub + 0x24) == 0) {
     if ((*(u8 *)(obj + 0xaf) & 0x1) != 0) {
@@ -2350,7 +2351,6 @@ void fn_801F2290(int obj);
 #pragma opt_strength_reduction off
 void dll_200_update(int obj)
 {
-    extern void ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, int n);
     extern u8 framesThisStep;
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
@@ -2379,7 +2379,8 @@ void dll_200_update(int obj)
             if (*(s16 *)(obj + 0xa0) != 2) {
                 ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
             }
-            ObjAnim_AdvanceCurrentMove(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, 0);
+            ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+                (obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
             break;
         case 6:
             fn_801F20D4(obj);
@@ -2796,8 +2797,6 @@ void fn_801F2290(int obj)
     extern int getAngle(f32 x, f32 y);
     extern f32 sqrtf(f32 x);
     extern void fn_80137948(char *fmt, ...);
-    extern int ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, void *events);
-    extern void ObjAnim_SampleRootCurvePhase(int obj, void *p);
     extern int *gGameUIInterface;
     extern int lbl_802C2470[];
     extern ArwAttachTarget lbl_80328974[];
@@ -2818,7 +2817,7 @@ void fn_801F2290(int obj)
     f32 dist;
     f32 spd;
     IntVec3 stk;
-    u8 events[28];
+    ObjAnimEventList animEvents;
 
     b = *(char **)(obj + 0xb8);
     Obj_GetPlayerObject();
@@ -2883,7 +2882,8 @@ void fn_801F2290(int obj)
                     *(u8 *)(b + 0x22) = 13;
                 }
             } else if (m == 13) {
-                if (ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(b + 0xc), timeDelta, events) != 0) {
+                if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+                        (obj, *(f32 *)(b + 0xc), timeDelta, &animEvents) != 0) {
                     if ((f32)(int)*(s16 *)(obj + 0xa0) ==
                         lbl_80328974[*(u8 *)(b + 0x23)].moveId) {
                         ObjAnim_SetCurrentMove(obj,
@@ -2910,7 +2910,8 @@ void fn_801F2290(int obj)
                     spd = lbl_803E5DAC;
                     *(f32 *)(obj + 0x24) = spd * (dx / dist);
                     *(f32 *)(obj + 0x2c) = spd * (dy / dist);
-                    ObjAnim_SampleRootCurvePhase(obj, b + 0xc);
+                    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)
+                        (obj, spd, (float *)(b + 0xc));
                 } else {
                     if (*(s16 *)(obj + 0xa0) != 12) {
                         ObjAnim_SetCurrentMove(obj, 12, lbl_803E5D98, 0);
@@ -2931,7 +2932,8 @@ void fn_801F2290(int obj)
                 }
                 *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
                 *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
-                ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(b + 0xc), timeDelta, events);
+                ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+                    (obj, *(f32 *)(b + 0xc), timeDelta, &animEvents);
             }
         }
     }

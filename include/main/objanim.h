@@ -9,6 +9,8 @@ typedef struct ObjAnimComponent ObjAnimComponent;
 typedef struct ObjAnimEventList ObjAnimEventList;
 
 typedef int (*ObjAnimSetProgressObjectFirstFn)(int objAnimArg,f32 progress);
+typedef int (*ObjAnimSampleRootCurveObjectFirstFn)(int objAnimArg,f32 distance,
+                                                   float *phaseOut);
 typedef int (*ObjAnimSetCurrentMoveObjectFirstFn)(int objAnimArg,int moveId,f32 moveProgress,
                                                   int moveControlFlags);
 typedef int (*ObjAnimAdvanceObjectFirstFn)(int objAnimArg,double moveStepScale,double deltaTime,
