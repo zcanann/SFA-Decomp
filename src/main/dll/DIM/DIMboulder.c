@@ -3,6 +3,89 @@
 #include "main/objanim.h"
 #include "main/dll/DIM/DIMboulder.h"
 
+/*
+ * Per-object extra state for the IM ice-mountain event controller
+ * (imicemountain_getExtraSize == 0x14).
+ */
+typedef struct IMIceMountainState {
+    u8 eventState; /* 0..7 event machine (imicemountain_updateEventState) */
+    u8 pad01[3];
+    s32 latchFlags; /* SCGameBitLatch record; bit 1 = latch fired this frame */
+    s8 warpCountdown; /* state 6: frames until warpToMap(0x1A) */
+    u8 pad09;
+    s16 musicTrack; /* -1 or 26; Music_Trigger edge latch */
+    u8 mapEventState; /* MEVT_QUERY result at init (1/2/5) */
+    u8 pad0D[3];
+    f32 warningTextTimer; /* shows text 0x351 while above the floor value */
+} IMIceMountainState;
+
+STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
+
+/*
+ * Per-object extra state for the magiclight proximity light
+ * (magiclight_getExtraSize == 0x14 for non-0x172 types).
+ */
+typedef struct MagicLightState {
+    f32 triggerRadius; /* preset by subtype */
+    s16 lifetime; /* rand(200,600) at init */
+    s16 enterAction; /* L-action when the player enters the radius */
+    s16 leaveAction; /* L-action when the player leaves radius + hysteresis */
+    u8 pad0A;
+    s8 inRange; /* hysteresis latch */
+    s8 subtype; /* params+0x1A */
+    u8 pad0D[3];
+    s16 unk10; /* 301 at init */
+    u8 pad12[2];
+} MagicLightState;
+
+STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
+
+/*
+ * Per-object extra state for the dll_16C map-event boulder proxy
+ * (dll_16C_getExtraSize == 0x24).
+ */
+typedef struct Dll16CState {
+    void *linkedObj; /* group-10 object matched by type (364/367) */
+    f32 unk04; /* set on anim event 2 */
+    f32 snapX; /* path point snapshot taken on anim event 2 */
+    f32 snapY;
+    f32 snapZ;
+    f32 pathPointX; /* path point 1 world position, refreshed in render */
+    f32 pathPointY;
+    f32 pathPointZ;
+    u8 opacity; /* distance fade; 0xFF when unlinked */
+    s8 subObjIndex; /* lbl_802C2308 id selector; -1 = clear (anim event 3) */
+    s8 subObjIndexApplied;
+    u8 pad23;
+} Dll16CState;
+
+STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
+
+/*
+ * Per-object extra state for the crrockfall falling rock
+ * (crrockfall_getExtraSize == 0x14).
+ */
+typedef struct CrRockfallCfgEntry {
+    f32 unk00;
+    s32 landSfx; /* 0 = none */
+    f32 restOffsetY; /* scaled by obj scale, added to floorY at rest */
+} CrRockfallCfgEntry;
+
+typedef struct CrRockfallState {
+    CrRockfallCfgEntry *cfg; /* lbl_803236B8 entry 0, or entry 1 for type 0x600 */
+    f32 floorY; /* probed landing height */
+    f32 startY; /* obj Y at init; fade fraction reference */
+    u8 mode; /* 0 armed, 1 falling, 2 resting, 3 shattered */
+    u8 fallStarted;
+    u8 floorFound;
+    u8 pad0F;
+    s16 fallDelay; /* params+0x1E; counts down while the player is in range */
+    u8 pad12[2];
+} CrRockfallState;
+
+STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
+
+
 extern undefined4 getLActions();
 extern undefined4 FUN_80006724();
 extern undefined8 FUN_80006728();
@@ -1046,31 +1129,31 @@ extern f32 lbl_803E46E0;
 #pragma scheduling off
 void imicemountain_init(int* obj)
 {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    IMIceMountainState* sub = *(IMIceMountainState**)((char*)obj + 0xb8);
     int i;
     *(void**)((char*)obj + 0xbc) = (void*)&IMIceMountain_SeqFn;
     for (i = 1; (u8)i <= 0xd; i++) {
         gameBitFn_800ea2e0(i);
     }
-    *(f32*)(sub + 0x10) = lbl_803E46E0;
+    sub->warningTextTimer = lbl_803E46E0;
     MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 1, 0);
     MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 5, 1);
     unlockLevel(0, 0, 1);
     if (GameBit_Get(0x379) != 0) {
         MEVT_SET(*(s8*)((char*)obj + 0xac), 2);
     }
-    sub[0xc] = MEVT_QUERY(*(s8*)((char*)obj + 0xac));
-    switch (sub[0xc]) {
+    sub->mapEventState = MEVT_QUERY(*(s8*)((char*)obj + 0xac));
+    switch (sub->mapEventState) {
     case 1:
         if (GameBit_Get(0x72) != 0) {
             if (GameBit_Get(0x379) != 0) {
-                sub[0] = 5;
+                sub->eventState = 5;
             } else {
                 GameBit_Set(0x3a3, 0);
                 GameBit_Set(0x3a2, 0);
                 GameBit_Set(0xcb, 0);
                 GameBit_Set(0x379, 0);
-                sub[0] = 3;
+                sub->eventState = 3;
             }
         } else {
             MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 0, 1);
@@ -1078,10 +1161,10 @@ void imicemountain_init(int* obj)
                 MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 0xb, 1);
             }
             if (GameBit_Get(0x6e) != 0) {
-                sub[0] = 1;
+                sub->eventState = 1;
             } else {
                 MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 2, 1);
-                sub[0] = 7;
+                sub->eventState = 7;
             }
         }
         MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 3, 1);
@@ -1125,43 +1208,43 @@ extern f32 lbl_803E4744;
 #pragma peephole off
 void magiclight_init(int* obj, u8* params)
 {
-    u8* sub;
+    MagicLightState* sub;
     *(int*)((char*)obj + 0xf4) = 0;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     *(void**)((char*)obj + 0xbc) = (void*)&magiclight_SeqFn;
     if (*(s16*)((char*)obj + 0x46) == 0x172) {
         return;
     }
-    sub = *(u8**)((char*)obj + 0xb8);
-    *(s16*)(sub + 4) = (s16)randomGetRange(0xc8, 0x258);
-    *(s8*)(sub + 0xc) = (s8)*(s16*)(params + 0x1a);
-    sub[0xb] = 0;
+    sub = *(MagicLightState**)((char*)obj + 0xb8);
+    sub->lifetime = (s16)randomGetRange(0xc8, 0x258);
+    sub->subtype = (s8)*(s16*)(params + 0x1a);
+    sub->inRange = 0;
     if (*(s16*)((char*)obj + 0x46) == 0x16b) {
-        switch ((s8)sub[0xc]) {
+        switch (sub->subtype) {
         case 0:
-            *(s16*)(sub + 6) = 0x90;
-            *(s16*)(sub + 8) = 0x91;
-            *(f32*)(sub + 0) = lbl_803E4740;
+            sub->enterAction = 0x90;
+            sub->leaveAction = 0x91;
+            sub->triggerRadius = lbl_803E4740;
             break;
         case 1:
-            *(s16*)(sub + 6) = 0x92;
-            *(s16*)(sub + 8) = 0x93;
-            *(f32*)(sub + 0) = lbl_803E4740;
+            sub->enterAction = 0x92;
+            sub->leaveAction = 0x93;
+            sub->triggerRadius = lbl_803E4740;
             break;
         default:
-            *(s16*)(sub + 6) = 0x94;
-            *(s16*)(sub + 8) = 0x95;
-            *(f32*)(sub + 0) = lbl_803E4744;
+            sub->enterAction = 0x94;
+            sub->leaveAction = 0x95;
+            sub->triggerRadius = lbl_803E4744;
             break;
         case 3:
-            *(s16*)(sub + 6) = 0x187;
-            *(s16*)(sub + 8) = 0x5;
-            *(f32*)(sub + 0) = lbl_803E4740;
+            sub->enterAction = 0x187;
+            sub->leaveAction = 0x5;
+            sub->triggerRadius = lbl_803E4740;
             break;
         }
-        *(s16*)(sub + 0x10) = 0x12d;
+        sub->unk10 = 0x12d;
     } else {
-        *(s16*)(sub + 0x10) = 0x12d;
+        sub->unk10 = 0x12d;
     }
 }
 #pragma peephole reset
@@ -1197,8 +1280,8 @@ void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 #pragma scheduling off
 #pragma peephole off
 void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
-    u8 *inner = *(u8 **)(obj + 0xb8);
-    if (inner[0xc] != 3 && visible != 0) {
+    CrRockfallState *inner = *(CrRockfallState **)(obj + 0xb8);
+    if (inner->mode != 3 && visible != 0) {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4708);
     }
 }
@@ -1219,7 +1302,7 @@ extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;
 #pragma dont_inline on
 f32 fn_801ACCFC(int obj) {
-    int *state = *(int **)((char *)obj + 0xB8);
+    CrRockfallState *state = *(CrRockfallState **)((char *)obj + 0xB8);
     int *list;
     int count;
     int i;
@@ -1241,7 +1324,7 @@ f32 fn_801ACCFC(int obj) {
         }
     }
     if (bestIdx != -1) {
-        *(u8 *)((char *)state + 0xE) = 1;
+        state->floorFound = 1;
         return *(f32 *)list[bestIdx];
     }
     return *(f32 *)((char *)obj + 0x10);
@@ -1249,10 +1332,10 @@ f32 fn_801ACCFC(int obj) {
 #pragma dont_inline reset
 
 void magiclight_free(int obj) {
-    int *inner = *(int **)(obj + 0xb8);
+    MagicLightState *inner = *(MagicLightState **)(obj + 0xb8);
     if (*(s16 *)(obj + 0x46) != 0x172) {
-        if ((s8)*(s8 *)((char *)inner + 0xb) != 0) {
-            getLActions(obj, obj, (u16)*(s16 *)((char *)inner + 8), 0, 0, 0);
+        if ((s8)inner->inRange != 0) {
+            getLActions(obj, obj, (u16)inner->leaveAction, 0, 0, 0);
         }
         (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
     }
@@ -1303,11 +1386,11 @@ extern void dll_16C_syncSubObjectTransform(void *a, void *b, int c, int d, int e
 #pragma scheduling off
 #pragma peephole off
 void dll_16C_hitDetect(void *obj) {
-    void **extra = *(void ***)((char *)obj + 0xb8);
-    void *p = *extra;
+    Dll16CState *extra = *(Dll16CState **)((char *)obj + 0xb8);
+    void *p = extra->linkedObj;
     if (p != NULL) {
         if ((*(int (**)(void *))(**(int **)((char *)p + 0x68) + 0x38))(p) == 2) {
-            dll_16C_syncSubObjectTransform(obj, *extra, 0, 0, 0, 0, 0, 0, 0);
+            dll_16C_syncSubObjectTransform(obj, extra->linkedObj, 0, 0, 0, 0, 0, 0, 0);
         }
     }
 }
@@ -1320,7 +1403,7 @@ extern f32 lbl_803E4758;
 #pragma scheduling off
 #pragma peephole off
 void dll_16C_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
-    int *extra;
+    Dll16CState *extra;
     int *p;
     int hit;
 
@@ -1328,8 +1411,8 @@ void dll_16C_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
         if (GameBit_Get(110) != 0) {
             if (GameBit_Get(898) == 0) return;
         }
-        extra = *(int **)((char *)obj + 0xb8);
-        p = (int *)*extra;
+        extra = *(Dll16CState **)((char *)obj + 0xb8);
+        p = (int *)extra->linkedObj;
         hit = 0;
         if (p != NULL) {
             if ((*(int (**)(int *))(**(int **)((char *)p + 0x68) + 0x38))(p) == 2) {
@@ -1339,17 +1422,17 @@ void dll_16C_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
         if (hit != 0) {
             *(s16 *)((char *)obj + 6) |= 8;
             visible = (s8)objUpdateOpacity(p);
-            dll_16C_syncSubObjectTransform(obj, p, p1, p2, p3, p4, visible, *(u8 *)((char *)extra + 0x20), 1);
+            dll_16C_syncSubObjectTransform(obj, p, p1, p2, p3, p4, visible, extra->opacity, 1);
         } else {
             *(s16 *)((char *)obj + 6) &= ~8;
         }
-        if ((s8)visible != 0 && *(u8 *)((char *)extra + 0x20) != 0) {
+        if ((s8)visible != 0 && extra->opacity != 0) {
             u8 saved = *(u8 *)((char *)obj + 0x37);
             if (hit != 0) {
-                *(u8 *)((char *)obj + 0x37) = *(u8 *)((char *)extra + 0x20);
+                *(u8 *)((char *)obj + 0x37) = extra->opacity;
             }
             ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4758);
-            ObjPath_GetPointWorldPosition(obj, 1, (f32 *)((char *)extra + 0x14), (f32 *)((char *)extra + 0x18), (f32 *)((char *)extra + 0x1c), 0);
+            ObjPath_GetPointWorldPosition(obj, 1, &extra->pathPointX, &extra->pathPointY, &extra->pathPointZ, 0);
             *(u8 *)((char *)obj + 0x37) = saved;
         }
     } else {
@@ -1381,17 +1464,17 @@ extern int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3);
 #pragma scheduling off
 #pragma peephole off
 void dll_16C_init(void *obj, void *arg2) {
-    void *extra;
+    Dll16CState *extra;
     *(void **)((char *)obj + 0xbc) = (void *)dll_16C_SeqFn;
     if (*(void **)((char *)obj + 0x64) != NULL) {
         *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x4000;
         *(u8 *)(*(char **)((char *)obj + 0x64) + 0x3a) = 100;
         *(u8 *)(*(char **)((char *)obj + 0x64) + 0x3b) = 150;
     }
-    extra = *(void **)((char *)obj + 0xb8);
-    *(u32 *)extra = 0;
-    *(u8 *)((char *)extra + 0x21) = *(u8 *)((char *)arg2 + 0x27);
-    *(u8 *)((char *)extra + 0x20) = 0xff;
+    extra = *(Dll16CState **)((char *)obj + 0xb8);
+    extra->linkedObj = NULL;
+    *(u8 *)&extra->subObjIndex = *(u8 *)((char *)arg2 + 0x27);
+    extra->opacity = 0xff;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1401,22 +1484,22 @@ extern f32 lbl_803E4738;
 #pragma scheduling off
 #pragma peephole off
 int magiclight_SeqFn(int *obj) {
-    int *state;
+    MagicLightState *state;
     int *player;
     f32 dist;
 
     if (*(s16 *)((char *)obj + 0x46) == 370) return 0;
 
-    state = *(int **)((char *)obj + 0xb8);
+    state = *(MagicLightState **)((char *)obj + 0xb8);
     player = (int *)Obj_GetPlayerObject();
     dist = Vec_distance((f32 *)((char *)player + 0x18), (f32 *)((char *)obj + 0x18));
 
-    if (dist < *(f32 *)state && *(s8 *)((char *)state + 0xb) == 0) {
-        *(s8 *)((char *)state + 0xb) = 1;
-        getLActions(obj, obj, (u16) * (s16 *)((char *)state + 6), 0, 0, 0);
-    } else if (dist > lbl_803E4738 + *(f32 *)state && *(s8 *)((char *)state + 0xb) != 0) {
-        *(s8 *)((char *)state + 0xb) = 0;
-        getLActions(obj, obj, (u16) * (s16 *)((char *)state + 8), 0, 0, 0);
+    if (dist < state->triggerRadius && state->inRange == 0) {
+        state->inRange = 1;
+        getLActions(obj, obj, (u16)state->enterAction, 0, 0, 0);
+    } else if (dist > lbl_803E4738 + state->triggerRadius && state->inRange != 0) {
+        state->inRange = 0;
+        getLActions(obj, obj, (u16)state->leaveAction, 0, 0, 0);
     }
     return 0;
 }
@@ -1437,27 +1520,27 @@ extern void warpToMap(int mapId, int flags);
 #pragma peephole off
 void imicemountain_updateEventState(int *obj)
 {
-    int *extra = *(int **)((char *)obj + 0xb8);
-    switch (*(u8 *)extra) {
+    IMIceMountainState *extra = *(IMIceMountainState **)((char *)obj + 0xb8);
+    switch (extra->eventState) {
     case 7:
         if (GameBit_Get(0x6e) != 0) {
-            *(u8 *)extra = 1;
+            extra->eventState = 1;
             MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 2, 0);
         }
         break;
     case 1:
         if (GameBit_Get(0xadc) != 0 && GameBit_Get(0xadd) != 0) {
             GameBit_Set(0xade, 1);
-            *(u8 *)extra = 2;
+            extra->eventState = 2;
             MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 11, 1);
         } else if (GameBit_Get(0x70) != 0) {
-            *(u8 *)extra = 2;
+            extra->eventState = 2;
             MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 11, 1);
         }
         break;
     case 2:
         if (GameBit_Get(0x70) != 0) {
-            *(u8 *)extra = 3;
+            extra->eventState = 3;
             MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 6, 1);
         }
         break;
@@ -1466,7 +1549,7 @@ void imicemountain_updateEventState(int *obj)
             MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 0, 0);
         }
         if (GameBit_Get(0x3a2) != 0) {
-            *(u8 *)extra = 4;
+            extra->eventState = 4;
             GameBit_Set(0xe5d, 1);
             GameBit_Set(0xe5e, 1);
             GameBit_Set(0xe5f, 1);
@@ -1496,25 +1579,25 @@ void imicemountain_updateEventState(int *obj)
         }
         break;
     case 4:
-        fn_801AC108(obj, extra);
+        fn_801AC108(obj, (int *)extra);
         break;
     case 5:
-        if ((extra[1] & 1) != 0) {
+        if ((extra->latchFlags & 1) != 0) {
             MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 3, 0);
             MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 4, 0);
             MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 6, 0);
             MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 7, 0);
-            *(u8 *)extra = 0;
+            extra->eventState = 0;
             MEVT_SET(*(s8 *)((char *)obj + 0xac), 2);
         }
         break;
     case 6:
-        if ((extra[1] & 1) != 0) {
-            *(s8 *)((char *)extra + 8) = 2;
+        if ((extra->latchFlags & 1) != 0) {
+            extra->warpCountdown = 2;
         }
-        if (*(s8 *)((char *)extra + 8) > 0) {
-            s8 cnt = *(s8 *)((char *)extra + 8) - 1;
-            *(s8 *)((char *)extra + 8) = cnt;
+        if (extra->warpCountdown > 0) {
+            s8 cnt = extra->warpCountdown - 1;
+            extra->warpCountdown = cnt;
             if (cnt == 0) {
                 GameBit_Set(0x4e5, 0);
                 warpToMap(0x1a, 0);
@@ -1655,7 +1738,7 @@ extern f32 lbl_803E46DC;
 #pragma scheduling off
 void imicemountain_update(int *obj)
 {
-    int *extra = *(int **)((char *)obj + 0xb8);
+    IMIceMountainState *extra = *(IMIceMountainState **)((char *)obj + 0xb8);
     if (*(int *)((char *)obj + 0xf4) == 0) {
         getEnvfxAct(obj, obj, 0xa3, 0);
         getEnvfxAct(obj, obj, 0x9e, 0);
@@ -1663,7 +1746,7 @@ void imicemountain_update(int *obj)
         ((void (*)(int))((int *)*gCloudActionInterface)[0x1c / 4])(1);
         *(int *)((char *)obj + 0xf4) = 1;
     }
-    switch (*(u8 *)((char *)extra + 0xc)) {
+    switch (extra->mapEventState) {
     case 1:
         imicemountain_updateEventState(obj);
         break;
@@ -1675,26 +1758,26 @@ void imicemountain_update(int *obj)
     case 5:
         break;
     }
-    extra[1] &= ~1;
-    if (*(f32 *)((char *)extra + 0x10) > lbl_803E46DC) {
+    extra->latchFlags &= ~1;
+    if (extra->warningTextTimer > lbl_803E46DC) {
         gameTextSetColor(255, 255, 255, 255);
         gameTextShow(0x351);
-        *(f32 *)((char *)extra + 0x10) = *(f32 *)((char *)extra + 0x10) - timeDelta;
-        if (*(f32 *)((char *)extra + 0x10) < lbl_803E46DC) {
-            *(f32 *)((char *)extra + 0x10) = lbl_803E46DC;
+        extra->warningTextTimer = extra->warningTextTimer - timeDelta;
+        if (extra->warningTextTimer < lbl_803E46DC) {
+            extra->warningTextTimer = lbl_803E46DC;
         }
     }
     if (((int (*)(int))((int *)*gSHthorntailAnimationInterface)[0x24 / 4])(0) != 0) {
-        if (*(s16 *)((char *)extra + 0xa) != -1) {
-            *(s16 *)((char *)extra + 0xa) = -1;
-            if ((extra[1] & 8) != 0) {
+        if (extra->musicTrack != -1) {
+            extra->musicTrack = -1;
+            if ((extra->latchFlags & 8) != 0) {
                 Music_Trigger(26, 0);
             }
         }
     } else {
-        if (*(s16 *)((char *)extra + 0xa) != 26) {
-            *(s16 *)((char *)extra + 0xa) = 26;
-            if ((extra[1] & 8) != 0) {
+        if (extra->musicTrack != 26) {
+            extra->musicTrack = 26;
+            if ((extra->latchFlags & 8) != 0) {
                 Music_Trigger(26, 1);
             }
         }
@@ -1702,7 +1785,7 @@ void imicemountain_update(int *obj)
     SCGameBitLatch_Update((char *)extra + 4, 2, 705, 568, 493, 178);
     SCGameBitLatch_Update((char *)extra + 4, 16, 442, 441, 470, 180);
     SCGameBitLatch_Update((char *)extra + 4, 4, -1, -1, 928, 233);
-    SCGameBitLatch_Update((char *)extra + 4, 8, -1, -1, 929, *(s16 *)((char *)extra + 0xa));
+    SCGameBitLatch_Update((char *)extra + 4, 8, -1, -1, 929, extra->musicTrack);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1720,31 +1803,31 @@ extern f32 lbl_803E4764;
 #pragma peephole off
 void dll_16C_update(int *obj)
 {
-    int *extra = *(int **)((char *)obj + 0xb8);
+    Dll16CState *extra = *(Dll16CState **)((char *)obj + 0xb8);
     s16 ids[5];
 
     *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
-    if (*(s8 *)((char *)extra + 0x21) != *(s8 *)((char *)extra + 0x22)) {
+    if (extra->subObjIndex != extra->subObjIndexApplied) {
         if (*(void **)((char *)obj + 0xc8) != NULL) {
             Obj_FreeObject(*(int **)((char *)obj + 0xc8));
             *(int *)((char *)obj + 0xc8) = 0;
             *(u8 *)((char *)obj + 0xeb) = 0;
         }
         if (Obj_IsLoadingLocked()) {
-            s8 idx = *(s8 *)((char *)extra + 0x21);
+            s8 idx = extra->subObjIndex;
             if (idx > 0) {
                 *(int *)((char *)obj + 0xc8) =
                     Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
                                     *(int *)((char *)obj + 0x30));
                 *(u8 *)((char *)obj + 0xeb) = 1;
             }
-            *(s8 *)((char *)extra + 0x22) = *(s8 *)((char *)extra + 0x21);
+            extra->subObjIndexApplied = extra->subObjIndex;
         } else {
-            *(s8 *)((char *)extra + 0x22) = 0;
+            extra->subObjIndexApplied = 0;
         }
     }
 
-    if (*(void **)extra == NULL) {
+    if (extra->linkedObj == NULL) {
         int *objs;
         int count;
         int i;
@@ -1762,14 +1845,14 @@ void dll_16C_update(int *obj)
         }
         for (i = 0; i < count; i++) {
             if (sel == *(s16 *)((char *)objs[i] + 0x46)) {
-                *(int *)extra = objs[i];
+                extra->linkedObj = (void *)objs[i];
                 i = count;
             }
         }
     }
 
     if (*(s16 *)((char *)obj + 0x46) == 883 || GameBit_Get(0x3a2) != 0) {
-        int *sub = (int *)*extra;
+        int *sub = (int *)extra->linkedObj;
         f32 blend;
         f32 a, b;
         if (*(s16 *)((char *)obj + 0xa0) != 0x100) {
@@ -1779,22 +1862,22 @@ void dll_16C_update(int *obj)
         blend = lbl_803E474C;
         (*(void (**)(int *, f32 *, f32 *))(**(int **)((char *)sub + 0x68) + 0x40))(sub, &a, &b);
         ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, blend, (f32)(u32)framesThisStep, NULL);
-        if (*(void **)extra != NULL) {
+        if (extra->linkedObj != NULL) {
             f32 t;
             int *player = (int *)Obj_GetPlayerObject();
-            t = Vec_distance((f32 *)((char *)*(int **)extra + 0x18), (f32 *)((char *)player + 0x18));
+            t = Vec_distance((f32 *)((char *)extra->linkedObj + 0x18), (f32 *)((char *)player + 0x18));
             t = (t - lbl_803E475C) / lbl_803E4760;
             if (t < lbl_803E4748) {
                 t = lbl_803E4748;
             } else if (t > lbl_803E4758) {
                 t = lbl_803E4758;
             }
-            *(u8 *)((char *)extra + 0x20) = (int)(lbl_803E4764 * (lbl_803E4758 - t));
+            extra->opacity = (int)(lbl_803E4764 * (lbl_803E4758 - t));
             if (*(void **)((char *)obj + 0x64) != NULL) {
                 *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x1000;
             }
         } else {
-            *(u8 *)((char *)extra + 0x20) = 0xff;
+            extra->opacity = 0xff;
             if (*(void **)((char *)obj + 0x64) != NULL) {
                 *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) &= ~0x1000;
             }
@@ -1814,13 +1897,13 @@ extern f32 lbl_803E4730;
 #pragma peephole off
 void crrockfall_init(int *obj, u8 *params)
 {
-    int *extra = *(int **)((char *)obj + 0xb8);
+    CrRockfallState *extra = *(CrRockfallState **)((char *)obj + 0xb8);
     int *sub;
     int *p64;
 
-    *(u8 *)((char *)extra + 0xc) = 0;
-    *(f32 *)((char *)extra + 8) = *(f32 *)((char *)obj + 0x10);
-    *(s16 *)((char *)extra + 0x10) = *(s16 *)((char *)params + 0x1e);
+    extra->mode = 0;
+    extra->startY = *(f32 *)((char *)obj + 0x10);
+    extra->fallDelay = *(s16 *)((char *)params + 0x1e);
     *(f32 *)((char *)obj + 8) = (f32)(u32)params[0x1b] / lbl_803E4730;
 
     sub = *(int **)((char *)obj + 0x54);
@@ -1843,9 +1926,9 @@ void crrockfall_init(int *obj, u8 *params)
     }
 
     if (*(s16 *)((char *)obj + 0x46) == 1536) {
-        *(int *)extra = (int)&lbl_803236B8[0xc];
+        extra->cfg = (CrRockfallCfgEntry *)&lbl_803236B8[0xc];
     } else {
-        *(int *)extra = (int)lbl_803236B8;
+        extra->cfg = (CrRockfallCfgEntry *)lbl_803236B8;
     }
 }
 #pragma peephole reset
@@ -1874,7 +1957,7 @@ extern f32 lbl_803E4720;
 #pragma peephole off
 void crrockfall_update(int *obj)
 {
-    int *ex = *(int **)((char *)obj + 0xb8);
+    CrRockfallState *ex = *(CrRockfallState **)((char *)obj + 0xb8);
     int *s54 = *(int **)((char *)obj + 0x54);
     int *p64 = *(int **)((char *)obj + 0x64);
     int *p4c = *(int **)((char *)obj + 0x4c);
@@ -1883,10 +1966,10 @@ void crrockfall_update(int *obj)
         lbl_803DDB40 = Resource_Acquire(91, 1);
     }
 
-    if (*(u8 *)((char *)ex + 0xe) == 0) {
-        *(f32 *)((char *)ex + 4) = fn_801ACCFC((int)obj);
-        if (*(u8 *)((char *)ex + 0xe) != 0 && p64 != NULL) {
-            *(f32 *)((char *)p64 + 0x24) = *(f32 *)((char *)ex + 4);
+    if (ex->floorFound == 0) {
+        ex->floorY = fn_801ACCFC((int)obj);
+        if (ex->floorFound != 0 && p64 != NULL) {
+            *(f32 *)((char *)p64 + 0x24) = ex->floorY;
             fn_800628CC(obj);
         }
     } else {
@@ -1896,8 +1979,8 @@ void crrockfall_update(int *obj)
             f32 dist;
             int n;
             int *player;
-            frac = (*(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)ex + 4)) /
-                   (*(f32 *)((char *)ex + 8) - *(f32 *)((char *)ex + 4));
+            frac = (*(f32 *)((char *)obj + 0x10) - ex->floorY) /
+                   (ex->startY - ex->floorY);
             if (frac > lbl_803E4708) {
                 frac = lbl_803E4708;
             } else if (frac < lbl_803E46E8) {
@@ -1924,7 +2007,7 @@ void crrockfall_update(int *obj)
 
         if (*(s16 *)((char *)p4c + 0x1c) == -1 ||
             GameBit_Get(*(s16 *)((char *)p4c + 0x1c)) != 0) {
-            switch (*(u8 *)((char *)ex + 0xc)) {
+            switch (ex->mode) {
             case 0: {
                 int cond;
                 int *player = (int *)Obj_GetPlayerObject();
@@ -1946,17 +2029,17 @@ void crrockfall_update(int *obj)
                     }
                 }
                 if (cond != 0) {
-                    s16 timer = *(s16 *)((char *)ex + 0x10) - framesThisStep;
-                    *(s16 *)((char *)ex + 0x10) = timer;
+                    s16 timer = ex->fallDelay - framesThisStep;
+                    ex->fallDelay = timer;
                     if (timer <= 0) {
-                        *(u8 *)((char *)ex + 0xc) = 1;
+                        ex->mode = 1;
                     }
                 }
                 break;
             }
             case 1:
-                if (*(u8 *)((char *)ex + 0xd) == 0) {
-                    *(u8 *)((char *)ex + 0xd) = 1;
+                if (ex->fallStarted == 0) {
+                    ex->fallStarted = 1;
                     *(f32 *)((char *)obj + 0x28) = lbl_803E46E8;
                     if (*(s16 *)((char *)obj + 0x46) == 103) {
                         Sfx_PlayFromObject(obj, SFXwp_sexpl2_c);
@@ -1973,13 +2056,13 @@ void crrockfall_update(int *obj)
                 *(f32 *)((char *)obj + 0x10) =
                     *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
                 if (*(f32 *)((char *)obj + 0x10) <
-                    *(f32 *)((char *)ex + 4) + *(f32 *)((char *)*(int **)ex + 8)) {
+                    ex->floorY + ex->cfg->restOffsetY) {
                     *(f32 *)((char *)obj + 0x10) =
-                        *(f32 *)((char *)*(int **)ex + 8) * *(f32 *)((char *)obj + 8) +
-                        *(f32 *)((char *)ex + 4);
-                    *(u8 *)((char *)ex + 0xc) = 2;
-                    if (*(int *)((char *)*(int **)ex + 4) != 0) {
-                        Sfx_PlayFromObject(obj, (u16)*(int *)((char *)*(int **)ex + 4));
+                        ex->cfg->restOffsetY * *(f32 *)((char *)obj + 8) +
+                        ex->floorY;
+                    ex->mode = 2;
+                    if (ex->cfg->landSfx != 0) {
+                        Sfx_PlayFromObject(obj, (u16)ex->cfg->landSfx);
                     }
                 }
                 break;
@@ -1995,7 +2078,7 @@ void crrockfall_update(int *obj)
 
             if (*(void **)((char *)s54 + 0x50) != NULL) {
                 *(s16 *)((char *)s54 + 0x60) &= ~1;
-                *(u8 *)((char *)ex + 0xc) = 3;
+                ex->mode = 3;
                 Sfx_StopObjectChannel(obj, 8);
                 if (*(s16 *)((char *)obj + 0x46) == 103) {
                     Sfx_PlayFromObject(obj, SFXwp_simp1_c);
