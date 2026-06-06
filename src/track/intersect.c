@@ -426,16 +426,16 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     if (flags == 0) {
         return;
     }
-    if (!(((BaddieState *)st)->unk260 & 0x10) && ((BaddieState *)st)->unk25B != 0) {
+    if (!(((BaddieState *)st)->contactSfxFlags & 0x10) && ((BaddieState *)st)->contactSfxMuted != 0) {
         return;
     }
-    n = ((BaddieState *)st)->unkB8;
+    n = ((BaddieState *)st)->surfaceSoundIndex;
     if (n < 0 || n >= 0x23) {
         sfx = 0;
     } else {
         sfx = tbl[0xb4 + n];
     }
-    desc = ((BaddieState *)st)->unkC4;
+    desc = ((BaddieState *)st)->contactObj;
     if (desc != NULL) {
         switch (((GameObject *)desc)->anim.seqId) {
         case 0x5d:
@@ -447,7 +447,7 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     }
     if (sfxTab != NULL) {
         vec = vecs + vecIdx * 3;
-        if (((BaddieState *)st)->unk1B4 > Vachuff_803DEE20) {
+        if (((BaddieState *)st)->waterDepth > Vachuff_803DEE20) {
             (*(void (**)(u8 *, int, f32 *, u8 *))((int)*gWaterfxInterface + 8))(obj, flags, vecs, st);
             sfx = 5;
         }

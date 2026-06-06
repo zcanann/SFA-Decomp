@@ -37,21 +37,21 @@ typedef struct BaddieState {
     f32 velY;
     f32 velZ;
     u8 unk44[0xB8 - 0x44];
-    s8 unkB8; /* sound-surface index 0..0x22 into the per-type sfx tables (intersect.c) */
-    u8 unkB9[0xBC - 0xB9];
+    s8 surfaceSoundIndex; /* 0..0x22 index into the per-type contact-sfx tables (intersect.c objAudioFn_8006ef38) */
+    u8 padB9[0xBC - 0xB9];
     u8 unkBC;
     u8 unkBD[0xC4 - 0xBD];
-    void *unkC4; /* contact object (GameObject*); its anim.seqId switches a sfx override (intersect.c) */
+    void *contactObj; /* GameObject*; its anim.seqId (0x5d/0x99/0x1db/0x223) switches a sfx override (intersect.c) */
     u8 unkC8[0x19C - 0xC8];
     s16 unk19C; /* pair copied into the spawn-setup shorts */
     s16 unk19E;
     u8 unk1A0[0x1B4 - 0x1A0];
-    f32 unk1B4; /* water-depth gate for splash fx (intersect.c) */
+    f32 waterDepth; /* compared > threshold to fire the waterfx splash path (intersect.c) */
     u8 unk1B8[0x25B - 0x1B8];
-    s8 unk25B; /* nonzero suppresses contact sfx unless unk260 bit 0x10 (intersect.c) */
+    s8 contactSfxMuted; /* nonzero suppresses contact sfx unless contactSfxFlags bit 0x10 (intersect.c) */
     u8 unk25C[0x25F - 0x25C];
     u8 unk25F;
-    s8 unk260; /* bit 0x10 allows contact sfx with unk25B set (intersect.c) */
+    s8 contactSfxFlags; /* bit 0x10 allows contact sfx while contactSfxMuted is set (intersect.c) */
     u8 unk261[0x270 - 0x261];
     s16 unk270; /* CA-family substate 0..5; gates the map-event re-register when != 3 */
     s16 unk272;
