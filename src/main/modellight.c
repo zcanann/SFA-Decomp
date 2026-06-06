@@ -1052,7 +1052,7 @@ void modelLightStruct_loadDiffuseGXLight(u8 *light, u8 *obj, int lightId) {
             rgba[3] = (f32)light[0xab] * *(f32 *)(light + 0x134);
             color = *(u32 *)rgba;
             GXInitLightColor(light + 0x68, &color);
-            GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
+            GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, *(f32 *)&lbl_803DE75C);
         } else {
             u32 color;
             color = *(u32 *)(light + 0xa8);
@@ -1083,7 +1083,7 @@ void modelLightStruct_loadDiffuseGXLight(u8 *light, u8 *obj, int lightId) {
         GXInitLightPos(light + 0x68, viewPos[0], viewPos[1], viewPos[2]);
         color = *(u32 *)(light + 0xa8);
         GXInitLightColor(light + 0x68, &color);
-        GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
+        GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, *(f32 *)&lbl_803DE75C);
         break;
     }
     }
@@ -1323,7 +1323,7 @@ void modelLightStruct_setSpotAttenuation(ModelLightStruct *obj, f32 cutoff, int 
     obj->spotCutoff = cutoff;
     obj->spotFunction = mode;
     if (mode == 0) {
-        GXInitLightAttnA((u8 *)obj + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
+        GXInitLightAttnA((u8 *)obj + 0x68, lbl_803DE760, lbl_803DE75C, *(f32 *)&lbl_803DE75C);
     } else {
         GXInitLightSpot((u8 *)obj + 0x68, obj->spotCutoff, obj->spotFunction);
     }
