@@ -162,7 +162,7 @@ extern void Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void fn_801EED5C(int obj, f32 *x, f32 *y, f32 *z);
 extern int fn_801E2570(void);
 extern void setMatrixFromObjectPos(f32 *matrix, void *objPos);
-extern void Matrix_TransformPoint(f32 x, f32 y, f32 z, f32 *matrix, f32 *outX, f32 *outY, f32 *outZ);
+extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ);
 
 extern f32 lbl_803E56C8;
 extern f32 lbl_803E56D0;
@@ -259,6 +259,7 @@ void fn_801DFA28(u8 *obj)
   f32 limit;
   f32 negLimit;
   f32 blendK;
+  f32 lerpD;
   f32 zRatio;
   f32 tx;
   f32 ty;
@@ -406,14 +407,14 @@ void fn_801DFA28(u8 *obj)
       dy = dy * ((f32)(t - 0x78) / lbl_803E56F0);
     }
     *(s16 *)(state + 0x6E) += framesThisStep;
-    *(f32 *)(state + 0x0) += (dx - *(f32 *)(state + 0x0)) * lbl_803E56FC;
-    *(f32 *)(state + 0x4) += (dy - *(f32 *)(state + 0x4)) * lbl_803E56FC;
-    *(f32 *)(state + 0x8) += (dz - *(f32 *)(state + 0x8)) * lbl_803E56FC;
+    *(f32 *)(state + 0x0) += (dx - *(f32 *)(state + 0x0)) * (blendK = lbl_803E56FC);
+    *(f32 *)(state + 0x4) += (dy - *(f32 *)(state + 0x4)) * blendK;
+    *(f32 *)(state + 0x8) += (dz - *(f32 *)(state + 0x8)) * blendK;
     ambA = lbl_803E5700;
     ambB = lbl_803E5704;
     ambC = lbl_803E5708;
     if (*(s8 *)(state + 0x28) == 0) {
-      if ((*(s8 *)(state + 0x2B) < 2) && (-1 < *(s8 *)(state + 0x2B))) {
+      if ((*(s8 *)(state + 0x2B) < 2) && (*(s8 *)(state + 0x2B) >= 0)) {
         if (*(s16 *)(state + 0x82) != 0) {
           *(s16 *)(state + 0x82) -= 1;
           if (*(s16 *)(state + 0x82) <= 0) {
@@ -433,7 +434,7 @@ void fn_801DFA28(u8 *obj)
       }
     }
     else {
-      if ((*(s8 *)(state + 0x2B) < 5) && (2 < *(s8 *)(state + 0x2B))) {
+      if ((*(s8 *)(state + 0x2B) < 5) && (*(s8 *)(state + 0x2B) >= 3)) {
         if (*(s16 *)(state + 0x82) != 0) {
           *(s16 *)(state + 0x82) -= 1;
           if (*(s16 *)(state + 0x82) <= 0) {
@@ -533,7 +534,8 @@ void fn_801DFA28(u8 *obj)
       tz = lbl_803E5744;
     }
     *(s16 *)(state + 0x6E) += framesThisStep;
-    *(f32 *)(state + 0x0) += (tx - *(f32 *)(state + 0x0)) * lbl_803E5748;
+    lerpD = tx - *(f32 *)(state + 0x0);
+    *(f32 *)(state + 0x0) = lerpD * lbl_803E5748 + *(f32 *)(state + 0x0);
     *(f32 *)(state + 0x4) += (dy - *(f32 *)(state + 0x4)) / lbl_803E574C;
     *(f32 *)(state + 0x8) += (tz - *(f32 *)(state + 0x8)) / lbl_803E5750;
     ambA = lbl_803E5754;
@@ -729,7 +731,7 @@ void fn_801DFA28(u8 *obj)
     if (wrap < -0x8000) {
       wrap = wrap + 0xFFFF;
     }
-    *(s16 *)(obj + 0x2) = *(s16 *)(obj + 0x2) + ((wrap * framesThisStep) >> 6);
+    *(s16 *)(obj + 0x2) = *(s16 *)(int)(obj + 0x2) + ((wrap * framesThisStep) >> 6);
     dx = *(f32 *)(state + 0x50) - *(f32 *)(obj + 0xC);
     dz = *(f32 *)(state + 0x58) - *(f32 *)(obj + 0x14);
     sqrtf(dx * dx + dz * dz);
@@ -742,16 +744,16 @@ void fn_801DFA28(u8 *obj)
     if (dv < -0x3C) {
       dv = -0x3C;
     }
-    *(s16 *)(obj + 0x4) = (f32)dv * timeDelta + (f32)*(s16 *)(obj + 0x4);
+    *(s16 *)(obj + 0x4) = (f32)dv * timeDelta + (f32)*(s16 *)(int)(obj + 0x4);
     objPos.vec[0] = lbl_803E56CC;
     objPos.vec[1] = lbl_803E56CC;
     objPos.vec[2] = lbl_803E56CC;
     objPos.scale = lbl_803E57A4;
     objPos.rot[0] = *(s16 *)(obj + 0x0);
-    objPos.rot[1] = *(s16 *)(obj + 0x2);
-    objPos.rot[2] = *(s16 *)(obj + 0x4);
+    objPos.rot[1] = *(s16 *)(int)(obj + 0x2);
+    objPos.rot[2] = *(s16 *)(int)(obj + 0x4);
     setMatrixFromObjectPos(mtx, &objPos);
-    Matrix_TransformPoint(lbl_803E56CC, lbl_803E56CC, -*(f32 *)(state + 0x1C) * timeDelta, mtx,
+    Matrix_TransformPoint(mtx, lbl_803E56CC, *(f32 *)&lbl_803E56CC, -*(f32 *)(state + 0x1C) * timeDelta,
                           (f32 *)(state + 0x0), (f32 *)(state + 0x4), (f32 *)(state + 0x8));
     if (*(s8 *)(state + 0x29) == 7) {
       *(f32 *)(state + 0x2C) = tx;
@@ -818,24 +820,23 @@ void fn_801DFA28(u8 *obj)
     *(f32 *)(state + 0x60) += blendK * (timeDelta * (ambC - *(f32 *)(state + 0x60)));
     *(f32 *)(state + 0x64) += blendK * (timeDelta * (ambB - *(f32 *)(state + 0x64)));
     if (*(s8 *)(state + 0x29) == 0) {
-      zRatio = (f32)*(s16 *)(tricky + 0x2) / *(f32 *)(state + 0x5C);
+      zRatio = (f32)*(s16 *)(int)(tricky + 0x2) / *(f32 *)(state + 0x5C);
       *(f32 *)(state + 0x40) +=
           timeDelta * (*(f32 *)(state + 0x64) *
-                       ((f32)-*(s16 *)(tricky + 0x4) / *(f32 *)(state + 0x5C) - *(f32 *)(state + 0x40)));
+                       ((f32)-*(s16 *)(int)(tricky + 0x4) / *(f32 *)(state + 0x5C) - *(f32 *)(state + 0x40)));
       *(f32 *)(state + 0x3C) +=
           timeDelta * (*(f32 *)(state + 0x64) * (zRatio - *(f32 *)(state + 0x3C)));
       zero = lbl_803E56CC;
       *(f32 *)(state + 0x38) = zero;
       *(f32 *)(state + 0x3C) = zero;
-      rollA = (s16)(int)(-*(f32 *)(state + 0x40) * *(f32 *)(state + 0x60));
-      rollB = (s16)(int)(lbl_803E57B8 * (-*(f32 *)(state + 0x3C) * *(f32 *)(state + 0x60)));
+      rollA = (s16)(-*(f32 *)(state + 0x40) * *(f32 *)(state + 0x60));
+      rollB = (s16)(lbl_803E57B8 * (-*(f32 *)(state + 0x3C) * *(f32 *)(state + 0x60)));
     }
     else {
-      *(f32 *)(state + 0x40) =
-          -(timeDelta * (*(f32 *)(state + 0x40) * *(f32 *)(state + 0x64)) - *(f32 *)(state + 0x40));
-      *(f32 *)(state + 0x3C) =
-          -(timeDelta * (*(f32 *)(state + 0x3C) * *(f32 *)(state + 0x64)) - *(f32 *)(state + 0x3C));
-      rollB = rollA = 0;
+      *(f32 *)(state + 0x40) -= timeDelta * (*(f32 *)(state + 0x40) * *(f32 *)(state + 0x64));
+      *(f32 *)(state + 0x3C) -= timeDelta * (*(f32 *)(state + 0x3C) * *(f32 *)(state + 0x64));
+      rollA = 0;
+      rollB = rollA;
     }
     *(f32 *)(obj + 0xC) = *(f32 *)(state + 0x38) * *(f32 *)(state + 0x44) + *(f32 *)(state + 0x2C);
     *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x3C) * *(f32 *)(state + 0x44) + *(f32 *)(state + 0x30);
