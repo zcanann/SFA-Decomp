@@ -10212,10 +10212,10 @@ extern u16 lbl_803DCCAA;
 extern u8 lbl_803DCCA9;
 extern int lbl_803DB5C8;
 extern int lbl_803DD610;
-extern s16 lbl_803966D0[];
-extern s16 lbl_803965E0[];
-extern u16 lbl_803DD000;
-extern u16 lbl_803DD002;
+extern s16 gDepthReadPendingQueue[];
+extern s16 gDepthReadResults[];
+extern u16 gDepthReadPendingCount;
+extern u16 gDepthReadResultCount;
 extern u8 lbl_803DCCA8;
 
 #pragma scheduling off
@@ -10431,9 +10431,9 @@ void videoFn_800499e8(void)
     }
     Queue_Peek(lbl_8035F730, &peek);
     i = 0;
-    src = (u16 *)lbl_803966D0;
-    dst = (u16 *)lbl_803965E0;
-    for (; i < (int)(u32)lbl_803DD000; i++) {
+    src = (u16 *)gDepthReadPendingQueue;
+    dst = (u16 *)gDepthReadResults;
+    for (; i < (int)(u32)gDepthReadPendingCount; i++) {
         dst[0] = src[0];
         dst[1] = src[1];
         *(int *)(dst + 4) = *(int *)(src + 4);
@@ -10441,8 +10441,8 @@ void videoFn_800499e8(void)
         src += 6;
         dst += 6;
     }
-    lbl_803DD002 = lbl_803DD000;
-    lbl_803DD000 = 0;
+    gDepthReadResultCount = gDepthReadPendingCount;
+    gDepthReadPendingCount = 0;
     if (*(void **)(peek + 4) == lbl_803DCCCC) {
         lbl_803DCCA8 = 1;
         lbl_803DCCA9 = 0;

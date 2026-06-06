@@ -171,9 +171,9 @@ extern undefined4 DAT_80393a70;
 extern undefined4 DAT_80393a72;
 extern undefined4 DAT_80393a73;
 extern undefined4 DAT_80393a74;
-extern u8 lbl_803965E0[0xF0];
+extern u8 gDepthReadResults[0xF0];
 extern undefined4 DAT_80397244;
-extern u8 lbl_803966D0[0xF0];
+extern u8 gDepthReadPendingQueue[0xF0];
 extern undefined4 DAT_80397332;
 extern undefined4 DAT_80397338;
 extern undefined4 lbl_803DB65C;
@@ -219,8 +219,8 @@ extern undefined4* gWaterfxInterface;
 extern u8 lbl_803DCFF0;
 extern u8 lbl_803DCFF8;
 extern u8 lbl_803DCFF9;
-extern u16 lbl_803DD000;
-extern u16 lbl_803DD002;
+extern u16 gDepthReadPendingCount;
+extern u16 gDepthReadResultCount;
 extern f64 DOUBLE_803dfab0;
 extern f64 DOUBLE_803dfad0;
 extern f64 DOUBLE_803dfb80;
@@ -930,20 +930,20 @@ int maybeReadDepthBuffer(int x, int y, int id)
     if (ok) {
         if (x < 0x10) x = 0x10;
         if (y < 6) y = 6;
-        n = (u32)lbl_803DD000;
+        n = (u32)gDepthReadPendingCount;
         if (n < 0x14) {
-            u8* slot = (u8*)&lbl_803966D0 + n * 0xC;
+            u8* slot = (u8*)&gDepthReadPendingQueue + n * 0xC;
             *(u16*)(slot + 0x0) = (u16)x;
             *(u16*)(slot + 0x2) = (u16)y;
             *(int*)(slot + 0x8) = id;
-            lbl_803DD000++;
+            gDepthReadPendingCount++;
         }
         i = 0;
-        row = (u8*)&lbl_803965E0;
-        n = (u32)lbl_803DD002;
+        row = (u8*)&gDepthReadResults;
+        n = (u32)gDepthReadResultCount;
         while (n != 0) {
             if (id == *(int*)(row + 0x8)) {
-                found = (int*)((u8*)&lbl_803965E0 + i * 0xC);
+                found = (int*)((u8*)&gDepthReadResults + i * 0xC);
                 return found[1];
             }
             row += 0xC;
