@@ -1455,7 +1455,21 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
        dropped `f44`/`f48` constant stores; (e) `X = rand(); X = X + K;`
        double-stores collapsed into one statement (or vice versa — read
        target's store count); (f) faithful DEAD double-stores in the
-       original (`f44 = 0x81088000; f44 = 0x1000000;`) — keep both.
+       original (`f44 = 0x81088000; f44 = 0x1000000;`) — keep both;
+       (g) full case-content SCRAMBLE — bodies attached to the WRONG case
+       labels (verify each case against its jump-table block, not just
+       presence); (h) garbage constant placeholders (`f44 = 0xff` fills)
+       and single-nibble value bugs (0x80480108 vs 0x80280108) — re-derive
+       every lis/addi constant from target bytes; (i) per-compare
+       randomGetRange RE-ROLLS — `if (rand()==0) … else if (rand()==1)`
+       where target rolls ONCE into an int local (different RNG stream =
+       behavioral bug); (j) spurious local-struct construction — import
+       builds an `es`-style struct + field copies where target passes
+       `param_3` to the helper directly; (k) dropped `<<8` shifts on color
+       constants + values shifted up one field slot; (l) in-place
+       WRITE-BACK clamps gutted (`if (*(f32*)(param_3+4) <= lbl) *(f32*)
+       (param_3+4) = lbl;` then use — the import dropped the caller-visible
+       store, a game-visible data-corruption bug).
     Audit signature counts for the remaining modgfx fns are in task #147.
 
 **dtk `block_relocations` ranges currently in config/GSAE01/config.yml**
