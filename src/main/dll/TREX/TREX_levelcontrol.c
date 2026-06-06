@@ -475,7 +475,7 @@ void SB_CannonBall_hitDetect(int *obj) {
         *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
     }
     *(f32 *)((char *)state + 0x1c) = lbl_803E58B8;
-    *(u8 *)((char *)obj + 0x36) = SB_CANNONBALL_IMPACT_VISUAL_TIMER;
+    ((GameObject *)obj)->anim.alpha = SB_CANNONBALL_IMPACT_VISUAL_TIMER;
 
     {
         int i;

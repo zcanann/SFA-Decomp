@@ -176,7 +176,7 @@ int kaldachom_stateHandlerA00(int obj, int p2)
     ((GroundBaddieState *)p2)->baddie.unk25F = 1;
     GameBit_Set(state->gameBitB, 1);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-    *(u8 *)(obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     ((GroundBaddieState *)p2)->baddie.unk34D = 1;
     ((GroundBaddieState *)p2)->baddie.moveSpeed =
         lbl_803E3098 + ((f32)(u32)state->aggression / lbl_803E309C);

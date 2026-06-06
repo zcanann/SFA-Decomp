@@ -221,7 +221,7 @@ void fn_80239DD8(int p1, int p2)
             *(u8 *)(newObj + 5) = 1;
             *(int *)(p2 + 0x10) = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
             if (*(void **)(p2 + 0x10) != NULL) {
-                *(u8 *)(*(int *)(p2 + 0x10) + 0x36) = 0xff;
+                ((GameObject *)*(int *)(p2 + 0x10))->anim.alpha = 0xff;
                 *(u8 *)(*(int *)(p2 + 0x10) + 0x37) = 0xff;
                 *(int *)(p2 + 0x90) = 0x12c;
             }

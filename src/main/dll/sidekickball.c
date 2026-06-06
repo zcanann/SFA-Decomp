@@ -1,4 +1,5 @@
 #include "main/dll/sidekickball.h"
+#include "main/game_object.h"
 
 extern f32 timeDelta;
 extern f32 lbl_803E369C;
@@ -104,7 +105,7 @@ void sidekickball_update(u8 *self)
     }
     {
       f32 v = lbl_803E36AC * state->fadeTimer / lbl_803E36A4;
-      self[0x36] = (u8)(0xFF - (int)v);
+      ((GameObject *)self)->anim.alpha = (u8)(0xFF - (int)v);
     }
     break;
   case SIDEKICK_BALL_IDLE:

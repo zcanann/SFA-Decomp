@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/NW/dll_1DB.h"
+#include "main/game_object.h"
 
 
 extern f32 lbl_803E52A8;
@@ -70,7 +71,7 @@ void ediblemushroom_update(u8 *self)
     *(f32 *)(self + 0xC) = *(f32 *)(other + 0x8);
     *(f32 *)(self + 0x10) = *(f32 *)(other + 0xC);
     *(f32 *)(self + 0x14) = *(f32 *)(other + 0x10);
-    self[0x36] = 0xFF;
+    ((GameObject *)self)->anim.alpha = 0xFF;
     state[0x139] = 0;
   }
 

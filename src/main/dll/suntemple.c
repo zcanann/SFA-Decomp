@@ -99,7 +99,7 @@ void suntemple_init(u8 *obj, u8 *setup)
     state[0] = (u8)GameBit_Get(*(s16 *)(setup + 0x1c));
     state[1] = ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     if ((setup[0x1b] & 1) != 0 && state[0] != 0) {
-        obj[0x36] = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
     }
     if (state[0] != 0) {
         int *texture = objFindTexture((int)obj, 0, 0);
