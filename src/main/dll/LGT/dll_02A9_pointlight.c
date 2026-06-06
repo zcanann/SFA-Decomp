@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -76,10 +77,10 @@ void pointlight_update(int obj)
         return;
     }
 
-    *(s16 *)(obj + 0) =
-        (s16)((f32)*(s16 *)(setup + 0x32) * timeDelta + (f32)*(s16 *)(obj + 0));
-    *(s16 *)(obj + 2) =
-        (s16)((f32)*(s16 *)(setup + 0x34) * timeDelta + (f32)*(s16 *)(obj + 2));
+    ((GameObject *)obj)->anim.rotX =
+        (s16)((f32)*(s16 *)(setup + 0x32) * timeDelta + (f32)((GameObject *)obj)->anim.rotX);
+    ((GameObject *)obj)->anim.rotY =
+        (s16)((f32)*(s16 *)(setup + 0x34) * timeDelta + (f32)((GameObject *)obj)->anim.rotY);
 
     if (state->enabled != 0) {
         s16 bit = *(s16 *)(setup + 0x1e);
@@ -117,8 +118,8 @@ void pointlight_init(int obj, int setup)
 
     vec = *(PointLightVec *)lbl_802C25F8;
 
-    *(s16 *)(obj + 0) = (s16)(*(u8 *)(setup + 0x18) << 8);
-    *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)(*(u8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(setup + 0x19) << 8);
 
     if (state->light == NULL) {
         state->light = objCreateLight(obj, 1);
