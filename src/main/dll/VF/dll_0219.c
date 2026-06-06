@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/game_object.h"
 
 extern f32 lbl_803E60A8;
 extern f32 lbl_803E60AC;
@@ -92,7 +93,7 @@ void dll_219_init(int *obj, u8 *init) {
     int *inner = *(int **)((char *)obj + 0xb8);
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
-    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
 }
 #pragma scheduling reset
 #pragma peephole reset
