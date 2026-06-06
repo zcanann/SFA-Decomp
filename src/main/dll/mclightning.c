@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/mclightning_state.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -10,23 +11,23 @@ int mclightning_handleScriptEvents(int obj, int eventId, u8 *script) {
         switch (f->hi) {
         case 0:
             f->hi = 1;
-            *(f32 *)(state + 8) = lbl_803E7440 * (f32)(u32)script[0x81 + i];
+            ((McLightningState *)state)->unk8 = lbl_803E7440 * (f32)(u32)script[0x81 + i];
             break;
         case 1:
             f->hi = 2;
-            *(f32 *)(state + 0xc) = lbl_803E7440 * (f32)(u32)script[0x81 + i];
+            ((McLightningState *)state)->unkC = lbl_803E7440 * (f32)(u32)script[0x81 + i];
             break;
         case 2:
             f->hi = 3;
-            *(u8 *)(state + 0x18) = script[0x81 + i];
+            ((McLightningState *)state)->unk18 = script[0x81 + i];
             break;
         case 3:
             f->hi = 4;
-            *(u8 *)(state + 0x19) = script[0x81 + i];
+            ((McLightningState *)state)->unk19 = script[0x81 + i];
             break;
         case 4:
             f->hi = 5;
-            *(u8 *)(state + 0x1a) = script[0x81 + i];
+            ((McLightningState *)state)->unk1A = script[0x81 + i];
             *(s16 *)(obj + 6) &= ~0x4000;
             break;
         default:
@@ -87,8 +88,8 @@ void mclightning_init(int obj, u8 *setup)
     ObjGroup_AddObject(obj, 0x48);
     ((McLightningFlags *)(state + 0x1b))->lo = setup[0x1a];
     v = lbl_803E745C;
-    *(f32 *)(state + 0x10) = v;
-    *(f32 *)(state + 0x14) = v;
+    ((McLightningState *)state)->unk10 = v;
+    ((McLightningState *)state)->unk14 = v;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -105,7 +106,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
         int i;
         for (i = 0; i < count; i++) {
             int *o = (int *)objs[i];
-            if (*(u8 *)(*(int *)((int)o + 0x4c) + 0x1b) == *(u8 *)(state + 0x1a))
+            if (*(u8 *)(*(int *)((int)o + 0x4c) + 0x1b) == ((McLightningState *)state)->unk1A)
                 break;
         }
         if (i == count) {
@@ -113,13 +114,13 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
         } else {
             int foundState;
             McLightningFlags *ff;
-            *(void **)(state + 0) =
-                lightningCreate((f32 *)(obj + 0xc), (f32 *)(objs[i] + 0xc), *(f32 *)(state + 8),
-                            *(f32 *)(state + 0xc), *(u8 *)(state + 0x18), *(u8 *)(state + 0x19), 0);
+            ((McLightningState *)state)->unk0 =
+                lightningCreate((f32 *)(obj + 0xc), (f32 *)(objs[i] + 0xc), ((McLightningState *)state)->unk8,
+                            ((McLightningState *)state)->unkC, ((McLightningState *)state)->unk18, ((McLightningState *)state)->unk19, 0);
             f->hi = 6;
-            *(f32 *)(state + 4) = lbl_803E7450;
+            ((McLightningState *)state)->unk4 = lbl_803E7450;
             if (f->lo & 1) {
-                hitDetectFn_80097070(obj, 1, 7, *(f32 *)(state + 0x10), 0x1e, 0);
+                hitDetectFn_80097070(obj, 1, 7, ((McLightningState *)state)->unk10, 0x1e, 0);
             }
             foundState = *(int *)(objs[i] + 0xb8);
             ff = (McLightningFlags *)(foundState + 0x1b);
@@ -127,7 +128,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
                 hitDetectFn_80097070(objs[i], 1, 7, *(f32 *)(foundState + 0x10), 0x1e, 0);
             }
             if (f->lo & 2) {
-                objfx_spawnDirectionalBurst(obj, 5, 1, 1, *(f32 *)(state + 0x14), lbl_803E7454, 0x64, 0, 0);
+                objfx_spawnDirectionalBurst(obj, 5, 1, 1, ((McLightningState *)state)->unk14, lbl_803E7454, 0x64, 0, 0);
             }
             if (ff->lo & 2) {
                 objfx_spawnDirectionalBurst(objs[i], 5, 1, 1, *(f32 *)(foundState + 0x14), lbl_803E7454, 0x64, 0,
@@ -135,16 +136,16 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
             }
         }
     } else if (mode == 6) {
-        if (*(void **)(state + 0) != NULL) {
+        if (((McLightningState *)state)->unk0 != NULL) {
             u32 frame;
-            lightningRender(*(void **)(state + 0));
-            *(f32 *)(state + 4) += timeDelta;
-            frame = (u16)(lbl_803E7458 + *(f32 *)(state + 4));
-            *(u16 *)((int)*(void **)(state + 0) + 0x20) = frame;
-            if (*(u16 *)((int)*(void **)(state + 0) + 0x20) >=
-                *(u16 *)((int)*(void **)(state + 0) + 0x22)) {
-                mm_free(*(void **)(state + 0));
-                *(void **)(state + 0) = NULL;
+            lightningRender(((McLightningState *)state)->unk0);
+            ((McLightningState *)state)->unk4 += timeDelta;
+            frame = (u16)(lbl_803E7458 + ((McLightningState *)state)->unk4);
+            *(u16 *)((int)((McLightningState *)state)->unk0 + 0x20) = frame;
+            if (*(u16 *)((int)((McLightningState *)state)->unk0 + 0x20) >=
+                *(u16 *)((int)((McLightningState *)state)->unk0 + 0x22)) {
+                mm_free(((McLightningState *)state)->unk0);
+                ((McLightningState *)state)->unk0 = NULL;
                 f->hi = 0;
                 *(s16 *)(obj + 6) |= 0x4000;
             }
