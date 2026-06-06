@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
+#include "main/objanim.h"
 #include "main/dll/CF/CFBaby.h"
 
 extern undefined4 FUN_80006824();
@@ -1821,7 +1822,6 @@ extern f32 lbl_803E3B30;
 extern f32 lbl_803E3B34;
 extern void objRenderFn_8003b8f4(f32);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void ObjAnim_SetMoveProgress(int obj, f32 progress);
 extern void objRemoveFromListFn_8002ce88(int obj);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
@@ -1890,7 +1890,7 @@ void flammablevine_init(int obj, int def)
         0,
         (s16)(lbl_803E3B30 * scale));
     *(f32 *)(state + 0x10) = lbl_803E3B34;
-    ObjAnim_SetMoveProgress(obj, lbl_803E3B00);
+    ObjAnim_SetMoveProgress(lbl_803E3B00, (ObjAnimComponent *)obj);
 
     if (*(s16 *)(def + 0x1e) != -1 && GameBit_Get(*(s16 *)(def + 0x1e)) != 0) {
         objRemoveFromListFn_8002ce88(obj);
@@ -1992,8 +1992,8 @@ checked_vine_use:
 
         if (*(f32 *)(state + 4) < lbl_803E3B08 && *(f32 *)(state + 4) > lbl_803E3B04) {
             ObjAnim_SetMoveProgress(
-                obj,
-                lbl_803E3AF8 - ((*(f32 *)(state + 4) - lbl_803E3B04) / lbl_803E3B0C));
+                lbl_803E3AF8 - ((*(f32 *)(state + 4) - lbl_803E3B04) / lbl_803E3B0C),
+                (ObjAnimComponent *)obj);
         }
 
         if (*(f32 *)(state + 4) < lbl_803E3B10) {
@@ -2532,7 +2532,6 @@ extern f32 lbl_803E3BBC;
 extern f32 lbl_803E3BC0;
 extern f32 lbl_803E3BC4;
 extern f32 timeDelta;
-extern int ObjAnim_AdvanceCurrentMove(int obj, f32 rate, f32 delta, void *out);
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
@@ -2601,7 +2600,8 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState *state) {
             ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
                                                       state->hitCooldown);
         }
-        ObjAnim_AdvanceCurrentMove(obj, state->path8Fx, timeDelta, animScratch);
+        ObjAnim_AdvanceCurrentMove(state->path8Fx, timeDelta, obj,
+                                   (ObjAnimEventList *)animScratch);
     }
 }
 #pragma peephole reset
