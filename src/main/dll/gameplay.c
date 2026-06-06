@@ -16133,15 +16133,15 @@ extern f32 lbl_803E0CC8, lbl_803E0CCC, lbl_803E0CD0, lbl_803E0CD4, lbl_803E0CD8,
 extern f32 lbl_803E0CE0, lbl_803E0CE4, lbl_803E0CE8, lbl_803E0CEC, lbl_803E0CF0, lbl_803E0CF4;
 extern f32 lbl_803E0CF8, lbl_803E0CFC;
 
-void dll_79_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
+int dll_79_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
 {
   struct { GfxCmd *cmds; u8 *ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
     u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+  u8 *base = (u8 *)(int)lbl_80314AF0;
   int ret = 0;
   GfxCmd *entries = buf.entries;
   GfxCmd *e = entries;
-  u8 *base = lbl_80314AF0;
   if (param_2 == 0) {
     e[0].layer = 0; e[0].flags = 9; e[0].tex = &base[0x8c]; e[0].mode = 0x80;
     e[0].x = lbl_803E0CB0; e[0].y = lbl_803E0CB0; e[0].z = lbl_803E0CB4;
@@ -16266,16 +16266,17 @@ void dll_79_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
   }
   if (param_2 == 0) {
     buf.v58 = 0;
-    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, base, 8, &base[0x5c], 0x156, 0);
+    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, (u8 *)(int)lbl_80314AF0, 8, &base[0x5c], 0x156, 0);
   } else if (param_2 == 1) {
     buf.v58 = 0;
     buf.flags |= 4;
-    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, base, 8, &base[0x5c], 0x89, 0);
+    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, (u8 *)(int)lbl_80314AF0, 8, &base[0x5c], 0x89, 0);
   } else if (param_2 == 2) {
     buf.v58 = 0;
     buf.flags |= 4;
-    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, base, 8, &base[0x5c], 0x23b, 0);
+    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, (u8 *)(int)lbl_80314AF0, 8, &base[0x5c], 0x23b, 0);
   }
+  return ret;
 }
 
 extern u8 lbl_80314CB0[];
