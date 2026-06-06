@@ -779,7 +779,7 @@ void sidekickball_free(int obj) { GameBit_Set(0x3F8, 1); }
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 void doorf4_free(int obj) {
-    int *state = *(int **)(obj + 0xB8);
+    int *state = ((GameObject *)obj)->extra;
     if (*(u16 *)((char *)state + 0x1C) != 0) {
         if (Sfx_IsPlayingFromObject(obj, *(u16 *)((char *)state + 0x1C)) != 0) {
             Sfx_StopFromObject(obj, *(u16 *)((char *)state + 0x1C));
