@@ -768,6 +768,7 @@ extern f32 lbl_803DE7F0;
 
 #pragma push
 #pragma scheduling off
+#pragma peephole off
 #pragma fp_contract off
 void mtxRotateByVec3s(f32 *mtx, void *transform) {
     f32 cx;
@@ -775,40 +776,72 @@ void mtxRotateByVec3s(f32 *mtx, void *transform) {
     f32 cy;
     f32 sy;
     f32 cz;
+    f32 t1, t2, u, v;
     f32 sz;
+    f32 s, t;
+    f32 c;
     f32 x;
     f32 y;
     f32 z;
     f32 zero;
 
-    cx = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)transform)) * lbl_803DE7F0;
-    sx = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)transform)) * lbl_803DE7F0;
-    cy = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)((u8 *)transform + 2))) * lbl_803DE7F0;
-    sy = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)((u8 *)transform + 2))) * lbl_803DE7F0;
-    cz = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)((u8 *)transform + 4))) * lbl_803DE7F0;
-    sz = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)((u8 *)transform + 4))) * lbl_803DE7F0;
+    c = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)transform));
+    cx = c * lbl_803DE7F0;
+    c = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)transform));
+    sx = c * lbl_803DE7F0;
+    c = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)((u8 *)transform + 2)));
+    cy = c * lbl_803DE7F0;
+    c = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)((u8 *)transform + 2)));
+    sy = c * lbl_803DE7F0;
+    cz = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)((u8 *)transform + 4)));
+    cz = cz * lbl_803DE7F0;
+    sz = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)((u8 *)transform + 4)));
+    sz = sz * lbl_803DE7F0;
 
-    mtx[0] = sx * sz - (cy * cz) * cx;
-    mtx[1] = (cy * sz) * cx + sx * cz;
+    t1 = cy * cz;
+    u = t1 * cx;
+    u = sx * sz - u;
+    mtx[0] = u;
+    t2 = cy * sz;
+    v = t2 * cx;
+    v = v + sx * cz;
+    mtx[1] = v;
     mtx[2] = -(cx * sy);
-    zero = lbl_803DE7C0;
-    mtx[3] = zero;
+    mtx[3] = (zero = lbl_803DE7C0);
     mtx[4] = -(sy * cz);
     mtx[5] = sy * sz;
     mtx[6] = cy;
     mtx[7] = zero;
-    mtx[8] = (cy * cz) * sx + cx * sz;
-    mtx[9] = cx * cz - (cy * sz) * sx;
+    u = t1 * sx;
+    mtx[8] = u + cx * sz;
+    t2 = t2 * sx;
+    mtx[9] = cx * cz - t2;
     mtx[10] = sx * sy;
     mtx[11] = zero;
     x = *(f32 *)((u8 *)transform + 0xc);
     y = *(f32 *)((u8 *)transform + 0x10);
     z = *(f32 *)((u8 *)transform + 0x14);
-    mtx[12] = mtx[4] * y + mtx[0] * x + mtx[8] * z;
-    mtx[13] = mtx[5] * y + mtx[1] * x + mtx[9] * z;
-    mtx[14] = mtx[6] * y + mtx[2] * x + mtx[10] * z;
+    s = mtx[0] * x;
+    t = mtx[4] * y;
+    t = t + s;
+    s = mtx[8] * z;
+    t = t + s;
+    mtx[12] = t;
+    s = mtx[1] * x;
+    t = mtx[5] * y;
+    t = t + s;
+    s = mtx[9] * z;
+    t = t + s;
+    mtx[13] = t;
+    s = mtx[2] * x;
+    t = mtx[6] * y;
+    t = t + s;
+    s = mtx[10] * z;
+    t = t + s;
+    mtx[14] = t;
     mtx[15] = lbl_803DE7C4;
 }
+
 #pragma pop
 
 #pragma push
