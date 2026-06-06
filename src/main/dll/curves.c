@@ -2218,10 +2218,8 @@ void fn_800E56A4(int obj,f32 *state)
     *(f32 *)(obj + 0x1c) = state[3];
   }
 
-  points = curves_getCurves(state[5],state[7],obj,&hitCount,0);
-  point = points;
-  pointIndex = 0;
-  while (pointIndex < (int)hitCount) {
+  points = curves_getCurves(obj,state[5],state[7],&hitCount,0);
+  for (pointIndex = 0, point = points; pointIndex < (int)hitCount; ) {
     if (((s8)point->type != 0xe) && (point->z > lbl_803E0678) &&
         (point->x <= state[6]) && (point->x > state[3])) {
       state[0xe] = state[5];
@@ -2484,7 +2482,7 @@ void fn_800E5E38(int obj,f32 *state)
   f32 window;
   RomCurvePoint *point;
 
-  point = curves_getCurves(state[2],state[4],obj,&hitCount,0);
+  point = curves_getCurves(obj,state[2],state[4],&hitCount,0);
   hitIndex = hitCount - 1;
   currentY = *(f32 *)(obj + 0x1c);
   window = lbl_803E06A0;
@@ -2537,7 +2535,7 @@ void fn_800E5F1C(int obj,f32 *state)
   zero = lbl_803E0668;
   one = lbl_803E068C;
   foundBelow = 0;
-  points = curves_getCurves(state[2],state[4],obj,&hitCount,0);
+  points = curves_getCurves(obj,state[2],state[4],&hitCount,0);
   *(f32 *)((u8 *)state + 0x200) = topSentinel;
   *(f32 *)((u8 *)state + 0x1f0) = topSentinel;
   *(f32 *)((u8 *)state + 0x1d0) = floorSentinel;
@@ -3046,7 +3044,7 @@ f32 dll_15_func0B(int obj,f32 x,f32 baseY,f32 z,f32 height)
   RomCurvePoint *point;
   RomCurvePoint *points;
 
-  points = curves_getCurves(x,z,obj,&hitCount,1);
+  points = curves_getCurves(obj,x,z,&hitCount,1);
   maxY = baseY + height;
   point = points;
   for (i = 0; i < (int)hitCount; i++) {
@@ -3090,7 +3088,7 @@ double FUN_800e56bc(undefined8 param_1,double param_2,double param_3,double para
  * PAL Size: TODO
  */
 RomCurvePoint *
-curves_getCurves(f32 x,f32 z,int obj,u32 *outCount,int queryAll)
+curves_getCurves(int obj,f32 x,f32 z,u32 *outCount,int queryAll)
 {
   int queryMode;
   RomCurvePoint *outPoint;
