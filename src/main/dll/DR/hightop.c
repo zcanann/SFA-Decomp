@@ -1496,7 +1496,6 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int gTriggerObjDescriptor[];
 extern int *gCameraInterface;
 extern int *gObjectTriggerInterface;
 extern int *gCloudActionInterface;
@@ -1546,7 +1545,7 @@ extern f32 lbl_803E4100;
 #pragma peephole off
 void objInterpretSeq(int obj, int p2, int p3, int p4)
 {
-    char *desc = (char *)gTriggerObjDescriptor;
+    char *desc = (char *)&gTriggerObjDescriptor;
     u8 *state = ((GameObject *)obj)->extra;
     u8 *p = (u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x18);
     u8 i = 0;

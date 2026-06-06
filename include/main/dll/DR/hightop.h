@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_HIGHTOP_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 undefined4 FUN_801993b0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -18,6 +19,29 @@ void FUN_8019b86c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
 void FUN_8019bc2c(int param_1);
+
+int Trigger_getExtraSize(void);
+int Trigger_getObjectTypeId(void);
 void Trigger_free(void *obj);
+void Trigger_render(void);
+void Trigger_hitDetect(int obj);
+void Trigger_update(void);
+void Trigger_init(u8 *obj, u8 *params);
+void Trigger_release(void);
+void Trigger_initialise(void);
+
+extern ObjectDescriptor gTriggerObjDescriptor;
+
+int cloudprisoncontrol_getExtraSize(void);
+int cloudprisoncontrol_getObjectTypeId(void);
+void cloudprisoncontrol_free(void);
+void cloudprisoncontrol_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void cloudprisoncontrol_hitDetect(void);
+void cloudprisoncontrol_update(int obj);
+void cloudprisoncontrol_init(int obj);
+void cloudprisoncontrol_release(void);
+void cloudprisoncontrol_initialise(void);
+
+extern ObjectDescriptor gCloudPrisonControlObjDescriptor;
 
 #endif /* MAIN_DLL_DR_HIGHTOP_H_ */
