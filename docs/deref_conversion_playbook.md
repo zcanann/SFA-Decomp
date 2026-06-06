@@ -141,6 +141,17 @@ the renamer additionally greps src/+include/ for casts/uses of the record
 at PUSH time and harmonizes in the same commit if consumers appeared since
 authoring.
 
+**Chain gate -> commit -> push with && only.** A `;`-chained sequence
+commits and pushes past a FAILED gate, and the dol md5 it prints comes
+from stale objects - the stale-.o false-PASS hole with extra steps (the
+gViewFinderFadeLevel push rode exactly this past the B29-race breakage).
+
+**Every post-rebase push gets a FRESH forced-report gate, no exceptions.**
+A gate run before `git rebase` certifies a tree that no longer exists;
+the B29 BaddieState rename gated clean, then rebased over a just-landed
+adoption commit and pushed broken (both sides green per the race note
+above).
+
 **Gold-gate baselines must be taken AFTER a forced report build.** A
 default-ninja tree holds stale report-only objects (NonMatching TUs dirtied
 by earlier upstream commits but never rebuilt), so a full-tree .o md5
