@@ -145,15 +145,7 @@ typedef struct DrakorEnergyState {
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
 /* chuka extra block (extraSize 0xC). */
-typedef struct ChukaState {
-    u8 unk00[4];
-    int linkedObj; /* 0x04: the 0x431-type object driving the mode */
-    u8 modeIdx; /* 0x08: index into gChukaModeTable */
-    u8 mode; /* 0x09 */
-    u8 unk0A[2];
-} ChukaState;
-
-STATIC_ASSERT(sizeof(ChukaState) == 0xC);
+#include "main/dll/baddie/chuka.h"
 
 /* GCRobotBlast extra block (extraSize 0x8). */
 typedef struct GCRobotBlastState {
@@ -6930,32 +6922,32 @@ void chuka_update(int obj)
     int cnt;
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
 
-    ch = ((ChukaState *)blob)->linkedObj;
+    ch = ((ChukaState *)blob)->linkedObject;
     if ((u32)ch != 0) {
         if (*(s16 *)(ch + 6) & 0x40) {
-            ((ChukaState *)blob)->linkedObj = 0;
+            ((ChukaState *)blob)->linkedObject = 0;
             return;
         }
     }
-    if (*(void **)&((ChukaState *)blob)->linkedObj == NULL) {
+    if (*(void **)&((ChukaState *)blob)->linkedObject == NULL) {
         base = ObjList_GetObjects(&idx, &cnt);
         for (i = idx; i < cnt; i++) {
             o = base[i];
             if (*(s16 *)(o + 0x46) == 0x431) {
-                ((ChukaState *)blob)->linkedObj = o;
+                ((ChukaState *)blob)->linkedObject = o;
                 i = cnt;
             }
         }
-        if (*(void **)&((ChukaState *)blob)->linkedObj == NULL) {
+        if (*(void **)&((ChukaState *)blob)->linkedObject == NULL) {
             return;
         }
     }
-    ch = ((ChukaState *)blob)->linkedObj;
+    ch = ((ChukaState *)blob)->linkedObject;
     (**(void (**)(int, u8 *))(*(int *)(*(int *)(ch + 0x68)) + 0x20))(ch, gChukaModeTable);
     if (GameBit_Get(0x5e4) == 0) {
         ((ChukaState *)blob)->mode = 0;
     } else {
-        ((ChukaState *)blob)->mode = gChukaModeTable[((ChukaState *)blob)->modeIdx];
+        ((ChukaState *)blob)->mode = gChukaModeTable[((ChukaState *)blob)->modeIndex];
     }
     switch (((ChukaState *)blob)->mode) {
     case 0:

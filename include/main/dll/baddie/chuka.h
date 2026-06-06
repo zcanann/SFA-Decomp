@@ -2,12 +2,18 @@
 #define MAIN_DLL_BADDIE_CHUKA_H_
 
 #include "ghidra_import.h"
+#include "global.h"
 
 typedef struct ChukaState {
     f32 startY;
-    int linkedObject;
-    u8 modeIndex;
+    int linkedObject; /* 0x04: the 0x431-type object driving the mode */
+    u8 modeIndex; /* 0x08: index into gChukaModeTable */
+    u8 mode; /* 0x09 */
+    u8 pad0A[2];
 } ChukaState;
+
+STATIC_ASSERT(offsetof(ChukaState, linkedObject) == 0x4);
+STATIC_ASSERT(sizeof(ChukaState) == 0xC);
 
 void chuka_init(int obj, int params);
 void dfpfloorbar_free(int *obj);
