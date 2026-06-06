@@ -80,13 +80,12 @@ Heuristic:
 2. **Replace `& 0xff7f`-style literal with `& ~0x80`** for single-bit clears.
    The bit-NOT form often produces `rlwinm` directly where the explicit
    inverted-literal form produces `andi.`. See `782a09a8`, `91f5f4ab`.
-   **Inverse cap — when target MATERIALIZES the mask (`li rX,-K; and` /
-   `lis;ori`) MWCC won't reproduce it from clean C.** For some constants (e.g.
-   `&= ~K`, `|= 0x800000`) target emits a materialized-constant `li`/`lis;or`
-   form while every clean-C spelling gives `rlwinm`/`oris`. This is NOT
-   peephole-controllable (confirmed: peephole-off region still emits `rlwinm`).
-   Caps tiny flag fns ~70%. **Leave as documented partial — the Prime
-   Directive forbids asm; there is no asm fallback.**
+   **Inverse cap — CRACKED by recipe #74.** When target MATERIALIZES the mask
+   (`li rX,-K; and` / `lis;or`) where every 32-bit C spelling gives
+   `rlwinm`/`oris`, write the constant with an `LL` suffix
+   (`x &= ~0x80LL;` / `x |= 0x800000LL;`) — MWCC then materializes exactly
+   target's form. The old "leave as documented partial" guidance is obsolete;
+   retry all previously-capped materialized-mask partials.
 
 3. **`*(void **)ptr != NULL` instead of `*(int *)ptr != 0`**. The pointer form
    emits `cmplwi` (unsigned); the int form emits `cmpwi` (signed). Target
@@ -187,7 +186,10 @@ Heuristic:
     *worse*). If the explicit cast doesn't flip it on a late-pool function, it's
     a genuine residual (~85-96%) — leave it, don't keep retrying.
     **The `@NNN`-vs-named-`lbl` LABEL is largely a MEASUREMENT ARTIFACT — NOT
-    fixable via symbols.txt.** ⚠️ **PARTIALLY SUPERSEDED — see recipe #60**:
+    fixable via symbols.txt.** ⚠️ **CONFIRMED & CLOSED by recipe #70** (task
+    #145): the @NNN reloc itself is score-neutral (proven by 100.0% fns
+    carrying @NNN refs); any deficit is real codegen divergence elsewhere.
+    ⚠️ **PARTIALLY SUPERSEDED — see recipe #60**:
     a later byte-diff audit of 14 partials at 99.9-99.99% found ZERO of them
     were actually pool-name-only cosmetic; all had real codegen byte differences
     after reloc-masking. The measurement-artifact case below still applies
@@ -1046,6 +1048,31 @@ Heuristic:
     GXColor-style by-value struct args each take an 8B caller temp slot —
     same threshold behavior (objFn_8003dc50 capped: target allocates 2
     fewer temps for identical call sites; no source form found).
+    **(a)-struct corollary — a STRUCT-typed local reserves its stack slot
+    even when fully enregistered; flat scalar locals don't.** When the
+    frame is N bytes SHORT and the body computes a vector/aggregate in
+    plain f32 locals (`f32 dx, dy, dz;`), the original likely used a
+    struct (`SND_FVECTOR d; d.x = ...`) — rewrite as
+    `struct { f32 x, y, z; } d;` to claim the 16B slot with ZERO code
+    change. Proven: s3dUpdateRoomDistances 99.18→100 (the MP4 musyx
+    source literally declares `SND_FVECTOR d; // r1+0x8` while every use
+    is enregistered), s3dAllocateRoomStudios +16B/+0.2, dimlogfire_update
+    97.94→99.75 (3 flat f32 → struct vec, +16B). Check MP4 musyx for the
+    upstream form when the fn is audio. SCOPE NOTE: the corollary applies
+    even when the scalars ARE address-taken in one place (dimlogfire's
+    &local passed to a callee) — the struct still claims MORE space than
+    the bare scalars; but wrapping ALREADY-slotted outparam scalars
+    (CameraModeCrawl's &v20..&v8 quad) is frame-NEUTRAL — the extra 16B
+    there is the separate conversion-temp threshold class. A/B per fn.
+    Threshold caps seen in the census sweep (deletion probes move the
+    frame in 16B steps but no single source construct owns it; 4+ forms
+    tried each): treasurechest_update, CameraModeCrawl_update, drawHudBox
+    (target gives EVERY s16→f32 call-arg conversion a fresh slot — 18
+    slots, zero reuse — while current reuses the if-block's 2; scheduling
+    pragma toggles and if-form variants all inert), foodbag *_func03
+    family (sub-case d: long-lived `base+0x2a8` temp in r0 (volatile) in
+    target vs r25 (saved) in current — naming/decl-order/pragma all
+    inert; see task #146).
 
 68. **`mr rS,r3`-copy forward-prop into early derefs is a PEEPHOLE opt —
     `#pragma peephole off` makes pre-call derefs use the COPY, matching
@@ -1066,6 +1093,103 @@ Heuristic:
     show the same signature but are ALREADY peephole-off — that variant
     (deref via the copy of a NON-r3 param) remains a cap. Supersedes the
     "param-relocation cap class" note in the triage table below.
+    **Where #68 does NOT apply — peephole-ON-target units (audio TUs etc.).**
+    The recipe assumes the peephole pass is propping the copy and target
+    compiled WITHOUT that prop. In a unit whose target compiles peephole-ON
+    (no pragmas — audio/), target's compile ALREADY did the propagation, so
+    the residual there is genuine scheduler/coloring, NOT copy-prop.
+    Diagnostic: check the unit's pragma state FIRST. Applying `peephole off`
+    to a peephole-ON-target fn REGRESSES hard (golf-1's audio-cap A/B:
+    synthAssignHandle 98.6→81.4, hwChangeStudio 98.2→82.1,
+    synthGetNextChannelEvent 98.0→91.8, DoSetPitch unchanged — all reverted).
+
+69. **`cmpwi` immediate is ASYMMETRIC for mathematically-equivalent int
+    compares — match the immediate, not just the predicate.** `if (x <= 0)`
+    emits `cmpwi rX,0; bgt-skip`; the equivalent `if (x < 1)` emits
+    `cmpwi rX,1; bge-skip`. Same for `>= K` vs `> K-1`. When the residual is
+    a single cmpwi-immediate diff (paired with a branch-mnemonic diff), try
+    the equivalent inversion (`< K+1` ↔ `<= K`, `>= K` ↔ `> K-1`) — read
+    which immediate target uses and write that form. pinponspike_update's
+    timer test was `<= 0` (cmpwi 0) where the import wrote `< 1` (cmpwi 1).
+    NOTE the gotcha: the inversion is PER-COMPARE — flipping a different
+    equivalent compare in the same fn regressed the already-matching one.
+
+70. **FbBuf/cmd-list stack-builder family (foodbag/pickup `dll_XX_func03`) —
+    the four-part recipe set.** These fns build a cmd buffer on the stack
+    via `FbCmd *e = buf.entries; FbCmd *p = e;` + `p->field = …; p++` walks.
+    Four distinct divergence classes, each with a proven fix:
+    (a) **`buf.cmds = buf.entries;` → re-derive as
+    `(FbCmd *)((u8 *)&buf + 0x60);`** when target shows `addi r0,r1,K;
+    stw r0` (fresh re-derive, no reg reuse). Batch-scan the unit's target for
+    that 2-instr signature and fix every site at once — 9 foodbag fns had it;
+    one batch took dll_8C 96.86→100 and lifted 6 siblings (+0.35 unit pts).
+    (b) **Per-branch `p = e + K;` in BOTH if/else arms** (the dll_A0 phi
+    pattern): identical assignments at a join defeat const-folding, so
+    post-merge `p[i]` stores stay reg-relative (scratch r12 materialization
+    per branch-end). dll_80 93.90→100.
+    (c) **v1.0-vs-v1.1 import bug: v1.1 ADDED missing trailing `p++` in
+    conditional arms.** When target's if-arm shows `stores; addi rX,rX,24;
+    stores; b merge` (bump BETWEEN entries, NONE at arm end) while the
+    else-arm ends with a bump, v1.0's source omitted the trailing `p++` (a
+    real overwrite bug fixed in v1.1, which the Ghidra import reflects).
+    Drop the trailing `p++` and rebase the count expr. dll_7F 95.73→100.
+    (d) **Volatile-reg e/p coloring follows decl order + init placement**:
+    declare the walker `FbCmd *p;` BEFORE `FbCmd *e = buf.entries;` and
+    assign `p = &e[1];` AFTER the e[0] direct stores — flips r7/r9 to match
+    target and places the addi where target has it. Part of the dll_7F 100%.
+
+71. **MWCC value-tracks stack addresses through EVERYTHING except CSE-temp
+    copies and phis — and the tracking dies at the first CALL for those.**
+    Mechanism notes from the foodbag dig (explains the int/float store
+    asymmetry: int header stores BEFORE the first `bl` fold to `K(r1)` and
+    match target; value stores AFTER calls stay `4/8/12(rX)` reg-relative in
+    target). Tested NEGATIVE fold-defeats (don't retry): lvalue cast chains
+    (`*(f32 *)((u8 *)p + 4)`), volatile deref, `(u32)`-domain address
+    laundering, `(FbCmd *)(u8 *)p` self-reassign (elided), declare-then-assign
+    vs initializer, inline-setter param laundering, `do { } while (0)` (loop
+    pruned before const-prop), e-invalidation after `p = e`. The only WORKING
+    source-level unfold triggers at -O4: (a) a JOIN feeding p (recipe #70b),
+    (b) making the walker the SOLE holder so the address expression's 2nd
+    occurrence (e.g. in the count expr `- buf.entries`) forces a CSE temp and
+    p becomes an untracked temp-copy — BUT form (b) costs an addi/mr
+    owner-swap (the temp wins r31) that can net-regress a high partial
+    (dll_8E: 99.63 tracked form beats 98.81 unfolded form). Read which
+    stores target folds before picking a form.
+
+72. **`#pragma optimization_level 0-4` IS accepted per-function by GC/2.0
+    mwcc** (silently — no warning; `#pragma opt_propagation` /
+    `global_optimizer` etc. are silently IGNORED). Levels ≤3 disable the
+    sp-displacement store folding of #71 but ALSO switch the register
+    allocator to creation-order priority (materialization owner gets r31,
+    copies get r30; use-count weighting lost) and weaken address-mode
+    selection (offset-0 member stores reuse a value-equal reg as `0(rX)`
+    instead of folding). Net-NEGATIVE on every foodbag fn tested — but the
+    pragma's existence is a real tool for fns whose target shows
+    creation-order coloring. A/B per fn and read the prologue.
+
+**Recipe #60 addendum — two more single-instruction real-bug signatures:**
+- **Missing vtable deref**: target `lwz r12,K(rX); mtctr; bctrl` vs current
+  `addi r12,rX,K; mtctr; bctrl` = the C calls the SLOT ADDRESS instead of
+  the loaded function pointer (runtime crash). Add the missing `*` level at
+  the call expression (sh_beacon_update: `(*(fp*)(*iface + 0x20))` →
+  `(**(fp**)(*iface + 0x20))`). Same family as the "Vtable double-deref
+  pattern" section — but found via a SINGLE-instruction byte-diff at 99.78%.
+- **Wrongly-guarded store**: a single branch-DISPLACEMENT diff at 99.9%+
+  (beq jumping past one extra store) = a store/guard the import nested
+  inside a condition that target executes unconditionally
+  (sc_musictree_render: `obj->0xF8 = 1` belonged AFTER the if-block, the
+  import early-returned past it). Suspect behavioral guard bugs before
+  layout caps when ONE branch target is off by one store's width.
+
+**Recipe #65 addendum — the allocator-gap finds REAL dropped arguments.**
+~half of #65 applications surface genuine Ghidra-dropped call args, not
+dead-param signature mismatches: textureFree lost its only argument
+(drawTrickyHudOverlay), objRenderFn_8003b8f4 lost the 6-arg p2-p5
+pass-through (dimlogfire_render, animatedobj_render), trigger/sfx-handle
+ids lost from vcall sites (doorlock_update, sc_totemstrength_update,
+saveSelectOpenFile, imspacethruster_update). When the gap reg is LOADED
+with a meaningful value in target before the bl, the import dropped a real
+argument — restore it, don't just pad the signature.
 
 ### 99.5%+ tier sweep findings (task #142) — category triage table
 
@@ -1105,6 +1229,16 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   pairs DO respond to the plain source flip (`best < v` → `v > best`,
   frustumPlanes 99.78→100) — flip when the BRANCH differs (ble vs bge),
   add a local when only REGISTERS differ.
+- **95-98 tier signatures (highest-yield)**: (a) tiny DENORMAL float
+  literals in import code (`1.68156e-42`-style) = a misinterpreted INT store
+  — decode the bits, store the int (SB_Propeller_init: int 1200). (b)
+  `lha`-vs-`lhz` runs in halfword COPIES = mixed s16/u16 fields; `lha`
+  requires s16 on BOTH sides of the assignment — `u16dst[i] = *(s16*)…`
+  still normalizes to lhz; write `((s16*)dst)[i] = ((s16*)src)[i]`
+  (fn_8018FF48 95.08→100). (c) struct-index form (recipe #18) fixes BOTH
+  the indexing shape AND the frame (drops the offset local's slot —
+  synthHWMessageHandler frame 40→32); base-is-a-pointer-global variants
+  keep an lbzx residual (#30's alias didn't bite there — partial).
 - **CAP — FP volatile reg-number permutation** within a statement window
   (fcmpo operand pairs, lfs/stfs bursts, fdivs/fmuls chains, fctiwz). Decl
   order, temp locals, statement order, compare-direction flips all invariant
@@ -1113,11 +1247,35 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   numbers swapped. ~10 fns in the tier (dll_127_init, Curve_SampleSegmentPoints,
   exploded_seedDebrisMotion, scarab fn_8015EA48, drawTexture, pi_dolphin
   fn_8004E0FC, magiccavetop fmr) — skip on sight.
+  **EXCEPTION (cracked sub-shape): decrement+clamp where the compare CONSUMES
+  the fsubs/fmadds RESULT (no reload between store and fcmpo).** Write
+  `f32 t = global - delta; global = t; if (t < lim) global = lim;` — the
+  explicit t homes the result in f1 (the minuend's reg) matching target;
+  compound `-=` and the expanded re-read both leave it in f0
+  (MMP_levelcontrol_update 99.88→100). DISCRIMINATOR: if target RELOADS the
+  field before the fcmpo (lfs f1,off(rN) fresh load after the stfs), the cap
+  stands — verified still-capped on fn_801CEA14, dim2icicle_update,
+  cclevcontrol_update, wctemple_update. Read the target asm between the stfs
+  and the fcmpo to pick.
 - **CAP — `addi r0,rH,lo; mr rX,r0` vs direct `addi rX,rH,lo` global-address
   materialization** (foodbag dll_82_func03, mapSetupPlayer,
   camcontrol_loadTriggeredCamAction). Initializer-decl form, statement
   position, array-decay all invariant — yet other fns (player fn_8029DB70)
   get the direct form from identical-looking C; discriminator unknown.
+- **CAP — player_SeqFn (98.10) top-pair allocation order: DO NOT retry the
+  cache-inline fix.** Eliminating the (int)inner cast-copy web (savegpr
+  19→20, mid-webs align) makes the merged inner web (179 uses) outweigh obj
+  (117) and OUR allocator flips them to inner=r31/obj=r30 — INVERTED from
+  target (obj=r31, inner=r30 even though target's inner is also heavier).
+  Every variant scored 97.5 vs the 98.10 baseline: the baseline's cast-copy
+  web is LOAD-BEARING for the dominant coloring. Tested: web unification
+  (h/va/obj2→inner), int-retype, callee-retype-decasting, decl order,
+  register keyword, (char*)-cast stripping ×149. Also ruled out: the
+  inlined-helper hypothesis for the ~9 materialized-mask sites — MWCC's
+  INLINER re-folds constant masks to rlwinm (unlike the unroller, #28), so
+  `static helper(p, flag){p->f &= ~flag;}` + auto-inline does NOT reproduce
+  `li -K; and`. Both player_SeqFn residual families are allocator/codegen
+  caps pending a new recipe.
 - **CAP — web-split reload coloring** (reloaded pointer gets a fresh saved
   reg where target reuses the original — MoonSeedPlantingSpot_setScale;
   decl-perms and second-local splits all regress) and **reverse-order saved
@@ -1125,6 +1283,99 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
 - **CAP — materialized-mask `lis;or` for `|= 0x20000`** (warpDarkIceMines)
   — recipe #2 inverse re-confirmed; const-lift and expanded `x = x | K`
   still fold to `oris`.
+
+70. **@NNN-vs-named-lbl SDA21 relocs are SCORE-NEUTRAL — the "pool cap" was a
+    misattribution; the deficit is always real codegen divergence elsewhere.**
+    (Task #145, four decisive experiments.) objdiff content-matches a reloc by
+    the DATA BYTES at the resolved target, so a local `.sdata2` copy (`@534`)
+    of an int→f32 bias or float constant scores identically to target's shared
+    `lbl_803EXXXX`. Proof: zulu14's 803E7158 retype + india-1's 803DFD88 and
+    803E6E80 string→double retypes all produced ZERO project delta, and
+    dimbossgut2_update + 13 Effect*_func05 fns reached **100.0%** with @NNN
+    local-bias refs still in place. Consequences: (a) do NOT chase splits/dtk
+    knobs or symbols.txt retypes for @NNN refs; (b) a symbols.txt retype that
+    merges a `lbl_X+4` float away ORPHANS src externs referencing it — only
+    safe when nothing references the merged symbol (the link survives today
+    only because referencing units are NonMatching); (c) when a fn shows many
+    @NNN refs and <100%, align the instruction streams (mnemonic-level difflib
+    of `function_objdump.py`'s two halves) — the real divergences are ordinary
+    recipe-class bugs. Effect7_func04's "77-ref @NNN cap" was actually ~12
+    fixable divergences (98.30→99.87).
+
+71. **Literal float constants REMATERIALIZE per use; named `lbl_` externs get
+    CSE'd — pick the C form by whether target reloads.** When target reloads
+    the same `.sdata2` float at every use (fresh `lfs f0, const` before each
+    `fcmpo` clamp) but your named-extern form loads it once into a long-lived
+    reg, write the LITERAL (`if (sum > 1.0f)`) — MWCC pools it locally (an
+    @NNN reloc, score-neutral per #70) and reloads at each use, matching
+    target's shape. Keep the named extern when target DOES keep it live. Took
+    13 Effect*_func05 fns to 100% and lifted every Effect*_func04 head
+    (modgfx + dim_partfx).
+
+72. **`sum = g + (step = k * timeDelta);` — embedded assignment keeps
+    LHS-first eval AND forces the product into a fresh named FP reg.** When
+    target computes `fmuls f3,f1,f0` into a FRESH reg with the base global
+    loaded first (`lfs f2,g`), the plain `sum = g + k*td;` form CSEs the
+    product into a dead reg (`fmuls f1`), and a hoisted
+    `step = k*td; sum = g + step;` reorders the loads (product computed before
+    g loads). The embedded-assign form is the only spelling that does both:
+    g loads first, product lands in f3, reused by the second sum. (Effect
+    func05 family — combined with #71 for the 100%s.)
+
+73. **dtk FALSE-RELOCATES in-range constants — a `fn_XXXX+0xNNN` reloc on a
+    value stored to a FLAGS field is a constant, not an address.** When target
+    shows `lis;addi {fn_8017FFD0+0x130}` stored into a field that elsewhere
+    takes flag words (0x200, 0xc0080004, …) and the addend lands mid-function
+    (not at any symbol boundary — check the disasm: 0x80180200 was a shared
+    epilogue label), the original source stored the literal constant
+    (0x80180100) and dtk synthesized a spurious reloc when splitting. Write
+    the literal; objdiff resolves target's reloc to the same value and scores
+    it matched. The Ghidra `(u32)((u8 *)fn + 0x130)` form costs an extra
+    runtime `addi` — never matches. Check first that the addend is NOT a real
+    function boundary (then it'd be a genuine callback needing a symbols.txt
+    split). (modgfx Effect5/6/7/9_func04.)
+    **FULL fix = literal in C + dtk `block_relocations` in config.yml.** The
+    literal alone still scores a 2-instr mismatch per site (target .o carries
+    the synthesized reloc, our literal has none; MWCC NEVER folds extern+const
+    into a code reloc addend — probed 4 forms ×5 compiler versions, and MP4's
+    6526 ADDR16_HA relocs have zero addends). Suppress dtk's false relocs:
+    ```yaml
+    block_relocations:
+    - target: 0x80180100
+      end: 0x80180218
+    ```
+    (key is `block_relocations`, NOT `blocked_relocations` — dtk silently
+    ignores unknown keys). One range entry killed all 34 false-reloc sites
+    across modgfx/dim_partfx/modelfx → Effect7/16/17_func04 to 100%,
+    TOTAL +7216 in one config change.
+
+74. **`LL`-suffixed constants in logical ops force MATERIALIZED-constant
+    codegen — cracks the whole immediate-vs-materialized isel class
+    (including the recipe #2 "inverse cap").** When target materializes a
+    logical-op constant where every 32-bit C spelling folds to the immediate
+    form, widen the CONSTANT to long long — the op widens to s64 and
+    truncates back into the u32 lvalue with byte-identical semantics and no
+    other codegen change:
+    - `x ^= 2LL;` → `li r0,2; xor` (all 32-bit forms give `xori`)
+    - `x |= 0x100100LL;` → `lis;addi;or` (vs `oris;ori`)
+    - `x |= 0x800000LL;` → `lis;or` (vs `oris`)
+    - `x &= ~0x80LL;` → `li r0,-129; and` (vs `rlwinm`)
+    - `x &= ~0x20000LL;` → `lis -2; addi -1; and` (vs `rlwinm`)
+    Version-independent (probed all 5 mwcc versions) — it is purely the
+    operand TYPE; plausibly the original flag constants were 64-bit
+    enums/macros. Swept ~20 sites in modgfx/dim_partfx → contributed to 5
+    fns reaching 100%. Retry every "materialized-mask cap" partial
+    (warpDarkIceMines `|= 0x20000`, player_SeqFn's ~9 mask sites, arwing
+    flag handlers, the ~70%-capped tiny flag fns) with this spelling.
+    Probe-batch method (a /tmp probe.c with N spellings × objdump grep)
+    found it in minutes — use that pattern for future isel mysteries.
+    REFINEMENT (foxtrot): the LVALUE must be u32 — an `int` lvalue widens
+    SIGNED and emits an extra `srawi rX,rY,31` for the high word
+    (fn_80296BBC needed `*(u32 *)(...) &= ~2LL`, recovering the historic
+    70%-capped tiny-flag-fn example from the old recipe #2 inverse note to
+    100%). player_SeqFn's 9 mask sites + warpDarkIceMines also recovered
+    with #74 — the "11 missing instructions" diagnosis was entirely this
+    class.
 
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 

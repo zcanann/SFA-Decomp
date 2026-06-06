@@ -209,7 +209,7 @@ int fn_802966B4(int obj)
 void fn_80296BBC(int obj)
 {
     int inner = *(int *)((char *)obj + 0xb8);
-    *(int *)((char *)inner + 0x360) &= ~2;
+    *(u32 *)((char *)inner + 0x360) &= ~2LL;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -3163,10 +3163,10 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
         *(s16 *)((char *)inner + 0x80a) = -1;
     }
     ObjHits_DisableObject(obj);
-    *(u32 *)((char *)inner + 0x360) &= ~0x2;
+    *(u32 *)((char *)inner + 0x360) &= ~0x2LL;
     if (*(s8 *)((char *)seq + 0x56) != 0) {
         s8 c;
-        *(u32 *)((char *)inner + 0x360) &= ~0x400;
+        *(u32 *)((char *)inner + 0x360) &= ~0x400LL;
         {
             f32 fz = lbl_803E7EA4;
             *(f32 *)((char *)inner + 0x79c) = fz;
@@ -3653,7 +3653,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 obj2 = *(int *)((char *)obj + 0xb8);
                 (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, obj2, 1);
                 *(void (**)(int, int))(obj2 + 0x304) = fn_802A514C;
-                *(u32 *)((char *)obj2 + 0x360) &= ~0x1;
+                *(u32 *)((char *)obj2 + 0x360) &= ~0x1LL;
                 *(s16 *)((char *)obj + 6) &= ~8;
                 break;
             }
@@ -3729,26 +3729,26 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                             *(int *)(va + 0x7f8) = 0;
                         }
                     }
-                    *(u32 *)((char *)va + 0x360) |= 0x800000;
+                    *(u32 *)((char *)va + 0x360) |= 0x800000LL;
                     (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, va,
                                                                                        1);
                     *(void (**)(int, int))(va + 0x304) = fn_802A514C;
                 }
                 break;
             case 0x14: {
-                *(u32 *)((char *)inner + 0x360) |= 0x40000;
+                *(u32 *)((char *)inner + 0x360) |= 0x40000LL;
                 break;
             }
             case 0x15: {
-                *(u32 *)((char *)inner + 0x360) &= ~0x40000;
+                *(u32 *)((char *)inner + 0x360) &= ~0x40000LL;
                 break;
             }
             case 0x16: {
-                *(u32 *)((char *)inner + 0x360) |= 0x20000;
+                *(u32 *)((char *)inner + 0x360) |= 0x20000LL;
                 break;
             }
             case 0x12: {
-                *(u32 *)((char *)inner + 0x360) |= 0x8000;
+                *(u32 *)((char *)inner + 0x360) |= 0x8000LL;
                 break;
             }
             case 0x13:
@@ -3922,7 +3922,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             *(u16 *)((char *)lbl_803DE44C + 0xb0) |= 2;
         }
     }
-    *(u32 *)((char *)inner + 0x360) |= 0x800000;
+    *(u32 *)((char *)inner + 0x360) |= 0x800000LL;
     ((void (*)(int, int, int, int, int, f32, f32))objAudioFn_8006ef38)(
         obj, (int)((char *)seq + 0xf0), *(u8 *)((char *)inner + 0x8a6),
         (int)((char *)inner + 0x3c4), (int)((char *)inner + 4),

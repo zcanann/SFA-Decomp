@@ -202,14 +202,8 @@ void fn_8022AECC(int obj, int p)
     v[0] = v[0] * *(f32 *)(p + 0x60);
     v[1] = v[1] * *(f32 *)(p + 0x64);
     v[2] = v[2] * *(f32 *)(p + 0x68);
-    if (v[2] < *(f32 *)(p + 0x84)) {
-        cz = *(f32 *)(p + 0x84);
-    } else if (v[2] > *(f32 *)(p + 0x78)) {
-        cz = *(f32 *)(p + 0x78);
-    } else {
-        cz = v[2];
-    }
-    v[2] = cz;
+    v[2] = v[2] < *(f32 *)(p + 0x84) ? *(f32 *)(p + 0x84)
+         : (v[2] > *(f32 *)(p + 0x78) ? *(f32 *)(p + 0x78) : v[2]);
     PSVECScale(v, v, timeDelta);
     PSVECAdd((int)(p + 0x48), (int)v, (int)(p + 0x48));
     objMove(obj, *(f32 *)(p + 0x48) * timeDelta, *(f32 *)(p + 0x4c) * timeDelta,

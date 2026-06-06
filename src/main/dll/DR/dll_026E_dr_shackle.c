@@ -191,12 +191,7 @@ void drshackle_hitDetect(int obj) {
         int n;
         PSVECSubtract((f32 *)((char *)obj + 0xc), (f32 *)(p + 0x8), vec);
         n = 0xc8 - (int)(lbl_803E6A30 * PSVECMag(vec));
-        if (n < 1) {
-            n = 1;
-        } else if (n > 0xc8) {
-            n = 0xc8;
-        }
-        if ((int)randomGetRange(0, n) == 0) {
+        if ((int)randomGetRange(0, (n < 1) ? 1 : ((n > 0xc8) ? 0xc8 : n)) == 0) {
             Sfx_PlayFromObject(obj, SFXfoot_stone_run_1);
         }
     }

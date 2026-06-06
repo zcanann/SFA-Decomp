@@ -450,7 +450,7 @@ void warpDarkIceMines_801bbb44(int obj, int param_2)
       vec[2] = lbl_803E4C68;
       PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
       memcpy(state + 0x94, vec, 0xc);
-      gDIMbossSequenceFlags |= DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT;
+      gDIMbossSequenceFlags |= 0x20000LL;
     }
   }
   if (gDIMbossSequenceFlags & 0x4000) {

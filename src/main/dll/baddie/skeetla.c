@@ -638,9 +638,9 @@ void *trickyFindNearestLinkedRouteEntry(u8 *context, u8 *routeDef, int linkSelec
     void *entry;
     f32 bestDistance;
     f32 distance;
+    u16 mask;
     u16 i;
     u16 count;
-    u16 mask;
     u16 bestIndex;
     int curveId;
     s16 requiredBit;
@@ -673,21 +673,20 @@ void *trickyFindNearestLinkedRouteEntry(u8 *context, u8 *routeDef, int linkSelec
         routeFlagValue <<= 1;
     }
 
-    if (count == 0) {
-        return NULL;
-    }
-
-    bestDistance = getXZDistance((f32 *)(*(int *)(context + 4) + 0x18), (f32 *)((u8 *)candidates[0] + 8));
-    bestIndex = 0;
-    for (i = 1; i < count; i++) {
-        distance = getXZDistance((f32 *)(*(int *)(context + 4) + 0x18), (f32 *)((u8 *)candidates[i] + 8));
-        if (distance < bestDistance) {
-            bestDistance = distance;
-            bestIndex = i;
+    if (count != 0) {
+        bestDistance = getXZDistance((f32 *)(*(int *)(context + 4) + 0x18), (f32 *)((u8 *)candidates[0] + 8));
+        bestIndex = 0;
+        for (i = 1; i < count; i++) {
+            distance = getXZDistance((f32 *)(*(int *)(context + 4) + 0x18), (f32 *)((u8 *)candidates[i] + 8));
+            if (distance < bestDistance) {
+                bestDistance = distance;
+                bestIndex = i;
+            }
         }
-    }
 
-    return candidates[bestIndex];
+        return candidates[bestIndex];
+    }
+    return NULL;
 }
 #pragma peephole reset
 

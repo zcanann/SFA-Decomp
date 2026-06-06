@@ -583,7 +583,7 @@ void *getTablesBinEntry(int i) {
     return lbl_803DCBB4 + lbl_803DCBB0[i] * 4;
 }
 
-void fn_8002CE14(u8 *obj) {
+void Obj_InsertIntoUpdateList(u8 *obj) {
     if (*(u16 *)(obj + 0xb0) & 0x10) {
         int *list = &lbl_803DCB7C;
         int prev = 0;
@@ -597,7 +597,7 @@ void fn_8002CE14(u8 *obj) {
     }
 }
 
-void objRemoveFromListFn_8002ce88(u8 *obj) {
+void Obj_RemoveFromUpdateList(u8 *obj) {
     if (*(u16 *)(obj + 0xb0) & 0x10) {
         objList_remove(&lbl_803DCB7C, obj);
     }
@@ -1076,9 +1076,11 @@ void *Obj_SetupObject(int a, int b, int c, int d, int e) {
 
 #pragma scheduling off
 void *loadObjectAtObject(u8 *src, int arg1) {
-    int type = *(s8 *)(src + 0xac);
-    int objF30 = *(int *)(src + 0x30);
     void *obj;
+    int type;
+    int objF30;
+    objF30 = *(int *)(src + 0x30);
+    type = *(s8 *)(src + 0xac);
     if (getLoadedFileFlags(0) & 0x100000) {
         OSReport(sObjSetupObjectLoadingLockedWarning, -1);
         obj = NULL;

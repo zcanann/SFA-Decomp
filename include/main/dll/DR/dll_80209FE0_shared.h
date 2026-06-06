@@ -172,7 +172,7 @@ extern f32 lbl_803E6548;
 extern f32 lbl_803E654C;
 extern int lbl_80329F90[];
 extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern int objRemoveFromListFn_8002ce88(int *obj);
+extern int Obj_RemoveFromUpdateList(int *obj);
 extern void Obj_SpawnHitLightAndFade(int obj, f32 *pos, f32 v);
 extern int GameBit_Set(int bit, int val);
 extern void Sfx_PlayFromObject(int obj, int sfxId);

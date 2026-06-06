@@ -106,9 +106,7 @@ void dimlogfire_update(int obj)
     uint light;
     int tricky;
     int *state;
-    f32 local_28;
-    f32 local_24;
-    f32 local_20;
+    struct { f32 x, y, z; } vec;
 
     state = *(int **)(obj + 0xb8);
     tricky = *(int *)(obj + 0x4c);
@@ -133,10 +131,10 @@ void dimlogfire_update(int obj)
         } else {
             b = 0;
         }
-        local_28 = lbl_803E4828;
-        local_24 = lbl_803E482C;
-        local_20 = lbl_803E4828;
-        fn_80098B18(obj, *(f32 *)(obj + 8), 2, a, b, (int)&local_28);
+        vec.x = lbl_803E4828;
+        vec.y = lbl_803E482C;
+        vec.z = lbl_803E4828;
+        fn_80098B18(obj, *(f32 *)(obj + 8), 2, a, b, (int)&vec);
         ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
         break;
     case 2:

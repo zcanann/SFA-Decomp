@@ -225,16 +225,17 @@ SfxTrigger *Sfx_FindTrigger(u16 id)
 {
     SfxTrigger *low = (SfxTrigger *)gSfxTriggersData;
     SfxTrigger *high = (SfxTrigger *)gSfxTriggersData + gSfxTriggersCount;
-    SfxTriggerCacheEntry *c = &lbl_802C5D78[id & 0xf];
+    int key = id;
+    SfxTriggerCacheEntry *c = &lbl_802C5D78[key & 0xf];
 
-    if (c->key == id) {
+    if (c->key == key) {
         return (SfxTrigger *)gSfxTriggersData + c->index;
     }
     while (low < high) {
         SfxTrigger *mid = low + (high - low) / 2;
-        if (mid->id > id) {
+        if (mid->id > key) {
             high = mid;
-        } else if (mid->id < id) {
+        } else if (mid->id < key) {
             low = mid + 1;
         } else {
             c->key = id;

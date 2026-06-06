@@ -2592,7 +2592,7 @@ extern u8 lbl_803DBE28;
 extern u8 lbl_803DBE30;
 extern void storeZeroToFloatParam(void* p);
 extern uint GameBit_Get(int eventId);
-extern int objRemoveFromListFn_8002ce88(int *obj);
+extern int Obj_RemoveFromUpdateList(int *obj);
 
 typedef struct BabyCloudrunnerFlags {
     u8 resetLatch : 1;
@@ -2627,7 +2627,7 @@ void babycloudrunner_init(int *obj, u8 *def) {
         ObjHits_DisableObject(obj);
         *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
         sub[0x22c] = (u8)(sub[0x22c] & ~1);
-        objRemoveFromListFn_8002ce88(obj);
+        Obj_RemoveFromUpdateList(obj);
         ObjGroup_RemoveObject(obj, 3);
     } else {
         *(int*)(sub + 0x234) = *(s16*)(def + 0x22) - 0x2fc;
@@ -3221,7 +3221,7 @@ void cfguardian_init(int *obj, u8 *params) {
         sub[0xa80] = 4;
         if ((s8)params[0x19] == 0) {
             *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
-            objRemoveFromListFn_8002ce88(obj);
+            Obj_RemoveFromUpdateList(obj);
         }
     } else if (GameBit_Get(0x60) != 0 && (s8)params[0x19] == 0) {
         sub[0xa80] = 4;
@@ -3380,13 +3380,20 @@ extern f32  lbl_803E4244;
  * the idle audio cue. */
 #pragma scheduling off
 #pragma peephole off
-int babycloudrunner_func0B(int* obj)
+int babycloudrunner_func0B(void* p)
 {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
-    u8* q = *(u8**)((char*)obj + 0x4c);
-    int flag = 0;
-    void* player = Obj_GetPlayerObject();
-    u8* r = *(u8**)((char*)obj + 0x4c);
+    int* obj;
+    int flag;
+    u8* r;
+    u8* sub;
+    u8* q;
+    void* player;
+    obj = (int*)p;
+    sub = *(u8**)((char*)obj + 0xb8);
+    q = *(u8**)((char*)obj + 0x4c);
+    player = Obj_GetPlayerObject();
+    r = *(u8**)((char*)obj + 0x4c);
+    flag = 0;
     if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16)*(s16*)(r + 0x1a)) {
         if (*(int*)(sub + 0x230) == 3) {
             if ((*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
@@ -3556,7 +3563,7 @@ void cfprisonguard_update(int *obj) {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
         *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
         ObjHits_DisableObject(obj);
-        objRemoveFromListFn_8002ce88(obj);
+        Obj_RemoveFromUpdateList(obj);
         return;
     }
     bit44 = GameBit_Get(0x44);
@@ -5317,7 +5324,7 @@ void babycloudrunner_update(int* obj)
     if (GameBit_Get(*(s16*)(def + 0x22)) != 0) {
         *(s16*)((char*)obj + 6) |= 0x4000;
         *(u8*)(sub + 0x22c) &= ~1;
-        objRemoveFromListFn_8002ce88(obj);
+        Obj_RemoveFromUpdateList(obj);
         ObjGroup_RemoveObject(obj, 0x20);
         ObjGroup_RemoveObject(obj, 3);
     }
@@ -5334,7 +5341,7 @@ void babycloudrunner_update(int* obj)
             ObjHits_DisableObject(obj);
             *(s16*)((char*)obj + 6) |= 0x4000;
             *(u8*)(sub + 0x22c) &= ~1;
-            objRemoveFromListFn_8002ce88(obj);
+            Obj_RemoveFromUpdateList(obj);
             ObjGroup_RemoveObject(obj, 0x20);
             ObjGroup_RemoveObject(obj, 3);
             *(s16*)((char*)obj + 6) |= 0x4000;
@@ -5980,7 +5987,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         }
         *(u8*)((char*)obj + 0x36) = 0;
         *(s16*)(*(char**)((char*)obj + 0x54) + 0x60) &= ~1;
-        objRemoveFromListFn_8002ce88(obj);
+        Obj_RemoveFromUpdateList(obj);
         *(s16*)((char*)obj + 6) |= 0x4000;
         *(u8*)(sub + 0xa80) = 0xf;
         break;
@@ -6017,7 +6024,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         break;
     case 15:
         *(s16*)((char*)obj + 6) |= 0x4000;
-        objRemoveFromListFn_8002ce88(obj);
+        Obj_RemoveFromUpdateList(obj);
         *(s16*)(*(char**)((char*)obj + 0x54) + 0x60) &= ~1;
         break;
     }

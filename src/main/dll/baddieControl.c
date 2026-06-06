@@ -4777,7 +4777,7 @@ void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
     int spd;
     int d1, d2;
     int npc;
-    f32 va, vb, vc, vd;
+    f32 vd, vc, vb, va;
 
     if (lbl_803DD584 == 0) {
         lbl_803DD584 = (u32)mmAlloc(0x4c, 15, 0);

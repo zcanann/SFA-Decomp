@@ -266,11 +266,11 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   uint hasOffset;
 
   lbl_803DB830 = lbl_803DB830 + lbl_803DFEB8;
-  if (lbl_803DB830 > lbl_803DFEC0) {
+  if (lbl_803DB830 > 1.0f) {
     lbl_803DB830 = lbl_803DFEBC;
   }
   lbl_803DB834 = lbl_803DB834 + lbl_803DFEC4;
-  if (lbl_803DB834 > lbl_803DFEC0) {
+  if (lbl_803DB834 > 1.0f) {
     lbl_803DB834 = lbl_803DFEC8;
   }
   if (obj == NULL) {
@@ -317,7 +317,7 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     lbl_8039C3B0.x = lbl_803DFECC;
     lbl_8039C3B0.y = lbl_803DFECC;
     lbl_8039C3B0.z = lbl_803DFECC;
-    lbl_8039C3B0.w = lbl_803DFEC0;
+    lbl_8039C3B0.w = 1.0f;
     lbl_8039C3B0.rot0 = 0;
     lbl_8039C3B0.rot1 = 0;
     lbl_8039C3B0.rot2 = 0;
@@ -332,7 +332,7 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.srcX = src->x;
     p.srcY = src->y;
     p.srcZ = src->z;
-    p.srcW = lbl_803DFEC0;
+    p.srcW = 1.0f;
     p.rot2 = 0;
     p.rot1 = 0;
     p.rot0 = src->rot0;
@@ -346,7 +346,7 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.srcX = src->x;
     p.srcY = src->y;
     p.srcZ = src->z;
-    p.srcW = lbl_803DFEC0;
+    p.srcW = 1.0f;
     p.rot2 = 0;
     p.rot1 = 0;
     p.rot0 = 0;
@@ -360,7 +360,7 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.srcX = src->x;
     p.srcY = src->y;
     p.srcZ = src->z;
-    p.srcW = lbl_803DFEC0;
+    p.srcW = 1.0f;
     p.rot2 = 0;
     p.rot1 = 0;
     p.rot0 = 0;
@@ -393,10 +393,8 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     c = randomGetRange(0x8000, 0xffff);
     p.colD = c;
     p.colA = c;
-    p.colE = 0xffff;
-    p.colB = 0xffff;
-    p.colF = 0xffff;
-    p.colC = 0xffff;
+    p.colB = p.colE = 0xffff;
+    p.colC = p.colF = 0xffff;
     p.kind = 0x3a3;
     break;
   }
@@ -443,7 +441,7 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     if (p6 != NULL) {
       w = *p6;
     } else {
-      w = lbl_803DFEC0;
+      w = 1.0f;
     }
     p.posX = w * (f32)(int)randomGetRange(-10, 10);
     p.posY = w * (f32)(int)randomGetRange(-10, 10);
@@ -720,7 +718,7 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   }
   p.flagsA = p.flagsA | flags;
   if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0)) {
-    p.flagsA = p.flagsA ^ 2;
+    p.flagsA ^= 2LL;
   }
   if ((p.flagsA & 1) != 0) {
     if (hasOffset != 0) {
@@ -733,7 +731,7 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
     }
   }
-  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 2))(&p, -1, id, 0);
+  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 8))(&p, -1, id, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -835,13 +833,13 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   p.flagsB = 0;
   p.idByte = id;
   p.model = obj;
-  p.posX = lbl_803DFF38;
-  p.posY = lbl_803DFF38;
-  p.posZ = lbl_803DFF38;
-  p.velX = lbl_803DFF38;
-  p.velY = lbl_803DFF38;
-  p.velZ = lbl_803DFF38;
-  p.scale = lbl_803DFF38;
+  p.posX = 0.0f;
+  p.posY = 0.0f;
+  p.posZ = 0.0f;
+  p.velX = 0.0f;
+  p.velY = 0.0f;
+  p.velZ = 0.0f;
+  p.scale = 0.0f;
   p.count = 0;
   p.unk04 = -1;
   p.alpha = 0xff;
@@ -864,9 +862,9 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     break;
   case 0x12d:
     if (src == NULL) {
-      lbl_8039C3C8.x = lbl_803DFF38;
-      lbl_8039C3C8.y = lbl_803DFF38;
-      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.x = 0.0f;
+      lbl_8039C3C8.y = 0.0f;
+      lbl_8039C3C8.z = 0.0f;
       lbl_8039C3C8.w = lbl_803DFF40;
       lbl_8039C3C8.rot0 = 0;
       lbl_8039C3C8.rot1 = 0;
@@ -875,15 +873,15 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     }
     p.scale = lbl_803DFF44;
     p.count = randomGetRange(0, 0x1e) + 0x46;
-    p.alpha = src->w > lbl_803DFF38 ? 0x50 : 0x41;
+    p.alpha = src->w > 0.0f ? 0x50 : 0x41;
     p.flagsA = 0x80110;
-    p.kind = src->w > lbl_803DFF38 ? 0x7b : 0xdb;
+    p.kind = src->w > 0.0f ? 0x7b : 0xdb;
     break;
   case 0x12e:
     if (src == NULL) {
-      lbl_8039C3C8.x = lbl_803DFF38;
-      lbl_8039C3C8.y = lbl_803DFF38;
-      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.x = 0.0f;
+      lbl_8039C3C8.y = 0.0f;
+      lbl_8039C3C8.z = 0.0f;
       lbl_8039C3C8.w = lbl_803DFF40;
       lbl_8039C3C8.rot0 = 0;
       lbl_8039C3C8.rot1 = 0;
@@ -891,7 +889,7 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       src = &lbl_8039C3C8;
     }
     p.posX = lbl_803DFF48 * (f32)(int)randomGetRange(-10, 10);
-    p.posY = lbl_803DFF38;
+    p.posY = 0.0f;
     p.posZ = lbl_803DFF4C;
     p.velY = lbl_803DFF50 * (f32)(int)randomGetRange(1, 3);
     p.velX = lbl_803DFF48 * src->x;
@@ -904,9 +902,9 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     break;
   case 0x12f:
     if (src == NULL) {
-      lbl_8039C3C8.x = lbl_803DFF38;
-      lbl_8039C3C8.y = lbl_803DFF38;
-      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.x = 0.0f;
+      lbl_8039C3C8.y = 0.0f;
+      lbl_8039C3C8.z = 0.0f;
       lbl_8039C3C8.w = lbl_803DFF40;
       lbl_8039C3C8.rot0 = 0;
       lbl_8039C3C8.rot1 = 0;
@@ -914,7 +912,7 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       src = &lbl_8039C3C8;
     }
     p.posX = lbl_803DFF48 * (f32)(int)randomGetRange(-10, 10);
-    p.posY = lbl_803DFF38;
+    p.posY = 0.0f;
     p.posZ = lbl_803DFF4C;
     p.velY = lbl_803DFF50 * (f32)(int)randomGetRange(1, 3);
     p.velX = lbl_803DFF54 * src->x;
@@ -927,9 +925,9 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     break;
   case 0x130:
     if (src == NULL) {
-      lbl_8039C3C8.x = lbl_803DFF38;
-      lbl_8039C3C8.y = lbl_803DFF38;
-      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.x = 0.0f;
+      lbl_8039C3C8.y = 0.0f;
+      lbl_8039C3C8.z = 0.0f;
       lbl_8039C3C8.w = lbl_803DFF40;
       lbl_8039C3C8.rot0 = 0;
       lbl_8039C3C8.rot1 = 0;
@@ -937,7 +935,7 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       src = &lbl_8039C3C8;
     }
     p.posX = lbl_803DFF48 * (f32)(int)randomGetRange(-10, 10);
-    p.posY = lbl_803DFF38;
+    p.posY = 0.0f;
     p.posZ = lbl_803DFF4C;
     p.velY = lbl_803DFF50 * (f32)(int)randomGetRange(1, 3);
     p.velX = lbl_803DFF5C * src->x;
@@ -972,9 +970,9 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     break;
   case 0x133:
     if (src == NULL) {
-      lbl_8039C3C8.x = lbl_803DFF38;
-      lbl_8039C3C8.y = lbl_803DFF38;
-      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.x = 0.0f;
+      lbl_8039C3C8.y = 0.0f;
+      lbl_8039C3C8.z = 0.0f;
       lbl_8039C3C8.w = lbl_803DFF40;
       lbl_8039C3C8.rot0 = 0;
       lbl_8039C3C8.rot1 = 0;
@@ -987,14 +985,14 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.scale = lbl_803DFF74;
     p.count = 5;
     p.alpha = 0x80;
-    p.flagsA = p.flagsA | 0x80210;
+    p.flagsA |= 0x80210LL;
     p.kind = 0x26d;
     break;
   case 0x134:
     if (src == NULL) {
-      lbl_8039C3C8.x = lbl_803DFF38;
-      lbl_8039C3C8.y = lbl_803DFF38;
-      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.x = 0.0f;
+      lbl_8039C3C8.y = 0.0f;
+      lbl_8039C3C8.z = 0.0f;
       lbl_8039C3C8.w = lbl_803DFF40;
       lbl_8039C3C8.rot0 = 0;
       lbl_8039C3C8.rot1 = 0;
@@ -1007,14 +1005,14 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.scale = lbl_803DFF7C * (f32)(int)randomGetRange(5, 0xc);
     p.count = 0xc;
     p.alpha = randomGetRange(0x96, 0xfa);
-    p.flagsA = p.flagsA | 0x80210;
+    p.flagsA |= 0x80210LL;
     p.kind = 0xe0;
     break;
   case 0x135:
     if (src == NULL) {
-      lbl_8039C3C8.x = lbl_803DFF38;
-      lbl_8039C3C8.y = lbl_803DFF38;
-      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.x = 0.0f;
+      lbl_8039C3C8.y = 0.0f;
+      lbl_8039C3C8.z = 0.0f;
       lbl_8039C3C8.w = lbl_803DFF40;
       lbl_8039C3C8.rot0 = 0;
       lbl_8039C3C8.rot1 = 0;
@@ -1035,9 +1033,9 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     break;
   case 0x136:
     if (src == NULL) {
-      lbl_8039C3C8.x = lbl_803DFF38;
-      lbl_8039C3C8.y = lbl_803DFF38;
-      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.x = 0.0f;
+      lbl_8039C3C8.y = 0.0f;
+      lbl_8039C3C8.z = 0.0f;
       lbl_8039C3C8.w = lbl_803DFF40;
       lbl_8039C3C8.rot0 = 0;
       lbl_8039C3C8.rot1 = 0;
@@ -1054,9 +1052,9 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     break;
   case 0x137:
     if (src == NULL) {
-      lbl_8039C3C8.x = lbl_803DFF38;
-      lbl_8039C3C8.y = lbl_803DFF38;
-      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.x = 0.0f;
+      lbl_8039C3C8.y = 0.0f;
+      lbl_8039C3C8.z = 0.0f;
       lbl_8039C3C8.w = lbl_803DFF40;
       lbl_8039C3C8.rot0 = 0;
       lbl_8039C3C8.rot1 = 0;
@@ -1093,7 +1091,7 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   }
   p.flagsA = p.flagsA | flags;
   if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0)) {
-    p.flagsA = p.flagsA ^ 2;
+    p.flagsA ^= 2LL;
   }
   if ((p.flagsA & 1) != 0) {
     if (hasOffset != 0) {
@@ -1106,7 +1104,7 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
     }
   }
-  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 2))(&p, -1, id, 0);
+  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 8))(&p, -1, id, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1344,7 +1342,7 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.scale = lbl_803DFFE8 * (f32)(int)randomGetRange(0, 10) + lbl_803DFFE4;
     p.count = randomGetRange(0xbe, 0xfa);
     p.flagsA = 0x81088000;
-    p.kind = (s16)randomGetRange(0, 2) + 0x208;
+    p.kind = randomGetRange(0, 2) + 0x208;
     p.colD = 0xb400;
     p.colE = 0x8000;
     p.colF = 0;
@@ -1398,7 +1396,7 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       p.count = 100;
       p.alpha = 0xff;
       p.flagsB = 0x300800;
-      p.flagsA = 0x300210;
+      p.flagsA = 0x3000210;
     }
     p.kind = randomGetRange(0x156, 0x157);
     break;
@@ -1407,7 +1405,7 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   }
   p.flagsA = p.flagsA | flags;
   if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0)) {
-    p.flagsA = p.flagsA ^ 2;
+    p.flagsA ^= 2LL;
   }
   if ((p.flagsA & 1) != 0) {
     if (hasOffset != 0) {
@@ -1420,7 +1418,7 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
     }
   }
-  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 2))(&p, -1, id, 0);
+  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 8))(&p, -1, id, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1666,7 +1664,7 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.scale = lbl_803E002C;
     p.flagsA = 0x80200;
     p.flagsB = 0x4000800;
-    if (randomGetRange(0, 2) == 0) {
+    if ((int)randomGetRange(0, 2) == 0) {
       p.kind = 0xc0e;
     } else {
       p.kind = randomGetRange(0x156, 0x157);
@@ -1747,7 +1745,7 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.scale = lbl_803E0050 * (f32)(int)randomGetRange(0, 10) + lbl_803E004C;
     p.count = randomGetRange(0xbe, 0xfa);
     p.flagsA = 0x81488000;
-    p.kind = (s16)randomGetRange(0, 2) + 0x208;
+    p.kind = randomGetRange(0, 2) + 0x208;
     p.colD = 0x2000;
     p.colE = 0x8000;
     p.colF = 0xc000;
@@ -1973,7 +1971,7 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   }
   p.flagsA = p.flagsA | flags;
   if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0)) {
-    p.flagsA = p.flagsA ^ 2;
+    p.flagsA ^= 2LL;
   }
   if ((p.flagsA & 1) != 0) {
     if (hasOffset != 0) {
@@ -1986,7 +1984,7 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
     }
   }
-  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 2))(&p, -1, id, 0);
+  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 8))(&p, -1, id, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2015,14 +2013,15 @@ extern f32 fn_80293E80(f32 x);
 void Effect10_func05(void)
 {
     f32 sum;
-    sum = lbl_803DB838 + lbl_803DFEB8 * timeDelta;
+    f32 step;
+    sum = lbl_803DB838 + (step = lbl_803DFEB8 * timeDelta);
     lbl_803DB838 = sum;
-    if (sum > lbl_803DFEC0) {
+    if (sum > 1.0f) {
         lbl_803DB838 = lbl_803DFEBC;
     }
-    sum = lbl_803DB83C + lbl_803DFEB8 * timeDelta;
+    sum = lbl_803DB83C + step;
     lbl_803DB83C = sum;
-    if (sum > lbl_803DFEC0) {
+    if (sum > 1.0f) {
         lbl_803DB83C = lbl_803DFEC8;
     }
     lbl_803DD3B0 = lbl_803DD3B0 + (s32)framesThisStep * 0x64;

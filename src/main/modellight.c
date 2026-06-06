@@ -999,9 +999,10 @@ void modelLightStruct_setDirection(ModelLightStruct *s, f32 x, f32 y, f32 z) {
     if (s->transformMode == 0) {
         PSMTXMultVecSR(view, &s->worldDirX, &s->viewDirX);
     } else {
-        *(int *)&s->viewDirX = *(int *)&s->worldDirX;
-        *(int *)&s->viewDirY = *(int *)&s->worldDirY;
-        *(int *)&s->viewDirZ = *(int *)&s->worldDirZ;
+        {
+            typedef struct { int x, y, z; } IVec3;
+            *(IVec3 *)&s->viewDirX = *(IVec3 *)&s->worldDirX;
+        }
     }
 }
 
@@ -1025,9 +1026,10 @@ void modelLightStruct_setPosition(ModelLightStruct *s, f32 x, f32 y, f32 z) {
         tmp[2] = s->worldZ - playerMapOffsetZ;
         PSMTXMultVec(view, tmp, &s->viewX);
     } else {
-        *(int *)&s->viewX = *(int *)&s->worldX;
-        *(int *)&s->viewY = *(int *)&s->worldY;
-        *(int *)&s->viewZ = *(int *)&s->worldZ;
+        {
+            typedef struct { int x, y, z; } IVec3;
+            *(IVec3 *)&s->viewX = *(IVec3 *)&s->worldX;
+        }
     }
 }
 

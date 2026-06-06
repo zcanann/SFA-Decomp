@@ -983,7 +983,7 @@ extern void timer_forceStart(int obj);
 extern int  timer_hasExpired(int obj);
 extern int  barrelgener_getLinkId(int gen);
 extern void barrelgener_queueObjectRelease(int gen, int obj, int code);
-extern void objRemoveFromListFn_8002ce88(int obj);
+extern void Obj_RemoveFromUpdateList(int obj);
 extern u32  playerGetStateFlag310(u8 *player);
 extern void setAButtonIcon(int kind);
 extern void saveGame_saveObjectPos(int obj);
@@ -1120,7 +1120,7 @@ void gunpowderbarrel_update(int obj)
                 gen = ObjGroup_FindNearestObject(0x3a, obj, 0);
             }
             if (gen == 0) {
-                objRemoveFromListFn_8002ce88(obj);
+                Obj_RemoveFromUpdateList(obj);
                 ObjHits_DisableObject(obj);
                 *(s16 *)(obj + 6) |= 0x4000;
                 s16toFloat((void *)(st + 0x18), 0x3c);
@@ -1140,7 +1140,7 @@ void gunpowderbarrel_update(int obj)
                 *(s16 *)(obj + 6) |= 0x4000;
                 return;
             }
-            objRemoveFromListFn_8002ce88(obj);
+            Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             *(s16 *)(obj + 6) |= 0x4000;
             return;

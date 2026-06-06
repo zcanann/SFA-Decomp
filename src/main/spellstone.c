@@ -7,7 +7,7 @@ extern f32 Vec_distance(void *posA,void *posB);
 extern void GameBit_Set(int eventId,int value);
 extern int GameBit_Get(int eventId);
 extern void *Obj_GetPlayerObject(void);
-extern void objRemoveFromListFn_8002ce88(void *obj);
+extern void Obj_RemoveFromUpdateList(void *obj);
 extern void objRenderFn_8003b8f4(void *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                         undefined4 param_5,double scale);
 extern int spellstone_idleCallback(void);
@@ -91,14 +91,14 @@ void spellstone_update(SpellStoneObject *obj)
   if (eventActive != 0) {
     GameBit_Set(*(&lbl_803DC228 + def->eventIndex),1);
     obj->flags = (s16)(obj->flags | 0x4000);
-    objRemoveFromListFn_8002ce88(obj);
+    Obj_RemoveFromUpdateList(obj);
     (*gMapEventInterface)->setMode(0x1d,2);
   }
   else {
     eventActive = GameBit_Get(def->activeEvent);
     if (eventActive != 0) {
       obj->flags = (s16)(obj->flags | 0x4000);
-      objRemoveFromListFn_8002ce88(obj);
+      Obj_RemoveFromUpdateList(obj);
     }
     if (state->state == 2) {
       playerObj = Obj_GetPlayerObject();

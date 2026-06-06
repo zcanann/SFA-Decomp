@@ -772,12 +772,14 @@ void ObjModel_ResolveRenderOpTextures(u8 *m) {
         } else {
             *(int *)(op + 0x38) = 0;
         }
-        if (*(int *)(op + 0x1c) == -1) {
-            *(int *)(op + 0x1c) = 0;
-        } else if (*(int *)(op + 0x1c) == -2) {
-            *(int *)(op + 0x1c) = 0;
+        if (*(int *)(op + 0x1c) != -1) {
+            if (*(int *)(op + 0x1c) == -2) {
+                *(int *)(op + 0x1c) = 0;
+            } else {
+                *(int *)(op + 0x1c) = 1;
+            }
         } else {
-            *(int *)(op + 0x1c) = 1;
+            *(int *)(op + 0x1c) = 0;
         }
         if (*(int *)(op + 0x18) != -1) {
             *(int *)(op + 0x18) = ((int *)*(u8 **)(m + 0x20))[*(int *)(op + 0x18)];
@@ -1316,8 +1318,8 @@ void ObjModel_AdvanceBlendChannels(u8 *model, f32 dt) {
 }
 #pragma peephole reset
 
-extern void *modelLoadFn_80025ae4(u8 *p, int b, int isType1, int c);
-extern void modelLoadColorFn_80024ec8(void *m, void *data);
+extern void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c);
+extern void modelAnimResetState(void *m, void *data);
 extern void ObjModel_RelocateAnimData(u8 *p, u8 *m);
 extern void DCStoreRange(void *p, int size);
 
@@ -1325,10 +1327,10 @@ extern void DCStoreRange(void *p, int size);
 #pragma scheduling off
 #pragma peephole off
 void *ObjModel_LoadAnimData(u8 *p, int b, int c) {
-    void *m = modelLoadFn_80025ae4(p, b, p[0] == 1, c);
-    modelLoadColorFn_80024ec8(m, *(void **)((u8 *)m + 0x2c));
+    void *m = modelLoad_layoutBuffers(p, b, p[0] == 1, c);
+    modelAnimResetState(m, *(void **)((u8 *)m + 0x2c));
     if (*(void **)((u8 *)m + 0x30) != NULL) {
-        modelLoadColorFn_80024ec8(m, *(void **)((u8 *)m + 0x30));
+        modelAnimResetState(m, *(void **)((u8 *)m + 0x30));
     }
     ObjModel_RelocateAnimData(p, m);
     *(int *)(p + 8) = 0;
@@ -1545,7 +1547,7 @@ extern u8 lbl_80340740[];
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void modelAnimFn_80024524(u8 *hdr, u8 *stk, int n)
+void modelAnimUpdateChannels(u8 *hdr, u8 *stk, int n)
 {
     u8 *p2;
     u8 *p4;
@@ -1637,7 +1639,7 @@ void modelWalkAnimFn_800248b8(u8 *a, u8 *b, u8 *c, int d, f32 e)
             *(u32 *)(stk + j * 4 + 0x34) = *(u32 *)(c + idx * 4 + 0x34);
         }
         *(u16 *)(stk + 0x58) = *(u16 *)(c + 0x58);
-        modelAnimFn_80024524(hdr, stk, 2);
+        modelAnimUpdateChannels(hdr, stk, 2);
         sv = *(s8 *)(c + 0x63);
         if (sv & 1) {
             fl |= 0x10;
@@ -1688,7 +1690,7 @@ void modelWalkAnimFn_800248b8(u8 *a, u8 *b, u8 *c, int d, f32 e)
                     *(u16 *)(stk + 0x46) = *(u16 *)(p2 + 0x48);
                 }
                 *(u16 *)(stk + 0x58) = (u16)v;
-                modelAnimFn_80024524(hdr, stk, 2);
+                modelAnimUpdateChannels(hdr, stk, 2);
                 lbl_80006C6C(&px, a, stk, *(int *)(hdr + 0x3c), *(u8 *)(hdr + 0xf3), lbl_80340740, d, m);
                 if (m != 0) {
                     fl |= 1 << i;
@@ -1714,7 +1716,7 @@ void modelWalkAnimFn_800248b8(u8 *a, u8 *b, u8 *c, int d, f32 e)
                 *(u32 *)(stk + j * 4 + 0x34) = *(u32 *)(c + j * 4 + 0x34);
             }
             *(u16 *)(stk + 0x58) = *(u16 *)(c + 0x58);
-            modelAnimFn_80024524(hdr, stk, n);
+            modelAnimUpdateChannels(hdr, stk, n);
             sv = *(s8 *)(c + 0x63);
             if (sv & 1) {
                 fl |= 0x10;
@@ -1765,7 +1767,7 @@ extern void *animLoadFromTable(u8 *hdr, int idx, int a, u8 *b);
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void modelLoadColorFn_80024ec8(void *m, void *data)
+void modelAnimResetState(void *m, void *data)
 {
     u8 *p2 = (u8 *)data;
     u8 *hdr;
@@ -1882,7 +1884,7 @@ void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void *modelLoadFn_80025ae4(u8 *p, int b, int isType1, int c)
+void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c)
 {
     u8 *out;
     int szs[7];
@@ -3154,7 +3156,7 @@ void modelAnimFn_800246a0(u8 *a, u8 *b, u8 *c, f32 t, int d, int e, int f, int g
         w = 1;
     }
     *(u16 *)(stk + 0x58) = w;
-    modelAnimFn_80024524(hdr, stk, 2);
+    modelAnimUpdateChannels(hdr, stk, 2);
     fl = h & 0xF;
     if ((fl & 0xC) == 0) {
         int sv = *(s8 *)(c + 0x63);

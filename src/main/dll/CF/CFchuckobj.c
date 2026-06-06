@@ -1315,11 +1315,11 @@ void fn_8018FF48(undefined2* src, undefined2* dst)
 {
     *dst = *src;
     dst[1] = src[1];
-    dst[2] = src[2];
-    dst[3] = src[3];
-    dst[4] = src[4];
-    dst[5] = src[5];
-    dst[6] = src[6];
+    ((s16 *)dst)[2] = ((s16 *)src)[2];
+    ((s16 *)dst)[3] = ((s16 *)src)[3];
+    ((s16 *)dst)[4] = ((s16 *)src)[4];
+    ((s16 *)dst)[5] = ((s16 *)src)[5];
+    ((s16 *)dst)[6] = ((s16 *)src)[6];
     dst[7] = src[7];
     *(undefined*)(dst + 9) = *(undefined*)(src + 9);
     *(undefined*)((int)dst + 0x13) = *(undefined*)((int)src + 0x13);

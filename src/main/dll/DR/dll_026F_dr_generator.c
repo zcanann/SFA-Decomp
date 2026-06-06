@@ -60,7 +60,7 @@ void drgenerator_init(int obj, char *arg) {
     ObjHits_EnableObject(obj);
     if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
         *(s16 *)((char *)obj + 0x6) |= 0x4000;
-        objRemoveFromListFn_8002ce88(obj);
+        Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
     }
     ObjGroup_AddObject(obj, 0x3);

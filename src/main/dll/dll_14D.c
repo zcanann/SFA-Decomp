@@ -63,13 +63,13 @@ void dll_14D_update(undefined2 *param_1)
   int iVar2;
   int iVar5;
   byte *pbVar4;
-  float local_18 [3];
+  float local_18;
 
-  local_18[0] = lbl_803E3854;
+  local_18 = lbl_803E3854;
   iVar5 = *(int *)(param_1 + 0x26);
   pbVar4 = *(byte **)(param_1 + 0x5c);
   if (*(void **)(pbVar4 + 4) == NULL) {
-    uVar2 = ObjGroup_FindNearestObject((uint)*(byte *)(iVar5 + 0x21),param_1,local_18);
+    uVar2 = ObjGroup_FindNearestObject((uint)*(byte *)(iVar5 + 0x21),param_1,&local_18);
     *(undefined4 *)(pbVar4 + 4) = uVar2;
     if (*(void **)(pbVar4 + 4) == NULL) {
       return;

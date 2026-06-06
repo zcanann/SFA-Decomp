@@ -1543,7 +1543,7 @@ extern void pushable_savePos(int *obj);
 extern int fn_80174668(int *obj, u8 *state);
 extern void fn_80174438(int *obj, u8 *state);
 extern void Sfx_PlayFromObject(int *obj, int sfxId);
-extern void objRemoveFromListFn_8002ce88(int *obj);
+extern void Obj_RemoveFromUpdateList(int *obj);
 extern f32 lbl_803E3528;
 extern f64 lbl_803E3530;
 extern f64 lbl_803E3538;
@@ -1612,7 +1612,7 @@ void pushable_update(int *obj) {
             GameBit_Set(0x272, 1);
         }
         if (GameBit_Get(0x272) != 0) {
-            objRemoveFromListFn_8002ce88(obj);
+            Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             *(s16 *)((char *)obj + 6) = *(s16 *)((char *)obj + 6) | 0x4000;
         }

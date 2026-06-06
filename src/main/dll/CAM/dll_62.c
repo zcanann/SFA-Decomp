@@ -105,7 +105,10 @@ void CameraModeClimb_update(short *param_1)
   (*(CameraGetTargetFn *)(*gCameraInterface + 0x38))
             (param_1,&local_cc,&local_d0,&local_d4,&local_d8,
              (f64)(f32)(u32)*(u16 *)(lbl_803DD578 + 0xc),0);
-  iVar4 = (0x8000 - (u16)getAngle(local_cc,local_d4)) - (u16)*param_1;
+  {
+    int t = 0x8000 - (u16)getAngle(local_cc,local_d4);
+    iVar4 = t - (u16)*param_1;
+  }
   if (0x8000 < iVar4) {
     iVar4 = iVar4 + -0xffff;
   }
