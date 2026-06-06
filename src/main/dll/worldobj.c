@@ -749,8 +749,8 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
                         fn_8014C66C(o2, *(int **)(st + 0x28));
                     } else {
                         int *tw = tumbleweedbush_findNearestActive((char *)o2 + 0x18);
-                        if (tw == NULL || vec3f_distanceSquared((char *)tw + 0x18, (char *)o2 + 0x18) < lbl_803E522C) {
-                            if (vec3f_distanceSquared(*(char **)(st + 0x28) + 0x18, (char *)o2 + 0x18) < lbl_803E522C) {
+                        if (tw == NULL || vec3f_distanceSquared((char *)tw + 0x18, (char *)o2 + 0x18) >= lbl_803E522C) {
+                            if (vec3f_distanceSquared(*(char **)(st + 0x28) + 0x18, (char *)o2 + 0x18) >= lbl_803E522C) {
                                 fn_8014C66C(o2, obj);
                             } else {
                                 fn_8014C66C(o2, *(int **)(st + 0x28));
@@ -768,18 +768,18 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
             int *tw2 = tumbleweedbush_findNearestActive(st + 0xc);
             if (tw2 != NULL) {
                 int *tk = getTrickyObject();
-                (**(void (**)(int *, int *, int, int))((char *)(*(int **)((char *)tk + 0x68)) + 0x28))(tk, obj, 1, 1);
+                (**(void (**)(int *, int *, int, int))((char *)(*(int **)*(int *)((char *)tk + 0x68)) + 0x28))(tk, obj, 1, 1);
             }
             *(int *)(st + 0x48) = (int)&lbl_803DBFA8;
-            if (*(int *)(st + 0x24) == 0) {
+            if (*(void **)(st + 0x24) == NULL) {
                 short *cfg = *(short **)((char *)obj + 0x4c);
                 if (tw2 != NULL && *(s16 *)((char *)tw2 + 0x46) == 0x3fb) {
                     if (getXZDistance((char *)obj + 0x18, (char *)tw2 + 0x18) < (f32)(s32)(cfg[0xc] * cfg[0xc])) {
                         if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
                             Sfx_PlayFromObject(obj, 0x38a);
                         }
-                        if ((**(int (**)(int *))((char *)(*(int **)((char *)tw2 + 0x68)) + 0x30))(tw2) == 0) {
-                            (**(void (**)(int *, u8 *))((char *)(*(int **)((char *)tw2 + 0x68)) + 0x2c))(tw2, st + 0xc);
+                        if ((**(int (**)(int *))((char *)(*(int **)*(int *)((char *)tw2 + 0x68)) + 0x30))(tw2) == 0) {
+                            (**(void (**)(int *, u8 *))((char *)(*(int **)*(int *)((char *)tw2 + 0x68)) + 0x2c))(tw2, st + 0xc);
                             *(int **)(st + 0x24) = tw2;
                             st[0x408] = 0xe;
                         }
@@ -804,9 +804,9 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
         if (st[0x43c] & 2) {
             Obj_FreeObject(*(int *)(st + 0x24));
             *(int *)(st + 0x24) = 0;
-            st[0x43f] = st[0x43f] + 1;
+            *(s8 *)(st + 0x43f) += 1;
             if (*(s8 *)(st + 0x43f) > 3) {
-                st[0x43f] = 3;
+                *(s8 *)(st + 0x43f) = 3;
             }
             GameBit_Set(0x48b, *(s8 *)(st + 0x43f));
             if (*(s8 *)(st + 0x43f) >= 3) {
@@ -843,6 +843,7 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
             }
         }
         break;
+    case 0x13:
     default:
         if (GameBit_Get(0x224) != 0) {
             *(int *)(st + 0x48) = (int)&lbl_803DBFB0;
