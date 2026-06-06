@@ -1144,7 +1144,7 @@ void dim2icefloe_init(int obj, int p)
 #pragma scheduling reset
 #pragma peephole reset
 
-/* dim2icicle_update: state machine — wait for hit, shake, drop into water, melt. */
+/* dim2icicle_update: state machine -- wait for hit, shake, drop into water, melt. */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int *out, int a, int b);
 extern int *gWaterfxInterface;
@@ -1369,7 +1369,7 @@ void dll_1DB_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-/* dll_1DA_update: rolling-rock physics — damp velocity, bounce off geometry normal,
+/* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int objBboxFn_800640cc(int a, int b, f32 r, int c, int *out, int obj, int d, int e, int f,
@@ -1478,7 +1478,7 @@ void dll_1DA_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-/* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher — picks a player anim
+/* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
  * from distance/anim-state via the interface vtables. */
 extern int *gBaddieControlInterface;
 extern int *gPlayerInterface;
@@ -1606,9 +1606,9 @@ void dll_1DA_init(void* obj)
 }
 
 /* dll_1DF_init: similar romlist param init, but reads three u8 fields, packs to s16
- *              fields, and on a u8 flag does a u32→f32 conversion (MWCC emits the
+ *              fields, and on a u8 flag does a u32->f32 conversion (MWCC emits the
  *              magic-2^52 trick using a 2^52 constant) to scale obj[0x50]->f4 into
- *              obj[8]. Also sets obj[0xB8]→f10 from a constant and OR-merges flags
+ *              obj[8]. Also sets obj[0xB8]->f10 from a constant and OR-merges flags
  *              into obj[0x64]->u32_30 (0x810) and obj[0xB0]'s u16 (0x2000). */
 extern f32 lbl_803E4BA8;
 extern f32 lbl_803E4BAC;
@@ -1637,7 +1637,7 @@ void dll_1DF_init(void* obj, void* p)
 #pragma scheduling reset
 #pragma peephole reset
 
-/* dim2lavacontrol_setScale: every-frame tick — if not already "armed" (bit 0 of
+/* dim2lavacontrol_setScale: every-frame tick -- if not already "armed" (bit 0 of
  *   sub.b2 is clear), decrement sub.b0 counter; when it hits 0 set the armed bit
  *   and tell the game-event tracker (via param.s16_1E) that this trigger fired. */
 #pragma peephole off
@@ -1677,7 +1677,7 @@ void dim2lavacontrol_free(void)
  *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color
  *     (bytes 0xC..0xE) to (u8)(int)lbl_803E4B9C via three independent fctiwz casts,
  *     else do the same dest writes (different scheduling).
- *   - Then if (distance² from player to obj position < lbl_803E4BA0) and sub.f24
+ *   - Then if (distance^2 from player to obj position < lbl_803E4BA0) and sub.f24
  *     decremented by timeDelta is < lbl_803E4B9C, call gPartfxInterface->vt[2] with
  *     (obj, 525, 0, 2, -1, 0) and reset sub.f24 to lbl_803E4BA4. */
 extern void* objFindTexture(void* obj, int a, int b);

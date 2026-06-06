@@ -1,5 +1,5 @@
 /*
- * MusyX synthdata.c — sound data table management.
+ * MusyX synthdata.c -- sound data table management.
  * Matches the public MusyX runtime source (see PrimeDecomp/mariopartyrd
  * synthdata.c); SFA's build uses sndBegin/sndEnd for the IRQ guard.
  */

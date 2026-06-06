@@ -2817,7 +2817,7 @@ void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
 }
 #pragma peephole reset
 #pragma scheduling reset
-/* shop_getItem* helpers — table lookup */
+/* shop_getItem* helpers -- table lookup */
 #pragma peephole off
 #pragma scheduling off
 int shop_getItemPrice(int p, int idx)

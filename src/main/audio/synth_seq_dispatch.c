@@ -62,8 +62,8 @@ typedef struct {
     u8 *next;    // 0x0
     u8 *prev;    // 0x4
     u32 time;    // 0x8
-    u8 *data;    // 0xc — SeqTrackEntry (track event) or SeqNoteData (pattern note)
-    u8 *chanRec; // 0x10 — SynthChanRec of the dispatching channel
+    u8 *data;    // 0xc -- SeqTrackEntry (track event) or SeqNoteData (pattern note)
+    u8 *chanRec; // 0x10 -- SynthChanRec of the dispatching channel
     u8 type;     // 0x14
     u8 trackId;  // 0x15
     u8 pad16[2]; // 0x16

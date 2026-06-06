@@ -1202,10 +1202,10 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
  * Args: (s32 fade_target, u8 idx, u8 flags, u8 q).
  *   flags & 0x08 : commit `idx` to lbl_803DD77A and consult the bit
  *                  table at lbl_8031B074 (stride 0x1c, halfword field
- *                  at +0x16) — if the GameBit reads 0, override idx
+ *                  at +0x16) -- if the GameBit reads 0, override idx
  *                  to 5 before the rest of the work runs.
- *   flags & 0x04 : full reset path — clear lbl_803DD774 and return.
- *   flags & 0x02 : "mirror past peak" path — flip the active counter
+ *   flags & 0x04 : full reset path -- clear lbl_803DD774 and return.
+ *   flags & 0x02 : "mirror past peak" path -- flip the active counter
  *                  back to the [0xd9, 0xff] range and clear the
  *                  direction byte at lbl_803DD77F.
  *   flags & 0x01 : set the direction byte at lbl_803DD77F to 1.
@@ -1387,7 +1387,7 @@ int registerNewScore(s8 a, int b, u8 c, int mode)
  * ZBuf window 0x8000, then calls GXSetViewport with width/height
  * from the global render obj at lbl_803DCCF0 (offsets 0x4, 0x8).
  *
- * Logic-only — MWCC schedules the s32->f32 magic conversion for the
+ * Logic-only -- MWCC schedules the s32->f32 magic conversion for the
  * GXSetViewport width/height differently from retail (interleaves
  * vs fetch-all-then-process). The float constant pool entry for the
  * 0x4330_00000000 / 2^52 magic also lands on @408 instead of being
@@ -1417,7 +1417,7 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
 #pragma scheduling reset
 
 /* EN v1.0 0x8012C558  size: 340b  Snowworm scene shutdown / setup.
- * 97% — residual is MWCC routing the two .bss address loads via
+ * 97% -- residual is MWCC routing the two .bss address loads via
  * `addi r0,r3,@lo; mr rN,r0` per address instead of the clean
  * `lis r3,@ha; addi rN,r3,@lo` pair-per-address (plus a r30/r31
  * swap between obj and i). Pragmas don't disable the routing.
@@ -1611,7 +1611,7 @@ void perspectiveFn_80129db4(void)
 #pragma scheduling reset
 
 /* EN v1.0 0x8012D77C  size: 496b  Title-card overlay draw routine.
- * Logic-only — MWCC's register allocator picks different non-volatile
+ * Logic-only -- MWCC's register allocator picks different non-volatile
  * registers for saved / sprite / alpha / target than retail does
  * (target uses r31=sprite, r30=alpha, r29=handle, r28=saved, r27=
  * target, but MWCC swaps several around regardless of declaration

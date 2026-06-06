@@ -1133,7 +1133,7 @@ extern f32 lbl_803DEE9C;
 
 /* EN v1.0 Size: 132b - 74% match. 4x4 identity fill. Remaining diff:
  * target uses 'li r0, N; cmpw r4, r0' per column, mine uses 'cmpwi
- * r4, N' — MWCC always folds the integer literal into the compare
+ * r4, N' -- MWCC always folds the integer literal into the compare
  * immediate form. The +4 extra li instructions explain the 116 vs
  * 132 byte discrepancy. Not crackable without materializing the
  * comparison indices via a global/volatile, which would break other
@@ -3208,7 +3208,7 @@ u32 objCallback_80074d04(int handle, void* model)
     GXLoadTexMtxImm(mtx_ec, 0x21, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x21, 0, 0x7d);
 
-    /* indMtx_44 (6 floats) — first ind matrix */
+    /* indMtx_44 (6 floats) -- first ind matrix */
     {
         f32 v = gSynthDelayedActionWord0 * f31_val;
         indMtx_44[0] = v;
@@ -3231,7 +3231,7 @@ u32 objCallback_80074d04(int handle, void* model)
     GXLoadTexMtxImm(mtx_bc, 0x24, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x24, 0, 0x7d);
 
-    /* indMtx_2c — second ind matrix */
+    /* indMtx_2c -- second ind matrix */
     {
         f32 v44 = lbl_803DEF44 * f31_val;
         f32 v48 = lbl_803DEF48 * f31_val;
@@ -3247,7 +3247,7 @@ u32 objCallback_80074d04(int handle, void* model)
     GXSetIndTexMtx(2, (f32(*)[3])indMtx_2c, -4);
     GXSetTevIndirect(1, 1, 1, 7, 2, 0, 0, 0, 0, 1);
 
-    /* buf_8c_2 — third tex matrix at slot 0x55 */
+    /* buf_8c_2 -- third tex matrix at slot 0x55 */
     buf_8c_2[0] = lbl_803DB6AC;
     buf_8c_2[1] = lbl_803DEEDC;
     buf_8c_2[2] = lbl_803DEEDC;
@@ -5822,7 +5822,7 @@ void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a
     GXSetTevDirect(5);
     GXSetTevOrder(5, 0xFF, 0xFF, 0xFF);
     GXSetTevColorIn(5, 0xF, 0xF, 0xF, 0);
-    GXSetTevAlphaIn(5, 0, 6, 7, 0);  /* Note: target has 0, 0, 6, 7 — adjust */
+    GXSetTevAlphaIn(5, 0, 6, 7, 0);  /* Note: target has 0, 0, 6, 7 -- adjust */
     GXSetTevSwapMode(5, 0, 0);
     GXSetTevColorOp(5, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(5, 0, 0, 0, 1, 0);
@@ -7107,7 +7107,7 @@ void gxTextureSetupFn_8007cf7c(void)
  */
 /* EN v1.0 Size: 108b - 77% match. MWCC recomputes &lbl_803967C0 for
  * each PSMTXConcat call; target caches it once in r31 (callee-save)
- * and reuses across both calls. Register-allocator preference — not
+ * and reuses across both calls. Register-allocator preference -- not
  * crackable without inline asm. */
 #pragma scheduling off
 #pragma peephole off
@@ -7138,7 +7138,7 @@ void fn_8007D670(void)
  *
  * Retail ships a locally-defined empty OSReport that disables debug
  * output. MWCC generates a varargs prologue saving r3-r10 and, if
- * cr1 indicates FP args, f1-f8 — exactly what the empty body emits.
+ * cr1 indicates FP args, f1-f8 -- exactly what the empty body emits.
  */
 void OSReport(const char* msg, ...)
 {

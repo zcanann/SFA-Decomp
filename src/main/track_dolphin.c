@@ -4156,7 +4156,7 @@ typedef struct TrackBlockDescriptor {
 extern TrackBlockDescriptor lbl_8038DC64[];
 #define gTrackBlockDescriptors lbl_8038DC64
 
-/* fn_80069944 — store sbss byte into *p1 and return a fixed table base. */
+/* fn_80069944 -- store sbss byte into *p1 and return a fixed table base. */
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
@@ -4168,7 +4168,7 @@ void *fn_80069944(u32 *outVal) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_80069958 — write a fixed table base address into *out. */
+/* fn_80069958 -- write a fixed table base address into *out. */
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
@@ -4179,7 +4179,7 @@ void fn_80069958(void **out) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* mapBlockFn_80060678 — return top byte of obj[0x10]
+/* mapBlockFn_80060678 -- return top byte of obj[0x10]
  * (clrrwi 24 + srwi 24). */
 #pragma scheduling off
 #pragma peephole off
@@ -4204,7 +4204,7 @@ void mapGetBlocks(void **outPtr, u32 *outVal)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* playerShadowFn_80062a30 — if obj[0x64] non-NULL, clear bits 0x2020 in
+/* playerShadowFn_80062a30 -- if obj[0x64] non-NULL, clear bits 0x2020 in
  * its u32 at +0x30. */
 #pragma scheduling off
 #pragma peephole off
@@ -4217,7 +4217,7 @@ void playerShadowFn_80062a30(int *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_80060668 — extract bits 8-15 of obj[0x10] as a byte
+/* fn_80060668 -- extract bits 8-15 of obj[0x10] as a byte
  * (target uses rlwinm 8,15 + srwi 16). */
 #pragma scheduling off
 #pragma peephole off
@@ -4232,7 +4232,7 @@ u32 fn_80060668(int *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_80062894 — clear two shorts, toggle two bytes (1 - x), clear
+/* fn_80062894 -- clear two shorts, toggle two bytes (1 - x), clear
  * two more bytes. r3 stays at 0 through the whole sequence. */
 extern s16 lbl_803DCEF6;
 extern s16 lbl_803DCEFA;
@@ -4253,7 +4253,7 @@ void fn_80062894(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_80069968 — read s16 at lbl_8038DC64[idx*0x18 + 4] into *out1, and
+/* fn_80069968 -- read s16 at lbl_8038DC64[idx*0x18 + 4] into *out1, and
  * the sbss u32 lbl_803DCF30 into *out2. Asm form locks the lis/addi
  * pair so MWCC doesn't route the table base through r0. */
 #pragma scheduling off
@@ -7016,7 +7016,7 @@ void objBboxFn_800640cc(f32 *p0, f32 *p1, int p5, int *out, int *self, int p8, i
     }
 }
 
-/* fn_80067B84 — gather model triangles overlapping a swept bbox into the
+/* fn_80067B84 -- gather model triangles overlapping a swept bbox into the
  * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
  * cursor. */
 extern u8 *fn_80028364(int hdr, int i);
@@ -7219,7 +7219,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 s
     return cur;
 }
 
-/* mapLoadBlocksFn_800685cc — gather map-block collision triangles overlapping
+/* mapLoadBlocksFn_800685cc -- gather map-block collision triangles overlapping
  * the query box into the buffer at cur; returns advanced cursor. */
 extern u8 *mapGetBlockAtPos(int x, int z, int layer);
 extern int cacheAllocAndCopy(void *p, int size, int *offIn, int *offOut, int base);
@@ -7583,7 +7583,7 @@ u8 doEdges;
     return cur;
 }
 
-/* trackIntersect — rebuild the intersection line table from map blocks when
+/* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
 extern u8 *mapGetBlockIdx(int layer);
 extern u8 *mapGetBlock(int idx);
@@ -7771,7 +7771,7 @@ void trackIntersect(void)
     lbl_803DCF44 = 1;
 }
 
-/* doLotsOfMath — sweep a 2D segment (with radius) against the intersection
+/* doLotsOfMath -- sweep a 2D segment (with radius) against the intersection
  * line table, sliding/clipping the end point; fills *out with the last hit. */
 extern f32 lbl_803DECCC;
 extern f32 lbl_803DECD0;
@@ -8160,7 +8160,7 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
 }
 
 
-/* hitDetect_800667ec — sweep each input sphere against the gathered triangle
+/* hitDetect_800667ec -- sweep each input sphere against the gathered triangle
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
 extern char sTrackHitOverflowError[];
 extern void fn_80137948(char *fmt, ...);

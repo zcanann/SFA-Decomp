@@ -5,7 +5,7 @@
 #include "global.h"
 
 /* sh_staff per-object extra state (sh_staff_getExtraSize == 0x74; the
- * returner lives in IM/IMsnowbike.c, the handlers in DR/DRearthwalk.c —
+ * returner lives in IM/IMsnowbike.c, the handlers in DR/DRearthwalk.c --
  * IMsnowbike's sh_staff_free walks the slots region with a stride
  * walker and stays raw). Offsets derived from the DRearthwalk census
  * (task #4 redo). */

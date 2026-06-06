@@ -4018,7 +4018,7 @@ typedef struct ChukChukState {
     s16 unk08; /* from params+0x22 */
     s16 gameBit; /* set on destruction; already-set disables on load */
     u16 triggerDistance; /* params[0x29] << 3 */
-    u16 arcHalfAngle; /* (s8)params[0x28] * 182 — facing wedge for the spit attack */
+    u16 arcHalfAngle; /* (s8)params[0x28] * 182 -- facing wedge for the spit attack */
     u16 prevDistance; /* player planar distance last frame */
     u8 flags; /* 1 primed, 2 dead/disabled, 4 forced attack */
     u8 hitsLeft;
