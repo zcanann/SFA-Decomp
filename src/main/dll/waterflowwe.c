@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 extern f32 lbl_803E72B4;
 extern f32 lbl_803E72B8;
@@ -39,10 +40,10 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
         other = objects[i];
         if (((*(u8 **)(other + 0x4c))[0x1a] & 2) != 0) {
             anyCurrent = 1;
-            dy = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
+            dy = *(f32 *)(other + 0x10) - ((GameObject *)obj)->anim.localPosY;
             if ((dy <= lbl_803E72B4) && (dy >= lbl_803E72B8)) {
-                dx = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
-                dz = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
+                dx = *(f32 *)(other + 0xc) - ((GameObject *)obj)->anim.localPosX;
+                dz = *(f32 *)(other + 0x14) - ((GameObject *)obj)->anim.localPosZ;
                 distance = sqrtf(dx * dx + dz * dz);
                 radius = lbl_803E72BC * (f32)(u32)(*(u8 **)(other + 0x4c))[0x19];
                 if (distance < radius) {
@@ -65,10 +66,10 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
         other = objects[i];
         objectStrength = (f32)(u32)(*(u8 **)(other + 0x4c))[0x32] / strengthDiv;
         anyCurrent = 1;
-        dy = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
+        dy = *(f32 *)(other + 0x10) - ((GameObject *)obj)->anim.localPosY;
         if ((dy <= dyMax) && (dy >= lbl_803E72B8)) {
-            dx = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
-            dz = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
+            dx = *(f32 *)(other + 0xc) - ((GameObject *)obj)->anim.localPosX;
+            dz = *(f32 *)(other + 0x14) - ((GameObject *)obj)->anim.localPosZ;
             currentAngle = (s16)(getAngle(dx, dz) + 0x84d0);
             distance = sqrtf(dx * dx + dz * dz);
             radius = (f32)(s32)((*(u8 **)(other + 0x4c))[0x29] << 3);
@@ -129,17 +130,17 @@ int waterflowwe_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void waterflowwe_init(int obj, u8 *setup)
 {
-    *(s16 *)(obj + 4) = (s16)(setup[0x18] << 8);
-    *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
-    *(s16 *)(obj + 0) = (s16)(setup[0x1a] << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)(setup[0x18] << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)(setup[0x19] << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)(setup[0x1a] << 8);
     if (setup[0x1b] != 0) {
-        *(f32 *)(obj + 8) = (f32)(u32)setup[0x1b] / lbl_803E72F4;
-        if (*(f32 *)(obj + 8) == lbl_803E72B0) {
-            *(f32 *)(obj + 8) = lbl_803E72E8;
+        ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)setup[0x1b] / lbl_803E72F4;
+        if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E72B0) {
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E72E8;
         }
-        *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
+        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)(obj + 0x50) + 4);
     }
-    *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
+    ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x2000;
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E72B0, 0);
 }
 #pragma scheduling reset
