@@ -624,7 +624,6 @@ extern int *gPathControlInterface;
 extern f32 lbl_803E2574;
 extern f32 lbl_803E2600;
 
-void enemy_init(int obj, u8 *setup, int flag);
 
 #pragma scheduling off
 #pragma peephole off
