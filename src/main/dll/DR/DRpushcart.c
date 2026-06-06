@@ -916,7 +916,8 @@ int fn_801E86F4(int obj, int p2, int p3)
   *(s16 *)(p3 + 0x6e) = (s16)(*(s16 *)(p3 + 0x6e) & ~4);
   *(s16 *)(p3 + 0x70) = (s16)(*(s16 *)(p3 + 0x70) & ~4);
 
-  if (*(int *)(*(int *)(obj + 0x7c) + (s32)(s8)*(u8 *)(obj + 0xad) * 4) != 0) {
+  if (*(int *)(*(int *)(obj + offsetof(ObjAnimComponent, banks)) +
+               (s32)*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) * 4) != 0) {
     ObjAnim_AdvanceCurrentMove(lbl_803E5A60, timeDelta, obj, NULL);
   }
 

@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/dll/CF/windlift.h"
 
 extern undefined4 FUN_8000680c();
@@ -1350,7 +1351,7 @@ void fn_80185B74(int obj)
             }
             ObjHits_EnableObject(obj);
         }
-        held = *(u8 *)(*(int *)(obj + 0x54) + 0xad);
+        held = *(u8 *)(*(int *)(obj + 0x54) + offsetof(ObjAnimComponent, bankIndex));
         if ((s8)held != 0 && *(s8 *)(state + 0x23) == 1) {
             *(f32 *)(obj + 0x28) = lbl_803E3A58;
             *(u8 *)(state + 0x23) = 0;

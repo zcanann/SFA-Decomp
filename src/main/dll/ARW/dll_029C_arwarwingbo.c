@@ -120,7 +120,7 @@ void arwarwingbo_update(int obj)
         (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 0x79e, 0, 1, -1, obj + 0x24);
         ObjHits_SetHitVolumeSlot(obj, 0xf, 0, 0);
         if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL ||
-            (s8)*(u8 *)(*(int *)(obj + 0x54) + 0xad) != 0 ||
+            (s8)*(u8 *)(*(int *)(obj + 0x54) + offsetof(ObjAnimComponent, bankIndex)) != 0 ||
             (getButtonsJustPressed(0) & 0x200)) {
             state = *(int *)(obj + 0xb8);
             fn_8022D4F8(getArwing());
