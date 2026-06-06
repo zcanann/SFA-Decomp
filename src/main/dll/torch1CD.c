@@ -1,4 +1,5 @@
 #include "main/dll/torch1CD.h"
+#include "main/dll/torch1cd_state.h"
 
 extern void getEnvfxAct(int obj, int target, int id, int p);
 extern void GameBit_Set(int eventId, int value);
@@ -26,16 +27,16 @@ int dll_19B_SeqFn(int obj, int unused, u8 *buf)
     *(s16 *)(buf + 0x6e) = -1;
     buf[0x56] = 0;
 
-    if (*(s16 *)(state + 0xa) != 0) {
-        *(s16 *)(state + 0x8) += *(s16 *)(state + 0xa);
-        if (*(s16 *)(state + 0x8) <= 1 && *(s16 *)(state + 0xa) <= 0) {
-            *(s16 *)(state + 0x8) = 1;
-            *(s16 *)(state + 0xa) = 0;
-        } else if (*(s16 *)(state + 0x8) >= 0x46 && *(s16 *)(state + 0xa) >= 0) {
-            *(s16 *)(state + 0x8) = 0x46;
-            *(s16 *)(state + 0xa) = 0;
+    if (((Torch1CDState *)state)->unkA != 0) {
+        ((Torch1CDState *)state)->unk8 += ((Torch1CDState *)state)->unkA;
+        if (((Torch1CDState *)state)->unk8 <= 1 && ((Torch1CDState *)state)->unkA <= 0) {
+            ((Torch1CDState *)state)->unk8 = 1;
+            ((Torch1CDState *)state)->unkA = 0;
+        } else if (((Torch1CDState *)state)->unk8 >= 0x46 && ((Torch1CDState *)state)->unkA >= 0) {
+            ((Torch1CDState *)state)->unk8 = 0x46;
+            ((Torch1CDState *)state)->unkA = 0;
         }
-        ((void (**)(int, u8))*gTitleMenuControlInterface)[0x38/4](3, (u8)*(s16 *)(state + 0x8));
+        ((void (**)(int, u8))*gTitleMenuControlInterface)[0x38/4](3, (u8)((Torch1CDState *)state)->unk8);
     }
 
     for (i = 0; i < (int)buf[0x8b]; i++) {
@@ -53,20 +54,20 @@ int dll_19B_SeqFn(int obj, int unused, u8 *buf)
                 }
                 break;
             case 3:
-                *(u8 *)(state + 0x14) = 1;
+                ((Torch1CDState *)state)->unk14 = 1;
                 break;
             case 4:
-                *(u8 *)(state + 0x13) = 4;
-                *(u8 *)(state + 0x14) = 2;
+                ((Torch1CDState *)state)->unk13 = 4;
+                ((Torch1CDState *)state)->unk14 = 2;
                 GameBit_Set(0x129, 1);
                 GameBit_Set(0x1d2, 0);
                 GameBit_Set(0x126, 1);
-                *(s16 *)(state + 0xa) = -3;
+                ((Torch1CDState *)state)->unkA = -3;
                 break;
             case 5:
-                *(u8 *)(state + 0x13) = 6;
-                *(u8 *)(state + 0x14) = 3;
-                *(s16 *)(state + 0xa) = -3;
+                ((Torch1CDState *)state)->unk13 = 6;
+                ((Torch1CDState *)state)->unk14 = 3;
+                ((Torch1CDState *)state)->unkA = -3;
                 GameBit_Set(0x129, 1);
                 break;
             case 6:
@@ -74,7 +75,7 @@ int dll_19B_SeqFn(int obj, int unused, u8 *buf)
                 break;
             case 7:
                 GameBit_Set(0x1d2, 0);
-                *(s16 *)(state + 0xa) = -3;
+                ((Torch1CDState *)state)->unkA = -3;
                 break;
             case 8:
                 GameBit_Set(0x128, 1);
@@ -86,9 +87,9 @@ int dll_19B_SeqFn(int obj, int unused, u8 *buf)
                 GameBit_Set(0x127, 1);
                 break;
             case 0xb:
-                *(s16 *)(state + 0x8) = 100;
+                ((Torch1CDState *)state)->unk8 = 100;
                 ((void (**)(int, int, int, u8, int))*gTitleMenuControlInterface)[0x18/4]
-                    (3, 0x2d, 0x50, (u8)*(s16 *)(state + 0x8), 0);
+                    (3, 0x2d, 0x50, (u8)((Torch1CDState *)state)->unk8, 0);
                 break;
             }
         }
