@@ -751,39 +751,47 @@ void Sfx_UpdateLoopedObjectSounds(void)
 #pragma peephole off
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 {
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     SfxLoopedObjectSoundTable *table = &gSfxLoopedObjectSoundFlags;
     u8 *flags = table->flags;
-    u16 *ids = table->ids;
-    u32 *objects = table->objects;
-    s16 i;
     u16 count = gSfxLoopedObjectSoundCount;
     u16 sameSfxCount = 0;
-    u32 found;
+    s16 i = 0;
+    u16 *ids = table->ids;
+    u16 *ip = ids;
+    u32 *objects = table->objects;
+    u32 *op = objects;
+    s16 j;
+    int found;
 
-    for (i = 0; i < count; i++) {
-        if (sfxId == ids[i]) {
+    for (; i < count; i++) {
+        if (sfxId == *ip) {
             if (limit != 0) {
                 sameSfxCount++;
             }
-            if (objects[i] == obj) {
+            if (*op == obj) {
                 flags[i] |= SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
                 return;
             }
         }
+        ip++;
+        op++;
     }
 
     if (sameSfxCount <= limit) {
-        found = 0;
-        for (i = 0; i < count; i++) {
-            if ((objects[i] == obj) && (sfxId == ids[i])) {
+        for (j = 0; j < count; j++) {
+            if ((*objects == obj) && (sfxId == *ids)) {
                 found = 1;
-                break;
+                goto checked;
             }
+            objects++;
+            ids++;
         }
-
+        found = 0;
+checked:
         if ((found == 0) && (count != SFX_LOOPED_OBJECT_SOUND_COUNT)) {
-            objects[count] = obj;
-            ids[count] = sfxId;
+            table->objects[count] = obj;
+            table->ids[count] = sfxId;
             flags[count] = 0;
             gSfxLoopedObjectSoundCount++;
             Sfx_PlayFromObject(obj, sfxId);
