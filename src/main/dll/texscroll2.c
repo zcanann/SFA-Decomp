@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/wallanimator.h"
 #include "main/objanim.h"
 #include "main/dll/texscroll2.h"
 
@@ -9,7 +10,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 FUN_801695e8();
 
 extern undefined4 DAT_80321050;
 extern undefined4 DAT_80321054;
@@ -442,7 +442,6 @@ int fn_80167F58(int obj, int p2)
 int fn_80168018(int obj, int p2)
 {
   extern void ObjHits_DisableObject(int);
-  extern void fn_80169360(int obj, int mode);
   extern f32 lbl_803E3060;
   extern f32 lbl_803E307C;
   int state = *(int *)(obj + 0xb8);
@@ -466,7 +465,7 @@ int fn_80168018(int obj, int p2)
   }
   if ((s32)(((GroundBaddieState *)p2)->baddie.eventFlags & 0x1000) != 0) {
     ((GroundBaddieState *)p2)->baddie.eventFlags &= 0xffffefff;
-    fn_80169360(obj, 2);
+    kaldachompme_setLinkedMouthMode((u8 *)obj, 2);
   }
   return 0;
 }
@@ -478,7 +477,6 @@ int fn_80168018(int obj, int p2)
 int fn_80168118(int obj, int p2)
 {
   extern void ObjHits_EnableObject(int);
-  extern void fn_80169360(int obj, int mode);
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3098;
   extern f32 lbl_803E309C;
@@ -489,7 +487,7 @@ int fn_80168118(int obj, int p2)
       ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0);
       ((GroundBaddieState *)p2)->baddie.moveDone = 0;
     }
-    fn_80169360(obj, 1);
+    kaldachompme_setLinkedMouthMode((u8 *)obj, 1);
     ((GroundBaddieState *)p2)->baddie.unk25F = 1;
     GameBit_Set(*(s16 *)(state + 0x3f4), 1);
     *(u8 *)(obj + 0xaf) &= ~8;

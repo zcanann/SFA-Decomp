@@ -48,18 +48,26 @@ extern f32 lbl_803E30E0;
 
 extern int ObjList_FindObjectById(int id);
 
+typedef struct KaldaChompMeState {
+    f32 progress;
+    f32 step;
+    f32 targetProgress;
+    u8 moveId;
+    u8 pad0D[3];
+} KaldaChompMeState;
+
 /*
  * --INFO--
  *
- * Function: fn_80169360
+ * Function: kaldachompme_setLinkedMouthMode
  * EN v1.0 Address: 0x80169360
  * EN v1.0 Size: 556b
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_80169360(u8 *obj, u8 mode)
+void kaldachompme_setLinkedMouthMode(u8 *obj, u8 mode)
 {
-    f32 *state;
+    KaldaChompMeState *state;
     int obj2;
 
     if (obj == NULL) {
@@ -108,20 +116,20 @@ void fn_80169360(u8 *obj, u8 mode)
     default:
         return;
     }
-    state = *(f32 **)(obj2 + 0xb8);
+    state = *(KaldaChompMeState **)(obj2 + 0xb8);
     if (state != NULL) {
         switch (mode) {
         case 1:
-            state[2] = lbl_803E30D0;
-            state[0] = lbl_803E30D4;
-            state[1] = lbl_803E30D8;
-            *(u8 *)(state + 3) = 0;
+            state->targetProgress = lbl_803E30D0;
+            state->progress = lbl_803E30D4;
+            state->step = lbl_803E30D8;
+            state->moveId = 0;
             break;
         case 2:
-            state[2] = lbl_803E30D0;
-            state[0] = lbl_803E30D4;
-            state[1] = lbl_803E30D8;
-            *(u8 *)(state + 3) = 1;
+            state->targetProgress = lbl_803E30D0;
+            state->progress = lbl_803E30D4;
+            state->step = lbl_803E30D8;
+            state->moveId = 1;
             break;
         }
     }
@@ -165,31 +173,31 @@ void kaldachompme_update(int obj)
   float target;
   float current;
   float step;
-  float *extra;
+  KaldaChompMeState *extra;
 
-  extra = *(float **)(obj + 0xb8);
-  current = extra[0];
-  target = extra[2];
+  extra = *(KaldaChompMeState **)(obj + 0xb8);
+  current = extra->progress;
+  target = extra->targetProgress;
   if (current != target) {
-    step = extra[1];
+    step = extra->step;
     if (step > lbl_803E30D4) {
       if (current < target) {
-        extra[0] = current + step * timeDelta;
+        extra->progress = current + step * timeDelta;
       }
       else {
-        extra[0] = target;
+        extra->progress = target;
       }
     }
     else {
       if (current > target) {
-        extra[0] = current + step * timeDelta;
+        extra->progress = current + step * timeDelta;
       }
       else {
-        extra[0] = target;
+        extra->progress = target;
       }
     }
   }
-  ObjAnim_SetCurrentMove(obj,(uint)*(byte *)((int)extra + 0xc),extra[0],0);
+  ObjAnim_SetCurrentMove(obj,extra->moveId,extra->progress,0);
 }
 #pragma peephole reset
 #pragma scheduling reset

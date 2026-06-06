@@ -2,6 +2,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/cf_doorlight_state.h"
 #include "main/dll/cf_doorlight.h"
+#include "main/dll/wallanimator.h"
 #include "main/objanim.h"
 
 
@@ -285,7 +286,6 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
 #pragma peephole off
 int fn_80167B60(int obj, int p)
 {
-  extern void fn_80169360(int obj, int n);
   extern int *gBaddieControlInterface;
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3078;
@@ -311,7 +311,7 @@ int fn_80167B60(int obj, int p)
     int v = *(int *)(p + 0x314);
     if ((v & 0x1000) != 0) {
       *(int *)(p + 0x314) = v & ~0x1000;
-      fn_80169360(obj, 2);
+      kaldachompme_setLinkedMouthMode((u8 *)obj, 2);
     }
   }
   b8_40c = ((CfDoorlightState *)b8)->unk40C;

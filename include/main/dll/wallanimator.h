@@ -14,6 +14,7 @@ void kaldachompme_update(int obj);
 void kaldachompme_init(int obj,int params);
 void kaldachompme_release(void);
 void kaldachompme_initialise(void);
+void kaldachompme_setLinkedMouthMode(u8 *obj, u8 mode);
 void FUN_801695e8(int param_1,byte param_2);
 void FUN_8016980c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80169834(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
