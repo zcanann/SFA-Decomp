@@ -637,11 +637,11 @@ void gameTimerRun(void)
         if ((lbl_803DC8F9 & 1) != 0) {
             ratio = lbl_803DC900 / lbl_803DC8FC;
             panByte = (f32)(0x7F - ((int)(lbl_803DE6C0 * ratio) & 0xFF));
-            Sfx_SetObjectSfxVolume(lbl_803DE6C4 - lbl_803DE6C8 * ratio, 0, SFXsc_clubhit01, panByte);
+            Sfx_SetObjectSfxVolume(0, SFXsc_clubhit01, panByte, lbl_803DE6C4 - lbl_803DE6C8 * ratio);
         } else {
             ratio = lbl_803DC900 / lbl_803DC8FC;
             panByte = (f32)(((int)(lbl_803DE6C0 * ratio) & 0xFF) + 0x2F);
-            Sfx_SetObjectSfxVolume(lbl_803DE6C8 * ratio + lbl_803DE6CC, 0, SFXsc_clubhit01, panByte);
+            Sfx_SetObjectSfxVolume(0, SFXsc_clubhit01, panByte, lbl_803DE6C8 * ratio + lbl_803DE6CC);
         }
     }
 

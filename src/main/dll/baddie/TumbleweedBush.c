@@ -905,7 +905,7 @@ extern f32 lbl_803E21F8;
 extern s8 padGetStickX(int port);
 extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u32 sfxId);
-extern void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume);
+extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 extern void Music_PlayTrackByIndex(int index);
 extern void drawTexture(void* texture, u8 alpha, f32 x, f32 y, u16 scale);
 extern void* gameTextGetPhrase(int textId, int variant);
@@ -1074,7 +1074,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
             } else if (previewVolume > 0x7f) {
                 previewVolume = 0x7f;
             }
-            Sfx_SetObjectSfxVolume(lbl_803E21F8, 0, 0x3b9, (u8)previewVolume);
+            Sfx_SetObjectSfxVolume(0, 0x3b9, (u8)previewVolume, lbl_803E21F8);
         }
         break;
     default:

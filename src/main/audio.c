@@ -1107,7 +1107,7 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId)
 
 #pragma scheduling off
 #pragma peephole off
-void Sfx_SetObjectChannelVolume(f32 volumeScale, u32 obj, u32 channel, u8 volume)
+void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale)
 {
     u8 volumeByte;
     SfxObjectChannel* objectChannel;
@@ -1154,7 +1154,7 @@ void Sfx_SetObjectChannelVolume(f32 volumeScale, u32 obj, u32 channel, u8 volume
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume)
+void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
 {
     u8 volumeByte;
     SfxObjectChannel* objectChannel;
@@ -2050,11 +2050,11 @@ int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
         *sfxId = 0x409;
     case 0x409:
         *outChannel = 0;
-        return 1;
+        break;
     case 0x7e:
     case 0x487:
         *outChannel = 0;
-        return 1;
+        break;
     case 0x420:
         Music_Trigger(0xe7, 0);
         Music_Trigger(0xe7, 1);
@@ -2063,9 +2063,8 @@ int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
         return !(gAudioActiveChannelMask & 4);
     case 0x0:
         return 0;
-    default:
-        return 1;
     }
+    return 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2622,8 +2621,8 @@ foundChannel:
 #pragma peephole off
 void Music_PlayTrackByIndex(int index)
 {
-    MusicTrigger* trigger = gMusicTriggersData;
     int count = gMusicTriggersCount;
+    MusicTrigger* trigger = gMusicTriggersData;
     while (count != 0) {
         if ((int)trigger->id == 0xec) {
             goto found;
