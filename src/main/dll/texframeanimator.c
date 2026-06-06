@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/texframeanimator.h"
 #include "main/objanim_internal.h"
 

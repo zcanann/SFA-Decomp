@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/dll/CF/treasureRelated0177.h"
-#include "main/objanim.h"
 #include "main/objanim_internal.h"
 
 
