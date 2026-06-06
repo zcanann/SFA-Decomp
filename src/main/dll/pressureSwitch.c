@@ -4,6 +4,7 @@
 #include "main/mapEvent.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/game_object.h"
 #include "main/objhits_types.h"
 
 extern undefined4 FUN_800033a8();
@@ -778,76 +779,76 @@ void fn_8014E1DC(int obj, HagabonState *state) {
                         lbl_803E2620);
     waveB = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
                         lbl_803E2620);
-    *(s16 *)(obj + 4) = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
+    ((GameObject *)obj)->anim.rotZ = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
 
     waveA = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseC) /
                         lbl_803E2620);
     waveB = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
                         lbl_803E2620);
-    *(s16 *)(obj + 2) = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
+    ((GameObject *)obj)->anim.rotY = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
 
     accel = lbl_803E2624;
     if ((*flags & 2) != 0) {
         player = state->player;
-        *(f32 *)(obj + 0x24) += accel * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc));
-        *(f32 *)(obj + 0x28) += accel *
-                                ((lbl_803E2628 + *(f32 *)(player + 0x10)) -
-                                 *(f32 *)(obj + 0x10));
-        *(f32 *)(obj + 0x2c) += accel * (*(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14));
+        ((GameObject *)obj)->anim.velocityX += accel * (((GameObject *)player)->anim.localPosX - ((GameObject *)obj)->anim.localPosX);
+        ((GameObject *)obj)->anim.velocityY += accel *
+                                ((lbl_803E2628 + ((GameObject *)player)->anim.localPosY) -
+                                 ((GameObject *)obj)->anim.localPosY);
+        ((GameObject *)obj)->anim.velocityZ += accel * (((GameObject *)player)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ);
     } else if ((*flags & 4) != 0) {
-        *(f32 *)(obj + 0x24) += accel * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc));
-        *(f32 *)(obj + 0x28) += accel * (*(f32 *)(curve + 0x6c) - *(f32 *)(obj + 0x10));
-        *(f32 *)(obj + 0x2c) += accel * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14));
+        ((GameObject *)obj)->anim.velocityX += accel * (*(f32 *)(curve + 0x68) - ((GameObject *)obj)->anim.localPosX);
+        ((GameObject *)obj)->anim.velocityY += accel * (*(f32 *)(curve + 0x6c) - ((GameObject *)obj)->anim.localPosY);
+        ((GameObject *)obj)->anim.velocityZ += accel * (*(f32 *)(curve + 0x70) - ((GameObject *)obj)->anim.localPosZ);
     } else {
-        *(f32 *)(obj + 0x24) += accel * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc));
+        ((GameObject *)obj)->anim.velocityX += accel * (*(f32 *)(curve + 0x68) - ((GameObject *)obj)->anim.localPosX);
         waveA = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseB) /
                             lbl_803E2620);
         waveB = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
                             lbl_803E2620);
-        *(f32 *)(obj + 0x28) += accel *
+        ((GameObject *)obj)->anim.velocityY += accel *
                                 (((lbl_803E262C * (waveA + waveB)) +
                                   *(f32 *)(curve + 0x6c)) -
-                                 *(f32 *)(obj + 0x10));
-        *(f32 *)(obj + 0x2c) += accel * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14));
+                                 ((GameObject *)obj)->anim.localPosY);
+        ((GameObject *)obj)->anim.velocityZ += accel * (*(f32 *)(curve + 0x70) - ((GameObject *)obj)->anim.localPosZ);
     }
 
     damp = lbl_803E2630;
-    *(f32 *)(obj + 0x24) *= damp;
-    *(f32 *)(obj + 0x28) *= damp;
-    *(f32 *)(obj + 0x2c) *= damp;
+    ((GameObject *)obj)->anim.velocityX *= damp;
+    ((GameObject *)obj)->anim.velocityY *= damp;
+    ((GameObject *)obj)->anim.velocityZ *= damp;
 
     maxSpeed = lbl_803E2634;
-    if (*(f32 *)(obj + 0x24) > maxSpeed) {
-        *(f32 *)(obj + 0x24) = maxSpeed;
+    if (((GameObject *)obj)->anim.velocityX > maxSpeed) {
+        ((GameObject *)obj)->anim.velocityX = maxSpeed;
     }
-    if (*(f32 *)(obj + 0x28) > maxSpeed) {
-        *(f32 *)(obj + 0x28) = maxSpeed;
+    if (((GameObject *)obj)->anim.velocityY > maxSpeed) {
+        ((GameObject *)obj)->anim.velocityY = maxSpeed;
     }
-    if (*(f32 *)(obj + 0x2c) > maxSpeed) {
-        *(f32 *)(obj + 0x2c) = maxSpeed;
+    if (((GameObject *)obj)->anim.velocityZ > maxSpeed) {
+        ((GameObject *)obj)->anim.velocityZ = maxSpeed;
     }
 
     minSpeed = lbl_803E2638;
-    if (*(f32 *)(obj + 0x24) < minSpeed) {
-        *(f32 *)(obj + 0x24) = minSpeed;
+    if (((GameObject *)obj)->anim.velocityX < minSpeed) {
+        ((GameObject *)obj)->anim.velocityX = minSpeed;
     }
-    if (*(f32 *)(obj + 0x28) < minSpeed) {
-        *(f32 *)(obj + 0x28) = minSpeed;
+    if (((GameObject *)obj)->anim.velocityY < minSpeed) {
+        ((GameObject *)obj)->anim.velocityY = minSpeed;
     }
-    if (*(f32 *)(obj + 0x2c) < minSpeed) {
-        *(f32 *)(obj + 0x2c) = minSpeed;
+    if (((GameObject *)obj)->anim.velocityZ < minSpeed) {
+        ((GameObject *)obj)->anim.velocityZ = minSpeed;
     }
 
     objMove(obj,
-            *(f32 *)(obj + 0x24) * timeDelta,
-            *(f32 *)(obj + 0x28) * timeDelta,
-            *(f32 *)(obj + 0x2c) * timeDelta);
+            ((GameObject *)obj)->anim.velocityX * timeDelta,
+            ((GameObject *)obj)->anim.velocityY * timeDelta,
+            ((GameObject *)obj)->anim.velocityZ * timeDelta);
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta,
                                (ObjAnimEventList *)animEvents);
 
     player = state->player;
-    angle = (u16)getAngle(*(f32 *)(obj + 0x18) - *(f32 *)(player + 0x18),
-                          *(f32 *)(obj + 0x20) - *(f32 *)(player + 0x20));
+    angle = (u16)getAngle(((GameObject *)obj)->anim.worldPosX - ((GameObject *)player)->anim.worldPosX,
+                          ((GameObject *)obj)->anim.worldPosZ - ((GameObject *)player)->anim.worldPosZ);
     angleDelta = angle - ((int)*(s16 *)obj & 0xffff);
     if (angleDelta > 0x8000) {
         angleDelta -= 0xffff;
@@ -860,7 +861,7 @@ void fn_8014E1DC(int obj, HagabonState *state) {
 }
 
 void hagabon_hitDetect(int obj) {
-    if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
+    if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0) {
         Sfx_PlayFromObject(obj, SFXand_swipe2);
     }
 }
@@ -929,10 +930,10 @@ void hagabon_init(int obj, int data, int skip_alloc) {
     }
 }
 void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-    HagabonState *state = *(HagabonState **)(obj + 0xB8);
+    HagabonState *state = *(HagabonState **)&((GameObject *)obj)->extra;
     s32 v = visible;
     if (v != 0) {
-        if (*(int *)(obj + 0xF4) == 0) {
+        if (((GameObject *)obj)->unkF4 == 0) {
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
                 (obj, p2, p3, p4, p5, lbl_803E2650);
             if ((state->flags & 0x10) != 0) {
@@ -982,48 +983,48 @@ void fn_8014EE8C(int obj, SwarmBaddieState *state)
     lbl_803DDA60 = *(int *)(curve + 0x10);
     if ((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0) {
         step = lbl_803E267C;
-        *(f32 *)(obj + 0x24) = step * (*(f32 *)(state->player + 0xc) - *(f32 *)(obj + 0xc)) +
-                               *(f32 *)(obj + 0x24);
-        *(f32 *)(obj + 0x28) =
-            step * ((lbl_803E2680 + *(f32 *)(state->player + 0x10)) - *(f32 *)(obj + 0x10)) +
-            *(f32 *)(obj + 0x28);
-        *(f32 *)(obj + 0x2c) = step * (*(f32 *)(state->player + 0x14) - *(f32 *)(obj + 0x14)) +
-                               *(f32 *)(obj + 0x2c);
+        ((GameObject *)obj)->anim.velocityX = step * (*(f32 *)(state->player + 0xc) - ((GameObject *)obj)->anim.localPosX) +
+                               ((GameObject *)obj)->anim.velocityX;
+        ((GameObject *)obj)->anim.velocityY =
+            step * ((lbl_803E2680 + *(f32 *)(state->player + 0x10)) - ((GameObject *)obj)->anim.localPosY) +
+            ((GameObject *)obj)->anim.velocityY;
+        ((GameObject *)obj)->anim.velocityZ = step * (*(f32 *)(state->player + 0x14) - ((GameObject *)obj)->anim.localPosZ) +
+                               ((GameObject *)obj)->anim.velocityZ;
     } else {
         step = lbl_803E267C;
-        *(f32 *)(obj + 0x24) = step * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc)) +
-                               *(f32 *)(obj + 0x24);
-        *(f32 *)(obj + 0x28) = step * (*(f32 *)(curve + 0x6c) - *(f32 *)(obj + 0x10)) +
-                               *(f32 *)(obj + 0x28);
-        *(f32 *)(obj + 0x2c) = step * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14)) +
-                               *(f32 *)(obj + 0x2c);
+        ((GameObject *)obj)->anim.velocityX = step * (*(f32 *)(curve + 0x68) - ((GameObject *)obj)->anim.localPosX) +
+                               ((GameObject *)obj)->anim.velocityX;
+        ((GameObject *)obj)->anim.velocityY = step * (*(f32 *)(curve + 0x6c) - ((GameObject *)obj)->anim.localPosY) +
+                               ((GameObject *)obj)->anim.velocityY;
+        ((GameObject *)obj)->anim.velocityZ = step * (*(f32 *)(curve + 0x70) - ((GameObject *)obj)->anim.localPosZ) +
+                               ((GameObject *)obj)->anim.velocityZ;
     }
 
-    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (step = lbl_803E2684);
-    *(f32 *)(obj + 0x28) *= step;
-    *(f32 *)(obj + 0x2c) *= step;
+    ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (step = lbl_803E2684);
+    ((GameObject *)obj)->anim.velocityY *= step;
+    ((GameObject *)obj)->anim.velocityZ *= step;
 
-    if (*(f32 *)(obj + 0x24) > lbl_803E2688) {
-        *(f32 *)(obj + 0x24) = lbl_803E2688;
+    if (((GameObject *)obj)->anim.velocityX > lbl_803E2688) {
+        ((GameObject *)obj)->anim.velocityX = lbl_803E2688;
     }
-    if (*(f32 *)(obj + 0x28) > lbl_803E2688) {
-        *(f32 *)(obj + 0x28) = lbl_803E2688;
+    if (((GameObject *)obj)->anim.velocityY > lbl_803E2688) {
+        ((GameObject *)obj)->anim.velocityY = lbl_803E2688;
     }
-    if (*(f32 *)(obj + 0x2c) > lbl_803E2688) {
-        *(f32 *)(obj + 0x2c) = lbl_803E2688;
+    if (((GameObject *)obj)->anim.velocityZ > lbl_803E2688) {
+        ((GameObject *)obj)->anim.velocityZ = lbl_803E2688;
     }
-    if (*(f32 *)(obj + 0x24) < lbl_803E268C) {
-        *(f32 *)(obj + 0x24) = lbl_803E268C;
+    if (((GameObject *)obj)->anim.velocityX < lbl_803E268C) {
+        ((GameObject *)obj)->anim.velocityX = lbl_803E268C;
     }
-    if (*(f32 *)(obj + 0x28) < lbl_803E268C) {
-        *(f32 *)(obj + 0x28) = lbl_803E268C;
+    if (((GameObject *)obj)->anim.velocityY < lbl_803E268C) {
+        ((GameObject *)obj)->anim.velocityY = lbl_803E268C;
     }
-    if (*(f32 *)(obj + 0x2c) < lbl_803E268C) {
-        *(f32 *)(obj + 0x2c) = lbl_803E268C;
+    if (((GameObject *)obj)->anim.velocityZ < lbl_803E268C) {
+        ((GameObject *)obj)->anim.velocityZ = lbl_803E268C;
     }
 
-    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
-            *(f32 *)(obj + 0x2c) * timeDelta);
+    objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
+            ((GameObject *)obj)->anim.velocityZ * timeDelta);
 
     state->yawWavePhase += (s16)(lbl_803E2690 * timeDelta);
     state->rollWavePhase += (s16)(lbl_803E2694 * timeDelta);
@@ -1032,7 +1033,7 @@ void fn_8014EE8C(int obj, SwarmBaddieState *state)
                          (lbl_803E269C *
                           fn_80293E80((lbl_803E26A0 * (f32)state->yawWavePhase) / lbl_803E26A4)));
 
-    *(s16 *)(obj + 4) += (s16)(lbl_803E2698 *
+    ((GameObject *)obj)->anim.rotZ += (s16)(lbl_803E2698 *
                                (lbl_803E269C *
                                 fn_80293E80((lbl_803E26A0 * (f32)state->rollWavePhase) / lbl_803E26A4)));
 }
@@ -1064,58 +1065,58 @@ void fn_8014F620(int obj, int *state)
     lbl_803DDA68 = *(int *)(curve + 0x10);
 
     if ((*(u8 *)((u8 *)state + 0x24) & 2) != 0) {
-        *(f32 *)(obj + 0x24) =
-            lbl_803E26E8 * (*(f32 *)(state[1] + 0xc) - *(f32 *)(obj + 0xc)) +
-            *(f32 *)(obj + 0x24);
+        ((GameObject *)obj)->anim.velocityX =
+            lbl_803E26E8 * (*(f32 *)(state[1] + 0xc) - ((GameObject *)obj)->anim.localPosX) +
+            ((GameObject *)obj)->anim.velocityX;
 
         wave = fn_80293E80((lbl_803E26DC * (f32)*(s16 *)(state + 10)) /
                            lbl_803E26E0);
-        *(f32 *)(obj + 0x28) =
+        ((GameObject *)obj)->anim.velocityY =
             ((lbl_803E26F0 * wave + (lbl_803E26EC + *(f32 *)(state[1] + 0x10))) -
-             *(f32 *)(obj + 0x10)) * lbl_803E26E8 +
-            *(f32 *)(obj + 0x28);
-        *(f32 *)(obj + 0x2c) =
-            lbl_803E26E8 * (*(f32 *)(state[1] + 0x14) - *(f32 *)(obj + 0x14)) +
-            *(f32 *)(obj + 0x2c);
+             ((GameObject *)obj)->anim.localPosY) * lbl_803E26E8 +
+            ((GameObject *)obj)->anim.velocityY;
+        ((GameObject *)obj)->anim.velocityZ =
+            lbl_803E26E8 * (*(f32 *)(state[1] + 0x14) - ((GameObject *)obj)->anim.localPosZ) +
+            ((GameObject *)obj)->anim.velocityZ;
     } else {
-        *(f32 *)(obj + 0x24) = lbl_803E26E8 * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc)) +
-                               *(f32 *)(obj + 0x24);
+        ((GameObject *)obj)->anim.velocityX = lbl_803E26E8 * (*(f32 *)(curve + 0x68) - ((GameObject *)obj)->anim.localPosX) +
+                               ((GameObject *)obj)->anim.velocityX;
 
         wave = fn_80293E80((lbl_803E26DC * (f32)*(s16 *)(state + 10)) /
                            lbl_803E26E0);
-        *(f32 *)(obj + 0x28) =
-            ((lbl_803E26F0 * wave + *(f32 *)(curve + 0x6c)) - *(f32 *)(obj + 0x10)) *
+        ((GameObject *)obj)->anim.velocityY =
+            ((lbl_803E26F0 * wave + *(f32 *)(curve + 0x6c)) - ((GameObject *)obj)->anim.localPosY) *
                 lbl_803E26E8 +
-            *(f32 *)(obj + 0x28);
-        *(f32 *)(obj + 0x2c) = lbl_803E26E8 * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14)) +
-                               *(f32 *)(obj + 0x2c);
+            ((GameObject *)obj)->anim.velocityY;
+        ((GameObject *)obj)->anim.velocityZ = lbl_803E26E8 * (*(f32 *)(curve + 0x70) - ((GameObject *)obj)->anim.localPosZ) +
+                               ((GameObject *)obj)->anim.velocityZ;
     }
 
-    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (step = lbl_803E26F4);
-    *(f32 *)(obj + 0x28) *= step;
-    *(f32 *)(obj + 0x2c) *= step;
+    ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (step = lbl_803E26F4);
+    ((GameObject *)obj)->anim.velocityY *= step;
+    ((GameObject *)obj)->anim.velocityZ *= step;
 
-    if (*(f32 *)(obj + 0x24) > lbl_803E26F8) {
-        *(f32 *)(obj + 0x24) = lbl_803E26F8;
+    if (((GameObject *)obj)->anim.velocityX > lbl_803E26F8) {
+        ((GameObject *)obj)->anim.velocityX = lbl_803E26F8;
     }
-    if (*(f32 *)(obj + 0x28) > lbl_803E26F8) {
-        *(f32 *)(obj + 0x28) = lbl_803E26F8;
+    if (((GameObject *)obj)->anim.velocityY > lbl_803E26F8) {
+        ((GameObject *)obj)->anim.velocityY = lbl_803E26F8;
     }
-    if (*(f32 *)(obj + 0x2c) > lbl_803E26F8) {
-        *(f32 *)(obj + 0x2c) = lbl_803E26F8;
+    if (((GameObject *)obj)->anim.velocityZ > lbl_803E26F8) {
+        ((GameObject *)obj)->anim.velocityZ = lbl_803E26F8;
     }
-    if (*(f32 *)(obj + 0x24) < lbl_803E26FC) {
-        *(f32 *)(obj + 0x24) = lbl_803E26FC;
+    if (((GameObject *)obj)->anim.velocityX < lbl_803E26FC) {
+        ((GameObject *)obj)->anim.velocityX = lbl_803E26FC;
     }
-    if (*(f32 *)(obj + 0x28) < lbl_803E26FC) {
-        *(f32 *)(obj + 0x28) = lbl_803E26FC;
+    if (((GameObject *)obj)->anim.velocityY < lbl_803E26FC) {
+        ((GameObject *)obj)->anim.velocityY = lbl_803E26FC;
     }
-    if (*(f32 *)(obj + 0x2c) < lbl_803E26FC) {
-        *(f32 *)(obj + 0x2c) = lbl_803E26FC;
+    if (((GameObject *)obj)->anim.velocityZ < lbl_803E26FC) {
+        ((GameObject *)obj)->anim.velocityZ = lbl_803E26FC;
     }
 
-    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
-            *(f32 *)(obj + 0x2c) * timeDelta);
+    objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
+            ((GameObject *)obj)->anim.velocityZ * timeDelta);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1139,7 +1140,7 @@ void swarmbaddie_update(int obj)
     int hitB;
     int hitA;
 
-    state = *(SwarmBaddieState **)(obj + 0xb8);
+    state = *(SwarmBaddieState **)&((GameObject *)obj)->extra;
     oldTarget = state->curve;
     if (ObjHits_GetPriorityHitWithPosition(obj, &hitD, &hitB, &hitA, &hitE, &hitC, &hitF) != 0) {
         state->hitVolumeEnvelope = lbl_803E26B0;
@@ -1160,18 +1161,18 @@ void swarmbaddie_update(int obj)
                                                                        (int)&state->hitVolumeEnvelope);
     state->player = Obj_GetPlayerObject();
     if (*(void **)&state->player != NULL) {
-        d[0] = *(f32 *)(state->player + 0x18) - *(f32 *)(obj + 0x18);
-        d[1] = *(f32 *)(state->player + 0x1c) - *(f32 *)(obj + 0x1c);
-        d[2] = *(f32 *)(state->player + 0x20) - *(f32 *)(obj + 0x20);
+        d[0] = *(f32 *)(state->player + 0x18) - ((GameObject *)obj)->anim.worldPosX;
+        d[1] = *(f32 *)(state->player + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
+        d[2] = *(f32 *)(state->player + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
         sqz = d[2] * d[2];
         sqx = d[0] * d[0];
         sqy = d[1] * d[1];
         state->playerDistance = sqrtf(sqz + (sqx + sqy));
     }
     if ((void *)oldTarget != NULL) {
-        d[0] = *(f32 *)(oldTarget + 0x68) - *(f32 *)(obj + 0x18);
-        d[1] = *(f32 *)(oldTarget + 0x6c) - *(f32 *)(obj + 0x1c);
-        d[2] = *(f32 *)(oldTarget + 0x70) - *(f32 *)(obj + 0x20);
+        d[0] = *(f32 *)&((GameObject *)oldTarget)->anim.dll - ((GameObject *)obj)->anim.worldPosX;
+        d[1] = *(f32 *)&((GameObject *)oldTarget)->anim.jointPoseData - ((GameObject *)obj)->anim.worldPosY;
+        d[2] = *(f32 *)(oldTarget + 0x70) - ((GameObject *)obj)->anim.worldPosZ;
         sqz = d[2] * d[2];
         sqx = d[0] * d[0];
         sqy = d[1] * d[1];
@@ -1215,18 +1216,18 @@ void hagabon_update(int obj)
     PressureSwitchIntToDouble fadeAsDouble;
     PressureSwitchIntToDouble eventAsDouble;
 
-    state = *(HagabonState **)(obj + 0xb8);
+    state = *(HagabonState **)&((GameObject *)obj)->extra;
     oldCurve = state->curve;
-    data = *(int *)(obj + 0x4c);
+    data = *(int *)&((GameObject *)obj)->anim.placementData;
 
-    if (*(int *)(obj + 0xf4) != 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
         if ((*(s16 *)(data + 0x20) != -1) && (GameBit_Get(*(s16 *)(data + 0x20)) != 0)) {
             return;
         }
         if ((*gMapEventInterface)->isTimedEventActive(*(int *)(data + 0x14)) == 0) {
             return;
         }
-        *(int *)(obj + 0xf4) = 0;
+        ((GameObject *)obj)->unkF4 = 0;
         *(u8 *)(obj + 0x36) = 1;
         state->flags |= 8;
         Sfx_PlayFromObject(obj, SFXfox_treadwater122);
@@ -1247,7 +1248,7 @@ void hagabon_update(int obj)
             fade = (int)((f32)(fadeAsDouble.value - lbl_803E2640) - timeDelta);
             *(u8 *)(obj + 0x36) = (u8)fade;
             if (*(u8 *)(obj + 0x36) < 7) {
-                *(int *)(obj + 0xf4) = 1;
+                ((GameObject *)obj)->unkF4 = 1;
                 *(u8 *)(obj + 0x36) = 0;
                 state->flags &= 0xef;
                 Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
@@ -1292,15 +1293,15 @@ void hagabon_update(int obj)
     player = Obj_GetPlayerObject();
     state->player = player;
     if (player != 0) {
-        dx = *(f32 *)(player + 0x18) - *(f32 *)(obj + 0x18);
-        dy = *(f32 *)(player + 0x1c) - *(f32 *)(obj + 0x1c);
-        dz = *(f32 *)(player + 0x20) - *(f32 *)(obj + 0x20);
+        dx = ((GameObject *)player)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
+        dy = ((GameObject *)player)->anim.worldPosY - ((GameObject *)obj)->anim.worldPosY;
+        dz = ((GameObject *)player)->anim.worldPosZ - ((GameObject *)obj)->anim.worldPosZ;
         state->playerDistance = sqrtf(dz * dz + dx * dx + dy * dy);
     }
     if (oldCurve != 0) {
-        dx = *(f32 *)(oldCurve + 0x68) - *(f32 *)(obj + 0x18);
-        dy = *(f32 *)(oldCurve + 0x6c) - *(f32 *)(obj + 0x1c);
-        dz = *(f32 *)(oldCurve + 0x70) - *(f32 *)(obj + 0x20);
+        dx = *(f32 *)&((GameObject *)oldCurve)->anim.dll - ((GameObject *)obj)->anim.worldPosX;
+        dy = *(f32 *)&((GameObject *)oldCurve)->anim.jointPoseData - ((GameObject *)obj)->anim.worldPosY;
+        dz = *(f32 *)(oldCurve + 0x70) - ((GameObject *)obj)->anim.worldPosZ;
         state->pathDistance = sqrtf(dz * dz + dx * dx + dy * dy);
     }
     if (((state->flags & 2) != 0) && (lbl_803E2664 < state->pathDistance)) {
