@@ -1,4 +1,3 @@
-#include <dolphin.h>
 #include "dolphin/exi.h"
 
 #define REG_MAX 5

@@ -1,7 +1,5 @@
 #include <dolphin.h>
-#include <dolphin/ar.h>
 
-#include "dolphin/ar/__ar.h"
 
 static ARQRequest* __ARQRequestQueueHi;
 static ARQRequest* __ARQRequestTailHi;

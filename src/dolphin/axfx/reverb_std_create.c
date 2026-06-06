@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "dolphin/axfx.h"
 #include "dolphin/axfx/reverb_std_create.h"
 
 extern void *memset(void *dest, int val, u32 count);

@@ -1,4 +1,3 @@
-#include <dolphin.h>
 
 // EXI error codes
 typedef enum { AMC_EXI_NO_ERROR = 0, AMC_EXI_UNSELECTED } AmcExiError;

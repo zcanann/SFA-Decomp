@@ -1,7 +1,4 @@
-#include <stddef.h>
 
-#include <dolphin.h>
-#include <dolphin/hw_regs.h>
 
 #include "dolphin/dsp/__dsp.h"
 

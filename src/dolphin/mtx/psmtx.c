@@ -1,5 +1,4 @@
 #include <dolphin.h>
-#include <dolphin/mtx.h>
 
 asm void PSMTXReorder(const register Mtx src, register ROMtx dest)
 {

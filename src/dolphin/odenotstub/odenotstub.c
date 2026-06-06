@@ -1,4 +1,3 @@
-#include <dolphin.h>
 
 int Hu_IsStub(void)
 {

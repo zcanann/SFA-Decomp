@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "dolphin/card.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
