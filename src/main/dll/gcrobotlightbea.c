@@ -1,4 +1,5 @@
 #include "main/dll/gcrobotlightbea.h"
+#include "main/game_object.h"
 
 
 #pragma peephole off
@@ -134,19 +135,19 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
     switch ((s16)mode) {
     case 1:
         setup = Obj_AllocObjectSetup(0x24, 0x3d3);
-        *(f32 *)(setup + 0x8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 0x190;
-        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(void **)(obj + 0x30));
+        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
             *(f32 *)(spawned + 0x24) = sc * lbl_803AC790[0];
             *(f32 *)(spawned + 0x28) = lbl_803E394C * vel[1];
             *(f32 *)(spawned + 0x2c) = sc * vel[2];
         } else {
-            *(f32 *)(spawned + 0x24) = *(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc);
-            *(f32 *)(spawned + 0x2c) = *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14);
+            *(f32 *)(spawned + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+            *(f32 *)(spawned + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         }
         mag = *(f32 *)(spawned + 0x24) * *(f32 *)(spawned + 0x24);
         mag += *(f32 *)(spawned + 0x2c) * *(f32 *)(spawned + 0x2c);
@@ -183,19 +184,19 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
     case 2:
         setup = Obj_AllocObjectSetup(0x24, 0x3d4);
         *(s8 *)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
-        *(f32 *)(setup + 0x8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 0x190;
-        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(void **)(obj + 0x30));
+        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
             *(f32 *)(spawned + 0x24) = sc * lbl_803AC790[0];
             *(f32 *)(spawned + 0x28) = lbl_803E394C * vel[1];
             *(f32 *)(spawned + 0x2c) = sc * vel[2];
         } else {
-            *(f32 *)(spawned + 0x24) = *(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc);
-            *(f32 *)(spawned + 0x2c) = *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14);
+            *(f32 *)(spawned + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+            *(f32 *)(spawned + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         }
         mag = *(f32 *)(spawned + 0x24) * *(f32 *)(spawned + 0x24);
         mag += *(f32 *)(spawned + 0x2c) * *(f32 *)(spawned + 0x2c);
@@ -232,19 +233,19 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
     case 3:
         setup = Obj_AllocObjectSetup(0x24, 0x3d5);
         *(s8 *)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
-        *(f32 *)(setup + 0x8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 0x7d0;
-        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(void **)(obj + 0x30));
+        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
             *(f32 *)(spawned + 0x24) = sc * lbl_803AC790[0];
             *(f32 *)(spawned + 0x28) = lbl_803E394C * vel[1];
             *(f32 *)(spawned + 0x2c) = sc * vel[2];
         } else {
-            *(f32 *)(spawned + 0x24) = *(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc);
-            *(f32 *)(spawned + 0x2c) = *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14);
+            *(f32 *)(spawned + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+            *(f32 *)(spawned + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         }
         mag = *(f32 *)(spawned + 0x24) * *(f32 *)(spawned + 0x24);
         mag += *(f32 *)(spawned + 0x2c) * *(f32 *)(spawned + 0x2c);
@@ -290,17 +291,17 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         *(s16 *)(setup + 0x1c) = -1;
         if ((s8)data[9] != 0) {
             *(f32 *)(setup + 0x8) =
-                *(f32 *)(obj + 0xc) + (f32)(int)randomGetRange(-0xf, 0xf);
-            *(f32 *)(setup + 0xc) = lbl_803E395C + *(f32 *)(obj + 0x10);
+                ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-0xf, 0xf);
+            *(f32 *)(setup + 0xc) = lbl_803E395C + ((GameObject *)obj)->anim.localPosY;
             *(f32 *)(setup + 0x10) =
-                *(f32 *)(obj + 0x14) + (f32)(int)randomGetRange(-0xf, 0xf);
+                ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0xf, 0xf);
         } else {
-            *(f32 *)(setup + 0x8) = *(f32 *)(obj + 0xc);
-            *(f32 *)(setup + 0xc) = lbl_803E3960 + *(f32 *)(obj + 0x10);
-            *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+            *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(setup + 0xc) = lbl_803E3960 + ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         }
         *(s16 *)(setup + 0x24) = -1;
-        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(void **)(obj + 0x30));
+        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
             *(f32 *)(spawned + 0x24) = sc * lbl_803AC790[0];
@@ -386,24 +387,24 @@ int fn_801821FC(u8 *obj) {
     if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3970, 1, 0, obj, 1, -1, 0xff, 0) != 0) {
         *(s8 *)(st + 0xad) |= 1;
         *(f32 *)(st + 0x10) = *(f32 *)(obj + 0x80);
-        *(f32 *)(st + 0x14) = *(f32 *)(obj + 0x84);
-        *(f32 *)(st + 0x18) = *(f32 *)(obj + 0x88);
+        *(f32 *)(st + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
+        *(f32 *)(st + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
         fz = lbl_803E3938;
-        *(f32 *)(obj + 0x24) = fz;
-        *(f32 *)(obj + 0x28) = fz;
-        *(f32 *)(obj + 0x2c) = fz;
+        ((GameObject *)obj)->anim.velocityX = fz;
+        ((GameObject *)obj)->anim.velocityY = fz;
+        ((GameObject *)obj)->anim.velocityZ = fz;
         return 1;
     }
 
     if ((int)(*(u32 *)(st + 0x48) >> 4) != 0 && (s8)st[0x70] == 0) {
         endPoints[0] = *(f32 *)(obj + 0xc);
         endY = &endPoints[1];
-        endPoints[1] = *(f32 *)(obj + 0x10);
+        endPoints[1] = ((GameObject *)obj)->anim.localPosY;
         endZ = &endPoints[2];
-        endPoints[2] = *(f32 *)(obj + 0x14);
+        endPoints[2] = ((GameObject *)obj)->anim.localPosZ;
         startPoints[0] = *(f32 *)(obj + 0x80);
-        startPoints[1] = *(f32 *)(obj + 0x84);
-        startPoints[2] = *(f32 *)(obj + 0x88);
+        startPoints[1] = ((GameObject *)obj)->anim.previousLocalPosY;
+        startPoints[2] = ((GameObject *)obj)->anim.previousLocalPosZ;
         hitResults.radii[0] = (f32)*(s16 *)(st + 0x5a);
         axes = hitResults.axes;
         hitResults.axes[0] = -1;
@@ -436,28 +437,28 @@ int fn_801821FC(u8 *obj) {
         if (hitResults.solidFlags[idx] != 0) {
             *(s8 *)(st + 0xad) |= 2;
             *(f32 *)(obj + 0xc) = *(f32 *)(st + 0x3c);
-            *(f32 *)(obj + 0x10) = *(f32 *)(st + 0x40);
-            *(f32 *)(obj + 0x14) = *(f32 *)(st + 0x44);
+            ((GameObject *)obj)->anim.localPosY = *(f32 *)(st + 0x40);
+            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(st + 0x44);
             *(f32 *)(st + 0x10) = *(f32 *)(obj + 0x80);
-            *(f32 *)(st + 0x14) = *(f32 *)(obj + 0x84);
-            *(f32 *)(st + 0x18) = *(f32 *)(obj + 0x88);
+            *(f32 *)(st + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
+            *(f32 *)(st + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
             fz = lbl_803E3938;
-            *(f32 *)(obj + 0x24) = fz;
-            *(f32 *)(obj + 0x28) = fz;
-            *(f32 *)(obj + 0x2c) = fz;
+            ((GameObject *)obj)->anim.velocityX = fz;
+            ((GameObject *)obj)->anim.velocityY = fz;
+            ((GameObject *)obj)->anim.velocityZ = fz;
             return 1;
         } else {
             *(s8 *)(st + 0xad) |= 1;
             *(f32 *)(obj + 0xc) = *(f32 *)(st + 0x3c);
-            *(f32 *)(obj + 0x10) = *(f32 *)(st + 0x40);
-            *(f32 *)(obj + 0x14) = *(f32 *)(st + 0x44);
+            ((GameObject *)obj)->anim.localPosY = *(f32 *)(st + 0x40);
+            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(st + 0x44);
             *(f32 *)(st + 0x10) = *(f32 *)(obj + 0x80);
-            *(f32 *)(st + 0x14) = *(f32 *)(obj + 0x84);
-            *(f32 *)(st + 0x18) = *(f32 *)(obj + 0x88);
+            *(f32 *)(st + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
+            *(f32 *)(st + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
             fz = lbl_803E3938;
-            *(f32 *)(obj + 0x24) = fz;
-            *(f32 *)(obj + 0x28) = fz;
-            *(f32 *)(obj + 0x2c) = fz;
+            ((GameObject *)obj)->anim.velocityX = fz;
+            ((GameObject *)obj)->anim.velocityY = fz;
+            ((GameObject *)obj)->anim.velocityZ = fz;
             return 1;
         }
     }
