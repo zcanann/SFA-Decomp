@@ -13,6 +13,11 @@ int fn_80297498(void) { return 0x0; }
 
 int fn_80297824(void) { return 0x0; }
 
+static inline int *Player_GetActiveModel(int obj) {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+    return (int *)objAnim->banks[objAnim->bankIndex];
+}
+
 #pragma scheduling off
 #pragma peephole off
 int fn_80295CE4(int obj)
@@ -618,7 +623,7 @@ void fn_8029782C(int obj)
 int objIsCurModelNotZero(void *obj)
 {
     if (obj != NULL) {
-        return *(s8 *)((char *)obj + 0xad) != 0;
+        return ((ObjAnimComponent *)obj)->bankIndex != 0;
     }
     return 0;
 }
@@ -2340,7 +2345,7 @@ int fn_802A1CA8(int obj, int state)
             }
         }
     }
-    jt = *(int *)(*(int *)((char *)obj + 0x7c) + *(s8 *)((char *)obj + 0xad) * 4);
+    jt = (int)Player_GetActiveModel(obj);
     spd = lbl_803E7EA4;
     ph = *(f32 *)((char *)state + 0x2a0);
     lbl_803DC6A2 = lbl_803DC6A0;
@@ -2756,7 +2761,7 @@ int fn_802A0680(int obj, int state)
         *(u32 *)((char *)state + 4) |= 0x8000000;
         *(f32 *)((char *)obj + 0x28) = z;
     }
-    jt = *(int *)(*(int *)((char *)obj + 0x7c) + *(s8 *)((char *)obj + 0xad) * 4);
+    jt = (int)Player_GetActiveModel(obj);
     ph = *(f32 *)((char *)state + 0x2a0);
     lbl_803DC6A2 = lbl_803DC6A0;
     switch ((s16)lbl_803DC6A0) {
@@ -5604,7 +5609,7 @@ int fn_8029F108(int obj, int state)
         *(s16 *)((char *)obj + 0x2) = 0;
         *(s16 *)((char *)obj + 0x4) = 0;
         ObjAnim_SetCurrentMove(obj, ((s16 *)*(int *)((char *)inner + 0x6e8))[n], lbl_803E7EA4, 1);
-        joint = ((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)];
+        joint = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EA4, *(f32 *)((char *)obj + 0x8), pos1, ang);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, *(f32 *)((char *)obj + 0x8), pos2, ang);
         ang[0] = *(s16 *)((char *)inner + 0x478);
@@ -7941,9 +7946,7 @@ void fn_802AFB0C(int obj, int inner, int state)
                 lbl_803DE470 = 6;
             }
             if (lbl_803DE474 == 0) {
-                char *pt = *(char **)(*(int *)(*(int *)((char *)obj + 0x7c) +
-                                               *(s8 *)((char *)obj + 0xad) * 4) +
-                                      0x50);
+                char *pt = *(char **)((char *)Player_GetActiveModel(obj) + 0x50);
                 desc.x = playerMapOffsetX + *(f32 *)(pt + surfIdx * 0x10 + 4);
                 desc.y = *(f32 *)(pt + surfIdx * 0x10 + 8);
                 desc.z = playerMapOffsetZ + *(f32 *)(pt + surfIdx * 0x10 + 0xc);
@@ -8613,8 +8616,7 @@ int fn_802A1114(int obj, int state)
         *(s16 *)((char *)inner + 0x5a4) =
             fn_802A71E0(obj, tbl[0], tbl[1], (int *)((char *)inner + 0x598),
                         (int *)((char *)inner + 0x56c), lbl_803E7EA4, lbl_803E7EA4, 2, (u8)flags);
-        model = *(int *)((char *)*(int *)((char *)obj + 0x7c) +
-                         ((s32)(*(s8 *)((char *)obj + 0xad)) << 2));
+        model = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
                                       *(f32 *)((char *)obj + 0x8), buf1, buf2);
         *(f32 *)((char *)inner + 0x564) = lbl_803E7EA4;
@@ -8657,8 +8659,7 @@ s16 fn_802A71E0(int obj, int a, int b, int *p6, int *p7, f32 e, f32 f, int n, in
     f32 v1, v2, t;
     f32 buf1[3];
     f32 buf2[2];
-    model = *(int *)((char *)*(int *)((char *)obj + 0x7c) +
-                     ((s32)(*(s8 *)((char *)obj + 0xad)) << 2));
+    model = (int)Player_GetActiveModel(obj);
     uf = (u8)flags;
     mf = 0;
     if (uf & 0x2) {
@@ -9282,8 +9283,7 @@ int fn_802A00E0(int obj, int state)
         ObjAnim_SetCurrentMove(obj, lbl_80332F48[0x13], lbl_803E7EA4, 1);
         Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, lbl_80332F48[0x14], 0);
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7F34;
-        model = *(int *)((char *)*(int *)((char *)obj + 0x7c) +
-                         ((s32)(*(s8 *)((char *)obj + 0xad)) << 2));
+        model = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
                                       *(f32 *)((char *)obj + 0x8), buf1, buf2);
         *(f32 *)((char *)inner + 0x564) = *(f32 *)((char *)inner + 0x56c) * buf1[2];
@@ -9363,8 +9363,7 @@ int fn_802A03BC(int obj, int state)
         ObjAnim_SetCurrentMove(obj, lbl_80332F48[0x11], lbl_803E7EA4, 1);
         Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, lbl_80332F48[0x12], 0);
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7F84;
-        model = *(int *)((char *)*(int *)((char *)obj + 0x7c) +
-                         ((s32)(*(s8 *)((char *)obj + 0xad)) << 2));
+        model = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
                                       *(f32 *)((char *)obj + 0x8), buf1, buf2);
         *(f32 *)((char *)inner + 0x564) = *(f32 *)((char *)inner + 0x56c) * buf1[2];
@@ -10413,7 +10412,7 @@ void fn_802B07D8(int obj, int state)
     fn_8011F34C((u8)(int)*(f32 *)((char *)state + 0x7d4));
 
     if ((u32)obj != 0) {
-        b = (*(s8 *)((char *)obj + 0xad) != 0);
+        b = (((ObjAnimComponent *)obj)->bankIndex != 0);
     } else {
         b = 0;
     }
@@ -12171,7 +12170,7 @@ void playerDie(int obj)
     setTimeStop(0xff);
     setPendingMapLoad(1);
     if ((u32)obj != 0) {
-        variant = *(s8 *)((char *)obj + 0xad) != 0;
+        variant = ((ObjAnimComponent *)obj)->bankIndex != 0;
     } else {
         variant = 0;
     }
@@ -12218,7 +12217,7 @@ void fn_802AABE4(int obj)
     f32 out2[2];
     f32 out1[5];
 
-    model = ((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)];
+    model = (int)Player_GetActiveModel(obj);
 
     ObjAnim_SetCurrentMove(obj, *(s16 *)*(int *)((char *)inner + 0x3f8), lbl_803E7EA4, 0);
     ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, *(f32 *)((char *)obj + 8), out1, out2);
@@ -13941,7 +13940,7 @@ int fn_802A2918(int obj, int state, f32 fv)
             *(f32 *)((char *)inner + 0x4ec);
         *(f32 *)((char *)inner + 0x4f8) = *(f32 *)((char *)obj + 0x10);
         {
-            int joint = ((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)];
+            int joint = (int)Player_GetActiveModel(obj);
             f32 a8, ac, jp[3];
             ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, *(f32 *)((char *)obj + 0x8),
                                           jp, &a8);
@@ -14092,7 +14091,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
         *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
         ObjAnim_SetCurrentMove(obj, ((s16 *)*(int *)((char *)inner + 0x6e8))[sel],
                                lbl_803E7EA4, 4);
-        joint = ((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)];
+        joint = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EA4, *(f32 *)((char *)obj + 0x8),
                                       j0, &scratch);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, *(f32 *)((char *)obj + 0x8),
