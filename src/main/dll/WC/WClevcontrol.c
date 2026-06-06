@@ -819,7 +819,10 @@ void fn_801EE668(s16 *obj, u8 *state) {
     yaw = (-*(int *)(state + 0x74) * 6000) / 70;
     pitch = (-*(int *)(state + 0x70) * 12000) / 70;
 
-    *(s16 *)(state + 0x2c) = -(((f32)(*(int *)(state + 0x70) << 3) / lbl_803E5C98) * timeDelta - (f32)*(s16 *)(state + 0x2c));
+    {
+        f32 t = (f32)(*(int *)(state + 0x70) << 3) / lbl_803E5C98;
+        *(s16 *)(state + 0x2c) = -(t * timeDelta - (f32)*(s16 *)(state + 0x2c));
+    }
     *(s16 *)(state + 0x2c) -= (*(s16 *)(state + 0x2c) * framesThisStep) >> 5;
 
     d = yaw - (u16)obj[1];
@@ -829,7 +832,7 @@ void fn_801EE668(s16 *obj, u8 *state) {
     if (d < -0x8000) {
         d += 0xFFFF;
     }
-    obj[1] = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32)obj[1];
+    obj[1] = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32)*(s16 *)(int)(obj + 1);
 
     d = pitch - (u16)*(s16 *)(state + 0x2e);
     if (d > 0x8000) {
@@ -838,22 +841,14 @@ void fn_801EE668(s16 *obj, u8 *state) {
     if (d < -0x8000) {
         d += 0xFFFF;
     }
-    *(s16 *)(state + 0x2e) = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32)*(s16 *)(state + 0x2e);
+    *(s16 *)(state + 0x2e) = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32)*(s16 *)(int)(state + 0x2e);
 
     v = obj[1];
-    if (v < -8000) {
-        v = -8000;
-    } else if (v > 8000) {
-        v = 8000;
-    }
+    v = (v < -8000) ? -8000 : ((v > 8000) ? 8000 : v);
     obj[1] = v;
 
     v = *(s16 *)(state + 0x2e);
-    if (v < -13000) {
-        v = -13000;
-    } else if (v > 13000) {
-        v = 13000;
-    }
+    v = (v < -13000) ? -13000 : ((v > 13000) ? 13000 : v);
     *(s16 *)(state + 0x2e) = v;
 
     obj[0] = *(s16 *)(state + 0x2c) + 0x4000;
