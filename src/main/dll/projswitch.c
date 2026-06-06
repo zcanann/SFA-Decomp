@@ -359,18 +359,18 @@ void FUN_8014d7b8(uint param_1,int param_2,int param_3,int param_4,int param_5,s
       }
       if (((EnemyState *)iVar3)->modelLight == 0) {
         piVar2 = FUN_80017624(0,'\x01');
-        *(int **)(iVar3 + 0x368) = piVar2;
+        *(int **)&((EnemyState *)iVar3)->modelLight = piVar2;
       }
       FUN_8008111c((double)lbl_803E3200,(double)*(float *)(iVar3 + 0x30c),param_1,3,
-                   *(int **)(iVar3 + 0x368));
+                   *(int **)&((EnemyState *)iVar3)->modelLight);
     }
     if ((*(uint *)(iVar3 + 0x2e8) & 4) != 0) {
       if (((EnemyState *)iVar3)->modelLight == 0) {
         piVar2 = FUN_80017624(0,'\x01');
-        *(int **)(iVar3 + 0x368) = piVar2;
+        *(int **)&((EnemyState *)iVar3)->modelLight = piVar2;
       }
       FUN_8008111c((double)lbl_803E3200,(double)*(float *)(iVar3 + 0x30c),param_1,4,
-                   *(int **)(iVar3 + 0x368));
+                   *(int **)&((EnemyState *)iVar3)->modelLight);
     }
     if ((*(uint *)(iVar3 + 0x2e8) & 0x40) != 0) {
       FUN_800068c4(param_1,0x9e);

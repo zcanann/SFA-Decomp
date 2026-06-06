@@ -368,11 +368,11 @@ void fn_801DFA28(u8 *obj)
     Sfx_StopObjectChannel((int)obj, 1);
     DBPROT_CAMERA_SHAKE(&camShake, 0);
     ((GameObject *)obj)->unkF4 = 1;
-    tx = *(f32 *)(state + 0x50) - lbl_803E56DC;
+    tx = ((SBGalleonState *)state)->homeX - lbl_803E56DC;
     tz = lbl_803E56E0 * mathCosf((lbl_803E56E4 * (f32)((SBGalleonState *)state)->bobPhase) / lbl_803E56E8) +
-         *(f32 *)(state + 0x58);
+         ((SBGalleonState *)state)->homeZ;
     ty = lbl_803E56F0 * mathSinf((lbl_803E56E4 * (f32)((SBGalleonState *)state)->bobPhase) / lbl_803E56E8) +
-         (*(f32 *)(state + 0x54) - lbl_803E56EC);
+         (((SBGalleonState *)state)->homeY - lbl_803E56EC);
     ((SBGalleonState *)state)->bobPhase = ((SBGalleonState *)state)->bobPhase + framesThisStep * 0xB6;
     dx = tx - ((GameObject *)obj)->anim.localPosX;
     dy = ty - ((GameObject *)obj)->anim.localPosY;
@@ -409,9 +409,9 @@ void fn_801DFA28(u8 *obj)
       dy = dy * ((f32)(t - 0x78) / lbl_803E56F0);
     }
     ((SBGalleonState *)state)->phaseTimer += framesThisStep;
-    *(f32 *)(state + 0x0) += (dx - *(f32 *)(state + 0x0)) * (blendK = lbl_803E56FC);
-    *(f32 *)(state + 0x4) += (dy - *(f32 *)(state + 0x4)) * blendK;
-    *(f32 *)(state + 0x8) += (dz - *(f32 *)(state + 0x8)) * blendK;
+    ((SBGalleonState *)state)->driftX += (dx - ((SBGalleonState *)state)->driftX) * (blendK = lbl_803E56FC);
+    ((SBGalleonState *)state)->driftY += (dy - ((SBGalleonState *)state)->driftY) * blendK;
+    ((SBGalleonState *)state)->driftZ += (dz - ((SBGalleonState *)state)->driftZ) * blendK;
     ambA = lbl_803E5700;
     ambB = lbl_803E5704;
     ambC = lbl_803E5708;
@@ -463,8 +463,8 @@ void fn_801DFA28(u8 *obj)
     }
     switch (*(s8 *)&((SBGalleonState *)state)->flightPattern) {
     case 0:
-      tx = *(f32 *)(state + 0x50) - lbl_803E570C;
-      tz = *(f32 *)(state + 0x58);
+      tx = ((SBGalleonState *)state)->homeX - lbl_803E570C;
+      tz = ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E56EC + *(f32 *)(tricky + 0x10);
       if ((((SBGalleonState *)state)->headingLatch <= 0) &&
           ((((SBGalleonState *)state)->unk7C == 0) || (((SBGalleonState *)state)->unk7C == 5))) {
@@ -473,39 +473,39 @@ void fn_801DFA28(u8 *obj)
       Sfx_IsPlayingFromObjectChannel((int)obj, 2);
       break;
     case 1:
-      tx = *(f32 *)(state + 0x50) - lbl_803E5710;
-      tz = *(f32 *)(state + 0x58);
+      tx = ((SBGalleonState *)state)->homeX - lbl_803E5710;
+      tz = ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E56EC + *(f32 *)(tricky + 0x10);
       break;
     case 2:
       tx = *(f32 *)(tricky + 0xC) - lbl_803E5714;
-      tz = *(f32 *)(state + 0x58);
+      tz = ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
       break;
     case 3:
       tx = *(f32 *)(tricky + 0xC) - lbl_803E571C;
-      tz = lbl_803E5720 + *(f32 *)(state + 0x58);
+      tz = lbl_803E5720 + ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
       tz = tz + (*(f32 *)(tricky + 0x14) - ((SBGalleonState *)state)->posZ);
       ((SBGalleonState *)state)->unk7B = 0;
       break;
     case 4:
       tx = *(f32 *)(tricky + 0xC) - lbl_803E571C;
-      tz = lbl_803E5724 + *(f32 *)(state + 0x58);
+      tz = lbl_803E5724 + ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
       ((SBGalleonState *)state)->unk7B = 0;
       break;
     case 5:
       tx = *(f32 *)(tricky + 0xC) - lbl_803E571C;
-      tz = *(f32 *)(state + 0x58) - lbl_803E5720;
+      tz = ((SBGalleonState *)state)->homeZ - lbl_803E5720;
       ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
       tz = tz + (*(f32 *)(tricky + 0x14) - ((SBGalleonState *)state)->posZ);
       ((SBGalleonState *)state)->unk7B = 0;
       break;
     default:
       ((SBGalleonState *)state)->unk7B = 0;
-      tx = *(f32 *)(state + 0x50) - lbl_803E5728;
-      tz = *(f32 *)(state + 0x58);
+      tx = ((SBGalleonState *)state)->homeX - lbl_803E5728;
+      tz = ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E572C + *(f32 *)(tricky + 0x10);
       break;
     }
@@ -536,10 +536,10 @@ void fn_801DFA28(u8 *obj)
       tz = lbl_803E5744;
     }
     ((SBGalleonState *)state)->phaseTimer += framesThisStep;
-    lerpD = tx - *(f32 *)(state + 0x0);
-    *(f32 *)(state + 0x0) = lerpD * lbl_803E5748 + *(f32 *)(state + 0x0);
-    *(f32 *)(state + 0x4) += (dy - *(f32 *)(state + 0x4)) / lbl_803E574C;
-    *(f32 *)(state + 0x8) += (tz - *(f32 *)(state + 0x8)) / lbl_803E5750;
+    lerpD = tx - ((SBGalleonState *)state)->driftX;
+    ((SBGalleonState *)state)->driftX = lerpD * lbl_803E5748 + ((SBGalleonState *)state)->driftX;
+    ((SBGalleonState *)state)->driftY += (dy - ((SBGalleonState *)state)->driftY) / lbl_803E574C;
+    ((SBGalleonState *)state)->driftZ += (tz - ((SBGalleonState *)state)->driftZ) / lbl_803E5750;
     ambA = lbl_803E5754;
     ambB = lbl_803E5758;
     ambC = lbl_803E56CC;
@@ -631,34 +631,34 @@ void fn_801DFA28(u8 *obj)
     switch (((SBGalleonState *)state)->phase) {
     case 2:
       speedTarget = lbl_803E5764;
-      tx = *(f32 *)(state + 0x50) - lbl_803E5768;
-      tz = -(lbl_803E576C * (f32)((SBGalleonState *)state)->sweepDir - *(f32 *)(state + 0x58));
-      ty = *(f32 *)(state + 0x54);
+      tx = ((SBGalleonState *)state)->homeX - lbl_803E5768;
+      tz = -(lbl_803E576C * (f32)((SBGalleonState *)state)->sweepDir - ((SBGalleonState *)state)->homeZ);
+      ty = ((SBGalleonState *)state)->homeY;
       threshold = lbl_803E5770;
       nextState = 3;
       break;
     case 3:
       speedTarget = lbl_803E5774;
-      tx = *(f32 *)(state + 0x50) - lbl_803E5778;
-      tz = -(lbl_803E5770 * (f32)((SBGalleonState *)state)->sweepDir - *(f32 *)(state + 0x58));
-      ty = lbl_803E5724 + *(f32 *)(state + 0x54);
+      tx = ((SBGalleonState *)state)->homeX - lbl_803E5778;
+      tz = -(lbl_803E5770 * (f32)((SBGalleonState *)state)->sweepDir - ((SBGalleonState *)state)->homeZ);
+      ty = lbl_803E5724 + ((SBGalleonState *)state)->homeY;
       nextState = 4;
       threshold = lbl_803E577C;
       break;
     case 4:
       speedTarget = lbl_803E5774;
-      tx = *(f32 *)(state + 0x50) - lbl_803E5768;
-      tz = -(lbl_803E5708 * (f32)((SBGalleonState *)state)->sweepDir - *(f32 *)(state + 0x58));
-      ty = lbl_803E5724 + *(f32 *)(state + 0x54);
+      tx = ((SBGalleonState *)state)->homeX - lbl_803E5768;
+      tz = -(lbl_803E5708 * (f32)((SBGalleonState *)state)->sweepDir - ((SBGalleonState *)state)->homeZ);
+      ty = lbl_803E5724 + ((SBGalleonState *)state)->homeY;
       nextState = 5;
       threshold = lbl_803E577C;
       break;
     case 5:
       speedTarget = lbl_803E5708;
       ((GameObject *)obj)->unkF4 = 4;
-      tx = *(f32 *)(state + 0x50) - lbl_803E5780;
-      tz = *(f32 *)(state + 0x58);
-      ty = *(f32 *)(state + 0x54) - lbl_803E5724;
+      tx = ((SBGalleonState *)state)->homeX - lbl_803E5780;
+      tz = ((SBGalleonState *)state)->homeZ;
+      ty = ((SBGalleonState *)state)->homeY - lbl_803E5724;
       nextState = 6;
       threshold = lbl_803E577C;
       if ((((SBGalleonState *)state)->headingLatch <= 0) && (((SBGalleonState *)state)->stage == 6)) {
@@ -667,24 +667,24 @@ void fn_801DFA28(u8 *obj)
       break;
     case 6:
       speedTarget = lbl_803E56D0;
-      tx = lbl_803E5784 + *(f32 *)(state + 0x50);
-      tz = -(lbl_803E576C * (f32)((SBGalleonState *)state)->sweepDir - *(f32 *)(state + 0x58));
-      ty = lbl_803E5718 + *(f32 *)(state + 0x54);
+      tx = lbl_803E5784 + ((SBGalleonState *)state)->homeX;
+      tz = -(lbl_803E576C * (f32)((SBGalleonState *)state)->sweepDir - ((SBGalleonState *)state)->homeZ);
+      ty = lbl_803E5718 + ((SBGalleonState *)state)->homeY;
       nextState = 7;
       threshold = lbl_803E5724;
       break;
     case 7:
       speedTarget = lbl_803E56D0;
-      tx = lbl_803E5788 + *(f32 *)(state + 0x50);
-      tz = *(f32 *)(state + 0x58);
+      tx = lbl_803E5788 + ((SBGalleonState *)state)->homeX;
+      tz = ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E578C + *(f32 *)(tricky + 0x10);
       nextState = 8;
       threshold = lbl_803E5724;
       break;
     case 8:
       speedTarget = lbl_803E5790;
-      tx = *(f32 *)(state + 0x50) - lbl_803E5794;
-      tz = *(f32 *)(state + 0x58);
+      tx = ((SBGalleonState *)state)->homeX - lbl_803E5794;
+      tz = ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E5724 + *(f32 *)(tricky + 0x10);
       nextState = 2;
       threshold = lbl_803E5784;
@@ -734,8 +734,8 @@ void fn_801DFA28(u8 *obj)
       wrap = wrap + 0xFFFF;
     }
     ((GameObject *)obj)->anim.rotY = *(s16 *)(int)(obj + 0x2) + ((wrap * framesThisStep) >> 6);
-    dx = *(f32 *)(state + 0x50) - ((GameObject *)obj)->anim.localPosX;
-    dz = *(f32 *)(state + 0x58) - ((GameObject *)obj)->anim.localPosZ;
+    dx = ((SBGalleonState *)state)->homeX - ((GameObject *)obj)->anim.localPosX;
+    dz = ((SBGalleonState *)state)->homeZ - ((GameObject *)obj)->anim.localPosZ;
     sqrtf(dx * dx + dz * dz);
     t = ((GameObject *)obj)->anim.rotZ;
     iv = (int)(lbl_803E57A0 * (f32)((SBGalleonState *)state)->turnRate);
@@ -767,9 +767,9 @@ void fn_801DFA28(u8 *obj)
       ((SBGalleonState *)state)->swayZ = zero;
     }
     else {
-      ((SBGalleonState *)state)->posX = ((SBGalleonState *)state)->posX + *(f32 *)(state + 0x0);
-      ((SBGalleonState *)state)->posY = ((SBGalleonState *)state)->posY + *(f32 *)(state + 0x4);
-      ((SBGalleonState *)state)->posZ = ((SBGalleonState *)state)->posZ + *(f32 *)(state + 0x8);
+      ((SBGalleonState *)state)->posX = ((SBGalleonState *)state)->posX + ((SBGalleonState *)state)->driftX;
+      ((SBGalleonState *)state)->posY = ((SBGalleonState *)state)->posY + ((SBGalleonState *)state)->driftY;
+      ((SBGalleonState *)state)->posZ = ((SBGalleonState *)state)->posZ + ((SBGalleonState *)state)->driftZ;
     }
     ambB = lbl_803E57A8;
     ((GameObject *)obj)->anim.localPosX = ((SBGalleonState *)state)->posX + ((SBGalleonState *)state)->swayX;
@@ -808,11 +808,11 @@ void fn_801DFA28(u8 *obj)
   }
   if (((SBGalleonState *)state)->phase < 2) {
     ((SBGalleonState *)state)->posX =
-        ((SBGalleonState *)state)->moveScale * (*(f32 *)(state + 0x0) * timeDelta) + ((SBGalleonState *)state)->posX;
+        ((SBGalleonState *)state)->moveScale * (((SBGalleonState *)state)->driftX * timeDelta) + ((SBGalleonState *)state)->posX;
     ((SBGalleonState *)state)->posY =
-        ((SBGalleonState *)state)->moveScale * (*(f32 *)(state + 0x4) * timeDelta) + ((SBGalleonState *)state)->posY;
+        ((SBGalleonState *)state)->moveScale * (((SBGalleonState *)state)->driftY * timeDelta) + ((SBGalleonState *)state)->posY;
     ((SBGalleonState *)state)->posZ =
-        ((SBGalleonState *)state)->moveScale * (*(f32 *)(state + 0x8) * timeDelta) + ((SBGalleonState *)state)->posZ;
+        ((SBGalleonState *)state)->moveScale * (((SBGalleonState *)state)->driftZ * timeDelta) + ((SBGalleonState *)state)->posZ;
     ((SBGalleonState *)state)->moveScale += lbl_803E57B0;
     if (((SBGalleonState *)state)->moveScale > lbl_803E57A4) {
       ((SBGalleonState *)state)->moveScale = lbl_803E57A4;
@@ -871,7 +871,7 @@ void DBprotection_updateEnvfxGameBits(u8 *state)
     getEnvfxAct(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
     getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
     GameBit_Set(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING, 0);
-    *(u16 *)(state + 0xa2) = DBPROTECTION_GAMEBIT_CYCLE_A_DONE;
+    ((SBGalleonState *)state)->envfxCycle = DBPROTECTION_GAMEBIT_CYCLE_A_DONE;
   }
 
   if (GameBit_Get(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING) != 0) {
@@ -881,11 +881,11 @@ void DBprotection_updateEnvfxGameBits(u8 *state)
     getEnvfxAct(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
     getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
     GameBit_Set(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING, 0);
-    *(u16 *)(state + 0xa2) = DBPROTECTION_GAMEBIT_CYCLE_B_DONE;
+    ((SBGalleonState *)state)->envfxCycle = DBPROTECTION_GAMEBIT_CYCLE_B_DONE;
   }
 
   if (GameBit_Get(DBPROTECTION_GAMEBIT_CYCLE_A_DONE) != 0) {
-    if (*(u16 *)(state + 0xa2) != DBPROTECTION_GAMEBIT_CYCLE_A_DONE) {
+    if (((SBGalleonState *)state)->envfxCycle != DBPROTECTION_GAMEBIT_CYCLE_A_DONE) {
       state[0xa4] = (u8)(state[0xa4] ^ 1);
     }
     getEnvfxAct(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
@@ -895,7 +895,7 @@ void DBprotection_updateEnvfxGameBits(u8 *state)
   }
 
   if (GameBit_Get(DBPROTECTION_GAMEBIT_CYCLE_B_DONE) != 0) {
-    if (*(u16 *)(state + 0xa2) != DBPROTECTION_GAMEBIT_CYCLE_B_DONE) {
+    if (((SBGalleonState *)state)->envfxCycle != DBPROTECTION_GAMEBIT_CYCLE_B_DONE) {
       state[0xa4] = (u8)(state[0xa4] ^ 1);
     }
     getEnvfxAct(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
