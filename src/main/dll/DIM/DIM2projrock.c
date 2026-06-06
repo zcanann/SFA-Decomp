@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objanim_internal.h"
@@ -1012,7 +1013,7 @@ extern f32 lbl_803E4B80;
 #pragma scheduling off
 #pragma peephole off
 void dim2icicle_init(int obj, s8 *p) {
-    char *inner = *(char **)(obj + 0xb8);
+    char *inner = ((GameObject *)obj)->extra;
     if (GameBit_Get(*(s16 *)(p + 0x1e)) != 0) {
         inner[6] = 2;
         *(u8 *)(obj + 0x36) = 0;
@@ -1021,8 +1022,8 @@ void dim2icicle_init(int obj, s8 *p) {
         *(u8 *)(obj + 0x36) = 0xff;
     }
     *(s16 *)obj = (s16)((s32)p[0x18] << 8);
-    *(f32 *)(obj + 0x28) = lbl_803E4B80;
-    *(u16 *)(obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->anim.velocityY = lbl_803E4B80;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1052,13 +1053,13 @@ extern f32 lbl_803E4B3C;
 void dim2icefloe_update(int obj)
 {
     int sub = *(int *)(obj + 0xb8);
-    if (*(void **)(sub + 0x9c) != NULL && (*(u16 *)(*(int *)(sub + 0x9c) + 0xb0) & 0x40) != 0) {
-        *(u8 *)(sub + 0xb6) &= ~1;
-        *(int *)(sub + 0x9c) = 0;
+    if (*(void **)(sub + 0x9c) != NULL && (*(u16 *)(((Dim2IceFloeState *)sub)->unk9C + 0xb0) & 0x40) != 0) {
+        ((Dim2IceFloeState *)sub)->unkB6 &= ~1;
+        ((Dim2IceFloeState *)sub)->unk9C = 0;
     } else {
         int v;
         int reached;
-        if ((int)*(u8 *)(sub + 0xb8) != 0) {
+        if ((int)((Dim2IceFloeState *)sub)->unkB8 != 0) {
             return;
         }
         v = *(u8 *)(obj + 0x36) + framesThisStep * 4;
@@ -1066,35 +1067,35 @@ void dim2icefloe_update(int obj)
             v = 0xff;
         }
         *(u8 *)(obj + 0x36) = v;
-        if ((*(u8 *)(sub + 0xb6) & 1) == 0) {
-            *(int *)(sub + 0x9c) = ObjList_FindObjectById(*(int *)(sub + 0xa0));
-            *(int *)(sub + 0x90) = (*(code *)(**(int **)(*(int *)(sub + 0x9c) + 0x68) + 0x20))(
-                *(int *)(sub + 0x9c), sub + 0x84, sub + 0x88, sub + 0x8c, 0);
-            *(int *)(sub + 0x80) = 0;
-            *(void **)(sub + 0x94) = (void *)Curve_EvalHermite;
-            *(void **)(sub + 0x98) = (void *)Curve_BuildHermiteCoeffs;
+        if ((((Dim2IceFloeState *)sub)->unkB6 & 1) == 0) {
+            ((Dim2IceFloeState *)sub)->unk9C = ObjList_FindObjectById(((Dim2IceFloeState *)sub)->unkA0);
+            ((Dim2IceFloeState *)sub)->unk90 = (*(code *)(**(int **)(((Dim2IceFloeState *)sub)->unk9C + 0x68) + 0x20))(
+                ((Dim2IceFloeState *)sub)->unk9C, sub + 0x84, sub + 0x88, sub + 0x8c, 0);
+            ((Dim2IceFloeState *)sub)->unk80 = 0;
+            ((Dim2IceFloeState *)sub)->unk94 = (void *)Curve_EvalHermite;
+            ((Dim2IceFloeState *)sub)->unk98 = (void *)Curve_BuildHermiteCoeffs;
             curvesMove(sub);
-            *(u8 *)(sub + 0xb6) |= 1;
+            ((Dim2IceFloeState *)sub)->unkB6 |= 1;
         }
-        Curve_AdvanceAlongPath(sub, *(f32 *)(sub + 0xa4));
-        reached = *(s32 *)(sub + 0x10) >= *(s32 *)(sub + 0x90) - 4;
-        *(f32 *)(obj + 0xc) = *(f32 *)(sub + 0x68);
+        Curve_AdvanceAlongPath(sub, ((Dim2IceFloeState *)sub)->unkA4);
+        reached = ((Dim2IceFloeState *)sub)->unk10 >= ((Dim2IceFloeState *)sub)->unk90 - 4;
+        ((GameObject *)obj)->anim.localPosX = ((Dim2IceFloeState *)sub)->unk68;
         if (!((IceFloeFlags *)(sub + 0xb9))->finished) {
-            *(f32 *)(obj + 0x10) = lbl_803E4B34 + *(f32 *)(sub + 0x6c);
+            ((GameObject *)obj)->anim.localPosY = lbl_803E4B34 + ((Dim2IceFloeState *)sub)->unk6C;
         }
-        *(f32 *)(obj + 0x14) = *(f32 *)(sub + 0x70);
+        ((GameObject *)obj)->anim.localPosZ = ((Dim2IceFloeState *)sub)->unk70;
         if (reached) {
             ((IceFloeFlags *)(sub + 0xb9))->finished = 1;
         }
-        *(s16 *)(sub + 0xb4) = timeDelta * *(f32 *)(sub + 0xac) + (f32)*(u16 *)(sub + 0xb4);
+        ((Dim2IceFloeState *)sub)->unkB4 = timeDelta * ((Dim2IceFloeState *)sub)->unkAC + (f32)*(u16 *)(sub + 0xb4);
         if (((IceFloeFlags *)(sub + 0xb9))->finished) {
-            *(f32 *)(obj + 0x10) = -(lbl_803E4B38 * timeDelta - *(f32 *)(obj + 0x10));
-            if (*(f32 *)(obj + 0x10) < *(f32 *)(sub + 0x6c)) {
+            ((GameObject *)obj)->anim.localPosY = -(lbl_803E4B38 * timeDelta - ((GameObject *)obj)->anim.localPosY);
+            if (((GameObject *)obj)->anim.localPosY < ((Dim2IceFloeState *)sub)->unk6C) {
                 ObjHits_DisableObject(obj);
-                *(u16 *)(obj + 0xb0) |= 0x100;
+                ((GameObject *)obj)->unkB0 |= 0x100;
                 fn_80296D20(Obj_GetPlayerObject(), obj);
             }
-            if (*(f32 *)(obj + 0x10) < *(f32 *)(sub + 0x6c) - lbl_803E4B3C) {
+            if (((GameObject *)obj)->anim.localPosY < ((Dim2IceFloeState *)sub)->unk6C - lbl_803E4B3C) {
                 Obj_FreeObject(obj);
             }
         }
@@ -1115,30 +1116,30 @@ void dim2icefloe_init(int obj, int p)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int sub = *(int *)(obj + 0xb8);
-    *(int *)(sub + 0xa0) = *(int *)(p + 0x14);
-    *(f32 *)(sub + 0xa4) = (f32)*(s16 *)(p + 0x1c) / lbl_803E4B48;
-    *(f32 *)(sub + 0xa8) = (f32)(s32)randomGetRange(-0x1e, 0x1e);
+    ((Dim2IceFloeState *)sub)->unkA0 = *(int *)(p + 0x14);
+    ((Dim2IceFloeState *)sub)->unkA4 = (f32)*(s16 *)(p + 0x1c) / lbl_803E4B48;
+    ((Dim2IceFloeState *)sub)->unkA8 = (f32)(s32)randomGetRange(-0x1e, 0x1e);
     *(int *)(p + 0x14) = -1;
     objAnim->bankIndex = (s8)randomGetRange(0, objAnim->modelInstance->modelCount - 1);
-    *(s16 *)(obj + 0x0) = (s16)((s32)*(s8 *)(p + 0x18) << 8);
-    *(s16 *)(obj + 0x0) = (s16)randomGetRange(0, 0xffff);
+    ((GameObject *)obj)->anim.rotX = (s16)((s32)*(s8 *)(p + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
     *(u8 *)(obj + 0x36) = 0;
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x109:
-        *(f32 *)(sub + 0xac) = lbl_803E4B4C + (f32)(s32)randomGetRange(0, 0x28);
-        *(f32 *)(sub + 0xb0) = lbl_803E4B50;
+        ((Dim2IceFloeState *)sub)->unkAC = lbl_803E4B4C + (f32)(s32)randomGetRange(0, 0x28);
+        ((Dim2IceFloeState *)sub)->unkB0 = lbl_803E4B50;
         break;
     case 0x10d:
-        *(f32 *)(sub + 0xac) = lbl_803E4B54 + (f32)(s32)randomGetRange(0, 0x32);
-        *(f32 *)(sub + 0xb0) = lbl_803E4B50;
+        ((Dim2IceFloeState *)sub)->unkAC = lbl_803E4B54 + (f32)(s32)randomGetRange(0, 0x32);
+        ((Dim2IceFloeState *)sub)->unkB0 = lbl_803E4B50;
         break;
     case 0x111:
     default:
-        *(f32 *)(sub + 0xac) = lbl_803E4B58 + (f32)(s32)randomGetRange(0, 0x28);
-        *(f32 *)(sub + 0xb0) = lbl_803E4B50;
+        ((Dim2IceFloeState *)sub)->unkAC = lbl_803E4B58 + (f32)(s32)randomGetRange(0, 0x28);
+        ((Dim2IceFloeState *)sub)->unkB0 = lbl_803E4B50;
         break;
     }
-    *(u16 *)(obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1164,72 +1165,72 @@ void dim2icicle_update(int obj)
     int state;
     state = *(int *)(obj + 0x4c);
     sub = *(int *)(obj + 0xb8);
-    switch (*(u8 *)(sub + 6)) {
+    switch (((Dim2IcicleState *)sub)->mode) {
     case 0:
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0xe) {
             break;
         }
-        *(s16 *)(sub + 4) = (s16)randomGetRange(0x320, 0x4b0);
-        *(u8 *)(sub + 6) = 3;
+        ((Dim2IcicleState *)sub)->unk4 = (s16)randomGetRange(0x320, 0x4b0);
+        ((Dim2IcicleState *)sub)->mode = 3;
         (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
         Sfx_PlayFromObject(obj, SFXmv_cflap2_c);
         break;
     case 3:
-        *(s16 *)(obj + 2) = *(s16 *)(sub + 4);
-        *(s16 *)(sub + 4) = (f32)*(s16 *)(sub + 4) * lbl_803E4B6C;
-        if (*(s16 *)(obj + 2) >= 10) {
+        ((GameObject *)obj)->anim.rotY = ((Dim2IcicleState *)sub)->unk4;
+        ((Dim2IcicleState *)sub)->unk4 = (f32)((Dim2IcicleState *)sub)->unk4 * lbl_803E4B6C;
+        if (((GameObject *)obj)->anim.rotY >= 10) {
             break;
         }
-        *(s16 *)(obj + 2) = 0;
-        *(u8 *)(sub + 6) = 1;
-        *(s16 *)(sub + 8) = 0x3c;
+        ((GameObject *)obj)->anim.rotY = 0;
+        ((Dim2IcicleState *)sub)->mode = 1;
+        ((Dim2IcicleState *)sub)->timer = 0x3c;
         break;
     case 1:
-        if (*(u8 *)(sub + 7) == 0) {
+        if (((Dim2IcicleState *)sub)->unk7 == 0) {
             int n;
             int i;
             int list;
-            n = hitDetectFn_80065e50(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
-                                     *(f32 *)(obj + 0x14), obj, &list, 0, 0);
-            *(f32 *)sub = lbl_803E4B70;
+            n = hitDetectFn_80065e50(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                                     ((GameObject *)obj)->anim.localPosZ, obj, &list, 0, 0);
+            ((Dim2IcicleState *)sub)->dropY = lbl_803E4B70;
             for (i = 0; i < n; i++) {
                 int p = *(int *)(list + i * 4);
                 if (*(s8 *)(p + 0x14) == 0xe) {
-                    *(f32 *)sub = *(f32 *)p;
+                    ((Dim2IcicleState *)sub)->dropY = *(f32 *)p;
                     i = n;
                 }
             }
-            if (lbl_803E4B70 != *(f32 *)sub) {
-                *(u8 *)(sub + 7) = 1;
+            if (lbl_803E4B70 != ((Dim2IcicleState *)sub)->dropY) {
+                ((Dim2IcicleState *)sub)->unk7 = 1;
             }
         }
-        if (*(s16 *)(sub + 8) > 0) {
-            *(s16 *)(sub + 8) -= framesThisStep;
-            if (*(s16 *)(sub + 8) <= 0) {
+        if (((Dim2IcicleState *)sub)->timer > 0) {
+            ((Dim2IcicleState *)sub)->timer -= framesThisStep;
+            if (((Dim2IcicleState *)sub)->timer <= 0) {
                 Sfx_PlayFromObject(obj, SFXmv_blockscrape_lp);
             }
         }
-        *(f32 *)(obj + 0x28) = -(lbl_803E4B74 * timeDelta - *(f32 *)(obj + 0x28));
-        if (*(f32 *)(obj + 0x28) < lbl_803E4B78) {
-            *(f32 *)(obj + 0x28) = *(f32 *)&lbl_803E4B78;
+        ((GameObject *)obj)->anim.velocityY = -(lbl_803E4B74 * timeDelta - ((GameObject *)obj)->anim.velocityY);
+        if (((GameObject *)obj)->anim.velocityY < lbl_803E4B78) {
+            ((GameObject *)obj)->anim.velocityY = *(f32 *)&lbl_803E4B78;
         }
-        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
-        if (*(f32 *)(obj + 0x10) < *(f32 *)sub) {
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
+        if (((GameObject *)obj)->anim.localPosY < ((Dim2IcicleState *)sub)->dropY) {
             GameBit_Set(*(s16 *)(state + 0x1e), 1);
-            *(u8 *)(sub + 6) = 2;
+            ((Dim2IcicleState *)sub)->mode = 2;
             (*(WaterfxRippleFn)*(int *)(*gWaterfxInterface + 0x10))(
-                obj, *(f32 *)(obj + 0xc), *(f32 *)sub, *(f32 *)(obj + 0x14), lbl_803E4B7C);
+                obj, ((GameObject *)obj)->anim.localPosX, ((Dim2IcicleState *)sub)->dropY, ((GameObject *)obj)->anim.localPosZ, lbl_803E4B7C);
             (*(WaterfxSplashFn)*(int *)(*gWaterfxInterface + 0x14))(
-                *(f32 *)(obj + 0xc), *(f32 *)sub, *(f32 *)(obj + 0x14), 0, lbl_803E4B80, 2);
+                ((GameObject *)obj)->anim.localPosX, ((Dim2IcicleState *)sub)->dropY, ((GameObject *)obj)->anim.localPosZ, 0, lbl_803E4B80, 2);
             Sfx_PlayFromObject(obj, SFXmv_missingcog_lp);
-            *(s16 *)(sub + 8) = 0x96;
+            ((Dim2IcicleState *)sub)->timer = 0x96;
         }
         break;
     case 2:
     default:
-        if (*(s16 *)(sub + 8) > 0) {
-            *(s16 *)(sub + 8) -= framesThisStep;
-            if (*(s16 *)(sub + 8) <= 0) {
+        if (((Dim2IcicleState *)sub)->timer > 0) {
+            ((Dim2IcicleState *)sub)->timer -= framesThisStep;
+            if (((Dim2IcicleState *)sub)->timer <= 0) {
                 Sfx_PlayFromObject(obj, SFXwp_sexpl2_c);
             }
         }
@@ -1237,12 +1238,12 @@ void dim2icicle_update(int obj)
             int v = *(u8 *)(obj + 0x36) - framesThisStep * 8;
             if (v < 0) {
                 v = 0;
-                *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xc);
-                *(f32 *)(obj + 0x28) = lbl_803E4B80;
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0xc);
+                ((GameObject *)obj)->anim.velocityY = lbl_803E4B80;
             }
             *(u8 *)(obj + 0x36) = v;
         }
-        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
         break;
     }
 }
@@ -1330,10 +1331,10 @@ void dll_1DB_update(int obj)
                 *(f32 *)sub = *(f32 *)&lbl_803E4B18;
             }
         }
-        *(f32 *)(obj + 0x10) = *(f32 *)sub * timeDelta + *(f32 *)(obj + 0x10);
-        if (*(f32 *)(obj + 0x10) > *(f32 *)(state + 0xc)) {
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)sub * timeDelta + ((GameObject *)obj)->anim.localPosY;
+        if (((GameObject *)obj)->anim.localPosY > *(f32 *)(state + 0xc)) {
             Sfx_PlayFromObject(obj, SFXchar_on_firelp);
-            *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xc);
+            ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0xc);
             *(u8 *)(sub + 4) = 1;
             if (found != 0) {
                 *(u8 *)(sub + 5) = 1;
@@ -1349,10 +1350,10 @@ void dll_1DB_update(int obj)
                 *(f32 *)sub = *(f32 *)&lbl_803E4B20;
             }
         }
-        *(f32 *)(obj + 0x10) = *(f32 *)sub * timeDelta + *(f32 *)(obj + 0x10);
-        if (*(f32 *)(obj + 0x10) < *(f32 *)(state + 0xc) - lbl_803E4B24) {
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)sub * timeDelta + ((GameObject *)obj)->anim.localPosY;
+        if (((GameObject *)obj)->anim.localPosY < *(f32 *)(state + 0xc) - lbl_803E4B24) {
             Sfx_PlayFromObject(obj, SFXchar_on_firelp);
-            *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xc) - lbl_803E4B24;
+            ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0xc) - lbl_803E4B24;
             *(u8 *)(sub + 4) = 2;
             GameBit_Set(*(s16 *)(state + 0x1e), 1);
         }
@@ -1418,23 +1419,23 @@ void dll_1DA_update(int obj)
 
     sub = *(int *)(obj + 0xb8);
     if (*(u8 *)(sub + 4) != 0) {
-        *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (k = lbl_803E4AE0);
-        *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * k;
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4AE0);
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
     } else {
-        *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (k = lbl_803E4AE4);
-        *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * k;
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4AE4);
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
     }
-    if (*(f32 *)(obj + 0x24) < (hi = lbl_803E4AE8) && *(f32 *)(obj + 0x24) > (lo = lbl_803E4AEC) &&
-        *(f32 *)(obj + 0x2c) < hi && *(f32 *)(obj + 0x2c) > lo) {
-        *(f32 *)(obj + 0x24) = (k = lbl_803E4AF0);
-        *(f32 *)(obj + 0x2c) = k;
+    if (((GameObject *)obj)->anim.velocityX < (hi = lbl_803E4AE8) && ((GameObject *)obj)->anim.velocityX > (lo = lbl_803E4AEC) &&
+        ((GameObject *)obj)->anim.velocityZ < hi && ((GameObject *)obj)->anim.velocityZ > lo) {
+        ((GameObject *)obj)->anim.velocityX = (k = lbl_803E4AF0);
+        ((GameObject *)obj)->anim.velocityZ = k;
     }
-    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, lbl_803E4AF0, *(f32 *)(obj + 0x2c) * timeDelta);
+    objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, lbl_803E4AF0, ((GameObject *)obj)->anim.velocityZ * timeDelta);
     n = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E4AF4, 1, out.hit, obj, 8, -1, 0xff, 0);
     if (n != 0) {
-        vx = -*(f32 *)(obj + 0x24);
-        vy = -*(f32 *)(obj + 0x28);
-        vz = -*(f32 *)(obj + 0x2c);
+        vx = -((GameObject *)obj)->anim.velocityX;
+        vy = -((GameObject *)obj)->anim.velocityY;
+        vz = -((GameObject *)obj)->anim.velocityZ;
         len = sqrtf(vz * vz + (vx * vx + vy * vy));
         if (lbl_803E4AF0 != len) {
             f32 s = lbl_803E4AD8 / len;
@@ -1443,25 +1444,25 @@ void dll_1DA_update(int obj)
             vz = vz * s;
         }
         d = lbl_803E4AF8 * (vz * out.nz + (vx * out.nx + vy * out.ny));
-        *(f32 *)(obj + 0x24) = out.nx * d;
-        *(f32 *)(obj + 0x28) = out.ny * d;
-        *(f32 *)(obj + 0x2c) = out.nz * d;
-        *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) - vx;
-        *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) - vy;
-        *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) - vz;
-        *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (e = lbl_803E4AFC * len);
-        *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) * (lbl_803E4ADC * len);
-        *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * e;
+        ((GameObject *)obj)->anim.velocityX = out.nx * d;
+        ((GameObject *)obj)->anim.velocityY = out.ny * d;
+        ((GameObject *)obj)->anim.velocityZ = out.nz * d;
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX - vx;
+        ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY - vy;
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ - vz;
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (e = lbl_803E4AFC * len);
+        ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY * (lbl_803E4ADC * len);
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * e;
     }
-    *(f32 *)(obj + 0x10) = -(lbl_803E4B00 * timeDelta - *(f32 *)(obj + 0x10));
-    n = hitDetectFn_80065e50(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), obj,
+    ((GameObject *)obj)->anim.localPosY = -(lbl_803E4B00 * timeDelta - ((GameObject *)obj)->anim.localPosY);
+    n = hitDetectFn_80065e50(*(f32 *)(obj + 0xc), ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, obj,
                              &list, 0, 0x11);
     *(u8 *)(sub + 4) = 0;
     i = 0;
     p = list;
     for (; n > 0; n--) {
-        if (*(f32 *)(obj + 0x10) < lbl_803E4B04 + **(f32 **)p) {
-            *(f32 *)(obj + 0x10) = **(f32 **)(list + i * 4);
+        if (((GameObject *)obj)->anim.localPosY < lbl_803E4B04 + **(f32 **)p) {
+            ((GameObject *)obj)->anim.localPosY = **(f32 **)(list + i * 4);
             ObjHits_AddContactObject(*(int *)(*(int *)(list + i * 4) + 0x10), obj);
             *(u8 *)(sub + 4) = 1;
             break;
@@ -1469,8 +1470,8 @@ void dll_1DA_update(int obj)
         p += 4;
         i += 1;
     }
-    if (*(f32 *)(obj + 0x10) < *(f32 *)sub) {
-        *(f32 *)(obj + 0x10) = *(f32 *)sub;
+    if (((GameObject *)obj)->anim.localPosY < *(f32 *)sub) {
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)sub;
     }
     saveGame_saveObjectPos(obj);
 }
@@ -1753,9 +1754,9 @@ void dim2lavacontrol_init(int obj, int param2)
     int i;
     int g;
     if (getSaveGameLoadStatus() != 0) {
-        *(int *)(obj + 0xf4) = 2;
+        ((GameObject *)obj)->unkF4 = 2;
     } else {
-        *(int *)(obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
     for (i = 1; (u8)i <= 0x2d; i++) {
         gameBitFn_800ea2e0(i);
@@ -1798,8 +1799,8 @@ void dim2lavacontrol_update(int obj)
 {
     int diff;
     f32 local[3];
-    if (*(int *)(obj + 0xf4) != 0) {
-        if (*(int *)(obj + 0xf4) == 2) {
+    if (((GameObject *)obj)->unkF4 != 0) {
+        if (((GameObject *)obj)->unkF4 == 2) {
             getEnvfxActImmediately(0, 0, 0x163, 0);
             getEnvfxActImmediately(0, 0, 0x166, 0);
             getEnvfxActImmediately(0, 0, 0x165, 0);
@@ -1810,7 +1811,7 @@ void dim2lavacontrol_update(int obj)
             getEnvfxAct(0, 0, 0x165, 0);
             getEnvfxAct(0, 0, 0x164, 0);
         }
-        *(int *)(obj + 0xf4) = 0;
+        ((GameObject *)obj)->unkF4 = 0;
     }
     obj = *(int *)(obj + 0xb8);
     if (*(s8 *)(obj + 4) == 0) {
