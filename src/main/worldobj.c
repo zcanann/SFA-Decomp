@@ -1,4 +1,4 @@
-#include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 typedef struct {
     f32 f0;
@@ -407,7 +407,7 @@ void worldobj_update(int obj) {
             (obj, lbl_803E66A4, timeDelta, (ObjAnimEventList *)&vec[3]);
         break;
     case 0x5e3:
-        if (*(u8 *)(state + 0x27c) != *(s8 *)(obj + 0xad)) {
+        if (*(u8 *)(state + 0x27c) != ((ObjAnimComponent *)obj)->bankIndex) {
             Obj_SetActiveModelIndex(obj, *(u8 *)(state + 0x27c));
         }
         if (*(s8 *)(state + 0x27e) != (gAudioStreamCurrentId != 0)) {
