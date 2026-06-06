@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
@@ -4222,9 +4223,9 @@ extern f32 lbl_803E42B4;
 void cfprisoncage_init(int *obj, u8 *def) {
     ObjMsg_AllocQueue(obj, 1);
     *(s16 *)obj = (s16)((s32)def[0x1a] << 8);
-    *(int *)((char *)obj + 0xf4) = 1;
+    ((GameObject *)obj)->unkF4 = 1;
     *(int *)((char *)obj + 0xbc) = (int)cfprisoncage_SeqFn;
-    if (*(s16 *)((char *)obj + 0x46) == 296) {
+    if (((GameObject *)obj)->anim.seqId == 296) {
         if (GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E42B4, 0);
         } else {
@@ -4328,9 +4329,9 @@ int *findRomCurvePointNearObject(int *obj, int p2, int *outVec, int p4) {
     }
 
     found = (*(int (***)(f32, f32, f32, int *, int, int))gRomCurveInterface)[5](
-        *(f32 *)((char *)obj + 0xc),
-        *(f32 *)((char *)obj + 0x10),
-        *(f32 *)((char *)obj + 0x14),
+        ((GameObject *)obj)->anim.localPosX,
+        ((GameObject *)obj)->anim.localPosY,
+        ((GameObject *)obj)->anim.localPosZ,
         local, 2, p2);
 
     if (found > -1) {
@@ -4424,12 +4425,12 @@ int cfpowerbase_SeqFn(int p1, int unused, int p3)
 #pragma scheduling off
 #pragma peephole off
 void cfperch_update(int *obj) {
-    if (*(int *)((char *)obj + 0xf4) != 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
         if (GameBit_Get(0x50) == 0) {
             ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])(0, obj, -1);
         }
     }
-    *(int *)((char *)obj + 0xf4) = 0;
+    ((GameObject *)obj)->unkF4 = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4521,16 +4522,16 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag) {
             target = ObjGroup_FindNearestObject(0x3a, obj, (f32*)0);
         }
         if (target != 0) {
-            sx = *(f32*)(obj + 0xc);
-            sy = *(f32*)(obj + 0x10);
-            sz = *(f32*)(obj + 0x14);
-            *(f32*)(obj + 0xc) = *(f32*)(target + 0xc);
-            *(f32*)(obj + 0x10) = *(f32*)(target + 0x10);
-            *(f32*)(obj + 0x14) = *(f32*)(target + 0x14);
+            sx = ((GameObject *)obj)->anim.localPosX;
+            sy = ((GameObject *)obj)->anim.localPosY;
+            sz = ((GameObject *)obj)->anim.localPosZ;
+            ((GameObject *)obj)->anim.localPosX = *(f32*)(target + 0xc);
+            ((GameObject *)obj)->anim.localPosY = *(f32*)(target + 0x10);
+            ((GameObject *)obj)->anim.localPosZ = *(f32*)(target + 0x14);
             saveGame_saveObjectPos(obj);
-            *(f32*)(obj + 0xc) = sx;
-            *(f32*)(obj + 0x10) = sy;
-            *(f32*)(obj + 0x14) = sz;
+            ((GameObject *)obj)->anim.localPosX = sx;
+            ((GameObject *)obj)->anim.localPosY = sy;
+            ((GameObject *)obj)->anim.localPosZ = sz;
         }
     }
 }
