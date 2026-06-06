@@ -903,7 +903,7 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
         *(u8 *)(setup + 0x22) = 50;
         *(u8 *)(setup + 0x23) = 10;
         *(u8 *)(setup + 0x24) = 50;
-        *(u8 *)(setup + 0x25) = -50;
+        *(s8 *)(setup + 0x25) = -50;
         *(s16 *)(setup + 0x26) = -1;
         *(int *)(setup + 0x18) = 0;
         state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int *)(obj + 0x30));
