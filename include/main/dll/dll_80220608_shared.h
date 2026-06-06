@@ -163,8 +163,8 @@ extern int ObjGroup_FindNearestObject(int group, int obj, f32 *out);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
-extern void objfx_spawnBoxBurst(int obj, int a, int b, int c, f32 e, f32 f, f32 g, f32 h,
-                                int i, int j, int k);
+extern void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
+                                int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sound);
 extern void ObjHits_DisableObject(int obj);
 extern void ObjHits_EnableObject(int obj);
@@ -593,8 +593,8 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, 
 
 extern void objfx_spawnMaskedHitEffect(int obj, int a, int b, f32 c, int d, int e);
 extern void hitDetectFn_80097070(int obj, int a, int b, f32 c, int d, int e);
-extern void objfx_spawnBoxBurst(int obj, int a, int b, int c, f32 e, f32 f, f32 g, f32 h,
-                                int i, int j, int k);
+extern void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
+                                int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ);
 extern void objfx_spawnDirectionalBurst(int obj, int a, int b, int c, f32 e, f32 f, int g, int h, int i);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                    int particleId, int lifetime, f32 scaleX, f32 scaleY,

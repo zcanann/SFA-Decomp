@@ -96,10 +96,11 @@ void dustmotesou_update(int obj)
         return;
     }
     if (mapData->burstMode == DUSTMOTESOU_BURST_BOX) {
-        objfx_spawnBoxBurst(obj, mapData->effectId, mapData->effectParamA, mapData->effectParamB,
-                            mapData->scale, (f32)(u32)mapData->spreadX,
-                            (f32)(u32)mapData->spreadY, (f32)(u32)mapData->spreadZ,
-                            mapData->effectFlags, 0, 0);
+        ((void (*)(int, int, int, int, f32, f32, f32, f32, int, int, int))objfx_spawnBoxBurst)(
+            obj, mapData->effectId, mapData->effectParamA, mapData->effectParamB,
+            mapData->scale, (f32)(u32)mapData->spreadX,
+            (f32)(u32)mapData->spreadY, (f32)(u32)mapData->spreadZ,
+            mapData->effectFlags, 0, 0);
     } else if (mapData->burstMode == DUSTMOTESOU_BURST_ARCED) {
         objfx_spawnArcedBurst(obj, mapData->effectId, mapData->scale,
                                mapData->effectParamA, mapData->effectParamB, mapData->effectFlags,
