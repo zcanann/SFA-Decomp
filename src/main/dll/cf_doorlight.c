@@ -106,7 +106,7 @@ int fn_80167764(int obj, int p)
   int def;
 
   state = *(int *)(obj + 0xb8);
-  timer = ((CfDoorlightState *)state)->unk40C;
+  timer = ((CfDoorlightState *)state)->control;
   if (((GroundBaddieState *)p)->baddie.controlMode == 2) {
     *(f32 *)(timer + 0x34) = *(f32 *)(timer + 0x34) - timeDelta;
     if (*(f32 *)(timer + 0x34) <= lbl_803E3060) {
@@ -115,7 +115,7 @@ int fn_80167764(int obj, int p)
   }
   if ((s8)((GroundBaddieState *)p)->baddie.moveDone != 0 || (s8)((GroundBaddieState *)p)->baddie.moveJustStartedB != 0) {
     if (((int (*)(int, int, f32, int))((void **)*(int *)gBaddieControlInterface)[0x11])
-            (obj, p, (f32)(u32)((CfDoorlightState *)state)->unk3FE, 1) != 0) {
+            (obj, p, (f32)(u32)((CfDoorlightState *)state)->aggroRange, 1) != 0) {
       return 5;
     }
     def = *(int *)(obj + 0x4c);
@@ -150,8 +150,8 @@ int fn_8016792C(int obj, u8 *state)
     if ((s8)state[0x27b] != 0) {
         u8 *extra = *(u8 **)(obj + 0xb8);
         extra[0x405] = 0;
-        GameBit_Set(((CfDoorlightState *)extra)->unk3F4, 0);
-        GameBit_Set(((CfDoorlightState *)extra)->unk3F2, 1);
+        GameBit_Set(((CfDoorlightState *)extra)->gameBitB, 0);
+        GameBit_Set(((CfDoorlightState *)extra)->gameBitA, 1);
     }
     return 0;
 }
@@ -254,7 +254,7 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
   int iVar3;
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  iVar3 = ((CfDoorlightState *)iVar2)->unk40C;
+  iVar3 = ((CfDoorlightState *)iVar2)->control;
   if ((*(short *)(param_2 + 0x274) == 2) &&
      (*(float *)(iVar3 + 0x34) = *(float *)(iVar3 + 0x34) - lbl_803DC074,
      *(float *)(iVar3 + 0x34) <= lbl_803E3CF8)) {
@@ -262,7 +262,7 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
   }
   if ((*(char *)(param_2 + 0x346) != '\0') || (*(char *)(param_2 + 0x27b) != '\0')) {
     iVar2 = (**(code **)(*DAT_803dd738 + 0x44))
-                      ((double)(float)((double)CONCAT44(0x43300000,(uint)((CfDoorlightState *)iVar2)->unk3FE)
+                      ((double)(float)((double)CONCAT44(0x43300000,(uint)((CfDoorlightState *)iVar2)->aggroRange)
                                       - DOUBLE_803e3d00),param_1,param_2,1);
     if (iVar2 != 0) {
       return 5;
@@ -314,7 +314,7 @@ int fn_80167B60(int obj, int p)
       kaldachompme_setLinkedMouthMode((u8 *)obj, 2);
     }
   }
-  b8_40c = ((CfDoorlightState *)b8)->unk40C;
+  b8_40c = ((CfDoorlightState *)b8)->control;
   if ((*(u8 *)(b8_40c + 0x4b) & 0x1) == 0) {
     Sfx_PlayFromObject(obj, SFXkr_climb2);
     Sfx_PlayFromObject(obj, SFXsc_attack01);
@@ -400,11 +400,11 @@ int fn_80167988(int obj, int p2)
   int sub = *(int *)(obj + 0xb8);
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
-    *(u8 *)(((CfDoorlightState *)sub)->unk40C + 0x4b) = 0;
+    *(u8 *)(((CfDoorlightState *)sub)->control + 0x4b) = 0;
     (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 7);
     ObjHits_DisableObject(obj);
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
-    ((CfDoorlightState *)sub)->unk400 = (u16)(((CfDoorlightState *)sub)->unk400 | 0x20);
+    ((CfDoorlightState *)sub)->flags400 = (u16)(((CfDoorlightState *)sub)->flags400 | 0x20);
     ((CfDoorlightState *)sub)->unk3E8 = lbl_803E3078;
     ((CfDoorlightState *)sub)->unk3EC = lbl_803E307C;
   } else if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {

@@ -14,13 +14,13 @@ typedef struct CfDoorlightState {
     f32 unk3E8;
     f32 unk3EC;
     s16 unk3F0;
-    s16 unk3F2;
-    s16 unk3F4;
+    s16 gameBitA;
+    s16 gameBitB;
     u8 unk3F6[0x3FE - 0x3F6];
-    u16 unk3FE;
-    u16 unk400;
+    u16 aggroRange;
+    u16 flags400;
     u8 unk402[0x40C - 0x402];
-    int unk40C;
+    int control;
     u8 unk410[0x414 - 0x410];
 } CfDoorlightState;
 

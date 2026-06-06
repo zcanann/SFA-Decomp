@@ -13,17 +13,17 @@ typedef struct CampfireState {
     u8 unk0[0x270 - 0x0];
     s16 unk270;
     u8 unk272[0x274 - 0x272];
-    s16 unk274;
+    s16 controlMode;
     u8 unk276[0x2D0 - 0x276];
-    int unk2D0;
+    int targetObj;
     u8 unk2D4[0x3F4 - 0x2D4];
-    s16 unk3F4;
+    s16 gameBitB;
     u8 unk3F6[0x3FE - 0x3F6];
-    u16 unk3FE;
+    u16 aggroRange;
     u8 unk400[0x402 - 0x400];
-    s16 unk402;
+    s16 targetState;
     u8 unk404[0x40C - 0x404];
-    int unk40C;
+    int control;
     u8 unk410[0x414 - 0x410];
 } CampfireState;
 
