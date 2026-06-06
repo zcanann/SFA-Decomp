@@ -49,19 +49,21 @@ void dll_2A3_hitDetect(void) { lbl_803DDD94 = 0; }
 #pragma scheduling off
 void dll_2A3_update(int obj)
 {
+    f32 thr;
     f32 v;
     int state = *(int *)(obj + 0xb8);
 
-    if (*(f32 *)state > lbl_803E711C) {
+    if (*(f32 *)state > (thr = lbl_803E711C)) {
         *(f32 *)state -= timeDelta;
-        if (*(f32 *)state <= lbl_803E711C) {
-            *(f32 *)state = lbl_803E711C;
+        if (*(f32 *)state <= thr) {
+            *(f32 *)state = thr;
             Obj_FreeObject(obj);
             return;
         }
     }
 
-    v = (f32)(u32) * (u8 *)(obj + 0x36) + lbl_803E7120 * timeDelta;
+    v = (f32)(u32) * (u8 *)(obj + 0x36);
+    v = lbl_803E7120 * timeDelta + v;
     if (v > lbl_803E7124) {
         v = lbl_803E7124;
     }
