@@ -135,7 +135,7 @@ typedef struct ObjAnimRootCurve {
  * The named fields below are shared by root-motion sampling and hit-reaction
  * table loading; the rest of the object/model layout is still being mapped.
  */
-typedef struct ObjModelInstance {
+typedef struct ObjDef {
   u8 pad00[4];
   f32 rootMotionScaleBase;
   u8 pad08[0x10 - 0x08];
@@ -169,7 +169,9 @@ typedef struct ObjModelInstance {
   u8 pad78[0x90 - 0x78];
   u8 secondaryHitboxShapeFlags;
   u8 pad91[0x94 - 0x91];
-} ObjModelInstance;
+} ObjDef;
+
+typedef ObjDef ObjModelInstance;
 
 typedef struct ObjAnimMoveData {
   u8 pad00;
@@ -190,7 +192,7 @@ typedef struct ObjAnimComponent {
   s16 rotX;
   s16 rotY;
   s16 rotZ;
-  u8 pad06[0x08 - 0x06];
+  s16 flags;
   f32 rootMotionScale;
   f32 localPosX;
   f32 localPosY;
@@ -198,18 +200,31 @@ typedef struct ObjAnimComponent {
   f32 worldPosX;
   f32 worldPosY;
   f32 worldPosZ;
-  u8 pad24[0x46 - 0x24];
-  s16 objType;
-  u8 pad48[0x50 - 0x48];
-  ObjModelInstance *modelInstance;
+  f32 velocityX;
+  f32 velocityY;
+  f32 velocityZ;
+  void *parent;
+  u8 pad34[0x44 - 0x34];
+  s16 classId;
+  s16 seqId;
+  s16 defId;
+  u8 pad4A[0x4C - 0x4A];
+  s16 *placementData;
+  ObjDef *modelInstance;
   ObjHitReactState *hitReactState;
   u8 pad58[0x60 - 0x58];
   struct ObjAnimEventTable *eventTable;
-  u8 pad64[0x6C - 0x64];
+  u8 pad64[0x68 - 0x64];
+  int **dll;
   u8 *jointPoseData;
   u8 pad70[0x7C - 0x70];
   ObjAnimBank **banks;
-  u8 pad80[0x98 - 0x80];
+  f32 previousLocalPosX;
+  f32 previousLocalPosY;
+  f32 previousLocalPosZ;
+  f32 previousWorldPosX;
+  f32 previousWorldPosY;
+  f32 previousWorldPosZ;
   f32 currentMoveProgress;
   f32 activeMoveProgress;
   s16 currentMove;
@@ -280,27 +295,27 @@ STATIC_ASSERT(offsetof(ObjAnimState, blendToggle) == 0x62);
 STATIC_ASSERT(offsetof(ObjAnimState, moveControlFlags) == 0x63);
 STATIC_ASSERT(offsetof(ObjAnimState, lastBlendMoveIndex) == 0x64);
 
-STATIC_ASSERT(sizeof(ObjModelInstance) == 0x94);
-STATIC_ASSERT(offsetof(ObjModelInstance, rootMotionScaleBase) == 0x04);
-STATIC_ASSERT(offsetof(ObjModelInstance, jointData) == 0x10);
-STATIC_ASSERT(offsetof(ObjModelInstance, hitReactMoveTable) == 0x24);
-STATIC_ASSERT(offsetof(ObjModelInstance, flags) == 0x44);
-STATIC_ASSERT(offsetof(ObjModelInstance, hitboxFlags) == 0x4E);
-STATIC_ASSERT(offsetof(ObjModelInstance, modelCount) == 0x55);
-STATIC_ASSERT(offsetof(ObjModelInstance, jointCount) == 0x5A);
-STATIC_ASSERT(offsetof(ObjModelInstance, hitboxStateIndex) == 0x60);
-STATIC_ASSERT(offsetof(ObjModelInstance, primaryHitboxRadius) == 0x62);
-STATIC_ASSERT(offsetof(ObjModelInstance, lateralResponseWeight) == 0x63);
-STATIC_ASSERT(offsetof(ObjModelInstance, axialResponseWeight) == 0x64);
-STATIC_ASSERT(offsetof(ObjModelInstance, primaryHitboxShapeFlags) == 0x65);
-STATIC_ASSERT(offsetof(ObjModelInstance, targetHitMask) == 0x67);
-STATIC_ASSERT(offsetof(ObjModelInstance, primaryCapsuleOffsetA) == 0x68);
-STATIC_ASSERT(offsetof(ObjModelInstance, primaryCapsuleOffsetB) == 0x6A);
-STATIC_ASSERT(offsetof(ObjModelInstance, secondaryCapsuleOffsetA) == 0x6C);
-STATIC_ASSERT(offsetof(ObjModelInstance, secondaryCapsuleOffsetB) == 0x6E);
-STATIC_ASSERT(offsetof(ObjModelInstance, sourceHitMask) == 0x70);
-STATIC_ASSERT(offsetof(ObjModelInstance, secondaryHitboxRadius) == 0x77);
-STATIC_ASSERT(offsetof(ObjModelInstance, secondaryHitboxShapeFlags) == 0x90);
+STATIC_ASSERT(sizeof(ObjDef) == 0x94);
+STATIC_ASSERT(offsetof(ObjDef, rootMotionScaleBase) == 0x04);
+STATIC_ASSERT(offsetof(ObjDef, jointData) == 0x10);
+STATIC_ASSERT(offsetof(ObjDef, hitReactMoveTable) == 0x24);
+STATIC_ASSERT(offsetof(ObjDef, flags) == 0x44);
+STATIC_ASSERT(offsetof(ObjDef, hitboxFlags) == 0x4E);
+STATIC_ASSERT(offsetof(ObjDef, modelCount) == 0x55);
+STATIC_ASSERT(offsetof(ObjDef, jointCount) == 0x5A);
+STATIC_ASSERT(offsetof(ObjDef, hitboxStateIndex) == 0x60);
+STATIC_ASSERT(offsetof(ObjDef, primaryHitboxRadius) == 0x62);
+STATIC_ASSERT(offsetof(ObjDef, lateralResponseWeight) == 0x63);
+STATIC_ASSERT(offsetof(ObjDef, axialResponseWeight) == 0x64);
+STATIC_ASSERT(offsetof(ObjDef, primaryHitboxShapeFlags) == 0x65);
+STATIC_ASSERT(offsetof(ObjDef, targetHitMask) == 0x67);
+STATIC_ASSERT(offsetof(ObjDef, primaryCapsuleOffsetA) == 0x68);
+STATIC_ASSERT(offsetof(ObjDef, primaryCapsuleOffsetB) == 0x6A);
+STATIC_ASSERT(offsetof(ObjDef, secondaryCapsuleOffsetA) == 0x6C);
+STATIC_ASSERT(offsetof(ObjDef, secondaryCapsuleOffsetB) == 0x6E);
+STATIC_ASSERT(offsetof(ObjDef, sourceHitMask) == 0x70);
+STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxRadius) == 0x77);
+STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxShapeFlags) == 0x90);
 
 STATIC_ASSERT(sizeof(ObjAnimMoveData) == 0x08);
 STATIC_ASSERT(offsetof(ObjAnimMoveData, frameInfo) == 0x01);
@@ -316,6 +331,7 @@ STATIC_ASSERT(sizeof(ObjAnimComponent) == 0xB0);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotX) == 0x00);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotY) == 0x02);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotZ) == 0x04);
+STATIC_ASSERT(offsetof(ObjAnimComponent, flags) == 0x06);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rootMotionScale) == 0x08);
 STATIC_ASSERT(offsetof(ObjAnimComponent, localPosX) == 0x0C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, localPosY) == 0x10);
@@ -323,12 +339,22 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, localPosZ) == 0x14);
 STATIC_ASSERT(offsetof(ObjAnimComponent, worldPosX) == 0x18);
 STATIC_ASSERT(offsetof(ObjAnimComponent, worldPosY) == 0x1C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, worldPosZ) == 0x20);
-STATIC_ASSERT(offsetof(ObjAnimComponent, objType) == 0x46);
+STATIC_ASSERT(offsetof(ObjAnimComponent, velocityX) == 0x24);
+STATIC_ASSERT(offsetof(ObjAnimComponent, velocityY) == 0x28);
+STATIC_ASSERT(offsetof(ObjAnimComponent, velocityZ) == 0x2C);
+STATIC_ASSERT(offsetof(ObjAnimComponent, parent) == 0x30);
+STATIC_ASSERT(offsetof(ObjAnimComponent, classId) == 0x44);
+STATIC_ASSERT(offsetof(ObjAnimComponent, seqId) == 0x46);
+STATIC_ASSERT(offsetof(ObjAnimComponent, defId) == 0x48);
+STATIC_ASSERT(offsetof(ObjAnimComponent, placementData) == 0x4C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, modelInstance) == 0x50);
 STATIC_ASSERT(offsetof(ObjAnimComponent, hitReactState) == 0x54);
 STATIC_ASSERT(offsetof(ObjAnimComponent, eventTable) == 0x60);
+STATIC_ASSERT(offsetof(ObjAnimComponent, dll) == 0x68);
 STATIC_ASSERT(offsetof(ObjAnimComponent, jointPoseData) == 0x6C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, banks) == 0x7C);
+STATIC_ASSERT(offsetof(ObjAnimComponent, previousLocalPosX) == 0x80);
+STATIC_ASSERT(offsetof(ObjAnimComponent, previousWorldPosX) == 0x8C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, currentMoveProgress) == 0x98);
 STATIC_ASSERT(offsetof(ObjAnimComponent, activeMoveProgress) == 0x9C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, currentMove) == 0xA0);

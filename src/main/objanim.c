@@ -1149,11 +1149,11 @@ int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int moveCo
   state->lastBlendMoveIndex = OBJANIM_BLEND_MOVE_INDEX_INVALID;
   hitState = objAnim->hitReactState;
   if ((hitState != (ObjHitReactState *)0x0) && (hitState->entries != (ObjHitReactEntry *)0x0)) {
-    ObjHitReact_LoadMoveEntries((ObjAnimComponent *)objAnimArg,bank,(int)objAnim->objType,
+    ObjHitReact_LoadMoveEntries((ObjAnimComponent *)objAnimArg,bank,(int)objAnim->seqId,
                                 hitState,requestedMoveId,0);
   }
   if (objAnim->eventTable != (ObjAnimEventTable *)0x0) {
-    ObjAnim_LoadMoveEvents(objAnimArg,(int)objAnim->objType,objAnim->eventTable,requestedMoveId,0);
+    ObjAnim_LoadMoveEvents(objAnimArg,(int)objAnim->seqId,objAnim->eventTable,requestedMoveId,0);
   }
   previousMove = objAnim->currentMove;
   moveChanged = previousMove != requestedMoveId;
