@@ -688,7 +688,7 @@ void viewportEffectFn_8000e380(void)
         falloffTime = -slot->shakeFalloff;
         shakeTimer = slot->shakeTimer;
         falloffTime *= shakeTimer;
-        expTerm = lbl_803DE5F0;
+        expTerm = *(f32 *)&lbl_803DE5F0;
         n = expTerm;
         term = falloffTime;
         factorial = expTerm;
