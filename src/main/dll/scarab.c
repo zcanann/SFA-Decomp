@@ -2479,7 +2479,6 @@ extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int getTrickyObject(void);
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int *obj);
-extern void fn_8015FCCC(int obj);
 extern f32 timeDelta;
 extern f32 lbl_803E2E54;
 extern f32 lbl_803E2E58;
@@ -4040,7 +4039,6 @@ void dll_CB_func0B_nop(void) {}
 void dll_CB_release_nop(void) {}
 
 extern f32 lbl_803E2EA8;
-extern int dll_CB_seqFn(short *obj, int p2, u8 *p3);
 
 #pragma scheduling off
 #pragma peephole off
@@ -4142,12 +4140,10 @@ void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 #pragma peephole reset
 
 /* plain forwarder. */
-extern void fn_8015DAE8(void);
 extern void Camera_DisableViewYOffset(void);
 void dll_CA_initialise(void) { fn_8015DAE8(); }
 void iceball_free(void) { Camera_DisableViewYOffset(); }
 
-extern void iceball_update(undefined2 *param_1,int param_2);
 
 #pragma scheduling off
 #pragma peephole off
@@ -4577,28 +4573,11 @@ int fn_8016118C(int* obj, u8* state)
 }
 
 extern void* lbl_803AC5D0[];
-extern int fn_8016032C(int* obj, u8* state);
-extern int fn_801601C4(int obj, u8* state);
-extern int fn_8016043C(int obj, u8* state);
 extern int fn_801605D4(int* obj, u8* def);
-int fn_80160690(short* out, u8* obj);
-int fn_801605A8(short* out, u8* obj);
 int fn_80160534(int* obj);
-int fn_8016052C(void);
-int fn_8016050C(int p1, u8* obj);
-int fn_801603E8(int* obj, u8* obj2);
 
 extern void* lbl_803AC5B0[];
 extern void* lbl_803AC598[];
-extern int fn_8015E8BC(int obj, u8* state);
-extern int fn_8015E798(int obj, u8* state);
-extern int fn_8015E5DC(short* out, u8* obj);
-extern int fn_8015E520(int* obj, u8* state);
-extern int fn_8015E3A0(int obj, int state);
-extern int fn_8015E210(int* obj, u8* state);
-extern int fn_8015E0C8(int obj, u8* state);
-extern int fn_8015DF20(int obj, u8* state);
-extern int fn_8015DC04(int obj, u8* state);
 
 void dll_CE_initialise(void)
 {
