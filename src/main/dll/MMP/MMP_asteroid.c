@@ -1766,9 +1766,9 @@ void fn_80196520(u8 *obj, u8 *state, u8 *setup)
         *(f32 *)(obj + 0x28) = spd * vy;
         *(f32 *)(obj + 0x2c) = spd * vz;
     } else {
-        *(f32 *)(obj + 0x24) = (f32)*(s16 *)(setup + 0x20) / lbl_803E4030;
-        *(f32 *)(obj + 0x28) = (f32)*(s16 *)(setup + 0x22) / lbl_803E4030;
-        *(f32 *)(obj + 0x2c) = (f32)*(s16 *)(setup + 0x24) / lbl_803E4030;
+        *(f32 *)(obj + 0x24) = (f32)*(s16 *)(setup + 0x20) / (spd = lbl_803E4030);
+        *(f32 *)(obj + 0x28) = (f32)*(s16 *)(setup + 0x22) / spd;
+        *(f32 *)(obj + 0x2c) = (f32)*(s16 *)(setup + 0x24) / spd;
     }
     *(f32 *)(state + 0x278) = (f32)*(s16 *)(setup + 0x2c);
     *(f32 *)(state + 0x27c) = (f32)*(s16 *)(setup + 0x2e);
@@ -1788,12 +1788,12 @@ void fn_80196520(u8 *obj, u8 *state, u8 *setup)
     if (*(f32 *)(state + 0x280) > lbl_803E4034) {
         state[0x29f] = state[0x29f] | 0x10;
     }
-    *(f32 *)(state + 0x284) = (f32)*(s16 *)(setup + 0x32) / lbl_803E4038;
-    *(f32 *)(state + 0x288) = (f32)*(s16 *)(setup + 0x34) / lbl_803E4038;
-    *(f32 *)(state + 0x28c) = (f32)*(s16 *)(setup + 0x36) / lbl_803E4038;
-    *(f32 *)(state + 0x290) = (f32)*(s16 *)(setup + 0x26) / lbl_803E403C;
-    *(f32 *)(state + 0x294) = (f32)*(s16 *)(setup + 0x28) / lbl_803E403C;
-    *(f32 *)(state + 0x298) = (f32)*(s16 *)(setup + 0x2a) / lbl_803E403C;
+    *(f32 *)(state + 0x284) = (f32)*(s16 *)(setup + 0x32) / (spd = lbl_803E4038);
+    *(f32 *)(state + 0x288) = (f32)*(s16 *)(setup + 0x34) / spd;
+    *(f32 *)(state + 0x28c) = (f32)*(s16 *)(setup + 0x36) / spd;
+    *(f32 *)(state + 0x290) = (f32)*(s16 *)(setup + 0x26) / (spd = lbl_803E403C);
+    *(f32 *)(state + 0x294) = (f32)*(s16 *)(setup + 0x28) / spd;
+    *(f32 *)(state + 0x298) = (f32)*(s16 *)(setup + 0x2a) / spd;
     *(s16 *)(state + 0x29c) = 0;
 }
 
