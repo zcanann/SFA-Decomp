@@ -975,7 +975,7 @@ void FUN_80195b9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   if ((bVar1 & 2) == 0) {
     iVar8 = *(int *)(param_9 + 0x26);
     if ((bVar1 & 1) == 0) {
-      if (*(char *)((int)param_9 + offsetof(ObjAnimComponent, bankIndex)) == '\0') {
+      if (((ObjAnimComponent *)param_9)->bankIndex == 0) {
         uVar6 = GameBit_Get((int)*(short *)(iVar8 + 0x40));
         if ((uVar6 != 0) || (*(short *)(iVar8 + 0x40) == -1)) {
           *(byte *)(iVar9 + 0x29e) = *(byte *)(iVar9 + 0x29e) | 1;
@@ -1178,7 +1178,7 @@ void FUN_80196244(undefined2 *param_1,int param_2)
   undefined local_18 [12];
   
   local_18[0] = 5;
-  *(undefined *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) = *(undefined *)(param_2 + 0x18);
+  ((ObjAnimComponent *)param_1)->bankIndex = *(undefined *)(param_2 + 0x18);
   fVar1 = lbl_803E4CCC;
   iVar4 = *(int *)(param_1 + 0x5c);
   *(float *)(iVar4 + 0x26c) = lbl_803E4CCC;
@@ -1594,7 +1594,7 @@ void dimbossicesmash_update(u8 *obj)
     } else {
         setup = *(u8 **)(obj + 0x4c);
         if ((flags & 1) == 0) {
-            if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 0) {
+            if (((ObjAnimComponent *)obj)->bankIndex == 0) {
                 t = GameBit_Get(*(s16 *)(setup + 0x40));
                 if (t != 0 || *(s16 *)(setup + 0x40) == -1) {
                     state[0x29e] = state[0x29e] | 1;
@@ -1806,7 +1806,7 @@ void dimbossicesmash_init(u8 *obj, u8 *params)
     u8 buf[12];
 
     buf[0] = 5;
-    *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = params[0x18];
+    ((ObjAnimComponent *)obj)->bankIndex = params[0x18];
     fz = lbl_803E4034;
     state = *(u8 **)(obj + 0xb8);
     *(f32 *)(state + 0x26c) = lbl_803E4034;

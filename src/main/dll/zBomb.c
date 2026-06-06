@@ -1,5 +1,11 @@
 #include "main/dll/fruit.h"
 #include "main/dll/zBomb.h"
+#include "main/objanim_internal.h"
+
+static inline int *ZBomb_GetActiveModel(DfpTargetBlockObject *obj) {
+  ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+  return (int *)objAnim->banks[objAnim->bankIndex];
+}
 
 extern undefined4 streamFn_8000a380();
 extern u32 GameBit_Get(int eventId);
@@ -115,7 +121,7 @@ void dfptargetblock_init(DfpTargetBlockObject *obj,int param_2)
   DfpTargetBlockPoint point;
 
   state = (DfpTargetBlockState *)obj->state;
-  iVar7 = **(int **)(*(int *)((u8 *)obj + 0x7c) + *(char *)((u8 *)obj + 0xad) * 4);
+  iVar7 = *ZBomb_GetActiveModel(obj);
   *(ushort *)((u8 *)obj + 0xb0) = *(ushort *)((u8 *)obj + 0xb0) | 0x4000;
   if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE) {
     lbl_80329B78[0] = (int)obj->x;

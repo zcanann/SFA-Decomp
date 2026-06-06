@@ -2,6 +2,12 @@
 #include "main/dll/transporter.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
+
+static inline int *Transporter_GetActiveModel(void *obj) {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+    return (int *)objAnim->banks[objAnim->bankIndex];
+}
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068f8();
@@ -1942,7 +1948,7 @@ void pushable_init(s16 *obj, char *def) {
     *(void **)((char *)obj + 0xbc) = (void *)fn_8017510C;
     state = *(u8 **)((char *)obj + 0xb8);
     state[0xb4] = 0;
-    entry = *(int **)(*(int *)((char *)obj + 0x7c) + *(s8 *)((char *)obj + 0xad) * 4);
+    entry = Transporter_GetActiveModel(obj);
     model = (int *)*entry;
     *(int *)(state + 0xb0) = *(int *)(def + 0x1c);
     *(f32 *)(state + 0x10) = (f32)*(u16 *)(def + 0x20) / lbl_803E35CC;
@@ -2566,7 +2572,7 @@ void pushable_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
         }
         }
         {
-            char *hdr = *(char **)(*(int *)((char *)obj + 0x7c) + *(s8 *)((char *)obj + 0xad) * 4);
+            char *hdr = (char *)Transporter_GetActiveModel(obj);
             *(u16 *)(*(char **)hdr + 2) = *(u16 *)(*(char **)hdr + 2) | 2;
         }
         objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E3588);

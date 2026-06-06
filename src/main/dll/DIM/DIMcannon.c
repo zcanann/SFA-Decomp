@@ -700,7 +700,7 @@ void FUN_801aecf8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   pbVar6 = *(byte **)(param_9 + 0x5c);
   *param_9 = (short)((int)*(char *)(param_10 + 0x18) << 8);
   param_9[1] = *(undefined2 *)(param_10 + 0x1a);
-  *(char *)((int)param_9 + offsetof(ObjAnimComponent, bankIndex)) = (char)*(undefined2 *)(param_10 + 0x1c);
+  ((ObjAnimComponent *)param_9)->bankIndex = (char)*(undefined2 *)(param_10 + 0x1c);
   *pbVar6 = *(byte *)(param_10 + 0x19);
   bVar1 = *pbVar6;
   if (bVar1 == 4) {

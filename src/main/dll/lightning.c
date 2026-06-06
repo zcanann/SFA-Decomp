@@ -732,7 +732,7 @@ void FUN_80174524(int param_1,int param_2)
   iVar3 = *(int *)(iVar4 + 0x14);
   if (iVar3 == 0x49b5d) {
     *(undefined *)(param_2 + 0x144) = 0xb;
-    *(undefined *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) = 1;
+    ((ObjAnimComponent *)param_1)->bankIndex = 1;
   }
   else if (iVar3 < 0x49b5d) {
     if (iVar3 == 0x49b2c) {
@@ -741,7 +741,7 @@ void FUN_80174524(int param_1,int param_2)
   }
   else if (iVar3 < 0x49b5f) {
     *(undefined *)(param_2 + 0x144) = 0xc;
-    *(undefined *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) = 1;
+    ((ObjAnimComponent *)param_1)->bankIndex = 1;
   }
   uVar1 = GameBit_Get((int)*(short *)(iVar4 + 0x18));
   if (uVar1 != 0) {
@@ -826,11 +826,11 @@ void fn_80174588(int obj, int p2)
       break;
     case 0x49B5D:
       *(u8 *)(p2 + 0x144) = 11;
-      *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 1;
+      ((ObjAnimComponent *)obj)->bankIndex = 1;
       break;
     case 0x49B5E:
       *(u8 *)(p2 + 0x144) = 12;
-      *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 1;
+      ((ObjAnimComponent *)obj)->bankIndex = 1;
       break;
   }
 

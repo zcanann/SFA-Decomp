@@ -3607,7 +3607,7 @@ void objSoundFn_800392f0(int p1, int p2, int p3, u8 flag6)
     }
     count = *(u8*)((char*)p3 + 4);
     if (count != 0) {
-        model = ((int*)*(int*)((char*)p1 + 0x7c))[*(s8*)((char*)p1 + 0xad)];
+        model = (int)OBJPRINT_ACTIVE_BANK(p1);
         if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
             ObjModel_SetBlendChannelTargets(model, 2,
                 *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
@@ -3720,8 +3720,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
             if (vfn != NULL) {
                 vfn(obj, a, b, c, d, flag);
             }
-        } else if ((s8)flag != 0 &&
-                   ((void**)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)] != NULL) {
+        } else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL) {
             (*(void(*)(int))objRenderModel)(obj);
             if (*(void**)((char*)obj + 0x74) != NULL) {
                 objRenderFn_80041018((int*)obj);
@@ -3734,7 +3733,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
             playerRender(obj, a, b, c, d, flag);
             break;
         default:
-            if (((void**)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)] != NULL) {
+            if (OBJPRINT_ACTIVE_BANK(obj) != NULL) {
                 (*(void(*)(int))objRenderModel)(obj);
                 if (*(void**)((char*)obj + 0x74) != NULL) {
                     objRenderFn_80041018((int*)obj);
@@ -3747,9 +3746,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     for (i = 0, walk = obj; i < (s32)(u32)*(u8*)((char*)obj + 0xeb); i++) {
         int staff = *(int*)((char*)walk + 0xc8);
         if (*(s16*)((char*)staff + 0x44) == 0x2d) {
-            staffMtxFn_8003b620(staff, obj,
-                ((int*)*(int*)((char*)staff + 0x7c))[*(s8*)((char*)staff + 0xad)],
-                a, b, c);
+            staffMtxFn_8003b620(staff, obj, (int)OBJPRINT_ACTIVE_BANK(staff), a, b, c);
         }
         walk += 4;
     }
@@ -3773,7 +3770,7 @@ void objModelAndSoundFn_80039118(int obj, int p2)
     frame = *(int*)((char*)p2 + 0);
     if (frame >= *(int*)((char*)p2 + 4)) {
         *(int*)((char*)p2 + 0) = -1;
-        model = ((int*)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)];
+        model = (int)OBJPRINT_ACTIVE_BANK(obj);
         if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
             ObjModel_SetBlendChannelTargets(model, 2,
                 *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
@@ -3787,7 +3784,7 @@ void objModelAndSoundFn_80039118(int obj, int p2)
         frame = *(int*)((char*)p2 + 0);
         *(int*)((char*)p2 + 0) = frame + 1;
         kfval = kf[frame];
-        model = ((int*)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)];
+        model = (int)OBJPRINT_ACTIVE_BANK(obj);
         if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
             ObjModel_SetBlendChannelTargets(model, 2,
                 *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
