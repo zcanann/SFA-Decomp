@@ -106,7 +106,7 @@ void arwingandrossstuff_hitDetect(int obj)
             }
         }
         *(f32 *)(state + 0x10) = lbl_803E7028;
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         projectileParticleFxFn_80099660(obj, lbl_803E701C, *(u8 *)state);
         if (*(void **)(state + 0x14) != NULL) {
             ModelLightStruct_free(*(void **)(state + 0x14));
@@ -161,7 +161,7 @@ void arwingandrossstuff_init(int obj, u8 *setup)
 
     *(s16 *)obj = (s16)(setup[0x1a] << 8);
     ((GameObject *)obj)->anim.rotY = (s16)(setup[0x19] << 8);
-    *(u8 *)(obj + 0x36) = 1;
+    ((GameObject *)obj)->anim.alpha = 1;
     switch (((GameObject *)obj)->anim.seqId) {
     case 0x80d:
         *(s16 *)(state + 0x1a) = randomGetRange(-0x1f4, 0x1f4);
@@ -220,7 +220,7 @@ void arwingandrossstuff_update(int obj)
         return;
     }
     ObjHits_SetHitVolumeSlot(obj, 0xf, *(u8 *)(state + 0x18), 0);
-    *(u8 *)(obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     if (*(f32 *)(state + 4) > lbl_803E7008) {
         *(f32 *)(state + 4) -= timeDelta;
         if (*(f32 *)(state + 4) <= lbl_803E7008) {
@@ -233,7 +233,7 @@ void arwingandrossstuff_update(int obj)
                 Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
             }
             *(f32 *)(state + 0x10) = lbl_803E7028;
-            *(u8 *)(obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
             projectileParticleFxFn_80099660(obj, lbl_803E701C, *(u8 *)state);
             if (*(int *)(state + 0x14) != 0) {
                 ModelLightStruct_free(*(void **)(state + 0x14));

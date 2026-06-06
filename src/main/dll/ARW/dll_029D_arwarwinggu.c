@@ -47,11 +47,13 @@ void arwarwinggu_hitDetect(void) {}
 #pragma scheduling on
 void arwarwinggu_init(int obj)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
+
     if (((GameObject *)obj)->anim.seqId == 0x606) {
         return;
     }
     ((GameObject *)obj)->anim.flags |= 0x4000;
-    *(u8 *)(obj + 0x36) = 0;
+    objAnim->alpha = 0;
 }
 #pragma scheduling reset
 
@@ -59,16 +61,17 @@ void arwarwinggu_init(int obj)
 #pragma scheduling off
 void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     int state = *(int *)&((GameObject *)obj)->extra;
 
     if (active != 0) {
         Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
         ((GameObject *)obj)->anim.flags &= ~0x4000;
-        *(u8 *)(obj + 0x36) = 0xff;
+        objAnim->alpha = 0xff;
         *(f32 *)state = lbl_803E7058;
     } else {
         ((GameObject *)obj)->anim.flags |= 0x4000;
-        *(u8 *)(obj + 0x36) = 0;
+        objAnim->alpha = 0;
     }
 }
 #pragma scheduling reset
@@ -90,6 +93,8 @@ void arwarwinggu_initialise(void) {}
 #pragma scheduling off
 void arwarwinggu_update(int obj)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
+
     switch (((GameObject *)obj)->anim.seqId) {
     case 0x606: {
         int state = *(int *)&((GameObject *)obj)->extra;
@@ -107,7 +112,7 @@ void arwarwinggu_update(int obj)
             *(f32 *)state -= timeDelta;
             if (*(f32 *)state <= lbl_803E7060) {
                 *(f32 *)state = lbl_803E7060;
-                *(u8 *)(obj + 0x36) = 0;
+                objAnim->alpha = 0;
             }
         }
         break;
@@ -116,16 +121,16 @@ void arwarwinggu_update(int obj)
         int state = *(int *)&((GameObject *)obj)->extra;
         f32 v;
         if (*(u8 *)state != 0) {
-            v = lbl_803E705C * timeDelta + (f32)(u32)*(u8 *)(obj + 0x36);
+            v = lbl_803E705C * timeDelta + (f32)(u32)objAnim->alpha;
         } else {
-            v = (f32)(u32)*(u8 *)(obj + 0x36) - lbl_803E705C * timeDelta;
+            v = (f32)(u32)objAnim->alpha - lbl_803E705C * timeDelta;
         }
         if (v < lbl_803E7060) {
             v = lbl_803E7060;
         } else if (v > lbl_803E705C) {
             v = lbl_803E705C;
         }
-        *(u8 *)(obj + 0x36) = (int)v;
+        objAnim->alpha = (int)v;
         break;
     }
     }

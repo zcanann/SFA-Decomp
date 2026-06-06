@@ -50,6 +50,7 @@ void arwproximit_hitDetect(void) {}
 #pragma scheduling off
 void arwproximit_update(int obj)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     int state = *(int *)&((GameObject *)obj)->extra;
 
     if (*(u8 *)(state + 0x15) == 1) {
@@ -89,10 +90,10 @@ void arwproximit_update(int obj)
     case 1:
     default: {
         char *arwing;
-        int a = (int)(lbl_803E71FC * timeDelta + (f32)(u32)*(u8 *)(obj + 0x36));
+        int a = (int)(lbl_803E71FC * timeDelta + (f32)(u32)objAnim->alpha);
         if (a > 0xff)
             a = 0xff;
-        *(u8 *)(obj + 0x36) = a;
+        objAnim->alpha = a;
         arwing = (char *)getArwing();
         if (arwing == NULL)
             arwing = (char *)Obj_GetPlayerObject();
@@ -115,7 +116,7 @@ void arwproximit_update(int obj)
     }
     case 2: {
         u8 b0, b1, b2, b3;
-        *(u8 *)(obj + 0x36) = 0xff;
+        objAnim->alpha = 0xff;
         if (*(void **)(state + 4) != NULL) {
             modelLightStruct_getDiffuseColor(*(void **)(state + 4), &b0, &b1, &b2, &b3);
             modelLightStruct_setGlowColor(*(void **)(state + 4), b0, b1, b2, 0x64);
@@ -179,6 +180,7 @@ void arwproximit_update(int obj)
 #pragma scheduling off
 void arwproximit_init(int obj, int setup, int p3)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     int state = *(int *)&((GameObject *)obj)->extra;
 
     *(s16 *)(state + 0) = (s16)randomGetRange(0x64, 0x12c);
@@ -188,7 +190,7 @@ void arwproximit_init(int obj, int setup, int p3)
         ((GameObject *)obj)->anim.rotZ = (s16)randomGetRange(0, 0xffff);
         ((GameObject *)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
         ((GameObject *)obj)->anim.flags |= 0x4000;
-        *(u8 *)(obj + 0x36) = 0;
+        objAnim->alpha = 0;
     }
     storeZeroToFloatParam((void *)(state + 0xc));
     storeZeroToFloatParam((void *)(state + 0x10));

@@ -38,7 +38,7 @@ void arwspeedstr_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling on
 void arwspeedstr_init(int obj, int setup)
 {
-    *(u8 *)(obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -83,7 +83,7 @@ void arwspeedstr_update(int obj) {
                 *(f32 *)(state + 8) = lbl_803E7108 * timeDelta + *(f32 *)(state + 8);
                 if (*(f32 *)(state + 8) > lbl_803E710C)
                     *(f32 *)(state + 8) = lbl_803E710C;
-                *(u8 *)(obj + 0x36) = (int)*(f32 *)(state + 8);
+                ((GameObject *)obj)->anim.alpha = (int)*(f32 *)(state + 8);
             }
         }
     }

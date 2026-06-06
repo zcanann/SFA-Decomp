@@ -55,13 +55,15 @@ void arwblocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling off
 void arwblocker_init(int obj, int setup)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     int state = *(int *)&((GameObject *)obj)->extra;
+
     ((GameObject *)obj)->anim.rotX = -0x8000;
     ((GameObject *)obj)->anim.rotZ = (s16)(*(s8 *)(setup + 0x18) << 8);
     ((GameObject *)obj)->animEventCallback = (void *)arwblocker_getBlockState;
     *(u8 *)(state + 0) = *(u8 *)(setup + 0x19);
     ((GameObject *)obj)->anim.flags |= 0x4000;
-    *(u8 *)(obj + 0x36) = 0;
+    objAnim->alpha = 0;
     ObjHits_DisableObject(obj);
 }
 #pragma scheduling reset
@@ -81,15 +83,17 @@ void arwblocker_initialise(void) {}
 
 #pragma scheduling off
 void arwblocker_update(int obj) {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     int state = *(int *)&((GameObject *)obj)->extra;
     int arwing = getArwing();
+
     if (arwing == 0)
         arwing = Obj_GetPlayerObject();
     if (Vec_distance(obj + 0x18, arwing + 0x18) < lbl_803E721C) {
-        int a = (int)(lbl_803E7220 * timeDelta + (f32)(u32) * (u8 *)(obj + 0x36));
+        int a = (int)(lbl_803E7220 * timeDelta + (f32)(u32)objAnim->alpha);
         if (a > 0xff)
             a = 0xff;
-        *(u8 *)(obj + 0x36) = a;
+        objAnim->alpha = a;
         ((GameObject *)obj)->anim.flags &= ~0x4000;
         ObjHits_EnableObject(obj);
         if (((GameObject *)obj)->unkF4 == 0) {

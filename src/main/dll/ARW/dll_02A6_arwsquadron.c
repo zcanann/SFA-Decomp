@@ -205,7 +205,7 @@ void arwsquadron_init(int obj, int setup)
     if (*(f32 *)(s + 0x134) > *(f32 *)(s + 0x130)) {
         *(f32 *)(s + 0x134) = *(f32 *)(s + 0x130);
     }
-    *(u8 *)(obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
     ((GameObject *)obj)->anim.flags |= 0x4000;
     storeZeroToFloatParam((void *)(s + 0x12c));
 
@@ -596,7 +596,7 @@ void arwsquadron_update(int obj)
         int setupL = *(int *)&((GameObject *)obj)->anim.placementData;
         int leader = obj;
         int disable;
-        *(u8 *)(obj + 0x36) = 0xff;
+        ((GameObject *)obj)->anim.alpha = 0xff;
         getArwing();
         if (((ArwSquadronState *)state)->leaderObj != 0)
             leader = ((ArwSquadronState *)state)->leaderObj;

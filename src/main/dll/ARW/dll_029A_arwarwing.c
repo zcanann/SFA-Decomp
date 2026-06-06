@@ -446,29 +446,23 @@ void arwarwing_update(int obj)
         objMove(obj, ((ArwingState *)state)->velX * timeDelta, ((ArwingState *)state)->velY * timeDelta,
                 ((ArwingState *)state)->velZ * timeDelta);
         fn_8022AE1C(obj, state);
-        p = ((ArwingState *)state)->thrusterL;
-        *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
-        p = ((ArwingState *)state)->thrusterR;
-        *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
+        ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags |= 0x4000;
+        ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags |= 0x4000;
     } else {
         fn_8022A670(obj, state);
         if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) {
             *(s16 *)&((ArwingState *)state)->inputFlags2 = 0;
             *(s16 *)&((ArwingState *)state)->inputFlags = 0;
-            p = ((ArwingState *)state)->thrusterL;
-            *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
-            p = ((ArwingState *)state)->thrusterR;
-            *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
+            ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags |= 0x4000;
+            ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags |= 0x4000;
         } else {
-            p = ((ArwingState *)state)->thrusterL;
-            *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) & ~0x4000);
+            ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags &= ~0x4000;
             throttle = lbl_803E6FFC * timeDelta +
-                       (f32)(u32) * (u8 *)(((ArwingState *)state)->thrusterL + 0x36);
+                       (f32)(u32)((GameObject *)((ArwingState *)state)->thrusterL)->anim.alpha;
             if (throttle > lbl_803E7000) throttle = lbl_803E7000;
-            *(u8 *)(((ArwingState *)state)->thrusterL + 0x36) = (u8)(int)throttle;
-            p = ((ArwingState *)state)->thrusterR;
-            *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) & ~0x4000);
-            *(u8 *)(((ArwingState *)state)->thrusterR + 0x36) = (u8)(int)throttle;
+            ((GameObject *)((ArwingState *)state)->thrusterL)->anim.alpha = (u8)(int)throttle;
+            ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags &= ~0x4000;
+            ((GameObject *)((ArwingState *)state)->thrusterR)->anim.alpha = (u8)(int)throttle;
         }
         ((ArwingState *)state)->velTargetX = -((ArwingState *)state)->stickX * ((ArwingState *)state)->maxSpeedX;
         ((ArwingState *)state)->velTargetY = -((ArwingState *)state)->stickY * ((ArwingState *)state)->maxSpeedY;
@@ -1079,10 +1073,10 @@ int arwarwing_SeqFn(int obj, int p2, int script)
     fn_8022A9C8(obj, state);
     if (((ArwingState *)state)->bombObj != 0)
         arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
-    *(s16 *)(((ArwingState *)state)->thrusterL + 6) |= 0x4000;
-    *(u8 *)(((ArwingState *)state)->thrusterL + 0x36) = 0;
-    *(s16 *)(((ArwingState *)state)->thrusterR + 6) |= 0x4000;
-    *(u8 *)(((ArwingState *)state)->thrusterR + 0x36) = 0;
+    ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags |= 0x4000;
+    ((GameObject *)((ArwingState *)state)->thrusterL)->anim.alpha = 0;
+    ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags |= 0x4000;
+    ((GameObject *)((ArwingState *)state)->thrusterR)->anim.alpha = 0;
     ((GameObject *)obj)->anim.flags &= ~0x4000;
 
     for (i = 0; i < *(u8 *)(script + 0x8b); i++) {

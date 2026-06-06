@@ -40,8 +40,10 @@ void arwbombcoll_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling off
 void arwbombcoll_init(int obj, int setup)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
+
     ((GameObject *)obj)->anim.rotX = (s16)(*(s8 *)(setup + 0x18) << 8);
-    *(u8 *)(obj + 0x36) = 0;
+    objAnim->alpha = 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -175,6 +177,7 @@ int arwbombcoll_checkArwingCollision(int obj, int state, int arwing) {
 #pragma scheduling off
 void arwbombcoll_update(int obj)
 {
+    ObjAnimComponent *objAnim;
     ArwBombFlags *flags;
     int arw;
     int s;
@@ -182,6 +185,7 @@ void arwbombcoll_update(int obj)
     f32 thr;
 
     arw = getArwing();
+    objAnim = &((GameObject *)obj)->anim;
     s = *(int *)&((GameObject *)obj)->extra;
     flags = (ArwBombFlags *)(s + 0x4);
 
@@ -207,15 +211,15 @@ void arwbombcoll_update(int obj)
         }
     }
     ((GameObject *)obj)->anim.flags |= 0x4000;
-    *(u8 *)(obj + 0x36) = 0;
+    objAnim->alpha = 0;
     return;
 active : {
         int v;
-        v = (int)(lbl_803E7084 * timeDelta + (f32)(u32) * (u8 *)(obj + 0x36));
+        v = (int)(lbl_803E7084 * timeDelta + (f32)(u32)objAnim->alpha);
         if (v > 0xff) {
             v = 0xff;
         }
-        *(u8 *)(obj + 0x36) = v;
+        objAnim->alpha = v;
         ((GameObject *)obj)->anim.flags &= ~0x4000;
         ((GameObject *)obj)->anim.rotX = lbl_803E7088 * timeDelta + (f32) * (s16 *)(obj + 0x0);
         ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);

@@ -109,7 +109,7 @@ void arwarwingbo_update(int obj)
             Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
             *(f32 *)(state + 8) = lbl_803E7040;
             *(f32 *)(state + 0) = lbl_803E7044;
-            *(u8 *)(obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~0x200;
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0x280);
@@ -129,7 +129,7 @@ void arwarwingbo_update(int obj)
             Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
             *(f32 *)(state + 8) = lbl_803E7040;
             *(f32 *)(state + 0) = lbl_803E7044;
-            *(u8 *)(obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~0x200;
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0x280);
