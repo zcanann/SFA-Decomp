@@ -51,10 +51,12 @@ if '--rebuild' in sys.argv:
         os.unlink(cur_p)
     r = subprocess.run(['ninja', rel], cwd=root, capture_output=True, text=True, timeout=600)
     out = r.stdout + r.stderr
-    if r.returncode != 0 or 'FAILED' in out or 'Error' in out:
+    # \berror\b avoids false-positives on filenames like OSError.c in benign WARN lines
+    err_re = re.compile(r'(?i)\berror\b')
+    if r.returncode != 0 or 'FAILED' in out or err_re.search(out):
         print('FAIL: rebuild of %s errored (exit %d)' % (rel, r.returncode))
         for ln in out.splitlines():
-            if 'FAILED' in ln or 'Error' in ln or 'error' in ln:
+            if 'FAILED' in ln or err_re.search(ln):
                 print('  ' + ln.strip())
         sys.exit(1)
     if not os.path.exists(cur_p):

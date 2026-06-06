@@ -1,4 +1,5 @@
 #include "main/audio/hw_volume.h"
+#include "main/audio/dsp_voice.h"
 
 extern void salDeactivateVoice(void *entry);
 extern void salActivateStudio(void);
@@ -20,73 +21,73 @@ extern f32 lbl_803E78E4;
  */
 void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefined4 p7)
 {
-    u8 *voice;
-    u8 *aux_entry;
+    DspVoice *voice;
+    DspStudioInfo *aux_entry;
     f32 out[9];
     int v0, v1, v2;
 
-    voice = dspVoice + slot * 0xf4;
+    voice = (DspVoice *)(dspVoice + slot * 0xf4);
 
     if (a >= 1.0f) a = 1.0f;
     if (b >= 1.0f) b = 1.0f;
     if (c >= 1.0f) c = 1.0f;
 
-    aux_entry = lbl_803CC1E0 + *(u8 *)(voice + 0xef) * 0xbc;
+    aux_entry = (DspStudioInfo *)(lbl_803CC1E0 + voice->studio * 0xbc);
 
     {
         extern void salCalcVolumeMatrix(int voltab_index, f32 *out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 a, f32 b, f32 c);
-        u32 f0w = *(u32 *)(voice + 0xf0);
+        u32 f0w = voice->flags;
         salCalcVolumeMatrix(p2, out, aux, p7, (f0w & 0x80000000u) != 0,
-                        *(u32 *)(aux_entry + 0x54) == 1, a, b, c);
+                        aux_entry->type == 1, a, b, c);
     }
 
     v0 = (s32)(lbl_803E78E4 * out[0]);
     v1 = (s32)(lbl_803E78E4 * out[1]);
     v2 = (s32)(lbl_803E78E4 * out[2]);
-    if (*(u8 *)(voice + 0xe5) == 0xff
-        || *(u16 *)(voice + 0x4c) != (u16)v0
-        || *(u16 *)(voice + 0x4e) != (u16)v1
-        || *(u16 *)(voice + 0x50) != (u16)v2) {
-        *(u16 *)(voice + 0x4c) = v0;
-        *(u16 *)(voice + 0x4e) = v1;
-        *(u16 *)(voice + 0x50) = v2;
-        *(u32 *)(voice + 0x24) |= 0x1;
-        *(u8 *)(voice + 0xe5) = 0;
+    if (voice->lastUpdate.vol == 0xff
+        || voice->volL != (u16)v0
+        || voice->volR != (u16)v1
+        || voice->volS != (u16)v2) {
+        voice->volL = v0;
+        voice->volR = v1;
+        voice->volS = v2;
+        voice->changed[0] |= 0x1;
+        voice->lastUpdate.vol = 0;
     }
 
     v0 = (s32)(lbl_803E78E4 * out[3]);
     v1 = (s32)(lbl_803E78E4 * out[4]);
     v2 = (s32)(lbl_803E78E4 * out[5]);
-    if (*(u8 *)(voice + 0xe6) == 0xff
-        || *(u16 *)(voice + 0x52) != (u16)v0
-        || *(u16 *)(voice + 0x54) != (u16)v1
-        || *(u16 *)(voice + 0x56) != (u16)v2) {
-        *(u16 *)(voice + 0x52) = v0;
-        *(u16 *)(voice + 0x54) = v1;
-        *(u16 *)(voice + 0x56) = v2;
-        *(u32 *)(voice + 0x24) |= 0x2;
-        *(u8 *)(voice + 0xe6) = 0;
+    if (voice->lastUpdate.volA == 0xff
+        || voice->volLa != (u16)v0
+        || voice->volRa != (u16)v1
+        || voice->volSa != (u16)v2) {
+        voice->volLa = v0;
+        voice->volRa = v1;
+        voice->volSa = v2;
+        voice->changed[0] |= 0x2;
+        voice->lastUpdate.volA = 0;
     }
 
     v0 = (s32)(lbl_803E78E4 * out[6]);
     v1 = (s32)(lbl_803E78E4 * out[7]);
     v2 = (s32)(lbl_803E78E4 * out[8]);
-    if (*(u8 *)(voice + 0xe7) == 0xff
-        || *(u16 *)(voice + 0x58) != (u16)v0
-        || *(u16 *)(voice + 0x5a) != (u16)v1
-        || *(u16 *)(voice + 0x5c) != (u16)v2) {
-        *(u16 *)(voice + 0x58) = v0;
-        *(u16 *)(voice + 0x5a) = v1;
-        *(u16 *)(voice + 0x5c) = v2;
-        *(u32 *)(voice + 0x24) |= 0x4;
-        *(u8 *)(voice + 0xe7) = 0;
+    if (voice->lastUpdate.volB == 0xff
+        || voice->volLb != (u16)v0
+        || voice->volRb != (u16)v1
+        || voice->volSb != (u16)v2) {
+        voice->volLb = v0;
+        voice->volRb = v1;
+        voice->volSb = v2;
+        voice->changed[0] |= 0x4;
+        voice->lastUpdate.volB = 0;
     }
 
-    if (*(u32 *)(voice + 0xf0) & 0x80000000) {
+    if (voice->flags & 0x80000000) {
         u8 *p = lbl_802C2820 + (((aux >> 16) & 0xff) << 1);
-        *(u16 *)(voice + 0xd0) = *(u16 *)p;
-        *(u16 *)(voice + 0xd2) = 0x20 - *(u16 *)p;
-        *(u32 *)(voice + 0x24) |= 0x200;
+        voice->itdShiftL = *(u16 *)p;
+        voice->itdShiftR = 0x20 - *(u16 *)p;
+        voice->changed[0] |= 0x200;
     }
 }
 
@@ -113,11 +114,11 @@ void hwOff(int slot)
  */
 void hwSetAUXProcessingCallbacks(u8 idx, void *cb0, void *cb1, void *cb2, void *cb3)
 {
-    u8 *entry = lbl_803CC1E0 + idx * 0xbc;
-    *(void **)(entry + 0xac) = cb0;
-    *(void **)(entry + 0xb4) = cb1;
-    *(void **)(entry + 0xb0) = cb2;
-    *(void **)(entry + 0xb8) = cb3;
+    DspStudioInfo *entry = (DspStudioInfo *)(lbl_803CC1E0 + idx * 0xbc);
+    entry->auxAHandler = cb0;
+    entry->auxAUser = cb1;
+    entry->auxBHandler = cb2;
+    entry->auxBUser = cb3;
 }
 
 /*
