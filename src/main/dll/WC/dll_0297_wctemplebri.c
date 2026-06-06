@@ -268,8 +268,7 @@ void wctemplebri_init(int obj, int initData)
     done = 0;
     while (done == 0) {
         done = 1;
-        p = state;
-        for (k = 0; k < WCTEMPLEBRI_PART_COUNT(state) - 1; k++) {
+        for (k = 0, p = state; k < WCTEMPLEBRI_PART_COUNT(state) - 1; k++) {
             f32 a = *(f32 *)(p + 4);
             f32 b = *(f32 *)(p + 8);
             if (a < b) {
