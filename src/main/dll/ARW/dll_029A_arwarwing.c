@@ -352,24 +352,24 @@ void arwarwing_updateWeaponFire(int obj, int state) {
     int fire;
     fn_8022A9C8(obj, state);
     {
-        f32 t = *(f32 *)(state + 0x408);
+        f32 t = ((ArwingState *)state)->fireCooldown;
         if (t > lbl_803E6ECC) {
-            *(f32 *)(state + 0x408) = t - timeDelta;
-            if (*(f32 *)(state + 0x408) >= lbl_803E6ECC)
+            ((ArwingState *)state)->fireCooldown = t - timeDelta;
+            if (((ArwingState *)state)->fireCooldown >= lbl_803E6ECC)
                 return;
-            *(f32 *)(state + 0x408) = lbl_803E6ECC;
+            ((ArwingState *)state)->fireCooldown = lbl_803E6ECC;
         }
     }
     fire = 0;
-    if (*(u16 *)(state + 0x3f8) & 0x100) {
-        *(f32 *)(state + 0x414) -= timeDelta;
-        if (*(f32 *)(state + 0x414) <= lbl_803E6ECC)
+    if (((ArwingState *)state)->inputFlags2 & 0x100) {
+        ((ArwingState *)state)->fireTimer -= timeDelta;
+        if (((ArwingState *)state)->fireTimer <= lbl_803E6ECC)
             fire = 1;
     }
-    if ((*(u16 *)(state + 0x3f4) & 0x100) == 0 && fire == 0)
+    if ((((ArwingState *)state)->inputFlags & 0x100) == 0 && fire == 0)
         return;
-    *(f32 *)(state + 0x414) = lbl_803E6F04;
-    switch ((s8) * (u8 *)(state + 0x404)) {
+    ((ArwingState *)state)->fireTimer = lbl_803E6F04;
+    switch ((s8) ((ArwingState *)state)->laserLevel) {
     case 2:
         arwarwing_spawnLaserShot(obj, state, 0, 2, 1);
         arwarwing_spawnLaserShot(obj, state, 1, 2, 0);
@@ -379,11 +379,11 @@ void arwarwing_updateWeaponFire(int obj, int state) {
         arwarwing_spawnLaserShot(obj, state, 1, 1, 0);
         break;
     default:
-        arwarwing_spawnLaserShot(obj, state, *(u8 *)(state + 0x405), 0, 1);
-        *(u8 *)(state + 0x405) = (*(u8 *)(state + 0x405) ^ 1) & 0xff;
+        arwarwing_spawnLaserShot(obj, state, ((ArwingState *)state)->laserSide, 0, 1);
+        ((ArwingState *)state)->laserSide = (((ArwingState *)state)->laserSide ^ 1) & 0xff;
         break;
     }
-    *(f32 *)(state + 0x408) = (f32)(u32) * (u16 *)(state + 0x40c);
+    ((ArwingState *)state)->fireCooldown = (f32)(u32) ((ArwingState *)state)->fireDelay;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -399,24 +399,24 @@ void arwarwing_update(int obj)
     f32 t;
     f32 throttle;
 
-    if ((*(u8 *)(state + 0x477) & 1) == 0) {
+    if ((((ArwingState *)state)->flags477 & 1) == 0) {
         fn_8022CDEC(obj, state);
         return;
     }
-    mode = *(u8 *)(state + 0x478);
+    mode = ((ArwingState *)state)->mode;
     if (mode == 5) {
-        t = *(f32 *)(state + 0x46c) - timeDelta;
-        *(f32 *)(state + 0x46c) = t;
+        t = ((ArwingState *)state)->modeTimer - timeDelta;
+        ((ArwingState *)state)->modeTimer = t;
         if (t <= lbl_803E6ECC) {
-            *(u8 *)(state + 0x478) = 6;
+            ((ArwingState *)state)->mode = 6;
             (*(void (**)(int, int))(*gScreenTransitionInterface + 8))(0x14, 1);
-            *(f32 *)(state + 0x46c) = lbl_803E6F34;
+            ((ArwingState *)state)->modeTimer = lbl_803E6F34;
         }
         return;
     }
     if (mode == 6) {
-        t = *(f32 *)(state + 0x46c) - timeDelta;
-        *(f32 *)(state + 0x46c) = t;
+        t = ((ArwingState *)state)->modeTimer - timeDelta;
+        ((ArwingState *)state)->modeTimer = t;
         if (t <= lbl_803E6ECC) {
             if (*(s8 *)(obj + 0xac) == 0x26) {
                 unlockLevel(0, 0, 1);
@@ -430,108 +430,108 @@ void arwarwing_update(int obj)
         return;
     }
     if (mode == 4) {
-        t = *(f32 *)(state + 0x46c) - timeDelta;
-        *(f32 *)(state + 0x46c) = t;
+        t = ((ArwingState *)state)->modeTimer - timeDelta;
+        ((ArwingState *)state)->modeTimer = t;
         if (t <= lbl_803E6ECC) {
-            *(u8 *)(state + 0x478) = 5;
-            *(f32 *)(state + 0x46c) = lbl_803E6F24;
+            ((ArwingState *)state)->mode = 5;
+            ((ArwingState *)state)->modeTimer = lbl_803E6F24;
             *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
-        *(int *)(state + 0x36c) =
-            (int)(lbl_803E6F6C * timeDelta + (f32) * (int *)(state + 0x36c));
-        *(s16 *)(obj + 4) = (s16) * (int *)(state + 0x36c);
-        *(f32 *)(state + 0x4c) = *(f32 *)(state + 0x4c) - lbl_803E6EF8 * timeDelta;
-        objMove(obj, *(f32 *)(state + 0x48) * timeDelta, *(f32 *)(state + 0x4c) * timeDelta,
-                *(f32 *)(state + 0x50) * timeDelta);
+        ((ArwingState *)state)->pitchAccum =
+            (int)(lbl_803E6F6C * timeDelta + (f32) ((ArwingState *)state)->pitchAccum);
+        *(s16 *)(obj + 4) = (s16) ((ArwingState *)state)->pitchAccum;
+        ((ArwingState *)state)->velY = ((ArwingState *)state)->velY - lbl_803E6EF8 * timeDelta;
+        objMove(obj, ((ArwingState *)state)->velX * timeDelta, ((ArwingState *)state)->velY * timeDelta,
+                ((ArwingState *)state)->velZ * timeDelta);
         fn_8022AE1C(obj, state);
-        p = *(int *)(state + 0x418);
+        p = ((ArwingState *)state)->thrusterL;
         *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
-        p = *(int *)(state + 0x41c);
+        p = ((ArwingState *)state)->thrusterR;
         *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
     } else {
         fn_8022A670(obj, state);
         if ((*(s16 *)(obj + 6) & 0x4000) != 0) {
-            *(s16 *)(state + 0x3f8) = 0;
-            *(s16 *)(state + 0x3f4) = 0;
-            p = *(int *)(state + 0x418);
+            *(s16 *)&((ArwingState *)state)->inputFlags2 = 0;
+            *(s16 *)&((ArwingState *)state)->inputFlags = 0;
+            p = ((ArwingState *)state)->thrusterL;
             *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
-            p = *(int *)(state + 0x41c);
+            p = ((ArwingState *)state)->thrusterR;
             *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
         } else {
-            p = *(int *)(state + 0x418);
+            p = ((ArwingState *)state)->thrusterL;
             *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) & ~0x4000);
             throttle = lbl_803E6FFC * timeDelta +
-                       (f32)(u32) * (u8 *)(*(int *)(state + 0x418) + 0x36);
+                       (f32)(u32) * (u8 *)(((ArwingState *)state)->thrusterL + 0x36);
             if (throttle > lbl_803E7000) throttle = lbl_803E7000;
-            *(u8 *)(*(int *)(state + 0x418) + 0x36) = (u8)(int)throttle;
-            p = *(int *)(state + 0x41c);
+            *(u8 *)(((ArwingState *)state)->thrusterL + 0x36) = (u8)(int)throttle;
+            p = ((ArwingState *)state)->thrusterR;
             *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) & ~0x4000);
-            *(u8 *)(*(int *)(state + 0x41c) + 0x36) = (u8)(int)throttle;
+            *(u8 *)(((ArwingState *)state)->thrusterR + 0x36) = (u8)(int)throttle;
         }
-        *(f32 *)(state + 0x3c) = -*(f32 *)(state + 0x3e4) * *(f32 *)(state + 0x54);
-        *(f32 *)(state + 0x40) = -*(f32 *)(state + 0x3e8) * *(f32 *)(state + 0x58);
-        *(f32 *)(state + 0x44) = *(f32 *)(state + 0x5c) * *(f32 *)(state + 0x6c);
-        *(int *)(state + 0x340) =
-            (int)(-*(f32 *)(state + 0x3e4) * *(f32 *)(state + 0x348));
-        *(int *)(state + 0x354) = (int)(*(f32 *)(state + 0x3e8) * *(f32 *)(state + 0x35c));
-        *(int *)(state + 0x368) = (int)(*(f32 *)(state + 0x3e4) * *(f32 *)(state + 0x370));
-        *(int *)(state + 0x37c) =
-            (int)(*(f32 *)(state + 0x384) *
-                  (*(f32 *)(state + 0x3f0) + *(f32 *)(state + 0x3ec)));
+        ((ArwingState *)state)->unk3C = -((ArwingState *)state)->unk3E4 * ((ArwingState *)state)->unk54;
+        ((ArwingState *)state)->unk40 = -((ArwingState *)state)->unk3E8 * ((ArwingState *)state)->unk58;
+        ((ArwingState *)state)->unk44 = ((ArwingState *)state)->unk5C * ((ArwingState *)state)->unk6C;
+        ((ArwingState *)state)->unk340 =
+            (int)(-((ArwingState *)state)->unk3E4 * ((ArwingState *)state)->unk348);
+        ((ArwingState *)state)->unk354 = (int)(((ArwingState *)state)->unk3E8 * ((ArwingState *)state)->unk35C);
+        ((ArwingState *)state)->unk368 = (int)(((ArwingState *)state)->unk3E4 * ((ArwingState *)state)->unk370);
+        ((ArwingState *)state)->unk37C =
+            (int)(((ArwingState *)state)->unk384 *
+                  (((ArwingState *)state)->unk3F0 + ((ArwingState *)state)->unk3EC));
         fn_8022AECC(obj, state);
         arwarwing_updateWeaponFire(obj, state);
         fn_8022B8A0(obj, state);
 
-        *(s16 *)(*(int *)(state + 0x454) + 0) =
-            (int)((f32)(-*(int *)(state + 0x36c)) * *(f32 *)(state + 0x464));
-        *(s16 *)(*(int *)(state + 0x454) + 4) =
-            (int)((f32) * (int *)(state + 0x36c) * *(f32 *)(state + 0x464));
-        *(s16 *)(*(int *)(state + 0x458) + 0) =
-            (int)((f32)(-*(int *)(state + 0x36c)) * *(f32 *)(state + 0x464));
-        *(s16 *)(*(int *)(state + 0x458) + 4) =
-            (int)((f32) * (int *)(state + 0x36c) * *(f32 *)(state + 0x464));
-        p = (int)((f32) * (int *)(state + 0x36c) * *(f32 *)(state + 0x464));
-        *(s16 *)(*(int *)(state + 0x45c) + 4) = p;
-        *(s16 *)(*(int *)(state + 0x45c) + 0) = p;
-        p = (int)((f32) * (int *)(state + 0x36c) * *(f32 *)(state + 0x464));
-        *(s16 *)(*(int *)(state + 0x460) + 4) = p;
-        *(s16 *)(*(int *)(state + 0x460) + 0) = p;
+        *(s16 *)(((ArwingState *)state)->wingVec[0] + 0) =
+            (int)((f32)(-((ArwingState *)state)->pitchAccum) * ((ArwingState *)state)->wingFlexScale);
+        *(s16 *)(((ArwingState *)state)->wingVec[0] + 4) =
+            (int)((f32) ((ArwingState *)state)->pitchAccum * ((ArwingState *)state)->wingFlexScale);
+        *(s16 *)(((ArwingState *)state)->wingVec[1] + 0) =
+            (int)((f32)(-((ArwingState *)state)->pitchAccum) * ((ArwingState *)state)->wingFlexScale);
+        *(s16 *)(((ArwingState *)state)->wingVec[1] + 4) =
+            (int)((f32) ((ArwingState *)state)->pitchAccum * ((ArwingState *)state)->wingFlexScale);
+        p = (int)((f32) ((ArwingState *)state)->pitchAccum * ((ArwingState *)state)->wingFlexScale);
+        *(s16 *)(((ArwingState *)state)->wingVec[2] + 4) = p;
+        *(s16 *)(((ArwingState *)state)->wingVec[2] + 0) = p;
+        p = (int)((f32) ((ArwingState *)state)->pitchAccum * ((ArwingState *)state)->wingFlexScale);
+        *(s16 *)(((ArwingState *)state)->wingVec[3] + 4) = p;
+        *(s16 *)(((ArwingState *)state)->wingVec[3] + 0) = p;
 
-        *(s16 *)(*(int *)(state + 0x454) + 0) =
-            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
-                  (f32) * (s16 *)(*(int *)(state + 0x454) + 0));
-        *(s16 *)(*(int *)(state + 0x454) + 4) =
-            (int)((f32) * (int *)(state + 0x358) * *(f32 *)(state + 0x464) +
-                  (f32) * (s16 *)(*(int *)(state + 0x454) + 4));
-        *(s16 *)(*(int *)(state + 0x458) + 0) =
-            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
-                  (f32) * (s16 *)(*(int *)(state + 0x458) + 0));
-        *(s16 *)(*(int *)(state + 0x458) + 4) =
-            (int)((f32) * (int *)(state + 0x358) * *(f32 *)(state + 0x464) +
-                  (f32) * (s16 *)(*(int *)(state + 0x458) + 4));
-        *(s16 *)(*(int *)(state + 0x45c) + 0) =
-            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
-                  (f32) * (s16 *)(*(int *)(state + 0x45c) + 0));
-        *(s16 *)(*(int *)(state + 0x45c) + 4) =
-            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
-                  (f32) * (s16 *)(*(int *)(state + 0x45c) + 4));
-        *(s16 *)(*(int *)(state + 0x460) + 0) =
-            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
-                  (f32) * (s16 *)(*(int *)(state + 0x460) + 0));
-        *(s16 *)(*(int *)(state + 0x460) + 4) =
-            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
-                  (f32) * (s16 *)(*(int *)(state + 0x460) + 4));
+        *(s16 *)(((ArwingState *)state)->wingVec[0] + 0) =
+            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+                  (f32) * (s16 *)(((ArwingState *)state)->wingVec[0] + 0));
+        *(s16 *)(((ArwingState *)state)->wingVec[0] + 4) =
+            (int)((f32) ((ArwingState *)state)->rollInput * ((ArwingState *)state)->wingFlexScale +
+                  (f32) * (s16 *)(((ArwingState *)state)->wingVec[0] + 4));
+        *(s16 *)(((ArwingState *)state)->wingVec[1] + 0) =
+            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+                  (f32) * (s16 *)(((ArwingState *)state)->wingVec[1] + 0));
+        *(s16 *)(((ArwingState *)state)->wingVec[1] + 4) =
+            (int)((f32) ((ArwingState *)state)->rollInput * ((ArwingState *)state)->wingFlexScale +
+                  (f32) * (s16 *)(((ArwingState *)state)->wingVec[1] + 4));
+        *(s16 *)(((ArwingState *)state)->wingVec[2] + 0) =
+            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+                  (f32) * (s16 *)(((ArwingState *)state)->wingVec[2] + 0));
+        *(s16 *)(((ArwingState *)state)->wingVec[2] + 4) =
+            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+                  (f32) * (s16 *)(((ArwingState *)state)->wingVec[2] + 4));
+        *(s16 *)(((ArwingState *)state)->wingVec[3] + 0) =
+            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+                  (f32) * (s16 *)(((ArwingState *)state)->wingVec[3] + 0));
+        *(s16 *)(((ArwingState *)state)->wingVec[3] + 4) =
+            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+                  (f32) * (s16 *)(((ArwingState *)state)->wingVec[3] + 4));
     }
 
     fn_8022C30C(obj, state);
     (*(void (**)(void *, int))(*gCameraInterface + 0x60))((void *)(state + 0x2c), 0xc);
     camRot[0] = *(s16 *)(obj + 0);
     camRot[1] = *(s16 *)(obj + 2);
-    camRot[2] = (s16) * (int *)(state + 0x36c);
+    camRot[2] = (s16) ((ArwingState *)state)->pitchAccum;
     (*(void (**)(void *, int))(*gCameraInterface + 0x60))(camRot, 6);
-    camPos[0] = *(f32 *)(state + 0x5c);
-    camPos[1] = *(f32 *)(state + 0x50);
+    camPos[0] = ((ArwingState *)state)->unk5C;
+    camPos[1] = ((ArwingState *)state)->velZ;
     (*(void (**)(void *, int))(*gCameraInterface + 0x60))(camPos, 8);
     fn_8022BE14(obj, state);
     fn_8022C0D0(obj, state);
@@ -640,90 +640,90 @@ void fn_8022C30C(int obj, int state)
     int vec;
     f32 vol;
 
-    vec = objModelGetVecFn_800395d8(*(int *)(state + 0x4), 0x14);
+    vec = objModelGetVecFn_800395d8(((ArwingState *)state)->escortObj, 0x14);
 
-    if (*(u8 *)(state + 0x478) < 4 && (u32)GameBit_Get(0x9d6) == 0 && (u32)GameBit_Get(0x9d8) == 0) {
-        vol = (f32)((lbl_803E6F48 + fn_802945E0(*(f32 *)(state + 0x50) / *(f32 *)(state + 0x5c))) *
+    if (((ArwingState *)state)->mode < 4 && (u32)GameBit_Get(0x9d6) == 0 && (u32)GameBit_Get(0x9d8) == 0) {
+        vol = (f32)((lbl_803E6F48 + fn_802945E0(((ArwingState *)state)->velZ / ((ArwingState *)state)->unk5C)) *
                     lbl_803E6F50);
         Sfx_KeepAliveLoopedObjectSound(obj, SFXbaddie_pinpon_launch);
         Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
     }
 
-    fn_8022F270(*(int *)(state + 0x4), *(u16 *)(state + 0x44e));
+    fn_8022F270(((ArwingState *)state)->escortObj, ((ArwingState *)state)->unk44E);
 
-    if (*(f32 *)(state + 0xb4) <= lbl_803E6ECC) {
-        if ((*(u8 *)(state + 0x477) & 0x2) == 0) {
-            if ((*(u16 *)(state + 0x3f4) & 0x800) != 0) {
-                *(u8 *)(state + 0x477) &= ~0x4;
-                *(u8 *)(state + 0x477) |= 0x2;
-                *(f32 *)(state + 0xb0) = lbl_803E6F58;
+    if (((ArwingState *)state)->rollCooldown <= lbl_803E6ECC) {
+        if ((((ArwingState *)state)->flags477 & 0x2) == 0) {
+            if ((((ArwingState *)state)->inputFlags & 0x800) != 0) {
+                ((ArwingState *)state)->flags477 &= ~0x4;
+                ((ArwingState *)state)->flags477 |= 0x2;
+                ((ArwingState *)state)->wingFlexTarget = lbl_803E6F58;
                 Sfx_PlayFromObjectLimited(obj, SFXbaddie_eba_smallswipe2, 3);
             }
         } else {
-            *(f32 *)(state + 0x6c) = *(f32 *)(state + 0x88);
-            *(f32 *)(state + 0x68) = *(f32 *)(state + 0x90);
-            if ((*(u16 *)(state + 0x3f6) & 0x800) != 0) {
-                *(u8 *)(state + 0x477) &= ~0x2;
-                *(f32 *)(state + 0xb0) = lbl_803E6F5C;
+            ((ArwingState *)state)->unk6C = ((ArwingState *)state)->unk88;
+            ((ArwingState *)state)->unk68 = ((ArwingState *)state)->unk90;
+            if ((((ArwingState *)state)->inputFlagsPrev & 0x800) != 0) {
+                ((ArwingState *)state)->flags477 &= ~0x2;
+                ((ArwingState *)state)->wingFlexTarget = lbl_803E6F5C;
             }
         }
-        if ((*(u8 *)(state + 0x477) & 0x4) == 0) {
-            if ((*(u16 *)(state + 0x3f4) & 0x400) != 0) {
-                *(u8 *)(state + 0x477) &= ~0x2;
-                *(u8 *)(state + 0x477) |= 0x4;
-                *(f32 *)(state + 0xb0) = lbl_803E6F60;
+        if ((((ArwingState *)state)->flags477 & 0x4) == 0) {
+            if ((((ArwingState *)state)->inputFlags & 0x400) != 0) {
+                ((ArwingState *)state)->flags477 &= ~0x2;
+                ((ArwingState *)state)->flags477 |= 0x4;
+                ((ArwingState *)state)->wingFlexTarget = lbl_803E6F60;
                 Sfx_PlayFromObjectLimited(obj, SFXbaddie_kalda_distress, 3);
             }
         } else {
-            *(f32 *)(state + 0x6c) = *(f32 *)(state + 0x8c);
-            *(f32 *)(state + 0x68) = *(f32 *)(state + 0x94);
-            if ((*(u16 *)(state + 0x3f6) & 0x400) != 0) {
-                *(u8 *)(state + 0x477) &= ~0x4;
-                *(f32 *)(state + 0xb0) = lbl_803E6F5C;
+            ((ArwingState *)state)->unk6C = ((ArwingState *)state)->unk8C;
+            ((ArwingState *)state)->unk68 = ((ArwingState *)state)->unk94;
+            if ((((ArwingState *)state)->inputFlagsPrev & 0x400) != 0) {
+                ((ArwingState *)state)->flags477 &= ~0x4;
+                ((ArwingState *)state)->wingFlexTarget = lbl_803E6F5C;
             }
         }
     } else {
-        if ((*(u16 *)(state + 0x3f4) & 0xc00) != 0) {
+        if ((((ArwingState *)state)->inputFlags & 0xc00) != 0) {
             Sfx_PlayFromObject(obj, 0x381);
         }
-        *(f32 *)(state + 0xb4) -= timeDelta;
-        if (*(f32 *)(state + 0xb4) <= lbl_803E6ECC) {
-            *(f32 *)(state + 0xb0) = lbl_803E6F5C;
+        ((ArwingState *)state)->rollCooldown -= timeDelta;
+        if (((ArwingState *)state)->rollCooldown <= lbl_803E6ECC) {
+            ((ArwingState *)state)->wingFlexTarget = lbl_803E6F5C;
         }
     }
 
-    if ((*(u8 *)(state + 0x477) & 0x6) == 0) {
-        *(f32 *)(state + 0x6c) = lbl_803E6ED0;
-        *(f32 *)(state + 0x68) = *(f32 *)(state + 0x98);
-        if (*(f32 *)(state + 0xbc) <= lbl_803E6ECC) {
-            *(f32 *)(state + 0x9c) = lbl_803E6F64 * timeDelta + *(f32 *)(state + 0x9c);
+    if ((((ArwingState *)state)->flags477 & 0x6) == 0) {
+        ((ArwingState *)state)->unk6C = lbl_803E6ED0;
+        ((ArwingState *)state)->unk68 = ((ArwingState *)state)->unk98;
+        if (((ArwingState *)state)->rollRegenDelay <= lbl_803E6ECC) {
+            ((ArwingState *)state)->rollEnergy = lbl_803E6F64 * timeDelta + ((ArwingState *)state)->rollEnergy;
         } else {
-            *(f32 *)(state + 0xbc) -= timeDelta;
+            ((ArwingState *)state)->rollRegenDelay -= timeDelta;
         }
     } else {
-        *(f32 *)(state + 0x9c) -= timeDelta;
-        *(f32 *)(state + 0xbc) = lbl_803E6F38;
+        ((ArwingState *)state)->rollEnergy -= timeDelta;
+        ((ArwingState *)state)->rollRegenDelay = lbl_803E6F38;
     }
 
-    *(f32 *)(state + 0x9c) = *(f32 *)(state + 0x9c) < lbl_803E6ECC
+    ((ArwingState *)state)->rollEnergy = ((ArwingState *)state)->rollEnergy < lbl_803E6ECC
                                  ? lbl_803E6ECC
-                                 : *(f32 *)(state + 0x9c) > *(f32 *)(state + 0xa0)
-                                       ? *(f32 *)(state + 0xa0)
-                                       : *(f32 *)(state + 0x9c);
+                                 : ((ArwingState *)state)->rollEnergy > ((ArwingState *)state)->rollEnergyMax
+                                       ? ((ArwingState *)state)->rollEnergyMax
+                                       : ((ArwingState *)state)->rollEnergy;
 
-    if (*(f32 *)(state + 0x9c) <= lbl_803E6ECC) {
-        *(u8 *)(state + 0x477) &= ~0x6;
-        *(f32 *)(state + 0xb4) = *(f32 *)(state + 0xb8);
-        *(f32 *)(state + 0x9c) = *(f32 *)(state + 0xa0);
-        *(f32 *)(state + 0xb0) = lbl_803E6F68;
-        *(f32 *)(state + 0xbc) = lbl_803E6ECC;
+    if (((ArwingState *)state)->rollEnergy <= lbl_803E6ECC) {
+        ((ArwingState *)state)->flags477 &= ~0x6;
+        ((ArwingState *)state)->rollCooldown = ((ArwingState *)state)->rollCooldownInit;
+        ((ArwingState *)state)->rollEnergy = ((ArwingState *)state)->rollEnergyMax;
+        ((ArwingState *)state)->wingFlexTarget = lbl_803E6F68;
+        ((ArwingState *)state)->rollRegenDelay = lbl_803E6ECC;
     }
 
     if ((u32)vec != 0) {
         int n;
-        *(f32 *)(state + 0xac) =
-            lbl_803E6EF8 * (*(f32 *)(state + 0xb0) - *(f32 *)(state + 0xac)) + *(f32 *)(state + 0xac);
-        n = (int)*(f32 *)(state + 0xac);
+        ((ArwingState *)state)->wingFlexCur =
+            lbl_803E6EF8 * (((ArwingState *)state)->wingFlexTarget - ((ArwingState *)state)->wingFlexCur) + ((ArwingState *)state)->wingFlexCur;
+        n = (int)((ArwingState *)state)->wingFlexCur;
         *(s16 *)(vec + 0xa) = n;
         *(s16 *)(vec + 0x8) = n;
         *(s16 *)(vec + 0x6) = n;
@@ -749,145 +749,145 @@ void fn_8022CDEC(int obj, int state)
     radius = lbl_803E6FC0;
     mev = (*(int (**)(int))(*gMapEventInterface + 0x8c))(*gMapEventInterface);
 
-    if (*(void **)(state + 0x4) == 0) {
-        *(int *)(state + 0x4) = ObjList_FindNearestObjectByDefNo(obj, 0x606, &radius);
-        if (*(void **)(state + 0x4) != 0) {
-            ObjLink_AttachChild(obj, *(int *)(state + 0x4), 0);
+    if (*(void **)&((ArwingState *)state)->escortObj == 0) {
+        ((ArwingState *)state)->escortObj = ObjList_FindNearestObjectByDefNo(obj, 0x606, &radius);
+        if (*(void **)&((ArwingState *)state)->escortObj != 0) {
+            ObjLink_AttachChild(obj, ((ArwingState *)state)->escortObj, 0);
         }
     }
 
-    if (*(u8 *)(state + 0x480) != 0) {
-        if (*(void **)(state + 0x10) == 0) {
-            *(int *)(state + 0x10) = ObjList_FindNearestObjectByDefNo(obj, 0x611, &radius);
-            if (*(void **)(state + 0x10) != 0) {
-                ObjLink_AttachChild(obj, *(int *)(state + 0x10), 0);
+    if (((ArwingState *)state)->fullLoadout != 0) {
+        if (*(void **)&((ArwingState *)state)->bombObj == 0) {
+            ((ArwingState *)state)->bombObj = ObjList_FindNearestObjectByDefNo(obj, 0x611, &radius);
+            if (*(void **)&((ArwingState *)state)->bombObj != 0) {
+                ObjLink_AttachChild(obj, ((ArwingState *)state)->bombObj, 0);
             }
         }
-        if (*(void **)(state + 0x8) == 0) {
-            *(int *)(state + 0x8) = ObjList_FindNearestObjectByDefNo(obj, 0x610, &radius);
-            if (*(void **)(state + 0x8) != 0) {
-                ObjLink_AttachChild(obj, *(int *)(state + 0x8), 0);
+        if (*(void **)&((ArwingState *)state)->gunObjL == 0) {
+            ((ArwingState *)state)->gunObjL = ObjList_FindNearestObjectByDefNo(obj, 0x610, &radius);
+            if (*(void **)&((ArwingState *)state)->gunObjL != 0) {
+                ObjLink_AttachChild(obj, ((ArwingState *)state)->gunObjL, 0);
             }
         }
-        if (*(void **)(state + 0xc) == 0) {
-            *(int *)(state + 0xc) = ObjList_FindNearestObjectByDefNo(obj, 0x615, &radius);
-            if (*(void **)(state + 0xc) != 0) {
-                ObjLink_AttachChild(obj, *(int *)(state + 0xc), 0);
+        if (*(void **)&((ArwingState *)state)->gunObjR == 0) {
+            ((ArwingState *)state)->gunObjR = ObjList_FindNearestObjectByDefNo(obj, 0x615, &radius);
+            if (*(void **)&((ArwingState *)state)->gunObjR != 0) {
+                ObjLink_AttachChild(obj, ((ArwingState *)state)->gunObjR, 0);
             }
         }
     }
 
-    if (*(void **)(state + 0x418) == 0 && *(void **)(state + 0x41c) == 0) {
+    if (*(void **)&((ArwingState *)state)->thrusterL == 0 && *(void **)&((ArwingState *)state)->thrusterR == 0) {
         int setup;
         setup = Obj_AllocObjectSetup(0x20, 0x6de);
         *(u8 *)(setup + 0x4) = 1;
         *(u8 *)(setup + 0x5) = 1;
-        *(int *)(state + 0x418) = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
+        ((ArwingState *)state)->thrusterL = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
         setup = Obj_AllocObjectSetup(0x20, 0x6de);
         *(u8 *)(setup + 0x4) = 1;
         *(u8 *)(setup + 0x5) = 1;
-        *(int *)(state + 0x41c) = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
+        ((ArwingState *)state)->thrusterR = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
     }
 
     found = 0;
-    if (*(u8 *)(state + 0x480) != 0) {
-        if (*(void **)(state + 0x450) == 0) {
-            *(int *)(state + 0x450) = (int)objCreateLight(obj, 1);
-            if (*(void **)(state + 0x450) != 0) {
-                modelLightStruct_setLightKind(*(void **)(state + 0x450), 2);
-                modelLightStruct_setPosition(*(void **)(state + 0x450), lbl_803E6ECC, lbl_803E6FC4, lbl_803E6FC8);
-                lightSetFieldBC_8001db14(*(void **)(state + 0x450), 1);
-                modelLightStruct_setDiffuseColor(*(void **)(state + 0x450), 0x28, 0x7d, 0xff, 0);
-                modelLightStruct_setDistanceAttenuation(*(void **)(state + 0x450), lbl_803E6FCC, lbl_803E6FD0);
-                modelLightStruct_startColorFade(*(void **)(state + 0x450), 1, 1);
-                modelLightStruct_setDiffuseTargetColor(*(void **)(state + 0x450), 0x14, 0x64, 0xc8, 0);
+    if (((ArwingState *)state)->fullLoadout != 0) {
+        if (((ArwingState *)state)->light == 0) {
+            *(int *)&((ArwingState *)state)->light = (int)objCreateLight(obj, 1);
+            if (((ArwingState *)state)->light != 0) {
+                modelLightStruct_setLightKind(((ArwingState *)state)->light, 2);
+                modelLightStruct_setPosition(((ArwingState *)state)->light, lbl_803E6ECC, lbl_803E6FC4, lbl_803E6FC8);
+                lightSetFieldBC_8001db14(((ArwingState *)state)->light, 1);
+                modelLightStruct_setDiffuseColor(((ArwingState *)state)->light, 0x28, 0x7d, 0xff, 0);
+                modelLightStruct_setDistanceAttenuation(((ArwingState *)state)->light, lbl_803E6FCC, lbl_803E6FD0);
+                modelLightStruct_startColorFade(((ArwingState *)state)->light, 1, 1);
+                modelLightStruct_setDiffuseTargetColor(((ArwingState *)state)->light, 0x14, 0x64, 0xc8, 0);
             }
         }
-        if (*(void **)(state + 0x4) != 0 && *(void **)(state + 0x10) != 0 && *(void **)(state + 0x8) != 0 &&
-            *(void **)(state + 0xc) != 0) {
+        if (*(void **)&((ArwingState *)state)->escortObj != 0 && *(void **)&((ArwingState *)state)->bombObj != 0 && *(void **)&((ArwingState *)state)->gunObjL != 0 &&
+            *(void **)&((ArwingState *)state)->gunObjR != 0) {
             found = 1;
         }
     } else {
-        if (*(void **)(state + 0x4) != 0) {
+        if (*(void **)&((ArwingState *)state)->escortObj != 0) {
             found = 1;
         }
     }
 
     if (found != 0) {
         (*(void (**)(int, int))(*gCameraInterface + 0x28))(obj, 0);
-        *(u8 *)(state + 0x477) |= 1;
-        *(f32 *)(state + 0x54) = lbl_803E6F70;
-        *(f32 *)(state + 0x60) = lbl_803E6F74;
-        *(f32 *)(state + 0x58) = lbl_803E6F78;
-        *(f32 *)(state + 0x64) = lbl_803E6F7C;
-        *(f32 *)(state + 0x5c) = lbl_803E6F78;
-        *(f32 *)(state + 0x68) = lbl_803E6F7C;
-        *(f32 *)(state + 0x78) = lbl_803E6F80;
-        *(f32 *)(state + 0x84) = lbl_803E6F84;
-        *(f32 *)(state + 0x6c) = lbl_803E6ED0;
-        *(f32 *)(state + 0x348) = lbl_803E6F88;
-        *(f32 *)(state + 0x34c) = lbl_803E6F74;
-        *(f32 *)(state + 0x35c) = lbl_803E6F8C;
-        *(f32 *)(state + 0x360) = lbl_803E6F7C;
-        *(f32 *)(state + 0x370) = lbl_803E6F90;
-        *(f32 *)(state + 0x374) = lbl_803E6F94;
-        *(f32 *)(state + 0x384) = lbl_803E6F98;
-        *(f32 *)(state + 0x388) = lbl_803E6F9C;
-        *(f32 *)(state + 0x394) = lbl_803E6FA0;
-        *(f32 *)(state + 0x390) = lbl_803E6FA4;
-        *(f32 *)(state + 0x39c) = lbl_803E6FA8;
-        *(u8 *)(state + 0x3fa) = 0x19;
-        *(f32 *)(state + 0x3a4) = lbl_803E6FAC;
-        *(f32 *)(state + 0x38) = lbl_803E6FB0;
+        ((ArwingState *)state)->flags477 |= 1;
+        ((ArwingState *)state)->unk54 = lbl_803E6F70;
+        ((ArwingState *)state)->unk60 = lbl_803E6F74;
+        ((ArwingState *)state)->unk58 = lbl_803E6F78;
+        ((ArwingState *)state)->unk64 = lbl_803E6F7C;
+        ((ArwingState *)state)->unk5C = lbl_803E6F78;
+        ((ArwingState *)state)->unk68 = lbl_803E6F7C;
+        ((ArwingState *)state)->unk78 = lbl_803E6F80;
+        ((ArwingState *)state)->unk84 = lbl_803E6F84;
+        ((ArwingState *)state)->unk6C = lbl_803E6ED0;
+        ((ArwingState *)state)->unk348 = lbl_803E6F88;
+        ((ArwingState *)state)->unk34C = lbl_803E6F74;
+        ((ArwingState *)state)->unk35C = lbl_803E6F8C;
+        ((ArwingState *)state)->unk360 = lbl_803E6F7C;
+        ((ArwingState *)state)->unk370 = lbl_803E6F90;
+        ((ArwingState *)state)->unk374 = lbl_803E6F94;
+        ((ArwingState *)state)->unk384 = lbl_803E6F98;
+        ((ArwingState *)state)->unk388 = lbl_803E6F9C;
+        ((ArwingState *)state)->unk394 = lbl_803E6FA0;
+        ((ArwingState *)state)->unk390 = lbl_803E6FA4;
+        ((ArwingState *)state)->unk39C = lbl_803E6FA8;
+        ((ArwingState *)state)->unk3FA = 0x19;
+        ((ArwingState *)state)->unk3A4 = lbl_803E6FAC;
+        ((ArwingState *)state)->unk38 = lbl_803E6FB0;
         *(f32 *)(obj + 0x8) = lbl_803E6FB0;
-        *(f32 *)(state + 0x3ac) = lbl_803E6FB4;
-        *(f32 *)(state + 0x3b0) = lbl_803E6FB8;
-        *(f32 *)(state + 0x88) = lbl_803E6FBC;
-        *(f32 *)(state + 0x8c) = lbl_803E6F64;
-        *(f32 *)(state + 0x90) = lbl_803E6FD4;
-        *(f32 *)(state + 0x94) = lbl_803E6F74;
-        *(f32 *)(state + 0x98) = lbl_803E6FD8;
-        *(f32 *)(state + 0xb8) = lbl_803E6FDC;
-        *(f32 *)(state + 0xa0) = lbl_803E6FE0;
-        *(f32 *)(state + 0xa8) = lbl_803E6F2C;
-        *(f32 *)(state + 0x9c) = *(f32 *)(state + 0xa0);
-        *(f32 *)(state + 0xa4) = *(f32 *)(state + 0xa8);
-        *(f32 *)(state + 0xac) = lbl_803E6F5C;
-        *(f32 *)(state + 0xb0) = lbl_803E6F5C;
+        ((ArwingState *)state)->unk3AC = lbl_803E6FB4;
+        ((ArwingState *)state)->unk3B0 = lbl_803E6FB8;
+        ((ArwingState *)state)->unk88 = lbl_803E6FBC;
+        ((ArwingState *)state)->unk8C = lbl_803E6F64;
+        ((ArwingState *)state)->unk90 = lbl_803E6FD4;
+        ((ArwingState *)state)->unk94 = lbl_803E6F74;
+        ((ArwingState *)state)->unk98 = lbl_803E6FD8;
+        ((ArwingState *)state)->rollCooldownInit = lbl_803E6FDC;
+        ((ArwingState *)state)->rollEnergyMax = lbl_803E6FE0;
+        ((ArwingState *)state)->unkA8 = lbl_803E6F2C;
+        ((ArwingState *)state)->rollEnergy = ((ArwingState *)state)->rollEnergyMax;
+        ((ArwingState *)state)->unkA4 = ((ArwingState *)state)->unkA8;
+        ((ArwingState *)state)->wingFlexCur = lbl_803E6F5C;
+        ((ArwingState *)state)->wingFlexTarget = lbl_803E6F5C;
         if (*(s8 *)(obj + 0xac) == 0x26) {
-            *(f32 *)(state + 0x50) = lbl_803E6ECC;
+            ((ArwingState *)state)->velZ = lbl_803E6ECC;
         } else {
-            *(f32 *)(state + 0x50) = lbl_803E6F78;
+            ((ArwingState *)state)->velZ = lbl_803E6F78;
         }
-        *(s16 *)(state + 0x40e) = 0x28;
-        *(f32 *)(state + 0x410) = lbl_803E6FE0;
-        *(s16 *)(state + 0x40c) = 0x6;
-        *(s16 *)(state + 0x446) = 0x5a;
-        *(f32 *)(state + 0x448) = lbl_803E6F34;
-        *(s16 *)(state + 0x444) = 0xc;
-        *(u8 *)(state + 0x44d) = 0x3;
-        *(int *)(state + 0x454) = objModelGetVecFn_800395d8(obj, 0);
-        *(int *)(state + 0x458) = objModelGetVecFn_800395d8(obj, 1);
-        *(int *)(state + 0x45c) = objModelGetVecFn_800395d8(obj, 2);
-        *(int *)(state + 0x460) = objModelGetVecFn_800395d8(obj, 3);
-        *(f32 *)(state + 0x464) = lbl_803E6F64;
-        *(s16 *)(state + 0x44e) = 0xaf;
-        *(u8 *)(state + 0x469) = *(u8 *)(mev + 0x1);
-        *(u8 *)(state + 0x468) = *(u8 *)(state + 0x469);
-        *(f32 *)(state + 0x3b4) = lbl_803E6EF8;
-        *(f32 *)(state + 0x3b8) = lbl_803E6EF0;
-        *(f32 *)(state + 0x3bc) = lbl_803E6FE4;
-        *(f32 *)(state + 0x3c4) = lbl_803E6EF4;
-        *(f32 *)(state + 0x3c8) = lbl_803E6FD4;
-        *(f32 *)(state + 0x3d0) = lbl_803E6FE8;
-        *(f32 *)(state + 0x3d4) = lbl_803E6F80;
-        *(f32 *)(state + 0x3e0) = lbl_803E6FA4;
-        *(f32 *)(state + 0x14) = *(f32 *)(obj + 0xc);
-        *(f32 *)(state + 0x18) = *(f32 *)(obj + 0x10);
-        *(f32 *)(state + 0x1c) = *(f32 *)(obj + 0x14);
-        *(f32 *)(state + 0x20) = lbl_803E6FEC;
-        *(f32 *)(state + 0x28) = lbl_803E6FF0;
-        *(f32 *)(state + 0x24) = lbl_803E6EF0;
+        *(s16 *)&((ArwingState *)state)->projLifetime = 0x28;
+        ((ArwingState *)state)->projSpeed = lbl_803E6FE0;
+        *(s16 *)&((ArwingState *)state)->fireDelay = 0x6;
+        ((ArwingState *)state)->unk446 = 0x5a;
+        ((ArwingState *)state)->unk448 = lbl_803E6F34;
+        ((ArwingState *)state)->unk444 = 0xc;
+        ((ArwingState *)state)->maxBombCount = 0x3;
+        ((ArwingState *)state)->wingVec[0] = objModelGetVecFn_800395d8(obj, 0);
+        ((ArwingState *)state)->wingVec[1] = objModelGetVecFn_800395d8(obj, 1);
+        ((ArwingState *)state)->wingVec[2] = objModelGetVecFn_800395d8(obj, 2);
+        ((ArwingState *)state)->wingVec[3] = objModelGetVecFn_800395d8(obj, 3);
+        ((ArwingState *)state)->wingFlexScale = lbl_803E6F64;
+        *(s16 *)&((ArwingState *)state)->unk44E = 0xaf;
+        ((ArwingState *)state)->maxShield = *(u8 *)(mev + 0x1);
+        ((ArwingState *)state)->shield = ((ArwingState *)state)->maxShield;
+        ((ArwingState *)state)->unk3B4 = lbl_803E6EF8;
+        ((ArwingState *)state)->unk3B8 = lbl_803E6EF0;
+        ((ArwingState *)state)->unk3BC = lbl_803E6FE4;
+        ((ArwingState *)state)->unk3C4 = lbl_803E6EF4;
+        ((ArwingState *)state)->unk3C8 = lbl_803E6FD4;
+        ((ArwingState *)state)->unk3D0 = lbl_803E6FE8;
+        ((ArwingState *)state)->unk3D4 = lbl_803E6F80;
+        ((ArwingState *)state)->unk3E0 = lbl_803E6FA4;
+        ((ArwingState *)state)->homeX = *(f32 *)(obj + 0xc);
+        ((ArwingState *)state)->homeY = *(f32 *)(obj + 0x10);
+        ((ArwingState *)state)->homeZ = *(f32 *)(obj + 0x14);
+        ((ArwingState *)state)->unk20 = lbl_803E6FEC;
+        ((ArwingState *)state)->unk28 = lbl_803E6FF0;
+        ((ArwingState *)state)->unk24 = lbl_803E6EF0;
     }
 }
 #pragma scheduling reset
@@ -960,48 +960,48 @@ void fn_8022BE14(int obj, int state)
     (*(void (**)(int, int))(*gPathControlInterface + 0x14))(obj, sub);
     (*(void (**)(int, int, f32))(*gPathControlInterface + 0x18))(obj, sub, timeDelta);
 
-    if (*(u8 *)(state + 0x338) == 0 || *(u8 *)(state + 0x478) == 4) {
+    if (((ArwingState *)state)->hitShake == 0 || ((ArwingState *)state)->mode == 4) {
         dmg = (s8)*(u8 *)(sub + 0x260);
         if (dmg == 0)
             return;
-        if (*(u8 *)(state + 0x478) == 4) {
-            *(u8 *)(state + 0x478) = 5;
-            *(f32 *)(state + 0x46c) = lbl_803E6F24;
+        if (((ArwingState *)state)->mode == 4) {
+            ((ArwingState *)state)->mode = 5;
+            ((ArwingState *)state)->modeTimer = lbl_803E6F24;
             *(s16 *)(obj + 6) |= 0x4000;
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
             return;
         }
         if ((dmg & 1) && (s8)*(u8 *)(sub + 0xb8) == 8)
-            *(u8 *)(state + 0x468) = 0;
+            ((ArwingState *)state)->shield = 0;
         else
-            *(u8 *)(state + 0x468) = *(u8 *)(state + 0x468) - 1;
+            ((ArwingState *)state)->shield = ((ArwingState *)state)->shield - 1;
         doRumble(lbl_803E6F2C);
-        if ((s8)*(u8 *)(state + 0x468) <= 0) {
-            arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
+        if ((s8)((ArwingState *)state)->shield <= 0) {
+            arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
             if ((s8)*(u8 *)(obj + 0xac) == 0x26)
                 GameBit_Set(0xe74, 1);
             else
-                *(u8 *)(state + 0x478) = 4;
-            *(f32 *)(state + 0x46c) = lbl_803E6F30;
+                ((ArwingState *)state)->mode = 4;
+            ((ArwingState *)state)->modeTimer = lbl_803E6F30;
             Sfx_PlayFromObject(obj, 0x380);
             Music_Trigger(0xd6, 1);
         } else if ((s8)*(u8 *)(*(int *)(obj + 0xb8) + 0x468) <= 3) {
             Sfx_KeepAliveLoopedObjectSound(obj, 0x37f);
         }
         Sfx_PlayFromObject(obj, SFXbaddie_rach_bite);
-        *(u8 *)(state + 0x339) |= 0x80;
+        ((ArwingState *)state)->flags339 |= 0x80;
         Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
-        *(f32 *)(state + 0x328) = lbl_803E6F34;
-        *(u8 *)(state + 0x338) = 1;
-        *(s16 *)(state + 0x33a) = 0;
-        *(s16 *)(state + 0x33c) = 0;
-        *(f32 *)(state + 0x32c) = *(f32 *)(sub + 0x1a0);
-        *(f32 *)(state + 0x330) = *(f32 *)(sub + 0x1a4);
+        ((ArwingState *)state)->damageFlashTimer = lbl_803E6F34;
+        ((ArwingState *)state)->hitShake = 1;
+        ((ArwingState *)state)->shakeYaw = 0;
+        ((ArwingState *)state)->shakePitch = 0;
+        ((ArwingState *)state)->knockVelX = *(f32 *)(sub + 0x1a0);
+        ((ArwingState *)state)->knockVelZ = *(f32 *)(sub + 0x1a4);
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(lbl_803E6F38);
     } else {
-        *(s16 *)(state + 0x33a) = lbl_803E6F3C * timeDelta + (f32)*(u16 *)(state + 0x33a);
-        *(s16 *)(state + 0x33c) = lbl_803E6F40 * timeDelta + (f32)*(u16 *)(state + 0x33c);
+        ((ArwingState *)state)->shakeYaw = lbl_803E6F3C * timeDelta + (f32)*(u16 *)&((ArwingState *)state)->shakeYaw;
+        ((ArwingState *)state)->shakePitch = lbl_803E6F40 * timeDelta + (f32)*(u16 *)&((ArwingState *)state)->shakePitch;
     }
 }
 #pragma scheduling reset
@@ -1017,38 +1017,38 @@ void fn_8022C0D0(int obj, int state)
     if (objGetFlagsE5_2(obj) != 0)
         return;
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, &hitVol) != 0 && hitVol != 0) {
-        if (*(u8 *)(state + 0x478) == 4) {
-            *(u8 *)(state + 0x478) = 5;
-            *(f32 *)(state + 0x46c) = lbl_803E6F24;
+        if (((ArwingState *)state)->mode == 4) {
+            ((ArwingState *)state)->mode = 5;
+            ((ArwingState *)state)->modeTimer = lbl_803E6F24;
             *(s16 *)(obj + 6) |= 0x4000;
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         } else {
-            if (*(s16 *)(hitObj + 0x46) == 0x6ae && *(u8 *)(state + 0x478) == 1) {
+            if (*(s16 *)(hitObj + 0x46) == 0x6ae && ((ArwingState *)state)->mode == 1) {
                 Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_movelp);
                 return;
             }
             doRumble(lbl_803E6F2C);
-            *(u8 *)(state + 0x468) = *(u8 *)(state + 0x468) - hitVol;
+            ((ArwingState *)state)->shield = ((ArwingState *)state)->shield - hitVol;
             Sfx_PlayFromObject(obj, SFXbaddie_vambat_death);
-            *(u8 *)(state + 0x339) |= 0x80;
+            ((ArwingState *)state)->flags339 |= 0x80;
             Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
-            *(f32 *)(state + 0x328) = lbl_803E6F34;
-            *(u8 *)(state + 0x338) = 1;
-            *(s16 *)(state + 0x33a) = 0;
-            *(s16 *)(state + 0x33c) = 0;
-            *(f32 *)(state + 0x32c) = lbl_803E6ECC;
-            *(f32 *)(state + 0x330) = lbl_803E6ECC;
+            ((ArwingState *)state)->damageFlashTimer = lbl_803E6F34;
+            ((ArwingState *)state)->hitShake = 1;
+            ((ArwingState *)state)->shakeYaw = 0;
+            ((ArwingState *)state)->shakePitch = 0;
+            ((ArwingState *)state)->knockVelX = lbl_803E6ECC;
+            ((ArwingState *)state)->knockVelZ = lbl_803E6ECC;
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E6F2C);
         }
     }
-    if (*(u8 *)(state + 0x478) != 4 && *(u8 *)(state + 0x478) != 5 &&
-        *(u8 *)(state + 0x478) != 6 && (s8)*(u8 *)(state + 0x468) <= 0) {
-        arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
+    if (((ArwingState *)state)->mode != 4 && ((ArwingState *)state)->mode != 5 &&
+        ((ArwingState *)state)->mode != 6 && (s8)((ArwingState *)state)->shield <= 0) {
+        arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
         if ((s8)*(u8 *)(obj + 0xac) == 0x26)
             GameBit_Set(0xe74, 1);
-        *(u8 *)(state + 0x478) = 4;
-        *(f32 *)(state + 0x46c) = lbl_803E6F30;
+        ((ArwingState *)state)->mode = 4;
+        ((ArwingState *)state)->modeTimer = lbl_803E6F30;
         Sfx_PlayFromObject(obj, 0x380);
         Music_Trigger(0xd6, 1);
         unlockLevel(0, 0, 1);
@@ -1070,43 +1070,43 @@ int arwarwing_SeqFn(int obj, int p2, int script)
 
     Camera_GetCurrentViewSlot();
     *(int *)(script + 0xe8) = (int)fn_8022C7A4;
-    if ((*(u8 *)(state + 0x477) & 1) == 0) {
+    if ((((ArwingState *)state)->flags477 & 1) == 0) {
         fn_8022CDEC(obj, state);
         return 0;
     }
     fn_8022C30C(obj, state);
     fn_8022A9C8(obj, state);
-    if (*(int *)(state + 0x10) != 0)
-        arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
-    *(s16 *)(*(int *)(state + 0x418) + 6) |= 0x4000;
-    *(u8 *)(*(int *)(state + 0x418) + 0x36) = 0;
-    *(s16 *)(*(int *)(state + 0x41c) + 6) |= 0x4000;
-    *(u8 *)(*(int *)(state + 0x41c) + 0x36) = 0;
+    if (((ArwingState *)state)->bombObj != 0)
+        arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
+    *(s16 *)(((ArwingState *)state)->thrusterL + 6) |= 0x4000;
+    *(u8 *)(((ArwingState *)state)->thrusterL + 0x36) = 0;
+    *(s16 *)(((ArwingState *)state)->thrusterR + 6) |= 0x4000;
+    *(u8 *)(((ArwingState *)state)->thrusterR + 0x36) = 0;
     *(s16 *)(obj + 6) &= ~0x4000;
 
     for (i = 0; i < *(u8 *)(script + 0x8b); i++) {
         switch (*(u8 *)(script + i + 0x81)) {
         case 8: {
             int cam = Camera_GetCurrentViewSlot();
-            *(f32 *)(state + 0x484) = *(f32 *)(cam + 0xc) - *(f32 *)(obj + 0xc);
-            *(f32 *)(state + 0x488) = *(f32 *)(cam + 0x10) - *(f32 *)(obj + 0x10);
-            *(f32 *)(state + 0x48c) = *(f32 *)(cam + 0x14) - *(f32 *)(obj + 0x14);
-            *(s16 *)(state + 0x490) = *(s16 *)(obj + 0) - (u16)*(s16 *)(cam + 0);
-            if (*(s16 *)(state + 0x490) > 32768)
-                *(s16 *)(state + 0x490) -= 65535;
-            if (*(s16 *)(state + 0x490) < -32768)
-                *(s16 *)(state + 0x490) += 65535;
-            *(s16 *)(state + 0x492) = *(s16 *)(obj + 2) - (u16)*(s16 *)(cam + 2);
-            if (*(s16 *)(state + 0x492) > 32768)
-                *(s16 *)(state + 0x492) -= 65535;
-            if (*(s16 *)(state + 0x492) < -32768)
-                *(s16 *)(state + 0x492) += 65535;
-            *(s16 *)(state + 0x494) = *(s16 *)(cam + 4) - *(s16 *)(obj + 4);
-            *(u8 *)(state + 0x47f) = 1;
+            ((ArwingState *)state)->aimOffsetX = *(f32 *)(cam + 0xc) - *(f32 *)(obj + 0xc);
+            ((ArwingState *)state)->aimOffsetY = *(f32 *)(cam + 0x10) - *(f32 *)(obj + 0x10);
+            ((ArwingState *)state)->aimOffsetZ = *(f32 *)(cam + 0x14) - *(f32 *)(obj + 0x14);
+            ((ArwingState *)state)->aimYaw = *(s16 *)(obj + 0) - (u16)*(s16 *)(cam + 0);
+            if (((ArwingState *)state)->aimYaw > 32768)
+                ((ArwingState *)state)->aimYaw -= 65535;
+            if (((ArwingState *)state)->aimYaw < -32768)
+                ((ArwingState *)state)->aimYaw += 65535;
+            ((ArwingState *)state)->aimPitch = *(s16 *)(obj + 2) - (u16)*(s16 *)(cam + 2);
+            if (((ArwingState *)state)->aimPitch > 32768)
+                ((ArwingState *)state)->aimPitch -= 65535;
+            if (((ArwingState *)state)->aimPitch < -32768)
+                ((ArwingState *)state)->aimPitch += 65535;
+            ((ArwingState *)state)->aimRoll = *(s16 *)(cam + 4) - *(s16 *)(obj + 4);
+            ((ArwingState *)state)->aimSnapshotValid = 1;
             break;
         }
         case 9:
-            *(u8 *)(state + 0x47f) = 0;
+            ((ArwingState *)state)->aimSnapshotValid = 0;
             break;
         case 1:
             clearLoadedFileFlags_blocks1();
@@ -1131,9 +1131,9 @@ int arwarwing_SeqFn(int obj, int p2, int script)
             }
             break;
         case 0xb:
-            *(u8 *)(state + 0x44c) = 1;
-            fn_8022B764(obj, state, *(u8 *)(state + 0x43d));
-            *(u8 *)(state + 0x43d) ^= 1;
+            ((ArwingState *)state)->bombCount = 1;
+            fn_8022B764(obj, state, ((ArwingState *)state)->bombSide);
+            ((ArwingState *)state)->bombSide ^= 1;
             break;
         case 0xc:
             arwarwing_spawnLaserShot(obj, state, 0, 1, 1);
@@ -1145,12 +1145,12 @@ int arwarwing_SeqFn(int obj, int p2, int script)
             setLoadedFileFlags_blocks1();
             break;
         case 5:
-            if (*(u8 *)(state + 0x47b) == 0 && GameBit_Get(0xc85)) {
+            if (((ArwingState *)state)->levelIndex == 0 && GameBit_Get(0xc85)) {
                 loadMapAndParent(0xb);
                 lockLevel(mapGetDirIdx(0xb), 0);
             } else {
-                loadMapAndParent(lbl_803DC3C8[*(u8 *)(state + 0x47b)]);
-                lockLevel(mapGetDirIdx(lbl_803DC3C8[*(u8 *)(state + 0x47b)]), 0);
+                loadMapAndParent(lbl_803DC3C8[((ArwingState *)state)->levelIndex]);
+                lockLevel(mapGetDirIdx(lbl_803DC3C8[((ArwingState *)state)->levelIndex]), 0);
             }
             switch ((s8)*(u8 *)(obj + 0xac)) {
             case 0x3b:
@@ -1194,8 +1194,8 @@ int arwarwing_SeqFn(int obj, int p2, int script)
                 if (*(u16 *)(s2 + 0x47c) > 0x270f)
                     *(u16 *)(s2 + 0x47c) = 0x270f;
             }
-            registerNewScore((s8)*(u8 *)(state + 0x47e), *(u16 *)(state + 0x47c),
-                             *(u8 *)(state + 0x470), 2);
+            registerNewScore((s8)((ArwingState *)state)->scoreSlot, ((ArwingState *)state)->score,
+                             ((ArwingState *)state)->collectedRings, 2);
             break;
         case 0xd:
             gameTextFn_80125ba4(0x13);
@@ -1230,36 +1230,36 @@ void arwarwing_init(int obj)
     ObjGroup_AddObject(obj, 0x26);
     lbl_803DDD88 = obj;
     ObjHits_SetTargetMask(obj, 1);
-    *(u8 *)(state + 0x480) = 1;
+    ((ArwingState *)state)->fullLoadout = 1;
     switch ((s8)*(u8 *)(obj + 0xac) - 0x26) {
     case 27:
     default:
-        *(u8 *)(state + 0x480) = 0;
+        ((ArwingState *)state)->fullLoadout = 0;
         break;
     case 20:
-        *(u8 *)(state + 0x47b) = 0;
-        *(u8 *)(state + 0x471) = 1;
-        *(u8 *)(state + 0x47e) = 0;
+        ((ArwingState *)state)->levelIndex = 0;
+        ((ArwingState *)state)->requiredRings = 1;
+        ((ArwingState *)state)->scoreSlot = 0;
         break;
     case 21:
-        *(u8 *)(state + 0x47b) = 1;
-        *(u8 *)(state + 0x471) = 3;
-        *(u8 *)(state + 0x47e) = 1;
+        ((ArwingState *)state)->levelIndex = 1;
+        ((ArwingState *)state)->requiredRings = 3;
+        ((ArwingState *)state)->scoreSlot = 1;
         break;
     case 23:
-        *(u8 *)(state + 0x47b) = 2;
-        *(u8 *)(state + 0x471) = 7;
-        *(u8 *)(state + 0x47e) = 3;
+        ((ArwingState *)state)->levelIndex = 2;
+        ((ArwingState *)state)->requiredRings = 7;
+        ((ArwingState *)state)->scoreSlot = 3;
         break;
     case 22:
-        *(u8 *)(state + 0x47b) = 3;
-        *(u8 *)(state + 0x471) = 5;
-        *(u8 *)(state + 0x47e) = 2;
+        ((ArwingState *)state)->levelIndex = 3;
+        ((ArwingState *)state)->requiredRings = 5;
+        ((ArwingState *)state)->scoreSlot = 2;
         break;
     case 24:
-        *(u8 *)(state + 0x47b) = 4;
-        *(u8 *)(state + 0x471) = 0xa;
-        *(u8 *)(state + 0x47e) = 4;
+        ((ArwingState *)state)->levelIndex = 4;
+        ((ArwingState *)state)->requiredRings = 0xa;
+        ((ArwingState *)state)->scoreSlot = 4;
         break;
     case 0:
         break;
