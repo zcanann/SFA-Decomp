@@ -11896,11 +11896,13 @@ extern f32 lbl_803DFA78;
     param_3 = (s16 *)&lbl_8039C350;             \
   } while (0)
 
-int Effect3_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
-                   u8 param_5, s16 *param_6)
+int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
+                   u8 param_5, void *param_6v)
 {
     int uVar1;
     PartFxSpawn cfg;
+    s16 *param_6 = (s16 *)param_6v;
+    s16 *param_3 = (s16 *)param_3v;
 
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
