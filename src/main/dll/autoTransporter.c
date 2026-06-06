@@ -30,23 +30,7 @@ STATIC_ASSERT(sizeof(DoorF4State) == 0x24);
  * (sidekickball_getExtraSize == 0x2CC). Only locally-evidenced
  * fields are named.
  */
-typedef struct SidekickBallState {
-    u8 unk000[0x25B];
-    u8 unk25B; /* hittable latch */
-    u8 pad25C[0x26C - 0x25C];
-    f32 fadeTimer; /* 0x26C */
-    u8 pad270[4];
-    u8 ballMode; /* 0 idle, 1/2 active, 3 thrown */
-    u8 pad275[0x298 - 0x275];
-    f32 unk298;
-    u8 pad29C[0x2B0 - 0x29C];
-    f32 launchX; /* obj position at throw */
-    f32 launchY;
-    f32 launchZ;
-    u8 pad2BC[0x2CC - 0x2BC];
-} SidekickBallState;
-
-STATIC_ASSERT(sizeof(SidekickBallState) == 0x2CC);
+#include "main/dll/sidekickball_state.h"
 
 
 extern undefined4 FUN_80006728();

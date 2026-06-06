@@ -26,16 +26,7 @@ enum SidekickBallMode {
   SIDEKICK_BALL_FADING = 5,
 };
 
-typedef struct SidekickBallState {
-  u8 unk0[0x26C];
-  f32 timer;
-  u8 unk270[4];
-  u8 mode;
-  u8 onPathPoint;
-  u8 unk276[0x52];
-  u8 triggerArmed;
-  u8 triggerHit;
-} SidekickBallState;
+#include "main/dll/sidekickball_state.h"
 
 /*
  * --INFO--
@@ -72,19 +63,19 @@ void sidekickball_update(u8 *self)
     return;
   }
 
-  if (state->mode == SIDEKICK_BALL_THROWN ||
-      state->mode == SIDEKICK_BALL_HELD ||
-      state->mode == SIDEKICK_BALL_MOVING) {
-    state->timer = state->timer + timeDelta;
-    if (state->timer >= lbl_803E36A8) {
-      state->timer = lbl_803E369C;
-      state->mode = SIDEKICK_BALL_FADING;
+  if (state->ballMode == SIDEKICK_BALL_THROWN ||
+      state->ballMode == SIDEKICK_BALL_HELD ||
+      state->ballMode == SIDEKICK_BALL_MOVING) {
+    state->fadeTimer = state->fadeTimer + timeDelta;
+    if (state->fadeTimer >= lbl_803E36A8) {
+      state->fadeTimer = lbl_803E369C;
+      state->ballMode = SIDEKICK_BALL_FADING;
     }
   }
 
-  switch (state->mode) {
+  switch (state->ballMode) {
   case SIDEKICK_BALL_THROWN:
-    state->mode = trickyBallMove(self);
+    state->ballMode = trickyBallMove(self);
     return;
   case SIDEKICK_BALL_MOVING:
     trickyBallMove(self);
@@ -102,17 +93,17 @@ void sidekickball_update(u8 *self)
     if (state->triggerHit != 0) {
       state->triggerArmed = 0;
       state->triggerHit = 0;
-      state->mode = SIDEKICK_BALL_IDLE;
+      state->ballMode = SIDEKICK_BALL_IDLE;
     }
     break;
   case SIDEKICK_BALL_FADING:
-    state->timer = state->timer + timeDelta;
-    if (state->timer >= lbl_803E36A4) {
+    state->fadeTimer = state->fadeTimer + timeDelta;
+    if (state->fadeTimer >= lbl_803E36A4) {
       Obj_FreeObject(self);
       return;
     }
     {
-      f32 v = lbl_803E36AC * state->timer / lbl_803E36A4;
+      f32 v = lbl_803E36AC * state->fadeTimer / lbl_803E36A4;
       self[0x36] = (u8)(0xFF - (int)v);
     }
     break;
