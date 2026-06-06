@@ -393,10 +393,10 @@ void magicdust_init(int param_1,int param_2)
     *(float *)(param_1 + 0x28) =
          -((f32)(int)randomGetRange(0x8c,0x96) / lbl_803E34F0);
   }
-  *(u8 *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) = *(u8 *)(param_2 + 0x26);
-  if (*(s8 *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) >=
-      *(s8 *)(*(int *)(param_1 + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
-    *(undefined *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) = 0;
+  ((ObjAnimComponent *)param_1)->bankIndex = *(u8 *)(param_2 + 0x26);
+  if (((ObjAnimComponent *)param_1)->bankIndex >=
+      ((ObjAnimComponent *)param_1)->modelInstance->modelCount) {
+    ((ObjAnimComponent *)param_1)->bankIndex = 0;
   }
   if (*(uint *)(param_1 + 100) != 0) {
     *(undefined *)(*(int *)(param_1 + 100) + 0x3a) = 100;

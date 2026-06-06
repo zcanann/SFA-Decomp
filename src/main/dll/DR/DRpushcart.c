@@ -1130,15 +1130,17 @@ extern int *gPartfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void shopitem_init(int obj, int data) {
+    ObjAnimComponent *objAnim;
     int state = *(int *)(obj + 0xB8);
+
+    objAnim = (ObjAnimComponent *)obj;
     *(u16 *)(obj + 0xB0) |= 0x2000;
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E86F4;
-    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)*(s8 *)(data + 0x18);
+    objAnim->bankIndex = (s8)*(s8 *)(data + 0x18);
     *(s16 *)obj = (s16)((*(u8 *)(data + 0x1A)) << 8);
     *(s16 *)(obj + 2) = (s16)((*(u8 *)(data + 0x1B)) << 8);
-    if ((s32)*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
-        (s32)*(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
-        *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
+    if ((s32)objAnim->bankIndex >= (s32)objAnim->modelInstance->modelCount) {
+        objAnim->bankIndex = 0;
     }
     switch (*(s16 *)(obj + 0x46)) {
     case 0x467:

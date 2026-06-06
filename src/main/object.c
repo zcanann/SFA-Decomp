@@ -1748,6 +1748,7 @@ extern char sObjFreeObjdefError[];
 #pragma dont_inline on
 void objFreeObjDef(void *objp, int flag) {
     u8 *obj = (u8 *)objp;
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)objp;
     int defs[46];
     void (*fp)(u8 *, int);
     void (*cb)(u8 *);
@@ -1852,8 +1853,7 @@ void objFreeObjDef(void *objp, int flag) {
         mm_free(*(void **)(obj + 0xdc));
         *(int *)(obj + 0xdc) = 0;
     }
-    modelCount = *(s8 *)(*(u8 **)(obj + offsetof(ObjAnimComponent, modelInstance)) +
-                         offsetof(ObjModelInstance, modelCount));
+    modelCount = objAnim->modelInstance->modelCount;
     for (i = 0; i < modelCount; i++) {
         if (*(int *)(*(u8 **)(obj + 0x7c) + i * 4) != 0) {
             ObjModel_Release(*(u8 **)(*(u8 **)(obj + 0x7c) + i * 4));
@@ -2393,6 +2393,8 @@ void Obj_ResetObjectSystem(void)
 #pragma dont_inline on
 void Obj_UpdateModelBlendStates(void)
 {
+    ObjAnimComponent *objAnim;
+    ObjAnimComponent *childAnim;
     int joff;
     u8 *obj;
     int j;
@@ -2410,15 +2412,15 @@ void Obj_UpdateModelBlendStates(void)
     ioff = 0;
     for (; i < lbl_803DCB84; i++) {
         obj = *(u8 **)((int)lbl_803DCB88 + ioff);
-        if (obj != 0 && *(void **)(obj + 0x50) != 0) {
+        objAnim = (ObjAnimComponent *)obj;
+        if (obj != 0 && objAnim->modelInstance != NULL) {
             m = *(u8 **)(obj + 0x64);
             if (m != 0) {
                 *(int *)(m + 0xc) = 0;
             }
             j = 0;
             joff = 0;
-            for (; j < *(s8 *)(*(u8 **)(obj + offsetof(ObjAnimComponent, modelInstance)) +
-                                offsetof(ObjModelInstance, modelCount)); j++) {
+            for (; j < objAnim->modelInstance->modelCount; j++) {
                 m = *(u8 **)(*(u8 **)(obj + 0x7c) + joff);
                 if (m != 0) {
                     *(u16 *)(m + 0x18) &= ~8;
@@ -2432,11 +2434,11 @@ void Obj_UpdateModelBlendStates(void)
             walker = obj;
             for (; j < *(u8 *)(obj + 0xeb); j++) {
                 child = *(u8 **)(walker + 0xc8);
-                if (child != 0 && *(void **)(child + 0x50) != 0) {
+                childAnim = (ObjAnimComponent *)child;
+                if (child != 0 && childAnim->modelInstance != NULL) {
                     k = 0;
                     koff = k;
-                    for (; k < *(s8 *)(*(u8 **)(child + offsetof(ObjAnimComponent, modelInstance)) +
-                                        offsetof(ObjModelInstance, modelCount)); k++) {
+                    for (; k < childAnim->modelInstance->modelCount; k++) {
                         m = *(u8 **)(*(u8 **)(child + 0x7c) + koff);
                         if (m != 0) {
                             *(u16 *)(m + 0x18) &= ~8;
@@ -2510,14 +2512,14 @@ void Obj_RegisterObject(u8 *obj, int flags)
     if (id > -1) {
         mapLoadForObject(id, obj);
     }
-    if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40) {
+    if (object->modelInstance->flags & 0x40) {
         ObjGroup_AddObject((uint)obj, 6);
-        if (*(s8 *)(obj + 0xae) != 0x5a && (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40)) {
-            *(u8 *)(obj + 0xae) = 0x5a;
+        if (object->activeHitboxMode != 0x5a && (object->modelInstance->flags & 0x40)) {
+            object->activeHitboxMode = 0x5a;
         }
     } else {
-        if (*(s8 *)(obj + 0xae) == 0) {
-            *(u8 *)(obj + 0xae) = 0x50;
+        if (object->activeHitboxMode == 0) {
+            object->activeHitboxMode = 0x50;
         }
     }
     if (flags & 1) {
@@ -2527,17 +2529,17 @@ void Obj_RegisterObject(u8 *obj, int flags)
             prev = 0;
             cur = *(int *)((u8 *)&lbl_803DCB7C + 4);
             off = *(s16 *)((u8 *)&lbl_803DCB7C + 2);
-            while (cur != 0 && *(s8 *)(obj + 0xae) < *(s8 *)(cur + 0xae)) {
+            while (cur != 0 && object->activeHitboxMode < *(s8 *)(cur + 0xae)) {
                 prev = cur;
                 cur = *(int *)(cur + off);
             }
             objListAdd(&lbl_803DCB7C, prev, (int)obj);
         }
     }
-    if (*(s8 *)(*(u8 **)(obj + 0x50) + 0x56) > 0) {
+    if (object->modelInstance->group8RegistrationCount > 0) {
         ObjGroup_AddObject((uint)obj, 8);
     }
-    if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 1) {
+    if (object->modelInstance->flags & 1) {
         lbl_803DCBC4 = 0;
     }
 }

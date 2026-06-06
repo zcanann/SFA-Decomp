@@ -588,19 +588,20 @@ typedef struct PressureSwitchFbFlags {
 #pragma scheduling off
 #pragma peephole off
 void pressureswitchfb_init(u8* obj, u8* params) {
+    ObjAnimComponent *objAnim;
     u8* sub;
     int *tex;
     f32 defaultOffset;
     PressureSwitchFbFlags *flags;
 
+    objAnim = (ObjAnimComponent *)obj;
     sub = *(u8**)(obj + 0xb8);
     flags = (PressureSwitchFbFlags *)(sub + 0x84);
     *(s16*)obj = (s16)(params[0x18] << 8);
     *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
-    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)params[0x19];
-    if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
-        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
-        obj[offsetof(ObjAnimComponent, bankIndex)] = 0;
+    objAnim->bankIndex = (s8)params[0x19];
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+        objAnim->bankIndex = 0;
     }
     defaultOffset = lbl_803E3778;
     *(f32*)(sub + 0x80) = defaultOffset;
