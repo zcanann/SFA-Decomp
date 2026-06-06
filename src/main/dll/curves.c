@@ -2546,58 +2546,58 @@ void fn_800E5F1C(int obj,f32 *state)
   one = lbl_803E068C;
   foundBelow = 0;
   points = curves_getCurves(obj,collision->points[0][0],collision->points[0][2],&hitCount,0);
-  collision->waterY[0] = topSentinel;
-  collision->floorY[0] = topSentinel;
-  collision->ceilingY[0] = floorSentinel;
-  collision->waterDepth[0] = zero;
-  collision->floorGap[0] = zero;
-  collision->waterNormalX[0] = zero;
-  collision->waterNormalY[0] = one;
-  collision->waterNormalZ[0] = zero;
+  collision->waterY0 = topSentinel;
+  collision->floorY0 = topSentinel;
+  collision->ceilingY0 = floorSentinel;
+  collision->waterDepth0 = zero;
+  collision->floorGap0 = zero;
+  collision->waterNormalX0 = zero;
+  collision->waterNormalY0 = one;
+  collision->waterNormalZ0 = zero;
   point = points;
   for (i = 0; i < (int)hitCount; i++) {
     if ((s8)point->type != 0xe) {
       if ((foundBelow == 0) && (point->x < (collision->points[0][1] + lbl_803E06AC)) &&
           (point->z > lbl_803E0678)) {
-        collision->floorY[0] = point->x;
-        collision->floorGap[0] = collision->points[0][1] - point->x;
+        collision->floorY0 = point->x;
+        collision->floorGap0 = collision->points[0][1] - point->x;
         if (collision->segmentHitTypes[0] == -1) {
           collision->segmentHitTypes[0] = point->type;
         }
         foundBelow = 1;
       }
       else if ((point->x >= (collision->points[0][1] + lbl_803E06AC)) && (point->z < zero)) {
-        collision->ceilingY[0] = point->x;
+        collision->ceilingY0 = point->x;
       }
     }
     point++;
   }
   if (foundBelow == 0) {
-    collision->floorGap[0] = lbl_803E06B0;
+    collision->floorGap0 = lbl_803E06B0;
   }
   if (((s8)collision->surfaceFlags & 0x10) != 0) {
-    collision->floorGap[0] = zero;
+    collision->floorGap0 = zero;
   }
   point = points;
   for (i = 0; i < (int)hitCount; i++) {
     if (((s8)point->type == 0xe) && (point->z > lbl_803E06B4) &&
-        (point->x < collision->ceilingY[0]) &&
-        (point->x > collision->floorY[0])) {
-      collision->waterY[0] = point->x;
-      collision->waterNormalX[0] = point->y;
-      collision->waterNormalY[0] = point->z;
-      collision->waterNormalZ[0] = point->w;
+        (point->x < collision->ceilingY0) &&
+        (point->x > collision->floorY0)) {
+      collision->waterY0 = point->x;
+      collision->waterNormalX0 = point->y;
+      collision->waterNormalY0 = point->z;
+      collision->waterNormalZ0 = point->w;
     }
     point++;
   }
-  if (collision->waterY[0] != topSentinel) {
-    collision->waterDepth[0] = collision->waterY[0] - collision->points[0][1];
+  if (collision->waterY0 != topSentinel) {
+    collision->waterDepth0 = collision->waterY0 - collision->points[0][1];
   }
-  collision->resultWaterY = collision->waterY[0];
-  collision->resultFloorY = collision->floorY[0];
-  collision->resultCeilingY = collision->ceilingY[0];
-  collision->resultWaterDepth = collision->waterDepth[0];
-  collision->resultFloorGap = collision->floorGap[0];
+  collision->resultWaterY = collision->waterY0;
+  collision->resultFloorY = collision->floorY0;
+  collision->resultCeilingY = collision->ceilingY0;
+  collision->resultWaterDepth = collision->waterDepth0;
+  collision->resultFloorGap = collision->floorGap0;
 }
 
 /*
@@ -3315,7 +3315,7 @@ void dll_15_func08(short *curveObj,int *state,uint updateValue,f32 step)
                                                        (int)(uint)collision->pointCounts >>
                                                            CURVES_POINT_COUNT_SEGMENT_SHIFT,
                                                        state + 0x1a, 0);
-        collision->surfaceCounter = *(s16 *)((u8 *)state + 0xd4);
+        collision->surfaceCounter = collision->traceHitCount;
         collision->surfaceHitMask = 0;
       }
       switch (collision->updateMode) {
