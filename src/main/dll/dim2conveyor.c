@@ -1,12 +1,12 @@
 #include "main/dll/creator1D4.h"
 #include "main/dll/dim2conveyor.h"
 #include "main/dll/ped.h"
+#include "main/gameplay_runtime.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 
 extern undefined4 FUN_80017680();
 extern double FUN_80017714();
-extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a6c();
 extern undefined4 FUN_80017a98();
 extern int FUN_8002fc3c();
@@ -25,7 +25,6 @@ extern undefined4 FUN_801ce340();
 extern int FUN_801ce424();
 extern undefined4 FUN_801ce638();
 
-extern void *Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32 *p1, f32 *p2);
 extern void fn_8003A168(int obj, void *p);
 extern void characterDoEyeAnims(int obj, void *p);
@@ -36,7 +35,6 @@ extern void fn_801CEE0C(int obj, void *state, void *objDef);
 extern void fn_801CED2C(int obj, void *state, void *objDef);
 extern void fn_801CEA14(int obj, void *state, void *objDef);
 extern void fn_801CE2BC(int obj, void *state, void *objDef);
-extern u32 GameBit_Get(int eventId);
 extern int* getTrickyObject(void);
 extern void Sfx_StopObjectChannel(int *p1, int channel);
 
@@ -58,10 +56,10 @@ extern undefined4 DAT_803dcc24;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd728;
-extern void *gGameUIInterface;
-extern void *gObjectTriggerInterface;
-extern void *gPathControlInterface;
-extern void *gRomCurveInterface;
+extern NwMammothGameUiInterface **gGameUIInterface;
+extern NwMammothObjectTriggerInterface **gObjectTriggerInterface;
+extern NwMammothPathControlInterface **gPathControlInterface;
+extern NwMammothRomCurveInterface **gRomCurveInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DC074;
 extern u32 lbl_803E5208;
@@ -121,11 +119,11 @@ enum NwMammothRuntimeFlag {
  */
 #pragma peephole off
 #pragma scheduling off
-void nw_mammoth_update(int obj,int param_2)
+void nw_mammoth_update(NwMammothObject *obj,int param_2)
 {
-  u8 *table = lbl_803267C0;
-  u8 *state;
-  u8 *objDef;
+  NwMammothTables *table = (NwMammothTables *)lbl_803267C0;
+  NwMammothState *state;
+  NwMammothMapData *mapData;
   u8 stateIndex;
   u8 stateFlags;
   ObjHitReactEntry *hitReactEntries;
@@ -134,104 +132,99 @@ void nw_mammoth_update(int obj,int param_2)
   int triggerIndex;
 
   (void)param_2;
-  state = *(u8 **)(obj + 0xb8);
-  objDef = *(u8 **)(obj + 0x4c);
-  if ((state[0x43c] & NW_MAMMOTH_RUNTIME_RESET_PATH) != 0) {
-    state[0x43c] = (u8)(state[0x43c] & ~NW_MAMMOTH_RUNTIME_RESET_PATH);
+  state = obj->state;
+  mapData = obj->mapData;
+  if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_RESET_PATH) != 0) {
+    state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_RESET_PATH);
   }
-  *(void **)(state + 0x28) = Obj_GetPlayerObject();
-  if (*(void **)(state + 0x28) == NULL) {
+  state->playerObject = Obj_GetPlayerObject();
+  if (state->playerObject == NULL) {
     return;
   }
-  stateIndex = state[0x408];
-  stateFlags = NW_MAMMOTH_STATE_FLAGS(table)[stateIndex];
+  stateIndex = state->stateIndex;
+  stateFlags = table->stateFlags[stateIndex];
   if ((stateFlags & NW_MAMMOTH_STATE_FLAG_SOLID) != 0) {
-    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x400);
-    *(u32 *)(*(int *)(obj + 0x64) + 0x30) =
-        *(u32 *)(*(int *)(obj + 0x64) + 0x30) & ~0x4;
+    obj->objectFlags = (u16)(obj->objectFlags | NW_MAMMOTH_SOLID_OBJECT_FLAG);
+    obj->modelState->flags = obj->modelState->flags & ~NW_MAMMOTH_MODEL_COLLISION_FLAG;
   } else {
-    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) & ~0x400);
-    *(u32 *)(*(int *)(obj + 0x64) + 0x30) =
-        *(u32 *)(*(int *)(obj + 0x64) + 0x30) | 0x4;
+    obj->objectFlags = (u16)(obj->objectFlags & ~NW_MAMMOTH_SOLID_OBJECT_FLAG);
+    obj->modelState->flags = obj->modelState->flags | NW_MAMMOTH_MODEL_COLLISION_FLAG;
   }
-  stateFlags = NW_MAMMOTH_STATE_FLAGS(table)[state[0x408]];
+  stateFlags = table->stateFlags[state->stateIndex];
   if ((stateFlags & NW_MAMMOTH_STATE_FLAG_SKIP_HIT_REACT) == 0) {
     if ((stateFlags & NW_MAMMOTH_STATE_FLAG_HEAVY_HIT_REACT) != 0) {
-      hitReactEntries = NW_MAMMOTH_HEAVY_HIT_REACT_ENTRIES(table);
+      hitReactEntries = &table->heavyHitReactEntry;
     } else {
-      hitReactEntries = NW_MAMMOTH_HIT_REACT_ENTRIES(table);
+      hitReactEntries = &table->normalHitReactEntry;
     }
-    NW_MAMMOTH_HIT_REACT_STATE(state) =
-        ObjHitReact_Update(obj,hitReactEntries,1,NW_MAMMOTH_HIT_REACT_STATE(state),
-                           NW_MAMMOTH_HIT_REACT_STEP_SCALE(state));
-    if (NW_MAMMOTH_HIT_REACT_STATE(state) != 0) {
-      fn_8003A168(obj, state + 0x40c);
-      characterDoEyeAnims(obj, state + 0x40c);
+    state->hitReactState =
+        ObjHitReact_Update((int)obj,hitReactEntries,1,state->hitReactState,
+                           &state->hitReactStepScale);
+    if (state->hitReactState != 0) {
+      fn_8003A168((int)obj, state->eyeAnimState);
+      characterDoEyeAnims((int)obj, state->eyeAnimState);
       return;
     }
   }
-  *(f32 *)(state + 0x18) = vec3f_distanceSquared((f32 *)(obj + 0x18),
-                                                 (f32 *)(*(int *)(state + 0x28) + 0x18));
-  switch ((s8)objDef[0x1d]) {
+  state->playerDistanceSq = vec3f_distanceSquared(&obj->worldPosX,
+                                                 &((NwMammothObject *)state->playerObject)->worldPosX);
+  switch (mapData->behaviorMode) {
     case 0:
-      fn_801CEE0C(obj, state, objDef);
+      fn_801CEE0C((int)obj, state, mapData);
       break;
     case 2:
-      fn_801CED2C(obj, state, objDef);
+      fn_801CED2C((int)obj, state, mapData);
       break;
     case 1:
     case 3:
-      fn_801CEA14(obj, state, objDef);
+      fn_801CEA14((int)obj, state, mapData);
       break;
     case 4:
-      fn_801CE2BC(obj, state, objDef);
+      fn_801CE2BC((int)obj, state, mapData);
       break;
   }
-  stateFlags = NW_MAMMOTH_STATE_FLAGS(table)[state[0x408]];
+  stateFlags = table->stateFlags[state->stateIndex];
   if ((stateFlags & NW_MAMMOTH_STATE_FLAG_PATH_CONTROL) != 0) {
-    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
+    obj->hitboxFlags = (u8)(obj->hitboxFlags | NW_MAMMOTH_PATH_CONTROL_FLAG);
   } else {
-    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x10);
+    obj->hitboxFlags = (u8)(obj->hitboxFlags & ~NW_MAMMOTH_PATH_CONTROL_FLAG);
     if (((stateFlags & NW_MAMMOTH_STATE_FLAG_MENU_ACTION) != 0) &&
         (cMenuGetSelectedItem() != -1)) {
-      fn_8002B6D8(obj, 0, 0, 0, 0, 4);
+      fn_8002B6D8((int)obj, 0, 0, 0, 0, 4);
     } else {
-      fn_8002B6D8(obj, 0, 0, 0, 0, 2);
+      fn_8002B6D8((int)obj, 0, 0, 0, 0, 2);
     }
   }
-  stateIndex = state[0x408];
-  currentMove = NW_MAMMOTH_MOVE_IDS(table)[stateIndex];
-  if (*(s16 *)(obj + 0xa0) != currentMove) {
-    stepScale = NW_MAMMOTH_MOVE_STEP_SCALES(table)[stateIndex];
+  stateIndex = state->stateIndex;
+  currentMove = table->stateMoveIds[stateIndex];
+  if (obj->currentMove != currentMove) {
+    stepScale = table->stateMoveStepScales[stateIndex];
     if (stepScale > lbl_803E520C) {
-      ObjAnim_SetCurrentMove(obj, currentMove, lbl_803E520C, 0);
+      ObjAnim_SetCurrentMove((int)obj, currentMove, lbl_803E520C, 0);
     } else {
-      ObjAnim_SetCurrentMove(obj, currentMove, lbl_803E5210, 0);
+      ObjAnim_SetCurrentMove((int)obj, currentMove, lbl_803E5210, 0);
     }
-    *(f32 *)(state + 0x4c) = NW_MAMMOTH_MOVE_STEP_SCALES(table)[state[0x408]];
+    state->animStepScale = table->stateMoveStepScales[state->stateIndex];
   }
-  if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *(f32 *)(state + 0x4c), timeDelta,
-                                 (ObjAnimEventList *)(state + 0x440)) != 0) {
-    state[0x43c] = (u8)(state[0x43c] | NW_MAMMOTH_RUNTIME_ANIM_ENDED);
+  if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, state->animStepScale, timeDelta,
+                                 &state->animEvents) != 0) {
+    state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_ANIM_ENDED);
   } else {
-    state[0x43c] = (u8)(state[0x43c] & ~NW_MAMMOTH_RUNTIME_ANIM_ENDED);
+    state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_ANIM_ENDED);
   }
-  objAudioFn_8006ef38(obj, state + 0x440, 8, state + 0x45c, state + 0x16c,
+  objAudioFn_8006ef38((int)obj, &state->animEvents, 8, state->pathPoints, state->pathState,
                       lbl_803E5210, *(f32 *)&lbl_803E5210);
-  fn_801CDF94(obj, state, NW_MAMMOTH_STATE_FLAGS(table)[state[0x408]] & 4);
-  state[0x43c] = (u8)(state[0x43c] & ~NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
-  if (((state[0x43c] & NW_MAMMOTH_RUNTIME_MENU_LOCK) == 0) && (ObjTrigger_IsSet(obj) != 0)) {
-    triggerIndex = randomGetRange(1, **(u8 **)(state + 0x48));
-    state[0x43c] = (u8)(state[0x43c] | NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
-    (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(
-        *(u8 *)(*(int *)(state + 0x48) + triggerIndex), obj, -1);
+  fn_801CDF94((int)obj, state, table->stateFlags[state->stateIndex] & 4);
+  state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
+  if (((state->runtimeFlags & NW_MAMMOTH_RUNTIME_MENU_LOCK) == 0) && (ObjTrigger_IsSet((int)obj) != 0)) {
+    triggerIndex = randomGetRange(NW_MAMMOTH_TRIGGER_RANDOM_MIN, *state->triggerList);
+    state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
+    (*gObjectTriggerInterface)->activateObject(state->triggerList[triggerIndex], obj, -1);
   }
-  if ((state[0x43c] & NW_MAMMOTH_RUNTIME_PATH_CONTROL) != 0) {
-    (*(void (**)(int, void *, f32))(*(int *)gPathControlInterface + 0x10))(
-        obj, state + 0x16c, timeDelta);
-    (*(void (**)(int, void *))(*(int *)gPathControlInterface + 0x14))(obj, state + 0x16c);
-    (*(void (**)(int, void *, f32))(*(int *)gPathControlInterface + 0x18))(
-        obj, state + 0x16c, timeDelta);
+  if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_PATH_CONTROL) != 0) {
+    (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
+    (*gPathControlInterface)->apply(obj, state->pathState);
+    (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
   }
 }
 
@@ -247,71 +240,69 @@ void nw_mammoth_update(int obj,int param_2)
  */
 #pragma peephole off
 #pragma scheduling off
-void nw_mammoth_init(int obj, u8 *objDef, int isReload)
+void nw_mammoth_init(NwMammothObject *obj, NwMammothMapData *mapData, int isReload)
 {
   u32 pathParam;
-  u8 *state;
+  NwMammothState *state;
   int curveParam;
 
-  state = *(u8 **)(obj + 0xb8);
+  state = obj->state;
   pathParam = lbl_803E5208;
-  *(s16 *)obj = (s16)((s8)objDef[0x1c] << 8);
-  *(void **)(obj + 0xbc) = nw_mammoth_SeqFn;
+  obj->rotX = (s16)(mapData->modelIndex << 8);
+  obj->seqCallback = nw_mammoth_SeqFn;
   if (isReload != 0) {
     return;
   }
-  *(f32 *)(state + 0x4c) = lbl_803E5258;
-  switch ((s8)objDef[0x1d]) {
+  state->animStepScale = lbl_803E5258;
+  switch (mapData->behaviorMode) {
     case 0:
-      state[0x43c] = (u8)(state[0x43c] | NW_MAMMOTH_RUNTIME_PATH_CONTROL);
+      state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_PATH_CONTROL);
       break;
     case 2:
-      state[0x43c] = (u8)(state[0x43c] | NW_MAMMOTH_RUNTIME_PATH_CONTROL);
+      state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_PATH_CONTROL);
       if (GameBit_Get(0x19f) != 0) {
-        state[0x408] = 6;
+        state->stateIndex = 6;
       } else if (GameBit_Get(0x19d) != 0) {
-        state[0x408] = 5;
+        state->stateIndex = 5;
       } else {
-        state[0x408] = 4;
+        state->stateIndex = 4;
       }
       break;
     case 1:
     case 3:
-      curveParam = 0x19;
-      state[0x43c] = (u8)(state[0x43c] | NW_MAMMOTH_RUNTIME_PATH_CONTROL);
-      if ((u8)(*(int (*)(void *, int, f32, void *, int))(*(int *)gRomCurveInterface + 0x8c))(
-              state + 0x5c, obj, lbl_803E5254, &curveParam, -1) == 0) {
-        *(f32 *)(obj + 0xc) = *(f32 *)(state + 0xc4);
-        *(f32 *)(obj + 0x14) = *(f32 *)(state + 0xcc);
-        state[0x408] = 8;
-        *(f32 *)(state + 0x54) = lbl_803E524C;
+      curveParam = NW_MAMMOTH_CURVE_PARAM;
+      state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_PATH_CONTROL);
+      if ((u8)(*gRomCurveInterface)->initCurve(
+              &state->curveState, obj, lbl_803E5254, &curveParam, -1) == 0) {
+        obj->localPosX = state->curveState.pointX;
+        obj->localPosZ = state->curveState.pointZ;
+        state->stateIndex = 8;
+        state->pathSpeed = lbl_803E524C;
       }
       break;
     case 4:
-      state[0x43f] = (s8)GameBit_Get(0x48b);
+      state->uiMessageCount = (s8)GameBit_Get(0x48b);
       if (GameBit_Get(0x102) != 0) {
-        state[0x408] = 0x10;
+        state->stateIndex = 0x10;
       } else if (GameBit_Get(0xce1) != 0) {
-        state[0x408] = 0xc;
-        if ((s8)state[0x43f] >= 3) {
-          (*(void (**)(int, int))(*(int *)gGameUIInterface + 0x58))(0xc8, 0x5d0);
-          state[0x43c] = (u8)(state[0x43c] | NW_MAMMOTH_RUNTIME_UI_MESSAGE);
-          state[0x408] = 0x11;
+        state->stateIndex = 0xc;
+        if (state->uiMessageCount >= 3) {
+          (*gGameUIInterface)->showMessage(NW_MAMMOTH_UI_MESSAGE_ID, NW_MAMMOTH_UI_MESSAGE_TEXT_ID);
+          state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_UI_MESSAGE);
+          state->stateIndex = 0x11;
         }
       } else {
-        state[0x408] = 9;
+        state->stateIndex = 9;
       }
       break;
   }
-  if ((state[0x43c] & NW_MAMMOTH_RUNTIME_PATH_CONTROL) != 0) {
-    u8 *pathState = state + 0x16c;
-    (*(void (**)(void *, int, int, int))(*(int *)gPathControlInterface + 0x4))(
-        pathState, 3, 2, 1);
-    (*(void (**)(void *, int, u8 *, u8 *, u32 *))(*(int *)gPathControlInterface + 0xc))(
-        pathState, 4, lbl_803267E8, lbl_80326818, &pathParam);
-    (*(void (**)(int, void *))(*(int *)gPathControlInterface + 0x20))(obj, pathState);
+  if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_PATH_CONTROL) != 0) {
+    (*gPathControlInterface)->init(state->pathState, 3, 2, 1);
+    (*gPathControlInterface)->setup(state->pathState, NW_MAMMOTH_PATH_SETUP_POINT_COUNT,
+                                    lbl_803267E8, lbl_80326818, &pathParam);
+    (*gPathControlInterface)->attachObject(obj, state->pathState);
   }
-  ObjGroup_AddObject(obj, 0x4d);
+  ObjGroup_AddObject(obj, NW_MAMMOTH_GROUP_ID);
 }
 
 #pragma scheduling reset
@@ -497,7 +488,7 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(float *)(iVar6 + 0x18) = (float)dVar8;
   cVar1 = *(char *)(iVar5 + 0x1d);
   if (cVar1 == '\x02') {
-    nw_mammoth_update((int)param_9,iVar6);
+    nw_mammoth_update((NwMammothObject *)param_9,iVar6);
     goto LAB_801cf840;
   }
   if (cVar1 < '\x02') {
