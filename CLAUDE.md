@@ -187,7 +187,10 @@ Heuristic:
     *worse*). If the explicit cast doesn't flip it on a late-pool function, it's
     a genuine residual (~85-96%) — leave it, don't keep retrying.
     **The `@NNN`-vs-named-`lbl` LABEL is largely a MEASUREMENT ARTIFACT — NOT
-    fixable via symbols.txt.** ⚠️ **PARTIALLY SUPERSEDED — see recipe #60**:
+    fixable via symbols.txt.** ⚠️ **CONFIRMED & CLOSED by recipe #70** (task
+    #145): the @NNN reloc itself is score-neutral (proven by 100.0% fns
+    carrying @NNN refs); any deficit is real codegen divergence elsewhere.
+    ⚠️ **PARTIALLY SUPERSEDED — see recipe #60**:
     a later byte-diff audit of 14 partials at 99.9-99.99% found ZERO of them
     were actually pool-name-only cosmetic; all had real codegen byte differences
     after reloc-masking. The measurement-artifact case below still applies
@@ -1218,6 +1221,64 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
 - **CAP — materialized-mask `lis;or` for `|= 0x20000`** (warpDarkIceMines)
   — recipe #2 inverse re-confirmed; const-lift and expanded `x = x | K`
   still fold to `oris`.
+
+70. **@NNN-vs-named-lbl SDA21 relocs are SCORE-NEUTRAL — the "pool cap" was a
+    misattribution; the deficit is always real codegen divergence elsewhere.**
+    (Task #145, four decisive experiments.) objdiff content-matches a reloc by
+    the DATA BYTES at the resolved target, so a local `.sdata2` copy (`@534`)
+    of an int→f32 bias or float constant scores identically to target's shared
+    `lbl_803EXXXX`. Proof: zulu14's 803E7158 retype + india-1's 803DFD88 and
+    803E6E80 string→double retypes all produced ZERO project delta, and
+    dimbossgut2_update + 13 Effect*_func05 fns reached **100.0%** with @NNN
+    local-bias refs still in place. Consequences: (a) do NOT chase splits/dtk
+    knobs or symbols.txt retypes for @NNN refs; (b) a symbols.txt retype that
+    merges a `lbl_X+4` float away ORPHANS src externs referencing it — only
+    safe when nothing references the merged symbol (the link survives today
+    only because referencing units are NonMatching); (c) when a fn shows many
+    @NNN refs and <100%, align the instruction streams (mnemonic-level difflib
+    of `function_objdump.py`'s two halves) — the real divergences are ordinary
+    recipe-class bugs. Effect7_func04's "77-ref @NNN cap" was actually ~12
+    fixable divergences (98.30→99.87).
+
+71. **Literal float constants REMATERIALIZE per use; named `lbl_` externs get
+    CSE'd — pick the C form by whether target reloads.** When target reloads
+    the same `.sdata2` float at every use (fresh `lfs f0, const` before each
+    `fcmpo` clamp) but your named-extern form loads it once into a long-lived
+    reg, write the LITERAL (`if (sum > 1.0f)`) — MWCC pools it locally (an
+    @NNN reloc, score-neutral per #70) and reloads at each use, matching
+    target's shape. Keep the named extern when target DOES keep it live. Took
+    13 Effect*_func05 fns to 100% and lifted every Effect*_func04 head
+    (modgfx + dim_partfx).
+
+72. **`sum = g + (step = k * timeDelta);` — embedded assignment keeps
+    LHS-first eval AND forces the product into a fresh named FP reg.** When
+    target computes `fmuls f3,f1,f0` into a FRESH reg with the base global
+    loaded first (`lfs f2,g`), the plain `sum = g + k*td;` form CSEs the
+    product into a dead reg (`fmuls f1`), and a hoisted
+    `step = k*td; sum = g + step;` reorders the loads (product computed before
+    g loads). The embedded-assign form is the only spelling that does both:
+    g loads first, product lands in f3, reused by the second sum. (Effect
+    func05 family — combined with #71 for the 100%s.)
+
+73. **dtk FALSE-RELOCATES in-range constants — a `fn_XXXX+0xNNN` reloc on a
+    value stored to a FLAGS field is a constant, not an address.** When target
+    shows `lis;addi {fn_8017FFD0+0x130}` stored into a field that elsewhere
+    takes flag words (0x200, 0xc0080004, …) and the addend lands mid-function
+    (not at any symbol boundary — check the disasm: 0x80180200 was a shared
+    epilogue label), the original source stored the literal constant
+    (0x80180100) and dtk synthesized a spurious reloc when splitting. Write
+    the literal; objdiff resolves target's reloc to the same value and scores
+    it matched. The Ghidra `(u32)((u8 *)fn + 0x130)` form costs an extra
+    runtime `addi` — never matches. Check first that the addend is NOT a real
+    function boundary (then it'd be a genuine callback needing a symbols.txt
+    split). (modgfx Effect5/6/7/9_func04.)
+
+**Known 2-instr cap — `xori` vs `li;xor`.** Target modgfx/dim_partfx TUs
+contain ZERO `xori`; their `cfg.f44 ^= 2` sites all emit `li r0,2; xor`.
+Current MWCC config emits `xori r0,r3,2` for every C spelling tried
+(`x = x ^ 2`, `x ^= 2`, `2 ^ x`, `u32 two = 2; x ^= two` — constant-propped,
+explicit peephole-off wrap). Not peephole-controllable. ~2 instr per site;
+leave as residual. (10 sites in modgfx, 1 in dim_partfx.)
 
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
