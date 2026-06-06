@@ -9132,13 +9132,14 @@ cfg.f30 = lbl_803DF4CC * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
           cfg.f24 = lbl_803DF608;
           dVar12 = (f32)(s32)randomGetRange(0,0xfffe);
           dVar13 = (f32)(s32)randomGetRange(0,0xfffe);
+          dVar14 = (f32)(s32)randomGetRange(0,0xfffe);
           rot.m[1] = lbl_803DF4DC;
           rot.m[2] = lbl_803DF4DC;
           rot.m[3] = lbl_803DF4DC;
           rot.m[0] = lbl_803DF4D0;
-          rot.z = (short)randomGetRange(0,0xfffe);
-          rot.y = (short)(int)dVar13;
-          rot.x = (short)(int)dVar12;
+          rot.z = dVar14;
+          rot.y = dVar13;
+          rot.x = dVar12;
           vecRotateZXY((s16 *)&rot,&cfg.f24);
           cfg.f3c = lbl_803DF690;
           cfg.f08 = 0x32;
@@ -10099,12 +10100,7 @@ if (param_3 == NULL) {
         cfg.f14 = lbl_803DF4D0;
     break;
   case 0x55a:
-if (param_2 != 0x55b) {
-          if (0x55a < param_2) {
-            if (param_2 < 0x55d) goto LAB_800a69a8;
-            goto LAB_800a6a18;
-          }
-          if (0x559 < param_2) {
+          {
             if (param_3 == NULL) {
               *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
@@ -10138,9 +10134,6 @@ if (param_2 != 0x55b) {
             cfg.f42 = 0x567;
             goto LAB_800aeb30;
           }
-          goto LAB_800a6b6c;
-        }
-    break;
   case 0x564:
 cfg.f3c = lbl_803DF5A0 * (f32)(s32)randomGetRange(0x32,100);
         cfg.f08 = 0x2d;
