@@ -335,14 +335,30 @@ void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v)
     f32 sa = mathCosf(ra);
     f32 sb = mathCosf(rb);
     f32 sc = mathCosf(rc);
-    f32 A = x * sa + z * ca;
-    f32 p = z * sa - x * ca;
-    f32 B = y * sb - p * cb;
-    f32 C = p * sb + y * cb;
+    f32 t0, t1, A, p, B;
 
-    v[0] = A * sc - B * cc;
-    v[1] = B * sc + A * cc;
-    v[2] = C;
+    t0 = x * ca;
+    t1 = z * ca;
+    A = x * sa;
+    p = z * sa;
+    A = A + t1;
+    p = p - t0;
+    t0 = y * cb;
+    t1 = p * cb;
+    B = y * sb;
+    p = p * sb;
+    B = B - t1;
+    p = p + t0;
+    t0 = A * cc;
+    t1 = B * cc;
+    A = A * sc;
+    B = B * sc;
+    A = A - t1;
+    B = B + t0;
+
+    v[0] = A;
+    v[1] = B;
+    v[2] = p;
 }
 #pragma dont_inline reset
 #pragma peephole reset
