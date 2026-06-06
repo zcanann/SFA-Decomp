@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
-#include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
 extern undefined4 getLActions();
@@ -1522,7 +1522,7 @@ void FUN_8019d1cc(undefined2 *param_1,int param_2)
     *(undefined *)(iVar1 + 0x15d) = 0;
     *(undefined *)(iVar1 + 0x15e) = 0;
     *(undefined *)(iVar1 + 0x15f) = 0x46;
-    *(undefined *)((int)param_1 + 0xad) = 1;
+    ((ObjAnimComponent *)param_1)->bankIndex = 1;
     *(undefined4 *)(iVar1 + 0x158) = 0;
   }
   ObjMsg_AllocQueue((int)param_1,2);
@@ -4299,7 +4299,7 @@ void cfmaincrystal_init(int *obj, u8 *def) {
         state[0x15d] = 0;
         state[0x15e] = 0;
         state[0x15f] = 0x46;
-        *(u8 *)((char *)obj + 0xad) = 1;
+        ((ObjAnimComponent *)obj)->bankIndex = 1;
         *(int *)((char *)state + 0x158) = 0;
     }
     ObjMsg_AllocQueue(obj, 2);
