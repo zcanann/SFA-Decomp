@@ -1,3 +1,4 @@
+#include "main/sky_state.h"
 #include "main/sky_80080E58_shared.h"
 
 #pragma peephole off
@@ -173,7 +174,7 @@ int getSkyStructField24C(void)
 
     sky = lbl_803DD12C;
     if (sky != NULL) {
-        return sky[0x24c];
+        return ((SkyState *)sky)->unk24C;
     }
     return 0;
 }
@@ -438,7 +439,7 @@ void getTimeOfDay(f32 *time)
         *time = pEXIInputFlag;
         return;
     }
-    *time = *(f32 *)(sky + 0x20c);
+    *time = ((SkyState *)sky)->timeOfDay;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -514,8 +515,8 @@ void modelTextureFn_80089970(int slot)
     if (lbl_803DD144 != NULL) {
         offset = slot * 0xa4;
         sky = lbl_803DD12C + offset;
-        modelLightStruct_setDirection(lbl_803DD144, *(f32 *)(sky + 0x90), *(f32 *)(sky + 0x94),
-                                *(f32 *)(sky + 0x98));
+        modelLightStruct_setDirection(lbl_803DD144, ((SkyState *)sky)->lights[0].unk70, ((SkyState *)sky)->lights[0].unk74,
+                                ((SkyState *)sky)->lights[0].unk78);
         modelLightStruct_setDiffuseColor(lbl_803DD144, lbl_803DD12C[offset + 0x78],
                                        lbl_803DD12C[offset + 0x79],
                                        lbl_803DD12C[offset + 0x7a], 0xff);
@@ -523,8 +524,8 @@ void modelTextureFn_80089970(int slot)
     if (lbl_803DD168 != NULL) {
         offset = slot * 0xa4;
         sky = lbl_803DD12C + offset;
-        modelLightStruct_setDirection(lbl_803DD168, *(f32 *)(sky + 0x9c), *(f32 *)(sky + 0xa0),
-                                *(f32 *)(sky + 0xa4));
+        modelLightStruct_setDirection(lbl_803DD168, ((SkyState *)sky)->lights[0].unk7C, ((SkyState *)sky)->lights[0].unk80,
+                                ((SkyState *)sky)->lights[0].unk84);
         modelLightStruct_setDiffuseColor(lbl_803DD168, lbl_803DD12C[offset + 0x80],
                                        lbl_803DD12C[offset + 0x81],
                                        lbl_803DD12C[offset + 0x82], 0xff);
@@ -569,7 +570,7 @@ int getSunPos(f32 *outTime)
         return 0;
     }
 
-    time = *(f32 *)(lbl_803DD12C + 0x20c);
+    time = ((SkyState *)lbl_803DD12C)->timeOfDay;
     if (time >= lbl_803DF088 || time < lbl_803DF084) {
         if (outTime != NULL) {
             if (time >= lbl_803DF088) {
@@ -601,7 +602,7 @@ void fn_8008B88C(int *outTimer)
         *outTimer = 0;
         return;
     }
-    *outTimer = *(int *)(sky + 0x218);
+    *outTimer = ((SkyState *)sky)->unk218;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -626,9 +627,9 @@ void skyFn_80089710(int flags, u32 enabled, int startComplete)
         requestedActive = (u8)enabled;
         if (stateActive != requestedActive) {
             if (startComplete != 0) {
-                *(f32 *)(sky + 0xbc) = EXIInputFlag;
+                ((SkyState *)sky)->lights[0].unk9C = EXIInputFlag;
             } else {
-                *(f32 *)(sky + 0xbc) = pEXIInputFlag;
+                ((SkyState *)sky)->lights[0].unk9C = pEXIInputFlag;
             }
         }
         sky = lbl_803DD12C;
@@ -642,9 +643,9 @@ void skyFn_80089710(int flags, u32 enabled, int startComplete)
         requestedActive = (u8)enabled;
         if (stateActive != requestedActive) {
             if (startComplete != 0) {
-                *(f32 *)(sky + 0x160) = EXIInputFlag;
+                ((SkyState *)sky)->lights[1].unk9C = EXIInputFlag;
             } else {
-                *(f32 *)(sky + 0x160) = pEXIInputFlag;
+                ((SkyState *)sky)->lights[1].unk9C = pEXIInputFlag;
             }
         }
         sky = lbl_803DD12C;
@@ -672,13 +673,13 @@ void fn_800897D4(int slot, f32 *x, f32 *y, f32 *z)
 
     offset = slot * 0xa4;
     sky = lbl_803DD12C + offset;
-    *x = *(f32 *)(sky + 0x90);
+    *x = ((SkyState *)sky)->lights[0].unk70;
     sky = lbl_803DD12C;
     sky += offset;
-    *y = *(f32 *)(sky + 0x94);
+    *y = ((SkyState *)sky)->lights[0].unk74;
     sky = lbl_803DD12C;
     sky += offset;
-    *z = *(f32 *)(sky + 0x98);
+    *z = ((SkyState *)sky)->lights[0].unk78;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -854,7 +855,7 @@ void skyGetClockTime(f32 *time)
     if (sky == NULL) {
         *time = pEXIInputFlag;
     } else {
-        *time = *(s32 *)(sky + 0x210);
+        *time = ((SkyState *)sky)->clockTime;
     }
 }
 #pragma scheduling reset
@@ -1579,7 +1580,7 @@ void skyFn_80088c94(int flags, int mode) {
     }
     sky = lbl_803DD12C;
     ((SkyBlendStateFlags *)(sky + 0x209))->unused80 =
-        ((SkyBlendStateFlags *)(sky + sky[0x24c] * 0xa4 + 0xc1))->unused80;
+        ((SkyBlendStateFlags *)(sky + ((SkyState *)sky)->unk24C * 0xa4 + 0xc1))->unused80;
     env = saveGameGetEnvState();
     if (getSaveGameLoadStatus() == 0) {
         if (((SkyBlendStateFlags *)(lbl_803DD12C + 0xc1))->unused80 != 0) {
@@ -1609,17 +1610,17 @@ void skyFn_80088e54(int mode, f32 brightness)
     f32 fullBlend;
 
     env = saveGameGetEnvState();
-    if (lbl_803DD12C[0x24c] != mode) {
-        lbl_803DD12C[0x24d] = lbl_803DD12C[0x24c];
-        lbl_803DD12C[0x24c] = (u8)mode;
+    if (((SkyState *)lbl_803DD12C)->unk24C != mode) {
+        ((SkyState *)lbl_803DD12C)->unk24D = ((SkyState *)lbl_803DD12C)->unk24C;
+        ((SkyState *)lbl_803DD12C)->unk24C = (u8)mode;
         unset = pEXIInputFlag;
         if (brightness != unset) {
-            *(f32 *)(lbl_803DD12C + 0x248) = EXIInputFlag / (lbl_803DF060 * brightness);
-            *(f32 *)(lbl_803DD12C + 0x244) = unset;
+            ((SkyState *)lbl_803DD12C)->unk248 = EXIInputFlag / (lbl_803DF060 * brightness);
+            ((SkyState *)lbl_803DD12C)->unk244 = unset;
         } else {
             fullBlend = EXIInputFlag;
-            *(f32 *)(lbl_803DD12C + 0x248) = fullBlend;
-            *(f32 *)(lbl_803DD12C + 0x244) = fullBlend;
+            ((SkyState *)lbl_803DD12C)->unk248 = fullBlend;
+            ((SkyState *)lbl_803DD12C)->unk244 = fullBlend;
         }
         cloudMode = ((SkyBlendStateFlags *)(lbl_803DD12C + mode * 0xa4 + 0xc1))->cloud;
         if (cloudMode != 0) {
@@ -1671,28 +1672,28 @@ void timeOfDayFn_8008b964(void)
         return;
     } else {
         {
-            *(f32 *)(lbl_803DD12C + 0x20c) += *(f32 *)(lbl_803DD12C + 0x214) * timeDelta;
-            if (*(f32 *)(lbl_803DD12C + 0x20c) >= lbl_803DF078) {
-                *(f32 *)(lbl_803DD12C + 0x20c) = *(f32 *)(lbl_803DD12C + 0x20c) - lbl_803DF078;
-            } else if (*(f32 *)(lbl_803DD12C + 0x20c) < pEXIInputFlag) {
-                *(f32 *)(lbl_803DD12C + 0x20c) = *(f32 *)(lbl_803DD12C + 0x20c) + lbl_803DF078;
+            ((SkyState *)lbl_803DD12C)->timeOfDay += ((SkyState *)lbl_803DD12C)->unk214 * timeDelta;
+            if (((SkyState *)lbl_803DD12C)->timeOfDay >= lbl_803DF078) {
+                ((SkyState *)lbl_803DD12C)->timeOfDay = ((SkyState *)lbl_803DD12C)->timeOfDay - lbl_803DF078;
+            } else if (((SkyState *)lbl_803DD12C)->timeOfDay < pEXIInputFlag) {
+                ((SkyState *)lbl_803DD12C)->timeOfDay = ((SkyState *)lbl_803DD12C)->timeOfDay + lbl_803DF078;
             }
             if (getSunPos(&time) != 0) {
-                if (lbl_803DD12C[0x24e] == 0) {
-                    lbl_803DD12C[0x24e] = 1;
+                if (((SkyState *)lbl_803DD12C)->unk24E == 0) {
+                    ((SkyState *)lbl_803DD12C)->unk24E = 1;
                 }
             } else {
-                if (lbl_803DD12C[0x24e] != 0) {
-                    timer = *(int *)(lbl_803DD12C + 0x218) + 1;
-                    *(int *)(lbl_803DD12C + 0x218) = timer;
+                if (((SkyState *)lbl_803DD12C)->unk24E != 0) {
+                    timer = ((SkyState *)lbl_803DD12C)->unk218 + 1;
+                    ((SkyState *)lbl_803DD12C)->unk218 = timer;
                     if (timer > 0x1e) {
-                        *(int *)(lbl_803DD12C + 0x218) = 0;
+                        ((SkyState *)lbl_803DD12C)->unk218 = 0;
                     }
-                    lbl_803DD12C[0x24e] = 0;
+                    ((SkyState *)lbl_803DD12C)->unk24E = 0;
                 }
             }
             if (Obj_GetPlayerObject() != NULL) {
-                *(f32 *)env = *(f32 *)(lbl_803DD12C + 0x20c);
+                *(f32 *)env = ((SkyState *)lbl_803DD12C)->timeOfDay;
             }
             i = 0;
             for (count = 2; count != 0; count--) {
@@ -1707,13 +1708,13 @@ void timeOfDayFn_8008b964(void)
                     (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
                 i += 0xa4;
             }
-            *(f32 *)(lbl_803DD12C + 0x23c) -= *(f32 *)(lbl_803DD12C + 0x240) * timeDelta;
-            val = *(f32 *)(lbl_803DD12C + 0x23c);
-            *(f32 *)(lbl_803DD12C + 0x23c) =
+            ((SkyState *)lbl_803DD12C)->unk23C -= ((SkyState *)lbl_803DD12C)->unk240 * timeDelta;
+            val = ((SkyState *)lbl_803DD12C)->unk23C;
+            ((SkyState *)lbl_803DD12C)->unk23C =
                 (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
-            *(f32 *)(lbl_803DD12C + 0x244) += *(f32 *)(lbl_803DD12C + 0x248) * timeDelta;
-            val = *(f32 *)(lbl_803DD12C + 0x244);
-            *(f32 *)(lbl_803DD12C + 0x244) =
+            ((SkyState *)lbl_803DD12C)->unk244 += ((SkyState *)lbl_803DD12C)->unk248 * timeDelta;
+            val = ((SkyState *)lbl_803DD12C)->unk244;
+            ((SkyState *)lbl_803DD12C)->unk244 =
                 (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
         }
     }
@@ -1848,7 +1849,7 @@ void skyFn_8008a500(void)
         *lbl_8030F2D4 = *lbl_8030F2D4 / len;
         lbl_8030F2D4[1] = lbl_8030F2D4[1] / len;
         lbl_8030F2D4[2] = lbl_8030F2D4[2] / len;
-        time = *(f32 *)(lbl_803DD12C + 0x20c);
+        time = ((SkyState *)lbl_803DD12C)->timeOfDay;
         if (time >= lbl_803DF084 && time <= lbl_803DF088) {
             if (gSkyOverrideLightDirectionEnabled != 0) {
                 skyFn_80062a54(gSkyOverrideLightDirection[0], gSkyOverrideLightDirection[1],
@@ -1889,19 +1890,19 @@ void sky2_update(int a, int b, u8 *cfg)
     flags = 0;
     env = saveGameGetEnvState();
     if (cfg != NULL) {
-        (&lbl_803DB610)[1] = lbl_803DB610 = (s16)*(u16 *)(cfg + 0x24) - 1;
-        *(s16 *)(env + 0xc) = (s16)*(u16 *)(cfg + 0x24) - 1;
-        flags58 = cfg[0x58];
+        (&lbl_803DB610)[1] = lbl_803DB610 = (s16)((Sky2Config *)cfg)->unk24 - 1;
+        *(s16 *)(env + 0xc) = (s16)((Sky2Config *)cfg)->unk24 - 1;
+        flags58 = ((Sky2Config *)cfg)->unk58;
         b1 = (flags58 & 0x80) ? 1 : 0;
         if (*(s8 *)((&lbl_803DD184)[b1] + 0x317) == 0) {
             if ((flags58 & 0x40) != 0) {
                 flags |= 0x40;
             }
             fn_8008C9F4(cfg, flags);
-            if ((cfg[0x58] & 0x40) != 0) {
+            if ((((Sky2Config *)cfg)->unk58 & 0x40) != 0) {
                 (&lbl_803DD184)[b1][0x316] = 1;
             }
-            *(u16 *)((&lbl_803DD184)[b1] + 4) = cfg[0x58] | 0x100;
+            *(u16 *)((&lbl_803DD184)[b1] + 4) = ((Sky2Config *)cfg)->unk58 | 0x100;
             (&lbl_803DD184)[b1][0x315] = 1;
             *(f32 *)((&lbl_803DD184)[b1] + 0x304) = lbl_803DF108;
         } else if ((flags58 & 0x20) != 0) {
@@ -1922,24 +1923,24 @@ void sky2_update(int a, int b, u8 *cfg)
                 *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x280) =
                     (f32)(u32)*(u16 *)(cfg + lbl_8030F4A0[i] * 2 + 0x2e);
             }
-            *(int *)((&lbl_803DD184)[b1] + 0x3c) = *(u16 *)(cfg + 0x2a);
-            *(int *)((&lbl_803DD184)[b1] + 0x40) = *(u16 *)(cfg + 0x2c);
+            *(int *)((&lbl_803DD184)[b1] + 0x3c) = ((Sky2Config *)cfg)->unk2A;
+            *(int *)((&lbl_803DD184)[b1] + 0x40) = ((Sky2Config *)cfg)->unk2C;
             *(s8 *)((&lbl_803DD184)[b1] + 0x314) = -1;
-            if ((cfg[0x59] & 0x20) != 0) {
+            if ((((Sky2Config *)cfg)->unk59 & 0x20) != 0) {
                 st = (&lbl_803DD184)[b1];
                 bits = *(u16 *)(st + 6);
                 if ((bits & 0x20) == 0) {
                     *(u16 *)(st + 6) = bits | 0x20;
                 }
             }
-            if ((cfg[0x59] & 0x20) == 0) {
+            if ((((Sky2Config *)cfg)->unk59 & 0x20) == 0) {
                 st = (&lbl_803DD184)[b1];
                 bits = *(u16 *)(st + 6);
                 if ((bits & 0x20) != 0) {
                     *(u16 *)(st + 6) = bits ^ 0x20;
                 }
             }
-            if ((cfg[0x58] & 0x40) != 0) {
+            if ((((Sky2Config *)cfg)->unk58 & 0x40) != 0) {
                 *(u16 *)((&lbl_803DD184)[b1] + 6) |= 0x40;
                 (&lbl_803DD184)[b1][0x316] = 1;
             } else {
@@ -1949,7 +1950,7 @@ void sky2_update(int a, int b, u8 *cfg)
                     *(u16 *)(st + 6) = bits ^ 0x40;
                 }
             }
-            m40 = cfg[0x59] & 0x40;
+            m40 = ((Sky2Config *)cfg)->unk59 & 0x40;
             if (m40 != 0) {
                 st = (&lbl_803DD184)[b1];
                 bits = *(u16 *)(st + 6);
@@ -1979,7 +1980,7 @@ void fn_8008C9F4(u8 *cfg, u8 flags)
     int i;
     u8 *p2;
 
-    b1 = (cfg[0x58] & 0x80) ? 1 : 0;
+    b1 = (((Sky2Config *)cfg)->unk58 & 0x80) ? 1 : 0;
     *(int *)((&lbl_803DD184)[b1]) = 0;
     (&lbl_803DD184)[b1][0x317] = 1;
     for (i = 0; i < 0x21; i++) {
@@ -2004,33 +2005,33 @@ void fn_8008C9F4(u8 *cfg, u8 flags)
         *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x280) = (f32)(u32)*(u16 *)(cfg + *p2 * 2 + 0x2e);
         p2++;
     }
-    *(u16 *)((&lbl_803DD184)[b1] + 4) = cfg[0x58];
-    *(u16 *)((&lbl_803DD184)[b1] + 6) = cfg[0x59];
+    *(u16 *)((&lbl_803DD184)[b1] + 4) = ((Sky2Config *)cfg)->unk58;
+    *(u16 *)((&lbl_803DD184)[b1] + 6) = ((Sky2Config *)cfg)->unk59;
     *(f32 *)((&lbl_803DD184)[b1] + 0x64) = lbl_803DF108;
     *(f32 *)((&lbl_803DD184)[b1] + 0x68) = lbl_803DF108;
     *(s8 *)((&lbl_803DD184)[b1] + 0x314) = -1;
     *(f32 *)((&lbl_803DD184)[b1] + 0x6c) = lbl_803DF108;
-    if (*(u16 *)(cfg + 0x2a) == 0) {
-        *(u16 *)(cfg + 0x2a) = 1;
+    if (((Sky2Config *)cfg)->unk2A == 0) {
+        ((Sky2Config *)cfg)->unk2A = 1;
     }
-    if (*(u16 *)(cfg + 0x2a) != 0) {
-        *(int *)((&lbl_803DD184)[b1] + 0x3c) = *(u16 *)(cfg + 0x2a);
+    if (((Sky2Config *)cfg)->unk2A != 0) {
+        *(int *)((&lbl_803DD184)[b1] + 0x3c) = ((Sky2Config *)cfg)->unk2A;
         *(int *)((&lbl_803DD184)[b1] + 0x48) = 1;
-        *(int *)((&lbl_803DD184)[b1] + 8) = *(u16 *)(cfg + 0x2e);
-        *(f32 *)((&lbl_803DD184)[b1] + 0x5c) = lbl_803DF114 / (f32)(u32)*(u16 *)(cfg + 0x2a);
+        *(int *)((&lbl_803DD184)[b1] + 8) = ((Sky2Config *)cfg)->unk2E;
+        *(f32 *)((&lbl_803DD184)[b1] + 0x5c) = lbl_803DF114 / (f32)(u32)((Sky2Config *)cfg)->unk2A;
     } else {
         *(int *)((&lbl_803DD184)[b1] + 0x3c) = 0;
         *(f32 *)((&lbl_803DD184)[b1] + 0x5c) = lbl_803DF114;
     }
-    if (*(u16 *)(cfg + 0x2c) == 0) {
-        *(u16 *)(cfg + 0x2c) = 1;
+    if (((Sky2Config *)cfg)->unk2C == 0) {
+        ((Sky2Config *)cfg)->unk2C = 1;
     }
-    if (*(u16 *)(cfg + 0x2c) != 0) {
-        *(int *)((&lbl_803DD184)[b1] + 0x40) = *(u16 *)(cfg + 0x2c);
+    if (((Sky2Config *)cfg)->unk2C != 0) {
+        *(int *)((&lbl_803DD184)[b1] + 0x40) = ((Sky2Config *)cfg)->unk2C;
         *(f32 *)((&lbl_803DD184)[b1] + 0x58) =
-            lbl_803DF118 / (lbl_803DF11C * ((f32)(u32)*(u16 *)(cfg + 0x2c) / lbl_803DF120));
+            lbl_803DF118 / (lbl_803DF11C * ((f32)(u32)((Sky2Config *)cfg)->unk2C / lbl_803DF120));
         *(int *)((&lbl_803DD184)[b1] + 0xc) = 0x5dc;
-        *(f32 *)((&lbl_803DD184)[b1] + 0x60) = lbl_803DF114 / (f32)(u32)*(u16 *)(cfg + 0x2c);
+        *(f32 *)((&lbl_803DD184)[b1] + 0x60) = lbl_803DF114 / (f32)(u32)((Sky2Config *)cfg)->unk2C;
     } else {
         *(int *)((&lbl_803DD184)[b1] + 0x40) = 0;
         *(f32 *)((&lbl_803DD184)[b1] + 0x60) = lbl_803DF114;
@@ -2149,40 +2150,40 @@ void fn_8008BDA8(void)
             if (*(u8 **)lbl_803DD12C != NULL) {
                 textureFree(*(u8 **)lbl_803DD12C);
             }
-            if (*(u8 **)(lbl_803DD12C + 4) != NULL) {
-                textureFree(*(u8 **)(lbl_803DD12C + 4));
+            if (((SkyState *)lbl_803DD12C)->unk04 != NULL) {
+                textureFree(((SkyState *)lbl_803DD12C)->unk04);
             }
-            mm_free(*(u8 **)(lbl_803DD12C + 8));
-            mm_free(*(u8 **)(lbl_803DD12C + 0x10));
+            mm_free(((SkyState *)lbl_803DD12C)->unk08);
+            mm_free(((SkyState *)lbl_803DD12C)->unk10);
             mm_free(lbl_803DD12C);
         }
         lbl_803DD12C = NULL;
     }
     lbl_803DD12C = mmAlloc(600, 0x17, 0);
     memset(lbl_803DD12C, 0, 600);
-    *(s8 *)(lbl_803DD12C + 0x250) = -1;
-    *(int *)(lbl_803DD12C + 0x218) = randomGetRange(0, 0x1c);
-    lbl_803DD12C[0x252] = 0xc;
-    lbl_803DD12C[0x253] = 0;
-    *(f32 *)(lbl_803DD12C + 0x20c) = lbl_803DF0F4;
-    *(int *)(lbl_803DD12C + 0x210) = 0xb4;
-    *(f32 *)(lbl_803DD12C + 0x1c) = lbl_803DF0F8;
-    *(f32 *)(lbl_803DD12C + 0x214) = (f32)*(int *)(lbl_803DD12C + 0x210) / lbl_803DF060;
-    *(int *)(lbl_803DD12C + 0x21c) = 0xc38;
-    *(int *)(lbl_803DD12C + 0x220) = 0xc38;
-    *(int *)(lbl_803DD12C + 0x224) = 0xc38;
-    *(int *)(lbl_803DD12C + 0x228) = 0xc38;
-    *(int *)(lbl_803DD12C + 0x22c) = 0xc38;
-    *(int *)(lbl_803DD12C + 0x230) = 0xc38;
-    *(int *)(lbl_803DD12C + 0x234) = 0xc38;
-    *(int *)(lbl_803DD12C + 0x238) = 0xc38;
-    *(u8 **)lbl_803DD12C = textureLoadAsset(*(int *)(lbl_803DD12C + 0x21c));
-    *(u8 **)(lbl_803DD12C + 4) = textureLoadAsset(*(int *)(lbl_803DD12C + 0x220));
-    *(int *)(lbl_803DD12C + 0x14) = 0xc38;
-    *(int *)(lbl_803DD12C + 0x18) = 0xc38;
+    ((SkyState *)lbl_803DD12C)->unk250 = -1;
+    ((SkyState *)lbl_803DD12C)->unk218 = randomGetRange(0, 0x1c);
+    ((SkyState *)lbl_803DD12C)->unk252 = 0xc;
+    ((SkyState *)lbl_803DD12C)->unk253 = 0;
+    ((SkyState *)lbl_803DD12C)->timeOfDay = lbl_803DF0F4;
+    ((SkyState *)lbl_803DD12C)->clockTime = 0xb4;
+    ((SkyState *)lbl_803DD12C)->unk1C = lbl_803DF0F8;
+    ((SkyState *)lbl_803DD12C)->unk214 = (f32)((SkyState *)lbl_803DD12C)->clockTime / lbl_803DF060;
+    ((SkyState *)lbl_803DD12C)->unk21C = 0xc38;
+    ((SkyState *)lbl_803DD12C)->unk220 = 0xc38;
+    ((SkyState *)lbl_803DD12C)->unk224 = 0xc38;
+    ((SkyState *)lbl_803DD12C)->unk228 = 0xc38;
+    ((SkyState *)lbl_803DD12C)->unk22C = 0xc38;
+    ((SkyState *)lbl_803DD12C)->unk230 = 0xc38;
+    ((SkyState *)lbl_803DD12C)->unk234 = 0xc38;
+    ((SkyState *)lbl_803DD12C)->unk238 = 0xc38;
+    *(u8 **)lbl_803DD12C = textureLoadAsset(((SkyState *)lbl_803DD12C)->unk21C);
+    ((SkyState *)lbl_803DD12C)->unk04 = textureLoadAsset(((SkyState *)lbl_803DD12C)->unk220);
+    ((SkyState *)lbl_803DD12C)->unk14 = 0xc38;
+    ((SkyState *)lbl_803DD12C)->unk18 = 0xc38;
     tex0 = *(u8 **)lbl_803DD12C;
-    *(u8 **)(lbl_803DD12C + 8) = textureAlloc(*(u16 *)(tex0 + 0xa), *(u16 *)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
-    *(u8 **)(lbl_803DD12C + 0x10) = textureAlloc(*(u16 *)(tex0 + 0xa), *(u16 *)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
+    ((SkyState *)lbl_803DD12C)->unk08 = textureAlloc(*(u16 *)(tex0 + 0xa), *(u16 *)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
+    ((SkyState *)lbl_803DD12C)->unk10 = textureAlloc(*(u16 *)(tex0 + 0xa), *(u16 *)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
     iofs = 0;
     i = 0;
     do {
@@ -2274,7 +2275,7 @@ void skyFn_8008a04c(void)
             fn_80089A60(t2, vec[0], vec[1], vec[2], 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
         }
     } else {
-        t = *(f32 *)(lbl_803DD12C + 0x20c) / lbl_803DF078;
+        t = ((SkyState *)lbl_803DD12C)->timeOfDay / lbl_803DF078;
         tc = (t < pEXIInputFlag) ? pEXIInputFlag : ((t > EXIInputFlag) ? EXIInputFlag : t);
         if (tc <= lbl_803DF07C) {
             frac = tc / lbl_803DF07C;
@@ -2344,7 +2345,7 @@ void skyFn_8008a04c(void)
                 color[1] = (u8)green;
                 color[2] = (u8)blue;
             }
-            time2 = *(f32 *)(lbl_803DD12C + 0x20c);
+            time2 = ((SkyState *)lbl_803DD12C)->timeOfDay;
             if (time2 >= dayStart && time2 <= lbl_803DF088) {
                 fn_80089A60(i, vec[0], vec[1], vec[2], red, green, blue, cB, cC, cA);
             } else {
@@ -2385,15 +2386,15 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
     dir[1] = -y;
     dir[2] = -z;
     if (slot == 2) {
-        prev = lbl_803DD12C + lbl_803DD12C[0x24d] * 0xa4 + 0x20;
-        cur2 = lbl_803DD12C + lbl_803DD12C[0x24c] * 0xa4 + 0x20;
-        dir[0] = *(f32 *)(prev + 0x70) + *(f32 *)(lbl_803DD12C + 0x244) *
+        prev = lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24D * 0xa4 + 0x20;
+        cur2 = lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24C * 0xa4 + 0x20;
+        dir[0] = *(f32 *)(prev + 0x70) + ((SkyState *)lbl_803DD12C)->unk244 *
                                              (*(f32 *)(cur2 + 0x70) - *(f32 *)(prev + 0x70));
-        dir[1] = *(f32 *)(prev + 0x74) + *(f32 *)(lbl_803DD12C + 0x244) *
+        dir[1] = *(f32 *)(prev + 0x74) + ((SkyState *)lbl_803DD12C)->unk244 *
                                              (*(f32 *)(cur2 + 0x74) - *(f32 *)(prev + 0x74));
-        dir[2] = *(f32 *)(prev + 0x78) + *(f32 *)(lbl_803DD12C + 0x244) *
+        dir[2] = *(f32 *)(prev + 0x78) + ((SkyState *)lbl_803DD12C)->unk244 *
                                              (*(f32 *)(cur2 + 0x78) - *(f32 *)(prev + 0x78));
-        bl = *(f32 *)(lbl_803DD12C + 0x244);
+        bl = ((SkyState *)lbl_803DD12C)->unk244;
         pb = prev[0x58];
         cb = cur2[0x58];
         r = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
@@ -2524,7 +2525,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         far = Camera_GetFarPlane();
         Camera_SetFarPlane(lbl_803DF098, 0);
         Camera_RebuildProjectionMatrix();
-        sunT = (*(f32 *)(lbl_803DD12C + 0x20c) - lbl_803DF084) / lbl_803DF09C;
+        sunT = (((SkyState *)lbl_803DD12C)->timeOfDay - lbl_803DF084) / lbl_803DF09C;
         if (sunT < pEXIInputFlag) {
             sunT = pEXIInputFlag;
         } else if (sunT > EXIInputFlag) {
@@ -2548,7 +2549,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             }
         }
         sunT *= lbl_803DF0AC;
-        riseT = (*(f32 *)(lbl_803DD12C + 0x20c) - lbl_803DF084) / lbl_803DF0B0;
+        riseT = (((SkyState *)lbl_803DD12C)->timeOfDay - lbl_803DF084) / lbl_803DF0B0;
         if (riseT < pEXIInputFlag) {
             riseT = pEXIInputFlag;
         } else if (riseT > EXIInputFlag) {
@@ -2558,7 +2559,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         vec[0] = lbl_803DF0B8 * sunDir.x;
         vec[1] = lbl_803DF0B8 * sunDir.y;
         vec[2] = lbl_803DF0B8 * sunDir.z;
-        yaw = *(f32 *)(lbl_803DD12C + 0x1c);
+        yaw = ((SkyState *)lbl_803DD12C)->unk1C;
         q1.rx = (u16)(int)sunT;
         vecRotateZXY(&q1, vec);
         q1.w = EXIInputFlag;
@@ -2577,7 +2578,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         *(s16 *)(gSkySunObject + 2) = cam[1];
         *(s16 *)(gSkySunObject + 4) = 0;
         gSkySunObject[0x37] = (u8)lbl_803DD128;
-        time2 = *(f32 *)(lbl_803DD12C + 0x20c);
+        time2 = ((SkyState *)lbl_803DD12C)->timeOfDay;
         if (time2 >= lbl_803DF088) {
             moonT = time2 - lbl_803DF088;
         } else {
@@ -2842,8 +2843,8 @@ void Sky_func03(int a, int b, u8 *cfg)
     int tmp;
 
     envp = (s16 *)saveGameGetEnvState();
-    if (cfg != NULL && (cfg[0x58] & 2) != 0) {
-        switch (*(u16 *)(cfg + 0x54)) {
+    if (cfg != NULL && (((Sky2Config *)cfg)->unk58 & 2) != 0) {
+        switch (((Sky2Config *)cfg)->unk54) {
         case 0:
         default:
             mask = 0xf;
@@ -2870,34 +2871,34 @@ void Sky_func03(int a, int b, u8 *cfg)
         iofs = 0;
         for (i = 0; i < 2; i++) {
             if ((mask & (1 << i)) != 0) {
-                envp[2] = (s16)*(u16 *)(cfg + 0x24) - 1;
-                *(f32 *)(lbl_803DD12C + iofs + 0x20) = (f32)(u32)cfg[0xc];
-                *(f32 *)(lbl_803DD12C + iofs + 0x24) = (f32)(u32)cfg[0xc];
-                *(f32 *)(lbl_803DD12C + iofs + 0x28) = (f32)(u32)cfg[0xd];
-                *(f32 *)(lbl_803DD12C + iofs + 0x2c) = (f32)(u32)cfg[0xe];
-                *(f32 *)(lbl_803DD12C + iofs + 0x30) = (f32)(u32)cfg[0xf];
-                *(f32 *)(lbl_803DD12C + iofs + 0x34) = (f32)(u32)cfg[0xc];
-                *(f32 *)(lbl_803DD12C + iofs + 0x38) = (f32)(u32)cfg[0xc];
-                *(f32 *)(lbl_803DD12C + iofs + 0x3c) = (f32)(u32)cfg[0x14];
-                *(f32 *)(lbl_803DD12C + iofs + 0x40) = (f32)(u32)cfg[0x14];
-                *(f32 *)(lbl_803DD12C + iofs + 0x44) = (f32)(u32)cfg[0x15];
-                *(f32 *)(lbl_803DD12C + iofs + 0x48) = (f32)(u32)cfg[0x16];
-                *(f32 *)(lbl_803DD12C + iofs + 0x4c) = (f32)(u32)cfg[0x17];
-                *(f32 *)(lbl_803DD12C + iofs + 0x50) = (f32)(u32)cfg[0x14];
-                *(f32 *)(lbl_803DD12C + iofs + 0x54) = (f32)(u32)cfg[0x14];
-                *(f32 *)(lbl_803DD12C + iofs + 0x58) = (f32)(u32)cfg[0x1c];
-                *(f32 *)(lbl_803DD12C + iofs + 0x5c) = (f32)(u32)cfg[0x1c];
-                *(f32 *)(lbl_803DD12C + iofs + 0x60) = (f32)(u32)cfg[0x1d];
-                *(f32 *)(lbl_803DD12C + iofs + 0x64) = (f32)(u32)cfg[0x1e];
-                *(f32 *)(lbl_803DD12C + iofs + 0x68) = (f32)(u32)cfg[0x1f];
-                *(f32 *)(lbl_803DD12C + iofs + 0x6c) = (f32)(u32)cfg[0x1c];
-                *(f32 *)(lbl_803DD12C + iofs + 0x70) = (f32)(u32)cfg[0x1c];
+                envp[2] = (s16)((Sky2Config *)cfg)->unk24 - 1;
+                *(f32 *)(lbl_803DD12C + iofs + 0x20) = (f32)(u32)((Sky2Config *)cfg)->unk0C;
+                *(f32 *)(lbl_803DD12C + iofs + 0x24) = (f32)(u32)((Sky2Config *)cfg)->unk0C;
+                *(f32 *)(lbl_803DD12C + iofs + 0x28) = (f32)(u32)((Sky2Config *)cfg)->unk0D;
+                *(f32 *)(lbl_803DD12C + iofs + 0x2c) = (f32)(u32)((Sky2Config *)cfg)->unk0E;
+                *(f32 *)(lbl_803DD12C + iofs + 0x30) = (f32)(u32)((Sky2Config *)cfg)->unk0F;
+                *(f32 *)(lbl_803DD12C + iofs + 0x34) = (f32)(u32)((Sky2Config *)cfg)->unk0C;
+                *(f32 *)(lbl_803DD12C + iofs + 0x38) = (f32)(u32)((Sky2Config *)cfg)->unk0C;
+                *(f32 *)(lbl_803DD12C + iofs + 0x3c) = (f32)(u32)((Sky2Config *)cfg)->unk14;
+                *(f32 *)(lbl_803DD12C + iofs + 0x40) = (f32)(u32)((Sky2Config *)cfg)->unk14;
+                *(f32 *)(lbl_803DD12C + iofs + 0x44) = (f32)(u32)((Sky2Config *)cfg)->unk15;
+                *(f32 *)(lbl_803DD12C + iofs + 0x48) = (f32)(u32)((Sky2Config *)cfg)->unk16;
+                *(f32 *)(lbl_803DD12C + iofs + 0x4c) = (f32)(u32)((Sky2Config *)cfg)->unk17;
+                *(f32 *)(lbl_803DD12C + iofs + 0x50) = (f32)(u32)((Sky2Config *)cfg)->unk14;
+                *(f32 *)(lbl_803DD12C + iofs + 0x54) = (f32)(u32)((Sky2Config *)cfg)->unk14;
+                *(f32 *)(lbl_803DD12C + iofs + 0x58) = (f32)(u32)((Sky2Config *)cfg)->unk1C;
+                *(f32 *)(lbl_803DD12C + iofs + 0x5c) = (f32)(u32)((Sky2Config *)cfg)->unk1C;
+                *(f32 *)(lbl_803DD12C + iofs + 0x60) = (f32)(u32)((Sky2Config *)cfg)->unk1D;
+                *(f32 *)(lbl_803DD12C + iofs + 0x64) = (f32)(u32)((Sky2Config *)cfg)->unk1E;
+                *(f32 *)(lbl_803DD12C + iofs + 0x68) = (f32)(u32)((Sky2Config *)cfg)->unk1F;
+                *(f32 *)(lbl_803DD12C + iofs + 0x6c) = (f32)(u32)((Sky2Config *)cfg)->unk1C;
+                *(f32 *)(lbl_803DD12C + iofs + 0x70) = (f32)(u32)((Sky2Config *)cfg)->unk1C;
                 *(f32 *)(lbl_803DD12C + iofs + 0xb8) = EXIInputFlag;
-                if (*(u16 *)(cfg + 0x2a) == 0) {
+                if (((Sky2Config *)cfg)->unk2A == 0) {
                     *(f32 *)(lbl_803DD12C + iofs + 0xb4) = EXIInputFlag;
                 } else {
                     *(f32 *)(lbl_803DD12C + iofs + 0xb4) =
-                        EXIInputFlag / (lbl_803DF104 * (f32)(u32)*(u16 *)(cfg + 0x2a));
+                        EXIInputFlag / (lbl_803DF104 * (f32)(u32)((Sky2Config *)cfg)->unk2A);
                 }
                 p4 = lbl_803DD12C + iofs;
                 if (lbl_803DD12C == NULL) {
@@ -2909,20 +2910,20 @@ void Sky_func03(int a, int b, u8 *cfg)
                     p4[0x75] = lbl_803DD12C[iofs + 0x79];
                     p4[0x76] = lbl_803DD12C[iofs + 0x7a];
                 }
-                if (cfg[0x5d] == 0) {
+                if (((Sky2Config *)cfg)->unk5D == 0) {
                     ((SkyBlendStateFlags *)(lbl_803DD12C + iofs + 0xc1))->cloud = 0;
                 } else {
                     ((SkyBlendStateFlags *)(lbl_803DD12C + iofs + 0xc1))->cloud =
-                        (cfg[0x5d] & 1) + 1;
+                        (((Sky2Config *)cfg)->unk5D & 1) + 1;
                 }
             }
             envp++;
             iofs += 0xa4;
         }
-        if (cfg[0x5d] != 0) {
-            skyFn_80088c94(mask, cfg[0x5d] > 2);
+        if (((Sky2Config *)cfg)->unk5D != 0) {
+            skyFn_80088c94(mask, ((Sky2Config *)cfg)->unk5D > 2);
         }
-        vis = *(u16 *)(cfg + 0x56);
+        vis = ((Sky2Config *)cfg)->unk56;
         if ((mask & 1) != 0) {
             ((SkyBlendStateFlags *)(lbl_803DD12C + 0xc1))->bit20 = vis;
         }
@@ -2930,41 +2931,41 @@ void Sky_func03(int a, int b, u8 *cfg)
             ((SkyBlendStateFlags *)(lbl_803DD12C + 0x165))->bit20 = vis;
         }
         ((SkyBlendStateFlags *)(lbl_803DD12C + 0x209))->bit20 =
-            ((SkyBlendStateFlags *)(lbl_803DD12C + lbl_803DD12C[0x24c] * 0xa4 + 0xc1))->bit20;
-        if ((cfg[0x58] & 1) == 0) {
-            *(int *)(lbl_803DD12C + 0x21c) = *(u16 *)(cfg + 0x2e) + 0xc38;
-            *(int *)(lbl_803DD12C + 0x220) = *(u16 *)(cfg + 0x30) + 0xc38;
-            *(int *)(lbl_803DD12C + 0x224) = *(u16 *)(cfg + 0x32) + 0xc38;
-            *(int *)(lbl_803DD12C + 0x228) = *(u16 *)(cfg + 0x34) + 0xc38;
-            *(int *)(lbl_803DD12C + 0x22c) = *(u16 *)(cfg + 0x3e) + 0xc38;
-            *(int *)(lbl_803DD12C + 0x230) = *(u16 *)(cfg + 0x40) + 0xc38;
-            *(int *)(lbl_803DD12C + 0x234) = *(u16 *)(cfg + 0x42) + 0xc38;
-            *(int *)(lbl_803DD12C + 0x238) = *(u16 *)(cfg + 0x44) + 0xc38;
-            tmp = *(int *)(lbl_803DD12C + 0x10);
-            *(int *)(lbl_803DD12C + 0x10) =
-                *(int *)(lbl_803DD12C + lbl_803DD12C[0x251] * 4 + 8);
-            *(int *)(lbl_803DD12C + lbl_803DD12C[0x251] * 4 + 8) = tmp;
-            *(s8 *)(lbl_803DD12C + 0x250) = -1;
-            if (*(s8 *)(lbl_803DD12C + 0x255) < 0) {
-                *(f32 *)(lbl_803DD12C + 0x23c) = EXIInputFlag;
-                if (*(u16 *)(cfg + 0x2a) == 0) {
-                    *(f32 *)(lbl_803DD12C + 0x240) = EXIInputFlag;
+            ((SkyBlendStateFlags *)(lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24C * 0xa4 + 0xc1))->bit20;
+        if ((((Sky2Config *)cfg)->unk58 & 1) == 0) {
+            ((SkyState *)lbl_803DD12C)->unk21C = ((Sky2Config *)cfg)->unk2E + 0xc38;
+            ((SkyState *)lbl_803DD12C)->unk220 = ((Sky2Config *)cfg)->unk30 + 0xc38;
+            ((SkyState *)lbl_803DD12C)->unk224 = ((Sky2Config *)cfg)->unk32 + 0xc38;
+            ((SkyState *)lbl_803DD12C)->unk228 = ((Sky2Config *)cfg)->unk34 + 0xc38;
+            ((SkyState *)lbl_803DD12C)->unk22C = ((Sky2Config *)cfg)->unk3E + 0xc38;
+            ((SkyState *)lbl_803DD12C)->unk230 = ((Sky2Config *)cfg)->unk40 + 0xc38;
+            ((SkyState *)lbl_803DD12C)->unk234 = ((Sky2Config *)cfg)->unk42 + 0xc38;
+            ((SkyState *)lbl_803DD12C)->unk238 = ((Sky2Config *)cfg)->unk44 + 0xc38;
+            tmp = *(int *)&((SkyState *)lbl_803DD12C)->unk10;
+            *(int *)&((SkyState *)lbl_803DD12C)->unk10 =
+                *(int *)(lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk251 * 4 + 8);
+            *(int *)(lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk251 * 4 + 8) = tmp;
+            ((SkyState *)lbl_803DD12C)->unk250 = -1;
+            if (((SkyState *)lbl_803DD12C)->unk255 < 0) {
+                ((SkyState *)lbl_803DD12C)->unk23C = EXIInputFlag;
+                if (((Sky2Config *)cfg)->unk2A == 0) {
+                    ((SkyState *)lbl_803DD12C)->unk240 = EXIInputFlag;
                 } else {
-                    *(f32 *)(lbl_803DD12C + 0x240) =
-                        EXIInputFlag / (lbl_803DF104 * (f32)(u32)*(u16 *)(cfg + 0x2a));
+                    ((SkyState *)lbl_803DD12C)->unk240 =
+                        EXIInputFlag / (lbl_803DF104 * (f32)(u32)((Sky2Config *)cfg)->unk2A);
                 }
             } else {
-                *(f32 *)(lbl_803DD12C + 0x23c) = pEXIInputFlag;
+                ((SkyState *)lbl_803DD12C)->unk23C = pEXIInputFlag;
             }
         }
-        cloudMode = ((SkyBlendStateFlags *)(lbl_803DD12C + lbl_803DD12C[0x24c] * 0xa4 + 0xc1))->cloud;
+        cloudMode = ((SkyBlendStateFlags *)(lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24C * 0xa4 + 0xc1))->cloud;
         if (cloudMode != 0) {
             setDrawCloudsAndLights(cloudMode - 1);
         }
         ((SkyBlendStateFlags *)(lbl_803DD12C + 0x209))->unused80 =
-            ((SkyBlendStateFlags *)(lbl_803DD12C + lbl_803DD12C[0x24c] * 0xa4 + 0xc1))->unused80;
+            ((SkyBlendStateFlags *)(lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24C * 0xa4 + 0xc1))->unused80;
         ((SkyBlendStateFlags *)(lbl_803DD12C + 0x209))->bit20 =
-            ((SkyBlendStateFlags *)(lbl_803DD12C + lbl_803DD12C[0x24c] * 0xa4 + 0xc1))->bit20;
+            ((SkyBlendStateFlags *)(lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24C * 0xa4 + 0xc1))->bit20;
         env2 = saveGameGetEnvState();
         if (getSaveGameLoadStatus() == 0) {
             if (((SkyBlendStateFlags *)(lbl_803DD12C + 0xc1))->unused80 != 0) {
