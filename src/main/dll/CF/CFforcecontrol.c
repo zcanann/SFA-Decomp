@@ -839,7 +839,7 @@ void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void setScreenTransitionPause(int v);
 extern void setPendingMapLoad(int v);
-extern void deathRenderFn_8001fd98(int* obj);
+extern void removeButtonObject(int* obj);
 extern void* Obj_GetActiveModel(int* obj);
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern f32 lbl_803E3CC0;
@@ -887,7 +887,7 @@ void deathseq_free(int* obj)
 {
     setScreenTransitionPause(0);
     setPendingMapLoad(0);
-    deathRenderFn_8001fd98(obj);
+    removeButtonObject(obj);
 }
 
 #pragma scheduling off
