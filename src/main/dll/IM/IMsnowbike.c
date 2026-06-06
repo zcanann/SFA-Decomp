@@ -325,7 +325,7 @@ extern s16 lbl_80327618_ids[];
 #pragma scheduling off
 #pragma peephole off
 void sh_levelcontrol_init(int obj) {
-    int *state = *(int **)((char *)obj + 0xB8);
+    int *state = ((GameObject *)obj)->extra;
     int i;
     s16 *bitIds;
     u32 v;
@@ -374,7 +374,7 @@ void sh_levelcontrol_init(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void warpstonelift_init(int obj, s8 *def) {
-    int *state = *(int **)((char *)obj + 0xB8);
+    int *state = ((GameObject *)obj)->extra;
     int i;
     *(s16 *)obj = (s16)((s32)def[0x18] << 8);
     ((GameObject *)obj)->unkF4 = 0;
@@ -404,7 +404,7 @@ extern int ObjTrigger_IsSet(int obj);
 #pragma scheduling off
 #pragma peephole off
 void warpstonelift_update(u8 *obj) {
-    u8 *state = *(u8 **)(obj + 0xB8);
+    u8 *state = ((GameObject *)obj)->extra;
     int off;
     char *p;
     int found = 0;
@@ -465,7 +465,7 @@ void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 #pragma scheduling off
 #pragma peephole off
 void sh_staff_free(int *obj, int p2) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     char *p;
     int idx;
 
