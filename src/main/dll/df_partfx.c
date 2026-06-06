@@ -2192,9 +2192,9 @@ void player_applyVelocityStep(int *p, int *ctx, f32 t) {
     int flags;
     int b;
     struct PartDesc desc;
-    f32 mtx[12];
-    f32 outX;
+    f32 mtx[16];
     f32 outY;
+    f32 outX;
     f32 outZ;
     flags = ctx[0];
     if ((flags & 0x2000000) != 0) {
@@ -2205,7 +2205,7 @@ void player_applyVelocityStep(int *p, int *ctx, f32 t) {
         *(f32 *)((char *)p + 0x28) =
             -(*(f32 *)((char *)ctx + 0x2a4) * t) + *(f32 *)((char *)p + 0x28);
     }
-    b = (s8)*(u8 *)((char *)ctx + 0x34c);
+    b = *(s8 *)((char *)ctx + 0x34c);
     if ((b & 1) == 0 || (b & 4) != 0) {
         desc.ang[0] = *(s16 *)((char *)p + 0);
         desc.ang[1] = *(s16 *)((char *)p + 2);
