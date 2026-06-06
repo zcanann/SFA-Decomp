@@ -3,44 +3,6 @@
 
 #pragma peephole on
 #pragma scheduling on
-int arwlevelcon_getExtraSize(void) { return 0x24; }
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole on
-#pragma scheduling on
-int arwlevelcon_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole on
-#pragma scheduling off
-void arwlevelcon_free(void)
-{
-    arwingHudSetVisible(2);
-    fn_80125D04();
-    setIsOvercast(1);
-}
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole on
-#pragma scheduling on
-void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
-{
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E70E0);
-}
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole on
-#pragma scheduling on
-void arwlevelcon_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole on
-#pragma scheduling on
 void arwlevelcon_commitRingChoice(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -54,72 +16,6 @@ void arwlevelcon_commitRingChoice(int obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
-
-#pragma peephole on
-#pragma scheduling on
-void arwlevelcon_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole on
-#pragma scheduling on
-void arwlevelcon_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-void arwlevelcon_init(int obj, u8 *setup)
-{
-    int state = *(int *)&((GameObject *)obj)->extra;
-
-    ((GameObject *)obj)->animEventCallback = (void *)arwlevelcon_ringEventCallback;
-    *(s16 *)(state + 0x14) = 1;
-    *(s16 *)(state + 0x16) = 0x50;
-    {
-        f32 fz = lbl_803E70EC;
-        *(f32 *)(state + 0) = fz;
-        *(f32 *)(state + 4) = fz;
-    }
-    *(f32 *)(state + 8) = lbl_803E70F0;
-    *(f32 *)(state + 0xc) = lbl_803E70F4;
-    if (*(int *)(setup + 0x14) == 0x48f7e) {
-        *(u8 *)(state + 0x1b) = 1;
-    }
-    if (*(u8 *)(state + 0x19) == 0) {
-        GameBit_Set(0x9d6, 0);
-        GameBit_Set(0x9d8, 0);
-        GameBit_Set(0x9d7, 0);
-        GameBit_Set(0xe74, 0);
-    }
-    arwingHudSetVisible(2);
-    pauseMenuCreateHeads();
-    switch (*(s8 *)(obj + 0xac)) {
-    case 0x3a:
-        *(int *)(state + 0x1c) = 0x51bc;
-        *(s16 *)(state + 0x20) = 0x6e3;
-        break;
-    case 0x3b:
-        *(int *)(state + 0x1c) = 0x51bd;
-        *(s16 *)(state + 0x20) = 0x6df;
-        break;
-    case 0x3d:
-        *(int *)(state + 0x1c) = 0x51bf;
-        *(s16 *)(state + 0x20) = 0x6e2;
-        break;
-    case 0x3c:
-        *(int *)(state + 0x1c) = 0x51be;
-        *(s16 *)(state + 0x20) = 0x6e1;
-        break;
-    case 0x3e:
-    default:
-        *(int *)(state + 0x1c) = 0x51c0;
-        *(s16 *)(state + 0x20) = 0x6e0;
-        break;
-    }
-}
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -158,6 +54,44 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma peephole on
+#pragma scheduling on
+int arwlevelcon_getExtraSize(void) { return 0x24; }
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole on
+#pragma scheduling on
+int arwlevelcon_getObjectTypeId(void) { return 0; }
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole on
+#pragma scheduling off
+void arwlevelcon_free(void)
+{
+    arwingHudSetVisible(2);
+    fn_80125D04();
+    setIsOvercast(1);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole on
+#pragma scheduling on
+void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
+{
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E70E0);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole on
+#pragma scheduling on
+void arwlevelcon_hitDetect(void) {}
+#pragma scheduling reset
+#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -217,5 +151,71 @@ void arwlevelcon_update(int obj)
         }
     }
 }
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void arwlevelcon_init(int obj, u8 *setup)
+{
+    int state = *(int *)&((GameObject *)obj)->extra;
+
+    ((GameObject *)obj)->animEventCallback = (void *)arwlevelcon_ringEventCallback;
+    *(s16 *)(state + 0x14) = 1;
+    *(s16 *)(state + 0x16) = 0x50;
+    {
+        f32 fz = lbl_803E70EC;
+        *(f32 *)(state + 0) = fz;
+        *(f32 *)(state + 4) = fz;
+    }
+    *(f32 *)(state + 8) = lbl_803E70F0;
+    *(f32 *)(state + 0xc) = lbl_803E70F4;
+    if (*(int *)(setup + 0x14) == 0x48f7e) {
+        *(u8 *)(state + 0x1b) = 1;
+    }
+    if (*(u8 *)(state + 0x19) == 0) {
+        GameBit_Set(0x9d6, 0);
+        GameBit_Set(0x9d8, 0);
+        GameBit_Set(0x9d7, 0);
+        GameBit_Set(0xe74, 0);
+    }
+    arwingHudSetVisible(2);
+    pauseMenuCreateHeads();
+    switch (*(s8 *)(obj + 0xac)) {
+    case 0x3a:
+        *(int *)(state + 0x1c) = 0x51bc;
+        *(s16 *)(state + 0x20) = 0x6e3;
+        break;
+    case 0x3b:
+        *(int *)(state + 0x1c) = 0x51bd;
+        *(s16 *)(state + 0x20) = 0x6df;
+        break;
+    case 0x3d:
+        *(int *)(state + 0x1c) = 0x51bf;
+        *(s16 *)(state + 0x20) = 0x6e2;
+        break;
+    case 0x3c:
+        *(int *)(state + 0x1c) = 0x51be;
+        *(s16 *)(state + 0x20) = 0x6e1;
+        break;
+    case 0x3e:
+    default:
+        *(int *)(state + 0x1c) = 0x51c0;
+        *(s16 *)(state + 0x20) = 0x6e0;
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole on
+#pragma scheduling on
+void arwlevelcon_release(void) {}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole on
+#pragma scheduling on
+void arwlevelcon_initialise(void) {}
 #pragma scheduling reset
 #pragma peephole reset
