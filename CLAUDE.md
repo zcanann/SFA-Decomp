@@ -1507,7 +1507,10 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
        labels (verify each case against its jump-table block, not just
        presence); (h) garbage constant placeholders (`f44 = 0xff` fills)
        and single-nibble value bugs (0x80480108 vs 0x80280108) — re-derive
-       every lis/addi constant from target bytes; (i) per-compare
+       every lis/addi constant from target bytes; the SAME nibble corruption
+       often repeats across sibling sites (one bad transcription propagated —
+       Effect4 had 5 identical 0x8028→0x8048 sites, Effect1 had 2), so when
+       you find one, grep the fn for its pattern; (i) per-compare
        randomGetRange RE-ROLLS — `if (rand()==0) … else if (rand()==1)`
        where target rolls ONCE into an int local (different RNG stream =
        behavioral bug); (j) spurious local-struct construction — import
