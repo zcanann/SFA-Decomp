@@ -1,4 +1,5 @@
 #include "main/dll/DR/DRcradle.h"
+#include "main/objhits_types.h"
 
 
 #pragma peephole off
@@ -293,8 +294,8 @@ void SnowBike_setType(int obj, int type)
             }
         }
         if (*(s16 *)(obj + 0x46) == 0x72) {
-            *(s8 *)(*(int *)(obj + 0x54) + 0x6a) = 0x14;
-            *(s8 *)(*(int *)(obj + 0x54) + 0x6b) = 0x14;
+            (*(ObjHitsPriorityState **)(obj + 0x54))->lateralResponseWeight = 0x14;
+            (*(ObjHitsPriorityState **)(obj + 0x54))->axialResponseWeight = 0x14;
         }
     }
 }

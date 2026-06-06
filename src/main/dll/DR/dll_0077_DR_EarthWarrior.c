@@ -367,11 +367,11 @@ int fn_802BDBE8(int obj, int p2, int p3)
         case 0xe:
         case 0xf:
             *(u8 *)((char *)inner + 0x9fd) |= 1;
-            *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x62) &= ~0x20;
+            (*(ObjHitsPriorityState **)((char *)obj + 0x54))->shapeFlags &= ~0x20;
             break;
         case 0x10:
             *(u8 *)((char *)inner + 0x9fd) &= ~1;
-            *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x62) |= 0x20;
+            (*(ObjHitsPriorityState **)((char *)obj + 0x54))->shapeFlags |= 0x20;
             break;
         }
     }
@@ -1030,13 +1030,13 @@ void DR_EarthWarrior_update(int obj)
     if (*(u8 *)((char *)inner + 0x14e6) == 2) {
         setAButtonIcon(0x13);
         *(u8 *)((char *)obj + 0xaf) |= 8;
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6a) = 0xf4;
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6b) = 0xf4;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->lateralResponseWeight = 0xf4;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->axialResponseWeight = 0xf4;
         fn_802BE6E8(obj, (int)timeDelta, -1);
     } else {
         f32 z;
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6a) = 0;
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6b) = 0;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->lateralResponseWeight = 0;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->axialResponseWeight = 0;
         z = lbl_803E8304;
         *(f32 *)((char *)inner + 0x294) = z;
         *(f32 *)((char *)inner + 0x284) = z;
