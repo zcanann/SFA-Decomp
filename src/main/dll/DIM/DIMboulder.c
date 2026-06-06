@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
+#include "main/objanim.h"
 #include "main/dll/DIM/DIMboulder.h"
 
 extern undefined4 getLActions();
@@ -1529,7 +1530,6 @@ void imicemountain_updateEventState(int *obj)
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
-extern void ObjAnim_SetCurrentMove(int *obj, int move, f32 blend, int flag);
 extern f32 lbl_803E4748;
 extern u8 lbl_802C2308[];
 
@@ -1581,7 +1581,7 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
         *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0x18);
         *(f32 *)((char *)extra + 0x10) = *(f32 *)((char *)extra + 0x1c);
         (*(void (**)(int *, int))(**(int **)((char *)p + 0x68) + 0x3c))(p, 2);
-        ObjAnim_SetCurrentMove(obj, 0x100, lbl_803E4748, 1);
+        ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 1);
         if (*(void **)((char *)obj + 0x64) != NULL) {
             *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x1000;
         }
@@ -1707,7 +1707,6 @@ void imicemountain_update(int *obj)
 #pragma scheduling reset
 
 extern int *ObjGroup_GetObjects(int group, int *countOut);
-extern void ObjAnim_AdvanceCurrentMove(int *obj, int flag, f32 blend, f32 frames);
 extern u8 framesThisStep;
 extern f32 lbl_803E474C;
 extern f32 lbl_803E475C;
@@ -1773,12 +1772,12 @@ void dll_16C_update(int *obj)
         f32 blend;
         f32 a, b;
         if (*(s16 *)((char *)obj + 0xa0) != 0x100) {
-            ObjAnim_SetCurrentMove(obj, 0x100, lbl_803E4748, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 0);
         }
         (*(void (**)(int *, f32 *))(**(int **)((char *)sub + 0x68) + 0x44))(sub, &blend);
         blend = lbl_803E474C;
         (*(void (**)(int *, f32 *, f32 *))(**(int **)((char *)sub + 0x68) + 0x40))(sub, &a, &b);
-        ObjAnim_AdvanceCurrentMove(obj, 0, blend, (f32)(u32)framesThisStep);
+        ObjAnim_AdvanceCurrentMove(blend, (f32)(u32)framesThisStep, (int)obj, NULL);
         if (*(void **)extra != NULL) {
             f32 t;
             int *player = (int *)Obj_GetPlayerObject();
