@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/CAM/camshipbattle5C.h"
 
 extern undefined4 FUN_80135810();

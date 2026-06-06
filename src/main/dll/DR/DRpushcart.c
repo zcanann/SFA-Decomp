@@ -1,7 +1,5 @@
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
-#include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/dll/DR/DRpushcart.h"
 

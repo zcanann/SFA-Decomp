@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/dll/DR/DRCloudball.h"
-#include "main/objanim.h"
 #include "main/objanim_internal.h"
 
 extern f32 sqrtf(f32 x);

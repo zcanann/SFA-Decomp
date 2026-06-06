@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/baddie/balloonBaddie.h"
 
 extern undefined4 FUN_80006954();

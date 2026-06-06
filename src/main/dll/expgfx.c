@@ -1,9 +1,7 @@
-#include "ghidra_import.h"
 #include "dolphin/mtx.h"
 #include "dolphin/os/OSCache.h"
 #include "main/expgfx.h"
 #include "main/expgfx_internal.h"
-#include "main/object_descriptor.h"
 
 extern undefined4 ABS();
 extern int Camera_GetViewMatrix(void);

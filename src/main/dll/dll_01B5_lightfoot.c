@@ -1,7 +1,4 @@
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
-#include "main/objanim.h"
-#include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
 
 

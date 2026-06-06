@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/tricky.h"
 
 extern undefined4 FUN_800033a8();

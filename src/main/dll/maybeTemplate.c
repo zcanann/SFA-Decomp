@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/maybeTemplate.h"
 #include "main/mapEventTypes.h"
 

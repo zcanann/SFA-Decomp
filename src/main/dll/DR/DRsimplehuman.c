@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/dll/DR/DRsimplehuman.h"
 

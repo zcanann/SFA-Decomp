@@ -1,8 +1,6 @@
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/WM/WMcrystal.h"
-#include "main/objanim_update.h"
 
 
 #pragma peephole off

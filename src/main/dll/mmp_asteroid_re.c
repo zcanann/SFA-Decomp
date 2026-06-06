@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/mmp_asteroid_re.h"
 
 extern uint GameBit_Get(int eventId);

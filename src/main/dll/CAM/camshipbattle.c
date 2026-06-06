@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/CAM/camshipbattle.h"
 
 extern u32 getButtonsJustPressed(int port);

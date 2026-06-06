@@ -26,7 +26,6 @@
  *                        buttons relative to retail.
  */
 
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/baby_snowworm.h"
 #include "main/mapEventTypes.h"

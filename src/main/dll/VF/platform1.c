@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/VF/platform1.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"

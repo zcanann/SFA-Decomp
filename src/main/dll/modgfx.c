@@ -1,8 +1,5 @@
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
-#include "main/expgfx_internal.h"
 #include "main/dll/modgfx.h"
-#include "main/object_descriptor.h"
 
 typedef struct ModgfxVertexData {
   s16 posX;

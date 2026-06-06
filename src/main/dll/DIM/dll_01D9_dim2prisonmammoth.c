@@ -1,7 +1,4 @@
-#include "ghidra_import.h"
 #include "main/objHitReact.h"
-#include "main/objanim.h"
-#include "main/unknown/autos/placeholder_802BBC10.h"
 
 /* DLL 0x76 (DIMSnowHorn1 / dim2prisonmammoth) fragment: head/vtable live in placeholder_802BACC0 + placeholder_802BB4B0; consolidate when those adjacent units are graduated. */
 

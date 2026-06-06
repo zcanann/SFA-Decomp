@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/DR/gasventControl.h"
 
 extern uint FUN_80017690();

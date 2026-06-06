@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/dll/CF/CFTreasSharpy.h"
-#include "main/objanim.h"
 #include "main/objanim_internal.h"
 
 extern undefined4 FUN_80017a78();

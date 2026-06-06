@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/dll/CAM/dll_5B.h"
 

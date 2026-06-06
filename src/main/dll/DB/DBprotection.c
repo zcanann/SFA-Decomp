@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DB/DBprotection.h"
 #include "main/mapEventTypes.h"

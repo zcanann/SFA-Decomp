@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/MMP/mmp_barrel.h"
 
 extern undefined4 FUN_80006824();
