@@ -272,19 +272,18 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
 #pragma peephole off
 void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureFree,int flushSlot)
 {
-  u8 *expgfxBase;
+  ExpgfxRuntimeDataLayout *runtime;
   ExpgfxSlot *slot;
+  ExpgfxTableEntry *expTabEntry;
   u32 *poolActiveMask;
-  u32 *expTabResources;
-  u16 *expTabRefCount;
   s8 *poolActiveCountPtr;
   u32 activeBit;
   u32 inactiveBitMask;
-  u32 expTabOffset;
+  int expTabIndex;
 
-  expgfxBase = gExpgfxRuntimeData;
+  runtime = EXPGFX_RUNTIME_DATA;
   activeBit = 1 << slotIndex;
-  poolActiveMask = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET + poolIndex * sizeof(u32));
+  poolActiveMask = &runtime->poolActiveMasks[poolIndex];
   if ((activeBit & *poolActiveMask) == 0) {
     return;
   }
@@ -293,22 +292,19 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
   slot->behaviorFlags = 0;
 
   if (skipTextureFree == 0) {
-    expTabResources = (u32 *)(expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET);
-    expTabOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-    if (*(u32 *)((u8 *)expTabResources + expTabOffset) != 0) {
+    expTabIndex = Expgfx_GetSlotTableIndex(slot);
+    expTabEntry = Expgfx_GetTableEntry(expTabIndex);
+    if (expTabEntry->resource != 0) {
       gExpgfxTextureFreeInProgress = 1;
-      expTabOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-      textureFree((void *)*(u32 *)((u8 *)expTabResources + expTabOffset));
+      textureFree((void *)expTabEntry->resource);
       gExpgfxTextureFreeInProgress = 0;
     }
 
-    expTabOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-    expTabRefCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + expTabOffset);
-    if (*expTabRefCount != 0) {
-      (*expTabRefCount)--;
-      if (*expTabRefCount == 0) {
-        *(u32 *)((u8 *)expTabResources + expTabOffset) = 0;
-        *(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + expTabOffset) = 0;
+    if (expTabEntry->refCount != 0) {
+      expTabEntry->refCount--;
+      if (expTabEntry->refCount == 0) {
+        expTabEntry->resource = 0;
+        expTabEntry->sourceId = 0;
       }
     } else {
       debugPrintf(sExpgfxMismatchInAddRemove);
@@ -322,8 +318,7 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
 
   inactiveBitMask = ~activeBit;
   *poolActiveMask = *poolActiveMask & inactiveBitMask;
-  poolActiveCountPtr = (s8 *)(expgfxBase + poolIndex);
-  poolActiveCountPtr += EXPGFX_POOL_ACTIVE_COUNTS_OFFSET;
+  poolActiveCountPtr = &runtime->poolActiveCounts[poolIndex];
   (*poolActiveCountPtr)--;
   if (*poolActiveCountPtr == 0) {
     gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
@@ -349,25 +344,24 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
 #pragma peephole off
 void expgfxRemoveAll(void)
 {
-  u8 *expgfxBase;
+  ExpgfxRuntimeDataLayout *runtime;
   ExpgfxSlot *slot;
   u32 *slotPoolBases;
   u32 *poolActiveMasks;
   s8 *poolActiveCountPtrs;
   s16 *poolSlotTypeIds;
-  u16 *expTabRefCount;
   ExpgfxTableEntry *expTabEntry;
   u32 activeBit;
   u32 inactiveBitMask;
-  u32 expTabOffset;
+  int expTabIndex;
   int poolIndex;
   int slotIndex;
 
-  expgfxBase = gExpgfxRuntimeData;
+  runtime = EXPGFX_RUNTIME_DATA;
   poolIndex = 0;
-  slotPoolBases = (u32 *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
-  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
-  poolActiveCountPtrs = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+  slotPoolBases = runtime->slotPoolBases;
+  poolActiveMasks = runtime->poolActiveMasks;
+  poolActiveCountPtrs = runtime->poolActiveCounts;
   poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
 
   while (poolIndex < EXPGFX_POOL_COUNT) {
@@ -376,22 +370,17 @@ void expgfxRemoveAll(void)
     while (slotIndex < EXPGFX_SLOTS_PER_POOL) {
       activeBit = 1 << slotIndex;
       if ((activeBit & *poolActiveMasks) != 0) {
-        expTabOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-        expTabEntry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + expTabOffset);
+        expTabIndex = Expgfx_GetSlotTableIndex(slot);
+        expTabEntry = Expgfx_GetTableEntry(expTabIndex);
         if ((expTabEntry->resource != 0) && (expTabEntry->resource != 0)) {
           gExpgfxTextureFreeInProgress = 1;
-          expTabOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-          expTabEntry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + expTabOffset);
           textureFree((void *)expTabEntry->resource);
           gExpgfxTextureFreeInProgress = 0;
         }
 
-        expTabOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-        expTabEntry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + expTabOffset);
-        expTabRefCount = &expTabEntry->refCount;
-        if (*expTabRefCount != 0) {
-          (*expTabRefCount)--;
-          if (*expTabRefCount == 0) {
+        if (expTabEntry->refCount != 0) {
+          expTabEntry->refCount--;
+          if (expTabEntry->refCount == 0) {
             expTabEntry->resource = 0;
             expTabEntry->sourceId = 0;
           }
@@ -2371,7 +2360,6 @@ void expgfx_free2(u32 sourceId)
 #pragma peephole off
 void expgfx_free(u32 sourceId)
 {
-  u8 *expgfxBase;
   ExpgfxRuntimeDataLayout *runtime;
   ExpgfxSlot *slot;
   ExpgfxTableEntry *tableEntry;
@@ -2380,12 +2368,11 @@ void expgfx_free(u32 sourceId)
   s8 *poolActiveCounts;
   s16 *poolSlotTypeIds;
   u8 *poolFrameFlags;
-  u32 tableOffset;
+  int tableIndex;
   int poolIndex;
   int slotIndex;
 
   runtime = EXPGFX_RUNTIME_DATA;
-  expgfxBase = (u8 *)runtime;
   if (sourceId == 0) {
     return;
   }
@@ -2402,8 +2389,8 @@ void expgfx_free(u32 sourceId)
     if (*poolSourceIds == sourceId) {
       for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
         if (slot != NULL) {
-          tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-          tableEntry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset);
+          tableIndex = Expgfx_GetSlotTableIndex(slot);
+          tableEntry = Expgfx_GetTableEntry(tableIndex);
           if (tableEntry->sourceId == sourceId) {
             expgfxRemove(*slotPoolBases, poolIndex, slotIndex, 0, 1);
           }
@@ -2445,57 +2432,53 @@ void expgfx_free(u32 sourceId)
 #pragma peephole off
 void expgfx_resetAllPools(void)
 {
-  u8 *staticBase;
-  u8 *expgfxBase;
+  ExpgfxRuntimeDataLayout *runtime;
   ExpgfxSlot *slot;
   ExpgfxResourceEntry *resourceEntry;
+  ExpgfxTableEntry *tableEntry;
   u32 *slotPoolBases;
   u32 *poolActiveMasks;
   s8 *poolActiveCounts;
   s16 *poolSlotTypeIds;
   u32 *poolSourceIds;
   u8 *poolFrameFlags;
-  u16 *refCount;
   u32 activeBit;
   u32 inactiveBitMask;
-  u32 tableOffset;
+  int tableIndex;
   int poolIndex;
   int slotIndex;
   int resourceIndex;
 
-  staticBase = gExpgfxStaticData;
-  expgfxBase = gExpgfxRuntimeData;
+  runtime = EXPGFX_RUNTIME_DATA;
   poolIndex = 0;
-  slotPoolBases = (u32 *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
-  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
-  poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-  poolSlotTypeIds = (s16 *)(staticBase + EXPGFX_STATIC_POOL_SLOT_TYPE_IDS_OFFSET);
-  poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  poolFrameFlags = staticBase + EXPGFX_STATIC_POOL_FRAME_FLAGS_OFFSET;
+  slotPoolBases = runtime->slotPoolBases;
+  poolActiveMasks = runtime->poolActiveMasks;
+  poolActiveCounts = runtime->poolActiveCounts;
+  poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
+  poolSourceIds = runtime->poolSourceIds;
+  poolFrameFlags = gExpgfxStaticPoolFrameFlags;
 
   while (poolIndex < EXPGFX_POOL_COUNT) {
     slot = (ExpgfxSlot *)*slotPoolBases;
     for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
       activeBit = 1 << slotIndex;
       if ((*poolActiveMasks & activeBit) != 0) {
-        tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-        if (*(u32 *)(expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET + tableOffset) != 0) {
+        tableIndex = Expgfx_GetSlotTableIndex(slot);
+        tableEntry = Expgfx_GetTableEntry(tableIndex);
+        if (tableEntry->resource != 0) {
           gExpgfxTextureFreeInProgress = 1;
-          tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-          textureFree((void *)*(u32 *)(expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET + tableOffset));
+          textureFree((void *)tableEntry->resource);
           gExpgfxTextureFreeInProgress = 0;
         }
 
-        tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-        refCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + tableOffset);
-        if (*refCount != 0) {
-          (*refCount)--;
-          if (*refCount == 0) {
-            *(u32 *)(expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET + tableOffset) = 0;
-            *(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset) = 0;
+        if (tableEntry->refCount != 0) {
+          tableEntry->refCount--;
+          if (tableEntry->refCount == 0) {
+            tableEntry->resource = 0;
+            tableEntry->sourceId = 0;
           }
         } else {
-          debugPrintf((char *)(staticBase + EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET));
+          debugPrintf(sExpgfxMismatchInAddRemove);
         }
 
         slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
@@ -2521,7 +2504,7 @@ void expgfx_resetAllPools(void)
     poolIndex++;
   }
 
-  resourceEntry = (ExpgfxResourceEntry *)expgfxBase;
+  resourceEntry = runtime->resourceTable;
   resourceIndex = 0;
   while (resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT) {
     gExpgfxTextureFreeInProgress = 1;
