@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_DLL_1E1_H_
-#define MAIN_DLL_DLL_1E1_H_
+#ifndef MAIN_DLL_DIM_BOSSGUT_H_
+#define MAIN_DLL_DIM_BOSSGUT_H_
 
 #include "ghidra_import.h"
 
@@ -11,4 +11,4 @@ int bombplant_getObjectTypeId(void);
 void bombplant_free(void);
 void bombplant_hitDetect(void);
 
-#endif /* MAIN_DLL_DLL_1E1_H_ */
+#endif /* MAIN_DLL_DIM_BOSSGUT_H_ */

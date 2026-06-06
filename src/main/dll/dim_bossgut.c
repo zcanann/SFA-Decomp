@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/dll/dim_bossgut.h"
+#include "main/dll/ediblemushroom.h"
 
 
 extern undefined4 FUN_80006824();
@@ -20,7 +21,6 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_80081120();
-extern void enemymushroom_resetToSpawn(s16 *obj,float *state,int enableTimer);
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
