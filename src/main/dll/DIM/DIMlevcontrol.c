@@ -863,10 +863,11 @@ void dimcannon_update(int *obj)
         if (*(void **)(state + 0x0) != 0) {
         ((DimCannonState *)state)->unkAF += framesThisStep;
         if (((DimCannonState *)state)->unkAF > 0xa) {
+            char *e;
             u8 j;
             ((DimCannonState *)state)->unkAF = 0;
             for (j = 0; j < 9; j++) {
-                char *e = state + j * 4;
+                e = state + j * 4;
                 *(f32 *)(e + 0x14) = *(f32 *)(e + 0x18);
                 *(f32 *)(e + 0x3c) = *(f32 *)(e + 0x40);
                 *(f32 *)(e + 0x64) = *(f32 *)(e + 0x68);
@@ -881,10 +882,10 @@ void dimcannon_update(int *obj)
             *(f32 *)(state + 0xc) = *(f32 *)(state + 0x64);
         }
         if (((DimCannonState *)state)->aimYaw > 0) {
-            ((DimCannonState *)state)->aimYaw = (s16)(((DimCannonState *)state)->aimYaw - framesThisStep);
+            ((DimCannonState *)state)->aimYaw -= framesThisStep;
         }
         if (((DimCannonState *)state)->aimPitch > 0) {
-            ((DimCannonState *)state)->aimPitch = (s16)(((DimCannonState *)state)->aimPitch - framesThisStep);
+            ((DimCannonState *)state)->aimPitch -= framesThisStep;
         }
         *(f32 *)(state + 0x10) = getXZDistance((f32 *)((char *)obj + 0x18),
                                                (f32 *)(*(char **)(state + 0x0) + 0x18));
@@ -905,7 +906,7 @@ void dimcannon_update(int *obj)
     }
 
     lbl_803DBEF4 = lbl_803E48F0;
-    ObjAnim_AdvanceCurrentMove(lbl_803E48F0, timeDelta, (int)obj, NULL);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E48F0, timeDelta, NULL);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -991,10 +992,11 @@ int fn_801B2550(int *obj, int p2, char *p3)
                     else if (cur > 0) sc = 1;
                     else sc = 0;
                     if (sc == sd) {
-                        delta = delta * (lbl_803DBF02 - mag) / lbl_803DBF04;
+                        delta = delta * (lbl_803DBF02 - mag);
+                        delta = delta / lbl_803DBF04;
                     }
                 }
-                *(s16 *)((char *)vec + 0x2) = (s16)(*(s16 *)((char *)vec + 0x2) + delta);
+                *(s16 *)((int)vec + 0x2) = (s16)(*(s16 *)((int)vec + 0x2) + delta);
                 Sfx_KeepAliveLoopedObjectSound(obj, 0x1ff);
             } else {
                 if (*(int *)(state + 0xa8) != 0) {
@@ -1003,16 +1005,15 @@ int fn_801B2550(int *obj, int p2, char *p3)
             }
             *(int *)(state + 0xa8) = delta;
             if (*(s16 *)(state + 0xa4) > 0) {
-                *(s16 *)(state + 0xa4) = (s16)(*(s16 *)(state + 0xa4) - framesThisStep);
+                *(s16 *)(state + 0xa4) -= framesThisStep;
             }
             if (*(s16 *)(state + 0xa6) > 0) {
-                *(s16 *)(state + 0xa6) = (s16)(*(s16 *)(state + 0xa6) - framesThisStep);
+                *(s16 *)(state + 0xa6) -= framesThisStep;
             }
             if ((getButtonsHeld(0) & 0x100) && *(s16 *)(state + 0xa4) <= 0) {
                 buttonDisable(0, 0x100);
                 if (fn_80296A14(player) >= 1) {
                     *(u8 *)(state + 0xae) += framesThisStep;
-                    Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
                     if (Sfx_IsPlayingFromObjectChannel(obj, 2) == 0) {
                         Sfx_PlayFromObject((int)obj, 0x201);
                         Sfx_PlayFromObject((int)obj, 0x202);
@@ -1046,7 +1047,7 @@ int fn_801B2550(int *obj, int p2, char *p3)
             {
                 u8 b1 = *(u8 *)(state + 0xb1);
                 if (b1 != 0) {
-                    *(u8 *)(state + 0xb1) = (u8)(b1 + framesThisStep);
+                    *(u8 *)(state + 0xb1) += framesThisStep;
                     if (*(u8 *)(state + 0xb1) > 0x3c) {
                         done = 1;
                     }
