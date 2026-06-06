@@ -209,14 +209,14 @@ void nw_ice_update(int *obj) {
         *(s16 *)obj = *(s16 *)state->linkedObj;
         ObjGroup_FindNearestObjectForObject(0x3c, obj, &nearestDist);
 
-        if (*(u8 *)((char *)state->linkedObj + 0x36) < 0xc0) {
+        if (((GameObject *)state->linkedObj)->anim.alpha < 0xc0) {
             ObjHits_DisableObject(obj);
             fn_80296D20(Obj_GetPlayerObject(), obj);
         } else {
             ObjHits_EnableObject(obj);
         }
 
-        if ((*(u8 *)((char *)state->linkedObj + 0x36) < 0xc0) || (nearestDist < lbl_803E5274)) {
+        if ((((GameObject *)state->linkedObj)->anim.alpha < 0xc0) || (nearestDist < lbl_803E5274)) {
             ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x100);
         } else {
             ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags & ~0x100);

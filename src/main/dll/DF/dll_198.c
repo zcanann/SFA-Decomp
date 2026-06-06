@@ -197,7 +197,7 @@ void dfropenode_init(DFropenodeObject *obj, u8 *objDef)
   ((GameObject *)obj)->animEventCallback = dfropenode_syncRopeToEndpoints;
   extra->rope = NULL;
   extra->linkedObj = NULL;
-  *(u8 *)((u8 *)obj + 0x36) = 0x46;
+  ((GameObject *)obj)->anim.alpha = 0x46;
 }
 #pragma scheduling reset
 #pragma peephole reset

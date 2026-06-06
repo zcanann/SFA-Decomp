@@ -270,10 +270,10 @@ void fn_801C2914(int obj)
 
     distance = Vec_xzDistance((void *)(obj + 0x18),player + 0x18);
     if (distance <= lbl_803E4E74) {
-      *(u8 *)(obj + 0x36) = (u8)(s32)(lbl_803E4E78 * (distance / lbl_803E4E74));
+      ((GameObject *)obj)->anim.alpha = (u8)(s32)(lbl_803E4E78 * (distance / lbl_803E4E74));
     }
     else {
-      *(u8 *)(obj + 0x36) = 0xff;
+      ((GameObject *)obj)->anim.alpha = 0xff;
     }
   }
 }

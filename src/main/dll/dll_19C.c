@@ -853,7 +853,7 @@ void SpiritPrize_init(int *obj, u8 *init) {
             modelLightStruct_setDistanceAttenuation(state->light, lbl_803E4EB0, lbl_803E4EB4);
         }
     }
-    *(u8*)((char*)obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
     *(u8*)((char*)obj + 0x37) = 0;
     state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
 }

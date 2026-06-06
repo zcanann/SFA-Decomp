@@ -449,9 +449,9 @@ void fn_801C8B68(int obj)
     }
     dist = Vec_xzDistance((float *)(self + 0x18), (float *)((int)player + 0x18));
     if (dist <= lbl_803E50C4) {
-        *(u8 *)(self + 0x36) = (u8)(int)(lbl_803E50C8 * (dist / lbl_803E50C4));
+        ((GameObject *)self)->anim.alpha = (u8)(int)(lbl_803E50C8 * (dist / lbl_803E50C4));
     } else {
-        *(u8 *)(self + 0x36) = 0xff;
+        ((GameObject *)self)->anim.alpha = 0xff;
     }
 }
 #pragma scheduling reset

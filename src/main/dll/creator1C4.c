@@ -341,7 +341,7 @@ void gpsh_objcreator_update(int *obj) {
         ((GameObject *)obj)->unkF8 = 0;
         ((GpshShrineFlags *)(sub + 5))->b80 = 0;
         *(u8*)((char*)obj + 0x37) = 0xff;
-        *(u8*)((char*)obj + 0x36) = 0xff;
+        ((GameObject *)obj)->anim.alpha = 0xff;
     }
     if (((GpshShrineFlags *)(sub + 5))->b80) return;
     if (((GameObject *)obj)->unkF8 == 0) {
@@ -421,7 +421,7 @@ void gpsh_objcreator_init(int *obj, int *def) {
     *(u8 *)((char *)state + 4) = (u8)*(s16 *)((char *)def + 0x1a);
     ((GpshShrineFlags *)((char *)state + 5))->b80 = 0;
     *(u8 *)((char *)obj + 0x37) = 0xff;
-    *(u8 *)((char *)obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
 }
 #pragma peephole reset
 #pragma scheduling reset

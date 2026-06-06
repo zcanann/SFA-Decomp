@@ -383,7 +383,7 @@ void tumbleweed_updateEffects(int obj) {
     }
 
     if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_DESPAWN) != 0) {
-        *(u8*)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         state->mode = 5;
         state->despawnTimer = lbl_803E2FC8;
         ObjHits_DisableObject(obj);
@@ -489,7 +489,8 @@ int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
         Obj_FreeObject(obj);
         return 0;
     } else {
-        *(u8 *)(obj + 0x36) = (u8)(255 - (s32)(lbl_803E2FF8 * ((GameObject *)obj)->anim.currentMoveProgress));
+        ((GameObject *)obj)->anim.alpha =
+            (u8)(255 - (s32)(lbl_803E2FF8 * ((GameObject *)obj)->anim.currentMoveProgress));
     }
     return 0;
 }

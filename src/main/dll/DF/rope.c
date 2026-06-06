@@ -531,14 +531,14 @@ void DIMbossspit_updateBurst(int obj)
   if (n >= 0) {
     ObjHits_SetHitVolumeSlot(obj, 5, 2, 0);
     ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
-    *(u8 *)(obj + 0x36) = (u8)n;
+    ((GameObject *)obj)->anim.alpha = (u8)n;
   }
   else {
     if (*(void **)(state + 4) != NULL) {
       ModelLightStruct_free(*(void **)(state + 4));
       *(int *)(state + 4) = 0;
     }
-    *(u8 *)(obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
     if ((f32)(s32)((radius - 0x40) >> 1) > lbl_803E4D50) {
       ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
       ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));

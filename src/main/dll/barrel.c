@@ -381,7 +381,7 @@ void grimble_update(int obj)
                                                                       0x10e, 0x36, lbl_803E2F28);
       ((GroundBaddieState *)state)->baddie.unk270 = 1;
       ((GroundBaddieState *)state)->baddie.moveJustStartedB = 1;
-      *(u8 *)(obj + 0x36) = 0;
+      ((GameObject *)obj)->anim.alpha = 0;
     }
   } else {
     if (*(void **)(sub + 0x34) != NULL) {

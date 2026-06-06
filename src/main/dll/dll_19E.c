@@ -332,7 +332,7 @@ void dfsh_objcreator_init(int obj, s8 *def) {
     state->spawnTimer = 100;
     state->spawnTimerStep = 0;
     *(u8 *)((char *)obj + 0x37) = 0xFF;
-    *(u8 *)((char *)obj + 0x36) = 0xFF;
+    ((GameObject *)obj)->anim.alpha = 0xFF;
 }
 #pragma peephole reset
 #pragma scheduling reset

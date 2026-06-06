@@ -314,7 +314,7 @@ void dll_19A_update(int obj)
         *state = 100;
         state[1] = 0;
         *(u8 *)(obj + 0x37) = 0xff;
-        *(u8 *)(obj + 0x36) = 0xff;
+        ((GameObject *)obj)->anim.alpha = 0xff;
     }
     else {
         if ((((GameObject *)obj)->unkF8 == 0) && (GameBit_Get(*(s8 *)(setup + 0x1f) + 0x1cd) != 0)) {
@@ -383,7 +383,7 @@ void dll_19A_init(int obj, s8 *def) {
     *(s16 *)state = 100;
     *(s16 *)((char *)state + 2) = 0;
     *(u8 *)((char *)obj + 0x37) = 0xFF;
-    *(u8 *)((char *)obj + 0x36) = 0xFF;
+    ((GameObject *)obj)->anim.alpha = 0xFF;
 }
 #pragma peephole reset
 #pragma scheduling reset
