@@ -923,7 +923,7 @@ void blasted_update(int obj)
             u32 v;
             s8 m;
             int found;
-            m = (*(ObjHitsPriorityState **)(obj + 0x54))->priorities[i];
+            m = *(u8 *)&(*(ObjHitsPriorityState **)(obj + 0x54))->priorities[i];
             v = (*(ObjHitsPriorityState **)(obj + 0x54))->hitObjects[i];
             found = 0;
             if (m != 5) {
