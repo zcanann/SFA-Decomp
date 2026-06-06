@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/dll/smallbasket.h"
 
 extern undefined4 FUN_800067e8();
@@ -3487,7 +3488,6 @@ typedef struct {
 extern int* gRomCurveInterface;
 extern char lbl_803DBCF0;
 extern int Curve_AdvanceAlongPath(int p, f32 v);
-extern void ObjAnim_SetCurrentMove(s16* obj, int move, f32 blend, int flag);
 extern u8 lbl_8031FB48[];
 extern f32 lbl_803E2BA0;
 extern f32 lbl_803E2BA4;
@@ -3646,17 +3646,17 @@ void fn_80158494(s16* obj, u8* state)
                             int j = *(u8*)(state + 0x33b) * 0xc;
                             if (v > *(f32*)((int)lbl_8031FB48 + j)) {
                                 *(u8*)(state + 0x323) = 1;
-                                ObjAnim_SetCurrentMove(obj, *(u8*)(t0 + 0x2c), lbl_803E2BA8, 0);
+                                ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 0x2c), lbl_803E2BA8, 0);
                             } else if (v > *(f32*)((char*)lbl_8031FB48 + j + 4)) {
                                 *(u8*)(state + 0x323) = 1;
-                                ObjAnim_SetCurrentMove(obj, *(u8*)(t0 + 0x20), lbl_803E2BA8, 0);
+                                ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 0x20), lbl_803E2BA8, 0);
                             } else if (v > *(f32*)((char*)lbl_8031FB48 + j + 8)) {
                                 *(u8*)(state + 0x323) = 1;
-                                ObjAnim_SetCurrentMove(obj, *(u8*)(t0 + 0x14), lbl_803E2BA8, 0);
+                                ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 0x14), lbl_803E2BA8, 0);
                             } else {
                                 *(u8*)(state + 0x323) = 1;
                                 *(f32*)(state + 0x308) = lbl_803E2BDC;
-                                ObjAnim_SetCurrentMove(obj, *(u8*)(t0 + 8), lbl_803E2BA8, 0);
+                                ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 8), lbl_803E2BA8, 0);
                                 *(f32*)(state + 0x310) = lbl_803E2BA8;
                             }
                         }
