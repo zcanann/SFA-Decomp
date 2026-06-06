@@ -1,10 +1,6 @@
 #include "main/dfplightni.h"
+#include "main/gameplay_runtime.h"
 
-extern int Sfx_PlayFromObjectLimited(u8 *obj,int sfxId,int maxCount);
-extern u32 GameBit_Get(int eventId);
-extern int randomGetRange(int min,int max);
-extern void mm_free(u32 handle);
-extern u8 *Obj_GetPlayerObject(void);
 extern int ObjHits_GetPriorityHit(u8 *obj,int *out,int param_3,int param_4);
 extern void lightningRender(u32 handle);
 extern int lightningCreate(double radiusX,double radiusY,float *start,float *end,int param_5,int param_6,int param_7);
@@ -22,9 +18,9 @@ extern f32 lbl_803E6504;
 extern f32 lbl_803E6508;
 extern f32 lbl_803E650C;
 
-static inline DfpLightniState *dfplightni_getState(u8 *obj)
+static inline DfpLightniState *dfplightni_getState(DfpLightniObject *obj)
 {
-  return *(DfpLightniState **)(obj + DFPLIGHTNI_OBJECT_STATE_OFFSET);
+  return obj->state;
 }
 
 static inline f64 dfplightni_u32AsDouble(u32 value)
@@ -40,7 +36,7 @@ int dfplightni_getExtraSize(void)
 
 #pragma scheduling off
 #pragma peephole off
-void dfplightni_free(u8 *obj)
+void dfplightni_free(DfpLightniObject *obj)
 {
   DfpLightniState *state;
 
@@ -58,7 +54,7 @@ void dfplightni_free(u8 *obj)
 
 #pragma scheduling off
 #pragma peephole off
-void dfplightni_render(u8 *obj)
+void dfplightni_render(DfpLightniObject *obj)
 {
   DfpLightniState *state;
   int eventActive;
@@ -88,9 +84,9 @@ void dfplightni_render(u8 *obj)
 
 #pragma scheduling off
 #pragma peephole off
-void dfplightni_update(u8 *obj)
+void dfplightni_update(DfpLightniObject *obj)
 {
-  u8 *playerObj;
+  DfpLightniObject *playerObj;
   int eventActive;
   u32 eventBlocked;
   DfpLightniState *state;
@@ -114,26 +110,22 @@ void dfplightni_update(u8 *obj)
         state->timer = lbl_803E64F8;
       }
       if ((state->timer > state->triggerTime) && (state->timer < lbl_803E64E0)) {
-        start[0] = *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_X_OFFSET);
-        start[1] = *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_Y_OFFSET);
-        start[2] = *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_Z_OFFSET);
+        start[0] = obj->position[0];
+        start[1] = obj->position[1];
+        start[2] = obj->position[2];
         if (eventActive != 0) {
           randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[0] = (f32)randomZ * lbl_803E64FC +
-                   *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_X_OFFSET);
+          end[0] = (f32)randomZ * lbl_803E64FC + playerObj->position[0];
           randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN,DFPLIGHTNI_RANDOM_Y_MAX);
-          end[1] = (f32)randomY * lbl_803E64FC +
-                   *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_Y_OFFSET);
+          end[1] = (f32)randomY * lbl_803E64FC + playerObj->position[1];
           randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[2] = (f32)randomX * lbl_803E64FC +
-                   *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_Z_OFFSET);
+          end[2] = (f32)randomX * lbl_803E64FC + playerObj->position[2];
         }
         else {
           randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
           end[0] = (f32)randomX * lbl_803E64FC + start[0];
           randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN,DFPLIGHTNI_RANDOM_Y_MAX);
-          end[1] = (f32)randomY * lbl_803E64FC +
-                   *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_Y_OFFSET);
+          end[1] = (f32)randomY * lbl_803E64FC + obj->position[1];
           randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
           end[2] = (f32)randomZ * lbl_803E64FC + start[2];
         }
@@ -186,7 +178,7 @@ void dfplightni_update(u8 *obj)
 
 #pragma scheduling off
 #pragma peephole off
-void dfplightni_init(u8 *obj,DfpLightniMapData *mapData)
+void dfplightni_init(DfpLightniObject *obj,DfpLightniMapData *mapData)
 {
   DfpLightniState *state;
   f32 radiusMax;
