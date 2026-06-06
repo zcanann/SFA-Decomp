@@ -1,4 +1,5 @@
 #include "main/dll/weaponE6.h"
+#include "main/game_object.h"
 #include "main/dll/tricky_state.h"
 
 #define TRICKY_STATE_FLAGS_OFFSET 0x54
@@ -109,7 +110,7 @@ void fn_8013F100(int obj, register int state)
             } else if (iVar2 == 2) {
                 iVar3 = *(int *)(obj + 0xb8);
                 if ((((uint)*(u8 *)(iVar3 + 0x58) >> 6) & 1) == 0) {
-                    sVar = *(short *)(obj + 0xa0);
+                    sVar = ((GameObject *)obj)->anim.currentMove;
                     if (sVar >= 48 || sVar < 41) {
                         if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0) {
                             objAudioFn_800393f8(obj, (void *)(iVar3 + 936), 861, 1280, -1, 0);
@@ -177,7 +178,7 @@ void fn_8013F100(int obj, register int state)
                     if ((((uint)*(u8 *)(iVar3 + 0x58) >> 6) & 1) != 0) {
                         break;
                     }
-                    sVar = *(short *)(obj + 0xa0);
+                    sVar = ((GameObject *)obj)->anim.currentMove;
                     if (sVar < 48) {
                         if (sVar >= 41) {
                             break;
@@ -210,7 +211,7 @@ void fn_8013F100(int obj, register int state)
         }
         break;
     case 1:
-        if (*(float *)(obj + 0x98) >= lbl_803E24FC) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E24FC) {
             iVar2 = *(int *)(state + 0x700);
             *(float *)(iVar2 + 0x10) += lbl_803E2488;
             dVar = -sin(lbl_803E2454 * (f32)(s32)*(short *)obj / lbl_803E2458);
@@ -268,12 +269,12 @@ void fn_8013F100(int obj, register int state)
         }
         break;
     case 4:
-        if (*(float *)(obj + 0x98) >= lbl_803E24A8) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E24A8) {
             *(u8 *)(state + 0xa) = 4;
         }
         break;
     case 5:
-        if (*(float *)(obj + 0x98) >= lbl_803E24D0) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E24D0) {
             pTgt = *(u8 **)(state + 4) + 24;
             if (*(u8 **)(state + 0x28) != pTgt) {
                 *(u8 **)(state + 0x28) = pTgt;
@@ -329,7 +330,7 @@ void fn_8013F9E4(int obj, int state)
                 ((TrickyState *)state)->unk740 = (f32)(s32)randomGetRange(500, 750);
                 iVar3 = *(int *)(obj + 0xb8);
                 if ((((uint)*(u8 *)(iVar3 + 0x58) >> 6) & 1) == 0) {
-                    sVar = *(short *)(obj + 0xa0);
+                    sVar = ((GameObject *)obj)->anim.currentMove;
                     if (sVar >= 48 || sVar < 41) {
                         if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0) {
                             objAudioFn_800393f8(obj, (void *)(iVar3 + 936), 864, 1280, -1, 0);
@@ -352,7 +353,7 @@ void fn_8013F9E4(int obj, int state)
                 ((TrickyState *)state)->unk838 = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             } else {
-                switch (*(short *)(obj + 0xa0)) {
+                switch (((GameObject *)obj)->anim.currentMove) {
                 case 13:
                     if ((((TrickyState *)state)->unk54 & 0x8000000) != 0) {
                         objAnimFn_8013a3f0(obj, 49, lbl_803E243C, 0);
@@ -415,8 +416,8 @@ void fn_8013FBE4(int obj, register int state)
                 TRICKY_CLEAR_TARGET_DIRTY(state);
                 *(short *)(state + 0xd2) = 0;
             }
-            dx = *targetPos - *(float *)(obj + 0x18);
-            dz = targetPos[2] - *(float *)(obj + 0x20);
+            dx = *targetPos - ((GameObject *)obj)->anim.worldPosX;
+            dz = targetPos[2] - ((GameObject *)obj)->anim.worldPosZ;
             distance = sqrtf(dx * dx + dz * dz);
             if (lbl_803E23DC != distance) {
                 dx = dx / distance;
