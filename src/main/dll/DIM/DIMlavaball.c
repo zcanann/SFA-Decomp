@@ -167,9 +167,12 @@ void MMP_levelcontrol_update(int obj)
 
   if (lbl_803DDB28 > lbl_803E44C0) {
     gameTextShow(0x34f);
-    lbl_803DDB28 = lbl_803DDB28 - timeDelta;
-    if (lbl_803DDB28 < lbl_803E44C0) {
-      lbl_803DDB28 = lbl_803E44C0;
+    {
+      f32 t = lbl_803DDB28 - timeDelta;
+      lbl_803DDB28 = t;
+      if (t < lbl_803E44C0) {
+        lbl_803DDB28 = lbl_803E44C0;
+      }
     }
   }
 
