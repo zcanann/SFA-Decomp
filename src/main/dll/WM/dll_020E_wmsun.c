@@ -59,8 +59,8 @@ void wmsun_init(int obj, int params)
     int state = *(int *)(obj + 0xb8);
     u8 c;
     int c2;
-    s16 i;
     int j;
+    s16 i;
     s16 mode;
 
     *(void **)(obj + 0xbc) = (void *)fn_801F6E8C;

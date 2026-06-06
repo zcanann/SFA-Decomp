@@ -706,14 +706,15 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     if (visible == 0) return;
     fn_8003B608((int)*(u8 *)((char *)def + 0x20), (int)*(u8 *)((char *)def + 0x21), (int)*(u8 *)((char *)def + 0x22));
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E558C);
-    if ((state->flags & 0x80) == 0) return;
-    for (i = 0; i < 3; i++) {
-        ObjPath_GetPointWorldPosition(obj, i,
-            &state->pathPoint[0][0],
-            &state->pathPoint[0][1],
-            &state->pathPoint[0][2],
-            0);
-        state = (SCMusicTreeState *)((char *)state + 12);
+    if ((state->flags & 0x80) != 0) {
+        for (i = 0; i < 3; i++) {
+            ObjPath_GetPointWorldPosition(obj, i,
+                &state->pathPoint[0][0],
+                &state->pathPoint[0][1],
+                &state->pathPoint[0][2],
+                0);
+            state = (SCMusicTreeState *)((char *)state + 12);
+        }
     }
     *(int *)((char *)obj + 0xF8) = 1;
 }
