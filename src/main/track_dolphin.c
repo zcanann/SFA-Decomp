@@ -6228,7 +6228,6 @@ typedef union { u8 u8; u16 u16; u32 u32; s16 s16; s32 s32; f32 f32; } GolfWGPipe
 extern volatile GolfWGPipe GXWGFifo : (0xCC008000);
 
 extern void Obj_BuildWorldTransformMatrix(int obj, f32 *out, int flag);
-extern void GXLoadPosMtxImm(void *mtx, int id);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetNumTexGens(int n);

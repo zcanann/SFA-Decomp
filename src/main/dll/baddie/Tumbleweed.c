@@ -4027,7 +4027,6 @@ extern u8    lbl_803DD970;
 extern void* lbl_803DD974;
 extern void* lbl_803DD96C;
 extern void* gameTextGet(s32);
-extern void  textureFree(void*);
 
 /* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
  * buffer at lbl_803DD9D4 and walk the 19-slot table at lbl_803A9F98
@@ -5059,9 +5058,6 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void* gameTextGetBox(int boxId);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
 extern f32 lbl_803DD99C;
 extern u8  lbl_803DD9A0;
 extern f32 lbl_803E231C;
@@ -5147,7 +5143,6 @@ void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void GXSetScissor(int x, int y, int w, int h);
 
 #pragma scheduling off
 #pragma peephole off
@@ -5639,7 +5634,6 @@ void creditsStart_(void)
 #pragma peephole reset
 
 extern void CMenu_SetFadeCounter(int v);
-extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern int lbl_803DD978;
 extern int lbl_803DBBF8;
 extern int lbl_803DBBFC;
@@ -5793,9 +5787,6 @@ int Credits_frameStart(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 fn_80293E80(f32);
-extern f32 sin(f32);
-extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32 *color);
 extern u32 lbl_803E2200;
 extern s16 lbl_803DD930;
 extern f32 lbl_803DD94C;
@@ -6031,8 +6022,6 @@ int fn_80136A40(int p1, int c)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int Camera_GetViewportYOffset(void);
-extern int objIsCurModelNotZero(int obj);
 extern int getButtonsHeld(int p);
 extern int getButtonsJustPressed(int p);
 extern f32 powfCoreFast(f32 base, f32 exp);
@@ -6238,7 +6227,6 @@ void fn_8013396C(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32 *color);
 extern void GXSetTevColor(int id, int *color);
 extern void setTextColor(int p);
 extern u16 lbl_803DDA14;

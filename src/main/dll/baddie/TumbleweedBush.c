@@ -904,7 +904,6 @@ extern f32 lbl_803E21F0;
 extern f32 lbl_803E21F4;
 extern f32 lbl_803E21F8;
 extern s8 padGetStickX(int port);
-extern u32 getButtonsJustPressed(int port);
 extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u32 sfxId);
 extern void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume);
@@ -1165,7 +1164,6 @@ void TitleMenuItem_initialise(void)
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void* textureLoadAsset(int id);
 extern void textureFree(void* p);
-extern void fn_8001BDD4(int a);
 extern void fn_8001BE2C(int mode);
 extern void* mmAlloc(int size, int heap, int flags);
 extern void* memcpy(void* dst, const void* src, int size);

@@ -747,7 +747,6 @@ void cctestinfot_update(int *obj) {
 
 extern int Obj_GetActiveModel(int *obj);
 extern int *ObjModel_GetRenderOpTextureRefs(int model, int idx);
-extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E3C4C;
 #pragma scheduling off
 #pragma peephole off

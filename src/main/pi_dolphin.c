@@ -7993,7 +7993,6 @@ extern void Queue_Push(void *q, void *item);
 extern void GXEnableBreakPt(void *p);
 extern void GXSetDrawSync(u16 v);
 extern void GXCopyDisp(void *fb, u8 clear);
-extern void VISetBlack(int black);
 extern void *lbl_803DCCD4;
 extern void *lbl_803DCCD0;
 extern void *lbl_803DCCEC;
@@ -10079,7 +10078,6 @@ void fn_8004F080(void) {
     lbl_803DCD6A = lbl_803DCD6A + 3;
 }
 extern void textureFn_8006c75c(int a);
-extern void GXSetTevKColorSel(int tev, int sel);
 void fn_8004D928(void) {
     textureFn_8006c75c(lbl_803DCD8C);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0x24, 0, 0x7d);
@@ -10177,7 +10175,6 @@ extern void OSStartStopwatch(void *sw);
 extern int OSGetCurrentThread(void);
 extern int Queue_GetCount(void *q);
 extern void OSSleepThread(void *q);
-extern void OSRestoreInterrupts(int lvl);
 extern void Camera_ApplyFullViewport(void);
 extern void GXInvalidateVtxCache(void);
 extern void GXInvalidateTexAll(void);
@@ -10193,12 +10190,10 @@ extern void GXInitFifoBase(void *fifo, void *base, u32 size);
 extern void GXSetCPUFifo(void *fifo);
 extern void GXSetGPFifo(void *fifo);
 extern int GXInit(void *base, u32 size);
-extern void Queue_Push(void *q, void *e);
 extern void OSWakeupThread(void *q);
 extern int Queue_Peek(void *q, void *out);
 extern void Queue_Pop(void *q, void *out);
 extern void GXDisableBreakPt(void);
-extern void gxPerfFn_8004a77c(int v);
 extern void THPPlayerPostDrawDone(void);
 extern void GXPeekZ(int x, int y, void *out);
 extern f32 lbl_803DCCC0;

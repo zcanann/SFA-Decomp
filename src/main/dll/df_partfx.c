@@ -2141,7 +2141,6 @@ void Checkpoint_remove(int *obj) {
     }
 }
 #pragma opt_common_subs reset
-extern int getAngle(f32 a, f32 b);
 extern f32 timeDelta;
 #pragma scheduling off
 #pragma peephole off
@@ -2224,7 +2223,6 @@ void player_applyVelocityStep(int *p, int *ctx, f32 t) {
     objMove(p, *(f32 *)((char *)p + 0x24) * t, *(f32 *)((char *)p + 0x28) * t,
             *(f32 *)((char *)p + 0x2c) * t);
 }
-extern float sqrtf(float x);
 extern f32 lbl_803E0590;
 extern f32 lbl_803E0594;
 extern s16 lbl_803DD44C;

@@ -1449,7 +1449,6 @@ void ccqueen_init(int *obj, u8 *init) {
 extern f32 lbl_803E4664;
 extern f32 lbl_803E4668;
 extern f32 timeDelta;
-extern unsigned long GameBit_Set(int eventId, int value);
 extern f32 vec3f_distanceSquared(f32* p1, f32* p2);
 extern void characterDoEyeAnims(int obj, void* p);
 extern void *Obj_GetPlayerObject(void);
@@ -1685,7 +1684,6 @@ void ccsharpclawpad_update(int obj)
 #include "main/dll/SC/SCtotemlogpuz.h"
 extern f32 lbl_803E46D0;
 extern void gameTextShow(int textId);
-extern void Music_Trigger(int musicId, int value);
 extern void *getTrickyObject(void);
 extern int *gSHthorntailAnimationInterface;
 extern int *gCameraInterface;

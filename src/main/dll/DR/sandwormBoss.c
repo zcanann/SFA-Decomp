@@ -3536,10 +3536,8 @@ void cfprisonguard_init(int* obj, u8* params) {
 #pragma scheduling reset
 
 extern f32 lbl_803E4268;
-extern f32 Vec_distance(void *a, void *b);
 extern int waterfx_consumePendingImpactNearPoint(f32 *vec, f32 r);
 extern int objGetAnimState80A(void *obj);
-extern void *Obj_GetPlayerObject(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -3855,8 +3853,6 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer) {
 #pragma scheduling reset
 
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
-extern u32 GameBit_Get(int);
-extern void playerAddRemoveMagic(void*, int);
 #pragma peephole off
 int fn_8019FC84(int *obj, int p2, void *p3) {
     char *p = *(char**)((char*)obj + 0xb8);
@@ -5131,7 +5127,6 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void Music_Trigger(int trackId, int restart);
 extern int  Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32  lbl_803E41BC;
 

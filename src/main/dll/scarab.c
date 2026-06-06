@@ -4443,7 +4443,6 @@ int fn_80160690(short* out, u8* obj) {
 }
 #pragma scheduling reset
 
-extern void Obj_FreeObject(int* obj);
 extern f32 lbl_803E2DC8;
 extern u8 framesThisStep;
 

@@ -1380,7 +1380,6 @@ void *ObjModel_Load(int id, int arg2, int *outSize) {
 
 extern void ShaderDef_free(int *def);
 extern void model_adjustModelList(void *list, int index);
-extern void *textureIdxToPtr(int id);
 extern void model_findIdxInModelList(void *list, void *header, int *outIndex);
 extern void *lbl_803DCB50;
 extern void *allocModelStruct(int size, int align);

@@ -566,7 +566,6 @@ extern s8 lbl_803DD712;
 extern s16 lbl_803DD710;
 extern u8 lbl_803DD713;
 extern u32 lbl_8031AD20[];
-extern void loadUiDll(int);
 #pragma scheduling off
 #pragma peephole off
 int WeirdUnusedMenu_run(void) {
@@ -634,7 +633,6 @@ void WeirdUnusedMenu_release(void) {
 extern u32 lbl_803DD720;
 extern u32 lbl_8031AD98[];
 extern u32 textureLoadAsset(int);
-extern u32 gameTextGet(int);
 extern int Obj_GetPlayerObject(void);
 #pragma scheduling off
 #pragma peephole off

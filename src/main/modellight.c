@@ -1697,7 +1697,6 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct *light) {
 
 #pragma pop
 
-extern void *textureLoadAsset(int asset);
 
 #pragma push
 #pragma scheduling off

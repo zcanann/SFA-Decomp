@@ -413,7 +413,6 @@ extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
 extern void Resource_Release(int handle);
 extern void *lbl_803DE4D0;
 
-extern int GameBit_Set(int id, int value);
 extern int lbl_803DB1C0[];
 extern void *lbl_803DE4E0;
 extern int fn_802C0B84(int obj);

@@ -1122,7 +1122,6 @@ extern u32 getButtonsJustPressed(s32);
 extern void padGetAnalogInput(s32, u8*, u8*);
 extern void buttonDisable(s32, u32);
 extern int  Sfx_PlayFromObject(s32, s32);
-extern int  GameBit_Set(u32, u32);
 
 /* EN v1.0 0x8012DD7C  size: 40b  Cancel/clear helper. Stores the new u8
  * state byte and, when the caller resets it to 0, also clears the active

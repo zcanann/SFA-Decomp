@@ -2168,7 +2168,6 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
  * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
  * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
 extern MapEventInterface **gMapEventInterface;
-extern int GameBit_Get(int);
 extern f32 lbl_803E5DC0;
 #pragma scheduling off
 #pragma peephole off

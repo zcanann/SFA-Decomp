@@ -140,7 +140,6 @@ void optionsMenu_applyAudioSetting(int p1,int p2)
 extern int optionsMenu_openAudioPanel(void);
 extern int optionsMenu_openGeneralPanel(void);
 extern int languageMenuInit(void);
-extern void Sfx_PlayFromObject(int obj, int sfx);
 extern int* gTitleMenuLinkInterface;
 extern f32 lbl_803E1DD0;
 extern s8 lbl_803DBA28;

@@ -1372,7 +1372,6 @@ extern void pollenfragment_free(int obj);
 extern void pollenfragment_hitDetect(int obj);
 extern void pollenfragment_update(int obj);
 extern int fn_80080150(int p);
-extern void objRenderFn_8003b8f4(f32 f);
 extern f32 lbl_803E3158;
 
 #pragma scheduling off

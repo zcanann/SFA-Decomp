@@ -2132,7 +2132,6 @@ void GameUI_initAirMeter(int a, int b) {
 
 extern int *gMapEventInterface;
 extern u8 lbl_803DB424;
-extern void gameTextLoadDir(int);
 #pragma scheduling off
 #pragma peephole off
 void showDeathMenu(void) {

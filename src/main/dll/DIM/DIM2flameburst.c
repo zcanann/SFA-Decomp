@@ -2133,7 +2133,6 @@ extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
 extern f32 expf(f32 x);
 extern f32 sqrtf(f32 x);
 extern f32 fn_80293E80(f32 x);
-extern void Sfx_PlayFromObject(int obj, int id);
 extern void Sfx_PlayFromObjectLimited(int obj, int id, int n);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);

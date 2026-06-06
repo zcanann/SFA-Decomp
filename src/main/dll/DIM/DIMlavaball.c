@@ -1449,7 +1449,6 @@ void MoonSeedBush_update(int obj) {
 extern int getSaveGameLoadStatus(void);
 extern int mapGetDirIdx(int);
 extern void unlockLevel(int, int, int);
-extern void Music_Trigger(int, int);
 extern void MMP_LevelControl_SeqFn(int);
 extern f32 lbl_803E44C8;
 extern u8 framesThisStep;

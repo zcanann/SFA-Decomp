@@ -64,11 +64,12 @@ def split_top_level_commas(s):
     return parts
 
 
-FNPTR_NAME = re.compile(r'\(\s*\*+\s*(\w+)\s*\)\s*\(')
+FNPTR_NAME = re.compile(r'\(\s*\*+\s*(\w+)\s*(?:\[[^\]]*\]\s*)*\)\s*\(')
 FN_NAME = re.compile(r'(\w+)\s*\(')
 VAR_NAME = re.compile(r'(\w+)\s*((?:\[[^\]]*\]\s*)*)$')
 KEYWORDS = {'extern', 'static', 'const', 'volatile', 'struct', 'union',
-            'enum', 'unsigned', 'signed', 'register'}
+            'enum', 'unsigned', 'signed', 'register', 'void', 'int', 'char',
+            'short', 'long', 'float', 'double'}
 
 
 def declarator_name(decl):

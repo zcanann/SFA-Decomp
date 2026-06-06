@@ -900,7 +900,6 @@ void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
 extern int *gGameUIInterface;
-extern u32 GameBit_Get(int id);
 extern int *gObjectTriggerInterface;
 extern int *gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy

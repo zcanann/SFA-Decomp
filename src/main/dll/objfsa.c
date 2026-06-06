@@ -4853,7 +4853,6 @@ extern u8 lbl_803DD434;
 extern u8 lbl_803DD44E;
 extern u8 lbl_803DD44F;
 extern f32 timeDelta;
-extern float sqrtf(float x);
 extern u8 lbl_803DD450;
 extern f64 lbl_803E0598;
 extern f32 lbl_803E0588;

@@ -1953,7 +1953,6 @@ int saveFn_800e8508(void)
  * PAL Size: TODO
  */
 extern u32 pRestartPoint;
-extern int _saveGame(int a, int b, int c);
 
 void gplaySaveGame(int param)
 {
@@ -13180,7 +13179,6 @@ void SaveGame_gplayGotoSavegame(void) {
     loadMapForCurrentSaveGame();
 }
 extern void unlockLevel(int a, int b, int c);
-extern void *memset(void *p, int v, u32 n);
 extern void cutsceneExit(void);
 extern void audioStopByMask(int mask);
 extern void stopRumble2(void);
@@ -13513,7 +13511,6 @@ void updateSavedHealth(void) {
     *((u8*)lbl_803A32A8 + idx) = lbl_803DD498[idx];
 }
 extern void *gameTextGet(int idx);
-extern void *getLastSavedGameTexts(void);
 void *saveGameGetCurHint(void) {
     return gameTextGet((s32)*(u8*)((char*)getLastSavedGameTexts() + 0x5) + 0xf4);
 }

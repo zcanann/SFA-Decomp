@@ -513,7 +513,6 @@ extern f32 lbl_803E3974;
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
                                  undefined4 p5, double scale);
 extern void* Obj_GetPlayerObject(void);
-extern void vecRotateZXY(void* in, void* out);
 
 /*
  * --INFO--

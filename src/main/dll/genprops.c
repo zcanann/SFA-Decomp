@@ -5246,8 +5246,6 @@ void staff_func15(int *obj, s16 idx, f32 f1, f32 f2) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 
 #pragma scheduling off
 #pragma peephole off
@@ -7572,7 +7570,6 @@ void fn_80172144(int *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 fn_80293E80(f32 x);
 extern f32 fastFloorf(f32 v);
 extern f32 Curve_EvalBSpline(f32 *a, f32 t, f32 *out);
 extern f32 lbl_803E3304;

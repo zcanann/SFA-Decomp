@@ -4344,7 +4344,6 @@ extern void clearForceLoadImmediately(void);
 extern void loadModelAndAnimTabs(void);
 extern int getCurrentDataFile(int id);
 extern void setShadowFlag_803db658(int v);
-extern void gameTextLoadDir(int dir);
 extern char sTrackPiLockedFormat[];
 extern int lbl_803DCE88;
 extern int lbl_803DCE1C;

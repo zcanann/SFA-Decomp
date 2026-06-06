@@ -276,8 +276,6 @@ int sh_levelcontrol_getExtraSize(void)
 }
 
 extern void envFxActFn_800887f8(int);
-extern u32 GameBit_Get(int);
-extern int GameBit_Set(int, int);
 extern void *gGameUIInterface;
 
 #pragma scheduling off

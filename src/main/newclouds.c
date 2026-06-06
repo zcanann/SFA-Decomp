@@ -1401,7 +1401,6 @@ extern int getSaveGameLoadStatus(void);
 #pragma pop
 
 extern char sSnowFreeSnowCloudInvalidCloudId[];
-extern void mm_free(void *p);
 
 /*
  * --INFO--

@@ -2153,7 +2153,6 @@ f32 fn_8014C5D0(register int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 powfBitEstimate(f32 base, f32 exp);
 
 /* sidekickToy_accelerateTowardTargetXZ: xz-plane physics step toward a target. Computes the planar
  * distance to (tx,ty,tz), then nudges the obj's xz velocity (offsets 0x24,
@@ -2490,8 +2489,6 @@ int fn_8014BE1C(int *node, int p2, u8 *cmds)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern int getAngle(f32 a, f32 b);
-extern f32 sqrtf(f32 v);
 
 extern f32 lbl_803E25B8;
 extern f32 lbl_803E25EC;

@@ -1392,7 +1392,6 @@ void cflevelcontrol_release(void) {}
 void cflevelcontrol_initialise(void) {}
 
 extern void storeZeroToFloatParam(void* p);
-extern void s16toFloat(void* p, int duration);
 extern int CFLevelControl_SeqFn(int p1, int p2, void *p3);
 extern void objSetSlot(void *obj, int resourceId);
 extern s16 lbl_80323008[];
@@ -1748,7 +1747,6 @@ extern int slidingdoor_SeqFn(u8* obj, int unused, u8* data);
 extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
 extern f32 lbl_803E4428;
-extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int atan2i(int y, int x);
@@ -1972,7 +1970,6 @@ int CFLevelControl_SeqFn(int p1, int p2, void *p3) {
 #pragma scheduling reset
 
 /* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
-extern void storeZeroToFloatParam(void *p);
 #pragma scheduling off
 #pragma peephole off
 void cfforcefield_init(s16 *obj, void *data) {

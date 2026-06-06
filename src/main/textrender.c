@@ -1439,7 +1439,6 @@ void gameTextSetWindowStrPos(int idx, int x, int y) {
 }
 #pragma pop
 
-extern void *textureLoadAsset(int asset);
 extern void *lbl_8033BE54[];
 extern void *lbl_8033B240[];
 extern int lbl_803DCA14;
@@ -1729,7 +1728,6 @@ extern int lbl_803DC9D4;
 extern int lbl_803DC9E0;
 extern char sGameTextMapPathFormat[];
 extern char sGameTextSequencePathFormat[];
-extern int sprintf(char *s, const char *format, ...);
 extern void setFileInfo(void *fileInfo);
 extern void *loadFileByPathAsync(char *path, void *fileInfo, int flags, void *callback);
 extern void DVDCancelAsync(void *fileInfo, void *callback);

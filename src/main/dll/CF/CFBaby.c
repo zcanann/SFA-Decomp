@@ -2711,7 +2711,6 @@ void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma scheduling reset
 
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
-extern u32 GameBit_Get(int eventId);
 extern f64 lbl_803E3B60;
 extern f32 lbl_803E3B50;
 extern f32 lbl_803E3B54;
