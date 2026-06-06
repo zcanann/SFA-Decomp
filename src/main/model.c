@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/model_light.h"
+#include "main/objanim_internal.h"
 
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
@@ -1856,7 +1857,8 @@ void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
     i = 0;
     poff = 0;
     for (; i < (int)*(u8 *)(md + 0x5a); i++) {
-        u = *(u8 *)(*(u8 **)(md + 0x10) + boff + *(s8 *)(obj + 0xad) + 1);
+        u = *(u8 *)(*(u8 **)(md + 0x10) + boff +
+                    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) + 1);
         if (u != 0xff) {
             p = (s16 *)(*(u8 **)(obj + 0x6c) + poff);
             v1 = *(s8 *)(b1 + u) << 6;
@@ -1871,7 +1873,7 @@ void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
             BLENDTBL_ENTRY(7, 0x1a)
             BLENDTBL_ENTRY(8, 0x1c)
         }
-        boff = *(s8 *)(md + 0x55) + boff + 1;
+        boff = *(s8 *)(md + offsetof(ObjModelInstance, modelCount)) + boff + 1;
         poff += 0x12;
     }
     ((s16 *)lbl_80340740)[w++] = 0x1000;
