@@ -21,7 +21,7 @@ extern undefined4 unlockLevel(int param_1,int param_2,int param_3);
 extern undefined4 envFxActFn_800887f8(int param_1);
 
 extern FireObjectInterface **gObjectTriggerInterface;
-extern FireEventInterface **gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E64D8;
 
 #define FIRE_LOOP_SFX_ID 0x48B
@@ -118,19 +118,19 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
       case FIRE_MODE_2:
         GameBit_Set(FIRE_MODE2_RESET_GAMEBIT,0);
         if (GameBit_Get(FIRE_MODE2_ROUTE_B_GAMEBIT) != 0) {
-          (*gMapEventInterface)->triggerEvent(FIRE_MAP_ID_0B,3);
+          (*gMapEventInterface)->setMode(FIRE_MAP_ID_0B,3);
           (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,8,1);
           (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,9,1);
           warpToMap(FIRE_WARP_ID_MODE2_ROUTE_B,0);
         }
         else if (GameBit_Get(FIRE_MODE2_ROUTE_A_GAMEBIT) != 0) {
-          (*gMapEventInterface)->triggerEvent(FIRE_MAP_ID_0B,2);
+          (*gMapEventInterface)->setMode(FIRE_MAP_ID_0B,2);
           (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,5,1);
           (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,6,1);
           warpToMap(FIRE_WARP_ID_MODE2_ROUTE_A,0);
         }
         else if (GameBit_Get(FIRE_MODE2_ROUTE_C_GAMEBIT) != 0) {
-          (*gMapEventInterface)->triggerEvent(FIRE_MAP_ID_0B,4);
+          (*gMapEventInterface)->setMode(FIRE_MAP_ID_0B,4);
           (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,8,1);
           (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,9,1);
           warpToMap(FIRE_WARP_ID_MODE2_ROUTE_B,0);

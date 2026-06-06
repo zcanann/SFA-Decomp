@@ -2,6 +2,7 @@
 #define MAIN_DLL_FIRE_H_
 
 #include "ghidra_import.h"
+#include "main/mapEventTypes.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
 
@@ -20,15 +21,6 @@ typedef struct FireObjectInterface {
   u8 pad00[0x48];
   void (*refresh)(int param_1,FireObject *obj,int param_3);
 } FireObjectInterface;
-
-typedef struct FireEventInterface {
-  u8 pad00[0x40];
-  int (*getMode)(int mapId);
-  void (*triggerEvent)(int eventId,int value);
-  u8 pad48[0x4C - 0x48];
-  int (*getAnimEvent)(int animId,int eventId);
-  void (*setAnimEvent)(int animId,int eventId,int value);
-} FireEventInterface;
 
 extern ObjectDescriptor gFireObjDescriptor;
 

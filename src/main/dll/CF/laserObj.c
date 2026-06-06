@@ -7,7 +7,7 @@ extern void GameBit_Set(int eventId,int value);
 extern void objRenderFn_80041018(int obj);
 
 extern LaserTriggerInterface **gGameUIInterface;
-extern LaserEventInterface **gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 int laserObj_getExtraSize(void)
 {
@@ -70,10 +70,10 @@ void laserObj_update(LaserObject *obj)
           GameBit_Set((int)state->secondaryGameBit,0);
           state->gameBitLatched = 1;
           obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
-          (*gMapEventInterface)->triggerEvent(LASEROBJ_SEQUENCE_B_TRIGGER_A,
-                                   LASEROBJ_SEQUENCE_B_TRIGGER_A_VALUE);
-          (*gMapEventInterface)->triggerEvent(LASEROBJ_SEQUENCE_B_TRIGGER_B,
-                                   LASEROBJ_SEQUENCE_B_TRIGGER_B_VALUE);
+          (*gMapEventInterface)->setMode(LASEROBJ_SEQUENCE_B_MODE_MAP_A,
+                                         LASEROBJ_SEQUENCE_B_MODE_A);
+          (*gMapEventInterface)->setMode(LASEROBJ_SEQUENCE_B_MODE_MAP_B,
+                                         LASEROBJ_SEQUENCE_B_MODE_B);
         }
         break;
     }

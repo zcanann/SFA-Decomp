@@ -1,7 +1,7 @@
 #ifndef MAIN_MAPEVENTTYPES_H_
 #define MAIN_MAPEVENTTYPES_H_
 
-#include "ghidra_import.h"
+#include "global.h"
 
 typedef struct MapEventInterface {
     u8 pad00[0x1C];
@@ -18,5 +18,14 @@ typedef struct MapEventInterface {
     u8 *(*getWarpPos)(void);
     u8 *(*getProgressPtr)(void);
 } MapEventInterface;
+
+STATIC_ASSERT(offsetof(MapEventInterface, triggerEvent) == 0x1C);
+STATIC_ASSERT(offsetof(MapEventInterface, finishCurrentEvent) == 0x28);
+STATIC_ASSERT(offsetof(MapEventInterface, getMode) == 0x40);
+STATIC_ASSERT(offsetof(MapEventInterface, setMode) == 0x44);
+STATIC_ASSERT(offsetof(MapEventInterface, getAnimEvent) == 0x4C);
+STATIC_ASSERT(offsetof(MapEventInterface, setAnimEvent) == 0x50);
+STATIC_ASSERT(offsetof(MapEventInterface, getWarpPos) == 0x90);
+STATIC_ASSERT(offsetof(MapEventInterface, getProgressPtr) == 0x94);
 
 #endif /* MAIN_MAPEVENTTYPES_H_ */

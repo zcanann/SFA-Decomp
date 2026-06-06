@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/mapEventTypes.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
 
@@ -36,17 +37,6 @@ typedef struct LaserTriggerInterface {
   int (*isEventReady)(int eventId);
 } LaserTriggerInterface;
 
-typedef undefined8 (*LaserMapEventTriggerFn)();
-
-typedef struct LaserEventInterface {
-  u8 pad00[0x40];
-  int (*getMode)(int mapId);
-  void (*triggerEvent)(int eventId,int value);
-  u8 pad48[0x4C - 0x48];
-  int (*getAnimEvent)(int animId,int eventId);
-  void (*setAnimEvent)(int animId,int eventId,int value);
-} LaserEventInterface;
-
 typedef struct LaserReleaseInterface {
   u8 pad00[0x48];
   void (*releaseObject)(int parent,undefined4 object,int flags);
@@ -68,10 +58,6 @@ STATIC_ASSERT(offsetof(LaserObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(LaserObject, state) == 0xB8);
 
 STATIC_ASSERT(offsetof(LaserTriggerInterface, isEventReady) == 0x20);
-STATIC_ASSERT(offsetof(LaserEventInterface, getMode) == 0x40);
-STATIC_ASSERT(offsetof(LaserEventInterface, triggerEvent) == 0x44);
-STATIC_ASSERT(offsetof(LaserEventInterface, getAnimEvent) == 0x4C);
-STATIC_ASSERT(offsetof(LaserEventInterface, setAnimEvent) == 0x50);
 STATIC_ASSERT(offsetof(LaserReleaseInterface, releaseObject) == 0x48);
 
 #define LASER_OBJECT_STATUS_ACTIVE 0x01
@@ -84,10 +70,10 @@ STATIC_ASSERT(offsetof(LaserReleaseInterface, releaseObject) == 0x48);
 
 #define LASEROBJ_SEQUENCE_A_EVENT 0x2e8
 #define LASEROBJ_SEQUENCE_B_EVENT 0x83c
-#define LASEROBJ_SEQUENCE_B_TRIGGER_A 7
-#define LASEROBJ_SEQUENCE_B_TRIGGER_B 0xd
-#define LASEROBJ_SEQUENCE_B_TRIGGER_A_VALUE 8
-#define LASEROBJ_SEQUENCE_B_TRIGGER_B_VALUE 2
+#define LASEROBJ_SEQUENCE_B_MODE_MAP_A 7
+#define LASEROBJ_SEQUENCE_B_MODE_MAP_B 0xd
+#define LASEROBJ_SEQUENCE_B_MODE_A 8
+#define LASEROBJ_SEQUENCE_B_MODE_B 2
 
 #define LASEROBJ_MAIN_SEQUENCE_A_EVENT 0x123
 #define LASEROBJ_MAIN_SEQUENCE_B_EVENT 0x83b
