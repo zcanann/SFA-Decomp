@@ -1,9 +1,18 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/ARW/arwing_state.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/objhits_types.h"
 #pragma peephole on
 #pragma scheduling on
+/* wcfloortile_getExtraSize == 0x8. */
+typedef struct WcFloorTileState {
+    f32 shakeTime;
+    s16 shakeMag;
+    u8 phase;   /* 0x6 */
+    u8 flags;   /* 0x7: 1|2 done, 4 armed */
+} WcFloorTileState;
+
 int wcfloortile_getExtraSize(void) { return 8; }
 #pragma scheduling reset
 #pragma peephole reset
@@ -45,7 +54,7 @@ void wcfloortile_init(int obj)
 
     *(s16 *)obj = -0x4000;
     (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 0x1800;
-    *(u8 *)(state + 7) |= 2;
+    ((WcFloorTileState *)state)->flags |= 2;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -311,26 +320,26 @@ void fn_8022AECC(int obj, int p)
 
 #pragma scheduling off
 void fn_8022B8A0(int p, int q) {
-    if (*(void **)(q + 0x438) != NULL)
+    if (*(void * *)&((ArwingState *)q)->unk438 != NULL)
         return;
     {
-        f32 t = *(f32 *)(q + 0x440);
+        f32 t = ((ArwingState *)q)->unk440;
         if (t > lbl_803E6ECC) {
-            *(f32 *)(q + 0x440) = t - timeDelta;
-            if (*(f32 *)(q + 0x440) >= lbl_803E6ECC)
+            ((ArwingState *)q)->unk440 = t - timeDelta;
+            if (((ArwingState *)q)->unk440 >= lbl_803E6ECC)
                 return;
-            *(f32 *)(q + 0x440) = lbl_803E6ECC;
+            ((ArwingState *)q)->unk440 = lbl_803E6ECC;
         }
     }
-    if (*(u16 *)(q + 0x3f4) & 0x200) {
-        if ((s8) * (u8 *)(q + 0x43c) == 1) {
+    if (((ArwingState *)q)->inputFlags & 0x200) {
+        if ((s8) ((ArwingState *)q)->unk43C == 1) {
             fn_8022B764(p, q, 0);
             fn_8022B764(p, q, 1);
         } else {
-            fn_8022B764(p, q, *(u8 *)(q + 0x43d));
-            *(u8 *)(q + 0x43d) = (*(u8 *)(q + 0x43d) ^ 1) & 0xff;
+            fn_8022B764(p, q, ((ArwingState *)q)->bombSide);
+            ((ArwingState *)q)->bombSide = (((ArwingState *)q)->bombSide ^ 1) & 0xff;
         }
-        *(f32 *)(q + 0x440) = (f32)(u32) * (u16 *)(q + 0x444);
+        ((ArwingState *)q)->unk440 = (f32)(u32) *(u16 *)&((ArwingState *)q)->unk444;
     }
 }
 #pragma scheduling reset
@@ -343,10 +352,10 @@ void fn_8022B764(int p, int q, int idx) {
     u8 cnt;
     if (Obj_IsLoadingLocked() == 0)
         return;
-    cnt = *(u8 *)(q + 0x44c);
+    cnt = ((ArwingState *)q)->bombCount;
     if (cnt == 0)
         return;
-    *(u8 *)(q + 0x44c) = cnt - 1;
+    ((ArwingState *)q)->bombCount = cnt - 1;
     if (idx == 0)
         ObjPath_GetPointWorldPosition(p, 5, &px, &py, &pz, 0);
     else
@@ -360,9 +369,9 @@ void fn_8022B764(int p, int q, int idx) {
     *(u8 *)(setup + 0x18) = *(s16 *)(p + 4) >> 8;
     *(u8 *)(setup + 4) = 1;
     *(u8 *)(setup + 5) = 1;
-    *(int *)(q + 0x438) = loadObjectAtObject(p);
-    fn_8022ED74(*(int *)(q + 0x438), *(u16 *)(q + 0x446));
-    fn_8022ECE0(*(int *)(q + 0x438), *(f32 *)(q + 0x448));
+    ((ArwingState *)q)->unk438 = loadObjectAtObject(p);
+    fn_8022ED74(((ArwingState *)q)->unk438, *(u16 *)&((ArwingState *)q)->unk446);
+    fn_8022ECE0(((ArwingState *)q)->unk438, ((ArwingState *)q)->unk448);
     Sfx_PlayFromObject(p, SFXbaddie_rach_call3);
 }
 #pragma scheduling reset
@@ -388,26 +397,26 @@ void fn_8022A9C8(int obj, int state)
     setMatrixFromObjectPos(mtx, &src);
 
     Matrix_TransformPoint(mtx, lbl_803E6ECC, *(f32 *)&lbl_803E6ECC, lbl_803E6EF0,
-                          (f32 *)(*(int *)(state + 0x418) + 0xc),
-                          (f32 *)(*(int *)(state + 0x418) + 0x10),
-                          (f32 *)(*(int *)(state + 0x418) + 0x14));
-    *(f32 *)(*(int *)(state + 0x418) + 0x18) = *(f32 *)(*(int *)(state + 0x418) + 0xc);
-    *(f32 *)(*(int *)(state + 0x418) + 0x1c) = *(f32 *)(*(int *)(state + 0x418) + 0x10);
-    *(f32 *)(*(int *)(state + 0x418) + 0x20) = *(f32 *)(*(int *)(state + 0x418) + 0x14);
-    *(s16 *)(*(int *)(state + 0x418) + 4) = -*(s16 *)(slot + 4);
-    *(s16 *)(*(int *)(state + 0x418) + 2) = -*(s16 *)(slot + 2);
-    *(s16 *)(*(int *)(state + 0x418) + 0) = 0x8000 - *(s16 *)slot;
+                          (f32 *)(((ArwingState *)state)->thrusterL + 0xc),
+                          (f32 *)(((ArwingState *)state)->thrusterL + 0x10),
+                          (f32 *)(((ArwingState *)state)->thrusterL + 0x14));
+    *(f32 *)(((ArwingState *)state)->thrusterL + 0x18) = *(f32 *)(((ArwingState *)state)->thrusterL + 0xc);
+    *(f32 *)(((ArwingState *)state)->thrusterL + 0x1c) = *(f32 *)(((ArwingState *)state)->thrusterL + 0x10);
+    *(f32 *)(((ArwingState *)state)->thrusterL + 0x20) = *(f32 *)(((ArwingState *)state)->thrusterL + 0x14);
+    *(s16 *)(((ArwingState *)state)->thrusterL + 4) = -*(s16 *)(slot + 4);
+    *(s16 *)(((ArwingState *)state)->thrusterL + 2) = -*(s16 *)(slot + 2);
+    *(s16 *)(((ArwingState *)state)->thrusterL + 0) = 0x8000 - *(s16 *)slot;
 
     Matrix_TransformPoint(mtx, lbl_803E6ECC, *(f32 *)&lbl_803E6ECC, lbl_803E6EF4,
-                          (f32 *)(*(int *)(state + 0x41c) + 0xc),
-                          (f32 *)(*(int *)(state + 0x41c) + 0x10),
-                          (f32 *)(*(int *)(state + 0x41c) + 0x14));
-    *(f32 *)(*(int *)(state + 0x41c) + 0x18) = *(f32 *)(*(int *)(state + 0x41c) + 0xc);
-    *(f32 *)(*(int *)(state + 0x41c) + 0x1c) = *(f32 *)(*(int *)(state + 0x41c) + 0x10);
-    *(f32 *)(*(int *)(state + 0x41c) + 0x20) = *(f32 *)(*(int *)(state + 0x41c) + 0x14);
-    *(s16 *)(*(int *)(state + 0x41c) + 4) = -*(s16 *)(slot + 4);
-    *(s16 *)(*(int *)(state + 0x41c) + 2) = -*(s16 *)(slot + 2);
-    *(s16 *)(*(int *)(state + 0x41c) + 0) = 0x8000 - *(s16 *)slot;
+                          (f32 *)(((ArwingState *)state)->thrusterR + 0xc),
+                          (f32 *)(((ArwingState *)state)->thrusterR + 0x10),
+                          (f32 *)(((ArwingState *)state)->thrusterR + 0x14));
+    *(f32 *)(((ArwingState *)state)->thrusterR + 0x18) = *(f32 *)(((ArwingState *)state)->thrusterR + 0xc);
+    *(f32 *)(((ArwingState *)state)->thrusterR + 0x1c) = *(f32 *)(((ArwingState *)state)->thrusterR + 0x10);
+    *(f32 *)(((ArwingState *)state)->thrusterR + 0x20) = *(f32 *)(((ArwingState *)state)->thrusterR + 0x14);
+    *(s16 *)(((ArwingState *)state)->thrusterR + 4) = -*(s16 *)(slot + 4);
+    *(s16 *)(((ArwingState *)state)->thrusterR + 2) = -*(s16 *)(slot + 2);
+    *(s16 *)(((ArwingState *)state)->thrusterR + 0) = 0x8000 - *(s16 *)slot;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -421,55 +430,55 @@ void fn_8022A670(int obj, int state)
     int btn;
 
     debugPrintSetColor(0xff, 0xff, 0xff, 0xff);
-    *(f32 *)(state + 0x3e4) = (f32)(s8)padGetStickX(0) / lbl_803E6EC8;
-    *(f32 *)(state + 0x3e8) = (f32)(s8)padGetStickY(0) / lbl_803E6EC8;
-    if (*(f32 *)(state + 0x328) > lbl_803E6ECC) {
-        nx = -*(f32 *)(state + 0x32c);
-        ny = -*(f32 *)(state + 0x330);
-        *(f32 *)(state + 0x328) = *(f32 *)(state + 0x328) - timeDelta;
-        tv = lbl_8032B4A8[(int)*(f32 *)(state + 0x328)];
-        if (*(f32 *)(state + 0x328) <= lbl_803E6ECC) {
-            *(u8 *)(state + 0x338) = 0;
+    ((ArwingState *)state)->unk3E4 = (f32)(s8)padGetStickX(0) / lbl_803E6EC8;
+    ((ArwingState *)state)->unk3E8 = (f32)(s8)padGetStickY(0) / lbl_803E6EC8;
+    if (((ArwingState *)state)->damageFlashTimer > lbl_803E6ECC) {
+        nx = -((ArwingState *)state)->knockVelX;
+        ny = -((ArwingState *)state)->knockVelZ;
+        ((ArwingState *)state)->damageFlashTimer = ((ArwingState *)state)->damageFlashTimer - timeDelta;
+        tv = lbl_8032B4A8[(int)((ArwingState *)state)->damageFlashTimer];
+        if (((ArwingState *)state)->damageFlashTimer <= lbl_803E6ECC) {
+            ((ArwingState *)state)->hitShake = 0;
             (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, state + 0xc0);
         }
-        *(f32 *)(state + 0x3e4) =
-            *(f32 *)(state + 0x3e4) * (lbl_803E6ED0 - tv) + nx * tv;
-        *(f32 *)(state + 0x3e8) =
-            *(f32 *)(state + 0x3e8) * (lbl_803E6ED0 - tv) + ny * tv;
+        ((ArwingState *)state)->unk3E4 =
+            ((ArwingState *)state)->unk3E4 * (lbl_803E6ED0 - tv) + nx * tv;
+        ((ArwingState *)state)->unk3E8 =
+            ((ArwingState *)state)->unk3E8 * (lbl_803E6ED0 - tv) + ny * tv;
     }
-    *(f32 *)(state + 0x3ec) = (f32)(u32)(u8)padGetRTrigger(0) / lbl_803E6ED4;
-    if (*(f32 *)(state + 0x3ec) < lbl_803E6ECC)
-        *(f32 *)(state + 0x3ec) = lbl_803E6ECC;
-    else if (*(f32 *)(state + 0x3ec) > lbl_803E6ED0)
-        *(f32 *)(state + 0x3ec) = lbl_803E6ED0;
-    *(f32 *)(state + 0x3f0) = -(f32)(u32)(u8)padGetLTrigger(0) / lbl_803E6ED4;
-    if (*(f32 *)(state + 0x3f0) < lbl_803E6ED8)
-        *(f32 *)(state + 0x3f0) = lbl_803E6ED8;
-    else if (*(f32 *)(state + 0x3f0) > lbl_803E6ECC)
-        *(f32 *)(state + 0x3f0) = lbl_803E6ECC;
-    *(u16 *)(state + 0x3f4) = (u16)getButtonsJustPressed(0);
-    *(u16 *)(state + 0x3f6) = (u16)getButtonsJustPressedIfNotBusy(0);
-    *(u16 *)(state + 0x3f8) = (u16)getButtonsHeld(0);
-    if (*(u8 *)(state + 0x478) == 0) {
-        btn = *(u16 *)(state + 0x3f4);
+    ((ArwingState *)state)->unk3EC = (f32)(u32)(u8)padGetRTrigger(0) / lbl_803E6ED4;
+    if (((ArwingState *)state)->unk3EC < lbl_803E6ECC)
+        ((ArwingState *)state)->unk3EC = lbl_803E6ECC;
+    else if (((ArwingState *)state)->unk3EC > lbl_803E6ED0)
+        ((ArwingState *)state)->unk3EC = lbl_803E6ED0;
+    ((ArwingState *)state)->unk3F0 = -(f32)(u32)(u8)padGetLTrigger(0) / lbl_803E6ED4;
+    if (((ArwingState *)state)->unk3F0 < lbl_803E6ED8)
+        ((ArwingState *)state)->unk3F0 = lbl_803E6ED8;
+    else if (((ArwingState *)state)->unk3F0 > lbl_803E6ECC)
+        ((ArwingState *)state)->unk3F0 = lbl_803E6ECC;
+    ((ArwingState *)state)->inputFlags = (u16)getButtonsJustPressed(0);
+    ((ArwingState *)state)->inputFlagsPrev = (u16)getButtonsJustPressedIfNotBusy(0);
+    ((ArwingState *)state)->inputFlags2 = (u16)getButtonsHeld(0);
+    if (((ArwingState *)state)->mode == 0) {
+        btn = ((ArwingState *)state)->inputFlags;
         if ((btn & 0x20) != 0) {
             Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
-            *(u8 *)(state + 0x478) = 1;
-            *(int *)(state + 0x398) = *(s16 *)(obj + 4);
-            *(f32 *)(state + 0x3a0) = *(f32 *)(state + 0x39c);
-            *(f32 *)(state + 0x3a8) = lbl_803E6ED0;
-            *(f32 *)(state + 0x54) = *(f32 *)(state + 0x54) * *(f32 *)(state + 0x3ac);
-            *(f32 *)(state + 0x60) = *(f32 *)(state + 0x60) * *(f32 *)(state + 0x3b0);
-            arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 1, 0);
+            ((ArwingState *)state)->mode = 1;
+            ((ArwingState *)state)->unk398 = *(s16 *)(obj + 4);
+            ((ArwingState *)state)->unk3A0 = ((ArwingState *)state)->unk39C;
+            ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
+            ((ArwingState *)state)->unk54 = ((ArwingState *)state)->unk54 * ((ArwingState *)state)->unk3AC;
+            ((ArwingState *)state)->unk60 = ((ArwingState *)state)->unk60 * ((ArwingState *)state)->unk3B0;
+            arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 1, 0);
         } else if ((btn & 0x40) != 0) {
             Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
-            *(u8 *)(state + 0x478) = 1;
-            *(int *)(state + 0x398) = *(s16 *)(obj + 4);
-            *(f32 *)(state + 0x3a0) = -*(f32 *)(state + 0x39c);
-            *(f32 *)(state + 0x3a8) = lbl_803E6ED0;
-            *(f32 *)(state + 0x54) = *(f32 *)(state + 0x54) * *(f32 *)(state + 0x3ac);
-            *(f32 *)(state + 0x60) = *(f32 *)(state + 0x60) * *(f32 *)(state + 0x3b0);
-            arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 1, 1);
+            ((ArwingState *)state)->mode = 1;
+            ((ArwingState *)state)->unk398 = *(s16 *)(obj + 4);
+            ((ArwingState *)state)->unk3A0 = -((ArwingState *)state)->unk39C;
+            ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
+            ((ArwingState *)state)->unk54 = ((ArwingState *)state)->unk54 * ((ArwingState *)state)->unk3AC;
+            ((ArwingState *)state)->unk60 = ((ArwingState *)state)->unk60 * ((ArwingState *)state)->unk3B0;
+            arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 1, 1);
         }
     }
 }
@@ -482,53 +491,53 @@ void fn_8022AB68(int obj, int state)
     int cur;
     int d;
 
-    *(int *)(state + 0x398) =
-        (int)(timeDelta * (*(f32 *)(state + 0x3a0) * *(f32 *)(state + 0x3a8)) +
-              (f32) * (int *)(state + 0x398));
+    ((ArwingState *)state)->unk398 =
+        (int)(timeDelta * (((ArwingState *)state)->unk3A0 * ((ArwingState *)state)->unk3A8) +
+              (f32) ((ArwingState *)state)->unk398);
     *(s16 *)(obj + 4) =
-        (s16)(int)(timeDelta * (*(f32 *)(state + 0x3a0) * *(f32 *)(state + 0x3a8)) +
+        (s16)(int)(timeDelta * (((ArwingState *)state)->unk3A0 * ((ArwingState *)state)->unk3A8) +
                    (f32) * (s16 *)(obj + 4));
-    if (*(f32 *)(state + 0x3a0) > lbl_803E6ECC) {
-        tgt = *(int *)(state + 0x380);
-        cur = *(int *)(state + 0x398);
+    if (((ArwingState *)state)->unk3A0 > lbl_803E6ECC) {
+        tgt = ((ArwingState *)state)->unk380;
+        cur = ((ArwingState *)state)->unk398;
         if (cur > tgt + 0xffff) {
-            *(u8 *)(state + 0x478) = 0;
-            *(int *)(state + 0x380) = *(int *)(state + 0x398) - 0xffff;
-            *(f32 *)(state + 0x38c) = lbl_803E6ECC;
-            *(f32 *)(state + 0x54) = *(f32 *)(state + 0x54) / *(f32 *)(state + 0x3ac);
-            *(f32 *)(state + 0x60) = *(f32 *)(state + 0x60) / *(f32 *)(state + 0x3b0);
-            arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
+            ((ArwingState *)state)->mode = 0;
+            ((ArwingState *)state)->unk380 = ((ArwingState *)state)->unk398 - 0xffff;
+            ((ArwingState *)state)->unk38C = lbl_803E6ECC;
+            ((ArwingState *)state)->unk54 = ((ArwingState *)state)->unk54 / ((ArwingState *)state)->unk3AC;
+            ((ArwingState *)state)->unk60 = ((ArwingState *)state)->unk60 / ((ArwingState *)state)->unk3B0;
+            arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
         } else if (cur > tgt + 0x8000) {
             d = cur - (u16)tgt;
             if (d > 0x8000) d -= 0xffff;
             if (d < -0x8000) d += 0xffff;
             if (d < 0) d = -d;
-            *(f32 *)(state + 0x3a8) = (f32)d / *(f32 *)(state + 0x3a4);
-            if (*(f32 *)(state + 0x3a8) < lbl_803E6EF8)
-                *(f32 *)(state + 0x3a8) = lbl_803E6EF8;
-            else if (*(f32 *)(state + 0x3a8) > lbl_803E6ED0)
-                *(f32 *)(state + 0x3a8) = lbl_803E6ED0;
+            ((ArwingState *)state)->unk3A8 = (f32)d / ((ArwingState *)state)->unk3A4;
+            if (((ArwingState *)state)->unk3A8 < lbl_803E6EF8)
+                ((ArwingState *)state)->unk3A8 = lbl_803E6EF8;
+            else if (((ArwingState *)state)->unk3A8 > lbl_803E6ED0)
+                ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
         }
     } else {
-        tgt = *(int *)(state + 0x380);
-        cur = *(int *)(state + 0x398);
+        tgt = ((ArwingState *)state)->unk380;
+        cur = ((ArwingState *)state)->unk398;
         if (cur < tgt - 0xffff) {
-            *(u8 *)(state + 0x478) = 0;
-            *(int *)(state + 0x380) = *(int *)(state + 0x398) + 0xffff;
-            *(f32 *)(state + 0x38c) = lbl_803E6ECC;
-            *(f32 *)(state + 0x54) = *(f32 *)(state + 0x54) / *(f32 *)(state + 0x3ac);
-            *(f32 *)(state + 0x60) = *(f32 *)(state + 0x60) / *(f32 *)(state + 0x3b0);
-            arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
+            ((ArwingState *)state)->mode = 0;
+            ((ArwingState *)state)->unk380 = ((ArwingState *)state)->unk398 + 0xffff;
+            ((ArwingState *)state)->unk38C = lbl_803E6ECC;
+            ((ArwingState *)state)->unk54 = ((ArwingState *)state)->unk54 / ((ArwingState *)state)->unk3AC;
+            ((ArwingState *)state)->unk60 = ((ArwingState *)state)->unk60 / ((ArwingState *)state)->unk3B0;
+            arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
         } else if (cur > tgt - 0x8000) {
             d = cur - (u16)tgt;
             if (d > 0x8000) d -= 0xffff;
             if (d < -0x8000) d += 0xffff;
             if (d < 0) d = -d;
-            *(f32 *)(state + 0x3a8) = (f32)d / *(f32 *)(state + 0x3a4);
-            if (*(f32 *)(state + 0x3a8) < lbl_803E6EF8)
-                *(f32 *)(state + 0x3a8) = lbl_803E6EF8;
-            else if (*(f32 *)(state + 0x3a8) > lbl_803E6ED0)
-                *(f32 *)(state + 0x3a8) = lbl_803E6ED0;
+            ((ArwingState *)state)->unk3A8 = (f32)d / ((ArwingState *)state)->unk3A4;
+            if (((ArwingState *)state)->unk3A8 < lbl_803E6EF8)
+                ((ArwingState *)state)->unk3A8 = lbl_803E6EF8;
+            else if (((ArwingState *)state)->unk3A8 > lbl_803E6ED0)
+                ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
         }
     }
 }
