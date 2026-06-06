@@ -1617,7 +1617,7 @@ void FUN_801b05b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
           *(byte *)(iVar4 + 0x10) = *(byte *)(iVar4 + 0x10) | 0x10;
           param_9[3] = param_9[3] | 0x4000;
         }
-        if ((*(byte *)(iVar3 + 0xad) & 1) != 0) {
+        if ((((ObjAnimComponent *)iVar3)->bankIndex & 1) != 0) {
           FUN_8008112c((double)lbl_803E5494,dVar5,dVar6,param_4,param_5,param_6,param_7,param_8,
                        param_9,1,1,0,0,0,0,0);
           *(byte *)(iVar4 + 0x10) = *(byte *)(iVar4 + 0x10) | 0x10;
@@ -2630,9 +2630,7 @@ void dimlogfire_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
         state = *(DimLogFireState **)((char *)obj + 0xb8);
         subobj = (int *)state->subObj;
         if (subobj != NULL) {
-            int *p = *(int **)((char *)subobj + 0x7c);
-            int idx = (s32)*(s8 *)((char *)subobj + 0xad);
-            int *q = ((int **)p)[idx];
+            int *q = DIMcannon_GetActiveModel(subobj);
             *(u16 *)((char *)q + 0x18) = (u16)(*(u16 *)((char *)q + 0x18) & ~0x8);
             *(u8 *)((char *)(int *)state->subObj + 0x37) = *(u8 *)((char *)obj + 0x37);
             ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)((int *)state->subObj, p2, p3, p4, p5, lbl_803E4820);
@@ -2802,7 +2800,7 @@ void lavaball1be_update(s16 *obj) {
                     state[0x10] |= 0x10;
                     obj[3] |= 0x4000;
                 }
-                if (*(s8 *)((char *)sub + 0xad) & 1) {
+                if (((ObjAnimComponent *)sub)->bankIndex & 1) {
                     spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
                     state[0x10] |= 0x10;
                     obj[3] |= 0x4000;
