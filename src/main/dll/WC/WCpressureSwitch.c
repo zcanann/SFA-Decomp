@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/WC/WCpressureSwitch.h"
 #include "main/mapEventTypes.h"
+#include "main/objlib.h"
 
 
 #pragma peephole off
@@ -12,7 +13,6 @@ extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern void* ObjGroup_GetObjects();
 extern void Resource_Release(void *resource);
 extern void objRenderFn_8003b8f4(void *obj, int p2, int p3, int p4, int p5, f32 scale);
 extern undefined4 FUN_80286840();
@@ -74,7 +74,6 @@ extern MapEventInterface **gMapEventInterface;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern int *ObjGroup_GetObjects2(int group, int *countOut);
 extern int *gPartfxInterface;
 extern s16 lbl_803DDC68;
 extern f32 lbl_803E5CC8;
@@ -103,7 +102,7 @@ void WM_ObjCreator_update(int obj) {
                 if (GameBit_Get(0x78) != 0) {
                     ok = 0;
                 }
-                objs = ObjGroup_GetObjects2(3, &count);
+                objs = (int *)ObjGroup_GetObjects(3, &count);
                 k = 0;
                 while (k < count && ok) {
                     if (*(s16 *)(*objs + 0x46) == 0x139) {

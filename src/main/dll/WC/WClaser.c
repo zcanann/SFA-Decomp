@@ -3,12 +3,11 @@
 #include "main/dll/WC/WClaser.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objlib.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern int Obj_GetPlayerObject(void);
-extern undefined4 *ObjGroup_GetObjects(int group, int *countOut);
-extern void ObjMsg_AllocQueue(void *obj, int capacity);
 extern void objSetSlot(int *obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
 extern void objRenderFn_8003b8f4(f32 scale);
