@@ -1106,8 +1106,9 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     case 4:
         *(u8 *)((char *)obj + 0xaf) &= ~8;
         if (gb != 0) {
-            walk = (int **)((char *)list + objIdx * 4);
-            while (objIdx < objCount && active == 0) {
+            i = objIdx;
+            walk = (int **)((char *)list + i * 4);
+            while (i < objCount && active == 0) {
                 other = *walk;
                 if (*(s16 *)((char *)other + 0x46) == 0x7c) {
                     dx = *(f32 *)((char *)other + 0xc) - *(f32 *)(def + 8);
@@ -1124,7 +1125,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
                     }
                 }
                 walk = walk + 1;
-                objIdx = objIdx + 1;
+                i = i + 1;
             }
             if (active != 0) {
                 if (ObjMsg_Pop(obj, &msg, 0, 0) != 0 && msg < 10 && msg >= 8) {
