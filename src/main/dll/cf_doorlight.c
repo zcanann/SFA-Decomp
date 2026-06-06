@@ -261,7 +261,7 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
   }
   if ((*(char *)(param_2 + 0x346) != '\0') || (*(char *)(param_2 + 0x27b) != '\0')) {
     iVar2 = (**(code **)(*DAT_803dd738 + 0x44))
-                      ((double)(float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar2 + 0x3fe))
+                      ((double)(float)((double)CONCAT44(0x43300000,(uint)((CfDoorlightState *)iVar2)->unk3FE)
                                       - DOUBLE_803e3d00),param_1,param_2,1);
     if (iVar2 != 0) {
       return 5;
