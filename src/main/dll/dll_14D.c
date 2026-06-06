@@ -1,5 +1,6 @@
 #include "main/dll/dll_14D.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 
 #pragma peephole off
@@ -220,7 +221,7 @@ void fn_8017F334(int obj, void *setup, void *stateArg)
  */
 void FUN_8017f290(int param_1)
 {
-  if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
+  if (((((ObjAnimComponent *)param_1)->modelInstance->flags & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
     FUN_800400b0();
   }
   return;

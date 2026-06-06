@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -34,7 +35,7 @@ void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling on
 void suntemple_hitDetect(int obj)
 {
-    if ((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0 && *(void **)(obj + 0x74) != NULL) {
+    if ((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0 && *(void **)(obj + 0x74) != NULL) {
         objRenderFn_80041018(obj);
     }
 }

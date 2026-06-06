@@ -1,4 +1,5 @@
 #include "main/dll/babycloudrunner.h"
+#include "main/objanim_internal.h"
 
 extern void objRenderFn_80041018(void);
 extern int  ObjGroup_FindNearestObject(byte type, int obj, float *dist_out);
@@ -132,7 +133,7 @@ void dll_FC_init(int param_1, int param_2)
 #pragma peephole off
 void dll_14D_hitDetect(int param_1)
 {
-  if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) && (*(uint *)(param_1 + 0x74) != 0)) {
+  if (((((ObjAnimComponent *)param_1)->modelInstance->flags & 1) != 0) && (*(uint *)(param_1 + 0x74) != 0)) {
     objRenderFn_80041018();
   }
   return;

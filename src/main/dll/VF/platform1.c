@@ -1,6 +1,7 @@
 #include "main/dll/VF/platform1.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 extern undefined4 Sfx_SetObjectSfxVolume();
 extern undefined4 Sfx_PlayFromObject();
@@ -561,7 +562,7 @@ void paymentkiosk_update(int obj)
         break;
     }
     st[2] = 0;
-    if ((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0 && *(void **)(obj + 0x74) != NULL) {
+    if ((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0 && *(void **)(obj + 0x74) != NULL) {
         objRenderFn_80041018(obj);
     }
 }

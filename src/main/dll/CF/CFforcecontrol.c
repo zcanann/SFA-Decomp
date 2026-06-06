@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/dll/CF/CFforcecontrol.h"
 
 
@@ -268,7 +269,7 @@ void FUN_8018bf58(int param_1)
                     + 0x7c));
     }
   }
-  if ((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) {
+  if ((((ObjAnimComponent *)param_1)->modelInstance->flags & 1) != 0) {
     FUN_800400b0();
   }
   return;

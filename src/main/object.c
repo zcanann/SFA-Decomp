@@ -1858,8 +1858,8 @@ void objFreeObjDef(void *objp, int flag) {
     }
     modelCount = objAnim->modelInstance->modelCount;
     for (i = 0; i < modelCount; i++) {
-        if (*(int *)(*(u8 **)(obj + 0x7c) + i * 4) != 0) {
-            ObjModel_Release(*(u8 **)(*(u8 **)(obj + 0x7c) + i * 4));
+        if (objAnim->banks[i] != NULL) {
+            ObjModel_Release((u8 *)objAnim->banks[i]);
         }
     }
     if (*(u8 *)(obj + 0xe5) & 1) {
@@ -2397,14 +2397,12 @@ void Obj_UpdateModelBlendStates(void)
 {
     ObjAnimComponent *objAnim;
     ObjAnimComponent *childAnim;
-    int joff;
     u8 *obj;
     int j;
     int i;
     int k;
     int ioff;
     u8 *walker;
-    int koff;
     u8 *child;
     u8 *m;
     u8 *c0;
@@ -2421,16 +2419,14 @@ void Obj_UpdateModelBlendStates(void)
                 *(int *)(m + 0xc) = 0;
             }
             j = 0;
-            joff = 0;
             for (; j < objAnim->modelInstance->modelCount; j++) {
-                m = *(u8 **)(*(u8 **)(obj + 0x7c) + joff);
+                m = (u8 *)objAnim->banks[j];
                 if (m != 0) {
                     *(u16 *)(m + 0x18) &= ~8;
                     if (*(u8 *)(*(u8 **)m + 0xf9) != 0) {
                         ObjModel_AdvanceBlendChannels(m, timeDelta);
                     }
                 }
-                joff += 4;
             }
             j = 0;
             walker = obj;
@@ -2439,9 +2435,8 @@ void Obj_UpdateModelBlendStates(void)
                 childAnim = (ObjAnimComponent *)child;
                 if (child != 0 && childAnim->modelInstance != NULL) {
                     k = 0;
-                    koff = k;
                     for (; k < childAnim->modelInstance->modelCount; k++) {
-                        m = *(u8 **)(*(u8 **)(child + 0x7c) + koff);
+                        m = (u8 *)childAnim->banks[k];
                         if (m != 0) {
                             *(u16 *)(m + 0x18) &= ~8;
                             if (*(u8 *)(*(u8 **)m + 0xf9) != 0) {
@@ -2456,7 +2451,6 @@ void Obj_UpdateModelBlendStates(void)
                                 }
                             }
                         }
-                        koff += 4;
                     }
                 }
                 walker += 4;

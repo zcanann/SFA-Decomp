@@ -86,7 +86,7 @@ void dimdismountpoint_update(int *obj) {
             *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
         }
     }
-    if ((*(u32*)(*(int*)((char*)obj + 0x50) + 0x44) & 1) != 0 && *(void **)((char*)obj + 0x74) != NULL) {
+    if ((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0 && *(void **)((char*)obj + 0x74) != NULL) {
         objRenderFn_80041018((int)obj);
     }
 }

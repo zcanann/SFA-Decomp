@@ -1,6 +1,7 @@
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/VF/platform1.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
 
 extern uint FUN_80006c00();
 extern undefined4 FUN_80006c88();
@@ -382,7 +383,7 @@ void FUN_801df788(int param_1)
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
   }
   state->promptState = 0;
-  if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
+  if (((((ObjAnimComponent *)param_1)->modelInstance->flags & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
     FUN_800400b0();
   }
   return;

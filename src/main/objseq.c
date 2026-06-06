@@ -162,6 +162,10 @@ typedef struct SeqRunFlags {
 extern SeqRunFlags lbl_803DD0B4;
 extern u8 *lbl_803DD07C;
 
+static inline u8 *ObjSeq_GetActiveModel(u8 *obj) {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+    return (u8 *)objAnim->banks[objAnim->bankIndex];
+}
 
 void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
 {
@@ -1395,8 +1399,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
     }
 
     *(s16 *)(seq + 0x58) = (s16)found;
-    action = *(u8 **)(*(u8 **)(activeObj + 0x7c) +
-                      (s8)activeObj[offsetof(ObjAnimComponent, bankIndex)] * 4);
+    action = ObjSeq_GetActiveModel(activeObj);
     if (action != NULL) {
         if (*(void **)(seq + 0x98) == NULL) {
             val = lbl_803DEFB0;
@@ -1560,8 +1563,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
                     if (activeObj == NULL) {
                         activeObj = obj;
                     }
-                    action = *(u8 **)(*(u8 **)(activeObj + 0x7c) +
-                                      (s8)activeObj[offsetof(ObjAnimComponent, bankIndex)] * 4);
+                    action = ObjSeq_GetActiveModel(activeObj);
                 } else {
                     stop = 1;
                 }
@@ -1578,8 +1580,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
             if (activeObj == NULL) {
                 activeObj = obj;
             }
-            action = *(u8 **)(*(u8 **)(activeObj + 0x7c) +
-                              (s8)activeObj[offsetof(ObjAnimComponent, bankIndex)] * 4);
+            action = ObjSeq_GetActiveModel(activeObj);
         }
         lbl_803DD0C0 = 0;
     }
@@ -2058,8 +2059,7 @@ int ObjSeq_ExecuteActionCommand(u8 *obj, u8 *action, u8 **cmdPtr, int flags, voi
             }
         }
         if (*(s16 *)(activeObj + 0x44) == 1) {
-            act2 = *(u8 **)(*(u8 **)(activeObj + 0x7c) +
-                            (s8)activeObj[offsetof(ObjAnimComponent, bankIndex)] * 4);
+            act2 = ObjSeq_GetActiveModel(activeObj);
             animState = *(u8 **)(act2 + 0x2c);
             *(s16 *)(animState + 0x64) = -1;
             *(s16 *)(animState + 0x5a) = 0;
@@ -2483,8 +2483,7 @@ int ObjSeq_update(u8 *obj, f32 t)
         *(u16 *)(obj + 2) = *(s16 *)(obj + 2) + *(s16 *)(seq + 0x16);
         *(u16 *)(obj + 0) = *(s16 *)(obj + 0) + *(s16 *)(seq + 0x14);
 
-        action = *(u8 **)(*(u8 **)(activeObj + 0x7c) +
-                          (s8)activeObj[offsetof(ObjAnimComponent, bankIndex)] * 4);
+        action = ObjSeq_GetActiveModel(activeObj);
         lbl_803DD0C0 = 0;
         if (action != NULL) {
             if (*(void **)(seq + 0x98) == NULL) {
@@ -2636,8 +2635,7 @@ int ObjSeq_update(u8 *obj, f32 t)
                         if (activeObj == NULL) {
                             activeObj = obj;
                         }
-                        action = *(u8 **)(*(u8 **)(activeObj + 0x7c) +
-                                          (s8)activeObj[offsetof(ObjAnimComponent, bankIndex)] * 4);
+                        action = ObjSeq_GetActiveModel(activeObj);
                     } else {
                         stop = 1;
                     }
@@ -2739,8 +2737,7 @@ int ObjSeq_update(u8 *obj, f32 t)
             if (activeObj == NULL) {
                 activeObj = obj;
             }
-            action = *(u8 **)(*(u8 **)(activeObj + 0x7c) +
-                              (s8)activeObj[offsetof(ObjAnimComponent, bankIndex)] * 4);
+            action = ObjSeq_GetActiveModel(activeObj);
         }
 
         if (lbl_803DD070 != 0) {
@@ -2753,8 +2750,7 @@ int ObjSeq_update(u8 *obj, f32 t)
             if (activeObj == NULL) {
                 activeObj = obj;
             }
-            action = *(u8 **)(*(u8 **)(activeObj + 0x7c) +
-                              (s8)activeObj[offsetof(ObjAnimComponent, bankIndex)] * 4);
+            action = ObjSeq_GetActiveModel(activeObj);
             animatedObjFreeAndSavePlayerPos(obj, activeObj, seq);
         } else {
             slot = (s8)seq[0x57];
@@ -2821,8 +2817,7 @@ void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceO
     if (activeObj == NULL) {
         activeObj = obj;
     }
-    *outAction = *(void **)(*(u8 **)(activeObj + 0x7c) +
-                            (s8)activeObj[offsetof(ObjAnimComponent, bankIndex)] * 4);
+    *outAction = ObjSeq_GetActiveModel(activeObj);
     *seqObj = activeObj;
 
     ObjSeq_UpdateCurvePosition(obj, seq);

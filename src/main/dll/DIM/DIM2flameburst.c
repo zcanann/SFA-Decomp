@@ -272,7 +272,7 @@ void FUN_801b3f2c(int param_1)
     *(undefined *)(param_1 + 0xe4) = 1;
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xef;
   }
-  if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
+  if (((((ObjAnimComponent *)param_1)->modelInstance->flags & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
     FUN_800400b0();
   }
   return;

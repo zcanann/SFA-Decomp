@@ -1040,7 +1040,7 @@ void doorlock_update(int obj)
       }
       *(u8 *)(obj + 0xaf) |= 8;
     }
-    if (((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0) && (*(void **)(obj + 0x74) != NULL)) {
+    if (((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0) && (*(void **)(obj + 0x74) != NULL)) {
       objRenderFn_80041018((int *)obj);
     }
   }
