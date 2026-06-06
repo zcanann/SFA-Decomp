@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -45,12 +46,12 @@ void projectedlight_update(int obj)
 {
     int setup = *(int *)(obj + 0x4c);
 
-    *(s16 *)(obj + 0) =
-        (s16)((f32)*(s16 *)(setup + 0x20) * timeDelta + (f32)*(s16 *)(obj + 0));
-    *(s16 *)(obj + 2) =
-        (s16)((f32)*(s16 *)(setup + 0x22) * timeDelta + (f32)*(s16 *)(obj + 2));
-    *(s16 *)(obj + 4) =
-        (s16)((f32)(*(s8 *)(setup + 0x35) << 4) * timeDelta + (f32)*(s16 *)(obj + 4));
+    ((GameObject *)obj)->anim.rotX =
+        (s16)((f32)*(s16 *)(setup + 0x20) * timeDelta + (f32)((GameObject *)obj)->anim.rotX);
+    ((GameObject *)obj)->anim.rotY =
+        (s16)((f32)*(s16 *)(setup + 0x22) * timeDelta + (f32)((GameObject *)obj)->anim.rotY);
+    ((GameObject *)obj)->anim.rotZ =
+        (s16)((f32)(*(s8 *)(setup + 0x35) << 4) * timeDelta + (f32)((GameObject *)obj)->anim.rotZ);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -64,9 +65,9 @@ void projectedlight_init(int obj, int setup)
 
     vec = *(PointLightVec *)lbl_802C2618;
 
-    *(s16 *)(obj + 0) = (s16)(*(u8 *)(setup + 0x18) << 8);
-    *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
-    *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x34) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)(*(u8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(setup + 0x19) << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(setup + 0x34) << 8);
 
     if (*(void **)state == NULL) {
         *(void **)state = objCreateLight(obj, 1);
