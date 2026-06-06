@@ -59,6 +59,14 @@ typedef struct BaddieState {
     f32 unk290;
     f32 unk294; /* scaled together with animSpeedA and obj+0x28 */
     u8 unk298[0x2A0 - 0x298];
+    /* 0x2A0-0x2A7 is a PER-FAMILY UNION (lead-arbitrated): scarab and
+     * mediumbasket targets store f32 here (stfs f0,672(rN) at 4+ sites
+     * each -- the published types below), but the smallbasket family's
+     * target reads u16 (lhz r0,672(r30) in smallbasket_handleReactionEvent
+     * /fn_8015A924, lhz r0,676(r29) in fn_80157B58: a *0xc move-table
+     * index and a u16->f32 duration). smallbasket keeps RAW spellings at
+     * these offsets -- do NOT launder through these names there (a u16
+     * index read through "moveSpeed" would be semantically false). */
     f32 moveSpeed; /* per-mode movement speed */
     f32 unk2A4;
     f32 unk2A8; /* mediumbasket whirlpool block 0x2A8..0x33B */
