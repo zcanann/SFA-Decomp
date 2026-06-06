@@ -51,8 +51,9 @@ if '--rebuild' in sys.argv:
         os.unlink(cur_p)
     r = subprocess.run(['ninja', rel], cwd=root, capture_output=True, text=True, timeout=600)
     out = r.stdout + r.stderr
-    # \berror\b avoids false-positives on filenames like OSError.c in benign WARN lines
-    err_re = re.compile(r'(?i)\berror\b')
+    # \berror\b avoids false-positives on filenames like OSError.c in benign WARN lines;
+    # 'encoding' catches sjiswrap warnings from non-ASCII comment bytes (team style rule)
+    err_re = re.compile(r'(?i)\berror\b|encoding')
     if r.returncode != 0 or 'FAILED' in out or err_re.search(out):
         print('FAIL: rebuild of %s errored (exit %d)' % (rel, r.returncode))
         for ln in out.splitlines():

@@ -25,8 +25,30 @@ Work down this ladder per function; stop at the first rung that gates clean.
      house pattern). Null tests must stay int-typed: `(int)X == 0`.
    - Params and bases with load-bearing raw arithmetic: keep the int
      declaration and use inline casts `((T *)state)->field` (proven byte-exact,
-     #77 family). NEVER add a fresh typed-local copy to a high-pressure fn -
-     the extra web is the #77(d) all-or-nothing trap.
+     #77 family) ONLY when each converted field is referenced ONCE (or once
+     per re-derivation of the base). For MULTI-USE fields on an int base,
+     inline casts MATERIALIZE the field address into a register
+     (`addi rX,rBase,off` + `lwz/lbz 0(rX)`, often consuming a fresh saved
+     reg) where the raw int-sum folds to per-use displacement loads -
+     voice_id.c (every fn) and synth_seq_dispatch.c's trackId byte are the
+     evidence cases. Order of attack: typed local
+     (`T *s = (T *)state;`) FIRST - it folds back to displacement loads
+     byte-exact; inline casts second for single-use sites. The typed local
+     can still hit the #77(d) all-or-nothing trap on high-pressure fns
+     (savegpr shift) - the gate decides; revert the fn wholesale, never
+     partially.
+   - Member-lvalue LOAD+STORE pairs of the SAME field (read-modify across
+     two statements: `v = s->f; s->f = v | K;`) CSE the field ADDRESS
+     (`addi` + `stw 0(rX)`) where the raw deref pair folds both accesses to
+     displacements. Keep such pairs raw (hw_init time-offset loop,
+     hw_voice_params channelEntry pair). A single compound assign
+     (`s->f |= K;`) is fine.
+   - `(T *)(base + byteOffset)` casts on a PRECOMPUTED byte offset gate
+     clean (mcmd_exec, hw_init irq loop); the equivalent
+     `((T *)base)[idx].field` member-array form does NOT - it flips
+     displacement stores to indexed (`stbx`, inp_midi ring) or regrows
+     chain-walk fns (+12B each, synth_delay). When the source computes
+     `off = idx * sizeof(T)` separately, keep that and cast the sum.
    - `int *` word-scaled bases (`piVar[K]`, `*(f32 *)(p + 0x17)`): inline
      casts only; multiply offsets by the element size; `register` qualifiers
      on params must be stripped before type matching (a silent skip cost 65
@@ -115,6 +137,13 @@ without confirming the specific TU recompiled produced a false
 "byte-identical, no regression" stand-down on mmp_moonrock. rm the .o (or
 check mtime) before using any object as evidence.
 
+**Comments must be PURE ASCII (team style rule).** Everything compiles
+through sjiswrap; UTF-8 punctuation (em-dashes, arrows, typographic
+quotes, <=/>=/identical-to glyphs, superscripts) is invalid Shift-JIS and
+triggers encoding warnings that can escalate to hard errors. Write "--"
+not an em-dash, "->" not an arrow glyph, straight quotes, "^2" not a
+superscript. The gate's rebuild grep also flags "encoding" lines.
+
 ## 3. The shared-record registry
 
 | Record | Header | Owner model |
@@ -152,6 +181,15 @@ Rules distilled from the registry's construction:
 - **A TU's own prototype header is not a state header** - check existence
   before writing `include/.../<name>.h` (a state struct once overwrote a
   prototype header; new `*_state.h` filenames dodge the collision class).
+- **MWCC 2.0 8-aligns a real `u64` member - MP4 audio struct transplants
+  with mid-struct u64 fields will NOT reproduce the layout.** MP4's
+  SYNTH_VOICE declares `u64 cFlags` at 0x114 (4-mod-8); declaring the same
+  in SFA pushes it to 0x118 and fails the offsetof STATIC_ASSERT. Declare
+  `u32 cFlags[2];` at the true offset and spell u64-wide accesses as
+  `*(u64 *)&s->cFlags` launders (sub-word halves are `cFlags[0]`/`[1]`,
+  big-endian: [0]=high). synth_voice.h is the evidence case. Always
+  STATIC_ASSERT offsets when transplanting MP4 shapes - the assert catches
+  this class at compile time.
 
 ## 4. Incident postmortems (3 lines each)
 
