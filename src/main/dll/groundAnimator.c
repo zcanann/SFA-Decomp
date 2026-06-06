@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 
 extern undefined8 FUN_80006824();
@@ -103,8 +104,8 @@ void dll_115_update(int obj)
   int step;
   int eventId;
 
-  state = *(u8 **)(obj + 0xb8);
-  mapData = *(u8 **)(obj + 0x4c);
+  state = ((GameObject *)obj)->extra;
+  mapData = (u8 *)((GameObject *)obj)->anim.placementData;
   if ((state[1] & 1) != 0) {
     eventId = ((Dll115MapRow *)(mapData + state[0] * 2))->ev18;
     if (eventId != -1) {
@@ -172,10 +173,10 @@ void dll_115_init(short *obj, int mapData)
   u8 *state;
   int step;
 
-  state = *(u8 **)((int)obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   *obj = (s16)(*(u8 *)(mapData + 0x38) << 8);
-  *(void **)((int)obj + 0xbc) = dll_115_seqFn;
-  *(u16 *)((int)obj + 0xb0) |= 0x6000;
+  ((GameObject *)obj)->unkBC = dll_115_seqFn;
+  ((GameObject *)obj)->unkB0 |= 0x6000;
   ObjGroup_AddObject((int)obj, 0xf);
   step = 0;
   p = (short *)mapData;
@@ -356,16 +357,16 @@ void wm_column_update(int obj)
   int other;
   int state;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   nearest = lbl_803E37BC;
-  if ((*(GroundAnimatorAnimStateFn *)(*gCarryableInterface + 8))(obj, *(int *)(obj + 0xb8)) != 0) {
-    if ((*(int *)(obj + 0xf4) & 2) != 0) {
+  if ((*(GroundAnimatorAnimStateFn *)(*gCarryableInterface + 8))(obj, *(int *)&((GameObject *)obj)->extra) != 0) {
+    if ((((GameObject *)obj)->unkF4 & 2) != 0) {
       objects = ObjList_GetObjects(&i, &count);
       for (; i < count; i++) {
         other = objects[i];
-        if (((u32)other != (u32)obj) && (*(s16 *)(other + 0x46) == 499) &&
+        if (((u32)other != (u32)obj) && (((GameObject *)other)->anim.seqId == 499) &&
             (Vec_distance((float *)(obj + 0x18), (float *)(other + 0x18)) < lbl_803E37C0)) {
-          other = *(s16 *)(*(int *)(objects[i] + 0x4c) + 0x1e);
+          other = *(s16 *)(*(int *)&((GameObject *)objects[i])->anim.placementData + 0x1e);
           if (other != -1) {
             GameBit_Set(other, 0);
           }
@@ -378,41 +379,41 @@ void wm_column_update(int obj)
     if (((playerFlags & 0x4000) != 0) && (nearest > lbl_803E37C4)) {
       (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 0);
       setAButtonIcon(5);
-      *(u32 *)(obj + 0xf4) |= 1;
+      *(u32 *)&((GameObject *)obj)->unkF4 |= 1;
     } else {
       (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 1);
     }
-    *(u32 *)(obj + 0xf4) &= ~2;
+    *(u32 *)&((GameObject *)obj)->unkF4 &= ~2;
   } else {
-    if ((*(int *)(obj + 0xf4) & 1) != 0) {
+    if ((((GameObject *)obj)->unkF4 & 1) != 0) {
       objects = ObjList_GetObjects(&i, &count);
       for (; i < count; i++) {
         other = objects[i];
-        if (((u32)other != (u32)obj) && (*(s16 *)(other + 0x46) == 499) &&
+        if (((u32)other != (u32)obj) && (((GameObject *)other)->anim.seqId == 499) &&
             (Vec_distance((float *)(obj + 0x18), (float *)(other + 0x18)) < lbl_803E37C0)) {
-          int mapData = *(int *)(objects[i] + 0x4c);
-          if (*(s16 *)(obj + 0x46) == (s8)*(u8 *)(mapData + 0x19) + 500) {
+          int mapData = *(int *)&((GameObject *)objects[i])->anim.placementData;
+          if (((GameObject *)obj)->anim.seqId == (s8)*(u8 *)(mapData + 0x19) + 500) {
             if (*(s16 *)(mapData + 0x1e) != -1) {
               GameBit_Set(*(s16 *)(mapData + 0x1e), 1);
             }
           } else if (*(s16 *)(mapData + 0x1e) != -1) {
             GameBit_Set(*(s16 *)(mapData + 0x1e), 0);
           }
-          *(f32 *)(obj + 0xc) = *(f32 *)(objects[i] + 0xc);
-          *(f32 *)(obj + 0x10) = *(f32 *)(objects[i] + 0x10);
-          *(f32 *)(obj + 0x14) = *(f32 *)(objects[i] + 0x14);
+          ((GameObject *)obj)->anim.localPosX = ((GameObject *)objects[i])->anim.localPosX;
+          ((GameObject *)obj)->anim.localPosY = ((GameObject *)objects[i])->anim.localPosY;
+          ((GameObject *)obj)->anim.localPosZ = ((GameObject *)objects[i])->anim.localPosZ;
         }
       }
     }
     playerFlags = playerGetStateFlag310(Obj_GetPlayerObject());
     if ((playerFlags & 0x4000) != 0) {
       (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 0);
-      *(u32 *)(obj + 0xf4) |= 2;
+      *(u32 *)&((GameObject *)obj)->unkF4 |= 2;
     } else {
       (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 1);
-      *(u32 *)(obj + 0xf4) &= ~2;
+      *(u32 *)&((GameObject *)obj)->unkF4 &= ~2;
     }
-    *(u32 *)(obj + 0xf4) &= ~1;
+    *(u32 *)&((GameObject *)obj)->unkF4 &= ~1;
   }
 }
 #pragma peephole reset
@@ -436,10 +437,10 @@ void wm_column_update(int obj)
 void wm_column_init(short *obj, int mapData)
 {
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-  undefined4 state = *(undefined4 *)((int)obj + 0xb8);
+  undefined4 state = *(undefined4 *)&((GameObject *)(int)obj)->extra;
   *obj = (s16)(*(u8 *)(mapData + 0x18) << 8);
-  *(u16 *)((int)obj + 0xb0) |= 0x2000;
-  *(undefined4 *)((int)obj + 0xf4) = 0;
+  ((GameObject *)(int)obj)->unkB0 |= 0x2000;
+  ((GameObject *)(int)obj)->unkF4 = 0;
   objAnim->bankIndex = (s8)(int)*(s8 *)(mapData + 0x19);
   if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
     objAnim->bankIndex = 0;
@@ -533,6 +534,41 @@ u32 jumptable_803214DC[] = {
     (u32)(appleontree_update + 0x71C),
 };
 
+/* appleontree extra block (size 0x64 = appleontree_getExtraSize). */
+typedef struct AppleOnTreeState {
+    u8 unk00[8];
+    f32 unk08;
+    f32 unk0C;
+    u8 unk10[0x24 - 0x10];
+    f32 unk24;
+    f32 unk28;
+    f32 unk2C;
+    f32 unk30;
+    f32 unk34;
+    u16 unk38;
+    u8 unk3A;
+    u8 pad3B;
+    f32 unk3C;
+    f32 unk40;
+    f32 unk44;
+    s16 unk48;
+    s16 unk4A;
+    s16 unk4C;
+    u8 pad4E[2];
+    f32 unk50;
+    u8 pad54[6];
+    u8 unk5A;
+    u8 pad5B;
+    s16 unk5C;
+    s16 unk5E;
+    f32 unk60;
+} AppleOnTreeState;
+
+STATIC_ASSERT(offsetof(AppleOnTreeState, unk38) == 0x38);
+STATIC_ASSERT(offsetof(AppleOnTreeState, unk50) == 0x50);
+STATIC_ASSERT(offsetof(AppleOnTreeState, unk60) == 0x60);
+STATIC_ASSERT(sizeof(AppleOnTreeState) == 0x64);
+
 /*
  * --INFO--
  *
@@ -548,20 +584,20 @@ u32 jumptable_803214DC[] = {
  */
 void appleontree_func0B(int obj, float *pos)
 {
-  u8 *state = *(u8 **)(obj + 0xb8);
+  AppleOnTreeState *state = ((GameObject *)obj)->extra;
 
-  if (state[0x3a] == 4) {
+  if (state->unk3A == 4) {
     return;
   }
-  if (state[0x3a] == 5) {
+  if (state->unk3A == 5) {
     return;
   }
-  if (state[0x3a] == 6) {
+  if (state->unk3A == 6) {
     return;
   }
-  *(float *)(obj + 0xc) = pos[0];
-  *(float *)(obj + 0x10) = pos[1];
-  *(float *)(obj + 0x14) = pos[2];
+  ((GameObject *)obj)->anim.localPosX = pos[0];
+  ((GameObject *)obj)->anim.localPosY = pos[1];
+  ((GameObject *)obj)->anim.localPosZ = pos[2];
 }
 
 /*
@@ -771,7 +807,7 @@ extern f32 lbl_803E37F0;
 #pragma peephole off
 void appleontree_handleCollectableHit(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
 
     if (!(Vec_xzDistance((float *)(player + 0x18), (float *)(obj + 0x18)) < lbl_803E37EC)) return;
@@ -780,23 +816,23 @@ void appleontree_handleCollectableHit(int obj)
     if (GameBit_Get(0x90f) == 0) {
         (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x7c))(0x444, 0, 0);
         *(s16 *)(state + 0x5c) = -1;
-        *(s16 *)(state + 0x5e) = 0;
-        *(f32 *)(state + 0x60) = lbl_803E37C8;
+        ((AppleOnTreeState *)state)->unk5E = 0;
+        ((AppleOnTreeState *)state)->unk60 = lbl_803E37C8;
         ObjMsg_SendToObject(player, 0x7000a, obj, (int *)(state + 0x5c));
         GameBit_Set(0x90f, 1);
-        *(u8 *)(state + 0x5a) = (u8)(*(u8 *)(state + 0x5a) | 4);
+        ((AppleOnTreeState *)state)->unk5A = (u8)(((AppleOnTreeState *)state)->unk5A | 4);
     } else {
-        playerAddHealth(player, *(u16 *)(state + 0x38));
+        playerAddHealth(player, ((AppleOnTreeState *)state)->unk38);
         itemPickupDoParticleFx(obj, lbl_803E37C8, 0xff, 0x28);
         Sfx_PlayFromObject(obj, SFXen_waterblock_stop);
-        state = *(int *)(obj + 0xb8);
-        if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
+        state = *(int *)&((GameObject *)obj)->extra;
+        if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
             Obj_FreeObject(obj);
         } else {
-            if (*(void **)(obj + 0x54) != NULL) {
+            if (((GameObject *)obj)->anim.hitReactState != NULL) {
                 ObjHits_DisableObject(obj);
             }
-            *(u8 *)(state + 0x5a) = (u8)(*(u8 *)(state + 0x5a) | 2);
+            ((AppleOnTreeState *)state)->unk5A = (u8)(((AppleOnTreeState *)state)->unk5A | 2);
         }
     }
 }
@@ -837,7 +873,7 @@ void FUN_8017e0f8(void)
  */
 void FUN_8017e12c(int param_1)
 {
-  if ((*(byte *)(*(int *)(param_1 + 0xb8) + 0x5a) & 2) == 0) {
+  if ((((AppleOnTreeState *)*(int *)&((GameObject *)param_1)->extra)->unk5A & 2) == 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -1049,7 +1085,7 @@ void appleontree_setScale(void) {}
 int appleontree_getExtraSize(void) { return 0x64; }
 
 /* Pattern wrappers. */
-u8 appleontree_modelMtxFn(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x3a); }
+u8 appleontree_modelMtxFn(int *obj) { return ((AppleOnTreeState *)((int **)obj)[0xb8/4])->unk3A; }
 
 extern void ***gExpgfxInterface;
 #pragma scheduling off
@@ -1058,8 +1094,8 @@ void appleontree_free(int *obj) {
     ((void (*)(int*))(*gExpgfxInterface)[5])(obj);
 }
 void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
-    u8 *inner = *(u8 **)(obj + 0xb8);
-    if ((inner[0x5a] & 2) == 0) {
+    AppleOnTreeState *inner = ((GameObject *)obj)->extra;
+    if ((inner->unk5A & 2) == 0) {
         objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E37C8);
     }
 }
@@ -1086,7 +1122,7 @@ extern f32 lbl_803E3800;
 #pragma peephole off
 void fn_8017D854(int obj, int msg)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int v;
 
     switch (msg) {
@@ -1103,27 +1139,27 @@ void fn_8017D854(int obj, int msg)
         v = 0;
         break;
     }
-    *(u16 *)(state + 0x38) = (u16)v;
-    *(u8 *)(state + 0x3a) = 4;
-    *(f32 *)(state + 8) = timeDelta;
-    *(f32 *)(state + 0xc) = timeDelta;
-    *(s16 *)(state + 0x48) = (s16)randomGetRange(-0x8000, 0x7fff);
-    *(s16 *)(state + 0x4a) = (s16)randomGetRange(-0x8000, 0x7fff);
-    *(s16 *)(state + 0x4c) = 0x2000;
+    ((AppleOnTreeState *)state)->unk38 = (u16)v;
+    ((AppleOnTreeState *)state)->unk3A = 4;
+    ((AppleOnTreeState *)state)->unk08 = timeDelta;
+    ((AppleOnTreeState *)state)->unk0C = timeDelta;
+    ((AppleOnTreeState *)state)->unk48 = (s16)randomGetRange(-0x8000, 0x7fff);
+    ((AppleOnTreeState *)state)->unk4A = (s16)randomGetRange(-0x8000, 0x7fff);
+    ((AppleOnTreeState *)state)->unk4C = 0x2000;
 
-    if (fn_80065684(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14),
+    if (fn_80065684(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
                     (f32 *)(state + 0x30), 0) == 0) {
-        state = *(int *)(obj + 0xb8);
-        if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
+        state = *(int *)&((GameObject *)obj)->extra;
+        if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
             Obj_FreeObject(obj);
         } else {
-            if (*(void **)(obj + 0x54) != NULL) {
+            if (((GameObject *)obj)->anim.hitReactState != NULL) {
                 ObjHits_DisableObject(obj);
             }
-            *(u8 *)(state + 0x5a) = (u8)(*(u8 *)(state + 0x5a) | 2);
+            ((AppleOnTreeState *)state)->unk5A = (u8)(((AppleOnTreeState *)state)->unk5A | 2);
         }
     } else {
-        f32 m = *(f32 *)(state + 0x40);
+        f32 m = ((AppleOnTreeState *)state)->unk40;
         f32 g = lbl_803E37D8 * m;
         f32 q = sqrtf(-(g * *(f32 *)(state + 0x30) - lbl_803E37D4));
         f32 t = lbl_803E37DC * m;
@@ -1142,28 +1178,28 @@ void fn_8017D854(int obj, int msg)
             f32 r2 = (lbl_803E37E4 + q) / t;
             r = (r1 > 0.0f) ? r1 : r2;
         }
-        *(f32 *)(state + 0x50) = r;
+        ((AppleOnTreeState *)state)->unk50 = r;
 
-        if (*(f32 *)(state + 0x28) < lbl_803E37D4) {
-            *(f32 *)(state + 0x30) = -(lbl_803E37D8 * *(f32 *)(state + 0x24) - *(f32 *)(state + 0x30));
+        if (((AppleOnTreeState *)state)->unk28 < lbl_803E37D4) {
+            *(f32 *)(state + 0x30) = -(lbl_803E37D8 * ((AppleOnTreeState *)state)->unk24 - *(f32 *)(state + 0x30));
         } else {
-            *(f32 *)(state + 0x30) = lbl_803E37E8 * (lbl_803E37D8 * *(f32 *)(state + 0x24)) + *(f32 *)(state + 0x30);
+            *(f32 *)(state + 0x30) = lbl_803E37E8 * (lbl_803E37D8 * ((AppleOnTreeState *)state)->unk24) + *(f32 *)(state + 0x30);
         }
 
         if (*(f32 *)(state + 0x30) <= lbl_803E37D4) {
-            state = *(int *)(obj + 0xb8);
-            if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
+            state = *(int *)&((GameObject *)obj)->extra;
+            if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
                 Obj_FreeObject(obj);
             } else {
-                if (*(void **)(obj + 0x54) != NULL) {
+                if (((GameObject *)obj)->anim.hitReactState != NULL) {
                     ObjHits_DisableObject(obj);
                 }
-                *(u8 *)(state + 0x5a) = (u8)(*(u8 *)(state + 0x5a) | 2);
+                ((AppleOnTreeState *)state)->unk5A = (u8)(((AppleOnTreeState *)state)->unk5A | 2);
             }
         } else {
-            *(f32 *)(state + 0x2c) = *(f32 *)(obj + 0x10);
-            *(f32 *)(state + 0x34) = *(f32 *)(obj + 0x10) - *(f32 *)(state + 0x30);
-            if (*(void **)(obj + 0x54) != NULL) {
+            ((AppleOnTreeState *)state)->unk2C = ((GameObject *)obj)->anim.localPosY;
+            ((AppleOnTreeState *)state)->unk34 = ((GameObject *)obj)->anim.localPosY - *(f32 *)(state + 0x30);
+            if (((GameObject *)obj)->anim.hitReactState != NULL) {
                 ObjHits_DisableObject(obj);
             }
             Sfx_PlayFromObject(obj, SFXen_bridge_stops);
@@ -1174,14 +1210,14 @@ void fn_8017D854(int obj, int msg)
 int fn_8017DCD4(int p, int state, f32 y)
 {
     f32 zero = lbl_803E37D4;
-    f32 m = *(f32 *)(state + 0x40);
+    f32 m = ((AppleOnTreeState *)state)->unk40;
 
     if (zero != m) {
-        if (*(f32 *)(state + 0x30) - (*(f32 *)(state + 0x2c) - y) < zero) {
-            f32 b = *(f32 *)(state + 0x44);
+        if (((AppleOnTreeState *)state)->unk30 - (((AppleOnTreeState *)state)->unk2C - y) < zero) {
+            f32 b = ((AppleOnTreeState *)state)->unk44;
             if (zero == b) {
                 f32 g = lbl_803E37D8 * m;
-                f32 q = sqrtf(b * b - g * *(f32 *)(state + 0x30));
+                f32 q = sqrtf(b * b - g * ((AppleOnTreeState *)state)->unk30);
                 f32 t = lbl_803E37DC * m;
                 f32 a;
                 f32 r;
@@ -1198,23 +1234,23 @@ int fn_8017DCD4(int p, int state, f32 y)
                     f32 r2 = (-b + q) / t;
                     r = (r1 > 0.0f) ? r1 : r2;
                 }
-                *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - r;
-                *(f32 *)(state + 0x2c) = *(f32 *)(state + 0x2c) - *(f32 *)(state + 0x30);
-                *(f32 *)(state + 0x30) = lbl_803E37D4;
-                *(f32 *)(p + 0x10) = *(f32 *)(state + 0x2c);
-                *(s16 *)(p + 0) = *(s16 *)(state + 0x48);
-                *(s16 *)(p + 2) = *(s16 *)(state + 0x4a);
-                *(s16 *)(p + 4) = *(s16 *)(state + 0x4c);
-                *(f32 *)(state + 0x44) = -*(f32 *)(state + 0x28);
-                if ((*(u8 *)(state + 0x5a) & 8) == 0) {
+                ((AppleOnTreeState *)state)->unk0C = ((AppleOnTreeState *)state)->unk0C - r;
+                ((AppleOnTreeState *)state)->unk2C = ((AppleOnTreeState *)state)->unk2C - ((AppleOnTreeState *)state)->unk30;
+                ((AppleOnTreeState *)state)->unk30 = lbl_803E37D4;
+                ((GameObject *)p)->anim.localPosY = ((AppleOnTreeState *)state)->unk2C;
+                ((GameObject *)p)->anim.rotX = ((AppleOnTreeState *)state)->unk48;
+                ((GameObject *)p)->anim.rotY = ((AppleOnTreeState *)state)->unk4A;
+                ((GameObject *)p)->anim.rotZ = ((AppleOnTreeState *)state)->unk4C;
+                ((AppleOnTreeState *)state)->unk44 = -((AppleOnTreeState *)state)->unk28;
+                if ((((AppleOnTreeState *)state)->unk5A & 8) == 0) {
                     Sfx_PlayFromObject(p, 0x407);
-                    *(u8 *)(state + 0x5a) = (u8)(*(u8 *)(state + 0x5a) | 8);
+                    ((AppleOnTreeState *)state)->unk5A = (u8)(((AppleOnTreeState *)state)->unk5A | 8);
                 }
                 return 1;
             } else if (b < lbl_803E37F4) {
-                *(f32 *)(p + 0x10) = *(f32 *)(state + 0x2c);
-                *(f32 *)(state + 0x40) = zero;
-                *(f32 *)(state + 0x44) = zero;
+                ((GameObject *)p)->anim.localPosY = ((AppleOnTreeState *)state)->unk2C;
+                ((AppleOnTreeState *)state)->unk40 = zero;
+                ((AppleOnTreeState *)state)->unk44 = zero;
                 return 1;
             } else {
                 f32 g;
@@ -1222,9 +1258,9 @@ int fn_8017DCD4(int p, int state, f32 y)
                 f32 t;
                 f32 a;
                 f32 r;
-                m = m + *(f32 *)(state + 0x3c);
+                m = m + ((AppleOnTreeState *)state)->unk3C;
                 g = lbl_803E37D8 * m;
-                q = sqrtf(b * b - g * *(f32 *)(state + 0x30));
+                q = sqrtf(b * b - g * ((AppleOnTreeState *)state)->unk30);
                 t = lbl_803E37DC * m;
 
                 if (t >= lbl_803E37D4) {
@@ -1239,13 +1275,13 @@ int fn_8017DCD4(int p, int state, f32 y)
                     f32 r2 = (-b + q) / t;
                     r = (r1 > 0.0f) ? r1 : r2;
                 }
-                *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - r;
-                *(f32 *)(p + 0x10) = *(f32 *)(state + 0x2c);
-                *(f32 *)(state + 0x44) = *(f32 *)(state + 0x44) * lbl_803E37F8;
+                ((AppleOnTreeState *)state)->unk0C = ((AppleOnTreeState *)state)->unk0C - r;
+                ((GameObject *)p)->anim.localPosY = ((AppleOnTreeState *)state)->unk2C;
+                ((AppleOnTreeState *)state)->unk44 = ((AppleOnTreeState *)state)->unk44 * lbl_803E37F8;
                 return 0;
             }
         } else {
-            *(f32 *)(p + 0x10) = y;
+            ((GameObject *)p)->anim.localPosY = y;
             return 1;
         }
     }
@@ -1254,18 +1290,18 @@ int fn_8017DCD4(int p, int state, f32 y)
 
 int fn_8017DF34(int p, int state, f32 y)
 {
-    if (lbl_803E37D4 == *(f32 *)(state + 0x3c)) {
-        if (*(f32 *)(state + 0x30) - (*(f32 *)(state + 0x2c) - y) <= lbl_803E37D4) {
+    if (lbl_803E37D4 == ((AppleOnTreeState *)state)->unk3C) {
+        if (((AppleOnTreeState *)state)->unk30 - (((AppleOnTreeState *)state)->unk2C - y) <= lbl_803E37D4) {
             f32 b;
-            f32 m = *(f32 *)(state + 0x40);
+            f32 m = ((AppleOnTreeState *)state)->unk40;
             f32 g;
             f32 q;
             f32 t;
             f32 a;
             f32 r;
-            b = *(f32 *)(state + 0x44);
+            b = ((AppleOnTreeState *)state)->unk44;
             g = lbl_803E37D8 * m;
-            q = sqrtf(b * b - g * *(f32 *)(state + 0x30));
+            q = sqrtf(b * b - g * ((AppleOnTreeState *)state)->unk30);
             t = lbl_803E37DC * m;
 
             if (t >= lbl_803E37D4) {
@@ -1283,35 +1319,35 @@ int fn_8017DF34(int p, int state, f32 y)
                 r2 = (nb + q) / t;
                 r = (r > *(f32 *)&lbl_803E37D4) ? r : r2;
             }
-            *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - r;
-            *(f32 *)(state + 0x2c) = *(f32 *)(state + 0x2c) - *(f32 *)(state + 0x30);
-            *(f32 *)(state + 0x30) = lbl_803E37D4;
-            *(f32 *)(p + 0x10) = *(f32 *)(state + 0x2c);
-            *(s16 *)(p + 0) = *(s16 *)(state + 0x48);
-            *(s16 *)(p + 2) = *(s16 *)(state + 0x4a);
-            *(s16 *)(p + 4) = *(s16 *)(state + 0x4c);
+            ((AppleOnTreeState *)state)->unk0C = ((AppleOnTreeState *)state)->unk0C - r;
+            ((AppleOnTreeState *)state)->unk2C = ((AppleOnTreeState *)state)->unk2C - ((AppleOnTreeState *)state)->unk30;
+            ((AppleOnTreeState *)state)->unk30 = lbl_803E37D4;
+            ((GameObject *)p)->anim.localPosY = ((AppleOnTreeState *)state)->unk2C;
+            ((GameObject *)p)->anim.rotX = ((AppleOnTreeState *)state)->unk48;
+            ((GameObject *)p)->anim.rotY = ((AppleOnTreeState *)state)->unk4A;
+            ((GameObject *)p)->anim.rotZ = ((AppleOnTreeState *)state)->unk4C;
             {
-                f32 g2 = lbl_803E37DC * *(f32 *)(state + 0x40);
-                *(f32 *)(state + 0x44) = g2 * r + *(f32 *)(state + 0x44);
+                f32 g2 = lbl_803E37DC * ((AppleOnTreeState *)state)->unk40;
+                ((AppleOnTreeState *)state)->unk44 = g2 * r + ((AppleOnTreeState *)state)->unk44;
             }
-            *(f32 *)(state + 0x3c) = *(f32 *)(state + 0x28);
-            ((void (*)(int, f32, f32, f32))(*gWaterfxInterface)[4])(p, *(f32 *)(p + 0xc), *(f32 *)(state + 0x34), *(f32 *)(p + 0x14));
+            ((AppleOnTreeState *)state)->unk3C = ((AppleOnTreeState *)state)->unk28;
+            ((void (*)(int, f32, f32, f32))(*gWaterfxInterface)[4])(p, ((GameObject *)p)->anim.localPosX, ((AppleOnTreeState *)state)->unk34, ((GameObject *)p)->anim.localPosZ);
             return 0;
         } else {
-            *(f32 *)(p + 0x10) = y;
+            ((GameObject *)p)->anim.localPosY = y;
             return 1;
         }
-    } else if (y - *(f32 *)(state + 0x2c) >= lbl_803E37D4) {
+    } else if (y - ((AppleOnTreeState *)state)->unk2C >= lbl_803E37D4) {
         f32 b;
-        f32 m = *(f32 *)(state + 0x40) + *(f32 *)(state + 0x3c);
+        f32 m = ((AppleOnTreeState *)state)->unk40 + ((AppleOnTreeState *)state)->unk3C;
         f32 g;
         f32 q;
         f32 t;
         f32 a;
         f32 r;
-        b = *(f32 *)(state + 0x44);
+        b = ((AppleOnTreeState *)state)->unk44;
         g = lbl_803E37D8 * m;
-        q = sqrtf(b * b - g * *(f32 *)(state + 0x30));
+        q = sqrtf(b * b - g * ((AppleOnTreeState *)state)->unk30);
         t = lbl_803E37DC * m;
 
         if (t >= lbl_803E37D4) {
@@ -1329,13 +1365,13 @@ int fn_8017DF34(int p, int state, f32 y)
             r2 = (nb + q) / t;
             r = (r > *(f32 *)&lbl_803E37D4) ? r : r2;
         }
-        *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - r;
-        *(f32 *)(p + 0x10) = *(f32 *)(state + 0x2c);
-        *(f32 *)(state + 0x3c) = lbl_803E37FC;
-        *(f32 *)(state + 0x44) = lbl_803E3800;
+        ((AppleOnTreeState *)state)->unk0C = ((AppleOnTreeState *)state)->unk0C - r;
+        ((GameObject *)p)->anim.localPosY = ((AppleOnTreeState *)state)->unk2C;
+        ((AppleOnTreeState *)state)->unk3C = lbl_803E37FC;
+        ((AppleOnTreeState *)state)->unk44 = lbl_803E3800;
         return 0;
     } else {
-        *(f32 *)(p + 0x10) = y;
+        ((GameObject *)p)->anim.localPosY = y;
         return 1;
     }
 }
