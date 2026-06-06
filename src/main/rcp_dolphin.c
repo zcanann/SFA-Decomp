@@ -1,3 +1,4 @@
+#include "main/texture.h"
 #include "main/mapEvent.h"
 #include "main/rcp_dolphin.h"
 
@@ -2820,18 +2821,18 @@ void textureFree(u8 *tex) {
     int count;
     if (tex == gLoadedTextures[0].texture) return;
     if (tex == NULL) {
-        tex[75] = 10;
+        ((Texture *)tex)->evictTimer = 10;
         return;
     }
-    if (*(u16 *)(tex + 14) == 0) {
-        tex[75] = 10;
+    if (((Texture *)tex)->refCount == 0) {
+        ((Texture *)tex)->evictTimer = 10;
         return;
     }
-    if (tex[73] != 0 && *(u16 *)(tex + 14) <= 1) {
-        tex[75] = 10;
+    if (((Texture *)tex)->cached != 0 && ((Texture *)tex)->refCount <= 1) {
+        ((Texture *)tex)->evictTimer = 10;
     }
-    (*(u16 *)(tex + 14))--;
-    if (*(u16 *)(tex + 14) != 0) return;
+    (((Texture *)tex)->refCount)--;
+    if (((Texture *)tex)->refCount != 0) return;
     count = gLoadedTextureCount;
     if (count <= 0) return;
     {
@@ -2848,8 +2849,8 @@ void textureFree(u8 *tex) {
                     if (iter[73] == 0) mm_free(iter);
                     iter = next;
                 }
-                if (tex[72] != 0) findSomething(*(int *)(tex + 64));
-                if (tex[73] == 0) mm_free(tex);
+                if (((Texture *)tex)->preloaded != 0) findSomething(*(int *)&((Texture *)tex)->tmemAddr);
+                if (((Texture *)tex)->cached == 0) mm_free(tex);
                 entry->key = -1;
                 entry->texture = NULL;
                 return;
@@ -3188,8 +3189,8 @@ void fn_80051868(u8 *tex, f32 *mtx, int mode)
     map = lbl_803DCD8C;
     if (tex != NULL) {
         u8 *to = tex + 0x20;
-        if (tex[0x48] != 0) {
-            GXLoadTexObjPreLoaded(to, *(u32 **)(tex + 0x40), map);
+        if (((Texture *)tex)->preloaded != 0) {
+            GXLoadTexObjPreLoaded(to, ((Texture *)tex)->tmemAddr, map);
         } else {
             GXLoadTexObj(to, map);
         }
@@ -3238,8 +3239,8 @@ void fn_80051B00(u8 *tex, f32 *mtx, int mode, int *kparam)
     map = lbl_803DCD8C;
     if (tex != NULL) {
         u8 *to = tex + 0x20;
-        if (tex[0x48] != 0) {
-            GXLoadTexObjPreLoaded(to, *(u32 **)(tex + 0x40), map);
+        if (((Texture *)tex)->preloaded != 0) {
+            GXLoadTexObjPreLoaded(to, ((Texture *)tex)->tmemAddr, map);
         } else {
             GXLoadTexObj(to, map);
         }
@@ -3288,8 +3289,8 @@ void fn_80051D5C(u8 *tex, f32 *mtx, int mode, int *kparam)
     map = lbl_803DCD8C;
     if (tex != NULL) {
         u8 *to = tex + 0x20;
-        if (tex[0x48] != 0) {
-            GXLoadTexObjPreLoaded(to, *(u32 **)(tex + 0x40), map);
+        if (((Texture *)tex)->preloaded != 0) {
+            GXLoadTexObjPreLoaded(to, ((Texture *)tex)->tmemAddr, map);
         } else {
             GXLoadTexObj(to, map);
         }
@@ -3333,7 +3334,7 @@ void gxFn_80051fb8(u8 *tex, f32 *mtx, int mode, int *kparam, u8 swapsel, u8 useK
     if (useK != 0) {
         gxTextureFn_8004bf88(kparam, 1, 1, &sel, &v1);
         GXSetTevKColorSel(lbl_803DCD90, sel);
-        if (*(void **)(tex + 0x50) != NULL) {
+        if (*(void **)&((Texture *)tex)->imageOffset != NULL) {
             GXSetTevKAlphaSel(lbl_803DCD90 + 1, v1);
         } else {
             GXSetTevKAlphaSel(lbl_803DCD90, v1);
@@ -3342,7 +3343,7 @@ void gxFn_80051fb8(u8 *tex, f32 *mtx, int mode, int *kparam, u8 swapsel, u8 useK
         color = *kparam;
         GXSetTevKColor(lbl_803DCD74, &color);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
-        if (*(void **)(tex + 0x50) != NULL) {
+        if (*(void **)&((Texture *)tex)->imageOffset != NULL) {
             GXSetTevKAlphaSel(lbl_803DCD90 + 1, lbl_803DCD6C);
         } else {
             GXSetTevKAlphaSel(lbl_803DCD90, lbl_803DCD6C);
@@ -3369,17 +3370,17 @@ void gxFn_80051fb8(u8 *tex, f32 *mtx, int mode, int *kparam, u8 swapsel, u8 useK
     map = lbl_803DCD8C;
     if (tex != NULL) {
         u8 *to = tex + 0x20;
-        if (tex[0x48] != 0) {
-            GXLoadTexObjPreLoaded(to, *(u32 **)(tex + 0x40), map);
+        if (((Texture *)tex)->preloaded != 0) {
+            GXLoadTexObjPreLoaded(to, ((Texture *)tex)->tmemAddr, map);
         } else {
             GXLoadTexObj(to, map);
         }
-        if (*(void **)(tex + 0x50) != NULL) {
+        if (*(void **)&((Texture *)tex)->imageOffset != NULL) {
             fn_80053C40(tex, lbl_803779A0);
             GXLoadTexObj(lbl_803779A0, 1);
         }
     }
-    if (*(void **)(tex + 0x50) != NULL) {
+    if (*(void **)&((Texture *)tex)->imageOffset != NULL) {
         lbl_803DCD6A++;
         lbl_803DCD90 = lbl_803DCD90 + 1;
         lbl_803DCD8C = lbl_803DCD8C + 1;
@@ -3403,20 +3404,20 @@ void gxFn_80051fb8(u8 *tex, f32 *mtx, int mode, int *kparam, u8 swapsel, u8 useK
 void fn_80053C40(u8 *tex, u8 *obj)
 {
     u8 mipmap;
-    if ((int)tex[0x1d] - (int)tex[0x1c] > 0) {
+    if ((int)((Texture *)tex)->maxLod - (int)((Texture *)tex)->minLod > 0) {
         mipmap = 1;
     } else {
         mipmap = 0;
     }
-    GXInitTexObj(obj, &tex[*(int *)(tex + 0x50) + 0x60],
-                 *(u16 *)(tex + 0xa), *(u16 *)(tex + 0xc),
-                 0, tex[0x17], tex[0x18], mipmap);
+    GXInitTexObj(obj, &tex[((Texture *)tex)->imageOffset + 0x60],
+                 ((Texture *)tex)->width, ((Texture *)tex)->height,
+                 0, ((Texture *)tex)->wrapS, ((Texture *)tex)->wrapT, mipmap);
     if (mipmap != 0) {
-        GXInitTexObjLOD(obj, tex[0x19], tex[0x1a],
-                        (f32)(u32)tex[0x1c], (f32)(s32)tex[0x1d],
+        GXInitTexObjLOD(obj, ((Texture *)tex)->minFilter, ((Texture *)tex)->magFilter,
+                        (f32)(u32)((Texture *)tex)->minLod, (f32)(s32)((Texture *)tex)->maxLod,
                         lbl_803DEB98, 0, 0, 0);
     } else {
-        GXInitTexObjLOD(obj, tex[0x19], tex[0x1a],
+        GXInitTexObjLOD(obj, ((Texture *)tex)->minFilter, ((Texture *)tex)->magFilter,
                         lbl_803DEB9C, lbl_803DEB9C, lbl_803DEB9C, 0, 0, 0);
     }
 }
@@ -3901,7 +3902,7 @@ void gxTextureFn_80052efc(void)
     e = lbl_8037E000;
     for (; i < 6; i++) {
         tex = *(u8 **)e;
-        if (*(u16 *)(tex + 0xe) != 0 && e[0x1b] == 1 && lbl_803DCDA4 == e[0x1a]) {
+        if (((Texture *)tex)->refCount != 0 && e[0x1b] == 1 && lbl_803DCDA4 == e[0x1a]) {
             c.r = (e[0xc] * e[0x18]) >> 8;
             c.g = 0;
             c.b = (e[0xe] * e[0x19]) >> 8;
@@ -3915,8 +3916,8 @@ void gxTextureFn_80052efc(void)
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
             GXCopyTex(*(u8 **)e + 0x60, 0);
             tex = *(u8 **)e;
-            if (tex[0x48] != 0) {
-                GXPreLoadEntireTexture(tex + 0x20, *(u32 **)(tex + 0x40));
+            if (((Texture *)tex)->preloaded != 0) {
+                GXPreLoadEntireTexture(tex + 0x20, ((Texture *)tex)->tmemAddr);
             }
         }
         e += 0x1c;
@@ -3954,8 +3955,8 @@ void gxTextureFn_80052efc(void)
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
             GXCopyTex(*(u8 **)e + 0x60, (i == sel) ? 1 : 0);
             tex = *(u8 **)e;
-            if (tex[0x48] != 0) {
-                GXPreLoadEntireTexture(tex + 0x20, *(u32 **)(tex + 0x40));
+            if (((Texture *)tex)->preloaded != 0) {
+                GXPreLoadEntireTexture(tex + 0x20, ((Texture *)tex)->tmemAddr);
             }
         }
         e += 0x1c;
@@ -4005,7 +4006,7 @@ void texRestructRefs(int mode)
     entry = gLoadedTextures;
     for (; i < gLoadedTextureCount; i++, entry++) {
         tex = entry->texture;
-        if (tex != NULL && entry->flag != 0 && tex[0x49] == 0 && entry->size != -1 &&
+        if (tex != NULL && entry->flag != 0 && ((Texture *)tex)->cached == 0 && entry->size != -1 &&
             mmGetRegionForPtr(tex) == 0 && *(void **)tex == NULL) {
             size = entry->size;
             na = (u8 *)mmAlloc(size, 0xa0a0a0a0, 0);
@@ -4034,7 +4035,7 @@ void texRestructRefs(int mode)
         entry = gLoadedTextures;
         for (; i < gLoadedTextureCount; i++, entry++) {
             tex = entry->texture;
-            if (tex != NULL && entry->flag != 0 && tex[0x49] == 0 && entry->size != -1) {
+            if (tex != NULL && entry->flag != 0 && ((Texture *)tex)->cached == 0 && entry->size != -1) {
                 if (mmGetRegionForPtr(tex) == 0) {
                     if (*(void **)tex == NULL) {
                         size = entry->size;
@@ -4148,7 +4149,7 @@ void *textureLoad(int texId, u8 flag)
     for (; n < gLoadedTextureCount; n++, entry++) {
         if (entry->key == texId) {
             tex = entry->texture;
-            *(u16 *)(tex + 0xe) += 1;
+            ((Texture *)tex)->refCount += 1;
             if (flag != 0 && entry->flag != 0) {
                 return (void *)(n + 1);
             }
