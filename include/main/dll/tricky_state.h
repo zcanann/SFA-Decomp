@@ -48,7 +48,9 @@ typedef struct TrickyState {
     f32 unk8C;
     f32 unk90;
     f32 unk94;
-    u8 pad98[0xD0 - 0x98];
+    u16 patch[4]; /* curve-walk patch values (dll_DF trickyFn_8013b368); the
+                     indexed s16 copy loop stays raw */
+    u8 padA0[0xD0 - 0xA0]; /* 0xA0: f32 triples at stride 0xC (walker, raw) */
     u16 unkD0;
     u16 unkD2;
     u8 padD4[0xE0 - 0xD4];
@@ -119,7 +121,8 @@ typedef struct TrickyState {
     f32 unk410;
     u8 pad414[0x532 - 0x414];
     u16 unk532;
-    u8 pad534[4];
+    u16 unk534; /* mirrored from unk532 (dll_DF) */
+    u8 pad536[2];
     u8 voxBlocks[9][0x30]; /* trickyVoxAllocFn_8004b5d4 records, 0x538..0x6E8 */
     u8 pad6E8[0x6F0 - 0x6E8];
     int unk6F0;
