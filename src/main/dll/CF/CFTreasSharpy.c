@@ -57,15 +57,15 @@ extern f32 lbl_803E3E40;
 void cfccrate_init(int obj, int aux)
 {
     ObjAnimComponent *objAnim;
-    int state;
+    CfCcrateState *state;
     short id;
     f32 zeroF;
 
     objAnim = (ObjAnimComponent *)obj;
     id = *(short *)(aux + 0x0);
-    state = *(int *)(obj + 0xb8);
+    state = *(CfCcrateState **)(obj + 0xb8);
     zeroF = lbl_803E3DD8;
-    *(f32 *)(state + 0x2c) = zeroF;
+    state->unk2C = zeroF;
 
     switch (id) {
     case 0x2bb:
@@ -90,41 +90,41 @@ void cfccrate_init(int obj, int aux)
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         break;
     case 0x71b:
-        *(short *)(state + 0x36) = *(short *)(aux + 0x1a);
+        state->lingerTimer = *(short *)(aux + 0x1a);
         break;
     case 0x6be:
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(u8 *)(state + 0x3e) = 0;
-        *(short *)(state + 0x3a) = *(short *)(aux + 0x20);
+        state->latch3E = 0;
+        state->gameBit2 = *(short *)(aux + 0x20);
         break;
     case 0x828:
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(u8 *)(state + 0x3e) = 0;
-        *(short *)(state + 0x3a) = *(short *)(aux + 0x20);
-        if ((GameBit_Get(*(short *)(state + 0x3a)) != 0) && (*(u8 *)(state + 0x3e) == 0)) {
+        state->latch3E = 0;
+        state->gameBit2 = *(short *)(aux + 0x20);
+        if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0)) {
             *(short *)(obj + 4) = 0x7fff;
-            *(u8 *)(state + 0x3e) = 1;
+            state->latch3E = 1;
         }
         break;
     case 0x6bf:
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         *(short *)(obj + 2) = *(short *)(aux + 0x1a);
-        *(short *)(state + 0x3a) = *(short *)(aux + 0x20);
+        state->gameBit2 = *(short *)(aux + 0x20);
         break;
     case 0x708:
         objAnim->bankIndex = (s8)*(short *)(aux + 0x1a);
-        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
+        state->gameBit = *(short *)(aux + 0x20);
         if (objAnim->bankIndex >= 3) {
             objAnim->bankIndex = 0;
         }
         Obj_SetActiveModelIndex(obj, objAnim->bankIndex);
         break;
     case 0x6fc:
-        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
+        state->gameBit = *(short *)(aux + 0x20);
         break;
     case 0x622:
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
+        state->gameBit = *(short *)(aux + 0x20);
         break;
     case 0x6b4:
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
@@ -133,7 +133,7 @@ void cfccrate_init(int obj, int aux)
         break;
     case 0x66c:
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
+        state->gameBit = *(short *)(aux + 0x20);
         break;
     case 0x216:
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
@@ -142,8 +142,8 @@ void cfccrate_init(int obj, int aux)
     case 0x4bf:
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         objAnim->bankIndex = *(u8 *)(aux + 0x19);
-        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
-        if (GameBit_Get(*(short *)(state + 0x38)) != 0) {
+        state->gameBit = *(short *)(aux + 0x20);
+        if (GameBit_Get(state->gameBit) != 0) {
             *(f32 *)(obj + 0x10) = lbl_803E3DFC + *(f32 *)(aux + 0xc);
         }
         break;
@@ -155,14 +155,14 @@ void cfccrate_init(int obj, int aux)
         } else {
             *(f32 *)(obj + 8) = lbl_803E3E34;
         }
-        *(u8 *)(state + 0x3e) = 0;
-        *(f32 *)(state + 0x4) = *(f32 *)(aux + 0x8);
-        *(f32 *)(state + 0x8) = *(f32 *)(aux + 0xc);
-        *(f32 *)(state + 0xc) = *(f32 *)(aux + 0x10);
-        *(f32 *)(state + 0x14) = *(f32 *)(state + 0x18) = lbl_803E3E30;
-        *(f32 *)(state + 0x28) = lbl_803E3DF4;
-        *(f32 *)(state + 0x20) = lbl_803E3E38;
-        *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x24) = lbl_803E3DEC;
+        state->latch3E = 0;
+        state->homeX = *(f32 *)(aux + 0x8);
+        state->homeY = *(f32 *)(aux + 0xc);
+        state->homeZ = *(f32 *)(aux + 0x10);
+        state->oscPosA = state->oscPosB = lbl_803E3E30;
+        state->unk28 = lbl_803E3DF4;
+        state->unk20 = lbl_803E3E38;
+        state->oscVelA = state->oscVelB = lbl_803E3DEC;
         *(short *)(obj + 4) = 0;
         *(int *)(obj + 0xbc) = (int)&CFCrate_SeqFn;
         break;
@@ -174,20 +174,20 @@ void cfccrate_init(int obj, int aux)
         } else {
             *(f32 *)(obj + 8) = zeroF;
         }
-        *(f32 *)(state + 0x24) = (f32)(s32)*(short *)(aux + 0x1a);
-        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
-        if (GameBit_Get(*(short *)(state + 0x38)) != 0) {
-            *(f32 *)(state + 0x24) = *(f32 *)(state + 0x24) * lbl_803E3E3C;
+        state->oscVelB = (f32)(s32)*(short *)(aux + 0x1a);
+        state->gameBit = *(short *)(aux + 0x20);
+        if (GameBit_Get(state->gameBit) != 0) {
+            state->oscVelB = state->oscVelB * lbl_803E3E3C;
         }
         break;
     case 0xd7:
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         *(f32 *)(obj + 8) = zeroF;
-        *(u8 *)(state + 0x3e) = 0;
-        *(f32 *)(state + 0x4) = *(f32 *)(aux + 0x8);
-        *(f32 *)(state + 0x8) = *(f32 *)(aux + 0xc);
-        *(f32 *)(state + 0xc) = *(f32 *)(aux + 0x10);
-        *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x24) = *(f32 *)(state + 0x20) = *(f32 *)(state + 0x28) = *(f32 *)(state + 0x14) = *(f32 *)(state + 0x18) = lbl_803E3E30;
+        state->latch3E = 0;
+        state->homeX = *(f32 *)(aux + 0x8);
+        state->homeY = *(f32 *)(aux + 0xc);
+        state->homeZ = *(f32 *)(aux + 0x10);
+        state->oscVelA = state->oscVelB = state->unk20 = state->unk28 = state->oscPosA = state->oscPosB = lbl_803E3E30;
         *(int *)(obj + 0xbc) = (int)&CFCrate_SeqFn;
         break;
     case 0x125:
@@ -197,21 +197,21 @@ void cfccrate_init(int obj, int aux)
         *(f32 *)(obj + 8) = zeroF;
         *(int *)(obj + 0xf4) = 0;
         *(int *)(obj + 0xf8) = 0;
-        *(f32 *)(state + 0x24) = lbl_803E3E40;
-        *(f32 *)(state + 0x1c) = lbl_803E3DEC;
-        *(short *)(state + 0x32) = 0;
-        *(short *)(state + 0x34) = (short)randomGetRange(0x3e8, 0x1388);
-        *(u8 *)(state + 0x3f) = 1;
+        state->oscVelB = lbl_803E3E40;
+        state->oscVelA = lbl_803E3DEC;
+        state->unk32 = 0;
+        state->unk34 = (short)randomGetRange(0x3e8, 0x1388);
+        state->proximityLatch = 1;
         *(int *)(obj + 0xbc) = (int)&CFCrate_SeqFn;
         break;
     case 0x10d:
         *(int *)(obj + 0x54) = 0;
         if (*(short *)(aux + 0x1a) == 0) {
-            *(int *)(state + 0x44) = (int)&lbl_803DBDE8;
-            *(u8 *)(state + 0x40) = 1;
+            state->sfxTable = (u16 *)&lbl_803DBDE8;
+            state->sfxCount = 1;
         }
-        *(u16 *)(state + 0x48) = (u16)*(short *)(aux + 0x1c);
-        *(short *)(state + 0x3c) = (short)*(u16 *)(state + 0x48);
+        state->sfxPeriod = (u16)*(short *)(aux + 0x1c);
+        state->sfxTimer = (short)state->sfxPeriod;
         break;
     }
 }

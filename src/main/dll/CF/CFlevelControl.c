@@ -1,4 +1,5 @@
 #include "main/dll/CF/CFlevelControl.h"
+#include "main/dll/CF/CFTreasSharpy.h"
 #include "main/objanim.h"
 
 extern void *Obj_GetPlayerObject(void);
@@ -46,50 +47,50 @@ extern f64 lbl_803E3E28;
 #pragma peephole off
 void cfccrate_update(int obj)
 {
-    int state;       /* r31 = obj->b8 */
+    CfCcrateState *state; /* r31 = obj->b8 */
     int viewslot;    /* r29 = obj->4c */
     int tmp;
     short id;
 
     Obj_GetPlayerObject();
-    state = *(int *)(obj + 0xb8);
+    state = *(CfCcrateState **)(obj + 0xb8);
     Camera_GetCurrentViewSlot();
     id = *(short *)(obj + 0x46);
     viewslot = *(int *)(obj + 0x4c);
 
     switch (id) {
     case 0x7de:
-        if (GameBit_Get(*(short *)(state + 0x38)) != 0) {
-            *(short *)(obj + 0x4) = (short)-(timeDelta * *(f32 *)(state + 0x24) - (f32)*(short *)(obj + 0x4));
+        if (GameBit_Get(state->gameBit) != 0) {
+            *(short *)(obj + 0x4) = (short)-(timeDelta * state->oscVelB - (f32)*(short *)(obj + 0x4));
         } else {
-            *(short *)(obj + 0x4) = (short)(timeDelta * *(f32 *)(state + 0x24) + (f32)*(short *)(obj + 0x4));
+            *(short *)(obj + 0x4) = (short)(timeDelta * state->oscVelB + (f32)*(short *)(obj + 0x4));
         }
         break;
     case 0x729:
-        if (GameBit_Get(*(short *)(state + 0x38)) == 0) {
+        if (GameBit_Get(state->gameBit) == 0) {
             *(short *)(obj + 0x2) = *(short *)(obj + 0x2) + framesThisStep * 100;
         }
         break;
     case 0x71b:
-        *(u16 *)(state + 0x36) = *(short *)(state + 0x36) - framesThisStep;
+        *(u16 *)&state->lingerTimer = state->lingerTimer - framesThisStep;
         ObjHits_SetHitVolumeSlot(obj, 0x13, 1, 0);
-        if (*(short *)(state + 0x36) > 0) {
+        if (state->lingerTimer > 0) {
             *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - (f32)(lbl_803E3DE0 * (double)timeDelta);
         } else {
             Obj_FreeObject(obj);
         }
         break;
     case 0x6fc:
-        if ((GameBit_Get(*(short *)(state + 0x38)) != 0) &&
+        if ((GameBit_Get(state->gameBit) != 0) &&
             (*(f32 *)(obj + 0x10) <= lbl_803E3DE8 + *(f32 *)(viewslot + 0xc))) {
             *(f32 *)(obj + 0x10) = lbl_803E3DEC * timeDelta + *(f32 *)(obj + 0x10);
             if (lbl_803E3DE8 + *(f32 *)(viewslot + 0xc) <= *(f32 *)(obj + 0x10)) {
-                GameBit_Set(*(short *)(state + 0x38), 0);
+                GameBit_Set(state->gameBit, 0);
             }
         }
         break;
     case 0x6fd:
-        if (GameBit_Get(*(short *)(state + 0x38)) != 0) {
+        if (GameBit_Get(state->gameBit) != 0) {
             *(short *)(obj + 0) = *(short *)(obj + 0) + (s32)(lbl_803E3DF0 * timeDelta);
             *(short *)(obj + 0x4) = *(short *)(obj + 0x4) + (s32)(lbl_803E3DF4 * timeDelta);
         } else {
@@ -98,7 +99,7 @@ void cfccrate_update(int obj)
         }
         break;
     case 0x6fe:
-        if (GameBit_Get(*(short *)(state + 0x38)) != 0) {
+        if (GameBit_Get(state->gameBit) != 0) {
             *(short *)(obj + 0x2) = *(short *)(obj + 0x2) + (s32)(lbl_803E3DF0 * timeDelta);
             *(short *)(obj + 0x4) = *(short *)(obj + 0x4) + (s32)(lbl_803E3DF4 * timeDelta);
         } else {
@@ -108,7 +109,7 @@ void cfccrate_update(int obj)
         break;
     case 0x622: {
         int *p = (int *)objFindTexture(obj, 0, 0);
-        if ((p != NULL) && (GameBit_Get(*(short *)(state + 0x38)) != 0) && (*p == 0)) {
+        if ((p != NULL) && (GameBit_Get(state->gameBit) != 0) && (*p == 0)) {
             Sfx_PlayFromObject(obj, 0x3c4);
             *p = 0x100;
         }
@@ -124,9 +125,9 @@ void cfccrate_update(int obj)
         break;
     case 0x708:
         if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) != 0) {
-            GameBit_Set(*(short *)(state + 0x38), 1);
+            GameBit_Set(state->gameBit, 1);
         }
-        if (GameBit_Get(*(short *)(state + 0x38)) == 0) {
+        if (GameBit_Get(state->gameBit) == 0) {
             *(short *)(obj + 0) = *(short *)(obj + 0) + (short)*(s8 *)(viewslot + 0x18) * framesThisStep;
         }
         break;
@@ -134,22 +135,22 @@ void cfccrate_update(int obj)
         (**(void(***)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
         break;
     case 0x6be:
-        if ((GameBit_Get(*(short *)(state + 0x3a)) != 0) && (*(u8 *)(state + 0x3e) == 0)) {
-            *(u8 *)(state + 0x3e) = 1;
+        if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0)) {
+            state->latch3E = 1;
             (**(void(***)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
         }
         break;
     case 0x4bf:
         if ((*(f32 *)(obj + 0x10) < lbl_803E3DFC + *(f32 *)(viewslot + 0xc)) &&
-            (GameBit_Get(*(short *)(state + 0x38)) != 0)) {
+            (GameBit_Get(state->gameBit) != 0)) {
             *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + timeDelta;
         }
         break;
     case 0x828:
-        if ((GameBit_Get(*(short *)(state + 0x3a)) != 0) && (*(u8 *)(state + 0x3e) == 0)) {
+        if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0)) {
             tmp = *(short *)(obj + 0x4) + (s32)(lbl_803E3E00 * timeDelta);
             if (tmp > 0x7fff) {
-                *(u8 *)(state + 0x3e) = 1;
+                state->latch3E = 1;
                 *(short *)(obj + 0x4) = 0x7fff;
             } else {
                 *(short *)(obj + 0x4) = (short)tmp;
@@ -157,26 +158,26 @@ void cfccrate_update(int obj)
         }
         break;
     case 0x8e:
-        *(f32 *)(state + 0x14) = lbl_803E3E04 * *(f32 *)(state + 0x1c) + *(f32 *)(state + 0x14);
-        if ((lbl_803E3E08 < *(f32 *)(state + 0x14)) ||
-            (*(f32 *)(state + 0x14) < lbl_803E3E0C)) {
-            *(f32 *)(state + 0x1c) = -*(f32 *)(state + 0x1c);
+        state->oscPosA = lbl_803E3E04 * state->oscVelA + state->oscPosA;
+        if ((lbl_803E3E08 < state->oscPosA) ||
+            (state->oscPosA < lbl_803E3E0C)) {
+            state->oscVelA = -state->oscVelA;
         }
-        if ((lbl_803E3E10 < *(f32 *)(state + 0x18)) ||
-            (*(f32 *)(state + 0x18) < lbl_803E3E14)) {
-            *(f32 *)(state + 0x24) = -*(f32 *)(state + 0x24);
+        if ((lbl_803E3E10 < state->oscPosB) ||
+            (state->oscPosB < lbl_803E3E14)) {
+            state->oscVelB = -state->oscVelB;
         }
-        *(f32 *)(state + 0x18) = lbl_803E3E04 * *(f32 *)(state + 0x24) + *(f32 *)(state + 0x18);
+        state->oscPosB = lbl_803E3E04 * state->oscVelB + state->oscPosB;
         break;
     case 0x10d:
-        *(short *)(state + 0x3c) = *(short *)(state + 0x3c) - framesThisStep;
-        if (*(short *)(state + 0x3c) < 0) {
+        state->sfxTimer = state->sfxTimer - framesThisStep;
+        if (state->sfxTimer < 0) {
             uint r;
-            r = randomGetRange(0, *(u8 *)(state + 0x40) - 1);
-            Sfx_PlayFromObject(obj, *(u16 *)(*(int *)(state + 0x44) + r * 2));
-            *(u16 *)(state + 0x3c) = *(u16 *)(state + 0x48);
-            r = randomGetRange(0, *(u16 *)(state + 0x48));
-            *(short *)(state + 0x3c) = *(short *)(state + 0x3c) + r;
+            r = randomGetRange(0, state->sfxCount - 1);
+            Sfx_PlayFromObject(obj, state->sfxTable[r]);
+            *(u16 *)&state->sfxTimer = state->sfxPeriod;
+            r = randomGetRange(0, state->sfxPeriod);
+            state->sfxTimer = state->sfxTimer + r;
         }
         break;
     case 0x125: {
@@ -191,12 +192,12 @@ void cfccrate_update(int obj)
         fy = *(f32 *)(p + 0x1c) - *(f32 *)(obj + 0x1c);
         dist = sqrtf(fy * fy + fx * fx + fz * fz);
         if (dist < lbl_803E3E20) {
-            if (*(u8 *)(state + 0x3f) == 1) {
-                *(u8 *)(state + 0x3f) = 0;
+            if (state->proximityLatch == 1) {
+                state->proximityLatch = 0;
                 getLActions(obj, obj, 0x5c, 0, 0, 0);
             }
-        } else if ((dist > lbl_803E3E20) && (*(u8 *)(state + 0x3f) == 0)) {
-            *(u8 *)(state + 0x3f) = 1;
+        } else if ((dist > lbl_803E3E20) && (state->proximityLatch == 0)) {
+            state->proximityLatch = 1;
             getLActions(obj, obj, 0x5d, 0, 0, 0);
         }
         break;

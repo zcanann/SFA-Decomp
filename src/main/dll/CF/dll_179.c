@@ -1,4 +1,5 @@
 #include "main/dll/CF/dll_179.h"
+#include "main/dll/CF/CFTreasSharpy.h"
 
 extern uint GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -14,16 +15,16 @@ extern f32 lbl_803E3DD8;
 void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int objectType;
-    u8 *state;
+    CfCcrateState *state;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = *(CfCcrateState **)(obj + 0xb8);
     if ((s32)visible != 0) {
         objectType = *(s16 *)(obj + 0x46);
         if (objectType == 0x1b8) {
             return;
         }
         if (visible == 0 || objectType == 0x6bf) {
-            if (GameBit_Get(*(s16 *)(state + 0x3a)) == 0) {
+            if (GameBit_Get(state->gameBit2) == 0) {
                 return;
             }
         }
@@ -33,10 +34,10 @@ void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 int CFCrate_SeqFn(int obj, int unused, u8 *seq)
 {
-    u8 *state;
+    CfCcrateState *state;
     int i;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = *(CfCcrateState **)(obj + 0xb8);
     switch (*(s16 *)(obj + 0x46)) {
     case 0x85:
     case 0x87:
@@ -58,7 +59,7 @@ int CFCrate_SeqFn(int obj, int unused, u8 *seq)
     case 0x409:
         break;
     case 0x2B7:
-        if (GameBit_Get(*(s16 *)(state + 0x3a)) != 0) {
+        if (GameBit_Get(state->gameBit2) != 0) {
             seq[0x90] = (u8)(seq[0x90] | 4);
         }
         for (i = 0; i < (int)seq[0x8b]; i++) {
