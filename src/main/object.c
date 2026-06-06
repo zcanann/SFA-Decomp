@@ -771,8 +771,9 @@ void objWorldToLocalPos(f32 *out, u8 *transform, f32 *in) {
         f32 y;
         f32 z;
     } inverse;
-    f32 rotMtx[16];
+    union { f32 m[16]; f64 a8; } rotU;
     f32 transposed[16];
+#define rotMtx rotU.m
 
     inverse.x = -*(f32 *)(transform + 0xc);
     inverse.y = -*(f32 *)(transform + 0x10);
@@ -784,9 +785,11 @@ void objWorldToLocalPos(f32 *out, u8 *transform, f32 *in) {
     mtxRotateByVec3s(rotMtx, &inverse);
     mtx44Transpose(rotMtx, transposed);
     PSMTXMultVec(transposed, in, rotated);
-    *(u32 *)(out + 0) = *(u32 *)(rotated + 0);
-    *(u32 *)(out + 1) = *(u32 *)(rotated + 1);
-    *(u32 *)(out + 2) = *(u32 *)(rotated + 2);
+    {
+        struct WLPVec3 { int x, y, z; };
+        *(struct WLPVec3 *)out = *(struct WLPVec3 *)rotated;
+    }
+#undef rotMtx
 }
 
 extern void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);

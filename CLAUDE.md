@@ -1377,6 +1377,95 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     with #74 — the "11 missing instructions" diagnosis was entirely this
     class.
 
+75. **`union { f32 m[16]; f64 a8; }` 8-ALIGNS a stack array — fixes the
+    "+4 stack-offset" frame residual.** When target places an f32 array at
+    an 8-aligned sp offset (e.g. 112) but yours lands at off-by-4 (108),
+    the original type carried 8-byte alignment. Declare the array inside a
+    union with an f64 member (`#define name u.m` keeps the body unchanged)
+    — reproduces the alignment hole with zero codegen change. Sibling of
+    recipe #16's `f32 m[16]`-vs-`Mtx` frame-size note, for ALIGNMENT rather
+    than size. (objWorldToLocalPos 96→100, with #31 whole-struct copy-out.)
+    **Related frame lever — frame size tracks the COUNT of homed locals,
+    even when codegen is otherwise identical.** A 64-vs-48 stwu delta with a
+    byte-identical body = too many distinct locals homed to stack slots.
+    Fold single-use block locals into their consuming expression (each
+    −4/−8B) until stwu matches; a fresh local ADDS 8. Complements #67's
+    probe method — the probe direction here is removing locals, not
+    resizing buffers. (synthUpdateVirtualSamples 95.93→100 — also needed:
+    test-via-global to unsplit the state web (addi lands straight in r30,
+    kills a spurious `addi r3,r3,0`), switch dispatch, struct ent[vid] form
+    (#18), OR operand swap (#66).)
+
+76. **`int key = id;` (u16 param widened to an int local) fixes BOTH `cmpw`
+    signedness AND a whole-function volatile rotation in one line.** When
+    target compares a u16-derived value with SIGNED `cmpw` (yours emits
+    `cmplw`) and the volatiles are rotated (r6/r7/r8 ↔ r7/r8/r6), the
+    original held the param in an `int` local (one `clrlwi` at the copy).
+    Semantically safe (both operands non-negative); the extra web shifts
+    every volatile into target's numbering. Inverse direction of #58.
+    (Sfx_FindTrigger binary-search 95.98→100.)
+
+77. **Param saved-reg relocation: `void *` params + cast-assigned typed
+    locals split the webs when same-type local copies get propagated
+    away.** To reproduce a param coloring permutation (T: p1=r30 p2=r28
+    p3=r29 vs C: r28/r29/r30), change the signature's pointer params to
+    `void *` and copy each into a typed local with an explicit cast —
+    local decl order then sets the coloring (first = highest free). A
+    same-typed copy (`short *p2 = arg1;`) gets merged back and changes
+    nothing; the cast is load-bearing. Pointer args are ABI- and
+    caller-codegen-neutral so the header change is conservation-safe.
+    Extends #16/babycloudrunner split-decls to params. Also works for
+    plain-locals coloring: babycloudrunner_func0B 95.89→100 via void* param
+    + split decls in target coloring order with assignments in target
+    statement order. (camcontrol_getTargetPosition 95.96→98.42; residual:
+    the PLACEMENT of `mr r31,r6` among the prologue copies is
+    allocator-internal — emission order follows neither statement order nor
+    cast-ness; don't grind it. Same fn: sqrtf store-then-round
+    `stfs f1; frsp f5,f1` vs round-then-store is also internal.)
+
+78. **Triple-multiply REGROUP: `A * lbl * conv` → `A * (lbl * conv)` —
+    Ghidra always left-flattens; target groups the constant-by-conversion
+    product.** When target computes `fmuls f1,f0(lbl),f1(conv)` FIRST and
+    then `fmuls f0,A,f1`, the left-assoc import form `A * lbl * conv`
+    evaluates `(A*lbl)*conv` and mismatches at EVERY such site. Add explicit
+    parens to group the const×conversion subterm. Scales catastrophically:
+    147 sites in Effect20_func04 alone (+5pp in one sed), 13 more in modgfx.
+    Diagnostic grep: `\* lbl_\w+ \* \(f32\)\(s32\)randomGetRange`. Sibling
+    of #59 (statement-level reorder for fadds chains) for multiply chains.
+    (dim_partfx/modgfx Effect family, task #147.)
+
+79. **Import-dropped/mangled SWITCH CASES: reconstruct via jump-table
+    decode — the canonical fix for big `delete` regions in a stream
+    alignment.** When a mnemonic-level difflib alignment (recipe #70
+    method) shows target-side delete regions of 20+ instructions, the
+    Ghidra import dropped (or gutted) whole case bodies. Procedure, proven
+    on Effect3_func04 90.8→99.75 and Effect2_func04 93.5→98.0:
+    1. Find the fn's `jumptable_8xxxxxxx` in the auto_07 data asm
+       (`build/GSAE01/asm/auto_07_*.s`); the dispatch's `subi rX, rY, BASE`
+       gives the case-value base; table index i ⇒ case BASE+i, entry ⇒
+       fn-relative block offset.
+    2. Map the missing block offsets to case values; insert/repair the
+       cases at the position matching target block order (#13).
+    3. Transcribe bodies from target asm. Watch for the import-corruption
+       signatures: (a) real float-compare conditions (`lbl == *(f32*)
+       (param_3+4)` fcmpu) replaced by `param_3 != 0`; (b) `FILL` macro
+       calls + param_3 field reads silently dropped; (c) global TABLE reads
+       (`(s16)lbl_8031xxxx[i]`, lwz+extsh+sth) corrupted into
+       param-relative garbage (`*(int*)((char*)param_1 - 0x980)`); (d)
+       dropped `f44`/`f48` constant stores; (e) `X = rand(); X = X + K;`
+       double-stores collapsed into one statement (or vice versa — read
+       target's store count); (f) faithful DEAD double-stores in the
+       original (`f44 = 0x81088000; f44 = 0x1000000;`) — keep both.
+    Audit signature counts for the remaining modgfx fns are in task #147.
+
+**dtk `block_relocations` ranges currently in config/GSAE01/config.yml**
+(recipe #73 instances — flag constants that coincide with code addresses):
+`0x80180100–0x80180218` (fn_8017FFD0 interior), `0x80080108–0x80080120`
+(randFn_80080100 interior), `0x80080208–0x80080214` (getCurSeqNo+4 /
+fn_8008020C+4). When a new `sym+0xNNN` regex census
+(`grep -rh "+0x" build/GSAE01/asm/main/dll/*.s`) surfaces more, verify the
+addend lands mid-function (not at a symbol boundary) before adding a range.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
