@@ -1197,6 +1197,20 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   camcontrol_loadTriggeredCamAction). Initializer-decl form, statement
   position, array-decay all invariant — yet other fns (player fn_8029DB70)
   get the direct form from identical-looking C; discriminator unknown.
+- **CAP — player_SeqFn (98.10) top-pair allocation order: DO NOT retry the
+  cache-inline fix.** Eliminating the (int)inner cast-copy web (savegpr
+  19→20, mid-webs align) makes the merged inner web (179 uses) outweigh obj
+  (117) and OUR allocator flips them to inner=r31/obj=r30 — INVERTED from
+  target (obj=r31, inner=r30 even though target's inner is also heavier).
+  Every variant scored 97.5 vs the 98.10 baseline: the baseline's cast-copy
+  web is LOAD-BEARING for the dominant coloring. Tested: web unification
+  (h/va/obj2→inner), int-retype, callee-retype-decasting, decl order,
+  register keyword, (char*)-cast stripping ×149. Also ruled out: the
+  inlined-helper hypothesis for the ~9 materialized-mask sites — MWCC's
+  INLINER re-folds constant masks to rlwinm (unlike the unroller, #28), so
+  `static helper(p, flag){p->f &= ~flag;}` + auto-inline does NOT reproduce
+  `li -K; and`. Both player_SeqFn residual families are allocator/codegen
+  caps pending a new recipe.
 - **CAP — web-split reload coloring** (reloaded pointer gets a fresh saved
   reg where target reuses the original — MoonSeedPlantingSpot_setScale;
   decl-perms and second-local splits all regress) and **reverse-order saved
