@@ -119,7 +119,9 @@ typedef struct TrickyState {
     f32 unk410;
     u8 pad414[0x532 - 0x414];
     u16 unk532;
-    u8 pad534[0x6F0 - 0x534]; /* nine 0x30-stride voxmap blocks (trickyVoxAllocFn_8004b5d4), 0x538..0x6E8 */
+    u8 pad534[4];
+    u8 voxBlocks[9][0x30]; /* trickyVoxAllocFn_8004b5d4 records, 0x538..0x6E8 */
+    u8 pad6E8[0x6F0 - 0x6E8];
     int unk6F0;
     u8 pad6F4[0x700 - 0x6F4];
     u8 *unk700;
@@ -162,7 +164,9 @@ typedef struct TrickyState {
     f32 unk80C;
     f32 unk810;
     f32 unk814;
-    u8 pad818[0x82C - 0x818];
+    u8 pad818[2];
+    s16 unk81A;
+    u8 pad81C[0x82C - 0x81C];
     u8 modelVariant; /* progress/10; indexes model bank color */
     u8 unk82D;
     u8 unk82E; /* bit flags 5/6/7 (collectable.c overlays) */
