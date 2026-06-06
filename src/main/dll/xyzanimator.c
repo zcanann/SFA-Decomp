@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
 #include "main/objhits_types.h"
+#include "main/game_object.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -78,6 +79,17 @@ typedef struct {
     u8 smoothTurn : 1; /* 0x12 bit 5 */
     u8 usePath : 1;    /* 0x12 bit 4 */
 } PollenFragmentDef;
+
+/* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
+typedef struct PollenFragmentExtra {
+    u8 unk00[0xC];
+    f32 velX;
+    f32 velY;
+    f32 velZ;
+    u8 unk18[4];
+    PollenFragmentDef *def; /* 0x1C */
+} PollenFragmentExtra;
+
 
 extern void storeZeroToFloatParam(void *timer);
 
@@ -313,12 +325,12 @@ void kaldachompspit_init(int obj)
 {
     int *extra;
 
-    extra = *(int **)(obj + 0xb8);
-    *(int *)(obj + 0xf4) = 400;
+    extra = *(int **)&((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkF4 = 400;
     ObjHits_DisableObject(obj);
     *(u8 *)(obj + 0x36) = 0xff;
     Sfx_PlayFromObject(obj, 0x278);
-    *(u16 *)(obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
     if (*(void **)extra == NULL) {
         *extra = (int)objCreateLight(obj, 1);
         if (*(void **)extra != NULL) {
@@ -328,19 +340,19 @@ void kaldachompspit_init(int obj)
     if (*(void **)extra != NULL) {
         f32 k = lbl_803E30F8;
         modelLightStruct_setPosition(*extra, k, k, k);
-        if (*(s16 *)(obj + 0x46) == 0x869) {
+        if (((GameObject *)obj)->anim.seqId == 0x869) {
             modelLightStruct_setDiffuseColor(*extra, 0xff, 0xc0, 0, 0xff);
             modelLightStruct_setSpecularColor(*extra, 0xff, 0xc0, 0, 0xff);
-            modelLightStruct_setupGlow(*extra, 0, 0xff, 0xc0, 0, 0x7f, lbl_803E3108 * (lbl_803E310C * *(f32 *)(obj + 8)));
+            modelLightStruct_setupGlow(*extra, 0, 0xff, 0xc0, 0, 0x7f, lbl_803E3108 * (lbl_803E310C * ((GameObject *)obj)->anim.rootMotionScale));
             modelLightStruct_setDiffuseTargetColor(*extra, 0xff, 0xd2, 0, 0xff);
         } else {
             modelLightStruct_setDiffuseColor(*extra, 0, 0xff, 0, 0xff);
             modelLightStruct_setSpecularColor(*extra, 0, 0xff, 0, 0xff);
-            modelLightStruct_setupGlow(*extra, 0, 0, 0xff, 0, 0x28, lbl_803E310C * *(f32 *)(obj + 8));
+            modelLightStruct_setupGlow(*extra, 0, 0, 0xff, 0, 0x28, lbl_803E310C * ((GameObject *)obj)->anim.rootMotionScale);
             modelLightStruct_setDiffuseTargetColor(*extra, 0, 0xff, 0, 0xff);
         }
         {
-            int a = (int)(lbl_803E310C * *(f32 *)(obj + 8));
+            int a = (int)(lbl_803E310C * ((GameObject *)obj)->anim.rootMotionScale);
             modelLightStruct_setDistanceAttenuation(*extra, (f32)a, (f32)(a + 0x28));
         }
         lightSetField4D(*extra, 1);
@@ -415,37 +427,37 @@ void fn_8016A660(int obj)
   PollenExtra *extra;
   u8 *fragment;
 
-  extra = *(PollenExtra **)(obj + 0xb8);
+  extra = *(PollenExtra **)&((GameObject *)obj)->extra;
   if (Obj_IsLoadingLocked() != 0) {
     burstCounter = POLLEN_FRAGMENT_BURST_COUNTER_START;
     do {
       fragment = Obj_AllocObjectSetup(POLLEN_FRAGMENT_SETUP_SIZE, POLLEN_FRAGMENT_OBJECT_ID);
-      *(f32 *)(fragment + 8) = *(f32 *)(obj + 0xc);
-      *(f32 *)(fragment + 12) = *(f32 *)(obj + 0x10);
-      *(f32 *)(fragment + 16) = *(f32 *)(obj + 0x14);
-      *(u8 *)(fragment + 4) = 1;
+      ((GameObject *)fragment)->anim.rootMotionScale = ((GameObject *)obj)->anim.localPosX;
+      ((GameObject *)fragment)->anim.localPosX = ((GameObject *)obj)->anim.localPosY;
+      ((GameObject *)fragment)->anim.localPosY = ((GameObject *)obj)->anim.localPosZ;
+      *(u8 *)&((GameObject *)fragment)->anim.rotZ = 1;
       *(u8 *)(fragment + 5) = 1;
-      *(u8 *)(fragment + 6) = 0xff;
+      *(u8 *)&((GameObject *)fragment)->anim.flags = 0xff;
       *(u8 *)(fragment + 7) = 0xff;
       fragment = Obj_SetupObject(fragment, POLLEN_FRAGMENT_SETUP_KIND, -1, -1, 0);
       if (fragment != 0) {
-        *(s16 *)(fragment + 2) = 0;
-        *(s16 *)(fragment + 0) = (s16)randomGetRange(0, POLLEN_FRAGMENT_RANDOM_ANGLE_MAX);
-        *(f32 *)(fragment + 0x24) =
+        ((GameObject *)fragment)->anim.rotY = 0;
+        ((GameObject *)fragment)->anim.rotX = (s16)randomGetRange(0, POLLEN_FRAGMENT_RANDOM_ANGLE_MAX);
+        ((GameObject *)fragment)->anim.velocityX =
             lbl_803E3144 *
                 (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
                                          POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
-            *(f32 *)(obj + 0x24);
-        *(f32 *)(fragment + 0x28) =
+            ((GameObject *)obj)->anim.velocityX;
+        ((GameObject *)fragment)->anim.velocityY =
             lbl_803E3148 *
                 (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
                                          POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
-            *(f32 *)(obj + 0x28);
-        *(f32 *)(fragment + 0x2c) =
+            ((GameObject *)obj)->anim.velocityY;
+        ((GameObject *)fragment)->anim.velocityZ =
             lbl_803E3144 *
                 (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
                                          POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
-            *(f32 *)(obj + 0x2c);
+            ((GameObject *)obj)->anim.velocityZ;
         *(int *)(fragment + POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET) = obj;
       }
     } while (burstCounter-- != 0);
@@ -818,7 +830,7 @@ void pollenfragment_init(int obj,int config)
   int spawnCount;
   undefined4 *state;
   
-  state = *(undefined4 **)(obj + 0xb8);
+  state = *(undefined4 **)&((GameObject *)obj)->extra;
   if (*(char *)(config + 0x19) == '\x01') {
     *(float *)(state + 2) = lbl_803E3198;
   }
@@ -1177,23 +1189,23 @@ void pollen_free(int obj) {
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 void pinponspike_init(int obj) {
-    *(int *)(obj + 0xf4) = 0;
+    ((GameObject *)obj)->unkF4 = 0;
     ObjHits_DisableObject(obj);
     *(u8 *)(obj + 0x36) = 0xff;
     Sfx_PlayFromObject(obj, SFXsc_attack02);
-    *(u16 *)(obj + 0xb0) |= 0x6000;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
 }
 void pollen_hitDetect(int obj) {
-    ObjHitsPriorityState *hitState = *(ObjHitsPriorityState **)(obj + 0x54);
+    ObjHitsPriorityState *hitState = *(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState;
     if (hitState->contactFlags != 0) {
         f32 fz;
-        *(f32 *)(obj + 0xc) = (*(ObjHitsPriorityState **)(obj + 0x54))->contactPosX;
-        *(f32 *)(obj + 0x10) = (*(ObjHitsPriorityState **)(obj + 0x54))->contactPosY;
-        *(f32 *)(obj + 0x14) = (*(ObjHitsPriorityState **)(obj + 0x54))->contactPosZ;
+        ((GameObject *)obj)->anim.localPosX = (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactPosX;
+        ((GameObject *)obj)->anim.localPosY = (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactPosY;
+        ((GameObject *)obj)->anim.localPosZ = (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactPosZ;
         fz = lbl_803E313C;
-        *(f32 *)(obj + 0x24) = fz;
-        *(f32 *)(obj + 0x28) = fz;
-        *(f32 *)(obj + 0x2c) = fz;
+        ((GameObject *)obj)->anim.velocityX = fz;
+        ((GameObject *)obj)->anim.velocityY = fz;
+        ((GameObject *)obj)->anim.velocityZ = fz;
         *(u8 *)(obj + 0x36) = 0;
         ObjHits_DisableObject(obj);
     }
@@ -1506,47 +1518,47 @@ void pinponspike_update(int obj) {
     f32 vy;
     f32 vz;
 
-    if (*(int *)(obj + 0xf4) > 0) {
-        *(int *)(obj + 0xf4) = (int)((f32)*(int *)(obj + 0xf4) - timeDelta);
-        if (*(int *)(obj + 0xf4) <= 0) {
+    if (((GameObject *)obj)->unkF4 > 0) {
+        ((GameObject *)obj)->unkF4 = (int)((f32)((GameObject *)obj)->unkF4 - timeDelta);
+        if (((GameObject *)obj)->unkF4 <= 0) {
             Obj_FreeObject(obj);
             return;
         }
     }
     if (*(u8 *)(obj + 0x36) != 0) {
-        vx = *(f32 *)(obj + 0x24) * timeDelta;
-        vy = *(f32 *)(obj + 0x28) * timeDelta;
-        vz = *(f32 *)(obj + 0x2c) * timeDelta;
+        vx = ((GameObject *)obj)->anim.velocityX * timeDelta;
+        vy = ((GameObject *)obj)->anim.velocityY * timeDelta;
+        vz = ((GameObject *)obj)->anim.velocityZ * timeDelta;
         objMove(obj, vx, vy, vz);
-        *(f32 *)(obj + 0x28) += lbl_803E3124 * timeDelta;
-        if (*(f32 *)(obj + 0x28) < lbl_803E3128) {
-            *(f32 *)(obj + 0x28) = lbl_803E3128;
+        ((GameObject *)obj)->anim.velocityY += lbl_803E3124 * timeDelta;
+        if (((GameObject *)obj)->anim.velocityY < lbl_803E3128) {
+            ((GameObject *)obj)->anim.velocityY = lbl_803E3128;
         }
-        *(s16 *)(obj + 0) = getAngle(vx, vz) - 0x8000;
-        *(s16 *)(obj + 2) = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
+        ((GameObject *)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
+        ((GameObject *)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
         ObjHits_EnableObject(obj);
-        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
-            ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (int)Obj_GetPlayerObject() ||
-             (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (int)getTrickyObject())) {
+        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 &&
+            ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject() ||
+             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (int)getTrickyObject())) {
             int i;
             *(u8 *)(obj + 0x36) = 0;
-            *(int *)(obj + 0xf4) = 0x78;
-            (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
+            ((GameObject *)obj)->unkF4 = 0x78;
+            (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
                 (*(void (*)(int, int, int, int, int, int *))*(int *)(*gPartfxInterface + 8))(obj, 0x715, 0, 1, -1, &i);
             }
             Sfx_PlayFromObject(obj, 0x279);
-        } else if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0) {
+        } else if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0) {
             int i;
             *(u8 *)(obj + 0x36) = 0;
-            *(int *)(obj + 0xf4) = 0x78;
-            (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
+            ((GameObject *)obj)->unkF4 = 0x78;
+            (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
                 (*(void (*)(int, int, int, int, int, int *))*(int *)(*gPartfxInterface + 8))(obj, 0x715, 0, 1, -1, &i);
             }
             Sfx_PlayFromObject(obj, 0x279);
-        } else if (*(f32 *)(obj + 0x10) < lbl_803E312C) {
+        } else if (((GameObject *)obj)->anim.localPosY < lbl_803E312C) {
             Obj_FreeObject(obj);
         }
     }
@@ -1560,24 +1572,24 @@ void pollen_update(int obj) {
     PollenExtra *extra;
     int i;
 
-    extra = *(PollenExtra **)(obj + 0xb8);
+    extra = *(PollenExtra **)&((GameObject *)obj)->extra;
     if (extra->fragmentSpawnTimer != 0) {
         extra->fragmentSpawnTimer -= 1;
     } else {
-        f32 prev = *(f32 *)(obj + 0x28);
-        *(f32 *)(obj + 0x28) = -(lbl_803E3140 * timeDelta - prev);
-        if (prev >= lbl_803E313C && *(f32 *)(obj + 0x28) <= lbl_803E313C) {
+        f32 prev = ((GameObject *)obj)->anim.velocityY;
+        ((GameObject *)obj)->anim.velocityY = -(lbl_803E3140 * timeDelta - prev);
+        if (prev >= lbl_803E313C && ((GameObject *)obj)->anim.velocityY <= lbl_803E313C) {
             fn_8016A660(obj);
             Sfx_PlayFromObject(obj, 0xb7);
             *(u8 *)(obj + 0x36) = 0;
         }
-        objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
+        objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta, ((GameObject *)obj)->anim.velocityZ * timeDelta);
         ObjHits_SetHitVolumeSlot(obj, 0x16, 1, 0);
         ObjHitbox_SetSphereRadius(obj, 7);
         ObjHits_EnableObject(obj);
-        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
-            ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (int)Obj_GetPlayerObject() ||
-             (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (int)getTrickyObject())) {
+        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 &&
+            ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject() ||
+             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (int)getTrickyObject())) {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E3138);
             Sfx_PlayFromObject(obj, 0xb6);
@@ -1606,23 +1618,23 @@ void pollenfragment_hitDetect(int obj) {
     int hit;
     u8 buf[16];
 
-    extra = *(u8 **)(obj + 0xb8);
+    extra = *(u8 **)&((GameObject *)obj)->extra;
     if (fn_80080150((int)(extra + 0x20)) == 0) {
         hit = ObjHits_GetPriorityHit(obj, buf, 0, 0);
         if (hit == 0xe || hit == 0xf) {
-            if ((*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx != -1) {
+            if ((((PollenFragmentExtra *)extra)->def)->explodeSfx != -1) {
                 spawnExplosion(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
-                Sfx_PlayFromObjectLimited(obj, (u16)(*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx, 3);
+                Sfx_PlayFromObjectLimited(obj, (u16)(((PollenFragmentExtra *)extra)->def)->explodeSfx, 3);
             }
             ObjHits_DisableObject(obj);
             s16toFloat(extra + 0x20, 0x78);
         }
-        if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0) {
+        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0) {
             ObjHits_DisableObject(obj);
             *(f32 *)(extra + 8) = lbl_803E3160;
-            if ((*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx != -1) {
+            if ((((PollenFragmentExtra *)extra)->def)->explodeSfx != -1) {
                 spawnExplosion(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
-                Sfx_PlayFromObjectLimited(obj, (u16)(*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx, 3);
+                Sfx_PlayFromObjectLimited(obj, (u16)(((PollenFragmentExtra *)extra)->def)->explodeSfx, 3);
             }
             s16toFloat(extra + 0x20, 0x78);
         }
@@ -1644,7 +1656,7 @@ void pollenfragment_update(int obj) {
     XyzVec sc;
     XyzVec pos;
 
-    extra = *(u8 **)(obj + 0xb8);
+    extra = *(u8 **)&((GameObject *)obj)->extra;
     if (getCurSeqNo() != 0) {
         Obj_FreeObject(obj);
         return;
@@ -1658,17 +1670,17 @@ void pollenfragment_update(int obj) {
     if (timerCountDown((int)extra + 0x24) != 0) {
         s16toFloat(extra + 0x20, 0x78);
     }
-    if (*(void **)(obj + 0xc4) != NULL) {
-        *(int *)extra = *(int *)(obj + 0xc4);
-        *(int *)(obj + 0xc4) = 0;
+    if (*(void **)&((GameObject *)obj)->unkC4 != NULL) {
+        *(int *)extra = *(int *)&((GameObject *)obj)->unkC4;
+        *(int *)&((GameObject *)obj)->unkC4 = 0;
     }
-    if ((*(PollenFragmentDef **)(extra + 0x1c))->timed) {
+    if ((((PollenFragmentExtra *)extra)->def)->timed) {
         *(f32 *)(extra + 8) -= timeDelta;
         if (*(f32 *)(extra + 8) <= lbl_803E3160) {
             if (*(u8 *)(obj + 0x36) == 0xff) {
                 i = 2;
                 do {
-                    (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, (int)(*(PollenFragmentDef **)(extra + 0x1c))->burstFx, 0, 1, -1, 0);
+                    (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, (int)(((PollenFragmentExtra *)extra)->def)->burstFx, 0, 1, -1, 0);
                 } while (i-- != 0);
             }
             *(f32 *)(extra + 8) = lbl_803E3160;
@@ -1681,64 +1693,64 @@ void pollenfragment_update(int obj) {
             }
         }
     }
-    if ((*(PollenFragmentDef **)(extra + 0x1c))->auraFx != -1) {
-        (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, (int)(*(PollenFragmentDef **)(extra + 0x1c))->auraFx, 0, 1, -1, 0);
+    if ((((PollenFragmentExtra *)extra)->def)->auraFx != -1) {
+        (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, (int)(((PollenFragmentExtra *)extra)->def)->auraFx, 0, 1, -1, 0);
     }
-    nearObj = (u8 *)ObjGroup_FindNearestObject((int)(*(PollenFragmentDef **)(extra + 0x1c))->targetGroup, obj, 0);
+    nearObj = (u8 *)ObjGroup_FindNearestObject((int)(((PollenFragmentExtra *)extra)->def)->targetGroup, obj, 0);
     if (nearObj != NULL &&
-        (!(*(PollenFragmentDef **)(extra + 0x1c))->timed || *(f32 *)(extra + 8) < lbl_803E3164)) {
-        if ((*(PollenFragmentDef **)(extra + 0x1c))->usePath) {
+        (!(((PollenFragmentExtra *)extra)->def)->timed || *(f32 *)(extra + 8) < lbl_803E3164)) {
+        if ((((PollenFragmentExtra *)extra)->def)->usePath) {
             ObjPath_GetPointWorldPosition(nearObj, 0, &pos.x, &pos.y, &pos.z, 0);
         } else {
             f32 prod;
-            pos.x = *(f32 *)(nearObj + 0x18);
-            prod = *(f32 *)(nearObj + 0xa8) * *(f32 *)(nearObj + 8);
-            pos.y = prod * lbl_803E3168 + *(f32 *)(nearObj + 0x1c);
-            pos.z = *(f32 *)(nearObj + 0x20);
+            pos.x = ((GameObject *)nearObj)->anim.worldPosX;
+            prod = ((GameObject *)nearObj)->anim.hitboxScale * ((GameObject *)nearObj)->anim.rootMotionScale;
+            pos.y = prod * lbl_803E3168 + ((GameObject *)nearObj)->anim.worldPosY;
+            pos.z = ((GameObject *)nearObj)->anim.worldPosZ;
         }
         PSVECSubtract(&pos, (void *)(obj + 0x18), &dir);
         PSVECMag(&dir);
         PSVECNormalize(&dir, &dir);
         PSVECSubtract(&dir, extra + 0xc, &sc);
-        *(f32 *)(extra + 0xc) = dir.x;
-        *(f32 *)(extra + 0x10) = dir.y;
-        *(f32 *)(extra + 0x14) = dir.z;
+        ((PollenFragmentExtra *)extra)->velX = dir.x;
+        ((PollenFragmentExtra *)extra)->velY = dir.y;
+        ((PollenFragmentExtra *)extra)->velZ = dir.z;
         PSVECScale(&sc, &sc, lbl_803E315C);
         PSVECAdd(&dir, &sc, &dir);
-        *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) +
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX +
             ((*(f32 *)(extra + 8) + (w = lbl_803E315C)) * (dir.x * *(f32 *)(extra + 4))) / (m = lbl_803E3164);
-        *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) +
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ +
             ((w + *(f32 *)(extra + 8)) * (dir.z * *(f32 *)(extra + 4))) / m;
-        if (!(*(PollenFragmentDef **)(extra + 0x1c))->noVertical) {
-            *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) +
+        if (!(((PollenFragmentExtra *)extra)->def)->noVertical) {
+            ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY +
                 ((w + *(f32 *)(extra + 8)) * (lbl_803E316C * (dir.y * *(f32 *)(extra + 4)))) / m;
         }
     }
-    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (w = lbl_803E3170);
-    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * w;
-    *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) * lbl_803E3174;
-    if ((*(PollenFragmentDef **)(extra + 0x1c))->noVertical) {
-        *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) -
+    ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (w = lbl_803E3170);
+    ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * w;
+    ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY * lbl_803E3174;
+    if ((((PollenFragmentExtra *)extra)->def)->noVertical) {
+        ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY -
             (lbl_803E3178 * timeDelta * *(f32 *)(extra + 8)) / lbl_803E317C;
     }
-    if ((*(PollenFragmentDef **)(extra + 0x1c))->smoothTurn) {
+    if ((((PollenFragmentExtra *)extra)->def)->smoothTurn) {
         Obj_SmoothTurnAnglesTowardVelocity(obj, (void *)(obj + 0x24), 10, lbl_803E3160, lbl_803E3158);
-        *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + framesThisStep * 0x500;
-    } else if (*(s16 *)(obj + 0x46) == 0x482) {
-        *(s16 *)(obj + 0) = (s16)(int)(lbl_803E3180 * lbl_803DBD48 * (f32)(u32)framesThisStep + (f32)(int)*(s16 *)(obj + 0));
-        *(s16 *)(obj + 2) = (s16)(int)(lbl_803DBD4C * (f32)(u32)framesThisStep + (f32)(int)*(s16 *)(obj + 2));
+        ((GameObject *)obj)->anim.rotZ = ((GameObject *)obj)->anim.rotZ + framesThisStep * 0x500;
+    } else if (((GameObject *)obj)->anim.seqId == 0x482) {
+        ((GameObject *)obj)->anim.rotX = (s16)(int)(lbl_803E3180 * lbl_803DBD48 * (f32)(u32)framesThisStep + (f32)(int)((GameObject *)obj)->anim.rotX);
+        ((GameObject *)obj)->anim.rotY = (s16)(int)(lbl_803DBD4C * (f32)(u32)framesThisStep + (f32)(int)((GameObject *)obj)->anim.rotY);
     }
-    Sfx_KeepAliveLoopedObjectSound(obj, (u16)(*(PollenFragmentDef **)(extra + 0x1c))->loopSfx);
-    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
+    Sfx_KeepAliveLoopedObjectSound(obj, (u16)(((PollenFragmentExtra *)extra)->def)->loopSfx);
+    objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta, ((GameObject *)obj)->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot(obj, 0x16, 1, 0);
     ObjHits_EnableObject(obj);
-    hit = (void *)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject;
-    if (hit != NULL && *(s16 *)((u8 *)hit + 0x46) != *(s16 *)(obj + 0x46) && hit != *(void **)extra) {
+    hit = (void *)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject;
+    if (hit != NULL && *(s16 *)((u8 *)hit + 0x46) != ((GameObject *)obj)->anim.seqId && hit != *(void **)extra) {
         *(f32 *)(extra + 8) = lbl_803E3160;
         ObjHits_DisableObject(obj);
-        if ((*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx != -1) {
+        if ((((PollenFragmentExtra *)extra)->def)->explodeSfx != -1) {
             spawnExplosion(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
-            Sfx_PlayFromObjectLimited(obj, (u16)(*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx, 3);
+            Sfx_PlayFromObjectLimited(obj, (u16)(((PollenFragmentExtra *)extra)->def)->explodeSfx, 3);
         }
         s16toFloat(extra + 0x20, 0x78);
     }
