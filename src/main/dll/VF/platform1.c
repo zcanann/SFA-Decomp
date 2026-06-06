@@ -420,7 +420,7 @@ void sc_totemstrength_update(u8 *obj)
     if (t == 6) {
         if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0) {
             if (st->loopSfxHandle > 0) {
-                (*(void (**)(void))((char *)(*gObjectTriggerInterface) + 0x4c))();
+                (*(void (**)(int))((char *)(*gObjectTriggerInterface) + 0x4c))(st->loopSfxHandle);
                 fn_800882C8(st->loopSfxHandle);
             }
             if (lbl_803DDC10-- == 0) {
