@@ -1,4 +1,5 @@
 #include "main/dll/fogcontrol.h"
+#include "main/game_object.h"
 
 
 #pragma peephole off
@@ -103,7 +104,7 @@ u8 trickyBallMove(u8 *obj)
 
   ObjHits_EnableObject(obj);
 
-  dy = state->prevPos[1] - *(f32 *)(obj + 0x10);
+  dy = state->prevPos[1] - ((GameObject *)obj)->anim.localPosY;
   if (dy < lbl_803E369C) {
     dy = -dy;
   }
@@ -111,7 +112,7 @@ u8 trickyBallMove(u8 *obj)
   if (dx < lbl_803E369C) {
     dx = -dx;
   }
-  dz = state->prevPos[2] - *(f32 *)(obj + 0x14);
+  dz = state->prevPos[2] - ((GameObject *)obj)->anim.localPosZ;
   if (dz < lbl_803E369C) {
     dz = -dz;
   }
@@ -128,11 +129,11 @@ u8 trickyBallMove(u8 *obj)
     state->floorDepth = state->floorHeight;
     hasFloorDepth = 1;
   } else if (state->floorY != lbl_803E369C) {
-    if (*(f32 *)(obj + 0x10) > state->floorY) {
+    if (((GameObject *)obj)->anim.localPosY > state->floorY) {
       state->floorY = lbl_803E369C;
       hasFloorDepth = 0;
     } else {
-      state->floorDepth = state->floorY - *(f32 *)(obj + 0x10);
+      state->floorDepth = state->floorY - ((GameObject *)obj)->anim.localPosY;
       hasFloorDepth = 1;
     }
   } else {
@@ -141,21 +142,21 @@ u8 trickyBallMove(u8 *obj)
 
   if (hasFloorDepth != 0) {
     *(f32 *)(obj + 0x24) *= lbl_803E36B8;
-    *(f32 *)(obj + 0x28) *= lbl_803E36B8;
-    *(f32 *)(obj + 0x2c) *= lbl_803E36B8;
-    *(f32 *)(obj + 0x28) += lbl_803E36BC * timeDelta;
-    OSReport(sSidekickBallYVelDepthFormat, *(f32 *)(obj + 0x28), state->floorDepth);
-    if ((*(f32 *)(obj + 0x28) < lbl_803E36C0) &&
-        (*(f32 *)(obj + 0x28) > lbl_803E36C4) &&
+    ((GameObject *)obj)->anim.velocityY *= lbl_803E36B8;
+    ((GameObject *)obj)->anim.velocityZ *= lbl_803E36B8;
+    ((GameObject *)obj)->anim.velocityY += lbl_803E36BC * timeDelta;
+    OSReport(sSidekickBallYVelDepthFormat, ((GameObject *)obj)->anim.velocityY, state->floorDepth);
+    if ((((GameObject *)obj)->anim.velocityY < lbl_803E36C0) &&
+        (((GameObject *)obj)->anim.velocityY > lbl_803E36C4) &&
         (state->floorDepth < lbl_803E36A0)) {
       return 1;
     }
   } else if (hasCollisionNormal == 0) {
-    *(f32 *)(obj + 0x28) -= lbl_803E36C8 * timeDelta;
+    ((GameObject *)obj)->anim.velocityY -= lbl_803E36C8 * timeDelta;
   }
 
-  objMove((int)obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
-          *(f32 *)(obj + 0x2c) * timeDelta);
+  objMove((int)obj, *(f32 *)(obj + 0x24) * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
+          ((GameObject *)obj)->anim.velocityZ * timeDelta);
   (*(void (**)(u8 *,TrickyBallState *,f32))(*(int *)gPathControlInterface + 0x10))(obj, state,
                                                                                   timeDelta);
   (*(void (**)(u8 *,TrickyBallState *))(*(int *)gPathControlInterface + 0x14))(obj, state);
@@ -172,8 +173,8 @@ u8 trickyBallMove(u8 *obj)
   if (hasCollisionNormal != 0) {
     PSVECNormalize(collisionNormal, collisionNormal);
     reflectedX = -*(f32 *)(obj + 0x24);
-    reflectedY = -*(f32 *)(obj + 0x28);
-    reflectedZ = -*(f32 *)(obj + 0x2c);
+    reflectedY = -((GameObject *)obj)->anim.velocityY;
+    reflectedZ = -((GameObject *)obj)->anim.velocityZ;
     speed = sqrtf(reflectedX * reflectedX + reflectedY * reflectedY + reflectedZ * reflectedZ);
     if (speed > lbl_803E36CC) {
       Sfx_PlayFromObject((int)obj, 0x16c);
@@ -190,8 +191,8 @@ u8 trickyBallMove(u8 *obj)
     fn_80137948(sSidekickBallDotFormat, dot);
     if (dot > lbl_803E369C) {
       *(f32 *)(obj + 0x24) = (collisionNormal[0] * dot) - reflectedX;
-      *(f32 *)(obj + 0x28) = (collisionNormal[1] * dot) - reflectedY;
-      *(f32 *)(obj + 0x2c) = (collisionNormal[2] * dot) - reflectedZ;
+      ((GameObject *)obj)->anim.velocityY = (collisionNormal[1] * dot) - reflectedY;
+      ((GameObject *)obj)->anim.velocityZ = (collisionNormal[2] * dot) - reflectedZ;
       if ((state->floorY == lbl_803E369C) && (speed < lbl_803E36D4) &&
           (state->hasCollisionNormal != 0)) {
         return 2;
@@ -201,13 +202,13 @@ u8 trickyBallMove(u8 *obj)
   }
 
   if (movedFromCache != 0) {
-    *(f32 *)(obj + 0x28) -= lbl_803E36C8 * timeDelta;
+    ((GameObject *)obj)->anim.velocityY -= lbl_803E36C8 * timeDelta;
   }
 
   fn_8002A5DC((int)obj);
   state->prevPos[0] = *(f32 *)(obj + 0x0c);
-  state->prevPos[1] = *(f32 *)(obj + 0x10);
-  state->prevPos[2] = *(f32 *)(obj + 0x14);
+  state->prevPos[1] = ((GameObject *)obj)->anim.localPosY;
+  state->prevPos[2] = ((GameObject *)obj)->anim.localPosZ;
   return 3;
 }
 
