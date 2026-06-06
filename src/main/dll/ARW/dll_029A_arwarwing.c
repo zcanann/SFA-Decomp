@@ -1,6 +1,169 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
+
+/* Per-object extra state for the playable Arwing
+ * (arwarwing_getExtraSize == 0x498). */
+typedef struct ArwingState {
+    int unk00;
+    int escortObj;       /* 0x004: def 0x606 link */
+    int gunObjL;         /* 0x008: def 0x610 */
+    int gunObjR;         /* 0x00c: def 0x615 */
+    int bombObj;         /* 0x010: def 0x611 */
+    f32 homeX;           /* 0x014: spawn position */
+    f32 homeY;
+    f32 homeZ;
+    f32 unk20;
+    f32 unk24;
+    f32 unk28;
+    f32 camPos[3];       /* 0x02c: pushed to the camera each update */
+    f32 unk38;
+    f32 unk3C;
+    f32 unk40;
+    f32 unk44;
+    f32 velX;            /* 0x048 */
+    f32 velY;
+    f32 velZ;
+    f32 unk54;
+    f32 unk58;
+    f32 unk5C;
+    f32 unk60;
+    f32 unk64;
+    f32 unk68;
+    f32 unk6C;
+    u8 pad70[8];
+    f32 unk78;
+    u8 pad7C[8];
+    f32 unk84;
+    f32 unk88;
+    f32 unk8C;
+    f32 unk90;
+    f32 unk94;
+    f32 unk98;
+    f32 rollEnergy;      /* 0x09c */
+    f32 rollEnergyMax;   /* 0x0a0 */
+    f32 unkA4;
+    f32 unkA8;
+    f32 wingFlexCur;     /* 0x0ac */
+    f32 wingFlexTarget;  /* 0x0b0 */
+    f32 rollCooldown;    /* 0x0b4 */
+    f32 rollCooldownInit;/* 0x0b8 */
+    f32 rollRegenDelay;  /* 0x0bc */
+    u8 pathBlock[0x268]; /* 0x0c0: gPathControlInterface block */
+    f32 damageFlashTimer;/* 0x328 */
+    f32 knockVelX;       /* 0x32c */
+    f32 knockVelZ;       /* 0x330 */
+    u8 pad334[4];
+    u8 hitShake;         /* 0x338: damage camera-shake active */
+    u8 flags339;         /* 0x339: 0x80 damage flash; Arw339Flags overlay */
+    s16 shakeYaw;        /* 0x33a */
+    s16 shakePitch;      /* 0x33c */
+    u8 pad33E[2];
+    int unk340;
+    u8 pad344[4];
+    f32 unk348;
+    f32 unk34C;
+    u8 pad350[4];
+    int unk354;
+    int rollInput;       /* 0x358 */
+    f32 unk35C;
+    f32 unk360;
+    u8 pad364[4];
+    int unk368;
+    int pitchAccum;      /* 0x36c */
+    f32 unk370;
+    f32 unk374;
+    u8 pad378[4];
+    int unk37C;
+    u8 pad380[4];
+    f32 unk384;
+    f32 unk388;
+    u8 pad38C[4];
+    f32 unk390;
+    f32 unk394;
+    u8 pad398[4];
+    f32 unk39C;
+    u8 pad3A0[4];
+    f32 unk3A4;
+    u8 pad3A8[4];
+    f32 unk3AC;
+    f32 unk3B0;
+    f32 unk3B4;
+    f32 unk3B8;
+    f32 unk3BC;
+    u8 pad3C0[4];
+    f32 unk3C4;
+    f32 unk3C8;
+    u8 pad3CC[4];
+    f32 unk3D0;
+    f32 unk3D4;
+    u8 pad3D8[8];
+    f32 unk3E0;
+    f32 unk3E4;
+    f32 unk3E8;
+    f32 unk3EC;
+    f32 unk3F0;
+    u16 inputFlags;      /* 0x3f4: 0x100 fire, 0x400 roll-R, 0x800 roll-L */
+    u16 inputFlagsPrev;  /* 0x3f6 */
+    u16 inputFlags2;     /* 0x3f8: 0x100 fire held */
+    u8 unk3FA;
+    u8 pad3FB[9];
+    u8 laserLevel;       /* 0x404: 0 single, 1 twin, 2 hyper */
+    u8 laserSide;        /* 0x405: alternating muzzle */
+    u8 pad406[2];
+    f32 fireCooldown;    /* 0x408 */
+    u16 fireDelay;       /* 0x40c: frames loaded into fireCooldown */
+    u16 projLifetime;    /* 0x40e */
+    f32 projSpeed;       /* 0x410 */
+    f32 fireTimer;       /* 0x414 */
+    int thrusterL;       /* 0x418: def 0x6de exhaust objects */
+    int thrusterR;       /* 0x41c */
+    u8 pad420[0x18];
+    int unk438;
+    u8 pad43C;
+    u8 bombSide;         /* 0x43d */
+    u8 pad43E[6];
+    s16 unk444;
+    s16 unk446;
+    f32 unk448;
+    u8 bombCount;        /* 0x44c */
+    u8 maxBombCount;     /* 0x44d */
+    u16 unk44E;          /* engine pitch fed to fn_8022F270 */
+    void *light;         /* 0x450 */
+    int wingVec[4];      /* 0x454: objModelGetVecFn slots 0-3 */
+    f32 wingFlexScale;   /* 0x464 */
+    u8 shield;           /* 0x468 */
+    u8 maxShield;        /* 0x469 */
+    u8 pad46A[2];
+    f32 modeTimer;       /* 0x46c */
+    u8 collectedRings;   /* 0x470 */
+    u8 requiredRings;    /* 0x471 */
+    u8 counter472;
+    u8 counter473;
+    u8 counter474;
+    u8 counter475;
+    u8 counter476;
+    u8 flags477;         /* 1 initialized, 2 roll-left, 4 roll-right */
+    u8 mode;             /* 0x478: 4 dead, 5 exploding, 6 warp-out */
+    u8 pad479[2];
+    u8 levelIndex;       /* 0x47b */
+    u16 score;           /* 0x47c */
+    u8 scoreSlot;        /* 0x47e */
+    u8 aimSnapshotValid; /* 0x47f */
+    u8 fullLoadout;      /* 0x480 */
+    u8 pad481[3];
+    f32 aimOffsetX;      /* 0x484: camera-relative aim snapshot */
+    f32 aimOffsetY;
+    f32 aimOffsetZ;
+    s16 aimYaw;          /* 0x490 */
+    s16 aimPitch;        /* 0x492 */
+    s16 aimRoll;         /* 0x494 */
+    u8 pad496[2];
+} ArwingState;
+STATIC_ASSERT(sizeof(ArwingState) == 0x498);
+STATIC_ASSERT(offsetof(ArwingState, inputFlags) == 0x3f4);
+STATIC_ASSERT(offsetof(ArwingState, light) == 0x450);
 
 #pragma peephole on
 #pragma scheduling on
@@ -24,12 +187,12 @@ int arwarwing_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void arwarwing_free(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    ArwingState *state = *(ArwingState **)(obj + 0xb8);
 
     ObjGroup_RemoveObject(obj, 0x26);
     lbl_803DDD88 = 0;
-    if (*(void **)(state + 0x450) != NULL) {
-        ModelLightStruct_free(*(void **)(state + 0x450));
+    if (state->light != NULL) {
+        ModelLightStruct_free(state->light);
     }
 }
 #pragma scheduling reset
@@ -51,19 +214,19 @@ void arwarwing_initialise(void) {}
 #pragma scheduling off
 void arwarwing_render(int obj, int p2, int p3, int p4, int p5)
 {
-    int state = *(int *)(obj + 0xb8);
+    ArwingState *state = *(ArwingState **)(obj + 0xb8);
     int dx, dy;
 
-    if (*(u8 *)(state + 0x338) != 0) {
+    if (state->hitShake != 0) {
         dx = (int)(lbl_803E6FF4 *
-                   fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(state + 0x33c) / lbl_803E6F00));
+                   fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)&state->shakePitch / lbl_803E6F00));
         dy = (int)(lbl_803E6F5C *
-                   fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(state + 0x33a) / lbl_803E6F00));
+                   fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)&state->shakeYaw / lbl_803E6F00));
         *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) + dx);
         *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) + dy);
     }
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6ED0);
-    if (*(u8 *)(state + 0x338) != 0) {
+    if (state->hitShake != 0) {
         *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) - dx);
         *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) - dy);
     }
@@ -75,18 +238,18 @@ void arwarwing_render(int obj, int p2, int p3, int p4, int p5)
 #pragma scheduling off
 void arwarwing_hitDetect(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    ArwingState *state = *(ArwingState **)(obj + 0xb8);
     f32 pos[3];
     f32 mtx[12];
 
-    if ((*(u16 *)(obj + 0xb0) & 0x1000) != 0 && *(u8 *)(state + 0x47f) != 0) {
+    if ((*(u16 *)(obj + 0xb0) & 0x1000) != 0 && state->aimSnapshotValid != 0) {
         Obj_BuildWorldTransformMatrix(obj, mtx, 0);
-        PSMTXMultVec(mtx, (void *)(state + 0x484), pos);
+        PSMTXMultVec(mtx, &state->aimOffsetX, pos);
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;
-        fn_8008020C((s16)(0x8000 - *(s16 *)obj + *(s16 *)(state + 0x490)),
-                    (s16)(*(s16 *)(obj + 2) + *(s16 *)(state + 0x492)),
-                    (s16)(*(s16 *)(obj + 4) + *(s16 *)(state + 0x494)),
+        fn_8008020C((s16)(0x8000 - *(s16 *)obj + state->aimYaw),
+                    (s16)(*(s16 *)(obj + 2) + state->aimPitch),
+                    (s16)(*(s16 *)(obj + 4) + state->aimRoll),
                     pos[0], pos[1], pos[2], lbl_803E6FF8);
     }
 }
@@ -95,19 +258,19 @@ void arwarwing_hitDetect(int obj)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D460(int arwing, f32 val) { *(f32 *)(*(int *)(arwing + 0xb8) + 0x20) = val; }
+void fn_8022D460(int arwing, f32 val) { (*(ArwingState **)(arwing + 0xb8))->unk20 = val; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D46C(int arwing) { return (s16) * (int *)(*(int *)(arwing + 0xb8) + 0x358); }
+int fn_8022D46C(int arwing) { return (s16)(*(ArwingState **)(arwing + 0xb8))->rollInput; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D47C(int arwing, int p2) { *(int *)(*(int *)(arwing + 0xb8) + 0x358) = (s16)p2; }
+void fn_8022D47C(int arwing, int p2) { (*(ArwingState **)(arwing + 0xb8))->rollInput = (s16)p2; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -115,7 +278,7 @@ void fn_8022D47C(int arwing, int p2) { *(int *)(*(int *)(arwing + 0xb8) + 0x358)
 #pragma scheduling off
 void fn_8022D48C(int out, int arwing)
 {
-    *(Vec12 *)out = *(Vec12 *)(*(int *)(arwing + 0xb8) + 0x48);
+    *(Vec12 *)out = *(Vec12 *)&(*(ArwingState **)(arwing + 0xb8))->velX;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -124,10 +287,10 @@ void fn_8022D48C(int out, int arwing)
 #pragma scheduling off
 void fn_8022D4AC(int arwing, int in)
 {
-    int state = *(int *)(arwing + 0xb8);
-    *(f32 *)(state + 0x48) = *(f32 *)(in + 0);
-    *(f32 *)(state + 0x4c) = *(f32 *)(in + 4);
-    *(f32 *)(state + 0x50) = *(f32 *)(in + 8);
+    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    state->velX = *(f32 *)(in + 0);
+    state->velY = *(f32 *)(in + 4);
+    state->velZ = *(f32 *)(in + 8);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -144,100 +307,100 @@ void fn_8022D4CC(int arwing, int in)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D4F8(int arwing) { *(int *)(*(int *)(arwing + 0xb8) + 0x438) = 0; }
+void fn_8022D4F8(int arwing) { (*(ArwingState **)(arwing + 0xb8))->unk438 = 0; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_getRequiredRingCount(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x471); }
+int arwarwing_getRequiredRingCount(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->requiredRings; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_getCollectedRingCount(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x470); }
+int arwarwing_getCollectedRingCount(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->collectedRings; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling off
 void arwarwing_addScore(int arwing, u8 amount)
 {
-    int state = *(int *)(arwing + 0xb8);
+    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
     u16 v;
-    *(u16 *)(state + 0x47c) = *(u16 *)(state + 0x47c) + amount;
-    v = *(u16 *)(state + 0x47c);
+    state->score = state->score + amount;
+    v = state->score;
     if (v > 0x270f) {
         v = 0x270f;
     }
-    *(u16 *)(state + 0x47c) = v;
+    state->score = v;
 }
 #pragma scheduling reset
 
 #pragma scheduling off
 int arwarwing_getScore(int arwing)
 {
-    int state = *(int *)(arwing + 0xb8);
-    if (*(u16 *)(state + 0x47c) > 0x270f) {
-        *(u16 *)(state + 0x47c) = 0x270f;
+    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    if (state->score > 0x270f) {
+        state->score = 0x270f;
     }
-    return *(u16 *)(state + 0x47c);
+    return state->score;
 }
 #pragma scheduling reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_getBombCount(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x44c); }
+int arwarwing_getBombCount(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->bombCount; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_getMaxShield(int arwing) { return *(s8 *)(*(int *)(arwing + 0xb8) + 0x469); }
+int arwarwing_getMaxShield(int arwing) { return *(s8 *)&(*(ArwingState **)(arwing + 0xb8))->maxShield; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_getShield(int arwing) { return *(s8 *)(*(int *)(arwing + 0xb8) + 0x468); }
+int arwarwing_getShield(int arwing) { return *(s8 *)&(*(ArwingState **)(arwing + 0xb8))->shield; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D5A0(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x475))++; }
+int fn_8022D5A0(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->counter475)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D5B4(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x474))++; }
+int fn_8022D5B4(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->counter474)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D5C8(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x473))++; }
+int fn_8022D5C8(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->counter473)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D5DC(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x472))++; }
+int fn_8022D5DC(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->counter472)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling off
 int arwarwing_incrementCollectedRingCount(int arwing)
 {
-    int state = *(int *)(arwing + 0xb8);
-    if (*(u8 *)(state + 0x470) == 9) {
-        *(u16 *)(state + 0x47c) = *(u16 *)(state + 0x47c) + 0x64;
-        if (*(u16 *)(state + 0x47c) > 0x270f) {
-            *(u16 *)(state + 0x47c) = 0x270f;
+    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    if (state->collectedRings == 9) {
+        state->score = state->score + 0x64;
+        if (state->score > 0x270f) {
+            state->score = 0x270f;
         }
     }
-    return (*(u8 *)(state + 0x470))++;
+    return (state->collectedRings)++;
 }
 #pragma scheduling reset
 
@@ -245,8 +408,8 @@ int arwarwing_incrementCollectedRingCount(int arwing)
 #pragma scheduling off
 void arwarwing_addMaxShield(int arwing, int p2)
 {
-    int state = *(int *)(arwing + 0xb8);
-    *(s8 *)(state + 0x469) = *(u8 *)(state + 0x469) + p2;
+    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    *(s8 *)&state->maxShield = state->maxShield + p2;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -254,18 +417,18 @@ void arwarwing_addMaxShield(int arwing, int p2)
 #pragma scheduling off
 void arwarwing_addShield(int arwing, int p2)
 {
-    int state = *(int *)(arwing + 0xb8);
+    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
     s8 v;
 
-    *(s8 *)(state + 0x468) = *(u8 *)(state + 0x468) + p2;
-    v = *(s8 *)(state + 0x468);
+    *(s8 *)&state->shield = state->shield + p2;
+    v = *(s8 *)&state->shield;
     if (v < 0) {
         v = 0;
-    } else if (v > *(s8 *)(state + 0x469)) {
-        v = *(s8 *)(state + 0x469);
+    } else if (v > *(s8 *)&state->maxShield) {
+        v = *(s8 *)&state->maxShield;
     }
-    *(s8 *)(state + 0x468) = v;
-    if (*(s8 *)(state + 0x468) > 3) {
+    *(s8 *)&state->shield = v;
+    if (*(s8 *)&state->shield > 3) {
         Sfx_StopObjectChannel(arwing, 4);
     }
 }
@@ -548,7 +711,7 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
         arwarwinggu_setActiveVisible(*(int *)(state + 8), 1, level == 2);
     } else {
         ObjPath_GetPointWorldPosition(obj, 4, &px, &py, &pz, 0);
-        arwarwinggu_setActiveVisible(*(int *)(state + 0xc), 1, level == 2);
+        arwarwinggu_setActiveVisible(((ArwingState *)state)->gunObjR, 1, level == 2);
     }
     {
         int setup = Obj_AllocObjectSetup(0x20, 0x604);
@@ -574,8 +737,8 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
     }
     if (linkEffect != 0)
         arwprojectile_createLinkedEffect(proj, 1);
-    arwprojectile_setLifetime(proj, *(u16 *)(state + 0x40e));
-    arwprojectile_placeForward(proj, *(f32 *)(state + 0x410));
+    arwprojectile_setLifetime(proj, ((ArwingState *)state)->projLifetime);
+    arwprojectile_placeForward(proj, ((ArwingState *)state)->projSpeed);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -584,9 +747,9 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
 #pragma scheduling on
 void arwarwing_addBomb(int arwing)
 {
-    int state = *(int *)(arwing + 0xb8);
-    if (*(u8 *)(state + 0x44c) < *(u8 *)(state + 0x44d)) {
-        (*(u8 *)(state + 0x44c))++;
+    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    if (state->bombCount < state->maxBombCount) {
+        (state->bombCount)++;
     }
 }
 #pragma scheduling reset
@@ -596,9 +759,9 @@ void arwarwing_addBomb(int arwing)
 #pragma scheduling on
 void arwarwing_upgradeLaserLevel(int arwing)
 {
-    int state = *(int *)(arwing + 0xb8);
-    if ((s8) * (u8 *)(state + 0x404) < 2) {
-        (*(u8 *)(state + 0x404))++;
+    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    if ((s8)state->laserLevel < 2) {
+        (state->laserLevel)++;
     }
 }
 #pragma scheduling reset
@@ -609,7 +772,7 @@ void arwarwing_upgradeLaserLevel(int arwing)
 int fn_8022D710(int arwing)
 {
     int result = 0;
-    u32 v = *(u8 *)(*(int *)(arwing + 0xb8) + 0x478);
+    u32 v = (*(ArwingState **)(arwing + 0xb8))->mode;
     if (v == 5 || v == 6) {
         result = 1;
     }
@@ -620,13 +783,13 @@ int fn_8022D710(int arwing)
 
 #pragma peephole on
 #pragma scheduling on
-int fn_8022D738(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x478) == 1; }
+int fn_8022D738(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->mode == 1; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling on
-int fn_8022D750(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x478) == 4; }
+int fn_8022D750(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->mode == 4; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -731,7 +894,7 @@ void fn_8022C30C(int obj, int state)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022C7A4(int obj) { *(u8 *)(*(int *)(obj + 0xb8) + 0x47f) = 0; }
+void fn_8022C7A4(int obj) { (*(ArwingState **)(obj + 0xb8))->aimSnapshotValid = 0; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -894,54 +1057,54 @@ void fn_8022CDEC(int obj, int state)
 #pragma scheduling off
 void fn_8022D308(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    ArwingState *state = *(ArwingState **)(obj + 0xb8);
     f32 v7c = lbl_803E6F7C;
     f32 v74 = lbl_803E6F74;
 
-    *(f32 *)(state + 0x54) = lbl_803E6F70;
-    *(f32 *)(state + 0x60) = v74;
-    *(f32 *)(state + 0x58) = lbl_803E6F78;
-    *(f32 *)(state + 0x64) = v7c;
-    *(f32 *)(state + 0x5c) = lbl_803E6F78;
-    *(f32 *)(state + 0x68) = v7c;
-    *(f32 *)(state + 0x78) = lbl_803E6F80;
-    *(f32 *)(state + 0x84) = lbl_803E6F84;
-    *(f32 *)(state + 0x6c) = lbl_803E6ED0;
-    *(f32 *)(state + 0x348) = lbl_803E6F88;
-    *(f32 *)(state + 0x34c) = v74;
-    *(f32 *)(state + 0x35c) = lbl_803E6F8C;
-    *(f32 *)(state + 0x360) = v7c;
-    *(f32 *)(state + 0x370) = lbl_803E6F90;
-    *(f32 *)(state + 0x374) = lbl_803E6F94;
-    *(f32 *)(state + 0x384) = lbl_803E6F98;
-    *(f32 *)(state + 0x388) = lbl_803E6F9C;
-    *(f32 *)(state + 0x394) = lbl_803E6FA0;
-    *(f32 *)(state + 0x390) = lbl_803E6FA4;
-    *(f32 *)(state + 0x39c) = lbl_803E6FA8;
-    *(u8 *)(state + 0x3fa) = 0x19;
-    *(f32 *)(state + 0x3a4) = lbl_803E6FAC;
-    *(f32 *)(state + 0x38) = lbl_803E6FB0;
-    *(f32 *)(state + 0x3ac) = lbl_803E6FB4;
-    *(f32 *)(state + 0x3b0) = lbl_803E6FB8;
-    *(f32 *)(state + 0x88) = lbl_803E6FBC;
-    *(f32 *)(state + 0x8c) = lbl_803E6F64;
-    *(f32 *)(state + 0x9c) = *(f32 *)(state + 0xa0);
-    *(f32 *)(state + 0xa4) = *(f32 *)(state + 0xa8);
-    *(f32 *)(state + 0xac) = lbl_803E6F5C;
-    *(f32 *)(state + 0xb0) = lbl_803E6F5C;
-    *(f32 *)(state + 0x48) = lbl_803E6ECC;
-    *(f32 *)(state + 0x4c) = lbl_803E6ECC;
-    *(f32 *)(state + 0x50) = lbl_803E6ECC;
-    *(u8 *)(state + 0x404) = 0;
-    *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x14);
-    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x18);
-    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x1c);
-    *(int *)(state + 0x358) = 0;
-    *(int *)(state + 0x36c) = 0;
+    state->unk54 = lbl_803E6F70;
+    state->unk60 = v74;
+    state->unk58 = lbl_803E6F78;
+    state->unk64 = v7c;
+    state->unk5C = lbl_803E6F78;
+    state->unk68 = v7c;
+    state->unk78 = lbl_803E6F80;
+    state->unk84 = lbl_803E6F84;
+    state->unk6C = lbl_803E6ED0;
+    state->unk348 = lbl_803E6F88;
+    state->unk34C = v74;
+    state->unk35C = lbl_803E6F8C;
+    state->unk360 = v7c;
+    state->unk370 = lbl_803E6F90;
+    state->unk374 = lbl_803E6F94;
+    state->unk384 = lbl_803E6F98;
+    state->unk388 = lbl_803E6F9C;
+    state->unk394 = lbl_803E6FA0;
+    state->unk390 = lbl_803E6FA4;
+    state->unk39C = lbl_803E6FA8;
+    state->unk3FA = 0x19;
+    state->unk3A4 = lbl_803E6FAC;
+    state->unk38 = lbl_803E6FB0;
+    state->unk3AC = lbl_803E6FB4;
+    state->unk3B0 = lbl_803E6FB8;
+    state->unk88 = lbl_803E6FBC;
+    state->unk8C = lbl_803E6F64;
+    state->rollEnergy = state->rollEnergyMax;
+    state->unkA4 = state->unkA8;
+    state->wingFlexCur = lbl_803E6F5C;
+    state->wingFlexTarget = lbl_803E6F5C;
+    state->velX = lbl_803E6ECC;
+    state->velY = lbl_803E6ECC;
+    state->velZ = lbl_803E6ECC;
+    state->laserLevel = 0;
+    *(f32 *)(obj + 0xc) = state->homeX;
+    *(f32 *)(obj + 0x10) = state->homeY;
+    *(f32 *)(obj + 0x14) = state->homeZ;
+    state->rollInput = 0;
+    state->pitchAccum = 0;
     *(s16 *)(obj + 0) = 0;
     *(s16 *)(obj + 2) = 0;
     *(s16 *)(obj + 4) = 0;
-    arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
+    arwarwingbo_setActiveVisible(state->bombObj, 0, 0);
 }
 #pragma scheduling reset
 #pragma peephole reset
