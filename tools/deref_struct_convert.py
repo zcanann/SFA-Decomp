@@ -69,11 +69,16 @@ def fn_vars(cfg, name, body):
     defline = body.split('\n')[0]
     m = re.match(r'[^(]*\(([^)]*)', defline)
     if m:
+        ES = {'int':1,'u8 *':1,'char *':1,'void *':1,'uchar *':1,'byte *':1,
+              'short *':2,'s16 *':2,'u16 *':2,'ushort *':2,
+              'int *':4,'uint *':4,'s32 *':4,'u32 *':4}
         for p in m.group(1).split(','):
-            p = p.strip()
-            pm = re.match(r'(?:int|u8\s*\*|void\s*\*)\s*\*?(\w+)$', p)
-            if pm and pm.group(1) in cfg.get('param_names', []):
-                out[pm.group(1)] = (1, False)
+            p = ' '.join(p.strip().split())
+            if p.startswith('register '):
+                p = p[9:]
+            pm = re.match(r'([a-zA-Z_][a-zA-Z0-9_]*(?: \*+)?)\s*(\w+)$', p.replace('*', ' * ').replace('  ',' ').replace(' * ',' *'))
+            if pm and pm.group(2) in cfg.get('param_names', []) and pm.group(1) in ES:
+                out[pm.group(2)] = (ES[pm.group(1)], False)
     # locals: `[int [*]]X = <init>;` -- init pattern determines element size
     for ent in cfg.get('local_inits', []):
         pat, es = ent['pat'], ent['es']
