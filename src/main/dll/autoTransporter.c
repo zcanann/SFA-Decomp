@@ -1,4 +1,5 @@
 #include "main/dll/autoTransporter.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "global.h"
 
@@ -946,9 +947,9 @@ void doorf4_update(int *obj)
     if (((GameObject *)obj)->unkF4 == 0) {
         int *src = *(int **)((char *)obj + 0x4c);
         s16 type;
-        ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)src + 8);
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)src + 0xc);
-        ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)src + 0x10);
+        ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)src)->posX;
+        ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)src)->posY;
+        ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)src)->posZ;
         *(s16 *)obj = (s16)((s8) * (s8 *)((char *)src + 0x18) << 8);
         type = ((GameObject *)obj)->anim.seqId;
         if (type == 0x151) {
@@ -1069,8 +1070,8 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     list = ObjList_GetObjects(&objIdx, &objCount);
     seq[0x56] = 0;
     player = Obj_GetPlayerObject();
-    dx = *(f32 *)((char *)player + 0xc) - *(f32 *)(def + 8);
-    dy = *(f32 *)((char *)player + 0x14) - *(f32 *)(def + 0x10);
+    dx = *(f32 *)((char *)player + 0xc) - ((ObjPlacement *)def)->posX;
+    dy = *(f32 *)((char *)player + 0x14) - ((ObjPlacement *)def)->posZ;
     dist = sqrtf(dx * dx + dy * dy);
     if (sub->gameBitA == -1) {
         gb = 1;
@@ -1098,7 +1099,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
         ang = (lbl_803E364C * (f32)(*(s8 *)(def + 0x18) << 8)) / lbl_803E3650;
         sd = fn_80293E80(ang);
         s = sin(ang);
-        sd = -(*(f32 *)(def + 8) * sd + *(f32 *)(def + 0x10) * s)
+        sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
            + (sd * *(f32 *)((char *)player + 0xc) + s * *(f32 *)((char *)player + 0x14));
         thr = sub->openRange;
         if (dist < thr && gb != 0 && sd < thr && sd > -thr) {
@@ -1125,7 +1126,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             ang = (lbl_803E364C * (f32)(*(s8 *)(def + 0x18) << 8)) / lbl_803E3650;
             sd = fn_80293E80(ang);
             s = sin(ang);
-            sd = -(*(f32 *)(def + 8) * sd + *(f32 *)(def + 0x10) * s)
+            sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
                + (sd * *(f32 *)((char *)player + 0xc) + s * *(f32 *)((char *)player + 0x14));
             if (((GameObject *)obj)->unkF8 == 0) {
                 if (sd < lbl_803E3648 && sd > lbl_803E3658) {
@@ -1159,13 +1160,13 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             while (i < objCount && active == 0) {
                 other = *walk;
                 if (*(s16 *)((char *)other + 0x46) == 0x7c) {
-                    dx = *(f32 *)((char *)other + 0xc) - *(f32 *)(def + 8);
-                    dy = *(f32 *)((char *)other + 0x14) - *(f32 *)(def + 0x10);
+                    dx = *(f32 *)((char *)other + 0xc) - ((ObjPlacement *)def)->posX;
+                    dy = *(f32 *)((char *)other + 0x14) - ((ObjPlacement *)def)->posZ;
                     if (sqrtf(dx * dx + dy * dy) < lbl_803E3660) {
                         ang = (lbl_803E364C * (f32)(*(s8 *)(def + 0x18) << 8)) / lbl_803E3650;
                         sd = fn_80293E80(ang);
                         s = sin(ang);
-                        sd = -(*(f32 *)(def + 8) * sd + *(f32 *)(def + 0x10) * s)
+                        sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
                            + (sd * *(f32 *)((char *)other + 0xc) + s * *(f32 *)((char *)other + 0x14));
                         if (sd < lbl_803E3664 && sd > lbl_803E3668) {
                             active = 1;
@@ -1194,7 +1195,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             ang = (lbl_803E364C * (f32)(*(s8 *)(def + 0x18) << 8)) / lbl_803E3650;
             sd = fn_80293E80(ang);
             s = sin(ang);
-            sd = -(*(f32 *)(def + 8) * sd + *(f32 *)(def + 0x10) * s)
+            sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
                + (sd * *(f32 *)((char *)player + 0xc) + s * *(f32 *)((char *)player + 0x14));
             if (sd < lbl_803E366C && sd > lbl_803E3670) {
                 active = 1;
