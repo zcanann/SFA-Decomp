@@ -584,12 +584,39 @@ extern f32 lbl_803DE810;
 #pragma scheduling off
 #pragma peephole off
 void Matrix_TransformVector(f32 *m, f32 *v, f32 *out) {
-    f32 vx = v[0];
-    f32 vy = v[1];
-    f32 vz = v[2];
-    out[0] = vx * m[0] + vy * m[4] + vz * m[8];
-    out[1] = vx * m[1] + vy * m[5] + vz * m[9];
-    out[2] = vx * m[2] + vy * m[6] + vz * m[10];
+    f32 vx, vy, vz;
+    f32 m0, m1, m2;
+    f32 t;
+
+    vx = v[0];
+    m0 = m[0];
+    vy = v[1];
+    m1 = m[4];
+    vz = v[2];
+    m2 = m[8];
+    m0 = vx * m0;
+    m1 = vy * m1;
+    m2 = vz * m2;
+    m1 = m0 + m1;
+    m0 = m[1];
+    t = m1 + m2;
+    m1 = m[5];
+    m2 = m[9];
+    m0 = vx * m0;
+    out[0] = t;
+    m1 = vy * m1;
+    m2 = vz * m2;
+    m1 = m0 + m1;
+    m0 = m[2];
+    t = m1 + m2;
+    m1 = m[6];
+    m2 = m[10];
+    m0 = vx * m0;
+    out[1] = t;
+    m1 = vy * m1;
+    m2 = vz * m2;
+    m0 = m0 + m1;
+    out[2] = m0 + m2;
 }
 
 extern int rand(void);
