@@ -121,7 +121,6 @@ int drcloudper_selectActiveCloud(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void drcloudper_init(int obj, int setup)
 {
@@ -147,4 +146,3 @@ void drcloudper_init(int obj, int setup)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

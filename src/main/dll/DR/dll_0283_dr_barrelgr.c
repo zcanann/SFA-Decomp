@@ -226,7 +226,6 @@ void drbarrelgr_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
 {
@@ -268,4 +267,3 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

@@ -1,6 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#pragma peephole on
 #pragma scheduling off
 int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script)
 {
@@ -97,7 +96,6 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling on
@@ -232,7 +230,6 @@ void fn_80239DD8(int p1, int p2)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_80239EAC(int p1, int p2)
 {
@@ -259,7 +256,6 @@ void fn_80239EAC(int p1, int p2)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

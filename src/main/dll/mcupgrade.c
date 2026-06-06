@@ -1,6 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#pragma peephole on
 #pragma scheduling off
 int mcupgradema_SeqFn(int p1, int p2, int setup)
 {
@@ -22,9 +21,7 @@ int mcupgradema_SeqFn(int p1, int p2, int setup)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void mcupgrade_update(int obj)
 {
@@ -39,7 +36,6 @@ void mcupgrade_update(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off

@@ -151,7 +151,6 @@ void arwprojectile_placeForward(int obj, f32 dist)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwingandrossstuff_init(int obj, u8 *setup)
 {
@@ -199,7 +198,6 @@ void arwingandrossstuff_init(int obj, u8 *setup)
     ObjGroup_AddObject(obj, 2);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -293,7 +291,6 @@ void fn_8022ED74(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling on
 void fn_8022ECE0(int obj, f32 param)
 {
@@ -314,4 +311,3 @@ void fn_8022ECE0(int obj, f32 param)
                           (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
 }
 #pragma scheduling reset
-#pragma peephole reset

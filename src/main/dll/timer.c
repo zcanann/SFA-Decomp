@@ -79,7 +79,6 @@ void timer_addDuration(int obj, int duration)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling on
 void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
@@ -93,7 +92,6 @@ void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

@@ -92,7 +92,6 @@ void drearthcal_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling on
 void drearthcal_init(int obj, int setup)
 {
@@ -100,7 +99,6 @@ void drearthcal_init(int obj, int setup)
     *(u16 *)(obj + DREARTHCAL_OBJECT_FLAGS_B0) |= DREARTHCAL_INIT_FLAGS;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling on

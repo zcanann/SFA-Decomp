@@ -1,6 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#pragma peephole on
 #pragma scheduling off
 int arwblocker_getBlockState(int obj)
 {
@@ -17,7 +16,6 @@ int arwblocker_getBlockState(int obj)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling on
@@ -80,7 +78,6 @@ void arwblocker_initialise(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwblocker_update(int obj) {
     int state = *(int *)(obj + 0xb8);
@@ -109,4 +106,3 @@ void arwblocker_update(int obj) {
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

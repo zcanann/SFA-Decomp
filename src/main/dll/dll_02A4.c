@@ -86,7 +86,6 @@ void dll_2A4_init(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_802315EC(int obj, int state, int setup)
 {
@@ -112,9 +111,7 @@ void fn_802315EC(int obj, int state, int setup)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_802317A8(int obj, int state, int setup)
 {
@@ -140,4 +137,3 @@ void fn_802317A8(int obj, int state, int setup)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

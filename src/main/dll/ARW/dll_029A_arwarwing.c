@@ -160,7 +160,6 @@ int arwarwing_getCollectedRingCount(int arwing) { return *(u8 *)(*(int *)(arwing
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwarwing_addScore(int arwing, u8 amount)
 {
@@ -174,9 +173,7 @@ void arwarwing_addScore(int arwing, u8 amount)
     *(u16 *)(state + 0x47c) = v;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int arwarwing_getScore(int arwing)
 {
@@ -187,7 +184,6 @@ int arwarwing_getScore(int arwing)
     return *(u16 *)(state + 0x47c);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
@@ -231,7 +227,6 @@ int fn_8022D5DC(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x472))+
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int arwarwing_incrementCollectedRingCount(int arwing)
 {
@@ -245,7 +240,6 @@ int arwarwing_incrementCollectedRingCount(int arwing)
     return (*(u8 *)(state + 0x470))++;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -257,7 +251,6 @@ void arwarwing_addMaxShield(int arwing, int p2)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwarwing_addShield(int arwing, int p2)
 {
@@ -277,7 +270,6 @@ void arwarwing_addShield(int arwing, int p2)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -393,7 +385,6 @@ void arwarwing_updateWeaponFire(int obj, int state) {
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwarwing_update(int obj)
 {
@@ -544,7 +535,6 @@ void arwarwing_update(int obj)
     fn_8022BCD0(obj, state);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

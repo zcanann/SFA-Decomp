@@ -49,7 +49,6 @@ void drmusiccont_initialise(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void drmusiccont_init(int obj)
 {
@@ -72,7 +71,6 @@ void drmusiccont_init(int obj)
     f->b_9e7 = (u8)GameBit_Get(0x9e7);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

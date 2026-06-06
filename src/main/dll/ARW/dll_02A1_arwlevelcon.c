@@ -66,7 +66,6 @@ void arwlevelcon_initialise(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwlevelcon_init(int obj, u8 *setup)
 {
@@ -114,9 +113,7 @@ void arwlevelcon_init(int obj, u8 *setup)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling on
 int arwlevelcon_ringEventCallback(int obj, int p2, int data)
 {
@@ -152,7 +149,6 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

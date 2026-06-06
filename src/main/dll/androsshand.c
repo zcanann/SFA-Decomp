@@ -28,7 +28,6 @@ void androsshand_render(int obj, int p2, int p3, int p4, int p5)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void androsshand_update(int obj)
 {
@@ -228,7 +227,6 @@ void androsshand_update(int obj)
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *(f32 *)(state + 0x14), timeDelta, 0);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling on

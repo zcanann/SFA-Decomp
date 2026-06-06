@@ -167,7 +167,6 @@ void ring_init(int obj, int setup) {
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void ring_update(int obj)
 {
@@ -349,4 +348,3 @@ void ring_update(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

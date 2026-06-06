@@ -43,7 +43,6 @@ void arwarwinggu_hitDetect(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling on
 void arwarwinggu_init(int obj)
 {
@@ -54,7 +53,6 @@ void arwarwinggu_init(int obj)
     *(u8 *)(obj + 0x36) = 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -140,7 +138,6 @@ void fn_8022F270(int obj, int p2) { *(int *)(*(int *)(obj + 0xb8) + 0x4) = p2; }
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling on
 void fn_8022F27C(int obj)
 {
@@ -152,4 +149,3 @@ void fn_8022F27C(int obj)
     textureAnimFn_80053f2c(anim, state, (int)texture);
 }
 #pragma scheduling reset
-#pragma peephole reset

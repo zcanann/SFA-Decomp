@@ -63,7 +63,6 @@ void androssligh_init(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling on
 void androssligh_update(int obj)
 {
@@ -91,7 +90,6 @@ void androssligh_update(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
