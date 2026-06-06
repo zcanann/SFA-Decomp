@@ -14,7 +14,7 @@ extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 /*
  * --INFO--
  *
- * Function: gameTextFn_80017434
+ * Function: gameTextSetWindow
  * EN v1.0 Address: 0x80017434
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8001746C

@@ -7,7 +7,7 @@ extern undefined8 runLoadingScreens();
 /*
  * --INFO--
  *
- * Function: gameTextFn_80017434
+ * Function: gameTextSetWindow
  * EN v1.0 Address: 0x80017434
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8001746C
@@ -1607,7 +1607,7 @@ extern void debugPrintDraw(int a);
 extern void drawRect(f32 a, f32 b, int w, int h);
 extern void objRenderFn_8003b8f4(int obj, int b, int c, int d, int e, f32 a);
 extern void objRenderFuzz(void);
-extern void textFn_8001b46c(int a);
+extern void subtitleUpdateAndDraw(int a);
 extern void doNothing_endOfFrame(void);
 extern f32 lbl_803DE7A8;
 
@@ -1651,7 +1651,7 @@ void gameLoop(void)
             dvdCheckError();
             gameTextRun();
         }
-        textFn_8001b46c(0);
+        subtitleUpdateAndDraw(0);
         doNothing_endOfFrame();
         gameTextSetDrawFunc(0);
     }
@@ -1751,7 +1751,7 @@ extern void gameTextShowStr(int str, int a, int b, int c);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void textFn_8001b46c(int a);
+void subtitleUpdateAndDraw(int a);
 #pragma pop
 
 #pragma push

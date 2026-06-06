@@ -7,7 +7,7 @@ extern void mm_free(void *ptr);
 /*
  * --INFO--
  *
- * Function: gameTextFn_80017434
+ * Function: gameTextSetWindow
  * EN v1.0 Address: 0x80017434
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8001746C
@@ -940,7 +940,7 @@ extern void *gameTextDrawFunc;
 extern u8 *gameTextFonts;
 
 #pragma dont_inline on
-int gameTextFn_80019b14(void) {
+int gameTextGetCharset(void) {
     return lbl_803DC9E8;
 }
 #pragma dont_inline reset
@@ -996,7 +996,7 @@ int gameTextGetState(int i) {
 }
 #pragma dont_inline reset
 
-extern void textFn_8001b7b8(void);
+extern void subtitleBuildLineTable(void);
 extern int lbl_803DC9F0;
 extern int lbl_803DCA04;
 extern void *lbl_803DC9F8;
@@ -1004,12 +1004,12 @@ extern void *lbl_803DC9F8;
 void mainLoopDoGameText(void) {
     if (lbl_803DC9F0 != 0) {
         if (gameTextGetState(1) == 2 && lbl_803DCA04 == 1) {
-            textFn_8001b7b8();
+            subtitleBuildLineTable();
         }
     } else {
         if (gameTextGetState(0) == 2 && (int)lbl_803DC9F8 == (int)getCurGameText() &&
             lbl_803DCA04 == 1) {
-            textFn_8001b7b8();
+            subtitleBuildLineTable();
         }
     }
 }
@@ -1108,7 +1108,7 @@ int setSubtitlesEnabled(int enabled) {
 extern int lbl_803DB3C8;
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void *color);
 extern int lbl_803DC9D8;
-extern int gameTextFn_8001bcb4(void);
+extern int subtitleIsActive(void);
 extern int gameTextFn_8001b44c(int x);
 extern void gameTextLoadForCurMap(int sourceId);
 
@@ -1181,14 +1181,14 @@ void gameTextLoadDir(int dirId) {
             cmd->f4 = 0;
         }
         curGameTextDir = (void *)dirId;
-        if ((gameTextFn_8001bcb4() == 0 || gameTextFn_8001b44c(dirId) == 0) &&
+        if ((subtitleIsActive() == 0 || gameTextFn_8001b44c(dirId) == 0) &&
             (int)curGameTextDir != lbl_803DC9D8) {
             gameTextLoadForCurMap(0);
         }
     }
 }
 
-void gameTextFn_80019804(int flags) {
+void gameTextResetCursor(int flags) {
     if (flags & 1) {
         lbl_803DC9AA = 0;
         lbl_803DC9A8 = 0;
@@ -1203,7 +1203,7 @@ void gameTextFn_80019804(int flags) {
 extern u8 lbl_802C7400[];
 extern void *lbl_803DC9CC;
 
-void gameTextFn_80017434(u8 *param_1) {
+void gameTextSetWindow(u8 *param_1) {
     int i;
     GameTextSlot *s;
     int idx;
@@ -1230,7 +1230,7 @@ void gameTextFn_80017434(u8 *param_1) {
     }
 }
 
-void gameTextFn_8001984c(s16 x, s16 y, int flags) {
+void gameTextSetCursor(s16 x, s16 y, int flags) {
     if (flags & 1) {
         lbl_803DC9AA = x;
         lbl_803DC9A8 = y;
@@ -1324,7 +1324,7 @@ checkAllowed:
 #pragma optimize_for_size reset
 
 #pragma optimize_for_size on
-int gameTextFn_8001bcb4(void) {
+int subtitleIsActive(void) {
     int ret;
 
     ret = 0;
@@ -1576,7 +1576,7 @@ void fn_8001BE2C(int mode) {
     }
 }
 
-void textFn_8001bb78(int x) {
+void subtitleStart(int x) {
     if (lbl_803DCA00 != 0) {
         lbl_803DC9FC = x;
         lbl_803DC9F8 = getCurGameText();
@@ -2422,7 +2422,7 @@ void gameTextDrawBox(u16 *strPtr, int boxId, u8 *box) {
         } else if (boxId != 0) {
             gameTextBoxFn_800164b0(boxId, (int)(box - lbl_802C7400) / 0x20, &c6x0, &c6x1, &c6y0, &c6y1);
         }
-        gameTextFn_80017434(cur);
+        gameTextSetWindow(cur);
         hw = (c6x1 - c6x0) >> 1;
         hh = (c6y1 - c6y0) >> 1;
         cx = c6x0 + hw;
@@ -2447,7 +2447,7 @@ void gameTextDrawBox(u16 *strPtr, int boxId, u8 *box) {
         } else if (boxId != 0) {
             gameTextBoxFn_800164b0(boxId, (int)(box - lbl_802C7400) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
         }
-        gameTextFn_80017434(cur);
+        gameTextSetWindow(cur);
         drawTexture((f32)(c3x0 - 0x16), (f32)(c3y0 - 9), lbl_8033BE40[5], *(u8 *)(box + 0x1e), 0x100);
         drawScaledTexture((f32)c3x0, (f32)(c3y0 - 9), lbl_8033BE40[6], *(u8 *)(box + 0x1e), 0x100,
                           c3x1 - c3x0, 0x24, 0);
@@ -3020,7 +3020,7 @@ void *mmAlloc(int size, int type, int flag);
 #pragma dont_inline reset
 #pragma pop
 
-extern void textFn_8001b46c(int a);
+extern void subtitleUpdateAndDraw(int a);
 
 #pragma push
 #pragma scheduling off
@@ -3065,13 +3065,13 @@ typedef struct {
     u16 r, g, b, a;
 } SubtitleCmd;
 
-extern SubtitleCmd *textFn_80018bc4(int str, int *count);
+extern SubtitleCmd *subtitleParseControlCmds(int str, int *count);
 extern void gameTextShowStr(int str, int a, int b, int c);
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void textFn_8001b46c(int a)
+void subtitleUpdateAndDraw(int a)
 {
     int charset;
     SubtitleCmd *cmds;
@@ -3080,7 +3080,7 @@ void textFn_8001b46c(int a)
 
     if (lbl_803DCA04 == 2) {
         if (lbl_803DC9F0 != 0) {
-            charset = gameTextFn_80019b14();
+            charset = gameTextGetCharset();
             gameTextSetCharset(1, 2);
         }
         if (getHudHiddenFrameCount() == 0) {
@@ -3088,7 +3088,7 @@ void textFn_8001b46c(int a)
         }
         lbl_803DCA0C = (f32)lbl_803DCA10 / lbl_803DE720;
         if (lbl_803DCA08 + 1 < lbl_803DCA18 && lbl_803DCA0C >= lbl_8033BA40[lbl_803DCA08 + 1]) {
-            cmds = textFn_80018bc4(lbl_8033B640[lbl_803DCA08], &n);
+            cmds = subtitleParseControlCmds(lbl_8033B640[lbl_803DCA08], &n);
             if (cmds != NULL) {
                 SubtitleCmd *p = &cmds[n];
                 while (p--, n-- != 0) {
@@ -3363,7 +3363,7 @@ typedef struct SubtitleTextEntry {
 #pragma optimization_level 1
 #pragma scheduling off
 #pragma peephole off
-void textFn_8001b7b8(void) {
+void subtitleBuildLineTable(void) {
     int total;
     SubtitleLineTable *s = (SubtitleLineTable *)lbl_8033B240;
     f32 delta;
@@ -3387,7 +3387,7 @@ void textFn_8001b7b8(void) {
     total = 0;
     curTime = lbl_803DE730;
     if (lbl_803DC9F0 != 0) {
-        savedCharset = gameTextFn_80019b14();
+        savedCharset = gameTextGetCharset();
         gameTextSetCharset(1, 1);
     }
     t = (SubtitleTextEntry *)gameTextGet(lbl_803DC9FC);
@@ -3553,7 +3553,7 @@ extern u32 lbl_80339C40[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-SubtitleCmd *textFn_80018bc4(int str, int *count) {
+SubtitleCmd *subtitleParseControlCmds(int str, int *count) {
     int off;
     int n;
     u8 *tbl;

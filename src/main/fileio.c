@@ -77,7 +77,7 @@ void dvdCheckError(void)
     }
 
     if (msgId != 0xffff) {
-        int prevCharset = gameTextFn_80019b14();
+        int prevCharset = gameTextGetCharset();
         Sfx_SetObjectSoundsPaused(1);
         gameTextSetCharset(2, 2);
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);

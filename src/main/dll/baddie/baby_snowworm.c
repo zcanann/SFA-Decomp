@@ -1092,12 +1092,12 @@ extern void shadowRenderFn_8006b558(void*);
 
 extern u8  hudTextures[0x198];
 extern u32 lbl_8033BE40[5];
-extern int   gameTextFn_80019b14(void);
+extern int   gameTextGetCharset(void);
 extern void  gameTextSetCharset(int, s32);
 extern void* gameTextGetPhrase(s32, s32);
-extern void  gameTextFn_8001984c(u16, u16, s32);
+extern void  gameTextSetCursor(u16, u16, s32);
 extern void  gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
-extern void  gameTextFn_80019804(s32);
+extern void  gameTextResetCursor(s32);
 extern void  gameTextAppendStr(void*, s32);
 
 typedef struct BabySnowwormBitTableEntry {
@@ -1653,7 +1653,7 @@ void perspectiveFn_80129db4(void)
  * order, scheduling/peephole pragmas, or intermediate var tricks).
  *
  * Gated on (lbl_803DD774 != 0) && (lbl_803DD776 == 0). Saves the
- * current sprite-batch state via gameTextFn_80019b14, sets sub-batch via
+ * current sprite-batch state via gameTextGetCharset, sets sub-batch via
  * gameTextSetCharset(lbl_803DD77B, 3), grabs a slot handle from
  * gameTextGetPhrase(lbl_803DBA60, lbl_803DBA5C), and looks up sprite 0x49.
  *
@@ -1666,17 +1666,17 @@ void perspectiveFn_80129db4(void)
  *   alpha  = clamp((mirror) * 0xf, 0, 0xff)
  *   target = clamp(((mirror) - 0x14) << 4, 0, 0x10e)
  *
- * Issues gameTextFn_8001984c(sprite->_2, sprite->_a, 1) to enable, then
+ * Issues gameTextSetCursor(sprite->_2, sprite->_a, 1) to enable, then
  * gameTextMeasureFn_800163c4(handle, 0x49, 0, 0, &v[3..0]) to read the sprite's
- * current bbox into stack slots 0x14..0x8. Calls gameTextFn_80019804(1).
+ * current bbox into stack slots 0x14..0x8. Calls gameTextResetCursor(1).
  *
  * Computes blit_x = clamp((v[0x10] - v[0x14] + 0x28), 0, target_y);
  * stores blit_x & ~1 at sprite+0x8, and 0x140 - (blit_x>>1) at
- * sprite+0x14. Re-issues gameTextFn_8001984c with subbatch 2 and runs
+ * sprite+0x14. Re-issues gameTextSetCursor with subbatch 2 and runs
  * gameTextSetColor(0xff, 0xff, 0xff, alpha) to commit the colour, also
  * latches alpha into sprite+0x1e.
  *
- * Tail: gameTextAppendStr(handle, 0x49); gameTextFn_80019804(2); gameTextSetCharset with
+ * Tail: gameTextAppendStr(handle, 0x49); gameTextResetCursor(2); gameTextSetCharset with
  * the saved state to restore the batch.
  */
 #pragma scheduling off
@@ -1695,7 +1695,7 @@ void pauseMenuDrawText(void)
     if (lbl_803DD774 == 0) return;
     if (lbl_803DD776 != 0) return;
 
-    saved = gameTextFn_80019b14();
+    saved = gameTextGetCharset();
     gameTextSetCharset(lbl_803DD77B, 3);
     handle = gameTextGetPhrase(lbl_803DBA60, lbl_803DBA5C);
     sprite = gameTextGetBox(0x49);
@@ -1723,9 +1723,9 @@ void pauseMenuDrawText(void)
     target = (s16)(target << 4);
     if (target > 0x10e) target = 0x10e;
 
-    gameTextFn_8001984c(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
+    gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
     gameTextMeasureFn_800163c4(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
-    gameTextFn_80019804(1);
+    gameTextResetCursor(1);
 
     {
         s16 width = (s16)(v[2] - v[3]);
@@ -1736,11 +1736,11 @@ void pauseMenuDrawText(void)
         *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (blit_x >> 1));
     }
 
-    gameTextFn_8001984c(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
+    gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
     gameTextSetColor(0xff, 0xff, 0xff, (u8)alpha);
     *(u8*)((u8*)sprite + 0x1e) = (u8)alpha;
     gameTextAppendStr(handle, 0x49);
-    gameTextFn_80019804(2);
+    gameTextResetCursor(2);
     gameTextSetCharset(saved, 3);
 }
 #pragma peephole reset

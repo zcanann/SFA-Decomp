@@ -8,7 +8,7 @@ extern void mm_free(void *ptr);
 /*
  * --INFO--
  *
- * Function: gameTextFn_80017434
+ * Function: gameTextSetWindow
  * EN v1.0 Address: 0x80017434
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8001746C

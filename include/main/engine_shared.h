@@ -1151,7 +1151,7 @@ extern void DVDGetStreamPlayAddrAsync(void *buf, void *callback);
 extern void setTimeStop(int frames);
 extern void cutsceneFadeInOut(int mode);
 extern int getLoadedFileFlags(int slot);
-extern int gameTextFn_80019b14(void);
+extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int a, int b);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void Sfx_SetObjectSoundsPaused(s32 paused);
