@@ -113,7 +113,7 @@ void cannonclaw_update(u8* obj)
     if (*(s16*)(obj + 0xa0) != 0x208) {
         ObjAnim_SetCurrentMove((int)obj, 0x208, lbl_803E2F34, 0);
     }
-    ObjAnim_AdvanceCurrentMove(lbl_803E2F38, timeDelta, (int)obj, NULL);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E2F38, timeDelta, NULL);
     if (trickyState == NULL) return;
     if (GameBit_Get(*(s16*)(*(u8**)(trickyState + 0x4c) + 0x1a)) == 0) return;
     *(s32*)(obj + 0xf4) = 1;
