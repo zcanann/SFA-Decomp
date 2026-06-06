@@ -3,6 +3,29 @@
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
+#include "main/model.h"
+#include "main/texture.h"
+#include "main/dll/player_state.h"
+
+/* Model render-op record (0x44 stride at ModelFileHeader.renderOps);
+ * only the fields evidenced in this TU are typed. */
+typedef struct ModelRenderOp {
+    u8 pad00[0xc];
+    u8 alpha;        /* 0x0c */
+    u8 pad0D[0x34 - 0xd];
+    s32 layer0TexId; /* 0x34 */
+    u8 pad38[4];
+    u32 flags;       /* 0x3c */
+    u8 pad40[4];
+} ModelRenderOp; /* size 0x44 */
+
+/* Entry of gDepthReadPendingQueue/gDepthReadResults (0xC stride, 0x14 cap). */
+typedef struct DepthReadRequest {
+    u16 x;     /* 0x0 */
+    u16 y;     /* 0x2 */
+    s32 value; /* 0x4: completed GXPeekZ result */
+    s32 key;   /* 0x8: opaque request key */
+} DepthReadRequest;
 
 extern Mtx lbl_803967C0;
 extern Mtx lbl_80396820;
@@ -403,18 +426,18 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     if (flags == 0) {
         return;
     }
-    if (!(*(s8 *)(st + 0x260) & 0x10) && *(s8 *)(st + 0x25b) != 0) {
+    if (!(((BaddieState *)st)->unk260 & 0x10) && ((BaddieState *)st)->unk25B != 0) {
         return;
     }
-    n = *(s8 *)(st + 0xb8);
+    n = ((BaddieState *)st)->unkB8;
     if (n < 0 || n >= 0x23) {
         sfx = 0;
     } else {
         sfx = tbl[0xb4 + n];
     }
-    desc = *(void **)(st + 0xc4);
+    desc = ((BaddieState *)st)->unkC4;
     if (desc != NULL) {
-        switch (*(s16 *)((u8 *)desc + 0x46)) {
+        switch (((GameObject *)desc)->anim.seqId) {
         case 0x5d:
         case 0x99:
         case 0x1db:
@@ -424,7 +447,7 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     }
     if (sfxTab != NULL) {
         vec = vecs + vecIdx * 3;
-        if (*(f32 *)(st + 0x1b4) > Vachuff_803DEE20) {
+        if (((BaddieState *)st)->unk1B4 > Vachuff_803DEE20) {
             (*(void (**)(u8 *, int, f32 *, u8 *))((int)*gWaterfxInterface + 8))(obj, flags, vecs, st);
             sfx = 5;
         }
@@ -936,19 +959,19 @@ int depthReadRequestPoll(int x, int y, int requestKey)
         if (y < 6) y = 6;
         n = (u32)gDepthReadPendingCount;
         if (n < 0x14) {
-            u8* slot = (u8*)&gDepthReadPendingQueue + n * 0xC;
-            *(u16*)(slot + 0x0) = (u16)x;
-            *(u16*)(slot + 0x2) = (u16)y;
-            *(int*)(slot + 0x8) = requestKey;
+            DepthReadRequest* slot = (DepthReadRequest*)((u8*)&gDepthReadPendingQueue + n * 0xC);
+            slot->x = (u16)x;
+            slot->y = (u16)y;
+            slot->key = requestKey;
             gDepthReadPendingCount++;
         }
         i = 0;
         row = (u8*)&gDepthReadResults;
         n = (u32)gDepthReadResultCount;
         while (n != 0) {
-            if (requestKey == *(int*)(row + 0x8)) {
+            if (requestKey == ((DepthReadRequest *)row)->key) {
                 found = (int*)((u8*)&gDepthReadResults + i * 0xC);
-                return found[1];
+                return ((DepthReadRequest *)found)->value;
             }
             row += 0xC;
             i++;
@@ -1436,11 +1459,11 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
     handle1 = *Shader_getLayer(renderOp, 0);
     selectTexture(textureIdxToPtr(handle1), 0);
     selectReflectionTexture(1);
-    tex2 = textureIdxToPtr(*(int*)((u8*)renderOp + 0x34));
-    wrapBit = (((u8*)tex2)[0x1d] - ((u8*)tex2)[0x1c] > 0) ? 1 : 0;
+    tex2 = textureIdxToPtr(((ModelRenderOp *)renderOp)->layer0TexId);
+    wrapBit = (((Texture *)tex2)->maxLod - ((Texture *)tex2)->minLod > 0) ? 1 : 0;
     GXInitTexObj((void*)((u8*)tex2 + 0x20), (u8*)tex2 + 0x60,
-                 *(u16*)((u8*)tex2 + 0xa), *(u16*)((u8*)tex2 + 0xc),
-                 ((u8*)tex2)[0x16], 1, 1, wrapBit);
+                 ((Texture *)tex2)->width, ((Texture *)tex2)->height,
+                 ((Texture *)tex2)->unk16, 1, 1, wrapBit);
     selectTexture(tex2, 2);
     GXLoadTexMtxImm(lbl_80396850, 0x52, 0);
     GXSetTexCoordGen2(0, 0, 0, 0, 0, 0x52);
@@ -1519,12 +1542,12 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
         u32 flags2;
         u32 modelFlags;
         if (((u8*)obj_a)[0x37] >= 0xFF
-            && (*(u32*)((u8*)renderOp + 0x3c) & 0x40000000) == 0
-            && ((u8*)renderOp)[0xc] >= 0xFF) {
+            && (((ModelRenderOp *)renderOp)->flags & 0x40000000) == 0
+            && ((ModelRenderOp *)renderOp)->alpha >= 0xFF) {
             /* opaque path */
-            flags2 = *(u32*)((u8*)renderOp + 0x3c);
-            modelFlags = *(u32*)((u8*)renderOp + 0x3c);
-            if ((*(u16*)((u8*)model + 2) & 0x400) != 0) {
+            flags2 = ((ModelRenderOp *)renderOp)->flags;
+            modelFlags = ((ModelRenderOp *)renderOp)->flags;
+            if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                 /* alpha-test path */
                 int a = fn_8003BB74();
                 int b = fn_8003BB74();
@@ -1563,7 +1586,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
             }
         } else {
             /* translucent path */
-            if ((*(u16*)((u8*)model + 2) & 0x400) != 0) {
+            if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                 GXSetBlendMode(1, 4, 5, 5);
                 if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
@@ -1586,7 +1609,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
                 GXSetAlphaCompare(7, 0, 0, 7, 0);
             }
         }
-        if ((*(u32*)((u8*)renderOp + 0x3c) & 0x400) != 0) {
+        if ((((ModelRenderOp *)renderOp)->flags & 0x400) != 0) {
             zCompLoc = 0;
         }
         if (lbl_803DD011 != zCompLoc || lbl_803DD019 == 0) {
@@ -1594,7 +1617,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
             lbl_803DD011 = zCompLoc;
             lbl_803DD019 = 1;
         }
-        if ((*(u32*)((u8*)renderOp + 0x3c) & 0x10) != 0) {
+        if ((((ModelRenderOp *)renderOp)->flags & 0x10) != 0) {
             GXSetCullMode(2);
         } else {
             GXSetCullMode(0);
@@ -2439,7 +2462,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
     GXLoadTexMtxImm(lbl_80396820, 0x55, 0);
     GXSetTexCoordGen2(1, 0, 0, 0, 0, 0x55);
 
-    if (model == 0 || *(u16*)((u8*)model + 0xe6) == 0) {
+    if (model == 0 || ((ModelFileHeader *)model)->normalCount == 0) {
         PSMTXScale(mtx_54, lbl_803DB6B8, lbl_803DB6B8, lbl_803DEEDC);
         mtx_54[2][0] = lbl_803DEEE4;
         PSMTXTrans(mtx_24, gSynthDelayedActionWord0, gSynthDelayedActionWord0, lbl_803DEEDC);
@@ -2484,7 +2507,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
     GXSetNumTexGens(3);
     GXSetNumTevStages(2);
 
-    alpha_byte = (((u8*)renderOp)[0xc] * ((u8*)obj_a)[0x37]) >> 8;
+    alpha_byte = (((ModelRenderOp *)renderOp)->alpha * ((u8*)obj_a)[0x37]) >> 8;
     ((u8*)&temp)[3] = (u8)alpha_byte;
     ((u8*)&temp)[0] = ((u8*)&temp)[0]; /* keep rgb */
     {
@@ -2505,10 +2528,10 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
         u8 zCompLoc = 1;
         u32 modelFlags;
         if (((u8*)obj_a)[0x37] >= 0xff
-            && (*(u32*)((u8*)renderOp + 0x3c) & 0x40000000) == 0
-            && ((u8*)renderOp)[0xc] >= 0xff) {
-            modelFlags = *(u32*)((u8*)renderOp + 0x3c);
-            if ((*(u16*)((u8*)model + 2) & 0x400) != 0) {
+            && (((ModelRenderOp *)renderOp)->flags & 0x40000000) == 0
+            && ((ModelRenderOp *)renderOp)->alpha >= 0xff) {
+            modelFlags = ((ModelRenderOp *)renderOp)->flags;
+            if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                 GXSetBlendMode(0, 1, 0, 5);
                 if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
@@ -2531,7 +2554,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
             }
             GXSetAlphaCompare(7, 0, 0, 7, 0);
         } else {
-            if ((*(u16*)((u8*)model + 2) & 0x400) != 0) {
+            if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                 GXSetBlendMode(1, 4, 5, 5);
                 if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
@@ -2554,7 +2577,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
             }
             GXSetAlphaCompare(7, 0, 0, 7, 0);
         }
-        if ((*(u32*)((u8*)renderOp + 0x3c) & 0x400) != 0) {
+        if ((((ModelRenderOp *)renderOp)->flags & 0x400) != 0) {
             zCompLoc = 0;
         }
         if (lbl_803DD011 != zCompLoc || lbl_803DD019 == 0) {
@@ -2562,7 +2585,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
             lbl_803DD011 = zCompLoc;
             lbl_803DD019 = 1;
         }
-        if ((*(u32*)((u8*)renderOp + 0x3c) & 0x10) != 0) {
+        if ((((ModelRenderOp *)renderOp)->flags & 0x10) != 0) {
             GXSetCullMode(2);
         } else {
             GXSetCullMode(0);
@@ -2824,7 +2847,7 @@ int modelCb_80073d04(u8 *obj, int *objB)
     GXSetNumTexGens(2);
     GXSetNumTevStages(2);
     GXSetTevDirect(0);
-    if (*(u8 *)(model + 0x24) & 2) {
+    if (((ModelFileHeader *)model)->flags24 & 2) {
         GXSetNumChans(1);
         GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
         GXSetTevOrder(0, 0, 0, 4);
@@ -2917,7 +2940,7 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     GXSetNumTevStages(3);
     GXSetNumIndStages(0);
     selectTexture(tex, 0);
-    colorK.a = (*(u8 *)(op + 0xc) * obj[0x37]) >> 8;
+    colorK.a = (((ModelRenderOp *)op)->alpha * obj[0x37]) >> 8;
     GXSetTevKColor(0, colorK);
     GXSetTevKAlphaSel(0, 0x1c);
     GXSetTevDirect(0);
@@ -3050,7 +3073,7 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
     GXLoadTexMtxImm(mtx_90, 0x52, 0);
     GXSetTexCoordGen2(1, 0, 0, 0, 1, 0x52);
 
-    alpha_byte = (((u8*)renderOp)[0xc] * ((u8*)obj_a)[0x37]) >> 8;
+    alpha_byte = (((ModelRenderOp *)renderOp)->alpha * ((u8*)obj_a)[0x37]) >> 8;
     ((u8*)&temp)[3] = (u8)alpha_byte;
     GXSetTevKColor(0, temp);
     GXSetTevKAlphaSel(1, 0x1c);
@@ -3068,10 +3091,10 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
         u8 zCompLoc = 1;
         u32 modelFlags;
         if (((u8*)obj_a)[0x37] >= 0xff
-            && (*(u32*)((u8*)renderOp + 0x3c) & 0x40000000) == 0
-            && ((u8*)renderOp)[0xc] >= 0xff) {
-            modelFlags = *(u32*)((u8*)renderOp + 0x3c);
-            if ((*(u16*)((u8*)model + 2) & 0x400) != 0) {
+            && (((ModelRenderOp *)renderOp)->flags & 0x40000000) == 0
+            && ((ModelRenderOp *)renderOp)->alpha >= 0xff) {
+            modelFlags = ((ModelRenderOp *)renderOp)->flags;
+            if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                 GXSetBlendMode(0, 1, 0, 5);
                 if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
@@ -3094,7 +3117,7 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
             }
             GXSetAlphaCompare(7, 0, 0, 7, 0);
         } else {
-            if ((*(u16*)((u8*)model + 2) & 0x400) != 0) {
+            if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                 GXSetBlendMode(1, 4, 5, 5);
                 if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
@@ -3117,7 +3140,7 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
             }
             GXSetAlphaCompare(7, 0, 0, 7, 0);
         }
-        if ((*(u32*)((u8*)renderOp + 0x3c) & 0x400) != 0) {
+        if ((((ModelRenderOp *)renderOp)->flags & 0x400) != 0) {
             zCompLoc = 0;
         }
         if (lbl_803DD011 != zCompLoc || lbl_803DD019 == 0) {
@@ -3125,7 +3148,7 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
             lbl_803DD011 = zCompLoc;
             lbl_803DD019 = 1;
         }
-        if ((*(u32*)((u8*)renderOp + 0x3c) & 0x10) != 0) {
+        if ((((ModelRenderOp *)renderOp)->flags & 0x10) != 0) {
             GXSetCullMode(2);
         } else {
             GXSetCullMode(0);

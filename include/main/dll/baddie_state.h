@@ -36,14 +36,23 @@ typedef struct BaddieState {
     f32 velX; /* copied into spawned contact objects as velocity */
     f32 velY;
     f32 velZ;
-    u8 unk44[0xBC - 0x44];
+    u8 unk44[0xB8 - 0x44];
+    s8 unkB8; /* sound-surface index 0..0x22 into the per-type sfx tables (intersect.c) */
+    u8 unkB9[0xBC - 0xB9];
     u8 unkBC;
-    u8 unkBD[0x19C - 0xBD];
+    u8 unkBD[0xC4 - 0xBD];
+    void *unkC4; /* contact object (GameObject*); its anim.seqId switches a sfx override (intersect.c) */
+    u8 unkC8[0x19C - 0xC8];
     s16 unk19C; /* pair copied into the spawn-setup shorts */
     s16 unk19E;
-    u8 unk1A0[0x25F - 0x1A0];
+    u8 unk1A0[0x1B4 - 0x1A0];
+    f32 unk1B4; /* water-depth gate for splash fx (intersect.c) */
+    u8 unk1B8[0x25B - 0x1B8];
+    s8 unk25B; /* nonzero suppresses contact sfx unless unk260 bit 0x10 (intersect.c) */
+    u8 unk25C[0x25F - 0x25C];
     u8 unk25F;
-    u8 unk260[0x270 - 0x260];
+    s8 unk260; /* bit 0x10 allows contact sfx with unk25B set (intersect.c) */
+    u8 unk261[0x270 - 0x261];
     s16 unk270; /* CA-family substate 0..5; gates the map-event re-register when != 3 */
     s16 unk272;
     s16 controlMode; /* current control move/mode; gPlayerInterface[5](obj,state,N) requests N */
