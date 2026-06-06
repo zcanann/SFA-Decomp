@@ -638,7 +638,7 @@ void drawFn_8006f500(void)
                 tBot = lbl_803DEE38;
                 PSMTXRotRad(rot, 0x7a, lbl_803DEE3C * (Gbase * (f32)(u32)*(u16 *)(quad + 0x30)) / lbl_803DEE44);
             }
-            PSMTXTrans(trans, lbl_803DEE48, lbl_803DEE48, Vachuff_803DEE20);
+            PSMTXTrans(trans, lbl_803DEE48, *(f32 *)&lbl_803DEE48, Vachuff_803DEE20);
             PSMTXConcat(rot, trans, rot);
             PSMTXTrans(trans, __THPHuffmanBits_803DEE24, __THPHuffmanBits_803DEE24, Vachuff_803DEE20);
             PSMTXConcat(trans, rot, rot);
@@ -1655,7 +1655,7 @@ void screenImageDraw(u8 alpha)
     GXLoadTexMtxImm(mtx_60, 0x1e, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x1e, 0, 0x7d);
 
-    PSMTXScale(mtx_60, lbl_803DEEEC, lbl_803DEEEC, lbl_803DEEE4);
+    PSMTXScale(mtx_60, lbl_803DEEEC, *(f32 *)&lbl_803DEEEC, lbl_803DEEE4);
     PSMTXRotRad(mtx_30, 'z', lbl_803DEEF0);
     PSMTXConcat(mtx_30, mtx_60, mtx_60);
     mtx_60[0][3] = fB;
@@ -2239,7 +2239,7 @@ void doDistortionFilter(double radius, double angle, float* pos, u8* mod)
     PSMTXTrans(mtx_a0, gSynthDelayedActionWord0 * (-proj5) - gSynthDelayedActionWord0,
                        gSynthDelayedActionWord0 * proj4 - gSynthDelayedActionWord0,
                        lbl_803DEEDC);
-    PSMTXScale(mtx_70, lbl_803DEF24, lbl_803DEF24, lbl_803DEEDC);
+    PSMTXScale(mtx_70, lbl_803DEF24, *(f32 *)&lbl_803DEF24, lbl_803DEEDC);
     PSMTXRotRad(mtx_d0, 'z', angle);
     PSMTXConcat(mtx_70, mtx_a0, mtx_70);
     PSMTXConcat(mtx_d0, mtx_70, mtx_d0);
@@ -2895,7 +2895,7 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
     lbl_803DD010 = GameBit_Get(0x2ba);
     tx = (f32)lbl_803DD010 / lbl_803DEF38;
-    PSMTXTrans(mtx, tx, lbl_803DEEDC, lbl_803DEEDC);
+    PSMTXTrans(mtx, tx, lbl_803DEEDC, *(f32 *)&lbl_803DEEDC);
     GXLoadTexMtxImm(mtx, 0x1e, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x1e, 0, 0x7d);
     GXSetNumTexGens(2);
@@ -5743,7 +5743,7 @@ void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a
     PSMTXConcat(mtx_28, mtx_58, mtx_58);
     PSMTXRotRad(mtx_28, 'z', angle);
     PSMTXConcat(mtx_58, mtx_28, mtx_58);
-    PSMTXTrans(mtx_28, lbl_803DEEF4, lbl_803DEEF4, lbl_803DEEDC);
+    PSMTXTrans(mtx_28, lbl_803DEEF4, *(f32 *)&lbl_803DEEF4, lbl_803DEEDC);
     PSMTXConcat(mtx_58, mtx_28, mtx_58);
     GXLoadTexMtxImm(mtx_58, 0x1e, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x1e, 0, 0x7d);
@@ -5755,7 +5755,7 @@ void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a
     PSMTXConcat(mtx_28, mtx_58, mtx_58);
     PSMTXRotRad(mtx_28, 'z', gSynthDelayedActionWord0 * angle);
     PSMTXConcat(mtx_58, mtx_28, mtx_58);
-    PSMTXTrans(mtx_28, lbl_803DEEF4, lbl_803DEEF4, lbl_803DEEDC);
+    PSMTXTrans(mtx_28, lbl_803DEEF4, *(f32 *)&lbl_803DEEF4, lbl_803DEEDC);
     PSMTXConcat(mtx_58, mtx_28, mtx_58);
     GXLoadTexMtxImm(mtx_58, 0x21, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x21, 0, 0x7d);
@@ -5959,7 +5959,7 @@ void doHeatEffect(u8 alpha)
     indMtx[3] = -mulX;
     indMtx[4] = mulY;
 
-    PSMTXScale(mtx_44, lbl_803DEF74, lbl_803DEF74, lbl_803DEEE4);
+    PSMTXScale(mtx_44, lbl_803DEF74, *(f32 *)&lbl_803DEF74, lbl_803DEEE4);
     mtx_44[0][3] = fA;
     mtx_44[1][3] = -fB;
     GXLoadTexMtxImm(mtx_44, 0x40, 0);

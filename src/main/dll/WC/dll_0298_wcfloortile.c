@@ -387,7 +387,7 @@ void fn_8022A9C8(int obj, int state)
     src.scale = lbl_803E6ED0;
     setMatrixFromObjectPos(mtx, &src);
 
-    Matrix_TransformPoint(mtx, lbl_803E6ECC, lbl_803E6ECC, lbl_803E6EF0,
+    Matrix_TransformPoint(mtx, lbl_803E6ECC, *(f32 *)&lbl_803E6ECC, lbl_803E6EF0,
                           (f32 *)(*(int *)(state + 0x418) + 0xc),
                           (f32 *)(*(int *)(state + 0x418) + 0x10),
                           (f32 *)(*(int *)(state + 0x418) + 0x14));
@@ -398,7 +398,7 @@ void fn_8022A9C8(int obj, int state)
     *(s16 *)(*(int *)(state + 0x418) + 2) = -*(s16 *)(slot + 2);
     *(s16 *)(*(int *)(state + 0x418) + 0) = 0x8000 - *(s16 *)slot;
 
-    Matrix_TransformPoint(mtx, lbl_803E6ECC, lbl_803E6ECC, lbl_803E6EF4,
+    Matrix_TransformPoint(mtx, lbl_803E6ECC, *(f32 *)&lbl_803E6ECC, lbl_803E6EF4,
                           (f32 *)(*(int *)(state + 0x41c) + 0xc),
                           (f32 *)(*(int *)(state + 0x41c) + 0x10),
                           (f32 *)(*(int *)(state + 0x41c) + 0x14));

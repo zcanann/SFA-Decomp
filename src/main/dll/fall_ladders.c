@@ -338,7 +338,7 @@ void fn_80154584(int obj, int p)
         vec[0] = *(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc);
         vec[1] = lbl_803E2990;
         vec[2] = *(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14);
-        fn_8014C678(obj, p, vec, lbl_803E29A0, lbl_803E29B4, lbl_803E29B4, 1);
+        fn_8014C678(obj, p, vec, lbl_803E29A0, lbl_803E29B4, *(f32 *)&lbl_803E29B4, 1);
         *(f32 *)(p + 0x324) += timeDelta;
         if (*(f32 *)(p + 0x324) > lbl_803E29B8) {
             *(u32 *)(p + 0x2e4) &= ~0x10000;

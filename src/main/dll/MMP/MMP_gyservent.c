@@ -52,7 +52,7 @@ void objFn_80198fa4(s16 *param_1, void *param_2)
     tmp[2] = lbl_803E40D8;
     tmp[3] = lbl_803E40D8;
     setMatrixFromObjectPos(&tmp[4], vec);
-    Matrix_TransformPoint(&tmp[4], lbl_803E40D8, lbl_803E40D8, lbl_803E40E0, &out_z, &out_y, &out_x);
+    Matrix_TransformPoint(&tmp[4], lbl_803E40D8, *(f32 *)&lbl_803E40D8, lbl_803E40E0, &out_z, &out_y, &out_x);
     *(f32 *)((char *)state + 0xc) = out_y;
     *(f32 *)((char *)state + 0x10) = out_z;
     *(f32 *)((char *)state + 0x14) = out_x;

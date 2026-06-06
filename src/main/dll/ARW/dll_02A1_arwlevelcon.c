@@ -164,7 +164,7 @@ void arwlevelcon_update(int obj)
         } else {
             skyFn_800895e0(7, 0x96, 0x64, 0xf0, 0, 0);
         }
-        skyFn_800894a8(7, lbl_803E70E4, lbl_803E70E4, lbl_803E70E0);
+        skyFn_800894a8(7, lbl_803E70E4, *(f32 *)&lbl_803E70E4, lbl_803E70E0);
         getEnvfxAct(0, 0, 0x21f, 0);
         getEnvfxAct(0, 0, 0x22b, 0);
         setIsOvercast(0);

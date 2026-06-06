@@ -5027,13 +5027,13 @@ void player_update(char *pos, char *state, float dt, float pathDt, int stateFns,
         setMatrixFromObjectPos(matrix, &localTransform);
 
         attachment = *(int *)(state + 0x27c);
-        Matrix_TransformPoint(matrix, lbl_803E0570, lbl_803E0570, lbl_803E0588,
+        Matrix_TransformPoint(matrix, lbl_803E0570, *(f32 *)&lbl_803E0570, lbl_803E0588,
                               (f32 *)(attachment + 0x4), (f32 *)(attachment + 0x8), (f32 *)(attachment + 0xc));
         attachment = *(int *)(state + 0x27c);
         Matrix_TransformPoint(matrix, lbl_803E0570, lbl_803E0588, lbl_803E0570,
                               (f32 *)(attachment + 0x10), (f32 *)(attachment + 0x14), (f32 *)(attachment + 0x18));
         attachment = *(int *)(state + 0x27c);
-        Matrix_TransformPoint(matrix, lbl_803E0588, lbl_803E0570, lbl_803E0570,
+        Matrix_TransformPoint(matrix, lbl_803E0588, lbl_803E0570, *(f32 *)&lbl_803E0570,
                               (f32 *)(attachment + 0x1c), (f32 *)(attachment + 0x20), (f32 *)(attachment + 0x24));
     }
 

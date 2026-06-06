@@ -1396,7 +1396,7 @@ void dbegg_setupFromDef(int obj, u8 *state) {
     *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
     state[0x118] = (u8)(GameBit_Get(*(s16 *)(def + 0x1c)) != 0 ? 3 : 1);
     if (state[0x118] == 1) {
-        if (fn_801FE560(obj, &local_unused, lbl_803E61C8, lbl_803E61C8, 1) == 0) {
+        if (fn_801FE560(obj, &local_unused, lbl_803E61C8, *(f32 *)&lbl_803E61C8, 1) == 0) {
             state[0x118] = 2;
         }
     }

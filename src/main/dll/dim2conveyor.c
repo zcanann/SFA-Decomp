@@ -217,7 +217,7 @@ void nw_mammoth_update(int obj,int param_2)
     state[0x43c] = (u8)(state[0x43c] & ~NW_MAMMOTH_RUNTIME_ANIM_ENDED);
   }
   objAudioFn_8006ef38(obj, state + 0x440, 8, state + 0x45c, state + 0x16c,
-                      lbl_803E5210, lbl_803E5210);
+                      lbl_803E5210, *(f32 *)&lbl_803E5210);
   fn_801CDF94(obj, state, NW_MAMMOTH_STATE_FLAGS(table)[state[0x408]] & 4);
   state[0x43c] = (u8)(state[0x43c] & ~NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
   if (((state[0x43c] & NW_MAMMOTH_RUNTIME_MENU_LOCK) == 0) && (ObjTrigger_IsSet(obj) != 0)) {

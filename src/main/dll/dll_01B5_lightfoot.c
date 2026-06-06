@@ -190,7 +190,7 @@ void lightfoot_update(int obj)
             buf[3] = lbl_803E8180;
             buf[4] = lbl_803E821C;
             buf[5] = lbl_803E8180;
-            objfx_spawnArcedBurst(obj, 5, lbl_803E8220, 1, 6, 0x32, lbl_803E8214, lbl_803E8214,
+            objfx_spawnArcedBurst(obj, 5, lbl_803E8220, 1, 6, 0x32, lbl_803E8214, *(f32 *)&lbl_803E8214,
                                    lbl_803E8224, buf, 0);
         }
     } else {
