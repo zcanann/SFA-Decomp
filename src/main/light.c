@@ -3,6 +3,7 @@
 #include "main/mapEvent.h"
 #include "main/light.h"
 #include "main/objanim.h"
+#include "main/objlib.h"
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -1122,7 +1123,6 @@ void vfpdraghead_free(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void ObjHits_SetHitVolumeSlot(int obj, int slot, int p3, int p4);
 extern void *Resource_Acquire(int id, int mode);
 extern f32 lbl_803E6138;
 
@@ -1362,7 +1362,6 @@ void seqpoint_update(int *obj)
 
 extern int *gPartfxInterface;
 extern void Obj_FreeObject(int *obj);
-extern int ObjHits_GetPriorityHit(int *obj, int a, int b, int c);
 extern u32 randomGetRange(int min, int max);
 extern s16 lbl_803DDCC4;
 extern u8 lbl_803DDCC6;
@@ -1407,7 +1406,7 @@ void vfpdraghead_update(int *obj)
                 (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x391, 0, 4, -1, 0);
             }
         }
-        if ((s16)ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
+        if ((s16)ObjHits_GetPriorityHit((int)obj, (int *)0, (int *)0, (uint *)0) != 0) {
             GameBit_Set(*(s16 *)(self2 + 0), 1 - GameBit_Get(*(s16 *)(self2 + 0)));
         }
     }

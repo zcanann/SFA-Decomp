@@ -2,6 +2,7 @@
 #include "main/expgfx.h"
 #include "main/frustum.h"
 #include "main/lightmap.h"
+#include "main/objlib.h"
 
 
 #pragma peephole off
@@ -2811,7 +2812,6 @@ extern int lbl_803DCDF0;
 extern s16 gVisibleObjectSortKeyCount;
 extern int *gModgfxInterface;
 extern void objRender(int a, int b, int c, int d, void *obj, int f);
-extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 
 #pragma scheduling off
 #pragma peephole off
@@ -2825,7 +2825,7 @@ void renderObjects(s8 *arg0) {
     int slot;
     int *objects;
 
-    objects = ObjList_GetObjects((int *)0, (int *)0);
+    objects = (int *)ObjList_GetObjects((int *)0, (int *)0);
     for (i = 1; i < (int)gVisibleObjectSortKeyCount; i++) {
         idx = gVisibleObjectSortKeys[i] & 0x3ff;
         obj = (u8 *)objects[idx];
@@ -3891,7 +3891,7 @@ void getVisibleObjects(s8 *opacity)
     f32 depth;
 
     maybeHudFn_8006c91c();
-    objects = ObjList_GetObjects((int *)0, (int *)0);
+    objects = (int *)ObjList_GetObjects((int *)0, (int *)0);
     part = ObjList_PartitionForRender(&count);
     i = 0;
     p = objects;

@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/maketex.h"
 #include "main/objanim.h"
+#include "main/objlib.h"
 
 
 #pragma peephole off
@@ -31,7 +32,6 @@ extern int FUN_80017a98();
 extern undefined4 FUN_8002f6ac();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern int Obj_GetYawDeltaToObject();
 extern int FUN_8003964c();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80045c4c();
@@ -1550,7 +1550,6 @@ void objSeqInitFn_80080078(SeqSortPair *arr, int n)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern int *ObjList_GetObjects(int *idx, int *count);
 extern void debugPrintf(char *fmt, ...);
 extern char sEndObjSequenceMaxFreesError[];
 extern void Pause_ResetMenuFrameCounter(void);
@@ -2167,7 +2166,7 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         *(f32 *)(state + 0x40) = 0.0f;
         *(f32 *)(state + 0x44) = 0.0f;
         *(f32 *)(state + 0x48) = 0.0f;
-        yawd = Obj_GetYawDeltaToObject(obj, player, 0);
+        yawd = Obj_GetYawDeltaToObject((ushort *)obj, player, (float *)0);
         if ((yawd >= 0 ? yawd : -yawd) < p4) {
             turn = 0;
         } else {
@@ -2230,7 +2229,7 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
         if (v != NULL) {
             *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~8;
-            yawd = Obj_GetYawDeltaToObject(obj, player, 0);
+            yawd = Obj_GetYawDeltaToObject((ushort *)obj, player, (float *)0);
             {
                 f32 yf = (f32)yawd;
                 f32 blend = *(f32 *)(state + 0x4c);
@@ -2325,7 +2324,7 @@ void endObjSequence(int seq)
     int nFree;
     int *ret;
 
-    ret = ObjList_GetObjects(&objIdx, &objCount);
+    ret = (int *)ObjList_GetObjects(&objIdx, &objCount);
     nFree = 0;
     i = 0;
     objs = ret;
