@@ -1528,6 +1528,18 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       direct `stw r31` (dll_86 99.53; copy-var and call-parking inert);
       the `addi r0,rH,lo; mr rX,r0` saved-home materialization
       (dll_8B — pre-existing triage-table cap, NOT this class).
+    - LOOP-INVARIANT variant (tumbleweedbush_update 97.43->99.06): when
+      OURS hoists a loop-invariant STACK address (`&hitInfo[1]` passed to
+      a call inside a loop) into a saved reg (`addi r28,r1,12` pre-loop +
+      `mr r3,r28` per iter) while target re-derives `addi r3,r1,12` per
+      iteration, the lever is the LOCAL'S SHAPE, not the use spelling:
+      split the `int hitInfo[3]` array into SCALAR locals (`int hitExtra;
+      int hit1; int hit0;` — reverse decl order for the #5 stack offsets)
+      and pass `&hit1`. `&scalar` is a direct frame reference (no
+      hoistable web); `&arr[K]` is an address COMPUTATION that LICM
+      promotes regardless of spelling (natural form, (int)-cast form, and
+      #55 block-scope local all tested inert). Import-written `int buf[N]`
+      + `&buf[K]` call args inside loops are the tell.
 
 **dtk `block_relocations` ranges currently in config/GSAE01/config.yml**
 (recipe #73 instances — flag constants that coincide with code addresses):
