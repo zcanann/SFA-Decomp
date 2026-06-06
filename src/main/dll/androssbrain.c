@@ -1,5 +1,23 @@
 #include "main/dll/dll_80220608_shared.h"
 
+/*
+ * Per-object extra state for the Andross brain core
+ * (androssbrain_getExtraSize == 0x28).
+ */
+typedef struct AndrossBrainState {
+    void *andross; /* objId 0x47B77 main andross object */
+    void *lightning; /* objId 0x4C611, androssligh target */
+    u8 pad08[0x1C - 0x08];
+    s8 brainState; /* 0 shielded, 1 vulnerable, 2 defeated */
+    s8 prevState;
+    u8 health; /* 0x50; decrements per hit */
+    u8 flashTimer; /* frames of red flash / hit cooldown */
+    u8 pad20[8];
+} AndrossBrainState;
+
+STATIC_ASSERT(sizeof(AndrossBrainState) == 0x28);
+
+
 #pragma peephole on
 #pragma scheduling on
 int androssbrain_getExtraSize(void) { return 0x28; }
@@ -37,19 +55,19 @@ void androssbrain_hitDetect(void) {}
 #pragma scheduling off
 void androssbrain_setState(int obj, int newState, u8 force)
 {
-    int state;
+    AndrossBrainState *state;
 
     if ((void *)obj == NULL) {
         return;
     }
-    state = *(int *)(obj + 0xb8);
-    if (*(s8 *)(state + 0x1c) != 2 || force != 0) {
-        *(s8 *)(state + 0x1c) = (s8)newState;
+    state = *(AndrossBrainState **)(obj + 0xb8);
+    if (state->brainState != 2 || force != 0) {
+        state->brainState = (s8)newState;
         if (force != 0) {
-            *(u8 *)(state + 0x1e) = 0x50;
+            state->health = 0x50;
         }
     } else {
-        andross_setPartSignal(*(int *)state, 1);
+        andross_setPartSignal(*(int *)&state->andross, 1);
     }
 }
 #pragma scheduling reset
@@ -59,9 +77,9 @@ void androssbrain_setState(int obj, int newState, u8 force)
 #pragma scheduling off
 void androssbrain_init(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    AndrossBrainState *state = *(AndrossBrainState **)(obj + 0xb8);
 
-    *(u8 *)(state + 0x1e) = 0x50;
+    state->health = 0x50;
     ObjHits_SetTargetMask(obj, 4);
 }
 #pragma scheduling reset
@@ -71,7 +89,7 @@ void androssbrain_init(int obj)
 #pragma scheduling off
 void androssbrain_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    AndrossBrainState *state = *(AndrossBrainState **)(obj + 0xb8);
     u8 flag = 0;
     int hitObj;
     int sphereIdx;
@@ -80,52 +98,52 @@ void androssbrain_update(int obj)
     int t;
     u8 currentState;
 
-    if (*(void **)state == NULL) {
-        *(int *)state = ObjList_FindObjectById(0x47b77);
+    if (state->andross == NULL) {
+        *(int *)&state->andross = ObjList_FindObjectById(0x47b77);
     }
-    if (*(void **)(state + 4) == NULL) {
-        *(int *)(state + 4) = ObjList_FindObjectById(0x4c611);
+    if (state->lightning == NULL) {
+        *(int *)&state->lightning = ObjList_FindObjectById(0x4c611);
     }
     ObjHits_SetHitVolumeSlot(obj, 5, 2, -1);
     ObjHits_EnableObject(obj);
-    if (*(void **)state != NULL) {
-        *(f32 *)(obj + 0xc) = *(f32 *)(*(int *)state + 0xc);
-        *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)state + 0x10);
-        *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)state + 0x14);
+    if (state->andross != NULL) {
+        *(f32 *)(obj + 0xc) = *(f32 *)(*(int *)&state->andross + 0xc);
+        *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)&state->andross + 0x10);
+        *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)&state->andross + 0x14);
     }
-    currentState = *(u8 *)(state + 0x1c);
-    if ((s8)currentState != *(s8 *)(state + 0x1d)) {
+    currentState = *(u8 *)&state->brainState;
+    if ((s8)currentState != state->prevState) {
         flag = 1;
     }
-    *(u8 *)(state + 0x1d) = currentState;
-    switch (*(s8 *)(state + 0x1c)) {
+    *(u8 *)&state->prevState = currentState;
+    switch (state->brainState) {
     case 0:
         if (flag != 0) {
             (*(void (**)(void))(*gGameUIInterface + 0x64))();
         }
-        *(s16 *)obj = *(s16 *)(*(int *)state);
+        *(s16 *)obj = *(s16 *)(*(int *)&state->andross);
         *(s16 *)(obj + 6) |= 0x4000;
         break;
     case 1:
         if (flag != 0) {
-            *(u8 *)(state + 0x1f) = 0x3c;
+            state->flashTimer = 0x3c;
             (*(void (**)(int, int))(*gGameUIInterface + 0x58))(0x50, 0x643);
         }
-        (*(void (**)(int))(*gGameUIInterface + 0x5c))(*(u8 *)(state + 0x1e));
+        (*(void (**)(int))(*gGameUIInterface + 0x5c))(state->health);
         hit = ObjHits_GetPriorityHit(obj, &hitObj, &sphereIdx, &hitVol);
-        t = *(u8 *)(state + 0x1f) - framesThisStep;
+        t = state->flashTimer - framesThisStep;
         if (t < 0) {
             t = 0;
         }
-        *(u8 *)(state + 0x1f) = (u8)t;
+        state->flashTimer = (u8)t;
         if (hit != 0) {
-            if (*(u8 *)(state + 0x1f) == 0) {
+            if (state->flashTimer == 0) {
                 Obj_SetModelColorFadeRecursive(obj, 0x19, 0xc8, 0, 0, 1);
-                *(u8 *)(state + 0x1f) = 6;
-                *(u8 *)(state + 0x1e) -= 1;
-                if (*(u8 *)(state + 0x1e) == 0) {
-                    *(u8 *)(state + 0x1c) = 2;
-                    andross_setPartSignal(*(int *)state, 1);
+                state->flashTimer = 6;
+                state->health -= 1;
+                if (state->health == 0) {
+                    *(u8 *)&state->brainState = 2;
+                    andross_setPartSignal(*(int *)&state->andross, 1);
                     Sfx_PlayFromObject(obj, 0x485);
                 } else {
                     Sfx_PlayFromObject(obj, 0x484);
@@ -136,11 +154,11 @@ void androssbrain_update(int obj)
         break;
     case 2:
         if (flag != 0) {
-            androssligh_setState(*(int *)(state + 4), 2, 0);
+            androssligh_setState(*(int *)&state->lightning, 2, 0);
             (*(void (**)(void))(*gGameUIInterface + 0x64))();
         }
         *(s16 *)(obj + 6) |= 0x4000;
-        andross_setPartSignal(*(int *)state, 8);
+        andross_setPartSignal(*(int *)&state->andross, 8);
         break;
     }
 }
