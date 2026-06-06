@@ -117,7 +117,7 @@ void smallbasket_init(int obj, int def)
         ((CfperchState *)state)->unkC = 0x14;
     }
     ((CfperchState *)state)->unk12 = 0x320;
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     ((CfperchState *)state)->unk1E = *(u8*)(def + 0x19);
     ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosX;
     ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;

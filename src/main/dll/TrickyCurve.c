@@ -845,7 +845,7 @@ void TrickyCurve_init(int *obj, u8 *def) {
     ((TrickyCurveObjState *)state)->unk8 = *(s16 *)((char *)def + 0x20);
     ((TrickyCurveObjState *)state)->unkA = *(s16 *)((char *)def + 0x1e);
     ((TrickyCurveObjState *)state)->unk6 = 0;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
 #pragma peephole reset
 #pragma scheduling reset

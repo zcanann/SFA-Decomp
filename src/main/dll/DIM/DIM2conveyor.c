@@ -50,7 +50,7 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
         s16 *p = *(s16 **)&((GameObject *)obj)->anim.hitReactState;
         p[0x30] = (s16)(p[0x30] & ~1);
     }
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -153,9 +153,9 @@ void dimbridgecogmai_init(int *obj, int *def) {
     ((GameObject *)obj)->animEventCallback = (void *)dimbridgecogmai_SeqFn;
     ObjGroup_AddObject(obj, 15);
     if ((u8)GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
-        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
+        ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
     }
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -205,7 +205,7 @@ void dimbridgecogmai_update(int *obj) {
             switch (*(s16*)(def + 0x1a)) {
             case 0x17a:
                 if (GameBit_Get(0x181) != 0) {
-                    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
+                    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
                     code = -1;
                     callArg = 0;
                 } else {
@@ -219,7 +219,7 @@ void dimbridgecogmai_update(int *obj) {
                 bits = (u8)(bits | (GameBit_Get(0x183) << 1));
                 bits = (u8)(bits | (GameBit_Get(0x184) << 2));
                 if (bits == 7) {
-                    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
+                    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
                     code = -1;
                     callArg = 2;
                 } else {

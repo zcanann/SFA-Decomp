@@ -79,7 +79,7 @@ void largecrate_init(int obj, u8 *initData)
   ((CfForcefieldState *)state)->randomTimer = (short)(r3rand + LARGECRATE_RANDOM_DELAY_BASE);
   ((CfForcefieldState *)state)->countdown = LARGECRATE_DEFAULT_COUNTDOWN;
   ((CfForcefieldState *)state)->unk12 = (u8)*(short *)(initData + 0x1a);
-  ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | LARGECRATE_OBJECT_FLAGS);
+  ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | LARGECRATE_OBJECT_FLAGS);
   *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
 
   id = ((GameObject *)obj)->anim.seqId;

@@ -1424,7 +1424,7 @@ int fn_8017805C(int *obj, f32 *state) {
     vec.dir[1] = tricky[1];
     vec.dir[0] = tricky[0] + fn_80138F90();
     vecRotateZXY(&vec, (f32 *)((char *)obj + 0x24));
-    if ((((GameObject *)tricky)->unkB0 & 0x800) != 0) {
+    if ((((GameObject *)tricky)->objectFlags & 0x800) != 0) {
         pf = trickyGetQueuedPathParticlePos(tricky);
     } else {
         pf = (f32 *)((char *)tricky + 0xc);
@@ -1537,7 +1537,7 @@ void invhit_init(int *obj, u8 *def) {
         }
         break;
     }
-    ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x6000;
+    ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x6000;
 }
 #pragma opt_common_subs reset
 #pragma peephole reset

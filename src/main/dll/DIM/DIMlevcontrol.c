@@ -707,7 +707,7 @@ void dimcannon_init(int *obj, int *arg)
         if (p != 0) {
             *(s16 *)((char *)p + 0xb2) = 1;
         }
-        ((GameObject *)obj)->unkB0 |= 0x4000;
+        ((GameObject *)obj)->objectFlags |= 0x4000;
     } else {
         void *state = ((GameObject *)obj)->extra;
         u8 i;
@@ -754,7 +754,7 @@ void dimcannon_init(int *obj, int *arg)
         ((DimCannonState *)state)->unk94 = ((GameObject *)obj)->anim.localPosZ;
     }
 
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -140,7 +140,7 @@ void waterflowwe_init(int obj, u8 *setup)
         }
         ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)(obj + 0x50) + 4);
     }
-    ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x2000;
+    ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E72B0, 0);
 }
 #pragma scheduling reset

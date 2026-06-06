@@ -4025,7 +4025,7 @@ void dll_22C_init(int obj, char *p)
   ((Dll22CState *)b8)->raiseHeight = (f32)*(s16 *)(p + 0x1a);
   ((Dll22CState *)b8)->unk0C = (u8)*(s16 *)(p + 0x1c);
   ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E63A8;
-  ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x2000;
+  ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4308,7 +4308,7 @@ void dfpseqpoint_init(int *obj, u8 *init) {
     sub->triggerMode = init[0x19];
     sub->gameBitGate = *(s16*)(init + 0x1e);
     sub->gameBitDone = *(s16*)(init + 0x20);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
     sub->flags0F = (u8)(sub->flags0F & ~0x80);
 }
 #pragma peephole reset
@@ -4824,7 +4824,7 @@ void dfplevelcontrol_init(int obj, int param2)
     }
     ((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     unlockLevel(0, 0, 1);
-    ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x4000;
+    ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x4000;
     if (*(s8 *)(obj + 0xac) == 0x15) {
         GameBit_Set(0xdce, 0);
     }
@@ -4935,7 +4935,7 @@ void DFP_Torch_init(int obj, int param2)
         }
     }
     state->colorIdx = (u8)*(s16 *)(param2 + 0x1c);
-    ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x2000;
+    ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -1453,7 +1453,7 @@ void warpPadPlayerStandingOn(int obj)
     }
 
     if ((state->triggerMode == 0) && (state->countdownActive == 0) &&
-        ((((GameObject *)obj)->unkB0 & 0x1000) == 0)) {
+        ((((GameObject *)obj)->objectFlags & 0x1000) == 0)) {
         if (lbl_803DCEB8 > -1) {
             player = Obj_GetPlayerObject();
             if (Vec_xzDistance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < lbl_803E3EE0) {

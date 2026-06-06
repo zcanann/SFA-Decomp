@@ -45,7 +45,7 @@ GO = {
 0xa4:('anim.targetObj','PTR'),
 0xa8:('anim.hitboxScale','F32'),0xad:('anim.bankIndex','S8'),
 0xae:('anim.activeHitboxMode','S8'),0xaf:('anim.resetHitboxMode','S8'),
-0xb0:('unkB0','U16'),0xb4:('unkB4','S16'),0xb8:('extra','PTR'),
+0xb0:('objectFlags','U16'),0xb4:('unkB4','S16'),0xb8:('extra','PTR'),
 0xbc:('animEventCallback','PTR'),0xc0:('unkC0','PTR'),0xc4:('unkC4','PTR'),0xc8:('unkC8','PTR'),
 0xdc:('unkDC','PTR'),0xe4:('unkE4','U8'),0xe5:('unkE5','U8'),0xe6:('unkE6','S16'),
 0xe8:('unkE8','U8'),0xe9:('unkE9','S8'),0xea:('unkEA','U8'),0xeb:('unkEB','U8'),

@@ -4543,7 +4543,7 @@ extern void shield_update();
 
 void restartmarker_init(int *obj, int *state) {
     *(s16*)obj = (s16)(*(u8*)((char*)state + 0x18) << 8);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
 }
 extern void dll_F7_free();
 extern void dll_F7_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
@@ -5293,7 +5293,7 @@ void depthoffieldpoint_init(int *obj)
     s->enabled = 0;
     ((GameObject *)obj)->animEventCallback = (void *)depthoffieldpoint_SeqFn;
     s->field1 = 0;
-    ((GameObject *)obj)->unkB0 |= 0x4000;
+    ((GameObject *)obj)->objectFlags |= 0x4000;
 }
 
 void depthoffieldpoint_update(int *obj)
@@ -5467,7 +5467,7 @@ void dll_F7_init(int *obj, int *params)
     int *state = ((GameObject *)obj)->extra;
     ObjGroup_AddObject((int)obj, 0x3e);
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     lbl_803DDAB0 = Resource_Acquire(0x5b, 1);
     lbl_803DDAB4 = Resource_Acquire(0x5a, 1);
     {
@@ -6006,7 +6006,7 @@ void animatedobj_update(int *obj)
                 ((void (*)(int))((int *)*(int **)gObjectTriggerInterface)[0x4c / 4])(slot);
             }
             ((GameObject *)obj)->unkB4 = -1;
-            ((GameObject *)obj)->unkB0 |= 0x8000;
+            ((GameObject *)obj)->objectFlags |= 0x8000;
             ((GameObject *)obj)->anim.flags |= 0x4000;
         }
         if (((GameObject *)obj)->anim.seqId == 0x774) {
@@ -6185,7 +6185,7 @@ void dim2roofrub_spawnEffects(int *obj)
     } else if (((GameObject *)obj)->anim.seqId == 0x451) {
         int *model = Obj_GetActiveModel((int)obj);
         *(u8 *)((char *)*(int **)((char *)model + 0x34) + 8) = 2;
-        if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+        if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E3270, 2, 1, 20, lbl_803E3278, 0, 0);
         }
     }

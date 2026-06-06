@@ -156,7 +156,7 @@ void firepipe_updateState(FirePipeObject *obj)
     }
 
     if (flags->bit6 != 0) {
-        if (((((GameObject *)obj)->unkB0 & 0x800) != 0) || (obj->callback != NULL)) {
+        if (((((GameObject *)obj)->objectFlags & 0x800) != 0) || (obj->callback != NULL)) {
             fn_80098B18(obj,lbl_803E6B70 * (f32)mapData->scale,(u8)extra->effectType,0,0,0);
         }
     }

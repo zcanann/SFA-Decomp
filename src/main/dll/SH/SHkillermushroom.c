@@ -275,7 +275,7 @@ void bombplant_init(void *obj, void *param, int flag)
 
   state = ((GameObject *)obj)->extra;
   *(s16 *)obj = (s16)((s32)(s8) * ((u8 *)param + 0x1f) << 8);
-  ((GameObject *)obj)->unkB0 |= 0x2000;
+  ((GameObject *)obj)->objectFlags |= 0x2000;
   ((GameObject *)obj)->animEventCallback = (void *)bombplant_SeqFn;
   *(f32 *)((u8 *)state + 0xc) = ((GameObject *)obj)->anim.rootMotionScale;
 
@@ -428,7 +428,7 @@ void bombplant_update(void *obj)
       *(f32 *)state =
           (f32)(int)(*(s16 *)((u8 *)param + 0x1a) + randomGetRange(-0x32, 0x32));
     }
-    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+    if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
       (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
           obj, 0x7f1, 0, 2, -1, 0);
     }

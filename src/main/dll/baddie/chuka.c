@@ -42,7 +42,7 @@ void chuka_init(int obj, int params)
         ((GameObject *)obj)->anim.rotZ = *(s16 *)(params + 0x1a);
     }
 
-    ((GameObject *)obj)->unkB0 |= 0x4000;
+    ((GameObject *)obj)->objectFlags |= 0x4000;
     state->linkedObject = 0;
 
     modeTable = gChukaModeTable;

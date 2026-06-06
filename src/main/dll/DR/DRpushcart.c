@@ -1135,7 +1135,7 @@ void shopitem_init(int obj, int data) {
     int state = *(int *)&((GameObject *)obj)->extra;
 
     objAnim = (ObjAnimComponent *)obj;
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E86F4;
     objAnim->bankIndex = (s8)*(s8 *)(data + 0x18);
     *(s16 *)obj = (s16)((*(u8 *)(data + 0x1A)) << 8);
@@ -1163,7 +1163,7 @@ void shopitem_init(int obj, int data) {
 #pragma peephole off
 void shopkeeper_init(int obj) {
     int state = *(int *)&((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E76A0;
     *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
     *(f32 *)(state + 0x9B8) = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
@@ -1230,7 +1230,7 @@ void shopitem_update(int obj)
 
     if (b->flag_40) {
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
-        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
+        ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else if (b->flag_80) {
         *(s16 *)(state + 0x88) = -1;
@@ -1247,7 +1247,7 @@ void shopitem_update(int obj)
                     || (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x2C))(*(int *)(state + 0x90), *(u8 *)(def + 0x19)) != 0) {
                     b->flag_40 = 1;
                     ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
-                    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
+                    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
                     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 }
                 *(s16 *)(state + 0x94) = (s16)(*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x3C))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));

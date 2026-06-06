@@ -72,7 +72,7 @@ void drenergydisc_init(u8 *obj, u8 *setup)
             *texture = 0;
         }
     }
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
 #pragma scheduling reset
 #pragma peephole reset

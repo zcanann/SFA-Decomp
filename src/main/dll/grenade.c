@@ -496,7 +496,7 @@ void trickyFn_80142524(u8 *obj, u8 *state)
             if ((int)state[0x7d0] == 1) {
                 target = ((TrickyState *)state)->unk7D4;
                 other = ((GameObject *)obj)->extra;
-                if ((((GameObject *)obj)->unkB0 & 0x1000) == 0) {
+                if ((((GameObject *)obj)->objectFlags & 0x1000) == 0) {
                     if ((((TrickyState *)other)->unk54 & 0x10) == 0) {
                         ((TrickyState *)other)->unk24 = target;
                         if (((TrickyState *)other)->unk28 != target + 0x18) {

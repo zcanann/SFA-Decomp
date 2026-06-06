@@ -156,7 +156,7 @@ void vfpminifire_init(int *obj, u8 *init) {
     ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E609C;
     (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x38c, 0, 2, -1, 0);
     Sfx_PlayFromObject((int)obj, SFXqu_longsob2);
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 #pragma scheduling reset
 #pragma peephole reset

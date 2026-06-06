@@ -1203,7 +1203,7 @@ void sh_beacon_init(int obj, int defData)
 
     state = *(int *)&((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)*(s8 *)(defData + 0x18) << 8);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
 
     ((ShBeaconState *)state)->mode = (u8)GameBit_Get(*(s16 *)(defData + 0x1e));
     if (((ShBeaconState *)state)->mode == 0) {
@@ -1285,7 +1285,7 @@ void sh_beacon_update(int obj)
     ((ShBeaconState *)state2)->seqTimer = ((ShBeaconState *)state2)->seqTimer + timeDelta;
     if (((ShBeaconState *)state2)->seqTimer >= lbl_803E5528) {
       ((ShBeaconState *)state2)->seqTimer = ((ShBeaconState *)state2)->seqTimer - lbl_803E5528;
-      if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+      if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
         fn_80098B18(obj, ((GameObject *)obj)->anim.rootMotionScale, 0, 2, 0, 0);
       }
     }
@@ -1295,7 +1295,7 @@ void sh_beacon_update(int obj)
       Sfx_AddLoopedObjectSound(obj, 0x9e);
       ((BeaconFlags *)&((ShBeaconState *)state)->flags15)->looping = 1;
     }
-    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+    if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
       ((ShBeaconState *)state)->modeTimer = ((ShBeaconState *)state)->modeTimer + timeDelta;
       if (((ShBeaconState *)state)->modeTimer > lbl_803E5530) {
         mode = 2;
@@ -1333,7 +1333,7 @@ void sh_beacon_update(int obj)
   }
   if (((ShBeaconState *)state)->fadeTimer > lbl_803E5538) {
     ((ShBeaconState *)state)->fadeTimer = ((ShBeaconState *)state)->fadeTimer - timeDelta;
-    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+    if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
       fn_80098B18(obj, lbl_803E553C * ((GameObject *)obj)->anim.rootMotionScale, 3, 0, 0, 0);
     }
     if ((((ShBeaconState *)state)->fadeTimer <= lbl_803E5538) && (((ShBeaconState *)state)->mode == 2)) {

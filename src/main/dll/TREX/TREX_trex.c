@@ -1950,7 +1950,7 @@ int Lamp_SeqFn(int obj, int unused, int state)
     if (Obj_GetPlayerObject() == NULL) {
         return 0;
     }
-    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+    if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
         *(f32 *)(effectArgs + 8) = lbl_803E597C;
         *(s16 *)(effectArgs + 6) = 0xc0d;
         *(f32 *)(effectArgs + 0xc) = *(f32 *)(effectArgs + 0xc) - ((GameObject *)obj)->anim.worldPosX;
@@ -2052,7 +2052,7 @@ void Lamp_update(int obj)
                                                                      timeDelta, NULL);
     }
 
-    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+    if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
         *(f32 *)(effectArgs + 8) = lbl_803E597C;
         *(s16 *)(effectArgs + 6) = 0xc0d;
         *(f32 *)(effectArgs + 0xc) = lbl_803E5988;
@@ -2348,7 +2348,7 @@ void SB_KyteCage_init(int *obj, int *params)
     SBKyteCageState *state = ((GameObject *)obj)->extra;
     *(int (**)(int, int, int))((char *)obj + 0xbc) = SB_KyteCage_SeqFn;
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
     state->seqLatch = 0;
     if ((u32)GameBit_Get(117) == 0u) {
         getLActions(obj, obj, 88, 0, 0, 0);

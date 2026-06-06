@@ -313,7 +313,7 @@ void WaterFallSpray_update(int *objParam)
                 dz = ((GameObject *)obj)->anim.worldPosZ - *(f32 *)(player + 0x20);
                 distance = sqrtf(dz * dz + (dx * dx + dy * dy));
                 if (((distance <= (f32)(s32)((u32)data[0x20] << 4)) || (data[0x20] == 0)) &&
-                    ((((GameObject *)obj)->unkB0 & 0x800) != 0)) {
+                    ((((GameObject *)obj)->objectFlags & 0x800) != 0)) {
                     for (i = 0; i < data[0x24]; i++) {
                         partfxArgs.xOffset = (f32)(s32)randomGetRange(-data[0x1d], data[0x1d]);
                         partfxArgs.yOffset = (f32)(s32)randomGetRange(-data[0x1f], data[0x1f]);
@@ -384,7 +384,7 @@ extern f32 lbl_803E40BC;
 void sfxplayerObj_init(u8* obj, u8* data) {
     u8* sub = ((GameObject *)obj)->extra;
     int type;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | SFXPLAYER_OBJECT_FLAGS);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | SFXPLAYER_OBJECT_FLAGS);
     type = data[0x1d];
     switch (type) {
     case SFXPLAYER_MODE_GAMEBIT: {

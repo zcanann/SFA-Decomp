@@ -56,7 +56,7 @@ void vfpobjcreator_init(int *obj, u8 *init) {
     state->spawnTimer = state->spawnInterval;
     state->spawnParam = placement->spawnParam;
     state->spawnRadius = placement->spawnRadius;
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 #pragma scheduling reset
 #pragma peephole reset

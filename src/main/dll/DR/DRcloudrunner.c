@@ -237,7 +237,7 @@ void sc_musictree_init(int obj, SCMusicTreeSetup *setup)
     ((GameObject *)obj)->anim.rotX = (s16)((u32)setup->yawByte << 8);
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E55B8 * setup->scale;
     ((GameObject *)obj)->unkF8 = 0;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
     rnd = randomGetRange(1, 99);
     ratio = (f32)(s32)rnd / lbl_803E55BC;
     ObjAnim_SetCurrentMove(obj, 0, ratio, 0);

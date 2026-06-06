@@ -244,7 +244,7 @@ void barrelpad_init(s16 *obj, u8 *def) {
         }
         ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.modelInstance + 4);
     }
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 
 extern f32 lbl_803E3EEC;
@@ -260,7 +260,7 @@ void cflightwall_init(s16 *obj, u8 *def) {
         }
         ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.modelInstance + 4);
     }
-    ((GameObject *)obj)->unkB0 |= 0xA000;
+    ((GameObject *)obj)->objectFlags |= 0xA000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -316,8 +316,8 @@ void cf_doorlight_init(int *obj, s8 *def) {
         state->currentFrame = state->maxFrame;
         state->flags |= 0x20;
     }
-    ((GameObject *)obj)->unkB0 |= 0x2000;
-    ((GameObject *)obj)->unkB0 |= 0x4000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x4000;
 }
 #pragma peephole reset
 #pragma scheduling reset

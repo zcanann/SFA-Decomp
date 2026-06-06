@@ -1602,7 +1602,7 @@ void cflevelcontrol_update(int obj) {
         ((GameObject *)obj)->unkF4 = 1;
     }
 
-    if (GameBit_Get(0x94f) != 0 && (((GameObject *)player)->unkB0 & 0x1000) == 0) {
+    if (GameBit_Get(0x94f) != 0 && (((GameObject *)player)->objectFlags & 0x1000) == 0) {
         GameBit_Set(0x94e, 0);
     }
 

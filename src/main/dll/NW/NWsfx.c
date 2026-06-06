@@ -163,7 +163,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
             t = ((EdibleMushroomState *)state)->unk12C - timeDelta;
             ((EdibleMushroomState *)state)->unk12C = t;
             if (t <= lbl_803E5288) {
-                if (((GameObject *)obj)->unkB0 & 0x800) {
+                if (((GameObject *)obj)->objectFlags & 0x800) {
                     fx.x = ((GameObject *)obj)->anim.worldPosX;
                     fx.y = lbl_803E528C + ((GameObject *)obj)->anim.worldPosY;
                     fx.z = ((GameObject *)obj)->anim.worldPosZ;
@@ -304,13 +304,13 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
             if (t <= lbl_803E5288) {
                 fx.x = lbl_803E5294;
                 fx.y = lbl_803E529C;
-                if (((GameObject *)obj)->unkB0 & 0x800) {
+                if (((GameObject *)obj)->objectFlags & 0x800) {
                     (*(code *)(*(int *)gPartfxInterface + 0x8))(obj, 0x51d, &fx, 2, -1, 0);
                 }
                 ((EdibleMushroomState *)state)->unk128 = lbl_803E52A0;
             }
             if (GameBit_Get(0x12e) == 0) {
-                if (!(((GameObject *)player)->unkB0 & 0x1000)) {
+                if (!(((GameObject *)player)->objectFlags & 0x1000)) {
                     if (Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(obj + 0x18)) <
                         lbl_803E52A4) {
                         (*(code *)(*(int *)gExpgfxInterface + 0x14))(obj);
@@ -504,7 +504,7 @@ void ediblemushroom_hitDetect(u8 *obj) {
     state = ((GameObject *)obj)->extra;
     mapObj = *(u8 **)&((GameObject *)obj)->anim.placementData;
 
-    if (((((GameObject *)obj)->unkB0 & 0x1000) == 0) &&
+    if (((((GameObject *)obj)->objectFlags & 0x1000) == 0) &&
         (((((EdibleMushroomState *)state)->unk137 & 8) != 0) || (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) != 0))) {
         hitCount = hitDetectFn_80065e50(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
                                         ((GameObject *)obj)->anim.localPosZ, &hits, 0, 0);

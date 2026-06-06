@@ -81,7 +81,7 @@ extern int NW_geyser_SeqFn(int *obj, int p2, void *p3);
 #pragma peephole off
 void nw_geyser_init(int obj)
 {
-  ((GameObject *)obj)->unkB0 = (ushort)(((GameObject *)obj)->unkB0 | 0x6000);
+  ((GameObject *)obj)->objectFlags = (ushort)(((GameObject *)obj)->objectFlags | 0x6000);
   ((GameObject *)obj)->animEventCallback = NW_geyser_SeqFn;
 }
 
@@ -96,7 +96,7 @@ void nw_geyser_update(int obj)
 {
     if (GameBit_Get(0xa) != 0) {
         ((GameObject *)obj)->anim.flags = 0x4000;
-        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
+        ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
         Sfx_RemoveLoopedObjectSound(obj, 0x372);
         Sfx_RemoveLoopedObjectSound(obj, 0x373);
         ObjHits_DisableObject(obj);
@@ -163,7 +163,7 @@ int fn_801CDE7C(int obj, int param_2, u8 *seqData)
     objAudioFn_8006ef38(obj, audioEvents, 8, audioPoints, audioScratch,
                         audioScale, audioScale);
     if (seqData[0x8b] != 0) {
-        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 & ~0x400);
+        ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags & ~0x400);
         *(u32 *)(*(int *)(obj + 0x64) + 0x30) =
             *(u32 *)(*(int *)(obj + 0x64) + 0x30) | 4;
     }

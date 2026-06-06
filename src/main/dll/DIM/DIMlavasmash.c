@@ -303,7 +303,7 @@ void dimlogfire_init(int obj, int def)
         state->mode = 1;
         state->dousedLatch = 1;
     }
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     state->flickerTimerA = lbl_803E482C;
     state->flickerTimerB = lbl_803E4820;
     if (*(int **)&state->light == NULL) {

@@ -91,7 +91,7 @@ void ediblemushroom_init(int obj, int aux)
     player = (int)Obj_GetPlayerObject();
 
     *(int *)&((GameObject *)obj)->animEventCallback = (int)&EdibleMushroom_SeqFn;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
 
     if (GameBit_Get(*(short *)(aux + 0x1a)) != 0) {
         *(u8 *)(state + 0x136) = 8;

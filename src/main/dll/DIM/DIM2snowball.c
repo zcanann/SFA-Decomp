@@ -1373,7 +1373,7 @@ void dim2pathgenerator_init(int* obj, int* def)
         }
     }
     state->flags = (u8)(state->flags | 4);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
 
 void dimtruthhornice_init(int* obj, int* def)
@@ -1381,7 +1381,7 @@ void dimtruthhornice_init(int* obj, int* def)
     TruthHornIceState* state = ((GameObject *)obj)->extra;
     state->hitsLeft = (s8)*(s16*)((char*)def + 26);
     state->gameBit = *(s16*)((char*)def + 30);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
     {
         s16 slot = state->gameBit;
         if (slot != -1 && (u32)GameBit_Get(slot) != 0u) {
@@ -1407,7 +1407,7 @@ void dim2snowball_init(int* obj, int* def)
         }
     }
     state->targetObj = (int*)ObjList_FindObjectById(state->targetId);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
 
 void dll_1CF_init(int* obj, int* def)
@@ -1416,7 +1416,7 @@ void dll_1CF_init(int* obj, int* def)
         ((GameObject *)obj)->anim.rotY = (s16)(((s32)*(s16*)((char*)def + 26) << 13) / 45);
     }
     *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0xe000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0xe000);
 }
 
 extern f32 lbl_803E4A28;
@@ -1451,7 +1451,7 @@ void dim_levelcontrol_init(int obj)
     st->b4 = (u8)GameBit_Get(0xd0e);
     st->b3 = (u8)GameBit_Get(0xa21);
     (*gMapEventInterface)->setMode(*(s8 *)(obj + 0xac), 1);
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     unlockLevel(0, 0, 1);
 }
 
@@ -1504,7 +1504,7 @@ void dim2conveyor_init(int *obj, u8 *params)
     extra->swapTimer = lbl_803E4A60;
     extra->musicHold = 0;
     ObjGroup_AddObject(obj, 22);
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     if (*(u32 *)((char *)params + 0x14) == 0x49b23) {
         GameBit_Set(3164, 1);
     }
@@ -1597,7 +1597,7 @@ void dll_1D6_init(int *obj, u8 *params)
     extra->bufB = mmAlloc(40, 18, 0);
     getTabEntry(extra->bufB, 12,
                 ((&lbl_803DBF18)[extra->slot] + 1) * 40, 40);
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset

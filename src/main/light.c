@@ -1037,7 +1037,7 @@ void vfpblock1_init(int obj, int data) {
     int state = *(int *)&((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
     *(s16 *)state = *(s16 *)(data + 0x1e);
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
 }
 void vfpplatform_init(int obj, int data) {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -1045,7 +1045,7 @@ void vfpplatform_init(int obj, int data) {
     *(s16 *)state = *(s16 *)(data + 0x20);
     *(u8 *)(state + 2) = 0;
     *(u8 *)(state + 3) = *(u8 *)(data + 0x19);
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1069,7 +1069,7 @@ void vfpcoreplat_init(int obj, int data) {
             ((GameObject *)obj)->anim.rootMotionScale = lbl_803E6148 * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
         }
     }
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 
 extern void GameBit_Set(int eventId, int value);
@@ -1169,7 +1169,7 @@ void vfpdraghead_init(int obj, int data) {
     if (*(s8 *)(data + 0x19) == 1) {
         ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * lbl_803E6138;
     }
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     lbl_803DDCC0 = (u32)Resource_Acquire(0xA5, 1);
 }
 #pragma peephole reset
@@ -1187,7 +1187,7 @@ void seqpoint_init(int obj, int data) {
     state->mode = *(u8 *)(data + 0x19);
     state->conditionBit = *(s16 *)(data + 0x1e);
     state->disableBit = *(s16 *)(data + 0x20);
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1266,7 +1266,7 @@ void vfpdoorswitch_init(int obj, int data) {
     if (((GameObject *)obj)->anim.seqId == 0x3e7 && state->activated != 0) {
         *(u8 *)&((GameObject *)obj)->anim.bankIndex = 1;
     }
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 
 extern int Camera_GetCurrentViewSlot(void);

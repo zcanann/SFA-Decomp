@@ -82,7 +82,7 @@ void drearthcal_update(int obj)
             (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(2, obj, -1);
         }
     }
-    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+    if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
         part.vec[0] = lbl_803E6C0C;
         part.vec[1] = lbl_803E6C10;
         part.vec[2] = lbl_803E6C0C;

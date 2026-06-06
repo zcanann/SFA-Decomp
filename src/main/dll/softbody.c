@@ -55,7 +55,7 @@ void softbody_init(int obj, int setup)
         }
         ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     }
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E7298, 0);
     if (((GameObject *)obj)->anim.hitReactState != NULL) {
         ObjHitbox_SetSphereRadius(obj,

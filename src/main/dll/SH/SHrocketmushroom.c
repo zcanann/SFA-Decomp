@@ -239,7 +239,7 @@ void bombplantspore_init(void *obj, void *param2) {
     state = ((GameObject *)obj)->extra;
     events[0] = 5;
     state->fuseTimer = lbl_803E53F0;
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     ((GameObject *)obj)->anim.velocityY = lbl_803E53F4;
     ObjHits_DisableObject(obj);
     state->spinAngle = (s16)randomGetRange(0, 0xffff);
@@ -306,7 +306,7 @@ void bombplantingspot_update(void *obj) {
 }
 
 void bombplantingspot_init(void *obj, BombPlantingSpotMapData *mapData) {
-    ((GameObject *)obj)->unkB0 |= 0x4000;
+    ((GameObject *)obj)->objectFlags |= 0x4000;
     *(s16 *)obj = (s16)(mapData->yawByte << 8);
 }
 

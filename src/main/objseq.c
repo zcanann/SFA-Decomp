@@ -394,7 +394,7 @@ void *ObjSeq_ToggleCommand3Target(u8 *obj, u8 *seq, u8 *src)
                 *(u16 *)obj = *(s16 *)obj + ((ObjSeqState *)seq)->heading;
             }
             ((GameObject *)obj)->unkC0 = NULL;
-            ((GameObject *)obj)->unkB0 &= ~0x1000;
+            ((GameObject *)obj)->objectFlags &= ~0x1000;
             ((ObjSeqState *)seq)->targetObj = NULL;
             result = obj;
         }

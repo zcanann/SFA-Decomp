@@ -216,7 +216,7 @@ void wcapertures_update(int obj)
         if ((*(int (**)(void))(*gCameraInterface + 0x10))() == WCAPERTURES_CAMERA_MODE &&
             fn_802969F0(player) == WCAPERTURES_PLAYER_STATE) {
             WCAPERTURES_TARGET_ALPHA(state) = WCAPERTURES_ALPHA_OPAQUE;
-            if (Camera_GetFovY() <= lbl_803E6E38 && (((GameObject *)obj)->unkB0 & WCAPERTURES_ACCEPT_OBJECT_FLAG)) {
+            if (Camera_GetFovY() <= lbl_803E6E38 && (((GameObject *)obj)->objectFlags & WCAPERTURES_ACCEPT_OBJECT_FLAG)) {
                 GameBit_Set(*(s16 *)(setup + WCAPERTURES_SETUP_OPEN_BIT_OFFSET), 1);
                 WCAPERTURES_MODE(state) = WCAPERTURES_MODE_OPEN;
             }

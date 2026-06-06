@@ -218,7 +218,7 @@ void bossdrakor_update(int obj)
             s16toFloat((void *)((char *)state + 0x10), (int)((BossDrakorState *)state)->unk14);
         }
     }
-    if ((((GameObject *)obj)->unkB0 & 0x800) == 0) {
+    if ((((GameObject *)obj)->objectFlags & 0x800) == 0) {
         ((BossDrakorState *)state)->unk1C = ((GameObject *)obj)->anim.localPosX;
         ((BossDrakorState *)state)->unk20 = ((GameObject *)obj)->anim.localPosY - lbl_803E655C;
         ((BossDrakorState *)state)->unk24 = ((GameObject *)obj)->anim.localPosZ;

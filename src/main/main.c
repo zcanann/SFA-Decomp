@@ -1675,7 +1675,7 @@ void fn_801FD6B4(int obj) {
     c = *(f32 *)(extra + 0xc);
     if (c > lbl_803E6184 && c < lbl_803E6188) {
         parm.value = *(f32 *)(extra + 8);
-        if (((GameObject *)obj)->unkB0 & 0x800) {
+        if (((GameObject *)obj)->objectFlags & 0x800) {
             (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x3a2, &parm, 2, -1, 0);
         }
     }
@@ -1761,7 +1761,7 @@ void vfplavastar_init(int obj, int def) {
     extra[0] = lbl_803E61B4 * (f32)(int)randomGetRange(10, 0x19);
     *(s16 *)((u8 *)extra + 0xe) = 0x14;
     ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc) + (f32)(int)*(s16 *)(def + 0x1a);
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     extra[1] = (f32)(int)randomGetRange(0x1e, 0x3c);
     extra[2] = (f32)(int)randomGetRange(100, 200);
 }
@@ -1821,7 +1821,7 @@ void vfpspellplace_init(int obj, s8 *def) {
         *(u8 *)(st + 2) = 1;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
 }
 #pragma peephole reset
 #pragma scheduling reset

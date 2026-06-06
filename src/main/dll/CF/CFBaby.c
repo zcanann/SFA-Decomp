@@ -2076,7 +2076,7 @@ void coldwatercontrol_update(int obj) {
 void coldwatercontrol_init(int obj) {
     int *p = ((int**)obj)[0xb8/4];
     *(f32*)p = lbl_803E3B68;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2513,7 +2513,7 @@ void infopoint_update(int obj) {
 #pragma peephole off
 void landed_arwing_init(int obj, int param) {
     int *p = ((int**)obj)[0xb8/4];
-    ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x2000;
+    ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
     *(s8*)((char*)p + 0x16) = 1;
     if (GameBit_Get(*(s16*)((char*)param + 0x1c)) == 0) {
         unlockLevel(0, 0, 1);
@@ -2655,7 +2655,7 @@ void landed_arwing_updateDamageTexture(int obj, LandedArwingState *state) {
 #pragma peephole off
 void dll_109_init(int obj, u8 *p) {
     *(s16 *)obj = (s16)((s32)p[0x1a] << 8);
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     (*(void (*)(int, int *, int))(*(int *)(*gCarryableInterface + 0x4)))(obj, ((GameObject *)obj)->extra, 0x21);
     (*(void (*)(int *, int))(*(int *)(*gCarryableInterface + 0x2c)))(((GameObject *)obj)->extra, 1);
 }
@@ -2777,7 +2777,7 @@ void Fall_Ladders_init(int *obj, s8 *def) {
     state[3] = *(s16 *)((char *)def + 0x20);
     state[2] = *(s16 *)((char *)def + 0x1e);
     *(f32 *)state = (f32)(s32)*(s16 *)((char *)def + 0x1a);
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     *(int *)&((GameObject *)obj)->animEventCallback = (int)Fall_Ladders_SeqFn;
     ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY + *(f32 *)state;
     Obj_SetActiveModelIndex(obj, (s32)*(s8 *)((char *)def + 0x19));
@@ -2811,7 +2811,7 @@ void infopoint_init(int *obj, u8 *def) {
     *(int *)(state + 0x18) = 2;
     *(u8 *)(state + 0x10) = *(u8 *)((char *)def + 0x1b);
     *(s16 *)(state + 0x16) = 0;
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset

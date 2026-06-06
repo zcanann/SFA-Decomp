@@ -1208,7 +1208,7 @@ extern f32 lbl_803E46C8;
 void ccsharpclawpad_init(int* obj, int* def)
 {
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 24) << 8);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
 }
 
 void cclevcontrol_free(void)
@@ -1220,7 +1220,7 @@ void cclevcontrol_free(void)
 void cclightfoot_init(int* obj, int* def)
 {
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 26) << 8);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
     ((GameObject *)obj)->animEventCallback = (void*)ccqueen_SeqFn;
 }
 
@@ -1262,7 +1262,7 @@ extern void fn_8002B6D8(void *obj, int p2, int p3, int p4, int p5, int p6);
 void ccpedstal_init(int *obj, u8 *params) {
     u8 *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((u32)params[0x1a] << 8);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
     switch (*(int *)(params + 0x14)) {
     case 0x45f1a:
         *(void **)state = (void *)ccpedstal_updateAltVariant;
@@ -1469,7 +1469,7 @@ void ccqueen_update(int *obj) {
     }
     if (GameBit_Get(0x1c3) != 0) {
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
-        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
+        ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
         ObjHits_DisableObject(obj);
     } else {
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4668, timeDelta, NULL);
@@ -2072,7 +2072,7 @@ void cclightfoot_update(int obj)
             state[0] = 0;
         }
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
-        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
+        ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
         ObjHits_DisableObject(obj);
         return;
     }

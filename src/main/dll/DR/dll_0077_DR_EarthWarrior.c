@@ -1003,7 +1003,7 @@ void DR_EarthWarrior_hitDetect(int obj)
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
     int p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
     rows = lbl_802C2CC0;
-    if (!(((GameObject *)obj)->unkB0 & 0x1000)) {
+    if (!(((GameObject *)obj)->objectFlags & 0x1000)) {
         if (((ObjHitsPriorityState *)p54)->contactFlags != 0) {
             int i = *(s8 *)((char *)p54 + 0xac);
             if (i < 0) {

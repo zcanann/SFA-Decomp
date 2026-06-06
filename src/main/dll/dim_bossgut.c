@@ -330,7 +330,7 @@ int bombplant_SeqFn(int *obj)
             v = *(s16 *)((char *)base + 0x1a) + randomGetRange(-0x32, 0x32);
             *(f32 *)((char *)state + 0x0) = (f32)v;
         }
-        if (((GameObject *)obj)->unkB0 & 0x800) {
+        if (((GameObject *)obj)->objectFlags & 0x800) {
             (*(void (**)(int *, int, int, int, int, int))(*(int *)gPartfxInterface + 0x8))(
                 obj, 0x7f1, 0, 2, -1, 0);
         }

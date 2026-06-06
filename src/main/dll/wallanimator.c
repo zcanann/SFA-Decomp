@@ -210,7 +210,7 @@ void kaldachompme_init(int obj,int params)
   ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(params + 0x18) << 8);
   ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(params + 0x19) << 8);
   ((GameObject *)obj)->anim.rotX = (s16)(*(u8 *)(params + 0x1a) << 8);
-  ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+  ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
   ObjAnim_SetCurrentMove(obj,0,lbl_803E30D4,0);
 }
 #pragma peephole reset

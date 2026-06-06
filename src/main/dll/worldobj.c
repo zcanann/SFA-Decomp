@@ -537,7 +537,7 @@ int fn_801CE078(int *obj, u8 *st) {
             f32 t = *(f32 *)(st + 0x1c) - timeDelta;
             *(f32 *)(st + 0x1c) = t;
             if (t <= lbl_803E520C) {
-                if (((GameObject *)obj)->unkB0 & 0x800) {
+                if (((GameObject *)obj)->objectFlags & 0x800) {
                     blk.pos[0] = *(f32 *)(st + 0xc);
                     blk.pos[1] = *(f32 *)(st + 0x10);
                     blk.pos[2] = *(f32 *)(st + 0x14);

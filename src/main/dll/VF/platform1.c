@@ -376,7 +376,7 @@ void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { i
 void sc_totemstrength_init(int *obj) {
     int *inner = ((GameObject *)obj)->extra;
     *(int *)&((GameObject *)obj)->animEventCallback = (int)&platform1_control;
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     *(s16 *)obj = (s16)-10496;
     inner[8] = -10496;
     *(s16 *)((char *)inner + 0x2e) = 0;

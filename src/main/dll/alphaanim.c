@@ -621,7 +621,7 @@ void seqobject_init(int *obj, u8 *params) {
         }
     }
     sub[1] = 0;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -638,7 +638,7 @@ void immultiseq_init(int *obj, u8 *params) {
     sub = ((GameObject *)obj)->extra;
     *(s16*)obj = (s16)(params[0x28] << 8);
     ((GameObject *)obj)->animEventCallback = (void*)&immultiseq_SeqFn;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
     objAnim->bankIndex = (s8)params[0x2a];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
@@ -769,7 +769,7 @@ void seqobj2_init(int* obj, int* def)
         }
     }
     ObjGroup_AddObject(obj, 15);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
 
 int seqobj2_SeqFn(int* obj, int* anim, u8* buf)

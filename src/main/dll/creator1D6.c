@@ -217,9 +217,9 @@ void nw_ice_update(int *obj) {
         }
 
         if ((*(u8 *)((char *)state->linkedObj + 0x36) < 0xc0) || (nearestDist < lbl_803E5274)) {
-            ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x100);
+            ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x100);
         } else {
-            ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 & ~0x100);
+            ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags & ~0x100);
         }
     } else {
         objects = ObjGroup_GetObjects(0x3d, &count);
@@ -251,11 +251,11 @@ extern void nw_tricky_SeqFn(void);
 #pragma peephole off
 void nw_tricky_init(int *obj) {
     ((GameObject *)obj)->animEventCallback = (void *)nw_tricky_SeqFn;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
 void nw_animice_init(int *obj) {
     ((GameObject *)obj)->animEventCallback = (void *)nw_animice_SeqFn;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
     ObjGroup_AddObject(obj, 0x3d);
 }
 #pragma peephole reset

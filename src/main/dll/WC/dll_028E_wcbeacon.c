@@ -134,7 +134,7 @@ void wcbeacon_update(int obj)
             WCBEACON_STATE_PHASE_VALUE(state) = WCBEACON_PHASE_ACTIVE;
         }
     } else if (phase == WCBEACON_PHASE_ACTIVE) {
-        if (((GameObject *)obj)->unkB0 & WCBEACON_VISIBLE_PARTFX_FLAG) {
+        if (((GameObject *)obj)->objectFlags & WCBEACON_VISIBLE_PARTFX_FLAG) {
             (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, WCBEACON_PARTFX_ACTIVE, 0,
                                                                                 WCBEACON_PARTFX_KIND,
                                                                                 WCBEACON_TRIGGER_NO_ARG, 0);

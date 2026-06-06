@@ -896,7 +896,7 @@ void enemy_init(int obj, u8 *setup, int flag)
         ((EnemyState *)state)->unk334 = fz;
         ((EnemyState *)state)->unk2B4 = -1;
         ((EnemyState *)state)->unk2B6 = ((EnemyState *)state)->unk2B4;
-        ((GameObject *)obj)->unkB0 |= *(s8 *)(setup + 0x28) & 7;
+        ((GameObject *)obj)->objectFlags |= *(s8 *)(setup + 0x28) & 7;
         ((EnemyState *)state)->unk2B0 = setup[0x32];
         *(int *)&((GameObject *)obj)->animEventCallback = (int)enemy_animEventCallback;
         switch (((GameObject *)obj)->anim.seqId) {

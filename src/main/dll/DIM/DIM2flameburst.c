@@ -1876,7 +1876,7 @@ void dimwooddoor2_init(u8* obj, u8* params)
     DimWoodDoor2State* sub;
     f32 fz;
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
     sub = ((GameObject *)obj)->extra;
     sub->burnState = 3;
     fz = lbl_803E49D4;
@@ -1897,7 +1897,7 @@ void dll_1CE_init(u8* obj, u8* params)
 {
     Dll1CEState* sub;
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
     sub = ((GameObject *)obj)->extra;
     sub->igniteCountdown = 1;
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
@@ -2686,7 +2686,7 @@ void explosion_init(int obj, int p2)
         }
     }
     fn_801B3DE4(obj, 0, lbl_803E49AC * scale, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     *(u8 *)((char *)state + 0xa5d) = *(s16 *)((char *)p2 + 0x1c) & 3;
     Obj_SetActiveModelIndex(obj, *(u8 *)((char *)state + 0xa5d));
     if (*(s16 *)((char *)p2 + 0x1c) & 4) {

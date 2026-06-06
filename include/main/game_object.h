@@ -30,7 +30,8 @@
  */
 typedef struct GameObject {
     ObjAnimComponent anim;
-    u16 unkB0;
+    u16 objectFlags; /* obj+0xB0 flag word; 9 object families STATIC_ASSERT
+        this name (Checkpoint4/CmbSrc/EnemyMushroom/Laser/MagicPlant/...) */
     u8 unkB2[2];
     s16 unkB4;
     u8 unkB6[2];
@@ -61,7 +62,7 @@ typedef struct GameObject {
     f32 unk104;
 } GameObject;
 
-STATIC_ASSERT(offsetof(GameObject, unkB0) == 0xB0);
+STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(GameObject, extra) == 0xB8);
 STATIC_ASSERT(offsetof(GameObject, unkE4) == 0xE4);
 STATIC_ASSERT(offsetof(GameObject, unkEF) == 0xEF);

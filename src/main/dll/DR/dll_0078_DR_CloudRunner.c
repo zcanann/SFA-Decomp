@@ -818,7 +818,7 @@ void DR_CloudRunner_func23(int obj, int mode, int *out)
     inner = ((GameObject *)obj)->extra;
     switch (mode) {
     case 2:
-        if ((((GameObject *)obj)->unkB0 & 0x1000) || ((ByteFlags *)&inner->flagsBC1)->b80) {
+        if ((((GameObject *)obj)->objectFlags & 0x1000) || ((ByteFlags *)&inner->flagsBC1)->b80) {
             *out = ((GameObject *)obj)->anim.rotX;
             lbl_803DE4DC = ((GameObject *)obj)->anim.rotX;
             ((ByteFlags *)&inner->flagsBC1)->b80 = 0;
@@ -861,7 +861,7 @@ void DR_CloudRunner_func23(int obj, int mode, int *out)
         }
         break;
     case 3:
-        if (((GameObject *)obj)->unkB0 & 0x1000) {
+        if (((GameObject *)obj)->objectFlags & 0x1000) {
             *out = 0;
         } else {
             *out = 1;

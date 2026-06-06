@@ -1587,7 +1587,7 @@ int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3) {
 #pragma scheduling off
 #pragma peephole off
 void MMP_levelcontrol_init(int obj) {
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     if (getSaveGameLoadStatus() != 0) {
         ((GameObject *)obj)->unkF4 = 2;
     } else {
@@ -1746,7 +1746,7 @@ int fn_801A6F4C(int obj, int p2, int data) {
 #pragma peephole off
 void mmp_asteroid_re_init(int obj) {
     MmpAsteroidReState *state = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     *(int (**)(int, int, int))(obj + 0xBC) = fn_801A6F4C;
     state->eventFlags = 0;
     state->intensity = (u8)GameBit_Get(0x88C);
@@ -1789,7 +1789,7 @@ void MoonSeedBush_init(int obj, int data) {
     state->flags = 1;
     *(s16 *)obj = (s16)((*(u8 *)(data + 0x1F)) << 8);
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))MoonSeedBush_SeqFn;
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)(*(u8 *)(data + 0x21)) * lbl_803E44D4;
     if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E44D8) {
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E44D0;
@@ -1963,7 +1963,7 @@ void fn_801A80F0(int obj, u8 flag) {
 #pragma scheduling off
 #pragma peephole off
 void mmp_gyservent_init(int obj) {
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     *(u32 *)&((GameObject *)obj)->unkF4 = randomGetRange(0xa, 0xc8);
     *(u8 *)(obj + 0x36) = 0;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
@@ -2008,7 +2008,7 @@ void mmp_moonrock_init(int obj, int param2)
 {
     MmpMoonrockState *state = ((GameObject *)obj)->extra;
     u8 kind;
-    ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x2000;
+    ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
     *(s16 *)&state->flags = 0;
     state->kind = (u8)GameBit_Get(*(s16 *)(param2 + 0x1a));
     kind = state->kind;

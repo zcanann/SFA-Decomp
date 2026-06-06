@@ -73,7 +73,7 @@ void vfpladders_init(int *obj, u8 *init) {
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     *(s16 *)((char *)inner + 2) = *(s16 *)((char *)init + 0x20);
     *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     ((GameObject *)obj)->animEventCallback = (void *)vfpladders_SeqFn;
 }
 #pragma scheduling reset

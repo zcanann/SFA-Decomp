@@ -1796,7 +1796,7 @@ void portalspelldoor_init(u8* obj, u8* data) {
     }
     if (GameBit_Get(*(s16*)(data + 0x1e)) != 0) {
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
-        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0xe000);
+        ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0xe000);
     }
     sub->openTimer = -1;
 }

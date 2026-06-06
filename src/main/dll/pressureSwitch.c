@@ -906,7 +906,7 @@ void swarmbaddie_init(int obj, int data, int skip_alloc) {
         }
         Sfx_PlayFromObject(obj, SFXfox_treadwater422);
     }
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 void hagabon_init(int obj, int data, int skip_alloc) {
     HagabonState *state = ((GameObject *)obj)->extra;

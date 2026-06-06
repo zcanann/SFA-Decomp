@@ -330,7 +330,7 @@ void kaldachompspit_init(int obj)
     ObjHits_DisableObject(obj);
     *(u8 *)(obj + 0x36) = 0xff;
     Sfx_PlayFromObject(obj, 0x278);
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     if (*(void **)extra == NULL) {
         *extra = (int)objCreateLight(obj, 1);
         if (*(void **)extra != NULL) {
@@ -1193,7 +1193,7 @@ void pinponspike_init(int obj) {
     ObjHits_DisableObject(obj);
     *(u8 *)(obj + 0x36) = 0xff;
     Sfx_PlayFromObject(obj, SFXsc_attack02);
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
 }
 void pollen_hitDetect(int obj) {
     ObjHitsPriorityState *hitState = *(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState;

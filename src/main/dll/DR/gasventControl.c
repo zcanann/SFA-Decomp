@@ -748,7 +748,7 @@ void explodable_init(int obj, int setup)
         *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(int)*(s8 *)(setup + 0x3d) / lbl_803E435C;
     e = lbl_80322DA0;
     if ((e[((ExplodableState *)state)->unk6E5].flags & 1) != 0) {
-        ((GameObject *)obj)->unkB0 |= 0x4000;
+        ((GameObject *)obj)->objectFlags |= 0x4000;
     }
 }
 #pragma peephole reset

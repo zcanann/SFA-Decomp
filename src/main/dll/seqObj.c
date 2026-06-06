@@ -235,7 +235,7 @@ void wispbaddie_init(int obj,int setup,int initialised)
     }
     Sfx_PlayFromObject(obj,0x23b);
   }
-  ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+  ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
 #pragma scheduling reset
 #pragma peephole reset

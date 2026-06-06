@@ -215,7 +215,7 @@ void drbarrelgr_update(int obj)
         *(int *)(state + 4) = *(int *)(state + 0);
         *(int *)(state + 0) = newMode;
     }
-    if ((((GameObject *)obj)->unkB0 & 0x800) == 0 && *(void **)(state + 8) != 0) {
+    if ((((GameObject *)obj)->objectFlags & 0x800) == 0 && *(void **)(state + 8) != 0) {
         *(f32 *)(state + 0x14) = ((GameObject *)obj)->anim.localPosX;
         *(f32 *)(state + 0x18) = ((GameObject *)obj)->anim.localPosY + lbl_803DC3B4;
         *(f32 *)(state + 0x1c) = ((GameObject *)obj)->anim.localPosZ;

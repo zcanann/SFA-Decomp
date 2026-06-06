@@ -145,7 +145,7 @@ void vfplevelcontrol_init(int *obj, u8 *init) {
     ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)((char *)obj + 0xac));
     state->cueTimers[4] = 0;
     state->cueTimers[5] = 0;
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     timeOfDayFn_80055038();
     GameBit_Set(0xdcf, 1);
     unlockLevel(0, 0, 1);

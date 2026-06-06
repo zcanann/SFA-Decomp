@@ -391,7 +391,7 @@ void tumbleweed_updateEffects(int obj) {
     }
 
     if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_HIT_PULSE) != 0 &&
-        (((GameObject *)obj)->unkB0 & 0x800) != 0) {
+        (((GameObject *)obj)->objectFlags & 0x800) != 0) {
         u32 r;
         ObjHits_SetHitVolumeSlot(obj, TUMBLEWEED_HIT_PULSE_VOLUME_SLOT, 1, 0);
         r = state->hitPulseCounter;

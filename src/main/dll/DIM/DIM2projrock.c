@@ -1023,7 +1023,7 @@ void dim2icicle_init(int obj, s8 *p) {
     }
     *(s16 *)obj = (s16)((s32)p[0x18] << 8);
     ((GameObject *)obj)->anim.velocityY = lbl_803E4B80;
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1092,7 +1092,7 @@ void dim2icefloe_update(int obj)
             ((GameObject *)obj)->anim.localPosY = -(lbl_803E4B38 * timeDelta - ((GameObject *)obj)->anim.localPosY);
             if (((GameObject *)obj)->anim.localPosY < ((Dim2IceFloeState *)sub)->unk6C) {
                 ObjHits_DisableObject(obj);
-                ((GameObject *)obj)->unkB0 |= 0x100;
+                ((GameObject *)obj)->objectFlags |= 0x100;
                 fn_80296D20(Obj_GetPlayerObject(), obj);
             }
             if (((GameObject *)obj)->anim.localPosY < ((Dim2IceFloeState *)sub)->unk6C - lbl_803E4B3C) {
@@ -1139,7 +1139,7 @@ void dim2icefloe_init(int obj, int p)
         ((Dim2IceFloeState *)sub)->unkB0 = lbl_803E4B50;
         break;
     }
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 #pragma scheduling reset
 #pragma peephole reset

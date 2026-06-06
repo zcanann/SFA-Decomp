@@ -91,7 +91,7 @@ void collectible_init(int obj,int setup)
   if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
     objAnim->bankIndex = 0;
   }
-  ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x2000;
+  ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
   ((TexFrameAnimatorState *)state)->unkC = *(u8 *)(setup + 0x19);
   ((TexFrameAnimatorState *)state)->unkD = *(u8 *)(setup + 0x1a);
   ((TexFrameAnimatorState *)state)->unkF = 0;

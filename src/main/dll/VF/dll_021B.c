@@ -42,7 +42,7 @@ void dll_21B_init(int *obj, u8 *init) {
     Dll21BState *inner = *(Dll21BState **)((char *)obj + 0xb8);
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     inner->gameBit = *(s16 *)((char *)init + 0x1e);
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
 }
 #pragma scheduling reset
 #pragma peephole reset

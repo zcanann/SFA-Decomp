@@ -176,7 +176,7 @@ void dll_115_init(short *obj, int mapData)
   state = ((GameObject *)obj)->extra;
   *obj = (s16)(*(u8 *)(mapData + 0x38) << 8);
   ((GameObject *)obj)->animEventCallback = dll_115_seqFn;
-  ((GameObject *)obj)->unkB0 |= 0x6000;
+  ((GameObject *)obj)->objectFlags |= 0x6000;
   ObjGroup_AddObject((int)obj, 0xf);
   step = 0;
   p = (short *)mapData;
@@ -439,7 +439,7 @@ void wm_column_init(short *obj, int mapData)
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
   undefined4 state = *(undefined4 *)&((GameObject *)(int)obj)->extra;
   *obj = (s16)(*(u8 *)(mapData + 0x18) << 8);
-  ((GameObject *)(int)obj)->unkB0 |= 0x2000;
+  ((GameObject *)(int)obj)->objectFlags |= 0x2000;
   ((GameObject *)(int)obj)->unkF4 = 0;
   objAnim->bankIndex = (s8)(int)*(s8 *)(mapData + 0x19);
   if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {

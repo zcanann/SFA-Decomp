@@ -2486,7 +2486,7 @@ void fn_80157CDC(int obj, int p2)
       }
       if (*(u8 *)(sub + 10) != 0) {
         void *player = Obj_GetPlayerObject();
-        if ((((GameObject *)player)->unkB0 & 0x1000) == 0) {
+        if ((((GameObject *)player)->objectFlags & 0x1000) == 0) {
           f32 dist = Vec_distance(obj + 0x18, (int)player + 0x18);
           if (dist <= lbl_803E2B80) {
             f32 amt = lbl_803E2BA4 - dist / lbl_803E2B80;
@@ -3058,7 +3058,7 @@ void fn_80159FCC(s16* obj, u8* state)
     sp.z = lbl_803E2C30;
     sp.vol = lbl_803E2C24;
     sp.sfxId = 0x605;
-    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+    if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
         ((void(*)(s16*,int,void*,int,int,int))((void**)*gPartfxInterface)[2])(obj, 1999, &sp, 2, -1, 0);
         if (*(void**)(state + 0x368) == NULL) {
             if (*(void**)(state + 0x368) == NULL) {
@@ -3891,7 +3891,7 @@ void fn_80159958(s16* obj, u8* state)
     sp.z = lbl_803E2C30;
     sp.vol = lbl_803E2C24;
     sp.sfxId = 0x605;
-    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+    if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
         ((void(*)(s16*,int,void*,int,int,int))((void**)*gPartfxInterface)[2])(obj, 1999, &sp, 2, -1, 0);
         if (*(void**)(state + 0x368) == NULL) {
             if (*(void**)(state + 0x368) == NULL) {

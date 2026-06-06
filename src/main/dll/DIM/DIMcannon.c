@@ -2287,7 +2287,7 @@ void link_levcontrol_init(int *obj) {
     inner->areaCell = -1;
     inner->unk04 = -1;
     inner->musicTrack = -1;
-    ((GameObject *)obj)->unkB0 |= 0x4000;
+    ((GameObject *)obj)->objectFlags |= 0x4000;
     if (getSaveGameLoadStatus() != 0) {
         ((GameObject *)obj)->unkF4 = 2;
     } else {
@@ -2319,7 +2319,7 @@ typedef struct {
 void linkb_levcontrol_init(int *obj) {
     u8 *t = (u8 *)(int)lbl_803238D8;
     LinkbLevState *sub = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
     if (GameBit_Get(0x36e) != 0) {
         sub->flags &= 4;
     }
@@ -2604,7 +2604,7 @@ void lavaball1bf_init(s16 *obj, u8 *p) {
     if (*(s16 *)(p + 0x24) == -1 && inner->gateB == 0) {
         inner->soloLatch = 1;
     }
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
 }
 void lavaball1bf_free(int obj, int mode) {
     Lavaball1bfState *inner = ((GameObject *)obj)->extra;
@@ -2788,7 +2788,7 @@ void lavaball1be_init(s16 *obj, u8 *p) {
         *(int *)&state->targetObj = ObjList_FindObjectById(state->linkedId);
         state->flags |= 0x10;
         ObjHits_DisableObject(obj);
-        ((GameObject *)obj)->unkB0 |= 0x2000;
+        ((GameObject *)obj)->objectFlags |= 0x2000;
         state->light = objCreateLight(obj, 1);
         light = state->light;
         if (light != NULL) {

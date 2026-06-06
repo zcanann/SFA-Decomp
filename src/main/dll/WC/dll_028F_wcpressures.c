@@ -305,8 +305,8 @@ void wcpressures_init(u8 *obj, u8 *setup)
 
     objType = (s16)(setupData->objectTypeHi << 8);
     *(s16 *)obj = objType;
-    objFlags = ((GameObject *)obj)->unkB0 | 0x6000;
-    ((GameObject *)obj)->unkB0 = objFlags;
+    objFlags = ((GameObject *)obj)->objectFlags | 0x6000;
+    ((GameObject *)obj)->objectFlags = objFlags;
     modelIndex = (s8)setupData->modelIndex;
     objAnim->bankIndex = modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {

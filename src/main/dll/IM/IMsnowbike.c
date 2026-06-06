@@ -331,8 +331,8 @@ void sh_levelcontrol_init(int obj) {
     u32 v;
 
     *(void (**)(void))((char *)obj + 0xBC) = SH_LevelControl_SeqFn;
-    v = (u32)((GameObject *)obj)->unkB0 | 0x4000;
-    ((GameObject *)obj)->unkB0 = (u16)v;
+    v = (u32)((GameObject *)obj)->objectFlags | 0x4000;
+    ((GameObject *)obj)->objectFlags = (u16)v;
     ((GameObject *)obj)->unkF8 = 3;
 
     if (getSaveGameLoadStatus() != 0) {

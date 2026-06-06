@@ -119,7 +119,7 @@ void tree_init(int obj, u8 *setup)
     ((GameObject *)obj)->anim.rotY = (s16)(setup[0x19] << 8);
     ((GameObject *)obj)->anim.rotX = (s16)(setup[0x1a] << 8);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
     ((GameObject *)obj)->unkF8 = 0;
     if (setup[0x1b] != 0) {
         *(f32 *)(state + 0x48) = (f32)(u32)setup[0x1b] / lbl_803E7328;

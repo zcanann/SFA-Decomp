@@ -3880,7 +3880,7 @@ void getVisibleObjects(s8 *opacity)
     for (; i < count; i++) {
         o = (u8 *)*p;
         modelDef = ((ObjAnimComponent *)o)->modelInstance;
-        ((GameObject *)o)->unkB0 &= ~0x800;
+        ((GameObject *)o)->objectFlags &= ~0x800;
         j = 0;
         sub = o;
         for (; j < ((GameObject *)o)->unkEB; j++) {
@@ -3934,7 +3934,7 @@ void getVisibleObjects(s8 *opacity)
                             (i & 0x3ff) | (((t1000 & 0x3ff) << 10) | key);
                         gVisibleObjectSortKeyCount++;
                         if ((modelDef->renderFlags & 0x20) != 0 &&
-                            (((GameObject *)o)->unkB0 & 0x400) == 0 &&
+                            (((GameObject *)o)->objectFlags & 0x400) == 0 &&
                             (((GameObject *)o)->anim.flags & 0x4000) == 0) {
                             renderShadowType3(o, 7, 0x50);
                             lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 1;

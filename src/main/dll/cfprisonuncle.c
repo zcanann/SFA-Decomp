@@ -1840,7 +1840,7 @@ u32 MagicPlant_getObjectTypeId(MagicPlantObject *obj)
 
 /* obj->u16_X |= MASK */
 #pragma peephole off
-void StayPoint_init(u16 *obj) { u32 v; v = ((GameObject *)obj)->unkB0; v |= 0x4000; ((GameObject *)obj)->unkB0 = (u16)v; }
+void StayPoint_init(u16 *obj) { u32 v; v = ((GameObject *)obj)->objectFlags; v |= 0x4000; ((GameObject *)obj)->objectFlags = (u16)v; }
 #pragma peephole reset
 
 extern void objRenderFn_8003b8f4(int obj, float arg);
@@ -1993,18 +1993,18 @@ int fn_8017FFD0(int obj, TrickyWarpState *state) {
 #pragma peephole off
 void trickywarp_init(s16 *obj, u8 *param_2) {
   u32 v;
-  v = ((GameObject *)obj)->unkB0;
+  v = ((GameObject *)obj)->objectFlags;
   v |= 0x4000;
-  ((GameObject *)obj)->unkB0 = (u16)v;
+  ((GameObject *)obj)->objectFlags = (u16)v;
   *obj = (s16)((u32)param_2[0x1a] << 8);
 }
 
 void trickyguard_init(s16 *obj, u8 *param_2) {
   u32 v;
   *obj = (s16)((u32)param_2[0x18] << 8);
-  v = ((GameObject *)obj)->unkB0;
+  v = ((GameObject *)obj)->objectFlags;
   v |= 0x4000;
-  ((GameObject *)obj)->unkB0 = (u16)v;
+  ((GameObject *)obj)->objectFlags = (u16)v;
 }
 
 #pragma peephole off
@@ -2573,9 +2573,9 @@ void curvefish_init(int obj, u8 *param_2) {
   int state;
   u32 v;
   state = *(int *)&((GameObject *)obj)->extra;
-  v = ((GameObject *)obj)->unkB0;
+  v = ((GameObject *)obj)->objectFlags;
   v |= 0x6000;
-  ((GameObject *)obj)->unkB0 = (u16)v;
+  ((GameObject *)obj)->objectFlags = (u16)v;
   ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) *
                       ((f32)(u32)param_2[0x18] / lbl_803E3928);
   *(u8 *)(state + 0x108) = 1;

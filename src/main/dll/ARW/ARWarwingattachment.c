@@ -2080,7 +2080,7 @@ void wmtorch_init(u8* obj, u8* params) {
     }
     ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E5DF8;
     Resource_Release(res);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -2575,7 +2575,7 @@ void lightsource_update(int obj)
         }
         break;
     }
-    if (b->lit != 0 && (((GameObject *)obj)->unkB0 & 0x800)) {
+    if (b->lit != 0 && (((GameObject *)obj)->objectFlags & 0x800)) {
         b->fxTimer = b->fxTimer - timeDelta;
         if (b->fxTimer <= lbl_803E5E0C) {
             sfxFlag = b->fxArg;

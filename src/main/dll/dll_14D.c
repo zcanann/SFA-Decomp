@@ -167,7 +167,7 @@ void dll_14D_init(int *obj)
     char *p = ((GameObject *)obj)->extra;
     *p = 0;
     *(u32*)(p + 4) = 0;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
 }
 
 void fn_8017F334(int obj, void *setup, void *stateArg)

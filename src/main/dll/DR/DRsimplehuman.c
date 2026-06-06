@@ -361,7 +361,7 @@ void FUN_801e983c(undefined8 param_1,double param_2,double param_3,double param_
 #pragma peephole off
 void spitembeam_init(int obj)
 {
-  ((GameObject *)obj)->unkB0 = (ushort)(((GameObject *)obj)->unkB0 | 0x6000);
+  ((GameObject *)obj)->objectFlags = (ushort)(((GameObject *)obj)->objectFlags | 0x6000);
 }
 #pragma peephole reset
 
@@ -396,7 +396,7 @@ void spitembeam_update(int *obj) {
         if (((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[10])(target, *(s16*)(def + 0x1a)) == 0
             || ((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[11])(target, *(s16*)(def + 0x1a)) != 0) {
             ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
-            ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
+            ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
         }
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL) {
@@ -428,8 +428,8 @@ void spdrape_init(int *obj, u8 *def) {
     f32 *state;
     int *player;
     state = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkB0 |= 0x2000;
-    ((GameObject *)obj)->unkB0 |= 0x4000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x4000;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
     if (*(s16 *)((char *)def + 0x1a) != 0) {
         ((GameObject *)obj)->anim.rootMotionScale = (f32)(s32)*(s16 *)((char *)def + 0x1a) / lbl_803E5AC4 * lbl_803E5AC0;

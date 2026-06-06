@@ -217,7 +217,7 @@ void ProjectileSwitch_init(int obj, u8 *initData)
     *(u8 *)state = 0;
   }
   if ((initData[0x23] & 1) == 0) {
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
   }
 }
 

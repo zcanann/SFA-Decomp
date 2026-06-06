@@ -86,7 +86,7 @@ void dimsnowball1c2_init(int obj, u8 *p) {
     inner = ((GameObject *)obj)->extra;
     *(s16 *)(inner + 2) = *(s16 *)(p + 0x18);
     *(s16 *)inner = *(s16 *)(p + 0x18);
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
 }
 void dimicewall_init(int obj, s8 *p) {
     char *inner = ((GameObject *)obj)->extra;
@@ -95,7 +95,7 @@ void dimicewall_init(int obj, s8 *p) {
         *(u8 *)(inner + 1) = (u8)GameBit_Get(*(s16 *)(p + 0x1e));
     }
     *(s16 *)obj = (s16)((s32)p[0x18] << 8);
-    ((GameObject *)obj)->unkB0 |= 0x4000;
+    ((GameObject *)obj)->objectFlags |= 0x4000;
 }
 void dimgate_init(int obj, s8 *p_unused_passthrough) {
     char *inner;
@@ -110,12 +110,12 @@ void dimgate_init(int obj, s8 *p_unused_passthrough) {
     }
     ((GameObject *)obj)->animEventCallback = (void *)dimgate_SeqFn;
     *(s16 *)obj = (s16)((s32)param[0x18] << 8);
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
 }
 void dimbarrier_init(int obj, s8 *p) {
     char *inner;
     *(s16 *)obj = (s16)((s32)p[0x18] << 8);
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     inner = ((GameObject *)obj)->extra;
     inner[3] = 1;
     inner[2] = 0;

@@ -3580,7 +3580,7 @@ void dll_19_func19(u8 *cam, u8 *ctx) {
         if ((s8)ctx[1031] > 0) {
             int obj = Obj_AllocObjectSetup(24, buf[(s8)ctx[1031] - 1]);
             *(int *)&((GameObject *)cam)->unkC8 = Obj_SetupObject(obj, 4, -1, -1, *(int *)&((GameObject *)cam)->anim.parent);
-            *(u16 *)(*(int *)&((GameObject *)cam)->unkC8 + 0xb0) = ((GameObject *)cam)->unkB0 & 7;
+            *(u16 *)(*(int *)&((GameObject *)cam)->unkC8 + 0xb0) = ((GameObject *)cam)->objectFlags & 7;
         }
         ctx[1033] = ctx[1031];
     } else {

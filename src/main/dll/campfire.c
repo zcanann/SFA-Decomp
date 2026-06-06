@@ -626,7 +626,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
   pathData[0xe] = (f32)(int)randomGetRange(0,499);
   pathData[0xf] = lbl_803E3060;
   *(int *)pathData = 0;
-  ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x2000;
+  ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
   ((GameObject *)obj)->anim.rootMotionScale = lbl_803E30A0 + (f32)(s32)*(s8 *)(data + 0x28) / lbl_803E30A4;
   ObjHitbox_SetSphereRadius(obj,(int)(lbl_803E30CC * ((GameObject *)obj)->anim.rootMotionScale));
   if (skip_alloc == 0) {

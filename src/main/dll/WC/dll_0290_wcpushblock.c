@@ -208,7 +208,7 @@ void wcpushblock_update(int obj)
     if (tex != 0) {
         *tex = WCPUSHBLOCK_TEXTURE_DEFAULT;
     }
-    ((GameObject *)obj)->unkB0 &= ~WCPUSHBLOCK_OBJFLAG_LOCKED;
+    ((GameObject *)obj)->objectFlags &= ~WCPUSHBLOCK_OBJFLAG_LOCKED;
 
     if (WCPUSHBLOCK_FLAGS(state).phase != WCPUSHBLOCK_PHASE_SOLVED) {
         if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
@@ -512,7 +512,7 @@ void wcpushblock_update(int obj)
         if (tex != 0) {
             *tex = WCPUSHBLOCK_TEXTURE_LOCKED;
         }
-        ((GameObject *)obj)->unkB0 |= WCPUSHBLOCK_OBJFLAG_LOCKED;
+        ((GameObject *)obj)->objectFlags |= WCPUSHBLOCK_OBJFLAG_LOCKED;
         break;
     }
 

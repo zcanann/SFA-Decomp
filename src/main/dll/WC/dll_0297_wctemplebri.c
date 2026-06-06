@@ -296,7 +296,7 @@ void wctemplebri_init(int obj, int initData)
         ObjHits_DisableObject(obj);
         *(u8 *)(obj + 0x36) = 0;
     }
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
 }
 #pragma scheduling reset

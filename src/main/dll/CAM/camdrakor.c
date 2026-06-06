@@ -179,7 +179,7 @@ void CameraModeCombat_update(short *cam)
             (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
         } else {
             tgt = *(char **)((char *)cam + 0x11c);
-            if (tgt == NULL || (((GameObject *)tgt)->unkB0 & 0x40) || (*(u8 *)(tgt + 0xaf) & 0x28)) {
+            if (tgt == NULL || (((GameObject *)tgt)->objectFlags & 0x40) || (*(u8 *)(tgt + 0xaf) & 0x28)) {
                 if (tgt != NULL) {
                     if ((*(u8 *)(tgt + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                         return;

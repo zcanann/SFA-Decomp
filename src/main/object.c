@@ -593,7 +593,7 @@ void *getTablesBinEntry(int i) {
 }
 
 void Obj_InsertIntoUpdateList(u8 *obj) {
-    if (((GameObject *)obj)->unkB0 & 0x10) {
+    if (((GameObject *)obj)->objectFlags & 0x10) {
         int *list = &lbl_803DCB7C;
         int prev = 0;
         int cur = list[1];
@@ -607,7 +607,7 @@ void Obj_InsertIntoUpdateList(u8 *obj) {
 }
 
 void Obj_RemoveFromUpdateList(u8 *obj) {
-    if (((GameObject *)obj)->unkB0 & 0x10) {
+    if (((GameObject *)obj)->objectFlags & 0x10) {
         objList_remove(&lbl_803DCB7C, obj);
     }
 }
@@ -1326,7 +1326,7 @@ void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags) {
     }
     if ((u8)flags != 0) {
         savedZ = ((GameObject *)obj)->anim.rootMotionScale;
-        if ((((GameObject *)obj)->unkB0 & 0x8) == 0) {
+        if ((((GameObject *)obj)->objectFlags & 0x8) == 0) {
             ((GameObject *)obj)->anim.rootMotionScale = lbl_803DE890;
         }
     }
@@ -1970,7 +1970,7 @@ void Obj_UpdateObject(u8 *obj)
     void (*cb2)(u8 *);
 
     object = (ObjAnimComponent *)obj;
-    if (((GameObject *)obj)->unkB0 & 0x40) {
+    if (((GameObject *)obj)->objectFlags & 0x40) {
         return;
     }
     if (lbl_803DCB78 & 1) {
@@ -2036,7 +2036,7 @@ void Obj_UpdateObject(u8 *obj)
             Sfx_PlayFromObject(obj, 0x47b);
         }
     }
-    if ((((GameObject *)obj)->unkB0 & 0x8000) == 0) {
+    if ((((GameObject *)obj)->objectFlags & 0x8000) == 0) {
         switch (object->seqId) {
         case 0:
         case 0x1f:
@@ -2144,7 +2144,7 @@ void Obj_UpdateAllObjects(u8 flags)
         ObjHits_Update(lbl_803DCB84);
         obj = *(int *)((u8 *)&lbl_803DCB7C + 4);
         for (; obj != 0; obj = *(int *)(obj + off)) {
-            if ((((GameObject *)obj)->unkB0 & 0x2000) == 0) {
+            if ((((GameObject *)obj)->objectFlags & 0x2000) == 0) {
                 switch (((GameObject *)obj)->anim.seqId) {
                 case 0:
                 case 0x1f:
@@ -2174,7 +2174,7 @@ void Obj_UpdateAllObjects(u8 flags)
         if (obj2 != 0 && ((GameObject *)obj2)->unkC8 != 0) {
             *(int *)((u8 *)((GameObject *)obj2)->unkC8 + 0x30) = *(int *)&((GameObject *)obj2)->anim.parent;
             child = *(int *)&((GameObject *)obj2)->unkC8;
-            if ((((GameObject *)child)->unkB0 & 0x2000) == 0) {
+            if ((((GameObject *)child)->objectFlags & 0x2000) == 0) {
                 switch (((GameObject *)child)->anim.seqId) {
                 case 0:
                 case 0x1f:
@@ -2520,9 +2520,9 @@ void Obj_RegisterObject(u8 *obj, int flags)
         }
     }
     if (flags & 1) {
-        ((GameObject *)obj)->unkB0 |= 0x10;
+        ((GameObject *)obj)->objectFlags |= 0x10;
         ((u8 **)lbl_803DCB88)[lbl_803DCB84++] = obj;
-        if (((GameObject *)obj)->unkB0 & 0x10) {
+        if (((GameObject *)obj)->objectFlags & 0x10) {
             prev = 0;
             cur = *(int *)((u8 *)&lbl_803DCB7C + 4);
             off = *(s16 *)((u8 *)&lbl_803DCB7C + 2);
@@ -2561,12 +2561,12 @@ void Obj_FreeObject(u8 *obj)
     int off;
     u8 *q;
 
-    if (((GameObject *)obj)->unkB0 & 0x40) {
+    if (((GameObject *)obj)->objectFlags & 0x40) {
         return;
     }
     Sfx_RemoveLoopedObjectSoundForObject(obj);
     Sfx_StopObjectChannel(obj, 0x7f);
-    if (((GameObject *)obj)->unkB0 & 0x10) {
+    if (((GameObject *)obj)->objectFlags & 0x10) {
         i = 0;
         p = (u8 **)lbl_803DCB88;
         for (n = lbl_803DCB84; n > 0; n--) {
@@ -2587,14 +2587,14 @@ void Obj_FreeObject(u8 *obj)
         } else {
             OSReport(sObjFreeNonExistentObjectWarning);
         }
-        if (((GameObject *)obj)->unkB0 & 0x10) {
+        if (((GameObject *)obj)->objectFlags & 0x10) {
             objList_remove(&lbl_803DCB7C, obj);
         }
         lbl_803DCBC4 = 0;
     }
     for (i = 0; i < lbl_803DCB94; i++) {
     }
-    ((GameObject *)obj)->unkB0 |= 0x40;
+    ((GameObject *)obj)->objectFlags |= 0x40;
     if (((GameObject *)obj)->unkEA != 0) {
         i = 0;
         base = (u8 **)lbl_803DCB90;

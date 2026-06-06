@@ -205,7 +205,7 @@ void lightfoot_update(int obj)
             ((GroundBaddieState *)inner)->flags400 &= ~0x4;
         }
         Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
-        if ((((GroundBaddieState *)inner)->configFlags & 1) && (((GameObject *)obj)->unkB0 & 0x800)) {
+        if ((((GroundBaddieState *)inner)->configFlags & 1) && (((GameObject *)obj)->objectFlags & 0x800)) {
             int a40c = *(int *)((char *)inner + 0x40c);
             int mode;
             *(f32 *)((char *)a40c + 0xc) -= timeDelta;
@@ -243,12 +243,12 @@ void lightfoot_init(int obj, int p2, int p3)
     *(int *)((char *)obj + 0xbc) = (int)Lightfoot_SeqFn;
     ((GroundBaddieState *)inner)->baddie.controlMode = 0;
     ((GroundBaddieState *)inner)->baddie.unk270 = 0;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
     sub = *(int *)((char *)inner + 0x40c);
     *(s16 *)((char *)sub + 0x26) = -1;
     *(s16 *)((char *)sub + 0x28) = *(s16 *)((char *)sub + 0x26);
-    ((GameObject *)obj)->unkB0 =
-        (u16)(((GameObject *)obj)->unkB0 | (*(s8 *)((char *)p2 + 0x28) & 0x7));
+    ((GameObject *)obj)->objectFlags =
+        (u16)(((GameObject *)obj)->objectFlags | (*(s8 *)((char *)p2 + 0x28) & 0x7));
     if (*(s16 *)((char *)p2 + 0x1a) == 0x64c) {
         ((GroundBaddieState *)inner)->baddie.controlMode = 2;
         ((GroundBaddieState *)inner)->baddie.unk270 = 1;

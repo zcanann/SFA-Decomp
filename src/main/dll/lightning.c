@@ -474,7 +474,7 @@ void magicdust_init(int param_1,int param_2)
     (*(code *)(*gPathControlInterface + 0xc))(iVar5,1,lbl_80320CB8,iVar5 + 0x268,local_58);
     (*(code *)(*gPathControlInterface + 0x20))(param_1,iVar5);
   }
-  ((GameObject *)param_1)->unkB0 = ((GameObject *)param_1)->unkB0 | 0x2000;
+  ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x2000;
   if ((((MagicDustState *)iVar5)->flags27A & 1) != 0) {
     ((MagicDustState *)iVar5)->unk26C = lbl_803E34FC;
   }
@@ -824,8 +824,8 @@ void effectbox_init(int obj, int *def) {
     } else {
         ((GameObject *)obj)->unkF8 = -1;
     }
-    v = (u32)((GameObject *)obj)->unkB0 | 0x6000;
-    ((GameObject *)obj)->unkB0 = (u16)v;
+    v = (u32)((GameObject *)obj)->objectFlags | 0x6000;
+    ((GameObject *)obj)->objectFlags = (u16)v;
 }
 #pragma peephole reset
 #pragma scheduling reset

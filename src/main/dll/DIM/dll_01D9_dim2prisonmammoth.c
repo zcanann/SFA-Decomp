@@ -742,7 +742,7 @@ void dim2prisonmammoth_init(int obj, int p2)
     }
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
     *(u8 *)((char *)inner + 0x25f) = 0;
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset

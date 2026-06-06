@@ -261,7 +261,7 @@ skip_insert: ;
         }
       }
     }
-    if (((((GameObject *)obj)->unkB0 & 0x800) != 0) && ((((SwitchFlags *)(state + 0x84))->latched) == 0) &&
+    if (((((GameObject *)obj)->objectFlags & 0x800) != 0) && ((((SwitchFlags *)(state + 0x84))->latched) == 0) &&
         ((((SwitchFlags *)(state + 0x84))->active) != 0)) {
       tmp = (int)Obj_GetPlayerObject();
       if (Vec_distance((f32 *)(obj + 0x18), (f32 *)(tmp + 0x18)) < lbl_803E375C) {
@@ -600,7 +600,7 @@ void pressureswitchfb_init(u8* obj, u8* params) {
     sub = ((GameObject *)obj)->extra;
     flags = (PressureSwitchFbFlags *)(sub + 0x84);
     *(s16*)obj = (s16)(params[0x18] << 8);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
     objAnim->bankIndex = (s8)params[0x19];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
@@ -683,7 +683,7 @@ void mmp_bridge_init(int *obj) {
         *(s16 *)((char *)tex + 8) = 0x800;
     }
     *(s16 *)obj = (s16)(*(s8 *)((char *)state + 0x18) << 8);
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     ObjHits_DisableObject((int)obj);
     if (GameBit_Get(*(s16 *)((char *)state + 0x1e)) != 0) {
         ObjHits_EnableObject((int)obj);
@@ -724,7 +724,7 @@ void Door_init(int *obj, u8 *def) {
     state[5] = 1;
     *(s16 *)obj = (s16)(def[0x1f] << 8);
     *(int *)&((GameObject *)obj)->animEventCallback = (int)Door_SeqFn;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
     ((GameObject *)obj)->anim.rootMotionScale = ((f32)(u32)*(u8 *)((char *)def + 0x21) - lbl_803E3790) * lbl_803E3784;
     if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E3788) {
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3780;

@@ -1556,7 +1556,7 @@ void visanimator_init(int *obj, int *desc)
     u32 gate;
     u8 tmp;
     int sv;
-    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
     vstate = (VisAnimatorState *)((int**)obj)[0xB8/4];
     sv = *(s8*)((char*)desc + 0x1B);
     vstate->visBit = (s8)sv;

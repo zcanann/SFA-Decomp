@@ -1414,8 +1414,8 @@ void texframeanimator_init(int *obj, u8 *params)
         state->frame = state->endFrame;
         state->active = 1;
     }
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1489,7 +1489,7 @@ void fogcontrol_init(u8* obj, u8* params) {
     f32 t;
 
     st = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
     st->on = 0;
     st->full = 0;
     st->blend = lbl_803E4070;

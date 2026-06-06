@@ -2398,7 +2398,7 @@ void FUN_800404cc(int param_1)
   double dVar11;
   
   puVar6 = FUN_800069a8();
-  if (((((((GameObject *)param_1)->unkB0 & 0x1000) == 0) && (*(char *)(param_1 + 0xac) != '?')) &&
+  if (((((((GameObject *)param_1)->objectFlags & 0x1000) == 0) && (*(char *)(param_1 + 0xac) != '?')) &&
       (((GameObject *)param_1)->anim.seqId != 0x882)) && (((GameObject *)param_1)->anim.seqId != 0x887)) {
     bVar5 = false;
     iVar9 = 3;

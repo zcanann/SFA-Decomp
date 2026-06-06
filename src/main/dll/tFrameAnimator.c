@@ -43,7 +43,7 @@ undefined4 sidekickball_init(int obj)
   Obj_GetPlayerObject();
   state[0x274] = 0;
   ((TFrameAnimatorState *)state)->unk26C = lbl_803E369C;
-  ((GameObject *)obj)->unkB0 |= 0x2000;
+  ((GameObject *)obj)->objectFlags |= 0x2000;
   objDef = *(int *)&((GameObject *)obj)->anim.hitReactState;
   *(f32 *)(state + 0x268) = (f32)*(s16 *)(objDef + 0x5a);
   (*(void (**)(u8 *, int, int, int))(*(int *)gPathControlInterface + 4))(state, 0, 0x40007, 1);
@@ -70,7 +70,7 @@ void area_update(void) {}
 
 /* obj->u16_X |= MASK */
 #pragma peephole off
-void area_init(u16 *obj) { u32 v; v = ((GameObject *)obj)->unkB0; v |= 0xa000; ((GameObject *)obj)->unkB0 = (u16)v; }
+void area_init(u16 *obj) { u32 v; v = ((GameObject *)obj)->objectFlags; v |= 0xa000; ((GameObject *)obj)->objectFlags = (u16)v; }
 #pragma peephole reset
 
 void area_release(void) {}
@@ -160,7 +160,7 @@ void levelname_init(int obj, int objDef)
             ((TFrameAnimatorState *)state)->phase = 4;
         }
     }
-    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -367,7 +367,7 @@ void wmspiritplace_init(int obj, int setup)
     state->primaryGameBit = *(s16 *)(setup + 0x20);
     state->setupParam = (s16)*(s8 *)(setup + 0x19);
     state->f80 = 0;
-    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
     state->mapEventState = ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
 
     if (*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) == 0x47295) {

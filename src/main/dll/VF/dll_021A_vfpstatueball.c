@@ -130,7 +130,7 @@ void vfpstatueball_init(int *obj, u8 *init) {
     VfpStatueBallState *inner = *(VfpStatueBallState **)((char *)obj + 0xb8);
     inner->gameBit = *(s16 *)((char *)init + 0x1e);
     inner->timer = 0x19;
-    ((GameObject *)obj)->unkB0 |= 0x4000;
+    ((GameObject *)obj)->objectFlags |= 0x4000;
     if (*(s16 *)((char *)init + 0x1a) > 2) {
         *(s16 *)((char *)init + 0x1a) = 2;
     }
