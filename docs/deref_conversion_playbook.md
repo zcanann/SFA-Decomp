@@ -132,6 +132,15 @@ complete report tree (`ninja -k 0 build/GSAE01/report.json`), error-grepped.
 That forced rebuild is also what surfaces other people's latent breakage -
 budget for triaging it.
 
+**Shared-record commits (rename OR adoption) gate on the FORCED report
+build, error-grepped.** Default ninja + dol + per-TU gates all stay green
+while a report-only consumer is broken: a BaddieState field rename and a
+4-TU adoption raced on main with both sides' gates green and the forced
+report build failing for the interval (fixed at aa6df9744). Standing rule:
+the renamer additionally greps src/+include/ for casts/uses of the record
+at PUSH time and harmonizes in the same commit if consumers appeared since
+authoring.
+
 **Gold-gate baselines must be taken AFTER a forced report build.** A
 default-ninja tree holds stale report-only objects (NonMatching TUs dirtied
 by earlier upstream commits but never rebuilt), so a full-tree .o md5
