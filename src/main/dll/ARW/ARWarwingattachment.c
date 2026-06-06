@@ -1816,6 +1816,7 @@ extern void Obj_SetActiveModelIndex(int *obj, int idx);
 void wmlasertarget_update(int *obj) {
     extern u8 framesThisStep;
     extern void GameBit_Set(int slot, int val);
+    extern u32 GameBit_Get(int slot);
     u8 *def;
     u8 *sub;
 
@@ -1838,7 +1839,8 @@ void wmlasertarget_update(int *obj) {
         sub[2] = 0;
         *(s16*)sub = *(s16*)(def + 0x1a);
     } else if (*(s16*)sub > 0) {
-        *(s16*)sub = (s16)(*(s16*)sub - framesThisStep);
+        u8 fs = framesThisStep;
+        *(s16*)sub -= fs;
     }
 }
 #pragma peephole reset
