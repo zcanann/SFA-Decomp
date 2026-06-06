@@ -16,7 +16,7 @@ extern int ObjLink_AttachChild(int parent, int child, int a);
 extern int ObjLink_DetachChild(int parent, int child);
 extern void cmbsrc_setExternalActive(int obj, int active);
 extern void Obj_FreeObject(int obj);
-extern u8 Obj_IsLoadingLocked(int obj);
+extern u8 Obj_IsLoadingLocked(void);
 extern void *Obj_GetPlayerObject(void);
 extern void objSetSlot(int obj, int slot);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
@@ -411,94 +411,113 @@ void sc_cloudrunnera_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 
 void sc_cloudrunnera_hitDetect(void) {}
 
+#pragma peephole off
 #pragma scheduling off
 void sc_cloudrunnera_update(int obj)
 {
+    int i;
     int inner = *(int *)&((GameObject *)obj)->extra;
     void *sub;
-    int i;
+    int idx, count;
 
     sub = ((GameObject *)obj)->anim.placementData;
     if (sub == NULL) return;
     if (*(s16 *)((char *)sub + 0x18) == -1) return;
-    if (((int (*)(int, f32))(*(int *)(*gObjectTriggerInterface + 0x14)))(obj, (f32)(u32)lbl_803DB411) != 0
-        && ((GameObject *)obj)->unkB4 == -2) {
-        s32 mark = (s8)*(u8 *)(inner + 0x57);
-        int found = 0;
-        int matchCount = 0;
+    idx = ((int (*)(int, f32))(*(int *)(*gObjectTriggerInterface + 0x14)))(obj, (f32)(u32)lbl_803DB411);
+    if (idx != 0 && ((GameObject *)obj)->unkB4 == -2) {
+        int found;
+        s32 mark = *(s8 *)(inner + 0x57);
         int *arr;
-        int idx, count;
+        int n;
+        int markCopy;
+        int matchCount;
+
+        found = 0;
         arr = ObjList_GetObjects(&idx, &count);
+        matchCount = 0;
         idx = 0;
-        for (; idx < count; idx++) {
-            int o = arr[idx];
+        markCopy = mark;
+        n = count;
+        for (; idx < n; idx++) {
+            int o = *arr;
             s16 t = *(s16 *)(o + 0xb4);
-            if (t == mark) found = o;
-            if (t == -2 && *(s16 *)(o + 0x44) == 0x10) {
-                int innerO = *(int *)(o + 0xb8);
-                s32 v = (s8)*(u8 *)(innerO + 0x57);
-                if (mark == v) matchCount++;
+            if (t == mark) {
+                found = o;
             }
+            if (t == -2 && *(s16 *)(o + 0x44) == 0x10) {
+                inner = *(int *)(o + 0xb8);
+                if (markCopy == (s8)*(u8 *)(inner + 0x57)) {
+                    matchCount++;
+                }
+            }
+            arr++;
         }
-        if (matchCount <= 1 && found != 0 && *(s16 *)(found + 0xb4) != -1) {
+        if (matchCount <= 1 && (u32)found != 0 && *(s16 *)(found + 0xb4) != -1) {
             *(s16 *)(found + 0xb4) = -1;
-            ((void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(mark);
+            ((void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(markCopy);
         }
         ((GameObject *)obj)->unkB4 = -1;
     }
 
     for (i = 0; i < *(u8 *)(inner + 0x8b); i++) {
-        int mode = *(u8 *)(inner + 0x81 + i);
-        if (mode == 1) {
-            int slot = *(int *)&((GameObject *)obj)->unkC8;
-            if (slot != 0) {
-                ((void (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(slot, 0);
+        switch (*(u8 *)(inner + i + 0x81)) {
+        case 0: {
+            int setup;
+            int newObj;
+            if (*(void **)&((GameObject *)obj)->unkC8 != NULL) {
+                break;
             }
-        } else if (mode >= 1) {
-            if (mode < 3) {
-                int innerSlot = *(int *)&((GameObject *)obj)->unkC8;
-                if (innerSlot != 0) {
-                    ObjLink_DetachChild(obj, innerSlot);
-                    Obj_FreeObject(innerSlot);
-                }
+            if (Obj_IsLoadingLocked() == 0) {
+                break;
             }
-        } else if (mode >= 0) {
-            if (*(int *)&((GameObject *)obj)->unkC8 != 0) continue;
-            if (!Obj_IsLoadingLocked(obj)) continue;
-            {
-                int setup = Obj_AllocObjectSetup(0x30, 0x6e8);
-                int newObj;
-                *(u8 *)(setup + 0x1b) = 0x9;
-                *(u8 *)(setup + 0x1c) = 0;
-                *(u8 *)(setup + 0x1d) = 0;
-                *(f32 *)(setup + 0x20) = lbl_803E55E0;
-                *(u8 *)(setup + 0x26) = 0xff;
-                *(u8 *)(setup + 0x27) = 0xff;
-                *(u8 *)(setup + 0x28) = 0xff;
-                *(s16 *)(setup + 0x24) = -1;
-                *(u8 *)(setup + 0x4) = 2;
-                *(u8 *)(setup + 0x5) = 1;
-                *(u8 *)(setup + 0x6) = 0xff;
-                *(u8 *)(setup + 0x7) = 0xff;
-                *(u8 *)(setup + 0x29) = 1;
-                *(u8 *)(setup + 0x2a) = 0;
-                newObj = Obj_SetupObject(setup, 5, (s8)*(u8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
-                *(s16 *)(newObj + 6) = (s16)(*(s16 *)(newObj + 6) | 0x4000);
-                ObjLink_AttachChild(obj, newObj, 0);
-                Sfx_PlayFromObject(obj, 0x10f);
+            setup = Obj_AllocObjectSetup(0x30, 0x6e8);
+            *(u8 *)(setup + 0x1b) = 0x9;
+            *(u8 *)(setup + 0x1c) = 0;
+            *(u8 *)(setup + 0x1d) = 0;
+            *(f32 *)(setup + 0x20) = lbl_803E55E0;
+            *(u8 *)(setup + 0x26) = 0xff;
+            *(u8 *)(setup + 0x27) = 0xff;
+            *(u8 *)(setup + 0x28) = 0xff;
+            *(s16 *)(setup + 0x24) = -1;
+            *(u8 *)(setup + 0x4) = 2;
+            *(u8 *)(setup + 0x5) = 1;
+            *(u8 *)(setup + 0x6) = 0xff;
+            *(u8 *)(setup + 0x7) = 0xff;
+            *(u8 *)(setup + 0x29) = 1;
+            *(u8 *)(setup + 0x2a) = 0;
+            newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+            *(s16 *)(newObj + 6) = (s16)(*(s16 *)(newObj + 6) | 0x4000);
+            ObjLink_AttachChild(obj, newObj, 0);
+            Sfx_PlayFromObject(obj, 0x10f);
+            break;
+        }
+        case 1: {
+            if (*(void **)&((GameObject *)obj)->unkC8 != NULL) {
+                cmbsrc_setExternalActive(*(int *)&((GameObject *)obj)->unkC8, 0);
             }
+            break;
+        }
+        case 2: {
+            int innerSlot = *(int *)&((GameObject *)obj)->unkC8;
+            if ((u32)innerSlot != 0) {
+                ObjLink_DetachChild(obj, innerSlot);
+                Obj_FreeObject(innerSlot);
+            }
+            break;
+        }
         }
     }
     {
-        int s = *(int *)&((GameObject *)obj)->unkC8;
-        if (s != 0) {
-            *(s16 *)(s + 4) = ((GameObject *)obj)->anim.rotZ;
+        int t = *(int *)&((GameObject *)obj)->unkC8;
+        if ((u32)t != 0) {
+            *(s16 *)(t + 4) = ((GameObject *)obj)->anim.rotZ;
             *(s16 *)(*(int *)&((GameObject *)obj)->unkC8 + 2) = (s16)(((GameObject *)obj)->anim.rotY + 0xe38);
             *(s16 *)(*(int *)&((GameObject *)obj)->unkC8 + 0) = (s16)(((GameObject *)obj)->anim.rotX + -0x8000);
         }
     }
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 #pragma scheduling off
 void sc_cloudrunnera_init(int obj, int p2)
