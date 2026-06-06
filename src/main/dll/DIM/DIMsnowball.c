@@ -1698,14 +1698,14 @@ void cclevcontrol_update(int obj)
 {
     int *state = *(int **)(obj + 0xb8);
     int *tricky;
-    int a;
-    int b;
+    u32 a;
+    u32 b;
 
     if (*(f32 *)state > lbl_803E46D0) {
         gameTextShow(0x34c);
         *(f32 *)state -= timeDelta;
         if (*(f32 *)state < lbl_803E46D0) {
-            *(f32 *)state = lbl_803E46D0;
+            *(f32 *)state = *(f32 *)&lbl_803E46D0;
         }
     }
     if ((*(int (**)(int))(*(int *)gSHthorntailAnimationInterface + 0x24))(0) != 0) {

@@ -602,7 +602,7 @@ void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
         } else {
             *(f32 *)(st + 0x54) += lbl_803E523C * timeDelta;
             if (*(f32 *)(st + 0x54) > lbl_803E524C) {
-                *(f32 *)(st + 0x54) = lbl_803E524C;
+                *(f32 *)(st + 0x54) = *(f32 *)&lbl_803E524C;
             }
         }
         break;
