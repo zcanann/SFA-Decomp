@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/baddie_state.h"
 #include "main/dll/player_80295318_shared.h"
 
 
@@ -107,13 +108,13 @@ void lightfoot_update(int obj)
         }
     }
 
-    if (*(s16 *)((char *)obj + 0x46) == 0x27c && *(s16 *)((char *)inner + 0x3f2) != -1) {
+    if (*(s16 *)((char *)obj + 0x46) == 0x27c && ((GroundBaddieState *)inner)->gameBitA != -1) {
         switch (*(int *)((char *)p30 + 0x14)) {
         case 0x4993F:
         case 0x49940:
         case 0x49941:
             if (GameBit_Get(0xc44)) {
-                *(int *)((char *)obj + 0xf4) = GameBit_Get(*(s16 *)((char *)inner + 0x3f2));
+                *(int *)((char *)obj + 0xf4) = GameBit_Get(((GroundBaddieState *)inner)->gameBitA);
             } else {
                 *(int *)((char *)obj + 0xf4) = 1;
             }
@@ -121,11 +122,11 @@ void lightfoot_update(int obj)
         case 0x499AC:
         case 0x499AE:
         case 0x499AF:
-            if (GameBit_Get(0xc42) && GameBit_Get(*(s16 *)((char *)inner + 0x3f2)) == 0) {
+            if (GameBit_Get(0xc42) && GameBit_Get(((GroundBaddieState *)inner)->gameBitA) == 0) {
                 void *other = ObjList_FindObjectById(0x499B5);
                 if (other != NULL &&
                     Vec_distance((char *)obj + 0x18, (char *)other + 0x18) < lbl_803E8214) {
-                    GameBit_Set(*(s16 *)((char *)inner + 0x3f2), 1);
+                    GameBit_Set(((GroundBaddieState *)inner)->gameBitA, 1);
                     buf[3] = lbl_803E8180;
                     buf[4] = lbl_803E8218;
                     buf[5] = lbl_803E8180;
@@ -138,7 +139,7 @@ void lightfoot_update(int obj)
                         Sfx_PlayFromObject(0, 0x409);
                     }
                 }
-                *(int *)((char *)obj + 0xf4) = GameBit_Get(*(s16 *)((char *)inner + 0x3f2));
+                *(int *)((char *)obj + 0xf4) = GameBit_Get(((GroundBaddieState *)inner)->gameBitA);
             } else {
                 *(int *)((char *)obj + 0xf4) = 1;
             }
@@ -146,11 +147,11 @@ void lightfoot_update(int obj)
         case 0x499B0:
         case 0x499B1:
         case 0x499B2:
-            if (GameBit_Get(0xc46) && GameBit_Get(*(s16 *)((char *)inner + 0x3f2)) == 0) {
+            if (GameBit_Get(0xc46) && GameBit_Get(((GroundBaddieState *)inner)->gameBitA) == 0) {
                 void *other = ObjList_FindObjectById(0x499B6);
                 if (other != NULL &&
                     Vec_distance((char *)obj + 0x18, (char *)other + 0x18) < lbl_803E8214) {
-                    GameBit_Set(*(s16 *)((char *)inner + 0x3f2), 1);
+                    GameBit_Set(((GroundBaddieState *)inner)->gameBitA, 1);
                     buf[3] = lbl_803E8180;
                     buf[4] = lbl_803E8218;
                     buf[5] = lbl_803E8180;
@@ -163,13 +164,13 @@ void lightfoot_update(int obj)
                         Sfx_PlayFromObject(0, 0x409);
                     }
                 }
-                *(int *)((char *)obj + 0xf4) = GameBit_Get(*(s16 *)((char *)inner + 0x3f2));
+                *(int *)((char *)obj + 0xf4) = GameBit_Get(((GroundBaddieState *)inner)->gameBitA);
             } else {
                 *(int *)((char *)obj + 0xf4) = 1;
             }
             break;
         default:
-            *(int *)((char *)obj + 0xf4) = GameBit_Get(*(s16 *)((char *)inner + 0x3f2)) == 0;
+            *(int *)((char *)obj + 0xf4) = GameBit_Get(((GroundBaddieState *)inner)->gameBitA) == 0;
             break;
         }
 
@@ -195,14 +196,14 @@ void lightfoot_update(int obj)
         }
     } else {
         Lightfoot_UpdateAttachedChild(obj, inner);
-        if (*(u16 *)((char *)inner + 0x400) & 0x2) {
+        if (((GroundBaddieState *)inner)->flags400 & 0x2) {
             Lightfoot_RecordCompletedChallengeTargetHit(obj, inner, anim);
             Lightfoot_ResetScriptedPosition(obj);
             *(int *)((char *)obj + 0xf8) = 0;
-            *(u16 *)((char *)inner + 0x400) &= ~0x4;
+            ((GroundBaddieState *)inner)->flags400 &= ~0x4;
         }
         Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
-        if ((*(u8 *)((char *)inner + 0x404) & 1) && (*(u16 *)((char *)obj + 0xb0) & 0x800)) {
+        if ((((GroundBaddieState *)inner)->configFlags & 1) && (*(u16 *)((char *)obj + 0xb0) & 0x800)) {
             int a40c = *(int *)((char *)inner + 0x40c);
             int mode;
             *(f32 *)((char *)a40c + 0xc) -= timeDelta;
@@ -238,8 +239,8 @@ void lightfoot_init(int obj, int p2, int p3)
     (*(void (*)(int, int, int, int, int, int, int, f32))(*(int *)(*gBaddieControlInterface + 0x58)))(
         obj, p2, inner, 5, 3, 0x108, flags, lbl_803E8228);
     *(int *)((char *)obj + 0xbc) = (int)Lightfoot_SeqFn;
-    *(s16 *)((char *)inner + 0x274) = 0;
-    *(s16 *)((char *)inner + 0x270) = 0;
+    ((GroundBaddieState *)inner)->baddie.controlMode = 0;
+    ((GroundBaddieState *)inner)->baddie.unk270 = 0;
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
     sub = *(int *)((char *)inner + 0x40c);
     *(s16 *)((char *)sub + 0x26) = -1;
@@ -247,8 +248,8 @@ void lightfoot_init(int obj, int p2, int p3)
     *(u16 *)((char *)obj + 0xb0) =
         (u16)(*(u16 *)((char *)obj + 0xb0) | (*(s8 *)((char *)p2 + 0x28) & 0x7));
     if (*(s16 *)((char *)p2 + 0x1a) == 0x64c) {
-        *(s16 *)((char *)inner + 0x274) = 2;
-        *(s16 *)((char *)inner + 0x270) = 1;
+        ((GroundBaddieState *)inner)->baddie.controlMode = 2;
+        ((GroundBaddieState *)inner)->baddie.unk270 = 1;
         ObjHits_DisableObject(obj);
         *(s16 *)((char *)sub + 0x24) = (u16)randomGetRange(0, 3);
         *(s16 *)((char *)sub + 0x28) = 0x6f1;
@@ -327,7 +328,7 @@ void lightfoot_init(int obj, int p2, int p3)
         case 0x499b0:
         case 0x499b1:
         case 0x499b2:
-            *(s16 *)((char *)inner + 0x270) = 2;
+            ((GroundBaddieState *)inner)->baddie.unk270 = 2;
             *(int *)((char *)sub + 0) = (int)((char *)lbl_80334EE8 + 0x30);
             *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x40);
             *(f32 *)((char *)sub + 0x14) = (f32)(s32)randomGetRange(0x78, 0xb4);
