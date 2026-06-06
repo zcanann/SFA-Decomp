@@ -1020,11 +1020,11 @@ f32 curves_distFn0B(int obj,uint curveId)
 
 #pragma scheduling off
 #pragma peephole off
-int curves_isNotPoint(int *obj) {
+int curves_isNotPoint(RomCurveDef *curve) {
     int i;
     for (i = 0; i < 4; i++) {
-        if (*(int *)((char *)obj + 0x1c + i * 4) != -1 &&
-            (*(s8 *)((char *)obj + 0x1b) & (1 << i)) == 0) {
+        if ((s32)curve->linkIds[i] != -1 &&
+            (curve->blockedLinkMask & (1 << i)) == 0) {
             return 0;
         }
     }
@@ -1035,11 +1035,11 @@ int curves_isNotPoint(int *obj) {
 
 #pragma scheduling off
 #pragma peephole off
-int curves_isPoint(int *obj) {
+int curves_isPoint(RomCurveDef *curve) {
     int i;
     for (i = 0; i < 4; i++) {
-        if (*(int *)((char *)obj + 0x1c + i * 4) != -1 &&
-            (*(s8 *)((char *)obj + 0x1b) & (1 << i)) != 0) {
+        if ((s32)curve->linkIds[i] != -1 &&
+            (curve->blockedLinkMask & (1 << i)) != 0) {
             return 0;
         }
     }
