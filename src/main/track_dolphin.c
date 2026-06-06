@@ -4742,19 +4742,25 @@ void *MapBlock_loadFromFile(int blockId)
     int *table;
     int v;
     if (blockId > lbl_803DCEB0) {
-        return 0;
+        goto ret0a;
     }
     table = (int *)lbl_803DCDE4;
     if (table != 0) {
         v = table[blockId];
         if (v != -1) {
             if (v == 0 && table[blockId + 1] == 0) {
-                return 0;
+                goto ret0b;
             }
             blockOff = v;
             checkLoadBlock(v, &local_c, &local_8);
         }
     }
+    goto cont;
+ret0a:
+    return 0;
+ret0b:
+    return 0;
+cont:
     if (local_c <= 0) {
         return 0;
     }
