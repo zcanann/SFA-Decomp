@@ -338,43 +338,17 @@ void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff)
 void CameraShake_SetAllMagnitudes(f32 magnitude)
 {
     CameraViewSlot* slot = gCameraShakeSlots;
+    int v;
+    int i;
 
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
-    slot++;
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
-    slot++;
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
-    slot++;
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
-    slot++;
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
-    slot++;
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
-
-    slot++;
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
-    slot++;
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
-    slot++;
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
-    slot++;
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
-    slot++;
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
-    slot++;
-    slot->shakeMagnitude = magnitude;
-    slot->shakeActive = 0;
+    for (v = 0; v < 2; v++) {
+        for (i = 0; i < 6; i++) {
+            CameraViewSlot* p = &slot[i];
+            p->shakeMagnitude = magnitude;
+            p->shakeActive = 0;
+        }
+        slot += 6;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -793,10 +767,11 @@ void Camera_UpdateProjection(void* viewportArg)
     u32 screenHeight = resolution & 0xffff;
     u8* viewportEntry = lbl_802C5E00 + viewIndex * 0x34;
 
-    if ((*(u32*)(viewportEntry + 0x30) & 1) != 0) {
+    if ((*(int*)(viewportEntry + 0x30) & 1) != 0) {
         u8 savedViewIndex = gCameraCurrentViewIndex;
 
         gCameraCurrentViewIndex = viewIndex;
+        viewportEntry = lbl_802C5E00 + viewIndex * 0x34;
         gxSetScissorRect(0, 0,
                          *(s32*)(viewportEntry + 0x20),
                          *(s32*)(viewportEntry + 0x24),
@@ -805,7 +780,7 @@ void Camera_UpdateProjection(void* viewportArg)
 
         activeViewIndex = gCameraCurrentViewIndex;
         viewportEntry = lbl_802C5E00 + activeViewIndex * 0x34;
-        if ((*(u32*)(viewportEntry + 0x30) & 1) == 0) {
+        if ((*(int*)(viewportEntry + 0x30) & 1) == 0) {
             lbl_802C5ED0[activeViewIndex * 8 + 4] = 0;
             lbl_802C5ED0[activeViewIndex * 8 + 5] = 0;
             lbl_802C5ED0[activeViewIndex * 8 + 0] = 0;
@@ -820,11 +795,11 @@ void Camera_UpdateProjection(void* viewportArg)
             C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio,
                              gCameraNearPlane, gCameraFarPlane);
             C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628,
-                                  lbl_803DE628, lbl_803DE62C, *(f32 *)&lbl_803DE62C);
+                                  *(f32 *)&lbl_803DE628, lbl_803DE62C, *(f32 *)&lbl_803DE62C);
             C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
-                                  lbl_803DE62C, lbl_803DE62C, lbl_803DE62C);
+                                  *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C);
             C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
-                                  lbl_803DE630, lbl_803DE62C, lbl_803DE62C);
+                                  lbl_803DE630, *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C);
         }
         GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
         gCameraCurrentViewIndex = viewIndex;
@@ -834,11 +809,13 @@ void Camera_UpdateProjection(void* viewportArg)
 
         activeViewIndex = gCameraCurrentViewIndex;
         viewportEntry = lbl_802C5E00 + activeViewIndex * 0x34;
-        if ((*(u32*)(viewportEntry + 0x30) & 1) == 0) {
-            s16 scaledHalfHeight = (s16)(halfScreenHeight << 2);
-            s16 scaledHalfWidth = (s16)(halfScreenWidth << 2);
+        if ((*(int*)(viewportEntry + 0x30) & 1) == 0) {
+            s16 scaledHalfHeight;
+            s16 scaledHalfWidth;
 
+            scaledHalfHeight = (s16)(halfScreenHeight << 2);
             lbl_802C5ED0[activeViewIndex * 8 + 4] = scaledHalfHeight;
+            scaledHalfWidth = (s16)(halfScreenWidth << 2);
             lbl_802C5ED0[activeViewIndex * 8 + 5] = scaledHalfWidth;
             lbl_802C5ED0[activeViewIndex * 8 + 0] = scaledHalfHeight;
             lbl_802C5ED0[activeViewIndex * 8 + 1] = scaledHalfWidth;
@@ -851,11 +828,11 @@ void Camera_UpdateProjection(void* viewportArg)
             C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio,
                              gCameraNearPlane, gCameraFarPlane);
             C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628,
-                                  lbl_803DE628, lbl_803DE62C, *(f32 *)&lbl_803DE62C);
+                                  *(f32 *)&lbl_803DE628, lbl_803DE62C, *(f32 *)&lbl_803DE62C);
             C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
-                                  lbl_803DE62C, lbl_803DE62C, lbl_803DE62C);
+                                  *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C);
             C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
-                                  lbl_803DE630, lbl_803DE62C, lbl_803DE62C);
+                                  lbl_803DE630, *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C);
         }
         GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
         Camera_ApplyCurrentViewport(viewportArg);
@@ -936,14 +913,16 @@ void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
 #pragma peephole off
 void Camera_UpdateViewMatrices(void)
 {
-    CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
+    u8* base = (u8*)gObjInverseYawTransformMatrices;
+    int off = gCameraCurrentViewIndex * 96;
+    CameraViewSlot* slot = (CameraViewSlot*)(base + off + 4416);
     CameraMatrixTransform transform;
     f32 rotationMatrix[16];
 
     transform.x = -(slot->x - playerMapOffsetX);
     transform.y = -slot->y;
     transform.z = -(slot->z - playerMapOffsetZ);
-    transform.pitch = slot->pitch - 0x8000;
+    transform.pitch = slot->pitch + 0x8000;
     transform.yaw = slot->yaw;
     transform.roll = slot->roll;
     transform.scale = lbl_803DE5F0;
@@ -957,12 +936,12 @@ void Camera_UpdateViewMatrices(void)
     }
 
     mtxRotateByVec3s(rotationMatrix, &transform);
-    mtx44Transpose(rotationMatrix, gCameraViewMatrix);
+    mtx44Transpose(rotationMatrix, (f32*)(base + 5696));
 
     transform.x = slot->x - playerMapOffsetX;
     transform.y = slot->y;
     transform.z = slot->z - playerMapOffsetZ;
-    transform.pitch = -(slot->pitch - 0x8000);
+    transform.pitch = -(slot->pitch + 0x8000);
     transform.yaw = -slot->yaw;
     transform.roll = -slot->roll;
     transform.scale = lbl_803DE5F0;
@@ -975,16 +954,16 @@ void Camera_UpdateViewMatrices(void)
         transform.z -= lbl_803DE60C;
     }
 
-    setMatrixFromObjectPos((f32*)lbl_80338090, &transform);
-    mtx44Transpose((f32*)lbl_80338090, gCameraInverseViewMatrix);
-    PSMTXCopy(gCameraViewMatrix, gCameraViewRotationMatrix);
-    gCameraViewRotationMatrix[3] = lbl_803DE60C;
-    gCameraViewRotationMatrix[7] = lbl_803DE60C;
-    gCameraViewRotationMatrix[11] = lbl_803DE60C;
-    PSMTXCopy(gCameraInverseViewMatrix, gCameraInverseViewRotationMatrix);
-    gCameraInverseViewRotationMatrix[3] = lbl_803DE60C;
-    gCameraInverseViewRotationMatrix[7] = lbl_803DE60C;
-    gCameraInverseViewRotationMatrix[11] = lbl_803DE60C;
+    setMatrixFromObjectPos((f32*)(base + 4096), &transform);
+    mtx44Transpose((f32*)((int)base + 4096), (f32*)(base + 5760));
+    PSMTXCopy((f32*)(base + 5696), (f32*)(base + 5568));
+    *(f32*)(base + 5568 + 12) = lbl_803DE60C;
+    *(f32*)(base + 5568 + 28) = lbl_803DE60C;
+    *(f32*)(base + 5568 + 44) = lbl_803DE60C;
+    PSMTXCopy((f32*)(base + 5760), (f32*)(base + 5632));
+    *(f32*)(base + 5632 + 12) = lbl_803DE60C;
+    *(f32*)(base + 5632 + 28) = lbl_803DE60C;
+    *(f32*)(base + 5632 + 44) = lbl_803DE60C;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1233,13 +1212,14 @@ void Camera_SetFovY(f32 fovY)
 #pragma peephole off
 void Camera_InitState(void)
 {
+    u8* base = (u8*)gObjInverseYawTransformMatrices;
     u32 i;
     CameraViewSlot* slot;
-    f32* scaledProjection;
-    f32* copiedProjection;
+    int off;
 
     for (i = 0; i < 12; i++) {
-        slot = &gCameraShakeSlots[(u8)i];
+        off = (u8)i * 96;
+        slot = (CameraViewSlot*)(base + off + 4416);
         slot->roll = 0;
         slot->yaw = 0;
         slot->pitch = 0x7FF8;
@@ -1266,25 +1246,23 @@ void Camera_InitState(void)
     gCameraProjectionMode = 0;
 
     if (gCameraProjectionMode == 1) {
-        C_MTXOrtho(gCameraProjectionMatrix, lbl_803DC8A0, lbl_803DC89C, lbl_803DC898,
+        C_MTXOrtho((f32*)(base + 5824), lbl_803DC8A0, lbl_803DC89C, lbl_803DC898,
                    lbl_803DC894, gCameraNearPlane, gCameraFarPlane);
     } else {
-        C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane,
+        C_MTXPerspective((f32*)(base + 5824), gCameraFovY, gCameraAspectRatio, gCameraNearPlane,
                          gCameraFarPlane);
         C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628,
-                              lbl_803DE628, lbl_803DE62C, *(f32 *)&lbl_803DE62C);
+                              *(f32 *)&lbl_803DE628, lbl_803DE62C, *(f32 *)&lbl_803DE62C);
         C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
-                              lbl_803DE62C, lbl_803DE62C, lbl_803DE62C);
+                              *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C);
         C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
-                              lbl_803DE630, lbl_803DE62C, lbl_803DE62C);
+                              lbl_803DE630, *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C);
     }
-    GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
+    GXSetProjection((f32*)(base + 5824), gCameraProjectionMode);
 
-    scaledProjection = (f32*)((u8*)gObjInverseYawTransformMatrices + 0x1080);
-    copiedProjection = (f32*)((u8*)gObjInverseYawTransformMatrices + 0x0FC0);
     matrixFn_8006ff0c(gCameraFovY, gCameraAspectRatio, gCameraNearPlane, gCameraFarPlane,
-                      lbl_803DE5F0, scaledProjection, &lbl_803DC88A);
-    copyMatrix44(scaledProjection, copiedProjection);
+                      lbl_803DE5F0, (f32*)(base + 0x1080), &lbl_803DC88A);
+    copyMatrix44((f32*)((int)base + 0x1080), (f32*)(base + 0x0FC0));
 }
 #pragma peephole reset
 #pragma scheduling reset
