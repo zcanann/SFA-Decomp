@@ -26,9 +26,9 @@ u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value) {
         if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4)) {
             slot = (SynthVoiceSlot*)(synthVoice + idx * 0x404);
             if ((SYNTH_VOICE_SLOT_FLAGS64(slot) & 2) != 0) {
-                inpSetMidiCtrl(controller, idx, *(u8*)((u8*)slot + 0x20B), value);
+                inpSetMidiCtrl(controller, idx, slot->alternateStudioIndex, value);
             } else {
-                inpSetMidiCtrl(controller, idx, *(u8*)((u8*)slot + 0x122), value);
+                inpSetMidiCtrl(controller, idx, slot->studioIndex, value);
             }
             found = 1;
             handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
@@ -56,9 +56,9 @@ u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value) {
         if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4)) {
             slot = (SynthVoiceSlot*)(synthVoice + idx * 0x404);
             if ((SYNTH_VOICE_SLOT_FLAGS64(slot) & 2) != 0) {
-                inpSetMidiCtrl14(controller, idx, *(u8*)((u8*)slot + 0x20B), value);
+                inpSetMidiCtrl14(controller, idx, slot->alternateStudioIndex, value);
             } else {
-                inpSetMidiCtrl14(controller, idx, *(u8*)((u8*)slot + 0x122), value);
+                inpSetMidiCtrl14(controller, idx, slot->studioIndex, value);
             }
             found = 1;
             handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
