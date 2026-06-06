@@ -472,7 +472,7 @@ void CameraModeShipBattle_update(short *cam)
     f32 fc;
     f32 r;
     int m = 0;
-    char *focus = ((GameObject *)cam)->anim.targetObj;
+    char *focus = ((CameraObject *)cam)->anim.targetObj;
     if (focus != NULL) {
         m = shipBattleFn_801eed24((int)focus);
     }
