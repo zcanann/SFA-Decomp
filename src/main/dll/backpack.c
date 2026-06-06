@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/baddie_state.h"
 #include "main/dll/backpack_state.h"
 #include "main/dll/backpack.h"
 #include "main/dll/landedArwing.h"
@@ -442,7 +443,7 @@ int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
     f32 horizontalDamping;
     LandedArwingState *state;
 
-    state = *(LandedArwingState **)(*(int *)(obj + 0xb8) + 0x40c);
+    state = (LandedArwingState *)((GroundBaddieState *)*(int *)(obj + 0xb8))->control;
     *(u8 *)((int)stateWord + 0x34d) = 3;
     if (*(s8 *)((int)stateWord + 0x27a) != 0) {
         ObjHits_DisableObject(obj);
@@ -511,7 +512,7 @@ int LandedArwing_UpdateRetreatChase(int obj, int stateWord) {
     f32 y;
     f32 z;
 
-    state = *(LandedArwingState **)(*(int *)(obj + 0xb8) + 0x40c);
+    state = (LandedArwingState *)((GroundBaddieState *)*(int *)(obj + 0xb8))->control;
     player = (int)Obj_GetPlayerObject();
     *(u8 *)(stateWord + 0x34d) = 1;
     if (*(s8 *)(stateWord + 0x27a) != 0) {

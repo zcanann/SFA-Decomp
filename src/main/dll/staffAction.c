@@ -1,3 +1,4 @@
+#include "main/dll/baddie_state.h"
 #include "main/dll/landedArwing.h"
 #include "main/dll/staffAction.h"
 #include "main/objanim.h"
@@ -824,7 +825,7 @@ void FUN_80166e9c(double param_1,double param_2,double param_3,double param_4,in
   double dVar5;
   double dVar6;
   
-  iVar2 = *(int *)(*(int *)(param_5 + 0xb8) + 0x40c);
+  iVar2 = (int)((GroundBaddieState *)*(int *)(param_5 + 0xb8))->control;
   if ((*(byte *)(iVar2 + 0x92) >> 2 & 1) == 0) {
     dVar6 = (double)(float)(param_1 - (double)*(float *)(param_5 + 0xc));
     dVar5 = (double)(float)(param_2 - (double)*(float *)(param_5 + 0x10));
@@ -954,7 +955,7 @@ void FUN_8016725c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   float local_20;
   
   iVar1 = FUN_8028683c();
-  iVar2 = *(int *)(*(int *)(iVar1 + 0xb8) + 0x40c);
+  iVar2 = (int)((GroundBaddieState *)*(int *)(iVar1 + 0xb8))->control;
   if ((visible != 0) && (*(int *)(iVar1 + 0xf4) == 0)) {
     if ((*(char *)(iVar2 + 0x90) == '\x06') && ((*(byte *)(iVar2 + 0x92) >> 3 & 1) != 0)) {
       if ((*(byte *)(iVar2 + 0x92) >> 2 & 1) == 0) {
@@ -1043,7 +1044,7 @@ void dll_D3_render(int obj,int p2,int p3,int p4,int p5,s8 visible)
   f32 mtx[15];
   f32 scale;
 
-  state = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+  state = (int)((GroundBaddieState *)*(int *)(obj + 0xb8))->control;
   slideMtx = (f32 *)(state + 4);
   if ((visible != 0) && (*(int *)(obj + 0xf4) == 0)) {
     if ((*(u8 *)(state + 0x90) == 6) && (((*(u8 *)(state + 0x92) >> 3) & 1) != 0)) {
@@ -1238,7 +1239,7 @@ void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,
   f32 scale;
   f32 dot;
 
-  state = *(LandedArwingState **)(*(int *)(obj + 0xb8) + 0x40c);
+  state = (LandedArwingState *)((GroundBaddieState *)*(int *)(obj + 0xb8))->control;
   if ((u32)(state->flags92 >> 2 & 1) == 0) {
     vx = targetX - *(f32 *)(obj + 0xc);
     vy = targetY - *(f32 *)(obj + 0x10);
