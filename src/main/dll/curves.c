@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
 #include "main/dll/curves.h"
+#include "main/objlib.h"
 #include <string.h>
 
 
@@ -26,9 +27,6 @@ extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
-extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
-extern int ObjHits_IsObjectEnabled();
-extern undefined4 ObjHits_AddContactObject();
 extern undefined4 FUN_80061fc8();
 extern int FUN_800620e8();
 extern int objBboxFn_800640cc(void *hitOut,void *pos,f32 radius,int mode,void *bbox,int obj,
@@ -3703,21 +3701,20 @@ void dll_15_func06(short *curveObj,int *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_15_func05(u32 *state,int count,u32 source,f32 *radii,s8 *types)
+void dll_15_func05(CurvesCollisionState *state,int count,f32 *segmentLocalPoints,f32 *radii,
+                   s8 *types)
 {
-  u8 *stateBytes;
   int i;
 
-  stateBytes = (u8 *)state;
-  stateBytes[0x25c] &= 0xf;
-  stateBytes[0x25c] |= (count & 0xf) << 4;
-  state[1] = source;
+  state->pointCounts &= CURVES_POINT_COUNT_LOCAL_MASK;
+  state->pointCounts |= (count & CURVES_POINT_COUNT_LOCAL_MASK) << CURVES_POINT_COUNT_SEGMENT_SHIFT;
+  state->segmentLocalPoints = segmentLocalPoints;
   for (i = 0; i < count; i++) {
-    stateBytes[0xbc + i] = types[i];
-    stateBytes[0xb8 + i] = 0xff;
-    *(f32 *)(stateBytes + 0xa8 + i * sizeof(f32)) = radii[i];
+    state->segmentSourceTypes[i] = types[i];
+    state->segmentHitTypes[i] = -1;
+    state->segmentRadii[i] = radii[i];
   }
-  *state |= 0x2000;
+  state->flags |= CURVES_COLLISION_STATE_HIT_SEGMENTS;
 }
 
 /*
@@ -3733,78 +3730,75 @@ void dll_15_func05(u32 *state,int count,u32 source,f32 *radii,s8 *types)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e65c8(uint *param_1,byte param_2,uint param_3,uint param_4,undefined param_5,
-                 undefined param_6)
+void FUN_800e65c8(CurvesCollisionState *state,u8 pointCount,f32 *localPointPositions,
+                  f32 *localPointRadii,s8 primaryHitType,s8 secondaryHitType)
 {
-  *(byte *)(param_1 + 0x97) = *(byte *)(param_1 + 0x97) & 0xf0;
-  *(byte *)(param_1 + 0x97) = *(byte *)(param_1 + 0x97) | param_2 & 0xf;
-  *(undefined *)((int)param_1 + 0x25d) = param_5;
-  *(undefined *)((int)param_1 + 0x263) = param_6;
-  param_1[0x37] = param_3;
-  param_1[0x38] = param_4;
-  *param_1 = *param_1 | 0x2000008;
-  *(undefined *)(param_1 + 0x99) = 10;
+  state->pointCounts &= CURVES_POINT_COUNT_SEGMENT_MASK;
+  state->pointCounts |= pointCount & CURVES_POINT_COUNT_LOCAL_MASK;
+  state->primaryHitType = primaryHitType;
+  state->secondaryHitType = secondaryHitType;
+  state->localPointPositions = localPointPositions;
+  state->localPointRadii = localPointRadii;
+  state->flags |= CURVES_COLLISION_STATE_SECONDARY_LOCAL_POINTS | CURVES_COLLISION_STATE_LOCAL_POINTS;
+  state->activeTimer = 10;
   return;
 }
 
-/* dll_15_func07: early-out unless flags bits 0x04000000 and 0x00002000 are
- * set; bail if obj[0x25b] isn't 1 or 2; otherwise OR-in 0x01 (when bit 0x4)
- * and 0x20 (when bit 0x01000000) into the mask, then forward to
- * hitDetectFn_800691c0(arg1, obj+0x240, mask, 1). */
+/* Forward active hit-segment bounds to ObjHits with the state-derived target mask. */
 extern void hitDetectFn_800691c0(void* a, void* b, u8 mask, int e);
 #pragma scheduling off
 #pragma peephole off
-void dll_15_func07(void* arg1, u8* obj)
+void dll_15_func07(void* arg1, CurvesCollisionState* state)
 {
     u32 flags;
     s8 type;
     u8 mask;
     mask = 0;
-    flags = *(u32*)obj;
-    if ((s32)(flags & 0x04000000) == 0) return;
-    if ((s32)(flags & 0x00002000) != 0) {
-        type = *(s8*)(obj + 0x25b);
+    flags = state->flags;
+    if ((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) == 0) return;
+    if ((s32)(flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0) {
+        type = state->subtype;
         if (type != 1 && type != 2) return;
         if ((s32)(flags & 0x00000004) != 0) mask = (u8)(mask | 0x1);
         if ((s32)(flags & 0x01000000) != 0) mask = (u8)(mask | 0x20);
-        hitDetectFn_800691c0(arg1, obj + 0x240, mask, 1);
+        hitDetectFn_800691c0(arg1, state->hitBounds, mask, 1);
     }
 }
 #pragma peephole reset
 #pragma scheduling reset
 
-/* curves_setLocalPointCollisionEx: extended dll_15_func04 - same fields plus a second signed
- * byte at obj[0x263] and OR-in 0x02000008 on the flags word at obj[0]. */
+/* Extended local-point collision setup with a secondary hit type. */
 #pragma scheduling off
 #pragma peephole off
-void curves_setLocalPointCollisionEx(u8* obj, int a, u32 b, u32 c, int d, int e)
+void curves_setLocalPointCollisionEx(CurvesCollisionState* state, int pointCount,
+                                     f32 *localPointPositions, f32 *localPointRadii,
+                                     int primaryHitType, int secondaryHitType)
 {
-    obj[0x25c] &= 0xf0;
-    obj[0x25c] = (u8)(obj[0x25c] | (a & 0xf));
-    *(s8*)(obj + 0x25d) = (s8)d;
-    *(s8*)(obj + 0x263) = (s8)e;
-    *(u32*)(obj + 0xdc) = b;
-    *(u32*)(obj + 0xe0) = c;
-    *(u32*)obj |= 0x02000008;
-    obj[0x264] = 0xa;
+    state->pointCounts &= CURVES_POINT_COUNT_SEGMENT_MASK;
+    state->pointCounts = (u8)(state->pointCounts | (pointCount & CURVES_POINT_COUNT_LOCAL_MASK));
+    state->primaryHitType = (s8)primaryHitType;
+    state->secondaryHitType = (s8)secondaryHitType;
+    state->localPointPositions = localPointPositions;
+    state->localPointRadii = localPointRadii;
+    state->flags |= CURVES_COLLISION_STATE_SECONDARY_LOCAL_POINTS | CURVES_COLLISION_STATE_LOCAL_POINTS;
+    state->activeTimer = 0xa;
 }
 #pragma peephole reset
 #pragma scheduling reset
 
-/* dll_15_func04: write the per-slot config block on obj+0x25c..+0x264:
- * replace low 4 bits of obj[0x25c] with (a & 0xf), set obj[0x25d] = (s8)d,
- * stash two u32s at +0xdc/+0xe0, OR-in bit 3 of obj[0], and set obj[0x264]=10. */
+/* Basic local-point collision setup used by path control. */
 #pragma scheduling off
 #pragma peephole off
-void dll_15_func04(u8* obj, int a, u32 b, u32 c, int d)
+void dll_15_func04(CurvesCollisionState* state, int pointCount, f32 *localPointPositions,
+                   f32 *localPointRadii, int primaryHitType)
 {
-    obj[0x25c] &= 0xf0;
-    obj[0x25c] = (u8)(obj[0x25c] | (a & 0xf));
-    *(s8*)(obj + 0x25d) = (s8)d;
-    *(u32*)(obj + 0xdc) = b;
-    *(u32*)(obj + 0xe0) = c;
-    *(u32*)obj |= 0x8;
-    obj[0x264] = 0xa;
+    state->pointCounts &= CURVES_POINT_COUNT_SEGMENT_MASK;
+    state->pointCounts = (u8)(state->pointCounts | (pointCount & CURVES_POINT_COUNT_LOCAL_MASK));
+    state->primaryHitType = (s8)primaryHitType;
+    state->localPointPositions = localPointPositions;
+    state->localPointRadii = localPointRadii;
+    state->flags |= CURVES_COLLISION_STATE_LOCAL_POINTS;
+    state->activeTimer = 0xa;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -3824,22 +3818,13 @@ void dll_15_func04(u8* obj, int a, u32 b, u32 c, int d)
  */
 #pragma scheduling off
 #pragma peephole off
-void curves_clear(uint *param_1,int param_2,uint param_3,int param_4)
+void curves_clear(CurvesCollisionState *state,int updateMode,uint flags,int subtype)
 {
-  uint *curve;
-  int flagsByte;
-  uint flags;
-  int subtype;
-
-  curve = param_1;
-  flagsByte = param_2;
-  flags = param_3;
-  subtype = param_4;
-  memset(curve,0,0x268);
-  *(s8 *)((int)curve + 0x25b) = (s8)subtype;
-  *curve = flags | 0x4000000;
-  *(u8 *)((int)curve + 0x262) = (u8)flagsByte;
-  *(u8 *)(curve + 0x96) = 5;
+  memset(state,0,CURVES_COLLISION_STATE_SIZE);
+  state->subtype = (s8)subtype;
+  state->flags = flags | CURVES_COLLISION_STATE_ACTIVE;
+  state->updateMode = (u8)updateMode;
+  state->surfaceFlags = 5;
   return;
 }
 #pragma peephole reset

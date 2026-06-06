@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/BW/BWalphaanim.h"
+#include "main/dll/curves.h"
 
 
 #pragma peephole off
@@ -81,7 +82,6 @@ extern void Obj_ClearModelSlotIndex(int obj);
 extern void fn_801EC928(int obj, u8 *state);
 extern void fn_801EB420();
 extern void ObjGroup_AddObject(int obj, int group);
-extern void curves_setLocalPointCollisionEx(u8 *path, int a, u8 *b, f32 *c, int d, int e);
 extern int *gGameUIInterface;
 extern int *gPathControlInterface;
 extern f32 lbl_803DC0B8;
@@ -266,7 +266,8 @@ void SnowBike_init(int obj, u8 *params, int flag)
     (**(void (**)(u8 *, int, int, int))(*gPathControlInterface + 0x4))(path, 0, 0x48607, 1);
     (**(void (**)(u8 *, int, char *, char *, u32 *))(*gPathControlInterface + 0xc))(path, 4, base, base + 0x30, &pathParam);
     if (((SnowBikeFlags *)(state + 0x428))->b02 && *(s8 *)(state + 0x65) != -1) {
-        curves_setLocalPointCollisionEx(path, 1, (u8 *)(base + 0x40), &lbl_803DC0B8, 8, *(s8 *)(state + 0x65));
+        curves_setLocalPointCollisionEx((CurvesCollisionState *)path, 1, (f32 *)(base + 0x40),
+                                        &lbl_803DC0B8, 8, *(s8 *)(state + 0x65));
     } else {
         (**(void (**)(u8 *, int, char *, f32 *, int))(*gPathControlInterface + 0x8))(path, 1, base + 0x40, &lbl_803DC0B8, 8);
     }

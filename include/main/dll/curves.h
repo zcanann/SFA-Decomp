@@ -26,6 +26,14 @@
 #define ROMCURVE_PLACEMENT_EXT_SIZE 0x30
 #define ROMCURVE_TYPE_ACTION 0x15
 #define ROMCURVE_GETCURVES_MAX_POINTS 0x23
+#define CURVES_COLLISION_STATE_SIZE 0x268
+#define CURVES_COLLISION_STATE_ACTIVE 0x04000000
+#define CURVES_COLLISION_STATE_LOCAL_POINTS 0x00000008
+#define CURVES_COLLISION_STATE_HIT_SEGMENTS 0x00002000
+#define CURVES_COLLISION_STATE_SECONDARY_LOCAL_POINTS 0x02000000
+#define CURVES_POINT_COUNT_LOCAL_MASK 0x0f
+#define CURVES_POINT_COUNT_SEGMENT_MASK 0xf0
+#define CURVES_POINT_COUNT_SEGMENT_SHIFT 4
 
 typedef struct RomCurveDef {
   u8 pad00[0x08];
@@ -69,6 +77,33 @@ typedef struct RomCurveSegmentProjection {
   f32 nearestZ;
 } RomCurveSegmentProjection;
 
+typedef struct CurvesCollisionState {
+  u32 flags;
+  f32 *segmentLocalPoints;
+  u8 pad008[0x0A8 - 0x008];
+  f32 segmentRadii[4];
+  s8 segmentHitTypes[4];
+  s8 segmentSourceTypes[4];
+  u8 pad0C0[0x0DC - 0x0C0];
+  f32 *localPointPositions;
+  f32 *localPointRadii;
+  u8 pad0E4[0x240 - 0x0E4];
+  u8 hitBounds[0x18];
+  u8 heightPadding;
+  u8 pad259[2];
+  s8 subtype;
+  u8 pointCounts;
+  s8 primaryHitType;
+  u8 localPointHitMask;
+  u8 surfaceHitMask;
+  u8 surfaceFlags;
+  u8 surfaceCounter;
+  u8 updateMode;
+  s8 secondaryHitType;
+  u8 activeTimer;
+  u8 pad265[CURVES_COLLISION_STATE_SIZE - 0x265];
+} CurvesCollisionState;
+
 STATIC_ASSERT(sizeof(RomCurveDef) == ROMCURVE_DEF_SIZE);
 STATIC_ASSERT(offsetof(RomCurveDef, x) == ROMCURVE_X_OFFSET);
 STATIC_ASSERT(offsetof(RomCurveDef, y) == ROMCURVE_Y_OFFSET);
@@ -91,6 +126,24 @@ STATIC_ASSERT(offsetof(RomCurvePoint, type) == 0x14);
 STATIC_ASSERT(sizeof(RomCurveSegmentProjection) == 0x24);
 STATIC_ASSERT(offsetof(RomCurveSegmentProjection, endX) == 0x0C);
 STATIC_ASSERT(offsetof(RomCurveSegmentProjection, nearestX) == 0x18);
+
+STATIC_ASSERT(sizeof(CurvesCollisionState) == CURVES_COLLISION_STATE_SIZE);
+STATIC_ASSERT(offsetof(CurvesCollisionState, flags) == 0x00);
+STATIC_ASSERT(offsetof(CurvesCollisionState, segmentLocalPoints) == 0x04);
+STATIC_ASSERT(offsetof(CurvesCollisionState, segmentRadii) == 0xA8);
+STATIC_ASSERT(offsetof(CurvesCollisionState, segmentHitTypes) == 0xB8);
+STATIC_ASSERT(offsetof(CurvesCollisionState, segmentSourceTypes) == 0xBC);
+STATIC_ASSERT(offsetof(CurvesCollisionState, localPointPositions) == 0xDC);
+STATIC_ASSERT(offsetof(CurvesCollisionState, localPointRadii) == 0xE0);
+STATIC_ASSERT(offsetof(CurvesCollisionState, hitBounds) == 0x240);
+STATIC_ASSERT(offsetof(CurvesCollisionState, heightPadding) == 0x258);
+STATIC_ASSERT(offsetof(CurvesCollisionState, subtype) == 0x25B);
+STATIC_ASSERT(offsetof(CurvesCollisionState, pointCounts) == 0x25C);
+STATIC_ASSERT(offsetof(CurvesCollisionState, primaryHitType) == 0x25D);
+STATIC_ASSERT(offsetof(CurvesCollisionState, localPointHitMask) == 0x25E);
+STATIC_ASSERT(offsetof(CurvesCollisionState, updateMode) == 0x262);
+STATIC_ASSERT(offsetof(CurvesCollisionState, secondaryHitType) == 0x263);
+STATIC_ASSERT(offsetof(CurvesCollisionState, activeTimer) == 0x264);
 
 undefined4
 RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
@@ -140,12 +193,15 @@ double FUN_800e56bc(undefined8 param_1,double param_2,double param_3,double para
 RomCurvePoint *curves_getCurves(int obj,f32 x,f32 z,u32 *outCount,int queryAll);
 void dll_15_func08(short *curveObj,int *state,uint updateValue,f32 step);
 void FUN_800e6140(undefined4 param_1,uint *param_2);
-void dll_15_func05(u32 *state,int count,u32 source,f32 *radii,s8 *types);
+void dll_15_func05(CurvesCollisionState *state,int count,f32 *segmentLocalPoints,f32 *radii,
+                   s8 *types);
 void dll_15_func06(short *curveObj,int *state);
-void FUN_800e65c8(uint *param_1,byte param_2,uint param_3,uint param_4,undefined param_5,
-                 undefined param_6);
-void curves_setLocalPointCollisionEx(u8* obj, int a, u32 b, u32 c, int d, int e);
-void curves_clear(uint *param_1,int param_2,uint param_3,int param_4);
+void FUN_800e65c8(CurvesCollisionState *state,u8 pointCount,f32 *localPointPositions,
+                  f32 *localPointRadii,s8 primaryHitType,s8 secondaryHitType);
+void curves_setLocalPointCollisionEx(CurvesCollisionState *state,int pointCount,
+                                     f32 *localPointPositions,f32 *localPointRadii,
+                                     int primaryHitType,int secondaryHitType);
+void curves_clear(CurvesCollisionState *state,int updateMode,uint flags,int subtype);
 int pushable_savePos(int obj);
 uint playerHasKrazoaSpirit(u8 checkStoryBits,uint bit);
 void saveFileStruct_setCheatActive(uint param_1,u8 param_2);
