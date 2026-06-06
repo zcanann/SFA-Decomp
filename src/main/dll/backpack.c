@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/backpack.h"
+#include "main/dll/landedArwing.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 
@@ -438,9 +439,9 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target) {
 #pragma peephole off
 int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
     f32 horizontalDamping;
-    int state;
+    LandedArwingState *state;
 
-    state = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+    state = *(LandedArwingState **)(*(int *)(obj + 0xb8) + 0x40c);
     *(u8 *)((int)stateWord + 0x34d) = 3;
     if (*(s8 *)((int)stateWord + 0x27a) != 0) {
         ObjHits_DisableObject(obj);
@@ -448,7 +449,7 @@ int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
         *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) + lbl_803E2FD8;
         *(f32 *)(obj + 0x2c) = -*(f32 *)(obj + 0x2c);
         ObjAnim_SetCurrentMove(obj, 3, lbl_803E2FDC, 0);
-        *(f32 *)(state + 0x44) = lbl_803E2FE0;
+        state->animSpeed = lbl_803E2FE0;
     }
     (*(ObjHitsPriorityState **)(obj + 0x54))->objectPairHitVolume = 0;
     *stateWord = *stateWord | 0x4000;
@@ -456,28 +457,28 @@ int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
     *(f32 *)(obj + 0x28) = lbl_803E2FE8 * (*(f32 *)(obj + 0x28) - lbl_803E2FEC);
     *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * horizontalDamping;
     objMove(obj, *(f32 *)(obj + 0x24), *(f32 *)(obj + 0x28), *(f32 *)(obj + 0x2c));
-    if (*(f32 *)(obj + 0xc) < *(f32 *)(state + 0x48)) {
-        *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x48);
+    if (*(f32 *)(obj + 0xc) < state->boundsMinX) {
+        *(f32 *)(obj + 0xc) = state->boundsMinX;
         *(f32 *)(obj + 0x24) = lbl_803E2FF0 * -*(f32 *)(obj + 0x24);
     }
-    if (*(f32 *)(obj + 0xc) > *(f32 *)(state + 0x4c)) {
-        *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x4c);
+    if (*(f32 *)(obj + 0xc) > state->boundsMaxX) {
+        *(f32 *)(obj + 0xc) = state->boundsMaxX;
         *(f32 *)(obj + 0x24) = lbl_803E2FF0 * -*(f32 *)(obj + 0x24);
     }
-    if (*(f32 *)(obj + 0x10) < *(f32 *)(state + 0x5c)) {
-        *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x5c);
+    if (*(f32 *)(obj + 0x10) < state->boundsMinY) {
+        *(f32 *)(obj + 0x10) = state->boundsMinY;
         *(f32 *)(obj + 0x28) = lbl_803E2FF0 * -*(f32 *)(obj + 0x28);
     }
-    if (*(f32 *)(obj + 0x10) > *(f32 *)(state + 0x58)) {
-        *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x58);
+    if (*(f32 *)(obj + 0x10) > state->boundsMaxY) {
+        *(f32 *)(obj + 0x10) = state->boundsMaxY;
         *(f32 *)(obj + 0x28) = lbl_803E2FF0 * -*(f32 *)(obj + 0x28);
     }
-    if (*(f32 *)(obj + 0x14) < *(f32 *)(state + 0x54)) {
-        *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x54);
+    if (*(f32 *)(obj + 0x14) < state->boundsMinZ) {
+        *(f32 *)(obj + 0x14) = state->boundsMinZ;
         *(f32 *)(obj + 0x2c) = lbl_803E2FF0 * -*(f32 *)(obj + 0x2c);
     }
-    if (*(f32 *)(obj + 0x14) > *(f32 *)(state + 0x50)) {
-        *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x50);
+    if (*(f32 *)(obj + 0x14) > state->boundsMaxZ) {
+        *(f32 *)(obj + 0x14) = state->boundsMaxZ;
         *(f32 *)(obj + 0x2c) = lbl_803E2FF0 * -*(f32 *)(obj + 0x2c);
     }
     if (lbl_803E2FF4 == *(f32 *)(obj + 0x98)) {
@@ -504,39 +505,39 @@ int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
 int LandedArwing_UpdateRetreatChase(int obj, int stateWord) {
     f32 scale;
     int player;
-    int state;
+    LandedArwingState *state;
     f32 x;
     f32 y;
     f32 z;
 
-    state = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+    state = *(LandedArwingState **)(*(int *)(obj + 0xb8) + 0x40c);
     player = (int)Obj_GetPlayerObject();
     *(u8 *)(stateWord + 0x34d) = 1;
     if (*(s8 *)(stateWord + 0x27a) != 0) {
-        *(u16 *)(state + 0x8e) = 0x3c;
-        *(f32 *)(state + 0x60) = lbl_803E2FFC;
+        state->scriptTimer = 0x3c;
+        state->speed = lbl_803E2FFC;
         ObjHits_DisableObject(obj);
     }
-    if (*(u8 *)(state + 0x90) == 6) {
+    if (state->surfaceMode == 6) {
         goto use_player_reflect_position;
     }
     if ((u32)player == 0) {
         goto use_object_position;
     }
-    if (*(f32 *)(player + 0x18) < *(f32 *)(state + 0x48)) {
+    if (*(f32 *)(player + 0x18) < state->boundsMinX) {
         goto use_object_position;
     }
-    if (*(f32 *)(player + 0x18) > *(f32 *)(state + 0x4c)) {
-        if (*(f32 *)(player + 0x1c) < *(f32 *)(state + 0x5c)) {
+    if (*(f32 *)(player + 0x18) > state->boundsMaxX) {
+        if (*(f32 *)(player + 0x1c) < state->boundsMinY) {
             goto use_object_position;
         }
     }
-    if (*(f32 *)(player + 0x1c) > *(f32 *)(state + 0x58)) {
-        if (*(f32 *)(player + 0x20) < *(f32 *)(state + 0x54)) {
+    if (*(f32 *)(player + 0x1c) > state->boundsMaxY) {
+        if (*(f32 *)(player + 0x20) < state->boundsMinZ) {
             goto use_object_position;
         }
     }
-    if (*(f32 *)(player + 0x20) > *(f32 *)(state + 0x50)) {
+    if (*(f32 *)(player + 0x20) > state->boundsMaxZ) {
         goto use_object_position;
     }
     goto use_player_reflect_position;
@@ -557,19 +558,19 @@ use_player_reflect_position:
     }
 update_action:
     updateConstrainedChaseVelocity(obj, x, y, z, scale);
-    if (*(u8 *)(state + 0x90) == 6) {
-        if ((u32)((*(u8 *)(state + 0x92) >> 2) & 1) != 0U) {
-            fn_80165B3C(obj, state);
+    if (state->surfaceMode == 6) {
+        if ((u32)((state->flags92 >> 2) & 1) != 0U) {
+            fn_80165B3C(obj, (int)state);
         } else {
-            fn_80166444(obj, state);
+            fn_80166444(obj, (int)state);
         }
     } else {
-        fn_80165C8C(obj, state);
+        fn_80165C8C(obj, (int)state);
     }
-    if ((int)*(u16 *)(state + 0x8e) <= (int)(u32)framesThisStep) {
+    if ((int)state->scriptTimer <= (int)(u32)framesThisStep) {
         return 2;
     }
-    *(u16 *)(state + 0x8e) -= framesThisStep;
+    state->scriptTimer -= framesThisStep;
     return 0;
 }
 #pragma pop

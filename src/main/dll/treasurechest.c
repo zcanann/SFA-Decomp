@@ -1,3 +1,4 @@
+#include "main/dll/landedArwing.h"
 #include "main/objanim.h"
 #include "main/object_descriptor.h"
 
@@ -33,7 +34,6 @@ extern f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
 
 extern void fn_801659B8(void);
-extern void LandedArwing_UpdateFlightChase(void);
 extern void LandedArwing_UpdateRetreatChase(void);
 extern void LandedArwing_UpdateBounceFade(void);
 extern void LandedArwing_TriggerLaunchTarget(void);
@@ -55,7 +55,7 @@ void dll_D3_update(int *obj)
 {
     int trans;
     int *state;
-    int *extra;
+    LandedArwingState *extra;
     int *player;
     int iVar3;
     int rc;
@@ -69,24 +69,24 @@ void dll_D3_update(int *obj)
 
     trans = *(int *)((char *)obj + 0x4c);
     state = *(int **)((char *)obj + 0xb8);
-    extra = *(int **)((char *)state + 0x40c);
+    extra = *(LandedArwingState **)((char *)state + 0x40c);
     player = (int *)Obj_GetPlayerObject();
     local_90 = lbl_803E3034;
 
-    if (*(void **)extra == NULL) {
-        *(u8 *)((char *)extra + 0x90) = 6;
-        if (((u32)*(u8 *)((char *)extra + 0x92) >> 4) != 0) {
-            *(int *)extra = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &local_90);
-            if (*(void **)extra != NULL) {
-                (*(void (**)(int, int, int))(*(int **)(*(int *)extra + 0x68) + 0x20 / 4))(
-                    *(int *)extra,
-                    (int)((char *)extra + 0x48),
-                    (int)((char *)extra + 0x91));
-                *(u8 *)((char *)extra + 0x90) = 5;
+    if (extra->boundsObj == NULL) {
+        extra->surfaceMode = 6;
+        if (((u32)extra->flags92 >> 4) != 0) {
+            *(int *)&extra->boundsObj = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &local_90);
+            if (extra->boundsObj != NULL) {
+                (*(void (**)(int, int, int))(*(int **)(*(int *)&extra->boundsObj + 0x68) + 0x20 / 4))(
+                    *(int *)&extra->boundsObj,
+                    (int)&extra->boundsMinX,
+                    (int)&extra->bounceFlags);
+                extra->surfaceMode = 5;
             }
-            *(u8 *)((char *)extra + 0x92) =
-                (u8)((((*(u8 *)((char *)extra + 0x92) >> 4) - 1) << 4) |
-                     (*(u8 *)((char *)extra + 0x92) & 0xf));
+            extra->flags92 =
+                (u8)((((extra->flags92 >> 4) - 1) << 4) |
+                     (extra->flags92 & 0xf));
         }
     }
 
@@ -105,14 +105,14 @@ void dll_D3_update(int *obj)
     rc = ((int (*)(int *, int *, int))((void **)*(int *)gBaddieControlInterface)[0x30 / 4])(obj, state, 0);
     if (rc == 0) return;
 
-    if ((*(u8 *)((char *)extra + 0x92) & 2) == 0) {
+    if ((extra->flags92 & 2) == 0) {
         if (ObjContact_AddCallback(obj, (int)player, fn_80167550) != 0) {
-            *(u8 *)((char *)extra + 0x92) =
-                (u8)((*(u8 *)((char *)extra + 0x92) & 0xfd) | 2);
+            extra->flags92 =
+                (u8)((extra->flags92 & 0xfd) | 2);
         }
     }
 
-    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, *(f32 *)((char *)extra + 0x44), timeDelta, NULL);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, extra->animSpeed, timeDelta, NULL);
 
     if (*(s16 *)((char *)state + 0x402) != 1) {
         rc = ((int (*)(f32, int *, int *, int))((void **)*(int *)gBaddieControlInterface)[0x48 / 4])(
@@ -183,17 +183,17 @@ void dll_D3_update(int *obj)
 
     *(int *)((char *)obj + 0xc0) = *(int *)((char *)state + 0x3e0);
 
-    if ((*(u8 *)((char *)extra + 0x92) & 1) == 0 &&
-        *(u8 *)((char *)extra + 0x90) == 6) {
+    if ((extra->flags92 & 1) == 0 &&
+        extra->surfaceMode == 6) {
         iVar3 = objBboxFn_800640cc(
             (int)((char *)obj + 0x80),
             (f32 *)((char *)obj + 0xc),
             lbl_803E3030, 0,
             aiStack_80, obj, -0x7c, -1, 0xff, 0);
         if (iVar3 != 0 && local_30 == 13) {
-            *(u8 *)((char *)extra + 0x92) =
-                (u8)((*(u8 *)((char *)extra + 0x92) & 0xfe) | 1);
-            *(s16 *)((char *)extra + 0x8e) = (s16)(randomGetRange(10, 0xf) * 0x3c);
+            extra->flags92 =
+                (u8)((extra->flags92 & 0xfe) | 1);
+            *(s16 *)&extra->scriptTimer = (s16)(randomGetRange(10, 0xf) * 0x3c);
         }
     }
 }
@@ -212,7 +212,7 @@ void dll_D3_update(int *obj)
 void dll_D3_init(int obj, int def, int flag)
 {
     int state;
-    int extra;
+    LandedArwingState *extra;
     u8 setupFlags;
     f32 fz;
     s16 ftag;
@@ -226,18 +226,18 @@ void dll_D3_init(int obj, int def, int flag)
         (obj, def, state, 5, 1, 0x108, setupFlags, lbl_803E3048);
     *(int *)(obj + 0xbc) = 0;
 
-    extra = *(int *)(state + 0x40c);
+    extra = *(LandedArwingState **)(state + 0x40c);
     memset((void *)extra, 0, 0x94);
-    *(u8 *)(extra + 0x90) = 5;
-    *(u8 *)(extra + 0x92) = (*(u8 *)(extra + 0x92) & 0xf) | 0x30;
+    extra->surfaceMode = 5;
+    extra->flags92 = (extra->flags92 & 0xf) | 0x30;
     fz = lbl_803E2FDC;
-    *(f32 *)(extra + 0x7c) = fz;
-    *(f32 *)(extra + 0x80) = lbl_803E2FF4;
-    *(f32 *)(extra + 0x84) = fz;
-    *(f32 *)(extra + 0x88) = -*(f32 *)(obj + 0x10);
-    *(f32 *)(extra + 0x70) = *(f32 *)(obj + 0xc);
-    *(f32 *)(extra + 0x74) = *(f32 *)(obj + 0x10);
-    *(f32 *)(extra + 0x78) = *(f32 *)(obj + 0x14);
+    extra->surfaceNormalX = fz;
+    extra->surfaceNormalY = lbl_803E2FF4;
+    extra->surfaceNormalZ = fz;
+    extra->surfacePlaneD = -*(f32 *)(obj + 0x10);
+    extra->scriptTargetX = *(f32 *)(obj + 0xc);
+    extra->scriptTargetY = *(f32 *)(obj + 0x10);
+    extra->scriptTargetZ = *(f32 *)(obj + 0x14);
 
     ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
     if (*(u8 *)(def + 0x2b) != 0) {
@@ -253,10 +253,10 @@ void dll_D3_init(int obj, int def, int flag)
     ObjHits_DisableObject(obj);
 
     fz = lbl_803E2FF4;
-    *(f32 *)(extra + 4) = fz;
-    *(f32 *)(extra + 0x18) = fz;
-    *(f32 *)(extra + 0x2c) = fz;
-    *(f32 *)(extra + 0x40) = fz;
+    extra->unk_04 = fz;
+    extra->unk_18 = fz;
+    extra->unk_2C = fz;
+    extra->unk_40 = fz;
 }
 #pragma peephole reset
 #pragma scheduling reset

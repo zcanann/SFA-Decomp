@@ -1,3 +1,4 @@
+#include "main/dll/landedArwing.h"
 #include "main/dll/staffAction.h"
 #include "main/objanim.h"
 
@@ -332,220 +333,220 @@ void FUN_801660c0(int param_1,int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_80165C8C(short *param_1,int param_2)
+void fn_80165C8C(short *param_1,LandedArwingState *param_2)
 {
   int iVar2;
 
   objMove((int)param_1,*(float *)(param_1 + 0x12),*(float *)(param_1 + 0x14),
           *(float *)(param_1 + 0x16));
-  switch (*(byte *)(param_2 + 0x90)) {
+  switch (param_2->surfaceMode) {
   case 0:
-    if (*(float *)(param_1 + 8) < *(float *)(param_2 + 0x5c)) {
-      *(float *)(param_1 + 8) = *(float *)(param_2 + 0x5c);
-      if ((*(byte *)(param_2 + 0x91) & 0x20) != 0) {
+    if (*(float *)(param_1 + 8) < param_2->boundsMinY) {
+      *(float *)(param_1 + 8) = param_2->boundsMinY;
+      if ((param_2->bounceFlags & 0x20) != 0) {
         *(float *)(param_1 + 0x12) = -*(float *)(param_1 + 0x14);
-        *(undefined *)(param_2 + 0x90) = 5;
+        param_2->surfaceMode = 5;
       }
       *(float *)(param_1 + 0x14) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) > *(float *)(param_2 + 0x58)) {
-      *(float *)(param_1 + 8) = *(float *)(param_2 + 0x58);
-      if ((*(byte *)(param_2 + 0x91) & 0x10) != 0) {
+    else if (*(float *)(param_1 + 8) > param_2->boundsMaxY) {
+      *(float *)(param_1 + 8) = param_2->boundsMaxY;
+      if ((param_2->bounceFlags & 0x10) != 0) {
         *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x14);
-        *(undefined *)(param_2 + 0x90) = 4;
+        param_2->surfaceMode = 4;
       }
       *(float *)(param_1 + 0x14) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) > *(float *)(param_2 + 0x50)) {
-      *(float *)(param_1 + 10) = *(float *)(param_2 + 0x50);
-      if ((*(byte *)(param_2 + 0x91) & 4) != 0) {
+    else if (*(float *)(param_1 + 10) > param_2->boundsMaxZ) {
+      *(float *)(param_1 + 10) = param_2->boundsMaxZ;
+      if ((param_2->bounceFlags & 4) != 0) {
         *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x16);
-        *(undefined *)(param_2 + 0x90) = 2;
+        param_2->surfaceMode = 2;
       }
       *(float *)(param_1 + 0x16) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) < *(float *)(param_2 + 0x54)) {
-      *(float *)(param_1 + 10) = *(float *)(param_2 + 0x54);
-      if ((*(byte *)(param_2 + 0x91) & 8) != 0) {
+    else if (*(float *)(param_1 + 10) < param_2->boundsMinZ) {
+      *(float *)(param_1 + 10) = param_2->boundsMinZ;
+      if ((param_2->bounceFlags & 8) != 0) {
         *(float *)(param_1 + 0x12) = -*(float *)(param_1 + 0x16);
-        *(undefined *)(param_2 + 0x90) = 3;
+        param_2->surfaceMode = 3;
       }
       *(float *)(param_1 + 0x16) = lbl_803E2FDC;
     }
     break;
   case 1:
-    if (*(float *)(param_1 + 8) < *(float *)(param_2 + 0x5c)) {
-      *(float *)(param_1 + 8) = *(float *)(param_2 + 0x5c);
-      if ((*(byte *)(param_2 + 0x91) & 0x20) != 0) {
+    if (*(float *)(param_1 + 8) < param_2->boundsMinY) {
+      *(float *)(param_1 + 8) = param_2->boundsMinY;
+      if ((param_2->bounceFlags & 0x20) != 0) {
         *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x14);
-        *(undefined *)(param_2 + 0x90) = 5;
+        param_2->surfaceMode = 5;
       }
       *(float *)(param_1 + 0x14) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) > *(float *)(param_2 + 0x58)) {
-      *(float *)(param_1 + 8) = *(float *)(param_2 + 0x58);
-      if ((*(byte *)(param_2 + 0x91) & 0x10) != 0) {
+    else if (*(float *)(param_1 + 8) > param_2->boundsMaxY) {
+      *(float *)(param_1 + 8) = param_2->boundsMaxY;
+      if ((param_2->bounceFlags & 0x10) != 0) {
         *(float *)(param_1 + 0x12) = -*(float *)(param_1 + 0x14);
-        *(undefined *)(param_2 + 0x90) = 4;
+        param_2->surfaceMode = 4;
       }
       *(float *)(param_1 + 0x14) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) > *(float *)(param_2 + 0x50)) {
-      *(float *)(param_1 + 10) = *(float *)(param_2 + 0x50);
-      if ((*(byte *)(param_2 + 0x91) & 4) != 0) {
+    else if (*(float *)(param_1 + 10) > param_2->boundsMaxZ) {
+      *(float *)(param_1 + 10) = param_2->boundsMaxZ;
+      if ((param_2->bounceFlags & 4) != 0) {
         *(float *)(param_1 + 0x12) = -*(float *)(param_1 + 0x16);
-        *(undefined *)(param_2 + 0x90) = 2;
+        param_2->surfaceMode = 2;
       }
       *(float *)(param_1 + 0x16) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) < *(float *)(param_2 + 0x54)) {
-      *(float *)(param_1 + 10) = *(float *)(param_2 + 0x54);
-      if ((*(byte *)(param_2 + 0x91) & 8) != 0) {
+    else if (*(float *)(param_1 + 10) < param_2->boundsMinZ) {
+      *(float *)(param_1 + 10) = param_2->boundsMinZ;
+      if ((param_2->bounceFlags & 8) != 0) {
         *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x16);
-        *(undefined *)(param_2 + 0x90) = 3;
+        param_2->surfaceMode = 3;
       }
       *(float *)(param_1 + 0x16) = lbl_803E2FDC;
     }
     break;
   case 2:
-    if (*(float *)(param_1 + 6) < *(float *)(param_2 + 0x48)) {
-      *(float *)(param_1 + 6) = *(float *)(param_2 + 0x48);
-      if ((*(byte *)(param_2 + 0x91) & 1) != 0) {
+    if (*(float *)(param_1 + 6) < param_2->boundsMinX) {
+      *(float *)(param_1 + 6) = param_2->boundsMinX;
+      if ((param_2->bounceFlags & 1) != 0) {
         *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x12);
-        *(undefined *)(param_2 + 0x90) = 0;
+        param_2->surfaceMode = 0;
       }
       *(float *)(param_1 + 0x12) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 6) > *(float *)(param_2 + 0x4c)) {
-      *(float *)(param_1 + 6) = *(float *)(param_2 + 0x4c);
-      if ((*(byte *)(param_2 + 0x91) & 2) != 0) {
+    else if (*(float *)(param_1 + 6) > param_2->boundsMaxX) {
+      *(float *)(param_1 + 6) = param_2->boundsMaxX;
+      if ((param_2->bounceFlags & 2) != 0) {
         *(float *)(param_1 + 0x16) = -*(float *)(param_1 + 0x12);
-        *(undefined *)(param_2 + 0x90) = 1;
+        param_2->surfaceMode = 1;
       }
       *(float *)(param_1 + 0x12) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) < *(float *)(param_2 + 0x5c)) {
-      *(float *)(param_1 + 8) = *(float *)(param_2 + 0x5c);
-      if ((*(byte *)(param_2 + 0x91) & 0x20) != 0) {
+    else if (*(float *)(param_1 + 8) < param_2->boundsMinY) {
+      *(float *)(param_1 + 8) = param_2->boundsMinY;
+      if ((param_2->bounceFlags & 0x20) != 0) {
         *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x14);
-        *(undefined *)(param_2 + 0x90) = 5;
+        param_2->surfaceMode = 5;
       }
       *(float *)(param_1 + 0x14) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) > *(float *)(param_2 + 0x58)) {
-      *(float *)(param_1 + 8) = *(float *)(param_2 + 0x58);
-      if ((*(byte *)(param_2 + 0x91) & 0x10) != 0) {
+    else if (*(float *)(param_1 + 8) > param_2->boundsMaxY) {
+      *(float *)(param_1 + 8) = param_2->boundsMaxY;
+      if ((param_2->bounceFlags & 0x10) != 0) {
         *(float *)(param_1 + 0x16) = -*(float *)(param_1 + 0x14);
-        *(undefined *)(param_2 + 0x90) = 4;
+        param_2->surfaceMode = 4;
       }
       *(float *)(param_1 + 0x14) = lbl_803E2FDC;
     }
     break;
   case 3:
-    if (*(float *)(param_1 + 6) < *(float *)(param_2 + 0x48)) {
-      *(float *)(param_1 + 6) = *(float *)(param_2 + 0x48);
-      if ((*(byte *)(param_2 + 0x91) & 1) != 0) {
+    if (*(float *)(param_1 + 6) < param_2->boundsMinX) {
+      *(float *)(param_1 + 6) = param_2->boundsMinX;
+      if ((param_2->bounceFlags & 1) != 0) {
         *(float *)(param_1 + 0x16) = -*(float *)(param_1 + 0x12);
-        *(undefined *)(param_2 + 0x90) = 0;
+        param_2->surfaceMode = 0;
       }
       *(float *)(param_1 + 0x12) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 6) > *(float *)(param_2 + 0x4c)) {
-      *(float *)(param_1 + 6) = *(float *)(param_2 + 0x4c);
-      if ((*(byte *)(param_2 + 0x91) & 2) != 0) {
+    else if (*(float *)(param_1 + 6) > param_2->boundsMaxX) {
+      *(float *)(param_1 + 6) = param_2->boundsMaxX;
+      if ((param_2->bounceFlags & 2) != 0) {
         *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x12);
-        *(undefined *)(param_2 + 0x90) = 1;
+        param_2->surfaceMode = 1;
       }
       *(float *)(param_1 + 0x12) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) < *(float *)(param_2 + 0x5c)) {
-      *(float *)(param_1 + 8) = *(float *)(param_2 + 0x5c);
-      if ((*(byte *)(param_2 + 0x91) & 0x20) != 0) {
+    else if (*(float *)(param_1 + 8) < param_2->boundsMinY) {
+      *(float *)(param_1 + 8) = param_2->boundsMinY;
+      if ((param_2->bounceFlags & 0x20) != 0) {
         *(float *)(param_1 + 0x16) = -*(float *)(param_1 + 0x14);
-        *(undefined *)(param_2 + 0x90) = 5;
+        param_2->surfaceMode = 5;
       }
       *(float *)(param_1 + 0x14) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) > *(float *)(param_2 + 0x58)) {
-      *(float *)(param_1 + 8) = *(float *)(param_2 + 0x58);
-      if ((*(byte *)(param_2 + 0x91) & 0x10) != 0) {
+    else if (*(float *)(param_1 + 8) > param_2->boundsMaxY) {
+      *(float *)(param_1 + 8) = param_2->boundsMaxY;
+      if ((param_2->bounceFlags & 0x10) != 0) {
         *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x14);
-        *(undefined *)(param_2 + 0x90) = 4;
+        param_2->surfaceMode = 4;
       }
       *(float *)(param_1 + 0x14) = lbl_803E2FDC;
     }
     break;
   case 5:
-    if (*(float *)(param_1 + 6) < *(float *)(param_2 + 0x48)) {
-      *(float *)(param_1 + 6) = *(float *)(param_2 + 0x48);
-      if ((*(byte *)(param_2 + 0x91) & 1) != 0) {
+    if (*(float *)(param_1 + 6) < param_2->boundsMinX) {
+      *(float *)(param_1 + 6) = param_2->boundsMinX;
+      if ((param_2->bounceFlags & 1) != 0) {
         *(float *)(param_1 + 0x14) = -*(float *)(param_1 + 0x12);
-        *(undefined *)(param_2 + 0x90) = 0;
+        param_2->surfaceMode = 0;
       }
       *(float *)(param_1 + 0x12) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 6) > *(float *)(param_2 + 0x4c)) {
-      *(float *)(param_1 + 6) = *(float *)(param_2 + 0x4c);
-      if ((*(byte *)(param_2 + 0x91) & 2) != 0) {
+    else if (*(float *)(param_1 + 6) > param_2->boundsMaxX) {
+      *(float *)(param_1 + 6) = param_2->boundsMaxX;
+      if ((param_2->bounceFlags & 2) != 0) {
         *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x12);
-        *(undefined *)(param_2 + 0x90) = 1;
+        param_2->surfaceMode = 1;
       }
       *(float *)(param_1 + 0x12) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) > *(float *)(param_2 + 0x50)) {
-      *(float *)(param_1 + 10) = *(float *)(param_2 + 0x50);
-      if ((*(byte *)(param_2 + 0x91) & 4) != 0) {
+    else if (*(float *)(param_1 + 10) > param_2->boundsMaxZ) {
+      *(float *)(param_1 + 10) = param_2->boundsMaxZ;
+      if ((param_2->bounceFlags & 4) != 0) {
         *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x16);
-        *(undefined *)(param_2 + 0x90) = 2;
+        param_2->surfaceMode = 2;
       }
       *(float *)(param_1 + 0x16) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) < *(float *)(param_2 + 0x54)) {
-      *(float *)(param_1 + 10) = *(float *)(param_2 + 0x54);
-      if ((*(byte *)(param_2 + 0x91) & 8) != 0) {
+    else if (*(float *)(param_1 + 10) < param_2->boundsMinZ) {
+      *(float *)(param_1 + 10) = param_2->boundsMinZ;
+      if ((param_2->bounceFlags & 8) != 0) {
         *(float *)(param_1 + 0x14) = -*(float *)(param_1 + 0x16);
-        *(undefined *)(param_2 + 0x90) = 3;
+        param_2->surfaceMode = 3;
       }
       *(float *)(param_1 + 0x16) = lbl_803E2FDC;
     }
     break;
   case 4:
-    if (*(float *)(param_1 + 6) < *(float *)(param_2 + 0x48)) {
-      *(float *)(param_1 + 6) = *(float *)(param_2 + 0x48);
-      if ((*(byte *)(param_2 + 0x91) & 1) != 0) {
+    if (*(float *)(param_1 + 6) < param_2->boundsMinX) {
+      *(float *)(param_1 + 6) = param_2->boundsMinX;
+      if ((param_2->bounceFlags & 1) != 0) {
         *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x12);
-        *(undefined *)(param_2 + 0x90) = 0;
+        param_2->surfaceMode = 0;
       }
       *(float *)(param_1 + 0x12) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 6) > *(float *)(param_2 + 0x4c)) {
-      *(float *)(param_1 + 6) = *(float *)(param_2 + 0x4c);
-      if ((*(byte *)(param_2 + 0x91) & 2) != 0) {
+    else if (*(float *)(param_1 + 6) > param_2->boundsMaxX) {
+      *(float *)(param_1 + 6) = param_2->boundsMaxX;
+      if ((param_2->bounceFlags & 2) != 0) {
         *(float *)(param_1 + 0x14) = -*(float *)(param_1 + 0x12);
-        *(undefined *)(param_2 + 0x90) = 1;
+        param_2->surfaceMode = 1;
       }
       *(float *)(param_1 + 0x12) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) > *(float *)(param_2 + 0x50)) {
-      *(float *)(param_1 + 10) = *(float *)(param_2 + 0x50);
-      if ((*(byte *)(param_2 + 0x91) & 4) != 0) {
+    else if (*(float *)(param_1 + 10) > param_2->boundsMaxZ) {
+      *(float *)(param_1 + 10) = param_2->boundsMaxZ;
+      if ((param_2->bounceFlags & 4) != 0) {
         *(float *)(param_1 + 0x14) = -*(float *)(param_1 + 0x16);
-        *(undefined *)(param_2 + 0x90) = 2;
+        param_2->surfaceMode = 2;
       }
       *(float *)(param_1 + 0x16) = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) < *(float *)(param_2 + 0x54)) {
-      *(float *)(param_1 + 10) = *(float *)(param_2 + 0x54);
-      if ((*(byte *)(param_2 + 0x91) & 8) != 0) {
+    else if (*(float *)(param_1 + 10) < param_2->boundsMinZ) {
+      *(float *)(param_1 + 10) = param_2->boundsMinZ;
+      if ((param_2->bounceFlags & 8) != 0) {
         *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x16);
-        *(undefined *)(param_2 + 0x90) = 3;
+        param_2->surfaceMode = 3;
       }
       *(float *)(param_1 + 0x16) = lbl_803E2FDC;
     }
     break;
   }
 
-  switch (*(byte *)(param_2 + 0x90)) {
+  switch (param_2->surfaceMode) {
   case 0:
     *param_1 = 0;
     iVar2 = atan2_8002178c(*(float *)(param_1 + 0x16),*(float *)(param_1 + 0x14));
@@ -590,7 +591,7 @@ void fn_80165C8C(short *param_1,int param_2)
 
 void FUN_801661ec(short *param_1,int param_2)
 {
-  fn_80165C8C(param_1,param_2);
+  fn_80165C8C(param_1,(LandedArwingState *)param_2);
 }
 
 /*
@@ -1070,19 +1071,19 @@ void dll_D3_render(int obj,int p2,int p3,int p4,int p5,s8 visible)
 #pragma peephole off
 undefined4 fn_801659B8(s16 *obj,u32 *params)
 {
-  int state;
+  LandedArwingState *state;
 
-  state = *(int *)(*(int *)(obj + 0x5c) + 0x40c);
+  state = *(LandedArwingState **)(*(int *)(obj + 0x5c) + 0x40c);
   *(undefined *)((int)params + 0x34d) = 1;
   if (*(s8 *)((int)params + 0x27a) != 0) {
-    *(f32 *)(state + 0x60) = lbl_803E3004;
+    state->speed = lbl_803E3004;
     ObjHits_EnableObject((int)obj);
-    *(f32 *)(obj + 0x12) = -(*(f32 *)(state + 0x60)) * fsin16Precise((u16)*obj);
+    *(f32 *)(obj + 0x12) = -(state->speed) * fsin16Precise((u16)*obj);
     *(f32 *)(obj + 0x14) = lbl_803E2FDC;
-    *(f32 *)(obj + 0x16) = -(*(f32 *)(state + 0x60)) * fcos16Precise((u16)*obj);
+    *(f32 *)(obj + 0x16) = -(state->speed) * fcos16Precise((u16)*obj);
     *params |= 0x2004000;
     ObjAnim_SetCurrentMove((int)obj,0,lbl_803E2FDC,0);
-    *(f32 *)(state + 0x44) = lbl_803E2FDC;
+    state->animSpeed = lbl_803E2FDC;
   }
   ObjHits_SetHitVolumeSlot((int)obj,9,1,-1);
   *(undefined *)(*(int *)(obj + 0x2a) + 0x6c) = 9;
@@ -1090,11 +1091,11 @@ undefined4 fn_801659B8(s16 *obj,u32 *params)
   ObjHits_RegisterActiveHitVolumeObject(obj);
   (*(void (**)(int,u32 *,f32))(*(int *)gPathControlInterface + 0x18))((int)obj,params + 1,timeDelta);
   if (*(s8 *)((int)params + 0x27a) != 0) {
-    if (*(s8 *)(state + 0x90) == 6) {
-      if (((*(u8 *)(state + 0x92) >> 2) & 1) == 0) {
-        FUN_8016693c((int)obj,state);
+    if (*(s8 *)&state->surfaceMode == 6) {
+      if (((state->flags92 >> 2) & 1) == 0) {
+        FUN_8016693c((int)obj,(int)state);
       } else {
-        fn_80165B3C((int)obj,state);
+        fn_80165B3C((int)obj,(int)state);
       }
     } else {
       fn_80165C8C(obj,state);
@@ -1147,7 +1148,7 @@ void fn_80165B3C(int obj,int state)
     {
         struct StaffFlag92 { u8 b80:1, b40:1, b20:1, b10:1, b08:1, b04:1, b02:1, b01:1; };
         int zero = 0;
-        ((struct StaffFlag92 *)(state + 0x92))->b04 = zero;
+        ((struct StaffFlag92 *)&((LandedArwingState *)state)->flags92)->b04 = zero;
     }
     fn_80166840(obj,state,hitScratch.hit,end);
   } else {
@@ -1184,11 +1185,11 @@ void fn_80166840(int obj,int state,f32 *hit,f32 *end)
 
   scale = lbl_803E3020;
   objX = *(f32 *)(obj + 0xc);
-  stateX = scale * *(f32 *)(state + 0x7c) + objX;
+  stateX = scale * ((LandedArwingState *)state)->surfaceNormalX + objX;
   objY = *(f32 *)(obj + 0x10);
-  stateY = scale * *(f32 *)(state + 0x80) + objY;
+  stateY = scale * ((LandedArwingState *)state)->surfaceNormalY + objY;
   objZ = *(f32 *)(obj + 0x14);
-  stateZ = scale * *(f32 *)(state + 0x84) + objZ;
+  stateZ = scale * ((LandedArwingState *)state)->surfaceNormalZ + objZ;
   velX = scale * *(f32 *)(obj + 0x24) + objX;
   velY = scale * *(f32 *)(obj + 0x28) + objY;
   velZ = scale * *(f32 *)(obj + 0x2c) + objZ;
@@ -1213,13 +1214,13 @@ void fn_80166840(int obj,int state,f32 *hit,f32 *end)
   *(f32 *)(obj + 0x24) = lbl_803E3004 * response[0];
   *(f32 *)(obj + 0x28) = fVar1 * response[1];
   *(f32 *)(obj + 0x2c) = fVar1 * response[2];
-  *(f32 *)(state + 0x7c) = hit[0];
-  *(f32 *)(state + 0x80) = hit[1];
-  *(f32 *)(state + 0x84) = hit[2];
-  *(f32 *)(state + 0x88) = hit[3];
-  *(f32 *)(obj + 0xc) = end[0] + *(f32 *)(state + 0x7c);
-  *(f32 *)(obj + 0x10) = end[1] + *(f32 *)(state + 0x80);
-  *(f32 *)(obj + 0x14) = end[2] + *(f32 *)(state + 0x84);
+  ((LandedArwingState *)state)->surfaceNormalX = hit[0];
+  ((LandedArwingState *)state)->surfaceNormalY = hit[1];
+  ((LandedArwingState *)state)->surfaceNormalZ = hit[2];
+  ((LandedArwingState *)state)->surfacePlaneD = hit[3];
+  *(f32 *)(obj + 0xc) = end[0] + ((LandedArwingState *)state)->surfaceNormalX;
+  *(f32 *)(obj + 0x10) = end[1] + ((LandedArwingState *)state)->surfaceNormalY;
+  *(f32 *)(obj + 0x14) = end[2] + ((LandedArwingState *)state)->surfaceNormalZ;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1228,7 +1229,7 @@ void fn_80166840(int obj,int state,f32 *hit,f32 *end)
 #pragma peephole off
 void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,f32 blend)
 {
-  int state;
+  LandedArwingState *state;
   int mode;
   f32 vx;
   f32 vy;
@@ -1237,14 +1238,14 @@ void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,
   f32 scale;
   f32 dot;
 
-  state = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
-  if ((u32)(*(u8 *)(state + 0x92) >> 2 & 1) == 0) {
+  state = *(LandedArwingState **)(*(int *)(obj + 0xb8) + 0x40c);
+  if ((u32)(state->flags92 >> 2 & 1) == 0) {
     vx = targetX - *(f32 *)(obj + 0xc);
     vy = targetY - *(f32 *)(obj + 0x10);
     vz = targetZ - *(f32 *)(obj + 0x14);
     len = sqrtf(vz * vz + (vx * vx + vy * vy));
     if (len >= lbl_803E2FDC) {
-      scale = *(f32 *)(state + 0x60) / len;
+      scale = state->speed / len;
       vx *= scale;
       vy *= scale;
       vz *= scale;
@@ -1252,14 +1253,14 @@ void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,
     vx = blend * (vx - *(f32 *)(obj + 0x24)) + *(f32 *)(obj + 0x24);
     vy = blend * (vy - *(f32 *)(obj + 0x28)) + *(f32 *)(obj + 0x28);
     vz = blend * (vz - *(f32 *)(obj + 0x2c)) + *(f32 *)(obj + 0x2c);
-    mode = *(u8 *)(state + 0x90);
+    mode = state->surfaceMode;
     switch (mode) {
     case 0:
     case 1:
       vx = 0.0f;
       len = sqrtf(vy * vy + vz * vz);
       if (len != 0.0f) {
-        scale = *(f32 *)(state + 0x60) / len;
+        scale = state->speed / len;
         vy *= scale;
         vz *= scale;
       }
@@ -1269,7 +1270,7 @@ void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,
       vz = 0.0f;
       len = sqrtf(vx * vx + vy * vy);
       if (len != 0.0f) {
-        scale = *(f32 *)(state + 0x60) / len;
+        scale = state->speed / len;
         vx *= scale;
         vy *= scale;
       }
@@ -1279,20 +1280,20 @@ void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,
       vy = 0.0f;
       len = sqrtf(vx * vx + vz * vz);
       if (len != 0.0f) {
-        scale = *(f32 *)(state + 0x60) / len;
+        scale = state->speed / len;
         vx *= scale;
         vz *= scale;
       }
       break;
     case 6:
-      dot = vz * *(f32 *)(state + 0x84) +
-            (vx * *(f32 *)(state + 0x7c) + vy * *(f32 *)(state + 0x80));
-      vx = -(dot * *(f32 *)(state + 0x7c) - vx);
-      vy = -(dot * *(f32 *)(state + 0x80) - vy);
-      vz = -(dot * *(f32 *)(state + 0x84) - vz);
+      dot = vz * state->surfaceNormalZ +
+            (vx * state->surfaceNormalX + vy * state->surfaceNormalY);
+      vx = -(dot * state->surfaceNormalX - vx);
+      vy = -(dot * state->surfaceNormalY - vy);
+      vz = -(dot * state->surfaceNormalZ - vz);
       len = sqrtf(vz * vz + (vx * vx + vy * vy));
       if (len != 0.0f) {
-        scale = *(f32 *)(state + 0x60) / len;
+        scale = state->speed / len;
         vx *= scale;
         vy *= scale;
         vz *= scale;
@@ -1376,17 +1377,17 @@ void fn_80166444(int obj,int state)
   start[0] = *(f32 *)(obj + 0xc);
   start[1] = *(f32 *)(obj + 0x10);
   start[2] = *(f32 *)(obj + 0x14);
-  end[0] = -(lbl_803E3028 * *(f32 *)(state + 0x7c) - start[0]);
-  end[1] = -(lbl_803E3028 * *(f32 *)(state + 0x80) - start[1]);
-  end[2] = -(lbl_803E3028 * *(f32 *)(state + 0x84) - start[2]);
+  end[0] = -(lbl_803E3028 * ((LandedArwingState *)state)->surfaceNormalX - start[0]);
+  end[1] = -(lbl_803E3028 * ((LandedArwingState *)state)->surfaceNormalY - start[1]);
+  end[2] = -(lbl_803E3028 * ((LandedArwingState *)state)->surfaceNormalZ - start[2]);
   hitScratch.hitRadius = lbl_803E2FDC;
   hitScratch.hitType = 3;
   hitFound = hitDetectFn_80067958(obj,start,end,1,hitScratch.hit,0x20);
   if (hitFound != 0) {
-    if ((((hitScratch.hit[0] != *(f32 *)(state + 0x7c)) ||
-          (hitScratch.hit[1] != *(f32 *)(state + 0x80))) ||
-         (hitScratch.hit[2] != *(f32 *)(state + 0x84))) ||
-        (hitScratch.hit[3] != *(f32 *)(state + 0x88))) {
+    if ((((hitScratch.hit[0] != ((LandedArwingState *)state)->surfaceNormalX) ||
+          (hitScratch.hit[1] != ((LandedArwingState *)state)->surfaceNormalY)) ||
+         (hitScratch.hit[2] != ((LandedArwingState *)state)->surfaceNormalZ)) ||
+        (hitScratch.hit[3] != ((LandedArwingState *)state)->surfacePlaneD)) {
       fn_80166840(obj,state,hitScratch.hit,end);
     } else {
       *(f32 *)(obj + 0xc) = end[0];
@@ -1411,13 +1412,13 @@ void fn_80166444(int obj,int state)
       fn_80166840(obj,state,hitScratch.hit,end);
     } else {
       fVar1 = lbl_803E3030;
-      *(f32 *)(obj + 0x24) = fVar1 * *(f32 *)(state + 0x7c);
-      *(f32 *)(obj + 0x28) = fVar1 * *(f32 *)(state + 0x80);
-      *(f32 *)(obj + 0x2c) = fVar1 * *(f32 *)(state + 0x84);
-      ((StaffBits *)(state + 0x92))->b2 = 1;
+      *(f32 *)(obj + 0x24) = fVar1 * ((LandedArwingState *)state)->surfaceNormalX;
+      *(f32 *)(obj + 0x28) = fVar1 * ((LandedArwingState *)state)->surfaceNormalY;
+      *(f32 *)(obj + 0x2c) = fVar1 * ((LandedArwingState *)state)->surfaceNormalZ;
+      ((StaffBits *)&((LandedArwingState *)state)->flags92)->b2 = 1;
     }
   }
-  ((StaffBits *)(state + 0x92))->b3 = 1;
+  ((StaffBits *)&((LandedArwingState *)state)->flags92)->b3 = 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
