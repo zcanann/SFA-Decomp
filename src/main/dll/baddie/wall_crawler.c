@@ -1369,16 +1369,14 @@ void GameUI_update(void)
 
         if (f25 != 0) {
             int cxa, cya;
-            int doTarget;
             if ((s8)padGetCX(0) < 0) cxa = -(s8)padGetCX(0);
             else cxa = (s8)padGetCX(0);
-            doTarget = cxa > 5;
-            if (!doTarget) {
+            if (cxa <= 5) {
                 if ((s8)padGetCY(0) < 0) cya = -(s8)padGetCY(0);
                 else cya = (s8)padGetCY(0);
-                doTarget = cya > 5;
+                if (cya <= 5) goto skipTarget;
             }
-            if (doTarget) {
+            {
                 int closed;
                 if (cMenuOpen != 0) closed = 0;
                 else if (lbl_803DD8D6 != 0) closed = 0;
@@ -1420,6 +1418,7 @@ void GameUI_update(void)
                     }
                 }
             }
+        skipTarget:;
         }
 
         flags = lbl_803DD8A4;
