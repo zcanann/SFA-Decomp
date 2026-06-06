@@ -1140,30 +1140,30 @@ void modelLightChannels_applyGXControls(void) {
 
     activeMask = 0;
     channel = 0;
-    entry = gModelLightChannelStates;
     do {
-        if (entry->active != 0) {
-            if (entry->mode == 0) {
-                lightMask = entry->lightMask;
+        if (gModelLightChannelStates[channel].active != 0) {
+            if (gModelLightChannelStates[channel].mode == 0) {
+                lightMask = gModelLightChannelStates[channel].lightMask;
                 if (lightMask != 0) {
                     attnFn = 1;
                 } else {
                     attnFn = 2;
                 }
-                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, lightMask != 0 ? 2 : 0,
-                              attnFn);
-            } else if (entry->mode == 2) {
-                lightMask = entry->lightMask;
+                GXSetChanCtrl(channel, lightMask != 0, 0, gModelLightChannelStates[channel].matSrc,
+                              lightMask, lightMask != 0 ? 2 : 0, attnFn);
+            } else if (gModelLightChannelStates[channel].mode == 2) {
+                lightMask = gModelLightChannelStates[channel].lightMask;
                 attnFn = lightMask != 0 ? 1 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
+                GXSetChanCtrl(channel, lightMask != 0, 0, gModelLightChannelStates[channel].matSrc,
+                              lightMask, 0, attnFn);
             } else {
-                lightMask = entry->lightMask;
+                lightMask = gModelLightChannelStates[channel].lightMask;
                 attnFn = lightMask != 0 ? 0 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
+                GXSetChanCtrl(channel, lightMask != 0, 0, gModelLightChannelStates[channel].matSrc,
+                              lightMask, 0, attnFn);
             }
             activeMask = (activeMask | (1 << channel)) & 0xff;
         }
-        entry++;
         channel++;
     } while (channel <= 5);
 
@@ -1200,8 +1200,8 @@ void modelLightChannels_applyGXControls(void) {
 void updateLights(void) {
     f32 viewPos[3];
     f32 concatMtx[16];
-    f32 *view;
     u8 *light;
+    f32 *view;
     int i;
     int fadeState;
 
@@ -1212,13 +1212,13 @@ void updateLights(void) {
         if (fadeState == 1) {
             *(f32 *)(light + 0x138) += *(f32 *)(light + 0x13c);
             if (*(f32 *)(light + 0x138) >= lbl_803DE760) {
-                *(f32 *)(light + 0x138) = lbl_803DE760;
+                *(f32 *)(light + 0x138) = *(f32 *)&lbl_803DE760;
                 *(int *)(light + 0x58) = 2;
             }
         } else if (fadeState == 3) {
             *(f32 *)(light + 0x138) += *(f32 *)(light + 0x13c);
             if (*(f32 *)(light + 0x138) <= lbl_803DE788) {
-                *(f32 *)(light + 0x138) = lbl_803DE788;
+                *(f32 *)(light + 0x138) = *(f32 *)&lbl_803DE788;
                 *(int *)(light + 0x58) = 0;
                 light[0x4c] = 0;
             }
@@ -1236,9 +1236,7 @@ void updateLights(void) {
                     viewPos[2] = *(f32 *)(light + 0x18) - playerMapOffsetZ;
                     PSMTXMultVec(view, viewPos, (f32 *)(light + 0x1c));
                 } else {
-                    *(int *)(light + 0x1c) = *(int *)(light + 0x10);
-                    *(int *)(light + 0x20) = *(int *)(light + 0x14);
-                    *(int *)(light + 0x24) = *(int *)(light + 0x18);
+                    *(IVec3 *)(light + 0x1c) = *(IVec3 *)(light + 0x10);
                 }
             }
 
@@ -1249,22 +1247,20 @@ void updateLights(void) {
             if (*(int *)(light + 0x60) == 0) {
                 PSMTXMultVecSR(view, (f32 *)(light + 0x34), (f32 *)(light + 0x40));
             } else {
-                *(int *)(light + 0x40) = *(int *)(light + 0x34);
-                *(int *)(light + 0x44) = *(int *)(light + 0x38);
-                *(int *)(light + 0x48) = *(int *)(light + 0x3c);
+                *(IVec3 *)(light + 0x40) = *(IVec3 *)(light + 0x34);
             }
 
             if (*(int *)(light + 0x2d8) != 0) {
                 modelLightStruct_updateColorFade((ModelLightStruct *)light);
             } else {
-                light[0xa8] = (u8)(int)((f32)light[0xac] * *(f32 *)(light + 0x138));
-                light[0xa9] = (u8)(int)((f32)light[0xad] * *(f32 *)(light + 0x138));
-                light[0xaa] = (u8)(int)((f32)light[0xae] * *(f32 *)(light + 0x138));
-                light[0xab] = (u8)(int)((f32)light[0xaf] * *(f32 *)(light + 0x138));
-                light[0x100] = (u8)(int)((f32)light[0x104] * *(f32 *)(light + 0x138));
-                light[0x101] = (u8)(int)((f32)light[0x105] * *(f32 *)(light + 0x138));
-                light[0x102] = (u8)(int)((f32)light[0x106] * *(f32 *)(light + 0x138));
-                light[0x103] = (u8)(int)((f32)light[0x107] * *(f32 *)(light + 0x138));
+                light[0xa8] = ((f32)light[0xac] * *(f32 *)(light + 0x138));
+                light[0xa9] = ((f32)light[0xad] * *(f32 *)(light + 0x138));
+                light[0xaa] = ((f32)light[0xae] * *(f32 *)(light + 0x138));
+                light[0xab] = ((f32)light[0xaf] * *(f32 *)(light + 0x138));
+                light[0x100] = ((f32)light[0x104] * *(f32 *)(light + 0x138));
+                light[0x101] = ((f32)light[0x105] * *(f32 *)(light + 0x138));
+                light[0x102] = ((f32)light[0x106] * *(f32 *)(light + 0x138));
+                light[0x103] = ((f32)light[0x107] * *(f32 *)(light + 0x138));
             }
 
             if (*(int *)(light + 0x50) == 8) {
