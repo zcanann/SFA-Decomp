@@ -1,4 +1,5 @@
 #include "global.h"
+#include "main/game_object.h"
 #include "main/dll/WM/wm_shared.h"
 #include "main/audio/sfx_ids.h"
 
@@ -148,12 +149,12 @@ void FireFlyFn_801f4f88(int obj)
         state->splineY[3] = state->targetY;
         state->splineZ[3] = state->targetZ;
     }
-    *(f32 *)(obj + 0xc) = Curve_EvalBSpline(state->splineX, 0, FIREFLY_SPLINE_T(state));
-    *(f32 *)(obj + 0x10) = Curve_EvalBSpline(state->splineY, 0, FIREFLY_SPLINE_T(state));
-    *(f32 *)(obj + 0x14) = Curve_EvalBSpline(state->splineZ, 0, FIREFLY_SPLINE_T(state));
+    ((GameObject *)obj)->anim.localPosX = Curve_EvalBSpline(state->splineX, 0, FIREFLY_SPLINE_T(state));
+    ((GameObject *)obj)->anim.localPosY = Curve_EvalBSpline(state->splineY, 0, FIREFLY_SPLINE_T(state));
+    ((GameObject *)obj)->anim.localPosZ = Curve_EvalBSpline(state->splineZ, 0, FIREFLY_SPLINE_T(state));
     FIREFLY_SPLINE_T(state) = FIREFLY_SPLINE_SPEED(state) * timeDelta + FIREFLY_SPLINE_T(state);
-    *(s16 *)obj = (s16)getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
-                                 *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+    *(s16 *)obj = (s16)getAngle(((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
+                                 ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
     if (FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_MAIN || FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_NEAR) {
         ((void (*)(int, int, int, int, int, int))((void **)*gPartfxInterface)[2])(
             obj, FIREFLY_PARTFX_BLUE_TRAIL, 0, FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, 0);
@@ -188,7 +189,7 @@ void FireFlyFn_801f4f88(int obj)
         }
     }
     if ((FIREFLY_FLAGS(state) & FIREFLY_FLAG_PLAYER_TOUCHED) == 0) {
-        f32 dy = *(f32 *)(obj + 0x10) - *(f32 *)(player + 0x10);
+        f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)(player + 0x10);
         if (dy < lbl_803E5EEC && dy > lbl_803E5EC4) {
             if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < lbl_803E5EF0) {
                 FIREFLY_FLAGS(state) = (u8)(FIREFLY_FLAGS(state) | FIREFLY_FLAG_PLAYER_TOUCHED);
@@ -197,7 +198,7 @@ void FireFlyFn_801f4f88(int obj)
                     ObjMsg_SendToObject(player, FIREFLY_MESSAGE_TALK, obj, &state->messageParam);
                     GameBit_Set(FIREFLY_FIRST_TOUCH_BIT, 1);
                 } else {
-                    *(s16 *)(obj + 0x6) = (s16)(*(s16 *)(obj + 0x6) | FIREFLY_OBJFLAG_HIDDEN);
+                    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
                     FIREFLY_DESPAWN_TIMER(state) = lbl_803E5EA8;
                     gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
                     gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
@@ -233,7 +234,7 @@ void firefly_update(int obj)
     despawnTimer = lbl_803E5EA8;
     while (ObjMsg_Pop(obj, msg, 0, 0) != 0) {
         if (msg[0] == fireflyMessage) {
-            *(s16 *)(obj + 0x6) = (s16)(*(s16 *)(obj + 0x6) | FIREFLY_OBJFLAG_HIDDEN);
+            ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
             state->despawnTimer = despawnTimer;
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
@@ -278,7 +279,7 @@ void firefly_init(int obj, int def)
     mapData = (FireFlyMapData *)def;
     fn_801F4C28(obj, state);
     *(u8 *)(obj + 0x36) = 0;
-    *(void **)(obj + 0xbc) = fn_801F4C04;
+    ((GameObject *)obj)->unkBC = fn_801F4C04;
     ObjMsg_AllocQueue(obj, 1);
     storeZeroToFloatParam(state->activateDelay);
     if (mapData->startDelayKind == 0x7f) {
