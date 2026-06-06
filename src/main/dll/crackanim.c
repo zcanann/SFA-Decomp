@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/crackanim_state.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/crackanim.h"
 
