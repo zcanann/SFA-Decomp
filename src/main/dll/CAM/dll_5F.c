@@ -1,4 +1,5 @@
 #include "main/dll/CAM/dll_5F.h"
+#include "main/camera_object.h"
 #include "main/game_object.h"
 
 
@@ -126,9 +127,9 @@ void CameraModeTestStrength_update(short *cam)
     t = lbl_803E18BC * (t2 - *(f32 *)((char *)lbl_803DD560 + 0x58)) +
         *(f32 *)((char *)lbl_803DD560 + 0x58);
     *(f32 *)((char *)lbl_803DD560 + 0x58) = t;
-    ((GameObject *)cam)->anim.worldPosX = Curve_EvalBSpline(x, t, (f32 *)0);
-    ((GameObject *)cam)->anim.worldPosY = Curve_EvalBSpline(y, t, (f32 *)0);
-    ((GameObject *)cam)->anim.worldPosZ = Curve_EvalBSpline(z, t, (f32 *)0);
+    ((CameraObject *)cam)->anim.worldPosX = Curve_EvalBSpline(x, t, (f32 *)0);
+    ((CameraObject *)cam)->anim.worldPosY = Curve_EvalBSpline(y, t, (f32 *)0);
+    ((CameraObject *)cam)->anim.worldPosZ = Curve_EvalBSpline(z, t, (f32 *)0);
     node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
     flags = *(u8 *)(node2 + 0x3b);
     m1 = flags & 1;
@@ -143,13 +144,13 @@ void CameraModeTestStrength_update(short *cam)
     if (m4 == 0) {
       cam[2] = Curve_EvalCatmullRom(rollS, t, (f32 *)0);
     }
-    *(f32 *)((char *)cam + 0xb4) = Curve_EvalBSpline(fov, t, (f32 *)0);
+    ((CameraObject *)cam)->fov = Curve_EvalBSpline(fov, t, (f32 *)0);
     if (*((u8 *)lbl_803DD560 + 0x64) == 0 && fn_8010AEA8(cam, flags) != 0) {
       *((u8 *)lbl_803DD560 + 0x64) = 1;
     }
-    dx = ((GameObject *)cam)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
-    dy = ((GameObject *)cam)->anim.worldPosY - ((GameObject *)obj)->anim.worldPosY;
-    dz = ((GameObject *)cam)->anim.worldPosZ - ((GameObject *)obj)->anim.worldPosZ;
+    dx = ((CameraObject *)cam)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
+    dy = ((CameraObject *)cam)->anim.worldPosY - ((GameObject *)obj)->anim.worldPosY;
+    dz = ((CameraObject *)cam)->anim.worldPosZ - ((GameObject *)obj)->anim.worldPosZ;
     if (m1 != 0) {
       *cam = 0x8000 - getAngle(dx, dz);
     }
@@ -178,18 +179,18 @@ void CameraModeTestStrength_update(short *cam)
     }
     if (*(void **)lbl_803DD560 != (void *)0) {
       f32 v;
-      v = ((GameObject *)cam)->anim.worldPosX;
+      v = ((CameraObject *)cam)->anim.worldPosX;
       *(f32 *)(*(int *)lbl_803DD560 + 0x18) = v;
       *(f32 *)(*(int *)lbl_803DD560 + 0xc) = v;
-      v = ((GameObject *)cam)->anim.worldPosY;
+      v = ((CameraObject *)cam)->anim.worldPosY;
       *(f32 *)(*(int *)lbl_803DD560 + 0x1c) = v;
       *(f32 *)(*(int *)lbl_803DD560 + 0x10) = v;
-      v = ((GameObject *)cam)->anim.worldPosZ;
+      v = ((CameraObject *)cam)->anim.worldPosZ;
       *(f32 *)(*(int *)lbl_803DD560 + 0x20) = v;
       *(f32 *)(*(int *)lbl_803DD560 + 0x14) = v;
     }
-    Obj_TransformWorldPointToLocal(((GameObject *)cam)->anim.worldPosX, ((GameObject *)cam)->anim.worldPosY,
-                                   ((GameObject *)cam)->anim.worldPosZ, (float *)(cam + 6),
+    Obj_TransformWorldPointToLocal(((CameraObject *)cam)->anim.worldPosX, ((CameraObject *)cam)->anim.worldPosY,
+                                   ((CameraObject *)cam)->anim.worldPosZ, (float *)(cam + 6),
                                    (float *)(cam + 8), (float *)(cam + 10), *(int *)(cam + 0x18));
   }
 }
@@ -292,16 +293,16 @@ void CameraModeTestStrength_init(short *cam, int param2, int *param3)
   if (*((u8 *)param3 + 4) == 0 && param2 != 3) {
     cameraModeTestStrengthFn_8010b238((int)cam, pos, pitch, yaw, roll);
   } else {
-    ((GameObject *)cam)->anim.worldPosX = px;
-    ((GameObject *)cam)->anim.worldPosY = py;
-    ((GameObject *)cam)->anim.worldPosZ = pz;
-    Obj_TransformWorldPointToLocal(((GameObject *)cam)->anim.worldPosX, ((GameObject *)cam)->anim.worldPosY,
-                                   ((GameObject *)cam)->anim.worldPosZ, (float *)(cam + 6),
+    ((CameraObject *)cam)->anim.worldPosX = px;
+    ((CameraObject *)cam)->anim.worldPosY = py;
+    ((CameraObject *)cam)->anim.worldPosZ = pz;
+    Obj_TransformWorldPointToLocal(((CameraObject *)cam)->anim.worldPosX, ((CameraObject *)cam)->anim.worldPosY,
+                                   ((CameraObject *)cam)->anim.worldPosZ, (float *)(cam + 6),
                                    (float *)(cam + 8), (float *)(cam + 10), *(int *)(cam + 0x18));
     cam[0] = pitch;
     cam[1] = yaw;
     cam[2] = roll;
-    *(f32 *)((char *)cam + 0xb4) = fov;
+    ((CameraObject *)cam)->fov = fov;
   }
   *(f32 *)((char *)lbl_803DD560 + 0x58) = t;
 }
