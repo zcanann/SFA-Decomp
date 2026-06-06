@@ -975,7 +975,6 @@ extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
 extern f32 lbl_803E364C;
 extern f32 lbl_803E3650;
-extern int doorf4_SeqFn(int *obj, int arg1, u8 *seq);
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
 

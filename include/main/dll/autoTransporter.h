@@ -7,7 +7,7 @@
 extern ObjectDescriptor gDoorF4ObjDescriptor;
 extern ObjectDescriptor gSidekickBallObjDescriptor;
 
-void FUN_80178338(undefined4 param_1);
+int doorf4_SeqFn(int *obj, int arg1, u8 *seq);
 void FUN_80178370(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
