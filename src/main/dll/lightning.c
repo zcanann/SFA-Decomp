@@ -2,6 +2,7 @@
 #include "main/dll/lightning.h"
 #include "main/dll/pushable.h"
 #include "main/objanim_internal.h"
+#include "main/game_object.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -116,6 +117,31 @@ extern f32 lbl_803E4194;
 extern f32 lbl_803E41AC;
 extern f32 lbl_803E41C4;
 
+/* magicdust extra block (collectible sparkle state; tail of the pickup record). */
+typedef struct MagicDustState {
+    u8 unk00[0x6C];
+    f32 unk6C;
+    u8 unk70[0x25B - 0x70];
+    u8 unk25B;
+    u8 unk25C[5];
+    s8 unk261;
+    u8 unk262[6];
+    f32 unk268;
+    f32 unk26C; /* sparkle scale; reset on collect */
+    u16 unk270;
+    u16 unk272; /* partfx effect id */
+    s16 unk274; /* collect sfx id */
+    s16 unk276;
+    s16 unk278;
+    u8 flags27A; /* bits 8/0x10/0x40 observed; &0xFA clear on collect */
+    u8 unk27B;
+    u8 unk27C; /* particle color row */
+    u8 unk27D[3];
+    u16 unk280;
+} MagicDustState;
+
+STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
+
 /*
  * --INFO--
  *
@@ -146,57 +172,57 @@ void magicdust_update(int obj)
   f32 dist;
   
   iVar5 = (int)Obj_GetPlayerObject();
-  iVar8 = *(int *)(obj + 0xb8);
+  iVar8 = *(int *)&((GameObject *)obj)->extra;
   msgId = 0x7000b;
   while (iVar6 = ObjMsg_Pop(obj,(uint *)local_24,(uint *)0x0,(uint *)0x0), iVar6 != 0) {
     if (local_24[0] == msgId) {
-      iVar6 = *(int *)(*(int *)(obj + 0x50) + 0x18);
+      iVar6 = *(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
       (*(code *)(*gExpgfxInterface + 0x18))(obj);
-      itemPickupDoParticleFx(obj,lbl_803E34B0,*(u8 *)(iVar8 + 0x27c),0x28);
+      itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)iVar8)->unk27C,0x28);
       ObjHits_DisableObject(obj);
-      Sfx_PlayFromObject(obj,(u16)*(s16 *)(iVar8 + 0x274));
+      Sfx_PlayFromObject(obj,(u16)((MagicDustState *)iVar8)->unk274);
       Sfx_StopFromObject(obj,0x56);
       playerAddRemoveMagic(iVar5,(int)*(s8 *)(iVar6 + 0xb));
-      *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) & 0xfa;
-      *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 8;
-      *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 0x40;
-      *(float *)(iVar8 + 0x26c) = lbl_803E34B4;
+      ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A & 0xfa;
+      ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 8;
+      ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 0x40;
+      ((MagicDustState *)iVar8)->unk26C = lbl_803E34B4;
       OSReport(sMagicDustCollectedMessage);
       *(u8 *)(obj + 0x36) = 1;
     }
   }
-  if ((*(byte *)(iVar8 + 0x27a) & 0x10) == 0) {
-    if (((*(byte *)(iVar8 + 0x27a) & 0x40) == 0) &&
+  if ((((MagicDustState *)iVar8)->flags27A & 0x10) == 0) {
+    if (((((MagicDustState *)iVar8)->flags27A & 0x40) == 0) &&
        (getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18)) < lbl_803E34B8)) {
-      *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 0x10;
+      ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 0x10;
       local_28 = '\0';
       (*(code *)(*gPartfxInterface + 8))
-                (obj,*(u16 *)(iVar8 + 0x272),0,0x10002,0xffffffff,&local_28);
+                (obj,((MagicDustState *)iVar8)->unk272,0,0x10002,0xffffffff,&local_28);
       local_28 = '\x01';
       (*(code *)(*gPartfxInterface + 8))
-                (obj,*(u16 *)(iVar8 + 0x272),0,0x10002,0xffffffff,&local_28);
+                (obj,((MagicDustState *)iVar8)->unk272,0,0x10002,0xffffffff,&local_28);
       local_28 = '\x02';
       (*(code *)(*gPartfxInterface + 8))
-                (obj,*(u16 *)(iVar8 + 0x272),0,0x10002,0xffffffff,&local_28);
+                (obj,((MagicDustState *)iVar8)->unk272,0,0x10002,0xffffffff,&local_28);
     }
   }
   else {
     if (getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18)) >= lbl_803E34B8) {
-      *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) & 0xef;
+      ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A & 0xef;
       (*(code *)(*gExpgfxInterface + 0x18))(obj);
     }
   }
-  if ((*(short *)(obj + 6) & 0x2000) != 0) {
-    if ((*(byte *)(iVar8 + 0x27a) & 2) != 0) {
+  if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
+    if ((((MagicDustState *)iVar8)->flags27A & 2) != 0) {
       *(short *)obj = *(short *)obj + (u16)framesThisStep * 0x100;
-      *(short *)(iVar8 + 0x278) -= (u16)framesThisStep;
-      if (*(short *)(iVar8 + 0x278) < 0) {
+      ((MagicDustState *)iVar8)->unk278 -= (u16)framesThisStep;
+      if (((MagicDustState *)iVar8)->unk278 < 0) {
         Sfx_PlayFromObject(obj,SFXen_statue_wave);
         uVar7 = randomGetRange(0xf0,300);
-        *(short *)(iVar8 + 0x278) = (short)uVar7;
+        ((MagicDustState *)iVar8)->unk278 = (short)uVar7;
       }
     }
-    if (*(uint *)(obj + 0xc4) != 0) {
+    if (*(uint *)&((GameObject *)obj)->unkC4 != 0) {
       iVar5 = *(int *)(obj + 0x64);
       if ((uint)iVar5 != 0) {
         *(uint *)(iVar5 + 0x30) = *(uint *)(iVar5 + 0x30) | 0x1000;
@@ -208,114 +234,114 @@ void magicdust_update(int obj)
     if ((uint)iVar6 != 0) {
       *(uint *)(iVar6 + 0x30) = *(uint *)(iVar6 + 0x30) & 0xffffefff;
     }
-    *(undefined *)(iVar8 + 0x25b) = 1;
+    *(undefined *)&((MagicDustState *)iVar8)->unk25B = 1;
     fVar1 = lbl_803E34BC;
-    if ((*(byte *)(iVar8 + 0x27a) & 3) == 0) {
-      *(float *)(obj + 0x24) = *(float *)(obj + 0x24) * fVar1;
-      *(float *)(obj + 0x2c) = *(float *)(obj + 0x2c) * fVar1;
-      *(float *)(obj + 0x28) = -(lbl_803E34C0 * timeDelta - *(float *)(obj + 0x28));
+    if ((((MagicDustState *)iVar8)->flags27A & 3) == 0) {
+      ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * fVar1;
+      ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * fVar1;
+      ((GameObject *)obj)->anim.velocityY = -(lbl_803E34C0 * timeDelta - ((GameObject *)obj)->anim.velocityY);
     }
-    *(float *)(iVar8 + 0x26c) = *(float *)(iVar8 + 0x26c) - timeDelta;
-    bVar3 = *(byte *)(iVar8 + 0x27a);
+    ((MagicDustState *)iVar8)->unk26C = ((MagicDustState *)iVar8)->unk26C - timeDelta;
+    bVar3 = ((MagicDustState *)iVar8)->flags27A;
     if ((bVar3 & 1) == 0) {
       if ((bVar3 & 4) == 0) {
-        if (*(float *)(iVar8 + 0x26c) <= lbl_803E34C4) {
+        if (((MagicDustState *)iVar8)->unk26C <= lbl_803E34C4) {
           Obj_FreeObject(obj);
         }
         goto LAB_80173f80;
       }
-      if (*(float *)(iVar8 + 0x26c) <= lbl_803E34C4) {
-        *(byte *)(iVar8 + 0x27a) = bVar3 & 0xfb;
-        *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 8;
-        *(float *)(iVar8 + 0x26c) = lbl_803E34B4;
+      if (((MagicDustState *)iVar8)->unk26C <= lbl_803E34C4) {
+        ((MagicDustState *)iVar8)->flags27A = bVar3 & 0xfb;
+        ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 8;
+        ((MagicDustState *)iVar8)->unk26C = lbl_803E34B4;
         (*(code *)(*gExpgfxInterface + 0x18))(obj);
-        if (*(int *)(obj + 0x30) == 0) {
+        if (*(int *)&((GameObject *)obj)->anim.parent == 0) {
           for (local_27[0] = '\x1e'; local_27[0] != '\0'; local_27[0] = local_27[0] + -1) {
-            (*(code *)(*gPartfxInterface + 8))(obj,*(u16 *)(iVar8 + 0x270),0,1,0xffffffff,local_27);
+            (*(code *)(*gPartfxInterface + 8))(obj,((MagicDustState *)iVar8)->unk270,0,1,0xffffffff,local_27);
           }
         }
         *(u8 *)(obj + 0x36) = 1;
         Sfx_PlayFromObject(obj,SFXen_waterblock_wave);
       }
-      objMove(*(float *)(obj + 0x24) * timeDelta, *(float *)(obj + 0x28) * timeDelta,
-          *(float *)(obj + 0x2c) * timeDelta, obj);
+      objMove(((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
+          ((GameObject *)obj)->anim.velocityZ * timeDelta, obj);
     }
     else {
-      if (*(float *)(iVar8 + 0x26c) <= lbl_803E34C4) {
-        *(byte *)(iVar8 + 0x27a) = bVar3 & 0xfe;
-        *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 4;
-        *(float *)(iVar8 + 0x26c) = lbl_803E34C8;
+      if (((MagicDustState *)iVar8)->unk26C <= lbl_803E34C4) {
+        ((MagicDustState *)iVar8)->flags27A = bVar3 & 0xfe;
+        ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 4;
+        ((MagicDustState *)iVar8)->unk26C = lbl_803E34C8;
         *(u8 *)(obj + 0x36) = 0xff;
       }
-      if (*(int *)(obj + 0x30) == 0) {
-        (*(code *)(*gPartfxInterface + 8))(obj,*(u16 *)(iVar8 + 0x270),0,1,0xffffffff,0);
-        (*(code *)(*gPartfxInterface + 8))(obj,*(u16 *)(iVar8 + 0x270),0,1,0xffffffff,0);
+      if (*(int *)&((GameObject *)obj)->anim.parent == 0) {
+        (*(code *)(*gPartfxInterface + 8))(obj,((MagicDustState *)iVar8)->unk270,0,1,0xffffffff,0);
+        (*(code *)(*gPartfxInterface + 8))(obj,((MagicDustState *)iVar8)->unk270,0,1,0xffffffff,0);
       }
     }
-    if ((*(byte *)(iVar8 + 0x27a) & 3) == 0) {
+    if ((((MagicDustState *)iVar8)->flags27A & 3) == 0) {
       (*(code *)(*gPathControlInterface + 0x10))(timeDelta,obj,iVar8);
       (*(code *)(*gPathControlInterface + 0x14))(obj,iVar8);
       (*(code *)(*gPathControlInterface + 0x18))(timeDelta,obj,iVar8);
-      if (*(char *)(iVar8 + 0x261) != '\0') {
-        float vx = -*(float *)(obj + 0x24);
-        float vy = -*(float *)(obj + 0x28);
-        float vz = -*(float *)(obj + 0x2c);
+      if (((MagicDustState *)iVar8)->unk261 != '\0') {
+        float vx = -((GameObject *)obj)->anim.velocityX;
+        float vy = -((GameObject *)obj)->anim.velocityY;
+        float vz = -((GameObject *)obj)->anim.velocityZ;
         float mag = sqrtf(vx*vx + vy*vy + vz*vz);
         if (lbl_803E34CC < mag) {
           Sfx_PlayFromObject(obj,SFXwp_iceywindlp16);
         }
-        if (*(float *)(iVar8 + 0x6c) < lbl_803E34D0) {
-          *(float *)(obj + 0x24) = -*(float *)(obj + 0x24);
-          *(float *)(obj + 0x2c) = -*(float *)(obj + 0x2c);
+        if (((MagicDustState *)iVar8)->unk6C < lbl_803E34D0) {
+          ((GameObject *)obj)->anim.velocityX = -((GameObject *)obj)->anim.velocityX;
+          ((GameObject *)obj)->anim.velocityZ = -((GameObject *)obj)->anim.velocityZ;
           fVar1 = lbl_803E34D8;
-          *(float *)(obj + 0x24) = *(float *)(obj + 0x24) * lbl_803E34D8;
-          *(float *)(obj + 0x2c) = *(float *)(obj + 0x2c) * fVar1;
+          ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * lbl_803E34D8;
+          ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * fVar1;
         }
         else {
-          *(float *)(obj + 0x28) = -*(float *)(obj + 0x28);
-          *(float *)(obj + 0x28) = *(float *)(obj + 0x28) * lbl_803E34D4;
+          ((GameObject *)obj)->anim.velocityY = -((GameObject *)obj)->anim.velocityY;
+          ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY * lbl_803E34D4;
         }
-        bVar3 = *(char *)(iVar8 + 0x27b) + 1;
-        *(byte *)(iVar8 + 0x27b) = bVar3;
+        bVar3 = *(char *)&((MagicDustState *)iVar8)->unk27B + 1;
+        ((MagicDustState *)iVar8)->unk27B = bVar3;
         if (5 < bVar3) {
-          *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 2;
+          ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 2;
           fVar1 = lbl_803E34C4;
-          *(float *)(obj + 0x24) = lbl_803E34C4;
-          *(float *)(obj + 0x28) = fVar1;
-          *(float *)(obj + 0x2c) = fVar1;
+          ((GameObject *)obj)->anim.velocityX = lbl_803E34C4;
+          ((GameObject *)obj)->anim.velocityY = fVar1;
+          ((GameObject *)obj)->anim.velocityZ = fVar1;
         }
       }
     }
   }
-  if (((*(byte *)(iVar8 + 0x27a) & 0x20) == 0) && ((*(byte *)(iVar8 + 0x27a) & 0x40) == 0)) {
-    fVar1 = *(float *)(obj + 0x10) - *(float *)(iVar5 + 0x10);
+  if (((((MagicDustState *)iVar8)->flags27A & 0x20) == 0) && ((((MagicDustState *)iVar8)->flags27A & 0x40) == 0)) {
+    fVar1 = ((GameObject *)obj)->anim.localPosY - *(float *)(iVar5 + 0x10);
     if (fVar1 < lbl_803E34C4) {
       fVar1 = -fVar1;
     }
     if (fVar1 < lbl_803E34DC) {
       dist = getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18));
-      fVar1 = lbl_803E34E0 + *(float *)(iVar8 + 0x268);
+      fVar1 = lbl_803E34E0 + ((MagicDustState *)iVar8)->unk268;
       if ((dist < fVar1 * fVar1) && (fn_8029622C(iVar5) != 0)) {
         uVar7 = GameBit_Get(0x90d);
         if (uVar7 == 0) {
-          *(undefined2 *)(iVar8 + 0x280) = 0xffff;
+          *(undefined2 *)&((MagicDustState *)iVar8)->unk280 = 0xffff;
           ObjMsg_SendToObject(iVar5, 0x7000a, obj, iVar8 + 0x280);
           ObjHits_DisableObject(obj);
           GameBit_Set(0x90d,1);
-          *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 0x20;
+          ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 0x20;
         }
         else {
-          iVar6 = *(int *)(*(int *)(obj + 0x50) + 0x18);
+          iVar6 = *(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
           (*(code *)(*gExpgfxInterface + 0x18))(obj);
-          itemPickupDoParticleFx(obj,lbl_803E34B0,*(u8 *)(iVar8 + 0x27c),0x28);
+          itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)iVar8)->unk27C,0x28);
           ObjHits_DisableObject(obj);
-          Sfx_PlayFromObject(obj,(u16)*(s16 *)(iVar8 + 0x274));
+          Sfx_PlayFromObject(obj,(u16)((MagicDustState *)iVar8)->unk274);
           Sfx_StopFromObject(obj,0x56);
           playerAddRemoveMagic(iVar5,(int)*(s8 *)(iVar6 + 0xb));
-          *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) & 0xfa;
-          *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 8;
-          *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 0x40;
-          *(float *)(iVar8 + 0x26c) = lbl_803E34B4;
+          ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A & 0xfa;
+          ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 8;
+          ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 0x40;
+          ((MagicDustState *)iVar8)->unk26C = lbl_803E34B4;
           OSReport(sMagicDustCollectedMessage);
           *(u8 *)(obj + 0x36) = 1;
         }
@@ -360,38 +386,38 @@ void magicdust_init(int param_1,int param_2)
   undefined4 local_38;
   uint uStack_34;
   
-  iVar5 = *(int *)(param_1 + 0xb8);
+  iVar5 = *(int *)&((GameObject *)param_1)->extra;
   local_58[0] = 3;
   local_50[0] = lbl_803E34A8;
   local_54[0] = lbl_803E34AC;
   uVar3 = randomGetRange(0,0xffff);
   spd = (f32)(int)randomGetRange(0x27,0x2c) / lbl_803E34E4;
   ang = (lbl_803E34E8 * (f32)(int)uVar3) / lbl_803E34EC;
-  *(float *)(param_1 + 0x24) = spd * fn_80293E80(ang);
-  *(float *)(param_1 + 0x2c) = spd * sin(ang);
-  *(float *)(param_1 + 0x28) = (f32)(int)randomGetRange(0x28,0x32) / lbl_803E34F0;
+  ((GameObject *)param_1)->anim.velocityX = spd * fn_80293E80(ang);
+  ((GameObject *)param_1)->anim.velocityZ = spd * sin(ang);
+  ((GameObject *)param_1)->anim.velocityY = (f32)(int)randomGetRange(0x28,0x32) / lbl_803E34F0;
   sVar1 = *(short *)(param_2 + 0x2e);
   if (sVar1 == 1) {
-    *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 1;
+    ((MagicDustState *)iVar5)->flags27A = ((MagicDustState *)iVar5)->flags27A | 1;
     *(undefined *)(param_1 + 0x36) = 1;
   }
   else if (sVar1 == 2) {
-    *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 1;
+    ((MagicDustState *)iVar5)->flags27A = ((MagicDustState *)iVar5)->flags27A | 1;
     *(undefined *)(param_1 + 0x36) = 1;
-    if (*(uint *)(param_1 + 0x54) != 0) {
+    if (*(uint *)&((GameObject *)param_1)->anim.hitReactState != 0) {
       ObjHits_DisableObject(param_1);
     }
     iVar4 = (int)Obj_GetPlayerObject();
     fVar2 = lbl_803E34F4;
-    *(float *)(param_1 + 0x24) =
-         (*(float *)(iVar4 + 0xc) - *(float *)(param_1 + 0xc)) / lbl_803E34F4;
-    *(float *)(param_1 + 0x28) = (*(float *)(iVar4 + 0x10) - *(float *)(param_1 + 0x10)) / fVar2;
-    *(float *)(param_1 + 0x2c) = (*(float *)(iVar4 + 0x14) - *(float *)(param_1 + 0x14)) / fVar2;
+    ((GameObject *)param_1)->anim.velocityX =
+         (*(float *)(iVar4 + 0xc) - ((GameObject *)param_1)->anim.localPosX) / lbl_803E34F4;
+    ((GameObject *)param_1)->anim.velocityY = (*(float *)(iVar4 + 0x10) - ((GameObject *)param_1)->anim.localPosY) / fVar2;
+    ((GameObject *)param_1)->anim.velocityZ = (*(float *)(iVar4 + 0x14) - ((GameObject *)param_1)->anim.localPosZ) / fVar2;
   }
   else if (sVar1 == 3) {
-    *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 1;
+    ((MagicDustState *)iVar5)->flags27A = ((MagicDustState *)iVar5)->flags27A | 1;
     *(undefined *)(param_1 + 0x36) = 1;
-    *(float *)(param_1 + 0x28) =
+    ((GameObject *)param_1)->anim.velocityY =
          -((f32)(int)randomGetRange(0x8c,0x96) / lbl_803E34F0);
   }
   ((ObjAnimComponent *)param_1)->bankIndex = *(u8 *)(param_2 + 0x26);
@@ -404,56 +430,56 @@ void magicdust_init(int param_1,int param_2)
     *(undefined *)(*(int *)(param_1 + 100) + 0x3b) = 0x96;
   }
   iVar4 = Obj_GetActiveModel(param_1);
-  sVar1 = *(short *)(param_1 + 0x46);
+  sVar1 = ((GameObject *)param_1)->anim.seqId;
   switch (sVar1) {
   case 0x2c4:
     uVar3 = randomGetRange(0,1);
     *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = *(u8 *)((int)local_50 + uVar3);
-    *(undefined2 *)(iVar5 + 0x272) = 0x54f;
-    *(undefined2 *)(iVar5 + 0x270) = 0x54b;
-    *(undefined2 *)(iVar5 + 0x274) = 0x58;
-    *(undefined2 *)(iVar5 + 0x276) = 0x5b0;
-    *(undefined *)(iVar5 + 0x27c) = 4;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk272 = 0x54f;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk270 = 0x54b;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk274 = 0x58;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk276 = 0x5b0;
+    *(undefined *)&((MagicDustState *)iVar5)->unk27C = 4;
     break;
   case 0x2cd:
     uVar3 = randomGetRange(0,1);
     *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = *(u8 *)((int)local_54 + uVar3);
-    *(undefined2 *)(iVar5 + 0x272) = 0x54e;
-    *(undefined2 *)(iVar5 + 0x270) = 0x54a;
-    *(undefined2 *)(iVar5 + 0x274) = 0x59;
-    *(undefined2 *)(iVar5 + 0x276) = 0x5b1;
-    *(undefined *)(iVar5 + 0x27c) = 1;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk272 = 0x54e;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk270 = 0x54a;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk274 = 0x59;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk276 = 0x5b1;
+    *(undefined *)&((MagicDustState *)iVar5)->unk27C = 1;
     break;
   case 0x2ce:
     *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = 3;
-    *(undefined2 *)(iVar5 + 0x272) = 0x54d;
-    *(undefined2 *)(iVar5 + 0x270) = 0x549;
-    *(undefined2 *)(iVar5 + 0x274) = 0x5a;
-    *(undefined2 *)(iVar5 + 0x276) = 0x5b2;
-    *(undefined *)(iVar5 + 0x27c) = 2;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk272 = 0x54d;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk270 = 0x549;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk274 = 0x5a;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk276 = 0x5b2;
+    *(undefined *)&((MagicDustState *)iVar5)->unk27C = 2;
     break;
   default:
     *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = 2;
-    *(undefined2 *)(iVar5 + 0x272) = 0x550;
-    *(undefined2 *)(iVar5 + 0x270) = 0x54c;
-    *(undefined2 *)(iVar5 + 0x274) = 0x5b;
-    *(undefined2 *)(iVar5 + 0x276) = 0x5b3;
-    *(undefined *)(iVar5 + 0x27c) = 6;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk272 = 0x550;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk270 = 0x54c;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk274 = 0x5b;
+    *(undefined2 *)&((MagicDustState *)iVar5)->unk276 = 0x5b3;
+    *(undefined *)&((MagicDustState *)iVar5)->unk27C = 6;
     break;
   }
-  *(float *)(iVar5 + 0x268) = lbl_803E34F8;
-  if ((*(short *)(param_1 + 6) & 0x2000) != 0) {
+  ((MagicDustState *)iVar5)->unk268 = lbl_803E34F8;
+  if ((((GameObject *)param_1)->anim.flags & 0x2000) != 0) {
     (*(code *)(*gPathControlInterface + 4))(iVar5,0,0x40007,0);
     (*(code *)(*gPathControlInterface + 0xc))(iVar5,1,lbl_80320CB8,iVar5 + 0x268,local_58);
     (*(code *)(*gPathControlInterface + 0x20))(param_1,iVar5);
   }
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
-  if ((*(byte *)(iVar5 + 0x27a) & 1) != 0) {
-    *(float *)(iVar5 + 0x26c) = lbl_803E34FC;
+  ((GameObject *)param_1)->unkB0 = ((GameObject *)param_1)->unkB0 | 0x2000;
+  if ((((MagicDustState *)iVar5)->flags27A & 1) != 0) {
+    ((MagicDustState *)iVar5)->unk26C = lbl_803E34FC;
   }
   else {
-    *(float *)(iVar5 + 0x26c) = lbl_803E34C8;
-    *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 4;
+    ((MagicDustState *)iVar5)->unk26C = lbl_803E34C8;
+    ((MagicDustState *)iVar5)->flags27A = ((MagicDustState *)iVar5)->flags27A | 4;
   }
   ObjMsg_AllocQueue(param_1,1);
   return;
@@ -819,7 +845,7 @@ void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 
 void fn_80174588(int obj, PushableState *p2)
 {
   extern int *objFindTexture(int, int, int);
-  int data = *(int *)(obj + 0x4c);
+  int data = *(int *)&((GameObject *)obj)->anim.placementData;
 
   switch (*(int *)(data + 0x14)) {
     case 0x49B2C:
@@ -907,8 +933,8 @@ void effectbox_update(int obj)
   f32 proj;
   int gb;
 
-  def = *(int *)(obj + 0x4c);
-  gb = *(int *)(obj + 0xf8);
+  def = *(int *)&((GameObject *)obj)->anim.placementData;
+  gb = ((GameObject *)obj)->unkF8;
   if ((gb <= -1) || (*(u8 *)(def + 0x1f) != GameBit_Get(gb))) {
     sinY = sin((lbl_803E350C * (f32)-(*(u8 *)(def + 0x18) << 8)) / lbl_803E3510);
     cosY = fn_80293E80((lbl_803E350C * (f32)-(*(u8 *)(def + 0x18) << 8)) / lbl_803E3510);
@@ -945,9 +971,9 @@ void effectbox_update(int obj)
     negExtZ = -extZ;
     for (i = 0; i < count; i++) {
       other = *list;
-      dx = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
-      dy = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
-      dz = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
+      dx = *(f32 *)(other + 0xc) - ((GameObject *)obj)->anim.localPosX;
+      dy = *(f32 *)(other + 0x10) - ((GameObject *)obj)->anim.localPosY;
+      dz = *(f32 *)(other + 0x14) - ((GameObject *)obj)->anim.localPosZ;
       proj = dx * sinY + dz * cosY;
       if ((proj > negExtX) && (proj < extX)) {
         proj = (-dx) * cosY + dz * sinY;
@@ -985,7 +1011,7 @@ int fn_80174438(int obj, PushableState *state)
   int def;
   void *player;
 
-  def = *(int *)(obj + 0x4c);
+  def = *(int *)&((GameObject *)obj)->anim.placementData;
   player = Obj_GetPlayerObject();
   if (((state->flags & 0x80) != 0) || (fn_80295A04(player, 10) != 0)) {
     Sfx_StopObjectChannel(obj, 8);
@@ -996,18 +1022,18 @@ int fn_80174438(int obj, PushableState *state)
   if ((state->flags & 4) == 0) {
     fn_80174BFC(obj, state);
   }
-  if (*(f32 *)(obj + 0xc) <= lbl_803E352C + *(f32 *)(def + 8)) {
+  if (((GameObject *)obj)->anim.localPosX <= lbl_803E352C + *(f32 *)(def + 8)) {
     GameBit_Set(state->gameBit, 1);
     state->flags |= 0x80;
-    *(f32 *)(obj + 0xc) = (f32)(*(f32 *)(def + 8) - lbl_803E3530);
-    *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
-    *(f32 *)(obj + 0x14) = (f32)(lbl_803E3538 + *(f32 *)(def + 0x10));
+    ((GameObject *)obj)->anim.localPosX = (f32)(*(f32 *)(def + 8) - lbl_803E3530);
+    ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
+    ((GameObject *)obj)->anim.localPosZ = (f32)(lbl_803E3538 + *(f32 *)(def + 0x10));
     Sfx_PlayFromObject(obj, 0x68);
   }
   if (GameBit_Get(0xa1a) != 0) {
-    *(f32 *)(obj + 0xc) = *(f32 *)(def + 8);
-    *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
-    *(f32 *)(obj + 0x14) = *(f32 *)(def + 0x10);
+    ((GameObject *)obj)->anim.localPosX = *(f32 *)(def + 8);
+    ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
+    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(def + 0x10);
   }
   return 0;
 }
@@ -1035,14 +1061,14 @@ int fn_80174668(int obj, PushableState *state)
   dist[0] = lbl_803E3540;
   fn_80175428(obj, 0);
   if (GameBit_Get(state->gameBit) != 0) {
-    cur = *(f32 *)(obj + 8);
+    cur = ((GameObject *)obj)->anim.rootMotionScale;
     bound = lbl_803E3544;
     if (cur > bound) {
-      *(f32 *)(obj + 8) = -(lbl_803E3548 * timeDelta - *(f32 *)(obj + 8));
-      if (*(f32 *)(obj + 8) <= bound) {
-        *(f32 *)(obj + 8) = lbl_803E3528;
-        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E354C;
-        *(u8 *)(obj + 0xaf) |= 8;
+      ((GameObject *)obj)->anim.rootMotionScale = -(lbl_803E3548 * timeDelta - ((GameObject *)obj)->anim.rootMotionScale);
+      if (((GameObject *)obj)->anim.rootMotionScale <= bound) {
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3528;
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E354C;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
       }
     }
     return 1;
@@ -1056,7 +1082,7 @@ int fn_80174668(int obj, PushableState *state)
   if (state->eyeOpenAmount < lbl_803E3550) {
     state->eyeOpenAmount = lbl_803E3550;
   }
-  dy = *(f32 *)((int)state->nearestObj + 0x14) - *(f32 *)(obj + 0x14);
+  dy = *(f32 *)((int)state->nearestObj + 0x14) - ((GameObject *)obj)->anim.localPosZ;
   if (dy < lbl_803E3528) {
     dy = dy * lbl_803E3554;
   }
@@ -1064,7 +1090,7 @@ int fn_80174668(int obj, PushableState *state)
   if (cur < lbl_803E3558 + dy) {
     return 0;
   }
-  dx = *(f32 *)((int)state->nearestObj + 0xc) - *(f32 *)(obj + 0xc);
+  dx = *(f32 *)((int)state->nearestObj + 0xc) - ((GameObject *)obj)->anim.localPosX;
   if (dx < lbl_803E3528) {
     dx = dx * lbl_803E3554;
   }
