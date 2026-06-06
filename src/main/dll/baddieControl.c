@@ -5227,7 +5227,7 @@ void CameraModeWorldMap_update(u8 *obj) {
                     *(s16 *)(lbl_803DD588 + 0xc) = (s16)(0x8000 - getAngle(dx, dz));
                     d = (s16)(*(s16 *)(lbl_803DD588 + 0xc) - (u16)*(s16 *)obj);
                     if (d > 0x8000) {
-                        d -= 0xffff;
+                        d = (s16)(d - 0xffff);
                     }
                     if (d < -0x8000) {
                         d += 0xffff;
@@ -5238,7 +5238,7 @@ void CameraModeWorldMap_update(u8 *obj) {
                                                 *(f32 *)(f + 0x1c) - *(f32 *)(objA + 0x1c)));
                     d = (s16)(*(s16 *)(lbl_803DD588 + 0xc) - (u16)*(s16 *)(obj + 2));
                     if (d > 0x8000) {
-                        d -= 0xffff;
+                        d = (s16)(d - 0xffff);
                     }
                     if (d < -0x8000) {
                         d += 0xffff;
@@ -5311,7 +5311,7 @@ void CameraModeWorldMap_update(u8 *obj) {
                                      *(f32 *)(objA + 0x20) - *(f32 *)(state + 0x20));
                 d = (s16)((ang - 0x308f) - (u16)*(s16 *)obj);
                 if (d > 0x8000) {
-                    d -= 0xffff;
+                    d = (s16)(d - 0xffff);
                 }
                 if (d < -0x8000) {
                     d += 0xffff;
@@ -5319,7 +5319,7 @@ void CameraModeWorldMap_update(u8 *obj) {
                 *(s16 *)obj = *(s16 *)obj + d / *(s16 *)(lbl_803DD588 + 0xa);
                 d = (s16)(0x7d0 - (u16)*(s16 *)(obj + 2));
                 if (d > 0x8000) {
-                    d -= 0xffff;
+                    d = (s16)(d - 0xffff);
                 }
                 if (d < -0x8000) {
                     d += 0xffff;
