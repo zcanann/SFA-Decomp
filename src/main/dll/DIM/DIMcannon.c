@@ -89,7 +89,7 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de7c8;
 extern f64 DOUBLE_803e53e8;
 extern f64 DOUBLE_803e5438;
@@ -974,7 +974,7 @@ void FUN_801af444(void)
   puVar9 = *(uint **)(iVar3 + 0xb8);
   iVar4 = FUN_80017a98();
   iVar5 = FUN_80017a90();
-  pbVar6 = (byte *)(**(code **)(*DAT_803dd72c + 0x94))();
+  pbVar6 = (*DAT_803dd72c)->getProgressPtr();
   iVar7 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
   if (iVar7 == 0) {
     if ((*(short *)(puVar9 + 3) != 0x1a) && (*(undefined2 *)(puVar9 + 3) = 0x1a, (*puVar9 & 8) != 0)
@@ -1170,7 +1170,7 @@ void FUN_801af9e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80080f18(&DAT_80324550,&DAT_80324518,&DAT_80324588,&DAT_803245c0);
   iVar2 = FUN_800e8b98();
   if (iVar2 == 0) {
-    cVar3 = (**(code **)(*DAT_803dd72c + 0x4c))((int)*(char *)(param_9 + 0xac),0);
+    cVar3 = (*DAT_803dd72c)->getAnimEvent((int)*(char *)(param_9 + 0xac),0);
     uVar5 = extraout_f1_00;
     if (cVar3 == '\0') {
       uVar5 = FUN_80080f14(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -1180,7 +1180,7 @@ void FUN_801af9e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  in_r8,in_r9,in_r10);
   }
   else {
-    cVar3 = (**(code **)(*DAT_803dd72c + 0x4c))((int)*(char *)(param_9 + 0xac),0);
+    cVar3 = (*DAT_803dd72c)->getAnimEvent((int)*(char *)(param_9 + 0xac),0);
     uVar5 = extraout_f1;
     if (cVar3 == '\0') {
       uVar5 = FUN_80080f14(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x3f)

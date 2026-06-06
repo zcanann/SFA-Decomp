@@ -571,7 +571,7 @@ extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de100;
 extern undefined4 DAT_803de104;
 extern undefined4 DAT_803de10c;
@@ -2002,7 +2002,7 @@ void titleDoLoadSave(void)
   FUN_80244e58(0,0);
   DAT_803dc4f0 = (undefined)((int)(*((byte *)DAT_803de110 + 0x21) & 0x60) >> 5);
   *((byte *)DAT_803de110 + 0x21) = *((byte *)DAT_803de110 + 0x21) & 0x1f;
-  (**(code **)(*DAT_803dd72c + 0x20))();
+  (*(void (**)(void))((char *)*DAT_803dd72c + 0x20))();
   return;
 }
 #pragma peephole reset
@@ -2353,7 +2353,7 @@ void FUN_800e8f58(undefined8 param_1,double param_2,undefined8 param_3,undefined
   psVar6 = &DAT_80312370;
   do {
     if (*psVar6 != 0) {
-      (**(code **)(*DAT_803dd72c + 0x44))(iVar5,1);
+      (*DAT_803dd72c)->setMode(iVar5,1);
     }
     psVar6 = psVar6 + 1;
     iVar5 = iVar5 + 1;
