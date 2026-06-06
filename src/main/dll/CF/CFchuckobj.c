@@ -1,4 +1,5 @@
 #include "main/dll/CF/CFchuckobj.h"
+#include "main/dll/CF/CFTreasSharpy.h"
 
 extern undefined4 FUN_80006824();
 extern int FUN_80006a10();
@@ -133,22 +134,22 @@ extern void setAButtonIcon(int iconId);
  */
 void fxemit_init(int obj, int setup)
 {
-  int state;
+  FxEmitState *state;
   s16 emitCount;
 
   *(s16 *)(obj + 0) = 0;
   *(int (**)(int, int, int))(obj + 0xbc) = fxemit_SeqFn;
-  state = *(int *)(obj + 0xb8);
+  state = *(FxEmitState **)(obj + 0xb8);
 
-  *(f32 *)(state + 0) = (f32)((s32)*(s8 *)(setup + 0x18) << 2);
-  *(s16 *)(state + 8) = *(s8 *)(setup + 0x19);
-  *(s16 *)(state + 0xa) = *(s16 *)(setup + 0x1a);
+  state->triggerRadius = (f32)((s32)*(s8 *)(setup + 0x18) << 2);
+  state->effectMode = *(s8 *)(setup + 0x19);
+  state->effectId = *(s16 *)(setup + 0x1a);
   emitCount = *(s16 *)(setup + 0x1c);
-  *(s16 *)(state + 0xe) = emitCount;
+  state->emitCount = emitCount;
   *(f32 *)(obj + 8) = lbl_803E3E50;
-  *(s16 *)(state + 0x14) = *(s16 *)(setup + 0x1e);
-  *(s16 *)(state + 0x16) = *(s16 *)(setup + 0x20);
-  *(s16 *)(state + 0x18) = 0;
+  state->enableBit = *(s16 *)(setup + 0x1e);
+  state->stopBit = *(s16 *)(setup + 0x20);
+  state->suppressed = 0;
 
   if (emitCount < 1) {
     *(s32 *)(obj + 0xf4) = emitCount;
@@ -156,17 +157,17 @@ void fxemit_init(int obj, int setup)
     *(s32 *)(obj + 0xf4) = 0;
   }
 
-  if (*(s16 *)(state + 0x16) != -1 && GameBit_Get(*(s16 *)(state + 0x16)) != 0) {
-    *(s16 *)(state + 0x18) = 1;
+  if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0) {
+    state->suppressed = 1;
   }
 
   *(s16 *)(obj + 0) = (s16)(*(s8 *)(setup + 0x24) << 8);
   *(s16 *)(obj + 2) = (s16)(*(s8 *)(setup + 0x23) << 8);
   *(s16 *)(obj + 4) = (s16)(*(s8 *)(setup + 0x22) << 8);
-  *(s16 *)(state + 0x1a) = (s16)(*(u8 *)(setup + 0x29) * 100);
-  *(f32 *)(state + 4) = *(f32 *)(obj + 0xc);
-  *(s16 *)(state + 0x12) = (s16)randomGetRange(0, 10);
-  *(s16 *)(state + 0xc) = 0;
+  state->sfxTimer = (s16)(*(u8 *)(setup + 0x29) * 100);
+  state->unk04 = *(f32 *)(obj + 0xc);
+  state->startDelay = (s16)randomGetRange(0, 10);
+  state->altEffectId = 0;
 }
 
 #pragma scheduling off

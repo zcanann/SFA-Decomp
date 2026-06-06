@@ -233,20 +233,20 @@ typedef struct CFTreasSharpyFxSpawnArgs {
 #pragma peephole off
 void fxemit_emitEffect(int obj)
 {
-    u8 *state;
+    FxEmitState *state;
     u8 *def;
     int spawnFlags;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = *(FxEmitState **)(obj + 0xb8);
     def = *(u8 **)(obj + 0x4c);
     spawnFlags = 0;
-    if (*(s16 *)(state + 0xa) == 0x11) {
+    if (state->effectId == 0x11) {
         fn_80137948(sCFTreasSharpyDebugFormat, obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x14));
     }
 
     switch (def[0x28]) {
     case 0: {
-        s16 mode = *(s16 *)(state + 8);
+        s16 mode = state->effectMode;
         if (mode == 0) {
             spawnFlags = 2;
         }
@@ -259,7 +259,7 @@ void fxemit_emitEffect(int obj)
         break;
     }
     case 1: {
-        s16 mode = *(s16 *)(state + 8);
+        s16 mode = state->effectMode;
         if (mode == 0) {
             spawnFlags = 4;
         }
@@ -272,7 +272,7 @@ void fxemit_emitEffect(int obj)
         break;
     }
     case 2: {
-        s16 mode = *(s16 *)(state + 8);
+        s16 mode = state->effectMode;
         if (mode == 0) {
             spawnFlags = 0x200001;
         }
@@ -303,30 +303,30 @@ void fxemit_emitEffect(int obj)
         args.roll = *(s16 *)(obj + 4);
         args.pitch = *(s16 *)(obj + 2);
         args.scale = lbl_803E3E48;
-        if (*(s16 *)(state + 0xe) > 0) {
-            for (i = 0; i < *(s16 *)(state + 0xe); i++) {
-                CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xa), &args, spawnFlags, -1, 0);
+        if (state->emitCount > 0) {
+            for (i = 0; i < state->emitCount; i++) {
+                CFTREAS_PARTFX_SPAWN(obj, state->effectId, &args, spawnFlags, -1, 0);
             }
         } else {
-            CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xc), &args, spawnFlags, -1, 0);
+            CFTREAS_PARTFX_SPAWN(obj, state->altEffectId, &args, spawnFlags, -1, 0);
         }
     } else {
         s16 i;
         void *resource;
-        s16 mode = *(s16 *)(state + 8);
+        s16 mode = state->effectMode;
 
         if (mode == 0) {
-            if (*(s16 *)(state + 0xe) > 0) {
-                for (i = 0; i < *(s16 *)(state + 0xe); i++) {
-                    CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xa), NULL, spawnFlags, -1, 0);
+            if (state->emitCount > 0) {
+                for (i = 0; i < state->emitCount; i++) {
+                    CFTREAS_PARTFX_SPAWN(obj, state->effectId, NULL, spawnFlags, -1, 0);
                 }
             } else {
-                CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xa), NULL, spawnFlags, -1, 0);
+                CFTREAS_PARTFX_SPAWN(obj, state->effectId, NULL, spawnFlags, -1, 0);
             }
         } else if (mode == 1) {
-            resource = Resource_Acquire((u16)(*(s16 *)(state + 0xa) + 0x58), 1);
-            if (*(s16 *)(state + 0xe) > 0) {
-                for (i = 0; i < *(s16 *)(state + 0xe); i++) {
+            resource = Resource_Acquire((u16)(state->effectId + 0x58), 1);
+            if (state->emitCount > 0) {
+                for (i = 0; i < state->emitCount; i++) {
                     ((void (*)(int, int, int, int, int, int))((void **)*(int *)resource)[1])(obj, 0, 0, spawnFlags, -1, 0);
                 }
             } else {
@@ -334,15 +334,15 @@ void fxemit_emitEffect(int obj)
             }
             Resource_Release(resource);
         } else if (mode == 2) {
-            resource = Resource_Acquire((u16)(*(s16 *)(state + 0xa) + 0xab), 1);
-            if (*(s16 *)(state + 0xe) > 0) {
-                for (i = 0; i < *(s16 *)(state + 0xe); i++) {
+            resource = Resource_Acquire((u16)(state->effectId + 0xab), 1);
+            if (state->emitCount > 0) {
+                for (i = 0; i < state->emitCount; i++) {
                     ((void (*)(int, int, int, int, int, int, int))((void **)*(int *)resource)[1])
-                        (obj, 0, 0, spawnFlags, -1, *(s16 *)(state + 0xa) & 0xff, 0);
+                        (obj, 0, 0, spawnFlags, -1, state->effectId & 0xff, 0);
                 }
             } else {
                 ((void (*)(int, int, int, int, int, int, int))((void **)*(int *)resource)[1])
-                    (obj, 0, 0, spawnFlags, -1, *(s16 *)(state + 0xa) & 0xff, 0);
+                    (obj, 0, 0, spawnFlags, -1, state->effectId & 0xff, 0);
             }
             Resource_Release(resource);
         }
@@ -357,13 +357,13 @@ void fxemit_emitEffect(int obj)
 #pragma peephole off
 int fxemit_SeqFn(int obj, int unused, int events)
 {
-    u8 *state;
+    FxEmitState *state;
     u8 *def;
     u8 event;
     int i;
     s8 delta;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = *(FxEmitState **)(obj + 0xb8);
     def = *(u8 **)(obj + 0x4c);
     for (i = 0; i < *(u8 *)(events + 0x8b); i++) {
         event = *(u8 *)(events + i + 0x81);
@@ -371,12 +371,12 @@ int fxemit_SeqFn(int obj, int unused, int events)
             fxemit_emitEffect(obj);
         }
         if (*(u8 *)(events + i + 0x81) == 2) {
-            state[0x1c] = (u8)(1 - state[0x1c]);
+            state->seqToggle = (u8)(1 - state->seqToggle);
         }
         *(u8 *)(events + i + 0x81) = 0;
     }
 
-    if (state[0x1c] != 0) {
+    if (state->seqToggle != 0) {
         delta = (s8)def[0x27];
         if (delta == 0x7f) {
             *(s16 *)(obj + 0) = *(s16 *)(obj + 0) + framesThisStep * 10;
@@ -516,7 +516,7 @@ extern f32 lbl_803E3E4C;
 #pragma peephole off
 void fxemit_update(int obj)
 {
-    u8 *state;
+    FxEmitState *state;
     u8 *def;
     u8 *player;
     s16 e;
@@ -526,12 +526,12 @@ void fxemit_update(int obj)
     f32 dz;
     f32 dist;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = *(FxEmitState **)(obj + 0xb8);
     def = *(u8 **)(obj + 0x4c);
-    if (*(s16 *)(state + 0x12) != 0) {
-        *(s16 *)(state + 0x12) -= (int)timeDelta;
-        if (*(s16 *)(state + 0x12) < 0) {
-            *(s16 *)(state + 0x12) = 0;
+    if (state->startDelay != 0) {
+        state->startDelay -= (int)timeDelta;
+        if (state->startDelay < 0) {
+            state->startDelay = 0;
         }
     } else {
         *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
@@ -545,18 +545,18 @@ void fxemit_update(int obj)
             if (def == NULL) {
             } else {
             if (def[0x29] != 0 && def[0x29] != 0xff) {
-                if (*(s16 *)(state + 0x1a) <= 0) {
+                if (state->sfxTimer <= 0) {
                     int sfx;
-                    *(s16 *)(state + 0x18) = 0;
-                    *(s16 *)(state + 0x1a) = def[0x29] * 100;
+                    state->suppressed = 0;
+                    state->sfxTimer = def[0x29] * 100;
                     sfx = *(s16 *)(def + 0x2a);
                     if (sfx != 0) {
                         Sfx_PlayFromObject(obj, (u16)sfx);
                     }
                 } else {
-                    *(s16 *)(state + 0x18) = 1;
+                    state->suppressed = 1;
                 }
-                *(s16 *)(state + 0x1a) -= framesThisStep;
+                state->sfxTimer -= framesThisStep;
             }
 
             delta = (s8)def[0x27];
@@ -580,28 +580,28 @@ void fxemit_update(int obj)
                 *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + delta * framesThisStep * 100;
             }
 
-            if (*(s16 *)(state + 0x14) == -1 || GameBit_Get(*(s16 *)(state + 0x14)) != 0) {
-                if (*(s16 *)(state + 0x18) != 0) {
+            if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0) {
+                if (state->suppressed != 0) {
                 } else {
-                if (*(s16 *)(state + 0x16) != -1 && GameBit_Get(*(s16 *)(state + 0x16)) != 0) {
-                    *(s16 *)(state + 0x18) = 1;
+                if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0) {
+                    state->suppressed = 1;
                 }
                 if (def[0x29] == 0xff) {
-                    *(s16 *)(state + 0x18) = 1;
+                    state->suppressed = 1;
                 }
-                e = *(s16 *)(state + 0xe);
+                e = state->emitCount;
                 if (e >= 0 || (e < 0 && *(int *)(obj + 0xf4) <= 0)) {
                     dx = *(f32 *)(obj + 0x18) - *(f32 *)(player + 0x18);
                     dy = *(f32 *)(obj + 0x1c) - *(f32 *)(player + 0x1c);
                     dz = *(f32 *)(obj + 0x20) - *(f32 *)(player + 0x20);
                     if (e == 0) {
-                        *(s16 *)(state + 0x18) = 1;
+                        state->suppressed = 1;
                     }
                     dist = sqrtf(dx * dx + dy * dy + dz * dz);
-                    if (dist <= *(f32 *)state || lbl_803E3E4C == *(f32 *)state) {
+                    if (dist <= state->triggerRadius || lbl_803E3E4C == state->triggerRadius) {
                         fxemit_emitEffect(obj);
                     }
-                    *(int *)(obj + 0xf4) = -(int)*(s16 *)(state + 0xe);
+                    *(int *)(obj + 0xf4) = -(int)state->emitCount;
                 } else if (e < 0 && *(int *)(obj + 0xf4) > 0) {
                     *(int *)(obj + 0xf4) -= framesThisStep;
                 }
