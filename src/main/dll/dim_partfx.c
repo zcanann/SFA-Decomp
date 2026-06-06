@@ -3596,7 +3596,7 @@ int Effect15_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f28 = lbl_803E0110;
         cfg.f2c = lbl_803E0118 * (f32)(s32)randomGetRange(-0x32, 0x32);
         cfg.f08 = 0x28;
-        cfg.f44 |= 0x80218;
+        cfg.f44 |= 0x80218LL;
         cfg.f48 = 0x20;
         switch (randomGetRange(0, 2)) {
         case 0:
@@ -3635,7 +3635,7 @@ int Effect15_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f34 = *(f32 *)(param_3 + 8);
         cfg.f38 = *(f32 *)(param_3 + 10);
         cfg.f3c = lbl_803E0120;
-        cfg.f44 |= 0x180110;
+        cfg.f44 |= 0x180110LL;
         cfg.f48 = 0x20;
         cfg.f08 = 0x12;
         cfg.f60 = 0xff;
@@ -3661,7 +3661,7 @@ int Effect15_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f30 = (f32)(s32)randomGetRange(0, 0x64) / lbl_803E0124;
         cfg.f34 = (f32)(s32)(-(s32)randomGetRange(0x64, 0x96)) / lbl_803E0128;
         cfg.f38 = (f32)(s32)randomGetRange(-0x64, 0x64) / lbl_803E0124;
-        cfg.f44 |= 0x80208;
+        cfg.f44 |= 0x80208LL;
         cfg.f48 = 0x10000;
         cfg.f24 = lbl_803E012C * (f32)(s32)randomGetRange(-0x64, 0x64);
         cfg.f2c = lbl_803E012C * (f32)(s32)randomGetRange(-0x64, 0x64);
