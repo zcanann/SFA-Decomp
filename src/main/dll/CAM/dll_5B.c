@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camshipbattle5C.h"
+#include "main/game_object.h"
 #include "main/dll/CAM/viewfinder_state.h"
 #include "main/dll/CAM/dll_5B.h"
 
@@ -242,10 +243,10 @@ int firstPersonEnter(u8 *cam, s16 *p2)
   int flag;
   int other;
 
-  *(f32 *)(cam + 24) = ((ViewfinderState *)lbl_803DD548)->unk120;
-  *(f32 *)(cam + 28) = ((ViewfinderState *)lbl_803DD548)->unk124;
-  *(f32 *)(cam + 32) = ((ViewfinderState *)lbl_803DD548)->unk128;
-  *(s16 *)(cam + 2) = 0;
+  ((GameObject *)cam)->anim.worldPosX = ((ViewfinderState *)lbl_803DD548)->unk120;
+  ((GameObject *)cam)->anim.worldPosY = ((ViewfinderState *)lbl_803DD548)->unk124;
+  ((GameObject *)cam)->anim.worldPosZ = ((ViewfinderState *)lbl_803DD548)->unk128;
+  ((GameObject *)cam)->anim.rotY = 0;
   flag = 0;
   if (*(f32 *)(cam + 244) <= lbl_803E17C4) {
     flag = 1;
@@ -991,15 +992,15 @@ void CameraModeStatic_init(u8 *cam, int p2, int *p3)
   }
   {
     f32 fov = (f32)(u32)setup[26];
-    *(f32 *)(cam + 24) = *(f32 *)(best + 24);
-    *(f32 *)(cam + 28) = *(f32 *)(best + 28);
-    *(f32 *)(cam + 32) = *(f32 *)(best + 32);
-    *(s16 *)(cam + 0) = yaw;
-    *(s16 *)(cam + 2) = pitch;
-    *(s16 *)(cam + 4) = roll;
+    ((GameObject *)cam)->anim.worldPosX = *(f32 *)(best + 24);
+    ((GameObject *)cam)->anim.worldPosY = *(f32 *)(best + 28);
+    ((GameObject *)cam)->anim.worldPosZ = *(f32 *)(best + 32);
+    ((GameObject *)cam)->anim.rotX = yaw;
+    ((GameObject *)cam)->anim.rotY = pitch;
+    ((GameObject *)cam)->anim.rotZ = roll;
     *(f32 *)(cam + 180) = fov;
   }
-  Obj_TransformWorldPointToLocal(*(f32 *)(cam + 24), *(f32 *)(cam + 28), *(f32 *)(cam + 32),
+  Obj_TransformWorldPointToLocal(((GameObject *)cam)->anim.worldPosX, ((GameObject *)cam)->anim.worldPosY, ((GameObject *)cam)->anim.worldPosZ,
                                  (f32 *)(cam + 12), (f32 *)(cam + 16), (f32 *)(cam + 20),
                                  *(int *)(cam + 48));
 }
