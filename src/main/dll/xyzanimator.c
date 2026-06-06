@@ -85,7 +85,6 @@ extern undefined4 DAT_803dc070;
 extern undefined4 *gPartfxInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
-extern PollenFragmentConfig *lbl_8032059C[];
 extern f64 DOUBLE_803e3d80;
 extern f64 DOUBLE_803e3d98;
 extern f64 DOUBLE_803e3dc8;
@@ -1238,17 +1237,9 @@ void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v
 #pragma peephole reset
 
 extern void kaldachompspit_free(void);
-extern void kaldachompspit_hitDetect(void);
 extern void kaldachompspit_update(void);
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
-extern void pinponspike_free(int obj);
-extern void pinponspike_update(int obj);
-extern void pinponspike_init(int obj);
-extern void pollen_free(int obj);
-extern void pollen_hitDetect(int obj);
-extern void pollen_update(int obj);
-extern void pollen_init(int *obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -1369,9 +1360,6 @@ PollenFragmentConfig *lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-extern void pollenfragment_free(int obj);
-extern void pollenfragment_hitDetect(int obj);
-extern void pollenfragment_update(int obj);
 extern int fn_80080150(int p);
 extern f32 lbl_803E3158;
 

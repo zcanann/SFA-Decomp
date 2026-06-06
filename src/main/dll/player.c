@@ -1651,37 +1651,12 @@ int fn_8029A76C(int obj, int state, f32 fv)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E7ED4;
 extern f32 lbl_803E8064;
-extern f32 lbl_803E8068;
-extern f32 lbl_803E806C;
-extern f32 lbl_803E7F14;
-extern f32 lbl_803E7F2C;
-extern f32 lbl_803E7EA4;
-extern f32 lbl_803E7EE0;
-extern f32 lbl_803E7F6C;
-extern f32 lbl_803E8070;
-extern f32 lbl_803E7F98;
-extern f32 lbl_803E7EFC;
 extern f32 lbl_803E8074;
-extern f32 lbl_803E7FA4;
-extern f32 lbl_803E7EAC;
 extern f32 lbl_803E8030;
-extern f32 lbl_803E7F00;
-extern f32 lbl_803E7EA8;
-extern f32 lbl_803E7F94;
-extern f32 lbl_803E7F90;
-extern f32 lbl_803E7F20;
-extern f32 lbl_803E7E8C;
 extern f32 lbl_803E8078;
 extern f32 lbl_803E807C;
 extern f32 lbl_803E8080;
-extern f32 lbl_803E7F74;
-extern f32 lbl_803E7E98;
-extern f32 lbl_803E7EE8;
-extern f32 lbl_803E7ECC;
-extern f32 lbl_803E7FAC;
-extern f32 lbl_803E7F78;
 extern int fn_802AD2F4(int obj, int inner, int state);
 
 #pragma scheduling off
@@ -2730,11 +2705,7 @@ typedef struct {
     u8 pad5;
 } WallHit;
 
-extern f32 lbl_803E7F30;
-extern f32 lbl_803E7F50;
 extern f32 lbl_803E7FF8;
-extern f32 lbl_803E7FFC;
-extern f32 lbl_803E7FCC;
 extern f32 lbl_803E8000;
 extern f32 lbl_803E8004;
 
@@ -6906,11 +6877,7 @@ void playerUpdate(int obj)
 #pragma scheduling reset
 
 extern f32 Curve_EvalCatmullRom(int curve, f32 t, int mode);
-extern f32 lbl_803E7FA8;
 extern f64 lbl_803E7EC0;
-extern f32 lbl_803E7F44;
-extern f32 lbl_803E80E4;
-extern f32 lbl_803E7F10;
 
 #pragma scheduling off
 #pragma peephole off
@@ -7192,12 +7159,8 @@ typedef struct {
 } IdleEntry;
 
 extern s16 lbl_803DC6CC[4];
-extern f32 lbl_803E7FC8;
-extern f32 lbl_803E7FBC;
-extern f32 lbl_803E8018;
 extern f32 lbl_803E8084;
 extern f32 lbl_803E8088;
-extern f32 lbl_803E7E90;
 
 #pragma scheduling off
 #pragma peephole off
@@ -13248,11 +13211,8 @@ extern u64 lbl_803DE4A0;
 extern u64 lbl_803DE4A8;
 typedef struct { int a; int b; } IntPair2;
 extern int lbl_803E7E70;
-extern f32 lbl_803E7FA0;
 extern f32 lbl_803E80FC;
 extern f32 lbl_803E8100;
-extern f32 lbl_803E7FC0;
-extern f32 lbl_803E7EF8;
 int fn_802AC7DC(int obj, int state, int inner, f32 fv)
 {
     int r;
