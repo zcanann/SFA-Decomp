@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/objanim.h"
 #include "main/object_descriptor.h"
 
 extern u32 randomGetRange(int min, int max);
@@ -8,8 +9,6 @@ extern int ObjList_FindNearestObjectByDefNo(int *obj, int defNo, f32 *radius);
 extern int objBboxFn_800640cc(int a, f32 *pos, f32 b, int c, int *out, int *obj, int e, int g, int h, int i);
 extern void objLightFn_8009a1dc(int *obj, f32 a, int b, int c);
 extern void objRenderFn_8003b8f4(f32);
-extern void ObjAnim_AdvanceCurrentMove(int *obj, int a, f32 b, f32 c);
-extern void ObjAnim_SetCurrentMove(int obj, int move, f32 progress, int flags);
 extern void ObjHits_DisableObject(int obj);
 extern f32 sqrtf(f32);
 extern void *memset(void *dst, int val, u32 size);
@@ -114,7 +113,7 @@ void dll_D3_update(int *obj)
         }
     }
 
-    ObjAnim_AdvanceCurrentMove(obj, 0, *(f32 *)((char *)extra + 0x44), timeDelta);
+    ObjAnim_AdvanceCurrentMove(*(f32 *)((char *)extra + 0x44), timeDelta, (int)obj, NULL);
 
     if (*(s16 *)((char *)state + 0x402) != 1) {
         rc = ((int (*)(f32, int *, int *, int))((void **)*(int *)gBaddieControlInterface)[0x48 / 4])(
