@@ -1904,6 +1904,25 @@ compare's immediate and subtract 1 for the real case value.
     a volatile f0 hop), and the `B - A*C` spelling to get `fnmsubs` where
     `-(A*C - B)` splits into fmsubs+fneg.
 
+92. **CAP — the `bge +8; b far` two-branch guard (branch-to-NEXT over an
+    unconditional b) is NOT source-reproducible.** Target shape:
+    `cmpwi r0,K; bge L1; b Lfar; L1:` where L1 is the literal next
+    instruction. Every spelling — `&&` chains, negated-`||`, DeMorgan
+    variants, and even explicit `if (cond) goto L1; goto Lfar; L1:` — gets
+    front-end-folded to the single inverted branch (`blt Lfar`). MWCC folds
+    branch-over-branch eagerly BEFORE codegen; `#pragma peephole off` does
+    not preserve it. Likely an original-compiler-version artifact. ~3 instrs
+    per site; skip on sight (fn_801DFA28 ×2 sites). Recognize it by the
+    conditional branch targeting the immediately-following instruction.
+    Related wins from the same fn: a bare `(s16)` cast (NO `(int)`
+    intermediate) on a float→int conversion result assigned to an `int`
+    local emits `extsh rDST,r0` directly into the variable's home —
+    `(s16)(int)(f)` routes through `extsh r0,r0; mr rDST,r0` (+1);
+    `s16`-typing the local moves the extension to the USE side (worse).
+    And `x -= timeDelta * (x * k);` compound gives `fnmsubs` with
+    timeDelta-first load order where `x = -(timeDelta*(x*k) - x);` splits
+    to fmsubs+fneg.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
