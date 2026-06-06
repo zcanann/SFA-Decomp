@@ -156,7 +156,6 @@ void wcpushblock_hitDetect(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void wcpushblock_init(int obj, int setup)
 {
@@ -174,7 +173,6 @@ void wcpushblock_init(int obj, int setup)
     state->baseY = lbl_803E6DA0 + setupData->y;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling on

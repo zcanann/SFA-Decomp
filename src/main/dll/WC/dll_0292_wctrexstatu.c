@@ -22,7 +22,6 @@
 
 #define WCTREXSTATU_MAPEVENT_RAISED 2
 
-#pragma peephole on
 #pragma scheduling off
 int wctrexstatu_interactCallback(int obj, int unused, int callbackData)
 {
@@ -42,13 +41,10 @@ int wctrexstatu_interactCallback(int obj, int unused, int callbackData)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling on
 int wctrexstatu_getExtraSize(void) { return 0; }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
@@ -110,7 +106,6 @@ void wctrexstatu_update(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void wctrexstatu_init(int obj, int setup, int fromLoad)
 {
@@ -138,7 +133,6 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling on

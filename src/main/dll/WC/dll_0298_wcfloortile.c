@@ -157,7 +157,6 @@ void wcfloortile_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_8022AE1C(int obj, int bounds) {
     f32 cx = *(f32 *)(bounds + 0x14);
@@ -185,7 +184,6 @@ void fn_8022AE1C(int obj, int bounds) {
     *(f32 *)(bounds + 0x34) = lbl_803E6ECC;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -311,7 +309,6 @@ void fn_8022AECC(int obj, int p)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_8022B8A0(int p, int q) {
     if (*(void **)(q + 0x438) != NULL)
@@ -337,7 +334,6 @@ void fn_8022B8A0(int p, int q) {
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling on
@@ -416,7 +412,6 @@ void fn_8022A9C8(int obj, int state)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_8022A670(int obj, int state)
 {
@@ -479,9 +474,7 @@ void fn_8022A670(int obj, int state)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_8022AB68(int obj, int state)
 {
@@ -540,4 +533,3 @@ void fn_8022AB68(int obj, int state)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

@@ -295,7 +295,6 @@ void Obj_SpawnHitLightAndFade(int obj, f32 *p2)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
 {
@@ -350,9 +349,7 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
     return 1;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
 {
@@ -409,9 +406,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int fn_80221C18(int obj, f32 dt, int p3, int p4)
 {
@@ -446,7 +441,6 @@ int fn_80221C18(int obj, f32 dt, int p3, int p4)
     return voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) != 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
@@ -463,7 +457,6 @@ int voxmaps_traceWorldLine(void *p1, void *p2)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void voxmaps_traceScaledVectorEnd(f32 *p1, void *p2, f32 *p3, f32 scale)
 {
@@ -489,4 +482,3 @@ void voxmaps_traceScaledVectorEnd(f32 *p1, void *p2, f32 *p3, f32 scale)
     *(int *)&p1[2] = *(int *)&endPos[2];
 }
 #pragma scheduling reset
-#pragma peephole reset

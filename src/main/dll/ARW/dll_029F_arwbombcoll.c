@@ -57,7 +57,6 @@ void arwbombcoll_initialise(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwbombcoll_updateMovingAxis(int obj, int state) {
     u8 mode = *(u8 *)(state + 1);
@@ -97,9 +96,7 @@ void arwbombcoll_updateMovingAxis(int obj, int state) {
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwbombcoll_handleArwingHit(int obj, int state, int arwing) {
     int setup = *(int *)(obj + 0x4c);
@@ -139,7 +136,6 @@ void arwbombcoll_handleArwingHit(int obj, int state, int arwing) {
     *(u8 *)(state + 0x15) = 2;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

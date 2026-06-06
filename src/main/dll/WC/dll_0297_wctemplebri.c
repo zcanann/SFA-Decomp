@@ -44,7 +44,6 @@
 #define WCTEMPLEBRI_WAVE_PHASE_B(state) (*(u16 *)((state) + WCTEMPLEBRI_STATE_WAVE_PHASE_B))
 #define WCTEMPLEBRI_FLAGS(state) (*(u8 *)((state) + WCTEMPLEBRI_STATE_FLAGS))
 
-#pragma peephole on
 #pragma scheduling off
 void wctemplebri_updateModelWarp(int obj, int p2)
 {
@@ -67,7 +66,6 @@ void wctemplebri_updateModelWarp(int obj, int p2)
     WCTEMPLEBRI_WAVE_PHASE_B(p2) = (u16)v;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
