@@ -99,6 +99,79 @@ typedef struct Dll22CState {
 
 STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
+/* dbegg extra block: rom-curve walker + egg mode machine. */
+typedef struct DbEggState {
+    f32 waterOffset; /* float-height offset above water */
+    u8 curveWalker[0x10]; /* 0x004: rom-curve walker record (state+4 to gRomCurveInterface) */
+    int unk14;
+    u8 unk18[0x6C - 0x18];
+    f32 curvePosX; /* 0x06C: walker sample position */
+    f32 curvePosY;
+    f32 curvePosZ;
+    u8 unk78[0x118 - 0x78];
+    u8 mode; /* 0x118 */
+    u8 flags119; /* bits 1/2/4/8/0x10 */
+    u8 unk11A[2];
+    s16 msg11C; /* 0x11C: 3-word message payload sent via ObjMsg */
+    s16 msg11E;
+    f32 msg120;
+} DbEggState;
+
+STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
+
+/* dfpseqpoint extra block (extraSize 0x10). */
+typedef struct DfpSeqPointState {
+    f32 triggerRadius; /* def+0x1A */
+    s16 gameBitGate; /* 0x04: def+0x1E */
+    s16 gameBitDone; /* 0x06: def+0x20 */
+    s16 triggerId; /* 0x08: def+0x1C */
+    u8 unk0A[3];
+    u8 doneLatch; /* 0x0D */
+    u8 triggerMode; /* 0x0E: def+0x19 */
+    u8 flags0F; /* DfpFlags7-style bit 0x80 */
+} DfpSeqPointState;
+
+STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
+
+/* drakorenergy extra block (extraSize 0xC). */
+typedef struct DrakorEnergyState {
+    f32 startY; /* spawn height; bounce threshold in mode 1 */
+    int phase; /* += framesThisStep * 0x500; drives glow color/bob */
+    u8 mode; /* 0x08: 0 idle, 1 falling, 2 bobbing, 3 chasing, 4 collected, 5 reset */
+    u8 unk09[3];
+} DrakorEnergyState;
+
+STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
+
+/* chuka extra block (extraSize 0xC). */
+typedef struct ChukaState {
+    u8 unk00[4];
+    int linkedObj; /* 0x04: the 0x431-type object driving the mode */
+    u8 modeIdx; /* 0x08: index into gChukaModeTable */
+    u8 mode; /* 0x09 */
+    u8 unk0A[2];
+} ChukaState;
+
+STATIC_ASSERT(sizeof(ChukaState) == 0xC);
+
+/* GCRobotBlast extra block (extraSize 0x8). */
+typedef struct GCRobotBlastState {
+    int mode; /* def+0x19 */
+    u8 flags04; /* bit 0x80 = blast fired (BlastFlags4 overlay) */
+    u8 unk05[3];
+} GCRobotBlastState;
+
+STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
+
+/* dbholecontrol1 extra block (extraSize 0xC). */
+typedef struct DbHoleControl1State {
+    int gameBitA; /* def+0x1A */
+    int gameBitB; /* def+0x1C */
+    u8 unk08[4];
+} DbHoleControl1State;
+
+STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
+
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_800033a8();
@@ -392,10 +465,10 @@ int GCRobotBlast_SeqFn(int obj, int unused, int p3)
   int i;
 
   for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
-    ((BlastFlags4 *)(sub + 4))->b80 = *(u8 *)(p3 + i + 0x81);
+    ((BlastFlags4 *)&((GCRobotBlastState *)sub)->flags04)->b80 = *(u8 *)(p3 + i + 0x81);
   }
-  if (((u32)*(u8 *)(sub + 4) >> 7 & 1) != 0) {
-    switch (*(int *)sub) {
+  if (((u32)((GCRobotBlastState *)sub)->flags04 >> 7 & 1) != 0) {
+    switch (((GCRobotBlastState *)sub)->mode) {
     case 0:
     case 1:
       objfx_spawnDirectionalBurst(obj, 7, lbl_803E6270, 5, 6, 0x64, lbl_803E6274, 0, 0x200000);
@@ -4084,10 +4157,10 @@ extern f32 lbl_803E62A0;
 #pragma peephole off
 void drakorenergy_init(int *obj, u8 *init) {
     extern uint GameBit_Get(int);
-    u8 *sub;
+    DrakorEnergyState *sub;
     f32 fz;
-    sub = *(u8**)((char*)obj + 0xb8);
-    sub[8] = 5;
+    sub = *(DrakorEnergyState **)((char*)obj + 0xb8);
+    sub->mode = 5;
     *(f32*)((char*)obj + 0xc) = *(f32*)(init + 8);
     *(f32*)((char*)obj + 0x10) = *(f32*)(init + 0xc);
     *(f32*)((char*)obj + 0x14) = *(f32*)(init + 0x10);
@@ -4095,9 +4168,9 @@ void drakorenergy_init(int *obj, u8 *init) {
     *(f32*)((char*)obj + 0x2c) = fz;
     *(f32*)((char*)obj + 0x24) = fz;
     *(f32*)((char*)obj + 0x28) = lbl_803E62A0;
-    *(int*)(sub + 4) = randomGetRange(0, 0xffff);
+    sub->phase = randomGetRange(0, 0xffff);
     if (GameBit_Get(*(s16*)(init + 0x20)) != 0) {
-        sub[8] = 4;
+        sub->mode = 4;
     }
 }
 #pragma peephole reset
@@ -4193,12 +4266,12 @@ void dbstealerworm_free(int *obj) {
 #pragma scheduling off
 #pragma peephole off
 void dbholecontrol1_init(int *obj, u8 *params) {
-    int *sub = *(int**)((char*)obj + 0xb8);
+    DbHoleControl1State *sub = *(DbHoleControl1State **)((char*)obj + 0xb8);
     ObjGroup_AddObject(obj, 0x1e);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     *(void**)((char*)obj + 0xbc) = (void*)&dbholecontrol1_SeqFn;
-    sub[0] = *(s16*)(params + 0x1a);
-    sub[1] = *(s16*)(params + 0x1c);
+    sub->gameBitA = *(s16*)(params + 0x1a);
+    sub->gameBitB = *(s16*)(params + 0x1c);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4225,17 +4298,17 @@ extern int dfpseqpoint_SeqFn(int obj, int p2, int p3);
 #pragma scheduling off
 #pragma peephole off
 void dfpseqpoint_init(int *obj, u8 *init) {
-    u8 *sub;
-    sub = *(u8**)((char*)obj + 0xb8);
+    DfpSeqPointState *sub;
+    sub = *(DfpSeqPointState **)((char*)obj + 0xb8);
     *(void**)((char*)obj + 0xbc) = (void*)&dfpseqpoint_SeqFn;
     *(s16*)obj = (s16)((s8)init[0x18] << 8);
-    *(f32*)sub = (f32)(s32)*(s16*)(init + 0x1a);
-    *(s16*)(sub + 8) = *(s16*)(init + 0x1c);
-    sub[0xe] = init[0x19];
-    *(s16*)(sub + 4) = *(s16*)(init + 0x1e);
-    *(s16*)(sub + 6) = *(s16*)(init + 0x20);
+    sub->triggerRadius = (f32)(s32)*(s16*)(init + 0x1a);
+    sub->triggerId = *(s16*)(init + 0x1c);
+    sub->triggerMode = init[0x19];
+    sub->gameBitGate = *(s16*)(init + 0x1e);
+    sub->gameBitDone = *(s16*)(init + 0x20);
     *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x2000);
-    sub[0xf] = (u8)(sub[0xf] & ~0x80);
+    sub->flags0F = (u8)(sub->flags0F & ~0x80);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4289,8 +4362,8 @@ extern f32 lbl_803E6278;
 #pragma scheduling off
 #pragma peephole off
 void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
-    u8 *inner = *(u8 **)(obj + 0xb8);
-    u32 t = inner[8];
+    DrakorEnergyState *inner = *(DrakorEnergyState **)(obj + 0xb8);
+    u32 t = inner->mode;
     if (t != 0 && t != 4) {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E6278);
     }
@@ -4322,8 +4395,8 @@ void GCRobotBlast_init(int obj, s8 *p) {
         u8 b80 : 1;
     } BlastFlags4;
     char *inner = *(char **)(obj + 0xb8);
-    *(int *)inner = (s8)p[0x19];
-    ((BlastFlags4 *)(inner + 4))->b80 = 0;
+    ((GCRobotBlastState *)inner)->mode = (s8)p[0x19];
+    ((BlastFlags4 *)&((GCRobotBlastState *)inner)->flags04)->b80 = 0;
     *(void (**)(void))((char *)obj + 0xbc) = (void (*)(void))GCRobotBlast_SeqFn;
 }
 #pragma peephole reset
@@ -4353,7 +4426,7 @@ void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 
 #pragma scheduling off
 #pragma peephole off
-int DrakorEnergy_setScale(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x8) == 0; }
+int DrakorEnergy_setScale(int *obj) { return ((DrakorEnergyState *)((int**)obj)[0xb8/4])->mode == 0; }
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -4893,11 +4966,11 @@ void fn_80202EF0(int obj, int p2)
                 setup[7] = 0xff;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, 0);
         if (newObj != NULL) {
-            t = *(f32 *)(p2 + 0x2c0) / lbl_803E62B4;
+            t = ((BaddieState *)p2)->unk2C0 / lbl_803E62B4;
             dur = lbl_803E62B8 * t;
-            *(f32 *)(newObj + 0x24) = (*(f32 *)(*(int *)(p2 + 0x2d0) + 0xc) - *(f32 *)(obj + 0xc)) / dur;
-            *(f32 *)(newObj + 0x28) = ((lbl_803E6380 * t + *(f32 *)(*(int *)(p2 + 0x2d0) + 0x10)) - *(f32 *)(obj + 0x10)) / dur;
-            *(f32 *)(newObj + 0x2c) = (*(f32 *)(*(int *)(p2 + 0x2d0) + 0x14) - *(f32 *)(obj + 0x14)) / dur;
+            *(f32 *)(newObj + 0x24) = (*(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0xc) - *(f32 *)(obj + 0xc)) / dur;
+            *(f32 *)(newObj + 0x28) = ((lbl_803E6380 * t + *(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0x10)) - *(f32 *)(obj + 0x10)) / dur;
+            *(f32 *)(newObj + 0x2c) = (*(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0x14) - *(f32 *)(obj + 0x14)) / dur;
             *(int *)(newObj + 0xc4) = obj;
         }
     }
@@ -6856,34 +6929,34 @@ void chuka_update(int obj)
     int cnt;
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
 
-    ch = *(int *)(blob + 4);
+    ch = ((ChukaState *)blob)->linkedObj;
     if ((u32)ch != 0) {
         if (*(s16 *)(ch + 6) & 0x40) {
-            *(int *)(blob + 4) = 0;
+            ((ChukaState *)blob)->linkedObj = 0;
             return;
         }
     }
-    if (*(void **)(blob + 4) == NULL) {
+    if (*(void **)&((ChukaState *)blob)->linkedObj == NULL) {
         base = ObjList_GetObjects(&idx, &cnt);
         for (i = idx; i < cnt; i++) {
             o = base[i];
             if (*(s16 *)(o + 0x46) == 0x431) {
-                *(int *)(blob + 4) = o;
+                ((ChukaState *)blob)->linkedObj = o;
                 i = cnt;
             }
         }
-        if (*(void **)(blob + 4) == NULL) {
+        if (*(void **)&((ChukaState *)blob)->linkedObj == NULL) {
             return;
         }
     }
-    ch = *(int *)(blob + 4);
+    ch = ((ChukaState *)blob)->linkedObj;
     (**(void (**)(int, u8 *))(*(int *)(*(int *)(ch + 0x68)) + 0x20))(ch, gChukaModeTable);
     if (GameBit_Get(0x5e4) == 0) {
-        *(u8 *)(blob + 9) = 0;
+        ((ChukaState *)blob)->mode = 0;
     } else {
-        *(u8 *)(blob + 9) = gChukaModeTable[*(u8 *)(blob + 8)];
+        ((ChukaState *)blob)->mode = gChukaModeTable[((ChukaState *)blob)->modeIdx];
     }
-    switch (*(u8 *)(blob + 9)) {
+    switch (((ChukaState *)blob)->mode) {
     case 0:
         if (objAnim->bankIndex != 0) {
             Obj_SetActiveModelIndex(obj, 0);
@@ -7113,19 +7186,19 @@ void drakorenergy_update(int obj)
 
     player = Obj_GetPlayerObject();
     data = *(int *)(obj + 0x4c);
-    switch (*(u8 *)(blob + 8)) {
+    switch (((DrakorEnergyState *)blob)->mode) {
     case 0:
         if (GameBit_Get(*(s16 *)(data + 0x20)) == 1) {
-            *(u8 *)(blob + 8) = 2;
+            ((DrakorEnergyState *)blob)->mode = 2;
         }
         break;
     case 1:
-        if (*(f32 *)blob - *(f32 *)(obj + 0x10) > (v = lbl_803E627C)) {
+        if (((DrakorEnergyState *)blob)->startY - *(f32 *)(obj + 0x10) > (v = lbl_803E627C)) {
             *(f32 *)(obj + 0x28) = lbl_803E6280 * -*(f32 *)(obj + 0x28);
             dist = *(f32 *)(obj + 0x28);
             dist = dist >= v ? -dist : dist;
             if (dist < lbl_803E6284) {
-                *(u8 *)(blob + 8) = 2;
+                ((DrakorEnergyState *)blob)->mode = 2;
                 *(f32 *)(obj + 0x24) = lbl_803E627C;
                 *(f32 *)(obj + 0x2c) = lbl_803E627C;
                 break;
@@ -7134,15 +7207,15 @@ void drakorenergy_update(int obj)
         *(f32 *)(obj + 0x28) += lbl_803E6288;
         objMove(obj, *(f32 *)(obj + 0x24), *(f32 *)(obj + 0x28), *(f32 *)(obj + 0x2c));
         trio[2] = 0xff;
-        trio[1] = 0xff - *(int *)(blob + 4) % 0x500;
+        trio[1] = 0xff - ((DrakorEnergyState *)blob)->phase % 0x500;
         trio[0] = 0xff;
         (**(void (**)(int, int, s16 *, int, int, int))((char *)*gPartfxInterface + 8))(obj, 0x357, trio, 0, -1, 0);
         break;
     case 2:
-        *(f32 *)(obj + 0x28) = lbl_803DC160 * fn_80293E80(lbl_803E628C * (f32)*(int *)(blob + 4) / lbl_803E6290);
+        *(f32 *)(obj + 0x28) = lbl_803DC160 * fn_80293E80(lbl_803E628C * (f32)((DrakorEnergyState *)blob)->phase / lbl_803E6290);
         objMove(obj, *(f32 *)(obj + 0x24), *(f32 *)(obj + 0x28), *(f32 *)(obj + 0x2c));
         if (Vec_distance(obj + 0x18, player + 0x18) < lbl_803DC164) {
-            *(u8 *)(blob + 8) = 3;
+            ((DrakorEnergyState *)blob)->mode = 3;
         }
         objfx_spawnFlaggedTrailBurst(obj, lbl_803DC174, 1, 0xc22, 0x14, obj + 0x24);
         break;
@@ -7151,7 +7224,7 @@ void drakorenergy_update(int obj)
         if (dist < lbl_803DC168) {
             playerAddHealth(player, lbl_803DC170);
             Sfx_PlayFromObject(obj, 0x49);
-            *(u8 *)(blob + 8) = 4;
+            ((DrakorEnergyState *)blob)->mode = 4;
         } else {
             spd = lbl_803DC16C;
             fn_80221C18(player, obj + 0xc, v1, spd / lbl_803E6294);
@@ -7169,11 +7242,11 @@ void drakorenergy_update(int obj)
         }
         break;
     case 5:
-        *(u8 *)(blob + 8) = 0;
+        ((DrakorEnergyState *)blob)->mode = 0;
         break;
     }
     *(s16 *)obj += lbl_803DC178;
-    *(int *)(blob + 4) += framesThisStep * 0x500;
+    ((DrakorEnergyState *)blob)->phase += framesThisStep * 0x500;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -7194,7 +7267,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
     *(s16 *)(p3 + 0x70) = -1;
     *(u8 *)(p3 + 0x56) = 0;
     for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
-        switch (*(s16 *)(blob + 8)) {
+        switch (((DfpSeqPointState *)blob)->triggerId) {
         case 1:
             if (*(u8 *)(p3 + i + 0x81) == 1) {
                 if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1) {
@@ -7211,7 +7284,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
         case 0xa:
             if (*(u8 *)(p3 + i + 0x81) == 0x14) {
                 if (*(u32 *)(data + 0x14) == 0x49de8) {
-                    ((DfpFlags7 *)(blob + 0xf))->b80 = 1;
+                    ((DfpFlags7 *)&((DfpSeqPointState *)blob)->flags0F)->b80 = 1;
                 } else {
                     if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1 ||
                         ((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
@@ -7246,73 +7319,73 @@ void dfpseqpoint_update(int obj)
 
     player = Obj_GetPlayerObject();
     blob = *(int *)(obj + 0xb8);
-    if (((u32)*(u8 *)(blob + 0xf) >> 7 & 1) != 0) {
+    if (((u32)((DfpSeqPointState *)blob)->flags0F >> 7 & 1) != 0) {
         GameBit_Set(0xef7, 1);
-        ((DfpFlags7 *)(blob + 0xf))->b80 = 0;
+        ((DfpFlags7 *)&((DfpSeqPointState *)blob)->flags0F)->b80 = 0;
     }
-    h = *(s16 *)(blob + 6);
+    h = ((DfpSeqPointState *)blob)->gameBitDone;
     if (h != -1) {
-        if (*(u8 *)(blob + 0xd) != 0) {
+        if (((DfpSeqPointState *)blob)->doneLatch != 0) {
             if (GameBit_Get(h) != 0) {
                 return;
             }
-            GameBit_Set(*(s16 *)(blob + 6), 1);
-            *(u8 *)(blob + 0xd) = 1;
+            GameBit_Set(((DfpSeqPointState *)blob)->gameBitDone, 1);
+            ((DfpSeqPointState *)blob)->doneLatch = 1;
             return;
         }
         if (GameBit_Get(h) != 0) {
-            *(u8 *)(blob + 0xd) = 1;
+            ((DfpSeqPointState *)blob)->doneLatch = 1;
             return;
         }
     }
-    if (*(u8 *)(blob + 0xd) != 0) {
+    if (((DfpSeqPointState *)blob)->doneLatch != 0) {
         return;
     }
-    switch (*(u8 *)(blob + 0xe)) {
+    switch (((DfpSeqPointState *)blob)->triggerMode) {
     case 0:
-        if (Vec_distance(obj + 0x18, player + 0x18) < *(f32 *)blob) {
-            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
-            *(u8 *)(blob + 0xd) = 1;
+        if (Vec_distance(obj + 0x18, player + 0x18) < ((DfpSeqPointState *)blob)->triggerRadius) {
+            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
+            ((DfpSeqPointState *)blob)->doneLatch = 1;
         }
         break;
     case 1:
-        h = *(s16 *)(blob + 4);
+        h = ((DfpSeqPointState *)blob)->gameBitGate;
         if (h != -1 && GameBit_Get(h) != 0) {
-            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
-            *(u8 *)(blob + 0xd) = 1;
+            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
+            ((DfpSeqPointState *)blob)->doneLatch = 1;
         }
         break;
     case 2:
-        if (Vec_distance(obj + 0x18, player + 0x18) < *(f32 *)blob) {
-            h = *(s16 *)(blob + 4);
+        if (Vec_distance(obj + 0x18, player + 0x18) < ((DfpSeqPointState *)blob)->triggerRadius) {
+            h = ((DfpSeqPointState *)blob)->gameBitGate;
             if (h != -1 && GameBit_Get(h) != 0) {
-                ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
-                *(u8 *)(blob + 0xd) = 1;
+                ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
+                ((DfpSeqPointState *)blob)->doneLatch = 1;
             }
         }
         break;
     case 3:
-        if (Vec_distance(obj + 0x18, player + 0x18) < *(f32 *)blob) {
-            h = *(s16 *)(blob + 4);
+        if (Vec_distance(obj + 0x18, player + 0x18) < ((DfpSeqPointState *)blob)->triggerRadius) {
+            h = ((DfpSeqPointState *)blob)->gameBitGate;
             if (h != -1 && GameBit_Get(h) == 0) {
-                ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
-                GameBit_Set(*(s16 *)(blob + 4), 1);
-                *(u8 *)(blob + 0xd) = 1;
+                ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
+                GameBit_Set(((DfpSeqPointState *)blob)->gameBitGate, 1);
+                ((DfpSeqPointState *)blob)->doneLatch = 1;
             }
         }
         break;
     case 4:
-        h = *(s16 *)(blob + 4);
+        h = ((DfpSeqPointState *)blob)->gameBitGate;
         if (h != -1 && GameBit_Get(h) == 0) {
-            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
-            GameBit_Set(*(s16 *)(blob + 4), 1);
-            *(u8 *)(blob + 0xd) = 1;
+            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
+            GameBit_Set(((DfpSeqPointState *)blob)->gameBitGate, 1);
+            ((DfpSeqPointState *)blob)->doneLatch = 1;
         }
         break;
     case 5:
-        h = *(s16 *)(blob + 4);
+        h = ((DfpSeqPointState *)blob)->gameBitGate;
         if (h != -1 && GameBit_Get(h) != 0) {
-            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
+            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
         }
         break;
     }
@@ -7504,22 +7577,22 @@ void dbegg_update(int obj)
     if (objPosToMapBlockIdx(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14)) != -1) {
         dbegg_processMessages(obj);
         (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~0x400;
-        switch (*(u8 *)(blob + 0x118)) {
+        switch (((DbEggState *)blob)->mode) {
         case 5:
             if (*(int *)(obj + 0xf8) == 0) {
                 (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
             }
             if (fn_801FE560(obj, &h, lbl_803E61C8, *(f32 *)&lbl_803E61C8, 1) == 0) {
-                *(u8 *)(blob + 0x118) = 2;
+                ((DbEggState *)blob)->mode = 2;
                 break;
             }
             v = h;
             v = v >= lbl_803E61C8 ? v : -v;
             if (v < lbl_803E6220) {
-                if (*(u8 *)(blob + 0x119) & 0x10) {
-                    *(u8 *)(blob + 0x118) = 0xd;
+                if (((DbEggState *)blob)->flags119 & 0x10) {
+                    ((DbEggState *)blob)->mode = 0xd;
                 } else {
-                    *(u8 *)(blob + 0x118) = 1;
+                    ((DbEggState *)blob)->mode = 1;
                 }
                 fz = lbl_803E61C8;
                 *(f32 *)(obj + 0x24) = lbl_803E61C8;
@@ -7549,13 +7622,13 @@ void dbegg_update(int obj)
             *(u8 *)(obj + 0xaf) &= ~8;
             break;
         case 2:
-            if (*(u8 *)(blob + 0x119) & 4) {
+            if (((DbEggState *)blob)->flags119 & 4) {
                 *(u8 *)(obj + 0xaf) |= 8;
                 *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) + (*(f32 *)(data + 8) - *(f32 *)(obj + 0xc)) / (fz = lbl_803E61E4);
                 *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) + (*(f32 *)(data + 0xc) - *(f32 *)(obj + 0x10)) / fz;
                 *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) + (*(f32 *)(data + 0x10) - *(f32 *)(obj + 0x14)) / fz;
                 if (GameBit_Get(0x44d) != 0) {
-                    *(u8 *)(blob + 0x118) = 0xa;
+                    ((DbEggState *)blob)->mode = 0xa;
                 }
             }
             (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 0x400;
@@ -7572,7 +7645,7 @@ void dbegg_update(int obj)
                 *(f32 *)(obj + 0x2c) = lbl_803E6234 * *(f32 *)(obj + 0x2c);
                 fn_801FE560(obj, &h, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta, 1);
             }
-            h = h + *(f32 *)blob;
+            h = h + ((DbEggState *)blob)->waterOffset;
             if (oneOverTimeDelta != lbl_803E61C8) {
                 *(f32 *)(obj + 0x28) = h * (lbl_803E6238 * oneOverTimeDelta);
             } else {
@@ -7585,22 +7658,22 @@ void dbegg_update(int obj)
                 int nb = h < lbl_803E6200;
                 nb = (nb < 0) ? -nb : nb;
                 if (nb != 0) {
-                (**(void (**)(int, int, f32, f32, f32, f32))((char *)*gWaterfxInterface + 0x14))(*(s16 *)obj, 1, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10) - *(f32 *)blob, *(f32 *)(obj + 0x14), (f32)randomGetRange(1, 10));
+                (**(void (**)(int, int, f32, f32, f32, f32))((char *)*gWaterfxInterface + 0x14))(*(s16 *)obj, 1, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10) - ((DbEggState *)blob)->waterOffset, *(f32 *)(obj + 0x14), (f32)randomGetRange(1, 10));
                 }
             }
             if (GameBit_Get(0x426) != 0) {
                 *(u8 *)(obj + 0xaf) &= ~8;
-                *(f32 *)blob = *(f32 *)blob - lbl_803E623C * timeDelta;
-                if (*(f32 *)blob < lbl_803E61EC) {
+                ((DbEggState *)blob)->waterOffset = ((DbEggState *)blob)->waterOffset - lbl_803E623C * timeDelta;
+                if (((DbEggState *)blob)->waterOffset < lbl_803E61EC) {
                     GameBit_Set(0x428, GameBit_Get(0x428) + 1);
-                    *(u8 *)(blob + 0x118) = 7;
+                    ((DbEggState *)blob)->mode = 7;
                     fz = lbl_803E61C8;
                     *(f32 *)(obj + 0x28) = lbl_803E61C8;
                     *(f32 *)(obj + 0x24) = fz;
                     *(f32 *)(obj + 0x2c) = fz;
                     *(u8 *)(obj + 0xaf) |= 8;
                 }
-            } else if (*(u8 *)(blob + 0x119) & 2) {
+            } else if (((DbEggState *)blob)->flags119 & 2) {
                 *(u8 *)(obj + 0xaf) |= 8;
             }
             break;
@@ -7608,23 +7681,23 @@ void dbegg_update(int obj)
             *(u8 *)(obj + 0xaf) |= 8;
             break;
         case 6:
-            if (Vec_xzDistance(obj + 0x18, data + 8) > lbl_803E6240 && (*(u8 *)(blob + 0x119) & 2) == 0) {
+            if (Vec_xzDistance(obj + 0x18, data + 8) > lbl_803E6240 && (((DbEggState *)blob)->flags119 & 2) == 0) {
                 p2 = Obj_GetPlayerObject();
                 b2 = *(int *)(obj + 0xb8);
                 d2 = *(int *)(obj + 0x4c);
                 ObjGroup_RemoveObject(obj, 0x24);
-                *(u8 *)(b2 + 0x118) = 3;
+                ((DbEggState *)b2)->mode = 3;
                 GameBit_Set(0x3c4, 1);
                 GameBit_Set(0x86d, 1);
                 *(u8 *)(obj + 0xaf) |= 8;
                 GameBit_Set(*(s16 *)(d2 + 0x1c), 1);
-                *(s16 *)(b2 + 0x11c) = -1;
-                *(s16 *)(b2 + 0x11e) = 0;
-                *(f32 *)(b2 + 0x120) = lbl_803E61CC;
+                ((DbEggState *)b2)->msg11C = -1;
+                ((DbEggState *)b2)->msg11E = 0;
+                ((DbEggState *)b2)->msg120 = lbl_803E61CC;
                 ObjMsg_SendToObject(p2, 0x7000a, obj, b2 + 0x11c);
                 *(int *)(obj + 0xf8) = 0;
             } else if (getButtonsJustPressed(0) & 0x100) {
-                *(u8 *)(blob + 0x118) = 5;
+                ((DbEggState *)blob)->mode = 5;
                 *(u8 *)(obj + 0xaf) &= ~8;
             } else {
                 (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
@@ -7640,7 +7713,7 @@ void dbegg_update(int obj)
             v = h;
             v = v >= lbl_803E61C8 ? v : -v;
             if (v < lbl_803E6220) {
-                *(u8 *)(blob + 0x118) = 8;
+                ((DbEggState *)blob)->mode = 8;
                 fz = lbl_803E61C8;
                 *(f32 *)(obj + 0x24) = lbl_803E61C8;
                 *(f32 *)(obj + 0x2c) = fz;
@@ -7661,25 +7734,25 @@ void dbegg_update(int obj)
             break;
         case 0xa:
             if ((u8)(**(int (**)(int, int, f32, int *, int))((char *)*gRomCurveInterface + 0x8c))(blob + 4, obj, lbl_803E624C, buf2, 2) != 0) {
-                *(u8 *)(blob + 0x118) = 5;
+                ((DbEggState *)blob)->mode = 5;
             } else {
                 *(u8 *)(obj + 0xaf) &= ~8;
-                *(u8 *)(blob + 0x118) = 9;
-                n = *(u8 *)(blob + 0x119);
+                ((DbEggState *)blob)->mode = 9;
+                n = ((DbEggState *)blob)->flags119;
                 if (n & 4) {
-                    *(u8 *)(blob + 0x119) = n & ~4;
+                    ((DbEggState *)blob)->flags119 = n & ~4;
                 }
             }
             break;
         case 9:
-            if (Curve_AdvanceAlongPath(blob + 4, lbl_803E6250) != 0 || *(int *)(blob + 0x14) != 0) {
+            if (Curve_AdvanceAlongPath(blob + 4, lbl_803E6250) != 0 || ((DbEggState *)blob)->unk14 != 0) {
                 if ((u8)(**(int (**)(int))((char *)*gRomCurveInterface + 0x90))(blob + 4) != 0) {
-                    *(u8 *)(blob + 0x118) = 5;
+                    ((DbEggState *)blob)->mode = 5;
                 }
             } else {
-                *(f32 *)(obj + 0x24) = *(f32 *)(blob + 0x6c) - *(f32 *)(obj + 0xc);
-                *(f32 *)(obj + 0x28) = *(f32 *)(blob + 0x70) - *(f32 *)(obj + 0x10);
-                *(f32 *)(obj + 0x2c) = *(f32 *)(blob + 0x74) - *(f32 *)(obj + 0x14);
+                *(f32 *)(obj + 0x24) = ((DbEggState *)blob)->curvePosX - *(f32 *)(obj + 0xc);
+                *(f32 *)(obj + 0x28) = ((DbEggState *)blob)->curvePosY - *(f32 *)(obj + 0x10);
+                *(f32 *)(obj + 0x2c) = ((DbEggState *)blob)->curvePosZ - *(f32 *)(obj + 0x14);
                 fx = sqrtf(*(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c) + (*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x28) * *(f32 *)(obj + 0x28)));
                 if (fx > lbl_803E6254 * timeDelta) {
                     Vec3_Normalize(obj + 0x24);
@@ -7696,7 +7769,7 @@ void dbegg_update(int obj)
         case 0xc:
             if (GameBit_Get(*(s16 *)(data + 0x24)) != 0) {
                 ObjGroup_AddObject(obj, 0x24);
-                *(u8 *)(blob + 0x118) = 5;
+                ((DbEggState *)blob)->mode = 5;
             }
             break;
         case 0xd:
@@ -7714,7 +7787,7 @@ void dbegg_update(int obj)
             fx = fx >= lbl_803E61C8 ? fx : -fx;
             if (fx + fz < lbl_803E625C) {
                 ObjHits_EnableObject(obj);
-                *(u8 *)(blob + 0x118) = 1;
+                ((DbEggState *)blob)->mode = 1;
                 *(f32 *)(obj + 0xc) = *(f32 *)(data + 8);
                 *(f32 *)(obj + 0x10) = *(f32 *)(data + 0xc);
                 *(f32 *)(obj + 0x14) = *(f32 *)(data + 0x10);
@@ -7727,37 +7800,37 @@ void dbegg_update(int obj)
             }
             break;
         }
-        if (*(u8 *)(blob + 0x119) & 8) {
+        if (((DbEggState *)blob)->flags119 & 8) {
             *(u8 *)(obj + 0xaf) |= 8;
             ObjHits_DisableObject(obj);
             if (GameBit_Get(*(s16 *)(data + 0x1c)) != 0) {
-                *(u8 *)(blob + 0x119) &= ~9;
+                ((DbEggState *)blob)->flags119 &= ~9;
                 *(u8 *)(obj + 0xaf) &= ~8;
                 ObjHits_EnableObject(obj);
             }
         } else if (*(u8 *)(obj + 0xaf) & 1) {
             if (GameBit_Get(0x3c4) == 0) {
                 if (Vec_xzDistance(obj + 0x18, player + 0x18) < lbl_803E6264) {
-                    if ((*(u8 *)(blob + 0x119) & 1) == 0) {
+                    if ((((DbEggState *)blob)->flags119 & 1) == 0) {
                         p2 = Obj_GetPlayerObject();
                         b2 = *(int *)(obj + 0xb8);
                         d2 = *(int *)(obj + 0x4c);
                         ObjGroup_RemoveObject(obj, 0x24);
-                        *(u8 *)(b2 + 0x118) = 3;
+                        ((DbEggState *)b2)->mode = 3;
                         GameBit_Set(0x3c4, 1);
                         GameBit_Set(0x86d, 1);
                         *(u8 *)(obj + 0xaf) |= 8;
                         GameBit_Set(*(s16 *)(d2 + 0x1c), 1);
-                        *(s16 *)(b2 + 0x11c) = -1;
-                        *(s16 *)(b2 + 0x11e) = 0;
-                        *(f32 *)(b2 + 0x120) = lbl_803E61CC;
+                        ((DbEggState *)b2)->msg11C = -1;
+                        ((DbEggState *)b2)->msg11E = 0;
+                        ((DbEggState *)b2)->msg120 = lbl_803E61CC;
                         ObjMsg_SendToObject(p2, 0x7000a, obj, b2 + 0x11c);
                     } else {
                         v = *(f32 *)(obj + 0x10) - *(f32 *)(player + 0x10);
                         v = v >= lbl_803E61C8 ? v : -v;
                         if (v < lbl_803E6268) {
                             *(u8 *)(obj + 0xaf) |= 8;
-                            *(u8 *)(blob + 0x118) = 6;
+                            ((DbEggState *)blob)->mode = 6;
                             (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
                         }
                     }
