@@ -8812,6 +8812,18 @@ dVar13 = lbl_803DF5B4;
             cfg.f08 = 0x3c;
             cfg.f44 = 0x108;
             cfg.f42 = 0x5c;
+            if ((cfg.f44 & 1) != 0) {
+              if (cfg.f00 != NULL) {
+                cfg.f30 = cfg.f30 + *(f32 *)((char *)cfg.f00 + 0xc);
+                cfg.f34 = cfg.f34 + *(f32 *)((char *)cfg.f00 + 0x10);
+                cfg.f38 = cfg.f38 + *(f32 *)((char *)cfg.f00 + 0x14);
+              }
+              else {
+                cfg.f30 = cfg.f30 + cfg.f18;
+                cfg.f34 = cfg.f34 + cfg.f1c;
+                cfg.f38 = cfg.f38 + cfg.f20;
+              }
+            }
             (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
           }
     break;
