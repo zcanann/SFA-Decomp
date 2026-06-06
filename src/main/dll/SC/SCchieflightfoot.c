@@ -6,6 +6,7 @@
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/mapEventTypes.h"
 
 extern void Sfx_PlayFromObject(SHthorntailObject *obj,u16 volumeId);
 extern f32 getXZDistance(f32 *posA,f32 *posB);
@@ -35,7 +36,7 @@ extern undefined4 lbl_803E5410;
 extern undefined4* gPartfxInterface;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd728;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern SHthorntailPathControlInterface **gPathControlInterface;
 extern f32 timeDelta;
 extern f64 lbl_803E5428;
@@ -163,7 +164,7 @@ void SHthorntail_update(SHthorntailObject *obj)
   cVar3 = ObjHitReact_Update((int)obj,hitReactEntries,0x19,uVar7,pfVar8);
   runtime->hitReactState = cVar3;
   if (cVar3 == '\0') {
-    uVar4 = (*(code *)(*DAT_803dd72c + 0x40))((int)obj->animObjId);
+    uVar4 = (*DAT_803dd72c)->getMode((int)obj->animObjId);
     runtime->locomotionMode = uVar4;
     bVar1 = config->controlMode;
     switch (bVar1) {

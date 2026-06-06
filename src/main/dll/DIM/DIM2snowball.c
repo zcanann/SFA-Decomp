@@ -55,7 +55,7 @@ extern undefined4 DAT_803dcb88;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern f64 DOUBLE_803e56e8;
 extern f64 DOUBLE_803e5708;
 extern f64 DOUBLE_803e5730;
@@ -294,7 +294,7 @@ void FUN_801b6d24(int param_1)
   uVar2 = GameBit_Get(0xa21);
   *(byte *)((int)pfVar4 + 0xe) =
        (byte)((uVar2 & 0xff) << 3) & 8 | *(byte *)((int)pfVar4 + 0xe) & 0xf7;
-  (**(code **)(*DAT_803dd72c + 0x44))((int)*(char *)(param_1 + 0xac),1);
+  (*DAT_803dd72c)->setMode((int)*(char *)(param_1 + 0xac),1);
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x6000;
   FUN_80042b9c(0,0,1);
   return;

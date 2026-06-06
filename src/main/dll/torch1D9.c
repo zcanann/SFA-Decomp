@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/torch1D9.h"
+#include "main/mapEventTypes.h"
 
 extern undefined4 FUN_80006724();
 extern undefined4 FUN_80006728();
@@ -13,7 +14,7 @@ extern undefined4 DAT_8032768c;
 extern undefined4 DAT_803276c4;
 extern undefined4 DAT_803276fc;
 extern undefined4 DAT_80327734;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern f32 lbl_803E5F18;
 
 /*
@@ -72,11 +73,11 @@ void edibleMushroomFn_801d083c(undefined8 param_1,double param_2,double param_3,
     FUN_80006724(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x23c,0,in_r7,
                  in_r8,in_r9,in_r10);
   }
-  (**(code **)(*DAT_803dd72c + 0x50))(7,0,0);
-  (**(code **)(*DAT_803dd72c + 0x50))(7,2,0);
-  (**(code **)(*DAT_803dd72c + 0x50))(7,5,0);
-  (**(code **)(*DAT_803dd72c + 0x50))(7,10,0);
-  (**(code **)(*DAT_803dd72c + 0x50))(7,0x1c,0);
-  (**(code **)(*DAT_803dd72c + 0x50))(7,9,1);
+  (*DAT_803dd72c)->setAnimEvent(7,0,0);
+  (*DAT_803dd72c)->setAnimEvent(7,2,0);
+  (*DAT_803dd72c)->setAnimEvent(7,5,0);
+  (*DAT_803dd72c)->setAnimEvent(7,10,0);
+  (*DAT_803dd72c)->setAnimEvent(7,0x1c,0);
+  (*DAT_803dd72c)->setAnimEvent(7,9,1);
   return;
 }

@@ -70,7 +70,7 @@ extern undefined4* DAT_803dd6f4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd70c;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4* DAT_803dd734;
 extern undefined4 DAT_803de8d8;
 extern undefined4* lbl_803DCAB4;
@@ -483,7 +483,7 @@ void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
   iVar3 = (int)((ulonglong)uVar9 >> 0x20);
   uVar4 = FUN_80017ae8();
   if ((uVar4 & 0xff) != 0) {
-    (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(iVar3 + 0xac),6,1);
+    (*DAT_803dd72c)->setAnimEvent((int)*(char *)(iVar3 + 0xac),6,1);
     dVar7 = (double)*(float *)(iVar3 + 0x10);
     dVar8 = (double)*(float *)(iVar3 + 0x14);
     FUN_800632e8((double)*(float *)(iVar3 + 0xc),dVar7,dVar8,iVar3,local_28,0);

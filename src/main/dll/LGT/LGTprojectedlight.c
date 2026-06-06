@@ -48,7 +48,7 @@ extern undefined4 DAT_803dcd80;
 extern undefined4 DAT_803dcd84;
 extern undefined4 DAT_803dcd88;
 extern undefined4 DAT_803dcd8c;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803de910;
 extern undefined4 DAT_803de914;
@@ -159,7 +159,7 @@ void FUN_801f456c(int param_1)
   fVar3 = DAT_802c2c4c;
   fVar2 = DAT_802c2c48;
   fVar1 = DAT_802c2c44;
-  cVar10 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_1 + 0xac));
+  cVar10 = (*DAT_803dd72c)->getMode((int)*(char *)(param_1 + 0xac));
   if (cVar10 != '\a') {
     FUN_8005d0ac(0);
     bVar11 = FUN_80080f2c(0);

@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/VF/platform1.h"
+#include "main/mapEventTypes.h"
 
 extern uint FUN_80006c00();
 extern undefined4 FUN_80006c88();
@@ -21,7 +22,7 @@ extern uint countLeadingZeros();
 extern undefined4 DAT_80328730;
 extern undefined4 DAT_80328734;
 extern undefined4* DAT_803dd6d4;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de890;
 extern f32 lbl_803E6310;
 extern undefined4 *gPartfxInterface;
@@ -204,7 +205,7 @@ void FUN_801df45c(undefined2 *param_1)
   state = *(Platform1State **)(param_1 + 0x5c);
   FUN_80017a98();
   GameBit_Set(0xf1d,0);
-  cVar7 = (**(code **)(*DAT_803dd72c + 0x40))(0xe);
+  cVar7 = (*DAT_803dd72c)->getMode(0xe);
   if (cVar7 == '\x06') {
     if ((state->flags & PLATFORM1_FLAG_ACTIVE) == 0) {
       if ((state->flags & PLATFORM1_TRIGGER_FLAG_02) != 0) {
