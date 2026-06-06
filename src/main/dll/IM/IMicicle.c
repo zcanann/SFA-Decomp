@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/IM/IMicicle.h"
+#include "main/game_object.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -163,11 +164,11 @@ void cfforcefield_update(u8 *obj)
   f32 world[6];
   f32 local[3];
 
-  data = *(u8 **)(obj + 0x4c);
-  state = *(u8 **)(obj + 0xb8);
+  data = *(u8 **)&((GameObject *)obj)->anim.placementData;
+  state = ((GameObject *)obj)->extra;
   z = lbl_803E4390;
-  *(f32 *)(obj + 0x2c) = z;
-  *(f32 *)(obj + 0x28) = z;
+  ((GameObject *)obj)->anim.velocityZ = z;
+  ((GameObject *)obj)->anim.velocityY = z;
   *(f32 *)(obj + 0x24) = z;
 
   if (GameBit_Get(*(s16 *)(data + 0x1e)) != 0) {
@@ -184,7 +185,7 @@ void cfforcefield_update(u8 *obj)
 
       {
         Obj_BuildWorldTransformMatrix(obj, (f32 *)mtx, 0);
-        *(s16 *)(obj + 4) = (s16)(lbl_803E439C * timeDelta + (f32)(s32)*(s16 *)(obj + 4));
+        ((GameObject *)obj)->anim.rotZ = (s16)(lbl_803E439C * timeDelta + (f32)(s32)((GameObject *)obj)->anim.rotZ);
 
         angle = -0x7fff;
         emitter = (ForceFieldEmitter *)((u8 *)lbl_80322ED8 + style * 0x18);
@@ -204,9 +205,9 @@ void cfforcefield_update(u8 *obj)
                          fn_80293E80(kA4 * (f32)(angle + (s32)(kA8 * *wavePtr)) / kAC);
           local[2] = kZero;
           PSMTXMultVecSR((f32 *)mtx, local, local);
-          world[3] = local[0] + *(f32 *)(obj + 0xc);
-          world[4] = local[1] + *(f32 *)(obj + 0x10);
-          world[5] = local[2] + *(f32 *)(obj + 0x14);
+          world[3] = local[0] + ((GameObject *)obj)->anim.localPosX;
+          world[4] = local[1] + ((GameObject *)obj)->anim.localPosY;
+          world[5] = local[2] + ((GameObject *)obj)->anim.localPosZ;
           ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
               obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
           ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
@@ -217,15 +218,15 @@ void cfforcefield_update(u8 *obj)
       }
 
       if (fn_80080150(state + 4) != 0) {
-        *(s16 *)(obj + 2) = (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)*(s16 *)(obj + 2));
+        ((GameObject *)obj)->anim.rotY = (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)((GameObject *)obj)->anim.rotY);
         if (timerCountDown(state + 4) != 0) {
           ((ForceFieldFlags *)state)->disabled = 1;
-          *(s16 *)(obj + 2) = 0;
+          ((GameObject *)obj)->anim.rotY = 0;
         }
       } else if (GameBit_Get(*(s16 *)(data + 0x20)) != 0) {
         s16toFloat(state + 4, 0x3c);
         Sfx_PlayFromObject((int)obj, 0x366);
-        if (*(int *)(*(int *)(obj + 0x4c) + 0x14) != 0x47f5e) {
+        if (*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) != 0x47f5e) {
           Sfx_PlayFromObject((int)obj, 0x409);
         }
       }
@@ -1410,14 +1411,14 @@ void cflevelcontrol_init(u8* obj, u8* params) {
     s16* p;
     int i;
 
-    sub = *(u8**)(obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     *(int*)(sub + 8) = 0;
     *(s8*)(sub + 0xd) = -1;
     storeZeroToFloatParam(sub);
     s16toFloat(sub, 0x1e0);
     ((LevelControlFlags *)(sub + 0xc))->b6 = 0;
-    *(void**)(obj + 0xbc) = (void*)&CFLevelControl_SeqFn;
-    GameBit_Set(0x983, *(int*)(*(int*)(obj + 0x4c) + 0x14) != 0x2cef);
+    ((GameObject *)obj)->unkBC = (void*)&CFLevelControl_SeqFn;
+    GameBit_Set(0x983, *(int*)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) != 0x2cef);
     if (GameBit_Get(0x2fe) == 0) {
         for (i = 0, p = lbl_80323008; i < 0x17; i++) {
             GameBit_Set(*p, 0);
@@ -1452,7 +1453,7 @@ int cflevelcontrol_getObjectTypeId(void) { return 0x0; }
 int exploded_getExtraSize(void) { return 0x6c; }
 
 /* Pattern wrappers. */
-u8 exploded_setScale(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x69); }
+u8 exploded_setScale(int *obj) { return ((ExplodedObjectState *)((int **)obj)[0xb8/4])->explodePhase; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E43BC;
@@ -1474,7 +1475,7 @@ void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v
 #pragma peephole reset
 
 void cfmagicwall_update(int obj) {
-    int data = *(int *)(obj + 0x4c);
+    int data = *(int *)&((GameObject *)obj)->anim.placementData;
     int player = (int)Obj_GetPlayerObject();
     int alpha = 0xff;
 
@@ -1497,11 +1498,11 @@ void cfmagicwall_update(int obj) {
             range = (f32)(s32)*(s16 *)(data + 0x1a);
             playerDistance = Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18));
             fadeDistance = Camera_DistanceToCurrentViewPosition(
-                *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
 
             if (fadeDistance < playerDistance) {
                 fadeDistance = Camera_DistanceToCurrentViewPosition(
-                    *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
             } else {
                 fadeDistance = playerDistance;
             }
@@ -1532,7 +1533,7 @@ extern void SCGameBitLatch_UpdateInverted(void *latch, int mask, int clearIfSetB
                                           int clearIfClearBit, int latchBit, int musicId);
 
 void cflevelcontrol_update(int obj) {
-    u8 *state = *(u8 **)(obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     int player = (int)Obj_GetPlayerObject();
     int triggerPos[3];
     u32 bit974;
@@ -1579,7 +1580,7 @@ void cflevelcontrol_update(int obj) {
     state[0xc] = (u8)((state[0xc] & ~0x20) | ((bit974 & 1) << 5));
     state[0xc] = (u8)((state[0xc] & ~0x10) | ((bit975 & 1) << 4));
 
-    if (*(int *)(obj + 0xf4) == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         getEnvfxActImmediately((void *)obj, (void *)obj, 0x56, 0);
         if (GameBit_Get(0xd73) == 0) {
             getEnvfxActImmediately((void *)obj, (void *)obj, 0xd, 0);
@@ -1598,10 +1599,10 @@ void cflevelcontrol_update(int obj) {
             unlockLevel(0, 0, 1);
         }
 
-        *(int *)(obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
 
-    if (GameBit_Get(0x94f) != 0 && (*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+    if (GameBit_Get(0x94f) != 0 && (((GameObject *)player)->unkB0 & 0x1000) == 0) {
         GameBit_Set(0x94e, 0);
     }
 
@@ -1781,8 +1782,8 @@ int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
         trickyNear = 0;
     }
 
-    state = *(u8**)(obj + 0xb8);
-    params = *(u8**)(obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    params = *(u8**)&((GameObject *)obj)->anim.placementData;
     mode = ((u32)state[0] >> 5) & 7;
 
     if (mode == 0) {
@@ -1839,9 +1840,9 @@ extern u32 *gObjectTriggerInterface;
 void slidingdoor_update(u8* obj) {
     u8* sub;
     u8* data;
-    if (*(s32*)(obj + 0xf4) != 0) return;
-    sub = *(u8**)(obj + 0xb8);
-    data = *(u8**)(obj + 0x4c);
+    if (((GameObject *)obj)->unkF4 != 0) return;
+    sub = ((GameObject *)obj)->extra;
+    data = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (*(s16*)(data + 0x1c) != 0) {
         u32 mode = (u32)((sub[0] >> 5) & 7);
         if (mode != 0) {
@@ -1854,7 +1855,7 @@ void slidingdoor_update(u8* obj) {
             (*(void (***)(s8, u8*, int))gObjectTriggerInterface)[0x12](id, obj, -1);
         }
     }
-    *(u32*)(obj + 0xf4) = 1;
+    *(u32 *)&((GameObject *)obj)->unkF4 = 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1890,7 +1891,7 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra) 
 #pragma peephole off
 void attractor_func0B(u8* obj, void** out) {
     void* result = NULL;
-    s8 state = *(s8*)((char*)(*(u8**)(obj + 0x4c)) + 0x19);
+    s8 state = *(s8*)((char*)(*(u8**)&((GameObject *)obj)->anim.placementData) + 0x19);
     switch (state) {
     case 0:
         break;
@@ -1900,10 +1901,10 @@ void attractor_func0B(u8* obj, void** out) {
     case 2: {
         u8* player = (u8*)Obj_GetPlayerObject();
         int angle = atan2i(
-            (int)(*(f32*)(player + 0xc) - *(f32*)(obj + 0xc)),
-            (int)(*(f32*)(player + 0x14) - *(f32*)(obj + 0x14))
+            (int)(((GameObject *)player)->anim.localPosX - ((GameObject *)obj)->anim.localPosX),
+            (int)(((GameObject *)player)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ)
         );
-        *(s16*)obj = (s16)(angle + 0x8000);
+        ((GameObject *)obj)->anim.rotX = (s16)(angle + 0x8000);
         result = obj;
         break;
     }
@@ -1927,13 +1928,13 @@ void slidingdoor_init(u8* obj, u8* data) {
     u8* sub;
     f32 v;
     u32 doorState = 0;
-    *(u32*)(obj + 0xf4) = doorState;
-    *(s16*)obj = (s16)(data[0x1f] << 8);
+    *(u32 *)&((GameObject *)obj)->unkF4 = doorState;
+    ((GameObject *)obj)->anim.rotX = (s16)(data[0x1f] << 8);
     *(int(**)(u8*, int, u8*))(obj + 0xbc) = slidingdoor_SeqFn;
     v = (f32)(u32)data[0x21] * lbl_803E43C0;
-    *(f32*)(obj + 0x8) = v;
-    *(f32*)(obj + 0x8) = *(f32*)(obj + 0x8) * *(f32*)((char*)(*(u8**)(obj + 0x50)) + 4);
-    sub = *(u8**)(obj + 0xb8);
+    ((GameObject *)obj)->anim.rootMotionScale = v;
+    ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32*)((char*)(*(u8**)&((GameObject *)obj)->anim.modelInstance) + 4);
+    sub = ((GameObject *)obj)->extra;
     ((SlidingDoorSubFlags *)sub)->doorState = doorState;
 }
 #pragma peephole reset
@@ -2027,7 +2028,7 @@ void exploded_initDebrisState(ExplodedObject *obj, ExplodedObjectMapData *data,
     v[4] = z;
     v[5] = z;
 
-    mesh = *(int **)(*(int *)(*(int *)((u8 *)obj + 0x7c) + (u32)data->objectTypeTag * 4));
+    mesh = *(int **)(*(int *)(*(int *)&((GameObject *)obj)->anim.banks + (u32)data->objectTypeTag * 4));
     for (i = 0; i < *(u16 *)((char *)mesh + 0xe4); i++) {
       Model_GetVertexPosition((int)mesh, i, v);
       v[3] = v[0] + v[3];
