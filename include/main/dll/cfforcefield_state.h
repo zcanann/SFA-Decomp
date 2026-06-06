@@ -11,15 +11,15 @@
  */
 typedef struct CfForcefieldState {
     u8 unk0[0xA - 0x0];
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
+    s16 randomTimer;
+    s16 countdown;
+    s16 enableGameBit;
     u8 unk10[0x11 - 0x10];
     u8 unk11;
     u8 unk12;
     u8 unk13[0x14 - 0x13];
-    s16 unk14;
-    s16 unk16;
+    s16 sfxIdA;
+    s16 sfxIdB;
     u8 unk18[0x20 - 0x18];
     s16 unk20;
     u8 unk22[0x28 - 0x22];

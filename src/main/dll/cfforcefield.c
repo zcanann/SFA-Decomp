@@ -55,7 +55,7 @@ void largecrate_init(int obj, u8 *initData)
   state = *(int *)(obj + 0xb8);
   *(void (**)(void))(obj + 0xbc) = LargeCrate_SeqFn;
   *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
-  ((CfForcefieldState *)state)->unkE = *(short *)(initData + 0x1e);
+  ((CfForcefieldState *)state)->enableGameBit = *(short *)(initData + 0x1e);
 
   id = *(short *)(initData + 0x1c);
   if (id == LARGECRATE_TIMER_SENTINEL_DISABLED) {
@@ -68,7 +68,7 @@ void largecrate_init(int obj, u8 *initData)
     *(int *)state = (int)id * LARGECRATE_TIMER_SCALE_FRAMES;
   }
 
-  if (GameBit_Get((int)((CfForcefieldState *)state)->unkE) != 0) {
+  if (GameBit_Get((int)((CfForcefieldState *)state)->enableGameBit) != 0) {
     *(float *)(state + 4) = lbl_803E39AC;
     ObjHits_DisableObject((u32)obj);
   }
@@ -76,8 +76,8 @@ void largecrate_init(int obj, u8 *initData)
   ((CfForcefieldState *)state)->unk11 = initData[0x19];
   lbl_803DDAC8 = (undefined4)Resource_Acquire(LARGECRATE_RESOURCE_ID, LARGECRATE_RESOURCE_MODE);
   r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_DELAY_MAX);
-  ((CfForcefieldState *)state)->unkA = (short)(r3rand + LARGECRATE_RANDOM_DELAY_BASE);
-  ((CfForcefieldState *)state)->unkC = LARGECRATE_DEFAULT_COUNTDOWN;
+  ((CfForcefieldState *)state)->randomTimer = (short)(r3rand + LARGECRATE_RANDOM_DELAY_BASE);
+  ((CfForcefieldState *)state)->countdown = LARGECRATE_DEFAULT_COUNTDOWN;
   ((CfForcefieldState *)state)->unk12 = (u8)*(short *)(initData + 0x1a);
   ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | LARGECRATE_OBJECT_FLAGS);
   *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
@@ -85,13 +85,13 @@ void largecrate_init(int obj, u8 *initData)
   id = ((GameObject *)obj)->anim.seqId;
   if (id == LARGECRATE_VARIANT_A) {
     ((CfForcefieldState *)state)->unk11 = (u8)constArrA.entries[((CfForcefieldState *)state)->unk11];
-    ((CfForcefieldState *)state)->unk14 = LARGECRATE_VARIANT_A_SFX_A;
-    ((CfForcefieldState *)state)->unk16 = LARGECRATE_VARIANT_A_SFX_B;
+    ((CfForcefieldState *)state)->sfxIdA = LARGECRATE_VARIANT_A_SFX_A;
+    ((CfForcefieldState *)state)->sfxIdB = LARGECRATE_VARIANT_A_SFX_B;
   }
   else if (id == LARGECRATE_VARIANT_B || id == LARGECRATE_VARIANT_C) {
     ((CfForcefieldState *)state)->unk11 = (u8)constArrB.entries[((CfForcefieldState *)state)->unk11];
-    ((CfForcefieldState *)state)->unk14 = LARGECRATE_VARIANT_B_SFX_A;
-    ((CfForcefieldState *)state)->unk16 = LARGECRATE_VARIANT_B_SFX_B;
+    ((CfForcefieldState *)state)->sfxIdA = LARGECRATE_VARIANT_B_SFX_A;
+    ((CfForcefieldState *)state)->sfxIdB = LARGECRATE_VARIANT_B_SFX_B;
   }
 
   ((CfForcefieldState *)state)->unk20 = 0;
