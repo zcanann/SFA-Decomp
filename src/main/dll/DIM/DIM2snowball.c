@@ -895,7 +895,7 @@ void FUN_801b77a8(short *param_1)
     if (local_84 < lbl_803E5724) {
       local_88 = local_88 * local_88;
       if (local_88 <= *(float *)(iVar9 + 8)) {
-        iVar4 = *(int *)(*(int *)(param_1 + 0x3e) + *(char *)((int)param_1 + 0xad) * 4);
+        iVar4 = (int)DIM2snowball_GetActiveModel(param_1);
         uStack_14 = (int)*(short *)(*(int *)(iVar4 + (*(ushort *)(iVar4 + 0x18) >> 1 & 1) * 4 + 4) +
                                    (uint)*(byte *)(iVar9 + 0x1e) * 0x10) ^ 0x80000000;
         local_18 = 0x43300000;
@@ -968,7 +968,7 @@ void FUN_801b7c38(undefined8 param_1,double param_2,double param_3,undefined8 pa
   
   *param_9 = (short)((int)*(char *)(param_10 + 0x18) << 8);
   piVar6 = *(int **)(param_9 + 0x5c);
-  piVar5 = *(int **)(*(int *)(param_9 + 0x3e) + *(char *)((int)param_9 + 0xad) * 4);
+  piVar5 = DIM2snowball_GetActiveModel(param_9);
   uVar4 = 0;
   FUN_800178e8((double)lbl_803E5720,piVar5,0,-1,0,0);
   FUN_800178e4((double)lbl_803E5710,piVar5,0);
