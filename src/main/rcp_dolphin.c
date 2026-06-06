@@ -1,4 +1,5 @@
 #include "main/texture.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/rcp_dolphin.h"
 

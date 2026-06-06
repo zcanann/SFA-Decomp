@@ -1,4 +1,5 @@
 #include "main/newshadows.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 
 extern float ABS();
@@ -3695,9 +3696,9 @@ void shadowCreate(int *obj) {
         modelDef = objAnim->modelInstance;
         *(int **)(lbl_8038E2A8 + lbl_803DCF78 * 0xc) = obj;
         cam = lbl_803DCFE8;
-        dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)cam + 0xc);
-        dy = *(f32 *)((char *)obj + 0x1c) - *(f32 *)((char *)cam + 0x10);
-        dz = *(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)cam + 0x14);
+        dx = ((GameObject *)obj)->anim.worldPosX - *(f32 *)((char *)cam + 0xc);
+        dy = ((GameObject *)obj)->anim.worldPosY - *(f32 *)((char *)cam + 0x10);
+        dz = ((GameObject *)obj)->anim.worldPosZ - *(f32 *)((char *)cam + 0x14);
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
         *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) =
             *(f32 *)(*(int *)((char *)obj + 0x64)) / dist;
@@ -3792,28 +3793,28 @@ void shadowRenderFn_8006b558(int *obj) {
     f32 *o64;
     Obj_BuildWorldTransformMatrix(obj, mtx, 0);
     Camera_ProjectWorldSphere(&vA, &vB, &vC, &vD, &vE, &vF,
-        *(f32 *)((char *)obj + 0xc) - playerMapOffsetX,
-        *(f32 *)((char *)obj + 0x10),
-        *(f32 *)((char *)obj + 0x14) - playerMapOffsetZ,
-        1.3f * (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 0x8)));
+        ((GameObject *)obj)->anim.localPosX - playerMapOffsetX,
+        ((GameObject *)obj)->anim.localPosY,
+        ((GameObject *)obj)->anim.localPosZ - playerMapOffsetZ,
+        1.3f * (((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale));
     vD = 320.0f * vD + 8.0f;
     vE = Chan_803DED18 * vE + 8.0f;
     if (vD > vE) m = vD;
     else m = vE;
     sc = Dev_803DED1C / m;
-    objScale = *(f32 *)((char *)obj + 0x8) * sc;
+    objScale = ((GameObject *)obj)->anim.rootMotionScale * sc;
     nx = -vA;
     ny = vB;
     GXSetViewport(320.0f * nx, Chan_803DED18 * ny, Enabled_803DED20,
                   BarnacleEnabled_803DED24, 0.0f, 1.0f);
     if (vC < 0.0f) {
-        f32 saved = *(f32 *)((char *)obj + 0x8);
+        f32 saved = ((GameObject *)obj)->anim.rootMotionScale;
         int *model;
-        *(f32 *)((char *)obj + 0x8) = objScale;
+        ((GameObject *)obj)->anim.rootMotionScale = objScale;
         set_shadowFlag_803dcc29(1);
         objRender(0, 0, 0, 0, obj, 1);
         set_shadowFlag_803dcc29(0);
-        *(f32 *)((char *)obj + 0x8) = saved;
+        ((GameObject *)obj)->anim.rootMotionScale = saved;
         model = Obj_GetActiveModel(obj);
         *(u16 *)((char *)model + 0x18) &= ~0x8;
         gxSetZMode_(1, 3, 1);
@@ -4035,13 +4036,13 @@ void renderShadows(void) {
                 *(f32 *)((char *)slot + 0x10) = dirY + m[7];
                 *(f32 *)((char *)slot + 0x14) = dirZ + m[11];
             }
-            if (*(u32 *)((char *)obj + 0x30) == 0) {
+            if (*(u32 *)&((GameObject *)obj)->anim.parent == 0) {
                 *(f32 *)((char *)slot + 0xc) += lbl_803DCED0;
                 *(f32 *)((char *)slot + 0x14) += lbl_803DCECC;
             }
             f21 = *(f32 *)of64;
             f22 = -f21;
-            if (*(u32 *)((char *)obj + 0x30) != 0) {
+            if (*(u32 *)&((GameObject *)obj)->anim.parent != 0) {
                 *(f32 *)((char *)slot + 0xc) += playerMapOffsetX;
                 *(f32 *)((char *)slot + 0x14) += playerMapOffsetZ;
             }
@@ -4089,13 +4090,13 @@ void renderShadows(void) {
         } else {
             f32 fx, fz;
             *(int *)(castSlot + 0x60) = *(int *)((char *)obj[0x64 / 4] + 4);
-            fx = *(f32 *)((char *)obj + 0xc);
-            fz = *(f32 *)((char *)obj + 0x14);
-            if (*(u32 *)((char *)obj + 0x30) == 0) {
+            fx = ((GameObject *)obj)->anim.localPosX;
+            fz = ((GameObject *)obj)->anim.localPosZ;
+            if (*(u32 *)&((GameObject *)obj)->anim.parent == 0) {
                 fx -= playerMapOffsetX;
                 fz -= playerMapOffsetZ;
             }
-            PSMTXTrans(mTrans, -fx, -*(f32 *)((char *)obj + 0x10), -fz);
+            PSMTXTrans(mTrans, -fx, -((GameObject *)obj)->anim.localPosY, -fz);
             {
                 f32 s = CPUFifo_803DED38 / *(f32 *)of64;
                 mScale[0] = s;

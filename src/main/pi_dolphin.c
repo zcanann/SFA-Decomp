@@ -1,4 +1,5 @@
 #include "dolphin/PPCArch.h"
+#include "main/game_object.h"
 #include "main/pi_dolphin.h"
 
 extern undefined4 FUN_80003494();

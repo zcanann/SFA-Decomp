@@ -1,4 +1,5 @@
 #include "main/model.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 
 extern void gxSetPeControl_ZCompLoc_();
