@@ -2464,10 +2464,10 @@ extern u8 lbl_8037E000[];
 #pragma scheduling off
 #pragma peephole off
 void ShaderDef_free(int *def) {
-    void *p1 = (void *)def[0];
-    void *p2;
-    int i;
     void *s;
+    void *p1 = (void *)def[0];
+    int i;
+    void *p2;
 
     if (p1 != NULL) {
         for (i = 0; i < 6; i++) {

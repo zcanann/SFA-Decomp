@@ -155,20 +155,18 @@ camcontrol_traceMove(float *param_2,float *param_3,float *param_4,u8 *param_5,
  */
 undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
 {
-  float local_88;
-  float local_84;
-  float local_80;
+  float local_88[3];
   undefined auStack_7c [111];
 
   if (*(short *)(param_2 + 0x44) == 1) {
-    cameraGetPrevPos2(param_2,&local_88,&local_84,&local_80);
+    cameraGetPrevPos2(param_2,&local_88[0],&local_88[1],&local_88[2]);
   }
   else {
-    local_88 = *(float *)(param_2 + 0x18);
-    local_84 = *(float *)(param_2 + 0x1c) + cameraMtxVar57[0x23];
-    local_80 = *(float *)(param_2 + 0x20);
+    local_88[0] = *(float *)(param_2 + 0x18);
+    local_88[1] = *(float *)(param_2 + 0x1c) + cameraMtxVar57[0x23];
+    local_88[2] = *(float *)(param_2 + 0x20);
   }
-  camcontrol_traceMove(&local_88,param_1,param_3,auStack_7c,3,'\x01','\x01',(double)lbl_803E1688);
+  camcontrol_traceMove(local_88,param_1,param_3,auStack_7c,3,'\x01','\x01',(double)lbl_803E1688);
   return auStack_7c[110];
 }
 
