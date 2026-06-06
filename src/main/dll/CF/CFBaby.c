@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
@@ -155,7 +156,7 @@ void FireFlyLantern_init(int obj, int def)
   int i;
   u32 childCount;
 
-  state = *(u8 **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   *(int *)(obj + 0xbc) = (int)FireFlyLantern_SeqFn;
   player = Obj_GetPlayerObject();
   if (*(s16 *)((u8 *)player + 0x46) != 0) {
@@ -173,7 +174,7 @@ void FireFlyLantern_init(int obj, int def)
       *(u8 *)(state + 0x1c) = 1;
       *(int *)state = FireFlyLantern_spawnFireFly((int *)obj);
     }
-    *(s16 *)(obj + 6) = *(s16 *)(obj + 6) | 0x4000;
+    ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
   }
   else {
     childCount = *(u8 *)(state + 0x1d);
@@ -1769,8 +1770,8 @@ void carryable_break_respawn_update(int obj) {
                 if (Obj_IsLoadingLocked() != 0) {
                     setup = Obj_AllocObjectSetup(0x24, 0x253);
                     *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
-                    *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-                    *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                    *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+                    *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
                     Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
                 }
                 ((PartfxSpawnFn)(*(u32 *)(*gPartfxInterface + 8)))(obj, 0x355, 0, 0, -1, 0);
@@ -1785,14 +1786,14 @@ void carryable_break_respawn_update(int obj) {
             state->state = 2;
             state->timer = lbl_803E3B44;
             *(f32 *)(obj + 0xc) = *(f32 *)(def + 8);
-            *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
-            *(f32 *)(obj + 0x14) = *(f32 *)(def + 0x10);
+            ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
+            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(def + 0x10);
             break;
         case 2:
             state->timer += timeDelta;
             if (state->timer > lbl_803E3B48) {
                 if (ViewFrustum_IsSphereVisible((f32 *)(obj + 0xc),
-                                                *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8)) == 0) {
+                                                ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale) == 0) {
                     ObjHits_EnableObject(obj);
                     *(u8 *)(obj + 0xaf) &= ~8;
                     state->state = 0;
@@ -1850,7 +1851,7 @@ void flammablevine_hitDetect(int obj)
     u8 *def;
     int hitObj;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     def = *(u8 **)(obj + 0x4c);
     if ((state[0] & 3) == 0) {
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitObj) == 0x1a) {
@@ -1873,16 +1874,16 @@ void flammablevine_init(int obj, int def)
     u8 *state;
     f32 scale;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     ObjGroup_AddObject(obj, 0x31);
     *(s16 *)obj = (s16)((s8)*(u8 *)(def + 0x18) << 8);
 
-    *(f32 *)(obj + 8) = lbl_803E3B20 * ((f32)*(s16 *)(def + 0x1a) / lbl_803E3B24);
-    if (*(f32 *)(obj + 8) <= lbl_803E3B28) {
-        *(f32 *)(obj + 8) = lbl_803E3B28;
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3B20 * ((f32)*(s16 *)(def + 0x1a) / lbl_803E3B24);
+    if (((GameObject *)obj)->anim.rootMotionScale <= lbl_803E3B28) {
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3B28;
     }
 
-    scale = *(f32 *)(obj + 8);
+    scale = ((GameObject *)obj)->anim.rootMotionScale;
     ObjHitbox_SetCapsuleBounds(
         obj,
         (s16)(lbl_803E3B2C * scale),
@@ -1919,7 +1920,7 @@ void flammablevine_update(int obj)
     int pulseStyle;
     u32 fadeAlpha;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     def = *(u8 **)(obj + 0x4c);
     tricky = getTrickyObject();
 
@@ -1949,7 +1950,7 @@ checked_vine_use:
         }
         ObjHits_EnableObject(obj);
 
-        if (*(s16 *)(obj + 0x46) == 0x102) {
+        if (((GameObject *)obj)->anim.seqId == 0x102) {
             if (cMenuGetSelectedItem() == -1) {
                 *(u8 *)(*(int *)(*(int *)(obj + 0x50) + 0x40) + 0x11) = 0;
             }
@@ -2013,7 +2014,7 @@ checked_vine_use:
         else {
             pulseStyle = 0;
         }
-        fn_80098B18(obj, lbl_803E3B1C * (*(f32 *)(state + 0x10) * *(f32 *)(obj + 8)), 3, 0, pulseStyle, 0);
+        fn_80098B18(obj, lbl_803E3B1C * (*(f32 *)(state + 0x10) * ((GameObject *)obj)->anim.rootMotionScale), 3, 0, pulseStyle, 0);
         Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
     }
 }
@@ -2039,7 +2040,7 @@ typedef void (*InfoPtUpdateFn)(int, int, int);
 void coldwatercontrol_update(int obj) {
     u8 *state;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if (GameBit_Get(0x1bf) != 0 && GameBit_Get(0x1bd) == 0) {
         ((InfoPtUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
         GameBit_Set(0x1bd, 1);
@@ -2178,36 +2179,36 @@ void landed_arwing_renderPathEffects(int obj) {
         while (i < 5) {
             entry = &lbl_80321A28[i];
             ObjPath_GetPointWorldPosition(obj, entry->pathPoint, xPtr, yPtr, zPtr, 0);
-            *xPtr -= *(f32 *)(obj + 0xc);
-            *yPtr -= *(f32 *)(obj + 0x10);
-            *zPtr -= *(f32 *)(obj + 0x14);
+            *xPtr -= ((GameObject *)obj)->anim.localPosX;
+            *yPtr -= ((GameObject *)obj)->anim.localPosY;
+            *zPtr -= ((GameObject *)obj)->anim.localPosZ;
             objfx_spawnMaskedHitEffect(obj, 4, entry->arg5, entry->arg6, scratch.effectPos,
-                        *(f32 *)(obj + 8) * entry->scale);
+                        ((GameObject *)obj)->anim.rootMotionScale * entry->scale);
             i++;
         }
     }
 
     if (state->path6Fx != lbl_803E3B98) {
         ObjPath_GetPointWorldPosition(obj, 6, &scratch.x, &scratch.y, &scratch.z, 0);
-        scratch.x -= *(f32 *)(obj + 0xc);
-        scratch.y -= *(f32 *)(obj + 0x10);
-        scratch.z -= *(f32 *)(obj + 0x14);
+        scratch.x -= ((GameObject *)obj)->anim.localPosX;
+        scratch.y -= ((GameObject *)obj)->anim.localPosY;
+        scratch.z -= ((GameObject *)obj)->anim.localPosZ;
         objfx_spawnLightPulse(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path6Fx);
     }
 
     if (state->path8Fx != lbl_803E3B98) {
         ObjPath_GetPointWorldPosition(obj, 8, &scratch.x, &scratch.y, &scratch.z, 0);
-        scratch.x -= *(f32 *)(obj + 0xc);
-        scratch.y -= *(f32 *)(obj + 0x10);
-        scratch.z -= *(f32 *)(obj + 0x14);
+        scratch.x -= ((GameObject *)obj)->anim.localPosX;
+        scratch.y -= ((GameObject *)obj)->anim.localPosY;
+        scratch.z -= ((GameObject *)obj)->anim.localPosZ;
         objfx_spawnLightPulse(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path8Fx);
     }
 
     if (state->path7Fx != lbl_803E3B98) {
         ObjPath_GetPointWorldPosition(obj, 7, &scratch.x, &scratch.y, &scratch.z, 0);
-        scratch.x -= *(f32 *)(obj + 0xc);
-        scratch.y -= *(f32 *)(obj + 0x10);
-        scratch.z -= *(f32 *)(obj + 0x14);
+        scratch.x -= ((GameObject *)obj)->anim.localPosX;
+        scratch.y -= ((GameObject *)obj)->anim.localPosY;
+        scratch.z -= ((GameObject *)obj)->anim.localPosZ;
         objfx_spawnLightPulse(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path7Fx);
     }
 }
@@ -2546,9 +2547,9 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState *state) {
             return;
         }
         if (state->hitStarted != 0) {
-            *(s16 *)(obj + 2) = 0;
-            *(s16 *)(obj + 4) = 0;
-            if (*(f32 *)(obj + 0x98) >= lbl_803E3BBC && ((state->hitFlags >> 4) & 1) == 0) {
+            ((GameObject *)obj)->anim.rotY = 0;
+            ((GameObject *)obj)->anim.rotZ = 0;
+            if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E3BBC && ((state->hitFlags >> 4) & 1) == 0) {
                 if (*(s16 *)(def + 0x24) > 0) {
                     GameBit_Set(*(s16 *)(def + 0x24), 1);
                 }
@@ -2559,9 +2560,9 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState *state) {
                             yOffset = lbl_803E3BB8;
                             for (i = 0; i < *(u8 *)(def + 0x1f); i++) {
                                 setup = Obj_AllocObjectSetup(0x24, 0x259);
-                                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
-                                *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10) + yOffset;
-                                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                                *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
+                                *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY + yOffset;
+                                *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
                                 *(u8 *)(setup + 4) = 1;
                                 Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1,
                                                 *(int *)(obj + 0x30));
@@ -2587,8 +2588,8 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState *state) {
             state->path8Fx = lbl_803E3BC4;
         } else {
             if (*(u8 *)(def + 0x1e) == 2) {
-                *(s16 *)(obj + 2) = (s16)randomGetRange(-200, 200);
-                *(s16 *)(obj + 4) = (s16)randomGetRange(-200, 200);
+                ((GameObject *)obj)->anim.rotY = (s16)randomGetRange(-200, 200);
+                ((GameObject *)obj)->anim.rotZ = (s16)randomGetRange(-200, 200);
             }
             ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
                                                       state->hitCooldown);
@@ -2653,9 +2654,9 @@ void landed_arwing_updateDamageTexture(int obj, LandedArwingState *state) {
 #pragma peephole off
 void dll_109_init(int obj, u8 *p) {
     *(s16 *)obj = (s16)((s32)p[0x1a] << 8);
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
-    (*(void (*)(int, int *, int))(*(int *)(*gCarryableInterface + 0x4)))(obj, *(int **)(obj + 0xb8), 0x21);
-    (*(void (*)(int *, int))(*(int *)(*gCarryableInterface + 0x2c)))(*(int **)(obj + 0xb8), 1);
+    ((GameObject *)obj)->unkB0 |= 0x2000;
+    (*(void (*)(int, int *, int))(*(int *)(*gCarryableInterface + 0x4)))(obj, ((GameObject *)obj)->extra, 0x21);
+    (*(void (*)(int *, int))(*(int *)(*gCarryableInterface + 0x2c)))(((GameObject *)obj)->extra, 1);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2676,7 +2677,7 @@ void decoration11a_expandBoundsWithVertex(f32 *vertex, f32 *maxOut, f32 *minOut)
 #pragma scheduling off
 #pragma peephole off
 int InfoPoint_SeqFn(int obj, int unused, u8 *p3) {
-    s16 *inner = *(s16 **)((char *)obj + 0xb8);
+    s16 *inner = ((GameObject *)obj)->extra;
     int i;
     for (i = 0; i < p3[0x8b]; i++) {
         switch (p3[0x81 + i]) {
@@ -2700,7 +2701,7 @@ extern f32 lbl_803E3B40;
 #pragma scheduling off
 #pragma peephole off
 void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
-    int *inner = *(int **)(obj + 0xb8);
+    int *inner = ((GameObject *)obj)->extra;
     if (*(u8 *)((char *)inner + 0xa) == 0) {
         if ((*(int (*)(int, s32))(*(int *)(*gCarryableInterface + 0xc)))(obj, visible) != 0) {
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E3B40);
@@ -2726,7 +2727,7 @@ void Fall_Ladders_update(int obj) {
 
     def = *(int *)(obj + 0x4c);
     state = *(FallLaddersState **)(obj + 0xb8);
-    if (*(s16 *)(obj + 0x46) == 0x548) {
+    if (((GameObject *)obj)->anim.seqId == 0x548) {
         if (GameBit_Get(state->upperGameBit) != 0 && GameBit_Get(state->lowerGameBit) == 0) {
             ((ObjectTriggerUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
         }
@@ -2747,13 +2748,13 @@ void Fall_Ladders_update(int obj) {
         if ((s8)state->motionState == 0 && GameBit_Get(state->upperGameBit) != 0) {
             state->delay = 10;
         }
-        if ((s8)state->motionState == 1 && *(f32 *)(obj + 0x10) >= *(f32 *)(def + 0xc)) {
-            *(f32 *)(obj + 0x28) -= lbl_803E3B50;
-            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
-            if (*(f32 *)(obj + 0x10) <= *(f32 *)(def + 0xc)) {
-                *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
-                *(f32 *)(obj + 0x28) = lbl_803E3B54 * -*(f32 *)(obj + 0x28);
-                speed = *(f32 *)(obj + 0x28);
+        if ((s8)state->motionState == 1 && ((GameObject *)obj)->anim.localPosY >= *(f32 *)(def + 0xc)) {
+            ((GameObject *)obj)->anim.velocityY -= lbl_803E3B50;
+            ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
+            if (((GameObject *)obj)->anim.localPosY <= *(f32 *)(def + 0xc)) {
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
+                ((GameObject *)obj)->anim.velocityY = lbl_803E3B54 * -((GameObject *)obj)->anim.velocityY;
+                speed = ((GameObject *)obj)->anim.velocityY;
                 if (speed < lbl_803E3B58) {
                     speed = -speed;
                 }
@@ -2770,14 +2771,14 @@ void Fall_Ladders_update(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void Fall_Ladders_init(int *obj, s8 *def) {
-    s16 *state = *(s16 **)((char *)obj + 0xb8);
+    s16 *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
     state[3] = *(s16 *)((char *)def + 0x20);
     state[2] = *(s16 *)((char *)def + 0x1e);
     *(f32 *)state = (f32)(s32)*(s16 *)((char *)def + 0x1a);
-    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
     *(int *)((char *)obj + 0xbc) = (int)Fall_Ladders_SeqFn;
-    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)def + 0xc) + *(f32 *)state;
+    ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)def + 0xc) + *(f32 *)state;
     Obj_SetActiveModelIndex(obj, (s32)*(s8 *)((char *)def + 0x19));
     *(u8 *)((char *)state + 8) = 0;
     if (GameBit_Get(state[3]) == 0) {
@@ -2794,7 +2795,7 @@ extern int lbl_80321990[];
 #pragma scheduling off
 #pragma peephole off
 void infopoint_init(int *obj, u8 *def) {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     int *txt;
     *(int *)((char *)obj + 0xbc) = (int)InfoPoint_SeqFn;
     if (*(void **)lbl_803219A0 == NULL) {
@@ -2809,7 +2810,7 @@ void infopoint_init(int *obj, u8 *def) {
     *(int *)(state + 0x18) = 2;
     *(u8 *)(state + 0x10) = *(u8 *)((char *)def + 0x1b);
     *(s16 *)(state + 0x16) = 0;
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2838,7 +2839,7 @@ void decoration11a_hitDetect(int obj) {
     f32 ySq;
     f32 zSq;
 
-    modelId = *(s16 *)(obj + 0x46);
+    modelId = ((GameObject *)obj)->anim.seqId;
     if (modelId == 0x7a1) {
         goto check_decor_objects;
     }
@@ -2850,7 +2851,7 @@ void decoration11a_hitDetect(int obj) {
     }
 
 check_decor_objects:
-    state = *(f32 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     objects = ObjGroup_GetObjects(2, &count);
     while (count != 0) {
         if (Vec_distance((f32 *)(*objects + 0x18), (f32 *)(obj + 0x18)) < state[6]) {
@@ -2910,18 +2911,18 @@ check_decor_objects:
 #pragma scheduling off
 #pragma peephole off
 void decoration11a_init(int *obj, u8 *def) {
-    *(s16 *)((char *)obj + 4) = (s16)((s32)def[24] << 8);
-    *(s16 *)((char *)obj + 2) = (s16)((s32)def[25] << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)((s32)def[24] << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)((s32)def[25] << 8);
     *(s16 *)obj = (s16)((s32)def[26] << 8);
     if (def[27] != 0) {
-        *(f32 *)((char *)obj + 8) = (f32)(u32)def[27] / lbl_803E3B88;
-        if (*(f32 *)((char *)obj + 8) == lbl_803E3B7C) {
-            *(f32 *)((char *)obj + 8) = lbl_803E3B78;
+        ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)def[27] / lbl_803E3B88;
+        if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E3B7C) {
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3B78;
         }
-        *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
+        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
     }
     {
-        s16 model = *(s16 *)((char *)obj + 0x46);
+        s16 model = ((GameObject *)obj)->anim.seqId;
         if (model == 1953) {
             goto calc_decor_bounds;
         }
@@ -2938,7 +2939,7 @@ calc_decor_bounds:
             f32 magB;
             f32 maxMag;
 
-            state = *(f32 **)((char *)obj + 0xb8);
+            state = ((GameObject *)obj)->extra;
             m = **(int ***)(*(int *)((char *)obj + 0x7c));
             Model_GetVertexPosition(m, 0, state);
             Model_GetVertexPosition(m, 0, state + 3);
@@ -2946,8 +2947,8 @@ calc_decor_bounds:
                 Model_GetVertexPosition(m, i, tmp);
                 decoration11a_expandBoundsWithVertex(tmp, state, state + 3);
             }
-            PSVECScale(state, state, *(f32 *)((char *)obj + 8));
-            PSVECScale(state + 3, state + 3, *(f32 *)((char *)obj + 8));
+            PSVECScale(state, state, ((GameObject *)obj)->anim.rootMotionScale);
+            PSVECScale(state + 3, state + 3, ((GameObject *)obj)->anim.rootMotionScale);
             magB = PSVECMag(state + 3);
             if (PSVECMag(state) > magB) {
                 maxMag = PSVECMag(state);
