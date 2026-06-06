@@ -1,4 +1,44 @@
 #include "main/dll/DIM/dll_802B9780_shared.h"
+#include "main/dll/baddie_state.h"
+
+/*
+ * Per-object extra state for the DIM SnowHorn (DIMSnowHorn1_getExtraSize
+ * == 0xD0C). Embeds the engine BaddieState as its prefix; the tail is
+ * family-private.
+ */
+typedef struct DIMSnowHorn1State {
+    BaddieState baddie;
+    u8 unk410[0x96D - 0x410];
+    u8 unk96D;
+    u8 pad96E[0x980 - 0x96E];
+    u8 unk980;
+    u8 pad981[3];
+    f32 unk984;
+    f32 unk988;
+    f32 unk98C;
+    u8 pad990[0x9E8 - 0x990];
+    f32 unk9E8; /* model-matrix offset vec */
+    f32 unk9EC;
+    f32 unk9F0;
+    u8 pad9F4[0xA84 - 0x9F4];
+    s16 unkA84;
+    s16 unkA86;
+    s16 unkA88;
+    u8 unkA8A;
+    u8 padA8B;
+    u8 unkA8C;
+    u8 unkA8D;
+    u8 unkA8E;
+    u8 padA8F[2];
+    u8 unkA91;
+    u8 padA92[0xD00 - 0xA92];
+    u8 unkD00;
+    u8 padD01[0xB];
+} DIMSnowHorn1State;
+
+STATIC_ASSERT(sizeof(DIMSnowHorn1State) == 0xD0C);
+STATIC_ASSERT(offsetof(DIMSnowHorn1State, unkA84) == 0xA84);
+
 #include "main/mapEventTypes.h"
 
 void DIMSnowHorn1_func23(void) {}
@@ -42,12 +82,12 @@ int fn_802BA6E0(int obj, int state)
 #pragma peephole off
 int fn_802BABB4(int obj)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
 
-    switch (*(u8 *)((char *)inner + 0xa8c)) {
+    switch (inner->unkA8C) {
     case 0:
         if (GameBit_Get(0xf3)) {
-            *(u8 *)((char *)inner + 0xa8e) |= 0x20;
+            inner->unkA8E |= 0x20;
         }
         return 2;
     case 5:
@@ -73,7 +113,7 @@ int fn_802BABB4(int obj)
 #pragma peephole off
 int fn_802BA938(int obj, int state, f32 fv)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     f32 k = lbl_803E8234;
     s16 v;
 
@@ -90,9 +130,9 @@ int fn_802BA938(int obj, int state, f32 fv)
         ObjAnim_SetCurrentMove(obj, lbl_803DC748, k, 0);
     }
 
-    *(s16 *)((char *)inner + 0xa84) = randomGetRange(0x4b0, 0x960);
-    v = *(s16 *)((char *)inner + 0xa84) - (int)fv;
-    *(s16 *)((char *)inner + 0xa84) = v;
+    inner->unkA84 = randomGetRange(0x4b0, 0x960);
+    v = inner->unkA84 - (int)fv;
+    inner->unkA84 = v;
     if (v <= 0) {
         return -4;
     }
@@ -110,7 +150,7 @@ int fn_802BA938(int obj, int state, f32 fv)
 #pragma peephole off
 int fn_802BA7EC(int obj, int state)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     f32 k = lbl_803E8234;
     int idx;
 
@@ -131,7 +171,7 @@ int fn_802BA7EC(int obj, int state)
         return -1;
     }
     if (*(u8 *)((char *)obj + 0xaf) & 1) {
-        if (*(u8 *)((char *)inner + 0xa8e) & 0x20) {
+        if (inner->unkA8E & 0x20) {
             (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
                 randomGetRange(0, 2) + 6, obj, -1);
         } else {
@@ -149,7 +189,7 @@ int fn_802BA7EC(int obj, int state)
 #pragma peephole off
 int fn_802BAA54(int obj, int state, f32 fv)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     f32 k = lbl_803E8234;
     s16 v;
 
@@ -166,16 +206,16 @@ int fn_802BAA54(int obj, int state, f32 fv)
         if (*(s16 *)((char *)obj + 0xa0) != lbl_803DC748) {
             ObjAnim_SetCurrentMove(obj, lbl_803DC748, lbl_803E8234, 0);
         }
-        *(s16 *)((char *)inner + 0xa84) = randomGetRange(0x4b0, 0x960);
+        inner->unkA84 = randomGetRange(0x4b0, 0x960);
     }
 
-    v = *(s16 *)((char *)inner + 0xa84) - (int)fv;
-    *(s16 *)((char *)inner + 0xa84) = v;
+    v = inner->unkA84 - (int)fv;
+    inner->unkA84 = v;
     if (v <= 0) {
         return -3;
     }
     if (*(u8 *)((char *)obj + 0xaf) & 1) {
-        if (*(u8 *)((char *)inner + 0xa8e) & 0x20) {
+        if (inner->unkA8E & 0x20) {
             (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
                 randomGetRange(0, 2) + 6, obj, -1);
         } else {
@@ -193,7 +233,7 @@ int fn_802BAA54(int obj, int state, f32 fv)
 #pragma peephole off
 int fn_802B978C(int obj, int state)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     int sub = *(int *)((char *)obj + 0x54);
     f32 k = lbl_803E8234;
 
@@ -206,16 +246,16 @@ int fn_802B978C(int obj, int state)
     *(f32 *)((char *)obj + 0x2c) = k;
 
     if (*(s8 *)((char *)state + 0x27a) != 0) {
-        *(u8 *)((char *)inner + 0xa8e) &= ~0x8;
+        inner->unkA8E &= ~0x8;
         *(s16 *)((char *)sub + 0x60) |= 0x200;
         ObjAnim_SetCurrentMove(obj, 0x204, k, 0);
         *(f32 *)((char *)state + 0x2a0) = lbl_803E8238;
         Sfx_PlayFromObject(obj, 0x3b3);
     }
     if ((*(s16 *)((char *)sub + 0x60) & 0x200) && (*(s8 *)((char *)sub + 0xad) & 2)) {
-        *(u8 *)((char *)inner + 0xa8e) |= 0x8;
+        inner->unkA8E |= 0x8;
     }
-    if (*(u8 *)((char *)inner + 0xa8e) & 0x8) {
+    if (inner->unkA8E & 0x8) {
         *(u8 *)((char *)sub + 0x6e) = 0;
         *(u8 *)((char *)sub + 0x6f) = 0;
         *(s16 *)((char *)sub + 0x60) &= ~0x200;
@@ -236,7 +276,7 @@ int fn_802B978C(int obj, int state)
 #pragma peephole off
 int fn_802B9CC4(int obj, int state, f32 fv)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     int near;
     f32 sp = lbl_803E8240;
     s16 d;
@@ -244,7 +284,7 @@ int fn_802B9CC4(int obj, int state, f32 fv)
     near = ObjGroup_FindNearestObject(0x13, obj, &sp);
     *(u32 *)((char *)state) |= 0x200000;
 
-    if (*(s16 *)((char *)state + 0x334) < *(s16 *)((char *)inner + 0xa86) ||
+    if (*(s16 *)((char *)state + 0x334) < inner->unkA86 ||
         lbl_803E8234 == *(f32 *)((char *)state + 0x298)) {
         return 8;
     }
@@ -279,7 +319,7 @@ int fn_802B9CC4(int obj, int state, f32 fv)
 #pragma peephole off
 int fn_802B9E38(int obj, int state)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
 
     *(u32 *)((char *)state) |= 0x200000;
     *(u8 *)((char *)obj + 0xaf) |= 0x8;
@@ -294,7 +334,7 @@ int fn_802B9E38(int obj, int state)
                 return 8;
             }
         }
-        if (*(s16 *)((char *)inner + 0xa88) != 0 &&
+        if (inner->unkA88 != 0 &&
             *(f32 *)((char *)state + 0x2a0) > lbl_803E8234) {
             if (*(int *)((char *)state + 0x31c) != 0 ||
                 lbl_803E8234 != *(f32 *)((char *)state + 0x290) ||
@@ -304,7 +344,7 @@ int fn_802B9E38(int obj, int state)
         }
         break;
     case 0x205:
-        if (*(s16 *)((char *)inner + 0xa88) != 0) {
+        if (inner->unkA88 != 0) {
             if (*(int *)((char *)state + 0x31c) != 0 ||
                 lbl_803E8234 != *(f32 *)((char *)state + 0x290) ||
                 lbl_803E8234 != *(f32 *)((char *)state + 0x28c)) {
@@ -333,12 +373,12 @@ int fn_802B9E38(int obj, int state)
 int fn_802B9FC0(int obj, int state)
 {
     void *near;
-    int inner;
+    DIMSnowHorn1State *inner;
     f32 sp = lbl_803E8240;
     f32 fz;
 
     near = (void *)ObjGroup_FindNearestObject(0x13, obj, &sp);
-    inner = *(int *)((char *)obj + 0xb8);
+    inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     *(u8 *)((char *)obj + 0xaf) |= 0x8;
     fz = lbl_803E8234;
     *(f32 *)((char *)state + 0x294) = fz;
@@ -373,11 +413,11 @@ int fn_802B9FC0(int obj, int state)
     {
         f32 v = *(f32 *)((char *)state + 0x29c);
         if (v > lbl_803E8234 && *(f32 *)((char *)state + 0x298) > lbl_803E8234 &&
-            *(s16 *)((char *)state + 0x334) >= *(s16 *)((char *)inner + 0xa86)) {
+            *(s16 *)((char *)state + 0x334) >= inner->unkA86) {
             return 0xa;
         }
         if (v > lbl_803E8288 && *(f32 *)((char *)state + 0x298) > lbl_803E8288 &&
-            *(s16 *)((char *)state + 0x334) < *(s16 *)((char *)inner + 0xa86)) {
+            *(s16 *)((char *)state + 0x334) < inner->unkA86) {
             return 0xb;
         }
     }
@@ -387,7 +427,7 @@ int fn_802B9FC0(int obj, int state)
         }
     }
     if (GameBit_Get(0x3e3) != 0) {
-        if (RandomTimer_UpdateRangeTrigger(inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0) {
+        if (RandomTimer_UpdateRangeTrigger((int)((char *)inner + 0xd04), lbl_803E8244, lbl_803E8248) != 0) {
             Sfx_PlayFromObject(obj, 0x43a);
         }
     }
@@ -400,7 +440,7 @@ int fn_802B9FC0(int obj, int state)
 #pragma peephole off
 int fn_802BA1D4(int obj, int state)
 {
-    int inner;
+    DIMSnowHorn1State *inner;
     f32 fz;
 
     fz = lbl_803E8234;
@@ -411,7 +451,7 @@ int fn_802BA1D4(int obj, int state)
     *(f32 *)((char *)obj + 0x28) = fz;
     *(f32 *)((char *)obj + 0x2c) = fz;
     *(u32 *)((char *)state) |= 0x200000;
-    inner = *(int *)((char *)obj + 0xb8);
+    inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     *(u8 *)((char *)obj + 0xaf) &= ~8;
     *(u8 *)((char *)obj + 0xe4) = GameBit_Get(0x170) != 0;
     if (*(s8 *)((char *)state + 0x27a) != 0) {
@@ -427,30 +467,30 @@ int fn_802BA1D4(int obj, int state)
                 switch (bit170) {
                 case 1:
                     GameBit_Set(0x28, 1);
-                    *(u8 *)((char *)inner + 0xa8d) = 2;
+                    inner->unkA8D = 2;
                     break;
                 case 2:
-                    *(u8 *)((char *)inner + 0xa8d) = 4;
+                    inner->unkA8D = 4;
                     GameBit_Set(0x16f, 1);
                     break;
                 }
             } else {
-                *(u8 *)((char *)inner + 0xa8d) = 4;
+                inner->unkA8D = 4;
                 GameBit_Set(0x16f, 1);
             }
             (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
-                *(u8 *)((char *)inner + 0xa8d), obj, -1);
+                inner->unkA8D, obj, -1);
             GameBit_Set(0x170, GameBit_Get(0x170) - bit170);
             buttonDisable(0, 0x100);
         } else {
             if (*(u8 *)((char *)obj + 0xaf) & 1) {
                 if (GameBit_Get(0x28) != 0) {
-                    *(u8 *)((char *)inner + 0xa8d) = 3;
+                    inner->unkA8D = 3;
                 } else {
-                    *(u8 *)((char *)inner + 0xa8d) = 1;
+                    inner->unkA8D = 1;
                 }
                 (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
-                    *(u8 *)((char *)inner + 0xa8d), obj, -1);
+                    inner->unkA8D, obj, -1);
                 buttonDisable(0, 0x100);
             }
         }
@@ -464,7 +504,7 @@ int fn_802BA1D4(int obj, int state)
 #pragma peephole off
 int fn_802BA3EC(int obj, int state)
 {
-    int inner;
+    DIMSnowHorn1State *inner;
     int id_a, id_b, id_c, id_d;
     void *player;
     int bit_a, bit_b;
@@ -482,9 +522,9 @@ int fn_802BA3EC(int obj, int state)
     *(f32 *)((char *)obj + 0x2c) = f;
     *(int *)state |= 0x200000;
 
-    inner = *(int *)((char *)obj + 0xb8);
+    inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     player = (void *)Obj_GetPlayerObject();
-    switch (*(u8 *)((char *)inner + 0xa8c)) {
+    switch (inner->unkA8C) {
     case 1:
         id_a = 0x1602;
         id_b = 0x454bc;
@@ -512,23 +552,23 @@ int fn_802BA3EC(int obj, int state)
 
     if (GameBit_Get(bit_a) != 0 && GameBit_Get(bit_b) != 0 && player != NULL &&
         Vec_distance((char *)player + 0x18, (char *)obj + 0x18) < lbl_803E828C) {
-        switch (*(u8 *)((char *)inner + 0xa8c)) {
+        switch (inner->unkA8C) {
         case 1:
-            *(u8 *)((char *)inner + 0xa8d) = 0;
+            inner->unkA8D = 0;
             GameBit_Set(0x245, 1);
             GameBit_Set(0x27, 1);
             break;
         case 4:
-            *(u8 *)((char *)inner + 0xa8d) = 9;
+            inner->unkA8D = 9;
             GameBit_Set(0x1db, 1);
             break;
         }
         (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
-            *(u8 *)((char *)inner + 0xa8d), obj, -1);
+            inner->unkA8D, obj, -1);
         buttonDisable(0, 0x100);
     } else {
         *(u8 *)((char *)obj + 0xaf) |= 8;
-        v = *(u8 *)((char *)inner + 0xa91);
+        v = inner->unkA91;
         switch (v) {
         case 1:
             if (Vec_distance((char *)player + 0x18, (char *)obj + 0x18) < lbl_803E8290) {
@@ -536,7 +576,7 @@ int fn_802BA3EC(int obj, int state)
                 if (o1 != NULL) fn_8014C63C(o1);
                 o1 = ObjList_FindObjectById(id_b);
                 if (o1 != NULL) fn_8014C63C(o1);
-                *(u8 *)((char *)inner + 0xa91) = 2;
+                inner->unkA91 = 2;
             }
             break;
         case 0:
@@ -554,7 +594,7 @@ int fn_802BA3EC(int obj, int state)
                 o1 = ObjList_FindObjectById(id_b);
                 o2 = ObjList_FindObjectById(id_d);
                 if (o1 != NULL && o2 != NULL) fn_8014C66C(o1, (int)o2);
-                *(u8 *)((char *)inner + 0xa91) = 1;
+                inner->unkA91 = 1;
             }
             break;
         }
@@ -569,7 +609,7 @@ int fn_802BA3EC(int obj, int state)
 int fn_802B98F0(int obj, int state, f32 t)
 {
     int near;
-    int inner;
+    DIMSnowHorn1State *inner;
     int phase;
     int changed;
     int useNormal;
@@ -582,9 +622,9 @@ int fn_802B98F0(int obj, int state, f32 t)
 
     nearDist = lbl_803E8240;
     near = ObjGroup_FindNearestObject(0x13, obj, &nearDist);
-    inner = *(int *)((char *)obj + 0xb8);
+    inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     if (GameBit_Get(0x3e3) != 0) {
-        if (RandomTimer_UpdateRangeTrigger(inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0) {
+        if (RandomTimer_UpdateRangeTrigger((int)((char *)inner + 0xd04), lbl_803E8244, lbl_803E8248) != 0) {
             Sfx_PlayFromObject(obj, 0x43a);
         }
     }
@@ -609,7 +649,7 @@ int fn_802B98F0(int obj, int state, f32 t)
     if (v > lbl_803E8258) {
         v = lbl_803E8258;
     }
-    if (*(s16 *)((char *)inner + 0xa88) == 0) {
+    if (inner->unkA88 == 0) {
         v = lbl_803E8234;
     }
     target = lbl_803E825C * v;
@@ -717,9 +757,9 @@ int DIMSnowHorn1_func20(void) { return 0; }
  */
 f32 DIMSnowHorn1_func19(int obj, f32 *out)
 {
-    int state = *(int *)(obj + 0xb8);
-    if (*(s16 *)(state + 0x274) == 0xa) {
-        *out = -*(f32 *)(state + 0x2a0);
+    DIMSnowHorn1State *state = *(DIMSnowHorn1State **)(obj + 0xb8);
+    if (state->baddie.controlMode == 0xa) {
+        *out = -state->baddie.moveSpeed;
     } else {
         *out = lbl_803E827C;
     }
@@ -820,10 +860,10 @@ int DIMSnowHorn1_func14(int obj)
  */
 int DIMSnowHorn1_render2(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    if ((*(u8 *)(state + 0xa8e) & 0x2) != 0) {
+    DIMSnowHorn1State *state = *(DIMSnowHorn1State **)(obj + 0xb8);
+    if ((state->unkA8E & 0x2) != 0) {
         GameBit_Set(0x3e3, 0);
-        *(u8 *)(state + 0xa8e) = (u8)(*(u8 *)(state + 0xa8e) & ~0x2);
+        state->unkA8E = (u8)(state->unkA8E & ~0x2);
         return 1;
     }
     return 0;
@@ -838,10 +878,10 @@ int DIMSnowHorn1_render2(int obj)
  */
 void DIMSnowHorn1_modelMtxFn(int obj, f32 *out_x, f32 *out_y, f32 *out_z)
 {
-    int state = *(int *)(obj + 0xb8);
-    *out_x = *(f32 *)(state + 0x9e8);
-    *out_y = *(f32 *)(state + 0x9ec);
-    *out_z = *(f32 *)(state + 0x9f0);
+    DIMSnowHorn1State *state = *(DIMSnowHorn1State **)(obj + 0xb8);
+    *out_x = state->unk9E8;
+    *out_y = state->unk9EC;
+    *out_z = state->unk9F0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -866,38 +906,38 @@ int DIMSnowHorn1_func11(int obj)
 #pragma dont_inline on
 int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
 {
-    int state;
+    DIMSnowHorn1State *state;
     int animState;
     int i;
     f32 fz;
 
     (void)unused;
-    state = *(int *)(obj + 0xb8);
+    state = *(DIMSnowHorn1State **)(obj + 0xb8);
     *(u8 *)(obj + 0xaf) |= 8;
 
-    switch (*(u8 *)(state + 0xa8c)) {
+    switch (state->unkA8C) {
         case 0:
             *(u8 *)(setup + 0x56) = 0;
             if (*(s16 *)(obj + 0xb4) == -1) {
                 for (i = 0; i < (int)(u32)*(u8 *)(setup + 0x8b); i++) {
                     GameBit_Set(0x17b, 1);
-                    *(u8 *)(state + 0xa8e) |= 0x20;
+                    state->unkA8E |= 0x20;
                 }
             }
-            (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, state, 1);
+            (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 1);
             break;
         case 5:
             *(u8 *)(setup + 0x56) = 0;
-            (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, state, 2);
+            (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 2);
             break;
         case 4:
             *(u8 *)(setup + 0x56) = 0;
-            (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, state, 7);
+            (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 7);
             break;
         case 1:
             *(u8 *)(setup + 0x56) = 0;
             if (*(s16 *)(obj + 0xb4) != -1) {
-                switch (*(u8 *)(state + 0xa8d)) {
+                switch (state->unkA8D) {
                     case 0:
                     case 1:
                     case 2:
@@ -912,22 +952,22 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
             } else {
                 animState = 7;
             }
-            (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, state, animState);
+            (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, animState);
             break;
         case 3:
             *(u8 *)(setup + 0x56) = 0;
-            *(u8 *)(state + 0x27a) = 1;
-            (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, state, 7);
+            state->baddie.moveJustStartedA = 1;
+            (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 7);
             break;
         default:
             break;
     }
 
-    (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, state + 4);
+    (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, (int)((char *)state + 4));
     fz = lbl_803E8234;
-    *(f32 *)(state + 0x294) = fz;
-    *(f32 *)(state + 0x284) = fz;
-    *(f32 *)(state + 0x280) = fz;
+    state->baddie.unk294 = fz;
+    state->baddie.animSpeedB = fz;
+    state->baddie.animSpeedA = fz;
     *(f32 *)(obj + 0x24) = fz;
     *(f32 *)(obj + 0x28) = fz;
     *(f32 *)(obj + 0x2c) = fz;
@@ -979,19 +1019,19 @@ void DIMSnowHorn1_func22(int obj, f32 scale)
 #pragma dont_inline on
 int DIMSnowHorn1_setScale(int obj)
 {
-    int state;
+    DIMSnowHorn1State *state;
     f32 range;
     void *nearest;
 
-    state = *(int *)(obj + 0xb8);
+    state = *(DIMSnowHorn1State **)(obj + 0xb8);
     range = lbl_803E8240;
 
-    switch (*(u8 *)(state + 0xa8c)) {
+    switch (state->unkA8C) {
     case 0:
     case 5:
         return 0;
     }
-    if (*(s16 *)(state + 0x274) != 7) {
+    if (state->baddie.controlMode != 7) {
         return 0;
     }
     if (*(void **)(obj + 0xc0) != NULL) {
@@ -1101,20 +1141,20 @@ void DIMSnowHorn1_free(int obj)
 #pragma dont_inline on
 void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int state = *(int *)(obj + 0xb8);
+    DIMSnowHorn1State *state = *(DIMSnowHorn1State **)(obj + 0xb8);
 
     if (visible == -1) {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E8258);
-        ObjPath_GetPointWorldPosition(obj, 1, (f32 *)(state + 0x9e8), (f32 *)(state + 0x9ec),
-                                      (f32 *)(state + 0x9f0), 0);
-        ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32 *)(state + 0x9b0));
+        ObjPath_GetPointWorldPosition(obj, 1, &state->unk9E8, &state->unk9EC,
+                                      &state->unk9F0, 0);
+        ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32 *)((char *)state + 0x9b0));
     }
 
-    if ((*(u8 *)(state + 0xa8a) != 2) && (visible != 0)) {
+    if ((state->unkA8A != 2) && (visible != 0)) {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E8258);
-        ObjPath_GetPointWorldPosition(obj, 1, (f32 *)(state + 0x9e8), (f32 *)(state + 0x9ec),
-                                      (f32 *)(state + 0x9f0), 0);
-        ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32 *)(state + 0x9b0));
+        ObjPath_GetPointWorldPosition(obj, 1, &state->unk9E8, &state->unk9EC,
+                                      &state->unk9F0, 0);
+        ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32 *)((char *)state + 0x9b0));
     }
 }
 #pragma dont_inline reset
@@ -1137,38 +1177,38 @@ void fn_802BB4B4(int obj, int a, int slot)
     extern u32 getButtonsHeld(int controller);
     int matchFrame = (slot == -1) ? 1 : ((framesThisStep - 1 - slot) == 0);
     int *viewSlot = (int *)Camera_GetCurrentViewSlot();
-    int state = *(int *)(obj + 0xb8);
+    DIMSnowHorn1State *state = *(DIMSnowHorn1State **)(obj + 0xb8);
 
-    *(u8 *)(state + 0x354) = 0;
+    state->baddie.unk354 = 0;
     *(u32 *)state &= ~0x8000;
 
-    if (*(u8 *)(state + 0xa8a) == 2) {
+    if (state->unkA8A == 2) {
         if (GameBit_Get(0x3e2) != 0) {
-            *(s16 *)(state + 0xa88) -= 1;
+            state->unkA88 -= 1;
         } else {
-            *(s16 *)(state + 0xa88) = 0x3e8;
+            state->unkA88 = 0x3e8;
         }
-        (*(void (**)(int))(*(int *)gGameUIInterface + 0x5c))(*(s16 *)(state + 0xa88));
+        (*(void (**)(int))(*(int *)gGameUIInterface + 0x5c))(state->unkA88);
         if (GameBit_Get(0x3e9) != 0) {
             GameBit_Set(0x3e9, 0);
-            *(s16 *)(state + 0xa88) = 0x3e8;
+            state->unkA88 = 0x3e8;
         }
-        if (*(s16 *)(state + 0xa88) < 0) {
-            *(s16 *)(state + 0xa88) = 0;
+        if (state->unkA88 < 0) {
+            state->unkA88 = 0;
             ((MapEventInterface *)*(int *)gMapEventInterface)
                 ->finishCurrentEvent((MapEventInterface *)*(int *)gMapEventInterface);
         }
-        *(f32 *)(state + 0x290) = (f32)(s8)padGetStickX(0);
-        *(f32 *)(state + 0x28c) = (f32)(s8)padGetStickY(0);
-        *(u32 *)(state + 0x31c) = getButtonsJustPressed(0);
-        *(u32 *)(state + 0x318) = getButtonsHeld(0);
-        *(s16 *)(state + 0x330) = *(s16 *)viewSlot;
+        state->baddie.unk290 = (f32)(s8)padGetStickX(0);
+        state->baddie.unk28C = (f32)(s8)padGetStickY(0);
+        *(u32 *)&state->baddie.unk31C = getButtonsJustPressed(0);
+        *(u32 *)&state->baddie.unk318 = getButtonsHeld(0);
+        state->baddie.unk330 = *(s16 *)viewSlot;
     } else {
-        *(f32 *)(state + 0x290) = lbl_803E8234;
-        *(f32 *)(state + 0x28c) = lbl_803E8234;
-        *(u32 *)(state + 0x31c) = 0;
-        *(u32 *)(state + 0x318) = 0;
-        *(u16 *)(state + 0x330) = 0;
+        state->baddie.unk290 = lbl_803E8234;
+        state->baddie.unk28C = lbl_803E8234;
+        *(u32 *)&state->baddie.unk31C = 0;
+        *(u32 *)&state->baddie.unk318 = 0;
+        *(u16 *)&state->baddie.unk330 = 0;
     }
 
     *(u32 *)state |= 0x00400000;
@@ -1176,7 +1216,7 @@ void fn_802BB4B4(int obj, int a, int slot)
         *(u32 *)state &= ~0x00400000;
     }
 
-    if (*(s8 *)(state + 0x25f) != 0) {
+    if (*(s8 *)&state->baddie.unk25F != 0) {
         *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) - lbl_803E82A4 * (f32)a;
     }
 
@@ -1191,8 +1231,8 @@ void fn_802BB4B4(int obj, int a, int slot)
     }
 
     (*(void (**)(int, int, f32, f32, int *, f32 *))(*(int *)gPlayerInterface + 0x8))
-        (obj, state, timeDelta, timeDelta, lbl_803DB130, &lbl_803DE4C4);
-    fn_802BB998(obj, state, state);
+        (obj, (int)state, timeDelta, timeDelta, lbl_803DB130, &lbl_803DE4C4);
+    fn_802BB998(obj, (int)state, (int)state);
 }
 #pragma dont_inline reset
 #pragma peephole reset
@@ -1424,27 +1464,27 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     extern int GameBit_Get(int id);
     u8 *base = lbl_80335030;
     int stk = lbl_803E8230;
-    int inner;
+    DIMSnowHorn1State *inner;
     int q;
     s8 idx;
     *(s16 *)((char *)obj + 0) = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
     *(int *)((char *)obj + 0xbc) = (int)DIMSnowHorn1_animEventCallback;
     ObjGroup_AddObject(obj, 0xa);
-    inner = *(int *)((char *)obj + 0xb8);
-    *(u8 *)((char *)inner + 0xa8c) = *(u8 *)((char *)p2 + 0x19);
-    *(s16 *)((char *)inner + 0xa86) = 5;
-    *(s16 *)((char *)inner + 0xa88) = 0x3e8;
+    inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
+    inner->unkA8C = *(u8 *)((char *)p2 + 0x19);
+    inner->unkA86 = 5;
+    inner->unkA88 = 0x3e8;
     if (*(void **)((char *)obj + 0x64) != NULL) {
         *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0xa10;
     }
     if (*(void **)((char *)obj + 0x54) != NULL) {
         *(s16 *)((char *)*(int *)((char *)obj + 0x54) + 0xb2) = 9;
     }
-    (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 0xc, 1);
-    *(f32 *)((char *)inner + 0x2a4) = lbl_803E82B8;
-    q = inner + 0x4;
+    (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, (int)inner, 0xc, 1);
+    inner->baddie.unk2A4 = lbl_803E82B8;
+    q = (int)((char *)inner + 0x4);
     *(u8 *)((char *)q + 0x25b) = 0;
-    switch (*(u8 *)((char *)inner + 0xa8c)) {
+    switch (inner->unkA8C) {
     case 1:
     case 3:
     case 4:
@@ -1456,11 +1496,11 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     case 2:
         break;
     }
-    dll_2E_func05(obj, inner + 0x35c, -0x2000, 0x2aaa, 3);
-    *(u8 *)((char *)inner + 0x96d) |= 8;
+    dll_2E_func05(obj, (int)inner->baddie.unk35C, -0x2000, 0x2aaa, 3);
+    inner->unk96D |= 8;
     if (p3 == 0) {
         idx = -1;
-        switch (*(u8 *)((char *)inner + 0xa8c)) {
+        switch (inner->unkA8C) {
         case 1:
             if (GameBit_Get(0x16f)) {
                 idx = 0;

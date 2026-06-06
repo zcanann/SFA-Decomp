@@ -60,7 +60,7 @@ typedef struct BaddieState {
     f32 unk294; /* scaled together with animSpeedA and obj+0x28 */
     u8 unk298[0x2A0 - 0x298];
     f32 moveSpeed; /* per-mode movement speed */
-    u8 unk2A4[4];
+    f32 unk2A4;
     f32 unk2A8; /* mediumbasket whirlpool block 0x2A8..0x33B */
     f32 unk2AC;
     u8 unk2B0[0x2C0 - 0x2B0];
@@ -82,7 +82,8 @@ typedef struct BaddieState {
     u8 unk322;
     u8 unk323[0x32E - 0x323];
     s16 unk32E; /* compared > 0x78 */
-    u8 unk330[6];
+    s16 unk330;
+    u8 unk332[4];
     s16 unk336; /* (f32)-scaled by timeDelta */
     u8 unk338[2];
     u8 unk33A;
