@@ -1568,12 +1568,12 @@ void pinponspike_update(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void pollen_update(int obj) {
-    s16 *extra;
+    PollenExtra *extra;
     int i;
 
-    extra = *(s16 **)(obj + 0xb8);
-    if (*(s16 *)((u8 *)extra + 0x12) != 0) {
-        *(s16 *)((u8 *)extra + 0x12) -= 1;
+    extra = *(PollenExtra **)(obj + 0xb8);
+    if (extra->fragmentSpawnTimer != 0) {
+        extra->fragmentSpawnTimer -= 1;
     } else {
         f32 prev = *(f32 *)(obj + 0x28);
         *(f32 *)(obj + 0x28) = -(lbl_803E3140 * timeDelta - prev);
@@ -1593,7 +1593,7 @@ void pollen_update(int obj) {
             CameraShake_SetAllMagnitudes(lbl_803E3138);
             Sfx_PlayFromObject(obj, 0xb6);
             *(u8 *)(obj + 0x36) = 0;
-            *(s16 *)((u8 *)extra + 0x12) = 0x3c;
+            extra->fragmentSpawnTimer = 0x3c;
             ObjHits_DisableObject(obj);
         }
         if (*(u8 *)(obj + 0x36) == 0xff) {
@@ -1603,7 +1603,7 @@ void pollen_update(int obj) {
             } while (i-- != 0);
         }
     }
-    if (*(u8 *)(obj + 0x36) == 0 && *(s16 *)((u8 *)extra + 0x12) == 0) {
+    if (*(u8 *)(obj + 0x36) == 0 && extra->fragmentSpawnTimer == 0) {
         Obj_FreeObject(obj);
     }
 }
