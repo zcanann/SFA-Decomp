@@ -7,6 +7,10 @@
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
 
+#define LASER_UNSUPPORTED_DLL_ID 0x0236
+#define LASER_UNSUPPORTED_OBJECT_CLASS_ID 0x0030
+#define LASER_UNSUPPORTED_OBJECT_DEF_DFP_LASERBE 0x0355
+
 typedef struct LaserState {
   s16 primaryGameBit;
   s16 secondaryGameBit;
