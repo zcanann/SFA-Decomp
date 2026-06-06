@@ -356,7 +356,7 @@ void FUN_8014d7b8(uint param_1,int param_2,int param_3,int param_4,int param_5,s
         *(uint *)(iVar3 + 0x2e8) = uVar1 & ~1;
         *(uint *)(iVar3 + 0x2e8) = *(uint *)(iVar3 + 0x2e8) | 2;
       }
-      if (((EnemyState *)iVar3)->unk368 == 0) {
+      if (((EnemyState *)iVar3)->modelLight == 0) {
         piVar2 = FUN_80017624(0,'\x01');
         *(int **)(iVar3 + 0x368) = piVar2;
       }
@@ -364,7 +364,7 @@ void FUN_8014d7b8(uint param_1,int param_2,int param_3,int param_4,int param_5,s
                    *(int **)(iVar3 + 0x368));
     }
     if ((*(uint *)(iVar3 + 0x2e8) & 4) != 0) {
-      if (((EnemyState *)iVar3)->unk368 == 0) {
+      if (((EnemyState *)iVar3)->modelLight == 0) {
         piVar2 = FUN_80017624(0,'\x01');
         *(int **)(iVar3 + 0x368) = piVar2;
       }
@@ -410,7 +410,7 @@ void FUN_8014d924(int param_1)
     FUN_80017620(*(uint *)(iVar2 + 0x368));
     *(undefined4 *)(iVar2 + 0x368) = 0;
   }
-  ((EnemyState *)iVar2)->unk340 = (*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject;
+  ((EnemyState *)iVar2)->lastHitObject = (*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject;
   if ((*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject != 0) {
     *(undefined *)(*(int *)(param_1 + 0x54) + 0x70) = 1;
   }
@@ -532,11 +532,11 @@ void enemy_hitDetect(int obj)
 {
     u8 *state = *(u8 **)(obj + 0xb8);
 
-    if (*(void **)(state + 0x368) != NULL && modelLightStruct_getActiveState(((EnemyState *)state)->unk368) == 0) {
-        ModelLightStruct_free(((EnemyState *)state)->unk368);
-        ((EnemyState *)state)->unk368 = 0;
+    if (*(void **)(state + 0x368) != NULL && modelLightStruct_getActiveState(((EnemyState *)state)->modelLight) == 0) {
+        ModelLightStruct_free(((EnemyState *)state)->modelLight);
+        ((EnemyState *)state)->modelLight = 0;
     }
-    ((EnemyState *)state)->unk340 = (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject;
+    ((EnemyState *)state)->lastHitObject = (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject;
     if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
         *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 1;
     }
@@ -572,8 +572,8 @@ void enemy_free(int obj, int flag)
         fn_80026C88(((EnemyState *)state)->unk36C);
     }
     if (*(void **)(state + 0x368) != NULL) {
-        ModelLightStruct_free(((EnemyState *)state)->unk368);
-        ((EnemyState *)state)->unk368 = 0;
+        ModelLightStruct_free(((EnemyState *)state)->modelLight);
+        ((EnemyState *)state)->modelLight = 0;
     }
     if (*(void **)state != NULL) {
         mm_free(*(int *)state);
@@ -644,7 +644,7 @@ void enemy_update(int obj)
     if (getCurUiDll() == 4) {
         return;
     }
-    if ((((EnemyState *)state)->unk2E4 & 0x8000006) != 0) {
+    if ((((EnemyState *)state)->flags2E4 & 0x8000006) != 0) {
         if (objPosToMapBlockIdx(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14)) == -1) {
             return;
         }
@@ -658,13 +658,13 @@ void enemy_update(int obj)
         return;
     }
     if (*(void **)(state + 0x29c) == NULL) {
-        ((EnemyState *)state)->unk29C = Obj_GetPlayerObject();
+        ((EnemyState *)state)->playerObj = Obj_GetPlayerObject();
     } else if ((*(u16 *)(*(int *)(state + 0x29c) + 0xb0) & 0x40) != 0) {
-        ((EnemyState *)state)->unk29C = Obj_GetPlayerObject();
+        ((EnemyState *)state)->playerObj = Obj_GetPlayerObject();
     }
-    ((EnemyState *)state)->unk2E0 = *(int *)(state + 0x2dc);
+    ((EnemyState *)state)->initialFlags = *(int *)(state + 0x2dc);
     baddieInstantiateWeapon(obj, state);
-    flags = ((EnemyState *)state)->unk2DC;
+    flags = ((EnemyState *)state)->flags2DC;
     if ((flags & 1) != 0 && (flags & 2) == 0) {
         if (*(s8 *)(setup + 0x2e) == -1) {
             return;
@@ -675,7 +675,7 @@ void enemy_update(int obj)
             *(f32 *)(obj + 0x14) = *(f32 *)(setup + 0x10);
         }
         (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(*(s8 *)(setup + 0x2e), obj, -1);
-        ((EnemyState *)state)->unk2DC |= 2;
+        ((EnemyState *)state)->flags2DC |= 2;
         *(int *)(state + 0x2dc) = *(int *)(state + 0x2dc) & -2;
         return;
     }
@@ -684,10 +684,10 @@ void enemy_update(int obj)
             if (GameBit_Get(*(s16 *)(setup + 0x1a)) == 0) {
                 return;
             }
-            if ((((EnemyState *)state)->unk2DC & 0x800) != 0) {
+            if ((((EnemyState *)state)->flags2DC & 0x800) != 0) {
                 return;
             }
-            if ((((EnemyState *)state)->unk2DC & 0x1000) == 0) {
+            if ((((EnemyState *)state)->flags2DC & 0x1000) == 0) {
                 return;
             }
             player = Obj_GetPlayerObject();
@@ -699,8 +699,8 @@ void enemy_update(int obj)
             if (player != NULL) {
                 if (vec3f_distanceSquared((f32 *)(player + 0x18), (f32 *)(setup + 8)) > lbl_803E2600) {
                     enemy_init(obj, setup, 0);
-                    ((EnemyState *)state)->unk2DC |= 0x1000;
-                    ((EnemyState *)state)->unk2E0 = ((EnemyState *)state)->unk2E0 & -4097;
+                    ((EnemyState *)state)->flags2DC |= 0x1000;
+                    ((EnemyState *)state)->initialFlags = ((EnemyState *)state)->initialFlags & -4097;
                 } else {
                     return;
                 }
@@ -711,14 +711,14 @@ void enemy_update(int obj)
             if (GameBit_Get(*(s16 *)(setup + 0x18)) != 0) {
                 return;
             }
-            if ((((EnemyState *)state)->unk2DC & 0x800) != 0) {
+            if ((((EnemyState *)state)->flags2DC & 0x800) != 0) {
                 return;
             }
             player = Obj_GetPlayerObject();
             if (player != NULL) {
                 if (vec3f_distanceSquared((f32 *)(player + 0x18), (f32 *)(setup + 8)) > lbl_803E2600) {
                     enemy_init(obj, setup, 0);
-                    ((EnemyState *)state)->unk2DC |= 0x1000;
+                    ((EnemyState *)state)->flags2DC |= 0x1000;
                     *(u32 *)(state + 0x2e0) &= 0xFFFFEFFF;
                 } else {
                     return;
@@ -734,12 +734,12 @@ void enemy_update(int obj)
                 return;
             }
             if (((MapEventInterface *)*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) != 0) {
-                if ((((EnemyState *)state)->unk2DC & 0x800) == 0) {
+                if ((((EnemyState *)state)->flags2DC & 0x800) == 0) {
                     player = Obj_GetPlayerObject();
                     if (player != NULL) {
                         if (vec3f_distanceSquared((f32 *)(player + 0x18), (f32 *)(setup + 8)) > lbl_803E2600) {
                             enemy_init(obj, setup, 0);
-                            ((EnemyState *)state)->unk2DC |= 0x1000;
+                            ((EnemyState *)state)->flags2DC |= 0x1000;
                             *(u32 *)(state + 0x2e0) &= 0xFFFFEFFF;
                         } else {
                             return;
@@ -755,11 +755,11 @@ void enemy_update(int obj)
             }
         }
     }
-    if ((((EnemyState *)state)->unk2DC & 0x8000) != 0) {
+    if ((((EnemyState *)state)->flags2DC & 0x8000) != 0) {
         hudFn_8011f38c(0);
         (**(void (**)(int, u8 *))(*gPathControlInterface + 0x20))(obj, state + 4);
-        ((EnemyState *)state)->unk2DC &= ~0x8003;
-        if ((((EnemyState *)state)->unk2E4 & 0x20000) != 0) {
+        ((EnemyState *)state)->flags2DC &= ~0x8003;
+        if ((((EnemyState *)state)->flags2E4 & 0x20000) != 0) {
             s2 = *(u8 **)(obj + 0x4c);
             *(f32 *)(obj + 0xc) = *(f32 *)(s2 + 8);
             *(f32 *)(obj + 0x10) = *(f32 *)(s2 + 0xc);
@@ -773,7 +773,7 @@ void enemy_update(int obj)
             *(f32 *)(obj + 0x2c) = fz;
         }
     }
-    if ((((EnemyState *)state)->unk2E4 & 0x80000) != 0) {
+    if ((((EnemyState *)state)->flags2E4 & 0x80000) != 0) {
         if (tricky != NULL && GameBit_Get(0x9e) != 0) {
             *(u8 *)(obj + 0xaf) &= ~0x10;
         } else {
@@ -784,7 +784,7 @@ void enemy_update(int obj)
         }
     }
     baddie_updateWhileFrozen(obj, state, 0);
-    if ((((EnemyState *)state)->unk2DC & 0x1800) == 0) {
+    if ((((EnemyState *)state)->flags2DC & 0x1800) == 0) {
         fn_8014BC98(obj, state);
         fn_8014B878(obj, state);
     }
@@ -862,7 +862,7 @@ void enemy_init(int obj, u8 *setup, int flag)
     ((EnemyState *)state)->unk2FC = (f32)setup[0x2f] / lbl_803E257C;
     ((EnemyState *)state)->unk2A8 = (f32)(u32)(setup[0x29] << 3);
     *(int *)(state + 0x2dc) = 0;
-    ((EnemyState *)state)->unk2E0 = *(int *)(state + 0x2dc);
+    ((EnemyState *)state)->initialFlags = *(int *)(state + 0x2dc);
     *(s16 *)obj = *(s8 *)(setup + 0x2a) << 8;
     *(f32 *)(obj + 0xc) = *(f32 *)(setup + 8);
     *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc);
@@ -983,33 +983,33 @@ void enemy_init(int obj, u8 *setup, int flag)
             memset(*(void **)state, 0, 264);
         }
         if ((u8)(**(int (**)(int, int, f32, f32 *, int))(*gRomCurveInterface + 0x8c))(*(int *)state, obj, ((EnemyState *)state)->unk2AC, &lbl_803DBC58, -1) == 0) {
-            ((EnemyState *)state)->unk2DC |= 0x2000;
+            ((EnemyState *)state)->flags2DC |= 0x2000;
         }
         (**(void (**)(u8 *, int, int, int))(*gPathControlInterface + 0x4))(state + 4, 0, 422, 1);
-        if ((((EnemyState *)state)->unk2E4 & 8) != 0) {
+        if ((((EnemyState *)state)->flags2E4 & 8) != 0) {
             (**(void (**)(u8 *, int, u8 *, f32 *, int))(*gPathControlInterface + 0x8))(state + 4, 1, lbl_8031DBE4, &lbl_803DBC64, 4);
         }
-        if ((((EnemyState *)state)->unk2E4 & 4) != 0) {
+        if ((((EnemyState *)state)->flags2E4 & 4) != 0) {
             (**(void (**)(u8 *, int, u8 *, f32 *, f32 *))(*gPathControlInterface + 0xc))(state + 4, 1, lbl_8031DBD8, &lbl_803DBC60, &lbl_803DBC68);
         }
         (**(void (**)(int, u8 *))(*gPathControlInterface + 0x20))(obj, state + 4);
-        if ((((EnemyState *)state)->unk2E4 & 0xc) != 0) {
+        if ((((EnemyState *)state)->flags2E4 & 0xc) != 0) {
             state[0x25f] = 1;
         }
-        if ((((EnemyState *)state)->unk2E4 & 0x8000022) != 0 || *(u16 *)(setup + 0x34) != 0
+        if ((((EnemyState *)state)->flags2E4 & 0x8000022) != 0 || *(u16 *)(setup + 0x34) != 0
             || *(s16 *)(obj + 0x46) == 1022 || *(s16 *)(obj + 0x46) == 1990) {
             *(u32 *)(state + 4) |= 0x40000;
         } else {
             *(u32 *)(state + 4) &= ~0x40000;
         }
-        if ((((EnemyState *)state)->unk2E4 & 4) == 0 && (((EnemyState *)state)->unk2E4 & 8) != 0) {
+        if ((((EnemyState *)state)->flags2E4 & 4) == 0 && (((EnemyState *)state)->flags2E4 & 8) != 0) {
             *(u32 *)(state + 4) &= ~0x3800;
         }
         if (*(int *)(obj + 0xf4) != 0) {
-            ((EnemyState *)state)->unk2DC |= 0x1000;
-            ((EnemyState *)state)->unk2E0 = ((EnemyState *)state)->unk2E0 & -4097;
+            ((EnemyState *)state)->flags2DC |= 0x1000;
+            ((EnemyState *)state)->initialFlags = ((EnemyState *)state)->initialFlags & -4097;
             ObjHits_DisableObject(obj);
-        } else if ((((EnemyState *)state)->unk2E4 & 1) != 0) {
+        } else if ((((EnemyState *)state)->flags2E4 & 1) != 0) {
             ObjHits_EnableObject(obj);
         }
     }
