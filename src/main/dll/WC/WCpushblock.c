@@ -229,9 +229,10 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject *obj, WCPushBlockState *state)
     targetPitch = (-(s32)state->stickY * WCPUSHBLOCK_PITCH_INPUT_SCALE) / WCPUSHBLOCK_INPUT_SCALE;
     targetRoll = (-(s32)state->stickX * WCPUSHBLOCK_ROLL_INPUT_SCALE) / WCPUSHBLOCK_INPUT_SCALE;
 
-    state->cloudYawDrift =
-        (s16)((f32)state->cloudYawDrift -
-              (((f32)(state->stickX << 3) / lbl_803E5C98) * timeDelta));
+    {
+        f32 t = (f32)(state->stickX << 3) / lbl_803E5C98;
+        state->cloudYawDrift = (s16)(-(t * timeDelta - (f32)state->cloudYawDrift));
+    }
     state->cloudYawDrift =
         (s16)(state->cloudYawDrift -
               ((state->cloudYawDrift * framesThisStep) >> WCPUSHBLOCK_ANGLE_DAMP_SHIFT));
@@ -244,7 +245,7 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject *obj, WCPushBlockState *state)
         pitchDelta += 0xffff;
     }
 
-    obj->pitch = (s16)((f32)obj->pitch + (lbl_803E5CA8 * ((f32)pitchDelta * timeDelta)));
+    obj->pitch = (s16)(lbl_803E5CA8 * ((f32)pitchDelta * timeDelta) + (f32)*(s16 *)(int)&obj->pitch);
 
     rollDelta = targetRoll - (u16)state->pushRoll;
     if (rollDelta > 0x8000) {
@@ -255,7 +256,7 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject *obj, WCPushBlockState *state)
     }
 
     state->pushRoll =
-        (s16)((f32)state->pushRoll + (lbl_803E5CA8 * ((f32)rollDelta * timeDelta)));
+        (s16)(lbl_803E5CA8 * ((f32)rollDelta * timeDelta) + (f32)*(s16 *)(int)&state->pushRoll);
 
     pitch = obj->pitch;
     if (pitch < -WCPUSHBLOCK_MAX_PITCH) {
