@@ -452,11 +452,10 @@ void screenFn_8000e944(void* viewportArg)
 {
     u32 resolution;
     u32 width;
-    u32 height;
     u32* viewportFlags;
+    u32 height;
     u8 viewIndex;
-    s16 halfWidth;
-    s16 halfHeight;
+    u32 t;
 
     gCameraCurrentViewIndex = 4;
     resolution = getScreenResolution();
@@ -464,13 +463,15 @@ void screenFn_8000e944(void* viewportArg)
     height = resolution & 0xFFFF;
     viewportFlags = (u32*)(lbl_802C5E00 + 0x30);
 
-    if ((*(u32*)((u8*)viewportFlags + gCameraCurrentViewIndex * 0x34) & 1) == 0) {
+    if ((*(int*)((u8*)viewportFlags + gCameraCurrentViewIndex * 0x34) & 1) == 0) {
         gxSetScissorRect(0, 0, 0, 0, height - 1, width - 1);
-        halfWidth = (s16)((height >> 1) << 2);
+        t = height >> 1;
         viewIndex = gCameraCurrentViewIndex;
-        if ((*(u32*)((u8*)viewportFlags + viewIndex * 0x34) & 1) == 0) {
-            halfHeight = (s16)((width >> 1) << 2);
+        if ((*(int*)((u8*)viewportFlags + viewIndex * 0x34) & 1) == 0) {
+            s16 halfWidth = (s16)(t << 2);
+            s16 halfHeight;
             lbl_802C5ED0[viewIndex * 8 + 4] = halfWidth;
+            halfHeight = (s16)((width >> 1) << 2);
             lbl_802C5ED0[viewIndex * 8 + 5] = halfHeight;
             lbl_802C5ED0[viewIndex * 8 + 0] = halfWidth;
             lbl_802C5ED0[viewIndex * 8 + 1] = halfHeight;
@@ -478,7 +479,7 @@ void screenFn_8000e944(void* viewportArg)
     } else {
         Camera_ApplyCurrentViewport(viewportArg);
         viewIndex = gCameraCurrentViewIndex;
-        if ((*(u32*)((u8*)viewportFlags + viewIndex * 0x34) & 1) == 0) {
+        if ((*(int*)((u8*)viewportFlags + viewIndex * 0x34) & 1) == 0) {
             lbl_802C5ED0[viewIndex * 8 + 4] = 0;
             lbl_802C5ED0[viewIndex * 8 + 5] = 0;
             lbl_802C5ED0[viewIndex * 8 + 0] = 0;
@@ -506,22 +507,22 @@ void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* ou
 
     *outViewZ = pos[2];
     *outX = gCameraProjectionMatrix[3] +
-            gCameraProjectionMatrix[2] * pos[2] +
-            gCameraProjectionMatrix[0] * pos[0] +
-            gCameraProjectionMatrix[1] * pos[1];
+            (gCameraProjectionMatrix[1] * pos[1] +
+             gCameraProjectionMatrix[0] * pos[0] +
+             gCameraProjectionMatrix[2] * pos[2]);
     *outY = gCameraProjectionMatrix[7] +
-            gCameraProjectionMatrix[6] * pos[2] +
-            gCameraProjectionMatrix[4] * pos[0] +
-            gCameraProjectionMatrix[5] * pos[1];
+            (gCameraProjectionMatrix[5] * pos[1] +
+             gCameraProjectionMatrix[4] * pos[0] +
+             gCameraProjectionMatrix[6] * pos[2]);
     *outZ = gCameraProjectionMatrix[11] +
-            gCameraProjectionMatrix[10] * pos[2] +
-            gCameraProjectionMatrix[8] * pos[0] +
-            gCameraProjectionMatrix[9] * pos[1];
+            (gCameraProjectionMatrix[9] * pos[1] +
+             gCameraProjectionMatrix[8] * pos[0] +
+             gCameraProjectionMatrix[10] * pos[2]);
 
     w = gCameraProjectionMatrix[15] +
-        gCameraProjectionMatrix[14] * pos[2] +
-        gCameraProjectionMatrix[12] * pos[0] +
-        gCameraProjectionMatrix[13] * pos[1];
+        (gCameraProjectionMatrix[13] * pos[1] +
+         gCameraProjectionMatrix[12] * pos[0] +
+         gCameraProjectionMatrix[14] * pos[2]);
     if (w != lbl_803DE60C) {
         invW = lbl_803DE5F0 / w;
         *outX *= invW;
@@ -550,22 +551,22 @@ void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* ou
     PSVECSubtract(pos, offsetVec, pos);
 
     *outX = gCameraProjectionMatrix[3] +
-            gCameraProjectionMatrix[2] * pos[2] +
-            gCameraProjectionMatrix[0] * pos[0] +
-            gCameraProjectionMatrix[1] * pos[1];
+            (gCameraProjectionMatrix[1] * pos[1] +
+             gCameraProjectionMatrix[0] * pos[0] +
+             gCameraProjectionMatrix[2] * pos[2]);
     *outY = gCameraProjectionMatrix[7] +
-            gCameraProjectionMatrix[6] * pos[2] +
-            gCameraProjectionMatrix[4] * pos[0] +
-            gCameraProjectionMatrix[5] * pos[1];
+            (gCameraProjectionMatrix[5] * pos[1] +
+             gCameraProjectionMatrix[4] * pos[0] +
+             gCameraProjectionMatrix[6] * pos[2]);
     *outZ = gCameraProjectionMatrix[11] +
-            gCameraProjectionMatrix[10] * pos[2] +
-            gCameraProjectionMatrix[8] * pos[0] +
-            gCameraProjectionMatrix[9] * pos[1];
+            (gCameraProjectionMatrix[9] * pos[1] +
+             gCameraProjectionMatrix[8] * pos[0] +
+             gCameraProjectionMatrix[10] * pos[2]);
 
     w = gCameraProjectionMatrix[15] +
-        gCameraProjectionMatrix[14] * pos[2] +
-        gCameraProjectionMatrix[12] * pos[0] +
-        gCameraProjectionMatrix[13] * pos[1];
+        (gCameraProjectionMatrix[13] * pos[1] +
+         gCameraProjectionMatrix[12] * pos[0] +
+         gCameraProjectionMatrix[14] * pos[2]);
     if (w != lbl_803DE60C) {
         invW = lbl_803DE5F0 / w;
         *outX *= invW;
@@ -600,22 +601,22 @@ void Camera_ProjectWorldSphere(
     PSMTXMultVec(gCameraViewMatrix, pos, pos);
 
     *outX = gCameraProjectionMatrix[3] +
-            gCameraProjectionMatrix[2] * pos[2] +
-            gCameraProjectionMatrix[0] * pos[0] +
-            gCameraProjectionMatrix[1] * pos[1];
+            (gCameraProjectionMatrix[1] * pos[1] +
+             gCameraProjectionMatrix[0] * pos[0] +
+             gCameraProjectionMatrix[2] * pos[2]);
     *outY = gCameraProjectionMatrix[7] +
-            gCameraProjectionMatrix[6] * pos[2] +
-            gCameraProjectionMatrix[4] * pos[0] +
-            gCameraProjectionMatrix[5] * pos[1];
+            (gCameraProjectionMatrix[5] * pos[1] +
+             gCameraProjectionMatrix[4] * pos[0] +
+             gCameraProjectionMatrix[6] * pos[2]);
     *outZ = gCameraProjectionMatrix[11] +
-            gCameraProjectionMatrix[10] * pos[2] +
-            gCameraProjectionMatrix[8] * pos[0] +
-            gCameraProjectionMatrix[9] * pos[1];
+            (gCameraProjectionMatrix[9] * pos[1] +
+             gCameraProjectionMatrix[8] * pos[0] +
+             gCameraProjectionMatrix[10] * pos[2]);
 
     w = gCameraProjectionMatrix[15] +
-        gCameraProjectionMatrix[14] * pos[2] +
-        gCameraProjectionMatrix[12] * pos[0] +
-        gCameraProjectionMatrix[13] * pos[1];
+        (gCameraProjectionMatrix[13] * pos[1] +
+         gCameraProjectionMatrix[12] * pos[0] +
+         gCameraProjectionMatrix[14] * pos[2]);
     if (w != lbl_803DE60C) {
         invW = lbl_803DE5F0 / w;
         *outX *= invW;
@@ -628,9 +629,9 @@ void Camera_ProjectWorldSphere(
         }
 
         w = gCameraProjectionMatrix[15] +
-            gCameraProjectionMatrix[14] * pos[2] +
-            gCameraProjectionMatrix[12] * pos[0] +
-            gCameraProjectionMatrix[13] * pos[1];
+            (gCameraProjectionMatrix[13] * pos[1] +
+             gCameraProjectionMatrix[12] * pos[0] +
+             gCameraProjectionMatrix[14] * pos[2]);
         if (w != lbl_803DE60C) {
             invW = lbl_803DE5F0 / w;
             *outRadiusX = fabsf(invW * (radius * gCameraProjectionMatrix[0]));
@@ -874,11 +875,18 @@ void Camera_SetCurrentViewIndex(int index)
 f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z)
 {
     CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
-    f32 dz = z - slot->z;
-    f32 dx = x - slot->x;
-    f32 dy = y - slot->y;
+    f32 t;
+    f32 dz;
+    f32 dx;
+    f32 dy;
 
-    return sqrtf(dx * dx + dy * dy + dz * dz);
+    t = z - slot->z;
+    dz = t * t;
+    t = x - slot->x;
+    dx = t * t;
+    t = y - slot->y;
+    dy = t * t;
+    return sqrtf(dz + (dx + dy));
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1123,11 +1131,11 @@ void Camera_RebuildProjectionMatrix(void)
         C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio,
                          gCameraNearPlane, gCameraFarPlane);
         C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628,
-                              lbl_803DE628, lbl_803DE62C, *(f32 *)&lbl_803DE62C);
+                              *(f32 *)&lbl_803DE628, lbl_803DE62C, *(f32 *)&lbl_803DE62C);
         C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
-                              lbl_803DE62C, lbl_803DE62C, lbl_803DE62C);
+                              *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C);
         C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
-                              lbl_803DE630, lbl_803DE62C, lbl_803DE62C);
+                              lbl_803DE630, *(f32 *)&lbl_803DE62C, *(f32 *)&lbl_803DE62C);
     }
     GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
 }
