@@ -7836,9 +7836,12 @@ if (param_3 == NULL) {
           param_3 = lbl_8039C308;
         }
         if (param_3 != NULL) {
-          cfg.f30 = *(f32 *)(param_3 + 6) - *(f32 *)(param_1 + 0xc);
-          cfg.f34 = *(f32 *)(param_3 + 8) - *(f32 *)(param_1 + 0xe);
-          cfg.f38 = *(f32 *)(param_3 + 10) - *(f32 *)(param_1 + 0x10);
+          cfg.f30 = *(f32 *)(param_3 + 6);
+          cfg.f34 = *(f32 *)(param_3 + 8);
+          cfg.f38 = *(f32 *)(param_3 + 10);
+          cfg.f30 = cfg.f30 - *(f32 *)((char *)cfg.f00 + 0x18);
+          cfg.f34 = cfg.f34 - *(f32 *)((char *)cfg.f00 + 0x1c);
+          cfg.f38 = cfg.f38 - *(f32 *)((char *)cfg.f00 + 0x20);
         }
         if (randomGetRange(0,0x28) == 0) {
           cfg.f3c = lbl_803DF4D4;
@@ -7864,9 +7867,12 @@ if (param_3 == NULL) {
                 param_3 = lbl_8039C308;
               }
               if (param_3 != NULL) {
-                cfg.f30 = *(f32 *)(param_3 + 6) - *(f32 *)(param_1 + 0xc);
-                cfg.f34 = *(f32 *)(param_3 + 8) - *(f32 *)(param_1 + 0xe);
-                cfg.f38 = *(f32 *)(param_3 + 10) - *(f32 *)(param_1 + 0x10);
+                cfg.f30 = *(f32 *)(param_3 + 6);
+                cfg.f34 = *(f32 *)(param_3 + 8);
+                cfg.f38 = *(f32 *)(param_3 + 10);
+                cfg.f30 = cfg.f30 - *(f32 *)((char *)cfg.f00 + 0x18);
+                cfg.f34 = cfg.f34 - *(f32 *)((char *)cfg.f00 + 0x1c);
+                cfg.f38 = cfg.f38 - *(f32 *)((char *)cfg.f00 + 0x20);
                 cfg.f2c = lbl_803DF4D8;
               }
               cfg.f3c = lbl_803DF514;
@@ -8185,9 +8191,12 @@ if (param_3 == NULL) {
               param_3 = lbl_8039C308;
             }
             if (param_3 != NULL) {
-              cfg.f30 = *(f32 *)(param_3 + 6) - *(f32 *)(param_1 + 0xc);
-              cfg.f34 = *(f32 *)(param_3 + 8) - *(f32 *)(param_1 + 0xe);
-              cfg.f38 = *(f32 *)(param_3 + 10) - *(f32 *)(param_1 + 0x10);
+              cfg.f30 = *(f32 *)(param_3 + 6);
+              cfg.f34 = *(f32 *)(param_3 + 8);
+              cfg.f38 = *(f32 *)(param_3 + 10);
+              cfg.f30 = cfg.f30 - *(f32 *)((char *)cfg.f00 + 0x18);
+              cfg.f34 = cfg.f34 - *(f32 *)((char *)cfg.f00 + 0x1c);
+              cfg.f38 = cfg.f38 - *(f32 *)((char *)cfg.f00 + 0x20);
             }
             cfg.f3c = lbl_803DF5A8;
             cfg.f08 = 0x14;
