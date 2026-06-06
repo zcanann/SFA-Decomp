@@ -1649,6 +1649,11 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       seedDebrisMotion 6, Curve_SampleSegmentPoints Z-block 3, drawTexture
       fctiwz, cfprisonguard_render reload-f2). Skip on sight ONLY for this
       sub-class — the residual is 1-8 bytes.
+    - Sub-class-2 EXTENSION: when the swapped pair is two named f32 locals
+      init'd from DIFFERENT symbols (`f1 = lblA; ... f0 = lblB;` store-burst)
+      and the decl-order swap is INERT, the #81 launder on ONE init
+      (`f1 = *(f32 *)&lblA;`) still flips the pair (fn_800A0478 98.37->100).
+      Try decl-swap first, launder second, before classifying as sub-class 3.
     - Diagnostic: reduced /tmp probes do NOT reproduce these permutations —
       the coloring depends on whole-function web pressure; A/B in the real
       TU.
