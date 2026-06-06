@@ -1,7 +1,3 @@
-#include "PowerPC_EABI_Support/MetroTRK/ppc_reg.h"
-#include "PowerPC_EABI_Support/MetroTRK/trktypes.h"
-#include "PowerPC_EABI_Support/MetroTRK/trkenum.h"
-#include "PowerPC_EABI_Support/MetroTRK/dstypes.h"
 #include "PowerPC_EABI_Support/MetroTRK/memmap.h"
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk.h"
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"

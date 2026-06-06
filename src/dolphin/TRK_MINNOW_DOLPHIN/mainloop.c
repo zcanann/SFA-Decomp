@@ -1,8 +1,4 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/serpoll.h"
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/dispatch.h"
-#include "TRK_MINNOW_DOLPHIN/Os/dolphin/targcont.h"
-#include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 
 static inline void TRKHandleRequestEvent(TRKEvent* event)
 {

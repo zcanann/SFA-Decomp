@@ -1,6 +1,4 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/dispatch.h"
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msghndlr.h"
 
 u32 gTRKDispatchTableSize;
 
