@@ -1,4 +1,5 @@
 #include "main/dll/dimtruthhornice.h"
+#include "main/game_object.h"
 
 extern undefined4 *gPartfxInterface;
 extern undefined4 *gObjectTriggerInterface;
@@ -69,7 +70,7 @@ int TreeBird_SeqFn(int obj, int param_2, int data)
       break;
     case 2:
       j = 100;
-      if (*(short *)(obj + 0x46) == 0x5d) {
+      if (((GameObject *)obj)->anim.seqId == 0x5d) {
         do {
           TREEBIRD_SPAWN_PARTICLE(obj,0xd3);
           j--;
@@ -90,7 +91,7 @@ int TreeBird_SeqFn(int obj, int param_2, int data)
       break;
     case 3:
       j = 5;
-      if (*(short *)(obj + 0x46) == 0x5d) {
+      if (((GameObject *)obj)->anim.seqId == 0x5d) {
         do {
           TREEBIRD_SPAWN_PARTICLE(obj,0xd4);
           j--;
