@@ -3954,8 +3954,8 @@ FUN_80161ea0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   uint uStack_2c;
   
   iVar4 = *(int *)(*(int *)(param_9 + 0xb8) + 0x40c);
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 9;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumePriority = 9;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumeId = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
   uVar1 = randomGetRange(0,100);
   if ((int)uVar1 < 0x32) {
@@ -4771,8 +4771,8 @@ int fn_80161880(short *obj, u8 *p, f32 spd)
   } a;
 
   hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
-  *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6e) = 9;
-  *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6f) = 1;
+  ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 9;
+  ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId = 1;
   ObjHits_RegisterActiveHitVolumeObject(obj);
   if (randomGetRange(0, 100) < 50) {
     if (*(char *)(p + 0x27a) != '\0') {

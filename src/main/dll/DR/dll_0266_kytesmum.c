@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/objhits_types.h"
 
 typedef int (*KytesMumUpdateCallback)(int obj);
 
@@ -278,8 +279,8 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
     if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
         if ((*(int (**)(void *))((char *)*gGameUIInterface + 0x1c))(*gGameUIInterface) == 0) {
             buttonDisable(0, 0x100);
-            *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6e) = 0xb;
-            *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6f) = 4;
+            ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 0xb;
+            ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId = 4;
             (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(randomGetRange(0, 1), obj, -1);
         }
     }
@@ -294,8 +295,8 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
         }
     }
     if (*(s16 *)((char *)obj + 0xa0) == 9) {
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6e) = 0xb;
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6f) = 4;
+        ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 0xb;
+        ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId = 4;
         ObjHits_SetHitVolumeSlot(obj, 0xb, 4, 7);
         ObjHits_RegisterActiveHitVolumeObject(obj);
     }

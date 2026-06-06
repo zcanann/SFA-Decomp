@@ -857,8 +857,8 @@ FUN_8015c1b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   int iVar2;
   
   iVar2 = *(int *)(param_9 + 0xb8);
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 10;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumePriority = 10;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumeId = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(byte *)(iVar2 + 0x406) < 0x33) {
     if (*(char *)(param_10 + 0x27a) != '\0') {
@@ -1237,8 +1237,8 @@ FUN_8015ca54(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   
   iVar2 = *(int *)(param_9 + 0xb8);
   *(byte *)(*(int *)(iVar2 + 0x40c) + 0x44) = *(byte *)(*(int *)(iVar2 + 0x40c) + 0x44) | 4;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 10;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumePriority = 10;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumeId = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(char *)(param_10 + 0x27a) != '\0') {
     uVar1 = randomGetRange(0,2);
@@ -1304,8 +1304,8 @@ FUN_8015cd2c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   
   iVar2 = *(int *)(param_9 + 0xb8);
   *(byte *)(*(int *)(iVar2 + 0x40c) + 0x44) = *(byte *)(*(int *)(iVar2 + 0x40c) + 0x44) | 4;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 10;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumePriority = 10;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumeId = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(char *)(param_10 + 0x27a) != '\0') {
     uVar1 = randomGetRange(0,1);
@@ -1417,8 +1417,8 @@ FUN_8015d19c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   int iVar1;
   
   iVar1 = *(int *)(*(int *)(param_9 + 0xb8) + 0x40c);
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 10;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumePriority = 10;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumeId = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(char *)(param_10 + 0x27a) != '\0') {
     *(undefined *)(param_10 + 0x346) = 0;
@@ -2112,8 +2112,8 @@ int mediumbasket_updateContactHitState(int obj, int state)
     int control;
     f32 noBlend;
 
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 10;
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
+    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
+    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if (*(u8 *)(sub + 0x406) > 0x32) {
         if ((s8)*(u8 *)(state + 0x27a) != 0) {
@@ -2269,8 +2269,8 @@ int fn_8015C0B4(int obj, int state)
     int choice;
 
     *(u8 *)(*(int *)(sub + 0x40c) + 0x44) |= 4;
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 10;
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
+    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
+    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
         lbl_803DDA79 = randomGetRange(0, 2);
@@ -2312,8 +2312,8 @@ int fn_8015C2AC(int obj, int state)
     int choice;
 
     *(u8 *)(*(int *)(sub + 0x40c) + 0x44) |= 4;
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 10;
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
+    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
+    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
         choice = randomGetRange(0, 1);
@@ -2382,8 +2382,8 @@ int mediumbasket_updateImpactHitState(int obj, int state)
     int sub = *(int *)(obj + 0xb8);
     int control = *(int *)(sub + 0x40c);
 
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 10;
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
+    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
+    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
         *(u8 *)(state + 0x346) = 0;
