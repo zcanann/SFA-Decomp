@@ -957,43 +957,39 @@ extern f32 mathCosf(f32);
 void mtx44_multSafe(int a, int b, f32 *out)
 {
     f32 tmp[16];
-    int j;
-    int i;
-    int row;
-    int aoff;
-    f32 zero;
-    int toff;
-    int boff;
     int o3, o2, o1;
-    f32 a0, a1, a2, a3;
+    int t;
+    int row;
+    f32 *tp;
+    int i;
+    int j;
+    f32 zero;
 
+    i = 0;
     row = 0;
-    aoff = 0;
     zero = lbl_803DE7C0;
-    for (i = 0; i < 4; i++) {
-        boff = 0;
-        toff = row << 2;
+    tp = tmp;
+    for (; i < 4; i++) {
+        j = 0;
+        t = row;
         o1 = (row + 1) * 4;
         o2 = (row + 2) * 4;
         o3 = (row + 3) * 4;
-        for (j = 0; j < 4; j++) {
-            *(f32 *)((int)tmp + toff) = zero;
-            a0 = *(f32 *)(a + aoff);
-            *(f32 *)((int)tmp + toff) += a0 * *(f32 *)(b + boff);
-            a1 = *(f32 *)(a + o1);
-            *(f32 *)((int)tmp + toff) += a1 * *(f32 *)(b + (j + 4) * 4);
-            a2 = *(f32 *)(a + o2);
-            *(f32 *)((int)tmp + toff) += a2 * *(f32 *)(b + (j + 8) * 4);
-            a3 = *(f32 *)(a + o3);
-            *(f32 *)((int)tmp + toff) += a3 * *(f32 *)(b + (j + 12) * 4);
-            toff += 4;
-            boff += 4;
+        for (; j < 4; j++) {
+            tp[t] = zero;
+            tp[t] += ((f32 *)a)[row] * ((f32 *)b)[j];
+            tp[t] += *(f32 *)(a + o1) * *(f32 *)(b + (j + 4) * 4);
+            tp[t] += *(f32 *)(a + o2) * *(f32 *)(b + (j + 8) * 4);
+            tp[t] += *(f32 *)(a + o3) * *(f32 *)(b + (j + 12) * 4);
+            t++;
         }
         row += 4;
-        aoff += 0x10;
     }
-    for (i = 0; i < 16; i++) {
-        *(f32 *)((int)out + i * 4) = *(f32 *)((int)tmp + i * 4);
+    for (i = 0; i < 16; i += 4) {
+        *(f32 *)((int)out + (i << 2)) = *(f32 *)((int)tmp + (i << 2));
+        *(f32 *)((int)out + ((i + 1) << 2)) = *(f32 *)((int)tmp + ((i + 1) << 2));
+        *(f32 *)((int)out + ((i + 2) << 2)) = *(f32 *)((int)tmp + ((i + 2) << 2));
+        *(f32 *)((int)out + ((i + 3) << 2)) = *(f32 *)((int)tmp + ((i + 3) << 2));
     }
 }
 #pragma opt_loop_invariants reset
