@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/objanim.h"
 #include "main/dll/sidekickToy.h"
+#include "main/dll/mediumbasket.h"
 #include "main/dll/tricky_state.h"
 
 extern undefined4 ABS();
@@ -60,10 +61,6 @@ extern undefined4 FUN_80158c5c();
 extern undefined4 FUN_80159520();
 extern undefined4 FUN_80159cdc();
 extern undefined4 FUN_80159ce0();
-extern undefined4 FUN_8015ad60();
-extern undefined4 FUN_8015b10c();
-extern undefined4 FUN_8015b2d0();
-extern undefined4 FUN_8015b34c();
 extern undefined4 FUN_80247944();
 extern undefined4 FUN_80247cd8();
 extern undefined4 FUN_80247ef8();
@@ -166,8 +163,6 @@ extern void fn_80159958(short *obj, int state);
 extern void fn_80159FCC(short *obj, int state);
 extern void fn_8015A924(short *obj, int state);
 extern void smallbasket_applyReactionState(short *obj, int state);
-extern void mediumbasket_enterWhirlpoolGroup(short *obj, int state);
-extern void mediumbasket_leaveWhirlpoolGroup(short *obj, int state);
 extern f32 lbl_803E256C;
 extern f32 lbl_803E2570;
 extern f32 lbl_803E2574;
@@ -267,7 +262,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
         fn_80156B0C(obj, state);
         break;
       case 0x851:
-        mediumbasket_enterWhirlpoolGroup(obj, state);
+        mediumbasket_enterWhirlpoolGroup((int *)obj, (GroundBaddieState *)state);
         break;
       case 0x842: case 0x84b:
         fn_8015A924(obj, state);
@@ -330,7 +325,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
         fn_80156B0C(obj, state);
         break;
       case 0x851:
-        mediumbasket_enterWhirlpoolGroup(obj, state);
+        mediumbasket_enterWhirlpoolGroup((int *)obj, (GroundBaddieState *)state);
         break;
       case 0x842: case 0x84b:
         fn_8015A924(obj, state);
@@ -420,7 +415,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
       fn_80156C34(obj, state);
       break;
     case 0x851:
-      mediumbasket_leaveWhirlpoolGroup(obj, state);
+      mediumbasket_leaveWhirlpoolGroup((int *)obj, (GroundBaddieState *)state);
       break;
     case 0x842: case 0x84b:
       smallbasket_applyReactionState(obj, state);
