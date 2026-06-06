@@ -1,4 +1,5 @@
 #include "main/dll/DF/dll_194.h"
+#include "main/game_object.h"
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/dll/DF/dfropenode.h"
 
@@ -219,8 +220,8 @@ void dfropenode_func0B(f32 phase, int obj, float *xOut, float *yOut, float *zOut
   dy = node[1].pos[1] - node->pos[1];
   dz = node[1].pos[2] - node->pos[2];
   x0 = *(f32 *)(nodes + idx * 0x34);
-  *xOut = (node[1].pos[0] - x0) * fraction + (*(f32 *)(obj + 0xc) + x0);
-  *yOut = dy * fraction + (*(f32 *)(obj + 0x10) + extra->rope->nodes[idx].pos[1]);
-  *zOut = dz * fraction + (*(f32 *)(obj + 0x14) + extra->rope->nodes[idx].pos[2]);
+  *xOut = (node[1].pos[0] - x0) * fraction + (((GameObject *)obj)->anim.localPosX + x0);
+  *yOut = dy * fraction + (((GameObject *)obj)->anim.localPosY + extra->rope->nodes[idx].pos[1]);
+  *zOut = dz * fraction + (((GameObject *)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
 }
 #pragma scheduling reset
