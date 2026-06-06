@@ -327,7 +327,7 @@ int dfsh_shrine_SeqFn(int obj,int unused,void *seq)
         fn_80296518(player,1,1);
         GameBit_Set(0xbfd,1);
         GameBit_Set(0x956,1);
-        (*(void (**)(int, int))((char *)*gMapEventInterface + 0x44))(0xb,2);
+        (*gMapEventInterface)->setMode(0xb,2);
         break;
       case 0xe:
         *(s16 *)(objLocal + 6) = (s16)(*(s16 *)(objLocal + 6) | 0x4000);

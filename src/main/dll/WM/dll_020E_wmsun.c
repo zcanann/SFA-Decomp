@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/mapEventTypes.h"
 
 int fn_801F6E8C(int p1, int p2, int actor)
 {
@@ -64,7 +65,7 @@ void wmsun_init(int obj, int params)
     s16 mode;
 
     *(void **)(obj + 0xbc) = (void *)fn_801F6E8C;
-    c = (*(code *)(*gMapEventInterface + 0x40))((int)*(s8 *)(obj + 0xac));
+    c = ((MapEventInterface *)*gMapEventInterface)->getMode((int)*(s8 *)(obj + 0xac));
     if (c == 3 && (u32)GameBit_Get(0x21b) == 0) {
         GameBit_Set(0x21b, 1);
     }

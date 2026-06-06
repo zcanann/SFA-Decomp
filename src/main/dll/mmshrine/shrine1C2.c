@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
+#include "main/mapEventTypes.h"
 #include "main/dll/mmshrine/shrine1C2.h"
 
 #pragma peephole off
@@ -959,7 +960,7 @@ void ecsh_creator_init(s16 *obj, s8 *def) {
 
 extern int *Obj_GetPlayerObject(void);
 extern void fn_80296518(int *player, int a, int b);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int fn_801C5CE4(void *objArg, int unused, void *eventListArg);
 extern int objCreateLight(int a, int b);
 extern int lbl_803DDBC0;
@@ -996,7 +997,7 @@ int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
                 fn_80296518(player, 0x80, 1);
                 GameBit_Set(0x12b, 1);
                 GameBit_Set(0xc85, 1);
-                (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(0xb, 5);
+                (*gMapEventInterface)->setMode(0xb, 5);
                 break;
             case 14:
                 *(s16 *)((char *)obj + 6) |= 0x4000;

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/mmshrine/shrine.h"
+#include "main/objlib.h"
 
 
 #pragma peephole off
@@ -117,7 +118,6 @@ void mmsh_scales_free(int param_1,int param_2)
  * EN v1.0 Size: 372b
  */
 extern u8 lbl_803DB411;
-extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 
 void mmsh_scales_update(int param_1)
 {
@@ -135,7 +135,7 @@ void mmsh_scales_update(int param_1)
     if ((i != 0) && (*(short *)(param_1 + 0xb4) == -2)) {
       typeId = *(char *)(*(int *)(param_1 + 0xb8) + 0x57);
       found = 0;
-      list = ObjList_GetObjects(&i, &count);
+      list = (int *)ObjList_GetObjects(&i, &count);
       n = 0;
       for (i = 0, id = typeId; i < count; i++) {
         obj = *list;
@@ -432,7 +432,6 @@ void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
  * EN v1.0 Address: 0x801C57B0
  * EN v1.0 Size: 380b
  */
-extern void ObjHits_SetHitVolumeSlot(int obj, int animObjId, int frame, int flags);
 extern void *ObjList_FindObjectById(int id);
 extern f32 objFn_801948c0(void *obj, int param_2);
 extern void fn_80137948(char *fmt, ...);
@@ -503,7 +502,6 @@ void mmsh_waterspike_update(int param_1)
   return;
 }
 
-extern void ObjHits_EnableObject(int obj);
 #pragma scheduling off
 #pragma peephole off
 void mmsh_waterspike_init(int obj, s16 *def) {

@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/CR/CRsnowbike.h"
+#include "main/mapEventTypes.h"
 
 
 extern undefined8 FUN_80006724();
@@ -968,7 +969,7 @@ extern void timeListFn_8012df14(void);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern int *gScreenTransitionInterface;
 extern int *gSHthorntailAnimationInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern u16  lbl_803DC060[4];
 extern f32  timeDelta;
 extern f32  lbl_803E5558;
@@ -995,7 +996,7 @@ void sc_levelcontrol_update(int obj)
             getEnvfxActImmediately(0, 0, 0x4f, 0);
             getEnvfxActImmediately(0, 0, 0x50, 0);
             getEnvfxActImmediately(0, 0, 0x245, 0);
-            if ((*(u8 (**)(int, int))((char *)*gMapEventInterface + 0x4c))(0xe, 5) != 0) {
+            if ((*gMapEventInterface)->getAnimEvent(0xe, 5) != 0) {
                 getEnvfxActImmediately(0, 0, 0x246, 0);
             } else {
                 getEnvfxActImmediately(0, 0, 0x51, 0);
@@ -1004,7 +1005,7 @@ void sc_levelcontrol_update(int obj)
             getEnvfxAct(0, 0, 0x4f, 0);
             getEnvfxAct(0, 0, 0x50, 0);
             getEnvfxAct(0, 0, 0x245, 0);
-            if ((*(u8 (**)(int, int))((char *)*gMapEventInterface + 0x4c))(0xe, 5) != 0) {
+            if ((*gMapEventInterface)->getAnimEvent(0xe, 5) != 0) {
                 getEnvfxAct(0, 0, 0x246, 0);
             } else {
                 getEnvfxAct(0, 0, 0x51, 0);
@@ -1013,17 +1014,17 @@ void sc_levelcontrol_update(int obj)
         *(int *)(obj + 0xf4) = 0;
     }
     if (((SnowFlags22 *)(state + 0x22))->bit7 == 0 && (u32)GameBit_Get(0xc53) != 0) {
-        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(0xe, 0xa, 1);
+        (*gMapEventInterface)->setAnimEvent(0xe, 0xa, 1);
         ((SnowFlags22 *)(state + 0x22))->bit7 = 1;
     }
     if (*(u8 *)(state + 0x1e) != 0xe) {
         if (coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14)) == 0xe) {
-            u8 c = (*(int (**)(int))((char *)*gMapEventInterface + 0x40))(0xe);
+            u8 c = (*gMapEventInterface)->getMode(0xe);
             Obj_GetPlayerObject();
             switch (c) {
             case 1:
                 if ((u32)GameBit_Get(0x5f3) != 0) {
-                    (*(void (**)(int, int))((char *)*gMapEventInterface + 0x44))(0xe, 2);
+                    (*gMapEventInterface)->setMode(0xe, 2);
                 }
                 break;
             case 2:
@@ -1031,7 +1032,7 @@ void sc_levelcontrol_update(int obj)
             case 4:
             case 5:
                 if ((u32)GameBit_Get(0x2d0) != 0) {
-                    (*(void (**)(int, int))((char *)*gMapEventInterface + 0x44))(0xe, 6);
+                    (*gMapEventInterface)->setMode(0xe, 6);
                 }
                 break;
             }
@@ -1085,10 +1086,10 @@ void sc_levelcontrol_update(int obj)
                 *(f32 *)(state + 0xc) = lbl_803E5558;
             }
         }
-        if ((*(u8 (**)(int, int))((char *)*gMapEventInterface + 0x4c))(0xe, 1) != 0) {
+        if ((*gMapEventInterface)->getAnimEvent(0xe, 1) != 0) {
             *(f32 *)(state + 0x4) = lbl_803E555C;
             *(f32 *)(state + 0x8) = lbl_803E5560;
-        } else if ((*(u8 (**)(int, int))((char *)*gMapEventInterface + 0x4c))(0xe, 5) != 0) {
+        } else if ((*gMapEventInterface)->getAnimEvent(0xe, 5) != 0) {
             *(f32 *)(state + 0x4) = lbl_803E5564;
             *(f32 *)(state + 0x8) = lbl_803E5568;
             if (*(int *)(obj + 0xf8) != 0) {
@@ -1208,9 +1209,9 @@ void sc_levelcontrol_update(int obj)
     if ((u32)GameBit_Get(0x4d0) == 0) {
         if ((u32)GameBit_Get(0x2b5) != 0) {
             GameBit_Set(0x4d0, 1);
-            (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(0xe, 2, 1);
+            (*gMapEventInterface)->setAnimEvent(0xe, 2, 1);
             warpToMap(0x50, 0);
-            (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(0xe, 1, 0);
+            (*gMapEventInterface)->setAnimEvent(0xe, 1, 0);
         }
     }
     if ((*(int (**)(int))((char *)*gSHthorntailAnimationInterface + 0x24))(0) != 0) {

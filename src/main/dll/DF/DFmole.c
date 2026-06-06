@@ -1,9 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/DFmole.h"
+#include "main/objlib.h"
 
 extern void mm_free(void *p);
-extern void ObjGroup_RemoveObject(void *obj, int group);
-extern int *ObjGroup_GetObjects(int group, int *count);
 
 /*
  * --INFO--
@@ -22,7 +21,7 @@ void dfropenode_free(void *obj)
     int i;
 
     node = *(void **)((char *)obj + 0xb8);
-    ObjGroup_RemoveObject(obj, 0x17);
+    ObjGroup_RemoveObject((u32)obj, 0x17);
     if (*(void **)((char *)node + 0x2c) != NULL && *(void **)((char *)node + 0x2c) != NULL) {
         mm_free(*(void **)((char *)node + 0x2c));
     }

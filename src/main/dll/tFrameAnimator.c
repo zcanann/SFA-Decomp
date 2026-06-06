@@ -1,9 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/tFrameAnimator.h"
+#include "main/objlib.h"
 
 extern void *memset(void *dest, int value, u32 size);
-extern void ObjHits_DisableObject(int obj);
-extern void ObjMsg_AllocQueue(int obj, int capacity);
 extern int *Obj_GetPlayerObject(void);
 extern void GameBit_Set(int gameBit, int value);
 extern u32 GameBit_Get(int gameBit);
@@ -53,7 +52,7 @@ undefined4 sidekickball_init(int obj)
   (*(void (**)(int, u8 *))(*(int *)gPathControlInterface + 0x20))(obj, state);
   ObjHits_DisableObject(obj);
   state[0x25b] = 0;
-  ObjMsg_AllocQueue(obj, 1);
+  ObjMsg_AllocQueue((void *)obj, 1);
   GameBit_Set(0x3f8, 0);
 }
 #pragma peephole reset

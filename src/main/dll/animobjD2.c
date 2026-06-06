@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/animobjD2.h"
+#include "main/objlib.h"
 
 #pragma peephole off
 #pragma scheduling off
 
 extern void *fn_80296118(void *p);
-extern void **ObjGroup_GetObjects(int group, int *countOut);
 extern f32 Vec_xzDistance(void *a, void *b);
 extern int atan2_8002178c(f32 dx, f32 dz);
 extern int randomGetRange(int lo, int hi);
@@ -36,7 +36,7 @@ void *trickyFindCirclingTarget(void *obj, void *arg2) {
     target = fn_80296118(*(void **)((u8 *)arg2 + 0x4));
     if (target == NULL) goto fail;
 
-    list = ObjGroup_GetObjects(3, &count);
+    list = (void **)ObjGroup_GetObjects(3, &count);
     for (i = 0; i < count; i++) {
         if (list[i] == target) {
             d1 = Vec_xzDistance((u8 *)obj + 0x18, (u8 *)target + 0x18);
@@ -105,7 +105,6 @@ extern void objAnimFn_8013a3f0(int *obj, int anim, f32 p3, int p4);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int id);
 extern int Obj_SetupObject(int o, int p2, int p3, int p4, int p5);
-extern void ObjLink_AttachChild(int *obj, int child, int slot);
 extern void Sfx_PlayFromObject(int *obj, int sfx);
 extern void Sfx_AddLoopedObjectSound(int *obj, int sfx);
 extern void Sfx_RemoveLoopedObjectSound(int *obj, int sfx);
@@ -318,7 +317,7 @@ void fn_8013E0D0(int *obj, register u8 *st) {
                             }
                             ((TrickyPack *)(st + 0x7bc))->c = free_;
                             *(int *)(st + 0x7b8) = Obj_SetupObject(o, 4, -1, -1, *(int *)((char *)obj + 0x30));
-                            ObjLink_AttachChild(obj, *(int *)(st + 0x7b8), ((TrickyPack *)(st + 0x7bc))->c);
+                            ObjLink_AttachChild((int)obj, *(int *)(st + 0x7b8), ((TrickyPack *)(st + 0x7bc))->c);
                             *(f32 *)(st + 0x7c0) = lbl_803E23DC;
                             *(f32 *)(st + 0x7c4) = lbl_803E23DC;
                             *(f32 *)(st + 0x7c8) = lbl_803E23DC;
@@ -429,7 +428,7 @@ void fn_8013E0D0(int *obj, register u8 *st) {
         } else {
             int count;
             int i = 0;
-            void **list = ObjGroup_GetObjects(0x4b, &count);
+            void **list = (void **)ObjGroup_GetObjects(0x4b, &count);
             f32 ratio = lbl_803E23F8;
             for (; i < count; i++) {
                 f32 d1 = Vec_xzDistance((u8 *)list[0] + 0x18, (u8 *)t + 0x18);

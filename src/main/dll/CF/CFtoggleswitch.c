@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/CFtoggleswitch.h"
+#include "main/mapEventTypes.h"
 
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -894,7 +895,7 @@ extern void Sfx_PlayFromObject(int *obj, int sfxId);
 extern void objfx_spawnArcedBurst(int *obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 sx, f32 sy, f32 sz,
                                   void *args, int a);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *gCameraInterface;
 extern f32 lbl_803E3C30;
 extern f32 lbl_803E3C34;
@@ -941,7 +942,7 @@ void magiccavetop_update(int *obj) {
     if (player != NULL) {
         if (GameBit_Get(0x91e) != 0) {
             GameBit_Set(0x91e, 0);
-            (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(def[0x1f], def[0x1a], 0);
+            (*gMapEventInterface)->setAnimEvent(def[0x1f], def[0x1a], 0);
             (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(1, obj, -1);
             unlockLevel(0, 0, 1);
             *sub = 3;
@@ -969,8 +970,8 @@ void magiccavetop_update(int *obj) {
                 *sub = 0;
             } else if (dist < lbl_803E3C30 && gb != 0) {
                 *sub = 2;
-                (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(def[0x1f], def[0x1a], 1);
-                (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(def[0x1f], def[0x1b]);
+                (*gMapEventInterface)->setAnimEvent(def[0x1f], def[0x1a], 1);
+                (*gMapEventInterface)->setMode(def[0x1f], def[0x1b]);
                 (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
                 (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
             }
