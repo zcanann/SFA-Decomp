@@ -7,7 +7,11 @@
  * ObjPlacement - the COMMON HEAD of the per-object placement/setup
  * record at obj+0x4C (ObjAnimComponent.placementData). Cross-partition
  * census (engine: objseq.c/main.c/light.c; dll root: 47 TUs):
- *  - 0x02 s16: ~17 dll sites + main.c (semantics unproven - unk02)
+ *  - 0x00/0x02 s16 pair: CLASS-DEPENDENT. player.c's arwprojectile
+ *    setup writes a yaw/pitch pair ((s16)getAngle(dx,dz) at +0,
+ *    -getAngle(dy,horiz) at +2), but main.c's trigger path reads +2 as
+ *    a GameBit id - so the slots are rotation-by-convention, repurposed
+ *    per class. Kept as unk00/unk02 until a single semantic holds.
  *  - 0x04..0x07: class-specific bytes, NOT common (padded here)
  *  - 0x08/0x0C/0x10 f32: placement position (187/350/178 dll sites +
  *    engine consensus)
