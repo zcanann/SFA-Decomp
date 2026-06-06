@@ -29,7 +29,7 @@ void fn_801BEEA0(s16 *obj, u8 *state)
   motion = (u8 *)*(int *)(state + 0x40C);
   heightDelta = *(f32 *)(motion + 0xC) - *(f32 *)((u8 *)obj + 0x10);
 
-  *(s16 *)(motion + 0x14) = (s16)(*(s16 *)(motion + 0x14) + 0x400);
+  *(s16 *)(motion + 0x14) += 0x400;
   heightDelta = heightDelta + (f32)(int)cos16(*(s16 *)(motion + 0x14)) / lbl_803E4D00;
 
   *(f32 *)(motion + 0x0) = timeDelta * (heightDelta / lbl_803E4D04 - *(f32 *)(motion + 0x8))
@@ -39,7 +39,7 @@ void fn_801BEEA0(s16 *obj, u8 *state)
 
   {
     f32 pitch = lbl_803E4D08 * *(f32 *)(motion + 0x0);
-    obj[1] = (s16)(int)pitch;
+    obj[1] = pitch;
   }
 
   turnDelta = (s16)-(u16)obj[2];
@@ -52,7 +52,7 @@ void fn_801BEEA0(s16 *obj, u8 *state)
 
   *(f32 *)(motion + 0x4) = *(f32 *)(motion + 0x4) + (f32)((int)((s16)turnDelta / 16) * (int)framesThisStep);
 
-  obj[2] = (s16)(int)(*(f32 *)(motion + 0x4) + (f32)(int)obj[2]);
+  obj[2] = *(f32 *)(motion + 0x4) + (f32)(int)obj[2];
 
   *(f32 *)(motion + 0x0) = *(f32 *)(motion + 0x0) / lbl_803E4D0C;
   *(f32 *)(motion + 0x4) = *(f32 *)(motion + 0x4) / lbl_803E4D10;
