@@ -61,15 +61,15 @@ void SnowBike_initialise(void) {
 
 #pragma peephole off
 void SB_CloudRunner_onSeqFree(int *obj) {
-    int *p = (int*)obj[0xb8/4];
-    *(f32*)((char*)p + 0x4c) = *(f32*)((char*)obj + 0xc);
-    *(f32*)((char*)p + 0x50) = *(f32*)((char*)obj + 0x10);
-    *(f32*)((char*)p + 0x54) = *(f32*)((char*)obj + 0x14);
+    SnowBikeState *p = (SnowBikeState *)obj[0xb8/4];
+    p->unk04C = *(f32*)((char*)obj + 0xc);
+    p->unk050 = *(f32*)((char*)obj + 0x10);
+    p->unk054 = *(f32*)((char*)obj + 0x14);
     {
         s32 v = *(s16*)obj - 0x4000;
-        *(s16*)((char*)p + 0x2c) = (s16)v;
+        p->unk02C = (s16)v;
     }
-    *(s16*)((char*)p + 0x2e) = *(s16*)((char*)obj + 4);
+    p->unk02E = *(s16*)((char*)obj + 4);
 }
 #pragma peephole reset
 
@@ -135,17 +135,17 @@ void SnowBike_init(int obj, u8 *params, int flag)
         Obj_ClearModelSlotIndex(obj);
     }
     rot = params[0x18] << 8;
-    *(s16 *)(state + 0x40c) = rot;
-    *(s16 *)(state + 0x40e) = rot;
+    ((SnowBikeState *)state)->unk40C = rot;
+    ((SnowBikeState *)state)->unk40E = rot;
     *(s16 *)obj = rot;
     fn_801EC928(obj, state);
     if (flag == 0) {
         if (((SnowBikeFlags *)(state + 0x428))->b20) {
-            *(f32 *)(state + 0x4b8) = lbl_803E5B90;
-            *(f32 *)(state + 0x4c0) = lbl_803E5AEC;
-            *(f32 *)(state + 0x4bc) = lbl_803E5B94;
-            if (*(s8 *)(state + 0x421) == 2) {
-                (**(void (**)(int, int))(*gGameUIInterface + 0x58))((int)*(f32 *)(state + 0x4b8), 1485);
+            ((SnowBikeState *)state)->unk4B8 = lbl_803E5B90;
+            ((SnowBikeState *)state)->unk4C0 = lbl_803E5AEC;
+            ((SnowBikeState *)state)->unk4BC = lbl_803E5B94;
+            if (((SnowBikeState *)state)->unk421 == 2) {
+                (**(void (**)(int, int))(*gGameUIInterface + 0x58))((int)((SnowBikeState *)state)->unk4B8, 1485);
                 (**(void (**)(f32))(*gGameUIInterface + 0x68))(lbl_803E5B98);
             }
         }
@@ -153,14 +153,14 @@ void SnowBike_init(int obj, u8 *params, int flag)
     if (params[0x19] != 0) {
         ((SnowBikeFlags *)(state + 0x428))->b02 = 1;
     }
-    *(int *)(state + 0x38) = -1;
-    *(int *)(state + 0x3c) = -1;
-    *(int *)(state + 0x40) = -1;
-    state[0x5c] = params[0x1c];
-    state[0x5d] = params[0x1d];
-    *(f32 *)(state + 0xc) = *(f32 *)(obj + 0xc);
-    *(f32 *)(state + 0x10) = *(f32 *)(obj + 0x10);
-    *(f32 *)(state + 0x14) = *(f32 *)(obj + 0x14);
+    ((SnowBikeState *)state)->unk038 = -1;
+    ((SnowBikeState *)state)->unk03C = -1;
+    ((SnowBikeState *)state)->unk040 = -1;
+    ((SnowBikeState *)state)->unk05C = params[0x1c];
+    ((SnowBikeState *)state)->unk05D = params[0x1d];
+    ((SnowBikeState *)state)->unk00C = *(f32 *)(obj + 0xc);
+    ((SnowBikeState *)state)->unk010 = *(f32 *)(obj + 0x10);
+    ((SnowBikeState *)state)->unk014 = *(f32 *)(obj + 0x14);
     *(int *)(obj + 0xbc) = (int)fn_801EB420;
     ObjGroup_AddObject(obj, 10);
     if (flag == 0) {
@@ -170,103 +170,103 @@ void SnowBike_init(int obj, u8 *params, int flag)
             path += 8;
         }
     }
-    *(f32 *)(state + 0x51c) = *(f32 *)(obj + 0x18);
-    *(f32 *)(state + 0x520) = *(f32 *)(obj + 0x1c);
-    *(f32 *)(state + 0x524) = *(f32 *)(obj + 0x20);
-    *(f32 *)(state + 0x68) = lbl_803E5AE8;
-    *(s16 *)(state + 0x448) = *(s16 *)(params + 0x1a);
-    *(s16 *)(state + 0x44a) = *(s16 *)(params + 0x1e);
-    if (GameBit_Get(*(s16 *)(state + 0x44a)) != 0) {
+    ((SnowBikeState *)state)->unk51C = *(f32 *)(obj + 0x18);
+    ((SnowBikeState *)state)->unk520 = *(f32 *)(obj + 0x1c);
+    ((SnowBikeState *)state)->unk524 = *(f32 *)(obj + 0x20);
+    ((SnowBikeState *)state)->unk068 = lbl_803E5AE8;
+    ((SnowBikeState *)state)->unk448 = *(s16 *)(params + 0x1a);
+    ((SnowBikeState *)state)->unk44A = *(s16 *)(params + 0x1e);
+    if (GameBit_Get(((SnowBikeState *)state)->unk44A) != 0) {
         ((SnowBikeFlags *)(state + 0x428))->b04 = 1;
     }
-    *(f32 *)(state + 0x438) = lbl_803E5B1C;
+    ((SnowBikeState *)state)->unk438 = lbl_803E5B1C;
     fz = lbl_803E5AE8;
-    *(f32 *)(state + 0x3f4) = fz;
-    *(f32 *)(state + 0x3f8) = fz;
-    *(f32 *)(state + 0x18) = lbl_803E5C48;
-    *(f32 *)(state + 0x1c) = fz;
-    *(f32 *)(state + 0x20) = lbl_803E5BC4;
-    *(f32 *)(state + 0x24) = lbl_803E5C50;
-    *(s8 *)(state + 0x65) = -1;
+    ((SnowBikeState *)state)->unk3F4 = fz;
+    ((SnowBikeState *)state)->unk3F8 = fz;
+    ((SnowBikeState *)state)->unk018 = lbl_803E5C48;
+    ((SnowBikeState *)state)->unk01C = fz;
+    ((SnowBikeState *)state)->unk020 = lbl_803E5BC4;
+    ((SnowBikeState *)state)->unk024 = lbl_803E5C50;
+    ((SnowBikeState *)state)->unk065 = -1;
     fv = lbl_803E5B98;
-    *(f32 *)(state + 0x464) = fv;
-    *(f32 *)(state + 0x468) = fv;
-    *(s16 *)(state + 0x440) = 0x436;
+    ((SnowBikeState *)state)->unk464 = fv;
+    ((SnowBikeState *)state)->unk468 = fv;
+    ((SnowBikeState *)state)->unk440 = 0x436;
     switch (*(s16 *)(obj + 0x46)) {
     case 0x72:
     default:
-        state[0x434] = 1;
-        *(f32 *)(state + 0x46c) = lbl_803E5C50;
-        *(s16 *)(state + 0x440) = 282;
+        ((SnowBikeState *)state)->unk434 = 1;
+        ((SnowBikeState *)state)->unk46C = lbl_803E5C50;
+        ((SnowBikeState *)state)->unk440 = 282;
         break;
     case 0x16c:
-        state[0x434] = 1;
-        state[0x435] = 0;
-        *(f32 *)(state + 0x1c) = lbl_803E5B14;
-        *(f32 *)(state + 0x18) = lbl_803E5C54;
-        *(s8 *)(state + 0x65) = 1;
-        *(f32 *)(state + 0x46c) = lbl_803E5AF0;
+        ((SnowBikeState *)state)->unk434 = 1;
+        ((SnowBikeState *)state)->unk435 = 0;
+        ((SnowBikeState *)state)->unk01C = lbl_803E5B14;
+        ((SnowBikeState *)state)->unk018 = lbl_803E5C54;
+        ((SnowBikeState *)state)->unk065 = 1;
+        ((SnowBikeState *)state)->unk46C = lbl_803E5AF0;
         break;
     case 0x16f:
-        state[0x434] = 1;
-        state[0x58] = 1;
-        state[0x435] = 1;
-        *(s8 *)(state + 0x65) = 2;
-        *(f32 *)(state + 0x46c) = lbl_803E5AF0;
+        ((SnowBikeState *)state)->unk434 = 1;
+        ((SnowBikeState *)state)->unk058 = 1;
+        ((SnowBikeState *)state)->unk435 = 1;
+        ((SnowBikeState *)state)->unk065 = 2;
+        ((SnowBikeState *)state)->unk46C = lbl_803E5AF0;
         break;
     case 0x38c:
-        state[0x434] = 0;
-        *(f32 *)(state + 0x46c) = lbl_803DC0C4;
-        *(s16 *)(state + 0x440) = 282;
+        ((SnowBikeState *)state)->unk434 = 0;
+        ((SnowBikeState *)state)->unk46C = lbl_803DC0C4;
+        ((SnowBikeState *)state)->unk440 = 282;
         break;
     case 0x38d:
-        state[0x434] = 0;
-        state[0x435] = 0;
-        *(f32 *)(state + 0x1c) = lbl_803E5B14;
-        *(f32 *)(state + 0x18) = lbl_803E5C54;
-        *(f32 *)(state + 0x46c) = lbl_803E5C58 * lbl_803DC0C0;
+        ((SnowBikeState *)state)->unk434 = 0;
+        ((SnowBikeState *)state)->unk435 = 0;
+        ((SnowBikeState *)state)->unk01C = lbl_803E5B14;
+        ((SnowBikeState *)state)->unk018 = lbl_803E5C54;
+        ((SnowBikeState *)state)->unk46C = lbl_803E5C58 * lbl_803DC0C0;
         break;
     case 0x38e:
-        state[0x434] = 0;
-        state[0x435] = 1;
-        *(f32 *)(state + 0x1c) = lbl_803E5B48;
-        *(f32 *)(state + 0x18) = lbl_803E5C5C;
-        *(f32 *)(state + 0x46c) = lbl_803E5C60 * lbl_803DC0C0;
+        ((SnowBikeState *)state)->unk434 = 0;
+        ((SnowBikeState *)state)->unk435 = 1;
+        ((SnowBikeState *)state)->unk01C = lbl_803E5B48;
+        ((SnowBikeState *)state)->unk018 = lbl_803E5C5C;
+        ((SnowBikeState *)state)->unk46C = lbl_803E5C60 * lbl_803DC0C0;
         break;
     case 0x4d4:
-        state[0x434] = 0;
-        state[0x435] = 2;
-        *(f32 *)(state + 0x1c) = lbl_803E5B48;
-        *(f32 *)(state + 0x18) = lbl_803E5C5C;
-        *(f32 *)(state + 0x46c) = lbl_803DC0C0;
+        ((SnowBikeState *)state)->unk434 = 0;
+        ((SnowBikeState *)state)->unk435 = 2;
+        ((SnowBikeState *)state)->unk01C = lbl_803E5B48;
+        ((SnowBikeState *)state)->unk018 = lbl_803E5C5C;
+        ((SnowBikeState *)state)->unk46C = lbl_803DC0C0;
         break;
     }
-    fv = *(f32 *)(state + 0x464);
-    *(f32 *)(state + 0x47c) = fv;
-    *(f32 *)(state + 0x470) = fv;
-    fv = *(f32 *)(state + 0x468);
-    *(f32 *)(state + 0x480) = fv;
-    *(f32 *)(state + 0x474) = fv;
-    fv = *(f32 *)(state + 0x46c);
-    *(f32 *)(state + 0x484) = fv;
-    *(f32 *)(state + 0x478) = fv;
-    *(char **)(state + 0x60) = base + state[0x434] * 6 + 0xa4;
-    if (state[0x434] == 0) {
+    fv = ((SnowBikeState *)state)->unk464;
+    ((SnowBikeState *)state)->unk47C = fv;
+    ((SnowBikeState *)state)->unk470 = fv;
+    fv = ((SnowBikeState *)state)->unk468;
+    ((SnowBikeState *)state)->unk480 = fv;
+    ((SnowBikeState *)state)->unk474 = fv;
+    fv = ((SnowBikeState *)state)->unk46C;
+    ((SnowBikeState *)state)->unk484 = fv;
+    ((SnowBikeState *)state)->unk478 = fv;
+    ((SnowBikeState *)state)->unk060 = base + ((SnowBikeState *)state)->unk434 * 6 + 0xa4;
+    if (((SnowBikeState *)state)->unk434 == 0) {
         if (!((SnowBikeFlags *)(state + 0x428))->b02) {
             ((SnowBikeFlags *)(state + 0x428))->b20 = 1;
-            *(f32 *)(state + 0x4c4) = lbl_803E5AE8;
+            ((SnowBikeState *)state)->unk4C4 = lbl_803E5AE8;
         }
-        *(f32 *)(state + 0x538) = lbl_803E5C64;
+        ((SnowBikeState *)state)->unk538 = lbl_803E5C64;
     } else {
-        *(f32 *)(state + 0x538) = lbl_803E5B74;
+        ((SnowBikeState *)state)->unk538 = lbl_803E5B74;
     }
     path = state + 0x178;
     path[0x25b] = 1;
     (**(void (**)(u8 *, int, int, int))(*gPathControlInterface + 0x4))(path, 0, 0x48607, 1);
     (**(void (**)(u8 *, int, char *, char *, u32 *))(*gPathControlInterface + 0xc))(path, 4, base, base + 0x30, &pathParam);
-    if (((SnowBikeFlags *)(state + 0x428))->b02 && *(s8 *)(state + 0x65) != -1) {
+    if (((SnowBikeFlags *)(state + 0x428))->b02 && ((SnowBikeState *)state)->unk065 != -1) {
         curves_setLocalPointCollisionEx((CurvesCollisionState *)path, 1, (f32 *)(base + 0x40),
-                                        &lbl_803DC0B8, 8, *(s8 *)(state + 0x65));
+                                        &lbl_803DC0B8, 8, ((SnowBikeState *)state)->unk065);
     } else {
         (**(void (**)(u8 *, int, char *, f32 *, int))(*gPathControlInterface + 0x8))(path, 1, base + 0x40, &lbl_803DC0B8, 8);
     }
@@ -328,28 +328,28 @@ void SnowBike_update(int obj)
 
     if (*(s8 *)(obj + 0xac) == -1) {
         if (GameBit_Get(0x1fa) != 0) {
-            state[0x420] = 0;
+            ((SnowBikeState *)state)->unk420 = 0;
         }
         if (GameBit_Get(0x1fb) != 0) {
             Obj_SetModelSlotIndex(obj, 0x13);
         }
     }
     *(u8 *)(obj + 0xaf) |= 8;
-    *(s16 *)(obj + 2) = *(s16 *)(state + 0x41c);
-    *(s16 *)(obj + 4) = *(s16 *)(state + 0x41e);
-    if (((SnowBikeFlags *)(state + 0x428))->b04 || GameBit_Get(*(s16 *)(state + 0x44a)) != 0) {
+    *(s16 *)(obj + 2) = ((SnowBikeState *)state)->unk41C;
+    *(s16 *)(obj + 4) = ((SnowBikeState *)state)->unk41E;
+    if (((SnowBikeFlags *)(state + 0x428))->b04 || GameBit_Get(((SnowBikeState *)state)->unk44A) != 0) {
         ((SnowBikeFlags *)(state + 0x428))->b04 = 1;
         return;
     }
-    mode = *(s8 *)(state + 0x421);
+    mode = ((SnowBikeState *)state)->unk421;
     if (mode != 1) {
         if (mode < 1) {
             if (mode >= 0) {
                 *(u8 *)(obj + 0xaf) &= ~8;
                 if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
-                    state[0x420] = 1;
+                    ((SnowBikeState *)state)->unk420 = 1;
                 } else {
-                    state[0x420] = 0;
+                    ((SnowBikeState *)state)->unk420 = 0;
                 }
                 Sfx_StopObjectChannel(obj, 0x57);
             }
@@ -359,55 +359,55 @@ void SnowBike_update(int obj)
                 if (drshackle_updateAttachedPosition(obj, state) != 0) {
                     fn_801EBD60(obj, state);
                     fn_801EC7A0(obj, state);
-                    if (*(f32 *)(state + 0x3e4) != lbl_803E5AE8) {
-                        PSVECScale((f32 *)(state + 0x464), (f32 *)(state + 0x47c), *(f32 *)(state + 0x3e0));
-                        PSVECScale((f32 *)(state + 0x494), (f32 *)(state + 0x494), *(f32 *)(state + 0x3e0));
-                        *(f32 *)(state + 0x3e4) -= timeDelta;
-                        if (*(f32 *)(state + 0x3e4) <= lbl_803E5AE8) {
+                    if (((SnowBikeState *)state)->unk3E4 != lbl_803E5AE8) {
+                        PSVECScale((f32 *)(state + 0x464), (f32 *)(state + 0x47c), ((SnowBikeState *)state)->unk3E0);
+                        PSVECScale((f32 *)(state + 0x494), (f32 *)(state + 0x494), ((SnowBikeState *)state)->unk3E0);
+                        ((SnowBikeState *)state)->unk3E4 -= timeDelta;
+                        if (((SnowBikeState *)state)->unk3E4 <= lbl_803E5AE8) {
                             if (Rcp_GetMotionBlurEnabled() != 0) {
                                 setMotionBlur(0, lbl_803E5AE8);
                             }
-                            *(f32 *)(state + 0x3e4) = lbl_803E5AE8;
+                            ((SnowBikeState *)state)->unk3E4 = lbl_803E5AE8;
                         }
                     } else {
                         *(f32 *)(state + 0x47c) = *(f32 *)(state + 0x464);
-                        *(f32 *)(state + 0x480) = *(f32 *)(state + 0x468);
-                        *(f32 *)(state + 0x484) = *(f32 *)(state + 0x46c);
+                        ((SnowBikeState *)state)->unk480 = ((SnowBikeState *)state)->unk468;
+                        ((SnowBikeState *)state)->unk484 = ((SnowBikeState *)state)->unk46C;
                     }
                     fz = lbl_803E5AE8;
                     rq1.quad[1] = fz;
                     rq1.quad[2] = fz;
                     rq1.quad[3] = fz;
                     rq1.quad[0] = lbl_803E5AEC;
-                    rq1.rot[0] = -*(s16 *)(state + 0x40e);
+                    rq1.rot[0] = -((SnowBikeState *)state)->unk40E;
                     rq1.rot[1] = -*(s16 *)(obj + 2);
                     rq1.rot[2] = -*(s16 *)(obj + 4);
                     mtxRotateByVec3s(mtx1, rq1.rot);
-                    Matrix_TransformPoint(mtx1, lbl_803E5AE8, *(f32 *)(state + 0x4b0) * *(f32 *)(state + 0x544), lbl_803E5AE8, &vec1[0], &dummy1, &vec1[2]);
-                    vec1[0] = vec1[0] * *(f32 *)(state + 0x540);
+                    Matrix_TransformPoint(mtx1, lbl_803E5AE8, ((SnowBikeState *)state)->unk4B0 * ((SnowBikeState *)state)->unk544, lbl_803E5AE8, &vec1[0], &dummy1, &vec1[2]);
+                    vec1[0] = vec1[0] * ((SnowBikeState *)state)->unk540;
                     vec1[1] = lbl_803E5AE8;
                     PSVECScale(vec1, vec1, timeDelta);
                     PSVECAdd((f32 *)(state + 0x494), vec1, (f32 *)(state + 0x494));
-                    *(f32 *)(state + 0x498) = *(f32 *)(state + 0x4b0) * timeDelta + *(f32 *)(state + 0x498);
-                    p = powfBitEstimate(*(f32 *)(state + 0x548), timeDelta);
+                    ((SnowBikeState *)state)->unk498 = ((SnowBikeState *)state)->unk4B0 * timeDelta + ((SnowBikeState *)state)->unk498;
+                    p = powfBitEstimate(((SnowBikeState *)state)->unk548, timeDelta);
                     *(f32 *)(state + 0x494) *= p;
-                    p = powfBitEstimate(*(f32 *)(state + 0x54c), timeDelta);
-                    *(f32 *)(state + 0x49c) *= p;
+                    p = powfBitEstimate(((SnowBikeState *)state)->unk54C, timeDelta);
+                    ((SnowBikeState *)state)->unk49C *= p;
                     fn_801EC1AC(obj, (int)state);
-                    Matrix_TransformPoint((f32 *)(state + 0xec), *(f32 *)(state + 0x494), *(f32 *)(state + 0x498), *(f32 *)(state + 0x49c), (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
+                    Matrix_TransformPoint((f32 *)(state + 0xec), *(f32 *)(state + 0x494), ((SnowBikeState *)state)->unk498, ((SnowBikeState *)state)->unk49C, (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
                     objApplyVelocity(obj);
                 }
             } else {
                 setAButtonIcon(0x10);
                 setBButtonIcon(0x11);
-                *(f32 *)(state + 0x45c) = (f32)padGetStickX(0);
-                *(s8 *)(state + 0x460) = (f32)padGetStickY(0);
-                *(u32 *)(state + 0x458) = getButtonsHeld(0);
-                *(u32 *)(state + 0x450) = getButtonsJustPressed(0);
-                *(u32 *)(state + 0x454) = getButtonsJustPressedIfNotBusy(0);
-                *(s16 *)(state + 0x44c) = (f32)(u16)getAngle(*(f32 *)(state + 0x45c), (f32)-(int)*(s8 *)(state + 0x460)) / lbl_803E5C18;
-                *(f32 *)(state + 0x45c) = *(f32 *)(state + 0x45c) / lbl_803E5B6C;
-                v = *(f32 *)(state + 0x45c);
+                ((SnowBikeState *)state)->unk45C = (f32)padGetStickX(0);
+                ((SnowBikeState *)state)->unk460 = (f32)padGetStickY(0);
+                ((SnowBikeState *)state)->unk458 = getButtonsHeld(0);
+                ((SnowBikeState *)state)->unk450 = getButtonsJustPressed(0);
+                ((SnowBikeState *)state)->unk454 = getButtonsJustPressedIfNotBusy(0);
+                ((SnowBikeState *)state)->unk44C = (f32)(u16)getAngle(((SnowBikeState *)state)->unk45C, (f32)-(int)((SnowBikeState *)state)->unk460) / lbl_803E5C18;
+                ((SnowBikeState *)state)->unk45C = ((SnowBikeState *)state)->unk45C / lbl_803E5B6C;
+                v = ((SnowBikeState *)state)->unk45C;
                 if (v < lbl_803E5B70) {
                     c = lbl_803E5B70;
                 } else if (v > lbl_803E5AEC) {
@@ -415,51 +415,51 @@ void SnowBike_update(int obj)
                 } else {
                     c = v;
                 }
-                *(f32 *)(state + 0x45c) = c;
+                ((SnowBikeState *)state)->unk45C = c;
                 fn_801EBD60(obj, state);
                 fn_801EC7A0(obj, state);
-                if (*(f32 *)(state + 0x3e4) != lbl_803E5AE8) {
-                    PSVECScale((f32 *)(state + 0x464), (f32 *)(state + 0x47c), *(f32 *)(state + 0x3e0));
-                    PSVECScale((f32 *)(state + 0x494), (f32 *)(state + 0x494), *(f32 *)(state + 0x3e0));
-                    *(f32 *)(state + 0x3e4) -= timeDelta;
-                    if (*(f32 *)(state + 0x3e4) <= lbl_803E5AE8) {
+                if (((SnowBikeState *)state)->unk3E4 != lbl_803E5AE8) {
+                    PSVECScale((f32 *)(state + 0x464), (f32 *)(state + 0x47c), ((SnowBikeState *)state)->unk3E0);
+                    PSVECScale((f32 *)(state + 0x494), (f32 *)(state + 0x494), ((SnowBikeState *)state)->unk3E0);
+                    ((SnowBikeState *)state)->unk3E4 -= timeDelta;
+                    if (((SnowBikeState *)state)->unk3E4 <= lbl_803E5AE8) {
                         if (Rcp_GetMotionBlurEnabled() != 0) {
                             setMotionBlur(0, lbl_803E5AE8);
                         }
-                        *(f32 *)(state + 0x3e4) = lbl_803E5AE8;
+                        ((SnowBikeState *)state)->unk3E4 = lbl_803E5AE8;
                     }
                 } else {
                     *(f32 *)(state + 0x47c) = *(f32 *)(state + 0x464);
-                    *(f32 *)(state + 0x480) = *(f32 *)(state + 0x468);
-                    *(f32 *)(state + 0x484) = *(f32 *)(state + 0x46c);
+                    ((SnowBikeState *)state)->unk480 = ((SnowBikeState *)state)->unk468;
+                    ((SnowBikeState *)state)->unk484 = ((SnowBikeState *)state)->unk46C;
                 }
                 fz = lbl_803E5AE8;
                 rq2.quad[1] = fz;
                 rq2.quad[2] = fz;
                 rq2.quad[3] = fz;
                 rq2.quad[0] = lbl_803E5AEC;
-                rq2.rot[0] = -*(s16 *)(state + 0x40e);
+                rq2.rot[0] = -((SnowBikeState *)state)->unk40E;
                 rq2.rot[1] = -*(s16 *)(obj + 2);
                 rq2.rot[2] = -*(s16 *)(obj + 4);
                 mtxRotateByVec3s(mtx2, rq2.rot);
-                Matrix_TransformPoint(mtx2, lbl_803E5AE8, *(f32 *)(state + 0x4b0) * *(f32 *)(state + 0x544), lbl_803E5AE8, &vec2[0], &dummy2, &vec2[2]);
-                vec2[0] = vec2[0] * *(f32 *)(state + 0x540);
+                Matrix_TransformPoint(mtx2, lbl_803E5AE8, ((SnowBikeState *)state)->unk4B0 * ((SnowBikeState *)state)->unk544, lbl_803E5AE8, &vec2[0], &dummy2, &vec2[2]);
+                vec2[0] = vec2[0] * ((SnowBikeState *)state)->unk540;
                 vec2[1] = lbl_803E5AE8;
                 PSVECScale(vec2, vec2, timeDelta);
                 PSVECAdd((f32 *)(state + 0x494), vec2, (f32 *)(state + 0x494));
-                *(f32 *)(state + 0x498) = *(f32 *)(state + 0x4b0) * timeDelta + *(f32 *)(state + 0x498);
-                p = powfBitEstimate(*(f32 *)(state + 0x548), timeDelta);
+                ((SnowBikeState *)state)->unk498 = ((SnowBikeState *)state)->unk4B0 * timeDelta + ((SnowBikeState *)state)->unk498;
+                p = powfBitEstimate(((SnowBikeState *)state)->unk548, timeDelta);
                 *(f32 *)(state + 0x494) *= p;
-                p = powfBitEstimate(*(f32 *)(state + 0x54c), timeDelta);
-                *(f32 *)(state + 0x49c) *= p;
+                p = powfBitEstimate(((SnowBikeState *)state)->unk54C, timeDelta);
+                ((SnowBikeState *)state)->unk49C *= p;
                 fn_801EC1AC(obj, (int)state);
-                Matrix_TransformPoint((f32 *)(state + 0xec), *(f32 *)(state + 0x494), *(f32 *)(state + 0x498), *(f32 *)(state + 0x49c), (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
+                Matrix_TransformPoint((f32 *)(state + 0xec), *(f32 *)(state + 0x494), ((SnowBikeState *)state)->unk498, ((SnowBikeState *)state)->unk49C, (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
                 objApplyVelocity(obj);
             }
             fn_801EB0D4(obj, state);
-            fn_801EA240(obj, state, *(f32 *)(state + 0x49c), (int)(lbl_803E5BA0 * -*(f32 *)(state + 0x430)), state + 0x461, 7);
+            fn_801EA240(obj, state, ((SnowBikeState *)state)->unk49C, (int)(lbl_803E5BA0 * -((SnowBikeState *)state)->unk430), state + 0x461, 7);
             fn_801EB634(obj, state);
-            *(s16 *)obj = *(s16 *)(state + 0x40e);
+            *(s16 *)obj = ((SnowBikeState *)state)->unk40E;
         }
     }
 }
