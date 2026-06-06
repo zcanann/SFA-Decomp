@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "dolphin/os/OSFastCast.h"
 
 extern undefined8 camcontrol_playTargetTypeSfx();
 extern undefined8 runLoadingScreens();
@@ -1128,23 +1129,7 @@ void init(void) {
     VIInit();
     PADInit();
     LCEnable();
-    {
-        register u32 v;
-        asm {
-            li v, 0x4
-            oris v, v, 0x4
-            mtspr 914, v
-            li v, 0x5
-            oris v, v, 0x5
-            mtspr 915, v
-            li v, 0x6
-            oris v, v, 0x6
-            mtspr 916, v
-            li v, 0x7
-            oris v, v, 0x7
-            mtspr 917, v
-        }
-    }
+    OSInitFastCast();
     lbl_803DCCF0 = GXNtsc480IntDf;
     lbl_803DCAE4 = OSGetProgressiveMode();
     if (OSGetResetCode() != 0 && lbl_803DCAE4 == 1) {

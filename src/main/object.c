@@ -227,14 +227,15 @@ void ObjModel_EnableDefaultRenderCallback(void *obj, u8 *model, f32 *mtx, int en
 void ObjModel_SetRenderCallback(u8 *model, void *callback);
 
 void Obj_SetModelRenderOpAlpha(u8 *obj, int alpha) {
+    ObjAnimComponent *objAnim;
     int renderOpAlpha;
     int renderOpIndex;
     ObjModelFileHeaderLite *modelFile;
     ObjModelInstanceLite *model;
 
+    objAnim = (ObjAnimComponent *)obj;
     renderOpAlpha = alpha;
-    model = *(ObjModelInstanceLite **)(*(u8 **)(obj + 0x7c) +
-                                       (s8)obj[offsetof(ObjAnimComponent, bankIndex)] * 4);
+    model = (ObjModelInstanceLite *)objAnim->banks[objAnim->bankIndex];
     if (model != NULL) {
         modelFile = model->file;
         if (modelFile != NULL) {
@@ -255,8 +256,10 @@ void Obj_ClearModelSlotIndex(u8 *obj) {
 }
 
 void *Obj_GetActiveModel(u8 *obj) {
-    return *(void **)(*(u8 **)(obj + 0x7c) +
-                      (s8)obj[offsetof(ObjAnimComponent, bankIndex)] * 4);
+    ObjAnimComponent *objAnim;
+
+    objAnim = (ObjAnimComponent *)obj;
+    return objAnim->banks[objAnim->bankIndex];
 }
 
 extern int *lbl_803DCAB4;
@@ -651,19 +654,21 @@ void *loadAssetFileById(int id, int arg);
 #pragma dont_inline reset
 
 void Obj_SetActiveModelIndex(u8 *obj, int idx) {
-    if (idx == (s8)obj[offsetof(ObjAnimComponent, bankIndex)]) {
+    ObjAnimComponent *objAnim;
+
+    objAnim = (ObjAnimComponent *)obj;
+    if (idx == objAnim->bankIndex) {
         return;
     }
     if (idx < 0) {
         idx = 0;
     } else {
-        int max = *(s8 *)(*(u8 **)(obj + offsetof(ObjAnimComponent, modelInstance)) +
-                          offsetof(ObjModelInstance, modelCount));
+        int max = objAnim->modelInstance->modelCount;
         if (idx >= max) {
             idx = max - 1;
         }
     }
-    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = idx;
+    objAnim->bankIndex = idx;
 }
 #pragma pop
 

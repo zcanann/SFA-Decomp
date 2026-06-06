@@ -1,6 +1,8 @@
 #ifndef _DOLPHIN_OSFASTCAST
 #define _DOLPHIN_OSFASTCAST
 
+#include <dolphin/PPCArch.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
