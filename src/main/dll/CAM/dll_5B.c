@@ -253,7 +253,7 @@ int firstPersonEnter(u8 *cam, s16 *p2)
     flag = 1;
   }
   conv = (int)(lbl_803E1814 * ((CameraObject *)cam)->unkF4);
-  state = *(u8 **)(cam + 164);
+  state = ((GameObject *)cam)->anim.targetObj;
   if (conv < 1) {
     conv = 1;
   }
@@ -960,7 +960,7 @@ void CameraModeStatic_init(u8 *cam, int p2, int *p3)
   f32 dy;
   f32 dz;
 
-  state = *(u8 **)(cam + 164);
+  state = ((GameObject *)cam)->anim.targetObj;
   if (lbl_803DD558 == NULL) {
     lbl_803DD558 = (undefined4 *)mmAlloc(248, 15, 0);
   }
