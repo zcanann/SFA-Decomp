@@ -1455,7 +1455,7 @@ int ktrex_stateHandlerA01(int obj, int runtime) {
         Music_Trigger(40, 0);
         Music_Trigger(147, 0);
         Music_Trigger(148, 0);
-        *(u8 *)((char *)obj + 0xad) = 1;
+        ((ObjAnimComponent *)obj)->bankIndex = 1;
         GameBit_Set(1380, 1);
         GameBit_Set(874, 0);
         ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(13, 0, 1);
