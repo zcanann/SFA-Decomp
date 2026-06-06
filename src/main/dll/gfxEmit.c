@@ -744,12 +744,12 @@ void collectible_update(int obj)
     f32 zero;
 
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-    timer = ((GfxEmitState *)state)->unk8;
+    timer = ((GfxEmitState *)state)->delayTimer;
     zero = lbl_803E345C;
     if (timer != zero) {
-        ((GfxEmitState *)state)->unk8 = timer - timeDelta;
-        if (((GfxEmitState *)state)->unk8 <= zero) {
-            ((GfxEmitState *)state)->unk8 = zero;
+        ((GfxEmitState *)state)->delayTimer = timer - timeDelta;
+        if (((GfxEmitState *)state)->delayTimer <= zero) {
+            ((GfxEmitState *)state)->delayTimer = zero;
             ObjHits_DisableObject(obj);
             if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
                 Obj_FreeObject(obj);
@@ -757,8 +757,8 @@ void collectible_update(int obj)
         }
         return;
     }
-    if (((GfxEmitState *)state)->unk14 != -1) {
-        state[0x1e] = (u8)(GameBit_Get((s32)((GfxEmitState *)state)->unk14) == 0);
+    if (((GfxEmitState *)state)->enableGameBit != -1) {
+        state[0x1e] = (u8)(GameBit_Get((s32)((GfxEmitState *)state)->enableGameBit) == 0);
     }
     if (state[0x1e] != 0 || state[0xf] != 0) {
         return;
@@ -768,19 +768,19 @@ void collectible_update(int obj)
         objfx_spawnDirectionalBurst(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
         break;
     }
-    timer = ((GfxEmitState *)state)->unk44;
+    timer = ((GfxEmitState *)state)->intervalTimer;
     zero = lbl_803E345C;
     if (timer != zero) {
-        ((GfxEmitState *)state)->unk44 = timer - timeDelta;
-        if (((GfxEmitState *)state)->unk44 <= zero) {
+        ((GfxEmitState *)state)->intervalTimer = timer - timeDelta;
+        if (((GfxEmitState *)state)->intervalTimer <= zero) {
             if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
-                ((GfxEmitState *)state)->unk8 = lbl_803E3450;
+                ((GfxEmitState *)state)->delayTimer = lbl_803E3450;
                 if (*(void **)(obj + 0x64) != NULL) {
                     *(int *)(*(int *)(obj + 0x64) + 0x30) = 0x1000;
                 }
                 itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
             }
-            ((GfxEmitState *)state)->unk44 = lbl_803E345C;
+            ((GfxEmitState *)state)->intervalTimer = lbl_803E345C;
             return;
         }
     }
@@ -793,11 +793,11 @@ void collectible_update(int obj)
     }
     switch (((GameObject *)obj)->anim.seqId) {
     case 0x319:
-        t = ((GfxEmitState *)state)->unk3C;
+        t = ((GfxEmitState *)state)->hideFrames;
         if (t != 0) {
-            ((GfxEmitState *)state)->unk3C -= framesThisStep;
-            if (((GfxEmitState *)state)->unk3C <= 0) {
-                ((GfxEmitState *)state)->unk3C = 0;
+            ((GfxEmitState *)state)->hideFrames -= framesThisStep;
+            if (((GfxEmitState *)state)->hideFrames <= 0) {
+                ((GfxEmitState *)state)->hideFrames = 0;
                 state[0x37] &= ~1;
                 *(u8 *)(obj + 0x36) = 255;
                 ((GameObject *)obj)->unkF4 = 0;
@@ -810,7 +810,7 @@ void collectible_update(int obj)
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 0x100;
         }
         ObjHits_DisableObject(obj);
-        if (((GfxEmitState *)state)->unk10 != -1 && GameBit_Get((s32)((GfxEmitState *)state)->unk10) == 0) {
+        if (((GfxEmitState *)state)->hideGameBit != -1 && GameBit_Get((s32)((GfxEmitState *)state)->hideGameBit) == 0) {
             ((GameObject *)obj)->unkF4 = 0;
         }
     } else {
@@ -838,10 +838,10 @@ void collectible_update(int obj)
 void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
-    if (visible != 0 && ((GfxEmitState *)state)->unk8 == lbl_803E345C && ((GameObject *)obj)->unkF4 == 0
-        && (((GameObject *)obj)->anim.seqId == 0x156 || ((GfxEmitState *)state)->unk1E == 0)) {
-        if ((((ObjAnimComponent *)obj)->modelInstance->flags & 0x10000) != 0 && ((GfxEmitState *)state)->unk36 != 0) {
-            fn_8003B608(((GfxEmitState *)state)->unk38, ((GfxEmitState *)state)->unk39, ((GfxEmitState *)state)->unk3A);
+    if (visible != 0 && ((GfxEmitState *)state)->delayTimer == lbl_803E345C && ((GameObject *)obj)->unkF4 == 0
+        && (((GameObject *)obj)->anim.seqId == 0x156 || ((GfxEmitState *)state)->enableGameBitClear == 0)) {
+        if ((((ObjAnimComponent *)obj)->modelInstance->flags & 0x10000) != 0 && ((GfxEmitState *)state)->useColor != 0) {
+            fn_8003B608(((GfxEmitState *)state)->colorR, ((GfxEmitState *)state)->colorG, ((GfxEmitState *)state)->colorB);
         }
         objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3454);
         if (((GameObject *)obj)->anim.seqId == 0xa8) {
@@ -864,16 +864,16 @@ void fn_801723DC(int obj)
     switch (((GameObject *)obj)->anim.seqId) {
     case 0xb:
         fs = framesThisStep;
-        t = ((GfxEmitState *)state)->unk34;
+        t = ((GfxEmitState *)state)->spinTimer;
         nv = t - fs;
         *(u16 *)(state + 0x34) = nv;
         if ((s16)nv <= 0) {
-            ((GfxEmitState *)state)->unk30 = (f32)(int)randomGetRange(600, 800);
-            ((GfxEmitState *)state)->unk34 = (s16)randomGetRange(180, 240);
+            ((GfxEmitState *)state)->spinSpeed = (f32)(int)randomGetRange(600, 800);
+            ((GfxEmitState *)state)->spinTimer = (s16)randomGetRange(180, 240);
             Sfx_PlayFromObject(obj, SFXwp_whiz3_c);
         }
-        ((GameObject *)obj)->anim.rotY = ((GfxEmitState *)state)->unk30;
-        ((GfxEmitState *)state)->unk30 *= lbl_803E3478;
+        ((GameObject *)obj)->anim.rotY = ((GfxEmitState *)state)->spinSpeed;
+        ((GfxEmitState *)state)->spinSpeed *= lbl_803E3478;
         if (((GameObject *)obj)->anim.rotY < 10 && ((GameObject *)obj)->anim.rotY > -10) {
             ((GameObject *)obj)->anim.rotY = 0;
         }
