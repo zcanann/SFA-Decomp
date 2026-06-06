@@ -14,7 +14,7 @@ typedef struct EnemyState {
     u8 unk0[0x4 - 0x0];
     u32 unk4;
     u8 unk8[0x29C - 0x8];
-    u8 *playerObj;
+    u8 *trackedObj;
     u8 unk2A0[0x2A8 - 0x2A0];
     f32 unk2A8;
     f32 unk2AC;
@@ -24,7 +24,7 @@ typedef struct EnemyState {
     s16 unk2B6;
     u8 unk2B8[0x2D8 - 0x2B8];
     f32 unk2D8;
-    u32 flags2DC;
+    u32 controlFlags;
     int initialFlags;
     u32 flags2E4;
     int unk2E8;
