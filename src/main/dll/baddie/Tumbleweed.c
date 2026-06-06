@@ -2,6 +2,7 @@
 #include "main/objanim.h"
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/dll/FRONT/dll_39.h"
+#include "main/mapEventTypes.h"
 #include "stdarg.h"
 
 extern undefined4 FUN_80003494();
@@ -4916,7 +4917,8 @@ int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
         v1 == 0 &&
         v2 != 0) {
       if (*(s16 *)(*objs + 0x46) != 2129) {
-        if ((**(int (**)(int))((char *)(*gMapEventInterface) + 0x68))(*(int *)((char *)data + 0x14)) != 0) {
+        if (((MapEventInterface *)*gMapEventInterface)->isTimedEventActive(
+                *(int *)((char *)data + 0x14)) != 0) {
           if (p2 == 0) {
             s16 m = *(s16 *)(*objs + 0x46);
             if (m == 1022 || m == 1239 || m == 636 || m == 593) goto next;
@@ -5711,8 +5713,7 @@ void WarpstoneUI_showUI(int param_1)
         sel = (**(int (**)(void))((char *)(*gTitleMenuLinkInterface) + 0xc))();
         idx = (**(int (**)(void))((char *)(*gTitleMenuLinkInterface) + 0x14))();
         if (sel > 0) {
-            (**(void (**)(int, u8))((char *)(*gMapEventInterface) + 0x44))
-                (0x42, lbl_8031CC38[lbl_803A9F38[idx]].b2);
+            ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, lbl_8031CC38[lbl_803A9F38[idx]].b2);
         }
         (**(void (**)(int))((char *)(*gTitleMenuLinkInterface) + 0x10))(param_1);
         break;

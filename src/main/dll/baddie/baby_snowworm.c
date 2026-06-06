@@ -3757,7 +3757,8 @@ void pauseMenuFn_80129ee0(void)
                 case 0xa:
                     Music_Trigger(0x23, 0);
                     if ((*(int (**)(void))(*(int *)gMapEventInterface + 0x30))() != 0) {
-                        (*(void (**)(void))(*(int *)gMapEventInterface + 0x28))();
+                        ((MapEventInterface *)*(int *)gMapEventInterface)
+                            ->finishCurrentEvent((MapEventInterface *)*(int *)gMapEventInterface);
                     } else {
                         (*(void (**)(void))(*(int *)gMapEventInterface + 0x20))();
                     }

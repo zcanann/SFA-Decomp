@@ -1,4 +1,5 @@
 #include "main/dll/DIM/dll_802B9780_shared.h"
+#include "main/mapEventTypes.h"
 
 void DIMSnowHorn1_func23(void) {}
 
@@ -1154,7 +1155,8 @@ void fn_802BB4B4(int obj, int a, int slot)
         }
         if (*(s16 *)(state + 0xa88) < 0) {
             *(s16 *)(state + 0xa88) = 0;
-            (*(void (**)(void))(*(int *)gMapEventInterface + 0x28))();
+            ((MapEventInterface *)*(int *)gMapEventInterface)
+                ->finishCurrentEvent((MapEventInterface *)*(int *)gMapEventInterface);
         }
         *(f32 *)(state + 0x290) = (f32)(s8)padGetStickX(0);
         *(f32 *)(state + 0x28c) = (f32)(s8)padGetStickY(0);

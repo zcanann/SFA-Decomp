@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/hightop.h"
+#include "main/mapEventTypes.h"
 
 extern undefined4 getLActions();
 extern undefined8 FUN_80006728();
@@ -1774,7 +1775,8 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (((u32)p[2] << 8) >> 13)));
                     break;
                 case 0x13:
-                    (*(code *)(*gMapEventInterface + 0x50))((int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]), 1);
+                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(
+                        (int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]), 1);
                     break;
                 case 0x27:
                     id = (u16)((p[2] << 8) | p[3]);
@@ -1805,12 +1807,13 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x14:
-                    (*(code *)(*gMapEventInterface + 0x50))((int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]), 0);
+                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(
+                        (int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]), 0);
                     break;
                 case 0x22:
                     id = (u16)((p[2] << 8) | p[3]);
-                    c = (*(code *)(*gMapEventInterface + 0x4c))((int)*(s8 *)(obj + 0xac), id);
-                    (*(code *)(*gMapEventInterface + 0x50))((int)*(s8 *)(obj + 0xac), id, c ^ 1);
+                    c = ((MapEventInterface *)*gMapEventInterface)->getAnimEvent((int)*(s8 *)(obj + 0xac), id);
+                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((int)*(s8 *)(obj + 0xac), id, c ^ 1);
                     break;
                 case 0x15:
                     tbl = (int *)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
@@ -1833,16 +1836,17 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x18:
-                    (*(code *)(*gMapEventInterface + 0x44))((int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]));
+                    ((MapEventInterface *)*gMapEventInterface)->setMode(
+                        (int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]));
                     break;
                 case 0x1a:
-                    (*(code *)(*gMapEventInterface + 0x50))(p[3], p[2], 1);
+                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(p[3], p[2], 1);
                     break;
                 case 0x1b:
-                    (*(code *)(*gMapEventInterface + 0x50))(p[3], p[2], 0);
+                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(p[3], p[2], 0);
                     break;
                 case 0x1e:
-                    (*(code *)(*gMapEventInterface + 0x44))(p[3], p[2]);
+                    ((MapEventInterface *)*gMapEventInterface)->setMode(p[3], p[2]);
                     break;
                 case 0x11:
                     GameBit_Set(0x4e3, (p[2] << 8) | p[3]);
@@ -1861,9 +1865,11 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         ang = -ang;
                     }
                     if (ang > 0x4000) {
-                        (*(code *)(*gMapEventInterface + 0x1c))(obj + 0xc, (int)(s16)(*(s16 *)obj + 0x8000), p[3], getCurMapLayer());
+                        ((MapEventInterface *)*gMapEventInterface)
+                            ->triggerEvent(obj + 0xc, (int)(s16)(*(s16 *)obj + 0x8000), p[3], getCurMapLayer());
                     } else {
-                        (*(code *)(*gMapEventInterface + 0x1c))(obj + 0xc, (int)*(s16 *)obj, p[3], getCurMapLayer());
+                        ((MapEventInterface *)*gMapEventInterface)
+                            ->triggerEvent(obj + 0xc, (int)*(s16 *)obj, p[3], getCurMapLayer());
                     }
                     break;
                 case 0x20:
@@ -1882,7 +1888,8 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         (*(code *)(*gMapEventInterface + 0x2c))();
                         break;
                     case 2:
-                        (*(code *)(*gMapEventInterface + 0x28))();
+                        ((MapEventInterface *)*gMapEventInterface)
+                            ->finishCurrentEvent((MapEventInterface *)*gMapEventInterface);
                         break;
                     case 3:
                         (*(code *)(*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16 *)obj, getCurMapLayer(), 1);
