@@ -965,11 +965,9 @@ int sh_staff_SeqFn(int obj, int unused, u8 *buf)
     int state = *(int *)(obj + 0xb8);
     int *p;
     int i;
-    int pendingOffset;
 
     for (i = 0, p = (int *)state; i < 10; i++) {
-        pendingOffset = i + 0x60;
-        if (((u8 *)state)[pendingOffset] != 0) {
+        if (*(u8 *)(state + i + 0x60) != 0) {
             int loadResult;
             if ((u8)Obj_IsLoadingLocked() == 0) {
                 loadResult = 0;
@@ -980,7 +978,7 @@ int sh_staff_SeqFn(int obj, int unused, u8 *buf)
                 loadResult = loadObjectAtObject(obj, newSetup);
             }
             *(int *)((char *)p + 0x38) = loadResult;
-            ((u8 *)state)[pendingOffset] = 0;
+            *(u8 *)(state + i + 0x60) = 0;
         }
         p = (int *)((char *)p + 4);
     }
