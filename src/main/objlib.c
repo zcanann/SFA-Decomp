@@ -895,7 +895,8 @@ void ObjHits_RefreshObjectState(int param_1)
     hitState->flags = *(s16 *)(*(int *)(param_1 + 0x50) + 0x4e);
     hitState->shapeFlags = *(undefined *)(*(int *)(param_1 + 0x50) + 0x65);
     if ((hitState->shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) {
-      piVar6 = *(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
+      piVar6 = *(int **)(*(int *)(param_1 + 0x7c) +
+                         *(char *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) * 4);
       if (((*(ushort *)(*piVar6 + 2) & 0x1000) == 0) || (piVar6[5] == 0)) {
         hitState->shapeFlags = hitState->shapeFlags & (u8)~OBJHITS_SHAPE_SKELETON;
       }
