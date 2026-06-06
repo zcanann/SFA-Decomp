@@ -2484,6 +2484,21 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   swap), grep ALL printed lines, not just per-fn heads — fns whose signature
   sits behind earlier unrelated diffs are otherwise missed (task #162 found
   4 hidden #81 sites this way, all -> 100%).
+- `python3 tools/width_audit.py [--all] [--arrays]` — enumerate extern decls
+  whose C type width contradicts symbols.txt's `data:N` annotation, ranked by
+  consuming-fn fuzzy% (full triage taxonomy in the script header).
+  **Width-audit lesson (task #176): "symbols.txt width is the physical truth"
+  INVERTS in practice** — when a 100%-matched fn disagrees with the
+  annotation, the CODE is the truth and the annotation is drift (73 of 78
+  scalar mismatches were this). The live win class is wrong-SYMBOL references
+  (a double's address where a float was meant, semantically masked when the
+  values coincide — TrickyCurve_updateBurstTrigger +992 to 100%); the width
+  lens catches them as a side effect. Don't retype symbols.txt annotations
+  (#70's decisive negative); fix wrong-symbol refs in <100% fns. Deliberate
+  "mismatch" classes to skip on sight: u8 scalars used only via `&sym`
+  (sda21 address-of form), u32 RGBA overlays accessed via `(u8*)` casts,
+  u8/char blob arrays on 4byte/float data (access width comes from the
+  cast-derefs, not the element type).
 - `python3 tools/offset_deref_scan.py [path-filter]` — find Ghidra-style
   `*(T*)((u8*)var + 0xNN)` derefs replaceable with typed `var->field` access.
   Parses every typedef struct to compute field offsets, drops structs whose
