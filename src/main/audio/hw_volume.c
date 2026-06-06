@@ -21,18 +21,18 @@ extern f32 lbl_803E78E4;
  */
 void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefined4 p7)
 {
-    DspVoice *voice;
-    DspStudioInfo *aux_entry;
+    DSPvoice *voice;
+    DSPstudioinfo *aux_entry;
     f32 out[9];
     int v0, v1, v2;
 
-    voice = (DspVoice *)(dspVoice + slot * 0xf4);
+    voice = (DSPvoice *)(dspVoice + slot * 0xf4);
 
     if (a >= 1.0f) a = 1.0f;
     if (b >= 1.0f) b = 1.0f;
     if (c >= 1.0f) c = 1.0f;
 
-    aux_entry = (DspStudioInfo *)(lbl_803CC1E0 + voice->studio * 0xbc);
+    aux_entry = (DSPstudioinfo *)(lbl_803CC1E0 + voice->studio * 0xbc);
 
     {
         extern void salCalcVolumeMatrix(int voltab_index, f32 *out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 a, f32 b, f32 c);
@@ -114,7 +114,7 @@ void hwOff(int slot)
  */
 void hwSetAUXProcessingCallbacks(u8 idx, void *cb0, void *cb1, void *cb2, void *cb3)
 {
-    DspStudioInfo *entry = (DspStudioInfo *)(lbl_803CC1E0 + idx * 0xbc);
+    DSPstudioinfo *entry = (DSPstudioinfo *)(lbl_803CC1E0 + idx * 0xbc);
     entry->auxAHandler = cb0;
     entry->auxAUser = cb1;
     entry->auxBHandler = cb2;

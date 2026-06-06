@@ -41,18 +41,18 @@ int hwChangeStudio(int slot) {
     offset = slot * 0xf4;
     base = dspVoice;
     voice = base + offset;
-    if (((DspVoice *)voice)->state != 2) {
+    if (((DSPvoice *)voice)->state != 2) {
         return 0;
     }
-    mode = ((DspVoice *)voice)->smp_info.compType;
+    mode = ((DSPvoice *)voice)->smp_info.compType;
     switch (mode) {
     case 0:
     case 1:
     case 4:
     case 5:
         voice = base + offset;
-        pos = ((DspVoice *)voice)->currentAddr;
-        samplePos = ((pos - 2 * *(int *)&((DspVoice *)voice)->smp_info.addr) >> 4) * 0xe;
+        pos = ((DSPvoice *)voice)->currentAddr;
+        samplePos = ((pos - 2 * *(int *)&((DSPvoice *)voice)->smp_info.addr) >> 4) * 0xe;
         lowBits = pos & 0xf;
         if (lowBits < 2) {
             return samplePos;
@@ -60,9 +60,9 @@ int hwChangeStudio(int slot) {
         samplePos += lowBits;
         return samplePos - 2;
     case 3:
-        return (int)((DspVoice *)voice)->currentAddr - *(int *)&((DspVoice *)voice)->smp_info.addr;
+        return (int)((DSPvoice *)voice)->currentAddr - *(int *)&((DSPvoice *)voice)->smp_info.addr;
     case 2:
-        return (int)((DspVoice *)voice)->currentAddr - (*(u32 *)&((DspVoice *)voice)->smp_info.addr >> 1);
+        return (int)((DSPvoice *)voice)->currentAddr - (*(u32 *)&((DSPvoice *)voice)->smp_info.addr >> 1);
     default:
         return slot;
     }
