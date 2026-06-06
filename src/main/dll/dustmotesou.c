@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dustmotesou.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -42,10 +43,13 @@ void dustmotesou_hitDetect(void) {}
 #pragma scheduling off
 void dustmotesou_init(int obj, int setup)
 {
-    *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
-    *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
-    *(s16 *)(obj + 0) = (s16)(*(u8 *)(setup + 0x1a) << 8);
-    *(u16 *)(obj + 0xb0) |= 0x2000;
+    DustMoteSouObject *source = (DustMoteSouObject *)obj;
+    DustMoteSouMapData *mapData = (DustMoteSouMapData *)setup;
+
+    source->objAnim.rotZ = (s16)(mapData->rotZ << 8);
+    source->objAnim.rotY = (s16)(mapData->rotY << 8);
+    source->objAnim.rotX = (s16)(mapData->rotX << 8);
+    source->objectFlags |= DUSTMOTESOU_OBJECT_FLAG_SPAWN_EFFECTS;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -54,56 +58,57 @@ void dustmotesou_init(int obj, int setup)
 #pragma scheduling off
 void dustmotesou_update(int obj)
 {
-    int setup = *(int *)(obj + 0x4c);
+    DustMoteSouObject *source = (DustMoteSouObject *)obj;
+    DustMoteSouMapData *mapData = (DustMoteSouMapData *)source->objAnim.placementData;
 
-    if (*(s16 *)(setup + 0x24) != -1 && (u32)GameBit_Get(*(s16 *)(setup + 0x24)) == 0) {
+    if (mapData->gameBit != -1 && (u32)GameBit_Get(mapData->gameBit) == 0) {
         return;
     }
-    if (*(s16 *)(obj + 0x46) == 2055) {
-        if (*(u8 *)(setup + 0x1b) == 0) {
+    if (source->objAnim.seqId == DUSTMOTESOU_SEQ_TAIL_LIGHT) {
+        if (mapData->effectId == 0) {
             return;
         }
-        if (*(u8 *)(setup + 0x1c) == 0) {
+        if (mapData->effectParamA == 0) {
             return;
         }
-        objfx_spawnMaskedHitEffect(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), *(f32 *)(setup + 0x20),
-                    *(u8 *)(setup + 0x1d), 0);
+        objfx_spawnMaskedHitEffect(obj, mapData->effectId, mapData->effectParamA, mapData->scale,
+                    mapData->effectParamB, 0);
         return;
     }
-    if (*(s16 *)(obj + 0x46) == 2062) {
-        if (*(u8 *)(setup + 0x1b) == 0) {
+    if (source->objAnim.seqId == DUSTMOTESOU_SEQ_FIREWORK) {
+        if (mapData->effectId == 0) {
             return;
         }
-        if (*(u8 *)(setup + 0x1c) == 0) {
+        if (mapData->effectParamA == 0) {
             return;
         }
-        hitDetectFn_80097070(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c),
-                             *(f32 *)(setup + 0x20), *(u8 *)(setup + 0x1d), 0);
+        hitDetectFn_80097070(obj, mapData->effectId, mapData->effectParamA,
+                             mapData->scale, mapData->effectParamB, 0);
         return;
     }
-    if (*(u8 *)(setup + 0x1b) == 0) {
+    if (mapData->effectId == 0) {
         return;
     }
-    if (*(u8 *)(setup + 0x1c) == 0) {
+    if (mapData->effectParamA == 0) {
         return;
     }
-    if (*(u8 *)(setup + 0x1d) == 0) {
+    if (mapData->effectParamB == 0) {
         return;
     }
-    if (*(u8 *)(setup + 0x2a) == 0) {
-        objfx_spawnBoxBurst(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), *(u8 *)(setup + 0x1d),
-                            *(f32 *)(setup + 0x20), (f32)(u32)*(u8 *)(setup + 0x26),
-                            (f32)(u32)*(u8 *)(setup + 0x27), (f32)(u32)*(u8 *)(setup + 0x28),
-                            *(u8 *)(setup + 0x29), 0, 0);
-    } else if (*(u8 *)(setup + 0x2a) == 1) {
-        objfx_spawnArcedBurst(obj, *(u8 *)(setup + 0x1b), *(f32 *)(setup + 0x20),
-                               *(u8 *)(setup + 0x1c), *(u8 *)(setup + 0x1d), *(u8 *)(setup + 0x29),
-                               (f32)(u32)*(u8 *)(setup + 0x26), (f32)(u32)*(u8 *)(setup + 0x27),
-                               (f32)(u32)*(u8 *)(setup + 0x28), 0, 0);
+    if (mapData->burstMode == DUSTMOTESOU_BURST_BOX) {
+        objfx_spawnBoxBurst(obj, mapData->effectId, mapData->effectParamA, mapData->effectParamB,
+                            mapData->scale, (f32)(u32)mapData->spreadX,
+                            (f32)(u32)mapData->spreadY, (f32)(u32)mapData->spreadZ,
+                            mapData->effectFlags, 0, 0);
+    } else if (mapData->burstMode == DUSTMOTESOU_BURST_ARCED) {
+        objfx_spawnArcedBurst(obj, mapData->effectId, mapData->scale,
+                               mapData->effectParamA, mapData->effectParamB, mapData->effectFlags,
+                               (f32)(u32)mapData->spreadX, (f32)(u32)mapData->spreadY,
+                               (f32)(u32)mapData->spreadZ, 0, 0);
     } else {
-        objfx_spawnDirectionalBurst(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), *(u8 *)(setup + 0x1d),
-                       *(f32 *)(setup + 0x20), (f32)(u32)*(u8 *)(setup + 0x26),
-                       *(u8 *)(setup + 0x29), 0, 0);
+        objfx_spawnDirectionalBurst(obj, mapData->effectId, mapData->effectParamA, mapData->effectParamB,
+                       mapData->scale, (f32)(u32)mapData->spreadX,
+                       mapData->effectFlags, 0, 0);
     }
 }
 #pragma scheduling reset
