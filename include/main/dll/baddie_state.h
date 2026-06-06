@@ -64,7 +64,7 @@ typedef struct BaddieState {
     f32 unk2A8; /* mediumbasket whirlpool block 0x2A8..0x33B */
     f32 unk2AC;
     u8 unk2B0[0x2C0 - 0x2B0];
-    f32 unk2C0; /* frame-counter-ish; compared (s32) > 0x37 */
+    f32 targetDistance; /* sqrtf dist to targetObj (scarab/campfire/anim/mediumbasket); also (s32)-compared */
     u8 unk2C4[0x2D0 - 0x2C4];
     void *targetObj; /* current attack/aggro target */
     u8 unk2D4[0x2E4 - 0x2D4];
@@ -95,7 +95,7 @@ typedef struct BaddieState {
     u8 unk34A[3];
     u8 unk34D; /* 0/1/3 */
     u8 unk34E[6];
-    u8 unk354; /* (s8)-compared counter */
+    u8 hitPoints; /* decremented on hit, (s8) < 1 = dead (anim.c/kt_rex pattern) */
     u8 unk355;
     u8 unk356; /* bit flags 1|2 */
     u8 unk357[0x35C - 0x357];
@@ -130,7 +130,7 @@ typedef struct GroundBaddieState {
     u8 unk3F8[2];
     s16 unk3FA; /* pair passed to the interface with unk3FC */
     s16 unk3FC;
-    u16 unk3FE; /* distance config; (f32)(u32) conversions */
+    u16 aggroRange; /* target-acquire radius passed to interface+0x48; (f32)(u32) conversions */
     u16 flags400; /* bit flags 2/8/0x100; &flags400 also passed as a buffer base */
     s16 targetState; /* 0 = no target; tryAcquireTarget vs updateTargetMotion */
     u8 configFlags; /* bits 1/2/0x10 */

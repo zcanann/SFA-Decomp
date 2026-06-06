@@ -4473,7 +4473,7 @@ extern f32 lbl_803E62BC;
 int fn_80200410(int p1, int p2)
 {
   GroundBaddieState *state = *(GroundBaddieState **)(p1 + 0xb8);
-  if ((s8)((BaddieState *)p2)->unk354 < 1) return 3;
+  if ((s8)((BaddieState *)p2)->hitPoints < 1) return 3;
   if ((s8)((BaddieState *)p2)->moveDone != 0) {
     ((DbStealerwormControl *)state->control)->unk38 += lbl_803E62BC;
     return 7;
@@ -4966,7 +4966,7 @@ void fn_80202EF0(int obj, int p2)
                 setup[7] = 0xff;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, 0);
         if (newObj != NULL) {
-            t = ((BaddieState *)p2)->unk2C0 / lbl_803E62B4;
+            t = ((BaddieState *)p2)->targetDistance / lbl_803E62B4;
             dur = lbl_803E62B8 * t;
             *(f32 *)(newObj + 0x24) = (*(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0xc) - *(f32 *)(obj + 0xc)) / dur;
             *(f32 *)(newObj + 0x28) = ((lbl_803E6380 * t + *(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0x10)) - *(f32 *)(obj + 0x10)) / dur;
@@ -5399,7 +5399,7 @@ void fn_80203144(int obj, int p2, int p3)
 
     stk.range = lbl_803E62B0;
     data = *(int *)(obj + 0x4c);
-    near = (**(u32 (**)(int, int, f32, int))((char *)*gBaddieControlInterface + 0x48))(obj, p3, (f32)st->unk3FE, 0x8000);
+    near = (**(u32 (**)(int, int, f32, int))((char *)*gBaddieControlInterface + 0x48))(obj, p3, (f32)st->aggroRange, 0x8000);
     if (near == 0 && (st->configFlags & 0x10) != 0) {
         near = ObjGroup_FindNearestObject(0x24, obj, &stk.range);
     }
@@ -6405,7 +6405,7 @@ void dbstealerworm_update(u8 *objp)
                     stk.v[0] = *(f32 *)(t + 0x18) - *(f32 *)(obj + 0x18);
                     stk.v[1] = *(f32 *)(t + 0x1c) - *(f32 *)(obj + 0x1c);
                     stk.v[2] = *(f32 *)(t + 0x20) - *(f32 *)(obj + 0x20);
-                    ((GroundBaddieState *)blob)->baddie.unk2C0 = sqrtf(stk.v[2] * stk.v[2] + (stk.v[0] * stk.v[0] + stk.v[1] * stk.v[1]));
+                    ((GroundBaddieState *)blob)->baddie.targetDistance = sqrtf(stk.v[2] * stk.v[2] + (stk.v[0] * stk.v[0] + stk.v[1] * stk.v[1]));
                 }
                 stk.msg = 0;
                 stk.argA = 0;

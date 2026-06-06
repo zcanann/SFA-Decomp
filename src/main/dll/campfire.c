@@ -345,7 +345,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
     st.dx = *(f32 *)(target + 0x18) - *(f32 *)(obj + 0x18);
     st.dy = *(f32 *)(target + 0x1c) - *(f32 *)(obj + 0x1c);
     st.dz = *(f32 *)(target + 0x20) - *(f32 *)(obj + 0x20);
-    ((GroundBaddieState *)state)->baddie.unk2C0 = sqrtf(st.dz * st.dz + (st.dx * st.dx + st.dy * st.dy));
+    ((GroundBaddieState *)state)->baddie.targetDistance = sqrtf(st.dz * st.dz + (st.dx * st.dx + st.dy * st.dy));
   }
   (*(void (**)(int, int, int, int, int, int, int, int))(*(int *)gBaddieControlInterface + 0x54))(
       obj, state, stateWithBaddieData + 0x35c, *(s16 *)(stateWithBaddieData + 0x3f4), 0, 0, 0, 4);
@@ -359,7 +359,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
       if ((result != 0x10) && (result != 0x11)) {
         objLightFn_8009a1dc(lbl_803E30BC, obj, lbl_803AC668, 3, 0);
         (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 4);
-        ((GroundBaddieState *)state)->baddie.unk354 -= 1;
+        ((GroundBaddieState *)state)->baddie.hitPoints -= 1;
         Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
         Sfx_PlayFromObject(obj, SFXen_blkscrp6);
       }

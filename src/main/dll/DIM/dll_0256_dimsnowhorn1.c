@@ -1180,7 +1180,7 @@ void fn_802BB4B4(int obj, int a, int slot)
     int *viewSlot = (int *)Camera_GetCurrentViewSlot();
     DIMSnowHorn1State *state = *(DIMSnowHorn1State **)(obj + 0xb8);
 
-    state->baddie.unk354 = 0;
+    state->baddie.hitPoints = 0;
     *(u32 *)state &= ~0x8000;
 
     if (state->unkA8A == 2) {

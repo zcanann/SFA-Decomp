@@ -957,7 +957,7 @@ int fn_8015DC04(int obj, GroundBaddieState *p)
   if (*(char *)&p->baddie.moveDone != '\0' || *(char *)&p->baddie.moveJustStartedB != '\0') {
     hit = *(u8 **)&sub->control;
     r = (*(int (**)(int, u8 *, f32, int))(*(int *)gBaddieControlInterface + 0x44))(
-        obj, (u8 *)p, (f32)(u32)sub->unk3FE, 1);
+        obj, (u8 *)p, (f32)(u32)sub->aggroRange, 1);
     if (r != 0) {
       hit[9] &= ~2;
       return 5;
@@ -1074,8 +1074,8 @@ void dll_CA_init(int obj, u8 *p, int flags)
   (*(void (**)(int, u8 *, int, int, int, int, u8, f32))(*(int *)gBaddieControlInterface + 0x58))(
       obj, p, (int)sub, 14, 8, 0x102, mode, lbl_803E2DB8);
   *(int *)(obj + 0xbc) = 0;
-  if (lbl_803E2D24 * (f32)(u32)sub->unk3FE < lbl_803E2D54) {
-    *(s16 *)&sub->unk3FE = 0x6e;
+  if (lbl_803E2D24 * (f32)(u32)sub->aggroRange < lbl_803E2D54) {
+    *(s16 *)&sub->aggroRange = 0x6e;
   }
   ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0);
   *(u8 *)(obj + 0xaf) |= 8;
@@ -1310,7 +1310,7 @@ void fn_8015EA48(int obj, GroundBaddieState *p)
     *(u8 *)(setup + 7) = 0xff;
     o = Obj_SetupObject(setup, 5, -1, -1, 0);
     if (o != NULL) {
-      t = p->baddie.unk2C0 / (f32)(u32)p->unk3FE;
+      t = p->baddie.targetDistance / (f32)(u32)p->aggroRange;
       dur = lbl_803E2DF8 * t;
       *(f32 *)(o + 0x24) =
           (*(f32 *)(*(int *)&p->baddie.targetObj + 0xc) - *(f32 *)(obj + 0xc)) / dur;
@@ -2560,7 +2560,7 @@ int fn_801601C4(int obj, GroundBaddieState *p)
     memcpy(wp, (void *)(obj + 0xc), 12);
     memcpy((void *)(sub->route35C + 0xc), (void *)(*(int *)&p->baddie.targetObj + 0xc), 12);
     voxmaps_updateRoutePath(wp, (char *)(sub->route35C + 0x28));
-    if (p->baddie.unk2C0 < lbl_803E2E6C && sub->unk405 == 2) {
+    if (p->baddie.targetDistance < lbl_803E2E6C && sub->unk405 == 2) {
       return 5;
     }
     if (*(u8 *)(wp + 0x25) == 0) {
@@ -2668,7 +2668,7 @@ void fn_8016083C(int *obj, GroundBaddieState *sub, GroundBaddieState *p)
     d.x = *(f32 *)(o + 0x18) - *(f32 *)((char *)obj + 0x18);
     d.y = *(f32 *)(o + 0x1c) - *(f32 *)((char *)obj + 0x1c);
     d.z = *(f32 *)(o + 0x20) - *(f32 *)((char *)obj + 0x20);
-    p->baddie.unk2C0 = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
+    p->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
   }
   characterDoEyeAnims(obj, sub->route35C + 0x50);
   if ((sub->configFlags & 1) == 0) {
@@ -4078,8 +4078,8 @@ void dll_CB_init(int *obj, u8 *params, int extra) {
     *(void**)((char*)obj + 0xbc) = (void*)&dll_CB_seqFn;
     ((void(*)(int*, u8*, int))((void**)*(int*)gPlayerInterface)[5])(obj, (u8 *)sub, 0);
     sub->baddie.unk270 = 0;
-    if (sub->unk3FE < 0x32) {
-        sub->unk3FE = 0x32;
+    if (sub->aggroRange < 0x32) {
+        sub->aggroRange = 0x32;
     }
 }
 #pragma peephole reset

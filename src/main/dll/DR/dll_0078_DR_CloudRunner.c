@@ -984,7 +984,7 @@ void fn_802C11BC(int obj, int p2, f32 f)
     }
     slot = (int)Camera_GetCurrentViewSlot();
     inner = *(CloudRunnerState **)((char *)obj + 0xb8);
-    inner->baddie.unk354 = 0;
+    inner->baddie.hitPoints = 0;
     *(int *)&inner->baddie &= ~0x8000;
     *(int *)&inner->baddie |= 0x200000;
     if (inner->unkBB2 == 2) {

@@ -752,9 +752,9 @@ undefined4 FUN_8015be40(int param_1,int param_2)
       if (((GroundBaddieState *)iVar3)->aggression < 0x33) {
         (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,1);
       }
-      else if ((((GroundBaddieState *)param_2)->baddie.unk2C0 <
+      else if ((((GroundBaddieState *)param_2)->baddie.targetDistance <
                 lbl_803E39BC *
-                (float)((double)CONCAT44(0x43300000,(uint)((GroundBaddieState *)iVar3)->unk3FE) -
+                (float)((double)CONCAT44(0x43300000,(uint)((GroundBaddieState *)iVar3)->aggroRange) -
                        DOUBLE_803e39a0)) || ((((GroundBaddieState *)iVar3)->configFlags & 2) != 0)) {
         (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,0);
       }
@@ -769,8 +769,8 @@ undefined4 FUN_8015be40(int param_1,int param_2)
         return 5;
       }
       if ((lbl_803E39BC *
-           (float)((double)CONCAT44(0x43300000,(uint)((GroundBaddieState *)iVar3)->unk3FE) - DOUBLE_803e39a0)
-           <= ((GroundBaddieState *)param_2)->baddie.unk2C0) && ((((GroundBaddieState *)iVar3)->configFlags & 2) == 0)) {
+           (float)((double)CONCAT44(0x43300000,(uint)((GroundBaddieState *)iVar3)->aggroRange) - DOUBLE_803e39a0)
+           <= ((GroundBaddieState *)param_2)->baddie.targetDistance) && ((((GroundBaddieState *)iVar3)->configFlags & 2) == 0)) {
         return 7;
       }
       return 8;
@@ -1847,14 +1847,14 @@ void FUN_8015e038(int param_1,int param_2,int param_3)
     if ((((GroundBaddieState *)param_2)->configFlags & 8) == 0) {
       iVar1 = (**(code **)(*DAT_803dd738 + 0x48))
                         ((double)(float)((double)CONCAT44(0x43300000,
-                                                          (uint)((GroundBaddieState *)param_2)->unk3FE) -
+                                                          (uint)((GroundBaddieState *)param_2)->aggroRange) -
                                         DOUBLE_803e39a0),param_1,param_3,0x8000);
     }
     else {
       iVar1 = (**(code **)(*DAT_803dd738 + 0x48))
                         ((double)(lbl_803E39BC *
                                  (float)((double)CONCAT44(0x43300000,
-                                                          (uint)((GroundBaddieState *)param_2)->unk3FE) -
+                                                          (uint)((GroundBaddieState *)param_2)->aggroRange) -
                                         DOUBLE_803e39a0)),param_1,param_3,0x8000);
     }
   }
@@ -2244,7 +2244,7 @@ int mediumbasket_updateHeightBlendState(int obj, int state)
         }
         ((GroundBaddieState *)state)->baddie.unk34D = 1;
     }
-    ((GroundBaddieState *)state)->baddie.moveSpeed = ((GroundBaddieState *)state)->baddie.unk2C0 / lbl_803E2D3C;
+    ((GroundBaddieState *)state)->baddie.moveSpeed = ((GroundBaddieState *)state)->baddie.targetDistance / lbl_803E2D3C;
     if (((GroundBaddieState *)state)->baddie.moveSpeed > lbl_803E2D40) {
         ((GroundBaddieState *)state)->baddie.moveSpeed = lbl_803E2D40;
     } else if (((GroundBaddieState *)state)->baddie.moveSpeed < lbl_803E2D38) {
@@ -2292,10 +2292,10 @@ int fn_8015C0B4(int obj, int state)
     }
     if (sub->aggression <= 50 || (sub->configFlags & 2) != 0) {
         ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2D14;
-    } else if (((GroundBaddieState *)state)->baddie.unk2C0 <= lbl_803E2D54 || (s8)((GroundBaddieState *)state)->baddie.moveDone != 0) {
+    } else if (((GroundBaddieState *)state)->baddie.targetDistance <= lbl_803E2D54 || (s8)((GroundBaddieState *)state)->baddie.moveDone != 0) {
         ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2D14;
     } else {
-        ((GroundBaddieState *)state)->baddie.animSpeedA = ((GroundBaddieState *)state)->baddie.unk2C0 / lbl_803E2D54 - lbl_803E2D48;
+        ((GroundBaddieState *)state)->baddie.animSpeedA = ((GroundBaddieState *)state)->baddie.targetDistance / lbl_803E2D54 - lbl_803E2D48;
         ((GroundBaddieState *)state)->baddie.animSpeedA =
             ((GroundBaddieState *)state)->baddie.animSpeedA * ((f32)sub->aggression / lbl_803E2D58);
     }
@@ -2336,10 +2336,10 @@ int fn_8015C2AC(int obj, int state)
     }
     if (sub->aggression <= 50 || (sub->configFlags & 2) != 0) {
         ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2D14;
-    } else if (((GroundBaddieState *)state)->baddie.unk2C0 <= lbl_803E2D54 || (s8)((GroundBaddieState *)state)->baddie.moveDone != 0) {
+    } else if (((GroundBaddieState *)state)->baddie.targetDistance <= lbl_803E2D54 || (s8)((GroundBaddieState *)state)->baddie.moveDone != 0) {
         ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2D14;
     } else {
-        ((GroundBaddieState *)state)->baddie.animSpeedA = ((GroundBaddieState *)state)->baddie.unk2C0 / lbl_803E2D54 - lbl_803E2D48;
+        ((GroundBaddieState *)state)->baddie.animSpeedA = ((GroundBaddieState *)state)->baddie.targetDistance / lbl_803E2D54 - lbl_803E2D48;
         ((GroundBaddieState *)state)->baddie.animSpeedA =
             ((GroundBaddieState *)state)->baddie.animSpeedA * ((f32)sub->aggression / lbl_803E2D58);
     }
@@ -2455,7 +2455,7 @@ int fn_8015B2A0(int obj, int state)
     } else if (sub->targetState == 3) {
         ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 4);
     } else if (sub->targetState == 4) {
-        if (((GroundBaddieState *)state)->baddie.unk2C0 < lbl_803E2D10 && (s8)((GroundBaddieState *)state)->baddie.moveDone != 0) {
+        if (((GroundBaddieState *)state)->baddie.targetDistance < lbl_803E2D10 && (s8)((GroundBaddieState *)state)->baddie.moveDone != 0) {
             if (sub->aggression > 50) {
                 ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 0);
             } else {
@@ -2483,7 +2483,7 @@ int fn_8015B2A0(int obj, int state)
     }
     if (((GroundBaddieState *)state)->baddie.unk32E > 0x78 &&
         ((int (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[17])(
-            obj, state, (f32)sub->unk3FE, 1) != 0) {
+            obj, state, (f32)sub->aggroRange, 1) != 0) {
         return 5;
     }
     return 0;
@@ -2498,7 +2498,7 @@ int fn_8015AF10(int obj, int state)
     GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
 
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedB != 0) {
-        if ((s32)((GroundBaddieState *)state)->baddie.unk2C0 > 0x37) {
+        if ((s32)((GroundBaddieState *)state)->baddie.targetDistance > 0x37) {
             if ((sub->configFlags & 2) == 0) {
                 ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 7);
             } else {
@@ -2531,10 +2531,10 @@ int fn_8015AF10(int obj, int state)
             return 5;
         }
         if (((int (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[17])(
-                obj, state, (f32)sub->unk3FE, 1) != 0) {
+                obj, state, (f32)sub->aggroRange, 1) != 0) {
             return 5;
         }
-        if ((s32)((GroundBaddieState *)state)->baddie.unk2C0 > 0x37) {
+        if ((s32)((GroundBaddieState *)state)->baddie.targetDistance > 0x37) {
             if ((sub->configFlags & 2) == 0) {
                 ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 7);
             } else {
@@ -2561,7 +2561,7 @@ int fn_8015AF10(int obj, int state)
                 ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 6);
             }
         }
-    } else if (((GroundBaddieState *)state)->baddie.controlMode == 7 && (s32)((GroundBaddieState *)state)->baddie.unk2C0 < 0x37) {
+    } else if (((GroundBaddieState *)state)->baddie.controlMode == 7 && (s32)((GroundBaddieState *)state)->baddie.targetDistance < 0x37) {
         if (((GroundBaddieState *)state)->baddie.controlMode == 6) {
             ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 5);
         } else {
@@ -2747,7 +2747,7 @@ void fn_8015D3C0(int obj, int sub, int state)
         distSq = targetDelta[2] * targetDelta[2];
         distSq += targetDelta[0] * targetDelta[0];
         distSq += targetDelta[1] * targetDelta[1];
-        ((GroundBaddieState *)state)->baddie.unk2C0 = sqrtf(distSq);
+        ((GroundBaddieState *)state)->baddie.targetDistance = sqrtf(distSq);
     }
     if ((((GroundBaddieState *)sub)->configFlags & 0x20) == 0) {
         ((void (*)(int, int, int, int, int, int, int))((void **)*gBaddieControlInterface)[15])(
@@ -2767,7 +2767,7 @@ void fn_8015D3C0(int obj, int sub, int state)
             *(s16 *)(control + 6) = 0;
         }
         *(f32 *)control = lbl_803E2D14;
-        if ((s8)((GroundBaddieState *)state)->baddie.unk354 > 0 && *(s16 *)(control + 6) >= 2) {
+        if ((s8)((GroundBaddieState *)state)->baddie.hitPoints > 0 && *(s16 *)(control + 6) >= 2) {
             ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 3);
             *(s16 *)(control + 6) = 0;
             ((GroundBaddieState *)state)->baddie.unk270 = 5;
@@ -2926,7 +2926,7 @@ int fn_8015B524(int* obj, GroundBaddieState *state) {
 
 int fn_8015B748(int* obj, GroundBaddieState *state) {
     GroundBaddieState* sub = *(GroundBaddieState**)((char*)obj + 0xb8);
-    if ((s8)state->baddie.unk354 < 1) return 3;
+    if ((s8)state->baddie.hitPoints < 1) return 3;
     if ((s8)state->baddie.moveDone != 0) {
         if (state->baddie.controlMode == 12) {
             if (sub->aggression > 50) {
@@ -2988,10 +2988,10 @@ void mediumbasket_tryAcquireTarget(int obj, int p2, int p3)
             obj, p3, lbl_803E2D54, 0x8000);
   } else if ((((GroundBaddieState *)p2)->configFlags & 0x8) != 0) {
     r = (**(uint (**)(int, int, f32, int))((char *)(*gBaddieControlInterface) + 0x48))(
-            obj, p3, lbl_803E2D24 * (f32)(u32)((GroundBaddieState *)p2)->unk3FE, 0x8000);
+            obj, p3, lbl_803E2D24 * (f32)(u32)((GroundBaddieState *)p2)->aggroRange, 0x8000);
   } else {
     r = (**(uint (**)(int, int, f32, int))((char *)(*gBaddieControlInterface) + 0x48))(
-            obj, p3, (f32)(u32)((GroundBaddieState *)p2)->unk3FE, 0x8000);
+            obj, p3, (f32)(u32)((GroundBaddieState *)p2)->aggroRange, 0x8000);
   }
 
   if (r != 0) {
@@ -3035,7 +3035,7 @@ int mediumbasket_checkTargetState(int obj, int p2)
     ((GroundBaddieState *)p2)->baddie.animSpeedB = neutralBlend;
     ((GroundBaddieState *)p2)->baddie.animSpeedA = neutralBlend;
     if ((u32)sub->aggression > 50) {
-      if (((GroundBaddieState *)p2)->baddie.unk2C0 < lbl_803E2D24 * (f32)(u32)sub->unk3FE
+      if (((GroundBaddieState *)p2)->baddie.targetDistance < lbl_803E2D24 * (f32)(u32)sub->aggroRange
           || (sub->configFlags & 0x2) != 0) {
         (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 0);
       } else {
@@ -3053,7 +3053,7 @@ int mediumbasket_checkTargetState(int obj, int p2)
     return 5;
   }
 
-  if (((GroundBaddieState *)p2)->baddie.unk2C0 < lbl_803E2D24 * (f32)(u32)sub->unk3FE
+  if (((GroundBaddieState *)p2)->baddie.targetDistance < lbl_803E2D24 * (f32)(u32)sub->aggroRange
       || (sub->configFlags & 0x2) != 0) {
     return 8;
   }

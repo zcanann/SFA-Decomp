@@ -404,13 +404,13 @@ void grimble_update(int obj)
       if (((GroundBaddieState *)state)->baddie.targetObj != NULL || *(s8 *)(state + 0x354) == 0) {
         (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
         if ((*(int (**)(int, char *, f32, int))(*(int *)gBaddieControlInterface + 0x44))(
-                obj, state, (f32)((GroundBaddieState *)state)->unk3FE, 1) != 0) {
+                obj, state, (f32)((GroundBaddieState *)state)->aggroRange, 1) != 0) {
           *(int *)(state + 0x2d0) = 0;
         }
       } else {
         (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
         target = (*(void *(**)(int, char *, f32, int))(*(int *)gBaddieControlInterface + 0x48))(
-            obj, state, (f32)((GroundBaddieState *)state)->unk3FE, 0x8000);
+            obj, state, (f32)((GroundBaddieState *)state)->aggroRange, 0x8000);
         if (target != NULL) {
           ((GroundBaddieState *)state)->baddie.targetObj = target;
           ((GroundBaddieState *)state)->baddie.unk349 = 0;
