@@ -2,6 +2,7 @@
 #include "main/dll/magicPlant.h"
 #include "main/dll/baddie_state.h"
 #include "main/game_object.h"
+#include "main/dll/curve_walker.h"
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
@@ -931,7 +932,7 @@ void fn_80153040(int obj, int state)
         *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x80;
     }
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
-        if (Curve_AdvanceAlongPath(curve, *(f32*)(state + 0x2fc)) != 0 || curve[0x10/4] != 0) {
+        if (Curve_AdvanceAlongPath(curve, *(f32*)(state + 0x2fc)) != 0 || ((RomCurveWalker *)curve)->unk10 != 0) {
             if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
                 if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
                         *(int*)state, obj, lbl_803E28B8, &lbl_803DBCB8, -1, *(void**)gRomCurveInterface) != 0) {
@@ -941,11 +942,11 @@ void fn_80153040(int obj, int state)
         }
     }
 
-    fn_8014CF7C(obj, state, 0xf, 0, *(f32*)((char*)curve + 0x68), *(f32*)((char*)curve + 0x70));
+    fn_8014CF7C(obj, state, 0xf, 0, ((RomCurveWalker *)curve)->unk68, ((RomCurveWalker *)curve)->unk70);
 
-    vec[0] = *(f32*)((char*)curve + 0x68) - ((GameObject *)obj)->anim.localPosX;
-    vec[1] = *(f32*)((char*)curve + 0x6c) - ((GameObject *)obj)->anim.localPosY;
-    vec[2] = *(f32*)((char*)curve + 0x70) - ((GameObject *)obj)->anim.localPosZ;
+    vec[0] = ((RomCurveWalker *)curve)->unk68 - ((GameObject *)obj)->anim.localPosX;
+    vec[1] = ((RomCurveWalker *)curve)->unk6C - ((GameObject *)obj)->anim.localPosY;
+    vec[2] = ((RomCurveWalker *)curve)->unk70 - ((GameObject *)obj)->anim.localPosZ;
     fn_8014C678(obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
 
     *(f32*)(state + 0x324) = *(f32*)(state + 0x324) + timeDelta;
@@ -1169,7 +1170,7 @@ void fn_80153248(int obj, int state)
     }
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
         if (Curve_AdvanceAlongPath(curve, lbl_803E28D4 * *(f32*)(state + 0x2fc)) != 0
-            || curve[0x10/4] != 0) {
+            || ((RomCurveWalker *)curve)->unk10 != 0) {
             if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
                 if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
                         *(int*)state, obj, lbl_803E28B8, &lbl_803DBCB8, -1, *(void**)gRomCurveInterface) != 0) {
@@ -1194,9 +1195,9 @@ void fn_80153248(int obj, int state)
         worldPos[1] = ((GameObject *)obj)->anim.localPosY;
         worldPos[2] = ((GameObject *)obj)->anim.localPosZ;
         voxmaps_worldToGrid(worldPos, gridA);
-        worldPos[0] = *(f32*)((char*)curve + 0x68);
-        worldPos[1] = *(f32*)((char*)curve + 0x6c);
-        worldPos[2] = *(f32*)((char*)curve + 0x70);
+        worldPos[0] = ((RomCurveWalker *)curve)->unk68;
+        worldPos[1] = ((RomCurveWalker *)curve)->unk6C;
+        worldPos[2] = ((RomCurveWalker *)curve)->unk70;
         voxmaps_worldToGrid(worldPos, gridB);
         if (((countLeadingZeros(*(u32*)(state + 0x2dc)) >> 5) & 0x01000000) != 0) {
             if (voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) == 0) {
@@ -1408,7 +1409,7 @@ void fn_80153E0C(int obj, int state)
     ((BaddieState *)state)->unk33A = 0;
     *(f32*)(state + 0x328) = lbl_803E294C;
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
-        if (Curve_AdvanceAlongPath(curve, *(f32*)(state + 0x2fc)) != 0 || curve[0x10/4] != 0) {
+        if (Curve_AdvanceAlongPath(curve, *(f32*)(state + 0x2fc)) != 0 || ((RomCurveWalker *)curve)->unk10 != 0) {
             if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
                 if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
                         *(int*)state, obj, lbl_803E2950, &lbl_803DBCC8, -1, *(void**)gRomCurveInterface) != 0) {
@@ -1418,7 +1419,7 @@ void fn_80153E0C(int obj, int state)
         }
         if (lbl_803E294C == *(f32*)(state + 0x32c)) {
             if (((GameObject *)obj)->anim.currentMove == 0) {
-                fn_8014CF7C(obj, state, 0x3c, 0, *(f32*)((char*)curve + 0x68), *(f32*)((char*)curve + 0x70));
+                fn_8014CF7C(obj, state, 0x3c, 0, ((RomCurveWalker *)curve)->unk68, ((RomCurveWalker *)curve)->unk70);
             }
             if (*(f32*)(state + 0x324) > lbl_803E294C) {
                 *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
