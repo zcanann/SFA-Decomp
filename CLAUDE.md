@@ -2587,6 +2587,14 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   stray `local_N`) — replace with real locals for plausible C.
 - **Two agents must never edit the same `.c`** — concurrent recovery of the same
   unit produces duplicate definitions and rebase conflicts. One owner per unit.
+- **Edit SJIS-bearing files BYTE-WISE (python rb/wb or byte-safe tools), never
+  through a text codec round-trip.** A UTF-8 read/write of a file carrying
+  Shift-JIS comments mangles the bytes; sjiswrap's reaction ranges from a
+  non-fatal warning (Tumbleweed.c compiled anyway) to a HARD compile error
+  (src/track/intersect.c failed the build). Known SJIS carriers hit so far:
+  src/track/intersect.c, src/main/dll/baddie/Tumbleweed.c -- check for the
+  sjiswrap warning after the first edit to any unfamiliar file, and if it
+  appears, revert and redo the edit byte-wise.
 - **NEVER `git stash` / `git stash pop` in a hunter worktree.** The stash store
   lives in the COMMON git dir and is SHARED across all worktrees, so a `git stash
   pop` can pop a DIFFERENT agent's (or an old) WIP stash and splatter it as
