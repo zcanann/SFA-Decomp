@@ -743,9 +743,9 @@ int tricky_SeqFn(int obj,int unused,int seq)
       break;
     }
   }
-  objAnimFreeChildren(obj,state,(int *)(state + 0x7a8));
-  objAnimFreeChildren(obj,state,(int *)(state + 0x7b0));
-  objAnimFreeChildren(obj,state,(int *)(state + 0x7b8));
+  objAnimFreeChildren(obj,state,(int *)&((TrickyState *)state)->unk7A8);
+  objAnimFreeChildren(obj,state,(int *)&((TrickyState *)state)->unk7B0);
+  objAnimFreeChildren(obj,state,(int *)&((TrickyState *)state)->unk7B8);
   fn_80138D7C(obj,state);
   Tricky_updateBlendChannelWeight(obj,state);
   objAudioFn_8006ef38(obj,seq + 0xf0,1,state + 0x7d8,state + 0xf8,lbl_803E23E8,lbl_803E23E8);
@@ -1151,20 +1151,20 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   int childSlot;
 
   state = *(int *)(obj + 0xb8);
-  freeAndNull((void *)(state + 0x538));
-  freeAndNull((void *)(state + 0x568));
-  freeAndNull((void *)(state + 0x598));
-  freeAndNull((void *)(state + 0x5c8));
-  freeAndNull((void *)(state + 0x5f8));
-  freeAndNull((void *)(state + 0x628));
-  freeAndNull((void *)(state + 0x658));
-  freeAndNull((void *)(state + 0x688));
-  freeAndNull((void *)(state + 0x6b8));
+  freeAndNull((void *)((TrickyState *)state)->voxBlocks[0]);
+  freeAndNull((void *)((TrickyState *)state)->voxBlocks[1]);
+  freeAndNull((void *)((TrickyState *)state)->voxBlocks[2]);
+  freeAndNull((void *)((TrickyState *)state)->voxBlocks[3]);
+  freeAndNull((void *)((TrickyState *)state)->voxBlocks[4]);
+  freeAndNull((void *)((TrickyState *)state)->voxBlocks[5]);
+  freeAndNull((void *)((TrickyState *)state)->voxBlocks[6]);
+  freeAndNull((void *)((TrickyState *)state)->voxBlocks[7]);
+  freeAndNull((void *)((TrickyState *)state)->voxBlocks[8]);
   ObjGroup_RemoveObject(obj,1);
   ((void (**)(int))(*gExpgfxInterface))[5](obj);
-  if ((shouldKeepFlameChildren == 0) && ((*(uint *)(state + 0x54) & 0x800) != 0)) {
-    *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffff7ff;
-    *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x1000;
+  if ((shouldKeepFlameChildren == 0) && ((((TrickyState *)state)->unk54 & 0x800) != 0)) {
+    ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 & 0xfffff7ff;
+    ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 | 0x1000;
     i = 0;
     childSlot = state;
     do {
@@ -1181,14 +1181,14 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
     }
   }
   doNothing_onTrickyFree();
-  objAnimFreeChildren(obj,state,(int *)(state + 0x7a8));
-  objAnimFreeChildren(obj,state,(int *)(state + 0x7b0));
-  objAnimFreeChildren(obj,state,(int *)(state + 0x7b8));
-  if (*(int *)(state + 0x7cc) != 0) {
-    ObjLink_DetachChild(obj,*(int *)(state + 0x7cc));
-    Obj_FreeObject(*(int *)(state + 0x7cc));
+  objAnimFreeChildren(obj,state,(int *)&((TrickyState *)state)->unk7A8);
+  objAnimFreeChildren(obj,state,(int *)&((TrickyState *)state)->unk7B0);
+  objAnimFreeChildren(obj,state,(int *)&((TrickyState *)state)->unk7B8);
+  if (*(int *)&((TrickyState *)state)->unk7CC != 0) {
+    ObjLink_DetachChild(obj,*(int *)&((TrickyState *)state)->unk7CC);
+    Obj_FreeObject(*(int *)&((TrickyState *)state)->unk7CC);
   }
-  if (((*(byte *)(state + 0x58) >> 7 & 1) != 0) && (lbl_803DDA48 != 0)) {
+  if (((((TrickyState *)state)->unk58 >> 7 & 1) != 0) && (lbl_803DDA48 != 0)) {
     Obj_FreeObject(lbl_803DDA48);
     lbl_803DDA48 = 0;
   }
@@ -1656,8 +1656,8 @@ void Tricky_update(int obj)
       ((TrickyState *)state)->unk740 = (f32)(int)randomGetRange(0x1f4,0x2ee);
       ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 & ~0x20000LL;
       ((TrickyState *)state)->unkD = 3;
-      if (*(u32 *)&((TrickyState *)state)->unk28 != (u32)(state + 0x72c)) {
-        *(u32 *)&((TrickyState *)state)->unk28 = (u32)(state + 0x72c);
+      if (*(u32 *)&((TrickyState *)state)->unk28 != (u32)&((TrickyState *)state)->unk72C) {
+        *(u32 *)&((TrickyState *)state)->unk28 = (u32)&((TrickyState *)state)->unk72C;
         ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 & 0xfffffbff;
         ((TrickyState *)state)->unkD2 = 0;
       }
@@ -1702,7 +1702,7 @@ void Tricky_update(int obj)
     if (diff < -0x8000) {
       diff += 0xffff;
     }
-    step = (int)((f32)*(s16 *)(state + 0x81a) * ((TrickyState *)state)->unk4C);
+    step = (int)((f32)((TrickyState *)state)->unk81A * ((TrickyState *)state)->unk4C);
     if ((diff < 0 ? -diff : diff) >= 4) {
       if ((step > 0 && diff > 0) || (step < 0 && diff < 0)) {
         if ((step < 0 ? -step : step) > (diff < 0 ? -diff : diff)) {
@@ -1887,15 +1887,15 @@ void Tricky_init(int obj)
   }
   *(void **)(obj + 0xbc) = (void *)tricky_SeqFn;
   ObjGroup_AddObject(obj,1);
-  trickyVoxAllocFn_8004b5d4((void *)(state + 0x538));
-  trickyVoxAllocFn_8004b5d4((void *)(state + 0x568));
-  trickyVoxAllocFn_8004b5d4((void *)(state + 0x598));
-  trickyVoxAllocFn_8004b5d4((void *)(state + 0x5c8));
-  trickyVoxAllocFn_8004b5d4((void *)(state + 0x5f8));
-  trickyVoxAllocFn_8004b5d4((void *)(state + 0x628));
-  trickyVoxAllocFn_8004b5d4((void *)(state + 0x658));
-  trickyVoxAllocFn_8004b5d4((void *)(state + 0x688));
-  trickyVoxAllocFn_8004b5d4((void *)(state + 0x6b8));
+  trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[0]);
+  trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[1]);
+  trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[2]);
+  trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[3]);
+  trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[4]);
+  trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[5]);
+  trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[6]);
+  trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[7]);
+  trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[8]);
   ((TrickyState *)state)->progressPtr = (int)((MapEventInterface *)*gMapEventInterface)->getProgressPtr();
   ((TrickyState *)state)->playerObj = Obj_GetPlayerObject();
   ((TrickyState *)state)->unk08 = 0;
@@ -2462,14 +2462,14 @@ void baddie_updateWhileFrozen(int obj, u8 *state, u8 fromHit)
         fn_802961FC(proj,result);
       }
     } else if ((((TrickyState *)state)->unk2E8 & 0x20) != 0) {
-      if (((FrozenByte2F6 *)(state + 0x2f6))->fadeCounter == 0) {
+      if (((FrozenByte2F6 *)((TrickyState *)state)->pad2F6)->fadeCounter == 0) {
         Sfx_PlayFromObject(obj,0x47a);
-        ((FrozenByte2F6 *)(state + 0x2f6))->fadeCounter = 0x1f;
+        ((FrozenByte2F6 *)((TrickyState *)state)->pad2F6)->fadeCounter = 0x1f;
       }
       Obj_StartModelFadeIn(obj,0x12c);
     } else {
-      if (((FrozenByte2F6 *)(state + 0x2f6))->fadeCounter != 0) {
-        ((FrozenByte2F6 *)(state + 0x2f6))->fadeCounter -= 1;
+      if (((FrozenByte2F6 *)((TrickyState *)state)->pad2F6)->fadeCounter != 0) {
+        ((FrozenByte2F6 *)((TrickyState *)state)->pad2F6)->fadeCounter -= 1;
       }
     }
     ((TrickyState *)state)->unk2E8 = ((TrickyState *)state)->unk2E8 & 0xfffffdc7;
@@ -2737,9 +2737,9 @@ void Tricky_findNearbyFloorHeights(int obj,int state,f32 *nearestFloorY,f32 *nea
   *nearestSpecialY = *(f32 *)(obj + 0x10);
   nearestFloorDelta = lbl_803E25C8;
   nearestSpecialDelta = nearestFloorDelta;
-  *(u32 *)(state + 0x2dc) &= ~TRICKY_STATE_FLAG_SPECIAL_FLOOR_ABOVE;
-  *(f32 *)(state + 0x1b8) = lbl_803E2574;
-  *(s8 *)(state + 0x264) &= ~TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
+  ((TrickyState *)state)->flags2DC &= ~TRICKY_STATE_FLAG_SPECIAL_FLOOR_ABOVE;
+  ((TrickyState *)state)->unk1B8 = lbl_803E2574;
+  *(s8 *)&((TrickyState *)state)->unk264 &= ~TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
   for (i = 0; i < hitCount; i++) {
     hit = *(f32 **)(hitList[0] + ((u32)i << 2));
     hitY = hit[0];
@@ -2750,19 +2750,19 @@ void Tricky_findNearbyFloorHeights(int obj,int state,f32 *nearestFloorY,f32 *nea
     }
     if (*(s8 *)(hit + 5) == 0xe) {
       if (absDy < nearestSpecialDelta) {
-        *(f32 *)(state + 0x1b8) = dy;
-        *(s8 *)(state + 0x264) |= TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
+        ((TrickyState *)state)->unk1B8 = dy;
+        *(s8 *)&((TrickyState *)state)->unk264 |= TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
         *nearestSpecialY = **(f32 **)(hitList[0] + ((u32)i << 2));
         nearestSpecialDelta = absDy;
-        if (lbl_803E25A0 < *(f32 *)(state + 0x1b8)) {
-          *(u32 *)(state + 0x2dc) |=
+        if (lbl_803E25A0 < ((TrickyState *)state)->unk1B8) {
+          ((TrickyState *)state)->flags2DC |=
               TRICKY_STATE_FLAG_SPECIAL_FLOOR_ABOVE | TRICKY_STATE_FLAG_FLOOR_RESPONSE;
         }
       }
     }
     else if (absDy < nearestFloorDelta) {
       *nearestFloorY = hitY;
-      *(s8 *)(state + 0x264) |= TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
+      *(s8 *)&((TrickyState *)state)->unk264 |= TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
       nearestFloorDelta = absDy;
     }
   }
@@ -2830,7 +2830,7 @@ void Tricky_render(int obj,int param_2,int param_3,int param_4,int param_5,char 
       }
     }
     Tricky_emitQueuedPathParticles(obj,state);
-    ObjPath_GetPointWorldPositionArray(obj,4,4,(float *)(state + 0x7d8));
+    ObjPath_GetPointWorldPositionArray(obj,4,4,(float *)((TrickyState *)state)->pad7D8);
     ((TrickyState *)state)->unk838 = ((TrickyState *)state)->unk838 - timeDelta;
     if (((TrickyState *)state)->unk838 > lbl_803E23DC) {
       objParticleFn_80099d84(obj,lbl_803E253C,6,lbl_803E23E8,0);
@@ -3703,7 +3703,7 @@ int trickyFn_801451d8(int obj,int state) {
     }
     {
         int ret = 1;
-        ((TrickyByteFlags *)(state + 0x58))->bit7 = ret;
+        ((TrickyByteFlags *)&((TrickyState *)state)->unk58)->bit7 = ret;
         return ret;
     }
 }
