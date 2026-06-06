@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/SH/SHkillermushroom.h"
+#include "main/objanim.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -38,8 +39,6 @@ extern void Sfx_KeepAliveLoopedObjectSound(void *obj, int sndId);
 extern void Obj_StartModelFadeIn(void *obj, int duration);
 extern void objLightFn_8009a1dc(void *obj, f32 *pos, int a, int b, f32 intensity);
 extern void Obj_SetModelColorFadeRecursive(void *obj, int a, int b, int c, int d, int e);
-extern void ObjAnim_SetCurrentMove(void *obj, s16 animId, int a, f32 startTime);
-extern int ObjAnim_AdvanceCurrentMove(void *obj, int mode, f32 ts1, f32 ts2);
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
 
@@ -487,10 +486,11 @@ void bombplant_update(void *obj)
   }
 
   if (*(s16 *)((u8 *)obj + 0xa0) != *(s16 *)entry) {
-    ObjAnim_SetCurrentMove(obj, *(s16 *)entry, 0, lbl_803E536C);
+    ObjAnim_SetCurrentMove((int)obj, *(s16 *)entry, lbl_803E536C, 0);
   }
 
-  if (ObjAnim_AdvanceCurrentMove(obj, 0, *(f32 *)(entry + 0x4), timeDelta) != 0) {
+  if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+          (int)obj, *(f32 *)(entry + 0x4), timeDelta, NULL) != 0) {
     *(u8 *)((u8 *)state + 0x15) |= 0x1;
   } else {
     *(u8 *)((u8 *)state + 0x15) &= ~0x1;

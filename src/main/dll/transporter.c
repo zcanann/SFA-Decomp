@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/transporter.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068f8();
@@ -1906,7 +1907,6 @@ void WarpPoint_update(int *obj) {
 
 extern void objSetSlot(s16 *obj, int slot);
 extern int modelFileHeaderGetCullDistance(int hdr);
-extern void ObjAnim_SetCurrentMove(s16 *obj, int moveId, int flags);
 extern void Model_GetVertexPosition(int *model, int idx, f32 *out);
 extern void debugPrintf(char *fmt, ...);
 extern char sPushPullObjectHitpointOverflow[];
@@ -1950,7 +1950,7 @@ void pushable_init(s16 *obj, char *def) {
     *(f32 *)(state + 0xc) = *(f32 *)(state + 0x10) * (f32)(u16)modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
     *(f32 *)(state + 0x14) = lbl_803E3528;
     *(s16 *)(state + 0xac) = *(s16 *)(def + 0x18);
-    ObjAnim_SetCurrentMove(obj, 0, 0);
+    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E3528, 0);
     ObjMsg_AllocQueue(obj, 4);
     ObjHits_EnableObject(obj);
     {
