@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camcannon.h"
+#include "main/dll/CAM/camcannon_state.h"
 
 
 #pragma peephole off
@@ -42,16 +43,16 @@ uint fn_8010AEA8(s16 *st, uint flagsIn)
   f32 t;
   f32 q;
 
-  *(f32 *)(lbl_803DD560 + 0x14) = *(f32 *)(st + 6);
-  *(f32 *)(lbl_803DD560 + 0x1c) = *(f32 *)(st + 8);
-  *(f32 *)(lbl_803DD560 + 0x24) = *(f32 *)(st + 10);
-  *(f32 *)(lbl_803DD560 + 0x2c) = (f32)st[0];
-  *(f32 *)(lbl_803DD560 + 0x34) = (f32)st[1];
-  *(f32 *)(lbl_803DD560 + 0x3c) = (f32)st[2];
-  *(f32 *)(lbl_803DD560 + 0x44) = *(f32 *)(st + 0x5a);
+  ((CamCannonState *)lbl_803DD560)->unk14 = *(f32 *)(st + 6);
+  ((CamCannonState *)lbl_803DD560)->unk1C = *(f32 *)(st + 8);
+  ((CamCannonState *)lbl_803DD560)->unk24 = *(f32 *)(st + 10);
+  ((CamCannonState *)lbl_803DD560)->unk2C = (f32)st[0];
+  ((CamCannonState *)lbl_803DD560)->unk34 = (f32)st[1];
+  ((CamCannonState *)lbl_803DD560)->unk3C = (f32)st[2];
+  ((CamCannonState *)lbl_803DD560)->unk44 = *(f32 *)(st + 0x5a);
 
-  if (lbl_803E1888 != *(f32 *)(lbl_803DD560 + 0x60)) {
-    t = *(f32 *)(lbl_803DD560 + 0x5c) / *(f32 *)(lbl_803DD560 + 0x60);
+  if (lbl_803E1888 != ((CamCannonState *)lbl_803DD560)->unk60) {
+    t = ((CamCannonState *)lbl_803DD560)->unk5C / ((CamCannonState *)lbl_803DD560)->unk60;
   } else {
     t = lbl_803E1888;
   }
@@ -62,11 +63,11 @@ uint fn_8010AEA8(s16 *st, uint flagsIn)
   if (t < lbl_803E18AC) {
     t = lbl_803E18AC;
   }
-  *(f32 *)(lbl_803DD560 + 0x5c) = t * timeDelta + *(f32 *)(lbl_803DD560 + 0x5c);
+  ((CamCannonState *)lbl_803DD560)->unk5C = t * timeDelta + ((CamCannonState *)lbl_803DD560)->unk5C;
 
   q = lbl_803E1888;
-  if (q != *(f32 *)(lbl_803DD560 + 0x60)) {
-    q = *(f32 *)(lbl_803DD560 + 0x5c) / *(f32 *)(lbl_803DD560 + 0x60);
+  if (q != ((CamCannonState *)lbl_803DD560)->unk60) {
+    q = ((CamCannonState *)lbl_803DD560)->unk5C / ((CamCannonState *)lbl_803DD560)->unk60;
   }
   if (q > lbl_803E188C) {
     q = lbl_803E188C;
@@ -76,31 +77,31 @@ uint fn_8010AEA8(s16 *st, uint flagsIn)
   *(f32 *)(st + 10) = Curve_EvalLinear(q, (f32 *)(lbl_803DD560 + 0x20), (f32 *)0x0);
   *(f32 *)(st + 0x5a) = Curve_EvalLinear(q, (f32 *)(lbl_803DD560 + 0x40), (f32 *)0x0);
 
-  d = *(f32 *)(lbl_803DD560 + 0x28) - *(f32 *)(lbl_803DD560 + 0x2c);
+  d = *(f32 *)(lbl_803DD560 + 0x28) - ((CamCannonState *)lbl_803DD560)->unk2C;
   if ((d > lbl_803E1890) || (d < lbl_803E1894)) {
     if (*(f32 *)(lbl_803DD560 + 0x28) < lbl_803E1888) {
       *(f32 *)(lbl_803DD560 + 0x28) = *(f32 *)(lbl_803DD560 + 0x28) + lbl_803E1898;
     }
-    else if (*(f32 *)(lbl_803DD560 + 0x2c) < lbl_803E1888) {
-      *(f32 *)(lbl_803DD560 + 0x2c) = *(f32 *)(lbl_803DD560 + 0x2c) + lbl_803E1898;
+    else if (((CamCannonState *)lbl_803DD560)->unk2C < lbl_803E1888) {
+      ((CamCannonState *)lbl_803DD560)->unk2C = ((CamCannonState *)lbl_803DD560)->unk2C + lbl_803E1898;
     }
   }
-  d = *(f32 *)(lbl_803DD560 + 0x30) - *(f32 *)(lbl_803DD560 + 0x34);
+  d = *(f32 *)(lbl_803DD560 + 0x30) - ((CamCannonState *)lbl_803DD560)->unk34;
   if ((d > lbl_803E1890) || (d < lbl_803E1894)) {
     if (*(f32 *)(lbl_803DD560 + 0x30) < lbl_803E1888) {
       *(f32 *)(lbl_803DD560 + 0x30) = *(f32 *)(lbl_803DD560 + 0x30) + lbl_803E1898;
     }
-    else if (*(f32 *)(lbl_803DD560 + 0x34) < lbl_803E1888) {
-      *(f32 *)(lbl_803DD560 + 0x34) = *(f32 *)(lbl_803DD560 + 0x34) + lbl_803E1898;
+    else if (((CamCannonState *)lbl_803DD560)->unk34 < lbl_803E1888) {
+      ((CamCannonState *)lbl_803DD560)->unk34 = ((CamCannonState *)lbl_803DD560)->unk34 + lbl_803E1898;
     }
   }
-  d = *(f32 *)(lbl_803DD560 + 0x38) - *(f32 *)(lbl_803DD560 + 0x3c);
+  d = *(f32 *)(lbl_803DD560 + 0x38) - ((CamCannonState *)lbl_803DD560)->unk3C;
   if ((d > lbl_803E1890) || (d < lbl_803E1894)) {
     if (*(f32 *)(lbl_803DD560 + 0x38) < lbl_803E1888) {
       *(f32 *)(lbl_803DD560 + 0x38) = *(f32 *)(lbl_803DD560 + 0x38) + lbl_803E1898;
     }
-    else if (*(f32 *)(lbl_803DD560 + 0x3c) < lbl_803E1888) {
-      *(f32 *)(lbl_803DD560 + 0x3c) = *(f32 *)(lbl_803DD560 + 0x3c) + lbl_803E1898;
+    else if (((CamCannonState *)lbl_803DD560)->unk3C < lbl_803E1888) {
+      ((CamCannonState *)lbl_803DD560)->unk3C = ((CamCannonState *)lbl_803DD560)->unk3C + lbl_803E1898;
     }
   }
 
