@@ -2014,7 +2014,7 @@ void dll_CA_func0B(int obj, int message)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015B5CC(int obj, int state)
+int mediumbasket_stateHandlerB04(int obj, int state)
 {
     if ((s8)*(u8 *)(state + 0x27b) != 0) {
         ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 2);
@@ -2026,7 +2026,7 @@ int fn_8015B5CC(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015B614(int obj, int state)
+int mediumbasket_stateHandlerB03(int obj, int state)
 {
     GroundBaddieState *sub;
 
@@ -2043,7 +2043,7 @@ int fn_8015B614(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015B670(int obj, int state)
+int mediumbasket_stateHandlerB02(int obj, int state)
 {
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedB != 0) {
         ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 0xd);
@@ -2142,7 +2142,7 @@ int mediumbasket_updateContactHitState(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015BC18(int obj, int state)
+int mediumbasket_stateHandlerA0B(int obj, int state)
 {
     GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int control;
@@ -2264,7 +2264,7 @@ int mediumbasket_updateHeightBlendState(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015C0B4(int obj, int state)
+int mediumbasket_stateHandlerA06(int obj, int state)
 {
     GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int choice;
@@ -2307,7 +2307,7 @@ int fn_8015C0B4(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015C2AC(int obj, int state)
+int mediumbasket_stateHandlerA05(int obj, int state)
 {
     GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int choice;
@@ -2439,7 +2439,7 @@ int mediumbasket_updateHideResetState(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015B2A0(int obj, int state)
+int mediumbasket_stateHandlerB06(int obj, int state)
 {
     GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int route;
@@ -2493,7 +2493,7 @@ int fn_8015B2A0(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015AF10(int obj, int state)
+int mediumbasket_stateHandlerB07(int obj, int state)
 {
     GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
 
@@ -2908,7 +2908,7 @@ int mediumbasket_updateControlMove5State(int* obj, GroundBaddieState *state) {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015B524(int* obj, GroundBaddieState *state) {
+int mediumbasket_stateHandlerB05(int* obj, GroundBaddieState *state) {
     if ((s8)state->baddie.moveJustStartedB != 0) {
         ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 3);
     }
@@ -2924,7 +2924,7 @@ int fn_8015B524(int* obj, GroundBaddieState *state) {
 #pragma peephole reset
 #pragma scheduling reset
 
-int fn_8015B748(int* obj, GroundBaddieState *state) {
+int mediumbasket_stateHandlerB01(int* obj, GroundBaddieState *state) {
     GroundBaddieState* sub = *(GroundBaddieState**)((char*)obj + 0xb8);
     if ((s8)state->baddie.hitPoints < 1) return 3;
     if ((s8)state->baddie.moveDone != 0) {
