@@ -1,4 +1,5 @@
 #include "main/dll/LGT/LGTpointlight.h"
+#include "main/game_object.h"
 
 
 #pragma peephole off
@@ -55,10 +56,10 @@ void lightsource_init(s16 *obj, int mapData)
   *obj = (short)(((int)*(s8 *)(mapData + 0x18) & 0x3fU) << 10);
   range = *(s16 *)(mapData + 0x1a);
   if (range > 0) {
-    *(f32 *)(obj + 4) = (f32)range / lbl_803E5E20;
+    ((GameObject *)obj)->anim.rootMotionScale = (f32)range / lbl_803E5E20;
   }
   else {
-    *(f32 *)(obj + 4) = lbl_803E5E24;
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5E24;
   }
 
   *(u8 *)((int)state + 0x14) = *(u8 *)(mapData + 0x19);
@@ -131,12 +132,12 @@ void lightsource_init(s16 *obj, int mapData)
         if (type == 0x705 || type == 0x712) {
           colorBase = *(u8 *)((int)state + 0x15) * 3;
           modelLightStruct_setupGlow(*state, 0, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2],
-                      0x8c, lbl_803E5E38 * (lbl_803E5E3C * *(f32 *)(obj + 4)));
+                      0x8c, lbl_803E5E38 * (lbl_803E5E3C * ((GameObject *)obj)->anim.rootMotionScale));
         }
         else {
           colorBase = *(u8 *)((int)state + 0x15) * 3;
           modelLightStruct_setupGlow(*state, 0, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2],
-                      0x8c, lbl_803E5E3C * *(f32 *)(obj + 4));
+                      0x8c, lbl_803E5E3C * ((GameObject *)obj)->anim.rootMotionScale);
         }
         modelLightStruct_setGlowProjectionRadius(*state, lbl_803E5E40);
       }
