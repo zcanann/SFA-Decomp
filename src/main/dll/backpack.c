@@ -123,8 +123,8 @@ void tumbleweed_updateStateMachine(int obj) {
     u32 hitVolume;
     int hitObject;
     u32 popMsg;
-    int *player;
-    int *tricky;
+    GameObject *player;
+    GameObject *tricky;
 
     aux = *(int *)&((GameObject *)obj)->extra;
     {
@@ -147,18 +147,18 @@ void tumbleweed_updateStateMachine(int obj) {
     } else if (state == 2) {
         f32 dx, dz, dist2;
         f32 d;
-        player = (int*)Obj_GetPlayerObject();
-        dx = ((GameObject *)obj)->anim.localPosX - *(f32*)((char*)player + 0xc);
-        dz = ((GameObject *)obj)->anim.localPosZ - *(f32*)((char*)player + 0x14);
+        player = (GameObject*)Obj_GetPlayerObject();
+        dx = ((GameObject *)obj)->anim.localPosX - player->anim.localPosX;
+        dz = ((GameObject *)obj)->anim.localPosZ - player->anim.localPosZ;
         dist2 = dx*dx + dz*dz;
-        tricky = (int*)getTrickyObject();
-        if (tricky != 0 && *(s16*)((char*)tricky + 0x46) == 0x24) {
+        tricky = (GameObject*)getTrickyObject();
+        if (tricky != 0 && tricky->anim.seqId == 0x24) {
             f32 ndx, ndz, ndist2;
             if (dist2 < lbl_803E2FA0) {
-                (*(int(**)(int, int, int, int))(*(int*)*(int*)((char*)tricky + 0x68) + 0x28))((int)tricky, obj, 0, 1);
+                (*(int(**)(int, int, int, int))((char *)*tricky->anim.dll + 0x28))((int)tricky, obj, 0, 1);
             }
-            ndx = ((GameObject *)obj)->anim.localPosX - *(f32*)((char*)tricky + 0xc);
-            ndz = ((GameObject *)obj)->anim.localPosZ - *(f32*)((char*)tricky + 0x14);
+            ndx = ((GameObject *)obj)->anim.localPosX - tricky->anim.localPosX;
+            ndz = ((GameObject *)obj)->anim.localPosZ - tricky->anim.localPosZ;
             ndist2 = ndx*ndx + ndz*ndz;
             if (ndist2 < dist2) {
                 dx = ndx;
@@ -199,7 +199,7 @@ void tumbleweed_updateStateMachine(int obj) {
             ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
         } else {
             if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
-                *(s16*)(hitObject + 0x46) != ((GameObject *)obj)->anim.seqId) {
+                ((GameObject *)hitObject)->anim.seqId != ((GameObject *)obj)->anim.seqId) {
                 if (((GameObject *)obj)->anim.seqId == TUMBLEWEED_TYPE_3) {
                     ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 3);
                     ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A & ~0x10);
@@ -214,8 +214,8 @@ void tumbleweed_updateStateMachine(int obj) {
         }
     } else if (state == 3) {
         f32 d;
-        player = (int*)Obj_GetPlayerObject();
-        d = getXZDistance((f32*)((char*)player + 0x18), (f32*)(obj + 0x18));
+        player = (GameObject*)Obj_GetPlayerObject();
+        d = getXZDistance(&player->anim.worldPosX, &((GameObject *)obj)->anim.worldPosX);
         if (d < lbl_803E2FB8) {
             *(s16*)(aux + 0x298) = 0x195;
             ((BackpackState *)aux)->unk29A = 0;
@@ -231,7 +231,7 @@ void tumbleweed_updateStateMachine(int obj) {
                 ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
             } else {
                 if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
-                    *(s16*)(hitObject + 0x46) != ((GameObject *)obj)->anim.seqId) {
+                    ((GameObject *)hitObject)->anim.seqId != ((GameObject *)obj)->anim.seqId) {
                     ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
                 }
             }
@@ -261,9 +261,9 @@ void tumbleweed_updateStateMachine(int obj) {
             ((GameObject *)obj)->anim.velocityY = (k * vy) * ((BackpackState *)aux)->unk294;
             ((GameObject *)obj)->anim.velocityZ = (k * vz) * ((BackpackState *)aux)->unk294;
         }
-        d = getXZDistance((f32*)(obj + 0xc), ((BackpackState *)aux)->unk290);
+        d = getXZDistance(&((GameObject *)obj)->anim.localPosX, ((BackpackState *)aux)->unk290);
         objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta, ((GameObject *)obj)->anim.velocityZ * timeDelta);
-        if (getXZDistance((f32*)(obj + 0xc), ((BackpackState *)aux)->unk290) > d) {
+        if (getXZDistance(&((GameObject *)obj)->anim.localPosX, ((BackpackState *)aux)->unk290) > d) {
             ((GameObject *)obj)->anim.localPosX += ((((BackpackState *)aux)->unk290)[0] - ((GameObject *)obj)->anim.localPosX) * lbl_803E2F98;
             ((GameObject *)obj)->anim.localPosY += ((((BackpackState *)aux)->unk290)[1] - ((GameObject *)obj)->anim.localPosY) * lbl_803E2F98;
             ((GameObject *)obj)->anim.localPosZ += ((((BackpackState *)aux)->unk290)[2] - ((GameObject *)obj)->anim.localPosZ) * lbl_803E2F98;
@@ -595,7 +595,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     int hitObject;
     int animPhase;
     int aux;
-    int *player;
+    GameObject *player;
     u32 state;
 
     aux = *(int *)&((GameObject *)obj)->extra;
@@ -611,10 +611,10 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     } else if (state == 1) {
         if ((*(int(**)(int*))(*(int*)gSHthorntailAnimationInterface + 0x24))(&animPhase) != 0) {
             f32 dx, dz, d;
-            player = ((BackpackState *)aux)->unk284;
-            player = player ? player : (int*)Obj_GetPlayerObject();
-            dx = ((GameObject *)obj)->anim.localPosX - *(f32*)((char*)player + 0xc);
-            dz = ((GameObject *)obj)->anim.localPosZ - *(f32*)((char*)player + 0x14);
+            player = (GameObject *)((BackpackState *)aux)->unk284;
+            player = player ? player : (GameObject*)Obj_GetPlayerObject();
+            dx = ((GameObject *)obj)->anim.localPosX - player->anim.localPosX;
+            dz = ((GameObject *)obj)->anim.localPosZ - player->anim.localPosZ;
             d = sqrtf(dx*dx + dz*dz);
             *(s16*)(aux + 0x268) = d;
             if (((BackpackState *)aux)->unk268 < *(u16*)(aux + 0x26a)) {
@@ -626,10 +626,10 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     } else if (state == 2) {
         f32 dz, dx, d;
         u32 dist;
-        player = ((BackpackState *)aux)->unk284;
-        player = player ? player : (int*)Obj_GetPlayerObject();
-        dx = ((GameObject *)obj)->anim.localPosX - *(f32*)((char*)player + 0xc);
-        dz = ((GameObject *)obj)->anim.localPosZ - *(f32*)((char*)player + 0x14);
+        player = (GameObject *)((BackpackState *)aux)->unk284;
+        player = player ? player : (GameObject*)Obj_GetPlayerObject();
+        dx = ((GameObject *)obj)->anim.localPosX - player->anim.localPosX;
+        dz = ((GameObject *)obj)->anim.localPosZ - player->anim.localPosZ;
         d = sqrtf(dx*dx + dz*dz);
         *(s16*)(aux + 0x268) = d;
         dist = ((BackpackState *)aux)->unk268;
