@@ -954,6 +954,58 @@ Heuristic:
     FIRST regressed), CameraModeCloudRunner_init 99.60→100 (q local for the
     global pointer). Sibling of #16, for the volatile-pair case.
 
+67. **Frame-size (stwu/stmw delta) class — diagnose via sp-LAYOUT, not call
+    args; four sub-causes, each with its own fix.** (task #144 research.)
+    Ground truth first: MWCC GC EABI reserves NO outgoing-arg area for
+    register args (a 6-arg-calling fn compiles to frame -8 = linkage only) —
+    a frame delta is NEVER about callee arg counts ≤8 GPR words. Frame =
+    8B linkage + address-taken locals + FP-CONVERSION SCRATCH high-water +
+    saved regs, rounded to 8. Each int↔f32 conversion site consumes one-two
+    8B scratch slots (xoris/0x43300000 magic pair in, fctiwz+stfd+lwz out).
+    DIAGNOSIS: dump both objects, list every `r1)`-relative access + the
+    `_savegpr_NN` reloc, then classify:
+    (a) **Inner offsets identical, only the top differs** → phantom temp-slot
+        delta from source-form temp COUNT. A re-evaluated member chain adds
+        an 8B slot with ZERO code change: seqPlaySong 99.94→100 by writing
+        `if (gs[i].gAddr->type == 0) { g = gs[i].gAddr; ... }` (re-evaluate
+        in the condition, assign inside) instead of `g = gs[i].gAddr;
+        if (g->type == 0)`. The CSE'd final code is identical; only the
+        pre-RA slot count grows. Inverse direction: collapse such
+        re-evaluations to shrink. (1.2.5n; on 2.0 GPR-temp re-evals were
+        slot-neutral — A/B per compiler.)
+    (b) **GAP between address-taken local offsets** → a stack struct is
+        BIGGER than the fields you write. Read the gap: fn_801E83B0's target
+        put f64 scratch at 0x40 but `v` fields ended at 0x18 → the
+        lightningCreate endpoint struct is really 0x38 bytes (pad 0x28),
+        frame -96→-144 exactly (97.29→97.41, rest is coloring).
+    (c) **Conversion-scratch slots at DIFFERENT offsets (slot-stream
+        divergence)** → compare the "slot stream" (the ordered sequence of
+        `lfd/stfd fN,K(r1)` offsets). Statement GRANULARITY controls slot
+        coexistence: a clamp written as ONE ternary statement
+        (`g = g < (f32)-p5 ? (f32)-p5 : (g > (f32)p5 ? (f32)p5 : g);`)
+        keeps all its conversion temps simultaneously live → distinct
+        descending slots + bigger frame; the if/else form frees+reuses one
+        slot. CAVEAT: flipping the form can perturb GLOBAL register
+        coloring elsewhere in the fn (ObjSeq_func20: ternary matched the
+        full slot stream AND frame -128 but cost an extra `mr` upstream,
+        insensitive to 6 yawd-form variants — net LOWER fuzzy; reverted).
+        If the slot-stream fix regresses elsewhere, keep the higher-scoring
+        form and file the frame as cosmetic.
+    (d) **`_savegpr_NN` differs (extra saved reg)** → NOT a frame mystery:
+        one extra live range, usually MWCC CSE-ing a repeated address expr
+        (`(char*)o2 + 0x18` ×3) into a saved reg where target recomputes.
+        Value-numbered CSE — different SPELLINGS of the same value
+        (`(char*)(o2+6)`, `(u8*)o2+0x18`) do NOT defeat it. But FIRST diff
+        the logic: fn_801CE2BC's "frame residual" hid 3 missing vtable
+        double-derefs, two INVERTED float compares, and a missing
+        `case 0x13:` fallthrough (97.0→98.15 from bug fixes alone).
+    Null results (don't retry): dead/unused locals and dead conversions drop
+    their slots entirely (can't pad a frame with dead code); `(s16)` casts,
+    block-vs-function scope, and lo/hi clamp-bound locals are all
+    slot-neutral on 2.0. Sensitivity probe: an address-taken `f32 probe[N]`
+    passed to any callee moves the frame in 8B quanta — use it to measure
+    the demand gap before hunting the source form.
+
 ### 99.5%+ tier sweep findings (task #142) — category triage table
 
 Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
