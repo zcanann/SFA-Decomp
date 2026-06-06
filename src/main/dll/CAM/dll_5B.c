@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camshipbattle5C.h"
+#include "main/dll/CAM/viewfinder_state.h"
 #include "main/dll/CAM/dll_5B.h"
 
 
@@ -152,14 +153,14 @@ void firstPersonDoControls(short *param_1)
     }
   }
   spin = (f32)cVar3 * -(lbl_803E17F0 * zoom - lbl_803E17EC);
-  spin = interpolate(spin - *(f32 *)((int)lbl_803DD548 + 0x11c), lbl_803E17F4, timeDelta);
-  *(f32 *)((int)lbl_803DD548 + 0x11c) = *(f32 *)((int)lbl_803DD548 + 0x11c) + spin;
-  if ((*(f32 *)((int)lbl_803DD548 + 0x11c) > lbl_803E17F8) &&
-     (*(f32 *)((int)lbl_803DD548 + 0x11c) < lbl_803E17FC)) {
-    *(f32 *)((int)lbl_803DD548 + 0x11c) = lbl_803E17C4;
+  spin = interpolate(spin - ((ViewfinderState *)lbl_803DD548)->unk11C, lbl_803E17F4, timeDelta);
+  ((ViewfinderState *)lbl_803DD548)->unk11C = ((ViewfinderState *)lbl_803DD548)->unk11C + spin;
+  if ((((ViewfinderState *)lbl_803DD548)->unk11C > lbl_803E17F8) &&
+     (((ViewfinderState *)lbl_803DD548)->unk11C < lbl_803E17FC)) {
+    ((ViewfinderState *)lbl_803DD548)->unk11C = lbl_803E17C4;
   }
   spinI = (int)(lbl_803E1800 * ((f32)cVar4 / lbl_803E1804));
-  *param_1 = *(f32 *)((int)lbl_803DD548 + 0x11c) * timeDelta + (f32)*param_1;
+  *param_1 = ((ViewfinderState *)lbl_803DD548)->unk11C * timeDelta + (f32)*param_1;
   sVar2 = spinI - (param_1[1] & 0xffffU);
   if (0x8000 < sVar2) {
     sVar2 = sVar2 - 0xffff;
@@ -179,12 +180,12 @@ void firstPersonDoControls(short *param_1)
   if (psVar5[0x22] == 1) {
     fn_802961D4(psVar5, *psVar5);
   }
-  if (*(f32 *)((int)lbl_803DD548 + 0x124) < *(f32 *)((int)lbl_803DD548 + 0x130)) {
-    *(f32 *)((int)lbl_803DD548 + 0x130) = *(f32 *)((int)lbl_803DD548 + 0x124);
+  if (((ViewfinderState *)lbl_803DD548)->unk124 < ((ViewfinderState *)lbl_803DD548)->unk130) {
+    ((ViewfinderState *)lbl_803DD548)->unk130 = ((ViewfinderState *)lbl_803DD548)->unk124;
   }
-  *(f32 *)(param_1 + 0xc) = *(f32 *)((int)lbl_803DD548 + 0x120);
-  *(f32 *)(param_1 + 0xe) = *(f32 *)((int)lbl_803DD548 + 0x130);
-  *(f32 *)(param_1 + 0x10) = *(f32 *)((int)lbl_803DD548 + 0x128);
+  *(f32 *)(param_1 + 0xc) = ((ViewfinderState *)lbl_803DD548)->unk120;
+  *(f32 *)(param_1 + 0xe) = ((ViewfinderState *)lbl_803DD548)->unk130;
+  *(f32 *)(param_1 + 0x10) = ((ViewfinderState *)lbl_803DD548)->unk128;
   if (((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7) {
     zoom2 = *(f32 *)(param_1 + 0x5a);
     cVar3 = padGetCY(0);
@@ -241,9 +242,9 @@ int firstPersonEnter(u8 *cam, s16 *p2)
   int flag;
   int other;
 
-  *(f32 *)(cam + 24) = *(f32 *)((char *)lbl_803DD548 + 288);
-  *(f32 *)(cam + 28) = *(f32 *)((char *)lbl_803DD548 + 292);
-  *(f32 *)(cam + 32) = *(f32 *)((char *)lbl_803DD548 + 296);
+  *(f32 *)(cam + 24) = ((ViewfinderState *)lbl_803DD548)->unk120;
+  *(f32 *)(cam + 28) = ((ViewfinderState *)lbl_803DD548)->unk124;
+  *(f32 *)(cam + 32) = ((ViewfinderState *)lbl_803DD548)->unk128;
   *(s16 *)(cam + 2) = 0;
   flag = 0;
   if (*(f32 *)(cam + 244) <= lbl_803E17C4) {
@@ -267,29 +268,29 @@ int firstPersonEnter(u8 *cam, s16 *p2)
     }
   }
   if (flag != 0) {
-    *(int *)((char *)lbl_803DD548 + 252) = (int)((char *)lbl_803DD548 + 64);
-    *(int *)((char *)lbl_803DD548 + 256) = 0;
-    *(int *)((char *)lbl_803DD548 + 260) = 0;
-    *(int *)((char *)lbl_803DD548 + 264) = 4;
-    *(int *)((char *)lbl_803DD548 + 268) = (int)&Curve_EvalHermite;
-    *(int *)((char *)lbl_803DD548 + 272) = (int)&Curve_BuildHermiteCoeffs;
-    *(int *)((char *)lbl_803DD548 + 248) = 0;
+    ((ViewfinderState *)lbl_803DD548)->unkFC = (int)((char *)lbl_803DD548 + 64);
+    ((ViewfinderState *)lbl_803DD548)->unk100 = 0;
+    ((ViewfinderState *)lbl_803DD548)->unk104 = 0;
+    ((ViewfinderState *)lbl_803DD548)->unk108 = 4;
+    ((ViewfinderState *)lbl_803DD548)->unk10C = (int)&Curve_EvalHermite;
+    ((ViewfinderState *)lbl_803DD548)->unk110 = (int)&Curve_BuildHermiteCoeffs;
+    ((ViewfinderState *)lbl_803DD548)->unkF8 = 0;
     *(f32 *)((char *)lbl_803DD548 + 64) = (f32)(s32)*(s16 *)cam;
-    *(f32 *)((char *)lbl_803DD548 + 68) = (f32)(s16)(0x8000 - p2[0]);
-    f2 = *(f32 *)((char *)lbl_803DD548 + 64) - *(f32 *)((char *)lbl_803DD548 + 68);
+    ((ViewfinderState *)lbl_803DD548)->unk44 = (f32)(s16)(0x8000 - p2[0]);
+    f2 = *(f32 *)((char *)lbl_803DD548 + 64) - ((ViewfinderState *)lbl_803DD548)->unk44;
     if (f2 < lbl_803E1818 && f2 > lbl_803E181C) {
-      *(f32 *)((char *)lbl_803DD548 + 68) = *(f32 *)((char *)lbl_803DD548 + 64);
+      ((ViewfinderState *)lbl_803DD548)->unk44 = *(f32 *)((char *)lbl_803DD548 + 64);
     } else if (f2 > lbl_803E17C8 || f2 < lbl_803E17CC) {
       if (*(f32 *)((char *)lbl_803DD548 + 64) < lbl_803E17C4) {
         *(f32 *)((char *)lbl_803DD548 + 64) += lbl_803E17D0;
-      } else if (*(f32 *)((char *)lbl_803DD548 + 68) < lbl_803E17C4) {
-        *(f32 *)((char *)lbl_803DD548 + 68) += lbl_803E17D0;
+      } else if (((ViewfinderState *)lbl_803DD548)->unk44 < lbl_803E17C4) {
+        ((ViewfinderState *)lbl_803DD548)->unk44 += lbl_803E17D0;
       }
     }
     {
         f32 k = lbl_803E17C4;
-        *(f32 *)((char *)lbl_803DD548 + 72) = k;
-        *(f32 *)((char *)lbl_803DD548 + 76) = k;
+        ((ViewfinderState *)lbl_803DD548)->unk48 = k;
+        ((ViewfinderState *)lbl_803DD548)->unk4C = k;
     }
     curvesMove((char *)lbl_803DD548 + 120);
     return 1;
@@ -412,18 +413,18 @@ void CameraModeViewfinder_update(s16 *param_1)
   camObj = *(int *)(param_1 + 0x52);
   getButtonsJustPressed(0);
   firstPersonPlaceCamera(camObj, 0);
-  switch (*(u8 *)((int)lbl_803DD548 + 0x12c)) {
+  switch (((ViewfinderState *)lbl_803DD548)->unk12C) {
   case 0:
-    *(u8 *)((int)lbl_803DD548 + 0x12c) = firstPersonEnter((u8 *)param_1, (s16 *)*(int *)(param_1 + 0x52));
+    ((ViewfinderState *)lbl_803DD548)->unk12C = firstPersonEnter((u8 *)param_1, (s16 *)*(int *)(param_1 + 0x52));
     break;
   case 1:
     if (Curve_AdvanceAlongPath((char *)lbl_803DD548 + 0x78, lbl_803E1820) != 0) {
       if (((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7) {
         Rcp_SetViewFinderHudEnabled(1);
       }
-      *(u8 *)((int)lbl_803DD548 + 0x12c) = 2;
+      ((ViewfinderState *)lbl_803DD548)->unk12C = 2;
     }
-    *param_1 = *(f32 *)((int)lbl_803DD548 + 0xe0);
+    *param_1 = ((ViewfinderState *)lbl_803DD548)->unkE0;
     *(u8 *)(param_1 + 0x9f) = 1;
     break;
   case 2:
@@ -435,26 +436,26 @@ void CameraModeViewfinder_update(s16 *param_1)
       buttonDisable(0, 0x200);
       firstPersonExit(param_1);
       Rcp_SetViewFinderHudEnabled(0);
-      *(u8 *)((int)lbl_803DD548 + 0x12c) = 3;
+      ((ViewfinderState *)lbl_803DD548)->unk12C = 3;
     }
     *(u8 *)(param_1 + 0x9f) = 0;
     break;
   case 3:
     angleDiff = Curve_AdvanceAlongPath((char *)lbl_803DD548 + 0x78, lbl_803E1820);
-    *param_1 = *(f32 *)((int)lbl_803DD548 + 0xe0);
-    param_1[1] = *(f32 *)((int)lbl_803DD548 + 0xe4);
+    *param_1 = ((ViewfinderState *)lbl_803DD548)->unkE0;
+    param_1[1] = ((ViewfinderState *)lbl_803DD548)->unkE4;
     if (angleDiff != 0) {
-      *(int *)((int)lbl_803DD548 + 0xfc) = (int)lbl_803DD548 + 0x10;
-      *(int *)((int)lbl_803DD548 + 0x100) = (int)lbl_803DD548 + 0x20;
-      *(int *)((int)lbl_803DD548 + 0x104) = (int)lbl_803DD548 + 0x30;
-      *(int *)((int)lbl_803DD548 + 0x108) = 4;
-      *(int *)((int)lbl_803DD548 + 0xf8) = 0;
-      *(int *)((int)lbl_803DD548 + 0x10c) = (int)Curve_EvalHermite;
-      *(int *)((int)lbl_803DD548 + 0x110) = (int)Curve_BuildHermiteCoeffs;
+      ((ViewfinderState *)lbl_803DD548)->unkFC = (int)lbl_803DD548 + 0x10;
+      ((ViewfinderState *)lbl_803DD548)->unk100 = (int)lbl_803DD548 + 0x20;
+      ((ViewfinderState *)lbl_803DD548)->unk104 = (int)lbl_803DD548 + 0x30;
+      ((ViewfinderState *)lbl_803DD548)->unk108 = 4;
+      ((ViewfinderState *)lbl_803DD548)->unkF8 = 0;
+      ((ViewfinderState *)lbl_803DD548)->unk10C = (int)Curve_EvalHermite;
+      ((ViewfinderState *)lbl_803DD548)->unk110 = (int)Curve_BuildHermiteCoeffs;
       curvesMove((char *)lbl_803DD548 + 0x78);
       *(s16 *)(*(int *)(param_1 + 0x52) + 6) = *(s16 *)(*(int *)(param_1 + 0x52) + 6) & ~0x4000;
       firstPersonZoomOutOnExit(0xf, 0xfe);
-      *(u8 *)((int)lbl_803DD548 + 0x12c) = 4;
+      ((ViewfinderState *)lbl_803DD548)->unk12C = 4;
       if (((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b6) {
         Sfx_PlayFromObject(0, ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7 ? 0x3f5 : 0x3f3);
       }
@@ -462,9 +463,9 @@ void CameraModeViewfinder_update(s16 *param_1)
     *(u8 *)(param_1 + 0x9f) = 1;
     break;
   case 4:
-    *(f32 *)(param_1 + 0xc) = *(f32 *)((int)lbl_803DD548 + 0x14);
-    *(f32 *)(param_1 + 0xe) = *(f32 *)((int)lbl_803DD548 + 0x24);
-    *(f32 *)(param_1 + 0x10) = *(f32 *)((int)lbl_803DD548 + 0x34);
+    *(f32 *)(param_1 + 0xc) = ((ViewfinderState *)lbl_803DD548)->unk14;
+    *(f32 *)(param_1 + 0xe) = ((ViewfinderState *)lbl_803DD548)->unk24;
+    *(f32 *)(param_1 + 0x10) = ((ViewfinderState *)lbl_803DD548)->unk34;
     {
       f32 fade = (lbl_803E17E8 - *(f32 *)(param_1 + 0x7a)) - lbl_803E1824;
       if (fade < lbl_803E17C4) {
@@ -535,9 +536,9 @@ void CameraModeViewfinder_update(s16 *param_1)
   }
   if (ObjHits_GetPriorityHit(*(int *)(param_1 + 0x52), 0, 0, 0) != 0) {
     firstPersonExit(param_1);
-    *(f32 *)(param_1 + 0xc) = *(f32 *)((int)lbl_803DD548 + 0x14);
-    *(f32 *)(param_1 + 0xe) = *(f32 *)((int)lbl_803DD548 + 0x24);
-    *(f32 *)(param_1 + 0x10) = *(f32 *)((int)lbl_803DD548 + 0x34);
+    *(f32 *)(param_1 + 0xc) = ((ViewfinderState *)lbl_803DD548)->unk14;
+    *(f32 *)(param_1 + 0xe) = ((ViewfinderState *)lbl_803DD548)->unk24;
+    *(f32 *)(param_1 + 0x10) = ((ViewfinderState *)lbl_803DD548)->unk34;
     ((void (*)(int, int, int, int, int, int, int))*(code **)(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0, 0);
   }
   fn_80137948(&sCam5BYDebugFormat, *(f32 *)(param_1 + 0xe));
@@ -585,9 +586,9 @@ void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3)
   }
   memset(lbl_803DD548, 0, 0x134);
   *(f32 *)lbl_803DD548 = *(f32 *)param_3;
-  *(f32 *)((int)lbl_803DD548 + 0x114) = (f32)(u32)*(u16 *)((int)param_3 + 8);
-  *(f32 *)((int)lbl_803DD548 + 4) = *(f32 *)(param_3 + 1);
-  *(f32 *)((int)lbl_803DD548 + 0x11c) = lbl_803E17C4;
+  ((ViewfinderState *)lbl_803DD548)->unk114 = (f32)(u32)*(u16 *)((int)param_3 + 8);
+  ((ViewfinderState *)lbl_803DD548)->unk4 = *(f32 *)(param_3 + 1);
+  ((ViewfinderState *)lbl_803DD548)->unk11C = lbl_803E17C4;
   diff = 0x8000 - param_1[0] - camObj[0];
   if (diff < 0) {
     absDiff = -diff;
@@ -597,13 +598,13 @@ void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3)
   }
   spinRate = (f32)diff / lbl_803E17E4;
   rollRate = (f32)absDiff / lbl_803E1830;
-  *(int *)((int)lbl_803DD548 + 0xfc) = (int)lbl_803DD548 + 0x10;
-  *(int *)((int)lbl_803DD548 + 0x100) = (int)lbl_803DD548 + 0x20;
-  *(int *)((int)lbl_803DD548 + 0x104) = (int)lbl_803DD548 + 0x30;
-  *(int *)((int)lbl_803DD548 + 0x108) = 4;
-  *(int *)((int)lbl_803DD548 + 0xf8) = 0;
-  *(int *)((int)lbl_803DD548 + 0x10c) = (int)Curve_EvalHermite;
-  *(int *)((int)lbl_803DD548 + 0x110) = (int)Curve_BuildHermiteCoeffs;
+  ((ViewfinderState *)lbl_803DD548)->unkFC = (int)lbl_803DD548 + 0x10;
+  ((ViewfinderState *)lbl_803DD548)->unk100 = (int)lbl_803DD548 + 0x20;
+  ((ViewfinderState *)lbl_803DD548)->unk104 = (int)lbl_803DD548 + 0x30;
+  ((ViewfinderState *)lbl_803DD548)->unk108 = 4;
+  ((ViewfinderState *)lbl_803DD548)->unkF8 = 0;
+  ((ViewfinderState *)lbl_803DD548)->unk10C = (int)Curve_EvalHermite;
+  ((ViewfinderState *)lbl_803DD548)->unk110 = (int)Curve_BuildHermiteCoeffs;
   dx = *(f32 *)(param_1 + 0xc) - *(f32 *)(camObj + 0xc);
   dz = *(f32 *)(param_1 + 0x10) - *(f32 *)(camObj + 0x10);
   dist = sqrtf(dx * dx + dz * dz);
@@ -615,64 +616,64 @@ void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3)
   cosv = -fn_80293E80((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
   sinv = -sin((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
   *(f32 *)((int)lbl_803DD548 + 0x10) = *(f32 *)(param_1 + 0xc);
-  *(f32 *)((int)lbl_803DD548 + 0x14) = *(f32 *)((int)lbl_803DD548 + 0x120);
-  *(f32 *)((int)lbl_803DD548 + 0x18) = -dz * spinRate;
-  *(f32 *)((int)lbl_803DD548 + 0x1c) = cosv * rollRate;
+  ((ViewfinderState *)lbl_803DD548)->unk14 = ((ViewfinderState *)lbl_803DD548)->unk120;
+  ((ViewfinderState *)lbl_803DD548)->unk18 = -dz * spinRate;
+  ((ViewfinderState *)lbl_803DD548)->unk1C = cosv * rollRate;
   *(f32 *)((int)lbl_803DD548 + 0x20) = *(f32 *)(param_1 + 0xe);
-  *(f32 *)((int)lbl_803DD548 + 0x24) = *(f32 *)((int)lbl_803DD548 + 0x124);
+  ((ViewfinderState *)lbl_803DD548)->unk24 = ((ViewfinderState *)lbl_803DD548)->unk124;
   zero = lbl_803E17C4;
-  *(f32 *)((int)lbl_803DD548 + 0x28) = zero;
-  *(f32 *)((int)lbl_803DD548 + 0x2c) = zero;
+  ((ViewfinderState *)lbl_803DD548)->unk28 = zero;
+  ((ViewfinderState *)lbl_803DD548)->unk2C = zero;
   *(f32 *)((int)lbl_803DD548 + 0x30) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)((int)lbl_803DD548 + 0x34) = *(f32 *)((int)lbl_803DD548 + 0x128);
-  *(f32 *)((int)lbl_803DD548 + 0x38) = dx * spinRate;
-  *(f32 *)((int)lbl_803DD548 + 0x3c) = sinv * rollRate;
-  *(f32 *)((int)lbl_803DD548 + 0x18) = zero;
-  *(f32 *)((int)lbl_803DD548 + 0x1c) = zero;
-  *(f32 *)((int)lbl_803DD548 + 0x28) = zero;
-  *(f32 *)((int)lbl_803DD548 + 0x2c) = zero;
-  *(f32 *)((int)lbl_803DD548 + 0x38) = zero;
-  *(f32 *)((int)lbl_803DD548 + 0x3c) = zero;
+  ((ViewfinderState *)lbl_803DD548)->unk34 = ((ViewfinderState *)lbl_803DD548)->unk128;
+  ((ViewfinderState *)lbl_803DD548)->unk38 = dx * spinRate;
+  ((ViewfinderState *)lbl_803DD548)->unk3C = sinv * rollRate;
+  ((ViewfinderState *)lbl_803DD548)->unk18 = zero;
+  ((ViewfinderState *)lbl_803DD548)->unk1C = zero;
+  ((ViewfinderState *)lbl_803DD548)->unk28 = zero;
+  ((ViewfinderState *)lbl_803DD548)->unk2C = zero;
+  ((ViewfinderState *)lbl_803DD548)->unk38 = zero;
+  ((ViewfinderState *)lbl_803DD548)->unk3C = zero;
   curvesMove((char *)lbl_803DD548 + 0x78);
-  a2 = param_1[0] - (u16)(0x8000 - getAngle(*(f32 *)(param_1 + 0xc) - *(f32 *)((int)lbl_803DD548 + 0x14),
-                                            *(f32 *)(param_1 + 0x10) - *(f32 *)((int)lbl_803DD548 + 0x34)));
+  a2 = param_1[0] - (u16)(0x8000 - getAngle(*(f32 *)(param_1 + 0xc) - ((ViewfinderState *)lbl_803DD548)->unk14,
+                                            *(f32 *)(param_1 + 0x10) - ((ViewfinderState *)lbl_803DD548)->unk34));
   if (a2 > 0x8000) {
     a2 = a2 - 0xffff;
   }
   if (a2 < -0x8000) {
     a2 = a2 + 0xffff;
   }
-  *(f32 *)((int)lbl_803DD548 + 0x40) = (f32)a2;
-  *(f32 *)((int)lbl_803DD548 + 0x44) = lbl_803E17C4;
-  *(f32 *)((int)lbl_803DD548 + 0x48) = lbl_803E17C4;
-  *(f32 *)((int)lbl_803DD548 + 0x4c) = lbl_803E17C4;
-  dx = *(f32 *)((int)lbl_803DD548 + 0x40) - *(f32 *)((int)lbl_803DD548 + 0x44);
+  ((ViewfinderState *)lbl_803DD548)->unk40 = (f32)a2;
+  ((ViewfinderState *)lbl_803DD548)->unk44 = lbl_803E17C4;
+  ((ViewfinderState *)lbl_803DD548)->unk48 = lbl_803E17C4;
+  ((ViewfinderState *)lbl_803DD548)->unk4C = lbl_803E17C4;
+  dx = ((ViewfinderState *)lbl_803DD548)->unk40 - ((ViewfinderState *)lbl_803DD548)->unk44;
   if (dx > lbl_803E17C8 || dx < lbl_803E17CC) {
-    if (*(f32 *)((int)lbl_803DD548 + 0x40) < lbl_803E17C4) {
-      *(f32 *)((int)lbl_803DD548 + 0x40) = *(f32 *)((int)lbl_803DD548 + 0x40) + lbl_803E17D0;
+    if (((ViewfinderState *)lbl_803DD548)->unk40 < lbl_803E17C4) {
+      ((ViewfinderState *)lbl_803DD548)->unk40 = ((ViewfinderState *)lbl_803DD548)->unk40 + lbl_803E17D0;
     }
-    else if (*(f32 *)((int)lbl_803DD548 + 0x44) < lbl_803E17C4) {
-      *(f32 *)((int)lbl_803DD548 + 0x44) = *(f32 *)((int)lbl_803DD548 + 0x44) + lbl_803E17D0;
+    else if (((ViewfinderState *)lbl_803DD548)->unk44 < lbl_803E17C4) {
+      ((ViewfinderState *)lbl_803DD548)->unk44 = ((ViewfinderState *)lbl_803DD548)->unk44 + lbl_803E17D0;
     }
   }
-  *(f32 *)((int)lbl_803DD548 + 0x50) = (f32)param_1[1];
-  *(f32 *)((int)lbl_803DD548 + 0x54) = lbl_803E17C4;
-  *(f32 *)((int)lbl_803DD548 + 0x58) = lbl_803E17C4;
-  *(f32 *)((int)lbl_803DD548 + 0x5c) = lbl_803E17C4;
+  ((ViewfinderState *)lbl_803DD548)->unk50 = (f32)param_1[1];
+  ((ViewfinderState *)lbl_803DD548)->unk54 = lbl_803E17C4;
+  ((ViewfinderState *)lbl_803DD548)->unk58 = lbl_803E17C4;
+  ((ViewfinderState *)lbl_803DD548)->unk5C = lbl_803E17C4;
   *(u8 *)(param_1 + 0x9f) = 1;
   if (GameBit_Get(0xc64) != 0) {
     ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7 = 1;
   }
   if (param_2 == 1) {
-    *(u8 *)((int)lbl_803DD548 + 0x12c) = 5;
+    ((ViewfinderState *)lbl_803DD548)->unk12C = 5;
   }
   else {
-    *(u8 *)((int)lbl_803DD548 + 0x12c) = 0;
+    ((ViewfinderState *)lbl_803DD548)->unk12C = 0;
     ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b6 = 1;
     Sfx_PlayFromObject(0, ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7 ? 0x3f4 : 0x28b);
   }
   ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b5 = 0;
-  *(f32 *)((int)lbl_803DD548 + 0x130) = *(f32 *)((int)lbl_803DD548 + 0x124);
+  ((ViewfinderState *)lbl_803DD548)->unk130 = ((ViewfinderState *)lbl_803DD548)->unk124;
 }
 
 /*
