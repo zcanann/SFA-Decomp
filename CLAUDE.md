@@ -1777,6 +1777,18 @@ addend lands mid-function (not at a symbol boundary) before adding a range.
     lfs AFTER the numerator (fn_8015F5B0 96.09→100, RandomTimer 96.3→99.8
     with the #32 acc-chain). Read the shape: call-arg hoist = cap;
     expression-operand hoist = embedded assignment.
+    **⚠️ MISCOMPILE HAZARD — an embedded assign in a CALL ARG whose value
+    is REUSED by LATER args of the SAME call generates WRONG CODE under
+    MWCC 2.0 (-O4): `f(p, (zero = lbl_A), zero, (one = lbl_B), x, zero,
+    one - x)` emitted `fmr f5,f2` reading the STALE incoming param reg and
+    `fsubs f6,f6,f4` reading an UNINITIALIZED reg — the embedded value
+    never flows to the reuse sites. Compiler tell: warning "variable
+    'zero' is not initialized before being used" on a variable that IS
+    assigned (in the embedded position). The fn compiles and links —
+    silently wrong at runtime. Never use #40-family embedded assigns for
+    multi-use values inside one call's arg list; the safe scope is a
+    SINGLE-use value or an expression operand outside arg lists.
+    (modellight setSpecularAttenuation probes, task #163.)
     **SAFETY: NEVER flip the callee's DEFINITION — cast at the CALL SITE
     only.** Flipping modelWalkAnimFn_800248b8's def regressed the callee
     230 instrs (param homing order matters in the body); the
