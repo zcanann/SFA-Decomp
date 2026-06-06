@@ -1,3 +1,5 @@
+#include "main/game_object.h"
+#include "main/model.h"
 #include "main/objprint_dolphin.h"
 #include "main/objanim_internal.h"
 
@@ -503,7 +505,7 @@ void FUN_8003d97c(ushort *param_1,int param_2)
     uStack_24 = (int)*(short *)(iVar10 + 2) >> 8 ^ 0x80000000;
     local_28 = 0x43300000;
     local_e8 = fVar1 * (float)((double)CONCAT44(0x43300000, uStack_24) - DOUBLE_803df6c0) +
-               *(float *)(param_1 + 8);
+               ((GameObject *)param_1)->anim.rootMotionScale;
     uStack_1c = (int)*(short *)(iVar10 + 4) >> 8 ^ 0x80000000;
     local_20 = 0x43300000;
     local_e4 = fVar1 * (float)((double)CONCAT44(0x43300000, uStack_1c) - DOUBLE_803df6c0) +
@@ -2314,8 +2316,8 @@ void FUN_80040374(int param_1)
   FUN_80017964((int)piVar2,FUN_8003c1f8);
   for (DAT_803dd8c4 = 0; DAT_803dd8c4 < 0x10; DAT_803dd8c4 = DAT_803dd8c4 + DAT_803dd8c0) {
     iVar3 = param_1;
-    if (*(int *)(param_1 + 0xc4) != 0) {
-      iVar3 = *(int *)(param_1 + 0xc4);
+    if (*(int *)&((GameObject *)param_1)->unkC4 != 0) {
+      iVar3 = *(int *)&((GameObject *)param_1)->unkC4;
     }
     FUN_800400ac(param_1,iVar3,*piVar2,8);
     DAT_803dd8a4 = uVar1;
@@ -2354,8 +2356,8 @@ void FUN_80040434(int param_1)
   DAT_803dd8bd = (undefined)(int)lbl_803DD8B8;
   for (DAT_803dd8c4 = 0; DAT_803dd8c4 < 0x10; DAT_803dd8c4 = DAT_803dd8c4 + DAT_803dd8c0) {
     iVar3 = param_1;
-    if (*(int *)(param_1 + 0xc4) != 0) {
-      iVar3 = *(int *)(param_1 + 0xc4);
+    if (*(int *)&((GameObject *)param_1)->unkC4 != 0) {
+      iVar3 = *(int *)&((GameObject *)param_1)->unkC4;
     }
     DAT_803dd8a4 = uVar1;
     FUN_800400ac(param_1,iVar3,*piVar2,2);
@@ -2396,14 +2398,14 @@ void FUN_800404cc(int param_1)
   double dVar11;
   
   puVar6 = FUN_800069a8();
-  if (((((*(ushort *)(param_1 + 0xb0) & 0x1000) == 0) && (*(char *)(param_1 + 0xac) != '?')) &&
-      (*(short *)(param_1 + 0x46) != 0x882)) && (*(short *)(param_1 + 0x46) != 0x887)) {
+  if (((((((GameObject *)param_1)->unkB0 & 0x1000) == 0) && (*(char *)(param_1 + 0xac) != '?')) &&
+      (((GameObject *)param_1)->anim.seqId != 0x882)) && (((GameObject *)param_1)->anim.seqId != 0x887)) {
     bVar5 = false;
     iVar9 = 3;
   }
   else {
     bVar5 = true;
-    if (((*(short *)(param_1 + 0x44) == 1) || (sVar1 = *(short *)(param_1 + 0x46), sVar1 == 0x77d))
+    if (((((GameObject *)param_1)->anim.classId == 1) || (sVar1 = ((GameObject *)param_1)->anim.seqId, sVar1 == 0x77d))
        || ((sVar1 == 0x882 || (sVar1 == 0x887)))) {
       iVar9 = 0xf;
     }
@@ -2412,9 +2414,9 @@ void FUN_800404cc(int param_1)
     }
   }
   if (DAT_803dd8a4 == 0) {
-    fVar2 = *(float *)(param_1 + 0x18) - *(float *)(puVar6 + 6);
-    fVar3 = *(float *)(param_1 + 0x1c) - *(float *)(puVar6 + 8);
-    fVar4 = *(float *)(param_1 + 0x20) - *(float *)(puVar6 + 10);
+    fVar2 = ((GameObject *)param_1)->anim.worldPosX - *(float *)(puVar6 + 6);
+    fVar3 = ((GameObject *)param_1)->anim.worldPosY - *(float *)(puVar6 + 8);
+    fVar4 = ((GameObject *)param_1)->anim.worldPosZ - *(float *)(puVar6 + 10);
   }
   else {
     fVar2 = *(float *)(DAT_803dd8a4 + 0xc) - (*(float *)(puVar6 + 6) - lbl_803DDA58);
@@ -2424,12 +2426,12 @@ void FUN_800404cc(int param_1)
   dVar11 = FUN_80293900((double)(fVar4 * fVar4 + fVar2 * fVar2 + fVar3 * fVar3));
   if (bVar5) {
     fVar2 = (float)((double)lbl_803DF6E8 * dVar11) /
-            (*(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8));
+            (((GameObject *)param_1)->anim.hitboxScale * ((GameObject *)param_1)->anim.rootMotionScale);
     DAT_803dd8c0 = 1;
   }
   else {
     fVar2 = (lbl_803DF6E4 * (float)((double)lbl_803DF6E8 * dVar11)) /
-            (*(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8));
+            (((GameObject *)param_1)->anim.hitboxScale * ((GameObject *)param_1)->anim.rootMotionScale);
     DAT_803dd8c0 = 2;
   }
   iVar10 = 0x10 - (int)fVar2;
@@ -2442,8 +2444,8 @@ void FUN_800404cc(int param_1)
     FUN_80017964((int)piVar7,FUN_8003cb48);
     for (DAT_803dd8c4 = 0; DAT_803dd8c4 < iVar10; DAT_803dd8c4 = DAT_803dd8c4 + 1) {
       iVar8 = param_1;
-      if (*(int *)(param_1 + 0xc4) != 0) {
-        iVar8 = *(int *)(param_1 + 0xc4);
+      if (*(int *)&((GameObject *)param_1)->unkC4 != 0) {
+        iVar8 = *(int *)&((GameObject *)param_1)->unkC4;
       }
       FUN_800400ac(param_1,iVar8,*piVar7,4);
       DAT_803dd8a4 = iVar9;
@@ -2473,7 +2475,7 @@ void FUN_800406cc(int param_1)
   int iVar2;
   int iVar3;
   
-  if (lbl_803DF684 == *(float *)(param_1 + 8)) {
+  if (lbl_803DF684 == ((GameObject *)param_1)->anim.rootMotionScale) {
     DAT_803dd8a4 = 0;
   }
   else {
@@ -2485,9 +2487,9 @@ void FUN_800406cc(int param_1)
     else {
       fn_8003FDA8(param_1,param_1,iVar2);
     }
-    if (*(short *)(param_1 + 0x44) == 1) {
+    if (((GameObject *)param_1)->anim.classId == 1) {
       iVar2 = param_1;
-      for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_1 + 0xeb); iVar3 = iVar3 + 1) {
+      for (iVar3 = 0; iVar3 < (int)(uint)((GameObject *)param_1)->unkEB; iVar3 = iVar3 + 1) {
         if (*(int *)(iVar2 + 200) != 0) {
           FUN_80040784(*(int *)(iVar2 + 200),param_1,1);
         }
@@ -2670,40 +2672,40 @@ void FUN_80040a88(int param_1)
   longlong local_18;
   
   piVar2 = (int *)FUN_80017a54(param_1);
-  if (lbl_803DF684 == *(float *)(param_1 + 8)) {
+  if (lbl_803DF684 == ((GameObject *)param_1)->anim.rootMotionScale) {
     DAT_803dd8a4 = 0;
   }
   else {
     iVar3 = *piVar2;
     if ((*(ushort *)(iVar3 + 2) & 0x8000) == 0) {
       iVar4 = param_1;
-      if (*(int *)(param_1 + 0xc4) != 0) {
-        iVar4 = *(int *)(param_1 + 0xc4);
+      if (*(int *)&((GameObject *)param_1)->unkC4 != 0) {
+        iVar4 = *(int *)&((GameObject *)param_1)->unkC4;
       }
       FUN_800400ac(param_1, iVar4, iVar3, 0);
     }
     else {
       iVar4 = param_1;
-      if (*(int *)(param_1 + 0xc4) != 0) {
-        iVar4 = *(int *)(param_1 + 0xc4);
+      if (*(int *)&((GameObject *)param_1)->unkC4 != 0) {
+        iVar4 = *(int *)&((GameObject *)param_1)->unkC4;
       }
       fn_8003F8EC(param_1, iVar4, iVar3);
     }
     iVar3 = param_1;
-    for (iVar4 = 0; iVar4 < (int)(uint)*(byte *)(param_1 + 0xeb); iVar4 = iVar4 + 1) {
+    for (iVar4 = 0; iVar4 < (int)(uint)((GameObject *)param_1)->unkEB; iVar4 = iVar4 + 1) {
       if (*(int *)(iVar3 + 200) != 0) {
         FUN_80040784(*(int *)(iVar3 + 200), param_1, 0);
       }
       iVar3 = iVar3 + 4;
     }
     if (((((OBJPRINT_MODEL_DEF(param_1)->shadowType == 4) && (DAT_803dd8a9 == '\0')) &&
-         ((sVar1 = *(short *)(param_1 + 0x46), sVar1 != 0x6a8 && (sVar1 != 0x6a9)))) &&
+         ((sVar1 = ((GameObject *)param_1)->anim.seqId, sVar1 != 0x6a8 && (sVar1 != 0x6a9)))) &&
         ((sVar1 != 0x6aa && (sVar1 != 0x6ab)))) &&
        ((sVar1 != 0x6ac && (sVar1 != 0x752)))) {
-      FUN_80006940((double)(*(float *)(param_1 + 0xc) - lbl_803DDA58),
-                   (double)*(float *)(param_1 + 0x10),
-                   (double)(*(float *)(param_1 + 0x14) - lbl_803DDA5C),
-                   (double)(*(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8)), &local_30,
+      FUN_80006940((double)(((GameObject *)param_1)->anim.localPosX - lbl_803DDA58),
+                   (double)((GameObject *)param_1)->anim.localPosY,
+                   (double)(((GameObject *)param_1)->anim.localPosZ - lbl_803DDA5C),
+                   (double)(((GameObject *)param_1)->anim.hitboxScale * ((GameObject *)param_1)->anim.rootMotionScale), &local_30,
                    &local_34, &local_38);
       FUN_80006938((double)local_30, (double)local_34, (double)local_38, &local_3c, &local_40,
                    &local_44);
@@ -4664,9 +4666,9 @@ void objRenderFuzz(int *obj) {
     {
         u32 m = curObjMtx;
         if (m != 0) {
-            dx = *(f32 *)(m + 0xc) - (*(f32 *)((char *)cam + 0xc) - playerMapOffsetX);
-            dy = *(f32 *)(m + 0x1c) - *(f32 *)((char *)cam + 0x10);
-            dz = *(f32 *)(m + 0x2c) - (*(f32 *)((char *)cam + 0x14) - playerMapOffsetZ);
+            dx = *(f32 *)&((ModelFileHeader *)m)->dataSize - (*(f32 *)((char *)cam + 0xc) - playerMapOffsetX);
+            dy = *(f32 *)&((ModelFileHeader *)m)->unk1C - *(f32 *)((char *)cam + 0x10);
+            dz = *(f32 *)&((ModelFileHeader *)m)->normals - (*(f32 *)((char *)cam + 0x14) - playerMapOffsetZ);
         } else {
             dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)cam + 0xc);
             dy = *(f32 *)((char *)obj + 0x1c) - *(f32 *)((char *)cam + 0x10);
@@ -5088,12 +5090,12 @@ void shaderSetGxFlags(u8 *obj, u8 *m, u8 *shader) {
     u32 sf;
     if (obj[0x37] < 0xff || ((sf = *(u32 *)(shader + 0x3c)) & 0x40000000)) {
         blend = 1;
-        if (*(u16 *)(m + 2) & 0x400) {
+        if (((ModelFileHeader *)m)->flags & 0x400) {
             zwrite = 0;
             zcmp = 0;
             zcomploc = 1;
             alpha = 0;
-        } else if (*(u16 *)(m + 2) & 0x2000) {
+        } else if (((ModelFileHeader *)m)->flags & 0x2000) {
             zwrite = 1;
             zcmp = 1;
             zcomploc = 0;
@@ -5106,7 +5108,7 @@ void shaderSetGxFlags(u8 *obj, u8 *m, u8 *shader) {
         }
     } else if (sf & 0x400) {
         blend = 0;
-        if (*(u16 *)(m + 2) & 0x400) {
+        if (((ModelFileHeader *)m)->flags & 0x400) {
             zwrite = 0;
             zcmp = 0;
         } else {
@@ -5117,7 +5119,7 @@ void shaderSetGxFlags(u8 *obj, u8 *m, u8 *shader) {
         alpha = 0x40;
     } else {
         blend = 0;
-        if (*(u16 *)(m + 2) & 0x400) {
+        if (((ModelFileHeader *)m)->flags & 0x400) {
             zwrite = 0;
             zcmp = 0;
         } else {
@@ -5522,7 +5524,7 @@ void modelRenderFn_setVtxDescr(u8 *hdr, u8 *m, u32 *p3, MtxBitStream *bs, u8 p5,
         next = 1;
         back = 8;
         if (p3[0] != 0 || p3[1] != 0) {
-            if (*(u32 *)(m + 0x34) != 0) {
+            if (*(u32 *)&((ModelFileHeader *)m)->unk34 != 0) {
                 GXSetVtxDesc(1, 1);
                 GXSetVtxDesc(2, 1);
                 next = 3;
@@ -5677,7 +5679,7 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
     PSMTXConcat(Camera_GetViewMatrix(), wm, cm);
     if (!(*(u16 *)((char *)am + 0x18) & 8)) {
         *(u8 *)((char *)am + 0x60) = 0;
-        if (*(u16 *)(m + 0xec) != 0 && !(*(u16 *)(m + 2) & 2) && m[0xf3] != 0) {
+        if (((ModelFileHeader *)m)->unkEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
             if (lbl_803DCC30 != (u32)m) {
                 ObjModel_UpdateAnimMatrices(am, m, obj, lbl_802CAEE8);
                 modelInitMtxs(m, am);
@@ -5700,8 +5702,8 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
         }
         *(u16 *)((char *)am + 0x18) |= 8;
     }
-    modelRenderInstrsState_init(&bs, *(u8 **)(m + 0xd4), *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
-    if (*(u16 *)(m + 0xe2) & 2) {
+    modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->unkD4, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
+    if (((ModelFileHeader *)m)->unkE2 & 2) {
         if (lbl_803DCC28 != 0) {
             color[0] = lbl_803DCC58;
             color[1] = (&lbl_803DCC58)[1];
@@ -5722,7 +5724,7 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
         if (cb == NULL || cb(obj, am, 0) == 0) {
             _gxSetFogParams();
             resetLotsOfRenderVars();
-            gxFn_80051fb8(textureIdxToPtr(*(int *)(*(int *)(m + 0x38) + 0x24)), 0, 0, color, 0, 0);
+            gxFn_80051fb8(textureIdxToPtr(*(int *)(*(int *)&((ModelFileHeader *)m)->renderOps + 0x24)), 0, 0, color, 0, 0);
             if (isHeavyFogEnabled() != 0) {
                 f32 c;
                 getColor803dd01c(&c);
@@ -5736,7 +5738,7 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
             *(u32 *)lbl_803DB484 = *(u32 *)color;
         }
     } else {
-        void *tex = textureIdxToPtr(*(int *)(*(int *)(m + 0x38) + 0x24));
+        void *tex = textureIdxToPtr(*(int *)(*(int *)&((ModelFileHeader *)m)->renderOps + 0x24));
         if (lbl_803DCC2C != (u32)tex) {
             lbl_803DCC2C = (u32)tex;
             selectTexture(tex, 0);
@@ -5750,12 +5752,12 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
     }
     if (lbl_803DCC30 != (u32)m) {
         GXSetArray(9, ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1], 6);
-        GXSetArray(13, *(int *)(m + 0x34), 4);
+        GXSetArray(13, *(int *)&((ModelFileHeader *)m)->unk34, 4);
         lbl_803DCC30 = (u32)m;
     }
-    shaderSetGxFlags((u8 *)obj, m, *(u8 **)(m + 0x38));
+    shaderSetGxFlags((u8 *)obj, m, ((ModelFileHeader *)m)->renderOps);
     bs.pos += 4;
-    ModelHeader_setupPosTexFmt(m, *(int **)(m + 0x38), &bs, p4);
+    ModelHeader_setupPosTexFmt(m, (void *)((ModelFileHeader *)m)->renderOps, &bs, p4);
     bs.pos += 4;
     modelLoadMtxsToGx((int)m, am, &bs, cm);
     {
@@ -5828,8 +5830,8 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         did = 0;
         *(u8 *)((char *)am + 0x60) = 0;
         ObjModel_ToggleVertexBuffer(am);
-        if (*(u16 *)(m + 0xec) != 0 && !(*(u16 *)(m + 2) & 2) && m[0xf3] != 0) {
-            if (*(u32 *)(m + 0xa4) != 0) {
+        if (((ModelFileHeader *)m)->unkEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
+            if (*(u32 *)&((ModelFileHeader *)m)->unkA4 != 0) {
                 PSMTXIdentity(im);
                 ObjModel_UpdateAnimMatrices(am, m, obj, im);
                 modelInitBoneMtxs2(am, wm, lbl_80342E10);
@@ -5847,7 +5849,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
             ObjModel_ToggleMatrixBuffer(am);
             PSMTXCopy(wm, (f32 *)ObjModel_GetJointMatrix(am, 0));
         }
-        if (m[0xf9] != 0) {
+        if (((ModelFileHeader *)m)->unkF9 != 0) {
             ObjModel_ApplyBlendChannels(am);
         }
         if (did != 0) {
@@ -5855,12 +5857,12 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
             if (*(u8 *)((char *)am + 0x60) != 0) {
                 vtx = ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1];
             } else {
-                vtx = *(int *)(m + 0x28);
+                vtx = *(int *)&((ModelFileHeader *)m)->vertices;
             }
             ObjModel_BlendPrimaryVertexStream(lbl_80342E10, m + 0x88, vtx, *(int *)((char *)am + 0x40), ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1]);
-            ObjModel_BlendSecondaryVertexStream(lbl_80342E10, m + 0xac, *(int *)(m + 0x2c), *(int *)((char *)am + 0x44), m[0x24] & 8);
+            ObjModel_BlendSecondaryVertexStream(lbl_80342E10, m + 0xac, *(int *)&((ModelFileHeader *)m)->normals, *(int *)((char *)am + 0x44), ((ModelFileHeader *)m)->flags24 & 8);
         }
-        if (m[0xf7] != 0) {
+        if (((ModelFileHeader *)m)->unkF7 != 0) {
             objUpdateHitSpheres(am, m, obj, 0, obj2);
         } else {
             u8 *att = *(u8 **)((char *)obj + 0x54);
@@ -5874,8 +5876,8 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         *(u16 *)((char *)am + 0x18) |= 8;
     }
     modelInitMtxs(m, am);
-    modelRenderInstrsState_init(&bs, *(u8 **)(m + 0xd4), *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
-    if (*(u32 *)(m + 0xa4) != 0) {
+    modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->unkD4, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
+    if (*(u32 *)&((ModelFileHeader *)m)->unkA4 != 0) {
         PSMTXConcat(vm, wm, cm);
         GXLoadPosMtxImm(cm, lbl_802CAED0[9]);
     }
@@ -5946,7 +5948,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         switch (op4) {
         case 3:
             GXClearVtxDesc();
-            if (m[0xf3] > 1) {
+            if (((ModelFileHeader *)m)->jointCount > 1) {
                 GXSetVtxDesc(0, 1);
             }
             {
@@ -5990,7 +5992,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
                 w |= p[1] << 8;
                 w |= p[2] << 16;
                 bs.pos = pos + 8;
-                dl = modelFileGetDisplayList(m, m[0xf5] + ((w >> (pos & 7)) & 0xff));
+                dl = modelFileGetDisplayList(m, ((ModelFileHeader *)m)->unkF5 + ((w >> (pos & 7)) & 0xff));
                 GXCallDisplayList(*(void **)dl, *(u16 *)(dl + 4));
             }
             break;
@@ -6102,8 +6104,8 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
     if (!(*(u16 *)((char *)am + 0x18) & 8)) {
         *(u8 *)((char *)am + 0x60) = 0;
         ObjModel_ToggleVertexBuffer(am);
-        if (*(u16 *)(m + 0xec) != 0 && !(*(u16 *)(m + 2) & 2) && m[0xf3] != 0) {
-            if (*(u32 *)(m + 0xa4) != 0) {
+        if (((ModelFileHeader *)m)->unkEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
+            if (*(u32 *)&((ModelFileHeader *)m)->unkA4 != 0) {
                 PSMTXIdentity(im);
                 ObjModel_UpdateAnimMatrices(am, m, obj, im);
                 if (m4 == 0) {
@@ -6126,7 +6128,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
             PSMTXCopy(wm, (f32 *)ObjModel_GetJointMatrix(am, 0));
         }
         if ((m4 == 0 && (mode8 & 8) == 0) || lbl_803DCC44 == 0) {
-            if (m[0xf9] != 0) {
+            if (((ModelFileHeader *)m)->unkF9 != 0) {
                 ObjModel_ApplyBlendChannels(am);
             }
             if (did != 0) {
@@ -6134,13 +6136,13 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
                 if (*(u8 *)((char *)am + 0x60) != 0) {
                     vtx = ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1];
                 } else {
-                    vtx = *(int *)(m + 0x28);
+                    vtx = *(int *)&((ModelFileHeader *)m)->vertices;
                 }
                 ObjModel_BlendPrimaryVertexStream(lbl_80342E10, m + 0x88, vtx, *(int *)((char *)am + 0x40), ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1]);
-                ObjModel_BlendSecondaryVertexStream(lbl_80342E10, m + 0xac, *(int *)(m + 0x2c), *(int *)((char *)am + 0x44), m[0x24] & 8);
+                ObjModel_BlendSecondaryVertexStream(lbl_80342E10, m + 0xac, *(int *)&((ModelFileHeader *)m)->normals, *(int *)((char *)am + 0x44), ((ModelFileHeader *)m)->flags24 & 8);
             }
         }
-        if (m[0xf7] != 0) {
+        if (((ModelFileHeader *)m)->unkF7 != 0) {
             objUpdateHitSpheres(am, m, obj, 0, obj2);
         } else {
             u8 *att = *(u8 **)((char *)obj + 0x54);
@@ -6160,18 +6162,18 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
         f32 a1c = lbl_803DEA1C;
         j = 0;
         joff = 0;
-        for (; j < m[0xf3]; j++) {
-            f32 sc = (f32)lbl_803DCC40 * (fade / *(f32 *)(*(char **)(m + 0x40) + joff + 0xc)) + a1c;
+        for (; j < ((ModelFileHeader *)m)->jointCount; j++) {
+            f32 sc = (f32)lbl_803DCC40 * (fade / *(f32 *)(((ModelFileHeader *)m)->unk40 + joff + 0xc)) + a1c;
             f32 *jm = (f32 *)ObjModel_GetJointMatrix(am, j);
             PSMTXScale(sm, sc, sc, sc);
             if (lbl_803DCC35 == 0) {
                 {
-                    char *jp = *(char **)(m + 0x40) + joff;
+                    char *jp = (char *)((ModelFileHeader *)m)->unk40 + joff;
                     PSMTXTrans(tm, -*(f32 *)jp, -*(f32 *)(jp + 4), -*(f32 *)(jp + 8));
                 }
                 PSMTXConcat(sm, tm, sm);
                 {
-                    char *jp = *(char **)(m + 0x40) + joff;
+                    char *jp = (char *)((ModelFileHeader *)m)->unk40 + joff;
                     PSMTXTrans(tm, *(f32 *)jp, *(f32 *)(jp + 4), *(f32 *)(jp + 8));
                 }
                 PSMTXConcat(tm, sm, sm);
@@ -6184,12 +6186,12 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
         }
     }
     modelInitMtxs(m, am);
-    modelRenderInstrsState_init(&bs, *(u8 **)(m + 0xd4), *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
+    modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->unkD4, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
     {
         f32 inv = lbl_803DEA1C / *(f32 *)((char *)obj + 8);
         PSMTXScale(sm, inv, inv, inv);
     }
-    if (*(u32 *)(m + 0xa4) != 0) {
+    if (*(u32 *)&((ModelFileHeader *)m)->unkA4 != 0) {
         if (m4 || m2 || (mode8 & 8)) {
             f32 sc2 = lbl_803DEA1C + (lbl_803DEA54 * ((f32)(lbl_803DCC44 + 1) * fade)) / *(f32 *)(m + 0x50);
             PSMTXTrans(tm, -*(f32 *)(m + 0x44), -*(f32 *)(m + 0x48), -*(f32 *)(m + 0x4c));
@@ -6273,21 +6275,21 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
     } else {
         Camera_RebuildProjectionMatrix();
         objFn_8003dc50(m, (u8 *)obj);
-        if (*(u16 *)(m + 2) & 0x100) {
+        if (((ModelFileHeader *)m)->flags & 0x100) {
             GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjGXColor *)&lbl_803DB468);
         } else {
             _gxSetFogParams();
         }
     }
     GXSetArray(9, ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1], 6);
-    if (m[0x24] & 8) {
+    if (((ModelFileHeader *)m)->flags24 & 8) {
         GXSetArray(0xa, *(int *)((char *)am + 0x24), 9);
     } else {
         GXSetArray(0xa, *(int *)((char *)am + 0x24), 3);
     }
-    GXSetArray(0xb, *(int *)(m + 0x30), 2);
-    GXSetArray(0xd, *(int *)(m + 0x34), 4);
-    GXSetArray(0xe, *(int *)(m + 0x34), 4);
+    GXSetArray(0xb, *(int *)&((ModelFileHeader *)m)->unk30, 2);
+    GXSetArray(0xd, *(int *)&((ModelFileHeader *)m)->unk34, 4);
+    GXSetArray(0xe, *(int *)&((ModelFileHeader *)m)->unk34, 4);
     done = 0;
     while (!done) {
         u32 op4;
