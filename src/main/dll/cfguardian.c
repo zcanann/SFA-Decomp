@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfguardian.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 
 extern bool FUN_800067f8();
@@ -115,16 +116,16 @@ void pressureswitchfb_update(int obj)
   f32 nearDist;
   FxArgs fx;
 
-  def = *(int *)(obj + 0x4c);
-  state = *(char **)(obj + 0xb8);
+  def = *(int *)&((GameObject *)obj)->anim.placementData;
+  state = ((GameObject *)obj)->extra;
   if ((((SwitchFlags *)(state + 0x84))->active) != 0) {
     if ((((SwitchFlags *)(state + 0x84))->released) == 0) {
-      *(u8 *)(obj + 0xaf) |= 8;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else {
-      *(u8 *)(obj + 0xaf) &= ~8;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     }
   } else {
-    *(u8 *)(obj + 0xaf) |= 8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
   }
   if ((*(s16 *)(def + 0x20) == -1) || (GameBit_Get(*(s16 *)(def + 0x20)) != 0)) {
     u8 c = *state;
@@ -140,15 +141,15 @@ void pressureswitchfb_update(int obj)
     if (*(s8 *)(*(int *)(obj + 0x58) + 0x10f) > 0) {
       for (i = 0, off = 0; i < *(s8 *)(*(int *)(obj + 0x58) + 0x10f); i++) {
         other = *(uint *)(*(int *)(obj + 0x58) + off + 0x100);
-        if ((*(s16 *)(other + 0x44) == 1) || (*(s16 *)(other + 0x44) == 2) ||
-            (*(s16 *)(other + 0x46) == 0x754) || (*(s16 *)(other + 0x46) == 0x6d)) {
+        if ((((GameObject *)other)->anim.classId == 1) || (((GameObject *)other)->anim.classId == 2) ||
+            (((GameObject *)other)->anim.seqId == 0x754) || (((GameObject *)other)->anim.seqId == 0x6d)) {
           isTarget = 1;
         } else {
           isTarget = 0;
         }
         if (isTarget && (other != nearest)) {
-          if (*(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10) > (f32)(u32)*(u8 *)(def + 0x1d)) {
-            tmp = *(int *)(obj + 0xb8);
+          if (((GameObject *)other)->anim.localPosY - ((GameObject *)obj)->anim.localPosY > (f32)(u32)*(u8 *)(def + 0x1d)) {
+            tmp = *(int *)&((GameObject *)obj)->extra;
             j = 0;
             if ((((SwitchFlags *)(tmp + 0x84))->playerOnly) != 0) {
               if (other == (uint)Obj_GetPlayerObject()) {
@@ -163,23 +164,23 @@ do_insert:
             ju = j & 0xff;
             *(uint *)(tmp + ju * 4 + 4) = other;
             base = tmp + ju * 8;
-            *(f32 *)(base + 0x2c) = *(f32 *)(other + 0xc);
-            *(f32 *)(base + 0x30) = *(f32 *)(other + 0x14);
+            *(f32 *)(base + 0x2c) = ((GameObject *)other)->anim.localPosX;
+            *(f32 *)(base + 0x30) = ((GameObject *)other)->anim.localPosZ;
 skip_insert: ;
           }
         }
         off += 4;
       }
     }
-    slots2 = *(int *)(obj + 0xb8);
+    slots2 = *(int *)&((GameObject *)obj)->extra;
     found = 0;
     for (j2 = 0; (j2 & 0xff) < 10; j2++) {
       ju2 = j2 & 0xff;
       o = *(uint *)(slots2 + ju2 * 4 + 4);
       if (o != 0) {
         base2 = slots2 + ju2 * 8;
-        if ((*(f32 *)(base2 + 0x2c) == *(f32 *)(o + 0xc)) &&
-            (*(f32 *)(base2 + 0x30) == *(f32 *)(o + 0x14))) {
+        if ((*(f32 *)(base2 + 0x2c) == ((GameObject *)o)->anim.localPosX) &&
+            (*(f32 *)(base2 + 0x30) == ((GameObject *)o)->anim.localPosZ)) {
           found = 1;
         } else {
           *(int *)(slots2 + ju2 * 4 + 4) = 0;
@@ -198,11 +199,11 @@ skip_insert: ;
       }
       if ((((SwitchFlags *)(state + 0x84))->released) == 0) {
         target = *(f32 *)(state + 0x7c) - (f32)(u32)*(u8 *)(def + 0x1c);
-        cur = *(f32 *)(obj + 0x10);
+        cur = ((GameObject *)obj)->anim.localPosY;
         if (cur < target) {
-          *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x80) * timeDelta + cur;
-          if (*(f32 *)(obj + 0x10) > target) {
-            *(f32 *)(obj + 0x10) = target;
+          ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x80) * timeDelta + cur;
+          if (((GameObject *)obj)->anim.localPosY > target) {
+            ((GameObject *)obj)->anim.localPosY = target;
           }
           GameBit_Set(*(s16 *)(def + 0x1a), 1);
           if ((((SwitchFlags *)(state + 0x84))->active) != 0) {
@@ -213,9 +214,9 @@ skip_insert: ;
             ((SwitchFlags *)(state + 0x84))->latched = 1;
           }
         } else {
-          *(f32 *)(obj + 0x10) = -(*(f32 *)(state + 0x80) * timeDelta - cur);
-          if (*(f32 *)(obj + 0x10) < target) {
-            *(f32 *)(obj + 0x10) = target;
+          ((GameObject *)obj)->anim.localPosY = -(*(f32 *)(state + 0x80) * timeDelta - cur);
+          if (((GameObject *)obj)->anim.localPosY < target) {
+            ((GameObject *)obj)->anim.localPosY = target;
             GameBit_Set(*(s16 *)(def + 0x1a), 1);
             if ((((SwitchFlags *)(state + 0x84))->active) != 0) {
               tex = (int *)objFindTexture((int *)obj, 0, 0);
@@ -229,20 +230,20 @@ skip_insert: ;
           }
         }
       } else {
-        *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x80) * timeDelta + *(f32 *)(obj + 0x10);
-        if (*(f32 *)(obj + 0x10) > *(f32 *)(state + 0x7c)) {
-          *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x7c);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x80) * timeDelta + ((GameObject *)obj)->anim.localPosY;
+        if (((GameObject *)obj)->anim.localPosY > *(f32 *)(state + 0x7c)) {
+          ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x7c);
         } else {
           i = 1;
         }
       }
     } else {
       if ((((SwitchFlags *)(state + 0x84))->latched) == 0) {
-        cur = *(f32 *)(obj + 0x10);
+        cur = ((GameObject *)obj)->anim.localPosY;
         if (cur < *(f32 *)(state + 0x7c)) {
-          *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x80) * timeDelta + cur;
-          if (*(f32 *)(obj + 0x10) > *(f32 *)(state + 0x7c)) {
-            *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x7c);
+          ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x80) * timeDelta + cur;
+          if (((GameObject *)obj)->anim.localPosY > *(f32 *)(state + 0x7c)) {
+            ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x7c);
             GameBit_Set(*(s16 *)(def + 0x1a), 0);
           } else {
             i = 1;
@@ -259,7 +260,7 @@ skip_insert: ;
         }
       }
     }
-    if (((*(u16 *)(obj + 0xb0) & 0x800) != 0) && ((((SwitchFlags *)(state + 0x84))->latched) == 0) &&
+    if (((((GameObject *)obj)->unkB0 & 0x800) != 0) && ((((SwitchFlags *)(state + 0x84))->latched) == 0) &&
         ((((SwitchFlags *)(state + 0x84))->active) != 0)) {
       tmp = (int)Obj_GetPlayerObject();
       if (Vec_distance((f32 *)(obj + 0x18), (f32 *)(tmp + 0x18)) < lbl_803E375C) {
@@ -283,8 +284,8 @@ skip_insert: ;
     }
     if (((*(u8 *)(def + 0x1e) != 0) && ((tmp = (int)getTrickyObject()) != 0)) &&
         (GameBit_Get(*(s16 *)(def + 0x1a)) == 0)) {
-      *(u8 *)(obj + 0xaf) &= ~8;
-      if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
+      if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
         (*(code *)(*(int *)(*(int *)(tmp + 0x68)) + 0x28))(tmp, obj, 1, 3);
       }
     }
@@ -595,17 +596,17 @@ void pressureswitchfb_init(u8* obj, u8* params) {
     PressureSwitchFbFlags *flags;
 
     objAnim = (ObjAnimComponent *)obj;
-    sub = *(u8**)(obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     flags = (PressureSwitchFbFlags *)(sub + 0x84);
     *(s16*)obj = (s16)(params[0x18] << 8);
-    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
     objAnim->bankIndex = (s8)params[0x19];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
     defaultOffset = lbl_803E3778;
     *(f32*)(sub + 0x80) = defaultOffset;
-    if (*(s16*)(obj + 0x46) == 0x77b) {
+    if (((GameObject *)obj)->anim.seqId == 0x77b) {
         flags->usePressedTexture = 1;
         flags->startPressed = 1;
         flags->canRelease = 1;
@@ -614,10 +615,10 @@ void pressureswitchfb_init(u8* obj, u8* params) {
     *(f32*)(sub + 0x7c) = *(f32*)(params + 0xc);
     if (GameBit_Get(*(s16*)(params + 0x1a)) != 0) {
         s16 model;
-        *(f32*)(obj + 0x10) = *(f32*)(sub + 0x7c) - (f32)(u32)params[0x1c];
+        ((GameObject *)obj)->anim.localPosY = *(f32*)(sub + 0x7c) - (f32)(u32)params[0x1c];
         sub[0] = 0x1e;
         flags->canRelease = 0;
-        model = *(s16*)(obj + 0x46);
+        model = ((GameObject *)obj)->anim.seqId;
         if (model != 0x19f) {
             if (model != 0x26c) {
                 if (model != 0x274) {
@@ -645,7 +646,7 @@ void pressureswitchfb_init(u8* obj, u8* params) {
     *(int*)(sub + 0x20) = 0;
     *(int*)(sub + 0x24) = 0;
     *(int*)(sub + 0x28) = 0;
-    *(void**)(obj + 0xbc) = (void*)&pressureswitchfb_updateStateMode;
+    ((GameObject *)obj)->unkBC = (void*)&pressureswitchfb_updateStateMode;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -675,13 +676,13 @@ void doorlock_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 #pragma scheduling off
 #pragma peephole off
 void mmp_bridge_init(int *obj) {
-    int *state = *(int **)((char *)obj + 0x4c);
+    int *state = *(int **)&((GameObject *)obj)->anim.placementData;
     int *tex = objFindTexture(obj, 0, 0);
     if (tex != NULL) {
         *(s16 *)((char *)tex + 8) = 0x800;
     }
     *(s16 *)obj = (s16)(*(s8 *)((char *)state + 0x18) << 8);
-    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
     ObjHits_DisableObject((int)obj);
     if (GameBit_Get(*(s16 *)((char *)state + 0x1e)) != 0) {
         ObjHits_EnableObject((int)obj);
@@ -718,16 +719,16 @@ extern f32 lbl_803E3790;
 #pragma scheduling off
 #pragma peephole off
 void Door_init(int *obj, u8 *def) {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     state[5] = 1;
     *(s16 *)obj = (s16)(def[0x1f] << 8);
-    *(int *)((char *)obj + 0xbc) = (int)Door_SeqFn;
-    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
-    *(f32 *)((char *)obj + 8) = ((f32)(u32)*(u8 *)((char *)def + 0x21) - lbl_803E3790) * lbl_803E3784;
-    if (*(f32 *)((char *)obj + 8) == lbl_803E3788) {
-        *(f32 *)((char *)obj + 8) = lbl_803E3780;
+    *(int *)&((GameObject *)obj)->unkBC = (int)Door_SeqFn;
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    ((GameObject *)obj)->anim.rootMotionScale = ((f32)(u32)*(u8 *)((char *)def + 0x21) - lbl_803E3790) * lbl_803E3784;
+    if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E3788) {
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3780;
     }
-    *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
+    ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     if (*(s16 *)(def + 0x1a) != -1) {
         state[4] = (u8)GameBit_Get(*(s16 *)(def + 0x1a));
     } else {
@@ -737,7 +738,7 @@ void Door_init(int *obj, u8 *def) {
     if (GameBit_Get(*(s16 *)(def + 0x18)) != 0) state[6] = (u8)(state[6] | 1);
     if (GameBit_Get(*(s16 *)(def + 0x22)) != 0) state[6] = (u8)(state[6] | 2);
     {
-        s16 model = *(s16 *)((char *)obj + 0x46);
+        s16 model = ((GameObject *)obj)->anim.seqId;
         if (model == 1101) {
             s32 subtype = (s32)*(s8 *)((char *)obj + 0xac);
             if ((subtype >= 31 && subtype < 35) || (subtype >= 40 && subtype < 43)) {
@@ -765,8 +766,8 @@ void Door_update(int obj)
   int triggerArg;
   int triggerId;
 
-  state = *(int *)(obj + 0xb8);
-  def = *(int *)(obj + 0x4c);
+  state = *(int *)&((GameObject *)obj)->extra;
+  def = *(int *)&((GameObject *)obj)->anim.placementData;
   if (*(u8 *)(state + 5) != 0) {
     triggerId = *(s16 *)(def + 0x1c);
     if ((triggerId != 0) && (*(u8 *)(state + 4) != 0)) {
@@ -834,12 +835,12 @@ int Door_SeqFn(int obj, int p2, int seq)
   int *tex;
   int ret;
 
-  state = *(int *)(obj + 0xb8);
-  def = *(int *)(obj + 0x4c);
+  state = *(int *)&((GameObject *)obj)->extra;
+  def = *(int *)&((GameObject *)obj)->anim.placementData;
   if (*(u8 *)(obj + 0x36) == 0) {
     ObjHits_DisableObject(obj);
   }
-  if (*(u8 *)(*(int *)(obj + 0x50) + 0x59) != 0) {
+  if (*(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x59) != 0) {
     if ((*(u8 *)(state + 6) & 1) != 0) {
       tex = (int *)objFindTexture((int *)obj, 0, 0);
       if (tex != NULL) {
@@ -860,13 +861,13 @@ int Door_SeqFn(int obj, int p2, int seq)
       closeReady = 1;
     }
     if ((opened != 0) && ((*(u8 *)(state + 6) & 1) == 0)) {
-      if (*(u8 *)(*(int *)(obj + 0x50) + 0x59) != 0) {
+      if (*(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x59) != 0) {
         Sfx_PlayFromObject(obj, 0x4b);
       }
       *(u8 *)(state + 6) |= 1;
     }
     if ((closeReady != 0) && ((*(u8 *)(state + 6) & 2) == 0)) {
-      if (*(u8 *)(*(int *)(obj + 0x50) + 0x59) != 0) {
+      if (*(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x59) != 0) {
         Sfx_PlayFromObject(obj, 0x4b);
       }
       *(u8 *)(state + 6) |= 2;
@@ -939,7 +940,7 @@ int Lock_DoorLock_SeqFn(int obj, int p2, int seq)
 {
   int def;
 
-  def = *(int *)(obj + 0x4c);
+  def = *(int *)&((GameObject *)obj)->anim.placementData;
   if (*(u8 *)(seq + 0x80) != 0) {
     if (((*(u8 *)(def + 0x1b) & 4) != 0) && (*(u8 *)(seq + 0x80) == 1)) {
       GameBit_Set(*(s16 *)(def + 0x1c), 1);
@@ -949,7 +950,7 @@ int Lock_DoorLock_SeqFn(int obj, int p2, int seq)
     }
     *(u8 *)(seq + 0x80) = 0;
   }
-  *(int *)(obj + 0xf8) = 0;
+  ((GameObject *)obj)->unkF8 = 0;
   return 0;
 }
 #pragma peephole reset
@@ -971,9 +972,9 @@ void doorlock_update(int obj)
   int flags;
   u8 b;
 
-  state = *(int *)(obj + 0xb8);
-  def = *(int *)(obj + 0x4c);
-  if (((*(u8 *)(obj + 0xaf) & 4) != 0) && (GameBit_Get(0x930) == 0)) {
+  state = *(int *)&((GameObject *)obj)->extra;
+  def = *(int *)&((GameObject *)obj)->anim.placementData;
+  if (((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) && (GameBit_Get(0x930) == 0)) {
     buttonDisable(0, 0x100);
     (*(code *)(*gObjectTriggerInterface + 0x84))(obj, 0);
     (*(code *)(*gObjectTriggerInterface + 0x48))(1, obj, -1);
@@ -986,22 +987,22 @@ void doorlock_update(int obj)
       }
     } else if ((*(s16 *)(def + 0x26) & 1) != 0) {
       if (*(u8 *)state != 0) {
-        *(int *)(obj + 0xf8) = 0;
+        ((GameObject *)obj)->unkF8 = 0;
       } else {
-        *(int *)(obj + 0xf8) = 1;
+        ((GameObject *)obj)->unkF8 = 1;
       }
     }
     if (*(u8 *)state == 0) {
-      *(u8 *)(obj + 0xaf) &= ~8;
-      *(u8 *)(obj + 0xaf) &= ~0x10;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
       if ((*(s16 *)(def + 0x22) != -1) && (GameBit_Get(*(s16 *)(def + 0x22)) == 0)) {
-        *(u8 *)(obj + 0xaf) |= 0x10;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
         if ((*(u8 *)(def + 0x1b) & 0x10) != 0) {
-          *(u8 *)(obj + 0xaf) |= 8;
+          *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         }
       }
       if ((*(s16 *)(def + 0x1e) != -1) && (GameBit_Get(*(s16 *)(def + 0x1e)) == 0)) {
-        *(u8 *)(obj + 0xaf) |= 0x10;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
       }
       if (((*(s16 *)(def + 0x1e) != -1) && (ObjTrigger_IsSetById(obj, *(s16 *)(def + 0x1e)) != 0)) ||
           ((*(s16 *)(def + 0x1e) == -1) && (ObjTrigger_IsSet(obj) != 0))) {
@@ -1015,12 +1016,12 @@ void doorlock_update(int obj)
           GameBit_Set(*(s16 *)(def + 0x22), 0);
         } else {
           *(u8 *)state = 1;
-          *(int *)(obj + 0xf4) = 1;
+          ((GameObject *)obj)->unkF4 = 1;
         }
         buttonDisable(0, 0x100);
       }
     } else {
-      if (*(int *)(obj + 0xf4) == 0) {
+      if (((GameObject *)obj)->unkF4 == 0) {
         if ((*(s8 *)(def + 0x20) != -1) && (*(s16 *)(def + 0x24) != 0)) {
           (*(code *)(*gObjectTriggerInterface + 0x54))(obj, *(s16 *)(def + 0x24));
           flags = 1;
@@ -1036,9 +1037,9 @@ void doorlock_update(int obj)
           }
           (*(code *)(*gObjectTriggerInterface + 0x48))((int)*(s8 *)(def + 0x20), obj, flags);
         }
-        *(int *)(obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
       }
-      *(u8 *)(obj + 0xaf) |= 8;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
     if (((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0) && (*(void **)(obj + 0x74) != NULL)) {
       objRenderFn_80041018((int *)obj);
