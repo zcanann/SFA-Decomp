@@ -1,15 +1,15 @@
 #include "main/dfppowersl.h"
+#include "main/gameplay_runtime.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void ObjHits_SetHitVolumeSlot(u8 *obj,int param_2,int param_3,int param_4);
+extern void ObjHits_SetHitVolumeSlot(DfpPowerSlObject *obj,int slot,int enabled,int param_4);
 
-extern undefined4 *gObjectTriggerInterface;
-extern undefined4 *gExpgfxInterface;
-extern undefined4 *gPartfxInterface;
+extern DfpPowerSlObjectTriggerInterface **gObjectTriggerInterface;
+extern DfpPowerSlEffectInterface **gExpgfxInterface;
+extern DfpPowerSlEffectInterface **gPartfxInterface;
 
-static inline DfpPowerSlState *dfppowersl_getState(u8 *obj)
+static inline DfpPowerSlState *dfppowersl_getState(DfpPowerSlObject *obj)
 {
-  return *(DfpPowerSlState **)(obj + DFPPOWERSL_OBJECT_STATE_OFFSET);
+  return obj->state;
 }
 
 int dfppowersl_getExtraSize(void)
@@ -19,10 +19,10 @@ int dfppowersl_getExtraSize(void)
 
 #pragma scheduling off
 #pragma peephole off
-void dfppowersl_free(u8 *obj)
+void dfppowersl_free(DfpPowerSlObject *obj)
 {
   if (obj != 0) {
-    ((DfpPowerSlFreeFn)(*(u32 *)(*gExpgfxInterface + 0x18)))(obj);
+    (*gExpgfxInterface)->freeObject(obj);
   }
   return;
 }
@@ -31,19 +31,19 @@ void dfppowersl_free(u8 *obj)
 
 #pragma scheduling off
 #pragma peephole off
-void dfppowersl_render(u8 *obj)
+void dfppowersl_render(DfpPowerSlObject *obj)
 {
-  u8 *powerSl;
+  DfpPowerSlObject *powerSl;
   DfpPowerSlState *state;
 
   powerSl = obj;
   if ((u32)powerSl != 0) {
     state = dfppowersl_getState(powerSl);
     if (GameBit_Get(state->eventId) == 0) {
-      ((DfpPowerSlSpawnFn)(*(u32 *)(*gPartfxInterface + 8)))(powerSl,state->spawnObjectId,0,
-                                                         DFPPOWERSL_SPAWN_MODE_PRELOAD,0xffffffff,0);
-      ((DfpPowerSlSpawnFn)(*(u32 *)(*gPartfxInterface + 8)))(powerSl,state->spawnObjectId,0,
-                                                         DFPPOWERSL_SPAWN_MODE_ACTIVE,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject(powerSl,state->spawnObjectId,0,
+                                       DFPPOWERSL_SPAWN_MODE_PRELOAD,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject(powerSl,state->spawnObjectId,0,
+                                       DFPPOWERSL_SPAWN_MODE_ACTIVE,0xffffffff,0);
     }
   }
   return;
@@ -54,16 +54,16 @@ void dfppowersl_render(u8 *obj)
 
 #pragma scheduling off
 #pragma peephole off
-void dfppowersl_update(u8 *obj)
+void dfppowersl_update(DfpPowerSlObject *obj)
 {
-  u8 *powerSl;
+  DfpPowerSlObject *powerSl;
   DfpPowerSlState *state;
 
   powerSl = obj;
   if ((u32)powerSl != 0) {
     state = dfppowersl_getState(powerSl);
-    ((DfpPowerSlActivateFn)(*(u32 *)(*gObjectTriggerInterface + 0x54)))(powerSl,state->activateObjectId);
-    ((DfpPowerSlRefreshFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(0,powerSl,0xffffffff);
+    (*gObjectTriggerInterface)->activateObject(powerSl,state->activateObjectId);
+    (*gObjectTriggerInterface)->refresh(0,powerSl,0xffffffff);
   }
   return;
 }
@@ -73,24 +73,23 @@ void dfppowersl_update(u8 *obj)
 
 #pragma scheduling off
 #pragma peephole off
-void dfppowersl_init(u8 *obj,u8 *params)
+void dfppowersl_init(DfpPowerSlObject *obj,DfpPowerSlMapData *mapData)
 {
   DfpPowerSlState *state;
 
   if (obj != 0) {
     state = dfppowersl_getState(obj);
-    if (*(s16 *)(params + DFPPOWERSL_PARAM_ACTIVATE_OBJECT_ID) <= 0) {
-      *(s16 *)(params + DFPPOWERSL_PARAM_ACTIVATE_OBJECT_ID) = DFPPOWERSL_DEFAULT_PARAM_OBJECT_ID;
+    if (mapData->activateObjectId <= 0) {
+      mapData->activateObjectId = DFPPOWERSL_DEFAULT_PARAM_OBJECT_ID;
     }
-    if (*(s16 *)(params + DFPPOWERSL_PARAM_SPAWN_OBJECT_ID) <= 0) {
-      *(s16 *)(params + DFPPOWERSL_PARAM_SPAWN_OBJECT_ID) = DFPPOWERSL_DEFAULT_PARAM_OBJECT_ID;
+    if (mapData->spawnObjectId <= 0) {
+      mapData->spawnObjectId = DFPPOWERSL_DEFAULT_PARAM_OBJECT_ID;
     }
-    *(DfpPowerSlHitCallback *)(obj + DFPPOWERSL_HIT_CALLBACK_OFFSET) =
-        dfppowersl_spawnSeqObjectsOnHit;
-    state->activateObjectId = *(s16 *)(params + DFPPOWERSL_PARAM_ACTIVATE_OBJECT_ID);
-    state->spawnObjectId = *(s16 *)(params + DFPPOWERSL_PARAM_SPAWN_OBJECT_ID);
-    state->eventId = *(s16 *)(params + DFPPOWERSL_PARAM_EVENT_ID);
-    *(s16 *)obj = *(s8 *)(params + DFPPOWERSL_PARAM_MODE) << DFPPOWERSL_MODE_WORD_SHIFT;
+    obj->hitCallback = dfppowersl_spawnSeqObjectsOnHit;
+    state->activateObjectId = mapData->activateObjectId;
+    state->spawnObjectId = mapData->spawnObjectId;
+    state->eventId = mapData->eventId;
+    obj->modeWord = mapData->mode << DFPPOWERSL_MODE_WORD_SHIFT;
     ObjHits_SetHitVolumeSlot(obj,DFPPOWERSL_HIT_VOLUME_SLOT,DFPPOWERSL_HIT_VOLUME_ENABLED,0);
   }
   return;

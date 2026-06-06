@@ -86,6 +86,6 @@ void dfplightni_free(DfpLightniObject *obj);
 void dfplightni_render(DfpLightniObject *obj);
 void dfplightni_update(DfpLightniObject *obj);
 void dfplightni_init(DfpLightniObject *obj,DfpLightniMapData *mapData);
-int dfppowersl_spawnSeqObjectsOnHit(u8 *obj);
+int dfppowersl_spawnSeqObjectsOnHit(DfpPowerSlObject *obj);
 
 #endif /* MAIN_DFPLIGHTNI_H_ */
