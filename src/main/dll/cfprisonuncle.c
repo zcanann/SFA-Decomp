@@ -2,6 +2,7 @@
 #include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfprisonuncle.h"
+#include "main/mapEventTypes.h"
 #include "main/objanim.h"
 
 extern bool FUN_800067f0();
@@ -525,12 +526,12 @@ void MagicPlant_update(int obj)
 
   switch (state->mode) {
     case MAGICPLANT_MODE_WAIT_FOR_EVENT:
-      if ((*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(setup->eventId) != 0) {
+      if (((MapEventInterface *)*(int *)gMapEventInterface)->isTimedEventActive(setup->eventId) != 0) {
         fn_8017F7B8(obj, lbl_803DBD98[setup->variant & 3]);
         state->mode = MAGICPLANT_MODE_ACTIVE;
         state->idleTimer = (s16)randomGetRange(300, 600);
       } else {
-        progress = (*(f32 (**)(int))(*(int *)gMapEventInterface + 0x6c))(setup->eventId);
+        progress = ((MapEventInterface *)*(int *)gMapEventInterface)->getTimedEventProgress(setup->eventId);
         divisor = setup->eventDuration;
         if (divisor < 100) {
           divisor = 100;
@@ -578,7 +579,7 @@ void MagicPlant_update(int obj)
       if (alpha >= 0xff) {
         alpha = 0xff;
         state->mode = MAGICPLANT_MODE_WAIT_FOR_EVENT;
-        (*(void (**)(int, f32))(*(int *)gMapEventInterface + 0x64))(setup->eventId, (f32)setup->eventDuration);
+        ((MapEventInterface *)*(int *)gMapEventInterface)->startTimedEvent(setup->eventId, (f32)setup->eventDuration);
       }
       *(u8 *)(obj + 0x36) = (u8)alpha;
       *(s16 *)(*(int *)(obj + 0x54) + 0x60) =
@@ -2328,9 +2329,9 @@ void MagicPlant_init(int obj, MagicPlantSetup *setup) {
     state = *(MagicPlantState **)(obj + 0xb8);
     ObjGroup_AddObject(obj, 52);
     ObjGroup_AddObject(obj, 62);
-    r = ((int (**)(int))((int **)gMapEventInterface)[0])[26](setup->eventId);
+    r = ((MapEventInterface *)*(int *)gMapEventInterface)->isTimedEventActive(setup->eventId);
     if (r == 0) {
-        t = ((f32 (**)(int))((int **)gMapEventInterface)[0])[27](setup->eventId);
+        t = ((MapEventInterface *)*(int *)gMapEventInterface)->getTimedEventProgress(setup->eventId);
         divisor = setup->eventDuration;
         if (divisor < 100) divisor = 100;
         t /= (f32)divisor;

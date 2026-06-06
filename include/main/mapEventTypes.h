@@ -14,7 +14,11 @@ typedef struct MapEventInterface {
     u8 pad48[0x4C - 0x48];
     u8 (*getAnimEvent)(int mapId, int eventId);
     void (*setAnimEvent)(int mapId, int eventId, int value);
-    u8 pad54[0x90 - 0x54];
+    u8 pad54[0x64 - 0x54];
+    void (*startTimedEvent)(int eventId, f32 duration);
+    u8 (*isTimedEventActive)(int eventId);
+    f32 (*getTimedEventProgress)(int eventId);
+    u8 pad70[0x90 - 0x70];
     u8 *(*getWarpPos)(void);
     u8 *(*getProgressPtr)(void);
 } MapEventInterface;
@@ -25,6 +29,9 @@ STATIC_ASSERT(offsetof(MapEventInterface, getMode) == 0x40);
 STATIC_ASSERT(offsetof(MapEventInterface, setMode) == 0x44);
 STATIC_ASSERT(offsetof(MapEventInterface, getAnimEvent) == 0x4C);
 STATIC_ASSERT(offsetof(MapEventInterface, setAnimEvent) == 0x50);
+STATIC_ASSERT(offsetof(MapEventInterface, startTimedEvent) == 0x64);
+STATIC_ASSERT(offsetof(MapEventInterface, isTimedEventActive) == 0x68);
+STATIC_ASSERT(offsetof(MapEventInterface, getTimedEventProgress) == 0x6C);
 STATIC_ASSERT(offsetof(MapEventInterface, getWarpPos) == 0x90);
 STATIC_ASSERT(offsetof(MapEventInterface, getProgressPtr) == 0x94);
 
