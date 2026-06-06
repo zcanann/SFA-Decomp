@@ -180,7 +180,7 @@ BOOL AttractMovieAudio_Init(int audioMode)
     AIDCallback oldCb;
     register AIDCallback dmaCallback;
 
-    base = lbl_803A57C0;
+    base = (char *)(int)lbl_803A57C0;
     memset((AttractMoviePlayer*)(base + 0x5A0), 0, sizeof(AttractMoviePlayer));
     OSInitMessageQueue((OSMessageQueue*)(base + 0x50C), (void*)(base + ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES), 3);
 
@@ -286,7 +286,7 @@ void THPRead_Reader(void)
 {
     char* base = lbl_803A5F08;
     int i = 0;
-    AttractMoviePlayer* player = &lbl_803A5D60;
+    AttractMoviePlayer* player = (AttractMoviePlayer *)(int)&lbl_803A5D60;
     AttractMovieReadBuffer* req;
     u32 readOff = player->initOffset;
     u32 readSize = player->initReadSize;
@@ -505,10 +505,10 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
                     OSRestoreInterrupts(intr);
                 }
                 {
-                    u32 cols = player->header.mNumFrames;
+                    u32 cols;
                     u32 bOff = player->initReadFrame;
                     u32 sum  = (u32)i + bOff;
-                    u32 pos  = sum % cols;
+                    u32 pos  = sum % (cols = player->header.mNumFrames);
                     if (pos == cols - 1) {
                         if (!(player->playFlags & 1)) {
                             break; /* pos==cols-1, not looping: go to decode */
@@ -531,10 +531,10 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
         AttractMovieVideo_Decode(&cur);
 
         {
-            u32 cols = player->header.mNumFrames;
+            u32 cols;
             u32 bOff = player->initReadFrame;
             u32 sum  = (u32)i + bOff;
-            u32 pos  = sum % cols;
+            u32 pos  = sum % (cols = player->header.mNumFrames);
             if (pos == cols - 1) {
                 if (player->playFlags & 1) {
                     frameSize = *(u32*)cur;
