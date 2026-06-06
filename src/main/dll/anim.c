@@ -2,7 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
-#include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
 #pragma peephole off
@@ -6749,6 +6749,7 @@ void chuka_update(int obj)
     int h;
     int idx;
     int cnt;
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
 
     ch = *(int *)(blob + 4);
     if ((u32)ch != 0) {
@@ -6779,7 +6780,7 @@ void chuka_update(int obj)
     }
     switch (*(u8 *)(blob + 9)) {
     case 0:
-        if (*(s8 *)(obj + 0xad) != 0) {
+        if (objAnim->bankIndex != 0) {
             Obj_SetActiveModelIndex(obj, 0);
         }
         h = *(s16 *)(data + 0x1c);
@@ -6788,7 +6789,7 @@ void chuka_update(int obj)
         }
         break;
     case 1:
-        if (*(s8 *)(obj + 0xad) != 1) {
+        if (objAnim->bankIndex != 1) {
             Obj_SetActiveModelIndex(obj, 1);
         }
         h = *(s16 *)(data + 0x1c);
@@ -6800,7 +6801,7 @@ void chuka_update(int obj)
         }
         break;
     case 2:
-        if (*(s8 *)(obj + 0xad) != 2) {
+        if (objAnim->bankIndex != 2) {
             Obj_SetActiveModelIndex(obj, 2);
         }
         h = *(s16 *)(data + 0x1c);
@@ -6812,7 +6813,7 @@ void chuka_update(int obj)
         }
         break;
     case 3:
-        if (*(s8 *)(obj + 0xad) != 2) {
+        if (objAnim->bankIndex != 2) {
             Obj_SetActiveModelIndex(obj, 2);
         }
         h = *(s16 *)(data + 0x1c);
@@ -6824,7 +6825,7 @@ void chuka_update(int obj)
         }
         break;
     case 4:
-        if (*(s8 *)(obj + 0xad) != 1) {
+        if (objAnim->bankIndex != 1) {
             Obj_SetActiveModelIndex(obj, 1);
         }
         h = *(s16 *)(data + 0x1c);
@@ -6836,7 +6837,7 @@ void chuka_update(int obj)
         }
         break;
     default:
-        if (*(s8 *)(obj + 0xad) != 0) {
+        if (objAnim->bankIndex != 0) {
             Obj_SetActiveModelIndex(obj, 0);
         }
         h = *(s16 *)(data + 0x1c);
