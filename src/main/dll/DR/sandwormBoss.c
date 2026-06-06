@@ -3756,7 +3756,7 @@ extern f32   lbl_803E4260;
 extern f32   lbl_803E4264;
 extern f32   lbl_803E4284;
 extern u8    framesThisStep;
-extern void  objParticleFn_80099d84(int obj, int a, f32 f, int b);
+extern void  objParticleFn_80099d84(int obj, f32 f, int a, int b);
 
 /* EN v1.0 0x8019F93C  size: 188b  cfprisonguard_render: render the guard
  * model when visible, ramp its alarm timer at sub->_30 each frame, and
@@ -3774,7 +3774,7 @@ void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         if (t > lbl_803E4260) {
             *(f32*)(sub + 0x30) = lbl_803E4264 * (f32)(u32)framesThisStep + t;
             if (*(f32*)(sub + 0x30) < lbl_803E4284) {
-                objParticleFn_80099d84((int)obj, 3, lbl_803E4280, 0);
+                objParticleFn_80099d84((int)obj, lbl_803E4280, 3, 0);
             }
         }
     }

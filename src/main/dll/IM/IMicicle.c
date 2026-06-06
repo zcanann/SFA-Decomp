@@ -2153,7 +2153,7 @@ int exploded_stepDebrisPhysics(ExplodedObject *obj, ExplodedObjectState *state)
   state->spinZ = timeDelta * state->spinVelocityZ + state->spinZ;
 
   if (worldBefore[1] < state->floorHeight) {
-    if (((obj->velocityY < lbl_803E43F0) && ((state->physicsFlags & 4) != 0)) ||
+    if (((obj->velocityY < *(f32 *)&lbl_803E43F0) && ((state->physicsFlags & 4) != 0)) ||
         (lbl_803E43F0 == obj->velocityY)) {
       f32 t;
       f32 k;

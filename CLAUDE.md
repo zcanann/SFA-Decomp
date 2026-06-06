@@ -1579,6 +1579,29 @@ addend lands mid-function (not at a symbol boundary) before adding a range.
     with the #32 acc-chain). Read the shape: call-arg hoist = cap;
     expression-operand hoist = embedded assignment.
 
+79. **Recipe #32's CANONICAL form requires the SELF-REASSIGN chain — a fresh
+    temp gets copy-propagated away.** `fr = (f32)(s32)x; state[2] = lbl + fr;`
+    compiles IDENTICALLY to the inline expression (the temp folds). The form
+    that works pins every step through ONE variable:
+    `fr = (f32)(s32)x; fr = lbl + fr; state[2] = fr;` — the const load then
+    lands AFTER the conversion (target's order) and the result chains in one
+    reg. Same for fmadds: `fr = (f32)(s32)x; fr = lbl * fr + other; dst = fr;`
+    (enemymushroom_resetToSpawn 95.06→100, both sites.)
+
+80. **Micro-cap: MWCC emits cheap `mr`/`li` set-ups BEFORE an adjacent
+    `lwz`/`lbz` regardless of statement order** — when target shows
+    load-then-copy (`lwz rX,disp(rY); mr rZ,r3`) and yours shows the copy
+    first, statement reorder, comma-for-init, and locals are all inert
+    (enemy_free, nw_ice_update, fn_80063368's mr-vs-li). 2-5 instr residual;
+    don't grind. Related fold cap: a displaced byte/half access folds the
+    constant onto the INDEX (`addi r0,idx,K; lbzx/stwx`) where target keeps
+    it on the access (`add base,idx; lbz K(base)`) — struct-field,
+    per-statement locals and pointer-arith spellings all fold back
+    (hwSetVirtualSampleLoopBuffer, immultiseq, wctrexstatu, bossdrakor's
+    2-instr tail). The ONLY working escape found so far is the
+    strength-reduced LOOP form (saveSelectFn struct-array, recipe #18) —
+    no non-loop escape known yet.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
