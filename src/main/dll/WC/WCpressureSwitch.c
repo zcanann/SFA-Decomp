@@ -1,6 +1,24 @@
 #include "main/dll/WC/WCpressureSwitch.h"
 #include "main/mapEventTypes.h"
 #include "main/objlib.h"
+#include "global.h"
+
+/* WM_ObjCreator per-object extra state (four s16 slots). */
+typedef struct WmObjCreatorState {
+    s16 gameBit;     /* 0x00: spawn gate, -1 = always */
+    s16 spawnPeriod; /* 0x02 */
+    s16 spawnTimer;  /* 0x04 */
+    s16 spawnJitter; /* 0x06: randomGetRange(0, jitter) added per cycle */
+} WmObjCreatorState;
+STATIC_ASSERT(sizeof(WmObjCreatorState) == 0x8);
+
+/* WM_Galleon_getExtraSize == 0x10. */
+typedef struct WmGalleonState {
+    u8 pad00[0xC];
+    u8 active;       /* 0x0c: cleared on a non-map-change free */
+    u8 pad0D[3];
+} WmGalleonState;
+STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
 
 #pragma peephole off
@@ -84,12 +102,12 @@ extern f32 lbl_803E5CDC;
 
 void WM_ObjCreator_update(int obj) {
     int def;
-    s16 *state;
+    WmObjCreatorState *state;
     int count;
     struct { s16 dir[3]; s16 pad; f32 pos[4]; } vec;
 
     def = *(int *)(obj + 0x4c);
-    state = *(s16 **)(obj + 0xb8);
+    state = *(WmObjCreatorState **)(obj + 0xb8);
     if (Obj_IsLoadingLocked() != 0) {
         switch (*(s16 *)(def + 0x1a)) {
         case 0: {
@@ -133,8 +151,8 @@ void WM_ObjCreator_update(int obj) {
             break;
         }
         case 1:
-            if ((GameBit_Get(state[0]) != 0 || state[0] == -1) &&
-                (state[2] -= framesThisStep, state[2] <= 0)) {
+            if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
+                (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0)) {
                 int setup = Obj_AllocObjectSetup(0x28, 0x263);
                 int spawned;
                 *(u8 *)(setup + 4) = 0x20;
@@ -153,12 +171,12 @@ void WM_ObjCreator_update(int obj) {
                 if ((u32)spawned != 0) {
                     *(f32 *)(spawned + 0x24) = lbl_803E5CCC + (f32)(int)randomGetRange(0, 10);
                 }
-                state[2] = state[1] + randomGetRange(0, state[3]);
+                state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
             break;
         case 5:
-            if ((GameBit_Get(state[0]) != 0 || state[0] == -1) &&
-                (state[2] -= framesThisStep, state[2] <= 0)) {
+            if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
+                (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0)) {
                 int setup = Obj_AllocObjectSetup(0x24, 0x275);
                 int spawned;
                 *(s8 *)(setup + 0x18) = randomGetRange(-0x7f, 0x7e);
@@ -171,31 +189,31 @@ void WM_ObjCreator_update(int obj) {
                 if ((u32)spawned != 0) {
                     lbl_803DDC68 += 1;
                 }
-                state[2] = state[1] + randomGetRange(0, state[3]);
+                state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
             break;
         case 8:
-            if ((GameBit_Get(state[0]) != 0 || state[0] == -1) &&
-                (state[2] -= framesThisStep, state[2] <= 0)) {
+            if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
+                (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0)) {
                 int setup = Obj_AllocObjectSetup(0x38, 0x4ac);
                 int spawned;
-                GameBit_Set(state[0], 0);
+                GameBit_Set(state->gameBit, 0);
                 *(s8 *)(setup + 0x2a) = randomGetRange(-0x7f, 0x7e);
                 *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
                 *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
                 *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
-                *(s16 *)(setup + 0x18) = state[0];
+                *(s16 *)(setup + 0x18) = state->gameBit;
                 *(s16 *)(setup + 0x22) = 1;
                 spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
                 if ((u32)spawned != 0) {
                     (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x1c3, 0, 2, -1, 0);
                 }
-                state[2] = state[1] + randomGetRange(0, state[3]);
+                state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
             break;
         case 2:
-            if ((GameBit_Get(state[0]) != 0 || state[0] == -1) &&
-                (state[2] -= framesThisStep, state[2] <= 0)) {
+            if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
+                (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0)) {
                 int setup = Obj_AllocObjectSetup(0x28, 0x263);
                 int spawned;
                 *(u8 *)(setup + 4) = 4;
@@ -212,11 +230,11 @@ void WM_ObjCreator_update(int obj) {
                 if ((u32)spawned != 0) {
                     *(f32 *)(spawned + 0x24) = lbl_803E5CD0 - (f32)(int)randomGetRange(0, 10);
                 }
-                state[2] = state[1] + randomGetRange(0, state[3]);
+                state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
             break;
         case 4:
-            if (GameBit_Get(state[0]) != 0 || state[0] == -1) {
+            if (GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) {
                 int n = 2;
                 do {
                     int setup;
@@ -252,12 +270,12 @@ void WM_ObjCreator_update(int obj) {
                         (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(spawned, 0x1a7, &vec, 0x10000, -1, 0);
                     }
                 } while (n != 0);
-                GameBit_Set(state[0], 0);
+                GameBit_Set(state->gameBit, 0);
             }
             break;
         case 7:
-            if ((GameBit_Get(state[0]) != 0 || state[0] == -1) &&
-                (state[2] -= framesThisStep, state[2] <= 0)) {
+            if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
+                (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0)) {
                 int setup = Obj_AllocObjectSetup(0x28, 0x263);
                 *(u8 *)(setup + 4) = 4;
                 *(u8 *)(setup + 5) = 2;
@@ -270,11 +288,11 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x18) = randomGetRange(-500, 500) + 0x5dc;
                 *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
                 Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-                state[2] = state[1] + randomGetRange(0, state[3]);
+                state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
             break;
         case 6:
-            if (GameBit_Get(state[0]) != 0 || state[0] == -1) {
+            if (GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) {
                 int setup = Obj_AllocObjectSetup(0x24, 700);
                 int n;
                 *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc) + (f32)(int)randomGetRange(-0x104, 0x104);
@@ -300,7 +318,7 @@ void WM_ObjCreator_update(int obj) {
                         (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x1a6, &vec, 0x10002, -1, 0);
                     }
                 }
-                GameBit_Set(state[0], 0);
+                GameBit_Set(state->gameBit, 0);
             }
             break;
         }
@@ -316,9 +334,9 @@ void WM_Galleon_hitDetect(void) {}
 void WM_Galleon_free(int *obj, int leavingMap)
 {
     if (*(s16 *)((char *)obj + 0x46) != 0x188) {
-        u8 *state = *(u8 **)((char *)obj + 0xb8);
-        if (state[0xc] != 0 && leavingMap == 0) {
-            state[0xc] = 0;
+        WmGalleonState *state = *(WmGalleonState **)((char *)obj + 0xb8);
+        if (state->active != 0 && leavingMap == 0) {
+            state->active = 0;
         }
         if (lbl_803DDC74 != NULL) {
             Resource_Release(lbl_803DDC74);
@@ -351,12 +369,12 @@ int WM_Galleon_getExtraSize(void) { return 0x10; }
 int WM_Galleon_getObjectTypeId(void) { return 0x0; }
 
 void WM_ObjCreator_init(int *obj, s8 *def) {
-    s16 *state = *(s16**)((char*)obj + 0xb8);
+    WmObjCreatorState *state = *(WmObjCreatorState**)((char*)obj + 0xb8);
     *(s16*)obj = (s16)((s32)def[0x1e] << 8);
-    state[0] = *(s16*)((char*)def + 0x18);
-    state[1] = *(s16*)((char*)def + 0x1c);
-    state[2] = state[1];
-    state[3] = (s16)(s32)def[0x1f];
+    state->gameBit = *(s16*)((char*)def + 0x18);
+    state->spawnPeriod = *(s16*)((char*)def + 0x1c);
+    state->spawnTimer = state->spawnPeriod;
+    state->spawnJitter = (s16)(s32)def[0x1f];
 }
 
 int WM_Galleon_SeqFn(int obj, int unused, u8 *script)
