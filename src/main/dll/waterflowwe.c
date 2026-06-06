@@ -31,7 +31,7 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
     f32 strength;
     f32 angle;
 
-    current = *(f32 **)(obj + 0xb8);
+    current = ((GameObject *)obj)->extra;
     currentX = lbl_803E72B0;
     currentZ = lbl_803E72B0;
     objects = ObjGroup_GetObjects(0x14, &count);
