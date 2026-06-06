@@ -8047,7 +8047,7 @@ void staffFn_80170380(int *obj, int cmd)
 #pragma scheduling reset
 
 extern int objFn_80296700(int *obj);
-extern void objfx_spawnArcedBurst(int *obj, f32 a, f32 b, f32 c, f32 d, int type, int ba, int one, int n, int x, int y);
+extern void objfx_spawnArcedBurst(int *obj, f32 a, int type, int ba, int one, int n, f32 b, f32 c, f32 d, int x, int y);
 extern void fn_802961A4(int *obj, int *type, f32 *power);
 extern void fn_802960F4(int objc4, u8 **out);
 extern f32 lbl_803E328C;
@@ -8097,11 +8097,11 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
                 v = lbl_803E3290;
             }
             if (state[0xbb] == 7) {
-                objfx_spawnArcedBurst(obj, lbl_803E3294, lbl_803E3294, lbl_803E3294, lbl_803E329C * power,
-                                      state[0xbb], state[0xba], 1, (int)(lbl_803E3298 * v), 0, 0);
+                objfx_spawnArcedBurst(obj, lbl_803E3294, state[0xbb], state[0xba], 1, (int)(lbl_803E3298 * v),
+                                      lbl_803E3294, lbl_803E3294, lbl_803E329C * power, 0, 0);
             } else {
-                objfx_spawnArcedBurst(obj, lbl_803E3288, lbl_803E3288, lbl_803E3288, lbl_803E329C * power,
-                                      state[0xbb], state[0xba], 1, (int)(lbl_803E3298 * v), 0, 0);
+                objfx_spawnArcedBurst(obj, lbl_803E3288, state[0xbb], state[0xba], 1, (int)(lbl_803E3298 * v),
+                                      lbl_803E3288, lbl_803E3288, lbl_803E329C * power, 0, 0);
             }
         }
         fn_802961A4(obj2, &type, &power);
@@ -8166,7 +8166,7 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
                 } else {
                     fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32A8));
                     fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - power / lbl_803E32A8);
-                    fxB.id = 0xc0e;
+                    fxB.id = 0xc94;
                 }
                 ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
                 ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
