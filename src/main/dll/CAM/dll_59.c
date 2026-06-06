@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/CAM/dll_59.h"
 
 extern void *mmAlloc(int size, int heap, int flags);
@@ -115,8 +116,8 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   relCos = fn_80293E80(relAngleRad);
   relSin = sin(relAngleRad);
 
-  approachAngle = target[0] - (u16)getAngle(*(f32 *)(obj + 0x18) - *(f32 *)(target + 0xc),
-                                            *(f32 *)(obj + 0x20) - *(f32 *)(target + 0x10));
+  approachAngle = target[0] - (u16)getAngle(((GameObject *)obj)->anim.worldPosX - *(f32 *)(target + 0xc),
+                                            ((GameObject *)obj)->anim.worldPosZ - *(f32 *)(target + 0x10));
   if (approachAngle > 0x8000) {
     approachAngle = approachAngle - 0xffff;
   }
@@ -152,13 +153,13 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
                                    &localPos[1], &localPos[2], *(int *)(obj + 0x30));
 
     for (pointCount = 0; pointCount < 3; pointCount++) {
-      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0x1c) = *(f32 *)(obj + 0xc);
-      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0x6c) = *(f32 *)(obj + 0x10);
-      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0xbc) = *(f32 *)(obj + 0x14);
+      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0x1c) = ((GameObject *)obj)->anim.localPosX;
+      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0x6c) = ((GameObject *)obj)->anim.localPosY;
+      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0xbc) = ((GameObject *)obj)->anim.localPosZ;
     }
 
-    dx = *(f32 *)(obj + 0xc) - localPos[0];
-    dz = *(f32 *)(obj + 0x14) - localPos[2];
+    dx = ((GameObject *)obj)->anim.localPosX - localPos[0];
+    dz = ((GameObject *)obj)->anim.localPosZ - localPos[2];
     pathRadius = lbl_803E1770 * sqrtf(dx * dx + dz * dz);
     turnAmount = getAngle(-relCos, -relSin) - (u16)getAngle(dx, dz);
 
@@ -203,7 +204,7 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
 
     camcontrol_buildPathPoints(localPos[0] - (relCos * pathScale),
                                localPos[2] - (relSin * pathScale),
-                               *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14),
+                               ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
                                localPos[1], pathAngle, 0x1555, &pointCount);
 
     pointOffset = pointCount * 4;
