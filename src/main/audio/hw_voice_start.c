@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/hw_voice_start.h"
 
 extern void salActivateVoice(void *entry, u8 studioIndex);

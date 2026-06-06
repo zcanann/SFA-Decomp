@@ -156,7 +156,7 @@ int crcloudrace_completionCallback(int obj, int arg2, u8 *data) {
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void crcloudrace_updateCompletionState(int obj, int *state) {
+void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state) {
     f32 dist;
     int player;
     u32 near;
@@ -165,7 +165,7 @@ void crcloudrace_updateCompletionState(int obj, int *state) {
     player = Obj_GetPlayerObject();
     if (GameBit_Get(0x499) == 0) {
         if (GameBit_Get(0x2e8) != 0) {
-            *(u8 *)((char *)state + 8) = 4;
+            state->phase = 4;
             setMotionBlur(0, lbl_803E6744);
             GameBit_Set(0x497, 0);
             GameBit_Set(0x49d, 0);
@@ -178,7 +178,7 @@ void crcloudrace_updateCompletionState(int obj, int *state) {
             if (near != 0) {
                 (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)(near + 0x68)) + 0x20)))(near, 1);
             }
-            *(u8 *)((char *)state + 8) = 5;
+            state->phase = 5;
         }
     }
 }
@@ -189,12 +189,12 @@ void crcloudrace_updateCompletionState(int obj, int *state) {
 #pragma scheduling off
 #pragma peephole off
 void crcloudrace_updateRaceState(int obj) {
-    int *inner;
+    CrCloudRaceState *inner;
     int player;
 
-    inner = *(int **)(obj + 0xb8);
+    inner = *(CrCloudRaceState **)(obj + 0xb8);
     player = Obj_GetPlayerObject();
-    switch (*(u8 *)((char *)inner + 8)) {
+    switch (inner->phase) {
     case 2:
         if (GameBit_Get(0x4a0) != 0) {
             GameBit_Set(0x4ba, 1);
@@ -202,7 +202,7 @@ void crcloudrace_updateRaceState(int obj) {
         if (fn_802972A8(player) != 0) {
             GameBit_Set(0x49d, 1);
             GameBit_Set(0x497, 1);
-            *(u8 *)((char *)inner + 8) = 3;
+            inner->phase = 3;
             unlockLevel(0, 0, 1);
         }
         break;
@@ -211,12 +211,12 @@ void crcloudrace_updateRaceState(int obj) {
         break;
     case 4:
         GameBit_Set(0x4ba, 0);
-        *(u8 *)((char *)inner + 8) = 7;
-        s16toFloat((char *)inner + 4, 0xa);
+        inner->phase = 7;
+        s16toFloat((char *)inner->timer, 0xa);
         break;
     case 7:
-        if (timerCountDown((char *)inner + 4) != 0) {
-            *(u8 *)((char *)inner + 8) = 8;
+        if (timerCountDown((char *)inner->timer) != 0) {
+            inner->phase = 8;
         }
         break;
     case 8:
@@ -230,15 +230,15 @@ void crcloudrace_updateRaceState(int obj) {
         GameBit_Set(0xdb8, 0);
         GameBit_Set(0x984, 0);
         GameBit_Set(0x458, 0);
-        *(u8 *)((char *)inner + 8) = 0;
+        inner->phase = 0;
         break;
     case 5:
-        *(u8 *)((char *)inner + 8) = 2;
+        inner->phase = 2;
         break;
     case 1:
     case 6:
     default:
-        *(u8 *)((char *)inner + 8) = 2;
+        inner->phase = 2;
         break;
     case 0:
         break;

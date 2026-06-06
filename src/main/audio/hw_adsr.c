@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/hw_adsr.h"
 
 extern u8 voiceAdsrDecayTable[];

@@ -1,5 +1,4 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubinit.h"
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/serpoll.h"
 
 extern BOOL gTRKBigEndian;
 

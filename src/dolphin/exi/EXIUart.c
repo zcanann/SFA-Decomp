@@ -1,4 +1,3 @@
-#include <dolphin/os.h>
 #include <dolphin/exi.h>
 
 #define EXI_TX 0x800400u

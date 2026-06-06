@@ -1,6 +1,4 @@
 #include <dolphin/exi.h>
-#include "dolphin/os.h"
-#include <dolphin/hw_regs.h>
 
 u8 lbl_803DE3DC;
 

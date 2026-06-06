@@ -1,7 +1,4 @@
-#include "ghidra_import.h"
 #include "main/audio/sal_dsp.h"
-#include "main/audio/hw_dspctrl.h"
-#include "dolphin/os.h"
 #include "dolphin/dsp.h"
 
 extern u16 hwIrqLevel;

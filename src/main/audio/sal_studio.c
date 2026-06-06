@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/unknown/autos/musyx_dsp.h"
 
 /* MusyX runtime DSP control (hw_dspctrl.c, MUSY_VERSION <= 2.0.0 paths),

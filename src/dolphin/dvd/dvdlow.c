@@ -1,5 +1,3 @@
-#include <dolphin.h>
-#include <dolphin/dvd.h>
 
 #include "dolphin/dvd/__dvd.h"
 #include "dolphin/os/__os.h"

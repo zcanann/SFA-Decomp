@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/hw_stream.h"
 
 extern void salRemoveStudioInput(void *p, void *input);

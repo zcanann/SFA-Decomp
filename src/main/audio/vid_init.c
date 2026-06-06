@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/vid_init.h"
 
 typedef struct VoiceNode {

@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/synth_job.h"
 #include "main/audio/synth_job_init.h"
 

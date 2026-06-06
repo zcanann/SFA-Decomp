@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/snd_reverb.h"
 
 extern u32 gSalMallocHook[2];

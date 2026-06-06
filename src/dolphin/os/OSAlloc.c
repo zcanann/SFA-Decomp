@@ -1,5 +1,4 @@
 #include <dolphin.h>
-#include <dolphin/os.h>
 
 #define ALIGNMENT 32
 #define MINOBJSIZE 64

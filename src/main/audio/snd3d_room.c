@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/snd3d_room.h"
 
 extern Snd3DEmitter *s3dEmitterRoot;

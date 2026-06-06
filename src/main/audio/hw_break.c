@@ -1,5 +1,4 @@
 #include "ghidra_import.h"
-#include "main/audio/hw_voice_control.h"
 
 extern undefined4 FUN_80281a34();
 extern uint FUN_80282fe4();

@@ -1,15 +1,7 @@
-#include "ghidra_import.h"
-#include "main/audio/hw_voice_control.h"
 #include "main/audio/inp_midi.h"
-#include "main/audio/snd_core.h"
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/voice_prio.h"
-#include "main/audio/mcmd_setup.h"
 #include "main/audio/mcmd_volume.h"
-#include "main/audio/hw_adsr.h"
-#include "main/audio/hw_aram.h"
-#include "main/audio/hw_init.h"
-#include "main/audio/hw_voice_params.h"
 #include "main/audio/inp_ctrl.h"
 
 extern int mcmdLoop();

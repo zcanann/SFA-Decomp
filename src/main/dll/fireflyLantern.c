@@ -71,26 +71,27 @@ void fn_80154870(int obj, int *state)
          ((*(u8 (**)(int))(*gRomCurveInterface + 0x90))(curve) != 0)) &&
         ((*(u8 (**)(int, int, f32, void *, int))(*gRomCurveInterface + 0x8c))(
              *state, obj, lbl_803E29B0, &lbl_803DBCD0, -1) != 0)) {
-        state[0xb7] = state[0xb7] & ~0x2000;
+        *(u32 *)&state[0xb7] &= ~0x2000LL;
     }
     ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
     flag = fn_80296448(Obj_GetPlayerObject());
     dvec[0] = *(f32 *)(state[0xa7] + 0xc) - *(f32 *)(obj + 0xc);
     dvec[1] = lbl_803E2990;
     dvec[2] = *(f32 *)(state[0xa7] + 0x14) - *(f32 *)(obj + 0x14);
-    if ((state[0xd0] != 0) && ((u32)state[0xd0] == (u32)Obj_GetPlayerObject())) {
-        state[0xb9] = state[0xb9] | 0x10000;
+    if (((u32)state[0xd0] != 0) && ((u32)state[0xd0] == (u32)Obj_GetPlayerObject())) {
+        *(u32 *)&state[0xb9] |= 0x10000LL;
         *(f32 *)(state + 0xc9) = lbl_803E2990;
     }
     *(s16 *)(obj + 2) =
         -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)((u8 *)state + 0x33a)) -
           (f32)*(s16 *)(obj + 2));
     if (flag == 0) {
-        *(f32 *)(obj + 0x24) = lbl_803E2990;
-        *(f32 *)(obj + 0x2c) = lbl_803E2990;
+        fVar1 = lbl_803E2990;
+        *(f32 *)(obj + 0x24) = fVar1;
+        *(f32 *)(obj + 0x2c) = fVar1;
         fn_8014CF7C(obj, state, *(f32 *)(state[0xa7] + 0xc), *(f32 *)(state[0xa7] + 0x14), 10, 0);
     } else {
-        fn_8014C678(obj, state, dvec, lbl_803E29A0, lbl_803E29B4, lbl_803E29B4, 1);
+        fn_8014C678(obj, state, dvec, lbl_803E29A0, lbl_803E29B4, *(f32 *)&lbl_803E29B4, 1);
         fn_8014CD1C(obj, state, 0xf, lbl_803E29C4, lbl_803E2994, 0);
     }
     if (state[0xb7] & 0x40000000U) {

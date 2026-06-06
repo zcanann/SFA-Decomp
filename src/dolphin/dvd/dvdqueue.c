@@ -1,7 +1,5 @@
 #include <dolphin.h>
-#include <dolphin/dvd.h>
 
-#include "dolphin/dvd/__dvd.h"
 
 typedef struct DVDWaitingQueue {
     /* 0x00 */ DVDCommandBlock* next;

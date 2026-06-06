@@ -1827,6 +1827,54 @@ addend lands mid-function (not at a symbol boundary) before adding a range.
     strength-reduced LOOP form (saveSelectFn struct-array, recipe #18) —
     no non-loop escape known yet.
 
+87. **DEFINITION param order controls the prologue param-save emission order
+    — declare the f32 param LAST to get `mr;mr;mr;fmr`.** When target's
+    prologue saves the GPR params before the `fmr fN,f1` but yours emits the
+    fmr first, the original signature listed the float param AFTER the ints
+    (`fn(short *obj, int state, uint turnTime, f32 maxDistance)`). Register
+    assignment is UNCHANGED (floats→f1.., ints→r3.. regardless of position),
+    so the flip is ABI-neutral; other TUs' block externs with the old order
+    keep compiling and matching (recipe #57). Definition-side mirror of #29.
+    (fn_80154FB4 — part of 96.2→100.)
+
+88. **Multi-def web SPLIT flips saved-FP pair coloring where decl-order is
+    inert.** When a saved-FP PAIR is number-swapped (T objY=f31/targetY=f30,
+    yours reversed) and one of the two variables has MULTIPLE defs (a
+    reassignment like `targetY = objY - targetY;` plus a clamp re-def),
+    rename the post-reassign value to a FRESH variable (`dy = objY - targetY;`
+    and rename the later uses). The allocator coalesces dy back onto the same
+    reg (zero byte cost) but the reduced web weight flips the pair to match
+    target. Decl-order swaps and #66 block-locals are inert on this shape.
+    Two confirmed: fireflyLantern fn_80154FB4 dy-split (17→8 bad), dll_54_update
+    t/t2 split. Sibling of #16/#61b for the FP-pair case.
+    **Same session also confirmed plain #45 decl-order DOES still rule
+    whole-GROUP saved-FP order** (dll_54_update: declaring `zz, xx` BEFORE
+    `dx, dy, dz` flipped a 19-instr web; `d2, h, t` ordering fixed the t/h
+    volatile pair) — try decl-reorder first for 3+-variable groups, web-split
+    for stubborn 2-var pairs with a multi-def member.
+
+89. **#83 corollary — MIXED if/ternary clamp split when target has if-SHAPE
+    but UN-flushed conversion slots.** Only the clamp chain sitting BETWEEN
+    two conversion regions needs the ternary-assignment form (to keep the
+    conversion-temp pool growing → fresh slots + bigger frame); chains before
+    the first conversion region stay as `if` statements, avoiding the
+    `b`+`mr` web-transition tax #83 documents for the first variable-arm
+    ternary of a chain. The all-ternary form costs +2 instrs; the all-if form
+    reuses slots (frame 32B short); the MIXED split matches exactly.
+    (dll_54_update: region-1 d-clamps as ifs, region-2 as ternaries —
+    frame -176→-208 = target, zero instr cost.)
+
+90. **#81 launder kills the pre-call HOIST of a doubled float arg while
+    keeping the `fmr` CSE.** When a call passes the same named f32 extern in
+    two arg slots (`f(.., lblK, lblK, ..)`), MWCC hoists the shared `lfs` to
+    the FRONT of the call's arg setup (before the GPR moves), where target
+    loads it lazily at its L2R slot (`..addi; lfs f1; lfs f2; fmr f3,f2`).
+    Laundering the SECOND use (`f(.., lblK, *(f32 *)&lblK, ..)`) defeats the
+    hoist-triggering CSE but MWCC still emits `lfs f2; fmr f3,f2` — exact
+    match. Embedded-assignment `(t = lblK)` in the arg EXPLODES (allocates
+    f31 + psq spills) even when t is otherwise dead — re-confirmed, never
+    embed assignments in call args. (fn_80154870 95.55→99.85.)
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/

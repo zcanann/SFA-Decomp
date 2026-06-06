@@ -1,6 +1,4 @@
-#include "stddef.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/mem_TRK.h"
-#include "dolphin/types.h"
 
 void TRK_fill_mem(void *dest, int value, unsigned long length)
 {

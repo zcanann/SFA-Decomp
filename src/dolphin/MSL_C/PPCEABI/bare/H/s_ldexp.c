@@ -18,7 +18,6 @@
  */
 
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/float.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/fdlibm.h"
 
 extern const double lbl_803E7950;
 extern const double lbl_803E7958;

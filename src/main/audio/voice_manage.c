@@ -1,7 +1,3 @@
-#include "ghidra_import.h"
-#include "main/audio/hw_voice_control.h"
-#include "main/audio/voice_id.h"
-#include "main/audio/voice_alloc.h"
 #include "main/audio/voice_manage.h"
 
 extern u32 hwIsActive(u32 voice);

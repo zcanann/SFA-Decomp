@@ -1,4 +1,3 @@
-#include "PowerPC_EABI_Support/Runtime/NMWException.h"
 
 typedef struct ProcessInfo {
     struct __eti_init_info* exception_info;

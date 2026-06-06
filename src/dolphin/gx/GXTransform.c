@@ -1,6 +1,4 @@
-#include <dolphin/gx.h>
 #include <dolphin/mtx.h>
-#include <dolphin/os.h>
 
 #include "dolphin/gx/__gx.h"
 

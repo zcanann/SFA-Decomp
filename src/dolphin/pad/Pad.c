@@ -1,10 +1,7 @@
-#include <dolphin.h>
-#include <dolphin/ai.h>
 #include <dolphin/pad.h>
 #include <dolphin/si.h>
 #include <global.h>
 
-#include "dolphin/si/__si.h"
 
 extern u32 lbl_803DE088;
 

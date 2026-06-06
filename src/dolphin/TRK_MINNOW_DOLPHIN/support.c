@@ -3,8 +3,6 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/support.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msg.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msghndlr.h"
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/serpoll.h"
 #include <string.h>
 
 DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count, u8* io_result,

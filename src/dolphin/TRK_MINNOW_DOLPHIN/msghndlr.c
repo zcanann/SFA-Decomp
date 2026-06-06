@@ -1,10 +1,7 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msghndlr.h"
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubevent.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msg.h"
-#include "TRK_MINNOW_DOLPHIN/Os/dolphin/targcont.h"
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
-#include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
 BOOL IsTRKConnected;
 

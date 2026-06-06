@@ -1,7 +1,5 @@
 /* TODO: restore stripped imported address metadata if needed. */
 
-#include <dolphin.h>
-#include <dolphin/os.h>
 
 #include "dolphin/os/__os.h"
 

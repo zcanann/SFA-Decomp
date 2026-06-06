@@ -1,8 +1,6 @@
 #include "dolphin/ar.h"
 
-#include "dolphin/hw_regs.h"
 #include "dolphin/os.h"
-#include "dolphin/os/OSCache.h"
 
 static ARCallback __AR_Callback;
 static u32 __AR_Size;

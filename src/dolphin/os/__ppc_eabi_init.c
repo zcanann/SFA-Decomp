@@ -1,4 +1,3 @@
-#include "dolphin/base/PPCArch.h"
 
 typedef void (*voidfunctionptr)(void);
 

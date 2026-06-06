@@ -1176,9 +1176,6 @@ main/dll/flybaddie1D7.c:
 main/dll/projball1D8.c:
 	.text       start:0x801CFF20 end:0x801D083C
 
-main/dll/torch1D9.c:
-	.text       start:0x801D083C end:0x801D083C
-
 main/dll/NW/NWsfx.c:
 	.text       start:0x801D083C end:0x801D16EC
 
@@ -1292,9 +1289,6 @@ main/dll/WM/WMlevcontrol.c:
 
 main/dll/WM/WMcrystal.c:
 	.text       start:0x801DD46C end:0x801DE430
-
-main/dll/VF/VFlevcontrol.c:
-	.text       start:0x801DE430 end:0x801DE430
 
 main/dll/VF/platform1.c:
 	.text       start:0x801DE430 end:0x801DF43C

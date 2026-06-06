@@ -1,8 +1,4 @@
-#include <dolphin.h>
-#include <dolphin/os.h>
-#include <dolphin/dvd.h>
 
-#include "dolphin/dvd/__dvd.h"
 #include "dolphin/os/__os.h"
 
 extern u32 lbl_8032DD38[18];

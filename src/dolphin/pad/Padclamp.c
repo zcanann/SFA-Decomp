@@ -1,5 +1,4 @@
 #include <dolphin.h>
-#include <dolphin/pad.h>
 typedef struct PADClampExtents {
     u8 minTrigger;
     u8 maxTrigger;

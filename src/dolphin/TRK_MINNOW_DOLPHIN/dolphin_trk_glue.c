@@ -1,8 +1,6 @@
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
-#include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 #include "OdemuExi2/odemuexi/DebuggerDriver.h"
 #include "amcstubs/AmcExi2Stubs.h"
-#include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
 typedef struct UARTInlineBuffer {
     s32 writeLen;

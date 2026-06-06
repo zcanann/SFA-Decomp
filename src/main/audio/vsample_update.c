@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/audio/hw_voice_control.h"
 #include "main/audio/vsample_update.h"
 
 extern void synthAdvanceVirtualSampleEntry(void *entry, u32 tick);
