@@ -78,7 +78,7 @@ int curves_findNearObj(int obj,int *curveTypes,int typeCount,int action,char bbo
 void FUN_800dece0(void);
 int FUN_800df2a4(double param_1,double param_2,double param_3,int param_4,int param_5);
 uint FUN_800df46c(undefined8 param_1,double param_2,double param_3);
-void curves_lengthFn24(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4);
+f32 curves_lengthFn24(u32 a, u32 b, f32 *posA, f32 *posB, f32 t1, f32 t2);
 void curves_getPos(f32 phase,int curve,float *outX,float *outY,float *outZ);
 int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outPhase);
 
