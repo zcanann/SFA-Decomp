@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMcannon.h"
+#include "main/objanim_internal.h"
 
 
 extern undefined4 FUN_80006724();
@@ -603,7 +604,9 @@ void FUN_801aeab4(int param_1)
     if (bVar1 == 1) {
       if (sVar4 == 0) {
         FUN_800178e8((double)lbl_803E5428,
-                     *(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4),0,-1,0,0x10
+                     *(int **)(*(int *)(param_1 + offsetof(ObjAnimComponent, banks)) +
+                                *(s8 *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) * 4),
+                     0,-1,0,0x10
                     );
         pbVar5[2] = 0;
         pbVar5[3] = 0xb4;
@@ -614,7 +617,9 @@ void FUN_801aeab4(int param_1)
     else if (bVar1 == 0) {
       if (sVar4 == 1) {
         FUN_800178e8((double)lbl_803E5424,
-                     *(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4),0,-1,0,0x10
+                     *(int **)(*(int *)(param_1 + offsetof(ObjAnimComponent, banks)) +
+                                *(s8 *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) * 4),
+                     0,-1,0,0x10
                     );
         *(undefined *)(param_1 + 0x36) = 0xff;
         pbVar5[1] = 1;
@@ -696,7 +701,7 @@ void FUN_801aecf8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   pbVar6 = *(byte **)(param_9 + 0x5c);
   *param_9 = (short)((int)*(char *)(param_10 + 0x18) << 8);
   param_9[1] = *(undefined2 *)(param_10 + 0x1a);
-  *(char *)((int)param_9 + 0xad) = (char)*(undefined2 *)(param_10 + 0x1c);
+  *(char *)((int)param_9 + offsetof(ObjAnimComponent, bankIndex)) = (char)*(undefined2 *)(param_10 + 0x1c);
   *pbVar6 = *(byte *)(param_10 + 0x19);
   bVar1 = *pbVar6;
   if (bVar1 == 4) {
@@ -713,7 +718,8 @@ void FUN_801aecf8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   else if (bVar1 < 7) {
     *(float *)(param_9 + 4) = lbl_803E5448;
   }
-  piVar5 = *(int **)(*(int *)(param_9 + 0x3e) + *(char *)((int)param_9 + 0xad) * 4);
+  piVar5 = *(int **)(*(int *)((int)param_9 + offsetof(ObjAnimComponent, banks)) +
+                      *(s8 *)((int)param_9 + offsetof(ObjAnimComponent, bankIndex)) * 4);
   uVar4 = 0;
   FUN_800178e8((double)lbl_803E5430,piVar5,0,-1,0,0);
   uVar7 = FUN_800178e4((double)lbl_803E5420,piVar5,0);

@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
+#include "main/objanim_internal.h"
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
@@ -817,7 +818,8 @@ void FUN_801b77a8(short *param_1)
   iVar9 = *(int *)(param_1 + 0x5c);
   bVar1 = *(byte *)(iVar9 + 0x1d);
   if ((bVar1 & 1) == 0) {
-    piVar3 = *(int **)(*(int *)(param_1 + 0x3e) + *(char *)((int)param_1 + 0xad) * 4);
+    piVar3 = *(int **)(*(int *)((int)param_1 + offsetof(ObjAnimComponent, banks)) +
+                        *(s8 *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) * 4);
     pfVar7 = (float *)piVar3[10];
     if ((pfVar7 != (float *)0x0) && ((bVar1 & 4) != 0)) {
       if (lbl_803E5710 <= *pfVar7) {
@@ -852,8 +854,9 @@ void FUN_801b77a8(short *param_1)
     }
     if (*(short *)(iVar9 + 0x1a) < 1) {
       FUN_800178e8((double)lbl_803E5718,
-                   *(int **)(*(int *)(param_1 + 0x3e) + *(char *)((int)param_1 + 0xad) * 4),0,-1,0,
-                   0x10);
+                   *(int **)(*(int *)((int)param_1 + offsetof(ObjAnimComponent, banks)) +
+                              *(s8 *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) * 4),
+                   0,-1,0,0x10);
       *(undefined2 *)(iVar9 + 0x18) = *(undefined2 *)(iVar8 + 0x1a);
       if (*(short *)(iVar9 + 0x18) < 0xf) {
         *(undefined2 *)(iVar9 + 0x18) = 0xf;
