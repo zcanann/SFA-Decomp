@@ -1,6 +1,4 @@
 #include "ghidra_import.h"
-#include "main/audio/aram.h"
-#include "dolphin/os/OSCache.h"
 
 typedef struct AramStreamBufferEntry {
     struct AramStreamBufferEntry *next;

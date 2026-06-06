@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/audio/hw_aram.h"
-#include "main/audio/aram.h"
 
 extern undefined4 DAT_803defc4;
 extern u32 lbl_803BD150[];

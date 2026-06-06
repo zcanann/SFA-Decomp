@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/audio/hw_samplemem.h"
-#include "main/audio/aram.h"
 
 extern undefined4 DAT_803dd280;
 extern undefined4 DAT_803dd288;

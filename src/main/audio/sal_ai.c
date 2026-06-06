@@ -1,7 +1,4 @@
-#include "ghidra_import.h"
 #include "main/audio/sal_ai.h"
-#include "dolphin/os.h"
-#include "dolphin/ai.h"
 
 extern void *salMalloc(u32 size);
 extern void salFree(void *ptr);

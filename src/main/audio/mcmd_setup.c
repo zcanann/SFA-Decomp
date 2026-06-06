@@ -1,5 +1,4 @@
 #include "ghidra_import.h"
-#include "main/audio/hw_adsr.h"
 #include "main/audio/mcmd.h"
 
 extern McmdVoiceState *synthVoice;

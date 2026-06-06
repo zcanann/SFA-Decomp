@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/audio/hw_volume.h"
-#include "main/audio/snd3d_room.h"
 
 extern void salDeactivateVoice(void *entry);
 extern void salActivateStudio(void);

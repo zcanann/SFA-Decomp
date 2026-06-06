@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/hw_dspctrl.h"
 
 extern u8 lbl_803CC1E0[];

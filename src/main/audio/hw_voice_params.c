@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/hw_voice_params.h"
 
 extern u8 *volatile dspVoice;
