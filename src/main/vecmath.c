@@ -951,6 +951,92 @@ extern f32 mathCosf(f32);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+#pragma fp_contract off
+/* Tail residual: a1/a2/b0 FP volatile rotation (f1/f2/f3) resists decl-order
+   and fresh-web restructures -- recipe #82 named-local cap. */
+void mtx44_mult(f32 *a, f32 *b, f32 *out)
+{
+    f32 *end = a + 12;
+    f32 a1, a0, a2;
+    f32 b0, b1, b2, b3;
+    f32 s, t;
+
+    do {
+        a0 = a[0];
+        a1 = a[1];
+        a2 = a[2];
+        b0 = b[0];
+        b1 = b[4];
+        b2 = b[8];
+        b0 = a0 * b0;
+        b1 = a1 * b1;
+        b2 = a2 * b2;
+        s = b0 + b1;
+        b0 = b[1];
+        b1 = b[5];
+        s = b2 + s;
+        b2 = b[9];
+        out[0] = s;
+        b0 = a0 * b0;
+        b1 = a1 * b1;
+        b2 = a2 * b2;
+        s = b0 + b1;
+        b0 = b[2];
+        b1 = b[6];
+        s = b2 + s;
+        b2 = b[10];
+        out[1] = s;
+        b0 = a0 * b0;
+        b1 = a1 * b1;
+        b2 = a2 * b2;
+        out[2] = b2 + (b0 + b1);
+        out += 4;
+        a += 4;
+    } while (end != a);
+
+    a0 = a[0];
+    a1 = a[1];
+    a2 = a[2];
+    b0 = b[0];
+    b1 = b[4];
+    b2 = b[8];
+    b3 = b[12];
+    b0 = a0 * b0;
+    b1 = a1 * b1;
+    b2 = a2 * b2;
+    b3 = b0 + b3;
+    b2 = b1 + b2;
+    b0 = b[1];
+    b1 = b[5];
+    t = b2 + b3;
+    b2 = b[9];
+    b3 = b[13];
+    out[0] = t;
+    b0 = a0 * b0;
+    b1 = a1 * b1;
+    b2 = a2 * b2;
+    b3 = b0 + b3;
+    b2 = b1 + b2;
+    b0 = b[2];
+    b1 = b[6];
+    t = b2 + b3;
+    b2 = b[10];
+    b3 = b[14];
+    out[1] = t;
+    a0 = a0 * b0;
+    a1 = a1 * b1;
+    a2 = a2 * b2;
+    s = a0 + b3;
+    out[2] = (a1 + a2) + s;
+}
+#pragma fp_contract reset
+#pragma peephole reset
+#pragma scheduling reset
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 #pragma dont_inline on
 #pragma opt_strength_reduction off
 #pragma opt_loop_invariants off
