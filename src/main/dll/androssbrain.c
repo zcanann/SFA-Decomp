@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 /*
  * Per-object extra state for the Andross brain core
@@ -107,9 +108,9 @@ void androssbrain_update(int obj)
     ObjHits_SetHitVolumeSlot(obj, 5, 2, -1);
     ObjHits_EnableObject(obj);
     if (state->andross != NULL) {
-        *(f32 *)(obj + 0xc) = *(f32 *)(*(int *)&state->andross + 0xc);
-        *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)&state->andross + 0x10);
-        *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)&state->andross + 0x14);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(*(int *)&state->andross + 0xc);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(*(int *)&state->andross + 0x10);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(*(int *)&state->andross + 0x14);
     }
     currentState = *(u8 *)&state->brainState;
     if ((s8)currentState != state->prevState) {
@@ -122,7 +123,7 @@ void androssbrain_update(int obj)
             (*(void (**)(void))(*gGameUIInterface + 0x64))();
         }
         *(s16 *)obj = *(s16 *)(*(int *)&state->andross);
-        *(s16 *)(obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         break;
     case 1:
         if (flag != 0) {
@@ -150,14 +151,14 @@ void androssbrain_update(int obj)
                 }
             }
         }
-        *(s16 *)(obj + 6) &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~0x4000;
         break;
     case 2:
         if (flag != 0) {
             androssligh_setState(*(int *)&state->lightning, 2, 0);
             (*(void (**)(void))(*gGameUIInterface + 0x64))();
         }
-        *(s16 *)(obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         andross_setPartSignal(*(int *)&state->andross, 8);
         break;
     }
