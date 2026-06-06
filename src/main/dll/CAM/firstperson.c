@@ -1,4 +1,5 @@
 #include "main/dll/CAM/firstperson.h"
+#include "main/game_object.h"
 
 
 #pragma peephole off
@@ -260,11 +261,11 @@ void firstperson_loadSettings(int param_1)
 
 void CameraModeNormal_free(int obj)
 {
-  *(f32 *)((u8 *)cameraMtxVar57 + 0x74) = *(f32 *)(obj + 0x18);
-  *(f32 *)((u8 *)cameraMtxVar57 + 0x78) = *(f32 *)(obj + 0x1c);
-  *(f32 *)((u8 *)cameraMtxVar57 + 0x7c) = *(f32 *)(obj + 0x20);
-  *(s16 *)((u8 *)cameraMtxVar57 + 0x86) = *(s16 *)(obj + 0x0);
-  *(s16 *)((u8 *)cameraMtxVar57 + 0x88) = *(s16 *)(obj + 0x2);
-  *(s16 *)((u8 *)cameraMtxVar57 + 0x8a) = *(s16 *)(obj + 0x4);
+  *(f32 *)((u8 *)cameraMtxVar57 + 0x74) = ((GameObject *)obj)->anim.worldPosX;
+  *(f32 *)((u8 *)cameraMtxVar57 + 0x78) = ((GameObject *)obj)->anim.worldPosY;
+  *(f32 *)((u8 *)cameraMtxVar57 + 0x7c) = ((GameObject *)obj)->anim.worldPosZ;
+  *(s16 *)((u8 *)cameraMtxVar57 + 0x86) = ((GameObject *)obj)->anim.rotX;
+  *(s16 *)((u8 *)cameraMtxVar57 + 0x88) = ((GameObject *)obj)->anim.rotY;
+  *(s16 *)((u8 *)cameraMtxVar57 + 0x8a) = ((GameObject *)obj)->anim.rotZ;
   ((CamFlagByte2 *)((u8 *)cameraMtxVar57 + 0xc6))->flag = 0;
 }
