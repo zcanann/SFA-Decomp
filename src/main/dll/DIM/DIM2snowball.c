@@ -2,89 +2,6 @@
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 #include "main/objanim_internal.h"
-#include "global.h"
-
-/* dim2conveyor_getExtraSize == 0x14. */
-typedef struct Dim2ConveyorState {
-    u8 unk00;
-    u8 unk01;
-    u8 pad02[2];
-    f32 unk04;
-    u8 pad08[4];
-    f32 scrollPhase; /* 0x0c */
-    int gameBit;     /* 0x10 */
-} Dim2ConveyorState;
-STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
-
-/* dll_1D6_getExtraSize == 0x20. */
-typedef struct Dll1D6State {
-    void *bufA;
-    void *bufB;     /* 0x04 */
-    f32 unk08;
-    f32 unk0C;
-    f32 unk10;
-    f32 unk14;
-    s16 unk18;
-    s16 unk1A;
-    s8 unk1C;
-    u8 flags1D;
-    u8 unk1E;
-    u8 slot1F;
-} Dll1D6State;
-STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
-
-/* dimtruthhornice_getExtraSize == 0x8. */
-typedef struct TruthHornIceState {
-    s16 gameBit;
-    s8 hitsLeft;  /* 0x02 */
-    s8 phase;     /* 0x03 */
-    f32 unk04;
-} TruthHornIceState;
-
-/* dim2snowball_getExtraSize == 0xb0. */
-typedef struct Dim2SnowballState {
-    u8 pad00[0x10];
-    int unk10;
-    u8 pad14[0x54];
-    f32 unk68;
-    f32 unk6C;
-    f32 unk70;
-    f32 unk74;
-    u8 pad78[4];
-    f32 unk7C;
-    int unk80;
-    u8 pad84[0xc];
-    int unk90;
-    int unk94;
-    int unk98;
-    int *targetObj;  /* 0x9c */
-    int targetId;    /* 0xa0 */
-    f32 unkA4;
-    int *unkA8;
-    u8 flagsAC;
-    u8 padAD[3];
-} Dim2SnowballState;
-STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
-
-/* dim2pathgenerator_getExtraSize == 0x9a8. */
-typedef struct Dim2PathGeneratorState {
-    u8 pad00[4];
-    f32 unk04;
-    f32 unk08;
-    f32 curveA[200];  /* 0x00c */
-    f32 curveB[200];  /* 0x32c */
-    f32 curveC[200];  /* 0x64c */
-    f32 curveD[12];   /* 0x96c */
-    u8 pad99C[2];
-    s16 unk99E;
-    s16 unk9A0;
-    s16 unk9A2;
-    s16 unk9A4;
-    u8 unk9A6;
-    u8 flags9A7;
-} Dim2PathGeneratorState;
-STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
-
 
 static inline int *DIM2snowball_GetActiveModel(void *obj) {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -1258,24 +1175,24 @@ extern void Music_Trigger(int trackId, int restart);
 void dim2conveyor_setScale(int *obj, int unused, f32 *outX, f32 *outY) {
     f32 *state = *(f32 **)((char *)obj + 0xb8);
     int id;
-    if (state->gameBit == 0) {
+    if (*(int *)((char *)state + 0x10) == 0) {
         Music_Trigger(0xdf, 1);
     }
-    state->gameBit = 20;
+    *(int *)((char *)state + 0x10) = 20;
     id = *(int *)(*(int *)((char *)obj + 0x4c) + 0x14);
     switch (id) {
     case 7849:
-        *outX = state->unk00;
-        *outY = state->unk01;
+        *outX = state[0];
+        *outY = state[1];
         break;
     case 0x49B23:
         if (GameBit_Get(3164) != 0 && GameBit_Get(3163) == 0) {
-            *outX = state->unk00;
-            *outY = state->unk01;
+            *outX = state[0];
+            *outY = state[1];
         }
         if (GameBit_Get(3163) != 0 && GameBit_Get(3164) == 0) {
-            *outX = -state->unk00;
-            *outY = -state->unk01;
+            *outX = -state[0];
+            *outY = -state[1];
         }
         if (GameBit_Get(3163) != 0) {
             GameBit_Set(3164, 0);
@@ -1285,8 +1202,8 @@ void dim2conveyor_setScale(int *obj, int unused, f32 *outX, f32 *outY) {
         }
         break;
     default:
-        *outX = state->unk00;
-        *outY = state->unk01;
+        *outX = state[0];
+        *outY = state[1];
         break;
     }
 }
@@ -1326,9 +1243,9 @@ extern int* getTrickyObject(void);
 #pragma scheduling off
 int fn_801B6D40(int* obj, int v)
 {
-    TruthHornIceState *state = *(TruthHornIceState **)((char *)obj + 0xb8);
-    *(u8 *)&state->hitsLeft = (s8)(*(u8 *)&state->hitsLeft - v);
-    return state->hitsLeft == 0;
+    u8* state = *(u8**)((char*)obj + 0xb8);
+    state[2] = (s8)(state[2] - v);
+    return *(s8 *)(state + 2) == 0;
 }
 #pragma scheduling reset
 
@@ -1336,25 +1253,25 @@ int fn_801B6D40(int* obj, int v)
 #pragma peephole off
 u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4)
 {
-    Dim2PathGeneratorState *state = *(Dim2PathGeneratorState **)((char *)obj + 0xb8);
-    *p1 = (int*)state->curveA;
-    *p2 = (int*)state->curveB;
-    *p3 = (int*)state->curveC;
+    int* state = *(int**)((char*)obj + 0xb8);
+    *p1 = (int*)((char*)state + 12);
+    *p2 = (int*)((char*)state + 812);
+    *p3 = (int*)((char*)state + 1612);
     if (p4 != NULL) {
-        *p4 = (int*)state->curveD;
+        *p4 = (int*)((char*)state + 2412);
     }
     return *(u8*)((char*)state + 2470);
 }
 
 void dll_1D6_free(int* obj)
 {
-    Dll1D6State *state = *(Dll1D6State **)((char *)obj + 0xb8);
-    if ((state->flags1D & 4) != 0) {
-        state->flags1D = (u8)(state->flags1D & ~4);
+    u8* state = *(u8**)((char*)obj + 0xb8);
+    if ((state[29] & 4) != 0) {
+        state[29] = (u8)(state[29] & ~4);
     }
-    mm_free(state->bufA);
-    mm_free(state->bufB);
-    (&lbl_803DBF20)[state->slot1F] = 0;
+    mm_free(*(void**)state);
+    mm_free(*(void**)((char*)state + 4));
+    (&lbl_803DBF20)[state[31]] = 0;
 }
 
 void dim2pathgenerator_init(int* obj, int* def)
@@ -1379,12 +1296,12 @@ void dim2pathgenerator_init(int* obj, int* def)
 
 void dimtruthhornice_init(int* obj, int* def)
 {
-    TruthHornIceState *state = *(TruthHornIceState **)((char *)obj + 0xb8);
+    int* state = *(int**)((char*)obj + 0xb8);
     *(s8*)((char*)state + 2) = (s8)*(s16*)((char*)def + 26);
-    state->gameBit = *(s16*)((char*)def + 30);
+    *(s16*)state = *(s16*)((char*)def + 30);
     *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
     {
-        s16 slot = state->gameBit;
+        s16 slot = *(s16*)state;
         if (slot != -1 && (u32)GameBit_Get(slot) != 0u) {
             ObjHits_DisableObject(obj);
             *(s8*)((char*)state + 3) = 2;
@@ -1395,7 +1312,7 @@ void dimtruthhornice_init(int* obj, int* def)
 
 void dim2snowball_init(int* obj, int* def)
 {
-    Dim2SnowballState *state = *(Dim2SnowballState **)((char *)obj + 0xb8);
+    int* state = *(int**)((char*)obj + 0xb8);
     *(int*)((char*)state + 160) = *(int*)((char*)def + 20);
     *(u8*)((char*)state + 172) = (u8)(*(u8*)((char*)state + 172) | 4);
     *(int*)((char*)def + 20) = -1;
@@ -1501,9 +1418,9 @@ void dim2conveyor_init(int *obj, u8 *params)
     *(s16 *)obj = (s16)(*(s8 *)((char *)params + 0x18) << 8);
     extra = *(int **)((char *)obj + 0xb8);
     *(f32 *)extra = scale * fn_80293E80(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
-    extra->unk04 = scale * sin(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
-    extra->scrollPhase = lbl_803E4A60;
-    extra->gameBit = 0;
+    *(f32 *)((char *)extra + 4) = scale * sin(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
+    *(f32 *)((char *)extra + 0xc) = lbl_803E4A60;
+    *(int *)((char *)extra + 0x10) = 0;
     ObjGroup_AddObject(obj, 22);
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
     if (*(u32 *)((char *)params + 0x14) == 0x49b23) {
@@ -1513,19 +1430,19 @@ void dim2conveyor_init(int *obj, u8 *params)
 
 void dim2conveyor_update(int *obj)
 {
-    Dim2ConveyorState *extra = *(Dim2ConveyorState **)((char *)obj + 0xb8);
+    int *extra = *(int **)((char *)obj + 0xb8);
     Sfx_PlayFromObject((int)obj, SFXfoot_metal_scuff);
-    if (extra->gameBit != 0) {
-        extra->gameBit = extra->gameBit - 1;
-        if (extra->gameBit == 0) {
+    if (*(int *)((char *)extra + 0x10) != 0) {
+        *(int *)((char *)extra + 0x10) = *(int *)((char *)extra + 0x10) - 1;
+        if (*(int *)((char *)extra + 0x10) == 0) {
             Music_Trigger(223, 0);
         }
     }
     switch (*(int *)((char *)*(int **)((char *)obj + 0x4c) + 0x14)) {
     case 0x49b23:
         if (GameBit_Get(3169) != 0) {
-            extra->scrollPhase = extra->scrollPhase + timeDelta;
-            if (extra->scrollPhase > lbl_803E4A5C) {
+            *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0xc) + timeDelta;
+            if (*(f32 *)((char *)extra + 0xc) > lbl_803E4A5C) {
                 if (GameBit_Get(3163) != 0) {
                     GameBit_Set(3164, 1);
                     GameBit_Set(3163, 0);
@@ -1533,7 +1450,7 @@ void dim2conveyor_update(int *obj)
                     GameBit_Set(3164, 0);
                     GameBit_Set(3163, 1);
                 }
-                extra->scrollPhase = lbl_803E4A60;
+                *(f32 *)((char *)extra + 0xc) = lbl_803E4A60;
             }
         }
         if (GameBit_Get(3163) != 0) {
@@ -1570,34 +1487,34 @@ void dll_1D6_init(int *obj, u8 *params)
     model = DIM2snowball_GetActiveModel(obj);
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
     ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4A78);
-    extra->unk18 = *(s16 *)((char *)params + 0x1a);
-    if (extra->unk18 < 15) {
-        extra->unk18 = 15;
+    *(s16 *)((char *)extra + 0x18) = *(s16 *)((char *)params + 0x1a);
+    if (*(s16 *)((char *)extra + 0x18) < 15) {
+        *(s16 *)((char *)extra + 0x18) = 15;
     }
-    extra->unk1A = *(s16 *)((char *)params + 0x1c);
-    if (extra->unk1A < 15) {
-        extra->unk1A = 15;
+    *(s16 *)((char *)extra + 0x1a) = *(s16 *)((char *)params + 0x1c);
+    if (*(s16 *)((char *)extra + 0x1a) < 15) {
+        *(s16 *)((char *)extra + 0x1a) = 15;
     }
     {
         f32 k = lbl_803E4A88;
-        extra->unk08 = k * *(f32 *)((char *)obj + 8);
-        extra->unk08 = extra->unk08 * extra->unk08;
-        extra->unk0C = k * *(f32 *)((char *)obj + 8);
-        extra->unk0C = extra->unk0C * extra->unk0C;
+        *(f32 *)((char *)extra + 8) = k * *(f32 *)((char *)obj + 8);
+        *(f32 *)((char *)extra + 8) = *(f32 *)((char *)extra + 8) * *(f32 *)((char *)extra + 8);
+        *(f32 *)((char *)extra + 0xc) = k * *(f32 *)((char *)obj + 8);
+        *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0xc) * *(f32 *)((char *)extra + 0xc);
     }
-    extra->flags1D = GameBit_Get(496) ? 2 : 0;
+    *(u8 *)((char *)extra + 0x1d) = GameBit_Get(496) ? 2 : 0;
     for (i = 0; i < 4; i++) {
         if ((&lbl_803DBF20)[i] == 0) {
             (&lbl_803DBF20)[i] = 1;
-            extra->slot1F = i;
+            *(u8 *)((char *)extra + 0x1f) = i;
             i = 4;
         }
     }
     *(int *)extra = mmAlloc(40, 18, 0);
-    getTabEntry(*(int *)extra, 12, (&lbl_803DBF18)[extra->slot1F] * 40, 40);
-    *(int *)&extra->bufB = mmAlloc(40, 18, 0);
-    getTabEntry(*(int *)&extra->bufB, 12,
-                ((&lbl_803DBF18)[extra->slot1F] + 1) * 40, 40);
+    getTabEntry(*(int *)extra, 12, (&lbl_803DBF18)[*(u8 *)((char *)extra + 0x1f)] * 40, 40);
+    *(int *)((char *)extra + 4) = mmAlloc(40, 18, 0);
+    getTabEntry(*(int *)((char *)extra + 4), 12,
+                ((&lbl_803DBF18)[*(u8 *)((char *)extra + 0x1f)] + 1) * 40, 40);
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
 }
 #pragma peephole reset
@@ -1615,14 +1532,14 @@ void dimtruthhornice_update(int *obj)
 {
     int *extra = *(int **)((char *)obj + 0xb8);
     *(u8 *)((char *)obj + 0xaf) |= 8;
-    switch (extra->phase) {
+    switch (*(s8 *)((char *)extra + 3)) {
     case 0:
-        if (extra->hitsLeft <= 0) {
+        if (*(s8 *)((char *)extra + 2) <= 0) {
             if (*(s16 *)extra != -1) {
                 GameBit_Set(*(s16 *)extra, 1);
                 ObjHits_DisableObject(obj);
-                extra->phase = 1;
-                extra->unk04 = lbl_803E4A40;
+                *(s8 *)((char *)extra + 3) = 1;
+                *(f32 *)((char *)extra + 4) = lbl_803E4A40;
             }
         } else {
             int *tricky = (int *)getTrickyObject();
@@ -1635,11 +1552,11 @@ void dimtruthhornice_update(int *obj)
         }
         break;
     case 1:
-        extra->unk04 = extra->unk04 + timeDelta;
-        if (extra->unk04 > lbl_803E4A44) {
+        *(f32 *)((char *)extra + 4) = *(f32 *)((char *)extra + 4) + timeDelta;
+        if (*(f32 *)((char *)extra + 4) > lbl_803E4A44) {
             int i;
             f32 scale = lbl_803E4A48;
-            extra->phase = 2;
+            *(s8 *)((char *)extra + 3) = 2;
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             Sfx_PlayFromObject((int)obj, 1147);
             for (i = 30; i != 0; i--) {
@@ -1691,39 +1608,39 @@ void dim2pathgenerator_update(int *obj)
     if (GameBit_Get(*(s16 *)((char *)def + 0x22)) == 0) {
         return;
     }
-    if ((extra->flags9A7 & 4) != 0) {
-        if ((extra->flags9A7 & 2) == 0) {
+    if ((*(u8 *)((char *)extra + 0x9a7) & 4) != 0) {
+        if ((*(u8 *)((char *)extra + 0x9a7) & 2) == 0) {
             int n = 21;
             if (((int (*)(int *, int, int, f32, f32, f32))((int *)*gRomCurveInterface)[0x14 / 4])(
                     &n, 1, 10, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
                     *(f32 *)((char *)obj + 0x14)) != -1) {
                 int *cv = (int *)((int (*)(void))((int *)*gRomCurveInterface)[0x1c / 4])();
                 ((void (*)(void))((int *)*gRomCurveInterface)[0x74 / 4])();
-                extra->unk9A6 =
+                *(u8 *)((char *)extra + 0x9a6) =
                     ((int (*)(int *, void *, void *, void *, void *))((int *)*gRomCurveInterface)[0x78 / 4])(
                         cv, (char *)extra + 0xc, (char *)extra + 0x32c, (char *)extra + 0x64c,
                         (char *)extra + 0x96c);
-                extra->flags9A7 |= 2;
+                *(u8 *)((char *)extra + 0x9a7) |= 2;
                 *(f32 *)extra = *(f32 *)((char *)cv + 8);
-                extra->unk04 = *(f32 *)((char *)cv + 0xc);
-                extra->unk08 = *(f32 *)((char *)cv + 0x10);
+                *(f32 *)((char *)extra + 4) = *(f32 *)((char *)cv + 0xc);
+                *(f32 *)((char *)extra + 8) = *(f32 *)((char *)cv + 0x10);
             }
         }
     } else {
         *(f32 *)extra = *(f32 *)((char *)obj + 0xc);
-        extra->unk04 = *(f32 *)((char *)obj + 0x10);
-        extra->unk08 = *(f32 *)((char *)obj + 0x14);
+        *(f32 *)((char *)extra + 4) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)extra + 8) = *(f32 *)((char *)obj + 0x14);
     }
     {
-        s16 t = extra->unk99E - framesThisStep;
-        extra->unk99E = t;
+        s16 t = *(s16 *)((char *)extra + 0x99e) - framesThisStep;
+        *(s16 *)((char *)extra + 0x99e) = t;
         if (t > 0) {
             return;
         }
     }
-    toggle = extra->flags9A7 & 1;
-    extra->unk99E = extra->unk9A0;
-    extra->flags9A7 &= ~1;
+    toggle = *(u8 *)((char *)extra + 0x9a7) & 1;
+    *(s16 *)((char *)extra + 0x99e) = *(s16 *)((char *)extra + 0x9a0);
+    *(u8 *)((char *)extra + 0x9a7) &= ~1;
     objs = ObjGroup_GetObjects(47, &count);
     for (i = 0; i < count; i++) {
         if (*(s16 *)((char *)extra + 0x9a2 + toggle * 2) == *(s16 *)((char *)objs[i] + 0x46)) {
@@ -1732,23 +1649,23 @@ void dim2pathgenerator_update(int *obj)
             int j;
             int **o2;
             *(f32 *)((char *)p + 8) = *(f32 *)extra;
-            *(f32 *)((char *)p + 0xc) = extra->unk04;
-            *(f32 *)((char *)p + 0x10) = extra->unk08;
+            *(f32 *)((char *)p + 0xc) = *(f32 *)((char *)extra + 4);
+            *(f32 *)((char *)p + 0x10) = *(f32 *)((char *)extra + 8);
             *(int *)((char *)p + 0x14) = *(int *)((char *)def + 0x14);
             (*(void (**)(int *, int))(**(int **)((char *)objs[i] + 0x68) + 4))(objs[i], 1);
             ObjGroup_RemoveObject(objs[i], 47);
             o2 = ObjGroup_GetObjects(47, &c2);
             for (j = 0; j < c2; j++) {
             }
-            extra->flags9A7 |= (toggle ^ 1);
+            *(u8 *)((char *)extra + 0x9a7) |= (toggle ^ 1);
             return;
         }
     }
     if (Obj_IsLoadingLocked()) {
         int *np = (int *)Obj_AllocObjectSetup(36, *(s16 *)((char *)extra + 0x9a2 + toggle * 2));
         *(f32 *)((char *)np + 8) = *(f32 *)extra;
-        *(f32 *)((char *)np + 0xc) = extra->unk04;
-        *(f32 *)((char *)np + 0x10) = extra->unk08;
+        *(f32 *)((char *)np + 0xc) = *(f32 *)((char *)extra + 4);
+        *(f32 *)((char *)np + 0x10) = *(f32 *)((char *)extra + 8);
         *(u8 *)((char *)np + 4) = *(u8 *)((char *)def + 4);
         *(u8 *)((char *)np + 6) = *(u8 *)((char *)def + 6);
         *(u8 *)((char *)np + 5) = *(u8 *)((char *)def + 5);
@@ -1760,7 +1677,7 @@ void dim2pathgenerator_update(int *obj)
         *(s16 *)((char *)np + 0x1c) = *(u8 *)((char *)def + 0x1b);
         *(int *)((char *)np + 0x14) = *(int *)((char *)def + 0x14);
         Obj_SetupObject((int)np, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
-        extra->flags9A7 |= (toggle ^ 1);
+        *(u8 *)((char *)extra + 0x9a7) |= (toggle ^ 1);
     }
 }
 #pragma peephole reset
@@ -1791,44 +1708,44 @@ void dll_1D6_update(int *obj)
     def = *(int **)((char *)obj + 0x4c);
     extra = *(int **)((char *)obj + 0xb8);
 
-    if ((extra->flags1D & 1) != 0) {
-        if ((extra->flags1D & 4) == 0) {
-            extra->flags1D |= 4;
-            extra->unk10 = (f32)(int)randomGetRange(20, 40);
-            extra->unk14 = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
+    if ((*(u8 *)((char *)extra + 0x1d) & 1) != 0) {
+        if ((*(u8 *)((char *)extra + 0x1d) & 4) == 0) {
+            *(u8 *)((char *)extra + 0x1d) |= 4;
+            *(f32 *)((char *)extra + 0x10) = (f32)(int)randomGetRange(20, 40);
+            *(f32 *)((char *)extra + 0x14) = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
         }
-        extra->unk1A -= framesThisStep;
-        extra->unk1C = extra->unk1C - framesThisStep;
-        if (extra->unk1C <= 0) {
+        *(s16 *)((char *)extra + 0x1a) -= framesThisStep;
+        *(s8 *)((char *)extra + 0x1c) = *(s8 *)((char *)extra + 0x1c) - framesThisStep;
+        if (*(s8 *)((char *)extra + 0x1c) <= 0) {
             Sfx_PlayFromObject((int)obj, SFXmv_mushdizzylp12);
         }
-        if (extra->unk1A <= 0) {
+        if (*(s16 *)((char *)extra + 0x1a) <= 0) {
             model = DIM2snowball_GetActiveModel(obj);
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A80, 16);
-            extra->unk18 = *(s16 *)((char *)def + 0x1a);
-            if (extra->unk18 < 15) {
-                extra->unk18 = 15;
+            *(s16 *)((char *)extra + 0x18) = *(s16 *)((char *)def + 0x1a);
+            if (*(s16 *)((char *)extra + 0x18) < 15) {
+                *(s16 *)((char *)extra + 0x18) = 15;
             }
-            extra->flags1D &= ~1;
+            *(u8 *)((char *)extra + 0x1d) &= ~1;
             Sfx_PlayFromObject((int)obj, SFXfoot_metal_land);
         }
     } else {
         model = DIM2snowball_GetActiveModel(obj);
-        if (*(int *)((char *)model + 0x28) != 0 && (extra->flags1D & 4) != 0) {
+        if (*(int *)((char *)model + 0x28) != 0 && (*(u8 *)((char *)extra + 0x1d) & 4) != 0) {
             if (*(f32 *)*(int **)((char *)model + 0x28) >= lbl_803E4A78) {
-                extra->flags1D &= ~4;
+                *(u8 *)((char *)extra + 0x1d) &= ~4;
             }
         }
-        extra->unk18 -= framesThisStep;
-        if (extra->unk18 <= 0) {
+        *(s16 *)((char *)extra + 0x18) -= framesThisStep;
+        if (*(s16 *)((char *)extra + 0x18) <= 0) {
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A84, 16);
-            extra->unk1A = *(s16 *)((char *)def + 0x1c);
-            if (extra->unk1A < 15) {
-                extra->unk1A = 15;
+            *(s16 *)((char *)extra + 0x1a) = *(s16 *)((char *)def + 0x1c);
+            if (*(s16 *)((char *)extra + 0x1a) < 15) {
+                *(s16 *)((char *)extra + 0x1a) = 15;
             }
-            extra->flags1D |= 1;
+            *(u8 *)((char *)extra + 0x1d) |= 1;
             Sfx_PlayFromObject((int)obj, SFXfoot_ice_scuff);
-            extra->unk1C = 20;
+            *(s8 *)((char *)extra + 0x1c) = 20;
         }
     }
     tex = objFindTexture(obj, 0, 0);
@@ -1857,41 +1774,41 @@ void dll_1D6_update(int *obj)
     mtxRotateByVec3s(&mtx[3], ang);
     Matrix_TransformPoint(&mtx[3], *(f32 *)((char *)player + 0xc), *(f32 *)((char *)player + 0x10),
                           *(f32 *)((char *)player + 0x14), &lx, &ly, &lz);
-    if ((extra->flags1D & 2) != 0) {
+    if ((*(u8 *)((char *)extra + 0x1d) & 2) != 0) {
         ly = *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)player + 0x10);
         if (ly < lbl_803E4A88) {
             ly = -ly;
         }
         if (ly < lbl_803E4A8C) {
             lz = lz * lz;
-            if (lz <= extra->unk08) {
+            if (lz <= *(f32 *)((char *)extra + 8)) {
                 int *row;
                 f32 lim;
                 model = DIM2snowball_GetActiveModel(obj);
                 row = *(int **)((char *)model + ((*(u16 *)((char *)model + 0x18) >> 1) & 1) * 4 + 4);
                 lim = *(f32 *)((char *)obj + 8) *
-                      (f32)(int)*(s16 *)((char *)row + extra->unk1E * 16);
+                      (f32)(int)*(s16 *)((char *)row + *(u8 *)((char *)extra + 0x1e) * 16);
                 if (lx <= lim) {
                     ObjHits_RecordObjectHit(player, obj, 11, 4, 0);
                 }
             }
         }
     }
-    if ((extra->flags1D & 4) != 0) {
-        extra->unk10 =
-            extra->unk14 * timeDelta + extra->unk10;
-        if (extra->unk10 > lbl_803E4A90) {
-            extra->unk14 = -(f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
-            extra->unk10 = lbl_803E4A90;
-        } else if (extra->unk10 < lbl_803E4A7C) {
-            extra->unk14 = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
-            extra->unk10 = lbl_803E4A7C;
+    if ((*(u8 *)((char *)extra + 0x1d) & 4) != 0) {
+        *(f32 *)((char *)extra + 0x10) =
+            *(f32 *)((char *)extra + 0x14) * timeDelta + *(f32 *)((char *)extra + 0x10);
+        if (*(f32 *)((char *)extra + 0x10) > lbl_803E4A90) {
+            *(f32 *)((char *)extra + 0x14) = -(f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
+            *(f32 *)((char *)extra + 0x10) = lbl_803E4A90;
+        } else if (*(f32 *)((char *)extra + 0x10) < lbl_803E4A7C) {
+            *(f32 *)((char *)extra + 0x14) = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
+            *(f32 *)((char *)extra + 0x10) = lbl_803E4A7C;
         }
     }
     if (GameBit_Get(496) != 0) {
-        extra->flags1D |= 2;
+        *(u8 *)((char *)extra + 0x1d) |= 2;
     } else {
-        extra->flags1D &= ~2;
+        *(u8 *)((char *)extra + 0x1d) &= ~2;
     }
 }
 #pragma peephole reset
@@ -1932,45 +1849,45 @@ void dim2snowball_update(int *obj)
     f32 evt[6];
     f32 k;
 
-    if ((extra->flagsAC & 4) != 0) {
+    if ((*(u8 *)((char *)extra + 0xac) & 4) != 0) {
         int v = *(u8 *)((char *)obj + 0x36) + framesThisStep * 2;
         if (v > 255) {
             v = 255;
-            extra->flagsAC &= ~4;
+            *(u8 *)((char *)extra + 0xac) &= ~4;
         }
         *(u8 *)((char *)obj + 0x36) = v;
-    } else if ((extra->flagsAC & 8) != 0) {
+    } else if ((*(u8 *)((char *)extra + 0xac) & 8) != 0) {
         int v = *(u8 *)((char *)obj + 0x36) - framesThisStep * 2;
         if (v < 0) {
             v = 0;
-            extra->flagsAC &= ~8;
+            *(u8 *)((char *)extra + 0xac) &= ~8;
         }
         *(u8 *)((char *)obj + 0x36) = v;
     }
 
-    if ((extra->flagsAC & 1) == 0) {
-        int *cobj = extra->targetObj;
-        extra->unk90 =
+    if ((*(u8 *)((char *)extra + 0xac) & 1) == 0) {
+        int *cobj = *(int **)((char *)extra + 0x9c);
+        *(int *)((char *)extra + 0x90) =
             (*(int (**)(int *, void *, void *, void *, void *))(**(int **)((char *)cobj + 0x68) + 0x20))(
                 cobj, (char *)extra + 0x84, (char *)extra + 0x88, (char *)extra + 0x8c, (char *)extra + 0xa8);
-        extra->unk80 = 0;
-        extra->unk94 = (int)Curve_EvalHermite;
-        extra->unk98 = (int)Curve_BuildHermiteCoeffs;
+        *(int *)((char *)extra + 0x80) = 0;
+        *(int *)((char *)extra + 0x94) = (int)Curve_EvalHermite;
+        *(int *)((char *)extra + 0x98) = (int)Curve_BuildHermiteCoeffs;
         curvesMove(extra);
-        extra->flagsAC |= 1;
+        *(u8 *)((char *)extra + 0xac) |= 1;
     }
 
-    if ((extra->flagsAC & 2) != 0) {
-        if (*(f32 *)((char *)obj + 0x10) < extra->unkA4) {
+    if ((*(u8 *)((char *)extra + 0xac) & 2) != 0) {
+        if (*(f32 *)((char *)obj + 0x10) < *(f32 *)((char *)extra + 0xa4)) {
             *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4AA4);
             *(f32 *)((char *)obj + 0x28) = lbl_803E4AA8;
             *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
-            if ((extra->flagsAC & 0x10) == 0) {
+            if ((*(u8 *)((char *)extra + 0xac) & 0x10) == 0) {
                 int **list;
                 int *hit;
                 *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4AAC);
                 *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
-                extra->flagsAC |= 0x18;
+                *(u8 *)((char *)extra + 0xac) |= 0x18;
                 list = ObjList_GetObjects(&start, &count);
                 for (p = &list[start]; start < count; start++) {
                     if (*(s16 *)((char *)*p + 0x46) == 214) {
@@ -2018,10 +1935,10 @@ checkHit:
         }
     } else {
         int done = Curve_AdvanceAlongPath(extra, lbl_803E4AC0);
-        *(f32 *)((char *)obj + 0xc) = extra->unk68;
-        *(f32 *)((char *)obj + 0x10) = (f32)(lbl_803E4AC8 + extra->unk6C);
-        *(f32 *)((char *)obj + 0x14) = extra->unk70;
-        *(s16 *)obj = getAngle(extra->unk74, extra->unk7C);
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)extra + 0x68);
+        *(f32 *)((char *)obj + 0x10) = (f32)(lbl_803E4AC8 + *(f32 *)((char *)extra + 0x6c));
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)extra + 0x70);
+        *(s16 *)obj = getAngle(*(f32 *)((char *)extra + 0x74), *(f32 *)((char *)extra + 0x7c));
         *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) + framesThisStep * 800;
         *(f32 *)((char *)obj + 0x24) =
             oneOverTimeDelta * (*(f32 *)((char *)obj + 0xc) - *(f32 *)((char *)obj + 0x80));
@@ -2032,14 +1949,14 @@ checkHit:
             Obj_FreeObject(obj);
             return;
         }
-        if (*(u8 *)((char *)extra->unkA8 + (extra->unk10 >> 2)) == 32) {
+        if (*(u8 *)((char *)*(int **)((char *)extra + 0xa8) + (*(int *)((char *)extra + 0x10) >> 2)) == 32) {
             if (GameBit_Get(648) != 0) {
                 int n;
-                extra->flagsAC |= 2;
+                *(u8 *)((char *)extra + 0xac) |= 2;
                 n = hitDetectFn_80065e50(obj, *(f32 *)((char *)obj + 0xc),
                                          *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14),
                                          &results, 0, 0);
-                extra->unkA4 = *(f32 *)((char *)obj + 0x10);
+                *(f32 *)((char *)extra + 0xa4) = *(f32 *)((char *)obj + 0x10);
                 while (n > 0) {
                     int *r;
                     n--;
@@ -2047,7 +1964,7 @@ checkHit:
                     if (*(f32 *)r < *(f32 *)((char *)obj + 0x10)) {
                         s8 t = *(s8 *)((char *)r + 0x14);
                         if (t == 26 || t == 8) {
-                            extra->unkA4 = *(f32 *)r;
+                            *(f32 *)((char *)extra + 0xa4) = *(f32 *)r;
                             n = 0;
                         }
                     }

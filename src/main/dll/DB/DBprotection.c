@@ -1,52 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DB/DBprotection.h"
 #include "main/mapEventTypes.h"
-#include "global.h"
-
-/* Per-object extra state for the DB protection spirit. */
-typedef struct DBProtectionState {
-    f32 driftX;     /* 0x00: wander offset integrated each step */
-    f32 driftY;
-    f32 driftZ;
-    u8 pad0C[0x14];
-    s16 wanderYawA; /* 0x20 */
-    s16 wanderYawB;
-    s16 wanderYaw;  /* 0x24 */
-    s16 unk26;
-    s8 unk28;
-    s8 phase;       /* 0x29 */
-    u8 pad2A[2];
-    f32 homeX;      /* 0x2c */
-    f32 homeY;
-    f32 homeZ;
-    f32 unk38;
-    u8 pad3C[4];
-    f32 unk40;
-    f32 unk44;
-    u8 *targetObj;  /* 0x48 */
-    u8 pad4C[4];
-    f32 unk50;
-    f32 unk54;
-    f32 unk58;
-    u8 pad5C[4];
-    f32 unk60;
-    f32 unk64;
-    u16 shieldAngle;/* 0x68 */
-    u8 pad6A[6];
-    u8 unk70;
-    u8 pad71[8];
-    u8 unk79;
-    u8 pad7A[6];
-    u8 unk80;
-    u8 pad81;
-    s16 unk82;      /* heading latch */
-    u8 pad84[4];
-    f32 unk88;
-    u8 pad8C[4];
-    f32 unk90;
-    f32 unk94;
-} DBProtectionState;
-STATIC_ASSERT(offsetof(DBProtectionState, unk94) == 0x94);
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING 0xa3d
@@ -334,61 +288,61 @@ void fn_801DFA28(u8 *obj)
   state = *(u8 **)(obj + 0xB8);
   camShake = lbl_803E56C8;
   *(s8 *)(obj + 0xAC) = -1;
-  if ((*(void * *)&((DBProtectionState *)state)->targetObj != NULL) &&
-      ((*(s16 *)(((DBProtectionState *)state)->targetObj + 6) & 0x40) != 0)) {
-    ((DBProtectionState *)state)->targetObj = NULL;
+  if ((*(void **)(state + 0x48) != NULL) &&
+      ((*(s16 *)(*(u8 **)(state + 0x48) + 6) & 0x40) != 0)) {
+    *(u8 **)(state + 0x48) = NULL;
   }
-  if (*(void * *)&((DBProtectionState *)state)->targetObj == NULL) {
+  if (*(void **)(state + 0x48) == NULL) {
     objArray = ObjList_GetObjects(&objIndex, &objCount);
     for (t = objIndex; t < objCount; t++) {
       otherObj = *(u8 **)(objArray + t * 4);
       if (*(s16 *)(otherObj + 0x46) == 0x8C) {
-        ((DBProtectionState *)state)->targetObj = otherObj;
+        *(u8 **)(state + 0x48) = otherObj;
         t = objCount;
       }
     }
   }
-  if (((DBProtectionState *)state)->phase >= 2) {
+  if (*(s8 *)(state + 0x29) >= 2) {
     Sfx_PlayFromObject((int)obj, SFXwp_cahit2_c);
   }
   else {
     Sfx_StopFromObject((int)obj, SFXwp_cahit2_c);
   }
-  tricky = ((DBProtectionState *)state)->targetObj;
+  tricky = *(u8 **)(state + 0x48);
   if (tricky == NULL) goto end;
   if ((tricky != NULL) && (*(int *)(tricky + 0xF4) == 0)) {
     fn_801EED5C((int)tricky, (f32 *)(state + 0x50), (f32 *)(state + 0x54), (f32 *)(state + 0x58));
   }
-  ((DBProtectionState *)state)->unk26 -= framesThisStep;
-  if (((DBProtectionState *)state)->unk26 < 0) {
-    ((DBProtectionState *)state)->unk26 = 0;
+  *(s16 *)(state + 0x26) -= framesThisStep;
+  if (*(s16 *)(state + 0x26) < 0) {
+    *(s16 *)(state + 0x26) = 0;
   }
   c = *(s8 *)(state + 0x2B);
   if (c == 7) {
-    ((DBProtectionState *)state)->unk79 = 3;
+    *(u8 *)(state + 0x79) = 3;
   }
   else if (c == 8) {
-    ((DBProtectionState *)state)->unk79 = 4;
+    *(u8 *)(state + 0x79) = 4;
   }
   else if (c == 9) {
-    ((DBProtectionState *)state)->unk79 = 5;
+    *(u8 *)(state + 0x79) = 5;
   }
-  if (((DBProtectionState *)state)->phase < 2) {
-    ((DBProtectionState *)state)->unk90 -= timeDelta;
-    if (((DBProtectionState *)state)->unk90 <= lbl_803E56CC) {
+  if (*(s8 *)(state + 0x29) < 2) {
+    *(f32 *)(state + 0x90) -= timeDelta;
+    if (*(f32 *)(state + 0x90) <= lbl_803E56CC) {
       *(u8 *)(state + 0xA0) ^= 1;
-      ((DBProtectionState *)state)->unk90 = (f32)(int)randomGetRange(0xB4, 300);
+      *(f32 *)(state + 0x90) = (f32)(int)randomGetRange(0xB4, 300);
     }
     if (*(u8 *)(state + 0xA0) != 0) {
-      ((DBProtectionState *)state)->unk88 = lbl_803E56D0 * timeDelta + ((DBProtectionState *)state)->unk88;
+      *(f32 *)(state + 0x88) = lbl_803E56D0 * timeDelta + *(f32 *)(state + 0x88);
     }
     else {
-      ((DBProtectionState *)state)->unk88 -= timeDelta;
+      *(f32 *)(state + 0x88) -= timeDelta;
     }
-    ((DBProtectionState *)state)->unk94 -= timeDelta;
-    if (((DBProtectionState *)state)->unk94 <= lbl_803E56CC) {
+    *(f32 *)(state + 0x94) -= timeDelta;
+    if (*(f32 *)(state + 0x94) <= lbl_803E56CC) {
       *(u8 *)(state + 0xA1) ^= 1;
-      ((DBProtectionState *)state)->unk94 = (f32)(int)randomGetRange(0xB4, 300);
+      *(f32 *)(state + 0x94) = (f32)(int)randomGetRange(0xB4, 300);
     }
     if (*(u8 *)(state + 0xA1) != 0) {
       *(f32 *)(state + 0x8C) = lbl_803E56D0 * timeDelta + *(f32 *)(state + 0x8C);
@@ -399,25 +353,25 @@ void fn_801DFA28(u8 *obj)
   }
   else {
     amp = lbl_803E56D4;
-    ((DBProtectionState *)state)->unk88 = -(amp * timeDelta - ((DBProtectionState *)state)->unk88);
+    *(f32 *)(state + 0x88) = -(amp * timeDelta - *(f32 *)(state + 0x88));
     *(f32 *)(state + 0x8C) = -(amp * timeDelta - *(f32 *)(state + 0x8C));
   }
-  dx = ((DBProtectionState *)state)->unk88;
-  ((DBProtectionState *)state)->unk88 = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > lbl_803E56D8) ? lbl_803E56D8 : dx;
+  dx = *(f32 *)(state + 0x88);
+  *(f32 *)(state + 0x88) = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > lbl_803E56D8) ? lbl_803E56D8 : dx;
   dx = *(f32 *)(state + 0x8C);
   *(f32 *)(state + 0x8C) = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > lbl_803E56D8) ? lbl_803E56D8 : dx;
-  switch (((DBProtectionState *)state)->phase) {
+  switch (*(s8 *)(state + 0x29)) {
   case 0:
     camShake = lbl_803E56C8;
     Sfx_StopObjectChannel((int)obj, 1);
     DBPROT_CAMERA_SHAKE(&camShake, 0);
     *(int *)(obj + 0xF4) = 1;
-    tx = ((DBProtectionState *)state)->unk50 - lbl_803E56DC;
-    tz = lbl_803E56E0 * sin((lbl_803E56E4 * (f32)((DBProtectionState *)state)->wanderYawA) / lbl_803E56E8) +
-         ((DBProtectionState *)state)->unk58;
-    ty = lbl_803E56F0 * fn_80293E80((lbl_803E56E4 * (f32)((DBProtectionState *)state)->wanderYawA) / lbl_803E56E8) +
-         (((DBProtectionState *)state)->unk54 - lbl_803E56EC);
-    ((DBProtectionState *)state)->wanderYawA = ((DBProtectionState *)state)->wanderYawA + framesThisStep * 0xB6;
+    tx = *(f32 *)(state + 0x50) - lbl_803E56DC;
+    tz = lbl_803E56E0 * sin((lbl_803E56E4 * (f32)*(s16 *)(state + 0x20)) / lbl_803E56E8) +
+         *(f32 *)(state + 0x58);
+    ty = lbl_803E56F0 * fn_80293E80((lbl_803E56E4 * (f32)*(s16 *)(state + 0x20)) / lbl_803E56E8) +
+         (*(f32 *)(state + 0x54) - lbl_803E56EC);
+    *(s16 *)(state + 0x20) = *(s16 *)(state + 0x20) + framesThisStep * 0xB6;
     dx = tx - *(f32 *)(obj + 0xC);
     dy = ty - *(f32 *)(obj + 0x10);
     dz = tz - *(f32 *)(obj + 0x14);
@@ -453,48 +407,48 @@ void fn_801DFA28(u8 *obj)
       dy = dy * ((f32)(t - 0x78) / lbl_803E56F0);
     }
     *(s16 *)(state + 0x6E) += framesThisStep;
-    ((DBProtectionState *)state)->driftX += (dx - ((DBProtectionState *)state)->driftX) * (blendK = lbl_803E56FC);
-    ((DBProtectionState *)state)->driftY += (dy - ((DBProtectionState *)state)->driftY) * blendK;
-    ((DBProtectionState *)state)->driftZ += (dz - ((DBProtectionState *)state)->driftZ) * blendK;
+    *(f32 *)(state + 0x0) += (dx - *(f32 *)(state + 0x0)) * (blendK = lbl_803E56FC);
+    *(f32 *)(state + 0x4) += (dy - *(f32 *)(state + 0x4)) * blendK;
+    *(f32 *)(state + 0x8) += (dz - *(f32 *)(state + 0x8)) * blendK;
     ambA = lbl_803E5700;
     ambB = lbl_803E5704;
     ambC = lbl_803E5708;
-    if (((DBProtectionState *)state)->unk28 == 0) {
+    if (*(s8 *)(state + 0x28) == 0) {
       if ((*(s8 *)(state + 0x2B) < 2) && (*(s8 *)(state + 0x2B) >= 0)) {
-        if (((DBProtectionState *)state)->unk82 != 0) {
-          ((DBProtectionState *)state)->unk82 -= 1;
-          if (((DBProtectionState *)state)->unk82 <= 0) {
-            ((DBProtectionState *)state)->unk82 = 200;
+        if (*(s16 *)(state + 0x82) != 0) {
+          *(s16 *)(state + 0x82) -= 1;
+          if (*(s16 *)(state + 0x82) <= 0) {
+            *(s16 *)(state + 0x82) = 200;
           }
         }
       }
       else {
         *(s8 *)(state + 0x2B) = 2;
         *(s16 *)(state + 0x6E) = 0;
-        ((DBProtectionState *)state)->phase = 1;
-        ((DBProtectionState *)state)->unk28 = 1;
+        *(s8 *)(state + 0x29) = 1;
+        *(s8 *)(state + 0x28) = 1;
         *(s8 *)(state + 0x7C) = 0;
         *(s8 *)(state + 0x7A) = 0;
-        ((DBProtectionState *)state)->unk82 = 200;
+        *(s16 *)(state + 0x82) = 200;
         GameBit_Set(0xF1E, 1);
       }
     }
     else {
       if ((*(s8 *)(state + 0x2B) < 5) && (*(s8 *)(state + 0x2B) >= 3)) {
-        if (((DBProtectionState *)state)->unk82 != 0) {
-          ((DBProtectionState *)state)->unk82 -= 1;
-          if (((DBProtectionState *)state)->unk82 <= 0) {
-            ((DBProtectionState *)state)->unk82 = 200;
+        if (*(s16 *)(state + 0x82) != 0) {
+          *(s16 *)(state + 0x82) -= 1;
+          if (*(s16 *)(state + 0x82) <= 0) {
+            *(s16 *)(state + 0x82) = 200;
           }
         }
       }
       else {
         *(s8 *)(state + 0x2B) = 5;
         *(s16 *)(state + 0x6E) = 0;
-        ((DBProtectionState *)state)->phase = 1;
-        ((DBProtectionState *)state)->unk28 = 2;
+        *(s8 *)(state + 0x29) = 1;
+        *(s8 *)(state + 0x28) = 2;
         *(s8 *)(state + 0x7A) = 0;
-        ((DBProtectionState *)state)->unk82 = 200;
+        *(s16 *)(state + 0x82) = 200;
       }
     }
     break;
@@ -502,54 +456,54 @@ void fn_801DFA28(u8 *obj)
     *(int *)(obj + 0xF4) = 2;
     camShake = lbl_803E56C8;
     DBPROT_CAMERA_SHAKE(&camShake, 0);
-    if (((DBProtectionState *)state)->unk82 != 0) {
-      ((DBProtectionState *)state)->unk82 -= 1;
+    if (*(s16 *)(state + 0x82) != 0) {
+      *(s16 *)(state + 0x82) -= 1;
     }
     switch (*(s8 *)(state + 0x7A)) {
     case 0:
-      tx = ((DBProtectionState *)state)->unk50 - lbl_803E570C;
-      tz = ((DBProtectionState *)state)->unk58;
+      tx = *(f32 *)(state + 0x50) - lbl_803E570C;
+      tz = *(f32 *)(state + 0x58);
       ty = lbl_803E56EC + *(f32 *)(tricky + 0x10);
-      if ((((DBProtectionState *)state)->unk82 <= 0) &&
+      if ((*(s16 *)(state + 0x82) <= 0) &&
           ((*(s8 *)(state + 0x7C) == 0) || (*(s8 *)(state + 0x7C) == 5))) {
-        ((DBProtectionState *)state)->unk82 = 200;
+        *(s16 *)(state + 0x82) = 200;
       }
       Sfx_IsPlayingFromObjectChannel((int)obj, 2);
       break;
     case 1:
-      tx = ((DBProtectionState *)state)->unk50 - lbl_803E5710;
-      tz = ((DBProtectionState *)state)->unk58;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5710;
+      tz = *(f32 *)(state + 0x58);
       ty = lbl_803E56EC + *(f32 *)(tricky + 0x10);
       break;
     case 2:
       tx = *(f32 *)(tricky + 0xC) - lbl_803E5714;
-      tz = ((DBProtectionState *)state)->unk58;
+      tz = *(f32 *)(state + 0x58);
       ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
       break;
     case 3:
       tx = *(f32 *)(tricky + 0xC) - lbl_803E571C;
-      tz = lbl_803E5720 + ((DBProtectionState *)state)->unk58;
+      tz = lbl_803E5720 + *(f32 *)(state + 0x58);
       ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
-      tz = tz + (*(f32 *)(tricky + 0x14) - ((DBProtectionState *)state)->homeZ);
+      tz = tz + (*(f32 *)(tricky + 0x14) - *(f32 *)(state + 0x34));
       *(u8 *)(state + 0x7B) = 0;
       break;
     case 4:
       tx = *(f32 *)(tricky + 0xC) - lbl_803E571C;
-      tz = lbl_803E5724 + ((DBProtectionState *)state)->unk58;
+      tz = lbl_803E5724 + *(f32 *)(state + 0x58);
       ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
       *(u8 *)(state + 0x7B) = 0;
       break;
     case 5:
       tx = *(f32 *)(tricky + 0xC) - lbl_803E571C;
-      tz = ((DBProtectionState *)state)->unk58 - lbl_803E5720;
+      tz = *(f32 *)(state + 0x58) - lbl_803E5720;
       ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
-      tz = tz + (*(f32 *)(tricky + 0x14) - ((DBProtectionState *)state)->homeZ);
+      tz = tz + (*(f32 *)(tricky + 0x14) - *(f32 *)(state + 0x34));
       *(u8 *)(state + 0x7B) = 0;
       break;
     default:
       *(u8 *)(state + 0x7B) = 0;
-      tx = ((DBProtectionState *)state)->unk50 - lbl_803E5728;
-      tz = ((DBProtectionState *)state)->unk58;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5728;
+      tz = *(f32 *)(state + 0x58);
       ty = lbl_803E572C + *(f32 *)(tricky + 0x10);
       break;
     }
@@ -580,10 +534,10 @@ void fn_801DFA28(u8 *obj)
       tz = lbl_803E5744;
     }
     *(s16 *)(state + 0x6E) += framesThisStep;
-    lerpD = tx - ((DBProtectionState *)state)->driftX;
-    ((DBProtectionState *)state)->driftX = lerpD * lbl_803E5748 + ((DBProtectionState *)state)->driftX;
-    ((DBProtectionState *)state)->driftY += (dy - ((DBProtectionState *)state)->driftY) / lbl_803E574C;
-    ((DBProtectionState *)state)->driftZ += (tz - ((DBProtectionState *)state)->driftZ) / lbl_803E5750;
+    lerpD = tx - *(f32 *)(state + 0x0);
+    *(f32 *)(state + 0x0) = lerpD * lbl_803E5748 + *(f32 *)(state + 0x0);
+    *(f32 *)(state + 0x4) += (dy - *(f32 *)(state + 0x4)) / lbl_803E574C;
+    *(f32 *)(state + 0x8) += (tz - *(f32 *)(state + 0x8)) / lbl_803E5750;
     ambA = lbl_803E5754;
     ambB = lbl_803E5758;
     ambC = lbl_803E56CC;
@@ -628,33 +582,33 @@ void fn_801DFA28(u8 *obj)
       if (dist < lbl_803E5760) {
         if (*(s8 *)(state + 0x2B) == 2) {
           *(s16 *)(state + 0x6E) = 0;
-          ((DBProtectionState *)state)->phase = 0;
+          *(s8 *)(state + 0x29) = 0;
           *(s8 *)(state + 0x2B) = 3;
         }
         else if (*(s8 *)(state + 0x2B) == 5) {
-          ((DBProtectionState *)state)->phase = 2;
+          *(s8 *)(state + 0x29) = 2;
           *(s8 *)(state + 0x2B) = 6;
         }
       }
       break;
     }
-    ((DBProtectionState *)state)->unk26 = 300;
+    *(s16 *)(state + 0x26) = 300;
     if ((*(s8 *)(state + 0x7C) >= 4) && (*(s8 *)(state + 0x2B) < 3)) {
-      ((DBProtectionState *)state)->phase = 0;
-      ((DBProtectionState *)state)->unk28 = 1;
+      *(s8 *)(state + 0x29) = 0;
+      *(s8 *)(state + 0x28) = 1;
       *(s8 *)(state + 0x2B) = 3;
       *(s8 *)(state + 0x7C) = 5;
-      ((DBProtectionState *)state)->unk82 = 200;
+      *(s16 *)(state + 0x82) = 200;
       sfxObj = fn_801E2570();
       Sfx_StopFromObject(sfxObj, 0x2C6);
       Sfx_PlayFromObject(sfxObj, SFXwp_dsmk2_c);
       GameBit_Set(0xF1E, 0);
     }
     else if (*(s8 *)(state + 0x7C) >= 4) {
-      ((DBProtectionState *)state)->phase = 2;
-      ((DBProtectionState *)state)->unk28 = 3;
+      *(s8 *)(state + 0x29) = 2;
+      *(s8 *)(state + 0x28) = 3;
       *(s8 *)(state + 0x2B) = 6;
-      ((DBProtectionState *)state)->unk82 = 200;
+      *(s16 *)(state + 0x82) = 200;
       *(f32 *)(state + 0xC) = *(f32 *)(tricky + 0x14);
     }
     break;
@@ -669,85 +623,85 @@ void fn_801DFA28(u8 *obj)
     Sfx_StopObjectChannel((int)obj, 2);
     DBPROT_CAMERA_SHAKE(&camShake, 0);
     *(int *)(obj + 0xF4) = 3;
-    if (((DBProtectionState *)state)->unk82 != 0) {
-      ((DBProtectionState *)state)->unk82 -= 1;
+    if (*(s16 *)(state + 0x82) != 0) {
+      *(s16 *)(state + 0x82) -= 1;
     }
-    switch (((DBProtectionState *)state)->phase) {
+    switch (*(s8 *)(state + 0x29)) {
     case 2:
       speedTarget = lbl_803E5764;
-      tx = ((DBProtectionState *)state)->unk50 - lbl_803E5768;
-      tz = -(lbl_803E576C * (f32)*(s8 *)(state + 0x2A) - ((DBProtectionState *)state)->unk58);
-      ty = ((DBProtectionState *)state)->unk54;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5768;
+      tz = -(lbl_803E576C * (f32)*(s8 *)(state + 0x2A) - *(f32 *)(state + 0x58));
+      ty = *(f32 *)(state + 0x54);
       threshold = lbl_803E5770;
       nextState = 3;
       break;
     case 3:
       speedTarget = lbl_803E5774;
-      tx = ((DBProtectionState *)state)->unk50 - lbl_803E5778;
-      tz = -(lbl_803E5770 * (f32)*(s8 *)(state + 0x2A) - ((DBProtectionState *)state)->unk58);
-      ty = lbl_803E5724 + ((DBProtectionState *)state)->unk54;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5778;
+      tz = -(lbl_803E5770 * (f32)*(s8 *)(state + 0x2A) - *(f32 *)(state + 0x58));
+      ty = lbl_803E5724 + *(f32 *)(state + 0x54);
       nextState = 4;
       threshold = lbl_803E577C;
       break;
     case 4:
       speedTarget = lbl_803E5774;
-      tx = ((DBProtectionState *)state)->unk50 - lbl_803E5768;
-      tz = -(lbl_803E5708 * (f32)*(s8 *)(state + 0x2A) - ((DBProtectionState *)state)->unk58);
-      ty = lbl_803E5724 + ((DBProtectionState *)state)->unk54;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5768;
+      tz = -(lbl_803E5708 * (f32)*(s8 *)(state + 0x2A) - *(f32 *)(state + 0x58));
+      ty = lbl_803E5724 + *(f32 *)(state + 0x54);
       nextState = 5;
       threshold = lbl_803E577C;
       break;
     case 5:
       speedTarget = lbl_803E5708;
       *(int *)(obj + 0xF4) = 4;
-      tx = ((DBProtectionState *)state)->unk50 - lbl_803E5780;
-      tz = ((DBProtectionState *)state)->unk58;
-      ty = ((DBProtectionState *)state)->unk54 - lbl_803E5724;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5780;
+      tz = *(f32 *)(state + 0x58);
+      ty = *(f32 *)(state + 0x54) - lbl_803E5724;
       nextState = 6;
       threshold = lbl_803E577C;
-      if ((((DBProtectionState *)state)->unk82 <= 0) && (*(s8 *)(state + 0x2B) == 6)) {
-        ((DBProtectionState *)state)->unk82 = 200;
+      if ((*(s16 *)(state + 0x82) <= 0) && (*(s8 *)(state + 0x2B) == 6)) {
+        *(s16 *)(state + 0x82) = 200;
       }
       break;
     case 6:
       speedTarget = lbl_803E56D0;
-      tx = lbl_803E5784 + ((DBProtectionState *)state)->unk50;
-      tz = -(lbl_803E576C * (f32)*(s8 *)(state + 0x2A) - ((DBProtectionState *)state)->unk58);
-      ty = lbl_803E5718 + ((DBProtectionState *)state)->unk54;
+      tx = lbl_803E5784 + *(f32 *)(state + 0x50);
+      tz = -(lbl_803E576C * (f32)*(s8 *)(state + 0x2A) - *(f32 *)(state + 0x58));
+      ty = lbl_803E5718 + *(f32 *)(state + 0x54);
       nextState = 7;
       threshold = lbl_803E5724;
       break;
     case 7:
       speedTarget = lbl_803E56D0;
-      tx = lbl_803E5788 + ((DBProtectionState *)state)->unk50;
-      tz = ((DBProtectionState *)state)->unk58;
+      tx = lbl_803E5788 + *(f32 *)(state + 0x50);
+      tz = *(f32 *)(state + 0x58);
       ty = lbl_803E578C + *(f32 *)(tricky + 0x10);
       nextState = 8;
       threshold = lbl_803E5724;
       break;
     case 8:
       speedTarget = lbl_803E5790;
-      tx = ((DBProtectionState *)state)->unk50 - lbl_803E5794;
-      tz = ((DBProtectionState *)state)->unk58;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5794;
+      tz = *(f32 *)(state + 0x58);
       ty = lbl_803E5724 + *(f32 *)(tricky + 0x10);
       nextState = 2;
       threshold = lbl_803E5784;
       break;
     }
     dx = tx - *(f32 *)(state + 0x2C);
-    dy = ty - ((DBProtectionState *)state)->homeY;
-    dz = tz - ((DBProtectionState *)state)->homeZ;
+    dy = ty - *(f32 *)(state + 0x30);
+    dz = tz - *(f32 *)(state + 0x34);
     *(f32 *)(state + 0x1C) =
         *(f32 *)(state + 0x1C) + (speedTarget - *(f32 *)(state + 0x1C)) / lbl_803E5798;
     dist = sqrtf(dx * dx + dz * dz);
-    if ((((DBProtectionState *)state)->phase == 5) && (dist < lbl_803E579C)) {
+    if ((*(s8 *)(state + 0x29) == 5) && (dist < lbl_803E579C)) {
       *(int *)(obj + 0xF4) = 5;
     }
     if (dist < threshold) {
-      if (((DBProtectionState *)state)->phase == 5) {
+      if (*(s8 *)(state + 0x29) == 5) {
         *(s8 *)(state + 0x2A) = -*(s8 *)(state + 0x2A);
       }
-      ((DBProtectionState *)state)->phase = (s8)nextState;
+      *(s8 *)(state + 0x29) = (s8)nextState;
     }
     wrap = (getAngle(dx, dz) & 0xFFFF) + 0x8000;
     angY = getAngle(dy, dist) & 0xFFFF;
@@ -758,17 +712,17 @@ void fn_801DFA28(u8 *obj)
     if (wrap < -0x8000) {
       wrap = wrap + 0xFFFF;
     }
-    ((DBProtectionState *)state)->wanderYaw =
-        ((DBProtectionState *)state)->wanderYaw + ((framesThisStep * (wrap - ((DBProtectionState *)state)->wanderYaw)) >> 4);
-    c = ((DBProtectionState *)state)->phase;
+    *(s16 *)(state + 0x24) =
+        *(s16 *)(state + 0x24) + ((framesThisStep * (wrap - *(s16 *)(state + 0x24))) >> 4);
+    c = *(s8 *)(state + 0x29);
     if ((c == 3) || (c == 4)) {
-      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (((DBProtectionState *)state)->wanderYaw * framesThisStep) / 0x3C;
+      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (*(s16 *)(state + 0x24) * framesThisStep) / 0x3C;
     }
     else if ((c == 6) || (c == 2)) {
-      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (((DBProtectionState *)state)->wanderYaw * framesThisStep) / 0x78;
+      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (*(s16 *)(state + 0x24) * framesThisStep) / 0x78;
     }
     else {
-      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (((DBProtectionState *)state)->wanderYaw * framesThisStep) / 0x3C;
+      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (*(s16 *)(state + 0x24) * framesThisStep) / 0x3C;
     }
     wrap = angY - (*(s16 *)(obj + 0x2) & 0xFFFF);
     if (wrap > 0x8000) {
@@ -778,11 +732,11 @@ void fn_801DFA28(u8 *obj)
       wrap = wrap + 0xFFFF;
     }
     *(s16 *)(obj + 0x2) = *(s16 *)(int)(obj + 0x2) + ((wrap * framesThisStep) >> 6);
-    dx = ((DBProtectionState *)state)->unk50 - *(f32 *)(obj + 0xC);
-    dz = ((DBProtectionState *)state)->unk58 - *(f32 *)(obj + 0x14);
+    dx = *(f32 *)(state + 0x50) - *(f32 *)(obj + 0xC);
+    dz = *(f32 *)(state + 0x58) - *(f32 *)(obj + 0x14);
     sqrtf(dx * dx + dz * dz);
     t = *(s16 *)(obj + 0x4);
-    iv = (int)(lbl_803E57A0 * (f32)((DBProtectionState *)state)->wanderYaw);
+    iv = (int)(lbl_803E57A0 * (f32)*(s16 *)(state + 0x24));
     dv = (iv - t) >> 3;
     if (dv > 0x3C) {
       dv = 0x3C;
@@ -801,24 +755,24 @@ void fn_801DFA28(u8 *obj)
     setMatrixFromObjectPos(mtx, &objPos);
     Matrix_TransformPoint(mtx, lbl_803E56CC, *(f32 *)&lbl_803E56CC, -*(f32 *)(state + 0x1C) * timeDelta,
                           (f32 *)(state + 0x0), (f32 *)(state + 0x4), (f32 *)(state + 0x8));
-    if (((DBProtectionState *)state)->phase == 7) {
+    if (*(s8 *)(state + 0x29) == 7) {
       *(f32 *)(state + 0x2C) = tx;
-      ((DBProtectionState *)state)->homeY = ty;
-      ((DBProtectionState *)state)->homeZ = tz;
+      *(f32 *)(state + 0x30) = ty;
+      *(f32 *)(state + 0x34) = tz;
       zero = lbl_803E56CC;
-      ((DBProtectionState *)state)->unk38 = zero;
+      *(f32 *)(state + 0x38) = zero;
       *(f32 *)(state + 0x3C) = zero;
-      ((DBProtectionState *)state)->unk40 = zero;
+      *(f32 *)(state + 0x40) = zero;
     }
     else {
-      *(f32 *)(state + 0x2C) = *(f32 *)(state + 0x2C) + ((DBProtectionState *)state)->driftX;
-      ((DBProtectionState *)state)->homeY = ((DBProtectionState *)state)->homeY + ((DBProtectionState *)state)->driftY;
-      ((DBProtectionState *)state)->homeZ = ((DBProtectionState *)state)->homeZ + ((DBProtectionState *)state)->driftZ;
+      *(f32 *)(state + 0x2C) = *(f32 *)(state + 0x2C) + *(f32 *)(state + 0x0);
+      *(f32 *)(state + 0x30) = *(f32 *)(state + 0x30) + *(f32 *)(state + 0x4);
+      *(f32 *)(state + 0x34) = *(f32 *)(state + 0x34) + *(f32 *)(state + 0x8);
     }
     ambB = lbl_803E57A8;
-    *(f32 *)(obj + 0xC) = *(f32 *)(state + 0x2C) + ((DBProtectionState *)state)->unk38;
-    *(f32 *)(obj + 0x10) = ((DBProtectionState *)state)->homeY + *(f32 *)(state + 0x3C);
-    *(f32 *)(obj + 0x14) = ((DBProtectionState *)state)->homeZ + ((DBProtectionState *)state)->unk40 +
+    *(f32 *)(obj + 0xC) = *(f32 *)(state + 0x2C) + *(f32 *)(state + 0x38);
+    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x30) + *(f32 *)(state + 0x3C);
+    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x34) + *(f32 *)(state + 0x40) +
                            (*(f32 *)(tricky + 0x14) - *(f32 *)(state + 0xC));
     if (*(s8 *)(state + 0x2B) >= 7) {
       if (*(s16 *)(state + 0x6C) == 0) {
@@ -828,14 +782,14 @@ void fn_801DFA28(u8 *obj)
       *(s16 *)(state + 0x6C) += framesThisStep;
       if (*(s16 *)(state + 0x6C) > 0x41) {
         *(s16 *)(obj + 0x0) = 0;
-        ((DBProtectionState *)state)->phase = 6;
+        *(s8 *)(state + 0x29) = 6;
         DBPROT_CLOUD_SET_A(0);
         DBPROT_CLOUD_SET_B(0);
         DBPROT_CLOUD_SET_RANGE(lbl_803E56CC, lbl_803E5760);
-        if (((DBProtectionState *)state)->unk80 == 0) {
-          ((DBProtectionState *)state)->unk80 = 1;
+        if (*(u8 *)(state + 0x80) == 0) {
+          *(u8 *)(state + 0x80) = 1;
         }
-        ((DBProtectionState *)state)->unk70 = 1;
+        *(u8 *)(state + 0x70) = 1;
         *(f32 *)(obj + 0xC) = *(f32 *)(spawnData + 0x8);
         *(f32 *)(obj + 0x10) = lbl_803E57AC;
         *(f32 *)(obj + 0x14) = *(f32 *)(spawnData + 0x10);
@@ -850,48 +804,48 @@ void fn_801DFA28(u8 *obj)
     *(int *)(obj + 0xF4) = 7;
     break;
   }
-  if (((DBProtectionState *)state)->phase < 2) {
+  if (*(s8 *)(state + 0x29) < 2) {
     *(f32 *)(state + 0x2C) =
-        ((DBProtectionState *)state)->unk44 * (((DBProtectionState *)state)->driftX * timeDelta) + *(f32 *)(state + 0x2C);
-    ((DBProtectionState *)state)->homeY =
-        ((DBProtectionState *)state)->unk44 * (((DBProtectionState *)state)->driftY * timeDelta) + ((DBProtectionState *)state)->homeY;
-    ((DBProtectionState *)state)->homeZ =
-        ((DBProtectionState *)state)->unk44 * (((DBProtectionState *)state)->driftZ * timeDelta) + ((DBProtectionState *)state)->homeZ;
-    ((DBProtectionState *)state)->unk44 += lbl_803E57B0;
-    if (((DBProtectionState *)state)->unk44 > lbl_803E57A4) {
-      ((DBProtectionState *)state)->unk44 = lbl_803E57A4;
+        *(f32 *)(state + 0x44) * (*(f32 *)(state + 0x0) * timeDelta) + *(f32 *)(state + 0x2C);
+    *(f32 *)(state + 0x30) =
+        *(f32 *)(state + 0x44) * (*(f32 *)(state + 0x4) * timeDelta) + *(f32 *)(state + 0x30);
+    *(f32 *)(state + 0x34) =
+        *(f32 *)(state + 0x44) * (*(f32 *)(state + 0x8) * timeDelta) + *(f32 *)(state + 0x34);
+    *(f32 *)(state + 0x44) += lbl_803E57B0;
+    if (*(f32 *)(state + 0x44) > lbl_803E57A4) {
+      *(f32 *)(state + 0x44) = lbl_803E57A4;
     }
     blendK = lbl_803E57B4;
     *(f32 *)(state + 0x5C) += blendK * (timeDelta * (ambA - *(f32 *)(state + 0x5C)));
-    ((DBProtectionState *)state)->unk60 += blendK * (timeDelta * (ambC - ((DBProtectionState *)state)->unk60));
-    ((DBProtectionState *)state)->unk64 += blendK * (timeDelta * (ambB - ((DBProtectionState *)state)->unk64));
-    if (((DBProtectionState *)state)->phase == 0) {
+    *(f32 *)(state + 0x60) += blendK * (timeDelta * (ambC - *(f32 *)(state + 0x60)));
+    *(f32 *)(state + 0x64) += blendK * (timeDelta * (ambB - *(f32 *)(state + 0x64)));
+    if (*(s8 *)(state + 0x29) == 0) {
       zRatio = (f32)*(s16 *)(int)(tricky + 0x2) / *(f32 *)(state + 0x5C);
-      ((DBProtectionState *)state)->unk40 +=
-          timeDelta * (((DBProtectionState *)state)->unk64 *
-                       ((f32)-*(s16 *)(int)(tricky + 0x4) / *(f32 *)(state + 0x5C) - ((DBProtectionState *)state)->unk40));
+      *(f32 *)(state + 0x40) +=
+          timeDelta * (*(f32 *)(state + 0x64) *
+                       ((f32)-*(s16 *)(int)(tricky + 0x4) / *(f32 *)(state + 0x5C) - *(f32 *)(state + 0x40)));
       *(f32 *)(state + 0x3C) +=
-          timeDelta * (((DBProtectionState *)state)->unk64 * (zRatio - *(f32 *)(state + 0x3C)));
+          timeDelta * (*(f32 *)(state + 0x64) * (zRatio - *(f32 *)(state + 0x3C)));
       zero = lbl_803E56CC;
-      ((DBProtectionState *)state)->unk38 = zero;
+      *(f32 *)(state + 0x38) = zero;
       *(f32 *)(state + 0x3C) = zero;
-      rollA = (s16)(-((DBProtectionState *)state)->unk40 * ((DBProtectionState *)state)->unk60);
-      rollB = (s16)(lbl_803E57B8 * (-*(f32 *)(state + 0x3C) * ((DBProtectionState *)state)->unk60));
+      rollA = (s16)(-*(f32 *)(state + 0x40) * *(f32 *)(state + 0x60));
+      rollB = (s16)(lbl_803E57B8 * (-*(f32 *)(state + 0x3C) * *(f32 *)(state + 0x60)));
     }
     else {
-      ((DBProtectionState *)state)->unk40 -= timeDelta * (((DBProtectionState *)state)->unk40 * ((DBProtectionState *)state)->unk64);
-      *(f32 *)(state + 0x3C) -= timeDelta * (*(f32 *)(state + 0x3C) * ((DBProtectionState *)state)->unk64);
+      *(f32 *)(state + 0x40) -= timeDelta * (*(f32 *)(state + 0x40) * *(f32 *)(state + 0x64));
+      *(f32 *)(state + 0x3C) -= timeDelta * (*(f32 *)(state + 0x3C) * *(f32 *)(state + 0x64));
       rollA = 0;
       rollB = rollA;
     }
-    *(f32 *)(obj + 0xC) = ((DBProtectionState *)state)->unk38 * ((DBProtectionState *)state)->unk44 + *(f32 *)(state + 0x2C);
-    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x3C) * ((DBProtectionState *)state)->unk44 + ((DBProtectionState *)state)->homeY;
-    *(f32 *)(obj + 0x14) = ((DBProtectionState *)state)->unk40 * ((DBProtectionState *)state)->unk44 + ((DBProtectionState *)state)->homeZ;
-    ((DBProtectionState *)state)->wanderYawB =
-        ((DBProtectionState *)state)->wanderYawB + ((framesThisStep * (rollA - ((DBProtectionState *)state)->wanderYawB)) >> 5);
+    *(f32 *)(obj + 0xC) = *(f32 *)(state + 0x38) * *(f32 *)(state + 0x44) + *(f32 *)(state + 0x2C);
+    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x3C) * *(f32 *)(state + 0x44) + *(f32 *)(state + 0x30);
+    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x40) * *(f32 *)(state + 0x44) + *(f32 *)(state + 0x34);
+    *(s16 *)(state + 0x22) =
+        *(s16 *)(state + 0x22) + ((framesThisStep * (rollA - *(s16 *)(state + 0x22))) >> 5);
     *(s16 *)(obj + 0x2) =
         *(s16 *)(obj + 0x2) + ((framesThisStep * (rollB - *(s16 *)(obj + 0x2))) >> 5);
-    *(s16 *)(obj + 0x0) = ((DBProtectionState *)state)->wanderYawB + 0x4000;
+    *(s16 *)(obj + 0x0) = *(s16 *)(state + 0x22) + 0x4000;
     *(s16 *)(obj + 0x4) = *(s16 *)(obj + 0x0) - 0x4000;
   }
 end:;
@@ -954,10 +908,10 @@ int DBprotection_getCameraState(int *obj) { return *(s8*)((char*)((int**)obj)[0x
 
 void DBprotection_updateShield(int *obj)
 {
-  DBProtectionState *state;
+  u8 *state;
   f32 angleCos;
 
-  state = *(DBProtectionState **)((u8 *)obj + 0xb8);
+  state = *(u8 **)((u8 *)obj + 0xb8);
   *(int *)((u8 *)obj + 0xf4) = 7;
 
   if (GameBit_Get(DBPROTECTION_GAMEBIT_TRANSITION_ARMED) != 0 &&
@@ -980,7 +934,7 @@ void DBprotection_updateShield(int *obj)
   CLOUD_ACTION_SET(lbl_803E57C8, lbl_803E56CC);
   CLOUD_ACTION_ENABLE(0);
 
-  angleCos = fn_80293E80((lbl_803E56E4 * (f32)state->shieldAngle) / lbl_803E56E8);
+  angleCos = fn_80293E80((lbl_803E56E4 * (f32)*(u16 *)(state + 0x68)) / lbl_803E56E8);
   if (state[0x81] == 0) {
     if (angleCos < lbl_803E57CC) {
       if (GameBit_Get(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0) {
@@ -998,12 +952,12 @@ void DBprotection_updateShield(int *obj)
   }
 
   *(u16 *)((u8 *)obj + 4) = (s32)(lbl_803E57DC * angleCos);
-  state->shieldAngle = (u16)(s32)(lbl_803E57E0 * timeDelta + (f32)state->shieldAngle);
+  *(u16 *)(state + 0x68) = (u16)(s32)(lbl_803E57E0 * timeDelta + (f32)*(u16 *)(state + 0x68));
 }
 
 void DBprotection_storeHomePosition(int *obj) {
-    DBProtectionState *state = *(DBProtectionState**)((char*)obj + 0xb8);
-    state->homeX = *(f32*)((char*)obj + 0xc);
-    state->homeY = *(f32*)((char*)obj + 0x10);
-    state->homeZ = *(f32*)((char*)obj + 0x14);
+    char *state = *(char**)((char*)obj + 0xb8);
+    *(f32*)(state + 0x2c) = *(f32*)((char*)obj + 0xc);
+    *(f32*)(state + 0x30) = *(f32*)((char*)obj + 0x10);
+    *(f32*)(state + 0x34) = *(f32*)((char*)obj + 0x14);
 }

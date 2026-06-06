@@ -192,20 +192,20 @@ int fn_801E1AAC(int obj, int p2, int msgSrc) {
     fn_801E1588(obj, state);
     {
         f32 z = lbl_803E56CC;
-        ((SBGalleonState *)state)->unk44 = lbl_803E56CC;
-        ((SBGalleonState *)state)->unk38 = z;
-        ((SBGalleonState *)state)->unk3C = z;
-        ((SBGalleonState *)state)->unk40 = z;
+        *(f32 *)(state + 0x44) = lbl_803E56CC;
+        *(f32 *)(state + 0x38) = z;
+        *(f32 *)(state + 0x3c) = z;
+        *(f32 *)(state + 0x40) = z;
     }
     *(void **)(msgSrc + 0xe8) = (void *)DBprotection_storeHomePosition;
     for (i = 0; i < *(u8 *)(msgSrc + 0x8b); i++) {
         switch (*(u8 *)(msgSrc + i + 0x81)) {
         case 2:
-            if (((SBGalleonState *)state)->unk79 == 1) {
-                ((SBGalleonState *)state)->unk79 = 0;
+            if (*(u8 *)(state + 0x79) == 1) {
+                *(u8 *)(state + 0x79) = 0;
             }
             else {
-                ((SBGalleonState *)state)->unk79 = 1;
+                *(u8 *)(state + 0x79) = 1;
             }
             break;
         case 3: {
@@ -214,22 +214,22 @@ int fn_801E1AAC(int obj, int p2, int msgSrc) {
             int *arr = (int *)ObjList_GetObjects(&start, &end);
             for (i = start; i < end; i++) {
                 if (*(s16 *)(arr[i] + 0x46) == 0xf7) {
-                    ((SBGalleonState *)state)->unk4C = arr[i];
+                    *(int *)(state + 0x4c) = arr[i];
                     i = end;
                 }
             }
-            ((SBGalleonState *)state)->unk85 = 1;
+            *(u8 *)(state + 0x85) = 1;
             break;
         }
         case 4:
-            ((SBGalleonState *)state)->unk85 = 0;
+            *(u8 *)(state + 0x85) = 0;
             break;
         case 5:
-            if (((SBGalleonState *)state)->unk79 == 2) {
-                ((SBGalleonState *)state)->unk79 = 0;
+            if (*(u8 *)(state + 0x79) == 2) {
+                *(u8 *)(state + 0x79) = 0;
             }
             else {
-                ((SBGalleonState *)state)->unk79 = 2;
+                *(u8 *)(state + 0x79) = 2;
             }
             break;
         case 6:
@@ -239,52 +239,52 @@ int fn_801E1AAC(int obj, int p2, int msgSrc) {
             Sfx_StopFromObject(obj, 0x143);
             break;
         case 8:
-            if (((SBGalleonState *)state)->unk79 == 8) {
-                ((SBGalleonState *)state)->unk79 = 1;
+            if (*(u8 *)(state + 0x79) == 8) {
+                *(u8 *)(state + 0x79) = 1;
             }
             else {
-                ((SBGalleonState *)state)->unk79 = 8;
+                *(u8 *)(state + 0x79) = 8;
             }
             break;
         case 9:
-            ((SBGalleonState *)state)->unkAB = 1;
+            *(u8 *)(state + 0xab) = 1;
             break;
         case 10:
-            ((SBGalleonState *)state)->unkAB = 0;
+            *(u8 *)(state + 0xab) = 0;
             break;
         case 0xb:
             Sfx_PlayFromObject(fn_801E2570(), 0x2c6);
             break;
         case 0xc:
-            ((SBGalleonState *)state)->unk9C = 0xa3;
-            Music_Trigger(((SBGalleonState *)state)->unk9C, 1);
-            Music_Trigger(((SBGalleonState *)state)->unk98, 0);
+            *(int *)(state + 0x9c) = 0xa3;
+            Music_Trigger(*(int *)(state + 0x9c), 1);
+            Music_Trigger(*(int *)(state + 0x98), 0);
             break;
         case 0xd:
-            ((SBGalleonState *)state)->unkAC = lbl_803E57F8;
-            ((SBGalleonState *)state)->unk78 = 1;
-            ((SBGalleonState *)state)->unk74 = lbl_803E56CC;
+            *(f32 *)(state + 0xac) = lbl_803E57F8;
+            *(u8 *)(state + 0x78) = 1;
+            *(f32 *)(state + 0x74) = lbl_803E56CC;
             break;
         }
     }
     {
         f32 z = lbl_803E56CC;
-        if (((SBGalleonState *)state)->unkAC >= z) {
-            ((SBGalleonState *)state)->unkAC = ((SBGalleonState *)state)->unkAC - timeDelta;
-            if (((SBGalleonState *)state)->unkAC < z) {
-                ((SBGalleonState *)state)->unkAC = z;
-                ((SBGalleonState *)state)->unk78 = 0;
+        if (*(f32 *)(state + 0xac) >= z) {
+            *(f32 *)(state + 0xac) = *(f32 *)(state + 0xac) - timeDelta;
+            if (*(f32 *)(state + 0xac) < z) {
+                *(f32 *)(state + 0xac) = z;
+                *(u8 *)(state + 0x78) = 0;
             }
         }
     }
-    if (((SBGalleonState *)state)->unk78 != 0) {
-        ((SBGalleonState *)state)->unk74 = lbl_803E5790 * timeDelta + ((SBGalleonState *)state)->unk74;
+    if (*(u8 *)(state + 0x78) != 0) {
+        *(f32 *)(state + 0x74) = lbl_803E5790 * timeDelta + *(f32 *)(state + 0x74);
     }
     else {
-        ((SBGalleonState *)state)->unk74 = -(lbl_803E5790 * timeDelta - ((SBGalleonState *)state)->unk74);
+        *(f32 *)(state + 0x74) = -(lbl_803E5790 * timeDelta - *(f32 *)(state + 0x74));
     }
     {
-        f32 v = ((SBGalleonState *)state)->unk74;
+        f32 v = *(f32 *)(state + 0x74);
         f32 c = lbl_803E56CC;
         if (!(v < lbl_803E56CC)) {
             c = lbl_803E57F4;
@@ -292,15 +292,15 @@ int fn_801E1AAC(int obj, int p2, int msgSrc) {
                 c = v;
             }
         }
-        ((SBGalleonState *)state)->unk74 = c;
+        *(f32 *)(state + 0x74) = c;
     }
-    if (((SBGalleonState *)state)->unk74 > lbl_803E56CC) {
-        gameTextSetColor(0xff, 0xff, 0xff, (int)((SBGalleonState *)state)->unk74);
+    if (*(f32 *)(state + 0x74) > lbl_803E56CC) {
+        gameTextSetColor(0xff, 0xff, 0xff, (int)*(f32 *)(state + 0x74));
         gameTextShow(0x4b1);
     }
-    ((SBGalleonState *)state)->unk2C = *(f32 *)(obj + 0xc);
-    ((SBGalleonState *)state)->unk30 = *(f32 *)(obj + 0x10);
-    ((SBGalleonState *)state)->unk34 = *(f32 *)(obj + 0x14);
+    *(f32 *)(state + 0x2c) = *(f32 *)(obj + 0xc);
+    *(f32 *)(state + 0x30) = *(f32 *)(obj + 0x10);
+    *(f32 *)(state + 0x34) = *(f32 *)(obj + 0x14);
     *(s16 *)(msgSrc + 0x6e) = *(s16 *)(msgSrc + 0x70);
     *(u8 *)(msgSrc + 0x56) = 0;
     return 0;
@@ -423,7 +423,7 @@ void fn_801E1588(int obj, int state)
   skySetOverrideLightDirection(lbl_803DDC28 * (d.x - c.x) + c.x,
                                lbl_803DDC28 * (d.y - c.y) + c.y,
                                lbl_803DDC28 * (d.z - c.z) + c.z, lbl_803E5724);
-  if (((SBGalleonState *)state)->unkAB == 0) {
+  if (*(u8 *)(state + 0xab) == 0) {
     skyFn_800894a8(7, a.x, a.y, a.z);
   }
   else {
@@ -913,60 +913,6 @@ void SB_ShipMast_update(int *obj) {
 #pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
-#include "global.h"
-
-/* SB_Galleon_getExtraSize == 0xb4 (ship-battle galleon). */
-typedef struct SBGalleonState {
-    u8 pad00[0x26];
-    s16 unk26;
-    u8 pad28;
-    u8 unk29;
-    u8 unk2A;
-    u8 pad2B;
-    f32 unk2C;
-    f32 unk30;
-    f32 unk34;
-    f32 unk38;
-    f32 unk3C;
-    f32 unk40;
-    f32 unk44;
-    u8 pad48[4];
-    int unk4C;
-    u8 pad50[0x1e];
-    s16 unk6E;
-    u8 unk70;
-    u8 pad71;
-    s16 unk72;
-    f32 unk74;
-    u8 unk78;
-    u8 unk79;
-    u8 unk7A;
-    u8 pad7B[5];
-    u8 unk80;
-    u8 pad81;
-    s16 unk82;
-    u8 unk84;
-    u8 unk85;
-    u8 pad86[2];
-    f32 unk88;
-    f32 unk8C;
-    f32 unk90;
-    f32 unk94;
-    int unk98;
-    int unk9C;
-    u8 padA0[5];
-    u8 unkA5;
-    u8 unkA6;
-    u8 unkA7;
-    u8 unkA8;
-    u8 unkA9;
-    u8 unkAA;
-    u8 unkAB;
-    f32 unkAC;
-    u8 padB0[4];
-} SBGalleonState;
-STATIC_ASSERT(sizeof(SBGalleonState) == 0xb4);
-
 int SB_Galleon_getExtraSize(void) { return 0xb4; }
 int SB_Galleon_getObjectTypeId(void) { return 0x0; }
 int SB_Propeller_getExtraSize(void) { return 0x10; }
@@ -1060,13 +1006,13 @@ void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
         f32 c;
     } stk;
     if (visible != 0) {
-        if ((s8)((SBGalleonState *)p)->unk70 < 2) {
-            stk.mode = (u16)(s32)((SBGalleonState *)p)->unk88;
+        if ((s8)p[0x70] < 2) {
+            stk.mode = (u16)(s32)*(f32*)(p + 0x88);
             stk.a = lbl_803E5804;
             stk.b = lbl_803E5800;
             stk.c = lbl_803E57FC;
             (**(code **)(*gPartfxInterface + 8))(obj, 0xa3, stk.pad, 2, 0xffffffff, 0);
-            stk.mode = (u16)(s32)((SBGalleonState *)p)->unk8C;
+            stk.mode = (u16)(s32)*(f32*)(p + 0x8c);
             stk.a = lbl_803E5808;
             (**(code **)(*gPartfxInterface + 8))(obj, 0xa3, stk.pad, 2, 0xffffffff, 0);
         }
@@ -1116,7 +1062,7 @@ extern MapEventInterface **gMapEventInterface;
 extern int *gObjectTriggerInterface;
 void SB_Galleon_update(int obj) {
     s8 *p = (s8 *)((int **)obj)[0xb8/4];
-    *(s8 *)(obj + 0xac) = ((SBGalleonState *)p)->unk72;
+    *(s8 *)(obj + 0xac) = *(s16 *)(p + 0x72);
     fn_801E1588(obj, (int)p);
     if (GameBit_Get(0x75) == 0) {
         (*gMapEventInterface)->setMode(0xb, 1);
@@ -1130,16 +1076,16 @@ void SB_Galleon_update(int obj) {
         *(int *)(obj + 0xf4) = 0;
     }
     else {
-        if ((((SBGalleonState *)p)->unk80 == 0) && (((SBGalleonState *)p)->unk70 > 0)) {
-            ((SBGalleonState *)p)->unk80 = 1;
+        if ((*(u8 *)(p + 0x80) == 0) && (p[0x70] > 0)) {
+            p[0x80] = 1;
         }
-        switch (((SBGalleonState *)p)->unk70) {
+        switch (p[0x70]) {
         case 0:
             fn_801DFA28(obj);
             break;
         case 1:
             (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(3, obj, -1);
-            ((SBGalleonState *)p)->unk70 = 2;
+            p[0x70] = 2;
             break;
         case 2:
             DBprotection_updateShield(obj);
@@ -1148,7 +1094,7 @@ void SB_Galleon_update(int obj) {
             (*gMapEventInterface)->setMode(0xb, 1);
             *(s8 *)(obj + 0xac) = -1;
             (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(2, obj, -1);
-            ((SBGalleonState *)p)->unk70 = 4;
+            p[0x70] = 4;
             break;
         }
         SCGameBitLatch_Update((u8 *)p + 0xb0, 1, -1, -1, 0xa71, 0xa4);
@@ -1173,36 +1119,36 @@ void SB_Galleon_init(int obj) {
     ObjGroup_AddObject(obj, 3);
     objSetSlot((void *)obj, 0x5a);
     *(void **)(obj + 0xbc) = (void *)fn_801E1AAC;
-    ((SBGalleonState *)p)->unk2C = *(f32 *)(obj + 0xc);
-    ((SBGalleonState *)p)->unk30 = *(f32 *)(obj + 0x10);
-    ((SBGalleonState *)p)->unk34 = *(f32 *)(obj + 0x14);
-    ((SBGalleonState *)p)->unk2A = 1;
-    ((SBGalleonState *)p)->unk26 = 0xf0;
-    ((SBGalleonState *)p)->unk6E = 0xf0;
-    ((SBGalleonState *)p)->unk79 = 0;
-    ((SBGalleonState *)p)->unk82 = 200;
-    ((SBGalleonState *)p)->unkA7 = 0x89;
-    ((SBGalleonState *)p)->unkA8 = 0x95;
-    ((SBGalleonState *)p)->unkA9 = 0x86;
-    ((SBGalleonState *)p)->unkAA = 0x88;
-    ((SBGalleonState *)p)->unkA5 = 0x87;
-    ((SBGalleonState *)p)->unkA6 = 0x97;
-    ((SBGalleonState *)p)->unk72 = *(s8 *)(obj + 0xac);
+    *(f32 *)(p + 0x2c) = *(f32 *)(obj + 0xc);
+    *(f32 *)(p + 0x30) = *(f32 *)(obj + 0x10);
+    *(f32 *)(p + 0x34) = *(f32 *)(obj + 0x14);
+    *(u8 *)(p + 0x2a) = 1;
+    *(s16 *)(p + 0x26) = 0xf0;
+    *(s16 *)(p + 0x6e) = 0xf0;
+    *(u8 *)(p + 0x79) = 0;
+    *(s16 *)(p + 0x82) = 200;
+    *(u8 *)(p + 0xa7) = 0x89;
+    *(u8 *)(p + 0xa8) = 0x95;
+    *(u8 *)(p + 0xa9) = 0x86;
+    *(u8 *)(p + 0xaa) = 0x88;
+    *(u8 *)(p + 0xa5) = 0x87;
+    *(u8 *)(p + 0xa6) = 0x97;
+    *(s16 *)(p + 0x72) = *(s8 *)(obj + 0xac);
     *(s16 *)obj = 0x4000;
     *(s16 *)(obj + 2) = 0;
     *(s16 *)(obj + 4) = 0;
     lbl_803DDC18 = (int)textureLoadAsset(0x16d);
     lbl_803DDC1C = (int)textureLoadAsset(0x89);
-    ((SBGalleonState *)p)->unk84 = 100;
+    *(u8 *)(p + 0x84) = 100;
     (*gMapEventInterface)->setMode(*(s8 *)(obj + 0xac), 1);
     getLActions(obj, obj, 0x58, 0, 0, 0);
-    ((SBGalleonState *)p)->unk90 = lbl_803E56CC;
-    ((SBGalleonState *)p)->unk94 = lbl_803E580C;
+    *(f32 *)(p + 0x90) = lbl_803E56CC;
+    *(f32 *)(p + 0x94) = lbl_803E580C;
     (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 0x1800;
     setDrawLights(0);
-    ((SBGalleonState *)p)->unk98 = 0x92;
-    ((SBGalleonState *)p)->unk9C = 0x91;
-    Music_Trigger(((SBGalleonState *)p)->unk9C, 1);
+    *(int *)(p + 0x98) = 0x92;
+    *(int *)(p + 0x9c) = 0x91;
+    Music_Trigger(*(int *)(p + 0x9c), 1);
 }
 
 
@@ -1219,12 +1165,12 @@ void SB_Galleon_free(int obj, int p2) {
         lbl_803DDC1C = 0;
     }
     ObjGroup_RemoveObject(obj, 3);
-    if (((SBGalleonState *)p)->unk80 != 0 && p2 == 0) {
-        ((SBGalleonState *)p)->unk80 = 0;
+    if (p[0x80] != 0 && p2 == 0) {
+        p[0x80] = 0;
     }
     lbl_803DDC20 = 0;
-    Music_Trigger(((SBGalleonState *)p)->unk9C, 0);
-    Music_Trigger(((SBGalleonState *)p)->unk98, 0);
+    Music_Trigger(*(s32*)(p + 0x9c), 0);
+    Music_Trigger(*(s32*)(p + 0x98), 0);
     GameBit_Set(0xac8, 1);
 }
 
@@ -1269,12 +1215,12 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma scheduling off
 int SB_Galleon_modelMtxFn(int *obj) {
     u8 *p = (u8*)((int**)obj)[0xb8/4];
-    u8 b = ((SBGalleonState *)p)->unk29;
+    u8 b = p[0x29];
     if ((s8)b == 0) {
-        if (((SBGalleonState *)p)->unk26 > 0) return -2;
+        if (*(s16*)(p + 0x26) > 0) return -2;
     }
     if ((s8)b == 1) {
-        int t = (s8)((SBGalleonState *)p)->unk7A;
+        int t = (s8)p[0x7a];
         if (t == 2) return -1;
         if (t == 3) return -1;
         if (t == 5) return -1;

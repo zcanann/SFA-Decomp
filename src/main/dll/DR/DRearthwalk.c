@@ -126,17 +126,17 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   state = *(u8 **)(obj + 0xb8);
   player = (int)Obj_GetPlayerObject();
   if (visible != 0) {
-    if (((ShStaffState *)state)->phase == 3) {
+    if (state[0] == 3) {
       Obj_BuildWorldTransformMatrix(obj, mtxB, 0);
       PSMTXInverse((int)ObjPath_GetPointModelMtx((void *)player, 0), mtxA);
       PSMTXConcat(mtxA, mtxB, (f32 *)(state + 8));
-      ((ShStaffState *)state)->phase = 5;
+      state[0] = 5;
     }
-    if (((ShStaffState *)state)->phase == 4) {
+    if (state[0] == 4) {
       ObjPath_GetPointLocalMtx((void *)player, 0, (f32 *)(state + 8));
-      ((ShStaffState *)state)->phase = 5;
+      state[0] = 5;
     }
-    if (((ShStaffState *)state)->phase == 5) {
+    if (state[0] == 5) {
       PSMTXConcat((f32 *)ObjPath_GetPointModelMtx((void *)player, 0), (f32 *)(state + 8), mtxB);
       objSetMtxFn_800412d4(mtxB);
       objRenderModel(obj);
@@ -148,7 +148,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     dx = x1 - x0;
     dy = y1 - y0;
     dz = z1 - z0;
-    if (((((ShStaffState *)state)->unk02 & 1) != 0) && ((((ShStaffState *)state)->unk02 & 2) == 0)) {
+    if (((state[2] & 1) != 0) && ((state[2] & 2) == 0)) {
       ptr = state + 8;
       for (i = 2; i < 10; i += 2) {
         if (*(uint *)(ptr + 0x38) == 0) {
@@ -158,10 +158,10 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ptr += 8;
       }
       if (i >= 10) {
-        ((ShStaffState *)state)->unk02 |= 2;
+        state[2] |= 2;
       }
     }
-    if (((((ShStaffState *)state)->unk02 & 4) != 0) && ((((ShStaffState *)state)->unk02 & 8) == 0)) {
+    if (((state[2] & 4) != 0) && ((state[2] & 8) == 0)) {
       ptr = state + 4;
       for (i = 1; i < 10; i += 2) {
         if (*(uint *)(ptr + 0x38) == 0) {
@@ -171,11 +171,11 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ptr += 8;
       }
       if (i >= 10) {
-        ((ShStaffState *)state)->unk02 |= 8;
+        state[2] |= 8;
       }
     }
-    if (((ShStaffState *)state)->unk02 != 0) {
-      if ((((ShStaffState *)state)->unk02 & 0x20) != 0) {
+    if (state[2] != 0) {
+      if ((state[2] & 0x20) != 0) {
         i = 5;
         ptr = state + 0x14;
         for (; i < 5; i++) {
@@ -186,32 +186,32 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
           }
           ptr += 4;
         }
-        if ((((ShStaffState *)state)->unk02 & 0x10) != 0) {
-          ((ShStaffState *)state)->unk04 = ((ShStaffState *)state)->unk04 - timeDelta;
-          if (((ShStaffState *)state)->unk04 <= lbl_803E54D4) {
+        if ((state[2] & 0x10) != 0) {
+          *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
+          if (*(f32 *)(state + 4) <= lbl_803E54D4) {
             spd = lbl_803E54D8;
           } else {
-            ((ShStaffState *)state)->unk04 = ((ShStaffState *)state)->unk04 - timeDelta;
-            spd = lbl_803E54DC * ((ShStaffState *)state)->unk04;
+            *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
+            spd = lbl_803E54DC * *(f32 *)(state + 4);
           }
         } else {
-          ((ShStaffState *)state)->unk04 = ((ShStaffState *)state)->unk04 + timeDelta;
-          if (((ShStaffState *)state)->unk04 >= lbl_803E54E0) {
-            ((ShStaffState *)state)->unk04 = lbl_803E54E0;
+          *(f32 *)(state + 4) = *(f32 *)(state + 4) + timeDelta;
+          if (*(f32 *)(state + 4) >= lbl_803E54E0) {
+            *(f32 *)(state + 4) = lbl_803E54E0;
           }
-          spd = lbl_803E54E4 * ((ShStaffState *)state)->unk04;
+          spd = lbl_803E54E4 * *(f32 *)(state + 4);
         }
         j = 0;
         ptr = state;
         for (; j < 5; j++) {
-          if ((*(uint *)(ptr + 0x38) != 0) && (*(uint *)&((ShStaffState *)state)->unk48 != 0)) {
+          if ((*(uint *)(ptr + 0x38) != 0) && (*(uint *)(state + 0x48) != 0)) {
             t = lbl_803E54E8 + (f32)j / lbl_803E54EC;
-            bx = *(f32 *)(((ShStaffState *)state)->unk48 + 0xc);
+            bx = *(f32 *)(*(int *)(state + 0x48) + 0xc);
             *(f32 *)(*(int *)(ptr + 0x38) + 0xc) = t * (x0 - bx) + bx;
             *(f32 *)(*(int *)(ptr + 0x38) + 0x10) =
-                t * (y0 - *(f32 *)(((ShStaffState *)state)->unk48 + 0x10)) + *(f32 *)(((ShStaffState *)state)->unk48 + 0x10);
+                t * (y0 - *(f32 *)(*(int *)(state + 0x48) + 0x10)) + *(f32 *)(*(int *)(state + 0x48) + 0x10);
             *(f32 *)(*(int *)(ptr + 0x38) + 0x14) =
-                t * (z0 - *(f32 *)(((ShStaffState *)state)->unk48 + 0x14)) + *(f32 *)(((ShStaffState *)state)->unk48 + 0x14);
+                t * (z0 - *(f32 *)(*(int *)(state + 0x48) + 0x14)) + *(f32 *)(*(int *)(state + 0x48) + 0x14);
             *(f32 *)(*(int *)(ptr + 0x38) + 8) = spd;
           }
           ptr += 4;
@@ -219,62 +219,62 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         j = 9;
         ptr = state + 0x24;
         for (; j > 4; j--) {
-          if ((*(uint *)(ptr + 0x38) != 0) && (*(uint *)&((ShStaffState *)state)->unk4C != 0)) {
+          if ((*(uint *)(ptr + 0x38) != 0) && (*(uint *)(state + 0x4c) != 0)) {
             t = lbl_803E54E8 + (f32)(9 - j) / lbl_803E54EC;
-            bx = *(f32 *)(((ShStaffState *)state)->unk4C + 0xc);
+            bx = *(f32 *)(*(int *)(state + 0x4c) + 0xc);
             *(f32 *)(*(int *)(ptr + 0x38) + 0xc) = t * (x1 - bx) + bx;
             *(f32 *)(*(int *)(ptr + 0x38) + 0x10) =
-                t * (y1 - *(f32 *)(((ShStaffState *)state)->unk4C + 0x10)) + *(f32 *)(((ShStaffState *)state)->unk4C + 0x10);
+                t * (y1 - *(f32 *)(*(int *)(state + 0x4c) + 0x10)) + *(f32 *)(*(int *)(state + 0x4c) + 0x10);
             *(f32 *)(*(int *)(ptr + 0x38) + 0x14) =
-                t * (z1 - *(f32 *)(((ShStaffState *)state)->unk4C + 0x14)) + *(f32 *)(((ShStaffState *)state)->unk4C + 0x14);
+                t * (z1 - *(f32 *)(*(int *)(state + 0x4c) + 0x14)) + *(f32 *)(*(int *)(state + 0x4c) + 0x14);
             *(f32 *)(*(int *)(ptr + 0x38) + 8) = spd;
           }
           ptr -= 4;
         }
       } else {
         spd = lbl_803E54D8;
-        if ((((ShStaffState *)state)->unk02 & 0x10) != 0) {
-          ((ShStaffState *)state)->unk04 = ((ShStaffState *)state)->unk04 - timeDelta;
-          if (((ShStaffState *)state)->unk04 <= lbl_803E54D4) {
-            ((ShStaffState *)state)->unk02 &= ~0x10;
+        if ((state[2] & 0x10) != 0) {
+          *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
+          if (*(f32 *)(state + 4) <= lbl_803E54D4) {
+            state[2] &= ~0x10;
           } else {
-            spd = lbl_803E54E4 * ((ShStaffState *)state)->unk04;
+            spd = lbl_803E54E4 * *(f32 *)(state + 4);
           }
         }
         for (j = 0; j < 10; j++) {
-          if (*(uint *)&((ShStaffState *)state)->childObj != 0) {
+          if (*(uint *)(state + 0x38) != 0) {
             t = lbl_803E54F0 * (f32)j;
             t = t + (f32)(int)randomGetRange(-0x32, 0x32) / lbl_803E54F4;
-            *(f32 *)(((ShStaffState *)state)->childObj + 0xc) = dx * t + x0;
-            *(f32 *)(((ShStaffState *)state)->childObj + 0x10) = dy * t + y0;
-            *(f32 *)(((ShStaffState *)state)->childObj + 0x14) = dz * t + z0;
-            *(f32 *)(((ShStaffState *)state)->childObj + 8) = spd;
+            *(f32 *)(*(int *)(state + 0x38) + 0xc) = dx * t + x0;
+            *(f32 *)(*(int *)(state + 0x38) + 0x10) = dy * t + y0;
+            *(f32 *)(*(int *)(state + 0x38) + 0x14) = dz * t + z0;
+            *(f32 *)(*(int *)(state + 0x38) + 8) = spd;
           }
           state += 4;
         }
       }
     } else {
       scale = lbl_803E54F8;
-      cur2 = ((ShStaffState *)state)->unk04;
+      cur2 = *(f32 *)(state + 4);
       bx = lbl_803E54D4;
       if (cur2 != bx) {
-        ((ShStaffState *)state)->unk04 = cur2 - timeDelta;
-        if (((ShStaffState *)state)->unk04 <= bx) {
-          o = ((ShStaffState *)state)->childObj;
+        *(f32 *)(state + 4) = cur2 - timeDelta;
+        if (*(f32 *)(state + 4) <= bx) {
+          o = *(int *)(state + 0x38);
           if ((uint)o != 0) {
             *(s16 *)(o + 6) |= 0x4000;
-            ((ShStaffState *)state)->childObj = 0;
-            ((ShStaffState *)state)->unk04 = bx;
+            *(int *)(state + 0x38) = 0;
+            *(f32 *)(state + 4) = bx;
           }
         } else {
-          scale = lbl_803E54E4 * ((ShStaffState *)state)->unk04;
+          scale = lbl_803E54E4 * *(f32 *)(state + 4);
         }
       }
-      if (*(uint *)&((ShStaffState *)state)->childObj != 0) {
-        *(f32 *)(((ShStaffState *)state)->childObj + 0xc) = dx * ((ShStaffState *)state)->unk6C + x0;
-        *(f32 *)(((ShStaffState *)state)->childObj + 0x10) = dy * ((ShStaffState *)state)->unk6C + y0;
-        *(f32 *)(((ShStaffState *)state)->childObj + 0x14) = dz * ((ShStaffState *)state)->unk6C + z0;
-        *(f32 *)(((ShStaffState *)state)->childObj + 8) = scale;
+      if (*(uint *)(state + 0x38) != 0) {
+        *(f32 *)(*(int *)(state + 0x38) + 0xc) = dx * *(f32 *)(state + 0x6c) + x0;
+        *(f32 *)(*(int *)(state + 0x38) + 0x10) = dy * *(f32 *)(state + 0x6c) + y0;
+        *(f32 *)(*(int *)(state + 0x38) + 0x14) = dz * *(f32 *)(state + 0x6c) + z0;
+        *(f32 *)(*(int *)(state + 0x38) + 8) = scale;
       }
     }
   }
@@ -851,38 +851,6 @@ void FUN_801da868(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 }
 
 /* 8b "li r3, N; blr" returners. */
-#include "global.h"
-
-/* sh_staff_getExtraSize == 0x74 (staff pickup/holder). */
-typedef struct ShStaffState {
-    u8 phase;
-    u8 unk01;
-    u8 unk02;
-    u8 unk03;
-    f32 unk04;
-    u8 pad08[0x30];
-    int childObj;   /* 0x38 */
-    u8 pad3C[0xc];
-    int unk48;
-    int unk4C;
-    u8 pad50[0x1c];
-    f32 unk6C;
-    f32 unk70;
-} ShStaffState;
-STATIC_ASSERT(sizeof(ShStaffState) == 0x74);
-
-/* sh_beacon_getExtraSize == 0x18. */
-typedef struct ShBeaconState {
-    u8 pad00[4];
-    f32 glowPhase;  /* 0x04 */
-    f32 unk08;
-    f32 unk0C;
-    f32 unk10;
-    u8 unk14;
-    u8 pad15[3];
-} ShBeaconState;
-STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
-
 int sh_beacon_getExtraSize(void) { return 0x18; }
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
@@ -928,9 +896,9 @@ void sh_staffhaze_update(int obj)
 int sh_beacon_SeqFn(int obj)
 {
   int extra = *(int*)(obj + 0xb8);
-  ((ShBeaconState *)extra)->glowPhase = ((ShBeaconState *)extra)->glowPhase + timeDelta;
-  if (((ShBeaconState *)extra)->glowPhase >= lbl_803E5528) {
-    ((ShBeaconState *)extra)->glowPhase = ((ShBeaconState *)extra)->glowPhase - lbl_803E5528;
+  *(float*)(extra + 4) = *(float*)(extra + 4) + timeDelta;
+  if (*(float*)(extra + 4) >= lbl_803E5528) {
+    *(float*)(extra + 4) = *(float*)(extra + 4) - lbl_803E5528;
     if ((*(unsigned short*)(obj + 0xb0) & 0x800) != 0) {
       fn_80098B18(obj, *(float*)(obj + 8), 0, 2, 0, 0);
     }
@@ -1014,10 +982,10 @@ int sh_staff_SeqFn(int obj, int unused, u8 *buf)
             *(u8 *)state = 3;
             break;
         case 1:
-            ((ShStaffState *)state)->unk01 = 1;
+            *(u8 *)(state + 1) = 1;
             break;
         case 2:
-            ((ShStaffState *)state)->unk01 = 0;
+            *(u8 *)(state + 1) = 0;
             break;
         case 3:
             fn_801DA4A8(obj, state, 1);
@@ -1029,23 +997,23 @@ int sh_staff_SeqFn(int obj, int unused, u8 *buf)
             hudFn_8011f38c(1);
             break;
         case 6:
-            ((ShStaffState *)state)->unk02 = (u8)(((ShStaffState *)state)->unk02 | 1);
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 1);
             break;
         case 7:
-            ((ShStaffState *)state)->unk02 = (u8)(((ShStaffState *)state)->unk02 | 4);
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 4);
             break;
         case 8:
-            ((ShStaffState *)state)->unk02 = (u8)(((ShStaffState *)state)->unk02 | 0x10);
-            ((ShStaffState *)state)->unk04 = lbl_803E54E0;
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 0x10);
+            *(f32 *)(state + 4) = lbl_803E54E0;
             break;
         case 9:
-            ((ShStaffState *)state)->unk02 = (u8)(((ShStaffState *)state)->unk02 | 0x20);
-            ((ShStaffState *)state)->unk04 = lbl_803E54D4;
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 0x20);
+            *(f32 *)(state + 4) = lbl_803E54D4;
             break;
         case 0xa:
-            ((ShStaffState *)state)->unk02 = (u8)(((ShStaffState *)state)->unk02 | 0x10);
-            ((ShStaffState *)state)->unk02 = (u8)(((ShStaffState *)state)->unk02 | 0xa);
-            ((ShStaffState *)state)->unk04 = lbl_803E5508;
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 0x10);
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 0xa);
+            *(f32 *)(state + 4) = lbl_803E5508;
             break;
         case 0xb:
         case 0xc:
@@ -1053,13 +1021,13 @@ int sh_staff_SeqFn(int obj, int unused, u8 *buf)
         }
     }
 
-    if (((ShStaffState *)state)->unk01 != 0) {
+    if (*(u8 *)(state + 1) != 0) {
         ((void (*)(s16, int, int))((int *)*gGameUIInterface)[0x34 / 4])
             (*(s16 *)(*(int *)(obj + 0x50) + 0x7e), 0xa0, 0x8c);
     }
-    ((ShStaffState *)state)->unk6C = lbl_803E54D8 * timeDelta + ((ShStaffState *)state)->unk6C;
-    if (((ShStaffState *)state)->unk6C > lbl_803E54D0) {
-        ((ShStaffState *)state)->unk6C = lbl_803E54D4;
+    *(f32 *)(state + 0x6c) = lbl_803E54D8 * timeDelta + *(f32 *)(state + 0x6c);
+    if (*(f32 *)(state + 0x6c) > lbl_803E54D0) {
+        *(f32 *)(state + 0x6c) = lbl_803E54D4;
     }
     return 0;
 }
@@ -1165,43 +1133,43 @@ void sh_staff_update(int obj)
                 *(u8 *)((char *)newSetup + 7) = 0xff;
                 loadResult = loadObjectAtObject(obj, newSetup);
             }
-            ((ShStaffState *)state)->childObj = loadResult;
-            ((ShStaffState *)state)->unk70 = lbl_803E550C;
+            *(int *)(state + 0x38) = loadResult;
+            *(f32 *)(state + 0x70) = lbl_803E550C;
         }
     } else if (mode == 1) {
         if (ObjTrigger_IsSet(obj) != 0) {
             int target = ObjGroup_FindNearestObject(0xf, (u32)obj, 0);
             ((void (*)(int, int, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(0, target, -1);
             *(u8 *)state = 2;
-            ((ShStaffState *)state)->unk04 = lbl_803E54E0;
+            *(f32 *)(state + 4) = lbl_803E54E0;
             GameBit_Set(0x18b, 1);
         } else if (dist > lbl_803E5510) {
-            if (((ShStaffState *)state)->unk03 != 0) {
-                ((ShStaffState *)state)->unk03 = 0;
+            if (*(u8 *)(state + 3) != 0) {
+                *(u8 *)(state + 3) = 0;
                 mapUnload(0x13, 0x20000000);
             }
         } else if (dist < lbl_803E5514) {
-            if (((ShStaffState *)state)->unk03 == 0) {
-                ((ShStaffState *)state)->unk03 = 1;
+            if (*(u8 *)(state + 3) == 0) {
+                *(u8 *)(state + 3) = 1;
                 loadMapAndParent(8);
             }
         }
     } else {
-        if (((ShStaffState *)state)->unk03 != 0) {
-            ((ShStaffState *)state)->unk03 = 0;
+        if (*(u8 *)(state + 3) != 0) {
+            *(u8 *)(state + 3) = 0;
             mapUnload(0x13, 0x20000000);
             GameBit_Set(0x3b8, 1);
         }
     }
 end:
     hudFn_8011f38c(0);
-    ((ShStaffState *)state)->unk6C = lbl_803E54D8 * timeDelta + ((ShStaffState *)state)->unk6C;
-    if (((ShStaffState *)state)->unk6C > lbl_803E54D0) {
-        ((ShStaffState *)state)->unk6C = lbl_803E54D4;
+    *(f32 *)(state + 0x6c) = lbl_803E54D8 * timeDelta + *(f32 *)(state + 0x6c);
+    if (*(f32 *)(state + 0x6c) > lbl_803E54D0) {
+        *(f32 *)(state + 0x6c) = lbl_803E54D4;
     }
-    ((ShStaffState *)state)->unk70 = lbl_803E54D8 * timeDelta + ((ShStaffState *)state)->unk70;
-    if (((ShStaffState *)state)->unk70 > lbl_803E54D0) {
-        ((ShStaffState *)state)->unk70 = lbl_803E54D4;
+    *(f32 *)(state + 0x70) = lbl_803E54D8 * timeDelta + *(f32 *)(state + 0x70);
+    if (*(f32 *)(state + 0x70) > lbl_803E54D0) {
+        *(f32 *)(state + 0x70) = lbl_803E54D4;
         if (*(u8 *)state == 1) {
             Sfx_PlayFromObject(obj, 0x3fe);
         }
@@ -1220,14 +1188,14 @@ void sh_beacon_init(int obj, int defData)
     *(s16 *)obj = (s16)((s32)*(s8 *)(defData + 0x18) << 8);
     *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x4000);
 
-    ((ShBeaconState *)state)->unk14 = (u8)GameBit_Get(*(s16 *)(defData + 0x1e));
-    if (((ShBeaconState *)state)->unk14 == 0) {
+    *(u8 *)(state + 0x14) = (u8)GameBit_Get(*(s16 *)(defData + 0x1e));
+    if (*(u8 *)(state + 0x14) == 0) {
         if (GameBit_Get(*(s16 *)(defData + 0x20)) != 0) {
-            ((ShBeaconState *)state)->unk14 = 2;
+            *(u8 *)(state + 0x14) = 2;
         }
     }
 
-    if (((ShBeaconState *)state)->unk14 != 0 && Obj_IsLoadingLocked() != 0) {
+    if (*(u8 *)(state + 0x14) != 0 && Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x20, 0x55);
         *(f32 *)((char *)setup + 8) = *(f32 *)(obj + 0xc);
         *(f32 *)((char *)setup + 0xc) = *(f32 *)(obj + 0x10);
@@ -1276,7 +1244,7 @@ void sh_beacon_update(int obj)
 
   state = *(u8 **)(obj + 0xb8);
   def = *(int *)(obj + 0x4c);
-  switch (((ShBeaconState *)state)->unk14) {
+  switch (state[0x14]) {
   case 0:
     if (((*(u8 *)(obj + 0xaf) & 1) != 0) &&
         ((**(int (**)(int))(*gGameUIInterface + 0x20))(0x194) != 0)) {
@@ -1293,13 +1261,13 @@ void sh_beacon_update(int obj)
         *(int *)state = loadObjectAtObject(obj, setup);
       }
       (*(code *)(*gObjectTriggerInterface + 0x48))(0, obj, -1);
-      ((ShBeaconState *)state)->unk14 = 2;
+      state[0x14] = 2;
     }
   case 2:
     state2 = *(int *)(obj + 0xb8);
-    ((ShBeaconState *)state2)->glowPhase = ((ShBeaconState *)state2)->glowPhase + timeDelta;
-    if (((ShBeaconState *)state2)->glowPhase >= lbl_803E5528) {
-      ((ShBeaconState *)state2)->glowPhase = ((ShBeaconState *)state2)->glowPhase - lbl_803E5528;
+    *(f32 *)(state2 + 4) = *(f32 *)(state2 + 4) + timeDelta;
+    if (*(f32 *)(state2 + 4) >= lbl_803E5528) {
+      *(f32 *)(state2 + 4) = *(f32 *)(state2 + 4) - lbl_803E5528;
       if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
         fn_80098B18(obj, *(f32 *)(obj + 8), 0, 2, 0, 0);
       }
@@ -1311,26 +1279,26 @@ void sh_beacon_update(int obj)
       ((BeaconFlags *)(state + 0x15))->looping = 1;
     }
     if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
-      ((ShBeaconState *)state)->unk10 = ((ShBeaconState *)state)->unk10 + timeDelta;
-      if (((ShBeaconState *)state)->unk10 > lbl_803E5530) {
+      *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) + timeDelta;
+      if (*(f32 *)(state + 0x10) > lbl_803E5530) {
         mode = 2;
-        ((ShBeaconState *)state)->unk10 = ((ShBeaconState *)state)->unk10 - lbl_803E5530;
+        *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) - lbl_803E5530;
       } else {
         mode = 0;
       }
-      ((ShBeaconState *)state)->unk0C = ((ShBeaconState *)state)->unk0C + timeDelta;
-      if (((ShBeaconState *)state)->unk0C > lbl_803E5534) {
-        ((ShBeaconState *)state)->unk0C = ((ShBeaconState *)state)->unk0C - lbl_803E5534;
+      *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) + timeDelta;
+      if (*(f32 *)(state + 0xc) > lbl_803E5534) {
+        *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - lbl_803E5534;
         fn_80098B18(obj, *(f32 *)(obj + 8), 2, mode, 0, 0);
       }
     }
     break;
   }
-  if (((ShBeaconState *)state)->unk14 != 1) {
+  if (state[0x14] != 1) {
     *(u8 *)(obj + 0xaf) &= ~8;
-    if (((ShBeaconState *)state)->unk14 == 2) {
+    if (state[0x14] == 2) {
       fn_8002B6D8(obj, 0, 0, 0, 0, 8);
-    } else if ((((ShBeaconState *)state)->unk14 == 0) && (GameBit_Get(0x194) == 0)) {
+    } else if ((state[0x14] == 0) && (GameBit_Get(0x194) == 0)) {
       *(u8 *)(obj + 0xaf) |= 0x10;
     } else {
       *(u8 *)(obj + 0xaf) &= ~0x10;
@@ -1346,13 +1314,13 @@ void sh_beacon_update(int obj)
       *(u8 *)(obj + 0xaf) |= 0x10;
     }
   }
-  if (((ShBeaconState *)state)->unk08 > lbl_803E5538) {
-    ((ShBeaconState *)state)->unk08 = ((ShBeaconState *)state)->unk08 - timeDelta;
+  if (*(f32 *)(state + 8) > lbl_803E5538) {
+    *(f32 *)(state + 8) = *(f32 *)(state + 8) - timeDelta;
     if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
       fn_80098B18(obj, lbl_803E553C * *(f32 *)(obj + 8), 3, 0, 0, 0);
     }
-    if ((((ShBeaconState *)state)->unk08 <= lbl_803E5538) && (((ShBeaconState *)state)->unk14 == 2)) {
-      ((ShBeaconState *)state)->unk14 = 1;
+    if ((*(f32 *)(state + 8) <= lbl_803E5538) && (state[0x14] == 2)) {
+      state[0x14] = 1;
       GameBit_Set(*(s16 *)(def + 0x1e), 1);
       if ((GameBit_Get(0x190) != 0) && (GameBit_Get(0x191) != 0) && (GameBit_Get(0x192) != 0)) {
         Sfx_PlayFromObject(0, 0x7e);

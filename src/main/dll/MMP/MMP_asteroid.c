@@ -70,59 +70,6 @@ extern f32 lbl_803E4CF4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#include "global.h"
-
-/* xyzanimator_getExtraSize == 0x50 (vertex/texcoord plane animator). */
-typedef struct XyzAnimatorState {
-    int rowCount;
-    int vertexTotal;
-    int texCount;
-    int allocBase;   /* mmAlloc block holding all the plane buffers */
-    int vtxBuf[6];   /* 0x10 */
-    int texBuf[6];   /* 0x28 */
-    f32 offsetX;     /* 0x40 */
-    f32 offsetY;
-    f32 offsetZ;
-    s8 enabled;      /* 0x4c: gamebit latch */
-    s8 phase;        /* 0x4d: >2 = parked */
-    u16 sfxId;       /* 0x4e */
-} XyzAnimatorState;
-STATIC_ASSERT(sizeof(XyzAnimatorState) == 0x50);
-
-/* explodeanimator_getExtraSize == 0x4. */
-typedef struct ExplodeAnimatorState {
-    u8 pad0[2];
-    u8 done; /* burst already fired */
-    u8 pad3;
-} ExplodeAnimatorState;
-
-/* dimbossicesmash_getExtraSize == 0x2a0 (path-control block + launch state). */
-typedef struct DimBossIceSmashState {
-    u8 pathBlock[0x68];  /* gPathControlInterface block head */
-    f32 pathNormalX;     /* 0x68: surface normal from the path hooks */
-    f32 pathNormalY;
-    f32 pathNormalZ;
-    u8 pad074[0x1ed];
-    s8 pathTouched;      /* 0x261 */
-    u8 pad262[0xa];
-    f32 spawnOffX;       /* 0x26c */
-    f32 spawnOffY;
-    f32 spawnOffZ;
-    f32 rotVelX;         /* 0x278 */
-    f32 rotVelY;
-    f32 rotVelZ;
-    f32 rotAccX;         /* 0x284 */
-    f32 rotAccY;
-    f32 rotAccZ;
-    f32 accX;            /* 0x290 */
-    f32 accY;
-    f32 accZ;
-    s16 age;             /* 0x29c */
-    u8 flags;            /* 0x29e: 1 launched, 2 done */
-    u8 clampDirs;        /* 0x29f: per-axis gravity clamp directions */
-} DimBossIceSmashState;
-STATIC_ASSERT(sizeof(DimBossIceSmashState) == 0x2a0);
-
 extern int  objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int *mapGetBlock(int idx);
 extern u8  *mapBlockFn_800606ec(int block, int idx);
@@ -139,7 +86,7 @@ extern f32  lbl_803E4018;
 void xyzanimator_update(int obj)
 {
     u8 *setup = *(u8 **)(obj + 0x4c);
-    XyzAnimatorState *state = *(XyzAnimatorState **)(obj + 0xb8);
+    u8 *state = *(u8 **)(obj + 0xb8);
     int block;
     u8 *row;
     int i;
@@ -150,103 +97,103 @@ void xyzanimator_update(int obj)
     block = (int)mapGetBlock(objPosToMapBlockIdx(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
                                                  *(f32 *)(obj + 0x14)));
     if ((u32)block == 0) {
-        state->phase = 0;
+        *(s8 *)(state + 0x4d) = 0;
         goto done_lbl;
     }
     if ((*(u16 *)(block + 4) & 8) == 0) {
         goto done_lbl;
     }
-    if (state->vertexTotal == 0) {
+    if (*(int *)(state + 4) == 0) {
         for (i = 0; i < *(u16 *)(block + 0x9a); i++) {
             row = mapBlockFn_800606ec(block, i);
             t = mapBlockFn_80060678();
             if (*(s8 *)(setup + 0x28) == t) {
-                state->rowCount = state->rowCount + 1;
-                state->vertexTotal =
-                    state->vertexTotal + (*(u16 *)(row + 0x14) - *(u16 *)(row + 0));
+                *(int *)(state + 0) = *(int *)(state + 0) + 1;
+                *(int *)(state + 4) =
+                    *(int *)(state + 4) + (*(u16 *)(row + 0x14) - *(u16 *)(row + 0));
             }
         }
-        if (state->vertexTotal == 0) {
+        if (*(int *)(state + 4) == 0) {
             goto done_lbl;
         }
-        state->vertexTotal = state->vertexTotal * 3;
+        *(int *)(state + 4) = *(int *)(state + 4) * 3;
         if (*(s16 *)(setup + 0x18) == -1) {
-            state->enabled = 1;
+            *(s8 *)(state + 0x4c) = 1;
         } else {
-            state->enabled = (s8)GameBit_Get(*(s16 *)(setup + 0x18));
+            *(s8 *)(state + 0x4c) = (s8)GameBit_Get(*(s16 *)(setup + 0x18));
         }
-        state->texCount = *(u8 *)(block + 0xa1);
-        state->offsetX = (f32)*(s16 *)(setup + 0x1c);
-        state->offsetY = (f32)*(s16 *)(setup + 0x1e);
-        state->offsetZ = (f32)*(s16 *)(setup + 0x20);
+        *(int *)(state + 8) = *(u8 *)(block + 0xa1);
+        *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x1c);
+        *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x1e);
+        *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x20);
         if (*(s16 *)(setup + 0x1a) != -1 && GameBit_Get(*(s16 *)(setup + 0x1a)) != 0) {
-            state->offsetX = (f32)*(s16 *)(setup + 0x22);
-            state->offsetY = (f32)*(s16 *)(setup + 0x24);
-            state->offsetZ = (f32)*(s16 *)(setup + 0x26);
-            state->enabled = 1;
+            *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x22);
+            *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x24);
+            *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x26);
+            *(s8 *)(state + 0x4c) = 1;
         }
-        t = state->vertexTotal * 6 + state->rowCount * 0xc;
-        alloc = mmAlloc(t + state->texCount * 0xc, 5, 0);
-        state->allocBase = alloc;
-        stride = state->rowCount * 2;
-        alloc = alloc + state->vertexTotal * 6;
-        state->vtxBuf[2] = alloc;
+        t = *(int *)(state + 4) * 6 + *(int *)(state + 0) * 0xc;
+        alloc = mmAlloc(t + *(int *)(state + 8) * 0xc, 5, 0);
+        *(int *)(state + 0xc) = alloc;
+        stride = *(int *)(state + 0) * 2;
+        alloc = alloc + *(int *)(state + 4) * 6;
+        *(int *)(state + 0x18) = alloc;
         alloc = alloc + stride;
-        state->vtxBuf[3] = alloc;
+        *(int *)(state + 0x1c) = alloc;
         alloc = alloc + stride;
-        state->vtxBuf[0] = alloc;
+        *(int *)(state + 0x10) = alloc;
         alloc = alloc + stride;
-        state->vtxBuf[1] = alloc;
+        *(int *)(state + 0x14) = alloc;
         alloc = alloc + stride;
-        state->vtxBuf[4] = alloc;
+        *(int *)(state + 0x20) = alloc;
         alloc = alloc + stride;
-        state->vtxBuf[5] = alloc;
+        *(int *)(state + 0x24) = alloc;
         alloc = alloc + stride;
-        stride = state->texCount * 2;
-        state->texBuf[0] = alloc;
+        stride = *(int *)(state + 8) * 2;
+        *(int *)(state + 0x28) = alloc;
         alloc = alloc + stride;
-        state->texBuf[1] = alloc;
+        *(int *)(state + 0x2c) = alloc;
         alloc = alloc + stride;
-        state->texBuf[2] = alloc;
+        *(int *)(state + 0x30) = alloc;
         alloc = alloc + stride;
-        state->texBuf[3] = alloc;
+        *(int *)(state + 0x34) = alloc;
         alloc = alloc + stride;
-        state->texBuf[4] = alloc;
-        state->texBuf[5] = alloc + stride;
-        fn_80194964(setup, (u8 *)state, block);
+        *(int *)(state + 0x38) = alloc;
+        *(int *)(state + 0x3c) = alloc + stride;
+        fn_80194964(setup, state, block);
         if (*(u8 *)(setup + 0x2c) != 4) {
-            fn_80194C40(setup, (u8 *)state, block);
+            fn_80194C40(setup, state, block);
             *(u16 *)(block + 4) = *(u16 *)(block + 4) ^ 1;
-            fn_80194C40(setup, (u8 *)state, block);
+            fn_80194C40(setup, state, block);
             *(u16 *)(block + 4) = *(u16 *)(block + 4) ^ 1;
         }
     }
     if (*(u8 *)(setup + 0x2c) == 2) {
         t = GameBit_Get(*(s16 *)(setup + 0x18));
-        if (state->enabled != t) {
-            state->enabled = (s8)t;
+        if (*(s8 *)(state + 0x4c) != t) {
+            *(s8 *)(state + 0x4c) = (s8)t;
             if (t == 0) {
                 if (*(s16 *)(setup + 0x1a) > -1) {
                     GameBit_Set(*(s16 *)(setup + 0x1a), 0);
                 }
             }
-            if (state->phase > 2) {
-                state->phase = 0;
+            if (*(s8 *)(state + 0x4d) > 2) {
+                *(s8 *)(state + 0x4d) = 0;
             }
         }
-        if (state->phase > 2) {
+        if (*(s8 *)(state + 0x4d) > 2) {
             goto done_lbl;
         }
-        if (state->sfxId != 0) {
+        if (*(u16 *)(state + 0x4e) != 0) {
             Sfx_KeepAliveLoopedObjectSound(obj);
         }
     } else {
-        if (state->phase > 2) {
+        if (*(s8 *)(state + 0x4d) > 2) {
             goto done_lbl;
         }
-        if (state->enabled == 0) {
-            state->enabled = (s8)GameBit_Get(*(s16 *)(setup + 0x18));
-            if (state->enabled == 0) {
+        if (*(s8 *)(state + 0x4c) == 0) {
+            *(s8 *)(state + 0x4c) = (s8)GameBit_Get(*(s16 *)(setup + 0x18));
+            if (*(s8 *)(state + 0x4c) == 0) {
                 goto done_lbl;
             }
         }
@@ -256,47 +203,47 @@ void xyzanimator_update(int obj)
     case 4:
         done = 0;
         if (*(s16 *)(setup + 0x1c) > *(s16 *)(setup + 0x22)) {
-            state->offsetX =
-                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) - state->offsetX);
-            if (state->offsetX <= (f32)*(s16 *)(setup + 0x22)) {
-                state->offsetX = (f32)*(s16 *)(setup + 0x22);
+            *(f32 *)(state + 0x40) =
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) - *(f32 *)(state + 0x40));
+            if (*(f32 *)(state + 0x40) <= (f32)*(s16 *)(setup + 0x22)) {
+                *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x22);
                 done = 1;
             }
         } else {
-            state->offsetX =
-                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + state->offsetX;
-            if (state->offsetX >= (f32)*(s16 *)(setup + 0x22)) {
-                state->offsetX = (f32)*(s16 *)(setup + 0x22);
+            *(f32 *)(state + 0x40) =
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
+            if (*(f32 *)(state + 0x40) >= (f32)*(s16 *)(setup + 0x22)) {
+                *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x22);
                 done = 1;
             }
         }
         if (*(s16 *)(setup + 0x1e) > *(s16 *)(setup + 0x24)) {
-            state->offsetY =
-                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) - state->offsetY);
-            if (state->offsetY <= (f32)*(s16 *)(setup + 0x24)) {
-                state->offsetY = (f32)*(s16 *)(setup + 0x24);
+            *(f32 *)(state + 0x44) =
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) - *(f32 *)(state + 0x44));
+            if (*(f32 *)(state + 0x44) <= (f32)*(s16 *)(setup + 0x24)) {
+                *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x24);
                 done += 1;
             }
         } else {
-            state->offsetY =
-                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + state->offsetY;
-            if (state->offsetY >= (f32)*(s16 *)(setup + 0x24)) {
-                state->offsetY = (f32)*(s16 *)(setup + 0x24);
+            *(f32 *)(state + 0x44) =
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
+            if (*(f32 *)(state + 0x44) >= (f32)*(s16 *)(setup + 0x24)) {
+                *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x24);
                 done += 1;
             }
         }
         if (*(s16 *)(setup + 0x20) > *(s16 *)(setup + 0x26)) {
-            state->offsetZ =
-                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) - state->offsetZ);
-            if (state->offsetZ <= (f32)*(s16 *)(setup + 0x26)) {
-                state->offsetZ = (f32)*(s16 *)(setup + 0x26);
+            *(f32 *)(state + 0x48) =
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) - *(f32 *)(state + 0x48));
+            if (*(f32 *)(state + 0x48) <= (f32)*(s16 *)(setup + 0x26)) {
+                *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x26);
                 done += 1;
             }
         } else {
-            state->offsetZ =
-                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + state->offsetZ;
-            if (state->offsetZ >= (f32)*(s16 *)(setup + 0x26)) {
-                state->offsetZ = (f32)*(s16 *)(setup + 0x26);
+            *(f32 *)(state + 0x48) =
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
+            if (*(f32 *)(state + 0x48) >= (f32)*(s16 *)(setup + 0x26)) {
+                *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x26);
                 done += 1;
             }
         }
@@ -304,111 +251,111 @@ void xyzanimator_update(int obj)
             if (*(s16 *)(setup + 0x1a) != -1) {
                 GameBit_Set(*(s16 *)(setup + 0x1a), 1);
             }
-            state->phase += 1;
+            *(s8 *)(state + 0x4d) += 1;
         }
         break;
     case 1:
         if (*(s16 *)(setup + 0x1c) > *(s16 *)(setup + 0x22)) {
-            state->offsetX =
-                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) - state->offsetX);
-            if (state->offsetX < (f32)*(s16 *)(setup + 0x22)) {
-                state->offsetX =
+            *(f32 *)(state + 0x40) =
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) - *(f32 *)(state + 0x40));
+            if (*(f32 *)(state + 0x40) < (f32)*(s16 *)(setup + 0x22)) {
+                *(f32 *)(state + 0x40) =
                     (f32)(*(s16 *)(setup + 0x1c) -
-                          (int)((f32)*(s16 *)(setup + 0x22) - state->offsetX));
+                          (int)((f32)*(s16 *)(setup + 0x22) - *(f32 *)(state + 0x40)));
             }
         } else {
-            state->offsetX =
-                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + state->offsetX;
-            if (state->offsetX > (f32)*(s16 *)(setup + 0x1c)) {
-                state->offsetX =
+            *(f32 *)(state + 0x40) =
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
+            if (*(f32 *)(state + 0x40) > (f32)*(s16 *)(setup + 0x1c)) {
+                *(f32 *)(state + 0x40) =
                     (f32)(*(s16 *)(setup + 0x22) +
-                          (int)(state->offsetX - (f32)*(s16 *)(setup + 0x22)));
+                          (int)(*(f32 *)(state + 0x40) - (f32)*(s16 *)(setup + 0x22)));
             }
         }
         if (*(s16 *)(setup + 0x1e) > *(s16 *)(setup + 0x24)) {
-            state->offsetY =
-                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) - state->offsetY);
-            if (state->offsetY < (f32)*(s16 *)(setup + 0x24)) {
-                state->offsetY =
+            *(f32 *)(state + 0x44) =
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) - *(f32 *)(state + 0x44));
+            if (*(f32 *)(state + 0x44) < (f32)*(s16 *)(setup + 0x24)) {
+                *(f32 *)(state + 0x44) =
                     -(lbl_803E4018 *
-                          (f32)(int)((f32)*(s16 *)(setup + 0x24) - state->offsetY) -
+                          (f32)(int)((f32)*(s16 *)(setup + 0x24) - *(f32 *)(state + 0x44)) -
                       (f32)*(s16 *)(setup + 0x1e));
             }
         } else {
-            state->offsetY =
-                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + state->offsetY;
-            if (state->offsetY > (f32)*(s16 *)(setup + 0x1e)) {
-                state->offsetY =
+            *(f32 *)(state + 0x44) =
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
+            if (*(f32 *)(state + 0x44) > (f32)*(s16 *)(setup + 0x1e)) {
+                *(f32 *)(state + 0x44) =
                     (f32)(*(s16 *)(setup + 0x24) +
-                          (int)(state->offsetY - (f32)*(s16 *)(setup + 0x24)));
+                          (int)(*(f32 *)(state + 0x44) - (f32)*(s16 *)(setup + 0x24)));
             }
         }
         if (*(s16 *)(setup + 0x20) > *(s16 *)(setup + 0x26)) {
-            state->offsetZ =
-                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) - state->offsetZ);
-            if (state->offsetZ < (f32)*(s16 *)(setup + 0x26)) {
-                state->offsetZ =
+            *(f32 *)(state + 0x48) =
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) - *(f32 *)(state + 0x48));
+            if (*(f32 *)(state + 0x48) < (f32)*(s16 *)(setup + 0x26)) {
+                *(f32 *)(state + 0x48) =
                     (f32)(*(s16 *)(setup + 0x20) -
-                          (int)((f32)*(s16 *)(setup + 0x26) - state->offsetZ));
+                          (int)((f32)*(s16 *)(setup + 0x26) - *(f32 *)(state + 0x48)));
             }
         } else {
-            state->offsetZ =
-                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + state->offsetZ;
-            if (state->offsetZ > (f32)*(s16 *)(setup + 0x20)) {
-                state->offsetZ =
+            *(f32 *)(state + 0x48) =
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
+            if (*(f32 *)(state + 0x48) > (f32)*(s16 *)(setup + 0x20)) {
+                *(f32 *)(state + 0x48) =
                     (f32)(*(s16 *)(setup + 0x26) +
-                          (int)(state->offsetZ - (f32)*(s16 *)(setup + 0x26)));
+                          (int)(*(f32 *)(state + 0x48) - (f32)*(s16 *)(setup + 0x26)));
             }
         }
         break;
     case 2:
         done = 0;
-        if (state->enabled != 0) {
+        if (*(s8 *)(state + 0x4c) != 0) {
             if (*(s16 *)(setup + 0x1c) > *(s16 *)(setup + 0x22)) {
-                state->offsetX =
+                *(f32 *)(state + 0x40) =
                     -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) -
-                      state->offsetX);
-                if (state->offsetX <= (f32)*(s16 *)(setup + 0x22)) {
-                    state->offsetX = (f32)*(s16 *)(setup + 0x22);
+                      *(f32 *)(state + 0x40));
+                if (*(f32 *)(state + 0x40) <= (f32)*(s16 *)(setup + 0x22)) {
+                    *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x22);
                     done = 1;
                 }
             } else {
-                state->offsetX =
-                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + state->offsetX;
-                if (state->offsetX >= (f32)*(s16 *)(setup + 0x22)) {
-                    state->offsetX = (f32)*(s16 *)(setup + 0x22);
+                *(f32 *)(state + 0x40) =
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
+                if (*(f32 *)(state + 0x40) >= (f32)*(s16 *)(setup + 0x22)) {
+                    *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x22);
                     done = 1;
                 }
             }
             if (*(s16 *)(setup + 0x1e) > *(s16 *)(setup + 0x24)) {
-                state->offsetY =
+                *(f32 *)(state + 0x44) =
                     -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) -
-                      state->offsetY);
-                if (state->offsetY <= (f32)*(s16 *)(setup + 0x24)) {
-                    state->offsetY = (f32)*(s16 *)(setup + 0x24);
+                      *(f32 *)(state + 0x44));
+                if (*(f32 *)(state + 0x44) <= (f32)*(s16 *)(setup + 0x24)) {
+                    *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x24);
                     done += 1;
                 }
             } else {
-                state->offsetY =
-                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + state->offsetY;
-                if (state->offsetY >= (f32)*(s16 *)(setup + 0x24)) {
-                    state->offsetY = (f32)*(s16 *)(setup + 0x24);
+                *(f32 *)(state + 0x44) =
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
+                if (*(f32 *)(state + 0x44) >= (f32)*(s16 *)(setup + 0x24)) {
+                    *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x24);
                     done += 1;
                 }
             }
             if (*(s16 *)(setup + 0x20) > *(s16 *)(setup + 0x26)) {
-                state->offsetZ =
+                *(f32 *)(state + 0x48) =
                     -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) -
-                      state->offsetZ);
-                if (state->offsetZ <= (f32)*(s16 *)(setup + 0x26)) {
-                    state->offsetZ = (f32)*(s16 *)(setup + 0x26);
+                      *(f32 *)(state + 0x48));
+                if (*(f32 *)(state + 0x48) <= (f32)*(s16 *)(setup + 0x26)) {
+                    *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x26);
                     done += 1;
                 }
             } else {
-                state->offsetZ =
-                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + state->offsetZ;
-                if (state->offsetZ >= (f32)*(s16 *)(setup + 0x26)) {
-                    state->offsetZ = (f32)*(s16 *)(setup + 0x26);
+                *(f32 *)(state + 0x48) =
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
+                if (*(f32 *)(state + 0x48) >= (f32)*(s16 *)(setup + 0x26)) {
+                    *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x26);
                     done += 1;
                 }
             }
@@ -416,64 +363,64 @@ void xyzanimator_update(int obj)
                 if (*(s16 *)(setup + 0x1a) != -1) {
                     GameBit_Set(*(s16 *)(setup + 0x1a), 1);
                 }
-                state->phase += 1;
+                *(s8 *)(state + 0x4d) += 1;
             }
         } else {
             if (*(s16 *)(setup + 0x1c) > *(s16 *)(setup + 0x22)) {
-                state->offsetX =
-                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + state->offsetX;
-                if (state->offsetX >= (f32)*(s16 *)(setup + 0x1c)) {
-                    state->offsetX = (f32)*(s16 *)(setup + 0x1c);
+                *(f32 *)(state + 0x40) =
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
+                if (*(f32 *)(state + 0x40) >= (f32)*(s16 *)(setup + 0x1c)) {
+                    *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x1c);
                     done = 1;
                 }
             } else {
-                state->offsetX =
+                *(f32 *)(state + 0x40) =
                     -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) -
-                      state->offsetX);
-                if (state->offsetX <= (f32)*(s16 *)(setup + 0x1c)) {
-                    state->offsetX = (f32)*(s16 *)(setup + 0x1c);
+                      *(f32 *)(state + 0x40));
+                if (*(f32 *)(state + 0x40) <= (f32)*(s16 *)(setup + 0x1c)) {
+                    *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x1c);
                     done = 1;
                 }
             }
             if (*(s16 *)(setup + 0x1e) > *(s16 *)(setup + 0x24)) {
-                state->offsetY =
-                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + state->offsetY;
-                if (state->offsetY >= (f32)*(s16 *)(setup + 0x1e)) {
-                    state->offsetY = (f32)*(s16 *)(setup + 0x1e);
+                *(f32 *)(state + 0x44) =
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
+                if (*(f32 *)(state + 0x44) >= (f32)*(s16 *)(setup + 0x1e)) {
+                    *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x1e);
                     done += 1;
                 }
             } else {
-                state->offsetY =
+                *(f32 *)(state + 0x44) =
                     -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) -
-                      state->offsetY);
-                if (state->offsetY <= (f32)*(s16 *)(setup + 0x1e)) {
-                    state->offsetY = (f32)*(s16 *)(setup + 0x1e);
+                      *(f32 *)(state + 0x44));
+                if (*(f32 *)(state + 0x44) <= (f32)*(s16 *)(setup + 0x1e)) {
+                    *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x1e);
                     done += 1;
                 }
             }
             if (*(s16 *)(setup + 0x20) > *(s16 *)(setup + 0x26)) {
-                state->offsetZ =
-                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + state->offsetZ;
-                if (state->offsetZ >= (f32)*(s16 *)(setup + 0x20)) {
-                    state->offsetZ = (f32)*(s16 *)(setup + 0x20);
+                *(f32 *)(state + 0x48) =
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
+                if (*(f32 *)(state + 0x48) >= (f32)*(s16 *)(setup + 0x20)) {
+                    *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x20);
                     done += 1;
                 }
             } else {
-                state->offsetZ =
+                *(f32 *)(state + 0x48) =
                     -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) -
-                      state->offsetZ);
-                if (state->offsetZ <= (f32)*(s16 *)(setup + 0x20)) {
-                    state->offsetZ = (f32)*(s16 *)(setup + 0x20);
+                      *(f32 *)(state + 0x48));
+                if (*(f32 *)(state + 0x48) <= (f32)*(s16 *)(setup + 0x20)) {
+                    *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x20);
                     done += 1;
                 }
             }
             if (done == 3) {
-                state->phase += 1;
+                *(s8 *)(state + 0x4d) += 1;
             }
         }
         break;
     }
-    fn_80194C40(setup, (u8 *)state, block);
+    fn_80194C40(setup, state, block);
 done_lbl:
     return;
 }
@@ -1348,18 +1295,18 @@ extern f32 lbl_803E4020;
 #pragma scheduling off
 #pragma peephole off
 void explodeanimator_update(int *obj) {
-    ExplodeAnimatorState *sub;
+    u8 *sub;
     u8 *def;
     int i;
     f32 buf[6];
     f32 vel[2];
 
-    sub = *(ExplodeAnimatorState**)((char*)obj + 0xb8);
-    if ((sub->done & 1) != 0) return;
+    sub = *(u8**)((char*)obj + 0xb8);
+    if ((sub[2] & 1) != 0) return;
     def = *(u8**)((char*)obj + 0x4c);
     if (GameBit_Get(*(s16*)(def + 0x34)) == 0) return;
     GameBit_Set(*(s16*)(def + 0x32), 1);
-    sub->done = (u8)(sub->done | 1);
+    sub[2] = (u8)(sub[2] | 1);
     for (i = 0; i < def[0x2c]; i++) {
         vel[0] = (f32)(s32)randomGetRange(*(s16*)(def + 0x2e), *(s16*)(def + 0x28)) * lbl_803E4020;
         vel[1] = (f32)(s32)randomGetRange(*(s16*)(def + 0x30), *(s16*)(def + 0x2a)) * lbl_803E4020;
@@ -1515,8 +1462,8 @@ void dimbossicesmash_free(int* obj)
 
 void fogcontrol_free(int* obj)
 {
-    FogControlState* state = *(FogControlState**)((char*)obj + 0xb8);
-    if (state->on) {
+    u8* state = *(u8**)((char*)obj + 0xb8);
+    if (((u32)state[4] >> 7) & 1u) {
         disableHeavyFog();
     }
 }
@@ -1569,14 +1516,14 @@ void fogcontrol_init(u8* obj, u8* params) {
 
 void explodeanimator_init(int* obj, int* def)
 {
-    ExplodeAnimatorState* state = *(ExplodeAnimatorState**)((char*)obj + 0xb8);
+    int* state = *(int**)((char*)obj + 0xb8);
     int v;
     if ((u32)GameBit_Get(*(s16*)((char*)def + 50)) != 0u) {
         v = 1;
     } else {
         v = 0;
     }
-    state->done = (u8)v;
+    *(u8*)((char*)state + 2) = (u8)v;
     ObjGroup_AddObject(obj, 26);
 }
 
@@ -1587,19 +1534,19 @@ void explodeanimator_init(int* obj, int* def)
 #pragma scheduling off
 void xyzanimator_init(int obj)
 {
-    XyzAnimatorState *inner = *(XyzAnimatorState **)(obj + 0xb8);
+    int inner = *(int *)(obj + 0xb8);
     int id;
     ObjGroup_AddObject(obj, 0x51);
     id = *(int *)(*(int *)(obj + 0x4c) + 0x14);
     switch (id) {
     case 0x46406:
     case 0x4BAB1:
-        *(s16 *)&inner->sfxId = 0x7d;
+        *(s16 *)(inner + 0x4e) = 0x7d;
         break;
     case 0x49275:
     case 0x49CB7:
     case 0x4C797:
-        *(s16 *)&inner->sfxId = 0x4b7;
+        *(s16 *)(inner + 0x4e) = 0x4b7;
         break;
     }
 }
@@ -1625,8 +1572,8 @@ extern f32  lbl_803E405C;
 #pragma peephole off
 void dimbossicesmash_update(u8 *obj)
 {
-    DimBossIceSmashState *state = *(DimBossIceSmashState **)(obj + 0xb8);
-    u8 flags = state->flags;
+    u8 *state = *(u8 **)(obj + 0xb8);
+    u8 flags = state[0x29e];
     u8 *setup;
     u32 t;
     int a;
@@ -1650,26 +1597,26 @@ void dimbossicesmash_update(u8 *obj)
             if (((ObjAnimComponent *)obj)->bankIndex == 0) {
                 t = GameBit_Get(*(s16 *)(setup + 0x40));
                 if (t != 0 || *(s16 *)(setup + 0x40) == -1) {
-                    state->flags = state->flags | 1;
+                    state[0x29e] = state[0x29e] | 1;
                     GameBit_Set(*(s16 *)(setup + 0x3e), 1);
                     lbl_803DDB00 = 1;
                 }
             } else if (lbl_803DDB00 != 0) {
-                state->flags = flags | 1;
+                state[0x29e] = flags | 1;
             }
             *(u8 *)(obj + 0x36) = 0;
         } else {
             *(u8 *)(obj + 0x36) = 0xff;
-            state->age += framesThisStep;
-            cnt = state->age;
+            *(s16 *)(state + 0x29c) += framesThisStep;
+            cnt = *(s16 *)(state + 0x29c);
             if (*(u16 *)(setup + 0x38) <= cnt) {
-                state->flags = state->flags | 2;
+                state[0x29e] = state[0x29e] | 2;
             }
-            if (state->age > *(u16 *)(setup + 0x3a) &&
+            if (*(s16 *)(state + 0x29c) > *(u16 *)(setup + 0x3a) &&
                 (t1 = *(u16 *)(setup + 0x38) - *(u16 *)(setup + 0x3a)) != 0) {
                 a = (int)(lbl_803E404C *
                           (lbl_803E4048 -
-                           (f32)(state->age - *(u16 *)(setup + 0x3a)) / (f32)t1));
+                           (f32)(*(s16 *)(state + 0x29c) - *(u16 *)(setup + 0x3a)) / (f32)t1));
                 if (a > 0xff) {
                     a = 0xff;
                 } else if (a < 0) {
@@ -1677,61 +1624,61 @@ void dimbossicesmash_update(u8 *obj)
                 }
                 *(u8 *)(obj + 0x36) = (u8)a;
             }
-            *(f32 *)(obj + 0x24) = timeDelta * state->accX + *(f32 *)(obj + 0x24);
-            *(f32 *)(obj + 0x28) = timeDelta * state->accY + *(f32 *)(obj + 0x28);
-            *(f32 *)(obj + 0x2c) = timeDelta * state->accZ + *(f32 *)(obj + 0x2c);
-            state->rotVelX =
-                timeDelta * state->rotAccX + state->rotVelX;
-            state->rotVelY =
-                timeDelta * state->rotAccY + state->rotVelY;
-            state->rotVelZ =
-                timeDelta * state->rotAccZ + state->rotVelZ;
-            if ((state->clampDirs & 1) != 0) {
+            *(f32 *)(obj + 0x24) = timeDelta * *(f32 *)(state + 0x290) + *(f32 *)(obj + 0x24);
+            *(f32 *)(obj + 0x28) = timeDelta * *(f32 *)(state + 0x294) + *(f32 *)(obj + 0x28);
+            *(f32 *)(obj + 0x2c) = timeDelta * *(f32 *)(state + 0x298) + *(f32 *)(obj + 0x2c);
+            *(f32 *)(state + 0x278) =
+                timeDelta * *(f32 *)(state + 0x284) + *(f32 *)(state + 0x278);
+            *(f32 *)(state + 0x27c) =
+                timeDelta * *(f32 *)(state + 0x288) + *(f32 *)(state + 0x27c);
+            *(f32 *)(state + 0x280) =
+                timeDelta * *(f32 *)(state + 0x28c) + *(f32 *)(state + 0x280);
+            if ((state[0x29f] & 1) != 0) {
                 if (*(f32 *)(obj + 0x24) < lbl_803E4034) {
                     *(f32 *)(obj + 0x24) = lbl_803E4034;
                 }
             } else if (*(f32 *)(obj + 0x24) > lbl_803E4034) {
                 *(f32 *)(obj + 0x24) = lbl_803E4034;
             }
-            if ((state->clampDirs & 2) != 0) {
+            if ((state[0x29f] & 2) != 0) {
                 if (*(f32 *)(obj + 0x2c) < lbl_803E4034) {
                     *(f32 *)(obj + 0x2c) = lbl_803E4034;
                 }
             } else if (*(f32 *)(obj + 0x2c) > lbl_803E4034) {
                 *(f32 *)(obj + 0x2c) = lbl_803E4034;
             }
-            if ((state->clampDirs & 4) != 0) {
-                if (state->rotVelX < lbl_803E4034) {
-                    state->rotVelX = lbl_803E4034;
+            if ((state[0x29f] & 4) != 0) {
+                if (*(f32 *)(state + 0x278) < lbl_803E4034) {
+                    *(f32 *)(state + 0x278) = lbl_803E4034;
                 }
-            } else if (state->rotVelX > lbl_803E4034) {
-                state->rotVelX = lbl_803E4034;
+            } else if (*(f32 *)(state + 0x278) > lbl_803E4034) {
+                *(f32 *)(state + 0x278) = lbl_803E4034;
             }
-            if ((state->clampDirs & 8) != 0) {
-                if (state->rotVelY < lbl_803E4034) {
-                    state->rotVelY = lbl_803E4034;
+            if ((state[0x29f] & 8) != 0) {
+                if (*(f32 *)(state + 0x27c) < lbl_803E4034) {
+                    *(f32 *)(state + 0x27c) = lbl_803E4034;
                 }
-            } else if (state->rotVelY > lbl_803E4034) {
-                state->rotVelY = lbl_803E4034;
+            } else if (*(f32 *)(state + 0x27c) > lbl_803E4034) {
+                *(f32 *)(state + 0x27c) = lbl_803E4034;
             }
-            if ((state->clampDirs & 0x10) != 0) {
-                if (state->rotVelZ < lbl_803E4034) {
-                    state->rotVelZ = lbl_803E4034;
+            if ((state[0x29f] & 0x10) != 0) {
+                if (*(f32 *)(state + 0x280) < lbl_803E4034) {
+                    *(f32 *)(state + 0x280) = lbl_803E4034;
                 }
-            } else if (state->rotVelZ > lbl_803E4034) {
-                state->rotVelZ = lbl_803E4034;
+            } else if (*(f32 *)(state + 0x280) > lbl_803E4034) {
+                *(f32 *)(state + 0x280) = lbl_803E4034;
             }
             *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
             *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
             *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
-            *(s16 *)(obj + 0) = state->rotVelX * timeDelta + (f32)*(s16 *)(obj + 0);
-            *(s16 *)(obj + 2) = state->rotVelY * timeDelta + (f32)*(s16 *)(obj + 2);
-            *(s16 *)(obj + 4) = state->rotVelZ * timeDelta + (f32)*(s16 *)(obj + 4);
+            *(s16 *)(obj + 0) = *(f32 *)(state + 0x278) * timeDelta + (f32)*(s16 *)(obj + 0);
+            *(s16 *)(obj + 2) = *(f32 *)(state + 0x27c) * timeDelta + (f32)*(s16 *)(obj + 2);
+            *(s16 *)(obj + 4) = *(f32 *)(state + 0x280) * timeDelta + (f32)*(s16 *)(obj + 4);
             if ((*(u8 *)(setup + 0x3c) & 2) != 0) {
-                (*(void (**)(f32, u8 *, u8 *))((char *)(*gPathControlInterface) + 0x10))(timeDelta, obj, (u8 *)state);
-                (*(void (**)(u8 *, u8 *))((char *)(*gPathControlInterface) + 0x14))(obj, (u8 *)state);
-                (*(void (**)(f32, u8 *, u8 *))((char *)(*gPathControlInterface) + 0x18))(timeDelta, obj, (u8 *)state);
-                if (state->pathTouched != 0) {
+                (*(void (**)(f32, u8 *, u8 *))((char *)(*gPathControlInterface) + 0x10))(timeDelta, obj, state);
+                (*(void (**)(u8 *, u8 *))((char *)(*gPathControlInterface) + 0x14))(obj, state);
+                (*(void (**)(f32, u8 *, u8 *))((char *)(*gPathControlInterface) + 0x18))(timeDelta, obj, state);
+                if (*(s8 *)(state + 0x261) != 0) {
                     nx = -*(f32 *)(obj + 0x24);
                     ny = -*(f32 *)(obj + 0x28);
                     nz = -*(f32 *)(obj + 0x2c);
@@ -1742,11 +1689,11 @@ void dimbossicesmash_update(u8 *obj)
                         ny = ny * inv;
                         nz = nz * inv;
                     }
-                    fy = state->pathNormalY;
-                    fz = state->pathNormalZ;
+                    fy = *(f32 *)(state + 0x6c);
+                    fz = *(f32 *)(state + 0x70);
                     dot = lbl_803E4050 *
-                          (nz * fz + (nx * state->pathNormalX + ny * fy));
-                    *(f32 *)(obj + 0x24) = state->pathNormalX * dot;
+                          (nz * fz + (nx * *(f32 *)(state + 0x68) + ny * fy));
+                    *(f32 *)(obj + 0x24) = *(f32 *)(state + 0x68) * dot;
                     *(f32 *)(obj + 0x28) = fy * dot;
                     *(f32 *)(obj + 0x2c) = fz * dot;
                     *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) - nx;
@@ -1798,9 +1745,9 @@ void fn_80196520(u8 *obj, u8 *state, u8 *setup)
     f32 vx, vy, vz;
     f32 spd, len;
 
-    *(f32 *)(obj + 0xc) = ((DimBossIceSmashState *)state)->spawnOffX * *(f32 *)(obj + 8) + *(f32 *)(setup + 8);
-    *(f32 *)(obj + 0x10) = ((DimBossIceSmashState *)state)->spawnOffY * *(f32 *)(obj + 8) + *(f32 *)(setup + 0xc);
-    *(f32 *)(obj + 0x14) = ((DimBossIceSmashState *)state)->spawnOffZ * *(f32 *)(obj + 8) + *(f32 *)(setup + 0x10);
+    *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x26c) * *(f32 *)(obj + 8) + *(f32 *)(setup + 8);
+    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x270) * *(f32 *)(obj + 8) + *(f32 *)(setup + 0xc);
+    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x274) * *(f32 *)(obj + 8) + *(f32 *)(setup + 0x10);
     *(s16 *)(obj + 0) = *(s16 *)(setup + 0x1a);
     *(s16 *)(obj + 2) = *(s16 *)(setup + 0x1c);
     *(s16 *)(obj + 4) = *(s16 *)(setup + 0x1e);
@@ -1823,37 +1770,37 @@ void fn_80196520(u8 *obj, u8 *state, u8 *setup)
         *(f32 *)(obj + 0x28) = (f32)*(s16 *)(setup + 0x22) / spd;
         *(f32 *)(obj + 0x2c) = (f32)*(s16 *)(setup + 0x24) / spd;
     }
-    ((DimBossIceSmashState *)state)->rotVelX = (f32)*(s16 *)(setup + 0x2c);
-    ((DimBossIceSmashState *)state)->rotVelY = (f32)*(s16 *)(setup + 0x2e);
-    ((DimBossIceSmashState *)state)->rotVelZ = (f32)*(s16 *)(setup + 0x30);
+    *(f32 *)(state + 0x278) = (f32)*(s16 *)(setup + 0x2c);
+    *(f32 *)(state + 0x27c) = (f32)*(s16 *)(setup + 0x2e);
+    *(f32 *)(state + 0x280) = (f32)*(s16 *)(setup + 0x30);
     if (*(f32 *)(obj + 0x24) > lbl_803E4034) {
-        ((DimBossIceSmashState *)state)->clampDirs = ((DimBossIceSmashState *)state)->clampDirs | 1;
+        state[0x29f] = state[0x29f] | 1;
     }
     if (*(f32 *)(obj + 0x2c) > lbl_803E4034) {
-        ((DimBossIceSmashState *)state)->clampDirs = ((DimBossIceSmashState *)state)->clampDirs | 2;
+        state[0x29f] = state[0x29f] | 2;
     }
-    if (((DimBossIceSmashState *)state)->rotVelX > lbl_803E4034) {
-        ((DimBossIceSmashState *)state)->clampDirs = ((DimBossIceSmashState *)state)->clampDirs | 4;
+    if (*(f32 *)(state + 0x278) > lbl_803E4034) {
+        state[0x29f] = state[0x29f] | 4;
     }
-    if (((DimBossIceSmashState *)state)->rotVelY > lbl_803E4034) {
-        ((DimBossIceSmashState *)state)->clampDirs = ((DimBossIceSmashState *)state)->clampDirs | 8;
+    if (*(f32 *)(state + 0x27c) > lbl_803E4034) {
+        state[0x29f] = state[0x29f] | 8;
     }
-    if (((DimBossIceSmashState *)state)->rotVelZ > lbl_803E4034) {
-        ((DimBossIceSmashState *)state)->clampDirs = ((DimBossIceSmashState *)state)->clampDirs | 0x10;
+    if (*(f32 *)(state + 0x280) > lbl_803E4034) {
+        state[0x29f] = state[0x29f] | 0x10;
     }
-    ((DimBossIceSmashState *)state)->rotAccX = (f32)*(s16 *)(setup + 0x32) / (spd = lbl_803E4038);
-    ((DimBossIceSmashState *)state)->rotAccY = (f32)*(s16 *)(setup + 0x34) / spd;
-    ((DimBossIceSmashState *)state)->rotAccZ = (f32)*(s16 *)(setup + 0x36) / spd;
-    ((DimBossIceSmashState *)state)->accX = (f32)*(s16 *)(setup + 0x26) / (spd = lbl_803E403C);
-    ((DimBossIceSmashState *)state)->accY = (f32)*(s16 *)(setup + 0x28) / spd;
-    ((DimBossIceSmashState *)state)->accZ = (f32)*(s16 *)(setup + 0x2a) / spd;
-    ((DimBossIceSmashState *)state)->age = 0;
+    *(f32 *)(state + 0x284) = (f32)*(s16 *)(setup + 0x32) / (spd = lbl_803E4038);
+    *(f32 *)(state + 0x288) = (f32)*(s16 *)(setup + 0x34) / spd;
+    *(f32 *)(state + 0x28c) = (f32)*(s16 *)(setup + 0x36) / spd;
+    *(f32 *)(state + 0x290) = (f32)*(s16 *)(setup + 0x26) / (spd = lbl_803E403C);
+    *(f32 *)(state + 0x294) = (f32)*(s16 *)(setup + 0x28) / spd;
+    *(f32 *)(state + 0x298) = (f32)*(s16 *)(setup + 0x2a) / spd;
+    *(s16 *)(state + 0x29c) = 0;
 }
 
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
 void dimbossicesmash_init(u8 *obj, u8 *params)
 {
-    DimBossIceSmashState *state;
+    u8 *state;
     f32 fz;
     u8 t;
     u8 buf[12];
@@ -1861,22 +1808,22 @@ void dimbossicesmash_init(u8 *obj, u8 *params)
     buf[0] = 5;
     ((ObjAnimComponent *)obj)->bankIndex = params[0x18];
     fz = lbl_803E4034;
-    state = *(DimBossIceSmashState **)(obj + 0xb8);
-    state->spawnOffX = lbl_803E4034;
-    state->spawnOffY = fz;
-    state->spawnOffZ = fz;
-    fn_80196520(obj, (u8 *)state, params);
+    state = *(u8 **)(obj + 0xb8);
+    *(f32 *)(state + 0x26c) = lbl_803E4034;
+    *(f32 *)(state + 0x270) = fz;
+    *(f32 *)(state + 0x274) = fz;
+    fn_80196520(obj, state, params);
     if (GameBit_Get(*(s16 *)(params + 0x3e)) == 0) {
         t = 0;
     } else {
         t = 2;
     }
-    state->flags = t;
+    state[0x29e] = t;
     lbl_803DDB00 = 0;
     if ((*(u8 *)(params + 0x3c) & 2) != 0) {
-        (*(void (**)(u8 *, int, int, int))((char *)(*gPathControlInterface) + 4))((u8 *)state, 0, 0x40002, 1);
-        (*(void (**)(u8 *, int, u8 *, u8 *, u8 *))((char *)(*gPathControlInterface) + 0xc))((u8 *)state, 1, lbl_80322368, lbl_803DBDF8, buf);
-        (*(void (**)(u8 *, u8 *))((char *)(*gPathControlInterface) + 0x20))(obj, (u8 *)state);
+        (*(void (**)(u8 *, int, int, int))((char *)(*gPathControlInterface) + 4))(state, 0, 0x40002, 1);
+        (*(void (**)(u8 *, int, u8 *, u8 *, u8 *))((char *)(*gPathControlInterface) + 0xc))(state, 1, lbl_80322368, lbl_803DBDF8, buf);
+        (*(void (**)(u8 *, u8 *))((char *)(*gPathControlInterface) + 0x20))(obj, state);
     }
 }
 
