@@ -74,7 +74,7 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern int *gPartfxInterface;
-extern s16 lbl_803DDC68;
+extern int lbl_803DDC68;
 extern f32 lbl_803E5CC8;
 extern f32 lbl_803E5CCC;
 extern f32 lbl_803E5CD0;
@@ -125,7 +125,7 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x1a) = 2;
                 *(u8 *)(setup + 0x18) = *(u8 *)(def + 0x1e);
                 spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-                if (spawned != 0) {
+                if ((u32)spawned != 0) {
                     *(int *)(spawned + 0xf4) = 8;
                 }
                 *(int *)(obj + 0xf8) = 1;
@@ -150,10 +150,10 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x1a) = 0;
                 *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
                 spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-                if (spawned != 0) {
+                if ((u32)spawned != 0) {
                     *(f32 *)(spawned + 0x24) = lbl_803E5CCC + (f32)(int)randomGetRange(0, 10);
                 }
-                state[2] = state[1] + (s16)randomGetRange(0, state[3]);
+                state[2] = state[1] + randomGetRange(0, state[3]);
             }
             break;
         case 5:
@@ -161,17 +161,17 @@ void WM_ObjCreator_update(int obj) {
                 (state[2] -= framesThisStep, state[2] <= 0)) {
                 int setup = Obj_AllocObjectSetup(0x24, 0x275);
                 int spawned;
-                *(u8 *)(setup + 0x18) = randomGetRange(-0x7f, 0x7e);
+                *(s8 *)(setup + 0x18) = randomGetRange(-0x7f, 0x7e);
                 *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc) + (f32)(int)randomGetRange(-100, 100);
                 *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
                 *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14) + (f32)(int)randomGetRange(-100, 100);
                 *(s16 *)(setup + 0x1a) = 0x31;
                 *(s16 *)(setup + 0x1c) = 200;
                 spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-                if (spawned != 0) {
+                if ((u32)spawned != 0) {
                     lbl_803DDC68 += 1;
                 }
-                state[2] = state[1] + (s16)randomGetRange(0, state[3]);
+                state[2] = state[1] + randomGetRange(0, state[3]);
             }
             break;
         case 8:
@@ -180,17 +180,17 @@ void WM_ObjCreator_update(int obj) {
                 int setup = Obj_AllocObjectSetup(0x38, 0x4ac);
                 int spawned;
                 GameBit_Set(state[0], 0);
-                *(u8 *)(setup + 0x2a) = randomGetRange(-0x7f, 0x7e);
+                *(s8 *)(setup + 0x2a) = randomGetRange(-0x7f, 0x7e);
                 *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
                 *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
                 *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
                 *(s16 *)(setup + 0x18) = state[0];
                 *(s16 *)(setup + 0x22) = 1;
                 spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-                if (spawned != 0) {
+                if ((u32)spawned != 0) {
                     (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x1c3, 0, 2, -1, 0);
                 }
-                state[2] = state[1] + (s16)randomGetRange(0, state[3]);
+                state[2] = state[1] + randomGetRange(0, state[3]);
             }
             break;
         case 2:
@@ -209,10 +209,10 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x18) = randomGetRange(-500, 500) + 0x5dc;
                 *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
                 spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-                if (spawned != 0) {
+                if ((u32)spawned != 0) {
                     *(f32 *)(spawned + 0x24) = lbl_803E5CD0 - (f32)(int)randomGetRange(0, 10);
                 }
-                state[2] = state[1] + (s16)randomGetRange(0, state[3]);
+                state[2] = state[1] + randomGetRange(0, state[3]);
             }
             break;
         case 4:
@@ -237,7 +237,7 @@ void WM_ObjCreator_update(int obj) {
                     *(s16 *)(setup + 0x1c) = 0;
                     *(u8 *)(setup + 0x24) = 0;
                     spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-                    if (spawned != 0) {
+                    if ((u32)spawned != 0) {
                         *(u8 *)(*(int *)(spawned + 0xb8) + 0x120) |= 2;
                         *(f32 *)(spawned + 0x24) = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
                         *(f32 *)(spawned + 0x2c) = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
@@ -270,7 +270,7 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x18) = randomGetRange(-500, 500) + 0x5dc;
                 *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
                 Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-                state[2] = state[1] + (s16)randomGetRange(0, state[3]);
+                state[2] = state[1] + randomGetRange(0, state[3]);
             }
             break;
         case 6:
