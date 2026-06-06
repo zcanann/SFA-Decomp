@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/dll_138.h"
 #include "main/dll/pushable.h"
 
@@ -192,9 +193,9 @@ void fn_80174BFC(int obj, int ext)
         vel = velBase;
         extPtr = ext;
         for (; i < ((PushableState *)ext)->pointCount; i++) {
-            pose.rot[0] = *(s16 *)(obj + 0);
-            pose.rot[1] = *(s16 *)(obj + 2);
-            pose.rot[2] = *(s16 *)(obj + 4);
+            pose.rot[0] = ((GameObject *)obj)->anim.rotX;
+            pose.rot[1] = ((GameObject *)obj)->anim.rotY;
+            pose.rot[2] = ((GameObject *)obj)->anim.rotZ;
             pose.scale = scale;
             pose.x = *(f32 *)(obj + 0xc);
             pose.y = *(f32 *)(obj + 0x10);
@@ -214,7 +215,7 @@ void fn_80174BFC(int obj, int ext)
                         ((PushableState *)ext)->flags |= 1;
                         gamebit = *(s16 *)(def + 0x18);
                         if (gamebit > -1) {
-                            switch (*(s16 *)(obj + 0x46)) {
+                            switch (((GameObject *)obj)->anim.seqId) {
                             case 0x411:
                             case 0x21e:
                                 break;
@@ -418,15 +419,15 @@ void fn_80175428(int obj)
       state->msgSenderObj = msgSender;
       break;
     case 0xe:
-      if ((*(short *)(obj + 0x46) != 0x21e) && (*(short *)(obj + 0x46) != 0x411)) {
+      if ((((GameObject *)obj)->anim.seqId != 0x21e) && (((GameObject *)obj)->anim.seqId != 0x411)) {
         Obj_FreeObject(obj);
       }
       break;
     case 0x40001:
-      if (*(short *)(obj + 0x46) == 0x21e) {
+      if (((GameObject *)obj)->anim.seqId == 0x21e) {
         state->unk_F0 = *(float *)msgParam;
       }
-      if (*(short *)(obj + 0x46) == 0x411) {
+      if (((GameObject *)obj)->anim.seqId == 0x411) {
         state->unk_F0 = *(float *)msgParam;
       }
       break;
@@ -509,9 +510,9 @@ int pushable_func0B(int obj,int other)
 
   state = *(int *)(obj + 0xb8);
   d = delta;
-  d[0] = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
-  d[1] = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
-  d[2] = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
+  d[0] = *(f32 *)(other + 0xc) - ((GameObject *)obj)->anim.localPosX;
+  d[1] = *(f32 *)(other + 0x10) - ((GameObject *)obj)->anim.localPosY;
+  d[2] = *(f32 *)(other + 0x14) - ((GameObject *)obj)->anim.localPosZ;
   return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) <
          *(f32 *)(state + 0xc);
 }
