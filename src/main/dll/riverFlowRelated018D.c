@@ -50,7 +50,7 @@ extern f32 lbl_803E4CCC;
 #pragma scheduling off
 void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
 {
-  u8 variant;
+  u32 variant;
   int state;
   
   state = *(int *)(obj + 0xb8);
