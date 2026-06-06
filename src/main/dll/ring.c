@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 
 #define RING_EXTRA_SIZE 0x24
@@ -326,9 +327,9 @@ void ring_update(int obj)
             RING_PULL_TIMER(state) -= timeDelta;
             if (RING_PULL_TIMER(state) <= lbl_803E70A0) {
                 RING_PULL_TIMER(state) = lbl_803E70A0;
-                ((GameObject *)obj)->anim.localPosX = *(f32 *)(setup + 8);
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
-                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(setup + 0x10);
+                ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)setup)->posX;
+                ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
+                ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)setup)->posZ;
                 *(s16 *)(obj + 0) = 0;
                 *(u8 *)(obj + 0x36) = RING_ALPHA_OPAQUE;
                 ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)(obj + 0x50) + 4);
