@@ -1926,6 +1926,8 @@ void ObjHits_RegisterActiveHitVolumeObject(int obj)
 #pragma peephole off
 void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
 {
+  ObjAnimComponent *animA;
+  ObjAnimComponent *animB;
   ObjHitsPriorityState *stateA;
   ObjHitsPriorityState *stateB;
   f32 localAx;
@@ -1946,98 +1948,100 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
   f32 invBlend;
 
   ObjContact_DispatchCallbacks(objA, objB);
-  stateA = (ObjHitsPriorityState *)((GameObject *)objA)->anim.hitReactState;
-  stateB = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
+  animA = &((GameObject *)objA)->anim;
+  animB = &((GameObject *)objB)->anim;
+  stateA = (ObjHitsPriorityState *)animA->hitReactState;
+  stateB = (ObjHitsPriorityState *)animB->hitReactState;
   stateA->flags = stateA->flags | 8;
   stateB->flags = stateB->flags | 8;
   *(int *)stateA = objB;
   *(int *)stateB = objA;
-  if (*(int *)&((GameObject *)objA)->anim.parent != 0) {
-    Obj_TransformWorldVectorToLocal(x, y, z, &localAx, &localAy, &localAz, *(int *)&((GameObject *)objA)->anim.parent);
+  if (*(int *)&animA->parent != 0) {
+    Obj_TransformWorldVectorToLocal(x, y, z, &localAx, &localAy, &localAz, *(int *)&animA->parent);
   } else {
     localAx = x;
     localAy = y;
     localAz = z;
   }
-  if (*(int *)&((GameObject *)objB)->anim.parent != 0) {
-    Obj_TransformWorldVectorToLocal(x, y, z, &localBx, &localBy, &localBz, *(int *)&((GameObject *)objB)->anim.parent);
+  if (*(int *)&animB->parent != 0) {
+    Obj_TransformWorldVectorToLocal(x, y, z, &localBx, &localBy, &localBz, *(int *)&animB->parent);
   } else {
     localBx = x;
     localBy = y;
     localBz = z;
   }
-  if ((((GameObject *)objA)->anim.classId == 1) && (stateA->lateralResponseWeight != 0) &&
+  if ((animA->classId == 1) && (stateA->lateralResponseWeight != 0) &&
       ((stateB->flags & 0x400) == 0)) {
-    ((GameObject *)objA)->anim.localPosX = ((GameObject *)objA)->anim.localPosX - localAx;
-    ((GameObject *)objA)->anim.localPosY = ((GameObject *)objA)->anim.localPosY - localAy;
-    ((GameObject *)objA)->anim.localPosZ = ((GameObject *)objA)->anim.localPosZ - localAz;
+    animA->localPosX = animA->localPosX - localAx;
+    animA->localPosY = animA->localPosY - localAy;
+    animA->localPosZ = animA->localPosZ - localAz;
     if (flag != 0) {
-      ((GameObject *)objA)->anim.worldPosX = ((GameObject *)objA)->anim.worldPosX - x;
-      ((GameObject *)objA)->anim.worldPosY = ((GameObject *)objA)->anim.worldPosY - y;
-      ((GameObject *)objA)->anim.worldPosZ = ((GameObject *)objA)->anim.worldPosZ - z;
+      animA->worldPosX = animA->worldPosX - x;
+      animA->worldPosY = animA->worldPosY - y;
+      animA->worldPosZ = animA->worldPosZ - z;
     } else {
-      Obj_TransformLocalPointToWorld(((GameObject *)objA)->anim.localPosX, ((GameObject *)objA)->anim.localPosY,
-                                     ((GameObject *)objA)->anim.localPosZ, (f32 *)(objA + 0x18),
-                                     (f32 *)(objA + 0x1c), (f32 *)(objA + 0x20),
-                                     *(int *)&((GameObject *)objA)->anim.parent);
+      Obj_TransformLocalPointToWorld(animA->localPosX, animA->localPosY,
+                                     animA->localPosZ, &animA->worldPosX,
+                                     &animA->worldPosY, &animA->worldPosZ,
+                                     *(int *)&animA->parent);
     }
-  } else if ((((GameObject *)objB)->anim.classId == 1) && (stateB->lateralResponseWeight != 0) &&
+  } else if ((animB->classId == 1) && (stateB->lateralResponseWeight != 0) &&
              ((stateA->flags & 0x400) == 0)) {
-    ((GameObject *)objB)->anim.localPosX = ((GameObject *)objB)->anim.localPosX + localBx;
-    ((GameObject *)objB)->anim.localPosY = ((GameObject *)objB)->anim.localPosY + localBy;
-    ((GameObject *)objB)->anim.localPosZ = ((GameObject *)objB)->anim.localPosZ + localBz;
+    animB->localPosX = animB->localPosX + localBx;
+    animB->localPosY = animB->localPosY + localBy;
+    animB->localPosZ = animB->localPosZ + localBz;
     if (flag != 0) {
-      ((GameObject *)objB)->anim.worldPosX = ((GameObject *)objB)->anim.worldPosX + x;
-      ((GameObject *)objB)->anim.worldPosY = ((GameObject *)objB)->anim.worldPosY + y;
-      ((GameObject *)objB)->anim.worldPosZ = ((GameObject *)objB)->anim.worldPosZ + z;
+      animB->worldPosX = animB->worldPosX + x;
+      animB->worldPosY = animB->worldPosY + y;
+      animB->worldPosZ = animB->worldPosZ + z;
     } else {
-      Obj_TransformLocalPointToWorld(((GameObject *)objB)->anim.localPosX, ((GameObject *)objB)->anim.localPosY,
-                                     ((GameObject *)objB)->anim.localPosZ, (f32 *)(objB + 0x18),
-                                     (f32 *)(objB + 0x1c), (f32 *)(objB + 0x20),
-                                     *(int *)&((GameObject *)objB)->anim.parent);
+      Obj_TransformLocalPointToWorld(animB->localPosX, animB->localPosY,
+                                     animB->localPosZ, &animB->worldPosX,
+                                     &animB->worldPosY, &animB->worldPosZ,
+                                     *(int *)&animB->parent);
     }
   } else if (stateB->lateralResponseWeight == 0) {
     if (stateA->lateralResponseWeight != 0) {
-      ((GameObject *)objA)->anim.localPosX = ((GameObject *)objA)->anim.localPosX - localAx;
-      ((GameObject *)objA)->anim.localPosY = ((GameObject *)objA)->anim.localPosY - localAy;
-      ((GameObject *)objA)->anim.localPosZ = ((GameObject *)objA)->anim.localPosZ - localAz;
+      animA->localPosX = animA->localPosX - localAx;
+      animA->localPosY = animA->localPosY - localAy;
+      animA->localPosZ = animA->localPosZ - localAz;
       if (flag != 0) {
-        ((GameObject *)objA)->anim.worldPosX = ((GameObject *)objA)->anim.worldPosX - x;
-        ((GameObject *)objA)->anim.worldPosY = ((GameObject *)objA)->anim.worldPosY - y;
-        ((GameObject *)objA)->anim.worldPosZ = ((GameObject *)objA)->anim.worldPosZ - z;
+        animA->worldPosX = animA->worldPosX - x;
+        animA->worldPosY = animA->worldPosY - y;
+        animA->worldPosZ = animA->worldPosZ - z;
       } else {
-        Obj_TransformLocalPointToWorld(((GameObject *)objA)->anim.localPosX, ((GameObject *)objA)->anim.localPosY,
-                                       ((GameObject *)objA)->anim.localPosZ, (f32 *)(objA + 0x18),
-                                       (f32 *)(objA + 0x1c), (f32 *)(objA + 0x20),
-                                       *(int *)&((GameObject *)objA)->anim.parent);
+        Obj_TransformLocalPointToWorld(animA->localPosX, animA->localPosY,
+                                       animA->localPosZ, &animA->worldPosX,
+                                       &animA->worldPosY, &animA->worldPosZ,
+                                       *(int *)&animA->parent);
       }
     }
   } else if (stateA->lateralResponseWeight == 0) {
     if (stateB->lateralResponseWeight != 0) {
-      ((GameObject *)objB)->anim.localPosX = ((GameObject *)objB)->anim.localPosX + localBx;
-      ((GameObject *)objB)->anim.localPosY = ((GameObject *)objB)->anim.localPosY + localBy;
-      ((GameObject *)objB)->anim.localPosZ = ((GameObject *)objB)->anim.localPosZ + localBz;
+      animB->localPosX = animB->localPosX + localBx;
+      animB->localPosY = animB->localPosY + localBy;
+      animB->localPosZ = animB->localPosZ + localBz;
       if (flag != 0) {
-        ((GameObject *)objB)->anim.worldPosX = ((GameObject *)objB)->anim.worldPosX + x;
-        ((GameObject *)objB)->anim.worldPosY = ((GameObject *)objB)->anim.worldPosY + y;
-        ((GameObject *)objB)->anim.worldPosZ = ((GameObject *)objB)->anim.worldPosZ + z;
+        animB->worldPosX = animB->worldPosX + x;
+        animB->worldPosY = animB->worldPosY + y;
+        animB->worldPosZ = animB->worldPosZ + z;
       } else {
-        Obj_TransformLocalPointToWorld(((GameObject *)objB)->anim.localPosX, ((GameObject *)objB)->anim.localPosY,
-                                       ((GameObject *)objB)->anim.localPosZ, (f32 *)(objB + 0x18),
-                                       (f32 *)(objB + 0x1c), (f32 *)(objB + 0x20),
-                                       *(int *)&((GameObject *)objB)->anim.parent);
+        Obj_TransformLocalPointToWorld(animB->localPosX, animB->localPosY,
+                                       animB->localPosZ, &animB->worldPosX,
+                                       &animB->worldPosY, &animB->worldPosZ,
+                                       *(int *)&animB->parent);
       }
     }
   } else {
     angle = getAngle(-x, -z);
-    angleA = *(s16 *)objA - (int)(angle & 0xffff);
+    angleA = animA->rotX - (int)(angle & 0xffff);
     if (angleA > 0x8000) {
       angleA -= 0xffff;
     }
     if (angleA < -0x8000) {
       angleA += 0xffff;
     }
-    angleB = *(s16 *)objB - (int)(((angle & 0xffff) + 0x8000) & 0xffff);
+    angleB = animB->rotX - (int)(((angle & 0xffff) + 0x8000) & 0xffff);
     if (angleB > 0x8000) {
       angleB -= 0xffff;
     }
@@ -2061,21 +2065,21 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
     }
     sum = weightA + weightB;
     blend = (sum > gObjHitsScalarZero) ? weightB / sum : gObjHitsScalarZero;
-    ((GameObject *)objA)->anim.localPosX = ((GameObject *)objA)->anim.localPosX - localAx * blend;
-    ((GameObject *)objA)->anim.localPosY = ((GameObject *)objA)->anim.localPosY - localAy * blend;
-    ((GameObject *)objA)->anim.localPosZ = ((GameObject *)objA)->anim.localPosZ - localAz * blend;
-    Obj_TransformLocalPointToWorld(((GameObject *)objA)->anim.localPosX, ((GameObject *)objA)->anim.localPosY,
-                                   ((GameObject *)objA)->anim.localPosZ, (f32 *)(objA + 0x18),
-                                   (f32 *)(objA + 0x1c), (f32 *)(objA + 0x20),
-                                   *(int *)&((GameObject *)objA)->anim.parent);
+    animA->localPosX = animA->localPosX - localAx * blend;
+    animA->localPosY = animA->localPosY - localAy * blend;
+    animA->localPosZ = animA->localPosZ - localAz * blend;
+    Obj_TransformLocalPointToWorld(animA->localPosX, animA->localPosY,
+                                   animA->localPosZ, &animA->worldPosX,
+                                   &animA->worldPosY, &animA->worldPosZ,
+                                   *(int *)&animA->parent);
     invBlend = gObjHitsScalarOne - blend;
-    ((GameObject *)objB)->anim.localPosX = localBx * invBlend + ((GameObject *)objB)->anim.localPosX;
-    ((GameObject *)objB)->anim.localPosY = localBy * invBlend + ((GameObject *)objB)->anim.localPosY;
-    ((GameObject *)objB)->anim.localPosZ = localBz * invBlend + ((GameObject *)objB)->anim.localPosZ;
-    Obj_TransformLocalPointToWorld(((GameObject *)objB)->anim.localPosX, ((GameObject *)objB)->anim.localPosY,
-                                   ((GameObject *)objB)->anim.localPosZ, (f32 *)(objB + 0x18),
-                                   (f32 *)(objB + 0x1c), (f32 *)(objB + 0x20),
-                                   *(int *)&((GameObject *)objB)->anim.parent);
+    animB->localPosX = localBx * invBlend + animB->localPosX;
+    animB->localPosY = localBy * invBlend + animB->localPosY;
+    animB->localPosZ = localBz * invBlend + animB->localPosZ;
+    Obj_TransformLocalPointToWorld(animB->localPosX, animB->localPosY,
+                                   animB->localPosZ, &animB->worldPosX,
+                                   &animB->worldPosY, &animB->worldPosZ,
+                                   *(int *)&animB->parent);
   }
 }
 
