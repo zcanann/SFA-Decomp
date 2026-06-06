@@ -536,7 +536,7 @@ void kaldachom_update(int param_1)
     }
     else {
       kaldachom_updateCombat(param_1,iVar9,iVar9);
-      if (*(short *)(iVar9 + 0x402) == 0) {
+      if (((CampfireState *)iVar9)->unk402 == 0) {
         iVar8 = ((CampfireState *)iVar9)->unk40C;
         *(float *)(iVar8 + 0x34) = *(float *)(iVar8 + 0x34) - timeDelta;
         if (*(float *)(iVar8 + 0x34) <= lbl_803E3060) {
@@ -615,11 +615,11 @@ void kaldachom_init(int obj, int data, int skip_alloc)
   *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
   (**(code **)(*gPlayerInterface + 0x14))(obj,state,0);
   *(undefined2 *)(state + 0x270) = 0;
-  *(float *)(state + 0x2a0) = lbl_803E307C;
-  *(float *)(state + 0x280) = lbl_803E3060;
+  ((GroundBaddieState *)state)->baddie.moveSpeed = lbl_803E307C;
+  ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E3060;
   player = Obj_GetPlayerObject();
   ((CampfireState *)state)->unk2D0 = player;
-  *(undefined *)(state + 0x25f) = 0;
+  ((GroundBaddieState *)state)->baddie.unk25F = 0;
   ObjHits_DisableObject(obj);
   pathData[0xd] = (f32)(int)randomGetRange(300,600);
   pathData[0xe] = (f32)(int)randomGetRange(0,499);
