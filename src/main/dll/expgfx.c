@@ -69,6 +69,32 @@ extern void _restgpr_23(void);
 extern void _savegpr_25(void);
 extern void _restgpr_25(void);
 
+typedef void (*ExpgfxPartfxSpawnFn)(void *obj, int effectId, void *params, int flags,
+                                    int modelId, int extraArg);
+typedef void (*ExpgfxPartfxFrameFn)(int reset);
+
+typedef struct ExpgfxPartfxInterface {
+  u8 pad00[0x08];
+  ExpgfxPartfxSpawnFn spawnObject;
+  ExpgfxPartfxFrameFn updateFrameState;
+} ExpgfxPartfxInterface;
+
+STATIC_ASSERT(offsetof(ExpgfxPartfxInterface, spawnObject) == 0x08);
+STATIC_ASSERT(offsetof(ExpgfxPartfxInterface, updateFrameState) == 0x0C);
+
+typedef void (*ExpgfxWaterfxSpawnRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags);
+typedef void (*ExpgfxWaterfxSpawnSurfaceRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags,
+                                                  int count);
+
+typedef struct ExpgfxWaterfxInterface {
+  u8 pad00[0x10];
+  ExpgfxWaterfxSpawnRippleFn spawnRipple;
+  ExpgfxWaterfxSpawnSurfaceRippleFn spawnSurfaceRipple;
+} ExpgfxWaterfxInterface;
+
+STATIC_ASSERT(offsetof(ExpgfxWaterfxInterface, spawnRipple) == 0x10);
+STATIC_ASSERT(offsetof(ExpgfxWaterfxInterface, spawnSurfaceRipple) == 0x14);
+
 extern ExpgfxBounds gExpgfxBoundsTemplates[];
 extern s16 gExpgfxPoolSlotTypeIds[];
 extern u8 gExpgfxPoolFrameFlags[];
@@ -104,7 +130,7 @@ extern undefined4 DAT_803ddef4;
 extern undefined4 DAT_803ddef8;
 extern undefined4 DAT_cc008000;
 extern u8 gExpgfxStaticPoolFrameFlags[];
-extern undefined4* gPartfxInterface;
+extern ExpgfxPartfxInterface **gPartfxInterface;
 extern u8 gExpgfxUpdatingActivePools;
 extern u8 lbl_803DD253;
 extern u8 gExpgfxRenderResetPending;
@@ -645,7 +671,7 @@ extern void Obj_RotateLocalOffsetByYaw(void *offset, f32 *out, u8 yaw);
 extern void Sfx_PlayFromObject(void *obj, int sfxId);
 extern f32 sqrtf(f32 x);
 extern u8 framesThisStep;
-extern undefined4 *gWaterfxInterface;
+extern ExpgfxWaterfxInterface **gWaterfxInterface;
 extern u16 gExpgfxPhaseAngleA;
 extern u16 gExpgfxPhaseAngleB;
 extern f32 lbl_803DF38C;
@@ -670,11 +696,6 @@ extern f32 lbl_803DF404;
 extern f32 lbl_803DF408;
 extern f32 lbl_803DF40C;
 extern f32 lbl_803DF410;
-
-typedef void (*ExpgfxSfxMoveFn)(void *obj, int soundHandle, void *params, int flags, int a,
-                                int b);
-typedef void (*ExpgfxWaterRippleFnA)(f32 x, f32 y, f32 z, f32 w, int a, int b);
-typedef void (*ExpgfxWaterRippleFnB)(f32 x, f32 y, f32 z, f32 radius, int a);
 
 typedef struct ExpgfxRotateParams {
   s16 angleX;
@@ -1057,8 +1078,8 @@ foundFirst:
               slot->velocityZ *= gExpgfxSlotMotionStep;
               slot->behaviorFlags ^= 0x20;
               if (slot->soundHandle != -1) {
-                (*(ExpgfxSfxMoveFn *)(*gPartfxInterface + 8))(srcObj, slot->soundHandle, &rot,
-                                                              0x200001, -1, 0);
+                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001,
+                                                 -1, 0);
                 slot->soundHandle = -1;
               }
             } else if ((slot->behaviorFlags & 0x1000) != 0) {
@@ -1082,8 +1103,8 @@ foundFirst:
               slot->behaviorFlags ^= 0x4000;
               slot->behaviorFlags |= 0x2000;
               if (slot->soundHandle != -1) {
-                (*(ExpgfxSfxMoveFn *)(*gPartfxInterface + 8))(srcObj, slot->soundHandle, &rot,
-                                                              0x200001, -1, 0);
+                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001,
+                                                 -1, 0);
               }
               slot->soundHandle = -1;
             } else if ((slot->behaviorFlags & 0x8000) != 0) {
@@ -1094,8 +1115,8 @@ foundFirst:
               slot->behaviorFlags ^= 0x8000;
               slot->behaviorFlags |= 0x4000;
               if (slot->soundHandle != -1) {
-                (*(ExpgfxSfxMoveFn *)(*gPartfxInterface + 8))(srcObj, slot->soundHandle, &rot,
-                                                              0x200001, -1, 0);
+                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001,
+                                                 -1, 0);
               }
             }
             gExpgfxFrameParityBit = 0;
@@ -1120,10 +1141,8 @@ foundFirst:
                 rot.z = *(f32 *)&slot->posZ;
               }
               gExpgfxFrameParityBit = 1;
-              (*(ExpgfxWaterRippleFnA *)(*gWaterfxInterface + 0x14))(rot.x, rot.y, rot.z,
-                                                                     lbl_803DF35C, 0, 4);
-              (*(ExpgfxWaterRippleFnB *)(*gWaterfxInterface + 0x10))(rot.x, rot.y, rot.z,
-                                                                     gExpgfxSlotMotionStep, 0);
+              (*gWaterfxInterface)->spawnSurfaceRipple(rot.x, rot.y, rot.z, lbl_803DF35C, 0, 4);
+              (*gWaterfxInterface)->spawnRipple(rot.x, rot.y, rot.z, gExpgfxSlotMotionStep, 0);
               if (srcObj != NULL &&
                   coordsToMapCell(srcObj->localPosX, srcObj->localPosZ) == 0x10) {
                 Sfx_PlayFromObject(srcObj, 0x285);
@@ -1153,8 +1172,7 @@ foundFirst:
               rot.z = *(f32 *)&slot->posZ;
             }
             gExpgfxFrameParityBit = 1;
-            (*(ExpgfxSfxMoveFn *)(*gPartfxInterface + 8))(srcObj, slot->soundHandle, &rot,
-                                                          0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001, -1, 0);
             gExpgfxFrameParityBit = 0;
           }
           if ((slot->behaviorFlags & 0x80000000) != 0 && (int)randomGetRange(0, 4) == 1) {
@@ -2560,7 +2578,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
       poolIndex--;
       gExpgfxStaticPoolFrameFlags[(u8)poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
     }
-    (*(code *)(*gPartfxInterface + 0xc))(0);
+    (*gPartfxInterface)->updateFrameState(0);
     gExpgfxRenderResetPending = 1;
   }
   return;
