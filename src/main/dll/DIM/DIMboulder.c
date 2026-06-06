@@ -1130,9 +1130,9 @@ extern f32 lbl_803E46E0;
 #pragma scheduling off
 void imicemountain_init(int* obj)
 {
-    IMIceMountainState* sub = *(IMIceMountainState**)((char*)obj + 0xb8);
+    IMIceMountainState* sub = ((GameObject *)obj)->extra;
     int i;
-    *(void**)((char*)obj + 0xbc) = (void*)&IMIceMountain_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)IMIceMountain_SeqFn;
     for (i = 1; (u8)i <= 0xd; i++) {
         gameBitFn_800ea2e0(i);
     }

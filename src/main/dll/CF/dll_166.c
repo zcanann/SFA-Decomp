@@ -191,7 +191,7 @@ void treasurechest_init(int *obj) {
     register ChestFlags *state = ((GameObject *)obj)->extra;
     register int *cfg = *(int **)&((GameObject *)obj)->anim.placementData;
 
-    *(int (**)(int, int, u8 *))((char *)obj + 0xbc) = treasurechest_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)treasurechest_SeqFn;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)cfg + 0x18) << 8);
 
     if (*(s16 *)((char *)cfg + 0x1e) != -1) {

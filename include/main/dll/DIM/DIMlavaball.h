@@ -68,6 +68,7 @@ void MoonSeedBush_initialise(void);
 
 int mmp_asteroid_re_getExtraSize(void);
 int mmp_asteroid_re_getObjectTypeId(void);
+int fn_801A6F4C(int obj, int unused, int events);
 void mmp_asteroid_re_free(void);
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void mmp_asteroid_re_hitDetect(void);

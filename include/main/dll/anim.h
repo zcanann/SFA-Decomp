@@ -169,6 +169,7 @@ void dbegg_initialise(void);
 
 int GCRobotBlast_getExtraSize(void);
 int GCRobotBlast_func08_ret_0(void);
+int GCRobotBlast_SeqFn(int obj, int unused, int events);
 void GCRobotBlast_free(void);
 void GCRobotBlast_render(void);
 void GCRobotBlast_hitDetect(void);

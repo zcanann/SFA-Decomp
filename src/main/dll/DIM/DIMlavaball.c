@@ -1746,7 +1746,7 @@ int fn_801A6F4C(int obj, int p2, int data) {
 void mmp_asteroid_re_init(int obj) {
     MmpAsteroidReState *state = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->objectFlags |= 0x6000;
-    *(int (**)(int, int, int))(obj + 0xBC) = fn_801A6F4C;
+    ((GameObject *)obj)->animEventCallback = (void *)fn_801A6F4C;
     state->eventFlags = 0;
     state->intensity = (u8)GameBit_Get(0x88C);
     state->phase = (u8)GameBit_Get(0x87B);

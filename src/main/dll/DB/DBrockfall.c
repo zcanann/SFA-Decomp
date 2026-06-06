@@ -447,7 +447,7 @@ extern undefined4 *gObjectTriggerInterface;
 void FEseqobject_init(int obj)
 {
     *(short *)obj = 0;
-    *(void (**)(void))(obj + 0xbc) = (void (*)(void))FEseqobject_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)FEseqobject_SeqFn;
     ObjMsg_AllocQueue((void *)obj, 0xa);
 }
 #pragma peephole reset
@@ -496,7 +496,7 @@ int dll_144_SeqFn(void *p1, void *p2, u8 *p3)
 void dll_144_init(int obj)
 {
     *(short *)obj = 0;
-    *(int (**)(void *, void *, u8 *))(obj + 0xbc) = dll_144_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dll_144_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset

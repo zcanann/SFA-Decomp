@@ -4386,7 +4386,7 @@ void GCRobotBlast_init(int obj, s8 *p) {
     char *inner = ((GameObject *)obj)->extra;
     ((GCRobotBlastState *)inner)->mode = (s8)p[0x19];
     ((BlastFlags4 *)&((GCRobotBlastState *)inner)->flags04)->b80 = 0;
-    *(void (**)(void))((char *)obj + 0xbc) = (void (*)(void))GCRobotBlast_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)GCRobotBlast_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset

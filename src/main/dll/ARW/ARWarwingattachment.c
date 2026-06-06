@@ -2181,8 +2181,8 @@ void dll_1FF_init(s16* a, s8* b)
 #pragma scheduling off
 #pragma peephole off
 void WM_colrise_init(s16 *a, s8 *b) {
-    WMColriseState *inner = *(WMColriseState **)((char*)a + 0xb8);
-    *(void **)((char*)a + 0xbc) = (void *)WM_colrise_SeqFn;
+    WMColriseState *inner = ((GameObject *)a)->extra;
+    ((GameObject *)a)->animEventCallback = (void *)WM_colrise_SeqFn;
     a[0] = (s16)((s32)b[0x18] << 8);
     inner->gameBit = *(s16 *)(b + 0x1e);
 }
