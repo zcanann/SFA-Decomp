@@ -1333,7 +1333,7 @@ u8 groundanimator_func0B(int *obj)
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void *mapGetBlock(int idx);
 extern void fn_801923F8(int *cfg);
-extern void hitAnimatorFn_80193dbc(void *block, int *obj, u8 *vstate, u8 *desc);
+extern void hitAnimatorFn_80193dbc(void *block, HitAnimatorObject *obj, HitAnimatorState *vstate, HitAnimatorPlacement *desc);
 extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
 extern u8 lbl_803DDAE8;
@@ -1408,7 +1408,7 @@ void hitanimator_update(HitAnimatorObject *obj)
     if ((setup->flags & HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE) != 0) {
         if (setup->blockEffectId != 0) {
             if ((state->flags & HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING) != 0) {
-                hitAnimatorFn_80193dbc(block, (int *)obj, (u8 *)state, (u8 *)setup);
+                hitAnimatorFn_80193dbc(block, obj, state, setup);
                 state->flags &= ~HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
             }
         }
@@ -1464,7 +1464,7 @@ void hitanimator_init(HitAnimatorObject *obj, HitAnimatorPlacement *desc)
         (double)obj->objAnim.localPosZ));
     if (block != NULL) {
         if ((desc->flags & HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE) != 0 && desc->blockEffectId != 0) {
-            hitAnimatorFn_80193dbc(block, (int *)obj, (u8 *)state, (u8 *)desc);
+            hitAnimatorFn_80193dbc(block, obj, state, desc);
         }
     }
     state->flags |= HITANIMATOR_STATE_FLAG_SOUND_PENDING;
@@ -2210,35 +2210,35 @@ extern u8 *Shader_getLayer(char *s, int layer);
 
 #pragma scheduling off
 #pragma peephole off
-void hitAnimatorFn_80193dbc(void *block, int *obj, u8 *vstate, u8 *desc)
+void hitAnimatorFn_80193dbc(void *block, HitAnimatorObject *obj, HitAnimatorState *vstate, HitAnimatorPlacement *desc)
 {
     int i;
     char *m;
 
-    if ((desc[0x1c] & 0x10) == 0) {
+    if ((desc->flags & 0x10) == 0) {
         for (i = 0; i < *(u16 *)((char *)block + 0x9a); i++) {
             m = (char *)mapBlockFn_800606ec(block, i);
-            if (desc[0x1b] == mapBlockFn_80060678(m)) {
-                if (*(s8 *)vstate != 0) {
+            if (desc->blockEffectId == mapBlockFn_80060678(m)) {
+                if (vstate->activeBit != 0) {
                     *(int *)(m + 0x10) &= ~2;
-                    if ((desc[0x1c] & 0x2) != 0) {
+                    if ((desc->flags & 0x2) != 0) {
                         *(int *)(m + 0x10) &= ~1;
                     }
                 } else {
                     *(int *)(m + 0x10) |= 2;
-                    if ((desc[0x1c] & 0x2) != 0) {
+                    if ((desc->flags & 0x2) != 0) {
                         *(int *)(m + 0x10) |= 1;
                     }
                 }
             }
         }
     }
-    if ((desc[0x1c] & 0x2) != 0) {
+    if ((desc->flags & 0x2) != 0) {
         for (i = 0; i < *((u8 *)block + 0xa2); i++) {
             char *s = fn_8006070C(block, i);
             u8 *layer = Shader_getLayer(s, 0);
-            if (desc[0x1b] == layer[5]) {
-                if (*(s8 *)vstate != 0) {
+            if (desc->blockEffectId == layer[5]) {
+                if (vstate->activeBit != 0) {
                     *(int *)(s + 0x3c) &= ~2;
                 } else {
                     *(int *)(s + 0x3c) |= 2;
