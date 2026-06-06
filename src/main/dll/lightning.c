@@ -813,18 +813,18 @@ extern void fn_8002B860(int obj);
 void effectbox_init(int obj, int *def) {
     s16 bit;
     u32 v;
-    if (*(int *)((char *)obj + 0xF4) == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         fn_8002B860(obj);
     }
-    *(int *)((char *)obj + 0xF4) = 1;
+    ((GameObject *)obj)->unkF4 = 1;
     bit = *(s16 *)((char *)def + 0x20);
     if (bit > -1) {
-        *(int *)((char *)obj + 0xF8) = (int)bit;
+        ((GameObject *)obj)->unkF8 = (int)bit;
     } else {
-        *(int *)((char *)obj + 0xF8) = -1;
+        ((GameObject *)obj)->unkF8 = -1;
     }
-    v = (u32)*(u16 *)((char *)obj + 0xB0) | 0x6000;
-    *(u16 *)((char *)obj + 0xB0) = (u16)v;
+    v = (u32)((GameObject *)obj)->unkB0 | 0x6000;
+    ((GameObject *)obj)->unkB0 = (u16)v;
 }
 #pragma peephole reset
 #pragma scheduling reset

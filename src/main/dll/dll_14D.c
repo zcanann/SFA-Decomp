@@ -184,13 +184,13 @@ void fn_8017F334(int obj, void *setup, void *stateArg)
 
   childObj = *(u8 **)&state->childObj;
   if ((childObj != NULL) && (*(void **)(childObj + 0xc4) != NULL) &&
-      (*(f32 *)(obj + 0x98) >= lbl_803E3870)) {
+      (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E3870)) {
     state->childObj = 0;
     ObjLink_DetachChild(obj, (int)childObj);
 
     launchSpeed = (f32)(int)randomGetRange(0x27, 0x2c) / lbl_803E3874;
-    angle = getAngle(*(f32 *)(obj + 0x0c) - *(f32 *)(player + 0x0c),
-                     *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14));
+    angle = getAngle(((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0x0c),
+                     ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14));
     randomGetRange(((u16)angle) - 0x1000, ((u16)angle) + 0x1000);
 
     *(f32 *)(childObj + 0x24) =
@@ -200,7 +200,7 @@ void fn_8017F334(int obj, void *setup, void *stateArg)
     Sfx_PlayFromObject(obj, 0x5e);
   }
 
-  if (*(f32 *)(obj + 0x98) >= lbl_803E3858) {
+  if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E3858) {
     state->mode = 2;
     state->moveStepScale = lbl_803E3880;
     ObjAnim_SetCurrentMove(obj, 2, lbl_803E385C, 0);

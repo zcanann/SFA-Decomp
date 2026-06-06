@@ -409,7 +409,7 @@ extern KioskTextPair lbl_80327AF0[];
 #pragma peephole off
 void sc_totemstrength_update(u8 *obj)
 {
-    Platform1State *st = *(Platform1State **)(obj + 0xb8);
+    Platform1State *st = ((GameObject *)obj)->extra;
     u8 t;
     s16 step;
     u8 b;
@@ -426,9 +426,9 @@ void sc_totemstrength_update(u8 *obj)
             }
             if (lbl_803DDC10-- == 0) {
                 st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_ACTIVE);
-                *(f32 *)(obj + 0xc) = st->savedPosX;
-                *(f32 *)(obj + 0x10) = st->savedPosY;
-                *(f32 *)(obj + 0x14) = st->savedPosZ;
+                ((GameObject *)obj)->anim.localPosX = st->savedPosX;
+                ((GameObject *)obj)->anim.localPosY = st->savedPosY;
+                ((GameObject *)obj)->anim.localPosZ = st->savedPosZ;
                 st->linkedObject = 0;
                 *(s16 *)obj = -0x2900;
                 st->currentTrackOffset = -0x2900;
@@ -472,8 +472,8 @@ void sc_totemstrength_update(u8 *obj)
 /* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
 u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
 {
-    u8 *setup = *(u8 **)(obj + 0x4c);
-    PaymentKioskState *st = *(PaymentKioskState **)(obj + 0xb8);
+    u8 *setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    PaymentKioskState *st = ((GameObject *)obj)->extra;
     int player;
     u32 r;
 
@@ -508,8 +508,8 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
 /* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
 int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
 {
-    PaymentKioskState *st = *(PaymentKioskState **)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    PaymentKioskState *st = ((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     int player;
     int i;
     u8 ev;
@@ -541,8 +541,8 @@ int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
 /* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
 void paymentkiosk_update(int obj)
 {
-    PaymentKioskState *st = *(PaymentKioskState **)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    PaymentKioskState *st = ((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     u8 b = st->payState;
 
     switch (b) {
@@ -554,13 +554,13 @@ void paymentkiosk_update(int obj)
         }
         break;
     case 1:
-        if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
             (*(int (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
         }
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
         break;
     case 2:
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
         break;
     }
     st->promptState = 0;

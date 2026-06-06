@@ -21,7 +21,7 @@ void fn_801F654C(int obj)
     WmSeqPointState *state;
     int skyOn;
 
-    state = *(WmSeqPointState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if (state->triggerId == 0x21) {
         GameBit_Set(0xd1b, 1);
     } else if (state->triggerId == 1) {
@@ -57,7 +57,7 @@ int wmseqpoint_SeqFn(int obj, int unused, int actor)
     int player;
     int i;
 
-    state = *(WmSeqPointState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     player = (int)Obj_GetPlayerObject();
     *(u8 *)(actor + 0x56) = 0;
     *(void **)(actor + 0xe8) = fn_801F654C;
@@ -153,7 +153,7 @@ void wmseqpoint_update(int obj)
     int i;
 
     player = (int)Obj_GetPlayerObject();
-    state = *(WmSeqPointState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
 
     if (state->gateGameBit != -1) {
         if (state->done != 0) {
@@ -246,7 +246,7 @@ void wmseqpoint_init(int obj, int setup)
 {
     WmSeqPointState *state;
 
-    state = *(WmSeqPointState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->unkBC = wmseqpoint_SeqFn;
     ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
     state->radius = (f32)*(s16 *)(setup + 0x1a);

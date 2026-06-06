@@ -136,8 +136,8 @@ typedef struct PrisonGuardStateFlags {
 #pragma scheduling off
 void cfPrisonGuard_setGameBitMirror(int obj, u8 flag)
 {
-    register int s = *(int *)(obj + 0x4c);
-    register int t = *(int *)(obj + 0xb8);
+    register int s = *(int *)&((GameObject *)obj)->anim.placementData;
+    register int t = *(int *)&((GameObject *)obj)->extra;
     if (flag != 0) {
         GameBit_Set((int)*(short *)(s + 0x24), 1);
         ((PrisonGuardStateFlags *)t)->mirror = 1;
@@ -185,10 +185,10 @@ void staffactivated_spawnMapEventDebris(int obj)
   s32 yawDelta;
   PrisonGuardRotationWork rotate;
 
-  setup = *(int *)(obj + 0x4c);
+  setup = *(int *)&((GameObject *)obj)->anim.placementData;
   player = Obj_GetPlayerObject();
   tricky = getTrickyObject();
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
 
   if (((int (*)(int))(*(int *)(*gMapEventInterface + 0x68)))(*(int *)(setup + 0x14)) != 0 &&
       Obj_IsLoadingLocked() != 0) {
@@ -202,13 +202,13 @@ void staffactivated_spawnMapEventDebris(int obj)
     while (i < *(u8 *)(setup + 0x1f)) {
       spawnedSetup = Obj_AllocObjectSetup(0x24, lbl_803DBDE0[*(u8 *)(setup + 0x1e)]);
       *(f32 *)(spawnedSetup + 8) = *(f32 *)state;
-      *(f32 *)(spawnedSetup + 0xc) = *(f32 *)(obj + 0x10);
+      *(f32 *)(spawnedSetup + 0xc) = ((GameObject *)obj)->anim.localPosY;
       *(f32 *)(spawnedSetup + 0x10) = *(f32 *)(state + 4);
       *(s16 *)(spawnedSetup + 0x1a) = 0x190;
 
-      spawnedObj = Obj_SetupObject(spawnedSetup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-      *(f32 *)(spawnedObj + 0x24) = *(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc);
-      *(f32 *)(spawnedObj + 0x2c) = *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14);
+      spawnedObj = Obj_SetupObject(spawnedSetup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+      *(f32 *)(spawnedObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+      *(f32 *)(spawnedObj + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
 
       lenSq = (*(f32 *)(spawnedObj + 0x24) * *(f32 *)(spawnedObj + 0x24)) +
               (*(f32 *)(spawnedObj + 0x2c) * *(f32 *)(spawnedObj + 0x2c));
@@ -437,7 +437,7 @@ byte FUN_8018a0d0(int param_1)
  */
 u32 cfPrisonGuard_getPullRateMode(int obj) {
     u32 v;
-    v = *(u8 *)(*(int *)(obj + 0x4c) + 0x1d);
+    v = *(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x1d);
     if (v > 2) v = 2;
     return v;
 }

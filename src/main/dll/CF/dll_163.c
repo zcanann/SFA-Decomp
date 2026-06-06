@@ -74,8 +74,8 @@ void staffactivated_calcInteractionTargetXZ(int obj, f32 *outX, f32 *outZ) {
     int bMode;
     float *pfVar1;
 
-    pfVar1 = *(float **)(obj + 0xb8);
-    bMode = *(byte *)(*(int *)(obj + 0x4c) + 0x1c);
+    pfVar1 = ((GameObject *)obj)->extra;
+    bMode = *(byte *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x1c);
 
     if (bMode == 2) goto lbl_case2;
     if (bMode >= 2) goto lbl_gt2;
@@ -97,13 +97,13 @@ lbl_case3:
     goto lbl_done;
 
 lbl_case0:
-    *outX = lbl_803E3BFC * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0xc);
-    *outZ = lbl_803E3BFC * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0x14);
+    *outX = lbl_803E3BFC * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + ((GameObject *)obj)->anim.localPosX;
+    *outZ = lbl_803E3BFC * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + ((GameObject *)obj)->anim.localPosZ;
     goto lbl_done;
 
 lbl_default:
-    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0xc);
-    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0x14);
+    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + ((GameObject *)obj)->anim.localPosX;
+    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + ((GameObject *)obj)->anim.localPosZ;
 
 lbl_done:;
 }
@@ -171,8 +171,8 @@ void staffactivated_update(int obj) {
         f32 oz;
         f32 ow;
     } stk;
-    StaffActivatedSetup *param = *(StaffActivatedSetup **)(obj + 0x4c);
-    StaffActivatedState *state = *(StaffActivatedState **)(obj + 0xb8);
+    StaffActivatedSetup *param = *(StaffActivatedSetup **)&((GameObject *)obj)->anim.placementData;
+    StaffActivatedState *state = ((GameObject *)obj)->extra;
     int mode;
     int isSet;
     int gb;
@@ -180,18 +180,18 @@ void staffactivated_update(int obj) {
     Obj_GetPlayerObject();
 
     if ((state->flags >> 6) & 1) {
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | STAFFACTIVATED_OBJ_FLAG_LOCKED);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_LOCKED);
     } else {
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~STAFFACTIVATED_OBJ_FLAG_LOCKED);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~STAFFACTIVATED_OBJ_FLAG_LOCKED);
     }
 
     if ((state->flags >> 7) & 1) {
         if (fn_80295CE4() != 0) {
-            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~STAFFACTIVATED_OBJ_FLAG_DISABLED);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~STAFFACTIVATED_OBJ_FLAG_DISABLED);
             goto after_bit4;
         }
     }
-    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | STAFFACTIVATED_OBJ_FLAG_DISABLED);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_DISABLED);
 after_bit4:
 
     mode = param->mode;
@@ -206,14 +206,14 @@ after_bit4:
             landed_arwing_updateHitReaction(obj, (int)state);
         }
     } else if (mode == STAFFACTIVATED_MODE_ACTION) {
-        if (*(u8 *)(obj + 0xaf) & STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER) {
+        if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER) {
             if (GameBit_Get(STAFFACTIVATED_TRIGGER_GAMEBIT) == 0) {
                 (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
                 GameBit_Set(STAFFACTIVATED_TRIGGER_GAMEBIT, 1);
             }
         }
         if (GameBit_Get(STAFFACTIVATED_ENABLE_GAMEBIT) == 0) {
-            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | STAFFACTIVATED_OBJ_FLAG_DISABLED);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_DISABLED);
         }
         isSet = 0;
         gb = param->activeGameBit;

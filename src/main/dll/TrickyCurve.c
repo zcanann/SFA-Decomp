@@ -118,15 +118,15 @@ void TrickyCurve_updateBurstTrigger(int obj)
   TrickyCurveBurstFxParams fxParams;
   int burstParticles;
 
-  state = *(u8 **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   player = Obj_GetPlayerObject();
   insideCount = 0;
   xSide = 0;
   ySide = 0;
   zSide = 0;
-  dx = *(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc);
-  dy = *(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10);
-  dz = *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14);
+  dx = *(f32 *)(player + 0xc) - ((GameObject *)obj)->anim.localPosX;
+  dy = *(f32 *)(player + 0x10) - ((GameObject *)obj)->anim.localPosY;
+  dz = *(f32 *)(player + 0x14) - ((GameObject *)obj)->anim.localPosZ;
 
   if ((((TrickyCurveObjState *)state)->unk8 != -1) && (GameBit_Get(((TrickyCurveObjState *)state)->unk8) != 0)) {
     return;
@@ -690,9 +690,9 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         *(u8 *)(setup + 7) = 0xff;
         *(u8 *)(setup + 4) = 2;
         *(u8 *)(setup + 5) = 1;
-        *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x24) = -1;
         *(u8 *)(setup + 0x1a) = 0;
         *(u8 *)(setup + 0x18) = 0;
@@ -715,7 +715,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         *(int *)((int)handles + handleOffset) =
             Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
                             (s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET), -1,
-                            *(int *)(obj + 0x30));
+                            *(int *)&((GameObject *)obj)->anim.parent);
     }
 
     pair = (int *)((int)gSfxplayerEffectHandles + handleOffset + 4);
@@ -725,12 +725,12 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         *(u8 *)(setup + 7) = 0xff;
         *(u8 *)(setup + 4) = 2;
         *(u8 *)(setup + 5) = 1;
-        *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *pair = Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
                                 (s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET), -1,
-                                *(int *)(obj + 0x30));
+                                *(int *)&((GameObject *)obj)->anim.parent);
     }
 
     return 1;

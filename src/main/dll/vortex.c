@@ -26,8 +26,8 @@ void vortex_free(int obj)
 #pragma scheduling off
 void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    VortexState *state = *(VortexState **)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    VortexState *state = ((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     f32 dt;
     s16 *texture;
     int model;
@@ -182,7 +182,7 @@ void vortex_hitDetect(void) {}
 void vortex_init(int obj, int initData)
 {
     f32 *base = lbl_8032BE20;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     u8 i;
 
     ((VortexFlags *)(state + 0x26))->active = 0;
@@ -235,8 +235,8 @@ void vortex_init(int obj, int initData)
 #pragma scheduling off
 void vortex_update(int obj)
 {
-    VortexState *state = *(VortexState **)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    VortexState *state = ((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
 
     state->flags.active = 0;
     if (*(s16 *)(setup + 0x20) != -1) {

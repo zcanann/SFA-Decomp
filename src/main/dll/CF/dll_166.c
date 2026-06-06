@@ -72,16 +72,16 @@ void treasurechest_update(int obj)
   int local_44;
   int hitObject;
 
-  flags = *(ChestFlags **)(obj + 0xb8);
-  setup = *(int *)(obj + 0x4c);
+  flags = ((GameObject *)obj)->extra;
+  setup = *(int *)&((GameObject *)obj)->anim.placementData;
   local_3c = lbl_803E3C28;
   if (flags->trigger != 0 && flags->open != 0) {
-    *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
+    *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
     ObjAnim_SetCurrentMove(obj,0,lbl_803E3C2C,0);
   }
   if (flags->open == 0) {
-    if ((*(byte *)(obj + 0xaf) & 1) != 0) {
-      *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
+    if ((*(byte *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
+      *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
       fn_802967E0(Obj_GetPlayerObject(),1);
       iVar2 = ObjGroup_FindNearestObject(4,obj,&local_3c);
       if (iVar2 != 0) {

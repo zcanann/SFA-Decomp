@@ -94,7 +94,7 @@ typedef struct SCMusicTreeSetup {
 #pragma scheduling off
 void sc_musictree_update(int obj)
 {
-    int inner = *(int *)(obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     f32 stk;
     int rcType;
     f32 hx, hy, hz;
@@ -116,7 +116,7 @@ void sc_musictree_update(int obj)
     if (*(f32 *)(inner + 0x34) > lbl_803E5594) {
         *(f32 *)(inner + 0x34) = *(f32 *)(inner + 0x34) - lbl_803E5598;
     }
-    if ((*(u8 *)(inner + 0x4c) & 0x80) && *(int *)(obj + 0xf8) != 0) {
+    if ((*(u8 *)(inner + 0x4c) & 0x80) && ((GameObject *)obj)->unkF8 != 0) {
         p = (int *)inner;
         q = (int *)inner;
         for (i = 0; i < 3; i++) {
@@ -184,8 +184,8 @@ void sc_musictree_update(int obj)
 end:
     {
         void *player = Obj_GetPlayerObject();
-        f32 dx = *(f32 *)(obj + 0xc) - *(f32 *)((char *)player + 0xc);
-        f32 dz = *(f32 *)(obj + 0x14) - *(f32 *)((char *)player + 0x14);
+        f32 dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)((char *)player + 0xc);
+        f32 dz = ((GameObject *)obj)->anim.localPosZ - *(f32 *)((char *)player + 0x14);
         f32 d = sqrtf(dx * dx + dz * dz);
         s32 dl = (s32)d;
         u16 du = (u16)dl;
@@ -219,7 +219,7 @@ end:
 #pragma scheduling off
 void sc_musictree_init(int obj, SCMusicTreeSetup *setup)
 {
-    SCMusicTreeState *state = *(SCMusicTreeState **)(obj + 0xb8);
+    SCMusicTreeState *state = ((GameObject *)obj)->extra;
     f32 stk;
     u32 rnd;
     f32 ratio;
@@ -232,12 +232,12 @@ void sc_musictree_init(int obj, SCMusicTreeSetup *setup)
     state->flags = setup->flags;
     state->proximityCooldown = zero;
     state->scale = setup->scale;
-    *(s16 *)(obj + 4) = (s16)((setup->rotXByte - 0x7f) << 7);
-    *(s16 *)(obj + 2) = (s16)((setup->rotZByte - 0x7f) << 7);
-    *(s16 *)(obj + 0) = (s16)((u32)setup->yawByte << 8);
-    *(f32 *)(obj + 8) = lbl_803E55B8 * setup->scale;
-    *(int *)(obj + 0xf8) = 0;
-    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
+    ((GameObject *)obj)->anim.rotZ = (s16)((setup->rotXByte - 0x7f) << 7);
+    ((GameObject *)obj)->anim.rotY = (s16)((setup->rotZByte - 0x7f) << 7);
+    ((GameObject *)obj)->anim.rotX = (s16)((u32)setup->yawByte << 8);
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E55B8 * setup->scale;
+    ((GameObject *)obj)->unkF8 = 0;
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
     rnd = randomGetRange(1, 99);
     ratio = (f32)(s32)rnd / lbl_803E55BC;
     ObjAnim_SetCurrentMove(obj, 0, ratio, 0);
@@ -316,7 +316,7 @@ void sc_totempole_hitDetect(void) {}
 #pragma scheduling off
 void sc_totempole_update(int obj)
 {
-    SCTotemPoleState *state = *(SCTotemPoleState **)(obj + 0xb8);
+    SCTotemPoleState *state = ((GameObject *)obj)->extra;
     f32 stk;
     int played;
     int i;
@@ -368,7 +368,7 @@ void sc_totempole_update(int obj)
 #pragma scheduling off
 void sc_totempole_init(int obj, int p2)
 {
-    SCTotemPoleState *state = *(SCTotemPoleState **)(obj + 0xb8);
+    SCTotemPoleState *state = ((GameObject *)obj)->extra;
     switch (*(int *)(p2 + 0x14)) {
     case SC_TOTEMPOLE_SETUP_REAR:
         state->gameBit = SC_TOTEMPOLE_GAMEBIT_REAR;
@@ -414,15 +414,15 @@ void sc_cloudrunnera_hitDetect(void) {}
 #pragma scheduling off
 void sc_cloudrunnera_update(int obj)
 {
-    int inner = *(int *)(obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     void *sub;
     int i;
 
-    sub = *(void **)(obj + 0x4c);
+    sub = ((GameObject *)obj)->anim.placementData;
     if (sub == NULL) return;
     if (*(s16 *)((char *)sub + 0x18) == -1) return;
     if (((int (*)(int, f32))(*(int *)(*gObjectTriggerInterface + 0x14)))(obj, (f32)(u32)lbl_803DB411) != 0
-        && *(s16 *)(obj + 0xb4) == -2) {
+        && ((GameObject *)obj)->unkB4 == -2) {
         s32 mark = (s8)*(u8 *)(inner + 0x57);
         int found = 0;
         int matchCount = 0;
@@ -444,26 +444,26 @@ void sc_cloudrunnera_update(int obj)
             *(s16 *)(found + 0xb4) = -1;
             ((void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(mark);
         }
-        *(s16 *)(obj + 0xb4) = -1;
+        ((GameObject *)obj)->unkB4 = -1;
     }
 
     for (i = 0; i < *(u8 *)(inner + 0x8b); i++) {
         int mode = *(u8 *)(inner + 0x81 + i);
         if (mode == 1) {
-            int slot = *(int *)(obj + 0xc8);
+            int slot = *(int *)&((GameObject *)obj)->unkC8;
             if (slot != 0) {
                 ((void (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(slot, 0);
             }
         } else if (mode >= 1) {
             if (mode < 3) {
-                int innerSlot = *(int *)(obj + 0xc8);
+                int innerSlot = *(int *)&((GameObject *)obj)->unkC8;
                 if (innerSlot != 0) {
                     ObjLink_DetachChild(obj, innerSlot);
                     Obj_FreeObject(innerSlot);
                 }
             }
         } else if (mode >= 0) {
-            if (*(int *)(obj + 0xc8) != 0) continue;
+            if (*(int *)&((GameObject *)obj)->unkC8 != 0) continue;
             if (!Obj_IsLoadingLocked(obj)) continue;
             {
                 int setup = Obj_AllocObjectSetup(0x30, 0x6e8);
@@ -482,7 +482,7 @@ void sc_cloudrunnera_update(int obj)
                 *(u8 *)(setup + 0x7) = 0xff;
                 *(u8 *)(setup + 0x29) = 1;
                 *(u8 *)(setup + 0x2a) = 0;
-                newObj = Obj_SetupObject(setup, 5, (s8)*(u8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                newObj = Obj_SetupObject(setup, 5, (s8)*(u8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
                 *(s16 *)(newObj + 6) = (s16)(*(s16 *)(newObj + 6) | 0x4000);
                 ObjLink_AttachChild(obj, newObj, 0);
                 Sfx_PlayFromObject(obj, 0x10f);
@@ -490,11 +490,11 @@ void sc_cloudrunnera_update(int obj)
         }
     }
     {
-        int s = *(int *)(obj + 0xc8);
+        int s = *(int *)&((GameObject *)obj)->unkC8;
         if (s != 0) {
-            *(s16 *)(s + 4) = *(s16 *)(obj + 4);
-            *(s16 *)(*(int *)(obj + 0xc8) + 2) = (s16)(*(s16 *)(obj + 2) + 0xe38);
-            *(s16 *)(*(int *)(obj + 0xc8) + 0) = (s16)(*(s16 *)(obj + 0) + -0x8000);
+            *(s16 *)(s + 4) = ((GameObject *)obj)->anim.rotZ;
+            *(s16 *)(*(int *)&((GameObject *)obj)->unkC8 + 2) = (s16)(((GameObject *)obj)->anim.rotY + 0xe38);
+            *(s16 *)(*(int *)&((GameObject *)obj)->unkC8 + 0) = (s16)(((GameObject *)obj)->anim.rotX + -0x8000);
         }
     }
 }

@@ -57,8 +57,8 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distan
   f32 dz;
   f32 distance;
 
-  extra = *(DFropenodeExtra **)(obj + 0xb8);
-  if ((*(u8 *)(*(int *)(obj + 0x4c) + 0x18) & 1) == 0) {
+  extra = ((GameObject *)obj)->extra;
+  if ((*(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x18) & 1) == 0) {
     return 0;
   }
   if (extra->linkedObj == NULL) {
@@ -69,9 +69,9 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distan
     return 0;
   }
   *distanceOut = lbl_803E4E1C;
-  localX = worldX - *(f32 *)(obj + 0xc);
-  localY = worldY - *(f32 *)(obj + 0x10);
-  localZ = worldZ - *(f32 *)(obj + 0x14);
+  localX = worldX - ((GameObject *)obj)->anim.localPosX;
+  localY = worldY - ((GameObject *)obj)->anim.localPosY;
+  localZ = worldZ - ((GameObject *)obj)->anim.localPosZ;
   {
     i = 0;
     result = 0;
@@ -133,7 +133,7 @@ void dfropenode_render2(f32 phase, f32 force, int obj)
   f32 fraction;
   int node;
 
-  extra = *(int *)(obj + 0xb8);
+  extra = *(int *)&((GameObject *)obj)->extra;
   phase = phase - (f32)(s8)phase;
   idx = (s8)phase;
   fraction = phase - (f32)idx;
@@ -171,7 +171,7 @@ void dfropenode_modelMtxFn(f32 distance, int obj, float *phase)
   f32 dz;
   f32 len;
 
-  extra = *(int *)(obj + 0xb8);
+  extra = *(int *)&((GameObject *)obj)->extra;
   ph = *phase;
   raw = (s32)ph;
   idx = (s8)raw;
@@ -212,7 +212,7 @@ void dfropenode_func0B(f32 phase, int obj, float *xOut, float *yOut, float *zOut
   DFRopeNode *node;
   int nodes;
 
-  extra = *(DFropenodeExtra **)(obj + 0xb8);
+  extra = ((GameObject *)obj)->extra;
   idx = (s8)phase;
   fraction = phase - (f32)idx;
   nodes = (int)extra->rope->nodes;

@@ -37,14 +37,14 @@ undefined4 sidekickball_init(int obj)
   u8 *state;
   int objDef;
 
-  state = *(u8 **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   pathFlag = 5;
   memset(state, 0, 0x2cc);
   Obj_GetPlayerObject();
   state[0x274] = 0;
   ((TFrameAnimatorState *)state)->unk26C = lbl_803E369C;
-  *(u16 *)(obj + 0xb0) |= 0x2000;
-  objDef = *(int *)(obj + 0x54);
+  ((GameObject *)obj)->unkB0 |= 0x2000;
+  objDef = *(int *)&((GameObject *)obj)->anim.hitReactState;
   *(f32 *)(state + 0x268) = (f32)*(s16 *)(objDef + 0x5a);
   (*(void (**)(u8 *, int, int, int))(*(int *)gPathControlInterface + 4))(state, 0, 0x40007, 1);
   (*(void (**)(u8 *, int, u8 *, u8 *, int))(*(int *)gPathControlInterface + 8))(
@@ -144,8 +144,8 @@ void levelname_init(int obj, int objDef)
     int *state;
     int *text;
 
-    state = *(int **)(obj + 0xb8);
-    *(void **)(obj + 0xbc) = levelname_SeqFn;
+    state = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkBC = levelname_SeqFn;
     text = gameTextGet(*(int *)(objDef + 0x1c));
     ((TFrameAnimatorState *)state)->unk4 = **(int **)(text + 2);
     ((TFrameAnimatorState *)state)->unk8 = 0x64;
@@ -160,7 +160,7 @@ void levelname_init(int obj, int objDef)
             ((TFrameAnimatorState *)state)->unk14 = 4;
         }
     }
-    *(u16 *)(obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset

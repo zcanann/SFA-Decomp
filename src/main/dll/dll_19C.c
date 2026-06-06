@@ -134,7 +134,7 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     void *light;
     s32 isVisible;
 
-    state = *(DfshShrineState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     isVisible = visible;
     if (isVisible == 0) {
         light = state->light;
@@ -170,11 +170,11 @@ void dfsh_shrine_update(int obj)
     s16 i;
     u8 anyMissing;
 
-    state = *(DfshShrineState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
-    if (*(int *)(obj + 0xf4) != 0) {
-        *(int *)(obj + 0xf4) = *(int *)(obj + 0xf4) - 1;
-        if (*(int *)(obj + 0xf4) == 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
+        ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - 1;
+        if (((GameObject *)obj)->unkF4 == 0) {
             skyFn_80088c94(7, 1);
             getEnvfxAct(obj, player, 0x78, 0);
             getEnvfxAct(obj, player, 0x79, 0);
@@ -183,9 +183,9 @@ void dfsh_shrine_update(int obj)
     }
     fn_801C2914(obj);
     if (lbl_803DBF60 != 0) {
-        *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
-        *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
-        *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+        ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
+        ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
+        ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
         playerAddRemoveMagic(player, 0x14);
         GameBit_Set(0x1d7, 1);
         lbl_803DBF60 = 0;
@@ -207,7 +207,7 @@ void dfsh_shrine_update(int obj)
             Sfx_PlayFromObject(obj, 0x343);
             state->idleChimeTimer = (f32)(s32)randomGetRange(500, 1000);
         }
-        if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
             GameBit_Set(0x589, 0);
             state->mode = 5;
             Music_Trigger(0xd8, 1);
@@ -291,13 +291,13 @@ void dfsh_shrine_update(int obj)
             GameBit_Set(DFSH_REQUIRED_BIT(i), 0);
             GameBit_Set(DFSH_REWARD_BIT(i), 0);
         }
-        *(s16 *)(obj + 6) &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~0x4000;
         break;
     case 5:
         state->transitionTimer = 0x1f;
         ((void (*)(int, int))((void **)*(int *)gScreenTransitionInterface)[3])(0x1e, 1);
         state->mode = 1;
-        *(s16 *)(obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         break;
     case 6:
         state->mode = 3;
@@ -798,7 +798,7 @@ void SpiritPrize_free(int obj)
     SpiritPrizeState *state;
     void *light;
 
-    state = *(SpiritPrizeState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     light = state->light;
     if (light != NULL) {
         ModelLightStruct_free(light);
@@ -905,8 +905,8 @@ void SpiritPrize_update(int obj)
     int *objects;
     int i;
 
-    params = *(u8 **)(obj + 0x4c);
-    state = *(SpiritPrizeState **)(obj + 0xb8);
+    params = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    state = ((GameObject *)obj)->extra;
     if (params == NULL || *(s16 *)(params + 0x18) == -1 || *(int *)(params + 0x14) == 0x4ca62) {
         return;
     }
@@ -924,7 +924,7 @@ void SpiritPrize_update(int obj)
 
     objectIndex = ((int (*)(int, f32))((void **)*(int *)gObjectTriggerInterface)[5])
         (obj, (f32)(u32)lbl_803DB411);
-    if (objectIndex != 0 && *(s16 *)(obj + 0xb4) == -2) {
+    if (objectIndex != 0 && ((GameObject *)obj)->unkB4 == -2) {
         int prizeId;
         int matchingObj;
         int duplicateCount;
@@ -949,7 +949,7 @@ void SpiritPrize_update(int obj)
             *(s16 *)(matchingObj + 0xb4) = -1;
             ((void (*)(int))((void **)*(int *)gObjectTriggerInterface)[0x13])(prizeId);
         }
-        *(s16 *)(obj + 0xb4) = -1;
+        ((GameObject *)obj)->unkB4 = -1;
         Obj_FreeObject(obj);
     }
 

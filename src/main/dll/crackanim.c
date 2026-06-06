@@ -334,7 +334,7 @@ void appleontree_init(int obj, int def)
     int eventBit;
     int *texture;
 
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
 
     ((CrackAnimState *)state)->unk0 = *(u32 *)(def + 0x18);
     ((CrackAnimState *)state)->duration = (f32)*(u16 *)(def + 0x1c);
@@ -371,16 +371,16 @@ void appleontree_init(int obj, int def)
         if (progress < ((CrackAnimState *)state)->stageEnd0) {
             ((CrackAnimState *)state)->stage = 0;
         } else if (progress < ((CrackAnimState *)state)->stageEnd1) {
-            ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)(obj + 0x50) + 4);
+            ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
             ((CrackAnimState *)state)->stage = 1;
         } else if (progress < ((CrackAnimState *)state)->stageEnd2) {
             ((CrackAnimState *)state)->stage = 2;
         } else {
-            state = *(int *)(obj + 0xb8);
+            state = *(int *)&((GameObject *)obj)->extra;
             texture = objFindTexture(obj, 0, 0);
             *texture = 0;
             ((CrackAnimState *)state)->unk24 = lbl_803E37C8;
-            ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)(obj + 0x50) + 4);
+            ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
             Obj_SetActiveModelIndex(obj, 1);
             ((CrackAnimState *)state)->stage = 3;
         }

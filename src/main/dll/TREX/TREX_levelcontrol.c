@@ -118,9 +118,9 @@ void SB_ShipGun_update(int obj)
 
   player = Obj_GetPlayerObject();
   piVar10 = ((GameObject *)obj)->extra;
-  iVar11 = *(int *)(obj + 0x4c);
-  if (*(short *)(*(int *)(obj + 0x30) + 0x46) == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE) {
-    (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
+  iVar11 = *(int *)&((GameObject *)obj)->anim.placementData;
+  if (*(short *)(*(int *)&((GameObject *)obj)->anim.parent + 0x46) == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE) {
+    (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
     *(undefined *)((int)piVar10 + 0xd) = 0;
   }
   else {
@@ -134,7 +134,7 @@ void SB_ShipGun_update(int obj)
         }
       }
     }
-    iVar5 = *(int *)(obj + 0x30);
+    iVar5 = *(int *)&((GameObject *)obj)->anim.parent;
     if (((void *)iVar5 != NULL) &&
         (*(short *)(iVar5 + 0x46) == SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE)) {
       iVar6 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x24))(iVar5);
@@ -158,11 +158,11 @@ void SB_ShipGun_update(int obj)
           *(undefined2 *)(piVar10 + 2) = 0;
         }
       }
-      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
+      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
       break;
     case 2:
       {
-          (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
+          (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
           iVar11 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5);
           if ((iVar11 == 0) &&
              (iVar7 = ObjHits_GetPriorityHit(obj,0,0,0), iVar7 != 0)) {
@@ -188,7 +188,7 @@ void SB_ShipGun_update(int obj)
           if (((void *)iVar5 != NULL) && (iVar11 != 0)) {
             *(undefined *)((int)piVar10 + 10) = 3;
           }
-          fdx = *(float *)(player + 0x18) - *(float *)(obj + 0x18);
+          fdx = *(float *)(player + 0x18) - ((GameObject *)obj)->anim.worldPosX;
           fdz = *(float *)(player + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
           *(short *)(piVar10 + 1) = (short)(((uint)(u16)getAngle(-fdz,fdx) & 0xffff) << 1);
           fdy = *(float *)(player + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
@@ -226,7 +226,7 @@ void SB_ShipGun_update(int obj)
             *(undefined *)(iVar11 + 7) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
             puVar9 = Obj_SetupObject((void *)iVar11,5,0xffffffff,0xffffffff,0);
             iVar11 = *piVar10;
-            fdx = *(float *)(iVar11 + 0x18) - *(float *)(obj + 0x18);
+            fdx = *(float *)(iVar11 + 0x18) - ((GameObject *)obj)->anim.worldPosX;
             fdy = *(float *)(iVar11 + 0x1c) - (((GameObject *)obj)->anim.worldPosY - lbl_803E5898);
             fdz = *(float *)(iVar11 + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
             dist = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
@@ -266,7 +266,7 @@ void SB_ShipGun_update(int obj)
       }
       break;
     case 3:
-      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
+      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
       if (*(char *)(piVar10 + 3) == '\0') {
         spawnExplosion((double)lbl_803E5890,obj,1,1,1,0,1,1,0);
         *(undefined *)((int)piVar10 + 10) = 4;
@@ -280,7 +280,7 @@ void SB_ShipGun_update(int obj)
       local_60 = lbl_803E58A8;
       local_68[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
       ObjPath_GetPointWorldPosition(obj,0,&local_5c,&local_58,local_54,0);
-      local_5c = local_5c - *(float *)(obj + 0x18);
+      local_5c = local_5c - ((GameObject *)obj)->anim.worldPosX;
       local_58 = local_58 - ((GameObject *)obj)->anim.worldPosY;
       local_54[0] = local_54[0] - ((GameObject *)obj)->anim.worldPosZ;
       for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1) {
@@ -290,7 +290,7 @@ void SB_ShipGun_update(int obj)
       }
       break;
     case 5:
-      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
+      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
       if (((void *)iVar5 != NULL) &&
          (iVar5 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5), iVar5 == 0)) {
         if (*(char *)(iVar11 + 0x19) == '\0') {
@@ -307,7 +307,7 @@ void SB_ShipGun_update(int obj)
       local_60 = lbl_803E58A8;
       local_68[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
       ObjPath_GetPointWorldPosition(obj,0,&local_5c,&local_58,local_54,0);
-      local_5c = local_5c - *(float *)(obj + 0x18);
+      local_5c = local_5c - ((GameObject *)obj)->anim.worldPosX;
       local_58 = local_58 - ((GameObject *)obj)->anim.worldPosY;
       local_54[0] = local_54[0] - ((GameObject *)obj)->anim.worldPosZ;
       for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1) {
@@ -340,7 +340,7 @@ void SB_ShipGun_init(int obj)
 {
   int state;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   *(u8 *)(state + 0xd) = 0;
   *(u8 *)(state + 0xc) = SB_SHIPGUN_START_HEALTH;
   *(u8 *)(state + 0xe) = 0;
@@ -358,7 +358,7 @@ void SB_CannonBall_free(int obj)
 {
   int state;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
   if (*(void **)(state + 0x20) != 0) {
     ModelLightStruct_free(*(void **)(state + 0x20));
@@ -428,13 +428,13 @@ void SB_CannonBall_update(int *obj) {
         Obj_FreeObject(obj);
     }
     if (*(s16 *)((char *)state + 0x18) > SB_CANNONBALL_HITBOX_ENABLE_DELAY) {
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->hitVolumePriority = SB_CANNONBALL_HITBOX_TYPE;
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->hitVolumeId = SB_CANNONBALL_HITBOX_PRIORITY;
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->objectHitMask = SB_CANNONBALL_HITBOX_SIZE;
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->skeletonHitMask = SB_CANNONBALL_HITBOX_SIZE;
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags |= SB_CANNONBALL_SOLID_HITBOX_FLAG;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = SB_CANNONBALL_HITBOX_TYPE;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = SB_CANNONBALL_HITBOX_PRIORITY;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->objectHitMask = SB_CANNONBALL_HITBOX_SIZE;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->skeletonHitMask = SB_CANNONBALL_HITBOX_SIZE;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= SB_CANNONBALL_SOLID_HITBOX_FLAG;
     } else {
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
     }
     *(s16 *)((char *)state + 0x18) += framesThisStep;
 }
@@ -458,7 +458,7 @@ void SB_CannonBall_hitDetect(int *obj) {
     }
 
     {
-        int *side = *(int **)((char *)obj + 0x54);
+        int *side = *(int **)&((GameObject *)obj)->anim.hitReactState;
         int *target = *(int **)((char *)side + 0x50);
         s16 type;
         if (target == NULL) return;
@@ -471,7 +471,7 @@ void SB_CannonBall_hitDetect(int *obj) {
 
     Sfx_PlayFromObject(obj, SB_CANNONBALL_IMPACT_SFX);
     {
-        int *p = *(int **)((char *)obj + 0x54);
+        int *p = *(int **)&((GameObject *)obj)->anim.hitReactState;
         *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
     }
     *(f32 *)((char *)state + 0x1c) = lbl_803E58B8;
@@ -517,7 +517,7 @@ void SB_CannonBall_init(int *obj) {
         }
     }
     {
-        int *p = *(int **)((char *)obj + 0x54);
+        int *p = *(int **)&((GameObject *)obj)->anim.hitReactState;
         *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
     }
     ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E58D0;

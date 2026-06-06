@@ -1204,15 +1204,15 @@ void Trigger_init(u8* obj, u8* params) {
     f32 t;
 
     objSetSlot(obj, 0x28);
-    sub = *(u8**)(obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     switch (*(s16*)params) {
     case 0x4b:
         t = (f32)(s32)(params[0x3a] * 2);
         *(f32*)(sub + 4) = t * t;
-        *(s16*)(obj + 4) = 0;
-        *(s16*)(obj + 2) = 0;
+        ((GameObject *)obj)->anim.rotZ = 0;
+        ((GameObject *)obj)->anim.rotY = 0;
         *(s16*)obj = (s16)(params[0x3d] << 8);
-        *(f32*)(obj + 8) = t / lbl_803E40F8;
+        ((GameObject *)obj)->anim.rootMotionScale = t / lbl_803E40F8;
         break;
     case 0x4c:
         *(s16*)(sub + 0x82) = *(s16*)(params + 0x48);
@@ -1224,8 +1224,8 @@ void Trigger_init(u8* obj, u8* params) {
         break;
     case 0x4d:
         *(s16*)obj = (s16)(params[0x3d] << 8);
-        *(s16*)(obj + 2) = (s16)(params[0x3e] << 8);
-        *(s16*)(obj + 4) = 0;
+        ((GameObject *)obj)->anim.rotY = (s16)(params[0x3e] << 8);
+        ((GameObject *)obj)->anim.rotZ = 0;
         break;
     case 0x54:
         *(s16*)(sub + 0x82) = *(s16*)(params + 0x48);
@@ -1443,10 +1443,10 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     moved = 1;
     ret = 0;
     ground = lbl_803E4110;
-    if (*(int *)(obj + 0xf4) == -1) {
+    if (((GameObject *)obj)->unkF4 == -1) {
         return 1;
     }
-    if (*(int *)(obj + 0xf4) == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         sel = p3;
         pt = findRomCurvePointNearObject(obj, sel, 0, 2);
         tgt.x = *(f32 *)(pt + 8);
@@ -1457,7 +1457,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
             cmd[0] = 0x19;
             cmd[1] = 0x15;
             (*(code *)(*gRomCurveInterface + 0x8c))(p2, obj, lbl_803E4120, cmd, sel);
-            *(int *)(obj + 0xf4) = 1;
+            ((GameObject *)obj)->unkF4 = 1;
             moved = 1;
         }
     } else {
@@ -1465,20 +1465,20 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
         if (Curve_AdvanceAlongPath(p2) != 0 || *(int *)(p2 + 0x10) != 0) {
             ret = (u8)(*(code *)(*gRomCurveInterface + 0x90))(p2);
         }
-        *(f32 *)(obj + 0xc) = *(f32 *)(p2 + 0x68);
-        *(f32 *)(obj + 0x10) = *(f32 *)(p2 + 0x6c);
-        *(f32 *)(obj + 0x14) = *(f32 *)(p2 + 0x70);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(p2 + 0x68);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(p2 + 0x6c);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(p2 + 0x70);
         if (ret != 0) {
-            *(int *)(obj + 0xf4) = -1;
+            ((GameObject *)obj)->unkF4 = -1;
         }
-        if (hitDetectFn_800658a4(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), obj, &ground, 0) == 0) {
-            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - ground;
+        if (hitDetectFn_800658a4(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, obj, &ground, 0) == 0) {
+            ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - ground;
         }
     }
     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, t, (float *)p4);
     if (moved != 0) {
-        v = (s16)(getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
-                           *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88)) + 0x8000);
+        v = (s16)(getAngle(((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
+                           ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ) + 0x8000);
         v = v - (u16)*(s16 *)obj;
         if (v > 0x8000) {
             v -= 0xffff;
@@ -1488,7 +1488,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
         }
         *(s16 *)obj = *(s16 *)obj + (v >> 3);
     }
-    if (*(s16 *)(obj + 0xa0) != 0x1a) {
+    if (((GameObject *)obj)->anim.currentMove != 0x1a) {
         ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
     }
     return ret;
@@ -1547,8 +1547,8 @@ extern f32 lbl_803E4100;
 void objInterpretSeq(int obj, int p2, int p3, int p4)
 {
     char *desc = (char *)gTriggerObjDescriptor;
-    u8 *state = *(u8 **)(obj + 0xb8);
-    u8 *p = (u8 *)(*(int *)(obj + 0x4c) + 0x18);
+    u8 *state = ((GameObject *)obj)->extra;
+    u8 *p = (u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x18);
     u8 i = 0;
     u8 b;
     u8 sflags;
@@ -1706,7 +1706,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 10:
                     getEnvfxAct(obj, p2, (s16)((p[2] << 8) | p[3]), p4);
-                    OSReport(desc + 0x68, (int)*(s16 *)(obj + 0x44), (s16)((p[2] << 8) | p[3]), p4);
+                    OSReport(desc + 0x68, (int)((GameObject *)obj)->anim.classId, (s16)((p[2] << 8) | p[3]), p4);
                     break;
                 case 0xd:
                     getLActions(obj, p2, (s16)((p[2] << 8) | p[3]), p3, p4, 0);
@@ -2010,8 +2010,8 @@ extern u8 framesThisStep;
 #pragma peephole off
 void Trigger_hitDetect(int obj)
 {
-    u8 *state = *(u8 **)(obj + 0xb8);
-    u8 *def = *(u8 **)(obj + 0x4c);
+    u8 *state = ((GameObject *)obj)->extra;
+    u8 *def = *(u8 **)&((GameObject *)obj)->anim.placementData;
     int t;
     int tk;
     int target;
@@ -2128,8 +2128,8 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4d:
                     if (ok) {
-                        r1 = fn_80198B68(obj, *(int *)(obj + 0xb8) + 0x28);
-                        r2 = fn_80198B68(obj, *(int *)(obj + 0xb8) + 0x1c);
+                        r1 = fn_80198B68(obj, *(int *)&((GameObject *)obj)->extra + 0x28);
+                        r2 = fn_80198B68(obj, *(int *)&((GameObject *)obj)->extra + 0x1c);
                         if (r1 == 0) {
                             if (r2 == 0) {
                                 objInterpretSeq(obj, target, -2, 0);

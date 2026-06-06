@@ -28,10 +28,10 @@ u8 SnowBike_func0B(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x420
  */
 void SnowBike_mount(int obj, f32 *x, f32 *y, f32 *z)
 {
-    int t = *(int *)(obj + 0xb8);
-    *(f32 *)(t + 0x400) = *(f32 *)(obj + 0xc);
-    *(f32 *)(t + 0x404) = *(f32 *)(obj + 0x10);
-    *(f32 *)(t + 0x408) = *(f32 *)(obj + 0x14);
+    int t = *(int *)&((GameObject *)obj)->extra;
+    *(f32 *)(t + 0x400) = ((GameObject *)obj)->anim.localPosX;
+    *(f32 *)(t + 0x404) = ((GameObject *)obj)->anim.localPosY;
+    *(f32 *)(t + 0x408) = ((GameObject *)obj)->anim.localPosZ;
     *x = *(f32 *)(t + 0x400);
     *y = *(f32 *)(t + 0x404);
     *z = *(f32 *)(t + 0x408);
@@ -46,7 +46,7 @@ void SnowBike_mount(int obj, f32 *x, f32 *y, f32 *z)
  */
 void SnowBike_modelMtxFn(int obj, f32 *x, f32 *y, f32 *z)
 {
-    int t = *(int *)(obj + 0xb8);
+    int t = *(int *)&((GameObject *)obj)->extra;
     *x = *(f32 *)(t + 0x3e8);
     *y = *(f32 *)(t + 0x3ec);
     *z = *(f32 *)(t + 0x3f0);
@@ -99,7 +99,7 @@ extern void *gPathControlInterface;
 #pragma scheduling off
 void SnowBike_func15(int obj)
 {
-    int t = *(int *)(obj + 0xb8);
+    int t = *(int *)&((GameObject *)obj)->extra;
     int *table;
     void *found;
     f32 zero;
@@ -108,27 +108,27 @@ void SnowBike_func15(int obj)
     found = mapRomListFindItem(table[*(u8 *)(t + 0x435)], 0, 0, 0, 0);
     if (found != NULL) {
         if (*(u8 *)(t + 0x434) != 0) {
-            *(f32 *)(obj + 0xc) = *(f32 *)((char *)found + 0x8);
-            *(f32 *)(obj + 0x10) = *(f32 *)((char *)found + 0xc);
-            *(f32 *)(obj + 0x14) = *(f32 *)((char *)found + 0x10);
-            *(s16 *)(obj + 0x0) = (s16)((*(u8 *)((char *)found + 0x29)) << 8);
+            ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)found + 0x8);
+            ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)found + 0xc);
+            ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)found + 0x10);
+            ((GameObject *)obj)->anim.rotX = (s16)((*(u8 *)((char *)found + 0x29)) << 8);
         }
         (*(void (**)(int, int, int))((char *)*(int *)gCheckpointInterface + 0x10))(obj, t + 0x28, 0);
-        *(f32 *)(t + 0xc) = *(f32 *)(obj + 0xc);
-        *(f32 *)(t + 0x10) = *(f32 *)(obj + 0x10);
-        *(f32 *)(t + 0x14) = *(f32 *)(obj + 0x14);
-        *(s16 *)(t + 0x0) = *(s16 *)(obj + 0x0);
+        *(f32 *)(t + 0xc) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(t + 0x10) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(t + 0x14) = ((GameObject *)obj)->anim.localPosZ;
+        *(s16 *)(t + 0x0) = ((GameObject *)obj)->anim.rotX;
         zero = lbl_803E5AE8;
         *(f32 *)(t + 0x494) = zero;
         *(f32 *)(t + 0x498) = zero;
         *(f32 *)(t + 0x49c) = zero;
         (*(void (**)(int, int))((char *)*(int *)gPathControlInterface + 0x20))(obj, t + 0x178);
-        *(f32 *)(*(int *)(obj + 0x54) + 0x10) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(int *)(obj + 0x54) + 0x14) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(int *)(obj + 0x54) + 0x18) = *(f32 *)(obj + 0x14);
-        *(f32 *)(*(int *)(obj + 0x54) + 0x1c) = *(f32 *)(obj + 0x18);
-        *(f32 *)(*(int *)(obj + 0x54) + 0x20) = *(f32 *)(obj + 0x1c);
-        *(f32 *)(*(int *)(obj + 0x54) + 0x24) = *(f32 *)(obj + 0x20);
+        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x10) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x14) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x18) = ((GameObject *)obj)->anim.localPosZ;
+        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x1c) = ((GameObject *)obj)->anim.worldPosX;
+        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x20) = ((GameObject *)obj)->anim.worldPosY;
+        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x24) = ((GameObject *)obj)->anim.worldPosZ;
         *(s8 *)(t + 0x3d3) = 1;
     }
 }
@@ -278,7 +278,7 @@ void fn_801EC928(int p1, int p2)
 #pragma scheduling off
 void SnowBike_setType(int obj, int type)
 {
-    int t = *(int *)(obj + 0xb8);
+    int t = *(int *)&((GameObject *)obj)->extra;
     u32 bit;
     *(s8 *)(t + 0x421) = (s8)type;
     if (type == 2) {
@@ -294,9 +294,9 @@ void SnowBike_setType(int obj, int type)
                 (*(void (**)(f32))((char *)*(int *)gGameUIInterface + 0x68))(lbl_803E5B98);
             }
         }
-        if (*(s16 *)(obj + 0x46) == 0x72) {
-            (*(ObjHitsPriorityState **)(obj + 0x54))->lateralResponseWeight = 0x14;
-            (*(ObjHitsPriorityState **)(obj + 0x54))->axialResponseWeight = 0x14;
+        if (((GameObject *)obj)->anim.seqId == 0x72) {
+            (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lateralResponseWeight = 0x14;
+            (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->axialResponseWeight = 0x14;
         }
     }
 }
@@ -314,7 +314,7 @@ void SnowBike_setType(int obj, int type)
 #pragma scheduling off
 void SnowBike_func12(int obj, f32 *outFloat, s32 *outBool)
 {
-    int t = *(int *)(obj + 0xb8);
+    int t = *(int *)&((GameObject *)obj)->extra;
     f32 v, r;
     *outFloat = *(f32 *)(t + 0x414) / lbl_803E5C48;
     v = *outFloat;
@@ -342,7 +342,7 @@ void SnowBike_func12(int obj, f32 *outFloat, s32 *outBool)
 #pragma scheduling off
 f32 SnowBike_func13(int obj, f32 *out)
 {
-    int t = *(int *)(obj + 0xb8);
+    int t = *(int *)&((GameObject *)obj)->extra;
     f32 r;
     *out = lbl_803E5BB8;
     r = sqrtf(*(f32 *)(t + 0x49c) * *(f32 *)(t + 0x49c)
@@ -368,7 +368,7 @@ f32 SnowBike_func13(int obj, f32 *out)
 #pragma scheduling off
 u32 SnowBike_setScale(int obj)
 {
-    int t = *(int *)(obj + 0xb8);
+    int t = *(int *)&((GameObject *)obj)->extra;
     u32 bit = (*(u8 *)(t + 0x428) >> 1) & 1;
     if (bit != 0) {
         return 0;
@@ -389,7 +389,7 @@ u32 SnowBike_setScale(int obj)
 #pragma scheduling off
 void fn_801EC9BC(int obj)
 {
-    (*(void (**)(int))((char *)*(int *)gCheckpointInterface + 0x34))(*(int *)(obj + 0xb8) + 0x28);
+    (*(void (**)(int))((char *)*(int *)gCheckpointInterface + 0x34))(*(int *)&((GameObject *)obj)->extra + 0x28);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -405,7 +405,7 @@ void fn_801EC9BC(int obj)
 #pragma scheduling off
 u32 fn_801EC9F4(int obj)
 {
-    int result = (*(int (**)(int))((char *)*(int *)gCheckpointInterface + 0x34))(*(int *)(obj + 0xb8) + 0x28);
+    int result = (*(int (**)(int))((char *)*(int *)gCheckpointInterface + 0x34))(*(int *)&((GameObject *)obj)->extra + 0x28);
     if (result == 3) {
         if (lbl_803DC0BC == -1) {
             return 1;
@@ -432,7 +432,7 @@ void SnowBike_free(int obj)
     u32 bit;
     int t;
 
-    t = *(int *)(obj + 0xb8);
+    t = *(int *)&((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 0xa);
     i = 0;
     p = (char *)t;

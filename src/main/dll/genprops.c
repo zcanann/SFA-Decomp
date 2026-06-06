@@ -7553,8 +7553,8 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
     obj = (u8 *)p4;
     if (*(int **)(swipe + 0x48) != NULL && swipe[0xbc] == 0) {
         ang = *(s16 *)obj;
-        if (*(s16 **)(obj + 0x30) != NULL) {
-            ang += **(s16 **)(obj + 0x30);
+        if (*(s16 **)&((GameObject *)obj)->anim.parent != NULL) {
+            ang += **(s16 **)&((GameObject *)obj)->anim.parent;
         }
         angle = (lbl_803E3304 * (f32)(int)-ang) / lbl_803E3308;
         cosv = mathSinf(angle);
@@ -7566,9 +7566,9 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
             count = (int)(lbl_803E330C * *(f32 *)(model2 + 0x14));
             prog = *(f32 *)(slot + 8) * *(f32 *)(model2 + 0x14);
             if (slot[0x14] & 1) {
-                *(f32 *)(swipe + 0x8c) = *(f32 *)(obj + 0x18);
-                *(f32 *)(swipe + 0x90) = *(f32 *)(obj + 0x1c);
-                *(f32 *)(swipe + 0x94) = *(f32 *)(obj + 0x20);
+                *(f32 *)(swipe + 0x8c) = ((GameObject *)obj)->anim.worldPosX;
+                *(f32 *)(swipe + 0x90) = ((GameObject *)obj)->anim.worldPosY;
+                *(f32 *)(swipe + 0x94) = ((GameObject *)obj)->anim.worldPosZ;
                 *(f32 *)(swipe + 0x98) = lbl_803E32B4;
                 slot[0x14] &= ~1;
             }
@@ -7673,9 +7673,9 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                         *(f32 *)(vp + 0) = Curve_EvalBSpline(arrH, frac, NULL);
                         *(f32 *)(vp + 4) = Curve_EvalBSpline(arrI, frac, NULL);
                         *(f32 *)(vp + 8) = Curve_EvalBSpline(arrJ, frac, NULL);
-                        *(f32 *)(vp + 0) = *(f32 *)(vp + 0) + (acc * (*(f32 *)(obj + 0x18) - *(f32 *)(swipe + 0x8c)) + *(f32 *)(swipe + 0x8c));
-                        *(f32 *)(vp + 4) = *(f32 *)(vp + 4) + (acc * (*(f32 *)(obj + 0x1c) - *(f32 *)(swipe + 0x90)) + *(f32 *)(swipe + 0x90));
-                        *(f32 *)(vp + 8) = *(f32 *)(vp + 8) + (acc * (*(f32 *)(obj + 0x20) - *(f32 *)(swipe + 0x94)) + *(f32 *)(swipe + 0x94));
+                        *(f32 *)(vp + 0) = *(f32 *)(vp + 0) + (acc * (((GameObject *)obj)->anim.worldPosX - *(f32 *)(swipe + 0x8c)) + *(f32 *)(swipe + 0x8c));
+                        *(f32 *)(vp + 4) = *(f32 *)(vp + 4) + (acc * (((GameObject *)obj)->anim.worldPosY - *(f32 *)(swipe + 0x90)) + *(f32 *)(swipe + 0x90));
+                        *(f32 *)(vp + 8) = *(f32 *)(vp + 8) + (acc * (((GameObject *)obj)->anim.worldPosZ - *(f32 *)(swipe + 0x94)) + *(f32 *)(swipe + 0x94));
                         vidx = (f32)ibase + frac;
                         *(f32 *)(vp + 0xc) = vidx;
                         {
@@ -7695,9 +7695,9 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                         *(f32 *)(vp + 0x14) = Curve_EvalBSpline(arrE, frac, NULL);
                         *(f32 *)(vp + 0x18) = Curve_EvalBSpline(arrF, frac, NULL);
                         *(f32 *)(vp + 0x1c) = Curve_EvalBSpline(arrG, frac, NULL);
-                        *(f32 *)(vp + 0x14) = *(f32 *)(vp + 0x14) + (acc * (*(f32 *)(obj + 0x18) - *(f32 *)(swipe + 0x8c)) + *(f32 *)(swipe + 0x8c));
-                        *(f32 *)(vp + 0x18) = *(f32 *)(vp + 0x18) + (acc * (*(f32 *)(obj + 0x1c) - *(f32 *)(swipe + 0x90)) + *(f32 *)(swipe + 0x90));
-                        *(f32 *)(vp + 0x1c) = *(f32 *)(vp + 0x1c) + (acc * (*(f32 *)(obj + 0x20) - *(f32 *)(swipe + 0x94)) + *(f32 *)(swipe + 0x94));
+                        *(f32 *)(vp + 0x14) = *(f32 *)(vp + 0x14) + (acc * (((GameObject *)obj)->anim.worldPosX - *(f32 *)(swipe + 0x8c)) + *(f32 *)(swipe + 0x8c));
+                        *(f32 *)(vp + 0x18) = *(f32 *)(vp + 0x18) + (acc * (((GameObject *)obj)->anim.worldPosY - *(f32 *)(swipe + 0x90)) + *(f32 *)(swipe + 0x90));
+                        *(f32 *)(vp + 0x1c) = *(f32 *)(vp + 0x1c) + (acc * (((GameObject *)obj)->anim.worldPosZ - *(f32 *)(swipe + 0x94)) + *(f32 *)(swipe + 0x94));
                         *(f32 *)(vp + 0x20) = vidx;
                         {
                             f32 k = lbl_803E32F4;
@@ -7726,9 +7726,9 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                 return;
             }
         }
-        *(f32 *)(swipe + 0x8c) = *(f32 *)(obj + 0x18);
-        *(f32 *)(swipe + 0x90) = *(f32 *)(obj + 0x1c);
-        *(f32 *)(swipe + 0x94) = *(f32 *)(obj + 0x20);
+        *(f32 *)(swipe + 0x8c) = ((GameObject *)obj)->anim.worldPosX;
+        *(f32 *)(swipe + 0x90) = ((GameObject *)obj)->anim.worldPosY;
+        *(f32 *)(swipe + 0x94) = ((GameObject *)obj)->anim.worldPosZ;
         *(f32 *)(swipe + 0x98) = *(f32 *)(model2 + 4);
     }
 }

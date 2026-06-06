@@ -936,7 +936,7 @@ void SB_CloudRunner_HandlePriorityHit(int obj, u8 *state) {
                 if (GameBit_Get(3870) != 0) {
                     Sfx_PlayFromObject(obj, 1169);
                 }
-                *(s16 *)(obj + 2) = 4000;
+                ((GameObject *)obj)->anim.rotY = 4000;
                 state[0x65] = 1;
                 args.scale = lbl_803E5C74;
                 args.v[0] = 0;
@@ -964,30 +964,30 @@ extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
 #pragma scheduling off
 #pragma peephole off
 void SB_CloudRunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-    f32 *state = *(f32 **)(obj + 0xB8);
+    f32 *state = ((GameObject *)obj)->extra;
     f32 mtx[16];
     if (visible == -1) {
         objRenderFn_8003b8f4(lbl_803E5C74);
         ObjPath_GetPointWorldPosition(obj, 3, state, state + 1, state + 2, 0);
-        if (*(void **)(obj + 0x30) != NULL) {
+        if (((GameObject *)obj)->anim.parent != NULL) {
             *state = *state - playerMapOffsetX;
             state[2] = state[2] - playerMapOffsetZ;
-            Obj_BuildInverseWorldTransformMatrix(*(int *)(obj + 0x30), mtx);
+            Obj_BuildInverseWorldTransformMatrix(*(int *)&((GameObject *)obj)->anim.parent, mtx);
             PSMTXMultVec(mtx, state, state);
         }
     } else if (visible != 0) {
         objRenderFn_8003b8f4(lbl_803E5C74);
         ObjPath_GetPointWorldPosition(obj, 3, state, state + 1, state + 2, 0);
-        if (*(void **)(obj + 0x30) != NULL) {
+        if (((GameObject *)obj)->anim.parent != NULL) {
             *state = *state - playerMapOffsetX;
             state[2] = state[2] - playerMapOffsetZ;
-            Obj_BuildInverseWorldTransformMatrix(*(int *)(obj + 0x30), mtx);
+            Obj_BuildInverseWorldTransformMatrix(*(int *)&((GameObject *)obj)->anim.parent, mtx);
             PSMTXMultVec(mtx, state, state);
         }
     } else {
-        *state = *(f32 *)(obj + 0xC);
-        state[1] = *(f32 *)(obj + 0x10);
-        state[2] = *(f32 *)(obj + 0x14);
+        *state = ((GameObject *)obj)->anim.localPosX;
+        state[1] = ((GameObject *)obj)->anim.localPosY;
+        state[2] = ((GameObject *)obj)->anim.localPosZ;
     }
 }
 #pragma peephole reset
@@ -1004,11 +1004,11 @@ int SB_CloudRunner_SeqFn(int obj, int unused, u8 *setupData) {
     int player = Obj_GetPlayerObject();
     int i;
     *(void (**)(void))((char *)setupData + 0xE8) = SB_CloudRunner_onSeqFree;
-    *(f32 *)((char *)state + 0x4C) = *(f32 *)(obj + 0xC);
-    *(f32 *)((char *)state + 0x50) = *(f32 *)(obj + 0x10);
-    *(f32 *)((char *)state + 0x54) = *(f32 *)(obj + 0x14);
+    *(f32 *)((char *)state + 0x4C) = ((GameObject *)obj)->anim.localPosX;
+    *(f32 *)((char *)state + 0x50) = ((GameObject *)obj)->anim.localPosY;
+    *(f32 *)((char *)state + 0x54) = ((GameObject *)obj)->anim.localPosZ;
     *(s16 *)((char *)state + 0x2C) = (s16)(*(s16 *)obj - 0x4000);
-    *(s16 *)((char *)state + 0x2E) = *(s16 *)(obj + 0x4);
+    *(s16 *)((char *)state + 0x2E) = ((GameObject *)obj)->anim.rotZ;
     for (i = 0; i < setupData[0x8B]; i++) {
         if (setupData[0x81 + i] == 1) {
             objHitDetectFn_80062e84(player, *(int *)((char *)state + 0x10), 0);
@@ -1076,11 +1076,11 @@ extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 #pragma peephole off
 void SB_CloudRunner_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int prevKey;
 
     if (*(s8 *)(state + 0x6e) != 0 || *(s8 *)(obj + 0xac) == 0xb) {
-        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
         return;
     }
     setAButtonIcon(6);
@@ -1098,7 +1098,7 @@ void SB_CloudRunner_update(int obj)
             }
         }
     }
-    *(int *)(obj + 0xf4) = 0;
+    ((GameObject *)obj)->unkF4 = 0;
     prevKey = *(s8 *)(state + 0x65);
     *(s8 *)(state + 0x64) = (s8)(*(s8 *)(state + 0x64) - framesThisStep);
     if (*(s8 *)(state + 0x64) < 0) {
@@ -1114,16 +1114,16 @@ void SB_CloudRunner_update(int obj)
         break;
     case 2:
     case 3:
-        *(int *)(obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
         break;
     }
-    *(f32 *)(state + 0x5c) = *(f32 *)(state + 0x5c) + (f32)(int)*(s16 *)(obj + 4) * timeDelta / lbl_803E5CBC;
-    *(f32 *)(state + 0x58) = *(f32 *)(state + 0x58) + (f32)(int)*(s16 *)(obj + 2) * timeDelta / lbl_803E5CBC;
+    *(f32 *)(state + 0x5c) = *(f32 *)(state + 0x5c) + (f32)(int)((GameObject *)obj)->anim.rotZ * timeDelta / lbl_803E5CBC;
+    *(f32 *)(state + 0x58) = *(f32 *)(state + 0x58) + (f32)(int)((GameObject *)obj)->anim.rotY * timeDelta / lbl_803E5CBC;
     *(f32 *)(state + 0x5c) = *(f32 *)(state + 0x5c) - timeDelta * (*(f32 *)(state + 0x5c) * lbl_803E5CC0);
     *(f32 *)(state + 0x58) = *(f32 *)(state + 0x58) - timeDelta * (*(f32 *)(state + 0x58) * lbl_803E5CC0);
-    *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) - (int)(lbl_803E5CB8 * *(f32 *)(state + 0x58)));
-    *(f32 *)(obj + 0x10) = lbl_803E5CB8 * *(f32 *)(state + 0x58) + *(f32 *)(state + 0x50);
-    *(f32 *)(obj + 0x14) = lbl_803E5CB8 * *(f32 *)(state + 0x5c) + *(f32 *)(state + 0x54);
+    ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY - (int)(lbl_803E5CB8 * *(f32 *)(state + 0x58)));
+    ((GameObject *)obj)->anim.localPosY = lbl_803E5CB8 * *(f32 *)(state + 0x58) + *(f32 *)(state + 0x50);
+    ((GameObject *)obj)->anim.localPosZ = lbl_803E5CB8 * *(f32 *)(state + 0x5c) + *(f32 *)(state + 0x54);
     *(s16 *)(state + 0x6c) = (s16)(*(s16 *)(state + 0x6c) + framesThisStep);
     if (*(s8 *)(state + 0x65) != prevKey) {
         *(s16 *)(state + 0x6c) = 0;

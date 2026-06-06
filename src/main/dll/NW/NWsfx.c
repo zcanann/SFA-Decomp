@@ -135,7 +135,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                 if (((EdibleMushroomState *)state)->unk137 & 2) {
                     rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
                     while (1) {
-                        dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
+                        dx = *(f32 *)(state + 0x68) - ((GameObject *)obj)->anim.localPosX;
                         dz = *(f32 *)(state + 0x70) - ((GameObject *)obj)->anim.localPosZ;
                         if (dx * dx + dz * dz < rangeSq) {
                             if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
@@ -196,7 +196,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         if (((EdibleMushroomState *)state)->unk137 & 0x10) {
             ((EdibleMushroomState *)state)->unk136 = 9;
         } else {
-            ang = getAngle(-(*(f32 *)(obj + 0xc) - ((GameObject *)player)->anim.localPosX),
+            ang = getAngle(-(((GameObject *)obj)->anim.localPosX - ((GameObject *)player)->anim.localPosX),
                            -(((GameObject *)obj)->anim.localPosZ - ((GameObject *)player)->anim.localPosZ));
             *(s16 *)obj = ang;
             if (((EdibleMushroomState *)state)->unk108 > lbl_803E5294 + (f32)other[0x1f]) {
@@ -207,7 +207,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                     if (((EdibleMushroomState *)state)->unk137 & 2) {
                         rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
                         while (1) {
-                            dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
+                            dx = *(f32 *)(state + 0x68) - ((GameObject *)obj)->anim.localPosX;
                             dz = *(f32 *)(state + 0x70) - ((GameObject *)obj)->anim.localPosZ;
                             if (dx * dx + dz * dz < rangeSq) {
                                 if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
@@ -230,7 +230,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                     if (((EdibleMushroomState *)state)->unk137 & 2) {
                         rangeSq = ((EdibleMushroomState *)state)->unk11C * ((EdibleMushroomState *)state)->unk11C;
                         while (1) {
-                            dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
+                            dx = *(f32 *)(state + 0x68) - ((GameObject *)obj)->anim.localPosX;
                             dz = *(f32 *)(state + 0x70) - ((GameObject *)obj)->anim.localPosZ;
                             if (dx * dx + dz * dz < rangeSq) {
                                 if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
@@ -263,7 +263,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
             if (((EdibleMushroomState *)state)->unk137 & 2) {
                 rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
                 while (1) {
-                    dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
+                    dx = *(f32 *)(state + 0x68) - ((GameObject *)obj)->anim.localPosX;
                     dz = *(f32 *)(state + 0x70) - ((GameObject *)obj)->anim.localPosZ;
                     if (dx * dx + dz * dz < rangeSq) {
                         if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
@@ -409,12 +409,12 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
     f32 sinStepM;
     f32 vec[3];
 
-    angle = getAngle(-(*(f32 *)(obj + 0xc) - ((GameObject *)player)->anim.localPosX),
+    angle = getAngle(-(((GameObject *)obj)->anim.localPosX - ((GameObject *)player)->anim.localPosX),
                      -(((GameObject *)obj)->anim.localPosZ - ((GameObject *)player)->anim.localPosZ));
     rad = (lbl_803E52B4 * (f32)angle) / lbl_803E52B8;
     c = mathSinf(rad);
     s = mathCosf(rad);
-    vec[0] = *(f32 *)(obj + 0xc) - dist * c;
+    vec[0] = ((GameObject *)obj)->anim.localPosX - dist * c;
     vec[1] = ((GameObject *)obj)->anim.localPosY;
     vec[2] = ((GameObject *)obj)->anim.localPosZ - dist * s;
     if (objBboxFn_800640cc(obj + 0xc, vec, lbl_803E52D0, 3, 0, obj, 8, -1, 0xff, 0) != 0) {
@@ -434,7 +434,7 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
             t = cosP * sinStepP + s * cosStepP;
             s = s * sinStepP - cosP * cosStepP;
             cosP = t;
-            vec[0] = *(f32 *)(obj + 0xc) - dist * t;
+            vec[0] = ((GameObject *)obj)->anim.localPosX - dist * t;
             vec[2] = ((GameObject *)obj)->anim.localPosZ - dist * s;
             if (objBboxFn_800640cc(obj + 0xc, vec, lbl_803E52D0, 1, 0, obj, 8, -1, 0xff, 0) == 0) {
                 return anglePlus;
@@ -443,7 +443,7 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
             t = cosM * sinStepM + sinM * cosStepM;
             sinM = sinM * sinStepM - cosM * cosStepM;
             cosM = t;
-            vec[0] = *(f32 *)(obj + 0xc) - dist * t;
+            vec[0] = ((GameObject *)obj)->anim.localPosX - dist * t;
             vec[2] = ((GameObject *)obj)->anim.localPosZ - dist * sinM;
             if (objBboxFn_800640cc(obj + 0xc, vec, lbl_803E52D0, 1, 0, obj, 8, -1, 0xff, 0) == 0) {
                 return angleMinus;
@@ -505,7 +505,7 @@ void ediblemushroom_hitDetect(u8 *obj) {
 
     if (((((GameObject *)obj)->unkB0 & 0x1000) == 0) &&
         (((((EdibleMushroomState *)state)->unk137 & 8) != 0) || (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) != 0))) {
-        hitCount = hitDetectFn_80065e50(obj, *(f32 *)(obj + 0xc), ((GameObject *)obj)->anim.localPosY,
+        hitCount = hitDetectFn_80065e50(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
                                         ((GameObject *)obj)->anim.localPosZ, &hits, 0, 0);
         i = 0;
         hitIter = hits;

@@ -102,7 +102,7 @@ f32 wallanimator_setScale(int obj,int target)
   f32 kD8;
   f32 kDC;
 
-  desc = *(int *)(obj + 0x4c);
+  desc = *(int *)&((GameObject *)obj)->anim.placementData;
   count = 6;
   kD0 = lbl_803E3FD0;
   kD4 = lbl_803E3FD4;
@@ -120,9 +120,9 @@ f32 wallanimator_setScale(int obj,int target)
     vecRotateZXY((void *)obj,out);
     effect.rot[2] = *(s16 *)(desc + 0x1c);
     effect.rot[0] = *(s16 *)obj;
-    effect.pos[0] = *(f32 *)(obj + 0x18) + out[0];
-    effect.pos[1] = kDC + (*(f32 *)(obj + 0x1c) + out[1]);
-    effect.pos[2] = *(f32 *)(obj + 0x20) + out[2];
+    effect.pos[0] = ((GameObject *)obj)->anim.worldPosX + out[0];
+    effect.pos[1] = kDC + (((GameObject *)obj)->anim.worldPosY + out[1]);
+    effect.pos[2] = ((GameObject *)obj)->anim.worldPosZ + out[2];
     ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(
         obj, 0xca, effect.rot, 0x200001, -1, 0);
     ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(
@@ -130,14 +130,14 @@ f32 wallanimator_setScale(int obj,int target)
     count--;
   } while (count != 0);
 
-  state = *(int **)(obj + 0xb8);
-  deltaY = *(f32 *)(target + 0x10) - *(f32 *)(obj + 0x10);
+  state = ((GameObject *)obj)->extra;
+  deltaY = *(f32 *)(target + 0x10) - ((GameObject *)obj)->anim.localPosY;
   if ((lbl_803E3FE0 > deltaY) || (lbl_803E3FE4 < deltaY)) {
     scale = lbl_803E3FD4;
   }
   else {
-    deltaX = *(f32 *)(target + 0xc) - *(f32 *)(obj + 0xc);
-    deltaZ = *(f32 *)(target + 0x14) - *(f32 *)(obj + 0x14);
+    deltaX = *(f32 *)(target + 0xc) - ((GameObject *)obj)->anim.localPosX;
+    deltaZ = *(f32 *)(target + 0x14) - ((GameObject *)obj)->anim.localPosZ;
     if (deltaX * deltaX + deltaZ * deltaZ > lbl_803E3FE8) {
       scale = lbl_803E3FD4;
     }
@@ -488,20 +488,20 @@ f32 objFn_801948c0(u8 *obj,u8 coord)
 {
   u8 *state;
 
-  if (obj == NULL || (state = *(u8 **)(obj + 0xb8), state == NULL)) {
+  if (obj == NULL || (state = ((GameObject *)obj)->extra, state == NULL)) {
     return lbl_803E4000;
   }
   switch (coord) {
     case 1:
-      return *(f32 *)(obj + 0xc) + *(f32 *)(state + 0x40);
+      return ((GameObject *)obj)->anim.localPosX + *(f32 *)(state + 0x40);
     case 2:
       return *(f32 *)(state + 0x40);
     case 3:
-      return *(f32 *)(obj + 0x10) + *(f32 *)(state + 0x44);
+      return ((GameObject *)obj)->anim.localPosY + *(f32 *)(state + 0x44);
     case 4:
       return *(f32 *)(state + 0x44);
     case 5:
-      return *(f32 *)(obj + 0x14) + *(f32 *)(state + 0x48);
+      return ((GameObject *)obj)->anim.localPosZ + *(f32 *)(state + 0x48);
     case 6:
       return *(f32 *)(state + 0x48);
   }
@@ -841,14 +841,14 @@ void xyzanimator_free(int obj,int param_2)
   f32 zero;
 
   zero = lbl_803E4000;
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   def = *(undefined4 *)(obj + 0x4c);
   *(float *)(state + 0x40) = lbl_803E4000;
   *(float *)(state + 0x44) = zero;
   *(float *)(state + 0x48) = zero;
   if (param_2 == 0) {
-    block = objPosToMapBlockIdx((double)*(float *)(obj + 0xc),(double)*(float *)(obj + 0x10),
-                                (double)*(float *)(obj + 0x14));
+    block = objPosToMapBlockIdx((double)((GameObject *)obj)->anim.localPosX,(double)((GameObject *)obj)->anim.localPosY,
+                                (double)((GameObject *)obj)->anim.localPosZ);
     block = mapGetBlock(block);
     if ((block != 0) && (*(int *)(state + 4) != 0)) {
       fn_80194C40(def,state,block);
@@ -891,9 +891,9 @@ void wallanimator_update(int obj)
   int tricky;
   float nearestDistance[4];
 
-  state = *(int **)(obj + 0xb8);
-  desc = *(int *)(obj + 0x4c);
-  *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
+  state = ((GameObject *)obj)->extra;
+  desc = *(int *)&((GameObject *)obj)->anim.placementData;
+  *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
 
   if (((u32)*(u8 *)(state + 1) >> 7) != 0) {
     return;
@@ -913,16 +913,16 @@ void wallanimator_update(int obj)
     nearestDistance[0] = lbl_803E3FFC;
     nearby = ObjGroup_FindNearestObject(WALLANIMATOR_NEARBY_GROUP,obj,nearestDistance);
     if ((void *)nearby == NULL) {
-      *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) & ~0x10;
-      *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) & ~8;
-      if ((*(byte *)(obj + 0xaf) & 4) != 0) {
+      *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10;
+      *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode & ~8;
+      if ((*(byte *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
         (*(code *)(**(int **)(tricky + 0x68) + 0x28))(tricky,obj,1,1);
       }
       objRenderFn_80041018(obj);
     }
   }
   else {
-    *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 0x10;
+    *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 0x10;
   }
 }
 #pragma peephole reset

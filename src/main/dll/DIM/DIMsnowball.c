@@ -1352,13 +1352,13 @@ extern int** gObjectTriggerInterface;
 #pragma peephole off
 void ccpedstal_updateGameBitGate(int obj, u8* state2) {
     if (GameBit_Get(*(s16*)(state2 + 0x4)) != 0) {
-        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
         Obj_SetActiveModelIndex(obj, 1);
     } else {
         int doMark;
         Obj_SetActiveModelIndex(obj, 0);
         if (GameBit_Get(0xa9) != 0) {
-            *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) & ~0x10);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10);
             if (ObjTrigger_IsSetById(obj, 0xa9) != 0) {
                 (*(void(**)(int, int, int))(*(int*)gObjectTriggerInterface + 0x48))(0, obj, -1);
                 gameBitDecrement(0xa9);
@@ -1366,7 +1366,7 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2) {
                 goto check;
             }
         } else {
-            *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 0x10);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x10);
         }
         doMark = 0;
     check:
@@ -1392,12 +1392,12 @@ extern void gameBitIncrement(int id);
 #pragma peephole off
 void ccpedstal_updateAltVariant(int obj, u8* state2) {
     if (GameBit_Get(0xdc5) != 0) {
-        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
     } else {
-        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) & ~8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
     }
     if (GameBit_Get(*(s16*)(state2 + 0x4)) != 0) {
-        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
         Obj_SetActiveModelIndex(obj, 0);
     } else {
         int doMark;
@@ -1487,23 +1487,23 @@ void ccqueen_update(int *obj) {
 #pragma scheduling off
 #pragma peephole off
 int ccqueen_SeqFn(int obj, int unused, u8* data) {
-    int* state = *(int**)(obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     if (data[0x8b] != 0) {
         int i;
         for (i = 0; (u8)i < data[0x8b]; i++) {
             int cmd = data[0x81 + (u8)i];
             switch (cmd) {
             case 1:
-                if (*(void**)(obj + 0xc8) != NULL) {
+                if (((GameObject *)obj)->unkC8 != NULL) {
                     ObjLink_DetachChild(obj, *(int*)state);
                 }
                 break;
             case 2:
                 ((void(*)(int, f32, f32, f32, f32))((void**)*gWaterfxInterface)[4])(
                     obj,
-                    *(f32*)(obj + 0x18),
-                    *(f32*)(obj + 0x1c),
-                    *(f32*)(obj + 0x20),
+                    ((GameObject *)obj)->anim.worldPosX,
+                    ((GameObject *)obj)->anim.worldPosY,
+                    ((GameObject *)obj)->anim.worldPosZ,
                     lbl_803E4670);
                 break;
             }
@@ -1518,7 +1518,7 @@ int ccqueen_SeqFn(int obj, int unused, u8* data) {
 #pragma scheduling off
 void ccpedstal_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (*(u8 *)(state + 6) != 0) {
         if (*(u8 *)(state + 6) & 1) {
             GameBit_Set(*(s16 *)(state + 4), 1);
@@ -1544,7 +1544,7 @@ extern int *gGameUIInterface;
 #pragma scheduling off
 void fn_801AC01C(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int r;
     void *res;
     GameBit_Set(0x3a3, 0);
@@ -1632,8 +1632,8 @@ void ccsharpclawpad_update(int obj)
     f32 *state;
     int *player;
 
-    if (GameBit_Get(*(s16 *)(*(int *)(obj + 0x4c) + 0x1a)) != 0) {
-        *(u8 *)(obj + 0xaf) |= 8;
+    if (GameBit_Get(*(s16 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x1a)) != 0) {
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         particleArgs.offset[0] = lbl_803E46A8;
         particleArgs.offset[1] = lbl_803E46AC;
         particleArgs.offset[2] = lbl_803E46B0;
@@ -1643,30 +1643,30 @@ void ccsharpclawpad_update(int obj)
         objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 2, 2, 0x19, lbl_803E46B8,
                               lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
     } else {
-        *(u8 *)(obj + 0xaf) &= ~8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
         if (GameBit_Get(0x40) == 0) {
-            *(u8 *)(obj + 0xaf) |= 0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
         } else {
-            *(u8 *)(obj + 0xaf) &= ~0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
         }
-        state = *(f32 **)(obj + 0xb8);
+        state = ((GameObject *)obj)->extra;
         if (ObjTrigger_IsSet(obj) != 0 && fn_801334E0() == 0) {
             *state = lbl_803E46C0;
         }
         if (*state > lbl_803E46B0) {
-            if ((*(u8 *)(obj + 0xaf) & 4) == 0) {
+            if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) == 0) {
                 *state = lbl_803E46B0;
             } else {
                 *state -= timeDelta;
-                showHelpText(*(s16 *)(*(int *)(obj + 0x50) + 0x7c));
+                showHelpText(*(s16 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x7c));
             }
         }
         player = (int *)Obj_GetPlayerObject();
         if (vec3f_distanceSquared((f32 *)(obj + 0x18), (f32 *)((char *)player + 0x18)) < lbl_803E46C4
             && playerIsDisguised((int)player) != 0) {
             Sfx_PlayFromObject(obj, 0x109);
-            GameBit_Set(*(s16 *)(*(int *)(obj + 0x4c) + 0x1a), 1);
-            *(u8 *)(obj + 0xaf) |= 8;
+            GameBit_Set(*(s16 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x1a), 1);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         }
         particleArgs.offset[0] = lbl_803E46A8;
         particleArgs.offset[1] = lbl_803E46AC;
@@ -1692,7 +1692,7 @@ extern int *gCameraInterface;
 #pragma scheduling off
 void cclevcontrol_update(int obj)
 {
-    int *state = *(int **)(obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     int *tricky;
     u32 a;
     u32 b;
@@ -1799,7 +1799,7 @@ void cclightfoot_update(int obj)
 {
     LightfootAnimTable *tbl = (LightfootAnimTable *)lbl_80323408;
     u32 fallback;
-    int *state = *(int **)(obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     u32 targetObj;
     s16 angle;
     u32 o2;
@@ -1820,9 +1820,9 @@ void cclightfoot_update(int obj)
 
     fallback = 0;
     if (tbl->stateFlags[*((u8 *)state + 0x10)] & 1) {
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else {
-        *(u8 *)(obj + 0xaf) &= ~8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     }
     o1 = state[2];
     if (o1 != 0) {
@@ -1911,8 +1911,8 @@ void cclightfoot_update(int obj)
                 dist = lbl_803E4674;
             }
         }
-        angle = (s16)getAngle(-(*(f32 *)(targetObj + 0xc) - *(f32 *)(obj + 0xc)),
-                              -(*(f32 *)(targetObj + 0x14) - *(f32 *)(obj + 0x14)));
+        angle = (s16)getAngle(-(*(f32 *)(targetObj + 0xc) - ((GameObject *)obj)->anim.localPosX),
+                              -(*(f32 *)(targetObj + 0x14) - ((GameObject *)obj)->anim.localPosZ));
         diff = (s16)(*(s16 *)obj - (u16)angle);
         if (diff > 0x8000) {
             diff = (s16)(diff - 0xffff);
@@ -1942,7 +1942,7 @@ void cclightfoot_update(int obj)
         } else {
             if (Obj_IsLoadingLocked() != 0) {
                 state[0] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6f1), 5, -1, -1,
-                                           *(int *)(obj + 0x30));
+                                           *(int *)&((GameObject *)obj)->anim.parent);
                 ObjLink_AttachChild(obj, state[0], 0);
             }
             state[1] = (int)Obj_GetPlayerObject();
@@ -1953,7 +1953,7 @@ void cclightfoot_update(int obj)
         }
         break;
     case 1:
-        if (*(f32 *)(obj + 0x98) > lbl_803E467C && *(f32 *)(obj + 0x98) < lbl_803E4688) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E467C && ((GameObject *)obj)->anim.currentMoveProgress < lbl_803E4688) {
             if (diff > 0x400) {
                 *(s16 *)obj = (s16)(*(s16 *)obj - (int)(lbl_803E468C * timeDelta));
             } else if (diff < -0x400) {
@@ -2050,7 +2050,7 @@ void cclightfoot_update(int obj)
         }
         break;
     case 0xd:
-        if (*(f32 *)(obj + 0x98) > lbl_803E467C && *(f32 *)(obj + 0x98) < lbl_803E4688) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E467C && ((GameObject *)obj)->anim.currentMoveProgress < lbl_803E4688) {
             if (diff > 0x400) {
                 *(s16 *)obj = (s16)(*(s16 *)obj - (int)(lbl_803E468C * timeDelta));
             } else if (diff < -0x400) {
@@ -2065,14 +2065,14 @@ void cclightfoot_update(int obj)
         break;
     case 0xe:
         if ((u32)state[0] != 0) {
-            if (*(void **)(obj + 0xc8) != NULL) {
+            if (((GameObject *)obj)->unkC8 != NULL) {
                 ObjLink_DetachChild(obj, state[0]);
             }
             Obj_FreeObject(state[0]);
             state[0] = 0;
         }
-        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
-        *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x8000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
         ObjHits_DisableObject(obj);
         return;
     }
@@ -2097,7 +2097,7 @@ void cclightfoot_update(int obj)
     {
         u8 *pa = &tbl->stateFlags[m];
         animId = pa[0x10];
-        if (animId != *(s16 *)(obj + 0xa0)) {
+        if (animId != ((GameObject *)obj)->anim.currentMove) {
             if (pa[0] & 2) {
                 ObjAnim_SetCurrentMove(obj, animId, lbl_803E4698, 0);
             } else {

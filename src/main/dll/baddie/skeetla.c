@@ -56,7 +56,7 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
     doGroundSnap = 0;
     nearestDistance = lbl_803E2424;
 
-    if ((objPosToMapBlockIdx(*(f32 *)(obj + 0x18), ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ) == -1) &&
+    if ((objPosToMapBlockIdx(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ) == -1) &&
         ((state->unk54 & 0x80000) == 0)) {
         state->unk353 = 0;
         ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
@@ -74,7 +74,7 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
     }
 
     if (doGroundSnap != 0) {
-        hitDetectFn_800658a4(obj, *(f32 *)(obj + 0x18), ((GameObject *)obj)->anim.worldPosY,
+        hitDetectFn_800658a4(obj, ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY,
                              ((GameObject *)obj)->anim.worldPosZ, &hitOffsetY, 0);
         ((GameObject *)obj)->anim.localPosY -= hitOffsetY;
         state->unk353 = 0;
@@ -106,8 +106,8 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
         ((GameObject *)obj)->anim.velocityY = lbl_803E23DC;
     }
 
-    lastContactObj = (void *)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject;
-    if (((*(ObjHitsPriorityState **)(obj + 0x54))->flags & 8) == 0 ||
+    lastContactObj = (void *)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject;
+    if (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) == 0 ||
         (*(s16 *)((u8 *)lastContactObj + 0x46) == 0x1f)) {
         lastContactObj = NULL;
     }
@@ -118,7 +118,7 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
             if (vec3f_distanceSquared((f32 *)(obj + 0x18),
                                       (f32 *)(Obj_GetPlayerObject() + 0x18)) > lbl_803E2430) {
                 state->contactTimer -= lbl_803E242C;
-                *(u8 *)(*(u8 **)(obj + 0x50) + 0x71) = 0x7f;
+                *(u8 *)(*(u8 **)&((GameObject *)obj)->anim.modelInstance + 0x71) = 0x7f;
                 state->unk54 &= ~8;
             }
         }
@@ -128,7 +128,7 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
         if (state->contactTimer >= lbl_803E23E0) {
             state->contactTimer -= lbl_803E23E0;
             state->unk54 |= 8;
-            *(u8 *)(*(u8 **)(obj + 0x50) + 0x71) = 0x7e;
+            *(u8 *)(*(u8 **)&((GameObject *)obj)->anim.modelInstance + 0x71) = 0x7e;
         }
     } else {
         state->contactTimer = lbl_803E23DC;
@@ -408,7 +408,7 @@ int trickyMove(u8 *obj, f32 *targetPos) {
   moveSpeed = ((TrickyState *)state)->unk14;
   trickyDebugPrint(&lbl_803DBC4C, moveSpeed);
 
-  ((TrickyState *)state)->unk2C = targetPos[0] - *(f32 *)(obj + 0x18);
+  ((TrickyState *)state)->unk2C = targetPos[0] - ((GameObject *)obj)->anim.worldPosX;
   ((TrickyState *)state)->unk30 = targetPos[2] - ((GameObject *)obj)->anim.worldPosZ;
   length =
       sqrtf((((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C) +
@@ -420,14 +420,14 @@ int trickyMove(u8 *obj, f32 *targetPos) {
 
   if (moveSpeed < lbl_803E2420) {
     prospectivePos[0] =
-        lbl_803E2420 * ((TrickyState *)state)->unk2C * timeDelta + *(f32 *)(obj + 0x18);
+        lbl_803E2420 * ((TrickyState *)state)->unk2C * timeDelta + ((GameObject *)obj)->anim.worldPosX;
     prospectivePos[1] = ((GameObject *)obj)->anim.worldPosY;
     prospectivePos[2] =
         lbl_803E2420 * ((TrickyState *)state)->unk30 * timeDelta + ((GameObject *)obj)->anim.worldPosZ;
   }
   else {
     prospectivePos[0] =
-        timeDelta * (((TrickyState *)state)->unk2C * moveSpeed) + *(f32 *)(obj + 0x18);
+        timeDelta * (((TrickyState *)state)->unk2C * moveSpeed) + ((GameObject *)obj)->anim.worldPosX;
     prospectivePos[1] = ((GameObject *)obj)->anim.worldPosY;
     prospectivePos[2] =
         timeDelta * (((TrickyState *)state)->unk30 * moveSpeed) + ((GameObject *)obj)->anim.worldPosZ;
@@ -438,7 +438,7 @@ int trickyMove(u8 *obj, f32 *targetPos) {
   adjustedPos[2] = prospectivePos[2];
   trickyApplyObjectAvoidanceToStep((f32 *)(obj + 0x18), adjustedPos, targetPos);
   if (vec3f_distanceSquared(prospectivePos, adjustedPos) > lbl_803E2468) {
-    ((TrickyState *)state)->unk2C = adjustedPos[0] - *(f32 *)(obj + 0x18);
+    ((TrickyState *)state)->unk2C = adjustedPos[0] - ((GameObject *)obj)->anim.worldPosX;
     ((TrickyState *)state)->unk30 = adjustedPos[2] - ((GameObject *)obj)->anim.worldPosZ;
     length =
         sqrtf((((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C) +
@@ -567,7 +567,7 @@ int trickyMove(u8 *obj, f32 *targetPos) {
 #pragma scheduling off
 int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags)
 {
-    int t = *(int *)(obj + 0xb8);
+    int t = *(int *)&((GameObject *)obj)->extra;
     f32 fz;
     if (*(int *)(t + 0x20) == newState) {
         if (((GameObject *)obj)->anim.currentMove == newState) {
@@ -1119,7 +1119,7 @@ void trickyApplyObjectAvoidanceToStep(f32 *start, f32 *end, f32 *guardPoint)
     objects = ObjGroup_GetObjects(0x40, &count);
     for (i = 0; i < count; i++) {
         obj = objects[i];
-        def = *(u8 **)(obj + 0x4c);
+        def = *(u8 **)&((GameObject *)obj)->anim.placementData;
         trickyAdjustStepAroundPoint(start, end, guardPoint, (f32 *)(obj + 0x18),
                     lbl_803E2484 * (f32)*(u16 *)(def + 0x18),
                     lbl_803E2484 * (f32)*(u16 *)(def + 0x1a));
@@ -1128,10 +1128,10 @@ void trickyApplyObjectAvoidanceToStep(f32 *start, f32 *end, f32 *guardPoint)
     objects = ObjList_GetObjects(&startIndex, &objectCount);
     for (i = startIndex; i < objectCount; i++) {
         obj = objects[i];
-        def = *(u8 **)(obj + 0x50);
+        def = *(u8 **)&((GameObject *)obj)->anim.modelInstance;
         minRadius = *(u16 *)(def + 0x84);
         if (minRadius != 0) {
-            runtime = *(u8 **)(obj + 0x54);
+            runtime = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
             if ((runtime != NULL) && ((*(u16 *)(runtime + 0x60) & 1) != 0)) {
                 trickyAdjustStepAroundPoint(start, end, guardPoint, (f32 *)(obj + 0x18),
                             lbl_803E2484 * (f32)minRadius,

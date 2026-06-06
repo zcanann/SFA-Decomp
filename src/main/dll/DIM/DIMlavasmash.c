@@ -109,9 +109,9 @@ void dimlogfire_update(int obj)
     DimLogFireState *state;
     struct { f32 x, y, z; } vec;
 
-    state = *(DimLogFireState **)(obj + 0xb8);
-    tricky = *(int *)(obj + 0x4c);
-    *(u8 *)(obj + 0xaf) |= 8;
+    state = ((GameObject *)obj)->extra;
+    tricky = *(int *)&((GameObject *)obj)->anim.placementData;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     switch (state->mode) {
     case 1:
         if (*(int **)&state->light != NULL) {
@@ -135,7 +135,7 @@ void dimlogfire_update(int obj)
         vec.x = lbl_803E4828;
         vec.y = lbl_803E482C;
         vec.z = lbl_803E4828;
-        fn_80098B18(obj, *(f32 *)(obj + 8), 2, a, b, (int)&vec);
+        fn_80098B18(obj, ((GameObject *)obj)->anim.rootMotionScale, 2, a, b, (int)&vec);
         ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
         break;
     case 2:
@@ -150,10 +150,10 @@ void dimlogfire_update(int obj)
         }
         tricky = getTrickyObject();
         if ((uint)tricky != 0) {
-            if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+            if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
                 (*(void (**)(int, int, int, int))(**(int **)(tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
             }
-            *(u8 *)(obj + 0xaf) &= ~8;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
         }
         ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
         break;
@@ -292,9 +292,9 @@ void dimlogfire_init(int obj, int def)
     int radius;
     DimLogFireState *state;
 
-    *(void **)(obj + 0xbc) = (void *)dimlogfire_SeqFn;
+    ((GameObject *)obj)->unkBC = (void *)dimlogfire_SeqFn;
     ObjGroup_AddObject(obj, 0x31);
-    state = *(DimLogFireState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     state->unk20 = 0;
     state->unk18 = *(s16 *)(def + 0x1a);
     state->strengthInit = (s8)*(s16 *)(def + 0x1c);
@@ -303,7 +303,7 @@ void dimlogfire_init(int obj, int def)
         state->mode = 1;
         state->dousedLatch = 1;
     }
-    *(u16 *)(obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
     state->flickerTimerA = lbl_803E482C;
     state->flickerTimerB = lbl_803E4820;
     if (*(int **)&state->light == NULL) {
@@ -313,13 +313,13 @@ void dimlogfire_init(int obj, int def)
         modelLightStruct_setLightKind(state->light, 2);
         modelLightStruct_setDiffuseColor(state->light, 0xff, 0x7f, 0, 0xff);
         modelLightStruct_setSpecularColor(state->light, 0xff, 0x7f, 0, 0xff);
-        radius = (int)(lbl_803E4830 * *(f32 *)(obj + 8));
+        radius = (int)(lbl_803E4830 * ((GameObject *)obj)->anim.rootMotionScale);
         modelLightStruct_setDistanceAttenuation(state->light, (f32)radius, lbl_803E4834 + (f32)radius);
         modelLightStruct_setEnabled(state->light, 1, lbl_803E4828);
         modelLightStruct_setPosition(state->light, lbl_803E4828, lbl_803E4838, lbl_803E4828);
         modelLightStruct_startColorFade(state->light, 1, 3);
         modelLightStruct_setDiffuseTargetColor(state->light, 0xff, 0x5c, 0, 0xff);
-        modelLightStruct_setupGlow(state->light, 0, 0xff, 0x7f, 0, 0x87, lbl_803E483C * *(f32 *)(obj + 8));
+        modelLightStruct_setupGlow(state->light, 0, 0xff, 0x7f, 0, 0x87, lbl_803E483C * ((GameObject *)obj)->anim.rootMotionScale);
         modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E4834);
     }
 }
@@ -414,7 +414,7 @@ void dimsnowball_update(int obj)
     ap = x;
     ap = y;
     ap = z;
-    state = *(int **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     if (*(void **)state == NULL) {
         Obj_FreeObject(obj);
@@ -459,30 +459,30 @@ void dimsnowball_update(int obj)
     dy1 = y[1] - y[0];
     dy2 = y[2] - y[3];
     if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && *(s8 *)((u8 *)state + 0xc) <= 0) {
-        sqrtf(*(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c) +
-              (*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x28) * *(f32 *)(obj + 0x28)));
+        sqrtf(((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ +
+              (((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX + ((GameObject *)obj)->anim.velocityY * ((GameObject *)obj)->anim.velocityY));
         if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
             Sfx_PlayFromObject(obj, SFXfoot_run_jingle2);
         }
         *(s8 *)((u8 *)state + 0xc) = 0x1e;
     }
-    *(f32 *)(obj + 0xc) = lbl_803E4850 * (x[2] - x[1]) + x[1];
-    *(f32 *)(obj + 0x10) = lbl_803E4850 * (y[2] - y[1]) + y[1];
-    *(f32 *)(obj + 0x14) = lbl_803E4850 * (z[2] - z[1]) + z[1];
-    *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + *(f32 *)(*state + 0xc);
-    *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + *(f32 *)(*state + 0x10);
-    *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + *(f32 *)(*state + 0x14);
-    *(f32 *)(obj + 0x24) = oneOverTimeDelta * (*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80));
-    *(f32 *)(obj + 0x28) = oneOverTimeDelta * (*(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84));
-    *(f32 *)(obj + 0x2c) = oneOverTimeDelta * (*(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+    ((GameObject *)obj)->anim.localPosX = lbl_803E4850 * (x[2] - x[1]) + x[1];
+    ((GameObject *)obj)->anim.localPosY = lbl_803E4850 * (y[2] - y[1]) + y[1];
+    ((GameObject *)obj)->anim.localPosZ = lbl_803E4850 * (z[2] - z[1]) + z[1];
+    ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.localPosX + *(f32 *)(*state + 0xc);
+    ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + *(f32 *)(*state + 0x10);
+    ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ + *(f32 *)(*state + 0x14);
+    ((GameObject *)obj)->anim.velocityX = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX);
+    ((GameObject *)obj)->anim.velocityY = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY);
+    ((GameObject *)obj)->anim.velocityZ = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
     state[2] = state[2] + frames;
     if (*(s8 *)((u8 *)state + 0xc) > 0) {
         *(s8 *)((u8 *)state + 0xc) -= frames;
     }
-    v24 = *(f32 *)(obj + 0x24);
-    *(s16 *)(obj + 2) = (int)-(lbl_803E4854 * -*(f32 *)(obj + 0x2c) - (f32)*(s16 *)(obj + 2));
-    *(s16 *)(obj + 4) = (int)-(lbl_803E4854 * v24 - (f32)*(s16 *)(obj + 4));
-    model = *(u8 **)(obj + 0x54);
+    v24 = ((GameObject *)obj)->anim.velocityX;
+    ((GameObject *)obj)->anim.rotY = (int)-(lbl_803E4854 * -((GameObject *)obj)->anim.velocityZ - (f32)((GameObject *)obj)->anim.rotY);
+    ((GameObject *)obj)->anim.rotZ = (int)-(lbl_803E4854 * v24 - (f32)((GameObject *)obj)->anim.rotZ);
+    model = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
     if (model != NULL) {
         *(s16 *)(model + 0x60) |= 1;
         *(u8 *)(model + 0x6e) = 4;

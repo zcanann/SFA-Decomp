@@ -95,7 +95,7 @@ extern void mm_free(void* p);
 #pragma scheduling off
 void lightning_free(u8* obj, int p2)
 {
-    u8* state = *(u8**)(obj + 0xb8);
+    u8* state = ((GameObject *)obj)->extra;
     void* h;
     ObjGroup_RemoveObject(obj, MMP_LIGHTNING_OBJGROUP);
     h = *(void**)state;
@@ -110,7 +110,7 @@ void lightning_free(u8* obj, int p2)
 extern void lightningRender(u32 handle);
 void lightning_render(u8* obj)
 {
-    u32 handle = *(u32*)(*(u8**)(obj + 0xb8));
+    u32 handle = *(u32*)(((GameObject *)obj)->extra);
     if (handle != 0) {
         lightningRender(handle);
     }
@@ -148,8 +148,8 @@ void lightning_update(u8 *obj)
     int spawnLightning;
     int handle;
 
-    state = *(u8 **)(obj + 0xb8);
-    data = *(u8 **)(obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    data = *(u8 **)&((GameObject *)obj)->anim.placementData;
     if (*(s16 *)(data + 0x24) != -1) {
         if (((LightningFlags *)(state + 0x25))->enabled) {
             if (GameBit_Get(*(s16 *)(data + 0x24)) == 0) {
@@ -232,7 +232,7 @@ void lightning_init(u8 *obj, u8 *data)
     u8 *state;
     f32 defaultScale;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     ObjGroup_AddObject(obj, MMP_LIGHTNING_OBJGROUP);
     ((LightningMode *)(state + 0x24))->mode = data[0x21];
     defaultScale = lbl_803E40A0;
@@ -290,8 +290,8 @@ void WaterFallSpray_update(int *objParam)
     s16 i;
 
     obj = (u8 *)objParam;
-    state = *(u32 **)(obj + 0xb8);
-    data = *(u8 **)(obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    data = *(u8 **)&((GameObject *)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
     if (player != NULL) {
         if (*(s16 *)(data + 0x18) != -1) {
@@ -306,14 +306,14 @@ void WaterFallSpray_update(int *objParam)
                 Sfx_KeepAliveLoopedObjectSound(obj, state[1] & 0xffff);
             }
 
-            cooldown = *(int *)(obj + 0xf4);
+            cooldown = ((GameObject *)obj)->unkF4;
             if (cooldown <= 0) {
-                dx = *(f32 *)(obj + 0x18) - *(f32 *)(player + 0x18);
-                dy = *(f32 *)(obj + 0x1c) - *(f32 *)(player + 0x1c);
-                dz = *(f32 *)(obj + 0x20) - *(f32 *)(player + 0x20);
+                dx = ((GameObject *)obj)->anim.worldPosX - *(f32 *)(player + 0x18);
+                dy = ((GameObject *)obj)->anim.worldPosY - *(f32 *)(player + 0x1c);
+                dz = ((GameObject *)obj)->anim.worldPosZ - *(f32 *)(player + 0x20);
                 distance = sqrtf(dz * dz + (dx * dx + dy * dy));
                 if (((distance <= (f32)(s32)((u32)data[0x20] << 4)) || (data[0x20] == 0)) &&
-                    ((*(u16 *)(obj + 0xb0) & 0x800) != 0)) {
+                    ((((GameObject *)obj)->unkB0 & 0x800) != 0)) {
                     for (i = 0; i < data[0x24]; i++) {
                         partfxArgs.xOffset = (f32)(s32)randomGetRange(-data[0x1d], data[0x1d]);
                         partfxArgs.yOffset = (f32)(s32)randomGetRange(-data[0x1f], data[0x1f]);
@@ -332,10 +332,10 @@ void WaterFallSpray_update(int *objParam)
                         }
                     }
                 }
-                *(u32 *)(obj + 0xf4) = -(u32)data[0x24];
+                *(u32 *)&((GameObject *)obj)->unkF4 = -(u32)data[0x24];
             }
             else if (cooldown > 0) {
-                *(u32 *)(obj + 0xf4) = cooldown - (u32)framesThisStep;
+                *(u32 *)&((GameObject *)obj)->unkF4 = cooldown - (u32)framesThisStep;
             }
         }
     }
@@ -349,18 +349,18 @@ void WaterFallSpray_update(int *objParam)
 #pragma scheduling off
 #pragma peephole off
 void WaterFallSpray_init(u8* obj, u8* data) {
-    u8* sub = *(u8**)(obj + 0xb8);
+    u8* sub = ((GameObject *)obj)->extra;
     s16 a, b, c;
     int v;
     a = (s16)((s32)(s8)data[0x1a] << 8);
-    *(s16*)(obj + 0x4) = a;
+    ((GameObject *)obj)->anim.rotZ = a;
     b = (s16)((s32)(s8)data[0x1b] << 8);
-    *(s16*)(obj + 0x2) = b;
+    ((GameObject *)obj)->anim.rotY = b;
     c = (s16)((s32)(s8)data[0x1c] << 8);
-    *(s16*)(obj + 0x0) = c;
-    *(u32*)(obj + 0xf4) = 0;
+    ((GameObject *)obj)->anim.rotX = c;
+    *(u32 *)&((GameObject *)obj)->unkF4 = 0;
     *(int(**)(int*))(obj + 0xbc) = WaterFallSpray_SeqFn;
-    v = *(int*)((char*)(*(u8**)(obj + 0x4c)) + 0x14);
+    v = *(int*)((char*)(*(u8**)&((GameObject *)obj)->anim.placementData) + 0x14);
     if (v < WATERFALLSPRAY_ALT_SFX_DEF_END) {
         if (v >= WATERFALLSPRAY_ALT_SFX_DEF_MIN) {
             *(u32*)(sub + 0) = WATERFALLSPRAY_ALT_SFX_A;
@@ -382,9 +382,9 @@ extern f32 lbl_803E40BC;
 #pragma scheduling off
 #pragma peephole off
 void sfxplayerObj_init(u8* obj, u8* data) {
-    u8* sub = *(u8**)(obj + 0xb8);
+    u8* sub = ((GameObject *)obj)->extra;
     int type;
-    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | SFXPLAYER_OBJECT_FLAGS);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | SFXPLAYER_OBJECT_FLAGS);
     type = data[0x1d];
     switch (type) {
     case SFXPLAYER_MODE_GAMEBIT: {
@@ -418,8 +418,8 @@ extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8 *obj, u16 sfx);
 #pragma peephole off
 void sfxplayerObj_free(u8* obj)
 {
-    u8* data = *(u8**)(obj + 0x4c);
-    u8* sub = *(u8**)(obj + 0xb8);
+    u8* data = *(u8**)&((GameObject *)obj)->anim.placementData;
+    u8* sub = ((GameObject *)obj)->extra;
     u8 flag = sub[4];
     if ((flag & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0) return;
     sub[4] = (u8)(flag & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG);
@@ -502,8 +502,8 @@ void sfxplayerObj_update(u8 *obj)
     u16 soundId;
     int bitState;
 
-    state = *(u8 **)(obj + 0xb8);
-    data = *(u8 **)(obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    data = *(u8 **)&((GameObject *)obj)->anim.placementData;
     if ((data[0x1c] & 8) != 0) {
         if (getCurSeqNo() != 0) {
             focusObj = (*(u8 *(**)(void))(*gCameraInterface + 0x0c))();
@@ -591,10 +591,10 @@ void fn_80198A00(u8 *obj, int seqArg)
     int rearBlocked;
 
     queryType = 0x17;
-    state = *(u8 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     curveHit = (*(int (**)(f32, f32, f32, int *, int, int))(*gRomCurveInterface + 0x14))(
         *(f32 *)(state + 0x28), *(f32 *)(state + 0x2c), *(f32 *)(state + 0x30),
-        &queryType, 1, *(s16 *)(*(u8 **)(obj + 0x4c) + 0x38));
+        &queryType, 1, *(s16 *)(*(u8 **)&((GameObject *)obj)->anim.placementData + 0x38));
     frontBlocked = (*(int (**)(int, f32, f32, f32, f32 *))(*gRomCurveInterface + 0x4c))(
         curveHit, *(f32 *)(state + 0x28), *(f32 *)(state + 0x2c), *(f32 *)(state + 0x30),
         &hitDistance);
@@ -640,19 +640,19 @@ int fn_80198B68(u8 *obj, f32 *point)
     f32 localZ;
     f32 forward;
 
-    data = *(u8 **)(obj + 0x4c);
+    data = *(u8 **)&((GameObject *)obj)->anim.placementData;
     pointX = point[0];
     pointY = point[1];
     pointZ = point[2];
 
     yawCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
     yawSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
-    pitchCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)(obj + 2)));
-    pitchSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)(obj + 2)));
+    pitchCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotY));
+    pitchSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotY));
 
-    relX = pointX - *(f32 *)(obj + 0x18);
-    relY = pointY - *(f32 *)(obj + 0x1c);
-    relZ = pointZ - *(f32 *)(obj + 0x20);
+    relX = pointX - ((GameObject *)obj)->anim.worldPosX;
+    relY = pointY - ((GameObject *)obj)->anim.worldPosY;
+    relZ = pointZ - ((GameObject *)obj)->anim.worldPosZ;
     localX = relX * yawSin - relZ * yawCos;
     forward = relX * yawCos + relZ * yawSin;
     localY = relY * pitchSin - forward * pitchCos;
@@ -705,8 +705,8 @@ void fn_80198DE8(u8 *obj, int seqArg)
     f32 localPos[3];
     s8 triggerState;
 
-    data = *(u8 **)(obj + 0x4c);
-    state = *(u8 **)(obj + 0xb8);
+    data = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    state = ((GameObject *)obj)->extra;
 
     planeBase = *(f32 *)(state + 0x18);
     normalZ = *(f32 *)(state + 0x14);

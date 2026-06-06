@@ -2487,13 +2487,13 @@ void fn_800E5E38(int obj,f32 *state)
   collision = (CurvesCollisionState *)state;
   point = curves_getCurves(obj,collision->points[0][0],collision->points[0][2],&hitCount,0);
   hitIndex = hitCount - 1;
-  currentY = *(f32 *)(obj + 0x1c);
+  currentY = ((GameObject *)obj)->anim.worldPosY;
   window = lbl_803E06A0;
   point = point + hitIndex;
   while (hitIndex >= 0) {
     if ((s8)point->type != 0xe) {
       if ((currentY <= point->x) && (currentY >= (point->x - window))) {
-        *(f32 *)(obj + 0x1c) = point->x;
+        ((GameObject *)obj)->anim.worldPosY = point->x;
         collision->surfaceNormalX = point->y;
         collision->surfaceNormalY = point->z;
         collision->surfaceNormalZ = point->w;
@@ -3123,7 +3123,7 @@ curves_getCurves(int obj,f32 x,f32 z,u32 *outCount,int queryAll)
     else {
       queryMode = -2;
     }
-    sCurvesCachedHitCount = hitDetectFn_80065e50(obj,x,*(float *)(obj + 0x1c),z,
+    sCurvesCachedHitCount = hitDetectFn_80065e50(obj,x,((GameObject *)obj)->anim.worldPosY,z,
                                                  &hitPoints,queryMode,0);
     if (ROMCURVE_GETCURVES_MAX_POINTS < (int)sCurvesCachedHitCount) {
       sCurvesCachedHitCount = ROMCURVE_GETCURVES_MAX_POINTS;

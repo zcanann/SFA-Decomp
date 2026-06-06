@@ -3971,13 +3971,13 @@ void fn_80135814(u32 a, u32 b) { lbl_803DD9BC = a; lbl_803DD9B8 = b; }
 void titleScreenFn_801368d4(void) { lbl_803DD9AB = 0; }
 
 /* EN v1.0 0x80138F78  size: 12b  obj->_b8->_14 (f32). */
-f32 fn_80138F78(u8* obj) { return *(f32*)(*(u8**)(obj + 0xb8) + 0x14); }
+f32 fn_80138F78(u8* obj) { return *(f32*)(*(u8**)&((GameObject *)obj)->extra + 0x14); }
 /* EN v1.0 0x80138F84  size: 12b  obj->_b8->_24 (u32). */
-u32 fn_80138F84(u8* obj) { return *(u32*)(*(u8**)(obj + 0xb8) + 0x24); }
+u32 fn_80138F84(u8* obj) { return *(u32*)(*(u8**)&((GameObject *)obj)->extra + 0x24); }
 /* EN v1.0 0x80138F90  size: 12b  obj->_b8->_414 (s16). */
-s16 fn_80138F90(u8* obj) { return *(s16*)(*(u8**)(obj + 0xb8) + 0x414); }
+s16 fn_80138F90(u8* obj) { return *(s16*)(*(u8**)&((GameObject *)obj)->extra + 0x414); }
 /* EN v1.0 0x80138F9C  size: 12b  Returns Tricky's queued path particle position. */
-void* trickyGetQueuedPathParticlePos(u8* obj) { return (void*)(*(u8**)(obj + 0xb8) + 0x408); }
+void* trickyGetQueuedPathParticlePos(u8* obj) { return (void*)(*(u8**)&((GameObject *)obj)->extra + 0x408); }
 
 /* EN v1.0 0x80135BC4  size: 8b   titlescreen_getExtraSize -> 56. */
 int titlescreen_getExtraSize(void) { return 56; }
@@ -4151,24 +4151,24 @@ extern void  AttractMovie_DrawTextureCallback(void);
 #pragma peephole off
 void titlescreen_init(u8* obj, u8* p)
 {
-    u8* a = *(u8**)(obj + 0xb8);
+    u8* a = ((GameObject *)obj)->extra;
     s16 v;
     *(u8*)(a + 0x30) = 0;
-    *(s16*)(obj + 0) = (s16)((s8)p[0x18] << 8);
-    v = *(s16*)(obj + 0x46);
+    ((GameObject *)obj)->anim.rotX = (s16)((s8)p[0x18] << 8);
+    v = ((GameObject *)obj)->anim.seqId;
     if (v >= 0x77d && v < 0x781) {
         *(s8*)(a + 0x31) = (s8)(v - 0x77d);
-        *(f32*)(a + 0x34) = lbl_8031CE10[*(s16*)(obj + 0x46) - 0x77d].moves[0];
+        *(f32*)(a + 0x34) = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
     } else {
         *(f32*)(a + 0x34) = lbl_803E22F8;
         *(s8*)(a + 0x31) = -2;
-        v = *(s16*)(obj + 0x46);
+        v = ((GameObject *)obj)->anim.seqId;
         if (v == 0x78a) {
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);
         } else if (v == 0x781) {
             ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2318, 0);
-            ObjModel_SetRenderCallback(*(int**)(*(int**)(obj + 0x7c)),
+            ObjModel_SetRenderCallback(*(int**)(*(int**)&((GameObject *)obj)->anim.banks),
                                        (void*)AttractMovie_DrawTextureCallback);
         }
     }
@@ -4763,7 +4763,7 @@ void fn_801375A0(void) {
  * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
  * the rlwimi only uses bit 0 of r4. No C form found to force it. */
 void fn_80138908(int *obj, u8 v) {
-    u8* x = *(u8**)((char*)obj + 0xb8);
+    u8* x = ((GameObject *)obj)->extra;
     u8 b = *(u8*)(x + 0x58);
     *(u8*)(x + 0x58) = (u8)((b & ~0x40) | ((v & 1) << 6));
 }
@@ -5259,7 +5259,7 @@ void titlescreen_update(u8 *obj)
     extern void fn_80131F0C(void);
     extern f32  timeDelta;
 
-    u8 *state = *(u8 **)(obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     s16 t;
     u8 c;
     int evt;
@@ -5276,34 +5276,34 @@ void titlescreen_update(u8 *obj)
     if (lbl_803DD9AB != 0) {
         if ((s8)state[0x31] != (s8)lbl_803DD990 && (s8)lbl_803DD991 == 0 &&
             (c = state[0x30]) != 0 && c != 4 && c != 3) {
-            if (*(s16 *)(obj + 0x46) == 0x77d || *(s16 *)(obj + 0x46) == 0x780) {
+            if (((GameObject *)obj)->anim.seqId == 0x77d || ((GameObject *)obj)->anim.seqId == 0x780) {
                 state[0x30] = 3;
                 ObjAnim_SetCurrentMove(obj, 1, lbl_803E2318, 0);
-                *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[3];
+                *(f32 *)(state + 0x34) = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[3];
             } else {
                 state[0x30] = 0;
                 ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
-                *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
+                *(f32 *)(state + 0x34) = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
             }
         }
         if ((s8)state[0x31] == (s8)lbl_803DD990 && (s8)lbl_803DD991 != 0 &&
             (c = state[0x30]) != 1 && c != 2 && c != 5) {
             state[0x30] = 1;
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E22F8, 0);
-            *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1];
-            if (*(s16 *)(obj + 0x46) == 0x77e) {
+            *(f32 *)(state + 0x34) = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[1];
+            if (((GameObject *)obj)->anim.seqId == 0x77e) {
                 Sfx_StopFromObject(obj, 0x370);
                 Sfx_StopFromObject(obj, 0x36c);
                 Sfx_PlayFromObject(obj, 0x36d);
             }
         }
-        t = *(s16 *)(obj + 0x46);
+        t = ((GameObject *)obj)->anim.seqId;
         if (t == 0x7a7) {
             *(s16 *)obj = lbl_803E2354 * timeDelta + (f32)*(s16 *)obj;
         } else if (t != 0x78a) {
             buf[0x1b] = 0;
             if (t == 0x77d && state[0x30] == 2) {
-                if (*(f32 *)(obj + 0x98) < lbl_803E2358) {
+                if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2358) {
                     lbl_803DBC0C = f = lbl_803E235C * (f32)(int)randomGetRange(0x32, 0x96);
                 } else {
                     f = lbl_803DBC0C;
@@ -5316,41 +5316,41 @@ void titlescreen_update(u8 *obj)
                 if ((s8)state[0x31] == (s8)lbl_803DD990 && state[0x30] == 1) {
                     state[0x30] = 2;
                     ObjAnim_SetCurrentMove(obj, 2, lbl_803E22F8, 0);
-                    *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[2];
+                    *(f32 *)(state + 0x34) = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[2];
                 } else if (state[0x30] == 3) {
                     state[0x30] = 0;
                     ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
-                    *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
-                } else if (*(s16 *)(obj + 0x46) >= 0x77d && *(s16 *)(obj + 0x46) < 0x781) {
+                    *(f32 *)(state + 0x34) = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
+                } else if (((GameObject *)obj)->anim.seqId >= 0x77d && ((GameObject *)obj)->anim.seqId < 0x781) {
                     if (randomGetRange(0, 4) == 0) {
                         if ((c = state[0x30]) == 0 || c == 4) {
                             state[0x30] = 4;
                             ObjAnim_SetCurrentMove(obj, randomGetRange(3, 4), lbl_803E22F8, 0);
                             *(f32 *)(state + 0x34) =
-                                lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1 + *(s16 *)(obj + 0xa0)];
+                                lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[1 + ((GameObject *)obj)->anim.currentMove];
                         } else {
                             state[0x30] = 5;
                             ObjAnim_SetCurrentMove(obj, randomGetRange(5, 6), lbl_803E22F8, 0);
                             *(f32 *)(state + 0x34) =
-                                lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1 + *(s16 *)(obj + 0xa0)];
+                                lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[1 + ((GameObject *)obj)->anim.currentMove];
                         }
                     } else {
                         c = state[0x30];
                         if (c == 4) {
                             state[0x30] = 0;
                             ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
-                            *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
+                            *(f32 *)(state + 0x34) = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
                         } else if (c == 5) {
                             state[0x30] = 2;
                             ObjAnim_SetCurrentMove(obj, 2, lbl_803E22F8, 0);
-                            *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[2];
+                            *(f32 *)(state + 0x34) = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[2];
                         }
                     }
                 }
             }
             fn_80134870(obj, buf);
         }
-        t = *(s16 *)(obj + 0x46);
+        t = ((GameObject *)obj)->anim.seqId;
         if (t == 0x77e && ((c = state[0x30]) == 0 || c == 4)) {
             fn_8003B228(obj, state);
         } else if (t >= 0x77d && t < 0x781) {
@@ -5366,7 +5366,7 @@ void titlescreen_update(u8 *obj)
         lbl_803DBC08 = -1;
         lbl_803DBC09 = -1;
         s = state[0x30];
-        t = *(s16 *)(obj + 0x46);
+        t = ((GameObject *)obj)->anim.seqId;
         switch (t) {
         case 0x77d:
             break;
@@ -5376,8 +5376,8 @@ void titlescreen_update(u8 *obj)
                 row = lbl_803A9F50 + (t - 0x77d) * 0x12;
                 col = s * 3;
                 if (row[col] != 0) {
-                    if (*(f32 *)(obj + 0x98) < lbl_803E2364) row[col] = 0;
-                } else if (*(f32 *)(obj + 0x98) > lbl_803E2364) {
+                    if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2364) row[col] = 0;
+                } else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2364) {
                     Sfx_PlayFromObject(obj, 0x41d);
                     row[col] = 1;
                 }
@@ -5388,19 +5388,19 @@ void titlescreen_update(u8 *obj)
             switch (s) {
             case 4:
             case 5:
-                if (*(s16 *)(obj + 0xa0) == 3 || *(s16 *)(obj + 0xa0) == 5) {
+                if (((GameObject *)obj)->anim.currentMove == 3 || ((GameObject *)obj)->anim.currentMove == 5) {
                     row = lbl_803A9F50 + (t - 0x77d) * 0x12;
                     col = s * 3;
                     if (row[col] != 0) {
-                        if (*(f32 *)(obj + 0x98) < lbl_803E2368) row[col] = 0;
-                    } else if (*(f32 *)(obj + 0x98) > lbl_803E2368) {
+                        if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2368) row[col] = 0;
+                    } else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2368) {
                         Sfx_PlayFromObject(obj, 0x421);
                         row[col] = 1;
                     }
-                    p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + s * 3 + 1;
+                    p = lbl_803A9F50 + (((GameObject *)obj)->anim.seqId - 0x77d) * 0x12 + s * 3 + 1;
                     if (*p != 0) {
-                        if (*(f32 *)(obj + 0x98) < lbl_803E236C) *p = 0;
-                    } else if (*(f32 *)(obj + 0x98) > lbl_803E236C) {
+                        if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E236C) *p = 0;
+                    } else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E236C) {
                         Sfx_PlayFromObject(obj, 0x421);
                         *p = 1;
                     }
@@ -5414,8 +5414,8 @@ void titlescreen_update(u8 *obj)
                 row = lbl_803A9F50 + (t - 0x77d) * 0x12;
                 col = s * 3;
                 if (row[col] != 0) {
-                    if (*(f32 *)(obj + 0x98) < lbl_803E2370) row[col] = 0;
-                } else if (*(f32 *)(obj + 0x98) > lbl_803E2370) {
+                    if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2370) row[col] = 0;
+                } else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2370) {
                     Sfx_PlayFromObject(obj, 0x414);
                     row[col] = 1;
                 }
@@ -5424,22 +5424,22 @@ void titlescreen_update(u8 *obj)
                 row = lbl_803A9F50 + (t - 0x77d) * 0x12;
                 col = s * 3;
                 if (row[col] != 0) {
-                    if (*(f32 *)(obj + 0x98) < lbl_803E2374) row[col] = 0;
-                } else if (*(f32 *)(obj + 0x98) > lbl_803E2374) {
+                    if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2374) row[col] = 0;
+                } else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2374) {
                     Sfx_PlayFromObject(obj, 0x412);
                     row[col] = 1;
                 }
-                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + s * 3 + 1;
+                p = lbl_803A9F50 + (((GameObject *)obj)->anim.seqId - 0x77d) * 0x12 + s * 3 + 1;
                 if (*p != 0) {
-                    if (*(f32 *)(obj + 0x98) < lbl_803E2378) *p = 0;
-                } else if (*(f32 *)(obj + 0x98) > lbl_803E2378) {
+                    if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2378) *p = 0;
+                } else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2378) {
                     Sfx_PlayFromObject(obj, 0x426);
                     *p = 1;
                 }
-                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + s * 3 + 2;
+                p = lbl_803A9F50 + (((GameObject *)obj)->anim.seqId - 0x77d) * 0x12 + s * 3 + 2;
                 if (*p != 0) {
-                    if (*(f32 *)(obj + 0x98) < lbl_803E237C) *p = 0;
-                } else if (*(f32 *)(obj + 0x98) > lbl_803E237C) {
+                    if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E237C) *p = 0;
+                } else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E237C) {
                     Sfx_PlayFromObject(obj, 0x413);
                     *p = 1;
                 }
@@ -5448,22 +5448,22 @@ void titlescreen_update(u8 *obj)
                 row = lbl_803A9F50 + (t - 0x77d) * 0x12;
                 col = s * 3;
                 if (row[col] != 0) {
-                    if (*(f32 *)(obj + 0x98) < lbl_803E2368) row[col] = 0;
-                } else if (*(f32 *)(obj + 0x98) > lbl_803E2368) {
+                    if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2368) row[col] = 0;
+                } else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2368) {
                     Sfx_PlayFromObject(obj, 0x426);
                     row[col] = 1;
                 }
-                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + s * 3 + 1;
+                p = lbl_803A9F50 + (((GameObject *)obj)->anim.seqId - 0x77d) * 0x12 + s * 3 + 1;
                 if (*p != 0) {
-                    if (*(f32 *)(obj + 0x98) < lbl_803E2380) *p = 0;
-                } else if (*(f32 *)(obj + 0x98) > lbl_803E2380) {
+                    if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2380) *p = 0;
+                } else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2380) {
                     Sfx_PlayFromObject(obj, 0x426);
                     *p = 1;
                 }
-                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + s * 3 + 2;
+                p = lbl_803A9F50 + (((GameObject *)obj)->anim.seqId - 0x77d) * 0x12 + s * 3 + 2;
                 if (*p != 0) {
-                    if (*(f32 *)(obj + 0x98) < lbl_803E2384) *p = 0;
-                } else if (*(f32 *)(obj + 0x98) > lbl_803E2384) {
+                    if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2384) *p = 0;
+                } else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2384) {
                     Sfx_PlayFromObject(obj, 0x426);
                     *p = 1;
                 }

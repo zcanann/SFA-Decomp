@@ -1155,9 +1155,9 @@ void DIMexplosionFn_8009a96c(u8 *src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
         obj = Obj_AllocObjectSetup(0x24, 0x253);
         *(u8 *)(obj + 4) = 2;
         *(u8 *)(obj + 5) = 1;
-        *(f32 *)(obj + 8) = vx;
-        *(f32 *)(obj + 0xc) = vy;
-        *(f32 *)(obj + 0x10) = vz;
+        ((GameObject *)obj)->anim.rootMotionScale = vx;
+        ((GameObject *)obj)->anim.localPosX = vy;
+        ((GameObject *)obj)->anim.localPosY = vz;
         *(s8 *)(obj + 0x19) = (s8)a;
         *(s16 *)(obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
         *(s16 *)(obj + 0x1c) = (u8)f1cinit;
@@ -1201,9 +1201,9 @@ void spawnExplosion(u8 *src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
         obj = Obj_AllocObjectSetup(0x24, 0x253);
         *(u8 *)(obj + 4) = 2;
         *(u8 *)(obj + 5) = 1;
-        *(f32 *)(obj + 8) = *(f32 *)(src + 0x18);
-        *(f32 *)(obj + 0xc) = *(f32 *)(src + 0x1c);
-        *(f32 *)(obj + 0x10) = *(f32 *)(src + 0x20);
+        ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(src + 0x18);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(src + 0x1c);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(src + 0x20);
         *(s8 *)(obj + 0x19) = (s8)a;
         *(s16 *)(obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
         *(s16 *)(obj + 0x1c) = (u8)f1cinit;

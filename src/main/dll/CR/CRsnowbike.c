@@ -750,7 +750,7 @@ extern f32 lbl_803E5550;
 #pragma scheduling off
 int sc_levelcontrol_processAnimEventsCallback(int obj, int p2, int p3)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int i;
 
     *(u8 *)(p3 + 0x56) = 0;
@@ -770,7 +770,7 @@ int sc_levelcontrol_processAnimEventsCallback(int obj, int p2, int p3)
     }
     *(u8 *)(state + 0x1f) |= 1;
     GameBit_Set(0x60f, 0);
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     Obj_GetPlayerObject();
     if (*(u8 *)(state + 0x1d) == 5) {
         GameBit_Set(0x60f, 1);
@@ -793,7 +793,7 @@ int sc_levelcontrol_processAnimEventsCallback(int obj, int p2, int p3)
 #pragma scheduling off
 void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     u8 v;
 
     *(u8 *)(state + 0x1d) = scale;
@@ -842,14 +842,14 @@ typedef struct { u8 bit7 : 1; u8 lo : 7; } SnowFlags22;
 #pragma scheduling off
 void sc_levelcontrol_init(int obj)
 {
-    f32 *st = *(f32 **)(obj + 0xb8);
+    f32 *st = ((GameObject *)obj)->extra;
     int state = (int)st;
     f32 v;
 
     ((SnowFlags22 *)(state + 0x22))->bit7 = 0;
     *(u8 *)(state + 0x1e) = 0xff;
     *(u8 *)(state + 0x1d) = 0;
-    *(void **)(obj + 0xbc) = (void *)sc_levelcontrol_processAnimEventsCallback;
+    ((GameObject *)obj)->unkBC = (void *)sc_levelcontrol_processAnimEventsCallback;
     GameBit_Set(0x60f, 1);
     GameBit_Set(0x2b8, 0);
     GameBit_Set(0x4bd, 1);
@@ -868,11 +868,11 @@ void sc_levelcontrol_init(int obj)
     }
     unlockLevel(mapGetDirIdx(0xe), 0, 0);
     if (getSaveGameLoadStatus() != 0) {
-        *(int *)(obj + 0xf4) = 2;
+        ((GameObject *)obj)->unkF4 = 2;
     } else {
-        *(int *)(obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
-    *(int *)(obj + 0xf8) = 1;
+    ((GameObject *)obj)->unkF8 = 1;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -885,7 +885,7 @@ extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 #pragma scheduling off
 void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 {
-    int def = *(int *)(obj + 0x4c);
+    int def = *(int *)&((GameObject *)obj)->anim.placementData;
     SCMusicTreeState *state = (SCMusicTreeState *)p2;
     int setup;
 
@@ -908,7 +908,7 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
         *(s8 *)(setup + 0x25) = -50;
         *(s16 *)(setup + 0x26) = -1;
         *(int *)(setup + 0x18) = 0;
-        state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int *)(obj + 0x30));
+        state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int *)&((GameObject *)obj)->anim.parent);
     }
 }
 #pragma scheduling reset
@@ -986,13 +986,13 @@ extern f32  lbl_803E556C;
 #pragma peephole off
 void sc_levelcontrol_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     u8 *player = Obj_GetPlayerObject();
 
-    if (*(int *)(obj + 0xf4) != 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
         skyFn_80088c94(7, 0);
         envFxActFn_800887f8(0);
-        if (*(int *)(obj + 0xf4) == 2) {
+        if (((GameObject *)obj)->unkF4 == 2) {
             getEnvfxActImmediately(0, 0, 0x4f, 0);
             getEnvfxActImmediately(0, 0, 0x50, 0);
             getEnvfxActImmediately(0, 0, 0x245, 0);
@@ -1011,7 +1011,7 @@ void sc_levelcontrol_update(int obj)
                 getEnvfxAct(0, 0, 0x51, 0);
             }
         }
-        *(int *)(obj + 0xf4) = 0;
+        ((GameObject *)obj)->unkF4 = 0;
     }
     if (((SnowFlags22 *)(state + 0x22))->bit7 == 0 && (u32)GameBit_Get(0xc53) != 0) {
         (*gMapEventInterface)->setAnimEvent(0xe, 0xa, 1);
@@ -1092,9 +1092,9 @@ void sc_levelcontrol_update(int obj)
         } else if ((*gMapEventInterface)->getAnimEvent(0xe, 5) != 0) {
             *(f32 *)(state + 0x4) = lbl_803E5564;
             *(f32 *)(state + 0x8) = lbl_803E5568;
-            if (*(int *)(obj + 0xf8) != 0) {
+            if (((GameObject *)obj)->unkF8 != 0) {
                 skyFn_80088e54(1, lbl_803E5554);
-                *(int *)(obj + 0xf8) = 0;
+                ((GameObject *)obj)->unkF8 = 0;
             }
         } else {
             *(f32 *)(state + 0x4) = lbl_803E555C;
@@ -1191,7 +1191,7 @@ void sc_levelcontrol_update(int obj)
         GameBit_Set(0xbe3, 1);
     }
     {
-        int state2 = *(int *)(obj + 0xb8);
+        int state2 = *(int *)&((GameObject *)obj)->extra;
         Obj_GetPlayerObject();
         if (*(u8 *)(state2 + 0x1d) == 5) {
             GameBit_Set(0x60f, 1);

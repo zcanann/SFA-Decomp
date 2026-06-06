@@ -117,17 +117,17 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
         ((BaddieState *)st)->unk28C = rest;
     }
     if ((s8)*(u8 *)(state + 0x56) != 1) {
-        *(f32 *)(state + 0x40) = *(f32 *)(obj + 0xc);
-        *(f32 *)(state + 0x44) = *(f32 *)(obj + 0x10);
-        *(f32 *)(state + 0x48) = *(f32 *)(obj + 0x14);
+        *(f32 *)(state + 0x40) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(state + 0x44) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(state + 0x48) = ((GameObject *)obj)->anim.localPosZ;
         lbl_803DD5D8 = lbl_803E1C70;
         lbl_803DD5DC = 0;
     }
     *(s16 *)(state + 0x6e) = 0;
     *(u8 *)(state + 0x56) = 1;
     {
-        f32 ex = *(f32 *)(state + 0x40) - *(f32 *)(obj + 0xc);
-        f32 ez = *(f32 *)(state + 0x48) - *(f32 *)(obj + 0x14);
+        f32 ex = *(f32 *)(state + 0x40) - ((GameObject *)obj)->anim.localPosX;
+        f32 ez = *(f32 *)(state + 0x48) - ((GameObject *)obj)->anim.localPosZ;
         dist = sqrtf(ex * ex + ez * ez);
     }
     t = *(char **)(st + 0x2d0);
@@ -150,7 +150,7 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
         }
         if (dist >= total || (s8)lbl_803DD5DC > 9) {
             char *t2 = *(char **)(st + 0x2d0);
-            int delta = *(s16 *)(obj + 0x0) - (u16)*(s16 *)t2;
+            int delta = ((GameObject *)obj)->anim.rotX - (u16)*(s16 *)t2;
             if (delta > 0x8000) {
                 delta -= 0xffff;
             }
@@ -163,7 +163,7 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
             if (delta < -0x2000) {
                 delta = -0x2000;
             }
-            *(s16 *)(obj + 0x0) -= (s16)((delta * framesThisStep) >> 3);
+            ((GameObject *)obj)->anim.rotX -= (s16)((delta * framesThisStep) >> 3);
             if ((s8)lbl_803DD5DC > 10) {
                 delta = 0;
             }
@@ -180,8 +180,8 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
             nz = nz / total;
             ((BaddieState *)st)->unk290 = -nx * step;
             ((BaddieState *)st)->unk28C = nz * step;
-            *(f32 *)(obj + 0xc) = dist * nx + *(f32 *)(state + 0x40);
-            *(f32 *)(obj + 0x14) = dist * nz + *(f32 *)(state + 0x48);
+            ((GameObject *)obj)->anim.localPosX = dist * nx + *(f32 *)(state + 0x40);
+            ((GameObject *)obj)->anim.localPosZ = dist * nz + *(f32 *)(state + 0x48);
             td = timeDelta;
             (*(void (**)(int, char *, f32, f32, int, int))(*gPlayerInterface + 0x8))(
                 obj, st, td, td, p4, p5);
@@ -1402,7 +1402,7 @@ void dll_2E_func08(int obj, int v1, int v2) {
 }
 
 u16 dll_19_func0A(int obj) {
-    void *p = *(void **)(obj + 0x4c);
+    void *p = ((GameObject *)obj)->anim.placementData;
     if (p != NULL) return *(u16 *)((char *)p + 0x34);
     return 0xd2;
 }
@@ -1615,12 +1615,12 @@ void dll_2E_func06(int obj, char *st, int point)
         *(f32 *)(st + 0x4) = (cA * x0 + x1) * (cB = lbl_803E1CCC);
         *(f32 *)(st + 0x8) = y0;
         *(f32 *)(st + 0xc) = (cA * z0 + z1) * cB;
-        *(f32 *)(st + 0x4) -= *(f32 *)(obj + 0xc);
-        *(f32 *)(st + 0x8) -= *(f32 *)(obj + 0x10);
-        *(f32 *)(st + 0xc) -= *(f32 *)(obj + 0x14);
-        ang[0] = (s16)-*(s16 *)(obj + 0x4);
-        ang[1] = (s16)-*(s16 *)(obj + 0x2);
-        ang[2] = (s16)-*(s16 *)(obj + 0x0);
+        *(f32 *)(st + 0x4) -= ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(st + 0x8) -= ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(st + 0xc) -= ((GameObject *)obj)->anim.localPosZ;
+        ang[0] = (s16)-((GameObject *)obj)->anim.rotZ;
+        ang[1] = (s16)-((GameObject *)obj)->anim.rotY;
+        ang[2] = (s16)-((GameObject *)obj)->anim.rotX;
         vecRotateZXY(ang, (f32 *)(st + 0x4));
         *(u8 *)(st + 0x601) = 0;
     }
@@ -1640,7 +1640,7 @@ extern s16 getAngle(f32 x, f32 z);
 #pragma peephole off
 void dll_19_func07(int obj, int target, int div, u16 *outYaw, u16 *outDelta, u16 *outDist)
 {
-    char *st = *(char **)(obj + 0xb8);
+    char *st = ((GameObject *)obj)->extra;
     f32 d[3];
     f32 *dp = d;
     s16 *ovr;
@@ -1653,15 +1653,15 @@ void dll_19_func07(int obj, int target, int div, u16 *outYaw, u16 *outDelta, u16
         *outDelta = 0;
         *outDist = 0;
     } else {
-        dp[0] = *(f32 *)(target + 0x18) - *(f32 *)(obj + 0x18);
-        dp[1] = *(f32 *)(target + 0x1c) - *(f32 *)(obj + 0x1c);
-        dp[2] = *(f32 *)(target + 0x20) - *(f32 *)(obj + 0x20);
+        dp[0] = *(f32 *)(target + 0x18) - ((GameObject *)obj)->anim.worldPosX;
+        dp[1] = *(f32 *)(target + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
+        dp[2] = *(f32 *)(target + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
         ang = getAngle(-dp[0], -dp[2]);
-        ovr = *(s16 **)(obj + 0x30);
+        ovr = *(s16 **)&((GameObject *)obj)->anim.parent;
         if (ovr != NULL) {
-            cur = (s16)(*(s16 *)(obj + 0x0) + *ovr);
+            cur = (s16)(((GameObject *)obj)->anim.rotX + *ovr);
         } else {
-            cur = *(s16 *)(obj + 0x0);
+            cur = ((GameObject *)obj)->anim.rotX;
         }
         delta = ang - (u16)(s16)cur;
         if (delta > 0x8000) {
@@ -1713,23 +1713,23 @@ u8 dll_19_func08(int obj, char *st, f32 dist)
     f32 a;
 
     mask = 0;
-    world[0] = *(f32 *)(obj + 0xc);
-    world[1] = lbl_803E1C68 + *(f32 *)(obj + 0x10);
-    world[2] = *(f32 *)(obj + 0x14);
+    world[0] = ((GameObject *)obj)->anim.localPosX;
+    world[1] = lbl_803E1C68 + ((GameObject *)obj)->anim.localPosY;
+    world[2] = ((GameObject *)obj)->anim.localPosZ;
     voxmaps_worldToGrid(world, grid0);
-    ovr = *(s16 **)(obj + 0x30);
+    ovr = *(s16 **)&((GameObject *)obj)->anim.parent;
     if (ovr != NULL) {
-        cur = (s16)(*(s16 *)(obj + 0x0) + *ovr);
+        cur = (s16)(((GameObject *)obj)->anim.rotX + *ovr);
     } else {
-        cur = *(s16 *)(obj + 0x0);
+        cur = ((GameObject *)obj)->anim.rotX;
     }
     for (i = 0; i < 4; i++) {
         a = lbl_803E1C80 * (f32)((s16)cur + (i << 14)) / lbl_803E1C84;
-        world[0] = *(f32 *)(obj + 0xc) - dist * mathSinf(a);
-        world[1] = lbl_803E1C68 + *(f32 *)(obj + 0x10);
-        world[2] = *(f32 *)(obj + 0x14) - dist * mathCosf(a);
+        world[0] = ((GameObject *)obj)->anim.localPosX - dist * mathSinf(a);
+        world[1] = lbl_803E1C68 + ((GameObject *)obj)->anim.localPosY;
+        world[2] = ((GameObject *)obj)->anim.localPosZ - dist * mathCosf(a);
         voxmaps_worldToGrid(world, grid1);
-        if (*(void **)(obj + 0x30) != NULL) {
+        if (((GameObject *)obj)->anim.parent != NULL) {
             ok = 1;
         } else {
             ok = (u8)voxmaps_traceLine(grid1, grid0, 0, &hitFlag, 0);
@@ -1787,26 +1787,26 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32 *d, int *fla
         if (Curve_AdvanceAlongPath(curve) != 0 || *(int *)(curve + 0x10) != 0) {
             hit = (*(u8 (*)(int))(*(int *)(*gRomCurveInterface + 0x90)))(curve);
         }
-        *(f32 *)(obj + 0xc) = *(f32 *)(curve + 0x68);
-        *(f32 *)(obj + 0x10) = *(f32 *)(curve + 0x6c);
-        *(f32 *)(obj + 0x14) = *(f32 *)(curve + 0x70);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(curve + 0x68);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(curve + 0x6c);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(curve + 0x70);
         if (hit != 0) {
             *flags |= 0x10;
         }
     }
     ObjAnim_SampleRootCurvePhase(phase, (ObjAnimComponent *)obj, d);
     if (*flags & 1) {
-        if (hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
-                                 *(f32 *)(obj + 0x14), &ground, 0) == 0) {
-            *(f32 *)(obj + 0x10) -= ground;
+        if (hitDetectFn_800658a4(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                                 ((GameObject *)obj)->anim.localPosZ, &ground, 0) == 0) {
+            ((GameObject *)obj)->anim.localPosY -= ground;
         }
     }
     if (moved != 0 && (*flags & 0x2) != 0) {
-        int t = (s16)(getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
-                               *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88)) +
+        int t = (s16)(getAngle(((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
+                               ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ) +
                       0x8000);
-        *(s16 *)(obj + 0x0) =
-            (s16)(*(s16 *)(obj + 0x0) + ((t - *(s16 *)(obj + 0x0)) >> 3));
+        ((GameObject *)obj)->anim.rotX =
+            (s16)(((GameObject *)obj)->anim.rotX + ((t - ((GameObject *)obj)->anim.rotX) >> 3));
     }
     return hit;
 }
@@ -1832,7 +1832,7 @@ int dll_2E_func07(int obj, char *state, char *st, s16 a, s16 b)
     pair[0] = a;
     pair[1] = b;
     {
-        char *p = *(char **)(obj + 0x54);
+        char *p = *(char **)&((GameObject *)obj)->anim.hitReactState;
         *(s16 *)(p + 0x60) = *(s16 *)(p + 0x60) | 1;
     }
     mode = (s8)*(u8 *)(state + 0x56);
@@ -1914,8 +1914,8 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char *st)
         f32 base;
         f32 d1;
         f32 d2;
-        c = mathSinf(lbl_803E1C80 * (f32)*(s16 *)(obj + 0x0) / lbl_803E1C84);
-        s = mathCosf(lbl_803E1C80 * (f32)*(s16 *)(obj + 0x0) / lbl_803E1C84);
+        c = mathSinf(lbl_803E1C80 * (f32)((GameObject *)obj)->anim.rotX / lbl_803E1C84);
+        s = mathCosf(lbl_803E1C80 * (f32)((GameObject *)obj)->anim.rotX / lbl_803E1C84);
         base = -(c * (px - c) + s * (pz - s));
         d1 = base + (c * *(f32 *)(st + 0x18) + s * *(f32 *)(st + 0x20));
         d2 = base + (c * *(f32 *)(st + 0x8c) + s * *(f32 *)(st + 0x94));
@@ -1937,9 +1937,9 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char *st)
         fx = px;
         fz = pz;
     }
-    c = mathSinf(lbl_803E1C80 * (f32)(*(s16 *)(obj + 0x0) + 0x4000) / lbl_803E1C84);
-    s = mathCosf(lbl_803E1C80 * (f32)(*(s16 *)(obj + 0x0) + 0x4000) / lbl_803E1C84);
-    return -(-(*(f32 *)(obj + 0xc) * c + *(f32 *)(obj + 0x14) * s) + (c * fx + s * fz));
+    c = mathSinf(lbl_803E1C80 * (f32)(((GameObject *)obj)->anim.rotX + 0x4000) / lbl_803E1C84);
+    s = mathCosf(lbl_803E1C80 * (f32)(((GameObject *)obj)->anim.rotX + 0x4000) / lbl_803E1C84);
+    return -(-(((GameObject *)obj)->anim.localPosX * c + ((GameObject *)obj)->anim.localPosZ * s) + (c * fx + s * fz));
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1967,49 +1967,49 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32 *out, u8 *flags)
     if ((void *)target == NULL) {
         return 0;
     }
-    dx = *(f32 *)(target + 0xc) - *(f32 *)(obj + 0xc);
-    dy = *(f32 *)(target + 0x10) - *(f32 *)(obj + 0x10);
-    dz = *(f32 *)(target + 0x14) - *(f32 *)(obj + 0x14);
+    dx = *(f32 *)(target + 0xc) - ((GameObject *)obj)->anim.localPosX;
+    dy = *(f32 *)(target + 0x10) - ((GameObject *)obj)->anim.localPosY;
+    dz = *(f32 *)(target + 0x14) - ((GameObject *)obj)->anim.localPosZ;
     dist = sqrtf(dz * dz + (dx * dx + dy * dy));
     if (dist < lbl_803E1CB4 * speed) {
-        *(f32 *)(obj + 0xc) = *(f32 *)(target + 0xc);
-        *(f32 *)(obj + 0x10) = *(f32 *)(target + 0x10);
-        *(f32 *)(obj + 0x14) = *(f32 *)(target + 0x14);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(target + 0xc);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(target + 0x10);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(target + 0x14);
         if (*flags & 1) {
-            if (hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
-                                     *(f32 *)(obj + 0x14), &ground, 0) == 0) {
-                *(f32 *)(obj + 0x10) -= ground;
+            if (hitDetectFn_800658a4(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                                     ((GameObject *)obj)->anim.localPosZ, &ground, 0) == 0) {
+                ((GameObject *)obj)->anim.localPosY -= ground;
             }
         }
         return 1;
     }
     normalize(&dx, &dy, &dz);
-    *(f32 *)(obj + 0x24) = dx * (speed * timeDelta);
-    *(f32 *)(obj + 0x28) = dy * (speed * timeDelta);
-    *(f32 *)(obj + 0x2c) = dz * (speed * timeDelta);
+    ((GameObject *)obj)->anim.velocityX = dx * (speed * timeDelta);
+    ((GameObject *)obj)->anim.velocityY = dy * (speed * timeDelta);
+    ((GameObject *)obj)->anim.velocityZ = dz * (speed * timeDelta);
     if (*flags & 1) {
-        if (hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
-                                 *(f32 *)(obj + 0x14), &ground, 0) == 0) {
-            *(f32 *)(obj + 0x10) -= ground;
+        if (hitDetectFn_800658a4(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                                 ((GameObject *)obj)->anim.localPosZ, &ground, 0) == 0) {
+            ((GameObject *)obj)->anim.localPosY -= ground;
         }
     }
     if (*flags & 2) {
-        delta = *(s16 *)(target + 0x0) - (u16)*(s16 *)(obj + 0x0);
+        delta = *(s16 *)(target + 0x0) - (u16)((GameObject *)obj)->anim.rotX;
         if (delta > 0x8000) {
             delta = delta - 0xffff;
         }
         if (delta < -0x8000) {
             delta = delta + 0xffff;
         }
-        *(s16 *)(obj + 0x0) = (f32)*(s16 *)(obj + 0x0) +
+        ((GameObject *)obj)->anim.rotX = (f32)((GameObject *)obj)->anim.rotX +
                               (lbl_803E1CB8 + (f32)delta) * (speed * timeDelta) / dist;
     }
-    objMove(obj, *(f32 *)(obj + 0x24), *(f32 *)(obj + 0x28), *(f32 *)(obj + 0x2c));
+    objMove(obj, ((GameObject *)obj)->anim.velocityX, ((GameObject *)obj)->anim.velocityY, ((GameObject *)obj)->anim.velocityZ);
     if (move != -1) {
-        if (*(s16 *)(obj + 0xa0) != move) {
+        if (((GameObject *)obj)->anim.currentMove != move) {
             ObjAnim_SetCurrentMove(obj, move, lbl_803E1C90, 0);
         }
-        delta = *(s16 *)(obj + 0x0) - (u16)(s16)getAngle(dx, dz);
+        delta = ((GameObject *)obj)->anim.rotX - (u16)(s16)getAngle(dx, dz);
         if (delta > 0x8000) {
             delta = delta - 0xffff;
         }

@@ -992,11 +992,11 @@ extern int *gBaddieControlInterface;
 #pragma scheduling off
 #pragma peephole off
 void dll_D3_free(int obj) {
-    int *inner = *(int **)(obj + 0xb8);
+    int *inner = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
-    if (*(void **)(obj + 0xc8) != NULL) {
-        Obj_FreeObject(*(void **)(obj + 0xc8));
-        *(int *)(obj + 0xc8) = 0;
+    if (((GameObject *)obj)->unkC8 != NULL) {
+        Obj_FreeObject(((GameObject *)obj)->unkC8);
+        *(int *)&((GameObject *)obj)->unkC8 = 0;
     }
     (*(void (*)(int, int *, int))(*(int *)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
 }
@@ -1045,19 +1045,19 @@ void dll_D3_render(int obj,int p2,int p3,int p4,int p5,s8 visible)
   f32 mtx[15];
   f32 scale;
 
-  state = (int)((GroundBaddieState *)*(int *)(obj + 0xb8))->control;
+  state = (int)((GroundBaddieState *)*(int *)&((GameObject *)obj)->extra)->control;
   slideMtx = (f32 *)(state + 4);
-  if ((visible != 0) && (*(int *)(obj + 0xf4) == 0)) {
+  if ((visible != 0) && (((GameObject *)obj)->unkF4 == 0)) {
     if ((*(u8 *)(state + 0x90) == 6) && (((*(u8 *)(state + 0x92) >> 3) & 1) != 0)) {
       if (((*(u8 *)(state + 0x92) >> 2) & 1) == 0) {
         fn_80166E38(slideMtx,(f32 *)(obj + 0x24),(f32 *)(state + 0x7c));
       }
-      scale = *(f32 *)(obj + 8);
+      scale = ((GameObject *)obj)->anim.rootMotionScale;
       initRotationMtx(mtx,scale,scale,scale);
       mtx44_mult(mtx,slideMtx,mtx);
-      mtx[12] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
-      mtx[13] = *(f32 *)(obj + 0x10);
-      mtx[14] = *(f32 *)(obj + 0x14) - playerMapOffsetZ;
+      mtx[12] = ((GameObject *)obj)->anim.localPosX - playerMapOffsetX;
+      mtx[13] = ((GameObject *)obj)->anim.localPosY;
+      mtx[14] = ((GameObject *)obj)->anim.localPosZ - playerMapOffsetZ;
       fn_8003B950(mtx);
       objRenderFn_8003b8f4(obj,p2,p3,p4,p5,lbl_803E2FF4);
       fn_8003B950(0);
@@ -1130,17 +1130,17 @@ void fn_80165B3C(int obj,int state)
   int hitFound;
 
   radius = lbl_803E3020;
-  *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) - lbl_803E2FF4;
+  ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY - lbl_803E2FF4;
   damping = lbl_803E3024;
-  *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * lbl_803E3024;
-  *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) * damping;
-  *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * damping;
-  start[0] = *(f32 *)(obj + 0xc);
-  start[1] = *(f32 *)(obj + 0x10);
-  start[2] = *(f32 *)(obj + 0x14);
-  end[0] = start[0] + *(f32 *)(obj + 0x24);
-  end[1] = start[1] + *(f32 *)(obj + 0x28);
-  end[2] = start[2] + *(f32 *)(obj + 0x2c);
+  ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * lbl_803E3024;
+  ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY * damping;
+  ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * damping;
+  start[0] = ((GameObject *)obj)->anim.localPosX;
+  start[1] = ((GameObject *)obj)->anim.localPosY;
+  start[2] = ((GameObject *)obj)->anim.localPosZ;
+  end[0] = start[0] + ((GameObject *)obj)->anim.velocityX;
+  end[1] = start[1] + ((GameObject *)obj)->anim.velocityY;
+  end[2] = start[2] + ((GameObject *)obj)->anim.velocityZ;
   hitScratch.hitRadius = lbl_803E2FDC;
   hitScratch.hitType = 3;
   hitDetect_calcSweptSphereBounds(bounds,start,end,&radius,1);
@@ -1154,9 +1154,9 @@ void fn_80165B3C(int obj,int state)
     }
     fn_80166840(obj,state,hitScratch.hit,end);
   } else {
-    *(f32 *)(obj + 0xc) = end[0];
-    *(f32 *)(obj + 0x10) = end[1];
-    *(f32 *)(obj + 0x14) = end[2];
+    ((GameObject *)obj)->anim.localPosX = end[0];
+    ((GameObject *)obj)->anim.localPosY = end[1];
+    ((GameObject *)obj)->anim.localPosZ = end[2];
   }
 }
 #pragma peephole reset
@@ -1186,15 +1186,15 @@ void fn_80166840(int obj,int state,f32 *hit,f32 *end)
   f32 len;
 
   scale = lbl_803E3020;
-  objX = *(f32 *)(obj + 0xc);
+  objX = ((GameObject *)obj)->anim.localPosX;
   stateX = scale * ((LandedArwingState *)state)->surfaceNormalX + objX;
-  objY = *(f32 *)(obj + 0x10);
+  objY = ((GameObject *)obj)->anim.localPosY;
   stateY = scale * ((LandedArwingState *)state)->surfaceNormalY + objY;
-  objZ = *(f32 *)(obj + 0x14);
+  objZ = ((GameObject *)obj)->anim.localPosZ;
   stateZ = scale * ((LandedArwingState *)state)->surfaceNormalZ + objZ;
-  velX = scale * *(f32 *)(obj + 0x24) + objX;
-  velY = scale * *(f32 *)(obj + 0x28) + objY;
-  velZ = scale * *(f32 *)(obj + 0x2c) + objZ;
+  velX = scale * ((GameObject *)obj)->anim.velocityX + objX;
+  velY = scale * ((GameObject *)obj)->anim.velocityY + objY;
+  velZ = scale * ((GameObject *)obj)->anim.velocityZ + objZ;
   planeX = objY * (stateZ - velZ) + (stateY * (velZ - objZ) + velY * (objZ - stateZ));
   planeY = objZ * (stateX - velX) + (stateZ * (velX - objX) + velZ * (objX - stateX));
   planeZ = objX * (stateY - velY) + (stateX * (velY - objY) + velX * (objY - stateY));
@@ -1213,16 +1213,16 @@ void fn_80166840(int obj,int state,f32 *hit,f32 *end)
   Vec3_Cross(plane,hit,response);
   Vec3_Normalize(response);
   fVar1 = lbl_803E3004;
-  *(f32 *)(obj + 0x24) = lbl_803E3004 * response[0];
-  *(f32 *)(obj + 0x28) = fVar1 * response[1];
-  *(f32 *)(obj + 0x2c) = fVar1 * response[2];
+  ((GameObject *)obj)->anim.velocityX = lbl_803E3004 * response[0];
+  ((GameObject *)obj)->anim.velocityY = fVar1 * response[1];
+  ((GameObject *)obj)->anim.velocityZ = fVar1 * response[2];
   ((LandedArwingState *)state)->surfaceNormalX = hit[0];
   ((LandedArwingState *)state)->surfaceNormalY = hit[1];
   ((LandedArwingState *)state)->surfaceNormalZ = hit[2];
   ((LandedArwingState *)state)->surfacePlaneD = hit[3];
-  *(f32 *)(obj + 0xc) = end[0] + ((LandedArwingState *)state)->surfaceNormalX;
-  *(f32 *)(obj + 0x10) = end[1] + ((LandedArwingState *)state)->surfaceNormalY;
-  *(f32 *)(obj + 0x14) = end[2] + ((LandedArwingState *)state)->surfaceNormalZ;
+  ((GameObject *)obj)->anim.localPosX = end[0] + ((LandedArwingState *)state)->surfaceNormalX;
+  ((GameObject *)obj)->anim.localPosY = end[1] + ((LandedArwingState *)state)->surfaceNormalY;
+  ((GameObject *)obj)->anim.localPosZ = end[2] + ((LandedArwingState *)state)->surfaceNormalZ;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1240,11 +1240,11 @@ void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,
   f32 scale;
   f32 dot;
 
-  state = (LandedArwingState *)((GroundBaddieState *)*(int *)(obj + 0xb8))->control;
+  state = (LandedArwingState *)((GroundBaddieState *)*(int *)&((GameObject *)obj)->extra)->control;
   if ((u32)(state->flags92 >> 2 & 1) == 0) {
-    vx = targetX - *(f32 *)(obj + 0xc);
-    vy = targetY - *(f32 *)(obj + 0x10);
-    vz = targetZ - *(f32 *)(obj + 0x14);
+    vx = targetX - ((GameObject *)obj)->anim.localPosX;
+    vy = targetY - ((GameObject *)obj)->anim.localPosY;
+    vz = targetZ - ((GameObject *)obj)->anim.localPosZ;
     len = sqrtf(vz * vz + (vx * vx + vy * vy));
     if (len >= lbl_803E2FDC) {
       scale = state->speed / len;
@@ -1252,9 +1252,9 @@ void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,
       vy *= scale;
       vz *= scale;
     }
-    vx = blend * (vx - *(f32 *)(obj + 0x24)) + *(f32 *)(obj + 0x24);
-    vy = blend * (vy - *(f32 *)(obj + 0x28)) + *(f32 *)(obj + 0x28);
-    vz = blend * (vz - *(f32 *)(obj + 0x2c)) + *(f32 *)(obj + 0x2c);
+    vx = blend * (vx - ((GameObject *)obj)->anim.velocityX) + ((GameObject *)obj)->anim.velocityX;
+    vy = blend * (vy - ((GameObject *)obj)->anim.velocityY) + ((GameObject *)obj)->anim.velocityY;
+    vz = blend * (vz - ((GameObject *)obj)->anim.velocityZ) + ((GameObject *)obj)->anim.velocityZ;
     mode = state->surfaceMode;
     switch (mode) {
     case 0:
@@ -1302,9 +1302,9 @@ void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,
       }
       break;
     }
-    *(f32 *)(obj + 0x24) = vx;
-    *(f32 *)(obj + 0x28) = vy;
-    *(f32 *)(obj + 0x2c) = vz;
+    ((GameObject *)obj)->anim.velocityX = vx;
+    ((GameObject *)obj)->anim.velocityY = vy;
+    ((GameObject *)obj)->anim.velocityZ = vz;
   }
 }
 #pragma peephole reset
@@ -1336,31 +1336,31 @@ void fn_80166444(int obj,int state)
   } hitScratch;
   f32 fVar1;
 
-  distanceRemaining = sqrtf(*(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c) +
-                            (*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) +
-                             *(f32 *)(obj + 0x28) * *(f32 *)(obj + 0x28)));
+  distanceRemaining = sqrtf(((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ +
+                            (((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX +
+                             ((GameObject *)obj)->anim.velocityY * ((GameObject *)obj)->anim.velocityY));
   traveled = lbl_803E2FDC;
   stepCount = 0;
   hitScratch.hitRadius = traveled;
   hitScratch.hitType = 3;
-  start[0] = *(f32 *)(obj + 0xc);
-  start[1] = *(f32 *)(obj + 0x10);
-  start[2] = *(f32 *)(obj + 0x14);
-  end[0] = start[0] + *(f32 *)(obj + 0x24);
-  end[1] = start[1] + *(f32 *)(obj + 0x28);
-  end[2] = start[2] + *(f32 *)(obj + 0x2c);
+  start[0] = ((GameObject *)obj)->anim.localPosX;
+  start[1] = ((GameObject *)obj)->anim.localPosY;
+  start[2] = ((GameObject *)obj)->anim.localPosZ;
+  end[0] = start[0] + ((GameObject *)obj)->anim.velocityX;
+  end[1] = start[1] + ((GameObject *)obj)->anim.velocityY;
+  end[2] = start[2] + ((GameObject *)obj)->anim.velocityZ;
   radius = lbl_803E3020;
   hitDetect_calcSweptSphereBounds(bounds,start,end,&radius,1);
   hitDetectFn_800691c0(obj,bounds,0,1);
   one = lbl_803E2FF4;
   while ((traveled < distanceRemaining) && (++stepCount < 10)) {
-    start[0] = *(f32 *)(obj + 0xc);
-    start[1] = *(f32 *)(obj + 0x10);
-    start[2] = *(f32 *)(obj + 0x14);
+    start[0] = ((GameObject *)obj)->anim.localPosX;
+    start[1] = ((GameObject *)obj)->anim.localPosY;
+    start[2] = ((GameObject *)obj)->anim.localPosZ;
     stepScale = one - (traveled / distanceRemaining);
-    end[0] = *(f32 *)(obj + 0x24) * stepScale + start[0];
-    end[1] = *(f32 *)(obj + 0x28) * stepScale + start[1];
-    end[2] = *(f32 *)(obj + 0x2c) * stepScale + start[2];
+    end[0] = ((GameObject *)obj)->anim.velocityX * stepScale + start[0];
+    end[1] = ((GameObject *)obj)->anim.velocityY * stepScale + start[1];
+    end[2] = ((GameObject *)obj)->anim.velocityZ * stepScale + start[2];
     hitFound = hitDetectFn_80067958(obj,start,end,1,hitScratch.hit,0x20);
     if (hitFound != 0) {
       dx = end[0] - start[0];
@@ -1371,14 +1371,14 @@ void fn_80166444(int obj,int state)
       fn_80166840(obj,state,hitScratch.hit,end);
     } else {
       traveled = distanceRemaining;
-      *(f32 *)(obj + 0xc) = end[0];
-      *(f32 *)(obj + 0x10) = end[1];
-      *(f32 *)(obj + 0x14) = end[2];
+      ((GameObject *)obj)->anim.localPosX = end[0];
+      ((GameObject *)obj)->anim.localPosY = end[1];
+      ((GameObject *)obj)->anim.localPosZ = end[2];
     }
   }
-  start[0] = *(f32 *)(obj + 0xc);
-  start[1] = *(f32 *)(obj + 0x10);
-  start[2] = *(f32 *)(obj + 0x14);
+  start[0] = ((GameObject *)obj)->anim.localPosX;
+  start[1] = ((GameObject *)obj)->anim.localPosY;
+  start[2] = ((GameObject *)obj)->anim.localPosZ;
   end[0] = -(lbl_803E3028 * ((LandedArwingState *)state)->surfaceNormalX - start[0]);
   end[1] = -(lbl_803E3028 * ((LandedArwingState *)state)->surfaceNormalY - start[1]);
   end[2] = -(lbl_803E3028 * ((LandedArwingState *)state)->surfaceNormalZ - start[2]);
@@ -1392,17 +1392,17 @@ void fn_80166444(int obj,int state)
         (hitScratch.hit[3] != ((LandedArwingState *)state)->surfacePlaneD)) {
       fn_80166840(obj,state,hitScratch.hit,end);
     } else {
-      *(f32 *)(obj + 0xc) = end[0];
-      *(f32 *)(obj + 0x10) = end[1];
-      *(f32 *)(obj + 0x14) = end[2];
+      ((GameObject *)obj)->anim.localPosX = end[0];
+      ((GameObject *)obj)->anim.localPosY = end[1];
+      ((GameObject *)obj)->anim.localPosZ = end[2];
     }
   } else {
     start[0] = end[0];
     start[1] = end[1];
     start[2] = end[2];
-    end[0] = -*(f32 *)(obj + 0x24);
-    end[1] = -*(f32 *)(obj + 0x28);
-    end[2] = -*(f32 *)(obj + 0x2c);
+    end[0] = -((GameObject *)obj)->anim.velocityX;
+    end[1] = -((GameObject *)obj)->anim.velocityY;
+    end[2] = -((GameObject *)obj)->anim.velocityZ;
     Vec3_Normalize(end);
     end[0] = lbl_803E302C * end[0] + start[0];
     end[1] = lbl_803E302C * end[1] + start[1];
@@ -1414,9 +1414,9 @@ void fn_80166444(int obj,int state)
       fn_80166840(obj,state,hitScratch.hit,end);
     } else {
       fVar1 = lbl_803E3030;
-      *(f32 *)(obj + 0x24) = fVar1 * ((LandedArwingState *)state)->surfaceNormalX;
-      *(f32 *)(obj + 0x28) = fVar1 * ((LandedArwingState *)state)->surfaceNormalY;
-      *(f32 *)(obj + 0x2c) = fVar1 * ((LandedArwingState *)state)->surfaceNormalZ;
+      ((GameObject *)obj)->anim.velocityX = fVar1 * ((LandedArwingState *)state)->surfaceNormalX;
+      ((GameObject *)obj)->anim.velocityY = fVar1 * ((LandedArwingState *)state)->surfaceNormalY;
+      ((GameObject *)obj)->anim.velocityZ = fVar1 * ((LandedArwingState *)state)->surfaceNormalZ;
       ((StaffBits *)&((LandedArwingState *)state)->flags92)->b2 = 1;
     }
   }

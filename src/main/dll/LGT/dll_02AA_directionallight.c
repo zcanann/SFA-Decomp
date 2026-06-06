@@ -17,7 +17,7 @@ int directionallight_getObjectTypeId(void) { return 0; }
 #pragma scheduling on
 void directionallight_free(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (*(void **)(state + 8) != NULL) {
         ModelLightStruct_free(*(void **)(state + 8));
     }
@@ -158,7 +158,7 @@ void directionallight_init(int obj, int setup)
 {
     u8 colorR, colorG, colorB;
     PointLightVec vec;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     vec = *(PointLightVec *)lbl_802C2608;
 
@@ -202,8 +202,8 @@ void directionallight_init(int obj, int setup)
 void directionallight_update(int obj)
 {
     u8 colorR, colorG, colorB;
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
 
     if (*(void **)(state + 8) == NULL) {
         return;

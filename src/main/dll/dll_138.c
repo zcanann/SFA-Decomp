@@ -71,7 +71,7 @@ void fn_80174A80(int obj, PushableState *ext)
     f32 v;
     f32 lim;
 
-    def = *(int *)(obj + 0x4c);
+    def = *(int *)&((GameObject *)obj)->anim.placementData;
     ext->eyeOpenSpeed = lbl_803E3580;
     f = lbl_803E3584;
     ext->eyeDriftSpeedX = f;
@@ -170,12 +170,12 @@ void fn_80174BFC(int obj, int ext)
     f32 points[21];
     Dll138HitInfo hit;
 
-    def = *(int *)(obj + 0x4c);
+    def = *(int *)&((GameObject *)obj)->anim.placementData;
     velBase = (f32 *)((PushableState *)ext)->probeLocal;
     Obj_GetPlayerObject();
-    savedX = *(f32 *)(obj + 0xc);
-    savedY = *(f32 *)(obj + 0x10);
-    savedZ = *(f32 *)(obj + 0x14);
+    savedX = ((GameObject *)obj)->anim.localPosX;
+    savedY = ((GameObject *)obj)->anim.localPosY;
+    savedZ = ((GameObject *)obj)->anim.localPosZ;
     bits = 0xf;
     iter = 0;
     scale = lbl_803E3588;
@@ -183,9 +183,9 @@ void fn_80174BFC(int obj, int ext)
         bits = 0xf;
         iter = iter + 1;
         if (iter > 4) {
-            *(f32 *)(obj + 0xc) = savedX;
-            *(f32 *)(obj + 0x10) = savedY;
-            *(f32 *)(obj + 0x14) = savedZ;
+            ((GameObject *)obj)->anim.localPosX = savedX;
+            ((GameObject *)obj)->anim.localPosY = savedY;
+            ((GameObject *)obj)->anim.localPosZ = savedZ;
             break;
         }
         i = 0;
@@ -197,9 +197,9 @@ void fn_80174BFC(int obj, int ext)
             pose.rot[1] = ((GameObject *)obj)->anim.rotY;
             pose.rot[2] = ((GameObject *)obj)->anim.rotZ;
             pose.scale = scale;
-            pose.x = *(f32 *)(obj + 0xc);
-            pose.y = *(f32 *)(obj + 0x10);
-            pose.z = *(f32 *)(obj + 0x14);
+            pose.x = ((GameObject *)obj)->anim.localPosX;
+            pose.y = ((GameObject *)obj)->anim.localPosY;
+            pose.z = ((GameObject *)obj)->anim.localPosZ;
             setMatrixFromObjectPos(mtx, (short *)&pose);
             Matrix_TransformPoint(mtx, vel[0], vel[1], vel[2], ptOut, &points[i * 3 + 1],
                                   &points[i * 3 + 2]);
@@ -227,7 +227,7 @@ void fn_80174BFC(int obj, int ext)
                                         *tex = 0x100;
                                     }
                                     GameBit_Set(*(s16 *)(def + 0x18), 1);
-                                    *(u8 *)(obj + 0xaf) |= 8;
+                                    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                                     ((PushableState *)ext)->flags |= 0x80;
                                 }
                                 break;
@@ -236,7 +236,7 @@ void fn_80174BFC(int obj, int ext)
                                     GameBit_Set(gamebit, 1);
                                     Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
                                     ((PushableState *)ext)->flags |= 0x80;
-                                    *(u8 *)(obj + 0xaf) |= 8;
+                                    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                                     saveGame_saveObjectPos(obj);
                                 }
                                 break;
@@ -411,7 +411,7 @@ void fn_80175428(int obj)
   int msg;
   int msgParam;
 
-  state = *(PushableState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   msgParam = 0;
   while (ObjMsg_Pop(obj,&msg,&msgSender,&msgParam) != 0) {
     switch (msg) {
@@ -452,7 +452,7 @@ void fn_80175428(int obj)
  */
 int pushable_render2(int obj)
 {
-  return (*(PushableState **)(obj + 0xb8))->flags & 1;
+  return (*(PushableState **)&((GameObject *)obj)->extra)->flags & 1;
 }
 
 /*
@@ -472,7 +472,7 @@ int pushable_render2(int obj)
 #pragma peephole off
 void pushable_modelMtxFn(int obj,int modelNo)
 {
-  int extra = *(int *)(obj + 0xb8);
+  int extra = *(int *)&((GameObject *)obj)->extra;
   uint flags = *(uint *)(extra + 0xa8);
 
   *(uint *)(extra + 0xa8) = flags | (1 << modelNo);
@@ -508,7 +508,7 @@ int pushable_func0B(int obj,int other)
   f32 delta[3];
   f32 *d;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   d = delta;
   d[0] = *(f32 *)(other + 0xc) - ((GameObject *)obj)->anim.localPosX;
   d[1] = *(f32 *)(other + 0x10) - ((GameObject *)obj)->anim.localPosY;

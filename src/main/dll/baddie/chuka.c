@@ -25,24 +25,24 @@ extern int chuka_SeqFn(void);
 #pragma peephole off
 void chuka_init(int obj, int params)
 {
-    ChukaState *state = *(ChukaState **)(obj + 0xb8);
+    ChukaState *state = ((GameObject *)obj)->extra;
     u8 *modeTable;
 
-    *(s16 *)(obj + 0x0) = (s16)((s8)*(u8 *)(params + 0x18) << 8);
-    *(int *)(obj + 0xbc) = (int)&chuka_SeqFn;
-    state->startY = *(f32 *)(obj + 0x10);
+    ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(params + 0x18) << 8);
+    *(int *)&((GameObject *)obj)->unkBC = (int)&chuka_SeqFn;
+    state->startY = ((GameObject *)obj)->anim.localPosY;
     state->modeIndex = *(u8 *)(params + 0x19);
 
     if (*(s16 *)(params + 0x1c) != 0) {
-        *(f32 *)(obj + 0x8) =
+        ((GameObject *)obj)->anim.rootMotionScale =
             lbl_803E63F8 / ((f32)(s32)*(s16 *)(params + 0x1c) / lbl_803E63FC);
     }
 
     if (*(s16 *)(params + 0x1a) != 0) {
-        *(s16 *)(obj + 0x4) = *(s16 *)(params + 0x1a);
+        ((GameObject *)obj)->anim.rotZ = *(s16 *)(params + 0x1a);
     }
 
-    *(u16 *)(obj + 0xb0) |= 0x4000;
+    ((GameObject *)obj)->unkB0 |= 0x4000;
     state->linkedObject = 0;
 
     modeTable = gChukaModeTable;

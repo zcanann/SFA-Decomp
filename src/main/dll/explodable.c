@@ -98,7 +98,7 @@ int fn_801833E4(int obj, int player, int state)
         *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
         *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 400;
-        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
         *(f32 *)(newObj + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         len = *(f32 *)(newObj + 0x24) * *(f32 *)(newObj + 0x24) +
@@ -140,7 +140,7 @@ int fn_801833E4(int obj, int player, int state)
         *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
         *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 400;
-        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
         *(f32 *)(newObj + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         len = *(f32 *)(newObj + 0x24) * *(f32 *)(newObj + 0x24) +
@@ -182,7 +182,7 @@ int fn_801833E4(int obj, int player, int state)
         *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
         *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 2000;
-        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
         *(f32 *)(newObj + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         len = *(f32 *)(newObj + 0x24) * *(f32 *)(newObj + 0x24) +
@@ -231,7 +231,7 @@ int fn_801833E4(int obj, int player, int state)
         *(f32 *)(setup + 0xc) = lbl_803E39C0 + ((GameObject *)obj)->anim.localPosY;
         *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x24) = -1;
-        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         (**(void (**)(f32, f32, f32))(**(int **)(newObj + 0x68) + 0x2c))(
             lbl_803E39B8, lbl_803E39AC, lbl_803E39B8);
         break;
@@ -249,7 +249,7 @@ int fn_801833E4(int obj, int player, int state)
             *(u8 *)(setup + 0x6) = 200;
             *(s16 *)(setup + 0x20) = -1;
             *(s16 *)(setup + 0x1a) = 0x7f;
-            Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+            Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         }
         break;
     }
@@ -301,8 +301,8 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
   int state;
   s16 timer;
 
-  state = *(int *)(obj + 0xb8);
-  if (((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(*(int *)(obj + 0x4c) + 0x14)) == 0) ||
+  state = *(int *)&((GameObject *)obj)->extra;
+  if (((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14)) == 0) ||
       (((timer = ((ExplodableState *)state)->explodeTimer) != 0) && (timer <= 0x32)) ||
       (((ExplodableState *)state)->animTimer > lbl_803E39B8)) {
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
@@ -363,14 +363,14 @@ void largecrate_update(int obj)
     int level;
     f32 thresh;
 
-    def = *(int *)(obj + 0x4c);
+    def = *(int *)&((GameObject *)obj)->anim.placementData;
     local40 = -1;
     animSpeed = lbl_803E39AC;
     (**(void (**)(f32 *))(*gSHthorntailAnimationInterface + 0x18))(&animSpeed);
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     if (((GameObject *)obj)->anim.parent != NULL) {
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
     if ((**(int (**)(int))(*gMapEventInterface + 0x68))(((ObjPlacement *)def)->mapId) == 0) {
         ObjHits_DisableObject(obj);
@@ -386,7 +386,7 @@ void largecrate_update(int obj)
                     ((ExplodableState *)state)->animTimer = lbl_803E39B8;
                     ((ExplodableState *)state)->explodeTimer = 0;
                     ObjHits_EnableObject(obj);
-                    *(u8 *)(obj + 0xaf) &= ~0x8;
+                    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
                     ((GameObject *)obj)->anim.flags &= ~0x4000;
                 }
             }
@@ -455,7 +455,7 @@ void largecrate_update(int obj)
                 ((ExplodableState *)state)->explodeTimer = 0x32;
                 ((ExplodableState *)state)->damageTaken = 0;
                 fn_801833E4(obj, player, state);
-                *(u8 *)(obj + 0xaf) |= 8;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             }
         }
         vec3f_distanceSquared((f32 *)(Obj_GetPlayerObject() + 0x18), (f32 *)(obj + 0x18));
@@ -481,7 +481,7 @@ void largecrate_free(int obj) {
 extern int *gCameraInterface;
 #pragma scheduling off
 int LargeCrate_SeqFn(int *obj) {
-    if (*(s16*)((char*)obj + 0xb4) != -1) {
+    if (((GameObject *)obj)->unkB4 != -1) {
         ((void (*)(int*))((void**)*gCameraInterface)[19])(obj);
     }
     return 0;

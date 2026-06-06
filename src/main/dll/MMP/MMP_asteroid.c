@@ -86,7 +86,7 @@ extern f32  lbl_803E4018;
 #pragma peephole off
 void xyzanimator_update(int obj)
 {
-    u8 *setup = *(u8 **)(obj + 0x4c);
+    u8 *setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
     u8 *state = ((GameObject *)obj)->extra;
     int block;
     u8 *row;
@@ -1302,9 +1302,9 @@ void explodeanimator_update(int *obj) {
     f32 buf[6];
     f32 vel[2];
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     if ((sub[2] & 1) != 0) return;
-    def = *(u8**)((char*)obj + 0x4c);
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (GameBit_Get(*(s16*)(def + 0x34)) == 0) return;
     GameBit_Set(*(s16*)(def + 0x32), 1);
     sub[2] = (u8)(sub[2] | 1);
@@ -1357,8 +1357,8 @@ void texframeanimator_update(int *obj)
     int *textureHit;
     int *textureEntry;
 
-    state = *(TexFrameAnimatorState **)((char *)obj + 0xb8);
-    params = *(u8 **)((char *)obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    params = *(u8 **)&((GameObject *)obj)->anim.placementData;
 
     if ((state->active == 0) &&
         ((u32)GameBit_Get(*(s16 *)(params + 0x20)) != 0) &&
@@ -1404,7 +1404,7 @@ void texframeanimator_init(int *obj, u8 *params)
     TexFrameAnimatorState *state;
     u8 done;
 
-    state = *(TexFrameAnimatorState **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     state->textureSlot = (s8)params[0x19];
     state->endFrame = *(s16 *)(params + 0x1a) << 8;
     state->speed = (u8)*(s16 *)(params + 0x1c);
@@ -1463,7 +1463,7 @@ void dimbossicesmash_free(int* obj)
 
 void fogcontrol_free(int* obj)
 {
-    u8* state = *(u8**)((char*)obj + 0xb8);
+    u8* state = ((GameObject *)obj)->extra;
     if (((u32)state[4] >> 7) & 1u) {
         disableHeavyFog();
     }
@@ -1488,7 +1488,7 @@ void fogcontrol_init(u8* obj, u8* params) {
     u8 cv;
     f32 t;
 
-    st = *(FogControlState **)(obj + 0xb8);
+    st = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
     st->on = 0;
     st->full = 0;
@@ -1517,7 +1517,7 @@ void fogcontrol_init(u8* obj, u8* params) {
 
 void explodeanimator_init(int* obj, int* def)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     int v;
     if ((u32)GameBit_Get(*(s16*)((char*)def + 50)) != 0u) {
         v = 1;
@@ -1535,10 +1535,10 @@ void explodeanimator_init(int* obj, int* def)
 #pragma scheduling off
 void xyzanimator_init(int obj)
 {
-    int inner = *(int *)(obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     int id;
     ObjGroup_AddObject(obj, 0x51);
-    id = *(int *)(*(int *)(obj + 0x4c) + 0x14);
+    id = *(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14);
     switch (id) {
     case 0x46406:
     case 0x4BAB1:
@@ -1593,7 +1593,7 @@ void dimbossicesmash_update(u8 *obj)
         }
         *(u8 *)(obj + 0x36) = 0;
     } else {
-        setup = *(u8 **)(obj + 0x4c);
+        setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
         if ((flags & 1) == 0) {
             if (((ObjAnimComponent *)obj)->bankIndex == 0) {
                 t = GameBit_Get(*(s16 *)(setup + 0x40));
@@ -1835,8 +1835,8 @@ extern f32 lbl_803E406C;
  * toward the gamebit-selected target and feed the heavy fog params. */
 void fogcontrol_update(int obj)
 {
-    u8 *setup = *(u8 **)(obj + 0x4c);
-    FogControlState *st = *(FogControlState **)(obj + 0xb8);
+    u8 *setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    FogControlState *st = ((GameObject *)obj)->extra;
     u8 cv;
     u8 run;
     f32 t;

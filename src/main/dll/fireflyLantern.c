@@ -76,20 +76,20 @@ void fn_80154870(int obj, int *state)
     }
     ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
     flag = fn_80296448(Obj_GetPlayerObject());
-    dvec[0] = *(f32 *)(state[0xa7] + 0xc) - *(f32 *)(obj + 0xc);
+    dvec[0] = *(f32 *)(state[0xa7] + 0xc) - ((GameObject *)obj)->anim.localPosX;
     dvec[1] = lbl_803E2990;
-    dvec[2] = *(f32 *)(state[0xa7] + 0x14) - *(f32 *)(obj + 0x14);
+    dvec[2] = *(f32 *)(state[0xa7] + 0x14) - ((GameObject *)obj)->anim.localPosZ;
     if (((u32)state[0xd0] != 0) && ((u32)state[0xd0] == (u32)Obj_GetPlayerObject())) {
         *(u32 *)&state[0xb9] |= 0x10000LL;
         *(f32 *)(state + 0xc9) = lbl_803E2990;
     }
-    *(s16 *)(obj + 2) =
+    ((GameObject *)obj)->anim.rotY =
         -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)((u8 *)state + 0x33a)) -
-          (f32)*(s16 *)(obj + 2));
+          (f32)((GameObject *)obj)->anim.rotY);
     if (flag == 0) {
         fVar1 = lbl_803E2990;
-        *(f32 *)(obj + 0x24) = fVar1;
-        *(f32 *)(obj + 0x2c) = fVar1;
+        ((GameObject *)obj)->anim.velocityX = fVar1;
+        ((GameObject *)obj)->anim.velocityZ = fVar1;
         fn_8014CF7C(obj, state, *(f32 *)(state[0xa7] + 0xc), *(f32 *)(state[0xa7] + 0x14), 10, 0);
     } else {
         fn_8014C678(obj, state, dvec, lbl_803E29A0, lbl_803E29B4, *(f32 *)&lbl_803E29B4, 1);
@@ -99,13 +99,13 @@ void fn_80154870(int obj, int *state)
         fVar1 = lbl_803E2990;
         if (fVar1 == *(f32 *)(state + 0xca)) {
             if (flag == 0) {
-                if (*(f32 *)(obj + 0x98) > lbl_803E29A4) {
+                if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E29A4) {
                     *(f32 *)(state + 0xca) = lbl_803E29E0;
                     *(u8 *)((u8 *)state + 0x33b) += 1;
                 } else {
                     *(f32 *)(state + 0xca) = lbl_803E29E4;
                 }
-            } else if (*(f32 *)(obj + 0x98) > lbl_803E29C8) {
+            } else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E29C8) {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
                 *(f32 *)(state + 0xc2) = lbl_803E29D0;
             } else {
@@ -116,7 +116,7 @@ void fn_80154870(int obj, int *state)
             *(f32 *)(state + 0xca) = *(f32 *)(state + 0xca) - timeDelta;
             if (*(f32 *)(state + 0xca) <= fVar1) {
                 *(f32 *)(state + 0xca) = fVar1;
-                if (*(f32 *)(obj + 0x98) > lbl_803E29C8) {
+                if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E29C8) {
                     Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
                     *(f32 *)(state + 0xc2) = lbl_803E29D0;
                 } else {
@@ -127,9 +127,9 @@ void fn_80154870(int obj, int *state)
         }
     }
     *(u8 *)((u8 *)state + 0x33a) += 1;
-    *(s16 *)(obj + 2) =
+    ((GameObject *)obj)->anim.rotY =
         (lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)((u8 *)state + 0x33a)) +
-         (f32)*(s16 *)(obj + 2));
+         (f32)((GameObject *)obj)->anim.rotY);
     fn_80154328(obj, state);
 }
 #pragma peephole reset
@@ -157,7 +157,7 @@ void fn_80154C24(int obj, int state)
     fVar1 = lbl_803E2990;
     *(float *)(state + 0x324) = lbl_803E2990;
     *(float *)(state + 0x328) = fVar1;
-    *(float *)(state + 0x32c) = *(float *)(obj + 0x10);
+    *(float *)(state + 0x32c) = ((GameObject *)obj)->anim.localPosY;
     uVar2 = randomGetRange(0, 0xff);
     *(u8 *)(state + 0x33a) = uVar2;
     *(undefined *)(state + 0x33b) = 0;
@@ -196,18 +196,18 @@ void fn_80154D0C(int obj, int state, u16 *outAngle, float *outDistance)
     vecA[2] = *(f32 *)(state + 0x364);
     PSVECSubtract(vecA, (f32 *)(obj + 0xc), tmpA);
     d = PSVECDotProduct(tmpA, (f32 *)(state + 0x344));
-    vecA[0] = *(f32 *)(state + 0x344) * d + *(f32 *)(obj + 0xc);
-    vecA[1] = *(f32 *)(state + 0x348) * d + (objY = *(f32 *)(obj + 0x10));
-    vecA[2] = *(f32 *)(state + 0x34c) * d + *(f32 *)(obj + 0x14);
+    vecA[0] = *(f32 *)(state + 0x344) * d + ((GameObject *)obj)->anim.localPosX;
+    vecA[1] = *(f32 *)(state + 0x348) * d + (objY = ((GameObject *)obj)->anim.localPosY);
+    vecA[2] = *(f32 *)(state + 0x34c) * d + ((GameObject *)obj)->anim.localPosZ;
     axisA[0] = lbl_803E2A00;
     axisA[1] = lbl_803E2A04;
     axisA[2] = lbl_803E2A00;
     PSVECCrossProduct(axisA, (f32 *)(state + 0x344), crossA);
     PSVECNormalize(crossA, crossA);
     if (lbl_803E2A00 != crossA[0]) {
-        dx = (*(f32 *)(obj + 0xc) - *(f32 *)(state + 0x360)) / crossA[0];
+        dx = (((GameObject *)obj)->anim.localPosX - *(f32 *)(state + 0x360)) / crossA[0];
     } else {
-        dx = (*(f32 *)(obj + 0x14) - *(f32 *)(state + 0x364)) / crossA[2];
+        dx = (((GameObject *)obj)->anim.localPosZ - *(f32 *)(state + 0x364)) / crossA[2];
     }
     targetObj = *(int *)(state + 0x29c);
     targetPos[0] = *(f32 *)(targetObj + 0xc);
@@ -234,7 +234,7 @@ void fn_80154D0C(int obj, int state, u16 *outAngle, float *outDistance)
     dx = dx - d;
     targetY = objY - targetY;
     angle = getAngle(-targetY, dx) & 0xffff;
-    delta = angle - (*(s16 *)(obj + 2) & 0xffff);
+    delta = angle - (((GameObject *)obj)->anim.rotY & 0xffff);
     if (delta > 0x8000) {
         delta = delta - 0xffff;
     }

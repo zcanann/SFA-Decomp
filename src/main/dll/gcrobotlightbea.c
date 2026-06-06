@@ -383,10 +383,10 @@ int fn_801821FC(u8 *obj) {
     f32 startPoints[12];
     u32 sweptBounds[6];
 
-    st = *(u8 **)(obj + 0x54);
+    st = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
     if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3970, 1, 0, obj, 1, -1, 0xff, 0) != 0) {
         *(s8 *)(st + 0xad) |= 1;
-        *(f32 *)(st + 0x10) = *(f32 *)(obj + 0x80);
+        *(f32 *)(st + 0x10) = ((GameObject *)obj)->anim.previousLocalPosX;
         *(f32 *)(st + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
         *(f32 *)(st + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
         fz = lbl_803E3938;
@@ -397,12 +397,12 @@ int fn_801821FC(u8 *obj) {
     }
 
     if ((int)(*(u32 *)(st + 0x48) >> 4) != 0 && (s8)st[0x70] == 0) {
-        endPoints[0] = *(f32 *)(obj + 0xc);
+        endPoints[0] = ((GameObject *)obj)->anim.localPosX;
         endY = &endPoints[1];
         endPoints[1] = ((GameObject *)obj)->anim.localPosY;
         endZ = &endPoints[2];
         endPoints[2] = ((GameObject *)obj)->anim.localPosZ;
-        startPoints[0] = *(f32 *)(obj + 0x80);
+        startPoints[0] = ((GameObject *)obj)->anim.previousLocalPosX;
         startPoints[1] = ((GameObject *)obj)->anim.previousLocalPosY;
         startPoints[2] = ((GameObject *)obj)->anim.previousLocalPosZ;
         hitResults.radii[0] = (f32)*(s16 *)(st + 0x5a);
@@ -436,10 +436,10 @@ int fn_801821FC(u8 *obj) {
         lbl_803AC790[3] = hitResults.hitInfo[idx][3];
         if (hitResults.solidFlags[idx] != 0) {
             *(s8 *)(st + 0xad) |= 2;
-            *(f32 *)(obj + 0xc) = *(f32 *)(st + 0x3c);
+            ((GameObject *)obj)->anim.localPosX = *(f32 *)(st + 0x3c);
             ((GameObject *)obj)->anim.localPosY = *(f32 *)(st + 0x40);
             ((GameObject *)obj)->anim.localPosZ = *(f32 *)(st + 0x44);
-            *(f32 *)(st + 0x10) = *(f32 *)(obj + 0x80);
+            *(f32 *)(st + 0x10) = ((GameObject *)obj)->anim.previousLocalPosX;
             *(f32 *)(st + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
             *(f32 *)(st + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
             fz = lbl_803E3938;
@@ -449,10 +449,10 @@ int fn_801821FC(u8 *obj) {
             return 1;
         } else {
             *(s8 *)(st + 0xad) |= 1;
-            *(f32 *)(obj + 0xc) = *(f32 *)(st + 0x3c);
+            ((GameObject *)obj)->anim.localPosX = *(f32 *)(st + 0x3c);
             ((GameObject *)obj)->anim.localPosY = *(f32 *)(st + 0x40);
             ((GameObject *)obj)->anim.localPosZ = *(f32 *)(st + 0x44);
-            *(f32 *)(st + 0x10) = *(f32 *)(obj + 0x80);
+            *(f32 *)(st + 0x10) = ((GameObject *)obj)->anim.previousLocalPosX;
             *(f32 *)(st + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
             *(f32 *)(st + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
             fz = lbl_803E3938;

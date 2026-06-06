@@ -866,7 +866,7 @@ void hagabon_hitDetect(int obj) {
     }
 }
 void swarmbaddie_free(int obj) {
-    void **state = *(void ***)(obj + 0xB8);
+    void **state = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
     if (*state != NULL) {
         mm_free(*state);
@@ -874,7 +874,7 @@ void swarmbaddie_free(int obj) {
     }
 }
 void wispbaddie_free(int obj) {
-    void **state = *(void ***)(obj + 0xB8);
+    void **state = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
     if (*state != NULL) {
         mm_free(*state);
@@ -882,7 +882,7 @@ void wispbaddie_free(int obj) {
     }
 }
 void hagabon_free(int obj) {
-    void **state = *(void ***)(obj + 0xB8);
+    void **state = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
     Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
     if (*state != NULL) {
@@ -891,7 +891,7 @@ void hagabon_free(int obj) {
     }
 }
 void swarmbaddie_init(int obj, int data, int skip_alloc) {
-    SwarmBaddieState *state = *(SwarmBaddieState **)(obj + 0xB8);
+    SwarmBaddieState *state = ((GameObject *)obj)->extra;
     state->curveStep = (f32)(s32)*(s16 *)(data + 0x1A) / lbl_803E26CC;
     state->chaseRadius = lbl_803E2698 * (f32)(s32)*(s8 *)(data + 0x19);
     state->hitVolumeEnvelope = lbl_803E26B4;
@@ -906,10 +906,10 @@ void swarmbaddie_init(int obj, int data, int skip_alloc) {
         }
         Sfx_PlayFromObject(obj, SFXfox_treadwater422);
     }
-    *(u16 *)(obj + 0xB0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
 }
 void hagabon_init(int obj, int data, int skip_alloc) {
-    HagabonState *state = *(HagabonState **)(obj + 0xB8);
+    HagabonState *state = ((GameObject *)obj)->extra;
     state->curveStep = (f32)(s32)*(s16 *)(data + 0x1A) / lbl_803E266C;
     state->animSpeed = lbl_803E2670;
     state->chaseRadius = lbl_803E2674 * (f32)(s32)*(s8 *)(data + 0x19);
@@ -925,7 +925,7 @@ void hagabon_init(int obj, int data, int skip_alloc) {
     }
     if (*(s16 *)(data + 0x20) != -1) {
         if (GameBit_Get(*(s16 *)(data + 0x20)) != 0) {
-            *(int *)(obj + 0xF4) = 1;
+            ((GameObject *)obj)->unkF4 = 1;
         }
     }
 }

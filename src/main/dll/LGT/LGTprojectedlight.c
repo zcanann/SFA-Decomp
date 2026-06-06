@@ -318,7 +318,7 @@ void wmlevelcontrol_update(int obj)
   float timer;
   
   Obj_GetPlayerObject();
-  state = *(float **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   timer = *state;
   if (timer > lbl_803E5E70) {
     gameTextSetColor(0xff,0xff,0xff,0xff);
@@ -372,7 +372,7 @@ void wmlevelcontrol_init(int obj)
 
     ObjGroup_AddObject(obj, 9);
     unlockLevel(mapGetDirIdx(0xb), 0, 0);
-    state = *(f32 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     *((u8 *)state + 0xb) = 0;
     *(s16 *)((char *)state + 6) = 0x1e;
     *state = lbl_803E5E90;
@@ -465,7 +465,7 @@ int wmgeneralscales_SeqFn(int obj, int p2, u8 *seq)
     int i;
     u8 buf[16];
 
-    state = *(f32 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if (*((u8 *)state + 5) != 0) {
         int a = *((u8 *)state + 5) + framesThisStep;
         if (a < 0) {
@@ -501,33 +501,33 @@ int wmgeneralscales_SeqFn(int obj, int p2, u8 *seq)
             *((u8 *)state + 4) = 0;
             break;
         case 5:
-            if (*(void **)(obj + 0xc8) == NULL && Obj_IsLoadingLocked() != 0) {
+            if (((GameObject *)obj)->unkC8 == NULL && Obj_IsLoadingLocked() != 0) {
                 int setup = Obj_AllocObjectSetup(0x24, 0x1b8);
-                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
-                *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
+                *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+                *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
                 *(u8 *)(setup + 4) = 0x20;
                 *(u8 *)(setup + 5) = 4;
                 *(u8 *)(setup + 7) = 0xff;
                 ObjLink_AttachChild(obj, Obj_SetupObject(setup, 5, -1, -1, 0), 0);
-                *(f32 *)(*(int *)(obj + 0xc8) + 8) *= lbl_803E5EA0;
+                *(f32 *)(*(int *)&((GameObject *)obj)->unkC8 + 8) *= lbl_803E5EA0;
             }
             break;
         case 6: {
-            int *child = *(int **)(obj + 0xc8);
+            int *child = ((GameObject *)obj)->unkC8;
             if (child != NULL) {
                 ObjLink_DetachChild((int *)obj, child);
             }
             break;
         }
         case 7: {
-            u8 *p = *(u8 **)(obj + 0x50);
+            u8 *p = *(u8 **)&((GameObject *)obj)->anim.modelInstance;
             p[0x5f] |= 0x10;
             *((u8 *)state + 5) = 1;
             break;
         }
         case 8: {
-            u8 *p = *(u8 **)(obj + 0x50);
+            u8 *p = *(u8 **)&((GameObject *)obj)->anim.modelInstance;
             p[0x5f] &= ~0x10;
             Obj_SetModelRenderOpAlpha(obj, 0);
             *((u8 *)state + 5) = 0;

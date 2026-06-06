@@ -205,7 +205,7 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
         ((GameObject *)obj)->anim.localPosX = ((TrickyState *)state)->homePosX;
         ((GameObject *)obj)->anim.localPosY = ((TrickyState *)state)->homePosY;
         ((GameObject *)obj)->anim.localPosZ = ((TrickyState *)state)->homePosZ;
-        *(f32 *)(obj + 0x18) = ((TrickyState *)state)->homePosX;
+        ((GameObject *)obj)->anim.worldPosX = ((TrickyState *)state)->homePosX;
         ((GameObject *)obj)->anim.worldPosY = ((TrickyState *)state)->homePosY;
         ((GameObject *)obj)->anim.worldPosZ = ((TrickyState *)state)->homePosZ;
         ObjHits_SyncObjectPosition(obj);
@@ -236,7 +236,7 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
     *(u16 *)(state + 0x534) = ((TrickyState *)state)->unk532;
     trickyDebugPrint(strs + 0x1e8, ((TrickyState *)state)->unkD0, wg, targetWg, ((TrickyState *)state)->unk532);
     if (((TrickyState *)state)->unkD0 == 0) {
-        trickyReportError(strs + 0x214, *(f32 *)(obj + 0x18), ((GameObject *)obj)->anim.worldPosY,
+        trickyReportError(strs + 0x214, ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY,
                           ((GameObject *)obj)->anim.worldPosZ);
     }
     velBefore = ((TrickyState *)state)->unk14;
@@ -529,7 +529,7 @@ state_selected:
                     switch (*(s8 *)(prevNode + 0x1a)) {
                     case 1:
                         ((TrickyState *)state)->unk2C =
-                            *(f32 *)(*(int *)(state + 0x4c0) + 8) - *(f32 *)(obj + 0x18);
+                            *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
                         ((TrickyState *)state)->unk30 =
                             *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
                         len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
@@ -545,7 +545,7 @@ state_selected:
                         break;
                     case 5:
                         ((TrickyState *)state)->unk2C =
-                            *(f32 *)(*(int *)(state + 0x4c0) + 8) - *(f32 *)(obj + 0x18);
+                            *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
                         ((TrickyState *)state)->unk30 =
                             *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
                         len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
@@ -576,7 +576,7 @@ state_selected:
                         break;
                     case 6:
                         ((TrickyState *)state)->unk2C =
-                            *(f32 *)(*(int *)(state + 0x4c0) + 8) - *(f32 *)(obj + 0x18);
+                            *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
                         ((TrickyState *)state)->unk30 =
                             *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
                         len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
@@ -655,7 +655,7 @@ state_selected:
         node = *(u8 **)(state + 0x4c0);
         if ((*(s8 *)(*(int *)(state + 0x4bc) + 0x1a) != 9) && (*(s8 *)(node + 0x1a) != 9)) {
             f32 *tpos = *(f32 **)(state + 0x28);
-            delta[0] = tpos[0] - *(f32 *)(obj + 0x18);
+            delta[0] = tpos[0] - ((GameObject *)obj)->anim.worldPosX;
             delta[1] = tpos[1] - ((GameObject *)obj)->anim.worldPosY;
             delta[2] = tpos[2] - ((GameObject *)obj)->anim.worldPosZ;
             rot.yaw = -*(s16 *)obj;
@@ -821,7 +821,7 @@ state_selected:
             } else {
                 curveFn_800da23c(state + 0x420);
                 ((TrickyState *)state)->unk2C =
-                    *(f32 *)(*(int *)(state + 0x4c0) + 8) - *(f32 *)(obj + 0x18);
+                    *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
                 ((TrickyState *)state)->unk30 =
                     *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
                 len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
@@ -857,8 +857,8 @@ state_selected:
         }
         ((TrickyState *)state)->unk14 = v;
         {
-            f32 dx = *(f32 *)(*(int *)(obj + 0xb8) + 0x2c);
-            f32 dz = *(f32 *)(*(int *)(obj + 0xb8) + 0x30);
+            f32 dx = *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x2c);
+            f32 dz = *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x30);
             if (lbl_803E23EC < dx * dx + dz * dz) {
                 yawA = getAngle(-dx, -dz);
                 trickyTurnTowardYaw(obj, yawA);
@@ -886,14 +886,14 @@ state_selected:
             f32 dx;
             f32 dz;
             node = *(u8 **)(state + 0x4c0);
-            dx = *(f32 *)(node + 8) - *(f32 *)(obj + 0x18);
+            dx = *(f32 *)(node + 8) - ((GameObject *)obj)->anim.worldPosX;
             dz = *(f32 *)(node + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
             len = sqrtf(dx * dx + dz * dz);
             *(f32 *)(state + 0x64) = len / lbl_803E24A4;
             *(f32 *)(state + 0x68) = lbl_803E23DC;
-            *(u32 *)(state + 0x74) = *(u32 *)(obj + 0x18);
-            *(u32 *)(state + 0x70) = *(u32 *)(obj + 0x1c);
-            *(u32 *)(state + 0x78) = *(u32 *)(obj + 0x20);
+            *(u32 *)(state + 0x74) = *(u32 *)&((GameObject *)obj)->anim.worldPosX;
+            *(u32 *)(state + 0x70) = *(u32 *)&((GameObject *)obj)->anim.worldPosY;
+            *(u32 *)(state + 0x78) = *(u32 *)&((GameObject *)obj)->anim.worldPosZ;
             *(u32 *)(state + 0x7c) = *(u32 *)(node + 8);
             *(u32 *)(state + 0x80) = *(u32 *)(node + 0x10);
             k = *(f32 *)(state + 0x64);
@@ -918,7 +918,7 @@ state_selected:
         trickyDebugPrint(strs + 0x4b8);
         *(f32 *)(state + 0x68) = *(f32 *)(state + 0x68) + timeDelta;
         if (*(f32 *)(state + 0x68) >= *(f32 *)(state + 0x64)) {
-            *(u32 *)(obj + 0x10) = *(u32 *)(*(int *)(state + 0x4c0) + 0xc);
+            *(u32 *)&((GameObject *)obj)->anim.localPosY = *(u32 *)(*(int *)(state + 0x4c0) + 0xc);
             ((TrickyState *)state)->unk3C = lbl_803E23E8;
             ((TrickyState *)state)->unk09 = 7;
         } else {
@@ -1005,7 +1005,7 @@ state_selected:
             } else {
                 curveFn_800da23c(state + 0x420);
                 ((TrickyState *)state)->unk2C =
-                    *(f32 *)(*(int *)(state + 0x4c0) + 8) - *(f32 *)(obj + 0x18);
+                    *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
                 ((TrickyState *)state)->unk30 =
                     *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
                 len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
@@ -1042,8 +1042,8 @@ state_selected:
         ((TrickyState *)state)->unk353 = 0;
         trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->unk14);
         {
-            f32 dx = *(f32 *)(*(int *)(obj + 0xb8) + 0x2c);
-            f32 dz = *(f32 *)(*(int *)(obj + 0xb8) + 0x30);
+            f32 dx = *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x2c);
+            f32 dz = *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x30);
             if (lbl_803E23EC < dx * dx + dz * dz) {
                 yawA = getAngle(-dx, -dz);
                 trickyTurnTowardYaw(obj, yawA);
@@ -1106,7 +1106,7 @@ state_selected:
             } else {
                 curveFn_800da23c(state + 0x420);
                 ((TrickyState *)state)->unk2C =
-                    *(f32 *)(*(int *)(state + 0x4c0) + 8) - *(f32 *)(obj + 0x18);
+                    *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
                 ((TrickyState *)state)->unk30 =
                     *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
                 len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
@@ -1138,7 +1138,7 @@ state_selected:
     }
     if (((TrickyState *)state)->unk09 < 5) {
         if (isInWalkGroupOrPatch((f32 *)(obj + 0x18)) != 0) {
-            ((TrickyState *)state)->homePosX = *(f32 *)(obj + 0x18);
+            ((TrickyState *)state)->homePosX = ((GameObject *)obj)->anim.worldPosX;
             ((TrickyState *)state)->homePosY = ((GameObject *)obj)->anim.worldPosY;
             ((TrickyState *)state)->homePosZ = ((GameObject *)obj)->anim.worldPosZ;
         } else {
@@ -1146,7 +1146,7 @@ state_selected:
             ((GameObject *)obj)->anim.localPosX = ((TrickyState *)state)->homePosX;
             ((GameObject *)obj)->anim.localPosY = ((TrickyState *)state)->homePosY;
             ((GameObject *)obj)->anim.localPosZ = ((TrickyState *)state)->homePosZ;
-            *(f32 *)(obj + 0x18) = ((TrickyState *)state)->homePosX;
+            ((GameObject *)obj)->anim.worldPosX = ((TrickyState *)state)->homePosX;
             ((GameObject *)obj)->anim.worldPosY = ((TrickyState *)state)->homePosY;
             ((GameObject *)obj)->anim.worldPosZ = ((TrickyState *)state)->homePosZ;
             ObjHits_SyncObjectPosition(obj);
@@ -1203,7 +1203,7 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
         return;
     }
     if (flag != 0) {
-        delta[0] = *(f32 *)(targetPos + 0) - *(f32 *)(obj + 0x18);
+        delta[0] = *(f32 *)(targetPos + 0) - ((GameObject *)obj)->anim.worldPosX;
         delta[1] = *(f32 *)(targetPos + 1) - ((GameObject *)obj)->anim.worldPosY;
         delta[2] = *(f32 *)(targetPos + 2) - ((GameObject *)obj)->anim.worldPosZ;
         params.a = -((GameObject *)obj)->anim.rotX;
@@ -1233,10 +1233,10 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
         ctx = ((GameObject *)obj)->extra;
         otherTarget = (f32 *)((TrickyState *)ctx)->unk28;
         if (otherTarget == (f32 *)((TrickyState *)ctx)->previousPathPoint) {
-            dx = ((TrickyState *)ctx)->previousPathX - *(f32 *)(obj + 0x18);
+            dx = ((TrickyState *)ctx)->previousPathX - ((GameObject *)obj)->anim.worldPosX;
             dz = ((TrickyState *)ctx)->previousPathZ - ((GameObject *)obj)->anim.worldPosZ;
             vel = sqrtf(dx * dx + dz * dz) * oneOverTimeDelta;
-            dx = *(f32 *)((u8 *)otherTarget + 0) - *(f32 *)(obj + 0x18);
+            dx = *(f32 *)((u8 *)otherTarget + 0) - ((GameObject *)obj)->anim.worldPosX;
             dz = *(f32 *)((u8 *)otherTarget + 8) - ((GameObject *)obj)->anim.worldPosZ;
             {
                 f32 distOther = sqrtf(dx * dx + dz * dz) * oneOverTimeDelta;

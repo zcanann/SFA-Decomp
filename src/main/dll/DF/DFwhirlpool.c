@@ -64,8 +64,8 @@ void dfropenode_render(int obj, int param_2, int param_3)
   f32 originalScale;
 
   renderState.objAndParam = (undefined4)param_2;
-  extra = *(DFropenodeExtra **)(obj + 0xb8);
-  objDef = *(int *)(obj + 0x4c);
+  extra = ((GameObject *)obj)->extra;
+  objDef = *(int *)&((GameObject *)obj)->anim.placementData;
   eventId = *(s16 *)(objDef + 0x1c);
   if ((eventId != 0) && (GameBit_Get(eventId) != 0)) {
     oldAlpha = *(u8 *)(obj + 0x36);

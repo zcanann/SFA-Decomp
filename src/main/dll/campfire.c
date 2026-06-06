@@ -252,7 +252,7 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 {
   int sub_40c = *(int *)(p2 + 0x40c);
 
-  lbl_803DDA98 = lbl_803E30A0 + (f32)(s32)(s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x28) / lbl_803E30A4;
+  lbl_803DDA98 = lbl_803E30A0 + (f32)(s32)(s8)*(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x28) / lbl_803E30A4;
 
   if ((*(int *)(p3 + 0x314) &0x1) != 0) {
     *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x1;
@@ -343,9 +343,9 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
   playerObj = Obj_GetPlayerObject();
   if (((GroundBaddieState *)state)->baddie.targetObj != NULL) {
     int target = *(int *)(state + 0x2d0);
-    st.dx = *(f32 *)(target + 0x18) - *(f32 *)(obj + 0x18);
-    st.dy = *(f32 *)(target + 0x1c) - *(f32 *)(obj + 0x1c);
-    st.dz = *(f32 *)(target + 0x20) - *(f32 *)(obj + 0x20);
+    st.dx = *(f32 *)(target + 0x18) - ((GameObject *)obj)->anim.worldPosX;
+    st.dy = *(f32 *)(target + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
+    st.dz = *(f32 *)(target + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
     ((GroundBaddieState *)state)->baddie.targetDistance = sqrtf(st.dz * st.dz + (st.dx * st.dx + st.dy * st.dy));
   }
   (*(void (**)(int, int, int, int, int, int, int, int))(*(int *)gBaddieControlInterface + 0x54))(
@@ -414,8 +414,8 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
     else {
       rnd = randomGetRange(0, (u8)(s32)*(f32 *)((char *)piVar8 + 0x40));
       *(u8 *)(*(int *)piVar8 + 0x36) = rnd;
-      *(s16 *)(*(int *)piVar8 + 4) = *(s16 *)(obj + 4);
-      *(s16 *)(*(int *)piVar8 + 2) = *(s16 *)(obj + 2);
+      *(s16 *)(*(int *)piVar8 + 4) = ((GameObject *)obj)->anim.rotZ;
+      *(s16 *)(*(int *)piVar8 + 2) = ((GameObject *)obj)->anim.rotY;
       *(s16 *)(*(int *)piVar8 + 0) = *(s16 *)obj;
       *(f32 *)((char *)piVar8 + 0x40) = *(f32 *)((char *)piVar8 + 0x40) - lbl_803E30C4 * timeDelta;
     }
@@ -472,8 +472,8 @@ void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   int state;
   int pathData;
   
-  state = *(int *)(obj + 0xb8);
-  if ((visible != 0) && (*(int *)(obj + 0xf4) == 0)) {
+  state = *(int *)&((GameObject *)obj)->extra;
+  if ((visible != 0) && (((GameObject *)obj)->unkF4 == 0)) {
     if (*(float *)(state + 1000) != lbl_803E3060) {
       fn_8003B5E0(200,0,0,(int)*(float *)(state + 1000));
     }
@@ -603,7 +603,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
   int state;
   int player;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   initMode = 6;
   if (skip_alloc != 0) {
     initMode = 7;
@@ -612,8 +612,8 @@ void kaldachom_init(int obj, int data, int skip_alloc)
   *(undefined4 *)(obj + 0xbc) = 0;
   pathData = *(f32 **)(state + 0x40c);
   ObjAnim_SetCurrentMove(obj,4,lbl_803E3060,0x10);
-  *(float *)(obj + 0x98) = lbl_803E307C;
-  *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
+  ((GameObject *)obj)->anim.currentMoveProgress = lbl_803E307C;
+  *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
   (**(code **)(*gPlayerInterface + 0x14))(obj,state,0);
   *(undefined2 *)(state + 0x270) = 0;
   ((GroundBaddieState *)state)->baddie.moveSpeed = lbl_803E307C;
@@ -626,9 +626,9 @@ void kaldachom_init(int obj, int data, int skip_alloc)
   pathData[0xe] = (f32)(int)randomGetRange(0,499);
   pathData[0xf] = lbl_803E3060;
   *(int *)pathData = 0;
-  *(ushort *)(obj + 0xb0) = *(ushort *)(obj + 0xb0) | 0x2000;
-  *(f32 *)(obj + 8) = lbl_803E30A0 + (f32)(s32)*(s8 *)(data + 0x28) / lbl_803E30A4;
-  ObjHitbox_SetSphereRadius(obj,(int)(lbl_803E30CC * *(float *)(obj + 8)));
+  ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x2000;
+  ((GameObject *)obj)->anim.rootMotionScale = lbl_803E30A0 + (f32)(s32)*(s8 *)(data + 0x28) / lbl_803E30A4;
+  ObjHitbox_SetSphereRadius(obj,(int)(lbl_803E30CC * ((GameObject *)obj)->anim.rootMotionScale));
   if (skip_alloc == 0) {
     lbl_803DDA90 = (undefined4 *)Resource_Acquire(0x5a,1);
   }

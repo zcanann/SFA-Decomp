@@ -56,12 +56,12 @@ extern f32 lbl_803E60EC;
 
 static inline VFPLiftState *vfplift_getState(int obj)
 {
-    return *(VFPLiftState **)(obj + 0xb8);
+    return ((GameObject *)obj)->extra;
 }
 
 static inline f32 vfplift_getModelY(int obj)
 {
-    return *(f32 *)(*(int *)(obj + 0x4c) + 0xc);
+    return *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0xc);
 }
 
 static inline void vfplift_trigger(int triggerId,int obj)
@@ -71,7 +71,7 @@ static inline void vfplift_trigger(int triggerId,int obj)
 
 static inline void vfplift_setObjectHitDisabled(int obj)
 {
-    *(u8 *)(obj + 0xaf) = (*(u8 *)(obj + 0xaf) & ~VFPLIFT_OBJ_FLAG_NO_HIT);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~VFPLIFT_OBJ_FLAG_NO_HIT);
 }
 
 static inline f32 vfplift23_getRaisedOffset(int objType)
@@ -95,7 +95,7 @@ void vfplift23_updateState(int obj)
     f32 raisedOffset;
 
     raisedOffset = vfplift23_getRaisedOffset(((GameObject *)obj)->anim.seqId);
-    setup = *(int *)(obj + 0x4c);
+    setup = *(int *)&((GameObject *)obj)->anim.placementData;
     state = vfplift_getState(obj);
     if (state->applyHeight != 0) {
         ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) + raisedOffset;
@@ -103,7 +103,7 @@ void vfplift23_updateState(int obj)
     }
     if (state->mode >= VFPLIFT_STATE_RAISED || state->mode < VFPLIFT_STATE_LOWERED) {
         vfplift_setObjectHitDisabled(obj);
-        if ((*(u8 *)(obj + 0xaf) & VFPLIFT_OBJ_FLAG_INTERACT) != 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & VFPLIFT_OBJ_FLAG_INTERACT) != 0) {
             buttonDisable(0,VFPLIFT_INTERACT_BUTTON_MASK);
             vfplift_trigger(VFPLIFT_TRIGGER_LOWER,obj);
             state->mode = VFPLIFT_STATE_LOWERED;
@@ -118,7 +118,7 @@ void vfplift23_updateState(int obj)
         }
     } else {
         vfplift_setObjectHitDisabled(obj);
-        if ((*(u8 *)(obj + 0xaf) & VFPLIFT_OBJ_FLAG_INTERACT) != 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & VFPLIFT_OBJ_FLAG_INTERACT) != 0) {
             buttonDisable(0,VFPLIFT_INTERACT_BUTTON_MASK);
             vfplift_trigger(VFPLIFT_TRIGGER_RAISE,obj);
             state->mode = VFPLIFT_STATE_RAISED;
@@ -147,9 +147,9 @@ void vfplift1_updateState(int obj)
     s16 gate3;
 
     state = vfplift_getState(obj);
-    setup = *(int *)(obj + 0x4c);
+    setup = *(int *)&((GameObject *)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
-    *(u8 *)(obj + 0xaf) |= VFPLIFT_OBJ_FLAG_NO_HIT;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= VFPLIFT_OBJ_FLAG_NO_HIT;
     if (player == NULL) {
         return;
     }
@@ -179,7 +179,7 @@ void vfplift1_updateState(int obj)
     }
     if (state->mode >= VFPLIFT_STATE_RAISED || state->mode < VFPLIFT_STATE_LOWERED) {
         vfplift_setObjectHitDisabled(obj);
-        if ((*(u8 *)(obj + 0xaf) & VFPLIFT_OBJ_FLAG_INTERACT) != 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & VFPLIFT_OBJ_FLAG_INTERACT) != 0) {
             buttonDisable(0,VFPLIFT_INTERACT_BUTTON_MASK);
             vfplift_trigger(VFPLIFT_TRIGGER_LOWER,obj);
             state->mode = VFPLIFT_STATE_LOWERED;
@@ -194,7 +194,7 @@ void vfplift1_updateState(int obj)
         }
     } else {
         vfplift_setObjectHitDisabled(obj);
-        if ((*(u8 *)(obj + 0xaf) & VFPLIFT_OBJ_FLAG_INTERACT) != 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & VFPLIFT_OBJ_FLAG_INTERACT) != 0) {
             buttonDisable(0,VFPLIFT_INTERACT_BUTTON_MASK);
             vfplift_trigger(VFPLIFT_TRIGGER_RAISE,obj);
             state->mode = VFPLIFT_STATE_RAISED;
@@ -256,11 +256,11 @@ void vfplift_update(int obj) {
 #pragma peephole off
 #pragma scheduling off
 void vfplift_hitDetect(int obj) {
-    int inner = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     if (*(s16 *)((char *)inner + 0xc) != -1 && (u32)GameBit_Get(*(s16 *)((char *)inner + 0xc)) == 0) {
-        *(u8 *)((char *)obj + 0xaf) |= 8;
-    } else if ((*(u8 *)((char *)obj + 0xaf) & 8) != 0) {
-        *(u8 *)((char *)obj + 0xaf) ^= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
+    } else if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 8) != 0) {
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode ^= 8;
     }
 }
 #pragma scheduling reset
@@ -269,7 +269,7 @@ void vfplift_hitDetect(int obj) {
 #pragma peephole off
 #pragma scheduling off
 void vfplift_init(int *obj, u8 *init) {
-    VFPLiftState *st = *(VFPLiftState **)((char *)obj + 0xb8);
+    VFPLiftState *st = ((GameObject *)obj)->extra;
     int *inner = (int *)st;
     ((GameObject *)obj)->unkBC = (void *)vfplift_SeqFn;
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);

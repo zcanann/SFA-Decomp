@@ -2048,7 +2048,7 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
   *(f32 *)(p2 + 0x308) = lbl_803E256C / (lbl_803E2570 * mult);
   *(u8 *)(p2 + 0x323) = c;
   ObjAnim_SetCurrentMove(obj, (u8)a, lbl_803E2574, b);
-  sub = *(void **)(obj + 0x54);
+  sub = ((GameObject *)obj)->anim.hitReactState;
   if (sub != NULL) {
     *(u8 *)((char *)sub + 0x70) = 0;
   }
@@ -2105,7 +2105,7 @@ f32 fn_8014C5D0(register int obj) {
     register u16 a;
     register int* state;
     u16 b;
-    state = *(int**)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if (state == NULL) return lbl_803E2574;
     a = *(u16*)((char*)state + 690);
     if (a != 0) {
@@ -2127,30 +2127,30 @@ f32 fn_8014C5D0(register int obj) {
 #pragma scheduling off
 #pragma peephole off
 f32 sidekickToy_accelerateTowardTargetXZ(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel, f32 drag) {
-    f32 dx = tx - *(f32*)(obj + 0x18);
-    f32 dy = ty - *(f32*)(obj + 0x1c);
-    f32 dz = tz - *(f32*)(obj + 0x20);
+    f32 dx = tx - ((GameObject *)obj)->anim.worldPosX;
+    f32 dy = ty - ((GameObject *)obj)->anim.worldPosY;
+    f32 dz = tz - ((GameObject *)obj)->anim.worldPosZ;
     f32 dist = sqrtf(dx * dx + dz * dz);
     if (dist > accel) {
-        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) + timeDelta * (speedScale * (dx / dist));
-        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) + timeDelta * (speedScale * (dz / dist));
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + timeDelta * (speedScale * (dx / dist));
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + timeDelta * (speedScale * (dz / dist));
     } else if (dist > lbl_803E2574) {
-        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) + timeDelta * (speedScale * (dx / accel));
-        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) + timeDelta * (speedScale * (dz / accel));
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + timeDelta * (speedScale * (dx / accel));
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + timeDelta * (speedScale * (dz / accel));
     }
-    if (*(f32*)(obj + 0x24) < -maxVel) {
-        *(f32*)(obj + 0x24) = -maxVel;
-    } else if (*(f32*)(obj + 0x24) > maxVel) {
-        *(f32*)(obj + 0x24) = maxVel;
+    if (((GameObject *)obj)->anim.velocityX < -maxVel) {
+        ((GameObject *)obj)->anim.velocityX = -maxVel;
+    } else if (((GameObject *)obj)->anim.velocityX > maxVel) {
+        ((GameObject *)obj)->anim.velocityX = maxVel;
     }
-    if (*(f32*)(obj + 0x2c) < -maxVel) {
-        *(f32*)(obj + 0x2c) = -maxVel;
-    } else if (*(f32*)(obj + 0x2c) > maxVel) {
-        *(f32*)(obj + 0x2c) = maxVel;
+    if (((GameObject *)obj)->anim.velocityZ < -maxVel) {
+        ((GameObject *)obj)->anim.velocityZ = -maxVel;
+    } else if (((GameObject *)obj)->anim.velocityZ > maxVel) {
+        ((GameObject *)obj)->anim.velocityZ = maxVel;
     }
     if (lbl_803E2574 != drag) {
-        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) * powfBitEstimate(drag, timeDelta);
-        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) * powfBitEstimate(drag, timeDelta);
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * powfBitEstimate(drag, timeDelta);
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * powfBitEstimate(drag, timeDelta);
     }
     return dy;
 }
@@ -2163,38 +2163,38 @@ f32 sidekickToy_accelerateTowardTargetXZ(int obj, f32 tx, f32 ty, f32 tz, f32 ac
 #pragma scheduling off
 #pragma peephole off
 f32 sidekickToy_accelerateTowardTarget3D(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel, f32 drag) {
-    f32 dx = tx - *(f32*)(obj + 0x18);
-    f32 dy = ty - *(f32*)(obj + 0x1c);
-    f32 dz = tz - *(f32*)(obj + 0x20);
+    f32 dx = tx - ((GameObject *)obj)->anim.worldPosX;
+    f32 dy = ty - ((GameObject *)obj)->anim.worldPosY;
+    f32 dz = tz - ((GameObject *)obj)->anim.worldPosZ;
     f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
     if (dist > accel) {
-        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) + timeDelta * (speedScale * (dx / dist));
-        *(f32*)(obj + 0x28) = *(f32*)(obj + 0x28) + timeDelta * (speedScale * (dy / dist));
-        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) + timeDelta * (speedScale * (dz / dist));
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + timeDelta * (speedScale * (dx / dist));
+        ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY + timeDelta * (speedScale * (dy / dist));
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + timeDelta * (speedScale * (dz / dist));
     } else if (dist > lbl_803E2574) {
-        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) + timeDelta * (speedScale * (dx / accel));
-        *(f32*)(obj + 0x28) = *(f32*)(obj + 0x28) + timeDelta * (speedScale * (dy / accel));
-        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) + timeDelta * (speedScale * (dz / accel));
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + timeDelta * (speedScale * (dx / accel));
+        ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY + timeDelta * (speedScale * (dy / accel));
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + timeDelta * (speedScale * (dz / accel));
     }
-    if (*(f32*)(obj + 0x24) < -maxVel) {
-        *(f32*)(obj + 0x24) = -maxVel;
-    } else if (*(f32*)(obj + 0x24) > maxVel) {
-        *(f32*)(obj + 0x24) = maxVel;
+    if (((GameObject *)obj)->anim.velocityX < -maxVel) {
+        ((GameObject *)obj)->anim.velocityX = -maxVel;
+    } else if (((GameObject *)obj)->anim.velocityX > maxVel) {
+        ((GameObject *)obj)->anim.velocityX = maxVel;
     }
-    if (*(f32*)(obj + 0x28) < -maxVel) {
-        *(f32*)(obj + 0x28) = -maxVel;
-    } else if (*(f32*)(obj + 0x28) > maxVel) {
-        *(f32*)(obj + 0x28) = maxVel;
+    if (((GameObject *)obj)->anim.velocityY < -maxVel) {
+        ((GameObject *)obj)->anim.velocityY = -maxVel;
+    } else if (((GameObject *)obj)->anim.velocityY > maxVel) {
+        ((GameObject *)obj)->anim.velocityY = maxVel;
     }
-    if (*(f32*)(obj + 0x2c) < -maxVel) {
-        *(f32*)(obj + 0x2c) = -maxVel;
-    } else if (*(f32*)(obj + 0x2c) > maxVel) {
-        *(f32*)(obj + 0x2c) = maxVel;
+    if (((GameObject *)obj)->anim.velocityZ < -maxVel) {
+        ((GameObject *)obj)->anim.velocityZ = -maxVel;
+    } else if (((GameObject *)obj)->anim.velocityZ > maxVel) {
+        ((GameObject *)obj)->anim.velocityZ = maxVel;
     }
     if (lbl_803E2574 != drag) {
-        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) * powfBitEstimate(drag, timeDelta);
-        *(f32*)(obj + 0x28) = *(f32*)(obj + 0x28) * powfBitEstimate(drag, timeDelta);
-        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) * powfBitEstimate(drag, timeDelta);
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * powfBitEstimate(drag, timeDelta);
+        ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY * powfBitEstimate(drag, timeDelta);
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * powfBitEstimate(drag, timeDelta);
     }
     return dy;
 }
@@ -2214,7 +2214,7 @@ extern f32 lbl_803E25DC;
 #pragma scheduling off
 #pragma peephole off
 void sidekickToy_updateCurveTargetLatch(int obj) {
-    u8* state = *(u8**)(obj + 0xb8);
+    u8* state = ((GameObject *)obj)->extra;
     u8* data = *(u8**)state;
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
         if ((u8)baddieTargetFn_8014a150(obj, state, (f32*)(obj + 0x18), data + 0x68) != 0) {

@@ -91,10 +91,10 @@ void dll_19B_update(int obj)
     int unk8;
     int handle;
 
-    st = *(s16 **)(obj + 0xb8);
+    st = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     dist = lbl_803E518C;
-    st2 = *(s16 **)(obj + 0xb8);
+    st2 = ((GameObject *)obj)->extra;
     unk16 = 0;
     while (ObjMsg_Pop(obj, &msg, &unk8, &unk16) != 0) {
         switch (msg) {
@@ -349,7 +349,7 @@ void dll_19B_init(u8 *obj, u8 *params) {
     register u8 *sub;
     int res;
 
-    sub = *(u8**)(obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     *(s16*)obj = 0;
     *(s16*)sub = 0xa;
     if (*(s16*)(params + 0x1a) > 0) {
@@ -359,7 +359,7 @@ void dll_19B_init(u8 *obj, u8 *params) {
     sub[0x14] = 0;
     *(s16*)(sub + 2) = 0;
     sub[0x12] = 0;
-    *(void**)(obj + 0xbc) = (void*)&dll_19B_SeqFn;
+    ((GameObject *)obj)->unkBC = (void*)&dll_19B_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     GameBit_Set(0x1d2, 0);
@@ -381,9 +381,9 @@ void dll_19B_init(u8 *obj, u8 *params) {
     res = Resource_Acquire(0x6a, 1);
     *(s16*)(sub + 0xc) = ((s16(*)(u8*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
     Resource_Release(res);
-    *(f32*)(obj + 0x18) = *(f32*)(obj + 0xc);
-    *(f32*)(obj + 0x1c) = *(f32*)(obj + 0x10);
-    *(f32*)(obj + 0x20) = *(f32*)(obj + 0x14);
+    ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
+    ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
 }
 #pragma peephole reset
 #pragma scheduling reset

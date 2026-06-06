@@ -109,15 +109,15 @@ void cannonclaw_update(u8* obj)
     u8* trickyState;
     getTrickyObject();
     trickyState = (u8*)ObjList_FindObjectById(0x1723);
-    if (*(s32*)(obj + 0xf4) != 0) return;
-    if (*(s16*)(obj + 0xa0) != 0x208) {
+    if (((GameObject *)obj)->unkF4 != 0) return;
+    if (((GameObject *)obj)->anim.currentMove != 0x208) {
         ObjAnim_SetCurrentMove((int)obj, 0x208, lbl_803E2F34, 0);
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E2F38, timeDelta, NULL);
     if (trickyState == NULL) return;
     if (GameBit_Get(*(s16*)(*(u8**)(trickyState + 0x4c) + 0x1a)) == 0) return;
-    *(s32*)(obj + 0xf4) = 1;
-    *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 0x8);
+    ((GameObject *)obj)->unkF4 = 1;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     ObjHits_DisableObject(obj);
 }
 #pragma peephole reset
@@ -557,20 +557,20 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3) {
     u8* p12;
     u8* pe;
 
-    sub = *(u8**)(obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     *(f32*)sub = lbl_803E2F48;
     *(u16*)(sub + 8) = (u16)(params[0x1b] * 2);
     sub[0x4c] = params[0x23];
-    *(s16*)(obj + 4) = (s16)((params[0x18] - 0x7f) << 7);
-    *(s16*)(obj + 2) = (s16)((params[0x19] - 0x7f) << 7);
+    ((GameObject *)obj)->anim.rotZ = (s16)((params[0x18] - 0x7f) << 7);
+    ((GameObject *)obj)->anim.rotY = (s16)((params[0x19] - 0x7f) << 7);
     *(s16*)obj = (s16)(params[0x1a] << 8);
-    *(f32*)(obj + 8) = *(f32*)(params + 0x1c);
-    t = *(f32*)(obj + 8);
+    ((GameObject *)obj)->anim.rootMotionScale = *(f32*)(params + 0x1c);
+    t = ((GameObject *)obj)->anim.rootMotionScale;
     ObjHitbox_SetCapsuleBounds(obj,
         (s32)(lbl_803E2F4C * t),
         (s32)(lbl_803E2F50 * t),
         (s32)(lbl_803E2F54 * t));
-    switch (*(s16*)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x28d:
     case 0x4b9:
     case 0x4be:
@@ -589,9 +589,9 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3) {
         for (i = 0; i < (int)sub[0x50]; i++) {
             *(int*)(p4 + 0xc) = 0;
             memcpy(p12 + 0x1c, pe, 0xc);
-            *(f32*)(p12 + 0x1c) = *(f32*)(p12 + 0x1c) * *(f32*)(obj + 8);
-            *(f32*)(p12 + 0x20) = *(f32*)(p12 + 0x20) * *(f32*)(obj + 8);
-            *(f32*)(p12 + 0x24) = *(f32*)(p12 + 0x24) * *(f32*)(obj + 8);
+            *(f32*)(p12 + 0x1c) = *(f32*)(p12 + 0x1c) * ((GameObject *)obj)->anim.rootMotionScale;
+            *(f32*)(p12 + 0x20) = *(f32*)(p12 + 0x20) * ((GameObject *)obj)->anim.rootMotionScale;
+            *(f32*)(p12 + 0x24) = *(f32*)(p12 + 0x24) * ((GameObject *)obj)->anim.rootMotionScale;
             vecRotateZXY(obj, p12 + 0x1c);
             p4 += 4;
             pe += 0xc;
@@ -740,7 +740,7 @@ void* tumbleweedbush_findNearestActive(f32* p_pos)
 void tumbleweedbush_setScale(u8* obj, void* match) {
     TumbleweedBushState *state;
     int i;
-    state = *(TumbleweedBushState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     i = 0;
     while (i < (int)state->pieceCount) {
         if (state->pieceObjects[i] == match) {

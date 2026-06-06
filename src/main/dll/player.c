@@ -4068,34 +4068,34 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
         }
         if (useAlt == 0) {
             if (ok == 0) {
-                end[0] = *(f32 *)(obj + 0xc) + sc1[0];
-                end[1] = *(f32 *)(obj + 0x10) + sc1[1];
-                end[2] = *(f32 *)(obj + 0x14) + sc1[2];
+                end[0] = ((GameObject *)obj)->anim.localPosX + sc1[0];
+                end[1] = ((GameObject *)obj)->anim.localPosY + sc1[1];
+                end[2] = ((GameObject *)obj)->anim.localPosZ + sc1[2];
                 dir = rot;
             } else {
-                end[0] = *(f32 *)(obj + 0xc) + sc0[0];
-                end[1] = *(f32 *)(obj + 0x10) + sc0[1];
-                end[2] = *(f32 *)(obj + 0x14) + sc0[2];
+                end[0] = ((GameObject *)obj)->anim.localPosX + sc0[0];
+                end[1] = ((GameObject *)obj)->anim.localPosY + sc0[1];
+                end[2] = ((GameObject *)obj)->anim.localPosZ + sc0[2];
                 dir = vec;
             }
-            start[0] = *(f32 *)(obj + 0xc);
-            start[1] = *(f32 *)(obj + 0x10);
-            start[2] = *(f32 *)(obj + 0x14);
+            start[0] = ((GameObject *)obj)->anim.localPosX;
+            start[1] = ((GameObject *)obj)->anim.localPosY;
+            start[2] = ((GameObject *)obj)->anim.localPosZ;
         } else {
             if (ok == 0) {
-                start[0] = *(f32 *)(obj + 0xc) + sc1[0];
-                start[1] = *(f32 *)(obj + 0x10) + sc1[1];
-                start[2] = *(f32 *)(obj + 0x14) + sc1[2];
+                start[0] = ((GameObject *)obj)->anim.localPosX + sc1[0];
+                start[1] = ((GameObject *)obj)->anim.localPosY + sc1[1];
+                start[2] = ((GameObject *)obj)->anim.localPosZ + sc1[2];
                 dir = rot;
             } else {
-                start[0] = *(f32 *)(obj + 0xc) + sc0[0];
-                start[1] = *(f32 *)(obj + 0x10) + sc0[1];
-                start[2] = *(f32 *)(obj + 0x14) + sc0[2];
+                start[0] = ((GameObject *)obj)->anim.localPosX + sc0[0];
+                start[1] = ((GameObject *)obj)->anim.localPosY + sc0[1];
+                start[2] = ((GameObject *)obj)->anim.localPosZ + sc0[2];
                 dir = vec;
             }
-            end[0] = *(f32 *)(obj + 0xc);
-            end[1] = *(f32 *)(obj + 0x10);
-            end[2] = *(f32 *)(obj + 0x14);
+            end[0] = ((GameObject *)obj)->anim.localPosX;
+            end[1] = ((GameObject *)obj)->anim.localPosY;
+            end[2] = ((GameObject *)obj)->anim.localPosZ;
         }
         hit = objBboxFn_800640cc(lbl_803E7EA4, start, end, 3, &buf, obj, 1, dirs[i], 0xff, 10);
         if (flagA != 0 && hit != 0) {
@@ -4106,8 +4106,8 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
             switch (i) {
             case 3:
             case 5:
-                if (*(f32 *)(obj + 0x10) < lbl_803E7F10 + buf.minY &&
-                    *(f32 *)(obj + 0x10) < lbl_803E7F10 + buf.maxY) {
+                if (((GameObject *)obj)->anim.localPosY < lbl_803E7F10 + buf.minY &&
+                    ((GameObject *)obj)->anim.localPosY < lbl_803E7F10 + buf.maxY) {
                     hit = 0;
                 }
                 break;
@@ -4116,8 +4116,8 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
             case 6:
                 if (((u32)*(u8 *)(p2 + 0x3f1) & 1) != 0) {
                     if (dp > lbl_803E8090 ||
-                        (*(f32 *)(obj + 0x10) > buf.g3c - lbl_803E7ED8 &&
-                         *(f32 *)(obj + 0x10) > buf.g40 - lbl_803E7ED8)) {
+                        (((GameObject *)obj)->anim.localPosY > buf.g3c - lbl_803E7ED8 &&
+                         ((GameObject *)obj)->anim.localPosY > buf.g40 - lbl_803E7ED8)) {
                         hit = 0;
                     }
                 } else {
@@ -4137,19 +4137,19 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
         }
         if (flagB != 0 && hit != 0) {
             if (useAlt == 0) {
-                start[0] = *(f32 *)(obj + 0xc);
-                start[1] = *(f32 *)(obj + 0x10);
-                start[2] = *(f32 *)(obj + 0x14);
-                end[0] = -(lbl_803E808C * buf.nx - *(f32 *)(obj + 0xc));
-                end[1] = *(f32 *)(obj + 0x10);
-                end[2] = -(lbl_803E808C * buf.nz - *(f32 *)(obj + 0x14));
+                start[0] = ((GameObject *)obj)->anim.localPosX;
+                start[1] = ((GameObject *)obj)->anim.localPosY;
+                start[2] = ((GameObject *)obj)->anim.localPosZ;
+                end[0] = -(lbl_803E808C * buf.nx - ((GameObject *)obj)->anim.localPosX);
+                end[1] = ((GameObject *)obj)->anim.localPosY;
+                end[2] = -(lbl_803E808C * buf.nz - ((GameObject *)obj)->anim.localPosZ);
             } else {
-                start[0] = lbl_803E808C * buf.nx + *(f32 *)(obj + 0xc);
-                start[1] = *(f32 *)(obj + 0x10);
-                start[2] = lbl_803E808C * buf.nz + *(f32 *)(obj + 0x14);
-                end[0] = *(f32 *)(obj + 0xc);
-                end[1] = *(f32 *)(obj + 0x10);
-                end[2] = *(f32 *)(obj + 0x14);
+                start[0] = lbl_803E808C * buf.nx + ((GameObject *)obj)->anim.localPosX;
+                start[1] = ((GameObject *)obj)->anim.localPosY;
+                start[2] = lbl_803E808C * buf.nz + ((GameObject *)obj)->anim.localPosZ;
+                end[0] = ((GameObject *)obj)->anim.localPosX;
+                end[1] = ((GameObject *)obj)->anim.localPosY;
+                end[2] = ((GameObject *)obj)->anim.localPosZ;
             }
             hit = objBboxFn_800640cc(lbl_803E7EA4, start, end, 3, &buf, obj, 1, dirs[i], 0xff,
                                      10);

@@ -37,8 +37,8 @@ void cnthitobjec_initialise(void) {}
 #pragma scheduling off
 void cnthitobjec_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     if (*(u8 *)(setup + 0x19) == 2 && ((CntHitFlags *)(state + 9))->disabled == 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7430);
     }
@@ -63,8 +63,8 @@ int cnthitobjec_emitHitEvents(int obj, int p2, int p3)
 #pragma scheduling off
 void cnthitobjec_hitDetect(int obj)
 {
-    int setup = *(int *)(obj + 0x4c);
-    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    int state = *(int *)&((GameObject *)obj)->extra;
     int hit;
     int dmg;
     int amount;
@@ -89,7 +89,7 @@ void cnthitobjec_hitDetect(int obj)
         Sfx_PlayFromObject(obj, 1174);
     }
     if (((CntHitObjectState *)state)->unk0 <= 0) {
-        int s = *(int *)(obj + 0x4c);
+        int s = *(int *)&((GameObject *)obj)->anim.placementData;
         ((CntHitObjectState *)state)->unk0 = 0;
         GameBit_Set(*(s16 *)(s + 0x1e), 1);
         if (*(u8 *)(s + 0x19) != 0) {
@@ -98,7 +98,7 @@ void cnthitobjec_hitDetect(int obj)
             } else {
                 amount = *(s16 *)(s + 0x1c);
             }
-            model = *(int *)(*(int *)(obj + 0x4c) + 0x14);
+            model = *(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14);
             if (model != 0x470EA && model != 0x480F5 && model != 0x46710 &&
                 model != 0x49B43) {
                 spawnExplosion(obj, (f32)amount, 1, 1, 1, 1, 0, 1, 0);
@@ -118,7 +118,7 @@ void cnthitobjec_hitDetect(int obj)
 #pragma scheduling off
 void cnthitobjec_init(int obj, int setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     ((CntHitObjectState *)state)->unk0 = 0;
     *(s8 *)(setup + 0x18) = (s8)((u32)(s8)*(s8 *)(setup + 0x18) % 3);
@@ -136,7 +136,7 @@ void cnthitobjec_init(int obj, int setup)
         ((CntHitFlags *)(state + 9))->disabled = 1;
         ObjHits_DisableObject(obj);
     }
-    *(int *)(obj + 0xbc) = (int)cnthitobjec_emitHitEvents;
+    *(int *)&((GameObject *)obj)->unkBC = (int)cnthitobjec_emitHitEvents;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -146,8 +146,8 @@ void cnthitobjec_init(int obj, int setup)
 void cnthitobjec_update(int obj)
 {
     int setup;
-    int state = *(int *)(obj + 0xb8);
-    setup = *(int *)(obj + 0x4c);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    setup = *(int *)&((GameObject *)obj)->anim.placementData;
 
     if (((CntHitFlags *)(state + 9))->disabled == 0) {
         if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
@@ -174,7 +174,7 @@ int mcupgrade_SeqFn(int obj, int p2, int setup)
 {
     if (*(u8 *)(setup + 0x8b) != 0) {
         (*(void (**)(int, int, int, int))(*gGameUIInterface + 0x38))(
-            *(s16 *)(*(int *)(obj + 0x4c) + 0x1a), 0x14, 0x8c, 0);
+            *(s16 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x1a), 0x14, 0x8c, 0);
     }
     return 0;
 }

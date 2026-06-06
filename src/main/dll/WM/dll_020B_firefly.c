@@ -121,7 +121,7 @@ STATIC_ASSERT(offsetof(FireFlyState, messageParam) == FIREFLY_STATE_MESSAGE_PARA
 #pragma scheduling off
 void FireFlyFn_801f4f88(int obj)
 {
-    FireFlyState *state = *(FireFlyState **)(obj + 0xb8);
+    FireFlyState *state = ((GameObject *)obj)->extra;
     int player = (int)Obj_GetPlayerObject();
     if (*(u8 *)(obj + 0x36) < FIREFLY_ALPHA_OPAQUE) {
         int v = (int)(lbl_803E5EDC * timeDelta + (f32)*(u8 *)(obj + 0x36));
@@ -162,7 +162,7 @@ void FireFlyFn_801f4f88(int obj)
         ((void (*)(int, int, int, int, int, int))((void **)*gPartfxInterface)[2])(
             obj, FIREFLY_PARTFX_ORANGE_TRAIL, 0, FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, 0);
     }
-    if (Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(*(int *)(obj + 0x4c) + 0x8)) <
+    if (Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x8)) <
         FIREFLY_PLAYER_RADIUS(state)) {
         if (FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_NEAR) {
             ((void (*)(int, int, int, int, int, int))((void **)*gPartfxInterface)[2])(
@@ -213,7 +213,7 @@ void FireFlyFn_801f4f88(int obj)
 
 void firefly_free(int obj)
 {
-    FireFlyState *state = *(FireFlyState **)(obj + 0xb8);
+    FireFlyState *state = ((GameObject *)obj)->extra;
 
     modelLightStruct_freeSlot(state);
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
@@ -228,8 +228,8 @@ void firefly_update(int obj)
     f32 despawnTimer;
     int fireflyMessage;
 
-    state = *(FireFlyState **)(obj + 0xB8);
-    def = *(FireFlyMapData **)(obj + 0x4C);
+    state = ((GameObject *)obj)->extra;
+    def = *(FireFlyMapData **)&((GameObject *)obj)->anim.placementData;
     fireflyMessage = FIREFLY_MESSAGE_DESPAWN;
     despawnTimer = lbl_803E5EA8;
     while (ObjMsg_Pop(obj, msg, 0, 0) != 0) {
@@ -275,7 +275,7 @@ void firefly_init(int obj, int def)
     FireFlyState *state;
     FireFlyMapData *mapData;
 
-    state = *(FireFlyState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     mapData = (FireFlyMapData *)def;
     fn_801F4C28(obj, state);
     *(u8 *)(obj + 0x36) = 0;

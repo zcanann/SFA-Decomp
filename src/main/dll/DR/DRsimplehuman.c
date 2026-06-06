@@ -90,9 +90,9 @@ void spdrape_update(int obj)
     f32 *state;
     char *player;
 
-    state = *(f32 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     player = (char *)Obj_GetPlayerObject();
-    switch (*(s16 *)(obj + 0xa0)) {
+    switch (((GameObject *)obj)->anim.currentMove) {
     case 0:
         if ((s16)(*(s16 *)((char *)state + 0x14) -= framesThisStep) <= 0) {
             Sfx_PlayFromObject(obj, 0x13f);
@@ -139,7 +139,7 @@ void spdrape_update(int obj)
         break;
     case 3:
     case 6:
-        if ((*(f32 *)(obj + 0x98) > lbl_803E5AB8) && (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < lbl_803E5AA4)) {
+        if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E5AB8) && (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < lbl_803E5AA4)) {
             if (player != 0) {
                 if (state[3] + (state[1] * *(f32 *)(player + 0xc) + state[2] * *(f32 *)(player + 0x14)) < lbl_803E5AA0) {
                     *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B0;
@@ -361,7 +361,7 @@ void FUN_801e983c(undefined8 param_1,double param_2,double param_3,double param_
 #pragma peephole off
 void spitembeam_init(int obj)
 {
-  *(ushort *)(obj + 0xb0) = (ushort)(*(ushort *)(obj + 0xb0) | 0x6000);
+  ((GameObject *)obj)->unkB0 = (ushort)(((GameObject *)obj)->unkB0 | 0x6000);
 }
 #pragma peephole reset
 

@@ -63,17 +63,17 @@ typedef struct DfshObjCreatorState {
 #pragma scheduling off
 void dfsh_objcreator_update(int obj)
 {
-    u8 *setup = *(u8 **)(obj + 0x4c);
-    DfshObjCreatorState *state = *(DfshObjCreatorState **)(obj + 0xb8);
+    u8 *setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    DfshObjCreatorState *state = ((GameObject *)obj)->extra;
     void *resource;
     u8 *spawnSetup;
 
     if (GameBit_Get(0x589) != 0) {
-        *(int *)(obj + 0xf8) = 0;
+        ((GameObject *)obj)->unkF8 = 0;
         return;
     }
 
-    if (*(int *)(obj + 0xf8) == 0 && GameBit_Get((s8)setup[0x1f] + 0xf6) != 0) {
+    if (((GameObject *)obj)->unkF8 == 0 && GameBit_Get((s8)setup[0x1f] + 0xf6) != 0) {
         resource = Resource_Acquire(0x82, 1);
         (*(void (**)(int, int, int, int, int, int))(*(int *)resource + 4))(
             obj, 0, 0, 1, -1, 0);
@@ -82,7 +82,7 @@ void dfsh_objcreator_update(int obj)
         Sfx_PlayFromObject(obj, SFXsc_gemrun1022);
         Resource_Release(resource);
         state->spawnTimerStep = 1;
-        *(int *)(obj + 0xf8) = 1;
+        ((GameObject *)obj)->unkF8 = 1;
     }
 
     if (state->spawnTimerStep != 0) {
@@ -115,7 +115,7 @@ void dfsh_objcreator_update(int obj)
         spawnSetup[0x29] = 0xff;
         *(s8 *)(spawnSetup + 0x2e) = -1;
         *(u16 *)(spawnSetup + 0x34) = 0xffff;
-        Obj_SetupObject(spawnSetup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+        Obj_SetupObject(spawnSetup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         state->spawnTimer = 100;
         state->spawnTimerStep = 0;
     }

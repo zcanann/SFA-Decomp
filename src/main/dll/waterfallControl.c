@@ -138,7 +138,7 @@ void tumbleweed_updateRollingMotion(short *param_1, int param_2)
  */
 void tumbleweed_func0F(int obj, int value)
 {
-  *(int *)(*(int *)(obj + 0xb8) + 0x284) = value;
+  *(int *)(*(int *)&((GameObject *)obj)->extra + 0x284) = value;
 }
 
 /*
@@ -150,7 +150,7 @@ void tumbleweed_func0F(int obj, int value)
  */
 int tumbleweed_func0E(int obj)
 {
-  return *(byte *)(*(int *)(obj + 0xb8) + 0x278) == 6;
+  return *(byte *)(*(int *)&((GameObject *)obj)->extra + 0x278) == 6;
 }
 
 /*
@@ -161,7 +161,7 @@ int tumbleweed_func0E(int obj)
  * EN v1.0 Size: 64b
  */
 void tumbleweed_render2(int *obj, int p2) {
-    int *state = *(int**)((char*)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     *(u8*)((char*)state + 0x278) = 6;
     *(int*)((char*)state + 0x290) = p2;
     *(f32*)((char*)state + 0x294) = timeDelta * lbl_803E2F98;
@@ -177,7 +177,7 @@ void tumbleweed_render2(int *obj, int p2) {
  */
 void tumbleweed_modelMtxFn(int obj)
 {
-  int state = *(int *)(obj + 0xb8);
+  int state = *(int *)&((GameObject *)obj)->extra;
   if (*(u8 *)(state + 0x278) == 1) {
     ObjHits_EnableObject(obj);
     *(u8 *)(state + 0x278) = 2;
@@ -197,7 +197,7 @@ void tumbleweed_modelMtxFn(int obj)
  */
 void tumbleweed_func0B(int obj, float x, float y)
 {
-  int extra = *(int *)(obj + 0xb8);
+  int extra = *(int *)&((GameObject *)obj)->extra;
 
   *(float *)(extra + 0x288) = x;
   *(float *)(extra + 0x28c) = y;
@@ -212,7 +212,7 @@ void tumbleweed_func0B(int obj, float x, float y)
  */
 int tumbleweed_setScale(int obj)
 {
-  return *(byte *)(*(int *)(obj + 0xb8) + 0x278);
+  return *(byte *)(*(int *)&((GameObject *)obj)->extra + 0x278);
 }
 
 /*

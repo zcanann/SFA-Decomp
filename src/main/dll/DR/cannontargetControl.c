@@ -789,14 +789,14 @@ typedef struct {
 #pragma peephole off
 void gunpowderbarrel_init(int obj, u8 *def)
 {
-    int st = *(int *)(obj + 0xb8);
+    int st = *(int *)&((GameObject *)obj)->extra;
 
     ((GunpowderBarrelState *)st)->unk07 |= 2;
     (*(void (**)(int, int, int))((char *)*lbl_803DCAC0 + 0x4))(obj, st, 5);
     ObjGroup_AddObject(obj, 0x19);
     ObjGroup_AddObject(obj, 0x16);
     ObjMsg_AllocQueue(obj, 8);
-    *(int *)(obj + 0xf8) = 0;
+    ((GameObject *)obj)->unkF8 = 0;
     ((GunpowderBarrelState *)st)->unk44 = 0;
     ((GunpowderBarrelState *)st)->unk46 = 0;
     ((GunpowderBarrelState *)st)->unk15 = 0;
@@ -826,15 +826,15 @@ void gunpowderbarrel_init(int obj, u8 *def)
         ((BarrelBits *)(st + 0x48))->b6 = v;
     }
     ObjHits_EnableObject(obj);
-    ((GunpowderBarrelState *)st)->unk2C = (f32)*(s16 *)(*(int *)(obj + 0x54) + 0x5a);
+    ((GunpowderBarrelState *)st)->unk2C = (f32)*(s16 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x5a);
     ((BarrelBits *)(st + 0x4a))->b5 = 0;
     ((GunpowderBarrelState *)st)->unk38 = lbl_803E42C0;
     ((GunpowderBarrelState *)st)->linkedObj = 0;
     (*(void (**)(int, int))((char *)*lbl_803DCAC0 + 0x2c))(st, 1);
-    if (*(void **)(obj + 0x54) != NULL) {
-        *(s16 *)(*(int *)(obj + 0x54) + 0xb2) = 1;
+    if (((GameObject *)obj)->anim.hitReactState != NULL) {
+        *(s16 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0xb2) = 1;
     }
-    if (*(s16 *)(obj + 0x46) == 0x754) {
+    if (((GameObject *)obj)->anim.seqId == 0x754) {
         ((BarrelBits *)(st + 0x4a))->b1 = 1;
     }
 }
@@ -858,8 +858,8 @@ int fn_801A27B8(int obj, int id)
 {
     u8 *block;
 
-    block = mapGetBlock(objPosToMapBlockIdx(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
-                                            *(f32 *)(obj + 0x14)));
+    block = mapGetBlock(objPosToMapBlockIdx(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                                            ((GameObject *)obj)->anim.localPosZ));
     if (block == NULL || (*(u16 *)(block + 4) & 0x8) == 0) {
         return 0;
     }
@@ -906,8 +906,8 @@ extern int  lbl_803DDB18;
 #pragma peephole off
 void blasted_update(int obj)
 {
-    int def = *(int *)(obj + 0x4c);
-    int st = *(int *)(obj + 0xb8);
+    int def = *(int *)&((GameObject *)obj)->anim.placementData;
+    int st = *(int *)&((GameObject *)obj)->extra;
     s16 total = *(s16 *)(def + 0x1a);
 
     if (*(int *)(st + 0xc) != 0) {
@@ -919,12 +919,12 @@ void blasted_update(int obj)
     }
     {
         int i;
-        for (i = 0; i < (*(ObjHitsPriorityState **)(obj + 0x54))->priorityHitCount; i++) {
+        for (i = 0; i < (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->priorityHitCount; i++) {
             u32 v;
             s8 m;
             int found;
-            m = *(u8 *)&(*(ObjHitsPriorityState **)(obj + 0x54))->priorities[i];
-            v = (*(ObjHitsPriorityState **)(obj + 0x54))->hitObjects[i];
+            m = *(u8 *)&(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->priorities[i];
+            v = (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->hitObjects[i];
             found = 0;
             if (m != 5) {
                 continue;
@@ -1012,20 +1012,20 @@ extern f32  lbl_803DBE80;
 #pragma peephole off
 void gunpowderbarrel_update(int obj)
 {
-    int st = *(int *)(obj + 0xb8);
+    int st = *(int *)&((GameObject *)obj)->extra;
     u8 *player = Obj_GetPlayerObject();
-    int def = *(int *)(obj + 0x4c);
+    int def = *(int *)&((GameObject *)obj)->anim.placementData;
 
     if (((GunpowderBarrelState *)st)->unk54 <= lbl_803E4334) {
         ((GunpowderBarrelState *)st)->unk54 += timeDelta;
     }
     if (fn_80080150((void *)(st + 0x18)) != 0) {
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         if (timerCountDown((void *)(st + 0x18)) != 0) {
             ((GunpowderBarrelState *)st)->unk17 = 0;
             ((GunpowderBarrelState *)st)->unk16 = 0;
             ((GunpowderBarrelState *)st)->flags49 |= 1;
-            *(s16 *)(obj + 6) &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~0x4000;
             ObjHits_ClearHitVolumes(obj);
             ObjHitbox_SetCapsuleBounds(obj, 8, -2, 0x19);
             ObjHits_EnableObject(obj);
@@ -1036,7 +1036,7 @@ void gunpowderbarrel_update(int obj)
         return;
     }
     if (fn_80080150((void *)(st + 0x1c)) != 0) {
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         timerCountDown((void *)(st + 0x1c));
         memset((void *)(st + 0x20), 0, 0xc);
         memset((void *)(obj + 0x24), 0, 0xc);
@@ -1044,12 +1044,12 @@ void gunpowderbarrel_update(int obj)
     }
     if (((BarrelBits *)(st + 0x4a))->b5 == 0) {
         if (((BarrelBits *)(st + 0x4a))->b1 != 0 && playerIsDisguised(player) == 0) {
-            *(u8 *)(obj + 0xaf) |= 0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
         } else {
-            *(u8 *)(obj + 0xaf) &= ~0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
         }
     }
-    if (*(void **)(obj + 0xc8) == NULL) {
+    if (((GameObject *)obj)->unkC8 == NULL) {
         f32 range = lbl_803E4338;
         if ((u32)(((GunpowderBarrelState *)st)->linkedObj = ObjGroup_FindNearestObject(0x4c, obj, &range)) != 0 &&
             timer_isEffectMode(((GunpowderBarrelState *)st)->linkedObj) != 0 &&
@@ -1082,9 +1082,9 @@ void gunpowderbarrel_update(int obj)
         }
     }
     if (((BarrelBits *)(st + 0x4a))->b5 != 0) {
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else {
-        *(u8 *)(obj + 0xaf) &= ~8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     }
     if (((GunpowderBarrelState *)st)->unk17 != 0) {
         ((GunpowderBarrelState *)st)->unk17 += framesThisStep;
@@ -1122,7 +1122,7 @@ void gunpowderbarrel_update(int obj)
             if (gen == 0) {
                 Obj_RemoveFromUpdateList(obj);
                 ObjHits_DisableObject(obj);
-                *(s16 *)(obj + 6) |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= 0x4000;
                 s16toFloat((void *)(st + 0x18), 0x3c);
                 return;
             }
@@ -1137,12 +1137,12 @@ void gunpowderbarrel_update(int obj)
                 barrelgener_queueObjectRelease(gen, obj, 0x46);
                 ObjHits_ClearHitVolumes(obj);
                 ObjHits_DisableObject(obj);
-                *(s16 *)(obj + 6) |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= 0x4000;
                 return;
             }
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
-            *(s16 *)(obj + 6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
             return;
         }
         return;
@@ -1176,18 +1176,18 @@ void gunpowderbarrel_update(int obj)
                 ObjHits_SyncObjectPositionIfDirty(obj);
                 gunpowderbarrel_launchAtTarget(obj, 0);
             } else if (((GunpowderBarrelState *)st)->unk17 == 0) {
-                *(f32 *)(obj + 0x24) = ((GunpowderBarrelState *)st)->velX =
+                ((GameObject *)obj)->anim.velocityX = ((GunpowderBarrelState *)st)->velX =
                     mathSinf(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340);
-                *(f32 *)(obj + 0x28) = ((GunpowderBarrelState *)st)->velY = lbl_803E42C0;
-                *(f32 *)(obj + 0x2c) = ((GunpowderBarrelState *)st)->velZ =
+                ((GameObject *)obj)->anim.velocityY = ((GunpowderBarrelState *)st)->velY = lbl_803E42C0;
+                ((GameObject *)obj)->anim.velocityZ = ((GunpowderBarrelState *)st)->velZ =
                     mathCosf(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340);
-                *(f32 *)(obj + 0xc) =
+                ((GameObject *)obj)->anim.localPosX =
                     lbl_803DBE80 * -mathSinf(lbl_803E433C * (f32)*(s16 *)player /
                                                 lbl_803E4340) +
-                    *(f32 *)(obj + 0xc);
-                *(f32 *)(obj + 0x14) =
+                    ((GameObject *)obj)->anim.localPosX;
+                ((GameObject *)obj)->anim.localPosZ =
                     lbl_803DBE80 * -mathCosf(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340) +
-                    *(f32 *)(obj + 0x14);
+                    ((GameObject *)obj)->anim.localPosZ;
                 ObjGroup_AddObject(obj, 0x16);
             }
             ObjGroup_AddObject(obj, 0x16);
@@ -1207,11 +1207,11 @@ void gunpowderbarrel_update(int obj)
         fn_801A1230(obj);
     }
     if (((BarrelBits *)(st + 0x4a))->b5 != 0) {
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         if (((BarrelBits *)(st + 0x4a))->b6 != 0 && ((BarrelBits *)(st + 0x4a))->b7 != 0) {
-            ((GunpowderBarrelState *)st)->velX = *(f32 *)(obj + 0x24);
-            ((GunpowderBarrelState *)st)->velY = *(f32 *)(obj + 0x28);
-            ((GunpowderBarrelState *)st)->velZ = *(f32 *)(obj + 0x2c);
+            ((GunpowderBarrelState *)st)->velX = ((GameObject *)obj)->anim.velocityX;
+            ((GunpowderBarrelState *)st)->velY = ((GameObject *)obj)->anim.velocityY;
+            ((GunpowderBarrelState *)st)->velZ = ((GameObject *)obj)->anim.velocityZ;
             ((GunpowderBarrelState *)st)->velY = lbl_803E42C0;
             ((BarrelBits *)(st + 0x4a))->b6 = 0;
         }

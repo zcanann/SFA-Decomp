@@ -1399,32 +1399,32 @@ void fn_801F20D4(int obj)
   int sub;
   int stk[3];
 
-  sub = *(int *)(obj + 0xb8);
+  sub = *(int *)&((GameObject *)obj)->extra;
   Obj_GetPlayerObject();
   stk[0] = lbl_802C247C[0];
   stk[1] = lbl_802C247C[1];
   stk[2] = lbl_802C247C[2];
-  if ((*(u8 *)(obj + 0xaf) & 0x8) != 0) {
-    *(u8 *)(obj + 0xaf) ^= 0x8;
+  if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x8) != 0) {
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode ^= 0x8;
   }
   if (GameBit_Get(763) == 0) {
-    if (*(s16 *)(obj + 0xa0) != 7) {
+    if (((GameObject *)obj)->anim.currentMove != 7) {
       ObjAnim_SetCurrentMove(obj, 7, lbl_803E5D98, 0);
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
         (obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
   } else {
-    if (*(s16 *)(obj + 0xa0) != 2) {
+    if (((GameObject *)obj)->anim.currentMove != 2) {
       ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
         (obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
   }
-  if ((*(u8 *)(obj + 0xaf) & 0x1) != 0 && GameBit_Get(763) == 0) {
+  if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x1) != 0 && GameBit_Get(763) == 0) {
     GameBit_Set(763, 1);
     *(u8 *)(sub + 0x27) = 0;
     buttonDisable(0, 256);
-  } else if ((*(u8 *)(obj + 0xaf) & 0x1) != 0) {
+  } else if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x1) != 0) {
     if ((**(int (**)(int *, int))(*gGameUIInterface + 0x24))(stk, 3) > -1) {
       GameBit_Set(784, 1);
       *(u8 *)(sub + 0x27) = *(u8 *)(sub + 0x27) + 1;
@@ -1598,22 +1598,22 @@ void fn_801F27E4(int obj)
   extern uint GameBit_Get(int id);
   int sub;
 
-  sub = *(int *)(obj + 0xb8);
-  if (*(s16 *)(obj + 0xa0) != 2) {
+  sub = *(int *)&((GameObject *)obj)->extra;
+  if (((GameObject *)obj)->anim.currentMove != 2) {
     ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
   }
   ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
       (obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
   *(u8 *)(sub + 0x24) = 1;
   if (*(u8 *)(sub + 0x24) == 0) {
-    if ((*(u8 *)(obj + 0xaf) & 0x1) != 0) {
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x1) != 0) {
       GameBit_Set(208, 1);
       *(u8 *)(sub + 0x24) = 1;
       buttonDisable(0, 256);
     }
   } else {
-    *(u8 *)(obj + 0xaf) &= ~0x8;
-    if ((*(u8 *)(obj + 0xaf) & 0x1) != 0) {
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x1) != 0) {
       Obj_GetPlayerObject();
       if (fn_80296A14() > 0) {
         *(u8 *)(sub + 0x25) = 2;
@@ -2050,7 +2050,7 @@ void wmtorch_init(u8* obj, u8* params) {
     u32 res;
     f32 v[5];
 
-    sub = *(WmTorchState**)(obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     if (*(s16*)(params + 0x1a) != 0) {
         sub->unk04 = (f32)(s32)*(s16*)(params + 0x1a);
     } else {
@@ -2065,20 +2065,20 @@ void wmtorch_init(u8* obj, u8* params) {
     v[4] = lbl_803E5DF0;
     if (sub->torchType == 0) {
         res = Resource_Acquire(0x69, 1);
-        *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF4;
+        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E5DF4;
         ((void(*)(u8*, int, f32*, int, int, int))((void**)*(int*)res)[1])(obj, 1, v, 0x10004, -1, 0);
     } else if (sub->torchType == 0x7f) {
         res = Resource_Acquire(0x69, 1);
-        *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF4;
+        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E5DF4;
         ((void(*)(u8*, int, f32*, int, int, int))((void**)*(int*)res)[1])(obj, 2, v, 0x10004, -1, 0);
     } else {
         res = Resource_Acquire(0x63, 1);
-        *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF4;
+        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E5DF4;
         ((void(*)(u8*, int, f32*, int, int, int))((void**)*(int*)res)[1])(obj, 2, v, 0x10004, -1, 0);
     }
-    *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF8;
+    ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E5DF8;
     Resource_Release(res);
-    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x2000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -2192,7 +2192,7 @@ extern int GameBit_Get(int id);
 #pragma scheduling off
 #pragma peephole off
 void wmlasertarget_init(char *obj, s8 *p) {
-    WmLaserTargetState *inner = *(WmLaserTargetState **)(obj + 0xb8);
+    WmLaserTargetState *inner = ((GameObject *)obj)->extra;
     ((ObjAnimComponent *)obj)->bankIndex = (s8)GameBit_Get(*(s16 *)(p + 0x1e));
     inner->cooldown = *(s16 *)(p + 0x1a);
     inner->toggleQueued = 0;
@@ -2206,7 +2206,7 @@ extern f32 lbl_803E5DE8;
 #pragma scheduling off
 #pragma peephole off
 void wmtorch_update(int obj) {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (((WmTorchState *)state)->torchType == 2) {
         *(s16 *)obj += 0x32;
     }
@@ -2225,7 +2225,7 @@ extern void Obj_FreeObject(void *o);
 #pragma scheduling off
 #pragma peephole off
 void wmtorch_free(int obj, int mode) {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (mode == 0 && ((WmTorchState *)state)->linkedObj != 0) {
         Obj_FreeObject(((WmTorchState *)state)->linkedObj);
     }
@@ -2239,7 +2239,7 @@ extern void ModelLightStruct_free(void *light);
 #pragma scheduling off
 #pragma peephole off
 void lightsource_free(int obj) {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
     if (((LightSourceState *)state)->light != 0) {
         ModelLightStruct_free(((LightSourceState *)state)->light);
@@ -2473,7 +2473,7 @@ void dll_200_update(int obj)
     u8 ret;
     Dll200State *b;
 
-    b = *(Dll200State **)(obj + 0xb8);
+    b = ((GameObject *)obj)->extra;
     ret = ObjHitReact_Update(obj, lbl_80328898, 11,
                              (u8)((b->mode & 0x80) ? 1 : 0),
                              &b->hitReactVec);
@@ -2490,8 +2490,8 @@ void dll_200_update(int obj)
             fn_801F2290(obj);
             break;
         case 4:
-            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
-            if (*(s16 *)(obj + 0xa0) != 2) {
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
+            if (((GameObject *)obj)->anim.currentMove != 2) {
                 ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
             }
             ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
@@ -2549,7 +2549,7 @@ void lightsource_update(int obj)
         u8 pad2[0xc];
     } fx;
 
-    b = *(LightSourceState **)(obj + 0xb8);
+    b = ((GameObject *)obj)->extra;
     switch (b->mode) {
     case 0:
         break;
@@ -2573,7 +2573,7 @@ void lightsource_update(int obj)
         }
         break;
     }
-    if (b->lit != 0 && (*(u16 *)(obj + 0xb0) & 0x800)) {
+    if (b->lit != 0 && (((GameObject *)obj)->unkB0 & 0x800)) {
         b->fxTimer = b->fxTimer - timeDelta;
         if (b->fxTimer <= lbl_803E5E0C) {
             sfxFlag = b->fxArg;
@@ -2583,13 +2583,13 @@ void lightsource_update(int obj)
         }
         if (b->fxType != 0 || b->fxArg != 0) {
             vec[0] = lbl_803E5E0C;
-            if (*(s16 *)(obj + 0x46) == 0x717) {
+            if (((GameObject *)obj)->anim.seqId == 0x717) {
                 vec[1] = vec[0];
             } else {
                 vec[1] = lbl_803E5E14;
             }
             vec[2] = lbl_803E5E0C;
-            fn_80098B18(obj, lbl_803E5E18 * *(f32 *)(obj + 8), b->fxType, sfxFlag, 0, vec);
+            fn_80098B18(obj, lbl_803E5E18 * ((GameObject *)obj)->anim.rootMotionScale, b->fxType, sfxFlag, 0, vec);
         }
         if (b->sparks != 0) {
             b->sparkTimer = b->sparkTimer - timeDelta;
@@ -2613,7 +2613,7 @@ void lightsource_update(int obj)
         }
         *(u8 *)((char *)b->light + 0x2f9) = (u8)sum;
     }
-    if (*(s16 *)(obj + 0x46) != 0x705 && *(s16 *)(obj + 0x46) != 0x712) {
+    if (((GameObject *)obj)->anim.seqId != 0x705 && ((GameObject *)obj)->anim.seqId != 0x712) {
         if (b->lit != 0) {
             if (!((LightSourceFlagByte *)&b->loopFlags)->looped) {
                 Sfx_AddLoopedObjectSound(obj, 0x72);
@@ -2667,11 +2667,11 @@ void dll_1FF_update(int obj)
     char *p;
     int stk[2];
 
-    b = *(Dll1FFState **)(obj + 0xb8);
+    b = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     if (b->grabPhase == 0) {
         flag = 0;
-        if ((*(u8 *)(obj + 0xaf) & 1) != 0 && *(int *)(obj + 0xf8) == 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0 && ((GameObject *)obj)->unkF8 == 0) {
             b->msgLo = (s16)flag;
             b->msgHi = 0x28;
             buttonDisable(0, 0x100);
@@ -2681,22 +2681,22 @@ void dll_1FF_update(int obj)
         if (b->grabPhase != 0) {
             b->sendFlag = 1;
         }
-        if (*(int *)(obj + 0xf8) == 0) {
+        if (((GameObject *)obj)->unkF8 == 0) {
             ObjHits_EnableObject(obj);
-            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
-            *(f32 *)(obj + 0x28) = -(lbl_803E5D84 * timeDelta - *(f32 *)(obj + 0x28));
-            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
-            count = hitDetectFn_80065e50(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
-                                         *(f32 *)(obj + 0x14), stk, 0, 1);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
+            ((GameObject *)obj)->anim.velocityY = -(lbl_803E5D84 * timeDelta - ((GameObject *)obj)->anim.velocityY);
+            ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
+            count = hitDetectFn_80065e50(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                                         ((GameObject *)obj)->anim.localPosZ, stk, 0, 1);
             found = NULL;
             for (i = 0; i < count; i++) {
                 p = ((char **)stk[0])[i];
                 if (*(s8 *)(p + 0x14) != 14) {
-                    if (*(f32 *)(obj + 0x10) < *(f32 *)p) {
-                        if (*(f32 *)(obj + 0x10) > *(f32 *)p - lbl_803E5D88 || i == 0) {
+                    if (((GameObject *)obj)->anim.localPosY < *(f32 *)p) {
+                        if (((GameObject *)obj)->anim.localPosY > *(f32 *)p - lbl_803E5D88 || i == 0) {
                             found = *(char **)(p + 0x10);
-                            *(f32 *)(obj + 0x10) = *(f32 *)p;
-                            *(f32 *)(obj + 0x28) = lbl_803E5D8C;
+                            ((GameObject *)obj)->anim.localPosY = *(f32 *)p;
+                            ((GameObject *)obj)->anim.velocityY = lbl_803E5D8C;
                         }
                     }
                 }
@@ -2710,15 +2710,15 @@ void dll_1FF_update(int obj)
         }
     } else {
         ObjHits_DisableObject(obj);
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
         if ((getButtonsJustPressed(0) & 0x100) != 0) {
             b->sendFlag = 0;
             buttonDisable(0, 0x100);
         }
-        if (*(int *)(obj + 0xf8) == 1) {
+        if (((GameObject *)obj)->unkF8 == 1) {
             b->grabPhase = 2;
         }
-        if (b->grabPhase == 2 && *(int *)(obj + 0xf8) == 0) {
+        if (b->grabPhase == 2 && ((GameObject *)obj)->unkF8 == 0) {
             b->grabPhase = 0;
             b->sendFlag = 0;
         }
@@ -2773,8 +2773,8 @@ void pressureswitch_update(int obj)
     f32 f;
 
     player = Obj_GetPlayerObject();
-    t = *(char **)(obj + 0x4c);
-    b = *(PressureSwitchState **)(obj + 0xb8);
+    t = *(char **)&((GameObject *)obj)->anim.placementData;
+    b = ((GameObject *)obj)->extra;
     far = 0;
     if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) > lbl_803E5D5C) {
         far = 1;
@@ -2794,7 +2794,7 @@ void pressureswitch_update(int obj)
             if (*(s16 *)(ent + 0x46) == 0x6d) {
                 ((PswFlags *)&b->flags)->active = 1;
             }
-            if (*(f32 *)(ent + 0x10) - *(f32 *)(obj + 0x10) > thr) {
+            if (*(f32 *)(ent + 0x10) - ((GameObject *)obj)->anim.localPosY > thr) {
                 b->holdTimer = 5;
             }
             if (b->chimeLatch == 0 && ent != NULL && *(s16 *)(ent + 0x46) == 0x146) {
@@ -2815,7 +2815,7 @@ void pressureswitch_update(int obj)
     ac = *(s8 *)(obj + 0xac);
     if (ac == 11 && (*gMapEventInterface)->getMode(ac) == 1 && far == 0) {
         if (b->holdTimer != 0) {
-            f = *(f32 *)(t + 0xc) - *(f32 *)(obj + 0x10);
+            f = *(f32 *)(t + 0xc) - ((GameObject *)obj)->anim.localPosY;
             if (f > lbl_803E5D68 && f < lbl_803E5D6C && GameBit_Get(b->mapGameBit) == 0) {
                 GameBit_Set(0x905, 1);
             } else if (GameBit_Get(0x905) != 0) {
@@ -2828,20 +2828,20 @@ void pressureswitch_update(int obj)
     played = 0;
     if (b->holdTimer != 0) {
         lim = *(f32 *)(t + 0xc) - lbl_803E5D6C;
-        cur = *(f32 *)(obj + 0x10);
+        cur = ((GameObject *)obj)->anim.localPosY;
         if (cur < lim) {
-            *(f32 *)(obj + 0x10) = lbl_803E5D70 * timeDelta + cur;
-            if (*(f32 *)(obj + 0x10) > lim) {
-                *(f32 *)(obj + 0x10) = lim;
+            ((GameObject *)obj)->anim.localPosY = lbl_803E5D70 * timeDelta + cur;
+            if (((GameObject *)obj)->anim.localPosY > lim) {
+                ((GameObject *)obj)->anim.localPosY = lim;
             }
             GameBit_Set(*(s16 *)(t + 0x1c), 1);
             if (((PswFlags *)&b->flags)->active) {
                 GameBit_Set(b->mapGameBit, 1);
             }
         } else {
-            *(f32 *)(obj + 0x10) = -(lbl_803E5D74 * timeDelta - cur);
-            if (*(f32 *)(obj + 0x10) < lim) {
-                *(f32 *)(obj + 0x10) = lim;
+            ((GameObject *)obj)->anim.localPosY = -(lbl_803E5D74 * timeDelta - cur);
+            if (((GameObject *)obj)->anim.localPosY < lim) {
+                ((GameObject *)obj)->anim.localPosY = lim;
                 GameBit_Set(*(s16 *)(t + 0x1c), 1);
                 v = b->mapGameBit;
                 if (v != -1) {
@@ -2856,9 +2856,9 @@ void pressureswitch_update(int obj)
         }
     } else {
         if (b->retriggerTimer == 0) {
-            *(f32 *)(obj + 0x10) = lbl_803E5D74 * timeDelta + *(f32 *)(obj + 0x10);
-            if (*(f32 *)(obj + 0x10) > *(f32 *)(t + 0xc)) {
-                *(f32 *)(obj + 0x10) = *(f32 *)(t + 0xc);
+            ((GameObject *)obj)->anim.localPosY = lbl_803E5D74 * timeDelta + ((GameObject *)obj)->anim.localPosY;
+            if (((GameObject *)obj)->anim.localPosY > *(f32 *)(t + 0xc)) {
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)(t + 0xc);
             } else {
                 played = 1;
             }
@@ -2934,13 +2934,13 @@ void fn_801F2290(int obj)
     IntVec3 stk;
     ObjAnimEventList animEvents;
 
-    b = *(Dll200State **)(obj + 0xb8);
+    b = ((GameObject *)obj)->extra;
     Obj_GetPlayerObject();
     stk = *(IntVec3 *)lbl_802C2470;
-    *(f32 *)(obj + 0x10) = b->homeY;
+    ((GameObject *)obj)->anim.localPosY = b->homeY;
     if (GameBit_Get(0x1fc) != 0) {
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
-        if ((*(u8 *)(obj + 0xaf) & 1) != 0 &&
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0 &&
             (**(int (**)(IntVec3 *, int))(*gGameUIInterface + 0x24))(&stk, 3) > -1) {
             GameBit_Set(0x4d1, 1);
             b->counter27 += 1;
@@ -2948,7 +2948,7 @@ void fn_801F2290(int obj)
             buttonDisable(0, 0x100);
         }
     } else {
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
         if (b->modeTimer <= 0) {
             switch (randomGetRange(1, 4)) {
             case 1:
@@ -2999,7 +2999,7 @@ void fn_801F2290(int obj)
             } else if (m == 13) {
                 if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
                         (obj, b->animSpeed, timeDelta, &animEvents) != 0) {
-                    if ((f32)(int)*(s16 *)(obj + 0xa0) ==
+                    if ((f32)(int)((GameObject *)obj)->anim.currentMove ==
                         lbl_80328974[b->prevMode].moveId) {
                         ObjAnim_SetCurrentMove(obj,
                                                (int)lbl_80328974[b->prevMode].altMoveId,
@@ -3012,23 +3012,23 @@ void fn_801F2290(int obj)
                     b->modeTimer = 0;
                 }
             } else {
-                dx = lbl_80328974[m].x - (*(f32 *)(obj + 0xc) - b->homeX);
-                dy = lbl_80328974[m].y - (*(f32 *)(obj + 0x14) - b->homeZ);
+                dx = lbl_80328974[m].x - (((GameObject *)obj)->anim.localPosX - b->homeX);
+                dy = lbl_80328974[m].y - (((GameObject *)obj)->anim.localPosZ - b->homeZ);
                 dist = sqrtf(dx * dx + dy * dy);
                 ang = getAngle(dx, dy);
                 diff = (s16)(ang - *(s16 *)obj);
                 if (diff >= -1000 && diff <= 1000) {
-                    if (*(s16 *)(obj + 0xa0) != 59) {
+                    if (((GameObject *)obj)->anim.currentMove != 59) {
                         ObjAnim_SetCurrentMove(obj, 59, lbl_803E5D98, 0);
                         b->animSpeed = lbl_803E5DA8;
                     }
                     spd = lbl_803E5DAC;
-                    *(f32 *)(obj + 0x24) = spd * (dx / dist);
-                    *(f32 *)(obj + 0x2c) = spd * (dy / dist);
+                    ((GameObject *)obj)->anim.velocityX = spd * (dx / dist);
+                    ((GameObject *)obj)->anim.velocityZ = spd * (dy / dist);
                     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)
                         (obj, spd, &b->animSpeed);
                 } else {
-                    if (*(s16 *)(obj + 0xa0) != 12) {
+                    if (((GameObject *)obj)->anim.currentMove != 12) {
                         ObjAnim_SetCurrentMove(obj, 12, lbl_803E5D98, 0);
                         b->animSpeed = lbl_803E5DB0;
                     }
@@ -3042,11 +3042,11 @@ void fn_801F2290(int obj)
                     b->prevMode = (u8)b->mode;
                     b->mode = 12;
                     spd = lbl_803E5D98;
-                    *(f32 *)(obj + 0x24) = spd;
-                    *(f32 *)(obj + 0x2c) = spd;
+                    ((GameObject *)obj)->anim.velocityX = spd;
+                    ((GameObject *)obj)->anim.velocityZ = spd;
                 }
-                *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
-                *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
+                ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.velocityX * timeDelta + ((GameObject *)obj)->anim.localPosX;
+                ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * timeDelta + ((GameObject *)obj)->anim.localPosZ;
                 ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
                     (obj, b->animSpeed, timeDelta, &animEvents);
             }

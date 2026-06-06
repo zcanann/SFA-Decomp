@@ -111,12 +111,12 @@ void dimdismountpoint_init(u8* obj, u8* params) {
 
     ObjGroup_AddObject(obj, 0x13);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    sub = *(f32**)(obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     sub[0] = mathSinf(lbl_803E4914 * (f32)(s32)*(s16*)obj / lbl_803E4918);
     sub[1] = lbl_803E4908;
     sub[2] = mathCosf(lbl_803E4914 * (f32)(s32)*(s16*)obj / lbl_803E4918);
-    sub[3] = -(sub[0] * *(f32*)(obj + 0xc) + sub[1] * *(f32*)(obj + 0x10) + sub[2] * *(f32*)(obj + 0x14));
-    *(int*)(obj + 0xf8) = 1;
+    sub[3] = -(sub[0] * ((GameObject *)obj)->anim.localPosX + sub[1] * ((GameObject *)obj)->anim.localPosY + sub[2] * ((GameObject *)obj)->anim.localPosZ);
+    ((GameObject *)obj)->unkF8 = 1;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -164,8 +164,8 @@ extern f32 lbl_803E490C;
 #pragma scheduling off
 #pragma peephole off
 void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
-    if (visible == 0 || *(int *)(obj + 0xf8) != 0) {
-        if (*(int *)(obj + 0xf8) != 0) {
+    if (visible == 0 || ((GameObject *)obj)->unkF8 != 0) {
+        if (((GameObject *)obj)->unkF8 != 0) {
             objRenderFn_80041018(obj);
         }
     } else {
@@ -178,7 +178,7 @@ void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible
 #pragma scheduling off
 #pragma peephole off
 int dimbridgecogmai_SeqFn(int obj, int p2, char *r5) {
-    char *param = *(char **)(obj + 0x4c);
+    char *param = *(char **)&((GameObject *)obj)->anim.placementData;
     r5[0x56] = 0;
     if ((*(u8 *)(param + 0x1d) & 0x2) != 0 && *(u8 *)(r5 + 0x80) == 1) {
         GameBit_Set(*(s16 *)(param + 0x18), 1);

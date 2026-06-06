@@ -1211,7 +1211,7 @@ void pollen_hitDetect(int obj) {
     }
 }
 void pollenfragment_free(int obj) {
-    int *inner = *(int **)(obj + 0xb8);
+    int *inner = ((GameObject *)obj)->extra;
     if ((void *)inner[6] != NULL) {
         ModelLightStruct_free((void *)inner[6]);
         inner[6] = 0;
@@ -1219,7 +1219,7 @@ void pollenfragment_free(int obj) {
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 void mikabomb_free(int obj, int mode) {
-    void **inner = *(void ***)(obj + 0xb8);
+    void **inner = ((GameObject *)obj)->extra;
     if (inner[0] != NULL && mode == 0) {
         Obj_FreeObject(inner[0]);
         inner[0] = NULL;
@@ -1378,7 +1378,7 @@ extern f32 lbl_803E3158;
 #pragma scheduling off
 #pragma peephole off
 void pollenfragment_render(int *obj, int p2, int p3, int p4, int p5) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     if (fn_80080150((int)((char *)state + 0x20)) != 0) return;
     ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3158);
 }
@@ -1407,7 +1407,7 @@ extern f32 lbl_803E3148;
 #pragma scheduling off
 #pragma peephole off
 void pollen_init(int *obj) {
-    s16 *state = *(s16 **)((char *)obj + 0xb8);
+    s16 *state = ((GameObject *)obj)->extra;
     state[0] = (s16)randomGetRange(-0x8000, 0x7fff);
     *(f32 *)((char *)state + 0xc) = lbl_803E3148 * (f32)(s32)randomGetRange(0xfa0, 0x1388);
     *(s16 *)((char *)state + 4) = (s16)randomGetRange(-0x8000, 0x7fff);

@@ -533,8 +533,8 @@ void fn_801513AC(int obj, u8 *state)
         if (*(u16 *)(lbl_803AC428 + 4) <= 40
             && *(u16 *)(state + 0x2a0) != 3
             && *(u16 *)(state + 0x2a0) != 4) {
-            d = getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(*(int *)lbl_803AC428 + 0xc),
-                         *(f32 *)(obj + 0x14) - *(f32 *)(*(int *)lbl_803AC428 + 0x14))
+            d = getAngle(((GameObject *)obj)->anim.localPosX - *(f32 *)(*(int *)lbl_803AC428 + 0xc),
+                         ((GameObject *)obj)->anim.localPosZ - *(f32 *)(*(int *)lbl_803AC428 + 0x14))
                 - (u16)*(s16 *)obj;
             if (d > 0x8000) {
                 d -= 0xFFFF;
@@ -638,19 +638,19 @@ void fn_8015165C(int obj, u8 *state)
                 }
             }
         }
-        ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 0;
-        ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 0;
-        if (*(s16 *)(obj + 0xa0) == p20[8]) {
-            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = (s8)*(int *)(p20 + 4);
-            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = (s8)p20[9];
+        ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 0;
+        ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 0;
+        if (((GameObject *)obj)->anim.currentMove == p20[8]) {
+            ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = (s8)*(int *)(p20 + 4);
+            ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[9];
         }
-        if (*(s16 *)(obj + 0xa0) == p20[0x14]) {
-            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = (s8)*(int *)(p20 + 0x10);
-            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = (s8)p20[0x15];
+        if (((GameObject *)obj)->anim.currentMove == p20[0x14]) {
+            ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = (s8)*(int *)(p20 + 0x10);
+            ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[0x15];
         }
-        if (*(s16 *)(obj + 0xa0) == p20[0x20]) {
-            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = (s8)*(int *)(p20 + 0x1c);
-            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = (s8)p20[0x21];
+        if (((GameObject *)obj)->anim.currentMove == p20[0x20]) {
+            ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = (s8)*(int *)(p20 + 0x1c);
+            ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[0x21];
         }
         if ((state[0x323] & 8) == 0) {
             fn_8014CF7C(obj, state, *(f32 *)(*(int *)(state + 0x29c) + 0xc),
@@ -682,7 +682,7 @@ extern f32 lbl_803E27D0;
 #pragma peephole off
 void fn_80151954(int obj, u8 *state)
 {
-    u8 *setup = *(u8 **)(obj + 0x4c);
+    u8 *setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
     f32 fz;
     int z;
 
@@ -702,7 +702,7 @@ void fn_80151954(int obj, u8 *state)
     state[0x322] = 6;
     ((GroundBaddieState *)state)->baddie.unk31C = fz;
     *(f32 *)(state + 0x2fc) *= lbl_803E27BC;
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 314:
         if (*(s8 *)(setup + 0x27) != 0) {
             *(s16 *)(state + 0x2b6) = 51;
@@ -793,13 +793,13 @@ void fn_80151C68(int obj, u8 *state)
     u8 *setup;
 
     player = Obj_GetPlayerObject();
-    setup = *(u8 **)(obj + 0x4c);
+    setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
     if ((**(int (**)(int))(*gGameUIInterface + 0x20))(446) != 0) {
         if (player != NULL && playerGetMoney(player) >= 25) {
             playerAddMoney(player, -25);
             GameBit_Set(*(s16 *)(setup + 0x1c), 1);
             *(u16 *)(state + 0x338) = lbl_803DBCA0[2];
-            *(u8 *)(obj + 0xaf) |= 8;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             hudFn_8011f38c(2);
             (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(2, obj, -1);
         } else {
@@ -844,8 +844,8 @@ void fn_80151DB8(int obj, u8 *state)
     f32 dz;
 
     player = Obj_GetPlayerObject();
-    setup = *(u8 **)(obj + 0x4c);
-    dy = *(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10);
+    setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    dy = *(f32 *)(player + 0x10) - ((GameObject *)obj)->anim.localPosY;
     dy = (dy >= lbl_803E27D8) ? dy : -dy;
     if (dy > lbl_803E27DC) {
         return;

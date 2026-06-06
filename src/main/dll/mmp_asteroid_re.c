@@ -60,13 +60,13 @@ void transporter_init(int obj, u8 *params)
   u8 *state;
   int id;
 
-  state = *(u8 **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   *(s16 *)(state + 8) = 400;
   *(s8 *)(state + 0xe) = 0;
   *(s16 *)obj = (s16)((u16)(params[0x18] << 8));
-  *(int *)(obj + 0xf4) = 0;
-  *(void **)(obj + 0xbc) = (void *)Transporter_SeqFn;
-  *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+  ((GameObject *)obj)->unkF4 = 0;
+  ((GameObject *)obj)->unkBC = (void *)Transporter_SeqFn;
+  *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
 
   id = *(int *)(params + 0x14);
   switch (id) {
@@ -126,7 +126,7 @@ void transporter_init(int obj, u8 *params)
   }
 
   if ((*(u8 *)(state + 0xe) & 0x40) != 0) {
-    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
   }
 }
 #pragma scheduling reset
@@ -272,8 +272,8 @@ void cf_doorlight_update(int obj) {
     CfDoorLightDef *def;
     int *textureFrame;
 
-    state = *(CfDoorLightState **)(obj + 0xb8);
-    def = *(CfDoorLightDef **)(obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    def = *(CfDoorLightDef **)&((GameObject *)obj)->anim.placementData;
     if ((((state->flags >> 5) & 1) == 0) && (GameBit_Get(def->triggerEvent) != 0) &&
         (((state->flags >> 6) & 1) == 0)) {
         state->flags = (state->flags & ~0x20) | 0x20;

@@ -169,7 +169,7 @@ void cfforcefield_update(u8 *obj)
   z = lbl_803E4390;
   ((GameObject *)obj)->anim.velocityZ = z;
   ((GameObject *)obj)->anim.velocityY = z;
-  *(f32 *)(obj + 0x24) = z;
+  ((GameObject *)obj)->anim.velocityX = z;
 
   if (GameBit_Get(*(s16 *)(data + 0x1e)) != 0) {
     if (!((ForceFieldFlags *)state)->disabled) {

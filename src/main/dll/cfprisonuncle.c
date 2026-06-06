@@ -272,7 +272,7 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
   f32 distance;
 
   player = (int)Obj_GetPlayerObject();
-  *(u8 *)(obj + 0xaf) &= ~8;
+  *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
 
   hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitA, &hitB, &hitObj, &hitPos[0], &hitPos[1], &hitPos[2]);
   if ((hitKind != 0) && (hitObj != 0)) {
@@ -303,8 +303,8 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
   }
 
   if (stateParam->mode == MAGICPLANT_MODE_ACTIVE) {
-    if (*(s16 *)(obj + 0xa0) == 1) {
-      if (*(f32 *)(obj + 0x98) >= lbl_803E3858) {
+    if (((GameObject *)obj)->anim.currentMove == 1) {
+      if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E3858) {
         stateParam->animStepScale = lbl_803E388C;
         ObjAnim_SetCurrentMove(obj, 4, lbl_803E385C, 0);
       } else {
@@ -313,7 +313,7 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
     } else {
       if ((stateParam->idleTimer -= framesThisStep) <= 0) {
         stateParam->idleTimer = (s16)randomGetRange(300, 600);
-      } else if (*(s16 *)(obj + 0xa0) != 4) {
+      } else if (((GameObject *)obj)->anim.currentMove != 4) {
         stateParam->animStepScale = lbl_803E388C;
         ObjAnim_SetCurrentMove(obj, 4, lbl_803E3890 * (f32)(int)randomGetRange(0, 99), 0);
       }
@@ -355,22 +355,22 @@ void fn_8017F7B8(int obj,int objectId)
   u8 *mapData;
   MagicPlantState *state;
 
-  mapData = *(u8 **)(obj + 0x4c);
-  state = *(MagicPlantState **)(obj + 0xb8);
+  mapData = *(u8 **)&((GameObject *)obj)->anim.placementData;
+  state = ((GameObject *)obj)->extra;
   if ((u8)Obj_IsLoadingLocked() != 0) {
     setup = Obj_AllocObjectSetup(0x30,objectId);
     setup->field1A = 0x14;
     setup->field2C = -1;
     setup->field1C = -1;
-    setup->x = *(f32 *)(obj + 0x0c);
-    setup->y = *(f32 *)(obj + 0x10);
-    setup->z = *(f32 *)(obj + 0x14);
+    setup->x = ((GameObject *)obj)->anim.localPosX;
+    setup->y = ((GameObject *)obj)->anim.localPosY;
+    setup->z = ((GameObject *)obj)->anim.localPosZ;
     setup->field24 = -1;
     setup->mapByte4 = mapData[0x04];
     setup->mapByte6 = mapData[0x06];
     setup->mapByte5 = mapData[0x05];
     setup->yawByte = (u8)(mapData[0x07] - 0xf);
-    childObj = Obj_SetupObject(setup,5,*(s8 *)(obj + 0xac),-1,*(void **)(obj + 0x30));
+    childObj = Obj_SetupObject(setup,5,*(s8 *)(obj + 0xac),-1,((GameObject *)obj)->anim.parent);
     if (childObj != 0) {
       ObjLink_AttachChild(obj,childObj,0);
       state->childObject = childObj;
@@ -535,7 +535,7 @@ void MagicPlant_update(int obj)
         }
         *(u8 *)(obj + 0x36) = (u8)alpha;
       }
-      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
+      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
       break;
 
     case MAGICPLANT_MODE_FADE_IN:
@@ -547,7 +547,7 @@ void MagicPlant_update(int obj)
         ((MapEventInterface *)*(int *)gMapEventInterface)->startTimedEvent(setup->eventId, (f32)setup->eventDuration);
       }
       *(u8 *)(obj + 0x36) = (u8)alpha;
-      (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
+      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
       break;
 
     case MAGICPLANT_MODE_HIT_REACT:
@@ -1813,7 +1813,7 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 #pragma scheduling off
 #pragma peephole off
 int duster_SeqFn(u8* obj) {
-    DusterState *state = *(DusterState **)(obj + 0xb8);
+    DusterState *state = ((GameObject *)obj)->extra;
     state->flags.floorCached = 0;
     return 0;
 }
@@ -1889,7 +1889,7 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma peephole reset
 
 void trickywarp_free(int obj) {
-  TrickyWarpState *state = *(TrickyWarpState **)(obj + 0xb8);
+  TrickyWarpState *state = ((GameObject *)obj)->extra;
   if (state->active != 0) {
     ObjGroup_RemoveObject(obj, 0x4b);
   }
@@ -2010,7 +2010,7 @@ void trickyguard_init(s16 *obj, u8 *param_2) {
 #pragma peephole off
 #pragma scheduling off
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-  DusterState *state = *(DusterState **)(obj + 0xb8);
+  DusterState *state = ((GameObject *)obj)->extra;
   if (visible != 0) {
     if (state->active != 0) {
       if (state->complete == 0) {
@@ -2033,15 +2033,15 @@ void duster_hitDetect(int param_1) {
   DusterState *state;
   u8 hit[0x54];
   int r;
-  state = *(DusterState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   r = objBboxFn_800640cc((f32 *)(obj + 128), (f32 *)(obj + 12),
                          lbl_803E38B4, 2, hit, (void *)obj, 8, -1, 255, 0);
   if (r != 0) {
     state->priorityHit = 1;
   }
-  *(f32 *)(obj + 128) = *(f32 *)(obj + 12);
-  *(f32 *)(obj + 132) = *(f32 *)(obj + 16);
-  *(f32 *)(obj + 136) = *(f32 *)(obj + 20);
+  ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosX;
+  ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
+  ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2075,7 +2075,7 @@ void duster_init(int obj, u8 *params) {
   void *hitData;
 
   setup = (DusterSetup *)params;
-  state = *(DusterState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   state->settleTimer = (s16)randomGetRange(0,0x32);
   state->moveStepScale = lbl_803E38E0;
   state->activeGameBit = setup->activeGameBit;
@@ -2087,15 +2087,15 @@ void duster_init(int obj, u8 *params) {
     state->completeGameBit = state->activeGameBit + 0x64;
   }
   state->complete = (u8)GameBit_Get(state->completeGameBit);
-  hitData = *(void **)(obj + 0x54);
+  hitData = ((GameObject *)obj)->anim.hitReactState;
   if (hitData != NULL && state->active == 0) {
     *(s16 *)((int)hitData + 0x60) = (s16)(*(s16 *)((int)hitData + 0x60) | 1);
   }
-  if ((state->complete != 0 || state->active == 0) && *(void **)(obj + 0x54) != NULL) {
+  if ((state->complete != 0 || state->active == 0) && ((GameObject *)obj)->anim.hitReactState != NULL) {
     ObjHits_DisableObject(obj);
   }
   ObjMsg_AllocQueue((void *)obj,1);
-  *(void **)(obj + 0xbc) = duster_SeqFn;
+  ((GameObject *)obj)->unkBC = duster_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2117,8 +2117,8 @@ void duster_update(int obj) {
   DusterLaunchRotation launch;
   DusterMapEventState *mapState;
 
-  state = *(DusterState **)(obj + 0xb8);
-  setup = *(DusterSetup **)(obj + 0x4c);
+  state = ((GameObject *)obj)->extra;
+  setup = *(DusterSetup **)&((GameObject *)obj)->anim.placementData;
   player = (int)Obj_GetPlayerObject();
 
   while (ObjMsg_Pop(obj, &msg, 0, 0) != 0) {
@@ -2149,18 +2149,18 @@ void duster_update(int obj) {
     return;
   }
 
-  if (*(f32 *)(obj + 0x28) > lbl_803E38B8) {
-    *(f32 *)(obj + 0x28) = lbl_803E38BC * timeDelta + *(f32 *)(obj + 0x28);
+  if (((GameObject *)obj)->anim.velocityY > lbl_803E38B8) {
+    ((GameObject *)obj)->anim.velocityY = lbl_803E38BC * timeDelta + ((GameObject *)obj)->anim.velocityY;
   }
 
   state->priorityHit = 0;
   if (state->flags.floorCached == 0) {
-    floorHitCount = hitDetectFn_80065e50(obj, &floorHits, 0, 0, *(f32 *)(obj + 0xc),
-                                         *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+    floorHitCount = hitDetectFn_80065e50(obj, &floorHits, 0, 0, ((GameObject *)obj)->anim.localPosX,
+                                         ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
     bestFloorIndex = -1;
     bestFloorDelta = lbl_803E38C0;
     for (i = 0; i < floorHitCount; i++) {
-      floorDelta = **(f32 **)((int)floorHits + i * 4) - *(f32 *)(obj + 0x10);
+      floorDelta = **(f32 **)((int)floorHits + i * 4) - ((GameObject *)obj)->anim.localPosY;
       if (floorDelta < lbl_803E38C4) {
         floorDelta = -floorDelta;
       }
@@ -2172,7 +2172,7 @@ void duster_update(int obj) {
     if (bestFloorIndex != -1) {
       state->flags.floorCached = 1;
       state->floorY = **(f32 **)((int)floorHits + bestFloorIndex * 4);
-      *(f32 *)(obj + 0x28) = lbl_803E38C4;
+      ((GameObject *)obj)->anim.velocityY = lbl_803E38C4;
     }
     if (state->flags.floorCached == 0) {
       state->floorY = *(f32 *)((u8 *)setup + 0xc);
@@ -2180,9 +2180,9 @@ void duster_update(int obj) {
     }
   }
 
-  if (*(f32 *)(obj + 0x10) < state->floorY) {
-    *(f32 *)(obj + 0x10) = state->floorY;
-    *(f32 *)(obj + 0x28) = lbl_803E38C4;
+  if (((GameObject *)obj)->anim.localPosY < state->floorY) {
+    ((GameObject *)obj)->anim.localPosY = state->floorY;
+    ((GameObject *)obj)->anim.velocityY = lbl_803E38C4;
   }
 
   if (state->settleTimer == 0 && state->hitReactTimer == 0) {
@@ -2195,22 +2195,22 @@ void duster_update(int obj) {
           obj, 0x51f, 0, 2, -1, 0);
       state->driftDir = (u8)randomGetRange(0, 4);
       if (state->useLaunchVelocity != 0) {
-        *(f32 *)(obj + 0x24) = lbl_803E38C8;
-        launch.z = launch.y = launch.x = *(f32 *)(obj + 0x2c) = lbl_803E38C4;
+        ((GameObject *)obj)->anim.velocityX = lbl_803E38C8;
+        launch.z = launch.y = launch.x = ((GameObject *)obj)->anim.velocityZ = lbl_803E38C4;
         launch.scale = lbl_803E38B0;
         launch.roll = 0;
         launch.pitch = 0;
         launch.yaw = *(s16 *)obj;
         vecRotateZXY(&launch, (void *)(obj + 0x24));
       } else {
-        *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x24) = lbl_803E38C4;
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityX = lbl_803E38C4;
       }
       if (state->hitReactActive != 0) {
         state->hitReactTimer = 0xfa;
       }
     } else {
-      *(f32 *)(obj + 0xc) += *(f32 *)(obj + 0x24) * timeDelta;
-      *(f32 *)(obj + 0x14) += *(f32 *)(obj + 0x2c) * timeDelta;
+      ((GameObject *)obj)->anim.localPosX += ((GameObject *)obj)->anim.velocityX * timeDelta;
+      ((GameObject *)obj)->anim.localPosZ += ((GameObject *)obj)->anim.velocityZ * timeDelta;
     }
 
     if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe) {
@@ -2241,7 +2241,7 @@ void duster_update(int obj) {
     *(s16 *)obj = (s16)((f32)*(s16 *)obj + lbl_803E38CC * timeDelta);
   }
 
-  floorDelta = *(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10);
+  floorDelta = *(f32 *)(player + 0x10) - ((GameObject *)obj)->anim.localPosY;
   if (floorDelta < lbl_803E38C4) {
     floorDelta = -floorDelta;
   }
@@ -2275,12 +2275,12 @@ void duster_update(int obj) {
         *(u8 *)(obj + 0x36) = 1;
       }
     }
-    if (*(void **)(obj + 0x54) != NULL) {
+    if (((GameObject *)obj)->anim.hitReactState != NULL) {
       ObjHits_DisableObject(obj);
     }
   }
 
-  *(f32 *)(obj + 0x10) += *(f32 *)(obj + 0x28);
+  ((GameObject *)obj)->anim.localPosY += ((GameObject *)obj)->anim.velocityY;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2372,7 +2372,7 @@ void trickywarp_update(int param_1) {
   int obj = param_1;
   TrickyWarpState *state;
   int r;
-  state = *(TrickyWarpState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   r = fn_8017FFD0(obj, state);
   if (r != 0) {
     if (state->active == 0) {
@@ -2412,10 +2412,10 @@ void curvefish_update(int obj) {
   s16 targetYaw;
   int yawDelta;
 
-  state = *(CurveFishState **)(obj + 0xb8);
-  setup = *(CurveFishSetup **)(obj + 0x4c);
+  state = ((GameObject *)obj)->extra;
+  setup = *(CurveFishSetup **)&((GameObject *)obj)->anim.placementData;
   player = Obj_GetPlayerObject();
-  setup2 = *(CurveFishSetup **)(obj + 0x4c);
+  setup2 = *(CurveFishSetup **)&((GameObject *)obj)->anim.placementData;
   curveQuery = lbl_803E38E8;
 
   state->phaseTimer += timeDelta;
@@ -2432,13 +2432,13 @@ void curvefish_update(int obj) {
   }
     /* fall through */
   case 1:
-    *(f32 *)(obj + 0xc) = setup2->spawnX;
-    *(f32 *)(obj + 0x10) = setup2->spawnY;
-    *(f32 *)(obj + 0x14) = setup2->spawnZ;
+    ((GameObject *)obj)->anim.localPosX = setup2->spawnX;
+    ((GameObject *)obj)->anim.localPosY = setup2->spawnY;
+    ((GameObject *)obj)->anim.localPosZ = setup2->spawnZ;
 
     firstNode = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(
         (*(int (**)(void *, int, int, f32, f32, f32))(*(int *)gRomCurveInterface + 0x14))(
-            &curveQuery, 1, -1, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14)));
+            &curveQuery, 1, -1, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ));
     secondNode = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(
         (*(int (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(firstNode, 0));
     thirdNode = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(
@@ -2489,21 +2489,21 @@ void curvefish_update(int obj) {
 
   speedThreshold = state->maxSpeed * lbl_803E3900;
   if (state->speed < speedThreshold) {
-    if (*(s16 *)(obj + 0xa0) == 0 && state->animTimer > lbl_803E3904) {
+    if (((GameObject *)obj)->anim.currentMove == 0 && state->animTimer > lbl_803E3904) {
       ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
       ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x3c);
       state->animTimer = lbl_803E38F0;
     }
     state->moveStepScale = lbl_803E3908;
   } else if (state->speed > lbl_803E390C * state->maxSpeed * lbl_803E3900) {
-    if (*(s16 *)(obj + 0xa0) == 0 && state->animTimer > lbl_803E3910) {
+    if (((GameObject *)obj)->anim.currentMove == 0 && state->animTimer > lbl_803E3910) {
       ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
       ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x3c);
       state->animTimer = lbl_803E38F0;
     }
     state->moveStepScale = lbl_803E3914;
   } else {
-    if (*(s16 *)(obj + 0xa0) == 1 && state->animTimer > lbl_803E3910) {
+    if (((GameObject *)obj)->anim.currentMove == 1 && state->animTimer > lbl_803E3910) {
       ObjAnim_SetCurrentMove(obj, 0, lbl_803E38F0, 0);
       ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x3c);
       state->animTimer = lbl_803E38F0;
@@ -2533,17 +2533,17 @@ void curvefish_update(int obj) {
       }
     }
 
-    dx = state->targetX - *(f32 *)(obj + 0xc);
-    dy = (state->targetY + (f32)(u32)setup->targetYOffset) - *(f32 *)(obj + 0x10);
-    dz = state->targetZ - *(f32 *)(obj + 0x14);
+    dx = state->targetX - ((GameObject *)obj)->anim.localPosX;
+    dy = (state->targetY + (f32)(u32)setup->targetYOffset) - ((GameObject *)obj)->anim.localPosY;
+    dz = state->targetZ - ((GameObject *)obj)->anim.localPosZ;
     mag = sqrtf(dx * dx + dy * dy + dz * dz);
     dx /= mag;
     dy /= mag;
     dz /= mag;
 
-    *(f32 *)(obj + 0xc) += dx * state->speed;
-    *(f32 *)(obj + 0x10) += dy * state->speed;
-    *(f32 *)(obj + 0x14) += dz * state->speed;
+    ((GameObject *)obj)->anim.localPosX += dx * state->speed;
+    ((GameObject *)obj)->anim.localPosY += dy * state->speed;
+    ((GameObject *)obj)->anim.localPosZ += dz * state->speed;
 
     targetYaw = getAngle(dx, dz);
     yawDelta = (s16)targetYaw - ((u16)*(s16 *)obj);
@@ -2572,11 +2572,11 @@ void curvefish_update(int obj) {
 void curvefish_init(int obj, u8 *param_2) {
   int state;
   u32 v;
-  state = *(int *)(obj + 0xb8);
-  v = *(u16 *)(obj + 0xb0);
+  state = *(int *)&((GameObject *)obj)->extra;
+  v = ((GameObject *)obj)->unkB0;
   v |= 0x6000;
-  *(u16 *)(obj + 0xb0) = (u16)v;
-  *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4) *
+  ((GameObject *)obj)->unkB0 = (u16)v;
+  ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) *
                       ((f32)(u32)param_2[0x18] / lbl_803E3928);
   *(u8 *)(state + 0x108) = 1;
   *(f32 *)(state + 0x110) = (f32)(u32)param_2[0x19] / lbl_803E3928;
@@ -2625,7 +2625,7 @@ void fn_801814D0(int obj, int param_2, u8 *state) {
         for (; i < hitWork[0]; i++) {
           if (ObjHits_IsObjectEnabled(*objects) != 0) {
             groupObjY = *(f32 *)(*objects + 0x10);
-            objY = *(f32 *)(obj + 0x10);
+            objY = ((GameObject *)obj)->anim.localPosY;
             if (groupObjY > objY && groupObjY < objY + lbl_803DBDA8) {
               if (Vec_xzDistance((f32 *)(*objects + 0x18),(f32 *)(obj + 0x18)) < lbl_803DBDA4) {
                 ObjHits_RecordObjectHit(*objects,hitWork[3],5,1,0);
@@ -2643,10 +2643,10 @@ void fn_801814D0(int obj, int param_2, u8 *state) {
       *(s16 *)(state + 0xa) = 0x32;
       state[9] = 0;
       fn_801816F8(obj,param_2,state);
-      *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
       f = lbl_803E3938;
-      *(f32 *)(obj + 0x24) = lbl_803E3938;
-      *(f32 *)(obj + 0x2c) = f;
+      ((GameObject *)obj)->anim.velocityX = lbl_803E3938;
+      ((GameObject *)obj)->anim.velocityZ = f;
       ObjHits_ClearHitVolumes(obj);
       if (lbl_803DBDA0 != 0) {
         ObjHits_DisableObject(obj);
@@ -2691,9 +2691,9 @@ void StayPoint_update(int obj) {
     void *tricky;
     int isCurrentStayPoint;
 
-    setup = *(StayPointSetup **)(obj + 0x4c);
+    setup = *(StayPointSetup **)&((GameObject *)obj)->anim.placementData;
     tricky = getTrickyObject();
-    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
     if (tricky != NULL) {
         isCurrentStayPoint = (obj - fn_80138F84((int)tricky) == 0);
         if (isCurrentStayPoint == 0 && setup->activeGameBit != -1) {
@@ -2708,15 +2708,15 @@ void StayPoint_update(int obj) {
                 return;
             }
             if (cMenuGetSelectedItem() == -1) {
-                *(u8 *)(*(int *)(*(int *)(obj + 0x50) + 0x40) + 0x11) = 0;
+                *(u8 *)(*(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x40) + 0x11) = 0;
             } else {
-                *(u8 *)(*(int *)(*(int *)(obj + 0x50) + 0x40) + 0x11) = 0x10;
+                *(u8 *)(*(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x40) + 0x11) = 0x10;
             }
-            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
             if (((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0) && *(void **)(obj + 0x74) != NULL) {
                 objRenderFn_80041018((int *)obj);
             }
-            if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+            if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
                 ((void (*)(void *, int, int, int))(*(int *)(*(int *)(*(int *)((int)tricky + 0x68)) + 0x28)))(
                     tricky,obj,1,3);
             }

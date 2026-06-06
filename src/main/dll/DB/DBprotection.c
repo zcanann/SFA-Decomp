@@ -286,8 +286,8 @@ void fn_801DFA28(u8 *obj)
   int objCount;
   f32 camShake;
 
-  spawnData = *(int *)(obj + 0x4C);
-  state = *(u8 **)(obj + 0xB8);
+  spawnData = *(int *)&((GameObject *)obj)->anim.placementData;
+  state = ((GameObject *)obj)->extra;
   camShake = lbl_803E56C8;
   *(s8 *)(obj + 0xAC) = -1;
   if ((*(void **)&((SBGalleonState *)state)->targetObj != NULL) &&
@@ -367,16 +367,16 @@ void fn_801DFA28(u8 *obj)
     camShake = lbl_803E56C8;
     Sfx_StopObjectChannel((int)obj, 1);
     DBPROT_CAMERA_SHAKE(&camShake, 0);
-    *(int *)(obj + 0xF4) = 1;
+    ((GameObject *)obj)->unkF4 = 1;
     tx = *(f32 *)(state + 0x50) - lbl_803E56DC;
     tz = lbl_803E56E0 * mathCosf((lbl_803E56E4 * (f32)((SBGalleonState *)state)->bobPhase) / lbl_803E56E8) +
          *(f32 *)(state + 0x58);
     ty = lbl_803E56F0 * mathSinf((lbl_803E56E4 * (f32)((SBGalleonState *)state)->bobPhase) / lbl_803E56E8) +
          (*(f32 *)(state + 0x54) - lbl_803E56EC);
     ((SBGalleonState *)state)->bobPhase = ((SBGalleonState *)state)->bobPhase + framesThisStep * 0xB6;
-    dx = tx - *(f32 *)(obj + 0xC);
-    dy = ty - *(f32 *)(obj + 0x10);
-    dz = tz - *(f32 *)(obj + 0x14);
+    dx = tx - ((GameObject *)obj)->anim.localPosX;
+    dy = ty - ((GameObject *)obj)->anim.localPosY;
+    dz = tz - ((GameObject *)obj)->anim.localPosZ;
     ((SBGalleonState *)state)->speed = lbl_803E56F4;
     dx = dx * lbl_803E56F8;
     dy = dy * lbl_803E56F8;
@@ -455,7 +455,7 @@ void fn_801DFA28(u8 *obj)
     }
     break;
   case 1:
-    *(int *)(obj + 0xF4) = 2;
+    ((GameObject *)obj)->unkF4 = 2;
     camShake = lbl_803E56C8;
     DBPROT_CAMERA_SHAKE(&camShake, 0);
     if (((SBGalleonState *)state)->headingLatch != 0) {
@@ -509,9 +509,9 @@ void fn_801DFA28(u8 *obj)
       ty = lbl_803E572C + *(f32 *)(tricky + 0x10);
       break;
     }
-    tx = tx - *(f32 *)(obj + 0xC);
-    dy = ty - *(f32 *)(obj + 0x10);
-    tz = tz - *(f32 *)(obj + 0x14);
+    tx = tx - ((GameObject *)obj)->anim.localPosX;
+    dy = ty - ((GameObject *)obj)->anim.localPosY;
+    tz = tz - ((GameObject *)obj)->anim.localPosZ;
     ((SBGalleonState *)state)->speed = lbl_803E56F4;
     dist = sqrtf(tz * tz + (tx * tx + dy * dy));
     tx = tx * lbl_803E56FC;
@@ -624,7 +624,7 @@ void fn_801DFA28(u8 *obj)
     camShake = lbl_803E56C8;
     Sfx_StopObjectChannel((int)obj, 2);
     DBPROT_CAMERA_SHAKE(&camShake, 0);
-    *(int *)(obj + 0xF4) = 3;
+    ((GameObject *)obj)->unkF4 = 3;
     if (((SBGalleonState *)state)->headingLatch != 0) {
       ((SBGalleonState *)state)->headingLatch -= 1;
     }
@@ -655,7 +655,7 @@ void fn_801DFA28(u8 *obj)
       break;
     case 5:
       speedTarget = lbl_803E5708;
-      *(int *)(obj + 0xF4) = 4;
+      ((GameObject *)obj)->unkF4 = 4;
       tx = *(f32 *)(state + 0x50) - lbl_803E5780;
       tz = *(f32 *)(state + 0x58);
       ty = *(f32 *)(state + 0x54) - lbl_803E5724;
@@ -697,7 +697,7 @@ void fn_801DFA28(u8 *obj)
         ((SBGalleonState *)state)->speed + (speedTarget - ((SBGalleonState *)state)->speed) / lbl_803E5798;
     dist = sqrtf(dx * dx + dz * dz);
     if ((((SBGalleonState *)state)->phase == 5) && (dist < lbl_803E579C)) {
-      *(int *)(obj + 0xF4) = 5;
+      ((GameObject *)obj)->unkF4 = 5;
     }
     if (dist < threshold) {
       if (((SBGalleonState *)state)->phase == 5) {
@@ -707,7 +707,7 @@ void fn_801DFA28(u8 *obj)
     }
     wrap = (getAngle(dx, dz) & 0xFFFF) + 0x8000;
     angY = getAngle(dy, dist) & 0xFFFF;
-    wrap = wrap - (*(s16 *)(obj + 0x0) & 0xFFFF);
+    wrap = wrap - (((GameObject *)obj)->anim.rotX & 0xFFFF);
     if (wrap > 0x8000) {
       wrap = wrap - 0xFFFF;
     }
@@ -718,26 +718,26 @@ void fn_801DFA28(u8 *obj)
         ((SBGalleonState *)state)->turnRate + ((framesThisStep * (wrap - ((SBGalleonState *)state)->turnRate)) >> 4);
     c = ((SBGalleonState *)state)->phase;
     if ((c == 3) || (c == 4)) {
-      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (((SBGalleonState *)state)->turnRate * framesThisStep) / 0x3C;
+      ((GameObject *)obj)->anim.rotX = ((GameObject *)obj)->anim.rotX + (((SBGalleonState *)state)->turnRate * framesThisStep) / 0x3C;
     }
     else if ((c == 6) || (c == 2)) {
-      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (((SBGalleonState *)state)->turnRate * framesThisStep) / 0x78;
+      ((GameObject *)obj)->anim.rotX = ((GameObject *)obj)->anim.rotX + (((SBGalleonState *)state)->turnRate * framesThisStep) / 0x78;
     }
     else {
-      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (((SBGalleonState *)state)->turnRate * framesThisStep) / 0x3C;
+      ((GameObject *)obj)->anim.rotX = ((GameObject *)obj)->anim.rotX + (((SBGalleonState *)state)->turnRate * framesThisStep) / 0x3C;
     }
-    wrap = angY - (*(s16 *)(obj + 0x2) & 0xFFFF);
+    wrap = angY - (((GameObject *)obj)->anim.rotY & 0xFFFF);
     if (wrap > 0x8000) {
       wrap = wrap - 0xFFFF;
     }
     if (wrap < -0x8000) {
       wrap = wrap + 0xFFFF;
     }
-    *(s16 *)(obj + 0x2) = *(s16 *)(int)(obj + 0x2) + ((wrap * framesThisStep) >> 6);
-    dx = *(f32 *)(state + 0x50) - *(f32 *)(obj + 0xC);
-    dz = *(f32 *)(state + 0x58) - *(f32 *)(obj + 0x14);
+    ((GameObject *)obj)->anim.rotY = *(s16 *)(int)(obj + 0x2) + ((wrap * framesThisStep) >> 6);
+    dx = *(f32 *)(state + 0x50) - ((GameObject *)obj)->anim.localPosX;
+    dz = *(f32 *)(state + 0x58) - ((GameObject *)obj)->anim.localPosZ;
     sqrtf(dx * dx + dz * dz);
-    t = *(s16 *)(obj + 0x4);
+    t = ((GameObject *)obj)->anim.rotZ;
     iv = (int)(lbl_803E57A0 * (f32)((SBGalleonState *)state)->turnRate);
     dv = (iv - t) >> 3;
     if (dv > 0x3C) {
@@ -746,12 +746,12 @@ void fn_801DFA28(u8 *obj)
     if (dv < -0x3C) {
       dv = -0x3C;
     }
-    *(s16 *)(obj + 0x4) = (f32)dv * timeDelta + (f32)*(s16 *)(int)(obj + 0x4);
+    ((GameObject *)obj)->anim.rotZ = (f32)dv * timeDelta + (f32)*(s16 *)(int)(obj + 0x4);
     objPos.vec[0] = lbl_803E56CC;
     objPos.vec[1] = lbl_803E56CC;
     objPos.vec[2] = lbl_803E56CC;
     objPos.scale = lbl_803E57A4;
-    objPos.rot[0] = *(s16 *)(obj + 0x0);
+    objPos.rot[0] = ((GameObject *)obj)->anim.rotX;
     objPos.rot[1] = *(s16 *)(int)(obj + 0x2);
     objPos.rot[2] = *(s16 *)(int)(obj + 0x4);
     setMatrixFromObjectPos(mtx, &objPos);
@@ -772,9 +772,9 @@ void fn_801DFA28(u8 *obj)
       ((SBGalleonState *)state)->posZ = ((SBGalleonState *)state)->posZ + *(f32 *)(state + 0x8);
     }
     ambB = lbl_803E57A8;
-    *(f32 *)(obj + 0xC) = ((SBGalleonState *)state)->posX + ((SBGalleonState *)state)->swayX;
-    *(f32 *)(obj + 0x10) = ((SBGalleonState *)state)->posY + ((SBGalleonState *)state)->swayY;
-    *(f32 *)(obj + 0x14) = ((SBGalleonState *)state)->posZ + ((SBGalleonState *)state)->swayZ +
+    ((GameObject *)obj)->anim.localPosX = ((SBGalleonState *)state)->posX + ((SBGalleonState *)state)->swayX;
+    ((GameObject *)obj)->anim.localPosY = ((SBGalleonState *)state)->posY + ((SBGalleonState *)state)->swayY;
+    ((GameObject *)obj)->anim.localPosZ = ((SBGalleonState *)state)->posZ + ((SBGalleonState *)state)->swayZ +
                            (*(f32 *)(tricky + 0x14) - ((SBGalleonState *)state)->refZ);
     if (((SBGalleonState *)state)->stage >= 7) {
       if (((SBGalleonState *)state)->fadeTimer == 0) {
@@ -783,7 +783,7 @@ void fn_801DFA28(u8 *obj)
       }
       ((SBGalleonState *)state)->fadeTimer += framesThisStep;
       if (((SBGalleonState *)state)->fadeTimer > 0x41) {
-        *(s16 *)(obj + 0x0) = 0;
+        ((GameObject *)obj)->anim.rotX = 0;
         ((SBGalleonState *)state)->phase = 6;
         DBPROT_CLOUD_SET_A(0);
         DBPROT_CLOUD_SET_B(0);
@@ -792,9 +792,9 @@ void fn_801DFA28(u8 *obj)
           ((SBGalleonState *)state)->unk80 = 1;
         }
         ((SBGalleonState *)state)->cameraState = 1;
-        *(f32 *)(obj + 0xC) = *(f32 *)(spawnData + 0x8);
-        *(f32 *)(obj + 0x10) = lbl_803E57AC;
-        *(f32 *)(obj + 0x14) = *(f32 *)(spawnData + 0x10);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(spawnData + 0x8);
+        ((GameObject *)obj)->anim.localPosY = lbl_803E57AC;
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(spawnData + 0x10);
         Sfx_StopObjectChannel((int)obj, 1);
         DBPROT_MAP_EVENT(*(u8 *)(obj + 0x34), 2, 1);
         OBJECT_TRIGGER_REFRESH(0, (int *)obj, -1);
@@ -803,7 +803,7 @@ void fn_801DFA28(u8 *obj)
     }
     break;
   default:
-    *(int *)(obj + 0xF4) = 7;
+    ((GameObject *)obj)->unkF4 = 7;
     break;
   }
   if (((SBGalleonState *)state)->phase < 2) {
@@ -840,15 +840,15 @@ void fn_801DFA28(u8 *obj)
       rollA = 0;
       rollB = rollA;
     }
-    *(f32 *)(obj + 0xC) = ((SBGalleonState *)state)->swayX * ((SBGalleonState *)state)->moveScale + ((SBGalleonState *)state)->posX;
-    *(f32 *)(obj + 0x10) = ((SBGalleonState *)state)->swayY * ((SBGalleonState *)state)->moveScale + ((SBGalleonState *)state)->posY;
-    *(f32 *)(obj + 0x14) = ((SBGalleonState *)state)->swayZ * ((SBGalleonState *)state)->moveScale + ((SBGalleonState *)state)->posZ;
+    ((GameObject *)obj)->anim.localPosX = ((SBGalleonState *)state)->swayX * ((SBGalleonState *)state)->moveScale + ((SBGalleonState *)state)->posX;
+    ((GameObject *)obj)->anim.localPosY = ((SBGalleonState *)state)->swayY * ((SBGalleonState *)state)->moveScale + ((SBGalleonState *)state)->posY;
+    ((GameObject *)obj)->anim.localPosZ = ((SBGalleonState *)state)->swayZ * ((SBGalleonState *)state)->moveScale + ((SBGalleonState *)state)->posZ;
     ((SBGalleonState *)state)->rollLatch =
         ((SBGalleonState *)state)->rollLatch + ((framesThisStep * (rollA - ((SBGalleonState *)state)->rollLatch)) >> 5);
-    *(s16 *)(obj + 0x2) =
-        *(s16 *)(obj + 0x2) + ((framesThisStep * (rollB - *(s16 *)(obj + 0x2))) >> 5);
-    *(s16 *)(obj + 0x0) = ((SBGalleonState *)state)->rollLatch + 0x4000;
-    *(s16 *)(obj + 0x4) = *(s16 *)(obj + 0x0) - 0x4000;
+    ((GameObject *)obj)->anim.rotY =
+        ((GameObject *)obj)->anim.rotY + ((framesThisStep * (rollB - ((GameObject *)obj)->anim.rotY)) >> 5);
+    ((GameObject *)obj)->anim.rotX = ((SBGalleonState *)state)->rollLatch + 0x4000;
+    ((GameObject *)obj)->anim.rotZ = ((GameObject *)obj)->anim.rotX - 0x4000;
   }
 end:;
 }

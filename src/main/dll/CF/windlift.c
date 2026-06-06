@@ -1151,20 +1151,20 @@ void fn_80185868(int obj, f32 arg)
   WindLift107State *sub;
   f32 fz;
 
-  sub = *(WindLift107State **)(obj + 0xb8);
+  sub = ((GameObject *)obj)->extra;
   stk.val = sub->radius;
   (*(code *)(*(int *)lbl_803DDAD0 + 4))(obj, 0xf, 0, 2, -1, 0);
   (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stk.pad, 2, -1, 0);
   Sfx_PlayFromObject(obj, SFXmn_eggylaugh116);
   fz = lbl_803E3A58;
-  *(f32 *)(obj + 0x24) = fz;
-  *(f32 *)(obj + 0x2c) = fz;
+  ((GameObject *)obj)->anim.velocityX = fz;
+  ((GameObject *)obj)->anim.velocityZ = fz;
   sub->ventState = 0x32;
   sub->liftTimer = 800;
   sub->launchPhase = 0;
   sub->rideState = 0;
-  *(int *)(obj + 0xf8) = 0;
-  *(int *)(obj + 0xf4) = 2;
+  ((GameObject *)obj)->unkF8 = 0;
+  ((GameObject *)obj)->unkF4 = 2;
   ObjHits_EnableObject(obj);
   ObjHits_MarkObjectPositionDirty(obj);
   sub->spitTimer = 0;
@@ -1202,13 +1202,13 @@ void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
     WindLift107State *state;
     s16 t;
 
-    state = *(WindLift107State **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if ((state->ventState == 0 || state->ventState > 50) && state->holdTimer == 0) {
         goto ok;
     }
     goto end;
 ok:
-    if (*(int *)(obj + 0xf8) != 0) {
+    if (((GameObject *)obj)->unkF8 != 0) {
         if (renderState == -1) {
         } else {
             goto end;
@@ -1295,21 +1295,21 @@ void fn_80185B74(int obj)
     char on;
     u8 held;
 
-    p4c = *(int *)(obj + 0x4c);
+    p4c = *(int *)&((GameObject *)obj)->anim.placementData;
     spd = lbl_803E3A5C;
     (*(code *)(*(int *)gSHthorntailAnimationInterface + 0x18))(&spd);
-    state = *(WindLift107State **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     sub = *(int *)(player + 0xb8);
     dist = Vec_distance((void *)(player + 0x18), (void *)(obj + 0x18));
     if (state->liftTimer <= 0) {
         state->ventState = 1;
         state->launchPhase = 0;
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         {
             f32 fz = lbl_803E3A58;
-            *(f32 *)(obj + 0x24) = fz;
-            *(f32 *)(obj + 0x2c) = fz;
+            ((GameObject *)obj)->anim.velocityX = fz;
+            ((GameObject *)obj)->anim.velocityZ = fz;
         }
     }
     if (state->spitTimer != 0) {
@@ -1329,8 +1329,8 @@ void fn_80185B74(int obj)
             state->holdTimer = 0;
             state->ventState = 0;
             ObjHits_EnableObject(obj);
-            *(u8 *)(obj + 0xaf) &= ~8;
-            *(int *)(obj + 0xf4) = 0;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
+            ((GameObject *)obj)->unkF4 = 0;
         }
         return;
     }
@@ -1353,7 +1353,7 @@ void fn_80185B74(int obj)
             int cam = (*(code *)(*(int *)gCameraInterface + 0x3c))();
             on = 0;
             if ((void *)cam != (void *)obj &&
-                (*(u8 *)(obj + 0xaf) & 1) != 0 && *(int *)(obj + 0xf8) == 0) {
+                (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0 && ((GameObject *)obj)->unkF8 == 0) {
                 buttonDisable(0, 0x100);
                 Obj_GetYawDeltaToObject(obj, player, yawBuf);
                 state->yawLow = -32768;
@@ -1365,20 +1365,20 @@ void fn_80185B74(int obj)
                 state->riding = 1;
                 state->spitTimer = 600;
             }
-            if (*(int *)(obj + 0xf8) == 0) {
+            if (((GameObject *)obj)->unkF8 == 0) {
                 ObjHits_EnableObject(obj);
-                *(u8 *)(obj + 0xaf) &= ~8;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
             }
-            *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
-            *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x14);
-            *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+            ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosX;
+            ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosZ;
+            ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
         } else {
             u8 st21;
             ObjHits_DisableObject(obj);
-            *(f32 *)(*(int *)(obj + 0x54) + 0x10) = *(f32 *)(obj + 0xc);
-            *(f32 *)(*(int *)(obj + 0x54) + 0x14) = *(f32 *)(obj + 0x10);
-            *(f32 *)(*(int *)(obj + 0x54) + 0x18) = *(f32 *)(obj + 0x14);
-            *(u8 *)(obj + 0xaf) |= 8;
+            *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x10) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x14) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x18) = ((GameObject *)obj)->anim.localPosZ;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             if ((getButtonsJustPressed(0) & 0x100) != 0) {
                 state->riding = 0;
             }
@@ -1388,18 +1388,18 @@ void fn_80185B74(int obj)
                 ObjMsg_SendToObject(player, 0x100010, obj,
                                     (state->yawHigh << 0x10) | ((u16)state->yawLow));
             }
-            if (*(int *)(obj + 0xf8) == 1) {
+            if (((GameObject *)obj)->unkF8 == 1) {
                 state->rideState = 2;
             }
             st21 = state->rideState;
-            if ((s8)st21 == 2 && *(int *)(obj + 0xf8) == 0 && *(s16 *)(player + 0xa0) != 0x447) {
+            if ((s8)st21 == 2 && ((GameObject *)obj)->unkF8 == 0 && *(s16 *)(player + 0xa0) != 0x447) {
                 state->rideState = 0;
                 state->launchPhase = 1;
                 {
                     f32 fz = lbl_803E3A58;
-                    *(f32 *)(obj + 0x24) = fz;
-                    *(f32 *)(obj + 0x28) = lbl_803E3A64 * *(f32 *)(sub + 0x298) + lbl_803E3A60;
-                    *(f32 *)(obj + 0x2c) = lbl_803E3A6C * *(f32 *)(sub + 0x298) + lbl_803E3A68;
+                    ((GameObject *)obj)->anim.velocityX = fz;
+                    ((GameObject *)obj)->anim.velocityY = lbl_803E3A64 * *(f32 *)(sub + 0x298) + lbl_803E3A60;
+                    ((GameObject *)obj)->anim.velocityZ = lbl_803E3A6C * *(f32 *)(sub + 0x298) + lbl_803E3A68;
                     rot.x = fz;
                     rot.y = fz;
                     rot.z = fz;
@@ -1410,14 +1410,14 @@ void fn_80185B74(int obj)
                 rot.ang = *(s16 *)player;
                 vecRotateZXY(&rot, (f32 *)(obj + 0x24));
                 Sfx_PlayFromObject(obj, SFXmn_dimbos46);
-            } else if ((s8)st21 == 2 && *(int *)(obj + 0xf8) == 0) {
+            } else if ((s8)st21 == 2 && ((GameObject *)obj)->unkF8 == 0) {
                 f32 fz;
                 state->rideState = 0;
                 state->launchPhase = 2;
                 fz = lbl_803E3A58;
-                *(f32 *)(obj + 0x24) = fz;
-                *(f32 *)(obj + 0x28) = fz;
-                *(f32 *)(obj + 0x2c) = fz;
+                ((GameObject *)obj)->anim.velocityX = fz;
+                ((GameObject *)obj)->anim.velocityY = fz;
+                ((GameObject *)obj)->anim.velocityZ = fz;
                 Sfx_PlayFromObject(obj, SFXmn_dimbos46);
             }
         }
@@ -1425,7 +1425,7 @@ void fn_80185B74(int obj)
     ph = state->launchPhase;
     if ((s8)ph == 0 && *(s8 *)&state->rideState == 0) {
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
-            sub = *(int *)(obj + 0xb8);
+            sub = *(int *)&((GameObject *)obj)->extra;
             stkA.val = ((WindLift107State *)sub)->radius;
             (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stkA.pad, 2, -1, 0);
             ((WindLift107State *)sub)->spitTimer = 1;
@@ -1435,16 +1435,16 @@ void fn_80185B74(int obj)
         state->liftTimer -= framesThisStep;
         if (*(s8 *)&state->launchPhase == 1) {
             ObjHits_SetHitVolumeSlot(obj, 0xe, 3, 0);
-            if (*(f32 *)(obj + 0x28) > lbl_803E3A70) {
-                *(f32 *)(obj + 0x28) = lbl_803E3A74 * timeDelta + *(f32 *)(obj + 0x28);
+            if (((GameObject *)obj)->anim.velocityY > lbl_803E3A70) {
+                ((GameObject *)obj)->anim.velocityY = lbl_803E3A74 * timeDelta + ((GameObject *)obj)->anim.velocityY;
             }
             ObjHits_EnableObject(obj);
         }
-        held = (*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags;
+        held = (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags;
         if ((s8)held != 0 && *(s8 *)&state->launchPhase == 1) {
-            *(f32 *)(obj + 0x28) = lbl_803E3A58;
+            ((GameObject *)obj)->anim.velocityY = lbl_803E3A58;
             state->launchPhase = 0;
-            sub = *(int *)(obj + 0xb8);
+            sub = *(int *)&((GameObject *)obj)->extra;
             stkB.val = ((WindLift107State *)sub)->radius;
             (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stkB.pad, 2, -1, 0);
             ((WindLift107State *)sub)->spitTimer = 1;
@@ -1452,32 +1452,32 @@ void fn_80185B74(int obj)
         }
         if ((s8)held != 0 && *(s8 *)&state->launchPhase == 2) {
             state->launchPhase = 0;
-            sub = *(int *)(obj + 0xb8);
+            sub = *(int *)&((GameObject *)obj)->extra;
             stkC.val = ((WindLift107State *)sub)->radius;
             (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stkC.pad, 2, -1, 0);
             ((WindLift107State *)sub)->spitTimer = 1;
-            *(f32 *)(obj + 0x28) = lbl_803E3A58;
+            ((GameObject *)obj)->anim.velocityY = lbl_803E3A58;
             return;
         }
-        *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
-        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
-        *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
+        ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.velocityX * timeDelta + ((GameObject *)obj)->anim.localPosX;
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
+        ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * timeDelta + ((GameObject *)obj)->anim.localPosZ;
     }
-    *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
-    *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
-    *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+    ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
+    ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
     state->unk16 -= framesThisStep;
     if (*(s8 *)&state->rideState != 0) {
         if (getXZDistance((void *)(obj + 0x18), (void *)(p4c + 8)) >=
             (f32)(state->maxDist * state->maxDist)) {
             f32 fz = lbl_803E3A58;
-            *(f32 *)(obj + 0x24) = fz;
-            *(f32 *)(obj + 0x2c) = fz;
+            ((GameObject *)obj)->anim.velocityX = fz;
+            ((GameObject *)obj)->anim.velocityZ = fz;
             state->ventState = 500;
             state->launchPhase = 0;
-            *(int *)(obj + 0xf8) = 0;
+            ((GameObject *)obj)->unkF8 = 0;
             ObjHits_EnableObject(obj);
-            *(u8 *)(obj + 0xaf) &= ~8;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
             ObjHits_ClearHitVolumes(obj);
         }
     }
@@ -1580,15 +1580,15 @@ void portalspelldoor_update(int obj)
     int t;
 
     player = Obj_GetPlayerObject();
-    state = *(PortalSpellDoorState **)(obj + 0xb8);
-    p4c = *(int *)(obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    p4c = *(int *)&((GameObject *)obj)->anim.placementData;
     if (playerHasSpell(player, 3) != 0) {
-        *(u8 *)(obj + 0xaf) &= ~0x10;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
     } else {
-        *(u8 *)(obj + 0xaf) |= 0x10;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
     }
     if (((PortalFlags *)&state->flags0C)->open) {
-        *(s16 *)(obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         if (objGetAnimState80A(player) == 0x5bd) {
             fn_80296B78(player, -1);
         }
@@ -1603,7 +1603,7 @@ void portalspelldoor_update(int obj)
         state->openTimer = t;
         if (t < 0) {
             int tricky;
-            *(u8 *)(obj + 0xaf) |= 8;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             (*(code *)(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
             tricky = getTrickyObject();
             if ((void *)tricky != NULL) {
@@ -1647,7 +1647,7 @@ int LanternFireFly_getObjectTypeId(void) { return 0x0; }
 /* LanternFireFly_modelMtxFn: receives (obj, f1, f2, f3) and stores the
  * three floats into obj->_b8 at +0x54/+0x58/+0x5c. */
 void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c) {
-    LanternFireFlyState* sub = *(LanternFireFlyState**)(obj + 0xb8);
+    LanternFireFlyState* sub = ((GameObject *)obj)->extra;
     sub->baseX = a;
     sub->baseY = b;
     sub->baseZ = c;
@@ -1677,8 +1677,8 @@ void LanternFireFly_func0B(int obj)
     f32 py;
     f32 y2;
 
-    state = *(LanternFireFlyState **)(obj + 0xb8);
-    setup = *(int *)(obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    setup = *(int *)&((GameObject *)obj)->anim.placementData;
     state->yawRange = *(s8 *)(setup + 0x18);
     state->unk6A = *(u8 *)(setup + 0x19);
     state->hoverHeight = lbl_803E3AA0;
@@ -1693,11 +1693,11 @@ void LanternFireFly_func0B(int obj)
     vec[1] = py + lbl_803E3AA4;
     y2 = lbl_803E3AA8 + py;
     {
-        LanternFireFlyState *st = *(LanternFireFlyState **)(obj + 0xb8);
+        LanternFireFlyState *st = ((GameObject *)obj)->extra;
         st->baseX = vec[0];
         st->baseY = y2;
         st->baseZ = vec[2];
-        st = *(LanternFireFlyState **)(obj + 0xb8);
+        st = ((GameObject *)obj)->extra;
         vec[0] = vec[0] - st->baseX;
         vec[1] = vec[1] - st->baseY;
         vec[2] = vec[2] - st->baseZ;
@@ -1726,7 +1726,7 @@ void fn_801868D0(int obj)
     s16 r;
     f32 fz;
 
-    state = *(LanternFireFlyState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     state->offX = lbl_803E3AB8;
     state->offY = (f32)(int)randomGetRange(-state->yawRange, state->yawRange);
     if (state->ceilingY < lbl_803E3ABC) {
@@ -1753,7 +1753,7 @@ void fn_801869DC(int obj)
     typedef struct { u8 mode : 2; } LFF2;
     LanternFireFlyState *state;
 
-    state = *(LanternFireFlyState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     state->histX[0] = state->histX[1];
     state->histY[0] = state->histY[1];
     state->histZ[0] = state->histZ[1];
@@ -1786,17 +1786,17 @@ extern f32 lbl_803E3A90;
 #pragma scheduling off
 #pragma peephole off
 void portalspelldoor_init(u8* obj, u8* data) {
-    PortalSpellDoorState* sub = *(PortalSpellDoorState**)(obj + 0xb8);
+    PortalSpellDoorState* sub = ((GameObject *)obj)->extra;
     *(s16*)obj = (s16)((s32)(s8)data[0x18] << 8);
-    *(s16*)(obj + 0x2) = (s16)((s32)*(s16*)(data + 0x1c) << 8);
-    *(f32*)(obj + 0x8) = lbl_803E3A8C;
+    ((GameObject *)obj)->anim.rotY = (s16)((s32)*(s16*)(data + 0x1c) << 8);
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3A8C;
     {
-        f32 _ab = *(f32*)(obj + 0xa8) * *(f32*)(obj + 0x8);
+        f32 _ab = ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale;
         sub->openAmount = _ab * lbl_803E3A90;
     }
     if (GameBit_Get(*(s16*)(data + 0x1e)) != 0) {
-        *(s16*)(obj + 0x6) = (s16)(*(s16*)(obj + 0x6) | 0x4000);
-        *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0xe000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0xe000);
     }
     sub->openTimer = -1;
 }
@@ -1807,7 +1807,7 @@ void portalspelldoor_init(u8* obj, u8* data) {
  * vec), copy the result to sub->_34..3c, set sub->_6c = 4. */
 #pragma scheduling off
 void LanternFireFly_setScale(u8* obj, f32* vec) {
-    LanternFireFlyState* sub = *(LanternFireFlyState**)(obj + 0xb8);
+    LanternFireFlyState* sub = ((GameObject *)obj)->extra;
     vec[0] = vec[0] - sub->baseX;
     vec[1] = vec[1] - sub->baseY;
     vec[2] = vec[2] - sub->baseZ;
@@ -1828,7 +1828,7 @@ extern void *gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void LanternFireFly_free(u8* obj, int p2) {
-    LanternFireFlyState* sub = *(LanternFireFlyState**)(obj + 0xb8);
+    LanternFireFlyState* sub = ((GameObject *)obj)->extra;
     if (sub->light != NULL) {
         ModelLightStruct_free(sub->light);
         sub->light = NULL;

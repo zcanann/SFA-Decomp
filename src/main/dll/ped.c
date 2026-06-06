@@ -47,11 +47,11 @@ void treebird_init(int obj,int setup)
 {
   TreeBirdState *state;
 
-  state = *(TreeBirdState **)(obj + 0xb8);
-  *(void **)(obj + 0xbc) = TreeBird_SeqFn;
+  state = ((GameObject *)obj)->extra;
+  ((GameObject *)obj)->unkBC = TreeBird_SeqFn;
   *(s16 *)obj = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
-  *(s16 *)(obj + 2) = *(s16 *)(setup + 0x1a);
-  *(s16 *)(obj + 4) = *(s16 *)(setup + 0x1c);
+  ((GameObject *)obj)->anim.rotY = *(s16 *)(setup + 0x1a);
+  ((GameObject *)obj)->anim.rotZ = *(s16 *)(setup + 0x1c);
   state->triggerId = (s16)(s8)*(u8 *)(setup + 0x19);
   state->gameBit = *(s16 *)(setup + 0x1e);
   if (GameBit_Get((int)state->gameBit) != 0) {
@@ -81,8 +81,8 @@ extern int NW_geyser_SeqFn(int *obj, int p2, void *p3);
 #pragma peephole off
 void nw_geyser_init(int obj)
 {
-  *(ushort *)(obj + 0xb0) = (ushort)(*(ushort *)(obj + 0xb0) | 0x6000);
-  *(void **)(obj + 0xbc) = NW_geyser_SeqFn;
+  ((GameObject *)obj)->unkB0 = (ushort)(((GameObject *)obj)->unkB0 | 0x6000);
+  ((GameObject *)obj)->unkBC = NW_geyser_SeqFn;
 }
 
 char *fn_801CDE70(int *obj) { return *(char **)&((GameObject *)obj)->extra + 0xc; }
@@ -95,8 +95,8 @@ void nw_geyser_free(int *obj) {
 void nw_geyser_update(int obj)
 {
     if (GameBit_Get(0xa) != 0) {
-        *(s16 *)(obj + 6) = 0x4000;
-        *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x8000);
+        ((GameObject *)obj)->anim.flags = 0x4000;
+        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
         Sfx_RemoveLoopedObjectSound(obj, 0x372);
         Sfx_RemoveLoopedObjectSound(obj, 0x373);
         ObjHits_DisableObject(obj);
@@ -143,7 +143,7 @@ int fn_801CDE7C(int obj, int param_2, u8 *seqData)
 
     (void)param_2;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if ((state[0x43c] & 0x20) == 0) {
         Sfx_StopObjectChannel(obj, 0x7f);
         *(f32 *)(state + 0x54) = lbl_803E520C;
@@ -163,7 +163,7 @@ int fn_801CDE7C(int obj, int param_2, u8 *seqData)
     objAudioFn_8006ef38(obj, audioEvents, 8, audioPoints, audioScratch,
                         audioScale, audioScale);
     if (seqData[0x8b] != 0) {
-        *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) & ~0x400);
+        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 & ~0x400);
         *(u32 *)(*(int *)(obj + 0x64) + 0x30) =
             *(u32 *)(*(int *)(obj + 0x64) + 0x30) | 4;
     }

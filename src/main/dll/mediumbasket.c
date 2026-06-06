@@ -1036,9 +1036,9 @@ int mediumbasket_updateOpenState(int obj, int p)
   int sub_40c;
   int p54;
 
-  sub = *(GroundBaddieState **)(obj + 0xb8);
+  sub = ((GameObject *)obj)->extra;
   sub_40c = *(int *)&sub->control;
-  p54 = *(int *)(obj + 0x54);
+  p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
   *(s16 *)(p54 + 0x60) |= 1;
   ((GroundBaddieState *)p)->baddie.unk25F = 1;
   if (*(char *)(p + 0x27a) != '\0') {
@@ -1047,7 +1047,7 @@ int mediumbasket_updateOpenState(int obj, int p)
   }
   if (*(char *)(p + 0x27a) != '\0') {
     GameBit_Set(sub->gameBitB, 1);
-    *(u8 *)(obj + 0xaf) &= ~0x8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
     *(u8 *)(obj + 0x36) = 0xff;
     *(s8 *)(p + 0x34d) = 1;
     ((GroundBaddieState *)p)->baddie.moveSpeed = lbl_803E2D70 + (f32)(u32)sub->aggression / lbl_803E2D74;
@@ -1063,7 +1063,7 @@ int mediumbasket_updateOpenState(int obj, int p)
     }
   }
   *(u8 *)(sub_40c + 0x44) |= 0x4;
-  if (*(f32 *)(obj + 0x98) < lbl_803E2D78) {
+  if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2D78) {
     *(u8 *)(sub_40c + 0x44) |= 0x8;
   }
   (*(int (**)(int, int, f32, int))(*gPlayerInterface + 0x30))(obj, p, timeDelta, 4);
@@ -1086,14 +1086,14 @@ int mediumbasket_updateOpenHitState(int obj, int p)
   int sub_40c;
   int p54;
 
-  sub = *(GroundBaddieState **)(obj + 0xb8);
+  sub = ((GameObject *)obj)->extra;
   sub_40c = *(int *)&sub->control;
-  p54 = *(int *)(obj + 0x54);
+  p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
   *(s16 *)(p54 + 0x60) |= 1;
   ((GroundBaddieState *)p)->baddie.unk25F = 1;
-  p54 = *(int *)(obj + 0x54);
+  p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
   *(u8 *)(p54 + 0x6e) = 9;
-  p54 = *(int *)(obj + 0x54);
+  p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
   *(u8 *)(p54 + 0x6f) = 1;
   ObjHits_RegisterActiveHitVolumeObject(obj);
   if (*(char *)(p + 0x27a) != '\0') {
@@ -1102,7 +1102,7 @@ int mediumbasket_updateOpenHitState(int obj, int p)
   }
   if (*(char *)(p + 0x27a) != '\0') {
     GameBit_Set(sub->gameBitB, 1);
-    *(u8 *)(obj + 0xaf) &= ~0x8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
     *(u8 *)(obj + 0x36) = 0xff;
     *(s8 *)(p + 0x34d) = 1;
     ((GroundBaddieState *)p)->baddie.moveSpeed = lbl_803E2D7C + (f32)(u32)sub->aggression / lbl_803E2D80;
@@ -1118,7 +1118,7 @@ int mediumbasket_updateOpenHitState(int obj, int p)
     }
   }
   *(u8 *)(sub_40c + 0x44) |= 0x4;
-  if (*(f32 *)(obj + 0x98) < lbl_803E2D78) {
+  if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2D78) {
     *(u8 *)(sub_40c + 0x44) |= 0x8;
   }
   (*(int (**)(int, int, f32, int))(*gPlayerInterface + 0x30))(obj, p, timeDelta, 4);
@@ -2000,7 +2000,7 @@ void mediumbasket_spawnContactObject(int *obj, int *state);
 #pragma peephole off
 void dll_CA_func0B(int obj, int message)
 {
-    GroundBaddieState *state = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *state = ((GameObject *)obj)->extra;
 
     switch ((u8)message) {
     case 0x80:
@@ -2032,7 +2032,7 @@ int mediumbasket_stateHandlerB03(int obj, int state)
     GroundBaddieState *sub;
 
     if ((s8)*(u8 *)(state + 0x27b) != 0) {
-        sub = *(GroundBaddieState **)(obj + 0xb8);
+        sub = ((GameObject *)obj)->extra;
         sub->unk405 = 0;
         GameBit_Set((s32)sub->gameBitB, 0);
         GameBit_Set((s32)sub->gameBitA, 1);
@@ -2052,10 +2052,10 @@ int mediumbasket_stateHandlerB02(int obj, int state)
         ((GroundBaddieState *)state)->baddie.unk25F = 0;
         ((GroundBaddieState *)state)->baddie.unk349 = 0;
         ObjHits_DisableObject(obj);
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else if ((s8)((GroundBaddieState *)state)->baddie.moveDone != 0) {
         ObjMsg_SendToObjects(0, 3, obj, 0xe0000, obj);
-        if (*(void **)(obj + 0x4c) == NULL) {
+        if (((GameObject *)obj)->anim.placementData == NULL) {
             Obj_FreeObject(obj);
             return 0;
         }
@@ -2070,7 +2070,7 @@ int mediumbasket_stateHandlerB02(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateLandingState(int obj, int state)
 {
-    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = ((GameObject *)obj)->extra;
     int player;
     f32 noBlend;
 
@@ -2095,7 +2095,7 @@ playLandingExtras:
         Sfx_PlayFromObject(obj, SFXkr_panting2);
         ((GroundBaddieState *)state)->baddie.unk356 |= 1;
     }
-    if ((((GroundBaddieState *)state)->baddie.unk356 & 2) == 0 && *(f32 *)(obj + 0x98) > lbl_803E2D2C) {
+    if ((((GroundBaddieState *)state)->baddie.unk356 & 2) == 0 && ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2D2C) {
         Sfx_PlayFromObject(obj, SFXdoor_creak);
         ((GroundBaddieState *)state)->baddie.unk356 |= 2;
         ((void (*)(int, int, int, int))((void **)*gBaddieControlInterface)[19])(
@@ -2110,12 +2110,12 @@ playLandingExtras:
 #pragma peephole off
 int mediumbasket_updateContactHitState(int obj, int state)
 {
-    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = ((GameObject *)obj)->extra;
     int control;
     f32 noBlend;
 
-    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
-    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
+    ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 10;
+    ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if (sub->aggression > 0x32) {
         if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedA != 0) {
@@ -2134,7 +2134,7 @@ int mediumbasket_updateContactHitState(int obj, int state)
     ((GroundBaddieState *)state)->baddie.animSpeedA = noBlend;
     ((GroundBaddieState *)state)->baddie.animSpeedB = noBlend;
     if ((sub->configFlags & 2) == 0) {
-        ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2D30 + *(f32 *)(obj + 0x98);
+        ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2D30 + ((GameObject *)obj)->anim.currentMoveProgress;
     }
     return 0;
 }
@@ -2145,7 +2145,7 @@ int mediumbasket_updateContactHitState(int obj, int state)
 #pragma peephole off
 int mediumbasket_stateHandlerA0B(int obj, int state)
 {
-    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = ((GameObject *)obj)->extra;
     int control;
 
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedA == 0) {
@@ -2153,7 +2153,7 @@ int mediumbasket_stateHandlerA0B(int obj, int state)
             sub->targetState = 3;
         }
     } else {
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         ObjAnim_SetCurrentMove(obj, 2, lbl_803E2D14, 0);
         ((GroundBaddieState *)state)->baddie.moveDone = 0;
         sub->targetState = 2;
@@ -2167,7 +2167,7 @@ int mediumbasket_stateHandlerA0B(int obj, int state)
         *(u8 *)(control + 0x44) |= 0x10;
     }
     *(u8 *)(control + 0x44) |= 0xc;
-    ((GroundBaddieState *)state)->baddie.animSpeedA = *(f32 *)(obj + 0x98);
+    ((GroundBaddieState *)state)->baddie.animSpeedA = ((GameObject *)obj)->anim.currentMoveProgress;
     return 0;
 }
 #pragma peephole reset
@@ -2177,7 +2177,7 @@ int mediumbasket_stateHandlerA0B(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateDropState(int obj, int state)
 {
-    int control = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+    int control = *(int *)(*(int *)&((GameObject *)obj)->extra + 0x40c);
     int player;
 
     *(u8 *)(control + 0x44) |= 4;
@@ -2208,7 +2208,7 @@ playDropExtras:
 #pragma peephole off
 int mediumbasket_updateCommDownState(int obj, int state)
 {
-    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = ((GameObject *)obj)->extra;
     int control = *(int *)&sub->control;
 
     *(u8 *)(control + 0x44) |= 4;
@@ -2234,7 +2234,7 @@ int mediumbasket_updateCommDownState(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateHeightBlendState(int obj, int state)
 {
-    int control = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+    int control = *(int *)(*(int *)&((GameObject *)obj)->extra + 0x40c);
     f32 height;
 
     *(u8 *)(control + 0x44) |= 0xc;
@@ -2251,7 +2251,7 @@ int mediumbasket_updateHeightBlendState(int obj, int state)
     } else if (((GroundBaddieState *)state)->baddie.moveSpeed < lbl_803E2D38) {
         ((GroundBaddieState *)state)->baddie.moveSpeed = lbl_803E2D38;
     }
-    height = *(f32 *)(obj + 0x98);
+    height = ((GameObject *)obj)->anim.currentMoveProgress;
     if (height < lbl_803E2D24) {
         ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2D44 * height;
     } else {
@@ -2267,12 +2267,12 @@ int mediumbasket_updateHeightBlendState(int obj, int state)
 #pragma peephole off
 int mediumbasket_stateHandlerA06(int obj, int state)
 {
-    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = ((GameObject *)obj)->extra;
     int choice;
 
     *(u8 *)(*(int *)&sub->control + 0x44) |= 4;
-    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
-    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
+    ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 10;
+    ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedA != 0) {
         lbl_803DDA79 = randomGetRange(0, 2);
@@ -2310,12 +2310,12 @@ int mediumbasket_stateHandlerA06(int obj, int state)
 #pragma peephole off
 int mediumbasket_stateHandlerA05(int obj, int state)
 {
-    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = ((GameObject *)obj)->extra;
     int choice;
 
     *(u8 *)(*(int *)&sub->control + 0x44) |= 4;
-    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
-    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
+    ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 10;
+    ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedA != 0) {
         choice = randomGetRange(0, 1);
@@ -2354,7 +2354,7 @@ int mediumbasket_stateHandlerA05(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateSpinState(int obj, int state)
 {
-    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = ((GameObject *)obj)->extra;
     int control;
 
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedA != 0) {
@@ -2364,7 +2364,7 @@ int mediumbasket_updateSpinState(int obj, int state)
     control = *(int *)&sub->control;
     *(u8 *)(control + 0x44) |= 0xc;
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedA != 0) {
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         sub->targetState = 4;
     }
     *(s16 *)obj = (s16)(lbl_803E2D5C *
@@ -2381,11 +2381,11 @@ int mediumbasket_updateSpinState(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateImpactHitState(int obj, int state)
 {
-    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = ((GameObject *)obj)->extra;
     int control = *(int *)&sub->control;
 
-    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
-    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
+    ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 10;
+    ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedA != 0) {
         ((GroundBaddieState *)state)->baddie.moveDone = 0;
@@ -2410,7 +2410,7 @@ int mediumbasket_updateImpactHitState(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateHideResetState(int obj, int state)
 {
-    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = ((GameObject *)obj)->extra;
     int hitState;
 
     if (((GroundBaddieState *)state)->baddie.unk276 != 4 && (s8)((GroundBaddieState *)state)->baddie.moveJustStartedA != 0) {
@@ -2419,7 +2419,7 @@ int mediumbasket_updateHideResetState(int obj, int state)
     }
     *(u8 *)(*(int *)&sub->control + 0x44) |= 0xc;
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedA != 0) {
-        hitState = *(int *)(obj + 0x54);
+        hitState = *(int *)&((GameObject *)obj)->anim.hitReactState;
         *(s16 *)(hitState + 0x60) &= ~1;
         ((GroundBaddieState *)state)->baddie.moveSpeed = lbl_803E2D38;
         ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2D14;
@@ -2431,7 +2431,7 @@ int mediumbasket_updateHideResetState(int obj, int state)
         ((GroundBaddieState *)state)->baddie.unk25F = 0;
         ((GroundBaddieState *)state)->baddie.unk349 = 0;
         sub->targetState = 0;
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
     return 0;
 }
@@ -2442,7 +2442,7 @@ int mediumbasket_updateHideResetState(int obj, int state)
 #pragma peephole off
 int mediumbasket_stateHandlerB06(int obj, int state)
 {
-    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = ((GameObject *)obj)->extra;
     int route;
     f32 neutralBlend;
 
@@ -2496,7 +2496,7 @@ int mediumbasket_stateHandlerB06(int obj, int state)
 #pragma peephole off
 int mediumbasket_stateHandlerB07(int obj, int state)
 {
-    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = ((GameObject *)obj)->extra;
 
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedB != 0) {
         if ((s32)((GroundBaddieState *)state)->baddie.targetDistance > 0x37) {
@@ -2594,7 +2594,7 @@ void fn_8015CE68(int obj, int state)
     pathMtx[14] = lbl_803E2D14;
     pathMtx[13] = lbl_803E2D14;
     pathMtx[12] = lbl_803E2D14;
-    if (*(s16 *)(obj + 0x46) == 99) {
+    if (((GameObject *)obj)->anim.seqId == 99) {
         scale = lbl_803E2D48;
     } else {
         scale = lbl_803E2D2C;
@@ -2609,7 +2609,7 @@ void fn_8015CE68(int obj, int state)
         ObjPath_GetPointWorldPosition(obj, 2, (f32 *)(control + 0x2c),
                                       (f32 *)(control + 0x30), (f32 *)(control + 0x34), 0);
     }
-    *(f32 *)(control + 0x30) = lbl_803E2D90 + *(f32 *)(obj + 0x10);
+    *(f32 *)(control + 0x30) = lbl_803E2D90 + ((GameObject *)obj)->anim.localPosY;
     angle = (lbl_803E2D98 * (f32)*(s16 *)obj) / lbl_803E2D9C;
     *(f32 *)(control + 0x2c) =
         *(f32 *)(control + 0x2c) - scale * (lbl_803E2D94 * mathSinf(angle));
@@ -2644,7 +2644,7 @@ void mediumbasket_updateControlEffects(int obj, int state)
     f32 shakeScale;
     f32 contactScale;
 
-    if (*(s16 *)(obj + 0x46) == 99) {
+    if (((GameObject *)obj)->anim.seqId == 99) {
         *(f32 *)(control + 0x28) = lbl_803E2D84;
         shakeScale = lbl_803E2D88;
     } else {
@@ -2719,11 +2719,11 @@ void mediumbasket_updateTargetMotion(int obj, int sub, int state)
         ((void (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[11])(
             obj, state, lbl_803E2DB0, -1);
     }
-    *(int *)(sub + 0x3e0) = *(int *)(obj + 0xc0);
-    *(int *)(obj + 0xc0) = 0;
+    *(int *)(sub + 0x3e0) = *(int *)&((GameObject *)obj)->unkC0;
+    *(int *)&((GameObject *)obj)->unkC0 = 0;
     ((void (*)(int, int, f32, f32, u8 *, u8 *))((void **)*gPlayerInterface)[2])(
         obj, state, timeDelta, timeDelta, gMediumBasketStateHandlersA, gMediumBasketStateHandlersB);
-    *(int *)(obj + 0xc0) = *(int *)(sub + 0x3e0);
+    *(int *)&((GameObject *)obj)->unkC0 = *(int *)(sub + 0x3e0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2742,9 +2742,9 @@ void fn_8015D3C0(int obj, int sub, int state)
     Obj_GetPlayerObject();
     target = *(u8 **)(state + 0x2d0);
     if (target != NULL) {
-        targetDelta[0] = *(f32 *)(target + 0x18) - *(f32 *)(obj + 0x18);
-        targetDelta[1] = *(f32 *)(target + 0x1c) - *(f32 *)(obj + 0x1c);
-        targetDelta[2] = *(f32 *)(target + 0x20) - *(f32 *)(obj + 0x20);
+        targetDelta[0] = *(f32 *)(target + 0x18) - ((GameObject *)obj)->anim.worldPosX;
+        targetDelta[1] = *(f32 *)(target + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
+        targetDelta[2] = *(f32 *)(target + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
         distSq = targetDelta[2] * targetDelta[2];
         distSq += targetDelta[0] * targetDelta[0];
         distSq += targetDelta[1] * targetDelta[1];
@@ -2790,13 +2790,13 @@ int dll_CA_getObjectTypeId(void) { return 0x49; }
 #pragma peephole off
 void dll_CA_free(int obj)
 {
-    GroundBaddieState *state = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *state = ((GameObject *)obj)->extra;
 
     Camera_DisableViewYOffset();
     ObjGroup_RemoveObject(obj, 3);
-    if (*(void **)(obj + 0xc8) != NULL) {
-        Obj_FreeObject(*(int *)(obj + 0xc8));
-        *(int *)(obj + 0xc8) = 0;
+    if (((GameObject *)obj)->unkC8 != NULL) {
+        Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
+        *(int *)&((GameObject *)obj)->unkC8 = 0;
     }
     ((void (*)(int, int, int))((void **)*gBaddieControlInterface)[16])(obj, (int)state, 0x20);
 }
@@ -2807,12 +2807,12 @@ void dll_CA_free(int obj)
 #pragma peephole off
 void dll_CA_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
 {
-    GroundBaddieState *state = *(GroundBaddieState **)(obj + 0xb8);
+    GroundBaddieState *state = ((GameObject *)obj)->extra;
 
     if (visible == 0) {
         goto done;
     }
-    if (*(int *)(obj + 0xf4) != 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
         goto done;
     }
     if (state->targetState != 0) {
@@ -2835,7 +2835,7 @@ done:;
 #pragma peephole off
 void dll_CA_hitDetect(int obj)
 {
-    ((void (*)(int, int, u8 *))((void **)*gPlayerInterface)[3])(obj, *(int *)(obj + 0xb8),
+    ((void (*)(int, int, u8 *))((void **)*gPlayerInterface)[3])(obj, *(int *)&((GameObject *)obj)->extra,
                                                                gMediumBasketStateHandlersA);
 }
 #pragma peephole reset
@@ -3026,7 +3026,7 @@ int mediumbasket_checkTargetState(int obj, int p2)
   extern f32 lbl_803E2D00;
   extern f32 lbl_803E2D14;
   extern f32 lbl_803E2D24;
-  GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+  GroundBaddieState *sub = ((GameObject *)obj)->extra;
   f32 neutralBlend;
 
   if (((GroundBaddieState *)p2)->baddie.targetObj == NULL) goto return0;

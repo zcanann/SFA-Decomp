@@ -94,13 +94,13 @@ void dll_127_update(int obj)
 {
   int flags;
 
-  if (*(void **)(obj + 0x54) == 0) {
+  if (((GameObject *)obj)->anim.hitReactState == 0) {
     return;
   }
   if (*(short *)(obj + 0xf8) > 0) {
     *(short *)(obj + 0xf8) -= framesThisStep;
   }
-  flags = (*(ObjHitsPriorityState **)(obj + 0x54))->flags & 8;
+  flags = (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8;
   if (flags == 0) {
     return;
   }
@@ -402,7 +402,7 @@ void campfire_update(int obj)
     u8 buf[4];
     f32 params[3];
 
-    state = *(int **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     Obj_GetPlayerObject();
     if ((*(ThorntailQueryFn *)(*gSHthorntailAnimationInterface + 0x24))(buf) != 0) {
         if (*(void **)state != NULL) {
@@ -444,7 +444,7 @@ void campfire_update(int obj)
     params[0] = lbl_803E3D7C;
     params[1] = lbl_803E3D80;
     params[2] = lbl_803E3D7C;
-    fn_80098B18(obj, lbl_803E3D84 * *(f32 *)(obj + 8), type, mode, flag, params);
+    fn_80098B18(obj, lbl_803E3D84 * ((GameObject *)obj)->anim.rootMotionScale, type, mode, flag, params);
     {
         u8 *light = *(u8 **)state;
         if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0) {
@@ -497,10 +497,10 @@ void campfire_init(int obj, int p2)
     u32 size;
     s16 bit;
 
-    state = *(int **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     size = *(u8 *)(p2 + 0x1a);
     if (size != 0) {
-        *(f32 *)(obj + 8) = lbl_803E3D88 * (f32)size;
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3D88 * (f32)size;
     }
     if (GameBit_Get(0x8c) != 0) {
         *((u8 *)state + 0x11) |= 1;
@@ -512,8 +512,8 @@ void campfire_init(int obj, int p2)
     }
     *((u8 *)state + 0x10) = *(u8 *)(p2 + 0x1b);
     {
-        f32 scale = *(f32 *)(obj + 8) / *(f32 *)(*(int *)(obj + 0x50) + 4);
-        int m = *(int *)(obj + 0x54);
+        f32 scale = ((GameObject *)obj)->anim.rootMotionScale / *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
+        int m = *(int *)&((GameObject *)obj)->anim.hitReactState;
         ObjHitbox_SetCapsuleBounds(obj,
             (int)((f32)*(s16 *)(m + 0x5a) * scale),
             (int)((f32)*(s16 *)(m + 0x5c) * scale),
@@ -529,7 +529,7 @@ void campfire_init(int obj, int p2)
         modelLightStruct_setLightKind(*state, 2);
         modelLightStruct_setDiffuseColor(*state, 0xff, 0x7f, 0, 0xff);
         modelLightStruct_setSpecularColor(*state, 0xff, 0x7f, 0, 0xff);
-        atten = (int)(lbl_803E3D8C * *(f32 *)(obj + 8));
+        atten = (int)(lbl_803E3D8C * ((GameObject *)obj)->anim.rootMotionScale);
         modelLightStruct_setDistanceAttenuation(*state, (f32)atten, lbl_803E3D90 + (f32)atten);
         if ((*(ThorntailQueryFn *)(*gSHthorntailAnimationInterface + 0x24))(buf) != 0) {
             modelLightStruct_setEnabled(*state, 1, lbl_803E3D7C);
@@ -539,7 +539,7 @@ void campfire_init(int obj, int p2)
         modelLightStruct_setPosition(*state, lbl_803E3D7C, lbl_803E3D94, lbl_803E3D7C);
         modelLightStruct_startColorFade(*state, 1, 3);
         modelLightStruct_setDiffuseTargetColor(*state, 0xff, 0x5c, 0, 0xff);
-        modelLightStruct_setupGlow(*state, 0, 0xff, 0x7f, 0, 0x87, lbl_803E3D98 * *(f32 *)(obj + 8));
+        modelLightStruct_setupGlow(*state, 0, 0xff, 0x7f, 0, 0x87, lbl_803E3D98 * ((GameObject *)obj)->anim.rootMotionScale);
         modelLightStruct_setGlowProjectionRadius(*state, lbl_803E3D90);
     }
 }
@@ -561,17 +561,17 @@ void kt_torch_init(int obj, int p2)
     f32 scale;
     u8 b;
 
-    *(s16 *)(obj + 6) |= 2;
+    ((GameObject *)obj)->anim.flags |= 2;
     b = *(u8 *)(p2 + 0x1c);
     scale = (f32)(int)b;
     if ((f32)(int)b < lbl_803E3DC0) {
         scale = *(f32 *)&lbl_803E3DC0;
     }
     scale *= lbl_803E3DC4;
-    *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4) * scale;
+    ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * scale;
     *(s16 *)obj = (s16)((*(u8 *)(p2 + 0x1d) & 0x3f) << 10);
     if (*(void **)(obj + 0x64) != NULL) {
-        **(f32 **)(obj + 0x64) = **(f32 **)(obj + 0x50) * scale;
+        **(f32 **)(obj + 0x64) = **(f32 **)&((GameObject *)obj)->anim.modelInstance * scale;
     }
     objAnim->bankIndex = (s8)*(u8 *)(p2 + 0x18);
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
@@ -596,7 +596,7 @@ void campfire_free(int obj)
   void **state;
   void *effect;
 
-  state = *(void ***)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
   effect = *state;
   if (effect != 0) {
@@ -613,7 +613,7 @@ void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5
   void *effect;
   s32 isVisible;
 
-  state = *(void ***)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   isVisible = visible;
   if (isVisible != 0) {
     objRenderFn_8003b8f4(lbl_803E3D78);
@@ -638,7 +638,7 @@ void kt_torch_update(int obj)
   int mapData;
   int bit;
 
-  mapData = *(int *)(obj + 0x4c);
+  mapData = *(int *)&((GameObject *)obj)->anim.placementData;
   ObjAnim_AdvanceCurrentMove((f32)*(u8 *)(mapData + 0x1b) / lbl_803E3DB4,
                              timeDelta,obj,(ObjAnimEventList *)0);
   bit = *(short *)(mapData + 0x20);
