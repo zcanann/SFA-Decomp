@@ -1,6 +1,13 @@
 #include "ghidra_import.h"
 #include "main/objprint.h"
+#include "main/objanim_internal.h"
 
+#define OBJPRINT_MODEL_INSTANCE(obj) (*(void **)((char *)(obj) + offsetof(ObjAnimComponent, modelInstance)))
+#define OBJPRINT_BANK_TABLE(obj) (*(int ***)((char *)(obj) + offsetof(ObjAnimComponent, banks)))
+#define OBJPRINT_ACTIVE_BANK_INDEX(obj) (*(s8 *)((char *)(obj) + offsetof(ObjAnimComponent, bankIndex)))
+#define OBJPRINT_ACTIVE_BANK(obj) (OBJPRINT_BANK_TABLE(obj)[OBJPRINT_ACTIVE_BANK_INDEX(obj)])
+#define OBJPRINT_MODEL_COUNT(model) (*(s8 *)((char *)(model) + offsetof(ObjModelInstance, modelCount)))
+#define OBJPRINT_JOINT_COUNT(model) (*(u8 *)((char *)(model) + offsetof(ObjModelInstance, jointCount)))
 
 #pragma peephole off
 #pragma scheduling off
@@ -209,18 +216,18 @@ void objAnimFn_80038f38(int obj, char *p2)
 
     t = (s32)*(f32 *)(p2 + 0xc);
     found = NULL;
-    m = *(void **)(obj + 0x50);
+    m = OBJPRINT_MODEL_INSTANCE(obj);
     if (m != NULL) {
         int entryIdx = 0, vecOffset = 0;
-        int n = *(u8 *)((char *)m + 0x5a);
+        int n = OBJPRINT_JOINT_COUNT(m);
         int j;
         for (j = 0; j < n; j++) {
             u8 *entries = *(u8 **)((char *)m + 0x10);
-            int idx = (s8)*(s8 *)(obj + 0xad) + entryIdx + 1;
+            int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
             if ((int)entries[idx] != 0xff && entries[entryIdx] == 1) {
                 found = (s16 *)((char *)*(void **)(obj + 0x6c) + vecOffset);
             }
-            entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+            entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
             vecOffset += 0x12;
         }
     }
@@ -243,7 +250,7 @@ void objAnimFn_80038f38(int obj, char *p2)
         if (*(f32 *)(p2 + 4) > lbl_803DE9A4) {
             int *pi;
             *(f32 *)(p2 + 4) = lbl_803DE9A4;
-            pi = *(int **)(*(int *)(obj + 0x7c) + (s8)*(s8 *)(obj + 0xad) * 4);
+            pi = OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8 *)(*pi + 0xf9) != 0) {
                 ObjModel_SetBlendChannelTargets((int)pi, 2,
                     (s8)*(s8 *)(*(int *)((char *)pi + 0x28) + 0x2d), -1,
@@ -285,7 +292,7 @@ void FUN_80039130(uint param_1,int *param_2)
       }
       iVar3 = *param_2;
       *param_2 = iVar3 + 1;
-      piVar2 = *(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
+      piVar2 = OBJPRINT_ACTIVE_BANK(param_1);
       if (*(char *)(*piVar2 + 0xf9) != '\0') {
         FUN_800178e8((double)(lbl_803DF61C / lbl_803DC0C4),piVar2,2,
                      (int)*(char *)(piVar2[10] + 0x2d),*(int *)(param_2[4] + iVar3 * 4) + -1,0);
@@ -294,7 +301,7 @@ void FUN_80039130(uint param_1,int *param_2)
     }
     else {
       *param_2 = -1;
-      piVar2 = *(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
+      piVar2 = OBJPRINT_ACTIVE_BANK(param_1);
       if (*(char *)(*piVar2 + 0xf9) != '\0') {
         FUN_800178e8((double)(lbl_803DF61C / lbl_803DC0C4),piVar2,2,
                      (int)*(char *)(piVar2[10] + 0x2d),-1,0);
@@ -387,8 +394,7 @@ void FUN_80039370(undefined4 param_1,undefined4 param_2,ushort *param_3,uint par
     *(float *)(puVar6 + 4) = lbl_803DF61C;
   }
   if ((*(byte *)(param_3 + 2) != 0) &&
-     (piVar4 = *(int **)(*(int *)(uVar3 + 0x7c) + *(char *)(uVar3 + 0xad) * 4),
-     *(char *)(*piVar4 + 0xf9) != '\0')) {
+     (piVar4 = OBJPRINT_ACTIVE_BANK(uVar3), *(char *)(*piVar4 + 0xf9) != '\0')) {
     FUN_800178e8((double)(lbl_803DF61C / lbl_803DC0C4),piVar4,2,
                  (int)*(char *)(piVar4[10] + 0x2d),*(byte *)(param_3 + 2) - 1,0);
     param_3[1] = 0;
@@ -512,9 +518,9 @@ void FUN_80039580(int param_1,uint param_2,float *param_3)
   int iVar4;
   uint unaff_r31;
   
-  iVar3 = *(int *)(param_1 + 0x50);
+  iVar3 = (int)OBJPRINT_MODEL_INSTANCE(param_1);
   iVar4 = 0;
-  uVar1 = (uint)*(byte *)(iVar3 + 0x5a);
+  uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar3);
   do {
     if (uVar1 == 0) {
 LAB_80039674:
@@ -528,11 +534,11 @@ LAB_80039674:
       return;
     }
     if (param_2 == *(byte *)(*(int *)(iVar3 + 0x10) + iVar4)) {
-      unaff_r31 = (uint)*(byte *)(*(int *)(iVar3 + 0x10) + iVar4 + (int)*(char *)(param_1 + 0xad) +
+      unaff_r31 = (uint)*(byte *)(*(int *)(iVar3 + 0x10) + iVar4 + (int)OBJPRINT_ACTIVE_BANK_INDEX(param_1) +
                                  1);
       goto LAB_80039674;
     }
-    iVar4 = *(char *)(iVar3 + 0x55) + iVar4 + 1;
+    iVar4 = OBJPRINT_MODEL_COUNT(iVar3) + iVar4 + 1;
     uVar1 = uVar1 - 1;
   } while( true );
 }
@@ -559,16 +565,16 @@ int FUN_8003964c(int param_1,uint param_2)
   int iVar5;
   
   iVar5 = 0;
-  iVar4 = *(int *)(param_1 + 0x50);
+  iVar4 = (int)OBJPRINT_MODEL_INSTANCE(param_1);
   if (iVar4 != 0) {
     iVar3 = 0;
     iVar2 = 0;
-    for (uVar1 = (uint)*(byte *)(iVar4 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1) {
-      if ((*(char *)(*(int *)(iVar4 + 0x10) + *(char *)(param_1 + 0xad) + iVar3 + 1) != -1) &&
+    for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar4); uVar1 != 0; uVar1 = uVar1 - 1) {
+      if ((*(char *)(*(int *)(iVar4 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + iVar3 + 1) != -1) &&
          (param_2 == *(byte *)(*(int *)(iVar4 + 0x10) + iVar3))) {
         iVar5 = *(int *)(param_1 + 0x6c) + iVar2;
       }
-      iVar3 = *(char *)(iVar4 + 0x55) + iVar3 + 1;
+      iVar3 = OBJPRINT_MODEL_COUNT(iVar4) + iVar3 + 1;
       iVar2 = iVar2 + 0x12;
     }
   }
@@ -1053,16 +1059,16 @@ void FUN_8003a1c4(int param_1,int param_2)
   int iVar5;
   
   psVar2 = (short *)0x0;
-  iVar3 = *(int *)(param_1 + 0x50);
+  iVar3 = (int)OBJPRINT_MODEL_INSTANCE(param_1);
   if (iVar3 != 0) {
     iVar4 = 0;
     iVar5 = 0;
-    for (uVar1 = (uint)*(byte *)(iVar3 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1) {
-      if ((*(char *)(*(int *)(iVar3 + 0x10) + *(char *)(param_1 + 0xad) + iVar4 + 1) != -1) &&
+    for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar3); uVar1 != 0; uVar1 = uVar1 - 1) {
+      if ((*(char *)(*(int *)(iVar3 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + iVar4 + 1) != -1) &&
          (*(char *)(*(int *)(iVar3 + 0x10) + iVar4) == '\0')) {
         psVar2 = (short *)(*(int *)(param_1 + 0x6c) + iVar5);
       }
-      iVar4 = *(char *)(iVar3 + 0x55) + iVar4 + 1;
+      iVar4 = OBJPRINT_MODEL_COUNT(iVar3) + iVar4 + 1;
       iVar5 = iVar5 + 0x12;
     }
   }
@@ -1103,16 +1109,16 @@ void fn_8003A328(double param_1,short *param_2,char *param_3)
   int iVar5;
   
   psVar2 = (short *)0x0;
-  iVar3 = *(int *)(param_2 + 0x28);
+  iVar3 = (int)OBJPRINT_MODEL_INSTANCE(param_2);
   if (iVar3 != 0) {
     iVar4 = 0;
     iVar5 = 0;
-    for (uVar1 = (uint)*(byte *)(iVar3 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1) {
-      if ((*(char *)(*(int *)(iVar3 + 0x10) + *(char *)((int)param_2 + 0xad) + iVar4 + 1) != -1) &&
+    for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar3); uVar1 != 0; uVar1 = uVar1 - 1) {
+      if ((*(char *)(*(int *)(iVar3 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_2) + iVar4 + 1) != -1) &&
          (*(char *)(*(int *)(iVar3 + 0x10) + iVar4) == '\0')) {
         psVar2 = (short *)(*(int *)(param_2 + 0x36) + iVar5);
       }
-      iVar4 = *(char *)(iVar3 + 0x55) + iVar4 + 1;
+      iVar4 = OBJPRINT_MODEL_COUNT(iVar3) + iVar4 + 1;
       iVar5 = iVar5 + 0x12;
     }
   }
@@ -2199,7 +2205,7 @@ void FUN_8003b590(undefined4 param_1,undefined4 param_2,int *param_3)
  */
 void FUN_8003b7dc(int param_1)
 {
-  if (*(int *)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4) != 0) {
+  if (OBJPRINT_ACTIVE_BANK(param_1) != 0) {
     FUN_800406cc(param_1);
   }
   return;
@@ -2220,7 +2226,7 @@ void FUN_8003b7dc(int param_1)
  */
 void FUN_8003b818(int param_1)
 {
-  if ((*(int *)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4) != 0) &&
+  if ((OBJPRINT_ACTIVE_BANK(param_1) != 0) &&
      (FUN_80040a88(param_1), *(int *)(param_1 + 0x74) != 0)) {
     FUN_800400b0();
   }
@@ -2286,7 +2292,7 @@ void FUN_8003b878(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
         if ((sVar1 == 0x1f) || ((sVar1 < 0x1f && (sVar1 == 0)))) {
           FUN_802950c8(param_5,uVar2,(int)uVar8,param_3,param_4,cVar7);
         }
-        else if ((*(int *)(*(int *)(param_5 + 0x7c) + *(char *)(param_5 + 0xad) * 4) != 0) &&
+        else if ((OBJPRINT_ACTIVE_BANK(param_5) != 0) &&
                 (FUN_80040a88(param_5), *(int *)(param_5 + 0x74) != 0)) {
           FUN_800400b0();
         }
@@ -2299,7 +2305,7 @@ void FUN_8003b878(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
       }
     }
     else if (((cVar7 != '\0') &&
-             (*(int *)(*(int *)(param_5 + 0x7c) + *(char *)(param_5 + 0xad) * 4) != 0)) &&
+             (OBJPRINT_ACTIVE_BANK(param_5) != 0)) &&
             (FUN_80040a88(param_5), *(int *)(param_5 + 0x74) != 0)) {
       FUN_800400b0();
     }
@@ -2308,7 +2314,7 @@ void FUN_8003b878(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
     for (iVar6 = 0; iVar6 < (int)(uint)*(byte *)(param_5 + 0xeb); iVar6 = iVar6 + 1) {
       iVar3 = *(int *)(iVar5 + 200);
       if (*(short *)(iVar3 + 0x44) == 0x2d) {
-        FUN_8003b590(iVar3,param_5,*(int **)(*(int *)(iVar3 + 0x7c) + *(char *)(iVar3 + 0xad) * 4));
+        FUN_8003b590(iVar3,param_5,OBJPRINT_ACTIVE_BANK(iVar3));
       }
       iVar5 = iVar5 + 4;
     }
@@ -2988,19 +2994,19 @@ extern void objRenderFn_80041018(int *obj);
 #pragma peephole off
 void *objModelGetVecFn_800395d8(void *obj, int target) {
     void *result = NULL;
-    void *m = *(void **)((char *)obj + 0x50);
+    void *m = OBJPRINT_MODEL_INSTANCE(obj);
     if (m != NULL) {
         int entryIdx = 0, vecOffset = 0;
-        int count = *(u8 *)((char *)m + 0x5a);
+        int count = OBJPRINT_JOINT_COUNT(m);
         int i;
         if (count > 0) {
             for (i = 0; i < count; i++) {
                 u8 *entries = *(u8 **)((char *)m + 0x10);
-                int adj = (s8)*(s8 *)((char *)obj + 0xad) + entryIdx;
+                int adj = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx;
                 if (entries[adj + 1] != 0xff && (s32)entries[entryIdx] == target) {
                     result = (char *)*(void **)((char *)obj + 0x6c) + vecOffset;
                 }
-                entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+                entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
                 vecOffset += 0x12;
             }
         }
@@ -3043,8 +3049,8 @@ void objAudioFn_80039270(int obj, void *p, int sfxId) {
 #pragma scheduling off
 #pragma peephole off
 void objRenderFn_8003b8f4(int *obj) {
-    int **table = (int **)obj[0x7c / 4];
-    if (table[(s8)*(s8 *)((char *)obj + 0xad)] != NULL) {
+    int **table = OBJPRINT_BANK_TABLE(obj);
+    if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL) {
         objRenderModel(obj, table);
         if (*(void **)((char *)obj + 0x74) != NULL) {
             objRenderFn_80041018(obj);
