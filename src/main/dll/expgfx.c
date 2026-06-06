@@ -370,7 +370,7 @@ void expgfxRemoveAll(void)
       if ((activeBit & *poolActiveMasks) != 0) {
         expTabIndex = Expgfx_GetSlotTableIndex(slot);
         expTabEntry = Expgfx_GetTableEntry(expTabIndex);
-        if ((expTabEntry->resource != 0) && (expTabEntry->resource != 0)) {
+        if (expTabEntry->resource != 0) {
           gExpgfxTextureFreeInProgress = 1;
           textureFree((void *)expTabEntry->resource);
           gExpgfxTextureFreeInProgress = 0;
@@ -1635,7 +1635,7 @@ int expgfx_addToTable(uint resourceHandle,uint sourceId,uint attachedTableKey,s1
   for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++) {
     if ((entry->refCount != 0) && (entry->resource == resourceHandle) &&
         (entry->sourceId == sourceId) && (entry->attachedTableKey == attachedTableKey)) {
-      refCount = &gExpgfxTableEntries[tableIndex].refCount;
+      refCount = &entry->refCount;
       if (*refCount >= EXPGFX_REFCOUNT_OVERFLOW) {
         debugPrintf(sExpgfxAddToTableUsageOverflow);
         return EXPGFX_INVALID_TABLE_INDEX;
@@ -1647,11 +1647,11 @@ int expgfx_addToTable(uint resourceHandle,uint sourceId,uint attachedTableKey,s1
 
   for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeScan++, freeIndex++) {
     if (freeScan->refCount == 0) {
-      gExpgfxTableEntries[freeIndex].refCount = 1;
-      gExpgfxTableEntries[freeIndex].resource = resourceHandle;
-      gExpgfxTableEntries[freeIndex].sourceId = sourceId;
-      gExpgfxTableEntries[freeIndex].attachedTableKey = attachedTableKey;
-      gExpgfxTableEntries[freeIndex].resourceId = resourceId;
+      freeScan->refCount = 1;
+      freeScan->resource = resourceHandle;
+      freeScan->sourceId = sourceId;
+      freeScan->attachedTableKey = attachedTableKey;
+      freeScan->resourceId = resourceId;
       return (s16)freeIndex;
     }
   }
