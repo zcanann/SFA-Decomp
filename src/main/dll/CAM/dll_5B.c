@@ -823,26 +823,29 @@ void CameraModeDebug_init(void)
 #pragma dont_inline on
 void *fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
 {
+    int *list;
+    int i;
     void *best;
     double bestDist;
     int count;
-    int *list;
-    int i;
     int *obj;
+    int *tmpList;
     f32 dx, dy, dz;
+    f32 yy;
     double dist;
 
     bestDist = lbl_803E1878;
     best = NULL;
-    list = (int *)ObjGroup_GetObjects(7, &count);
-    for (i = 0; i < count; i++) {
+    tmpList = (int *)ObjGroup_GetObjects(7, &count);
+    for (i = 0, list = tmpList; i < count; i++) {
         obj = (int *)*list;
         if (*(s16 *)((char *)obj + 0x44) == filter2 &&
             *(u8 *)(*(int *)((char *)obj + 0x4c) + 0x18) == filter1) {
             dx = x - *(f32 *)((char *)obj + 0x18);
             dy = y - *(f32 *)((char *)obj + 0x1c);
             dz = z - *(f32 *)((char *)obj + 0x20);
-            dist = sqrtf(dy*dy + dx*dx + dz*dz);
+            yy = dy*dy;
+            dist = sqrtf(yy + dx*dx + dz*dz);
             if (dist < bestDist) {
                 bestDist = dist;
                 best = obj;
