@@ -888,6 +888,20 @@ Heuristic:
     is allocator-internal. Classify on sight and skip — the residual is
     ~5-10 bytes.
 
+61d. **The @NNN-vs-named conversion-bias cap: MECHANISM + tested negative.**
+    The "named" symbols (lbl_803DFD88, lbl_803E6E80, ... — mistyped `string
+    "C0"` in symbols.txt) are the int→f32 conversion biases (0x43300000...)
+    living in the SHARED auto_11_803DE500_sdata2 unit; target TUs reference
+    them via SDA21 while our TUs emit a private @NNN copy that links at a
+    different address (hence the per-reference fuzzy penalty — 77 refs in
+    Effect7_func04 alone). TESTED: writing the conversion manually in C
+    (`((u32*)&t)[0]=0x43300000; ((u32*)&t)[1]=x^0x80000000; r = t - bias;`
+    with `extern f64 lbl_x`) DOES emit the named SDA21 reloc, but produces
+    `fsub+frsp` instead of MWCC's internal fused `fsubs` — net WORSE (+1
+    instr per site). No C spelling fuses a user-written f64 subtract into
+    fsubs. The real fix is splits/link-level (dedup our .sdata2 bias entries
+    onto the auto_11 symbols) — out of recipe scope; don't grind it per-fn.
+
 62. **`(int)`-cast the store base to defeat address-CSE with a later
     `(u8 *)p + off` call arg — restores the displacement-form store.** When a
     function stores to `*(u8 *)((u8 *)p + off) = K` AND later passes the same

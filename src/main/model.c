@@ -3022,7 +3022,7 @@ void ObjModel_UnpackResourcePayload(u8 *src, int srcSize, u8 *dst, int dstSize) 
         t = v & 0xF;
         if (t != 0) {
             if (t < 0) {
-                srcBits = fn_80006B1C(&srcState, &dstState, dst[7], vertBits);
+                srcBits = ((u8 *(*)(void *, void *, int, int, int))fn_80006B1C)(&srcState, &dstState, dst[7], vertBits, t);
             } else {
                 srcBits = modelRenderFn_80006744(srcBits, dst[7], &dstState, vertBits);
             }

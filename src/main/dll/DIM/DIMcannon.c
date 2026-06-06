@@ -2939,7 +2939,7 @@ void imspacethruster_update(int *obj) {
             } else if (a < lbl_803E4798) {
                 a = lbl_803E4798;
             }
-            ((void (*)(int, f32))((void **)*(void **)*(int *)(*(int *)((char *)obj + 0x30) + 0x68))[10])(*(int *)((char *)obj + 0x30), a);
+            ((void (*)(int, f32, int))((void **)*(void **)*(int *)(*(int *)((char *)obj + 0x30) + 0x68))[10])(*(int *)((char *)obj + 0x30), a, state[0]);
         }
         tex = objFindTexture(obj, 0, 0);
         v = -*(s16 *)((char *)tex + 0xa);

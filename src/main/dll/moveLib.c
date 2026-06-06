@@ -1706,7 +1706,7 @@ u8 dll_19_func08(int obj, char *st, f32 dist)
     int grid1[2];
     int grid0[2];
     f32 world[3];
-    u8 bboxOut[0x80];
+    u8 bboxOut[0x54];
     int cur;
     s16 *ovr;
     u8 ok;
