@@ -25,7 +25,7 @@ typedef struct ObjHitsPriorityState {
   f32 contactPosZ;
   u32 objectHitMask;
   u32 skeletonHitMask;
-  int lastHitObject;
+  u32 lastHitObject;
   u8 pad54[0x58 - 0x54];
   s16 capsuleScale;
   s16 primaryRadius;
