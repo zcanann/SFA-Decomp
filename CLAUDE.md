@@ -1696,6 +1696,19 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       OFF — tells: extsb after lbz, extsh before sth, param deref via the
       mr copy, recipe #68) and recipe #46 base bugs (its 0xac read was
       obj, not p).
+    - Sub-patterns from the application sweeps (tasks #156/#159): (i)
+      `outLights[(*outCount)++] = x;` — the post-increment-index spelling
+      reproduces target's FRESH reload of the counter at the increment
+      site where the expanded `n = *cnt; *cnt = n + 1; out[n] = x;` form
+      CSEs it (modelLight selectBrightest/selectObject). (ii) Attenuation
+      polynomials may be DISTRIBUTED in the original: `a + (d*(c*d) +
+      b*d)` emits fmuls+fmuls+fmadds where `a + d*(c*d + b)` emits
+      fmadds-first — read the multiply count off target. (iii) A
+      score-vs-correctness TRAP: an import's semantically-suspect form
+      can score HIGHER than the corrected one (cMenuRotateFn_80124d80:
+      s16 diff with a dead >0x8000 test beats the live int form by 3.4) —
+      flag such fns for a #46 logic audit instead of "fixing" them by
+      score.
     - NEGATIVES (exhausted, don't retry): compiler versions 1.0-3.0a5 and
       -O0..4 (cmdline+pragma) all keep the join-flush with if-statements;
       opt_* pragmas/subflags, sched/peephole matrix, -inline
