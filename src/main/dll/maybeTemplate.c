@@ -951,7 +951,7 @@ void hudDrawButtons(int param1, int param2, int param3)
     for (i = 0; i < lbl_803DD8B0; i++) {
       slots[i] = 0;
     }
-    for (; i < 3; i++) {
+    for (i = lbl_803DD8B0; i < 3; i++) {
       slots[i] = 1;
     }
     if (lbl_803DD8B0 < 3) {
