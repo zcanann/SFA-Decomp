@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/barrel.h"
+#include "main/mapEventTypes.h"
 #include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
@@ -56,7 +57,7 @@ extern void *Obj_GetPlayerObject(void);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern void *gPlayerInterface;
 extern void *gBaddieControlInterface;
-extern void *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *lbl_803DCAB4;
 extern int lbl_803200E0[];
 extern int lbl_80320158[];
@@ -369,7 +370,7 @@ void grimble_update(int obj)
   sub = *(char **)(state + 0x40c);
   def = *(int *)(obj + 0x4c);
   if (*(int *)(obj + 0xf4) != 0) {
-    if ((*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(*(int *)(def + 0x14)) != 0) {
+    if ((*gMapEventInterface)->isTimedEventActive(*(int *)(def + 0x14)) != 0) {
       (*(void (**)(int, int, char *, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                                0x58))(obj, def, state, 0xa, 6,
                                                                       0x10e, 0x36, lbl_803E2F28);

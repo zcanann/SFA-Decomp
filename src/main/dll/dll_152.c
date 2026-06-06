@@ -1,11 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_152.h"
+#include "main/mapEventTypes.h"
 
 extern undefined4 FUN_8003b818();
 extern int FUN_80286838();
 extern undefined4 FUN_80286884();
 
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 
 /*
  * --INFO--
@@ -29,7 +30,7 @@ void smallbasket_update(int param_1, int param_2, int param_3, int param_4, int 
   
   iVar2 = FUN_80286838();
   iVar4 = *(int *)(iVar2 + 0xb8);
-  iVar3 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(*(int *)(iVar2 + 0x4c) + 0x14));
+  iVar3 = (*DAT_803dd72c)->isTimedEventActive(*(int *)(*(int *)(iVar2 + 0x4c) + 0x14));
   if (iVar3 == 0) {
     *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;
   }

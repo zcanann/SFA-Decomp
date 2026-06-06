@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfperch.h"
+#include "main/mapEventTypes.h"
 
 #define SMALLBASKET_LINKED_ID_BASE 0x40000
 #define SMALLBASKET_ROB_WAVE_DIRECT_ID 0x66
@@ -209,7 +210,7 @@ extern f32 getXZDistance(f32 *a, f32 *b);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern int *gSHthorntailAnimationInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E3930;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
@@ -266,7 +267,7 @@ void smallbasket_update(int obj)
     animSpeed = lbl_803E3950;
     (**(void (**)(f32 *))(*gSHthorntailAnimationInterface + 0x18))(&animSpeed);
     state = *(int *)(obj + 0xb8);
-    if ((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(def + 0x14)) == 0) {
+    if ((*gMapEventInterface)->isTimedEventActive(*(int *)(def + 0x14)) == 0) {
         return;
     }
     playerState = *(int *)(player + 0xb8);
@@ -317,8 +318,7 @@ void smallbasket_update(int obj)
                 } else {
                     *(int *)(state + 0x14) = 1;
                 }
-                (**(void (**)(int, f32))(*gMapEventInterface + 0x64))(
-                    *(int *)(def + 0x14), (f32)*(int *)(state + 0x18));
+                (*gMapEventInterface)->startTimedEvent(*(int *)(def + 0x14), (f32)*(int *)(state + 0x18));
                 *(f32 *)(obj + 0xc) = *(f32 *)(def + 0x8);
                 *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
                 *(f32 *)(obj + 0x14) = *(f32 *)(def + 0x10);
