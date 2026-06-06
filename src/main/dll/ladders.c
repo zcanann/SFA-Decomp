@@ -633,23 +633,22 @@ typedef struct TumbleweedBushState {
 void tumbleweedbush_update(int *obj) {
     TumbleweedBushState *state;
     int *player;
-    int hitInfo[2];
-    int hitData;
+    int hitInfo[3];
     f32 dx, dy, d;
     int i;
     int j;
 
     state = *(TumbleweedBushState **)((char*)obj + 0xb8);
     player = (int*)Obj_GetPlayerObject();
-    if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, hitInfo, &hitData) != 0) {
+    if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, hitInfo, &hitInfo[2]) != 0) {
         if (*(s16*)((char*)hitInfo[0] + 0x46) != 0x4ba) {
-            objfx_spawnHitEmitterAtPos(&hitData, 8, 0xff, 0xff, 0x78);
+            objfx_spawnHitEmitterAtPos((int *)((int)hitInfo + 8), 8, 0xff, 0xff, 0x78);
             Sfx_PlayFromObject(obj, SFXsc_gethit04);
             for (i = 0; (u8)i < state->pieceCount; i++) {
                 int **slot = (int **)&state->pieceObjects[(u8)i];
                 if (*slot != NULL) {
                     if (*(s16*)((char*)obj + 0x46) == 0x28d) {
-                        if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])(&hitData) == 0) continue;
+                        if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])((int *)((int)hitInfo + 4)) == 0) continue;
                     }
                     ((void(*)(int*))*(int*)(*(int*)(*(int*)((char*)*slot + 0x68)) + 0x28))(*slot);
                 }
