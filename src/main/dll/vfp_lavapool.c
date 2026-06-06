@@ -140,21 +140,23 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
     }
 
     hitReactMode = state->hitReactMode;
-    if (hitReactMode == 1) {
+    switch (hitReactMode) {
+    case 0:
+      break;
+    case 1:
       goto updateHitReaction;
+    case 2:
+      animUpdate->hitVolumePair = 0;
+      dimBossTonsil_newState_hitFightMain(obj,animUpdate,state,state);
+      if (state->hitReactMode == 1) {
+        state->field270 = 0;
+        (*(void (**)(void *,DIMbosstonsilState *,f32,f32,u8 *,u8 *))(*(int *)gPlayerInterface + 0x8))
+            (obj,state,lbl_803E4CB8,lbl_803E4CB8,&lbl_803DDBB0,&lbl_803DDBA8);
+        animUpdate->sequenceEventActive = 0;
+      }
+      goto updateDone;
     }
-    if (hitReactMode < 1 || hitReactMode >= 3) {
-      goto clearHitVolumePair;
-    }
-    animUpdate->hitVolumePair = 0;
-    dimBossTonsil_newState_hitFightMain(obj,animUpdate,state,state);
-    if (state->hitReactMode == 1) {
-      state->field270 = 0;
-      (*(void (**)(void *,DIMbosstonsilState *,f32,f32,u8 *,u8 *))(*(int *)gPlayerInterface + 0x8))
-          (obj,state,lbl_803E4CB8,lbl_803E4CB8,&lbl_803DDBB0,&lbl_803DDBA8);
-      animUpdate->sequenceEventActive = 0;
-    }
-    goto updateDone;
+    goto clearHitVolumePair;
 
 updateHitReaction:
       animOk = (*(int (**)(void *,ObjAnimUpdateState *,DIMbosstonsilState *,u8 *,u8 *,int))
