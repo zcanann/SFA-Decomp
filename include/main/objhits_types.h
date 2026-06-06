@@ -58,7 +58,8 @@ typedef struct ObjHitsPriorityState {
   u8 activeHitboxMode;
   u8 resetHitboxMode;
   u8 stateIndex;
-  u8 padB1[0xB4 - 0xB1];
+  u8 padB1;
+  u16 trackContactMask;
   u8 sourceMask;
   u8 targetMask;
   u8 secondaryShapeFlags;
@@ -92,6 +93,7 @@ STATIC_ASSERT(offsetof(ObjHitsPriorityState, axialResponseWeight) == 0x6B);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, suppressOutgoingHits) == 0x70);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, priorityHitCount) == 0x71);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, contactFlags) == 0xAD);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, trackContactMask) == 0xB2);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryShapeFlags) == 0xB6);
 
 #endif

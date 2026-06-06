@@ -2438,7 +2438,8 @@ void ObjHits_CheckTrackContact(int objA,int objB)
   int mask2;
   int iVar3;
   byte bVar4;
-  int iVar6;
+  ObjHitsPriorityState *stateA;
+  ObjHitsPriorityState *stateB;
   uint uVar7;
   float *puVar8;
   int *piVar9;
@@ -2465,16 +2466,16 @@ void ObjHits_CheckTrackContact(int objA,int objB)
   int local_44 [5];
   f32 fConv;
 
-  iVar6 = *(int *)&((GameObject *)objA)->anim.hitReactState;
+  stateA = (ObjHitsPriorityState *)((GameObject *)objA)->anim.hitReactState;
   if ((uint)objB == (uint)objA) {
-    mask2 = *(uint *)(iVar6 + 0x48) >> 4;
+    mask2 = stateA->objectHitMask >> 4;
   }
   else {
-    mask2 = *(uint *)(iVar6 + 0x48) & 0xf;
+    mask2 = stateA->objectHitMask & 0xf;
   }
-  if ((mask2 != 0) && (((ObjHitsPriorityState *)iVar6)->suppressOutgoingHits == 0)) {
-    iVar6 = *(int *)&((GameObject *)objB)->anim.hitReactState;
-    if ((*(byte *)(iVar6 + 0xb6) & 0x10) != 0) {
+  if ((mask2 != 0) && (stateA->suppressOutgoingHits == 0)) {
+    stateB = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
+    if ((stateB->secondaryShapeFlags & 0x10) != 0) {
       piVar9 = ObjHits_GetActiveModel(objB);
       iVar12 = *piVar9;
       uVar7 = *(ushort *)(piVar9 + 6) >> 2 & 1;
@@ -2560,7 +2561,7 @@ void ObjHits_CheckTrackContact(int objA,int objB)
     }
     if (iVar23 != 0) {
       hitDetect_calcSweptSphereBounds(auStack_148,local_130,local_e8,local_60,iVar23);
-      hitDetectFn_800691c0(objB,auStack_148,(uint)*(ushort *)(iVar6 + 0xb2),1);
+      hitDetectFn_800691c0(objB,auStack_148,(uint)stateB->trackContactMask,1);
       bVar4 = hitDetectFn_80067958(objB,local_130,local_e8,iVar23,auStack_a0,0);
       if (bVar4 != 0) {
         if ((bVar4 & 1) == 0) {
@@ -2579,15 +2580,15 @@ void ObjHits_CheckTrackContact(int objA,int objB)
         else {
           iVar23 = 0;
         }
-        ((ObjHitsPriorityState *)iVar6)->contactHitVolume = local_50[iVar23];
-        *(float *)(iVar6 + 0x3c) = local_e8[iVar23 * 3];
-        *(float *)(iVar6 + 0x40) = local_e8[iVar23 * 3 + 1];
-        *(float *)(iVar6 + 0x44) = local_e8[iVar23 * 3 + 2];
+        stateB->contactHitVolume = local_50[iVar23];
+        stateB->contactPosX = local_e8[iVar23 * 3];
+        stateB->contactPosY = local_e8[iVar23 * 3 + 1];
+        stateB->contactPosZ = local_e8[iVar23 * 3 + 2];
         if (local_44[iVar23] == 0) {
-          ((ObjHitsPriorityState *)iVar6)->contactFlags = ((ObjHitsPriorityState *)iVar6)->contactFlags | 1;
+          stateB->contactFlags = stateB->contactFlags | 1;
         }
         else {
-          ((ObjHitsPriorityState *)iVar6)->contactFlags = ((ObjHitsPriorityState *)iVar6)->contactFlags | 2;
+          stateB->contactFlags = stateB->contactFlags | 2;
         }
       }
     }
