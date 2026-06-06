@@ -2259,7 +2259,7 @@ typedef struct {
 } LinkbLevState;
 
 void linkb_levcontrol_init(int *obj) {
-    u8 *t = lbl_803238D8;
+    u8 *t = (u8 *)(int)lbl_803238D8;
     LinkbLevState *sub = *(LinkbLevState **)((char *)obj + 0xb8);
     *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
     if (GameBit_Get(0x36e) != 0) {
@@ -2276,7 +2276,7 @@ void linkb_levcontrol_init(int *obj) {
     } else if (GameBit_Get(0x384) != 0) {
         sub->stage = 1;
     }
-    fn_80088870(t + 0x38, t, t + 0x70, t + 0xa8);
+    fn_80088870(t + 0x38, (u8 *)(int)lbl_803238D8, t + 0x70, t + 0xa8);
     if (getSaveGameLoadStatus() != 0) {
         if ((*gMapEventInterface)->getAnimEvent(*(s8*)((char*)obj + 0xac), 0) == 0) {
             envFxActFn_800887f8(0x3f);
