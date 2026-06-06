@@ -838,8 +838,8 @@ void FUN_8010edc4(int param_1,int param_2)
   int iVar3;
   short *psVar4;
   float local_48;
-  undefined4 local_44;
-  undefined4 local_40;
+  float local_44;
+  float local_40;
   undefined4 local_38;
   uint uStack_34;
   undefined4 local_30;
@@ -869,14 +869,14 @@ void FUN_8010edc4(int param_1,int param_2)
     *psVar4 = (short)iVar3;
     camcontrol_getTargetPosition(iVar2,psVar4,&local_48,(short *)0x0);
     *psVar4 = sVar1;
-    *(float *)(iVar2 + 0x18) = local_48;
-    *(float *)(iVar2 + 0xb8) = local_48;
-    *(undefined4 *)(iVar2 + 0x1c) = local_44;
-    *(undefined4 *)(iVar2 + 0xbc) = local_44;
-    *(undefined4 *)(iVar2 + 0x20) = local_40;
-    *(undefined4 *)(iVar2 + 0xc0) = local_40;
-    FUN_800068f4((double)*(float *)(iVar2 + 0x18),(double)*(float *)(iVar2 + 0x1c),
-                 (double)*(float *)(iVar2 + 0x20),(float *)(iVar2 + 0xc),(float *)(iVar2 + 0x10),
+    ((CameraObject *)iVar2)->anim.worldPosX = local_48;
+    ((CameraObject *)iVar2)->probePosX = local_48;
+    ((CameraObject *)iVar2)->anim.worldPosY = local_44;
+    ((CameraObject *)iVar2)->probePosY = local_44;
+    ((CameraObject *)iVar2)->anim.worldPosZ = local_40;
+    ((CameraObject *)iVar2)->probePosZ = local_40;
+    FUN_800068f4((double)((CameraObject *)iVar2)->anim.worldPosX,(double)((CameraObject *)iVar2)->anim.worldPosY,
+                 (double)((CameraObject *)iVar2)->anim.worldPosZ,(float *)(iVar2 + 0xc),(float *)(iVar2 + 0x10),
                  (float *)(iVar2 + 0x14),*(int *)(iVar2 + 0x30));
     *(byte *)(DAT_803de210 + 8) = *(byte *)(DAT_803de210 + 8) & 0x7f | 0x80;
   }
