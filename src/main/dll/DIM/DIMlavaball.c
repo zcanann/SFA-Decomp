@@ -4,6 +4,86 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+/*
+ * Per-object extra state for the MoonSeedBush plant spot
+ * (MoonSeedBush_getExtraSize == 0x2).
+ */
+typedef struct MoonSeedBushState {
+    u8 seedState; /* gamebit value: 0 unplanted, 2 grown (SeqFn) */
+    u8 flags; /* bit 1 = pending update */
+} MoonSeedBushState;
+
+STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
+
+/*
+ * Per-object extra state for the mmp asteroid set piece
+ * (mmp_asteroid_re_getExtraSize == 0x1C).
+ */
+typedef struct MmpAsteroidReState {
+    u8 eventFlags; /* 1/8/0x10/0x20 fx bursts, 0x40 periodic fx, 0x80 seq-ran latch */
+    u8 phase; /* gamebit 0x87B value 0..3 */
+    u8 intensity; /* gamebit 0x88C / 0xD52; scales rise height + sfx volume */
+    u8 pad03;
+    f32 stateTimer; /* counts down; clears gamebit 0x88B on expiry */
+    f32 periodicFxTimer; /* rand(10,60); flag 0x40 fx cadence */
+    f32 baseY; /* obj Y at init */
+    f32 baseY2;
+    u16 bobPhase; /* angle accumulators for the float wobble */
+    u16 rollPhase;
+    u16 pitchPhase;
+    u8 pad1A[2];
+} MmpAsteroidReState;
+
+STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
+
+/*
+ * Per-object extra state for the mmp trench fx emitter
+ * (mmp_trenchfx_getExtraSize == 0x30).
+ */
+typedef struct MmpTrenchfxState {
+    s16 enableBit; /* data+0x24 gamebit gate, -1 = always on */
+    u16 extentX; /* data[0x1C..0x1E] << 2 random offset half-extents */
+    u16 extentZ;
+    u16 extentY;
+    s16 emitAngles[3]; /* roll/pitch/yaw presets, mirrored to obj+4/2/0 */
+    u8 pad0E[2];
+    u32 fxUnk10; /* embedded partfx args record (state+0x10 passed to spawn) */
+    u32 fxUnk14;
+    f32 fxScale;
+    f32 fxX;
+    f32 fxY;
+    f32 fxZ;
+    f32 emitCooldown; /* rand(100,200) frames between bursts */
+    f32 emitTimer; /* rand(50,100); spawns effect 0x71F while > 0 */
+} MmpTrenchfxState;
+
+STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
+
+/*
+ * Per-object extra state for the mmp moonrock carryable
+ * (mmp_moonrock_getExtraSize == 0x30). The leading bytes belong to the
+ * gCarryableInterface record (the state pointer itself is handed to it).
+ */
+typedef struct MmpMoonrockState {
+    u8 carryable[0xC];
+    f32 baseY; /* lava base height */
+    f32 baseY2;
+    f32 respawnTimer; /* counts down while flag 0x200 (sunk/reset) */
+    f32 homeX; /* spawn position for the reset */
+    f32 homeY;
+    f32 homeZ;
+    u16 flags; /* 1 drop, 2 armed, 4 held?, 8 grab-frame, 0x10/0x20 icon kind, 0x40 thrown, 0x200 respawning, 0x400 placed */
+    u16 bobPhase; /* angle accumulators for the float wobble */
+    u16 rollPhase;
+    u16 pitchPhase;
+    u8 pad2C[2];
+    u8 kind; /* gamebit-derived 0..6 */
+    u8 raised; /* gamebit 0x894 while placed */
+} MmpMoonrockState;
+
+STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
+
+
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -1418,11 +1498,11 @@ extern int *gObjectTriggerInterface;
 #pragma scheduling off
 #pragma peephole off
 void MoonSeedBush_update(int obj) {
-    int state = *(int *)(obj + 0xB8);
+    MoonSeedBushState *state = *(MoonSeedBushState **)(obj + 0xB8);
     int def = *(int *)(obj + 0x4C);
     int v;
-    if ((*(u8 *)(state + 1) & 1) == 0) return;
-    if (*(s16 *)(def + 0x1C) != 0 && *(u8 *)state != 0) {
+    if ((state->flags & 1) == 0) return;
+    if (*(s16 *)(def + 0x1C) != 0 && state->seedState != 0) {
         v = *(u8 *)(def + 0x20);
         (*(int (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x54)))(obj, *(s16 *)(def + 0x1C));
     } else {
@@ -1434,7 +1514,7 @@ void MoonSeedBush_update(int obj) {
             (*(int (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(idx, obj, v);
         }
     }
-    *(u8 *)(state + 1) &= ~1;
+    state->flags &= ~1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1473,19 +1553,19 @@ void mmp_gyservent_update(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3) {
-    int state = *(int *)(obj + 0xB8);
+    MoonSeedBushState *state = *(MoonSeedBushState **)(obj + 0xB8);
     int def = *(int *)(obj + 0x4C);
     int i;
     int j;
-    if (*(u8 *)state == 0) {
+    if (state->seedState == 0) {
         if (GameBit_Get(*(s16 *)(def + 0x18)) != 0) {
-            *(u8 *)state = 2;
+            state->seedState = 2;
         }
     }
     for (i = 0; i < p3[0x8B]; i++) {
         switch ((s32)p3[0x81 + i]) {
         case 1:
-            *(u8 *)state = 1;
+            state->seedState = 1;
             if (*(s16 *)(def + 0x1A) != -1) {
                 GameBit_Set(*(s16 *)(def + 0x1A), 1);
             }
@@ -1498,7 +1578,7 @@ int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3) {
             break;
         }
     }
-    return *(u8 *)state != 2;
+    return state->seedState != 2;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1543,7 +1623,7 @@ extern f32 lbl_803E4568;
 #pragma peephole off
 void fn_801A7B10(int obj) {
     extern int fn_801A78C8(int obj, f32 x, f32 y, f32 z, f32 y2, f32 *out1, int *out2);
-    int state = *(int *)(obj + 0xb8);
+    MmpMoonrockState *state = *(MmpMoonrockState **)(obj + 0xb8);
     int auStack_14[1];
     f32 local_18;
     int idx;
@@ -1591,20 +1671,20 @@ void fn_801A7B10(int obj) {
         *(f32 *)(obj + 0x24) = v2;
     }
     objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
-    *(u16 *)(state + 0x24) &= ~0x80;
+    state->flags &= ~0x80;
     v = *(f32 *)(obj + 0x10);
     ret = fn_801A78C8(obj, *(f32 *)(obj + 0xc), v, *(f32 *)(obj + 0x14), lbl_803E4568 + v, &local_18, auStack_14);
     if (ret == 0) return;
     if (ret == 2) {
         f32 c;
-        *(u16 *)(state + 0x24) |= 0x100;
+        state->flags |= 0x100;
         c = lbl_803E4554;
         *(f32 *)(obj + 0x24) = c;
         *(f32 *)(obj + 0x28) = c;
         *(f32 *)(obj + 0x2c) = c;
     } else {
         f32 c;
-        *(u16 *)(state + 0x24) |= 0x180;
+        state->flags |= 0x180;
         *(f32 *)(obj + 0x10) = local_18;
         c = lbl_803E4554;
         *(f32 *)(obj + 0x24) = c;
@@ -1618,7 +1698,7 @@ void fn_801A7B10(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int fn_801A6F4C(int obj, int p2, int data) {
-    u8 *state = *(u8 **)(obj + 0xb8);
+    MmpAsteroidReState *state = *(MmpAsteroidReState **)(obj + 0xb8);
     int i;
     *(u8 *)(data + 0x56) = 0;
     for (i = 0; i < (int)*(u8 *)(data + 0x8b); i++) {
@@ -1628,33 +1708,33 @@ int fn_801A6F4C(int obj, int p2, int data) {
             setDrawLights(0);
             break;
         case 1:
-            state[0] = 13;
-            state[1] = 1;
-            GameBit_Set(0x87b, state[1]);
+            state->eventFlags = 13;
+            state->phase = 1;
+            GameBit_Set(0x87b, state->phase);
             *(u8 *)(obj + 0x36) = 0xff;
             break;
         case 2:
-            state[0] = state[0] & ~9;
-            state[0] = state[0] | 0x30;
+            state->eventFlags = state->eventFlags & ~9;
+            state->eventFlags = state->eventFlags | 0x30;
             ((ObjAnimComponent *)obj)->bankIndex = 1;
             break;
         case 3: {
             int r;
-            state[0] = state[0] & ~0x20;
-            state[0] = state[0] | 0x50;
+            state->eventFlags = state->eventFlags & ~0x20;
+            state->eventFlags = state->eventFlags | 0x50;
             r = (int)randomGetRange(10, 60);
-            *(f32 *)(state + 8) = (f32)r;
-            state[1] = 1;
-            GameBit_Set(0x87b, state[1]);
+            state->periodicFxTimer = (f32)r;
+            state->phase = 1;
+            GameBit_Set(0x87b, state->phase);
             break;
         }
         case 4:
-            *(f32 *)(state + 4) = lbl_803E44E8;
+            state->stateTimer = lbl_803E44E8;
             setDrawLights(1);
             break;
         }
     }
-    state[0] |= 0x80;
+    state->eventFlags |= 0x80;
     mmp_asteroid_re_update(obj);
     return 0;
 }
@@ -1664,38 +1744,38 @@ int fn_801A6F4C(int obj, int p2, int data) {
 #pragma scheduling off
 #pragma peephole off
 void mmp_asteroid_re_init(int obj) {
-    int state = *(int *)(obj + 0xB8);
+    MmpAsteroidReState *state = *(MmpAsteroidReState **)(obj + 0xB8);
     *(u16 *)(obj + 0xB0) |= 0x6000;
     *(int (**)(int, int, int))(obj + 0xBC) = fn_801A6F4C;
-    *(u8 *)state = 0;
-    *(u8 *)(state + 2) = (u8)GameBit_Get(0x88C);
-    *(u8 *)(state + 1) = (u8)GameBit_Get(0x87B);
-    switch ((s32)*(u8 *)(state + 1)) {
+    state->eventFlags = 0;
+    state->intensity = (u8)GameBit_Get(0x88C);
+    state->phase = (u8)GameBit_Get(0x87B);
+    switch ((s32)state->phase) {
     case 0:
         *(u8 *)(obj + 0x36) = 0;
         *(u8 *)(obj + 0xAD) = 0;
         break;
     case 1:
         *(u8 *)(obj + 0x36) = 0xFF;
-        *(u8 *)state = 4;
+        state->eventFlags = 4;
         *(u8 *)(obj + 0xAD) = 1;
-        *(u8 *)state |= 0x40;
+        state->eventFlags |= 0x40;
         break;
     case 2:
         *(u8 *)(obj + 0x36) = 0xFF;
-        *(u8 *)state = 4;
+        state->eventFlags = 4;
         *(u8 *)(obj + 0xAD) = 1;
         break;
     case 3:
         *(u8 *)(obj + 0x36) = 0xFF;
-        *(u8 *)state = 4;
+        state->eventFlags = 4;
         *(u8 *)(obj + 0xAD) = 1;
         break;
     }
     {
         f32 v = *(f32 *)(obj + 0x10);
-        *(f32 *)(state + 0xC) = v;
-        *(f32 *)(state + 0x10) = v;
+        state->baseY = v;
+        state->baseY2 = v;
     }
 }
 #pragma peephole reset
@@ -1704,8 +1784,8 @@ void mmp_asteroid_re_init(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void MoonSeedBush_init(int obj, int data) {
-    int state = *(int *)(obj + 0xB8);
-    *(u8 *)(state + 1) = 1;
+    MoonSeedBushState *state = *(MoonSeedBushState **)(obj + 0xB8);
+    state->flags = 1;
     *(s16 *)obj = (s16)((*(u8 *)(data + 0x1F)) << 8);
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))MoonSeedBush_SeqFn;
     *(u16 *)(obj + 0xB0) |= 0x2000;
@@ -1715,9 +1795,9 @@ void MoonSeedBush_init(int obj, int data) {
     }
     *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
     if (*(s16 *)(data + 0x1a) != -1) {
-        *(u8 *)state = (u8)GameBit_Get(*(s16 *)(data + 0x1a));
+        state->seedState = (u8)GameBit_Get(*(s16 *)(data + 0x1a));
     } else {
-        *(u8 *)state = 0;
+        state->seedState = 0;
     }
 }
 #pragma peephole reset
@@ -1737,24 +1817,24 @@ extern f32 lbl_803E4558;
 void fn_801A79E0(int obj) {
     int auStack_14[21];
     int local_18;
-    int *state;
+    MmpMoonrockState *state;
     int ret;
-    state = *(int **)(obj + 0xb8);
+    state = *(MmpMoonrockState **)(obj + 0xb8);
     ret = ObjHits_GetPriorityHit(obj, &local_18, (int *)0, (int *)0);
     if (ret == 0) {
         ret = objBboxFn_800640cc((int *)(obj + 0x80), (int *)(obj + 0xc), lbl_803E454C, 1, auStack_14, obj, 1, -1, 0xff, 0);
     }
     if ((ret != 0) ||
-        (((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0 && (*(u16 *)((char *)state + 0x24) & 0x40) != 0) ||
-         (*(u16 *)((char *)state + 0x24) & 0x100) != 0)) {
+        (((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0 && (state->flags & 0x40) != 0) ||
+         (state->flags & 0x100) != 0)) {
         *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + lbl_803E4550;
         spawnExplosion(obj, lbl_803E4554, 1, 1, 0, 0, 0, 1, 0);
-        *(u16 *)((char *)state + 0x24) |= 0x200;
-        *(f32 *)((char *)state + 0x14) = lbl_803E4558;
+        state->flags |= 0x200;
+        state->respawnTimer = lbl_803E4558;
         *(u8 *)(obj + 0x36) = 0;
-        *(f32 *)(obj + 0xc) = *(f32 *)((char *)state + 0x18);
-        *(f32 *)(obj + 0x10) = *(f32 *)((char *)state + 0x1c);
-        *(f32 *)(obj + 0x14) = *(f32 *)((char *)state + 0x20);
+        *(f32 *)(obj + 0xc) = state->homeX;
+        *(f32 *)(obj + 0x10) = state->homeY;
+        *(f32 *)(obj + 0x14) = state->homeZ;
         saveGame_saveObjectPos(obj);
     }
 }
@@ -1779,20 +1859,20 @@ extern f32 lbl_803E45C0;
 #pragma scheduling off
 #pragma peephole off
 void mmp_trenchfx_init(int obj, int data) {
-    int state = *(int *)(obj + 0xB8);
+    MmpTrenchfxState *state = *(MmpTrenchfxState **)(obj + 0xB8);
     s16 v;
-    *(s16 *)state = *(s16 *)(data + 0x24);
-    *(u16 *)(state + 2) = (u16)((*(u8 *)(data + 0x1C)) << 2);
-    *(u16 *)(state + 4) = (u16)((*(u8 *)(data + 0x1D)) << 2);
-    *(u16 *)(state + 6) = (u16)((*(u8 *)(data + 0x1E)) << 2);
+    state->enableBit = *(s16 *)(data + 0x24);
+    state->extentX = (u16)((*(u8 *)(data + 0x1C)) << 2);
+    state->extentZ = (u16)((*(u8 *)(data + 0x1D)) << 2);
+    state->extentY = (u16)((*(u8 *)(data + 0x1E)) << 2);
     v = (s16)(((s32)*(s8 *)(data + 0x19)) << 8);
-    *(s16 *)(state + 0xC) = v;
+    state->emitAngles[2] = v;
     *(s16 *)(obj + 4) = v;
     v = (s16)(((s32)*(s8 *)(data + 0x1A)) << 8);
-    *(s16 *)(state + 0xA) = v;
+    state->emitAngles[1] = v;
     *(s16 *)(obj + 2) = v;
     v = (s16)(((s32)*(s8 *)(data + 0x1B)) << 8);
-    *(s16 *)(state + 0x8) = v;
+    state->emitAngles[0] = v;
     *(s16 *)obj = v;
     *(f32 *)(obj + 8) = lbl_803E45C0;
 }
@@ -1833,7 +1913,7 @@ extern f32 lbl_803E4578;
 #pragma scheduling off
 #pragma peephole off
 void fn_801A7CC4(int obj) {
-    int state = *(int *)(obj + 0xB8);
+    MmpMoonrockState *state = *(MmpMoonrockState **)(obj + 0xB8);
     struct {
         s16 a;
         s16 b;
@@ -1858,7 +1938,7 @@ void fn_801A7CC4(int obj) {
     stk.b = 0;
     stk.a = *(s16 *)player;
     vecRotateZXY(&stk, (void *)(obj + 0x24));
-    *(u16 *)(state + 0x24) |= 0x40;
+    state->flags |= 0x40;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1867,12 +1947,12 @@ void fn_801A7CC4(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void fn_801A80F0(int obj, u8 flag) {
-    int state = *(int *)(obj + 0xB8);
+    MmpMoonrockState *state = *(MmpMoonrockState **)(obj + 0xB8);
     if (flag != 0) {
-        *(u16 *)(state + 0x24) |= 0x4;
+        state->flags |= 0x4;
         *(u8 *)(obj + 0xAF) |= 0x8;
     } else {
-        *(u16 *)(state + 0x24) &= ~0x4;
+        state->flags &= ~0x4;
         *(u8 *)(obj + 0xAF) &= ~0x8;
     }
 }
@@ -1925,31 +2005,31 @@ int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32 *out1, int *out2) {
 #pragma scheduling off
 void mmp_moonrock_init(int obj, int param2)
 {
-    int state = *(int *)(obj + 0xb8);
+    MmpMoonrockState *state = *(MmpMoonrockState **)(obj + 0xb8);
     u8 kind;
     *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
-    *(s16 *)(state + 0x24) = 0;
-    *(u8 *)(state + 0x2e) = (u8)GameBit_Get(*(s16 *)(param2 + 0x1a));
-    kind = *(u8 *)(state + 0x2e);
+    *(s16 *)&state->flags = 0;
+    state->kind = (u8)GameBit_Get(*(s16 *)(param2 + 0x1a));
+    kind = state->kind;
     if (kind != 0) {
         if ((u8)(kind - 3) <= 1 || kind == 6) {
-            *(u16 *)(state + 0x24) = *(u16 *)(state + 0x24) | 0x400;
+            state->flags = state->flags | 0x400;
         }
-        (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))(state, 0);
+        (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))((int)state, 0);
     } else {
-        (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))(state, 1);
+        (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))((int)state, 1);
     }
     {
         f32 z = *(f32 *)(obj + 0x10);
-        *(f32 *)(state + 0xc) = z;
-        *(f32 *)(state + 0x10) = z;
+        state->baseY = z;
+        state->baseY2 = z;
     }
     (*(int (**)(int, int, int))(*(int *)lbl_803DCAC0 + 0x4))(obj, *(int *)(obj + 0xb8), 0x32);
-    (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x2c))(state, 1);
+    (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x2c))((int)state, 1);
     ObjGroup_AddObject(obj, 4);
-    *(f32 *)(state + 0x18) = *(f32 *)(obj + 0xc);
-    *(f32 *)(state + 0x1c) = *(f32 *)(obj + 0x10);
-    *(f32 *)(state + 0x20) = *(f32 *)(obj + 0x14);
+    state->homeX = *(f32 *)(obj + 0xc);
+    state->homeY = *(f32 *)(obj + 0x10);
+    state->homeZ = *(f32 *)(obj + 0x14);
     ObjHits_DisableObject(obj);
     fn_801A7D74(obj, 1, 2);
 }
@@ -1968,13 +2048,13 @@ void fn_801A7D74(int obj, u8 a, u8 b) {
     int i;
     int count;
     int *list;
-    int state;
+    MmpMoonrockState *state;
     int odef;
     int mydef;
     s8 g1;
     s8 g2;
 
-    state = *(int *)(obj + 0xB8);
+    state = *(MmpMoonrockState **)(obj + 0xB8);
     list = ObjList_GetObjects(&i, &count);
     for (; i < count; i++) {
         u32 o = (u32)list[i];
@@ -1986,11 +2066,11 @@ void fn_801A7D74(int obj, u8 a, u8 b) {
             g1 = GameBit_Get(0x88C);
             g2 = GameBit_Get(0x894);
             if (a == 0) {
-                (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))(state, 1);
+                (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))((int)state, 1);
                 if (*(s16 *)(odef + 0x1E) != -1) {
                     GameBit_Set(*(s16 *)(odef + 0x1E), 0);
                 }
-                c = *(u8 *)(state + 0x2E);
+                c = state->kind;
                 if (c == 3) goto dec;
                 if (c == 4) goto dec;
                 if (c == 6) {
@@ -2001,20 +2081,20 @@ void fn_801A7D74(int obj, u8 a, u8 b) {
                 }
                 if (*(s16 *)(mydef + 0x1A) != -1) {
                     GameBit_Set(*(s16 *)(mydef + 0x1A), 0);
-                    *(u8 *)(state + 0x2E) = 0;
+                    state->kind = 0;
                 }
                 {
                     f32 y = *(f32 *)(obj + 0x10);
-                    *(f32 *)(state + 0xC) = y;
-                    *(f32 *)(state + 0x10) = y;
+                    state->baseY = y;
+                    state->baseY2 = y;
                 }
-                *(u16 *)(state + 0x24) &= ~0x400;
-                *(f32 *)(obj + 0xC) = *(f32 *)(state + 0x18);
-                *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x1C);
-                *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x20);
+                state->flags &= ~0x400;
+                *(f32 *)(obj + 0xC) = state->homeX;
+                *(f32 *)(obj + 0x10) = state->homeY;
+                *(f32 *)(obj + 0x14) = state->homeZ;
                 saveGame_saveObjectPos(obj);
             } else {
-                (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))(state, 0);
+                (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))((int)state, 0);
                 if (*(s16 *)(odef + 0x1E) != -1) {
                     GameBit_Set(*(s16 *)(odef + 0x1E), 1);
                 }
@@ -2026,14 +2106,14 @@ void fn_801A7D74(int obj, u8 a, u8 b) {
                 }
                 {
                     f32 y = *(f32 *)(obj + 0x10);
-                    *(f32 *)(state + 0xC) = y;
-                    *(f32 *)(state + 0x10) = y;
+                    state->baseY = y;
+                    state->baseY2 = y;
                 }
                 if (*(s16 *)(mydef + 0x1A) != -1) {
                     GameBit_Set(*(s16 *)(mydef + 0x1A), *(s16 *)(odef + 0x1A));
-                    *(u8 *)(state + 0x2E) = *(s16 *)(odef + 0x1A);
+                    state->kind = *(s16 *)(odef + 0x1A);
                 }
-                c = *(u8 *)(state + 0x2E);
+                c = state->kind;
                 if (c == 3) goto held;
                 if (c == 4) goto held;
                 if (c == 6) {
@@ -2045,7 +2125,7 @@ void fn_801A7D74(int obj, u8 a, u8 b) {
                         Sfx_PlayFromObject(0, g1 < 3 ? 0x109 : 0x7E);
                         GameBit_Set(0x9AE, 1);
                     }
-                    *(u16 *)(state + 0x24) |= 0x400;
+                    state->flags |= 0x400;
                     setAButtonIcon(0);
                 } else if (b != 2) {
                     g2 += 1;
@@ -2081,30 +2161,30 @@ extern f32 lbl_803E45B4;
 #pragma scheduling off
 #pragma peephole off
 void mmp_trenchfx_update(int obj) {
-    int state = *(int *)(obj + 0xB8);
-    if (*(s16 *)state == -1 || GameBit_Get(*(s16 *)state) != 0) {
-        *(f32 *)(state + 0x28) -= timeDelta;
-        if (*(f32 *)(state + 0x28) < lbl_803E45B0) {
-            *(f32 *)(state + 0x18) = lbl_803E45B4;
-            *(f32 *)(state + 0x1C) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 2), *(u16 *)(state + 2));
-            *(f32 *)(state + 0x20) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 6), *(u16 *)(state + 6));
-            *(f32 *)(state + 0x24) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 4), *(u16 *)(state + 4));
-            vecRotateZXY((void *)(state + 8), (void *)(state + 0x1C));
-            *(f32 *)(state + 0x1C) += *(f32 *)(obj + 0xC);
-            *(f32 *)(state + 0x20) += *(f32 *)(obj + 0x10);
-            *(f32 *)(state + 0x24) += *(f32 *)(obj + 0x14);
-            *(f32 *)(state + 0x28) = (f32)(int)randomGetRange(0x64, 0xC8);
-            *(f32 *)(state + 0x2C) = (f32)(int)randomGetRange(0x32, 0x64);
+    MmpTrenchfxState *state = *(MmpTrenchfxState **)(obj + 0xB8);
+    if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0) {
+        state->emitCooldown -= timeDelta;
+        if (state->emitCooldown < lbl_803E45B0) {
+            state->fxScale = lbl_803E45B4;
+            state->fxX = (f32)(int)randomGetRange(-(int)state->extentX, state->extentX);
+            state->fxY = (f32)(int)randomGetRange(-(int)state->extentY, state->extentY);
+            state->fxZ = (f32)(int)randomGetRange(-(int)state->extentZ, state->extentZ);
+            vecRotateZXY((void *)state->emitAngles, (void *)&state->fxX);
+            state->fxX += *(f32 *)(obj + 0xC);
+            state->fxY += *(f32 *)(obj + 0x10);
+            state->fxZ += *(f32 *)(obj + 0x14);
+            state->emitCooldown = (f32)(int)randomGetRange(0x64, 0xC8);
+            state->emitTimer = (f32)(int)randomGetRange(0x32, 0x64);
         }
-        *(f32 *)(state + 0x2C) -= timeDelta;
-        if (*(f32 *)(state + 0x2C) > lbl_803E45B0) {
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71F, state + 0x10, 0x200001, -1, 0);
+        state->emitTimer -= timeDelta;
+        if (state->emitTimer > lbl_803E45B0) {
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71F, (int)&state->fxUnk10, 0x200001, -1, 0);
         }
         *(f32 *)(lbl_803AC930 + 8) = lbl_803E45B4;
-        *(f32 *)(lbl_803AC930 + 0xC) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 2), *(u16 *)(state + 2));
-        *(f32 *)(lbl_803AC930 + 0x10) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 6), *(u16 *)(state + 6));
-        *(f32 *)(lbl_803AC930 + 0x14) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 4), *(u16 *)(state + 4));
-        vecRotateZXY((void *)(state + 8), (void *)(lbl_803AC930 + 0xC));
+        *(f32 *)(lbl_803AC930 + 0xC) = (f32)(int)randomGetRange(-(int)state->extentX, state->extentX);
+        *(f32 *)(lbl_803AC930 + 0x10) = (f32)(int)randomGetRange(-(int)state->extentY, state->extentY);
+        *(f32 *)(lbl_803AC930 + 0x14) = (f32)(int)randomGetRange(-(int)state->extentZ, state->extentZ);
+        vecRotateZXY((void *)state->emitAngles, (void *)(lbl_803AC930 + 0xC));
         *(f32 *)(lbl_803AC930 + 0xC) += *(f32 *)(obj + 0xC);
         *(f32 *)(lbl_803AC930 + 0x10) += *(f32 *)(obj + 0x10);
         *(f32 *)(lbl_803AC930 + 0x14) += *(f32 *)(obj + 0x14);
@@ -2142,59 +2222,59 @@ extern f32 lbl_803E453C;
 #pragma scheduling off
 #pragma peephole off
 void mmp_asteroid_re_update(int obj) {
-    u8 *state = *(u8 **)(obj + 0xB8);
-    if ((*state & 0x80) == 0) {
+    MmpAsteroidReState *state = *(MmpAsteroidReState **)(obj + 0xB8);
+    if ((state->eventFlags & 0x80) == 0) {
         if (GameBit_Get(0xD52) != 0) {
-            state[2] = 1;
+            state->intensity = 1;
         } else {
-            state[2] = GameBit_Get(0x88C);
+            state->intensity = GameBit_Get(0x88C);
         }
-        state[1] = 2;
+        state->phase = 2;
         Sfx_KeepAliveLoopedObjectSound(obj, 0x107);
         {
-            int vol = state[2] * 0x20 + 0x20;
+            int vol = state->intensity * 0x20 + 0x20;
             if (vol > 0x7F) {
                 vol = 0x7F;
             }
             Sfx_SetObjectChannelVolume(obj, 0x40, vol, lbl_803E44FC);
         }
-        if (state[2] != 0) {
+        if (state->intensity != 0) {
             f32 speed = *(f32 *)(obj + 0x28);
-            if (speed < lbl_803E4500 * ((*(f32 *)(state + 0xC) + *(f32 *)(lbl_803231D0 + state[2] * 4)) - *(f32 *)(obj + 0x10))) {
+            if (speed < lbl_803E4500 * ((state->baseY + *(f32 *)(lbl_803231D0 + state->intensity * 4)) - *(f32 *)(obj + 0x10))) {
                 *(f32 *)(obj + 0x28) = lbl_803E4504 * timeDelta + speed;
             } else {
                 *(f32 *)(obj + 0x28) = -(lbl_803E4508 * timeDelta - speed);
             }
-            *(s16 *)(state + 0x14) = lbl_803E450C * timeDelta + (f32)*(u16 *)(state + 0x14);
-            *(s16 *)(state + 0x16) = lbl_803E4510 * timeDelta + (f32)*(u16 *)(state + 0x16);
-            *(s16 *)(state + 0x18) = lbl_803E4514 * timeDelta + (f32)*(u16 *)(state + 0x18);
+            *(s16 *)&state->bobPhase = lbl_803E450C * timeDelta + (f32)state->bobPhase;
+            *(s16 *)&state->rollPhase = lbl_803E4510 * timeDelta + (f32)state->rollPhase;
+            *(s16 *)&state->pitchPhase = lbl_803E4514 * timeDelta + (f32)state->pitchPhase;
             ((void (*)(int, f32, f32, f32))objMove)(obj, lbl_803E4518, *(f32 *)(obj + 0x28) * timeDelta, lbl_803E4518);
-            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + fn_80293E80((lbl_803E451C * (f32)*(u16 *)(state + 0x14)) / lbl_803E4520);
-            if (*(f32 *)(obj + 0x10) < *(f32 *)(state + 0xC)) {
-                *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xC);
+            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + fn_80293E80((lbl_803E451C * (f32)state->bobPhase) / lbl_803E4520);
+            if (*(f32 *)(obj + 0x10) < state->baseY) {
+                *(f32 *)(obj + 0x10) = state->baseY;
             }
-            *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) + (int)(lbl_803E4524 * fn_80293E80((lbl_803E451C * (f32)*(u16 *)(state + 0x16)) / lbl_803E4520)));
-            *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) + (int)(lbl_803E4524 * fn_80293E80((lbl_803E451C * (f32)*(u16 *)(state + 0x18)) / lbl_803E4520)));
+            *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) + (int)(lbl_803E4524 * fn_80293E80((lbl_803E451C * (f32)state->rollPhase) / lbl_803E4520)));
+            *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) + (int)(lbl_803E4524 * fn_80293E80((lbl_803E451C * (f32)state->pitchPhase) / lbl_803E4520)));
             *(f32 *)(lbl_803AC900 + 8) = lbl_803E44F8;
             *(f32 *)(lbl_803AC900 + 0xC) = *(f32 *)(obj + 0xC);
-            *(f32 *)(lbl_803AC900 + 0x10) = *(f32 *)(state + 0xC) - lbl_803E4528;
+            *(f32 *)(lbl_803AC900 + 0x10) = state->baseY - lbl_803E4528;
             *(f32 *)(lbl_803AC900 + 0x14) = *(f32 *)(obj + 0x14);
-            lbl_803DDB30 = (int)(*(f32 *)(obj + 0x10) - *(f32 *)(state + 0xC));
+            lbl_803DDB30 = (int)(*(f32 *)(obj + 0x10) - state->baseY);
             (*(int (*)(int, int, int, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x722, 0, 2, -1, &lbl_803DDB30);
             (*(int (*)(int, int, char *, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x723, lbl_803AC900, 0x200001, -1, &lbl_803DDB30);
             (*(int (*)(int, int, char *, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x723, lbl_803AC900, 0x200001, -1, &lbl_803DDB30);
         }
     }
-    if (*state != 0) {
-        if ((*state & 1) != 0) {
+    if (state->eventFlags != 0) {
+        if ((state->eventFlags & 1) != 0) {
             (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x716, 0, 1, -1, 0);
             (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x716, 0, 1, -1, 0);
             (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x716, 0, 1, -1, 0);
         }
-        if ((*state & 8) != 0) {
+        if ((state->eventFlags & 8) != 0) {
             (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71A, 0, 2, -1, 0);
         }
-        if ((*state & 0x10) != 0) {
+        if ((state->eventFlags & 0x10) != 0) {
             int n;
             (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71B, 0, 1, -1, 0);
             n = 0x28;
@@ -2205,31 +2285,31 @@ void mmp_asteroid_re_update(int obj) {
             spawnExplosion(obj, lbl_803E452C, 1, 1, 0, 1, 0, 1, 0);
             CameraShake_Start(lbl_803E4530, lbl_803E4534, lbl_803E4538);
             doRumble(lbl_803E453C);
-            *state &= ~0x10;
+            state->eventFlags &= ~0x10;
         }
-        if ((*state & 0x20) != 0) {
+        if ((state->eventFlags & 0x20) != 0) {
             (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71D, 0, 1, -1, 0);
             (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71D, 0, 1, -1, 0);
         }
-        if ((*state & 0x40) != 0) {
-            *(f32 *)(state + 8) -= timeDelta;
-            if (*(f32 *)(state + 8) < lbl_803E4518) {
-                *(f32 *)(state + 8) = (f32)(int)randomGetRange(10, 0x3C);
+        if ((state->eventFlags & 0x40) != 0) {
+            state->periodicFxTimer -= timeDelta;
+            if (state->periodicFxTimer < lbl_803E4518) {
+                state->periodicFxTimer = (f32)(int)randomGetRange(10, 0x3C);
                 (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71E, 0, 1, -1, 0);
             }
         }
     }
     {
-        f32 v = *(f32 *)(state + 4);
+        f32 v = state->stateTimer;
         f32 k = lbl_803E4518;
         if (v > k) {
-            *(f32 *)(state + 4) = v - timeDelta;
-            if (*(f32 *)(state + 4) <= k) {
+            state->stateTimer = v - timeDelta;
+            if (state->stateTimer <= k) {
                 GameBit_Set(0x88B, 0);
             }
         }
     }
-    *state &= ~0x80;
+    state->eventFlags &= ~0x80;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2252,7 +2332,7 @@ extern f32 lbl_803E45A0;
 #pragma scheduling off
 #pragma peephole off
 void mmp_moonrock_update(int obj) {
-    int state = *(int *)(obj + 0xB8);
+    MmpMoonrockState *state = *(MmpMoonrockState **)(obj + 0xB8);
     int def = *(int *)(obj + 0x4C);
     u8 grabbed;
     int d;
@@ -2260,39 +2340,39 @@ void mmp_moonrock_update(int obj) {
     if (objPosToMapBlockIdx(*(f32 *)(obj + 0xC), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14)) == -1) {
         return;
     }
-    if ((*(u16 *)(state + 0x24) & 4) != 0) {
+    if ((state->flags & 4) != 0) {
         return;
     }
-    if ((*(u16 *)(state + 0x24) & 0x200) != 0) {
-        f32 v = *(f32 *)(state + 0x14);
+    if ((state->flags & 0x200) != 0) {
+        f32 v = state->respawnTimer;
         f32 k = lbl_803E4554;
         if (v > k) {
-            *(f32 *)(state + 0x14) = v - timeDelta;
-            if (*(f32 *)(state + 0x14) <= k) {
-                *(s16 *)(state + 0x24) = 0;
+            state->respawnTimer = v - timeDelta;
+            if (state->respawnTimer <= k) {
+                *(s16 *)&state->flags = 0;
                 *(u8 *)(obj + 0x36) = 0xFF;
                 ObjHits_DisableObject(obj);
                 fn_801A7D74(obj, 1, 1);
             } else {
-                *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E4584 * (lbl_803E457C - *(f32 *)(state + 0x14) / lbl_803E4558));
-                objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - *(f32 *)(state + 0x14) / lbl_803E4558, 0);
-                objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - *(f32 *)(state + 0x14) / lbl_803E4558, 0);
+                *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E4584 * (lbl_803E457C - state->respawnTimer / lbl_803E4558));
+                objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - state->respawnTimer / lbl_803E4558, 0);
+                objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - state->respawnTimer / lbl_803E4558, 0);
             }
         }
         return;
     }
     objfx_spawnDirectionalBurst(obj, 1, lbl_803E457C, 5, 1, 0xA, lbl_803E454C, 0, 0);
     objfx_spawnDirectionalBurst(obj, 5, lbl_803E457C, 5, 1, 0x14, lbl_803E454C, 0, 0);
-    if ((*(u16 *)(state + 0x24) & 0x40) != 0) {
+    if ((state->flags & 0x40) != 0) {
         fn_801A7B10(obj);
         fn_801A79E0(obj);
         return;
     }
     grabbed = 0;
-    if ((*(u16 *)(state + 0x24) & 8) != 0 &&
+    if ((state->flags & 8) != 0 &&
         ((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(0x12, 6) == 0) {
-        *(u16 *)(state + 0x24) |= 1;
-    } else if ((*(u16 *)(state + 0x24) & 0x400) == 0) {
+        state->flags |= 1;
+    } else if ((state->flags & 0x400) == 0) {
         if (*(s16 *)(def + 0x20) != -1 && GameBit_Get(*(s16 *)(def + 0x20)) == 0) {
             *(u8 *)(obj + 0xAF) |= 8;
         } else if ((*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x8))(obj, *(int *)(obj + 0xB8)) != 0) {
@@ -2301,7 +2381,7 @@ void mmp_moonrock_update(int obj) {
     } else {
         *(u8 *)(obj + 0xAF) |= 8;
     }
-    *(u16 *)(state + 0x24) &= ~0x8;
+    state->flags &= ~0x8;
     if (grabbed != 0) {
         int stateCopy;
         int i;
@@ -2309,12 +2389,12 @@ void mmp_moonrock_update(int obj) {
         u8 found;
         if ((playerGetStateFlag310((int)Obj_GetPlayerObject()) & 0x4000) != 0) {
             setAButtonIcon(5);
-            *(u16 *)(state + 0x24) |= 0x18;
-            *(u16 *)(state + 0x24) &= ~0x20;
+            state->flags |= 0x18;
+            state->flags &= ~0x20;
         } else {
             setAButtonIcon(4);
-            *(u16 *)(state + 0x24) |= 0x28;
-            *(u16 *)(state + 0x24) &= ~0x10;
+            state->flags |= 0x28;
+            state->flags &= ~0x10;
         }
         stateCopy = *(int *)(obj + 0xB8);
         (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x24))(stateCopy, 0);
@@ -2335,59 +2415,59 @@ void mmp_moonrock_update(int obj) {
         found = 1;
     checked:
         if (found != 0) {
-            *(u16 *)(state + 0x24) |= 1;
+            state->flags |= 1;
         }
-        if ((*(u16 *)(state + 0x24) & 2) != 0) {
+        if ((state->flags & 2) != 0) {
             fn_801A7D74(obj, 0, 0);
-            *(u16 *)(state + 0x24) &= ~0x2;
+            state->flags &= ~0x2;
         }
         return;
     }
     {
-        u16 flags = *(u16 *)(state + 0x24);
+        u16 flags = state->flags;
         if ((flags & 0x400) == 0 && (flags & 1) != 0) {
             if ((flags & 0x20) != 0) {
                 fn_801A7CC4(obj);
             } else {
                 fn_801A7D74(obj, 1, 0);
             }
-            *(u16 *)(state + 0x24) &= ~0x1;
+            state->flags &= ~0x1;
         }
     }
-    *(u16 *)(state + 0x24) |= 2;
-    if (*(u8 *)(state + 0x2E) == 0) {
+    state->flags |= 2;
+    if (state->kind == 0) {
         return;
     }
-    if ((*(u16 *)(state + 0x24) & 0x400) != 0) {
-        *(u8 *)(state + 0x2F) = GameBit_Get(0x894);
+    if ((state->flags & 0x400) != 0) {
+        state->raised = GameBit_Get(0x894);
     } else {
-        *(u8 *)(state + 0x2F) = 0;
+        state->raised = 0;
     }
     Sfx_PlayFromObject(obj, 0x108);
-    Sfx_SetObjectChannelVolume(obj, 0x40, *(u8 *)(state + 0x2F) * 0x20 + 0x20, lbl_803E4588);
+    Sfx_SetObjectChannelVolume(obj, 0x40, state->raised * 0x20 + 0x20, lbl_803E4588);
     {
         f32 speed = *(f32 *)(obj + 0x28);
-        if (speed < lbl_803E458C * ((lbl_803E4568 * (f32)*(u8 *)(state + 0x2F) + *(f32 *)(state + 0xC)) - *(f32 *)(obj + 0x10))) {
+        if (speed < lbl_803E458C * ((lbl_803E4568 * (f32)state->raised + state->baseY) - *(f32 *)(obj + 0x10))) {
             *(f32 *)(obj + 0x28) = speed + lbl_803E4590;
         } else {
             *(f32 *)(obj + 0x28) = speed - lbl_803E4594;
         }
     }
-    *(u16 *)(state + 0x26) += 0x1000;
-    *(u16 *)(state + 0x28) += 0xDAC;
-    *(u16 *)(state + 0x2A) += 0x800;
+    state->bobPhase += 0x1000;
+    state->rollPhase += 0xDAC;
+    state->pitchPhase += 0x800;
     ((void (*)(int, f32, f32, f32))objMove)(obj, lbl_803E4554, *(f32 *)(obj + 0x28) * timeDelta, lbl_803E4554);
-    *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + fn_80293E80((lbl_803E4598 * (f32)*(u16 *)(state + 0x26)) / lbl_803E459C);
-    if (*(f32 *)(obj + 0x10) < *(f32 *)(state + 0xC)) {
-        *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xC);
+    *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + fn_80293E80((lbl_803E4598 * (f32)state->bobPhase) / lbl_803E459C);
+    if (*(f32 *)(obj + 0x10) < state->baseY) {
+        *(f32 *)(obj + 0x10) = state->baseY;
     }
-    *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) + (int)(lbl_803E45A0 * fn_80293E80((lbl_803E4598 * (f32)*(u16 *)(state + 0x28)) / lbl_803E459C)));
-    *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) + (int)(lbl_803E45A0 * fn_80293E80((lbl_803E4598 * (f32)*(u16 *)(state + 0x2A)) / lbl_803E459C)));
+    *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) + (int)(lbl_803E45A0 * fn_80293E80((lbl_803E4598 * (f32)state->rollPhase) / lbl_803E459C)));
+    *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) + (int)(lbl_803E45A0 * fn_80293E80((lbl_803E4598 * (f32)state->pitchPhase) / lbl_803E459C)));
     *(f32 *)(lbl_803AC918 + 8) = lbl_803E457C;
     *(f32 *)(lbl_803AC918 + 0xC) = *(f32 *)(obj + 0xC);
-    *(f32 *)(lbl_803AC918 + 0x10) = *(f32 *)(state + 0xC);
+    *(f32 *)(lbl_803AC918 + 0x10) = state->baseY;
     *(f32 *)(lbl_803AC918 + 0x14) = *(f32 *)(obj + 0x14);
-    d = (int)(*(f32 *)(obj + 0x10) - *(f32 *)(state + 0xC));
+    d = (int)(*(f32 *)(obj + 0x10) - state->baseY);
     (*(int (*)(int, int, char *, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x723, lbl_803AC918, 0x200001, -1, &d);
 }
 #pragma peephole reset
