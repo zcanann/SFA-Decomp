@@ -4,6 +4,26 @@
 #include "ghidra_import.h"
 #include "global.h"
 
+typedef struct KaldaChomControl {
+    void *spawnedDustObj;
+    u8 unk04[0x10 - 0x04];
+    f32 upperMouthPosX;
+    f32 upperMouthPosY;
+    f32 upperMouthPosZ;
+    u8 unk1C[0x28 - 0x1C];
+    f32 lowerMouthPosX;
+    f32 lowerMouthPosY;
+    f32 lowerMouthPosZ;
+    f32 pullupSfxTimer;
+    f32 idleAnimTimer;
+    f32 unk3C;
+    f32 hitFlashTimer;
+    f32 returnStateTimer;
+    s16 textureScrollAngle;
+    u8 climbFxIndex;
+    u8 soundFlags;
+} KaldaChomControl;
+
 /* campfire_state_GENERATED
  * CampfireState - the obj+0xB8 extra record observed in campfire.c. Field widths
  * mirror the observed deref widths; unobserved ranges are padded. The
@@ -23,8 +43,16 @@ typedef struct CampfireState {
     u8 unk400[0x402 - 0x400];
     s16 targetState;
     u8 unk404[0x40C - 0x404];
-    int control;
-    u8 unk410[0x414 - 0x410];
+    KaldaChomControl *control;
+    KaldaChomControl controlData;
 } CampfireState;
+
+STATIC_ASSERT(sizeof(KaldaChomControl) == 0x4C);
+STATIC_ASSERT(offsetof(KaldaChomControl, pullupSfxTimer) == 0x34);
+STATIC_ASSERT(offsetof(KaldaChomControl, hitFlashTimer) == 0x40);
+STATIC_ASSERT(offsetof(KaldaChomControl, textureScrollAngle) == 0x48);
+STATIC_ASSERT(offsetof(KaldaChomControl, soundFlags) == 0x4B);
+STATIC_ASSERT(offsetof(CampfireState, controlData) == 0x410);
+STATIC_ASSERT(sizeof(CampfireState) == 0x45C);
 
 #endif /* MAIN_DLL_CAMPFIRE_STATE_H_ */

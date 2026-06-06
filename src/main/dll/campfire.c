@@ -128,36 +128,36 @@ extern f32 lbl_803E30CC;
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void kaldaChomFn_8016821c(int param_1,int *param_2)
+void kaldaChomFn_8016821c(int obj, KaldaChomControl *control)
 {
   char cVar1;
   int iVar2;
   int iVar3;
 
-  iVar3 = *(int *)(param_1 + 0x4c);
+  iVar3 = *(int *)(obj + 0x4c);
   lbl_803DDA94 =
        lbl_803E30A0 +
        (float)((double)CONCAT44(0x43300000,(int)*(char *)(iVar3 + 0x28) ^ 0x80000000) -
               DOUBLE_803E3070) / lbl_803E30A4;
-  param_2[0x10] = (int)lbl_803E308C;
-  Sfx_PlayFromObject(param_1,SFXkr_land2);
+  control->hitFlashTimer = lbl_803E308C;
+  Sfx_PlayFromObject(obj,SFXkr_land2);
   iVar2 = 0x28;
   do {
-    (**(code **)(*gPartfxInterface + 8))(param_1,0x717,0,4,0xffffffff,&lbl_803DDA94);
+    (**(code **)(*gPartfxInterface + 8))(obj,0x717,0,4,0xffffffff,&lbl_803DDA94);
     iVar2 = iVar2 + -1;
   } while (iVar2 != 0);
-  if ((*param_2 == 0) && (cVar1 = Obj_IsLoadingLocked(), cVar1 != '\0')) {
+  if ((control->spawnedDustObj == NULL) && (cVar1 = Obj_IsLoadingLocked(), cVar1 != '\0')) {
     iVar2 = Obj_AllocObjectSetup(0x24,0x55e);
-    *(undefined4 *)(iVar2 + 8) = *(undefined4 *)(param_1 + 0xc);
-    *(float *)(iVar2 + 0xc) = lbl_803E30A8 + *(float *)(param_1 + 0x10);
-    *(undefined4 *)(iVar2 + 0x10) = *(undefined4 *)(param_1 + 0x14);
+    *(undefined4 *)(iVar2 + 8) = *(undefined4 *)(obj + 0xc);
+    *(float *)(iVar2 + 0xc) = lbl_803E30A8 + *(float *)(obj + 0x10);
+    *(undefined4 *)(iVar2 + 0x10) = *(undefined4 *)(obj + 0x14);
     *(undefined *)(iVar2 + 4) = *(undefined *)(iVar3 + 4);
     *(undefined *)(iVar2 + 5) = *(undefined *)(iVar3 + 5);
     *(undefined *)(iVar2 + 6) = *(undefined *)(iVar3 + 6);
     *(undefined *)(iVar2 + 7) = *(undefined *)(iVar3 + 7);
     iVar2 = Obj_SetupObject(iVar2,5,0xffffffff,0xffffffff,0);
-    *param_2 = iVar2;
-    *(float *)(*param_2 + 8) = lbl_803DDA94;
+    control->spawnedDustObj = (void *)iVar2;
+    *(float *)((u8 *)control->spawnedDustObj + 8) = lbl_803DDA94;
   }
   return;
 }
@@ -177,29 +177,29 @@ void kaldaChomFn_8016821c(int param_1,int *param_2)
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void kaldaChomFn_80168374(int param_1, int param_2, u8 param_3)
+void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
 {
-  int iVar4;
+  KaldaChomControl *control;
   int iVar3;
   u8 *setup;
   f32 h;
   f32 spd;
   f32 r;
 
-  iVar4 = *(int *)(param_2 + 0x40c);
-  iVar3 = *(int *)(param_1 + 0x4c);
+  control = ((CampfireState *)state)->control;
+  iVar3 = *(int *)(obj + 0x4c);
   if (Obj_IsLoadingLocked() != 0) {
     h = lbl_803E30A0 + (f32)(s32)*(s8 *)(iVar3 + 0x28) / lbl_803E30A4;
     iVar3 = Obj_AllocObjectSetup(0x24, 0x51b);
-    if (param_3 != 0) {
-      *(f32 *)(iVar3 + 8) = *(f32 *)(iVar4 + 0x10);
-      *(f32 *)(iVar3 + 0xc) = *(f32 *)(iVar4 + 0x14);
-      *(f32 *)(iVar3 + 0x10) = *(f32 *)(iVar4 + 0x18);
+    if (useUpperMouthPoint != 0) {
+      *(f32 *)(iVar3 + 8) = control->upperMouthPosX;
+      *(f32 *)(iVar3 + 0xc) = control->upperMouthPosY;
+      *(f32 *)(iVar3 + 0x10) = control->upperMouthPosZ;
     }
     else {
-      *(f32 *)(iVar3 + 8) = *(f32 *)(iVar4 + 0x28);
-      *(f32 *)(iVar3 + 0xc) = *(f32 *)(iVar4 + 0x2c);
-      *(f32 *)(iVar3 + 0x10) = *(f32 *)(iVar4 + 0x30);
+      *(f32 *)(iVar3 + 8) = control->lowerMouthPosX;
+      *(f32 *)(iVar3 + 0xc) = control->lowerMouthPosY;
+      *(f32 *)(iVar3 + 0x10) = control->lowerMouthPosZ;
     }
     *(u8 *)(iVar3 + 4) = 1;
     *(u8 *)(iVar3 + 5) = 4;
@@ -207,14 +207,14 @@ void kaldaChomFn_80168374(int param_1, int param_2, u8 param_3)
     *(u8 *)(iVar3 + 7) = 0xff;
     setup = (u8 *)Obj_SetupObject(iVar3, 5, 0xffffffff, 0xffffffff, 0);
     if (setup != NULL) {
-      spd = lbl_803E30AC * (*(f32 *)(param_2 + 0x2c0) / (f32)(u32)*(u16 *)(param_2 + 0x3fe));
+      spd = lbl_803E30AC * (((GroundBaddieState *)state)->baddie.targetDistance / (f32)(u32)((GroundBaddieState *)state)->aggroRange);
       *(f32 *)(setup + 0x24) =
-          (*(f32 *)(*(int *)(param_2 + 0x2d0) + 0xc) - *(f32 *)(iVar3 + 8)) / spd;
+          (((GameObject *)((GroundBaddieState *)state)->baddie.targetObj)->anim.worldPosX - *(f32 *)(iVar3 + 8)) / spd;
       r = (f32)(s32)randomGetRange(-0xa, 0xa);
       *(f32 *)(setup + 0x28) =
-          (lbl_803E30A8 * h + *(f32 *)(*(int *)(param_2 + 0x2d0) + 0x10) + r - *(f32 *)(iVar3 + 0xc)) / spd;
+          (lbl_803E30A8 * h + ((GameObject *)((GroundBaddieState *)state)->baddie.targetObj)->anim.worldPosY + r - *(f32 *)(iVar3 + 0xc)) / spd;
       *(f32 *)(setup + 0x2c) =
-          (*(f32 *)(*(int *)(param_2 + 0x2d0) + 0x14) - *(f32 *)(iVar3 + 0x10)) / spd;
+          (((GameObject *)((GroundBaddieState *)state)->baddie.targetObj)->anim.worldPosZ - *(f32 *)(iVar3 + 0x10)) / spd;
     }
   }
 }
@@ -237,46 +237,47 @@ void kaldaChomFn_80168374(int param_1, int param_2, u8 param_3)
 #pragma peephole off
 void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 {
-  int sub_40c = *(int *)(p2 + 0x40c);
+  KaldaChomControl *control = ((CampfireState *)p2)->control;
+  GroundBaddieState *eventState = (GroundBaddieState *)p3;
 
   lbl_803DDA98 = lbl_803E30A0 + (f32)(s32)(s8)*(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x28) / lbl_803E30A4;
 
-  if ((*(int *)(p3 + 0x314) &0x1) != 0) {
-    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x1;
+  if ((eventState->baddie.eventFlags &0x1) != 0) {
+    eventState->baddie.eventFlags &= ~0x1;
     Sfx_PlayFromObject(obj, SFXkr_climb1);
   }
-  if ((*(int *)(p3 + 0x314) &0x80) != 0) {
+  if ((eventState->baddie.eventFlags &0x80) != 0) {
     int n;
-    *(u8 *)(sub_40c + 0x4a) = (u8)randomGetRange(0, 2);
-    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x80;
+    control->climbFxIndex = (u8)randomGetRange(0, 2);
+    eventState->baddie.eventFlags &= ~0x80;
     Sfx_PlayFromObject(obj, SFXkr_climb2);
-    for (n = (2 - (s32)*(u8 *)(sub_40c + 0x4a)) * 10; n != 0; n--) {
+    for (n = (2 - (s32)control->climbFxIndex) * 10; n != 0; n--) {
       (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
           obj, 1809, 0, 4, -1, (int)&lbl_803DDA98);
     }
   }
-  if ((*(int *)(p3 + 0x314) &0x40) != 0) {
-    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x40;
+  if ((eventState->baddie.eventFlags &0x40) != 0) {
+    eventState->baddie.eventFlags &= ~0x40;
     kaldaChomFn_80168374(obj, p2, 0);
   }
-  if ((*(int *)(p3 + 0x314) &0x20) != 0) {
-    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x20;
+  if ((eventState->baddie.eventFlags &0x20) != 0) {
+    eventState->baddie.eventFlags &= ~0x20;
     kaldaChomFn_80168374(obj, p2, 1);
   }
-  if ((*(int *)(p3 + 0x314) &0x200) != 0) {
-    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x200;
+  if ((eventState->baddie.eventFlags &0x200) != 0) {
+    eventState->baddie.eventFlags &= ~0x200;
     Sfx_PlayFromObject(obj, SFXkr_land1);
   }
-  if ((*(int *)(p3 + 0x314) &0x400) != 0) {
+  if ((eventState->baddie.eventFlags &0x400) != 0) {
     int n;
-    *(u8 *)(sub_40c + 0x4a) = 3;
+    control->climbFxIndex = 3;
     n = 10;
     do {
       (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
           obj, 1808, 0, 4, -1, (int)&lbl_803DDA98);
       n--;
     } while (n != 0);
-    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x400;
+    eventState->baddie.eventFlags &= ~0x400;
   }
 }
 #pragma peephole reset
@@ -316,7 +317,7 @@ extern u8 lbl_803AC668[0x18];
 #pragma peephole off
 void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
 {
-  int *piVar8;
+  KaldaChomControl *control;
   int playerObj;
   int result;
   u8 rnd;
@@ -325,7 +326,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
   u16 hitAux1;
   u16 hitAux2;
 
-  piVar8 = *(int **)(stateWithBaddieData + 0x40c);
+  control = ((CampfireState *)stateWithBaddieData)->control;
   st.p = *(KaldaCombatParams *)lbl_802C2210;
   playerObj = Obj_GetPlayerObject();
   if (((GroundBaddieState *)state)->baddie.targetObj != NULL) {
@@ -362,8 +363,8 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
         lbl_803AC668);
     if (result != 0) {
       if (result != 0x11) {
-        if ((result != 0x10) && (*(f32 *)((char *)piVar8 + 0x40) < lbl_803E30C0)) {
-          kaldaChomFn_8016821c(obj, piVar8);
+        if ((result != 0x10) && (control->hitFlashTimer < lbl_803E30C0)) {
+          kaldaChomFn_8016821c(obj, control);
           *(f32 *)(lbl_803AC668 + 8) = lbl_803E3078;
           *(u16 *)(lbl_803AC668 + 4) = 0;
           *(u16 *)(lbl_803AC668 + 2) = 0;
@@ -393,18 +394,18 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
     }
   }
 
-  if (*(void **)piVar8 != NULL) {
-    if (*(f32 *)((char *)piVar8 + 0x40) <= lbl_803E3060) {
-      *(u8 *)(*(int *)piVar8 + 0x36) = 0;
-      *(f32 *)((char *)piVar8 + 0x40) = lbl_803E3060;
+  if (control->spawnedDustObj != NULL) {
+    if (control->hitFlashTimer <= lbl_803E3060) {
+      *(u8 *)((u8 *)control->spawnedDustObj + 0x36) = 0;
+      control->hitFlashTimer = lbl_803E3060;
     }
     else {
-      rnd = randomGetRange(0, (u8)(s32)*(f32 *)((char *)piVar8 + 0x40));
-      *(u8 *)(*(int *)piVar8 + 0x36) = rnd;
-      *(s16 *)(*(int *)piVar8 + 4) = ((GameObject *)obj)->anim.rotZ;
-      *(s16 *)(*(int *)piVar8 + 2) = ((GameObject *)obj)->anim.rotY;
-      *(s16 *)(*(int *)piVar8 + 0) = *(s16 *)obj;
-      *(f32 *)((char *)piVar8 + 0x40) = *(f32 *)((char *)piVar8 + 0x40) - lbl_803E30C4 * timeDelta;
+      rnd = randomGetRange(0, (u8)(s32)control->hitFlashTimer);
+      *(u8 *)((u8 *)control->spawnedDustObj + 0x36) = rnd;
+      *(s16 *)((u8 *)control->spawnedDustObj + 4) = ((GameObject *)obj)->anim.rotZ;
+      *(s16 *)((u8 *)control->spawnedDustObj + 2) = ((GameObject *)obj)->anim.rotY;
+      *(s16 *)control->spawnedDustObj = *(s16 *)obj;
+      control->hitFlashTimer = control->hitFlashTimer - lbl_803E30C4 * timeDelta;
     }
   }
 }
@@ -415,7 +416,7 @@ void kaldachom_func0B(void) {}
 
 /* 8b "li r3, N; blr" returners and small wrappers. */
 s16 kaldachom_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
-int kaldachom_getExtraSize(void) { return 0x45c; }
+int kaldachom_getExtraSize(void) { return sizeof(CampfireState); }
 int kaldachom_getObjectTypeId(void) { return 0x49; }
 
 /*
@@ -457,7 +458,7 @@ void kaldachom_free(int param_1)
 void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
   int state;
-  int pathData;
+  KaldaChomControl *control;
   
   state = *(int *)&((GameObject *)obj)->extra;
   if ((visible != 0) && (((GameObject *)obj)->unkF4 == 0)) {
@@ -469,9 +470,9 @@ void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if ((*(ushort *)(state + 0x400) & 0x60) != 0) {
       objParticleFn_80099d84(obj,lbl_803E3078,3,*(float *)(state + 1000),0);
     }
-    pathData = ((CampfireState *)state)->control;
-    ObjPath_GetPointWorldPosition(obj,2,pathData + 0x10,pathData + 0x14,pathData + 0x18,0);
-    ObjPath_GetPointWorldPosition(obj,1,pathData + 0x28,pathData + 0x2c,pathData + 0x30,0);
+    control = ((CampfireState *)state)->control;
+    ObjPath_GetPointWorldPosition(obj,2,&control->upperMouthPosX,&control->upperMouthPosY,&control->upperMouthPosZ,0);
+    ObjPath_GetPointWorldPosition(obj,1,&control->lowerMouthPosX,&control->lowerMouthPosY,&control->lowerMouthPosZ,0);
   }
   return;
 }
@@ -500,6 +501,7 @@ void kaldachom_update(int param_1)
   undefined4 uVar4;
   int iVar8;
   int iVar9;
+  KaldaChomControl *control;
   f32 dVar10;
   
   iVar9 = *(int *)(param_1 + 0xb8);
@@ -525,11 +527,11 @@ void kaldachom_update(int param_1)
     else {
       kaldachom_updateCombat(param_1,iVar9,iVar9);
       if (((CampfireState *)iVar9)->targetState == 0) {
-        iVar8 = ((CampfireState *)iVar9)->control;
-        *(float *)(iVar8 + 0x34) = *(float *)(iVar8 + 0x34) - timeDelta;
-        if (*(float *)(iVar8 + 0x34) <= lbl_803E3060) {
+        control = ((CampfireState *)iVar9)->control;
+        control->pullupSfxTimer = control->pullupSfxTimer - timeDelta;
+        if (control->pullupSfxTimer <= lbl_803E3060) {
           Sfx_PlayFromObject(param_1,SFXkr_pullup2);
-          *(float *)(iVar8 + 0x34) = (f32)(int)randomGetRange(300,600);
+          control->pullupSfxTimer = (f32)(int)randomGetRange(300,600);
         }
         uVar3 = Obj_GetPlayerObject();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;
@@ -546,10 +548,10 @@ void kaldachom_update(int param_1)
         }
       }
       else {
-        iVar8 = ((CampfireState *)iVar9)->control;
+        control = ((CampfireState *)iVar9)->control;
         piVar3 = (int *)objFindTexture(param_1,0,0);
-        *(short *)(iVar8 + 0x48) = *(short *)(iVar8 + 0x48) + 0x1000;
-        dVar10 = mathSinf((lbl_803E30B4 * (f32)(s32)*(s16 *)(iVar8 + 0x48)) / lbl_803E30B8);
+        control->textureScrollAngle = control->textureScrollAngle + 0x1000;
+        dVar10 = mathSinf((lbl_803E30B4 * (f32)(s32)control->textureScrollAngle) / lbl_803E30B8);
         *piVar3 = (int)(lbl_803E30B0 * (lbl_803E3078 + dVar10));
         uVar3 = Obj_GetPlayerObject();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;
@@ -586,7 +588,7 @@ void kaldachom_update(int param_1)
 void kaldachom_init(int obj, int data, int skip_alloc)
 {
   int initMode;
-  f32 *pathData;
+  KaldaChomControl *control;
   int state;
   int player;
 
@@ -597,7 +599,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
   }
   (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,obj,data,state,8,6,0,initMode);
   ((GameObject *)obj)->animEventCallback = NULL;
-  pathData = *(f32 **)(state + 0x40c);
+  control = ((CampfireState *)state)->control;
   ObjAnim_SetCurrentMove(obj,4,lbl_803E3060,0x10);
   ((GameObject *)obj)->anim.currentMoveProgress = lbl_803E307C;
   *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
@@ -609,10 +611,10 @@ void kaldachom_init(int obj, int data, int skip_alloc)
   ((CampfireState *)state)->targetObj = player;
   ((GroundBaddieState *)state)->baddie.unk25F = 0;
   ObjHits_DisableObject(obj);
-  pathData[0xd] = (f32)(int)randomGetRange(300,600);
-  pathData[0xe] = (f32)(int)randomGetRange(0,499);
-  pathData[0xf] = lbl_803E3060;
-  *(int *)pathData = 0;
+  control->pullupSfxTimer = (f32)(int)randomGetRange(300,600);
+  control->idleAnimTimer = (f32)(int)randomGetRange(0,499);
+  control->unk3C = lbl_803E3060;
+  control->spawnedDustObj = NULL;
   ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
   ((GameObject *)obj)->anim.rootMotionScale = lbl_803E30A0 + (f32)(s32)*(s8 *)(data + 0x28) / lbl_803E30A4;
   ObjHitbox_SetSphereRadius(obj,(int)(lbl_803E30CC * ((GameObject *)obj)->anim.rootMotionScale));

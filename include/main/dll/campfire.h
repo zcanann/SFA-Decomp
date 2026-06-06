@@ -2,10 +2,11 @@
 #define MAIN_DLL_CAMPFIRE_H_
 
 #include "ghidra_import.h"
+#include "main/dll/campfire_state.h"
 #include "main/object_descriptor.h"
 
-void kaldaChomFn_8016821c(int param_1,int *param_2);
-void kaldaChomFn_80168374(int param_1,int param_2,u8 param_3);
+void kaldaChomFn_8016821c(int obj, KaldaChomControl *control);
+void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint);
 void kaldachom_handleAnimEvents(int obj, int p2, int p3);
 void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state);
 void kaldachom_func0B(void);
