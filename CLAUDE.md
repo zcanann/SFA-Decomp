@@ -1054,8 +1054,23 @@ Heuristic:
     `struct { f32 x, y, z; } d;` to claim the 16B slot with ZERO code
     change. Proven: s3dUpdateRoomDistances 99.18→100 (the MP4 musyx
     source literally declares `SND_FVECTOR d; // r1+0x8` while every use
-    is enregistered), s3dAllocateRoomStudios +16B/+0.2. Check MP4 musyx
-    for the upstream form when the fn is audio.
+    is enregistered), s3dAllocateRoomStudios +16B/+0.2, dimlogfire_update
+    97.94→99.75 (3 flat f32 → struct vec, +16B). Check MP4 musyx for the
+    upstream form when the fn is audio. SCOPE NOTE: the corollary applies
+    even when the scalars ARE address-taken in one place (dimlogfire's
+    &local passed to a callee) — the struct still claims MORE space than
+    the bare scalars; but wrapping ALREADY-slotted outparam scalars
+    (CameraModeCrawl's &v20..&v8 quad) is frame-NEUTRAL — the extra 16B
+    there is the separate conversion-temp threshold class. A/B per fn.
+    Threshold caps seen in the census sweep (deletion probes move the
+    frame in 16B steps but no single source construct owns it; 4+ forms
+    tried each): treasurechest_update, CameraModeCrawl_update, drawHudBox
+    (target gives EVERY s16→f32 call-arg conversion a fresh slot — 18
+    slots, zero reuse — while current reuses the if-block's 2; scheduling
+    pragma toggles and if-form variants all inert), foodbag *_func03
+    family (sub-case d: long-lived `base+0x2a8` temp in r0 (volatile) in
+    target vs r25 (saved) in current — naming/decl-order/pragma all
+    inert; see task #146).
 
 68. **`mr rS,r3`-copy forward-prop into early derefs is a PEEPHOLE opt —
     `#pragma peephole off` makes pre-call derefs use the COPY, matching
