@@ -70,8 +70,8 @@ extern uint countLeadingZeros();
 extern RomCurveDef *romCurves[];
 extern RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 extern undefined4 DAT_803dc070;
-extern RomCurveDef *lbl_803DD470;
-extern RomCurveDef *lbl_803DD474;
+extern RomCurveDef *gRomCurveLastFindEnd;
+extern RomCurveDef *gRomCurveLastFindStart;
 extern int nRomCurves;
 extern u32 sCurvesCachedHitCount;
 extern u32 sCurvesCachedHitObj;
@@ -1139,8 +1139,8 @@ foundLinkedCurve:
               absDistance = -distance;
             }
             if (absDistance < absBestDistance) {
-              lbl_803DD474 = curve;
-              lbl_803DD470 = linkedCurve;
+              gRomCurveLastFindStart = curve;
+              gRomCurveLastFindEnd = linkedCurve;
               bestDistance = distance;
               *outX = segment.nearestX;
               *outY = segment.nearestY;
@@ -3976,7 +3976,7 @@ void loadSaveSettings(void)
 /* Pattern wrappers. */
 void curves_initialise(void) { nRomCurves = 0x0; }
 
-void RomCurve_func0D(RomCurveDef **p1, RomCurveDef **p2) { *p1 = lbl_803DD474; *p2 = lbl_803DD470; }
+void RomCurve_func0D(RomCurveDef **startOut, RomCurveDef **endOut) { *startOut = gRomCurveLastFindStart; *endOut = gRomCurveLastFindEnd; }
 
 /* getSaveFileStruct: return &saveData (lis/addi). */
 void* getSaveFileStruct(void) { return &saveData; }
