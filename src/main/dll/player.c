@@ -7704,7 +7704,7 @@ void playerDoHitDetection(int obj)
                 if (((*(s8 *)((char *)inner + 0x264) & 2) != 0 &&
                      (*(s8 *)((char *)inner + 0x264) & 0x20) == 0) ||
                     *(u8 *)((char *)inner + 0x262) != 0 ||
-                    (*(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) & 8) != 0) {
+                    ((*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags & 8) != 0) {
                     if (*(f32 *)((char *)inner + 0x410) <= lbl_803E7EA4 &&
                         *(f32 *)((char *)inner + 0x280) > lbl_803E8160) {
                         doRumble(lbl_803E7F10);
