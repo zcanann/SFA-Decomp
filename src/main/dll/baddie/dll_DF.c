@@ -1231,10 +1231,10 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
         f32 deltaSpeed = lbl_803E2488 + thresh;
         f32 deltaSpeedSq = deltaSpeed * deltaSpeed;
         ctx = ((GameObject *)obj)->extra;
-        otherTarget = *(f32 **)(ctx + 0x28);
-        if (otherTarget == *(f32 **)(ctx + 0x6f0)) {
-            dx = *(f32 *)(ctx + 0x6f4) - *(f32 *)(obj + 0x18);
-            dz = *(f32 *)(ctx + 0x6fc) - ((GameObject *)obj)->anim.worldPosZ;
+        otherTarget = (f32 *)((TrickyState *)ctx)->unk28;
+        if (otherTarget == (f32 *)((TrickyState *)ctx)->previousPathPoint) {
+            dx = ((TrickyState *)ctx)->previousPathX - *(f32 *)(obj + 0x18);
+            dz = ((TrickyState *)ctx)->previousPathZ - ((GameObject *)obj)->anim.worldPosZ;
             vel = sqrtf(dx * dx + dz * dz) * oneOverTimeDelta;
             dx = *(f32 *)((u8 *)otherTarget + 0) - *(f32 *)(obj + 0x18);
             dz = *(f32 *)((u8 *)otherTarget + 8) - ((GameObject *)obj)->anim.worldPosZ;

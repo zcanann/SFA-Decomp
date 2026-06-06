@@ -1249,15 +1249,15 @@ void FUN_8013939c(uint param_1)
   bVar1 = false;
   local_38 = FLOAT_803e30b4;
   iVar2 = FUN_8005b398((double)*(float *)(param_1 + 0x18),(double)*(float *)(param_1 + 0x1c));
-  if ((iVar2 == -1) && ((*(uint *)(iVar3 + 0x54) & 0x80000) == 0)) {
-    *(undefined *)(iVar3 + 0x353) = 0;
+  if ((iVar2 == -1) && ((((TrickyState *)iVar3)->unk54 & 0x80000) == 0)) {
+    ((TrickyState *)iVar3)->unk353 = 0;
     *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(param_1 + 0x80);
     *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(param_1 + 0x84);
     *(undefined4 *)(param_1 + 0x14) = *(undefined4 *)(param_1 + 0x88);
   }
-  *(uint *)(iVar3 + 0x54) = *(uint *)(iVar3 + 0x54) & 0xfff7ffff;
+  ((TrickyState *)iVar3)->unk54 = ((TrickyState *)iVar3)->unk54 & 0xfff7ffff;
   if (*(char *)(iVar3 + 0x374) == '\0') {
-    if ((*(uint *)(iVar3 + 0x54) & 0x2000) != 0) {
+    if ((((TrickyState *)iVar3)->unk54 & 0x2000) != 0) {
       bVar1 = true;
     }
   }
@@ -1269,19 +1269,19 @@ void FUN_8013939c(uint param_1)
     FUN_800632e8((double)*(float *)(param_1 + 0x18),(double)*(float *)(param_1 + 0x1c),
                  (double)*(float *)(param_1 + 0x20),param_1,&local_30,0);
     *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) - local_30;
-    *(undefined *)(iVar3 + 0x353) = 0;
+    ((TrickyState *)iVar3)->unk353 = 0;
   }
-  if ((*(char *)(iVar3 + 0x353) == '\0') || ((*(byte *)(iVar3 + 0x58) >> 5 & 1) != 0)) {
+  if ((*(char *)(iVar3 + 0x353) == '\0') || ((((TrickyState *)iVar3)->unk58 >> 5 & 1) != 0)) {
     *(float *)(param_1 + 0x28) = FLOAT_803e306c;
   }
   else {
-    if (FLOAT_803e306c == *(float *)(iVar3 + 0x2ac)) {
+    if (FLOAT_803e306c == ((TrickyState *)iVar3)->unk2AC) {
       bVar1 = false;
     }
-    else if (FLOAT_803e30a0 == *(float *)(iVar3 + 0x2b0)) {
+    else if (FLOAT_803e30a0 == ((TrickyState *)iVar3)->unk2B0) {
       bVar1 = true;
     }
-    else if (*(float *)(iVar3 + 0x2b4) - *(float *)(iVar3 + 0x2b0) <= FLOAT_803e30a4) {
+    else if (((TrickyState *)iVar3)->unk2B4 - ((TrickyState *)iVar3)->unk2B0 <= FLOAT_803e30a4) {
       bVar1 = false;
     }
     else {
@@ -1289,7 +1289,7 @@ void FUN_8013939c(uint param_1)
     }
     if (bVar1) {
       *(float *)(param_1 + 0x28) = FLOAT_803e306c;
-      *(float *)(param_1 + 0x10) = *(float *)(iVar3 + 0x2b4) - FLOAT_803e307c;
+      *(float *)(param_1 + 0x10) = ((TrickyState *)iVar3)->unk2B4 - FLOAT_803e307c;
     }
     else {
       *(float *)(param_1 + 0x28) = FLOAT_803e30b8 * FLOAT_803dc074 + *(float *)(param_1 + 0x28);
@@ -1302,35 +1302,35 @@ void FUN_8013939c(uint param_1)
      (*(short *)(local_34 + 0x46) == 0x1f)) {
     local_34 = 0;
   }
-  if ((*(uint *)(iVar3 + 0x54) & 8) == 0) {
-    if ((*(int *)(iVar3 + 0x360) == 0) || (local_34 != *(int *)(iVar3 + 0x360))) {
-      *(float *)(iVar3 + 0x364) = FLOAT_803e306c;
+  if ((((TrickyState *)iVar3)->unk54 & 8) == 0) {
+    if ((*(int *)&((TrickyState *)iVar3)->lastContactObj == 0) || (local_34 != *(int *)&((TrickyState *)iVar3)->lastContactObj)) {
+      ((TrickyState *)iVar3)->contactTimer = FLOAT_803e306c;
     }
     else {
-      *(float *)(iVar3 + 0x364) = *(float *)(iVar3 + 0x364) + FLOAT_803dc074;
-      if (FLOAT_803e3070 <= *(float *)(iVar3 + 0x364)) {
-        *(float *)(iVar3 + 0x364) = *(float *)(iVar3 + 0x364) - FLOAT_803e3070;
-        *(uint *)(iVar3 + 0x54) = *(uint *)(iVar3 + 0x54) | 8;
+      ((TrickyState *)iVar3)->contactTimer = ((TrickyState *)iVar3)->contactTimer + FLOAT_803dc074;
+      if (FLOAT_803e3070 <= ((TrickyState *)iVar3)->contactTimer) {
+        ((TrickyState *)iVar3)->contactTimer = ((TrickyState *)iVar3)->contactTimer - FLOAT_803e3070;
+        ((TrickyState *)iVar3)->unk54 = ((TrickyState *)iVar3)->unk54 | 8;
         *(undefined *)(*(int *)(param_1 + 0x50) + 0x71) = 0x7e;
       }
     }
   }
   else {
-    *(float *)(iVar3 + 0x364) = *(float *)(iVar3 + 0x364) + FLOAT_803dc074;
-    if (FLOAT_803e30bc <= *(float *)(iVar3 + 0x364)) {
+    ((TrickyState *)iVar3)->contactTimer = ((TrickyState *)iVar3)->contactTimer + FLOAT_803dc074;
+    if (FLOAT_803e30bc <= ((TrickyState *)iVar3)->contactTimer) {
       iVar2 = FUN_80017a98();
       dVar4 = FUN_80017714((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
       if ((double)FLOAT_803e30c0 < dVar4) {
-        *(float *)(iVar3 + 0x364) = *(float *)(iVar3 + 0x364) - FLOAT_803e30bc;
+        ((TrickyState *)iVar3)->contactTimer = ((TrickyState *)iVar3)->contactTimer - FLOAT_803e30bc;
         *(undefined *)(*(int *)(param_1 + 0x50) + 0x71) = 0x7f;
-        *(uint *)(iVar3 + 0x54) = *(uint *)(iVar3 + 0x54) & 0xfffffff7;
+        ((TrickyState *)iVar3)->unk54 = ((TrickyState *)iVar3)->unk54 & 0xfffffff7;
       }
     }
   }
-  *(int *)(iVar3 + 0x360) = local_34;
-  iVar2 = ObjHits_PollPriorityHitWithCooldown(param_1,(float *)(iVar3 + 0x370),&local_34,afStack_20);
-  *(int *)(iVar3 + 0x368) = iVar2;
-  switch(*(undefined4 *)(iVar3 + 0x368)) {
+  *(int *)&((TrickyState *)iVar3)->lastContactObj = local_34;
+  iVar2 = ObjHits_PollPriorityHitWithCooldown(param_1,&((TrickyState *)iVar3)->hitCooldown,&local_34,afStack_20);
+  ((TrickyState *)iVar3)->unk368 = iVar2;
+  switch(*(u32 *)&((TrickyState *)iVar3)->unk368) {
   case 1:
   case 2:
   case 4:
@@ -1354,23 +1354,23 @@ void FUN_8013939c(uint param_1)
     }
     break;
   case 0x1f:
-    *(float *)(iVar3 + 0x838) = FLOAT_803e30c8;
+    ((TrickyState *)iVar3)->unk838 = FLOAT_803e30c8;
   }
   if (*(char *)(iVar3 + 0x353) == '\0') {
     (**(code **)(*DAT_803dd728 + 0x20))(param_1,iVar3 + 0xf8);
   }
   iVar2 = FUN_8005b024();
   if ((iVar2 == 0xe) || (iVar2 = ObjGroup_FindNearestObject(5,param_1,&local_38), iVar2 != 0)) {
-    *(uint *)(iVar3 + 0xf8) = *(uint *)(iVar3 + 0xf8) & 0xfffffffb;
+    ((TrickyState *)iVar3)->unkF8 = ((TrickyState *)iVar3)->unkF8 & 0xfffffffb;
   }
   else {
-    *(uint *)(iVar3 + 0xf8) = *(uint *)(iVar3 + 0xf8) | 4;
+    ((TrickyState *)iVar3)->unkF8 = ((TrickyState *)iVar3)->unkF8 | 4;
   }
   (**(code **)(*DAT_803dd728 + 0x10))((double)FLOAT_803dc074,param_1,iVar3 + 0xf8);
   (**(code **)(*DAT_803dd728 + 0x14))(param_1,iVar3 + 0xf8);
   (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,param_1,iVar3 + 0xf8);
-  *(undefined2 *)(param_1 + 2) = *(undefined2 *)(iVar3 + 0x290);
-  *(undefined2 *)(param_1 + 4) = *(undefined2 *)(iVar3 + 0x292);
+  *(undefined2 *)(param_1 + 2) = *(u16 *)&((TrickyState *)iVar3)->pathRotY;
+  *(undefined2 *)(param_1 + 4) = *(u16 *)&((TrickyState *)iVar3)->pathRotZ;
   return;
 }
 
