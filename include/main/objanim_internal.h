@@ -209,7 +209,9 @@ typedef struct ObjAnimComponent {
   f32 velocityY;
   f32 velocityZ;
   void *parent;
-  u8 pad34[0x44 - 0x34];
+  u8 pad34[2];
+  u8 alpha;
+  u8 pad37[0x44 - 0x37];
   s16 classId;
   s16 seqId;
   s16 defId;
@@ -356,6 +358,7 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, velocityX) == 0x24);
 STATIC_ASSERT(offsetof(ObjAnimComponent, velocityY) == 0x28);
 STATIC_ASSERT(offsetof(ObjAnimComponent, velocityZ) == 0x2C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, parent) == 0x30);
+STATIC_ASSERT(offsetof(ObjAnimComponent, alpha) == 0x36);
 STATIC_ASSERT(offsetof(ObjAnimComponent, classId) == 0x44);
 STATIC_ASSERT(offsetof(ObjAnimComponent, seqId) == 0x46);
 STATIC_ASSERT(offsetof(ObjAnimComponent, defId) == 0x48);

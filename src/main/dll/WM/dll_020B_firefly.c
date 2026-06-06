@@ -126,11 +126,12 @@ STATIC_ASSERT(offsetof(FireFlyState, messageParam) == FIREFLY_STATE_MESSAGE_PARA
 void FireFlyFn_801f4f88(int obj)
 {
     FireFlyState *state = ((GameObject *)obj)->extra;
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     int player = (int)Obj_GetPlayerObject();
-    if ((int)*(u8 *)(obj + 0x36) < FIREFLY_ALPHA_OPAQUE) {
-        int v = (int)(lbl_803E5EDC * timeDelta + (f32)(int)*(u8 *)(obj + 0x36));
+    if ((int)objAnim->alpha < FIREFLY_ALPHA_OPAQUE) {
+        int v = (int)(lbl_803E5EDC * timeDelta + (f32)(int)objAnim->alpha);
         if (v > FIREFLY_ALPHA_OPAQUE) v = FIREFLY_ALPHA_OPAQUE;
-        *(u8 *)(obj + 0x36) = v;
+        objAnim->alpha = v;
     }
     if (FIREFLY_SPLINE_T(state) > lbl_803E5EB4) {
         FIREFLY_SPLINE_T(state) = FIREFLY_SPLINE_T(state) - lbl_803E5EB4;
@@ -297,7 +298,7 @@ void firefly_init(int obj, int def)
     state = ((GameObject *)obj)->extra;
     mapData = (FireFlyMapData *)def;
     fn_801F4C28(obj, state);
-    *(u8 *)(obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
     ((GameObject *)obj)->animEventCallback = fn_801F4C04;
     ObjMsg_AllocQueue(obj, 1);
     storeZeroToFloatParam(state->activateDelay);

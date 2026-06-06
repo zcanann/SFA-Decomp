@@ -164,7 +164,7 @@ void wcpushblock_init(int obj, int setup)
     WCPushBlockRuntimeState *state = ((GameObject *)obj)->extra;
     WCPushBlockSetup *setupData = (WCPushBlockSetup *)setup;
 
-    *(u8 *)(obj + 0x36) = 0;
+    objAnim->alpha = 0;
     objAnim->bankIndex = setupData->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
@@ -201,7 +201,7 @@ void wcpushblock_update(int obj)
 
     if ((void *)WCPUSHBLOCK_CONTROLLER(state) == 0) {
         WCPUSHBLOCK_CONTROLLER(state) = ObjGroup_FindNearestObject(WCPUSHBLOCK_CONTROLLER_GROUP, obj, &range);
-        *(u8 *)(obj + 0x36) = 0;
+        objAnim->alpha = 0;
         return;
     }
     tex = objFindTexture(obj, 0, 0);
@@ -270,11 +270,11 @@ void wcpushblock_update(int obj)
         break;
     case WCPUSHBLOCK_PHASE_IDLE:
         {
-            int a = *(u8 *)(obj + 0x36) + framesThisStep * 8;
+            int a = objAnim->alpha + framesThisStep * 8;
             if (a > 255) {
                 a = 255;
             }
-            *(u8 *)(obj + 0x36) = a;
+            objAnim->alpha = a;
         }
         {
             f32 zero = lbl_803E6D64;
@@ -462,17 +462,17 @@ void wcpushblock_update(int obj)
         break;
     case WCPUSHBLOCK_PHASE_FADE_OUT:
         ObjHits_DisableObject(obj);
-        if (*(u8 *)(obj + 0x36) == WCPUSHBLOCK_ALPHA_OPAQUE) {
+        if (objAnim->alpha == WCPUSHBLOCK_ALPHA_OPAQUE) {
             Sfx_PlayFromObject(obj, SFXsc_lifeforcedoor);
         }
         {
-            int a = *(u8 *)(obj + 0x36) - (framesThisStep << WCPUSHBLOCK_ALPHA_STEP_SHIFT);
+            int a = objAnim->alpha - (framesThisStep << WCPUSHBLOCK_ALPHA_STEP_SHIFT);
             if (a < 0) {
                 a = 0;
             }
-            *(u8 *)(obj + 0x36) = a;
+            objAnim->alpha = a;
         }
-        if (*(u8 *)(obj + 0x36) == 0) {
+        if (objAnim->alpha == 0) {
             if (wcblock_isPlayerAwayFromStoredCell(obj, state, Obj_GetPlayerObject()) != 0) {
                 if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
                     (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x30))(
@@ -492,23 +492,23 @@ void wcpushblock_update(int obj)
         }
         break;
     case WCPUSHBLOCK_PHASE_FADE_IN:
-        if (*(u8 *)(obj + 0x36) == 0) {
+        if (objAnim->alpha == 0) {
             ObjHits_EnableObject(obj);
             Sfx_PlayFromObject(0, SFXsc_golfbar_swipe);
         }
         {
-            int a = *(u8 *)(obj + 0x36) + (framesThisStep << WCPUSHBLOCK_ALPHA_STEP_SHIFT);
+            int a = objAnim->alpha + (framesThisStep << WCPUSHBLOCK_ALPHA_STEP_SHIFT);
             if (a > WCPUSHBLOCK_ALPHA_OPAQUE) {
                 a = WCPUSHBLOCK_ALPHA_OPAQUE;
             }
-            *(u8 *)(obj + 0x36) = a;
+            objAnim->alpha = a;
         }
-        if (*(u8 *)(obj + 0x36) >= WCPUSHBLOCK_ALPHA_OPAQUE) {
+        if (objAnim->alpha >= WCPUSHBLOCK_ALPHA_OPAQUE) {
             WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_IDLE;
         }
         break;
     case WCPUSHBLOCK_PHASE_SOLVED:
-        *(u8 *)(obj + 0x36) = WCPUSHBLOCK_ALPHA_OPAQUE;
+        objAnim->alpha = WCPUSHBLOCK_ALPHA_OPAQUE;
     case WCPUSHBLOCK_PHASE_LOCKED:
         tex = objFindTexture(obj, 0, 0);
         if (tex != 0) {

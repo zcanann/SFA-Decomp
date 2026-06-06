@@ -341,7 +341,7 @@ LAB_80102ab4:
   else if (lbl_803E1678 < fVar4) {
     fVar4 = lbl_803E1678;
   }
-  *(u8 *)((u8 *)reticle + 0x36) = (int)fVar4;
+  reticle->alpha = (int)fVar4;
   lbl_803DD4C8 = 0x400;
   *(s16 *)reticle = (short)(int)(lbl_803E167C * timeDelta + (float)*(s16 *)reticle);
   return;
