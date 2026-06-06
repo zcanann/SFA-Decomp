@@ -110,3 +110,5 @@ block_relocations:
   end: 0x80080614
 - target: 0x80080404
   end: 0x80080408
+- target: 0x800C0100
+  end: 0x800C0104

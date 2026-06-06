@@ -4075,10 +4075,10 @@ int Effect18_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x714:
         cfg.f60 = (u8)randomGetRange(0x1e, 0x28);
         if (param_6 != 0) {
-            cfg.f60 = (s32)((f32)(u32)cfg.f60 *
-                      ((f32)(s32)*(int *)param_6 / lbl_803E0278));
+            cfg.f60 = (f32)(u32)cfg.f60 *
+                      ((f32)(s32)*(int *)param_6 / lbl_803E0278);
         }
-        cfg.f34 = lbl_803E027C * (f32)(s32)randomGetRange(0x12, 0x14);
+        cfg.f2c = lbl_803E027C * (f32)(s32)randomGetRange(0x12, 0x14);
         cfg.f3c = lbl_803E0280 * (f32)(s32)randomGetRange(0x28, 0x3c);
         cfg.f08 = randomGetRange(8, 0x14);
         cfg.f44 = 0x80204;
