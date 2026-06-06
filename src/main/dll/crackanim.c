@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/crackanim_state.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/crackanim.h"
@@ -357,8 +358,8 @@ void appleontree_init(int obj, int def)
     timeScale *= timeScale;
     ((CrackAnimState *)state)->unk54 = (timeScale * timeScale) * lbl_803E3830;
 
-    *(s16 *)(obj + 0x00) = (s16)randomGetRange(-0x8000, 0x7fff);
-    *(f32 *)(obj + 0x08) = lbl_803E3834;
+    ((GameObject *)obj)->anim.rotX = (s16)randomGetRange(-0x8000, 0x7fff);
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3834;
     Obj_SetActiveModelIndex(obj, 0);
 
     eventBit = *(s16 *)(def + 0x26);
@@ -370,7 +371,7 @@ void appleontree_init(int obj, int def)
         if (progress < ((CrackAnimState *)state)->unk10) {
             ((CrackAnimState *)state)->unk3A = 0;
         } else if (progress < ((CrackAnimState *)state)->unk14) {
-            *(f32 *)(obj + 0x08) = *(f32 *)(*(int *)(obj + 0x50) + 4);
+            ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)(obj + 0x50) + 4);
             ((CrackAnimState *)state)->unk3A = 1;
         } else if (progress < ((CrackAnimState *)state)->unk18) {
             ((CrackAnimState *)state)->unk3A = 2;
@@ -379,7 +380,7 @@ void appleontree_init(int obj, int def)
             texture = objFindTexture(obj, 0, 0);
             *texture = 0;
             ((CrackAnimState *)state)->unk24 = lbl_803E37C8;
-            *(f32 *)(obj + 0x08) = *(f32 *)(*(int *)(obj + 0x50) + 4);
+            ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)(obj + 0x50) + 4);
             Obj_SetActiveModelIndex(obj, 1);
             ((CrackAnimState *)state)->unk3A = 3;
         }
