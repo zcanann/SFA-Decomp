@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/DIM/DIM2icicle.h"
 
 #define DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT 0x20000

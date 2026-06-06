@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMwooddoor.h"
 #include "main/objanim.h"

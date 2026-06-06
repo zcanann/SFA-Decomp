@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/dll/DIM/DIMbossspit.h"
 
 extern f32 timeDelta;

@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/dll/DIM/dll_223.h"
-#include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/objanim.h"
 
 extern undefined4 FUN_800067c0();
