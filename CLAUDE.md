@@ -1077,6 +1077,41 @@ Heuristic:
     (deref via the copy of a NON-r3 param) remains a cap. Supersedes the
     "param-relocation cap class" note in the triage table below.
 
+69. **`cmpwi` immediate is ASYMMETRIC for mathematically-equivalent int
+    compares — match the immediate, not just the predicate.** `if (x <= 0)`
+    emits `cmpwi rX,0; bgt-skip`; the equivalent `if (x < 1)` emits
+    `cmpwi rX,1; bge-skip`. Same for `>= K` vs `> K-1`. When the residual is
+    a single cmpwi-immediate diff (paired with a branch-mnemonic diff), try
+    the equivalent inversion (`< K+1` ↔ `<= K`, `>= K` ↔ `> K-1`) — read
+    which immediate target uses and write that form. pinponspike_update's
+    timer test was `<= 0` (cmpwi 0) where the import wrote `< 1` (cmpwi 1).
+    NOTE the gotcha: the inversion is PER-COMPARE — flipping a different
+    equivalent compare in the same fn regressed the already-matching one.
+
+**Recipe #60 addendum — two more single-instruction real-bug signatures:**
+- **Missing vtable deref**: target `lwz r12,K(rX); mtctr; bctrl` vs current
+  `addi r12,rX,K; mtctr; bctrl` = the C calls the SLOT ADDRESS instead of
+  the loaded function pointer (runtime crash). Add the missing `*` level at
+  the call expression (sh_beacon_update: `(*(fp*)(*iface + 0x20))` →
+  `(**(fp**)(*iface + 0x20))`). Same family as the "Vtable double-deref
+  pattern" section — but found via a SINGLE-instruction byte-diff at 99.78%.
+- **Wrongly-guarded store**: a single branch-DISPLACEMENT diff at 99.9%+
+  (beq jumping past one extra store) = a store/guard the import nested
+  inside a condition that target executes unconditionally
+  (sc_musictree_render: `obj->0xF8 = 1` belonged AFTER the if-block, the
+  import early-returned past it). Suspect behavioral guard bugs before
+  layout caps when ONE branch target is off by one store's width.
+
+**Recipe #65 addendum — the allocator-gap finds REAL dropped arguments.**
+~half of #65 applications surface genuine Ghidra-dropped call args, not
+dead-param signature mismatches: textureFree lost its only argument
+(drawTrickyHudOverlay), objRenderFn_8003b8f4 lost the 6-arg p2-p5
+pass-through (dimlogfire_render, animatedobj_render), trigger/sfx-handle
+ids lost from vcall sites (doorlock_update, sc_totemstrength_update,
+saveSelectOpenFile, imspacethruster_update). When the gap reg is LOADED
+with a meaningful value in target before the bl, the import dropped a real
+argument — restore it, don't just pad the signature.
+
 ### 99.5%+ tier sweep findings (task #142) — category triage table
 
 Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
