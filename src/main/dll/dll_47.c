@@ -385,7 +385,6 @@ void saveSelectGoToChapterSelect(void)
 #pragma dont_inline on
 void saveSelectFn_8011a70c(void) {
     int i;
-    int off;
     saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
     lbl_803DB9FC = 0;
     if (lbl_803DB424 != 0) {
@@ -394,17 +393,23 @@ void saveSelectFn_8011a70c(void) {
             lbl_803DB9FC = 3;
         }
     }
-    i = lbl_803DB9FC;
-    off = i * 0x24;
-    while (i < 3) {
-        sprintf((char *)saveFileSelect_saveSlots + off, &sFrontendStringFormat, &lbl_803DBA20);
-        *((u8 *)saveFileSelect_saveSlots + (off + 0x5)) = 0;
-        *((u8 *)saveFileSelect_saveSlots + (off + 0x6)) = 0;
-        *((u8 *)saveFileSelect_saveSlots + (off + 0x4)) = 0;
-        *((int *)((char *)saveFileSelect_saveSlots + (off + 0x8))) = 0;
-        *((u8 *)saveFileSelect_saveSlots + (off + 0x21)) = 0;
-        off += 0x24;
-        i++;
+    {
+        struct SaveSlotRec {
+            char name[4];
+            u8 f4, f5, f6, pad7;
+            int f8;
+            u8 padc[0x15];
+            u8 f21;
+            u8 pad22[2];
+        };
+        for (i = lbl_803DB9FC; i < 3; i++) {
+            sprintf(((struct SaveSlotRec *)saveFileSelect_saveSlots)[i].name, &sFrontendStringFormat, &lbl_803DBA20);
+            ((struct SaveSlotRec *)saveFileSelect_saveSlots)[i].f5 = 0;
+            ((struct SaveSlotRec *)saveFileSelect_saveSlots)[i].f6 = 0;
+            ((struct SaveSlotRec *)saveFileSelect_saveSlots)[i].f4 = 0;
+            ((struct SaveSlotRec *)saveFileSelect_saveSlots)[i].f8 = 0;
+            ((struct SaveSlotRec *)saveFileSelect_saveSlots)[i].f21 = 0;
+        }
     }
 }
 #pragma dont_inline reset
