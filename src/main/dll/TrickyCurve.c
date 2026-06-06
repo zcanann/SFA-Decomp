@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/trickycurve_state.h"
 #include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
@@ -814,7 +815,7 @@ extern void fn_80206968(int *obj);
 #pragma scheduling off
 #pragma peephole off
 void TrickyCurve_update(int *obj) {
-    u8 *inner = *(u8 **)((char *)obj + 0xb8);
+    u8 *inner = ((GameObject *)obj)->extra;
     u32 state = inner[0xe];
     if (state == 0) {
         TrickyCurve_updateBurstTrigger((int)obj);
@@ -832,7 +833,7 @@ void TrickyCurve_free(int obj) {
 }
 
 void TrickyCurve_init(int *obj, u8 *def) {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     state[0xc] = def[0x19];
     ((TrickyCurveObjState *)state)->unk4 = (s16)((s32)*(s8 *)((char *)def + 0x18) << 2);
     *(s16 *)state = *(s16 *)((char *)def + 0x1a);
@@ -844,7 +845,7 @@ void TrickyCurve_init(int *obj, u8 *def) {
     ((TrickyCurveObjState *)state)->unk8 = *(s16 *)((char *)def + 0x20);
     ((TrickyCurveObjState *)state)->unkA = *(s16 *)((char *)def + 0x1e);
     ((TrickyCurveObjState *)state)->unk6 = 0;
-    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -1,4 +1,5 @@
 #include "main/objanim.h"
+#include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/moveLib.h"
 
@@ -1444,7 +1445,7 @@ void fn_80114B1C(int *obj) {
     int *types;
 
     types = (int *)seqFn_800394a0();
-    state = *(char **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
 
     (*((void (***)(int))gCameraInterface))[18](0);
 

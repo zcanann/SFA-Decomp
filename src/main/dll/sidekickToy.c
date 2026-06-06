@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/dll/sidekickToy.h"
 #include "main/dll/mediumbasket.h"
@@ -2002,13 +2003,13 @@ extern f32 lbl_803E2598;
 
 void fn_8014C5C0(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     *(s16*)((char*)state + 688) = 0;
 }
 
 void fn_8014C63C(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     *(void**)((char*)state + 668) = Obj_GetPlayerObject();
 }
 
@@ -2017,7 +2018,7 @@ u8 fn_8014C4D8(int* obj)
     int* state;
     f32 val;
     if (obj == NULL) goto null_obj;
-    state = *(int**)((char*)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     goto have_state;
 null_obj:
     return 0;
@@ -2061,9 +2062,9 @@ extern void fn_8015983C(void);
 #pragma scheduling off
 void baddieAfterUpdateBonesCb(int obj, int *p2)
 {
-    int *state = *(int **)((char *)obj + 0xB8);
+    int *state = ((GameObject *)obj)->extra;
     int v = *p2;
-    switch (*(s16 *)((char *)obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x7C8:
         playerTailFn_80026b3c(p2, v, *(int *)((char *)state + 0x36C), (void *)fn_8015983C);
         break;
@@ -2082,7 +2083,7 @@ void fn_8014C540(int* obj, int* p4, f32* p5, f32* p6) {
     int* state;
     f32 fz;
     if (obj != NULL) {
-        state = *(int**)((char*)obj + 0xb8);
+        state = ((GameObject *)obj)->extra;
         if (state != NULL) {
             *p5 = (f32)(u32)*(u8*)((char*)state + 755) / lbl_803E257C;
             *p6 = (f32)(u32)*(u8*)((char*)state + 756);
@@ -2402,7 +2403,7 @@ int enemy_animEventCallback(int *node, int p2, u8 *cmds)
         case 1:
             obj = getTrickyObject();
             if (obj != NULL) {
-                (*(void (*)(int *, int, int *))(*(int *)(*(int *)(*(int *)((char *)obj + 0x68)) + 0x34)))(obj, 1, node);
+                (*(void (*)(int *, int, int *))(*(int *)(*(int *)(*(int *)&((GameObject *)obj)->anim.dll) + 0x34)))(obj, 1, node);
                 ((TrickyState *)sub)->flags2DC |= 0x200000;
                 *(int **)&((TrickyState *)sub)->unk29C = obj;
             }

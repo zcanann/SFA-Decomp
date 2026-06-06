@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 
@@ -71,7 +72,7 @@ void wmwallcrawler_update(s16 *obj)
     f32 **list2;
     f32 best;
 
-    st = *(u8 **)((u8 *)obj + 0xb8);
+    st = ((GameObject *)obj)->extra;
     bestIdx = 0;
     speed = lbl_803E5FB4;
     sum = 0;
@@ -98,7 +99,7 @@ void wmwallcrawler_update(s16 *obj)
                 if (*(s16 *)(st + 0x292) != 0 && *(s16 *)(st + 0x292) != -1) {
                     GameBit_Set(*(s16 *)(st + 0x292), GameBit_Get(*(s16 *)(st + 0x292)) + 1);
                 }
-                if (*(void **)(*(int *)((u8 *)obj + 0x4c) + 0x14) == 0) {
+                if (*(void **)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) == 0) {
                     ObjHits_DisableObject((int)obj);
                     Obj_FreeObject((int)obj);
                 } else {
@@ -119,7 +120,7 @@ void wmwallcrawler_update(s16 *obj)
                 }
                 if (timerCountDown(st + 0x28c) != 0) {
                     *((u8 *)obj + 0xaf) |= 8;
-                    if (*(void **)(*(int *)((u8 *)obj + 0x4c) + 0x14) == 0) {
+                    if (*(void **)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) == 0) {
                         ObjHits_DisableObject((int)obj);
                         Obj_FreeObject((int)obj);
                     } else {
@@ -152,7 +153,7 @@ void wmwallcrawler_update(s16 *obj)
                             }
                             if (*(s16 *)(st + 0x290) < 1) {
                                 if ((*(u16 *)(st + 0x294) & 0x100) == 0) {
-                                    if (*(void **)(*(int *)((u8 *)obj + 0x4c) + 0x14) == 0) {
+                                    if (*(void **)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) == 0) {
                                         ObjHits_DisableObject((int)obj);
                                         Obj_FreeObject((int)obj);
                                     } else {
@@ -314,7 +315,7 @@ void wmwallcrawler_update(s16 *obj)
                                 }
                                 if (dist < lbl_803E5FF8 ||
                                     ((*(u16 *)(st + 0x294) & 0x10) != 0 &&
-                                     (*(u16 *)&(*(ObjHitsPriorityState **)((u8 *)obj + 0x54))->flags & 8) != 0 &&
+                                     (*(u16 *)&(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) != 0 &&
                                      dist < lbl_803E5FFC)) {
                                     lbl_803DDCB8 += 1;
                                     if (obj[0x50] == 2 && *(f32 *)(obj + 0x4c) > lbl_803E6000 && *(f32 *)(obj + 0x4c) < lbl_803E6004) {
@@ -387,7 +388,7 @@ void wmwallcrawler_update(s16 *obj)
                         }
                     }
                 }
-            } else if (*(void **)(*(int *)((u8 *)obj + 0x4c) + 0x14) == 0) {
+            } else if (*(void **)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) == 0) {
                 ObjHits_DisableObject((int)obj);
                 Obj_FreeObject((int)obj);
             } else {

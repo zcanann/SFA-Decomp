@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
@@ -830,7 +831,7 @@ extern f32 lbl_803E4D98;
 #pragma scheduling off
 #pragma peephole off
 int dimbosscrackpar_SeqFn(int *obj) {
-    int *side = *(int **)((char *)obj + 0x4c);
+    int *side = *(int **)&((GameObject *)obj)->anim.placementData;
     if ((u32)GameBit_Get(*(s16 *)((char *)side + 0x1e)) == 0u) {
         return 0;
     }
@@ -841,7 +842,7 @@ int dimbosscrackpar_SeqFn(int *obj) {
     return 0;
 }
 void dimbosscrackpar_update(int *obj) {
-    int *side = *(int **)((char *)obj + 0x4c);
+    int *side = *(int **)&((GameObject *)obj)->anim.placementData;
     if ((u32)GameBit_Get(*(s16 *)((char *)side + 0x1e)) != 0u) {
         (*((int (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
             obj, *(s16 *)((char *)side + 0x1a) + 1222, 0, 2, -1, 0);
@@ -855,8 +856,8 @@ void dimbosscrackpar_free(int *obj) {
 void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void dimbosscrackpar_init(s16 *obj, s8 *def) {
     obj[0] = 0;
-    *(f32 *)((char *)obj + 8) = lbl_803E4D98;
-    *(int *)((char *)obj + 0xbc) = (int)&dimbosscrackpar_SeqFn;
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E4D98;
+    *(int *)&((GameObject *)obj)->unkBC = (int)&dimbosscrackpar_SeqFn;
     obj[0] = (s16)((s32)def[0x24] << 8);
     obj[1] = (s16)((s32)def[0x23] << 8);
     obj[2] = (s16)((s32)def[0x22] << 8);

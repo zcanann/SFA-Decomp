@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/creator19D.h"
 #include "main/objanim.h"
 
@@ -371,9 +372,9 @@ void DFSH_LaserBeam_update(uint param_1)
   DFSH_LASER_RANGE_VALUE(runtime) =
       *(f32 *)((u8 *)runtime + 0x14) + (f32)((double)config->rangeAngle - lbl_803E4F00);
   DFSH_LASER_HEIGHT_WINDOW(runtime) = 8;
-  *(f32 *)((u8 *)obj + 0x98) += lbl_803E4EF8 * timeDelta;
-  if (*(f32 *)((u8 *)obj + 0x98) > lbl_803E4EC8) {
-    *(f32 *)((u8 *)obj + 0x98) -= lbl_803E4EC8;
+  ((GameObject *)obj)->anim.currentMoveProgress += lbl_803E4EF8 * timeDelta;
+  if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E4EC8) {
+    ((GameObject *)obj)->anim.currentMoveProgress -= lbl_803E4EC8;
   }
 }
 #pragma peephole reset

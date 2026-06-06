@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/objHitReact.h"
@@ -1887,12 +1888,12 @@ void pressureswitch_init(int *obj, u8 *init) {
     PressureSwitchState *sub;
     uint mapId;
 
-    sub = *(PressureSwitchState**)((char*)obj + 0xb8);
-    *(void**)((char*)obj + 0xbc) = (void*)&PressureSwitch_SeqFn;
+    sub = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkBC = (void*)&PressureSwitch_SeqFn;
     *(s16*)obj = (s16)((s8)init[0x18] << 8);
     sub->retriggerTimer = (s16)(*(s16*)(init + 0x1e) * 0x3c);
     sub->chimeLatch = 0;
-    mapId = *(int*)(*(int*)((char*)obj + 0x4c) + 0x14);
+    mapId = *(int*)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14);
     if (mapId == 0x1f1a) {
         sub->mapGameBit = 0xf45;
     } else if (mapId == 0x47293) {
@@ -1906,7 +1907,7 @@ void pressureswitch_init(int *obj, u8 *init) {
         }
     }
     if (GameBit_Get(*(s16*)(init + 0x1c)) != 0) {
-        *(f32*)((char*)obj + 0x10) = *(f32*)(init + 0xc) - lbl_803E5D78;
+        ((GameObject *)obj)->anim.localPosY = *(f32*)(init + 0xc) - lbl_803E5D78;
         sub->holdTimer = 0x1e;
     }
 }
@@ -1932,8 +1933,8 @@ void wmlasertarget_update(int *obj) {
     u8 *def;
     WmLaserTargetState *sub;
 
-    def = *(u8**)((char*)obj + 0x4c);
-    sub = *(WmLaserTargetState**)((char*)obj + 0xb8);
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
+    sub = ((GameObject *)obj)->extra;
     if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
         sub->toggleQueued = 1;
         sub->cooldown = *(s16*)(def + 0x1a);
@@ -1986,15 +1987,15 @@ void WM_colrise_update(int *obj) {
     f32 target;
     int i;
 
-    def = *(u8**)((char*)obj + 0x4c);
-    sub = *(WMColriseState**)((char*)obj + 0xb8);
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
+    sub = ((GameObject *)obj)->extra;
     sub->raiseTimer -= 1;
     if ((s8)sub->raiseTimer < 0) sub->raiseTimer = 0;
     if ((s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f) > 0) {
         detectDistance = lbl_803E5DCC;
         for (i = 0; i < (s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f); i++) {
             int *p = *(int**)((char*)*(int**)((char*)obj + 0x58) + 0x100 + i * 4);
-            if (*(f32*)((char*)p + 0x10) - *(f32*)((char*)obj + 0x10) > detectDistance) {
+            if (*(f32*)((char*)p + 0x10) - ((GameObject *)obj)->anim.localPosY > detectDistance) {
                 sub->raiseTimer = 0x3c;
             }
         }
@@ -2002,23 +2003,23 @@ void WM_colrise_update(int *obj) {
     reached = 0;
     if ((sub->gameBit == -1 || (u32)GameBit_Get(sub->gameBit) != 0) && (s8)sub->raiseTimer != 0) {
         target = lbl_803E5DD0 + (lbl_803E5DD4 + *(f32*)(def + 0xc));
-        if (*(f32*)((char*)obj + 0x10) > target) {
-            *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) - lbl_803E5DD8 * timeDelta;
-            if (*(f32*)((char*)obj + 0x10) > target) {
-                *(f32*)((char*)obj + 0x10) = target;
+        if (((GameObject *)obj)->anim.localPosY > target) {
+            ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E5DD8 * timeDelta;
+            if (((GameObject *)obj)->anim.localPosY > target) {
+                ((GameObject *)obj)->anim.localPosY = target;
             }
         } else {
-            *(f32*)((char*)obj + 0x10) = lbl_803E5DDC * timeDelta + *(f32*)((char*)obj + 0x10);
-            if (*(f32*)((char*)obj + 0x10) > target) {
-                *(f32*)((char*)obj + 0x10) = target;
+            ((GameObject *)obj)->anim.localPosY = lbl_803E5DDC * timeDelta + ((GameObject *)obj)->anim.localPosY;
+            if (((GameObject *)obj)->anim.localPosY > target) {
+                ((GameObject *)obj)->anim.localPosY = target;
             } else {
                 reached = 1;
             }
         }
     } else {
-        *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) - lbl_803E5DE0 * timeDelta;
-        if (*(f32*)((char*)obj + 0x10) < *(f32*)(def + 0xc)) {
-            *(f32*)((char*)obj + 0x10) = *(f32*)(def + 0xc);
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E5DE0 * timeDelta;
+        if (((GameObject *)obj)->anim.localPosY < *(f32*)(def + 0xc)) {
+            ((GameObject *)obj)->anim.localPosY = *(f32*)(def + 0xc);
         } else {
             reached = 1;
         }
@@ -2130,7 +2131,7 @@ void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32
 void lightsource_render(void *obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void *obj, int p1, int p2, int p3, int p4, f32 alpha);
-    void *light = (*(LightSourceState **)((char *)obj + 0xb8))->light;
+    void *light = (*(LightSourceState **)&((GameObject *)obj)->extra)->light;
     if (light != NULL && *(u8 *)((char *)light + 0x2f8) != 0 && *(u8 *)((char *)light + 0x4c) != 0) {
         queueGlowRender(light);
     }
@@ -2145,7 +2146,7 @@ void lightsource_render(void *obj, int p1, int p2, int p3, int p4, s8 visible)
 #pragma peephole off
 #pragma scheduling off
 #pragma peephole off
-int dll_1FF_getObjectTypeId(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x146) return 0x2; return 0x0; }
+int dll_1FF_getObjectTypeId(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x146) return 0x2; return 0x0; }
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
@@ -2257,7 +2258,7 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
     s32 v;
-    if (*(int*)((char*)obj + 0xf8) != 0) {
+    if (((GameObject *)obj)->unkF8 != 0) {
         v = visible;
         if (v != -1) return;
     } else {
@@ -2265,7 +2266,7 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
         if (v == 0) return;
     }
     if (((ObjAnimComponent *)obj)->modelInstance->shadowType == 2) {
-        if (*(s16*)((char*)obj + 0xb4) == -1) {
+        if (((GameObject *)obj)->unkB4 == -1) {
             *(u32*)(*(char**)((char*)obj + 0x64) + 0x30) &= ~0x1000;
         } else {
             *(u32*)(*(char**)((char*)obj + 0x64) + 0x30) |= 0x1000;
@@ -2311,10 +2312,10 @@ extern f32 lbl_803E5D98;
 void dll_200_init(int* obj, int* arg)
 {
     Dll200State* b;
-    *(int*)((char*)obj + 0xf4) = 0;
+    ((GameObject *)obj)->unkF4 = 0;
     *(s16*)obj = (s16)((s32)*(s8*)((char*)arg + 0x18) << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)dll_200_SeqFn;
-    b = *(Dll200State**)((char*)obj + 0xb8);
+    ((GameObject *)obj)->unkBC = (void*)dll_200_SeqFn;
+    b = ((GameObject *)obj)->extra;
     b->defNoLow = (u8)*(s16*)arg;
     b->unk1C = 0;
     b->unk18 = 0;
@@ -2428,7 +2429,7 @@ void LaserBeam_free(s16 *obj, char *arg)
 {
     LaserBeamState *b;
 
-    b = *(LaserBeamState **)((char *)obj + 0xb8);
+    b = ((GameObject *)obj)->extra;
     ObjMsg_AllocQueue(obj, 2);
     *obj = (s16)((s32)*(s8 *)(arg + 0x18) << 8);
     if (*(s16 *)(arg + 0x1c) == 0) {

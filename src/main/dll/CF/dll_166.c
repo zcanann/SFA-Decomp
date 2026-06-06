@@ -1,4 +1,5 @@
 #include "main/dll/CF/dll_166.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
 
@@ -187,8 +188,8 @@ extern int treasurechest_SeqFn(int obj, int unused, u8 *events);
 #pragma scheduling off
 #pragma peephole off
 void treasurechest_init(int *obj) {
-    register ChestFlags *state = *(ChestFlags **)((char *)obj + 0xb8);
-    register int *cfg = *(int **)((char *)obj + 0x4c);
+    register ChestFlags *state = ((GameObject *)obj)->extra;
+    register int *cfg = *(int **)&((GameObject *)obj)->anim.placementData;
 
     *(int (**)(int, int, u8 *))((char *)obj + 0xbc) = treasurechest_SeqFn;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)cfg + 0x18) << 8);
@@ -199,7 +200,7 @@ void treasurechest_init(int *obj) {
         state->open = 0;
     }
     if (state->open != 0) {
-        *(s16 *)((char *)obj + 6) = (s16)(*(s16 *)((char *)obj + 6) | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
         ObjHits_DisableObject((int)obj);
     }
     lbl_803DDAE0 = Resource_Acquire(90, 1);

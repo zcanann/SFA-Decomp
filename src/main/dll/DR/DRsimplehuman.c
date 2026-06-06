@@ -1,4 +1,5 @@
 #include "main/objanim_internal.h"
+#include "main/game_object.h"
 #include "main/dll/DR/DRsimplehuman.h"
 
 extern undefined4 FUN_8000680c();
@@ -386,16 +387,16 @@ void spitembeam_update(int *obj) {
     int *tex;
     f32 d;
 
-    target = *(int**)((char*)obj + 0xf4);
-    def = *(u8**)((char*)obj + 0x4c);
+    target = *(int**)&((GameObject *)obj)->unkF4;
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
     d = lbl_803E5AD8;
     if (target == NULL) {
-        *(int**)((char*)obj + 0xf4) = ObjGroup_FindNearestObject(9, obj, &d);
+        *(int**)&((GameObject *)obj)->unkF4 = ObjGroup_FindNearestObject(9, obj, &d);
     } else {
         if (((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[10])(target, *(s16*)(def + 0x1a)) == 0
             || ((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[11])(target, *(s16*)(def + 0x1a)) != 0) {
-            *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
-            *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
+            ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+            ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
         }
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL) {
@@ -426,17 +427,17 @@ extern unsigned long randomGetRange(int a, int b);
 void spdrape_init(int *obj, u8 *def) {
     f32 *state;
     int *player;
-    state = *(f32 **)((char *)obj + 0xb8);
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
-    *(u16 *)((char *)obj + 0xb0) |= 0x4000;
+    state = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x4000;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
     if (*(s16 *)((char *)def + 0x1a) != 0) {
-        *(f32 *)((char *)obj + 8) = (f32)(s32)*(s16 *)((char *)def + 0x1a) / lbl_803E5AC4 * lbl_803E5AC0;
+        ((GameObject *)obj)->anim.rootMotionScale = (f32)(s32)*(s16 *)((char *)def + 0x1a) / lbl_803E5AC4 * lbl_803E5AC0;
     }
     state[0] = lbl_803E5ABC;
     state[1] = mathSinf(lbl_803E5AC8 * (f32)(s32)*(s16 *)obj / lbl_803E5ACC);
     state[2] = mathCosf(lbl_803E5AC8 * (f32)(s32)*(s16 *)obj / lbl_803E5ACC);
-    state[3] = -(state[1] * *(f32 *)((char *)obj + 0xc) + state[2] * *(f32 *)((char *)obj + 0x14));
+    state[3] = -(state[1] * ((GameObject *)obj)->anim.localPosX + state[2] * ((GameObject *)obj)->anim.localPosZ);
     *(s16 *)((char *)state + 0x14) = (s16)randomGetRange(0xb4, 0x12c);
     player = (int *)Obj_GetPlayerObject();
     if (player != NULL) {

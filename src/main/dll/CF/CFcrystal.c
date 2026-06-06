@@ -1,4 +1,5 @@
 #include "main/dll/CF/CFcrystal.h"
+#include "main/game_object.h"
 
 extern undefined4 FUN_800068c4();
 extern double FUN_80006a38();
@@ -278,9 +279,9 @@ int FireFlyLantern_spawnFireFly(int *obj) {
     setup->field06 = 0xff;
     setup->field05 = 4;
     setup->field07 = 8;
-    setup->x = *(f32 *)((char *)obj + 0xc);
-    setup->y = lbl_803E3AE8 + *(f32 *)((char *)obj + 0x10);
-    setup->z = *(f32 *)((char *)obj + 0x14);
+    setup->x = ((GameObject *)obj)->anim.localPosX;
+    setup->y = lbl_803E3AE8 + ((GameObject *)obj)->anim.localPosY;
+    setup->z = ((GameObject *)obj)->anim.localPosZ;
     setup->field19 = 4;
     setup->field1A = 0x514;
     setup->field1C = 40;

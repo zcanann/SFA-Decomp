@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 
 int ktrexlevel_getExtraSize(void) { return 0x4; }
 
@@ -68,7 +69,7 @@ void ktrexlevel_updatePathGameBits(void) {
 #pragma scheduling off
 #pragma peephole off
 void ktrexlevel_init(int obj) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     setDrawCloudsAndLights(0);
     GameBit_Set(0x572, 0);
     GameBit_Set(0x56e, 1);
@@ -80,7 +81,7 @@ void ktrexlevel_init(int obj) {
     GameBit_Set(0x54e, 2);
     GameBit_Set(0x552, 1);
     GameBit_Set(0x556, 1);
-    *(int *)((char *)obj + 0xf4) = 0;
+    ((GameObject *)obj)->unkF4 = 0;
     GameBit_Set(0xefd, 1);
 }
 #pragma peephole reset
@@ -89,14 +90,14 @@ void ktrexlevel_init(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void ktrexlevel_update(int obj) {
-    if (*(int *)((char *)obj + 0xf4) == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         skyFn_80088c94(7, 1);
         getEnvfxAct(obj, obj, 0x18f, 0);
         getEnvfxAct(obj, obj, 0x18e, 0);
         getEnvfxAct(obj, obj, 0x190, 0);
         skyFn_80088e54(1, lbl_803E67A4);
         GameBit_Set(0x55e, 1);
-        *(int *)((char *)obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
     lbl_803DDD40 = GameBit_Get(0x572);
 }

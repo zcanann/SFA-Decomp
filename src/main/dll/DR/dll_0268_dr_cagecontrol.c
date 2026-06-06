@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 
 void cagecontrol_free(void) {}
 
@@ -27,7 +28,7 @@ void cagecontrol_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, 
 void cagecontrol_init(int obj, char *arg) {
     ObjHits_EnableObject(obj);
     if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
-        *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         ObjHits_DisableObject(obj);
     }
     *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
@@ -38,12 +39,12 @@ void cagecontrol_init(int obj, char *arg) {
 #pragma scheduling off
 #pragma peephole off
 void cagecontrol_update(int obj) {
-    int p = *(int *)((char *)obj + 0x4c);
+    int p = *(int *)&((GameObject *)obj)->anim.placementData;
     if (GameBit_Get(*(s16 *)(p + 0x1e)) != 0) {
-        *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         ObjHits_DisableObject(obj);
     } else {
-        *(s16 *)((char *)obj + 0x6) &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~0x4000;
         ObjHits_EnableObject(obj);
     }
 }

@@ -1,4 +1,5 @@
 #include "main/dll/LGT/LGTprojectedlight.h"
+#include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 extern undefined4 FUN_800067c0();
@@ -571,14 +572,14 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off
 #pragma peephole off
 void wmgeneralscales_init(int *obj) {
-    int *state = *(int **)((char *)obj + 0xb8);
-    *(void **)((char *)obj + 0xbc) = (void *)wmgeneralscales_SeqFn;
+    int *state = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkBC = (void *)wmgeneralscales_SeqFn;
     *(f32 *)state = lbl_803E5E98;
     *(u8 *)((char *)state + 4) = 1;
-    *(int *)((char *)obj + 0xc8) = 0;
+    *(int *)&((GameObject *)obj)->unkC8 = 0;
 }
 void wmgeneralscales_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     if (*(u8 *)((char *)state + 4) == 1) return;
     if (visible == 0) return;
     ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5EA4);

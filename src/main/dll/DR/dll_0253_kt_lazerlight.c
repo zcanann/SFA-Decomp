@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 
 int ktlazerlight_getExtraSize(void) { return 0x14; }
 
@@ -15,7 +16,7 @@ void ktlazerlight_render(void) {}
 #pragma scheduling off
 #pragma peephole off
 void ktlazerlight_free(int obj) {
-    void *p = *(void **)((char *)obj + 0xb8);
+    void *p = ((GameObject *)obj)->extra;
     void *m = *(void **)((char *)p + 0x4);
     if (m != 0) {
         ModelLightStruct_free(m);
@@ -27,7 +28,7 @@ void ktlazerlight_free(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void ktlazerlight_init(int obj, char *arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     *(void **)(p + 0x4) = objCreateLight(0, 1);
     if (*(void **)(p + 0x4) != 0) {
         modelLightStruct_setLightKind(*(void **)(p + 0x4), 2);
@@ -41,8 +42,8 @@ void ktlazerlight_init(int obj, char *arg) {
 #pragma scheduling off
 #pragma peephole off
 void ktlazerlight_update(int obj) {
-    int q = *(int *)((char *)obj + 0x4c);
-    char *p = *(char **)((char *)obj + 0xb8);
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
+    char *p = ((GameObject *)obj)->extra;
     s16 v;
     void *light = *(void **)(p + 0x4);
     v = (s16)GameBit_Get(*(s16 *)(q + 0x1a));

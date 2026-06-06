@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/CR/CRsnowbike.h"
 #include "main/mapEventTypes.h"
 
@@ -700,8 +701,8 @@ typedef struct SCMusicTreeState {
 #pragma scheduling off
 #pragma peephole off
 void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-    int *def = *(int **)((char *)obj + 0x4C);
-    SCMusicTreeState *state = *(SCMusicTreeState **)((char *)obj + 0xB8);
+    int *def = *(int **)&((GameObject *)obj)->anim.placementData;
+    SCMusicTreeState *state = ((GameObject *)obj)->extra;
     int i;
     if (visible == 0) return;
     fn_8003B608((int)*(u8 *)((char *)def + 0x20), (int)*(u8 *)((char *)def + 0x21), (int)*(u8 *)((char *)def + 0x22));
@@ -716,7 +717,7 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
             state = (SCMusicTreeState *)((char *)state + 12);
         }
     }
-    *(int *)((char *)obj + 0xF8) = 1;
+    ((GameObject *)obj)->unkF8 = 1;
 }
 #pragma peephole reset
 #pragma scheduling reset

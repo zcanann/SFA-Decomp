@@ -1,4 +1,5 @@
 #include "main/dll/WC/WCpressureSwitch.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objlib.h"
 #include "global.h"
@@ -333,8 +334,8 @@ void WM_Galleon_hitDetect(void) {}
 
 void WM_Galleon_free(int *obj, int leavingMap)
 {
-    if (*(s16 *)((char *)obj + 0x46) != 0x188) {
-        WmGalleonState *state = *(WmGalleonState **)((char *)obj + 0xb8);
+    if (((GameObject *)obj)->anim.seqId != 0x188) {
+        WmGalleonState *state = ((GameObject *)obj)->extra;
         if (state->active != 0 && leavingMap == 0) {
             state->active = 0;
         }
@@ -353,7 +354,7 @@ void WM_Galleon_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
     if (visible == 0) {
         return;
     }
-    if (*(s16 *)((char *)obj + 0x46) == 0x188 && *(s32 *)(*(u8 **)((char *)obj + 0x30) + 0xf4) >= 7) {
+    if (((GameObject *)obj)->anim.seqId == 0x188 && *(s32 *)(*(u8 **)&((GameObject *)obj)->anim.parent + 0xf4) >= 7) {
         return;
     }
 
@@ -369,7 +370,7 @@ int WM_Galleon_getExtraSize(void) { return 0x10; }
 int WM_Galleon_getObjectTypeId(void) { return 0x0; }
 
 void WM_ObjCreator_init(int *obj, s8 *def) {
-    WmObjCreatorState *state = *(WmObjCreatorState**)((char*)obj + 0xb8);
+    WmObjCreatorState *state = ((GameObject *)obj)->extra;
     *(s16*)obj = (s16)((s32)def[0x1e] << 8);
     state->gameBit = *(s16*)((char*)def + 0x18);
     state->spawnPeriod = *(s16*)((char*)def + 0x1c);
