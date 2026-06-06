@@ -485,15 +485,15 @@ void dimcannon_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     s16 saved;
 
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
-    if (((GameObject *)obj)->anim.seqId == 0x1d6) {
-        objRenderFn_8003b8f4(lbl_803E48E8);
-    } else {
+    if (((GameObject *)obj)->anim.seqId != 0x1d6) {
         sub = ((GameObject *)obj)->extra;
         saved = *(s16*)obj;
         *(s16*)obj = (s16)((s8)def[0x28] << 8);
-        objRenderFn_8003b8f4(lbl_803E48E8);
+        ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E48E8);
         *(s16*)obj = saved;
         ObjPath_GetPointWorldPosition((int)obj, 0, (f32*)(sub + 0x8c), (f32*)(sub + 0x90), (f32*)(sub + 0x94), 0);
+    } else {
+        ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E48E8);
     }
 }
 #pragma peephole reset
@@ -584,6 +584,7 @@ extern int Shader_getLayer(int layer, int idx);
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 /* Toggle collision/render surface flags for matching block polys and layers. */
 void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
 {
@@ -615,6 +616,7 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
         }
     }
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
