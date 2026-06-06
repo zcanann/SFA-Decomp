@@ -1,4 +1,5 @@
 #include "main/dll/dll_B6.h"
+#include "main/objanim_internal.h"
 #include "main/objlib.h"
 
 extern void *Obj_GetPlayerObject(void);
@@ -81,7 +82,7 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         if (data == NULL
            || *(u8 *)(obj + 0x36) != 0xff
            || (*(u8 *)(obj + 0xaf) & 0x28)
-           || (!(*(u16 *)(obj + 0xb0) & 0x800) && !(*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 1))
+           || (!(*(u16 *)(obj + 0xb0) & 0x800) && !(((ObjAnimComponent *)obj)->modelInstance->flags & 1))
            || (*(s16 *)(obj + 6) & 0x4000)
            || (*(u16 *)(obj + 0xb0) & 0x40)
            || (lbl_803DB992 & ((ok = 1) << (data[*(u8 *)(obj + 0xe4) * 5 + 4] & 0xf))) == 0) {

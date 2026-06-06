@@ -1835,7 +1835,7 @@ void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
     for (; i < (int)modelDef->jointCount; i++) {
         u = *(u8 *)(modelDef->jointData + boff + objAnim->bankIndex + 1);
         if (u != 0xff) {
-            p = (s16 *)(*(u8 **)(obj + 0x6c) + poff);
+            p = (s16 *)(objAnim->jointPoseData + poff);
             v1 = *(s8 *)(b1 + u) << 6;
             v2 = *(s8 *)(b2 + u) << 6;
             BLENDTBL_ENTRY(0, 0)
@@ -1848,7 +1848,7 @@ void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
             BLENDTBL_ENTRY(7, 0x1a)
             BLENDTBL_ENTRY(8, 0x1c)
         }
-        boff = modelDef->modelCount + boff + 1;
+        boff += modelDef->modelCount + 1;
         poff += 0x12;
     }
     ((s16 *)lbl_80340740)[w++] = 0x1000;

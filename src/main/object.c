@@ -386,10 +386,12 @@ void Obj_ResetModelColorState(u8 *obj) {
 
 #pragma peephole off
 void Obj_StartModelFadeIn(u8 *obj, int frames) {
+    ObjAnimComponent *objAnim;
     f32 mtx[16];
     int fadeLimit;
     s16 objType;
 
+    objAnim = (ObjAnimComponent *)obj;
     fadeLimit = 10;
     objType = *(s16 *)(obj + 0x44);
     if (objType == 0x1c || objType == 0x6d || objType == 0x2a) {
@@ -408,8 +410,7 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
             obj[0xe5] = (u8)(obj[0xe5] | 1);
             Obj_BuildWorldTransformMatrix(obj, mtx, 0);
             ((void (*)(u8 *, u8 *, f32 *, int, f32))ObjModel_EnableDefaultRenderCallback)(
-                obj, *(u8 **)(*(u8 **)(obj + 0x7c) +
-                               (s8)obj[offsetof(ObjAnimComponent, bankIndex)] * 4), mtx, 1,
+                obj, (u8 *)objAnim->banks[objAnim->bankIndex], mtx, 1,
                 *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8));
             (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x64, 0);
         }
@@ -531,7 +532,7 @@ int Obj_IsLoadingLocked(void) {
 
 void objSetSlot(u8 *obj, s8 slot) {
     if (slot == 0x5a) {
-        if ((*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40) == 0) {
+        if ((((ObjAnimComponent *)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) == 0) {
             return;
         }
     }
@@ -1283,7 +1284,7 @@ void ObjList_PartitionForRender(int *out) {
         arr = (void **)lbl_803DCB88;
         stop = 0;
         while (i <= hi && stop == 0) {
-            if (*(int *)(*(u8 **)((u8 *)arr[i] + 0x50) + 0x44) & 1) {
+            if (((ObjAnimComponent *)arr[i])->modelInstance->flags & 1) {
                 i++;
             } else {
                 stop = -1;
@@ -1291,7 +1292,7 @@ void ObjList_PartitionForRender(int *out) {
         }
         stop = 0;
         while (j >= 0 && stop == 0) {
-            if (*(int *)(*(u8 **)((u8 *)arr[j] + 0x50) + 0x44) & 1) {
+            if (((ObjAnimComponent *)arr[j])->modelInstance->flags & 1) {
                 stop = -1;
             } else {
                 j--;
@@ -1436,6 +1437,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     int i;
     int count;
     int idx;
+    ObjModelInstance *modelDef;
     LoadedObj *obj;
     int base;
     int cursor;
@@ -1468,13 +1470,14 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
         debugPrintf(sObjUnknownTypeUsingDummyObjectWarning, id, *data, tmpl.seqId);
         return NULL;
     }
+    modelDef = (ObjModelInstance *)def;
     tmpl.f44 = *(s16 *)(def + 0x52);
-    tmpl.scale = *(f32 *)(def + 4);
+    tmpl.scale = modelDef->rootMotionScaleBase;
     tmpl.flags06 = 2;
-    if (*(u32 *)(def + 0x44) & 0x80) {
+    if (modelDef->flags & 0x80) {
         tmpl.flags06 = tmpl.flags06 | 0x80;
     }
-    if (*(u32 *)(def + 0x44) & 0x40000) {
+    if (modelDef->flags & 0x40000) {
         tmpl.fb0 = tmpl.fb0 | 0x80;
     }
     if (flags & 4) {
@@ -1519,7 +1522,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
         }
         break;
     }
-    if (*(u32 *)(def + 0x44) & 0x20) {
+    if (modelDef->flags & 0x20) {
         flags29 = fnFlags & ~1;
     } else {
         flags29 = fnFlags | 1;
@@ -1532,12 +1535,12 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     if (*(s16 *)(def + 0x48) == 3) {
         flags29 |= 0x8000;
     }
-    if (*(u32 *)(def + 0x44) & 1) {
+    if (modelDef->flags & 1) {
         flags29 |= 0x200;
     }
     total = 0;
     i = 0;
-    count = *(s8 *)(def + offsetof(ObjModelInstance, modelCount));
+    count = modelDef->modelCount;
     if (flags29 & 0x400) {
         idx = (flags29 >> 0xb) & 0xf;
         if (idx < count) {
@@ -1557,7 +1560,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     memcpy(obj, &tmpl, 0x10c);
     memset((u8 *)obj + 0x10c, 0, base + total - 0x10c);
     obj->models = (u8 **)(obj + 1);
-    *(u32 *)(obj->def + 0x44) |= 0x800000;
+    modelDef->flags |= 0x800000;
     i = 0;
     obj->f108 = 0;
     if (flags29 & 0x400) {
@@ -1566,11 +1569,11 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
             obj->models[idx] = (u8 *)obj + base + offsets[idx];
             ObjModel_LoadAnimData(models[idx], flags29, (int)obj->models[idx]);
             if (!(*(u16 *)(*(u8 **)obj->models[idx] + 2) & 0x8000)) {
-                *(u32 *)(obj->def + 0x44) &= 0xff7fffff;
+                modelDef->flags &= 0xff7fffff;
             }
             ObjModel_LoadRenderOpTextures(obj->models[idx], (int)obj);
             modelInitBones(obj->scale, obj->models[idx]);
-            if (*(u32 *)(obj->def + 0x44) & 0x800) {
+            if (modelDef->flags & 0x800) {
                 ObjModel_SetRenderCallback(obj->models[idx], objCallback_80074d04);
             } else {
                 cb = *(u8 *)(obj->def + 0x5f);
@@ -1587,11 +1590,11 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
             ObjModel_LoadAnimData(models[i], flags29, (int)obj->models[i]);
             h = *(u16 *)(*(u8 **)obj->models[i] + 2);
             if (!(h & 0x8000) && !(h & 0x4000)) {
-                *(u32 *)(obj->def + 0x44) &= 0xff7fffff;
+                modelDef->flags &= 0xff7fffff;
             }
             ObjModel_LoadRenderOpTextures(obj->models[i], (int)obj);
             modelInitBones(obj->scale, obj->models[i]);
-            if (*(u32 *)(obj->def + 0x44) & 0x800) {
+            if (modelDef->flags & 0x800) {
                 ObjModel_SetRenderCallback(obj->models[i], objCallback_80074d04);
             } else {
                 cb = *(u8 *)(obj->def + 0x5f);
@@ -1603,7 +1606,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
             }
         }
     }
-    cursor = roundUpTo4((int)obj->models + *(s8 *)(def + offsetof(ObjModelInstance, modelCount)) * 4);
+    cursor = roundUpTo4((int)obj->models + count * 4);
     switch (obj->seqId) {
     case 0:
     case 0x1f:
@@ -1623,7 +1626,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     } else {
         obj->fb8 = 0;
     }
-    if ((flags29 & 0x40) || (*(u32 *)(obj->def + 0x44) & 0x400000)) {
+    if ((flags29 & 0x40) || (modelDef->flags & 0x400000)) {
         seq2 = obj->seqId;
         tmp = roundUpTo4(cursor);
         obj->objAnimEventTable = tmp;
@@ -1644,7 +1647,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     }
     max = lbl_803DE8CC;
     i = 0;
-    for (; i < *(s8 *)(obj->def + offsetof(ObjModelInstance, modelCount)); i++) {
+    for (; i < count; i++) {
         m = *(int *)((u8 *)obj->models + i * 4);
         if (m != 0) {
             if ((f32)modelFileHeaderGetCullDistance(*(u8 **)m) > max) {
@@ -1659,14 +1662,14 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     obj->cullDist = max;
     if (*(u8 *)(def + 0x61) != 0) {
         cursor = ObjHits_AllocObjectState((int)obj, cursor);
-        if (*(s8 *)(def + 0x65) & 8) {
+        if (modelDef->primaryHitboxShapeFlags & 8) {
             cursor = ObjHitbox_AllocRotatedBounds((ObjHitbox *)obj, cursor);
         }
     }
-    if (*(u8 *)(def + 0x5a) != 0) {
+    if (modelDef->jointCount != 0) {
         tmp = roundUpTo4(cursor);
         obj->f6c = tmp;
-        cursor = tmp + *(u8 *)(def + 0x5a) * 0x12;
+        cursor = tmp + modelDef->jointCount * 0x12;
     }
     if (*(u8 *)(def + 0x59) != 0) {
         tmp = roundUpTo4(cursor);
@@ -1787,7 +1790,7 @@ void objFreeObjDef(void *objp, int flag) {
     }
     (*(void (**)(u8 *))(*(int *)gTitleMenuControlInterface + 0x48))(obj);
     (*(void (**)(u8 *))(*(int *)gExpgfxInterface + 0x28))(obj);
-    if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40) {
+    if (((ObjAnimComponent *)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) {
         ObjGroup_RemoveObject((uint)obj, 6);
         if (flag == 0) {
             count = 0;
@@ -1863,8 +1866,7 @@ void objFreeObjDef(void *objp, int flag) {
         *(u16 *)(obj + 0xe6) = 0;
         *(u8 *)(obj + 0xe5) = *(u8 *)(obj + 0xe5) & ~1;
         *(u8 *)(obj + 0xf0) = 0;
-        ObjModel_ClearRenderAttachment(*(u8 **)(*(u8 **)(obj + 0x7c) +
-                                                *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) * 4));
+        ObjModel_ClearRenderAttachment((u8 *)objAnim->banks[objAnim->bankIndex]);
         cb2 = (void (*)(u8 *, int, int, int, int))*(int *)(*(int *)lbl_803DCAB4 + 0xc);
         cb2(obj, 0x7fb, 0, 0x50, 0);
         cb2 = (void (*)(u8 *, int, int, int, int))*(int *)(*(int *)lbl_803DCAB4 + 0xc);
@@ -2025,8 +2027,7 @@ void Obj_UpdateObject(u8 *obj)
             *(s16 *)(obj + 0xe6) = 0;
             *(u8 *)(obj + 0xe5) &= ~1;
             *(u8 *)(obj + 0xf0) = 0;
-            ObjModel_ClearRenderAttachment(*(u8 **)(*(u8 **)(obj + 0x7c) +
-                                                    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) * 4));
+            ObjModel_ClearRenderAttachment((u8 *)object->banks[object->bankIndex]);
             cb = (void (*)(u8 *, int, int, int, int))*(int *)(*lbl_803DCAB4 + 0xc);
             cb(obj, 0x7fb, 0, 0x50, 0);
             cb = (void (*)(u8 *, int, int, int, int))*(int *)(*lbl_803DCAB4 + 0xc);
@@ -2105,11 +2106,12 @@ void Obj_UpdateAllObjects(u8 flags)
     Obj_UpdateModelBlendStates();
     ObjHitReact_ResetActiveObjects(lbl_803DCB84);
     obj = *(int *)((u8 *)&lbl_803DCB7C + 4);
-    while (obj != 0 && *(s8 *)(obj + 0xae) == 0x64) {
+    while (obj != 0 && ((ObjAnimComponent *)obj)->activeHitboxMode == 0x64) {
         Obj_UpdateObject((u8 *)obj);
         obj = *(int *)(obj + off);
     }
-    while (obj != 0 && (*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 0x40)) {
+    while (obj != 0 &&
+           (((ObjAnimComponent *)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE)) {
         Obj_UpdateObject((u8 *)obj);
         *(s8 *)(obj + 0x35) = (s8)Obj_BuildTransformMatrixSlot(obj);
         obj = *(int *)(obj + off);
@@ -2778,12 +2780,14 @@ u8 *loadObjectFile(int id)
 #pragma dont_inline on
 int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
 {
+    ObjModelInstance *modelDef;
     int size;
     int r;
     int extra;
     int (*cb)(void *, int);
 
-    size = *(s8 *)(def + offsetof(ObjModelInstance, modelCount)) * 4 + 0x10c;
+    modelDef = (ObjModelInstance *)def;
+    size = modelDef->modelCount * 4 + 0x10c;
     switch (*(s16 *)((u8 *)tmpl + 0x46)) {
     case 0:
     case 0x1f:
@@ -2804,7 +2808,7 @@ int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
         break;
     }
     size += extra;
-    if ((flags & 0x40) || (*(u32 *)(def + 0x44) & 0x400000)) {
+    if ((flags & 0x40) || (modelDef->flags & 0x400000)) {
         size = roundUpTo8(roundUpTo4(size) + 8) + 0x50;
     }
     if (flags & 0x100) {
@@ -2815,13 +2819,13 @@ int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
     }
     if (*(u8 *)(def + 0x61) != 0) {
         size = roundUpTo4(size) + 0xb8;
-        if (*(s8 *)(def + 0x65) & 8) {
+        if (modelDef->primaryHitboxShapeFlags & 8) {
             size += 0x110;
         }
     }
-    if (*(u8 *)(def + 0x5a) != 0) {
+    if (modelDef->jointCount != 0) {
         r = roundUpTo4(size);
-        size = r + *(u8 *)(def + 0x5a) * 0x12;
+        size = r + modelDef->jointCount * 0x12;
     }
     if (*(u8 *)(def + 0x59) != 0) {
         r = roundUpTo4(size);
