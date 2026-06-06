@@ -112,14 +112,12 @@ int getEnvfxAct(int a, int b, u16 idx, int d)
 
 #pragma scheduling off
 #pragma peephole off
-u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int stride, u8 bw)
+u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int gap, u8 bw)
 {
-    int bitWidth = bw;
     int acc;
+    int bitWidth = bw;
     int idx;
-    u8 *cur;
     int initialBit;
-    int gap;
     int sh16;
     int shamt = bitWidth - 4;
     int hi = (*p >> 4) & 0xf;
@@ -130,24 +128,24 @@ u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int 
     }
     acc = hi << shamt;
     idx = (*p & 0xf) << 3;
-    cur = p + 1;
+    p = p + 1;
     initialBit = modelRenderInstrsState_getBit(state);
-    gap = stride - bitWidth;
+    gap = gap - bitWidth;
     sh16 = 0x10 - bitWidth;
 
     for (i = count / 2; i > 0; i--) {
-        MODEL_DECODE_NIBBLE(*cur & 0xf);
-        MODEL_DECODE_NIBBLE((*cur >> 4) & 0xf);
-        cur++;
+        MODEL_DECODE_NIBBLE(*p & 0xf);
+        MODEL_DECODE_NIBBLE((*p >> 4) & 0xf);
+        p++;
     }
     if (count & 1) {
-        MODEL_DECODE_NIBBLE(*cur & 0xf);
-        cur++;
+        MODEL_DECODE_NIBBLE(*p & 0xf);
+        p++;
     }
     if (gap != 0) {
         modelRenderInstrsState_setBit(state, initialBit + bitWidth);
     }
-    return cur;
+    return p;
 }
 #pragma peephole reset
 #pragma scheduling reset
