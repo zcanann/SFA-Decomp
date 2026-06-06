@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/dll/mclightning_state.h"
 
 #pragma peephole off
@@ -28,7 +29,7 @@ int mclightning_handleScriptEvents(int obj, int eventId, u8 *script) {
         case 4:
             f->hi = 5;
             ((McLightningState *)state)->unk1A = script[0x81 + i];
-            *(s16 *)(obj + 6) &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~0x4000;
             break;
         default:
             f->hi = 0xa;
@@ -71,7 +72,7 @@ void mclightning_update(int obj)
         *(int *)state = 0;
     }
     ((McLightningFlags *)(state + 0x1b))->hi = 0;
-    *(s16 *)(obj + 6) |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= 0x4000;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -83,8 +84,8 @@ void mclightning_init(int obj, u8 *setup)
     int state = *(int *)(obj + 0xb8);
     f32 v;
 
-    *(s16 *)(obj + 6) |= 0x4000;
-    *(void **)(obj + 0xbc) = (void *)mclightning_handleScriptEvents;
+    ((GameObject *)obj)->anim.flags |= 0x4000;
+    ((GameObject *)obj)->unkBC = (void *)mclightning_handleScriptEvents;
     ObjGroup_AddObject(obj, 0x48);
     ((McLightningFlags *)(state + 0x1b))->lo = setup[0x1a];
     v = lbl_803E745C;
@@ -147,7 +148,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
                 mm_free(((McLightningState *)state)->unk0);
                 ((McLightningState *)state)->unk0 = NULL;
                 f->hi = 0;
-                *(s16 *)(obj + 6) |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= 0x4000;
             }
         }
     }
