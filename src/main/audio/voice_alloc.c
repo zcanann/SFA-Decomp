@@ -224,12 +224,13 @@ _fail:
  */
 void voiceFree(int state)
 {
+    McmdVoiceState *vs = (McmdVoiceState *)state;
     macMakeInactive((McmdVoiceState *)state, 2);
     voiceRemovePriority(state);
-    *(u32 *)(state + 0x34) = 0;
-    *(u8 *)(state + 0x10c) = 0;
+    *(u32 *)&vs->macroBase = 0;
+    vs->priorityGroup = 0;
     {
-        u32 voice = *(u32 *)(state + 0xf4);
+        u32 voice = vs->voiceHandle;
         u32 v = voice & 0xff;
         VoiceIdSlot *slot = &voiceFreeListSlots[v];
         if (slot->active == 0) {
@@ -244,12 +245,12 @@ void voiceFree(int state)
                 voiceListRoot = v;
             }
             voiceListInsert = v;
-            if (*(u8 *)(state + 0x11d) != 0) {
+            if (vs->streamKind != 0) {
                 voiceFxRunning--;
             } else {
                 voiceMusicRunning--;
             }
         }
     }
-    *(int *)(state + 0xf4) = -1;
+    *(int *)&vs->voiceHandle = -1;
 }
