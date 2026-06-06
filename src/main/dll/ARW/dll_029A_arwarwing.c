@@ -105,13 +105,13 @@ void fn_8022D460(int arwing, f32 val) { (*(ArwingState **)(arwing + 0xb8))->unk2
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D46C(int arwing) { return (s16)(*(ArwingState **)(arwing + 0xb8))->rollInput; }
+int fn_8022D46C(int arwing) { return (s16)(*(ArwingState **)(arwing + 0xb8))->rotYCur; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D47C(int arwing, int p2) { (*(ArwingState **)(arwing + 0xb8))->rollInput = (s16)p2; }
+void fn_8022D47C(int arwing, int p2) { (*(ArwingState **)(arwing + 0xb8))->rotYCur = (s16)p2; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -439,9 +439,9 @@ void arwarwing_update(int obj)
             ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
-        ((ArwingState *)state)->pitchAccum =
-            (int)(lbl_803E6F6C * timeDelta + (f32) ((ArwingState *)state)->pitchAccum);
-        ((GameObject *)obj)->anim.rotZ = (s16) ((ArwingState *)state)->pitchAccum;
+        ((ArwingState *)state)->rotZCur =
+            (int)(lbl_803E6F6C * timeDelta + (f32) ((ArwingState *)state)->rotZCur);
+        ((GameObject *)obj)->anim.rotZ = (s16) ((ArwingState *)state)->rotZCur;
         ((ArwingState *)state)->velY = ((ArwingState *)state)->velY - lbl_803E6EF8 * timeDelta;
         objMove(obj, ((ArwingState *)state)->velX * timeDelta, ((ArwingState *)state)->velY * timeDelta,
                 ((ArwingState *)state)->velZ * timeDelta);
@@ -470,58 +470,58 @@ void arwarwing_update(int obj)
             *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) & ~0x4000);
             *(u8 *)(((ArwingState *)state)->thrusterR + 0x36) = (u8)(int)throttle;
         }
-        ((ArwingState *)state)->unk3C = -((ArwingState *)state)->unk3E4 * ((ArwingState *)state)->unk54;
-        ((ArwingState *)state)->unk40 = -((ArwingState *)state)->unk3E8 * ((ArwingState *)state)->unk58;
-        ((ArwingState *)state)->unk44 = ((ArwingState *)state)->unk5C * ((ArwingState *)state)->unk6C;
-        ((ArwingState *)state)->unk340 =
-            (int)(-((ArwingState *)state)->unk3E4 * ((ArwingState *)state)->unk348);
-        ((ArwingState *)state)->unk354 = (int)(((ArwingState *)state)->unk3E8 * ((ArwingState *)state)->unk35C);
-        ((ArwingState *)state)->unk368 = (int)(((ArwingState *)state)->unk3E4 * ((ArwingState *)state)->unk370);
-        ((ArwingState *)state)->unk37C =
-            (int)(((ArwingState *)state)->unk384 *
+        ((ArwingState *)state)->velTargetX = -((ArwingState *)state)->stickX * ((ArwingState *)state)->maxSpeedX;
+        ((ArwingState *)state)->velTargetY = -((ArwingState *)state)->stickY * ((ArwingState *)state)->maxSpeedY;
+        ((ArwingState *)state)->velTargetZ = ((ArwingState *)state)->maxSpeedZ * ((ArwingState *)state)->speedScaleZ;
+        ((ArwingState *)state)->rotXTarget =
+            (int)(-((ArwingState *)state)->stickX * ((ArwingState *)state)->rotXRange);
+        ((ArwingState *)state)->rotYTarget = (int)(((ArwingState *)state)->stickY * ((ArwingState *)state)->rotYRange);
+        ((ArwingState *)state)->rotZTarget = (int)(((ArwingState *)state)->stickX * ((ArwingState *)state)->rotZRange);
+        ((ArwingState *)state)->rotZTrimTarget =
+            (int)(((ArwingState *)state)->rotZTrimRange *
                   (((ArwingState *)state)->unk3F0 + ((ArwingState *)state)->unk3EC));
         fn_8022AECC(obj, state);
         arwarwing_updateWeaponFire(obj, state);
         fn_8022B8A0(obj, state);
 
         *(s16 *)(((ArwingState *)state)->wingVec[0] + 0) =
-            (int)((f32)(-((ArwingState *)state)->pitchAccum) * ((ArwingState *)state)->wingFlexScale);
+            (int)((f32)(-((ArwingState *)state)->rotZCur) * ((ArwingState *)state)->wingFlexScale);
         *(s16 *)(((ArwingState *)state)->wingVec[0] + 4) =
-            (int)((f32) ((ArwingState *)state)->pitchAccum * ((ArwingState *)state)->wingFlexScale);
+            (int)((f32) ((ArwingState *)state)->rotZCur * ((ArwingState *)state)->wingFlexScale);
         *(s16 *)(((ArwingState *)state)->wingVec[1] + 0) =
-            (int)((f32)(-((ArwingState *)state)->pitchAccum) * ((ArwingState *)state)->wingFlexScale);
+            (int)((f32)(-((ArwingState *)state)->rotZCur) * ((ArwingState *)state)->wingFlexScale);
         *(s16 *)(((ArwingState *)state)->wingVec[1] + 4) =
-            (int)((f32) ((ArwingState *)state)->pitchAccum * ((ArwingState *)state)->wingFlexScale);
-        p = (int)((f32) ((ArwingState *)state)->pitchAccum * ((ArwingState *)state)->wingFlexScale);
+            (int)((f32) ((ArwingState *)state)->rotZCur * ((ArwingState *)state)->wingFlexScale);
+        p = (int)((f32) ((ArwingState *)state)->rotZCur * ((ArwingState *)state)->wingFlexScale);
         *(s16 *)(((ArwingState *)state)->wingVec[2] + 4) = p;
         *(s16 *)(((ArwingState *)state)->wingVec[2] + 0) = p;
-        p = (int)((f32) ((ArwingState *)state)->pitchAccum * ((ArwingState *)state)->wingFlexScale);
+        p = (int)((f32) ((ArwingState *)state)->rotZCur * ((ArwingState *)state)->wingFlexScale);
         *(s16 *)(((ArwingState *)state)->wingVec[3] + 4) = p;
         *(s16 *)(((ArwingState *)state)->wingVec[3] + 0) = p;
 
         *(s16 *)(((ArwingState *)state)->wingVec[0] + 0) =
-            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+            (int)((f32)(-((ArwingState *)state)->rotYCur) * ((ArwingState *)state)->wingFlexScale +
                   (f32) * (s16 *)(((ArwingState *)state)->wingVec[0] + 0));
         *(s16 *)(((ArwingState *)state)->wingVec[0] + 4) =
-            (int)((f32) ((ArwingState *)state)->rollInput * ((ArwingState *)state)->wingFlexScale +
+            (int)((f32) ((ArwingState *)state)->rotYCur * ((ArwingState *)state)->wingFlexScale +
                   (f32) * (s16 *)(((ArwingState *)state)->wingVec[0] + 4));
         *(s16 *)(((ArwingState *)state)->wingVec[1] + 0) =
-            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+            (int)((f32)(-((ArwingState *)state)->rotYCur) * ((ArwingState *)state)->wingFlexScale +
                   (f32) * (s16 *)(((ArwingState *)state)->wingVec[1] + 0));
         *(s16 *)(((ArwingState *)state)->wingVec[1] + 4) =
-            (int)((f32) ((ArwingState *)state)->rollInput * ((ArwingState *)state)->wingFlexScale +
+            (int)((f32) ((ArwingState *)state)->rotYCur * ((ArwingState *)state)->wingFlexScale +
                   (f32) * (s16 *)(((ArwingState *)state)->wingVec[1] + 4));
         *(s16 *)(((ArwingState *)state)->wingVec[2] + 0) =
-            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+            (int)((f32)(-((ArwingState *)state)->rotYCur) * ((ArwingState *)state)->wingFlexScale +
                   (f32) * (s16 *)(((ArwingState *)state)->wingVec[2] + 0));
         *(s16 *)(((ArwingState *)state)->wingVec[2] + 4) =
-            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+            (int)((f32)(-((ArwingState *)state)->rotYCur) * ((ArwingState *)state)->wingFlexScale +
                   (f32) * (s16 *)(((ArwingState *)state)->wingVec[2] + 4));
         *(s16 *)(((ArwingState *)state)->wingVec[3] + 0) =
-            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+            (int)((f32)(-((ArwingState *)state)->rotYCur) * ((ArwingState *)state)->wingFlexScale +
                   (f32) * (s16 *)(((ArwingState *)state)->wingVec[3] + 0));
         *(s16 *)(((ArwingState *)state)->wingVec[3] + 4) =
-            (int)((f32)(-((ArwingState *)state)->rollInput) * ((ArwingState *)state)->wingFlexScale +
+            (int)((f32)(-((ArwingState *)state)->rotYCur) * ((ArwingState *)state)->wingFlexScale +
                   (f32) * (s16 *)(((ArwingState *)state)->wingVec[3] + 4));
     }
 
@@ -529,9 +529,9 @@ void arwarwing_update(int obj)
     (*(void (**)(void *, int))(*gCameraInterface + 0x60))((void *)(state + 0x2c), 0xc);
     camRot[0] = ((GameObject *)obj)->anim.rotX;
     camRot[1] = ((GameObject *)obj)->anim.rotY;
-    camRot[2] = (s16) ((ArwingState *)state)->pitchAccum;
+    camRot[2] = (s16) ((ArwingState *)state)->rotZCur;
     (*(void (**)(void *, int))(*gCameraInterface + 0x60))(camRot, 6);
-    camPos[0] = ((ArwingState *)state)->unk5C;
+    camPos[0] = ((ArwingState *)state)->maxSpeedZ;
     camPos[1] = ((ArwingState *)state)->velZ;
     (*(void (**)(void *, int))(*gCameraInterface + 0x60))(camPos, 8);
     fn_8022BE14(obj, state);
@@ -644,7 +644,7 @@ void fn_8022C30C(int obj, int state)
     vec = objModelGetVecFn_800395d8(((ArwingState *)state)->escortObj, 0x14);
 
     if (((ArwingState *)state)->mode < 4 && (u32)GameBit_Get(0x9d6) == 0 && (u32)GameBit_Get(0x9d8) == 0) {
-        vol = (f32)((lbl_803E6F48 + fn_802945E0(((ArwingState *)state)->velZ / ((ArwingState *)state)->unk5C)) *
+        vol = (f32)((lbl_803E6F48 + fn_802945E0(((ArwingState *)state)->velZ / ((ArwingState *)state)->maxSpeedZ)) *
                     lbl_803E6F50);
         Sfx_KeepAliveLoopedObjectSound(obj, SFXbaddie_pinpon_launch);
         Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
@@ -661,8 +661,8 @@ void fn_8022C30C(int obj, int state)
                 Sfx_PlayFromObjectLimited(obj, SFXbaddie_eba_smallswipe2, 3);
             }
         } else {
-            ((ArwingState *)state)->unk6C = ((ArwingState *)state)->unk88;
-            ((ArwingState *)state)->unk68 = ((ArwingState *)state)->unk90;
+            ((ArwingState *)state)->speedScaleZ = ((ArwingState *)state)->speedScaleRollL;
+            ((ArwingState *)state)->accelZ = ((ArwingState *)state)->accelZRollL;
             if ((((ArwingState *)state)->inputFlagsPrev & 0x800) != 0) {
                 ((ArwingState *)state)->flags477 &= ~0x2;
                 ((ArwingState *)state)->wingFlexTarget = lbl_803E6F5C;
@@ -676,8 +676,8 @@ void fn_8022C30C(int obj, int state)
                 Sfx_PlayFromObjectLimited(obj, SFXbaddie_kalda_distress, 3);
             }
         } else {
-            ((ArwingState *)state)->unk6C = ((ArwingState *)state)->unk8C;
-            ((ArwingState *)state)->unk68 = ((ArwingState *)state)->unk94;
+            ((ArwingState *)state)->speedScaleZ = ((ArwingState *)state)->speedScaleRollR;
+            ((ArwingState *)state)->accelZ = ((ArwingState *)state)->accelZRollR;
             if ((((ArwingState *)state)->inputFlagsPrev & 0x400) != 0) {
                 ((ArwingState *)state)->flags477 &= ~0x4;
                 ((ArwingState *)state)->wingFlexTarget = lbl_803E6F5C;
@@ -694,8 +694,8 @@ void fn_8022C30C(int obj, int state)
     }
 
     if ((((ArwingState *)state)->flags477 & 0x6) == 0) {
-        ((ArwingState *)state)->unk6C = lbl_803E6ED0;
-        ((ArwingState *)state)->unk68 = ((ArwingState *)state)->unk98;
+        ((ArwingState *)state)->speedScaleZ = lbl_803E6ED0;
+        ((ArwingState *)state)->accelZ = ((ArwingState *)state)->accelZNeutral;
         if (((ArwingState *)state)->rollRegenDelay <= lbl_803E6ECC) {
             ((ArwingState *)state)->rollEnergy = lbl_803E6F64 * timeDelta + ((ArwingState *)state)->rollEnergy;
         } else {
@@ -817,25 +817,25 @@ void fn_8022CDEC(int obj, int state)
     if (found != 0) {
         (*(void (**)(int, int))(*gCameraInterface + 0x28))(obj, 0);
         ((ArwingState *)state)->flags477 |= 1;
-        ((ArwingState *)state)->unk54 = lbl_803E6F70;
-        ((ArwingState *)state)->unk60 = lbl_803E6F74;
-        ((ArwingState *)state)->unk58 = lbl_803E6F78;
-        ((ArwingState *)state)->unk64 = lbl_803E6F7C;
-        ((ArwingState *)state)->unk5C = lbl_803E6F78;
-        ((ArwingState *)state)->unk68 = lbl_803E6F7C;
-        ((ArwingState *)state)->unk78 = lbl_803E6F80;
-        ((ArwingState *)state)->unk84 = lbl_803E6F84;
-        ((ArwingState *)state)->unk6C = lbl_803E6ED0;
-        ((ArwingState *)state)->unk348 = lbl_803E6F88;
-        ((ArwingState *)state)->unk34C = lbl_803E6F74;
-        ((ArwingState *)state)->unk35C = lbl_803E6F8C;
-        ((ArwingState *)state)->unk360 = lbl_803E6F7C;
-        ((ArwingState *)state)->unk370 = lbl_803E6F90;
-        ((ArwingState *)state)->unk374 = lbl_803E6F94;
-        ((ArwingState *)state)->unk384 = lbl_803E6F98;
-        ((ArwingState *)state)->unk388 = lbl_803E6F9C;
-        ((ArwingState *)state)->unk394 = lbl_803E6FA0;
-        ((ArwingState *)state)->unk390 = lbl_803E6FA4;
+        ((ArwingState *)state)->maxSpeedX = lbl_803E6F70;
+        ((ArwingState *)state)->accelX = lbl_803E6F74;
+        ((ArwingState *)state)->maxSpeedY = lbl_803E6F78;
+        ((ArwingState *)state)->accelY = lbl_803E6F7C;
+        ((ArwingState *)state)->maxSpeedZ = lbl_803E6F78;
+        ((ArwingState *)state)->accelZ = lbl_803E6F7C;
+        ((ArwingState *)state)->maxAccelZ = lbl_803E6F80;
+        ((ArwingState *)state)->minAccelZ = lbl_803E6F84;
+        ((ArwingState *)state)->speedScaleZ = lbl_803E6ED0;
+        ((ArwingState *)state)->rotXRange = lbl_803E6F88;
+        ((ArwingState *)state)->rotXGain = lbl_803E6F74;
+        ((ArwingState *)state)->rotYRange = lbl_803E6F8C;
+        ((ArwingState *)state)->rotYGain = lbl_803E6F7C;
+        ((ArwingState *)state)->rotZRange = lbl_803E6F90;
+        ((ArwingState *)state)->rotZGain = lbl_803E6F94;
+        ((ArwingState *)state)->rotZTrimRange = lbl_803E6F98;
+        ((ArwingState *)state)->rotZTrimGain = lbl_803E6F9C;
+        ((ArwingState *)state)->rotZBlendThreshold = lbl_803E6FA0;
+        ((ArwingState *)state)->rotZBlendRate = lbl_803E6FA4;
         ((ArwingState *)state)->unk39C = lbl_803E6FA8;
         ((ArwingState *)state)->unk3FA = 0x19;
         ((ArwingState *)state)->unk3A4 = lbl_803E6FAC;
@@ -843,11 +843,11 @@ void fn_8022CDEC(int obj, int state)
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E6FB0;
         ((ArwingState *)state)->unk3AC = lbl_803E6FB4;
         ((ArwingState *)state)->unk3B0 = lbl_803E6FB8;
-        ((ArwingState *)state)->unk88 = lbl_803E6FBC;
-        ((ArwingState *)state)->unk8C = lbl_803E6F64;
-        ((ArwingState *)state)->unk90 = lbl_803E6FD4;
-        ((ArwingState *)state)->unk94 = lbl_803E6F74;
-        ((ArwingState *)state)->unk98 = lbl_803E6FD8;
+        ((ArwingState *)state)->speedScaleRollL = lbl_803E6FBC;
+        ((ArwingState *)state)->speedScaleRollR = lbl_803E6F64;
+        ((ArwingState *)state)->accelZRollL = lbl_803E6FD4;
+        ((ArwingState *)state)->accelZRollR = lbl_803E6F74;
+        ((ArwingState *)state)->accelZNeutral = lbl_803E6FD8;
         ((ArwingState *)state)->rollCooldownInit = lbl_803E6FDC;
         ((ArwingState *)state)->rollEnergyMax = lbl_803E6FE0;
         ((ArwingState *)state)->unkA8 = lbl_803E6F2C;
@@ -875,14 +875,14 @@ void fn_8022CDEC(int obj, int state)
         *(s16 *)&((ArwingState *)state)->unk44E = 0xaf;
         ((ArwingState *)state)->maxShield = *(u8 *)(mev + 0x1);
         ((ArwingState *)state)->shield = ((ArwingState *)state)->maxShield;
-        ((ArwingState *)state)->unk3B4 = lbl_803E6EF8;
-        ((ArwingState *)state)->unk3B8 = lbl_803E6EF0;
-        ((ArwingState *)state)->unk3BC = lbl_803E6FE4;
-        ((ArwingState *)state)->unk3C4 = lbl_803E6EF4;
-        ((ArwingState *)state)->unk3C8 = lbl_803E6FD4;
-        ((ArwingState *)state)->unk3D0 = lbl_803E6FE8;
-        ((ArwingState *)state)->unk3D4 = lbl_803E6F80;
-        ((ArwingState *)state)->unk3E0 = lbl_803E6FA4;
+        ((ArwingState *)state)->bobSpeedThreshold = lbl_803E6EF8;
+        ((ArwingState *)state)->bobRotZRate = lbl_803E6EF0;
+        ((ArwingState *)state)->bobRotZAmp = lbl_803E6FE4;
+        ((ArwingState *)state)->bobXRate = lbl_803E6EF4;
+        ((ArwingState *)state)->bobXAmp = lbl_803E6FD4;
+        ((ArwingState *)state)->bobYRate = lbl_803E6FE8;
+        ((ArwingState *)state)->bobYAmp = lbl_803E6F80;
+        ((ArwingState *)state)->bobBlendRate = lbl_803E6FA4;
         ((ArwingState *)state)->homeX = ((GameObject *)obj)->anim.localPosX;
         ((ArwingState *)state)->homeY = ((GameObject *)obj)->anim.localPosY;
         ((ArwingState *)state)->homeZ = ((GameObject *)obj)->anim.localPosZ;
@@ -902,33 +902,33 @@ void fn_8022D308(int obj)
     f32 v7c = lbl_803E6F7C;
     f32 v74 = lbl_803E6F74;
 
-    state->unk54 = lbl_803E6F70;
-    state->unk60 = v74;
-    state->unk58 = lbl_803E6F78;
-    state->unk64 = v7c;
-    state->unk5C = lbl_803E6F78;
-    state->unk68 = v7c;
-    state->unk78 = lbl_803E6F80;
-    state->unk84 = lbl_803E6F84;
-    state->unk6C = lbl_803E6ED0;
-    state->unk348 = lbl_803E6F88;
-    state->unk34C = v74;
-    state->unk35C = lbl_803E6F8C;
-    state->unk360 = v7c;
-    state->unk370 = lbl_803E6F90;
-    state->unk374 = lbl_803E6F94;
-    state->unk384 = lbl_803E6F98;
-    state->unk388 = lbl_803E6F9C;
-    state->unk394 = lbl_803E6FA0;
-    state->unk390 = lbl_803E6FA4;
+    state->maxSpeedX = lbl_803E6F70;
+    state->accelX = v74;
+    state->maxSpeedY = lbl_803E6F78;
+    state->accelY = v7c;
+    state->maxSpeedZ = lbl_803E6F78;
+    state->accelZ = v7c;
+    state->maxAccelZ = lbl_803E6F80;
+    state->minAccelZ = lbl_803E6F84;
+    state->speedScaleZ = lbl_803E6ED0;
+    state->rotXRange = lbl_803E6F88;
+    state->rotXGain = v74;
+    state->rotYRange = lbl_803E6F8C;
+    state->rotYGain = v7c;
+    state->rotZRange = lbl_803E6F90;
+    state->rotZGain = lbl_803E6F94;
+    state->rotZTrimRange = lbl_803E6F98;
+    state->rotZTrimGain = lbl_803E6F9C;
+    state->rotZBlendThreshold = lbl_803E6FA0;
+    state->rotZBlendRate = lbl_803E6FA4;
     state->unk39C = lbl_803E6FA8;
     state->unk3FA = 0x19;
     state->unk3A4 = lbl_803E6FAC;
     state->unk38 = lbl_803E6FB0;
     state->unk3AC = lbl_803E6FB4;
     state->unk3B0 = lbl_803E6FB8;
-    state->unk88 = lbl_803E6FBC;
-    state->unk8C = lbl_803E6F64;
+    state->speedScaleRollL = lbl_803E6FBC;
+    state->speedScaleRollR = lbl_803E6F64;
     state->rollEnergy = state->rollEnergyMax;
     state->unkA4 = state->unkA8;
     state->wingFlexCur = lbl_803E6F5C;
@@ -940,8 +940,8 @@ void fn_8022D308(int obj)
     ((GameObject *)obj)->anim.localPosX = state->homeX;
     ((GameObject *)obj)->anim.localPosY = state->homeY;
     ((GameObject *)obj)->anim.localPosZ = state->homeZ;
-    state->rollInput = 0;
-    state->pitchAccum = 0;
+    state->rotYCur = 0;
+    state->rotZCur = 0;
     ((GameObject *)obj)->anim.rotX = 0;
     ((GameObject *)obj)->anim.rotY = 0;
     ((GameObject *)obj)->anim.rotZ = 0;

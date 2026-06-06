@@ -20,28 +20,28 @@ typedef struct ArwingState {
     f32 unk28;
     f32 camPos[3];       /* 0x02c: pushed to the camera each update */
     f32 unk38;
-    f32 unk3C;
-    f32 unk40;
-    f32 unk44;
+    f32 velTargetX;      /* 0x03c: (vel - velTarget) * accel integrates vel (fn_8022AECC) */
+    f32 velTargetY;
+    f32 velTargetZ;
     f32 velX;            /* 0x048 */
     f32 velY;
     f32 velZ;
-    f32 unk54;
-    f32 unk58;
-    f32 unk5C;
-    f32 unk60;
-    f32 unk64;
-    f32 unk68;
-    f32 unk6C;
+    f32 maxSpeedX;
+    f32 maxSpeedY;
+    f32 maxSpeedZ;
+    f32 accelX;
+    f32 accelY;
+    f32 accelZ;
+    f32 speedScaleZ;
     u8 pad70[8];
-    f32 unk78;
+    f32 maxAccelZ;
     u8 pad7C[8];
-    f32 unk84;
-    f32 unk88;
-    f32 unk8C;
-    f32 unk90;
-    f32 unk94;
-    f32 unk98;
+    f32 minAccelZ;
+    f32 speedScaleRollL;
+    f32 speedScaleRollR;
+    f32 accelZRollL;
+    f32 accelZRollR;
+    f32 accelZNeutral;
     f32 rollEnergy;      /* 0x09c */
     f32 rollEnergyMax;   /* 0x0a0 */
     f32 unkA4;
@@ -61,28 +61,28 @@ typedef struct ArwingState {
     s16 shakeYaw;        /* 0x33a */
     s16 shakePitch;      /* 0x33c */
     u8 pad33E[2];
-    int unk340;
-    int unk344;
-    f32 unk348;
-    f32 unk34C;
-    int unk350;
-    int unk354;
-    int rollInput;       /* 0x358 */
-    f32 unk35C;
-    f32 unk360;
-    int unk364;
-    int unk368;
-    int pitchAccum;      /* 0x36c */
-    f32 unk370;
-    f32 unk374;
-    f32 unk378;
-    int unk37C;
-    int unk380;
-    f32 unk384;
-    f32 unk388;
-    f32 unk38C;
-    f32 unk390;
-    f32 unk394;
+    int rotXTarget;
+    int rotXCur;
+    f32 rotXRange;
+    f32 rotXGain;
+    int rotXRate;
+    int rotYTarget;
+    int rotYCur;         /* 0x358: integrated to anim.rotY; also drives wing flex */
+    f32 rotYRange;
+    f32 rotYGain;
+    int rotYRate;
+    int rotZTarget;
+    int rotZCur;         /* 0x36c: blended into anim.rotZ; camera roll source */
+    f32 rotZRange;
+    f32 rotZGain;
+    f32 rotZRate;
+    int rotZTrimTarget;
+    int rotZTrimCur;
+    f32 rotZTrimRange;
+    f32 rotZTrimGain;
+    f32 rotZBlend;
+    f32 rotZBlendRate;
+    f32 rotZBlendThreshold;
     int unk398;
     f32 unk39C;
     f32 unk3A0;
@@ -90,23 +90,23 @@ typedef struct ArwingState {
     f32 unk3A8;
     f32 unk3AC;
     f32 unk3B0;
-    f32 unk3B4;
-    f32 unk3B8;
-    f32 unk3BC;
-    u16 unk3C0;
+    f32 bobSpeedThreshold;
+    f32 bobRotZRate;
+    f32 bobRotZAmp;
+    u16 bobRotZPhase;
     u8 pad3C2[2];
-    f32 unk3C4;
-    f32 unk3C8;
-    u16 unk3CC;
+    f32 bobXRate;
+    f32 bobXAmp;
+    u16 bobXPhase;
     u8 pad3CE[2];
-    f32 unk3D0;
-    f32 unk3D4;
-    u16 unk3D8;
+    f32 bobYRate;
+    f32 bobYAmp;
+    u16 bobYPhase;
     u8 pad3DA[2];
-    f32 unk3DC;
-    f32 unk3E0;
-    f32 unk3E4;
-    f32 unk3E8;
+    f32 bobBlend;
+    f32 bobBlendRate;
+    f32 stickX;          /* 0x3e4: padGetStickX(0) normalized */
+    f32 stickY;
     f32 unk3EC;
     f32 unk3F0;
     u16 inputFlags;      /* 0x3f4: 0x100 fire, 0x400 roll-R, 0x800 roll-L */

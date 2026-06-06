@@ -431,8 +431,8 @@ void fn_8022A670(int obj, int state)
     int btn;
 
     debugPrintSetColor(0xff, 0xff, 0xff, 0xff);
-    ((ArwingState *)state)->unk3E4 = (f32)(s8)padGetStickX(0) / lbl_803E6EC8;
-    ((ArwingState *)state)->unk3E8 = (f32)(s8)padGetStickY(0) / lbl_803E6EC8;
+    ((ArwingState *)state)->stickX = (f32)(s8)padGetStickX(0) / lbl_803E6EC8;
+    ((ArwingState *)state)->stickY = (f32)(s8)padGetStickY(0) / lbl_803E6EC8;
     if (((ArwingState *)state)->damageFlashTimer > lbl_803E6ECC) {
         nx = -((ArwingState *)state)->knockVelX;
         ny = -((ArwingState *)state)->knockVelZ;
@@ -442,10 +442,10 @@ void fn_8022A670(int obj, int state)
             ((ArwingState *)state)->hitShake = 0;
             (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, state + 0xc0);
         }
-        ((ArwingState *)state)->unk3E4 =
-            ((ArwingState *)state)->unk3E4 * (lbl_803E6ED0 - tv) + nx * tv;
-        ((ArwingState *)state)->unk3E8 =
-            ((ArwingState *)state)->unk3E8 * (lbl_803E6ED0 - tv) + ny * tv;
+        ((ArwingState *)state)->stickX =
+            ((ArwingState *)state)->stickX * (lbl_803E6ED0 - tv) + nx * tv;
+        ((ArwingState *)state)->stickY =
+            ((ArwingState *)state)->stickY * (lbl_803E6ED0 - tv) + ny * tv;
     }
     ((ArwingState *)state)->unk3EC = (f32)(u32)(u8)padGetRTrigger(0) / lbl_803E6ED4;
     if (((ArwingState *)state)->unk3EC < lbl_803E6ECC)
@@ -468,8 +468,8 @@ void fn_8022A670(int obj, int state)
             ((ArwingState *)state)->unk398 = ((GameObject *)obj)->anim.rotZ;
             ((ArwingState *)state)->unk3A0 = ((ArwingState *)state)->unk39C;
             ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
-            ((ArwingState *)state)->unk54 = ((ArwingState *)state)->unk54 * ((ArwingState *)state)->unk3AC;
-            ((ArwingState *)state)->unk60 = ((ArwingState *)state)->unk60 * ((ArwingState *)state)->unk3B0;
+            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX * ((ArwingState *)state)->unk3AC;
+            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX * ((ArwingState *)state)->unk3B0;
             arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 1, 0);
         } else if ((btn & 0x40) != 0) {
             Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
@@ -477,8 +477,8 @@ void fn_8022A670(int obj, int state)
             ((ArwingState *)state)->unk398 = ((GameObject *)obj)->anim.rotZ;
             ((ArwingState *)state)->unk3A0 = -((ArwingState *)state)->unk39C;
             ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
-            ((ArwingState *)state)->unk54 = ((ArwingState *)state)->unk54 * ((ArwingState *)state)->unk3AC;
-            ((ArwingState *)state)->unk60 = ((ArwingState *)state)->unk60 * ((ArwingState *)state)->unk3B0;
+            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX * ((ArwingState *)state)->unk3AC;
+            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX * ((ArwingState *)state)->unk3B0;
             arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 1, 1);
         }
     }
@@ -499,14 +499,14 @@ void fn_8022AB68(int obj, int state)
         (s16)(int)(timeDelta * (((ArwingState *)state)->unk3A0 * ((ArwingState *)state)->unk3A8) +
                    (f32) * (s16 *)(obj + 4));
     if (((ArwingState *)state)->unk3A0 > lbl_803E6ECC) {
-        tgt = ((ArwingState *)state)->unk380;
+        tgt = ((ArwingState *)state)->rotZTrimCur;
         cur = ((ArwingState *)state)->unk398;
         if (cur > tgt + 0xffff) {
             ((ArwingState *)state)->mode = 0;
-            ((ArwingState *)state)->unk380 = ((ArwingState *)state)->unk398 - 0xffff;
-            ((ArwingState *)state)->unk38C = lbl_803E6ECC;
-            ((ArwingState *)state)->unk54 = ((ArwingState *)state)->unk54 / ((ArwingState *)state)->unk3AC;
-            ((ArwingState *)state)->unk60 = ((ArwingState *)state)->unk60 / ((ArwingState *)state)->unk3B0;
+            ((ArwingState *)state)->rotZTrimCur = ((ArwingState *)state)->unk398 - 0xffff;
+            ((ArwingState *)state)->rotZBlend = lbl_803E6ECC;
+            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX / ((ArwingState *)state)->unk3AC;
+            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX / ((ArwingState *)state)->unk3B0;
             arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
         } else if (cur > tgt + 0x8000) {
             d = cur - (u16)tgt;
@@ -520,14 +520,14 @@ void fn_8022AB68(int obj, int state)
                 ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
         }
     } else {
-        tgt = ((ArwingState *)state)->unk380;
+        tgt = ((ArwingState *)state)->rotZTrimCur;
         cur = ((ArwingState *)state)->unk398;
         if (cur < tgt - 0xffff) {
             ((ArwingState *)state)->mode = 0;
-            ((ArwingState *)state)->unk380 = ((ArwingState *)state)->unk398 + 0xffff;
-            ((ArwingState *)state)->unk38C = lbl_803E6ECC;
-            ((ArwingState *)state)->unk54 = ((ArwingState *)state)->unk54 / ((ArwingState *)state)->unk3AC;
-            ((ArwingState *)state)->unk60 = ((ArwingState *)state)->unk60 / ((ArwingState *)state)->unk3B0;
+            ((ArwingState *)state)->rotZTrimCur = ((ArwingState *)state)->unk398 + 0xffff;
+            ((ArwingState *)state)->rotZBlend = lbl_803E6ECC;
+            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX / ((ArwingState *)state)->unk3AC;
+            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX / ((ArwingState *)state)->unk3B0;
             arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
         } else if (cur > tgt - 0x8000) {
             d = cur - (u16)tgt;
