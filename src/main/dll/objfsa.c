@@ -5707,13 +5707,14 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxD
 
 #pragma scheduling off
 #pragma peephole off
-int RomCurve_func1C(int startCurve, int unused1, int unused2, int unused3, int unused4, int *previousCurveId)
+int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int *previousCurveId)
 {
     int startIndex;
     int candidateCount;
+    u32 cur;
     int directSlot;
     int directLinkId;
-    int directCurve;
+    u32 directCurve;
     int directIndex;
     int queueCount;
     int queueIndex;
@@ -5745,8 +5746,9 @@ int RomCurve_func1C(int startCurve, int unused1, int unused2, int unused3, int u
     }
 
     candidateCount = 0;
-    for (directSlot = 0; directSlot < 4; directSlot++) {
-        directLinkId = *(s32 *)(startCurve + 0x1c + directSlot * 4);
+    cur = startCurve;
+    for (directSlot = 0; directSlot < 4; directSlot++, cur += 4) {
+        directLinkId = *(s32 *)(cur + 0x1c);
         if (directLinkId <= -1) {
             continue;
         }
@@ -5756,7 +5758,7 @@ int RomCurve_func1C(int startCurve, int unused1, int unused2, int unused3, int u
         }
         visited[startIndex] = 1;
 
-        directCurve = (int)RomCurve_findByIdWithIndex(directLinkId, &directIndex);
+        directCurve = (u32)RomCurve_findByIdWithIndex(*(s32 *)(cur + 0x1c), &directIndex);
         if (directCurve == 0) {
             continue;
         }
