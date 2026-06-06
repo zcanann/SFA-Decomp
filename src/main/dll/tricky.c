@@ -2348,16 +2348,16 @@ void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, int p5, int p6, in
     fx = lbl_803E1E80 * fx;
     fy = lbl_803E1E80 * fy;
     GXBegin(0x80, 1, 4);
-    c0 = lbl_803E1E3C;
-    c1 = lbl_803E1E68;
     GXWGFifo.s16 = (s16)fx;
     GXWGFifo.s16 = (s16)fy;
     GXWGFifo.s16 = (s16)(p4 << 2);
+    c0 = lbl_803E1E3C;
     GXWGFifo.f32 = c0;
     GXWGFifo.f32 = c0;
     GXWGFifo.s16 = (s16)(fx + (f32)(u32)dx);
     GXWGFifo.s16 = (s16)fy;
     GXWGFifo.s16 = (s16)(p4 << 2);
+    c1 = lbl_803E1E68;
     GXWGFifo.f32 = c1;
     GXWGFifo.f32 = c0;
     GXWGFifo.s16 = (s16)(fx + (f32)(u32)dx);
