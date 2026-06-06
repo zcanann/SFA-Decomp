@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/shrine1CE.h"
 
@@ -300,14 +301,14 @@ void dll_19C_update(int *obj) {
     int res;
     void *setup;
 
-    def = *(u8**)((char*)obj + 0x4c);
-    sub = *(u8**)((char*)obj + 0xb8);
-    if (*(int*)((char*)obj + 0xf8) != 0) {
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
+    sub = ((GameObject *)obj)->extra;
+    if (((GameObject *)obj)->unkF8 != 0) {
         if (GameBit_Get(0x1d4) != 0) {
-            *(int*)((char*)obj + 0xf8) = 0;
+            ((GameObject *)obj)->unkF8 = 0;
         }
     }
-    if (*(int*)((char*)obj + 0xf8) == 0) {
+    if (((GameObject *)obj)->unkF8 == 0) {
         if (GameBit_Get(0x1d3) != 0) {
             res = Resource_Acquire(0x82, 1);
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 0, 0, 1, -1, 0);
@@ -315,7 +316,7 @@ void dll_19C_update(int *obj) {
             Sfx_PlayFromObject(0, SFXsc_gemrun1022);
             Resource_Release(res);
             *(s16*)(sub + 6) = 1;
-            *(int*)((char*)obj + 0xf8) = 1;
+            ((GameObject *)obj)->unkF8 = 1;
         }
     }
     if (*(s16*)(sub + 6) != 0) {
@@ -332,7 +333,7 @@ void dll_19C_update(int *obj) {
         *(u8*)((char*)setup + 5) = def[5];
         *(u8*)((char*)setup + 6) = def[6];
         *(u8*)((char*)setup + 7) = def[7];
-        Obj_SetupObject(setup, 5, *(s8*)((char*)obj + 0xac), -1, *(void**)((char*)obj + 0x30));
+        Obj_SetupObject(setup, 5, *(s8*)((char*)obj + 0xac), -1, *(void**)&((GameObject *)obj)->anim.parent);
         *(s16*)(sub + 4) = 0x64;
         *(s16*)(sub + 6) = 0;
     }

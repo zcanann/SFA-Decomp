@@ -1,4 +1,5 @@
 #include "main/mapEvent.h"
+#include "main/game_object.h"
 #include "main/dll/ped.h"
 
 extern uint GameBit_Get(int eventId);
@@ -84,7 +85,7 @@ void nw_geyser_init(int obj)
   *(void **)(obj + 0xbc) = NW_geyser_SeqFn;
 }
 
-char *fn_801CDE70(int *obj) { return *(char **)((char *)obj + 0xb8) + 0xc; }
+char *fn_801CDE70(int *obj) { return *(char **)&((GameObject *)obj)->extra + 0xc; }
 
 extern MapEventInterface **gMapEventInterface;
 void nw_geyser_free(int *obj) {

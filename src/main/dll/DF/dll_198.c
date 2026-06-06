@@ -1,4 +1,5 @@
 #include "main/dll/DF/DFbarrelanim.h"
+#include "main/game_object.h"
 #include "main/dll/DF/dll_196.h"
 #include "main/dll/DF/dll_198.h"
 
@@ -190,10 +191,10 @@ void dfropenode_init(DFropenodeObject *obj, u8 *objDef)
 
   extra = obj->extra;
   if ((&lbl_803DBF58)[*(u8 *)(objDef + 0x1b)] == 0) {
-    *(s16 *)((u8 *)obj + 6) = *(s16 *)((u8 *)obj + 6) & ~0x80;
+    ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags & ~0x80;
   }
   ObjGroup_AddObject((int)obj, 0x17);
-  *(void **)((u8 *)obj + 0xbc) = dfropenode_syncRopeToEndpoints;
+  ((GameObject *)obj)->unkBC = dfropenode_syncRopeToEndpoints;
   extra->rope = NULL;
   extra->linkedObj = NULL;
   *(u8 *)((u8 *)obj + 0x36) = 0x46;

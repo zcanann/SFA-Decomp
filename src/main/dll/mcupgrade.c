@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma scheduling off
 int mcupgradema_SeqFn(int p1, int p2, int setup)

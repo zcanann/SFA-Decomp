@@ -1,4 +1,5 @@
 #include "main/dll/CF/treasureRelated0177.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 

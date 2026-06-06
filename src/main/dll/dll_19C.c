@@ -1,4 +1,5 @@
 #include "main/dll/dll_19C.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
 extern undefined8 FUN_80006728();
@@ -739,7 +740,7 @@ void dfsh_shrine_init(int *obj, u8 *init) {
     u8 *sub;
     DfshShrineFlags *flags;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     flags = (DfshShrineFlags *)(sub + 0x1c);
     *(s16*)obj = (s16)((s8)init[0x18] << 8);
     *(s16*)(sub + 0x10) = 0xa;
@@ -749,7 +750,7 @@ void dfsh_shrine_init(int *obj, u8 *init) {
     sub[0x1a] = 4;
     flags->openedBySequence = 0;
     *(s16*)(sub + 0x12) = 0;
-    *(void**)((char*)obj + 0xbc) = (void*)&dfsh_shrine_SeqFn;
+    ((GameObject *)obj)->unkBC = (void*)&dfsh_shrine_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     sub[0x1b] = 0;
@@ -758,7 +759,7 @@ void dfsh_shrine_init(int *obj, u8 *init) {
     if (*(void**)sub == NULL) {
         *(int*)sub = (int)objCreateLight(NULL, 1);
     }
-    *(int*)((char*)obj + 0xf4) = 1;
+    ((GameObject *)obj)->unkF4 = 1;
     GameBit_Set(0xe70, 1);
     GameBit_Set(0xefa, 1);
 }
@@ -821,27 +822,27 @@ extern f32 lbl_803E4EB4;
 void SpiritPrize_init(int *obj, u8 *init) {
     SpiritPrizeState *state;
 
-    state = *(SpiritPrizeState **)((char*)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if (*(u32*)(init + 0x14) == 0x4ca62) return;
     state->mapParam1A = *(s16*)(init + 0x1a);
     state->targetObjectId = -1;
     state->spawnScale = lbl_803E4E98 / (lbl_803E4E98 + (f32)(u32)init[0x24]);
     state->triggerHandle = -1;
-    if (*(int*)((char*)obj + 0xf4) == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         if (*(s16*)(init + 0x18) != 1) {
             ((void(*)(SpiritPrizeState *))((void**)*(int*)gObjectTriggerInterface)[7])(state);
-            *(int*)((char*)obj + 0xf4) = *(s16*)(init + 0x18) + 1;
+            ((GameObject *)obj)->unkF4 = *(s16*)(init + 0x18) + 1;
         }
     } else {
-        if (*(s16*)(init + 0x18) != *(int*)((char*)obj + 0xf4) - 1) {
+        if (*(s16*)(init + 0x18) != ((GameObject *)obj)->unkF4 - 1) {
             ((void(*)(SpiritPrizeState *))((void**)*(int*)gObjectTriggerInterface)[9])(state);
             if (*(s16*)(init + 0x18) != -1) {
                 ((void(*)(SpiritPrizeState *, u8 *))((void**)*(int*)gObjectTriggerInterface)[7])(state, init);
             }
-            *(int*)((char*)obj + 0xf4) = *(s16*)(init + 0x18) + 1;
+            ((GameObject *)obj)->unkF4 = *(s16*)(init + 0x18) + 1;
         }
     }
-    if (*(s16*)((char*)obj + 0x46) != 0x1d9) {
+    if (((GameObject *)obj)->anim.seqId != 0x1d9) {
         state->useDetachedLight = 1;
     }
     if (state->light == NULL) {
@@ -878,7 +879,7 @@ void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 void SpiritPrize_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     SpiritPrizeState *state;
     s32 v;
-    state = *(SpiritPrizeState **)((char*)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     v = visible;
     if (v != 0) {
         objRenderFn_8003b8f4(lbl_803E4E98);

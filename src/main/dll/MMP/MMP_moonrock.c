@@ -1,4 +1,5 @@
 #include "main/dll/MMP/MMP_moonrock.h"
+#include "main/game_object.h"
 
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006820();

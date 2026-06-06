@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/objanim_internal.h"
@@ -83,7 +84,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
 #pragma scheduling off
 #pragma peephole off
 int drshackle_func0B(int obj) {
-    int p = *(int *)((char *)obj + 0x4c);
+    int p = *(int *)&((GameObject *)obj)->anim.placementData;
     return *(s8 *)(p + 0x19);
 }
 #pragma peephole reset
@@ -100,11 +101,11 @@ void drshackle_free(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void drshackle_init(int obj, char *arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     ObjGroup_AddObject(obj, 0x37);
     ((BitFlags8 *)(p + 0x1a))->b0 = (GameBit_Get(*(s16 *)(arg + 0x1e)) == 0);
     *(u8 *)(p + 0x1b) = (s8)arg[0x18] % 2;
-    *(void **)((char *)obj + 0xbc) = (void *)drshackle_toggleEventCallback;
+    ((GameObject *)obj)->unkBC = (void *)drshackle_toggleEventCallback;
     if (*(s16 *)(arg + 0x1c) == 1) {
         *(int *)(p + 0x14) = 2;
         *(u8 *)(p + 0x1c) = 1 - *(u8 *)(p + 0x1b);
@@ -118,13 +119,13 @@ void drshackle_init(int obj, char *arg) {
 #pragma scheduling off
 #pragma peephole off
 int drshackle_toggleEventCallback(int obj, int unused, u8 *arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     void *q = *(void **)p;
     int i;
     if (q != 0) {
-        *(f32 *)((char *)q + 0xc) = *(f32 *)((char *)obj + 0xc);
-        *(f32 *)((char *)q + 0x10) = *(f32 *)((char *)obj + 0x10);
-        *(f32 *)((char *)q + 0x14) = *(f32 *)((char *)obj + 0x14);
+        *(f32 *)((char *)q + 0xc) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)((char *)q + 0x10) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)((char *)q + 0x14) = ((GameObject *)obj)->anim.localPosZ;
     }
     for (i = 0; i < arg[0x8b]; i++) {
         switch (arg[i + 0x81]) {
@@ -144,7 +145,7 @@ int drshackle_toggleEventCallback(int obj, int unused, u8 *arg) {
 #pragma scheduling off
 #pragma peephole off
 void drshackle_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    u8 *p = ((GameObject *)obj)->extra;
     int i;
     int *ptr;
     if (((BitFlags8 *)(p + 0x1a))->b0 == 0 && visible != 0) {
@@ -165,8 +166,8 @@ void drshackle_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, un
 #pragma scheduling off
 #pragma peephole off
 void drshackle_update(int obj) {
-    char *p = *(char **)((char *)obj + 0xb8);
-    int q = *(int *)((char *)obj + 0x4c);
+    char *p = ((GameObject *)obj)->extra;
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
     int count;
     int *list;
     int j;
@@ -193,7 +194,7 @@ void drshackle_update(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void drshackle_hitDetect(int obj) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     if (Sfx_IsPlayingFromObjectChannel(obj, 1) == 0 && ((BitFlags8 *)(p + 0x1a))->b0 != 0) {
         f32 vec[3];
         int n;

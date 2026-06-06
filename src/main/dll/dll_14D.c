@@ -1,4 +1,5 @@
 #include "main/dll/dll_14D.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 
@@ -163,10 +164,10 @@ void dll_14D_update(undefined2 *param_1)
  */
 void dll_14D_init(int *obj)
 {
-    char *p = *(char**)((char*)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     *p = 0;
     *(u32*)(p + 4) = 0;
-    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x4000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
 }
 
 void fn_8017F334(int obj, void *setup, void *stateArg)

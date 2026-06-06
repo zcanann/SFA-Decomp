@@ -1,4 +1,5 @@
 #include "main/dll/baddie_state.h"
+#include "main/game_object.h"
 #include "main/dll/landedArwing.h"
 #include "main/dll/staffAction.h"
 #include "main/objanim.h"

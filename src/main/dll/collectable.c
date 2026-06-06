@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "dolphin/mtx.h"
 #include "main/dll/collectable.h"
 #include "main/dll/baddie/skeetla.h"
@@ -3757,7 +3758,7 @@ int Tricky_func12(int *obj) {
 #pragma scheduling off
 int Tricky_func10(int *obj,int targetObj) {
     int *state = (int*)obj[0xb8/4];
-    s32 objBlocked = *(u16*)((u8*)obj + 0xb0) & 0x1000;
+    s32 objBlocked = ((GameObject *)obj)->unkB0 & 0x1000;
 
     if (objBlocked != 0) {
         return 0;

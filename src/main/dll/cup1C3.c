@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/cup1C3.h"
 #include "main/objanim.h"
 #include "main/objlib.h"
@@ -161,7 +162,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
     int player;
     DbshSymbolState *state;
 
-    state = *(DbshSymbolState **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     Sfx_SetObjectSfxVolume((int)obj, 0x3af, 10, lbl_803E50E0);
     Sfx_KeepAliveLoopedObjectSound((int)obj, 0x3af);
@@ -779,7 +780,7 @@ extern f32 lbl_803E5118;
 #pragma peephole off
 void dbsh_symbol_init(int* obj)
 {
-    DbshSymbolState* state = *(DbshSymbolState**)((char*)obj + 0xb8);
+    DbshSymbolState* state = ((GameObject *)obj)->extra;
     int* otherPtr;
 
     state->spinSpeed = lbl_803E50EC;
@@ -790,8 +791,8 @@ void dbsh_symbol_init(int* obj)
     state->flags.finished = 0;
     state->flags.active = 1;
 
-    *(f32*)((char*)obj + 0x10) -= lbl_803E5118;
-    *(int**)((char*)obj + 0xbc) = (int*)DBSH_Symbol_SeqFn;
+    ((GameObject *)obj)->anim.localPosY -= lbl_803E5118;
+    ((GameObject *)obj)->unkBC = (int*)DBSH_Symbol_SeqFn;
 
     otherPtr = *(int**)((char*)obj + 0x64);
     *(u32 *)((char *)otherPtr + 0x30) &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;

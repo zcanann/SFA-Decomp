@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/mediumbasket.h"
@@ -2894,7 +2895,7 @@ void mediumbasket_spawnContactObject(int* obj, int* state) {
 }
 
 int mediumbasket_updateControlMove5State(int* obj, GroundBaddieState *state) {
-    u8* t = *(u8**)((char*)(*(int**)((char*)obj + 0xb8)) + 0x40c);
+    u8* t = *(u8**)((char*)(*(int**)&((GameObject *)obj)->extra) + 0x40c);
     t[0x44] |= 4;
     state->baddie.moveSpeed = lbl_803E2D38;
     if ((s8)state->baddie.moveJustStartedA != 0) {
@@ -2925,7 +2926,7 @@ int mediumbasket_stateHandlerB05(int* obj, GroundBaddieState *state) {
 #pragma scheduling reset
 
 int mediumbasket_stateHandlerB01(int* obj, GroundBaddieState *state) {
-    GroundBaddieState* sub = *(GroundBaddieState**)((char*)obj + 0xb8);
+    GroundBaddieState* sub = ((GameObject *)obj)->extra;
     if ((s8)state->baddie.hitPoints < 1) return 3;
     if ((s8)state->baddie.moveDone != 0) {
         if (state->baddie.controlMode == 12) {
@@ -2961,8 +2962,8 @@ void mediumbasket_enterWhirlpoolGroup(int* obj, GroundBaddieState *state) {
         state->baddie.inWhirlpoolGroup = 1;
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
-    *(u8*)(*(int*)((char*)obj + 0x54) + 0x70) = 0;
-    *(s16*)((char*)obj + 0) -= 256;
+    *(u8*)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+    ((GameObject *)obj)->anim.rotX -= 256;
 }
 #pragma peephole reset
 #pragma scheduling reset

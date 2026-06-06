@@ -1,4 +1,5 @@
 #include "global.h"
+#include "main/game_object.h"
 #include "main/dll/CF/dll_163.h"
 
 extern undefined8 ObjGroup_RemoveObject();
@@ -114,7 +115,7 @@ u32 cfPrisonGuard_getLiftHeight(int *obj) { return *(u32*)((char*)((int**)obj)[0
 #pragma scheduling off
 #pragma peephole off
 void cfPrisonGuard_setLiftHeight(int *obj, int v) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     *(int *)((char *)state + 0x14) = v;
     *(u8 *)((char *)state + 0x1c) = 1;
 }

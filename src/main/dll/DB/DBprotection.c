@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/DB/DBprotection.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/DB/sbgalleon_state.h"
@@ -912,8 +913,8 @@ void DBprotection_updateShield(int *obj)
   SBGalleonState *state;
   f32 angleCos;
 
-  state = *(SBGalleonState **)((u8 *)obj + 0xb8);
-  *(int *)((u8 *)obj + 0xf4) = 7;
+  state = ((GameObject *)obj)->extra;
+  ((GameObject *)obj)->unkF4 = 7;
 
   if (GameBit_Get(DBPROTECTION_GAMEBIT_TRANSITION_ARMED) != 0 &&
       GameBit_Get(DBPROTECTION_GAMEBIT_TRANSITION_USED) == 0 &&
@@ -952,13 +953,13 @@ void DBprotection_updateShield(int *obj)
     state->shieldSfxLatch = 0;
   }
 
-  *(u16 *)((u8 *)obj + 4) = (s32)(lbl_803E57DC * angleCos);
+  *(u16 *)&((GameObject *)obj)->anim.rotZ = (s32)(lbl_803E57DC * angleCos);
   state->shieldAngle = (u16)(s32)(lbl_803E57E0 * timeDelta + (f32)state->shieldAngle);
 }
 
 void DBprotection_storeHomePosition(int *obj) {
-    SBGalleonState *state = *(SBGalleonState**)((char*)obj + 0xb8);
-    state->posX = *(f32*)((char*)obj + 0xc);
-    state->posY = *(f32*)((char*)obj + 0x10);
-    state->posZ = *(f32*)((char*)obj + 0x14);
+    SBGalleonState *state = ((GameObject *)obj)->extra;
+    state->posX = ((GameObject *)obj)->anim.localPosX;
+    state->posY = ((GameObject *)obj)->anim.localPosY;
+    state->posZ = ((GameObject *)obj)->anim.localPosZ;
 }

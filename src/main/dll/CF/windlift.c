@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
@@ -1885,7 +1886,7 @@ extern u8 lbl_803DBDB8;
 #pragma scheduling off
 #pragma peephole off
 void scarab_init(int *obj, u8 *def) {
-    ScarabState *state = *(ScarabState **)((char *)obj + 0xb8);
+    ScarabState *state = ((GameObject *)obj)->extra;
     int *model;
     state->phase = 0;
     state->mode = *(s16 *)((char *)def + 0x1a);
@@ -1893,7 +1894,7 @@ void scarab_init(int *obj, u8 *def) {
     state->riseLimit = (s16)randomGetRange(0x32, 0x64);
     state->baseY = *(f32 *)((char *)def + 0xc);
     model = (int *)Obj_GetActiveModel(obj);
-    switch (*(s16 *)((char *)obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x3d3:
         *(u8 *)((char *)*(int *)((char *)model + 0x34) + 8) = (&lbl_803DBDB0)[randomGetRange(0, 2)];
         state->pickupSfx = 0x41;

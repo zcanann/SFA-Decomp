@@ -1,4 +1,5 @@
 #include "main/dll/baddie/balloonBaddie.h"
+#include "main/game_object.h"
 
 extern undefined4 FUN_80006954();
 extern undefined4 FUN_8000695c();

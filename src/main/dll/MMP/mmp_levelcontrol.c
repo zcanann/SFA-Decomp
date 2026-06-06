@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/MMP/mmp_levelcontrol.h"
 
 
@@ -931,7 +932,7 @@ void wallanimator_update(int obj)
 #pragma peephole off
 void wallanimator_init(s16* obj, s16* p2)
 {
-    register int* state = *(int**)((char*)obj + 0xb8);
+    register int* state = ((GameObject *)obj)->extra;
 
     *obj = (s16)p2[0x24 / 2];
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_PRIMARY);

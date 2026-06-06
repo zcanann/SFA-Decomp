@@ -1,4 +1,5 @@
 #include "main/dll/DR/hightop.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 
@@ -1181,7 +1182,7 @@ extern f32 lbl_803E40F8;
 void Trigger_free(void *obj)
 {
     u8 i;
-    u8 *entry = *(u8 **)((char *)obj + 0x4c) + 0x18;
+    u8 *entry = *(u8 **)&((GameObject *)obj)->anim.placementData + 0x18;
     i = 0;
 
     while (i < 8) {
@@ -1275,7 +1276,7 @@ void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visibl
 void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
 
 int cfguardian_setScale(int *obj) {
-    return (*(u8*)(*(int*)((char*)obj + 0xb8) + 0xa9b) & 0x2) == 0;
+    return (*(u8*)(*(int *)&((GameObject *)obj)->extra + 0xa9b) & 0x2) == 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

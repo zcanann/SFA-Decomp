@@ -1,4 +1,5 @@
 #include "main/mapEvent.h"
+#include "main/game_object.h"
 #include "main/dll/creator1C6.h"
 
 extern undefined4 FUN_80017710();

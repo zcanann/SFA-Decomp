@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/campfire_state.h"
 #include "main/dll/campfire.h"

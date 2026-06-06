@@ -1,4 +1,5 @@
 #include "main/objanim.h"
+#include "main/game_object.h"
 
 extern u32 GameBit_Get(int id);
 extern void GameBit_Set(int id, int value);
@@ -397,7 +398,7 @@ int sc_cloudrunnera_getObjectTypeId(void) { return 0xb; }
 #pragma peephole off
 void sc_cloudrunnera_free(int *obj)
 {
-    void *inner = *(void **)((char *)obj + 0xb8);
+    void *inner = ((GameObject *)obj)->extra;
     ((void (*)(void *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
     ((void (*)(int *, int, int, int, int))(*(int *)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
 }

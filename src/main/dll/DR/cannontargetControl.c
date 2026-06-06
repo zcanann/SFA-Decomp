@@ -1,4 +1,5 @@
 #include "main/dll/DR/cannontargetControl.h"
+#include "main/game_object.h"
 #include "main/dll/DR/gasvent.h"
 #include "main/dll/DR/gunpowderbarrel_state.h"
 #include "main/objhits_types.h"
@@ -366,7 +367,7 @@ void blasted_hitDetect(void)
 #pragma peephole off
 void blasted_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-  int *state = *(int **)((char *)obj + 0xb8);
+  int *state = ((GameObject *)obj)->extra;
   if (visible != 0 && state[3] == 0) {
     objRenderFn_8003b8f4(lbl_803E4348);
   }

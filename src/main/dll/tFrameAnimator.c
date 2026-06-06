@@ -1,4 +1,5 @@
 #include "main/dll/tFrameAnimator.h"
+#include "main/game_object.h"
 #include "main/dll/tframeanimator_state.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
@@ -69,7 +70,7 @@ void area_update(void) {}
 
 /* obj->u16_X |= MASK */
 #pragma peephole off
-void area_init(u16 *obj) { u32 v; v = *(u16*)((char*)obj + 0xb0); v |= 0xa000; *(u16*)((char*)obj + 0xb0) = (u16)v; }
+void area_init(u16 *obj) { u32 v; v = ((GameObject *)obj)->unkB0; v |= 0xa000; ((GameObject *)obj)->unkB0 = (u16)v; }
 #pragma peephole reset
 
 void area_release(void) {}
@@ -95,7 +96,7 @@ void levelname_update(int *obj) {
     u8 *sub;
     int *player;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     switch (sub[0x14]) {
     case 0:
         player = Obj_GetPlayerObject();
@@ -175,7 +176,7 @@ int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 #pragma peephole off
 int ProjectileSwitch_getObjectTypeId(int *obj) {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int v = (int)*(u8 *)((char *)*(int **)((char *)obj + 0x4c) + 0x1e) >> 2;
+    int v = (int)*(u8 *)((char *)*(int **)&((GameObject *)obj)->anim.placementData + 0x1e) >> 2;
     int max = objAnim->modelInstance->modelCount;
     if (v >= max) {
         v = 0;
@@ -188,7 +189,7 @@ int ProjectileSwitch_getObjectTypeId(int *obj) {
 #pragma scheduling off
 #pragma peephole off
 int levelname_SeqFn(int obj, int unused, u8 *setupData) {
-    int *state = *(int **)((char *)obj + 0xB8);
+    int *state = ((GameObject *)obj)->extra;
     int i;
     for (i = 0; i < setupData[0x8B]; i++) {
         if (setupData[0x81 + i] == 1) {

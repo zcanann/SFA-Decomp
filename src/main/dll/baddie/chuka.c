@@ -1,4 +1,5 @@
 #include "main/dll/baddie/chuka.h"
+#include "main/game_object.h"
 #include "main/dll/baddie/chukachuck.h"
 
 extern undefined4* gExpgfxInterface;

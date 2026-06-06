@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
@@ -900,15 +901,15 @@ void SB_ShipMast_update(int *obj) {
     int pf4;
     f32 speed;
 
-    parent = *(int**)((char*)obj + 0x30);
+    parent = *(int**)&((GameObject *)obj)->anim.parent;
     if (parent == NULL) return;
     pf4 = *(int*)((char*)parent + 0xf4);
-    *(f32*)((char*)obj + 0xc) = lbl_803E586C;
-    *(f32*)((char*)obj + 0x10) = lbl_803E586C;
-    *(f32*)((char*)obj + 0x14) = lbl_803E586C;
-    if (*(s16*)((char*)*(int**)((char*)obj + 0x30) + 0x46) == 0x139) {
+    ((GameObject *)obj)->anim.localPosX = lbl_803E586C;
+    ((GameObject *)obj)->anim.localPosY = lbl_803E586C;
+    ((GameObject *)obj)->anim.localPosZ = lbl_803E586C;
+    if (*(s16*)((char*)*(int**)&((GameObject *)obj)->anim.parent + 0x46) == 0x139) {
         if (pf4 >= 0xa && pf4 < 0xd) {
-            if (*(s16*)((char*)obj + 0xa0) != 0) {
+            if (((GameObject *)obj)->anim.currentMove != 0) {
                 ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E586C, 0);
             }
             if (pf4 >= 0xc) {
@@ -917,13 +918,13 @@ void SB_ShipMast_update(int *obj) {
                 speed = lbl_803E5874;
             }
         } else {
-            if (*(s16*)((char*)obj + 0xa0) != 1) {
+            if (((GameObject *)obj)->anim.currentMove != 1) {
                 ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E586C, 0);
             }
             speed = lbl_803E5878;
         }
     } else {
-        if (*(s16*)((char*)obj + 0xa0) != 1) {
+        if (((GameObject *)obj)->anim.currentMove != 1) {
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E586C, 0);
         }
         speed = lbl_803E5878;

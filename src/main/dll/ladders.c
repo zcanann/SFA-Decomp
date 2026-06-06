@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/ladders.h"
 #include "main/objanim.h"
 
@@ -640,7 +641,7 @@ void tumbleweedbush_update(int *obj) {
     int i;
     int **slot;
 
-    state = *(TumbleweedBushState **)((char*)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     player = (int*)Obj_GetPlayerObject();
     if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, &hit0, &hitExtra) != 0) {
         if (*(s16*)((char*)hit0 + 0x46) != 0x4ba) {
@@ -649,7 +650,7 @@ void tumbleweedbush_update(int *obj) {
             for (i = 0; (u8)i < state->pieceCount; i++) {
                 int **slot = (int **)&state->pieceObjects[(u8)i];
                 if (*slot != NULL) {
-                    if (*(s16*)((char*)obj + 0x46) == 0x28d) {
+                    if (((GameObject *)obj)->anim.seqId == 0x28d) {
                         if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])(&hit1) == 0) continue;
                     }
                     ((void(*)(int*))*(int*)(*(int*)(*(int*)((char*)*slot + 0x68)) + 0x28))(*slot);
@@ -657,8 +658,8 @@ void tumbleweedbush_update(int *obj) {
             }
         }
     }
-    dx = *(f32*)((char*)obj + 0xc) - *(f32*)((char*)player + 0xc);
-    dy = *(f32*)((char*)obj + 0x14) - *(f32*)((char*)player + 0x14);
+    dx = ((GameObject *)obj)->anim.localPosX - *(f32*)((char*)player + 0xc);
+    dy = ((GameObject *)obj)->anim.localPosZ - *(f32*)((char*)player + 0x14);
     d = sqrtf(dx * dx + dy * dy);
     if ((u16)(s32)d < state->triggerRadius) {
         while ((s8)fn_801631C8(obj) != -1) {
@@ -773,9 +774,9 @@ s8 fn_801631C8(int *obj) {
     int *newObj;
     u8 *off;
 
-    state = *(u8 **)((char*)obj + 0xb8);
-    p4c = *(u8 **)((char*)obj + 0x4c);
-    switch (*(s16 *)((char*)obj + 0x46)) {
+    state = ((GameObject *)obj)->extra;
+    p4c = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x28d:
         if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])(&aliveOut) == 0)
             return -1;
@@ -814,9 +815,9 @@ s8 fn_801631C8(int *obj) {
 
     newObj = Obj_AllocObjectSetup(0x20, siblingType);
     off = state + freeSlot * 12;
-    *(f32 *)((char*)newObj + 0x8) = *(f32 *)((char*)obj + 0xc) + *(f32 *)(off + 0x1c);
-    *(f32 *)((char*)newObj + 0xc) = *(f32 *)((char*)obj + 0x10) + *(f32 *)(off + 0x20);
-    *(f32 *)((char*)newObj + 0x10) = *(f32 *)((char*)obj + 0x14) + *(f32 *)(off + 0x24);
+    *(f32 *)((char*)newObj + 0x8) = ((GameObject *)obj)->anim.localPosX + *(f32 *)(off + 0x1c);
+    *(f32 *)((char*)newObj + 0xc) = ((GameObject *)obj)->anim.localPosY + *(f32 *)(off + 0x20);
+    *(f32 *)((char*)newObj + 0x10) = ((GameObject *)obj)->anim.localPosZ + *(f32 *)(off + 0x24);
     *((u8 *)newObj + 4) = p4c[4];
     *((u8 *)newObj + 5) = p4c[5];
     *((u8 *)newObj + 6) = p4c[6];
@@ -824,7 +825,7 @@ s8 fn_801631C8(int *obj) {
     *(f32 *)((char*)newObj + 0x1c) = lbl_803E2F40;
 
     if ((state[0x4c] & 1) != 0
-        && *(int *)(*(int *)((char*)obj + 0x4c) + 0x14) == 0x292c
+        && *(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) == 0x292c
         && *(u16 *)(state + 0x4e) == 6) {
         *((u8 *)newObj + 0x1b) = 1;
         list = ObjList_GetObjects(&idx, &outCount);
@@ -840,9 +841,9 @@ s8 fn_801631C8(int *obj) {
         }
     }
 
-    *(int **)(state + freeSlot * 4 + 0xc) = Obj_SetupObject(newObj, 5, (s8)*((u8 *)obj + 0xac), -1, *(void **)((char*)obj + 0x30));
+    *(int **)(state + freeSlot * 4 + 0xc) = Obj_SetupObject(newObj, 5, (s8)*((u8 *)obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
     (**(void(***)(f64, f64))(*(int *)((char*)(*(int **)(state + freeSlot * 4 + 0xc)) + 0x68) + 0x24))(
-        (f64)*(f32 *)((char*)obj + 0xc), (f64)*(f32 *)((char*)obj + 0x14));
+        (f64)((GameObject *)obj)->anim.localPosX, (f64)((GameObject *)obj)->anim.localPosZ);
     *(u16 *)(state + 0x4e) = *(u16 *)(state + 0x4e) + 1;
     return (s8)freeSlot;
 }

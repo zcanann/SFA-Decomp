@@ -1,4 +1,5 @@
 #include "main/dll/BW/BWalphaanim.h"
+#include "main/game_object.h"
 #include "main/dll/curves.h"
 
 
@@ -62,14 +63,14 @@ void SnowBike_initialise(void) {
 #pragma peephole off
 void SB_CloudRunner_onSeqFree(int *obj) {
     SnowBikeState *p = (SnowBikeState *)obj[0xb8/4];
-    p->unk04C = *(f32*)((char*)obj + 0xc);
-    p->unk050 = *(f32*)((char*)obj + 0x10);
-    p->unk054 = *(f32*)((char*)obj + 0x14);
+    p->unk04C = ((GameObject *)obj)->anim.localPosX;
+    p->unk050 = ((GameObject *)obj)->anim.localPosY;
+    p->unk054 = ((GameObject *)obj)->anim.localPosZ;
     {
         s32 v = *(s16*)obj - 0x4000;
         p->unk02C = (s16)v;
     }
-    p->unk02E = *(s16*)((char*)obj + 4);
+    p->unk02E = ((GameObject *)obj)->anim.rotZ;
 }
 #pragma peephole reset
 

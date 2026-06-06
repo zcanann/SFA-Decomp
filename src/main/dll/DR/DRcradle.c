@@ -1,4 +1,5 @@
 #include "main/dll/DR/DRcradle.h"
+#include "main/game_object.h"
 #include "main/objhits_types.h"
 
 
