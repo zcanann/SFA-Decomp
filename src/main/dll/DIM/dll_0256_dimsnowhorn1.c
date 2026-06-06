@@ -1,4 +1,5 @@
 #include "main/dll/DIM/dll_802B9780_shared.h"
+#include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 
 /*
@@ -52,17 +53,17 @@ int fn_802BA6E0(int obj, int state)
     f32 k = lbl_803E8234;
     int idx;
 
-    *(f32 *)((char *)state + 0x294) = k;
-    *(f32 *)((char *)state + 0x284) = k;
-    *(f32 *)((char *)state + 0x280) = k;
-    *(f32 *)((char *)obj + 0x24) = k;
-    *(f32 *)((char *)obj + 0x28) = k;
-    *(f32 *)((char *)obj + 0x2c) = k;
+    ((DIMSnowHorn1State *)state)->baddie.unk294 = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedB = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedA = k;
+    ((GameObject *)obj)->anim.velocityX = k;
+    ((GameObject *)obj)->anim.velocityY = k;
+    ((GameObject *)obj)->anim.velocityZ = k;
     *(u32 *)((char *)state) |= 0x200000;
 
     if (*(s8 *)((char *)state + 0x27a) != 0) {
         idx = randomGetRange(0, 1);
-        *(f32 *)((char *)state + 0x2a0) = lbl_803DC740[idx];
+        ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803DC740[idx];
         ObjAnim_SetCurrentMove(obj, lbl_803DC73C[idx], lbl_803E8234, 0);
     }
     if (*(s8 *)((char *)state + 0x346) != 0) {
@@ -117,16 +118,16 @@ int fn_802BA938(int obj, int state, f32 fv)
     f32 k = lbl_803E8234;
     s16 v;
 
-    *(f32 *)((char *)state + 0x294) = k;
-    *(f32 *)((char *)state + 0x284) = k;
-    *(f32 *)((char *)state + 0x280) = k;
-    *(f32 *)((char *)obj + 0x24) = k;
-    *(f32 *)((char *)obj + 0x28) = k;
-    *(f32 *)((char *)obj + 0x2c) = k;
+    ((DIMSnowHorn1State *)state)->baddie.unk294 = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedB = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedA = k;
+    ((GameObject *)obj)->anim.velocityX = k;
+    ((GameObject *)obj)->anim.velocityY = k;
+    ((GameObject *)obj)->anim.velocityZ = k;
     *(u32 *)((char *)state) |= 0x200000;
-    *(f32 *)((char *)state + 0x2a0) = lbl_803E827C;
+    ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
 
-    if (*(s16 *)((char *)obj + 0xa0) != lbl_803DC748) {
+    if (((GameObject *)obj)->anim.currentMove != lbl_803DC748) {
         ObjAnim_SetCurrentMove(obj, lbl_803DC748, k, 0);
     }
 
@@ -154,17 +155,17 @@ int fn_802BA7EC(int obj, int state)
     f32 k = lbl_803E8234;
     int idx;
 
-    *(f32 *)((char *)state + 0x294) = k;
-    *(f32 *)((char *)state + 0x284) = k;
-    *(f32 *)((char *)state + 0x280) = k;
-    *(f32 *)((char *)obj + 0x24) = k;
-    *(f32 *)((char *)obj + 0x28) = k;
-    *(f32 *)((char *)obj + 0x2c) = k;
+    ((DIMSnowHorn1State *)state)->baddie.unk294 = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedB = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedA = k;
+    ((GameObject *)obj)->anim.velocityX = k;
+    ((GameObject *)obj)->anim.velocityY = k;
+    ((GameObject *)obj)->anim.velocityZ = k;
     *(u32 *)((char *)state) |= 0x200000;
 
     if (*(s8 *)((char *)state + 0x27a) != 0) {
         idx = randomGetRange(0, 1);
-        *(f32 *)((char *)state + 0x2a0) = lbl_803DC740[idx];
+        ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803DC740[idx];
         ObjAnim_SetCurrentMove(obj, lbl_803DC73C[idx], lbl_803E8234, 0);
     }
     if (*(s8 *)((char *)state + 0x346) != 0) {
@@ -193,17 +194,17 @@ int fn_802BAA54(int obj, int state, f32 fv)
     f32 k = lbl_803E8234;
     s16 v;
 
-    *(f32 *)((char *)state + 0x294) = k;
-    *(f32 *)((char *)state + 0x284) = k;
-    *(f32 *)((char *)state + 0x280) = k;
-    *(f32 *)((char *)obj + 0x24) = k;
-    *(f32 *)((char *)obj + 0x28) = k;
-    *(f32 *)((char *)obj + 0x2c) = k;
+    ((DIMSnowHorn1State *)state)->baddie.unk294 = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedB = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedA = k;
+    ((GameObject *)obj)->anim.velocityX = k;
+    ((GameObject *)obj)->anim.velocityY = k;
+    ((GameObject *)obj)->anim.velocityZ = k;
     *(u32 *)((char *)state) |= 0x200000;
 
     if (*(s8 *)((char *)state + 0x27a) != 0) {
-        *(f32 *)((char *)state + 0x2a0) = lbl_803E827C;
-        if (*(s16 *)((char *)obj + 0xa0) != lbl_803DC748) {
+        ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
+        if (((GameObject *)obj)->anim.currentMove != lbl_803DC748) {
             ObjAnim_SetCurrentMove(obj, lbl_803DC748, lbl_803E8234, 0);
         }
         inner->unkA84 = randomGetRange(0x4b0, 0x960);
@@ -238,18 +239,18 @@ int fn_802B978C(int obj, int state)
     f32 k = lbl_803E8234;
 
     *(u32 *)((char *)state) |= 0x200000;
-    *(f32 *)((char *)state + 0x294) = k;
-    *(f32 *)((char *)state + 0x284) = k;
-    *(f32 *)((char *)state + 0x280) = k;
-    *(f32 *)((char *)obj + 0x24) = k;
-    *(f32 *)((char *)obj + 0x28) = k;
-    *(f32 *)((char *)obj + 0x2c) = k;
+    ((DIMSnowHorn1State *)state)->baddie.unk294 = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedB = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedA = k;
+    ((GameObject *)obj)->anim.velocityX = k;
+    ((GameObject *)obj)->anim.velocityY = k;
+    ((GameObject *)obj)->anim.velocityZ = k;
 
     if (*(s8 *)((char *)state + 0x27a) != 0) {
         inner->unkA8E &= ~0x8;
         *(s16 *)((char *)sub + 0x60) |= 0x200;
         ObjAnim_SetCurrentMove(obj, 0x204, k, 0);
-        *(f32 *)((char *)state + 0x2a0) = lbl_803E8238;
+        ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E8238;
         Sfx_PlayFromObject(obj, 0x3b3);
     }
     if ((*(s16 *)((char *)sub + 0x60) & 0x200) && (*(s8 *)((char *)sub + 0xad) & 2)) {
@@ -264,7 +265,7 @@ int fn_802B978C(int obj, int state)
         *(u8 *)((char *)sub + 0x6f) = 1;
         *(s16 *)((char *)sub + 0x60) |= 0x200;
     }
-    if (*(f32 *)((char *)obj + 0x98) > lbl_803E823C) {
+    if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E823C) {
         return 8;
     }
     return 0;
@@ -289,20 +290,20 @@ int fn_802B9CC4(int obj, int state, f32 fv)
         return 8;
     }
 
-    if (*(s16 *)((char *)state + 0x336) < -0xaf) {
-        *(s16 *)((char *)state + 0x336) = -*(s16 *)((char *)state + 0x336);
+    if (((DIMSnowHorn1State *)state)->baddie.unk336 < -0xaf) {
+        ((DIMSnowHorn1State *)state)->baddie.unk336 = -((DIMSnowHorn1State *)state)->baddie.unk336;
     }
-    d = *(s16 *)((char *)state + 0x336);
+    d = ((DIMSnowHorn1State *)state)->baddie.unk336;
     if (d > 0) {
-        if (*(s16 *)((char *)obj + 0xa0) != 0x201) {
+        if (((GameObject *)obj)->anim.currentMove != 0x201) {
             ObjAnim_SetCurrentMove(obj, 0x201, lbl_803E8234, 0);
         }
     } else if (d <= 0) {
-        if (*(s16 *)((char *)obj + 0xa0) != 0x200) {
+        if (((GameObject *)obj)->anim.currentMove != 0x200) {
             ObjAnim_SetCurrentMove(obj, 0x200, lbl_803E8234, 0);
         }
     }
-    *(f32 *)((char *)state + 0x2a0) = lbl_803E8278;
+    ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E8278;
     (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 8);
 
     if (*(int *)((char *)state + 0x31c) & 0x100) {
@@ -324,32 +325,32 @@ int fn_802B9E38(int obj, int state)
     *(u32 *)((char *)state) |= 0x200000;
     *(u8 *)((char *)obj + 0xaf) |= 0x8;
 
-    switch (*(s16 *)((char *)obj + 0xa0)) {
+    switch (((GameObject *)obj)->anim.currentMove) {
     case 0x206:
         if (*(s8 *)((char *)state + 0x346) != 0) {
-            if (*(f32 *)((char *)state + 0x2a0) > lbl_803E8234) {
+            if (((DIMSnowHorn1State *)state)->baddie.moveSpeed > lbl_803E8234) {
                 ObjAnim_SetCurrentMove(obj, 0x205, lbl_803E8234, 0);
-                *(f32 *)((char *)state + 0x2a0) = lbl_803E827C;
+                ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
             } else {
                 return 8;
             }
         }
         if (inner->unkA88 != 0 &&
-            *(f32 *)((char *)state + 0x2a0) > lbl_803E8234) {
+            ((DIMSnowHorn1State *)state)->baddie.moveSpeed > lbl_803E8234) {
             if (*(int *)((char *)state + 0x31c) != 0 ||
-                lbl_803E8234 != *(f32 *)((char *)state + 0x290) ||
-                lbl_803E8234 != *(f32 *)((char *)state + 0x28c)) {
-                *(f32 *)((char *)state + 0x2a0) = -*(f32 *)((char *)state + 0x2a0);
+                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.unk290 ||
+                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.unk28C) {
+                ((DIMSnowHorn1State *)state)->baddie.moveSpeed = -((DIMSnowHorn1State *)state)->baddie.moveSpeed;
             }
         }
         break;
     case 0x205:
         if (inner->unkA88 != 0) {
             if (*(int *)((char *)state + 0x31c) != 0 ||
-                lbl_803E8234 != *(f32 *)((char *)state + 0x290) ||
-                lbl_803E8234 != *(f32 *)((char *)state + 0x28c)) {
+                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.unk290 ||
+                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.unk28C) {
                 ObjAnim_SetCurrentMove(obj, 0x207, lbl_803E8234, 0);
-                *(f32 *)((char *)state + 0x2a0) = lbl_803E8280;
+                ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E8280;
             }
         }
         break;
@@ -360,7 +361,7 @@ int fn_802B9E38(int obj, int state)
         break;
     default:
         ObjAnim_SetCurrentMove(obj, 0x206, lbl_803E8234, 0);
-        *(f32 *)((char *)state + 0x2a0) = lbl_803E8280;
+        ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E8280;
         break;
     }
     return 0;
@@ -381,33 +382,33 @@ int fn_802B9FC0(int obj, int state)
     inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     *(u8 *)((char *)obj + 0xaf) |= 0x8;
     fz = lbl_803E8234;
-    *(f32 *)((char *)state + 0x294) = fz;
-    *(f32 *)((char *)state + 0x284) = fz;
-    *(f32 *)((char *)state + 0x280) = fz;
-    *(f32 *)((char *)obj + 0x24) = fz;
-    *(f32 *)((char *)obj + 0x28) = fz;
-    *(f32 *)((char *)obj + 0x2c) = fz;
+    ((DIMSnowHorn1State *)state)->baddie.unk294 = fz;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedB = fz;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedA = fz;
+    ((GameObject *)obj)->anim.velocityX = fz;
+    ((GameObject *)obj)->anim.velocityY = fz;
+    ((GameObject *)obj)->anim.velocityZ = fz;
     *(u32 *)((char *)state) |= 0x200000;
     if (*(s8 *)((char *)state + 0x27a) != 0) {
         *(s16 *)((char *)state + 0x338) = 0;
-        *(f32 *)((char *)state + 0x2a0) = lbl_803E827C;
+        ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
         *(f32 *)((char *)state + 0x2b8) = lbl_803E8284;
-        if (*(s16 *)((char *)obj + 0xa0) != lbl_803DC748) {
+        if (((GameObject *)obj)->anim.currentMove != lbl_803DC748) {
             ObjAnim_SetCurrentMove(obj, lbl_803DC748, fz, 0);
         }
     }
-    switch (*(s16 *)((char *)obj + 0xa0)) {
+    switch (((GameObject *)obj)->anim.currentMove) {
     case 0x209:
     case 0x20a:
         if (*(s8 *)((char *)state + 0x346) != 0) {
             ObjAnim_SetCurrentMove(obj, lbl_803DC748, lbl_803E8234, 0);
-            *(f32 *)((char *)state + 0x2a0) = lbl_803E827C;
+            ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
         }
         break;
     }
     if (*(f32 *)((char *)state + 0x298) < lbl_803E824C) {
         *(s16 *)((char *)state + 0x334) = 0;
-        *(s16 *)((char *)state + 0x336) = 0;
+        ((DIMSnowHorn1State *)state)->baddie.unk336 = 0;
         *(f32 *)((char *)state + 0x298) = lbl_803E8234;
     }
     {
@@ -444,19 +445,19 @@ int fn_802BA1D4(int obj, int state)
     f32 fz;
 
     fz = lbl_803E8234;
-    *(f32 *)((char *)state + 0x294) = fz;
-    *(f32 *)((char *)state + 0x284) = fz;
-    *(f32 *)((char *)state + 0x280) = fz;
-    *(f32 *)((char *)obj + 0x24) = fz;
-    *(f32 *)((char *)obj + 0x28) = fz;
-    *(f32 *)((char *)obj + 0x2c) = fz;
+    ((DIMSnowHorn1State *)state)->baddie.unk294 = fz;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedB = fz;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedA = fz;
+    ((GameObject *)obj)->anim.velocityX = fz;
+    ((GameObject *)obj)->anim.velocityY = fz;
+    ((GameObject *)obj)->anim.velocityZ = fz;
     *(u32 *)((char *)state) |= 0x200000;
     inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     *(u8 *)((char *)obj + 0xaf) &= ~8;
-    *(u8 *)((char *)obj + 0xe4) = GameBit_Get(0x170) != 0;
+    ((GameObject *)obj)->unkE4 = GameBit_Get(0x170) != 0;
     if (*(s8 *)((char *)state + 0x27a) != 0) {
-        *(f32 *)((char *)state + 0x2a0) = lbl_803E827C;
-        if (*(s16 *)((char *)obj + 0xa0) != 0x13) {
+        ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
+        if (((GameObject *)obj)->anim.currentMove != 0x13) {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E8234, 0);
         }
     }
@@ -514,12 +515,12 @@ int fn_802BA3EC(int obj, int state)
     f32 f;
 
     f = lbl_803E8234;
-    *(f32 *)((char *)state + 0x294) = f;
-    *(f32 *)((char *)state + 0x284) = f;
-    *(f32 *)((char *)state + 0x280) = f;
-    *(f32 *)((char *)obj + 0x24) = f;
-    *(f32 *)((char *)obj + 0x28) = f;
-    *(f32 *)((char *)obj + 0x2c) = f;
+    ((DIMSnowHorn1State *)state)->baddie.unk294 = f;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedB = f;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedA = f;
+    ((GameObject *)obj)->anim.velocityX = f;
+    ((GameObject *)obj)->anim.velocityY = f;
+    ((GameObject *)obj)->anim.velocityZ = f;
     *(int *)state |= 0x200000;
 
     inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
@@ -544,8 +545,8 @@ int fn_802BA3EC(int obj, int state)
     }
 
     if (*(s8 *)((char *)state + 0x27a) != 0) {
-        *(f32 *)((char *)state + 0x2a0) = lbl_803E827C;
-        if (*(s16 *)((char *)obj + 0xa0) != 0x13) {
+        ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
+        if (((GameObject *)obj)->anim.currentMove != 0x13) {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E8234, 0);
         }
     }
@@ -656,9 +657,9 @@ int fn_802B98F0(int obj, int state, f32 t)
     if (target < lbl_803E8234) {
         target = lbl_803E8234;
     }
-    *(f32 *)((char *)state + 0x294) =
-        t * ((target - *(f32 *)((char *)state + 0x294)) / *(f32 *)((char *)state + 0x2b8)) +
-        *(f32 *)((char *)state + 0x294);
+    ((DIMSnowHorn1State *)state)->baddie.unk294 =
+        t * ((target - ((DIMSnowHorn1State *)state)->baddie.unk294) / *(f32 *)((char *)state + 0x2b8)) +
+        ((DIMSnowHorn1State *)state)->baddie.unk294;
 
     if (*(s16 *)((char *)obj + 2) > 0) {
         target = target -
@@ -672,13 +673,13 @@ int fn_802B98F0(int obj, int state, f32 t)
     if (target < lbl_80335128[2]) {
         target = lbl_80335128[2];
     }
-    *(f32 *)((char *)state + 0x280) =
-        t * ((target - *(f32 *)((char *)state + 0x280)) / *(f32 *)((char *)state + 0x2b8)) +
-        *(f32 *)((char *)state + 0x280);
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedA =
+        t * ((target - ((DIMSnowHorn1State *)state)->baddie.animSpeedA) / *(f32 *)((char *)state + 0x2b8)) +
+        ((DIMSnowHorn1State *)state)->baddie.animSpeedA;
 
     changed = 0;
-    blend = *(f32 *)((char *)obj + 0x98);
-    moveId = *(s16 *)((char *)obj + 0xa0);
+    blend = ((GameObject *)obj)->anim.currentMoveProgress;
+    moveId = ((GameObject *)obj)->anim.currentMove;
     phase = 0;
     while (phase < 2 && (&lbl_803DC748)[phase] != moveId) {
         phase++;
@@ -690,7 +691,7 @@ int fn_802B98F0(int obj, int state, f32 t)
         phase = 1;
     }
 
-    f2 = *(f32 *)((char *)state + 0x294);
+    f2 = ((DIMSnowHorn1State *)state)->baddie.unk294;
     if (f2 < lbl_80335128[phase * 2]) {
         if (phase == 1) {
             return 8;
@@ -718,7 +719,7 @@ int fn_802B98F0(int obj, int state, f32 t)
         }
     }
 
-    ObjAnim_SampleRootCurvePhase(*(f32 *)((char *)state + 0x280), (ObjAnimComponent *)obj,
+    ObjAnim_SampleRootCurvePhase(((DIMSnowHorn1State *)state)->baddie.animSpeedA, (ObjAnimComponent *)obj,
                                  (f32 *)((char *)state + 0x2a0));
     if ((*(int *)((char *)state + 0x31c) & 0x100) == 0) {
         return 0;
@@ -918,7 +919,7 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
     switch (state->unkA8C) {
         case 0:
             *(u8 *)(setup + 0x56) = 0;
-            if (*(s16 *)(obj + 0xb4) == -1) {
+            if (((GameObject *)obj)->unkB4 == -1) {
                 for (i = 0; i < (int)(u32)*(u8 *)(setup + 0x8b); i++) {
                     GameBit_Set(0x17b, 1);
                     state->unkA8E |= 0x20;
@@ -936,7 +937,7 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
             break;
         case 1:
             *(u8 *)(setup + 0x56) = 0;
-            if (*(s16 *)(obj + 0xb4) != -1) {
+            if (((GameObject *)obj)->unkB4 != -1) {
                 switch (state->unkA8D) {
                     case 0:
                     case 1:
@@ -968,9 +969,9 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
     state->baddie.unk294 = fz;
     state->baddie.animSpeedB = fz;
     state->baddie.animSpeedA = fz;
-    *(f32 *)(obj + 0x24) = fz;
-    *(f32 *)(obj + 0x28) = fz;
-    *(f32 *)(obj + 0x2c) = fz;
+    ((GameObject *)obj)->anim.velocityX = fz;
+    ((GameObject *)obj)->anim.velocityY = fz;
+    ((GameObject *)obj)->anim.velocityZ = fz;
     return (u32)(-*(s8 *)(setup + 0x56) | *(s8 *)(setup + 0x56)) >> 0x1f;
 }
 #pragma dont_inline reset
@@ -1034,7 +1035,7 @@ int DIMSnowHorn1_setScale(int obj)
     if (state->baddie.controlMode != 7) {
         return 0;
     }
-    if (*(void **)(obj + 0xc0) != NULL) {
+    if (((GameObject *)obj)->unkC0 != NULL) {
         return 0;
     }
 
@@ -1217,17 +1218,17 @@ void fn_802BB4B4(int obj, int a, int slot)
     }
 
     if (*(s8 *)&state->baddie.unk25F != 0) {
-        *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) - lbl_803E82A4 * (f32)a;
+        ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY - lbl_803E82A4 * (f32)a;
     }
 
     {
-        f32 cur = *(f32 *)(obj + 0x28);
+        f32 cur = ((GameObject *)obj)->anim.velocityY;
         if (cur < lbl_803E82A8) {
             cur = lbl_803E82A8;
         } else if (cur > lbl_803E8234) {
             cur = lbl_803E8234;
         }
-        *(f32 *)(obj + 0x28) = cur;
+        ((GameObject *)obj)->anim.velocityY = cur;
     }
 
     (*(void (**)(int, int, f32, f32, int *, f32 *))(*(int *)gPlayerInterface + 0x8))
@@ -1467,7 +1468,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     DIMSnowHorn1State *inner;
     int q;
     s8 idx;
-    *(s16 *)((char *)obj + 0) = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
     *(int *)((char *)obj + 0xbc) = (int)DIMSnowHorn1_animEventCallback;
     ObjGroup_AddObject(obj, 0xa);
     inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
@@ -1518,18 +1519,18 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
         if (idx >= 0) {
             SnowHornEntry *e = &((SnowHornEntry *)base)[idx];
             if (GameBit_Get(e->h1e)) {
-                *(f32 *)((char *)obj + 0xc) = e->f10;
-                *(f32 *)((char *)obj + 0x10) = e->f14;
-                *(f32 *)((char *)obj + 0x14) = e->f18;
-                *(s16 *)((char *)obj + 0) = e->h1c;
+                ((GameObject *)obj)->anim.localPosX = e->f10;
+                ((GameObject *)obj)->anim.localPosY = e->f14;
+                ((GameObject *)obj)->anim.localPosZ = e->f18;
+                ((GameObject *)obj)->anim.rotX = e->h1c;
             } else {
-                *(f32 *)((char *)obj + 0xc) = e->f0;
-                *(f32 *)((char *)obj + 0x10) = e->f4;
-                *(f32 *)((char *)obj + 0x14) = e->f8;
-                *(s16 *)((char *)obj + 0) = e->hc;
+                ((GameObject *)obj)->anim.localPosX = e->f0;
+                ((GameObject *)obj)->anim.localPosY = e->f4;
+                ((GameObject *)obj)->anim.localPosZ = e->f8;
+                ((GameObject *)obj)->anim.rotX = e->hc;
             }
             if (GameBit_Get(e->h20)) {
-                *(s16 *)((char *)obj + 0) += 0x8000;
+                ((GameObject *)obj)->anim.rotX += 0x8000;
             }
         }
     }
