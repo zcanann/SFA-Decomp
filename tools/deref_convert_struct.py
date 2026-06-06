@@ -45,6 +45,7 @@ def _evaldim(a):
 
 def parse_struct(body, structs):
     off, fields = 0, []
+    body = re.sub(r'/\*.*?\*/', '', body, flags=re.S)  # strip block comments (multi-line)
     for line in body.split('\n'):
         line = line.split('//')[0].split('/*')[0].strip()
         if not line:
@@ -92,12 +93,21 @@ def main():
                 structs[m.group(1)] = parse_struct(m.group(2), structs)
     if sname not in structs or not structs[sname]:
         print('ERROR: could not parse', sname); sys.exit(2)
+    # Flatten nested struct members into dotted paths so a deref landing inside
+    # an embedded struct (e.g. GroundBaddieState.baddie.controlMode) maps to the
+    # full member path. Recurses single (non-array, non-pointer) struct members.
+    def flatten(name, base, prefix, out):
+        for off, fname, ty, size, cls in structs.get(name) or []:
+            low = fname.lower()
+            base_ty = ty.rstrip('*')
+            if cls is None and not ty.endswith('*') and base_ty in structs and structs[base_ty]:
+                flatten(base_ty, base + off, prefix + fname + '.', out)
+            else:
+                if 'pad' in low or 'unk' in low or cls is None:
+                    continue
+                out[base + off] = (prefix + fname, cls, ty)
     M = {}
-    for off, fname, ty, size, cls in structs[sname]:
-        low = fname.lower()
-        if 'pad' in low or 'unk' in low or cls is None:
-            continue
-        M[off] = (fname, cls, ty)
+    flatten(sname, 0, '', M)
 
     src = open(path, encoding='latin-1').read()  # byte-preserving (SJIS-safe)
     stats = collections.Counter()
