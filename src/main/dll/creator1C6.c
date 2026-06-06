@@ -62,10 +62,11 @@ extern f32 lbl_803E5D60;
 #pragma peephole off
 int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
 {
-  int i;
-  int player;
+  struct Creator1C6Flag15 { u8 b80:1; u8 rest:7; };
   void **state;
-  int event;
+  int player;
+  int i;
+  u32 event;
 
   state = *(void ***)(obj + 0xb8);
   player = Obj_GetPlayerObject();
@@ -77,7 +78,7 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
     if (event != 0) {
       switch (event) {
       case 3:
-        *(u8 *)((u8 *)state + 0x15) = *(u8 *)((u8 *)state + 0x15) | 0x80;
+        ((struct Creator1C6Flag15 *)((u8 *)state + 0x15))->b80 = 1;
         break;
       case 7:
         fn_80296518(player,2,1);
