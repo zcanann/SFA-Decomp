@@ -1,6 +1,13 @@
 #include "main/dll/DR/dr_shared.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/objanim_internal.h"
+
+static inline int *DrShackle_GetActiveModel(void *obj) {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+    return (int *)objAnim->banks[objAnim->bankIndex];
+}
+
 int drshackle_getExtraSize(void) { return 0x20; }
 
 int drshackle_getObjectTypeId(void) { return 0x0; }
@@ -22,6 +29,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
     int i;
     int *ptr;
     BitFlags8 *bf = (BitFlags8 *)(p + 0x1a);
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
 
     if (bf->b0 == 0) {
         return 1;
@@ -30,8 +38,8 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
     *(f32 *)(p + 0xc) = *(f32 *)((char *)obj + 0x10);
     *(f32 *)(p + 0x10) = *(f32 *)((char *)obj + 0x14);
 
-    joint1 = *(s8 *)(*(int *)(*(int *)((char *)a + 0x50) + 0x2c) + b * 24 + *(s8 *)((char *)obj + 0xad) + 0x12);
-    model = *(int **)(*(int *)((char *)a + 0x7c) + *(s8 *)((char *)a + 0xad) * 4);
+    joint1 = *(s8 *)(*(int *)(*(int *)((char *)a + 0x50) + 0x2c) + b * 24 + objAnim->bankIndex + 0x12);
+    model = DrShackle_GetActiveModel((void *)a);
     modelData = *(int **)model;
 
     *(s16 *)((char *)obj + 4) = 0;

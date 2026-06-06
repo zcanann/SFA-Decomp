@@ -1,7 +1,13 @@
 #include "main/dll/DIM/DIM2icicle.h"
+#include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
 #define DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT 0x20000
+
+static inline int *DIM2Icicle_GetActiveModel(void *obj) {
+  ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+  return (int *)objAnim->banks[objAnim->bankIndex];
+}
 
 extern undefined4 FUN_80003494();
 extern undefined8 FUN_80006728();
@@ -570,7 +576,7 @@ void fn_801BC2D8(int obj, int param_2)
     if (hit) {
       if (lbl_803DDB8C == 0) {
         Sfx_PlayFromObject(obj, 0x4b2);
-        base = *(IcicleHitEntry **)(*(int *)(*(int *)(obj + 0x7c) + (s8)*(u8 *)(obj + 0xad) * 4) + 0x50);
+        base = (IcicleHitEntry *)DIM2Icicle_GetActiveModel((void *)obj)[0x14];
         ((IcicleHitFx *)lbl_803AC994)->x = playerMapOffsetX + base[hitType].px;
         ((IcicleHitFx *)lbl_803AC994)->y = base[hitType].py;
         ((IcicleHitFx *)lbl_803AC994)->z = playerMapOffsetZ + base[hitType].pz;
