@@ -1,4 +1,5 @@
 #include "main/dll/DR/gasventControl.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 
 extern uint FUN_80017690();
@@ -899,9 +900,9 @@ void fn_801A30C0(int obj, int slot, int def)
     int max;
 
     vecRotateZXY((s16 *)(def + 0x1a), (f32 *)(slot + 0x10));
-    *(f32 *)(slot + 0x4c) = *(f32 *)(slot + 0x10) * ((GameObject *)obj)->anim.rootMotionScale + *(f32 *)(def + 8);
-    *(f32 *)(slot + 0x50) = *(f32 *)(slot + 0x14) * ((GameObject *)obj)->anim.rootMotionScale + *(f32 *)(def + 0xc);
-    *(f32 *)(slot + 0x54) = *(f32 *)(slot + 0x18) * ((GameObject *)obj)->anim.rootMotionScale + *(f32 *)(def + 0x10);
+    *(f32 *)(slot + 0x4c) = *(f32 *)(slot + 0x10) * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)def)->posX;
+    *(f32 *)(slot + 0x50) = *(f32 *)(slot + 0x14) * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)def)->posY;
+    *(f32 *)(slot + 0x54) = *(f32 *)(slot + 0x18) * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)def)->posZ;
     *(s16 *)(slot + 0x68) = *(s16 *)(def + 0x1a);
     *(s16 *)(slot + 0x66) = *(s16 *)(def + 0x1c);
     *(s16 *)(slot + 0x64) = *(s16 *)(def + 0x1e);

@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/mapEventTypes.h"
@@ -1046,9 +1047,9 @@ void ecsh_creator_update(s16 *obj) {
     }
     if (Obj_IsLoadingLocked() != 0 && *sub < 1) {
         p = mmAlloc(0x38, 0xe, 0);
-        *(f32 *)(p + 8) = *(f32 *)(def + 8);
-        *(f32 *)(p + 0xc) = *(f32 *)(def + 0xc);
-        *(f32 *)(p + 0x10) = *(f32 *)(def + 0x10);
+        *(f32 *)(p + 8) = ((ObjPlacement *)def)->posX;
+        *(f32 *)(p + 0xc) = ((ObjPlacement *)def)->posY;
+        *(f32 *)(p + 0x10) = ((ObjPlacement *)def)->posZ;
         *(s16 *)p = 0x11;
         *(int *)(p + 0x14) = -1;
         p[4] = def[4];
@@ -1109,13 +1110,13 @@ void fn_801C70F0(s16 *obj) {
     player = Obj_GetPlayerObject();
     if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) {
         *obj = 0;
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
+        ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
     } else {
         *(s16 *)(sub + 0xc) = (s16)(*(s16 *)(sub + 0xc) + (int)(lbl_803E5000 * timeDelta));
         *(s16 *)(sub + 0xe) = (s16)(*(s16 *)(sub + 0xe) + (int)(lbl_803E5004 * timeDelta));
         *(s16 *)(sub + 0x10) = (s16)(*(s16 *)(sub + 0x10) + (int)(lbl_803E5008 * timeDelta));
         ((GameObject *)obj)->anim.localPosY =
-            lbl_803E500C + (*(f32 *)(def + 0xc)
+            lbl_803E500C + (((ObjPlacement *)def)->posY
                             + mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014));
         c1 = mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xe)) / lbl_803E5014);
         obj[2] = lbl_803E5018

@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
 #include "main/dll/transporter.h"
@@ -1170,7 +1171,7 @@ void pushable_free(int *obj) {
         break;
     }
     if ((sub->flags & 1) != 0) {
-        int val = *(int*)(def + 0x14);
+        int val = ((ObjPlacement *)def)->mapId;
         v = lbl_803DDAB8;
         lbl_803DDAB8 = v + 1;
         lbl_803AC6E0[v] = val;
@@ -1336,7 +1337,7 @@ void WarpPoint_init(int *obj, u8 *def) {
     if (*(s8 *)((char *)def + 0x1d) == 2) {
         state[0] = 0;
     }
-    if (*(int *)((char *)def + 0x14) == 0x4B675 || *(int *)((char *)def + 0x14) == 0x46882) {
+    if (((ObjPlacement *)def)->mapId == 0x4B675 || ((ObjPlacement *)def)->mapId == 0x46882) {
         *(u8 *)((char *)def + 0x1f) = 1;
     } else {
         *(u8 *)((char *)def + 0x1f) = 0;
@@ -1602,9 +1603,9 @@ void pushable_update(int *obj) {
         return;
     case 0x54a:
         if (GameBit_Get(state->gameBit) != 0) {
-            ((GameObject *)obj)->anim.localPosX = (f32)((f64)*(f32 *)(def + 8) - lbl_803E3530);
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
-            ((GameObject *)obj)->anim.localPosZ = (f32)(lbl_803E3538 + (f64)*(f32 *)(def + 0x10));
+            ((GameObject *)obj)->anim.localPosX = (f32)((f64)((ObjPlacement *)def)->posX - lbl_803E3530);
+            ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
+            ((GameObject *)obj)->anim.localPosZ = (f32)(lbl_803E3538 + (f64)((ObjPlacement *)def)->posZ);
         }
         fn_80174438(obj, state);
         break;
@@ -1932,13 +1933,13 @@ void pushable_init(s16 *obj, char *def) {
     char *e;
     f32 vtx[3];
 
-    if (*(int *)(def + 0x14) == 0x30398) {
+    if (((ObjPlacement *)def)->mapId == 0x30398) {
         *(u8 *)(def + 0x23) = 1;
     } else {
         *(s8 *)(def + 0x23) = -1;
     }
     *obj = *(u8 *)(def + 0x22) << 8;
-    ((GameObject *)obj)->anim.localPosY = lbl_803E358C + *(f32 *)(def + 0xc);
+    ((GameObject *)obj)->anim.localPosY = lbl_803E358C + ((ObjPlacement *)def)->posY;
     ObjGroup_AddObject(obj, 5);
     objSetSlot(obj, 0x5a);
     ((GameObject *)obj)->unkBC = (void *)fn_8017510C;
@@ -2083,9 +2084,9 @@ void pushable_init(s16 *obj, char *def) {
         }
     }
     state->flags = state->flags | 0x40;
-    if (arrayIndexOf(lbl_803AC6E0, lbl_803DDAB8, *(int *)(def + 0x14)) != -1) {
+    if (arrayIndexOf(lbl_803AC6E0, lbl_803DDAB8, ((ObjPlacement *)def)->mapId) != -1) {
         state->flags = state->flags | 1;
-        fn_8007FE04(lbl_803AC6E0, &lbl_803DDAB8, *(int *)(def + 0x14));
+        fn_8007FE04(lbl_803AC6E0, &lbl_803DDAB8, ((ObjPlacement *)def)->mapId);
     }
 }
 #pragma peephole reset

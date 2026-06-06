@@ -1,4 +1,5 @@
 #include "main/dll/WC/WCpressureSwitch.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objlib.h"
@@ -133,9 +134,9 @@ void WM_ObjCreator_update(int obj) {
             if (ok) {
                 int setup = Obj_AllocObjectSetup(0x24, 0x139);
                 int spawned;
-                *(f32 *)(setup + 8) = *(f32 *)(def + 8);
-                *(f32 *)(setup + 0xc) = *(f32 *)(def + 0xc);
-                *(f32 *)(setup + 0x10) = *(f32 *)(def + 0x10);
+                *(f32 *)(setup + 8) = ((ObjPlacement *)def)->posX;
+                *(f32 *)(setup + 0xc) = ((ObjPlacement *)def)->posY;
+                *(f32 *)(setup + 0x10) = ((ObjPlacement *)def)->posZ;
                 *(u8 *)(setup + 4) = *(u8 *)(def + 4);
                 *(u8 *)(setup + 5) = *(u8 *)(def + 5);
                 *(u8 *)(setup + 6) = *(u8 *)(def + 6);
@@ -219,9 +220,9 @@ void WM_ObjCreator_update(int obj) {
                 int spawned;
                 *(u8 *)(setup + 4) = 4;
                 *(u8 *)(setup + 5) = 2;
-                *(f32 *)(setup + 8) = *(f32 *)(def + 8);
-                *(f32 *)(setup + 0xc) = *(f32 *)(def + 0xc) + (f32)(int)randomGetRange(-0x28, 0x28);
-                *(f32 *)(setup + 0x10) = *(f32 *)(def + 0x10) + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(f32 *)(setup + 8) = ((ObjPlacement *)def)->posX;
+                *(f32 *)(setup + 0xc) = ((ObjPlacement *)def)->posY + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(f32 *)(setup + 0x10) = ((ObjPlacement *)def)->posZ + (f32)(int)randomGetRange(-0x28, 0x28);
                 *(s16 *)(setup + 0x20) = 100;
                 *(s16 *)(setup + 0x1e) = 0x10f;
                 *(s16 *)(setup + 0x22) = 0xffff;
@@ -280,9 +281,9 @@ void WM_ObjCreator_update(int obj) {
                 int setup = Obj_AllocObjectSetup(0x28, 0x263);
                 *(u8 *)(setup + 4) = 4;
                 *(u8 *)(setup + 5) = 2;
-                *(f32 *)(setup + 8) = *(f32 *)(def + 8) + (f32)(int)randomGetRange(-0x28, 0x28);
-                *(f32 *)(setup + 0xc) = *(f32 *)(def + 0xc) + (f32)(int)randomGetRange(0, 0x14);
-                *(f32 *)(setup + 0x10) = *(f32 *)(def + 0x10) + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(f32 *)(setup + 8) = ((ObjPlacement *)def)->posX + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(f32 *)(setup + 0xc) = ((ObjPlacement *)def)->posY + (f32)(int)randomGetRange(0, 0x14);
+                *(f32 *)(setup + 0x10) = ((ObjPlacement *)def)->posZ + (f32)(int)randomGetRange(-0x28, 0x28);
                 *(s16 *)(setup + 0x20) = 0x1c2;
                 *(s16 *)(setup + 0x1e) = randomGetRange(0, 2) + 0x1cc;
                 *(s16 *)(setup + 0x22) = 0xffff;

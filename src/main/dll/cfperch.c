@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/cfperch_state.h"
 #include "main/audio/sfx_ids.h"
@@ -271,7 +272,7 @@ void smallbasket_update(int obj)
     animSpeed = lbl_803E3950;
     (**(void (**)(f32 *))(*gSHthorntailAnimationInterface + 0x18))(&animSpeed);
     state = *(int *)&((GameObject *)obj)->extra;
-    if ((*gMapEventInterface)->isTimedEventActive(*(int *)(def + 0x14)) == 0) {
+    if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)def)->mapId) == 0) {
         return;
     }
     playerState = *(int *)(player + 0xb8);
@@ -322,13 +323,13 @@ void smallbasket_update(int obj)
                 } else {
                     ((CfperchState *)state)->unk14 = 1;
                 }
-                (*gMapEventInterface)->startTimedEvent(*(int *)(def + 0x14), (f32)((CfperchState *)state)->unk18);
-                ((GameObject *)obj)->anim.localPosX = *(f32 *)(def + 0x8);
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
-                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(def + 0x10);
-                ((GameObject *)obj)->anim.previousLocalPosX = *(f32 *)(def + 0x8);
-                ((GameObject *)obj)->anim.previousLocalPosY = *(f32 *)(def + 0xc);
-                ((GameObject *)obj)->anim.previousLocalPosZ = *(f32 *)(def + 0x10);
+                (*gMapEventInterface)->startTimedEvent(((ObjPlacement *)def)->mapId, (f32)((CfperchState *)state)->unk18);
+                ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)def)->posX;
+                ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
+                ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)def)->posZ;
+                ((GameObject *)obj)->anim.previousLocalPosX = ((ObjPlacement *)def)->posX;
+                ((GameObject *)obj)->anim.previousLocalPosY = ((ObjPlacement *)def)->posY;
+                ((GameObject *)obj)->anim.previousLocalPosZ = ((ObjPlacement *)def)->posZ;
                 zf = lbl_803E3938;
                 ((GameObject *)obj)->anim.velocityX = zf;
                 ((GameObject *)obj)->anim.velocityY = zf;

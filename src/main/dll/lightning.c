@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/dll/lightning.h"
 #include "main/dll/pushable.h"
 #include "main/objanim_internal.h"
@@ -1022,18 +1023,18 @@ int fn_80174438(int obj, PushableState *state)
   if ((state->flags & 4) == 0) {
     fn_80174BFC(obj, state);
   }
-  if (((GameObject *)obj)->anim.localPosX <= lbl_803E352C + *(f32 *)(def + 8)) {
+  if (((GameObject *)obj)->anim.localPosX <= lbl_803E352C + ((ObjPlacement *)def)->posX) {
     GameBit_Set(state->gameBit, 1);
     state->flags |= 0x80;
-    ((GameObject *)obj)->anim.localPosX = (f32)(*(f32 *)(def + 8) - lbl_803E3530);
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
-    ((GameObject *)obj)->anim.localPosZ = (f32)(lbl_803E3538 + *(f32 *)(def + 0x10));
+    ((GameObject *)obj)->anim.localPosX = (f32)(((ObjPlacement *)def)->posX - lbl_803E3530);
+    ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
+    ((GameObject *)obj)->anim.localPosZ = (f32)(lbl_803E3538 + ((ObjPlacement *)def)->posZ);
     Sfx_PlayFromObject(obj, 0x68);
   }
   if (GameBit_Get(0xa1a) != 0) {
-    ((GameObject *)obj)->anim.localPosX = *(f32 *)(def + 8);
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(def + 0x10);
+    ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)def)->posX;
+    ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
+    ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)def)->posZ;
   }
   return 0;
 }
