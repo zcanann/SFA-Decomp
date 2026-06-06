@@ -7417,7 +7417,25 @@ cfg.f34 = lbl_803DF4FC;
             cfg.f48 = 0x400200;
             cfg.f42 = 0xe4;
             (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
-            goto LAB_800a69a8;
+LAB_800a69a8:
+              cfg.f34 = lbl_803DF4FC;
+              cfg.f3c = lbl_803DF4E8;
+              cfg.f08 = 0xaf;
+              cfg.f60 = 0xff;
+              cfg.f44 = 0x500010;
+              cfg.f48 = 0x400100;
+              cfg.f42 = 0xe4;
+              (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+LAB_800a6a18:
+            cfg.f34 = lbl_803DF4FC;
+            cfg.f3c = lbl_803DF504;
+            cfg.f08 = 0x2d;
+            cfg.f60 = 0xff;
+            cfg.f44 = 0x100210;
+            cfg.f48 = 0x200;
+            cfg.f42 = 0xe4;
+            (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+            goto LAB_800a6a6c;
   case 0x55d:
 if (param_2 < 0x45) goto LAB_800aa8ac;
             goto LAB_800aeb28;
@@ -10169,26 +10187,8 @@ if (param_3 == NULL) {
   case 0x55a:
 if (param_2 != 0x55b) {
           if (0x55a < param_2) {
-            if (param_2 < 0x55d) {
-LAB_800a69a8:
-              cfg.f34 = lbl_803DF4FC;
-              cfg.f3c = lbl_803DF4E8;
-              cfg.f08 = 0xaf;
-              cfg.f60 = 0xff;
-              cfg.f44 = 0x500010;
-              cfg.f48 = 0x400100;
-              cfg.f42 = 0xe4;
-              (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
-            }
-            cfg.f34 = lbl_803DF4FC;
-            cfg.f3c = lbl_803DF504;
-            cfg.f08 = 0x2d;
-            cfg.f60 = 0xff;
-            cfg.f44 = 0x100210;
-            cfg.f48 = 0x200;
-            cfg.f42 = 0xe4;
-            (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
-            goto LAB_800a6a6c;
+            if (param_2 < 0x55d) goto LAB_800a69a8;
+            goto LAB_800a6a18;
           }
           if (0x559 < param_2) {
             if (param_3 == NULL) {
