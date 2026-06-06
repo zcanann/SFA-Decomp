@@ -4455,7 +4455,10 @@ void animatedObjFreeAndSavePlayerPos(u8 *obj, u8 *seqObj, u8 *seq) {
         ((MapEventInterface *)*gMapEventInterface)->triggerEvent(
             (int)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
         clearBit = 0;
-        seq[0x136] = (seq[0x136] & (u8)~4) | ((clearBit & 1) << 2);
+        {
+            struct SeqByte136 { u8 b80:1, b40:1, b20:1, b10:1, b08:1, b04:1, b02:1, b01:1; };
+            ((struct SeqByte136 *)&seq[0x136])->b04 = clearBit;
+        }
     }
 
     seq[0x7e] = 0;

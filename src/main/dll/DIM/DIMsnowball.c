@@ -1475,7 +1475,7 @@ void ccqueen_update(int *obj) {
         *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
         ObjHits_DisableObject(obj);
     } else {
-        ObjAnim_AdvanceCurrentMove(lbl_803E4668, timeDelta, (int)obj, NULL);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4668, timeDelta, NULL);
         dll_2E_func03(obj, sub);
         characterDoEyeAnims((int)obj, sub + 0x624);
     }
