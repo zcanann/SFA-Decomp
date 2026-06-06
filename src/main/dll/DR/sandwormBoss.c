@@ -3380,13 +3380,20 @@ extern f32  lbl_803E4244;
  * the idle audio cue. */
 #pragma scheduling off
 #pragma peephole off
-int babycloudrunner_func0B(int* obj)
+int babycloudrunner_func0B(void* p)
 {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
-    u8* q = *(u8**)((char*)obj + 0x4c);
-    int flag = 0;
-    void* player = Obj_GetPlayerObject();
-    u8* r = *(u8**)((char*)obj + 0x4c);
+    int* obj;
+    int flag;
+    u8* r;
+    u8* sub;
+    u8* q;
+    void* player;
+    obj = (int*)p;
+    sub = *(u8**)((char*)obj + 0xb8);
+    q = *(u8**)((char*)obj + 0x4c);
+    player = Obj_GetPlayerObject();
+    r = *(u8**)((char*)obj + 0x4c);
+    flag = 0;
     if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16)*(s16*)(r + 0x1a)) {
         if (*(int*)(sub + 0x230) == 3) {
             if ((*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
