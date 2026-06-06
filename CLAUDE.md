@@ -1480,6 +1480,36 @@ fn_8008020C+4). When a new `sym+0xNNN` regex census
 (`grep -rh "+0x" build/GSAE01/asm/main/dll/*.s`) surfaces more, verify the
 addend lands mid-function (not at a symbol boundary) before adding a range.
 
+78. **The "const-hoist-above-addr-arg" cap family is largely recipe #29 in
+    disguise — the callee's REAL arg order puts the object/pointer FIRST.**
+    Signature: T has `mr r3,rX` / `addi r3,...` BEFORE the `lfs` const loads;
+    C emits the lfs first. The fix is the obj-first calling form:
+    - `ObjAnim_AdvanceCurrentMove`: cast via the existing
+      `ObjAnimAdvanceObjectFirstF32Fn` typedef (objanim.h) and call
+      `(obj, speed, dt, events)` — cannonclaw_update 95.74→100 (one site
+      also lifted siblings, total +0.037), ccqueen_update 96.55→100.
+      MANY float-first call sites remain (grep
+      `ObjAnim_AdvanceCurrentMove(lbl_`) — flip ONLY when the containing fn
+      is a partial showing the mr-before-lfs shape.
+    - `objBboxFn_800640cc`: real order is `(from, to, radius, ...)` per
+      every caller outside main.c — dbegg_hitDetect 96.23→100.
+    - `curves_getCurves`: real order is `(obj, x, z, outCount, queryAll)` —
+      flipped decl+def+4 sites, fn_800E56A4 96→98.7, no regressions.
+    - `objParticleFn_80099d84`: real order `(int obj, f32, int, f32, int)`
+      per snowclaw/barrel callers; dll_80209FE0_shared.h carries a WRONG
+      `(double,double,int,...)` decl — override block-scope (#57),
+      bossdrakor_animEventCallback 96.09→99.10.
+    When NOT an arg-order case (the same shape on Matrix_TransformPoint
+    where the mtx IS already arg1 — wcfloortile, fn_802BC3F0), the residual
+    is MWCC hoisting a multi-use const load above cheap addi/mr arg setup —
+    embedded `(t = lbl)` in the arg position does NOT fix it (allocates a
+    callee-saved FP and explodes) — that direction IS a 2-instr cap.
+    BUT for a const consumed inside an EXPRESSION (not a call arg), the
+    embedded-assignment placement DOES work: `x / (sc = lbl)` forces the
+    lfs AFTER the numerator (fn_8015F5B0 96.09→100, RandomTimer 96.3→99.8
+    with the #32 acc-chain). Read the shape: call-arg hoist = cap;
+    expression-operand hoist = embedded assignment.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
