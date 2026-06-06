@@ -118,6 +118,26 @@ STATIC_ASSERT(offsetof(EarthWalkerState, hitReactState) == 0x65A);
 STATIC_ASSERT(offsetof(EarthWalkerState, encounterType) == 0x65B);
 STATIC_ASSERT(offsetof(EarthWalkerState, lastTriggeredState) == 0x65C);
 
+typedef struct EarthWalkerObject {
+    s16 facingAngle;
+    u8 pad02[0xA0 - 0x02];
+    s16 currentMove;
+    u8 padA2[0xAC - 0xA2];
+    s8 mapEventId;
+    u8 padAD[0xAF - 0xAD];
+    u8 statusFlags;
+    u8 padB0[0xB8 - 0xB0];
+    EarthWalkerState *state;
+    int animEventCallback;
+} EarthWalkerObject;
+
+STATIC_ASSERT(offsetof(EarthWalkerObject, facingAngle) == 0x00);
+STATIC_ASSERT(offsetof(EarthWalkerObject, currentMove) == 0xA0);
+STATIC_ASSERT(offsetof(EarthWalkerObject, mapEventId) == 0xAC);
+STATIC_ASSERT(offsetof(EarthWalkerObject, statusFlags) == 0xAF);
+STATIC_ASSERT(offsetof(EarthWalkerObject, state) == 0xB8);
+STATIC_ASSERT(offsetof(EarthWalkerObject, animEventCallback) == 0xBC);
+
 
 extern f32 lbl_803E6D20;
 extern f32 lbl_803E6D24;
