@@ -972,9 +972,6 @@ main/dll/DIM/dll_223.c:
 main/dll/DIM/DIMbossspit.c:
 	.text       start:0x801BE19C end:0x801BE44C
 
-main/dll/dll_224.c:
-	.text       start:0x801BE44C end:0x801BE44C
-
 main/dll/vfp_lavapool.c:
 	.text       start:0x801BE44C end:0x801BE8F8
 
@@ -1179,9 +1176,6 @@ main/dll/SC/SCtotemlogpuz.c:
 main/dll/SC/SCtotembondpuz.c:
 	.text       start:0x801D8060 end:0x801D80F4
 
-main/dll/SC/SCtotemstrength.c:
-	.text       start:0x801D80F4 end:0x801D80F4
-
 main/dll/brokecannon.c:
 	.text       start:0x801D80F4 end:0x801D8308
 
@@ -1244,9 +1238,6 @@ main/dll/DB/DBprotection.c:
 	.text       start:0x801DFA28 end:0x801E1588
 
 main/dll/DB/DBdustgeezer.c:
-	.text       start:0x801E1588 end:0x801E1588
-
-main/dll/DB/DBbonedust.c:
 	.text       start:0x801E1588 end:0x801E1588
 
 main/dll/DB/DBstealerworm.c:
