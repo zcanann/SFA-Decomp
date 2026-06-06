@@ -9,7 +9,9 @@
 /* Per-object extra state for the WM laser beam emitter. */
 typedef struct LaserBeamState {
     int texture;
-    u8 pad04[8];
+    f32 unk04;        /* 0x04: cur/prev pair A (reset each update) */
+    f32 unk08;
+
     f32 beamX;        /* 0x0c: beam base position */
     f32 beamX2;       /* 0x10 */
     f32 beamZ;        /* 0x14 */
@@ -270,7 +272,7 @@ void LaserBeam_update(int param_1)
     extern f32 lbl_803E5D44;
     extern f32 lbl_803E5D48;
     char *t;
-    char *b;
+    LaserBeamState *b;
     char *player;
     u8 c;
     int i;
@@ -290,29 +292,29 @@ void LaserBeam_update(int param_1)
     f32 fz;
 
     t = *(char **)(param_1 + 0x4c);
-    b = *(char **)(param_1 + 0xb8);
-    *(s16 *)(b + 0x2c) -= framesThisStep;
+    b = *(LaserBeamState **)(param_1 + 0xb8);
+    b->fireTimer -= framesThisStep;
     if (GameBit_Get(*(s16 *)(t + 0x1e)) == 0) {
-        if (*(s16 *)(b + 0x2c) < 0) {
-            if (*(u8 *)(b + 0x25) == 0) {
-                c = *(u8 *)(b + 0x4e);
+        if (b->fireTimer < 0) {
+            if (b->unk25 == 0) {
+                c = b->beamKind;
                 if (c == 3 || c == 30) {
-                    *(s16 *)(b + 0x2c) = *(s16 *)(b + 0x30);
+                    b->fireTimer = b->firePeriod;
                 } else {
-                    if (c == 0 && *(s16 *)(b + 0x32) != -1) {
-                        (*(void (**)(void *))(*gModgfxInterface + 0x20))(b + 0x32);
+                    if (c == 0 && b->emitterSlot != -1) {
+                        (*(void (**)(void *))(*gModgfxInterface + 0x20))(&b->emitterSlot);
                     }
-                    *(s16 *)(b + 0x2c) = *(s16 *)(b + 0x30);
+                    b->fireTimer = b->firePeriod;
                 }
-                *(f32 *)(b + 0x1c) = lbl_803E5D10;
+                b->sweepPhase = lbl_803E5D10;
             } else {
-                *(s16 *)(b + 0x2c) = 150;
+                b->fireTimer = 150;
             }
-            *(u8 *)(b + 0x4d) = 0;
-        } else if (*(s16 *)(b + 0x2c) < *(s16 *)(b + 0x2e)) {
-            if (*(u8 *)(b + 0x4d) == 0) {
-                *(u8 *)(b + 0x4d) = 1;
-                c = *(u8 *)(b + 0x4e);
+            b->active = 0;
+        } else if (b->fireTimer < b->unk2E) {
+            if (b->active == 0) {
+                b->active = 1;
+                c = b->beamKind;
                 if (c == 1) {
                     if (lbl_803DDC80 != NULL) {
                         (*(s16 (**)(int, int, int, int, int, int))(*lbl_803DDC80 + 4))(
@@ -323,14 +325,14 @@ void LaserBeam_update(int param_1)
                         param_1, 0, 0, 0x10004, -1, 0);
                 }
             }
-            if (*(s16 *)(b + 0x2c) < 0x28) {
-                if (*(f32 *)(b + 0x1c) >= lbl_803E5D10 && *(u8 *)(b + 0x25) == 0) {
-                    *(f32 *)(b + 0x1c) = -(lbl_803E5D14 * timeDelta - *(f32 *)(b + 0x1c));
+            if (b->fireTimer < 0x28) {
+                if (b->sweepPhase >= lbl_803E5D10 && b->unk25 == 0) {
+                    b->sweepPhase = -(lbl_803E5D14 * timeDelta - b->sweepPhase);
                 }
-            } else if (*(s16 *)(b + 0x2c) < 0x8c) {
-                if (*(u8 *)(b + 0x4d) == 1) {
-                    *(u8 *)(b + 0x4d) = 2;
-                    c = *(u8 *)(b + 0x4e);
+            } else if (b->fireTimer < 0x8c) {
+                if (b->active == 1) {
+                    b->active = 2;
+                    c = b->beamKind;
                     if (c == 1) {
                         if (lbl_803DDC80 != NULL) {
                             (*(s16 (**)(int, int, int, int, int, int))(*lbl_803DDC80 + 4))(
@@ -338,7 +340,7 @@ void LaserBeam_update(int param_1)
                         }
                     } else if (c == 30) {
                         if (lbl_803DDC80 != NULL) {
-                            *(s16 *)(b + 0x32) =
+                            b->emitterSlot =
                                 (*(s16 (**)(int, int, int, int, int, int))(*lbl_803DDC80 + 4))(
                                     param_1, 30, 0, 0x10004, -1, 0);
                         }
@@ -348,24 +350,24 @@ void LaserBeam_update(int param_1)
                                 param_1, 1, 0, 0x10004, -1, 0);
                         }
                     } else {
-                        if (lbl_803DDC80 != NULL && *(s16 *)(b + 0x32) == -1) {
-                            if (*(s16 *)(b + 0x32) != -1) {
-                                (*(void (**)(void *))(*gModgfxInterface + 0x20))(b + 0x32);
+                        if (lbl_803DDC80 != NULL && b->emitterSlot == -1) {
+                            if (b->emitterSlot != -1) {
+                                (*(void (**)(void *))(*gModgfxInterface + 0x20))(&b->emitterSlot);
                             }
                             if (lbl_803DDC80 != NULL) {
-                                *(s16 *)(b + 0x32) =
+                                b->emitterSlot =
                                     (*(s16 (**)(int, int, int, int, int, int))(*lbl_803DDC80 + 4))(
                                         param_1, 0, 0, 0x10004, -1, 0);
                             }
                         }
                     }
                 }
-            } else if (*(f32 *)(b + 0x1c) <= lbl_803E5D18) {
-                *(f32 *)(b + 0x1c) = lbl_803E5D1C * timeDelta + *(f32 *)(b + 0x1c);
+            } else if (b->sweepPhase <= lbl_803E5D18) {
+                b->sweepPhase = lbl_803E5D1C * timeDelta + b->sweepPhase;
             }
         }
-    } else if (*(u8 *)(b + 0x4e) == 0 && *(s16 *)(b + 0x32) != -1) {
-        (*(void (**)(void *))(*gModgfxInterface + 0x20))(b + 0x32);
+    } else if (b->beamKind == 0 && b->emitterSlot != -1) {
+        (*(void (**)(void *))(*gModgfxInterface + 0x20))(&b->emitterSlot);
     }
     dz = (f32)(int)*(s16 *)(t + 0x1a);
     dz2 = dz * dz;
@@ -373,40 +375,40 @@ void LaserBeam_update(int param_1)
     cosv = mathSinf((lbl_803E5D20 * (f32)(int)*(s16 *)param_1) / lbl_803E5D24);
     dot = -(*(f32 *)(param_1 + 0xc) * sinv + *(f32 *)(param_1 + 0x14) * cosv);
     player = Obj_GetPlayerObject();
-    *(s8 *)(b + 0x27) = (s8)(*(s8 *)(b + 0x27) - framesThisStep);
-    if (*(s8 *)(b + 0x27) <= 0) {
-        *(s8 *)(b + 0x27) = 0;
-    } else if (*(u8 *)(b + 0x4e) == 0 && *(s16 *)(b + 0x32) != -1) {
-        (*(void (**)(void *))(*gModgfxInterface + 0x20))(b + 0x32);
+    b->unk27 = (s8)(b->unk27 - framesThisStep);
+    if (b->unk27 <= 0) {
+        b->unk27 = 0;
+    } else if (b->beamKind == 0 && b->emitterSlot != -1) {
+        (*(void (**)(void *))(*gModgfxInterface + 0x20))(&b->emitterSlot);
     }
     if ((dot + (sinv * *(f32 *)(player + 0xc) + cosv * *(f32 *)(player + 0x14)) > lbl_803E5D10 &&
-         *(u8 *)(b + 0x4e) != 2) ||
-        *(u8 *)(b + 0x4e) == 30) {
-        *(s16 *)(b + 0x2a) -= framesThisStep;
-        if (*(s16 *)(b + 0x2a) < 0) {
-            *(s16 *)(b + 0x2a) = 0;
-            *(u8 *)(b + 0x25) = 0;
+         b->beamKind != 2) ||
+        b->beamKind == 30) {
+        b->sweepYaw -= framesThisStep;
+        if (b->sweepYaw < 0) {
+            b->sweepYaw = 0;
+            b->unk25 = 0;
         }
     } else {
-        *(s16 *)(b + 0x2a) += framesThisStep;
-        if (*(s16 *)(b + 0x2a) > 60) {
-            *(s16 *)(b + 0x2a) = 60;
-            *(u8 *)(b + 0x25) = 1;
+        b->sweepYaw += framesThisStep;
+        if (b->sweepYaw > 60) {
+            b->sweepYaw = 60;
+            b->unk25 = 1;
         }
     }
-    if (*(u8 *)(b + 0x25) == 0) {
-        *(u8 *)(b + 0x24) = (u8)(*(u8 *)(b + 0x4d) & 3);
+    if (b->unk25 == 0) {
+        b->unk24 = (u8)(b->active & 3);
     } else {
-        *(u8 *)(b + 0x24) = 2;
+        b->unk24 = 2;
     }
     if (GameBit_Get(*(s16 *)(t + 0x1e)) != 0) {
-        *(u8 *)(b + 0x24) = 0;
+        b->unk24 = 0;
     }
-    if (*(s8 *)(b + 0x27) == 0) {
-        *(s16 *)(b + 0x28) = 0;
+    if (b->unk27 == 0) {
+        b->unk28 = 0;
     }
-    if (player != NULL && *(s8 *)(b + 0x27) == 0 && *(u8 *)(b + 0x24) == 2) {
-        range = lbl_803E5D28 + (f32)(int)*(s8 *)(b + 0x26);
+    if (player != NULL && b->unk27 == 0 && b->unk24 == 2) {
+        range = lbl_803E5D28 + (f32)(int)*(s8 *)&b->unk26;
         dy = *(f32 *)(player + 0x10) - *(f32 *)(param_1 + 0x10);
         if (dy < range && dy > -(lbl_803E5D2C + range)) {
             dx = *(f32 *)(player + 0xc) - *(f32 *)(param_1 + 0xc);
@@ -420,13 +422,13 @@ void LaserBeam_update(int param_1)
                 if (a > lbl_803E5D30) {
                     a = lbl_803E5D30;
                 }
-                *(s16 *)(b + 0x28) = (s16)(int)((lbl_803E5D30 - a) * lbl_803E5D34);
-                if (!(lat < lbl_803E5D38 && lat > lbl_803E5D3C) && *(u8 *)(b + 0x4c) == 1) {
+                b->unk28 = (s16)(int)((lbl_803E5D30 - a) * lbl_803E5D34);
+                if (!(lat < lbl_803E5D38 && lat > lbl_803E5D3C) && b->unk4C == 1) {
                     (*(void (**)(int))(*gModgfxInterface + 0x18))(param_1);
-                    *(u8 *)(b + 0x4c) = 0;
+                    b->unk4C = 0;
                 }
                 if (lat < range && lat > -range) {
-                    if (objGetAnimState80A(player) == 0x1d7 && *(u8 *)(b + 0x4e) != 1) {
+                    if (objGetAnimState80A(player) == 0x1d7 && b->beamKind != 1) {
                         GameBit_Set(0x468, 1);
                     } else {
                         if (dot + (sinv * *(f32 *)(player + 0x80) +
@@ -448,37 +450,37 @@ void LaserBeam_update(int param_1)
                             (*(void (**)(void *, int, int, int, int, int))(*gPartfxInterface + 8))(
                                 Obj_GetPlayerObject(), 0x198, 0, 4, -1, 0);
                         }
-                        *(f32 *)(b + 0x40) = sinv * spread + *(f32 *)(player + 0xc);
-                        *(f32 *)(b + 0x48) = cosv * spread + *(f32 *)(player + 0x14);
-                        c = *(u8 *)(b + 0x4e);
+                        b->targetX = sinv * spread + *(f32 *)(player + 0xc);
+                        b->targetZ = cosv * spread + *(f32 *)(player + 0x14);
+                        c = b->beamKind;
                         if (c == 0 || c == 1) {
-                            ObjMsg_SendToObject(player, 0x60003, b + 0x34, 0);
+                            ObjMsg_SendToObject(player, 0x60003, (char *)b + 0x34, 0);
                         } else if ((u8)(c - 2) <= 1 || c == 30) {
-                            ObjMsg_SendToObject(player, 0x60004, b + 0x34, 0);
+                            ObjMsg_SendToObject(player, 0x60004, (char *)b + 0x34, 0);
                         }
-                        *(u8 *)(b + 0x27) = 2;
+                        *(u8 *)&b->unk27 = 2;
                     }
                 }
             }
         }
     }
-    if (*(u8 *)(b + 0x24) == 0) {
-        if (*(u8 *)(b + 0x4e) == 30 && *(s16 *)(b + 0x32) != -1) {
-            (*(void (**)(void *))(*gModgfxInterface + 0x20))(b + 0x32);
+    if (b->unk24 == 0) {
+        if (b->beamKind == 30 && b->emitterSlot != -1) {
+            (*(void (**)(void *))(*gModgfxInterface + 0x20))(&b->emitterSlot);
         }
-        if (*(u8 *)(b + 0x4c) == 1) {
+        if (b->unk4C == 1) {
             (*(void (**)(int))(*gModgfxInterface + 0x18))(param_1);
-            *(u8 *)(b + 0x4c) = 0;
+            b->unk4C = 0;
         }
     }
     fz = lbl_803E5D10;
-    *(f32 *)(b + 4) = fz;
-    *(f32 *)(b + 0xc) = fz;
-    *(f32 *)(b + 0x14) = fz;
-    *(f32 *)(b + 8) = *(f32 *)(b + 4);
-    *(f32 *)(b + 0x10) = *(f32 *)(b + 0xc);
-    *(f32 *)(b + 0x18) = *(f32 *)(b + 0x14) + dz;
-    *(u8 *)(b + 0x26) = 8;
+    b->unk04 = fz;
+    b->beamX = fz;
+    b->beamZ = fz;
+    b->unk08 = b->unk04;
+    b->beamX2 = b->beamX;
+    b->beamZ2 = b->beamZ + dz;
+    b->unk26 = 8;
     *(f32 *)(param_1 + 0x98) = lbl_803E5D48 * timeDelta + *(f32 *)(param_1 + 0x98);
     if (*(f32 *)(param_1 + 0x98) > lbl_803E5D18) {
         *(f32 *)(param_1 + 0x98) = *(f32 *)(param_1 + 0x98) - lbl_803E5D18;
