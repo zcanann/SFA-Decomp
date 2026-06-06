@@ -5,7 +5,7 @@ extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY
                                            int obj);
 extern int objBboxFn_800640cc(int startPoints,int endPoints,int radii,int hitOut,int objOut,
                               int pointCount,int mask,int flags,int mode);
-extern int hitDetectFn_80065e50(f32 x,f32 y,f32 z,int obj,int *hitsOut,int pointCount,
+extern int hitDetectFn_80065e50(int obj,f32 x,f32 y,f32 z,int *hitsOut,int pointCount,
                                 int mask);
 extern void hitDetectFn_80067958(int obj,float *startPoints,float *endPoints,int pointCount,
                                  int outPos,int mode);
@@ -73,8 +73,8 @@ void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upp
     *(f32 *)(camera + 0x20) = pos[2];
   }
   if ((flags & 2) != 0) {
-    count = hitDetectFn_80065e50(*(float *)(camera + 0x18),*(float *)(camera + 0x1c),
-                                 *(float *)(camera + 0x20),camObj,&hits,1,0x40);
+    count = hitDetectFn_80065e50(camObj,*(float *)(camera + 0x18),*(float *)(camera + 0x1c),
+                                 *(float *)(camera + 0x20),&hits,1,0x40);
     *upperBound = lbl_803E16D0;
     bestUpper = (*lowerBound = lbl_803E16D4);
     bestLower = bestUpper;
