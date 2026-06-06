@@ -188,7 +188,7 @@ extern s16 *objModelGetVecFn_800395d8(int obj, int idx);
 
 void fn_802BCA10(int obj, int q, int p2);
 
-int fn_802BCCFC(void) { return 0x0; }
+int DR_EarthWarrior_defaultStateHandler(void) { return 0x0; }
 
 void DR_EarthWarrior_func21(void) {}
 
@@ -217,7 +217,7 @@ void DR_EarthWarrior_func15(int obj, f32 *x, f32 *y, f32 *z)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BDBCC(int obj)
+int DR_EarthWarrior_stateHandler00(int obj)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
     inner->sub.flags98C |= 0x20;
@@ -289,7 +289,7 @@ void DR_EarthWarrior_release(void)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BCD04(int obj, int p2)
+int DR_EarthWarrior_stateHandler03(int obj, int p2)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
     f32 fz;
@@ -331,11 +331,11 @@ int fn_802BCD04(int obj, int p2)
 #pragma peephole off
 void DR_EarthWarrior_initialise(void)
 {
-    ((void **)gDREarthWarriorStateHandlers)[0] = (void *)fn_802BDBCC;
-    ((void **)gDREarthWarriorStateHandlers)[1] = (void *)fn_802BD7AC;
-    ((void **)gDREarthWarriorStateHandlers)[2] = (void *)fn_802BCE14;
-    ((void **)gDREarthWarriorStateHandlers)[3] = (void *)fn_802BCD04;
-    gDREarthWarriorDefaultStateHandler = (void *)fn_802BCCFC;
+    ((void **)gDREarthWarriorStateHandlers)[0] = (void *)DR_EarthWarrior_stateHandler00;
+    ((void **)gDREarthWarriorStateHandlers)[1] = (void *)DR_EarthWarrior_stateHandler01;
+    ((void **)gDREarthWarriorStateHandlers)[2] = (void *)DR_EarthWarrior_stateHandler02;
+    ((void **)gDREarthWarriorStateHandlers)[3] = (void *)DR_EarthWarrior_stateHandler03;
+    gDREarthWarriorDefaultStateHandler = (void *)DR_EarthWarrior_defaultStateHandler;
     if (lbl_803DE4D0 == NULL) {
         lbl_803DE4D0 = (void *)Resource_Acquire(0x5a, 1);
     }
@@ -683,7 +683,7 @@ void fn_802BCA10(int obj, int q, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BCE14(int obj, int p2)
+int DR_EarthWarrior_stateHandler02(int obj, int p2)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     int q = inner + 0xb58;
@@ -897,7 +897,7 @@ int fn_802BCE14(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BD7AC(int obj, int p2)
+int DR_EarthWarrior_stateHandler01(int obj, int p2)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
     EarthWarriorSub *q = &inner->sub;

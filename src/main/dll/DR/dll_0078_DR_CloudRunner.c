@@ -53,7 +53,7 @@ STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 
 #include "main/audio/sfx_ids.h"
 #include "main/objanim_internal.h"
-int fn_802BF728(void) { return 0x0; }
+int DR_CloudRunner_defaultStateHandler(void) { return 0x0; }
 
 void DR_CloudRunner_func21(void) {}
 
@@ -137,7 +137,7 @@ void DR_CloudRunner_modelMtxFn(int obj, int a, int b, int c)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BF730(int obj)
+int DR_CloudRunner_stateHandler07(int obj)
 {
     CloudRunnerState *inner = *(CloudRunnerState **)((char *)obj + 0xb8);
     u8 v;
@@ -166,22 +166,22 @@ void DR_CloudRunner_free(int obj)
 #pragma peephole off
 void DR_CloudRunner_initialise(void)
 {
-    ((void **)gDRCloudRunnerStateHandlers)[0] = (void *)fn_802C0B84;
-    ((void **)gDRCloudRunnerStateHandlers)[1] = (void *)fn_802C0A5C;
-    ((void **)gDRCloudRunnerStateHandlers)[2] = (void *)fn_802C0978;
-    ((void **)gDRCloudRunnerStateHandlers)[3] = (void *)fn_802C0830;
-    ((void **)gDRCloudRunnerStateHandlers)[4] = (void *)fn_802C0550;
-    ((void **)gDRCloudRunnerStateHandlers)[5] = (void *)fn_802BF934;
-    ((void **)gDRCloudRunnerStateHandlers)[6] = (void *)fn_802BF75C;
-    ((void **)gDRCloudRunnerStateHandlers)[7] = (void *)fn_802BF730;
-    gDRCloudRunnerDefaultStateHandler = (void *)fn_802BF728;
+    ((void **)gDRCloudRunnerStateHandlers)[0] = (void *)DR_CloudRunner_stateHandler00;
+    ((void **)gDRCloudRunnerStateHandlers)[1] = (void *)DR_CloudRunner_stateHandler01;
+    ((void **)gDRCloudRunnerStateHandlers)[2] = (void *)DR_CloudRunner_stateHandler02;
+    ((void **)gDRCloudRunnerStateHandlers)[3] = (void *)DR_CloudRunner_stateHandler03;
+    ((void **)gDRCloudRunnerStateHandlers)[4] = (void *)DR_CloudRunner_stateHandler04;
+    ((void **)gDRCloudRunnerStateHandlers)[5] = (void *)DR_CloudRunner_stateHandler05;
+    ((void **)gDRCloudRunnerStateHandlers)[6] = (void *)DR_CloudRunner_stateHandler06;
+    ((void **)gDRCloudRunnerStateHandlers)[7] = (void *)DR_CloudRunner_stateHandler07;
+    gDRCloudRunnerDefaultStateHandler = (void *)DR_CloudRunner_defaultStateHandler;
 }
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802C0978(int obj, int p2)
+int DR_CloudRunner_stateHandler02(int obj, int p2)
 {
     int inner = *(int *)((char *)obj + 0xb8);
     *(int *)((char *)p2 + 0) |= 0x200000;
@@ -216,7 +216,7 @@ int fn_802C0978(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802C0A5C(int obj, int p2)
+int DR_CloudRunner_stateHandler01(int obj, int p2)
 {
     CloudRunnerState *inner;
     int q = *(int *)((char *)obj + 0x4c);
@@ -255,7 +255,7 @@ int fn_802C0A5C(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802C0830(int obj, int p2)
+int DR_CloudRunner_stateHandler03(int obj, int p2)
 {
     int inner = *(int *)((char *)obj + 0xb8);
     if (*(s8 *)((char *)p2 + 0x27a) != 0) {
@@ -320,7 +320,7 @@ void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802C0B84(int obj)
+int DR_CloudRunner_stateHandler00(int obj)
 {
     CloudRunnerState *inner = *(CloudRunnerState **)((char *)obj + 0xb8);
     if (inner->unkBB4 == 0) {
@@ -455,7 +455,7 @@ typedef struct {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BF934(int obj, int p2, f32 f)
+int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
 {
     u8 *base = (u8 *)lbl_803356F0;
     u32 idx;
@@ -876,7 +876,7 @@ void DR_CloudRunner_func23(int obj, int mode, int *out)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BF75C(int obj, int p2)
+int DR_CloudRunner_stateHandler06(int obj, int p2)
 {
     CloudRunnerState *inner = *(CloudRunnerState **)((char *)obj + 0xb8);
     int q = *(int *)((char *)obj + 0x54);
@@ -1163,7 +1163,7 @@ void fn_802BF4D8(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802C0550(int obj, int p2)
+int DR_CloudRunner_stateHandler04(int obj, int p2)
 {
     CloudRunnerState *inner = *(CloudRunnerState **)((char *)obj + 0xb8);
     int a0;

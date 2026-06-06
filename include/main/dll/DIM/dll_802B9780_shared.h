@@ -316,25 +316,25 @@ extern void *lbl_803DE4D0;
 
 extern int gDRCloudRunnerStateHandlers[];
 extern void *gDRCloudRunnerDefaultStateHandler;
-extern int fn_802C0B84(int obj);
-extern int fn_802C0A5C(int obj, int p2);
-extern int fn_802C0978(int obj, int p2);
-extern int fn_802C0830(int obj, int p2);
-extern int fn_802C0550(int obj, int p2);
-extern void fn_802BF934();
-extern void fn_802BF75C();
+extern int DR_CloudRunner_stateHandler00(int obj);
+extern int DR_CloudRunner_stateHandler01(int obj, int p2);
+extern int DR_CloudRunner_stateHandler02(int obj, int p2);
+extern int DR_CloudRunner_stateHandler03(int obj, int p2);
+extern int DR_CloudRunner_stateHandler04(int obj, int p2);
+extern void DR_CloudRunner_stateHandler05();
+extern void DR_CloudRunner_stateHandler06();
 
 extern int Resource_Acquire(int id, int kind);
 extern int gDim2PrisonMammothStateHandlers[];
 extern int gDREarthWarriorStateHandlers[];
 extern void *gDim2PrisonMammothDefaultStateHandler;
 extern void *gDREarthWarriorDefaultStateHandler;
-extern int fn_802BC27C(int obj, int p2);
-extern int fn_802BC19C(int obj, int p2);
-extern int fn_802BC0D8(int obj, int p2);
-extern void fn_802BD7AC();
-extern void fn_802BCE14();
-extern int fn_802BCD04(int obj, int p2);
+extern int dim2prisonmammoth_stateHandler01(int obj, int p2);
+extern int dim2prisonmammoth_stateHandler02(int obj, int p2);
+extern int dim2prisonmammoth_stateHandler03(int obj, int p2);
+extern void DR_EarthWarrior_stateHandler01();
+extern void DR_EarthWarrior_stateHandler02();
+extern int DR_EarthWarrior_stateHandler03(int obj, int p2);
 
 extern f32 lbl_803E82C0;
 extern f32 lbl_803E82C4;
