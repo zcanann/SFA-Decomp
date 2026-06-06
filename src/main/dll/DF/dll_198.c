@@ -1,9 +1,6 @@
-#include "ghidra_import.h"
-#include "main/dll/DF/DFbarrel.h"
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/dll/DF/dll_196.h"
 #include "main/dll/DF/dll_198.h"
-#include "main/dll/DF/dfropenode.h"
 
 typedef struct DFDoorSpeciExtra {
   u16 phase;

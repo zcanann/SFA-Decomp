@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/dll/DF/DFbarrel.h"
 #include "main/dll/DF/DFcradle.h"
 #include "main/dll/DF/DFwhirlpool.h"
 #include "main/dll/DF/dfropenode.h"
