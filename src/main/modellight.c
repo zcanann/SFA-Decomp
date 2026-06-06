@@ -1026,9 +1026,10 @@ void modelLightStruct_setPosition(ModelLightStruct *s, f32 x, f32 y, f32 z) {
         tmp[2] = s->worldZ - playerMapOffsetZ;
         PSMTXMultVec(view, tmp, &s->viewX);
     } else {
-        *(int *)&s->viewX = *(int *)&s->worldX;
-        *(int *)&s->viewY = *(int *)&s->worldY;
-        *(int *)&s->viewZ = *(int *)&s->worldZ;
+        {
+            typedef struct { int x, y, z; } IVec3;
+            *(IVec3 *)&s->viewX = *(IVec3 *)&s->worldX;
+        }
     }
 }
 
