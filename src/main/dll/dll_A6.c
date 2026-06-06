@@ -1,4 +1,5 @@
 #include "main/dll/dll_A6.h"
+#include "main/game_object.h"
 #include "main/dll/CAM/camcontrol.h"
 
 extern u8 *gCamcontrolTargetReticle;
@@ -51,7 +52,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
   if (target != NULL) {
     if (*(u32 *)(target + 0x74) == 0) goto end;
 
-    idx = target[0xE4];
+    idx = ((GameObject *)target)->unkE4;
     slot = (u8 *)*(u32 *)(target + 0x74) + idx * 0x18;
     otherTbl = (u8 *)*(u32 *)(target + 0x78);
     otherTbl = otherTbl + idx * 5;
@@ -69,9 +70,9 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
       break;
     }
 
-    paletteIdx = (int)target[0xE8];
+    paletteIdx = (int)((GameObject *)target)->unkE8;
     if (paletteIdx >= 4) paletteIdx = 0;
-    paletteBase = (u8 *)*(u32 *)(target + 0x50);
+    paletteBase = (u8 *)*(u32 *)&((GameObject *)target)->anim.modelInstance;
     paletteBase = paletteBase + paletteIdx * 2;
     lbl_803DB990 = *(s16 *)(paletteBase + 0x7C);
 
@@ -80,7 +81,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
     *(f32 *)(reticle + 0x20) = *(f32 *)(slot + 0x8);
     *(s8 *)(reticle + 0xAD) = mode;
 
-    *(u32 *)(reticle + 0x30) = *(u32 *)(target + 0x30);
+    *(u32 *)(reticle + 0x30) = *(u32 *)&((GameObject *)target)->anim.parent;
     if (*(u32 *)(reticle + 0x30) != 0) {
       Obj_TransformWorldPointToLocal(*(f32 *)(reticle + 0x18),
                                      *(f32 *)(reticle + 0x1C),

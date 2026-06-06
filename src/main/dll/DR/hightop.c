@@ -2072,17 +2072,17 @@ void Trigger_hitDetect(int obj)
                 if (ok) {
                     if ((*state & 0x40) != 0) {
                         if ((s8)def[0x43] == 2) {
-                            *(f32 *)(state + 0x1c) = *(f32 *)(target + 0x18);
-                            *(f32 *)(state + 0x20) = *(f32 *)(target + 0x1c);
-                            *(f32 *)(state + 0x24) = *(f32 *)(target + 0x20);
+                            *(f32 *)(state + 0x1c) = ((GameObject *)target)->anim.worldPosX;
+                            *(f32 *)(state + 0x20) = ((GameObject *)target)->anim.worldPosY;
+                            *(f32 *)(state + 0x24) = ((GameObject *)target)->anim.worldPosZ;
                         } else if ((s8)def[0x43] < 2) {
-                            *(f32 *)(state + 0x1c) = *(f32 *)(target + 0x8c);
-                            *(f32 *)(state + 0x20) = *(f32 *)(target + 0x90);
-                            *(f32 *)(state + 0x24) = *(f32 *)(target + 0x94);
+                            *(f32 *)(state + 0x1c) = ((GameObject *)target)->anim.previousWorldPosX;
+                            *(f32 *)(state + 0x20) = ((GameObject *)target)->anim.previousWorldPosY;
+                            *(f32 *)(state + 0x24) = ((GameObject *)target)->anim.previousWorldPosZ;
                         } else {
-                            *(f32 *)(state + 0x1c) = *(f32 *)(target + 0x80);
-                            *(f32 *)(state + 0x20) = *(f32 *)(target + 0x84);
-                            *(f32 *)(state + 0x24) = *(f32 *)(target + 0x88);
+                            *(f32 *)(state + 0x1c) = ((GameObject *)target)->anim.previousLocalPosX;
+                            *(f32 *)(state + 0x20) = ((GameObject *)target)->anim.previousLocalPosY;
+                            *(f32 *)(state + 0x24) = ((GameObject *)target)->anim.previousLocalPosZ;
                         }
                         *state &= ~0x40;
                     } else {
@@ -2091,13 +2091,13 @@ void Trigger_hitDetect(int obj)
                         *(f32 *)(state + 0x24) = *(f32 *)(state + 0x30);
                     }
                     if ((s8)def[0x43] < 3) {
-                        *(f32 *)(state + 0x28) = *(f32 *)(target + 0x18);
-                        *(f32 *)(state + 0x2c) = *(f32 *)(target + 0x1c);
-                        *(f32 *)(state + 0x30) = *(f32 *)(target + 0x20);
+                        *(f32 *)(state + 0x28) = ((GameObject *)target)->anim.worldPosX;
+                        *(f32 *)(state + 0x2c) = ((GameObject *)target)->anim.worldPosY;
+                        *(f32 *)(state + 0x30) = ((GameObject *)target)->anim.worldPosZ;
                     } else {
-                        *(f32 *)(state + 0x28) = *(f32 *)(target + 0xc);
-                        *(f32 *)(state + 0x2c) = *(f32 *)(target + 0x10);
-                        *(f32 *)(state + 0x30) = *(f32 *)(target + 0x14);
+                        *(f32 *)(state + 0x28) = ((GameObject *)target)->anim.localPosX;
+                        *(f32 *)(state + 0x2c) = ((GameObject *)target)->anim.localPosY;
+                        *(f32 *)(state + 0x30) = ((GameObject *)target)->anim.localPosZ;
                     }
                 }
                 switch (*(s16 *)def) {

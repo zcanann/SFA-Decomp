@@ -83,9 +83,9 @@ int drlasercannon_aimAtTarget(int self, int target, int *out, int maxRate, f32 *
         *vec = (s16)(*vec >> 1);
         return 0;
     }
-    d[0] = *(f32 *)((char *)target + 0xc) - eyePos[0];
-    d[1] = *(f32 *)((char *)target + 0x10) - eyePos[1];
-    d[2] = *(f32 *)((char *)target + 0x14) - eyePos[2];
+    d[0] = ((GameObject *)target)->anim.localPosX - eyePos[0];
+    d[1] = ((GameObject *)target)->anim.localPosY - eyePos[1];
+    d[2] = ((GameObject *)target)->anim.localPosZ - eyePos[2];
     horiz = sqrtf(d[0] * d[0] + d[2] * d[2]);
     yaw = getAngle(d[0], d[2]);
     pitch = getAngle(d[1], horiz);

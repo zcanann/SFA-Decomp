@@ -4525,9 +4525,9 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag) {
             sx = ((GameObject *)obj)->anim.localPosX;
             sy = ((GameObject *)obj)->anim.localPosY;
             sz = ((GameObject *)obj)->anim.localPosZ;
-            ((GameObject *)obj)->anim.localPosX = *(f32*)(target + 0xc);
-            ((GameObject *)obj)->anim.localPosY = *(f32*)(target + 0x10);
-            ((GameObject *)obj)->anim.localPosZ = *(f32*)(target + 0x14);
+            ((GameObject *)obj)->anim.localPosX = ((GameObject *)target)->anim.localPosX;
+            ((GameObject *)obj)->anim.localPosY = ((GameObject *)target)->anim.localPosY;
+            ((GameObject *)obj)->anim.localPosZ = ((GameObject *)target)->anim.localPosZ;
             saveGame_saveObjectPos(obj);
             ((GameObject *)obj)->anim.localPosX = sx;
             ((GameObject *)obj)->anim.localPosY = sy;
@@ -4655,9 +4655,9 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     if (target == NULL) {
         return 0;
     }
-    dx = *(f32*)((char*)target + 0xc) - *(f32*)((char*)obj + 0xc);
-    dy = *(f32*)((char*)target + 0x10) - *(f32*)((char*)obj + 0x10);
-    dz = *(f32*)((char*)target + 0x14) - *(f32*)((char*)obj + 0x14);
+    dx = ((GameObject *)target)->anim.localPosX - *(f32*)((char*)obj + 0xc);
+    dy = ((GameObject *)target)->anim.localPosY - *(f32*)((char*)obj + 0x10);
+    dz = ((GameObject *)target)->anim.localPosZ - *(f32*)((char*)obj + 0x14);
     dist = sqrtf(dz * dz + (dx * dx + dy * dy));
     if (dist < lbl_803E4124 * speed) {
         return 1;

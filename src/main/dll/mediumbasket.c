@@ -2742,9 +2742,9 @@ void fn_8015D3C0(int obj, int sub, int state)
     Obj_GetPlayerObject();
     target = *(u8 **)(state + 0x2d0);
     if (target != NULL) {
-        targetDelta[0] = *(f32 *)(target + 0x18) - ((GameObject *)obj)->anim.worldPosX;
-        targetDelta[1] = *(f32 *)(target + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
-        targetDelta[2] = *(f32 *)(target + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
+        targetDelta[0] = ((GameObject *)target)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
+        targetDelta[1] = ((GameObject *)target)->anim.worldPosY - ((GameObject *)obj)->anim.worldPosY;
+        targetDelta[2] = ((GameObject *)target)->anim.worldPosZ - ((GameObject *)obj)->anim.worldPosZ;
         distSq = targetDelta[2] * targetDelta[2];
         distSq += targetDelta[0] * targetDelta[0];
         distSq += targetDelta[1] * targetDelta[1];

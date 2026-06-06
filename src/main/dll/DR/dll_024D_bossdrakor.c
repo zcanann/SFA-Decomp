@@ -647,14 +647,14 @@ int bossdrakor_animEventCallback(int obj, int a2, int events)
         case 6:
             target = ObjGroup_FindNearestObject(0x1e, obj, 0);
             if ((void *)target != NULL && ((GameObject *)obj)->unkEB != 0) {
-                (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)((char *)target + 0x68)) + 0x20)))(target, 2);
+                (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)&((GameObject *)target)->anim.dll) + 0x20)))(target, 2);
                 ObjLink_DetachChild(obj, target);
             }
             break;
         case 7:
             target = ObjGroup_FindNearestObject(0x1e, obj, 0);
             if ((void *)target != NULL) {
-                (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)((char *)target + 0x68)) + 0x20)))(target, 0);
+                (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)&((GameObject *)target)->anim.dll) + 0x20)))(target, 0);
                 ObjLink_AttachChild(obj, target, 1);
                 ((BossDrakorState *)inner)->unk18C = lbl_803E6514;
             }
