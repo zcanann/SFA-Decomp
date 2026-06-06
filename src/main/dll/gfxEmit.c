@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/gfxEmit.h"
+#include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
 extern undefined4 FUN_80006824();
@@ -491,7 +492,7 @@ void FUN_8017308c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   if ((((visible != 0) && (*(float *)(iVar2 + 8) == lbl_803E40F4)) &&
       (*(int *)(iVar1 + 0xf4) == 0)) &&
      ((*(short *)(iVar1 + 0x46) == 0x156 || (*(char *)(iVar2 + 0x1e) == '\0')))) {
-    if (((*(uint *)(*(int *)(iVar1 + 0x50) + 0x44) & 0x10000) != 0) &&
+    if (((((ObjAnimComponent *)iVar1)->modelInstance->flags & 0x10000) != 0) &&
        (*(char *)(iVar2 + 0x36) != '\0')) {
       FUN_8003b56c((ushort)*(byte *)(iVar2 + 0x38),(ushort)*(byte *)(iVar2 + 0x39),
                    (ushort)*(byte *)(iVar2 + 0x3a));
@@ -837,7 +838,7 @@ void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
     int state = *(int*)(obj + 0xb8);
     if (visible != 0 && *(f32*)(state + 8) == lbl_803E345C && *(int*)(obj + 0xf4) == 0
         && (*(s16*)(obj + 0x46) == 0x156 || *(u8*)(state + 0x1e) == 0)) {
-        if ((*(u32*)(*(int*)(obj + 0x50) + 0x44) & 0x10000) != 0 && *(u8*)(state + 0x36) != 0) {
+        if ((((ObjAnimComponent *)obj)->modelInstance->flags & 0x10000) != 0 && *(u8*)(state + 0x36) != 0) {
             fn_8003B608(*(u8*)(state + 0x38), *(u8*)(state + 0x39), *(u8*)(state + 0x3a));
         }
         objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3454);

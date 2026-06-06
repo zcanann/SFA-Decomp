@@ -1093,7 +1093,7 @@ void FUN_801807cc(int param_1)
           *(undefined *)(*(int *)(*(int *)(param_1 + 0x50) + 0x40) + 0x11) = 0x10;
         }
         *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
-        if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) &&
+        if (((((ObjAnimComponent *)param_1)->modelInstance->flags & 1) != 0) &&
            (*(int *)(param_1 + 0x74) != 0)) {
           FUN_800400b0();
         }
@@ -2738,7 +2738,7 @@ void StayPoint_update(int obj) {
                 *(u8 *)(*(int *)(*(int *)(obj + 0x50) + 0x40) + 0x11) = 0x10;
             }
             *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
-            if (((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0) && *(void **)(obj + 0x74) != NULL) {
+            if (((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0) && *(void **)(obj + 0x74) != NULL) {
                 objRenderFn_80041018((int *)obj);
             }
             if ((*(u8 *)(obj + 0xaf) & 4) != 0) {

@@ -1,5 +1,6 @@
 #include "main/dll/CF/CFtoggleswitch.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
 
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -873,7 +874,7 @@ void infotext_update(int *obj) {
             showHelpText(*(s16 *)((char *)*(int **)((char *)obj + 0x50) + 0x7c + (*(u8 **)((char *)obj + 0x4c))[0x19] * 2));
         }
     }
-    if ((*(u32 *)((char *)*(int **)((char *)obj + 0x50) + 0x44) & 1) != 0) {
+    if ((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0) {
         objRenderFn_80041018((int)obj);
     }
 }

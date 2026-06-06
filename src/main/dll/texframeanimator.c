@@ -122,7 +122,7 @@ void collectible_init(int obj,int setup)
     if (data != 0) {
       *(f32 *)(state + 4) = (f32)(s32)(*(u8 *)(data + 0xc) << 2);
     }
-    if (((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 0x10000) != 0) &&
+    if (((((ObjAnimComponent *)obj)->modelInstance->flags & 0x10000) != 0) &&
         (*(u8 *)(state + 0x36) != 0)) {
       *(u8 *)(state + 0x38) = *(u8 *)(setup + 0x28);
       *(u8 *)(state + 0x39) = *(u8 *)(setup + 0x29);
