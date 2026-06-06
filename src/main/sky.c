@@ -530,7 +530,7 @@ void modelTextureFn_80089970(int slot)
                                        lbl_803DD12C[offset + 0x82], 0xff);
     }
     offset = slot * 0xa4;
-    colorFn_8001efe0(0, lbl_803DD12C[offset + 0x88], lbl_803DD12C[offset + 0x89],
+    lightSetColor(0, lbl_803DD12C[offset + 0x88], lbl_803DD12C[offset + 0x89],
                      lbl_803DD12C[offset + 0x8a]);
 }
 #pragma scheduling reset

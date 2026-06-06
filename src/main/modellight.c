@@ -639,7 +639,7 @@ void modelLightStruct_getWorldPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 
 
 #pragma dont_inline reset
 
-void colorFn_8001efe0(int i, u8 a, u8 b, u8 c) {
+void lightSetColor(int i, u8 a, u8 b, u8 c) {
     u8 *base = &lbl_803DB408;
     base[i * 4] = a;
     base[i * 4 + 1] = b;
