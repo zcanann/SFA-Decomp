@@ -1,15 +1,18 @@
-#ifndef MAIN_DLL_TEXFRAMEANIMATOR_STATE_H_
-#define MAIN_DLL_TEXFRAMEANIMATOR_STATE_H_
+#ifndef MAIN_DLL_COLLECTIBLE_STATE_H_
+#define MAIN_DLL_COLLECTIBLE_STATE_H_
 
 #include "ghidra_import.h"
 #include "global.h"
 
-/* texframeanimator_state_GENERATED
- * TexFrameAnimatorState - the obj+0xB8 extra record observed in texframeanimator.c. Field widths
+/* CollectibleState - the obj+0xB8 extra record of the collectible/
+ * magicdust family, censused from texframeanimator.c (which contains
+ * that family despite its filename - the real texframeanimator_*
+ * symbols live in MMP_asteroid.c; file rename parked as a repo-owner
+ * proposal). Field widths
  * mirror the observed deref widths; unobserved ranges are padded. The
  * span covers every observed access - the true allocation may be larger.
  */
-typedef struct TexFrameAnimatorState {
+typedef struct CollectibleState {
     u8 unk0[0x4 - 0x0];
     f32 unk4;
     u8 unk8[0xC - 0x8];
@@ -42,6 +45,6 @@ typedef struct TexFrameAnimatorState {
     f32 unk40;
     f32 unk44;
     u8 unk48[0x4C - 0x48];
-} TexFrameAnimatorState;
+} CollectibleState;
 
-#endif /* MAIN_DLL_TEXFRAMEANIMATOR_STATE_H_ */
+#endif /* MAIN_DLL_COLLECTIBLE_STATE_H_ */

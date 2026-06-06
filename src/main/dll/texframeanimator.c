@@ -1,6 +1,9 @@
 #include "main/dll/texframeanimator.h"
+/* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
+ * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
+ * verified). File rename parked as a repo-owner proposal. */
 #include "main/game_object.h"
-#include "main/dll/texframeanimator_state.h"
+#include "main/dll/collectible_state.h"
 #include "main/objanim_internal.h"
 
 extern uint GameBit_Get(int eventId);
@@ -92,55 +95,55 @@ void collectible_init(int obj,int setup)
     objAnim->bankIndex = 0;
   }
   ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
-  ((TexFrameAnimatorState *)state)->unkC = *(u8 *)(setup + 0x19);
-  ((TexFrameAnimatorState *)state)->unkD = *(u8 *)(setup + 0x1a);
-  ((TexFrameAnimatorState *)state)->unkF = 0;
+  ((CollectibleState *)state)->unkC = *(u8 *)(setup + 0x19);
+  ((CollectibleState *)state)->unkD = *(u8 *)(setup + 0x1a);
+  ((CollectibleState *)state)->unkF = 0;
   *(s32 *)(state + 0x18) = -2;
-  ((TexFrameAnimatorState *)state)->unk1D = 0;
-  ((TexFrameAnimatorState *)state)->unk14 = *(s16 *)(setup + 0x24);
+  ((CollectibleState *)state)->unk1D = 0;
+  ((CollectibleState *)state)->unk14 = *(s16 *)(setup + 0x24);
   *(s32 *)(state + 0x20) = *(s32 *)(setup + 0x14);
-  ((TexFrameAnimatorState *)state)->basePosX = ((GameObject *)obj)->anim.localPosX;
-  ((TexFrameAnimatorState *)state)->basePosY = ((GameObject *)obj)->anim.localPosY;
-  ((TexFrameAnimatorState *)state)->basePosZ = ((GameObject *)obj)->anim.localPosZ;
-  ((TexFrameAnimatorState *)state)->unk36 = *(u8 *)(setup + 0x27);
-  ((TexFrameAnimatorState *)state)->unk3E = 0;
-  if (((TexFrameAnimatorState *)state)->unk14 != -1) {
-    ((TexFrameAnimatorState *)state)->unk1E = (u8)((u32)__cntlzw(GameBit_Get(((TexFrameAnimatorState *)state)->unk14)) >> 5);
+  ((CollectibleState *)state)->basePosX = ((GameObject *)obj)->anim.localPosX;
+  ((CollectibleState *)state)->basePosY = ((GameObject *)obj)->anim.localPosY;
+  ((CollectibleState *)state)->basePosZ = ((GameObject *)obj)->anim.localPosZ;
+  ((CollectibleState *)state)->unk36 = *(u8 *)(setup + 0x27);
+  ((CollectibleState *)state)->unk3E = 0;
+  if (((CollectibleState *)state)->unk14 != -1) {
+    ((CollectibleState *)state)->unk1E = (u8)((u32)__cntlzw(GameBit_Get(((CollectibleState *)state)->unk14)) >> 5);
   }
-  ((TexFrameAnimatorState *)state)->hideGameBit = *(s16 *)(setup + 0x1c);
-  if (((TexFrameAnimatorState *)state)->hideGameBit != -1) {
-    *(u32 *)&((GameObject *)obj)->unkF4 = GameBit_Get(((TexFrameAnimatorState *)state)->hideGameBit);
+  ((CollectibleState *)state)->hideGameBit = *(s16 *)(setup + 0x1c);
+  if (((CollectibleState *)state)->hideGameBit != -1) {
+    *(u32 *)&((GameObject *)obj)->unkF4 = GameBit_Get(((CollectibleState *)state)->hideGameBit);
   } else {
     *(u32 *)&((GameObject *)obj)->unkF4 = 0;
   }
   if (((GameObject *)obj)->unkF4 == 0) {
     data = *(u8 **)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
     if (data != 0) {
-      ((TexFrameAnimatorState *)state)->unk4 = (f32)*(s8 *)(data + 8);
+      ((CollectibleState *)state)->unk4 = (f32)*(s8 *)(data + 8);
     } else {
-      ((TexFrameAnimatorState *)state)->unk4 = lbl_803E3494;
+      ((CollectibleState *)state)->unk4 = lbl_803E3494;
     }
     data = *(u8 **)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x40);
     if (data != 0) {
-      ((TexFrameAnimatorState *)state)->unk4 = (f32)(s32)(*(u8 *)(data + 0xc) << 2);
+      ((CollectibleState *)state)->unk4 = (f32)(s32)(*(u8 *)(data + 0xc) << 2);
     }
     if (((((ObjAnimComponent *)obj)->modelInstance->flags & 0x10000) != 0) &&
-        (((TexFrameAnimatorState *)state)->unk36 != 0)) {
-      ((TexFrameAnimatorState *)state)->unk38 = *(u8 *)(setup + 0x28);
-      ((TexFrameAnimatorState *)state)->unk39 = *(u8 *)(setup + 0x29);
-      ((TexFrameAnimatorState *)state)->unk3A = *(u8 *)(setup + 0x2a);
+        (((CollectibleState *)state)->unk36 != 0)) {
+      ((CollectibleState *)state)->unk38 = *(u8 *)(setup + 0x28);
+      ((CollectibleState *)state)->unk39 = *(u8 *)(setup + 0x29);
+      ((CollectibleState *)state)->unk3A = *(u8 *)(setup + 0x2a);
     }
     switch (((GameObject *)obj)->anim.seqId) {
       case 0xb:
-        ((TexFrameAnimatorState *)state)->unk40 = lbl_803E345C;
-        ((TexFrameAnimatorState *)state)->unk44 = lbl_803E3498;
+        ((CollectibleState *)state)->unk40 = lbl_803E345C;
+        ((CollectibleState *)state)->unk44 = lbl_803E3498;
         break;
       case 0x3cd:
-        ((TexFrameAnimatorState *)state)->unk40 = lbl_803E349C;
-        ((TexFrameAnimatorState *)state)->unk44 = lbl_803E3498;
+        ((CollectibleState *)state)->unk40 = lbl_803E349C;
+        ((CollectibleState *)state)->unk44 = lbl_803E3498;
         break;
       default:
-        ((TexFrameAnimatorState *)state)->unk40 = lbl_803E34A0;
+        ((CollectibleState *)state)->unk40 = lbl_803E34A0;
         break;
     }
     (*(void (**)(u8 *,int,int,int))(*(int *)gPathControlInterface + 4))(state + 0x50,0,0x40006,1);
