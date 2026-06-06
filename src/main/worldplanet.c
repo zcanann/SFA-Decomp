@@ -477,8 +477,8 @@ void worldplanet_update(int obj) {
             case 1:
                 Pause_ResetMenuFrameCounter();
                 {
-                    int eq = !(lbl_803DDD00 != lbl_803E65F8);
-                    if (eq != 0) {
+                    int neq = lbl_803DDD00 != lbl_803E65F8;
+                    if (!neq) {
                         lbl_803DDD00 = lbl_803E6618;
                     }
                 }
