@@ -1796,7 +1796,7 @@ void vfpspellplace_update(int obj) {
     }
     objRenderFn_80041018((void *)obj);
     if (*(u8 *)(obj + 0xaf) & 1) {
-        mode = (*gMapEventInterface)->getMode((s8)*(u8 *)(obj + 0xac));
+        mode = (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
         switch (mode) {
             case 1:
                 st = *(s16 **)(obj + 0xb8);
