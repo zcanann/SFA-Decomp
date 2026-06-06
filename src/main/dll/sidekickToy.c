@@ -2257,7 +2257,7 @@ void sidekickToy_updateCurveTargetLatch(int obj) {
     }
     if ((u8)(*(u8(**)(u8*, int, f32, u8*, int))(*(int*)gRomCurveInterface + 0x8c))(
             *(u8**)state, obj, lbl_803E25DC, &lbl_803DBC58, -1) != 0) {
-        *(u32*)(state + 0x2dc) &= ~0x2000;
+        *(u32*)(state + 0x2dc) &= ~0x2000LL;
     } else {
         *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x2000;
     }
@@ -2292,7 +2292,7 @@ extern uint lbl_8031DC10[];
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_8014C11C(short *obj, u8 flags, int max, TrickyTargetRec *out, f32 radius)
+int fn_8014C11C(short *obj, f32 radius, u8 flags, int max, TrickyTargetRec *out)
 {
   int i;
   int n;

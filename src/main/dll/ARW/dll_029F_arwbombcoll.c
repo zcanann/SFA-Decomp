@@ -182,14 +182,15 @@ void arwbombcoll_update(int obj)
     int arw;
     int s;
     int a2;
+    f32 thr;
 
     arw = getArwing();
     s = *(int *)(obj + 0xb8);
     flags = (ArwBombFlags *)(s + 0x4);
 
-    if (*(f32 *)(s + 0x0) > lbl_803E707C) {
+    if (*(f32 *)(s + 0x0) > (thr = lbl_803E707C)) {
         *(f32 *)(s + 0x0) -= timeDelta;
-        if (*(f32 *)(s + 0x0) <= lbl_803E707C) {
+        if (*(f32 *)(s + 0x0) <= thr) {
             Obj_FreeObject(obj);
             return;
         }
@@ -219,11 +220,11 @@ active : {
         }
         *(u8 *)(obj + 0x36) = v;
         *(s16 *)(obj + 0x6) &= ~0x4000;
-        *(s16 *)(obj + 0x0) = (int)(lbl_803E7088 * timeDelta + (f32) * (s16 *)(obj + 0x0));
+        *(s16 *)(obj + 0x0) = lbl_803E7088 * timeDelta + (f32) * (s16 *)(obj + 0x0);
         ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);
         if (flags->b40 != 0) {
-            if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
-                (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == getArwing()) {
+            if ((u32)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
+                (u32)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (u32)getArwing()) {
                 arwarwing_addScore(arw, 0x19);
                 flags->b80 = 1;
                 *(s16 *)(obj + 0x6) |= 0x4000;
@@ -238,8 +239,8 @@ active : {
                 Obj_SetActiveModelIndex(obj, 1);
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
             }
-            if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
-                (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == getArwing()) {
+            if ((u32)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
+                (u32)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (u32)getArwing()) {
                 *(s16 *)(obj + 0x6) |= 0x4000;
                 ObjHits_DisableObject(obj);
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
@@ -254,6 +255,8 @@ active : {
             case 0x608:
                 Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesclose);
                 arwarwing_addBomb(arw);
+                break;
+            case 0x60a:
                 break;
             case 0x6d8:
                 Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
