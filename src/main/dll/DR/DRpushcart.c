@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/dll/DR/DRpushcart.h"
 
 
@@ -1135,11 +1136,12 @@ void shopitem_init(int obj, int data) {
     int state = *(int *)(obj + 0xB8);
     *(u16 *)(obj + 0xB0) |= 0x2000;
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E86F4;
-    *(s8 *)(obj + 0xAD) = (s8)*(s8 *)(data + 0x18);
+    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)*(s8 *)(data + 0x18);
     *(s16 *)obj = (s16)((*(u8 *)(data + 0x1A)) << 8);
     *(s16 *)(obj + 2) = (s16)((*(u8 *)(data + 0x1B)) << 8);
-    if ((s32)*(s8 *)(obj + 0xAD) >= (s32)*(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        *(s8 *)(obj + 0xAD) = 0;
+    if ((s32)*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
+        (s32)*(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
+        *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
     }
     switch (*(s16 *)(obj + 0x46)) {
     case 0x467:

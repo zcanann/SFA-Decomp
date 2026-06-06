@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
+#include "main/objanim_internal.h"
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
@@ -1115,7 +1116,9 @@ void dim2icefloe_init(int obj, int p)
     *(f32 *)(sub + 0xa4) = (f32)*(s16 *)(p + 0x1c) / lbl_803E4B48;
     *(f32 *)(sub + 0xa8) = (f32)(s32)randomGetRange(-0x1e, 0x1e);
     *(int *)(p + 0x14) = -1;
-    *(s8 *)(obj + 0xad) = (s8)randomGetRange(0, *(s8 *)(*(int *)(obj + 0x50) + 0x55) - 1);
+    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) =
+        (s8)randomGetRange(0, *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) +
+                                      offsetof(ObjModelInstance, modelCount)) - 1);
     *(s16 *)(obj + 0x0) = (s16)((s32)*(s8 *)(p + 0x18) << 8);
     *(s16 *)(obj + 0x0) = (s16)randomGetRange(0, 0xffff);
     *(u8 *)(obj + 0x36) = 0;

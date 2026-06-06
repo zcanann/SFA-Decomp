@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/screenOverlay.h"
+#include "main/objanim_internal.h"
 
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
@@ -182,10 +183,11 @@ void ProjectileSwitch_init(int obj, u8 *initData)
   }
   ObjHitbox_SetSphereRadius(
       obj, (short)(((int)initData[0x1d] * (int)*(u8 *)(*(int *)(obj + 0x50) + 0x62)) / 64));
-  *(s8 *)(obj + 0xad) = initData[0x1e] >> 2;
-  if ((int)(signed char)*(u8 *)(obj + 0xad) >=
-      (int)(signed char)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
-    *(u8 *)(obj + 0xad) = 0;
+  *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = initData[0x1e] >> 2;
+  if ((int)(signed char)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
+      (int)(signed char)*(u8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) +
+                                offsetof(ObjModelInstance, modelCount))) {
+    *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
   }
 
   linkObj = *(u8 **)(obj + 0x30);

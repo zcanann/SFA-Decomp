@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/alphaanim.h"
+#include "main/objanim_internal.h"
 
 
 #pragma peephole off
@@ -41,9 +42,11 @@ void doorlock_init(short *obj,int config)
   obj[1] = (short)((byte)*(byte *)(config + 0x19) << 8);
   obj[2] = (short)((byte)*(byte *)(config + 0x1a) << 8);
   *(code *)(obj + 0x5e) = Lock_DoorLock_SeqFn;
-  *(undefined *)((int)obj + 0xad) = *(undefined *)(config + 0x21);
-  if (!(*(char *)((int)obj + 0xad) < *(char *)(*(int *)(obj + 0x28) + 0x55))) {
-    *(undefined *)((int)obj + 0xad) = 0;
+  *(undefined *)((int)obj + offsetof(ObjAnimComponent, bankIndex)) = *(undefined *)(config + 0x21);
+  if (!(*(char *)((int)obj + offsetof(ObjAnimComponent, bankIndex)) <
+        *(char *)(*(int *)((int)obj + offsetof(ObjAnimComponent, modelInstance)) +
+                  offsetof(ObjModelInstance, modelCount)))) {
+    *(undefined *)((int)obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
   }
   state = *(byte **)(obj + 0x5c);
   *state = (byte)GameBit_Get((int)*(short *)(config + 0x1c));
@@ -603,9 +606,10 @@ void seqobject_init(int *obj, u8 *params) {
     sub = *(u8**)((char*)obj + 0xb8);
     *(s16*)obj = (s16)(params[0x1c] << 8);
     *(void**)((char*)obj + 0xbc) = (void*)&seqobject_SeqFn;
-    *(u8*)((char*)obj + 0xad) = params[0x1f];
-    if ((s8)*(u8*)((char*)obj + 0xad) >= *(s8*)(*(int*)((char*)obj + 0x50) + 0x55)) {
-        *(u8*)((char*)obj + 0xad) = 0;
+    *(u8*)((char*)obj + offsetof(ObjAnimComponent, bankIndex)) = params[0x1f];
+    if ((s8)*(u8*)((char*)obj + offsetof(ObjAnimComponent, bankIndex)) >=
+        *(s8*)(*(int*)((char*)obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
+        *(u8*)((char*)obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
     }
     ObjGroup_AddObject(obj, 0xf);
     sub[0] = 0;
@@ -632,9 +636,10 @@ void immultiseq_init(int *obj, u8 *params) {
     *(s16*)obj = (s16)(params[0x28] << 8);
     *(void**)((char*)obj + 0xbc) = (void*)&immultiseq_SeqFn;
     *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
-    *(s8*)((char*)obj + 0xad) = (s8)params[0x2a];
-    if (*(s8*)((char*)obj + 0xad) >= *(s8*)(*(int*)((char*)obj + 0x50) + 0x55)) {
-        *(u8*)((char*)obj + 0xad) = 0;
+    *(s8*)((char*)obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)params[0x2a];
+    if (*(s8*)((char*)obj + offsetof(ObjAnimComponent, bankIndex)) >=
+        *(s8*)(*(int*)((char*)obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
+        *(u8*)((char*)obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
     }
     ObjGroup_AddObject(obj, 0xf);
     i = 0;
