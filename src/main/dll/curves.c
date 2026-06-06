@@ -1183,7 +1183,7 @@ RomCurveDef *RomCurve_findByIdWithIndex(uint curveId,int *outIndex)
   }
   high = nRomCurves + -1;
   low = 0;
-  while (low <= high) {
+  while (high >= low) {
     mid = high + low >> 1;
     if (curveId > RomCurve_GetId(romCurves[mid])) {
       low = mid + 1;
