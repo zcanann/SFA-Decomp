@@ -1,4 +1,5 @@
 #include "main/objanim.h"
+#include "main/dll/baddie_state.h"
 #include "main/dll/moveLib.h"
 
 extern undefined4 FUN_80003494();
@@ -108,11 +109,11 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
 
     *(int *)(st + 0x318) = 0;
     *(int *)(st + 0x31c) = 0;
-    *(s16 *)(st + 0x330) = 0;
+    ((BaddieState *)st)->unk330 = 0;
     {
         f32 rest = lbl_803E1C2C;
-        *(f32 *)(st + 0x290) = rest;
-        *(f32 *)(st + 0x28c) = rest;
+        ((BaddieState *)st)->unk290 = rest;
+        ((BaddieState *)st)->unk28C = rest;
     }
     if ((s8)*(u8 *)(state + 0x56) != 1) {
         *(f32 *)(state + 0x40) = *(f32 *)(obj + 0xc);
@@ -176,8 +177,8 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
         } else {
             nx = nx / total;
             nz = nz / total;
-            *(f32 *)(st + 0x290) = -nx * step;
-            *(f32 *)(st + 0x28c) = nz * step;
+            ((BaddieState *)st)->unk290 = -nx * step;
+            ((BaddieState *)st)->unk28C = nz * step;
             *(f32 *)(obj + 0xc) = dist * nx + *(f32 *)(state + 0x40);
             *(f32 *)(obj + 0x14) = dist * nz + *(f32 *)(state + 0x48);
             td = timeDelta;
@@ -188,11 +189,11 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
     lbl_803DD5D8 = dist;
     if ((s8)*(u8 *)(state + 0x56) == 0) {
         *(u8 *)(st + 0x405) = 0;
-        *(s16 *)(st + 0x274) = p6;
+        ((BaddieState *)st)->controlMode = p6;
         *(int *)(st + 0x2d0) = 0;
         *(s16 *)(state + 0x6e) = -1;
         *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~0x60;
-        *(u8 *)(st + 0x25f) = 0;
+        ((BaddieState *)st)->unk25F = 0;
         GameBit_Set(*(s16 *)(st + 0x3f4), 0);
     }
     return 1;
@@ -894,7 +895,7 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     f32 vb;
     *(f32 *)(p3 + 0x18) = lbl_803E1CA0;
     vb = lbl_803E1C90;
-    *(f32 *)(p3 + 0x1c) = vb;
+    ((BaddieState *)p3)->posZ = vb;
     *(f32 *)(p3 + 0x20) = vb;
     *(f32 *)(p3 + 0x24) = vb;
     *(f32 *)(p3 + 0x28) = vb;
@@ -923,11 +924,11 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     *(f32 *)(p1 + 0x0c) = Curve_EvalHermite(buf, *(f32 *)p4, 0);
     buf[0] = *(f32 *)(p3 + 0x04);
     buf[1] = *(f32 *)(p3 + 0x10);
-    buf[2] = *(f32 *)(p3 + 0x1c);
+    buf[2] = ((BaddieState *)p3)->posZ;
     buf[3] = *(f32 *)(p3 + 0x28);
     *(f32 *)(p1 + 0x10) = Curve_EvalHermite(buf, *(f32 *)p4, 0);
     buf[0] = *(f32 *)(p3 + 0x08);
-    buf[1] = *(f32 *)(p3 + 0x14);
+    buf[1] = ((BaddieState *)p3)->posX;
     buf[2] = *(f32 *)(p3 + 0x20);
     buf[3] = *(f32 *)(p3 + 0x2c);
     *(f32 *)(p1 + 0x14) = Curve_EvalHermite(buf, *(f32 *)p4, 0);
@@ -1529,22 +1530,22 @@ void dll_19_func06(s16 *yaw, char *st, f32 cap, f32 speed)
     if (*(f32 *)(st + 0x298) < lbl_803E1C78) {
         f32 rest;
         *(s16 *)(st + 0x334) = 0;
-        *(s16 *)(st + 0x336) = 0;
+        ((BaddieState *)st)->unk336 = 0;
         rest = lbl_803E1C2C;
         *(f32 *)(st + 0x298) = rest;
-        *(f32 *)(st + 0x280) = rest;
+        ((BaddieState *)st)->animSpeedA = rest;
     }
-    *(f32 *)(st + 0x284) = lbl_803E1C2C;
-    *yaw = lbl_803E1C7C * ((f32)*(s16 *)(st + 0x336) * timeDelta / speed) + (f32)*yaw;
-    *(f32 *)(st + 0x294) +=
-        timeDelta * ((*(f32 *)(st + 0x298) - *(f32 *)(st + 0x294)) / *(f32 *)(st + 0x2b8));
-    *(f32 *)(st + 0x280) +=
-        timeDelta * ((*(f32 *)(st + 0x298) - *(f32 *)(st + 0x280)) / *(f32 *)(st + 0x2b8));
-    if (*(f32 *)(st + 0x294) > cap) {
-        *(f32 *)(st + 0x294) = cap;
+    ((BaddieState *)st)->animSpeedB = lbl_803E1C2C;
+    *yaw = lbl_803E1C7C * ((f32)((BaddieState *)st)->unk336 * timeDelta / speed) + (f32)*yaw;
+    ((BaddieState *)st)->unk294 +=
+        timeDelta * ((*(f32 *)(st + 0x298) - ((BaddieState *)st)->unk294) / *(f32 *)(st + 0x2b8));
+    ((BaddieState *)st)->animSpeedA +=
+        timeDelta * ((*(f32 *)(st + 0x298) - ((BaddieState *)st)->animSpeedA) / *(f32 *)(st + 0x2b8));
+    if (((BaddieState *)st)->unk294 > cap) {
+        ((BaddieState *)st)->unk294 = cap;
     }
-    if (*(f32 *)(st + 0x280) > cap) {
-        *(f32 *)(st + 0x280) = cap;
+    if (((BaddieState *)st)->animSpeedA > cap) {
+        ((BaddieState *)st)->animSpeedA = cap;
     }
 }
 #pragma peephole reset
