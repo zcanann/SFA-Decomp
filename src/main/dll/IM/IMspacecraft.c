@@ -159,7 +159,7 @@ void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling off
 #pragma peephole off
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
-    u8 *inner = *(u8 **)(obj + 0xb8);
+    u8 *inner = ((GameObject *)obj)->extra;
     if (visible != 0 && inner[ROLLINGBARREL_STATE_OFFSET] < ROLLINGBARREL_STATE_EXPLODED_WAIT) {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4474);
     }
@@ -191,7 +191,7 @@ void MMP_levelcontrol_free(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void RollingBarrel_free(int obj) {
-    char *inner = *(char **)(obj + 0xb8);
+    char *inner = ((GameObject *)obj)->extra;
     int count;
     int *arr = ObjGroup_GetObjects(ROLLINGBARREL_GROUP_ID, &count);
     int i;
@@ -214,7 +214,7 @@ void RollingBarrel_free(int obj) {
 #pragma peephole off
 void RollingBarrel_init(int obj, int *params)
 {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     int tmp[2];
 
     tmp[0] = lbl_803E4460;
@@ -245,7 +245,7 @@ void RollingBarrel_init(int obj, int *params)
 #pragma peephole off
 void SpiritDoorLock_init(int obj, int *params, int mode)
 {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     f32 mult;
 
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + SPIRITDOORLOCK_SETUP_YAW) << 8);
@@ -284,7 +284,7 @@ void SpiritDoorLock_update(int obj)
     ((int *)local_58)[1] = lbl_802C22F8[1];
     ((int *)local_58)[2] = lbl_802C22F8[2];
 
-    state = *(int **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     descriptor = *(int **)((char *)obj + 0x4c);
 
     player = Obj_GetPlayerObject();
@@ -399,7 +399,7 @@ void RollingBarrel_update(int obj)
     u32 r;
     u8 bVar1;
 
-    state = *(int **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     hitInfo = 0;
     descriptor = *(int **)((char *)obj + 0x4c);
     blocked = 0;
