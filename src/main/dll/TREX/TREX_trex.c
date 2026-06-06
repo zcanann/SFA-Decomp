@@ -2429,7 +2429,7 @@ extern void Obj_FreeObject(int obj);
 #pragma peephole off
 void SB_MiniFire_update(int obj)
 {
-    f32 buf[8];
+    f32 buf[6];
     f32 dx;
     f32 dy;
     f32 dz;
