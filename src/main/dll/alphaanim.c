@@ -1,4 +1,5 @@
 #include "main/dll/alphaanim.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
@@ -758,7 +759,7 @@ void fn_8017C294(int* obj)
 void seqobj2_init(int* obj, int* def)
 {
     int* state = ((GameObject *)obj)->extra;
-    OSReport(sSeqObjNeedBitUsedBitFormat, *(int*)((char*)def + 20), *(s16*)((char*)def + 26), *(s16*)((char*)def + 24));
+    OSReport(sSeqObjNeedBitUsedBitFormat, ((ObjPlacement *)def)->mapId, *(s16*)((char*)def + 26), *(s16*)((char*)def + 24));
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 28) << 8);
     ((GameObject *)obj)->unkBC = (void*)seqobj2_SeqFn;
     if (*(s16*)((char*)def + 32) > -1) {
@@ -912,13 +913,13 @@ void seqobj2_update(int *obj)
     if ((state[0] & SEQOBJECT_STATE_OPEN) != 0) {
         if ((def[0x1d] & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) != 0) {
             GameBit_Set(*(s16 *)(def + 0x1a), 0);
-            OSReport(descriptor + 0x94, *(int *)(def + 0x14));
+            OSReport(descriptor + 0x94, ((ObjPlacement *)def)->mapId);
         }
         if ((def[0x1d] & SEQOBJECT_FLAG_SET_SOURCE_ON_DONE) != 0) {
             GameBit_Set(*(s16 *)(def + 0x18), 1);
-            OSReport(descriptor + 0xd0, *(int *)(def + 0x14));
+            OSReport(descriptor + 0xd0, ((ObjPlacement *)def)->mapId);
         }
-        OSReport(descriptor + 0x108, *(int *)(def + 0x14),
+        OSReport(descriptor + 0x108, ((ObjPlacement *)def)->mapId,
                  *(u16 *)(def + 0x22));
         ((void (*)(int *, int))((int **)*gObjectTriggerInterface)[0x15])
             (obj, *(s16 *)(def + 0x20));
@@ -930,11 +931,11 @@ void seqobj2_update(int *obj)
     else if ((state[0] & SEQOBJECT_STATE_TRIGGER_SEQUENCE) != 0) {
         if ((def[0x1d] & SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE) != 0) {
             GameBit_Set(*(s16 *)(def + 0x1a), 0);
-            OSReport(descriptor + 0x140, *(int *)(def + 0x14));
+            OSReport(descriptor + 0x140, ((ObjPlacement *)def)->mapId);
         }
         if ((def[0x1d] & SEQOBJECT_FLAG_USE_TRIGGER_PARAM) != 0) {
             GameBit_Set(*(s16 *)(def + 0x18), 1);
-            OSReport(descriptor + 0x170, *(int *)(def + 0x14));
+            OSReport(descriptor + 0x170, ((ObjPlacement *)def)->mapId);
         }
         state[0] = (u8)(state[0] & ~SEQOBJECT_STATE_TRIGGER_SEQUENCE);
     }
@@ -943,13 +944,13 @@ void seqobj2_update(int *obj)
             (*(s16 *)(def + 0x18) == -1 || GameBit_Get(*(s16 *)(def + 0x18)) == 0)) {
             if ((def[0x1d] & SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE) != 0) {
                 GameBit_Set(*(s16 *)(def + 0x1a), 0);
-                OSReport(descriptor + 0x19c, *(int *)(def + 0x14));
+                OSReport(descriptor + 0x19c, ((ObjPlacement *)def)->mapId);
             }
             if ((def[0x1d] & SEQOBJECT_FLAG_UNUSED_20) != 0) {
                 GameBit_Set(*(s16 *)(def + 0x18), 1);
-                OSReport(descriptor + 0x1cc, *(int *)(def + 0x14));
+                OSReport(descriptor + 0x1cc, ((ObjPlacement *)def)->mapId);
             }
-            OSReport(descriptor + 0x1f8, *(int *)(def + 0x14));
+            OSReport(descriptor + 0x1f8, ((ObjPlacement *)def)->mapId);
             ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])
                 (*(s8 *)(def + 0x1e), obj, -1);
         }

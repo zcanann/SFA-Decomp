@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
@@ -1785,9 +1786,9 @@ void carryable_break_respawn_update(int obj) {
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             state->state = 2;
             state->timer = lbl_803E3B44;
-            ((GameObject *)obj)->anim.localPosX = *(f32 *)(def + 8);
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
-            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(def + 0x10);
+            ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)def)->posX;
+            ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
+            ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)def)->posZ;
             break;
         case 2:
             state->timer += timeDelta;
@@ -2748,11 +2749,11 @@ void Fall_Ladders_update(int obj) {
         if ((s8)state->motionState == 0 && GameBit_Get(state->upperGameBit) != 0) {
             state->delay = 10;
         }
-        if ((s8)state->motionState == 1 && ((GameObject *)obj)->anim.localPosY >= *(f32 *)(def + 0xc)) {
+        if ((s8)state->motionState == 1 && ((GameObject *)obj)->anim.localPosY >= ((ObjPlacement *)def)->posY) {
             ((GameObject *)obj)->anim.velocityY -= lbl_803E3B50;
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
-            if (((GameObject *)obj)->anim.localPosY <= *(f32 *)(def + 0xc)) {
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
+            if (((GameObject *)obj)->anim.localPosY <= ((ObjPlacement *)def)->posY) {
+                ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
                 ((GameObject *)obj)->anim.velocityY = lbl_803E3B54 * -((GameObject *)obj)->anim.velocityY;
                 speed = ((GameObject *)obj)->anim.velocityY;
                 if (speed < lbl_803E3B58) {
@@ -2778,7 +2779,7 @@ void Fall_Ladders_init(int *obj, s8 *def) {
     *(f32 *)state = (f32)(s32)*(s16 *)((char *)def + 0x1a);
     ((GameObject *)obj)->unkB0 |= 0x6000;
     *(int *)&((GameObject *)obj)->unkBC = (int)Fall_Ladders_SeqFn;
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)def + 0xc) + *(f32 *)state;
+    ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY + *(f32 *)state;
     Obj_SetActiveModelIndex(obj, (s32)*(s8 *)((char *)def + 0x19));
     *(u8 *)((char *)state + 8) = 0;
     if (GameBit_Get(state[3]) == 0) {

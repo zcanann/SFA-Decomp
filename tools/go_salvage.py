@@ -88,6 +88,13 @@ def build(obj):
 def main():
     f = sys.argv[1]
     rest = sys.argv[2:]
+    # --struct <header.h> <StructName>: salvage a per-class struct conversion
+    # (deref_convert_struct) instead of the default GameObject conversion.
+    struct = None
+    if '--struct' in rest:
+        i = rest.index('--struct')
+        struct = (rest[i+1], rest[i+2])  # (header, name)
+        rest = rest[:i] + rest[i+3:]
     obj = 'build/GSAE01/src/' + f[len('src/'):]
     obj = obj[:-2] + '.o'
     orig = '/tmp/' + os.path.basename(f) + '.salvorig'
@@ -97,11 +104,20 @@ def main():
     shutil.copy(f, orig)
 
     # full convert
-    subprocess.run(['python3', 'tools/deref_convert_gameobject.py', f] + rest)
-    if 'game_object.h' not in open(f, encoding='latin-1').read():
-        s = open(f, encoding='latin-1').read().split('\n')
-        s.insert(1, '#include "main/game_object.h"')
-        open(f, 'w', encoding='latin-1', newline='').write('\n'.join(s))
+    if struct:
+        header, sname = struct
+        subprocess.run(['python3', 'tools/deref_convert_struct.py', f, header, sname] + rest)
+        inc = header[len('include/'):] if header.startswith('include/') else header
+        if inc not in open(f, encoding='latin-1').read():
+            s = open(f, encoding='latin-1').read().split('\n')
+            s.insert(1, '#include "%s"' % inc)
+            open(f, 'w', encoding='latin-1', newline='').write('\n'.join(s))
+    else:
+        subprocess.run(['python3', 'tools/deref_convert_gameobject.py', f] + rest)
+        if 'game_object.h' not in open(f, encoding='latin-1').read():
+            s = open(f, encoding='latin-1').read().split('\n')
+            s.insert(1, '#include "main/game_object.h"')
+            open(f, 'w', encoding='latin-1', newline='').write('\n'.join(s))
 
     orig_lines = open(orig, encoding='latin-1').read().split('\n')
     funcs = {name: (a, b) for name, a, b in find_funcs(orig_lines)}
