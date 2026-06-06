@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/DR/cannontargetControl.h"
 #include "main/objhits_types.h"
 

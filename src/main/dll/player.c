@@ -1,6 +1,5 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/DB/DBbonedust.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/unknown/autos/placeholder_80295318.h"

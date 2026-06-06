@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/cannonball.h"
 
 #pragma peephole off

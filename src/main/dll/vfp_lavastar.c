@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/dll/DIM/DIMbossspit.h"
 
 extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);

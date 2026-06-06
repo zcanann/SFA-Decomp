@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/DR/DRhightop.h"

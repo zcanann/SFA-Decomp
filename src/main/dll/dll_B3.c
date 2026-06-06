@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/dll_B3.h"
 
 extern u8 *ObjModel_GetRenderOp(int model, int idx);

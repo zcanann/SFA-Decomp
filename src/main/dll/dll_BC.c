@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/dll_BC.h"
 #include "main/dll/CAM/camcontrol.h"
 

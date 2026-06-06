@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/CF/CFcrystal.h"
 
 extern undefined4 FUN_800068c4();

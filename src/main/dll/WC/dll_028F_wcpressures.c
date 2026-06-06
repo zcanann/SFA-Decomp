@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 
 #include "main/audio/sfx_ids.h"
-#include "main/objanim_internal.h"
 
 #define WCPRESSURES_OBJECT_DEF_ID 0x0128
 #define WCPRESSURES_DLL_ID 0x028f

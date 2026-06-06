@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/WC/WCpressureSwitch.h"
 #include "main/mapEventTypes.h"
 #include "main/objlib.h"

@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/babycloudrunner.h"
 
 extern void objRenderFn_80041018(void);

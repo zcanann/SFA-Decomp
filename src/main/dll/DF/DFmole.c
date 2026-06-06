@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/DF/DFmole.h"
 #include "main/objlib.h"
 

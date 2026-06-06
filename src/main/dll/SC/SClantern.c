@@ -1,5 +1,4 @@
 #include "main/dll/SC/SClantern.h"
-#include "main/objanim.h"
 #include "main/objanim_internal.h"
 
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);

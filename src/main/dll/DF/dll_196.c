@@ -1,7 +1,4 @@
-#include "ghidra_import.h"
-#include "main/dll/DF/DFbarrel.h"
 #include "main/dll/DF/dll_196.h"
-#include "main/dll/DF/dfropenode.h"
 
 extern int getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);

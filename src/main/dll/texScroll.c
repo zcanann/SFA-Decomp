@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/texScroll.h"
 
 extern void GameBit_Set(int eventId,int value);

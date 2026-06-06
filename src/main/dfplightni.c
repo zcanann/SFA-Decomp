@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dfplightni.h"
 
 extern int Sfx_PlayFromObjectLimited(u8 *obj,int sfxId,int maxCount);

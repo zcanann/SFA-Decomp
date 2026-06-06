@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"

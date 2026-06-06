@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/SC/SClevelcontrol.h"
 
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 *z,int param_6);

@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/brokecannon.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/dll/SH/SHthorntail_internal.h"

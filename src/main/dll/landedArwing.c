@@ -1,7 +1,5 @@
-#include "ghidra_import.h"
 #include "main/dll/landedArwing.h"
 #include "main/objanim.h"
-#include "main/objhits.h"
 #include "main/objlib.h"
 
 extern void *Obj_GetPlayerObject(void);

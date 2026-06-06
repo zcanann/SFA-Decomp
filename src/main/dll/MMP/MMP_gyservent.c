@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/MMP/MMP_gyservent.h"
 
 #pragma peephole off

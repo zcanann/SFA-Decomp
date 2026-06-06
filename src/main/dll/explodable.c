@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/explodable.h"
 
 extern u8 Obj_IsLoadingLocked(void);

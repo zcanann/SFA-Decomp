@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/dll_B6.h"
 #include "main/objlib.h"
 

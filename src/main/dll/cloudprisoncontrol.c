@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/cloudprisoncontrol.h"
 
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);

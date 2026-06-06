@@ -1,7 +1,5 @@
-#include "ghidra_import.h"
 #include "dolphin/os.h"
 #include "main/dll/CF/laser.h"
-#include "main/object_descriptor.h"
 #include "main/textblock.h"
 
 int laser_getExtraSize(void)

@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/debug/prof.h"
 
 extern undefined4 saveFileStruct_isCheatActive();

@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/dll_4A.h"
 
 #define ENTER_SAVE_NAME_CHAR_COUNT 40

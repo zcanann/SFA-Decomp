@@ -1,5 +1,4 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/objanim_internal.h"
 
 #define WCTEMPLEBRI_EXTRA_SIZE 0x68
 #define WCTEMPLEBRI_RENDER_TYPE_BASE 0x400

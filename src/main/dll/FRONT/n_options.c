@@ -1,9 +1,6 @@
-#include "ghidra_import.h"
 #include "dolphin/ai.h"
 #include "dolphin/os.h"
-#include "dolphin/os/OSCache.h"
 #include "dolphin/vi.h"
-#include "dolphin/vi/vifuncs.h"
 #include "main/dll/FRONT/attract_movie.h"
 #include "main/dll/FRONT/n_options.h"
 

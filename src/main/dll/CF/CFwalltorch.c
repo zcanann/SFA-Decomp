@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/CF/CFwalltorch.h"
 #include "main/mapEventTypes.h"
 

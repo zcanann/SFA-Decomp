@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/dll/fire.h"
-#include "main/object_descriptor.h"
 
 extern undefined4 FUN_800178b8();
 extern undefined8 FUN_80286840();

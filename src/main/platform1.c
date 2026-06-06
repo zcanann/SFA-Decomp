@@ -1,7 +1,5 @@
-#include "ghidra_import.h"
 #include "dolphin/os.h"
 #include "main/dll/VF/platform1.h"
-#include "main/object_descriptor.h"
 
 int platform1_getExtraSize(void)
 {

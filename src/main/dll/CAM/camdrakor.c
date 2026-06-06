@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/dll/CAM/camdrakor.h"
-#include "main/dll/CAM/dll_60.h"
 
 
 #pragma peephole off

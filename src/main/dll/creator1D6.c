@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/creator1D6.h"
 #include "main/mapEventTypes.h"
 

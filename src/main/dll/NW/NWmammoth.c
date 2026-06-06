@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/dll/NW/NWmammoth.h"
-#include "main/objanim.h"
 #include "main/objanim_internal.h"
 
 

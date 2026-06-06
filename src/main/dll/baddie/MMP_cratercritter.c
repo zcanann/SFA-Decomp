@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/baddie/MMP_cratercritter.h"
 
 extern f32 lbl_803E23DC;

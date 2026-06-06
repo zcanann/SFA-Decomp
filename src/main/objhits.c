@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/objhits.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"

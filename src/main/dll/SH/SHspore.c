@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/dll/SH/SHspore.h"
 #include "main/objanim.h"

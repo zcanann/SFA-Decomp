@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 extern uint GameBit_Get(int bit);

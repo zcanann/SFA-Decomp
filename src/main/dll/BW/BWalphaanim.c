@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/curves.h"
 

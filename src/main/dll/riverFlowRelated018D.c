@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 
 extern int GameBit_Get(int eventId);

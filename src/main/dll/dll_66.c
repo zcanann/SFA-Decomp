@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/dll_66.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1

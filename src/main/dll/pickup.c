@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/pickup.h"
 
 extern undefined4 FUN_80286838();

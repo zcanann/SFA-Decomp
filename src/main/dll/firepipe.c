@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
-#include "global.h"
 #include "main/dll/firepipe.h"
 #include "string.h"
 

@@ -1,7 +1,4 @@
-#include "ghidra_import.h"
-#include "main/objHitReact.h"
 #include "main/objanim_internal.h"
-#include "main/objhits.h"
 #include "main/objlib.h"
 
 

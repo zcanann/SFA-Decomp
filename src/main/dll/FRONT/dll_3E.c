@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "dolphin/os.h"
 #include "dolphin/vi/vifuncs.h"
 #include "main/dll/FRONT/attract_movie.h"

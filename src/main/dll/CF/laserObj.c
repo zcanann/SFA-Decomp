@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/dll/CF/laser.h"
-#include "main/object_descriptor.h"
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);

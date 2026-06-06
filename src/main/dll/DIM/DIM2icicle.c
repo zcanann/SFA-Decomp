@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/objhits_types.h"
 

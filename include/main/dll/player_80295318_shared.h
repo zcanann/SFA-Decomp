@@ -229,7 +229,6 @@ extern undefined4 FUN_8016d9a4();
 extern undefined4 FUN_8016e5b0();
 extern undefined4 FUN_8016e658();
 extern undefined8 FUN_80170048();
-extern undefined4 FUN_801829e4();
 extern undefined4 FUN_8018a060();
 extern byte FUN_8018a0d0();
 extern int FUN_801e1ee4();

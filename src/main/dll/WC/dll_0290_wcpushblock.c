@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
 
 #define WCPUSHBLOCK_EXTRA_SIZE 0x288
 #define WCPUSHBLOCK_RENDER_TYPE_BASE 0x400

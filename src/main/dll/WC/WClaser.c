@@ -1,5 +1,3 @@
-#include "global.h"
-#include "ghidra_import.h"
 #include "main/dll/WC/WClaser.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"

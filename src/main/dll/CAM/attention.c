@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/CAM/attention.h"
 
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,

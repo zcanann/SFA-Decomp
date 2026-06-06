@@ -1,8 +1,4 @@
-#include "ghidra_import.h"
 #include "main/dll/FRONT/dll_44.h"
-#include "dolphin/dvd.h"
-#include "dolphin/thp/THPFile.h"
-#include "dolphin/thp/THPInfo.h"
 
 extern void DCInvalidateRange(void *start, u32 nBytes);
 

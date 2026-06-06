@@ -1,6 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
 
 #pragma peephole on
 #pragma scheduling on

@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/tesla.h"
 
 #define TRICKY_CURVE_GAMEBIT_HIT 0x468

@@ -1,8 +1,6 @@
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "dolphin/os.h"
 #include "main/dll/CAM/camcontrol.h"
-#include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "string.h"
 

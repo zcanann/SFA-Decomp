@@ -1,5 +1,4 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/objanim_internal.h"
 
 #define WCAPERTURES_EXTRA_SIZE 8
 #define WCAPERTURES_RENDER_TYPE_BASE 0x400

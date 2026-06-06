@@ -106,8 +106,8 @@ void dll_19B_update(int obj)
         }
     }
     GameBit_Set(0x127, 1);
-    if (st[3] != 0) {
-        st[2] = st[2] + st[3];
+    if ((v = st[3]) != 0) {
+        st[2] = st[2] + v;
         if (st[2] <= 12) {
             st[2] = 12;
             st[3] = 0;
@@ -117,8 +117,8 @@ void dll_19B_update(int obj)
         }
         (*(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(2, st[2] & 0xff);
     }
-    if (st[5] != 0) {
-        st[4] = st[4] + st[5];
+    if ((v = st[5]) != 0) {
+        st[4] = st[4] + v;
         if (st[4] <= 1 && st[5] <= 0) {
             st[4] = 1;
             st[5] = 0;
@@ -140,7 +140,7 @@ void dll_19B_update(int obj)
         }
     } else {
         near = ObjGroup_FindNearestObject(0xe, player, &dist);
-        if (near != 0 && dist < lbl_803E5190 && dist > lbl_803E5194) {
+        if ((u32)near != 0 && dist < lbl_803E5190 && dist > lbl_803E5194) {
             dy = *(f32 *)(near + 0x14) - *(f32 *)(player + 0x14);
             if (dy <= lbl_803E5198) {
                 if (dy < lbl_803E5198) {
@@ -154,7 +154,7 @@ void dll_19B_update(int obj)
                     v = 1;
                 }
                 (*(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(3, v & 0xff);
-                v = (int)((f32)st[2] * ((lbl_803E51A0 - (dy - lbl_803E5194)) / lbl_803E51A0));
+                v = (int)((f32)st[2] * ((lbl_803E51A0 - (dy - lbl_803E5194)) / *(f32 *)&lbl_803E51A0));
                 if ((s16)v < 1) {
                     v = 1;
                 }
@@ -565,7 +565,7 @@ void dll_19D_update(int obj)
         *(s16 *)(self + 0x4) = (s16)(*(s16 *)(self + 0x4) + *(s16 *)(state + 0x2c) * (u16)framesThisStep);
         (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29d, vec, 4, -1, 0);
 
-        if ((*(s16 *)(state + 0x30) -= (u16)framesThisStep) <= 0) {
+        if ((s16)(*(u16 *)(state + 0x30) -= (u16)framesThisStep) <= 0) {
             (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29e, vec, 4, -1, 0);
             (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29f, vec, 4, -1, 0);
             (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a1, vec, 4, -1, 0);

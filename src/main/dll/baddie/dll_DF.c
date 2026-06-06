@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/baddie/dll_DF.h"
 
 #pragma peephole off
