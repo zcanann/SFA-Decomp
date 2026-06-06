@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
 """Compare two .o files: PASS if byte-identical everywhere except that
 local @NNN symbol name strings in .strtab may differ in their digits.
-Usage: check_o.py baseline.o new.o   -> exit 0 PASS / 1 FAIL"""
-import sys, re, struct
+
+Usage: check_o.py baseline.o current.o [--rebuild [ninja-root]]
+
+--rebuild closes the stale-.o false-PASS hole (a failed compile leaves
+the previous .o on disk, which then md5-matches the baseline): the tool
+DELETES current.o, runs `ninja <current.o>` from ninja-root (default:
+cwd), and FAILS LOUDLY if the build errors or the .o does not reappear -
+only then does it compare. Always use --rebuild when gating a fresh
+edit; the bare 2-arg form is for comparing already-verified artifacts.
+exit 0 PASS / 1 FAIL"""
+import sys, re, struct, os, subprocess
 
 def sections(path):
     d = open(path, 'rb').read()
@@ -33,7 +42,25 @@ def sections(path):
         out['__symbols__'] = syms
     return out
 
-a, b = sections(sys.argv[1]), sections(sys.argv[2])
+base_p, cur_p = sys.argv[1], sys.argv[2]
+if '--rebuild' in sys.argv:
+    i = sys.argv.index('--rebuild')
+    root = sys.argv[i+1] if len(sys.argv) > i+1 else os.getcwd()
+    rel = os.path.relpath(cur_p, root)
+    if os.path.exists(cur_p):
+        os.unlink(cur_p)
+    r = subprocess.run(['ninja', rel], cwd=root, capture_output=True, text=True, timeout=600)
+    out = r.stdout + r.stderr
+    if r.returncode != 0 or 'FAILED' in out or 'Error' in out:
+        print('FAIL: rebuild of %s errored (exit %d)' % (rel, r.returncode))
+        for ln in out.splitlines():
+            if 'FAILED' in ln or 'Error' in ln or 'error' in ln:
+                print('  ' + ln.strip())
+        sys.exit(1)
+    if not os.path.exists(cur_p):
+        print('FAIL: %s missing after rebuild - build did not produce it' % cur_p)
+        sys.exit(1)
+a, b = sections(base_p), sections(cur_p)
 if set(a) != set(b):
     print('FAIL: section sets differ'); sys.exit(1)
 ok = True
