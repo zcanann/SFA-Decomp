@@ -718,7 +718,7 @@ void dll_97_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
 void dll_98_func03(int param_1,int param_2,int param_3,uint param_4,int param_5,int param_6)
 {
   GfxBuf buf;
-  u8 *base = lbl_803178B0;
+  u8 *base = (u8 *)(int)lbl_803178B0;
   GfxCmd *e;
 
   *(s16 *)(base + 0x216) = randomGetRange(0, 0x1e) + 0x1e;
