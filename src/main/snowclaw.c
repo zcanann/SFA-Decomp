@@ -323,14 +323,17 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
         *(f32 *)((char *)inner + 0xac) = lbl_803E66F0;
     }
     found = 0;
-    if (*(s8 *)((char *)inner + 0xa4) >= 0 && sub != 0) {
+    if (*(s8 *)((char *)inner + 0xa4) >= 0 && (u32)sub != 0) {
         if ((*(int (*)(int))(*(int *)(*(int *)(*(int *)(sub + 0x68)) + 0x38)))(sub) == 2) {
             found = 1;
         }
     }
     if (found != 0) {
         *(s16 *)((char *)obj + 6) |= 8;
-        vis = (s8)objUpdateOpacity(sub);
+        {
+            extern s8 objUpdateOpacity(int);
+            vis = objUpdateOpacity(sub);
+        }
         snowclaw_syncMountTransform(obj, sub, p2, p3, p4, p5, vis, *(u8 *)((char *)inner + 0xa0), 1);
     } else {
         *(s16 *)((char *)obj + 6) &= ~8;
