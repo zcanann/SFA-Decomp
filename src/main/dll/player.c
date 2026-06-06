@@ -5251,7 +5251,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         }
     }
     ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 0xb;
-    ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId =
+    *(u8 *)&((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId =
         ((u8 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0x14];
     {
         int slot = *(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0;

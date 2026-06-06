@@ -315,7 +315,7 @@ void wmwallcrawler_update(s16 *obj)
                                 }
                                 if (dist < lbl_803E5FF8 ||
                                     ((*(u16 *)(st + 0x294) & 0x10) != 0 &&
-                                     ((*(ObjHitsPriorityState **)((u8 *)obj + 0x54))->flags & 8) != 0 &&
+                                     (*(u16 *)&(*(ObjHitsPriorityState **)((u8 *)obj + 0x54))->flags & 8) != 0 &&
                                      dist < lbl_803E5FFC)) {
                                     lbl_803DDCB8 += 1;
                                     if (obj[0x50] == 2 && *(f32 *)(obj + 0x4c) > lbl_803E6000 && *(f32 *)(obj + 0x4c) < lbl_803E6004) {

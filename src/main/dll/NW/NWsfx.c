@@ -320,9 +320,8 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E52B0, 0);
     }
 
-    if (ObjAnim_AdvanceCurrentMove(lbl_80326BE8[state[0x136]], timeDelta, (int)obj,
-                                   (ObjAnimEventList *)animOut) !=
-        0) {
+    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+            (int)obj, lbl_80326BE8[state[0x136]], timeDelta, (ObjAnimEventList *)animOut) != 0) {
         state[0x137] |= 1;
     } else {
         state[0x137] &= ~1;
