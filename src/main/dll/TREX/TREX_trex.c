@@ -2,7 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
-#include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
 /*
@@ -690,7 +690,7 @@ void FUN_801e4d6c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     *(undefined4 *)(*(int *)(param_9 + 0x2a) + 0x48) = 0x10;
     *(undefined4 *)(*(int *)(param_9 + 0x2a) + 0x4c) = 0x10;
     *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) = *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) | 1;
-    if ((*(char *)(*(int *)(param_9 + 0x2a) + 0xad) != '\0') && (pfVar3[8] == lbl_803E6584)) {
+    if ((((ObjAnimComponent *)*(int *)(param_9 + 0x2a))->bankIndex != 0) && (pfVar3[8] == lbl_803E6584)) {
       FUN_80081114(param_9,2);
       pfVar3[8] = lbl_803E6588;
       *(undefined *)(param_9 + 0x1b) = 0;
@@ -2534,7 +2534,7 @@ void SB_SeqDoor_init(int* obj, int* def)
     *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
     {
         s8 b = *(s8*)((char*)def + 25);
-        *(s8*)((char*)obj + 0xad) = (s8)(((u32)-b | (u32)b) >> 31);
+        ((ObjAnimComponent *)obj)->bankIndex = (s8)(((u32)-b | (u32)b) >> 31);
     }
 }
 #pragma peephole reset
