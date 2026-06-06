@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIM2conveyor.h"
+#include "main/objanim_internal.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -41,7 +42,7 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
             dimlavasmash_setBlockSurfaceFlags(block, 0, *(u8 *)(inner + 1) + 1);
         }
     }
-    *(s8 *)((char *)obj + 0xad) = def[0x19];
+    *(s8 *)((char *)obj + offsetof(ObjAnimComponent, bankIndex)) = def[0x19];
     {
         s16 *p = *(s16 **)((char *)obj + 0x54);
         p[0x30] = (s16)(p[0x30] & ~1);

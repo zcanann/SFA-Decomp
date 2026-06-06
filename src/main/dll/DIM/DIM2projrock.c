@@ -496,8 +496,9 @@ void FUN_801b972c(undefined2 *param_1,int param_2)
   *(float *)(iVar3 + 0xa8) =
        (f32)(s32)(uVar2);
   *(undefined4 *)(param_2 + 0x14) = 0xffffffff;
-  uVar2 = randomGetRange(0,(int)*(char *)(*(int *)(param_1 + 0x28) + 0x55) - 1);
-  *(char *)((int)param_1 + 0xad) = (char)uVar2;
+  uVar2 = randomGetRange(0,(int)*(char *)(*(int *)((int)param_1 + offsetof(ObjAnimComponent, modelInstance)) +
+                                           offsetof(ObjModelInstance, modelCount)) - 1);
+  *(char *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) = (char)uVar2;
   *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
   uVar2 = randomGetRange(0,0xffff);
   *param_1 = (short)uVar2;

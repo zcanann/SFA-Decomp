@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "main/objanim_internal.h"
 
 extern undefined4 FUN_800068c4();
 extern uint GameBit_Get(int eventId);
@@ -976,7 +977,7 @@ void FUN_80195b9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   if ((bVar1 & 2) == 0) {
     iVar8 = *(int *)(param_9 + 0x26);
     if ((bVar1 & 1) == 0) {
-      if (*(char *)((int)param_9 + 0xad) == '\0') {
+      if (*(char *)((int)param_9 + offsetof(ObjAnimComponent, bankIndex)) == '\0') {
         uVar6 = GameBit_Get((int)*(short *)(iVar8 + 0x40));
         if ((uVar6 != 0) || (*(short *)(iVar8 + 0x40) == -1)) {
           *(byte *)(iVar9 + 0x29e) = *(byte *)(iVar9 + 0x29e) | 1;
@@ -1179,7 +1180,7 @@ void FUN_80196244(undefined2 *param_1,int param_2)
   undefined local_18 [12];
   
   local_18[0] = 5;
-  *(undefined *)((int)param_1 + 0xad) = *(undefined *)(param_2 + 0x18);
+  *(undefined *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) = *(undefined *)(param_2 + 0x18);
   fVar1 = lbl_803E4CCC;
   iVar4 = *(int *)(param_1 + 0x5c);
   *(float *)(iVar4 + 0x26c) = lbl_803E4CCC;

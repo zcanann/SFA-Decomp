@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/DB/DBbonedust.h"
 #include "main/dll/DB/DBstealerworm.h"
@@ -541,7 +542,7 @@ void SB_Propeller_update(int obj) {
             }
             *pf = (f32)(int)randomGetRange(0x5a, 0xf0);
         }
-        if ((2 < camA) && (*(s8 *)(obj + 0xad) == 1)) {
+        if ((2 < camA) && (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 1)) {
             stk.a = lbl_803E5818;
             stk.mode = 0xc0a;
             ObjPath_GetPointWorldPosition(obj, 0, &stk.b, &stk.c, &stk.d, 0);
@@ -624,7 +625,7 @@ void SB_Propeller_init(int param_1,int param_2)
   pfVar2[1] = lbl_803E64A8;
   *(int *)(pfVar2 + 2) = 1200;
   *(undefined *)(pfVar2 + 3) = 4;
-  *(char *)(param_1 + 0xad) = (char)*(s16 *)(param_2 + 0x1a);
+  *(char *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) = (char)*(s16 *)(param_2 + 0x1a);
   if (*(short *)(param_1 + 0x46) != 0x69c) {
     DAT_803de8c0 = param_1;
   }

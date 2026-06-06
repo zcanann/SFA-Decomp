@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/dll/DR/DRsimplehuman.h"
 
 extern undefined4 FUN_8000680c();
@@ -295,7 +296,7 @@ void FUN_801e9690(short *param_1,int param_2)
   local_28 = 0x43300000;
   dVar5 = (double)FUN_80294964();
   *(float *)(param_1 + 0x16) = (float)-dVar5;
-  *(char *)((int)param_1 + 0xad) = '\x01' - *(char *)(param_2 + 0x19);
+  *(char *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) = '\x01' - *(char *)(param_2 + 0x19);
   uStack_1c = (int)*(short *)(param_2 + 0x1a) ^ 0x80000000;
   local_20 = 0x43300000;
   *pfVar4 = (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6730);
