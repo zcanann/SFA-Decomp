@@ -147,10 +147,10 @@ typedef struct TrickyState {
     u8 voxBlocks[9][0x30]; /* trickyVoxAllocFn_8004b5d4 records, 0x538..0x6E8 */
     void *unk6E8; /* one u32-spelled site launders */
     int unk6EC;
-    int unk6F0;
-    f32 unk6F4;
-    u8 pad6F8[4];
-    f32 unk6FC;
+    f32 *previousPathPoint;
+    f32 previousPathX;
+    f32 previousPathY;
+    f32 previousPathZ;
     u8 *unk700;
     u8 *unk704;
     u8 *unk708;
@@ -207,5 +207,6 @@ STATIC_ASSERT(offsetof(TrickyState, unk54) == 0x54);
 STATIC_ASSERT(offsetof(TrickyState, pathRotY) == 0x290);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
+STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
 
 #endif /* MAIN_DLL_TRICKY_STATE_H_ */

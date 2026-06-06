@@ -1306,6 +1306,7 @@ void Tricky_update(int obj)
   int p;
   int cmd;
   int st;
+  TrickyState *stState;
   bool playing;
   int i;
   int setup;
@@ -1742,12 +1743,13 @@ void Tricky_update(int obj)
   }
   objAnimFn_80038f38(obj,state + 0x3a8);
   st = *(int *)(obj + 0xb8);
-  p = *(int *)(st + 0x28);
-  *(int *)(st + 0x6f0) = p;
-  if (*(int *)(st + 0x6f0) != 0) {
-    *(f32 *)(st + 0x6f4) = *(f32 *)p;
-    *(f32 *)(st + 0x6f8) = *(f32 *)(p + 4);
-    *(f32 *)(st + 0x6fc) = *(f32 *)(p + 8);
+  stState = (TrickyState *)st;
+  p = (int)stState->unk28;
+  stState->previousPathPoint = (f32 *)p;
+  if (stState->previousPathPoint != NULL) {
+    stState->previousPathX = *(f32 *)p;
+    stState->previousPathY = *(f32 *)(p + 4);
+    stState->previousPathZ = *(f32 *)(p + 8);
   }
   ((TrickyState *)state)->unk10 = ((TrickyState *)state)->unk14;
   i = ((TrickyState *)state)->unk798 - 1;
@@ -1897,7 +1899,7 @@ void Tricky_init(int obj)
   ((TrickyState *)state)->playerObj = Obj_GetPlayerObject();
   ((TrickyState *)state)->unk08 = 0;
   ((TrickyState *)state)->unk0B = 0;
-  ((TrickyState *)state)->unk6F0 = 0;
+  ((TrickyState *)state)->previousPathPoint = NULL;
   ((TrickyState *)state)->unkD0 = 0;
   ((TrickyState *)state)->homePosX = *(f32 *)(obj + 0x18);
   ((TrickyState *)state)->homePosY = *(f32 *)(obj + 0x1c);

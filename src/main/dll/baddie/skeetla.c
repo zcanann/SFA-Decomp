@@ -334,17 +334,17 @@ static int skeetla_isInWater(u8 *state)
 
 static f32 skeetla_pathSpeedDelta(u8 *obj)
 {
-    u8 *state = ((GameObject *)obj)->extra;
+    TrickyState *state = (TrickyState *)((GameObject *)obj)->extra;
     f32 *currentPathPoint;
     f32 dx;
     f32 dz;
     f32 previousSpeed;
     f32 currentSpeed;
 
-    currentPathPoint = *(f32 **)(state + 0x28);
-    if (currentPathPoint == *(f32 **)(state + 0x6f0)) {
-        dx = *(f32 *)(state + 0x6f4) - ((GameObject *)obj)->anim.worldPosX;
-        dz = *(f32 *)(state + 0x6fc) - ((GameObject *)obj)->anim.worldPosZ;
+    currentPathPoint = (f32 *)state->unk28;
+    if (currentPathPoint == state->previousPathPoint) {
+        dx = state->previousPathX - ((GameObject *)obj)->anim.worldPosX;
+        dz = state->previousPathZ - ((GameObject *)obj)->anim.worldPosZ;
         previousSpeed = oneOverTimeDelta * sqrtf((dx * dx) + (dz * dz));
 
         dx = currentPathPoint[0] - ((GameObject *)obj)->anim.worldPosX;
