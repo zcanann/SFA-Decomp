@@ -534,6 +534,7 @@ void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordI
 {
   ObjAnimBank *bank;
   ObjAnimState *state;
+  u16 *stateWords;
   u16 stateWord;
 
   bank = ObjAnim_GetActiveBank(objAnim);
@@ -547,8 +548,8 @@ void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordI
   else {
     state = bank->currentState;
   }
-  state = (ObjAnimState *)((u8 *)state + wordIndex * 2);
-  state->eventCountdown = stateWord;
+  stateWords = &state->eventCountdown;
+  stateWords[wordIndex] = stateWord;
 }
 
 /*
