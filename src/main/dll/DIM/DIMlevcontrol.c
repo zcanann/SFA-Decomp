@@ -540,6 +540,32 @@ int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 #pragma peephole off
 #pragma scheduling off
 #pragma peephole off
+#include "global.h"
+
+/* dimcannon extra block (0xb4); the head is the per-cannonball column
+ * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
+typedef struct DimCannonState {
+    u8 pad00[0x88];
+    f32 unk88;
+    f32 unk8C;
+    f32 unk90;
+    f32 unk94;
+    f32 unk98;
+    u8 pad9C[8];
+    s16 aimYaw;     /* 0xa4 */
+    s16 aimPitch;   /* 0xa6 */
+    int unkA8;
+    u8 fireState;   /* 0xac */
+    u8 unkAD;
+    u8 unkAE;
+    u8 unkAF;
+    s8 unkB0;
+    u8 unkB1;
+    u8 unkB2;
+    u8 padB3;
+} DimCannonState;
+STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
+
 int dimcannon_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1d6) return 0xc; return 0xb4; }
 int dimcannon_getObjectTypeId(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1d6) return 0x0; return 0x0; }
 #pragma peephole reset
@@ -690,7 +716,7 @@ void dimcannon_init(int *obj, int *arg)
             if (GameBit_Get(0xc17) && GameBit_Get(0xa21)) {
                 v = 1;
             }
-            *(u8 *)((char *)state + 0xb2) = v;
+            ((DimCannonState *)state)->unkB2 = v;
         }
 
         for (i = 0; i < 0xa; i += 5) {
@@ -712,19 +738,19 @@ void dimcannon_init(int *obj, int *arg)
             *(f32 *)(e + 0x74) = *(f32 *)((char *)obj + 0x14);
         }
 
-        *(u8 *)((char *)state + 0xaf) = 0x80;
-        *(f32 *)((char *)state + 0x98) = lbl_803E48B8;
+        ((DimCannonState *)state)->unkAF = 0x80;
+        ((DimCannonState *)state)->unk98 = lbl_803E48B8;
         *(u8 *)((char *)obj + 0xaf) |= 0x8;
         *(int *)((char *)obj + 0xbc) = (int)fn_801B2550;
         *(s16 *)((char *)obj + 0x0) = (s16)((s8)*(s8 *)((char *)arg + 0x28) << 8);
         lbl_803DDB50 = Resource_Acquire(0x79, 1);
         if (GameBit_Get(*(s16 *)((char *)arg + 0x1a))) {
-            *(u8 *)((char *)state + 0xb0) = 0x3c;
-            *(u8 *)((char *)state + 0xac) = 5;
+            *(u8 *)&((DimCannonState *)state)->unkB0 = 0x3c;
+            ((DimCannonState *)state)->fireState = 5;
         }
-        *(f32 *)((char *)state + 0x8c) = *(f32 *)((char *)obj + 0xc);
-        *(f32 *)((char *)state + 0x90) = *(f32 *)((char *)obj + 0x10);
-        *(f32 *)((char *)state + 0x94) = *(f32 *)((char *)obj + 0x14);
+        ((DimCannonState *)state)->unk8C = *(f32 *)((char *)obj + 0xc);
+        ((DimCannonState *)state)->unk90 = *(f32 *)((char *)obj + 0x10);
+        ((DimCannonState *)state)->unk94 = *(f32 *)((char *)obj + 0x14);
     }
 
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
@@ -778,65 +804,65 @@ void dimcannon_update(int *obj)
 
     *(s16 *)((char *)obj + 0x6) = (s16)(*(s16 *)((char *)obj + 0x6) & ~0x4000);
 
-    switch (*(u8 *)(state + 0xac)) {
+    switch (((DimCannonState *)state)->fireState) {
     case 0:
         if (GameBit_Get(*(s16 *)((char *)src + 0x1c))) {
-            *(u8 *)(state + 0xac) = 4;
+            ((DimCannonState *)state)->fireState = 4;
         }
         break;
     case 5: {
-        s8 t = *(s8 *)(state + 0xb0);
+        s8 t = ((DimCannonState *)state)->unkB0;
         if (t > 0) {
-            *(s8 *)(state + 0xb0) = (s8)(t - framesThisStep);
+            ((DimCannonState *)state)->unkB0 = (s8)(t - framesThisStep);
         } else if (*(u8 *)((char *)obj + 0xaf) & 0x1) {
             int *focusObj;
-            *(u8 *)(state + 0xae) = 0;
-            *(u8 *)(state + 0xb1) = 0;
+            ((DimCannonState *)state)->unkAE = 0;
+            ((DimCannonState *)state)->unkB1 = 0;
             focusObj = obj;
             (*(void (**)(int, int, int, int, int **, int, int))(*(int *)gCameraInterface + 0x1c))(
                 0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
             buttonDisable(0, 0x100);
-            *(u8 *)(state + 0xac) = 3;
+            ((DimCannonState *)state)->fireState = 3;
             (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
-            *(u8 *)(state + 0xb0) = 0x3c;
+            *(u8 *)&((DimCannonState *)state)->unkB0 = 0x3c;
             *(u8 *)((char *)obj + 0xaf) |= 0x8;
         }
-        *(u8 *)(state + 0xad) = 0;
-        *(s16 *)(state + 0xa4) = 0;
-        *(s16 *)(state + 0xa6) = 0;
+        ((DimCannonState *)state)->unkAD = 0;
+        ((DimCannonState *)state)->aimYaw = 0;
+        ((DimCannonState *)state)->aimPitch = 0;
         break;
     }
     case 4:
         DIMwooddoor_updateShardAim(obj, *(f32 *)(state + 0x4), *(f32 *)(state + 0x8),
                                    *(f32 *)(state + 0xc), *(f32 *)(state + 0x10));
         if (GameBit_Get(*(s16 *)((char *)src + 0x1a))) {
-            *(u8 *)(state + 0xac) = 5;
+            ((DimCannonState *)state)->fireState = 5;
         } else if (*(void **)(state + 0x0) != 0 && !GameBit_Get(*(s16 *)((char *)src + 0x1e))) {
             f32 d = getXZDistance((f32 *)((char *)obj + 0x18),
                                   (f32 *)(*(char **)(state + 0x0) + 0x18));
             int v = *(s16 *)((char *)src + 0x26) * lbl_803DBF10;
             if (d < (f32)v / lbl_803E48EC) {
-                *(u8 *)(state + 0xac) = 1;
+                ((DimCannonState *)state)->fireState = 1;
             }
         }
-        *(u8 *)(state + 0xad) = 0;
-        *(s16 *)(state + 0xa4) = 0;
-        *(s16 *)(state + 0xa6) = 0;
+        ((DimCannonState *)state)->unkAD = 0;
+        ((DimCannonState *)state)->aimYaw = 0;
+        ((DimCannonState *)state)->aimPitch = 0;
         break;
     case 1:
         if (GameBit_Get(*(s16 *)((char *)src + 0x1a))) {
-            *(u8 *)(state + 0xac) = 5;
+            ((DimCannonState *)state)->fireState = 5;
             break;
         }
         if (GameBit_Get(*(s16 *)((char *)src + 0x1e))) {
-            *(u8 *)(state + 0xac) = 4;
+            ((DimCannonState *)state)->fireState = 4;
             break;
         }
         if (*(void **)(state + 0x0) != 0) {
-        *(u8 *)(state + 0xaf) += framesThisStep;
-        if (*(u8 *)(state + 0xaf) > 0xa) {
+        ((DimCannonState *)state)->unkAF += framesThisStep;
+        if (((DimCannonState *)state)->unkAF > 0xa) {
             u8 j;
-            *(u8 *)(state + 0xaf) = 0;
+            ((DimCannonState *)state)->unkAF = 0;
             for (j = 0; j < 9; j++) {
                 char *e = state + j * 4;
                 *(f32 *)(e + 0x14) = *(f32 *)(e + 0x18);
@@ -848,15 +874,15 @@ void dimcannon_update(int *obj)
             }
             *(f32 *)(state + 0x38) = *(f32 *)(*(char **)(state + 0x0) + 0xc);
             *(f32 *)(state + 0x60) = *(f32 *)(*(char **)(state + 0x0) + 0x10);
-            *(f32 *)(state + 0x88) = *(f32 *)(*(char **)(state + 0x0) + 0x14);
+            ((DimCannonState *)state)->unk88 = *(f32 *)(*(char **)(state + 0x0) + 0x14);
             *(f32 *)(state + 0x4) = *(f32 *)(state + 0x14);
             *(f32 *)(state + 0xc) = *(f32 *)(state + 0x64);
         }
-        if (*(s16 *)(state + 0xa4) > 0) {
-            *(s16 *)(state + 0xa4) = (s16)(*(s16 *)(state + 0xa4) - framesThisStep);
+        if (((DimCannonState *)state)->aimYaw > 0) {
+            ((DimCannonState *)state)->aimYaw = (s16)(((DimCannonState *)state)->aimYaw - framesThisStep);
         }
-        if (*(s16 *)(state + 0xa6) > 0) {
-            *(s16 *)(state + 0xa6) = (s16)(*(s16 *)(state + 0xa6) - framesThisStep);
+        if (((DimCannonState *)state)->aimPitch > 0) {
+            ((DimCannonState *)state)->aimPitch = (s16)(((DimCannonState *)state)->aimPitch - framesThisStep);
         }
         *(f32 *)(state + 0x10) = getXZDistance((f32 *)((char *)obj + 0x18),
                                                (f32 *)(*(char **)(state + 0x0) + 0x18));
@@ -867,11 +893,11 @@ void dimcannon_update(int *obj)
             f32 d2 = *(f32 *)(state + 0x10);
             int v = *(s16 *)((char *)src + 0x26) * lbl_803DBF0C;
             if (d2 > (f32)v / lbl_803E48EC) {
-                *(u8 *)(state + 0xac) = 4;
+                ((DimCannonState *)state)->fireState = 4;
             }
         }
         } else {
-            *(u8 *)(state + 0xac) = 4;
+            ((DimCannonState *)state)->fireState = 4;
         }
         break;
     }
