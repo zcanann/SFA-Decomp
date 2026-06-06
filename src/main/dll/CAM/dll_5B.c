@@ -155,14 +155,14 @@ void firstPersonDoControls(short *param_1)
     }
   }
   spin = (f32)cVar3 * -(lbl_803E17F0 * zoom - lbl_803E17EC);
-  spin = interpolate(spin - ((ViewfinderState *)lbl_803DD548)->unk11C, lbl_803E17F4, timeDelta);
-  ((ViewfinderState *)lbl_803DD548)->unk11C = ((ViewfinderState *)lbl_803DD548)->unk11C + spin;
-  if ((((ViewfinderState *)lbl_803DD548)->unk11C > lbl_803E17F8) &&
-     (((ViewfinderState *)lbl_803DD548)->unk11C < lbl_803E17FC)) {
-    ((ViewfinderState *)lbl_803DD548)->unk11C = lbl_803E17C4;
+  spin = interpolate(spin - ((ViewfinderState *)lbl_803DD548)->yawSpeed, lbl_803E17F4, timeDelta);
+  ((ViewfinderState *)lbl_803DD548)->yawSpeed = ((ViewfinderState *)lbl_803DD548)->yawSpeed + spin;
+  if ((((ViewfinderState *)lbl_803DD548)->yawSpeed > lbl_803E17F8) &&
+     (((ViewfinderState *)lbl_803DD548)->yawSpeed < lbl_803E17FC)) {
+    ((ViewfinderState *)lbl_803DD548)->yawSpeed = lbl_803E17C4;
   }
   spinI = (int)(lbl_803E1800 * ((f32)cVar4 / lbl_803E1804));
-  *param_1 = ((ViewfinderState *)lbl_803DD548)->unk11C * timeDelta + (f32)*param_1;
+  *param_1 = ((ViewfinderState *)lbl_803DD548)->yawSpeed * timeDelta + (f32)*param_1;
   sVar2 = spinI - (param_1[1] & 0xffffU);
   if (0x8000 < sVar2) {
     sVar2 = sVar2 - 0xffff;
@@ -182,12 +182,12 @@ void firstPersonDoControls(short *param_1)
   if (psVar5[0x22] == 1) {
     fn_802961D4(psVar5, *psVar5);
   }
-  if (((ViewfinderState *)lbl_803DD548)->unk124 < ((ViewfinderState *)lbl_803DD548)->unk130) {
-    ((ViewfinderState *)lbl_803DD548)->unk130 = ((ViewfinderState *)lbl_803DD548)->unk124;
+  if (((ViewfinderState *)lbl_803DD548)->camPosY < ((ViewfinderState *)lbl_803DD548)->clampedPosY) {
+    ((ViewfinderState *)lbl_803DD548)->clampedPosY = ((ViewfinderState *)lbl_803DD548)->camPosY;
   }
-  *(f32 *)(param_1 + 0xc) = ((ViewfinderState *)lbl_803DD548)->unk120;
-  *(f32 *)(param_1 + 0xe) = ((ViewfinderState *)lbl_803DD548)->unk130;
-  *(f32 *)(param_1 + 0x10) = ((ViewfinderState *)lbl_803DD548)->unk128;
+  *(f32 *)(param_1 + 0xc) = ((ViewfinderState *)lbl_803DD548)->camPosX;
+  *(f32 *)(param_1 + 0xe) = ((ViewfinderState *)lbl_803DD548)->clampedPosY;
+  *(f32 *)(param_1 + 0x10) = ((ViewfinderState *)lbl_803DD548)->camPosZ;
   if (((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7) {
     zoom2 = *(f32 *)(param_1 + 0x5a);
     cVar3 = padGetCY(0);
@@ -244,9 +244,9 @@ int firstPersonEnter(u8 *cam, s16 *p2)
   int flag;
   int other;
 
-  ((CameraObject *)cam)->anim.worldPosX = ((ViewfinderState *)lbl_803DD548)->unk120;
-  ((CameraObject *)cam)->anim.worldPosY = ((ViewfinderState *)lbl_803DD548)->unk124;
-  ((CameraObject *)cam)->anim.worldPosZ = ((ViewfinderState *)lbl_803DD548)->unk128;
+  ((CameraObject *)cam)->anim.worldPosX = ((ViewfinderState *)lbl_803DD548)->camPosX;
+  ((CameraObject *)cam)->anim.worldPosY = ((ViewfinderState *)lbl_803DD548)->camPosY;
+  ((CameraObject *)cam)->anim.worldPosZ = ((ViewfinderState *)lbl_803DD548)->camPosZ;
   ((CameraObject *)cam)->anim.rotY = 0;
   flag = 0;
   if (((CameraObject *)cam)->unkF4 <= lbl_803E17C4) {
@@ -270,13 +270,13 @@ int firstPersonEnter(u8 *cam, s16 *p2)
     }
   }
   if (flag != 0) {
-    ((ViewfinderState *)lbl_803DD548)->unkFC = (int)((char *)lbl_803DD548 + 64);
-    ((ViewfinderState *)lbl_803DD548)->unk100 = 0;
-    ((ViewfinderState *)lbl_803DD548)->unk104 = 0;
-    ((ViewfinderState *)lbl_803DD548)->unk108 = 4;
-    ((ViewfinderState *)lbl_803DD548)->unk10C = (int)&Curve_EvalHermite;
-    ((ViewfinderState *)lbl_803DD548)->unk110 = (int)&Curve_BuildHermiteCoeffs;
-    ((ViewfinderState *)lbl_803DD548)->unkF8 = 0;
+    ((ViewfinderState *)lbl_803DD548)->curvePointsX = (int)((char *)lbl_803DD548 + 64);
+    ((ViewfinderState *)lbl_803DD548)->curvePointsY = 0;
+    ((ViewfinderState *)lbl_803DD548)->curvePointsZ = 0;
+    ((ViewfinderState *)lbl_803DD548)->curvePointCount = 4;
+    ((ViewfinderState *)lbl_803DD548)->curveEvalFn = (int)&Curve_EvalHermite;
+    ((ViewfinderState *)lbl_803DD548)->curveCoeffsFn = (int)&Curve_BuildHermiteCoeffs;
+    ((ViewfinderState *)lbl_803DD548)->curveParam = 0;
     *(f32 *)((char *)lbl_803DD548 + 64) = (f32)(s32)*(s16 *)cam;
     ((ViewfinderState *)lbl_803DD548)->unk44 = (f32)(s16)(0x8000 - p2[0]);
     f2 = *(f32 *)((char *)lbl_803DD548 + 64) - ((ViewfinderState *)lbl_803DD548)->unk44;
@@ -415,16 +415,16 @@ void CameraModeViewfinder_update(s16 *param_1)
   camObj = *(int *)(param_1 + 0x52);
   getButtonsJustPressed(0);
   firstPersonPlaceCamera(camObj, 0);
-  switch (((ViewfinderState *)lbl_803DD548)->unk12C) {
+  switch (((ViewfinderState *)lbl_803DD548)->mode) {
   case 0:
-    ((ViewfinderState *)lbl_803DD548)->unk12C = firstPersonEnter((u8 *)param_1, (s16 *)*(int *)(param_1 + 0x52));
+    ((ViewfinderState *)lbl_803DD548)->mode = firstPersonEnter((u8 *)param_1, (s16 *)*(int *)(param_1 + 0x52));
     break;
   case 1:
     if (Curve_AdvanceAlongPath((char *)lbl_803DD548 + 0x78, lbl_803E1820) != 0) {
       if (((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7) {
         Rcp_SetViewFinderHudEnabled(1);
       }
-      ((ViewfinderState *)lbl_803DD548)->unk12C = 2;
+      ((ViewfinderState *)lbl_803DD548)->mode = 2;
     }
     *param_1 = ((ViewfinderState *)lbl_803DD548)->unkE0;
     *(u8 *)(param_1 + 0x9f) = 1;
@@ -438,7 +438,7 @@ void CameraModeViewfinder_update(s16 *param_1)
       buttonDisable(0, 0x200);
       firstPersonExit(param_1);
       Rcp_SetViewFinderHudEnabled(0);
-      ((ViewfinderState *)lbl_803DD548)->unk12C = 3;
+      ((ViewfinderState *)lbl_803DD548)->mode = 3;
     }
     *(u8 *)(param_1 + 0x9f) = 0;
     break;
@@ -447,17 +447,17 @@ void CameraModeViewfinder_update(s16 *param_1)
     *param_1 = ((ViewfinderState *)lbl_803DD548)->unkE0;
     param_1[1] = ((ViewfinderState *)lbl_803DD548)->unkE4;
     if (angleDiff != 0) {
-      ((ViewfinderState *)lbl_803DD548)->unkFC = (int)lbl_803DD548 + 0x10;
-      ((ViewfinderState *)lbl_803DD548)->unk100 = (int)lbl_803DD548 + 0x20;
-      ((ViewfinderState *)lbl_803DD548)->unk104 = (int)lbl_803DD548 + 0x30;
-      ((ViewfinderState *)lbl_803DD548)->unk108 = 4;
-      ((ViewfinderState *)lbl_803DD548)->unkF8 = 0;
-      ((ViewfinderState *)lbl_803DD548)->unk10C = (int)Curve_EvalHermite;
-      ((ViewfinderState *)lbl_803DD548)->unk110 = (int)Curve_BuildHermiteCoeffs;
+      ((ViewfinderState *)lbl_803DD548)->curvePointsX = (int)lbl_803DD548 + 0x10;
+      ((ViewfinderState *)lbl_803DD548)->curvePointsY = (int)lbl_803DD548 + 0x20;
+      ((ViewfinderState *)lbl_803DD548)->curvePointsZ = (int)lbl_803DD548 + 0x30;
+      ((ViewfinderState *)lbl_803DD548)->curvePointCount = 4;
+      ((ViewfinderState *)lbl_803DD548)->curveParam = 0;
+      ((ViewfinderState *)lbl_803DD548)->curveEvalFn = (int)Curve_EvalHermite;
+      ((ViewfinderState *)lbl_803DD548)->curveCoeffsFn = (int)Curve_BuildHermiteCoeffs;
       curvesMove((char *)lbl_803DD548 + 0x78);
       *(s16 *)(*(int *)(param_1 + 0x52) + 6) = *(s16 *)(*(int *)(param_1 + 0x52) + 6) & ~0x4000;
       firstPersonZoomOutOnExit(0xf, 0xfe);
-      ((ViewfinderState *)lbl_803DD548)->unk12C = 4;
+      ((ViewfinderState *)lbl_803DD548)->mode = 4;
       if (((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b6) {
         Sfx_PlayFromObject(0, ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7 ? 0x3f5 : 0x3f3);
       }
@@ -590,7 +590,7 @@ void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3)
   *(f32 *)lbl_803DD548 = *(f32 *)param_3;
   ((ViewfinderState *)lbl_803DD548)->unk114 = (f32)(u32)*(u16 *)((int)param_3 + 8);
   ((ViewfinderState *)lbl_803DD548)->unk4 = *(f32 *)(param_3 + 1);
-  ((ViewfinderState *)lbl_803DD548)->unk11C = lbl_803E17C4;
+  ((ViewfinderState *)lbl_803DD548)->yawSpeed = lbl_803E17C4;
   diff = 0x8000 - param_1[0] - camObj[0];
   if (diff < 0) {
     absDiff = -diff;
@@ -600,13 +600,13 @@ void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3)
   }
   spinRate = (f32)diff / lbl_803E17E4;
   rollRate = (f32)absDiff / lbl_803E1830;
-  ((ViewfinderState *)lbl_803DD548)->unkFC = (int)lbl_803DD548 + 0x10;
-  ((ViewfinderState *)lbl_803DD548)->unk100 = (int)lbl_803DD548 + 0x20;
-  ((ViewfinderState *)lbl_803DD548)->unk104 = (int)lbl_803DD548 + 0x30;
-  ((ViewfinderState *)lbl_803DD548)->unk108 = 4;
-  ((ViewfinderState *)lbl_803DD548)->unkF8 = 0;
-  ((ViewfinderState *)lbl_803DD548)->unk10C = (int)Curve_EvalHermite;
-  ((ViewfinderState *)lbl_803DD548)->unk110 = (int)Curve_BuildHermiteCoeffs;
+  ((ViewfinderState *)lbl_803DD548)->curvePointsX = (int)lbl_803DD548 + 0x10;
+  ((ViewfinderState *)lbl_803DD548)->curvePointsY = (int)lbl_803DD548 + 0x20;
+  ((ViewfinderState *)lbl_803DD548)->curvePointsZ = (int)lbl_803DD548 + 0x30;
+  ((ViewfinderState *)lbl_803DD548)->curvePointCount = 4;
+  ((ViewfinderState *)lbl_803DD548)->curveParam = 0;
+  ((ViewfinderState *)lbl_803DD548)->curveEvalFn = (int)Curve_EvalHermite;
+  ((ViewfinderState *)lbl_803DD548)->curveCoeffsFn = (int)Curve_BuildHermiteCoeffs;
   dx = *(f32 *)(param_1 + 0xc) - *(f32 *)(camObj + 0xc);
   dz = *(f32 *)(param_1 + 0x10) - *(f32 *)(camObj + 0x10);
   dist = sqrtf(dx * dx + dz * dz);
@@ -618,16 +618,16 @@ void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3)
   cosv = -mathSinf((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
   sinv = -mathCosf((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
   *(f32 *)((int)lbl_803DD548 + 0x10) = *(f32 *)(param_1 + 0xc);
-  ((ViewfinderState *)lbl_803DD548)->unk14 = ((ViewfinderState *)lbl_803DD548)->unk120;
+  ((ViewfinderState *)lbl_803DD548)->unk14 = ((ViewfinderState *)lbl_803DD548)->camPosX;
   ((ViewfinderState *)lbl_803DD548)->unk18 = -dz * spinRate;
   ((ViewfinderState *)lbl_803DD548)->unk1C = cosv * rollRate;
   *(f32 *)((int)lbl_803DD548 + 0x20) = *(f32 *)(param_1 + 0xe);
-  ((ViewfinderState *)lbl_803DD548)->unk24 = ((ViewfinderState *)lbl_803DD548)->unk124;
+  ((ViewfinderState *)lbl_803DD548)->unk24 = ((ViewfinderState *)lbl_803DD548)->camPosY;
   zero = lbl_803E17C4;
   ((ViewfinderState *)lbl_803DD548)->unk28 = zero;
   ((ViewfinderState *)lbl_803DD548)->unk2C = zero;
   *(f32 *)((int)lbl_803DD548 + 0x30) = *(f32 *)(param_1 + 0x10);
-  ((ViewfinderState *)lbl_803DD548)->unk34 = ((ViewfinderState *)lbl_803DD548)->unk128;
+  ((ViewfinderState *)lbl_803DD548)->unk34 = ((ViewfinderState *)lbl_803DD548)->camPosZ;
   ((ViewfinderState *)lbl_803DD548)->unk38 = dx * spinRate;
   ((ViewfinderState *)lbl_803DD548)->unk3C = sinv * rollRate;
   ((ViewfinderState *)lbl_803DD548)->unk18 = zero;
@@ -667,15 +667,15 @@ void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3)
     ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7 = 1;
   }
   if (param_2 == 1) {
-    ((ViewfinderState *)lbl_803DD548)->unk12C = 5;
+    ((ViewfinderState *)lbl_803DD548)->mode = 5;
   }
   else {
-    ((ViewfinderState *)lbl_803DD548)->unk12C = 0;
+    ((ViewfinderState *)lbl_803DD548)->mode = 0;
     ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b6 = 1;
     Sfx_PlayFromObject(0, ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7 ? 0x3f4 : 0x28b);
   }
   ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b5 = 0;
-  ((ViewfinderState *)lbl_803DD548)->unk130 = ((ViewfinderState *)lbl_803DD548)->unk124;
+  ((ViewfinderState *)lbl_803DD548)->clampedPosY = ((ViewfinderState *)lbl_803DD548)->camPosY;
 }
 
 /*

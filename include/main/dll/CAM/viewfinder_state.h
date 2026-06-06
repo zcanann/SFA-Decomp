@@ -40,25 +40,25 @@ typedef struct ViewfinderState {
     f32 unkE0;
     f32 unkE4;
     u8 unkE8[0xF8 - 0xE8];
-    int unkF8;
-    int unkFC;
-    int unk100;
-    int unk104;
-    int unk108;
-    int unk10C;
-    int unk110;
+    int curveParam;
+    int curvePointsX;
+    int curvePointsY;
+    int curvePointsZ;
+    int curvePointCount;
+    int curveEvalFn;
+    int curveCoeffsFn;
     f32 unk114;
     u8 unk118[0x11C - 0x118];
-    f32 unk11C;
-    f32 unk120;
-    f32 unk124;
-    f32 unk128;
-    u8 unk12C;
+    f32 yawSpeed;
+    f32 camPosX;
+    f32 camPosY;
+    f32 camPosZ;
+    u8 mode;
     u8 unk12D;
     u8 unk12E[0x130 - 0x12E];
-    f32 unk130;
+    f32 clampedPosY;
 } ViewfinderState;
 
-STATIC_ASSERT(offsetof(ViewfinderState, unk11C) == 0x11C);
+STATIC_ASSERT(offsetof(ViewfinderState, yawSpeed) == 0x11C);
 
 #endif /* MAIN_DLL_CAM_VIEWFINDER_STATE_H_ */
