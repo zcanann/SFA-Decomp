@@ -526,7 +526,7 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
 #pragma peephole off
 void expgfx_initSlotQuad(void *slotPtr)
 {
-  u8 *staticBase;
+  ExpgfxStaticDataLayout *staticData;
   ExpgfxSlot *slot;
   ExpgfxTableEntry *entry;
   ExpgfxQuadVertex *quad;
@@ -540,7 +540,7 @@ void expgfx_initSlotQuad(void *slotPtr)
   f32 step;
 
   slot = (ExpgfxSlot *)slotPtr;
-  staticBase = gExpgfxStaticData;
+  staticData = EXPGFX_STATIC_DATA;
   entry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
   resource = entry->resource;
 
@@ -549,9 +549,9 @@ void expgfx_initSlotQuad(void *slotPtr)
 
   behaviorFlags = slot->behaviorFlags;
   if ((behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0) {
-    template = (ExpgfxQuadTemplateVertex *)(staticBase + EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
+    template = staticData->quadTemplateA;
   } else {
-    template = (ExpgfxQuadTemplateVertex *)(staticBase + EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
+    template = staticData->quadTemplateB;
   }
 
   if ((behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 &&
@@ -584,7 +584,7 @@ void expgfx_initSlotQuad(void *slotPtr)
   }
 
   if (resource == 0) {
-    debugPrintf((char *)(staticBase + EXPGFX_STATIC_NO_TEXTURE_STRING_OFFSET));
+    debugPrintf(staticData->noTextureString);
     return;
   }
 
@@ -704,8 +704,8 @@ typedef struct ExpgfxRotateParams {
 #pragma peephole off
 void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameState)
 {
-  u8 *staticBase;
-  u8 *runtimeBase;
+  ExpgfxStaticDataLayout *staticData;
+  ExpgfxRuntimeDataLayout *runtime;
   int next;
   ExpgfxBounds *bounds;
   f32 *maxYPtr;
@@ -734,7 +734,6 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
   u8 *curCache;
   u8 *curPoolBuf;
   f32 *maxXPtr;
-  int pool4;
   u8 parity;
   u8 prefetched;
   int ambRPlus1;
@@ -761,8 +760,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
   f32 attractRatio;
   f32 camScale;
 
-  staticBase = gExpgfxStaticData;
-  runtimeBase = gExpgfxRuntimeData;
+  staticData = EXPGFX_STATIC_DATA;
+  runtime = EXPGFX_RUNTIME_DATA;
   attractRatio = lbl_803DF354;
   trickyRange = lbl_803DF35C;
   playerRange = trickyRange;
@@ -784,7 +783,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
   ambScaled[0] = (int)((f32)ambB8 * camScale);
 
   next = 0;
-  scan = (s8 *)(runtimeBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+  scan = runtime->poolActiveCounts;
   for (batch = 8; batch != 0; batch--) {
     switch (scan[0]) { case 0: break; default: goto foundFirst; }
     next++;
@@ -812,8 +811,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
 foundFirst:
   pool = next;
   if (pool != -1) {
-    copyToCache(cache, (void *)((ExpgfxRuntimeDataLayout *)runtimeBase)->slotPoolBases[pool],
-                0x7e);
+    copyToCache(cache, (void *)runtime->slotPoolBases[pool], 0x7e);
     parity = 1;
     curCache = cache;
     Camera_GetCurrentViewSlot();
@@ -830,7 +828,7 @@ foundFirst:
     boundsMin = lbl_803DF3D4;
     boundsMax = lbl_803DF3D8;
     while (pool > -1) {
-      bounds = (ExpgfxBounds *)(runtimeBase + pool * 0x18 + EXPGFX_POOL_BOUNDS_OFFSET);
+      bounds = &runtime->poolBounds[pool];
       bounds->minX = boundsMin;
       maxXPtr = &bounds->maxX;
       *maxXPtr = boundsMax;
@@ -844,7 +842,7 @@ foundFirst:
       *maxZPtr = boundsMax;
       curPool = pool;
       next = pool + 1;
-      scan = (s8 *)(runtimeBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET + next);
+      scan = &runtime->poolActiveCounts[next];
       if (next < EXPGFX_POOL_COUNT) {
         for (batch = EXPGFX_POOL_COUNT - next; batch != 0; batch--) {
           switch (*scan) { case 0: break; default: goto foundNext; }
@@ -857,17 +855,14 @@ foundFirst:
       slot = (ExpgfxSlot *)curCache;
       if (next > -1) {
         nextBuf = (u8 *)cache + (u32)parity * 0x1000;
-        copyToCache(nextBuf,
-                    (void *)((ExpgfxRuntimeDataLayout *)runtimeBase)->slotPoolBases[next], 0x7e);
+        copyToCache(nextBuf, (void *)runtime->slotPoolBases[next], 0x7e);
         curCache = nextBuf;
         prefetched = 1;
       }
       parity ^= 1;
       cacheQueueWait(prefetched);
       slot--;
-      pool4 = pool << 2;
-      maskPtr = (u32 *)(runtimeBase + pool4);
-      maskPtr = (u32 *)((u8 *)maskPtr + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
+      maskPtr = &runtime->poolActiveMasks[pool];
       curPoolBuf = (u8 *)cache + (u32)parity * 0x1000;
       for (slotIdx = 0; slotIdx < EXPGFX_SLOTS_PER_POOL; slotIdx++) {
         ExpgfxQuadVertex *quad;
@@ -881,9 +876,8 @@ foundFirst:
         if (slot->sequenceId == -1) {
           continue;
         }
-        entry = &((ExpgfxRuntimeDataLayout *)runtimeBase)
-                     ->expTab[((u32)slot->encodedTableIndex >> 1) &
-                              EXPGFX_SLOT_TABLE_INDEX_MASK];
+        entry = &runtime->expTab[((u32)slot->encodedTableIndex >> 1) &
+                                  EXPGFX_SLOT_TABLE_INDEX_MASK];
         srcObj = (u8 *)entry->sourceId;
         resource = entry->resource;
         slot->stateBits.bits.frameParity = 0;
@@ -905,11 +899,9 @@ foundFirst:
           continue;
         }
         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0) {
-          template =
-              (ExpgfxQuadTemplateVertex *)(staticBase + EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
+          template = staticData->quadTemplateA;
         } else {
-          template =
-              (ExpgfxQuadTemplateVertex *)(staticBase + EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
+          template = staticData->quadTemplateB;
         }
         if ((slot->behaviorFlags & 0x20000) != 0 &&
             (slot->renderFlags & 0x30000000) == 0) {
@@ -1196,7 +1188,7 @@ foundFirst:
         }
         quad = (ExpgfxQuadVertex *)slot;
         if (resource == 0) {
-          debugPrintf((char *)(staticBase + EXPGFX_STATIC_NO_TEXTURE_STRING_OFFSET));
+          debugPrintf(staticData->noTextureString);
         } else {
           u8 *attached;
 
@@ -1518,9 +1510,8 @@ foundFirst:
             quad[3].texS = texS0;
             quad[3].texT = texT1;
           }
-          attached = (u8 *)((ExpgfxRuntimeDataLayout *)runtimeBase)
-                         ->expTab[((u32)slot->encodedTableIndex >> 1) &
-                                  EXPGFX_SLOT_TABLE_INDEX_MASK]
+          attached = (u8 *)runtime->expTab[((u32)slot->encodedTableIndex >> 1) &
+                                            EXPGFX_SLOT_TABLE_INDEX_MASK]
                          .attachedTableKey;
           rot.x = lbl_803DF35C;
           rot.y = lbl_803DF35C;
@@ -1606,8 +1597,7 @@ foundFirst:
           }
         }
       }
-      memcpyToCache((void *)*(u32 *)((runtimeBase + pool4) + EXPGFX_SLOT_POOL_BASES_OFFSET),
-                    curPoolBuf, 0x7e);
+      memcpyToCache((void *)runtime->slotPoolBases[pool], curPoolBuf, 0x7e);
       prefetched = 1;
       pool = next;
     }
@@ -2253,36 +2243,34 @@ void drawGlow(uint slotPoolBase,int poolIndex)
 #pragma peephole off
 void renderParticles(void)
 {
+  ExpgfxRuntimeDataLayout *runtime;
   ExpgfxBounds *boundsTemplate;
   ExpgfxPoolSourcePosition *sourcePosition;
-  register u8 *expgfxBase = gExpgfxRuntimeData;
-  char *poolActiveCounts;
+  s8 *poolActiveCounts;
   u8 *poolSourceModes;
   u8 *poolBoundsTemplateIds;
   ExpgfxBounds *poolBounds;
   u32 *poolSourceIds;
   register s16 *poolSlotTypeIds;
-  register s16 *poolSlotTypeIdBase;
-  uint *slotPoolBases;
+  u32 *slotPoolBases;
   int poolIndex;
   int currentMatrix;
   float queuePosition[3];
 
+  runtime = EXPGFX_RUNTIME_DATA;
   currentMatrix = Camera_GetViewMatrix();
   poolIndex = 0;
-  poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-  poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
-  poolBoundsTemplateIds = expgfxBase + EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET;
-  poolBounds = (ExpgfxBounds *)(expgfxBase + EXPGFX_POOL_BOUNDS_OFFSET);
-  poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
+  poolActiveCounts = runtime->poolActiveCounts;
+  poolSourceModes = runtime->poolSourceModes;
+  poolBoundsTemplateIds = runtime->poolBoundsTemplateIds;
+  poolBounds = runtime->poolBounds;
+  poolSourceIds = runtime->poolSourceIds;
   poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
-  slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
+  slotPoolBases = runtime->slotPoolBases;
   do {
-    if ((*poolActiveCounts != '\0') &&
+    if ((*poolActiveCounts != 0) &&
         (*poolSourceModes == EXPGFX_POOL_SOURCE_MODE_STANDALONE)) {
-      boundsTemplate =
-          (ExpgfxBounds *)(gExpgfxStaticData +
-                           (uint)*poolBoundsTemplateIds * EXPGFX_BOUNDS_TEMPLATE_SIZE);
+      boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
       if (fn_8005E97C((double)(poolBounds->minX - playerMapOffsetX),
                       (double)(poolBounds->maxX - playerMapOffsetX),
                       (double)poolBounds->minY,(double)poolBounds->maxY,
