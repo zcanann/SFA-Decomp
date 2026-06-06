@@ -26,30 +26,6 @@
 #define DBSH_SHRINE_ENVFX_C 0x222
 #define DBSH_SHRINE_IDLE_SFX 0x343
 
-typedef struct DbshShrineRuntime {
-    u8 pad00[4];
-    SCGameBitLatchState latch;
-    f32 idleSfxTimer;
-    s16 resetTimer;
-    u8 pad0E[6];
-    u8 state;
-    u8 flags;
-} DbshShrineRuntime;
-
-typedef struct DbshShrineObject {
-    s16 triggerRadius;
-    u8 pad02[4];
-    s16 flags;
-    u8 pad08[0xa4];
-    s8 mapId;
-    u8 padAD[2];
-    u8 mapFlags;
-    u8 padB0[8];
-    DbshShrineRuntime *runtime;
-    u8 padBC[0x38];
-    s32 introDelay;
-} DbshShrineObject;
-
 typedef void (*ObjectTriggerRefreshFn)(int triggerId, DbshShrineObject *obj, int arg);
 
 typedef union SceneIntToDouble {
@@ -149,7 +125,7 @@ void dbsh_shrine_update(DbshShrineObject *obj)
         break;
     case DBSH_SHRINE_STATE_RISING:
         obj->flags |= DBSH_SHRINE_OBJ_FLAG_ACTIVE;
-        if ((runtime->flags & DBSH_SHRINE_LATCH_STARTED) != 0) {
+        if ((*(u8 *)&runtime->flags & DBSH_SHRINE_LATCH_STARTED) != 0) {
             runtime->state = DBSH_SHRINE_STATE_ACTIVE;
             GameBit_Set(DBSH_SHRINE_GB_RISE_DONE, 1);
         }
@@ -172,7 +148,7 @@ void dbsh_shrine_update(DbshShrineObject *obj)
         break;
     case DBSH_SHRINE_STATE_RESET:
         runtime->state = DBSH_SHRINE_STATE_WAITING;
-        runtime->flags &= ~DBSH_SHRINE_LATCH_STARTED;
+        *(u8 *)&runtime->flags &= ~DBSH_SHRINE_LATCH_STARTED;
         runtime->resetTimer = 0;
         GameBit_Set(DBSH_SHRINE_GB_APPROACH, 0);
         GameBit_Set(DBSH_SHRINE_GB_FIRST_RISE, 0);

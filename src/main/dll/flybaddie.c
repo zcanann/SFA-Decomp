@@ -6,44 +6,6 @@
 #define DBSH_SHRINE_GB_ACTIVE 0xefa
 #define DBSH_SHRINE_GB_INITIALIZED 0xf08
 
-typedef struct DbshShrineFlags {
-    u8 latchStarted : 1;
-    u8 unused1 : 1;
-    u8 unused2 : 1;
-    u8 unused3 : 1;
-    u8 unused4 : 1;
-    u8 unused5 : 1;
-    u8 unused6 : 1;
-    u8 unused7 : 1;
-} DbshShrineFlags;
-
-typedef struct DbshShrineRuntime {
-    void *light;
-    u8 latch[8];
-    s16 resetTimer;
-    u8 pad0E[6];
-    u8 state;
-    DbshShrineFlags flags;
-} DbshShrineRuntime;
-
-typedef struct DbshShrineObject {
-    s16 triggerRadius;
-    u8 pad02[0xa];
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 startX;
-    f32 startY;
-    f32 startZ;
-    u8 pad24[0x88];
-    s8 mapId;
-    u8 padAD[0xb];
-    DbshShrineRuntime *runtime;
-    int (*messageFn)(int obj, undefined4 unused, int animEvents);
-    u8 padC0[0x34];
-    s32 introDelay;
-} DbshShrineObject;
-
 extern void ObjMsg_AllocQueue(DbshShrineObject *obj, int capacity);
 extern void *objCreateLight(int obj, int lightType);
 extern void GameBit_Set(u32 id, u32 value);
