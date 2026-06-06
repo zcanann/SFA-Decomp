@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/VF/platform1.h"
+#include "main/mapEventTypes.h"
 #include "main/objanim.h"
 
 extern undefined4 Sfx_SetObjectSfxVolume();
@@ -416,7 +417,7 @@ void sc_totemstrength_update(u8 *obj)
 
     Obj_GetPlayerObject();
     GameBit_Set(0xf1d, 0);
-    t = (u8)(*(int (**)(int))((char *)(*gMapEventInterface) + 0x40))(0xe);
+    t = ((MapEventInterface *)*gMapEventInterface)->getMode(0xe);
     if (t == 6) {
         if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0) {
             if (st->loopSfxHandle > 0) {

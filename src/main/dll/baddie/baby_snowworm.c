@@ -29,6 +29,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/baby_snowworm.h"
+#include "main/mapEventTypes.h"
 
 
 extern undefined4 FUN_800067c0();
@@ -2135,7 +2136,7 @@ void drawWorldMapHud(void)
             } else if (fi == cur && li_ != cur) {
                 hint = lbl_8031B074[cur].hint8;
             } else if (cur == 2) {
-                if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(0xd) == 2 && lv == 0) {
+                if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
                     hint = 0x51e5;
                 } else if (fi == li_) {
                     if (GameBit_Get(lbl_8031B074[li_].bit1a)) {
@@ -2147,7 +2148,7 @@ void drawWorldMapHud(void)
                     hint = lbl_8031B074[lbl_803DD77A].hintC;
                 }
             } else if (cur == 0) {
-                if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(0xd) == 2 && lv == 0) {
+                if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
                     hint = 0x51e2;
                 } else {
                     hint = lbl_8031B074[lbl_803DD77A].hintC;
@@ -3077,7 +3078,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 } else if (fi == cur && li_ != cur) {
                     hint = lbl_8031B074[cur].hint0;
                 } else if (cur == 2) {
-                    if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(0xd) == 2 && lv == 0) {
+                    if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
                         hint = 0x577;
                     } else if (fi == li_) {
                         if (GameBit_Get(lbl_8031B074[li_].bit1a)) {
@@ -3089,7 +3090,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                         hint = lbl_8031B074[lbl_803DD77A].hint2;
                     }
                 } else if (cur == 0) {
-                    if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(0xd) == 2 && lv == 0) {
+                    if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
                         hint = 0x568;
                     } else {
                         hint = lbl_8031B074[lbl_803DD77A].hint2;
@@ -3299,26 +3300,26 @@ void pauseMenuFn_80129ee0(void)
         }
         lbl_803DD8E0 = cell;
         if (cell == 0x36) {
-            if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(cell) == 1) {
-                if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 0)) {
+            if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(cell) == 1) {
+                if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 0)) {
                     lbl_803DD8E0 = 5;
-                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 1)) {
+                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 1)) {
                     lbl_803DD8E0 = 6;
-                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 2)) {
+                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 2)) {
                     lbl_803DD8E0 = 0xc;
                 }
-            } else if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(lbl_803DD8E0) == 2) {
-                if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 0)) {
+            } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(lbl_803DD8E0) == 2) {
+                if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 0)) {
                     lbl_803DD8E0 = 6;
-                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 1)) {
+                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 1)) {
                     lbl_803DD8E0 = 6;
-                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 2)) {
+                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 2)) {
                     lbl_803DD8E0 = 6;
-                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 3)) {
+                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 3)) {
                     lbl_803DD8E0 = 0xa;
-                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 4)) {
+                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 4)) {
                     lbl_803DD8E0 = 9;
-                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 5)) {
+                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 5)) {
                     lbl_803DD8E0 = 3;
                 }
             }

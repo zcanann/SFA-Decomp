@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/creator1C4.h"
+#include "main/mapEventTypes.h"
 
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
@@ -241,11 +242,11 @@ void gpsh_shrine_update(int obj)
                     (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
                     *(u8 *)((char *)data + 0x14) = 4;
                     GameBit_Set(0x36a, 0);
-                    (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(0xd, 0, 1);
-                    (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(0xd, 1, 1);
-                    (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(0xd, 5, 1);
-                    (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(0xd, 10, 1);
-                    (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(0xd, 0xb, 1);
+                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 0, 1);
+                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 1, 1);
+                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 5, 1);
+                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 10, 1);
+                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 0xb, 1);
                     GameBit_Set(0xc91, 1);
                     GameBit_Set(0xe05, 0);
                 }
