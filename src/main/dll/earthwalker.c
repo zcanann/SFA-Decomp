@@ -33,7 +33,7 @@ void earthwalker_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling off
 void earthwalker_hitDetect(int obj)
 {
