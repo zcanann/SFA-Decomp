@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/tFrameAnimator.h"
+#include "main/objanim_internal.h"
 #include "main/objlib.h"
 
 extern void *memset(void *dest, int value, u32 size);
@@ -174,7 +175,8 @@ int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 #pragma peephole off
 int ProjectileSwitch_getObjectTypeId(int *obj) {
     int v = (int)*(u8 *)((char *)*(int **)((char *)obj + 0x4c) + 0x1e) >> 2;
-    int max = *(s8 *)((char *)*(int **)((char *)obj + 0x50) + 0x55);
+    int max = *(s8 *)((char *)*(int **)((char *)obj + offsetof(ObjAnimComponent, modelInstance)) +
+                      offsetof(ObjModelInstance, modelCount));
     if (v >= max) {
         v = 0;
     }
