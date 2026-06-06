@@ -129,7 +129,7 @@ void FUN_801723dc(int param_1)
     *(float *)(param_1 + 0x2c) = (float)((double)*(float *)(param_1 + 0x2c) * dVar6);
     *(char *)(iVar4 + 0x1d) = *(char *)(iVar4 + 0x1d) + -1;
     if (*(char *)(iVar4 + 0x1d) == '\0') {
-      *(undefined *)(iVar4 + 0x1d) = 0;
+      ((GfxEmitState *)iVar4)->unk1D = 0;
       fVar1 = lbl_803E40F4;
       *(float *)(param_1 + 0x24) = lbl_803E40F4;
       *(float *)(param_1 + 0x28) = fVar1;
