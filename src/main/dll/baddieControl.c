@@ -3701,11 +3701,13 @@ void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
     f32 extra;
     f32 dx, dz;
 
-    angle = lbl_803E1B00 * (f32)(s32)*(s16 *)state / lbl_803E1B04;
+    {
+        int a = *(s16 *)state;
+        angle = lbl_803E1B00 * (f32)a / lbl_803E1B04;
+    }
     cosv = fn_80293E80(angle);
     sinv = sin(angle);
-    baseX = *(f32 *)(state + 0x18);
-    pos[0] = cosv * lbl_803DB9C8 + baseX;
+    pos[0] = cosv * lbl_803DB9C8 + (baseX = *(f32 *)(state + 0x18));
     pos[1] = lbl_803E1B08 + *(f32 *)(state + 0x1c);
     baseZ = *(f32 *)(state + 0x20);
     pos[2] = sinv * lbl_803DB9C8 + baseZ;
