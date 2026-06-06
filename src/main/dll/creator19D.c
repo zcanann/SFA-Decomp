@@ -404,12 +404,12 @@ void DFSH_LaserBeam_free(void *objArg,void *configArg)
   ObjMsg_AllocQueue(obj,2);
   obj->yaw = (s16)((s32)config->yawByte << 8);
   timer = randomGetRange(-0x50,0x50);
-  *(s16 *)((u8 *)runtime + 0x2C) = (s16)(timer + 0x190);
+  runtime->lockTimer = (s16)(timer + 0x190);
   *(u8 *)((u8 *)runtime + 0x49) = 0;
   lbl_803DDBB8 = Resource_Acquire(0x81,1);
   runtime->beamVolumeScale = lbl_803E4EC0;
   *(u8 *)((u8 *)runtime + 0x4A) = config->proximityMode;
-  *(s16 *)((u8 *)runtime + 0x2E) = 0x118;
+  runtime->cycleTimer = 0x118;
   if (runtime->beamTexture == NULL) {
     runtime->beamTexture = textureLoadAsset(0x2E);
   }
