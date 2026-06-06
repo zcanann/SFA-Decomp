@@ -1076,6 +1076,15 @@ Heuristic:
     show the same signature but are ALREADY peephole-off — that variant
     (deref via the copy of a NON-r3 param) remains a cap. Supersedes the
     "param-relocation cap class" note in the triage table below.
+    **Where #68 does NOT apply — peephole-ON-target units (audio TUs etc.).**
+    The recipe assumes the peephole pass is propping the copy and target
+    compiled WITHOUT that prop. In a unit whose target compiles peephole-ON
+    (no pragmas — audio/), target's compile ALREADY did the propagation, so
+    the residual there is genuine scheduler/coloring, NOT copy-prop.
+    Diagnostic: check the unit's pragma state FIRST. Applying `peephole off`
+    to a peephole-ON-target fn REGRESSES hard (golf-1's audio-cap A/B:
+    synthAssignHandle 98.6→81.4, hwChangeStudio 98.2→82.1,
+    synthGetNextChannelEvent 98.0→91.8, DoSetPitch unchanged — all reverted).
 
 69. **`cmpwi` immediate is ASYMMETRIC for mathematically-equivalent int
     compares — match the immediate, not just the predicate.** `if (x <= 0)`
