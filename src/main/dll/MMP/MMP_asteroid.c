@@ -1878,9 +1878,9 @@ void fogcontrol_update(int obj)
                 st->blend = *(f32 *)&lbl_803E4074;
                 st->full = 1;
             }
-            t = *(f32 *)(obj + 0x10) +
-                (st->blend * ((f32)*(s16 *)(setup + 0x1c) - (f32)*(s16 *)(setup + 0x20)) +
-                 (f32)*(s16 *)(setup + 0x20));
+            t = st->blend * ((f32)*(s16 *)(setup + 0x1c) - (f32)*(s16 *)(setup + 0x20)) +
+                (f32)*(s16 *)(setup + 0x20);
+            t = *(f32 *)(obj + 0x10) + t;
             enableHeavyFog(*(u8 *)(setup + 0x1a) & 1, t,
                            ((f32)*(s16 *)(setup + 0x1e) + t) - (f32)*(s16 *)(setup + 0x1c),
                            (f32)*(s16 *)(setup + 0x24),
