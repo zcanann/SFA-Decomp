@@ -5008,8 +5008,8 @@ void fn_800A0478(ModgfxState *state)
     int i;
     ModgfxVertexData *dst;
     ModgfxVertexData *src;
-    f32 f0;
     f32 f1;
+    f32 f0;
     src = state->vertexBuffers[1 - (u32)state->activeVertexBufferIndex];
     dst = state->baseVertexData;
     for (i = 0; i < state->vertexCount; i++) {
@@ -5023,7 +5023,7 @@ void fn_800A0478(ModgfxState *state)
         dst++;
         src++;
     }
-    f1 = lbl_803DF434;
+    f1 = *(f32 *)&lbl_803DF434;
     *(f32*)((char*)state + 0x30) = f1;
     *(f32*)((char*)state + 0x34) = f1;
     *(f32*)((char*)state + 0x38) = f1;
