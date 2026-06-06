@@ -3848,25 +3848,25 @@ extern f32 lbl_803E2418;
 
 /* Tricky_findNearestGroup4BObject: find nearest object within distance threshold. */
 #pragma scheduling off
-int Tricky_findNearestGroup4BObject(int *obj, int *p) {
+u8 *Tricky_findNearestGroup4BObject(u8 *obj, TrickyState *state) {
     int *objs;
     int count[1];
-    int result;
+    u8 *result;
     f32 d;
     f32 bestD;
     int i;
 
     result = 0;
     objs = ObjGroup_GetObjects(0x4b, count);
-    d = getXZDistance((f32*)((char*)(int*)p[0x4/4] + 0x18), (f32*)((char*)obj + 0x18));
-    if ((d >= lbl_803E2538) || (*(f32*)((char*)p + 0x71c) > lbl_803E23DC)) {
+    d = getXZDistance((f32*)((char*)state->playerObj + 0x18), (f32*)((char*)obj + 0x18));
+    if ((d >= lbl_803E2538) || (state->unk71C > lbl_803E23DC)) {
         if (ViewFrustum_IsSphereVisible((f32*)((char*)obj + 0xc), lbl_803E2500) == 0) {
             bestD = lbl_803E2418;
             for (i = 0; i < count[0]; i++) {
-                f32 cd = getXZDistance((f32*)((char*)(int*)p[0x4/4] + 0x18), (f32*)((char*)*objs + 0x18));
+                f32 cd = getXZDistance((f32*)((char*)state->playerObj + 0x18), (f32*)((char*)*objs + 0x18));
                 if (cd < d && cd < bestD) {
                     bestD = cd;
-                    result = *objs;
+                    result = (u8 *)*objs;
                 }
                 objs++;
             }

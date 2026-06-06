@@ -2,11 +2,12 @@
 #define MAIN_DLL_COLLECTABLE_H_
 
 #include "ghidra_import.h"
+#include "main/dll/tricky_state.h"
 #include "main/object_descriptor.h"
 
 extern ObjectDescriptor20WithPadding gTrickyObjDescriptor;
 
-void FUN_80144e40(int param_1,int param_2);
+u8 *Tricky_findNearestGroup4BObject(u8 *obj, TrickyState *state);
 int FUN_80145120(int param_1,int param_2);
 void FUN_80145230(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,

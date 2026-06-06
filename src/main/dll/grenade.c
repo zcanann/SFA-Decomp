@@ -1,4 +1,5 @@
 #include "main/dll/grenade.h"
+#include "main/dll/collectable.h"
 #include "main/game_object.h"
 #include "main/dll/tricky_state.h"
 
@@ -36,9 +37,6 @@ extern undefined4 FUN_80139a4c();
 extern int trickyFn_8013b368();
 extern undefined4 objAnimFn_8013a3f0(int param_1, int param_2, f32 param_3, int param_4);
 extern void trickyFn_8013d8f0(u8 *arg1, u8 *arg2);
-extern undefined4 FUN_80144e40();
-extern undefined4 FUN_80145120();
-extern undefined4 FUN_80146fa0();
 extern undefined4 FUN_801778d0();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
@@ -476,7 +474,6 @@ void trickyFn_80141fec(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void *Tricky_findNearestGroup4BObject(void);
 extern void fn_80144B50(u8 *obj, u8 *state);
 typedef struct GrenadeIfc { void *vtable; } GrenadeIfc;
 typedef struct TrickyFnRow { u8 pad[0x6c]; int (*fn)(u8 *, u8 *); } TrickyFnRow;
@@ -560,7 +557,7 @@ void trickyFn_80142524(u8 *obj, u8 *state)
             state[0x7d0] = 0;
             return;
         }
-        found = Tricky_findNearestGroup4BObject();
+        found = Tricky_findNearestGroup4BObject(obj, (TrickyState *)state);
     }
     if (found != NULL) {
         state[0x374] = 2;
