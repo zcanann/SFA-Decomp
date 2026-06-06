@@ -844,29 +844,11 @@ void modelLightStruct_setEnabled(ModelLightStruct *light, u8 enabled, f32 durati
 }
 
 void modelLightStruct_setProjectionFarZ(ModelLightStruct *p, f32 v) {
-    f32 clamped = p->projectionNearZ;
-    if (v < clamped) {
-    } else {
-        clamped = lbl_803DE764;
-        if (v > clamped) {
-        } else {
-            clamped = v;
-        }
-    }
-    p->projectionFarZ = clamped;
+    p->projectionFarZ = (v < p->projectionNearZ) ? p->projectionNearZ : ((v > lbl_803DE764) ? lbl_803DE764 : v);
 }
 
 void modelLightStruct_setProjectionNearZ(ModelLightStruct *p, f32 v) {
-    f32 clamped = lbl_803DE78C;
-    if (v < clamped) {
-    } else {
-        clamped = p->projectionFarZ;
-        if (v > clamped) {
-        } else {
-            clamped = v;
-        }
-    }
-    p->projectionNearZ = clamped;
+    p->projectionNearZ = (v < lbl_803DE78C) ? lbl_803DE78C : ((v > p->projectionFarZ) ? p->projectionFarZ : v);
 }
 
 #pragma peephole on
