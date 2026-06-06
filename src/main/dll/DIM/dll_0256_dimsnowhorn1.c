@@ -8,7 +8,7 @@
  */
 typedef struct DIMSnowHorn1State {
     BaddieState baddie;
-    u8 unk410[0x96D - 0x410];
+    u8 lookController[0x96D - 0x35C]; /* dll_2E look-controller block at 0x35C (start evidenced; true extent unknown) */
     u8 unk96D;
     u8 pad96E[0x980 - 0x96E];
     u8 unk980;
@@ -1496,7 +1496,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     case 2:
         break;
     }
-    dll_2E_func05(obj, (int)inner->baddie.unk35C, -0x2000, 0x2aaa, 3);
+    dll_2E_func05(obj, (int)inner->lookController, -0x2000, 0x2aaa, 3);
     inner->unk96D |= 8;
     if (p3 == 0) {
         idx = -1;

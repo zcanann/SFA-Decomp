@@ -1,8 +1,12 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/baddie_state.h"
 
 typedef struct HighTopRuntime {
-    u8 pad000[0x3ec];
-    u8 lookController[0xb18 - 0x3ec];
+    BaddieState baddie;
+    u8 pad35C[0x3ec - 0x35c];
+    u8 lookController[0x9fd - 0x3ec]; /* dll_2E look-controller block at 0x3EC (start evidenced; true extent unknown) */
+    u8 unk9FD;
+    u8 pad9FE[0xb18 - 0x9fe];
     f32 pathPointWorldPositions[12];
     u8 padB48[0xb6c - 0xb48];
     f32 pathPoint2X;
@@ -11,13 +15,34 @@ typedef struct HighTopRuntime {
     f32 pathPoint0X;
     f32 pathPoint0Y;
     f32 pathPoint0Z;
-    u8 padB84[0xc1c - 0xb84];
+    u8 padB84[0xc16 - 0xb84];
+    s16 unkC16;
+    s16 unkC18;
+    u8 padC1A[2];
     f32 lookTargetX;
     f32 lookTargetY;
     f32 lookTargetZ;
-    u8 padC28[0xc49 - 0xc28];
+    f32 unkC28;
+    u8 padC2C[4];
+    f32 unkC30;
+    u8 padC34[4];
+    f32 unkC38;
+    s32 unkC3C;
+    u16 unkC40;
+    u8 unkC42;
+    u8 unkC43;
+    u8 padC44;
+    u8 unkC45;
+    u8 padC46[3];
     BitFlags8 flagsC49;
+    BitFlags8 flagsC4A;
+    u8 unkC4B;
 } HighTopRuntime;
+
+STATIC_ASSERT(sizeof(HighTopRuntime) == 0xC4C);
+STATIC_ASSERT(offsetof(HighTopRuntime, unk9FD) == 0x9FD);
+STATIC_ASSERT(offsetof(HighTopRuntime, unkC16) == 0xC16);
+STATIC_ASSERT(offsetof(HighTopRuntime, unkC4B) == 0xC4B);
 
 typedef struct HighTopObject {
     s16 yaw;
@@ -55,8 +80,8 @@ int hightop_setScale(void) { return 0x0; }
 #pragma peephole off
 void hightop_func11(int obj, int val) {
     u8 v = val;
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
-    p[0xc43] = v;
+    HighTopRuntime *p = *(HighTopRuntime **)((char *)obj + 0xb8);
+    p->unkC43 = v;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -120,9 +145,9 @@ int hightop_stateHandler00(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler06(int obj, u8 *p2) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    HighTopRuntime *p = *(HighTopRuntime **)((char *)obj + 0xb8);
     if ((s8)p2[0x27a] != 0) {
-        p[0x9fd] |= 1;
+        p->unk9FD |= 1;
     }
     if (GameBit_Get(0x632) != 0) {
         return 8;
@@ -155,7 +180,7 @@ void hightop_func0F(int obj, f32 *ox, f32 *oy, f32 *oz) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler03(int obj, u8 *p2) {
-    int p = *(int *)((char *)obj + 0xb8);
+    HighTopRuntime *p = *(HighTopRuntime **)((char *)obj + 0xb8);
     f32 zero = lbl_803E6AA8;
     *(f32 *)(p2 + 0x294) = zero;
     *(f32 *)(p2 + 0x284) = zero;
@@ -165,7 +190,7 @@ int hightop_stateHandler03(int obj, u8 *p2) {
     *(f32 *)((char *)obj + 0x2c) = zero;
     if ((s8)p2[0x27a] != 0) {
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x78);
-        if (*(u32 *)(p + 0xc3c) == 4) {
+        if (*(u32 *)&p->unkC3C == 4) {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E6AA8, 0);
             *(f32 *)(p2 + 0x2a0) = lbl_803E6AC8;
         } else {
@@ -174,7 +199,7 @@ int hightop_stateHandler03(int obj, u8 *p2) {
         }
     }
     if (*(f32 *)((char *)obj + 0x98) > lbl_803E6B00) {
-        return *(int *)(p + 0xc3c) + 1;
+        return p->unkC3C + 1;
     }
     return 0;
 }
@@ -184,15 +209,15 @@ int hightop_stateHandler03(int obj, u8 *p2) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler05(int obj, u8 *p2) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    HighTopRuntime *p = *(HighTopRuntime **)((char *)obj + 0xb8);
     if ((s8)p2[0x27a] != 0) {
-        ((BitFlags8 *)(p + 0xc49))->b1 = 0;
-        p[0xc4b] = 0xa;
+        p->flagsC49.b1 = 0;
+        p->unkC4B = 0xa;
     }
-    switch ((s8)p[0xc4b]) {
+    switch ((s8)p->unkC4B) {
     case 1:
         if (GameBit_Get(0x62c) != 0) {
-            p[0xc4b] = 2;
+            p->unkC4B = 2;
         }
         break;
     case 0xa:
@@ -209,14 +234,14 @@ int hightop_stateHandler05(int obj, u8 *p2) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_interactionCallback(int obj) {
-    char *p;
+    HighTopRuntime *p;
     seqFn_800394a0(obj);
-    p = *(char **)((char *)obj + 0xb8);
-    *(u8 *)(p + 0x9fd) &= ~1;
-    ((BitFlags8 *)(p + 0xc49))->b4 = 0;
-    ((BitFlags8 *)(p + 0xc49))->b6 = 1;
-    if ((s8)p[0xc4b] == 0) {
-        ((BitFlags8 *)(p + 0xc4a))->b0 = 1;
+    p = *(HighTopRuntime **)((char *)obj + 0xb8);
+    p->unk9FD &= ~1;
+    p->flagsC49.b4 = 0;
+    p->flagsC49.b6 = 1;
+    if ((s8)p->unkC4B == 0) {
+        p->flagsC4A.b0 = 1;
     }
     return 0;
 }
@@ -251,17 +276,17 @@ void hightop_playMovementSfx(int obj, int p2, int p3) {
 #pragma peephole off
 void hightop_getLookTargetYaw(int obj, int mode, int *out) {
     f32 buf[6];
-    char *p;
+    HighTopRuntime *p;
     int yaw;
     switch (mode) {
     case 2:
         if (dll_2E_func0A(0x11, buf) != 0) {
             yaw = getAngle(buf[3] - *(f32 *)((char *)obj + 0xc), buf[5] - *(f32 *)((char *)obj + 0x14));
             *out = yaw + lbl_803DC328;
-            p = *(char **)((char *)obj + 0xb8);
-            *(f32 *)(p + 0xc1c) = buf[3];
-            *(f32 *)(p + 0xc20) = buf[4];
-            *(f32 *)(p + 0xc24) = buf[5];
+            p = *(HighTopRuntime **)((char *)obj + 0xb8);
+            p->lookTargetX = buf[3];
+            p->lookTargetY = buf[4];
+            p->lookTargetZ = buf[5];
         } else {
             *out = *(s16 *)obj + 0x4000;
         }
@@ -333,7 +358,7 @@ void hightop_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, unde
 #pragma peephole off
 void hightop_init(void *obj, u8 *arg) {
     u8 *base = lbl_8032AAB0;
-    char *runtime = *(char **)((char *)obj + 0xb8);
+    HighTopRuntime *runtime = *(HighTopRuntime **)((char *)obj + 0xb8);
     char *pathObj;
     int *node;
     HtInitData local1;
@@ -344,41 +369,41 @@ void hightop_init(void *obj, u8 *arg) {
     local2 = lbl_802C25A4;
     *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
     *(int *)((char *)obj + 0xbc) = (int)hightop_interactionCallback;
-    *(u8 *)(runtime + 0xc45) = arg[0x19];
-    *(s16 *)(runtime + 0xc16) = 5;
-    *(s8 *)(runtime + 0xc4b) = -1;
+    runtime->unkC45 = arg[0x19];
+    runtime->unkC16 = 5;
+    *(s8 *)&runtime->unkC4B = -1;
     node = *(int **)((char *)obj + 0x64);
     if (node != 0) {
         *(int *)((char *)node + 0x30) |= 0xa10;
     }
     ObjGroup_AddObject((int)obj, 38);
     ObjGroup_AddObject((int)obj, 10);
-    (*(void (**)(void *, char *, int, int))((char *)*gPlayerInterface + 4))(obj, runtime, 11, 1);
-    *(f32 *)(runtime + 0x2a4) = lbl_803E6B4C;
-    pathObj = runtime + 4;
+    (*(void (**)(void *, char *, int, int))((char *)*gPlayerInterface + 4))(obj, (char *)runtime, 11, 1);
+    runtime->baddie.unk2A4 = lbl_803E6B4C;
+    pathObj = (char *)runtime + 4;
     *(u8 *)(pathObj + 0x25b) = 1;
     (*(void (**)(char *, int, int, int))((char *)*gPathControlInterface + 4))(pathObj, 3, 1024, 0);
     (*(void (**)(char *, int, u8 *, int *, int))((char *)*gPathControlInterface + 8))(pathObj, 2, &base[0xe8], &lbl_803DC318, 8);
     (*(void (**)(char *, int, u8 *, u8 *, int *))((char *)*gPathControlInterface + 12))(pathObj, 4, &base[0xa8], &base[0xd8], &local8);
     (*(void (**)(void *, char *))((char *)*gPathControlInterface + 32))(obj, pathObj);
-    dll_2E_func05((int)obj, runtime + 0x3ec, -4551, 23665, 6);
-    dll_2E_func08(runtime + 0x3ec, 300, 120);
-    dll_2E_func09(runtime + 0x3ec, &local2, &local1, 6);
-    *(u8 *)(runtime + 0x9fd) |= 2;
-    *(u8 *)(runtime + 0x9fd) |= 8;
-    *(s16 *)(runtime + 0xc18) = *(s16 *)(arg + 0x1a);
-    *(u8 *)(runtime + 0x9fd) |= 1;
+    dll_2E_func05((int)obj, (char *)runtime->lookController, -4551, 23665, 6);
+    dll_2E_func08((char *)runtime->lookController, 300, 120);
+    dll_2E_func09((char *)runtime->lookController, &local2, &local1, 6);
+    runtime->unk9FD |= 2;
+    runtime->unk9FD |= 8;
+    runtime->unkC18 = *(s16 *)(arg + 0x1a);
+    runtime->unk9FD |= 1;
     *(u8 *)(*(int *)((char *)obj + 0x50) + 0x71) = 127;
-    ((BitFlags8 *)(runtime + 0xc49))->b4 = 0;
-    ((BitFlags8 *)(runtime + 0xc49))->b7 = 0;
+    runtime->flagsC49.b4 = 0;
+    runtime->flagsC49.b7 = 0;
     lbl_803DC320 = *(s16 *)(arg + 0x1a);
     if (*(s16 *)(arg + 0x1c) == 0) {
-        *(f32 *)(runtime + 0xc28) = lbl_803E6B50;
+        runtime->unkC28 = lbl_803E6B50;
     } else {
-        *(f32 *)(runtime + 0xc28) = (f32)*(s16 *)(arg + 0x1c) / lbl_803E6B54;
+        runtime->unkC28 = (f32)*(s16 *)(arg + 0x1c) / lbl_803E6B54;
     }
-    ((BitFlags8 *)(runtime + 0xc49))->b6 = 0;
-    ((BitFlags8 *)(runtime + 0xc4a))->b0 = 0;
+    runtime->flagsC49.b6 = 0;
+    runtime->flagsC4A.b0 = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -386,10 +411,10 @@ void hightop_init(void *obj, u8 *arg) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler08(int obj, u8 *p2) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    HighTopRuntime *state = *(HighTopRuntime **)((char *)obj + 0xb8);
     if ((s8)p2[0x27a] != 0) {
         f32 zero;
-        *(f32 *)((char *)state + 0xc30) = lbl_803E6AB4;
+        state->unkC30 = lbl_803E6AB4;
         zero = lbl_803E6AA8;
         *(f32 *)(p2 + 0x294) = zero;
         *(f32 *)(p2 + 0x284) = zero;
@@ -409,7 +434,7 @@ int hightop_stateHandler08(int obj, u8 *p2) {
             }
             break;
         case 5:
-            if (*(f32 *)((char *)state + 0xc30) < lbl_803E6AA8) {
+            if (state->unkC30 < lbl_803E6AA8) {
                 ObjAnim_SetCurrentMove(obj, 10, lbl_803E6AB8, 0);
                 *(f32 *)(p2 + 0x2a0) = lbl_803E6ABC;
             }
@@ -429,7 +454,7 @@ int hightop_stateHandler08(int obj, u8 *p2) {
             }
         }
     }
-    *(f32 *)((char *)state + 0xc30) -= (f32)(u32)framesThisStep;
+    state->unkC30 -= (f32)(u32)framesThisStep;
     return 0;
 }
 #pragma peephole reset
@@ -459,10 +484,10 @@ void hightop_initialise(void) {
 #pragma peephole off
 #pragma dont_inline on
 int hightop_handleMotionEvent(int obj, u8 event) {
-    char *runtime = *(char **)((char *)obj + 0xb8);
+    HighTopRuntime *runtime = *(HighTopRuntime **)((char *)obj + 0xb8);
     switch (event) {
     case 5:
-        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 8);
+        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)runtime, 8);
         break;
     case 6:
         GameBit_Set(0x634, 1);
@@ -472,15 +497,15 @@ int hightop_handleMotionEvent(int obj, u8 event) {
         GameBit_Set(0x634, 0);
         GameBit_Set(0x631, 1);
         *(u8 *)(*(int *)((char *)obj + 0x50) + 0x71) |= 1;
-        *(u16 *)(runtime + 0xc40) &= ~0x140;
-        *(u8 *)(runtime + 0x9fd) &= ~2;
-        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 7);
+        runtime->unkC40 &= ~0x140;
+        runtime->unk9FD &= ~2;
+        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)runtime, 7);
         break;
     case 8:
         (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(7, obj, -1);
         break;
     case 9:
-        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 7);
+        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)runtime, 7);
         break;
     }
     return 0;
@@ -492,7 +517,7 @@ int hightop_handleMotionEvent(int obj, u8 event) {
 #pragma scheduling off
 #pragma peephole off
 void hightop_hitDetect(int obj) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    HighTopRuntime *p = *(HighTopRuntime **)((char *)obj + 0xb8);
     f32 l10;
     f32 lc;
     f32 l8;
@@ -502,28 +527,28 @@ void hightop_hitDetect(int obj) {
     if (hit == 0) {
         return;
     }
-    st = *(s16 *)(p + 0x274);
+    st = p->baddie.controlMode;
     if (st != 4 && (u16)(st - 9) > 1) {
         if (hit == 0xf || hit == 0xe) {
             return;
         }
     }
-    if (*(s16 *)(p + 0xc18) == 0) {
+    if (p->unkC18 == 0) {
         return;
     }
     Obj_SpawnHitLightAndFade(obj, &l8, lbl_803E6B40);
-    objSoundFn_800392f0(obj, (int)(p + 0x3bc), &lbl_803DC308 + randomGetRange(0, 0) * 6, 1);
-    st = *(s16 *)(p + 0x274);
+    objSoundFn_800392f0(obj, (int)((char *)p + 0x3bc), &lbl_803DC308 + randomGetRange(0, 0) * 6, 1);
+    st = p->baddie.controlMode;
     if (st != 3) {
-        *(int *)(p + 0xc3c) = st;
+        p->unkC3C = st;
     }
-    st = *(s16 *)(p + 0x274);
+    st = p->baddie.controlMode;
     if (st == 2 || st == 8) {
-        *(s16 *)(p + 0xc18) -= 1;
+        p->unkC18 -= 1;
         fn_8009A8C8(obj, lbl_803E6B30);
-        if (*(s16 *)(p + 0xc18) <= 0) {
+        if (p->unkC18 <= 0) {
             (*(void (**)(void *))((char *)*gGameUIInterface + 0x60))(*gGameUIInterface);
-            ((BitFlags8 *)(p + 0xc49))->b7 = 0;
+            p->flagsC49.b7 = 0;
             GameBit_Set(0x634, 0);
             if (Obj_IsLoadingLocked() != 0) {
                 int spawn = Obj_AllocObjectSetup(0x2c, 0xd4);
@@ -538,13 +563,13 @@ void hightop_hitDetect(int obj) {
             }
             *(s16 *)((char *)obj + 0x2) = 0;
             *(s16 *)((char *)obj + 0x4) = 0;
-            *(u8 *)(p + 0x25f) = 0;
+            p->baddie.unk25F = 0;
             *(int *)p |= 0x1000000;
             GameBit_Set(0xb48, 1);
             (*(void (**)(void *))((char *)*gGameUIInterface + 0x60))(*gGameUIInterface);
         }
     } else {
-        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, p, 3);
+        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)p, 3);
     }
 }
 #pragma peephole reset
@@ -580,7 +605,7 @@ void hightop_update(int obj) {
     *(s16 *)(p + 0x330) = 0;
     *(int *)p &= ~0x400000;
     (*(void (**)(int, char *, f32, f32, void **, void *))((char *)*gPlayerInterface + 0x8))(
-        obj, p, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);
+        obj, (char *)p, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);
     hightop_playMovementSfx(obj, (int)p, (int)p);
     characterDoEyeAnims(obj, (void *)(p + 0x38c));
     objAnimFn_80038f38(obj, (void *)(p + 0x3bc));
@@ -588,7 +613,7 @@ void hightop_update(int obj) {
     if (ObjTrigger_IsSet(obj) != 0) {
         s8 v;
         buttonDisable(0, 0x100);
-        v = (s8)p[0xc4b];
+        v = (s8)*(u8 *)(p + 0xc4b);
         if (v != -1) {
             if (v < 0xa) {
                 (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(v, obj, -1);
@@ -648,7 +673,7 @@ int hightop_stateHandler01(int obj, int p) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler07(int obj, int p) {
-    u8 *rt = *(u8 **)((char *)obj + 0xb8);
+    HighTopRuntime *rt = *(HighTopRuntime **)((char *)obj + 0xb8);
     f32 v;
     if ((s8)*(u8 *)((char *)p + 0x27a) != 0) {
         v = lbl_803E6AA8;
@@ -660,11 +685,11 @@ int hightop_stateHandler07(int obj, int p) {
         *(f32 *)((char *)obj + 0x2c) = v;
         ObjHits_SyncObjectPositionIfDirty(obj);
         (*(void (**)(void))((char *)*gGameUIInterface + 0x60))();
-        ((BitFlags8 *)(rt + 0xc49))->b7 = 0;
-        ((BitFlags8 *)(rt + 0xc49))->b1 = 0;
-        *(u8 *)(rt + 0xc4b) = 5;
+        rt->flagsC49.b7 = 0;
+        rt->flagsC49.b1 = 0;
+        rt->unkC4B = 5;
         *(f32 *)((char *)p + 0x2a0) = lbl_803E6AAC;
-        *(u8 *)(rt + 0x9fd) &= ~1;
+        rt->unk9FD &= ~1;
         ObjGroup_RemoveObject(obj, 10);
     }
     if ((s8)*(u8 *)((char *)p + 0x346) != 0) {
@@ -684,14 +709,14 @@ int hightop_stateHandler07(int obj, int p) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler04(int obj, int p) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    HighTopRuntime *state = *(HighTopRuntime **)((char *)obj + 0xb8);
     int move = -1;
     int count;
     int *player;
     if ((s8)*(u8 *)((char *)p + 0x27a) != 0) {
-        ((BitFlags8 *)((char *)state + 0xc49))->b1 = 1;
-        *(f32 *)((char *)state + 0xc30) = (f32)(int)randomGetRange(0x1f4, 0x3e8);
-        *(u8 *)((char *)state + 0xc4b) = 0;
+        state->flagsC49.b1 = 1;
+        state->unkC30 = (f32)(int)randomGetRange(0x1f4, 0x3e8);
+        state->unkC4B = 0;
         if (*(s16 *)((char *)obj + 0xa0) != 2) {
             move = 2;
             *(f32 *)((char *)p + 0x2a0) = lbl_803E6AAC;
@@ -700,22 +725,22 @@ int hightop_stateHandler04(int obj, int p) {
     }
     count = GameBit_Get(0x9c9) + GameBit_Get(0x9c7) + GameBit_Get(0x9cb) + GameBit_Get(0x9cd);
     if (GameBit_Get(0x62b) != 0) {
-        int *state2;
+        HighTopRuntime *state2;
         GameBit_Set(0x62f, 1);
         ObjHits_MarkObjectPositionDirty(obj);
         ObjHits_ClearSourceMask(obj, 1);
         *(u8 *)(*(int *)((char *)obj + 0x50) + 0x71) &= ~1;
-        *(u8 *)((char *)state + 0xc4b) = -1;
-        *(u16 *)((char *)state + 0xc40) |= 0x40;
-        *(u16 *)((char *)state + 0xc40) |= 0x20;
-        ((BitFlags8 *)((char *)state + 0xc49))->b1 = 0;
+        state->unkC4B = -1;
+        state->unkC40 |= 0x40;
+        state->unkC40 |= 0x20;
+        state->flagsC49.b1 = 0;
         (*(void (**)(void *, int, int, void *))((char *)*gRomCurveInterface + 0xa8))(
             (char *)state + 0xa10, obj, 0x3463a, *gRomCurveInterface);
-        state2 = *(int **)((char *)obj + 0xb8);
-        ((BitFlags8 *)((char *)state2 + 0xc49))->b7 = 1;
+        state2 = *(HighTopRuntime **)((char *)obj + 0xb8);
+        state2->flagsC49.b7 = 1;
         (*(void (**)(int, int, void *))((char *)*gGameUIInterface + 0x58))(lbl_803DC320, 0x5ce, *gGameUIInterface);
         (*(void (**)(int, void *))((char *)*gGameUIInterface + 0x5c))(
-            *(s16 *)((char *)state2 + 0xc18), *gGameUIInterface);
+            state2->unkC18, *gGameUIInterface);
         fn_80039264((char *)state + 0xb48);
         return 7;
     }
@@ -724,20 +749,20 @@ int hightop_stateHandler04(int obj, int p) {
         return 0;
     }
     objModelAndSoundFn_80039118(obj, (char *)state + 0xb48);
-    *(f32 *)((char *)state + 0xc30) -= (f32)(u32)framesThisStep;
+    state->unkC30 -= (f32)(u32)framesThisStep;
     if (*(s16 *)((char *)obj + 0xa0) != 9 && *(s16 *)((char *)obj + 0xa0) != 0x11) {
         RandomTimer_UpdateRangeTrigger((char *)state + 0xc34, lbl_803E6AD8, lbl_803E6ADC);
         if (count == 0) {
-            if (*(f32 *)((char *)state + 0xc30) < lbl_803E6AA8) {
+            if (state->unkC30 < lbl_803E6AA8) {
                 *(f32 *)((char *)p + 0x2a0) = lbl_803E6AE0 * (f32)count + lbl_803E6AB0;
                 move = 9;
-                *(f32 *)((char *)state + 0xc30) = (f32)(int)(randomGetRange(0x2bc, 0x3e8) - count * 0x12c);
+                state->unkC30 = (f32)(int)(randomGetRange(0x2bc, 0x3e8) - count * 0x12c);
             }
         } else {
             if (randFn_80080100((4 - count) * 0xa) != 0) {
                 *(f32 *)((char *)p + 0x2a0) = lbl_803E6AE8 * (f32)count + lbl_803E6AE4;
                 move = 9;
-                *(f32 *)((char *)state + 0xc30) = (f32)(int)(randomGetRange(0x2bc, 0x3e8) - count * 0x12c);
+                state->unkC30 = (f32)(int)(randomGetRange(0x2bc, 0x3e8) - count * 0x12c);
             }
         }
     }
@@ -753,7 +778,7 @@ int hightop_stateHandler04(int obj, int p) {
     }
     player = (int *)Obj_GetPlayerObject();
     if (player == 0) {
-        *(u8 *)((char *)state + 0x9fd) &= ~1;
+        state->unk9FD &= ~1;
     } else {
         f32 dy = *(f32 *)((char *)player + 0x10) - *(f32 *)((char *)obj + 0x10);
         f32 a = dy >= lbl_803E6AA8 ? dy : -dy;
@@ -765,9 +790,9 @@ int hightop_stateHandler04(int obj, int p) {
             doBlock = b > lbl_803E6AF0;
         }
         if (doBlock == 0) {
-            *(u8 *)((char *)state + 0x9fd) &= ~1;
+            state->unk9FD &= ~1;
         } else {
-            *(u8 *)((char *)state + 0x9fd) |= 1;
+            state->unk9FD |= 1;
             if (randomGetRange(0, 0x64) == 0 && *(s16 *)((char *)obj + 0xa0) != 9) {
                 f32 c = *(f32 *)((char *)player + 0x10) - *(f32 *)((char *)obj + 0x10);
                 f32 ac = c >= lbl_803E6AA8 ? c : -c;
@@ -786,7 +811,7 @@ int hightop_stateHandler04(int obj, int p) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler02(int obj, int p, f32 t) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    HighTopRuntime *state = *(HighTopRuntime **)((char *)obj + 0xb8);
     s16 d336;
     int absd;
     int conv;
@@ -806,7 +831,7 @@ int hightop_stateHandler02(int obj, int p, f32 t) {
     }
     d336 = *(s16 *)((char *)p + 0x336);
     absd = d336 < 0 ? -d336 : d336;
-    if (*(s16 *)((char *)state + 0xc16) < absd) {
+    if (state->unkC16 < absd) {
         conv = (int)(lbl_803E6B08 * ((f32)d336 * t));
         *(s16 *)obj = (s16)(*(s16 *)obj + ((s16)conv >> 5));
     } else {
@@ -889,20 +914,20 @@ int hightop_stateHandler02(int obj, int p, f32 t) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler09(int obj, int p) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    HighTopRuntime *state = *(HighTopRuntime **)((char *)obj + 0xb8);
     int *sub = *(int **)((char *)obj + 0x4c);
     int r25;
     int i;
-    if ((s8)*(u8 *)((char *)p + 0x27a) != 0 || ((BitFlags8 *)((char *)state + 0xc49))->b6 != 0) {
-        if (((BitFlags8 *)((char *)state + 0xc4a))->b0 != 0) {
-            *(u8 *)((char *)state + 0xc4b) = 9;
+    if ((s8)*(u8 *)((char *)p + 0x27a) != 0 || state->flagsC49.b6 != 0) {
+        if (state->flagsC4A.b0 != 0) {
+            state->unkC4B = 9;
         } else {
-            *(u8 *)((char *)state + 0xc4b) = 0;
+            state->unkC4B = 0;
         }
-        *(u8 *)((char *)state + 0x9fd) &= ~1;
-        ((BitFlags8 *)((char *)state + 0xc49))->b1 = 0;
-        *(u8 *)((char *)state + 0xc42) = 0;
-        ((BitFlags8 *)((char *)state + 0xc49))->b6 = 0;
+        state->unk9FD &= ~1;
+        state->flagsC49.b1 = 0;
+        state->unkC42 = 0;
+        state->flagsC49.b6 = 0;
         *(u32 *)p |= 0x1000000;
         storeZeroToFloatParam((char *)state + 0xc2c);
         ObjHits_EnableObject(obj);
@@ -913,7 +938,7 @@ int hightop_stateHandler09(int obj, int p) {
         }
         *(f32 *)((char *)p + 0x2a0) = lbl_803E6AAC;
         r25 = GameBit_Get(0x3f0) - 1;
-        *(int *)((char *)state + 0xc3c) = 9;
+        state->unkC3C = 9;
         for (i = 0; i < 4; i++) {
             GameBit_Set((&lbl_803DC330)[i], i > r25);
         }
@@ -954,9 +979,9 @@ int hightop_stateHandler09(int obj, int p) {
         GameBit_Set(0x3f0, total);
         GameBit_Set(0xaf7, 0);
         if (randFn_80080100(5 - total) != 0) {
-            *(u8 *)((char *)state + 0xc4b) = 2;
+            state->unkC4B = 2;
         } else {
-            *(u8 *)((char *)state + 0xc4b) = 9;
+            state->unkC4B = 9;
         }
         objModelClearVecFn_8003aa40(obj);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0);
@@ -976,9 +1001,9 @@ int hightop_stateHandler09(int obj, int p) {
     }
     if (fn_80080150((char *)state + 0xc2c) != 0) {
         if (timerCountDown((char *)state + 0xc2c) != 0) {
-            *(u8 *)((char *)state + 0xc4b) = -1;
+            state->unkC4B = -1;
             (*(void (**)(int, int, int, void *))((char *)*gObjectTriggerInterface + 0x48))(
-                lbl_8032AB30[*(u8 *)((char *)state + 0xc42)], obj, -1, *gObjectTriggerInterface);
+                lbl_8032AB30[state->unkC42], obj, -1, *gObjectTriggerInterface);
         }
     } else {
         if (Vec_distance((f32 *)((char *)Obj_GetPlayerObject() + 0x18), (f32 *)((char *)obj + 0x18)) > lbl_803E6AA4) {
@@ -989,8 +1014,8 @@ int hightop_stateHandler09(int obj, int p) {
                     roll -= lbl_8032AB3C[idx];
                     idx++;
                 }
-                *(u8 *)((char *)state + 0xc42) = (u8)idx;
-                *(u8 *)((char *)state + 0x9fd) |= 1;
+                state->unkC42 = (u8)idx;
+                state->unk9FD |= 1;
                 s16toFloat((char *)state + 0xc2c, 0x14);
             }
         }
@@ -1003,21 +1028,21 @@ int hightop_stateHandler09(int obj, int p) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler10(int obj, int p) {
-    u8 *rt = *(u8 **)((char *)obj + 0xb8);
+    HighTopRuntime *rt = *(HighTopRuntime **)((char *)obj + 0xb8);
     int r;
     int i;
     if ((s8)*(u8 *)((char *)p + 0x27a) != 0) {
-        *(u8 *)(rt + 0xc4b) = 3;
+        rt->unkC4B = 3;
         *(int *)((char *)p + 0) |= 0x1000000;
     }
     if (GameBit_Get(451) != 0) {
         if ((int)GameBit_Get(238) == 2) {
-            *(u8 *)(rt + 0xc4b) = 7;
+            rt->unkC4B = 7;
         } else {
-            *(u8 *)(rt + 0xc4b) = 9;
+            rt->unkC4B = 9;
         }
     } else {
-        *(u8 *)(rt + 0xc4b) = 3;
+        rt->unkC4B = 3;
     }
     if (Vec_distance((f32 *)((char *)Obj_GetPlayerObject() + 0x18), (f32 *)((char *)obj + 0x18)) > lbl_803E6AA4) {
         if (randFn_80080100(500) != 0) {

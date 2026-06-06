@@ -1031,11 +1031,11 @@ int mediumbasket_updateOpenState(int obj, int p)
   extern f32 lbl_803E2D70;
   extern f32 lbl_803E2D74;
   extern f32 lbl_803E2D78;
-  BaddieState *sub;
+  GroundBaddieState *sub;
   int sub_40c;
   int p54;
 
-  sub = *(BaddieState **)(obj + 0xb8);
+  sub = *(GroundBaddieState **)(obj + 0xb8);
   sub_40c = *(int *)&sub->control;
   p54 = *(int *)(obj + 0x54);
   *(s16 *)(p54 + 0x60) |= 1;
@@ -1081,11 +1081,11 @@ int mediumbasket_updateOpenHitState(int obj, int p)
   extern f32 lbl_803E2D78;
   extern f32 lbl_803E2D7C;
   extern f32 lbl_803E2D80;
-  BaddieState *sub;
+  GroundBaddieState *sub;
   int sub_40c;
   int p54;
 
-  sub = *(BaddieState **)(obj + 0xb8);
+  sub = *(GroundBaddieState **)(obj + 0xb8);
   sub_40c = *(int *)&sub->control;
   p54 = *(int *)(obj + 0x54);
   *(s16 *)(p54 + 0x60) |= 1;
@@ -1999,13 +1999,13 @@ void mediumbasket_spawnContactObject(int *obj, int *state);
 #pragma peephole off
 void dll_CA_func0B(int obj, int message)
 {
-    BaddieState *state = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *state = *(GroundBaddieState **)(obj + 0xb8);
 
     switch ((u8)message) {
     case 0x80:
         ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, (int)state, 2);
-        state->unk270 = 4;
-        state->moveJustStartedB = 1;
+        state->baddie.unk270 = 4;
+        state->baddie.moveJustStartedB = 1;
         break;
     }
 }
@@ -2028,10 +2028,10 @@ int fn_8015B5CC(int obj, int state)
 #pragma peephole off
 int fn_8015B614(int obj, int state)
 {
-    BaddieState *sub;
+    GroundBaddieState *sub;
 
     if ((s8)*(u8 *)(state + 0x27b) != 0) {
-        sub = *(BaddieState **)(obj + 0xb8);
+        sub = *(GroundBaddieState **)(obj + 0xb8);
         sub->unk405 = 0;
         GameBit_Set((s32)sub->gameBitB, 0);
         GameBit_Set((s32)sub->gameBitA, 1);
@@ -2069,7 +2069,7 @@ int fn_8015B670(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateLandingState(int obj, int state)
 {
-    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int player;
     f32 noBlend;
 
@@ -2109,7 +2109,7 @@ playLandingExtras:
 #pragma peephole off
 int mediumbasket_updateContactHitState(int obj, int state)
 {
-    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int control;
     f32 noBlend;
 
@@ -2144,7 +2144,7 @@ int mediumbasket_updateContactHitState(int obj, int state)
 #pragma peephole off
 int fn_8015BC18(int obj, int state)
 {
-    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int control;
 
     if ((s8)*(u8 *)(state + 0x27a) == 0) {
@@ -2207,7 +2207,7 @@ playDropExtras:
 #pragma peephole off
 int mediumbasket_updateCommDownState(int obj, int state)
 {
-    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int control = *(int *)&sub->control;
 
     *(u8 *)(control + 0x44) |= 4;
@@ -2266,7 +2266,7 @@ int mediumbasket_updateHeightBlendState(int obj, int state)
 #pragma peephole off
 int fn_8015C0B4(int obj, int state)
 {
-    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int choice;
 
     *(u8 *)(*(int *)&sub->control + 0x44) |= 4;
@@ -2309,7 +2309,7 @@ int fn_8015C0B4(int obj, int state)
 #pragma peephole off
 int fn_8015C2AC(int obj, int state)
 {
-    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int choice;
 
     *(u8 *)(*(int *)&sub->control + 0x44) |= 4;
@@ -2353,7 +2353,7 @@ int fn_8015C2AC(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateSpinState(int obj, int state)
 {
-    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int control;
 
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
@@ -2380,7 +2380,7 @@ int mediumbasket_updateSpinState(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateImpactHitState(int obj, int state)
 {
-    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int control = *(int *)&sub->control;
 
     ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
@@ -2409,7 +2409,7 @@ int mediumbasket_updateImpactHitState(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateHideResetState(int obj, int state)
 {
-    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int hitState;
 
     if (*(s16 *)(state + 0x276) != 4 && (s8)*(u8 *)(state + 0x27a) != 0) {
@@ -2441,7 +2441,7 @@ int mediumbasket_updateHideResetState(int obj, int state)
 #pragma peephole off
 int fn_8015B2A0(int obj, int state)
 {
-    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
     int route;
     f32 neutralBlend;
 
@@ -2465,13 +2465,13 @@ int fn_8015B2A0(int obj, int state)
     } else if (sub->targetState == 1) {
         return 8;
     }
-    route = (int)sub->unk35C;
+    route = (int)sub->route35C;
     neutralBlend = lbl_803E2D14;
     *(f32 *)(state + 0x290) = neutralBlend;
     *(f32 *)(state + 0x28c) = neutralBlend;
     memcpy((void *)route, (void *)(obj + 0xc), 0xc);
-    memcpy((void *)(sub->unk35C + 0xc), (void *)(*(int *)(state + 0x2d0) + 0xc), 0xc);
-    voxmaps_updateRoutePath((void *)route, (void *)(sub->unk35C + 0x28));
+    memcpy((void *)(sub->route35C + 0xc), (void *)(*(int *)(state + 0x2d0) + 0xc), 0xc);
+    voxmaps_updateRoutePath((void *)route, (void *)(sub->route35C + 0x28));
     if (*(u8 *)(route + 0x25) == 0) {
         ((void (*)(int, int, f32, f32, f32, f32, f32))((void **)*gPlayerInterface)[7])(
             obj, state, *(f32 *)(route + 0x18), *(f32 *)(route + 0x20), lbl_803E2D14,
@@ -2495,7 +2495,7 @@ int fn_8015B2A0(int obj, int state)
 #pragma peephole off
 int fn_8015AF10(int obj, int state)
 {
-    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
 
     if ((s8)*(u8 *)(state + 0x27b) != 0) {
         if ((s32)*(f32 *)(state + 0x2c0) > 0x37) {
@@ -2789,7 +2789,7 @@ int dll_CA_getObjectTypeId(void) { return 0x49; }
 #pragma peephole off
 void dll_CA_free(int obj)
 {
-    BaddieState *state = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *state = *(GroundBaddieState **)(obj + 0xb8);
 
     Camera_DisableViewYOffset();
     ObjGroup_RemoveObject(obj, 3);
@@ -2806,7 +2806,7 @@ void dll_CA_free(int obj)
 #pragma peephole off
 void dll_CA_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
 {
-    BaddieState *state = *(BaddieState **)(obj + 0xb8);
+    GroundBaddieState *state = *(GroundBaddieState **)(obj + 0xb8);
 
     if (visible == 0) {
         goto done;
@@ -2841,24 +2841,24 @@ void dll_CA_hitDetect(int obj)
 #pragma scheduling reset
 
 #pragma scheduling off
-void mediumbasket_initWhirlpoolState(int* obj, BaddieState *state) {
+void mediumbasket_initWhirlpoolState(int* obj, GroundBaddieState *state) {
     f32 fz;
-    state->unk2AC = lbl_803E2CE8;
-    *(char *)&state->inWhirlpoolGroup = (int)state->unk2A8;
-    state->unk2A8 = lbl_803E2CEC;
-    state->unk2E4 = 0x42001;
-    state->unk308 = lbl_803E2CF0;
-    state->unk300 = lbl_803E2CF4;
-    state->unk304 = lbl_803E2CF8;
-    state->unk320 = 0;
+    state->baddie.unk2AC = lbl_803E2CE8;
+    *(char *)&state->baddie.inWhirlpoolGroup = (int)state->baddie.unk2A8;
+    state->baddie.unk2A8 = lbl_803E2CEC;
+    state->baddie.unk2E4 = 0x42001;
+    state->baddie.unk308 = lbl_803E2CF0;
+    state->baddie.unk300 = lbl_803E2CF4;
+    state->baddie.unk304 = lbl_803E2CF8;
+    state->baddie.unk320 = 0;
     fz = lbl_803E2CFC;
-    *(f32 *)&state->eventFlags = fz;
-    state->unk321 = 5;
-    state->unk318 = fz;
-    state->unk322 = 7;
-    state->unk31C = fz;
-    state->unk33A = 1;
-    state->inWhirlpoolGroup = 0;
+    *(f32 *)&state->baddie.eventFlags = fz;
+    state->baddie.unk321 = 5;
+    state->baddie.unk318 = fz;
+    state->baddie.unk322 = 7;
+    state->baddie.unk31C = fz;
+    state->baddie.unk33A = 1;
+    state->baddie.inWhirlpoolGroup = 0;
     ObjModel_SetRenderCallback(Obj_GetActiveModel(obj), (void*)renderWhirlpool);
 }
 #pragma scheduling reset
@@ -2893,27 +2893,27 @@ void mediumbasket_spawnContactObject(int* obj, int* state) {
     }
 }
 
-int mediumbasket_updateControlMove5State(int* obj, BaddieState *state) {
+int mediumbasket_updateControlMove5State(int* obj, GroundBaddieState *state) {
     u8* t = *(u8**)((char*)(*(int**)((char*)obj + 0xb8)) + 0x40c);
     t[0x44] |= 4;
-    state->moveSpeed = lbl_803E2D38;
-    if ((s8)state->moveJustStartedA != 0) {
+    state->baddie.moveSpeed = lbl_803E2D38;
+    if ((s8)state->baddie.moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2D14, 0);
-        state->moveDone = 0;
+        state->baddie.moveDone = 0;
     }
-    state->unk34D = 1;
+    state->baddie.unk34D = 1;
     ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, (u8 *)state, timeDelta, 4);
     return 0;
 }
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015B524(int* obj, BaddieState *state) {
-    if ((s8)state->moveJustStartedB != 0) {
+int fn_8015B524(int* obj, GroundBaddieState *state) {
+    if ((s8)state->baddie.moveJustStartedB != 0) {
         ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 3);
     }
-    if ((s8)state->moveDone != 0) {
-        if (state->controlMode == 3) {
+    if ((s8)state->baddie.moveDone != 0) {
+        if (state->baddie.controlMode == 3) {
             ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 0);
         } else {
             return 8;
@@ -2924,11 +2924,11 @@ int fn_8015B524(int* obj, BaddieState *state) {
 #pragma peephole reset
 #pragma scheduling reset
 
-int fn_8015B748(int* obj, BaddieState *state) {
-    BaddieState* sub = *(BaddieState**)((char*)obj + 0xb8);
-    if ((s8)state->unk354 < 1) return 3;
-    if ((s8)state->moveDone != 0) {
-        if (state->controlMode == 12) {
+int fn_8015B748(int* obj, GroundBaddieState *state) {
+    GroundBaddieState* sub = *(GroundBaddieState**)((char*)obj + 0xb8);
+    if ((s8)state->baddie.unk354 < 1) return 3;
+    if ((s8)state->baddie.moveDone != 0) {
+        if (state->baddie.controlMode == 12) {
             if (sub->aggression > 50) {
                 ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 0);
             } else {
@@ -2943,10 +2943,10 @@ int fn_8015B748(int* obj, BaddieState *state) {
 
 #pragma scheduling off
 #pragma peephole off
-void mediumbasket_leaveWhirlpoolGroup(int* obj, BaddieState *state) {
-    if (state->inWhirlpoolGroup != 0) {
+void mediumbasket_leaveWhirlpoolGroup(int* obj, GroundBaddieState *state) {
+    if (state->baddie.inWhirlpoolGroup != 0) {
         ObjGroup_RemoveObject(obj, 80);
-        state->inWhirlpoolGroup = 0;
+        state->baddie.inWhirlpoolGroup = 0;
     }
     *(u16*)obj = (float)(int)*(s16*)obj - lbl_803E2CD8 * timeDelta;
 }
@@ -2955,10 +2955,10 @@ void mediumbasket_leaveWhirlpoolGroup(int* obj, BaddieState *state) {
 
 #pragma scheduling off
 #pragma peephole off
-void mediumbasket_enterWhirlpoolGroup(int* obj, BaddieState *state) {
-    if (state->inWhirlpoolGroup == 0) {
+void mediumbasket_enterWhirlpoolGroup(int* obj, GroundBaddieState *state) {
+    if (state->baddie.inWhirlpoolGroup == 0) {
         ObjGroup_AddObject(obj, 80);
-        state->inWhirlpoolGroup = 1;
+        state->baddie.inWhirlpoolGroup = 1;
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
     *(u8*)(*(int*)((char*)obj + 0x54) + 0x70) = 0;
@@ -3025,7 +3025,7 @@ int mediumbasket_checkTargetState(int obj, int p2)
   extern f32 lbl_803E2D00;
   extern f32 lbl_803E2D14;
   extern f32 lbl_803E2D24;
-  BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+  GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
   f32 neutralBlend;
 
   if (*(void **)(p2 + 0x2d0) == NULL) goto return0;

@@ -99,7 +99,25 @@ typedef struct BaddieState {
     u8 unk355;
     u8 unk356; /* bit flags 1|2 */
     u8 unk357[0x35C - 0x357];
-    u8 unk35C[0x3DC - 0x35C]; /* buffer handed to gBaddieControlInterface[10] */
+} BaddieState;
+
+STATIC_ASSERT(sizeof(BaddieState) == 0x35C);
+STATIC_ASSERT(offsetof(BaddieState, controlMode) == 0x274);
+STATIC_ASSERT(offsetof(BaddieState, moveSpeed) == 0x2A0);
+STATIC_ASSERT(offsetof(BaddieState, eventFlags) == 0x314);
+STATIC_ASSERT(offsetof(BaddieState, moveDone) == 0x346);
+
+/*
+ * GroundBaddieState - BaddieState plus the route/config tail shared by the
+ * ground-bug baddie cluster (scarab dll_CA/CB/CE, mediumbasket; treasurechest
+ * and lightfoot reference the same tail offsets). The 0x35C+ region is
+ * PER-FAMILY in general: the dll_2E look-controller block sits at 0x35C for
+ * DRpushcart/DIMSnowHorn1, 0x3EC for hightop, 0x4C4 for DR_CloudRunner -
+ * which is why it is not part of BaddieState itself.
+ */
+typedef struct GroundBaddieState {
+    BaddieState baddie;
+    u8 route35C[0x3DC - 0x35C]; /* route/voxmap buffer handed to gBaddieControlInterface[10] */
     void *path; /* rom-curve/path record */
     int savedObjC0; /* obj+0xC0 swap slot around the player-interface update */
     u8 unk3E4[4];
@@ -120,14 +138,10 @@ typedef struct BaddieState {
     u8 aggression; /* percent-ish; randomGetRange(0, x), > 50 compares */
     u8 unk407[0x40C - 0x407];
     void *control; /* per-family control/extra record (engine-allocated; treasurechest casts its slot to LandedArwingState*) */
-} BaddieState;
+} GroundBaddieState;
 
-STATIC_ASSERT(sizeof(BaddieState) == 0x410);
-STATIC_ASSERT(offsetof(BaddieState, controlMode) == 0x274);
-STATIC_ASSERT(offsetof(BaddieState, moveSpeed) == 0x2A0);
-STATIC_ASSERT(offsetof(BaddieState, eventFlags) == 0x314);
-STATIC_ASSERT(offsetof(BaddieState, moveDone) == 0x346);
-STATIC_ASSERT(offsetof(BaddieState, targetState) == 0x402);
-STATIC_ASSERT(offsetof(BaddieState, control) == 0x40C);
+STATIC_ASSERT(sizeof(GroundBaddieState) == 0x410);
+STATIC_ASSERT(offsetof(GroundBaddieState, targetState) == 0x402);
+STATIC_ASSERT(offsetof(GroundBaddieState, control) == 0x40C);
 
 #endif /* MAIN_DLL_BADDIE_STATE_H_ */
