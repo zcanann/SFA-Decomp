@@ -1,6 +1,7 @@
 #include "main/expgfx.h"
 #include "main/frustum.h"
 #include "main/lightmap.h"
+#include "main/objanim_internal.h"
 #include "main/objlib.h"
 
 
@@ -934,6 +935,7 @@ void FUN_8005bc0c(void)
   int iVar5;
   int iVar6;
   int iVar7;
+  ObjModelInstance *modelDef;
   uint *puVar8;
   
   iVar2 = FUN_8028683c();
@@ -941,7 +943,8 @@ void FUN_8005bc0c(void)
   puVar8 = &DAT_8038753c;
   for (iVar7 = 1; iVar7 < DAT_803ddb2e; iVar7 = iVar7 + 1) {
     iVar6 = *(int *)(iVar3 + (*puVar8 & 0x3ff) * 4);
-    uVar4 = *(uint *)(*(int *)(iVar6 + 0x50) + 0x44);
+    modelDef = ((ObjAnimComponent *)iVar6)->modelInstance;
+    uVar4 = modelDef->flags;
     if (((uVar4 & 0x800) == 0) && ((*(byte *)(*(int *)(iVar6 + 0x50) + 0x5f) & 0x10) == 0)) {
       if ((uVar4 & 0x800000) == 0) {
         (**(code **)(*DAT_803dd6fc + 0x1c))(0,0,0,1,iVar6);
@@ -3856,6 +3859,7 @@ void getVisibleObjects(s8 *opacity)
     int j;
     u8 *s54;
     int *model;
+    ObjModelInstance *modelDef;
     u32 tf;
     u32 mode;
     s16 t;
@@ -3872,6 +3876,7 @@ void getVisibleObjects(s8 *opacity)
     cur = opacity;
     for (; i < count; i++) {
         o = (u8 *)*p;
+        modelDef = ((ObjAnimComponent *)o)->modelInstance;
         *(u16 *)(o + 0xb0) &= ~0x800;
         j = 0;
         sub = o;
@@ -3884,8 +3889,8 @@ void getVisibleObjects(s8 *opacity)
         }
         if (i >= part) {
             *cur = (s8)objUpdateOpacity(o);
-            if (*cur != 0 || (*(u32 *)(*(u8 **)(o + 0x50) + 0x44) & 0x200000) != 0) {
-                if ((*(u32 *)(*(u8 **)(o + 0x50) + 0x44) & 0x80000) != 0) {
+            if (*cur != 0 || (modelDef->flags & 0x200000) != 0) {
+                if ((modelDef->flags & 0x80000) != 0) {
                     *(f32 *)(o + 0xa4) = (f32)(*(u8 *)(*(u8 **)(o + 0x50) + 0x74) * 100);
                     depthInt = (int)*(f32 *)(o + 0xa4);
                 } else {
@@ -3914,7 +3919,7 @@ void getVisibleObjects(s8 *opacity)
                     key = 0;
                     model = Obj_GetActiveModel((int *)o);
                     if (*(u8 *)(o + 0x37) == 0xff && (*(s16 *)(o + 6) & 0x80) == 0 &&
-                        ((tf = *(u32 *)(*(u8 **)(o + 0x50) + 0x44)) & 0x40000) == 0 &&
+                        ((tf = modelDef->flags) & 0x40000) == 0 &&
                         *(void **)(model + 0x16) == NULL) {
                         key |= 0x80000000;
                         t1000 = 1000 - (depthInt & 0xffff);
@@ -3933,7 +3938,7 @@ void getVisibleObjects(s8 *opacity)
                             lbl_803DCE30++;
                         }
                     } else {
-                        if ((*(u32 *)(*(u8 **)(o + 0x50) + 0x44) & 0x800) != 0 ||
+                        if ((modelDef->flags & 0x800) != 0 ||
                             (*(u8 *)(*(u8 **)(o + 0x50) + 0x5f) & 0x10) != 0) {
                             mode = 0x1f;
                         } else {

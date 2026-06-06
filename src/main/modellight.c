@@ -1,4 +1,5 @@
 #include "main/model_light.h"
+#include "main/objanim_internal.h"
 
 typedef struct {
     int x, y, z;
@@ -1042,7 +1043,7 @@ void modelLightStruct_loadDiffuseGXLight(u8 *light, u8 *obj, int lightId) {
         }
         GXInitLightDir(light + 0x68, *(f32 *)(light + 0x40), *(f32 *)(light + 0x44),
                        *(f32 *)(light + 0x48));
-        if (obj != NULL && (*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 0x10) == 0) {
+        if (obj != NULL && (((ObjAnimComponent *)obj)->modelInstance->flags & 0x10) == 0) {
             u8 rgba[4];
             u32 color;
             rgba[0] = (f32)light[0xa8] * *(f32 *)(light + 0x134);
