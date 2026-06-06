@@ -925,6 +925,7 @@ void lightningRenderActive(void)
     }
 }
 
+#pragma dont_inline on
 void snowCloudBuildBoxVerts(f32 *out, f32 height, f32 scale)
 {
     f32 side;
@@ -961,6 +962,7 @@ void snowCloudBuildBoxVerts(f32 *out, f32 height, f32 scale)
     out[22] = zero;
     out[23] = edge;
 }
+#pragma dont_inline reset
 
 void mm_free_(void *ptr)
 {
