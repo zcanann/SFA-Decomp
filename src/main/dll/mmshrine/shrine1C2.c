@@ -848,7 +848,7 @@ extern void ModelLightStruct_free(void *light);
 extern void gameTimerStop(void);
 extern void modelLightStruct_setEnabled(void *light, int enabled, f32 scale);
 extern void objRenderFn_8003b8f4(f32);
-extern void objParticleFn_80099d84(void *obj, int type, void *light, f32 scale, f32 extraScale);
+extern void objParticleFn_80099d84(void *obj, f32 scale, int type, f32 extraScale, void *light);
 extern f32 lbl_803E5038;
 
 #pragma scheduling off
@@ -891,7 +891,7 @@ void gpsh_shrine_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
             modelLightStruct_setEnabled(light, 1, lbl_803E5038);
         }
         ((void (*)(void *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5038);
-        objParticleFn_80099d84(obj, 7, state[0], lbl_803E5038, lbl_803E5038);
+        objParticleFn_80099d84(obj, lbl_803E5038, 7, *(f32 *)&lbl_803E5038, state[0]);
     }
 }
 #pragma peephole reset

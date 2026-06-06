@@ -293,7 +293,7 @@ extern void ModelLightStruct_free(void *p);
 extern void Music_Trigger(int id, int p2);
 extern void objRenderFn_8003b8f4(int p1, undefined4 p2, undefined4 p3, undefined4 p4,
                                   undefined4 p5, f32 f);
-extern void objParticleFn_80099d84(int p1, int p2, int p3, f32 f1, f32 f2);
+extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
 extern void skyFn_80088c94(int skyId, int enable);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 extern int mapGetDirIdx(int mapDir);
@@ -362,7 +362,7 @@ void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, un
             modelLightStruct_setEnabled((int)runtime->light, 1, lbl_803E4F50);
         }
         objRenderFn_8003b8f4(obj, a2, a3, a4, a5, lbl_803E4F50);
-        objParticleFn_80099d84(obj, 7, (int)runtime->light, lbl_803E4F50, lbl_803E4F50);
+        objParticleFn_80099d84(obj, lbl_803E4F50, 7, *(f32 *)&lbl_803E4F50, (int)runtime->light);
     }
 }
 #pragma scheduling reset
