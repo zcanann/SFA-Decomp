@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objanim_internal.h"
@@ -2600,51 +2601,85 @@ typedef struct BabyCloudrunnerFlags {
     u8 flags : 7;
 } BabyCloudrunnerFlags;
 
+/* Per-object extra state for the baby CloudRunner
+ * (babycloudrunner_getExtraSize == 0x248). */
+typedef struct BabyCloudRunnerState {
+    f32 unk00;
+    u8 pad04[0x38];        /* 0x18: position used for the sandworm handoff */
+    u8 lookBlock[0x30];    /* 0x3c: fn_8003ADC4 head-track block */
+    u8 audioBlock[0x3c];   /* 0x6c: objAudioFn block */
+    f32 animSpeed;
+    f32 scale;             /* 0xac: copied to the linked object's scale */
+    int unkB0;
+    int unkB4;
+    int unkB8;
+    int unkBC;
+    int turnLatch;         /* 0xc0: sandworm_turnTowardTargetAnim turn/idle move latch */
+    int behaviourState;    /* 0xc4: def[0x1c]; SeqFn 0..0xb dispatch */
+    u8 padC8[4];
+    int unkCC;
+    s16 roostYaw;          /* 0xd0: heading captured at init */
+    u8 padD2[0x42];
+    void *linkedObj;       /* 0x114 */
+    u8 pad118[0xc];
+    u8 curveWalker[0x108]; /* 0x124: rom-curve follow block */
+    u8 flags22C;           /* 1 = alive/active */
+    u8 pad22D[3];
+    int runnerState;       /* 0x230: 0 curve-seek, 1 follow, 2 chased, 3 freed */
+    int runnerIndex;       /* 0x234: gamebit base index, -1 keyed off */
+    f32 countdownTimer;    /* 0x238 */
+    f32 curveSpeed;        /* 0x23c */
+    void *mutterSfxTable;  /* 0x240 */
+    u8 spitFlags;          /* 0x244: BabyCloudrunnerFlags / WormSpitByte overlay */
+    u8 pad245[3];
+} BabyCloudRunnerState;
+STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
+
 #pragma scheduling off
 #pragma peephole off
 void babycloudrunner_init(int *obj, u8 *def) {
-    u8 *sub;
+    BabyCloudRunnerState *sub;
 
     ObjHits_EnableObject(obj);
     ObjMsg_AllocQueue(obj, 4);
     *(void**)((char*)obj + 0xbc) = (void*)&babycloudrunner_SeqFn;
     *(s16*)obj = (s16)(def[0x1d] << 8);
     ObjGroup_AddObject(obj, 3);
-    sub = *(u8**)((char*)obj + 0xb8);
-    *(int*)(sub + 0xb0) = 0;
-    *(int*)(sub + 0xb4) = 0;
-    *(int*)(sub + 0xb8) = 0;
-    *(int*)(sub + 0xbc) = 0;
-    *(int*)(sub + 0xc0) = 0;
-    *(int*)(sub + 0xc4) = def[0x1c];
-    *(int*)(sub + 0xcc) = 0;
+    sub = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
+    sub->unkB0 = 0;
+    sub->unkB4 = 0;
+    sub->unkB8 = 0;
+    sub->unkBC = 0;
+    sub->turnLatch = 0;
+    sub->behaviourState = def[0x1c];
+    sub->unkCC = 0;
     storeZeroToFloatParam(sub);
-    *(int*)(sub + 0x114) = 0;
-    *(s16*)(sub + 0xd0) = *(s16*)obj;
-    sub[0x22c] = 0;
-    *(f32*)(sub + 0xa8) = lbl_803E422C;
-    *(int*)(sub + 0x230) = 0;
+    sub->linkedObj = 0;
+    sub->roostYaw = *(s16*)obj;
+    sub->flags22C = 0;
+    sub->animSpeed = lbl_803E422C;
+    sub->runnerState = 0;
     if (GameBit_Get(*(s16*)(def + 0x22)) != 0) {
         ObjHits_DisableObject(obj);
         *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
-        sub[0x22c] = (u8)(sub[0x22c] & ~1);
+        sub->flags22C = (u8)(sub->flags22C & ~1);
         Obj_RemoveFromUpdateList(obj);
         ObjGroup_RemoveObject(obj, 3);
     } else {
-        *(int*)(sub + 0x234) = *(s16*)(def + 0x22) - 0x2fc;
+        sub->runnerIndex = *(s16*)(def + 0x22) - 0x2fc;
         if (*(s16*)((char*)obj + 0x46) == 0x788) {
-            *(int*)(sub + 0x234) = -1;
-            *(f32*)(sub + 0x23c) = lbl_803E4244;
-            *(void**)(sub + 0x240) = &lbl_803DBE30;
+            sub->runnerIndex = -1;
+            sub->curveSpeed = lbl_803E4244;
+            sub->mutterSfxTable = &lbl_803DBE30;
         } else {
-            if (*(int*)(sub + 0x234) < 0 || *(int*)(sub + 0x234) > 4) {
-                *(int*)(sub + 0x230) = 3;
+            if (sub->runnerIndex < 0 || sub->runnerIndex > 4) {
+                sub->runnerState = 3;
             }
-            *(f32*)(sub + 0x23c) = lbl_803E4258;
-            *(void**)(sub + 0x240) = &lbl_803DBE28;
+            sub->curveSpeed = lbl_803E4258;
+            sub->mutterSfxTable = &lbl_803DBE28;
             ObjGroup_AddObject(obj, 0x20);
         }
-        ((BabyCloudrunnerFlags *)(sub + 0x244))->resetLatch = 0;
+        ((BabyCloudrunnerFlags *)&sub->spitFlags)->resetLatch = 0;
     }
 }
 #pragma peephole reset
@@ -3194,46 +3229,77 @@ extern void dll_2E_func08(u8 *sub, int b, int c);
 extern void dll_2E_func09(u8 *sub, void *a, void *b, int c);
 extern void objSeqInitFn_80080078(u8 *p, int n);
 
+/* Per-object extra state for the CloudRunner guardian
+ * (cfguardian_getExtraSize == 0xa9c). */
+typedef struct CfGuardianState {
+    u8 pad000[0x611];
+    u8 flags611;
+    u8 pad612[0x12];
+    u8 audioBlock[0x30];  /* 0x624: objAudioFn block */
+    u8 eyeBlock[0x38];    /* 0x654: characterDoEyeAnims block */
+    int linkedObjs[6];    /* 0x68c: freed with the guardian */
+    u8 pad6A4[0x18];
+    u8 pathBlock[0x140];  /* 0x6bc: fn_8019AF64 path-flight block */
+    f32 moveSpeed;        /* 0x7fc */
+    u8 pad800[0x25e];
+    u8 unkA5E;            /* bounce-velocity latch while landing */
+    u8 padA5F[9];
+    s16 homeYaw;          /* 0xa68: embedded steer-target header (fn_8019B1D8) */
+    u8 padA6A[0xa];
+    f32 homeX;            /* 0xa74: nearest rom-curve point after landing */
+    f32 homeY;
+    f32 homeZ;
+    u8 questState;        /* 0xa80: 16-state quest progression */
+    u8 padA81[0xf];
+    int unkA90;
+    int landingPhase;     /* 0xa94 */
+    u8 chatterState;      /* 0xa98: 1 ready, 2 playing */
+    s8 chatterAlt;
+    s8 chatterPick;
+    u8 flagsA9B;          /* 1 move-latched, 2 path-flying, 4 homing */
+} CfGuardianState;
+STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
+
 #pragma scheduling off
 #pragma peephole off
 void cfguardian_init(int *obj, u8 *params) {
-    u8 *sub;
+    CfGuardianState *sub;
     GuardianVec stk1;
     GuardianVec stk2;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = *(CfGuardianState**)((char*)obj + 0xb8);
     stk1 = lbl_802C22C0;
     stk2 = lbl_802C22CC;
     if (sub == NULL) return;
     ObjMsg_AllocQueue(obj, 4);
-    sub[0xa80] = (u8)GameBit_Get(0x4b);
+    sub->questState = (u8)GameBit_Get(0x4b);
     *(int*)((char*)obj + 0xf4) = 1;
     *(void**)((char*)obj + 0xbc) = (void*)&cfguardian_SeqFn;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    *(int*)(sub + 0xa94) = 0;
-    *(f32*)(sub + 0x7fc) = lbl_803E4110;
-    *(int*)(sub + 0xa90) = 6;
-    sub[0xa9b] = 0;
-    sub[0x611] = (u8)(sub[0x611] | 0x28);
-    sub[0xa98] = 1;
-    sub[0xa99] = 0;
-    sub[0xa9a] = 0;
+    sub->landingPhase = 0;
+    sub->moveSpeed = lbl_803E4110;
+    sub->unkA90 = 6;
+    sub->flagsA9B = 0;
+    sub->flags611 = (u8)(sub->flags611 | 0x28);
+    sub->chatterState = 1;
+    sub->chatterAlt = 0;
+    sub->chatterPick = 0;
     if (GameBit_Get(0x57) != 0) {
-        sub[0xa80] = 4;
+        sub->questState = 4;
         if ((s8)params[0x19] == 0) {
             *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
             Obj_RemoveFromUpdateList(obj);
         }
     } else if (GameBit_Get(0x60) != 0 && (s8)params[0x19] == 0) {
-        sub[0xa80] = 4;
+        sub->questState = 4;
         dll_2E_func0A(8, obj);
     }
     ObjHits_EnableObject(obj);
-    dll_2E_func05(obj, sub, -0x2000, 0x2800, 4);
-    dll_2E_func08(sub, 0x12c, 0x64);
-    dll_2E_func09(sub, &stk2, &stk1, 4);
+    dll_2E_func05(obj, (u8*)sub, -0x2000, 0x2800, 4);
+    dll_2E_func08((u8*)sub, 0x12c, 0x64);
+    dll_2E_func09((u8*)sub, &stk2, &stk1, 4);
     objSeqInitFn_80080078(lbl_8032284C, 0xf);
-    sub[0x611] = (u8)(sub[0x611] | 0x2);
+    sub->flags611 = (u8)(sub->flags611 | 0x2);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -3256,19 +3322,19 @@ int cfguardian_SeqFn(int* obj, int p2, int* p3)
 {
     int* sel;
     GuardianMsg stk;
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    CfGuardianState* sub = *(CfGuardianState**)((char*)obj + 0xb8);
     stk = lbl_802C22D8;
     if (*(s16*)((char*)obj + 0xb4) < 0) {
         saveGame_saveObjectPos((int)obj);
         return 0;
     }
-    if (sub[0xa80] != 6) {
+    if (sub->questState != 6) {
         sel = &stk.a;
     } else {
         sel = &stk.c;
     }
     if (animatedObjGetSeqId(p3) != 0x283) {
-        if (dll_2E_func07(obj, p3, sub, (s16)sel[0], (s16)sel[1]) != 0) {
+        if (dll_2E_func07(obj, p3, (u8*)sub, (s16)sel[0], (s16)sel[1]) != 0) {
             return 1;
         }
     }
@@ -3300,15 +3366,15 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
     *(s16*)a += shifted;
     if (d == 0) return;
     if ((s16)shifted > -200 && (s16)shifted < 200) {
-        if (*(int*)((char*)c + 0xc0) != 0) {
-            *(int*)((char*)c + 0xc0) = 0;
+        if (((BabyCloudRunnerState*)c)->turnLatch != 0) {
+            ((BabyCloudRunnerState*)c)->turnLatch = 0;
             ObjAnim_SetCurrentMove((int)a, 0, lbl_803E4218, 0);
         } else {
             ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)a, lbl_803E423C, timeDelta, 0);
         }
     } else {
-        if (*(int*)((char*)c + 0xc0) == 0) {
-            *(int*)((char*)c + 0xc0) = 1;
+        if (((BabyCloudRunnerState*)c)->turnLatch == 0) {
+            ((BabyCloudRunnerState*)c)->turnLatch = 1;
             ObjAnim_SetCurrentMove((int)a, 9, lbl_803E4218, 0);
         } else {
             s16 t;
@@ -3385,17 +3451,17 @@ int babycloudrunner_func0B(void* p)
     int* obj;
     int flag;
     u8* r;
-    u8* sub;
+    BabyCloudRunnerState* sub;
     u8* q;
     void* player;
     obj = (int*)p;
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
     q = *(u8**)((char*)obj + 0x4c);
     player = Obj_GetPlayerObject();
     r = *(u8**)((char*)obj + 0x4c);
     flag = 0;
     if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16)*(s16*)(r + 0x1a)) {
-        if (*(int*)(sub + 0x230) == 3) {
+        if (sub->runnerState == 3) {
             if ((*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
                 flag = 1;
             }
@@ -3404,11 +3470,11 @@ int babycloudrunner_func0B(void* p)
     if (flag != 0) {
         s16toFloat((int)sub, 0x3c);
         *(int*)((char*)obj + 0xf4) = 1;
-        *(s16*)obj = *(s16*)(sub + 0xd0);
+        *(s16*)obj = sub->roostYaw;
         ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(4, obj, -1);
-        *(f32*)(sub + 0) = lbl_803E4244;
+        sub->unk00 = lbl_803E4244;
         gameBitIncrement(0x901);
-        *(int*)(sub + 0xc4) = 0xc;
+        sub->behaviourState = 0xc;
         GameBit_Set(*(s16*)(q + 0x1e), 1);
         *(int*)((char*)obj + 0xf4) = 0;
         return 1;
@@ -3427,6 +3493,105 @@ void cfpowerbase_hitDetect(void) {}
 void cfpowerbase_release(void) {}
 void cfpowerbase_initialise(void) {}
 
+typedef struct { f32 f0, f4, f8, fc, f10, f14; u8 b18, b19, b1a, b1b; } CrystalBeam;
+
+/* Per-object extra state for the CloudRunner main crystal
+ * (cfmaincrystal_getExtraSize == 0x160). */
+typedef struct CfMainCrystalState {
+    f32 pylonX[3];         /* per-pylon beam source position */
+    f32 crystalX;
+    f32 pylonY[3];
+    f32 crystalY;
+    f32 pylonZ[3];
+    f32 crystalZ;
+    s16 pylonTimer[3];     /* 0x30: 0 unseen; ramps to 0x78 once reported */
+    s16 crystalKnown;      /* 0x36 */
+    CrystalBeam beams[10]; /* 0x38 */
+    s16 charge;            /* 0x150: convergence charge frames */
+    f32 humVolume;         /* 0x154 */
+    int unk158;
+    u8 chime[4];           /* 0x15c: per-beam chime timers */
+} CfMainCrystalState;
+STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
+
+/* Per-object extra state for the CloudRunner power base
+ * (cfpowerbase_getExtraSize == 0x6). */
+typedef struct CfPowerBaseState {
+    s16 typeBit;   /* gamebit 0x54..0x56, from params+0x1e */
+    s16 litBit;    /* gamebit 0x51..0x53 gating the lit state */
+    s8 typeIndex;  /* 0/1/2 trigger argument */
+    u8 pad5;
+} CfPowerBaseState;
+STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
+
+/* Per-object extra state for the CloudRunner prison guard
+ * (cfprisonguard_getExtraSize == 0x3c). */
+typedef struct CfPrisonGuardState {
+    u8 pad00[0x30];
+    f32 alarmRamp;    /* particle ramp advanced while above threshold */
+    s16 stateTimer;
+    s8 capturedLatch; /* last GameBit 0x50 value */
+    s8 guardState;    /* 0 idle .. 7 forced-chase */
+    u8 flags;         /* 1 spawn-pulse pending, 2 freed-check, 4 alarm raised */
+    u8 flags39;       /* 0x80 cleared every update */
+    u8 pad3A[2];
+} CfPrisonGuardState;
+STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
+
+/* Per-object extra state for the CloudRunner prison uncle
+ * (cfprisonuncle_getExtraSize == 0xa8). */
+typedef struct CfPrisonUncleState {
+    int target;          /* keyed type-0x3d object */
+    u8 lookBlock[0x30];  /* fn_8003ADC4 head-track block */
+    u8 audioBlock[0x30]; /* objAudioFn block */
+    int unk64;
+    int unk68;
+    u8 pad6C[4];
+    s16 unk70;
+    u8 pad72;
+    s8 captured;         /* GameBit 0x4d latch */
+    s8 kicked;           /* fn_8019FC84 one-shot */
+    u8 pad75[0x33];
+} CfPrisonUncleState;
+STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
+
+/* Per-object extra state for the robot light beacon
+ * (gcrobotlightbea_getExtraSize == 0xc). */
+typedef struct GcRobotLightBeaState {
+    void *light; /* modelLightStruct point light */
+    int unk4;
+    u8 hitFlags; /* 0x80 = player caught in the beam */
+    u8 pad9[3];
+} GcRobotLightBeaState;
+STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
+
+/* spiritdoorspirit_getExtraSize == 0x1. */
+typedef struct SpiritDoorSpiritState {
+    u8 active; /* gamebit not yet set: render + group 0x4e membership */
+} SpiritDoorSpiritState;
+
+/* Per-object extra state for the gunpowder barrel (carryable). */
+typedef struct GunpowderBarrelState {
+    u8 pad00[0x15];
+    u8 unk15;     /* blocks scaling/grabbing while set */
+    u8 pad16;
+    u8 unk17;     /* blocks scaling while set */
+    f32 unk18;    /* must be zero to grab */
+    u8 pad1C[4];
+    f32 velX;     /* launch/throw velocity */
+    f32 velY;
+    f32 velZ;
+    u8 pad2C[0xC];
+    f32 unk38;
+    u8 pad3C[0xC];
+    u8 flags48;   /* 0x40 = save position at the linked barrel */
+    u8 flags49;   /* 1 sleeping, 2 in flight */
+    u8 heldFlags; /* GpbHeldByte: held / playerHeld bits */
+    u8 pad4B[5];
+    s16 launchYaw;
+} GunpowderBarrelState;
+STATIC_ASSERT(offsetof(GunpowderBarrelState, launchYaw) == 0x50);
+
 extern int cfpowerbase_SeqFn(int p1, int unused, int p3);
 
 /* EN v1.0 0x8019D8B4  size: 308b  cfpowerbase_init: seed header and the
@@ -3435,35 +3600,35 @@ extern int cfpowerbase_SeqFn(int p1, int unused, int p3);
 #pragma scheduling off
 #pragma peephole off
 void cfpowerbase_init(int* obj, u8* params) {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    CfPowerBaseState* sub = *(CfPowerBaseState**)((char*)obj + 0xb8);
     s16 type;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    *(s16*)(sub + 0) = *(s16*)(params + 0x1e);
-    type = *(s16*)(sub + 0);
+    sub->typeBit = *(s16*)(params + 0x1e);
+    type = sub->typeBit;
     switch (type) {
     case 0x54:
-        *(s16*)(sub + 2) = 0x51;
-        sub[4] = 0;
+        sub->litBit = 0x51;
+        sub->typeIndex = 0;
         break;
     case 0x55:
-        *(s16*)(sub + 2) = 0x52;
-        sub[4] = 1;
+        sub->litBit = 0x52;
+        sub->typeIndex = 1;
         Obj_SetActiveModelIndex(obj, 2);
         break;
     case 0x56:
-        *(s16*)(sub + 2) = 0x53;
-        sub[4] = 2;
+        sub->litBit = 0x53;
+        sub->typeIndex = 2;
         Obj_SetActiveModelIndex(obj, 1);
         break;
     }
     *(void**)((char*)obj + 0xbc) = (void*)&cfpowerbase_SeqFn;
     ObjMsg_AllocQueue(obj, 2);
-    if (GameBit_Get(*(s16*)(sub + 2)) != 0) {
+    if (GameBit_Get(sub->litBit) != 0) {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
     } else {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
     }
-    if (GameBit_Get(*(s16*)(sub + 0)) != 0) {
+    if (GameBit_Get(sub->typeBit) != 0) {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
         *(int*)((char*)obj + 0xf4) = 1;
     }
@@ -3478,23 +3643,23 @@ void cfpowerbase_init(int* obj, u8* params) {
 #pragma scheduling off
 #pragma peephole off
 void cfpowerbase_update(int* obj) {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
-    if (GameBit_Get(*(s16*)(sub + 2)) != 0) {
+    CfPowerBaseState* sub = *(CfPowerBaseState**)((char*)obj + 0xb8);
+    if (GameBit_Get(sub->litBit) != 0) {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
     } else {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
     }
     if (*(int*)((char*)obj + 0xf4) != 0) {
         ((void (*)(int *, int))((int *)*gObjectTriggerInterface)[0x54 / 4])(obj, 0xfa);
-        ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])((*(s8*)(sub + 4)), obj, 3);
+        ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(sub->typeIndex, obj, 3);
         *(int*)((char*)obj + 0xf4) = 0;
     }
     if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
-        if (((int (*)(int))((int *)*gGameUIInterface)[0x20 / 4])(*(s16*)(sub + 2)) != 0) {
+        if (((int (*)(int))((int *)*gGameUIInterface)[0x20 / 4])(sub->litBit) != 0) {
             *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
-            GameBit_Set(*(s16*)(sub + 2), 0);
+            GameBit_Set(sub->litBit, 0);
             GameBit_Set(0x973, 0);
-            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])((*(s8*)(sub + 4)), obj, -1);
+            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(sub->typeIndex, obj, -1);
         }
     }
 }
@@ -3520,17 +3685,17 @@ typedef struct { u8 top : 1; u8 rest : 7; } Bit80;
 #pragma scheduling off
 #pragma peephole off
 void cfprisonguard_init(int* obj, u8* params) {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
-    sub[0x38] = 1;
+    CfPrisonGuardState* sub = *(CfPrisonGuardState**)((char*)obj + 0xb8);
+    sub->flags = 1;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     *(void**)((char*)obj + 0xbc) = (void*)&cfprisonguard_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
-    sub[0x36] = 1;
+    sub->capturedLatch = 1;
     if (GameBit_Get(0x4d) != 0) {
-        sub[0x38] = (u8)(sub[0x38] | 4);
+        sub->flags = (u8)(sub->flags | 4);
     }
     *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
-    ((Bit80*)(sub + 0x39))->top = 1;
+    ((Bit80*)&sub->flags39)->top = 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -3542,17 +3707,17 @@ extern int objGetAnimState80A(void *obj);
 #pragma scheduling off
 #pragma peephole off
 void cfprisonguard_update(int *obj) {
-    u8 *sub;
+    CfPrisonGuardState *sub;
     int *player;
     u8 *def;
     int bit44;
     f32 dist;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = *(CfPrisonGuardState**)((char*)obj + 0xb8);
     player = (int*)Obj_GetPlayerObject();
     def = *(u8**)((char*)obj + 0x4c);
-    if (((u32)sub[0x39] >> 7) & 1u) {
-        sub[0x39] = (u8)(sub[0x39] & ~0x80);
+    if (((u32)sub->flags39 >> 7) & 1u) {
+        sub->flags39 = (u8)(sub->flags39 & ~0x80);
     }
     if (GameBit_Get(*(s16*)(def + 0x1e)) != 0) {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
@@ -3563,13 +3728,13 @@ void cfprisonguard_update(int *obj) {
     }
     bit44 = GameBit_Get(0x44);
     dist = Vec_distance((char*)obj + 0x18, (char*)player + 0x18);
-    if (sub[0x38] == 1) {
+    if (sub->flags == 1) {
         waterfx_consumePendingImpactNearPoint((f32 *)((char*)obj + 0xc), lbl_803E4268);
         ((void(*)(int, int*, int))((void**)*gObjectTriggerInterface)[18])(0, obj, -1);
-        sub[0x38] = 2;
+        sub->flags = 2;
     }
     if (bit44 == 0) {
-        if ((s8)sub[0x37] != 4) {
+        if (sub->guardState != 4) {
             if (dist >= (f32)(s32)*(s16*)(def + 0x1a)) {
                 if (waterfx_consumePendingImpactNearPoint((f32 *)((char*)obj + 0xc), lbl_803E4268) == 0) return;
             }
@@ -3600,7 +3765,7 @@ extern f32  lbl_803E428C;
 #pragma peephole off
 void cfprisonuncle_update(int* obj)
 {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    CfPrisonUncleState* sub = *(CfPrisonUncleState**)((char*)obj + 0xb8);
     void* player;
     int m2, objectIndex, objectCount, m1, m3;
     int* objects;
@@ -3608,20 +3773,20 @@ void cfprisonuncle_update(int* obj)
     if (sub == NULL) return;
     if (GameBit_Get(0x50) != 0) return;
     if (ObjMsg_Pop(obj, &m1, &m2, &m3) != 0) {
-        *(void**)(sub + 0) = NULL;
+        *(void**)&sub->target = NULL;
     }
-    if (*(void**)(sub + 0) == NULL) {
+    if (*(void**)&sub->target == NULL) {
         objects = ObjList_GetObjects(&objectIndex, &objectCount);
         for (i = objectIndex; i < objectCount; i++) {
             if (*(s16*)((char*)objects[i] + 0x44) == 0x3d) {
-                *(int*)(sub + 0) = objects[i];
+                sub->target = objects[i];
                 i = objectCount;
             }
         }
     }
     ObjTrigger_UpdateIdBlockFlag((int)obj);
-    *(s8*)(sub + 0x73) = (s8)GameBit_Get(0x4d);
-    if (*(s8*)(sub + 0x73) == 0) {
+    sub->captured = (s8)GameBit_Get(0x4d);
+    if (sub->captured == 0) {
         player = Obj_GetPlayerObject();
         fn_8003ADC4(obj, player, (char*)sub + 4, 0x41, 0, 3);
         if ((int)randomGetRange(0, 0x1e) == 0) {
@@ -3661,8 +3826,8 @@ void gcrobotlightbea_hitDetect(int* obj)
     int out;
     f32 vec[3];
     void* hit;
-    u8* sub = *(u8**)((char*)obj + 0xb8);
-    ((Bit80*)(sub + 8))->top = 0;
+    GcRobotLightBeaState* sub = *(GcRobotLightBeaState**)((char*)obj + 0xb8);
+    ((Bit80*)&sub->hitFlags)->top = 0;
     if (*(void**)((char*)obj + 0xc4) == NULL) return;
     if (ObjHits_GetPriorityHit((int)obj, &hit, 0, 0) == 0) {
         hit = (void *)(*(ObjHitsPriorityState **)((char *)obj + 0x54))->lastHitObject;
@@ -3676,7 +3841,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     if (voxmaps_traceWorldLine((void *)((int)obj + 0xc), vec) == 0) return;
     if (*(int*)((char*)obj + 0xf4) != 0 ||
         objBboxFn_800640cc((int)obj + 0xc, vec, 0, &out, (int)obj, 4, -1, 0, 0) == 0) {
-        ((Bit80*)(sub + 8))->top = 1;
+        ((Bit80*)&sub->hitFlags)->top = 1;
     }
 }
 #pragma peephole reset
@@ -3757,15 +3922,15 @@ extern void  objParticleFn_80099d84(int obj, f32 f, int a, int b);
 #pragma peephole off
 void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    CfPrisonGuardState* sub = *(CfPrisonGuardState**)((char*)obj + 0xb8);
     if (visible != 0) {
         objRenderFn_8003b8f4(lbl_803E4280);
     }
     if (visible != 0) {
-        f32 t = *(f32*)(sub + 0x30);
+        f32 t = sub->alarmRamp;
         if (t > lbl_803E4260) {
-            *(f32*)(sub + 0x30) = lbl_803E4264 * (f32)(u32)framesThisStep + t;
-            if (*(f32*)(sub + 0x30) < lbl_803E4284) {
+            sub->alarmRamp = lbl_803E4264 * (f32)(u32)framesThisStep + t;
+            if (sub->alarmRamp < lbl_803E4284) {
                 objParticleFn_80099d84((int)obj, lbl_803E4280, 3, 0);
             }
         }
@@ -3791,8 +3956,8 @@ int cfprisoncage_getObjectTypeId(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0
 #pragma peephole reset
 
 /* chained byte bit-extract. */
-u32 fn_801A0174(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x8) >> 7) & 1; }
-u32 gunpowderbarrel_isHeld(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x4a) >> 5) & 1; }
+u32 fn_801A0174(int *obj) { return (((GcRobotLightBeaState*)((int**)obj)[0xb8/4])->hitFlags >> 7) & 1; }
+u32 gunpowderbarrel_isHeld(int *obj) { return (((GunpowderBarrelState*)((int**)obj)[0xb8/4])->heldFlags >> 5) & 1; }
 
 typedef struct { u8 playerHeld : 1; u8 _pad0 : 1; u8 held : 1; u8 _pad1 : 5; } GpbHeldByte;
 extern f32 lbl_803E42C0;
@@ -3802,39 +3967,39 @@ extern f32 lbl_803E42C0;
 #pragma scheduling off
 #pragma peephole off
 void gunpowderbarrel_setHeldState(int* obj) {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
-    ((GpbHeldByte*)(sub + 0x4a))->held = 1;
+    GunpowderBarrelState* sub = *(GunpowderBarrelState**)((char*)obj + 0xb8);
+    ((GpbHeldByte*)&sub->heldFlags)->held = 1;
     *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
-    *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) & ~2);
+    sub->flags49 = (u8)(sub->flags49 & ~2);
 }
 
 /* EN v1.0 0x801A0B90  size: 76b  gunpowderbarrel_clearHeldState: zero the
  * barrel's velocity/throw vectors, mark it sleeping, clear obj-active and
  * the held flag. */
 void gunpowderbarrel_clearHeldState(int* obj) {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    GunpowderBarrelState* sub = *(GunpowderBarrelState**)((char*)obj + 0xb8);
     f32 z = lbl_803E42C0;
-    *(f32*)(sub + 0x24) = z;
-    *(f32*)(sub + 0x20) = z;
-    *(f32*)(sub + 0x28) = z;
-    *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) | 1);
+    sub->velY = z;
+    sub->velX = z;
+    sub->velZ = z;
+    sub->flags49 = (u8)(sub->flags49 | 1);
     *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
-    *(f32*)(sub + 0x38) = z;
-    ((GpbHeldByte*)(sub + 0x4a))->held = 0;
+    sub->unk38 = z;
+    ((GpbHeldByte*)&sub->heldFlags)->held = 0;
 }
 
 /* EN v1.0 0x801A0E04  size: 244b  gunpowderbarrel_setPlayerHeldState: when
  * grabbed by the player, copy the held-pose and enable hit reactions; when
  * released, restore the default pose and clear them. */
 void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer) {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    GunpowderBarrelState* sub = *(GunpowderBarrelState**)((char*)obj + 0xb8);
     u8* h = *(u8**)((char*)obj + 0x54);
     if (heldByPlayer != 0) {
         h[0x6a] = 1;
         h[0x6b] = 1;
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
-        ((GpbHeldByte*)(sub + 0x4a))->playerHeld = 1;
-        *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) & ~2);
+        ((GpbHeldByte*)&sub->heldFlags)->playerHeld = 1;
+        sub->flags49 = (u8)(sub->flags49 & ~2);
         ObjHits_SetFlags((int)obj, 0x480);
         ObjHits_ClearSourceMask((int)obj, 1);
         ObjHits_EnableObject((int)obj);
@@ -3842,10 +4007,10 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer) {
     } else {
         h[0x6a] = (*(u8**)((char*)obj + 0x50))[0x63];
         h[0x6b] = (*(u8**)((char*)obj + 0x50))[0x64];
-        ((GpbHeldByte*)(sub + 0x4a))->playerHeld = 0;
+        ((GpbHeldByte*)&sub->heldFlags)->playerHeld = 0;
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
         ObjHits_ClearFlags((int)obj, 0x400);
-        *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) | 1);
+        sub->flags49 = (u8)(sub->flags49 | 1);
     }
 }
 #pragma peephole reset
@@ -3854,10 +4019,10 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer) {
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
 #pragma peephole off
 int fn_8019FC84(int *obj, int p2, void *p3) {
-    char *p = *(char**)((char*)obj + 0xb8);
-    if (*(s8*)(p + 0x74) != 0) return 0;
+    CfPrisonUncleState *p = *(CfPrisonUncleState**)((char*)obj + 0xb8);
+    if (p->kicked != 0) return 0;
     if (*(u8*)((char*)p3 + 0x80) == 2) {
-        *(u8*)(p + 0x74) = 1;
+        p->kicked = 1;
         playerAddRemoveMagic(Obj_GetPlayerObject(), 2);
     }
     return 0;
@@ -3899,8 +4064,8 @@ int babycloudrunner_getObjectTypeId(void) { return 0; }
 
 void spiritdoorspirit_init(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
-    *(s8*)state = 0;
+    SpiritDoorSpiritState* state = *(SpiritDoorSpiritState**)((char*)obj + 0xb8);
+    state->active = 0;
     *(s8*)((char*)obj + 54) = 0;
 }
 
@@ -3910,14 +4075,14 @@ extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 #pragma scheduling off
 #pragma peephole off
 void spiritdoorspirit_update(int *obj) {
-    u8 *sub;
+    SpiritDoorSpiritState *sub;
     u8 *def;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = *(SpiritDoorSpiritState**)((char*)obj + 0xb8);
     def = *(u8**)((char*)obj + 0x4c);
-    if (sub[0] == 0) {
-        sub[0] = (u8)(GameBit_Get(*(s16*)(def + 0x1e)) == 0);
-        if (sub[0] != 0) {
+    if (sub->active == 0) {
+        sub->active = (u8)(GameBit_Get(*(s16*)(def + 0x1e)) == 0);
+        if (sub->active != 0) {
             ObjGroup_AddObject(obj, 0x4e);
         }
         if (*(u8*)((char*)obj + 0x36) != 0) {
@@ -3925,8 +4090,8 @@ void spiritdoorspirit_update(int *obj) {
         }
     } else {
         fn_80098B18((int)obj, lbl_803DBE78, 5, 0, 0, 0);
-        sub[0] = (u8)(GameBit_Get(*(s16*)(def + 0x1e)) == 0);
-        if (sub[0] == 0) {
+        sub->active = (u8)(GameBit_Get(*(s16*)(def + 0x1e)) == 0);
+        if (sub->active == 0) {
             ObjGroup_RemoveObject(obj, 0x4e);
         }
         if (*(u8*)((char*)obj + 0x36) < 0xff) {
@@ -3939,8 +4104,8 @@ void spiritdoorspirit_update(int *obj) {
 
 int babycloudrunner_setScale(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
-    return !(*(u8*)((char*)state + 556) & 1);
+    BabyCloudRunnerState* state = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
+    return !(state->flags22C & 1);
 }
 
 void cfperch_init(int* obj)
@@ -3967,9 +4132,9 @@ void babycloudrunner_free(int* obj)
 
 void gcrobotlightbea_init(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
-    state[0] = 0;
-    state[1] = 0;
+    GcRobotLightBeaState* state = *(GcRobotLightBeaState**)((char*)obj + 0xb8);
+    state->light = 0;
+    state->unk4 = 0;
     ObjHits_EnableObject(obj);
     *(u8*)((char*)obj + 54) = 0x80;
 }
@@ -3992,16 +4157,16 @@ extern void modelLightStruct_setDiffuseColor(void *p, int r, int g, int b, int a
 #pragma scheduling off
 #pragma peephole off
 void gcrobotlightbea_update(int *obj) {
-    void **sub;
+    GcRobotLightBeaState *sub;
     f32 vec[3];
     f32 vec2[3];
     u8 b_byte, g_byte, r_byte;
 
-    sub = *(void***)((char*)obj + 0xb8);
-    if (sub[0] == NULL) {
-        sub[0] = modelLightStruct_createPointLight(0xfa, 0xfa, 0xfa, 1);
-        if (sub[0] != NULL) {
-            modelLightStruct_setDistanceAttenuation(sub[0], lbl_803DBE58, lbl_803E42A0 + lbl_803DBE58);
+    sub = *(GcRobotLightBeaState**)((char*)obj + 0xb8);
+    if (sub->light == NULL) {
+        sub->light = modelLightStruct_createPointLight(0xfa, 0xfa, 0xfa, 1);
+        if (sub->light != NULL) {
+            modelLightStruct_setDistanceAttenuation(sub->light, lbl_803DBE58, lbl_803E42A0 + lbl_803DBE58);
         }
     }
     ObjHits_SetHitVolumeSlot(obj, 0x17, 0, 0);
@@ -4013,13 +4178,13 @@ void gcrobotlightbea_update(int *obj) {
     PSVECDistance((char*)obj + 0xc, vec2);
     PSVECScale(lbl_80322C38, vec2, 0);
     getAmbientColor(0, &r_byte, &g_byte, &b_byte);
-    if (sub[0] != NULL) {
-        modelLightStruct_setDiffuseColor(sub[0],
+    if (sub->light != NULL) {
+        modelLightStruct_setDiffuseColor(sub->light,
             (s32)(lbl_803E42A4 * (f32)(u32)r_byte),
             (s32)(lbl_803E42A4 * (f32)(u32)g_byte),
             (s32)(lbl_803E42A4 * (f32)(u32)b_byte),
             0xff);
-        modelLightStruct_setPosition(sub[0], vec2[0], vec2[1], vec2[2]);
+        modelLightStruct_setPosition(sub->light, vec2[0], vec2[1], vec2[2]);
     }
 }
 #pragma peephole reset
@@ -4027,9 +4192,9 @@ void gcrobotlightbea_update(int *obj) {
 
 void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    SpiritDoorSpiritState* state = *(SpiritDoorSpiritState**)((char*)obj + 0xb8);
     if ((s32)visible != 0) {
-        if (*(u8*)state != 0) {
+        if (state->active != 0) {
             ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E42B8);
         }
     }
@@ -4037,17 +4202,17 @@ void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visibl
 
 void cfprisonguard_hitDetect(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    CfPrisonGuardState* state = *(CfPrisonGuardState**)((char*)obj + 0xb8);
     if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) == 19) {
-        *(s8*)((char*)state + 55) = 7;
+        state->guardState = 7;
     }
 }
 
 void gcrobotlightbea_free(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
-    if (*(void**)state != NULL) {
-        modelLightStruct_freeSlot(state);
+    GcRobotLightBeaState* state = *(GcRobotLightBeaState**)((char*)obj + 0xb8);
+    if (state->light != NULL) {
+        modelLightStruct_freeSlot((int*)state);
     }
     if (*(int**)((char*)obj + 196) != NULL) {
         ObjLink_DetachChild(*(int**)((char*)obj + 196), obj);
@@ -4121,21 +4286,21 @@ void cfguardian_free(int* obj, int p2)
 void gunpowderbarrel_setScale(int* obj, f32* params)
 {
     int* state = *(int**)((char*)obj + 0xb8);
-    if (*(u8*)((char*)state + 21) != 0) return;
-    if (*(u8*)((char*)state + 23) != 0) return;
-    *(f32*)((char*)state + 36) = *(f32*)((char*)state + 36) + params[1];
-    *(f32*)((char*)state + 32) = *(f32*)((char*)state + 32) + params[0];
-    *(f32*)((char*)state + 40) = *(f32*)((char*)state + 40) + params[2];
-    *(u8*)((char*)state + 73) = (u8)(*(u8*)((char*)state + 73) | 1);
+    if (((GunpowderBarrelState*)state)->unk15 != 0) return;
+    if (((GunpowderBarrelState*)state)->unk17 != 0) return;
+    ((GunpowderBarrelState*)state)->velY = ((GunpowderBarrelState*)state)->velY + params[1];
+    ((GunpowderBarrelState*)state)->velX = ((GunpowderBarrelState*)state)->velX + params[0];
+    ((GunpowderBarrelState*)state)->velZ = ((GunpowderBarrelState*)state)->velZ + params[2];
+    ((GunpowderBarrelState*)state)->flags49 = (u8)(((GunpowderBarrelState*)state)->flags49 | 1);
 }
 
 int gunpowderbarrel_canBeGrabbed(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    GunpowderBarrelState* state = *(GunpowderBarrelState**)((char*)obj + 0xb8);
     int result = 0;
-    if (*(u8*)((char*)state + 21) == 0 &&
-        *(f32*)((char*)state + 24) == lbl_803E42C0 &&
-        ((int(*)(int*))(*(*(void****)&lbl_803DCAC0))[5])(state) == 0) {
+    if (state->unk15 == 0 &&
+        state->unk18 == lbl_803E42C0 &&
+        ((int(*)(GunpowderBarrelState*))(*(*(void****)&lbl_803DCAC0))[5])(state) == 0) {
         result = 1;
     }
     return result;
@@ -4143,14 +4308,14 @@ int gunpowderbarrel_canBeGrabbed(int* obj)
 
 void cfprisonuncle_init(int* obj)
 {
-    int* state;
+    CfPrisonUncleState* state;
     ObjMsg_AllocQueue(obj, 1);
     *(void**)((char*)obj + 188) = (void*)fn_8019FC84;
-    state = *(int**)((char*)obj + 0xb8);
-    *(int*)((char*)state + 100) = 464;
-    *(int*)((char*)state + 104) = 465;
-    *(s16*)((char*)state + 112) = 0;
-    *(s8*)((char*)state + 116) = 0;
+    state = *(CfPrisonUncleState**)((char*)obj + 0xb8);
+    state->unk64 = 464;
+    state->unk68 = 465;
+    state->unk70 = 0;
+    state->kicked = 0;
     if ((u32)GameBit_Get(77) != 0u) {
         GameBit_Set(80, 1);
     }
@@ -4235,7 +4400,7 @@ void cfmaincrystal_update(int *obj) {
 int cfpowerbase_SeqFn(int p1, int unused, int p3)
 {
   extern int ObjMsg_Pop(int, int *, int *, int *);
-  int sub = *(int *)(p1 + 0xb8);
+  CfPowerBaseState *sub = *(CfPowerBaseState **)(p1 + 0xb8);
   int msgArg;
   int msgType;
   int msgFlag = 0;
@@ -4244,22 +4409,22 @@ int cfpowerbase_SeqFn(int p1, int unused, int p3)
   while (ObjMsg_Pop(p1, &msgType, &msgArg, &msgFlag) != 0) {
     switch (msgType) {
       case 0x110001:
-        if (*(s16 *)(sub + 0) == 84 && *(s16 *)(p3 + 0x58) > 175) {
+        if (sub->typeBit == 84 && *(s16 *)(p3 + 0x58) > 175) {
           ObjMsg_SendToObject((void *)msgArg, 0x110001, p1, 0);
         }
         break;
       case 0x110002:
-        if (*(s16 *)(sub + 0) == 85 && *(s16 *)(p3 + 0x58) > 175) {
+        if (sub->typeBit == 85 && *(s16 *)(p3 + 0x58) > 175) {
           ObjMsg_SendToObject((void *)msgArg, 0x110002, p1, 0);
         }
         break;
       case 0x110003:
-        if (*(s16 *)(sub + 0) == 86 && *(s16 *)(p3 + 0x58) > 175) {
+        if (sub->typeBit == 86 && *(s16 *)(p3 + 0x58) > 175) {
           ObjMsg_SendToObject((void *)msgArg, 0x110003, p1, 0);
         }
         break;
       case 0xA0005:
-        GameBit_Set(*(s16 *)(sub + 0), 1);
+        GameBit_Set(sub->typeBit, 1);
         break;
     }
   }
@@ -4292,15 +4457,15 @@ void cfperch_update(int *obj) {
 #pragma scheduling off
 #pragma peephole off
 void cfmaincrystal_init(int *obj, u8 *def) {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    CfMainCrystalState *state = *(CfMainCrystalState **)((char *)obj + 0xb8);
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
     if (*(s8 *)((char *)def + 0x19) == 0) {
-        state[0x15c] = 0x28;
-        state[0x15d] = 0;
-        state[0x15e] = 0;
-        state[0x15f] = 0x46;
+        state->chime[0] = 0x28;
+        state->chime[1] = 0;
+        state->chime[2] = 0;
+        state->chime[3] = 0x46;
         ((ObjAnimComponent *)obj)->bankIndex = 1;
-        *(int *)((char *)state + 0x158) = 0;
+        state->unk158 = 0;
     }
     ObjMsg_AllocQueue(obj, 2);
 }
@@ -4329,7 +4494,7 @@ extern f32 lbl_803E42DC;
 #pragma scheduling off
 #pragma peephole off
 void gunpowderbarrel_launchAtTarget(int obj, u8 flag) {
-    u8* state = *(u8**)(obj + 0xb8);
+    GunpowderBarrelState* state = *(GunpowderBarrelState**)(obj + 0xb8);
     u8* playerState;
     s16 stk[8];
     f32 fz;
@@ -4337,13 +4502,13 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag) {
     f32 sx, sy, sz;
 
     playerState = *(u8**)((u8*)Obj_GetPlayerObject() + 0xb8);
-    *(f32*)(state + 0x20) = lbl_803E42C0;
+    state->velX = lbl_803E42C0;
     if (flag != 0) {
-        *(f32*)(state + 0x24) = lbl_803E42C8 * *(f32*)(playerState + 0x298) + lbl_803E42C4;
-        *(f32*)(state + 0x28) = lbl_803E42D0 * *(f32*)(playerState + 0x298) + lbl_803E42CC;
+        state->velY = lbl_803E42C8 * *(f32*)(playerState + 0x298) + lbl_803E42C4;
+        state->velZ = lbl_803E42D0 * *(f32*)(playerState + 0x298) + lbl_803E42CC;
     } else {
-        *(f32*)(state + 0x24) = lbl_803E42D4;
-        *(f32*)(state + 0x28) = lbl_803E42D8;
+        state->velY = lbl_803E42D4;
+        state->velZ = lbl_803E42D8;
     }
     fz = lbl_803E42C0;
     *(f32*)((u8*)stk + 0xc) = fz;
@@ -4352,12 +4517,12 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag) {
     *(f32*)((u8*)stk + 0x8) = lbl_803E42DC;
     stk[2] = 0;
     stk[1] = 0;
-    stk[0] = *(s16*)(state + 0x50);
-    vecRotateZXY(stk, (f32*)(state + 0x20));
-    state[0x49] = (u8)(state[0x49] | 1);
+    stk[0] = state->launchYaw;
+    vecRotateZXY(stk, &state->velX);
+    state->flags49 = (u8)(state->flags49 | 1);
     Sfx_PlayFromObject(obj, SFXsk_baptr6_c);
-    state[0x49] = (u8)(state[0x49] | 2);
-    if ((state[0x48] & 0x40) != 0) {
+    state->flags49 = (u8)(state->flags49 | 2);
+    if ((state->flags48 & 0x40) != 0) {
         u8* params = *(u8**)(obj + 0x4c);
         target = 0;
         if (*(s16*)(params + 0x1a) != 0) {
@@ -4408,7 +4573,7 @@ typedef struct { u8 _p0 : 1; u8 spitLatch : 1; u8 _p1 : 6; } WormSpitByte;
 int fn_8019E3F4(int* obj)
 {
     f32 speed;
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    BabyCloudRunnerState* sub = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
     if (*(s16*)((char*)obj + 0xa0) != 5 && *(s16*)((char*)obj + 0xa0) != 0xd) {
         ObjAnim_SetCurrentMove((int)obj, 0xd, *(f32*)((char*)obj + 0x98), 0);
     }
@@ -4428,12 +4593,12 @@ int fn_8019E3F4(int* obj)
     }
     if (*(s16*)((char*)obj + 0xa0) == 0xd) {
         if (*(f32*)((char*)obj + 0x98) > lbl_803E4234) {
-            if (!((WormSpitByte*)(sub + 0x244))->spitLatch) {
+            if (!((WormSpitByte*)&sub->spitFlags)->spitLatch) {
                 Sfx_PlayFromObject((int)obj, SFXand_spitout);
-                ((WormSpitByte*)(sub + 0x244))->spitLatch = 1;
+                ((WormSpitByte*)&sub->spitFlags)->spitLatch = 1;
             }
         } else {
-            ((WormSpitByte*)(sub + 0x244))->spitLatch = 0;
+            ((WormSpitByte*)&sub->spitFlags)->spitLatch = 0;
         }
     }
     ((int(*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, speed, timeDelta, 0);
@@ -4454,28 +4619,28 @@ extern f32 lbl_803E4288;
 #pragma peephole off
 void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int* sub = *(int**)((char*)obj + 0xb8);
+    CfPrisonUncleState* sub = *(CfPrisonUncleState**)((char*)obj + 0xb8);
     if (GameBit_Get(0x50) != 0) {
-        if (*(void**)sub != NULL && objUpdateOpacity(*sub) != 0) {
-            ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(*sub, p2, p3, p4, p5, lbl_803E4288);
+        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0) {
+            ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
         }
     } else if (GameBit_Get(0x4d) != 0 && visible != 0) {
         ((void(*)(int*,int,int,int,int,f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
-        if (*(void**)sub != NULL && objUpdateOpacity(*sub) != 0) {
-            ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(*sub, p2, p3, p4, p5, lbl_803E4288);
+        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0) {
+            ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
         }
-    } else if (sub != NULL && *(void**)sub != NULL) {
-        if (*(s8*)((char*)sub + 0x73) == 0) {
+    } else if (sub != NULL && *(void**)&sub->target != NULL) {
+        if (sub->captured == 0) {
             if (visible != 0) {
-                if (objUpdateOpacity(*sub) != 0) {
-                    ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(*sub, p2, p3, p4, p5, lbl_803E4288);
-                    ObjPath_GetPointWorldPosition(*sub, 0, (char*)obj + 0xc, (char*)obj + 0x10, (char*)obj + 0x14, 0);
+                if (objUpdateOpacity(sub->target) != 0) {
+                    ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
+                    ObjPath_GetPointWorldPosition(sub->target, 0, (char*)obj + 0xc, (char*)obj + 0x10, (char*)obj + 0x14, 0);
                 }
                 ((void(*)(int*,int,int,int,int,f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
             }
         } else {
-            if (objUpdateOpacity(*sub) != 0) {
-                ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(*sub, p2, p3, p4, p5, lbl_803E4288);
+            if (objUpdateOpacity(sub->target) != 0) {
+                ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
             }
             if (visible != 0) {
                 ((void(*)(int*,int,int,int,int,f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
@@ -4731,7 +4896,7 @@ int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
     f32 dz;
     f32 distSq;
     u8* def = *(u8**)((char*)obj + 0x4c);
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    BabyCloudRunnerState* sub = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
     if (*(s16*)((char*)obj + 0xb4) == 4) {
         return 0;
     }
@@ -4747,12 +4912,12 @@ int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
     }
     *(u8*)((char*)obj + 0xaf) &= ~0x8;
     {
-        u8* sub2 = *(u8**)((char*)obj + 0xb8);
+        BabyCloudRunnerState* sub2 = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
         char* pp = (char*)Obj_GetPlayerObject();
         u8* def2 = *(u8**)((char*)obj + 0x4c);
         int found = 0;
         if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32)*(s16*)(def2 + 0x1a)
-            && *(int*)(sub2 + 0x230) == 3
+            && sub2->runnerState == 3
             && (*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
             found = 1;
         }
@@ -4762,7 +4927,7 @@ int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
             *(u8*)((char*)obj + 0xaf) |= 0x10;
         }
     }
-    if (inRange == 0 && *(int*)(sub + 0x230) == 2) {
+    if (inRange == 0 && sub->runnerState == 2) {
         f32 radius = (f32)*(s16*)(def + 0x18);
         if ((void*)ObjGroup_FindNearestObject(3, obj, &radius) != NULL) {
             inRange = 1;
@@ -4774,18 +4939,18 @@ int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
         }
     }
-    *(int*)(sub + 0xc4) = 0;
-    switch (*(int*)(sub + 0xc4)) {
+    sub->behaviourState = 0;
+    switch (sub->behaviourState) {
     case 10:
     case 11:
-        if (*(void**)(sub + 0x114) != NULL) {
-            *(f32*)(sub + 0xac) *= lbl_803E4248;
-            *(f32*)(*(char**)(sub + 0x114) + 8) = *(f32*)(sub + 0xac);
+        if (sub->linkedObj != NULL) {
+            sub->scale *= lbl_803E4248;
+            *(f32*)((char*)sub->linkedObj + 8) = sub->scale;
         }
-        *(int*)(sub + 0xc4) = 0xb;
+        sub->behaviourState = 0xb;
         if (Vec_distance((char*)obj + 0x18, player + 0x18) < (f32)*(s16*)(def + 0x1a)
             && (*(u8*)((char*)obj + 0xaf) & 1) != 0) {
-            *(int*)(sub + 0xc4) = 7;
+            sub->behaviourState = 7;
             return 4;
         }
         break;
@@ -4825,7 +4990,7 @@ extern void Sfx_StopObjectChannel(int obj, int ch);
 int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
 {
     char* player;
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    CfPrisonGuardState* sub = *(CfPrisonGuardState**)((char*)obj + 0xb8);
     s8 gb50;
     s8 gb48;
     s8 moved;
@@ -4836,13 +5001,13 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
     u8* def = *(u8**)((char*)obj + 0x4c);
     switch (p3[0x80]) {
     case 0x29:
-        *(f32*)(sub + 0x30) = lbl_803E4260;
+        sub->alarmRamp = lbl_803E4260;
         break;
     case 4:
-        *(s8*)(sub + 0x37) = 6;
+        sub->guardState = 6;
         return 0;
     case 5:
-        *(f32*)(sub + 0x30) = lbl_803E4264 * (f32)framesThisStep + *(f32*)(sub + 0x30);
+        sub->alarmRamp = lbl_803E4264 * (f32)framesThisStep + sub->alarmRamp;
         break;
     }
     if (*(s16*)((char*)obj + 0xb4) < 0) {
@@ -4851,20 +5016,20 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
     ObjHits_EnableObject(obj);
     gb50 = GameBit_Get(0x50);
     gb48 = GameBit_Get(0x48);
-    if ((*(u8*)(sub + 0x38) & 2) != 0 && GameBit_Get(0x4d) != 0) {
-        *(u8*)(sub + 0x38) &= ~0x2;
+    if ((sub->flags & 2) != 0 && GameBit_Get(0x4d) != 0) {
+        sub->flags &= ~0x2;
         return 4;
     }
     if (gb50 != 0) {
         return 4;
     }
-    if (gb50 != 0 || *(s8*)(sub + 0x37) == 5) {
-        *(s8*)(sub + 0x37) = 5;
+    if (gb50 != 0 || sub->guardState == 5) {
+        sub->guardState = 5;
         return 0;
     }
     moved = 0;
     player = (char*)Obj_GetPlayerObject();
-    switch (*(s8*)(sub + 0x37)) {
+    switch (sub->guardState) {
     case 0:
         fn_8003B228(obj, sub);
         dist = Vec_distance((char*)obj + 0x18, player + 0x18);
@@ -4873,11 +5038,11 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
                 || waterfx_consumePendingImpactNearPoint((f32*)((char*)obj + 0xc), lbl_803E4268) != 0) {
                 if (objGetAnimState80A(player) != 0x40) {
                     moved = 1;
-                    *(s8*)(sub + 0x37) = 4;
+                    sub->guardState = 4;
                 } else {
                     *(u8*)((char*)obj + 0xaf) |= 8;
-                    *(s8*)(sub + 0x37) = 5;
-                    *(s16*)(sub + 0x34) = 0x14;
+                    sub->guardState = 5;
+                    sub->stateTimer = 0x14;
                     ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(2, obj, -1);
                     return 4;
                 }
@@ -4885,8 +5050,8 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
         }
         break;
     case 2:
-        if ((*(s16*)(sub + 0x34) -= framesThisStep) <= 0) {
-            *(s8*)(sub + 0x37) = 1;
+        if ((sub->stateTimer -= framesThisStep) <= 0) {
+            sub->guardState = 1;
         }
         fn_8003B228(obj, sub);
         break;
@@ -4896,16 +5061,16 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
             if (dist < (f32)*(s16*)(def + 0x1a)) {
                 if (objGetAnimState80A(player) != 0x40) {
                     moved = 1;
-                    *(s8*)(sub + 0x37) = 4;
+                    sub->guardState = 4;
                 } else {
-                    *(s8*)(sub + 0x37) = 2;
+                    sub->guardState = 2;
                 }
             }
         }
         break;
     case 3:
-        if ((*(s16*)(sub + 0x34) -= framesThisStep) <= 0) {
-            *(s8*)(sub + 0x37) = 0;
+        if ((sub->stateTimer -= framesThisStep) <= 0) {
+            sub->guardState = 0;
         }
         break;
     case 5:
@@ -4914,7 +5079,7 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
         return 0;
     case 7:
         moved = 1;
-        *(s8*)(sub + 0x37) = 4;
+        sub->guardState = 4;
         break;
     }
     if (*(s16*)((char*)obj + 0xa0) == 0x103 || *(s16*)((char*)obj + 0xa0) == 0x2e) {
@@ -4922,13 +5087,13 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
     } else {
         Sfx_StopObjectChannel((int)obj, 0x10);
     }
-    if (gb50 != 0 && *(s8*)(sub + 0x36) == 0) {
+    if (gb50 != 0 && sub->capturedLatch == 0) {
         moved = 1;
     }
     if (moved != 0) {
         return 4;
     }
-    *(s8*)(sub + 0x36) = gb50;
+    sub->capturedLatch = gb50;
     p3[0x56] = 0;
     while (ObjMsg_Pop(obj, &msgA, &msgB, &payload) != 0) {
     }
@@ -5280,39 +5445,39 @@ typedef struct { s16 a, b, c; u8 pad[6]; f32 x, y, z; } RunnerTarget;
 void babycloudrunner_update(int* obj)
 {
     char* player;
-    u8* sub;
+    BabyCloudRunnerState* sub;
     u8* def = *(u8**)((char*)obj + 0x4c);
     int found;
     u8* def2;
     int* near;
-    u8* sub2;
+    BabyCloudRunnerState* sub2;
     int inRange;
     RunnerTarget tgt;
     int mode;
     f32 radius;
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
     player = (char*)Obj_GetPlayerObject();
     getTrickyObject();
     if (GameBit_Get(*(s16*)(def + 0x22)) != 0) {
         *(s16*)((char*)obj + 6) |= 0x4000;
-        *(u8*)(sub + 0x22c) &= ~1;
+        sub->flags22C &= ~1;
         Obj_RemoveFromUpdateList(obj);
         ObjGroup_RemoveObject(obj, 0x20);
         ObjGroup_RemoveObject(obj, 3);
     }
-    if (*(int*)(sub + 0x230) == 2 && GameBit_Get(0x66) != 0) {
+    if (sub->runnerState == 2 && GameBit_Get(0x66) != 0) {
         ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(6, obj, -1);
         ((void (*)(void))((int*)*gGameUIInterface)[0x60 / 4])();
     } else if (fn_80080150(sub) != 0) {
-        *(u8*)(sub + 0x22c) |= 1;
-        *(int*)(sub + 0xc4) = 0;
+        sub->flags22C |= 1;
+        sub->behaviourState = 0;
         if (*(int*)((char*)obj + 0xf4) < 0) {
             if (*(s16*)(def + 0x22) != -1) {
                 GameBit_Set(*(s16*)(def + 0x22), 1);
             }
             ObjHits_DisableObject(obj);
             *(s16*)((char*)obj + 6) |= 0x4000;
-            *(u8*)(sub + 0x22c) &= ~1;
+            sub->flags22C &= ~1;
             Obj_RemoveFromUpdateList(obj);
             ObjGroup_RemoveObject(obj, 0x20);
             ObjGroup_RemoveObject(obj, 3);
@@ -5322,41 +5487,41 @@ void babycloudrunner_update(int* obj)
         }
     } else {
         *(u8*)((char*)obj + 0xaf) |= 8;
-        if (*(int*)(sub + 0x230) == 0) {
+        if (sub->runnerState == 0) {
             mode = 0x19;
             if (((u8 (*)(void*, int*, f32, int*, int))((int*)*gRomCurveInterface)[0x8c / 4])((char*)sub + 0x124, obj, lbl_803E424C, &mode, 0) == 0) {
-                *(int*)(sub + 0x230) = 1;
+                sub->runnerState = 1;
                 storeZeroToFloatParam((char*)sub + 0x238);
             }
         } else {
             if (randFn_80080100(500) != 0) {
                 int r = randomGetRange(0, 3);
-                objAudioFn_80039270((int)obj, (char*)sub + 0x6c, (u16)((s16*)*(void**)(sub + 0x240))[r]);
+                objAudioFn_80039270((int)obj, (char*)sub + 0x6c, (u16)((s16*)sub->mutterSfxTable)[r]);
             }
             objAnimFn_80038f38((int)obj, (char*)sub + 0x6c);
-            if (*(int*)(sub + 0x230) == 1 || *(int*)(sub + 0x230) == 2) {
-                f32 speed = *(f32*)(sub + 0x23c);
+            if (sub->runnerState == 1 || sub->runnerState == 2) {
+                f32 speed = sub->curveSpeed;
                 Obj_UpdateRomCurveFollowVelocity(obj, (char*)sub + 0x124, speed, lbl_803E4238 * speed, lbl_803E4250 * speed, 1);
                 Obj_SmoothTurnAnglesTowardVelocity(obj, (char*)obj + 0x24, 0x1e, lbl_803E4238, lbl_803E4254);
                 objMove((int)obj, *(f32*)((char*)obj + 0x24), *(f32*)((char*)obj + 0x28), *(f32*)((char*)obj + 0x2c));
-                if (*(int*)(sub + 0x230) == 1) {
-                    if (*(int*)(sub + 0x234) != -1 && GameBit_Get(*(int*)(sub + 0x234) + 0xb2a) != 0) {
-                        *(int*)(sub + 0x230) = 2;
+                if (sub->runnerState == 1) {
+                    if (sub->runnerIndex != -1 && GameBit_Get(sub->runnerIndex + 0xb2a) != 0) {
+                        sub->runnerState = 2;
                         GameBit_Set(0x66, 0);
-                        ((void (*)(int, int))((int*)*gGameUIInterface)[0x58 / 4])(lbl_80322B28[*(int*)(sub + 0x234)], 0x5d1);
-                        s16toFloat((int)(sub + 0x238), (s16)lbl_80322B28[*(int*)(sub + 0x234)]);
+                        ((void (*)(int, int))((int*)*gGameUIInterface)[0x58 / 4])(lbl_80322B28[sub->runnerIndex], 0x5d1);
+                        s16toFloat((int)((char*)sub + 0x238), (s16)lbl_80322B28[sub->runnerIndex]);
                     }
                     fn_8019E3F4(obj);
                     return;
                 }
-                if (*(int*)(sub + 0x230) == 2) {
+                if (sub->runnerState == 2) {
                     near = (int*)ObjGroup_FindNearestObject(3, obj, 0);
                     if (near == NULL || Vec_distance((char*)near + 0x18, (char*)sub + 0x18) >= lbl_803DBE38) {
                         if (near != NULL) {
                             fn_8014C66C(near, Obj_GetPlayerObject());
                         }
                     } else {
-                        sandworm_turnTowardTargetAnim(obj, near, sub, 0);
+                        sandworm_turnTowardTargetAnim(obj, near, (u8*)sub, 0);
                         if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) <= lbl_803DBE3C) {
                             fn_8014C66C(near, Obj_GetPlayerObject());
                         } else {
@@ -5371,7 +5536,7 @@ void babycloudrunner_update(int* obj)
                 }
             }
             inRange = Vec_distance((char*)obj + 0x18, player + 0x18) < (f32)(*(s16*)(def + 0x1a) / 2);
-            if (*(int*)(sub + 0x230) == 2) {
+            if (sub->runnerState == 2) {
                 radius = (f32)*(s16*)(def + 0x18);
                 if (fn_80080150((char*)sub + 0x238) != 0) {
                     if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0 && timerCountDown((char*)sub + 0x238) != 0) {
@@ -5379,26 +5544,26 @@ void babycloudrunner_update(int* obj)
                         ((void (*)(void))((int*)*gGameUIInterface)[0x60 / 4])();
                         return;
                     }
-                    ((void (*)(int))((int*)*gGameUIInterface)[0x5c / 4])((int)*(f32*)(sub + 0x238));
+                    ((void (*)(int))((int*)*gGameUIInterface)[0x5c / 4])((int)sub->countdownTimer);
                 }
                 if (inRange == 0 && (void*)ObjGroup_FindNearestObject(3, obj, &radius) != NULL) {
                     inRange = 1;
                 }
-                if (GameBit_Get(*(int*)(sub + 0x234) + 0xb2e) != 0) {
-                    *(int*)(sub + 0x230) = 3;
+                if (GameBit_Get(sub->runnerIndex + 0xb2e) != 0) {
+                    sub->runnerState = 3;
                     ((void (*)(void))((int*)*gGameUIInterface)[0x60 / 4])();
                     Sfx_PlayFromObject((int)obj, SFXsp_lf_mutter4);
                     storeZeroToFloatParam((char*)sub + 0x238);
                 }
             } else {
                 *(u8*)((char*)obj + 0xaf) &= ~0x8;
-                sub2 = *(u8**)((char*)obj + 0xb8);
+                sub2 = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
                 {
                     char* pp = (char*)Obj_GetPlayerObject();
                     def2 = *(u8**)((char*)obj + 0x4c);
                     found = 0;
                     if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32)*(s16*)(def2 + 0x1a)
-                        && *(int*)(sub2 + 0x230) == 3
+                        && sub2->runnerState == 3
                         && (*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
                         found = 1;
                     }
@@ -5409,28 +5574,28 @@ void babycloudrunner_update(int* obj)
                     *(u8*)((char*)obj + 0xaf) |= 0x10;
                 }
             }
-            if (*(int*)(sub + 0x230) == 3) {
-                if (!((WormSpitByte*)(sub + 0x244))->_p0) {
+            if (sub->runnerState == 3) {
+                if (!((WormSpitByte*)&sub->spitFlags)->_p0) {
                     tgt.x = *(f32*)(def + 8);
                     tgt.y = *(f32*)(def + 0xc);
                     tgt.z = *(f32*)(def + 0x10);
-                    tgt.a = *(s16*)(sub + 0xd0);
+                    tgt.a = sub->roostYaw;
                     tgt.b = 0;
                     tgt.c = 0;
                     *(s16*)((char*)obj + 2) = 0;
                     *(s16*)((char*)obj + 4) = 0;
                     if (dll_2E_func0D(obj, &tgt, lbl_803DBE40, -1, &lbl_803DBE44, &lbl_803DBE48) != 0) {
-                        ((WormSpitByte*)(sub + 0x244))->_p0 = 1;
+                        ((WormSpitByte*)&sub->spitFlags)->_p0 = 1;
                         GameBit_Set(0x66, 0);
                     }
                     ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803DBE44, timeDelta, 0);
                 } else {
                     if (inRange != 0) {
                         ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(1, obj, -1);
-                        *(int*)(sub + 0xb0) = 1;
+                        sub->unkB0 = 1;
                     }
-                    sandworm_turnTowardTargetAnim(obj, (int*)Obj_GetPlayerObject(), sub, 1);
-                    if (((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, *(f32*)(sub + 0xa8), timeDelta, 0) != 0) {
+                    sandworm_turnTowardTargetAnim(obj, (int*)Obj_GetPlayerObject(), (u8*)sub, 1);
+                    if (((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, sub->animSpeed, timeDelta, 0) != 0) {
                         if (randFn_80080100(2) != 0) {
                             ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E4218, 0);
                         } else {
@@ -5464,7 +5629,6 @@ extern f32 lbl_803E4200;
 extern f32 lbl_803E4204;
 
 extern void Camera_EnableViewYOffset(void);
-typedef struct { f32 f0, f4, f8, fc, f10, f14; u8 b18, b19, b1a, b1b; } CrystalBeam;
 typedef struct { s16 a, b, c, d; u8 pad[4]; f32 x, y, z; } PartPayload;
 
 /* EN v1.0 0x8019D9F0  size: 2112b  fn_8019D9F0: main crystal beam update -
@@ -5478,7 +5642,7 @@ void fn_8019D9F0(int* obj)
     char* p16;
     char* p32;
     int i;
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    CfMainCrystalState* sub = *(CfMainCrystalState**)((char*)obj + 0xb8);
     int idx;
     int count;
     PartPayload pay;
@@ -5491,88 +5655,88 @@ void fn_8019D9F0(int* obj)
     while (ObjMsg_Pop(obj, &msgType, &msgSrc, &payload) != 0) {
         switch (msgType) {
         case 0x110001:
-            *(f32*)(sub + 0) = *(f32*)((char*)msgSrc + 0xc);
-            *(f32*)(sub + 0x10) = lbl_803E41D8;
-            *(f32*)(sub + 0x20) = *(f32*)((char*)msgSrc + 0x14);
-            *(s16*)(sub + 0x30) = 1;
+            sub->pylonX[0] = *(f32*)((char*)msgSrc + 0xc);
+            sub->pylonY[0] = lbl_803E41D8;
+            sub->pylonZ[0] = *(f32*)((char*)msgSrc + 0x14);
+            sub->pylonTimer[0] = 1;
             break;
         case 0x110002:
-            *(f32*)(sub + 4) = *(f32*)((char*)msgSrc + 0xc);
-            *(f32*)(sub + 0x14) = lbl_803E41D8;
-            *(f32*)(sub + 0x24) = *(f32*)((char*)msgSrc + 0x14);
-            *(s16*)(sub + 0x32) = 1;
+            sub->pylonX[1] = *(f32*)((char*)msgSrc + 0xc);
+            sub->pylonY[1] = lbl_803E41D8;
+            sub->pylonZ[1] = *(f32*)((char*)msgSrc + 0x14);
+            sub->pylonTimer[1] = 1;
             break;
         case 0x110003:
-            *(f32*)(sub + 8) = *(f32*)((char*)msgSrc + 0xc);
-            *(f32*)(sub + 0x18) = lbl_803E41D8;
-            *(f32*)(sub + 0x28) = *(f32*)((char*)msgSrc + 0x14);
-            *(s16*)(sub + 0x34) = 1;
+            sub->pylonX[2] = *(f32*)((char*)msgSrc + 0xc);
+            sub->pylonY[2] = lbl_803E41D8;
+            sub->pylonZ[2] = *(f32*)((char*)msgSrc + 0x14);
+            sub->pylonTimer[2] = 1;
             break;
         case 0x110004:
-            *(f32*)(sub + 0xc) = *(f32*)((char*)msgSrc + 0xc);
-            *(f32*)(sub + 0x1c) = *(f32*)((char*)msgSrc + 0x10);
-            *(f32*)(sub + 0x2c) = *(f32*)((char*)msgSrc + 0x14);
-            *(s16*)(sub + 0x36) = 1;
+            sub->crystalX = *(f32*)((char*)msgSrc + 0xc);
+            sub->crystalY = *(f32*)((char*)msgSrc + 0x10);
+            sub->crystalZ = *(f32*)((char*)msgSrc + 0x14);
+            sub->crystalKnown = 1;
             break;
         }
     }
-    if (*(s16*)(sub + 0x36) == 0) {
+    if (sub->crystalKnown == 0) {
         ObjMsg_SendToObjects(0xdc, 5, obj, 0x110004, 0);
     }
-    if (GameBit_Get(0x54) != 0 && *(s16*)(sub + 0x30) == 0) {
+    if (GameBit_Get(0x54) != 0 && sub->pylonTimer[0] == 0) {
         ObjMsg_SendToObjects(0xda, 4, obj, 0x110001, 0);
     }
-    if (GameBit_Get(0x55) != 0 && *(s16*)(sub + 0x32) == 0) {
+    if (GameBit_Get(0x55) != 0 && sub->pylonTimer[1] == 0) {
         ObjMsg_SendToObjects(0xda, 4, obj, 0x110002, 0);
     }
-    if (GameBit_Get(0x56) != 0 && *(s16*)(sub + 0x34) == 0) {
+    if (GameBit_Get(0x56) != 0 && sub->pylonTimer[2] == 0) {
         ObjMsg_SendToObjects(0xda, 4, obj, 0x110003, 0);
     }
-    *(u8*)(sub + 0x53) = 0;
-    *(u8*)(sub + 0x6f) = 0;
-    *(u8*)(sub + 0x8b) = 0;
-    *(u8*)(sub + 0xa7) = 0;
-    *(u8*)(sub + 0xc3) = 0;
-    *(u8*)(sub + 0xdf) = 0;
-    *(u8*)(sub + 0xfb) = 0;
-    *(u8*)(sub + 0x117) = 0;
-    *(u8*)(sub + 0x133) = 0;
-    *(u8*)(sub + 0x14f) = 0;
+    sub->beams[0].b1b = 0;
+    sub->beams[1].b1b = 0;
+    sub->beams[2].b1b = 0;
+    sub->beams[3].b1b = 0;
+    sub->beams[4].b1b = 0;
+    sub->beams[5].b1b = 0;
+    sub->beams[6].b1b = 0;
+    sub->beams[7].b1b = 0;
+    sub->beams[8].b1b = 0;
+    sub->beams[9].b1b = 0;
     count = 0;
     idx = 0;
-    if (*(s16*)(sub + 0x36) != 0) {
+    if (sub->crystalKnown != 0) {
         if (GameBit_Get(0x57) != 0) {
-            if (*(s16*)(sub + 0x30) != 0) {
-                *(s16*)(sub + 0x30) = 0x78;
+            if (sub->pylonTimer[0] != 0) {
+                sub->pylonTimer[0] = 0x78;
             }
-            if (*(s16*)(sub + 0x32) != 0) {
-                *(s16*)(sub + 0x32) = 0x78;
+            if (sub->pylonTimer[1] != 0) {
+                sub->pylonTimer[1] = 0x78;
             }
-            if (*(s16*)(sub + 0x34) != 0) {
-                *(s16*)(sub + 0x34) = 0x78;
+            if (sub->pylonTimer[2] != 0) {
+                sub->pylonTimer[2] = 0x78;
             }
-            *(s16*)(sub + 0x150) = 0x5a;
+            sub->charge = 0x5a;
         }
         i = 0;
         p16 = (char*)sub;
         p32 = (char*)sub;
         do {
             if (i < 3 && *(s16*)(p16 + 0x30) != 0) {
-                CrystalBeam* sl = (CrystalBeam*)(sub + idx++ * 0x1c + 0x38);
+                CrystalBeam* sl = &sub->beams[idx++];
                 sl->b1b = 1;
                 sl->b18 = 0x7f;
                 sl->b19 = 0x7f;
                 sl->b1a = 0xff;
-                sl->f0 = *(f32*)(sub + 0xc);
-                sl->f8 = lbl_803E41DC + *(f32*)(sub + 0x1c);
-                sl->f10 = *(f32*)(sub + 0x2c);
+                sl->f0 = sub->crystalX;
+                sl->f8 = lbl_803E41DC + sub->crystalY;
+                sl->f10 = sub->crystalZ;
                 dir[0] = *(f32*)p32 - sl->f0;
                 dir[1] = (lbl_803E41E0 + *(f32*)(p32 + 0x10)) - sl->f8;
                 dir[2] = *(f32*)(p32 + 0x20) - sl->f10;
                 PSVECNormalize(dir, dir);
-                pay.x = *(f32*)p32 - *(f32*)(sub + 0xc);
-                pay.y = (lbl_803E41E0 + *(f32*)(p32 + 0x10)) - *(f32*)(sub + 0x1c);
-                pay.z = *(f32*)(p32 + 0x20) - *(f32*)(sub + 0x2c);
+                pay.x = *(f32*)p32 - sub->crystalX;
+                pay.y = (lbl_803E41E0 + *(f32*)(p32 + 0x10)) - sub->crystalY;
+                pay.z = *(f32*)(p32 + 0x20) - sub->crystalZ;
                 dir[0] = -dir[0];
                 dir[1] = -dir[1];
                 dir[2] = -dir[2];
@@ -5590,7 +5754,7 @@ void fn_8019D9F0(int* obj)
                 pay.x = *(f32*)p32;
                 pay.y = *(f32*)(p32 + 0x10);
                 pay.z = *(f32*)(p32 + 0x20);
-                if (*(u8*)(sub + 0x15f) > 0x14) {
+                if (sub->chime[3] > 0x14) {
                     pay.x = *(f32*)p32;
                     pay.y = *(f32*)(p32 + 0x10);
                     pay.z = *(f32*)(p32 + 0x20);
@@ -5600,45 +5764,45 @@ void fn_8019D9F0(int* obj)
                 pay.y = *(f32*)(p32 + 0x10);
                 pay.z = *(f32*)(p32 + 0x20);
                 pay.c = i;
-                ((CrystalBeam*)(sub + idx++ * 0x1c + 0x38))->b1b = 1;
+                sub->beams[idx++].b1b = 1;
                 count++;
             }
             p16 += 2;
             p32 += 4;
             i++;
         } while (i < 3);
-        if (*(s16*)(sub + 0x30) + (*(s16*)(sub + 0x32) + *(s16*)(sub + 0x34)) < 0x12c
+        if (sub->pylonTimer[0] + (sub->pylonTimer[1] + sub->pylonTimer[2]) < 0x12c
             && (int)randomGetRange(0, 3) == 0) {
             ((void (*)(void*, int, void*, int, int, void*))((int*)*gPartfxInterface)[8 / 4])(obj, 0x81, 0, 0, -1, 0);
         }
-        if (*(s16*)(sub + 0x30) != 0 || *(s16*)(sub + 0x32) != 0 || *(s16*)(sub + 0x34) != 0) {
-            if (*(u8*)(sub + 0x15c) > 0x64) {
-                *(u8*)(sub + 0x15c) = 0;
+        if (sub->pylonTimer[0] != 0 || sub->pylonTimer[1] != 0 || sub->pylonTimer[2] != 0) {
+            if (sub->chime[0] > 0x64) {
+                sub->chime[0] = 0;
             }
-            if (*(u8*)(sub + 0x15d) > 0x64) {
-                *(u8*)(sub + 0x15d) = 0;
+            if (sub->chime[1] > 0x64) {
+                sub->chime[1] = 0;
             }
-            if (*(u8*)(sub + 0x15e) > 0x64) {
-                *(u8*)(sub + 0x15e) = 0;
+            if (sub->chime[2] > 0x64) {
+                sub->chime[2] = 0;
             }
-            if (*(u8*)(sub + 0x15f) > 0x14) {
-                *(u8*)(sub + 0x15f) = 0;
+            if (sub->chime[3] > 0x14) {
+                sub->chime[3] = 0;
             }
-            *(u8*)(sub + 0x15c) += framesThisStep;
-            *(u8*)(sub + 0x15d) += framesThisStep;
-            *(u8*)(sub + 0x15e) += framesThisStep;
-            *(u8*)(sub + 0x15f) += framesThisStep;
+            sub->chime[0] += framesThisStep;
+            sub->chime[1] += framesThisStep;
+            sub->chime[2] += framesThisStep;
+            sub->chime[3] += framesThisStep;
         }
         if (count == 3) {
-            if (*(s16*)(sub + 0x150) == 0) {
+            if (sub->charge == 0) {
                 Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
                 getEnvfxAct(0, 0, 0x7f, 0);
             }
-            *(s16*)(sub + 0x150) += framesThisStep;
+            sub->charge += framesThisStep;
         }
-        if (*(s16*)(sub + 0x150) >= 0x3c) {
-            f32 fr = (f32)(*(s16*)(sub + 0x150) - 0x3c) / lbl_803E41EC;
-            CrystalBeam* sl = (CrystalBeam*)(sub + idx * 0x1c + 0x38);
+        if (sub->charge >= 0x3c) {
+            f32 fr = (f32)(sub->charge - 0x3c) / lbl_803E41EC;
+            CrystalBeam* sl = &sub->beams[idx];
             sl->b1b = 1;
             sl->b18 = 0;
             sl->b19 = 0;
@@ -5655,14 +5819,14 @@ void fn_8019D9F0(int* obj)
     if (count != 0) {
         if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x40) == 0) {
             Sfx_PlayFromObject((int)obj, SFXsk_planteater11);
-            *(f32*)(sub + 0x154) = lbl_803E41F8;
+            sub->humVolume = lbl_803E41F8;
         } else {
             f32 vol = lbl_803E41FC + (f32)count / lbl_803E4200;
-            *(f32*)(sub + 0x154) = (vol - *(f32*)(sub + 0x154)) * lbl_803E4204 + *(f32*)(sub + 0x154);
-            if (*(s16*)(sub + 0x150) >= 0x3c) {
-                *(f32*)(sub + 0x154) = vol;
+            sub->humVolume = (vol - sub->humVolume) * lbl_803E4204 + sub->humVolume;
+            if (sub->charge >= 0x3c) {
+                sub->humVolume = vol;
             }
-            Sfx_SetObjectChannelVolume((int)obj, 0x40, 0x64, *(f32*)(sub + 0x154));
+            Sfx_SetObjectChannelVolume((int)obj, 0x40, 0x64, sub->humVolume);
         }
     }
     i = 0;
@@ -5721,7 +5885,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
 {
     u8* def;
     char* player;
-    u8* sub;
+    CfGuardianState* sub;
     u8 evbuf[0x1c];
     f32 v[3];
     f32 k;
@@ -5729,9 +5893,9 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
     f32 ground = lbl_803E4130;
     def = *(u8**)((char*)obj + 0x4c);
     evbuf[0x1b] = 0;
-    sub = *(u8**)((char*)obj + 0xb8);
-    *(u8*)(sub + 0xa9b) &= ~0x2;
-    *(f32*)(sub + 0x7fc) = lbl_803E4134;
+    sub = *(CfGuardianState**)((char*)obj + 0xb8);
+    sub->flagsA9B &= ~0x2;
+    sub->moveSpeed = lbl_803E4134;
     player = (char*)Obj_GetPlayerObject();
     ObjTrigger_UpdateIdBlockFlag((int)obj);
     if (*(s8*)(def + 0x19) == 1 && GameBit_Get(0x57) == 0) {
@@ -5739,63 +5903,63 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         return 0;
     }
     *(u8*)((char*)obj + 0xaf) &= ~8;
-    switch (*(u8*)(sub + 0xa80)) {
+    switch (sub->questState) {
     case 0:
-        if (*(u8*)(sub + 0xa98) == 2) {
-            *(u8*)(sub + 0xa98) = 1;
+        if (sub->chatterState == 2) {
+            sub->chatterState = 1;
         }
         if (GameBit_Get(0x94f) != 0) {
-            *(u8*)(sub + 0xa80) = 1;
+            sub->questState = 1;
         }
         break;
     case 1:
-        if (*(u8*)(sub + 0xa98) == 2) {
-            *(u8*)(sub + 0xa98) = 1;
+        if (sub->chatterState == 2) {
+            sub->chatterState = 1;
         }
         if (GameBit_Get(0x4e) != 0) {
-            *(u8*)(sub + 0xa80) = 3;
+            sub->questState = 3;
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
             *(int*)((char*)obj + 0xf4) = 0;
             GameBit_Set(0x48, 1);
-            *(u8*)(sub + 0xa9b) |= 1;
+            sub->flagsA9B |= 1;
         }
         break;
     case 2:
-        if (*(u8*)(sub + 0xa98) == 2) {
-            *(u8*)(sub + 0xa98) = 1;
+        if (sub->chatterState == 2) {
+            sub->chatterState = 1;
         }
-        *(u8*)(sub + 0xa9b) |= 2;
-        if (fn_8019AF64(obj, sub + 0x6bc, lbl_803E4138, 0, sub + 0x7fc) != 0) {
-            *(u8*)(sub + 0xa9b) &= ~1;
-            *(u8*)(sub + 0xa80) = 4;
+        sub->flagsA9B |= 2;
+        if (fn_8019AF64(obj, (u8*)sub + 0x6bc, lbl_803E4138, 0, (u8*)sub + 0x7fc) != 0) {
+            sub->flagsA9B &= ~1;
+            sub->questState = 4;
         }
         break;
     case 3:
         ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(2, obj, -1);
         GameBit_Set(0x60, 1);
-        *(u8*)(sub + 0xa80) = 2;
+        sub->questState = 2;
         break;
     case 4:
         if (GameBit_Get(0x57) != 0) {
             if (*(s8*)(def + 0x19) != 1) {
-                *(u8*)(sub + 0xa80) = 0xf;
-                *(s8*)(sub + 0xa99) = 0;
+                sub->questState = 0xf;
+                sub->chatterAlt = 0;
             } else {
-                *(u8*)(sub + 0xa80) = 0xe;
-                *(s8*)(sub + 0xa99) = 0;
+                sub->questState = 0xe;
+                sub->chatterAlt = 0;
             }
-        } else if (*(u8*)(sub + 0xa98) == 2) {
-            *(u8*)(sub + 0xa98) = 1;
-            *(s8*)(sub + 0xa99) = (s8)((*(s8*)(sub + 0xa99) + 1) % 2);
+        } else if (sub->chatterState == 2) {
+            sub->chatterState = 1;
+            sub->chatterAlt = (s8)((sub->chatterAlt + 1) % 2);
         }
         break;
     case 6:
-        if (*(int*)(sub + 0xa94) == 0) {
-            if (*(u8*)(sub + 0xa98) == 2) {
-                *(u8*)(sub + 0xa98) = 1;
+        if (sub->landingPhase == 0) {
+            if (sub->chatterState == 2) {
+                sub->chatterState = 1;
             }
         } else {
-            if (*(int*)(sub + 0xa94) >= 2) {
+            if (sub->landingPhase >= 2) {
                 *(f32*)((char*)obj + 0x24) = lbl_803E4110;
                 *(f32*)((char*)obj + 0x2c) = lbl_803E4110;
                 *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x28) * timeDelta + *(f32*)((char*)obj + 0x10);
@@ -5803,23 +5967,23 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
                 *(s16*)obj = (s16)((0xc0 << (*(s16*)obj + 8)) >> 1);
                 (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~0x400;
                 if (ground <= lbl_803E4130) {
-                    *(int*)(sub + 0xa94) = 2;
+                    sub->landingPhase = 2;
                     *(f32*)((char*)obj + 0x10) -= ground;
-                    *(u8*)(sub + 0xa98) = 1;
+                    sub->chatterState = 1;
                     *(int*)((char*)obj + 0xf4) = 0;
                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
                     {
                         char* pt = (char*)findRomCurvePointNearObject(obj, 0, 0, 2);
                         f32 d;
-                        *(f32*)(sub + 0xa74) = *(f32*)(pt + 8);
-                        *(f32*)(sub + 0xa78) = *(f32*)(pt + 0xc);
-                        *(f32*)(sub + 0xa7c) = *(f32*)(pt + 0x10);
-                        *(s16*)(sub + 0xa68) = (s16)(*(s8*)(pt + 0x2c) << 8);
-                        d = *(f32*)(sub + 0xa78) - *(f32*)((char*)obj + 0x10);
+                        sub->homeX = *(f32*)(pt + 8);
+                        sub->homeY = *(f32*)(pt + 0xc);
+                        sub->homeZ = *(f32*)(pt + 0x10);
+                        sub->homeYaw = (s16)(*(s8*)(pt + 0x2c) << 8);
+                        d = sub->homeY - *(f32*)((char*)obj + 0x10);
                         d = (d >= lbl_803E4110) ? d : -d;
                         if (d < lbl_803E413C) {
                             ObjGroup_AddObject(obj, 0x16);
-                            *(u8*)(sub + 0xa80) = 7;
+                            sub->questState = 7;
                             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
                         }
                     }
@@ -5830,7 +5994,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
                 f32 w = lbl_803E4144 * *(f32*)((char*)obj + 0x28);
                 w = (w >= lbl_803E4110) ? w : -w;
                 *(s16*)obj = (f32)*(s16*)obj + w;
-                *(f32*)(sub + 0x7fc) = lbl_803E4148;
+                sub->moveSpeed = lbl_803E4148;
                 if (GameBit_Get(0x8e9) != 0) {
                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
                     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
@@ -5839,14 +6003,14 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
                     *(f32*)((char*)obj + 0x24) = lbl_803E4110;
                     *(f32*)((char*)obj + 0x28) = lbl_803E414C;
                     *(f32*)((char*)obj + 0x2c) = lbl_803E4110;
-                    *(int*)(sub + 0xa94) = 2;
-                    *(u8*)(sub + 0xa9b) &= ~1;
+                    sub->landingPhase = 2;
+                    sub->flagsA9B &= ~1;
                 }
             }
-            if (*(int*)(sub + 0xa94) < 2) {
+            if (sub->landingPhase < 2) {
                 *(f32*)((char*)obj + 0xc) = timeDelta * *(f32*)((char*)obj + 0x24) + *(f32*)((char*)obj + 0xc);
                 *(f32*)((char*)obj + 0x14) = timeDelta * *(f32*)((char*)obj + 0x2c) + *(f32*)((char*)obj + 0x14);
-                if (*(u8*)(sub + 0xa5e) != 0) {
+                if (sub->unkA5E != 0) {
                     *(f32*)((char*)obj + 0x24) = lbl_803E4150 * -*(f32*)((char*)obj + 0x24);
                     *(f32*)((char*)obj + 0x2c) = lbl_803E4150 * -*(f32*)((char*)obj + 0x2c);
                 }
@@ -5867,12 +6031,12 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         }
         break;
     case 7:
-        if (*(u8*)(sub + 0xa98) == 2) {
-            *(u8*)(sub + 0xa98) = 1;
+        if (sub->chatterState == 2) {
+            sub->chatterState = 1;
         }
-        *(u8*)(sub + 0xa9b) |= 2;
-        if (fn_8019AF64(obj, sub + 0x6bc, lbl_803E4138, 1, sub + 0x7fc) != 0) {
-            *(u8*)(sub + 0xa80) = 8;
+        sub->flagsA9B |= 2;
+        if (fn_8019AF64(obj, (u8*)sub + 0x6bc, lbl_803E4138, 1, (u8*)sub + 0x7fc) != 0) {
+            sub->questState = 8;
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
         }
         break;
@@ -5883,31 +6047,31 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         }
         if (nearDist > lbl_803E4158 && Vec_xzDistance(player + 0x18, (char*)obj + 0x18) < lbl_803E413C) {
             *(u8*)((char*)obj + 0xaf) &= ~0x10;
-            if ((*(u8*)(sub + 0xa9b) & 4) == 0 && lbl_80322954[*(u8*)(sub + 0xa80)] != 0) {
-                dll_2E_func0C(0xf, sub + 0xa68);
-                *(u8*)(sub + 0xa9b) |= 5;
-                lbl_80322954[*(u8*)(sub + 0xa80)] = 0;
+            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0) {
+                dll_2E_func0C(0xf, (u8*)sub + 0xa68);
+                sub->flagsA9B |= 5;
+                lbl_80322954[sub->questState] = 0;
             }
-            if (*(u8*)(sub + 0xa98) == 2) {
-                *(u8*)(sub + 0xa98) = 1;
-                *(s8*)(sub + 0xa99) = (s8)((*(s8*)(sub + 0xa99) + 1) % 2);
+            if (sub->chatterState == 2) {
+                sub->chatterState = 1;
+                sub->chatterAlt = (s8)((sub->chatterAlt + 1) % 2);
             }
         } else {
-            if ((*(u8*)(sub + 0xa9b) & 4) == 0 && lbl_80322954[*(u8*)(sub + 0xa80)] != 0xe) {
-                *(u8*)(sub + 0xa98) = 2;
-                *(u8*)(sub + 0xa9b) |= 5;
-                dll_2E_func0A(0xe, (int*)(sub + 0xa68));
-                lbl_80322954[*(u8*)(sub + 0xa80)] = 0xe;
+            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0xe) {
+                sub->chatterState = 2;
+                sub->flagsA9B |= 5;
+                dll_2E_func0A(0xe, (int*)((u8*)sub + 0xa68));
+                lbl_80322954[sub->questState] = 0xe;
             }
         }
-        if ((*(u8*)(sub + 0xa9b) & 4) != 0
-            && fn_8019B1D8(obj, (int*)(sub + 0xa68), lbl_803E4128, (int)(sub + 0x7fc)) != 0) {
+        if ((sub->flagsA9B & 4) != 0
+            && fn_8019B1D8(obj, (int*)((u8*)sub + 0xa68), lbl_803E4128, (int)((u8*)sub + 0x7fc)) != 0) {
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-            *(u8*)(sub + 0xa9b) &= ~0x5;
+            sub->flagsA9B &= ~0x5;
         }
         if (GameBit_Get(0x43) != 0) {
-            *(u8*)(sub + 0xa80) = 9;
-            *(s8*)(sub + 0xa99) = 0;
+            sub->questState = 9;
+            sub->chatterAlt = 0;
         }
         break;
     case 9:
@@ -5915,56 +6079,56 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             dll_2E_func04(sub);
         }
         if (nearDist > lbl_803E4158 && Vec_xzDistance(player + 0x18, (char*)obj + 0x18) < lbl_803E413C) {
-            if ((*(u8*)(sub + 0xa9b) & 4) == 0 && lbl_80322954[*(u8*)(sub + 0xa80)] != 0) {
-                dll_2E_func0C(0xf, sub + 0xa68);
-                *(u8*)(sub + 0xa9b) |= 5;
-                lbl_80322954[*(u8*)(sub + 0xa80)] = 0;
+            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0) {
+                dll_2E_func0C(0xf, (u8*)sub + 0xa68);
+                sub->flagsA9B |= 5;
+                lbl_80322954[sub->questState] = 0;
             }
-            if (*(u8*)(sub + 0xa98) == 2) {
-                *(u8*)(sub + 0xa98) = 1;
-                *(s8*)(sub + 0xa99) = (s8)((*(s8*)(sub + 0xa99) + 1) % 2);
+            if (sub->chatterState == 2) {
+                sub->chatterState = 1;
+                sub->chatterAlt = (s8)((sub->chatterAlt + 1) % 2);
             }
         } else {
-            if ((*(u8*)(sub + 0xa9b) & 4) == 0 && lbl_80322954[*(u8*)(sub + 0xa80)] != 0xe) {
-                *(u8*)(sub + 0xa98) = 2;
-                *(u8*)(sub + 0xa9b) |= 5;
-                dll_2E_func0A(0xe, (int*)(sub + 0xa68));
-                lbl_80322954[*(u8*)(sub + 0xa80)] = 0xe;
+            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0xe) {
+                sub->chatterState = 2;
+                sub->flagsA9B |= 5;
+                dll_2E_func0A(0xe, (int*)((u8*)sub + 0xa68));
+                lbl_80322954[sub->questState] = 0xe;
             }
         }
-        if ((*(u8*)(sub + 0xa9b) & 4) != 0
-            && fn_8019B1D8(obj, (int*)(sub + 0xa68), lbl_803E4128, (int)(sub + 0x7fc)) != 0) {
+        if ((sub->flagsA9B & 4) != 0
+            && fn_8019B1D8(obj, (int*)((u8*)sub + 0xa68), lbl_803E4128, (int)((u8*)sub + 0x7fc)) != 0) {
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-            *(u8*)(sub + 0xa9b) &= ~0x5;
+            sub->flagsA9B &= ~0x5;
         }
         if (GameBit_Get(0x4be) != 0) {
-            *(u8*)(sub + 0xa80) = 0xa;
+            sub->questState = 0xa;
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
             *(int*)((char*)obj + 0xf4) = 0;
         }
         break;
     case 10:
-        if (*(u8*)(sub + 0xa98) == 2) {
-            *(u8*)(sub + 0xa98) = 1;
+        if (sub->chatterState == 2) {
+            sub->chatterState = 1;
         }
-        *(u8*)(sub + 0xa9b) |= 2;
-        if (fn_8019AF64(obj, sub + 0x6bc, lbl_803E415C, 2, sub + 0x7fc) != 0) {
-            *(u8*)(sub + 0xa80) = 0xb;
+        sub->flagsA9B |= 2;
+        if (fn_8019AF64(obj, (u8*)sub + 0x6bc, lbl_803E415C, 2, (u8*)sub + 0x7fc) != 0) {
+            sub->questState = 0xb;
         }
         break;
     case 11:
-        if (*(u8*)(sub + 0xa98) == 2) {
-            *(u8*)(sub + 0xa98) = 1;
+        if (sub->chatterState == 2) {
+            sub->chatterState = 1;
         }
         *(u8*)((char*)obj + 0x36) = 0;
         (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~1;
         Obj_RemoveFromUpdateList(obj);
         *(s16*)((char*)obj + 6) |= 0x4000;
-        *(u8*)(sub + 0xa80) = 0xf;
+        sub->questState = 0xf;
         break;
     case 12:
-        if (*(u8*)(sub + 0xa98) == 2) {
-            *(u8*)(sub + 0xa98) = 1;
+        if (sub->chatterState == 2) {
+            sub->chatterState = 1;
         }
         if (GameBit_Get(0x4b7) != 0) {
             ((void (*)(int*))((int*)*gCameraInterface)[0x48 / 4])(obj);
@@ -5972,12 +6136,12 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             GameBit_Set(0x4b7, 0);
         }
         if (GameBit_Get(0x49a) != 0) {
-            *(u8*)(sub + 0xa80) = 0xd;
+            sub->questState = 0xd;
         }
         break;
     case 13:
-        if (*(u8*)(sub + 0xa98) == 2) {
-            *(u8*)(sub + 0xa98) = 1;
+        if (sub->chatterState == 2) {
+            sub->chatterState = 1;
         }
         if (GameBit_Get(0x4b7) != 0) {
             ((void (*)(int*))((int*)*gCameraInterface)[0x48 / 4])(obj);
@@ -5985,12 +6149,12 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             GameBit_Set(0x4b7, 0);
         }
         if (GameBit_Get(0x4aa) != 0) {
-            *(u8*)(sub + 0xa80) = 0xe;
+            sub->questState = 0xe;
         }
         break;
     case 14:
-        if (*(u8*)(sub + 0xa98) == 2) {
-            *(u8*)(sub + 0xa98) = 1;
+        if (sub->chatterState == 2) {
+            sub->chatterState = 1;
         }
         break;
     case 15:
@@ -6004,52 +6168,52 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         buttonDisable(0, 0x100);
         if (((int (*)(int))((int*)*gGameUIInterface)[0x20 / 4])(0x2e8) != 0) {
             GameBit_Set(0x4ab, 1);
-        } else if (*(u8*)(sub + 0xa98) == 1) {
-            int* tbl = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, *(u8*)(sub + 0xa80));
+        } else if (sub->chatterState == 1) {
+            int* tbl = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, sub->questState);
             int pick;
             if (fn_80296A14((int)player) > 3) {
                 pick = tbl[0];
             } else {
                 pick = tbl[1];
             }
-            if (*(s8*)(sub + 0xa9a) % 2 != 0 && tbl[2] != -1) {
+            if (sub->chatterPick % 2 != 0 && tbl[2] != -1) {
                 pick = tbl[2];
             }
-            *(s8*)(sub + 0xa9a) += 1;
+            sub->chatterPick += 1;
             if (pick != -1) {
-                *(u8*)(sub + 0xa98) = 2;
+                sub->chatterState = 2;
                 ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(pick, obj, -1);
             }
         }
     }
     if (GameBit_Get(0x902) != 0) {
-        int* tbl2 = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, *(u8*)(sub + 0xa80));
+        int* tbl2 = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, sub->questState);
         if (tbl2[0] != -1) {
-            *(u8*)(sub + 0xa98) = 2;
+            sub->chatterState = 2;
             ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(tbl2[0], obj, -1);
             GameBit_Set(0x902, 0);
         }
     }
     {
-        int mv = lbl_80322954[*(u8*)(sub + 0xa80)];
-        if (mv != -1 && (*(u8*)(sub + 0xa9b) & 1) == 0 && *(s16*)((char*)obj + 0xa0) != mv) {
+        int mv = lbl_80322954[sub->questState];
+        if (mv != -1 && (sub->flagsA9B & 1) == 0 && *(s16*)((char*)obj + 0xa0) != mv) {
             ObjAnim_SetCurrentMove((int)obj, mv, lbl_803E4110, 0);
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x50);
         }
     }
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, *(f32*)(sub + 0x7fc), (f32)framesThisStep, evbuf) != 0
-        && (*(u8*)(sub + 0xa9b) & 1) != 0
+    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, sub->moveSpeed, (f32)framesThisStep, evbuf) != 0
+        && (sub->flagsA9B & 1) != 0
         && *(s16*)((char*)obj + 0xa0) != 0x1a
         && *(s16*)((char*)obj + 0xa0) != 9) {
-        *(u8*)(sub + 0xa9b) &= ~1;
+        sub->flagsA9B &= ~1;
     }
     fn_8019AE3C(obj, evbuf, &lbl_803DBE20);
     if (randFn_80080100(0x3c) != 0) {
-        objAudioFn_800393f8((int)obj, sub + 0x624, 0xdf, 0x1000, -1, 0);
+        objAudioFn_800393f8((int)obj, (u8*)sub + 0x624, 0xdf, 0x1000, -1, 0);
     }
-    objAnimFn_80038f38((int)obj, sub + 0x624);
-    characterDoEyeAnims(obj, sub + 0x654);
-    if (*(u8*)(sub + 0xa80) != GameBit_Get(0x4b)) {
+    objAnimFn_80038f38((int)obj, (u8*)sub + 0x624);
+    characterDoEyeAnims(obj, (u8*)sub + 0x654);
+    if (sub->questState != GameBit_Get(0x4b)) {
         GameBit_Set(0x4b);
     }
     return 0;
