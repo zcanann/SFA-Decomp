@@ -18,7 +18,7 @@ void wmspiritset_initialise(void) {}
 #pragma peephole off
 #pragma scheduling off
 void wmspiritset_init(int *obj, u8 *init) {
-    int *inner = *(int **)((char *)obj + 0xb8);
+    int *inner = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     if (((GameObject *)obj)->anim.seqId == 0x264) {
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5F94;
