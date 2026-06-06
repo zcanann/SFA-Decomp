@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/explosion.h"
+#include "main/mapEventTypes.h"
 
 
 extern undefined8 FUN_80006728();
@@ -496,7 +497,7 @@ void dll_199_free(int *obj) {
 
 extern void *Obj_GetPlayerObject(void);
 extern void fn_80296518(void *player, int a, int b);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *gObjectTriggerInterface;
 extern int getButtonsHeld(int pad);
 extern int return0_8005669C(int p);
@@ -517,11 +518,11 @@ int NWSH_levcon_SeqFn(int p1, int p2, u8 *p3)
             } else {
                 fn_80296518(player, 0x10, 1);
                 GameBit_Set(0x174, 1);
-                (**(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xb, 4, 1);
-                (**(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xb, 0x1d, 1);
-                (**(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xb, 0x1e, 1);
-                (**(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xb, 0x1f, 1);
-                (**(void (**)(int, int))(*gMapEventInterface + 0x44))(0xb, 6);
+                (*gMapEventInterface)->setAnimEvent(0xb, 4, 1);
+                (*gMapEventInterface)->setAnimEvent(0xb, 0x1d, 1);
+                (*gMapEventInterface)->setAnimEvent(0xb, 0x1e, 1);
+                (*gMapEventInterface)->setAnimEvent(0xb, 0x1f, 1);
+                (*gMapEventInterface)->setMode(0xb, 6);
             }
         }
     }

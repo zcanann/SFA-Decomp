@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
+#include "main/mapEventTypes.h"
 #include "main/dll/DB/DBbonedust.h"
 #include "main/dll/DB/DBstealerworm.h"
 
@@ -1058,20 +1059,20 @@ extern void lockLevel(int idx, int p2);
 extern void fn_801DFA28(int obj);
 extern void DBprotection_updateShield(int obj);
 extern void SCGameBitLatch_Update(u8 *latch, int mask, int a, int b, int bit, int c);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *gObjectTriggerInterface;
 void SB_Galleon_update(int obj) {
     s8 *p = (s8 *)((int **)obj)[0xb8/4];
     *(s8 *)(obj + 0xac) = *(s16 *)(p + 0x72);
     fn_801E1588(obj, (int)p);
     if (GameBit_Get(0x75) == 0) {
-        (**(void (**)(int, int))((char *)(*gMapEventInterface) + 0x44))(0xb, 1);
-        (**(void (**)(int, int, int))((char *)(*gMapEventInterface) + 0x50))(0xb, 0, 1);
-        (**(void (**)(int, int, int))((char *)(*gMapEventInterface) + 0x50))(0xb, 1, 1);
-        (**(void (**)(int, int, int))((char *)(*gMapEventInterface) + 0x50))(0xb, 5, 1);
+        (*gMapEventInterface)->setMode(0xb, 1);
+        (*gMapEventInterface)->setAnimEvent(0xb, 0, 1);
+        (*gMapEventInterface)->setAnimEvent(0xb, 1, 1);
+        (*gMapEventInterface)->setAnimEvent(0xb, 5, 1);
         lockLevel(mapGetDirIdx(0xb), 0);
-        if ((**(u8 (**)(int, int))((char *)(*gMapEventInterface) + 0x4c))(*(u8 *)(obj + 0x34), 1) == 0) {
-            (**(void (**)(int, int, int))((char *)(*gMapEventInterface) + 0x50))(*(u8 *)(obj + 0x34), 1, 1);
+        if ((*gMapEventInterface)->getAnimEvent(*(u8 *)(obj + 0x34), 1) == 0) {
+            (*gMapEventInterface)->setAnimEvent(*(u8 *)(obj + 0x34), 1, 1);
         }
         *(int *)(obj + 0xf4) = 0;
     }
@@ -1091,7 +1092,7 @@ void SB_Galleon_update(int obj) {
             DBprotection_updateShield(obj);
             break;
         case 3:
-            (**(void (**)(int, int))((char *)(*gMapEventInterface) + 0x44))(0xb, 1);
+            (*gMapEventInterface)->setMode(0xb, 1);
             *(s8 *)(obj + 0xac) = -1;
             (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(2, obj, -1);
             p[0x70] = 4;
@@ -1142,7 +1143,7 @@ void SB_Galleon_init(int obj) {
     lbl_803DDC18 = (int)textureLoadAsset(0x16d);
     lbl_803DDC1C = (int)textureLoadAsset(0x89);
     *(u8 *)(p + 0x84) = 100;
-    (**(void (**)(int, int))((char *)(*gMapEventInterface) + 0x44))(*(s8 *)(obj + 0xac), 1);
+    (*gMapEventInterface)->setMode(*(s8 *)(obj + 0xac), 1);
     getLActions(obj, obj, 0x58, 0, 0, 0);
     *(f32 *)(p + 0x90) = lbl_803E56CC;
     *(f32 *)(p + 0x94) = lbl_803E580C;

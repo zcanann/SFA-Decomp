@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/dimmagicbridge.h"
+#include "main/mapEventTypes.h"
 
 
 extern u32 GameBit_Get(int eventId);
@@ -15,7 +16,7 @@ extern void Resource_Release(int *res);
 extern int *gTitleMenuControlInterface;
 extern int *gObjectTriggerInterface;
 extern int *gModgfxInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 extern byte framesThisStep;
 
@@ -230,7 +231,7 @@ void dll_199_update(int obj)
             *(u8 *)((char *)state + 0xf) = 5;
             (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50, state[4] & 0xff, 0);
             GameBit_Set(0x1ce, 1);
-            (**(void (**)(int, int))(*gMapEventInterface + 0x44))(0xb, 6);
+            (*gMapEventInterface)->setMode(0xb, 6);
             break;
         }
     }
