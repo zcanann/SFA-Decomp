@@ -2110,7 +2110,19 @@ void doColorFilter(u8* mod)
  */
 #pragma peephole off
 #pragma scheduling off
-void doDistortionFilter(double radius, double angle, float* pos, u8* mod)
+static inline float distortSqrtf(float x) {
+    static const double half = 0.5;
+    static const double three = 3.0;
+    volatile float y;
+    double guess = __frsqrte((double)x);
+    guess = half * guess * (three - guess * guess * x);
+    guess = half * guess * (three - guess * guess * x);
+    guess = half * guess * (three - guess * guess * x);
+    y = (float)(x * guess);
+    return y;
+}
+
+void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 {
     extern f32 playerMapOffsetX, playerMapOffsetZ;
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -2195,11 +2207,10 @@ void doDistortionFilter(double radius, double angle, float* pos, u8* mod)
 
     /* Compute scaled radius (with rsqrt refinement when positive) */
     {
-        f32 r2 = lbl_803DB6C8 / (f32)radius;
+        f32 r2 = lbl_803DB6C8 / radius;
         f32 sr;
         if (r2 > lbl_803DEEDC) {
-            f32 e = (f32)(1.0 / __frsqrte((double)r2));
-            sr = r2 * e;
+            sr = distortSqrtf(r2);
         } else {
             sr = r2;
         }
@@ -2225,7 +2236,7 @@ void doDistortionFilter(double radius, double angle, float* pos, u8* mod)
 
     /* Indirect tex matrix scale */
     {
-        f32 ind_s = lbl_803DB6CC / (f32)radius;
+        f32 ind_s = lbl_803DB6CC / radius;
         if (ind_s > gSynthDelayedActionWord0) ind_s = gSynthDelayedActionWord0;
         indMtx[0] = ind_s;
         indMtx[1] = lbl_803DEEDC;

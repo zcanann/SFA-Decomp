@@ -30,7 +30,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3);
 void screenImageDraw(u8 alpha);
 void doSpiritVisionFilter(void);
 void doColorFilter(u8* mod);
-void doDistortionFilter(double radius, double angle, float* pos, u8* mod);
+void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod);
 void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3);
 void quakeSpellTextureFn_8007366c(u8 alpha);
 void fn_80073AAC(void* texture, u32* colorA, u32* colorB);
