@@ -587,9 +587,9 @@ void trickyFn_80142524(u8 *obj, u8 *state)
         z = lbl_803E23DC;
         ((TrickyState *)state)->unk10 = z;
         ((TrickyState *)state)->unk14 = z;
-        ((TrickyState *)state)->unkE0 = *(f32 *)(found + 0x18);
-        ((TrickyState *)state)->unkE4 = *(f32 *)(found + 0x1c);
-        ((TrickyState *)state)->unkE8 = *(f32 *)(found + 0x20);
+        ((TrickyState *)state)->homePosX = *(f32 *)(found + 0x18);
+        ((TrickyState *)state)->homePosY = *(f32 *)(found + 0x1c);
+        ((TrickyState *)state)->homePosZ = *(f32 *)(found + 0x20);
         ((TrickyState *)state)->unk54 |= 0x80000;
         ((TrickyState *)state)->unk54 &= ~0x2000;
     } else {
@@ -1349,7 +1349,7 @@ int trickyFn_80143c04(int obj, int state)
   int iVar4;
   float fVar;
 
-  *(int *)(state + 0x24) = ((TrickyState *)state)->unk4;
+  *(int *)(state + 0x24) = ((TrickyState *)state)->playerObj;
   if (*(int *)(state + 0x28) != *(int *)(state + 0x24) + 0x18) {
     *(int *)(state + 0x28) = *(int *)(state + 0x24) + 0x18;
     *(int *)(state + 0x54) = *(int *)(state + 0x54) & 0xfffffbff;
