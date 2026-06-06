@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/camera_object.h"
 #include "main/game_object.h"
 #include "main/dll/CAM/dll_59.h"
 
