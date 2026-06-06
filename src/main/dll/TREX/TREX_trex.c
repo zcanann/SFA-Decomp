@@ -2270,7 +2270,6 @@ void SB_KyteCage_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern int SB_KyteCage_SeqFn(int obj, int unused, int seqState);
 
 #pragma scheduling off
 #pragma peephole off
