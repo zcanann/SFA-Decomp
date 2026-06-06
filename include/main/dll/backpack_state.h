@@ -14,10 +14,10 @@ typedef struct BackpackState {
     u8 unk0[0x268 - 0x0];
     u16 unk268;
     s16 unk26A;
-    f32 unk26C;
-    f32 unk270;
+    f32 targetScale;
+    f32 growRate; /* scale/frame while growing; reused as a seconds countdown in later phases */
     u8 unk274[0x278 - 0x274];
-    u8 unk278;
+    u8 phase;
     u8 unk279;
     u8 unk27A;
     u8 unk27B[0x27C - 0x27B];
@@ -32,7 +32,7 @@ typedef struct BackpackState {
     s16 unk298;
     s16 unk29A;
     f32 unk29C;
-    f32 unk2A0;
+    f32 phaseTimer;
     u8 unk2A4[0x2A8 - 0x2A4];
 } BackpackState;
 

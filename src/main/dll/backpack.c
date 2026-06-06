@@ -128,20 +128,20 @@ void tumbleweed_updateStateMachine(int obj) {
 
     aux = *(int *)&((GameObject *)obj)->extra;
     {
-        u32 state = ((BackpackState *)aux)->unk278;
+        u32 state = ((BackpackState *)aux)->phase;
     if (state == 0) {
-        if (((GameObject *)obj)->anim.rootMotionScale < ((BackpackState *)aux)->unk26C) {
-            ((GameObject *)obj)->anim.rootMotionScale = ((BackpackState *)aux)->unk270 * timeDelta + ((GameObject *)obj)->anim.rootMotionScale;
+        if (((GameObject *)obj)->anim.rootMotionScale < ((BackpackState *)aux)->targetScale) {
+            ((GameObject *)obj)->anim.rootMotionScale = ((BackpackState *)aux)->growRate * timeDelta + ((GameObject *)obj)->anim.rootMotionScale;
         } else {
-            ((BackpackState *)aux)->unk278 = 1;
+            ((BackpackState *)aux)->phase = 1;
         }
     } else if (state == 1) {
         if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0) {
             ObjHits_EnableObject(obj);
-            ((BackpackState *)aux)->unk278 = 2;
+            ((BackpackState *)aux)->phase = 2;
             ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 3);
             if (((GameObject *)obj)->anim.seqId == TUMBLEWEED_TYPE_4) {
-                ((BackpackState *)aux)->unk2A0 = lbl_803E2F9C;
+                ((BackpackState *)aux)->phaseTimer = lbl_803E2F9C;
             }
         }
     } else if (state == 2) {
@@ -194,8 +194,8 @@ void tumbleweed_updateStateMachine(int obj) {
         }
         tumbleweed_updateRollingMotion(obj, aux);
         (*(int(**)(int, int, f32))(*(int*)gPathControlInterface + 0x18))(obj, aux, timeDelta);
-        ((BackpackState *)aux)->unk2A0 = ((BackpackState *)aux)->unk2A0 - timeDelta;
-        if (((BackpackState *)aux)->unk2A0 < lbl_803E2F68) {
+        ((BackpackState *)aux)->phaseTimer = ((BackpackState *)aux)->phaseTimer - timeDelta;
+        if (((BackpackState *)aux)->phaseTimer < lbl_803E2F68) {
             ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
         } else {
             if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
@@ -203,9 +203,9 @@ void tumbleweed_updateStateMachine(int obj) {
                 if (((GameObject *)obj)->anim.seqId == TUMBLEWEED_TYPE_3) {
                     ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 3);
                     ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A & ~0x10);
-                    ((BackpackState *)aux)->unk278 = 3;
-                    ((BackpackState *)aux)->unk270 = lbl_803E2FB0;
-                    ((BackpackState *)aux)->unk2A0 = lbl_803E2FB4;
+                    ((BackpackState *)aux)->phase = 3;
+                    ((BackpackState *)aux)->growRate = lbl_803E2FB0;
+                    ((BackpackState *)aux)->phaseTimer = lbl_803E2FB4;
                     Obj_SetActiveModelIndex(obj, 1);
                 } else {
                     ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
@@ -221,13 +221,13 @@ void tumbleweed_updateStateMachine(int obj) {
             ((BackpackState *)aux)->unk29A = 0;
             ((BackpackState *)aux)->unk29C = lbl_803E2F98;
             ObjMsg_SendToObject((int)player, 0x7000a, obj, (int*)(aux + 0x298));
-            ((BackpackState *)aux)->unk278 = 4;
+            ((BackpackState *)aux)->phase = 4;
         } else {
-            ((BackpackState *)aux)->unk270 = ((BackpackState *)aux)->unk270 - timeDelta;
-            ((BackpackState *)aux)->unk2A0 = ((BackpackState *)aux)->unk2A0 - timeDelta;
-            if (((BackpackState *)aux)->unk2A0 < lbl_803E2F68) {
+            ((BackpackState *)aux)->growRate = ((BackpackState *)aux)->growRate - timeDelta;
+            ((BackpackState *)aux)->phaseTimer = ((BackpackState *)aux)->phaseTimer - timeDelta;
+            if (((BackpackState *)aux)->phaseTimer < lbl_803E2F68) {
                 ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
-            } else if (((BackpackState *)aux)->unk270 <= lbl_803E2F68) {
+            } else if (((BackpackState *)aux)->growRate <= lbl_803E2F68) {
                 ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
             } else {
                 if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
@@ -278,10 +278,10 @@ void tumbleweed_updateStateMachine(int obj) {
         ((GameObject *)obj)->anim.localPosY = (((BackpackState *)aux)->unk290)[1];
         ((GameObject *)obj)->anim.localPosZ = (((BackpackState *)aux)->unk290)[2];
     } else {
-        if (((BackpackState *)aux)->unk270 <= lbl_803E2F68) {
+        if (((BackpackState *)aux)->growRate <= lbl_803E2F68) {
             Obj_FreeObject(obj);
         } else {
-            ((BackpackState *)aux)->unk270 = ((BackpackState *)aux)->unk270 - timeDelta;
+            ((BackpackState *)aux)->growRate = ((BackpackState *)aux)->growRate - timeDelta;
         }
     }
     }
@@ -305,15 +305,15 @@ void tumbleweed_init(int obj, int defData) {
     ((BackpackState *)aux)->unk28C = ((GameObject *)obj)->anim.localPosZ;
     ((BackpackState *)aux)->unk26A = (short)(lbl_803E2FCC * *(f32*)(defData + 0x1c));
     ((BackpackState *)aux)->unk279 = *(u8*)(defData + 0x1b);
-    ((BackpackState *)aux)->unk26C = ((GameObject *)obj)->anim.rootMotionScale;
-    ((BackpackState *)aux)->unk270 = ((BackpackState *)aux)->unk26C / (f32)(s32)randomGetRange(0xc8, 0x1f4);
+    ((BackpackState *)aux)->targetScale = ((GameObject *)obj)->anim.rootMotionScale;
+    ((BackpackState *)aux)->growRate = ((BackpackState *)aux)->targetScale / (f32)(s32)randomGetRange(0xc8, 0x1f4);
     *(u32*)(aux + 0x284) = 0;
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E2FD0;
     (*(int(**)(int, int, int, int))(*(int*)gPathControlInterface + 0x4))(aux, 0, 0x40000, 1);
     (*(int(**)(int, int, void*, void*, int))(*(int*)gPathControlInterface + 0x8))(aux, 1, lbl_80320288, lbl_803DBD40, 8);
     (*(int(**)(int, int))(*(int*)gPathControlInterface + 0x20))(obj, aux);
-    ((BackpackState *)aux)->unk278 = 0;
-    ((BackpackState *)aux)->unk2A0 = lbl_803E2FB4 + (f32)(s32)randomGetRange(-0x12c, 0x12c);
+    ((BackpackState *)aux)->phase = 0;
+    ((BackpackState *)aux)->phaseTimer = lbl_803E2FB4 + (f32)(s32)randomGetRange(-0x12c, 0x12c);
     ObjGroup_AddObject(obj, 3);
     ObjGroup_AddObject(obj, 0x31);
     ObjHits_DisableObject(obj);
@@ -599,13 +599,13 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     u32 state;
 
     aux = *(int *)&((GameObject *)obj)->extra;
-    state = ((BackpackState *)aux)->unk278;
+    state = ((BackpackState *)aux)->phase;
     if (state == 0) {
         if ((*(int(**)(int*))(*(int*)gSHthorntailAnimationInterface + 0x24))(&animPhase) != 0) {
-            if (((GameObject *)obj)->anim.rootMotionScale < ((BackpackState *)aux)->unk26C) {
-                ((GameObject *)obj)->anim.rootMotionScale = ((BackpackState *)aux)->unk270 * timeDelta + ((GameObject *)obj)->anim.rootMotionScale;
+            if (((GameObject *)obj)->anim.rootMotionScale < ((BackpackState *)aux)->targetScale) {
+                ((GameObject *)obj)->anim.rootMotionScale = ((BackpackState *)aux)->growRate * timeDelta + ((GameObject *)obj)->anim.rootMotionScale;
             } else {
-                ((BackpackState *)aux)->unk278 = 1;
+                ((BackpackState *)aux)->phase = 1;
             }
         }
     } else if (state == 1) {
@@ -618,7 +618,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
             d = sqrtf(dx*dx + dz*dz);
             *(s16*)(aux + 0x268) = d;
             if (((BackpackState *)aux)->unk268 < *(u16*)(aux + 0x26a)) {
-                ((BackpackState *)aux)->unk278 = 2;
+                ((BackpackState *)aux)->phase = 2;
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
                 ObjHits_EnableObject(obj);
             }
@@ -652,10 +652,10 @@ void tumbleweed_updateTargetedStateMachine(int obj)
             ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
         }
     } else {
-        if (((BackpackState *)aux)->unk270 <= lbl_803E2F68) {
+        if (((BackpackState *)aux)->growRate <= lbl_803E2F68) {
             Obj_FreeObject(obj);
         } else {
-            ((BackpackState *)aux)->unk270 = ((BackpackState *)aux)->unk270 - timeDelta;
+            ((BackpackState *)aux)->growRate = ((BackpackState *)aux)->growRate - timeDelta;
         }
     }
 }
