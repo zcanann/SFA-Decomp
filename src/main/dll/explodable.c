@@ -1,4 +1,5 @@
 #include "main/dll/explodable.h"
+#include "main/dll/explodable_state.h"
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int GameBit_Set(int bit, int value);
@@ -300,8 +301,8 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
 
   state = *(int *)(obj + 0xb8);
   if (((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(*(int *)(obj + 0x4c) + 0x14)) == 0) ||
-      (((timer = *(s16 *)(state + 0x8)) != 0) && (timer <= 0x32)) ||
-      (*(f32 *)(state + 0x4) > lbl_803E39B8)) {
+      (((timer = ((ExplodableState *)state)->unk8) != 0) && (timer <= 0x32)) ||
+      (((ExplodableState *)state)->unk4 > lbl_803E39B8)) {
     *(s16 *)(obj + 0x6) = *(s16 *)(obj + 0x6) | 0x4000;
   } else {
     if (*(int *)(obj + 0xf8) != 0) {
@@ -372,16 +373,16 @@ void largecrate_update(int obj)
     if ((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(def + 0x14)) == 0) {
         ObjHits_DisableObject(obj);
     } else {
-    if (*(f32 *)(state + 0x4) > (thresh = lbl_803E39B8)) {
+    if (((ExplodableState *)state)->unk4 > (thresh = lbl_803E39B8)) {
         *(u8 *)(obj + 0x36) = 0;
         if (*(int *)state != -1) {
-            *(f32 *)(state + 0x4) = -(timeDelta * animSpeed - *(f32 *)(state + 0x4));
-            if (*(f32 *)(state + 0x4) <= thresh) {
+            ((ExplodableState *)state)->unk4 = -(timeDelta * animSpeed - ((ExplodableState *)state)->unk4);
+            if (((ExplodableState *)state)->unk4 <= thresh) {
                 if (!(Vec_distance((f32 *)(obj + 0x18), (f32 *)(Obj_GetPlayerObject() + 0x18)) > lbl_803E39D0)) {
-                    *(f32 *)(state + 0x4) = lbl_803E39AC;
+                    ((ExplodableState *)state)->unk4 = lbl_803E39AC;
                 } else {
-                    *(f32 *)(state + 0x4) = lbl_803E39B8;
-                    *(s16 *)(state + 0x8) = 0;
+                    ((ExplodableState *)state)->unk4 = lbl_803E39B8;
+                    ((ExplodableState *)state)->unk8 = 0;
                     ObjHits_EnableObject(obj);
                     *(u8 *)(obj + 0xaf) &= ~0x8;
                     *(s16 *)(obj + 0x6) &= ~0x4000;
@@ -394,15 +395,15 @@ void largecrate_update(int obj)
             level = 0xff;
         }
         *(u8 *)(obj + 0x36) = level;
-        if (*(s16 *)(state + 0x8) != 0) {
+        if (((ExplodableState *)state)->unk8 != 0) {
             ObjHits_DisableObject(obj);
-            if ((*(s16 *)(state + 0x8) -= framesThisStep) <= 0) {
+            if ((((ExplodableState *)state)->unk8 -= framesThisStep) <= 0) {
                 if (*(int *)state > 0) {
-                    *(f32 *)(state + 0x4) = lbl_803E39AC;
+                    ((ExplodableState *)state)->unk4 = lbl_803E39AC;
                     (**(void (**)(int, f32))(*gMapEventInterface + 0x64))(
                         *(int *)(def + 0x14), (f32)*(int *)state);
                 } else {
-                    *(f32 *)(state + 0x4) = lbl_803E39AC;
+                    ((ExplodableState *)state)->unk4 = lbl_803E39AC;
                 }
                 *(f32 *)(obj + 0xc) = *(f32 *)(def + 0x8);
                 *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
@@ -415,12 +416,12 @@ void largecrate_update(int obj)
                 *(f32 *)(obj + 0x28) = thresh;
                 *(f32 *)(obj + 0x2c) = thresh;
             }
-            if (*(s16 *)(state + 0x8) <= 0x32) {
+            if (((ExplodableState *)state)->unk8 <= 0x32) {
                 return;
             }
         }
-        *(s16 *)(obj + 0x2) = *(s16 *)(state + 0x18);
-        *(s16 *)(state + 0x18) = (f32)*(s16 *)(state + 0x18) * lbl_803E39E0;
+        *(s16 *)(obj + 0x2) = ((ExplodableState *)state)->unk18;
+        ((ExplodableState *)state)->unk18 = (f32)((ExplodableState *)state)->unk18 * lbl_803E39E0;
         if ((*(s16 *)(obj + 0x2) < 10) && (-10 < *(s16 *)(obj + 0x2))) {
             *(s16 *)(obj + 0x2) = 0;
         }
@@ -430,34 +431,34 @@ void largecrate_update(int obj)
             hit = 0;
         }
         if ((hit != 0) && (*(void **)(obj + 0x30) == NULL)) {
-            *(u8 *)(state + 0x13) = *(u8 *)(state + 0x13) + hitDamage;
+            ((ExplodableState *)state)->unk13 = ((ExplodableState *)state)->unk13 + hitDamage;
             Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
             pos.x = pos.x + playerMapOffsetX;
             pos.z = pos.z + playerMapOffsetZ;
             objLightFn_8009a1dc(obj, lbl_803E39E4, &lightPos, 1, 0);
-            if (*(u8 *)(state + 0x13) < *(u8 *)(state + 0x28)) {
-                if (Sfx_IsPlayingFromObject(0, (u16)*(s16 *)(state + 0x14)) == 0) {
-                    Sfx_PlayFromObject(obj, (u16)*(s16 *)(state + 0x14));
+            if (((ExplodableState *)state)->unk13 < ((ExplodableState *)state)->unk28) {
+                if (Sfx_IsPlayingFromObject(0, (u16)((ExplodableState *)state)->unk14) == 0) {
+                    Sfx_PlayFromObject(obj, (u16)((ExplodableState *)state)->unk14);
                 }
                 if (*(s16 *)(obj + 0x46) == 0x3de) {
-                    *(s16 *)(state + 0x18) = (s16)randomGetRange(600, 800);
+                    ((ExplodableState *)state)->unk18 = (s16)randomGetRange(600, 800);
                 }
             } else {
                 Sfx_StopObjectChannel(obj, 0x7f);
                 (**(void (**)(int, int, int, int, int, int))(*lbl_803DDAC8 + 0x4))(
                     obj, 1, 0, 2, -1, 0);
-                if (Sfx_IsPlayingFromObject(0, (u16)*(s16 *)(state + 0x16)) == 0) {
-                    Sfx_PlayFromObject(obj, (u16)*(s16 *)(state + 0x16));
+                if (Sfx_IsPlayingFromObject(0, (u16)((ExplodableState *)state)->unk16) == 0) {
+                    Sfx_PlayFromObject(obj, (u16)((ExplodableState *)state)->unk16);
                 }
-                *(s16 *)(state + 0x8) = 0x32;
-                *(u8 *)(state + 0x13) = 0;
+                ((ExplodableState *)state)->unk8 = 0x32;
+                ((ExplodableState *)state)->unk13 = 0;
                 fn_801833E4(obj, player, state);
                 *(u8 *)(obj + 0xaf) |= 8;
             }
         }
         vec3f_distanceSquared((f32 *)(Obj_GetPlayerObject() + 0x18), (f32 *)(obj + 0x18));
-        if ((*(s16 *)(state + 0xa) -= framesThisStep) <= 0) {
-            *(s16 *)(state + 0xa) = (s16)(randomGetRange(0, 100) + 0x12c);
+        if ((((ExplodableState *)state)->unkA -= framesThisStep) <= 0) {
+            ((ExplodableState *)state)->unkA = (s16)(randomGetRange(0, 100) + 0x12c);
         }
         if (*(void **)(obj + 0x30) != NULL) {
             fn_80183250(obj, state);
