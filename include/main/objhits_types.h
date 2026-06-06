@@ -43,7 +43,7 @@ typedef struct ObjHitsPriorityState {
   u8 objectPairHitVolume;
   s8 hitVolumePriority;
   s8 hitVolumeId;
-  u8 pad70;
+  u8 suppressOutgoingHits;
   s8 priorityHitCount;
   s8 sphereIndices[OBJHITS_PRIORITY_HIT_COUNT];
   s8 priorities[OBJHITS_PRIORITY_HIT_COUNT];
@@ -89,6 +89,7 @@ STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryCapsuleOffsetA) == 0x66);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryCapsuleOffsetB) == 0x68);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, lateralResponseWeight) == 0x6A);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, axialResponseWeight) == 0x6B);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, suppressOutgoingHits) == 0x70);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, priorityHitCount) == 0x71);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, contactFlags) == 0xAD);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryShapeFlags) == 0xB6);

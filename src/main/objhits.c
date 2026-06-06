@@ -1782,7 +1782,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
     attStateB = NULL;
   }
   result = 0;
-  if ((stateA->objectHitMask != 0) && (*(s8 *)((int)stateA + 0x70) == 0)) {
+  if ((stateA->objectHitMask != 0) && (stateA->suppressOutgoingHits == 0)) {
     if (((GameObject *)objA)->anim.classId == 1) {
       hitboxBuf = ObjHits_GetActiveModel(objA);
       bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
@@ -1828,7 +1828,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
   }
   result = 0;
   if (((stateB->sourceMask & 0x80) == 0) && (stateB->objectHitMask != 0) &&
-      (*(s8 *)((int)stateB + 0x70) == 0)) {
+      (stateB->suppressOutgoingHits == 0)) {
     if (((GameObject *)objB)->anim.classId == 1) {
       hitboxBuf = ObjHits_GetActiveModel(objB);
       bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
@@ -2472,7 +2472,7 @@ void ObjHits_CheckTrackContact(int objA,int objB)
   else {
     mask2 = *(uint *)(iVar6 + 0x48) & 0xf;
   }
-  if ((mask2 != 0) && (*(char *)(iVar6 + 0x70) == '\0')) {
+  if ((mask2 != 0) && (((ObjHitsPriorityState *)iVar6)->suppressOutgoingHits == 0)) {
     iVar6 = *(int *)&((GameObject *)objB)->anim.hitReactState;
     if ((*(byte *)(iVar6 + 0xb6) & 0x10) != 0) {
       piVar9 = ObjHits_GetActiveModel(objB);

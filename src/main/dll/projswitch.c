@@ -235,7 +235,7 @@ void FUN_8014d4c8(double param_1,double param_2,double param_3,undefined8 param_
   FUN_800305f8((double)lbl_803E31FC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                param_9,param_11 & 0xff,param_12,param_12,param_13,param_14,param_15,param_16);
   if (*(int *)(param_9 + 0x54) != 0) {
-    *(undefined *)(*(int *)(param_9 + 0x54) + 0x70) = 0;
+    (*(ObjHitsPriorityState **)(param_9 + 0x54))->suppressOutgoingHits = 0;
   }
   return;
 }
@@ -413,12 +413,12 @@ void FUN_8014d924(int param_1)
   }
   ((EnemyState *)iVar2)->lastHitObject = (*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject;
   if ((*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject != 0) {
-    *(undefined *)(*(int *)(param_1 + 0x54) + 0x70) = 1;
+    (*(ObjHitsPriorityState **)(param_1 + 0x54))->suppressOutgoingHits = 1;
   }
   if (((*(int *)(param_1 + 200) != 0) &&
       (iVar1 = *(int *)(*(int *)(param_1 + 200) + 0x54), iVar1 != 0)) &&
      (((ObjHitsPriorityState *)iVar1)->lastHitObject != 0)) {
-    *(undefined *)(*(int *)(param_1 + 0x54) + 0x70) = 1;
+    (*(ObjHitsPriorityState **)(param_1 + 0x54))->suppressOutgoingHits = 1;
   }
   if (((EnemyState *)iVar2)->unk36C != 0) {
     FUN_800178ac(((EnemyState *)iVar2)->unk36C);
@@ -539,11 +539,11 @@ void enemy_hitDetect(int obj)
     }
     ((EnemyState *)state)->lastHitObject = (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject;
     if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0) {
-        *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 1;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
     }
     if (((GameObject *)obj)->unkC8 != NULL && *(void **)(*(int *)&((GameObject *)obj)->unkC8 + 0x54) != NULL
         && (*(ObjHitsPriorityState **)(*(int *)&((GameObject *)obj)->unkC8 + 0x54))->lastHitObject != 0) {
-        *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 1;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
     }
     if (*(void **)(state + 0x36c) != NULL) {
         fn_80026C54(((EnemyState *)state)->unk36C);
