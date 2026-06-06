@@ -6986,7 +6986,7 @@ int partfx_update(s16 *param_1, int param_2, s16 *param_3, u32 param_4,
 {
     int iVar8;
     s16 sVar10;
-    char cVar4;
+    u8 cVar4;
     f32 fVar1;
     f32 fVar2;
     f32 fVar3;
@@ -7645,7 +7645,7 @@ if (param_6 == NULL) {
             cVar4 = '\0';
           }
           else {
-            cVar4 = *(char *)param_6;
+            cVar4 = *(u8 *)param_6;
           }
           if (cVar4 == '\x01') {
             cfg.f3c = lbl_803DF524 * (f32)(s32)randomGetRange(10,0x14);
@@ -7668,7 +7668,7 @@ if (param_6 == NULL) {
     break;
   case 0x54e:
 if (param_6 != NULL) {
-            cVar4 = *(char *)param_6;
+            cVar4 = *(u8 *)param_6;
           }
           if (cVar4 == '\x01') {
             cfg.f3c = lbl_803DF524 * (f32)(s32)randomGetRange(10,0x14);
@@ -7692,7 +7692,7 @@ if (param_6 != NULL) {
   case 0x54f:
 
         if (param_6 != NULL) {
-          cVar4 = *(char *)param_6;
+          cVar4 = *(u8 *)param_6;
         }
         if (cVar4 == '\x01') {
           cfg.f3c = lbl_803DF524 * (f32)(s32)randomGetRange(10,0x14);
@@ -7715,7 +7715,7 @@ if (param_6 != NULL) {
     break;
   case 0x550:
 if (param_6 != NULL) {
-          cVar4 = *(char *)param_6;
+          cVar4 = *(u8 *)param_6;
         }
         if (cVar4 == '\x01') {
           cfg.f3c = lbl_803DF524 * (f32)(s32)randomGetRange(10,0x14);
@@ -9662,7 +9662,7 @@ if (param_3 == NULL) {
           cfg.f44 = 0x100210;
           cfg.f48 = 0x4000800;
           if (param_6 != NULL) {
-            cVar4 = *(char *)param_6;
+            cVar4 = *(u8 *)param_6;
             if (cVar4 == '\x01') {
               cfg.f4c = 0x2898;
               cfg.f50 = 0xffff;
@@ -9670,7 +9670,7 @@ if (param_3 == NULL) {
               cfg.f58 = 0x6574;
               cfg.f5a = 0x9f9;
               cfg.f5c = 0xffff;
-              cfg.f48 = 0x4000820;
+              cfg.f48 |= 0x20;
             }
             else if (cVar4 == '\x02') {
               cfg.f4c = 0xff65;
@@ -9679,7 +9679,7 @@ if (param_3 == NULL) {
               cfg.f58 = 0xffc4;
               cfg.f5a = 0xdc81;
               cfg.f5c = 0x2603;
-              cfg.f48 = 0x4000820;
+              cfg.f48 |= 0x20;
               cfg.f3c = cfg.f3c * lbl_803DF6DC;
               cfg.f08 = iVar8 + 0xc;
             }
@@ -9690,7 +9690,7 @@ if (param_3 == NULL) {
               cfg.f58 = 0xfd2c;
               cfg.f5a = 0x8e5;
               cfg.f5c = 0x1f5;
-              cfg.f48 = 0x4000820;
+              cfg.f48 |= 0x20;
               cfg.f3c = cfg.f3c * lbl_803DF6E0;
               cfg.f08 = iVar8 + 0x19;
             }
@@ -9701,7 +9701,7 @@ if (param_3 == NULL) {
               cfg.f58 = 0;
               cfg.f5a = 0xffff;
               cfg.f5c = 0;
-              cfg.f48 = 0x4000820;
+              cfg.f48 |= 0x20;
               cfg.f3c = cfg.f3c * lbl_803DF6E0;
             }
             else if (cVar4 == '\x05') {
@@ -9711,7 +9711,7 @@ if (param_3 == NULL) {
               cfg.f58 = 0xffff;
               cfg.f5a = 0;
               cfg.f5c = 0;
-              cfg.f48 = 0x4000820;
+              cfg.f48 |= 0x20;
               cfg.f3c = cfg.f3c * lbl_803DF6E0;
             }
             else if (cVar4 == '\x06') {
@@ -9721,7 +9721,7 @@ if (param_3 == NULL) {
               cfg.f58 = 0xffff;
               cfg.f5a = 0x7fff;
               cfg.f5c = 0;
-              cfg.f48 = 0x4000820;
+              cfg.f48 |= 0x20;
               cfg.f3c = cfg.f3c * lbl_803DF6E0;
             }
             else if (cVar4 == '\a') {
@@ -9731,7 +9731,7 @@ if (param_3 == NULL) {
               cfg.f58 = 0xffff;
               cfg.f5a = 0xffff;
               cfg.f5c = 0;
-              cfg.f48 = 0x4000820;
+              cfg.f48 |= 0x20;
               cfg.f3c = cfg.f3c * lbl_803DF6E0;
             }
             else if (cVar4 == '\b') {
@@ -9741,7 +9741,7 @@ if (param_3 == NULL) {
               cfg.f58 = 0;
               cfg.f5a = 0xffff;
               cfg.f5c = 0xffff;
-              cfg.f48 = 0x4000820;
+              cfg.f48 |= 0x20;
               cfg.f3c = cfg.f3c * lbl_803DF6E0;
             }
           }
@@ -9775,7 +9775,7 @@ if (param_3 == NULL) {
         cfg.f42 = 0xc98;
         cfg.f44 = 0x480110;
         if (param_6 != NULL) {
-          cVar4 = *(char *)param_6;
+          cVar4 = *(u8 *)param_6;
           if (cVar4 == '\x01') {
             cfg.f4c = 0x2898;
             cfg.f50 = 0xffff;
@@ -9826,7 +9826,7 @@ randomGetRange(1,1);
             cfg.f44 = 0x180210;
             cfg.f60 = 0x7d;
             if (param_6 != NULL) {
-              cVar4 = *(char *)param_6;
+              cVar4 = *(u8 *)param_6;
               if (cVar4 == '\x01') {
                 cfg.f4c = 0x2898;
                 cfg.f50 = 0xffff;
