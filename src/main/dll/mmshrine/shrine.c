@@ -1,4 +1,5 @@
 #include "main/dll/mmshrine/shrine.h"
+#include "main/game_object.h"
 #include "main/objlib.h"
 
 
@@ -507,11 +508,11 @@ void mmsh_waterspike_init(int obj, s16 *def) {
     register u32 packedEventIds;
     register u32 lowEventId;
     ObjHits_EnableObject(obj);
-    *(int *)((char *)obj + 0xF4) = 0;
+    ((GameObject *)obj)->unkF4 = 0;
     packedEventIds = (u32)(u16)*(s16 *)((char *)def + 0x1C) << 16;
     lowEventId = (u32)(u16)*(s16 *)((char *)def + 0x1A);
     packedEventIds |= lowEventId;
-    *(u32 *)((char *)obj + 0xF8) = packedEventIds;
+    *(u32 *)&((GameObject *)obj)->unkF8 = packedEventIds;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -523,35 +524,35 @@ extern u8 *Obj_SetupObject(u8 *no, int a, int b, int c, int d);
 #pragma scheduling off
 #pragma peephole off
 void mmsh_scales_init(int *obj, s16 *def) {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     u8 *no;
     int active;
     *(s16 *)(state + 106) = def[13];
     *(s16 *)(state + 110) = -1;
     *(f32 *)(state + 36) = lbl_803E4F68 / (lbl_803E4F68 + (f32)(u32)*(u8 *)((char *)def + 36));
     *(int *)(state + 40) = -1;
-    active = *(int *)((char *)obj + 0xf4);
+    active = ((GameObject *)obj)->unkF4;
     if (active == 0 && def[12] != 1) {
         ((void(*)(u8 *, s16 *))((void **)*gObjectTriggerInterface)[7])(state, def);
-        *(int *)((char *)obj + 0xf4) = (int)def[12] + 1;
+        ((GameObject *)obj)->unkF4 = (int)def[12] + 1;
     } else if (active != 0 && def[12] != active - 1) {
         ((void(*)(u8 *))((void **)*gObjectTriggerInterface)[9])(state);
         if (def[12] != -1) {
             ((void(*)(u8 *, s16 *))((void **)*gObjectTriggerInterface)[7])(state, def);
         }
-        *(int *)((char *)obj + 0xf4) = (int)def[12] + 1;
+        ((GameObject *)obj)->unkF4 = (int)def[12] + 1;
     }
     if (Obj_IsLoadingLocked() == 0) return;
     no = Obj_AllocObjectSetup(0x24, 0x1b8);
-    *(f32 *)(no + 8) = *(f32 *)((char *)obj + 12);
-    *(f32 *)(no + 12) = *(f32 *)((char *)obj + 16);
-    *(f32 *)(no + 16) = *(f32 *)((char *)obj + 20);
+    *(f32 *)(no + 8) = ((GameObject *)obj)->anim.localPosX;
+    *(f32 *)(no + 12) = ((GameObject *)obj)->anim.localPosY;
+    *(f32 *)(no + 16) = ((GameObject *)obj)->anim.localPosZ;
     no[4] = 32;
     no[5] = 4;
     no[7] = 0xff;
     no = Obj_SetupObject(no, 5, -1, -1, 0);
-    *(u8 **)((char *)obj + 200) = no;
-    *(f32 *)(*(u8 **)((char *)obj + 200) + 8) = *(f32 *)(*(u8 **)((char *)obj + 200) + 8) * lbl_803E4F78;
+    ((GameObject *)obj)->unkC8 = no;
+    *(f32 *)(*(u8 **)&((GameObject *)obj)->unkC8 + 8) = *(f32 *)(*(u8 **)&((GameObject *)obj)->unkC8 + 8) * lbl_803E4F78;
 }
 #pragma peephole reset
 #pragma scheduling reset

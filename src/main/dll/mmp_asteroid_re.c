@@ -1,4 +1,5 @@
 #include "main/dll/mmp_asteroid_re.h"
+#include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
@@ -237,13 +238,13 @@ void barrelpad_init(s16 *obj, u8 *def) {
     obj[1] = (s16)((s32)def[0x19] << 8);
     obj[0] = (s16)((s32)def[0x1a] << 8);
     if (def[0x1b] != 0) {
-        *(f32 *)((char *)obj + 8) = (f32)(u32)def[0x1b] / lbl_803E3F24;
-        if (*(f32 *)((char *)obj + 8) == lbl_803E3F04) {
-            *(f32 *)((char *)obj + 8) = lbl_803E3F00;
+        ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)def[0x1b] / lbl_803E3F24;
+        if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E3F04) {
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3F00;
         }
-        *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * *(f32 *)((char *)*(int **)((char *)obj + 0x50) + 4);
+        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.modelInstance + 4);
     }
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
 }
 
 extern f32 lbl_803E3EEC;
@@ -253,13 +254,13 @@ void cflightwall_init(s16 *obj, u8 *def) {
     obj[1] = (s16)((s32)def[0x19] << 8);
     obj[0] = (s16)((s32)def[0x1a] << 8);
     if (def[0x1b] != 0) {
-        *(f32 *)((char *)obj + 8) = (f32)(u32)def[0x1b] / lbl_803E3EEC;
-        if (*(f32 *)((char *)obj + 8) == lbl_803E3EF0) {
-            *(f32 *)((char *)obj + 8) = lbl_803E3EE8;
+        ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)def[0x1b] / lbl_803E3EEC;
+        if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E3EF0) {
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3EE8;
         }
-        *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * *(f32 *)((char *)*(int **)((char *)obj + 0x50) + 4);
+        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.modelInstance + 4);
     }
-    *(u16 *)((char *)obj + 0xb0) |= 0xA000;
+    ((GameObject *)obj)->unkB0 |= 0xA000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -302,7 +303,7 @@ void cf_doorlight_update(int obj) {
 }
 
 void cf_doorlight_init(int *obj, s8 *def) {
-    register CfDoorLightState *state = *(CfDoorLightState **)((char *)obj + 0xb8);
+    register CfDoorLightState *state = ((GameObject *)obj)->extra;
     u32 b;
     state->textureId = 0;
     *(s16 *)obj = (s16)((s32)def[0x19] << 9);
@@ -315,8 +316,8 @@ void cf_doorlight_init(int *obj, s8 *def) {
         state->currentFrame = state->maxFrame;
         state->flags |= 0x20;
     }
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
-    *(u16 *)((char *)obj + 0xb0) |= 0x4000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x4000;
 }
 #pragma peephole reset
 #pragma scheduling reset

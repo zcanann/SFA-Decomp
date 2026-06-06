@@ -58,7 +58,13 @@ CLASS_OF = {'f32':'F32','float':'F32','int':'S32','s32':'S32','u32':'U32','uint'
 SIZE = {'F32':4,'S32':4,'U32':4,'PTR':4,'S16':2,'U16':2,'S8':1,'U8':1}
 
 path = sys.argv[1]
-varnames = sys.argv[2:]
+args = sys.argv[2:]
+# --bytecast-only: only convert ((char*)obj + N) byte-cast sites, NEVER the
+# plain (obj + N) form. Required for files where obj is declared `int *obj`
+# (or other non-byte pointer) so plain `obj + N` is element-scaled and would
+# be mis-mapped to a byte offset.
+bytecast_only = '--bytecast-only' in args
+varnames = [a for a in args if not a.startswith('--')]
 src = open(path).read()
 stats = collections.Counter()
 
@@ -99,7 +105,11 @@ for var in varnames:
         return m.group(0)
     # Optional inner byte-cast: *(T *)((char *)obj + 0xNN) / ((u8 *)obj + 0xNN).
     # Byte offset is identical whether obj is an int address or a byte pointer.
-    src = re.sub(r'\*\(\s*([A-Za-z0-9_]+(?:\s*\*+)?)\s*\*\)\s*\(\s*(?:\(\s*(?:char|u8|s8|byte|undefined)\s*\*\)\s*)?%s\s*\+\s*(0x[0-9a-fA-F]+|\d+)\s*\)' % re.escape(var), drepl, src)
+    # In --bytecast-only mode the inner byte-cast is REQUIRED (plain obj+N on a
+    # non-byte pointer is element-scaled and must not be mapped to a byte field).
+    bc = r'\(\s*(?:char|u8|s8|byte|undefined)\s*\*\)\s*'
+    inner = bc if bytecast_only else (r'(?:%s)?' % bc)
+    src = re.sub(r'\*\(\s*([A-Za-z0-9_]+(?:\s*\*+)?)\s*\*\)\s*\(\s*%s%s\s*\+\s*(0x[0-9a-fA-F]+|\d+)\s*\)' % (inner, re.escape(var)), drepl, src)
     def irepl(m, var=var):
         off = int(m.group(1),0)
         if off in GO and GO[off][1]=='U8':
@@ -107,7 +117,10 @@ for var in varnames:
             return '((GameObject *)%s)->%s' % (var,GO[off][0])
         stats['skip_idx'] += 1
         return m.group(0)
-    src = re.sub(r'\b%s\[(0x[0-9a-fA-F]+|\d+)\]' % re.escape(var), irepl, src)
+    # obj[K] is a byte index only when obj is a byte pointer; skip in
+    # bytecast-only mode (there obj is element-scaled).
+    if not bytecast_only:
+        src = re.sub(r'\b%s\[(0x[0-9a-fA-F]+|\d+)\]' % re.escape(var), irepl, src)
 
 open(path,'w').write(src)
 print(dict(stats))

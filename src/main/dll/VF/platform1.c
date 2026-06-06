@@ -1,4 +1,5 @@
 #include "main/dll/paymentkiosk.h"
+#include "main/game_object.h"
 #include "main/dll/VF/platform1.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -373,16 +374,16 @@ extern void objRenderFn_8003b8f4(f32);
 void sc_totemstrength_render(void) { objRenderFn_8003b8f4(lbl_803E567C); }
 void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void sc_totemstrength_init(int *obj) {
-    int *inner = *(int **)((char *)obj + 0xb8);
-    *(int *)((char *)obj + 0xbc) = (int)&platform1_control;
-    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    int *inner = ((GameObject *)obj)->extra;
+    *(int *)&((GameObject *)obj)->unkBC = (int)&platform1_control;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
     *(s16 *)obj = (s16)-10496;
     inner[8] = -10496;
     *(s16 *)((char *)inner + 0x2e) = 0;
     inner[0] = 0;
-    *(f32 *)((char *)inner + 0xc) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)((char *)inner + 0x10) = *(f32 *)((char *)obj + 0x10);
-    *(f32 *)((char *)inner + 0x14) = *(f32 *)((char *)obj + 0x14);
+    *(f32 *)((char *)inner + 0xc) = ((GameObject *)obj)->anim.localPosX;
+    *(f32 *)((char *)inner + 0x10) = ((GameObject *)obj)->anim.localPosY;
+    *(f32 *)((char *)inner + 0x14) = ((GameObject *)obj)->anim.localPosZ;
 }
 #pragma peephole reset
 #pragma scheduling reset

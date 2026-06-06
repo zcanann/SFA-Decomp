@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/dll/WC/WClevcontrol.h"
 
@@ -748,7 +749,7 @@ void fn_801EEDE0(int *src, f32 *out_x, f32 *out_y, f32 *out_z) {
 
 /* virtual call through obj[0xb8][0x10] context, vtable double-deref at +0x68 */
 void shipBattleFn_801eed24(void *obj) {
-    void* this_ = *(void**)((char*)(*(void**)((char*)obj + 0xb8)) + 0x10);
+    void* this_ = *(void**)((char*)(*(void**)&((GameObject *)obj)->extra) + 0x10);
     void* vt = *(void**)*(void**)((char*)this_ + 0x68);
     void (*fn)(void*) = *(void(**)(void*))((char*)vt + 0x24);
     fn(this_);
@@ -756,7 +757,7 @@ void shipBattleFn_801eed24(void *obj) {
 
 /* copy 3 floats from obj->b8 [0x4c..0x54] to out args */
 void fn_801EED5C(int *obj, f32 *x, f32 *y, f32 *z) {
-    char* p = *(char**)((char*)obj + 0xb8);
+    char* p = ((GameObject *)obj)->extra;
     *x = *(f32*)(p + 0x4c);
     *y = *(f32*)(p + 0x50);
     *z = *(f32*)(p + 0x54);
@@ -777,7 +778,7 @@ void fn_801EEDC0(int p1, f32 *out, int *outInt) {
 #pragma scheduling reset
 
 void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
-    f32* p = *(f32**)((char*)obj + 0xb8);
+    f32* p = ((GameObject *)obj)->extra;
     *x = p[0];
     *y = p[1];
     *z = p[2];
@@ -999,7 +1000,7 @@ extern void fn_80295918(int player, int p2, f32 p3);
 #pragma scheduling off
 #pragma peephole off
 int SB_CloudRunner_SeqFn(int obj, int unused, u8 *setupData) {
-    int *state = *(int **)((char *)obj + 0xB8);
+    int *state = ((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
     int i;
     *(void (**)(void))((char *)setupData + 0xE8) = SB_CloudRunner_onSeqFree;
@@ -1016,7 +1017,7 @@ int SB_CloudRunner_SeqFn(int obj, int unused, u8 *setupData) {
         }
     }
     setupData[0x56] = 0;
-    *(s16 *)((char *)obj + 6) &= ~0x4000;
+    ((GameObject *)obj)->anim.flags &= ~0x4000;
     return 0;
 }
 #pragma peephole reset
@@ -1027,7 +1028,7 @@ extern void Resource_Release(void *handle);
 #pragma scheduling off
 #pragma peephole off
 void SB_CloudRunner_free(int *obj) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
     if (*(void **)((char *)state + 0x18) != NULL) {
         textureFree(*(void **)((char *)state + 0x18));
@@ -1048,11 +1049,11 @@ extern void *Resource_Acquire(int id, int mode);
 #pragma scheduling off
 #pragma peephole off
 void SB_CloudRunner_init(int *obj) {
-    int *state = *(int **)((char *)obj + 0xb8);
-    *(void **)((char *)obj + 0xbc) = (void *)SB_CloudRunner_SeqFn;
-    *(f32 *)((char *)state + 0x4c) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)((char *)state + 0x50) = *(f32 *)((char *)obj + 0x10);
-    *(f32 *)((char *)state + 0x54) = *(f32 *)((char *)obj + 0x14);
+    int *state = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkBC = (void *)SB_CloudRunner_SeqFn;
+    *(f32 *)((char *)state + 0x4c) = ((GameObject *)obj)->anim.localPosX;
+    *(f32 *)((char *)state + 0x50) = ((GameObject *)obj)->anim.localPosY;
+    *(f32 *)((char *)state + 0x54) = ((GameObject *)obj)->anim.localPosZ;
     *(u8 *)((char *)state + 0x64) = 100;
     *(s16 *)obj = 0x4000;
     *(void **)((char *)state + 0x18) = textureLoadAsset(342);

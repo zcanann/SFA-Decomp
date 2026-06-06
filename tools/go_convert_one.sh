@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Convert one TU's GameObject derefs and gate the .o byte-for-byte.
-# Usage: go_convert_one.sh <src/path/file.c> <basevar> [basevar...]
+# Usage: go_convert_one.sh <src/path/file.c> <basevar> [basevar...] [--bytecast-only]
 # Reverts the file if the gate fails or compile breaks.
 set -u
 ROOT="c:/Projects/SFA-Decomp"

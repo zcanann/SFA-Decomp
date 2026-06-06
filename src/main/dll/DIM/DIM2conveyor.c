@@ -1,4 +1,5 @@
 #include "main/dll/DIM/DIM2conveyor.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 
 extern uint GameBit_Get(int eventId);
@@ -32,13 +33,13 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
 
     objAnim = (ObjAnimComponent *)obj;
     obj[0] = (s16)((s32)def[0x18] << 8);
-    *(int *)((char *)obj + 0xbc) = (int)&dimlavasmash_SeqFn;
-    inner = *(char **)((char *)obj + 0xb8);
+    *(int *)&((GameObject *)obj)->unkBC = (int)&dimlavasmash_SeqFn;
+    inner = ((GameObject *)obj)->extra;
     *(u8 *)(inner + 1) = (u8)*(s16 *)(def + 0x1a);
     *(s8 *)(inner + 0) = (s8)*(s16 *)(def + 0x1c);
     *(u8 *)(inner + 2) = (u8)GameBit_Get(*(s16 *)(def + 0x1e));
     if (*(u8 *)(inner + 2) == 1) {
-        block = mapGetBlock(objPosToMapBlockIdx(*(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14)));
+        block = mapGetBlock(objPosToMapBlockIdx(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ));
         if (block != NULL) {
             dimlavasmash_setBlockSurfaceFlags(block, 1, *(u8 *)(inner + 1));
             dimlavasmash_setBlockSurfaceFlags(block, 0, *(u8 *)(inner + 1) + 1);
@@ -46,10 +47,10 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
     }
     objAnim->bankIndex = def[0x19];
     {
-        s16 *p = *(s16 **)((char *)obj + 0x54);
+        s16 *p = *(s16 **)&((GameObject *)obj)->anim.hitReactState;
         p[0x30] = (s16)(p[0x30] & ~1);
     }
-    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -76,17 +77,17 @@ void dimdismountpoint_update(int *obj) {
 
     d = lbl_803E4910;
     nearest = ObjGroup_FindNearestObject(0xa, obj, &d);
-    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
     if (GameBit_Get(0x3e3) != 0) {
-        *(u8*)((char*)obj + 0xe4) = 1;
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+        ((GameObject *)obj)->unkE4 = 1;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10);
     } else {
-        *(u8*)((char*)obj + 0xe4) = 0;
+        ((GameObject *)obj)->unkE4 = 0;
         if (nearest != NULL &&
             ((int (*)(int*, int*))(*(int *)(*(int *)*(int **)((char*)nearest + 0x68) + 0x20)))(nearest, obj) != 0) {
-            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10);
         } else {
-            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x10);
         }
     }
     if ((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0 && *(void **)((char*)obj + 0x74) != NULL) {
@@ -147,14 +148,14 @@ extern int dimbridgecogmai_SeqFn(int obj, int p2, char *r5);
 #pragma scheduling off
 #pragma peephole off
 void dimbridgecogmai_init(int *obj, int *def) {
-    *(u8 *)*(int **)((char *)obj + 0xb8) = 100;
+    *(u8 *)((GameObject *)obj)->extra = 100;
     *(s16 *)obj = (s16)((u32)*(u8 *)((char *)def + 0x1c) << 8);
-    *(void **)((char *)obj + 0xbc) = (void *)dimbridgecogmai_SeqFn;
+    ((GameObject *)obj)->unkBC = (void *)dimbridgecogmai_SeqFn;
     ObjGroup_AddObject(obj, 15);
     if ((u8)GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
-        *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x8000);
+        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
     }
-    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -198,13 +199,13 @@ void dimbridgecogmai_update(int *obj) {
     u8 bits;
     int callArg;
 
-    def = *(u8**)((char*)obj + 0x4c);
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (GameBit_Get(*(s16*)(def + 0x1a)) != 0) {
         if ((s8)def[0x1e] != -1) {
             switch (*(s16*)(def + 0x1a)) {
             case 0x17a:
                 if (GameBit_Get(0x181) != 0) {
-                    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
+                    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
                     code = -1;
                     callArg = 0;
                 } else {
@@ -218,7 +219,7 @@ void dimbridgecogmai_update(int *obj) {
                 bits = (u8)(bits | (GameBit_Get(0x183) << 1));
                 bits = (u8)(bits | (GameBit_Get(0x184) << 2));
                 if (bits == 7) {
-                    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
+                    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
                     code = -1;
                     callArg = 2;
                 } else {
@@ -252,7 +253,7 @@ void dimdismountpoint_func11(int obj, int flag) {
 extern int Obj_GetPlayerObject(void);
 int dimdismountpoint_setScale(int obj) {
     int *player = (int *)Obj_GetPlayerObject();
-    int *state = *(int **)((char *)obj + 0xB8);
+    int *state = ((GameObject *)obj)->extra;
     f32 result;
     int side;
 

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
@@ -205,7 +206,7 @@ extern int *gPartfxInterface;
 #pragma peephole off
 void SB_FireBall_hitDetect(int *obj)
 {
-    ObjHitsPriorityState *params = *(ObjHitsPriorityState **)((char *)obj + 0x54);
+    ObjHitsPriorityState *params = *(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState;
     int i;
     if (params->lastHitObject == 0) return;
     params->flags &= ~1;
@@ -1825,7 +1826,7 @@ void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 #pragma peephole off
 void Flag_init(int* obj, int* def)
 {
-    if (*(s16*)((char*)obj + 0x46) != 0x803) {
+    if (((GameObject *)obj)->anim.seqId != 0x803) {
         *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 0x18) << 8);
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E5998, 0);
     }
@@ -1900,11 +1901,11 @@ int SB_KyteCage_SeqFn(int obj, int unused, int seqState)
 #pragma peephole off
 int SB_CageKyte_SeqFn(int* obj, int p2, void* state)
 {
-    int v = *(int*)((char*)obj + 0xf4);
+    int v = ((GameObject *)obj)->unkF4;
     if (v > 0) {
-        *(int*)((char*)obj + 0xf4) = v - 1;
+        ((GameObject *)obj)->unkF4 = v - 1;
     }
-    *(u8*)((char*)obj + 0xaf) |= 0x8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
     *(s16*)((char*)state + 0x6e) = -2;
     *(u8*)((char*)state + 0x56) = 0;
     return 0;
@@ -2010,17 +2011,17 @@ void Lamp_free(int* obj)
 #pragma peephole off
 void Lamp_init(int* obj, int* def)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
-    if (*(s16*)((char*)obj + 0x46) == 996) {
+    int* state = ((GameObject *)obj)->extra;
+    if (((GameObject *)obj)->anim.seqId == 996) {
         *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 26) << 8);
     } else {
         *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
     }
-    *(s16*)((char*)obj + 2) = 0;
-    *(s16*)((char*)obj + 4) = 0;
-    *(int*)((char*)obj + 248) = 0;
+    ((GameObject *)obj)->anim.rotY = 0;
+    ((GameObject *)obj)->anim.rotZ = 0;
+    ((GameObject *)obj)->unkF8 = 0;
     *(s8*)state = 1;
-    *(void**)((char*)obj + 0xbc) = (void*)Lamp_SeqFn;
+    ((GameObject *)obj)->unkBC = (void*)Lamp_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2119,7 +2120,7 @@ void SB_CageKyte_update(int obj)
 #pragma peephole off
 void SB_CloudBall_free(int* obj)
 {
-    SBCloudBallState* state = *(SBCloudBallState**)((char*)obj + 0xb8);
+    SBCloudBallState* state = ((GameObject *)obj)->extra;
     ((void(*)(int*))((void**)*gExpgfxInterface)[6])(obj);
     {
         int* child = (int*)state->light;
@@ -2139,8 +2140,8 @@ extern void projectileParticleFxFn_80099660(int *obj, f32 scale, int type);
 #pragma peephole off
 void SB_CloudBall_hitDetect(int *obj)
 {
-    SBCloudBallState *state = *(SBCloudBallState **)((char *)obj + 0xb8);
-    int *params = *(int **)((char *)obj + 0x54);
+    SBCloudBallState *state = ((GameObject *)obj)->extra;
+    int *params = *(int **)&((GameObject *)obj)->anim.hitReactState;
     int *target = *(int **)((char *)params + 0x50);
 
     if ((void *)target == NULL) return;
@@ -2148,7 +2149,7 @@ void SB_CloudBall_hitDetect(int *obj)
     if (*(s16 *)((char *)target + 0x46) == 142) {
         Sfx_PlayFromObject(obj, SFXen_rockshat16);
     }
-    params = *(int **)((char *)obj + 0x54);
+    params = *(int **)&((GameObject *)obj)->anim.hitReactState;
     *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
     state->fadeTimer = lbl_803E58F0;
     *(u8 *)((char *)obj + 0x36) = 0;
@@ -2168,11 +2169,11 @@ extern f32 lbl_803E5914;
 #pragma peephole off
 void SB_CloudBall_init(int *obj)
 {
-    SBCloudBallState *state = *(SBCloudBallState **)((char *)obj + 0xb8);
-    int *params = *(int **)((char *)obj + 0x54);
+    SBCloudBallState *state = ((GameObject *)obj)->extra;
+    int *params = *(int **)&((GameObject *)obj)->anim.hitReactState;
 
     *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
-    params = *(int **)((char *)obj + 0x54);
+    params = *(int **)&((GameObject *)obj)->anim.hitReactState;
     *(u16 *)((char *)params + 0xb2) = (u16)(*(u16 *)((char *)params + 0xb2) | 1);
     if ((void *)state->light == NULL) {
         state->light = objCreateLight(obj, 1);
@@ -2332,7 +2333,7 @@ void SB_FireBall_update(int obj)
 #pragma peephole off
 void SB_KyteCage_free(int* obj)
 {
-    void *child = (*(SBKyteCageState**)((char*)obj + 0xb8))->kyte;
+    void *child = (*(SBKyteCageState**)&((GameObject *)obj)->extra)->kyte;
     if (child != NULL) {
         ObjLink_DetachChild(obj, child);
     }
@@ -2344,10 +2345,10 @@ void SB_KyteCage_free(int* obj)
 #pragma peephole off
 void SB_KyteCage_init(int *obj, int *params)
 {
-    SBKyteCageState *state = *(SBKyteCageState **)((char *)obj + 0xb8);
+    SBKyteCageState *state = ((GameObject *)obj)->extra;
     *(int (**)(int, int, int))((char *)obj + 0xbc) = SB_KyteCage_SeqFn;
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
-    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
     state->seqLatch = 0;
     if ((u32)GameBit_Get(117) == 0u) {
         getLActions(obj, obj, 88, 0, 0, 0);
@@ -2530,7 +2531,7 @@ void SB_MiniFire_update(int obj)
 #pragma peephole off
 void SB_SeqDoor_init(int* obj, int* def)
 {
-    *(void**)((char*)obj + 0xbc) = (void*)SB_SeqDoor_SeqFn;
+    ((GameObject *)obj)->unkBC = (void*)SB_SeqDoor_SeqFn;
     *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
     {
         s8 b = *(s8*)((char*)def + 25);
@@ -2543,15 +2544,15 @@ void SB_SeqDoor_init(int* obj, int* def)
 #pragma peephole off
 void SB_SeqDoor_update(int *obj)
 {
-    if (*(s16 *)((char *)obj + 0x46) == 371) {
-        if (*(int *)((char *)obj + 0xf4) == 0) {
+    if (((GameObject *)obj)->anim.seqId == 371) {
+        if (((GameObject *)obj)->unkF4 == 0) {
             if ((u32)GameBit_Get(2635) != 0u) {
                 ((void (*)(int, int *, int))((void **)*gObjectTriggerInterface)[18])(0, obj, -1);
-                *(int *)((char *)obj + 0xf4) = 1;
+                ((GameObject *)obj)->unkF4 = 1;
             }
         }
     }
-    *(u8 *)((char *)obj + 0xaf) |= 0x10;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2561,7 +2562,7 @@ extern f32 lbl_803E59C0;
 #pragma peephole off
 void SB_ShipGunBroke_render(int* obj, int p2, int p3, int p4, int p5)
 {
-    int* p = *(int**)((char*)obj + 76);
+    int* p = *(int**)&((GameObject *)obj)->anim.placementData;
     if ((u32)GameBit_Get(*(s16*)((char*)p + 30)) != 0u) {
         ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E59C0);
     }
@@ -2572,7 +2573,7 @@ void SB_ShipGunBroke_render(int* obj, int p2, int p3, int p4, int p5)
 #pragma peephole off
 void SB_ShipGunBroke_update(int* obj)
 {
-    int* p = *(int**)((char*)obj + 76);
+    int* p = *(int**)&((GameObject *)obj)->anim.placementData;
     if ((u32)GameBit_Get(*(s16*)((char*)p + 30)) != 0u) {
         Sfx_PlayFromObject(obj, SFXen_nlite1_c);
     }
@@ -2584,11 +2585,11 @@ void SB_ShipGunBroke_update(int* obj)
 #pragma peephole off
 void ShipBattle_free(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     ((void(*)(int*))((void**)*gObjectTriggerInterface)[9])(state);
     ((void(*)(int*, int, int, int, int))((void**)*gTitleMenuControlInterface)[2])(obj, 0xffff, 0, 0, 0);
     {
-        int light = *(int*)((char*)obj + 248);
+        int light = ((GameObject *)obj)->unkF8;
         if (light != 0) {
             ModelLightStruct_free((int*)light);
         }
@@ -2651,7 +2652,7 @@ light_setup:
 void ShipBattle_render(int* obj)
 {
     objRenderFn_8003b8f4(lbl_803E595C);
-    if (*(s16*)((char*)obj + 0x46) == 369) {
+    if (((GameObject *)obj)->anim.seqId == 369) {
         objfx_spawnFlaggedTrailBurst(obj, lbl_803E5960, 4, 389, 5, NULL);
     }
 }
@@ -2778,7 +2779,7 @@ void shop_free(int* obj)
 #pragma peephole off
 void shop_func0B(int* obj, int v, int p3)
 {
-    s8* state = *(s8**)((char*)obj + 0xb8);
+    s8* state = ((GameObject *)obj)->extra;
     state[0] = (s8)v;
     if (v != 0) {
         ((void(*)(int, int*, int))((void**)*gObjectTriggerInterface)[18])(p3, obj, -1);
@@ -2792,7 +2793,7 @@ void shop_func0B(int* obj, int v, int p3)
 #pragma peephole off
 void shop_func15(int* obj, int v)
 {
-    s8* b = *(s8**)((char*)obj + 0xb8);
+    s8* b = ((GameObject *)obj)->extra;
     b[2] = 0;
     b[3] = 0;
     b[4] = (s8)v;
@@ -2801,7 +2802,7 @@ void shop_func15(int* obj, int v)
  * obj->_b8[3] += p2. */
 void shop_func16(int* obj, int p2, int p3)
 {
-    s8* b = *(s8**)((char*)obj + 0xb8);
+    s8* b = ((GameObject *)obj)->extra;
     b[2] = (s8)(b[2] + p3);
     b[3] = (s8)(b[3] + p2);
 }
@@ -2809,7 +2810,7 @@ void shop_func16(int* obj, int p2, int p3)
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */
 void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
 {
-    s8* b = *(s8**)((char*)obj + 0xb8);
+    s8* b = ((GameObject *)obj)->extra;
     *out_b2 = b[2];
     *out_b3 = b[3];
     *out_b4 = b[4];
@@ -2908,7 +2909,7 @@ int shop_isItemBought(int p, int idx)
 #pragma peephole off
 void shop_setStateField1(int* obj, int v)
 {
-    s8* state = *(s8**)((char*)obj + 0xb8);
+    s8* state = ((GameObject *)obj)->extra;
     state[1] = (s8)v;
 }
 #pragma peephole reset

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfprisonuncle.h"
@@ -1839,7 +1840,7 @@ u32 MagicPlant_getObjectTypeId(MagicPlantObject *obj)
 
 /* obj->u16_X |= MASK */
 #pragma peephole off
-void StayPoint_init(u16 *obj) { u32 v; v = *(u16*)((char*)obj + 0xb0); v |= 0x4000; *(u16*)((char*)obj + 0xb0) = (u16)v; }
+void StayPoint_init(u16 *obj) { u32 v; v = ((GameObject *)obj)->unkB0; v |= 0x4000; ((GameObject *)obj)->unkB0 = (u16)v; }
 #pragma peephole reset
 
 extern void objRenderFn_8003b8f4(int obj, float arg);
@@ -1992,18 +1993,18 @@ int fn_8017FFD0(int obj, TrickyWarpState *state) {
 #pragma peephole off
 void trickywarp_init(s16 *obj, u8 *param_2) {
   u32 v;
-  v = *(u16 *)((char *)obj + 0xb0);
+  v = ((GameObject *)obj)->unkB0;
   v |= 0x4000;
-  *(u16 *)((char *)obj + 0xb0) = (u16)v;
+  ((GameObject *)obj)->unkB0 = (u16)v;
   *obj = (s16)((u32)param_2[0x1a] << 8);
 }
 
 void trickyguard_init(s16 *obj, u8 *param_2) {
   u32 v;
   *obj = (s16)((u32)param_2[0x18] << 8);
-  v = *(u16 *)((char *)obj + 0xb0);
+  v = ((GameObject *)obj)->unkB0;
   v |= 0x4000;
-  *(u16 *)((char *)obj + 0xb0) = (u16)v;
+  ((GameObject *)obj)->unkB0 = (u16)v;
 }
 
 #pragma peephole off
@@ -2660,18 +2661,18 @@ void fn_801814D0(int obj, int param_2, u8 *state) {
 #pragma peephole off
 void trickyguard_update(int *obj) {
     int *tricky;
-    int *def = *(int **)((char *)obj + 0x4c);
-    *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+    int *def = *(int **)&((GameObject *)obj)->anim.placementData;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
     if (*(s16 *)((char *)def + 0x1a) != -1) {
         if ((u32)GameBit_Get(*(s16 *)((char *)def + 0x1a)) == 0) return;
     }
     tricky = (int *)getTrickyObject();
     if (tricky == NULL) return;
     if ((u8)((int (*)(int *))(**(int ***)((char *)tricky + 0x68))[0x11])(tricky) != 0) return;
-    if ((*(u8 *)((char *)obj + 0xaf) & 0x04) != 0) {
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x04) != 0) {
         ((void (*)(int *, int *, int, int))(**(int ***)((char *)tricky + 0x68))[0xa])(tricky, obj, 1, 3);
     }
-    *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x08);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x08);
     objRenderFn_80041018(obj);
 }
 #pragma peephole reset

@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/cfguardian.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"

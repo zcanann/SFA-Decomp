@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/dll_19E.h"
 
 
@@ -141,7 +142,7 @@ extern void textureFree(void *tex);
 #pragma scheduling off
 #pragma peephole off
 void DFSH_LaserBeam_init(int *obj) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     ((void (*)(int *))((void **)*gModgfxInterface)[6])(obj);
     Resource_Release(lbl_803DDBB8);
     lbl_803DDBB8 = NULL;
@@ -325,9 +326,9 @@ void dfsh_objcreator_initialise(void)
 #pragma scheduling off
 #pragma peephole off
 void dfsh_objcreator_init(int obj, s8 *def) {
-    DfshObjCreatorState *state = *(DfshObjCreatorState **)((char *)obj + 0xB8);
+    DfshObjCreatorState *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
-    *(int *)((char *)obj + 0xF8) = 0;
+    ((GameObject *)obj)->unkF8 = 0;
     state->spawnTimer = 100;
     state->spawnTimerStep = 0;
     *(u8 *)((char *)obj + 0x37) = 0xFF;

@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
 #include "main/dll/DIM/DIMsnowball.h"
@@ -136,7 +137,7 @@ extern f32 lbl_803E5368;
 #pragma scheduling off
 void ccqueen_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-  void *state = *(void **)((char *)obj + 0xb8);
+  void *state = ((GameObject *)obj)->extra;
   objRenderFn_8003b8f4(lbl_803E4660);
   dll_2E_func06(obj, state, 0);
 }
@@ -1207,7 +1208,7 @@ extern f32 lbl_803E46C8;
 void ccsharpclawpad_init(int* obj, int* def)
 {
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 24) << 8);
-    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
 }
 
 void cclevcontrol_free(void)
@@ -1219,8 +1220,8 @@ void cclevcontrol_free(void)
 void cclightfoot_init(int* obj, int* def)
 {
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 26) << 8);
-    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
-    *(void**)((char*)obj + 188) = (void*)ccqueen_SeqFn;
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
+    ((GameObject *)obj)->unkBC = (void*)ccqueen_SeqFn;
 }
 
 int cclevcontrol_SeqFn(int p1, int p2, u8* state)
@@ -1235,10 +1236,10 @@ int cclevcontrol_SeqFn(int p1, int p2, u8* state)
 
 void cclightfoot_free(int* obj, int p2)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     int* sub = (int*)state[0];
     if (sub != NULL) {
-        if (*(void**)((char*)obj + 200) != NULL) {
+        if (((GameObject *)obj)->unkC8 != NULL) {
             ObjLink_DetachChild(obj, sub);
         }
         if (p2 == 0) {
@@ -1259,9 +1260,9 @@ extern void ccpedstal_updateAltVariant(int obj, u8* state2);
 extern void fn_8002B6D8(void *obj, int p2, int p3, int p4, int p5, int p6);
 
 void ccpedstal_init(int *obj, u8 *params) {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((u32)params[0x1a] << 8);
-    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x4000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
     switch (*(int *)(params + 0x14)) {
     case 0x45f1a:
         *(void **)state = (void *)ccpedstal_updateAltVariant;
@@ -1283,8 +1284,8 @@ void cclevcontrol_init(int *obj) {
     void *envfxTable;
     int *state;
     envfxTable = lbl_80323548;
-    state = *(int **)((char *)obj + 0xb8);
-    *(void **)((char *)obj + 0xbc) = (void *)cclevcontrol_SeqFn;
+    state = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkBC = (void *)cclevcontrol_SeqFn;
     fn_80088870((char *)envfxTable + 0x38, envfxTable, (char *)envfxTable + 0x70, (char *)envfxTable + 0xa8);
     if (getSaveGameLoadStatus() != 0) {
         envFxActFn_800887f8(0x3f);
@@ -1434,7 +1435,7 @@ void ccqueen_init(int *obj, u8 *init) {
     u8 *sub;
     _S16x3 buf2;
     _S16x3 buf1;
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     buf2 = lbl_803E4650;
     buf1 = lbl_803E4658;
     *(s16*)obj = (s16)(init[0x1a] << 8);
@@ -1459,7 +1460,7 @@ void ccqueen_update(int *obj) {
     u8 *sub;
     int *player;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     if (GameBit_Get(0x1c2) == 0 && GameBit_Get(0xa3) != 0) {
         player = (int*)Obj_GetPlayerObject();
         if (vec3f_distanceSquared((f32*)((char*)obj + 0x18), (f32*)((char*)player + 0x18)) < lbl_803E4664) {
@@ -1467,8 +1468,8 @@ void ccqueen_update(int *obj) {
         }
     }
     if (GameBit_Get(0x1c3) != 0) {
-        *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
-        *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
         ObjHits_DisableObject(obj);
     } else {
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4668, timeDelta, NULL);

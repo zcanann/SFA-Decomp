@@ -1,4 +1,5 @@
 #include "main/dll/objfsa.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 
 extern void OSReport(const char *fmt, ...);

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
@@ -4159,15 +4160,15 @@ void drakorenergy_init(int *obj, u8 *init) {
     extern uint GameBit_Get(int);
     DrakorEnergyState *sub;
     f32 fz;
-    sub = *(DrakorEnergyState **)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     sub->mode = 5;
-    *(f32*)((char*)obj + 0xc) = *(f32*)(init + 8);
-    *(f32*)((char*)obj + 0x10) = *(f32*)(init + 0xc);
-    *(f32*)((char*)obj + 0x14) = *(f32*)(init + 0x10);
+    ((GameObject *)obj)->anim.localPosX = *(f32*)(init + 8);
+    ((GameObject *)obj)->anim.localPosY = *(f32*)(init + 0xc);
+    ((GameObject *)obj)->anim.localPosZ = *(f32*)(init + 0x10);
     fz = lbl_803E627C;
-    *(f32*)((char*)obj + 0x2c) = fz;
-    *(f32*)((char*)obj + 0x24) = fz;
-    *(f32*)((char*)obj + 0x28) = lbl_803E62A0;
+    ((GameObject *)obj)->anim.velocityZ = fz;
+    ((GameObject *)obj)->anim.velocityX = fz;
+    ((GameObject *)obj)->anim.velocityY = lbl_803E62A0;
     sub->phase = randomGetRange(0, 0xffff);
     if (GameBit_Get(*(s16*)(init + 0x20)) != 0) {
         sub->mode = 4;
@@ -4188,10 +4189,10 @@ void dbholecontrol1_update(int *obj) {
     extern int *gObjectTriggerInterface;
     extern uint GameBit_Get(int);
     u8 *def;
-    def = *(u8**)((char*)obj + 0x4c);
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (GameBit_Get(*(s16*)(def + 0x1e)) != 0) {
         Obj_RemoveFromUpdateList(obj);
-        *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
     } else if (GameBit_Get(*(s16*)(def + 0x20)) != 0) {
         ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])(*(s8*)(def + 0x19), obj, -1);
     }
@@ -4216,14 +4217,14 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
     int mode;
     int r;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     mode = 6;
     if (param3 != 0) {
         mode = (u8)(mode | 1);
     }
     ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*gBaddieControlInterface)[22])(obj, def, sub, 0x10, 7, 0x10a, mode, lbl_803E62FC);
     ObjGroup_AddObject(obj, 3);
-    *(int*)((char*)obj + 0xbc) = 0;
+    *(int *)&((GameObject *)obj)->unkBC = 0;
     p40c = *(int**)&((GroundBaddieState *)sub)->control;
     memset(p40c, 0, 0x50);
     ((DbStealerwormControl *)p40c)->unk08 = lbl_803E62FC;
@@ -4234,7 +4235,7 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
     ((DbStealerwormControl *)p40c)->flags44 = (u8)(((DbStealerwormControl *)p40c)->flags44 | 0x10);
     ((DbStealerwormControl *)p40c)->linkedObj = 0;
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
-    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, sub, 3);
     ((GroundBaddieState *)sub)->baddie.unk270 = 0;
     ((GroundBaddieState *)sub)->baddie.unk25F = 1;
@@ -4250,13 +4251,13 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
 #pragma scheduling off
 #pragma peephole off
 void dbstealerworm_free(int *obj) {
-    u8 *sub = *(u8**)((char*)obj + 0xb8);
+    u8 *sub = ((GameObject *)obj)->extra;
     int *p40c = *(int**)&((GroundBaddieState *)sub)->control;
     ObjGroup_RemoveObject(obj, 3);
     Stack_Free((int*)((DbStealerwormControl *)p40c)->msgStack);
-    if (*(void**)((char*)obj + 0xc8) != NULL) {
-        Obj_FreeObject(*(int*)((char*)obj + 0xc8));
-        *(int*)((char*)obj + 0xc8) = 0;
+    if (((GameObject *)obj)->unkC8 != NULL) {
+        Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
+        *(int *)&((GameObject *)obj)->unkC8 = 0;
     }
     ((void(*)(int*, u8*, int))((void**)*gBaddieControlInterface)[16])(obj, sub, 3);
 }
@@ -4266,10 +4267,10 @@ void dbstealerworm_free(int *obj) {
 #pragma scheduling off
 #pragma peephole off
 void dbholecontrol1_init(int *obj, u8 *params) {
-    DbHoleControl1State *sub = *(DbHoleControl1State **)((char*)obj + 0xb8);
+    DbHoleControl1State *sub = ((GameObject *)obj)->extra;
     ObjGroup_AddObject(obj, 0x1e);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)&dbholecontrol1_SeqFn;
+    ((GameObject *)obj)->unkBC = (void*)&dbholecontrol1_SeqFn;
     sub->gameBitA = *(s16*)(params + 0x1a);
     sub->gameBitB = *(s16*)(params + 0x1c);
 }
@@ -4299,15 +4300,15 @@ extern int dfpseqpoint_SeqFn(int obj, int p2, int p3);
 #pragma peephole off
 void dfpseqpoint_init(int *obj, u8 *init) {
     DfpSeqPointState *sub;
-    sub = *(DfpSeqPointState **)((char*)obj + 0xb8);
-    *(void**)((char*)obj + 0xbc) = (void*)&dfpseqpoint_SeqFn;
+    sub = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkBC = (void*)&dfpseqpoint_SeqFn;
     *(s16*)obj = (s16)((s8)init[0x18] << 8);
     sub->triggerRadius = (f32)(s32)*(s16*)(init + 0x1a);
     sub->triggerId = *(s16*)(init + 0x1c);
     sub->triggerMode = init[0x19];
     sub->gameBitGate = *(s16*)(init + 0x1e);
     sub->gameBitDone = *(s16*)(init + 0x20);
-    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x2000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
     sub->flags0F = (u8)(sub->flags0F & ~0x80);
 }
 #pragma peephole reset
@@ -4531,7 +4532,7 @@ void dfplevelcontrol_initialise(void) {
 }
 
 void dfpobjcreator_free(int obj, int flag) {
-    DfpObjCreatorState *state = *(DfpObjCreatorState **)((char *)obj + 0xB8);
+    DfpObjCreatorState *state = ((GameObject *)obj)->extra;
     if (flag == 0) {
         if (*(void **)&state->spawnedObj != NULL) {
             Obj_FreeObject(state->spawnedObj);
@@ -4543,7 +4544,7 @@ void dfpobjcreator_free(int obj, int flag) {
 extern void dbegg_setupFromDef(int obj, int *state);
 void dbegg_init(int obj) {
     int *q;
-    dbegg_setupFromDef(obj, *(int **)((char *)obj + 0xB8));
+    dbegg_setupFromDef(obj, ((GameObject *)obj)->extra);
     ObjMsg_AllocQueue(obj, 8);
     q = *(int **)((char *)obj + 0x64);
     if (q != NULL) {
@@ -4558,7 +4559,7 @@ void DFP_Torch_free(int obj) {
 }
 
 void dfpobjcreator_init(int obj, s8 *def) {
-    DfpObjCreatorState *state = *(DfpObjCreatorState **)((char *)obj + 0xB8);
+    DfpObjCreatorState *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
     state->gameBit = *(s16 *)((char *)def + 0x18);
     state->spawnPeriod = *(s16 *)((char *)def + 0x1C);
