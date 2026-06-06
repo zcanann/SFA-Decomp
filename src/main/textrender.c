@@ -127,7 +127,7 @@ int getControlCharLen(u32 c) {
 #pragma pop
 
 extern int utf8GetNextChar(u8 *p, int *outLen);
-void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *outMaxAdv, f32 *outMaxH, int glyphLang);
+void gameTextMeasureString(u8 *str, f32 scale, f32 *outW, f32 *outZero, f32 *outMaxAdv, f32 *outMaxH, int glyphLang);
 extern void translateToDinoLanguage(u8 *str);
 extern void setTextColor(int a, int r, int g, int b, int al);
 extern void _textSetColor(int a, int r, int g, int b, int al);
@@ -145,12 +145,12 @@ extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
+void textRenderStr(u8 *str, u8 *win, f32 x, f32 y, f32 lineH, int mode) {
     int byteOff;
     int glyphLang;
     int curTexPage;
     int realign;
-    int ch;
+    u32 ch;
     int charLen;
     int n2;
     int i;
@@ -173,7 +173,10 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
     if (lbl_803DC9E8 == 2) {
         glyphLang = 6;
     } else {
-        glyphLang = ((u8 *)sLanguageNameTable)[curLanguage * 8 + 4];
+        {
+            u8 *tbl = (u8 *)sLanguageNameTable;
+            glyphLang = tbl[curLanguage * 8 + 4];
+        }
     }
     curTexPage = -1;
     realign = 1;
@@ -189,7 +192,7 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
         translateToDinoLanguage(str);
     }
 
-    gameTextMeasureString(str, &measW, &measN, lbl_803DC9A0, 0, 0, -1);
+    gameTextMeasureString(str, lbl_803DC9A0, &measW, &measN, 0, 0, -1);
     if (lbl_803DC9BC == 0) {
         setTextColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
         _textSetColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
@@ -239,10 +242,16 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
                     break;
                 case 0xf8ff:
                     if (mode == 0) {
-                        lbl_803DC9A4 = params[3] * (lbl_803DC9A4 + 1) >> 8;
-                        lbl_803DC9A7 = params[0];
-                        lbl_803DC9A6 = params[1];
-                        lbl_803DC9A5 = params[2];
+                        {
+                            u8 c3 = params[3] * (lbl_803DC9A4 + 1) >> 8;
+                            u8 c2 = params[2];
+                            u8 c1 = params[1];
+                            u8 c0 = params[0];
+                            lbl_803DC9A7 = c0;
+                            lbl_803DC9A6 = c1;
+                            lbl_803DC9A5 = c2;
+                            lbl_803DC9A4 = c3;
+                        }
                         if (lbl_803DC9BC == 0) {
                             setTextColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
                             _textSetColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
@@ -272,22 +281,24 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
                 break;
             case 1:
                 spaceExtra = lbl_803DE704;
-                gameTextMeasureString(p, &measW, NULL, lbl_803DC9A0, 0, 0, -1);
+                gameTextMeasureString(p, lbl_803DC9A0, &measW, NULL, 0, 0, -1);
                 x = (f32)*(s16 *)(win + 0x14) +
                     ((f32)(u32)*(u16 *)(win + 8) - measW);
                 break;
             case 2:
                 spaceExtra = lbl_803DE704;
-                gameTextMeasureString(p, &measW, NULL, lbl_803DC9A0, 0, 0, -1);
+                gameTextMeasureString(p, lbl_803DC9A0, &measW, NULL, 0, 0, -1);
                 x = ((f32)(u32)*(u16 *)(win + 8) - measW) * lbl_803DE70C +
                     (f32)*(s16 *)(win + 0x14);
                 break;
             case 3: {
-                int acc = 0;
-                int spaceCount = 0;
-                int innerCh;
+                int acc;
+                int spaceCount;
+                u32 innerCh;
                 int innerLen;
-                gameTextMeasureString(p, &measW, NULL, lbl_803DC9A0, 0, 0, -1);
+                gameTextMeasureString(p, lbl_803DC9A0, &measW, NULL, 0, 0, -1);
+                acc = 0;
+                spaceCount = acc;
                 while ((innerCh = utf8GetNextChar(p + acc, &innerLen)) != 0) {
                     acc += innerLen;
                     if (innerCh == 0x20) {
@@ -324,15 +335,19 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
             continue;
         }
         if (ch == 0x20) {
-            x = lbl_803DC9A0 * (f32)(g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9))) + x;
+            x = lbl_803DC9A0 * (f32)(g[0xc] + (*(s8 *)(g + 9) + *(s8 *)(g + 8))) + x;
             x = x + spaceExtra;
             continue;
         }
 
         u0 = (f32)(*(u16 *)(g + 4) << 5);
         v0 = (f32)(*(u16 *)(g + 6) << 5);
-        fx0 = lbl_803DE710 * (x + (f32)*(s8 *)(g + 8) * lbl_803DC9A0);
-        fy0 = lbl_803DE710 * (y + (f32)*(s8 *)(g + 0xa) * lbl_803DC9A0);
+        fx0 = (f32)*(s8 *)(g + 8) * lbl_803DC9A0;
+        fx0 = x + fx0;
+        fx0 = lbl_803DE710 * fx0;
+        fy0 = (f32)*(s8 *)(g + 0xa) * lbl_803DC9A0;
+        fy0 = y + fy0;
+        fy0 = lbl_803DE710 * fy0;
         fx1 = lbl_803DE710 * ((f32)(u32)g[0xc] * lbl_803DC9A0) + fx0;
         fy1 = lbl_803DE710 * ((f32)(u32)g[0xd] * lbl_803DC9A0) + fy0;
         if (fx0 < lbl_803DE704 && fx1 > lbl_803DE704) {
@@ -359,19 +374,15 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
             }
         } else {
             if (g[0xe] == 3) {
-                f32 shift = (f32)(lbl_803DB3CC << 2);
-                fy0 = fy0 - shift;
-                fy1 = fy1 - shift;
+                int shift = lbl_803DB3CC << 2;
+                fy0 = fy0 - (f32)shift;
+                fy1 = fy1 - (f32)shift;
                 GXGetScissor(&scisX, &scisY, &scisW, &scisH);
-                if (scisY < lbl_803DB3CC) {
-                    GXSetScissor(scisX, 0, scisW, scisH);
-                } else {
-                    GXSetScissor(scisX, scisY - lbl_803DB3CC, scisW, scisH);
-                }
+                GXSetScissor(scisX, (scisY >= lbl_803DB3CC) ? scisY - lbl_803DB3CC : 0, scisW, scisH);
             }
             if (g[0xe] == 5) {
-                int iw = g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9));
-                int ih = g[0xd] + (*(s8 *)(g + 0xa) + *(s8 *)(g + 0xb));
+                int iw = g[0xc] + (*(s8 *)(g + 9) + *(s8 *)(g + 8));
+                int ih = g[0xd] + (*(s8 *)(g + 0xb) + *(s8 *)(g + 0xa));
                 GXGetScissor(&scisX, &scisY, &scisW, &scisH);
                 gxSetScissorRect(0, 0, *(s16 *)(winBase + 0xfd4), *(s16 *)(winBase + 0xfd6),
                                  *(s16 *)(winBase + 0xfd4) + *(u16 *)(winBase + 0xfc8),
@@ -387,12 +398,12 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
             }
 
             if (mode != 0) {
-                f32 ox = (f32)lbl_803DC98C;
-                f32 oy = (f32)lbl_803DC988;
-                fx0 = fx0 + ox;
-                fx1 = fx1 + ox;
-                fy0 = fy0 + oy;
-                fy1 = fy1 + oy;
+                int ox = lbl_803DC98C;
+                int oy = lbl_803DC988;
+                fx0 = fx0 + (f32)ox;
+                fx1 = fx1 + (f32)ox;
+                fy0 = fy0 + (f32)oy;
+                fy1 = fy1 + (f32)oy;
             }
 
             if (lbl_803DC9BC == 0) {
@@ -446,8 +457,8 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
             }
         }
 
-        if (g[0xe] != 5) {
-            x = lbl_803DC9A0 * (f32)(g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9))) + x;
+        if ((int)g[0xe] != 5) {
+            x = lbl_803DC9A0 * (f32)(g[0xc] + (*(s8 *)(g + 9) + *(s8 *)(g + 8))) + x;
         }
     }
 }
@@ -456,7 +467,7 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *outMaxAdv, f32 *outMaxH, int glyphLang) {
+void gameTextMeasureString(u8 *str, f32 scale, f32 *outW, f32 *outZero, f32 *outMaxAdv, f32 *outMaxH, int glyphLang) {
     int byteOff;
     u32 ch;
     int charLen;
@@ -540,7 +551,7 @@ void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *out
         if (glyphLang == 5) {
             continue;
         }
-        width = scale * (f32)(g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9))) + width;
+        width = scale * (f32)(g[0xc] + (*(s8 *)(g + 9) + *(s8 *)(g + 8))) + width;
     }
 
     if (outW != NULL) {
