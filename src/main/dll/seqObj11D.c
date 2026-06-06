@@ -455,7 +455,7 @@ void FUN_8015209c(int param_1,int param_2)
 extern void Sfx_PlayFromObject(int obj, int sfx);
 void fn_80152004(int obj, int *state) {
     Sfx_PlayFromObject(obj, SFXen_cavedirt22);
-    *(u32*)((char*)state + 0x2e8) |= 0x10;
+    ((GroundBaddieState *)state)->baddie.reactionFlags |= 0x10;
 }
 
 extern void fn_8014D08C(int obj, u8 *state, int a, int b, int c, f32 f);
@@ -492,7 +492,7 @@ void fn_801511E8(int obj, u8 *state)
         }
     }
     while (*(u32 *)(entry + (idx = state[0x33a]) * 16 + 4) != 0
-           && (*(u32 *)(state + 0x2dc) & *(u32 *)(entry + idx * 16 + 4)) == 0) {
+           && (((GroundBaddieState *)state)->baddie.controlFlags & *(u32 *)(entry + idx * 16 + 4)) == 0) {
         (*(u8 *)(state + 0x33a))++;
         if (state[0x33a] > entry[8]) {
             state[0x33a] = 1;
@@ -556,7 +556,7 @@ void fn_801513AC(int obj, u8 *state)
         state[0x33a] = (u8)(entry[8] + 1);
     }
     while (*(u32 *)(entry + (idx = state[0x33a]) * 16 + 4) != 0
-           && (*(u32 *)(state + 0x2dc) & *(u32 *)(entry + idx * 16 + 4)) == 0) {
+           && (((GroundBaddieState *)state)->baddie.controlFlags & *(u32 *)(entry + idx * 16 + 4)) == 0) {
         (*(u8 *)(state + 0x33a))++;
         if (state[0x33a] > entry[8]) {
             state[0x33a] = 1;
@@ -600,10 +600,10 @@ void fn_8015165C(int obj, u8 *state)
     t = state[0x33b];
     p20 = *(u8 **)(lbl_8031F16C + t * 40 + 20);
     p28 = *(u8 **)(lbl_8031F16C + t * 40 + 28);
-    if (t == 5 && (*(u32 *)(state + 0x2dc) & 0x800000) != 0) {
+    if (t == 5 && (((GroundBaddieState *)state)->baddie.controlFlags & 0x800000) != 0) {
         GameBit_Set(456, 1);
     }
-    if (*(void **)(state + 0x29c) != NULL && *(s16 *)(*(int *)(state + 0x29c) + 0x44) == 1) {
+    if (((GroundBaddieState *)state)->baddie.trackedObj != NULL && *(s16 *)(*(int *)&((GroundBaddieState *)state)->baddie.trackedObj + 0x44) == 1) {
         fn_8001FEA8();
     }
     fn_8015039C(obj, state);
@@ -613,12 +613,12 @@ void fn_8015165C(int obj, u8 *state)
         *(f32 *)(state + 0x328) = tv - timeDelta;
         if (*(f32 *)(state + 0x328) <= fz) {
             *(f32 *)(state + 0x328) = fz;
-            *(u32 *)(state + 0x2dc) |= 0x40000000;
+            ((GroundBaddieState *)state)->baddie.controlFlags |= 0x40000000;
             *(u16 *)(state + 0x338) = *(u8 *)(p28 + *(u16 *)(state + 0x338) * 16 + 10);
         }
     }
     if ((u8)fn_8014FFB4(obj, state, 1) == 0) {
-        if ((*(u32 *)(state + 0x2dc) & 0x40000000) != 0) {
+        if ((((GroundBaddieState *)state)->baddie.controlFlags & 0x40000000) != 0) {
             player = Obj_GetPlayerObject();
             fn_8014C11C(obj, 3, 16, lbl_803AC428, lbl_803E27AC);
             if (*(u16 *)(state + 0x338) != 0) {
@@ -631,7 +631,7 @@ void fn_8015165C(int obj, u8 *state)
                     (ObjAnimComponent *)obj);
                 *(u16 *)(state + 0x338) = *(u8 *)(p28 + *(u16 *)(state + 0x338) * 16 + 9);
             } else {
-                if (player != NULL && ((*(u32 *)(state + 0x2dc) & 0x800080) != 0 || fn_80296118(player) == 0)) {
+                if (player != NULL && ((((GroundBaddieState *)state)->baddie.controlFlags & 0x800080) != 0 || fn_80296118(player) == 0)) {
                     fn_801511E8(obj, state);
                 } else {
                     fn_801513AC(obj, state);
@@ -653,8 +653,8 @@ void fn_8015165C(int obj, u8 *state)
             ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[0x21];
         }
         if ((state[0x323] & 8) == 0) {
-            fn_8014CF7C(obj, state, *(f32 *)(*(int *)(state + 0x29c) + 0xc),
-                        *(f32 *)(*(int *)(state + 0x29c) + 0x14), 10, 0);
+            fn_8014CF7C(obj, state, *(f32 *)(*(int *)&((GroundBaddieState *)state)->baddie.trackedObj + 0xc),
+                        *(f32 *)(*(int *)&((GroundBaddieState *)state)->baddie.trackedObj + 0x14), 10, 0);
         }
     }
 }
@@ -701,14 +701,14 @@ void fn_80151954(int obj, u8 *state)
     ((GroundBaddieState *)state)->baddie.unk318 = lbl_803E27B8;
     state[0x322] = 6;
     ((GroundBaddieState *)state)->baddie.unk31C = fz;
-    *(f32 *)(state + 0x2fc) *= lbl_803E27BC;
+    ((GroundBaddieState *)state)->baddie.pathStep *= lbl_803E27BC;
     switch (((GameObject *)obj)->anim.seqId) {
     case 314:
         if (*(s8 *)(setup + 0x27) != 0) {
             *(s16 *)(state + 0x2b6) = 51;
         }
         ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
-        *(s16 *)(state + 0x2b0) = 40;
+        *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 40;
         state[0x33b] = 0;
         break;
     case 17:
@@ -716,7 +716,7 @@ void fn_80151954(int obj, u8 *state)
             *(s16 *)(state + 0x2b6) = 51;
         }
         ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
-        *(s16 *)(state + 0x2b0) = 40;
+        *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 40;
         state[0x33b] = 1;
         break;
     case 1505:
@@ -724,7 +724,7 @@ void fn_80151954(int obj, u8 *state)
             *(s16 *)(state + 0x2b6) = 1529;
         }
         ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
-        *(s16 *)(state + 0x2b0) = 50;
+        *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 50;
         state[0x33b] = 2;
         break;
     case 1463:
@@ -732,7 +732,7 @@ void fn_80151954(int obj, u8 *state)
             *(s16 *)(state + 0x2b6) = 1530;
         }
         ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C4;
-        *(s16 *)(state + 0x2b0) = 50;
+        *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 50;
         state[0x33b] = 3;
         break;
     case 1464:
@@ -740,7 +740,7 @@ void fn_80151954(int obj, u8 *state)
             *(s16 *)(state + 0x2b6) = 1534;
         }
         ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
-        *(s16 *)(state + 0x2b0) = 60;
+        *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 60;
         state[0x33b] = 4;
         break;
     case 1465:
@@ -748,7 +748,7 @@ void fn_80151954(int obj, u8 *state)
             *(s16 *)(state + 0x2b6) = 51;
         }
         ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
-        *(s16 *)(state + 0x2b0) = 1;
+        *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 1;
         state[0x33b] = 1;
         break;
     case 1958:
@@ -756,7 +756,7 @@ void fn_80151954(int obj, u8 *state)
             *(s16 *)(state + 0x2b6) = 1957;
         }
         ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
-        *(s16 *)(state + 0x2b0) = 160;
+        *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 160;
         state[0x33b] = 5;
         z = 0;
         state[0x320] = z;
@@ -772,7 +772,7 @@ void fn_80151954(int obj, u8 *state)
         break;
     }
     if (*(s8 *)(setup + 0x2e) != -1) {
-        *(u32 *)(state + 0x2dc) |= 1;
+        ((GroundBaddieState *)state)->baddie.controlFlags |= 1;
     }
 }
 #pragma peephole reset
