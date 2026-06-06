@@ -1607,6 +1607,77 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     - Diagnostic: reduced /tmp probes do NOT reproduce these permutations —
       the coloring depends on whole-function web pressure; A/B in the real
       TU.
+81. **Fresh-slot paradox CRACKED (task #151) — MWCC's conversion-temp pool
+    is flushed by STATEMENT-level control-flow joins, NOT by ternary
+    expressions; plus the co-located CSE divergences that actually move the
+    score.** Test bed: drawHudBox 98.65->100, fn_801EE668 97.04->99.87,
+    fn_8022AECC 98.27->99.81 (all committed). The allocator model, mapped
+    by /tmp probe-batch:
+    - int<->f32 conversion scratch (xoris/0x43300000 pairs, fctiwz stfd)
+      allocates FRESH ASCENDING 8B slots through straight-line code and
+      across CALLS (bl does not flush). The free-list is recycled (LIFO)
+      only after a statement-level JOIN: `if`/`if-else` statements,
+      `&&`/`||` expression-STATEMENTS, and discarded-result ternaries all
+      flush; a ternary whose value is ASSIGNED (`x = c ? a : b;`) does NOT
+      flush — branches are emitted but the pool keeps growing. Verified
+      oracle: lightning_init (100%) has branch-separated fresh slots from
+      `(x & N) ? 1 : 0` materializations and lives in our own tree.
+    - So "target slots fresh-ascending but if-shaped clamps sit between
+      conversions" => the ORIGINAL spelled those clamps as ternary
+      ASSIGNMENTS. Constant-arm nested clamps
+      (`v = (v < lo) ? lo : ((v > hi) ? hi : v);`) coalesce IN-PLACE
+      (identical branch shape, score-neutral-or-positive — fn_8022AECC's
+      iv clamps +0.03, fn_801EE668's v clamps neutral with +16B frame).
+      Variable-arm chains (`d = (d > K) ? d - X : d;`) pay a one-time
+      `b`+`mr` web-transition at the FIRST ternary of each chain (the
+      second one coalesces in-place) — costs more than the slots gain
+      when target shape is the in-place if-form; A/B per site and keep
+      the ifs when ternaries net-lose.
+    - The slot-offset residual ITSELF is nearly objdiff-free (~0.1-0.2%):
+      do NOT chase the frame for its own sake. The real score in this fn
+      class is in the co-located divergences:
+      (a) **fresh-reload laundering** — target RELOADS a field for its
+          `(f32)` conversion instead of CSE-ing the earlier `(u16)`/int
+          read (tell: extra `lha`/`lwz`/`lfs` of the same offset in
+          target). Spell the conversion read as a formally-distinct tree:
+          `(f32)*(s16 *)(int)(obj + 1)` or `*(int *)((u8 *)p + 0x350)`.
+          The `(int)`-on-the-SUM spelling is web-priority-NEUTRAL;
+          `(int)obj`-on-the-BASE swaps r30/r31 coloring (recipe #36/#80)
+          — avoid. `volatile` also works but is semantically heavier.
+          One laundering fixed a whole volatile-permutation cascade
+          (fn_801EE668 98.70->99.87; fn_8022AECC x7 sites +0.96).
+      (b) **f32-temp split for eval order** — when current HOISTS a
+          float load (timeDelta) above a conversion that target evaluates
+          in source order, split the statement:
+          `f32 t = (f32)(x << 3) / lbl; *p = -(t * timeDelta - (f32)*q);`
+          (fn_801EE668 stmt1, +1.66).
+      (c) **direct f32->s16/u16 assignment** — under peephole-off,
+          `*(s16 *)p = (s16)(int)(fexpr)` AND `= (int)(fexpr)` both emit
+          a spurious `extsh` (clrlwi for u16) after the fctiwz lwz;
+          `*(s16 *)p = (fexpr);` (no int intermediate) emits none,
+          matching target (fn_8022AECC x5 sites, 98.87->99.78).
+    - Sibling discovery (drawHudBox): a no-op `(s16)` cast on ONE
+      use-class of an s16 param (`(f32)(x + (s16)w)`) blocks extsh-CSE
+      with the implicit promotions at the other uses — target re-extends
+      raw w/h at the adds while keeping the extended copies live for int
+      args => 2 more saved regs + frame -144->-160 and 100%. Same
+      expression-node-identity principle as the laundering in (a).
+    - Diagnostic for the class: current frame is N*8 short, current slot
+      offsets repeat (uniq -c >= 2) where target's are all 1x, if-clamps
+      sit between conversion statements. Fix order: reloads (a) first,
+      eval-order (b), store casts (c), THEN A/B ternary forms per clamp.
+      Also check the unit's peephole state (fn_8022AECC needed peephole
+      OFF — tells: extsb after lbz, extsh before sth, param deref via the
+      mr copy, recipe #68) and recipe #46 base bugs (its 0xac read was
+      obj, not p).
+    - NEGATIVES (exhausted, don't retry): compiler versions 1.0-3.0a5 and
+      -O0..4 (cmdline+pragma) all keep the join-flush with if-statements;
+      opt_* pragmas/subflags, sched/peephole matrix, -inline
+      auto/deferred/all, static-helper inlining, lang c/c++,
+      -Cpp_exceptions on, &&/comma/goto/block-scope/register/volatile-int
+      spellings of the clamps — all inert on the flush. MP4's fresh-slot
+      fns are -O0 game code (cflags_game) — not an oracle for -O4 units.
+
 **dtk `block_relocations` ranges currently in config/GSAE01/config.yml**
 (recipe #73 instances — flag constants that coincide with code addresses):
 `0x80180100–0x80180218` (fn_8017FFD0 interior), `0x80080108–0x80080120`
