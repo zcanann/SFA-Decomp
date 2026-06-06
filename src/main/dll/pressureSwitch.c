@@ -1200,7 +1200,7 @@ void hagabon_update(int obj)
         if ((*(s16 *)(data + 0x20) != -1) && (GameBit_Get(*(s16 *)(data + 0x20)) != 0)) {
             return;
         }
-        if ((*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(*(int *)(data + 0x14)) == 0) {
+        if ((*gMapEventInterface)->isTimedEventActive(*(int *)(data + 0x14)) == 0) {
             return;
         }
         *(int *)(obj + 0xf4) = 0;
@@ -1256,8 +1256,8 @@ void hagabon_update(int obj)
             objLightFn_8009a1dc(obj, lbl_803E2660, lightPos, 3, 0);
             eventAsDouble.bits = CONCAT44(0x43300000,
                                           (s32)(*(s16 *)(data + 0x1c) * 0x3c) ^ 0x80000000);
-            (*(void (**)(int, f32))(*(int *)gMapEventInterface + 0x64))(
-                *(int *)(data + 0x14), (f32)(eventAsDouble.value - lbl_803E2648));
+            (*gMapEventInterface)->startTimedEvent(*(int *)(data + 0x14),
+                                                   (f32)(eventAsDouble.value - lbl_803E2648));
             if (*(s16 *)(data + 0x20) != -1) {
                 GameBit_Set(*(s16 *)(data + 0x20), 1);
             }

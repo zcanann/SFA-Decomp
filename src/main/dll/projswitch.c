@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/projswitch.h"
+#include "main/mapEventTypes.h"
 
 
 extern undefined4 FUN_800033a8();
@@ -732,7 +733,7 @@ void enemy_update(int obj)
             if (*(s16 *)(setup + 0x2c) == 0) {
                 return;
             }
-            if ((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(setup + 0x14)) != 0) {
+            if (((MapEventInterface *)*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) != 0) {
                 if ((*(u32 *)(state + 0x2dc) & 0x800) == 0) {
                     player = Obj_GetPlayerObject();
                     if (player != NULL) {
@@ -843,7 +844,7 @@ void enemy_init(int obj, u8 *setup, int flag)
                 }
                 if (*(int *)(obj + 0xf4) == 0) {
                     if (*(s16 *)(setup + 0x2c) != 0) {
-                        if ((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(setup + 0x14)) == 0) {
+                        if (((MapEventInterface *)*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) == 0) {
                             *(int *)(obj + 0xf4) = 1;
                         }
                     }

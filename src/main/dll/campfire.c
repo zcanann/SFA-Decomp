@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/campfire.h"
+#include "main/mapEventTypes.h"
 #include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
@@ -516,7 +517,7 @@ void kaldachom_update(int param_1)
   iVar8 = *(int *)(param_1 + 0x4c);
   if (*(int *)(param_1 + 0xf4) != 0) {
     if ((*(short *)(iVar9 + 0x270) != 3) &&
-        (iVar1 = (**(code **)(*gMapEventInterface + 0x68))(*(undefined4 *)(iVar8 + 0x14)), iVar1 != 0))
+        (iVar1 = ((MapEventInterface *)*gMapEventInterface)->isTimedEventActive(*(int *)(iVar8 + 0x14)), iVar1 != 0))
     {
       (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
       *(undefined2 *)(iVar9 + 0x402) = 0;

@@ -1932,7 +1932,7 @@ int fn_802020B0(int obj, int p2)
       Stack_Pop(*(int *)(sub_40c + 0x24), &local);
     }
     if (*(s16 *)(data + 0x2c) == 0) {
-      (**(void (**)(int, f32))((char *)(*gMapEventInterface) + 0x64))(*(int *)(data + 0x14), lbl_803E633C);
+      ((MapEventInterface *)*gMapEventInterface)->startTimedEvent(*(int *)(data + 0x14), lbl_803E633C);
     }
     *(u8 *)(sub + 0x404) |= *(u8 *)(data + 0x2b);
   }
@@ -6220,7 +6220,7 @@ void dbstealerworm_update(u8 *objp)
     if (GameBit_Get(*(s16 *)(blob + 0x3f6)) != 0) {
         if (*(int *)(obj + 0xf4) != 0) {
             if ((*(u8 *)(blob + 0x404) & 4) == 0 &&
-                ((int (*)(int))((void **)*(int *)gMapEventInterface)[26])(*(int *)(data + 0x14)) != 0) {
+                ((MapEventInterface *)*(int *)gMapEventInterface)->isTimedEventActive(*(int *)(data + 0x14)) != 0) {
                 ((void (*)(int, int, int, int, int, int, int, f32))((void **)*gBaddieControlInterface)[22])(obj, data, blob, 0x10, 7, 0x10a, 0x26, lbl_803E62FC);
                 ObjGroup_AddObject(obj, 3);
                 *(s16 *)(blob + 0x402) = 0;

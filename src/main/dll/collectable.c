@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "dolphin/mtx.h"
 #include "main/dll/collectable.h"
+#include "main/mapEventTypes.h"
 #include "main/objanim.h"
 
 
@@ -1895,7 +1896,7 @@ void Tricky_init(int obj)
   trickyVoxAllocFn_8004b5d4((void *)(state + 0x658));
   trickyVoxAllocFn_8004b5d4((void *)(state + 0x688));
   trickyVoxAllocFn_8004b5d4((void *)(state + 0x6b8));
-  *(int *)(state + 0) = (*(int (**)(void))(*(int *)gMapEventInterface + 0x94))();
+  *(int *)(state + 0) = (int)((MapEventInterface *)*gMapEventInterface)->getProgressPtr();
   *(int *)(state + 4) = Obj_GetPlayerObject();
   *(u8 *)(state + 8) = 0;
   *(u8 *)(state + 0xb) = 0;

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/creator1D6.h"
+#include "main/mapEventTypes.h"
 
 extern undefined4 FUN_8000680c();
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -144,7 +145,7 @@ void nw_tricky_update(int *obj)
             *(f32 *)(state + 4) += timeDelta;
         }
         if (GameBit_Get(0x4e3) == 1) {
-            if (*(*(u8 *(**)(void))(*(char **)gMapEventInterface + 0x94))() >= 4) {
+            if (((MapEventInterface *)*(int *)gMapEventInterface)->getProgressPtr()[0] >= 4) {
                 GameBit_Set(0x4e3, 0xff);
             }
         }
@@ -152,7 +153,7 @@ void nw_tricky_update(int *obj)
         if (t >= lbl_803E5268) {
             *(f32 *)(state + 4) = t - lbl_803E5268;
             if (GameBit_Get(0x4e3) == 0xff) {
-                if (*(*(u8 *(**)(void))(*(char **)gMapEventInterface + 0x94))() < 4) {
+                if (((MapEventInterface *)*(int *)gMapEventInterface)->getProgressPtr()[0] < 4) {
                     GameBit_Set(0x4e3, 1);
                 }
             }
