@@ -1,4 +1,5 @@
 #include "main/dll/CF/CFTreasSharpy.h"
+#include "main/dll/CF/dll_179.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
@@ -8,7 +9,6 @@ extern undefined4 FUN_800305f8();
 extern u32 GameBit_Get(int bit);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern u32 randomGetRange(int min, int max);
-extern void CFCrate_SeqFn(void);
 
 extern undefined4 gCameraInterface;
 extern undefined4* DAT_803dd708;

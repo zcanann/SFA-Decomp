@@ -1,4 +1,5 @@
 #include "main/dll/CF/dll_166.h"
+#include "main/dll/CF/dll_165.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
@@ -184,7 +185,6 @@ void magiccavebottom_free(int obj) {
 }
 #pragma scheduling reset
 
-extern int treasurechest_SeqFn(int obj, int unused, u8 *events);
 #pragma scheduling off
 #pragma peephole off
 void treasurechest_init(int *obj) {

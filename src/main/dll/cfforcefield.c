@@ -1,4 +1,5 @@
 #include "main/dll/cfforcefield.h"
+#include "main/dll/explodable.h"
 #include "main/game_object.h"
 #include "main/dll/cfforcefield_state.h"
 
@@ -20,7 +21,6 @@ extern undefined4 lbl_803DDAC8;
 extern f32 lbl_803E39AC;
 extern f32 lbl_803E39E8;
 extern f32 lbl_803E39F4;
-extern void LargeCrate_SeqFn(void);
 
 typedef union LargeCrateVariantRemap {
   s16 entries[6];
@@ -53,7 +53,7 @@ void largecrate_init(int obj, u8 *initData)
   constArrB = lbl_802C228C;
 
   state = *(int *)(obj + 0xb8);
-  *(void (**)(void))(obj + 0xbc) = LargeCrate_SeqFn;
+  ((GameObject *)obj)->animEventCallback = (void *)LargeCrate_SeqFn;
   *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
   ((CfForcefieldState *)state)->enableGameBit = *(short *)(initData + 0x1e);
 

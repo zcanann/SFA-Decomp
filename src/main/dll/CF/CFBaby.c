@@ -75,8 +75,6 @@ extern undefined4 FUN_8028688c();
 extern uint FUN_80294c04();
 extern int FUN_80294dbc();
 extern void *Obj_GetPlayerObject(void);
-extern int FireFlyLantern_spawnFireFly(int *obj);
-extern int FireFlyLantern_SeqFn(int obj, int unused, int events);
 
 extern undefined4 DAT_803225e0;
 extern undefined4 DAT_803225f0;

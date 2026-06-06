@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 
 int fn_801833E4(int obj, int player, int state);
+int LargeCrate_SeqFn(int *obj);
 int largecrate_getExtraSize(void);
 int largecrate_getObjectTypeId(void);
 void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState);
