@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/DR/cannontargetControl.h"
 
 extern undefined4 FUN_800033a8();

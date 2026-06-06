@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/objanim.h"
 
 extern u32 GameBit_Get(int id);
