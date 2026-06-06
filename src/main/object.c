@@ -1550,7 +1550,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     }
     total = 0;
     i = 0;
-    count = *(s8 *)(def + 0x55);
+    count = *(s8 *)(def + offsetof(ObjModelInstance, modelCount));
     if (flags29 & 0x400) {
         idx = (flags29 >> 0xb) & 0xf;
         if (idx < count) {
@@ -1616,7 +1616,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
             }
         }
     }
-    cursor = roundUpTo4((int)obj->models + *(s8 *)(def + 0x55) * 4);
+    cursor = roundUpTo4((int)obj->models + *(s8 *)(def + offsetof(ObjModelInstance, modelCount)) * 4);
     switch (obj->seqId) {
     case 0:
     case 0x1f:
@@ -1657,7 +1657,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     }
     max = lbl_803DE8CC;
     i = 0;
-    for (; i < *(s8 *)(obj->def + 0x55); i++) {
+    for (; i < *(s8 *)(obj->def + offsetof(ObjModelInstance, modelCount)); i++) {
         m = *(int *)((u8 *)obj->models + i * 4);
         if (m != 0) {
             if ((f32)modelFileHeaderGetCullDistance(*(u8 **)m) > max) {
@@ -2780,7 +2780,7 @@ int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
     int extra;
     int (*cb)(void *, int);
 
-    size = *(s8 *)(def + 0x55) * 4 + 0x10c;
+    size = *(s8 *)(def + offsetof(ObjModelInstance, modelCount)) * 4 + 0x10c;
     switch (*(s16 *)((u8 *)tmpl + 0x46)) {
     case 0:
     case 0x1f:
