@@ -7,7 +7,7 @@ extern u8 *Obj_GetActiveModel(u8 *obj);
 extern void ObjModel_SetRenderCallback(u8 *model, void *cb);
 extern void lockIconTexCb(void);
 extern void aButtonIconTexCb(void);
-extern void colorFn_8001efe0(int a, int b, int c, int d);
+extern void lightSetColor(int a, int b, int c, int d);
 extern u8 *objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind(u8 *p, int a);
 extern void modelLightStruct_setObjectLightMaskIndex(u8 *p, int a);
@@ -39,7 +39,7 @@ void lockIconInit(void)
     ObjModel_SetRenderCallback(Obj_GetActiveModel(gCamcontrolTargetReticle), aButtonIconTexCb);
     gCamcontrolTargetReticle[0xAD] = 2;
     ObjModel_SetRenderCallback(Obj_GetActiveModel(gCamcontrolTargetReticle), aButtonIconTexCb);
-    colorFn_8001efe0(1, 0x32, 0x3C, 0x28);
+    lightSetColor(1, 0x32, 0x3C, 0x28);
     lbl_803DD4C4 = objCreateLight(0, 1);
     if (lbl_803DD4C4 != NULL) {
       modelLightStruct_setLightKind(lbl_803DD4C4, 4);
