@@ -72,7 +72,7 @@ void arwingandrossstuff_hitDetect(int obj)
             *(f32 *)(state + 0x10) = lbl_803E7028;
         }
     }
-    if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL && *(u8 *)(state + 1) == 0) {
+    if ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance != NULL && *(u8 *)(state + 1) == 0) {
         if (*(s16 *)(obj + 0x46) != 0x6ae) {
             Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
         }
@@ -88,7 +88,7 @@ void arwingandrossstuff_hitDetect(int obj)
             fn_8022D4AC(arwing, (int)&w);
             doRumble(lbl_803E703C);
         }
-        if (*(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)arwing) {
+        if ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance == (void *)arwing) {
             if (fn_8022D738(arwing) != 0) {
                 PSVECNormalize((void *)(obj + 0x24), (void *)(obj + 0x24));
                 d.x = *(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc);
