@@ -324,7 +324,7 @@ FUN_80168368(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80167E3C(int obj, int p2)
+int kaldachom_stateHandlerA04(int obj, int p2)
 {
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3090;
@@ -346,7 +346,7 @@ int fn_80167E3C(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80167D10(int obj, int p2)
+int kaldachom_stateHandlerA06(int obj, int p2)
 {
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3090;
@@ -369,7 +369,7 @@ int fn_80167D10(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80167EC4(int obj, int p2)
+int kaldachom_stateHandlerA03(int obj, int p2)
 {
   extern void ObjHits_EnableObject(int);
   extern f32 lbl_803E3060;
@@ -391,7 +391,7 @@ int fn_80167EC4(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80167DA4(int obj, int p2)
+int kaldachom_stateHandlerA05(int obj, int p2)
 {
   extern char lbl_803203F8[];
   extern f32 lbl_80320404[];
@@ -414,7 +414,7 @@ int fn_80167DA4(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80167F58(int obj, int p2)
+int kaldachom_stateHandlerA02(int obj, int p2)
 {
   extern void ObjHits_EnableObject(int);
   extern s16 lbl_803203F8[];
@@ -439,7 +439,7 @@ int fn_80167F58(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80168018(int obj, int p2)
+int kaldachom_stateHandlerA01(int obj, int p2)
 {
   extern void ObjHits_DisableObject(int);
   extern f32 lbl_803E3060;
@@ -474,7 +474,7 @@ int fn_80168018(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80168118(int obj, int p2)
+int kaldachom_stateHandlerA00(int obj, int p2)
 {
   extern void ObjHits_EnableObject(int);
   extern f32 lbl_803E3060;

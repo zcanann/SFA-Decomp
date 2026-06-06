@@ -111,20 +111,20 @@ extern f32 lbl_803E30CC;
 #pragma peephole off
 #pragma scheduling off
 
-extern void fn_80167764(void);
-extern void fn_801678E4(void);
-extern void fn_8016792C(void);
-extern void fn_80167988(void);
-extern void fn_80167A60(void);
-extern void fn_80167AE4(void);
-extern void fn_80167B60(void);
-extern void fn_80167D10(void);
-extern void fn_80167DA4(void);
-extern void fn_80167E3C(void);
-extern void fn_80167EC4(void);
-extern void fn_80167F58(void);
-extern void fn_80168018(void);
-extern void fn_80168118(void);
+extern void kaldachom_stateHandlerB05(void);
+extern void kaldachom_stateHandlerB04(void);
+extern void kaldachom_stateHandlerB03(void);
+extern void kaldachom_stateHandlerB02(void);
+extern void kaldachom_stateHandlerB01(void);
+extern void kaldachom_stateHandlerB00(void);
+extern void kaldachom_stateHandlerA07(void);
+extern void kaldachom_stateHandlerA06(void);
+extern void kaldachom_stateHandlerA05(void);
+extern void kaldachom_stateHandlerA04(void);
+extern void kaldachom_stateHandlerA03(void);
+extern void kaldachom_stateHandlerA02(void);
+extern void kaldachom_stateHandlerA01(void);
+extern void kaldachom_stateHandlerA00(void);
 
 /*
  * --INFO--
@@ -638,20 +638,20 @@ void kaldachom_release(void) {}
 
 void kaldachom_initialise(void)
 {
-  gKaldaChomStateHandlersA[0] = fn_80168118;
-  gKaldaChomStateHandlersA[1] = fn_80168018;
-  gKaldaChomStateHandlersA[2] = fn_80167F58;
-  gKaldaChomStateHandlersA[3] = fn_80167EC4;
-  gKaldaChomStateHandlersA[4] = fn_80167E3C;
-  gKaldaChomStateHandlersA[5] = fn_80167DA4;
-  gKaldaChomStateHandlersA[6] = fn_80167D10;
-  gKaldaChomStateHandlersA[7] = fn_80167B60;
-  gKaldaChomStateHandlersB[0] = fn_80167AE4;
-  gKaldaChomStateHandlersB[1] = fn_80167A60;
-  gKaldaChomStateHandlersB[2] = fn_80167988;
-  gKaldaChomStateHandlersB[3] = fn_8016792C;
-  gKaldaChomStateHandlersB[4] = fn_801678E4;
-  gKaldaChomStateHandlersB[5] = fn_80167764;
+  gKaldaChomStateHandlersA[0] = kaldachom_stateHandlerA00;
+  gKaldaChomStateHandlersA[1] = kaldachom_stateHandlerA01;
+  gKaldaChomStateHandlersA[2] = kaldachom_stateHandlerA02;
+  gKaldaChomStateHandlersA[3] = kaldachom_stateHandlerA03;
+  gKaldaChomStateHandlersA[4] = kaldachom_stateHandlerA04;
+  gKaldaChomStateHandlersA[5] = kaldachom_stateHandlerA05;
+  gKaldaChomStateHandlersA[6] = kaldachom_stateHandlerA06;
+  gKaldaChomStateHandlersA[7] = kaldachom_stateHandlerA07;
+  gKaldaChomStateHandlersB[0] = kaldachom_stateHandlerB00;
+  gKaldaChomStateHandlersB[1] = kaldachom_stateHandlerB01;
+  gKaldaChomStateHandlersB[2] = kaldachom_stateHandlerB02;
+  gKaldaChomStateHandlersB[3] = kaldachom_stateHandlerB03;
+  gKaldaChomStateHandlersB[4] = kaldachom_stateHandlerB04;
+  gKaldaChomStateHandlersB[5] = kaldachom_stateHandlerB05;
 }
 
 ObjectDescriptor12 gKaldaChomObjDescriptor = {

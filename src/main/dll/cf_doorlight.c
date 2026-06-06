@@ -99,7 +99,7 @@ extern int *gBaddieControlInterface;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80167764(int obj, int p)
+int kaldachom_stateHandlerB05(int obj, int p)
 {
   int state;
   int timer;
@@ -133,7 +133,7 @@ int fn_80167764(int obj, int p)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801678E4(int obj, u8 *state)
+int kaldachom_stateHandlerB04(int obj, u8 *state)
 {
     if ((s8)state[0x27b] != 0) {
         ((void (*)(int, u8 *, int))((void **)*gPlayerInterface)[5])(obj, state, 1);
@@ -145,7 +145,7 @@ int fn_801678E4(int obj, u8 *state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8016792C(int obj, u8 *state)
+int kaldachom_stateHandlerB03(int obj, u8 *state)
 {
     if ((s8)state[0x27b] != 0) {
         u8 *extra = *(u8 **)(obj + 0xb8);
@@ -284,7 +284,7 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80167B60(int obj, int p)
+int kaldachom_stateHandlerA07(int obj, int p)
 {
   extern int *gBaddieControlInterface;
   extern f32 lbl_803E3060;
@@ -349,7 +349,7 @@ extern f32 lbl_803E3080;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80167A60(int* obj, u8* state) {
+int kaldachom_stateHandlerB01(int* obj, u8* state) {
     f32* t = *(f32**)((char*)(*(int**)((char*)obj + 0xb8)) + 0x40c);
     if (*(s16*)((char*)state + 628) == 6) {
         f32 zero;
@@ -373,7 +373,7 @@ int fn_80167A60(int* obj, u8* state) {
     return 0;
 }
 
-int fn_80167AE4(int* obj, u8* state) {
+int kaldachom_stateHandlerB00(int* obj, u8* state) {
     if (*(void**)((char*)state + 0x2d0) != NULL) {
         if ((s8)state[635] != 0) {
             f32 fz = lbl_803E3060;
@@ -391,7 +391,7 @@ int fn_80167AE4(int* obj, u8* state) {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80167988(int obj, int p2)
+int kaldachom_stateHandlerB02(int obj, int p2)
 {
   extern void ObjHits_DisableObject(int);
   extern void Obj_FreeObject(int);

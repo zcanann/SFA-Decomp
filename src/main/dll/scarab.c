@@ -4352,8 +4352,8 @@ int fn_8016050C(int p1, u8 *obj) {
     if ((s8)obj[0x354] < 1) return 3;
     return 6;
 }
-/* fn_80161244 (32B). Returns 5 if (s8)obj[0x354] < 1 else 1. */
-int fn_80161244(int p1, u8 *obj) {
+/* grimble_stateHandlerB03 (32B). Returns 5 if (s8)obj[0x354] < 1 else 1. */
+int grimble_stateHandlerB03(int p1, u8 *obj) {
     if ((s8)obj[0x354] < 1) return 5;
     return 1;
 }
@@ -4368,11 +4368,11 @@ int fn_8015E00C(int p1, u8 *obj) {
 }
 #pragma peephole reset
 
-/* fn_80161130 (92B). If obj2->27b != 0, clear obj->b8->405, call GameBit_Set twice. */
+/* grimble_stateHandlerB05 (92B). If obj2->27b != 0, clear obj->b8->405, call GameBit_Set twice. */
 extern void GameBit_Set(int eventId, int value);
 #pragma peephole off
 #pragma scheduling off
-int fn_80161130(int* obj, u8* obj2) {
+int grimble_stateHandlerB05(int* obj, u8* obj2) {
     GroundBaddieState* x = *(GroundBaddieState**)((char*)obj + 0xb8);
     if ((s8)obj2[0x27b] != 0) {
         x->unk405 = 0;
@@ -4512,7 +4512,7 @@ extern f32 lbl_803E2E88;
 extern f32 lbl_803E2EB8;
 extern f32 lbl_803E2EE8;
 
-int fn_801616AC(int* obj, GroundBaddieState *state)
+int grimble_stateHandlerA08(int* obj, GroundBaddieState *state)
 {
     GroundBaddieState* sub = *(GroundBaddieState**)((char*)obj + 0xb8);
     if ((s8)state->baddie.moveJustStartedA != 0) {
@@ -4572,7 +4572,7 @@ int fn_8015E520(int* obj, GroundBaddieState *state)
     return 0;
 }
 
-int fn_8016118C(int* obj, GroundBaddieState *state)
+int grimble_stateHandlerB04(int* obj, GroundBaddieState *state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0) {
         ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 8);
@@ -4669,7 +4669,7 @@ int fn_80160534(int* obj)
 }
 #pragma peephole off
 
-int fn_80161468(int* obj, GroundBaddieState *state)
+int grimble_stateHandlerB01(int* obj, GroundBaddieState *state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0) {
         ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 9);
@@ -4680,7 +4680,7 @@ int fn_80161468(int* obj, GroundBaddieState *state)
     return 0;
 }
 
-int fn_801614D4(int obj, GroundBaddieState *p)
+int grimble_stateHandlerB00(int obj, GroundBaddieState *p)
 {
   extern f32 timeDelta;
   extern f64 lbl_803E2ED8;
@@ -4705,7 +4705,7 @@ int fn_801614D4(int obj, GroundBaddieState *p)
   return 0;
 }
 
-int fn_801615C8(int obj, GroundBaddieState *p)
+int grimble_stateHandlerA09(int obj, GroundBaddieState *p)
 {
   extern f32 lbl_803E2EB8;
   extern f32 lbl_803E2EE0;
@@ -4736,7 +4736,7 @@ int fn_801615C8(int obj, GroundBaddieState *p)
   return 0;
 }
 
-int fn_80161880(short *obj, GroundBaddieState *p, f32 spd)
+int grimble_stateHandlerA06(short *obj, GroundBaddieState *p, f32 spd)
 {
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);
@@ -4802,7 +4802,7 @@ int fn_80161880(short *obj, GroundBaddieState *p, f32 spd)
   return 0;
 }
 
-int fn_8016176C(short *obj, GroundBaddieState *p)
+int grimble_stateHandlerA07(short *obj, GroundBaddieState *p)
 {
   extern f32 lbl_803E2EB8;
   extern f32 lbl_803E2EEC;
@@ -4841,7 +4841,7 @@ int fn_8016176C(short *obj, GroundBaddieState *p)
   return 0;
 }
 
-int fn_80161AF8(short *obj, GroundBaddieState *p)
+int grimble_stateHandlerA05(short *obj, GroundBaddieState *p)
 {
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);
@@ -4883,7 +4883,7 @@ int fn_80161AF8(short *obj, GroundBaddieState *p)
   return 0;
 }
 
-int fn_80161C44(short *obj, GroundBaddieState *p)
+int grimble_stateHandlerA04(short *obj, GroundBaddieState *p)
 {
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);
@@ -4928,7 +4928,7 @@ int fn_80161C44(short *obj, GroundBaddieState *p)
   return 0;
 }
 
-int fn_80161DA8(short *obj, GroundBaddieState *p)
+int grimble_stateHandlerA03(short *obj, GroundBaddieState *p)
 {
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);

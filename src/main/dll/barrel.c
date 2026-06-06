@@ -43,7 +43,7 @@ extern f32 lbl_803E3BBC;
 /*
  * --INFO--
  *
- * Function: fn_80161F0C
+ * Function: grimble_stateHandlerA02
  * EN v1.0 Address: 0x80161F0C
  * EN v1.0 Size: 436b
  * EN v1.1 Address: 0x80161FA4
@@ -88,7 +88,7 @@ extern f32 lbl_803E2F28;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80161F0C(int obj, char *state, f32 arg)
+int grimble_stateHandlerA02(int obj, char *state, f32 arg)
 {
   u16 zone;
   u16 pad;
@@ -160,7 +160,7 @@ int fn_80161F0C(int obj, char *state, f32 arg)
   return 0;
 }
 
-int fn_801622D4(int obj, char *state, f32 arg)
+int grimble_stateHandlerA01(int obj, char *state, f32 arg)
 {
   f32 z2, y2, x2, z, y, x;
   u8 hitEdge;
@@ -207,7 +207,7 @@ int fn_801622D4(int obj, char *state, f32 arg)
   return 0;
 }
 
-int fn_80162518(int obj, char *state, f32 arg)
+int grimble_stateHandlerA00(int obj, char *state, f32 arg)
 {
   u16 zone;
   u16 pad;
@@ -1031,39 +1031,39 @@ int cannonclaw_getExtraSize(void) { return 0x0; }
 int cannonclaw_getObjectTypeId(void) { return 0x0; }
 
 /* plain forwarder. */
-extern void fn_80161DA8(void);
-extern void fn_80161C44(void);
-extern void fn_80161AF8(void);
-extern void fn_80161880(void);
-extern void fn_8016176C(void);
-extern void fn_801616AC(void);
-extern void fn_801615C8(void);
-extern void fn_801614D4(void);
-extern void fn_80161468(void);
+extern void grimble_stateHandlerA03(void);
+extern void grimble_stateHandlerA04(void);
+extern void grimble_stateHandlerA05(void);
+extern void grimble_stateHandlerA06(void);
+extern void grimble_stateHandlerA07(void);
+extern void grimble_stateHandlerA08(void);
+extern void grimble_stateHandlerA09(void);
+extern void grimble_stateHandlerB00(void);
+extern void grimble_stateHandlerB01(void);
 extern void scarab_updateProximityGate(void);
-extern void fn_80161244(void);
-extern void fn_8016118C(void);
-extern void fn_80161130(void);
+extern void grimble_stateHandlerB03(void);
+extern void grimble_stateHandlerB04(void);
+extern void grimble_stateHandlerB05(void);
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
 void grimble_initialiseStateHandlerTables(void) {
-    gGrimbleStateHandlersA[0] = (void *)fn_80162518;
-    gGrimbleStateHandlersA[1] = (void *)fn_801622D4;
-    gGrimbleStateHandlersA[2] = (void *)fn_80161F0C;
-    gGrimbleStateHandlersA[3] = (void *)fn_80161DA8;
-    gGrimbleStateHandlersA[4] = (void *)fn_80161C44;
-    gGrimbleStateHandlersA[5] = (void *)fn_80161AF8;
-    gGrimbleStateHandlersA[6] = (void *)fn_80161880;
-    gGrimbleStateHandlersA[7] = (void *)fn_8016176C;
-    gGrimbleStateHandlersA[8] = (void *)fn_801616AC;
-    gGrimbleStateHandlersA[9] = (void *)fn_801615C8;
-    gGrimbleStateHandlersB[0] = (void *)fn_801614D4;
-    gGrimbleStateHandlersB[1] = (void *)fn_80161468;
+    gGrimbleStateHandlersA[0] = (void *)grimble_stateHandlerA00;
+    gGrimbleStateHandlersA[1] = (void *)grimble_stateHandlerA01;
+    gGrimbleStateHandlersA[2] = (void *)grimble_stateHandlerA02;
+    gGrimbleStateHandlersA[3] = (void *)grimble_stateHandlerA03;
+    gGrimbleStateHandlersA[4] = (void *)grimble_stateHandlerA04;
+    gGrimbleStateHandlersA[5] = (void *)grimble_stateHandlerA05;
+    gGrimbleStateHandlersA[6] = (void *)grimble_stateHandlerA06;
+    gGrimbleStateHandlersA[7] = (void *)grimble_stateHandlerA07;
+    gGrimbleStateHandlersA[8] = (void *)grimble_stateHandlerA08;
+    gGrimbleStateHandlersA[9] = (void *)grimble_stateHandlerA09;
+    gGrimbleStateHandlersB[0] = (void *)grimble_stateHandlerB00;
+    gGrimbleStateHandlersB[1] = (void *)grimble_stateHandlerB01;
     gGrimbleStateHandlersB[2] = (void *)scarab_updateProximityGate;
-    gGrimbleStateHandlersB[3] = (void *)fn_80161244;
-    gGrimbleStateHandlersB[4] = (void *)fn_8016118C;
-    gGrimbleStateHandlersB[5] = (void *)fn_80161130;
+    gGrimbleStateHandlersB[3] = (void *)grimble_stateHandlerB03;
+    gGrimbleStateHandlersB[4] = (void *)grimble_stateHandlerB04;
+    gGrimbleStateHandlersB[5] = (void *)grimble_stateHandlerB05;
 }
 #pragma peephole reset
 #pragma scheduling reset
