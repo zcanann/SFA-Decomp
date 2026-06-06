@@ -433,7 +433,10 @@ void saveSelectGoToChooseSlot(int arg) {
     }
     lbl_803DB9FB = 0;
     saveFileSelect_currentSlotIndex = 0;
-    p = &lbl_8031A7BC[0];
+    {
+        void *tmp = &lbl_8031A7BC[0];
+        p = (SaveSelectPanel *)tmp;
+    }
 
     saveSelectFn_8011a70c();
     saveSelectSetupMenuItems((void **)p);
