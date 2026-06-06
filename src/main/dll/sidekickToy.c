@@ -2806,7 +2806,7 @@ void fn_8014CF7C(int *node, int p2, u16 p3, int p4, f32 fa, f32 fb) {
     delta += p4;
     dt = timeDelta / (f32)(u32)p3;
     if (dt > lbl_803E256C) dt = lbl_803E256C;
-    newVal = (s16)(*(s16*)node + (s32)((f32)(s16)delta * dt));
+    newVal = (s16)(*(s16*)(int)node + (s32)((f32)(s16)delta * dt));
     *(s16*)node = newVal;
 }
 #pragma peephole reset
