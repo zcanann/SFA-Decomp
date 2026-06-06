@@ -1249,7 +1249,8 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   numbers swapped. ~10 fns in the tier (dll_127_init, Curve_SampleSegmentPoints,
   exploded_seedDebrisMotion, scarab fn_8015EA48, drawTexture, pi_dolphin
   fn_8004E0FC, magiccavetop fmr) — skip on sight.
-  ⚠️ **DECOMPOSED by recipe #82 — classify by web kind BEFORE skipping**:
+  ⚠️ **PARTIALLY SUPERSEDED by recipe #82** (decomposed — classify by web
+  kind BEFORE skipping):
   symbol-CSE webs respond to the #81 launder (dll_127_init → 100%), named-local
   pairs to a plain decl-order swap (fn_8015EA48 → 100%); only expression-temp
   pairs remain a true cap. See #82 for the full taxonomy.
@@ -1262,10 +1263,10 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   field before the fcmpo (lfs f1,off(rN) fresh load after the stfs), the cap
   stands — verified still-capped on fn_801CEA14, dim2icicle_update,
   cclevcontrol_update, wctemple_update. Read the target asm between the stfs
-  and the fcmpo to pick. ⚠️ **The reload case is since CRACKED by recipe #81**
-  (the `*(f32 *)&lbl` launder) — the four "still-capped" fns above are #81's
-  test set (5 of 6 → 100%). Use the same stfs/fcmpo read to pick temp_t vs
-  the #81 launder.
+  and the fcmpo to pick. ⚠️ **SUPERSEDED by recipe #81** (the reload case is
+  cracked by the `*(f32 *)&lbl` launder) — the four "still-capped" fns above
+  are #81's test set (5 of 6 → 100%). Use the same stfs/fcmpo read to pick
+  temp_t vs the #81 launder.
 - **`addi r0,rH,lo; mr rX,r0` vs direct `addi rX,rH,lo` — MOSTLY recipe #80
   in disguise, NOT a cap** (task #155). When the recipient is a SAVED reg and
   the fn mixes body offset-uses (`base + K`) with a plain `base` call-arg,
@@ -1546,7 +1547,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       99.86; spelling-insensitive: -1/0xffff/65535u/(s16)-1 all inert);
       `buf.cmds = e` storing via `mr r0,r31; stw r0` in target vs our
       direct `stw r31` (dll_86 99.53; copy-var and call-parking inert —
-      ⚠️ since CRACKED, task #157: the `(FbCmd *)((u8 *)&buf + 0x60)`
+      ⚠️ SUPERSEDED, task #157: the `(FbCmd *)((u8 *)&buf + 0x60)`
       re-derive spelling (#93a/#62 family) reproduces the mr-r0;
       dll_86 → 100);
       the `addi r0,rH,lo; mr rX,r0` saved-home materialization
