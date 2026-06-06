@@ -1274,12 +1274,6 @@ main/dll/DR/DRCloudball.c:
 main/dll/DR/DRsimplehuman.c:
 	.text       start:0x801E9344 end:0x801E9C00
 
-main/dll/DR/DRyoutube.c:
-	.text       start:0x801E9C00 end:0x801E9C00
-
-main/dll/DR/DRexplodeDoor.c:
-	.text       start:0x801E9C00 end:0x801E9C00
-
 main/dll/DR/DRcloudcage.c:
 	.text       start:0x801E9C00 end:0x801EA854
 

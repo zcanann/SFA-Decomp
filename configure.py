@@ -1195,8 +1195,6 @@ config.libs = [
             Object(NonMatching, "main/dll/DR/DRpushcart.c"),
             Object(NonMatching, "main/dll/DR/DRCloudball.c"),
             Object(NonMatching, "main/dll/DR/DRsimplehuman.c"),
-            Object(NonMatching, "main/dll/DR/DRyoutube.c"),
-            Object(NonMatching, "main/dll/DR/DRexplodeDoor.c"),
             Object(NonMatching, "main/dll/DR/DRcloudcage.c"),
             Object(NonMatching, "main/dll/DR/DRshackle.c"),
             Object(NonMatching, "main/dll/DR/DRhightop.c"),
