@@ -1160,11 +1160,11 @@ void fn_801C70F0(s16 *obj) {
             lbl_803E500C + (*(f32 *)(def + 0xc)
                             + fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014));
         c1 = fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xe)) / lbl_803E5014);
-        obj[2] = (int)(lbl_803E5018
-                       * (fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1));
+        obj[2] = lbl_803E5018
+                 * (fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1);
         c1 = fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0x10)) / lbl_803E5014);
-        obj[1] = (int)(lbl_803E5018
-                       * (fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1));
+        obj[1] = lbl_803E5018
+                 * (fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1);
         ObjAnim_AdvanceCurrentMove(lbl_803E501C, timeDelta, (int)obj, (ObjAnimEventList *)buf);
         if (player != NULL) {
             diff = (getAngle(((f32 *)obj)[6] - ((f32 *)player)[6],
@@ -1176,8 +1176,8 @@ void fn_801C70F0(s16 *obj) {
             if (diff < -0x8000) {
                 diff = diff + 0xffff;
             }
-            *obj = (s16)(*obj + (int)(((f32)diff * timeDelta) / lbl_803E5020));
-            dist = Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18));
+            *obj = (s16)(*(s16 *)(int)obj + (int)(((f32)diff * timeDelta) / lbl_803E5020));
+            dist = Vec_xzDistance((f32 *)((int)obj + 0x18), (f32 *)((int)player + 0x18));
             if (dist <= lbl_803E5024) {
                 *(u8 *)((char *)obj + 0x36) = (u8)(int)(lbl_803E5028 * (dist / lbl_803E5024));
             } else {

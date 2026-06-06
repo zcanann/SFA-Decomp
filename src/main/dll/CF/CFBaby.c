@@ -2430,36 +2430,36 @@ void landed_arwing_update(int obj) {
     LandedArwingState *state;
     int player;
     int child;
-    int def;
     int nearest;
+    int def;
 
     state = *(LandedArwingState **)(obj + 0xb8);
     player = (int)Obj_GetPlayerObject();
-    if (state->childObject == 0) {
+    if ((u32)state->childObject == 0) {
         if (Obj_IsLoadingLocked() != 0) {
             child = Obj_SetupObject(Obj_AllocObjectSetup(0x24, 0x606), 4, -1, -1, 0);
             state->childObject = child;
-            if (state->childObject != 0) {
+            if ((u32)state->childObject != 0) {
                 ObjLink_AttachChild(obj, state->childObject, 0);
                 fn_8022F270(state->childObject, 0xaf);
-                *(u16 *)(state->childObject + 6) |= 0x4000;
+                *(s16 *)(state->childObject + 6) |= 0x4000;
             }
         }
     }
 
-    if (state->childObject != 0) {
+    if ((u32)state->childObject != 0) {
         fn_8022F27C(state->childObject);
     }
 
-    if (player != 0 && fn_802972A8(player) != 0) {
+    if ((u32)player != 0 && fn_802972A8(player) != 0) {
         *(u8 *)(obj + 0xaf) |= 0x10;
     } else {
-        *(u8 *)(obj + 0xaf) &= 0xef;
+        *(u8 *)(obj + 0xaf) &= ~0x10;
     }
 
     switch (state->sequenceState) {
         case 0:
-            if (ObjTrigger_IsSet(obj) != 0) {
+            if ((u32)ObjTrigger_IsSet(obj) != 0) {
                 def = *(int *)(obj + 0x4c);
                 nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
                 if (*(s8 *)(obj + 0xac) == 0xd && GameBit_Get(0xc92) != 0) {
@@ -2472,7 +2472,7 @@ void landed_arwing_update(int obj) {
             }
             break;
         case 1:
-            if (ObjTrigger_IsSet(obj) != 0) {
+            if ((u32)ObjTrigger_IsSet(obj) != 0) {
                 state->sequenceState = 2;
                 cutSceneFn_8011dd30();
             }

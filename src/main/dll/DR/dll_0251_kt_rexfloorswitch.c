@@ -60,7 +60,11 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle) {
     pos[1] = *(f32 *)((char *)obj + 0x10);
     pos[2] = *(f32 *)((char *)obj + 0x14);
     dir[0] = lbl_803E6898;
-    dir[1] = -((f32)angle * *(f32 *)(runtime + 0xc) * lbl_803E689C);
+    {
+        f32 fr = (f32)angle;
+        fr = fr * *(f32 *)(runtime + 0xc);
+        dir[1] = -(fr * lbl_803E689C);
+    }
     dir[2] = scale;
     vecRotateZXY(obj, dir);
     dir[0] += *(f32 *)((char *)obj + 0xc);

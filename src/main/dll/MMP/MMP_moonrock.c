@@ -596,12 +596,12 @@ void fn_80198A00(u8 *obj, int seqArg)
     curveHit = (*(int (**)(f32, f32, f32, int *, int, int))(*gRomCurveInterface + 0x14))(
         *(f32 *)(state + 0x28), *(f32 *)(state + 0x2c), *(f32 *)(state + 0x30),
         &queryType, 1, *(s16 *)(*(u8 **)(obj + 0x4c) + 0x38));
-    frontBlocked = (*(int (**)(f32, f32, f32, int, f32 *))(*gRomCurveInterface + 0x4c))(
-        *(f32 *)(state + 0x28), *(f32 *)(state + 0x2c), *(f32 *)(state + 0x30),
-        curveHit, &hitDistance);
-    rearBlocked = (*(int (**)(f32, f32, f32, int, f32 *))(*gRomCurveInterface + 0x4c))(
-        *(f32 *)(state + 0x1c), *(f32 *)(state + 0x20), *(f32 *)(state + 0x24),
-        curveHit, &hitDistance);
+    frontBlocked = (*(int (**)(int, f32, f32, f32, f32 *))(*gRomCurveInterface + 0x4c))(
+        curveHit, *(f32 *)(state + 0x28), *(f32 *)(state + 0x2c), *(f32 *)(state + 0x30),
+        &hitDistance);
+    rearBlocked = (*(int (**)(int, f32, f32, f32, f32 *))(*gRomCurveInterface + 0x4c))(
+        curveHit, *(f32 *)(state + 0x1c), *(f32 *)(state + 0x20), *(f32 *)(state + 0x24),
+        &hitDistance);
 
     if (frontBlocked != 0) {
         if (rearBlocked == 0) {

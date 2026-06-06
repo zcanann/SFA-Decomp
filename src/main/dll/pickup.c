@@ -1497,7 +1497,7 @@ void dll_A9_func03(u8 *param_1,int param_2,u8 *param_3,uint param_4,undefined4 p
 extern u8 lbl_80319168[];
 void dll_AA_func03(int param_1,int param_2,u8 *param_3,u8 *param_4)
 {
-  u8 *tab = lbl_80319168;
+  u8 *tab = (u8 *)(int)lbl_80319168;
   f32 scale;
 
   scale = lbl_803E1600;
@@ -1526,7 +1526,7 @@ void dll_AA_func03(int param_1,int param_2,u8 *param_3,u8 *param_4)
   (*(code *)(*gModgfxInterface + 0x3c))
             (4,lbl_803E160C,lbl_803E160C,lbl_803E160C,7,&tab[0x174]);
   (*(code *)(*gModgfxInterface + 0x50))
-            (param_3,tab,0x15,&tab[0xd4],0x18,0x3e9,0);
+            (param_3,(u8 *)(int)lbl_80319168,0x15,&tab[0xd4],0x18,0x3e9,0);
   (*(code *)(*gModgfxInterface + 0x58))();
 }
 

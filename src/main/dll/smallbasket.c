@@ -2728,7 +2728,7 @@ void fn_8015A924(int* obj, u8* state)
         } else {
             *(u8*)(state + 0x33a) = 7;
         }
-        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x40000000;
+        *(u32*)(state + 0x2dc) |= 0x40000000LL;
     }
 
     if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
@@ -2920,7 +2920,7 @@ void fn_80159284(int* obj, u8* state)
         *(f32*)(state + 0x328) -= timeDelta;
         if (*(f32*)(state + 0x328) <= cap) {
             *(f32*)(state + 0x328) = cap;
-            *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x40000000;
+            *(u32*)(state + 0x2dc) |= 0x40000000LL;
             *(u8*)(state + 0x33c) = t6[*(u8*)(state + 0x33f)].flagC;
             *(u8*)((char*)obj + 0xe4) = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = t6[*(u8*)(state + 0x33f)].nextA;
@@ -3047,7 +3047,7 @@ void fn_80159FCC(s16* obj, u8* state)
     f32 pw;
 
     if (*(void**)(state + 0x340) != NULL && *(void**)(state + 0x340) == *(void**)(state + 0x29c)) {
-        *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) | 0x10000;
+        *(u32*)(state + 0x2e4) |= 0x10000LL;
         *(f32*)(state + 0x330) = lbl_803E2C74;
     }
     *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x100;
@@ -3079,7 +3079,7 @@ void fn_80159FCC(s16* obj, u8* state)
     }
     if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
         *(u8*)(state + 0x33a) = 3;
-        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x40000000;
+        *(u32*)(state + 0x2dc) |= 0x40000000LL;
     }
     sidekickToy_accelerateTowardTarget3D(obj, *(f32*)(*(int*)(state + 0x29c) + 0x18),
         lbl_803E2C48 + *(f32*)(*(int*)(state + 0x29c) + 0x1c),
@@ -3106,21 +3106,21 @@ void fn_80159FCC(s16* obj, u8* state)
     *(f32*)(state + 0x328) = lbl_803E2C38;
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
         f32* dp = d;
-        dp[0] = *(f32*)(base + 0x68) - *(f32*)((char*)obj + 0xc);
-        dp[1] = *(f32*)(base + 0x6c) - *(f32*)((char*)obj + 0x10);
-        dp[2] = *(f32*)(base + 0x70) - *(f32*)((char*)obj + 0x14);
+        dp[0] = *(f32*)(base + 0x68) - *(f32*)((char*)obj + 0x18);
+        dp[1] = *(f32*)(base + 0x6c) - *(f32*)((char*)obj + 0x1c);
+        dp[2] = *(f32*)(base + 0x70) - *(f32*)((char*)obj + 0x20);
         *(f32*)(state + 0x32c) = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
         if (*(f32*)(state + 0x32c) > lbl_803E2C40) {
-            *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) | 0x10000;
+            *(u32*)(state + 0x2e4) |= 0x10000LL;
             *(f32*)(state + 0x330) = lbl_803E2C30;
         }
     }
-    if (*(f32*)(state + 0x324) <= lbl_803E2C30) {
-        Sfx_StopFromObject((int)obj, 0x3e8);
-    } else {
+    if (*(f32*)(state + 0x324) > lbl_803E2C30) {
         Sfx_PlayFromObject((int)obj, 0x3e8);
         i = (int)((lbl_803E2C6C * *(f32*)(state + 0x324)) / lbl_803E2C70);
         Sfx_SetObjectSfxVolume(*(f32*)(state + 0x324) / lbl_803E2C70, obj, 0x3e8, i);
+    } else {
+        Sfx_StopFromObject((int)obj, 0x3e8);
     }
     if (*(void**)(state + 0x340) != NULL
         && (*(s16*)(*(int*)(state + 0x340) + 0x46) == 0x1f || *(s16*)(*(int*)(state + 0x340) + 0x46) == 0)) {
@@ -3538,7 +3538,7 @@ void fn_80158494(s16* obj, u8* state)
         *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
         if (*(f32*)(state + 0x328) <= cap) {
             *(f32*)(state + 0x328) = cap;
-            *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x40000000;
+            *(u32*)(state + 0x2dc) |= 0x40000000LL;
             *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
             *(u8*)((char*)obj + 0xe4) = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].nextA;
@@ -3723,7 +3723,7 @@ void fn_80158C2C(s16* obj, u8* state)
         *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
         if (*(f32*)(state + 0x328) <= cap) {
             *(f32*)(state + 0x328) = cap;
-            *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x40000000;
+            *(u32*)(state + 0x2dc) |= 0x40000000LL;
             *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
             *(u8*)((char*)obj + 0xe4) = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].nextA;
