@@ -57,7 +57,9 @@ typedef struct TrickyState {
     f32 homePosX; /* home position, init from obj world pos */
     f32 homePosY;
     f32 homePosZ;
-    u8 padEC[0x1B8 - 0xEC]; /* embedded gPathControlInterface record (0xF8..0x1B8) */
+    u8 padEC[0xF8 - 0xEC];
+    u32 unkF8; /* head word of the embedded gPathControlInterface record */
+    u8 padFC[0x1B8 - 0xFC]; /* embedded gPathControlInterface record (0xF8..0x1B8) */
     f32 unk1B8;
     u8 pad1BC[0x25F - 0x1BC];
     u8 unk25F;
@@ -65,7 +67,10 @@ typedef struct TrickyState {
     u8 unk261;
     u8 pad262[0x264 - 0x262];
     u8 unk264;
-    u8 pad265[0x29C - 0x265];
+    u8 pad265[0x290 - 0x265];
+    s16 unk290;
+    s16 unk292;
+    u8 pad294[0x29C - 0x294];
     u32 unk29C;
     u8 pad2A0[0x2AC - 0x2A0];
     f32 unk2AC;
@@ -104,7 +109,9 @@ typedef struct TrickyState {
     u8 unk353;
     u8 pad354[0x358 - 0x354];
     s8 unk358;
-    u8 pad359[0x368 - 0x359];
+    u8 pad359[0x360 - 0x359];
+    void *unk360; /* hit-object link (skeetla) */
+    f32 unk364; /* flash/accumulate timer (skeetla) */
     int unk368; /* object link */
     int unk36C; /* object link */
     u8 pad370[0x374 - 0x370];
@@ -115,18 +122,35 @@ typedef struct TrickyState {
     f32 unk37C;
     f32 unk380;
     f32 unk384;
-    u8 pad388[0x408 - 0x388];
+    u8 pad388[0x3D8 - 0x388];
+    f32 unk3D8;
+    f32 unk3DC;
+    f32 unk3E0;
+    f32 unk3E4;
+    f32 unk3E8;
+    f32 unk3EC;
+    u8 pad3F0[0x408 - 0x3F0];
     f32 unk408;
     f32 unk40C;
     f32 unk410;
-    u8 pad414[0x532 - 0x414];
+    u8 pad414[0x4A0 - 0x414];
+    int unk4A0;
+    u8 pad4A4[0x528 - 0x4A4];
+    u8 unk528;
+    u8 pad529[3];
+    void *unk52C;
+    u16 unk530;
     u16 unk532;
     u16 unk534; /* mirrored from unk532 (dll_DF) */
-    u8 pad536[2];
+    u8 unk536;
+    u8 pad537[1];
     u8 voxBlocks[9][0x30]; /* trickyVoxAllocFn_8004b5d4 records, 0x538..0x6E8 */
-    u8 pad6E8[0x6F0 - 0x6E8];
+    void *unk6E8; /* one u32-spelled site launders */
+    int unk6EC;
     int unk6F0;
-    u8 pad6F4[0x700 - 0x6F4];
+    f32 unk6F4;
+    u8 pad6F8[4];
+    f32 unk6FC;
     u8 *unk700;
     u8 *unk704;
     u8 *unk708;
@@ -149,7 +173,7 @@ typedef struct TrickyState {
     u8 pad799[0x79C - 0x799];
     f32 unk79C;
     f32 unk7A0f;
-    u8 pad7A4[0x7A8 - 0x7A4];
+    f32 unk7A4;
     u8 *unk7A8;
     u8 pad7AC[0x7B0 - 0x7AC];
     u8 *unk7B0;
