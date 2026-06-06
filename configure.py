@@ -1300,7 +1300,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_02A4.c"),
             Object(NonMatching, "main/dll/ARW/dll_02A5_arwgenerato.c"),
             Object(NonMatching, "main/dll/ARW/dll_02A6_arwsquadron.c"),
-            Object(NonMatching, "main/dll/ARW/dll_02A7_arwproximit.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/ARW/dll_02A7_arwproximit.c"),
             Object(NonMatching, "main/dll/ARW/dll_02A8_arwblocker.c"),
             Object(NonMatching, "main/dll/LGT/dll_02A9_pointlight.c"),
             Object(NonMatching, "main/dll/LGT/dll_02AA_directionallight.c"),
