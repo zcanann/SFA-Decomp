@@ -14,7 +14,7 @@ int lockLevel(int mapDir, int locked);
 int mapUnload(int mapDir, int flags);
 int mapGetDirIdx(int mapId);
 void warpToMap(int mapId, int transition);
-void objRenderFn_8003b8f4(double scale);
+void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 void unlockLevel(int mapId, int flags, int unlocked);
 void envFxActFn_800887f8(u8 value);
 void streamFn_8000a380(int mask, int mode, int time);

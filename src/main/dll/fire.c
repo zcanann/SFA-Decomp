@@ -159,6 +159,7 @@ void fireObj_free(void)
 
 void fireObj_render(void)
 {
+  extern void objRenderFn_8003b8f4(double scale);
   objRenderFn_8003b8f4((double)lbl_803E64D8);
   return;
 }
