@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/proximitymine.h"
 #include "main/objlib.h"
 

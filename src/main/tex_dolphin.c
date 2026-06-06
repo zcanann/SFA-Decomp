@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/frustum.h"
 #include "main/tex_dolphin.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"

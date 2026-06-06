@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/maketex.h"
 #include "main/objanim.h"
 #include "main/objlib.h"

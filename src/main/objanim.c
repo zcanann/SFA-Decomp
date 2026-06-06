@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "dolphin/os.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"

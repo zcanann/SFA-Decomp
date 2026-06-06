@@ -1,9 +1,6 @@
-#include "ghidra_import.h"
 #include "dolphin/os.h"
 #include "main/objHitReact.h"
-#include "main/objanim.h"
 #include "main/objanim_internal.h"
-#include "main/objhits.h"
 #include "main/objlib.h"
 
 extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);

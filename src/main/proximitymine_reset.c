@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/proximitymine.h"
 
 extern void *Obj_GetPlayerObject(void);
