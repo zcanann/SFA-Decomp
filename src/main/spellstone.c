@@ -1,16 +1,13 @@
 #include "ghidra_import.h"
 #include "main/mapEvent.h"
 #include "main/spellstone.h"
+#include "main/objlib.h"
 
 extern f32 Vec_distance(void *posA,void *posB);
 extern void GameBit_Set(int eventId,int value);
 extern int GameBit_Get(int eventId);
 extern void *Obj_GetPlayerObject(void);
 extern void objRemoveFromListFn_8002ce88(void *obj);
-extern void ObjHits_DisableObject(void *obj);
-extern void ObjHits_EnableObject(void *obj);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 extern void objRenderFn_8003b8f4(void *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                         undefined4 param_5,double scale);
 extern int spellstone_idleCallback(void);
@@ -55,7 +52,7 @@ int spellstone_getObjectTypeId(void)
 
 void spellstone_free(SpellStoneObject *obj)
 {
-  ObjGroup_RemoveObject(obj,0x1e);
+  ObjGroup_RemoveObject((uint)obj,0x1e);
   return;
 }
 
@@ -110,7 +107,7 @@ void spellstone_update(SpellStoneObject *obj)
       }
     }
     if (state->state == 0) {
-      ObjHits_DisableObject(obj);
+      ObjHits_DisableObject((u32)obj);
       if (obj->followTarget != NULL) {
         obj->posX = *(f32 *)((u8 *)obj->followTarget + 0xc);
         obj->posY = *(f32 *)((u8 *)obj->followTarget + 0x10);
@@ -118,7 +115,7 @@ void spellstone_update(SpellStoneObject *obj)
       }
     }
     else {
-      ObjHits_EnableObject(obj);
+      ObjHits_EnableObject((u32)obj);
     }
   }
   return;
@@ -129,7 +126,7 @@ void spellstone_init(SpellStoneObject *obj)
   SpellStoneState *state;
 
   state = obj->state;
-  ObjGroup_AddObject(obj,0x1e);
+  ObjGroup_AddObject((uint)obj,0x1e);
   state->state = 1;
   obj->callback = spellstone_idleCallback;
   return;

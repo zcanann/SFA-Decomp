@@ -1,9 +1,8 @@
 #include "ghidra_import.h"
 #include "main/proximitymine.h"
+#include "main/objlib.h"
 
 extern void Obj_SetActiveModelIndex(void *obj,int modelIndex);
-extern void ObjHits_DisableObject(void *obj);
-extern void ObjHits_EnableObject(void *obj);
 extern void storeZeroToFloatParam(void *timer);
 extern void s16toFloat(void *timer,int duration);
 
@@ -25,7 +24,7 @@ void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def)
     def->mode = 2;
   }
   obj->angle = 0;
-  ObjHits_DisableObject(obj);
+  ObjHits_DisableObject((u32)obj);
   state->mode = 0;
   storeZeroToFloatParam(state->renderTimer);
   storeZeroToFloatParam(state->resetTimer);
@@ -58,7 +57,7 @@ void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def)
   case 2:
     storeZeroToFloatParam(state->lifespanTimer);
     state->mode = 3;
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((u32)obj);
     state->triggerDistance = (f32)(s32)def->parameter;
     storeZeroToFloatParam(state->bounceTimer);
     break;

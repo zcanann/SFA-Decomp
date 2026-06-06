@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/proximitymine.h"
+#include "main/objlib.h"
 
 extern void modelLightStruct_freeSlot(void *handle);
-extern int ObjHits_GetPriorityHit(void *obj,int param_2,int param_3,int param_4);
 extern void objRenderFn_8003b8f4(void *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                         undefined4 param_5,double scale);
 extern int objPosToMapBlockIdx(double x,double y,double z);
@@ -72,7 +72,7 @@ void proximitymine_hitDetect(ProximityMineObject *obj)
   ProximityMineState *state;
 
   if (fn_80080150(obj->state->renderTimer) == 0) {
-    hit = ObjHits_GetPriorityHit(obj,0,0,0);
+    hit = ObjHits_GetPriorityHit((int)obj,(int *)0,(int *)0,(uint *)0);
     collider = obj->collider;
     hitFlag = collider->hitFlag;
     if ((hitFlag != 0) || (hit != 0) || (collider->hitObj != NULL)) {

@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/proximitymine.h"
+#include "main/objlib.h"
 
 extern void modelLightStruct_updateGlowAlpha(void *light);
 extern int fn_80080150(void *timer);
 extern int timerCountDown(void *timer);
 extern int objUpdateOpacity(void *obj);
-extern int ObjPath_GetPointWorldPosition(void *obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
 extern int hitDetectFn_800658a4(void *obj, f32 x, f32 y, f32 z, f32 *out, int flag);
 extern void Sfx_PlayFromObject(void *obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(void *obj, int channel);
@@ -19,8 +19,6 @@ extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern f32 sqrtf(f32 x);
 extern void vecRotateZXY(void *params, f32 *vec);
 extern void Obj_FreeObject(void *obj);
-extern void ObjHits_EnableObject(void *obj);
-extern void ObjHits_SetHitVolumeSlot(void *obj, int p2, int p3, int p4);
 extern void storeZeroToFloatParam(void *timer);
 extern void s16toFloat(void *timer, int duration);
 extern int objPosToMapBlockIdx(double x, double y, double z);
@@ -71,8 +69,8 @@ void proximitymine_update(ProximityMineObject *obj)
     obj->height += state->verticalStep * timeDelta;
     if (state->targetObj != NULL) {
       if (objUpdateOpacity(state->targetObj) != 0) {
-        ObjPath_GetPointWorldPosition(state->targetObj, obj->pathIndex, &obj->posX, &obj->posY,
-                                      &obj->posZ, 0);
+        ObjPath_GetPointWorldPosition((int)state->targetObj, obj->pathIndex, &obj->posX,
+                                      &obj->posY, &obj->posZ, 0);
       } else {
         obj->posX = ((ProximityMineObject *)state->targetObj)->posX;
         obj->posY = ((ProximityMineObject *)state->targetObj)->posY;
@@ -201,9 +199,9 @@ void proximitymine_update(ProximityMineObject *obj)
       (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(
           (int *)obj, 0x51c, 0, 1, -1, 0);
       if (timerCountDown(state->bounceTimer) != 0) {
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((u32)obj);
       }
-      ObjHits_SetHitVolumeSlot(obj, 13, 1, 0);
+      ObjHits_SetHitVolumeSlot((u32)obj, 13, 1, 0);
       if (state->effectHandle != NULL) {
         if ((state->effectHandle->visible != 0) && (state->effectVisible == 0)) {
           Sfx_PlayFromObject(obj, 0x42e);
