@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
-#include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
 #pragma peephole off
@@ -1908,7 +1908,7 @@ void FUN_8016d9a4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                                 uVar4,iVar5,in_r10);
     uVar2 = FUN_80017690(0xc55);
     if (uVar2 != 0) {
-      *(undefined *)(DAT_803ad334 + 0xad) = 1;
+      ((ObjAnimComponent *)DAT_803ad334)->bankIndex = 1;
     }
     ObjHitbox_SetSphereRadius(DAT_803ad334,1);
     ObjHits_SetHitVolumeSlot(DAT_803ad334,0x11,5,0);
@@ -6578,7 +6578,7 @@ void fireball_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
         return;
     }
     if (*(f32 *)(state + 0x3c) == lbl_803E3330) {
-        *(u8 *)((char *)obj + 0xad) = 1;
+        ((ObjAnimComponent *)obj)->bankIndex = 1;
         model = Obj_GetActiveModel((int)obj);
         *(u8 *)((char *)*(int **)((char *)model + 0x34) + 8) = lbl_803DBD58[*(u8 *)(state + 0x71)];
         savedRot4 = *(s16 *)((char *)obj + 4);
@@ -6597,7 +6597,7 @@ void fireball_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
         *(s16 *)((char *)obj + 4) = (s16)savedRot4;
         *(s16 *)((char *)obj + 2) = (s16)savedRot2;
         *(f32 *)((char *)obj + 8) = savedF8;
-        *(u8 *)((char *)obj + 0xad) = 0;
+        ((ObjAnimComponent *)obj)->bankIndex = 0;
         *(u8 *)((char *)*(int **)((char *)Obj_GetActiveModel((int)obj) + 0x34) + 8) =
             lbl_803DBD58[*(u8 *)(state + 0x71)];
         ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
@@ -7131,7 +7131,7 @@ void superQuakeFn_8016d9fc(f32 *pos)
         *(f32 *)((u8 *)setup + 0x10) = *(f32 *)(lbl_803AC6B8 + 8);
         *(int **)(lbl_803AC6B8 + 0x1c) = Obj_SetupObject(setup, 5, *(s8 *)((u8 *)player + 0xac), -1, *(void **)((u8 *)player + 0x30));
         if (GameBit_Get(0xc55) != 0) {
-            *(u8 *)(*(int *)(lbl_803AC6B8 + 0x1c) + 0xad) = 1;
+            ((ObjAnimComponent *)*(int *)(lbl_803AC6B8 + 0x1c))->bankIndex = 1;
         }
         ObjHitbox_SetSphereRadius(*(int *)(lbl_803AC6B8 + 0x1c), 1);
         ObjHits_SetHitVolumeSlot(*(int *)(lbl_803AC6B8 + 0x1c), 17, 5, 0);
