@@ -42,6 +42,34 @@ typedef struct {
 } SynthVarTag; // size 0x6
 
 typedef struct {
+    u32 time;       // 0x0
+    u8 prgChange;   // 0x4
+    u8 velocity;    // 0x5
+    u8 res[2];      // 0x6
+    u16 pattern;    // 0x8
+    s8 transpose;   // 0xa
+    s8 velocityAdd; // 0xb
+} SeqTrackEntry; // size 0xc
+
+typedef struct {
+    u16 time;    // 0x0
+    u8 key;      // 0x2
+    u8 velocity; // 0x3
+    u16 length;  // 0x4
+} SeqNoteData; // size 0x6
+
+typedef struct {
+    u8 *next;    // 0x0
+    u8 *prev;    // 0x4
+    u32 time;    // 0x8
+    u8 *data;    // 0xc — SeqTrackEntry (track event) or SeqNoteData (pattern note)
+    u8 *chanRec; // 0x10 — SynthChanRec of the dispatching channel
+    u8 type;     // 0x14
+    u8 trackId;  // 0x15
+    u8 pad16[2]; // 0x16
+} SeqEvent; // size 0x18
+
+typedef struct {
     u32 unk0;     // 0x0
     u32 unk4;     // 0x4
     u32 dataPtr;  // 0x8
@@ -96,18 +124,18 @@ int fn_8026E0E4(int event, u8 voice, u32 *flag)
     u16 pbVal2;
     u16 pbVal1;
 
-    switch (*(u8 *)(event + 0x14)) {
+    switch (((SeqEvent *)event)->type) {
     case 4: {
-        u8 *d = *(u8 **)(event + 0xc);
+        SeqTrackEntry *d = (SeqTrackEntry *)((SeqEvent *)event)->data;
         SynthMidiState *sv = (SynthMidiState *)gSynthCurrentVoice;
         u8 *seq = sv->seqData;
         SynthChanRec *rec = &sv->records[*(u8 *)(event + 0x15)];
-        u8 *t = seq + *(u32 *)(seq + *(u16 *)(d + 8) * 4 + *(u32 *)(seq + 4));
+        u8 *t = seq + *(u32 *)(seq + d->pattern * 4 + *(u32 *)(seq + 4));
         u8 prog;
 
         rec->dataPtr = (u32)(t + 0xc);
         rec->unk0 = 0;
-        rec->unk4 = *(u32 *)d;
+        rec->unk4 = d->time;
         rec->eventPtr = (u32)d;
         if (*(u32 *)(t + 4) != 0) {
             if ((rec->pitchCur =
@@ -137,7 +165,7 @@ int fn_8026E0E4(int event, u8 voice, u32 *flag)
         rec->modVal = 0;
         rec->chan = *(u8 *)((u32)((SynthMidiState *)gSynthCurrentVoice)->seqData + *(u8 *)(event + 0x15) +
                             *(u32 *)(((SynthMidiState *)gSynthCurrentVoice)->seqData + 8));
-        prog = *(u8 *)(d + 4);
+        prog = d->prgChange;
         if (prog != 0xff) {
             SynthMidiState *sv2 = (SynthMidiState *)gSynthCurrentVoice;
             u8 chan = rec->chan;
@@ -160,19 +188,19 @@ int fn_8026E0E4(int event, u8 voice, u32 *flag)
                 }
             }
         }
-        if (*(u8 *)(d + 5) != 0xff) {
-            inpSetMidiCtrl(7, rec->chan, gSynthCurrentVoiceSlotIndex & 0xff, *(u8 *)(d + 5));
+        if (d->velocity != 0xff) {
+            inpSetMidiCtrl(7, rec->chan, gSynthCurrentVoiceSlotIndex & 0xff, d->velocity);
         }
         break;
     }
     case 0: {
         u32 chan;
-        u8 *d = *(u8 **)(event + 0xc);
-        u8 *t = *(u8 **)(event + 0x10);
-        u8 d2 = *(u8 *)(d + 2);
-        u8 d3 = *(u8 *)(d + 3);
+        SeqNoteData *d = (SeqNoteData *)((SeqEvent *)event)->data;
+        SynthChanRec *t = (SynthChanRec *)((SeqEvent *)event)->chanRec;
+        u8 d2 = d->key;
+        u8 d3 = d->velocity;
 
-        chan = *(u8 *)(t + 0x28);
+        chan = t->chan;
         if (d2 & 0x80) {
             switch (d3) {
             case 0: {
@@ -236,8 +264,8 @@ int fn_8026E0E4(int event, u8 voice, u32 *flag)
             if (sv->chanBits[*(u8 *)(event + 0x15) / 32] & (1 << (*(u8 *)(event + 0x15) & 0x1f))) {
                 u16 macroId = sv->chanPatch[chan].macroId;
                 if (macroId != 0xFFFF) {
-                    u8 *d6 = *(u8 **)(t + 0xc);
-                    int sum = d2 + *(s8 *)(d6 + 0xa);
+                    SeqTrackEntry *d6 = (SeqTrackEntry *)t->eventPtr;
+                    int sum = d2 + d6->transpose;
                     int key;
                     int sum2;
                     int vel;
@@ -250,7 +278,7 @@ int fn_8026E0E4(int event, u8 voice, u32 *flag)
                     } else {
                         key = sum;
                     }
-                    sum2 = d3 + *(s8 *)(d6 + 0xb);
+                    sum2 = d3 + d6->velocityAdd;
                     if (sum2 > 0x7f) {
                         vel = 0x7f;
                     } else if (sum2 < 0) {
@@ -258,7 +286,7 @@ int fn_8026E0E4(int event, u8 voice, u32 *flag)
                     } else {
                         vel = sum2;
                     }
-                    cb = synthAllocCallback(*(u32 *)(event + 8) + *(u16 *)(d + 4), voice);
+                    cb = synthAllocCallback(((SeqEvent *)event)->time + d->length, voice);
                     if (cb != NULL) {
                         SynthMidiState *sv2;
                         s16 mod;
@@ -304,37 +332,37 @@ int fn_8026E0E4(int event, u8 voice, u32 *flag)
         break;
     }
     case 2: {
-        u8 *t = *(u8 **)(event + 0x10);
+        SynthChanRec *t = (SynthChanRec *)((SeqEvent *)event)->chanRec;
 
-        *(u16 *)(t + 0x14) += *(s16 *)(t + 0x16);
-        if (*(u8 **)(t + 0x10) != NULL) {
-            if ((*(u32 *)(t + 0x10) = (u32)synthReadVariablePair(*(u8 **)(t + 0x10), &pbVal2,
-                                                                 (s16 *)(t + 0x16))) != 0) {
-                *(u32 *)(t + 0x18) += pbVal2;
+        t->pitchVal += t->pitchStep;
+        if ((u8 *)t->pitchCur != NULL) {
+            if ((t->pitchCur = (u32)synthReadVariablePair((u8 *)t->pitchCur, &pbVal2,
+                                                          &t->pitchStep)) != 0) {
+                t->pitchTime += pbVal2;
             } else {
-                *(u32 *)(t + 0x18) = 0x7fffffff;
+                t->pitchTime = 0x7fffffff;
             }
         } else {
-            *(u32 *)(t + 0x18) = 0x7fffffff;
+            t->pitchTime = 0x7fffffff;
         }
-        inpSetMidiCtrl14(0x80, *(u8 *)(t + 0x28), gSynthCurrentVoiceSlotIndex & 0xff, *(u16 *)(t + 0x14));
+        inpSetMidiCtrl14(0x80, t->chan, gSynthCurrentVoiceSlotIndex & 0xff, t->pitchVal);
         break;
     }
     case 1: {
-        u8 *t = *(u8 **)(event + 0x10);
+        SynthChanRec *t = (SynthChanRec *)((SeqEvent *)event)->chanRec;
 
-        *(u16 *)(t + 0x20) += *(s16 *)(t + 0x22);
-        if (*(u8 **)(t + 0x1c) != NULL) {
-            if ((*(u32 *)(t + 0x1c) = (u32)synthReadVariablePair(*(u8 **)(t + 0x1c), &pbVal1,
-                                                                 (s16 *)(t + 0x22))) != 0) {
-                *(u32 *)(t + 0x24) += pbVal1;
+        t->modVal += t->modStep;
+        if ((u8 *)t->modCur != NULL) {
+            if ((t->modCur = (u32)synthReadVariablePair((u8 *)t->modCur, &pbVal1,
+                                                        &t->modStep)) != 0) {
+                t->modTime += pbVal1;
             } else {
-                *(u32 *)(t + 0x24) = 0x7fffffff;
+                t->modTime = 0x7fffffff;
             }
         } else {
-            *(u32 *)(t + 0x24) = 0x7fffffff;
+            t->modTime = 0x7fffffff;
         }
-        inpSetMidiCtrl14(1, *(u8 *)(t + 0x28), gSynthCurrentVoiceSlotIndex & 0xff, *(u16 *)(t + 0x20));
+        inpSetMidiCtrl14(1, t->chan, gSynthCurrentVoiceSlotIndex & 0xff, t->modVal);
         break;
     }
     case 3:
@@ -431,10 +459,10 @@ int fn_8026E9D0(u8 voice, u32 param)
     k80 = lbl_803E7780;
     k84 = lbl_803E7784;
     vp = (u8 *)(gSynthCurrentVoice + voice * 56 + 0x14e8);
-    while (((event = *(u8 **)(vp + 0x1c)) == NULL ? 0 : *(u32 *)(event + 8))
+    while (((event = *(u8 **)(vp + 0x1c)) == NULL ? 0 : ((SeqEvent *)event)->time)
            <= *(u32 *)(vp + *(u8 *)(vp + 0x30) * 8 + 0x24)) {
         if (event != NULL) {
-            *(u8 **)(vp + 0x1c) = *(u8 **)event;
+            *(u8 **)(vp + 0x1c) = ((SeqEvent *)event)->next;
             if (*(int *)event != 0) {
                 *(int *)(*(int *)(vp + 0x1c) + 4) = 0;
             }
