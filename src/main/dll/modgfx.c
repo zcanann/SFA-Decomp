@@ -15,15 +15,47 @@ typedef struct ModgfxVertexData {
   u8 alpha;
 } ModgfxVertexData;
 
+/* per-channel vertex-scale blend record (state+0x30, stride 0x18, 2 channels) */
+typedef struct ModgfxScaleChannel {
+  f32 cur[3];
+  f32 step[3];
+} ModgfxScaleChannel;
+
+/* per-channel vertex-alpha blend record (state+0xAC, stride 8, 2 channels) */
+typedef struct ModgfxAlphaChannel {
+  f32 step;
+  f32 cur;
+} ModgfxAlphaChannel;
+
 typedef struct ModgfxState {
-  u8 pad00[0x78];
+  u8 pad00[4];
+  s16 *unk04; /* current vertex-index list */
+  u8 pad08[0x24 - 0x08];
+  f32 posStepX; /* 0x24: per-step vertex-position delta */
+  f32 posStepY;
+  f32 posStepZ;
+  ModgfxScaleChannel scaleChannels[2];
+  f32 posCurX; /* 0x60: accumulated vertex-position offset */
+  f32 posCurY;
+  f32 posCurZ;
+  u8 pad6C[0x78 - 0x6C];
   ModgfxVertexData *vertexBuffers[2];
   ModgfxVertexData *baseVertexData;
   u8 pad84[0xA4 - 0x84];
   u32 flags;
-  u8 padA8[0xEA - 0xA8];
+  u8 padA8[4];
+  ModgfxAlphaChannel alphaChannels[2];
+  f32 blendColorR; /* 0xBC: current blended vertex color */
+  f32 blendColorG;
+  f32 blendColorB;
+  f32 blendColorStepR; /* 0xC8 */
+  f32 blendColorStepG;
+  f32 blendColorStepB;
+  u8 padD4[0xEA - 0xD4];
   s16 vertexCount;
-  u8 padEC[0xFE - 0xEC];
+  u8 padEC[2];
+  s16 channelFrames[7]; /* 0xEE: per-channel remaining blend frames */
+  s16 activeChannel; /* 0xFC */
   s16 blendFrameCount;
   s16 colorStepR;
   s16 colorStepG;
@@ -35,6 +67,23 @@ typedef struct ModgfxState {
   u8 pad10E[0x130 - 0x10E];
   u8 activeVertexBufferIndex;
 } ModgfxState;
+
+STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
+STATIC_ASSERT(offsetof(ModgfxState, alphaChannels) == 0xAC);
+STATIC_ASSERT(offsetof(ModgfxState, blendColorR) == 0xBC);
+STATIC_ASSERT(offsetof(ModgfxState, vertexCount) == 0xEA);
+STATIC_ASSERT(offsetof(ModgfxState, posCurX) == 0x60);
+STATIC_ASSERT(offsetof(ModgfxState, activeChannel) == 0xFC);
+
+/* vertex-group command payload handed to the updateVertex* handlers */
+typedef struct ModgfxVertexGroupCmd {
+  u8 unk00[4];
+  f32 valueX; /* rgb r / scale x / alpha */
+  f32 valueY;
+  f32 valueZ;
+  s16 *indices; /* vertex indices, stride 2 */
+  s16 indexCount;
+} ModgfxVertexGroupCmd;
 
 static inline int *Modgfx_GetActiveModel(void *obj) {
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -1441,19 +1490,19 @@ void modgfx_resetBaseVertexState(int param_1)
     baseVertexData = baseVertexData + 1;
     inactiveVertexData = inactiveVertexData + 1;
   }
-  *(float *)(param_1 + 0x30) = lbl_803E00B4;
-  *(float *)(param_1 + 0x34) = fVar2;
-  *(float *)(param_1 + 0x38) = fVar2;
+  state->scaleChannels[0].cur[0] = lbl_803E00B4;
+  state->scaleChannels[0].cur[1] = fVar2;
+  state->scaleChannels[0].cur[2] = fVar2;
   fVar1 = lbl_803E00B0;
-  *(float *)(param_1 + 0x3c) = lbl_803E00B0;
-  *(float *)(param_1 + 0x40) = fVar1;
-  *(float *)(param_1 + 0x44) = fVar1;
-  *(float *)(param_1 + 0x48) = fVar2;
-  *(float *)(param_1 + 0x4c) = fVar2;
-  *(float *)(param_1 + 0x50) = fVar2;
-  *(float *)(param_1 + 0x54) = fVar1;
-  *(float *)(param_1 + 0x58) = fVar1;
-  *(float *)(param_1 + 0x5c) = fVar1;
+  state->scaleChannels[0].step[0] = lbl_803E00B0;
+  state->scaleChannels[0].step[1] = fVar1;
+  state->scaleChannels[0].step[2] = fVar1;
+  state->scaleChannels[1].cur[0] = fVar2;
+  state->scaleChannels[1].cur[1] = fVar2;
+  state->scaleChannels[1].cur[2] = fVar2;
+  state->scaleChannels[1].step[0] = fVar1;
+  state->scaleChannels[1].step[1] = fVar1;
+  state->scaleChannels[1].step[2] = fVar1;
   return;
 }
 
@@ -1487,86 +1536,86 @@ void modgfx_updateVertexRgb(int param_1,int param_2,int param_3)
   dVar4 = DOUBLE_803e00c0;
   iVar6 = *(int *)(param_1 + (uint)*(byte *)(param_1 + 0x130) * 4 + 0x78);
   if (param_3 == 1) {
-    fVar1 = *(float *)(param_2 + 4);
-    fVar2 = *(float *)(param_2 + 8);
-    fVar3 = *(float *)(param_2 + 0xc);
-    if (*(short *)(param_1 + 0xfe) == 0) {
-      *(float *)(param_1 + 0xbc) = fVar1;
-      *(float *)(param_1 + 0xc0) = fVar2;
-      *(float *)(param_1 + 0xc4) = fVar3;
+    fVar1 = ((ModgfxVertexGroupCmd *)param_2)->valueX;
+    fVar2 = ((ModgfxVertexGroupCmd *)param_2)->valueY;
+    fVar3 = ((ModgfxVertexGroupCmd *)param_2)->valueZ;
+    if (((ModgfxState *)param_1)->blendFrameCount == 0) {
+      ((ModgfxState *)param_1)->blendColorR = fVar1;
+      ((ModgfxState *)param_1)->blendColorG = fVar2;
+      ((ModgfxState *)param_1)->blendColorB = fVar3;
       fVar1 = lbl_803E00B0;
-      *(float *)(param_1 + 200) = lbl_803E00B0;
-      *(float *)(param_1 + 0xcc) = fVar1;
-      *(float *)(param_1 + 0xd0) = fVar1;
+      ((ModgfxState *)param_1)->blendColorStepR = lbl_803E00B0;
+      ((ModgfxState *)param_1)->blendColorStepG = fVar1;
+      ((ModgfxState *)param_1)->blendColorStepB = fVar1;
     }
     else {
-      *(float *)(param_1 + 0xbc) =
+      ((ModgfxState *)param_1)->blendColorR =
            (float)((double)CONCAT44(0x43300000,
-                                    (uint)*(byte *)(iVar6 + **(short **)(param_2 + 0x10) * 0x10 +
+                                    (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices * 0x10 +
                                                    0xc)) - DOUBLE_803e00c0);
-      *(float *)(param_1 + 0xc0) =
+      ((ModgfxState *)param_1)->blendColorG =
            (float)((double)CONCAT44(0x43300000,
-                                    (uint)*(byte *)(iVar6 + **(short **)(param_2 + 0x10) * 0x10 +
+                                    (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices * 0x10 +
                                                    0xd)) - dVar4);
-      *(float *)(param_1 + 0xc4) =
+      ((ModgfxState *)param_1)->blendColorB =
            (float)((double)CONCAT44(0x43300000,
-                                    (uint)*(byte *)(iVar6 + **(short **)(param_2 + 0x10) * 0x10 +
+                                    (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices * 0x10 +
                                                    0xe)) - dVar4);
       dVar5 = DOUBLE_803e00c8;
-      *(float *)(param_1 + 200) =
+      ((ModgfxState *)param_1)->blendColorStepR =
            (fVar1 - (float)((double)CONCAT44(0x43300000,
-                                             (uint)*(byte *)(iVar6 + **(short **)(param_2 + 0x10) *
+                                             (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices *
                                                                      0x10 + 0xc)) - dVar4)) /
-           (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xfe) ^ 0x80000000) -
+           (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000) -
                   DOUBLE_803e00c8);
-      local_18 = (double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xfe) ^ 0x80000000);
-      *(float *)(param_1 + 0xcc) =
+      local_18 = (double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000);
+      ((ModgfxState *)param_1)->blendColorStepG =
            (fVar2 - (float)((double)CONCAT44(0x43300000,
-                                             (uint)*(byte *)(iVar6 + **(short **)(param_2 + 0x10) *
+                                             (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices *
                                                                      0x10 + 0xd)) - dVar4)) /
            (float)(local_18 - dVar5);
       local_10 = (double)CONCAT44(0x43300000,
-                                  (uint)*(byte *)(iVar6 + **(short **)(param_2 + 0x10) * 0x10 + 0xe)
+                                  (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices * 0x10 + 0xe)
                                  );
-      local_8 = (double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xfe) ^ 0x80000000);
-      *(float *)(param_1 + 0xd0) = (fVar3 - (float)(local_10 - dVar4)) / (float)(local_8 - dVar5);
+      local_8 = (double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000);
+      ((ModgfxState *)param_1)->blendColorStepB = (fVar3 - (float)(local_10 - dVar4)) / (float)(local_8 - dVar5);
     }
   }
-  *(float *)(param_1 + 0xbc) = *(float *)(param_1 + 0xbc) + *(float *)(param_1 + 200);
-  *(float *)(param_1 + 0xc0) = *(float *)(param_1 + 0xc0) + *(float *)(param_1 + 0xcc);
-  *(float *)(param_1 + 0xc4) = *(float *)(param_1 + 0xc4) + *(float *)(param_1 + 0xd0);
-  if (lbl_803E00B0 <= *(float *)(param_1 + 0xbc)) {
-    if (lbl_803E00BC < *(float *)(param_1 + 0xbc)) {
-      *(float *)(param_1 + 0xbc) = lbl_803E00BC;
-    }
-  }
-  else {
-    *(float *)(param_1 + 0xbc) = lbl_803E00B0;
-  }
-  if (lbl_803E00B0 <= *(float *)(param_1 + 0xc0)) {
-    if (lbl_803E00BC < *(float *)(param_1 + 0xc0)) {
-      *(float *)(param_1 + 0xc0) = lbl_803E00BC;
+  ((ModgfxState *)param_1)->blendColorR = ((ModgfxState *)param_1)->blendColorR + ((ModgfxState *)param_1)->blendColorStepR;
+  ((ModgfxState *)param_1)->blendColorG = ((ModgfxState *)param_1)->blendColorG + ((ModgfxState *)param_1)->blendColorStepG;
+  ((ModgfxState *)param_1)->blendColorB = ((ModgfxState *)param_1)->blendColorB + ((ModgfxState *)param_1)->blendColorStepB;
+  if (lbl_803E00B0 <= ((ModgfxState *)param_1)->blendColorR) {
+    if (lbl_803E00BC < ((ModgfxState *)param_1)->blendColorR) {
+      ((ModgfxState *)param_1)->blendColorR = lbl_803E00BC;
     }
   }
   else {
-    *(float *)(param_1 + 0xc0) = lbl_803E00B0;
+    ((ModgfxState *)param_1)->blendColorR = lbl_803E00B0;
   }
-  if (lbl_803E00B0 <= *(float *)(param_1 + 0xc4)) {
-    if (lbl_803E00BC < *(float *)(param_1 + 0xc4)) {
-      *(float *)(param_1 + 0xc4) = lbl_803E00BC;
+  if (lbl_803E00B0 <= ((ModgfxState *)param_1)->blendColorG) {
+    if (lbl_803E00BC < ((ModgfxState *)param_1)->blendColorG) {
+      ((ModgfxState *)param_1)->blendColorG = lbl_803E00BC;
     }
   }
   else {
-    *(float *)(param_1 + 0xc4) = lbl_803E00B0;
+    ((ModgfxState *)param_1)->blendColorG = lbl_803E00B0;
+  }
+  if (lbl_803E00B0 <= ((ModgfxState *)param_1)->blendColorB) {
+    if (lbl_803E00BC < ((ModgfxState *)param_1)->blendColorB) {
+      ((ModgfxState *)param_1)->blendColorB = lbl_803E00BC;
+    }
+  }
+  else {
+    ((ModgfxState *)param_1)->blendColorB = lbl_803E00B0;
   }
   iVar7 = 0;
-  for (iVar8 = 0; iVar8 < *(short *)(param_2 + 0x14); iVar8 = iVar8 + 1) {
-    *(char *)(iVar6 + *(short *)(*(int *)(param_2 + 0x10) + iVar7) * 0x10 + 0xc) =
-         (char)(int)*(float *)(param_1 + 0xbc);
-    *(char *)(iVar6 + *(short *)(*(int *)(param_2 + 0x10) + iVar7) * 0x10 + 0xd) =
-         (char)(int)*(float *)(param_1 + 0xc0);
-    *(char *)(iVar6 + *(short *)(*(int *)(param_2 + 0x10) + iVar7) * 0x10 + 0xe) =
-         (char)(int)*(float *)(param_1 + 0xc4);
+  for (iVar8 = 0; iVar8 < ((ModgfxVertexGroupCmd *)param_2)->indexCount; iVar8 = iVar8 + 1) {
+    *(char *)(iVar6 + *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar7) * 0x10 + 0xc) =
+         (char)(int)((ModgfxState *)param_1)->blendColorR;
+    *(char *)(iVar6 + *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar7) * 0x10 + 0xd) =
+         (char)(int)((ModgfxState *)param_1)->blendColorG;
+    *(char *)(iVar6 + *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar7) * 0x10 + 0xe) =
+         (char)(int)((ModgfxState *)param_1)->blendColorB;
     iVar7 = iVar7 + 2;
   }
   return;
@@ -1718,15 +1767,15 @@ void modgfx_updateVertexAlpha(int param_1,int param_2,int param_3,uint param_4)
   
   dVar2 = DOUBLE_803e00c0;
   iVar5 = *(int *)(param_1 + (uint)*(byte *)(param_1 + 0x130) * 4 + 0x78);
-  iVar6 = *(int *)(param_1 + 0x80);
+  iVar6 = (int)((ModgfxState *)param_1)->baseVertexData;
   if (param_3 == 1) {
-    fVar1 = *(float *)(param_2 + 4);
-    if ((int)*(short *)(param_1 + 0xfe) == 0) {
+    fVar1 = ((ModgfxVertexGroupCmd *)param_2)->valueX;
+    if ((int)((ModgfxState *)param_1)->blendFrameCount == 0) {
       iVar7 = 0;
-      for (iVar3 = 0; iVar3 < *(short *)(param_2 + 0x14); iVar3 = iVar3 + 1) {
-        *(char *)(iVar6 + *(short *)(*(int *)(param_2 + 0x10) + iVar7) * 0x10 + 0xf) =
+      for (iVar3 = 0; iVar3 < ((ModgfxVertexGroupCmd *)param_2)->indexCount; iVar3 = iVar3 + 1) {
+        *(char *)(iVar6 + *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar7) * 0x10 + 0xf) =
              (char)(int)fVar1;
-        iVar8 = *(short *)(*(int *)(param_2 + 0x10) + iVar7) * 0x10 + 0xf;
+        iVar8 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar7) * 0x10 + 0xf;
         *(undefined *)(iVar5 + iVar8) = *(undefined *)(iVar6 + iVar8);
         iVar7 = iVar7 + 2;
       }
@@ -1735,12 +1784,12 @@ void modgfx_updateVertexAlpha(int param_1,int param_2,int param_3,uint param_4)
     iVar7 = param_1 + (param_4 & 0xff) * 8;
     *(float *)(iVar7 + 0xac) =
          (fVar1 - (float)((double)CONCAT44(0x43300000,
-                                           (uint)*(byte *)(iVar6 + **(short **)(param_2 + 0x10) *
+                                           (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices *
                                                                    0x10 + 0xf)) - DOUBLE_803e00c0))
-         / (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xfe) ^ 0x80000000) -
+         / (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000) -
                   DOUBLE_803e00c8);
     local_8 = (double)CONCAT44(0x43300000,
-                               (uint)*(byte *)(iVar6 + **(short **)(param_2 + 0x10) * 0x10 + 0xf));
+                               (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices * 0x10 + 0xf));
     *(float *)(iVar7 + 0xb0) = (float)(local_8 - dVar2);
   }
   iVar7 = (param_4 & 0xff) * 8;
@@ -1755,10 +1804,10 @@ void modgfx_updateVertexAlpha(int param_1,int param_2,int param_3,uint param_4)
     *(float *)(iVar3 + 0xb0) = lbl_803E00B0;
   }
   iVar3 = 0;
-  for (iVar8 = 0; iVar8 < *(short *)(param_2 + 0x14); iVar8 = iVar8 + 1) {
-    *(char *)(iVar5 + *(short *)(*(int *)(param_2 + 0x10) + iVar3) * 0x10 + 0xf) =
+  for (iVar8 = 0; iVar8 < ((ModgfxVertexGroupCmd *)param_2)->indexCount; iVar8 = iVar8 + 1) {
+    *(char *)(iVar5 + *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar3) * 0x10 + 0xf) =
          (char)(int)*(float *)(param_1 + iVar7 + 0xb0);
-    iVar4 = *(short *)(*(int *)(param_2 + 0x10) + iVar3) * 0x10 + 0xf;
+    iVar4 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar3) * 0x10 + 0xf;
     *(undefined *)(iVar6 + iVar4) = *(undefined *)(iVar5 + iVar4);
     iVar3 = iVar3 + 2;
   }
@@ -1796,32 +1845,32 @@ void modgfx_updateVertexScale(int param_1,int param_2,int param_3,uint param_4)
   
   dVar4 = DOUBLE_803e00c8;
   if (param_3 == 1) {
-    fVar1 = *(float *)(param_2 + 4);
-    fVar2 = *(float *)(param_2 + 8);
-    fVar3 = *(float *)(param_2 + 0xc);
-    if ((int)*(short *)(param_1 + 0xfe) == 0) {
-      iVar8 = *(int *)(param_1 + 0x80);
+    fVar1 = ((ModgfxVertexGroupCmd *)param_2)->valueX;
+    fVar2 = ((ModgfxVertexGroupCmd *)param_2)->valueY;
+    fVar3 = ((ModgfxVertexGroupCmd *)param_2)->valueZ;
+    if ((int)((ModgfxState *)param_1)->blendFrameCount == 0) {
+      iVar8 = (int)((ModgfxState *)param_1)->baseVertexData;
       iVar7 = *(int *)(param_1 + (uint)*(byte *)(param_1 + 0x130) * 4 + 0x78);
       iVar6 = 0;
-      for (iVar5 = 0; iVar5 < *(short *)(param_2 + 0x14); iVar5 = iVar5 + 1) {
-        iVar10 = *(short *)(*(int *)(param_2 + 0x10) + iVar6) * 0x10;
+      for (iVar5 = 0; iVar5 < ((ModgfxVertexGroupCmd *)param_2)->indexCount; iVar5 = iVar5 + 1) {
+        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10;
         *(short *)(iVar8 + iVar10) =
              (short)(int)((float)((double)CONCAT44(0x43300000,
                                                    (int)*(short *)(iVar8 + iVar10) ^ 0x80000000) -
                                  dVar4) * fVar1);
-        iVar10 = *(short *)(*(int *)(param_2 + 0x10) + iVar6) * 0x10 + 2;
+        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10 + 2;
         *(short *)(iVar8 + iVar10) =
              (short)(int)((float)((double)CONCAT44(0x43300000,
                                                    (int)*(short *)(iVar8 + iVar10) ^ 0x80000000) -
                                  dVar4) * fVar2);
-        iVar10 = *(short *)(*(int *)(param_2 + 0x10) + iVar6) * 0x10 + 4;
+        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10 + 4;
         local_18 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar8 + iVar10) ^ 0x80000000);
         *(short *)(iVar8 + iVar10) = (short)(int)((float)(local_18 - dVar4) * fVar3);
-        iVar10 = *(short *)(*(int *)(param_2 + 0x10) + iVar6) * 0x10;
+        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10;
         *(undefined2 *)(iVar7 + iVar10) = *(undefined2 *)(iVar8 + iVar10);
-        iVar10 = *(short *)(*(int *)(param_2 + 0x10) + iVar6) * 0x10 + 2;
+        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10 + 2;
         *(undefined2 *)(iVar7 + iVar10) = *(undefined2 *)(iVar8 + iVar10);
-        iVar10 = *(short *)(*(int *)(param_2 + 0x10) + iVar6) * 0x10 + 4;
+        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10 + 4;
         *(undefined2 *)(iVar7 + iVar10) = *(undefined2 *)(iVar8 + iVar10);
         iVar6 = iVar6 + 2;
       }
@@ -1830,37 +1879,37 @@ void modgfx_updateVertexScale(int param_1,int param_2,int param_3,uint param_4)
     iVar6 = param_1 + (param_4 & 0xff) * 0x18;
     *(float *)(iVar6 + 0x3c) =
          (fVar1 - *(float *)(iVar6 + 0x30)) /
-         (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xfe) ^ 0x80000000) -
+         (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000) -
                 DOUBLE_803e00c8);
-    local_30 = (double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xfe) ^ 0x80000000);
+    local_30 = (double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000);
     *(float *)(iVar6 + 0x40) = (fVar2 - *(float *)(iVar6 + 0x34)) / (float)(local_30 - dVar4);
     *(float *)(iVar6 + 0x44) =
          (fVar3 - *(float *)(iVar6 + 0x38)) /
-         (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xfe) ^ 0x80000000) - dVar4);
+         (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000) - dVar4);
   }
   iVar5 = param_1 + (param_4 & 0xff) * 0x18;
   *(float *)(iVar5 + 0x30) = *(float *)(iVar5 + 0x3c) * lbl_803DDF04 + *(float *)(iVar5 + 0x30);
   *(float *)(iVar5 + 0x34) = *(float *)(iVar5 + 0x40) * lbl_803DDF04 + *(float *)(iVar5 + 0x34);
   *(float *)(iVar5 + 0x38) = *(float *)(iVar5 + 0x44) * lbl_803DDF04 + *(float *)(iVar5 + 0x38);
   fVar1 = lbl_803E00B4;
-  iVar7 = *(int *)(param_1 + 0x80);
+  iVar7 = (int)((ModgfxState *)param_1)->baseVertexData;
   iVar6 = *(int *)(param_1 + (uint)*(byte *)(param_1 + 0x130) * 4 + 0x78);
   iVar10 = 0;
-  for (iVar8 = 0; iVar8 < *(short *)(param_2 + 0x14); iVar8 = iVar8 + 1) {
+  for (iVar8 = 0; iVar8 < ((ModgfxVertexGroupCmd *)param_2)->indexCount; iVar8 = iVar8 + 1) {
     if (fVar1 != *(float *)(iVar5 + 0x30)) {
-      iVar9 = *(short *)(*(int *)(param_2 + 0x10) + iVar10) * 0x10;
+      iVar9 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar10) * 0x10;
       local_10 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar7 + iVar9) ^ 0x80000000);
       *(short *)(iVar6 + iVar9) =
            (short)(int)(*(float *)(iVar5 + 0x30) * (float)(local_10 - DOUBLE_803e00c8));
     }
     if (fVar1 != *(float *)(iVar5 + 0x34)) {
-      iVar9 = *(short *)(*(int *)(param_2 + 0x10) + iVar10) * 0x10 + 2;
+      iVar9 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar10) * 0x10 + 2;
       local_10 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar7 + iVar9) ^ 0x80000000);
       *(short *)(iVar6 + iVar9) =
            (short)(int)(*(float *)(iVar5 + 0x34) * (float)(local_10 - DOUBLE_803e00c8));
     }
     if (fVar1 != *(float *)(iVar5 + 0x38)) {
-      iVar9 = *(short *)(*(int *)(param_2 + 0x10) + iVar10) * 0x10 + 4;
+      iVar9 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar10) * 0x10 + 4;
       local_10 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar7 + iVar9) ^ 0x80000000);
       *(short *)(iVar6 + iVar9) =
            (short)(int)(*(float *)(iVar5 + 0x38) * (float)(local_10 - DOUBLE_803e00c8));
@@ -5067,12 +5116,12 @@ void fn_800A081C(int p1, int p2, int mode)
   extern f32 lbl_803DF434;
 
   if (mode == 1) {
-    if (*(s16 *)((char *)p1 + (s32)*(s16 *)(p1 + 0xfc) * 2 + 0xee) == 0) {
-      int flags = *(u32 *)(p1 + 0xa4);
+    if (((ModgfxState *)p1)->channelFrames[((ModgfxState *)p1)->activeChannel] == 0) {
+      int flags = ((ModgfxState *)p1)->flags;
       if ((flags & 0x4) != 0 || (flags & 0x80000) != 0) {
         s16 buf[6];
         f32 *fbuf = (f32 *)&buf[2];
-        s16 v = *(s16 *)*(int *)(p1 + 0x4);
+        s16 v = *((ModgfxState *)p1)->unk04;
         f32 fill = lbl_803DF430;
         fbuf[3] = fill;
         fbuf[2] = fill;
@@ -5083,21 +5132,21 @@ void fn_800A081C(int p1, int p2, int mode)
         buf[0] = v;
         vecRotateZXY(buf, (f32 *)(p2 + 0x4));
       }
-      *(f32 *)(p1 + 0x24) = *(f32 *)(p2 + 0x4);
-      *(f32 *)(p1 + 0x28) = *(f32 *)(p2 + 0x8);
-      *(f32 *)(p1 + 0x2c) = *(f32 *)(p2 + 0xc);
+      ((ModgfxState *)p1)->posStepX = ((ModgfxVertexGroupCmd *)p2)->valueX;
+      ((ModgfxState *)p1)->posStepY = ((ModgfxVertexGroupCmd *)p2)->valueY;
+      ((ModgfxState *)p1)->posStepZ = ((ModgfxVertexGroupCmd *)p2)->valueZ;
     } else {
-      *(f32 *)(p1 + 0x24) = *(f32 *)(p2 + 0x4) / (f32)(s32)*(s16 *)(p1 + 0xfe);
-      *(f32 *)(p1 + 0x28) = *(f32 *)(p2 + 0x8) / (f32)(s32)*(s16 *)(p1 + 0xfe);
-      *(f32 *)(p1 + 0x2c) = *(f32 *)(p2 + 0xc) / (f32)(s32)*(s16 *)(p1 + 0xfe);
+      ((ModgfxState *)p1)->posStepX = ((ModgfxVertexGroupCmd *)p2)->valueX / (f32)(s32)((ModgfxState *)p1)->blendFrameCount;
+      ((ModgfxState *)p1)->posStepY = ((ModgfxVertexGroupCmd *)p2)->valueY / (f32)(s32)((ModgfxState *)p1)->blendFrameCount;
+      ((ModgfxState *)p1)->posStepZ = ((ModgfxVertexGroupCmd *)p2)->valueZ / (f32)(s32)((ModgfxState *)p1)->blendFrameCount;
     }
-    *(f32 *)(p1 + 0x60) = *(f32 *)(p1 + 0x60) + *(f32 *)(p1 + 0x24);
-    *(f32 *)(p1 + 0x64) = *(f32 *)(p1 + 0x64) + *(f32 *)(p1 + 0x28);
-    *(f32 *)(p1 + 0x68) = *(f32 *)(p1 + 0x68) + *(f32 *)(p1 + 0x2c);
+    ((ModgfxState *)p1)->posCurX = ((ModgfxState *)p1)->posCurX + ((ModgfxState *)p1)->posStepX;
+    ((ModgfxState *)p1)->posCurY = ((ModgfxState *)p1)->posCurY + ((ModgfxState *)p1)->posStepY;
+    ((ModgfxState *)p1)->posCurZ = ((ModgfxState *)p1)->posCurZ + ((ModgfxState *)p1)->posStepZ;
   } else {
-    *(f32 *)(p1 + 0x60) = *(f32 *)(p1 + 0x24) * lbl_803DD284 + *(f32 *)(p1 + 0x60);
-    *(f32 *)(p1 + 0x64) = *(f32 *)(p1 + 0x28) * lbl_803DD284 + *(f32 *)(p1 + 0x64);
-    *(f32 *)(p1 + 0x68) = *(f32 *)(p1 + 0x2c) * lbl_803DD284 + *(f32 *)(p1 + 0x68);
+    ((ModgfxState *)p1)->posCurX = ((ModgfxState *)p1)->posStepX * lbl_803DD284 + ((ModgfxState *)p1)->posCurX;
+    ((ModgfxState *)p1)->posCurY = ((ModgfxState *)p1)->posStepY * lbl_803DD284 + ((ModgfxState *)p1)->posCurY;
+    ((ModgfxState *)p1)->posCurZ = ((ModgfxState *)p1)->posStepZ * lbl_803DD284 + ((ModgfxState *)p1)->posCurZ;
   }
 }
 #pragma peephole reset
@@ -5114,22 +5163,22 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
         int tx = (int)params[1];
         int ty = (int)params[2];
         int tz = (int)params[3];
-        if (*(s16*)((char*)obj + 0xfe) != 0) {
-            *(s16*)((char*)obj + 0x100) = (s16)(((s16)tx - *(s16*)((char*)obj + 0x106)) / *(s16*)((char*)obj + 0xfe));
-            *(s16*)((char*)obj + 0x102) = (s16)(((s16)ty - *(s16*)((char*)obj + 0x108)) / *(s16*)((char*)obj + 0xfe));
-            *(s16*)((char*)obj + 0x104) = (s16)(((s16)tz - *(s16*)((char*)obj + 0x10a)) / *(s16*)((char*)obj + 0xfe));
+        if (((ModgfxState *)obj)->blendFrameCount != 0) {
+            ((ModgfxState *)obj)->colorStepR = (s16)(((s16)tx - ((ModgfxState *)obj)->colorValueR) / ((ModgfxState *)obj)->blendFrameCount);
+            ((ModgfxState *)obj)->colorStepG = (s16)(((s16)ty - ((ModgfxState *)obj)->colorValueG) / ((ModgfxState *)obj)->blendFrameCount);
+            ((ModgfxState *)obj)->colorStepB = (s16)(((s16)tz - ((ModgfxState *)obj)->colorValueB) / ((ModgfxState *)obj)->blendFrameCount);
         } else {
-            *(s16*)((char*)obj + 0x106) = tx;
-            *(s16*)((char*)obj + 0x100) = 0;
-            *(s16*)((char*)obj + 0x108) = ty;
-            *(s16*)((char*)obj + 0x102) = 0;
-            *(s16*)((char*)obj + 0x10a) = tz;
-            *(s16*)((char*)obj + 0x104) = 0;
+            ((ModgfxState *)obj)->colorValueR = tx;
+            ((ModgfxState *)obj)->colorStepR = 0;
+            ((ModgfxState *)obj)->colorValueG = ty;
+            ((ModgfxState *)obj)->colorStepG = 0;
+            ((ModgfxState *)obj)->colorValueB = tz;
+            ((ModgfxState *)obj)->colorStepB = 0;
         }
     }
-    *(s16*)((char*)obj + 0x106) = *(s16*)((char*)obj + 0x106) + *(s16*)((char*)obj + 0x100);
-    *(s16*)((char*)obj + 0x108) = *(s16*)((char*)obj + 0x108) + *(s16*)((char*)obj + 0x102);
-    *(s16*)((char*)obj + 0x10a) = *(s16*)((char*)obj + 0x10a) + *(s16*)((char*)obj + 0x104);
+    ((ModgfxState *)obj)->colorValueR = ((ModgfxState *)obj)->colorValueR + ((ModgfxState *)obj)->colorStepR;
+    ((ModgfxState *)obj)->colorValueG = ((ModgfxState *)obj)->colorValueG + ((ModgfxState *)obj)->colorStepG;
+    ((ModgfxState *)obj)->colorValueB = ((ModgfxState *)obj)->colorValueB + ((ModgfxState *)obj)->colorStepB;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -15226,18 +15275,18 @@ void fn_800A0C78(void *state, void *p, int mode, u8 idx)
   int j;
 
   if (mode == 1) {
-    f32 tx = *(f32 *)((char *)p + 0x4);
-    f32 ty = *(f32 *)((char *)p + 0x8);
-    f32 tz = *(f32 *)((char *)p + 0xc);
-    if (*(s16 *)((char *)state + 0xfe) != 0) {
-      *(f32 *)(base + 0x3c) = (tx - *(f32 *)(base + 0x30)) / (f32)*(s16 *)((char *)state + 0xfe);
-      *(f32 *)(base + 0x40) = (ty - *(f32 *)(base + 0x34)) / (f32)*(s16 *)((char *)state + 0xfe);
-      *(f32 *)(base + 0x44) = (tz - *(f32 *)(base + 0x38)) / (f32)*(s16 *)((char *)state + 0xfe);
+    f32 tx = ((ModgfxVertexGroupCmd *)p)->valueX;
+    f32 ty = ((ModgfxVertexGroupCmd *)p)->valueY;
+    f32 tz = ((ModgfxVertexGroupCmd *)p)->valueZ;
+    if (((ModgfxState *)state)->blendFrameCount != 0) {
+      *(f32 *)(base + 0x3c) = (tx - *(f32 *)(base + 0x30)) / (f32)((ModgfxState *)state)->blendFrameCount;
+      *(f32 *)(base + 0x40) = (ty - *(f32 *)(base + 0x34)) / (f32)((ModgfxState *)state)->blendFrameCount;
+      *(f32 *)(base + 0x44) = (tz - *(f32 *)(base + 0x38)) / (f32)((ModgfxState *)state)->blendFrameCount;
     } else {
-      u8 *buf = *(u8 **)((char *)state + 0x80);
+      u8 *buf = (u8 *)((ModgfxState *)state)->baseVertexData;
       u8 *buf2 = *(u8 **)((char *)state + *(u8 *)((char *)state + 0x130) * 4 + 0x78);
-      for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
-        s16 v = (*(s16 **)((char *)p + 0x10))[j];
+      for (j = 0; j < ((ModgfxVertexGroupCmd *)p)->indexCount; j++) {
+        s16 v = ((ModgfxVertexGroupCmd *)p)->indices[j];
         *(s16 *)(buf + v * 16 + 0) = (int)((f32)*(s16 *)(buf + v * 16 + 0) * tx);
         *(s16 *)(buf + v * 16 + 2) = (int)((f32)*(s16 *)(buf + v * 16 + 2) * ty);
         *(s16 *)(buf + v * 16 + 4) = (int)((f32)*(s16 *)(buf + v * 16 + 4) * tz);
@@ -15252,10 +15301,10 @@ void fn_800A0C78(void *state, void *p, int mode, u8 idx)
   *(f32 *)(base + 0x34) = *(f32 *)(base + 0x34) + *(f32 *)(base + 0x40) * lbl_803DD284;
   *(f32 *)(base + 0x38) = *(f32 *)(base + 0x38) + *(f32 *)(base + 0x44) * lbl_803DD284;
   {
-    u8 *buf = *(u8 **)((char *)state + 0x80);
+    u8 *buf = (u8 *)((ModgfxState *)state)->baseVertexData;
     u8 *buf2 = *(u8 **)((char *)state + *(u8 *)((char *)state + 0x130) * 4 + 0x78);
-    for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
-      s16 v = (*(s16 **)((char *)p + 0x10))[j];
+    for (j = 0; j < ((ModgfxVertexGroupCmd *)p)->indexCount; j++) {
+      s16 v = ((ModgfxVertexGroupCmd *)p)->indices[j];
       if (lbl_803DF434 != *(f32 *)(base + 0x30)) {
         *(s16 *)(buf2 + v * 16 + 0) = (int)(*(f32 *)(base + 0x30) * (f32)*(s16 *)(buf + v * 16 + 0));
       }
