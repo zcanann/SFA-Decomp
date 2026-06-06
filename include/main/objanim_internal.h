@@ -234,7 +234,9 @@ typedef struct ObjAnimComponent {
   f32 activeMoveProgress;
   s16 currentMove;
   s16 activeMove;
-  u8 padA4[0xA8 - 0xA4];
+  void *targetObj; /* attention/track target (GameObject*): camera focus/track
+                     sites across CAM TUs + baddieControl.c 0xA4-as-pointer
+                     census - general object field, not camera-specific */
   f32 hitboxScale;
   u8 padAC[0xAD - 0xAC];
   s8 bankIndex;
@@ -338,6 +340,7 @@ STATIC_ASSERT(offsetof(ObjAnimBank, currentState) == 0x2C);
 STATIC_ASSERT(offsetof(ObjAnimBank, activeState) == 0x30);
 
 STATIC_ASSERT(sizeof(ObjAnimComponent) == 0xB0);
+STATIC_ASSERT(offsetof(ObjAnimComponent, targetObj) == 0xA4);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotX) == 0x00);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotY) == 0x02);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotZ) == 0x04);
