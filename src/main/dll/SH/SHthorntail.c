@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
 
 extern void Sfx_PlayFromObject(SHthorntailObject *obj,u16 volumeId);

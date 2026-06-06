@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/SH/dll_1E7.h"
 
 extern void Sfx_PlayFromObject(uint objectId,u16 volumeId);
