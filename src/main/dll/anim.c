@@ -2,8 +2,102 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
+#include "main/dll/baddie_state.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+
+/*
+ * DbStealerwormControl - the per-family control record hung off
+ * GroundBaddieState.control (state+0x40C) for dbstealerworm
+ * (extraSize 0x460 = GroundBaddieState 0x410 + a 0x50 private tail;
+ * the control record itself is memset(0x50) in dbstealerworm_init).
+ */
+typedef struct DbStealerwormControl {
+    int cfg; /* entry in the lbl_80329514 table (stride 8 ints) */
+    f32 unk04;
+    f32 unk08;
+    f32 unk0C; /* countdown; init randomGetRange(10, 300) */
+    f32 unk10;
+    u8 flags14; /* bits 1/2 */
+    u8 flags15; /* bits 1/4 */
+    u8 unk16[2];
+    int linkedObj; /* ObjMsg target object */
+    s16 unk1C;
+    u8 unk1E[2];
+    int unk20; /* cursor into the cfg route list (12-byte entries) */
+    int msgStack; /* Stack_* handle; 3-word messages */
+    int unk28;
+    int unk2C;
+    int unk30; /* ObjGroup id */
+    u8 unk34;
+    u8 unk35[3];
+    f32 unk38;
+    int unk3C;
+    u8 unk40[4];
+    u8 flags44; /* bits 0x10/0x20 */
+    u8 unk45[3];
+    f32 randomTimer48; /* RandomTimer_UpdateRangeTrigger slots */
+    f32 randomTimer4C;
+} DbStealerwormControl;
+
+STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
+
+/* dfplevelcontrol extra block (extraSize 0xC). */
+typedef struct DfpLevelControlState {
+    s16 timer; /* counts down by timeDelta; set 300 on gamebit 1509 */
+    s16 mode; /* 1..2, from def+0x1A */
+    u8 unk04[2];
+    u8 sfxLatch; /* gamebit-1589 one-shot latch */
+    u8 flags07; /* DfpFlags7 bitfield overlay */
+    u8 unk08[4];
+} DfpLevelControlState;
+
+STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
+
+/* dfpobjcreator extra block (extraSize 0x1C). */
+typedef struct DfpObjCreatorState {
+    int spawnedObj;
+    u8 unk04[8];
+    s16 gameBit; /* 0x0C: spawn gate */
+    s16 spawnPeriod; /* 0x0E */
+    s16 spawnTimer; /* 0x10 */
+    s16 unk12;
+    s16 unk14;
+    s16 unk16;
+    u8 unk18[4];
+} DfpObjCreatorState;
+
+STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
+
+/* DFP_Torch extra block (extraSize 0x10). */
+typedef struct DfpTorchState {
+    int gameBit; /* lit-state gamebit, -1 = none (def+0x1E) */
+    s16 flickerTimer; /* 0x04 */
+    s16 litTimer; /* 0x06: 0x7D0 countdown while lit */
+    u8 visibleLatch; /* 0x08 */
+    u8 mode; /* 0x09: def+0x19 */
+    u8 lit; /* 0x0A */
+    u8 sfxPending; /* 0x0B */
+    u8 prevLit; /* 0x0C */
+    u8 colorIdx; /* 0x0D: def+0x1C */
+    u8 unk0E[2];
+} DfpTorchState;
+
+STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
+
+/* dll_22C (raising platform) extra block (extraSize 0x10). */
+typedef struct Dll22CState {
+    f32 raiseHeight; /* def+0x1A */
+    s16 mode; /* 0x04 */
+    s16 gameBit; /* 0x06: def+0x20 */
+    s16 gameBit2; /* 0x08: def+0x1E */
+    s16 pauseTimer; /* 0x0A: 100 between moves */
+    u8 unk0C; /* def+0x1C */
+    u8 sfxLatch; /* 0x0D */
+    u8 unk0E[2];
+} Dll22CState;
+
+STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
 #pragma peephole off
 #pragma scheduling off
@@ -665,13 +759,13 @@ int fn_802002C4(int obj, int p)
   int b8;
 
   b8 = *(int *)(obj + 0xb8);
-  if (*(char *)(p + 0x27b) != '\0') {
+  if (*(char *)&((BaddieState *)p)->moveJustStartedB != '\0') {
     (**(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, p, 1);
-    b8 = *(int *)(b8 + 0x40c);
+    b8 = *(int *)&((GroundBaddieState *)b8)->control;
     fz = lbl_803E62A8;
-    *(float *)(b8 + 0xc) = lbl_803E62A8;
-    *(float *)(b8 + 0x10) = fz;
-    *(float *)(b8 + 4) = fz;
+    ((DbStealerwormControl *)b8)->unk0C = lbl_803E62A8;
+    ((DbStealerwormControl *)b8)->unk10 = fz;
+    ((DbStealerwormControl *)b8)->unk04 = fz;
   }
   return 0;
 }
@@ -689,15 +783,15 @@ int fn_80200380(int obj, int p)
   s8 flag2;
 
   b8 = *(int *)(obj + 0xb8);
-  if (*(char *)(p + 0x27b) != '\0') {
-    b8 = *(int *)(b8 + 0x40c);
+  if (*(char *)&((BaddieState *)p)->moveJustStartedB != '\0') {
+    b8 = *(int *)&((GroundBaddieState *)b8)->control;
     fz = lbl_803E62A8;
-    *(float *)(b8 + 0xc) = lbl_803E62A8;
-    *(float *)(b8 + 0x10) = fz;
-    *(float *)(b8 + 4) = fz;
+    ((DbStealerwormControl *)b8)->unk0C = lbl_803E62A8;
+    ((DbStealerwormControl *)b8)->unk10 = fz;
+    ((DbStealerwormControl *)b8)->unk04 = fz;
     (**(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, p, 6);
   } else {
-    flag2 = *(char *)(p + 0x346);
+    flag2 = *(char *)&((BaddieState *)p)->moveDone;
     if (flag2 != 0) {
       if (*(u8 *)(obj + 0x36) == 0) {
         if (flag2 != 0) {
@@ -1429,56 +1523,57 @@ int fn_802015EC(int obj, int p)
   extern int Stack_IsFull(int sp);
   extern void Stack_Push(int sp, int *args);
   extern f32 lbl_803E62A8;
-  int sub_40c;
+  BaddieState *bs = (BaddieState *)p;
+  DbStealerwormControl *sub_40c;
   int sub_40c_30;
   int frame[3];
   int frame2[3];
   f32 resetValue;
 
-  sub_40c = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
-  sub_40c_30 = *(int *)(sub_40c + 0x30);
-  *(u8 *)(sub_40c + 0x14) |= 0x2;
+  sub_40c = (DbStealerwormControl *)(*(GroundBaddieState **)(obj + 0xb8))->control;
+  sub_40c_30 = sub_40c->unk30;
+  sub_40c->flags14 |= 0x2;
   resetValue = lbl_803E62A8;
-  *(f32 *)(p + 0x280) = resetValue;
-  *(f32 *)(p + 0x284) = resetValue;
+  bs->animSpeedA = resetValue;
+  bs->animSpeedB = resetValue;
   {
-    void *p2d0 = *(void **)(p + 0x2d0);
+    void *p2d0 = *(void **)&bs->targetObj;
     if (p2d0 == NULL || (**(int (**)(void *))(*(int *)(*(int *)((char *)p2d0 + 0x68)) + 0x20))(p2d0) == 0) {
-      *(u8 *)(sub_40c + 0x34) = 1;
+      sub_40c->unk34 = 1;
     }
   }
-  if (*(void **)(sub_40c + 0x18) == NULL) {
-    s16 r26 = *(s16 *)(sub_40c + 0x1c);
+  if (*(void **)&sub_40c->linkedObj == NULL) {
+    s16 r26 = sub_40c->unk1C;
     if (r26 != -1) {
       int sp_handle;
-      sp_handle = *(int *)(sub_40c + 0x24);
-      frame[0] = *(int *)(sub_40c + 0x28);
-      frame[1] = *(int *)(sub_40c + 0x2c);
-      frame[2] = *(int *)(sub_40c + 0x30);
+      sp_handle = sub_40c->msgStack;
+      frame[0] = sub_40c->unk28;
+      frame[1] = sub_40c->unk2C;
+      frame[2] = sub_40c->unk30;
       if (Stack_IsFull(sp_handle) == 0) Stack_Push(sp_handle, frame);
-      sp_handle = *(int *)(sub_40c + 0x24);
+      sp_handle = sub_40c->msgStack;
       frame2[0] = 7;
       frame2[1] = 0;
       frame2[2] = r26;
       if (Stack_IsFull(sp_handle) == 0) Stack_Push(sp_handle, frame2);
-      *(u8 *)(sub_40c + 0x34) = 1;
-      *(s16 *)(sub_40c + 0x1c) = -1;
+      sub_40c->unk34 = 1;
+      sub_40c->unk1C = -1;
     }
   }
-  if ((s32)(*(u32 *)(p + 0x314) & 0x200) != 0) {
-    *(int *)(sub_40c + 0x18) = *(int *)(p + 0x2d0);
-    *(s16 *)(sub_40c + 0x1c) = (s16)sub_40c_30;
-    *(int *)(sub_40c + 0x2c) = 0;
-    ObjMsg_SendToObject(*(int *)(sub_40c + 0x18), 17, obj, 18);
+  if ((s32)(bs->eventFlags & 0x200) != 0) {
+    sub_40c->linkedObj = *(int *)&bs->targetObj;
+    sub_40c->unk1C = (s16)sub_40c_30;
+    sub_40c->unk2C = 0;
+    ObjMsg_SendToObject(sub_40c->linkedObj, 17, obj, 18);
     Sfx_PlayFromObject(obj, SFXfoot_ice_run_3);
   }
-  *(s8 *)(p + 0x34d) = 18;
-  if (*(char *)(p + 0x27a) != '\0') {
+  *(s8 *)&bs->unk34D = 18;
+  if (*(char *)&bs->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 16, lbl_803E62A8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&bs->moveDone = 0;
   }
-  if (*(s8 *)(p + 0x346) != 0) {
-    *(u8 *)(sub_40c + 0x34) = 1;
+  if (*(s8 *)&bs->moveDone != 0) {
+    sub_40c->unk34 = 1;
   }
   return 0;
 }
@@ -1894,33 +1989,34 @@ int fn_802020B0(int obj, int p2)
   extern f32 lbl_803E6338;
   extern f32 lbl_803E633C;
 
-  int sub = *(int *)(obj + 0xb8);
+  GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
   int data = *(int *)(obj + 0x4c);
-  int sub_40c = *(int *)(sub + 0x40c);
+  DbStealerwormControl *sub_40c = (DbStealerwormControl *)sub->control;
+  BaddieState *bs = (BaddieState *)p2;
 
-  *(s8 *)(p2 + 0x34d) = 0x11;
+  *(s8 *)&bs->unk34D = 0x11;
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+  if ((s32)(s8)bs->moveJustStartedA != 0) {
     f32 fz = lbl_803E62A8;
-    *(f32 *)(p2 + 0x284) = fz;
-    *(f32 *)(p2 + 0x280) = fz;
-    *(int *)(p2 + 0x2d0) = 0;
-    *(u8 *)(p2 + 0x25f) = 1;
-    *(u8 *)(p2 + 0x349) = 0;
+    bs->animSpeedB = fz;
+    bs->animSpeedA = fz;
+    *(int *)&bs->targetObj = 0;
+    bs->unk25F = 1;
+    bs->unk349 = 0;
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
     ObjHits_DisableObject(obj);
     ObjGroup_RemoveObject(obj, 3);
-    if (*(void **)(sub_40c + 0x18) != NULL) {
-      ObjMsg_SendToObject((void *)*(int *)(sub_40c + 0x18), 17, obj, 16);
-      *(s16 *)(sub_40c + 0x1c) = -1;
-      *(int *)(sub_40c + 0x18) = 0;
+    if (*(void **)&sub_40c->linkedObj != NULL) {
+      ObjMsg_SendToObject((void *)sub_40c->linkedObj, 17, obj, 16);
+      sub_40c->unk1C = -1;
+      sub_40c->linkedObj = 0;
     }
   }
-  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+  if ((s32)(s8)bs->moveJustStartedA != 0) {
     ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E62A8, 0);
-    *(u8 *)(p2 + 0x346) = 0;
+    bs->moveDone = 0;
   }
-  *(f32 *)(p2 + 0x2a0) = lbl_803E6334;
+  bs->moveSpeed = lbl_803E6334;
   if (*(f32 *)(obj + 0x98) > lbl_803E6338) {
     int local;
     gameBitIncrement(*(s16 *)(data + 0x18));
@@ -1928,13 +2024,13 @@ int fn_802020B0(int obj, int p2)
       Obj_FreeObject(obj);
       return 0;
     }
-    while (Stack_IsEmpty(*(int *)(sub_40c + 0x24)) == 0) {
-      Stack_Pop(*(int *)(sub_40c + 0x24), &local);
+    while (Stack_IsEmpty(sub_40c->msgStack) == 0) {
+      Stack_Pop(sub_40c->msgStack, &local);
     }
     if (*(s16 *)(data + 0x2c) == 0) {
       ((MapEventInterface *)*gMapEventInterface)->startTimedEvent(*(int *)(data + 0x14), lbl_803E633C);
     }
-    *(u8 *)(sub + 0x404) |= *(u8 *)(data + 0x2b);
+    sub->configFlags |= *(u8 *)(data + 0x2b);
   }
   (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 0, 2, lbl_80329634);
   (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, lbl_80329640);
@@ -2057,21 +2153,22 @@ int fn_80202294(int obj, int p)
   extern void Stack_Push(int sp, int *args);
   extern f32 lbl_803E62A8;
   extern f32 lbl_803E6340;
-  int sub_40c;
+  BaddieState *bs = (BaddieState *)p;
+  DbStealerwormControl *sub_40c;
   int frame[3];
 
-  sub_40c = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
-  if (*(char *)(p + 0x27a) != '\0') {
+  sub_40c = (DbStealerwormControl *)(*(GroundBaddieState **)(obj + 0xb8))->control;
+  if (*(char *)&bs->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E62A8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&bs->moveDone = 0;
   }
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&bs->moveJustStartedA != '\0') {
     int r;
     int player_c8;
-    *(u32 *)(p + 0x2d0) = 0;
-    if (*(void **)(sub_40c + 0x18) != NULL) {
-      ObjMsg_SendToObject(*(int *)(sub_40c + 0x18), 17, obj, 16);
-      *(int *)(sub_40c + 0x18) = 0;
+    *(u32 *)&bs->targetObj = 0;
+    if (*(void **)&sub_40c->linkedObj != NULL) {
+      ObjMsg_SendToObject(sub_40c->linkedObj, 17, obj, 16);
+      sub_40c->linkedObj = 0;
     }
     player_c8 = *(int *)((char *)Obj_GetPlayerObject() + 0xc8);
     r = (**(int (**)(int))(*(int *)(*(int *)(player_c8 + 0x68)) + 0x44))(player_c8);
@@ -2085,10 +2182,10 @@ int fn_80202294(int obj, int p)
       int frame2;
       int sp_handle;
       int frame0;
-      frame2 = *(int *)(sub_40c + 0x30);
-      frame1 = *(int *)(sub_40c + 0x2c);
-      sp_handle = *(int *)(sub_40c + 0x24);
-      frame0 = *(int *)(sub_40c + 0x28);
+      frame2 = sub_40c->unk30;
+      frame1 = sub_40c->unk2C;
+      sp_handle = sub_40c->msgStack;
+      frame0 = sub_40c->unk28;
       frame[0] = frame0;
       frame[1] = frame1;
       frame[2] = frame2;
@@ -2096,13 +2193,13 @@ int fn_80202294(int obj, int p)
         Stack_Push(sp_handle, frame);
       }
     }
-    *(int *)(sub_40c + 0x3c) = 0;
+    sub_40c->unk3C = 0;
   }
-  *(s8 *)(p + 0x34d) = 16;
-  *(f32 *)(p + 0x2a0) = lbl_803E6340;
-  *(f32 *)(p + 0x280) = lbl_803E62A8;
-  if (*(s8 *)(p + 0x346) != 0) {
-    *(u8 *)(sub_40c + 0x34) = 1;
+  *(s8 *)&bs->unk34D = 16;
+  bs->moveSpeed = lbl_803E6340;
+  bs->animSpeedA = lbl_803E62A8;
+  if (*(s8 *)&bs->moveDone != 0) {
+    sub_40c->unk34 = 1;
   }
   return 0;
 }
@@ -2158,16 +2255,16 @@ int fn_80202524(int obj, int p)
   extern f32 lbl_803E62A8;
   extern f32 lbl_803E62F4;
 
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&((BaddieState *)p)->moveJustStartedA != '\0') {
     ObjHits_EnableObject(obj);
   }
   ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-  *(f32 *)(p + 0x2a0) = lbl_803E62F4;
-  if (*(char *)(p + 0x27a) != '\0') {
+  ((BaddieState *)p)->moveSpeed = lbl_803E62F4;
+  if (*(char *)&((BaddieState *)p)->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E62A8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&((BaddieState *)p)->moveDone = 0;
   }
-  *(s8 *)(p + 0x34d) = 1;
+  *(s8 *)&((BaddieState *)p)->unk34D = 1;
   return 0;
 }
 #pragma peephole reset
@@ -2265,44 +2362,45 @@ int fn_80202720(int obj, int p)
   extern f32 lbl_803E62C8;
   extern f32 lbl_803E62F4;
   extern f32 lbl_803E634C;
-  int sub;
-  int sub_40c;
+  BaddieState *bs = (BaddieState *)p;
+  GroundBaddieState *sub;
+  DbStealerwormControl *sub_40c;
   int p4c;
 
-  sub = *(int *)(obj + 0xb8);
+  sub = *(GroundBaddieState **)(obj + 0xb8);
   p4c = *(int *)(obj + 0x4c);
-  sub_40c = *(int *)(sub + 0x40c);
-  if (*(char *)(p + 0x27a) != '\0') {
+  sub_40c = (DbStealerwormControl *)sub->control;
+  if (*(char *)&bs->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 14, lbl_803E62A8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&bs->moveDone = 0;
   }
   *(u8 *)(obj + 0xaf) |= 0x8;
   if (*(f32 *)(obj + 0x98) > lbl_803E634C) {
-    *(u8 *)(sub_40c + 0x14) |= 0x2;
+    sub_40c->flags14 |= 0x2;
     ObjHits_DisableObject(obj);
   }
-  if (*(char *)(p + 0x27a) != '\0') {
-    *(f32 *)(p + 0x2a0) = lbl_803E62F4;
-    *(f32 *)(p + 0x280) = lbl_803E62A8;
+  if (*(char *)&bs->moveJustStartedA != '\0') {
+    bs->moveSpeed = lbl_803E62F4;
+    bs->animSpeedA = lbl_803E62A8;
   }
-  if (*(s8 *)(p + 0x346) != 0) {
+  if (*(s8 *)&bs->moveDone != 0) {
     Sfx_PlayFromObject(obj, SFXfoot_ice_run_2);
-    *(f32 *)(sub_40c + 4) = lbl_803E62C8;
+    sub_40c->unk04 = lbl_803E62C8;
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
-    *(u32 *)(p + 0x2d0) = 0;
-    *(u8 *)(p + 0x25f) = 0;
-    *(u8 *)(p + 0x349) = 0;
-    *(s16 *)(sub + 0x402) = 0;
-    *(u8 *)(sub + 0x404) |= *(u8 *)(p4c + 0x2b);
-    if (*(void **)(sub_40c + 0x18) != NULL) {
-      ObjMsg_SendToObject(*(int *)(sub_40c + 0x18), 17, obj, 19);
-      *(int *)(sub_40c + 0x18) = 0;
-      *(s16 *)(sub_40c + 0x1c) = -1;
+    *(u32 *)&bs->targetObj = 0;
+    bs->unk25F = 0;
+    bs->unk349 = 0;
+    sub->targetState = 0;
+    sub->configFlags |= *(u8 *)(p4c + 0x2b);
+    if (*(void **)&sub_40c->linkedObj != NULL) {
+      ObjMsg_SendToObject(sub_40c->linkedObj, 17, obj, 19);
+      sub_40c->linkedObj = 0;
+      sub_40c->unk1C = -1;
     }
-    if ((*(u8 *)(sub_40c + 0x15) & 0x2) == 0) {
+    if ((sub_40c->flags15 & 0x2) == 0) {
       *(u8 *)(obj + 0xaf) |= 0x8;
     }
-    *(u8 *)(sub_40c + 0x34) = 1;
+    sub_40c->unk34 = 1;
   }
   (**(int (**)(int, int, int, int, int *))(*gPlayerInterface + 0x34))(obj, p, 7, 0, lbl_80329640);
   return 0;
@@ -3222,10 +3320,10 @@ void fn_80204320(int obj)
   extern uint GameBit_Get(int);
   extern u8 lbl_803DC182;
   extern s16 lbl_80329848[];
-  int sub;
+  DfpLevelControlState *sub;
   void *player;
 
-  sub = *(int *)(obj + 0xb8);
+  sub = *(DfpLevelControlState **)(obj + 0xb8);
   player = Obj_GetPlayerObject();
   if (lbl_803DC182 != 0) {
     s16 i;
@@ -3239,7 +3337,7 @@ void fn_80204320(int obj)
       arr++;
     }
     GameBit_Set(1508, 0);
-    *(s16 *)(sub + 0) = 0;
+    sub->timer = 0;
     lbl_803DC182 = 0;
   }
   if (GameBit_Get(1507) == 0) {
@@ -3248,7 +3346,7 @@ void fn_80204320(int obj)
     }
   }
   if (GameBit_Get(3671) == 0) {
-    if (GameBit_Get(1589) != 0 && *(u8 *)(sub + 6) == 0) {
+    if (GameBit_Get(1589) != 0 && sub->sfxLatch == 0) {
       s16 i;
       s16 *arr;
       Sfx_PlayFromObject(0, 1095);
@@ -3258,13 +3356,13 @@ void fn_80204320(int obj)
         arr++;
       }
       GameBit_Set(1508, 1);
-      *(u8 *)(sub + 6) = 1;
-    } else if (GameBit_Get(1589) == 0 && *(u8 *)(sub + 6) == 1) {
-      *(u8 *)(sub + 6) = 0;
+      sub->sfxLatch = 1;
+    } else if (GameBit_Get(1589) == 0 && sub->sfxLatch == 1) {
+      sub->sfxLatch = 0;
       GameBit_Set(1508, 0);
     }
     if (GameBit_Get(1509) != 0) {
-      *(s16 *)(sub + 0) = 300;
+      sub->timer = 300;
       ObjMsg_SendToObject(player, 0x60005, obj, 1);
     }
   }
@@ -3847,11 +3945,11 @@ void dll_22C_init(int obj, char *p)
   b8 = *(int *)(obj + 0xb8);
   *(int *)(obj + 0xbc) = (int)dll_22C_SeqFn;
   *(s16 *)(obj + 0) = (s16)(*(char *)(p + 0x18) << 8);
-  *(s16 *)(b8 + 4) = 0;
-  *(s16 *)(b8 + 6) = *(s16 *)(p + 0x20);
-  *(s16 *)(b8 + 8) = *(s16 *)(p + 0x1e);
-  *(f32 *)(b8 + 0) = (f32)*(s16 *)(p + 0x1a);
-  *(u8 *)(b8 + 12) = (u8)*(s16 *)(p + 0x1c);
+  ((Dll22CState *)b8)->mode = 0;
+  ((Dll22CState *)b8)->gameBit = *(s16 *)(p + 0x20);
+  ((Dll22CState *)b8)->gameBit2 = *(s16 *)(p + 0x1e);
+  ((Dll22CState *)b8)->raiseHeight = (f32)*(s16 *)(p + 0x1a);
+  ((Dll22CState *)b8)->unk0C = (u8)*(s16 *)(p + 0x1c);
   *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E63A8;
   *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
 }
@@ -4053,20 +4151,20 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
     ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*gBaddieControlInterface)[22])(obj, def, sub, 0x10, 7, 0x10a, mode, lbl_803E62FC);
     ObjGroup_AddObject(obj, 3);
     *(int*)((char*)obj + 0xbc) = 0;
-    p40c = *(int**)(sub + 0x40c);
+    p40c = *(int**)&((GroundBaddieState *)sub)->control;
     memset(p40c, 0, 0x50);
-    *(f32*)((char*)p40c + 8) = lbl_803E62FC;
-    *(int*)p40c = (int)&lbl_80329514[((s16)*(s16*)(def + 0x24)) * 8];
+    ((DbStealerwormControl *)p40c)->unk08 = lbl_803E62FC;
+    ((DbStealerwormControl *)p40c)->cfg = (int)&lbl_80329514[((s16)*(s16*)(def + 0x24)) * 8];
     r = randomGetRange(0xa, 0x12c);
-    *(f32*)((char*)p40c + 0xc) = (f32)(s32)r;
-    *(u8*)((char*)p40c + 0x44) = (u8)((*(u8*)((char*)p40c + 0x44) & ~0x20) | ((def[0x2b] & 1) << 5));
-    *(u8*)((char*)p40c + 0x44) = (u8)(*(u8*)((char*)p40c + 0x44) | 0x10);
-    *(int*)((char*)p40c + 0x18) = 0;
+    ((DbStealerwormControl *)p40c)->unk0C = (f32)(s32)r;
+    ((DbStealerwormControl *)p40c)->flags44 = (u8)((((DbStealerwormControl *)p40c)->flags44 & ~0x20) | ((def[0x2b] & 1) << 5));
+    ((DbStealerwormControl *)p40c)->flags44 = (u8)(((DbStealerwormControl *)p40c)->flags44 | 0x10);
+    ((DbStealerwormControl *)p40c)->linkedObj = 0;
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
     *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
     ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, sub, 3);
-    *(s16*)(sub + 0x270) = 0;
-    *(u8*)(sub + 0x25f) = 1;
+    ((GroundBaddieState *)sub)->baddie.unk270 = 0;
+    ((GroundBaddieState *)sub)->baddie.unk25F = 1;
     ObjHits_EnableObject(obj);
     ObjMsg_AllocQueue(obj, 4);
     if (*(int*)((char*)obj + 0x64) != 0) {
@@ -4080,9 +4178,9 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
 #pragma peephole off
 void dbstealerworm_free(int *obj) {
     u8 *sub = *(u8**)((char*)obj + 0xb8);
-    int *p40c = *(int**)(sub + 0x40c);
+    int *p40c = *(int**)&((GroundBaddieState *)sub)->control;
     ObjGroup_RemoveObject(obj, 3);
-    Stack_Free((int*)p40c[9]);
+    Stack_Free((int*)((DbStealerwormControl *)p40c)->msgStack);
     if (*(void**)((char*)obj + 0xc8) != NULL) {
         Obj_FreeObject(*(int*)((char*)obj + 0xc8));
         *(int*)((char*)obj + 0xc8) = 0;
@@ -4173,7 +4271,7 @@ int chuka_getExtraSize(void) { return 0xc; }
 int chuka_getObjectTypeId(void) { return 0x0; }
 
 /* Pattern wrappers. */
-s16 DBstealerworm_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
+s16 DBstealerworm_setScale(int *obj) { return ((BaddieState *)((int**)obj)[0xb8/4])->controlMode; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6390;
@@ -4264,15 +4362,16 @@ int DrakorEnergy_setScale(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x8) 
 #pragma scheduling off
 int fn_80200460(int p1, int p2)
 {
+  BaddieState *p = (BaddieState *)p2;
   f32 fz;
-  if (*(void **)(p2 + 0x2d0) != NULL) {
-    if ((s8)*(u8 *)(p2 + 0x27b) != 0) {
+  if (*(void **)&p->targetObj != NULL) {
+    if ((s8)p->moveJustStartedB != 0) {
       fz = lbl_803E62A8;
-      *(f32 *)(p2 + 0x284) = fz;
-      *(f32 *)(p2 + 0x280) = fz;
+      p->animSpeedB = fz;
+      p->animSpeedA = fz;
       return 7;
     }
-    if ((s8)*(u8 *)(p2 + 0x346) != 0) return 7;
+    if ((s8)p->moveDone != 0) return 7;
   }
   return 0;
 }
@@ -4284,10 +4383,10 @@ int fn_80200460(int p1, int p2)
 #pragma scheduling off
 int fn_8020032C(int p1, int p2)
 {
-  int obj_b8 = *(int *)(p1 + 0xb8);
-  if ((s8)*(u8 *)(p2 + 0x27b) != 0) {
+  GroundBaddieState *state = *(GroundBaddieState **)(p1 + 0xb8);
+  if ((s8)((BaddieState *)p2)->moveJustStartedB != 0) {
     (*(void (**)(int, s16, int, int))((char *)*gBaddieControlInterface + 0x4c))(
-        p1, *(s16 *)(obj_b8 + 0x3f0), -1, 0);
+        p1, state->unk3F0, -1, 0);
   }
   return 0;
 }
@@ -4300,10 +4399,10 @@ extern f32 lbl_803E62BC;
 #pragma scheduling off
 int fn_80200410(int p1, int p2)
 {
-  int obj_b8 = *(int *)(p1 + 0xb8);
-  if ((s8)*(u8 *)(p2 + 0x354) < 1) return 3;
-  if ((s8)*(u8 *)(p2 + 0x346) != 0) {
-    *(f32 *)(*(int *)(obj_b8 + 0x40c) + 0x38) += lbl_803E62BC;
+  GroundBaddieState *state = *(GroundBaddieState **)(p1 + 0xb8);
+  if ((s8)((BaddieState *)p2)->unk354 < 1) return 3;
+  if ((s8)((BaddieState *)p2)->moveDone != 0) {
+    ((DbStealerwormControl *)state->control)->unk38 += lbl_803E62BC;
     return 7;
   }
   return 0;
@@ -4330,11 +4429,11 @@ extern f32 timeDelta;
 #pragma scheduling off
 int dfplevelcontrol_SeqFn(int p1)
 {
-  int p_b8 = *(int *)(p1 + 0xb8);
+  DfpLevelControlState *p_b8 = *(DfpLevelControlState **)(p1 + 0xb8);
   void *player = Obj_GetPlayerObject();
-  s16 v = *(s16 *)p_b8;
+  s16 v = p_b8->timer;
   if (v > 0) {
-    *(s16 *)p_b8 = v - (int)timeDelta;
+    p_b8->timer = v - (int)timeDelta;
     fn_802960E8(player, 0x51e);
   }
   return 0;
@@ -4359,11 +4458,11 @@ void dfplevelcontrol_initialise(void) {
 }
 
 void dfpobjcreator_free(int obj, int flag) {
-    int *state = *(int **)((char *)obj + 0xB8);
+    DfpObjCreatorState *state = *(DfpObjCreatorState **)((char *)obj + 0xB8);
     if (flag == 0) {
-        if (*(void **)state != NULL) {
-            Obj_FreeObject(*(int *)state);
-            *(int *)state = 0;
+        if (*(void **)&state->spawnedObj != NULL) {
+            Obj_FreeObject(state->spawnedObj);
+            state->spawnedObj = 0;
         }
     }
 }
@@ -4386,14 +4485,14 @@ void DFP_Torch_free(int obj) {
 }
 
 void dfpobjcreator_init(int obj, s8 *def) {
-    int *state = *(int **)((char *)obj + 0xB8);
+    DfpObjCreatorState *state = *(DfpObjCreatorState **)((char *)obj + 0xB8);
     *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
-    *(s16 *)((char *)state + 0xC) = *(s16 *)((char *)def + 0x18);
-    *(s16 *)((char *)state + 0xE) = *(s16 *)((char *)def + 0x1C);
-    *(s16 *)((char *)state + 0x10) = *(s16 *)((char *)state + 0xE);
-    *(s16 *)((char *)state + 0x12) = (s16)(s32)def[0x1F];
-    *(s16 *)((char *)state + 0x14) = (s16)((s32)(u8)def[0x20] << 1);
-    *(s16 *)((char *)state + 0x16) = 100;
+    state->gameBit = *(s16 *)((char *)def + 0x18);
+    state->spawnPeriod = *(s16 *)((char *)def + 0x1C);
+    state->spawnTimer = state->spawnPeriod;
+    state->unk12 = (s16)(s32)def[0x1F];
+    state->unk14 = (s16)((s32)(u8)def[0x20] << 1);
+    state->unk16 = 100;
 }
 
 void dfplevelcontrol_setScale(int unused, u8 *out) {
@@ -4420,34 +4519,35 @@ int fn_802028C0(int obj, int p2)
   extern f32 lbl_803E6350;
   extern f32 lbl_803E6354;
   extern f32 lbl_803E6358;
-  int sub = *(int *)(obj + 0xb8);
-  int sub_40c = *(int *)(sub + 0x40c);
+  GroundBaddieState *sub = *(GroundBaddieState **)(obj + 0xb8);
+  DbStealerwormControl *sub_40c = (DbStealerwormControl *)sub->control;
+  BaddieState *bs = (BaddieState *)p2;
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    *(u8 *)(p2 + 0x25f) = 1;
+  if ((s32)(s8)bs->moveJustStartedA != 0) {
+    bs->unk25F = 1;
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
     *(u8 *)(obj + 0x36) = 255;
-    *(u8 *)(p2 + 0x34d) = 1;
-    *(f32 *)(p2 + 0x2a0) = lbl_803E6350 + (f32)(u32)*(u8 *)(sub + 0x406) / lbl_803E6354;
+    bs->unk34D = 1;
+    bs->moveSpeed = lbl_803E6350 + (f32)(u32)sub->aggression / lbl_803E6354;
     ObjHits_EnableObject(obj);
-    *(int *)(sub_40c + 0x18) = 0;
-    *(s16 *)(sub_40c + 0x1c) = -1;
+    sub_40c->linkedObj = 0;
+    sub_40c->unk1C = -1;
   } else {
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
   }
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
-    *(s16 *)(sub + 0x402) = 1;
-    *(u8 *)(sub_40c + 0x34) = 1;
+  if ((s32)(s8)bs->moveDone != 0) {
+    sub->targetState = 1;
+    sub_40c->unk34 = 1;
   }
 
-  if ((*(int *)(p2 + 0x314) & 0x200) != 0) {
-    *(int *)(p2 + 0x314) = *(int *)(p2 + 0x314) & ~0x200;
-    *(u8 *)(sub_40c + 0x14) = (u8)(*(u8 *)(sub_40c + 0x14) | 0x4);
+  if ((*(int *)&bs->eventFlags & 0x200) != 0) {
+    *(int *)&bs->eventFlags = *(int *)&bs->eventFlags & ~0x200;
+    sub_40c->flags14 = (u8)(sub_40c->flags14 | 0x4);
   }
 
   if (*(f32 *)(obj + 0x98) < lbl_803E6358) {
-    *(u8 *)(sub_40c + 0x14) = (u8)(*(u8 *)(sub_40c + 0x14) | 0x2);
+    sub_40c->flags14 = (u8)(sub_40c->flags14 | 0x2);
   }
 
   (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, lbl_80329640);
@@ -4510,36 +4610,36 @@ int dbholecontrol1_SeqFn(int obj, int unused, int p3)
 #pragma scheduling off
 int dbstealerworm_func0B(int obj, u8 msg, int *out)
 {
-    int state = *(int *)(obj + 0xb8);
-    int sub = *(int *)(state + 0x40c);
+    GroundBaddieState *state = *(GroundBaddieState **)(obj + 0xb8);
+    DbStealerwormControl *sub = (DbStealerwormControl *)state->control;
     int result = 0;
     u8 b;
     switch (msg) {
     case 0x80:
         break;
     case 0x81:
-        b = *(u8 *)(state + 0x404);
+        b = state->configFlags;
         if ((b & 2) == 0) {
             break;
         }
-        *(u8 *)(state + 0x404) = b & ~2;
+        state->configFlags = b & ~2;
         if (out != 0) {
             *out = 1;
         }
         result = 1;
         break;
     case 0x82:
-        if (*(s16 *)(state + 0x274) != 0xb) {
+        if (state->baddie.controlMode != 0xb) {
             break;
         }
         if (out == 0) {
             break;
         }
-        *(int *)(sub + 0x3c) = (int)out;
+        sub->unk3C = (int)out;
         result = 1;
         break;
     case 0x83:
-        result = *(int *)(sub + 0x3c);
+        result = sub->unk3C;
         break;
     }
     return result;
@@ -4602,7 +4702,7 @@ void fn_80203000(int obj, int param2)
 {
     int i;
     int state = *(int *)(param2 + 0x40c);
-    if ((*(u8 *)(state + 0x14) & 1) && *(void **)(param2 + 0x2d0) != 0) {
+    if ((*(u8 *)(state + 0x14) & 1) && *(void **)&((GroundBaddieState *)param2)->baddie.targetObj != 0) {
         fn_80202EF0(obj, param2);
     }
     if (*(u8 *)(state + 0x14) & 2) {
@@ -4636,17 +4736,17 @@ typedef struct DfpFlags7 {
 #pragma scheduling off
 void dfplevelcontrol_init(int obj, int param2)
 {
-    int state = *(int *)(obj + 0xb8);
+    DfpLevelControlState *state = *(DfpLevelControlState **)(obj + 0xb8);
     int v;
     ObjGroup_AddObject(obj, 9);
-    ((DfpFlags7 *)(state + 7))->b80 = GameBit_Get(0xd5d);
-    ((DfpFlags7 *)(state + 7))->b40 = GameBit_Get(0xd59);
-    ((DfpFlags7 *)(state + 7))->b20 = GameBit_Get(0xd5a);
+    ((DfpFlags7 *)&state->flags07)->b80 = GameBit_Get(0xd5d);
+    ((DfpFlags7 *)&state->flags07)->b40 = GameBit_Get(0xd59);
+    ((DfpFlags7 *)&state->flags07)->b20 = GameBit_Get(0xd5a);
     *(void **)(obj + 0xbc) = dfplevelcontrol_SeqFn;
-    *(s16 *)(state + 2) = 1;
+    state->mode = 1;
     v = *(s16 *)(param2 + 0x1a);
     if (v != 0 && v <= 2) {
-        *(s16 *)(state + 2) = v;
+        state->mode = v;
     }
     ((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     unlockLevel(0, 0, 1);
@@ -4668,28 +4768,29 @@ extern f32 lbl_803E62F4;
 #pragma scheduling off
 int fn_80202428(int obj, int param2)
 {
-    int state = *(int *)(obj + 0xb8);
+    GroundBaddieState *state = *(GroundBaddieState **)(obj + 0xb8);
+    BaddieState *bs = (BaddieState *)param2;
     u32 v;
-    int sub;
-    if (*(s8 *)(param2 + 0x27a) != 0) {
+    DbStealerwormControl *sub;
+    if (*(s8 *)&bs->moveJustStartedA != 0) {
         ObjHits_EnableObject(obj);
     }
     ObjHits_SetHitVolumeSlot(obj, 0xa, 1, -1);
-    *(f32 *)(param2 + 0x2a0) = lbl_803E62F4;
-    if (*(s8 *)(param2 + 0x27a) != 0) {
+    bs->moveSpeed = lbl_803E62F4;
+    if (*(s8 *)&bs->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove((int)obj, 0xa, lbl_803E62A8, 0);
-        *(u8 *)(param2 + 0x346) = 0;
+        bs->moveDone = 0;
     }
-    *(u8 *)(param2 + 0x34d) = 1;
-    sub = *(int *)(state + 0x40c);
-    *(u8 *)(sub + 0x14) = *(u8 *)(sub + 0x14) | 0x2;
-    v = *(u32 *)(param2 + 0x314);
+    bs->unk34D = 1;
+    sub = (DbStealerwormControl *)state->control;
+    sub->flags14 = sub->flags14 | 0x2;
+    v = bs->eventFlags;
     if (v & 1) {
-        *(u32 *)(param2 + 0x314) = v & ~1;
-        *(u8 *)(sub + 0x14) = *(u8 *)(sub + 0x14) | 0x1;
+        bs->eventFlags = v & ~1;
+        sub->flags14 = sub->flags14 | 0x1;
     }
-    if (*(s8 *)(param2 + 0x346) != 0) {
-        *(u8 *)(sub + 0x34) = 1;
+    if (*(s8 *)&bs->moveDone != 0) {
+        sub->unk34 = 1;
     }
     return 0;
 }
@@ -4703,24 +4804,25 @@ extern f32 lbl_803E62EC;
 #pragma scheduling off
 int fn_80200750(int obj, int param2)
 {
-    int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
-    *(u8 *)(sub + 0x14) = *(u8 *)(sub + 0x14) | 0x2;
-    *(u8 *)(sub + 0x15) = *(u8 *)(sub + 0x15) | 0x4;
-    *(f32 *)(param2 + 0x2a0) = lbl_803E62E8;
-    if (*(s8 *)(param2 + 0x27a) != 0) {
+    DbStealerwormControl *sub = (DbStealerwormControl *)(*(GroundBaddieState **)(obj + 0xb8))->control;
+    BaddieState *bs = (BaddieState *)param2;
+    sub->flags14 = sub->flags14 | 0x2;
+    sub->flags15 = sub->flags15 | 0x4;
+    bs->moveSpeed = lbl_803E62E8;
+    if (*(s8 *)&bs->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
-        *(u8 *)(param2 + 0x346) = 0;
+        bs->moveDone = 0;
     }
-    *(u8 *)(param2 + 0x34d) = 0x1f;
-    if (*(s8 *)(param2 + 0x27a) != 0) {
-        *(int *)(sub + 0x18) = *(int *)(param2 + 0x2d0);
-        *(s16 *)(sub + 0x1c) = 0x24;
-        *(int *)(sub + 0x2c) = 0;
-        ObjMsg_SendToObject(*(int *)(sub + 0x18), 0x11, obj, 0x12);
+    bs->unk34D = 0x1f;
+    if (*(s8 *)&bs->moveJustStartedA != 0) {
+        sub->linkedObj = *(int *)&bs->targetObj;
+        sub->unk1C = 0x24;
+        sub->unk2C = 0;
+        ObjMsg_SendToObject(sub->linkedObj, 0x11, obj, 0x12);
         Sfx_PlayFromObject(obj, SFXfoot_ice_run_3);
     }
     if (*(f32 *)(obj + 0x98) > lbl_803E62EC) {
-        *(u8 *)(sub + 0x34) = 1;
+        sub->unk34 = 1;
     }
     return 0;
 }
@@ -4737,7 +4839,7 @@ extern f32 lbl_803E63E0;
 #pragma scheduling off
 void DFP_Torch_init(int obj, int param2)
 {
-    int state = *(int *)(obj + 0xb8);
+    DfpTorchState *state = *(DfpTorchState **)(obj + 0xb8);
     int res;
     f32 local_18;
     int v;
@@ -4748,17 +4850,17 @@ void DFP_Torch_init(int obj, int param2)
     } else {
         *(f32 *)(obj + 8) = lbl_803E63E8;
     }
-    *(u8 *)(state + 9) = *(u8 *)(param2 + 0x19);
-    *(int *)(state) = *(s16 *)(param2 + 0x1e);
+    state->mode = *(u8 *)(param2 + 0x19);
+    state->gameBit = *(s16 *)(param2 + 0x1e);
     local_18 = lbl_803E63E0;
-    if (*(u8 *)(state + 9) == 0) {
-        *(u8 *)(state + 0xa) = 1;
+    if (state->mode == 0) {
+        state->lit = 1;
         res = Resource_Acquire(0x69, 1);
         if (*(s16 *)(param2 + 0x1c) == 0) {
             (*(void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)res + 4)))(obj, 0, &local_18, 0x10004, -1, 0);
         }
     }
-    *(u8 *)(state + 0xd) = (u8)*(s16 *)(param2 + 0x1c);
+    state->colorIdx = (u8)*(s16 *)(param2 + 0x1c);
     *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
 }
 #pragma peephole reset
@@ -4816,7 +4918,7 @@ int fn_80202C78(int obj, int p6, f32 p1, f32 p2, f32 p3, f32 p4)
     extern f32 lbl_803E634C;
     extern f32 lbl_803E62C8;
     extern f32 lbl_803E6374;
-    int state = *(int *)(obj + 0xb8);
+    BaddieState *state = *(BaddieState **)(obj + 0xb8);
     f32 yawF;
     int yaw;
     f32 zero;
@@ -4845,11 +4947,11 @@ int fn_80202C78(int obj, int p6, f32 p1, f32 p2, f32 p3, f32 p4)
     if (ratio < lbl_803E62A8) {
         p2 = -p2;
     }
-    cur = *(f32 *)(state + 0x280);
+    cur = state->animSpeedA;
     k = timeDelta * lbl_803E634C;
     prod = p2 * (lbl_803E62C8 - (f32)(s16)yaw / lbl_803E6374);
-    *(f32 *)(state + 0x280) = k * (prod - cur) + cur;
-    *(f32 *)(state + 0x284) = lbl_803E62A8;
+    state->animSpeedA = k * (prod - cur) + cur;
+    state->animSpeedB = lbl_803E62A8;
     return 0;
 }
 #pragma dont_inline reset
@@ -4868,7 +4970,7 @@ int fn_80202DA4(u8 *obj, u8 *p6, f32 p1, f32 p2, f32 p3, f32 p4)
     extern f32 lbl_803E634C;
     extern f32 lbl_803E62C8;
     extern f32 lbl_803E6374;
-    int state = *(int *)(obj + 0xb8);
+    BaddieState *state = *(BaddieState **)(obj + 0xb8);
     f32 yawF;
     int yaw;
     f32 dy;
@@ -4892,11 +4994,11 @@ int fn_80202DA4(u8 *obj, u8 *p6, f32 p1, f32 p2, f32 p3, f32 p4)
             return 1;
         }
     }
-    cur = *(f32 *)(state + 0x280);
+    cur = state->animSpeedA;
     k = timeDelta * lbl_803E634C;
     prod = p2 * (lbl_803E62C8 - (f32)(s16)yaw / lbl_803E6374);
-    *(f32 *)(state + 0x280) = k * (prod - cur) + cur;
-    *(f32 *)(state + 0x284) = lbl_803E62A8;
+    state->animSpeedA = k * (prod - cur) + cur;
+    state->animSpeedB = lbl_803E62A8;
     return 0;
 }
 #pragma scheduling reset
@@ -4910,16 +5012,16 @@ void dfpobjcreator_update(int obj)
     extern u8 *Obj_SetupObject(u8 *, int, int, int, int);
     extern f32 timeDelta;
     int data = *(int *)(obj + 0x4c);
-    int state = *(int *)(obj + 0xb8);
+    DfpObjCreatorState *state = *(DfpObjCreatorState **)(obj + 0xb8);
     u8 *setup;
     u8 *newObj;
 
     if (Obj_IsLoadingLocked() != 0) {
         switch (*(s16 *)(data + 0x1a)) {
         case 7:
-            *(s16 *)(state + 0x10) -= (int)timeDelta;
-            if (*(s16 *)(state + 0x10) <= 0 && GameBit_Get(*(s16 *)(state + 0xc)) != 0) {
-                *(s16 *)(state + 0x10) = *(s16 *)(state + 0xe);
+            state->spawnTimer -= (int)timeDelta;
+            if (state->spawnTimer <= 0 && GameBit_Get(state->gameBit) != 0) {
+                state->spawnTimer = state->spawnPeriod;
                 setup = Obj_AllocObjectSetup(0x24, 0x71b);
                 *(f32 *)(setup + 0x8) = *(f32 *)(data + 0x8);
                 *(f32 *)(setup + 0xc) = *(f32 *)(data + 0xc);
@@ -4950,33 +5052,34 @@ int fn_802025C0(int obj, int p2)
     extern f32 lbl_803E62A8;
     extern f32 lbl_803E6344;
     extern f32 lbl_803E6348;
-    int state = *(int *)(obj + 0xb8);
-    int sub = *(int *)(state + 0x40c);
+    GroundBaddieState *state = *(GroundBaddieState **)(obj + 0xb8);
+    DbStealerwormControl *sub = (DbStealerwormControl *)state->control;
+    BaddieState *bs = (BaddieState *)p2;
 
-    if (*(s8 *)(p2 + 0x27a) != 0) {
+    if (*(s8 *)&bs->moveJustStartedA != 0) {
         ObjHits_EnableObject(obj);
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    if (*(s8 *)(p2 + 0x27a) != 0) {
+    if (*(s8 *)&bs->moveJustStartedA != 0) {
         if ((int)randomGetRange(0, 1) != 0) {
-            if (*(s8 *)(p2 + 0x27a) != 0) {
+            if (*(s8 *)&bs->moveJustStartedA != 0) {
                 ObjAnim_SetCurrentMove((int)obj, 6, lbl_803E62A8, 0);
-                *(u8 *)(p2 + 0x346) = 0;
+                bs->moveDone = 0;
             }
         } else {
-            if (*(s8 *)(p2 + 0x27a) != 0) {
+            if (*(s8 *)&bs->moveJustStartedA != 0) {
                 ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E62A8, 0);
-                *(u8 *)(p2 + 0x346) = 0;
+                bs->moveDone = 0;
             }
         }
-        *(u8 *)(p2 + 0x34d) = 1;
-        *(f32 *)(p2 + 0x2a0) = lbl_803E6344 + (f32)*(u8 *)(state + 0x406) / lbl_803E6348;
+        bs->unk34D = 1;
+        bs->moveSpeed = lbl_803E6344 + (f32)state->aggression / lbl_803E6348;
     }
-    *(f32 *)(p2 + 0x280) = lbl_803E62A8;
-    if (*(s8 *)(p2 + 0x346) != 0) {
-        *(u8 *)(sub + 0x34) = 1;
+    bs->animSpeedA = lbl_803E62A8;
+    if (*(s8 *)&bs->moveDone != 0) {
+        sub->unk34 = 1;
     }
-    *(u8 *)(sub + 0x14) |= 2;
+    sub->flags14 |= 2;
     return 0;
 }
 #pragma peephole reset
@@ -4992,31 +5095,31 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     extern f32 lbl_803E62D0;
     extern f32 lbl_803E62A8;
     extern f32 lbl_803E62C8;
-    int sub;
-    int state;
+    DbStealerwormControl *sub;
+    GroundBaddieState *state;
     char *path;
 
-    state = *(int *)(obj + 0xb8);
-    sub = *(int *)(state + 0x40c);
-    if (*(void **)(sub + 0x18) != NULL) {
-        *(f32 *)(*(int *)(sub + 0x18) + 0xc) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(int *)(sub + 0x18) + 0x10) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(int *)(sub + 0x18) + 0x14) = *(f32 *)(obj + 0x14);
-        *(f32 *)(*(int *)(sub + 0x18) + 0x10) += lbl_803E62D0;
+    state = *(GroundBaddieState **)(obj + 0xb8);
+    sub = (DbStealerwormControl *)state->control;
+    if (*(void **)&sub->linkedObj != NULL) {
+        *(f32 *)(sub->linkedObj + 0xc) = *(f32 *)(obj + 0xc);
+        *(f32 *)(sub->linkedObj + 0x10) = *(f32 *)(obj + 0x10);
+        *(f32 *)(sub->linkedObj + 0x14) = *(f32 *)(obj + 0x14);
+        *(f32 *)(sub->linkedObj + 0x10) += lbl_803E62D0;
     }
-    if (visible != 0 && *(int *)(obj + 0xf4) == 0 && *(s16 *)(state + 0x402) != 0) {
+    if (visible != 0 && *(int *)(obj + 0xf4) == 0 && state->targetState != 0) {
         {
-            if (*(f32 *)(state + 0x3e8) != lbl_803E62A8) {
-                fn_8003B5E0(0xc8, 0, 0, (int)*(f32 *)(state + 0x3e8));
+            if (state->unk3E8 != lbl_803E62A8) {
+                fn_8003B5E0(0xc8, 0, 0, (int)state->unk3E8);
             }
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E62C8);
-            if ((*(u16 *)(state + 0x400) & 0x60) != 0) {
-                objParticleFn_80099d84(obj, lbl_803E62C8, 3, *(f32 *)(state + 0x3e8), 0);
+            if ((state->flags400 & 0x60) != 0) {
+                objParticleFn_80099d84(obj, lbl_803E62C8, 3, state->unk3E8, 0);
             }
-            path = *(char **)(sub + 0x18);
+            path = *(char **)&sub->linkedObj;
             if (path != NULL && *(void **)(path + 0x50) != NULL) {
                 ObjPath_GetPointWorldPosition(obj, 3, path + 0xc, path + 0x10, path + 0x14, 0);
-                ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(*(int *)(sub + 0x18), p2, p3, p4, p5, lbl_803E62C8);
+                ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(sub->linkedObj, p2, p3, p4, p5, lbl_803E62C8);
             }
         }
     }
@@ -5038,7 +5141,8 @@ int fn_80200850(int obj, int p2)
     extern f32 lbl_803E62F8;
     extern f32 lbl_803E62FC;
     extern f32 lbl_803E62B8;
-    int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+    DbStealerwormControl *sub = (DbStealerwormControl *)(*(GroundBaddieState **)(obj + 0xb8))->control;
+    BaddieState *bs = (BaddieState *)p2;
     int q;
     int tmp;
     f32 v;
@@ -5050,55 +5154,55 @@ int fn_80200850(int obj, int p2)
         f32 pos[3];
     } stk;
 
-    *(u8 *)(sub + 0x14) |= 2;
-    *(u8 *)(sub + 0x15) &= ~4;
-    v = *(f32 *)(p2 + 0x280);
+    sub->flags14 |= 2;
+    sub->flags15 &= ~4;
+    v = bs->animSpeedA;
     d = lbl_803E62F0;
-    *(f32 *)(p2 + 0x280) = v / d;
-    *(f32 *)(p2 + 0x284) = *(f32 *)(p2 + 0x284) / d;
-    *(f32 *)(p2 + 0x2a0) = lbl_803E62F4;
-    if (*(s8 *)(p2 + 0x27a) != 0) {
+    bs->animSpeedA = v / d;
+    bs->animSpeedB = bs->animSpeedB / d;
+    bs->moveSpeed = lbl_803E62F4;
+    if (*(s8 *)&bs->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
-        *(u8 *)(p2 + 0x346) = 0;
+        bs->moveDone = 0;
     }
-    *(u8 *)(p2 + 0x34d) = 0x1f;
+    bs->unk34D = 0x1f;
     if (*(f32 *)(obj + 0x98) > lbl_803E62EC
-        && *(f32 *)(*(int *)(p2 + 0x2d0) + 0x10) - lbl_803E62F8 <= *(f32 *)(obj + 0x10)) {
-        q = *(int *)(sub + 0x24);
+        && *(f32 *)(*(int *)&bs->targetObj + 0x10) - lbl_803E62F8 <= *(f32 *)(obj + 0x10)) {
+        q = sub->msgStack;
         stk.msg9[0] = 9;
         stk.msg9[1] = 0;
         stk.msg9[2] = 0x24;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, stk.msg9);
         }
-        *(u8 *)(sub + 0x34) = 1;
-        tmp = *(int *)(p2 + 0x2d0);
-        q = *(int *)(sub + 0x24);
+        sub->unk34 = 1;
+        tmp = *(int *)&bs->targetObj;
+        q = sub->msgStack;
         stk.msg7[0] = 7;
         stk.msg7[1] = 1;
         stk.msg7[2] = tmp;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, stk.msg7);
         }
-        *(u8 *)(sub + 0x34) = 1;
+        sub->unk34 = 1;
     } else {
         stk.pos[0] = *(f32 *)(obj + 0xc);
         stk.pos[1] = *(f32 *)(obj + 0x10);
         stk.pos[2] = *(f32 *)(obj + 0x14);
         stk.pos[1] = stk.pos[1] + lbl_803E62FC;
-        stk.pos[0] = *(f32 *)(*(int *)(p2 + 0x2d0) + 0xc) - stk.pos[0];
-        stk.pos[1] = *(f32 *)(*(int *)(p2 + 0x2d0) + 0x10) - stk.pos[1];
-        stk.pos[2] = *(f32 *)(*(int *)(p2 + 0x2d0) + 0x14) - stk.pos[2];
+        stk.pos[0] = *(f32 *)(*(int *)&bs->targetObj + 0xc) - stk.pos[0];
+        stk.pos[1] = *(f32 *)(*(int *)&bs->targetObj + 0x10) - stk.pos[1];
+        stk.pos[2] = *(f32 *)(*(int *)&bs->targetObj + 0x14) - stk.pos[2];
         if (sqrtf(stk.pos[2] * stk.pos[2] + (stk.pos[0] * stk.pos[0] + stk.pos[1] * stk.pos[1])) < lbl_803E62B8) {
-            tmp = *(int *)(p2 + 0x2d0);
-            q = *(int *)(sub + 0x24);
+            tmp = *(int *)&bs->targetObj;
+            q = sub->msgStack;
             stk.msgE[0] = 0xe;
             stk.msgE[1] = 1;
             stk.msgE[2] = tmp;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, stk.msgE);
             }
-            *(u8 *)(sub + 0x34) = 1;
+            sub->unk34 = 1;
         }
     }
     return 0;
@@ -5126,8 +5230,8 @@ int fn_80200088(int obj, int p2)
     extern f32 lbl_803E62B0;
     extern f32 lbl_803E62B4;
     extern f32 lbl_803E62B8;
-    int tmp = *(int *)(obj + 0xb8);
-    int sub;
+    GroundBaddieState *tmp = *(GroundBaddieState **)(obj + 0xb8);
+    DbStealerwormControl *sub;
     int data = *(int *)(obj + 0x4c);
     int base;
     int n;
@@ -5139,35 +5243,35 @@ int fn_80200088(int obj, int p2)
     f32 range;
 
     range = lbl_803E62AC;
-    sub = *(int *)(tmp + 0x40c);
-    if (*(s8 *)(p2 + 0x27b) != 0 || ((u32)*(u8 *)(sub + 0x44) >> 6 & 1) != 0) {
-        *(u8 *)(sub + 0x15) &= ~4;
-        ((AnimFlags44 *)(sub + 0x44))->flag40 = 0;
-        if (Stack_IsEmpty(*(int *)(sub + 0x24)) == 0) {
-            Stack_Pop(*(int *)(sub + 0x24), buf);
+    sub = (DbStealerwormControl *)tmp->control;
+    if (*(s8 *)&((BaddieState *)p2)->moveJustStartedB != 0 || ((u32)sub->flags44 >> 6 & 1) != 0) {
+        sub->flags15 &= ~4;
+        ((AnimFlags44 *)&sub->flags44)->flag40 = 0;
+        if (Stack_IsEmpty(sub->msgStack) == 0) {
+            Stack_Pop(sub->msgStack, buf);
         }
-        base = *(int *)(sub + 0x0);
-        n = (*(int *)(sub + 0x20) - *(int *)base) / 12;
+        base = sub->cfg;
+        n = (sub->unk20 - *(int *)base) / 12;
         if (n >= *(s16 *)(base + 4)) {
-            *(int *)(sub + 0x20) = 0;
+            sub->unk20 = 0;
         }
-        if (*(void **)(sub + 0x20) == NULL) {
-            *(int *)(sub + 0x20) = *(int *)*(int *)(sub + 0x0);
+        if (*(void **)&sub->unk20 == NULL) {
+            sub->unk20 = *(int *)sub->cfg;
             *(f32 *)(obj + 0xc) = *(f32 *)(data + 0x8);
             *(f32 *)(obj + 0x10) = *(f32 *)(data + 0xc);
             *(f32 *)(obj + 0x14) = *(f32 *)(data + 0x10);
         }
-        if (*(int *)(*(int *)(sub + 0x20) + 4) != 0) {
-            *(int *)(p2 + 0x2d0) = ObjGroup_FindNearestObjectForObject(*(int *)(*(int *)(sub + 0x20) + 4), obj, &range);
+        if (*(int *)(sub->unk20 + 4) != 0) {
+            *(int *)&((BaddieState *)p2)->targetObj = ObjGroup_FindNearestObjectForObject(*(int *)(sub->unk20 + 4), obj, &range);
         }
-        if (*(void **)(p2 + 0x2d0) != NULL) {
-            (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, *(int *)*(int *)(sub + 0x20));
+        if (*(void **)&((BaddieState *)p2)->targetObj != NULL) {
+            (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, *(int *)sub->unk20);
         }
         return 0;
     } else {
         f32 t;
-        if (*(void **)(sub + 0x18) == NULL && (t = *(f32 *)(sub + 0x38)) > lbl_803E62B0) {
-            *(f32 *)(sub + 0x38) = t - lbl_803E62B0;
+        if (*(void **)&sub->linkedObj == NULL && (t = sub->unk38) > lbl_803E62B0) {
+            sub->unk38 = t - lbl_803E62B0;
             range = lbl_803E62B4;
             i = 3;
             found = 0;
@@ -5178,7 +5282,7 @@ int fn_80200088(int obj, int p2)
                     found = o;
                 }
             }
-            *(int *)(p2 + 0x2d0) = found;
+            *(int *)&((BaddieState *)p2)->targetObj = found;
             if (found != 0) {
                 if (range < lbl_803E62B8) {
                     (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 2);
@@ -5209,7 +5313,8 @@ void fn_80203144(int obj, int p2, int p3)
     extern f32 lbl_803E6354;
     extern f32 lbl_803E6384;
     extern f32 timeDelta;
-    int sub = *(int *)(p2 + 0x40c);
+    GroundBaddieState *st = (GroundBaddieState *)p2;
+    DbStealerwormControl *sub = (DbStealerwormControl *)st->control;
     u32 near;
     int data;
     char *player;
@@ -5221,19 +5326,19 @@ void fn_80203144(int obj, int p2, int p3)
 
     stk.range = lbl_803E62B0;
     data = *(int *)(obj + 0x4c);
-    near = (**(u32 (**)(int, int, f32, int))((char *)*gBaddieControlInterface + 0x48))(obj, p3, (f32)*(u16 *)(p2 + 0x3fe), 0x8000);
-    if (near == 0 && (*(u8 *)(p2 + 0x404) & 0x10) != 0) {
+    near = (**(u32 (**)(int, int, f32, int))((char *)*gBaddieControlInterface + 0x48))(obj, p3, (f32)st->unk3FE, 0x8000);
+    if (near == 0 && (st->configFlags & 0x10) != 0) {
         near = ObjGroup_FindNearestObject(0x24, obj, &stk.range);
     }
-    if (near == 0 && (*(u8 *)(p2 + 0x404) & 0x10) != 0 && (*(u8 *)(p2 + 0x404) & 2) == 0 && (*(u8 *)(data + 0x2b) & 2) != 0) {
+    if (near == 0 && (st->configFlags & 0x10) != 0 && (st->configFlags & 2) == 0 && (*(u8 *)(data + 0x2b) & 2) != 0) {
         near = ObjGroup_FindNearestObject(0x24, obj, 0);
     }
-    if (near != 0 && (*(u8 *)(p2 + 0x404) & 2) == 0) {
-        (**(void (**)(int, int, int, int, int, int, int, int, int))((char *)*gBaddieControlInterface + 0x28))(obj, p3, p2 + 0x35c, *(s16 *)(p2 + 0x3f4), 0, 0, 0, 8, -1);
-        *(int *)(p3 + 0x2d0) = near;
-        *(u8 *)(p3 + 0x349) = 0;
+    if (near != 0 && (st->configFlags & 2) == 0) {
+        (**(void (**)(int, int, int, int, int, int, int, int, int))((char *)*gBaddieControlInterface + 0x28))(obj, p3, p2 + 0x35c, st->gameBitB, 0, 0, 0, 8, -1);
+        *(int *)&((BaddieState *)p3)->targetObj = near;
+        ((BaddieState *)p3)->unk349 = 0;
         ObjGroup_AddObject(obj, 3);
-        *(u16 *)(p2 + 0x402) = 1;
+        *(u16 *)&st->targetState = 1;
     } else {
         player = Obj_GetPlayerObject();
         if (player != NULL) {
@@ -5244,11 +5349,11 @@ void fn_80203144(int obj, int p2, int p3)
         } else {
             dist = lbl_803E6354;
         }
-        if (*(f32 *)(sub + 0xc) > *(f32 *)(sub + 0x10) && dist < lbl_803E6384) {
+        if (sub->unk0C > sub->unk10 && dist < lbl_803E6384) {
             Sfx_PlayFromObject(obj, (u16)lbl_80329640[1]);
-            *(f32 *)(sub + 0x10) = *(f32 *)(sub + 0x10) + (f32)(int)randomGetRange(0x32, 0xfa);
+            sub->unk10 = sub->unk10 + (f32)(int)randomGetRange(0x32, 0xfa);
         }
-        *(f32 *)(sub + 0xc) += timeDelta;
+        sub->unk0C += timeDelta;
     }
 }
 #pragma peephole reset
@@ -5267,7 +5372,7 @@ void dfplevelcontrol_update(int obj)
     extern void SCGameBitLatch_UpdateInverted(void *, int, int, int, int, int);
     extern s16 lbl_803DC180;
     extern f32 timeDelta;
-    int state = *(int *)(obj + 0xb8);
+    DfpLevelControlState *state = *(DfpLevelControlState **)(obj + 0xb8);
     char *player;
     u8 b1;
     u8 b2;
@@ -5278,14 +5383,14 @@ void dfplevelcontrol_update(int obj)
     b1 = GameBit_Get(0xd5d);
     b2 = GameBit_Get(0xd59);
     b3 = GameBit_Get(0xd5a);
-    if ((b1 != 0 && ((u32)*(u8 *)(state + 7) >> 7 & 1) == 0)
-        || (b2 != 0 && ((u32)*(u8 *)(state + 7) >> 6 & 1) == 0)
-        || (b3 != 0 && ((u32)*(u8 *)(state + 7) >> 5 & 1) == 0)) {
+    if ((b1 != 0 && ((u32)state->flags07 >> 7 & 1) == 0)
+        || (b2 != 0 && ((u32)state->flags07 >> 6 & 1) == 0)
+        || (b3 != 0 && ((u32)state->flags07 >> 5 & 1) == 0)) {
         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     }
-    ((DfpFlags7 *)(state + 7))->b80 = b1;
-    ((DfpFlags7 *)(state + 7))->b40 = b2;
-    ((DfpFlags7 *)(state + 7))->b20 = b3;
+    ((DfpFlags7 *)&state->flags07)->b80 = b1;
+    ((DfpFlags7 *)&state->flags07)->b40 = b2;
+    ((DfpFlags7 *)&state->flags07)->b20 = b3;
     if (GameBit_Get(0x5e8) == 0 && GameBit_Get(0x5ee) != 0 && GameBit_Get(0x5ef) != 0) {
         GameBit_Set(0x5e8, 1);
     }
@@ -5309,9 +5414,9 @@ void dfplevelcontrol_update(int obj)
     case 0:
         break;
     }
-    SCGameBitLatch_Update((void *)(state + 8), 2, -1, -1, 0xdce, 0x95);
-    SCGameBitLatch_UpdateInverted((void *)(state + 8), 4, -1, -1, 0xdce, 0x37);
-    SCGameBitLatch_UpdateInverted((void *)(state + 8), 1, -1, -1, 0xdce, 0xe4);
+    SCGameBitLatch_Update((void *)state->unk08, 2, -1, -1, 0xdce, 0x95);
+    SCGameBitLatch_UpdateInverted((void *)state->unk08, 4, -1, -1, 0xdce, 0x37);
+    SCGameBitLatch_UpdateInverted((void *)state->unk08, 1, -1, -1, 0xdce, 0xe4);
     GameBit_Set(0xdcf, 0);
 }
 #pragma scheduling reset
@@ -5330,7 +5435,7 @@ int fn_80202A2C(int obj, int *objs, f32 *weights, int n, f32 limit)
     extern f32 lbl_803E6364;
     int *po;
     f32 *pw;
-    int state = *(int *)(obj + 0xb8);
+    BaddieState *state = *(BaddieState **)(obj + 0xb8);
     int i;
     f32 rangeInit;
     f32 accX;
@@ -5378,18 +5483,18 @@ int fn_80202A2C(int obj, int *objs, f32 *weights, int n, f32 limit)
     }
     cosv = fn_80293E80(lbl_803E6360 * (f32)*(s16 *)(obj + 0) / lbl_803E6364);
     sinv = sin(lbl_803E6360 * (f32)*(s16 *)(obj + 0) / lbl_803E6364);
-    *(f32 *)(state + 0x284) = *(f32 *)(state + 0x284) + (accX * sinv - accZ * cosv);
-    *(f32 *)(state + 0x280) = *(f32 *)(state + 0x280) + (-accZ * sinv - accX * cosv);
-    v = *(f32 *)(state + 0x280);
+    state->animSpeedB = state->animSpeedB + (accX * sinv - accZ * cosv);
+    state->animSpeedA = state->animSpeedA + (-accZ * sinv - accX * cosv);
+    v = state->animSpeedA;
     neg = -limit;
     if (v < neg) {
         v = neg;
     } else if (v > limit) {
         v = limit;
     }
-    *(f32 *)(state + 0x280) = v;
-    v = *(f32 *)(state + 0x284);
-    *(f32 *)(state + 0x284) = (v < neg) ? neg : (v > limit) ? limit : v;
+    state->animSpeedA = v;
+    v = state->animSpeedB;
+    state->animSpeedB = (v < neg) ? neg : (v > limit) ? limit : v;
     return 0;
 }
 #pragma peephole reset
@@ -5411,7 +5516,7 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     extern f32 lbl_803E63D8;
     extern f32 lbl_803E63DC;
     extern f32 timeDelta;
-    int state = *(int *)(obj + 0xb8);
+    DfpTorchState *state = *(DfpTorchState **)(obj + 0xb8);
     char *cam;
     f32 dist;
     f32 scale;
@@ -5429,12 +5534,12 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     } stk2;
 
     if (visible == 0) {
-        *(s16 *)(state + 4) = 0;
-        *(u8 *)(state + 8) = 0;
+        state->flickerTimer = 0;
+        state->visibleLatch = 0;
     } else {
         objRenderFn_8003b8f4(lbl_803E63C8);
-        if (*(u8 *)(state + 0xa) != 0) {
-            *(u8 *)(state + 8) = 1;
+        if (state->lit != 0) {
+            state->visibleLatch = 1;
             cam = Camera_GetCurrentViewSlot();
             stk2.d[0] = *(f32 *)(cam + 0xc) - *(f32 *)(obj + 0xc);
             stk2.d[1] = *(f32 *)(cam + 0x10) - *(f32 *)(obj + 0x10);
@@ -5460,20 +5565,20 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 voxmaps_worldToGrid(stk2.a, stk2.g1);
                 voxmaps_worldToGrid(stk2.b, stk2.g2);
                 if (voxmaps_traceLine(stk2.g1, stk2.g2, stk2.out, 0, 0) == 0) {
-                    *(u8 *)(state + 8) = 0;
+                    state->visibleLatch = 0;
                     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
                 }
             }
-            if (*(s16 *)(state + 4) > 0) {
-                *(s16 *)(state + 4) -= (int)timeDelta;
+            if (state->flickerTimer > 0) {
+                state->flickerTimer -= (int)timeDelta;
             } else {
-                if (*(u8 *)(state + 8) != 0) {
+                if (state->visibleLatch != 0) {
                     fx.col[0] = lbl_803E63D8;
                     fx.col[1] = lbl_803E63DC;
                     fx.col[2] = lbl_803E63D8;
                     (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x1f7, &fx, 0x12, -1, 0);
                 }
-                *(s16 *)(state + 4) = (s16)(randomGetRange(-10, 10) + 0x3c);
+                state->flickerTimer = (s16)(randomGetRange(-10, 10) + 0x3c);
             }
         }
     }
@@ -5492,7 +5597,7 @@ void fn_80204098(int obj)
     extern void ObjMsg_SendToObject(void *, int, int, int);
     extern u8 lbl_803DC183;
     extern s16 lbl_80329848[];
-    int state = *(int *)(obj + 0xb8);
+    DfpLevelControlState *state = *(DfpLevelControlState **)(obj + 0xb8);
     void *player;
     s16 i;
     s16 *p;
@@ -5506,7 +5611,7 @@ void fn_80204098(int obj)
             p++;
         }
         GameBit_Set(0x5e4, 0);
-        *(s16 *)(state + 0) = 0;
+        state->timer = 0;
         lbl_803DC183 = 0;
     }
     if (GameBit_Get(0x5e3) == 0 && GameBit_Get(0x5e0) != 0 && GameBit_Get(0x5e1) != 0) {
@@ -5518,22 +5623,22 @@ void fn_80204098(int obj)
         GameBit_Set(0x792, 1);
     }
     if (GameBit_Get(0xe58) == 0) {
-        if (GameBit_Get(0x635) != 0 && *(u8 *)(state + 6) == 0) {
+        if (GameBit_Get(0x635) != 0 && state->sfxLatch == 0) {
             Sfx_PlayFromObject(0, SFXfoot_wood_run_2);
             for (i = 0, p = lbl_80329848; i < 9; i++) {
                 *p = (s16)randomGetRange(1, 4);
                 p++;
             }
             GameBit_Set(0x5e4, 1);
-            *(u8 *)(state + 6) = 1;
+            state->sfxLatch = 1;
         } else {
-            if (GameBit_Get(0x635) == 0 && *(u8 *)(state + 6) == 1) {
-                *(u8 *)(state + 6) = 0;
+            if (GameBit_Get(0x635) == 0 && state->sfxLatch == 1) {
+                state->sfxLatch = 0;
                 GameBit_Set(0x5e4, 0);
             }
         }
         if (GameBit_Get(0x5e5) != 0) {
-            *(s16 *)(state + 0) = 300;
+            state->timer = 300;
             ObjMsg_SendToObject(player, 0x60005, obj, 0);
         }
     }
@@ -5560,8 +5665,8 @@ int fn_801FFE18(int obj, int p2)
     extern u8 lbl_80329514[];
     extern f32 lbl_803E62AC;
     extern f32 lbl_803E62A8;
-    int tmp = *(int *)(obj + 0xb8);
-    int sub;
+    GroundBaddieState *tmp = *(GroundBaddieState **)(obj + 0xb8);
+    DbStealerwormControl *sub;
     int data = *(int *)(obj + 0x4c);
     int off;
     int n;
@@ -5570,12 +5675,12 @@ int fn_801FFE18(int obj, int p2)
     f32 range;
 
     range = lbl_803E62AC;
-    sub = *(int *)(tmp + 0x40c);
-    if (*(s8 *)(p2 + 0x27b) != 0 || *(u8 *)(sub + 0x34) != 0) {
-        *(u8 *)(sub + 0x15) &= ~4;
-        *(u8 *)(sub + 0x34) = 0;
-        if (Stack_IsEmpty(*(int *)(sub + 0x24)) == 0) {
-            Stack_Pop(*(int *)(sub + 0x24), (int *)(sub + 0x28));
+    sub = (DbStealerwormControl *)tmp->control;
+    if (*(s8 *)&((BaddieState *)p2)->moveJustStartedB != 0 || sub->unk34 != 0) {
+        sub->flags15 &= ~4;
+        sub->unk34 = 0;
+        if (Stack_IsEmpty(sub->msgStack) == 0) {
+            Stack_Pop(sub->msgStack, (int *)&sub->unk28);
         } else {
             if (*(u32 *)(data + 0x14) == 0xFFFFFFFF) {
                 Obj_FreeObject(obj);
@@ -5585,52 +5690,52 @@ int fn_801FFE18(int obj, int p2)
             n = *(s16 *)(entry + 4);
             off = n * 12;
             for (; n != 0; n--) {
-                Stack_Push(*(int *)(sub + 0x24), (int *)(*(int *)entry + (off -= 12)));
+                Stack_Push(sub->msgStack, (int *)(*(int *)entry + (off -= 12)));
             }
-            *(u8 *)(sub + 0x34) = 1;
+            sub->unk34 = 1;
             *(f32 *)(obj + 0xc) = *(f32 *)(data + 0x8);
             *(f32 *)(obj + 0x10) = *(f32 *)(data + 0xc);
             *(f32 *)(obj + 0x14) = *(f32 *)(data + 0x10);
         }
-        switch (*(int *)(sub + 0x2c)) {
+        switch (sub->unk2C) {
         case 0:
-            if (*(int *)(sub + 0x30) != 0) {
-                *(int *)(p2 + 0x2d0) = ObjGroup_FindNearestObjectForObject(*(int *)(sub + 0x30), obj, &range);
+            if (sub->unk30 != 0) {
+                *(int *)&((BaddieState *)p2)->targetObj = ObjGroup_FindNearestObjectForObject(sub->unk30, obj, &range);
             }
             break;
         case 1:
-            *(int *)(p2 + 0x2d0) = *(int *)(sub + 0x30);
+            *(int *)&((BaddieState *)p2)->targetObj = sub->unk30;
             break;
         }
-        if (*(void **)(p2 + 0x2d0) != NULL) {
-            (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, *(int *)(sub + 0x28));
+        if (*(void **)&((BaddieState *)p2)->targetObj != NULL) {
+            (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, *(int *)&sub->unk28);
         }
         return 0;
     } else {
-        switch (*(int *)(sub + 0x2c)) {
+        switch (sub->unk2C) {
         case 0:
-            if (*(void **)(p2 + 0x2d0) == NULL) {
-                *(u8 *)(sub + 0x34) = 1;
-            } else if (*(int *)(sub + 0x30) != 0) {
-                if (ObjGroup_ContainsObject(*(int *)(p2 + 0x2d0), *(int *)(sub + 0x30)) == 0) {
-                    *(int *)(p2 + 0x2d0) = ObjGroup_FindNearestObjectForObject(*(int *)(sub + 0x30), obj, 0);
-                    if (*(void **)(p2 + 0x2d0) == NULL) {
-                        *(u8 *)(sub + 0x34) = 1;
+            if (*(void **)&((BaddieState *)p2)->targetObj == NULL) {
+                sub->unk34 = 1;
+            } else if (sub->unk30 != 0) {
+                if (ObjGroup_ContainsObject(*(int *)&((BaddieState *)p2)->targetObj, sub->unk30) == 0) {
+                    *(int *)&((BaddieState *)p2)->targetObj = ObjGroup_FindNearestObjectForObject(sub->unk30, obj, 0);
+                    if (*(void **)&((BaddieState *)p2)->targetObj == NULL) {
+                        sub->unk34 = 1;
                     }
-                    *(f32 *)(p2 + 0x280) = lbl_803E62A8;
+                    ((BaddieState *)p2)->animSpeedA = lbl_803E62A8;
                 }
             }
             break;
         case 1:
-            if (*(void **)(p2 + 0x2d0) == NULL) {
-                *(u8 *)(sub + 0x34) = 1;
+            if (*(void **)&((BaddieState *)p2)->targetObj == NULL) {
+                sub->unk34 = 1;
             }
             break;
         }
-        if (*(s16 *)(sub + 0x1c) == -1 && (ptr = *(char **)(sub + 0x3c)) != NULL) {
+        if (sub->unk1C == -1 && (ptr = *(char **)&sub->unk3C) != NULL) {
             if ((**(int (**)(char *))(*(int *)(*(int *)(ptr + 0x68))  + 0x20))(ptr) == 0) {
-                *(int *)(sub + 0x3c) = 0;
-                *(u8 *)(sub + 0x34) = 1;
+                sub->unk3C = 0;
+                sub->unk34 = 1;
             }
         }
         return 0;
@@ -5654,9 +5759,9 @@ int fn_80201358(int obj, int p2)
     extern f32 lbl_803E6318;
     extern f32 lbl_803E631C;
     extern f32 lbl_803E6320;
-    int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
-    int c30 = *(int *)(sub + 0x30);
-    int c2c = *(int *)(sub + 0x2c);
+    DbStealerwormControl *sub = (DbStealerwormControl *)(*(GroundBaddieState **)(obj + 0xb8))->control;
+    int c30 = sub->unk30;
+    int c2c = sub->unk2C;
     int tmpB;
     int tmpA;
     int t;
@@ -5672,41 +5777,41 @@ int fn_80201358(int obj, int p2)
     int msgC[3];
 
     z = lbl_803E62A8;
-    *(f32 *)(p2 + 0x280) = lbl_803E62A8;
-    *(f32 *)(p2 + 0x284) = z;
-    *(u8 *)(sub + 0x14) |= 2;
-    if (*(void **)(sub + 0x18) == NULL && *(s16 *)(sub + 0x1c) != -1) {
-        tmpA = *(int *)(sub + 0x30);
-        tmpB = *(int *)(sub + 0x2c);
-        q = *(int *)(sub + 0x24);
-        msgA[0] = *(int *)(sub + 0x28);
+    ((BaddieState *)p2)->animSpeedA = lbl_803E62A8;
+    ((BaddieState *)p2)->animSpeedB = z;
+    sub->flags14 |= 2;
+    if (*(void **)&sub->linkedObj == NULL && sub->unk1C != -1) {
+        tmpA = sub->unk30;
+        tmpB = sub->unk2C;
+        q = sub->msgStack;
+        msgA[0] = sub->unk28;
         msgA[1] = tmpB;
         msgA[2] = tmpA;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, msgA);
         }
-        q = *(int *)(sub + 0x24);
+        q = sub->msgStack;
         msgB[0] = 8;
         msgB[1] = c2c;
         msgB[2] = c30;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, msgB);
         }
-        *(u8 *)(sub + 0x34) = 1;
-        tmpA = *(s16 *)(sub + 0x1c);
-        q = *(int *)(sub + 0x24);
+        sub->unk34 = 1;
+        tmpA = sub->unk1C;
+        q = sub->msgStack;
         msgC[0] = 9;
         msgC[1] = 0;
         msgC[2] = tmpA;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, msgC);
         }
-        *(u8 *)(sub + 0x34) = 1;
+        sub->unk34 = 1;
         return 0;
     } else {
-        *(u8 *)(sub + 0x15) |= 4;
-        if (*(int *)(sub + 0x18) != 0 && (*(u32 *)(p2 + 0x314) & 0x200) != 0) {
-            t = *(int *)(p2 + 0x2d0);
+        sub->flags15 |= 4;
+        if (sub->linkedObj != 0 && (((BaddieState *)p2)->eventFlags & 0x200) != 0) {
+            t = *(int *)&((BaddieState *)p2)->targetObj;
             stk.v[0] = *(f32 *)(t + 0xc) - *(f32 *)(obj + 0xc);
             stk.v[1] = *(f32 *)(t + 0x10) - *(f32 *)(obj + 0x10);
             stk.v[2] = *(f32 *)(t + 0x14) - *(f32 *)(obj + 0x14);
@@ -5717,19 +5822,19 @@ int fn_80201358(int obj, int p2)
             stk.out[1] = stk.out[1] * lbl_803E631C;
             stk.out[0] = lbl_803E62A8;
             stk.out[2] = lbl_803E6320;
-            ObjMsg_SendToObject(*(int *)(sub + 0x18), 0x11, obj, 0x11);
-            (**(void (**)(int, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x18) + 0x68)) + 0x24))(*(int *)(sub + 0x18), stk.out);
-            *(int *)(sub + 0x18) = 0;
-            *(s16 *)(sub + 0x1c) = -1;
+            ObjMsg_SendToObject(sub->linkedObj, 0x11, obj, 0x11);
+            (**(void (**)(int, f32 *))(*(int *)(*(int *)(sub->linkedObj + 0x68)) + 0x24))(sub->linkedObj, stk.out);
+            sub->linkedObj = 0;
+            sub->unk1C = -1;
         }
-        *(s16 *)(obj + 0) += Obj_GetYawDeltaToObject(obj, *(int *)(p2 + 0x2d0), 0);
-        *(u8 *)(p2 + 0x34d) = 0x11;
-        if (*(s8 *)(p2 + 0x27a) != 0) {
+        *(s16 *)(obj + 0) += Obj_GetYawDeltaToObject(obj, *(int *)&((BaddieState *)p2)->targetObj, 0);
+        ((BaddieState *)p2)->unk34D = 0x11;
+        if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
             ObjAnim_SetCurrentMove((int)obj, 0x12, lbl_803E62A8, 0);
-            *(u8 *)(p2 + 0x346) = 0;
+            ((BaddieState *)p2)->moveDone = 0;
         }
-        if (*(s8 *)(p2 + 0x346) != 0) {
-            *(u8 *)(sub + 0x34) = 1;
+        if (*(s8 *)&((BaddieState *)p2)->moveDone != 0) {
+            sub->unk34 = 1;
         }
         return 0;
     }
@@ -5757,9 +5862,9 @@ int fn_80200E44(int obj, int p2, f32 t)
     extern f32 lbl_803E62D0;
     extern int lbl_8032971C[];
     extern f32 lbl_8032972C[];
-    int blob = *(int *)(obj + 0xb8);
-    int sub = *(int *)(blob + 0x40c);
-    int c30 = *(int *)(sub + 0x30);
+    GroundBaddieState *blob = *(GroundBaddieState **)(obj + 0xb8);
+    DbStealerwormControl *sub = (DbStealerwormControl *)blob->control;
+    int c30 = sub->unk30;
     int tmpA;
     int tmpB;
     int i;
@@ -5787,24 +5892,24 @@ int fn_80200E44(int obj, int p2, f32 t)
     int cnt2;
     f32 yawf;
 
-    *(u8 *)(sub + 0x14) |= 2;
-    *(u8 *)(sub + 0x15) &= ~4;
-    if (ObjGroup_ContainsObject(*(int *)(p2 + 0x2d0), c30) == 0) {
+    sub->flags14 |= 2;
+    sub->flags15 &= ~4;
+    if (ObjGroup_ContainsObject(*(int *)&((BaddieState *)p2)->targetObj, c30) == 0) {
         ObjGroup_GetObjects(c30, &cnt1);
         if (cnt1 == 0) {
             player = Obj_GetPlayerObject();
-            q = *(int *)(sub + 0x24);
+            q = sub->msgStack;
             msg0[0] = 0xf;
             msg0[1] = 1;
             msg0[2] = player;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msg0);
             }
-            *(u8 *)(sub + 0x34) = 1;
+            sub->unk34 = 1;
             return 0;
         }
     }
-    q = *(int *)(p2 + 0x2d0);
+    q = *(int *)&((BaddieState *)p2)->targetObj;
     found = 0;
     objs = ObjGroup_GetObjects(3, &cnt2);
     for (i = 0; i < cnt2; i++) {
@@ -5816,85 +5921,85 @@ int fn_80200E44(int obj, int p2, f32 t)
         objs++;
     }
     if (found == 0) {
-        if ((u32)obj == (u32)ObjGroup_FindNearestObject(3, *(int *)(p2 + 0x2d0), 0)) {
-            *(int *)(sub + 0x3c) = *(int *)(p2 + 0x2d0);
-            tmpA = *(int *)(sub + 0x30);
-            tmpB = *(int *)(sub + 0x2c);
-            q = *(int *)(sub + 0x24);
-            msgA[0] = *(int *)(sub + 0x28);
+        if ((u32)obj == (u32)ObjGroup_FindNearestObject(3, *(int *)&((BaddieState *)p2)->targetObj, 0)) {
+            sub->unk3C = *(int *)&((BaddieState *)p2)->targetObj;
+            tmpA = sub->unk30;
+            tmpB = sub->unk2C;
+            q = sub->msgStack;
+            msgA[0] = sub->unk28;
             msgA[1] = tmpB;
             msgA[2] = tmpA;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgA);
             }
-            q = *(int *)(sub + 0x24);
+            q = sub->msgStack;
             msgB[0] = 0xc;
             msgB[1] = 0;
             msgB[2] = 3;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgB);
             }
-            *(u8 *)(sub + 0x34) = 1;
-            q = *(int *)(sub + 0x24);
+            sub->unk34 = 1;
+            q = sub->msgStack;
             msgC[0] = 9;
             msgC[1] = 0;
             msgC[2] = c30;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgC);
             }
-            *(u8 *)(sub + 0x34) = 1;
-            tmpA = *(int *)(sub + 0x3c);
-            q = *(int *)(sub + 0x24);
+            sub->unk34 = 1;
+            tmpA = sub->unk3C;
+            q = sub->msgStack;
             msgD[0] = 7;
             msgD[1] = 1;
             msgD[2] = tmpA;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgD);
             }
-            *(u8 *)(sub + 0x34) = 1;
+            sub->unk34 = 1;
             return 0;
         }
     }
-    sub = *(int *)(blob + 0x40c);
-    *(u8 *)(p2 + 0x34d) = 0x1f;
-    if (*(s8 *)(p2 + 0x27a) != 0) {
+    sub = (DbStealerwormControl *)blob->control;
+    ((BaddieState *)p2)->unk34D = 0x1f;
+    if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove((int)obj, 0xf, lbl_803E62A8, 0);
-        *(u8 *)(p2 + 0x346) = 0;
+        ((BaddieState *)p2)->moveDone = 0;
     }
-    if (*(void **)(sub + 0x3c) != NULL) {
-        if (ObjGroup_ContainsObject(*(int *)(p2 + 0x2d0), c30) != 0) {
-            tmpA = *(int *)(sub + 0x30);
-            tmpB = *(int *)(sub + 0x2c);
-            q = *(int *)(sub + 0x24);
-            msgE[0] = *(int *)(sub + 0x28);
+    if (*(void **)&sub->unk3C != NULL) {
+        if (ObjGroup_ContainsObject(*(int *)&((BaddieState *)p2)->targetObj, c30) != 0) {
+            tmpA = sub->unk30;
+            tmpB = sub->unk2C;
+            q = sub->msgStack;
+            msgE[0] = sub->unk28;
             msgE[1] = tmpB;
             msgE[2] = tmpA;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgE);
             }
-            q = *(int *)(sub + 0x24);
+            q = sub->msgStack;
             msgF[0] = 0xc;
             msgF[1] = 0;
             msgF[2] = 3;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgF);
             }
-            *(u8 *)(sub + 0x34) = 1;
-            tmpA = *(int *)(sub + 0x3c);
-            q = *(int *)(sub + 0x24);
+            sub->unk34 = 1;
+            tmpA = sub->unk3C;
+            q = sub->msgStack;
             msgG[0] = 0xd;
             msgG[1] = 1;
             msgG[2] = tmpA;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgG);
             }
-            *(u8 *)(sub + 0x34) = 1;
+            sub->unk34 = 1;
             return 0;
         }
     }
-    frac = (f32)*(u8 *)(blob + 0x406) / lbl_803E62C4;
-    fn_80202C78(obj, *(int *)(p2 + 0x2d0), lbl_803E62B4, frac, lbl_803E62CC, t);
-    if (((u32)*(u8 *)(sub + 0x44) >> 5 & 1) != 0) {
+    frac = (f32)blob->aggression / lbl_803E62C4;
+    fn_80202C78(obj, *(int *)&((BaddieState *)p2)->targetObj, lbl_803E62B4, frac, lbl_803E62CC, t);
+    if (((u32)sub->flags44 >> 5 & 1) != 0) {
         fn_80202A2C(obj, lbl_8032971C, lbl_8032972C, 4, frac);
     }
     player = Obj_GetPlayerObject();
@@ -5921,24 +6026,24 @@ int fn_80200E44(int obj, int p2, f32 t)
             ptr++;
         }
         player = Obj_GetPlayerObject();
-        *(int *)(p2 + 0x2d0) = player;
-        tmpA = *(int *)(sub + 0x30);
-        tmpB = *(int *)(sub + 0x2c);
-        q = *(int *)(sub + 0x24);
-        msgH[0] = *(int *)(sub + 0x28);
+        *(int *)&((BaddieState *)p2)->targetObj = player;
+        tmpA = sub->unk30;
+        tmpB = sub->unk2C;
+        q = sub->msgStack;
+        msgH[0] = sub->unk28;
         msgH[1] = tmpB;
         msgH[2] = tmpA;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, msgH);
         }
-        q = *(int *)(sub + 0x24);
+        q = sub->msgStack;
         msgI[0] = 2;
         msgI[1] = 0;
         msgI[2] = 0;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, msgI);
         }
-        *(u8 *)(sub + 0x34) = 1;
+        sub->unk34 = 1;
     }
     return 0;
 }
@@ -5973,8 +6078,8 @@ int fn_80201BD8(int obj, int p2, f32 t)
     extern f32 lbl_803E6330;
     extern int lbl_803296FC[];
     extern f32 lbl_8032970C[];
-    int blob = *(int *)(obj + 0xb8);
-    int sub = *(int *)(blob + 0x40c);
+    GroundBaddieState *blob = *(GroundBaddieState **)(obj + 0xb8);
+    DbStealerwormControl *sub = (DbStealerwormControl *)blob->control;
     s16 h;
     register int q;
     register int *ptr;
@@ -5996,62 +6101,62 @@ int fn_80201BD8(int obj, int p2, f32 t)
     int msgD[3];
     f32 yawf;
 
-    *(u8 *)(sub + 0x14) |= 2;
-    *(u8 *)(sub + 0x15) &= ~4;
+    sub->flags14 |= 2;
+    sub->flags15 &= ~4;
     Sfx_KeepAliveLoopedObjectSound(obj, 0x441);
-    if (*(s8 *)(p2 + 0x27a) != 0) {
+    if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
         ObjHits_EnableObject(obj);
     }
     ObjHits_ClearHitVolumes(obj);
-    *(f32 *)(p2 + 0x2a0) = lbl_803E62F4;
-    if (*(void **)(sub + 0x18) == NULL) {
-        h = *(s16 *)(sub + 0x1c);
+    ((BaddieState *)p2)->moveSpeed = lbl_803E62F4;
+    if (*(void **)&sub->linkedObj == NULL) {
+        h = sub->unk1C;
         if (h != -1) {
-            tmpA = *(int *)(sub + 0x30);
-            tmpB = *(int *)(sub + 0x2c);
-            q = *(int *)(sub + 0x24);
-            msgA[0] = *(int *)(sub + 0x28);
+            tmpA = sub->unk30;
+            tmpB = sub->unk2C;
+            q = sub->msgStack;
+            msgA[0] = sub->unk28;
             msgA[1] = tmpB;
             msgA[2] = tmpA;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgA);
             }
-            q = *(int *)(sub + 0x24);
+            q = sub->msgStack;
             msgB[0] = 9;
             msgB[1] = 0;
             msgB[2] = h;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgB);
             }
-            *(u8 *)(sub + 0x34) = 1;
-            *(s16 *)(sub + 0x1c) = -1;
+            sub->unk34 = 1;
+            sub->unk1C = -1;
         }
-        if (*(s8 *)(p2 + 0x27a) != 0) {
+        if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
             ObjAnim_SetCurrentMove((int)obj, 0xf, lbl_803E62A8, 0);
-            *(u8 *)(p2 + 0x346) = 0;
+            ((BaddieState *)p2)->moveDone = 0;
         }
-        frac = (f32)*(u8 *)(blob + 0x406) / lbl_803E62C4;
-        if (RandomTimer_UpdateRangeTrigger(sub + 0x4c, lbl_803E62C8, lbl_803E632C) != 0) {
+        frac = (f32)blob->aggression / lbl_803E62C4;
+        if (RandomTimer_UpdateRangeTrigger((int)&sub->randomTimer4C, lbl_803E62C8, lbl_803E632C) != 0) {
             Sfx_PlayFromObject(obj, 0x43f);
         }
     } else {
-        if (RandomTimer_UpdateRangeTrigger(sub + 0x48, lbl_803E62C8, lbl_803E632C) != 0) {
+        if (RandomTimer_UpdateRangeTrigger((int)&sub->randomTimer48, lbl_803E62C8, lbl_803E632C) != 0) {
             Sfx_PlayFromObject(obj, 0x440);
         }
-        if (*(s8 *)(p2 + 0x27a) != 0) {
+        if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
             ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
-            *(u8 *)(p2 + 0x346) = 0;
+            ((BaddieState *)p2)->moveDone = 0;
         }
-        *(f32 *)(p2 + 0x2a0) = lbl_803E6300;
-        frac = (f32)*(u8 *)(blob + 0x406) / lbl_803E6324;
+        ((BaddieState *)p2)->moveSpeed = lbl_803E6300;
+        frac = (f32)blob->aggression / lbl_803E6324;
     }
-    *(u8 *)(p2 + 0x34d) = 0x1f;
-    if (fn_80202DA4((u8 *)obj, *(u8 **)(p2 + 0x2d0), lbl_803E6330, frac, lbl_803E62CC, t) != 0) {
-        *(u8 *)(sub + 0x34) = 1;
+    ((BaddieState *)p2)->unk34D = 0x1f;
+    if (fn_80202DA4((u8 *)obj, *(u8 **)&((BaddieState *)p2)->targetObj, lbl_803E6330, frac, lbl_803E62CC, t) != 0) {
+        sub->unk34 = 1;
     }
-    if (((u32)*(u8 *)(sub + 0x44) >> 5 & 1) != 0) {
+    if (((u32)sub->flags44 >> 5 & 1) != 0) {
         fn_80202A2C(obj, lbl_803296FC, lbl_8032970C, 4, frac);
-    } else if (*(void **)(sub + 0x18) == NULL) {
+    } else if (*(void **)&sub->linkedObj == NULL) {
         player = Obj_GetPlayerObject();
         d = (s16)Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
@@ -6076,27 +6181,27 @@ int fn_80201BD8(int obj, int p2, f32 t)
                 ptr++;
             }
             player = Obj_GetPlayerObject();
-            *(int *)(p2 + 0x2d0) = player;
-            tmp2A = *(int *)(sub + 0x30);
-            tmp2B = *(int *)(sub + 0x2c);
-            q = *(int *)(sub + 0x24);
-            msgC[0] = *(int *)(sub + 0x28);
+            *(int *)&((BaddieState *)p2)->targetObj = player;
+            tmp2A = sub->unk30;
+            tmp2B = sub->unk2C;
+            q = sub->msgStack;
+            msgC[0] = sub->unk28;
             msgC[1] = tmp2B;
             msgC[2] = tmp2A;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgC);
             }
-            q = *(int *)(sub + 0x24);
+            q = sub->msgStack;
             msgD[0] = 2;
             msgD[1] = 0;
             msgD[2] = 0;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgD);
             }
-            *(u8 *)(sub + 0x34) = 1;
+            sub->unk34 = 1;
         }
     }
-    if (((u32)*(u8 *)(sub + 0x44) >> 6 & 1) != 0) {
+    if (((u32)sub->flags44 >> 6 & 1) != 0) {
         ptr = seqFn_800394a0();
         q = 1;
         ptr = ptr + 1;
@@ -6109,9 +6214,9 @@ int fn_80201BD8(int obj, int p2, f32 t)
             }
             ptr++;
         }
-    } else if (*(void **)(sub + 0x18) == NULL) {
-        d = -(lbl_803E6328 * *(f32 *)(p2 + 0x280));
-        flag = -(lbl_803E6328 * *(f32 *)(p2 + 0x284));
+    } else if (*(void **)&sub->linkedObj == NULL) {
+        d = -(lbl_803E6328 * ((BaddieState *)p2)->animSpeedA);
+        flag = -(lbl_803E6328 * ((BaddieState *)p2)->animSpeedB);
         d = (s16)d;
         if (d < -0x500) {
             d = -0x500;
@@ -6138,7 +6243,7 @@ int fn_80201BD8(int obj, int p2, f32 t)
             ptr++;
         }
     }
-    ObjAnim_SampleRootCurvePhase(*(f32 *)(p2 + 0x280), (ObjAnimComponent *)obj,
+    ObjAnim_SampleRootCurvePhase(((BaddieState *)p2)->animSpeedA, (ObjAnimComponent *)obj,
                                  (float *)(p2 + 0x2a0));
     return 0;
 }
@@ -6173,7 +6278,7 @@ void dbstealerworm_update(u8 *objp)
     char *tbl = (char *)lbl_803293B8;
     int blob = *(int *)(objp + 0xb8);
     int data = *(int *)(objp + 0x4c);
-    int sub = *(int *)(blob + 0x40c);
+    int sub = *(int *)&((GroundBaddieState *)blob)->control;
     int obj = (int)objp;
     int off;
     char *entry;
@@ -6189,26 +6294,26 @@ void dbstealerworm_update(u8 *objp)
     } stk;
 
     *(u8 *)(obj + 0xaf) |= 8;
-    if ((u32)*(u8 *)(sub + 0x44) >> 4 & 1) {
+    if ((u32)((DbStealerwormControl *)sub)->flags44 >> 4 & 1) {
         entry = (char *)((int)(tbl + *(s16 *)(data + 0x24) * 8) + 0x15c);
-        *(int *)(sub + 0x24) = allocModelStruct_800139e8(0x14, 0xc);
+        ((DbStealerwormControl *)sub)->msgStack = allocModelStruct_800139e8(0x14, 0xc);
         n = *(s16 *)(entry + 4);
         off = n * 0xc;
         for (; n != 0; n--) {
-            Stack_Push(*(int *)(sub + 0x24), (int *)(*(int *)entry + (off -= 12)));
+            Stack_Push(((DbStealerwormControl *)sub)->msgStack, (int *)(*(int *)entry + (off -= 12)));
         }
-        *(u8 *)(sub + 0x34) = 1;
-        ((AnimFlags44 *)(sub + 0x44))->flag10 = 0;
+        ((DbStealerwormControl *)sub)->unk34 = 1;
+        ((AnimFlags44 *)&((DbStealerwormControl *)sub)->flags44)->flag10 = 0;
     }
-    if (GameBit_Get(*(s16 *)(blob + 0x3f6)) != 0) {
+    if (GameBit_Get(((GroundBaddieState *)blob)->gameBitC) != 0) {
         if (*(int *)(obj + 0xf4) != 0) {
-            if ((*(u8 *)(blob + 0x404) & 4) == 0 &&
+            if ((((GroundBaddieState *)blob)->configFlags & 4) == 0 &&
                 ((MapEventInterface *)*(int *)gMapEventInterface)->isTimedEventActive(*(int *)(data + 0x14)) != 0) {
                 ((void (*)(int, int, int, int, int, int, int, f32))((void **)*gBaddieControlInterface)[22])(obj, data, blob, 0x10, 7, 0x10a, 0x26, lbl_803E62FC);
                 ObjGroup_AddObject(obj, 3);
-                *(s16 *)(blob + 0x402) = 0;
+                ((GroundBaddieState *)blob)->targetState = 0;
                 ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0x10);
-                *(u8 *)(blob + 0x346) = 0;
+                ((GroundBaddieState *)blob)->baddie.moveDone = 0;
                 *(u8 *)(obj + 0x36) = 0xff;
                 *(u8 *)(obj + 0xaf) |= 8;
             }
@@ -6220,45 +6325,45 @@ void dbstealerworm_update(u8 *objp)
             *(int *)(obj + 0xf8) = 1;
         } else {
             if (((int (*)(int, int, int))((void **)*gBaddieControlInterface)[12])(obj, blob, 0) == 0) {
-                *(s16 *)(blob + 0x402) = 0;
+                ((GroundBaddieState *)blob)->targetState = 0;
             } else {
-                t = *(int *)(blob + 0x2d0);
-                if (*(void **)(blob + 0x2d0) != NULL) {
+                t = *(int *)&((GroundBaddieState *)blob)->baddie.targetObj;
+                if (*(void **)&((GroundBaddieState *)blob)->baddie.targetObj != NULL) {
                     stk.v[0] = *(f32 *)(t + 0x18) - *(f32 *)(obj + 0x18);
                     stk.v[1] = *(f32 *)(t + 0x1c) - *(f32 *)(obj + 0x1c);
                     stk.v[2] = *(f32 *)(t + 0x20) - *(f32 *)(obj + 0x20);
-                    *(f32 *)(blob + 0x2c0) = sqrtf(stk.v[2] * stk.v[2] + (stk.v[0] * stk.v[0] + stk.v[1] * stk.v[1]));
+                    ((GroundBaddieState *)blob)->baddie.unk2C0 = sqrtf(stk.v[2] * stk.v[2] + (stk.v[0] * stk.v[0] + stk.v[1] * stk.v[1]));
                 }
                 stk.msg = 0;
                 stk.argA = 0;
                 sub2 = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
                 while (ObjMsg_Pop(obj, &stk.msg, &stk.argB, &stk.argA) != 0) {
-                    if (stk.msg == 0x11 && *(s16 *)(sub2 + 0x1c) != -1) {
-                        ObjMsg_SendToObject(*(int *)(sub2 + 0x18), 0x11, obj, 0x14);
-                        *(int *)(sub2 + 0x18) = 0;
-                        *(s16 *)(sub2 + 0x1c) = -1;
+                    if (stk.msg == 0x11 && ((DbStealerwormControl *)sub2)->unk1C != -1) {
+                        ObjMsg_SendToObject(((DbStealerwormControl *)sub2)->linkedObj, 0x11, obj, 0x14);
+                        ((DbStealerwormControl *)sub2)->linkedObj = 0;
+                        ((DbStealerwormControl *)sub2)->unk1C = -1;
                         ObjAnim_SetCurrentMove((int)obj, 0xf, lbl_803E62A8, 0);
                     }
                 }
-                if (((int (*)(int, int, int, int, char *, char *, int, char *))((void **)*gBaddieControlInterface)[20])(obj, blob, blob + 0x35c, *(s16 *)(blob + 0x3f4), tbl + 0x2ac, tbl + 0x324, 1, st) != 0) {
+                if (((int (*)(int, int, int, int, char *, char *, int, char *))((void **)*gBaddieControlInterface)[20])(obj, blob, blob + 0x35c, ((GroundBaddieState *)blob)->gameBitB, tbl + 0x2ac, tbl + 0x324, 1, st) != 0) {
                     *(f32 *)(st + 0xc) = *(f32 *)(obj + 0xc);
                     *(f32 *)(st + 0x10) = *(f32 *)(obj + 0x10);
                     *(f32 *)(st + 0x14) = *(f32 *)(obj + 0x14);
                     objLightFn_8009a1dc(obj, lbl_803E638C, (int)st, 1, 0);
                 }
-                if (*(s16 *)(blob + 0x402) == 0) {
+                if (((GroundBaddieState *)blob)->targetState == 0) {
                     fn_80203144(obj, blob, blob);
                 } else {
-                    sub3 = *(int *)(blob + 0x40c);
+                    sub3 = *(int *)&((GroundBaddieState *)blob)->control;
                     fn_80203000(obj, blob);
                     ((void (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[11])(obj, blob, lbl_803E6388, -1);
-                    if ((*(u8 *)(sub3 + 0x15) & 4) == 0) {
+                    if ((((DbStealerwormControl *)sub3)->flags15 & 4) == 0) {
                         ((void (*)(int, int, f32, int))((void **)*(int *)gPlayerInterface)[12])(obj, blob, timeDelta, 4);
                     }
-                    *(int *)(blob + 0x3e0) = *(int *)(obj + 0xc0);
+                    ((GroundBaddieState *)blob)->savedObjC0 = *(int *)(obj + 0xc0);
                     *(int *)(obj + 0xc0) = 0;
                     ((void (*)(int, int, f32, f32, int, int))((void **)*(int *)gPlayerInterface)[2])(obj, blob, timeDelta, timeDelta, (int)(st + 0x34), (int)(st + 0x18));
-                    *(int *)(obj + 0xc0) = *(int *)(blob + 0x3e0);
+                    *(int *)(obj + 0xc0) = ((GroundBaddieState *)blob)->savedObjC0;
                 }
             }
         }
@@ -6290,8 +6395,8 @@ int fn_802017A4(int obj, int p2, f32 t)
     extern f32 lbl_803E6328;
     extern int lbl_803296FC[];
     extern f32 lbl_8032970C[];
-    int blob = *(int *)(obj + 0xb8);
-    int sub = *(int *)(blob + 0x40c);
+    GroundBaddieState *blob = *(GroundBaddieState **)(obj + 0xb8);
+    DbStealerwormControl *sub = (DbStealerwormControl *)blob->control;
     s16 h;
     int q;
     int *ptr;
@@ -6313,50 +6418,50 @@ int fn_802017A4(int obj, int p2, f32 t)
     int msgD[3];
     f32 yawf;
 
-    *(u8 *)(sub + 0x14) |= 2;
-    *(u8 *)(sub + 0x15) &= ~4;
-    if (*(s8 *)(p2 + 0x27a) != 0) {
+    sub->flags14 |= 2;
+    sub->flags15 &= ~4;
+    if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
         ObjHits_EnableObject(obj);
         ObjHits_ClearHitVolumes(obj);
     }
-    *(f32 *)(p2 + 0x2a0) = lbl_803E62F4;
-    if (*(void **)(sub + 0x18) == NULL) {
-        h = *(s16 *)(sub + 0x1c);
+    ((BaddieState *)p2)->moveSpeed = lbl_803E62F4;
+    if (*(void **)&sub->linkedObj == NULL) {
+        h = sub->unk1C;
         if (h != -1) {
-            tmpA = *(int *)(sub + 0x30);
-            tmpB = *(int *)(sub + 0x2c);
-            q = *(int *)(sub + 0x24);
-            msgA[0] = *(int *)(sub + 0x28);
+            tmpA = sub->unk30;
+            tmpB = sub->unk2C;
+            q = sub->msgStack;
+            msgA[0] = sub->unk28;
             msgA[1] = tmpB;
             msgA[2] = tmpA;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgA);
             }
-            q = *(int *)(sub + 0x24);
+            q = sub->msgStack;
             msgB[0] = 9;
             msgB[1] = 0;
             msgB[2] = h;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgB);
             }
-            *(u8 *)(sub + 0x34) = 1;
-            *(s16 *)(sub + 0x1c) = -1;
+            sub->unk34 = 1;
+            sub->unk1C = -1;
         }
     } else {
-        if (*(s8 *)(p2 + 0x27a) != 0) {
+        if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
             ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
-            *(u8 *)(p2 + 0x346) = 0;
+            ((BaddieState *)p2)->moveDone = 0;
         }
-        *(f32 *)(p2 + 0x2a0) = lbl_803E6300;
-        frac = (f32)*(u8 *)(blob + 0x406) / lbl_803E6324;
+        ((BaddieState *)p2)->moveSpeed = lbl_803E6300;
+        frac = (f32)blob->aggression / lbl_803E6324;
     }
-    *(u8 *)(p2 + 0x34d) = 0x1f;
-    if (fn_80202C78(obj, *(int *)(p2 + 0x2d0), lbl_803E62B4, frac, lbl_803E62CC, t) != 0) {
-        *(u8 *)(sub + 0x34) = 1;
+    ((BaddieState *)p2)->unk34D = 0x1f;
+    if (fn_80202C78(obj, *(int *)&((BaddieState *)p2)->targetObj, lbl_803E62B4, frac, lbl_803E62CC, t) != 0) {
+        sub->unk34 = 1;
     }
-    if (((u32)*(u8 *)(sub + 0x44) >> 5 & 1) != 0) {
+    if (((u32)sub->flags44 >> 5 & 1) != 0) {
         fn_80202A2C(obj, lbl_803296FC, lbl_8032970C, 4, frac);
-    } else if (*(void **)(sub + 0x18) == NULL) {
+    } else if (*(void **)&sub->linkedObj == NULL) {
         player = Obj_GetPlayerObject();
         d = (s16)Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
@@ -6381,27 +6486,27 @@ int fn_802017A4(int obj, int p2, f32 t)
                 ptr++;
             }
             player = Obj_GetPlayerObject();
-            *(int *)(p2 + 0x2d0) = player;
-            tmp2A = *(int *)(sub + 0x30);
-            tmp2B = *(int *)(sub + 0x2c);
-            q = *(int *)(sub + 0x24);
-            msgC[0] = *(int *)(sub + 0x28);
+            *(int *)&((BaddieState *)p2)->targetObj = player;
+            tmp2A = sub->unk30;
+            tmp2B = sub->unk2C;
+            q = sub->msgStack;
+            msgC[0] = sub->unk28;
             msgC[1] = tmp2B;
             msgC[2] = tmp2A;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgC);
             }
-            q = *(int *)(sub + 0x24);
+            q = sub->msgStack;
             msgD[0] = 2;
             msgD[1] = 0;
             msgD[2] = 0;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgD);
             }
-            *(u8 *)(sub + 0x34) = 1;
+            sub->unk34 = 1;
         }
     }
-    if (((u32)*(u8 *)(sub + 0x44) >> 6 & 1) != 0) {
+    if (((u32)sub->flags44 >> 6 & 1) != 0) {
         ptr = seqFn_800394a0();
         q = 1;
         ptr = ptr + 1;
@@ -6414,9 +6519,9 @@ int fn_802017A4(int obj, int p2, f32 t)
             }
             ptr++;
         }
-    } else if (*(void **)(sub + 0x18) == NULL) {
-        d = -(lbl_803E6328 * *(f32 *)(p2 + 0x280));
-        flag = -(lbl_803E6328 * *(f32 *)(p2 + 0x284));
+    } else if (*(void **)&sub->linkedObj == NULL) {
+        d = -(lbl_803E6328 * ((BaddieState *)p2)->animSpeedA);
+        flag = -(lbl_803E6328 * ((BaddieState *)p2)->animSpeedB);
         d = (s16)d;
         if (d < -0x500) {
             d = -0x500;
@@ -6443,7 +6548,7 @@ int fn_802017A4(int obj, int p2, f32 t)
             ptr++;
         }
     }
-    ObjAnim_SampleRootCurvePhase(*(f32 *)(p2 + 0x280), (ObjAnimComponent *)obj,
+    ObjAnim_SampleRootCurvePhase(((BaddieState *)p2)->animSpeedA, (ObjAnimComponent *)obj,
                                  (float *)(p2 + 0x2a0));
     return 0;
 }
@@ -6466,7 +6571,7 @@ void fn_80204BF8(int obj)
     extern f32 lbl_803E63A4;
     extern f32 lbl_803E63A8;
     int data = *(int *)(obj + 0x4c);
-    int blob = *(int *)(obj + 0xb8);
+    Dll22CState *blob = *(Dll22CState **)(obj + 0xb8);
     int player;
     int h;
     f32 d;
@@ -6476,31 +6581,31 @@ void fn_80204BF8(int obj)
     if ((u32)player == 0) {
         return;
     }
-    switch (*(s16 *)(blob + 4)) {
+    switch (blob->mode) {
     case 0:
-        if (GameBit_Get(*(s16 *)(blob + 6)) != 0 && *(u8 *)(blob + 0xc) != 1) {
+        if (GameBit_Get(blob->gameBit) != 0 && blob->unk0C != 1) {
             if (Vec_xzDistance(obj + 0x18, player + 0x18) < lbl_803E639C) {
                 if (*(f32 *)(obj + 0x10) < lbl_803E63A0 + *(f32 *)(data + 0xc)) {
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0) {
                         Sfx_PlayFromObject(obj, 0x116);
-                        *(u8 *)(blob + 0xd) = 1;
+                        blob->sfxLatch = 1;
                     }
                     *(f32 *)(obj + 0x10) += timeDelta;
                     if (*(f32 *)(obj + 0x10) >= lbl_803E63A0 + *(f32 *)(data + 0xc)) {
                         *(f32 *)(obj + 0x10) = lbl_803E63A0 + *(f32 *)(data + 0xc);
-                        *(s16 *)(blob + 4) = 1;
+                        blob->mode = 1;
                         Sfx_StopObjectChannel(obj, 8);
                     }
                 }
             }
         } else {
-            if (*(u8 *)(blob + 0xc) == 1) {
+            if (blob->unk0C == 1) {
                 if (Vec_xzDistance(obj + 0x18, player + 0x18) < lbl_803E639C) {
                     if (*(f32 *)(obj + 0x10) < (k = lbl_803E63A0) + *(f32 *)(data + 0xc)) {
                         *(f32 *)(obj + 0x10) += timeDelta;
                         if (*(f32 *)(obj + 0x10) >= k + *(f32 *)(data + 0xc)) {
                             *(f32 *)(obj + 0x10) = k + *(f32 *)(data + 0xc);
-                            *(s16 *)(blob + 4) = 1;
+                            blob->mode = 1;
                         }
                     }
                 }
@@ -6508,42 +6613,42 @@ void fn_80204BF8(int obj)
         }
         break;
     case 1:
-        *(s16 *)(blob + 4) = 2;
-        *(s16 *)(blob + 0xa) = 0x64;
+        blob->mode = 2;
+        blob->pauseTimer = 0x64;
         break;
     case 2:
-        h = *(s16 *)(blob + 0xa);
+        h = blob->pauseTimer;
         if (h != 0) {
-            *(s16 *)(blob + 0xa) = h - (int)timeDelta;
-            if (*(s16 *)(blob + 0xa) <= 0) {
-                *(s16 *)(blob + 0xa) = 0;
+            blob->pauseTimer = h - (int)timeDelta;
+            if (blob->pauseTimer <= 0) {
+                blob->pauseTimer = 0;
             }
         } else {
             d = Vec_xzDistance(obj + 0x18, player + 0x18);
             if (d < lbl_803E63A4) {
                 if (*(f32 *)(obj + 0x10) == lbl_803E63A0 + *(f32 *)(data + 0xc)) {
-                    *(s16 *)(blob + 4) = 3;
+                    blob->mode = 3;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0) {
                         Sfx_PlayFromObject(obj, 0x1cb);
-                        *(u8 *)(blob + 0xd) = 1;
+                        blob->sfxLatch = 1;
                     }
                 } else if (*(f32 *)(obj + 0x10) == d - lbl_803E63A8) {
-                    *(s16 *)(blob + 4) = 4;
+                    blob->mode = 4;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0) {
                         Sfx_PlayFromObject(obj, 0x1cb);
-                        *(u8 *)(blob + 0xd) = 1;
+                        blob->sfxLatch = 1;
                     }
                 }
             } else {
                 if (*(f32 *)(player + 0x10) < *(f32 *)(data + 0xc)) {
-                    *(s16 *)(blob + 4) = 3;
-                    if (*(u8 *)(blob + 0xd) == 1) {
-                        *(u8 *)(blob + 0xd) = 0;
+                    blob->mode = 3;
+                    if (blob->sfxLatch == 1) {
+                        blob->sfxLatch = 0;
                     }
                 } else if (*(f32 *)(player + 0x10) > *(f32 *)(data + 0xc)) {
-                    *(s16 *)(blob + 4) = 4;
-                    if (*(u8 *)(blob + 0xd) == 1) {
-                        *(u8 *)(blob + 0xd) = 0;
+                    blob->mode = 4;
+                    if (blob->sfxLatch == 1) {
+                        blob->sfxLatch = 0;
                     }
                 }
             }
@@ -6554,16 +6659,16 @@ void fn_80204BF8(int obj)
             *(f32 *)(obj + 0x10) -= timeDelta;
             if (*(f32 *)(obj + 0x10) <= *(f32 *)(data + 0xc) - k) {
                 *(f32 *)(obj + 0x10) = *(f32 *)(data + 0xc) - k;
-                *(s16 *)(blob + 4) = 2;
+                blob->mode = 2;
                 Sfx_StopObjectChannel(obj, 8);
-                *(s16 *)(blob + 0xa) = 0x64;
+                blob->pauseTimer = 0x64;
             }
             Vec_xzDistance(obj + 0x18, player + 0x18);
         } else {
             Sfx_StopObjectChannel(obj, 8);
             Vec_xzDistance(obj + 0x18, player + 0x18);
-            *(s16 *)(blob + 4) = 2;
-            *(s16 *)(blob + 0xa) = 0x64;
+            blob->mode = 2;
+            blob->pauseTimer = 0x64;
         }
         break;
     case 4:
@@ -6571,14 +6676,14 @@ void fn_80204BF8(int obj)
             *(f32 *)(obj + 0x10) += timeDelta;
             if (*(f32 *)(obj + 0x10) >= k + *(f32 *)(data + 0xc)) {
                 *(f32 *)(obj + 0x10) = k + *(f32 *)(data + 0xc);
-                *(s16 *)(blob + 4) = 2;
-                *(s16 *)(blob + 0xa) = 0x64;
+                blob->mode = 2;
+                blob->pauseTimer = 0x64;
                 Sfx_StopObjectChannel(obj, 8);
             }
             Vec_xzDistance(obj + 0x18, player + 0x18);
         } else {
-            *(s16 *)(blob + 4) = 2;
-            *(s16 *)(blob + 0xa) = 0x64;
+            blob->mode = 2;
+            blob->pauseTimer = 0x64;
             Sfx_StopObjectChannel(obj, 8);
             Vec_xzDistance(obj + 0x18, player + 0x18);
         }
@@ -6611,9 +6716,9 @@ int fn_80200A70(int obj, int p2, f32 t)
     extern f32 lbl_803E62CC;
     extern u8 lbl_803293B8[];
     char *tbl = (char *)lbl_803293B8;
-    int blob = *(int *)(obj + 0xb8);
-    int sub = *(int *)(blob + 0x40c);
-    int c30 = *(int *)(sub + 0x30);
+    GroundBaddieState *blob = *(GroundBaddieState **)(obj + 0xb8);
+    DbStealerwormControl *sub = (DbStealerwormControl *)blob->control;
+    int c30 = sub->unk30;
     s16 h;
     int n;
     int q;
@@ -6634,55 +6739,55 @@ int fn_80200A70(int obj, int p2, f32 t)
     int msgC[3];
     int cnt;
 
-    *(u8 *)(sub + 0x15) &= ~4;
-    *(u8 *)(sub + 0x14) |= 2;
-    fn_80137948(tbl + 0x430, *(int *)(sub + 0x3c), *(int *)(sub + 0x18));
-    if (*(void **)(sub + 0x3c) == NULL) {
+    sub->flags15 &= ~4;
+    sub->flags14 |= 2;
+    fn_80137948(tbl + 0x430, sub->unk3C, sub->linkedObj);
+    if (*(void **)&sub->unk3C == NULL) {
         player = Obj_GetPlayerObject();
-        q = *(int *)(sub + 0x24);
+        q = sub->msgStack;
         msg0[0] = 0xf;
         msg0[1] = 1;
         msg0[2] = player;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, msg0);
         }
-        *(u8 *)(sub + 0x34) = 1;
+        sub->unk34 = 1;
         return 0;
     }
-    if (*(s8 *)(p2 + 0x27a) != 0) {
+    if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
-        *(u8 *)(p2 + 0x346) = 0;
+        ((BaddieState *)p2)->moveDone = 0;
     }
-    *(f32 *)(p2 + 0x2a0) = lbl_803E6300;
-    frac = (f32)*(u8 *)(blob + 0x406) / lbl_803E62B8;
-    if (*(void **)(sub + 0x18) == NULL) {
-        h = *(s16 *)(sub + 0x1c);
+    ((BaddieState *)p2)->moveSpeed = lbl_803E6300;
+    frac = (f32)blob->aggression / lbl_803E62B8;
+    if (*(void **)&sub->linkedObj == NULL) {
+        h = sub->unk1C;
         if (h != -1) {
-            tmpA = *(int *)(sub + 0x30);
-            tmpB = *(int *)(sub + 0x2c);
-            q = *(int *)(sub + 0x24);
-            msgA[0] = *(int *)(sub + 0x28);
+            tmpA = sub->unk30;
+            tmpB = sub->unk2C;
+            q = sub->msgStack;
+            msgA[0] = sub->unk28;
             msgA[1] = tmpB;
             msgA[2] = tmpA;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgA);
             }
-            q = *(int *)(sub + 0x24);
+            q = sub->msgStack;
             msgB[0] = 9;
             msgB[1] = 0;
             msgB[2] = h;
             if (Stack_IsFull(q) == 0) {
                 Stack_Push(q, msgB);
             }
-            *(u8 *)(sub + 0x34) = 1;
-            *(s16 *)(sub + 0x1c) = -1;
+            sub->unk34 = 1;
+            sub->unk1C = -1;
         }
     }
-    if (((u32)*(u8 *)(sub + 0x44) >> 5 & 1) != 0) {
+    if (((u32)sub->flags44 >> 5 & 1) != 0) {
         fn_80202A2C(obj, (int *)(tbl + 0x344), (f32 *)(tbl + 0x354), 4, frac);
     }
     player = Obj_GetPlayerObject();
-    ratio = (Vec_xzDistance(obj + 0x18, player + 0x18) - lbl_803E6304) / (lbl_803E6308 * (f32)*(u8 *)(blob + 0x406));
+    ratio = (Vec_xzDistance(obj + 0x18, player + 0x18) - lbl_803E6304) / (lbl_803E6308 * (f32)blob->aggression);
     n = (int)(ratio < lbl_803E62A8 ? lbl_803E62A8 : (ratio > lbl_803E62B0 ? lbl_803E62B0 : ratio));
     fn_80137948(tbl + 0x444, n);
     player = Obj_GetPlayerObject();
@@ -6706,18 +6811,18 @@ int fn_80200A70(int obj, int p2, f32 t)
     if ((u32)best != 0) {
         if ((u32)best != (u32)obj) {
             if (*(s16 *)(best + 0x46) == 0x539) {
-                *(int *)(p2 + 0x2d0) = best;
+                *(int *)&((BaddieState *)p2)->targetObj = best;
                 if (randomGetRange(0, n) == 0) {
-                    if ((**(int (**)(int, int, int))(*(int *)(*(int *)(best + 0x68)) + 0x24))(best, 0x82, *(int *)(sub + 0x18)) != 0) {
-                        *(int *)(sub + 0x3c) = 0;
-                        q = *(int *)(sub + 0x24);
+                    if ((**(int (**)(int, int, int))(*(int *)(*(int *)(best + 0x68)) + 0x24))(best, 0x82, sub->linkedObj) != 0) {
+                        sub->unk3C = 0;
+                        q = sub->msgStack;
                         msgC[0] = 0xa;
                         msgC[1] = 1;
                         msgC[2] = best;
                         if (Stack_IsFull(q) == 0) {
                             Stack_Push(q, msgC);
                         }
-                        *(u8 *)(sub + 0x34) = 1;
+                        sub->unk34 = 1;
                     }
                 } else {
                     fn_80202C78(obj, best, lbl_803E630C, frac, lbl_803E62CC, t);
@@ -6878,7 +6983,7 @@ void DFP_Torch_update(int obj)
         int m2;
         int m3;
     } TorchPrm;
-    int blob = *(int *)(obj + 0xb8);
+    DfpTorchState *blob = *(DfpTorchState **)(obj + 0xb8);
     int res;
     int h;
     int i;
@@ -6888,69 +6993,69 @@ void DFP_Torch_update(int obj)
     prm = *(TorchPrm *)lbl_802C2510;
     Sfx_PlayFromObject(obj, 0x72);
     objUpdateOpacity(obj);
-    switch (*(u8 *)(blob + 9)) {
+    switch (blob->mode) {
     case 0:
         break;
     case 1:
         buf[4] = lbl_803E63E0;
-        *(u8 *)(blob + 0xc) = *(u8 *)(blob + 0xa);
+        blob->prevLit = blob->lit;
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
-            *(u8 *)(blob + 0xa) = 1 - *(u8 *)(blob + 0xa);
-            if (*(u8 *)(blob + 0xa) != 0) {
-                *(s16 *)(blob + 6) = 0x7d0;
+            blob->lit = 1 - blob->lit;
+            if (blob->lit != 0) {
+                blob->litTimer = 0x7d0;
             }
         }
-        if (*(u8 *)(blob + 0xa) != 0) {
-            h = *(s16 *)(blob + 6);
+        if (blob->lit != 0) {
+            h = blob->litTimer;
             if (h != 0) {
-                *(s16 *)(blob + 6) = h - (int)timeDelta;
-                if (*(s16 *)(blob + 6) <= 0) {
-                    *(s16 *)(blob + 6) = 0;
-                    *(u8 *)(blob + 0xa) = 0;
+                blob->litTimer = h - (int)timeDelta;
+                if (blob->litTimer <= 0) {
+                    blob->litTimer = 0;
+                    blob->lit = 0;
                 }
             }
         }
-        if (*(u8 *)(blob + 0xa) != 0 && *(s16 *)(blob + 4) <= 0 && *(u8 *)(blob + 0xb) != 0) {
-            *(u8 *)(blob + 0xb) = 0;
+        if (blob->lit != 0 && blob->flickerTimer <= 0 && blob->sfxPending != 0) {
+            blob->sfxPending = 0;
             Sfx_PlayFromObject(obj, 0x80);
         }
-        if (*(u8 *)(blob + 0xa) != *(u8 *)(blob + 0xc)) {
-            if (*(u8 *)(blob + 0xa) != 0) {
+        if (blob->lit != blob->prevLit) {
+            if (blob->lit != 0) {
                 res = Resource_Acquire(0x69, 1);
-                prm.m1 = *(u8 *)(blob + 0xd) * 2 + 0x19d;
-                prm.m2 = *(u8 *)(blob + 0xd) * 2 + 0x19e;
+                prm.m1 = blob->colorIdx * 2 + 0x19d;
+                prm.m2 = blob->colorIdx * 2 + 0x19e;
                 (*(void (*)(int, int, f32 *, int, int, void *))(*(int *)(*(int *)res + 4)))(obj, 1, buf, 0x10004, -1, &prm);
                 Resource_Release(res);
                 for (i = 0; i < 0x64; i++) {
                     (**(void (**)(int, int, int, int, int, int))((char *)*gPartfxInterface + 8))(obj, 0x1a3, 0, 0, -1, 0);
                 }
-                if (*(int *)blob != -1) {
-                    if (GameBit_Get(*(int *)blob) == 0) {
-                        GameBit_Set(*(int *)blob, 1);
+                if (blob->gameBit != -1) {
+                    if (GameBit_Get(blob->gameBit) == 0) {
+                        GameBit_Set(blob->gameBit, 1);
                     }
                 }
-                if ((s8)lbl_803DDCE8 == 0 && *(u8 *)(blob + 0xd) == 0 && GameBit_Get(*(int *)blob) != 0) {
+                if ((s8)lbl_803DDCE8 == 0 && blob->colorIdx == 0 && GameBit_Get(blob->gameBit) != 0) {
                     lbl_803DDCE8 = 1;
                 }
-                if ((s8)lbl_803DDCE8 == 1 && *(u8 *)(blob + 0xd) == 1 && GameBit_Get(*(int *)blob) != 0) {
+                if ((s8)lbl_803DDCE8 == 1 && blob->colorIdx == 1 && GameBit_Get(blob->gameBit) != 0) {
                     GameBit_Set(0x5e2, 1);
                     lbl_803DDCE8 = 2;
                 }
-                *(u8 *)(blob + 0xb) = 1;
-                *(s16 *)(blob + 4) = 1;
+                blob->sfxPending = 1;
+                blob->flickerTimer = 1;
             } else {
                 Sfx_StopObjectChannel(obj, 0x40);
                 (**(void (**)(int))((char *)*gModgfxInterface + 0x18))(obj);
                 (**(void (**)(int))((char *)*gExpgfxInterface + 0x14))(obj);
-                if (*(int *)blob != -1) {
-                    if (GameBit_Get(*(int *)blob) != 0) {
-                        GameBit_Set(*(int *)blob, 0);
+                if (blob->gameBit != -1) {
+                    if (GameBit_Get(blob->gameBit) != 0) {
+                        GameBit_Set(blob->gameBit, 0);
                     }
                 }
-                if ((s8)lbl_803DDCE8 == 1 && *(u8 *)(blob + 0xd) == 0) {
+                if ((s8)lbl_803DDCE8 == 1 && blob->colorIdx == 0) {
                     lbl_803DDCE8 = 0;
                 }
-                if ((s8)lbl_803DDCE8 == 2 && *(u8 *)(blob + 0xd) == 1 && GameBit_Get(0x5e2) == 0) {
+                if ((s8)lbl_803DDCE8 == 2 && blob->colorIdx == 1 && GameBit_Get(0x5e2) == 0) {
                     GameBit_Set(0x5e2, 0);
                     lbl_803DDCE8 = 0;
                 }
@@ -7233,9 +7338,9 @@ int fn_802004B0(int obj, int p2, f32 t)
     extern f32 lbl_803E62D8;
     extern int lbl_8032973C[];
     extern f32 lbl_8032974C[];
-    int blob = *(int *)(obj + 0xb8);
-    int sub = *(int *)(blob + 0x40c);
-    int n = 0x1f40 / *(u8 *)(blob + 0x406);
+    GroundBaddieState *blob = *(GroundBaddieState **)(obj + 0xb8);
+    DbStealerwormControl *sub = (DbStealerwormControl *)blob->control;
+    int n = 0x1f40 / blob->aggression;
     int tmpA;
     int tmpB;
     int q;
@@ -7247,68 +7352,68 @@ int fn_802004B0(int obj, int p2, f32 t)
     int msgC[3];
     int msgD[3];
 
-    *(u8 *)(sub + 0x14) |= 2;
-    *(u8 *)(sub + 0x15) &= ~4;
-    if (*(u16 *)(*(int *)(p2 + 0x2d0) + 0xb0) & 0x1000) {
-        *(f32 *)(p2 + 0x280) = lbl_803E62A8;
-        *(f32 *)(p2 + 0x284) = lbl_803E62A8;
-        *(f32 *)(p2 + 0x2a0) = lbl_803E62C0;
+    sub->flags14 |= 2;
+    sub->flags15 &= ~4;
+    if (*(u16 *)(*(int *)&((BaddieState *)p2)->targetObj + 0xb0) & 0x1000) {
+        ((BaddieState *)p2)->animSpeedA = lbl_803E62A8;
+        ((BaddieState *)p2)->animSpeedB = lbl_803E62A8;
+        ((BaddieState *)p2)->moveSpeed = lbl_803E62C0;
         return 0;
     }
-    frac = (f32)*(u8 *)(blob + 0x406) / lbl_803E62C4;
-    fn_80202C78(obj, *(int *)(p2 + 0x2d0), lbl_803E62C8, frac, lbl_803E62CC, t);
-    if (((u32)*(u8 *)(sub + 0x44) >> 5 & 1) != 0) {
+    frac = (f32)blob->aggression / lbl_803E62C4;
+    fn_80202C78(obj, *(int *)&((BaddieState *)p2)->targetObj, lbl_803E62C8, frac, lbl_803E62CC, t);
+    if (((u32)sub->flags44 >> 5 & 1) != 0) {
         fn_80202A2C(obj, lbl_8032973C, lbl_8032974C, 4, frac);
     }
-    d = Vec_xzDistance(obj + 0x18, *(int *)(p2 + 0x2d0) + 0x18);
-    *(u8 *)(p2 + 0x34d) = 1;
+    d = Vec_xzDistance(obj + 0x18, *(int *)&((BaddieState *)p2)->targetObj + 0x18);
+    ((BaddieState *)p2)->unk34D = 1;
     if (d < lbl_803E62D0) {
-        *(f32 *)(p2 + 0x280) *= lbl_803E62D4;
-        *(f32 *)(p2 + 0x284) *= lbl_803E62D4;
-        target = *(int *)(p2 + 0x2d0);
-        tmpA = *(int *)(sub + 0x30);
-        tmpB = *(int *)(sub + 0x2c);
-        q = *(int *)(sub + 0x24);
-        msgA[0] = *(int *)(sub + 0x28);
+        ((BaddieState *)p2)->animSpeedA *= lbl_803E62D4;
+        ((BaddieState *)p2)->animSpeedB *= lbl_803E62D4;
+        target = *(int *)&((BaddieState *)p2)->targetObj;
+        tmpA = sub->unk30;
+        tmpB = sub->unk2C;
+        q = sub->msgStack;
+        msgA[0] = sub->unk28;
         msgA[1] = tmpB;
         msgA[2] = tmpA;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, msgA);
         }
-        q = *(int *)(sub + 0x24);
+        q = sub->msgStack;
         msgB[0] = 2;
         msgB[1] = 1;
         msgB[2] = target;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, msgB);
         }
-        *(u8 *)(sub + 0x34) = 1;
+        sub->unk34 = 1;
         return 0;
     }
     if (d < lbl_803E62D8 && randomGetRange(0, n) == 0) {
-        *(f32 *)(p2 + 0x280) = lbl_803E62A8;
-        *(f32 *)(p2 + 0x284) = lbl_803E62A8;
-        target = *(int *)(p2 + 0x2d0);
-        tmpA = *(int *)(sub + 0x30);
-        tmpB = *(int *)(sub + 0x2c);
-        q = *(int *)(sub + 0x24);
-        msgC[0] = *(int *)(sub + 0x28);
+        ((BaddieState *)p2)->animSpeedA = lbl_803E62A8;
+        ((BaddieState *)p2)->animSpeedB = lbl_803E62A8;
+        target = *(int *)&((BaddieState *)p2)->targetObj;
+        tmpA = sub->unk30;
+        tmpB = sub->unk2C;
+        q = sub->msgStack;
+        msgC[0] = sub->unk28;
         msgC[1] = tmpB;
         msgC[2] = tmpA;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, msgC);
         }
-        q = *(int *)(sub + 0x24);
+        q = sub->msgStack;
         msgD[0] = 4;
         msgD[1] = 1;
         msgD[2] = target;
         if (Stack_IsFull(q) == 0) {
             Stack_Push(q, msgD);
         }
-        *(u8 *)(sub + 0x34) = 1;
+        sub->unk34 = 1;
         return 0;
     }
-    ObjAnim_SampleRootCurvePhase(*(f32 *)(p2 + 0x280), (ObjAnimComponent *)obj,
+    ObjAnim_SampleRootCurvePhase(((BaddieState *)p2)->animSpeedA, (ObjAnimComponent *)obj,
                                  (float *)(p2 + 0x2a0));
     return 0;
 }
