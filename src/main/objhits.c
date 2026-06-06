@@ -86,6 +86,11 @@ extern f32 lbl_803DF5D8;
 extern f32 lbl_803DF5DC;
 extern f32 lbl_803DF5E0;
 
+static inline int *ObjHits_GetActiveModel(int obj) {
+  ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+  return (int *)objAnim->banks[objAnim->bankIndex];
+}
+
 /*
  * --INFO--
  *
@@ -1381,8 +1386,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
       local_1f8 = fVar2;
     }
     else {
-      piVar11 = *(int **)(*(int *)(objA + 0x7c) +
-                          *(char *)(objA + offsetof(ObjAnimComponent, bankIndex)) * 4);
+      piVar11 = ObjHits_GetActiveModel(objA);
       iVar16 = *piVar11;
       local_174 = (uint)*(byte *)(iVar16 + 0xf7);
       local_184 = (float *)piVar11[0x14];
@@ -1416,8 +1420,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
       local_208 = fVar2;
     }
     else {
-      piVar11 = *(int **)(*(int *)(objB + 0x7c) +
-                          *(char *)(objB + offsetof(ObjAnimComponent, bankIndex)) * 4);
+      piVar11 = ObjHits_GetActiveModel(objB);
       iVar16 = *piVar11;
       local_178 = (uint)*(byte *)(iVar16 + 0xf7);
       local_188 = (float *)piVar11[0x14];
@@ -1780,8 +1783,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
   result = 0;
   if ((stateA->objectHitMask != 0) && (*(s8 *)((int)stateA + 0x70) == 0)) {
     if (*(s16 *)(objA + 0x44) == 1) {
-      hitboxBuf = *(int **)(*(int *)(objA + 0x7c) +
-                            *(s8 *)(objA + offsetof(ObjAnimComponent, bankIndex)) * 4);
+      hitboxBuf = ObjHits_GetActiveModel(objA);
       bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
       if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
         memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsPrimaryHitboxBufferScratch0,
@@ -1795,8 +1797,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
                (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
       }
       if (attA != 0) {
-        hitboxBuf = *(int **)(*(int *)(attA + 0x7c) +
-                              *(s8 *)(attA + offsetof(ObjAnimComponent, bankIndex)) * 4);
+        hitboxBuf = ObjHits_GetActiveModel(attA);
         bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
         if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
           memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsSecondaryHitboxBufferScratch0,
@@ -1828,8 +1829,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
   if (((stateB->sourceMask & 0x80) == 0) && (stateB->objectHitMask != 0) &&
       (*(s8 *)((int)stateB + 0x70) == 0)) {
     if (*(s16 *)(objB + 0x44) == 1) {
-      hitboxBuf = *(int **)(*(int *)(objB + 0x7c) +
-                            *(s8 *)(objB + offsetof(ObjAnimComponent, bankIndex)) * 4);
+      hitboxBuf = ObjHits_GetActiveModel(objB);
       bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
       if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
         memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsPrimaryHitboxBufferScratch0,
@@ -1843,8 +1843,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
                (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
       }
       if (attB != 0) {
-        hitboxBuf = *(int **)(*(int *)(attB + 0x7c) +
-                              *(s8 *)(attB + offsetof(ObjAnimComponent, bankIndex)) * 4);
+        hitboxBuf = ObjHits_GetActiveModel(attB);
         bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
         if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
           memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsSecondaryHitboxBufferScratch0,
@@ -2286,8 +2285,7 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
   objAState = *(ObjHitsPriorityState **)(objA + 0x54);
   if (((objAState->resetHitboxMode == 0) && (objBState->resetHitboxMode == 0)) &&
       (objBState->activeHitboxMode == 0) && (objAState->activeHitboxMode == 0)) {
-    hitboxBuf = *(int **)(*(int *)(objA + 0x7c) +
-                          *(s8 *)(objA + offsetof(ObjAnimComponent, bankIndex)) * 4);
+    hitboxBuf = ObjHits_GetActiveModel(objA);
     shapeFlags = objBState->shapeFlags;
     if ((shapeFlags & OBJHITBOX_SHAPE_SKELETON_3D) != 0) {
       point.x = *(f32 *)(objB + 0x18) - playerMapOffsetX;
@@ -2472,8 +2470,7 @@ void ObjHits_CheckTrackContact(int objA,int objB)
   if ((mask2 != 0) && (*(char *)(iVar6 + 0x70) == '\0')) {
     iVar6 = *(int *)(objB + 0x54);
     if ((*(byte *)(iVar6 + 0xb6) & 0x10) != 0) {
-      piVar9 = *(int **)(*(int *)(objB + 0x7c) +
-                         *(char *)(objB + offsetof(ObjAnimComponent, bankIndex)) * 4);
+      piVar9 = ObjHits_GetActiveModel(objB);
       iVar12 = *piVar9;
       uVar7 = *(ushort *)(piVar9 + 6) >> 2 & 1;
       puVar13 = (float *)piVar9[uVar7 + 0x12];

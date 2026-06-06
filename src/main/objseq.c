@@ -3593,8 +3593,8 @@ checked:
                 st->cmdFlags[*(s16 *)(obj + 0xb4)] = *(u16 *)(walk2 + 4);
                 st->handles[*(s16 *)(obj + 0xb4)] =
                     *(int *)(*(u8 **)(newObj + 0x4c) + 0x14);
-                mapFlags = *(u32 *)(*(u8 **)(obj + 0x50) + 0x44);
-                if ((mapFlags & 0x40) && !(mapFlags & 0x8000)) {
+                mapFlags = ((ObjAnimComponent *)obj)->modelInstance->flags;
+                if ((mapFlags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(mapFlags & 0x8000)) {
                     parent = obj;
                     z = y = x = lbl_803DEFB0;
                     heading = 0;

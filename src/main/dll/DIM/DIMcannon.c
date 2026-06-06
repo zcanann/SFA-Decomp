@@ -3,6 +3,10 @@
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/objanim_internal.h"
 
+static inline int *DIMcannon_GetActiveModel(void *obj) {
+  ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+  return (int *)objAnim->banks[objAnim->bankIndex];
+}
 
 extern undefined4 FUN_80006724();
 extern undefined8 FUN_80006728();
@@ -603,9 +607,7 @@ void FUN_801aeab4(int param_1)
     if (bVar1 == 1) {
       if (sVar4 == 0) {
         FUN_800178e8((double)lbl_803E5428,
-                     *(int **)(*(int *)(param_1 + offsetof(ObjAnimComponent, banks)) +
-                                *(s8 *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) * 4),
-                     0,-1,0,0x10
+                     DIMcannon_GetActiveModel((void *)param_1),0,-1,0,0x10
                     );
         pbVar5[2] = 0;
         pbVar5[3] = 0xb4;
@@ -616,9 +618,7 @@ void FUN_801aeab4(int param_1)
     else if (bVar1 == 0) {
       if (sVar4 == 1) {
         FUN_800178e8((double)lbl_803E5424,
-                     *(int **)(*(int *)(param_1 + offsetof(ObjAnimComponent, banks)) +
-                                *(s8 *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) * 4),
-                     0,-1,0,0x10
+                     DIMcannon_GetActiveModel((void *)param_1),0,-1,0,0x10
                     );
         *(undefined *)(param_1 + 0x36) = 0xff;
         pbVar5[1] = 1;
@@ -717,8 +717,7 @@ void FUN_801aecf8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   else if (bVar1 < 7) {
     *(float *)(param_9 + 4) = lbl_803E5448;
   }
-  piVar5 = *(int **)(*(int *)((int)param_9 + offsetof(ObjAnimComponent, banks)) +
-                      *(s8 *)((int)param_9 + offsetof(ObjAnimComponent, bankIndex)) * 4);
+  piVar5 = DIMcannon_GetActiveModel(param_9);
   uVar4 = 0;
   FUN_800178e8((double)lbl_803E5430,piVar5,0,-1,0,0);
   uVar7 = FUN_800178e4((double)lbl_803E5420,piVar5,0);
@@ -2184,16 +2183,18 @@ void link_levcontrol_applyEnterAreaEffects(int *obj) {
         break;
     }
 }
-extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
-extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
+extern void ObjModel_SetBlendChannelTargets(int *model, int channel, int p3, int p4, f32 weight, int p6);
+extern void ObjModel_SetBlendChannelWeight(int *model, int channel, f32 weight);
 extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
 extern s16 lbl_80323818[], lbl_80323824[];
 void imspacethruster_init(int *obj, u8 *param2) {
+    ObjAnimComponent *objAnim;
     u8 *sub = *(u8 **)((char *)obj + 0xb8);
-    int model;
+    int *model;
+    objAnim = (ObjAnimComponent *)obj;
     *(s16 *)obj = (s16)((s8)param2[0x18] << 8);
     *(s16 *)((char *)obj + 2) = *(s16 *)((char *)param2 + 0x1a);
-    *(s8 *)((char *)obj + 0xad) = (s8)*(s16 *)((char *)param2 + 0x1c);
+    objAnim->bankIndex = (s8)*(s16 *)((char *)param2 + 0x1c);
     sub[0] = param2[0x19];
     switch (sub[0]) {
     case 0:
@@ -2212,7 +2213,7 @@ void imspacethruster_init(int *obj, u8 *param2) {
         *(f32 *)((char *)obj + 8) = lbl_803E47B4;
         break;
     }
-    model = ((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)];
+    model = DIMcannon_GetActiveModel(obj);
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4798, 0);
     ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4788);
     {
@@ -2905,7 +2906,7 @@ void imspacethruster_update(int *obj) {
         switch (state[1]) {
         case 0:
             if (mode == 1) {
-                ObjModel_SetBlendChannelTargets(((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)], 0, -1, 0, lbl_803E478C, 0x10);
+                ObjModel_SetBlendChannelTargets(DIMcannon_GetActiveModel(obj), 0, -1, 0, lbl_803E478C, 0x10);
                 *(u8 *)((char *)obj + 0x36) = 0xff;
                 state[1] = 1;
             } else {
@@ -2918,7 +2919,7 @@ void imspacethruster_update(int *obj) {
             break;
         case 1:
             if (mode == 0) {
-                ObjModel_SetBlendChannelTargets(((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)], 0, -1, 0, lbl_803E4790, 0x10);
+                ObjModel_SetBlendChannelTargets(DIMcannon_GetActiveModel(obj), 0, -1, 0, lbl_803E4790, 0x10);
                 *(s16 *)(state + 2) = 0xb4;
                 *(u8 *)((char *)obj + 0x36) = 0xa4;
                 state[1] = 2;

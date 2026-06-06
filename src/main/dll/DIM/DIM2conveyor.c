@@ -26,8 +26,11 @@ extern int *mapGetBlock(int idx);
 #pragma scheduling off
 #pragma peephole off
 void dimlavasmash_init(s16 *obj, s8 *def) {
+    ObjAnimComponent *objAnim;
     int *block;
     char *inner;
+
+    objAnim = (ObjAnimComponent *)obj;
     obj[0] = (s16)((s32)def[0x18] << 8);
     *(int *)((char *)obj + 0xbc) = (int)&dimlavasmash_SeqFn;
     inner = *(char **)((char *)obj + 0xb8);
@@ -41,7 +44,7 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
             dimlavasmash_setBlockSurfaceFlags(block, 0, *(u8 *)(inner + 1) + 1);
         }
     }
-    *(s8 *)((char *)obj + offsetof(ObjAnimComponent, bankIndex)) = def[0x19];
+    objAnim->bankIndex = def[0x19];
     {
         s16 *p = *(s16 **)((char *)obj + 0x54);
         p[0x30] = (s16)(p[0x30] & ~1);

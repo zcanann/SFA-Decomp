@@ -3,6 +3,11 @@
 #include "main/dll/DIM/DIM2snowball.h"
 #include "main/objanim_internal.h"
 
+static inline int *DIM2snowball_GetActiveModel(void *obj) {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+    return (int *)objAnim->banks[objAnim->bankIndex];
+}
+
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -817,8 +822,7 @@ void FUN_801b77a8(short *param_1)
   iVar9 = *(int *)(param_1 + 0x5c);
   bVar1 = *(byte *)(iVar9 + 0x1d);
   if ((bVar1 & 1) == 0) {
-    piVar3 = *(int **)(*(int *)((int)param_1 + offsetof(ObjAnimComponent, banks)) +
-                        *(s8 *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) * 4);
+    piVar3 = DIM2snowball_GetActiveModel(param_1);
     pfVar7 = (float *)piVar3[10];
     if ((pfVar7 != (float *)0x0) && ((bVar1 & 4) != 0)) {
       if (lbl_803E5710 <= *pfVar7) {
@@ -852,10 +856,7 @@ void FUN_801b77a8(short *param_1)
       FUN_80006824((uint)param_1,SFXmv_mushdizzylp12);
     }
     if (*(short *)(iVar9 + 0x1a) < 1) {
-      FUN_800178e8((double)lbl_803E5718,
-                   *(int **)(*(int *)((int)param_1 + offsetof(ObjAnimComponent, banks)) +
-                              *(s8 *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) * 4),
-                   0,-1,0,0x10);
+      FUN_800178e8((double)lbl_803E5718,DIM2snowball_GetActiveModel(param_1),0,-1,0,0x10);
       *(undefined2 *)(iVar9 + 0x18) = *(undefined2 *)(iVar8 + 0x1a);
       if (*(short *)(iVar9 + 0x18) < 0xf) {
         *(undefined2 *)(iVar9 + 0x18) = 0xf;
@@ -1483,7 +1484,7 @@ void dll_1D6_init(int *obj, u8 *params)
 
     *(s16 *)obj = (s16)(*(s8 *)((char *)params + 0x18) << 8);
     extra = *(int **)((char *)obj + 0xb8);
-    model = (int *)(*(int **)((char *)obj + 0x7c))[(s8)*(s8 *)((char *)obj + 0xad)];
+    model = DIM2snowball_GetActiveModel(obj);
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
     ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4A78);
     *(s16 *)((char *)extra + 0x18) = *(s16 *)((char *)params + 0x1a);
@@ -1719,7 +1720,7 @@ void dll_1D6_update(int *obj)
             Sfx_PlayFromObject((int)obj, SFXmv_mushdizzylp12);
         }
         if (*(s16 *)((char *)extra + 0x1a) <= 0) {
-            model = (int *)(*(int **)((char *)obj + 0x7c))[(s8)*(s8 *)((char *)obj + 0xad)];
+            model = DIM2snowball_GetActiveModel(obj);
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A80, 16);
             *(s16 *)((char *)extra + 0x18) = *(s16 *)((char *)def + 0x1a);
             if (*(s16 *)((char *)extra + 0x18) < 15) {
@@ -1729,7 +1730,7 @@ void dll_1D6_update(int *obj)
             Sfx_PlayFromObject((int)obj, SFXfoot_metal_land);
         }
     } else {
-        model = (int *)(*(int **)((char *)obj + 0x7c))[(s8)*(s8 *)((char *)obj + 0xad)];
+        model = DIM2snowball_GetActiveModel(obj);
         if (*(int *)((char *)model + 0x28) != 0 && (*(u8 *)((char *)extra + 0x1d) & 4) != 0) {
             if (*(f32 *)*(int **)((char *)model + 0x28) >= lbl_803E4A78) {
                 *(u8 *)((char *)extra + 0x1d) &= ~4;
@@ -1783,7 +1784,7 @@ void dll_1D6_update(int *obj)
             if (lz <= *(f32 *)((char *)extra + 8)) {
                 int *row;
                 f32 lim;
-                model = (int *)(*(int **)((char *)obj + 0x7c))[(s8)*(s8 *)((char *)obj + 0xad)];
+                model = DIM2snowball_GetActiveModel(obj);
                 row = *(int **)((char *)model + ((*(u16 *)((char *)model + 0x18) >> 1) & 1) * 4 + 4);
                 lim = *(f32 *)((char *)obj + 8) *
                       (f32)(int)*(s16 *)((char *)row + *(u8 *)((char *)extra + 0x1e) * 16);

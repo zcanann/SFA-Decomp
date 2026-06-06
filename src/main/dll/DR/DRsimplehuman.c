@@ -264,6 +264,7 @@ void FUN_801e9368(int *param_1)
  */
 void FUN_801e9690(short *param_1,int param_2)
 {
+  ObjAnimComponent *objAnim;
   char cVar1;
   int iVar2;
   uint uVar3;
@@ -280,6 +281,7 @@ void FUN_801e9690(short *param_1,int param_2)
   undefined4 local_18;
   uint uStack_14;
   
+  objAnim = (ObjAnimComponent *)param_1;
   pfVar4 = *(float **)(param_1 + 0x5c);
   local_38 = DAT_803e6708;
   local_36 = DAT_803e670a;
@@ -293,7 +295,7 @@ void FUN_801e9690(short *param_1,int param_2)
   local_28 = 0x43300000;
   dVar5 = (double)FUN_80294964();
   *(float *)(param_1 + 0x16) = (float)-dVar5;
-  *(char *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) = '\x01' - *(char *)(param_2 + 0x19);
+  objAnim->bankIndex = '\x01' - *(char *)(param_2 + 0x19);
   uStack_1c = (int)*(short *)(param_2 + 0x1a) ^ 0x80000000;
   local_20 = 0x43300000;
   *pfVar4 = (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6730);

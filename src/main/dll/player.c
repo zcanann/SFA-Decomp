@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
@@ -7618,7 +7619,7 @@ void playerDoHitDetection(int obj)
         }
         if ((*(u32 *)((char *)inner + 0x360) & 2) != 0) {
             int h = *(int *)((char *)inner + 0xdc);
-            if (h != 0 && ((fl = *(u32 *)(*(int *)(h + 0x50) + 0x44)) & 0x40) != 0 &&
+            if (h != 0 && ((fl = ((ObjAnimComponent *)h)->modelInstance->flags) & OBJMODEL_FLAG_SKIP_RESET_UPDATE) != 0 &&
                 (fl & 0x8000) == 0) {
                 objHitDetectFn_80062e84(obj, h, 1);
             } else if (*(void **)((char *)obj + 0x30) != NULL && h == 0) {
@@ -11798,7 +11799,7 @@ int fn_802AB1D0(int obj)
             dist = dx * dx + dy * dy + dz * dz;
             if (dist < lbl_803E80E8) {
                 if (dist <= lbl_803E7EA4) {
-                    scale = (f32)*(s8 *)((char *)*(int *)((char *)cur + 0x50) + 0x56);
+                    scale = (f32)((ObjAnimComponent *)cur)->modelInstance->group8RegistrationCount;
                     if (scale <= lbl_803E7EA4) {
                         scale = lbl_803E7EE0;
                     }
@@ -13701,7 +13702,7 @@ int fn_802A87CC(int obj, char *cam, f32 *out, f32 *vec, f32 fa, f32 fb)
                 *(f32 *)((char *)inner + 0x5b0) + *(f32 *)(*(int *)((char *)obj + 0x30) + 0x10);
         }
         *(u8 *)((char *)out + 0x61) = 1;
-        if (parent != NULL && (*(u32 *)((char *)*(int *)((char *)parent + 0x50) + 0x44) & 0x8000) == 0) {
+        if (parent != NULL && (((ObjAnimComponent *)parent)->modelInstance->flags & 0x8000) == 0) {
             *(void **)((char *)inner + 0x4c4) = parent;
         } else {
             *(int *)((char *)inner + 0x4c4) = 0;
@@ -13818,7 +13819,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         if (*(f32 *)((char *)d + 0x0) >= lbl_803E8044) {
             return 0;
         }
-        if (hit != NULL && (*(int *)((char *)*(int *)((char *)hit + 0x50) + 0x44) & 0x8000) == 0) {
+        if (hit != NULL && (((ObjAnimComponent *)hit)->modelInstance->flags & 0x8000) == 0) {
             *(int *)((char *)b + 0x4c4) = (int)hit;
         }
         return 3;
@@ -13826,7 +13827,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     *(f32 *)((char *)d + 0x8) = *(f32 *)((char *)a + 0x84);
     *(f32 *)((char *)d + 0x0) = *(f32 *)((char *)d + 0x4) - *(f32 *)((char *)d + 0x8);
     if ((*(u8 *)((char *)b + 0x3f1) & 1) != 0) {
-        if (hit != NULL && (*(int *)((char *)*(int *)((char *)hit + 0x50) + 0x44) & 0x8000) == 0) {
+        if (hit != NULL && (((ObjAnimComponent *)hit)->modelInstance->flags & 0x8000) == 0) {
             *(int *)((char *)b + 0x4c4) = (int)hit;
         }
         if (*(f32 *)((char *)d + 0x0) <= lbl_803E80C8) {
@@ -13853,7 +13854,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         if (q < lbl_803E80C4) {
             return 0;
         }
-        if (hit != NULL && (*(int *)((char *)*(int *)((char *)hit + 0x50) + 0x44) & 0x8000) == 0) {
+        if (hit != NULL && (((ObjAnimComponent *)hit)->modelInstance->flags & 0x8000) == 0) {
             *(int *)((char *)b + 0x4c4) = (int)hit;
         }
         return 6;

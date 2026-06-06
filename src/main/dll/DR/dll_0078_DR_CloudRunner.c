@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/objanim_internal.h"
 int fn_802BF728(void) { return 0x0; }
 
 void DR_CloudRunner_func21(void) {}
@@ -980,11 +981,11 @@ void DR_CloudRunner_update(int obj)
     if (*(u8 *)((char *)inner + 0xbb2) == 2) {
         *(u8 *)((char *)obj + 0xaf) |= 8;
         fn_802C11BC(obj, -1, timeDelta);
-        *(int *)((char *)*(int *)((char *)obj + 0x50) + 0x44) |= 0x200000;
+        ((ObjAnimComponent *)obj)->modelInstance->flags |= 0x200000;
     } else {
         *(u8 *)((char *)inner + 0x25f) = 0;
         fn_802C11BC(obj, -1, timeDelta);
-        *(int *)((char *)*(int *)((char *)obj + 0x50) + 0x44) &= ~0x200000;
+        ((ObjAnimComponent *)obj)->modelInstance->flags &= ~0x200000;
     }
     if (*(s8 *)((char *)inner + 0xbc3) != 0) {
         s8 v = *(s8 *)((char *)inner + 0xbc3) - framesThisStep;

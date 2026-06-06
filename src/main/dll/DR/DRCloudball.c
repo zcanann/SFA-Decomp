@@ -126,10 +126,12 @@ void spscarab_update(int param_1)
 #pragma scheduling off
 void spscarab_init(int param_1, int param_2)
 {
+    ObjAnimComponent *objAnim;
     int p_b8;
     int model;
     struct { u16 a; u8 b; } pair;
 
+    objAnim = (ObjAnimComponent *)param_1;
     p_b8 = *(int *)(param_1 + 0xb8);
     pair.a = lbl_803E5A70;
     pair.b = lbl_803E5A72;
@@ -144,7 +146,7 @@ void spscarab_init(int param_1, int param_2)
         -sin(lbl_803E5A8C * (f32)(s32)*(s16 *)(param_1) /
              lbl_803E5A90);
 
-    *(s8 *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) = (s8)(1 - *(u8 *)(param_2 + 0x19));
+    objAnim->bankIndex = (s8)(1 - *(u8 *)(param_2 + 0x19));
 
     *(f32 *)(p_b8 + 0) = (f32)(s32)*(s16 *)(param_2 + 0x1a);
     *(f32 *)(p_b8 + 4) = lbl_803E5A94 + (f32)randomGetRange(0, 0x64) / lbl_803E5A80;

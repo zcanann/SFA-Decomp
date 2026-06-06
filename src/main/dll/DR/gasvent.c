@@ -681,8 +681,8 @@ void gunpowderbarrel_updatePhysics(int *obj)
         if (contact != 0) {
             u32 flags;
             ObjHits_AddContactObject(contact, obj);
-            flags = *(u32 *)(*(int *)((char *)contact + 0x50) + 0x44);
-            if ((flags & 0x40) && !(flags & 0x8000)) {
+            flags = ((ObjAnimComponent *)contact)->modelInstance->flags;
+            if ((flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(flags & 0x8000)) {
                 *(int **)(sub + 0xc) = contact;
             } else if (*(f32 *)(sub + 0x38) < lbl_803E431C) {
                 sub[0x16] = 4;
