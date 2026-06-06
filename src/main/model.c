@@ -1,3 +1,4 @@
+#include "main/model.h"
 #include "main/objanim_internal.h"
 
 extern void gxSetPeControl_ZCompLoc_();
@@ -212,15 +213,15 @@ typedef struct ObjModelInstanceLite {
 #pragma scheduling off
 #pragma peephole off
 void *fn_80028354(u8 *modelFile, int index) {
-    return *(u8 **)(modelFile + 0x5c) + index * 8;
+    return ((ModelFileHeader *)modelFile)->unk5C + index * 8;
 }
 
 void *fn_80028364(u8 *modelFile, int index) {
-    return *(u8 **)(modelFile + 0x60) + index * 0x14;
+    return ((ModelFileHeader *)modelFile)->unk60 + index * 0x14;
 }
 
 void *modelFileGetDisplayList(u8 *modelFile, int displayListIndex) {
-    return *(u8 **)(modelFile + 0xd0) + displayListIndex * 0x1c;
+    return ((ModelFileHeader *)modelFile)->displayLists + displayListIndex * 0x1c;
 }
 
 void ObjModel_CopyJointTranslation(u8 *modelBytes, int jointIndex, f32 *out) {
@@ -249,49 +250,49 @@ void ObjModel_CopyJointTranslation(u8 *modelBytes, int jointIndex, f32 *out) {
 }
 
 void *ObjModel_GetTexture(u8 *model, int textureIndex) {
-    return textureIdxToPtr(*(int *)(*(u8 **)(model + 0x20) + textureIndex * 4));
+    return textureIdxToPtr(((ModelFileHeader *)model)->textureIds[textureIndex]);
 }
 
 void *ObjModel_GetBaseVertexCoords(u8 *model, int vertexIndex) {
-    return *(u8 **)(model + 0x28) + vertexIndex * 6;
+    return ((ModelFileHeader *)model)->vertices + vertexIndex * 6;
 }
 
 #pragma dont_inline on
 void *ObjModel_GetRenderOp(u8 *model, int renderOpIndex) {
-    return *(u8 **)(model + 0x38) + renderOpIndex * 0x44;
+    return ((ModelFileHeader *)model)->renderOps + renderOpIndex * 0x44;
 }
 #pragma dont_inline reset
 
 u16 modelFileHeaderGetCullDistance(u8 *modelFile) {
-    return *(u16 *)(modelFile + 0xe0);
+    return ((ModelFileHeader *)modelFile)->cullDistance;
 }
 
 #pragma dont_inline on
 void ObjModel_ClearRenderAttachment(u8 *model) {
-    if (*(void **)(model + 0x58) != NULL) {
-        mm_free(*(void **)(model + 0x58));
-        *(void **)(model + 0x58) = NULL;
+    if (((ObjModel *)model)->renderAttachment != NULL) {
+        mm_free(((ObjModel *)model)->renderAttachment);
+        ((ObjModel *)model)->renderAttachment = NULL;
     } else {
-        *(void **)(model + 0x38) = NULL;
+        ((ObjModel *)model)->renderCallback = NULL;
     }
 }
 #pragma dont_inline reset
 
 #pragma dont_inline on
 void ObjModel_EnableDefaultRenderCallback(void *obj, u8 *model, f32 *mtx, int enabled, f32 scale) {
-    if (*(void **)(model + 0x58) == NULL) {
-        *(void **)(model + 0x38) = gxTextureFn_80072dfc;
+    if (((ObjModel *)model)->renderAttachment == NULL) {
+        ((ObjModel *)model)->renderCallback = gxTextureFn_80072dfc;
     }
 }
 #pragma dont_inline reset
 
 void *ObjModel_GetCurrentVertexCoords(u8 *model, int vertexIndex) {
-    model += (((*(u16 *)(model + 0x18) >> 1) & 1) * 4);
-    return *(u8 **)(model + 0x1c) + vertexIndex * 6;
+    model += (((((ObjModel *)model)->bufferFlags >> 1) & 1) * 4);
+    return ((ObjModel *)model)->vtxBuf0 + vertexIndex * 6;
 }
 
 void *ObjModel_GetPostRenderCallback(u8 *model) {
-    return *(void **)(model + 0x3c);
+    return ((ObjModel *)model)->postRenderCallback;
 }
 
 void postRenderSetAlphaBlendState(void) {
@@ -302,23 +303,23 @@ void postRenderSetAlphaBlendState(void) {
 }
 
 void ObjModel_SetPostRenderCallback(u8 *model, void *callback) {
-    *(void **)(model + 0x3c) = callback;
+    ((ObjModel *)model)->postRenderCallback = callback;
 }
 
 void *ObjModel_GetRenderCallback(u8 *model) {
-    return *(void **)(model + 0x38);
+    return ((ObjModel *)model)->renderCallback;
 }
 
 void ObjModel_SetRenderCallback(u8 *model, void *callback) {
-    *(void **)(model + 0x38) = callback;
+    ((ObjModel *)model)->renderCallback = callback;
 }
 
 void ObjModel_ToggleVertexBuffer(u8 *model) {
-    *(u16 *)(model + 0x18) ^= 2;
+    ((ObjModel *)model)->bufferFlags ^= 2;
 }
 
 void ObjModel_ToggleMatrixBuffer(u8 *model) {
-    *(u16 *)(model + 0x18) ^= 1;
+    ((ObjModel *)model)->bufferFlags ^= 1;
 }
 
 void *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex) {
@@ -343,7 +344,7 @@ void *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex) {
 }
 
 void *ObjModel_GetRenderOpTextureRefs(u8 *model, int renderOpIndex) {
-    return *(u8 **)(model + 0x34) + renderOpIndex * 0xc;
+    return ((ObjModel *)model)->textureRefs + renderOpIndex * 0xc;
 }
 
 int ObjModel_GetUnpackedResourceSize(u8 *resource, int baseSize) {
@@ -543,38 +544,38 @@ void setGQR7Packed(int a, int b, int c, int d) {
 #pragma dont_inline reset
 
 int ObjModel_HasActiveBlendChannels(u8 *model) {
-    u8 *ch;
+    ObjModelBlendChannel *ch;
 
-    if (*(void **)(*(u8 **)model + 0xdc) == NULL) {
+    if (((ObjModel *)model)->file->unkDC == NULL) {
         return 0;
     }
-    ch = *(u8 **)(model + 0x28);
-    if (*(f32 *)(ch + 0x0) != *(f32 *)(ch + 0x4) || (ch[0xe] & 0xe)) {
+    ch = ((ObjModel *)model)->blendChannels;
+    if (ch[0].weight != ch[0].targetWeight || (ch[0].flags0E & 0xe)) {
         return 1;
     }
-    if (*(f32 *)(ch + 0x10) != *(f32 *)(ch + 0x14) || (ch[0x1e] & 0xe)) {
+    if (ch[1].weight != ch[1].targetWeight || (ch[1].flags0E & 0xe)) {
         return 1;
     }
-    if (*(f32 *)(ch + 0x20) != *(f32 *)(ch + 0x24) || (ch[0x2e] & 0xe)) {
+    if (ch[2].weight != ch[2].targetWeight || (ch[2].flags0E & 0xe)) {
         return 1;
     }
     return 0;
 }
 
 void ObjModel_SetBlendChannelWeight(u8 *model, int channel, f32 weight) {
-    u8 *ch;
+    ObjModelBlendChannel *ch;
 
     if (channel > 2) {
         return;
     }
-    if (*(void **)(*(u8 **)model + 0xdc) == NULL) {
+    if (((ObjModel *)model)->file->unkDC == NULL) {
         return;
     }
-    ch = *(u8 **)(model + 0x28) + channel * 0x10;
-    if (weight != *(f32 *)ch) {
-        *(f32 *)ch = weight;
+    ch = ((ObjModel *)model)->blendChannels + channel;
+    if (weight != ch->weight) {
+        ch->weight = weight;
     }
-    ch[0xe] |= 4;
+    ch[0].flags0E |= 4;
 }
 #pragma pop
 
@@ -640,72 +641,72 @@ extern void shaderInit(u8 *def, void *out, int arg, int n);
 
 void ObjModel_RelocateModelData(u8 *m) {
     int i;
-    if (*(u32 *)(m + 0x58)) {
-        *(u8 **)(m + 0x58) = m + *(u32 *)(m + 0x58);
+    if (*(u32 *)&((ModelFileHeader *)m)->unk58) {
+        ((ModelFileHeader *)m)->unk58 = m + *(u32 *)&((ModelFileHeader *)m)->unk58;
     }
-    if (*(u32 *)(m + 0x3c)) {
-        *(u8 **)(m + 0x3c) = m + *(u32 *)(m + 0x3c);
-        if (*(u32 *)(m + 0x18)) {
-            *(u8 **)(m + 0x18) = m + *(u32 *)(m + 0x18);
+    if (*(u32 *)&((ModelFileHeader *)m)->unk3C) {
+        ((ModelFileHeader *)m)->unk3C = m + *(u32 *)&((ModelFileHeader *)m)->unk3C;
+        if (*(u32 *)&((ModelFileHeader *)m)->unk18) {
+            ((ModelFileHeader *)m)->unk18 = m + *(u32 *)&((ModelFileHeader *)m)->unk18;
         }
-        if (*(u32 *)(m + 0x1c)) {
-            *(u8 **)(m + 0x1c) = m + *(u32 *)(m + 0x1c);
+        if (*(u32 *)&((ModelFileHeader *)m)->unk1C) {
+            ((ModelFileHeader *)m)->unk1C = m + *(u32 *)&((ModelFileHeader *)m)->unk1C;
         }
-        if (*(u32 *)(m + 0x40)) {
-            *(u8 **)(m + 0x40) = m + *(u32 *)(m + 0x40);
+        if (*(u32 *)&((ModelFileHeader *)m)->unk40) {
+            ((ModelFileHeader *)m)->unk40 = m + *(u32 *)&((ModelFileHeader *)m)->unk40;
         }
     }
-    if (*(u32 *)(m + 0x54)) {
-        *(u8 **)(m + 0x54) = m + *(u32 *)(m + 0x54);
+    if (*(u32 *)&((ModelFileHeader *)m)->unk54) {
+        ((ModelFileHeader *)m)->unk54 = m + *(u32 *)&((ModelFileHeader *)m)->unk54;
     }
-    if (*(u32 *)(m + 0x20)) {
-        *(u8 **)(m + 0x20) = m + *(u32 *)(m + 0x20);
+    if (*(u32 *)&((ModelFileHeader *)m)->textureIds) {
+        *(u8 **)&((ModelFileHeader *)m)->textureIds = m + *(u32 *)&((ModelFileHeader *)m)->textureIds;
     }
-    *(u8 **)(m + 0x28) = m + *(u32 *)(m + 0x28);
-    if (*(u32 *)(m + 0x2c)) {
-        *(u8 **)(m + 0x2c) = m + *(u32 *)(m + 0x2c);
+    ((ModelFileHeader *)m)->vertices = m + *(u32 *)&((ModelFileHeader *)m)->vertices;
+    if (*(u32 *)&((ModelFileHeader *)m)->normals) {
+        ((ModelFileHeader *)m)->normals = m + *(u32 *)&((ModelFileHeader *)m)->normals;
     }
-    if (*(u32 *)(m + 0x30)) {
-        *(u8 **)(m + 0x30) = m + *(u32 *)(m + 0x30);
+    if (*(u32 *)&((ModelFileHeader *)m)->unk30) {
+        ((ModelFileHeader *)m)->unk30 = m + *(u32 *)&((ModelFileHeader *)m)->unk30;
     }
-    if (*(u32 *)(m + 0x34)) {
-        *(u8 **)(m + 0x34) = m + *(u32 *)(m + 0x34);
+    if (*(u32 *)&((ModelFileHeader *)m)->unk34) {
+        ((ModelFileHeader *)m)->unk34 = m + *(u32 *)&((ModelFileHeader *)m)->unk34;
     }
-    if (*(u32 *)(m + 0xd4)) {
-        *(u8 **)(m + 0xd4) = m + *(u32 *)(m + 0xd4);
+    if (*(u32 *)&((ModelFileHeader *)m)->unkD4) {
+        ((ModelFileHeader *)m)->unkD4 = m + *(u32 *)&((ModelFileHeader *)m)->unkD4;
     }
-    if (*(u32 *)(m + 0xd0)) {
-        *(u8 **)(m + 0xd0) = m + *(u32 *)(m + 0xd0);
+    if (*(u32 *)&((ModelFileHeader *)m)->displayLists) {
+        ((ModelFileHeader *)m)->displayLists = m + *(u32 *)&((ModelFileHeader *)m)->displayLists;
     }
-    if (*(u32 *)(m + 0xdc)) {
-        *(u8 **)(m + 0xdc) = m + *(u32 *)(m + 0xdc);
+    if (*(u32 *)&((ModelFileHeader *)m)->unkDC) {
+        ((ModelFileHeader *)m)->unkDC = m + *(u32 *)&((ModelFileHeader *)m)->unkDC;
     }
-    if (*(u32 *)(m + 0xa4)) {
-        *(u8 **)(m + 0xa4) = m + *(u32 *)(m + 0xa4);
+    if (*(u32 *)&((ModelFileHeader *)m)->unkA4) {
+        ((ModelFileHeader *)m)->unkA4 = m + *(u32 *)&((ModelFileHeader *)m)->unkA4;
     }
-    if (*(u32 *)(m + 0xa8)) {
-        *(u8 **)(m + 0xa8) = m + *(u32 *)(m + 0xa8);
+    if (*(u32 *)&((ModelFileHeader *)m)->unkA8) {
+        ((ModelFileHeader *)m)->unkA8 = m + *(u32 *)&((ModelFileHeader *)m)->unkA8;
     }
-    if (*(u32 *)(m + 0xc8)) {
-        *(u8 **)(m + 0xc8) = m + *(u32 *)(m + 0xc8);
+    if (*(u32 *)&((ModelFileHeader *)m)->unkC8) {
+        ((ModelFileHeader *)m)->unkC8 = m + *(u32 *)&((ModelFileHeader *)m)->unkC8;
     }
-    if (*(u32 *)(m + 0xcc)) {
-        *(u8 **)(m + 0xcc) = m + *(u32 *)(m + 0xcc);
+    if (*(u32 *)&((ModelFileHeader *)m)->unkCC) {
+        ((ModelFileHeader *)m)->unkCC = m + *(u32 *)&((ModelFileHeader *)m)->unkCC;
     }
-    if (*(u32 *)(m + 0x38)) {
-        *(u8 **)(m + 0x38) = m + *(u32 *)(m + 0x38);
+    if (*(u32 *)&((ModelFileHeader *)m)->renderOps) {
+        ((ModelFileHeader *)m)->renderOps = m + *(u32 *)&((ModelFileHeader *)m)->renderOps;
     }
-    for (i = 0; i < m[0xf5] + m[0xf6]; i++) {
-        *(u8 **)(*(u8 **)(m + 0xd0) + i * 0x1c) = m + *(u32 *)(*(u8 **)(m + 0xd0) + i * 0x1c);
+    for (i = 0; i < ((ModelFileHeader *)m)->unkF5 + ((ModelFileHeader *)m)->unkF6; i++) {
+        *(u8 **)(((ModelFileHeader *)m)->displayLists + i * 0x1c) = m + *(u32 *)(((ModelFileHeader *)m)->displayLists + i * 0x1c);
     }
-    for (i = 0; i < m[0xf9]; i++) {
-        *(u8 **)(*(u8 **)(m + 0xdc) + i * 4) = m + *(u32 *)(*(u8 **)(m + 0xdc) + i * 4);
+    for (i = 0; i < ((ModelFileHeader *)m)->unkF9; i++) {
+        *(u8 **)(((ModelFileHeader *)m)->unkDC + i * 4) = m + *(u32 *)(((ModelFileHeader *)m)->unkDC + i * 4);
     }
-    if (*(u32 *)(m + 0x5c)) {
-        *(u8 **)(m + 0x5c) = m + *(u32 *)(m + 0x5c);
+    if (*(u32 *)&((ModelFileHeader *)m)->unk5C) {
+        ((ModelFileHeader *)m)->unk5C = m + *(u32 *)&((ModelFileHeader *)m)->unk5C;
     }
-    if (*(u32 *)(m + 0x60)) {
-        *(u8 **)(m + 0x60) = m + *(u32 *)(m + 0x60);
+    if (*(u32 *)&((ModelFileHeader *)m)->unk60) {
+        ((ModelFileHeader *)m)->unk60 = m + *(u32 *)&((ModelFileHeader *)m)->unk60;
     }
 }
 
@@ -789,21 +790,21 @@ void ObjModel_ResolveRenderOpTextures(u8 *m) {
 #pragma dont_inline on
 void ObjModel_RelocateAnimData(u8 *m, u8 *dst) {
     int i;
-    *(u8 **)(m + 0x94) = *(u8 **)(m + 0xa4);
-    for (i = 0; i < *(u16 *)(m + 0x8a); i++) {
-        *(int *)(*(u8 **)(dst + 0x40) + i * 4) = *(int *)(*(u8 **)(m + 0xa4) + i * 0x74 + 0x60);
-        if (*(u32 *)(*(u8 **)(m + 0xa4) + i * 0x74 + 0x64) < *(u32 *)(m + 0xa8)) {
-            *(u32 *)(*(u8 **)(m + 0xa4) + i * 0x74 + 0x64) =
-                *(u32 *)(m + 0xa8) + *(u32 *)(*(u8 **)(m + 0xa4) + i * 0x74 + 0x64);
+    ((ModelFileHeader *)m)->unk94 = ((ModelFileHeader *)m)->unkA4;
+    for (i = 0; i < ((ModelFileHeader *)m)->unk8A; i++) {
+        ((ObjModel *)dst)->unk40[i] = *(int *)(((ModelFileHeader *)m)->unkA4 + i * 0x74 + 0x60);
+        if (*(u32 *)(((ModelFileHeader *)m)->unkA4 + i * 0x74 + 0x64) < *(u32 *)&((ModelFileHeader *)m)->unkA8) {
+            *(u32 *)(((ModelFileHeader *)m)->unkA4 + i * 0x74 + 0x64) =
+                *(u32 *)&((ModelFileHeader *)m)->unkA8 + *(u32 *)(((ModelFileHeader *)m)->unkA4 + i * 0x74 + 0x64);
         }
     }
-    *(u8 **)(m + 0xb8) = *(u8 **)(m + 0xc8);
-    for (i = 0; i < *(u16 *)(m + 0xae); i++) {
-        *(int *)(*(u8 **)(dst + 0x44) + i * 4) =
-            *(int *)(dst + 0x24) + *(int *)(*(u8 **)(m + 0xc8) + i * 0x74 + 0x60);
-        if (*(u32 *)(*(u8 **)(m + 0xc8) + i * 0x74 + 0x64) < *(u32 *)(m + 0xcc)) {
-            *(u32 *)(*(u8 **)(m + 0xc8) + i * 0x74 + 0x64) =
-                *(u32 *)(m + 0xcc) + *(u32 *)(*(u8 **)(m + 0xc8) + i * 0x74 + 0x64);
+    ((ModelFileHeader *)m)->unkB8 = ((ModelFileHeader *)m)->unkC8;
+    for (i = 0; i < ((ModelFileHeader *)m)->unkAE; i++) {
+        ((ObjModel *)dst)->unk44[i] =
+            *(int *)&((ObjModel *)dst)->normalBuf + *(int *)(((ModelFileHeader *)m)->unkC8 + i * 0x74 + 0x60);
+        if (*(u32 *)(((ModelFileHeader *)m)->unkC8 + i * 0x74 + 0x64) < *(u32 *)&((ModelFileHeader *)m)->unkCC) {
+            *(u32 *)(((ModelFileHeader *)m)->unkC8 + i * 0x74 + 0x64) =
+                *(u32 *)&((ModelFileHeader *)m)->unkCC + *(u32 *)(((ModelFileHeader *)m)->unkC8 + i * 0x74 + 0x64);
         }
     }
 }
@@ -812,13 +813,13 @@ void ObjModel_RelocateAnimData(u8 *m, u8 *dst) {
 void ObjModel_LoadRenderOpTextures(u8 *model, int arg) {
     int i;
     u8 *hdr = *(u8 **)model;
-    if (*(u16 *)(model + 0x18) & 0x40) {
+    if (((ObjModel *)model)->bufferFlags & 0x40) {
         return;
     }
-    *(u16 *)(model + 0x18) |= 0x40;
+    ((ObjModel *)model)->bufferFlags |= 0x40;
     for (i = 0; i < (*(u8 **)model)[0xf8]; i++) {
-        shaderInit(*(u8 **)(hdr + 0x38) + i * 0x44, *(u8 **)(model + 0x34) + i * 0xc, arg,
-                   *(u16 *)(hdr + 0xe2));
+        shaderInit(((ModelFileHeader *)hdr)->renderOps + i * 0x44, ((ObjModel *)model)->textureRefs + i * 0xc, arg,
+                   ((ModelFileHeader *)hdr)->unkE2);
     }
 }
 
@@ -1018,8 +1019,8 @@ void Model_GetVertexPosition(u8 *model, int vertexIndex, f32 *out) {
     s16 *vertex;
     f32 scale;
 
-    vertex = (s16 *)(*(u8 **)(model + 0x28) + vertexIndex * 6);
-    if ((*(u16 *)(model + 2) & 0x800) != 0) {
+    vertex = (s16 *)(((ModelFileHeader *)model)->vertices + vertexIndex * 6);
+    if ((((ModelFileHeader *)model)->flags & 0x800) != 0) {
         out[0] = (f32)vertex[0];
         out[1] = (f32)vertex[1];
         out[2] = (f32)vertex[2];
@@ -1090,7 +1091,7 @@ extern void ObjModel_SetBlendChannelTargets(u8 *model, int ch, int a, int b, f32
 #pragma scheduling off
 #pragma peephole off
 void ObjModel_ClearBlendChannels(u8 *model) {
-    if (*(void **)(*(u8 **)model + 0xdc) != NULL) {
+    if (((ObjModel *)model)->file->unkDC != NULL) {
         ObjModel_SetBlendChannelTargets(model, 0, -1, -1, lbl_803DE828, 7);
         ObjModel_SetBlendChannelTargets(model, 1, -1, -1, lbl_803DE828, 7);
         ObjModel_SetBlendChannelTargets(model, 2, -1, -1, lbl_803DE828, 7);
@@ -1103,13 +1104,13 @@ extern f32 lbl_803DE840;
 #pragma scheduling off
 #pragma peephole off
 void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 weight, int flags) {
-    u8 *ch;
+    ObjModelBlendChannel *ch;
     u8 *hdr;
     if (channel > 2) {
         return;
     }
     hdr = *(u8 **)model;
-    if (*(void **)(hdr + 0xdc) == NULL) {
+    if (((ModelFileHeader *)hdr)->unkDC == NULL) {
         return;
     }
     if (a < -1) {
@@ -1118,30 +1119,30 @@ void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 w
     if (b < -1) {
         return;
     }
-    if (a >= hdr[0xf9]) {
+    if (a >= ((ModelFileHeader *)hdr)->unkF9) {
         return;
     }
-    if (b >= hdr[0xf9]) {
+    if (b >= ((ModelFileHeader *)hdr)->unkF9) {
         return;
     }
-    ch = *(u8 **)(model + 0x28) + channel * 0x10;
+    ch = ((ObjModel *)model)->blendChannels + channel;
     if (a == -1 && b == -1) {
-        if ((s8)ch[0xc] == -1 && (s8)ch[0xd] == -1) {
+        if (ch[0].unk0C == -1 && ch[0].unk0D == -1) {
             return;
         }
         flags |= 6;
     }
-    if ((s8)ch[0xc] == a && (s8)ch[0xd] == b) {
+    if (ch[0].unk0C == a && ch[0].unk0D == b) {
         return;
     }
-    *(s8 *)(ch + 0xc) = a;
-    *(s8 *)(ch + 0xd) = b;
+    ch[0].unk0C = a;
+    ch[0].unk0D = b;
     if (!(flags & 0x10)) {
-        *(f32 *)(ch + 0x0) = lbl_803DE828;
+        ch[0].weight = lbl_803DE828;
     }
-    *(f32 *)(ch + 0x4) = lbl_803DE840;
-    *(f32 *)(ch + 0x8) = weight;
-    ch[0xe] = flags | 4;
+    ch[0].targetWeight = lbl_803DE840;
+    ch[0].unk08 = weight;
+    ch[0].flags0E = flags | 4;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1157,7 +1158,7 @@ extern f32 lbl_803DE870;
 #pragma peephole off
 void ObjModel_ApplyBlendChannels(u8 *model) {
     u8 *hdr;
-    u8 *ch;
+    ObjModelBlendChannel *ch;
     int i;
     s16 defFrame;
     int arrB[3] = {0, 0, 0};
@@ -1172,26 +1173,26 @@ void ObjModel_ApplyBlendChannels(u8 *model) {
     f32 r;
 
     hdr = *(u8 **)model;
-    if (*(void **)(hdr + 0xdc) == NULL) {
+    if (((ModelFileHeader *)hdr)->unkDC == NULL) {
         return;
     }
-    defFrame = *(u16 *)(hdr + 0xe4) + 1;
+    defFrame = ((ModelFileHeader *)hdr)->vertexCount + 1;
     for (i = 0; i < 3; i++) {
-        ch = *(u8 **)(model + 0x28) + i * 0x10;
-        if (*(f32 *)(ch + 0x0) != *(f32 *)(ch + 0x4)) {
-            ch[0xe] &= ~0xc;
-            ch[0xe] |= 4;
+        ch = ((ObjModel *)model)->blendChannels + i;
+        if (ch[0].weight != ch[0].targetWeight) {
+            ch[0].flags0E &= ~0xc;
+            ch[0].flags0E |= 4;
         }
-        fl = ch[0xe] & 0xc;
+        fl = ch[0].flags0E & 0xc;
         arrA[i] = fl;
-        if ((s8)ch[0xc] != -1 || (s8)ch[0xd] != -1 || fl != 0) {
+        if (ch[0].unk0C != -1 || ch[0].unk0D != -1 || fl != 0) {
             arrB[i] = 1;
         }
         if (arrA[i] & 4) {
-            ch[0xe] &= ~4;
-            ch[0xe] |= 8;
+            ch[0].flags0E &= ~4;
+            ch[0].flags0E |= 8;
         } else if (arrA[i] & 8) {
-            ch[0xe] &= ~8;
+            ch[0].flags0E &= ~8;
         }
     }
     if (arrB[0] == 0 && arrB[1] == 0 && arrB[2] == 0) {
@@ -1210,47 +1211,47 @@ void ObjModel_ApplyBlendChannels(u8 *model) {
         }
     }
     for (i = 0; i < 3; i++) {
-        if (arrB[i] && *(void **)(hdr + 0xa4)) {
+        if (arrB[i] && ((ModelFileHeader *)hdr)->unkA4) {
             arrA[i] = 1;
         }
-        ch = *(u8 **)(model + 0x28) + i * 0x10;
-        if (ch[0xe] & 2) {
-            ch[0xe] &= ~2;
-            *(f32 *)(ch + 0x0) = lbl_803DE828;
+        ch = ((ObjModel *)model)->blendChannels + i;
+        if (ch[0].flags0E & 2) {
+            ch[0].flags0E &= ~2;
+            ch[0].weight = lbl_803DE828;
         }
         if (arrB[i] && arrA[i]) {
-            if ((s8)ch[0xc] > -1) {
-                boneA = (void *)((int *)(*(u8 **)(hdr + 0xdc)))[(s8)ch[0xc]];
+            if (ch[0].unk0C > -1) {
+                boneA = (void *)((int *)(((ModelFileHeader *)hdr)->unkDC))[ch[0].unk0C];
             } else {
                 boneA = &defFrame;
             }
-            if ((s8)ch[0xd] > -1) {
-                boneB = (void *)((int *)(*(u8 **)(hdr + 0xdc)))[(s8)ch[0xd]];
+            if (ch[0].unk0D > -1) {
+                boneB = (void *)((int *)(((ModelFileHeader *)hdr)->unkDC))[ch[0].unk0D];
             } else {
                 boneB = &defFrame;
             }
             if (i == 2) {
                 if (arrB[0] == 0 && arrB[1] == 0) {
-                    arg0 = *(int *)(hdr + 0x28);
+                    arg0 = *(int *)&((ModelFileHeader *)hdr)->vertices;
                 } else {
-                    arg0 = *(int *)(model + ((*(u16 *)(model + 0x18) >> 1) & 1) * 4 + 0x1c);
+                    arg0 = *(int *)(model + ((((ObjModel *)model)->bufferFlags >> 1) & 1) * 4 + 0x1c);
                 }
             } else {
-                arg0 = *(int *)(hdr + 0x28);
+                arg0 = *(int *)&((ModelFileHeader *)hdr)->vertices;
             }
-            w = *(f32 *)(ch + 0x0);
+            w = ch[0].weight;
             if (w > lbl_803DE818) {
-                *(f32 *)(ch + 0x0) = lbl_803DE818;
+                ch[0].weight = lbl_803DE818;
             } else if (w < lbl_803DE828) {
-                if (ch[0xe] & 0x20) {
+                if (ch[0].flags0E & 0x20) {
                     if (w < lbl_803DE840) {
-                        *(f32 *)(ch + 0x0) = lbl_803DE840;
+                        ch[0].weight = lbl_803DE840;
                     }
                 } else {
-                    *(f32 *)(ch + 0x0) = lbl_803DE828;
+                    ch[0].weight = lbl_803DE828;
                 }
             }
-            w = *(f32 *)(ch + 0x0);
+            w = ch[0].weight;
             if (w >= lbl_803DE828) {
                 t = w;
                 r = lbl_803DE868 * t + lbl_803DE86C * (t * t) - t * (t * t);
@@ -1258,13 +1259,13 @@ void ObjModel_ApplyBlendChannels(u8 *model) {
                 t = w * lbl_803DE840;
                 r = (lbl_803DE868 * t + lbl_803DE86C * (t * t) - t * (t * t)) * lbl_803DE840;
             }
-            arg1 = *(int *)(model + ((*(u16 *)(model + 0x18) >> 1) & 1) * 4 + 0x1c);
-            modelApplyBoneTransforms(arg0, arg1, *(u16 *)(hdr + 0xe4), boneA, boneB,
+            arg1 = *(int *)(model + ((((ObjModel *)model)->bufferFlags >> 1) & 1) * 4 + 0x1c);
+            modelApplyBoneTransforms(arg0, arg1, ((ModelFileHeader *)hdr)->vertexCount, boneA, boneB,
                 (int)(lbl_803DE870 * r));
-            model[0x60] = 1;
+            ((ObjModel *)model)->unk60 = 1;
         }
-        if (*(f32 *)(ch + 0x4) != *(f32 *)(ch + 0x0)) {
-            *(f32 *)(ch + 0x4) = *(f32 *)(ch + 0x0);
+        if (ch[0].targetWeight != ch[0].weight) {
+            ch[0].targetWeight = ch[0].weight;
         }
     }
 }
@@ -1277,27 +1278,27 @@ extern f32 lbl_803DE87C;
 #pragma peephole off
 void ObjModel_AdvanceBlendChannels(u8 *model, f32 dt) {
     int i;
-    u8 *ch;
-    if (*(void **)(*(u8 **)model + 0xdc) == NULL) {
+    ObjModelBlendChannel *ch;
+    if (((ObjModel *)model)->file->unkDC == NULL) {
         return;
     }
     for (i = 0; i < 3; i++) {
-        ch = *(u8 **)(model + 0x28) + i * 0x10;
-        if ((s8)ch[0xc] == -1 && (s8)ch[0xd] == -1) {
+        ch = ((ObjModel *)model)->blendChannels + i;
+        if (ch[0].unk0C == -1 && ch[0].unk0D == -1) {
             continue;
         }
-        if (ch[0xe] & 1) {
+        if (ch[0].flags0E & 1) {
             continue;
         }
-        *(f32 *)(ch + 0x0) = *(f32 *)(ch + 0x8) * dt + *(f32 *)(ch + 0x0);
-        if (*(f32 *)(ch + 0x0) >= lbl_803DE874) {
-            *(f32 *)(ch + 0x0) = lbl_803DE874;
-            *(f32 *)(ch + 0x8) = lbl_803DE878;
-            ch[0xe] &= ~4;
-        } else if (*(f32 *)(ch + 0x0) <= lbl_803DE87C) {
-            *(f32 *)(ch + 0x0) = lbl_803DE87C;
-            *(f32 *)(ch + 0x8) = lbl_803DE878;
-            ch[0xe] &= ~4;
+        ch[0].weight = ch[0].unk08 * dt + ch[0].weight;
+        if (ch[0].weight >= lbl_803DE874) {
+            ch[0].weight = lbl_803DE874;
+            ch[0].unk08 = lbl_803DE878;
+            ch[0].flags0E &= ~4;
+        } else if (ch[0].weight <= lbl_803DE87C) {
+            ch[0].weight = lbl_803DE87C;
+            ch[0].unk08 = lbl_803DE878;
+            ch[0].flags0E &= ~4;
         }
     }
 }
@@ -1399,24 +1400,24 @@ void ObjModel_InitResourceCaches(void) {
 void ObjModel_Release(u8 *model) {
     u8 *header;
     int i;
-    if (*(u16 *)(model + 0x18) & 0x40) {
-        *(u16 *)(model + 0x18) &= ~0x40;
+    if (((ObjModel *)model)->bufferFlags & 0x40) {
+        ((ObjModel *)model)->bufferFlags &= ~0x40;
         for (i = 0; i < (*(u8 **)model)[0xf8]; i++) {
-            ShaderDef_free((int *)(*(u8 **)(model + 0x34) + i * 0xc));
+            ShaderDef_free((int *)(((ObjModel *)model)->textureRefs + i * 0xc));
         }
     }
     header = *(u8 **)model;
-    if (*(void **)(model + 0x58) != NULL) {
-        mm_free(*(void **)(model + 0x58));
+    if (((ObjModel *)model)->renderAttachment != NULL) {
+        mm_free(((ObjModel *)model)->renderAttachment);
     }
     if (--*(u8 *)header == 0) {
         model_adjustModelList(lbl_803DCB54, *(u16 *)(header + 0x4));
-        for (i = 0; i < header[0xf2]; i++) {
-            textureFree(textureIdxToPtr(*(int *)(*(u8 **)(header + 0x20) + i * 4)));
+        for (i = 0; i < ((ModelFileHeader *)header)->textureCount; i++) {
+            textureFree(textureIdxToPtr(((ModelFileHeader *)header)->textureIds[i]));
         }
-        if (*(void **)(header + 0x64) != NULL && *(u16 *)(header + 0xec) != 0) {
-            for (i = 0; i < *(u16 *)(header + 0xec); i++) {
-                void *tex = *(void **)(*(u8 **)(header + 0x64) + i * 4);
+        if (((ModelFileHeader *)header)->unk64 != NULL && ((ModelFileHeader *)header)->unkEC != 0) {
+            for (i = 0; i < ((ModelFileHeader *)header)->unkEC; i++) {
+                void *tex = *(void **)(((ModelFileHeader *)header)->unk64 + i * 4);
                 if (tex != NULL && (s8)--*(u8 *)tex <= 0) {
                     int idx;
                     model_findIdxInModelList(lbl_803DCB50, &tex, &idx);
@@ -1879,52 +1880,52 @@ void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c)
     }
     modelLoad_calcSizes(p, b, szs, 0);
     pos = roundUpTo32((int)out + 0x64);
-    *(int *)(out + 0xc) = pos;
+    *(int *)&((ObjModel *)out)->jointMatrices[0] = pos;
     pos += szs[6] >> 1;
-    *(int *)(out + 0x10) = pos;
+    *(int *)&((ObjModel *)out)->jointMatrices[1] = pos;
     pos += szs[6] >> 1;
-    *(int *)(out + 0x5c) = *(int *)(out + 0xc);
-    if (*(u8 *)(p + 0xf9) != 0 || *(int *)(p + 0xa4) != 0 || (*(u16 *)(p + 2) & 0x10)) {
+    *(int *)&((ObjModel *)out)->curMtxBuf = *(int *)&((ObjModel *)out)->jointMatrices[0];
+    if (((ModelFileHeader *)p)->unkF9 != 0 || *(int *)&((ModelFileHeader *)p)->unkA4 != 0 || (((ModelFileHeader *)p)->flags & 0x10)) {
         pos = roundUpTo32(pos);
-        *(int *)(out + 0x1c) = pos;
-        pos = roundUpTo32(pos + *(u16 *)(p + 0xe4) * 6);
-        *(int *)(out + 0x20) = pos;
-        end = pos + *(u16 *)(p + 0xe4) * 6;
-        memcpy(*(void **)(out + 0x1c), *(void **)(p + 0x28), *(u16 *)(p + 0xe4) * 6);
-        DCFlushRange(*(void **)(out + 0x1c), *(u16 *)(p + 0xe4) * 6);
-        memcpy(*(void **)(out + 0x20), *(void **)(p + 0x28), *(u16 *)(p + 0xe4) * 6);
-        DCFlushRange(*(void **)(out + 0x20), *(u16 *)(p + 0xe4) * 6);
+        *(int *)&((ObjModel *)out)->vtxBuf0 = pos;
+        pos = roundUpTo32(pos + ((ModelFileHeader *)p)->vertexCount * 6);
+        *(int *)&((ObjModel *)out)->vtxBuf1 = pos;
+        end = pos + ((ModelFileHeader *)p)->vertexCount * 6;
+        memcpy(((ObjModel *)out)->vtxBuf0, ((ModelFileHeader *)p)->vertices, ((ModelFileHeader *)p)->vertexCount * 6);
+        DCFlushRange(((ObjModel *)out)->vtxBuf0, ((ModelFileHeader *)p)->vertexCount * 6);
+        memcpy(((ObjModel *)out)->vtxBuf1, ((ModelFileHeader *)p)->vertices, ((ModelFileHeader *)p)->vertexCount * 6);
+        DCFlushRange(((ObjModel *)out)->vtxBuf1, ((ModelFileHeader *)p)->vertexCount * 6);
         pos = roundUpTo32(end);
     } else {
-        end = *(int *)(p + 0x28);
-        *(int *)(out + 0x20) = end;
-        *(int *)(out + 0x1c) = end;
+        end = *(int *)&((ModelFileHeader *)p)->vertices;
+        *(int *)&((ObjModel *)out)->vtxBuf1 = end;
+        *(int *)&((ObjModel *)out)->vtxBuf0 = end;
     }
-    if (*(int *)(p + 0xc8) != 0) {
-        if (*(u8 *)(p + 0x24) & 8) {
+    if (*(int *)&((ModelFileHeader *)p)->unkC8 != 0) {
+        if (((ModelFileHeader *)p)->flags24 & 8) {
             n = 9;
         } else {
             n = 3;
         }
         pos = roundUpTo32(pos);
-        *(int *)(out + 0x24) = pos;
-        end = pos + *(u16 *)(p + 0xe6) * n;
-        memcpy(*(void **)(out + 0x24), *(void **)(p + 0x2c), *(u16 *)(p + 0xe6) * n);
-        DCFlushRange(*(void **)(out + 0x24), n * *(u16 *)(p + 0xe6));
+        *(int *)&((ObjModel *)out)->normalBuf = pos;
+        end = pos + ((ModelFileHeader *)p)->normalCount * n;
+        memcpy(((ObjModel *)out)->normalBuf, ((ModelFileHeader *)p)->normals, ((ModelFileHeader *)p)->normalCount * n);
+        DCFlushRange(((ObjModel *)out)->normalBuf, n * ((ModelFileHeader *)p)->normalCount);
         pos = roundUpTo32(end);
     } else {
-        *(int *)(out + 0x24) = *(int *)(p + 0x2c);
+        *(int *)&((ObjModel *)out)->normalBuf = *(int *)&((ModelFileHeader *)p)->normals;
     }
     pos = roundUpTo4(pos);
-    *(int *)(out + 0x2c) = pos;
+    *(int *)&((ObjModel *)out)->animStateA = pos;
     pos += 0x68;
     if (b & 0x80) {
-        *(int *)(out + 0x30) = pos;
+        *(int *)&((ObjModel *)out)->animStateB = pos;
         pos += 0x68;
     }
-    if (*(u16 *)(p + 2) & 0x40) {
+    if (((ModelFileHeader *)p)->flags & 0x40) {
         pos = roundUpTo8(pos);
-        q = *(u8 **)(out + 0x2c);
+        q = ((ObjModel *)out)->animStateA;
         *(int *)(q + 0x1c) = pos;
         pos += szs[5];
         *(int *)(q + 0x20) = pos;
@@ -1933,7 +1934,7 @@ void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c)
         pos += szs[5];
         *(int *)(q + 0x28) = pos;
         pos += szs[5];
-        q = *(u8 **)(out + 0x30);
+        q = ((ObjModel *)out)->animStateB;
         if (q != 0) {
             *(int *)(q + 0x1c) = pos;
             pos += szs[5];
@@ -1945,24 +1946,24 @@ void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c)
             pos += szs[5];
         }
     }
-    if (*(u8 *)(p + 0xf9) != 0) {
+    if (((ModelFileHeader *)p)->unkF9 != 0) {
         pos = roundUpTo4(pos);
-        *(int *)(out + 0x28) = pos;
+        *(int *)&((ObjModel *)out)->blendChannels = pos;
         pos += 0x30;
-        q = *(u8 **)(out + 0x28);
+        q = (u8 *)((ObjModel *)out)->blendChannels;
         *(s8 *)(q + 0xc) = -1;
         *(s8 *)(q + 0xd) = -1;
         f = lbl_803DE828;
         *(f32 *)(q + 0) = f;
         *(f32 *)(q + 4) = f;
         *(f32 *)(q + 8) = f;
-        q = *(u8 **)(out + 0x28);
+        q = (u8 *)((ObjModel *)out)->blendChannels;
         *(s8 *)(q + 0x1c) = -1;
         *(s8 *)(q + 0x1d) = -1;
         *(f32 *)(q + 0x10) = f;
         *(f32 *)(q + 0x14) = f;
         *(f32 *)(q + 0x18) = f;
-        q = *(u8 **)(out + 0x28);
+        q = (u8 *)((ObjModel *)out)->blendChannels;
         *(s8 *)(q + 0x2c) = -1;
         *(s8 *)(q + 0x2d) = -1;
         *(f32 *)(q + 0x20) = f;
@@ -1971,58 +1972,58 @@ void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c)
     }
     if (szs[1] > 0) {
         pos = roundUpTo4(pos);
-        *(int *)(out + 0x48) = pos;
-        pos += *(u8 *)(p + 0xf7) * 0x10;
-        *(int *)(out + 0x4c) = pos;
-        pos += *(u8 *)(p + 0xf7) * 0x10;
-        *(int *)(out + 0x50) = *(int *)(out + 0x48);
+        *(int *)&((ObjModel *)out)->unk48 = pos;
+        pos += ((ModelFileHeader *)p)->unkF7 * 0x10;
+        *(int *)&((ObjModel *)out)->unk4C = pos;
+        pos += ((ModelFileHeader *)p)->unkF7 * 0x10;
+        *(int *)&((ObjModel *)out)->unk50 = *(int *)&((ObjModel *)out)->unk48;
     }
-    if (*(int *)(p + 0x3c) != 0 && *(u8 *)(p + 0xf3) != 0 && *(int *)(p + 0x18) != 0 && *(int *)(p + 0x1c) != 0) {
+    if (*(int *)&((ModelFileHeader *)p)->unk3C != 0 && ((ModelFileHeader *)p)->jointCount != 0 && *(int *)&((ModelFileHeader *)p)->unk18 != 0 && *(int *)&((ModelFileHeader *)p)->unk1C != 0) {
         pos = roundUpTo4(pos);
-        *(int *)(out + 0x14) = pos;
+        *(int *)&((ObjModel *)out)->unk14 = pos;
         pos += 0x1c;
-        *(int *)(*(u8 **)(out + 0x14) + 0) = pos;
-        pos += *(u8 *)(p + 0xf3) * 0xc;
-        *(int *)(*(u8 **)(out + 0x14) + 4) = pos;
-        pos += *(u8 *)(p + 0xf3) * 4;
-        *(int *)(*(u8 **)(out + 0x14) + 8) = pos;
-        pos += *(u8 *)(p + 0xf3) * 4;
-        *(int *)(*(u8 **)(out + 0x14) + 0xc) = pos;
-        pos += *(u8 *)(p + 0xf3) * 4;
-        *(int *)(*(u8 **)(out + 0x14) + 0x10) = pos;
-        pos += *(u8 *)(p + 0xf3) * 4;
-        *(int *)(*(u8 **)(out + 0x14) + 0x18) = pos;
-        pos += *(u8 *)(p + 0xf3);
+        *(int *)(((ObjModel *)out)->unk14 + 0) = pos;
+        pos += ((ModelFileHeader *)p)->jointCount * 0xc;
+        *(int *)(((ObjModel *)out)->unk14 + 4) = pos;
+        pos += ((ModelFileHeader *)p)->jointCount * 4;
+        *(int *)(((ObjModel *)out)->unk14 + 8) = pos;
+        pos += ((ModelFileHeader *)p)->jointCount * 4;
+        *(int *)(((ObjModel *)out)->unk14 + 0xc) = pos;
+        pos += ((ModelFileHeader *)p)->jointCount * 4;
+        *(int *)(((ObjModel *)out)->unk14 + 0x10) = pos;
+        pos += ((ModelFileHeader *)p)->jointCount * 4;
+        *(int *)(((ObjModel *)out)->unk14 + 0x18) = pos;
+        pos += ((ModelFileHeader *)p)->jointCount;
     } else {
-        *(int *)(out + 0x14) = 0;
+        *(int *)&((ObjModel *)out)->unk14 = 0;
     }
-    if (*(int *)(p + 0xa4) != 0) {
+    if (*(int *)&((ModelFileHeader *)p)->unkA4 != 0) {
         pos = roundUpTo4(pos);
-        *(int *)(out + 0x40) = pos;
-        pos += *(u16 *)(p + 0x8a) * 4;
+        *(int *)&((ObjModel *)out)->unk40 = pos;
+        pos += ((ModelFileHeader *)p)->unk8A * 4;
     }
-    if (*(int *)(p + 0xc8) != 0) {
+    if (*(int *)&((ModelFileHeader *)p)->unkC8 != 0) {
         pos = roundUpTo4(pos);
-        *(int *)(out + 0x44) = pos;
-        pos += *(u16 *)(p + 0xae) * 4;
+        *(int *)&((ObjModel *)out)->unk44 = pos;
+        pos += ((ModelFileHeader *)p)->unkAE * 4;
     }
     pos = roundUpTo4(pos);
-    *(int *)(out + 0x34) = pos;
-    pos += *(u8 *)(p + 0xf8) * 0xc;
+    *(int *)&((ObjModel *)out)->textureRefs = pos;
+    pos += ((ModelFileHeader *)p)->renderOpCount * 0xc;
     k = 0;
     o2 = 0;
-    for (; k < (int)*(u8 *)(p + 0xf8); k++) {
-        *(u8 *)(*(u8 **)(out + 0x34) + o2 + 8) = 0;
+    for (; k < (int)((ModelFileHeader *)p)->renderOpCount; k++) {
+        *(u8 *)(((ObjModel *)out)->textureRefs + o2 + 8) = 0;
         o2 += 0xc;
     }
     if (b & 0x8000) {
         pos = alignUp2(pos);
-        *(int *)(out + 0x54) = pos;
-        *(u8 *)(*(u8 **)(out + 0x54) + 0x18) = 0;
+        *(int *)&((ObjModel *)out)->unk54 = pos;
+        *(u8 *)(((ObjModel *)out)->unk54 + 0x18) = 0;
     }
-    *(int *)(out + 0x58) = 0;
-    *(u8 **)(out + 0) = p;
-    *(u8 *)(out + 0x60) = 0;
+    *(int *)&((ObjModel *)out)->renderAttachment = 0;
+    ((ObjModel *)out)->file = (ModelFileHeader *)p;
+    ((ObjModel *)out)->unk60 = 0;
     return out;
 }
 #pragma dont_inline reset
@@ -2063,50 +2064,50 @@ int modelLoadAnimations(void *model, int id, void *animBase)
     tbl = lbl_803DCB60;
     fileLoadToBufferOffset(0x2d, tbl, id << 1, 0x10);
     base = *(s16 *)tbl;
-    if (*(u16 *)(hdr + 0xec) == 0) {
+    if (((ModelFileHeader *)hdr)->unkEC == 0) {
         return 0;
     }
-    sz = (*(u16 *)(hdr + 0xec) << 1) + 8;
+    sz = (((ModelFileHeader *)hdr)->unkEC << 1) + 8;
     if (sz > 0x800) {
         debugPrintf(sModelAnimationBufferOverflowWarning, sz);
     }
     fileLoadToBufferOffset(0x31, lbl_803DCB60, (id & ~3) << 2, 0x20);
-    *(int *)(hdr + 0x80) = *(int *)((u8 *)lbl_803DCB60 + (id & 3) * 4);
+    ((ModelFileHeader *)hdr)->unk80 = *(int *)((u8 *)lbl_803DCB60 + (id & 3) * 4);
     sz4 = *(int *)((u8 *)lbl_803DCB60 + (id & 3) * 4);
     id = *(int *)((u8 *)lbl_803DCB60 + (id & 3) * 4 + 4) - sz4;
-    if (*(u16 *)(hdr + 2) & 0x40) {
-        *(u8 **)(hdr + 0x6c) = buf;
+    if (((ModelFileHeader *)hdr)->flags & 0x40) {
+        ((ModelFileHeader *)hdr)->unk6C = buf;
         while (sz & 7) {
             sz++;
         }
         aln = sz;
         buf += sz;
-        fileLoadToBufferOffset(0x2e, *(void **)(hdr + 0x6c), base, sz);
+        fileLoadToBufferOffset(0x2e, ((ModelFileHeader *)hdr)->unk6C, base, sz);
     } else {
         fileLoadToBufferOffset(0x2e, lbl_803DCB64, base, sz);
-        *(s16 **)(hdr + 0x6c) = lbl_803DCB64;
+        ((ModelFileHeader *)hdr)->unk6C = (u8 *)lbl_803DCB64;
     }
     o = 0;
     slot = 1;
     *(s16 *)(hdr + (slot - 1) * 2 + 0x70) = o;
     i = 0;
-    for (; i < (int)*(u16 *)(hdr + 0xec); i++) {
-        if (*(s16 *)(*(u8 **)(hdr + 0x6c) + o) == -1) {
+    for (; i < (int)((ModelFileHeader *)hdr)->unkEC; i++) {
+        if (*(s16 *)(((ModelFileHeader *)hdr)->unk6C + o) == -1) {
             *(s16 *)(hdr + slot++ * 2 + 0x70) = (s16)(i + 1);
         }
         o += 2;
     }
-    if ((*(u16 *)(hdr + 2) & 0x40) == 0) {
-        *(int *)(hdr + 0x6c) = 0;
-        *(u8 **)(hdr + 0x64) = buf;
-        buf += *(u16 *)(hdr + 0xec) * 4;
-        aln += *(u16 *)(hdr + 0xec) * 4;
+    if ((((ModelFileHeader *)hdr)->flags & 0x40) == 0) {
+        *(int *)&((ModelFileHeader *)hdr)->unk6C = 0;
+        ((ModelFileHeader *)hdr)->unk64 = buf;
+        buf += ((ModelFileHeader *)hdr)->unkEC * 4;
+        aln += ((ModelFileHeader *)hdr)->unkEC * 4;
         while (aln & 7) {
             buf++;
             aln++;
         }
-        *(u8 **)(hdr + 0x68) = buf;
-        fileLoadToBufferOffset(0x32, *(void **)(hdr + 0x68), *(int *)(hdr + 0x80), id);
+        ((ModelFileHeader *)hdr)->unk68 = buf;
+        fileLoadToBufferOffset(0x32, ((ModelFileHeader *)hdr)->unk68, ((ModelFileHeader *)hdr)->unk80, id);
         cnt = 0;
         toff = 0;
         woff = toff;
@@ -2129,15 +2130,15 @@ int modelLoadAnimations(void *model, int id, void *animBase)
                     }
                     pc = hp2;
                 }
-                *(u8 **)(*(u8 **)(hdr + 0x64) + woff) = pc;
-                if (*(u8 **)(*(u8 **)(hdr + 0x64) + woff) == 0) {
+                *(u8 **)(((ModelFileHeader *)hdr)->unk64 + woff) = pc;
+                if (*(u8 **)(((ModelFileHeader *)hdr)->unk64 + woff) == 0) {
                     int k;
                     int o3;
 
                     k = 0;
                     o3 = 0;
                     for (; k < cnt; k++) {
-                        q2 = *(u8 **)(*(u8 **)(hdr + 0x64) + o3);
+                        q2 = *(u8 **)(((ModelFileHeader *)hdr)->unk64 + o3);
                         if (q2 != 0) {
                             d = *q2 - 1;
                             *q2 = d;
@@ -2149,18 +2150,18 @@ int modelLoadAnimations(void *model, int id, void *animBase)
                         }
                         o3 += 4;
                     }
-                    *(int *)(hdr + 0x64) = 0;
+                    *(int *)&((ModelFileHeader *)hdr)->unk64 = 0;
                     return 1;
                 }
             } else {
-                *(int *)(*(u8 **)(hdr + 0x64) + woff) = 0;
+                *(int *)(((ModelFileHeader *)hdr)->unk64 + woff) = 0;
             }
             toff += 2;
             woff += 4;
             cnt++;
-        } while (cnt < (int)*(u16 *)(hdr + 0xec));
+        } while (cnt < (int)((ModelFileHeader *)hdr)->unkEC);
     } else {
-        *(int *)(hdr + 0x64) = 0;
+        *(int *)&((ModelFileHeader *)hdr)->unk64 = 0;
     }
     return 0;
 }
@@ -2288,21 +2289,21 @@ int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
     u8 *hdr = (u8 *)model;
     int total;
 
-    if (*(u16 *)(hdr + 0xec) != 0) {
-        sizes[6] = ((u32)*(u8 *)(hdr + 0xf3) + (u32)*(u8 *)(hdr + 0xf4)) * 0x80;
+    if (((ModelFileHeader *)hdr)->unkEC != 0) {
+        sizes[6] = ((u32)((ModelFileHeader *)hdr)->jointCount + (u32)((ModelFileHeader *)hdr)->extraJointCount) * 0x80;
     } else {
         sizes[6] = 0x80;
     }
-    if (*(u8 *)(hdr + 0xf9) != 0 || *(void **)(hdr + 0xa4) != 0 || (*(u16 *)(hdr + 2) & 0x10) != 0) {
-        sizes[0] = (u32)*(u16 *)(hdr + 0xe4) * 0xc + 0x60;
+    if (((ModelFileHeader *)hdr)->unkF9 != 0 || ((ModelFileHeader *)hdr)->unkA4 != 0 || (((ModelFileHeader *)hdr)->flags & 0x10) != 0) {
+        sizes[0] = (u32)((ModelFileHeader *)hdr)->vertexCount * 0xc + 0x60;
     } else {
         sizes[0] = 0;
     }
-    if (*(void **)(hdr + 0xc8) != 0) {
+    if (((ModelFileHeader *)hdr)->unkC8 != 0) {
         int cur = sizes[0];
-        int n = *(u16 *)(hdr + 0xe6);
+        int n = ((ModelFileHeader *)hdr)->normalCount;
         int k;
-        if (*(u8 *)(hdr + 0x24) & 8) {
+        if (((ModelFileHeader *)hdr)->flags24 & 8) {
             k = 9;
         } else {
             k = 3;
@@ -2311,12 +2312,12 @@ int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
         sizes[0] = cur + 0x40;
     }
     {
-        int half = *(u8 *)(hdr + 0xf7) << 4;
+        int half = ((ModelFileHeader *)hdr)->unkF7 << 4;
         sizes[1] = half << 1;
     }
     sizes[3] = 0;
-    if ((*(u16 *)(hdr + 2) & 0x40) != 0) {
-        sizes[5] = *(s16 *)(hdr + 0x84);
+    if ((((ModelFileHeader *)hdr)->flags & 0x40) != 0) {
+        sizes[5] = ((ModelFileHeader *)hdr)->unk84;
         while ((sizes[5] & 7) != 0) {
             sizes[5] = sizes[5] + 1;
         }
@@ -2327,25 +2328,25 @@ int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
         sizes[4] = sizes[4] << 1;
         sizes[3] = sizes[3] << 1;
     }
-    if (*(u8 *)(hdr + 0xf9) != 0 || a4 != 0) {
+    if (((ModelFileHeader *)hdr)->unkF9 != 0 || a4 != 0) {
         sizes[4] = sizes[4] + 0x30;
         total = sizes[6] + sizes[1] + sizes[3] + sizes[4] + 0x6c;
     } else {
         total = sizes[3] + sizes[6] + sizes[1] + sizes[4] + 0x6c;
     }
     total = total + sizes[0];
-    if (*(void **)(hdr + 0x3c) != 0 && *(u8 *)(hdr + 0xf3) != 0 && *(void **)(hdr + 0x18) != 0) {
-        total = (u32)*(u8 *)(hdr + 0xf3) * 0x1e + 0x1c + total;
+    if (((ModelFileHeader *)hdr)->unk3C != 0 && ((ModelFileHeader *)hdr)->jointCount != 0 && ((ModelFileHeader *)hdr)->unk18 != 0) {
+        total = (u32)((ModelFileHeader *)hdr)->jointCount * 0x1e + 0x1c + total;
     }
-    if (*(void **)(hdr + 0xa4) != 0) {
-        total = (u32)*(u16 *)(hdr + 0x8a) * 4 + total;
+    if (((ModelFileHeader *)hdr)->unkA4 != 0) {
+        total = (u32)((ModelFileHeader *)hdr)->unk8A * 4 + total;
         total = total + 4;
     }
-    if (*(void **)(hdr + 0xc8) != 0) {
-        total = (u32)*(u16 *)(hdr + 0xae) * 4 + total;
+    if (((ModelFileHeader *)hdr)->unkC8 != 0) {
+        total = (u32)((ModelFileHeader *)hdr)->unkAE * 4 + total;
         total = total + 4;
     }
-    total = total + (u32)*(u8 *)(hdr + 0xf8) * 0xc;
+    total = total + (u32)((ModelFileHeader *)hdr)->renderOpCount * 0xc;
     if ((flags & 0x8000) != 0) {
         total = total + 0x1a;
     }
@@ -2793,9 +2794,9 @@ void modelInitBoneMtxs(u8 *m, u8 *out) {
     hdr = *(u8 **)m;
     i = 0;
     boneOff = 0;
-    for (; i < *(u8 *)(hdr + 0xf3); i++) {
+    for (; i < ((ModelFileHeader *)hdr)->jointCount; i++) {
         mtx = modelGetBoneMtx(m, i);
-        bone = *(u8 **)(hdr + 0x3c) + boneOff;
+        bone = ((ModelFileHeader *)hdr)->unk3C + boneOff;
         PSMTXTrans(tmp, -*(f32 *)(bone + 0x10), -*(f32 *)(bone + 0x14), -*(f32 *)(bone + 0x18));
         PSMTXConcat((f32 *)mtx, tmp, tmp);
         PSMTXReorder(tmp, (f32 *)out);
@@ -2817,15 +2818,15 @@ void modelInitBoneMtxs2(u8 *m, u8 *out2, u8 *out) {
     f32 tmp[12];
 
     hdr = *(u8 **)m;
-    if (*(u8 *)(hdr + 0xf3) == 0) {
+    if (((ModelFileHeader *)hdr)->jointCount == 0) {
         mtx = modelGetBoneMtx(m, 0);
         PSMTXConcat((f32 *)out2, (f32 *)mtx, (f32 *)mtx);
     } else {
         i = 0;
         boneOff = 0;
-        for (; i < *(u8 *)(hdr + 0xf3); i++) {
+        for (; i < ((ModelFileHeader *)hdr)->jointCount; i++) {
             mtx = modelGetBoneMtx(m, i);
-            bone = *(u8 **)(hdr + 0x3c) + boneOff;
+            bone = ((ModelFileHeader *)hdr)->unk3C + boneOff;
             PSMTXTrans(tmp, -*(f32 *)(bone + 0x10), -*(f32 *)(bone + 0x14), -*(f32 *)(bone + 0x18));
             PSMTXConcat((f32 *)mtx, tmp, tmp);
             PSMTXReorder(tmp, (f32 *)out);
@@ -3306,7 +3307,7 @@ void ObjModel_SampleJointTransform(u8 *model, int b, int idx, f32 t, f32 s, f32 
     s16 srot[3];
     u8 *anim;
 
-    if (*(u16 *)(*(u8 **)model + 0xec) == 0) {
+    if (((ObjModel *)model)->file->unkEC == 0) {
         f32 z = lbl_803DE828;
         outPos[0] = z;
         outPos[1] = z;
