@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/game_object.h"
 
 typedef struct WmPlanetsState {
     s16 orbitYawStep;
@@ -77,9 +78,9 @@ void wmplanets_update(int *obj) {
     rotate.yaw = 0;
     vecRotateZXY(&rotate, vec.f);
 
-    *(f32 *)((char *)obj + 0xc) = vec.f[0] + state->baseX;
-    *(f32 *)((char *)obj + 0x10) = vec.f[1] + state->baseY;
-    *(f32 *)((char *)obj + 0x14) = vec.f[2] + state->baseZ;
+    ((GameObject *)obj)->anim.localPosX = vec.f[0] + state->baseX;
+    ((GameObject *)obj)->anim.localPosY = vec.f[1] + state->baseY;
+    ((GameObject *)obj)->anim.localPosZ = vec.f[2] + state->baseZ;
     *(s16 *)obj = (s16)(*(s16 *)obj + state->yawStep * (s32)timeDelta);
 }
 #pragma scheduling reset
@@ -90,7 +91,7 @@ void wmplanets_update(int *obj) {
 void wmplanets_init(int *obj, u8 *init) {
     WmPlanetsState *inner = *(WmPlanetsState **)((char *)obj + 0xb8);
     f32 a = lbl_803E5FA0 * *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4);
-    *(f32 *)((char *)obj + 8) = a * (lbl_803E5F98 + (f32)(s32)(s8)init[0x18]);
+    ((GameObject *)obj)->anim.rootMotionScale = a * (lbl_803E5F98 + (f32)(s32)(s8)init[0x18]);
     if (*(s16 *)init != 0) {
         inner->heightOffset = -(f32)(s32)((s8)init[0x19] << 4);
     } else {
@@ -100,11 +101,11 @@ void wmplanets_init(int *obj, u8 *init) {
     inner->yawStep = (s16)randomGetRange(0xc8, 0x190);
     inner->orbitYaw = 0;
     inner->orbitPitch = (s16)randomGetRange(0, 0x960);
-    inner->baseX = *(f32 *)((char *)obj + 0xc);
-    inner->baseY = *(f32 *)((char *)obj + 0x10);
-    inner->baseZ = *(f32 *)((char *)obj + 0x14);
+    inner->baseX = ((GameObject *)obj)->anim.localPosX;
+    inner->baseY = ((GameObject *)obj)->anim.localPosY;
+    inner->baseZ = ((GameObject *)obj)->anim.localPosZ;
     Obj_SetActiveModelIndex((int)obj, *(s16 *)((char *)init + 0x1a));
-    *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)init + 0x10) + inner->heightOffset;
+    ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)init + 0x10) + inner->heightOffset;
 }
 #pragma scheduling reset
 #pragma peephole reset
