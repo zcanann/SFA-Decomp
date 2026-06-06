@@ -1,10 +1,6 @@
-#include "ghidra_import.h"
-#include "main/dll/SH/SHthorntail_internal.h"
 #include "main/dll/SH/SHroot.h"
-#include "main/dll/SC/SClevelcontrol.h"
 #include "main/dll/SC/SCchieflightfoot.h"
 #include "main/objHitReact.h"
-#include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/mapEventTypes.h"
 

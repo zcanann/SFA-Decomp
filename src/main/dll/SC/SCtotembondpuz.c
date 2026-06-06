@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/SC/SCtotembondpuz.h"
 
 extern u32 GameBit_Get(int eventId);
