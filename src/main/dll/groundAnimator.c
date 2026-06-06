@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
+#include "main/objanim_internal.h"
 
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80017710();
@@ -439,9 +440,11 @@ void wm_column_init(short *obj, int mapData)
   *obj = (s16)(*(u8 *)(mapData + 0x18) << 8);
   *(u16 *)((int)obj + 0xb0) |= 0x2000;
   *(undefined4 *)((int)obj + 0xf4) = 0;
-  *(s8 *)((int)obj + 0xad) = (s8)(int)*(s8 *)(mapData + 0x19);
-  if (*(s8 *)((int)obj + 0xad) >= *(s8 *)(*(int *)((int)obj + 0x50) + 0x55)) {
-    *(u8 *)((int)obj + 0xad) = 0;
+  *(s8 *)((int)obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)(int)*(s8 *)(mapData + 0x19);
+  if (*(s8 *)((int)obj + offsetof(ObjAnimComponent, bankIndex)) >=
+      *(s8 *)(*(int *)((int)obj + offsetof(ObjAnimComponent, modelInstance)) +
+              offsetof(ObjModelInstance, modelCount))) {
+    *(u8 *)((int)obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
   }
   (*(GroundAnimatorInitAnimFn *)(*gCarryableInterface + 4))(obj, state, 0x32);
   ObjGroup_AddObject((int)obj, 4);

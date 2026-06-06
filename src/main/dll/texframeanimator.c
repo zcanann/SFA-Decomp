@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/texframeanimator.h"
+#include "main/objanim_internal.h"
 
 extern uint GameBit_Get(int eventId);
 extern int FUN_80017a98();
@@ -83,9 +84,10 @@ void collectible_init(int obj,int setup)
   *(f32 *)(obj + 8) = *(f32 *)(setupObj + 4);
   *(void (**)(void))(obj + 0xbc) = collectible_SeqFn;
   setupModelIndex = *(s8 *)(setup + 0x26);
-  *(s8 *)(obj + 0xad) = (s8)setupModelIndex;
-  if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
-    *(u8 *)(obj + 0xad) = 0;
+  *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)setupModelIndex;
+  if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
+      *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
+    *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
   }
   *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
   *(u8 *)(state + 0xc) = *(u8 *)(setup + 0x19);

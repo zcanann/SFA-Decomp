@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -66,7 +67,7 @@ int suntemple_interactCallback(int obj, int p2, int p3)
                 (*(void (**)(int))(*gObjectTriggerInterface + 0x58))(p3);
             break;
         case 3:
-            if ((s8)*(u8 *)(obj + 0xad) == 1)
+            if (((ObjAnimComponent *)obj)->bankIndex == 1)
                 (*(void (**)(void *, int, int, int))(*gMapEventInterface + 0x24))(
                     &vec, -0x4000, getCurMapLayer(), 0);
             break;
@@ -87,9 +88,10 @@ void suntemple_init(u8 *obj, u8 *setup)
     *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
     *(s16 *)(obj + 4) = (s16)(setup[0x1a] << 8);
     *(void **)(obj + 0xbc) = (void *)suntemple_interactCallback;
-    obj[0xad] = setup[0x21];
-    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        obj[0xad] = 0;
+    obj[offsetof(ObjAnimComponent, bankIndex)] = setup[0x21];
+    if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
+        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
+        obj[offsetof(ObjAnimComponent, bankIndex)] = 0;
     }
     state = *(u8 **)(obj + 0xb8);
     state[0] = (u8)GameBit_Get(*(s16 *)(setup + 0x1c));
