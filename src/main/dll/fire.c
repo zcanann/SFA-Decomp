@@ -1,57 +1,40 @@
 #include "main/dll/fire.h"
-
-extern undefined4 FUN_800178b8();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern undefined4 streamFn_8000a380(int param_1,int param_2,int param_3);
-extern undefined4 Sfx_KeepAliveLoopedObjectSound(int param_1,int param_2);
-extern undefined4 loadUiDll(int param_1);
-extern undefined4 defragMemory(int param_1);
-extern undefined4 loadMapAndParent(int param_1);
-extern undefined4 lockLevel(undefined4 param_1,int param_2);
-extern undefined4 mapUnload(undefined4 param_1,uint param_2);
-extern undefined4 mapGetDirIdx(int param_1);
-extern undefined4 warpToMap(int param_1,int param_2);
-extern uint GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId,int value);
-extern undefined4 objRenderFn_8003b8f4(double scale);
-extern undefined4 unlockLevel(int param_1,int param_2,int param_3);
-extern undefined4 envFxActFn_800887f8(int param_1);
+#include "main/gameplay_runtime.h"
 
 extern FireObjectInterface **gObjectTriggerInterface;
 extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E64D8;
 
-#define FIRE_LOOP_SFX_ID 0x48B
+#define LINKA_LEVCONTROL_LOOP_SFX_ID 0x48B
 
-#define FIRE_MODE_0 0
-#define FIRE_MODE_1 1
-#define FIRE_MODE_2 2
-#define FIRE_MODE_3 3
+#define LINKA_LEVCONTROL_MODE_0 0
+#define LINKA_LEVCONTROL_MODE_1 1
+#define LINKA_LEVCONTROL_MODE_2 2
+#define LINKA_LEVCONTROL_MODE_3 3
 
-#define FIRE_ANIM_EVENT_OPEN_PATH 1
-#define FIRE_ANIM_EVENT_WARP 2
-#define FIRE_ANIM_EVENT_UNLOAD_NEIGHBOR_MAP 3
+#define LINKA_LEVCONTROL_ANIM_EVENT_OPEN_PATH 1
+#define LINKA_LEVCONTROL_ANIM_EVENT_WARP 2
+#define LINKA_LEVCONTROL_ANIM_EVENT_UNLOAD_NEIGHBOR_MAP 3
 
-#define FIRE_MAP_ID_7 7
-#define FIRE_MAP_ID_0B 0x0B
-#define FIRE_MAP_ID_17 0x17
+#define LINKA_LEVCONTROL_MAP_ID_7 7
+#define LINKA_LEVCONTROL_MAP_ID_0B 0x0B
+#define LINKA_LEVCONTROL_MAP_ID_17 0x17
 
-#define FIRE_WARP_ID_SHRINE 2
-#define FIRE_WARP_ID_MODE2_ROUTE_A 0x20
-#define FIRE_WARP_ID_MODE2_ROUTE_B 0x22
-#define FIRE_WARP_ID_MODE3 0x0F
+#define LINKA_LEVCONTROL_WARP_ID_SHRINE 2
+#define LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_A 0x20
+#define LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B 0x22
+#define LINKA_LEVCONTROL_WARP_ID_MODE3 0x0F
 
-#define FIRE_MODE2_RESET_GAMEBIT 0x405
-#define FIRE_MODE2_ROUTE_A_GAMEBIT 0xBFD
-#define FIRE_MODE2_ROUTE_B_GAMEBIT 0x0FF
-#define FIRE_MODE2_ROUTE_C_GAMEBIT 0xC6E
-#define FIRE_LIGHTFOOT_UNLOCK_GAMEBIT 0x1ED
+#define LINKA_LEVCONTROL_MODE2_RESET_GAMEBIT 0x405
+#define LINKA_LEVCONTROL_MODE2_ROUTE_A_GAMEBIT 0xBFD
+#define LINKA_LEVCONTROL_MODE2_ROUTE_B_GAMEBIT 0x0FF
+#define LINKA_LEVCONTROL_MODE2_ROUTE_C_GAMEBIT 0xC6E
+#define LINKA_LEVCONTROL_LIGHTFOOT_UNLOCK_GAMEBIT 0x1ED
 
-#define FIRE_INIT_GAMEBIT_0 0x90D
-#define FIRE_INIT_GAMEBIT_1 0x90E
-#define FIRE_INIT_GAMEBIT_2 0x90F
-#define FIRE_INIT_COLLECTABLE_ID 0x2EE
+#define LINKA_LEVCONTROL_INIT_GAMEBIT_0 0x90D
+#define LINKA_LEVCONTROL_INIT_GAMEBIT_1 0x90E
+#define LINKA_LEVCONTROL_INIT_GAMEBIT_2 0x90F
+#define LINKA_LEVCONTROL_INIT_COLLECTABLE_ID 0x2EE
 
 /*
  * --INFO--
@@ -75,81 +58,81 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
   u8 eventId;
   undefined4 anim;
 
-  mode = (u8)(*gMapEventInterface)->getMode((int)obj->mapId);
-  Sfx_KeepAliveLoopedObjectSound(0,FIRE_LOOP_SFX_ID);
+  mode = (u8)(*gMapEventInterface)->getMode((int)obj->mapEventMapId);
+  Sfx_KeepAliveLoopedObjectSound(0,LINKA_LEVCONTROL_LOOP_SFX_ID);
   for (stateIndex = 0; stateIndex < (int)(uint)animUpdate->eventCount; stateIndex++) {
     eventId = animUpdate->eventIds[stateIndex];
-    if (eventId == FIRE_ANIM_EVENT_OPEN_PATH) {
+    if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_OPEN_PATH) {
       defragMemory(0);
       switch (mode) {
-      case FIRE_MODE_0:
-      case FIRE_MODE_1:
-        (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_7,0,0);
-        (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_7,2,0);
-        (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_7,3,0);
-        (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_7,7,0);
-        (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_7,10,0);
+      case LINKA_LEVCONTROL_MODE_0:
+      case LINKA_LEVCONTROL_MODE_1:
+        (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7,0,0);
+        (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7,2,0);
+        (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7,3,0);
+        (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7,7,0);
+        (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7,10,0);
         (*gMapEventInterface)->setAnimEvent(10,7,0);
-        GameBit_Set(FIRE_LIGHTFOOT_UNLOCK_GAMEBIT,1);
-        loadMapAndParent(FIRE_MAP_ID_17);
-        anim = mapGetDirIdx(FIRE_MAP_ID_17);
+        GameBit_Set(LINKA_LEVCONTROL_LIGHTFOOT_UNLOCK_GAMEBIT,1);
+        loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_17);
+        anim = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_17);
         lockLevel(anim,0);
         break;
-      case FIRE_MODE_2:
-        loadMapAndParent(FIRE_MAP_ID_0B);
-        anim = mapGetDirIdx(FIRE_MAP_ID_0B);
+      case LINKA_LEVCONTROL_MODE_2:
+        loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_0B);
+        anim = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
         lockLevel(anim,0);
         break;
-      case FIRE_MODE_3:
-        loadMapAndParent(FIRE_MAP_ID_7);
-        anim = mapGetDirIdx(FIRE_MAP_ID_7);
+      case LINKA_LEVCONTROL_MODE_3:
+        loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_7);
+        anim = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
         lockLevel(anim,0);
         break;
       }
     }
-    else if (eventId == FIRE_ANIM_EVENT_WARP) {
+    else if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_WARP) {
       switch (mode) {
-      case FIRE_MODE_0:
-      case FIRE_MODE_1:
-        warpToMap(FIRE_WARP_ID_SHRINE,0);
+      case LINKA_LEVCONTROL_MODE_0:
+      case LINKA_LEVCONTROL_MODE_1:
+        warpToMap(LINKA_LEVCONTROL_WARP_ID_SHRINE,0);
         break;
-      case FIRE_MODE_2:
-        GameBit_Set(FIRE_MODE2_RESET_GAMEBIT,0);
-        if (GameBit_Get(FIRE_MODE2_ROUTE_B_GAMEBIT) != 0) {
-          (*gMapEventInterface)->setMode(FIRE_MAP_ID_0B,3);
-          (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,8,1);
-          (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,9,1);
-          warpToMap(FIRE_WARP_ID_MODE2_ROUTE_B,0);
+      case LINKA_LEVCONTROL_MODE_2:
+        GameBit_Set(LINKA_LEVCONTROL_MODE2_RESET_GAMEBIT,0);
+        if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_B_GAMEBIT) != 0) {
+          (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B,3);
+          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,8,1);
+          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,9,1);
+          warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B,0);
         }
-        else if (GameBit_Get(FIRE_MODE2_ROUTE_A_GAMEBIT) != 0) {
-          (*gMapEventInterface)->setMode(FIRE_MAP_ID_0B,2);
-          (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,5,1);
-          (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,6,1);
-          warpToMap(FIRE_WARP_ID_MODE2_ROUTE_A,0);
+        else if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_A_GAMEBIT) != 0) {
+          (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B,2);
+          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,5,1);
+          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,6,1);
+          warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_A,0);
         }
-        else if (GameBit_Get(FIRE_MODE2_ROUTE_C_GAMEBIT) != 0) {
-          (*gMapEventInterface)->setMode(FIRE_MAP_ID_0B,4);
-          (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,8,1);
-          (*gMapEventInterface)->setAnimEvent(FIRE_MAP_ID_0B,9,1);
-          warpToMap(FIRE_WARP_ID_MODE2_ROUTE_B,0);
+        else if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_C_GAMEBIT) != 0) {
+          (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B,4);
+          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,8,1);
+          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,9,1);
+          warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B,0);
         }
         break;
-      case FIRE_MODE_3:
-        warpToMap(FIRE_WARP_ID_MODE3,0);
+      case LINKA_LEVCONTROL_MODE_3:
+        warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE3,0);
         break;
       }
       loadUiDll(1);
     }
-    else if (eventId == FIRE_ANIM_EVENT_UNLOAD_NEIGHBOR_MAP) {
+    else if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_UNLOAD_NEIGHBOR_MAP) {
       switch (mode) {
-      case FIRE_MODE_0:
-      case FIRE_MODE_1:
-      case FIRE_MODE_2:
-        anim = mapGetDirIdx(FIRE_MAP_ID_7);
+      case LINKA_LEVCONTROL_MODE_0:
+      case LINKA_LEVCONTROL_MODE_1:
+      case LINKA_LEVCONTROL_MODE_2:
+        anim = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
         mapUnload(anim,0x20000000);
         break;
-      case FIRE_MODE_3:
-        anim = mapGetDirIdx(FIRE_MAP_ID_0B);
+      case LINKA_LEVCONTROL_MODE_3:
+        anim = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
         mapUnload(anim,0x20000000);
         break;
       }
@@ -199,15 +182,15 @@ void fireObj_update(FireObject *obj)
 void fireObj_init(FireObject *obj)
 {
   u32 v;
-  obj->stateCallback = fire_updateState;
+  obj->animEventCallback = fire_updateState;
   unlockLevel(0,0,1);
   v = obj->flags | 0x2000;
   obj->flags = (u16)v;
   envFxActFn_800887f8(0);
-  GameBit_Set(FIRE_INIT_GAMEBIT_0,1);
-  GameBit_Set(FIRE_INIT_GAMEBIT_1,1);
-  GameBit_Set(FIRE_INIT_GAMEBIT_2,1);
-  streamFn_8000a380(3,2,FIRE_INIT_COLLECTABLE_ID);
+  GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_0,1);
+  GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_1,1);
+  GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_2,1);
+  streamFn_8000a380(3,2,LINKA_LEVCONTROL_INIT_COLLECTABLE_ID);
   return;
 }
 #pragma peephole reset

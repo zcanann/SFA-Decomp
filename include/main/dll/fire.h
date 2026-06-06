@@ -6,21 +6,39 @@
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
 
-typedef struct FireObject FireObject;
+#define LINKA_LEVCONTROL_OBJECT_DEF_ID 0x0342
+#define LINKA_LEVCONTROL_DLL_ID 0x0238
+#define LINKA_LEVCONTROL_CLASS_ID 0x0030
+#define LINKA_LEVCONTROL_OBJECT_DEF_SIZE 0xC0
+#define LINKA_LEVCONTROL_PLACEMENT_SIZE 0x24
 
-struct FireObject {
+typedef struct LinkALevelControlObject LinkALevelControlObject;
+typedef LinkALevelControlObject FireObject;
+
+typedef undefined4 (*LinkALevelControlAnimEventCallback)(
+    LinkALevelControlObject *obj, undefined4 unused,
+    ObjAnimUpdateState *animUpdate);
+
+struct LinkALevelControlObject {
     u8 pad00[0xAC];
-    s8 mapId;
+    s8 mapEventMapId;
     u8 padAD[0xB0 - 0xAD];
     u16 flags;
     u8 padB2[0xBC - 0xB2];
-    undefined4 (*stateCallback)(FireObject *obj, undefined4 param_2, ObjAnimUpdateState *animUpdate);
+    LinkALevelControlAnimEventCallback animEventCallback;
 };
 
-typedef struct FireObjectInterface {
+typedef struct LinkALevelControlTriggerInterface {
   u8 pad00[0x48];
-  void (*refresh)(int param_1,FireObject *obj,int param_3);
-} FireObjectInterface;
+  void (*refresh)(int mode, LinkALevelControlObject *obj, int mask);
+} LinkALevelControlTriggerInterface;
+
+typedef LinkALevelControlTriggerInterface FireObjectInterface;
+
+STATIC_ASSERT(offsetof(LinkALevelControlObject, mapEventMapId) == 0xAC);
+STATIC_ASSERT(offsetof(LinkALevelControlObject, flags) == 0xB0);
+STATIC_ASSERT(offsetof(LinkALevelControlObject, animEventCallback) == 0xBC);
+STATIC_ASSERT(offsetof(LinkALevelControlTriggerInterface, refresh) == 0x48);
 
 extern ObjectDescriptor gFireObjDescriptor;
 
