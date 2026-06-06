@@ -14395,7 +14395,7 @@ void dll_61_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
     u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   f32 t;
-  u8 *base = lbl_803128E8;
+  u8 *base = (u8 *)(int)lbl_803128E8;
   e[0].layer = 0; e[0].flags = 8; e[0].tex = &base[0xa0]; e[0].mode = 4;
   e[0].x = lbl_803E0858; e[0].y = lbl_803E0858; e[0].z = lbl_803E0858;
   e[1].layer = 0; e[1].flags = 1; e[1].tex = (void *)0; e[1].mode = 0x2008000;
