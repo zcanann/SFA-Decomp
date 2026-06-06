@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/NW/NWsfx.h"
 #include "main/dll/SH/SHthorntail_internal.h"
 #include "main/objanim.h"
