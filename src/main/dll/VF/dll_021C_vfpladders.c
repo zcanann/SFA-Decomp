@@ -69,7 +69,7 @@ void vfpladders_initialise(void) {}
 #pragma peephole off
 #pragma scheduling off
 void vfpladders_init(int *obj, u8 *init) {
-    int *inner = *(int **)((char *)obj + 0xb8);
+    int *inner = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     *(s16 *)((char *)inner + 2) = *(s16 *)((char *)init + 0x20);
     *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
