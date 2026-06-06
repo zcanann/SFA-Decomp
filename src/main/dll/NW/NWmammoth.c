@@ -1,4 +1,4 @@
-#include "main/dll/NW/NWmammoth.h"
+#include "main/dll/ediblemushroom.h"
 #include "main/objanim_internal.h"
 
 

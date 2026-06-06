@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_NW_NWMAMMOTH_H_
-#define MAIN_DLL_NW_NWMAMMOTH_H_
+#ifndef MAIN_DLL_EDIBLEMUSHROOM_H_
+#define MAIN_DLL_EDIBLEMUSHROOM_H_
 
 #include "ghidra_import.h"
 
@@ -10,4 +10,4 @@ int enemymushroom_getObjectTypeId(int obj);
 void enemymushroom_free(int obj);
 void enemymushroom_hitDetect(void);
 
-#endif /* MAIN_DLL_NW_NWMAMMOTH_H_ */
+#endif /* MAIN_DLL_EDIBLEMUSHROOM_H_ */
