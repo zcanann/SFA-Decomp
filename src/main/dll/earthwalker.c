@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/objanim.h"
 #include "main/mapEventTypes.h"
 
 #pragma peephole on
@@ -260,7 +261,7 @@ void earthwalker_update(int obj)
         break;
     }
 
-    ObjAnim_AdvanceCurrentMove(lbl_803E6CDC, timeDelta, obj, 0);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6CDC, timeDelta, 0);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -409,7 +410,7 @@ int earthwalker_animEventCallback(int obj, int p2, int p3, int p4)
         return 0;
     }
     if ((s8)p4 != 0) {
-        ObjAnim_AdvanceCurrentMove(lbl_803E6CDC, timeDelta, obj, 0);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6CDC, timeDelta, 0);
     }
     for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
         switch (*(u8 *)(p3 + i + 0x81)) {
