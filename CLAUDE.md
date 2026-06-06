@@ -1046,6 +1046,16 @@ Heuristic:
     GXColor-style by-value struct args each take an 8B caller temp slot —
     same threshold behavior (objFn_8003dc50 capped: target allocates 2
     fewer temps for identical call sites; no source form found).
+    **(a)-struct corollary — a STRUCT-typed local reserves its stack slot
+    even when fully enregistered; flat scalar locals don't.** When the
+    frame is N bytes SHORT and the body computes a vector/aggregate in
+    plain f32 locals (`f32 dx, dy, dz;`), the original likely used a
+    struct (`SND_FVECTOR d; d.x = ...`) — rewrite as
+    `struct { f32 x, y, z; } d;` to claim the 16B slot with ZERO code
+    change. Proven: s3dUpdateRoomDistances 99.18→100 (the MP4 musyx
+    source literally declares `SND_FVECTOR d; // r1+0x8` while every use
+    is enregistered), s3dAllocateRoomStudios +16B/+0.2. Check MP4 musyx
+    for the upstream form when the fn is audio.
 
 68. **`mr rS,r3`-copy forward-prop into early derefs is a PEEPHOLE opt —
     `#pragma peephole off` makes pre-call derefs use the COPY, matching
