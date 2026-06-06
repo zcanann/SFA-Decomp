@@ -2326,6 +2326,7 @@ typedef struct PartFxNode {
     u8 _pad14[4];
     s32 _0x18;
     s32 _0x1c;
+    s32 _0x20;
 } PartFxNode;
 
 /* Binary search for key in lbl_8039C458 (count = lbl_803DD410). */
@@ -2604,30 +2605,30 @@ void Checkpoint_func0A(s32 key, f32 *out_vec, u8 *flag_byte)
     out_vec[2] = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E0500;
     alt_found = 0;
     {
-        s32 v = *(s32 *)((char *)n + 0x20);
+        s32 v = n->_0x20;
         if (v != 0) {
             PartFxNode *m = (PartFxNode *)Checkpoint_find(v, &local_idx);
-            if (*(s32 *)((char *)m + 0x20) > -1) {
+            if (m->_0x20 > -1) {
                 alt_found = 1;
             }
         }
     }
     if ((s8)*flag_byte == 0) {
         if (alt_found != 0) {
-            *(s32 *)(out_vec + 4) = *(s32 *)((char *)n + 0x20);
+            *(s32 *)(out_vec + 4) = n->_0x20;
         } else {
-            s32 v = *(s32 *)((char *)n + 0x18);
+            s32 v = n->_0x18;
             if (v > -1) {
                 *(s32 *)(out_vec + 4) = v;
                 *flag_byte = 1;
             }
         }
     } else {
-        s32 v = *(s32 *)((char *)n + 0x18);
+        s32 v = n->_0x18;
         if (v != 0) {
             *(s32 *)(out_vec + 4) = v;
         } else if (alt_found != 0) {
-            *(s32 *)(out_vec + 4) = *(s32 *)((char *)n + 0x20);
+            *(s32 *)(out_vec + 4) = n->_0x20;
             *flag_byte = 0;
         }
     }
