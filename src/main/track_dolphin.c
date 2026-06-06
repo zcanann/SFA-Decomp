@@ -8171,7 +8171,7 @@ extern void fn_80137948(char *fmt, ...);
 
 u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p5, int z)
 {
-    u8 *descBase;
+    TrackBlockDescriptor *descBase;
     f32 *ep1, *ep2;
     f32 *sp1, *sp2;
     u8 *slotp;
@@ -8182,7 +8182,7 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
     u8 retHi;
     u8 typeb;
     u8 typeb2;
-    u8 *descSave;
+    TrackBlockDescriptor *descSave;
     u8 type;
     f32 edge2[4];
     f32 edge1[4];
@@ -8203,20 +8203,20 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
     f32 tmp1[3];
     f32 tmp2[3];
     f32 frac;
-    u8 *descEnd;
+    TrackBlockDescriptor *descEnd;
     f32 offX, offZ;
     f32 radius, maxStep, negStep;
     f32 mag;
     f32 eps;
-    u8 *desc;
+    TrackBlockDescriptor *desc;
     u8 *tri;
     int objmtx;
     u8 bounces;
     u8 found;
     s16 hit;
 
-    descEnd = (u8 *)gTrackBlockDescriptors + lbl_803DCF6C * 0x18;
-    descBase = (u8 *)gTrackBlockDescriptors;
+    descEnd = &gTrackBlockDescriptors[lbl_803DCF6C];
+    descBase = gTrackBlockDescriptors;
     offX = (f32)*(int *)lbl_8038DE44;
     offZ = (f32)*(int *)(lbl_8038DE44 + 8);
     i = 0;
@@ -8250,11 +8250,11 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
             we[2] = cur[2];
             found = 0;
             hit = 0;
-            for (desc = descBase; (u32)desc < (u32)descEnd; desc += 0x18) {
-                if (*(void **)desc != NULL) {
-                    Matrix_TransformPoint(*(void **)(desc + 0x10), sv[6], sv[7], sv[8],
+            for (desc = descBase; (u32)desc < (u32)descEnd; desc++) {
+                if (desc->object != NULL) {
+                    Matrix_TransformPoint(desc->alternateMatrix, sv[6], sv[7], sv[8],
                                           &ws[0], &ws[1], &ws[2]);
-                    Matrix_TransformPoint(*(void **)(desc + 8), cur[0], cur[1], cur[2],
+                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2],
                                           &we[0], &we[1], &we[2]);
                 } else {
                     ws[0] = sv[6] - offX;
@@ -8269,8 +8269,8 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                 if (mag > eps) {
                     PSVECNormalize(delta, dir);
                 }
-                for (tri = (u8 *)(lbl_803DCF30 + *(s16 *)(desc + 4) * 0x4c);
-                     (u32)tri < (u32)(lbl_803DCF30 + *(s16 *)(desc + 0x1c) * 0x4c); tri += 0x4c) {
+                for (tri = (u8 *)(lbl_803DCF30 + desc->firstTriangle * 0x4c);
+                     (u32)tri < (u32)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c); tri += 0x4c) {
                     s16 *ts = (s16 *)tri;
                     f32 dE, dS;
                     u8 b;
@@ -8346,8 +8346,8 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                     }
                 }
                 if (eps == mag) goto found_hit;
-                for (tri = (u8 *)(lbl_803DCF30 + *(s16 *)(desc + 4) * 0x4c);
-                     (u32)tri < (u32)(lbl_803DCF30 + *(s16 *)(desc + 0x1c) * 0x4c); tri += 0x4c) {
+                for (tri = (u8 *)(lbl_803DCF30 + desc->firstTriangle * 0x4c);
+                     (u32)tri < (u32)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c); tri += 0x4c) {
                     u8 bit;
                     if (tri[0x4b] == 0) continue;
                     for (bit = 0; bit < 3; bit++) {
@@ -8372,8 +8372,8 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                         }
                     }
                 }
-                for (tri = (u8 *)(lbl_803DCF30 + *(s16 *)(desc + 4) * 0x4c);
-                     (u32)tri < (u32)(lbl_803DCF30 + *(s16 *)(desc + 0x1c) * 0x4c); tri += 0x4c) {
+                for (tri = (u8 *)(lbl_803DCF30 + desc->firstTriangle * 0x4c);
+                     (u32)tri < (u32)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c); tri += 0x4c) {
                     u8 bit;
                     if (tri[0x4b] == 0) continue;
                     for (bit = 0; bit < 3; bit++) {
@@ -8511,7 +8511,7 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                     f32 *out4;
                     f32 pen;
                     if (objmtx != 0) {
-                        Matrix_TransformPoint(*(void **)(descSave + 8), cur[0], cur[1], cur[2],
+                        Matrix_TransformPoint(descSave->currentMatrix, cur[0], cur[1], cur[2],
                                               &cur[0], &cur[1], &cur[2]);
                     } else {
                         cur[0] = cur[0] - offX;
@@ -8520,7 +8520,7 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                     pen = (norm4[3] + (cur[2] * norm4[2] + (cur[0] * norm4[0] + cur[1] * norm4[1]))) - radius;
                     fn_800660C8(sv, cur, &sv[3], norm4, type, pen, maxStep);
                     if (objmtx != 0) {
-                        Matrix_TransformPoint(*(void **)(descSave + 0xc), cur[0], cur[1], cur[2],
+                        Matrix_TransformPoint(descSave->currentCollisionMatrix, cur[0], cur[1], cur[2],
                                               &cur[0], &cur[1], &cur[2]);
                     } else {
                         cur[0] = cur[0] + offX;
