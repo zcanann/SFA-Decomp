@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 int drenergydisc_getExtraSize(void) { return 1; }
@@ -16,8 +17,8 @@ void drenergydisc_hitDetect(void) {}
 void drenergydisc_update(int obj)
 {
     int *texture;
-    DrEnergyDiscState *state = *(DrEnergyDiscState **)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    DrEnergyDiscState *state = ((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
 
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
         if (state->activated == 0) {
@@ -52,7 +53,7 @@ void drenergydisc_update(int obj)
 void drenergydisc_init(u8 *obj, u8 *setup)
 {
     int *texture;
-    DrEnergyDiscState *state = *(DrEnergyDiscState **)(obj + 0xb8);
+    DrEnergyDiscState *state = ((GameObject *)obj)->extra;
     s16 objType;
 
     objType = (s16)((s8)setup[0x18] << 8);
@@ -71,7 +72,7 @@ void drenergydisc_init(u8 *obj, u8 *setup)
             *texture = 0;
         }
     }
-    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x6000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
 }
 #pragma scheduling reset
 #pragma peephole reset

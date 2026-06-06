@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/DR/DRcloudcage.h"
 
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
@@ -205,12 +206,12 @@ void fn_801E9C00(int obj, int state)
     minDelta = lbl_803E5AFC;
     scaleV = lbl_803E5AEC;
     for (; activeIndex < 3; activeOffset += 0x18, nextOffset += 0x18, slot += 4, activeIndex++) {
-        transform.x = *(f32 *)(obj + 0x18);
-        transform.y = *(f32 *)(obj + 0x1c);
-        transform.z = *(f32 *)(obj + 0x20);
-        transform.rotX = *(s16 *)(obj + 0);
-        transform.rotY = *(s16 *)(obj + 2);
-        transform.rotZ = (s16)(*(s16 *)(obj + 4) + *(s32 *)(state + 0x410));
+        transform.x = ((GameObject *)obj)->anim.worldPosX;
+        transform.y = ((GameObject *)obj)->anim.worldPosY;
+        transform.z = ((GameObject *)obj)->anim.worldPosZ;
+        transform.rotX = ((GameObject *)obj)->anim.rotX;
+        transform.rotY = ((GameObject *)obj)->anim.rotY;
+        transform.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + *(s32 *)(state + 0x410));
         transform.scale = scaleV;
         setMatrixFromObjectPos(matrix, &transform);
 
@@ -280,9 +281,9 @@ void fn_801E9C00(int obj, int state)
             selectedTrail->points[0].pad0E = *(u8 *)(state + 0x4b4);
             selectedTrail->points[0].pad1E = *(u8 *)(state + 0x4b4);
             selectedTrail->count += 2;
-            *(f32 *)(state + 0x51c) = *(f32 *)(obj + 0x18);
-            *(f32 *)(state + 0x520) = *(f32 *)(obj + 0x1c);
-            *(f32 *)(state + 0x524) = *(f32 *)(obj + 0x20);
+            *(f32 *)(state + 0x51c) = ((GameObject *)obj)->anim.worldPosX;
+            *(f32 *)(state + 0x520) = ((GameObject *)obj)->anim.worldPosY;
+            *(f32 *)(state + 0x524) = ((GameObject *)obj)->anim.worldPosZ;
         } else {
             *(DRCloudCageTrail **)(slot + 0x510) = 0;
         }
@@ -342,7 +343,7 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
             if (*(f32 *)(state + 0x424) < lbl_803E5B18) {
                 d = 0.0f;
                 if (d != clamped) {
-                    d = clamped * (f32)*(s16 *)(obj + 4) / lbl_803E5B24;
+                    d = clamped * (f32)((GameObject *)obj)->anim.rotZ / lbl_803E5B24;
                 }
                 lbl_803DDC64 = d;
                 fv = (f32)(f64)d;

@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/firepipe.h"
 #include "string.h"
 
@@ -155,7 +156,7 @@ void firepipe_updateState(FirePipeObject *obj)
     }
 
     if (flags->bit6 != 0) {
-        if (((*(u16 *)((u8 *)obj + 0xb0) & 0x800) != 0) || (obj->callback != NULL)) {
+        if (((((GameObject *)obj)->unkB0 & 0x800) != 0) || (obj->callback != NULL)) {
             fn_80098B18(obj,lbl_803E6B70 * (f32)mapData->scale,(u8)extra->effectType,0,0,0);
         }
     }
@@ -221,20 +222,20 @@ sound_update:
         spawnDef[4] = 2;
         *(s8 *)(spawnDef + 0x19) = (s8)ex3->effectMode;
         *(s16 *)(spawnDef + 0x1a) = md3->scale;
-        *(f32 *)(spawnDef + 8) = *(f32 *)((u8 *)obj + 0xc);
-        *(f32 *)(spawnDef + 0xc) = *(f32 *)((u8 *)obj + 0x10);
-        *(f32 *)(spawnDef + 0x10) = *(f32 *)((u8 *)obj + 0x14);
+        *(f32 *)(spawnDef + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(spawnDef + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(spawnDef + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         if (spawnDef == 0) {
             effectObj = 0;
         } else {
             effectObj = (u8 *)firepipe_spawnEffectObject(extra,obj,(void *)spawnDef);
         }
         if (effectObj != 0) {
-            *(f32 *)(effectObj + 0xc) = *(f32 *)((u8 *)obj + 0xc);
-            *(f32 *)(effectObj + 0x10) = *(f32 *)((u8 *)obj + 0x10);
-            *(f32 *)(effectObj + 0x14) = *(f32 *)((u8 *)obj + 0x14);
-            *(s16 *)(effectObj + 0) = *(s16 *)((u8 *)obj + 0);
-            *(s16 *)(effectObj + 2) = *(s16 *)((u8 *)obj + 2);
+            *(f32 *)(effectObj + 0xc) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(effectObj + 0x10) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(effectObj + 0x14) = ((GameObject *)obj)->anim.localPosZ;
+            *(s16 *)(effectObj + 0) = ((GameObject *)obj)->anim.rotX;
+            *(s16 *)(effectObj + 2) = ((GameObject *)obj)->anim.rotY;
             *(f32 *)(effectObj + 0x28) = lbl_803DC344;
         }
         storeZeroToFloatParam(&extra->emitTimer);

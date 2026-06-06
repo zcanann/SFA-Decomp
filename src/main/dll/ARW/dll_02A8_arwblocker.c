@@ -1,9 +1,10 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma scheduling off
 int arwblocker_getBlockState(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     switch (*(u8 *)(state + 0)) {
     case 1:
         if (*(u8 *)(state + 1) != 0) {
@@ -54,12 +55,12 @@ void arwblocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling off
 void arwblocker_init(int obj, int setup)
 {
-    int state = *(int *)(obj + 0xb8);
-    *(s16 *)(obj + 0) = -0x8000;
-    *(s16 *)(obj + 4) = (s16)(*(s8 *)(setup + 0x18) << 8);
-    *(void **)(obj + 0xbc) = (void *)arwblocker_getBlockState;
+    int state = *(int *)&((GameObject *)obj)->extra;
+    ((GameObject *)obj)->anim.rotX = -0x8000;
+    ((GameObject *)obj)->anim.rotZ = (s16)(*(s8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->unkBC = (void *)arwblocker_getBlockState;
     *(u8 *)(state + 0) = *(u8 *)(setup + 0x19);
-    *(s16 *)(obj + 6) |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= 0x4000;
     *(u8 *)(obj + 0x36) = 0;
     ObjHits_DisableObject(obj);
 }
@@ -80,7 +81,7 @@ void arwblocker_initialise(void) {}
 
 #pragma scheduling off
 void arwblocker_update(int obj) {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int arwing = getArwing();
     if (arwing == 0)
         arwing = Obj_GetPlayerObject();
@@ -89,9 +90,9 @@ void arwblocker_update(int obj) {
         if (a > 0xff)
             a = 0xff;
         *(u8 *)(obj + 0x36) = a;
-        *(s16 *)(obj + 6) &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~0x4000;
         ObjHits_EnableObject(obj);
-        if (*(int *)(obj + 0xf4) == 0) {
+        if (((GameObject *)obj)->unkF4 == 0) {
             switch (*(u8 *)(state + 0)) {
             case 1:
                 (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
@@ -101,7 +102,7 @@ void arwblocker_update(int obj) {
                 (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
                 break;
             }
-            *(int *)(obj + 0xf4) = 1;
+            ((GameObject *)obj)->unkF4 = 1;
         }
     }
 }

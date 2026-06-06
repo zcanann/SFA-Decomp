@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objlib.h"
 #include "main/dll/baddie/chuka.h"
@@ -184,22 +185,22 @@ void dfpfloorbar_release(void)
 #pragma peephole off
 void dfpfloorbar_init(int obj, int params)
 {
-    DfpFloorbarState *state = *(DfpFloorbarState **)(obj + 0xb8);
+    DfpFloorbarState *state = ((GameObject *)obj)->extra;
 
-    *(s16 *)(obj + 0x0) = (s16)((s8)*(u8 *)(params + 0x18) << 8);
-    *(int *)(obj + 0xbc) = (int)&dfpfloorbar_SeqFn;
+    ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(params + 0x18) << 8);
+    *(int *)&((GameObject *)obj)->unkBC = (int)&dfpfloorbar_SeqFn;
     state->modeIndex = *(u8 *)(params + 0x19);
     state->triggerGameBit = *(s16 *)(params + 0x1e);
     state->completionGameBit = *(s16 *)(params + 0x20);
     state->linkedObject = NULL;
 
     if (*(s16 *)(params + 0x1c) != 0) {
-        *(f32 *)(obj + 0x8) = lbl_803E6408 / ((f32)(s32)*(s16 *)(params + 0x1c) / lbl_803E642C);
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E6408 / ((f32)(s32)*(s16 *)(params + 0x1c) / lbl_803E642C);
     }
 
     if (GameBit_Get((int)state->completionGameBit) != 0) {
         state->active = 1;
-        *(f32 *)(obj + 0x10) = *(f32 *)(params + 0xc) - lbl_803E640C;
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(params + 0xc) - lbl_803E640C;
     }
 }
 #pragma peephole reset

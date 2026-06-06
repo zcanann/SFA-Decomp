@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/dll/cntcounter_state.h"
 
 #pragma peephole on
@@ -17,7 +18,7 @@ int cntcounter_getObjectTypeId(void) { return 0; }
 #pragma scheduling on
 void cntcounter_free(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (((CntCounterState *)state)->unk4 != 0) {
         set_hudNumber_803db278(-1);
     }
@@ -41,7 +42,7 @@ void cntcounter_render(void) {}
 #pragma scheduling on
 void cntcounter_init(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     ((CntCounterState *)state)->unk4 = 0;
     ((CntCounterState *)state)->unk0 = 0;
 }
@@ -52,8 +53,8 @@ void cntcounter_init(int obj)
 #pragma scheduling off
 void cntcounter_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
 
     if (((CntCounterState *)state)->unk0 != 0) {
         int bit;

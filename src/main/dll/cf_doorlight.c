@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/cf_doorlight_state.h"
 #include "main/dll/cf_doorlight.h"
@@ -105,7 +106,7 @@ int kaldachom_stateHandlerB05(int obj, int p)
   int timer;
   int def;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   timer = ((CfDoorlightState *)state)->control;
   if (((GroundBaddieState *)p)->baddie.controlMode == 2) {
     *(f32 *)(timer + 0x34) = *(f32 *)(timer + 0x34) - timeDelta;
@@ -118,7 +119,7 @@ int kaldachom_stateHandlerB05(int obj, int p)
             (obj, p, (f32)(u32)((CfDoorlightState *)state)->aggroRange, 1) != 0) {
       return 5;
     }
-    def = *(int *)(obj + 0x4c);
+    def = *(int *)&((GameObject *)obj)->anim.placementData;
     if ((int)randomGetRange(0, 0x63) < (int)*(u8 *)(def + 0x2f)) {
       ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, p, 3);
     } else {
@@ -148,7 +149,7 @@ int kaldachom_stateHandlerB04(int obj, u8 *state)
 int kaldachom_stateHandlerB03(int obj, u8 *state)
 {
     if ((s8)state[0x27b] != 0) {
-        u8 *extra = *(u8 **)(obj + 0xb8);
+        u8 *extra = ((GameObject *)obj)->extra;
         extra[0x405] = 0;
         GameBit_Set(((CfDoorlightState *)extra)->gameBitB, 0);
         GameBit_Set(((CfDoorlightState *)extra)->gameBitA, 1);
@@ -295,7 +296,7 @@ int kaldachom_stateHandlerA07(int obj, int p)
   int b8;
   int b8_40c;
 
-  b8 = *(int *)(obj + 0xb8);
+  b8 = *(int *)&((GameObject *)obj)->extra;
   *(s8 *)(p + 0x34d) = 3;
   ((GroundBaddieState *)p)->baddie.moveSpeed = lbl_803E3084;
   {
@@ -334,12 +335,12 @@ int kaldachom_stateHandlerA07(int obj, int p)
     }
   }
   if ((*(u8 *)(b8_40c + 0x4b) & 0x2) == 0) {
-    if (*(f32 *)(obj + 0x98) > lbl_803E3088) {
+    if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E3088) {
       Sfx_PlayFromObject(obj, SFXdoor_creak);
       *(u8 *)(b8_40c + 0x4b) |= 0x2;
     }
   }
-  *(u8 *)(obj + 0x36) = (s32)((lbl_803E3078 - *(f32 *)(obj + 0x98)) * lbl_803E308C);
+  *(u8 *)(obj + 0x36) = (s32)((lbl_803E3078 - ((GameObject *)obj)->anim.currentMoveProgress) * lbl_803E308C);
   return 0;
 }
 #pragma peephole reset
@@ -350,7 +351,7 @@ extern f32 lbl_803E3080;
 #pragma scheduling off
 #pragma peephole off
 int kaldachom_stateHandlerB01(int* obj, u8* state) {
-    f32* t = *(f32**)((char*)(*(int**)((char*)obj + 0xb8)) + 0x40c);
+    f32* t = *(f32**)((char*)(*(int**)&((GameObject *)obj)->extra) + 0x40c);
     if (*(s16*)((char*)state + 628) == 6) {
         f32 zero;
         f32 timer;
@@ -397,18 +398,18 @@ int kaldachom_stateHandlerB02(int obj, int p2)
   extern void Obj_FreeObject(int);
   extern f32 lbl_803E3078;
   extern f32 lbl_803E307C;
-  int sub = *(int *)(obj + 0xb8);
+  int sub = *(int *)&((GameObject *)obj)->extra;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
     *(u8 *)(((CfDoorlightState *)sub)->control + 0x4b) = 0;
     (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 7);
     ObjHits_DisableObject(obj);
-    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     ((CfDoorlightState *)sub)->flags400 = (u16)(((CfDoorlightState *)sub)->flags400 | 0x20);
     ((CfDoorlightState *)sub)->unk3E8 = lbl_803E3078;
     ((CfDoorlightState *)sub)->unk3EC = lbl_803E307C;
   } else if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
-    if (*(void **)(obj + 0x4c) == NULL) {
+    if (((GameObject *)obj)->anim.placementData == NULL) {
       Obj_FreeObject(obj);
       return 0;
     }

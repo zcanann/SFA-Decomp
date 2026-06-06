@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -34,7 +35,7 @@ void dll_28B_free(int obj) { ObjGroup_RemoveObject(obj, 3); }
 #pragma scheduling off
 void dll_28B_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6D18);
         dll_2E_func06(obj, state + 0x35c, 0);
@@ -50,7 +51,7 @@ void dll_28B_update(int obj)
     f32 ox, oy, oz;
     ObjXform xform;
     f32 mtx[12];
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
 
     *(f32 *)(state + 0xab8) = Vec_xzDistance(obj + 0x18, player + 0x18);
@@ -64,12 +65,12 @@ void dll_28B_update(int obj)
     }
     dll_2E_func03(obj, state + 0x35c);
     characterDoEyeAnims(obj, state + 0x980);
-    xform.x = *(f32 *)(obj + 0xc);
-    xform.y = *(f32 *)(obj + 0x10);
-    xform.z = *(f32 *)(obj + 0x14);
-    xform.rx = *(s16 *)(obj + 0);
-    xform.ry = *(s16 *)(obj + 2);
-    xform.rz = *(s16 *)(obj + 4);
+    xform.x = ((GameObject *)obj)->anim.localPosX;
+    xform.y = ((GameObject *)obj)->anim.localPosY;
+    xform.z = ((GameObject *)obj)->anim.localPosZ;
+    xform.rx = ((GameObject *)obj)->anim.rotX;
+    xform.ry = ((GameObject *)obj)->anim.rotY;
+    xform.rz = ((GameObject *)obj)->anim.rotZ;
     xform.scale = lbl_803E6D18;
     setMatrixFromObjectPos(mtx, &xform);
     Matrix_TransformPoint(mtx, lbl_803E6CF8, lbl_803E6CF8, lbl_803E6CF8, &ox, &oy, &oz);
@@ -85,7 +86,7 @@ void dll_28B_init(int obj)
     int two;
     Blob16 blockA;
     Blob16 blockB;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     blockA = *(Blob16 *)lbl_802C25B8;
     blockB = *(Blob16 *)lbl_802C25C8;

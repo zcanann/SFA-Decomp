@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim_internal.h"
 #include "main/dll/DR/DRpushcart.h"
@@ -908,7 +909,7 @@ int fn_801E86F4(int obj, int p2, int p3)
   extern f32 lbl_803E5A30;
   extern f32 lbl_803E5A60;
   extern f32 timeDelta;
-  int sub = *(int *)(obj + 0xb8);
+  int sub = *(int *)&((GameObject *)obj)->extra;
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
 
   *(int *)(p3 + 0xe8) = (int)&fn_801E8660;
@@ -919,7 +920,7 @@ int fn_801E86F4(int obj, int p2, int p3)
     ObjAnim_AdvanceCurrentMove(lbl_803E5A60, timeDelta, obj, NULL);
   }
 
-  switch (*(s16 *)(obj + 0x46)) {
+  switch (((GameObject *)obj)->anim.seqId) {
   case 1127: {
     f32 t = *(f32 *)(sub + 0x40);
     if (t > lbl_803E5A30) {
@@ -935,13 +936,13 @@ int fn_801E86F4(int obj, int p2, int p3)
     }
   }
   {
-    *(f32 *)(obj + 0xc) = Curve_EvalBSpline(sub + 4, *(f32 *)(sub + 0x40), 0);
-    *(f32 *)(obj + 0x10) = Curve_EvalBSpline(sub + 0x14, *(f32 *)(sub + 0x40), 0);
-    *(f32 *)(obj + 0x14) = Curve_EvalBSpline(sub + 0x24, *(f32 *)(sub + 0x40), 0);
+    ((GameObject *)obj)->anim.localPosX = Curve_EvalBSpline(sub + 4, *(f32 *)(sub + 0x40), 0);
+    ((GameObject *)obj)->anim.localPosY = Curve_EvalBSpline(sub + 0x14, *(f32 *)(sub + 0x40), 0);
+    ((GameObject *)obj)->anim.localPosZ = Curve_EvalBSpline(sub + 0x24, *(f32 *)(sub + 0x40), 0);
     *(f32 *)(sub + 0x40) = *(f32 *)(sub + 0x44) * timeDelta + *(f32 *)(sub + 0x40);
-    *(s16 *)(obj + 0) = (s16)getAngle(
-        *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
-        *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+    ((GameObject *)obj)->anim.rotX = (s16)getAngle(
+        ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
+        ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
     (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 415, 0, 1, -1, 0);
     (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 416, 0, 1, -1, 0);
   }
@@ -986,7 +987,7 @@ extern void fn_801E83B0(int obj, int, int, int, int);
 void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     s32 v = visible;
     if (v != 0) {
-        if (*(s16 *)(obj + 0x46) == 0x468) {
+        if (((GameObject *)obj)->anim.seqId == 0x468) {
             fn_801E83B0(obj, 0, 0, 0, 0);
         } else {
             objRenderFn_8003b8f4(lbl_803E5A30);
@@ -1001,7 +1002,7 @@ extern int *gExpgfxInterface;
 #pragma peephole off
 void shopitem_free(int obj) {
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x468:
         ObjGroup_RemoveObject(obj, 0x4F);
         break;
@@ -1089,7 +1090,7 @@ void shopkeeper_update(int obj) {
     int state;
     f32 dist;
     player = Obj_GetPlayerObject();
-    state = *(int *)(obj + 0xB8);
+    state = *(int *)&((GameObject *)obj)->extra;
     dist = lbl_803E5A20;
     *(u8 *)(state + 0x9D4) &= ~0x20;
     if (*(f32 *)(state + 0x9C4) > lbl_803E59DC) {
@@ -1102,7 +1103,7 @@ void shopkeeper_update(int obj) {
     if ((*(u8 *)(state + 0x9D4) & 0x04) != 0) {
         shopKeeperRotateFn_801e7c4c((s16 *)obj, player, 1);
     }
-    *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4);
+    ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     if (*(void **)(state + 0x9B4) == NULL) {
         *(int *)(state + 0x9B4) = ObjGroup_FindNearestObject(9, obj, &dist);
     }
@@ -1131,18 +1132,18 @@ extern int *gPartfxInterface;
 #pragma peephole off
 void shopitem_init(int obj, int data) {
     ObjAnimComponent *objAnim;
-    int state = *(int *)(obj + 0xB8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     objAnim = (ObjAnimComponent *)obj;
-    *(u16 *)(obj + 0xB0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E86F4;
     objAnim->bankIndex = (s8)*(s8 *)(data + 0x18);
     *(s16 *)obj = (s16)((*(u8 *)(data + 0x1A)) << 8);
-    *(s16 *)(obj + 2) = (s16)((*(u8 *)(data + 0x1B)) << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)((*(u8 *)(data + 0x1B)) << 8);
     if ((s32)objAnim->bankIndex >= (s32)objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x467:
         fn_801F4C28(obj, state);
         break;
@@ -1161,8 +1162,8 @@ void shopitem_init(int obj, int data) {
 #pragma scheduling off
 #pragma peephole off
 void shopkeeper_init(int obj) {
-    int state = *(int *)(obj + 0xB8);
-    *(u16 *)(obj + 0xB0) |= 0x2000;
+    int state = *(int *)&((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E76A0;
     *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
     *(f32 *)(state + 0x9B8) = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
@@ -1184,8 +1185,8 @@ typedef struct {
 #pragma scheduling off
 #pragma peephole off
 void fn_801E8660(int obj) {
-    int state = *(int *)(obj + 0xB8);
-    int def = *(int *)(obj + 0x4C);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    int def = *(int *)&((GameObject *)obj)->anim.placementData;
     PushcartState97 *b = (PushcartState97 *)(state + 0x97);
     if (b->flag_40 == 0) {
         int *vptr = *(int **)(state + 0x90);
@@ -1219,18 +1220,18 @@ extern f32 Curve_EvalBSpline(int p, f32 t, int m);
 #pragma peephole off
 void shopitem_update(int obj)
 {
-    int def = *(int *)(obj + 0x4C);
+    int def = *(int *)&((GameObject *)obj)->anim.placementData;
     void *player = Obj_GetPlayerObject();
-    int state = *(int *)(obj + 0xB8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     f32 range = lbl_803E5A64;
     PushcartState97 *b = (PushcartState97 *)(state + 0x97);
     int money;
     int price;
 
     if (b->flag_40) {
-        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
-        *(u16 *)(obj + 0xB0) = (u16)(*(u16 *)(obj + 0xB0) | 0x8000);
-        *(u8 *)(obj + 0xAF) |= 8;
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else if (b->flag_80) {
         *(s16 *)(state + 0x88) = -1;
         ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x7000A, obj, (void *)(state + 0x88));
@@ -1245,24 +1246,24 @@ void shopitem_update(int obj)
                 if ((*(int (**)(int, int))((char *)**(int ***)(item + 0x68) + 0x28))(item, *(u8 *)(def + 0x19)) == 0
                     || (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x2C))(*(int *)(state + 0x90), *(u8 *)(def + 0x19)) != 0) {
                     b->flag_40 = 1;
-                    *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
-                    *(u16 *)(obj + 0xB0) = (u16)(*(u16 *)(obj + 0xB0) | 0x8000);
-                    *(u8 *)(obj + 0xAF) |= 8;
+                    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+                    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);
+                    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 }
                 *(s16 *)(state + 0x94) = (s16)(*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x3C))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
             }
         } else {
-            if (*(u8 *)(obj + 0xAF) & 4) {
+            if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) {
                 forceAButtonIcon(0x12);
                 showHelpText(*(s16 *)(state + 0x94));
             }
-            if (*(u8 *)(obj + 0xAF) & 1) {
+            if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
                 money = playerGetMoney(player);
                 price = (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x38))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
                 (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x40))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
-                switch (*(s16 *)(obj + 0x46)) {
+                switch (((GameObject *)obj)->anim.seqId) {
                 case 0x467:
-                    *(f32 *)(obj + 0x10) = lbl_803E5A68 + *(f32 *)(*(int *)(obj + 0x4C) + 0xC);
+                    ((GameObject *)obj)->anim.localPosY = lbl_803E5A68 + *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0xC);
                     break;
                 }
                 if (money >= price) {
@@ -1273,7 +1274,7 @@ void shopitem_update(int obj)
                 }
                 buttonDisable(0, 0x100);
             }
-            switch (*(s16 *)(obj + 0x46)) {
+            switch (((GameObject *)obj)->anim.seqId) {
             case 0x467: {
                 f32 t = *(f32 *)(state + 0x40);
                 if (t > lbl_803E5A30) {
@@ -1287,23 +1288,23 @@ void shopitem_update(int obj)
                     }
                     fn_801F4ECC(obj, state);
                 }
-                *(f32 *)(obj + 0xC) = Curve_EvalBSpline(state + 4, *(f32 *)(state + 0x40), 0);
-                *(f32 *)(obj + 0x10) = Curve_EvalBSpline(state + 0x14, *(f32 *)(state + 0x40), 0);
-                *(f32 *)(obj + 0x14) = Curve_EvalBSpline(state + 0x24, *(f32 *)(state + 0x40), 0);
+                ((GameObject *)obj)->anim.localPosX = Curve_EvalBSpline(state + 4, *(f32 *)(state + 0x40), 0);
+                ((GameObject *)obj)->anim.localPosY = Curve_EvalBSpline(state + 0x14, *(f32 *)(state + 0x40), 0);
+                ((GameObject *)obj)->anim.localPosZ = Curve_EvalBSpline(state + 0x24, *(f32 *)(state + 0x40), 0);
                 *(f32 *)(state + 0x40) = *(f32 *)(state + 0x44) * timeDelta + *(f32 *)(state + 0x40);
-                *(s16 *)(obj + 0) = (s16)getAngle(
-                    *(f32 *)(obj + 0xC) - *(f32 *)(obj + 0x80),
-                    *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+                ((GameObject *)obj)->anim.rotX = (s16)getAngle(
+                    ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
+                    ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
                 (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 0x19F, 0, 1, -1, 0);
                 (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 0x1A0, 0, 1, -1, 0);
                 break;
             }
             }
         }
-        if (*(s16 *)(obj + 0x46) != 0x464 && *(s16 *)(obj + 0x46) != 0x467) {
+        if (((GameObject *)obj)->anim.seqId != 0x464 && ((GameObject *)obj)->anim.seqId != 0x467) {
             ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5A60, timeDelta, NULL);
         }
-        if ((*(u8 *)(obj + 0xAF) & 8) == 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 8) == 0) {
             objRenderFn_80041018(obj);
         }
     }
@@ -1338,7 +1339,7 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
     f32 range;
     f32 speed;
 
-    state = state2 = *(int *)(obj + 0xB8);
+    state = state2 = *(int *)&((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     range = lbl_803E59D8;
     *(u8 *)(state + 0x9D4) &= ~0x20;
@@ -1360,7 +1361,7 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
     if (advance != 0) {
         ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, speed, timeDelta, NULL);
     }
-    if (*(s16 *)(obj + 0xB4) == -1) {
+    if (((GameObject *)obj)->unkB4 == -1) {
         if (*(s8 *)(data + 0x56) != 0) {
             slot = (*(int (**)(int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x44))(*(int *)(state + 0x9B4));
             if (slot != -1) {
@@ -1473,8 +1474,8 @@ f32 shopKeeperRotateFn_801e7c4c(s16 *obj, void *player, int mode)
     u16 angle;
     int diff;
 
-    dx = *(f32 *)((char *)player + 0xC) - *(f32 *)((char *)obj + 0xC);
-    dz = *(f32 *)((char *)player + 0x14) - *(f32 *)((char *)obj + 0x14);
+    dx = *(f32 *)((char *)player + 0xC) - ((GameObject *)obj)->anim.localPosX;
+    dz = *(f32 *)((char *)player + 0x14) - ((GameObject *)obj)->anim.localPosZ;
     dist = sqrtf(dx * dx + dz * dz);
     if (dist != lbl_803E59DC) {
         dx /= dist;
@@ -1540,7 +1541,7 @@ typedef struct PushcartStateE8 {
 #pragma peephole off
 void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
 {
-    int state = *(int *)(obj + 0xB8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     u8 spawned = 0;
     ShopSparkleSpawn v;
     PushcartStateE8 *b = (PushcartStateE8 *)(state + 0xE8);
@@ -1570,9 +1571,9 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
         } else {
             if (spawned == 0 && getHudHiddenFrameCount() == 0) {
                 v.owner = obj;
-                v.x = *(f32 *)(obj + 0xC);
-                v.y = *(f32 *)(obj + 0x10);
-                v.z = *(f32 *)(obj + 0x14);
+                v.x = ((GameObject *)obj)->anim.localPosX;
+                v.y = ((GameObject *)obj)->anim.localPosY;
+                v.z = ((GameObject *)obj)->anim.localPosZ;
                 if (v.owner == obj) {
                     if (b->flag_40) {
                         scale = lbl_803E5A40;

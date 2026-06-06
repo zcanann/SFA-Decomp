@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
 #define WCTEMPLE_DIA_EXTRA_SIZE 0x14
@@ -43,7 +44,7 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
     int slot;
     int bit;
 
-    block = mapGetBlock(objPosToMapBlockIdx(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14)));
+    block = mapGetBlock(objPosToMapBlockIdx(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ));
     if (block != NULL) {
         for (part = 1; part < WCTEMPLE_DIA_STAGE_COUNT + 1; part++) {
             bit = mask & (1 << (part - 1));
@@ -67,10 +68,10 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
 #pragma scheduling off
 int wctempledia_interactCallback(int obj, int p2, int p3)
 {
-    f32 *p = *(f32 **)(obj + 0xb8);
+    f32 *p = ((GameObject *)obj)->extra;
 
     *p = lbl_803E6E48 * -*p * timeDelta + *p;
-    *(s16 *)(obj + 4) = (int)(timeDelta * *p + (f32)*(s16 *)(obj + 4));
+    ((GameObject *)obj)->anim.rotZ = (int)(timeDelta * *p + (f32)((GameObject *)obj)->anim.rotZ);
     *(s8 *)(p3 + WCTEMPLE_DIA_PAYLOAD_SUPPRESS_OFFSET) = 0;
     *(s16 *)(p3 + WCTEMPLE_DIA_PAYLOAD_FLAGS_A) &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
     *(s16 *)(p3 + WCTEMPLE_DIA_PAYLOAD_FLAGS_B) &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
@@ -118,8 +119,8 @@ void wctempledia_hitDetect(void) {}
 #pragma scheduling off
 void wctempledia_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    int r4c = *(int *)(obj + 0x4c);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    int r4c = *(int *)&((GameObject *)obj)->anim.placementData;
     int i;
     int j;
     int k;
@@ -131,7 +132,7 @@ void wctempledia_update(int obj)
     WCTEMPLE_DIA_SPEED(state) = timeDelta * (lbl_803E6E48 * (WCTEMPLE_DIA_TARGET_SPEED(state) -
                                                             WCTEMPLE_DIA_SPEED(state))) +
                                 WCTEMPLE_DIA_SPEED(state);
-    *(s16 *)(obj + 4) = (int)(timeDelta * WCTEMPLE_DIA_SPEED(state) + (f32)*(s16 *)(obj + 4));
+    ((GameObject *)obj)->anim.rotZ = (int)(timeDelta * WCTEMPLE_DIA_SPEED(state) + (f32)((GameObject *)obj)->anim.rotZ);
     Sfx_KeepAliveLoopedObjectSound(obj, SFXmn_sml_trex_roar);
     {
         f32 ratio = WCTEMPLE_DIA_SPEED(state) / WCTEMPLE_DIA_TARGET_TABLE(state)[2];
@@ -183,7 +184,7 @@ void wctempledia_update(int obj)
 void wctempledia_init(int obj, int setup)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int i;
 
     *(s16 *)obj = (s16)((s8)*(u8 *)(setup + WCTEMPLE_DIA_SETUP_TYPE_OFFSET) << 8);
@@ -215,7 +216,7 @@ void wctempledia_init(int obj, int setup)
         WCTEMPLE_DIA_SPEED(state) = WCTEMPLE_DIA_TARGET_TABLE(state)[0];
     }
     WCTEMPLE_DIA_TARGET_SPEED(state) = WCTEMPLE_DIA_SPEED(state);
-    *(void **)(obj + 0xbc) = (void *)wctempledia_interactCallback;
+    ((GameObject *)obj)->unkBC = (void *)wctempledia_interactCallback;
     wctempledia_syncPartVisibility(obj, WCTEMPLE_DIA_STAGE_MASK_BYTE(state));
 }
 #pragma scheduling reset

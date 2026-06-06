@@ -1,4 +1,5 @@
 #include "main/dll/ediblemushroom.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 
 
@@ -85,17 +86,17 @@ void ediblemushroom_init(int obj, int aux)
     ObjAnimEventList animEvents;
     f32 dist;
 
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     local_x = 0x19;
     player = (int)Obj_GetPlayerObject();
 
-    *(int *)(obj + 0xbc) = (int)&EdibleMushroom_SeqFn;
-    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x4000);
+    *(int *)&((GameObject *)obj)->unkBC = (int)&EdibleMushroom_SeqFn;
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
 
     if (GameBit_Get(*(short *)(aux + 0x1a)) != 0) {
         *(u8 *)(state + 0x136) = 8;
         ObjHits_DisableObject(obj);
-        *(short *)(obj + 0x6) = (short)(*(short *)(obj + 0x6) | 0x4000);
+        ((GameObject *)obj)->anim.flags = (short)(((GameObject *)obj)->anim.flags | 0x4000);
     }
 
     *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
@@ -130,8 +131,8 @@ void ediblemushroom_init(int obj, int aux)
                 *(u8 *)(state + 0x137) |= 2;
                 (**(void(***)(int, int, f32, int *, int))(*(int *)gRomCurveInterface + 0x8c))(
                     state, obj, lbl_803E52EC, &local_x, -1);
-                *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x68);
-                *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x70);
+                ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 0x68);
+                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x70);
             }
         }
     }
@@ -150,7 +151,7 @@ void ediblemushroom_init(int obj, int aux)
     ObjGroup_AddObject(obj, 0x31);
     ObjGroup_AddObject(obj, 0x47);
 
-    if (*(short *)(obj + 0x46) == 0x658) {
+    if (((GameObject *)obj)->anim.seqId == 0x658) {
         *(short *)(state + 0x134) = 0x66d;
     } else {
         *(short *)(state + 0x134) = 0xc1;
@@ -226,7 +227,7 @@ int enemymushroom_getExtraSize(void)
  */
 int enemymushroom_getObjectTypeId(EnemyMushroomObject *obj)
 {
-  return (*(byte *)(*(int *)((u8 *)obj + 0x4c) + 0x1f) << 0xb) | 0x400;
+  return (*(byte *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x1f) << 0xb) | 0x400;
 }
 
 void enemymushroom_free(EnemyMushroomObject *obj)
@@ -242,7 +243,7 @@ extern f32 lbl_803E5310;
 #pragma scheduling off
 void enemymushroom_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
-    void *state = *(void **)((char *)obj + 0xb8);
+    void *state = ((GameObject *)obj)->extra;
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5310);
         ObjPath_GetPointWorldPosition(obj, 0, (char *)state + 0x20, (char *)state + 0x24, (char *)state + 0x28, 0);

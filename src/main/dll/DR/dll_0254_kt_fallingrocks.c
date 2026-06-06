@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 int ktfallingrocks_getExtraSize(void) { return 0x0; }
@@ -14,7 +15,7 @@ void ktfallingrocks_release(void) {}
 #pragma scheduling off
 #pragma peephole off
 void ktfallingrocks_init(int obj) {
-    *(int *)((char *)obj + 0xbc) = 0;
+    *(int *)&((GameObject *)obj)->unkBC = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -40,7 +41,7 @@ void ktfallingrocks_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p
 #pragma scheduling off
 #pragma peephole off
 void ktfallingrocks_update(int obj) {
-    int q = *(int *)((char *)obj + 0x4c);
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
     ObjPosParams params;
     char *player;
     int i;
@@ -51,12 +52,12 @@ void ktfallingrocks_update(int obj) {
     if (player == NULL) {
         return;
     }
-    *(f32 *)((char *)obj + 0xc) = *(f32 *)(player + 0xc);
-    *(f32 *)((char *)obj + 0x14) = *(f32 *)(player + 0x14);
+    ((GameObject *)obj)->anim.localPosX = *(f32 *)(player + 0xc);
+    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(player + 0x14);
     for (i = 0; i < 10; i++) {
-        params.x = *(f32 *)((char *)obj + 0xc) + (f32)(int)randomGetRange(-200, 200);
-        params.y = *(f32 *)((char *)obj + 0x10);
-        params.z = *(f32 *)((char *)obj + 0x14) + (f32)(int)randomGetRange(-200, 200);
+        params.x = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-200, 200);
+        params.y = ((GameObject *)obj)->anim.localPosY;
+        params.z = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-200, 200);
         (*(void (**)(int, int, ObjPosParams *, int, int, int))((char *)*gPartfxInterface + 0x8))(
             obj, *(u16 *)(q + 0x20), &params, 0x200001, -1, 0);
     }

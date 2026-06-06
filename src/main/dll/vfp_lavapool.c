@@ -1,4 +1,5 @@
 #include "main/mapEvent.h"
+#include "main/game_object.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 
 
@@ -64,8 +65,8 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
   int hitReactMode;
   int animOk;
 
-  state = *(DIMbosstonsilState **)((u8 *)obj + 0xb8);
-  config = *(DIMbosstonsilConfig **)((u8 *)obj + 0x4c);
+  state = ((GameObject *)obj)->extra;
+  config = *(DIMbosstonsilConfig **)&((GameObject *)obj)->anim.placementData;
 
   if (gDIMbosstonsilLight != NULL) {
     modelLightStruct_getSpecularColor(gDIMbosstonsilLight,&red,&green,&blue,&alpha);
@@ -86,7 +87,7 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
     }
   }
 
-  if (*(int *)((u8 *)obj + 0xf4) != 0) {
+  if (((GameObject *)obj)->unkF4 != 0) {
     return 0;
   }
 
@@ -126,7 +127,7 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
   }
   lbl_803DDBA0 += timeDelta;
 
-  if (*(s16 *)((u8 *)obj + 0xb4) != -1) {
+  if (((GameObject *)obj)->unkB4 != -1) {
     animOk = (*(int (**)(void *,DIMbosstonsilState *,int))(*(int *)gBaddieControlInterface + 0x30))
         (obj,state,1);
     if (animOk == 0) {
@@ -175,7 +176,7 @@ clearHitVolumePair:
 updateDone:;
   }
 
-  if (*(s16 *)((u8 *)obj + 0xb4) == -1) {
+  if (((GameObject *)obj)->unkB4 == -1) {
     state->stateFlags |= DIMBOSSTONSIL_STATE_FLAG_START_MOVE;
     return 0;
   }
@@ -215,7 +216,7 @@ void DIMbosstonsil_func0B(void)
  */
 int DIMbosstonsil_setScale(int obj)
 {
-  return (*(DIMbosstonsilState **)(obj + 0xb8))->scale;
+  return (*(DIMbosstonsilState **)&((GameObject *)obj)->extra)->scale;
 }
 
 /*
@@ -271,7 +272,7 @@ void DIMbosstonsil_free(void *obj)
 {
   DIMbosstonsilState *state;
 
-  state = *(DIMbosstonsilState **)((u8 *)obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   ObjGroup_RemoveObject(obj,3);
   (*(void (**)(void *,DIMbosstonsilState *,int))(*(int *)gBaddieControlInterface + 0x40))(obj,state,1);
   if (gDIMbosstonsilLight != NULL) {

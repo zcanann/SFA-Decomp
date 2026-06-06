@@ -1,4 +1,5 @@
 #include "main/dll/DIM/DIMbossspit.h"
+#include "main/game_object.h"
 #include "main/objhits_types.h"
 
 extern f32 timeDelta;
@@ -52,7 +53,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
 
   timer = lbl_803E4C90;
 
-  (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
+  (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
 
   updateState->effectActive = 1;
 
@@ -70,7 +71,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
     if (lbl_803DDBA4 <= lbl_803E4CB8) {
       lbl_803DDBA4 = lbl_803E4C90;
       updateState->animFinished = 0;
-      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
+      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
       obj[0xAF] = (u8)(obj[0xAF] | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
       GameBit_Set(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
       if (gDIMbosstonsilRoutePhase >= DIMBOSSSPIT_ROUTE_HIGH_THRESHOLD) {
@@ -99,7 +100,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
     if (lbl_803DDB98 <= lbl_803E4C90) {
       lbl_803DDB98 = lbl_803E4C90;
       updateState->animFinished = 0;
-      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
+      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
       obj[0xAF] = (u8)(obj[0xAF] | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
       GameBit_Set(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
       if (gDIMbosstonsilRoutePhase == DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD) {
@@ -110,13 +111,13 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
     }
   }
 
-  state->savedObjFieldC0 = *(u32 *)(obj + 0xC0);
-  *(u32 *)(obj + 0xC0) = 0;
+  state->savedObjFieldC0 = *(u32 *)&((GameObject *)obj)->unkC0;
+  *(u32 *)&((GameObject *)obj)->unkC0 = 0;
 
   (*(void (**)(u8 *,DIMbosstonsilState *,double,double,u8 *,u8 *))(*(int *)gPlayerInterface + 0x8))(
       obj, updateState, (double)timeDelta, (double)timeDelta, lbl_803DDBB0, lbl_803DDBA8);
 
-  *(u32 *)(obj + 0xC0) = state->savedObjFieldC0;
+  *(u32 *)&((GameObject *)obj)->unkC0 = state->savedObjFieldC0;
 }
 
 #pragma peephole reset

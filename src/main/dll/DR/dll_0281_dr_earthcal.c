@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #define DREARTHCAL_SETUP_YAW 0x18
 #define DREARTHCAL_OBJECT_FLAGS_B0 0xb0
@@ -55,33 +56,33 @@ void drearthcal_update(int obj)
     player = Obj_GetPlayerObject();
     searchDist = lbl_803E6C08;
     if (fn_802972A8() != NULL) {
-        *(u8 *)(obj + 0xaf) &= ~0x18;
-        if ((*(u8 *)(obj + 0xaf) & 0x4) != 0) {
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x18;
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x4) != 0) {
             setAButtonIcon(0x15);
         }
         if (ObjTrigger_IsSet(obj) != 0) {
             (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
         }
     } else {
-        *(u8 *)(obj + 0xaf) |= 0x8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
         for (i = 0; i < *(s8 *)(*(int *)(obj + 0x58) + 0x10f); i++) {
             if (*(int *)(0x100 + i * 4 + *(int *)(obj + 0x58)) == player) {
-                *(u8 *)(obj + 0xaf) &= ~0x8;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
             }
         }
         if ((u32)ObjGroup_FindNearestObject(0xa, obj, &searchDist) == 0) {
-            *(u8 *)(obj + 0xaf) |= 0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
         } else {
-            *(u8 *)(obj + 0xaf) &= ~0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
         }
-        if ((*(u8 *)(obj + 0xaf) & 0x4) != 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x4) != 0) {
             setAButtonIcon(0x14);
         }
         if (ObjTrigger_IsSet(obj) != 0) {
             (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(2, obj, -1);
         }
     }
-    if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
+    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
         part.vec[0] = lbl_803E6C0C;
         part.vec[1] = lbl_803E6C10;
         part.vec[2] = lbl_803E6C0C;

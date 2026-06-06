@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -34,7 +35,7 @@ void controllight_render(void) {}
 #pragma scheduling off
 void controllight_init(int obj, int setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     *(s16 *)(state + 0) = *(s16 *)(setup + 0x1e);
     *(f32 *)(state + 4) = (f32)*(s16 *)(setup + 0x1a);
@@ -48,7 +49,7 @@ void controllight_init(int obj, int setup)
 #pragma scheduling off
 void controllight_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     u8 bit = (u8)GameBit_Get(*(s16 *)(state + 0));
 
     if (bit != *(u8 *)(state + 9)) {

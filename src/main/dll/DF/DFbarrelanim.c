@@ -1,4 +1,5 @@
 #include "main/dll/DF/DFbarrelanim.h"
+#include "main/game_object.h"
 #include "main/dll/DF/dfropenode.h"
 
 #pragma peephole off
@@ -155,12 +156,12 @@ DFRope *DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
  */
 void dfropenode_func12(int obj, float value)
 {
-  ((DFropenodeExtra *)*(int *)(obj + 0xb8))->minY = value;
+  ((DFropenodeExtra *)*(int *)&((GameObject *)obj)->extra)->minY = value;
 }
 
 int dfropenode_func11(int obj)
 {
-  DFropenodeExtra *extra = (DFropenodeExtra *)*(int *)(obj + 0xb8);
+  DFropenodeExtra *extra = (DFropenodeExtra *)*(int *)&((GameObject *)obj)->extra;
 
   return (s16)(extra->hidden == 0);
 }
@@ -174,7 +175,7 @@ void dfropenode_func10(int obj, int value)
   DFropenodeExtra *extra;
   void *linkedObj;
 
-  extra = (DFropenodeExtra *)*(int *)(obj + 0xb8);
+  extra = (DFropenodeExtra *)*(int *)&((GameObject *)obj)->extra;
   bit = (value == 0);
   bitByte = bit;
   extra->hidden = bitByte;
@@ -203,7 +204,7 @@ void dfropenode_func10(int obj, int value)
 #pragma scheduling off
 void dfropenode_func13(int obj)
 {
-  ((DFropenodeExtra *)*(int *)(obj + 0xb8))->linkedObj = 0;
+  ((DFropenodeExtra *)*(int *)&((GameObject *)obj)->extra)->linkedObj = 0;
 }
 #pragma scheduling reset
 
@@ -222,7 +223,7 @@ void dfropenode_func13(int obj)
  */
 int dfropenode_func0F(int obj)
 {
-  return ((DFropenodeExtra *)*(int *)(obj + 0xb8))->angle;
+  return ((DFropenodeExtra *)*(int *)&((GameObject *)obj)->extra)->angle;
 }
 
 #pragma scheduling off

@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -42,7 +43,7 @@ void arwlevelcon_hitDetect(void) {}
 #pragma scheduling on
 void arwlevelcon_commitRingChoice(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     if (*(u8 *)(state + 0x1b) != 0) {
         Music_Trigger(0xf3, 1);
@@ -69,9 +70,9 @@ void arwlevelcon_initialise(void) {}
 #pragma scheduling off
 void arwlevelcon_init(int obj, u8 *setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
-    *(int *)(obj + 0xbc) = (int)arwlevelcon_ringEventCallback;
+    *(int *)&((GameObject *)obj)->unkBC = (int)arwlevelcon_ringEventCallback;
     *(s16 *)(state + 0x14) = 1;
     *(s16 *)(state + 0x16) = 0x50;
     *(f32 *)(state + 0) = lbl_803E70EC;
@@ -154,7 +155,7 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
 #pragma scheduling off
 void arwlevelcon_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int arwing = getArwing();
 
     if (*(u8 *)(state + 0x18) == 0) {

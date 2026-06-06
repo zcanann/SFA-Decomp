@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -57,7 +58,7 @@ void arwspeedstr_initialise(void) {}
 #pragma peephole off
 #pragma scheduling off
 void arwspeedstr_update(int obj) {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (*(u8 *)(state + 0x18) == 0) {
         f32 local[3];
         local[0] = (f32)(int)randomGetRange((int)-*(f32 *)(state + 0xc), (int)*(f32 *)(state + 0xc));
@@ -65,8 +66,8 @@ void arwspeedstr_update(int obj) {
             (f32)(int)randomGetRange((int)-*(f32 *)(state + 0x10), (int)*(f32 *)(state + 0x10));
         local[2] = *(f32 *)(state + 0x14);
         PSMTXMultVec(Camera_GetInverseViewMatrix(), &local[0], (f32 *)(obj + 0xc));
-        *(f32 *)(obj + 0xc) += playerMapOffsetX;
-        *(f32 *)(obj + 0x14) += playerMapOffsetZ;
+        ((GameObject *)obj)->anim.localPosX += playerMapOffsetX;
+        ((GameObject *)obj)->anim.localPosZ += playerMapOffsetZ;
         *(u8 *)(state + 0x18) = (*(u8 *)(state + 0x18) | 1) & 0xff;
         *(f32 *)(state + 8) = lbl_803E7104;
     }
@@ -94,15 +95,15 @@ void arwspeedstr_update(int obj) {
 #pragma scheduling off
 void fn_80231058(int obj, int src)
 {
-    *(f32 *)(obj + 0x24) = *(f32 *)(src + 0x0);
-    *(f32 *)(obj + 0x28) = *(f32 *)(src + 0x4);
-    *(f32 *)(obj + 0x2c) = *(f32 *)(src + 0x8);
+    ((GameObject *)obj)->anim.velocityX = *(f32 *)(src + 0x0);
+    ((GameObject *)obj)->anim.velocityY = *(f32 *)(src + 0x4);
+    ((GameObject *)obj)->anim.velocityZ = *(f32 *)(src + 0x8);
 }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-void fn_80231028(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
+void fn_80231028(int obj, int v) { *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x0) = (f32)v; }
 #pragma scheduling reset
 #pragma peephole reset

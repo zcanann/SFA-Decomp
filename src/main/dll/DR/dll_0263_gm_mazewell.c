@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
 int gmmazewell_getExtraSize(void) { return 0x8; }
@@ -23,11 +24,11 @@ void gmmazewell_free(void) {
 #pragma scheduling off
 #pragma peephole off
 void gmmazewell_init(int obj) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    u8 *p = ((GameObject *)obj)->extra;
     p[0] = 0;
     GameBit_Set(0xefc, 1);
     Music_Trigger(0x36, 1);
-    *(void **)((char *)obj + 0xbc) = (void *)gmmazewell_clearPendingTriggerCallback;
+    ((GameObject *)obj)->unkBC = (void *)gmmazewell_clearPendingTriggerCallback;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -35,7 +36,7 @@ void gmmazewell_init(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     int i;
     for (i = 0; i < arg[0x8b]; i++) {
         if (arg[i + 0x81] == 1 && *(int *)(p + 0x4) != -1) {
@@ -58,7 +59,7 @@ typedef struct {
 void gmmazewell_update(void *obj) {
     s16 *base = lbl_8032A730;
     s32 *base32 = (s32 *)base;
-    u8 *runtime = *(u8 **)((char *)obj + 0xb8);
+    u8 *runtime = ((GameObject *)obj)->extra;
     u8 *player;
     int value;
     s16 *p;
@@ -71,7 +72,7 @@ void gmmazewell_update(void *obj) {
             runtime[1] = 1;
         }
     }
-    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     for (i = 0, p = base; (u32)i < 9; i++) {
         if (GameBit_Get(*p) != 0) {
             value = base[i];
@@ -82,16 +83,16 @@ void gmmazewell_update(void *obj) {
     value = 0;
 checkValue:
     if (value != 0) {
-        *(u8 *)((char *)obj + 0xaf) &= ~0x10;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
     } else {
-        *(u8 *)((char *)obj + 0xaf) |= 0x10;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
     }
-    if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         int found;
         for (i = 0, p = base; (u32)i < 9; i++) {
             if ((*(int (**)(int))((char *)*gGameUIInterface + 0x20))(*p) != 0) {
                 if (lbl_803DC968 != 0) {
-                    runtime = *(u8 **)((char *)obj + 0xb8);
+                    runtime = ((GameObject *)obj)->extra;
                     switch (i) {
                     case 0:
                     case 1:
@@ -103,7 +104,7 @@ checkValue:
                     *(int *)(runtime + 4) = base32[i + 14];
                     GameBit_Set(base[i + 20], 1);
                 } else {
-                    runtime = *(u8 **)((char *)obj + 0xb8);
+                    runtime = ((GameObject *)obj)->extra;
                     *(int *)(runtime + 4) = base32[i + 14];
                     switch (i) {
                     case 3:

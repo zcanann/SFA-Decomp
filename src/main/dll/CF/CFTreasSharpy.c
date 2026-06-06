@@ -1,4 +1,5 @@
 #include "main/dll/CF/CFTreasSharpy.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 
 extern undefined4 FUN_80017a78();
@@ -63,16 +64,16 @@ void cfccrate_init(int obj, int aux)
 
     objAnim = (ObjAnimComponent *)obj;
     id = *(short *)(aux + 0x0);
-    state = *(CfCcrateState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     zeroF = lbl_803E3DD8;
     state->unk2C = zeroF;
 
     switch (id) {
     case 0x2bb:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(short *)(obj + 2) = *(short *)(aux + 0x1a);
-        *(short *)(obj + 4) = *(short *)(aux + 0x1c);
-        *(f32 *)(obj + 8) = zeroF;
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rotY = *(short *)(aux + 0x1a);
+        ((GameObject *)obj)->anim.rotZ = *(short *)(aux + 0x1c);
+        ((GameObject *)obj)->anim.rootMotionScale = zeroF;
         break;
     case 0x1d0:
     case 0x1d1:
@@ -83,32 +84,32 @@ void cfccrate_init(int obj, int aux)
     case 0x492:
     case 0x78b:
     case 0x78c:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         break;
     case 0x726:
-        *(int *)(obj + 0xbc) = (int)&CFCrate_SeqFn;
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(int *)&((GameObject *)obj)->unkBC = (int)&CFCrate_SeqFn;
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         break;
     case 0x71b:
         state->lingerTimer = *(short *)(aux + 0x1a);
         break;
     case 0x6be:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         state->latch3E = 0;
         state->gameBit2 = *(short *)(aux + 0x20);
         break;
     case 0x828:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         state->latch3E = 0;
         state->gameBit2 = *(short *)(aux + 0x20);
         if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0)) {
-            *(short *)(obj + 4) = 0x7fff;
+            ((GameObject *)obj)->anim.rotZ = 0x7fff;
             state->latch3E = 1;
         }
         break;
     case 0x6bf:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(short *)(obj + 2) = *(short *)(aux + 0x1a);
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rotY = *(short *)(aux + 0x1a);
         state->gameBit2 = *(short *)(aux + 0x20);
         break;
     case 0x708:
@@ -123,37 +124,37 @@ void cfccrate_init(int obj, int aux)
         state->gameBit = *(short *)(aux + 0x20);
         break;
     case 0x622:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         state->gameBit = *(short *)(aux + 0x20);
         break;
     case 0x6b4:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(short *)(obj + 2) = *(short *)(aux + 0x1a);
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rotY = *(short *)(aux + 0x1a);
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E3E30, 0);
         break;
     case 0x66c:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         state->gameBit = *(short *)(aux + 0x20);
         break;
     case 0x216:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(short *)(obj + 2) = *(short *)(aux + 0x1a);
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rotY = *(short *)(aux + 0x1a);
         break;
     case 0x4bf:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         objAnim->bankIndex = *(u8 *)(aux + 0x19);
         state->gameBit = *(short *)(aux + 0x20);
         if (GameBit_Get(state->gameBit) != 0) {
-            *(f32 *)(obj + 0x10) = lbl_803E3DFC + *(f32 *)(aux + 0xc);
+            ((GameObject *)obj)->anim.localPosY = lbl_803E3DFC + *(f32 *)(aux + 0xc);
         }
         break;
     case 0x8e:
-        *(short *)(obj + 0) = 0;
-        *(short *)(obj + 2) = 0;
+        ((GameObject *)obj)->anim.rotX = 0;
+        ((GameObject *)obj)->anim.rotY = 0;
         if (*(short *)(aux + 0x1c) >= 0x3e8) {
-            *(f32 *)(obj + 8) = zeroF / ((f32)(s32)*(short *)(aux + 0x1c) / lbl_803E3DF4);
+            ((GameObject *)obj)->anim.rootMotionScale = zeroF / ((f32)(s32)*(short *)(aux + 0x1c) / lbl_803E3DF4);
         } else {
-            *(f32 *)(obj + 8) = lbl_803E3E34;
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3E34;
         }
         state->latch3E = 0;
         state->homeX = *(f32 *)(aux + 0x8);
@@ -163,16 +164,16 @@ void cfccrate_init(int obj, int aux)
         state->unk28 = lbl_803E3DF4;
         state->unk20 = lbl_803E3E38;
         state->oscVelA = state->oscVelB = lbl_803E3DEC;
-        *(short *)(obj + 4) = 0;
-        *(int *)(obj + 0xbc) = (int)&CFCrate_SeqFn;
+        ((GameObject *)obj)->anim.rotZ = 0;
+        *(int *)&((GameObject *)obj)->unkBC = (int)&CFCrate_SeqFn;
         break;
     case 0x7de:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(short *)(obj + 2) = 0;
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rotY = 0;
         if (*(short *)(aux + 0x1c) >= 0x3e8) {
-            *(f32 *)(obj + 8) = zeroF / ((f32)(s32)*(short *)(aux + 0x1c) / lbl_803E3DF4);
+            ((GameObject *)obj)->anim.rootMotionScale = zeroF / ((f32)(s32)*(short *)(aux + 0x1c) / lbl_803E3DF4);
         } else {
-            *(f32 *)(obj + 8) = zeroF;
+            ((GameObject *)obj)->anim.rootMotionScale = zeroF;
         }
         state->oscVelB = (f32)(s32)*(short *)(aux + 0x1a);
         state->gameBit = *(short *)(aux + 0x20);
@@ -181,31 +182,31 @@ void cfccrate_init(int obj, int aux)
         }
         break;
     case 0xd7:
-        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(f32 *)(obj + 8) = zeroF;
+        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject *)obj)->anim.rootMotionScale = zeroF;
         state->latch3E = 0;
         state->homeX = *(f32 *)(aux + 0x8);
         state->homeY = *(f32 *)(aux + 0xc);
         state->homeZ = *(f32 *)(aux + 0x10);
         state->oscVelA = state->oscVelB = state->unk20 = state->unk28 = state->oscPosA = state->oscPosB = lbl_803E3E30;
-        *(int *)(obj + 0xbc) = (int)&CFCrate_SeqFn;
+        *(int *)&((GameObject *)obj)->unkBC = (int)&CFCrate_SeqFn;
         break;
     case 0x125:
-        *(short *)(obj + 0) = 0;
-        *(short *)(obj + 2) = 0;
-        *(short *)(obj + 4) = 0;
-        *(f32 *)(obj + 8) = zeroF;
-        *(int *)(obj + 0xf4) = 0;
-        *(int *)(obj + 0xf8) = 0;
+        ((GameObject *)obj)->anim.rotX = 0;
+        ((GameObject *)obj)->anim.rotY = 0;
+        ((GameObject *)obj)->anim.rotZ = 0;
+        ((GameObject *)obj)->anim.rootMotionScale = zeroF;
+        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->unkF8 = 0;
         state->oscVelB = lbl_803E3E40;
         state->oscVelA = lbl_803E3DEC;
         state->unk32 = 0;
         state->unk34 = (short)randomGetRange(0x3e8, 0x1388);
         state->proximityLatch = 1;
-        *(int *)(obj + 0xbc) = (int)&CFCrate_SeqFn;
+        *(int *)&((GameObject *)obj)->unkBC = (int)&CFCrate_SeqFn;
         break;
     case 0x10d:
-        *(int *)(obj + 0x54) = 0;
+        *(int *)&((GameObject *)obj)->anim.hitReactState = 0;
         if (*(short *)(aux + 0x1a) == 0) {
             state->sfxTable = (u16 *)&lbl_803DBDE8;
             state->sfxCount = 1;

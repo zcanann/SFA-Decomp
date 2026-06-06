@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 
 void drcreator_free(void) {}
 
@@ -17,7 +18,7 @@ void drcreator_render(void) {}
 #pragma scheduling off
 #pragma peephole off
 void drcreator_init(int obj, char *arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)arg[0x1e] << 8);
     *(s16 *)(p + 0x4) = *(s16 *)(arg + 0x18);
     *(s16 *)(p + 0x6) = *(s16 *)(arg + 0x1c);
@@ -26,7 +27,7 @@ void drcreator_init(int obj, char *arg) {
     *(int *)p = (u8)arg[0x20];
     ((BitFlags8 *)(p + 0x18))->b0 = 1;
     GameBit_Set(0x5dd, 0);
-    *(void **)((char *)obj + 0xbc) = (void *)drcreator_spawnProjectileCallback;
+    ((GameObject *)obj)->unkBC = (void *)drcreator_spawnProjectileCallback;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -34,8 +35,8 @@ void drcreator_init(int obj, char *arg) {
 #pragma scheduling off
 #pragma peephole off
 void drcreator_update(int obj) {
-    int q = *(int *)((char *)obj + 0x4c);
-    char *runtime = *(char **)((char *)obj + 0xb8);
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
+    char *runtime = ((GameObject *)obj)->extra;
     int o;
     char *p;
     if (Obj_IsLoadingLocked() != 0) {
@@ -52,9 +53,9 @@ void drcreator_update(int obj) {
                 *(s16 *)(runtime + 8) -= framesThisStep;
                 if (*(s16 *)(runtime + 8) <= 0) {
                     o = Obj_AllocObjectSetup(36, 1725);
-                    *(f32 *)(o + 8) = *(f32 *)((char *)obj + 0xc);
-                    *(f32 *)(o + 0xc) = *(f32 *)((char *)obj + 0x10);
-                    *(f32 *)(o + 0x10) = *(f32 *)((char *)obj + 0x14);
+                    *(f32 *)(o + 8) = ((GameObject *)obj)->anim.localPosX;
+                    *(f32 *)(o + 0xc) = ((GameObject *)obj)->anim.localPosY;
+                    *(f32 *)(o + 0x10) = ((GameObject *)obj)->anim.localPosZ;
                     *(u8 *)(o + 4) = 1;
                     *(u8 *)(o + 5) = 1;
                     *(u8 *)(o + 6) = 255;
@@ -86,7 +87,7 @@ void drcreator_update(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int drcreator_spawnProjectileCallback(int obj, int unused, u8 *arg) {
-    int q = *(int *)((char *)obj + 0x4c);
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
     char *runtime;
     int o;
     int p;
@@ -100,12 +101,12 @@ int drcreator_spawnProjectileCallback(int obj, int unused, u8 *arg) {
         case 3:
         case 4:
         case 9:
-            runtime = *(char **)((char *)obj + 0xb8);
+            runtime = ((GameObject *)obj)->extra;
             if (GameBit_Get(*(s16 *)(runtime + 4)) != 0) {
                 o = Obj_AllocObjectSetup(36, 1725);
-                *(f32 *)(o + 8) = *(f32 *)((char *)obj + 0xc);
-                *(f32 *)(o + 0xc) = *(f32 *)((char *)obj + 0x10);
-                *(f32 *)(o + 0x10) = *(f32 *)((char *)obj + 0x14);
+                *(f32 *)(o + 8) = ((GameObject *)obj)->anim.localPosX;
+                *(f32 *)(o + 0xc) = ((GameObject *)obj)->anim.localPosY;
+                *(f32 *)(o + 0x10) = ((GameObject *)obj)->anim.localPosZ;
                 *(u8 *)(o + 4) = 1;
                 *(u8 *)(o + 5) = 1;
                 *(u8 *)(o + 6) = 255;

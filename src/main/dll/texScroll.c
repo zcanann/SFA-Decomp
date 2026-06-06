@@ -1,4 +1,5 @@
 #include "main/dll/texScroll.h"
+#include "main/game_object.h"
 
 extern void GameBit_Set(int eventId,int value);
 extern undefined8 ObjGroup_RemoveObject();
@@ -53,8 +54,8 @@ undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int state
   int trackedObjectSlot;
   u8 i;
 
-  runtime = *(int *)(obj + 0xb8);
-  config = *(int *)(obj + 0x4c);
+  runtime = *(int *)&((GameObject *)obj)->extra;
+  config = *(int *)&((GameObject *)obj)->anim.placementData;
   if (*(u8 *)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) ==
       PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS) {
     for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; i++) {
@@ -82,19 +83,19 @@ undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int state
       *(undefined4 *)(trackedObjectSlot + 0xc) = 0;
       *(undefined4 *)(trackedObjectSlot + 0x10) = 0;
     }
-    *(f32 *)(obj + 0x14) = *(f32 *)(config + PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET);
-    *(f32 *)(obj + 0x10) = *(f32 *)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET);
-    *(f32 *)(obj + 0x14) = *(f32 *)(config + PRESSURESWITCHFB_CONFIG_RESET_COORD_OFFSET);
+    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(config + PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET);
+    ((GameObject *)obj)->anim.localPosY = *(f32 *)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET);
+    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(config + PRESSURESWITCHFB_CONFIG_RESET_COORD_OFFSET);
     GameBit_Set(*(s16 *)(config + PRESSURESWITCHFB_CONFIG_RAISED_GAMEBIT_OFFSET),0);
     *(u8 *)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) =
         PRESSURESWITCHFB_STATE_IDLE;
   }
-  objType = *(s16 *)(obj + 0x46);
+  objType = ((GameObject *)obj)->anim.seqId;
   if ((((objType != PRESSURESWITCHFB_OBJ_LINK_SNOWPR) &&
         (objType != PRESSURESWITCHFB_OBJ_SH_PRESSURE)) &&
        (objType != PRESSURESWITCHFB_OBJ_LINK_UNDERW)) &&
       (objType != PRESSURESWITCHFB_OBJ_CC_PRESSURE)) {
-    *(f32 *)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET) = *(f32 *)(obj + 0x10);
+    *(f32 *)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET) = ((GameObject *)obj)->anim.localPosY;
   }
   return 0;
 }

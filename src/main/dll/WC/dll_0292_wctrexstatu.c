@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
 #define WCTREXSTATU_CALLBACK_COMMANDS_OFFSET 0x81
@@ -51,7 +52,7 @@ int wctrexstatu_getExtraSize(void) { return 0; }
 int wctrexstatu_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
+    int modelIndex = *(s8 *)(*(int *)&((GameObject *)obj)->anim.placementData + WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
@@ -110,7 +111,7 @@ void wctrexstatu_update(void) {}
 void wctrexstatu_init(int obj, int setup, int fromLoad)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    *(void **)(obj + 0xbc) = wctrexstatu_interactCallback;
+    ((GameObject *)obj)->unkBC = wctrexstatu_interactCallback;
     objAnim->bankIndex = *(u8 *)(setup + WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
@@ -119,7 +120,7 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
     *(s16 *)obj = (s16)((s8)*(u8 *)(setup + WCTREXSTATU_SETUP_TYPE_OFFSET) << 8);
     if (fromLoad == 0) {
         if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == WCTREXSTATU_MAPEVENT_RAISED) {
-            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + lbl_803E6E14;
+            ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + lbl_803E6E14;
         }
     }
 

@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 void explodeplan_free(void) {}
@@ -26,8 +27,8 @@ void explodeplan_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, 
 #pragma scheduling off
 #pragma peephole off
 void explodeplan_init(int obj, char *arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
-    *(void **)((char *)obj + 0xbc) = (void *)explodeplan_updateTriggerCallback;
+    char *p = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkBC = (void *)explodeplan_updateTriggerCallback;
     if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
         ((BitFlags8 *)(p + 0x4))->b2 = 1;
         *(int *)p = 2;
@@ -41,8 +42,8 @@ void explodeplan_init(int obj, char *arg) {
 #pragma scheduling off
 #pragma peephole off
 void explodeplan_update(int obj) {
-    int q = *(int *)((char *)obj + 0x4c);
-    char *p = *(char **)((char *)obj + 0xb8);
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
+    char *p = ((GameObject *)obj)->extra;
     if (((BitFlags8 *)(p + 0x4))->b1 != 0) {
         return;
     }
@@ -69,8 +70,8 @@ void explodeplan_update(int obj) {
 #pragma peephole off
 int explodeplan_updateTriggerCallback(int obj) {
     int ret;
-    int q = *(int *)((char *)obj + 0x4c);
-    char *runtime = *(char **)((char *)obj + 0xb8);
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
+    char *runtime = ((GameObject *)obj)->extra;
     if (*(int *)runtime == 0) {
         if (GameBit_Get(*(s16 *)(q + 0x1e)) != 0) {
             Sfx_StopObjectChannel(obj, 8);

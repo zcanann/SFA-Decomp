@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -44,21 +45,21 @@ void softbody_hitDetect(void) {}
 #pragma scheduling off
 void softbody_init(int obj, int setup)
 {
-    *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
-    *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
-    *(s16 *)(obj + 0) = (s16)(*(u8 *)(setup + 0x1a) << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(setup + 0x19) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)(*(u8 *)(setup + 0x1a) << 8);
     if (*(u8 *)(setup + 0x1b) != 0) {
-        *(f32 *)(obj + 8) = (f32)(u32)*(u8 *)(setup + 0x1b) / lbl_803E7294;
-        if (*(f32 *)(obj + 8) == lbl_803E7298) {
-            *(f32 *)(obj + 8) = lbl_803E7288;
+        ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)*(u8 *)(setup + 0x1b) / lbl_803E7294;
+        if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E7298) {
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E7288;
         }
-        *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
+        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     }
-    *(u16 *)(obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E7298, 0);
-    if (*(void **)(obj + 0x54) != NULL) {
+    if (((GameObject *)obj)->anim.hitReactState != NULL) {
         ObjHitbox_SetSphereRadius(obj,
-            (s16)((f32)*(s16 *)(*(int *)(obj + 0x54) + 0x5a) * *(f32 *)(obj + 8)));
+            (s16)((f32)*(s16 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x5a) * ((GameObject *)obj)->anim.rootMotionScale));
     }
 }
 #pragma scheduling reset
@@ -85,7 +86,7 @@ void softbody_initialise(void)
 #pragma scheduling off
 void softbody_update(int obj)
 {
-    int setup = *(int *)(obj + 0x4c);
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
 
     if (lbl_803DDD98 == NULL && *(u8 *)(setup + 0x1f) == 0) {
         lbl_803DDD98 = (void *)obj;
@@ -102,7 +103,7 @@ void softbody_update(int obj)
         }
     }
 
-    if (*(s16 *)(obj + 0x46) >= 0x6af && *(s16 *)(obj + 0x46) < 0x6b2) {
+    if (((GameObject *)obj)->anim.seqId >= 0x6af && ((GameObject *)obj)->anim.seqId < 0x6b2) {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803DDDA0, 0);
     } else {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803DDD9C, 0);

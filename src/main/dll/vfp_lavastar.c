@@ -1,4 +1,5 @@
 #include "main/dll/DIM/DIMbossspit.h"
+#include "main/game_object.h"
 
 extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
@@ -40,7 +41,7 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
     f32 *outZPtr;
 
     if (visible != 0) {
-        if (*(int *)((char *)obj + 0xf4) != 0) {
+        if (((GameObject *)obj)->unkF4 != 0) {
         } else {
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
@@ -75,7 +76,7 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
 void DIMbosstonsil_hitDetect(void *obj)
 {
     (*(void (***)(void *,DIMbosstonsilState *,int *))gPlayerInterface)[3](
-        obj,*(DIMbosstonsilState **)((char *)obj + 0xb8),&lbl_803DDBB0);
+        obj,((GameObject *)obj)->extra,&lbl_803DDBB0);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -95,17 +96,17 @@ void DIMbosstonsil_update(void *obj)
     DIMbosstonsilConfig *config;
     u8 b1, b2, b3, b4;
 
-    state = *(DIMbosstonsilState **)((char *)obj + 0xb8);
-    config = *(DIMbosstonsilConfig **)((char *)obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    config = *(DIMbosstonsilConfig **)&((GameObject *)obj)->anim.placementData;
 
-    if (*(int *)((char *)obj + 0xf4) != 0) return;
+    if (((GameObject *)obj)->unkF4 != 0) return;
 
-    if (*(int *)((char *)obj + 0xf8) == 0) {
-        *(f32 *)((char *)obj + 0xc) = config->spawnX;
-        *(f32 *)((char *)obj + 0x10) = config->spawnY;
-        *(f32 *)((char *)obj + 0x14) = config->spawnZ;
+    if (((GameObject *)obj)->unkF8 == 0) {
+        ((GameObject *)obj)->anim.localPosX = config->spawnX;
+        ((GameObject *)obj)->anim.localPosY = config->spawnY;
+        ((GameObject *)obj)->anim.localPosZ = config->spawnZ;
         (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12]((int)config->animObjId, obj, -1);
-        *(int *)((char *)obj + 0xf8) = 1;
+        ((GameObject *)obj)->unkF8 = 1;
         return;
     }
 

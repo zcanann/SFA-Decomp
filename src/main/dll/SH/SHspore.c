@@ -1,4 +1,5 @@
 #include "main/dll/SH/SHrocketmushroom.h"
+#include "main/game_object.h"
 #include "main/dll/SH/SHspore.h"
 #include "main/objanim.h"
 
@@ -111,7 +112,7 @@ void sh_queenearthwalker_update(void *obj)
   s16 currentMove;
   s16 targetMove;
 
-  state = *(void **)((u8 *)obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   *(u8 *)((u8 *)state + 0x2) &= ~0x20;
   actionParam = *(s8 *)((u8 *)obj + 0xac);
   action = (*(u8 (***)(s8))gMapEventInterface)[0x10](actionParam);
@@ -226,7 +227,7 @@ void sh_queenearthwalker_update(void *obj)
     characterDoEyeAnims(obj, (u8 *)state + 0x8);
   }
 
-  currentMove = *(s16 *)((u8 *)obj + 0xa0);
+  currentMove = ((GameObject *)obj)->anim.currentMove;
   targetMove = lbl_80326E18[*(u8 *)state];
   if (currentMove != targetMove) {
     ObjAnim_SetCurrentMove((int)obj, targetMove, lbl_803E53F8, 0);
@@ -269,7 +270,7 @@ void queenFeedFn_801d44a4(void *obj, void *state)
       }
       break;
     case 1:
-      *(u8 *)((u8 *)obj + 0xaf) &= ~0x8;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
       if (cMenuGetSelectedItem() == -1) {
         if (getYButtonItem(&triggerId) == 0 || triggerId != 0x66d) {
           tricky = getTrickyObject();
@@ -278,7 +279,7 @@ void queenFeedFn_801d44a4(void *obj, void *state)
                   lbl_803E5400) {
             fn_8002B6D8(obj, 0, 0, 0, 0, 2);
           } else {
-            *(u8 *)((u8 *)obj + 0xaf) |= 0x8;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
           }
           break;
         }
@@ -334,13 +335,13 @@ void openPortalFn_801d4364(void *obj, void *state)
   void *player;
 
   player = Obj_GetPlayerObject();
-  *(u8 *)((u8 *)obj + 0xaf) &= ~0x8;
+  *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
   if (GameBit_Get(0xc48) != 0) {
     *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFEC;
   } else if (GameBit_Get(0x23c) != 0) {
     *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFDC;
   } else if (GameBit_Get(0x5bd) != 0) {
-    *(u8 *)((u8 *)obj + 0xaf) |= 0x8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
     if (playerHasSpell(player, 3) != 0 &&
         getXZDistance((f32 *)((u8 *)player + 0x18), (f32 *)((u8 *)obj + 0x18)) < lbl_803E53FC) {
       GameBit_Set(0x23b, 1);
@@ -366,8 +367,8 @@ void openPortalFn_801d4364(void *obj, void *state)
 void sh_queenearthwalker_init(void *obj, QueenEarthWalkerMapData *mapData)
 {
   *(s16 *)obj = (s16)(mapData->yawByte << 8);
-  *(int *)((u8 *)obj + 0xbc) = (int)sh_queenearthwalker_processAnimEvents;
-  *(u16 *)((u8 *)obj + 0xb0) |= 0x4000;
+  *(int *)&((GameObject *)obj)->unkBC = (int)sh_queenearthwalker_processAnimEvents;
+  ((GameObject *)obj)->unkB0 |= 0x4000;
 }
 #pragma peephole reset
 #pragma scheduling reset

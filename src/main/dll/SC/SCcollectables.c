@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/SC/SCcollectables.h"
 #include "main/objanim.h"
@@ -101,7 +102,7 @@ extern void Obj_FreeObject(int obj);
 #pragma peephole off
 void warpstone_free(int obj, int mode)
 {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     if (*(void **)state != NULL && mode == 0) {
         ObjLink_DetachChild(obj, state[0]);
         Obj_FreeObject(state[0]);
@@ -123,7 +124,7 @@ extern f32 lbl_803E54A0;
 #pragma peephole off
 void warpstone_hitDetect(int obj)
 {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     f32 pos[3];
     int p[3];
 
@@ -155,7 +156,7 @@ extern f32 lbl_803E549C;
 void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     void *player;
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     int *model;
     f32 z;
     f32 y;
@@ -295,7 +296,7 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
     int i;
     int child;
     u8 command;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     if (animatedObjGetSeqId(animObj) == 0x35f) {
         fn_80080360(animObj, 0x2648);
@@ -307,7 +308,7 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
     child = *(int *)state;
     if (child != 0) {
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-            (child, *(f32 *)(obj + 0x98) - *(f32 *)(child + 0x98), timeDelta, NULL);
+            (child, ((GameObject *)obj)->anim.currentMoveProgress - *(f32 *)(child + 0x98), timeDelta, NULL);
     }
 
     *(void **)(animObj + 0xec) = warpstone_handleMenuOptionInput;

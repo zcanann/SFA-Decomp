@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -22,7 +23,7 @@ void androssligh_free(void) {}
 #pragma scheduling on
 void androssligh_render(int obj)
 {
-    void *p = *(void **)(*(int *)(obj + 0xb8) + 4);
+    void *p = *(void **)(*(int *)&((GameObject *)obj)->extra + 4);
 
     if (p != NULL) {
         lightningRender(p);
@@ -40,7 +41,7 @@ void androssligh_setState(int obj, int newState, u8 force)
     if ((void *)obj == NULL) {
         return;
     }
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     if (*(s8 *)(state + 0xc) == 2) {
         if (force == 0) {
             return;
@@ -66,15 +67,15 @@ void androssligh_init(void) {}
 #pragma scheduling on
 void androssligh_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     if (*(void **)state == NULL) {
         *(int *)state = ObjList_FindObjectById(0x47dd9);
     }
     if (*(void **)state != NULL) {
-        *(f32 *)(obj + 0xc) = *(f32 *)(*(int *)state + 0xc);
-        *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)state + 0x10);
-        *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)state + 0x14);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(*(int *)state + 0xc);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(*(int *)state + 0x10);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(*(int *)state + 0x14);
     }
     *(u8 *)(state + 0xd) = *(u8 *)(state + 0xc);
     switch (*(s8 *)(state + 0xc)) {
@@ -99,10 +100,10 @@ void androssligh_updateBeam(int obj, int beam)
     f32 end[3];
     f32 tmp[3];
 
-    start[0] = *(f32 *)(obj + 0xc) - lbl_803DC528;
-    start[1] = *(f32 *)(obj + 0x10);
-    start[2] = *(f32 *)(obj + 0x14);
-    end[0] = *(f32 *)(obj + 0xc) + lbl_803DC528;
+    start[0] = ((GameObject *)obj)->anim.localPosX - lbl_803DC528;
+    start[1] = ((GameObject *)obj)->anim.localPosY;
+    start[2] = ((GameObject *)obj)->anim.localPosZ;
+    end[0] = ((GameObject *)obj)->anim.localPosX + lbl_803DC528;
     end[1] = start[1];
     end[2] = start[2];
     tmp[0] = start[0] - playerMapOffsetX;

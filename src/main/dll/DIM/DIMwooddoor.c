@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/DIM/DIMwooddoor.h"
 #include "main/objanim.h"
 
@@ -82,9 +83,9 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     f32 launchScale;
     f32 angle;
 
-    config = *(DIMWoodDoorConfig **)(obj + 0x4c);
+    config = *(DIMWoodDoorConfig **)&((GameObject *)obj)->anim.placementData;
     if (Obj_IsLoadingLocked() != 0) {
-        state = *(DIMWoodDoorState **)(obj + 0xb8);
+        state = ((GameObject *)obj)->extra;
         if ((state->shouldSpawnShard != 0) && (state->launchDelay <= 0)) {
             modelVec = objModelGetVecFn_800395d8(obj, 0);
             setup = Obj_AllocObjectSetup(0x24, 0x1d6);
@@ -161,14 +162,14 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
     int turnSign;
     int pitchSign;
 
-    config = *(DIMWoodDoorConfig **)(obj + 0x4c);
+    config = *(DIMWoodDoorConfig **)&((GameObject *)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
-    state = *(DIMWoodDoorState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if (state->cooldown <= 0) {
         modelVec = objModelGetVecFn_800395d8(obj, 0);
         facingAngle = modelVec[1] + ((s32)config->angleBias << 8);
-        targetX -= *(f32 *)(obj + 0xc);
-        targetZ -= *(f32 *)(obj + 0x14);
+        targetX -= ((GameObject *)obj)->anim.localPosX;
+        targetZ -= ((GameObject *)obj)->anim.localPosZ;
         angleDelta = (((u16)getAngle(targetX, targetZ) + 0x8000) - (u16)facingAngle);
         if (angleDelta > 0x8000) {
             angleDelta -= 0xffff;

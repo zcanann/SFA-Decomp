@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -16,7 +17,7 @@ int drbarrelgr_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void drbarrelgr_free(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     void *heldObj = *(void **)(state + 8);
 
     if (heldObj != NULL) {
@@ -53,7 +54,7 @@ void drbarrelgr_init(int obj, int setup)
     int state;
 
     one = 1;
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     if (*(u8 *)(setup + 0x19) == 0) {
         *(u8 *)(setup + 0x19) = 0xa;
     }
@@ -72,9 +73,9 @@ void drbarrelgr_init(int obj, int setup)
     *(s16 *)obj = (s16)((s8)*(s8 *)(setup + 0x18) << 8);
     (*(void (**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
         state + 0x20, obj, lbl_803E6CD0, &one, 0);
-    *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x88);
-    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x90);
-    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x8c);
+    ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 0x88);
+    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x90);
+    ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x8c);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -83,8 +84,8 @@ void drbarrelgr_init(int obj, int setup)
 #pragma scheduling off
 void drbarrelgr_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     int newMode = -1;
     DrBarrelGrFlags *flags = (DrBarrelGrFlags *)(state + 0x12a);
     int nearest;
@@ -120,7 +121,7 @@ void drbarrelgr_update(int obj)
             nearest = ObjGroup_FindNearestObject(25, obj, 0);
             if ((u32)nearest != 0 &&
                 Vec_xzDistance(obj + 24, nearest + 24) < lbl_803E6CB0 &&
-                *(f32 *)(nearest + 16) < *(f32 *)(obj + 16)) {
+                *(f32 *)(nearest + 16) < ((GameObject *)obj)->anim.localPosY) {
                 vec[0] = *(f32 *)(nearest + 12);
                 vec[1] = lbl_803E6CB4 + *(f32 *)(nearest + 16);
                 vec[2] = *(f32 *)(nearest + 20);
@@ -170,14 +171,14 @@ void drbarrelgr_update(int obj)
         int r = Obj_UpdateRomCurveFollowVelocity(obj, state + 0x20,
                             lbl_803E6CB8 * (f32)*(s16 *)(state + 0x128) * timeDelta,
                             lbl_803E6CBC, lbl_803E6CB4, 1);
-        objMove(obj, *(f32 *)(obj + 36), *(f32 *)(obj + 40), *(f32 *)(obj + 44));
+        objMove(obj, ((GameObject *)obj)->anim.velocityX, ((GameObject *)obj)->anim.velocityY, ((GameObject *)obj)->anim.velocityZ);
         if (r != 0) {
             newMode = r - 1;
             storeZeroToFloatParam((void *)(state + 12));
             s16toFloat((void *)(state + 12), *(s16 *)(setup + 0x1a));
-            *(f32 *)(obj + 36) = lbl_803E6CA4;
-            *(f32 *)(obj + 40) = lbl_803E6CA4;
-            *(f32 *)(obj + 44) = lbl_803E6CA4;
+            ((GameObject *)obj)->anim.velocityX = lbl_803E6CA4;
+            ((GameObject *)obj)->anim.velocityY = lbl_803E6CA4;
+            ((GameObject *)obj)->anim.velocityZ = lbl_803E6CA4;
         }
         break;
     }
@@ -214,10 +215,10 @@ void drbarrelgr_update(int obj)
         *(int *)(state + 4) = *(int *)(state + 0);
         *(int *)(state + 0) = newMode;
     }
-    if ((*(u16 *)(obj + 0xb0) & 0x800) == 0 && *(void **)(state + 8) != 0) {
-        *(f32 *)(state + 0x14) = *(f32 *)(obj + 12);
-        *(f32 *)(state + 0x18) = *(f32 *)(obj + 16) + lbl_803DC3B4;
-        *(f32 *)(state + 0x1c) = *(f32 *)(obj + 20);
+    if ((((GameObject *)obj)->unkB0 & 0x800) == 0 && *(void **)(state + 8) != 0) {
+        *(f32 *)(state + 0x14) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(state + 0x18) = ((GameObject *)obj)->anim.localPosY + lbl_803DC3B4;
+        *(f32 *)(state + 0x1c) = ((GameObject *)obj)->anim.localPosZ;
         *(f32 *)(*(int *)(state + 8) + 12) = *(f32 *)(state + 0x14);
         *(f32 *)(*(int *)(state + 8) + 16) = *(f32 *)(state + 0x18);
         *(f32 *)(*(int *)(state + 8) + 20) = *(f32 *)(state + 0x1c);
@@ -229,7 +230,7 @@ void drbarrelgr_update(int obj)
 #pragma scheduling off
 void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int i;
     int objRef;
     int nearest;

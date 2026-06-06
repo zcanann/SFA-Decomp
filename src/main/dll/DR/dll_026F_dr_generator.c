@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 
 int drgenerator_getExtraSize(void) { return 0x19c; }
 
@@ -46,11 +47,11 @@ int drgenerator_eventCallback(int obj, int unused, u8 *arg) {
 #pragma scheduling off
 #pragma peephole off
 void drgenerator_init(int obj, char *arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     f32 fv;
-    if (*(s16 *)((char *)obj + 0x46) == 0x72e) {
+    if (((GameObject *)obj)->anim.seqId == 0x72e) {
         int *t;
-        *(void **)((char *)obj + 0xbc) = (void *)drgenerator_eventCallback;
+        ((GameObject *)obj)->unkBC = (void *)drgenerator_eventCallback;
         t = objFindTexture(obj, 0, 0);
         if (t != 0) {
             *t = 0x100;
@@ -59,7 +60,7 @@ void drgenerator_init(int obj, char *arg) {
     *(u8 *)(p + 0x19a) = 2;
     ObjHits_EnableObject(obj);
     if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
-        *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
     }
@@ -77,9 +78,9 @@ void drgenerator_init(int obj, char *arg) {
         ((BitFlags8 *)(p + 0x19b))->b4 = 0;
     }
     fv = lbl_803E6B6C;
-    *(f32 *)((char *)obj + 0x2c) = fv;
-    *(f32 *)((char *)obj + 0x28) = fv;
-    *(f32 *)((char *)obj + 0x24) = fv;
+    ((GameObject *)obj)->anim.velocityZ = fv;
+    ((GameObject *)obj)->anim.velocityY = fv;
+    ((GameObject *)obj)->anim.velocityX = fv;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -87,8 +88,8 @@ void drgenerator_init(int obj, char *arg) {
 #pragma scheduling off
 #pragma peephole off
 void drgenerator_hitDetect(int obj) {
-    char *p = *(char **)((char *)obj + 0xb8);
-    int q = *(int *)((char *)obj + 0x4c);
+    char *p = ((GameObject *)obj)->extra;
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
     f32 a18;
     f32 a14;
     f32 a10;
@@ -116,7 +117,7 @@ void drgenerator_hitDetect(int obj) {
     }
     ((BitFlags8 *)(p + 0x19b))->b0 = 1;
     GameBit_Set(*(s16 *)(q + 0x1e), 1);
-    if (*(s16 *)((char *)obj + 0x46) == 0x716 &&
+    if (((GameObject *)obj)->anim.seqId == 0x716 &&
         (found = (void *)ObjGroup_FindNearestObject(0x4c, obj, 0)) != NULL) {
         timer_addDuration((int)found, *(s16 *)(p + 0x198));
     } else {
@@ -129,8 +130,8 @@ void drgenerator_hitDetect(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void drgenerator_update(int obj) {
-    char *p = *(char **)((char *)obj + 0xb8);
-    int q = *(int *)((char *)obj + 0x4c);
+    char *p = ((GameObject *)obj)->extra;
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
     int n;
     if (((BitFlags8 *)(p + 0x19b))->b4 == 0 && GameBit_Get(0x9b9) != 0) {
         ((BitFlags8 *)(p + 0x19b))->b4 = 1;
@@ -144,7 +145,7 @@ void drgenerator_update(int obj) {
     if (GameBit_Get(*(s16 *)(q + 0x20)) != 0) {
         goto enable;
     }
-    if (*(s16 *)((char *)obj + 0x46) != 0x72e) {
+    if (((GameObject *)obj)->anim.seqId != 0x72e) {
         (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(4, obj, -1);
     }
     ((BitFlags8 *)(p + 0x19b))->b3 = 1;
@@ -158,7 +159,7 @@ enable:
     if (GameBit_Get(*(s16 *)(q + 0x20)) == 0) {
         goto loop;
     }
-    if (*(s16 *)((char *)obj + 0x46) != 0x72e) {
+    if (((GameObject *)obj)->anim.seqId != 0x72e) {
         (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(3, obj, -1);
     }
     ((BitFlags8 *)(p + 0x19b))->b3 = 0;

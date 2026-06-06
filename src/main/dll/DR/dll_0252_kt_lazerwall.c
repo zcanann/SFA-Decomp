@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 int ktlazerwall_getExtraSize(void) { return 0x14; }
@@ -14,7 +15,7 @@ void ktlazerwall_release(void) {}
 #pragma scheduling off
 #pragma peephole off
 void ktlazerwall_free(int obj) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     void *m = *(void **)(p + 0x10);
     if (m != 0) {
         mm_free(m);
@@ -27,7 +28,7 @@ void ktlazerwall_free(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void ktlazerwall_init(int obj, char *arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
     *(f32 *)(p + 0x4) = lbl_803E6898;
     *(f32 *)(p + 0xc) = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
@@ -41,8 +42,8 @@ void ktlazerwall_init(int obj, char *arg) {
 #pragma scheduling off
 #pragma peephole off
 void ktlazerwall_update(int obj) {
-    int q = *(int *)((char *)obj + 0x4c);
-    u8 *runtime = *(u8 **)((char *)obj + 0xb8);
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
+    u8 *runtime = ((GameObject *)obj)->extra;
     int cur;
     int mode;
     int i;
@@ -57,7 +58,7 @@ void ktlazerwall_update(int obj) {
             return;
         }
     }
-    *(s16 *)((char *)obj + 4) += 910;
+    ((GameObject *)obj)->anim.rotZ += 910;
     if (cur >= 15 && (runtime[0] & 9) == 0) {
         GameBit_Set(*(s16 *)(q + 0x1e), 1);
         runtime[0] |= 9;
@@ -101,8 +102,8 @@ void ktlazerwall_update(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void ktlazerwall_render(int obj) {
-    char *p = *(char **)((char *)obj + 0xb8);
-    int q = *(int *)((char *)obj + 0x4c);
+    char *p = ((GameObject *)obj)->extra;
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
     int m;
     if (*(void **)(p + 0x10) != 0) {
         *(f32 *)(p + 0x8) -= timeDelta;

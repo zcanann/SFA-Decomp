@@ -1,9 +1,10 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma scheduling off
 int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int i;
 
     script[0x56] = 0;
@@ -140,7 +141,7 @@ void gf_levelcon_free(void)
 #pragma scheduling off
 void gf_levelcon_update(int obj)
 {
-    *(void **)(obj + 0xbc) = (void *)gf_levelcon_handleScriptEvents;
+    ((GameObject *)obj)->unkBC = (void *)gf_levelcon_handleScriptEvents;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -170,7 +171,7 @@ void gf_levelcon_init(int obj)
 #pragma scheduling off
 void gf_levelcon_findLinkedObjects(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int *objects;
     int objectIndex;
     int objectCount;
@@ -243,13 +244,13 @@ void fn_80239EAC(int p1, int p2)
     objs = ObjGroup_GetObjects(2, &count);
     for (i = 0; i < count; i++) {
         obj = *objs;
-        defNo = *(s16 *)(*(int *)(obj + 0x4c));
+        defNo = *(s16 *)(*(int *)&((GameObject *)obj)->anim.placementData);
         if (defNo == 0x80d || defNo == 0x859) {
-            dy = *(f32 *)(p2 + 0xc4) - *(f32 *)(obj + 0x10);
-            dz = *(f32 *)(p2 + 0xc8) - *(f32 *)(obj + 0x14);
-            dx = *(f32 *)(p2 + 0xc0) - *(f32 *)(obj + 0xc);
-            *(s16 *)(obj + 0) = (s16)getAngle(dx, dz);
-            *(s16 *)(obj + 2) = -(s16)getAngle(dy, dz);
+            dy = *(f32 *)(p2 + 0xc4) - ((GameObject *)obj)->anim.localPosY;
+            dz = *(f32 *)(p2 + 0xc8) - ((GameObject *)obj)->anim.localPosZ;
+            dx = *(f32 *)(p2 + 0xc0) - ((GameObject *)obj)->anim.localPosX;
+            ((GameObject *)obj)->anim.rotX = (s16)getAngle(dx, dz);
+            ((GameObject *)obj)->anim.rotY = -(s16)getAngle(dy, dz);
             arwprojectile_placeForward(obj, (f32)(u32)lbl_803DC4E8);
         }
         objs++;

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/dll/dimmagicbridge.h"
 #include "main/mapEventTypes.h"
 
@@ -51,13 +52,13 @@ void dll_199_update(int obj)
     u32 n;
     int delta;
 
-    state = *(short **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     dist = lbl_803E515C;
-    *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
-    *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
-    *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
-    queue = *(int *)(obj + 0xb8);
+    ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
+    ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
+    queue = *(int *)&((GameObject *)obj)->extra;
     flags = 0;
     while (ObjMsg_Pop(obj, &msg, &param, &flags) != 0) {
         switch (msg) {
@@ -256,7 +257,7 @@ void dll_199_init(int obj, int def)
     int *res;
     short id;
 
-    state = *(short **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     *(s16 *)obj = 0;
     *state = 10;
     if (*(s16 *)(def + 0x1a) > 0) {
@@ -266,7 +267,7 @@ void dll_199_init(int obj, int def)
     *(u8 *)(state + 8) = 0;
     state[1] = 0;
     *(u8 *)(state + 7) = 0;
-    *(void **)(obj + 0xbc) = (void *)&dll_199_SeqFn;
+    ((GameObject *)obj)->unkBC = (void *)&dll_199_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     GameBit_Set(0x1cf, 0);
@@ -307,24 +308,24 @@ void dll_19A_update(int obj)
     int newObj;
     char *r;
 
-    setup = *(int *)(obj + 0x4c);
-    state = *(short **)(obj + 0xb8);
+    setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    state = ((GameObject *)obj)->extra;
     if (GameBit_Get(0x5b9) != 0) {
-        *(int *)(obj + 0xf8) = 0;
+        ((GameObject *)obj)->unkF8 = 0;
         *state = 100;
         state[1] = 0;
         *(u8 *)(obj + 0x37) = 0xff;
         *(u8 *)(obj + 0x36) = 0xff;
     }
     else {
-        if ((*(int *)(obj + 0xf8) == 0) && (GameBit_Get(*(s8 *)(setup + 0x1f) + 0x1cd) != 0)) {
+        if ((((GameObject *)obj)->unkF8 == 0) && (GameBit_Get(*(s8 *)(setup + 0x1f) + 0x1cd) != 0)) {
             res = Resource_Acquire(0x82, 1);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 1, 0, 1, 0xffffffff, 0);
             Sfx_PlayFromObject(obj, 0xaf);
             Resource_Release(res);
             state[1] = 1;
-            *(int *)(obj + 0xf8) = 1;
+            ((GameObject *)obj)->unkF8 = 1;
         }
         if (state[1] != 0) {
             *state -= state[1] * framesThisStep;
@@ -352,7 +353,7 @@ void dll_19A_update(int obj)
             *(u8 *)(newObj + 0x29) = 0xff;
             *(s8 *)(newObj + 0x2e) = -1;
             *(u8 *)(newObj + 0x32) = *(u8 *)(setup + 0x1f);
-            r = Obj_SetupObject(newObj, 5, *(s8 *)(obj + 0xac), 0xffffffff, *(int *)(obj + 0x30));
+            r = Obj_SetupObject(newObj, 5, *(s8 *)(obj + 0xac), 0xffffffff, *(int *)&((GameObject *)obj)->anim.parent);
             if ((r != 0) && (*(void **)(r + 0xb8) != 0)) {
                 *(u8 *)(*(int *)(r + 0xb8) + 0x404) = 0x20;
             }
@@ -377,9 +378,9 @@ int dll_19A_getObjectTypeId(void) { return 0x0; }
 #pragma scheduling off
 #pragma peephole off
 void dll_19A_init(int obj, s8 *def) {
-    int *state = *(int **)((char *)obj + 0xB8);
+    int *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
-    *(int *)((char *)obj + 0xF8) = 0;
+    ((GameObject *)obj)->unkF8 = 0;
     *(s16 *)state = 100;
     *(s16 *)((char *)state + 2) = 0;
     *(u8 *)((char *)obj + 0x37) = 0xFF;

@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/wallanimator.h"
 #include "main/objanim.h"
@@ -358,7 +359,7 @@ int kaldachom_stateHandlerA06(int obj, int p2)
     }
     Sfx_PlayFromObject(obj, SFXsc_attack01);
   }
-  *(s16 *)(obj + 0) += 546;
+  ((GameObject *)obj)->anim.rotX += 546;
   *(s8 *)(p2 + 0x34d) = 1;
   ((GroundBaddieState *)p2)->baddie.moveSpeed = lbl_803E3090;
   ((GroundBaddieState *)p2)->baddie.animSpeedA = lbl_803E3060;
@@ -396,7 +397,7 @@ int kaldachom_stateHandlerA05(int obj, int p2)
   extern char lbl_803203F8[];
   extern f32 lbl_80320404[];
   extern f32 lbl_803E3060;
-  int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+  int sub = *(int *)(*(int *)&((GameObject *)obj)->extra + 0x40c);
 
   if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
     if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
@@ -420,7 +421,7 @@ int kaldachom_stateHandlerA02(int obj, int p2)
   extern s16 lbl_803203F8[];
   extern f32 lbl_80320404[];
   extern f32 lbl_803E3060;
-  int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+  int sub = *(int *)(*(int *)&((GameObject *)obj)->extra + 0x40c);
 
   if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
     if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
@@ -444,7 +445,7 @@ int kaldachom_stateHandlerA01(int obj, int p2)
   extern void ObjHits_DisableObject(int);
   extern f32 lbl_803E3060;
   extern f32 lbl_803E307C;
-  int state = *(int *)(obj + 0xb8);
+  int state = *(int *)&((GameObject *)obj)->extra;
 
   if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
     if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
@@ -480,7 +481,7 @@ int kaldachom_stateHandlerA00(int obj, int p2)
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3098;
   extern f32 lbl_803E309C;
-  int state = *(int *)(obj + 0xb8);
+  int state = *(int *)&((GameObject *)obj)->extra;
 
   if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
     if ((s32)(s8)((GroundBaddieState *)p2)->baddie.moveJustStartedA != 0) {
@@ -490,7 +491,7 @@ int kaldachom_stateHandlerA00(int obj, int p2)
     kaldachompme_setLinkedMouthMode((u8 *)obj, 1);
     ((GroundBaddieState *)p2)->baddie.unk25F = 1;
     GameBit_Set(*(s16 *)(state + 0x3f4), 1);
-    *(u8 *)(obj + 0xaf) &= ~8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     *(u8 *)(obj + 0x36) = 0xff;
     ((GroundBaddieState *)p2)->baddie.unk34D = 1;
     ((GroundBaddieState *)p2)->baddie.moveSpeed =
