@@ -708,18 +708,20 @@ void lightGetColor(int i, u8 *a, u8 *b, u8 *c) {
 
 void modelLightStruct_updateColorFade(ModelLightStruct *light) {
     f32 progress;
-    f32 intensity;
     int mode;
 
     mode = light->colorFadeMode;
-    if (mode == 2) {
-        light->colorFadeProgress += light->colorFadeStep * timeDelta;
-    } else if (mode > 0 && mode < 2) {
+    switch (mode) {
+    case 1:
         light->colorFadeTimer += light->colorFadeStep * timeDelta;
         if (light->colorFadeTimer >= lbl_803DE760) {
             light->colorFadeProgress = (f32)randomGetRange(0, 100) / lbl_803DE778;
             light->colorFadeTimer = lbl_803DE75C;
         }
+        break;
+    case 2:
+        light->colorFadeProgress += light->colorFadeStep * timeDelta;
+        break;
     }
 
     progress = light->colorFadeProgress;
@@ -731,27 +733,25 @@ void modelLightStruct_updateColorFade(ModelLightStruct *light) {
         light->colorFadeStep = -light->colorFadeStep;
     }
 
-    progress = light->colorFadeProgress;
-    light->diffuseColor[0] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[0] - light->diffuseFadeStartColor[0]) + (f32)light->diffuseFadeStartColor[0]);
-    light->diffuseColor[1] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[1] - light->diffuseFadeStartColor[1]) + (f32)light->diffuseFadeStartColor[1]);
-    light->diffuseColor[2] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[2] - light->diffuseFadeStartColor[2]) + (f32)light->diffuseFadeStartColor[2]);
-    light->diffuseColor[3] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[3] - light->diffuseFadeStartColor[3]) + (f32)light->diffuseFadeStartColor[3]);
+    light->diffuseColor[0] = (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor[0] - light->diffuseFadeStartColor[0]) + (f32)light->diffuseFadeStartColor[0]);
+    light->diffuseColor[1] = (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor[1] - light->diffuseFadeStartColor[1]) + (f32)light->diffuseFadeStartColor[1]);
+    light->diffuseColor[2] = (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor[2] - light->diffuseFadeStartColor[2]) + (f32)light->diffuseFadeStartColor[2]);
+    light->diffuseColor[3] = (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor[3] - light->diffuseFadeStartColor[3]) + (f32)light->diffuseFadeStartColor[3]);
 
-    intensity = light->activeIntensity;
-    light->diffuseColor[0] = (u8)(int)((f32)light->diffuseColor[0] * intensity);
-    light->diffuseColor[1] = (u8)(int)((f32)light->diffuseColor[1] * intensity);
-    light->diffuseColor[2] = (u8)(int)((f32)light->diffuseColor[2] * intensity);
-    light->diffuseColor[3] = (u8)(int)((f32)light->diffuseColor[3] * intensity);
+    light->diffuseColor[0] = ((f32)light->diffuseColor[0] * light->activeIntensity);
+    light->diffuseColor[1] = ((f32)light->diffuseColor[1] * light->activeIntensity);
+    light->diffuseColor[2] = ((f32)light->diffuseColor[2] * light->activeIntensity);
+    light->diffuseColor[3] = ((f32)light->diffuseColor[3] * light->activeIntensity);
 
-    light->specularColor[0] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[0] - light->specularFadeStartColor[0]) + (f32)light->specularFadeStartColor[0]);
-    light->specularColor[1] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[1] - light->specularFadeStartColor[1]) + (f32)light->specularFadeStartColor[1]);
-    light->specularColor[2] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[2] - light->specularFadeStartColor[2]) + (f32)light->specularFadeStartColor[2]);
-    light->specularColor[3] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[3] - light->specularFadeStartColor[3]) + (f32)light->specularFadeStartColor[3]);
+    light->specularColor[0] = (light->colorFadeProgress * (f32)(light->specularFadeTargetColor[0] - light->specularFadeStartColor[0]) + (f32)light->specularFadeStartColor[0]);
+    light->specularColor[1] = (light->colorFadeProgress * (f32)(light->specularFadeTargetColor[1] - light->specularFadeStartColor[1]) + (f32)light->specularFadeStartColor[1]);
+    light->specularColor[2] = (light->colorFadeProgress * (f32)(light->specularFadeTargetColor[2] - light->specularFadeStartColor[2]) + (f32)light->specularFadeStartColor[2]);
+    light->specularColor[3] = (light->colorFadeProgress * (f32)(light->specularFadeTargetColor[3] - light->specularFadeStartColor[3]) + (f32)light->specularFadeStartColor[3]);
 
-    light->specularColor[0] = (u8)(int)((f32)light->specularColor[0] * intensity);
-    light->specularColor[1] = (u8)(int)((f32)light->specularColor[1] * intensity);
-    light->specularColor[2] = (u8)(int)((f32)light->specularColor[2] * intensity);
-    light->specularColor[3] = (u8)(int)((f32)light->specularColor[3] * intensity);
+    light->specularColor[0] = ((f32)light->specularColor[0] * light->activeIntensity);
+    light->specularColor[1] = ((f32)light->specularColor[1] * light->activeIntensity);
+    light->specularColor[2] = ((f32)light->specularColor[2] * light->activeIntensity);
+    light->specularColor[3] = ((f32)light->specularColor[3] * light->activeIntensity);
 }
 
 void modelLightStruct_startColorFade(ModelLightStruct *light, int mode, s16 frames) {
