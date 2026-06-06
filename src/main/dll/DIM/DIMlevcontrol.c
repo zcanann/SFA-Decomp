@@ -507,7 +507,7 @@ void dimlavasmash_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8 *state = ((GameObject *)obj)->extra;
     if (state[2] == 2 && visible != 0) {
-        objRenderFn_8003b8f4(lbl_803E48F8);
+        ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E48F8);
     }
 }
 #pragma peephole reset
@@ -698,7 +698,7 @@ void dimcannon_init(int *obj, int *arg)
         if (p != 0) {
             *(int *)((char *)p + 0x30) |= 0xc10;
             p = *(int **)((char *)obj + 0x64);
-            *(int *)((char *)p + 0x30) |= 0x8000;
+            *(u32 *)((char *)p + 0x30) |= 0x8000LL;
         }
         state = ((GameObject *)obj)->extra;
         *(s8 *)((char *)state + 0x9) = (s8)randomGetRange(-0x64, 0x64);
@@ -715,7 +715,7 @@ void dimcannon_init(int *obj, int *arg)
         u8 i;
 
         if (*(s8 *)((char *)obj + 0xac) == 0x13) {
-            u8 v = 0;
+            int v = 0;
             if (GameBit_Get(0xc17) && GameBit_Get(0xa21)) {
                 v = 1;
             }
@@ -723,22 +723,21 @@ void dimcannon_init(int *obj, int *arg)
         }
 
         for (i = 0; i < 0xa; i += 5) {
-            char *e = (char *)state + i * 4;
-            *(f32 *)(e + 0x14) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(e + 0x3c) = ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(e + 0x64) = ((GameObject *)obj)->anim.localPosZ;
-            *(f32 *)(e + 0x18) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(e + 0x40) = ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(e + 0x68) = ((GameObject *)obj)->anim.localPosZ;
-            *(f32 *)(e + 0x1c) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(e + 0x44) = ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(e + 0x6c) = ((GameObject *)obj)->anim.localPosZ;
-            *(f32 *)(e + 0x20) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(e + 0x48) = ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(e + 0x70) = ((GameObject *)obj)->anim.localPosZ;
-            *(f32 *)(e + 0x24) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(e + 0x4c) = ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(e + 0x74) = ((GameObject *)obj)->anim.localPosZ;
+            *(f32 *)((char *)state + i * 4 + 0x14) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)((char *)state + i * 4 + 0x3c) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)((char *)state + i * 4 + 0x64) = ((GameObject *)obj)->anim.localPosZ;
+            *(f32 *)((char *)state + i * 4 + 0x18) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)((char *)state + i * 4 + 0x40) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)((char *)state + i * 4 + 0x68) = ((GameObject *)obj)->anim.localPosZ;
+            *(f32 *)((char *)state + i * 4 + 0x1c) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)((char *)state + i * 4 + 0x44) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)((char *)state + i * 4 + 0x6c) = ((GameObject *)obj)->anim.localPosZ;
+            *(f32 *)((char *)state + i * 4 + 0x20) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)((char *)state + i * 4 + 0x48) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)((char *)state + i * 4 + 0x70) = ((GameObject *)obj)->anim.localPosZ;
+            *(f32 *)((char *)state + i * 4 + 0x24) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)((char *)state + i * 4 + 0x4c) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)((char *)state + i * 4 + 0x74) = ((GameObject *)obj)->anim.localPosZ;
         }
 
         ((DimCannonState *)state)->unkAF = 0x80;
