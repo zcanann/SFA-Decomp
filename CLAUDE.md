@@ -2170,6 +2170,15 @@ compare's immediate and subtract 1 for the real case value.
     `cmplwi` IMMEDIATES (the int form materializes the constants via
     lis/addi into saved regs and signed cmpw — a whole-fn coloring shift
     from one decl; recipe #58 at fn scale).
+    **f32->int DIRECTION caveat (the GVN-rematerialization cap): a hoisted
+    `int v = (int)volf;` makes every LATER `(int)volf` VN-reuse the result
+    (`mr`), while target RE-EXECUTES the fctiwz per site.** The #97
+    int->f32 "load CSEs, cast doesn't" behavior does NOT hold for
+    fctiwz when a named int already holds the converted value — GVN is
+    value-keyed across blocks. No working spelling found: `*(f32 *)&volf`
+    launder forces volf to MEMORY (demotes its saved-FPR home, net worse);
+    no-op cast chains fold (#94 negative list). ~3 instrs per re-eval site;
+    classify and bank (Sfx_UpdateObjectChannel3D 93.3 residual, audio).
 
 **Recipe #94 addendum (task #181) — the fold-back IS defeatable: a SAME-VALUE
 CONDITIONAL second def (phi) unfolds every `*p` deref to reg-form.** Probe-
