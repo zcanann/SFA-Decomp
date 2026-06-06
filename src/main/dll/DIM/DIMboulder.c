@@ -1197,7 +1197,6 @@ void magiclight_hitDetect(void) {}
 void magiclight_release(void) {}
 void magiclight_initialise(void) {}
 
-extern int magiclight_SeqFn(int* obj);
 extern u32 randomGetRange(int min, int max);
 extern f32 lbl_803E4740;
 extern f32 lbl_803E4744;
@@ -1212,7 +1211,7 @@ void magiclight_init(int* obj, u8* params)
     MagicLightState* sub;
     *(int*)((char*)obj + 0xf4) = 0;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)&magiclight_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)magiclight_SeqFn;
     if (*(s16*)((char*)obj + 0x46) == 0x172) {
         return;
     }
@@ -1461,7 +1460,6 @@ int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3) {
 #pragma scheduling reset
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
-extern int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3);
 #pragma scheduling off
 #pragma peephole off
 void dll_16C_init(void *obj, void *arg2) {

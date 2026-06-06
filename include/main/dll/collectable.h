@@ -31,6 +31,7 @@ int Tricky_updateSideCommandPrompts(int obj);
 uint FUN_80146874(void);
 void Tricky_destroy(int obj,int shouldKeepFlameChildren);
 void Tricky_init(int obj);
+int tricky_SeqFn(int obj,int unused,int seq);
 void Tricky_update(int obj);
 void fn_80148C18(int obj,int state);
 void trickyFn_80148d8c(int obj,int state);

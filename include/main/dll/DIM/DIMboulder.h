@@ -72,6 +72,7 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void magiclight_hitDetect(void);
 void magiclight_update(int obj);
 void magiclight_init(int* obj, u8* params);
+int magiclight_SeqFn(int *obj);
 void magiclight_release(void);
 void magiclight_initialise(void);
 
@@ -80,6 +81,7 @@ int dll_16C_getObjectTypeId(void);
 void dll_16C_free(int *obj);
 void dll_16C_hitDetect(void *obj);
 void dll_16C_init(void *obj, void *arg2);
+int dll_16C_SeqFn(int *obj, int arg2, u8 *events);
 void dll_16C_release(void);
 void dll_16C_initialise(void);
 

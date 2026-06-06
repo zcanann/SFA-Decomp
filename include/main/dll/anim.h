@@ -206,6 +206,7 @@ void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dbholecontrol1_hitDetect(void);
 void dbholecontrol1_update(int *obj);
 void dbholecontrol1_init(int *obj, u8 *params);
+int dbholecontrol1_SeqFn(int obj, int unused, int events);
 void dbholecontrol1_release(void);
 void dbholecontrol1_initialise(void);
 
@@ -237,8 +238,18 @@ void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dfpseqpoint_hitDetect(void);
 void dfpseqpoint_update(int obj);
 void dfpseqpoint_init(int *obj, u8 *init);
+int dfpseqpoint_SeqFn(int obj, int unused, int events);
 void dfpseqpoint_release(void);
 void dfpseqpoint_initialise(void);
+
+int dll_22C_getExtraSize_ret_16(void);
+int dll_22C_getObjectTypeId(void);
+void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dll_22C_init(int obj, char *p);
+int dll_22C_SeqFn(void);
+void dll_22C_hitDetect_nop(void);
+void dll_22C_release_nop(void);
+void dll_22C_initialise_nop(void);
 
 int DFP_Torch_getExtraSize(void);
 int DFP_Torch_getObjectTypeId(void);

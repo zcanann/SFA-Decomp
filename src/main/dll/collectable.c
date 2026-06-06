@@ -148,7 +148,6 @@ extern undefined8 FUN_80135d54();
 extern void objAnimFreeChildren(int param_1,int param_2,int *param_3);
 extern void trickyImpress(int obj);
 extern int trickyFoodFn_8014460c(int obj,int state);
-extern int tricky_SeqFn(int obj,int unused,int seq);
 extern void objAnimFn_8013a3f0(int obj,int animId,f32 blend,int flags);
 extern undefined4 FUN_80135f38();
 extern undefined4 FUN_80136310();

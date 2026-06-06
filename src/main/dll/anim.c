@@ -4004,12 +4004,11 @@ void FUN_80204f7c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 #pragma peephole off
 void dll_22C_init(int obj, char *p)
 {
-  extern int dll_22C_SeqFn(void);
   extern f32 lbl_803E63A8;
   int b8;
 
   b8 = *(int *)&((GameObject *)obj)->extra;
-  *(int *)&((GameObject *)obj)->animEventCallback = (int)dll_22C_SeqFn;
+  ((GameObject *)obj)->animEventCallback = (void *)dll_22C_SeqFn;
   ((GameObject *)obj)->anim.rotX = (s16)(*(char *)(p + 0x18) << 8);
   ((Dll22CState *)b8)->mode = 0;
   ((Dll22CState *)b8)->gameBit = *(s16 *)(p + 0x20);
@@ -4192,7 +4191,6 @@ void dbholecontrol1_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int dbholecontrol1_SeqFn(int obj, int unused, int p3);
 extern void Stack_Free(int *stack);
 extern void Obj_FreeObject(int obj);
 extern void **gBaddieControlInterface;
@@ -4285,8 +4283,6 @@ void dfpseqpoint_free(void) {}
 void dfpseqpoint_hitDetect(void) {}
 void dfpseqpoint_release(void) {}
 void dfpseqpoint_initialise(void) {}
-
-extern int dfpseqpoint_SeqFn(int obj, int p2, int p3);
 
 #pragma scheduling off
 #pragma peephole off
