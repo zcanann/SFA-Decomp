@@ -461,18 +461,10 @@ int fn_8026E9D0(u8 voice, u32 param)
     vp = (u8 *)(gSynthCurrentVoice + voice * 56 + 0x14e8);
     while (((event = *(u8 **)(vp + 0x1c)) == NULL ? 0 : ((SeqEvent *)event)->time)
            <= *(u32 *)(vp + *(u8 *)(vp + 0x30) * 8 + 0x24)) {
-        if (event != NULL) {
-            *(u8 **)(vp + 0x1c) = ((SeqEvent *)event)->next;
-            if (*(int *)event != 0) {
-                *(int *)(*(int *)(vp + 0x1c) + 4) = 0;
-            }
+        if (event != NULL && (*(u8 **)(vp + 0x1c) = (u8 *)((SeqEvent *)event)->next) != NULL) {
+            *(int *)(*(int *)(vp + 0x1c) + 4) = 0;
         }
-        if (event != NULL) {
-            res = fn_8026E0E4((int)event, voice, &flag);
-            if (res != 0) {
-                synthInsertChannelEvent((int)vp, res);
-            }
-        } else {
+        if (event == NULL) {
             if (flag == 0) {
                 return 0;
             }
@@ -484,7 +476,9 @@ int fn_8026E9D0(u8 voice, u32 param)
                 *(int *)(gSynthCurrentVoice + voice * 56 + 0x14ec) = *(int *)(gSynthCurrentVoice + voice * 56 + 0x14e8);
                 fn_8026CF78(voice);
                 vp2 = (u8 *)(gSynthCurrentVoice + voice * 56 + 0x14e8);
-                fm = k80 * ((f32)*(u32 *)(vp2 + 8) * (f32)param) * (k84 * (f32)*(u16 *)(vp2 + 0x32));
+                fm = (f32)*(u32 *)(vp2 + 8) * (f32)param;
+                fm = k80 * fm;
+                fm = fm * (k84 * (f32)*(u16 *)(vp2 + 0x32));
                 ftotal = k88 * fm;
                 if (k88abs > __fabs(ftotal)) {
                 } else {
@@ -495,6 +489,11 @@ int fn_8026E9D0(u8 voice, u32 param)
             }
             *(u16 *)(vp + 0x34) += 1;
             fn_8026E90C(voice);
+            continue;
+        }
+        res = fn_8026E0E4((int)event, voice, &flag);
+        if (res != 0) {
+            synthInsertChannelEvent((int)vp, res);
         }
     }
     return 1;
