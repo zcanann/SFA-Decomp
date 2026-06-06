@@ -84,7 +84,7 @@ extern undefined4 DAT_8032267e;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4* DAT_803dd740;
 extern f64 DOUBLE_803e47d0;
 extern f64 DOUBLE_803e47f8;
@@ -1372,7 +1372,7 @@ FUN_80189054(undefined8 param_1,double param_2,double param_3,undefined8 param_4
       }
       else if (iVar4 < 0x49f5a) {
         if (iVar4 == 0x451b9) {
-          cVar2 = (**(code **)(*DAT_803dd72c + 0x40))(0xd);
+          cVar2 = (*DAT_803dd72c)->getMode(0xd);
           param_1 = extraout_f1;
           if (cVar2 == '\x02') {
             FUN_80041ff8(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xb);
@@ -1421,22 +1421,22 @@ LAB_801893dc:
       iVar3 = *(int *)(iVar6 + 0x14);
       if (iVar3 == 0x49f5a) {
         iVar4 = 0;
-        param_12 = *DAT_803dd72c;
+        param_12 = (int)*DAT_803dd72c;
         param_1 = (**(code **)(param_12 + 0x50))(0xb,4);
       }
       else if (iVar3 < 0x49f5a) {
         if (iVar3 == 0x451b9) {
-          cVar2 = (**(code **)(*DAT_803dd72c + 0x40))(0xd);
+          cVar2 = (*DAT_803dd72c)->getMode(0xd);
           param_1 = extraout_f1_00;
           if (cVar2 == '\x02') {
             uVar8 = extraout_f1_00;
             FUN_80042b9c(0,0,1);
             FUN_80044404(0xd);
             FUN_80043030(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-            (**(code **)(*DAT_803dd72c + 0x50))(0xd,10,0);
-            (**(code **)(*DAT_803dd72c + 0x50))(0xd,0xb,0);
+            (*DAT_803dd72c)->setAnimEvent(0xd,10,0);
+            (*DAT_803dd72c)->setAnimEvent(0xd,0xb,0);
             iVar4 = 0;
-            param_12 = *DAT_803dd72c;
+            param_12 = (int)*DAT_803dd72c;
             param_1 = (**(code **)(param_12 + 0x50))(0xd,0xe);
           }
         }
@@ -1457,7 +1457,7 @@ LAB_801893dc:
     case 5:
       iVar3 = *(int *)(iVar6 + 0x14);
       if (iVar3 == 0x451b9) {
-        cVar2 = (**(code **)(*DAT_803dd72c + 0x40))(0xd);
+        cVar2 = (*DAT_803dd72c)->getMode(0xd);
         param_1 = extraout_f1_01;
         if (cVar2 == '\x02') {
           param_1 = FUN_80042800();
@@ -1474,7 +1474,7 @@ LAB_801895a4:
     case 6:
       iVar3 = *(int *)(iVar6 + 0x14);
       if (iVar3 == 0x451b9) {
-        cVar2 = (**(code **)(*DAT_803dd72c + 0x40))(0xd);
+        cVar2 = (*DAT_803dd72c)->getMode(0xd);
         param_1 = extraout_f1_02;
         if (cVar2 == '\x02') {
           param_1 = FUN_800427c8();
@@ -1497,9 +1497,9 @@ LAB_80189614:
       }
       else if (iVar3 < 0x49f5a) {
         if ((iVar3 == 0x451b9) &&
-           (cVar2 = (**(code **)(*DAT_803dd72c + 0x40))(0xd), param_1 = extraout_f1_03,
+           (cVar2 = (*DAT_803dd72c)->getMode(0xd), param_1 = extraout_f1_03,
            cVar2 == '\x02')) {
-          iVar4 = *DAT_803dd72c;
+          iVar4 = (int)*DAT_803dd72c;
           uVar8 = (**(code **)(iVar4 + 0x44))(0xb,5);
           param_1 = FUN_80053c98(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x4e,
                                  '\0',iVar4,param_12,param_13,param_14,param_15,param_16);
@@ -1508,7 +1508,7 @@ LAB_80189614:
       else if (iVar3 == 0x4cd65) {
         FUN_80053c98(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x7f,'\0',iVar4
                      ,param_12,param_13,param_14,param_15,param_16);
-        iVar4 = *DAT_803dd72c;
+        iVar4 = (int)*DAT_803dd72c;
         param_1 = (**(code **)(iVar4 + 0x44))(0x41,2);
       }
       break;
