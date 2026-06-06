@@ -2473,34 +2473,40 @@ extern void mapLoadForObject(int id, void *obj);
 #pragma dont_inline on
 void Obj_RegisterObject(u8 *obj, int flags)
 {
+    ObjAnimComponent *object;
+    ObjHitsPriorityState *hitState;
     int id;
     int prev;
     int cur;
     int off;
 
-    if (*(void **)(obj + 0x30) != 0) {
-        ((void (*)(f32, f32, f32, u8 *, u8 *, u8 *, void *))Obj_TransformLocalPointToWorld)(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), obj + 0x18, obj + 0x1c, obj + 0x20, *(void **)(obj + 0x30));
+    object = (ObjAnimComponent *)obj;
+    if (object->parent != NULL) {
+        ((void (*)(f32, f32, f32, f32 *, f32 *, f32 *, void *))Obj_TransformLocalPointToWorld)(
+            object->localPosX, object->localPosY, object->localPosZ, &object->worldPosX,
+            &object->worldPosY, &object->worldPosZ, object->parent);
     } else {
-        *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
-        *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
-        *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+        object->worldPosX = object->localPosX;
+        object->worldPosY = object->localPosY;
+        object->worldPosZ = object->localPosZ;
     }
-    *(f32 *)(obj + 0x8c) = *(f32 *)(obj + 0x18);
-    *(f32 *)(obj + 0x90) = *(f32 *)(obj + 0x1c);
-    *(f32 *)(obj + 0x94) = *(f32 *)(obj + 0x20);
-    *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
-    *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
-    *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
-    Obj_RunInitCallback(obj, *(int *)(obj + 0x4c), 0);
-    if (*(u8 **)(obj + 0x54) != 0) {
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x10) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x14) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x18) = *(f32 *)(obj + 0x14);
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x1c) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x20) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x24) = *(f32 *)(obj + 0x14);
+    object->previousWorldPosX = object->worldPosX;
+    object->previousWorldPosY = object->worldPosY;
+    object->previousWorldPosZ = object->worldPosZ;
+    object->previousLocalPosX = object->localPosX;
+    object->previousLocalPosY = object->localPosY;
+    object->previousLocalPosZ = object->localPosZ;
+    Obj_RunInitCallback(obj, (int)object->placementData, 0);
+    hitState = (ObjHitsPriorityState *)object->hitReactState;
+    if (hitState != NULL) {
+        hitState->localPosX = object->localPosX;
+        hitState->localPosY = object->localPosY;
+        hitState->localPosZ = object->localPosZ;
+        hitState->worldPosX = object->localPosX;
+        hitState->worldPosY = object->localPosY;
+        hitState->worldPosZ = object->localPosZ;
     }
-    id = *(s16 *)(*(u8 **)(obj + 0x50) + 0x78);
+    id = object->modelInstance->mapLoadObjectId;
     if (id > -1) {
         mapLoadForObject(id, obj);
     }
