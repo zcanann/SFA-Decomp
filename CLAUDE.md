@@ -1123,6 +1123,16 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   numbers swapped. ~10 fns in the tier (dll_127_init, Curve_SampleSegmentPoints,
   exploded_seedDebrisMotion, scarab fn_8015EA48, drawTexture, pi_dolphin
   fn_8004E0FC, magiccavetop fmr) — skip on sight.
+  **EXCEPTION (cracked sub-shape): decrement+clamp where the compare CONSUMES
+  the fsubs/fmadds RESULT (no reload between store and fcmpo).** Write
+  `f32 t = global - delta; global = t; if (t < lim) global = lim;` — the
+  explicit t homes the result in f1 (the minuend's reg) matching target;
+  compound `-=` and the expanded re-read both leave it in f0
+  (MMP_levelcontrol_update 99.88→100). DISCRIMINATOR: if target RELOADS the
+  field before the fcmpo (lfs f1,off(rN) fresh load after the stfs), the cap
+  stands — verified still-capped on fn_801CEA14, dim2icicle_update,
+  cclevcontrol_update, wctemple_update. Read the target asm between the stfs
+  and the fcmpo to pick.
 - **CAP — `addi r0,rH,lo; mr rX,r0` vs direct `addi rX,rH,lo` global-address
   materialization** (foodbag dll_82_func03, mapSetupPlayer,
   camcontrol_loadTriggeredCamAction). Initializer-decl form, statement
