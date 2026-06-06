@@ -1,4 +1,5 @@
 #include "main/dll/autoTransporter.h"
+#include "main/game_object.h"
 #include "global.h"
 
 /*
@@ -788,7 +789,7 @@ void doorf4_free(int obj) {
 
 extern f32 lbl_803E36A0;
 void sidekickball_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-    if (*(int *)((char *)obj + 0xF8) == 0 || visible == -1) {
+    if (((GameObject *)obj)->unkF8 == 0 || visible == -1) {
         objRenderFn_8003b8f4(lbl_803E36A0);
     }
 }
@@ -887,11 +888,11 @@ void trickyBallFn_801793b8(int *obj, u8 *params)
         }
     }
 
-    if (*(int *)((char *)obj + 0xf8) == 1) {
+    if (((GameObject *)obj)->unkF8 == 1) {
         params[0x2c9] = 2;
     }
     if (params[0x2c9] != 2) goto end;
-    if (*(int *)((char *)obj + 0xf8) != 0) goto end;
+    if (((GameObject *)obj)->unkF8 != 0) goto end;
 
     if (fn_8029669C(player) == 0) {
         params[0x2c9] = 0;
@@ -906,9 +907,9 @@ void trickyBallFn_801793b8(int *obj, u8 *params)
 
     {
         f32 k = lbl_803E3688;
-        *(f32 *)((char *)obj + 0x28) =
+        ((GameObject *)obj)->anim.velocityY =
             k * (lbl_803E3690 * *(f32 *)((char *)playerState + 0x298) + lbl_803E368C);
-        *(f32 *)((char *)obj + 0x2c) =
+        ((GameObject *)obj)->anim.velocityZ =
             k * (lbl_803E3698 * *(f32 *)((char *)playerState + 0x298) + lbl_803E3694);
     }
 
@@ -927,8 +928,8 @@ void trickyBallFn_801793b8(int *obj, u8 *params)
 
     fn_801796BC(obj,
                 *(f32 *)((char *)obj + 0x24),
-                *(f32 *)((char *)obj + 0x28),
-                *(f32 *)((char *)obj + 0x2c));
+                ((GameObject *)obj)->anim.velocityY,
+                ((GameObject *)obj)->anim.velocityZ);
 
 end:
     if (params[0x2ca] != 0) {
@@ -942,14 +943,14 @@ void doorf4_update(int *obj)
 {
     DoorF4State *state = *(DoorF4State **)((char *)obj + 0xb8);
     state->triggerLatch = 0;
-    if (*(int *)((char *)obj + 0xf4) == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         int *src = *(int **)((char *)obj + 0x4c);
         s16 type;
-        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)src + 8);
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)src + 0xc);
-        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)src + 0x10);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)src + 8);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)src + 0xc);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)src + 0x10);
         *(s16 *)obj = (s16)((s8) * (s8 *)((char *)src + 0x18) << 8);
-        type = *(s16 *)((char *)obj + 0x46);
+        type = ((GameObject *)obj)->anim.seqId;
         if (type == 0x151) {
             if (GameBit_Get(state->gameBitA) != 0) {
                 ((void (*)(int *, int))((int *)(*gObjectTriggerInterface))[0x54 / 4])(obj, 0x75);
@@ -965,7 +966,7 @@ void doorf4_update(int *obj)
         } else {
             ((void (*)(int, int *, int))((int *)(*gObjectTriggerInterface))[0x48 / 4])(0, obj, -1);
         }
-        *(int *)((char *)obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
 }
 
@@ -984,14 +985,14 @@ void doorf4_init(int *obj, int *params)
 
     ObjMsg_AllocQueue(obj, 4);
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
-    *(void **)((char *)obj + 0xbc) = (void *)doorf4_SeqFn;
+    ((GameObject *)obj)->unkBC = (void *)doorf4_SeqFn;
     *(u8 *)((char *)obj + 0xaf) |= 8;
-    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
     state->gameBitA = *(s16 *)((char *)params + 0x1e);
     state->unk18 = *(s16 *)((char *)params + 0x20);
     state->openRange = lbl_803E3654;
 
-    type = *(s16 *)((char *)obj + 0x46);
+    type = ((GameObject *)obj)->anim.seqId;
     switch (type) {
     case 193:
     case 196:
@@ -1016,8 +1017,8 @@ void doorf4_init(int *obj, int *params)
 
     state->cosYaw = fn_80293E80(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
     state->sinYaw = sin(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
-    state->planeD = -(state->cosYaw * *(f32 *)((char *)obj + 12) +
-                      state->sinYaw * *(f32 *)((char *)obj + 20));
+    state->planeD = -(state->cosYaw * ((GameObject *)obj)->anim.localPosX +
+                      state->sinYaw * ((GameObject *)obj)->anim.localPosZ);
 }
 
 #pragma peephole reset
@@ -1104,7 +1105,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             active = 1;
         }
         if (active != 0 && sub->toggled == 0) {
-            if (*(s16 *)((char *)obj + 0x46) == 200) {
+            if (((GameObject *)obj)->anim.seqId == 200) {
                 if (GameBit_Get(0x57) != 0) {
                     getEnvfxAct(0, 0, 0x7f, 0);
                 } else {
@@ -1113,7 +1114,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             }
             sub->toggled = 1;
         } else if (active == 0 && sub->toggled == 1) {
-            if (*(s16 *)((char *)obj + 0x46) == 200 && sd <= lbl_803E3648) {
+            if (((GameObject *)obj)->anim.seqId == 200 && sd <= lbl_803E3648) {
                 getEnvfxAct(0, 0, 0xe, 0);
             }
             sub->toggled = 0;
@@ -1126,7 +1127,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             s = sin(ang);
             sd = -(*(f32 *)(def + 8) * sd + *(f32 *)(def + 0x10) * s)
                + (sd * *(f32 *)((char *)player + 0xc) + s * *(f32 *)((char *)player + 0x14));
-            if (*(int *)((char *)obj + 0xf8) == 0) {
+            if (((GameObject *)obj)->unkF8 == 0) {
                 if (sd < lbl_803E3648 && sd > lbl_803E3658) {
                     active = 1;
                 }
@@ -1178,11 +1179,11 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
                 if (ObjMsg_Pop(obj, &msg, 0, 0) != 0 && msg < 10 && msg >= 8) {
                     ObjMsg_SendToObject(other, msg, obj, 0);
                 }
-                if (sd < lbl_803E3648 && *(int *)((char *)obj + 0xf8) == 0) {
+                if (sd < lbl_803E3648 && ((GameObject *)obj)->unkF8 == 0) {
                     seq[0x90] |= 0x14;
                 }
             } else {
-                if (*(int *)((char *)obj + 0xf8) == 1) {
+                if (((GameObject *)obj)->unkF8 == 1) {
                     seq[0x90] |= 8;
                 }
             }
@@ -1216,15 +1217,15 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
         }
         break;
     }
-    if (*(int *)((char *)obj + 0xf8) == 0) {
+    if (((GameObject *)obj)->unkF8 == 0) {
         if (active != 0) {
             seq[0x90] |= 1;
         }
     } else if (active == 0) {
         seq[0x90] |= 2;
     }
-    *(int *)((char *)obj + 0xf8) = active;
-    if ((*(s16 *)((char *)obj + 0x46) == 0x13e || *(s16 *)((char *)obj + 0x46) == 0x151)
+    ((GameObject *)obj)->unkF8 = active;
+    if ((((GameObject *)obj)->anim.seqId == 0x13e || ((GameObject *)obj)->anim.seqId == 0x151)
         && sub->triggerLatch != 0) {
         seq[0x90] |= 1;
     }
@@ -1246,7 +1247,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
                                 (u8)((u8)GameBit_Get(*(s16 *)(def + 0x1a)) ^ (u8)(*(s16 *)(def + 0x1c) >> 8)));
                 }
                 if (sd <= lbl_803E3648) {
-                    switch (*(s16 *)((char *)obj + 0x46)) {
+                    switch (((GameObject *)obj)->anim.seqId) {
                     case 0x1a2:
                         ObjMsg_SendToNearbyObjects(0x19c, lbl_803E3674, 0, obj, 0x30006, 0);
                         break;
@@ -1301,7 +1302,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
                     GameBit_Set(*(s16 *)(def + 0x1a),
                                 (u8)((u8)GameBit_Get(*(s16 *)(def + 0x1a)) ^ (u8)(*(s16 *)(def + 0x1c) >> 8)));
                 }
-                switch (*(s16 *)((char *)obj + 0x46)) {
+                switch (((GameObject *)obj)->anim.seqId) {
                 case 0x1a2:
                     ObjMsg_SendToNearbyObjects(0x19c, lbl_803E3674, 0, obj, 0x30005, 0);
                     break;
@@ -1332,8 +1333,8 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             seq[i + 0x81] = 0;
         }
     }
-    if (*(int *)((char *)obj + 0xf4) != 0) {
-        *(int *)((char *)obj + 0xf4) = 0;
+    if (((GameObject *)obj)->unkF4 != 0) {
+        ((GameObject *)obj)->unkF4 = 0;
         return 3;
     }
     return 0;
