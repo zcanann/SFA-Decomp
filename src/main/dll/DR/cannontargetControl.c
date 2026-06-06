@@ -1,4 +1,5 @@
 #include "main/dll/DR/cannontargetControl.h"
+#include "main/dll/DR/gunpowderbarrel_state.h"
 #include "main/objhits_types.h"
 
 extern undefined4 FUN_800033a8();
@@ -791,25 +792,25 @@ void gunpowderbarrel_init(int obj, u8 *def)
 {
     int st = *(int *)(obj + 0xb8);
 
-    *(u8 *)(st + 0x7) |= 2;
+    ((GunpowderBarrelState *)st)->unk07 |= 2;
     (*(void (**)(int, int, int))((char *)*lbl_803DCAC0 + 0x4))(obj, st, 5);
     ObjGroup_AddObject(obj, 0x19);
     ObjGroup_AddObject(obj, 0x16);
     ObjMsg_AllocQueue(obj, 8);
     *(int *)(obj + 0xf8) = 0;
-    *(s16 *)(st + 0x44) = 0;
-    *(s16 *)(st + 0x46) = 0;
-    *(u8 *)(st + 0x15) = 0;
-    *(s16 *)(st + 0x3c) = 0;
-    *(u8 *)(st + 0x16) = 0;
-    *(u8 *)(st + 0x17) = 0;
-    *(u8 *)(st + 0x3e) = 0;
-    *(int *)(st + 0x40) = 0;
-    *(f32 *)(st + 0x30) = lbl_803E42C0;
-    *(u8 *)(st + 0x49) = 0;
+    ((GunpowderBarrelState *)st)->unk44 = 0;
+    ((GunpowderBarrelState *)st)->unk46 = 0;
+    ((GunpowderBarrelState *)st)->unk15 = 0;
+    ((GunpowderBarrelState *)st)->unk3C = 0;
+    ((GunpowderBarrelState *)st)->unk16 = 0;
+    ((GunpowderBarrelState *)st)->unk17 = 0;
+    ((GunpowderBarrelState *)st)->unk3E = 0;
+    ((GunpowderBarrelState *)st)->unk40 = 0;
+    ((GunpowderBarrelState *)st)->unk30 = lbl_803E42C0;
+    ((GunpowderBarrelState *)st)->flags49 = 0;
     storeZeroToFloatParam((void *)(st + 0x18));
     storeZeroToFloatParam((void *)(st + 0x1c));
-    *(u8 *)(st + 0x49) |= 1;
+    ((GunpowderBarrelState *)st)->flags49 |= 1;
     {
         u8 v;
         if ((s8)def[0x19] >= 1) {
@@ -826,10 +827,10 @@ void gunpowderbarrel_init(int obj, u8 *def)
         ((BarrelBits *)(st + 0x48))->b6 = v;
     }
     ObjHits_EnableObject(obj);
-    *(f32 *)(st + 0x2c) = (f32)*(s16 *)(*(int *)(obj + 0x54) + 0x5a);
+    ((GunpowderBarrelState *)st)->unk2C = (f32)*(s16 *)(*(int *)(obj + 0x54) + 0x5a);
     ((BarrelBits *)(st + 0x4a))->b5 = 0;
-    *(f32 *)(st + 0x38) = lbl_803E42C0;
-    *(int *)(st + 0x10) = 0;
+    ((GunpowderBarrelState *)st)->unk38 = lbl_803E42C0;
+    ((GunpowderBarrelState *)st)->linkedObj = 0;
     (*(void (**)(int, int))((char *)*lbl_803DCAC0 + 0x2c))(st, 1);
     if (*(void **)(obj + 0x54) != NULL) {
         *(s16 *)(*(int *)(obj + 0x54) + 0xb2) = 1;
@@ -1016,15 +1017,15 @@ void gunpowderbarrel_update(int obj)
     u8 *player = Obj_GetPlayerObject();
     int def = *(int *)(obj + 0x4c);
 
-    if (*(f32 *)(st + 0x54) <= lbl_803E4334) {
-        *(f32 *)(st + 0x54) += timeDelta;
+    if (((GunpowderBarrelState *)st)->unk54 <= lbl_803E4334) {
+        ((GunpowderBarrelState *)st)->unk54 += timeDelta;
     }
     if (fn_80080150((void *)(st + 0x18)) != 0) {
         *(u8 *)(obj + 0xaf) |= 8;
         if (timerCountDown((void *)(st + 0x18)) != 0) {
-            *(u8 *)(st + 0x17) = 0;
-            *(u8 *)(st + 0x16) = 0;
-            *(u8 *)(st + 0x49) |= 1;
+            ((GunpowderBarrelState *)st)->unk17 = 0;
+            ((GunpowderBarrelState *)st)->unk16 = 0;
+            ((GunpowderBarrelState *)st)->flags49 |= 1;
             *(s16 *)(obj + 6) &= ~0x4000;
             ObjHits_ClearHitVolumes(obj);
             ObjHitbox_SetCapsuleBounds(obj, 8, -2, 0x19);
@@ -1051,15 +1052,15 @@ void gunpowderbarrel_update(int obj)
     }
     if (*(void **)(obj + 0xc8) == NULL) {
         f32 range = lbl_803E4338;
-        if ((u32)(*(int *)(st + 0x10) = ObjGroup_FindNearestObject(0x4c, obj, &range)) != 0 &&
-            timer_isEffectMode(*(int *)(st + 0x10)) != 0 &&
-            *(void **)(*(int *)(st + 0x10) + 0xc4) == NULL) {
-            ObjLink_AttachChild(obj, *(int *)(st + 0x10), 0);
+        if ((u32)(((GunpowderBarrelState *)st)->linkedObj = ObjGroup_FindNearestObject(0x4c, obj, &range)) != 0 &&
+            timer_isEffectMode(((GunpowderBarrelState *)st)->linkedObj) != 0 &&
+            *(void **)(((GunpowderBarrelState *)st)->linkedObj + 0xc4) == NULL) {
+            ObjLink_AttachChild(obj, ((GunpowderBarrelState *)st)->linkedObj, 0);
         }
     } else {
-        if (Obj_IsObjectAlive(*(int *)(st + 0x10)) == 0 && *(void **)(st + 0x10) != NULL) {
-            ObjLink_DetachChild(obj, *(int *)(st + 0x10));
-            *(int *)(st + 0x10) = 0;
+        if (Obj_IsObjectAlive(((GunpowderBarrelState *)st)->linkedObj) == 0 && *(void * *)&((GunpowderBarrelState *)st)->linkedObj != NULL) {
+            ObjLink_DetachChild(obj, ((GunpowderBarrelState *)st)->linkedObj);
+            ((GunpowderBarrelState *)st)->linkedObj = 0;
         }
     }
     {
@@ -1086,17 +1087,17 @@ void gunpowderbarrel_update(int obj)
     } else {
         *(u8 *)(obj + 0xaf) &= ~8;
     }
-    if (*(u8 *)(st + 0x17) != 0) {
-        *(u8 *)(st + 0x17) += framesThisStep;
-        *(f32 *)(st + 0x2c) =
-            *(f32 *)(st + 0x34) * (f32)(u32)*(u8 *)(st + 0x17) + lbl_803E42DC;
-        ObjHitbox_SetCapsuleBounds(obj, (s32)*(f32 *)(st + 0x2c),
-                                   (s32)(-*(f32 *)(st + 0x2c) * lbl_803E4328),
-                                   (s32)(*(f32 *)(st + 0x2c) * lbl_803E4328));
-        if (*(void **)(st + 0x10) != NULL) {
-            timer_clearManualFlags(*(int *)(st + 0x10));
+    if (((GunpowderBarrelState *)st)->unk17 != 0) {
+        ((GunpowderBarrelState *)st)->unk17 += framesThisStep;
+        ((GunpowderBarrelState *)st)->unk2C =
+            ((GunpowderBarrelState *)st)->unk34 * (f32)(u32)((GunpowderBarrelState *)st)->unk17 + lbl_803E42DC;
+        ObjHitbox_SetCapsuleBounds(obj, (s32)((GunpowderBarrelState *)st)->unk2C,
+                                   (s32)(-((GunpowderBarrelState *)st)->unk2C * lbl_803E4328),
+                                   (s32)(((GunpowderBarrelState *)st)->unk2C * lbl_803E4328));
+        if (*(void * *)&((GunpowderBarrelState *)st)->linkedObj != NULL) {
+            timer_clearManualFlags(((GunpowderBarrelState *)st)->linkedObj);
         }
-        if (*(u8 *)(st + 0x17) > 0x14) {
+        if (((GunpowderBarrelState *)st)->unk17 > 0x14) {
             int i;
             u32 gen;
             if (((BarrelBits *)(st + 0x4a))->b7 != 0) {
@@ -1128,7 +1129,7 @@ void gunpowderbarrel_update(int obj)
             }
             memset((void *)(st + 0x20), 0, 0xc);
             memset((void *)(obj + 0x24), 0, 0xc);
-            *(u8 *)(st + 0x49) &= ~2;
+            ((GunpowderBarrelState *)st)->flags49 &= ~2;
             ObjHits_RefreshObjectState(obj);
             if (((BarrelBits *)(st + 0x48))->b7 != 0) {
                 s16toFloat((void *)(st + 0x18), 0x3c);
@@ -1147,7 +1148,7 @@ void gunpowderbarrel_update(int obj)
         }
         return;
     }
-    if (*(u8 *)(st + 0x15) != 0) {
+    if (((GunpowderBarrelState *)st)->unk15 != 0) {
         if ((playerGetStateFlag310(player) & 0x4000) != 0) {
             setAButtonIcon(5);
         } else {
@@ -1155,18 +1156,18 @@ void gunpowderbarrel_update(int obj)
         }
     } else {
         if (((BarrelBits *)(st + 0x48))->b6 != 0 && ((BarrelBits *)(st + 0x4a))->b4 != 0 &&
-            (*(u8 *)(st + 0x49) & 2) == 0) {
+            (((GunpowderBarrelState *)st)->flags49 & 2) == 0) {
             saveGame_saveObjectPos(obj);
         }
     }
-    if ((*(u8 *)(st + 0x49) & 2) != 0 || ((BarrelBits *)(st + 0x4a))->b5 != 0 ||
+    if ((((GunpowderBarrelState *)st)->flags49 & 2) != 0 || ((BarrelBits *)(st + 0x4a))->b5 != 0 ||
         (*(int (**)(int, int))((char *)*lbl_803DCAC0 + 0x8))(obj, st) == 0 ||
         (((BarrelBits *)(st + 0x4a))->b1 != 0 && playerIsDisguised(player) == 0)) {
         ObjHits_EnableObject(obj);
         fn_801A1230(obj);
         *(u8 *)(obj + 0x36) = 0xff;
-        if (*(u8 *)(st + 0x15) != 0) {
-            *(u8 *)(st + 0x15) = 0;
+        if (((GunpowderBarrelState *)st)->unk15 != 0) {
+            ((GunpowderBarrelState *)st)->unk15 = 0;
             if (fn_802966B4(player) != 0) {
                 ObjHits_SyncObjectPositionIfDirty(obj);
             } else if (fn_8029669C(player) != 0) {
@@ -1175,11 +1176,11 @@ void gunpowderbarrel_update(int obj)
             } else if (lbl_803E42C0 == fn_80296214(player)) {
                 ObjHits_SyncObjectPositionIfDirty(obj);
                 gunpowderbarrel_launchAtTarget(obj, 0);
-            } else if (*(u8 *)(st + 0x17) == 0) {
-                *(f32 *)(obj + 0x24) = *(f32 *)(st + 0x20) =
+            } else if (((GunpowderBarrelState *)st)->unk17 == 0) {
+                *(f32 *)(obj + 0x24) = ((GunpowderBarrelState *)st)->velX =
                     fn_80293E80(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340);
-                *(f32 *)(obj + 0x28) = *(f32 *)(st + 0x24) = lbl_803E42C0;
-                *(f32 *)(obj + 0x2c) = *(f32 *)(st + 0x28) =
+                *(f32 *)(obj + 0x28) = ((GunpowderBarrelState *)st)->velY = lbl_803E42C0;
+                *(f32 *)(obj + 0x2c) = ((GunpowderBarrelState *)st)->velZ =
                     sin(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340);
                 *(f32 *)(obj + 0xc) =
                     lbl_803DBE80 * -fn_80293E80(lbl_803E433C * (f32)*(s16 *)player /
@@ -1194,31 +1195,31 @@ void gunpowderbarrel_update(int obj)
         }
         gunpowderbarrel_updatePhysics(obj);
     } else {
-        *(u8 *)(st + 0x49) |= 1;
-        if (*(u8 *)(st + 0x15) == 0) {
-            if (*(void **)(st + 0x10) != NULL) {
-                timer_forceStart(*(int *)(st + 0x10));
+        ((GunpowderBarrelState *)st)->flags49 |= 1;
+        if (((GunpowderBarrelState *)st)->unk15 == 0) {
+            if (*(void * *)&((GunpowderBarrelState *)st)->linkedObj != NULL) {
+                timer_forceStart(((GunpowderBarrelState *)st)->linkedObj);
             }
             ObjGroup_RemoveObject(obj, 0x16);
         }
-        *(u8 *)(st + 0x15) = 1;
+        ((GunpowderBarrelState *)st)->unk15 = 1;
         ((BarrelBits *)(st + 0x4a))->b6 = 1;
-        *(s16 *)(st + 0x50) = *(s16 *)player;
+        ((GunpowderBarrelState *)st)->launchYaw = *(s16 *)player;
         fn_801A1230(obj);
     }
     if (((BarrelBits *)(st + 0x4a))->b5 != 0) {
         *(u8 *)(obj + 0xaf) |= 8;
         if (((BarrelBits *)(st + 0x4a))->b6 != 0 && ((BarrelBits *)(st + 0x4a))->b7 != 0) {
-            *(f32 *)(st + 0x20) = *(f32 *)(obj + 0x24);
-            *(f32 *)(st + 0x24) = *(f32 *)(obj + 0x28);
-            *(f32 *)(st + 0x28) = *(f32 *)(obj + 0x2c);
-            *(f32 *)(st + 0x24) = lbl_803E42C0;
+            ((GunpowderBarrelState *)st)->velX = *(f32 *)(obj + 0x24);
+            ((GunpowderBarrelState *)st)->velY = *(f32 *)(obj + 0x28);
+            ((GunpowderBarrelState *)st)->velZ = *(f32 *)(obj + 0x2c);
+            ((GunpowderBarrelState *)st)->velY = lbl_803E42C0;
             ((BarrelBits *)(st + 0x4a))->b6 = 0;
         }
     }
-    if (*(void **)(st + 0x10) != NULL) {
-        if (timer_hasExpired(*(int *)(st + 0x10)) != 0) {
-            *(u8 *)(st + 0x16) = 0xa;
+    if (*(void * *)&((GunpowderBarrelState *)st)->linkedObj != NULL) {
+        if (timer_hasExpired(((GunpowderBarrelState *)st)->linkedObj) != 0) {
+            ((GunpowderBarrelState *)st)->unk16 = 0xa;
         }
     }
 }
