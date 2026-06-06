@@ -416,7 +416,7 @@ void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,f
       *outDistanceXZ = sqrtf(*outDistanceXZ);
     }
     if (*outDistanceXZ < lbl_803E1680) {
-      *outDistanceXZ = lbl_803E1680;
+      *outDistanceXZ = *(f32 *)&lbl_803E1680;
     }
   }
   return;

@@ -2251,7 +2251,7 @@ void mapSetupPlayer(void)
     u8 *vp;
     CharSpawn spawn;
 
-    base = (u8 *)&lbl_802CABF8;
+    base = (u8 *)(int)&lbl_802CABF8;
     mapType = getCurMapType();
     if (mapType == 2 || mapType == 3) {
         OSReport((char *)(base + 0x70));
@@ -2299,7 +2299,7 @@ void mapSetupPlayer(void)
             (*(void (**)(int))(*(int *)gCameraInterface + 8))(1);
         } else {
             (*(void (**)(u8 *, f32, f32, f32))(*(int *)gCameraInterface + 4))(obj, *(f32 *)(base + 8), *(f32 *)(base + 0xc), *(f32 *)(base + 0x10));
-            (*(void (**)(int, int, int, int, u8 *, int, int))(*(int *)gCameraInterface + 0x1c))(0x42, 0, 0, 0x20, base, 0, 0xff);
+            (*(void (**)(int, int, int, int, u8 *, int, int))(*(int *)gCameraInterface + 0x1c))(0x42, 0, 0, 0x20, (u8 *)(int)&lbl_802CABF8, 0, 0xff);
             (*(void (**)(int))(*(int *)gCameraInterface + 8))(1);
         }
         vp = Camera_GetCurrentViewSlot();
