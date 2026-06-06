@@ -2096,6 +2096,28 @@ compare's immediate and subtract 1 for the real case value.
     lis/addi into saved regs and signed cmpw — a whole-fn coloring shift
     from one decl; recipe #58 at fn scale).
 
+**Recipe #94 addendum (task #181) — the fold-back IS defeatable: a SAME-VALUE
+CONDITIONAL second def (phi) unfolds every `*p` deref to reg-form.** Probe-
+proven + verified at scale (partfx_update: 90/90 sites flipped to `0(rX)`):
+`f32 *p = &cfg.m;` + a redundant `p = &cfg.m;` inside ANY conditional arm
+makes p multi-def — #94's tracking only folds single-def webs — so all
+derefs emit `lfs/stfs fX,0(rX)` while DIRECT member spellings of the same
+field still sp-fold (write the inits as members, the work sites as `*p`).
+Reachability rule: only sites reachable from BOTH defs unfold (a def inside
+one switch arm does NOT poison sibling arms — put the second def pre-dispatch
+under an existing branch). Materialization shapes: if-without-else merges to
+ONE `addi r0,rL,K; mr rP,r0` at the first def (+dead cmp if the condition is
+otherwise unused); if/else both-arms emits per-arm DIRECT addis (+1 instr at
+the arm tail). Unconditional re-def copy-props away (no poison); the
+sole-holder/raw-& variants and 2-local splits stay folded — the phi is the
+only working trigger found (12 probe variants). partfx_update itself remains
+BLOCKED by an independent whole-fn param saved-reg rotation (target colors
+by web weight: p2=r31/p5=r29/p6=r28; ours by param order r25-r30; #36
+cast-inflation inert) — the unfold scores neutral there until that cracks;
+reverted. EDIT HAZARD: a bulk `&cfg.m -> p` sweep rewrites the DEF lines
+into `p = p;` — uninitialized-pointer code that builds green; always verify
+the addi exists in the .o after the sweep.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
