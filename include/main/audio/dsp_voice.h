@@ -13,7 +13,7 @@ typedef struct DspVoice {
     u32 prio;        /* 0x1c */
     u32 currentAddr; /* 0x20 */
     u32 changed[5];  /* 0x24 */
-    u8 pad38[0x14];  /* 0x38: pitch[5] */
+    u32 pitch[5];    /* 0x38 */
     u16 volL;        /* 0x4c */
     u16 volR;        /* 0x4e */
     u16 volS;        /* 0x50 */
