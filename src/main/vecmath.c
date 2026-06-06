@@ -628,8 +628,11 @@ int randomGetRange(int lo, int hi) {
     if (lo == hi) {
         return lo;
     }
-    v = ((f32)(u32)rand() / lbl_803DE7F8) * (lbl_803DE7C4 + (f32)hi - (f32)lo);
-    return (int)(v + (f32)lo);
+    v = (f32)(u32)rand();
+    v = v / lbl_803DE7F8;
+    v = v * (lbl_803DE7C4 + (f32)hi - (f32)lo);
+    v = v + (f32)lo;
+    return (int)v;
 }
 #pragma dont_inline reset
 
@@ -653,9 +656,12 @@ void copyMatrix44(f32 *src, f32 *dst) {
 }
 
 void Vec3_Normalize(f32 *v) {
-    f32 len = sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-    if (len != lbl_803DE808) {
-        f32 s = lbl_803DE810 / len;
+    f32 len;
+    f32 s;
+
+    len = sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    if (lbl_803DE808 != len) {
+        s = lbl_803DE810 / len;
         v[0] *= s;
         v[1] *= s;
         v[2] *= s;
