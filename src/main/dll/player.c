@@ -209,7 +209,7 @@ int fn_802966B4(int obj)
 void fn_80296BBC(int obj)
 {
     int inner = *(int *)((char *)obj + 0xb8);
-    *(int *)((char *)inner + 0x360) &= ~2;
+    *(u32 *)((char *)inner + 0x360) &= ~2LL;
 }
 #pragma peephole reset
 #pragma scheduling reset
