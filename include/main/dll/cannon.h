@@ -2,8 +2,11 @@
 #define MAIN_DLL_CANNON_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_internal.h"
 
-void trickyGuard(int p1, int p2);
+typedef struct TrickyRuntime TrickyRuntime;
+
+void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *state);
 undefined4 FUN_8013ffbc(int param_1);
 void FUN_801400fc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,

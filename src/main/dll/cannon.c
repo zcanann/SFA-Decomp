@@ -8,23 +8,59 @@
 #define TRICKY_STATE_RESET_FLAG_10000 0x00010000
 #define TRICKY_STATE_RESET_FLAG_20000 0x00020000
 #define TRICKY_STATE_RESET_FLAG_40000 0x00040000
+#define TRICKY_GUARD_HELPER_COUNT 7
+#define TRICKY_GUARD_APPROACH_GROUP 3
+#define TRICKY_GUARD_HELPER_SETUP_SIZE 0x24
+#define TRICKY_GUARD_HELPER_DEF_ID 0x04F0
+
+typedef struct TrickyRuntime {
+    u8 *helperSpawnCount;
+    u8 pad04[0x08 - 0x04];
+    u8 growlLatState;
+    u8 pad09;
+    u8 guardState;
+    u8 pad0B[0x24 - 0x0B];
+    ObjAnimComponent *homeObj;
+    f32 *targetPosition;
+    u8 pad2C[TRICKY_STATE_FLAGS_OFFSET - 0x2C];
+    u32 flags;
+    u8 pad58[0xD2 - 0x58];
+    u16 targetTurnTimer;
+    u8 padD4[0x700 - 0xD4];
+    void *guardHelpers[TRICKY_GUARD_HELPER_COUNT];
+    f32 guardPoint[3];
+    f32 guardTimer;
+    ObjAnimComponent *guardTarget;
+    s32 guardWalkGroup;
+    u8 guardCanSpawnHelpers;
+} TrickyRuntime;
+
+STATIC_ASSERT(offsetof(TrickyRuntime, flags) == TRICKY_STATE_FLAGS_OFFSET);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardHelpers) == 0x700);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardPoint) == 0x71C);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardTimer) == 0x728);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardTarget) == 0x72C);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardWalkGroup) == 0x730);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
+
+#define TRICKY_RUNTIME(st) ((TrickyRuntime *)(st))
 
 #define TRICKY_CLEAR_TARGET_DIRTY(st) \
-    (*(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_TARGET_DIRTY_FLAG)
+    (TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_TARGET_DIRTY_FLAG)
 
 #define TRICKY_MARK_HELPERS_FINISHED(st) \
     { \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_HELPERS_ACTIVE_FLAG; \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_HELPERS_FINISHED_FLAG; \
+        TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_HELPERS_ACTIVE_FLAG; \
+        TRICKY_RUNTIME(st)->flags |= TRICKY_STATE_HELPERS_FINISHED_FLAG; \
     }
 
 #define TRICKY_CLEAR_RESET_FLAGS(st) \
     { \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10; \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10000; \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_20000; \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_40000; \
-        *(s8 *)((st) + 0xd) = -1; \
+        TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_RESET_FLAG_10; \
+        TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_RESET_FLAG_10000; \
+        TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_RESET_FLAG_20000; \
+        TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_RESET_FLAG_40000; \
+        *(s8 *)((u8 *)(st) + 0xd) = -1; \
     }
 
 #pragma peephole off
@@ -58,7 +94,7 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
-int trickyGuardFindBaddieTarget(int p);
+int trickyGuardFindBaddieTarget(TrickyRuntime *state);
 
 extern undefined4* DAT_803dd71c;
 extern f32 lbl_803DC074;
@@ -391,13 +427,13 @@ void trickyFlame(int p1, int p2) {
  * EN v1.0 Address: 0x8013FFB8
  * EN v1.0 Size: 2276b
  */
-static int trickyGuardIsBaddieTargetValid(int p) {
-    int target = *(int *)(p + 0x72c);
+static int trickyGuardIsBaddieTargetValid(TrickyRuntime *trickyState) {
+    int target = (int)trickyState->guardTarget;
     int count;
     int *list;
     int i;
 
-    list = (int *)ObjGroup_GetObjects(3, &count);
+    list = (int *)ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
     for (i = 0; (s16)i < count; i++) {
         if (*list == target) {
             return 1;
@@ -408,7 +444,9 @@ static int trickyGuardIsBaddieTargetValid(int p) {
 }
 
 #pragma scheduling off
-void trickyGuard(int p1, int p2) {
+void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
+    int p1 = (int)obj;
+    int p2 = (int)trickyState;
     char *strBase = lbl_8031D2E8;
     int i;
     void **slot;
@@ -446,7 +484,7 @@ void trickyGuard(int p1, int p2) {
             }
             *(u8 *)(p2 + 0xa) = 3;
         } else {
-            trickyGuardFindBaddieTarget(p2);
+            trickyGuardFindBaddieTarget(trickyState);
         }
         break;
     case 3:
@@ -471,7 +509,7 @@ void trickyGuard(int p1, int p2) {
                 trickyDebugPrint(strBase + 0x190);
             }
         }
-        trickyGuardFindBaddieTarget(p2);
+        trickyGuardFindBaddieTarget(trickyState);
         break;
     case 4:
         trickyDebugPrint(strBase + 0x684);
@@ -531,7 +569,7 @@ void trickyGuard(int p1, int p2) {
                 }
             }
             *(u32 *)(p2 + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10;
-            if (trickyGuardFindBaddieTarget(p2) == 0) {
+            if (trickyGuardFindBaddieTarget(trickyState) == 0) {
                 newTarget = *(int *)(p2 + 0x24) + 0x18;
                 if (*(uint *)(p2 + 0x28) != (uint)newTarget) {
                     *(int *)(p2 + 0x28) = newTarget;
@@ -540,7 +578,7 @@ void trickyGuard(int p1, int p2) {
                 }
                 *(u8 *)(p2 + 0xa) = 2;
             }
-        } else if (trickyGuardIsBaddieTargetValid(p2) != 0) {
+        } else if (trickyGuardIsBaddieTargetValid(trickyState) != 0) {
             int targ = *(int *)(*(int *)(p1 + 0xb8) + 0x28);
             trickyTurnTowardYaw(p1, (s16)getAngle(
                 -(*(f32 *)targ - *(f32 *)(p1 + 0x18)),
@@ -562,7 +600,7 @@ void trickyGuard(int p1, int p2) {
                 }
             }
             *(u8 *)(p2 + 0xa) = 7;
-        } else if (trickyGuardIsBaddieTargetValid(p2) != 0) {
+        } else if (trickyGuardIsBaddieTargetValid(trickyState) != 0) {
             int targ = *(int *)(*(int *)(p1 + 0xb8) + 0x28);
             trickyTurnTowardYaw(p1, (s16)getAngle(
                 -(*(f32 *)targ - *(f32 *)(p1 + 0x18)),
@@ -585,7 +623,7 @@ void trickyGuard(int p1, int p2) {
         *(f32 *)(p2 + 0x728) = *(f32 *)(p2 + 0x728) + timeDelta;
         if (((double)*(f32 *)(p2 + 0x728) >= (double)lbl_803E24D8 &&
              (double)getXZDistance((float *)*(int *)(p2 + 0x28), (float *)(p1 + 0x18)) >= (double)lbl_803E24C4) ||
-            trickyGuardIsBaddieTargetValid(p2) == 0) {
+            trickyGuardIsBaddieTargetValid(trickyState) == 0) {
             objAnimFn_8013a3f0(p1, 0x32, lbl_803E23F4, 0x4000000);
             *(u8 *)(p2 + 0xa) = 8;
         } else {
@@ -599,7 +637,7 @@ void trickyGuard(int p1, int p2) {
         trickyDebugPrint(strBase + 0x6c8);
         if ((double)*(f32 *)(p1 + 0x98) <= (double)lbl_803E2420) {
             *(u32 *)(p2 + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10;
-            if (trickyGuardFindBaddieTarget(p2) == 0) {
+            if (trickyGuardFindBaddieTarget(trickyState) == 0) {
                 newTarget = *(int *)(p2 + 0x24) + 0x18;
                 if (*(uint *)(p2 + 0x28) != (uint)newTarget) {
                     *(int *)(p2 + 0x28) = newTarget;
@@ -622,7 +660,7 @@ void trickyGuard(int p1, int p2) {
  * EN v1.0 Size: 320b
  */
 #pragma scheduling off
-int trickyGuardFindBaddieTarget(int p) {
+int trickyGuardFindBaddieTarget(TrickyRuntime *trickyState) {
     int count;
     f32 d;
     f32 bestDist;
@@ -630,16 +668,16 @@ int trickyGuardFindBaddieTarget(int p) {
     int i;
     uint best = 0;
 
-    list = (int *)ObjGroup_GetObjects(3, &count);
+    list = (int *)ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
     for (i = 0; (s16)i < count; i++) {
-        d = (f32)getXZDistance((float *)(*list + 0x18), (float *)(p + 0x71c));
+        d = (f32)getXZDistance((float *)(*list + 0x18), trickyState->guardPoint);
         if (best == 0) {
-            if (*(int *)(p + 0x730) == Objfsa_GetWalkGroupIndexAtPoint((float *)(*list + 0x18), (void *)0x0)) {
+            if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint((float *)(*list + 0x18), (void *)0x0)) {
                 bestDist = d;
                 best = *list;
             }
         } else if (d < bestDist) {
-            if (*(int *)(p + 0x730) == Objfsa_GetWalkGroupIndexAtPoint((float *)(*list + 0x18), (void *)0x0)) {
+            if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint((float *)(*list + 0x18), (void *)0x0)) {
                 bestDist = d;
                 best = *list;
             }
@@ -647,13 +685,13 @@ int trickyGuardFindBaddieTarget(int p) {
         list++;
     }
     if (best != 0) {
-        *(int *)(p + 0x72c) = best;
-        if (*(uint *)(p + 0x28) != (best + 0x18)) {
-            *(int *)(p + 0x28) = best + 0x18;
-            TRICKY_CLEAR_TARGET_DIRTY(p);
-            *(u16 *)(p + 0xd2) = 0;
+        trickyState->guardTarget = (ObjAnimComponent *)best;
+        if ((uint)trickyState->targetPosition != (best + 0x18)) {
+            trickyState->targetPosition = (f32 *)(best + 0x18);
+            TRICKY_CLEAR_TARGET_DIRTY(trickyState);
+            trickyState->targetTurnTimer = 0;
         }
-        *(u8 *)(p + 0xa) = 4;
+        trickyState->guardState = 4;
         return 1;
     }
     return 0;
