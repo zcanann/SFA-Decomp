@@ -15,7 +15,7 @@ typedef struct AreaFxEmitState {
     s16 enableBit; /* gamebit gate, -1 = always on */
     s16 stopBit; /* gamebit; once set the emitter suppresses */
     s16 suppressed;
-    u16 extentX; /* setup[0x1c] << 2 — random offset half-extents */
+    u16 extentX; /* setup[0x1c] << 2 -- random offset half-extents */
     u16 extentZ; /* setup[0x1d] << 2 */
     u16 extentY; /* setup[0x1e] << 2 */
     s16 emitAngles[3]; /* yaw/pitch/roll, mirrored to obj+0/2/4 */
@@ -33,7 +33,7 @@ typedef struct LfxEmitterState {
     u8 curve00[0x10];
     int curveIdx; /* Curve.idx */
     u8 curve14[0x68 - 0x14];
-    f32 curveSample[3]; /* Curve.sample — walked world position */
+    f32 curveSample[3]; /* Curve.sample -- walked world position */
     u8 curve74[0x108 - 0x74];
     void *config; /* mmAlloc(0x28) copy of the lbl_803AC7B0-format record */
     f32 curveSpeed; /* (s8)setup[0x25] / lbl_803E3E84 */
@@ -1316,35 +1316,35 @@ void areafxemit_init(int obj, int setup)
 
 void lfxemitter_init(int obj, int setup)
 {
-    int state;
+    LfxEmitterState *state;
     int curveFlags;
 
-    state = *(int*)(obj + 0xb8);
+    state = *(LfxEmitterState **)(obj + 0xb8);
     curveFlags = 0x21;
     *(f32*)(obj + 8) = lbl_803E3E80 * *(f32*)(*(int*)(obj + 0x50) + 4);
 
-    *(s16*)(state + 0x112) = *(s16*)(setup + 0x1e);
-    *(s16*)(state + 0x110) = *(s16*)(setup + 0x20);
-    *(s16*)(state + 0x114) = -2;
-    *(s16*)(state + 0x116) = *(s16*)(setup + 0x22);
-    *(s16*)(state + 0x118) = *(s16*)(setup + 0x18);
-    *(s16*)(state + 0x11a) = *(s16*)(setup + 0x1a);
-    *(s16*)(state + 0x11c) = *(s16*)(setup + 0x1c);
+    state->configIndex = *(s16*)(setup + 0x1e);
+    state->lifeTimer = *(s16*)(setup + 0x20);
+    state->unk114 = -2;
+    state->enableBit = *(s16*)(setup + 0x22);
+    state->spinRoll = *(s16*)(setup + 0x18);
+    state->spinPitch = *(s16*)(setup + 0x1a);
+    state->spinYaw = *(s16*)(setup + 0x1c);
     *(f32*)(obj + 0xc) = *(f32*)(setup + 8);
     *(f32*)(obj + 0x10) = *(f32*)(setup + 0xc);
     *(f32*)(obj + 0x14) = *(f32*)(setup + 0x10);
 
-    if (*(s16*)(state + 0x110) != 0) {
-        *(u8*)(state + 0x11e) = 1;
+    if (state->lifeTimer != 0) {
+        state->hasLifeTimer = 1;
     } else {
-        *(u8*)(state + 0x11e) = 0;
+        state->hasLifeTimer = 0;
     }
 
     if (*(u8*)(setup + 0x24) != 0) {
-        *(u8*)(state + 0x120) = *(u8*)(state + 0x120) | 1;
-        *(f32*)(state + 0x10c) = (f32)*(s8*)(setup + 0x25) / lbl_803E3E84;
+        state->flags = state->flags | 1;
+        state->curveSpeed = (f32)*(s8*)(setup + 0x25) / lbl_803E3E84;
         (*(void (**)(int, int, f32, int*, int))(*(int*)(*gRomCurveInterface) + 0x8c))(
-            state, obj, lbl_803E3E88, &curveFlags, -1);
+            (int)state, obj, lbl_803E3E88, &curveFlags, -1);
     }
     ObjGroup_AddObject(obj, 0x1c);
 }
@@ -1360,8 +1360,8 @@ void lfxemitter_initialise(void)
 
 int lfxemitter_func0B(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
-    int v = *(int*)((char*)state + 264);
+    LfxEmitterState* state = *(LfxEmitterState**)((char*)obj + 0xb8);
+    int v = (int)state->config;
     return (u32)(-v | v) >> 31;
 }
 
@@ -1401,59 +1401,59 @@ void fn_8018FF48(undefined2* src, undefined2* dst)
 
 void lfxemitter_update(int obj)
 {
-    int state;
+    LfxEmitterState *state;
     int player;
     void* config;
 
-    state = *(int*)(obj + 0xb8);
+    state = *(LfxEmitterState **)(obj + 0xb8);
     player = Obj_GetPlayerObject();
 
-    *(s16*)(obj + 0) = *(s16*)(obj + 0) + *(s16*)(state + 0x11c);
-    *(s16*)(obj + 4) = *(s16*)(obj + 4) + *(s16*)(state + 0x118);
-    *(s16*)(obj + 2) = *(s16*)(obj + 2) + *(s16*)(state + 0x11a);
+    *(s16*)(obj + 0) = *(s16*)(obj + 0) + state->spinYaw;
+    *(s16*)(obj + 4) = *(s16*)(obj + 4) + state->spinRoll;
+    *(s16*)(obj + 2) = *(s16*)(obj + 2) + state->spinPitch;
 
-    if ((*(u8*)(state + 0x120) & 1) != 0) {
-        if ((Curve_AdvanceAlongPath(state, *(f32*)(state + 0x10c)) != 0) ||
-            (*(int*)(state + 0x10) != 0)) {
-            (*(void (**)(int))(*(int*)(*gRomCurveInterface) + 0x90))(state);
+    if ((state->flags & 1) != 0) {
+        if ((Curve_AdvanceAlongPath((int)state, state->curveSpeed) != 0) ||
+            (state->curveIdx != 0)) {
+            (*(void (**)(int))(*(int*)(*gRomCurveInterface) + 0x90))((int)state);
         }
-        *(f32*)(obj + 0xc) = *(f32*)(state + 0x68);
-        *(f32*)(obj + 0x10) = *(f32*)(state + 0x6c);
-        *(f32*)(obj + 0x14) = *(f32*)(state + 0x70);
+        *(f32*)(obj + 0xc) = state->curveSample[0];
+        *(f32*)(obj + 0x10) = state->curveSample[1];
+        *(f32*)(obj + 0x14) = state->curveSample[2];
     } else {
         *(f32*)(obj + 0xc) = *(f32*)(obj + 0x24) * timeDelta + *(f32*)(obj + 0xc);
         *(f32*)(obj + 0x10) = *(f32*)(obj + 0x28) * timeDelta + *(f32*)(obj + 0x10);
         *(f32*)(obj + 0x14) = *(f32*)(obj + 0x2c) * timeDelta + *(f32*)(obj + 0x14);
-        if (((*(u8*)(state + 0x120) & 2) != 0) && (*(f32*)(obj + 0x28) > lbl_803E3E78)) {
+        if (((state->flags & 2) != 0) && (*(f32*)(obj + 0x28) > lbl_803E3E78)) {
             *(f32*)(obj + 0x28) = lbl_803E3E7C * timeDelta + *(f32*)(obj + 0x28);
         }
     }
 
     if ((player != 0) &&
-        ((*(s16*)(state + 0x116) == -1) || (GameBit_Get(*(s16*)(state + 0x116)) != 0))) {
-        if (*(u8*)(state + 0x11e) != 0) {
-            *(s16*)(state + 0x110) = *(s16*)(state + 0x110) - framesThisStep;
-            if (*(s16*)(state + 0x110) <= 0) {
+        ((state->enableBit == -1) || (GameBit_Get(state->enableBit) != 0))) {
+        if (state->hasLifeTimer != 0) {
+            state->lifeTimer = state->lifeTimer - framesThisStep;
+            if (state->lifeTimer <= 0) {
                 Obj_FreeObject(obj);
             }
         }
-        if (*(u8*)(state + 0x11f) == 0) {
-            if ((state != 0) && (*(s16*)(state + 0x112) == (*(u16*)(lbl_803AC7B0 + 0xe) - 1))) {
+        if (state->configLoaded == 0) {
+            if (((int)state != 0) && (state->configIndex == (*(u16*)(lbl_803AC7B0 + 0xe) - 1))) {
                 config = mmAlloc(0x28, 0x12, 0);
-                *(void**)(state + 0x108) = config;
+                state->config = config;
                 if (config != NULL) {
                     fn_8018FF48((undefined2*)lbl_803AC7B0, (undefined2*)config);
                 }
             } else {
                 config = mmAlloc(0x28, 0x12, 0);
-                *(void**)(state + 0x108) = config;
-                getTabEntry(config, 0xc, *(s16*)(state + 0x112) * 0x28, 0x28);
-                config = *(void**)(state + 0x108);
+                state->config = config;
+                getTabEntry(config, 0xc, state->configIndex * 0x28, 0x28);
+                config = state->config;
                 if (config != NULL) {
                     fn_8018FF48((undefined2*)config, (undefined2*)lbl_803AC7B0);
                 }
             }
-            *(u8*)(state + 0x11f) = 1;
+            state->configLoaded = 1;
         }
     }
 }
@@ -1537,8 +1537,8 @@ void areafxemit_free(int* obj)
 
 void lfxemitter_free(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
-    int* ptr = *(int**)((char*)state + 264);
+    LfxEmitterState* state = *(LfxEmitterState**)((char*)obj + 0xb8);
+    int* ptr = (int*)state->config;
     if (ptr != NULL) {
         mm_free(ptr);
     }
