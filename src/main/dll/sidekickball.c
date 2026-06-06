@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/sidekickball.h"
 
 extern f32 timeDelta;

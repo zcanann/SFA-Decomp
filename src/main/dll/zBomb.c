@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/dll/door.h"
 #include "main/dll/fruit.h"
 #include "main/dll/zBomb.h"
 

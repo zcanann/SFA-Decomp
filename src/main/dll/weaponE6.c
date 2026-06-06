@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/weaponE6.h"
 
 #define TRICKY_STATE_FLAGS_OFFSET 0x54

@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/projLib.h"
 
 extern f32 Vec_distance(f32 *a, f32 *b);
