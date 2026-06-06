@@ -4218,7 +4218,7 @@ void cfprisoncage_init(int *obj, u8 *def) {
     ObjMsg_AllocQueue(obj, 1);
     *(s16 *)obj = (s16)((s32)def[0x1a] << 8);
     ((GameObject *)obj)->unkF4 = 1;
-    *(int *)((char *)obj + 0xbc) = (int)cfprisoncage_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)cfprisoncage_SeqFn;
     if (((GameObject *)obj)->anim.seqId == 296) {
         if (GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E42B4, 0);

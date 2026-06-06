@@ -359,7 +359,7 @@ void WaterFallSpray_init(u8* obj, u8* data) {
     c = (s16)((s32)(s8)data[0x1c] << 8);
     ((GameObject *)obj)->anim.rotX = c;
     *(u32 *)&((GameObject *)obj)->unkF4 = 0;
-    *(int(**)(int*))(obj + 0xbc) = WaterFallSpray_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)WaterFallSpray_SeqFn;
     v = *(int*)((char*)(*(u8**)&((GameObject *)obj)->anim.placementData) + 0x14);
     if (v < WATERFALLSPRAY_ALT_SFX_DEF_END) {
         if (v >= WATERFALLSPRAY_ALT_SFX_DEF_MIN) {

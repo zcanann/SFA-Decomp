@@ -372,7 +372,7 @@ void SHthorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
                                                       gSHthorntailPathHeaders,
                                                       gSHthorntailPathData,local_28);
   (*gSHthorntailPathControlInterface)->bindObject(obj,moveScratch);
-  *(code **)((int)obj + 0xbc) = (code *)SHthorntail_updateLevelControlState;
+  obj->animEventCallback = (void *)SHthorntail_updateLevelControlState;
   dll_2E_func05((int)obj,(int)runtime,0xffffdc72,0x2aaa,3);
   dll_2E_func08((int)runtime,400,0x78);
   ObjGroup_AddObject((int)obj,0x4d);

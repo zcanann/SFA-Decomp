@@ -1140,7 +1140,7 @@ void sh_staff_update(int obj)
             ObjAnim_SetMoveProgress(lbl_803E54D0, (ObjAnimComponent *)obj);
             ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(setup + 0x19) << 8);
             ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(setup + 0x18) << 8);
-            *(int (**)(int, int, u8 *))(obj + 0xbc) = sh_staff_SeqFn;
+            ((GameObject *)obj)->animEventCallback = (void *)sh_staff_SeqFn;
             ((ShStaffState *)state)->phase = 1;
             if (Obj_IsLoadingLocked() == 0) {
                 loadResult = 0;

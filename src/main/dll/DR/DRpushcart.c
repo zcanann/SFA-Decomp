@@ -1187,7 +1187,7 @@ void shopitem_init(int obj, int data) {
 
     objAnim = (ObjAnimComponent *)obj;
     ((GameObject *)obj)->objectFlags |= 0x2000;
-    *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E86F4;
+    ((GameObject *)obj)->animEventCallback = (void *)fn_801E86F4;
     objAnim->bankIndex = (s8)*(s8 *)(data + 0x18);
     *(s16 *)obj = (s16)((*(u8 *)(data + 0x1A)) << 8);
     ((GameObject *)obj)->anim.rotY = (s16)((*(u8 *)(data + 0x1B)) << 8);
@@ -1215,7 +1215,7 @@ void shopitem_init(int obj, int data) {
 void shopkeeper_init(int obj) {
     int state = *(int *)&((GameObject *)obj)->extra;
     ((GameObject *)obj)->objectFlags |= 0x2000;
-    *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E76A0;
+    ((GameObject *)obj)->animEventCallback = (void *)fn_801E76A0;
     *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
     ((ShopkeeperState *)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
     ((ShopkeeperState *)state)->msgStack = allocModelStruct_800139e8(4, 4);

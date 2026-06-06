@@ -72,7 +72,11 @@ typedef struct SHthorntailObject {
   u16 objectFlags;
   u8 padB2[0xB8 - 0xB2];
   SHthorntailRuntime *runtime;
+  void *animEventCallback;
 } SHthorntailObject;
+
+STATIC_ASSERT(offsetof(SHthorntailObject, runtime) == 0xB8);
+STATIC_ASSERT(offsetof(SHthorntailObject, animEventCallback) == 0xBC);
 
 typedef struct SHthorntailAnimationInterface {
   u8 pad00[0x24];
