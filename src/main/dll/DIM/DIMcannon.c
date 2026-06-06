@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMcannon.h"
+#include "main/dll/DIM/dimlogfire.h"
 #include "main/objanim_internal.h"
 
 static inline int *DIMcannon_GetActiveModel(void *obj) {
@@ -2568,14 +2569,14 @@ void imspacethruster_free(int obj) {
 }
 
 void dimlogfire_free(int *obj, int mode) {
-    void **inner = *(void ***)((char *)obj + 0xb8);
+    DimLogFireState *inner = *(DimLogFireState **)((char *)obj + 0xb8);
     (*(void (***)(int*))gExpgfxInterface)[6](obj);
-    if (inner[1] != NULL && mode == 0) {
-        Obj_FreeObject(inner[1]);
+    if ((void *)inner->subObj != NULL && mode == 0) {
+        Obj_FreeObject((int *)inner->subObj);
     }
     ObjGroup_RemoveObject(obj, 0x31);
-    if (inner[0] != NULL) {
-        ModelLightStruct_free(inner[0]);
+    if ((void *)inner->light != NULL) {
+        ModelLightStruct_free((void *)inner->light);
     }
 }
 #pragma peephole reset
@@ -2587,24 +2588,24 @@ extern void Sfx_StopObjectChannel(int *obj, int channel);
 #pragma scheduling off
 #pragma peephole off
 int dimlogfire_SeqFn(int *obj, int unused, int *p3) {
-    int *state = *(int **)((char *)obj + 0xb8);
-    if (*(u8 *)((char *)state + 0x1a) == 1) {
+    DimLogFireState *state = *(DimLogFireState **)((char *)obj + 0xb8);
+    if (state->mode == 1) {
         Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
     } else {
         Sfx_StopObjectChannel(obj, 64);
     }
     switch (*(u8 *)((char *)p3 + 0x80)) {
     case 1:
-        *(u8 *)((char *)state + 0x1b) = (u8)(*(u8 *)((char *)state + 0x1b) ^ 1);
+        state->smokeToggle = (u8)(state->smokeToggle ^ 1);
         break;
     case 2:
         GameBit_Set(46, 1);
         break;
     case 3:
-        *(u8 *)((char *)state + 0x1a) = 4;
+        state->mode = 4;
         break;
     }
-    if (*(u8 *)((char *)state + 0x1b) != 0) {
+    if (state->smokeToggle != 0) {
         (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
             obj, 215, 0, 0, -1, 0);
         Sfx_StopObjectChannel(obj, 5);
@@ -2623,24 +2624,24 @@ extern f32 lbl_803E4820;
 #pragma scheduling off
 #pragma peephole off
 void dimlogfire_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
-    int *state;
+    DimLogFireState *state;
     int *subobj;
     if ((s32)visible != 0) {
-        state = *(int **)((char *)obj + 0xb8);
-        subobj = (int *)state[1];
+        state = *(DimLogFireState **)((char *)obj + 0xb8);
+        subobj = (int *)state->subObj;
         if (subobj != NULL) {
             int *p = *(int **)((char *)subobj + 0x7c);
             int idx = (s32)*(s8 *)((char *)subobj + 0xad);
             int *q = ((int **)p)[idx];
             *(u16 *)((char *)q + 0x18) = (u16)(*(u16 *)((char *)q + 0x18) & ~0x8);
-            *(u8 *)((char *)(int *)state[1] + 0x37) = *(u8 *)((char *)obj + 0x37);
-            ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)((int *)state[1], p2, p3, p4, p5, lbl_803E4820);
+            *(u8 *)((char *)(int *)state->subObj + 0x37) = *(u8 *)((char *)obj + 0x37);
+            ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)((int *)state->subObj, p2, p3, p4, p5, lbl_803E4820);
         }
         ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4820);
-        if (*(void **)state != NULL) {
-            if (*(u8 *)((char *)*(void **)state + 0x2f8) != 0) {
-                if (*(u8 *)((char *)*(void **)state + 0x4c) != 0) {
-                    queueGlowRender(*(int **)state);
+        if (*(void **)&state->light != NULL) {
+            if (*(u8 *)((char *)*(void **)&state->light + 0x2f8) != 0) {
+                if (*(u8 *)((char *)*(void **)&state->light + 0x4c) != 0) {
+                    queueGlowRender(*(int **)&state->light);
                 }
             }
         }

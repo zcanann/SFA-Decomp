@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMlavasmash.h"
+#include "main/dll/DIM/dimlogfire.h"
 
 
 extern undefined4 FUN_8000680c();
@@ -104,29 +105,29 @@ void dimlogfire_update(int obj)
     s16 alpha;
     uint light;
     int tricky;
-    int *state;
+    DimLogFireState *state;
     struct { f32 x, y, z; } vec;
 
-    state = *(int **)(obj + 0xb8);
+    state = *(DimLogFireState **)(obj + 0xb8);
     tricky = *(int *)(obj + 0x4c);
     *(u8 *)(obj + 0xaf) |= 8;
-    switch (*(u8 *)((u8 *)state + 0x1a)) {
+    switch (state->mode) {
     case 1:
-        if (*(void **)state != NULL) {
-            modelLightStruct_setEnabled(*state, 1, lbl_803E4824);
+        if (*(int **)&state->light != NULL) {
+            modelLightStruct_setEnabled(state->light, 1, lbl_803E4824);
         }
         Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
-        *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
-        if (*(f32 *)(state + 4) <= lbl_803E4828) {
+        state->flickerTimerA = state->flickerTimerA - timeDelta;
+        if (state->flickerTimerA <= lbl_803E4828) {
             a = 7;
-            *(f32 *)(state + 4) = *(f32 *)(state + 4) + lbl_803E482C;
+            state->flickerTimerA = state->flickerTimerA + lbl_803E482C;
         } else {
             a = 0;
         }
-        *(f32 *)(state + 5) = *(f32 *)(state + 5) - timeDelta;
-        if (*(f32 *)(state + 5) <= lbl_803E4828) {
+        state->flickerTimerB = state->flickerTimerB - timeDelta;
+        if (state->flickerTimerB <= lbl_803E4828) {
             b = 1;
-            *(f32 *)(state + 5) = *(f32 *)(state + 5) + lbl_803E4820;
+            state->flickerTimerB = state->flickerTimerB + lbl_803E4820;
         } else {
             b = 0;
         }
@@ -137,13 +138,13 @@ void dimlogfire_update(int obj)
         ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
         break;
     case 2:
-        if (*(void **)state != NULL) {
-            modelLightStruct_setEnabled(*state, 0, lbl_803E4824);
+        if (*(int **)&state->light != NULL) {
+            modelLightStruct_setEnabled(state->light, 0, lbl_803E4824);
         }
-        if (*(s8 *)((u8 *)state + 0x1c) <= 0) {
+        if (state->strengthInit <= 0) {
             ObjHits_DisableObject(obj);
-            *(u8 *)((u8 *)state + 0x1a) = 1;
-            *(u8 *)((u8 *)state + 0x1d) = 1;
+            state->mode = 1;
+            state->dousedLatch = 1;
             GameBit_Set(*(s16 *)(tricky + 0x1e), 1);
         }
         tricky = getTrickyObject();
@@ -158,21 +159,21 @@ void dimlogfire_update(int obj)
     case 4:
         break;
     default:
-        if (*(u8 *)((u8 *)state + 0x18) == 0) {
-            *(u8 *)((u8 *)state + 0x1a) = 1;
-            *(u8 *)((u8 *)state + 0x1d) = 1;
+        if (state->unk18 == 0) {
+            state->mode = 1;
+            state->dousedLatch = 1;
         } else {
-            *(u8 *)((u8 *)state + 0x1a) = 2;
+            state->mode = 2;
         }
         break;
     }
-    if (*(s8 *)((u8 *)state + 0x1d) != 0) {
-        *(u8 *)((u8 *)state + 0x1d) = 0;
+    if (*(s8 *)&state->dousedLatch != 0) {
+        state->dousedLatch = 0;
     }
-    light = *state;
+    light = state->light;
     if (light != 0 && *(u8 *)(light + 0x2f8) != 0 && *(u8 *)(light + 0x4c) != 0) {
         rand = randomGetRange(-0x19, 0x19);
-        light = *state;
+        light = state->light;
         alpha = *(u8 *)(light + 0x2f9) + (*(s8 *)(light + 0x2fa) + rand);
         if (alpha < 0) {
             alpha = 0;
@@ -181,7 +182,7 @@ void dimlogfire_update(int obj)
             alpha = 0xff;
             *(u8 *)(light + 0x2fa) = 0;
         }
-        *(u8 *)(*state + 0x2f9) = alpha;
+        *(u8 *)(state->light + 0x2f9) = alpha;
     }
 }
 #pragma scheduling reset
@@ -288,37 +289,37 @@ void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 void dimlogfire_init(int obj, int def)
 {
     int radius;
-    int *state;
+    DimLogFireState *state;
 
     *(void **)(obj + 0xbc) = (void *)dimlogfire_SeqFn;
     ObjGroup_AddObject(obj, 0x31);
-    state = *(int **)(obj + 0xb8);
-    *(u8 *)((u8 *)state + 0x20) = 0;
-    *(u8 *)((u8 *)state + 0x18) = *(s16 *)(def + 0x1a);
-    *(s8 *)((u8 *)state + 0x1c) = (s8)*(s16 *)(def + 0x1c);
-    *(u8 *)((u8 *)state + 0x1e) = *(u8 *)((u8 *)state + 0x1c);
+    state = *(DimLogFireState **)(obj + 0xb8);
+    state->unk20 = 0;
+    state->unk18 = *(s16 *)(def + 0x1a);
+    state->strengthInit = (s8)*(s16 *)(def + 0x1c);
+    *(u8 *)&state->strength = *(u8 *)&state->strengthInit;
     if (GameBit_Get(*(s16 *)(def + 0x1e)) != 0) {
-        *(u8 *)((u8 *)state + 0x1a) = 1;
-        *(u8 *)((u8 *)state + 0x1d) = 1;
+        state->mode = 1;
+        state->dousedLatch = 1;
     }
     *(u16 *)(obj + 0xb0) |= 0x2000;
-    *(f32 *)(state + 4) = lbl_803E482C;
-    *(f32 *)(state + 5) = lbl_803E4820;
-    if (*(void **)state == NULL) {
-        *state = objCreateLight(obj, 1);
+    state->flickerTimerA = lbl_803E482C;
+    state->flickerTimerB = lbl_803E4820;
+    if (*(int **)&state->light == NULL) {
+        state->light = objCreateLight(obj, 1);
     }
-    if (*(void **)state != NULL) {
-        modelLightStruct_setLightKind(*state, 2);
-        modelLightStruct_setDiffuseColor(*state, 0xff, 0x7f, 0, 0xff);
-        modelLightStruct_setSpecularColor(*state, 0xff, 0x7f, 0, 0xff);
+    if (*(int **)&state->light != NULL) {
+        modelLightStruct_setLightKind(state->light, 2);
+        modelLightStruct_setDiffuseColor(state->light, 0xff, 0x7f, 0, 0xff);
+        modelLightStruct_setSpecularColor(state->light, 0xff, 0x7f, 0, 0xff);
         radius = (int)(lbl_803E4830 * *(f32 *)(obj + 8));
-        modelLightStruct_setDistanceAttenuation(*state, (f32)radius, lbl_803E4834 + (f32)radius);
-        modelLightStruct_setEnabled(*state, 1, lbl_803E4828);
-        modelLightStruct_setPosition(*state, lbl_803E4828, lbl_803E4838, lbl_803E4828);
-        modelLightStruct_startColorFade(*state, 1, 3);
-        modelLightStruct_setDiffuseTargetColor(*state, 0xff, 0x5c, 0, 0xff);
-        modelLightStruct_setupGlow(*state, 0, 0xff, 0x7f, 0, 0x87, lbl_803E483C * *(f32 *)(obj + 8));
-        modelLightStruct_setGlowProjectionRadius(*state, lbl_803E4834);
+        modelLightStruct_setDistanceAttenuation(state->light, (f32)radius, lbl_803E4834 + (f32)radius);
+        modelLightStruct_setEnabled(state->light, 1, lbl_803E4828);
+        modelLightStruct_setPosition(state->light, lbl_803E4828, lbl_803E4838, lbl_803E4828);
+        modelLightStruct_startColorFade(state->light, 1, 3);
+        modelLightStruct_setDiffuseTargetColor(state->light, 0xff, 0x5c, 0, 0xff);
+        modelLightStruct_setupGlow(state->light, 0, 0xff, 0x7f, 0, 0x87, lbl_803E483C * *(f32 *)(obj + 8));
+        modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E4834);
     }
 }
 #pragma scheduling reset
