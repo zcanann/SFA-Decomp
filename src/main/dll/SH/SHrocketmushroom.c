@@ -25,7 +25,7 @@ extern int fn_8003B500(void *obj, void *p2, f32 f1);
 extern int fn_8003B228(void *obj, void *p2);
 extern int characterDoEyeAnims(void *obj, void *p2);
 extern void *objCreateLight(void *obj, int arg);
-extern void modelLightStruct_setEnabled(f32 f1, void *light, int arg);
+extern void modelLightStruct_setEnabled(void *light, int enabled, f32 scale);
 extern void modelLightStruct_setLightKind(void *light, int value);
 extern void modelLightStruct_setDiffuseColor(void *light, int r, int g, int b, int a);
 extern void lightSetFieldBC_8001db14(void *light, int value);
@@ -104,7 +104,7 @@ void bombplantspore_update(void *obj) {
                     (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
                         obj, 0x3f3, 0, 4, -1, 0);
                 }
-                modelLightStruct_setEnabled(lbl_803E53AC, state->light, 0);
+                modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
                 ((GameObject *)obj)->anim.flags |= 0x4000;
                 ObjHits_DisableObject(obj);
@@ -221,7 +221,7 @@ void bombplantspore_update(void *obj) {
                     (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
                         obj, 0x3f3, 0, 4, -1, 0);
                 }
-                modelLightStruct_setEnabled(lbl_803E53AC, state->light, 0);
+                modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
                 ((GameObject *)obj)->anim.flags |= 0x4000;
                 ObjHits_DisableObject(obj);
