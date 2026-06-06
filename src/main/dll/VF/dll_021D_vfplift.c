@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/game_object.h"
 
 #define VFPLIFT1_OBJTYPE 0x3b7
 #define VFPLIFT2_OBJTYPE 0x3bf
@@ -93,11 +94,11 @@ void vfplift23_updateState(int obj)
     VFPLiftState *state;
     f32 raisedOffset;
 
-    raisedOffset = vfplift23_getRaisedOffset(*(s16 *)(obj + 0x46));
+    raisedOffset = vfplift23_getRaisedOffset(((GameObject *)obj)->anim.seqId);
     setup = *(int *)(obj + 0x4c);
     state = vfplift_getState(obj);
     if (state->applyHeight != 0) {
-        *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) + raisedOffset;
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) + raisedOffset;
         state->applyHeight = 0;
     }
     if (state->mode >= VFPLIFT_STATE_RAISED || state->mode < VFPLIFT_STATE_LOWERED) {
@@ -112,7 +113,7 @@ void vfplift23_updateState(int obj)
         } else {
             if ((u32)GameBit_Get(state->toggleGameBit) == 0) {
                 state->mode = VFPLIFT_STATE_LOWERED;
-                *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc);
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
             }
         }
     } else {
@@ -127,7 +128,7 @@ void vfplift23_updateState(int obj)
         } else {
             if ((u32)GameBit_Get(state->toggleGameBit) != 0) {
                 state->mode = VFPLIFT_STATE_RAISED;
-                *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) + raisedOffset;
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) + raisedOffset;
             }
         }
     }
@@ -168,7 +169,7 @@ void vfplift1_updateState(int obj)
     }
     if (state->applyHeight != 0 ||
         (state->forceRaised != 0 && state->mode == VFPLIFT_STATE_IDLE)) {
-        *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) + lbl_803E60EC;
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) + lbl_803E60EC;
         state->applyHeight = 0;
         state->forceRaised = 0;
         state->mode = VFPLIFT_STATE_RAISED;
@@ -188,7 +189,7 @@ void vfplift1_updateState(int obj)
         } else {
             if ((u32)GameBit_Get(state->toggleGameBit) != 0) {
                 state->mode = VFPLIFT_STATE_LOWERED;
-                *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc);
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
             }
         }
     } else {
@@ -203,7 +204,7 @@ void vfplift1_updateState(int obj)
         } else {
             if ((u32)GameBit_Get(state->toggleGameBit) == 0) {
                 state->mode = VFPLIFT_STATE_RAISED;
-                *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) + lbl_803E60EC;
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) + lbl_803E60EC;
             }
         }
     }
@@ -240,7 +241,7 @@ void vfplift_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
 void vfplift_update(int obj) {
     int v;
     Obj_GetPlayerObject();
-    v = *(s16 *)((char *)obj + 0x46);
+    v = ((GameObject *)obj)->anim.seqId;
     if (v == VFPLIFT1_OBJTYPE) {
         vfplift1_updateState(obj);
     } else if (v == VFPLIFT2_OBJTYPE) {
@@ -270,7 +271,7 @@ void vfplift_hitDetect(int obj) {
 void vfplift_init(int *obj, u8 *init) {
     VFPLiftState *st = *(VFPLiftState **)((char *)obj + 0xb8);
     int *inner = (int *)st;
-    *(void **)((char *)obj + 0xbc) = (void *)vfplift_SeqFn;
+    ((GameObject *)obj)->unkBC = (void *)vfplift_SeqFn;
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     *(s16 *)((char *)inner + 0xa) = 0;
     *(s16 *)((char *)inner + 0xc) = *(s16 *)((char *)init + 0x20);
@@ -281,7 +282,7 @@ void vfplift_init(int *obj, u8 *init) {
     *(s16 *)((char *)inner + 0x14) = 0;
     *(s16 *)((char *)inner + 0x16) = 0;
     *(s16 *)((char *)inner + 0x18) = 0;
-    if (*(s16 *)((char *)obj + 0x46) == 0x3bf) {
+    if (((GameObject *)obj)->anim.seqId == 0x3bf) {
         if ((u32)GameBit_Get(*(s16 *)((char *)inner + 0xe)) != 0) {
             *(s16 *)((char *)inner + 0xa) = 4;
             st->applyHeight = 1;
@@ -289,7 +290,7 @@ void vfplift_init(int *obj, u8 *init) {
             *(s16 *)((char *)inner + 0xa) = 3;
         }
     }
-    if (*(s16 *)((char *)obj + 0x46) == 0x3b7 && (u32)GameBit_Get(0x4ee) != 0) {
+    if (((GameObject *)obj)->anim.seqId == 0x3b7 && (u32)GameBit_Get(0x4ee) != 0) {
         if ((u32)GameBit_Get(*(s16 *)((char *)inner + 0xe)) != 0) {
             *(s16 *)((char *)inner + 0xa) = 3;
         } else {
