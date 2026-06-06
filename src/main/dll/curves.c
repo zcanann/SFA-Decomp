@@ -2,6 +2,7 @@
 #include "main/dll/curves.h"
 #include "main/objlib.h"
 #include <string.h>
+#include "main/game_object.h"
 
 
 #pragma peephole off
@@ -429,12 +430,12 @@ int curves_distanceToNearestOfType16(f32 x,f32 y,f32 z,int param_4)
   nearestDistance = (double)lbl_803E12B8;
   for (i = 0; i < objectCount; i = i + 1) {
     obj = objects[i];
-    if ((((*(short *)(obj + 0x44) == 0x2c) && (*(char *)(obj + 0xac) != param_4)) &&
-        (curve = *(RomCurveDef **)(obj + 0x4c), curve != NULL)) &&
+    if ((((((GameObject *)obj)->anim.classId == 0x2c) && (*(char *)(obj + 0xac) != param_4)) &&
+        (curve = *(RomCurveDef **)&((GameObject *)obj)->anim.placementData, curve != NULL)) &&
        ((curve->type == 0x16 &&
-         ((dx = *(float *)(obj + 0x18) - x,
-         dy = *(float *)(obj + 0x1c) - y,
-         dz = *(float *)(obj + 0x20) - z,
+         ((dx = ((GameObject *)obj)->anim.worldPosX - x,
+         dy = ((GameObject *)obj)->anim.worldPosY - y,
+         dz = ((GameObject *)obj)->anim.worldPosZ - z,
          distance = sqrtf(dz * dz + (dx * dx + dy * dy)),
          (double)lbl_803E12B0 == nearestCurveId || (distance < nearestDistance)))))) {
       nearestCurveId = (double)curve->id;
@@ -1011,9 +1012,9 @@ f32 curves_distFn0B(int obj,uint curveId)
     return gFloatNegOne;
   }
 
-  dx = curve->x - *(f32 *)(obj + 0x0c);
-  dy = curve->y - *(f32 *)(obj + 0x10);
-  dz = curve->z - *(f32 *)(obj + 0x14);
+  dx = curve->x - ((GameObject *)obj)->anim.localPosX;
+  dy = curve->y - ((GameObject *)obj)->anim.localPosY;
+  dz = curve->z - ((GameObject *)obj)->anim.localPosZ;
   return sqrtf(dx * dx + dy * dy + dz * dz);
 }
 
@@ -2209,9 +2210,9 @@ void fn_800E56A4(int obj,f32 *state)
   startX = collision->points[1][0];
   startZ = collision->points[1][2];
   if ((s32)(collision->flags & 0x100000) == 0) {
-    *(f32 *)(obj + 0x18) = startX;
-    *(f32 *)(obj + 0x20) = startZ;
-    *(f32 *)(obj + 0x1c) = collision->points[0][1];
+    ((GameObject *)obj)->anim.worldPosX = startX;
+    ((GameObject *)obj)->anim.worldPosZ = startZ;
+    ((GameObject *)obj)->anim.worldPosY = collision->points[0][1];
   }
 
   points = curves_getCurves(obj,collision->points[1][0],collision->points[1][2],&hitCount,0);
@@ -2231,7 +2232,7 @@ void fn_800E56A4(int obj,f32 *state)
     pointIndex++;
   }
 
-  if (*(s16 *)(obj + 0x44) == 1) {
+  if (((GameObject *)obj)->anim.classId == 1) {
     collision->traceStart[2][0] = collision->points[1][0];
     collision->traceStart[2][1] = collision->points[1][1];
     collision->traceStart[2][2] = collision->points[1][2];
@@ -2307,34 +2308,34 @@ void fn_800E58FC(int obj,f32 *state)
   pointCount = collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT;
   if ((pointCount == 2) || (pointCount == 4)) {
     zero = lbl_803E0668;
-    *(f32 *)(obj + 0x18) = zero;
-    *(f32 *)(obj + 0x1c) = zero;
-    *(f32 *)(obj + 0x20) = zero;
+    ((GameObject *)obj)->anim.worldPosX = zero;
+    ((GameObject *)obj)->anim.worldPosY = zero;
+    ((GameObject *)obj)->anim.worldPosZ = zero;
 
     pointX = state;
     pointYZ = state;
     pointLimit = pointCount * 3;
     for (pointIndex = 0; pointIndex < pointLimit; pointIndex += 3) {
-      *(f32 *)(obj + 0x18) += pointX[2];
-      *(f32 *)(obj + 0x1c) += pointYZ[3];
-      *(f32 *)(obj + 0x20) += pointYZ[4];
+      ((GameObject *)obj)->anim.worldPosX += pointX[2];
+      ((GameObject *)obj)->anim.worldPosY += pointYZ[3];
+      ((GameObject *)obj)->anim.worldPosZ += pointYZ[4];
       pointX += 3;
       pointYZ += 3;
     }
 
     averageScale = lbl_803E068C / (f32)pointCount;
-    *(f32 *)(obj + 0x18) *= averageScale;
-    *(f32 *)(obj + 0x1c) *= averageScale;
-    *(f32 *)(obj + 0x20) *= averageScale;
+    ((GameObject *)obj)->anim.worldPosX *= averageScale;
+    ((GameObject *)obj)->anim.worldPosY *= averageScale;
+    ((GameObject *)obj)->anim.worldPosZ *= averageScale;
 
     if ((collision->flags & 0x8600) != 0) {
       transform.angles[0] = -*(s16 *)obj;
-      transform.angles[1] = -*(s16 *)(obj + 2);
-      transform.angles[2] = -*(s16 *)(obj + 4);
+      transform.angles[1] = -((GameObject *)obj)->anim.rotY;
+      transform.angles[2] = -((GameObject *)obj)->anim.rotZ;
       transform.scale = lbl_803E068C;
-      transform.x = -*(f32 *)(obj + 0x18);
-      transform.y = -*(f32 *)(obj + 0x1c);
-      transform.z = -*(f32 *)(obj + 0x20);
+      transform.x = -((GameObject *)obj)->anim.worldPosX;
+      transform.y = -((GameObject *)obj)->anim.worldPosY;
+      transform.z = -((GameObject *)obj)->anim.worldPosZ;
       mtxRotateByVec3s(matrix,transform.angles);
 
       outZ = localZ;
@@ -2379,9 +2380,9 @@ void fn_800E58FC(int obj,f32 *state)
     }
   }
   else {
-    *(f32 *)(obj + 0x18) = collision->points[0][0];
-    *(f32 *)(obj + 0x1c) = collision->points[0][1];
-    *(f32 *)(obj + 0x20) = collision->points[0][2];
+    ((GameObject *)obj)->anim.worldPosX = collision->points[0][0];
+    ((GameObject *)obj)->anim.worldPosY = collision->points[0][1];
+    ((GameObject *)obj)->anim.worldPosZ = collision->points[0][2];
   }
 }
 
@@ -2701,8 +2702,8 @@ void curves_updateLocalPointCollision(int obj,f32 *state)
       goto buildTransform;
     }
     zero = lbl_803E0668;
-    *(f32 *)(obj + 0xc) = zero;
-    *(f32 *)(obj + 0x14) = zero;
+    ((GameObject *)obj)->anim.localPosX = zero;
+    ((GameObject *)obj)->anim.localPosZ = zero;
     pointTriples = pointCount * 3;
     pointTripletDivisor = 3;
     averageCount = (pointTriples + 2) / pointTripletDivisor;
@@ -2711,14 +2712,14 @@ void curves_updateLocalPointCollision(int obj,f32 *state)
       point = state;
       if (chunkCount != 0) {
         do {
-          *(f32 *)(obj + 0xc) += point[0x39];
-          *(f32 *)(obj + 0x14) += point[0x3b];
-          *(f32 *)(obj + 0xc) += point[0x3c];
-          *(f32 *)(obj + 0x14) += point[0x3e];
-          *(f32 *)(obj + 0xc) += point[0x3f];
-          *(f32 *)(obj + 0x14) += point[0x41];
-          *(f32 *)(obj + 0xc) += point[0x42];
-          *(f32 *)(obj + 0x14) += point[0x44];
+          ((GameObject *)obj)->anim.localPosX += point[0x39];
+          ((GameObject *)obj)->anim.localPosZ += point[0x3b];
+          ((GameObject *)obj)->anim.localPosX += point[0x3c];
+          ((GameObject *)obj)->anim.localPosZ += point[0x3e];
+          ((GameObject *)obj)->anim.localPosX += point[0x3f];
+          ((GameObject *)obj)->anim.localPosZ += point[0x41];
+          ((GameObject *)obj)->anim.localPosX += point[0x42];
+          ((GameObject *)obj)->anim.localPosZ += point[0x44];
           point += 0xc;
           chunkCount--;
         } while (chunkCount != 0);
@@ -2728,20 +2729,20 @@ void curves_updateLocalPointCollision(int obj,f32 *state)
         }
       }
       do {
-        *(f32 *)(obj + 0xc) += point[0x39];
-        *(f32 *)(obj + 0x14) += point[0x3b];
+        ((GameObject *)obj)->anim.localPosX += point[0x39];
+        ((GameObject *)obj)->anim.localPosZ += point[0x3b];
         averageCount--;
         point += 3;
       } while (averageCount != 0);
     }
 scaleAverage:
     averageScale = lbl_803E068C / (f32)pointCount;
-    *(f32 *)(obj + 0xc) *= averageScale;
-    *(f32 *)(obj + 0x14) *= averageScale;
+    ((GameObject *)obj)->anim.localPosX *= averageScale;
+    ((GameObject *)obj)->anim.localPosZ *= averageScale;
   }
   else if ((s32)(collision->flags & 0x100000) == 0) {
-    *(f32 *)(obj + 0xc) = collision->localPointWorld[0][0];
-    *(f32 *)(obj + 0x14) = collision->localPointWorld[0][2];
+    ((GameObject *)obj)->anim.localPosX = collision->localPointWorld[0][0];
+    ((GameObject *)obj)->anim.localPosZ = collision->localPointWorld[0][2];
   }
 buildTransform:
   transform.angles[0] = *(s16 *)obj;
@@ -2750,13 +2751,13 @@ buildTransform:
     transform.angles[2] = 0;
   }
   else {
-    transform.angles[1] = *(s16 *)(obj + 2);
-    transform.angles[2] = *(s16 *)(obj + 4);
+    transform.angles[1] = ((GameObject *)obj)->anim.rotY;
+    transform.angles[2] = ((GameObject *)obj)->anim.rotZ;
   }
   transform.scale = lbl_803E068C;
-  transform.x = *(f32 *)(obj + 0xc);
-  transform.y = *(f32 *)(obj + 0x10);
-  transform.z = *(f32 *)(obj + 0x14);
+  transform.x = ((GameObject *)obj)->anim.localPosX;
+  transform.y = ((GameObject *)obj)->anim.localPosY;
+  transform.z = ((GameObject *)obj)->anim.localPosZ;
   setMatrixFromObjectPos(matrix,&transform);
   localOffset = 0;
   point = state;
@@ -2805,25 +2806,25 @@ void curves_preparePointCollisionFrame(int obj,u32 *state)
   stateBytes = (u8 *)state;
   collision = (CurvesCollisionState *)state;
   if ((s32)(*state & CURVES_COLLISION_STATE_ACTIVE) != 0) {
-    if (*(int *)(obj + 0x30) != 0) {
-      if ((*(int *)(*(int *)(obj + 0x30) + 0x58) != 0) &&
-          (ObjHits_IsObjectEnabled(*(int *)(obj + 0x30)) != 0)) {
-        matrixSource = *(int *)(*(int *)(obj + 0x30) + 0x58);
+    if (*(int *)&((GameObject *)obj)->anim.parent != 0) {
+      if ((*(int *)(*(int *)&((GameObject *)obj)->anim.parent + 0x58) != 0) &&
+          (ObjHits_IsObjectEnabled(*(int *)&((GameObject *)obj)->anim.parent) != 0)) {
+        matrixSource = *(int *)(*(int *)&((GameObject *)obj)->anim.parent + 0x58);
         Matrix_TransformPoint((f32 *)(matrixSource + ((*(u8 *)(matrixSource + 0x10c) + 2) * 0x40)),
-                              *(f32 *)(obj + 0xc),*(f32 *)(obj + 0x10),*(f32 *)(obj + 0x14),
+                              ((GameObject *)obj)->anim.localPosX,((GameObject *)obj)->anim.localPosY,((GameObject *)obj)->anim.localPosZ,
                               (f32 *)(obj + 0x18),(f32 *)(obj + 0x1c),(f32 *)(obj + 0x20));
       }
       else {
-        Obj_TransformLocalPointToWorld(*(f32 *)(obj + 0xc),*(f32 *)(obj + 0x10),
-                                       *(f32 *)(obj + 0x14),(f32 *)(obj + 0x18),
+        Obj_TransformLocalPointToWorld(((GameObject *)obj)->anim.localPosX,((GameObject *)obj)->anim.localPosY,
+                                       ((GameObject *)obj)->anim.localPosZ,(f32 *)(obj + 0x18),
                                        (f32 *)(obj + 0x1c),(f32 *)(obj + 0x20),
-                                       *(u32 *)(obj + 0x30));
+                                       *(u32 *)&((GameObject *)obj)->anim.parent);
       }
     }
     else {
-      *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
-      *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
-      *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+      ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
+      ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
+      ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
     }
     flags = *state;
     if ((s32)(flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0) {
@@ -2833,13 +2834,13 @@ void curves_preparePointCollisionFrame(int obj,u32 *state)
         transform.angles[2] = 0;
       }
       else {
-        transform.angles[1] = *(s16 *)(obj + 2);
-        transform.angles[2] = *(s16 *)(obj + 4);
+        transform.angles[1] = ((GameObject *)obj)->anim.rotY;
+        transform.angles[2] = ((GameObject *)obj)->anim.rotZ;
       }
       transform.scale = lbl_803E068C;
-      transform.x = *(f32 *)(obj + 0x18);
-      transform.y = *(f32 *)(obj + 0x1c);
-      transform.z = *(f32 *)(obj + 0x20);
+      transform.x = ((GameObject *)obj)->anim.worldPosX;
+      transform.y = ((GameObject *)obj)->anim.worldPosY;
+      transform.z = ((GameObject *)obj)->anim.worldPosZ;
       setMatrixFromObjectPos(matrix,&transform);
       pointIndex = 0;
       pointOffset = 0;
@@ -2868,13 +2869,13 @@ void curves_preparePointCollisionFrame(int obj,u32 *state)
         height++;
       }
     }
-    if (*(s16 *)(obj + 0x44) == 1) {
-      *(u32 *)&collision->points[2][0] = *(u32 *)(obj + 0x18);
-      *(u32 *)&collision->traceStart[2][0] = *(u32 *)(obj + 0x18);
-      collision->points[2][1] = lbl_803E06BC + *(f32 *)(obj + 0x1c);
+    if (((GameObject *)obj)->anim.classId == 1) {
+      *(u32 *)&collision->points[2][0] = *(u32 *)&((GameObject *)obj)->anim.worldPosX;
+      *(u32 *)&collision->traceStart[2][0] = *(u32 *)&((GameObject *)obj)->anim.worldPosX;
+      collision->points[2][1] = lbl_803E06BC + ((GameObject *)obj)->anim.worldPosY;
       collision->traceStart[2][1] = collision->points[2][1];
-      *(u32 *)&collision->points[2][2] = *(u32 *)(obj + 0x20);
-      *(u32 *)&collision->traceStart[2][2] = *(u32 *)(obj + 0x20);
+      *(u32 *)&collision->points[2][2] = *(u32 *)&((GameObject *)obj)->anim.worldPosZ;
+      *(u32 *)&collision->traceStart[2][2] = *(u32 *)&((GameObject *)obj)->anim.worldPosZ;
     }
     collision->surfaceFlags = 0;
     collision->surfaceHitMask = 0;
@@ -2934,13 +2935,13 @@ void curves_updateLocalPointTransforms(int obj,u32 *state)
       transform.angles[2] = 0;
     }
     else {
-      transform.angles[1] = *(s16 *)(obj + 2);
-      transform.angles[2] = *(s16 *)(obj + 4);
+      transform.angles[1] = ((GameObject *)obj)->anim.rotY;
+      transform.angles[2] = ((GameObject *)obj)->anim.rotZ;
     }
     transform.scale = lbl_803E068C;
-    transform.x = *(f32 *)(obj + 0xc);
-    transform.y = *(f32 *)(obj + 0x10);
-    transform.z = *(f32 *)(obj + 0x14);
+    transform.x = ((GameObject *)obj)->anim.localPosX;
+    transform.y = ((GameObject *)obj)->anim.localPosY;
+    transform.z = ((GameObject *)obj)->anim.localPosZ;
     setMatrixFromObjectPos(matrix,&transform);
     pointIndex = 0;
     pointOffset = 0;
@@ -3005,13 +3006,13 @@ void dll_15_func0A(int obj,u32 *state)
       transform.angles[2] = 0;
     }
     else {
-      transform.angles[1] = *(s16 *)(obj + 2);
-      transform.angles[2] = *(s16 *)(obj + 4);
+      transform.angles[1] = ((GameObject *)obj)->anim.rotY;
+      transform.angles[2] = ((GameObject *)obj)->anim.rotZ;
     }
     transform.scale = lbl_803E068C;
-    transform.x = *(f32 *)(obj + 0xc);
-    transform.y = *(f32 *)(obj + 0x10);
-    transform.z = *(f32 *)(obj + 0x14);
+    transform.x = ((GameObject *)obj)->anim.localPosX;
+    transform.y = ((GameObject *)obj)->anim.localPosY;
+    transform.z = ((GameObject *)obj)->anim.localPosZ;
     setMatrixFromObjectPos(matrix,&transform);
     pointIndex = 0;
     pointOffset = 0;
@@ -3363,13 +3364,13 @@ void dll_15_func08(short *curveObj,int *state,uint updateValue,f32 step)
     }
     if ((*state & 0x40000) == 0) {
       linked = *(int *)(curveObj + 0x2a);
-      if ((linked == 0) || ((*(ushort *)(linked + 0x60) & 1) == 0)) {
+      if ((linked == 0) || ((*(ushort *)&((GameObject *)linked)->anim.eventTable & 1) == 0)) {
         *(f32 *)(curveObj + 0x14) =
             (f32)((f64)invStep * (f64)(*(f32 *)(curveObj + 0xe) - *(f32 *)(curveObj + 0x48)));
       }
       else {
         *(f32 *)(curveObj + 0x14) =
-            (f32)((f64)invStep * (f64)(*(f32 *)(curveObj + 0xe) - *(f32 *)(linked + 0x20)));
+            (f32)((f64)invStep * (f64)(*(f32 *)(curveObj + 0xe) - ((GameObject *)linked)->anim.worldPosZ));
         if (*(f32 *)(*(int *)(curveObj + 0x2a) + 0x20) < *(f32 *)(curveObj + 0xe)) {
           *(f32 *)(curveObj + 0x14) = lbl_803E0668;
         }
@@ -4012,15 +4013,15 @@ int pushable_savePos(int obj)
   for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++) {
     position = (CurvesSaveGameObjectPosition *)(lbl_803A32A8 + SAVEGAME_OBJECT_POSITION_OFFSET +
                                                 i * sizeof(CurvesSaveGameObjectPosition));
-    objectId = *(u32 *)(*(u32 *)(obj + 0x4c) + 0x14);
+    objectId = *(u32 *)(*(u32 *)&((GameObject *)obj)->anim.placementData + 0x14);
     if (objectId == position->objectId) {
-      if ((*(f32 *)(obj + 0xc) == position->x) && (*(f32 *)(obj + 0x10) == position->y) &&
-          (*(f32 *)(obj + 0x14) == position->z)) {
+      if ((((GameObject *)obj)->anim.localPosX == position->x) && (((GameObject *)obj)->anim.localPosY == position->y) &&
+          (((GameObject *)obj)->anim.localPosZ == position->z)) {
         return 0;
       }
-      *(f32 *)(obj + 0xc) = position->x;
-      *(f32 *)(obj + 0x10) = position->y;
-      *(f32 *)(obj + 0x14) = position->z;
+      ((GameObject *)obj)->anim.localPosX = position->x;
+      ((GameObject *)obj)->anim.localPosY = position->y;
+      ((GameObject *)obj)->anim.localPosZ = position->z;
       return 1;
     }
   }
