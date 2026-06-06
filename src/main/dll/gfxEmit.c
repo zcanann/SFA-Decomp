@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/gfxEmit.h"
+#include "main/objhits_types.h"
 
 extern undefined4 FUN_80006824();
 extern uint FUN_80017690();
@@ -804,7 +805,7 @@ void collectible_update(int obj)
     }
     if (*(int *)(obj + 0xf4) != 0) {
         if (*(void **)(obj + 0x54) != NULL) {
-            *(s16 *)(*(int *)(obj + 0x54) + 0x60) |= 0x100;
+            (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 0x100;
         }
         ObjHits_DisableObject(obj);
         if (*(s16 *)(state + 0x10) != -1 && GameBit_Get((s32)*(s16 *)(state + 0x10)) == 0) {

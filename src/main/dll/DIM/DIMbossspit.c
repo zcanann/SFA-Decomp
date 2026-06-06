@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/dll/DIM/DIMbossspit.h"
+#include "main/objhits_types.h"
 
 extern f32 timeDelta;
 extern f32 lbl_803DDB98;
@@ -53,8 +54,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
 
   timer = lbl_803E4C90;
 
-  *(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) =
-      (s16)(*(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) | DIMBOSSSPIT_MODEL_ACTIVE_FLAG);
+  (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
 
   updateState->effectActive = 1;
 
@@ -72,8 +72,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
     if (lbl_803DDBA4 <= lbl_803E4CB8) {
       lbl_803DDBA4 = lbl_803E4C90;
       updateState->animFinished = 0;
-      *(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) =
-          (s16)(*(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) & ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG);
+      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
       obj[0xAF] = (u8)(obj[0xAF] | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
       GameBit_Set(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
       if (gDIMbosstonsilRoutePhase >= DIMBOSSSPIT_ROUTE_HIGH_THRESHOLD) {
@@ -102,8 +101,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
     if (lbl_803DDB98 <= lbl_803E4C90) {
       lbl_803DDB98 = lbl_803E4C90;
       updateState->animFinished = 0;
-      *(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) =
-          (s16)(*(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) & ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG);
+      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
       obj[0xAF] = (u8)(obj[0xAF] | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
       GameBit_Set(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
       if (gDIMbosstonsilRoutePhase == DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD) {

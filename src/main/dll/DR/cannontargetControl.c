@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/cannontargetControl.h"
+#include "main/objhits_types.h"
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006824();
@@ -919,12 +920,12 @@ void blasted_update(int obj)
     }
     {
         int i;
-        for (i = 0; i < (s8)*(u8 *)(*(int *)(obj + 0x54) + 0x71); i++) {
+        for (i = 0; i < (*(ObjHitsPriorityState **)(obj + 0x54))->priorityHitCount; i++) {
             u32 v;
             s8 m;
             int found;
-            m = *(u8 *)(*(int *)(obj + 0x54) + i + 0x75);
-            v = *(u32 *)(*(int *)(obj + 0x54) + i * 4 + 0x7c);
+            m = (*(ObjHitsPriorityState **)(obj + 0x54))->priorities[i];
+            v = (*(ObjHitsPriorityState **)(obj + 0x54))->hitObjects[i];
             found = 0;
             if (m != 5) {
                 continue;

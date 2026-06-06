@@ -3,6 +3,7 @@
 #include "main/dll/barrel.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objhits_types.h"
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017730();
@@ -399,13 +400,13 @@ void grimble_update(int obj)
         *(void **)(state + 0x2d0) = Obj_GetPlayerObject();
       }
       if (*(void **)(state + 0x2d0) != NULL || *(s8 *)(state + 0x354) == 0) {
-        *(s16 *)(*(int *)(obj + 0x54) + 0x60) = *(s16 *)(*(int *)(obj + 0x54) + 0x60) | 1;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
         if ((*(int (**)(int, char *, f32, int))(*(int *)gBaddieControlInterface + 0x44))(
                 obj, state, (f32)*(u16 *)(state + 0x3fe), 1) != 0) {
           *(int *)(state + 0x2d0) = 0;
         }
       } else {
-        *(s16 *)(*(int *)(obj + 0x54) + 0x60) = *(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
         target = (*(void *(**)(int, char *, f32, int))(*(int *)gBaddieControlInterface + 0x48))(
             obj, state, (f32)*(u16 *)(state + 0x3fe), 0x8000);
         if (target != NULL) {

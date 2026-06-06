@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRhalolight.h"
+#include "main/objhits_types.h"
 
 /*
  * --INFO--
@@ -81,7 +82,7 @@ void SnowBike_hitDetect(int obj)
         *(f32 *)(state + 0x498) = *(f32 *)(obj + 0x28);
     }
     if (state[0x3d6] == 0) {
-        if ((*(s16 *)(*(int *)(obj + 0x54) + 0x60) & 8) != 0
+        if (((*(ObjHitsPriorityState **)(obj + 0x54))->flags & 8) != 0
             && arrayIndexOf(lbl_8032855C, 10, *(s16 *)(other + 0x46)) == -1) {
         } else {
             if (*(void **)(state + 0x42c) == NULL) {

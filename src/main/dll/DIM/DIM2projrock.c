@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
@@ -587,8 +588,7 @@ void FUN_801b9914(uint param_1)
         uVar3 = randomGetRange(800,0x4b0);
         *(short *)(pfVar7 + 1) = (short)uVar3;
         *(undefined *)((int)pfVar7 + 6) = 3;
-        *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-             *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
+        (*(ObjHitsPriorityState **)(param_1 + 0x54))->flags &= ~1;
         FUN_80006824(param_1,SFXmv_cflap2_c);
         return;
       }
@@ -1171,7 +1171,7 @@ void dim2icicle_update(int obj)
         }
         *(s16 *)(sub + 4) = (s16)randomGetRange(0x320, 0x4b0);
         *(u8 *)(sub + 6) = 3;
-        *(s16 *)(*(int *)(obj + 0x54) + 0x60) = *(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
         Sfx_PlayFromObject(obj, SFXmv_cflap2_c);
         break;
     case 3:

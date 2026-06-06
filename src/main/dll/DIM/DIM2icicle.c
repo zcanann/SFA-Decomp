@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIM2icicle.h"
+#include "main/objhits_types.h"
 
 #define DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT 0x20000
 
@@ -622,7 +623,7 @@ void fn_801BC2D8(int obj, int param_2)
         *(u8 *)(param_2 + 0x354) = 0;
         *(u8 *)(param_2 + 0x349) = 0;
         ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 0);
-        *(s16 *)(*(int *)(obj + 0x54) + 0x60) = *(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
         *(u8 *)(obj + 0xaf) |= 8;
         *(u8 *)(obj + 0xaf) &= ~0x80;
         GameBit_Set(0x20e, 1);

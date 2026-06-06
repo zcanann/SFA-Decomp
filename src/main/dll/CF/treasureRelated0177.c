@@ -2,6 +2,7 @@
 #include "main/dll/CF/treasureRelated0177.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 
 #pragma peephole off
@@ -100,7 +101,7 @@ void dll_127_update(int obj)
   if (*(short *)(obj + 0xf8) > 0) {
     *(short *)(obj + 0xf8) -= framesThisStep;
   }
-  flags = *(short *)(*(int *)(obj + 0x54) + 0x60) & 8;
+  flags = (*(ObjHitsPriorityState **)(obj + 0x54))->flags & 8;
   if (flags == 0) {
     return;
   }

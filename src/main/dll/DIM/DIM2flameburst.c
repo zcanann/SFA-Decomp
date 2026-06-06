@@ -3,6 +3,7 @@
 #include "main/dll/DIM/DIM2flameburst.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800067e8();
@@ -1188,8 +1189,7 @@ void fn_explosion_release_v11_unused(uint param_1)
     if (iVar4 < 0) {
       iVar4 = 0;
     }
-    *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
+    (*(ObjHitsPriorityState **)(param_1 + 0x54))->flags &= ~1;
     *(char *)(param_1 + 0x36) = (char)iVar4;
   }
   return;
@@ -1801,7 +1801,7 @@ void dimwooddoor2_init(u8* obj, u8* params)
     *(f32*)(sub + 8) = fz;
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
         sub[0] = 0;
-        *(s16*)(*(u8**)(obj + 0x54) + 0x60) = (s16)(*(s16*)(*(u8**)(obj + 0x54) + 0x60) & ~1);
+        (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
         *(u8*)(obj + 0x36) = 0;
     }
 }
@@ -1819,7 +1819,7 @@ void dll_1CE_init(u8* obj, u8* params)
     sub[9] = 1;
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
         sub[9] = 0;
-        *(s16*)(*(u8**)(obj + 0x54) + 0x60) = (s16)(*(s16*)(*(u8**)(obj + 0x54) + 0x60) & ~1);
+        (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
         *(u8*)(obj + 0x36) = 0;
     }
     *(f32*)(sub + 4) = lbl_803E49F0;
