@@ -2,6 +2,7 @@
 #define MAIN_DLL_MMSHRINE_SHRINE1C2_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void ecsh_shrine_update(s16 *obj);
 void FUN_801c6dd8(undefined2 *param_1,int param_2);
@@ -13,7 +14,12 @@ void FUN_801c70c4(ushort *param_1);
 void FUN_801c7390(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_801c74f0(int param_1);
 void FUN_801c75a4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
+void ecsh_shrine_init(s16 *obj, s8 *def);
+void ecsh_shrine_release(void);
+void ecsh_shrine_initialise(void);
 void gpsh_shrine_free(int *obj);
 void gpsh_shrine_render(void *obj, int p2, int p3, int p4, int p5, s8 visible);
+
+extern ObjectDescriptor15 gECSH_ShrineObjDescriptor;
 
 #endif /* MAIN_DLL_MMSHRINE_SHRINE1C2_H_ */
