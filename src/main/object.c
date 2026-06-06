@@ -1560,7 +1560,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     memcpy(obj, &tmpl, 0x10c);
     memset((u8 *)obj + 0x10c, 0, base + total - 0x10c);
     obj->models = (u8 **)(obj + 1);
-    modelDef->flags |= 0x800000;
+    modelDef->flags |= 0x800000LL;
     i = 0;
     obj->f108 = 0;
     if (flags29 & 0x400) {
@@ -1569,11 +1569,11 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
             obj->models[idx] = (u8 *)obj + base + offsets[idx];
             ObjModel_LoadAnimData(models[idx], flags29, (int)obj->models[idx]);
             if (!(*(u16 *)(*(u8 **)obj->models[idx] + 2) & 0x8000)) {
-                modelDef->flags &= 0xff7fffff;
+                modelDef->flags &= ~0x800000LL;
             }
             ObjModel_LoadRenderOpTextures(obj->models[idx], (int)obj);
             modelInitBones(obj->scale, obj->models[idx]);
-            if (modelDef->flags & 0x800) {
+            if (((ObjModelInstance *)obj->def)->flags & 0x800) {
                 ObjModel_SetRenderCallback(obj->models[idx], objCallback_80074d04);
             } else {
                 cb = *(u8 *)(obj->def + 0x5f);
@@ -1590,11 +1590,11 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
             ObjModel_LoadAnimData(models[i], flags29, (int)obj->models[i]);
             h = *(u16 *)(*(u8 **)obj->models[i] + 2);
             if (!(h & 0x8000) && !(h & 0x4000)) {
-                modelDef->flags &= 0xff7fffff;
+                modelDef->flags &= ~0x800000LL;
             }
             ObjModel_LoadRenderOpTextures(obj->models[i], (int)obj);
             modelInitBones(obj->scale, obj->models[i]);
-            if (modelDef->flags & 0x800) {
+            if (((ObjModelInstance *)obj->def)->flags & 0x800) {
                 ObjModel_SetRenderCallback(obj->models[i], objCallback_80074d04);
             } else {
                 cb = *(u8 *)(obj->def + 0x5f);
@@ -1626,7 +1626,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     } else {
         obj->fb8 = 0;
     }
-    if ((flags29 & 0x40) || (modelDef->flags & 0x400000)) {
+    if ((flags29 & 0x40) || (((ObjModelInstance *)obj->def)->flags & 0x400000)) {
         seq2 = obj->seqId;
         tmp = roundUpTo4(cursor);
         obj->objAnimEventTable = tmp;
