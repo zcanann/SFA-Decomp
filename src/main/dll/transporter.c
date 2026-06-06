@@ -1654,9 +1654,9 @@ void invhit_update(int *obj) {
     case 0: {
         char *victim = (char *)Obj_GetPlayerObject();
         while (victim != NULL) {
-            f32 dx = *(f32 *)((char *)obj + 0xc) - *(f32 *)(victim + 0xc);
-            f32 dy = *(f32 *)((char *)obj + 0x10) - *(f32 *)(victim + 0x10);
-            f32 dz = *(f32 *)((char *)obj + 0x14) - *(f32 *)(victim + 0x14);
+            f32 dx = *(f32 *)((char *)obj + 0xc) - ((PushableState *)victim)->cullDistance;
+            f32 dy = *(f32 *)((char *)obj + 0x10) - ((PushableState *)victim)->scale;
+            f32 dz = *(f32 *)((char *)obj + 0x14) - ((PushableState *)victim)->timer_0x14;
             f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
             if (dist < (f32)*(int *)((char *)obj + 0xf8)) {
                 u8 *victimHits = *(u8 **)(victim + 0x54);
@@ -1807,8 +1807,8 @@ void WarpPoint_update(int *obj) {
     case 0:
         if (lbl_803DCEB8 > -1 || GameBit_Get(0xd53) != 0) {
             f32 dx = *(f32 *)(player + 0xc) - *(f32 *)((char *)obj + 0xc);
-            f32 dy = *(f32 *)(player + 0x10) - *(f32 *)((char *)obj + 0x10);
-            f32 dz = *(f32 *)(player + 0x14) - *(f32 *)((char *)obj + 0x14);
+            f32 dy = ((PushableState *)player)->scale - *(f32 *)((char *)obj + 0x10);
+            f32 dz = ((PushableState *)player)->timer_0x14 - *(f32 *)((char *)obj + 0x14);
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
             if (*(u8 *)((char *)state + 0xc) == 0 && *(s8 *)(def + 0x1c) != 0 &&
                 dist < *(f32 *)((char *)state + 8) &&
@@ -1833,8 +1833,8 @@ void WarpPoint_update(int *obj) {
         break;
     case 1: {
         f32 dx = *(f32 *)(player + 0xc) - *(f32 *)((char *)obj + 0xc);
-        f32 dy = *(f32 *)(player + 0x10) - *(f32 *)((char *)obj + 0x10);
-        f32 dz = *(f32 *)(player + 0x14) - *(f32 *)((char *)obj + 0x14);
+        f32 dy = ((PushableState *)player)->scale - *(f32 *)((char *)obj + 0x10);
+        f32 dz = ((PushableState *)player)->timer_0x14 - *(f32 *)((char *)obj + 0x14);
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
         if (lbl_803DCEB8 > -1 && *(s8 *)(def + 0x1c) != 0 && dist < lbl_803E35D8 &&
             *(u32 *)(player + 0x30) == *(u32 *)((char *)obj + 0x30)) {
@@ -1850,8 +1850,8 @@ void WarpPoint_update(int *obj) {
     case 2:
         if (lbl_803E35DC != (dist = *(f32 *)((char *)state + 8))) {
             f32 dx = *(f32 *)(player + 0x18) - *(f32 *)((char *)obj + 0x18);
-            f32 dy = *(f32 *)(player + 0x1c) - *(f32 *)((char *)obj + 0x1c);
-            f32 dz = *(f32 *)(player + 0x20) - *(f32 *)((char *)obj + 0x20);
+            f32 dy = ((PushableState *)player)->probeLocal[0].y - *(f32 *)((char *)obj + 0x1c);
+            f32 dz = ((PushableState *)player)->probeLocal[0].z - *(f32 *)((char *)obj + 0x20);
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
         }
         if (GameBit_Get(state[1]) != 0 && *(u8 *)((char *)state + 0xc) == 0 &&
@@ -1869,8 +1869,8 @@ void WarpPoint_update(int *obj) {
         break;
     case 3: {
         f32 dx = *(f32 *)(player + 0xc) - *(f32 *)((char *)obj + 0xc);
-        f32 dy = *(f32 *)(player + 0x10) - *(f32 *)((char *)obj + 0x10);
-        f32 dz = *(f32 *)(player + 0x14) - *(f32 *)((char *)obj + 0x14);
+        f32 dy = ((PushableState *)player)->scale - *(f32 *)((char *)obj + 0x10);
+        f32 dz = ((PushableState *)player)->timer_0x14 - *(f32 *)((char *)obj + 0x14);
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
         if (GameBit_Get(state[1]) != 0 && *(u8 *)((char *)state + 0xc) == 0 &&
             *(s8 *)(def + 0x1c) != 0 && dist < *(f32 *)((char *)state + 8) &&
@@ -1884,8 +1884,8 @@ void WarpPoint_update(int *obj) {
     case 4:
         if (lbl_803E35DC != (dist = *(f32 *)((char *)state + 8))) {
             f32 dx = *(f32 *)(player + 0x18) - *(f32 *)((char *)obj + 0x18);
-            f32 dy = *(f32 *)(player + 0x1c) - *(f32 *)((char *)obj + 0x1c);
-            f32 dz = *(f32 *)(player + 0x20) - *(f32 *)((char *)obj + 0x20);
+            f32 dy = ((PushableState *)player)->probeLocal[0].y - *(f32 *)((char *)obj + 0x1c);
+            f32 dz = ((PushableState *)player)->probeLocal[0].z - *(f32 *)((char *)obj + 0x20);
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
         }
         if (lbl_803DCEB8 > -1 && *(u8 *)((char *)state + 0xc) == 0 && *(s8 *)(def + 0x1c) != 0 &&
@@ -1999,36 +1999,36 @@ void pushable_init(s16 *obj, char *def) {
         f32 zero = lbl_803E3528;
         for (; i < state->pointCount; i++) {
             f32 v;
-            *(f32 *)(e + 0x18) = *(f32 *)(e + 0x48);
-            *(f32 *)(e + 0x1c) = *(f32 *)(e + 0x4c);
-            *(f32 *)(e + 0x20) = *(f32 *)(e + 0x50);
-            v = *(f32 *)(e + 0x18);
+            ((PushableState *)e)->probeLocal[0].x = ((PushableState *)e)->cornerLocal[0].x;
+            ((PushableState *)e)->probeLocal[0].y = ((PushableState *)e)->cornerLocal[0].y;
+            ((PushableState *)e)->probeLocal[0].z = ((PushableState *)e)->cornerLocal[0].z;
+            v = ((PushableState *)e)->probeLocal[0].x;
             if (v < zero) {
-                *(f32 *)(e + 0x18) = v + lbl_803E358C;
+                ((PushableState *)e)->probeLocal[0].x = v + lbl_803E358C;
             } else {
-                *(f32 *)(e + 0x18) = v - lbl_803E358C;
+                ((PushableState *)e)->probeLocal[0].x = v - lbl_803E358C;
             }
-            v = *(f32 *)(e + 0x20);
+            v = ((PushableState *)e)->probeLocal[0].z;
             if (v < zero) {
-                *(f32 *)(e + 0x20) = v + lbl_803E358C;
+                ((PushableState *)e)->probeLocal[0].z = v + lbl_803E358C;
             } else {
-                *(f32 *)(e + 0x20) = v - lbl_803E358C;
+                ((PushableState *)e)->probeLocal[0].z = v - lbl_803E358C;
             }
-            v = *(f32 *)(e + 0x48);
+            v = ((PushableState *)e)->cornerLocal[0].x;
             if (v < zero) {
-                *(f32 *)(e + 0x48) = v + lbl_803E3588;
+                ((PushableState *)e)->cornerLocal[0].x = v + lbl_803E3588;
             } else {
-                *(f32 *)(e + 0x48) = v - lbl_803E3588;
+                ((PushableState *)e)->cornerLocal[0].x = v - lbl_803E3588;
                 state->cornerIdxPosX = i;
             }
-            v = *(f32 *)(e + 0x50);
+            v = ((PushableState *)e)->cornerLocal[0].z;
             if (v < zero) {
-                *(f32 *)(e + 0x50) = v + lbl_803E3588;
+                ((PushableState *)e)->cornerLocal[0].z = v + lbl_803E3588;
             } else {
-                *(f32 *)(e + 0x50) = v - lbl_803E3588;
+                ((PushableState *)e)->cornerLocal[0].z = v - lbl_803E3588;
                 state->cornerIdxPosZ = i;
             }
-            Matrix_TransformPoint(mtx, *(f32 *)(e + 0x18), *(f32 *)(e + 0x1c), *(f32 *)(e + 0x20),
+            Matrix_TransformPoint(mtx, ((PushableState *)e)->probeLocal[0].x, ((PushableState *)e)->probeLocal[0].y, ((PushableState *)e)->probeLocal[0].z,
                                   (f32 *)(e + 0x78), (f32 *)(e + 0x7c), (f32 *)(e + 0x80));
             e += 0xc;
         }
@@ -2036,13 +2036,13 @@ void pushable_init(s16 *obj, char *def) {
     i = 0;
     e = (char *)state;
     for (; i < state->pointCount; i++) {
-        if (i != state->cornerIdxPosX && *(f32 *)(e + 0x48) < lbl_803E3528) {
-            if ((int)*(f32 *)(e + 0x50) == (int)*(f32 *)((u8 *)state + state->cornerIdxPosX * 0xc + 0x50)) {
+        if (i != state->cornerIdxPosX && ((PushableState *)e)->cornerLocal[0].x < lbl_803E3528) {
+            if ((int)((PushableState *)e)->cornerLocal[0].z == (int)*(f32 *)((u8 *)state + state->cornerIdxPosX * 0xc + 0x50)) {
                 state->cornerIdxNegX = i;
             }
         }
-        if (i != state->cornerIdxPosZ && *(f32 *)(e + 0x50) < lbl_803E3528) {
-            if ((int)*(f32 *)(e + 0x48) == (int)*(f32 *)((u8 *)state + state->cornerIdxPosZ * 0xc + 0x48)) {
+        if (i != state->cornerIdxPosZ && ((PushableState *)e)->cornerLocal[0].z < lbl_803E3528) {
+            if ((int)((PushableState *)e)->cornerLocal[0].x == (int)*(f32 *)((u8 *)state + state->cornerIdxPosZ * 0xc + 0x48)) {
                 state->cornerIdxNegZ = i;
             }
         }
@@ -2208,7 +2208,7 @@ void pushable_hitDetect(int *obj) {
         w = wp;
         e = (u8 *)state;
         for (; i < state->pointCount; i++) {
-            Obj_TransformLocalPointToWorld(*(f32 *)(e + 0x48), *(f32 *)(e + 0x4c), *(f32 *)(e + 0x50),
+            Obj_TransformLocalPointToWorld(((PushableState *)e)->cornerLocal[0].x, ((PushableState *)e)->cornerLocal[0].y, ((PushableState *)e)->cornerLocal[0].z,
                                            w, w + 1, w + 2, obj);
             w += 3;
             e += 0xc;
@@ -2283,7 +2283,7 @@ void pushable_hitDetect(int *obj) {
     i = 0;
     e = (u8 *)state;
     for (; i < state->pointCount; i++) {
-        Obj_TransformLocalPointToWorld(*(f32 *)(e + 0x18), *(f32 *)(e + 0x1c), *(f32 *)(e + 0x20),
+        Obj_TransformLocalPointToWorld(((PushableState *)e)->probeLocal[0].x, ((PushableState *)e)->probeLocal[0].y, ((PushableState *)e)->probeLocal[0].z,
                                        (f32 *)(e + 0x78), (f32 *)(e + 0x7c), (f32 *)(e + 0x80), obj);
         e += 0xc;
     }
