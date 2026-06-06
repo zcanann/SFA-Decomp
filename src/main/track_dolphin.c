@@ -1783,7 +1783,7 @@ int FUN_80061024(int param_1,uint param_2)
   double dVar5;
   undefined8 local_28;
   
-  if ((*(byte *)(*(int *)(param_1 + 0x50) + 0x5f) & 4) == 0) {
+  if ((((ObjAnimComponent *)param_1)->modelInstance->renderFlags & 4) == 0) {
     uVar4 = 400;
     iVar3 = 500;
   }
@@ -1991,14 +1991,15 @@ int FUN_800614dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
   int iVar2;
   undefined4 uVar3;
   undefined4 *puVar4;
+  ObjModelInstance *modelDef;
   
   uVar1 = roundUpTo4(param_10);
   *(uint *)(param_9 + 100) = uVar1;
   puVar4 = *(undefined4 **)(param_9 + 100);
-  iVar2 = *(int *)(param_9 + 0x50);
-  if ((*(short *)(iVar2 + 0x4a) == -1) || (*(short *)(iVar2 + 0x48) == 2)) {
-    if ((*(byte *)(iVar2 + 0x5f) & 4) == 0) {
-      if ((*(byte *)(iVar2 + 0x5f) & 2) == 0) {
+  modelDef = ((ObjAnimComponent *)param_9)->modelInstance;
+  if ((*(short *)((char *)modelDef + 0x4a) == -1) || (modelDef->shadowType == 2)) {
+    if ((modelDef->renderFlags & 4) == 0) {
+      if ((modelDef->renderFlags & 2) == 0) {
         uVar3 = newshadows_getSmallShadowTexture();
         puVar4[1] = uVar3;
       }
@@ -2016,14 +2017,14 @@ int FUN_800614dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
     uVar3 = FUN_80053758(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
     puVar4[1] = uVar3;
   }
-  if (*(short *)(*(int *)(param_9 + 0x50) + 0x48) == 1) {
+  if (modelDef->shadowType == 1) {
     puVar4[4] = 0;
   }
   else {
     puVar4[4] = 0xffffffff;
   }
-  *puVar4 = **(undefined4 **)(param_9 + 0x50);
-  puVar4[0xb] = *(undefined4 *)(*(int *)(param_9 + 0x50) + 0x88);
+  *puVar4 = *(undefined4 *)modelDef;
+  puVar4[0xb] = *(undefined4 *)((char *)modelDef + 0x88);
   puVar4[5] = lbl_803DDB58;
   puVar4[6] = lbl_803DC2B0;
   puVar4[7] = lbl_803DDB5C;
@@ -6479,7 +6480,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     viewMtx = Camera_GetViewMatrix();
     PSMTXConcat(viewMtx, mtx, outMtx);
     GXLoadPosMtxImm(outMtx, 0);
-    if (*(u8 *)(*(int *)((char *)obj + 0x50) + 0x5f) & 0x4) {
+    if (((ObjAnimComponent *)obj)->modelInstance->renderFlags & 0x4) {
         int c = *(int *)col;
         objectShadow_setupSwappedProjectedTexture(*(int *)((char *)blockData + 0xc), &c, mtx);
     } else {

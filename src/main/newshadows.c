@@ -1021,6 +1021,8 @@ void newshadows_renderQueuedShadowCasters(void)
  */
 void newshadows_queueShadowCaster(int object)
 {
+  ObjAnimComponent *objAnim;
+  ObjModelInstance *modelDef;
   float fVar1;
   float fVar2;
   float fVar3;
@@ -1029,6 +1031,8 @@ void newshadows_queueShadowCaster(int object)
   double dVar6;
   
   if (DAT_803ddbf8 < 300) {
+    objAnim = (ObjAnimComponent *)object;
+    modelDef = objAnim->modelInstance;
     (&DAT_8038ef08)[(uint)DAT_803ddbf8 * 3] = object;
     fVar1 = *(float *)(object + 0x18) - *(float *)(DAT_803ddc68 + 0xc);
     fVar2 = *(float *)(object + 0x1c) - *(float *)(DAT_803ddc68 + 0x10);
@@ -1043,9 +1047,9 @@ void newshadows_queueShadowCaster(int object)
     }
     iVar4 = (uint)DAT_803ddbf8 * 0xc;
     *(float *)(&DAT_8038ef0c + iVar4) = (float)((double)**(float **)(object + 100) / dVar6);
-    if (((ObjAnimComponent *)object)->modelInstance->shadowType == 2) {
+    if (modelDef->shadowType == 2) {
       (&DAT_8038ef10)[iVar4] = 1;
-      if ((((ObjAnimComponent *)object)->modelInstance->renderFlags & 4) != 0) {
+      if ((modelDef->renderFlags & 4) != 0) {
         (&DAT_8038ef10)[iVar4] = 2;
         *(float *)(&DAT_8038ef0c + iVar4) = lbl_803DFA10;
       }
@@ -3682,9 +3686,13 @@ void allocLotsOfTextures(void) {
 #pragma scheduling reset
 #pragma scheduling off
 void shadowCreate(int *obj) {
+    ObjAnimComponent *objAnim;
+    ObjModelInstance *modelDef;
     int *cam;
     f32 dx, dy, dz, dist;
     if (lbl_803DCF78 < 0x12c) {
+        objAnim = (ObjAnimComponent *)obj;
+        modelDef = objAnim->modelInstance;
         *(int **)(lbl_8038E2A8 + lbl_803DCF78 * 0xc) = obj;
         cam = lbl_803DCFE8;
         dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)cam + 0xc);
@@ -3693,9 +3701,9 @@ void shadowCreate(int *obj) {
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
         *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) =
             *(f32 *)(*(int *)((char *)obj + 0x64)) / dist;
-        if (((ObjAnimComponent *)obj)->modelInstance->shadowType == 2) {
+        if (modelDef->shadowType == 2) {
             *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 1;
-            if (((ObjAnimComponent *)obj)->modelInstance->renderFlags & 4) {
+            if (modelDef->renderFlags & 4) {
                 *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 2;
                 *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) = Ydchuff_803DED80[4];
             }
