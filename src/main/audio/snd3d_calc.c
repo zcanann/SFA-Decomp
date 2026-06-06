@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/audio/snd_core.h"
 #include "main/audio/snd3d_calc.h"
 
 typedef struct S3DActiveNode {

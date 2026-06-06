@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/audio/data_ref.h"
-#include "main/audio/hw_volume.h"
 #include "main/audio/synth_job.h"
 #include "main/audio/synth_jobs.h"
 

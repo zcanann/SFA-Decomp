@@ -1,8 +1,4 @@
-#include "ghidra_import.h"
-#include "main/audio/hw_init.h"
 #include "main/audio/snd3d.h"
-#include "main/audio/snd3d_calc.h"
-#include "main/audio/snd3d_room.h"
 
 extern void dataInit(int p1, void *p2);
 extern void fn_8026F30C(void);

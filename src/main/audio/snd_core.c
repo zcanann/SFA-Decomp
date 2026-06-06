@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/audio/snd3d.h"
 #include "main/audio/snd_core.h"
 
 extern int FUN_80271b50();

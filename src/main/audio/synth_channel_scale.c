@@ -1,5 +1,4 @@
 #include "ghidra_import.h"
-#include "main/audio/inp_midi.h"
 
 extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD150[];

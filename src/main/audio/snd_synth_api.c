@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/snd_synth_api.h"
 
 extern void sndBegin(void);

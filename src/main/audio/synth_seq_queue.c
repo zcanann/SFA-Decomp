@@ -1,5 +1,4 @@
 #include "src/main/audio/synth_internal.h"
-#include "src/main/audio/synth_voice_overlays.h"
 
 void synthInitChannelEventQueues(void) {
     SynthSequenceEvent* event;

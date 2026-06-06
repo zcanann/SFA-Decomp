@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/audio/synth_virtual_sample.h"
 #include "main/audio/synth_volume.h"
 
 extern void voiceKill(u8 voiceIdx);
