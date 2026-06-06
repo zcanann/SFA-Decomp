@@ -1,5 +1,5 @@
 #include "main/dll/babycloudrunner.h"
-#include "main/objanim_internal.h"
+#include "main/game_object.h"
 
 extern void objRenderFn_80041018(void);
 extern int  ObjGroup_FindNearestObject(byte type, int obj, float *dist_out);
@@ -10,78 +10,105 @@ extern u32  randomGetRange(int min, int max);
 extern f32 lbl_803E384C;
 extern void *gObjectTriggerInterface;
 
+typedef struct BabyCloudRunnerPlacement {
+  u8 pad00[0x18];
+  s16 gateGameBit;
+  s16 rememberedGameBit;
+  u8 targetGroup;
+  u8 triggerIdMin;
+  u8 triggerIdMax;
+  u8 flags;
+} BabyCloudRunnerPlacement;
+
+typedef struct BabyCloudRunnerState {
+  u8 mode;
+  u8 triggerId;
+  u8 rememberedGameBitValue;
+  u8 pad03;
+  GameObject *target;
+} BabyCloudRunnerState;
+
+STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x8);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, gateGameBit) == 0x18);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, rememberedGameBit) == 0x1A);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, targetGroup) == 0x1C);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, triggerIdMin) == 0x1D);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, triggerIdMax) == 0x1E);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, flags) == 0x1F);
+STATIC_ASSERT(offsetof(BabyCloudRunnerState, target) == 0x4);
+
 #pragma scheduling off
 #pragma peephole off
-void dll_FC_update(int param_1)
+void dll_FC_update(int obj)
 {
-  int *piVar1;
-  byte *pbState;
+  BabyCloudRunnerPlacement *placement;
+  BabyCloudRunnerState *state;
   uint uVar3;
   float local8;
 
   local8 = lbl_803E384C;
-  piVar1 = *(int **)(param_1 + 0x4c);
-  pbState = *(byte **)(param_1 + 0xb8);
+  placement = (BabyCloudRunnerPlacement *)((GameObject *)obj)->anim.placementData;
+  state = ((GameObject *)obj)->extra;
 
-  if (*(uint *)(pbState + 4) == 0) {
-    *(int *)(pbState + 4) = ObjGroup_FindNearestObject(*(byte *)((int)piVar1 + 0x1c), param_1, &local8);
-    if (*(uint *)(pbState + 4) == 0) goto end;
-    if ((int)*(short *)((int)piVar1 + 0x1a) == -1) {
-      pbState[2] = 0;
+  if ((u32)state->target == 0) {
+    state->target = (GameObject *)ObjGroup_FindNearestObject(placement->targetGroup, obj, &local8);
+    if ((u32)state->target == 0) goto end;
+    if ((int)placement->rememberedGameBit == -1) {
+      state->rememberedGameBitValue = 0;
     } else {
-      uVar3 = GameBit_Get((int)*(short *)((int)piVar1 + 0x1a));
-      pbState[2] = (byte)uVar3;
+      uVar3 = GameBit_Get((int)placement->rememberedGameBit);
+      state->rememberedGameBitValue = (byte)uVar3;
     }
-    pbState[0] = 1;
+    state->mode = 1;
   }
 
-  *(float *)(param_1 + 0x0c) = *(float *)(*(int *)(pbState + 4) + 0x0c);
-  *(float *)(param_1 + 0x10) = *(float *)(*(int *)(pbState + 4) + 0x10);
-  *(float *)(param_1 + 0x14) = *(float *)(*(int *)(pbState + 4) + 0x14);
-  *(short *)(param_1 + 0x00) = *(short *)(*(int *)(pbState + 4) + 0x00);
-  *(short *)(param_1 + 0x04) = *(short *)(*(int *)(pbState + 4) + 0x04);
-  *(short *)(param_1 + 0x02) = *(short *)(*(int *)(pbState + 4) + 0x02);
+  ((GameObject *)obj)->anim.localPosX = state->target->anim.localPosX;
+  ((GameObject *)obj)->anim.localPosY = state->target->anim.localPosY;
+  ((GameObject *)obj)->anim.localPosZ = state->target->anim.localPosZ;
+  ((GameObject *)obj)->anim.rotX = state->target->anim.rotX;
+  ((GameObject *)obj)->anim.rotZ = state->target->anim.rotZ;
+  ((GameObject *)obj)->anim.rotY = state->target->anim.rotY;
 
-  switch (pbState[0]) {
+  switch (state->mode) {
   case 3:
     break;
   case 1:
-    if ((pbState[2] != 0) && ((*(byte *)((int)piVar1 + 0x1f) & 1) == 0)) {
-      *(byte *)(*(int *)(pbState + 4) + 0xaf) &= ~0x20;
-      *(byte *)(param_1 + 0xaf) |= 0x08;
-      pbState[0] = 3;
-    } else if (((int)*(short *)((int)piVar1 + 0x18) != -1) &&
-               (GameBit_Get((int)*(short *)((int)piVar1 + 0x18)) == 0)) {
-      *(byte *)(*(int *)(pbState + 4) + 0xaf) &= ~0x20;
-      *(byte *)(param_1 + 0xaf) |= 0x08;
-      pbState[0] = 2;
-    } else if ((*(byte *)(param_1 + 0xaf) & 1) != 0) {
-      if ((*(byte *)((int)piVar1 + 0x1f) & 2) != 0) {
-        GameBit_Set((int)*(short *)((int)piVar1 + 0x18), 0);
+    if ((state->rememberedGameBitValue != 0) && ((placement->flags & 1) == 0)) {
+      *(u8 *)&state->target->anim.resetHitboxMode &= ~0x20;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
+      state->mode = 3;
+    } else if (((int)placement->gateGameBit != -1) &&
+               (GameBit_Get((int)placement->gateGameBit) == 0)) {
+      *(u8 *)&state->target->anim.resetHitboxMode &= ~0x20;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
+      state->mode = 2;
+    } else if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
+      if ((placement->flags & 2) != 0) {
+        GameBit_Set((int)placement->gateGameBit, 0);
       }
-      if ((int)*(short *)((int)piVar1 + 0x1a) != -1) {
-        GameBit_Set((int)*(short *)((int)piVar1 + 0x1a), 1);
+      if ((int)placement->rememberedGameBit != -1) {
+        GameBit_Set((int)placement->rememberedGameBit, 1);
       }
-      if ((*(byte *)((int)piVar1 + 0x1f) & 4) != 0) {
-        uVar3 = randomGetRange((int)*(byte *)((int)piVar1 + 0x1d), (int)*(byte *)((int)piVar1 + 0x1e));
-        pbState[1] = (byte)uVar3;
+      if ((placement->flags & 4) != 0) {
+        uVar3 = randomGetRange((int)placement->triggerIdMin, (int)placement->triggerIdMax);
+        state->triggerId = (byte)uVar3;
       } else {
-        pbState[1] += 1;
-        if (pbState[1] > *(byte *)((int)piVar1 + 0x1e)) {
-          pbState[1] = *(byte *)((int)piVar1 + 0x1d);
+        state->triggerId += 1;
+        if (state->triggerId > placement->triggerIdMax) {
+          state->triggerId = placement->triggerIdMin;
         }
       }
-      *(byte *)(param_1 + 0xaf) |= 0x08;
-      pbState[2] = 1;
-      (*(void (***)(byte, int, int))gObjectTriggerInterface)[0x12](pbState[1], param_1, -1);
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
+      state->rememberedGameBitValue = 1;
+      (*(void (***)(byte, int, int))gObjectTriggerInterface)[0x12](state->triggerId, obj, -1);
     } else {
-      *(byte *)(*(int *)(pbState + 4) + 0xaf) |= 0x20;
-      *(byte *)(param_1 + 0xaf) &= ~0x08;
+      *(u8 *)&state->target->anim.resetHitboxMode |= 0x20;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x08;
     }
     break;
   case 2:
-    if (GameBit_Get((int)*(short *)((int)piVar1 + 0x18)) != 0) {
-      pbState[0] = 1;
+    if (GameBit_Get((int)placement->gateGameBit) != 0) {
+      state->mode = 1;
     }
     break;
   }
@@ -105,14 +132,16 @@ end:
  * PAL Size: TODO
  */
 #pragma peephole off
-void dll_FC_init(int param_1, int param_2)
+void dll_FC_init(int obj, int objDef)
 {
-  byte *pbVar1;
+  BabyCloudRunnerState *state;
+  BabyCloudRunnerPlacement *placement;
 
-  pbVar1 = *(byte **)(param_1 + 0xb8);
-  pbVar1[0] = 0;
-  pbVar1[1] = *(byte *)(param_2 + 0x1e);
-  *(ushort *)(param_1 + 0xb0) |= 0x4000;
+  state = ((GameObject *)obj)->extra;
+  placement = (BabyCloudRunnerPlacement *)objDef;
+  state->mode = 0;
+  state->triggerId = placement->triggerIdMax;
+  ((GameObject *)obj)->objectFlags |= 0x4000;
   return;
 }
 #pragma peephole reset
