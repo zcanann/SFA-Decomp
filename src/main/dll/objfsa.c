@@ -3,6 +3,30 @@
 
 extern void OSReport(const char *fmt, ...);
 typedef struct RomCurveDef RomCurveDef;
+
+/* rom-curve walker record (the f32* "state" the RomCurve_* family walks).
+ * Local to objfsa.c until lifted into dll/curves.h (shared with areas). */
+typedef struct RomCurveWalker {
+    f32 phase; /* 0x00: position along the current segment */
+    u8 unk04[0x80 - 0x04];
+    s32 reverse; /* 0x80: walk direction */
+    void *unk84;
+    void *unk88;
+    void *unk8C;
+    s32 moveNetwork; /* 0x90 */
+    void *node94; /* curve-node history: oldest.. */
+    void *node98;
+    void *node9C;
+    void *nodeA0; /* current node */
+    void *nodeA4; /* next node */
+    f32 hermX[4]; /* 0xA8: hermite endpoints+tangents, X */
+    f32 hermX2[4]; /* 0xB8: previous-segment X set */
+    f32 hermY[4]; /* 0xC8 */
+    f32 hermY2[4]; /* 0xD8 */
+    f32 hermZ[4]; /* 0xE8 */
+    f32 hermZ2[4]; /* 0xF8 */
+} RomCurveWalker;
+
 typedef struct RomCurveSegmentProjection {
   f32 startX;
   f32 startY;
@@ -5188,62 +5212,62 @@ int RomCurve_setClosed(float *state, int closed) {
     float t;
     void *tmpCurve;
 
-    if (closed == *(int *)(state + 0x20)) {
+    if (closed == ((RomCurveWalker *)state)->reverse) {
         return 0;
     }
-    if (*(void **)(state + 0x28) == 0 || *(void **)(state + 0x27) == 0) {
+    if (((RomCurveWalker *)state)->nodeA0 == 0 || ((RomCurveWalker *)state)->node9C == 0) {
         return 1;
     }
 
     savedPhase = state[0];
-    *(int *)(state + 0x20) = closed;
-    tmpCurve = *(void **)(state + 0x27);
-    *(void **)(state + 0x27) = *(void **)(state + 0x29);
-    *(void **)(state + 0x29) = tmpCurve;
+    ((RomCurveWalker *)state)->reverse = closed;
+    tmpCurve = ((RomCurveWalker *)state)->node9C;
+    ((RomCurveWalker *)state)->node9C = ((RomCurveWalker *)state)->nodeA4;
+    ((RomCurveWalker *)state)->nodeA4 = tmpCurve;
 
-    state[0x2e] = *(f32 *)((char *)*(void **)(state + 0x28) + 0x8);
-    state[0x2f] = *(f32 *)((char *)*(void **)(state + 0x29) + 0x8);
-    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x28) + 0x2e) *
+    ((RomCurveWalker *)state)->hermX2[0] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0x8);
+    ((RomCurveWalker *)state)->hermX2[1] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0x8);
+    t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0x2e) *
         fn_80293E80(lbl_803E0614 *
-                    (float)((s32)((s8)*((char *)*(void **)(state + 0x28) + 0x2c)) << 8) /
+                    (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA0 + 0x2c)) << 8) /
                     lbl_803E0618);
-    state[0x30] = lbl_803E0610 * t;
-    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x29) + 0x2e) *
+    ((RomCurveWalker *)state)->hermX2[2] = lbl_803E0610 * t;
+    t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0x2e) *
         fn_80293E80(lbl_803E0614 *
-                    (float)((s32)((s8)*((char *)*(void **)(state + 0x29) + 0x2c)) << 8) /
+                    (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA4 + 0x2c)) << 8) /
                     lbl_803E0618);
-    state[0x31] = lbl_803E0610 * t;
+    ((RomCurveWalker *)state)->hermX2[3] = lbl_803E0610 * t;
 
-    state[0x36] = *(f32 *)((char *)*(void **)(state + 0x28) + 0xc);
-    state[0x37] = *(f32 *)((char *)*(void **)(state + 0x29) + 0xc);
-    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x28) + 0x2e) *
+    ((RomCurveWalker *)state)->hermY2[0] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0xc);
+    ((RomCurveWalker *)state)->hermY2[1] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0xc);
+    t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0x2e) *
         fn_80293E80(lbl_803E0614 *
-                    (float)((s32)((s8)*((char *)*(void **)(state + 0x28) + 0x2d)) << 8) /
+                    (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA0 + 0x2d)) << 8) /
                     lbl_803E0618);
-    state[0x38] = lbl_803E0610 * t;
-    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x29) + 0x2e) *
+    ((RomCurveWalker *)state)->hermY2[2] = lbl_803E0610 * t;
+    t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0x2e) *
         fn_80293E80(lbl_803E0614 *
-                    (float)((s32)((s8)*((char *)*(void **)(state + 0x29) + 0x2d)) << 8) /
+                    (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA4 + 0x2d)) << 8) /
                     lbl_803E0618);
-    state[0x39] = lbl_803E0610 * t;
+    ((RomCurveWalker *)state)->hermY2[3] = lbl_803E0610 * t;
 
-    state[0x3e] = *(f32 *)((char *)*(void **)(state + 0x28) + 0x10);
-    state[0x3f] = *(f32 *)((char *)*(void **)(state + 0x29) + 0x10);
-    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x28) + 0x2e) *
+    ((RomCurveWalker *)state)->hermZ2[0] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0x10);
+    ((RomCurveWalker *)state)->hermZ2[1] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0x10);
+    t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0x2e) *
         sin(lbl_803E0614 *
-            (float)((s32)((s8)*((char *)*(void **)(state + 0x28) + 0x2c)) << 8) / lbl_803E0618);
-    state[0x40] = lbl_803E0610 * t;
-    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x29) + 0x2e) *
+            (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA0 + 0x2c)) << 8) / lbl_803E0618);
+    ((RomCurveWalker *)state)->hermZ2[2] = lbl_803E0610 * t;
+    t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0x2e) *
         sin(lbl_803E0614 *
-            (float)((s32)((s8)*((char *)*(void **)(state + 0x29) + 0x2c)) << 8) / lbl_803E0618);
-    state[0x41] = lbl_803E0610 * t;
+            (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA4 + 0x2c)) << 8) / lbl_803E0618);
+    ((RomCurveWalker *)state)->hermZ2[3] = lbl_803E0610 * t;
 
     if (RomCurve_goNextPoint(state) != 0) {
         return 1;
     }
 
-    *(void **)(state + 0x25) = Curve_EvalHermite;
-    *(void **)(state + 0x26) = Curve_BuildHermiteCoeffs;
+    ((RomCurveWalker *)state)->node94 = Curve_EvalHermite;
+    ((RomCurveWalker *)state)->node98 = Curve_BuildHermiteCoeffs;
     *(float **)(state + 0x21) = state + 0x2a;
     *(float **)(state + 0x22) = state + 0x32;
     *(float **)(state + 0x23) = state + 0x3a;
@@ -5316,19 +5340,19 @@ u8 RomCurve_goNextPoint(float *state) {
         return 1;
     }
     stateBytes = (char *)state;
-    if (*(void **)(stateBytes + 0xa0) == NULL || *(void **)(stateBytes + 0xa4) == NULL) {
+    if (((RomCurveWalker *)stateBytes)->nodeA0 == NULL || ((RomCurveWalker *)stateBytes)->nodeA4 == NULL) {
         return 1;
     }
 
-    *(void **)(stateBytes + 0x9c) = *(void **)(stateBytes + 0xa0);
-    *(void **)(stateBytes + 0xa0) = *(void **)(stateBytes + 0xa4);
+    ((RomCurveWalker *)stateBytes)->node9C = ((RomCurveWalker *)stateBytes)->nodeA0;
+    ((RomCurveWalker *)stateBytes)->nodeA0 = ((RomCurveWalker *)stateBytes)->nodeA4;
     memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
     memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
     memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
 
-    curve = *(s32 *)(stateBytes + 0xa0);
+    curve = *(s32 *)&((RomCurveWalker *)stateBytes)->nodeA0;
     candidateCount = 0;
-    if (*(s32 *)(stateBytes + 0x80) == 0) {
+    if (((RomCurveWalker *)stateBytes)->reverse == 0) {
         ROMCURVE_ADD_LINK(0x1c, 1, 0);
         ROMCURVE_ADD_LINK(0x20, 2, 0);
         ROMCURVE_ADD_LINK(0x24, 4, 0);
@@ -5346,7 +5370,7 @@ u8 RomCurve_goNextPoint(float *state) {
         neighborId = candidateIds[randomGetRange(0, candidateCount - 1)];
     }
     if (neighborId == -1) {
-        *(void **)(stateBytes + 0xa4) = NULL;
+        ((RomCurveWalker *)stateBytes)->nodeA4 = NULL;
         return 1;
     }
 
@@ -5372,21 +5396,21 @@ u8 RomCurve_goNextPoint(float *state) {
         }
     }
 
-    *(s32 *)(stateBytes + 0xa4) = nextCurve;
-    if (*(void **)(stateBytes + 0xa4) == NULL) {
+    *(s32 *)&((RomCurveWalker *)stateBytes)->nodeA4 = nextCurve;
+    if (((RomCurveWalker *)stateBytes)->nodeA4 == NULL) {
         return 1;
     }
 
-    if (*(s32 *)(stateBytes + 0x80) == 0) {
+    if (((RomCurveWalker *)stateBytes)->reverse == 0) {
         ROMCURVE_REFRESH_CONTROL(0xa4);
     } else {
         ROMCURVE_REFRESH_CONTROL(0x9c);
     }
 
-    if (*(s32 *)(stateBytes + 0x90) != 0) {
+    if (((RomCurveWalker *)stateBytes)->moveNetwork != 0) {
         curvesSetupMoveNetworkCurve(state);
     }
-    if (*(s32 *)(stateBytes + 0x80) == 0) {
+    if (((RomCurveWalker *)stateBytes)->reverse == 0) {
         ((void (*)(float *, double))Curve_AdvanceAlongPath)(state, gFloatOne);
     } else {
         ((void (*)(float *, double))Curve_AdvanceAlongPath)(state, gFloatNegOne);
@@ -5458,20 +5482,20 @@ int RomCurve_func29(float *state, int pickIdx)
     }
 
     stateBytes = (char *)state;
-    if (*(void **)(stateBytes + 0xa0) == NULL || *(void **)(stateBytes + 0xa4) == NULL) {
+    if (((RomCurveWalker *)stateBytes)->nodeA0 == NULL || ((RomCurveWalker *)stateBytes)->nodeA4 == NULL) {
         return 1;
     }
 
-    *(void **)(stateBytes + 0x9c) = *(void **)(stateBytes + 0xa0);
-    *(void **)(stateBytes + 0xa0) = *(void **)(stateBytes + 0xa4);
+    ((RomCurveWalker *)stateBytes)->node9C = ((RomCurveWalker *)stateBytes)->nodeA0;
+    ((RomCurveWalker *)stateBytes)->nodeA0 = ((RomCurveWalker *)stateBytes)->nodeA4;
     memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
     memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
     memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
 
-    if (*(s32 *)(stateBytes + 0x80) != 0) {
-        nextId = RomCurve_getControlPointId_2B(*(s32 *)(stateBytes + 0xa0), -1, pickIdx);
+    if (((RomCurveWalker *)stateBytes)->reverse != 0) {
+        nextId = RomCurve_getControlPointId_2B(*(s32 *)&((RomCurveWalker *)stateBytes)->nodeA0, -1, pickIdx);
     } else {
-        nextId = RomCurve_getControlPointId_2A(*(s32 *)(stateBytes + 0xa0), -1, pickIdx);
+        nextId = RomCurve_getControlPointId_2A(*(s32 *)&((RomCurveWalker *)stateBytes)->nodeA0, -1, pickIdx);
     }
 
     if (nextId == -1) {
@@ -5479,22 +5503,22 @@ int RomCurve_func29(float *state, int pickIdx)
     }
 
     nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32 *)(stateBytes + 0xa4) = nextCurve;
-    if (*(void **)(stateBytes + 0xa4) == NULL) {
+    *(s32 *)&((RomCurveWalker *)stateBytes)->nodeA4 = nextCurve;
+    if (((RomCurveWalker *)stateBytes)->nodeA4 == NULL) {
         goto fail;
     }
 
-    if (*(s32 *)(stateBytes + 0x80) != 0) {
+    if (((RomCurveWalker *)stateBytes)->reverse != 0) {
         ROMCURVE_REFRESH_CONTROL(0x9c);
     } else {
         ROMCURVE_REFRESH_CONTROL(0xa4);
     }
 
-    if (*(s32 *)(stateBytes + 0x90) != 0) {
+    if (((RomCurveWalker *)stateBytes)->moveNetwork != 0) {
         curvesSetupMoveNetworkCurve(state);
     }
 
-    if (*(s32 *)(stateBytes + 0x80) != 0) {
+    if (((RomCurveWalker *)stateBytes)->reverse != 0) {
         ((void (*)(float *, double))Curve_AdvanceAlongPath)(state, gFloatNegOne);
     } else {
         ((void (*)(float *, double))Curve_AdvanceAlongPath)(state, gFloatOne);
@@ -5503,7 +5527,7 @@ int RomCurve_func29(float *state, int pickIdx)
     return 0;
 
 failClear:
-    *(void **)(stateBytes + 0xa4) = NULL;
+    ((RomCurveWalker *)stateBytes)->nodeA4 = NULL;
 fail:
     return 1;
 }
@@ -5658,9 +5682,9 @@ int RomCurve_func2C(float *state, int unused, int startCurveId)
     }
 
     stateBytes = (char *)state;
-    if (*(s32 *)(stateBytes + 0x80) != 0) {
+    if (((RomCurveWalker *)stateBytes)->reverse != 0) {
         currentCurve = Objfsa_FindRomCurveById(startCurveId);
-        *(s32 *)(stateBytes + 0xa0) = currentCurve;
+        *(s32 *)&((RomCurveWalker *)stateBytes)->nodeA0 = currentCurve;
         nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
         if (nextId == -1) {
             return 1;
@@ -5669,13 +5693,13 @@ int RomCurve_func2C(float *state, int unused, int startCurveId)
     }
 
     currentCurve = Objfsa_FindRomCurveById(startCurveId);
-    *(s32 *)(stateBytes + 0xa0) = currentCurve;
-    if (*(void **)(stateBytes + 0xa0) == NULL) {
-        *(void **)(stateBytes + 0xa0) = NULL;
+    *(s32 *)&((RomCurveWalker *)stateBytes)->nodeA0 = currentCurve;
+    if (((RomCurveWalker *)stateBytes)->nodeA0 == NULL) {
+        ((RomCurveWalker *)stateBytes)->nodeA0 = NULL;
         return 1;
     }
 
-    if (*(s32 *)(stateBytes + 0x80) == 0) {
+    if (((RomCurveWalker *)stateBytes)->reverse == 0) {
         nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
     } else {
         nextId = RomCurve_getControlPointId_2B(currentCurve, -1, -1);
@@ -5685,9 +5709,9 @@ int RomCurve_func2C(float *state, int unused, int startCurveId)
     }
 
     nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32 *)(stateBytes + 0xa4) = nextCurve;
-    if (*(void **)(stateBytes + 0xa4) == NULL) {
-        *(void **)(stateBytes + 0xa4) = NULL;
+    *(s32 *)&((RomCurveWalker *)stateBytes)->nodeA4 = nextCurve;
+    if (((RomCurveWalker *)stateBytes)->nodeA4 == NULL) {
+        ((RomCurveWalker *)stateBytes)->nodeA4 = NULL;
         return 1;
     }
 
@@ -5696,12 +5720,12 @@ int RomCurve_func2C(float *state, int unused, int startCurveId)
         return 1;
     }
 
-    *(void **)(stateBytes + 0x94) = Curve_EvalHermite;
-    *(void **)(stateBytes + 0x98) = Curve_BuildHermiteCoeffs;
-    *(void **)(stateBytes + 0x84) = stateBytes + 0xa8;
-    *(void **)(stateBytes + 0x88) = stateBytes + 0xc8;
-    *(void **)(stateBytes + 0x8c) = stateBytes + 0xe8;
-    *(s32 *)(stateBytes + 0x90) = 8;
+    ((RomCurveWalker *)stateBytes)->node94 = Curve_EvalHermite;
+    ((RomCurveWalker *)stateBytes)->node98 = Curve_BuildHermiteCoeffs;
+    ((RomCurveWalker *)stateBytes)->unk84 = stateBytes + 0xa8;
+    ((RomCurveWalker *)stateBytes)->unk88 = stateBytes + 0xc8;
+    ((RomCurveWalker *)stateBytes)->unk8C = stateBytes + 0xe8;
+    ((RomCurveWalker *)stateBytes)->moveNetwork = 8;
     curvesMove(state);
     return 0;
 }
@@ -5734,9 +5758,9 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxD
         return 1;
     }
 
-    if (*(s32 *)(stateBytes + 0x80) != 0) {
+    if (((RomCurveWalker *)stateBytes)->reverse != 0) {
         currentCurve = Objfsa_FindRomCurveById(curveId);
-        *(s32 *)(stateBytes + 0xa0) = currentCurve;
+        *(s32 *)&((RomCurveWalker *)stateBytes)->nodeA0 = currentCurve;
         nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
         if (nextId == -1) {
             return 1;
@@ -5745,13 +5769,13 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxD
     }
 
     currentCurve = Objfsa_FindRomCurveById(curveId);
-    *(s32 *)(stateBytes + 0xa0) = currentCurve;
-    if (*(void **)(stateBytes + 0xa0) == NULL) {
-        *(void **)(stateBytes + 0xa0) = NULL;
+    *(s32 *)&((RomCurveWalker *)stateBytes)->nodeA0 = currentCurve;
+    if (((RomCurveWalker *)stateBytes)->nodeA0 == NULL) {
+        ((RomCurveWalker *)stateBytes)->nodeA0 = NULL;
         return 1;
     }
 
-    if (*(s32 *)(stateBytes + 0x80) == 0) {
+    if (((RomCurveWalker *)stateBytes)->reverse == 0) {
         nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
     } else {
         nextId = RomCurve_getControlPointId_2B(currentCurve, -1, -1);
@@ -5761,17 +5785,17 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxD
     }
 
     nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32 *)(stateBytes + 0xa4) = nextCurve;
-    if (*(void **)(stateBytes + 0xa4) == NULL) {
-        *(void **)(stateBytes + 0xa4) = NULL;
+    *(s32 *)&((RomCurveWalker *)stateBytes)->nodeA4 = nextCurve;
+    if (((RomCurveWalker *)stateBytes)->nodeA4 == NULL) {
+        ((RomCurveWalker *)stateBytes)->nodeA4 = NULL;
         return 1;
     }
 
     if (maxDistance != gFloatZero) {
-        if (*(s32 *)(stateBytes + 0x80) != 0) {
-            distanceCurve = *(s32 *)(stateBytes + 0xa4);
+        if (((RomCurveWalker *)stateBytes)->reverse != 0) {
+            distanceCurve = *(s32 *)&((RomCurveWalker *)stateBytes)->nodeA4;
         } else {
-            distanceCurve = *(s32 *)(stateBytes + 0xa0);
+            distanceCurve = *(s32 *)&((RomCurveWalker *)stateBytes)->nodeA0;
         }
         dx = *(f32 *)(distanceCurve + 0x8) - *(f32 *)(obj + 0xc);
         dy = *(f32 *)(distanceCurve + 0xc) - *(f32 *)(obj + 0x10);
@@ -5787,12 +5811,12 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxD
         return 1;
     }
 
-    *(void **)(stateBytes + 0x94) = Curve_EvalHermite;
-    *(void **)(stateBytes + 0x98) = Curve_BuildHermiteCoeffs;
-    *(void **)(stateBytes + 0x84) = stateBytes + 0xa8;
-    *(void **)(stateBytes + 0x88) = stateBytes + 0xc8;
-    *(void **)(stateBytes + 0x8c) = stateBytes + 0xe8;
-    *(s32 *)(stateBytes + 0x90) = 8;
+    ((RomCurveWalker *)stateBytes)->node94 = Curve_EvalHermite;
+    ((RomCurveWalker *)stateBytes)->node98 = Curve_BuildHermiteCoeffs;
+    ((RomCurveWalker *)stateBytes)->unk84 = stateBytes + 0xa8;
+    ((RomCurveWalker *)stateBytes)->unk88 = stateBytes + 0xc8;
+    ((RomCurveWalker *)stateBytes)->unk8C = stateBytes + 0xe8;
+    ((RomCurveWalker *)stateBytes)->moveNetwork = 8;
     curvesMove(state);
     return 0;
 }
@@ -5965,43 +5989,43 @@ int curveFn_800da23c(float *state,void *targetCurve)
     char *stateBytes;
 
     stateBytes = (char *)state;
-    if (*(void **)(stateBytes + 0xa0) == NULL ||
-        *(void **)(stateBytes + 0xa4) == NULL ||
+    if (((RomCurveWalker *)stateBytes)->nodeA0 == NULL ||
+        ((RomCurveWalker *)stateBytes)->nodeA4 == NULL ||
         targetCurve == NULL) {
         return 1;
     }
 
-    *(void **)(stateBytes + 0x9c) = *(void **)(stateBytes + 0xa0);
-    *(void **)(stateBytes + 0xa0) = *(void **)(stateBytes + 0xa4);
-    *(void **)(stateBytes + 0xa4) = targetCurve;
+    ((RomCurveWalker *)stateBytes)->node9C = ((RomCurveWalker *)stateBytes)->nodeA0;
+    ((RomCurveWalker *)stateBytes)->nodeA0 = ((RomCurveWalker *)stateBytes)->nodeA4;
+    ((RomCurveWalker *)stateBytes)->nodeA4 = targetCurve;
 
-    if (*(int *)(stateBytes + 0x80) != 0) {
+    if (((RomCurveWalker *)stateBytes)->reverse != 0) {
         memcpy(stateBytes + 0xb8,stateBytes + 0xa8,0x10);
         memcpy(stateBytes + 0xd8,stateBytes + 0xc8,0x10);
         memcpy(stateBytes + 0xf8,stateBytes + 0xe8,0x10);
 
-        *(f32 *)(stateBytes + 0xa8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0x8);
-        *(f32 *)(stateBytes + 0xac) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0x8);
-        *(f32 *)(stateBytes + 0xb0) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2c,0);
-        *(f32 *)(stateBytes + 0xb4) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2c,0);
+        ((RomCurveWalker *)stateBytes)->hermX[0] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA4 + 0x8);
+        ((RomCurveWalker *)stateBytes)->hermX[1] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA0 + 0x8);
+        ((RomCurveWalker *)stateBytes)->hermX[2] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA4,0x2c,0);
+        ((RomCurveWalker *)stateBytes)->hermX[3] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA0,0x2c,0);
 
-        *(f32 *)(stateBytes + 0xc8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0xc);
-        *(f32 *)(stateBytes + 0xcc) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0xc);
-        *(f32 *)(stateBytes + 0xd0) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2d,0);
-        *(f32 *)(stateBytes + 0xd4) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2d,0);
+        ((RomCurveWalker *)stateBytes)->hermY[0] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA4 + 0xc);
+        ((RomCurveWalker *)stateBytes)->hermY[1] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA0 + 0xc);
+        ((RomCurveWalker *)stateBytes)->hermY[2] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA4,0x2d,0);
+        ((RomCurveWalker *)stateBytes)->hermY[3] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA0,0x2d,0);
 
-        *(f32 *)(stateBytes + 0xe8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0x10);
-        *(f32 *)(stateBytes + 0xec) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0x10);
-        *(f32 *)(stateBytes + 0xf0) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2c,1);
-        *(f32 *)(stateBytes + 0xf4) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2c,1);
+        ((RomCurveWalker *)stateBytes)->hermZ[0] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA4 + 0x10);
+        ((RomCurveWalker *)stateBytes)->hermZ[1] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA0 + 0x10);
+        ((RomCurveWalker *)stateBytes)->hermZ[2] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA4,0x2c,1);
+        ((RomCurveWalker *)stateBytes)->hermZ[3] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA0,0x2c,1);
 
-        if (*(s32 *)(stateBytes + 0x90) != 0) {
+        if (((RomCurveWalker *)stateBytes)->moveNetwork != 0) {
             curvesSetupMoveNetworkCurve(state);
             if (*state <= lbl_803E05F0) {
                 *state = lbl_803E05F4;
@@ -6012,28 +6036,28 @@ int curveFn_800da23c(float *state,void *targetCurve)
         memcpy(stateBytes + 0xc8,stateBytes + 0xd8,0x10);
         memcpy(stateBytes + 0xe8,stateBytes + 0xf8,0x10);
 
-        *(f32 *)(stateBytes + 0xb8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0x8);
-        *(f32 *)(stateBytes + 0xbc) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0x8);
-        *(f32 *)(stateBytes + 0xc0) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2c,0);
-        *(f32 *)(stateBytes + 0xc4) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2c,0);
+        ((RomCurveWalker *)stateBytes)->hermX2[0] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA0 + 0x8);
+        ((RomCurveWalker *)stateBytes)->hermX2[1] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA4 + 0x8);
+        ((RomCurveWalker *)stateBytes)->hermX2[2] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA0,0x2c,0);
+        ((RomCurveWalker *)stateBytes)->hermX2[3] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA4,0x2c,0);
 
-        *(f32 *)(stateBytes + 0xd8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0xc);
-        *(f32 *)(stateBytes + 0xdc) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0xc);
-        *(f32 *)(stateBytes + 0xe0) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2d,0);
-        *(f32 *)(stateBytes + 0xe4) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2d,0);
+        ((RomCurveWalker *)stateBytes)->hermY2[0] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA0 + 0xc);
+        ((RomCurveWalker *)stateBytes)->hermY2[1] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA4 + 0xc);
+        ((RomCurveWalker *)stateBytes)->hermY2[2] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA0,0x2d,0);
+        ((RomCurveWalker *)stateBytes)->hermY2[3] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA4,0x2d,0);
 
-        *(f32 *)(stateBytes + 0xf8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0x10);
-        *(f32 *)(stateBytes + 0xfc) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0x10);
-        *(f32 *)(stateBytes + 0x100) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2c,1);
-        *(f32 *)(stateBytes + 0x104) =
-            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2c,1);
+        ((RomCurveWalker *)stateBytes)->hermZ2[0] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA0 + 0x10);
+        ((RomCurveWalker *)stateBytes)->hermZ2[1] = *(f32 *)((char *)((RomCurveWalker *)stateBytes)->nodeA4 + 0x10);
+        ((RomCurveWalker *)stateBytes)->hermZ2[2] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA0,0x2c,1);
+        ((RomCurveWalker *)stateBytes)->hermZ2[3] =
+            RomCurveNode_GetHermiteTangent(((RomCurveWalker *)stateBytes)->nodeA4,0x2c,1);
 
-        if (*(s32 *)(stateBytes + 0x90) != 0) {
+        if (((RomCurveWalker *)stateBytes)->moveNetwork != 0) {
             curvesSetupMoveNetworkCurve(state);
             if (*state >= lbl_803E05C8) {
                 *state = lbl_803E05CC;
@@ -6052,51 +6076,51 @@ int fn_800DA980(float *state,void *fromCurve,void *toCurve,void *targetCurve)
     char *stateBytes;
 
     stateBytes = (char *)state;
-    *(void **)(stateBytes + 0xa0) = fromCurve;
-    *(void **)(stateBytes + 0xa4) = toCurve;
+    ((RomCurveWalker *)stateBytes)->nodeA0 = fromCurve;
+    ((RomCurveWalker *)stateBytes)->nodeA4 = toCurve;
 
-    if (*(int *)(stateBytes + 0x80) != 0) {
-        *(f32 *)(stateBytes + 0xa8) = *(f32 *)((char *)toCurve + 0x8);
-        *(f32 *)(stateBytes + 0xac) = *(f32 *)((char *)fromCurve + 0x8);
-        *(f32 *)(stateBytes + 0xb0) = RomCurveNode_GetHermiteTangent(toCurve,0x2c,0);
-        *(f32 *)(stateBytes + 0xb4) = RomCurveNode_GetHermiteTangent(fromCurve,0x2c,0);
+    if (((RomCurveWalker *)stateBytes)->reverse != 0) {
+        ((RomCurveWalker *)stateBytes)->hermX[0] = *(f32 *)((char *)toCurve + 0x8);
+        ((RomCurveWalker *)stateBytes)->hermX[1] = *(f32 *)((char *)fromCurve + 0x8);
+        ((RomCurveWalker *)stateBytes)->hermX[2] = RomCurveNode_GetHermiteTangent(toCurve,0x2c,0);
+        ((RomCurveWalker *)stateBytes)->hermX[3] = RomCurveNode_GetHermiteTangent(fromCurve,0x2c,0);
 
-        *(f32 *)(stateBytes + 0xc8) = *(f32 *)((char *)toCurve + 0xc);
-        *(f32 *)(stateBytes + 0xcc) = *(f32 *)((char *)fromCurve + 0xc);
-        *(f32 *)(stateBytes + 0xd0) = RomCurveNode_GetHermiteTangent(toCurve,0x2d,0);
-        *(f32 *)(stateBytes + 0xd4) = RomCurveNode_GetHermiteTangent(fromCurve,0x2d,0);
+        ((RomCurveWalker *)stateBytes)->hermY[0] = *(f32 *)((char *)toCurve + 0xc);
+        ((RomCurveWalker *)stateBytes)->hermY[1] = *(f32 *)((char *)fromCurve + 0xc);
+        ((RomCurveWalker *)stateBytes)->hermY[2] = RomCurveNode_GetHermiteTangent(toCurve,0x2d,0);
+        ((RomCurveWalker *)stateBytes)->hermY[3] = RomCurveNode_GetHermiteTangent(fromCurve,0x2d,0);
 
-        *(f32 *)(stateBytes + 0xe8) = *(f32 *)((char *)toCurve + 0x10);
-        *(f32 *)(stateBytes + 0xec) = *(f32 *)((char *)fromCurve + 0x10);
-        *(f32 *)(stateBytes + 0xf0) = RomCurveNode_GetHermiteTangent(toCurve,0x2c,1);
-        *(f32 *)(stateBytes + 0xf4) = RomCurveNode_GetHermiteTangent(fromCurve,0x2c,1);
+        ((RomCurveWalker *)stateBytes)->hermZ[0] = *(f32 *)((char *)toCurve + 0x10);
+        ((RomCurveWalker *)stateBytes)->hermZ[1] = *(f32 *)((char *)fromCurve + 0x10);
+        ((RomCurveWalker *)stateBytes)->hermZ[2] = RomCurveNode_GetHermiteTangent(toCurve,0x2c,1);
+        ((RomCurveWalker *)stateBytes)->hermZ[3] = RomCurveNode_GetHermiteTangent(fromCurve,0x2c,1);
     } else {
-        *(f32 *)(stateBytes + 0xb8) = *(f32 *)((char *)fromCurve + 0x8);
-        *(f32 *)(stateBytes + 0xbc) = *(f32 *)((char *)toCurve + 0x8);
-        *(f32 *)(stateBytes + 0xc0) = RomCurveNode_GetHermiteTangent(fromCurve,0x2c,0);
-        *(f32 *)(stateBytes + 0xc4) = RomCurveNode_GetHermiteTangent(toCurve,0x2c,0);
+        ((RomCurveWalker *)stateBytes)->hermX2[0] = *(f32 *)((char *)fromCurve + 0x8);
+        ((RomCurveWalker *)stateBytes)->hermX2[1] = *(f32 *)((char *)toCurve + 0x8);
+        ((RomCurveWalker *)stateBytes)->hermX2[2] = RomCurveNode_GetHermiteTangent(fromCurve,0x2c,0);
+        ((RomCurveWalker *)stateBytes)->hermX2[3] = RomCurveNode_GetHermiteTangent(toCurve,0x2c,0);
 
-        *(f32 *)(stateBytes + 0xd8) = *(f32 *)((char *)fromCurve + 0xc);
-        *(f32 *)(stateBytes + 0xdc) = *(f32 *)((char *)toCurve + 0xc);
-        *(f32 *)(stateBytes + 0xe0) = RomCurveNode_GetHermiteTangent(fromCurve,0x2d,0);
-        *(f32 *)(stateBytes + 0xe4) = RomCurveNode_GetHermiteTangent(toCurve,0x2d,0);
+        ((RomCurveWalker *)stateBytes)->hermY2[0] = *(f32 *)((char *)fromCurve + 0xc);
+        ((RomCurveWalker *)stateBytes)->hermY2[1] = *(f32 *)((char *)toCurve + 0xc);
+        ((RomCurveWalker *)stateBytes)->hermY2[2] = RomCurveNode_GetHermiteTangent(fromCurve,0x2d,0);
+        ((RomCurveWalker *)stateBytes)->hermY2[3] = RomCurveNode_GetHermiteTangent(toCurve,0x2d,0);
 
-        *(f32 *)(stateBytes + 0xf8) = *(f32 *)((char *)fromCurve + 0x10);
-        *(f32 *)(stateBytes + 0xfc) = *(f32 *)((char *)toCurve + 0x10);
-        *(f32 *)(stateBytes + 0x100) = RomCurveNode_GetHermiteTangent(fromCurve,0x2c,1);
-        *(f32 *)(stateBytes + 0x104) = RomCurveNode_GetHermiteTangent(toCurve,0x2c,1);
+        ((RomCurveWalker *)stateBytes)->hermZ2[0] = *(f32 *)((char *)fromCurve + 0x10);
+        ((RomCurveWalker *)stateBytes)->hermZ2[1] = *(f32 *)((char *)toCurve + 0x10);
+        ((RomCurveWalker *)stateBytes)->hermZ2[2] = RomCurveNode_GetHermiteTangent(fromCurve,0x2c,1);
+        ((RomCurveWalker *)stateBytes)->hermZ2[3] = RomCurveNode_GetHermiteTangent(toCurve,0x2c,1);
     }
 
     if (curveFn_800da23c(state,targetCurve) != 0) {
         return 1;
     }
 
-    *(void **)(stateBytes + 0x94) = Curve_EvalHermite;
-    *(void **)(stateBytes + 0x98) = Curve_BuildHermiteCoeffs;
-    *(float **)(stateBytes + 0x84) = (float *)(stateBytes + 0xa8);
-    *(float **)(stateBytes + 0x88) = (float *)(stateBytes + 0xc8);
-    *(float **)(stateBytes + 0x8c) = (float *)(stateBytes + 0xe8);
-    *(s32 *)(stateBytes + 0x90) = 8;
+    ((RomCurveWalker *)stateBytes)->node94 = Curve_EvalHermite;
+    ((RomCurveWalker *)stateBytes)->node98 = Curve_BuildHermiteCoeffs;
+    *(float **)&((RomCurveWalker *)stateBytes)->unk84 = (float *)(stateBytes + 0xa8);
+    *(float **)&((RomCurveWalker *)stateBytes)->unk88 = (float *)(stateBytes + 0xc8);
+    *(float **)&((RomCurveWalker *)stateBytes)->unk8C = (float *)(stateBytes + 0xe8);
+    ((RomCurveWalker *)stateBytes)->moveNetwork = 8;
     curvesMove(state);
     return 0;
 }
