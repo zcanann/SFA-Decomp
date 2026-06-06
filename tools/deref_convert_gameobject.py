@@ -13,7 +13,14 @@ PRECONDITIONS (caller must verify per function, see CLAUDE.md #77):
 - every named base var is a BYTE pointer (u8*/char*) or integer address -
   typed pointers (int*/float*) scale arithmetic and will miscompile;
 - the var actually points at the engine GameObject record (head =
-  ObjAnimComponent; see include/main/game_object.h).
+  ObjAnimComponent; see include/main/game_object.h);
+- WATCH for Ghidra PRE-SCALED offsets: when the import declared the base
+  as int*/short* (e.g. `int *inner = *(int **)(obj + 0xb8);` ... `inner +
+  0x25c`), the written offset is in ELEMENTS in some fns and BYTES in
+  others depending on that fn's decl. Derive the REAL byte offset per
+  function from the decl type before mapping; converting through this
+  tool assumes byte offsets and will silently shift the field otherwise
+  (the .o gate catches it, but only after a wasted round).
 Always gate the result with tools/deref_o_gate.py against the baseline .o.
 
 The map only covers offsets named in game_object.h; pad-region offsets
