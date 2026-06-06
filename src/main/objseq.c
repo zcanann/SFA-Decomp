@@ -3614,8 +3614,8 @@ checked:
             seqFlags = *(int *)(base + j * 8 + 0x3d50);
             lbl_803DD124 -= 1;
             p = base + j * 8 + 0x3d4c;
-            for (k = 0; k < (s8)lbl_803DD124 - j; k++) {
-                v = *(int *)(p + 8);
+            v = *(int *)(p + 8);
+            for (k = j; k < (s8)lbl_803DD124; k++) {
                 *(int *)p = v;
                 *(int *)(p + 4) = v;
                 p += 8;
