@@ -1251,7 +1251,7 @@ extern s8   padGetCY(int chan);
 extern int  getNextTaskHintText(void);
 extern int *gCameraInterface;
 
-extern u8  cMenuOpen;
+extern s8  cMenuOpen;
 extern u8  cMenuState;
 extern u8  shouldOpenCMenu;
 extern int lbl_803A9320[];
