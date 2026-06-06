@@ -1576,7 +1576,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
             if (((ObjModelInstance *)obj->def)->flags & 0x800) {
                 ObjModel_SetRenderCallback(obj->models[idx], objCallback_80074d04);
             } else {
-                cb = ((ObjModelInstance *)obj->def)->renderFlags;
+                cb = modelDef->renderFlags;
                 if (cb & 1) {
                     ObjModel_SetRenderCallback(obj->models[idx], modelCb_80073d04);
                 } else if (cb & 0x80) {
@@ -1597,7 +1597,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
             if (((ObjModelInstance *)obj->def)->flags & 0x800) {
                 ObjModel_SetRenderCallback(obj->models[i], objCallback_80074d04);
             } else {
-                cb = ((ObjModelInstance *)obj->def)->renderFlags;
+                cb = modelDef->renderFlags;
                 if (cb & 1) {
                     ObjModel_SetRenderCallback(obj->models[i], modelCb_80073d04);
                 } else if (cb & 0x80) {

@@ -855,7 +855,7 @@ void FUN_8005b744(void)
         local_30 = (longlong)(int)fVar1;
         if ((((puVar12[3] & 0x4000) == 0) && (*(int *)(puVar12 + 0x32) != 0)) &&
            ((*(uint *)(*(int *)(puVar12 + 0x32) + 0x30) & 4) != 0)) {
-          sVar2 = *(short *)(*(int *)(puVar12 + 0x28) + 0x48);
+          sVar2 = modelDef->shadowType;
           if ((sVar2 == 2) || (sVar2 == 1)) {
             newshadows_queueShadowCaster((int)puVar12);
           }
@@ -876,7 +876,7 @@ void FUN_8005b744(void)
             (&DAT_80387538)[DAT_803ddb2e] =
                  uVar11 & 0x3ff | (1000 - ((int)fVar1 & 0xffffU) & 0x3ff) << 10 | uVar10;
             DAT_803ddb2e = DAT_803ddb2e + 1;
-            if ((((*(byte *)(*(int *)(puVar12 + 0x28) + 0x5f) & 0x20) != 0) &&
+            if ((((modelDef->renderFlags & 0x20) != 0) &&
                 ((puVar12[0x58] & 0x400) == 0)) && ((puVar12[3] & 0x4000) == 0)) {
               lightmap_queueObjectRenderEntry((int)puVar12,7,0x50);
               (&DAT_8037ed2c)[DAT_803ddab0 * 4] = 1;
@@ -885,7 +885,7 @@ void FUN_8005b744(void)
           }
           else {
             if (((modelDef->flags & 0x800) == 0) &&
-               ((*(byte *)(*(int *)(puVar12 + 0x28) + 0x5f) & 0x10) == 0)) {
+               ((modelDef->renderFlags & 0x10) == 0)) {
               iVar9 = 7;
             }
             else {
@@ -894,7 +894,7 @@ void FUN_8005b744(void)
             lightmap_queueObjectRenderEntry((int)puVar12,iVar9,0);
             (&DAT_8037ed2c)[DAT_803ddab0 * 4] = 0;
             DAT_803ddab0 = DAT_803ddab0 + 1;
-            if (((*(byte *)(*(int *)(puVar12 + 0x28) + 0x5f) & 0x20) != 0) &&
+            if (((modelDef->renderFlags & 0x20) != 0) &&
                ((puVar12[3] & 0x4000) == 0)) {
               lightmap_queueObjectRenderEntry((int)puVar12,7,0x50);
               (&DAT_8037ed2c)[DAT_803ddab0 * 4] = 1;
@@ -947,14 +947,14 @@ void FUN_8005bc0c(void)
     iVar6 = *(int *)(iVar3 + (*puVar8 & 0x3ff) * 4);
     modelDef = ((ObjAnimComponent *)iVar6)->modelInstance;
     uVar4 = modelDef->flags;
-    if (((uVar4 & 0x800) == 0) && ((*(byte *)(*(int *)(iVar6 + 0x50) + 0x5f) & 0x10) == 0)) {
+    if (((uVar4 & 0x800) == 0) && ((modelDef->renderFlags & 0x10) == 0)) {
       if ((uVar4 & 0x800000) == 0) {
         (**(code **)(*DAT_803dd6fc + 0x1c))(0,0,0,1,iVar6);
       }
       FUN_8003b878(0,0,0,0,iVar6,1);
       iVar5 = *(int *)(iVar6 + 100);
       if ((iVar5 == 0) || (*(int *)(iVar5 + 0xc) == 0)) {
-        if ((*(short *)(*(int *)(iVar6 + 0x50) + 0x48) == 3) &&
+        if ((modelDef->shadowType == 3) &&
            (((*(ushort *)(iVar6 + 6) & 0x4000) == 0 && ((*(uint *)(iVar5 + 0x30) & 4) != 0)))) {
           lightmap_queueObjectRenderEntry(iVar6,0x13,0);
           (&DAT_8037ed2c)[DAT_803ddab0 * 4] = 3;
@@ -3910,7 +3910,7 @@ void getVisibleObjects(s8 *opacity)
                 }
                 if ((*(s16 *)(o + 6) & 0x4000) == 0 && *(void **)(o + 0x64) != NULL &&
                     (*(u32 *)(*(u8 **)(o + 0x64) + 0x30) & 4) != 0) {
-                    t = *(s16 *)(*(u8 **)(o + 0x50) + 0x48);
+                    t = modelDef->shadowType;
                     if (t == 2 || t == 1) {
                         shadowCreate(o);
                     } else if (t == 4) {
@@ -3932,7 +3932,7 @@ void getVisibleObjects(s8 *opacity)
                         gVisibleObjectSortKeys[gVisibleObjectSortKeyCount] =
                             (i & 0x3ff) | (((t1000 & 0x3ff) << 10) | key);
                         gVisibleObjectSortKeyCount++;
-                        if ((*(u8 *)(*(u8 **)(o + 0x50) + 0x5f) & 0x20) != 0 &&
+                        if ((modelDef->renderFlags & 0x20) != 0 &&
                             (*(u16 *)(o + 0xb0) & 0x400) == 0 &&
                             (*(s16 *)(o + 6) & 0x4000) == 0) {
                             renderShadowType3(o, 7, 0x50);
@@ -3941,7 +3941,7 @@ void getVisibleObjects(s8 *opacity)
                         }
                     } else {
                         if ((modelDef->flags & 0x800) != 0 ||
-                            (*(u8 *)(*(u8 **)(o + 0x50) + 0x5f) & 0x10) != 0) {
+                            (modelDef->renderFlags & 0x10) != 0) {
                             mode = 0x1f;
                         } else {
                             mode = 7;
@@ -3949,7 +3949,7 @@ void getVisibleObjects(s8 *opacity)
                         renderShadowType3(o, mode, 0);
                         lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 0;
                         lbl_803DCE30++;
-                        if ((*(u8 *)(*(u8 **)(o + 0x50) + 0x5f) & 0x20) != 0 &&
+                        if ((modelDef->renderFlags & 0x20) != 0 &&
                             (*(s16 *)(o + 6) & 0x4000) == 0) {
                             renderShadowType3(o, 7, 0x50);
                             lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 1;
@@ -4017,7 +4017,7 @@ void objDrawFn_8005da48(int *obj)
         shadow = *(void **)((char *)obj + 0x64);
         if (shadow != NULL && *(void **)((char *)shadow + 0xc) != NULL) {
             objShadowFn_80062498(obj, 0, 0, framesThisStep);
-        } else if (*(s16 *)(*(int *)((char *)obj + 0x50) + 0x48) == 3) {
+        } else if (((ObjAnimComponent *)obj)->modelInstance->shadowType == 3) {
             objDrawFn_80061654(obj, model);
         }
         Camera_ApplyFullViewport();
