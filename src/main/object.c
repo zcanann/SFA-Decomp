@@ -535,7 +535,6 @@ void objSetSlot(u8 *obj, s8 slot) {
     *(s8 *)(obj + 0xae) = slot;
 }
 
-#pragma peephole on
 void fn_8002B758(void *v) {
     int i;
     int count;
@@ -555,6 +554,7 @@ void fn_8002B758(void *v) {
     lbl_803DCB74--;
 }
 
+#pragma peephole on
 void fn_8002B860(void *v) {
     s8 i = lbl_803DCB74;
     lbl_803DCB74 = i + 1;

@@ -53,7 +53,6 @@ void andross_setPartSignal(int obj, int signal)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int andross_updateModelAlpha(int obj)
 {
@@ -75,9 +74,7 @@ int andross_updateModelAlpha(int obj)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void andross_init(int obj, u8 *setup)
 {
@@ -113,7 +110,6 @@ void andross_init(int obj, u8 *setup)
     unlockLevel(0, 0, 1);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
