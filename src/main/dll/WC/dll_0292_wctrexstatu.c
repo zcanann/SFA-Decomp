@@ -1,6 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
 
 #define WCTREXSTATU_CALLBACK_COMMANDS_OFFSET 0x81
 #define WCTREXSTATU_CALLBACK_COMMAND_COUNT_OFFSET 0x8b
