@@ -96,7 +96,7 @@ void xyzanimator_update(int obj)
 
     block = (int)mapGetBlock(objPosToMapBlockIdx(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
                                                  *(f32 *)(obj + 0x14)));
-    if (block == 0) {
+    if ((u32)block == 0) {
         *(s8 *)(state + 0x4d) = 0;
         goto done_lbl;
     }
@@ -132,9 +132,8 @@ void xyzanimator_update(int obj)
             *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x26);
             *(s8 *)(state + 0x4c) = 1;
         }
-        alloc = mmAlloc(*(int *)(state + 4) * 6 + *(int *)(state + 0) * 0xc +
-                            *(int *)(state + 8) * 0xc,
-                        5, 0);
+        t = *(int *)(state + 4) * 6 + *(int *)(state + 0) * 0xc;
+        alloc = mmAlloc(t + *(int *)(state + 8) * 0xc, 5, 0);
         *(int *)(state + 0xc) = alloc;
         stride = *(int *)(state + 0) * 2;
         alloc = alloc + *(int *)(state + 4) * 6;
@@ -205,14 +204,14 @@ void xyzanimator_update(int obj)
         done = 0;
         if (*(s16 *)(setup + 0x1c) > *(s16 *)(setup + 0x22)) {
             *(f32 *)(state + 0x40) =
-                -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x29) * timeDelta) - *(f32 *)(state + 0x40));
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) - *(f32 *)(state + 0x40));
             if (*(f32 *)(state + 0x40) <= (f32)*(s16 *)(setup + 0x22)) {
                 *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x22);
                 done = 1;
             }
         } else {
             *(f32 *)(state + 0x40) =
-                lbl_803E4018 * ((f32)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
             if (*(f32 *)(state + 0x40) >= (f32)*(s16 *)(setup + 0x22)) {
                 *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x22);
                 done = 1;
@@ -220,14 +219,14 @@ void xyzanimator_update(int obj)
         }
         if (*(s16 *)(setup + 0x1e) > *(s16 *)(setup + 0x24)) {
             *(f32 *)(state + 0x44) =
-                -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2a) * timeDelta) - *(f32 *)(state + 0x44));
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) - *(f32 *)(state + 0x44));
             if (*(f32 *)(state + 0x44) <= (f32)*(s16 *)(setup + 0x24)) {
                 *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x24);
                 done += 1;
             }
         } else {
             *(f32 *)(state + 0x44) =
-                lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
             if (*(f32 *)(state + 0x44) >= (f32)*(s16 *)(setup + 0x24)) {
                 *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x24);
                 done += 1;
@@ -235,14 +234,14 @@ void xyzanimator_update(int obj)
         }
         if (*(s16 *)(setup + 0x20) > *(s16 *)(setup + 0x26)) {
             *(f32 *)(state + 0x48) =
-                -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2b) * timeDelta) - *(f32 *)(state + 0x48));
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) - *(f32 *)(state + 0x48));
             if (*(f32 *)(state + 0x48) <= (f32)*(s16 *)(setup + 0x26)) {
                 *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x26);
                 done += 1;
             }
         } else {
             *(f32 *)(state + 0x48) =
-                lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
             if (*(f32 *)(state + 0x48) >= (f32)*(s16 *)(setup + 0x26)) {
                 *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x26);
                 done += 1;
@@ -258,7 +257,7 @@ void xyzanimator_update(int obj)
     case 1:
         if (*(s16 *)(setup + 0x1c) > *(s16 *)(setup + 0x22)) {
             *(f32 *)(state + 0x40) =
-                -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x29) * timeDelta) - *(f32 *)(state + 0x40));
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) - *(f32 *)(state + 0x40));
             if (*(f32 *)(state + 0x40) < (f32)*(s16 *)(setup + 0x22)) {
                 *(f32 *)(state + 0x40) =
                     (f32)(*(s16 *)(setup + 0x1c) -
@@ -266,7 +265,7 @@ void xyzanimator_update(int obj)
             }
         } else {
             *(f32 *)(state + 0x40) =
-                lbl_803E4018 * ((f32)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
             if (*(f32 *)(state + 0x40) > (f32)*(s16 *)(setup + 0x1c)) {
                 *(f32 *)(state + 0x40) =
                     (f32)(*(s16 *)(setup + 0x22) +
@@ -275,7 +274,7 @@ void xyzanimator_update(int obj)
         }
         if (*(s16 *)(setup + 0x1e) > *(s16 *)(setup + 0x24)) {
             *(f32 *)(state + 0x44) =
-                -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2a) * timeDelta) - *(f32 *)(state + 0x44));
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) - *(f32 *)(state + 0x44));
             if (*(f32 *)(state + 0x44) < (f32)*(s16 *)(setup + 0x24)) {
                 *(f32 *)(state + 0x44) =
                     -(lbl_803E4018 *
@@ -284,7 +283,7 @@ void xyzanimator_update(int obj)
             }
         } else {
             *(f32 *)(state + 0x44) =
-                lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
             if (*(f32 *)(state + 0x44) > (f32)*(s16 *)(setup + 0x1e)) {
                 *(f32 *)(state + 0x44) =
                     (f32)(*(s16 *)(setup + 0x24) +
@@ -293,7 +292,7 @@ void xyzanimator_update(int obj)
         }
         if (*(s16 *)(setup + 0x20) > *(s16 *)(setup + 0x26)) {
             *(f32 *)(state + 0x48) =
-                -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2b) * timeDelta) - *(f32 *)(state + 0x48));
+                -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) - *(f32 *)(state + 0x48));
             if (*(f32 *)(state + 0x48) < (f32)*(s16 *)(setup + 0x26)) {
                 *(f32 *)(state + 0x48) =
                     (f32)(*(s16 *)(setup + 0x20) -
@@ -301,7 +300,7 @@ void xyzanimator_update(int obj)
             }
         } else {
             *(f32 *)(state + 0x48) =
-                lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
+                lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
             if (*(f32 *)(state + 0x48) > (f32)*(s16 *)(setup + 0x20)) {
                 *(f32 *)(state + 0x48) =
                     (f32)(*(s16 *)(setup + 0x26) +
@@ -311,62 +310,10 @@ void xyzanimator_update(int obj)
         break;
     case 2:
         done = 0;
-        if (*(s8 *)(state + 0x4c) == 0) {
+        if (*(s8 *)(state + 0x4c) != 0) {
             if (*(s16 *)(setup + 0x1c) > *(s16 *)(setup + 0x22)) {
                 *(f32 *)(state + 0x40) =
-                    lbl_803E4018 * ((f32)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
-                if (*(f32 *)(state + 0x40) >= (f32)*(s16 *)(setup + 0x1c)) {
-                    *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x1c);
-                    done = 1;
-                }
-            } else {
-                *(f32 *)(state + 0x40) =
-                    -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x29) * timeDelta) -
-                      *(f32 *)(state + 0x40));
-                if (*(f32 *)(state + 0x40) <= (f32)*(s16 *)(setup + 0x1c)) {
-                    *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x1c);
-                    done = 1;
-                }
-            }
-            if (*(s16 *)(setup + 0x1e) > *(s16 *)(setup + 0x24)) {
-                *(f32 *)(state + 0x44) =
-                    lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
-                if (*(f32 *)(state + 0x44) >= (f32)*(s16 *)(setup + 0x1e)) {
-                    *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x1e);
-                    done += 1;
-                }
-            } else {
-                *(f32 *)(state + 0x44) =
-                    -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2a) * timeDelta) -
-                      *(f32 *)(state + 0x44));
-                if (*(f32 *)(state + 0x44) <= (f32)*(s16 *)(setup + 0x1e)) {
-                    *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x1e);
-                    done += 1;
-                }
-            }
-            if (*(s16 *)(setup + 0x20) > *(s16 *)(setup + 0x26)) {
-                *(f32 *)(state + 0x48) =
-                    lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
-                if (*(f32 *)(state + 0x48) >= (f32)*(s16 *)(setup + 0x20)) {
-                    *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x20);
-                    done += 1;
-                }
-            } else {
-                *(f32 *)(state + 0x48) =
-                    -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2b) * timeDelta) -
-                      *(f32 *)(state + 0x48));
-                if (*(f32 *)(state + 0x48) <= (f32)*(s16 *)(setup + 0x20)) {
-                    *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x20);
-                    done += 1;
-                }
-            }
-            if (done == 3) {
-                *(s8 *)(state + 0x4d) += 1;
-            }
-        } else {
-            if (*(s16 *)(setup + 0x1c) > *(s16 *)(setup + 0x22)) {
-                *(f32 *)(state + 0x40) =
-                    -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x29) * timeDelta) -
+                    -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) -
                       *(f32 *)(state + 0x40));
                 if (*(f32 *)(state + 0x40) <= (f32)*(s16 *)(setup + 0x22)) {
                     *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x22);
@@ -374,7 +321,7 @@ void xyzanimator_update(int obj)
                 }
             } else {
                 *(f32 *)(state + 0x40) =
-                    lbl_803E4018 * ((f32)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
                 if (*(f32 *)(state + 0x40) >= (f32)*(s16 *)(setup + 0x22)) {
                     *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x22);
                     done = 1;
@@ -382,7 +329,7 @@ void xyzanimator_update(int obj)
             }
             if (*(s16 *)(setup + 0x1e) > *(s16 *)(setup + 0x24)) {
                 *(f32 *)(state + 0x44) =
-                    -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2a) * timeDelta) -
+                    -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) -
                       *(f32 *)(state + 0x44));
                 if (*(f32 *)(state + 0x44) <= (f32)*(s16 *)(setup + 0x24)) {
                     *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x24);
@@ -390,7 +337,7 @@ void xyzanimator_update(int obj)
                 }
             } else {
                 *(f32 *)(state + 0x44) =
-                    lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
                 if (*(f32 *)(state + 0x44) >= (f32)*(s16 *)(setup + 0x24)) {
                     *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x24);
                     done += 1;
@@ -398,7 +345,7 @@ void xyzanimator_update(int obj)
             }
             if (*(s16 *)(setup + 0x20) > *(s16 *)(setup + 0x26)) {
                 *(f32 *)(state + 0x48) =
-                    -(lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2b) * timeDelta) -
+                    -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) -
                       *(f32 *)(state + 0x48));
                 if (*(f32 *)(state + 0x48) <= (f32)*(s16 *)(setup + 0x26)) {
                     *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x26);
@@ -406,7 +353,7 @@ void xyzanimator_update(int obj)
                 }
             } else {
                 *(f32 *)(state + 0x48) =
-                    lbl_803E4018 * ((f32)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
                 if (*(f32 *)(state + 0x48) >= (f32)*(s16 *)(setup + 0x26)) {
                     *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x26);
                     done += 1;
@@ -416,6 +363,58 @@ void xyzanimator_update(int obj)
                 if (*(s16 *)(setup + 0x1a) != -1) {
                     GameBit_Set(*(s16 *)(setup + 0x1a), 1);
                 }
+                *(s8 *)(state + 0x4d) += 1;
+            }
+        } else {
+            if (*(s16 *)(setup + 0x1c) > *(s16 *)(setup + 0x22)) {
+                *(f32 *)(state + 0x40) =
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) + *(f32 *)(state + 0x40);
+                if (*(f32 *)(state + 0x40) >= (f32)*(s16 *)(setup + 0x1c)) {
+                    *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x1c);
+                    done = 1;
+                }
+            } else {
+                *(f32 *)(state + 0x40) =
+                    -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x29) * timeDelta) -
+                      *(f32 *)(state + 0x40));
+                if (*(f32 *)(state + 0x40) <= (f32)*(s16 *)(setup + 0x1c)) {
+                    *(f32 *)(state + 0x40) = (f32)*(s16 *)(setup + 0x1c);
+                    done = 1;
+                }
+            }
+            if (*(s16 *)(setup + 0x1e) > *(s16 *)(setup + 0x24)) {
+                *(f32 *)(state + 0x44) =
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) + *(f32 *)(state + 0x44);
+                if (*(f32 *)(state + 0x44) >= (f32)*(s16 *)(setup + 0x1e)) {
+                    *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x1e);
+                    done += 1;
+                }
+            } else {
+                *(f32 *)(state + 0x44) =
+                    -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2a) * timeDelta) -
+                      *(f32 *)(state + 0x44));
+                if (*(f32 *)(state + 0x44) <= (f32)*(s16 *)(setup + 0x1e)) {
+                    *(f32 *)(state + 0x44) = (f32)*(s16 *)(setup + 0x1e);
+                    done += 1;
+                }
+            }
+            if (*(s16 *)(setup + 0x20) > *(s16 *)(setup + 0x26)) {
+                *(f32 *)(state + 0x48) =
+                    lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) + *(f32 *)(state + 0x48);
+                if (*(f32 *)(state + 0x48) >= (f32)*(s16 *)(setup + 0x20)) {
+                    *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x20);
+                    done += 1;
+                }
+            } else {
+                *(f32 *)(state + 0x48) =
+                    -(lbl_803E4018 * ((f32)(int)*(s8 *)(setup + 0x2b) * timeDelta) -
+                      *(f32 *)(state + 0x48));
+                if (*(f32 *)(state + 0x48) <= (f32)*(s16 *)(setup + 0x20)) {
+                    *(f32 *)(state + 0x48) = (f32)*(s16 *)(setup + 0x20);
+                    done += 1;
+                }
+            }
+            if (done == 3) {
                 *(s8 *)(state + 0x4d) += 1;
             }
         }
