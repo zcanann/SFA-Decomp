@@ -1,4 +1,5 @@
 #include "main/mapEvent.h"
+#include "main/game_object.h"
 #include "main/dll/LGT/LGTdirectionallight.h"
 
 extern undefined4 FUN_8001753c();
@@ -240,9 +241,9 @@ void fn_801F3F18(int obj)
 
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x88, 0xb7, 0xba);
-    if ((*(int *)(obj + 0xf4) & 4) == 0) {
+    if ((((GameObject *)obj)->unkF4 & 4) == 0) {
         skyFn_80089710(1, 1, 0);
-        *(int *)(obj + 0xf4) |= 4;
+        ((GameObject *)obj)->unkF4 |= 4;
     } else {
         skyFn_80089710(1, 1, 1);
     }
