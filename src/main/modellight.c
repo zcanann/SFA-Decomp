@@ -1140,48 +1140,54 @@ void modelLightChannels_applyGXControls(void) {
 
     activeMask = 0;
     channel = 0;
+    entry = (ModelLightChannelState *)(int)gModelLightChannelStates;
     do {
-        if (gModelLightChannelStates[channel].active != 0) {
-            if (gModelLightChannelStates[channel].mode == 0) {
-                lightMask = gModelLightChannelStates[channel].lightMask;
+        if (entry->active != 0) {
+            if (entry->mode == 0) {
+                lightMask = entry->lightMask;
                 if (lightMask != 0) {
                     attnFn = 1;
                 } else {
                     attnFn = 2;
                 }
-                GXSetChanCtrl(channel, lightMask != 0, 0, gModelLightChannelStates[channel].matSrc,
-                              lightMask, lightMask != 0 ? 2 : 0, attnFn);
-            } else if (gModelLightChannelStates[channel].mode == 2) {
-                lightMask = gModelLightChannelStates[channel].lightMask;
-                attnFn = lightMask != 0 ? 1 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, 0, gModelLightChannelStates[channel].matSrc,
-                              lightMask, 0, attnFn);
+                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, lightMask != 0 ? 2 : 0,
+                              attnFn);
+            } else if (entry->mode == 2) {
+                lightMask = entry->lightMask;
+                if (lightMask != 0) {
+                    attnFn = 1;
+                } else {
+                    attnFn = 2;
+                }
+                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
             } else {
-                lightMask = gModelLightChannelStates[channel].lightMask;
-                attnFn = lightMask != 0 ? 0 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, 0, gModelLightChannelStates[channel].matSrc,
-                              lightMask, 0, attnFn);
+                lightMask = entry->lightMask;
+                if (lightMask != 0) {
+                    attnFn = 0;
+                } else {
+                    attnFn = 2;
+                }
+                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
             }
             activeMask = (activeMask | (1 << channel)) & 0xff;
         }
+        entry++;
         channel++;
     } while (channel <= 5);
 
     activeMask &= 0xff;
 
-    if ((activeMask & 1) != 0) {
-        if ((activeMask & 4) == 0) {
-            GXSetChanCtrl(2, 0, 0, 0, 0, 0, 2);
-        }
-    } else if ((activeMask & 4) != 0) {
+    if ((activeMask & 1) != 0 && (activeMask & 4) == 0) {
+        GXSetChanCtrl(2, 0, 0, 0, 0, 0, 2);
+    }
+    if ((activeMask & 1) == 0 && (activeMask & 4) != 0) {
         GXSetChanCtrl(0, 0, 0, 0, 0, 0, 2);
     }
 
-    if ((activeMask & 2) != 0) {
-        if ((activeMask & 8) == 0) {
-            GXSetChanCtrl(3, 0, 0, 0, 0, 0, 2);
-        }
-    } else if ((activeMask & 8) != 0) {
+    if ((activeMask & 2) != 0 && (activeMask & 8) == 0) {
+        GXSetChanCtrl(3, 0, 0, 0, 0, 0, 2);
+    }
+    if ((activeMask & 2) == 0 && (activeMask & 8) != 0) {
         GXSetChanCtrl(1, 0, 0, 0, 0, 0, 2);
     }
 
