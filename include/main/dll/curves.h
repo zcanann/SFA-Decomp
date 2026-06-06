@@ -80,11 +80,8 @@ typedef struct RomCurveSegmentProjection {
 typedef struct CurvesCollisionState {
   u32 flags;
   f32 *segmentLocalPoints;
-  f32 points[4][3];        /* 0x008 world-space segment points; [0] doubles as trace-end scratch */
-  f32 traceStart[3];       /* 0x038 */
-  u8 pad044[0x050 - 0x044];
-  f32 traceStartB[3];      /* 0x050 head-room probe start */
-  u8 pad05C[0x068 - 0x05C];
+  f32 points[4][3];        /* 0x008 world-space segment points; double as trace ends */
+  f32 traceStart[4][3];    /* 0x038 per-point raised trace starts */
   f32 segmentHitPlanes[4][4]; /* 0x068 trace hit-plane records (x,y,z,d) */
   f32 segmentRadii[4];
   s8 segmentHitTypes[4];
@@ -113,26 +110,14 @@ typedef struct CurvesCollisionState {
   f32 resultWaterDepth;    /* 0x1B4 */
   f32 resultFloorY;        /* 0x1B8 */
   f32 resultWaterY;        /* 0x1BC */
-  /* 0x1C0-0x23F: single-segment-point slots below; the multi-point walker
-   * instead uses stride-0xC per-point slots through this region (bases
-   * 0x1D0/0x1F0/0x200 + 0xC*i observed) -- full layout still TBD, keep the
-   * pads until that walker is RE'd. */
-  f32 floorGap0;           /* 0x1C0 posY - floorY */
-  u8 pad1C4[0x1D0 - 0x1C4];
-  f32 ceilingY0;           /* 0x1D0 */
-  u8 pad1D4[0x1E0 - 0x1D4];
-  f32 waterDepth0;         /* 0x1E0 waterY - posY */
-  u8 pad1E4[0x1F0 - 0x1E4];
-  f32 floorY0;             /* 0x1F0 */
-  u8 pad1F4[0x200 - 0x1F4];
-  f32 waterY0;             /* 0x200 type-0xE surface height */
-  u8 pad204[0x210 - 0x204];
-  f32 waterNormalX0;       /* 0x210 */
-  u8 pad214[0x220 - 0x214];
-  f32 waterNormalY0;       /* 0x220 init 1.0 */
-  u8 pad224[0x230 - 0x224];
-  f32 waterNormalZ0;       /* 0x230 */
-  u8 pad234[0x240 - 0x234];
+  f32 floorGap[4];         /* 0x1C0 posY - floorY per point */
+  f32 ceilingY[4];         /* 0x1D0 */
+  f32 waterDepth[4];       /* 0x1E0 waterY - posY */
+  f32 floorY[4];           /* 0x1F0 */
+  f32 waterY[4];           /* 0x200 type-0xE surface height */
+  f32 waterNormalX[4];     /* 0x210 */
+  f32 waterNormalY[4];     /* 0x220 init 1.0 */
+  f32 waterNormalZ[4];     /* 0x230 */
   u8 hitBounds[0x18];
   u8 heightPadding;
   u8 pad259[2];
@@ -182,7 +167,6 @@ STATIC_ASSERT(offsetof(CurvesCollisionState, localPointPositions) == 0xDC);
 STATIC_ASSERT(offsetof(CurvesCollisionState, localPointRadii) == 0xE0);
 STATIC_ASSERT(offsetof(CurvesCollisionState, points) == 0x008);
 STATIC_ASSERT(offsetof(CurvesCollisionState, traceStart) == 0x038);
-STATIC_ASSERT(offsetof(CurvesCollisionState, traceStartB) == 0x050);
 STATIC_ASSERT(offsetof(CurvesCollisionState, segmentHitPlanes) == 0x068);
 STATIC_ASSERT(offsetof(CurvesCollisionState, traceHitObj) == 0x0C4);
 STATIC_ASSERT(offsetof(CurvesCollisionState, contactObj) == 0x0D8);
@@ -193,9 +177,9 @@ STATIC_ASSERT(offsetof(CurvesCollisionState, resultFloorGap) == 0x1AC);
 STATIC_ASSERT(offsetof(CurvesCollisionState, traceHitCount) == 0x0D4);
 STATIC_ASSERT(offsetof(CurvesCollisionState, localPointWorld) == 0x0E4);
 STATIC_ASSERT(offsetof(CurvesCollisionState, localPointTarget) == 0x114);
-STATIC_ASSERT(offsetof(CurvesCollisionState, floorGap0) == 0x1C0);
-STATIC_ASSERT(offsetof(CurvesCollisionState, waterY0) == 0x200);
-STATIC_ASSERT(offsetof(CurvesCollisionState, waterNormalZ0) == 0x230);
+STATIC_ASSERT(offsetof(CurvesCollisionState, floorGap) == 0x1C0);
+STATIC_ASSERT(offsetof(CurvesCollisionState, waterY) == 0x200);
+STATIC_ASSERT(offsetof(CurvesCollisionState, waterNormalZ) == 0x230);
 STATIC_ASSERT(offsetof(CurvesCollisionState, hitBounds) == 0x240);
 STATIC_ASSERT(offsetof(CurvesCollisionState, heightPadding) == 0x258);
 STATIC_ASSERT(offsetof(CurvesCollisionState, subtype) == 0x25B);
