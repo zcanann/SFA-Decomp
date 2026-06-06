@@ -1188,9 +1188,9 @@ void pollen_hitDetect(int obj) {
     ObjHitsPriorityState *hitState = *(ObjHitsPriorityState **)(obj + 0x54);
     if (hitState->contactFlags != 0) {
         f32 fz;
-        *(f32 *)(obj + 0xc) = hitState->contactPosX;
-        *(f32 *)(obj + 0x10) = hitState->contactPosY;
-        *(f32 *)(obj + 0x14) = hitState->contactPosZ;
+        *(f32 *)(obj + 0xc) = (*(ObjHitsPriorityState **)(obj + 0x54))->contactPosX;
+        *(f32 *)(obj + 0x10) = (*(ObjHitsPriorityState **)(obj + 0x54))->contactPosY;
+        *(f32 *)(obj + 0x14) = (*(ObjHitsPriorityState **)(obj + 0x54))->contactPosZ;
         fz = lbl_803E313C;
         *(f32 *)(obj + 0x24) = fz;
         *(f32 *)(obj + 0x28) = fz;
