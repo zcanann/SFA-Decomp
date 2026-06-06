@@ -5879,7 +5879,6 @@ extern u16 *lbl_803DCCEC;
 extern u8 lbl_8031D060[];
 
 #pragma scheduling off
-#pragma peephole on
 void debugPrintfxy(int x, int y, char *fmt, ...)
 {
     int xx;
@@ -5928,7 +5927,6 @@ void debugPrintfxy(int x, int y, char *fmt, ...)
         lbl_803DDA30 = saved;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void selectTexture(char *tex, int slot);

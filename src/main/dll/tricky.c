@@ -1921,7 +1921,6 @@ void forceAButtonIcon(int x) {
     aButtonIcon = (s16)x;
 }
 #pragma scheduling on
-#pragma peephole on
 
 /* resetYbutton: zero out two halfwords */
 extern s16 yButtonItemTextureId;
@@ -1943,7 +1942,6 @@ void setBButtonIcon(int x) {
     }
 }
 #pragma scheduling on
-#pragma peephole on
 
 /* setAButtonIcon: sth if aButtonIcon == 0 */
 #pragma peephole off
@@ -1954,7 +1952,6 @@ void setAButtonIcon(int x) {
     }
 }
 #pragma scheduling on
-#pragma peephole on
 
 /* fearTestMeterSetRange: store the outer/inner half-widths and marker X. */
 extern u8 fearTestMeterOuterHalfWidth;
@@ -2035,7 +2032,6 @@ void arwingHudSetVisible(u32 x) {
     arwingHudAlpha = (s16)0xff;
 }
 #pragma scheduling on
-#pragma peephole on
 
 /* getYButtonItem: read yButtonState; if non-zero, set *out = yButtonItem; return yButtonState */
 extern u16 yButtonItem;
@@ -2048,7 +2044,6 @@ u16 getYButtonItem(s16 *out) {
     }
     return yButtonState;
 }
-#pragma peephole on
 
 /* GameUI_airMeterSetShutdown: set bit 7 of (*p)+0x44 if p non-null — uses bitfield insert (rlwimi) */
 typedef struct {
