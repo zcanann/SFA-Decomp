@@ -1019,6 +1019,7 @@ void ObjSeq_updateCamera(void)
 int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
 {
     u8 *base = lbl_80396918;
+    ObjAnimComponent *sourceAnim = (ObjAnimComponent *)sourceObj;
     u32 cmdByte = cmd & 0xff;
     int cmdArg = (cmd >> 8) & 0xff;
     u8 *slotPtr;
@@ -1104,8 +1105,7 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
         if (flag != 0) {
             break;
         }
-        if (cmdArg >= (s8)(*(u8 **)(sourceObj + offsetof(ObjAnimComponent, modelInstance)))
-                [offsetof(ObjModelInstance, modelCount)]) {
+        if (cmdArg >= sourceAnim->modelInstance->modelCount) {
             break;
         }
         if (*(s16 *)(sourceObj + 0x44) == 1) {
@@ -1244,8 +1244,7 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
         if (*(s16 *)(sourceObj + 0x44) == 1) {
             break;
         }
-        if (cmdArg >= (s8)(*(u8 **)(sourceObj + offsetof(ObjAnimComponent, modelInstance)))
-                [offsetof(ObjModelInstance, modelCount)]) {
+        if (cmdArg >= sourceAnim->modelInstance->modelCount) {
             break;
         }
         Obj_SetActiveModelIndex(sourceObj, cmdArg);
