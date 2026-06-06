@@ -1382,7 +1382,7 @@ void Sfx_PlayFromObjectEx(u32 obj, f32 *pos, u32 channel, u16 sfxId)
 
 #pragma scheduling off
 #pragma peephole off
-void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u32 sfxId)
+void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId)
 {
     Sfx_PlayFromObjectEx(obj, NULL, channel, sfxId);
 }
@@ -1391,7 +1391,7 @@ void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u32 sfxId)
 
 #pragma scheduling off
 #pragma peephole off
-void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u32 sfxId)
+void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId)
 {
     f32 pos[3];
 
