@@ -277,7 +277,7 @@ void FUN_801a3ac0(undefined8 param_1,double param_2,double param_3,undefined8 pa
           FUN_80006824(param_9,(ushort)*(int *)(iVar3 + 0x6d0));
         }
         *(undefined *)(iVar3 + 0x6e4) = 1;
-        *(undefined *)(param_9 + 0x36) = 0;
+        ((GameObject *)param_9)->anim.alpha = 0;
       }
     }
     else {
@@ -1487,7 +1487,7 @@ void cfmagicwall_update(int obj) {
         }
 
         if (yaw > 0x4000) {
-            *(char *)(obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
             return;
         }
 
@@ -1511,7 +1511,7 @@ void cfmagicwall_update(int obj) {
                 alpha = (s32)(lbl_803E43DC * (fadeDistance / range));
             }
 
-            *(char *)(obj + 0x36) = alpha;
+            ((GameObject *)obj)->anim.alpha = alpha;
         }
     }
 }

@@ -2,7 +2,8 @@
 #define MAIN_DLL_DLL_B3_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 
-int lockIconTexCb(u8 *param_1,int *param_2,int param_3);
+int lockIconTexCb(GameObject *obj, int *modelPtr, int renderOpIdx);
 
 #endif /* MAIN_DLL_DLL_B3_H_ */

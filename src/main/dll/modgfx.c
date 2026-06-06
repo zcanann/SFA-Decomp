@@ -15532,15 +15532,16 @@ void dll_0B_func05(void)
                     }
                 }
                 if (*(int *)(E9 + emOff) & 0x100000) {
+                    GameObject *obj = *(GameObject **)((char *)eff + 4);
                     if (active == 1) {
                         if (*(s16 *)((char *)eff + 0xfe) != 0) {
                             *(f32 *)((char *)eff + 0xbc) =
-                                (*(f32 *)(E9 + emOff + 0x4) - (f32)(u32)*(u8 *)((char *)*(int **)((char *)eff + 4) + 0x36)) /
+                                (*(f32 *)(E9 + emOff + 0x4) - (f32)(u32)obj->anim.alpha) /
                                 (f32)*(s16 *)((char *)eff + 0xfe);
-                            *(f32 *)((char *)eff + 0xc0) = (f32)(u32)*(u8 *)((char *)*(int **)((char *)eff + 4) + 0x36);
+                            *(f32 *)((char *)eff + 0xc0) = (f32)(u32)obj->anim.alpha;
                         } else {
                             *(f32 *)((char *)eff + 0xbc) =
-                                *(f32 *)(E9 + emOff + 0x4) - (f32)(u32)*(u8 *)((char *)*(int **)((char *)eff + 4) + 0x36);
+                                *(f32 *)(E9 + emOff + 0x4) - (f32)(u32)obj->anim.alpha;
                             *(f32 *)((char *)eff + 0xc0) = lbl_803DF430;
                         }
                     }
@@ -15550,7 +15551,7 @@ void dll_0B_func05(void)
                     } else if (*(f32 *)((char *)eff + 0xc0) < lbl_803DF430) {
                         *(f32 *)((char *)eff + 0xc0) = lbl_803DF430;
                     }
-                    *(u8 *)((char *)*(int **)((char *)eff + 4) + 0x36) = (int)*(f32 *)((char *)eff + 0xc0);
+                    obj->anim.alpha = (int)*(f32 *)((char *)eff + 0xc0);
                 }
                 if (*(int *)(E9 + emOff) & 0x400000) {
                     ((ExpFn4)fn_800A081C)(eff, E9 + emOff, active, 0);

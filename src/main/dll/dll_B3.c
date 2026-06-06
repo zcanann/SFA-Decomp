@@ -32,7 +32,7 @@ extern f32 lbl_803E163C;
  */
 #pragma scheduling off
 #pragma peephole off
-int lockIconTexCb(u8 *param_1, int *param_2, int param_3)
+int lockIconTexCb(GameObject *obj, int *modelPtr, int renderOpIdx)
 {
   u8 *renderOp;
   u8 tier;
@@ -40,7 +40,7 @@ int lockIconTexCb(u8 *param_1, int *param_2, int param_3)
   f32 dist;
   int alphaVal;
 
-  renderOp = ObjModel_GetRenderOp(*param_2, param_3);
+  renderOp = ObjModel_GetRenderOp(*modelPtr, renderOpIdx);
   dist = *(f32 *)(pCamera + 0x134);
   if (dist <= lbl_803E1630) {
     tier = 4;
@@ -58,18 +58,18 @@ int lockIconTexCb(u8 *param_1, int *param_2, int param_3)
     colorBuf[0] = 0;
     colorBuf[1] = 0;
     colorBuf[2] = 0;
-    alphaVal = ((param_1[0x36] + 1) * 0x60) >> 8;
+    alphaVal = ((obj->anim.alpha + 1) * 0x60) >> 8;
     colorBuf[3] = alphaVal;
     fn_80051D5C(textureIdxToPtr(*(int *)(renderOp + 0x24)), 0, 0, colorBuf);
   } else {
     colorBuf[0] = 0xff;
     colorBuf[1] = 0xff;
     colorBuf[2] = 0xff;
-    colorBuf[3] = param_1[0x36];
+    colorBuf[3] = obj->anim.alpha;
     fn_80051D5C(textureIdxToPtr(*(int *)(renderOp + 0x24)), 0, 0, colorBuf);
   }
   textureFn_800528bc();
-  if (param_1[0x36] < 0xff || renderOp[0x29] <= tier) {
+  if (obj->anim.alpha < 0xff || renderOp[0x29] <= tier) {
     GXSetBlendMode(1, 4, 5, 5);
     gxSetZMode_(1, 3, 0);
   } else {

@@ -1048,7 +1048,7 @@ int mediumbasket_updateOpenState(int obj, int p)
   if (*(char *)(p + 0x27a) != '\0') {
     GameBit_Set(sub->gameBitB, 1);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
-    *(u8 *)(obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     *(s8 *)(p + 0x34d) = 1;
     ((GroundBaddieState *)p)->baddie.moveSpeed = lbl_803E2D70 + (f32)(u32)sub->aggression / lbl_803E2D74;
   }
@@ -1103,7 +1103,7 @@ int mediumbasket_updateOpenHitState(int obj, int p)
   if (*(char *)(p + 0x27a) != '\0') {
     GameBit_Set(sub->gameBitB, 1);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
-    *(u8 *)(obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     *(s8 *)(p + 0x34d) = 1;
     ((GroundBaddieState *)p)->baddie.moveSpeed = lbl_803E2D7C + (f32)(u32)sub->aggression / lbl_803E2D80;
   }
@@ -1520,7 +1520,7 @@ FUN_8015d518(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   if (*(char *)(param_10 + 0x27a) != '\0') {
     GameBit_Set((int)*(short *)(iVar2 + 0x3f4),1);
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xf7;
-    *(undefined *)(param_9 + 0x36) = 0xff;
+    ((GameObject *)param_9)->anim.alpha = 0xff;
     *(undefined *)(param_10 + 0x34d) = 1;
     *(float *)(param_10 + 0x2a0) =
          lbl_803E3A08 +
@@ -1579,7 +1579,7 @@ FUN_8015d6ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   if (*(char *)(param_10 + 0x27a) != '\0') {
     GameBit_Set((int)*(short *)(iVar2 + 0x3f4),1);
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xf7;
-    *(undefined *)(param_9 + 0x36) = 0xff;
+    ((GameObject *)param_9)->anim.alpha = 0xff;
     *(undefined *)(param_10 + 0x34d) = 1;
     *(float *)(param_10 + 0x2a0) =
          lbl_803E3A14 +

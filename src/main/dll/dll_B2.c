@@ -23,7 +23,7 @@ extern void GXSetCullMode(int mode);
 #pragma peephole off
 #pragma scheduling off
 
-int aButtonIconTexCb(u8 *this_, void **objPtr, undefined4 arg3)
+int aButtonIconTexCb(GameObject *obj, void **objPtr, undefined4 arg3)
 {
   u8 *renderOp;
   u8 color[4];
@@ -34,10 +34,10 @@ int aButtonIconTexCb(u8 *this_, void **objPtr, undefined4 arg3)
     if ((pCamera[0x141] & 0x20) == 0) {
       color[3] = 0;
     } else {
-      color[3] = this_[0x36];
+      color[3] = obj->anim.alpha;
     }
   } else {
-    color[3] = this_[0x36];
+    color[3] = obj->anim.alpha;
   }
   if (pCamera[0x138] == 8) {
     color[3] = 0;

@@ -28,7 +28,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
                                     undefined4 arg5, undefined4 arg6)
 {
   int savedReticleState;
-  u8 savedReticleByte;
+  u8 savedReticleAlpha;
   u8 *reticle;
   u8 *target;
   u8 *otherTbl;
@@ -45,8 +45,8 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
     target = (u8 *)CAMCONTROL_CAMERA->targetReticleOverride;
     savedReticleState = gCamcontrolTargetState;
     gCamcontrolTargetState = 3;
-    savedReticleByte = reticle[0x36];
-    reticle[0x36] = 0xFF;
+    savedReticleAlpha = ((GameObject *)reticle)->anim.alpha;
+    ((GameObject *)reticle)->anim.alpha = 0xFF;
   }
 
   if (target != NULL) {
@@ -97,7 +97,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
     *(s16 *)(reticle + 0x2) = 0;
     *(s16 *)(reticle + 0x4) = 0;
     *(f32 *)(reticle + 0x8) = lbl_803E1628;
-    reticle[0x37] = reticle[0x36];
+    reticle[0x37] = ((GameObject *)reticle)->anim.alpha;
     objRenderFn_8003b8f4(reticle, arg3, arg4, arg5, arg6, lbl_803E162C);
   } else {
     *(u32 *)(reticle + 0x30) = 0;
@@ -108,7 +108,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
 
   if (CAMCONTROL_CAMERA->targetReticleOverride != 0) {
     gCamcontrolTargetState = (s8)savedReticleState;
-    reticle[0x36] = savedReticleByte;
+    ((GameObject *)reticle)->anim.alpha = savedReticleAlpha;
   }
 end:
   ;
