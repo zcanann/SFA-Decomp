@@ -914,7 +914,7 @@ int salSynthSendMessage(int synth, int msg) {
     if (salMessageCallback == NULL) {
         return 0;
     }
-    return salMessageCallback(msg, *(int *)(synth + 0x18));
+    return salMessageCallback(msg, ((DSPvoice *)synth)->mesgCallBackUserValue);
 }
 
 void salActivateVoice(SalVoice *voice, u8 idx) {
@@ -993,27 +993,27 @@ int salRemoveStudioInput(SalStudio *studio, SalStudioInputSource *input) {
 
 void salHandleAuxProcessing(void) {
     int i;
-    char *studio;
+    DSPstudioinfo *studio;
     int buf;
     void *bufs[3];
 
-    studio = (char *)lbl_803CC1E0;
-    for (i = 0; (u8)i < salMaxStudioNum; i++, studio += 0xbc) {
-        if (*(u8 *)(studio + 0x50) == 1) {
-            if (*(void **)(studio + 0xac) != NULL) {
-                buf = *(int *)(studio + ((salAuxFrame + 2) % 3) * 4 + 0x30);
+    studio = (DSPstudioinfo *)lbl_803CC1E0;
+    for (i = 0; (u8)i < salMaxStudioNum; i++, studio++) {
+        if (studio->state == 1) {
+            if (studio->auxAHandler != NULL) {
+                buf = (int)studio->auxA[(salAuxFrame + 2) % 3];
                 bufs[0] = (void *)buf;
                 bufs[1] = (void *)(buf + 0x280);
                 bufs[2] = (void *)(buf + 0x500);
-                (*(void (*)(int, void *, int))*(int *)(studio + 0xac))(0, bufs, *(int *)(studio + 0xb4));
+                ((void (*)(int, void *, int))studio->auxAHandler)(0, bufs, (int)studio->auxAUser);
                 DCFlushRangeNoSync((void *)buf, 0x780);
             }
-            if (*(int *)(studio + 0x54) == 0 && *(void **)(studio + 0xb0) != NULL) {
-                buf = *(int *)(studio + ((salAuxFrame + 2) % 3) * 4 + 0x3c);
+            if (*(int *)&studio->type == 0 && studio->auxBHandler != NULL) {
+                buf = (int)studio->auxB[(salAuxFrame + 2) % 3];
                 bufs[0] = (void *)buf;
                 bufs[1] = (void *)(buf + 0x280);
                 bufs[2] = (void *)(buf + 0x500);
-                (*(void (*)(int, void *, int))*(int *)(studio + 0xb0))(0, bufs, *(int *)(studio + 0xb8));
+                ((void (*)(int, void *, int))studio->auxBHandler)(0, bufs, (int)studio->auxBUser);
                 DCFlushRangeNoSync((void *)buf, 0x780);
             }
         }
