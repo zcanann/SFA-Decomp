@@ -2536,20 +2536,22 @@ void Music_LoadChannelForTrigger(MusicTrigger *trigger)
     MusicChannel *channel;
     int counter;
     int i;
+    int track;
 
-    if ((trigger->pad[0xb] >> 5) & 1) {
-        if (audioFlagFn_8000a188(2)) {
+    if (((u32)trigger->pad[0xb] >> 5) & 1) {
+        if ((int)audioFlagFn_8000a188(2) != 0) {
             return;
         }
     }
-    if (!((trigger->pad[0xb] >> 5) & 1)) {
-        if (audioFlagFn_8000a188(1)) {
+    if (!(((u32)trigger->pad[0xb] >> 5) & 1)) {
+        if ((int)audioFlagFn_8000a188(1) != 0) {
             return;
         }
     }
+    track = trigger->track;
     slot = (MusicTrackSlot *)sMusicTrackTable;
-    for (i = 0; i < 100; i++) {
-        if (slot->id == (int)trigger->track) {
+    for (i = 99; i >= 0; i--) {
+        if (slot->id == track) {
             goto foundSlot;
         }
         slot++;
@@ -2560,7 +2562,7 @@ foundSlot:
         return;
     }
     channel = gMusicChannels;
-    for (i = 0; i < 16; i++) {
+    for (i = 15; i >= 0; i--) {
         if (channel->status == 0) {
             goto foundChannel;
         }
@@ -2577,9 +2579,11 @@ foundChannel:
     channel->status = 4;
     channel->field_12 = trigger->pad[9];
     if (channel->pad11) {
-        counter = lbl_803DC814++;
+        counter = lbl_803DC814;
+        lbl_803DC814 = counter + 1;
     } else {
-        counter = lbl_803DC818++;
+        counter = lbl_803DC818;
+        lbl_803DC818 = counter + 1;
     }
     *(int *)&channel->pad14[4] = counter;
     *(MusicTrigger **)&channel->pad14[8] = trigger;
