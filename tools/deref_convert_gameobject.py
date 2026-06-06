@@ -72,13 +72,19 @@ for var in varnames:
             return m.group(0)
         name,fcls = GO[off]
         mem = '((GameObject *)%s)->%s' % (var,name)
-        # A PTR field is void* in GameObject; if the original cast was a more
-        # specific pointer AND the result is immediately dereferenced (->) or
-        # indexed ([), a bare member access loses the type and won't compile.
-        # Launder to preserve the exact cast type (still byte-identical).
+        # Pointer-typed sites need care: the anim.* fields (off < 0xb0) are
+        # declared with concrete pointer types in objanim_internal.h, so a bare
+        # member assigned to / from a differently-typed local is an illegal
+        # implicit conversion. The GameObject tail fields (>=0xb0) are void* and
+        # accept any pointer assignment. Also, a result immediately dereferenced
+        # (->) or indexed ([) must keep its type regardless of offset. In all
+        # these cases launder to the original cast type (byte-identical load).
         if cls=='PTR' and ty != 'void *':
-            after = m.string[m.end():m.end()+4].lstrip(')')
-            if after.startswith('->') or after.startswith('['):
+            after = m.string[m.end():m.end()+4].lstrip(') ')
+            # chained deref/index OR pointer arithmetic on the result both need
+            # the concrete type (void* can't be dereffed or offset in MWCC).
+            chained = after[:2] in ('->',) or after[:1] in ('[', '+', '-')
+            if off < 0xb0 or chained:
                 stats['launder'] += 1
                 return '*(%s*)&%s' % (ty,mem)
         if cls==fcls:
@@ -91,7 +97,9 @@ for var in varnames:
             return '*(%s *)&%s' % (ty,mem)
         stats['skip_size'] += 1
         return m.group(0)
-    src = re.sub(r'\*\(\s*([A-Za-z0-9_]+(?:\s*\*+)?)\s*\*\)\s*\(\s*%s\s*\+\s*(0x[0-9a-fA-F]+|\d+)\s*\)' % re.escape(var), drepl, src)
+    # Optional inner byte-cast: *(T *)((char *)obj + 0xNN) / ((u8 *)obj + 0xNN).
+    # Byte offset is identical whether obj is an int address or a byte pointer.
+    src = re.sub(r'\*\(\s*([A-Za-z0-9_]+(?:\s*\*+)?)\s*\*\)\s*\(\s*(?:\(\s*(?:char|u8|s8|byte|undefined)\s*\*\)\s*)?%s\s*\+\s*(0x[0-9a-fA-F]+|\d+)\s*\)' % re.escape(var), drepl, src)
     def irepl(m, var=var):
         off = int(m.group(1),0)
         if off in GO and GO[off][1]=='U8':

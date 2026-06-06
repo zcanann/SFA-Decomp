@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/SH/SHkillermushroom.h"
 #include "main/objanim.h"
 
@@ -121,7 +122,7 @@ void bombplantspore_free(void *obj)
   void *state;
   void *light;
 
-  state = *(void **)((u8 *)obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   (*(void (***)(void *))gExpgfxInterface)[5](obj);
   light = *(void **)((u8 *)state + 0x270);
   if (light != NULL) {
@@ -150,7 +151,7 @@ void bombplantspore_startDriftBurst(void *obj, void *state)
   void *params;
   s32 angleDelta;
 
-  params = *(void **)((u8 *)obj + 0x4c);
+  params = ((GameObject *)obj)->anim.placementData;
   baseAngle = *(s16 *)((u8 *)params + 0x1c);
 
   *(f32 *)((u8 *)state + 0x298) = (f32)(int)randomGetRange(0x1e, 0x2d);
@@ -202,7 +203,7 @@ void bombplantspore_updateDrift(void *obj, void *state)
   void *params;
   s32 angleDelta;
 
-  params = *(void **)((u8 *)obj + 0x4c);
+  params = ((GameObject *)obj)->anim.placementData;
   baseAngle = *(s16 *)((u8 *)params + 0x1c);
 
   if (randomGetRange(0, 100) < 10 && *(f32 *)((u8 *)state + 0x2a0) <= lbl_803E5394) {
@@ -272,11 +273,11 @@ void bombplant_init(void *obj, void *param, int flag)
   void *p4c;
   s16 bitId;
 
-  state = *(void **)((u8 *)obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   *(s16 *)obj = (s16)((s32)(s8) * ((u8 *)param + 0x1f) << 8);
-  *(u16 *)((u8 *)obj + 0xb0) |= 0x2000;
-  *(void **)((u8 *)obj + 0xbc) = (void *)bombplant_SeqFn;
-  *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)obj + 0x8);
+  ((GameObject *)obj)->unkB0 |= 0x2000;
+  ((GameObject *)obj)->unkBC = (void *)bombplant_SeqFn;
+  *(f32 *)((u8 *)state + 0xc) = ((GameObject *)obj)->anim.rootMotionScale;
 
   if (flag != 0) {
     return;
@@ -284,13 +285,13 @@ void bombplant_init(void *obj, void *param, int flag)
 
   bitId = *(s16 *)((u8 *)param + 0x1c);
   if (bitId != -1 && GameBit_Get(bitId) == 0) {
-    p4c = *(void **)((u8 *)obj + 0x4c);
+    p4c = ((GameObject *)obj)->anim.placementData;
     *(u8 *)((u8 *)obj + 0x36) = 0xff;
-    *(s16 *)((u8 *)obj + 0x6) &= ~0x4000;
-    *(f32 *)((u8 *)obj + 0xc) = *(f32 *)((u8 *)p4c + 0x8);
-    *(f32 *)((u8 *)obj + 0x10) = *(f32 *)((u8 *)p4c + 0xc);
-    *(f32 *)((u8 *)obj + 0x14) = *(f32 *)((u8 *)p4c + 0x10);
-    *(f32 *)((u8 *)obj + 0x8) = lbl_803E5358;
+    ((GameObject *)obj)->anim.flags &= ~0x4000;
+    ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
+    ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
+    ((GameObject *)obj)->anim.localPosZ = *(f32 *)((u8 *)p4c + 0x10);
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
     *(f32 *)((u8 *)state + 0x8) = lbl_803E535C;
     *(f32 *)((u8 *)state + 0x4) = *(f32 *)((u8 *)state + 0xc);
     *(f32 *)((u8 *)state + 0x10) =
@@ -299,12 +300,12 @@ void bombplant_init(void *obj, void *param, int flag)
     ObjHits_RefreshObjectState(obj);
     *(u8 *)((u8 *)state + 0x14) = 1;
   } else {
-    p4c = *(void **)((u8 *)obj + 0x4c);
+    p4c = ((GameObject *)obj)->anim.placementData;
     *(u8 *)((u8 *)obj + 0x36) = 0xff;
-    *(s16 *)((u8 *)obj + 0x6) &= ~0x4000;
-    *(f32 *)((u8 *)obj + 0xc) = *(f32 *)((u8 *)p4c + 0x8);
-    *(f32 *)((u8 *)obj + 0x10) = *(f32 *)((u8 *)p4c + 0xc);
-    *(f32 *)((u8 *)obj + 0x14) = *(f32 *)((u8 *)p4c + 0x10);
+    ((GameObject *)obj)->anim.flags &= ~0x4000;
+    ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
+    ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
+    ((GameObject *)obj)->anim.localPosZ = *(f32 *)((u8 *)p4c + 0x10);
     ObjHits_RefreshObjectState(obj);
   }
 }
@@ -340,12 +341,12 @@ void bombplant_update(void *obj)
     goto epilogue;
   }
 
-  state = *(void **)((u8 *)obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   entry = &lbl_80326D20[*(u8 *)((u8 *)state + 0x14) * 0xc];
 
   switch (*(u8 *)((u8 *)state + 0x14)) {
   case 1:
-    param = *(void **)((u8 *)obj + 0x4c);
+    param = ((GameObject *)obj)->anim.placementData;
     if ((*(u8 *)((u8 *)state + 0x15) & 0x2) != 0) {
       *(u8 *)((u8 *)state + 0x15) &= ~0x2;
       *(f32 *)state = (f32)(int)*(s16 *)((u8 *)param + 0x18);
@@ -381,13 +382,13 @@ void bombplant_update(void *obj)
     if ((*(u8 *)((u8 *)state + 0x15) & 0x2) != 0) {
       Sfx_PlayFromObject(obj, SFXmv_sliftloop11);
       *(u8 *)((u8 *)state + 0x15) &= ~0x2;
-      p4c = *(void **)((u8 *)obj + 0x4c);
+      p4c = ((GameObject *)obj)->anim.placementData;
       *(u8 *)((u8 *)obj + 0x36) = 0xff;
-      *(s16 *)((u8 *)obj + 0x6) &= ~0x4000;
-      *(f32 *)((u8 *)obj + 0xc) = *(f32 *)((u8 *)p4c + 0x8);
-      *(f32 *)((u8 *)obj + 0x10) = *(f32 *)((u8 *)p4c + 0xc);
-      *(f32 *)((u8 *)obj + 0x14) = *(f32 *)((u8 *)p4c + 0x10);
-      *(f32 *)((u8 *)obj + 0x8) = lbl_803E5358;
+      ((GameObject *)obj)->anim.flags &= ~0x4000;
+      ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
+      ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
+      ((GameObject *)obj)->anim.localPosZ = *(f32 *)((u8 *)p4c + 0x10);
+      ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
       *(f32 *)((u8 *)state + 0x8) = lbl_803E535C;
       *(f32 *)((u8 *)state + 0x4) = *(f32 *)((u8 *)state + 0xc);
       *(f32 *)((u8 *)state + 0x10) =
@@ -395,14 +396,14 @@ void bombplant_update(void *obj)
       *(f32 *)state = *(f32 *)((u8 *)state + 0x8);
       ObjHits_RefreshObjectState(obj);
     }
-    if (*(f32 *)((u8 *)obj + 0x8) > *(f32 *)((u8 *)state + 0x4)) {
+    if (((GameObject *)obj)->anim.rootMotionScale > *(f32 *)((u8 *)state + 0x4)) {
       *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)state + 0x10) / lbl_803E537C;
     }
     if (*(f32 *)((u8 *)state + 0x10) < lbl_803E5358) {
       *(f32 *)((u8 *)state + 0x10) = lbl_803E536C;
     }
-    *(f32 *)((u8 *)obj + 0x8) =
-        *(f32 *)((u8 *)state + 0x10) * timeDelta + *(f32 *)((u8 *)obj + 0x8);
+    ((GameObject *)obj)->anim.rootMotionScale =
+        *(f32 *)((u8 *)state + 0x10) * timeDelta + ((GameObject *)obj)->anim.rootMotionScale;
     {
       f32 t = *(f32 *)state - timeDelta;
       *(f32 *)state = t;
@@ -421,13 +422,13 @@ void bombplant_update(void *obj)
     Sfx_KeepAliveLoopedObjectSound(obj, 0x3fd);
     /* fallthrough */
   default:
-    param = *(void **)((u8 *)obj + 0x4c);
+    param = ((GameObject *)obj)->anim.placementData;
     if ((*(u8 *)((u8 *)state + 0x15) & 0x2) != 0) {
       *(u8 *)((u8 *)state + 0x15) &= ~0x2;
       *(f32 *)state =
           (f32)(int)(*(s16 *)((u8 *)param + 0x1a) + randomGetRange(-0x32, 0x32));
     }
-    if ((*(u16 *)((u8 *)obj + 0xb0) & 0x800) != 0) {
+    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
       (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
           obj, 0x7f1, 0, 2, -1, 0);
     }
@@ -448,7 +449,7 @@ void bombplant_update(void *obj)
         Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
         *(u8 *)((u8 *)state + 0x14) = 4;
         *(u8 *)((u8 *)state + 0x15) |= 0x2;
-        p50 = *(void **)((u8 *)obj + 0x50);
+        p50 = ((GameObject *)obj)->anim.modelInstance;
         ObjHitbox_SetCapsuleBounds(obj, (s16)(*(u8 *)((u8 *)p50 + 0x62) + 0x50),
                                    (s16)(*(s16 *)((u8 *)p50 + 0x68) - 0x50),
                                    (s16)(*(s16 *)((u8 *)p50 + 0x6a) + 0x50));
@@ -470,22 +471,22 @@ void bombplant_update(void *obj)
   }
 
   if ((entry[8] & 0x2) != 0) {
-    *(u8 *)((u8 *)obj + 0xaf) &= ~0x8;
-    if ((*(u8 *)((u8 *)obj + 0xaf) & 0x4) != 0 && GameBit_Get(0x189) == 0) {
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x4) != 0 && GameBit_Get(0x189) == 0) {
       (*(void (***)(int, void *, int))gObjectTriggerInterface)[18](0, obj, -1);
       GameBit_Set(0x189, 1);
     }
   } else {
-    *(u8 *)((u8 *)obj + 0xaf) |= 0x8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
   }
 
   if ((entry[8] & 0x4) != 0) {
-    *(s16 *)((u8 *)obj + 0x6) |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= 0x4000;
   } else {
-    *(s16 *)((u8 *)obj + 0x6) &= ~0x4000;
+    ((GameObject *)obj)->anim.flags &= ~0x4000;
   }
 
-  if (*(s16 *)((u8 *)obj + 0xa0) != *(s16 *)entry) {
+  if (((GameObject *)obj)->anim.currentMove != *(s16 *)entry) {
     ObjAnim_SetCurrentMove((int)obj, *(s16 *)entry, lbl_803E536C, 0);
   }
 

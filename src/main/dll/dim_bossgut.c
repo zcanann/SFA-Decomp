@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/dll/dim_bossgut.h"
 #include "main/dll/ediblemushroom.h"
@@ -173,7 +174,7 @@ extern f32 lbl_803E5378;
 #pragma scheduling off
 #pragma peephole off
 void fn_801D2B70(int *obj, int unused, int *p3) {
-    int *p4 = *(int **)((char *)obj + 0x4c);
+    int *p4 = *(int **)&((GameObject *)obj)->anim.placementData;
     void *trickyObj = getTrickyObject();
     s16 gbId;
     int i;
@@ -182,7 +183,7 @@ void fn_801D2B70(int *obj, int unused, int *p3) {
     }
     Sfx_PlayFromObject(obj, SFXmv_curtainrustle);
     {
-        int *p = *(int **)((char *)obj + 0x54);
+        int *p = *(int **)&((GameObject *)obj)->anim.hitReactState;
         *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) | 0x40);
     }
     spawnExplosion((int)obj, lbl_803E5378, 0, 1, 1, 1, 0, 1, 0);
@@ -250,7 +251,7 @@ typedef struct { s16 pos[3]; f32 w; f32 v[3]; } MushSpawnBuild;
 void fn_801D29E4(int *obj, int *p2)
 {
     int *spore;
-    int *base = *(int **)((char *)obj + 0x4c);
+    int *base = *(int **)&((GameObject *)obj)->anim.placementData;
 
     if (Obj_IsLoadingLocked()) {
         MushSpawnBuild bd;
@@ -259,9 +260,9 @@ void fn_801D29E4(int *obj, int *p2)
         f32 sx;
 
         spore = Obj_AllocObjectSetup(0x24, 0x198);
-        bd.pos[0] = *(s16 *)((char *)obj + 0x0);
-        bd.pos[1] = *(s16 *)((char *)obj + 0x2);
-        bd.pos[2] = *(s16 *)((char *)obj + 0x4);
+        bd.pos[0] = ((GameObject *)obj)->anim.rotX;
+        bd.pos[1] = ((GameObject *)obj)->anim.rotY;
+        bd.pos[2] = ((GameObject *)obj)->anim.rotZ;
         bd.v[0] = lbl_803E536C;
         bd.v[1] = lbl_803E536C;
         bd.v[2] = lbl_803E536C;
@@ -272,13 +273,13 @@ void fn_801D29E4(int *obj, int *p2)
         bd.v[0] = sx;
         bd.v[1] = lbl_803E5374 * ty;
         bd.v[2] = lbl_803E5374 * tz;
-        *(f32 *)((char *)spore + 0x8)  = *(f32 *)((char *)obj + 0xc) + sx;
-        *(f32 *)((char *)spore + 0xc)  = *(f32 *)((char *)obj + 0x10) + bd.v[1];
-        *(f32 *)((char *)spore + 0x10) = *(f32 *)((char *)obj + 0x14) + bd.v[2];
+        *(f32 *)((char *)spore + 0x8)  = ((GameObject *)obj)->anim.localPosX + sx;
+        *(f32 *)((char *)spore + 0xc)  = ((GameObject *)obj)->anim.localPosY + bd.v[1];
+        *(f32 *)((char *)spore + 0x10) = ((GameObject *)obj)->anim.localPosZ + bd.v[2];
         *(u8 *)((char *)spore + 0x5) = 1;
         *(u8 *)((char *)spore + 0x4) = 2;
         *(s16 *)((char *)spore + 0x1a) = (s16)((s8)*(s8 *)((char *)base + 0x1e) << 8);
-        *(s16 *)((char *)spore + 0x1c) = *(s16 *)((char *)obj + 0x0);
+        *(s16 *)((char *)spore + 0x1c) = ((GameObject *)obj)->anim.rotX;
         Obj_SetupObject(spore, 5, -1, -1, 0);
     }
 }
@@ -298,18 +299,18 @@ extern f32 lbl_803E535C;
 #pragma peephole off
 int bombplant_SeqFn(int *obj)
 {
-    float *state = *(float **)((char *)obj + 0xb8);
+    float *state = ((GameObject *)obj)->extra;
 
     if (*(u8 *)((char *)state + 0x14) != 0) {
         int *src;
-        *(s16 *)((char *)obj + 0x6) = (s16)(*(s16 *)((char *)obj + 0x6) & ~0x4000);
-        src = *(int **)((char *)obj + 0x4c);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
+        src = *(int **)&((GameObject *)obj)->anim.placementData;
         *(u8 *)((char *)obj + 0x36) = 0xff;
-        *(s16 *)((char *)obj + 0x6) = (s16)(*(s16 *)((char *)obj + 0x6) & ~0x4000);
-        *(f32 *)((char *)obj + 0xc)  = *(f32 *)((char *)src + 0x8);
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)src + 0xc);
-        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)src + 0x10);
-        *(f32 *)((char *)obj + 0x8) = lbl_803E5358;
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
+        ((GameObject *)obj)->anim.localPosX  = *(f32 *)((char *)src + 0x8);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)src + 0xc);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)src + 0x10);
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
         *(f32 *)((char *)state + 0x8) = lbl_803E535C;
         *(f32 *)((char *)state + 0x4) = *(f32 *)((char *)state + 0xc);
         *(f32 *)((char *)state + 0x10) = *(f32 *)((char *)state + 0x4) / *(f32 *)((char *)state + 0x8);
@@ -321,7 +322,7 @@ int bombplant_SeqFn(int *obj)
         int *base;
         u8 flags;
         Sfx_KeepAliveLoopedObjectSound(obj, 0x3fd);
-        base = *(int **)((char *)obj + 0x4c);
+        base = *(int **)&((GameObject *)obj)->anim.placementData;
         flags = *(u8 *)((char *)state + 0x15);
         if (flags & 0x2) {
             int v;
@@ -329,7 +330,7 @@ int bombplant_SeqFn(int *obj)
             v = *(s16 *)((char *)base + 0x1a) + randomGetRange(-0x32, 0x32);
             *(f32 *)((char *)state + 0x0) = (f32)v;
         }
-        if (*(u16 *)((char *)obj + 0xb0) & 0x800) {
+        if (((GameObject *)obj)->unkB0 & 0x800) {
             (*(void (**)(int *, int, int, int, int, int))(*(int *)gPartfxInterface + 0x8))(
                 obj, 0x7f1, 0, 2, -1, 0);
         }
@@ -379,7 +380,7 @@ typedef struct { f32 unk[3]; f32 x, y, z; } MushHitInfo;
 #pragma peephole off
 void enemymushroom_update(int *obj)
 {
-    char *state = *(char **)((char *)obj + 0xb8);
+    char *state = ((GameObject *)obj)->extra;
     u8 *player;
     int *src;
     MushHitInfo hv;
@@ -387,9 +388,9 @@ void enemymushroom_update(int *obj)
     int hitType;
 
     player = (u8 *)Obj_GetPlayerObject();
-    src = *(int **)((char *)obj + 0x4c);
+    src = *(int **)&((GameObject *)obj)->anim.placementData;
     ObjHits_ClearHitVolumes(obj);
-    *(u8 *)((char *)obj + 0xaf) |= 0x8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
     *(u8 *)(state + 0x37) |= 0x4;
 
     if (objIsFrozen(obj)) {
@@ -457,14 +458,14 @@ void enemymushroom_update(int *obj)
         }
         break;
     case 3:
-        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9c);
         if (*(u8 *)(state + 0x37) & 0x2) {
             *(u8 *)(state + 0x36) = 4;
         }
         break;
     case 4:
-        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
         *(f32 *)(state + 0x2c) = lbl_803E5320 * timeDelta + *(f32 *)(state + 0x2c);
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
         if (!(*(u8 *)(state + 0x37) & 0x1)) {
@@ -497,7 +498,7 @@ void enemymushroom_update(int *obj)
         }
         break;
     case 5:
-        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
         *(f32 *)(state + 0x0) = *(f32 *)(state + 0x0) + timeDelta;
         if (*(f32 *)(state + 0x0) > (f32)*(u16 *)((char *)src + 0x18)) {
             if (*(u8 *)(state + 0x37) & 0x2) {
@@ -509,14 +510,14 @@ void enemymushroom_update(int *obj)
         break;
     case 1:
         *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x6);
-        if (*(f32 *)((char *)obj + 0x8) > *(f32 *)(state + 0x4)) {
+        if (((GameObject *)obj)->anim.rootMotionScale > *(f32 *)(state + 0x4)) {
             *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) / lbl_803E5328;
         }
         if (*(f32 *)(state + 0x10) < lbl_803E52F8) {
             *(f32 *)(state + 0x10) = lbl_803E52FC;
         }
         *(f32 *)(state + 0x0) = *(f32 *)(state + 0x0) + timeDelta;
-        *(f32 *)((char *)obj + 0x8) = *(f32 *)(state + 0x10) * timeDelta + *(f32 *)((char *)obj + 0x8);
+        ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(state + 0x10) * timeDelta + ((GameObject *)obj)->anim.rootMotionScale;
         if (*(f32 *)(state + 0x0) > *(f32 *)(state + 0x8)) {
             *(u8 *)(state + 0x36) = 0;
         }
@@ -546,7 +547,7 @@ void enemymushroom_update(int *obj)
                         obj, 0x51d, &hv, 2, -1, 0);
                     *(f32 *)(state + 0x30) = lbl_803E5334;
                 }
-                *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
             }
         }
         break;
@@ -560,11 +561,11 @@ void enemymushroom_update(int *obj)
         }
         break;
     default:
-        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
         {
-            f32 dx = *(f32 *)(player + 0xc) - *(f32 *)((char *)obj + 0xc);
-            f32 dy = *(f32 *)(player + 0x10) - *(f32 *)((char *)obj + 0x10);
-            f32 dz = *(f32 *)(player + 0x14) - *(f32 *)((char *)obj + 0x14);
+            f32 dx = *(f32 *)(player + 0xc) - ((GameObject *)obj)->anim.localPosX;
+            f32 dy = *(f32 *)(player + 0x10) - ((GameObject *)obj)->anim.localPosY;
+            f32 dz = *(f32 *)(player + 0x14) - ((GameObject *)obj)->anim.localPosZ;
             if ((u16)(int)sqrtf(dx * dx + dy * dy + dz * dz) <
                 (u16)(int)(lbl_803E5338 * (f32)*(u8 *)((char *)src + 0x1e))) {
                 if (fn_8029610C(player) >= lbl_803E533C) {
@@ -595,13 +596,13 @@ void enemymushroom_update(int *obj)
                 }
                 *(u8 *)(state + 0x36) = 9;
                 *(f32 *)(state + 0x0) = lbl_803E52FC;
-                *(f32 *)((char *)obj + 0x98) = (f32)(int)randomGetRange(0, 0x28) / lbl_803E5340;
+                ((GameObject *)obj)->anim.currentMoveProgress = (f32)(int)randomGetRange(0, 0x28) / lbl_803E5340;
             }
             objLightFn_8009a1dc(obj, lbl_803E5314, &hv, 1, 0);
         }
     }
 
-    if (*(s16 *)((char *)obj + 0xa0) != lbl_80326C78[*(u8 *)(state + 0x36)]) {
+    if (((GameObject *)obj)->anim.currentMove != lbl_80326C78[*(u8 *)(state + 0x36)]) {
         ObjAnim_SetCurrentMove((int)obj, lbl_80326C78[*(u8 *)(state + 0x36)], lbl_803E52FC, 0);
     }
     if (ObjAnim_AdvanceCurrentMove(lbl_80326C90[*(u8 *)(state + 0x36)], timeDelta,

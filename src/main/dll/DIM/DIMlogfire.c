@@ -1,4 +1,5 @@
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
 extern undefined4 FUN_8000680c();
@@ -801,8 +802,8 @@ void MoonSeedPlantingSpot_init(int *obj, u8 *init) {
     u8 *sub;
     int mapId;
 
-    sub = *(u8**)((char*)obj + 0xb8);
-    *(void**)((char*)obj + 0xbc) = (void*)&MoonSeedPlantingSpot_SeqFn;
+    sub = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkBC = (void*)&MoonSeedPlantingSpot_SeqFn;
     *(s16*)obj = (s16)(init[0x1f] << 8);
     sub[0] = 0;
     ObjGroup_AddObject((int)obj, 0x2e);
@@ -906,8 +907,8 @@ extern int *gTitleMenuControlInterfaceCopy;
 void animsharpclaw_free(int obj) {
     char *inner;
     int *child;
-    inner = *(char **)(obj + 0xb8);
-    child = *(int **)(obj + 0xc8);
+    inner = ((GameObject *)obj)->extra;
+    child = ((GameObject *)obj)->unkC8;
     if (child != NULL) {
         ObjLink_DetachChild(obj, (int)child);
         Obj_FreeObject((int)child);
@@ -921,7 +922,7 @@ void animsharpclaw_free(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void ccgasventcontrol_free(int obj) {
-    char *inner = *(char **)(obj + 0xb8);
+    char *inner = ((GameObject *)obj)->extra;
     u8 t = *(u8 *)inner;
     if (t == 3 || t == 4) {
         disableHeavyFog();
@@ -929,8 +930,8 @@ void ccgasventcontrol_free(int obj) {
     (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
 }
 void ccgasventcontrol_init(int obj, u8 *p) {
-    char *inner = *(char **)(obj + 0xb8);
-    *(void **)((char *)obj + 0xbc) = (void *)CCGasVentControl_SeqFn;
+    char *inner = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkBC = (void *)CCGasVentControl_SeqFn;
     *(s16 *)obj = (s16)((u32)p[0x1a] << 8);
     if (GameBit_Get(0xa3) != 0) {
         *(u8 *)inner = 7;
@@ -943,7 +944,7 @@ void ccgasventcontrol_init(int obj, u8 *p) {
 #pragma peephole off
 int MoonSeedPlantingSpot_SeqFn(int obj)
 {
-    obj = *(int *)(obj + 0xb8);
+    obj = *(int *)&((GameObject *)obj)->extra;
     *(u8 *)(obj + 1) = (u8)((uint)*(u8 *)(obj + 1) | 1);
     return 0;
 }
@@ -955,7 +956,7 @@ extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
 #pragma scheduling off
 int CCGasVentControl_SeqFn(int obj)
 {
-    CCGasVentControlFn_801a9fd0(obj, *(int *)(obj + 0xb8));
+    CCGasVentControlFn_801a9fd0(obj, *(int *)&((GameObject *)obj)->extra);
     return 0;
 }
 #pragma scheduling reset
@@ -981,7 +982,7 @@ extern f32 lbl_803E4640;
 #pragma peephole off
 void ccgasventcontrol_update(int obj)
 {
-    int ex = *(int *)((char *)obj + 0xb8);
+    int ex = *(int *)&((GameObject *)obj)->extra;
     u8 b = CCGasVentControlFn_801a9fd0(obj, ex);
     switch (*(u8 *)ex) {
     case 0: {
@@ -1011,7 +1012,7 @@ void ccgasventcontrol_update(int obj)
             if (*(f32 *)((char *)ex + 8) > lbl_803E4628) {
                 *(f32 *)((char *)ex + 8) = *(f32 *)&lbl_803E4628;
             }
-            if (*(f32 *)((char *)player + 0x10) <= *(f32 *)((char *)obj + 0x10) + *(f32 *)((char *)ex + 8)) {
+            if (*(f32 *)((char *)player + 0x10) <= ((GameObject *)obj)->anim.localPosY + *(f32 *)((char *)ex + 8)) {
                 *(f32 *)((char *)ex + 4) = -(timeDelta * (f32)b - *(f32 *)((char *)ex + 4));
             } else {
                 *(f32 *)((char *)ex + 4) = lbl_803E462C * timeDelta + *(f32 *)((char *)ex + 4);
@@ -1019,16 +1020,16 @@ void ccgasventcontrol_update(int obj)
                     *(f32 *)((char *)ex + 4) = *(f32 *)&lbl_803E4624;
                 }
             }
-            enableHeavyFog(*(f32 *)((char *)obj + 0x10) + *(f32 *)((char *)ex + 8),
-                           *(f32 *)((char *)obj + 0x10) - lbl_803E4630, lbl_803E4634, lbl_803E4638,
+            enableHeavyFog(((GameObject *)obj)->anim.localPosY + *(f32 *)((char *)ex + 8),
+                           ((GameObject *)obj)->anim.localPosY - lbl_803E4630, lbl_803E4634, lbl_803E4638,
                            lbl_803E463C, 0);
             if (*(f32 *)((char *)ex + 4) >= lbl_803E4640) {
                 (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))((int)*(f32 *)((char *)ex + 4));
             } else {
                 (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
-                *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)player + 0xc);
-                *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)player + 0x10);
-                *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)player + 0x14);
+                ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)player + 0xc);
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)player + 0x10);
+                ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)player + 0x14);
                 (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
                 (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
                 *(u8 *)ex = 4;
@@ -1125,64 +1126,64 @@ extern f32 lbl_803E4608;
 #pragma peephole off
 void MoonSeedPlantingSpot_update(int obj)
 {
-    int ex = *(int *)((char *)obj + 0xb8);
-    int setup = *(int *)((char *)obj + 0x4c);
+    int ex = *(int *)&((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     if (*(u8 *)((char *)ex + 1) & 1) {
         *(u8 *)ex = 2;
         GameBit_Set(*(s16 *)((char *)ex + 8), 1);
         *(u8 *)((char *)ex + 1) = *(u8 *)((char *)ex + 1) & ~1;
         *(u8 *)((char *)obj + 0x36) = 0xff;
     }
-    if ((*(u8 *)((char *)obj + 0xaf) & 4) && !(*(u8 *)((char *)obj + 0xaf) & 8)) {
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) && !(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 8)) {
         if (GameBit_Get(0x86a) != 0) {
-            *(u8 *)((char *)obj + 0xaf) &= ~0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
         } else {
-            *(u8 *)((char *)obj + 0xaf) |= 0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
         }
     }
     *(u8 *)((char *)ex + 1) |= 2;
     switch (*(u8 *)ex) {
     case 0:
         *(u8 *)ex = 1;
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup + 0xc) - lbl_803E45F0;
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc) - lbl_803E45F0;
         if (GameBit_Get(*(s16 *)((char *)ex + 8)) != 0) {
             *(u8 *)ex = 2;
-            *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup + 0xc);
+            ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc);
             *(u8 *)((char *)obj + 0x36) = 0xff;
         }
         if (GameBit_Get(*(s16 *)((char *)ex + 0xa)) != 0) {
             int setup2;
             int ex2;
-            ex2 = *(int *)((char *)obj + 0xb8);
-            setup2 = *(int *)((char *)obj + 0x4c);
+            ex2 = *(int *)&((GameObject *)obj)->extra;
+            setup2 = *(int *)&((GameObject *)obj)->anim.placementData;
             if (GameBit_Get(*(s16 *)((char *)ex2 + 8)) != 0) {
-                *(u8 *)((char *)obj + 0xaf) |= 8;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 GameBit_Set(*(s16 *)((char *)ex2 + 0xa), 1);
                 *(u8 *)ex2 = 4;
-                *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup2 + 0xc);
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup2 + 0xc);
             }
         }
         break;
     case 1:
-        if ((*(u8 *)((char *)obj + 0xaf) & 1) &&
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) &&
             (*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x86a) != 0) {
             int cnt = GameBit_Get(0x86a);
             if (cnt != 0) {
-                *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup + 0xc);
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc);
                 *(u8 *)((char *)obj + 0x36) = 0;
                 (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
                 GameBit_Set(0x86a, cnt - 1);
-                *(u8 *)((char *)obj + 0xaf) |= 8;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             }
         }
         break;
     case 2: {
         int tricky = getTrickyObject();
-        *(u8 *)((char *)obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         if (*(u8 *)((char *)ex + 1) & 2) {
             void *player;
             if (*(u8 *)((char *)ex + 1) & 4) {
-                *(f32 *)((char *)obj + 0x10) =
+                ((GameObject *)obj)->anim.localPosY =
                     *(f32 *)((char *)setup + 0xc) + (f32)(int)randomGetRange(-1, 1);
                 (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x70f, 0, 2, -1, 0);
             }
@@ -1214,8 +1215,8 @@ void MoonSeedPlantingSpot_update(int obj)
     }
     case 3: {
         int tricky = getTrickyObject();
-        *(u8 *)((char *)obj + 0xaf) |= 8;
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup + 0xc);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc);
         if (getXZDistance((f32 *)(tricky + 0x18), (f32 *)(obj + 0x18)) <= lbl_803E45FC) {
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 5, 1, 0x28, lbl_803E4600, 0, 0);
         } else {
@@ -1225,13 +1226,13 @@ void MoonSeedPlantingSpot_update(int obj)
             GameBit_Get(*(s16 *)((char *)ex + 0xa)) == 0) {
             int setup2;
             int ex2;
-            ex2 = *(int *)((char *)obj + 0xb8);
-            setup2 = *(int *)((char *)obj + 0x4c);
+            ex2 = *(int *)&((GameObject *)obj)->extra;
+            setup2 = *(int *)&((GameObject *)obj)->anim.placementData;
             if (GameBit_Get(*(s16 *)((char *)ex2 + 8)) != 0) {
-                *(u8 *)((char *)obj + 0xaf) |= 8;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 GameBit_Set(*(s16 *)((char *)ex2 + 0xa), 1);
                 *(u8 *)ex2 = 4;
-                *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup2 + 0xc);
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup2 + 0xc);
             }
         }
         *(f32 *)((char *)ex + 0x10) = *(f32 *)((char *)ex + 0x10) - timeDelta;
@@ -1260,23 +1261,23 @@ int fn_801A8F88(int obj, int arg2)
         u8 v = *(u8 *)(arg2 + (i + 0x81));
         switch (v) {
         case 1:
-            *(int *)(obj + 0xf8) = 779;
-            state = *(void **)(obj + 0xc8);
+            ((GameObject *)obj)->unkF8 = 779;
+            state = ((GameObject *)obj)->unkC8;
             if (state != NULL) {
                 ObjLink_DetachChild(obj, (int)state);
                 Obj_FreeObject((int)state);
             }
-            alloc = Obj_AllocObjectSetup(32, *(int *)(obj + 0xf8));
-            alloc = Obj_SetupObject(alloc, 4, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+            alloc = Obj_AllocObjectSetup(32, ((GameObject *)obj)->unkF8);
+            alloc = Obj_SetupObject(alloc, 4, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
             ObjLink_AttachChild(obj, alloc, 0);
             break;
         case 2:
-            state = *(void **)(obj + 0xc8);
+            state = ((GameObject *)obj)->unkC8;
             if (state != NULL) {
                 ObjLink_DetachChild(obj, (int)state);
                 Obj_FreeObject((int)state);
             }
-            *(int *)(obj + 0xf8) = -1;
+            ((GameObject *)obj)->unkF8 = -1;
             break;
         }
     }
@@ -1293,7 +1294,7 @@ extern f32 lbl_803E4614;
 #pragma peephole off
 void ccgasvent_update(int *obj) {
     f32 dist = lbl_803E4610;
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     if (GameBit_Get(0x1c0) != 0) {
         ObjGroup_FindNearestObject(5, (uint)obj, &dist);
         switch (state[0]) {
@@ -1322,7 +1323,7 @@ int MoonSeedPlantingSpot_setScale(int *obj, int arg) {
     u8 *inner;
     int ret;
 
-    inner = *(u8 **)((char *)obj + 0xb8);
+    inner = ((GameObject *)obj)->extra;
     ret = 0;
     if (arg == 0) {
         if ((inner[1] & 2) != 0) {
@@ -1334,13 +1335,13 @@ int MoonSeedPlantingSpot_setScale(int *obj, int arg) {
         if (inner[0] == 3) {
             ret = 1;
             if (GameBit_Get(*(s16 *)(inner + 8)) != 0 && GameBit_Get(*(s16 *)(inner + 0xa)) == 0) {
-                inner = *(u8 **)((char *)obj + 0xb8);
-                sub = *(int **)((char *)obj + 0x4c);
+                inner = ((GameObject *)obj)->extra;
+                sub = *(int **)&((GameObject *)obj)->anim.placementData;
                 if (GameBit_Get(*(s16 *)(inner + 8)) != 0) {
-                    *(u8 *)((char *)obj + 0xaf) |= 8;
+                    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                     GameBit_Set(*(s16 *)(inner + 0xa), 1);
                     inner[0] = 4;
-                    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)sub + 0xc);
+                    ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)sub + 0xc);
                 }
             }
         }
@@ -1393,26 +1394,26 @@ void animsharpclaw_init(int *obj, u8 *init) {
     int *inner;
     int f4;
 
-    *(int *)((char *)obj + 0xbc) = 0;
+    *(int *)&((GameObject *)obj)->unkBC = 0;
     objSetSlot(obj, 0x64);
-    inner = *(int **)((char *)obj + 0xb8);
+    inner = ((GameObject *)obj)->extra;
     *(s16 *)((char *)inner + 0x6a) = *(s16 *)((char *)init + 0x1a);
     *(s16 *)((char *)inner + 0x6e) = -1;
     *(f32 *)((char *)inner + 0x24) = lbl_803E45C8 / (lbl_803E45C8 + (f32)(u32)init[0x24]);
     *(int *)((char *)inner + 0x28) = -1;
     *(int *)((char *)inner + 0x98) = 0;
     *(int *)((char *)inner + 0x94) = 0;
-    *(int *)((char *)obj + 0xf8) = -1;
-    f4 = *(int *)((char *)obj + 0xf4);
+    ((GameObject *)obj)->unkF8 = -1;
+    f4 = ((GameObject *)obj)->unkF4;
     if (f4 == 0 && *(s16 *)((char *)init + 0x18) != 1) {
         (*(void (*)(int *, u8 *))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, init);
-        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)init + 0x18) + 1;
+        ((GameObject *)obj)->unkF4 = *(s16 *)((char *)init + 0x18) + 1;
     } else if (f4 != 0 && *(s16 *)((char *)init + 0x18) != f4 - 1) {
         (*(void (*)(int *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
         if (*(s16 *)((char *)init + 0x18) != -1) {
             (*(void (*)(int *, u8 *))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, init);
         }
-        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)init + 0x18) + 1;
+        ((GameObject *)obj)->unkF4 = *(s16 *)((char *)init + 0x18) + 1;
     }
     if (*(int **)((char *)obj + 0x64) != NULL) {
         *(u8 *)(*(int *)((char *)obj + 0x64) + 0x3a) = 0x64;
@@ -1437,8 +1438,8 @@ void animsharpclaw_update(int *obj) {
     int count;
     int result;
 
-    inner = *(int **)((char *)obj + 0xb8);
-    child = *(int **)((char *)obj + 0x4c);
+    inner = ((GameObject *)obj)->extra;
+    child = *(int **)&((GameObject *)obj)->anim.placementData;
     if (child == NULL) {
         return;
     }
@@ -1450,7 +1451,7 @@ void animsharpclaw_update(int *obj) {
     if (result == 0) {
         return;
     }
-    if (*(s16 *)((char *)obj + 0xb4) != -2) {
+    if (((GameObject *)obj)->unkB4 != -2) {
         return;
     }
     kind = (s8)*(u8 *)((char *)inner + 0x57);
@@ -1471,7 +1472,7 @@ void animsharpclaw_update(int *obj) {
         *(s16 *)((char *)found + 0xb4) = -1;
         (*(void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(kind);
     }
-    *(s16 *)((char *)obj + 0xb4) = -1;
+    ((GameObject *)obj)->unkB4 = -1;
 }
 #pragma peephole reset
 #pragma scheduling reset

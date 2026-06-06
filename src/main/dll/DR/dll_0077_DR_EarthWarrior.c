@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/dll/baddie_state.h"
@@ -207,9 +208,9 @@ int DR_EarthWarrior_getObjectTypeId(void) { return 0x43; }
 #pragma peephole off
 void DR_EarthWarrior_func15(int obj, f32 *x, f32 *y, f32 *z)
 {
-    *x = *(f32 *)((char *)obj + 0xc);
-    *y = *(f32 *)((char *)obj + 0x10);
-    *z = *(f32 *)((char *)obj + 0x14);
+    *x = ((GameObject *)obj)->anim.localPosX;
+    *y = ((GameObject *)obj)->anim.localPosY;
+    *z = ((GameObject *)obj)->anim.localPosZ;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -218,7 +219,7 @@ void DR_EarthWarrior_func15(int obj, f32 *x, f32 *y, f32 *z)
 #pragma peephole off
 int fn_802BDBCC(int obj)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     inner->sub.flags98C |= 0x20;
     return 2;
 }
@@ -229,7 +230,7 @@ int fn_802BDBCC(int obj)
 #pragma peephole off
 void DR_EarthWarrior_modelMtxFn(int obj, f32 *x, f32 *y, f32 *z)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     *x = inner->sub.unk8E0;
     *y = inner->sub.unk8E4;
     *z = inner->sub.unk8E8;
@@ -241,7 +242,7 @@ void DR_EarthWarrior_modelMtxFn(int obj, f32 *x, f32 *y, f32 *z)
 #pragma peephole off
 int DR_EarthWarrior_func11(int obj)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     if (inner->sub.unk993 != 0) {
         return 1;
     }
@@ -254,7 +255,7 @@ int DR_EarthWarrior_func11(int obj)
 #pragma peephole off
 int DR_EarthWarrior_func14(int obj)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     if (inner->sub.unk992 != 0) {
         return 2;
     }
@@ -267,7 +268,7 @@ int DR_EarthWarrior_func14(int obj)
 #pragma peephole off
 void DR_EarthWarrior_func18(int obj, f32 *a, int *b)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     *a = (f32)(s32)inner->sub.unk4D4;
     *b = inner->sub.unk4D6;
 }
@@ -290,16 +291,16 @@ void DR_EarthWarrior_release(void)
 #pragma peephole off
 int fn_802BCD04(int obj, int p2)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     f32 fz;
-    *(u8 *)((char *)obj + 0xaf) |= 8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     fz = lbl_803E8304;
     ((BaddieState *)p2)->unk294 = fz;
     ((BaddieState *)p2)->animSpeedB = fz;
     ((BaddieState *)p2)->animSpeedA = fz;
-    *(f32 *)((char *)obj + 0x24) = fz;
-    *(f32 *)((char *)obj + 0x28) = fz;
-    *(f32 *)((char *)obj + 0x2c) = fz;
+    ((GameObject *)obj)->anim.velocityX = fz;
+    ((GameObject *)obj)->anim.velocityY = fz;
+    ((GameObject *)obj)->anim.velocityZ = fz;
     if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
         if (((ByteFlags *)&inner->sub.flags994)->b80) {
             ObjAnim_SetCurrentMove(obj, 7, fz, 0);
@@ -346,7 +347,7 @@ void DR_EarthWarrior_initialise(void)
 #pragma peephole off
 f32 DR_EarthWarrior_func19(int obj, f32 *out)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     f32 v = lbl_803E8360 * inner->baddie.unk294 + lbl_803E8354;
     if (v < lbl_803E8354) {
         v = lbl_803E8354;
@@ -382,7 +383,7 @@ void DR_EarthWarrior_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 #pragma peephole off
 void DR_EarthWarrior_free(int obj)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     if (*(void * *)&inner->sub.unk9A0 != NULL) {
         fn_80026C88(inner->sub.unk9A0);
     }
@@ -402,7 +403,7 @@ void DR_EarthWarrior_free(int obj)
 #pragma peephole off
 void DR_EarthWarrior_func23(int obj, int mode)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     if (mode == 1) {
         inner->sub.health += 4;
         objAudioFn_800393f8(obj, (char *)(char *)inner + 0x3bc, 0x291, 0x1000, -1, 1);
@@ -417,7 +418,7 @@ void DR_EarthWarrior_func23(int obj, int mode)
 #pragma peephole off
 void DR_EarthWarrior_func17(int obj, int param)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     inner->sub.unk98E = (u8)param;
     if (param == 0) {
         GameBit_Set(0x7bc, 0);
@@ -426,8 +427,8 @@ void DR_EarthWarrior_func17(int obj, int param)
         ((ByteFlags *)&inner->sub.flags994)->b02 = 0;
         (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
     } else {
-        EarthWarriorState *inner2 = *(EarthWarriorState **)((char *)obj + 0xb8);
-        int p = *(int *)((char *)obj + 0x4c);
+        EarthWarriorState *inner2 = ((GameObject *)obj)->extra;
+        int p = *(int *)&((GameObject *)obj)->anim.placementData;
         ((ByteFlags *)&inner2->sub.flags994)->b02 = 1;
         (*(void (*)(int, int))(*(int *)(*gGameUIInterface + 0x58)))(*(s16 *)((char *)p + 0x1a), 0x5cf);
         (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(inner2->sub.health);
@@ -455,7 +456,7 @@ void DR_EarthWarrior_func22(int obj, f32 scale)
     v.angles[0] = 0;
     v.angles[1] = 0;
     v.angles[2] = 0;
-    v.mat[0] = scale / *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 0x4);
+    v.mat[0] = scale / *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 0x4);
     setMatrixFromObjectPos(lbl_803DB170, v.angles);
     mtx44_mult(lbl_803DB170, (void *)mtx, lbl_803DB170);
     fn_8003B950((int)lbl_803DB170);
@@ -467,10 +468,10 @@ void DR_EarthWarrior_func22(int obj, f32 scale)
 #pragma peephole off
 int fn_802BDBE8(int obj, int p2, int p3)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     int i;
     f32 fz;
-    *(u8 *)((char *)obj + 0xaf) |= 8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     if (dll_2E_func07(obj, p3, (void *)((int)((char *)inner + 0x3ec)), 0, 0) != 0) {
         return 1;
     }
@@ -483,11 +484,11 @@ int fn_802BDBE8(int obj, int p2, int p3)
         case 0xe:
         case 0xf:
             inner->unk9FD |= 1;
-            (*(ObjHitsPriorityState **)((char *)obj + 0x54))->shapeFlags &= ~0x20;
+            (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->shapeFlags &= ~0x20;
             break;
         case 0x10:
             inner->unk9FD &= ~1;
-            (*(ObjHitsPriorityState **)((char *)obj + 0x54))->shapeFlags |= 0x20;
+            (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->shapeFlags |= 0x20;
             break;
         }
     }
@@ -497,9 +498,9 @@ int fn_802BDBE8(int obj, int p2, int p3)
     inner->baddie.unk294 = fz;
     inner->baddie.animSpeedB = fz;
     inner->baddie.animSpeedA = fz;
-    *(f32 *)((char *)obj + 0x24) = fz;
-    *(f32 *)((char *)obj + 0x28) = fz;
-    *(f32 *)((char *)obj + 0x2c) = fz;
+    ((GameObject *)obj)->anim.velocityX = fz;
+    ((GameObject *)obj)->anim.velocityY = fz;
+    ((GameObject *)obj)->anim.velocityZ = fz;
     return 0;
 }
 #pragma peephole reset
@@ -509,7 +510,7 @@ int fn_802BDBE8(int obj, int p2, int p3)
 #pragma peephole off
 void fn_802BE6E8(int obj, int t, int p3)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     int q;
     int slot;
     Obj_GetPlayerObject();
@@ -534,8 +535,8 @@ void fn_802BE6E8(int obj, int t, int p3)
     *(int *)((char *)inner + 0) |= 0x1000000;
     fn_802B0EA4(obj, q, inner);
     (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)lbl_803DB1B0, &lbl_803DE4D4);
-    *(s16 *)((char *)obj + 0x2) = (s16)(*(s16 *)((char *)obj + 0x2) + (*(s16 *)((char *)inner + 0x19c) >> 2));
-    *(s16 *)((char *)obj + 0x4) = (s16)(*(s16 *)((char *)obj + 0x4) + (*(s16 *)((char *)inner + 0x19e) >> 2));
+    ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + (*(s16 *)((char *)inner + 0x19c) >> 2));
+    ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (*(s16 *)((char *)inner + 0x19e) >> 2));
     if (((ByteFlags *)((char *)inner + 0x14ec))->b02) {
         (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(*(s16 *)((char *)inner + 0x14e2));
     }
@@ -544,7 +545,7 @@ void fn_802BE6E8(int obj, int t, int p3)
     (*(void (*)(int, int, f32))(*(int *)(*gPathControlInterface + 0x10)))(obj, inner + 0x4, timeDelta);
     (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x14)))(obj, inner + 0x4);
     (*(void (*)(int, int, f32))(*(int *)(*gPathControlInterface + 0x18)))(obj, inner + 0x4, timeDelta);
-    *(s16 *)((char *)obj + 0) = *(s16 *)((char *)q + 0x478);
+    ((GameObject *)obj)->anim.rotX = *(s16 *)((char *)q + 0x478);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -555,8 +556,8 @@ int fn_802BC830(int obj, int p2, int p3)
 {
     ((EarthWarriorSub *)p2)->unk360 |= 0x1000000;
     ((BaddieState *)p3)->moveSpeed = lbl_803E82EC;
-    if (*(f32 *)((char *)obj + 0x98) > GXInit_ClearColor &&
-        *(f32 *)((char *)obj + 0x98) < GXInit_BlackColor &&
+    if (((GameObject *)obj)->anim.currentMoveProgress > GXInit_ClearColor &&
+        ((GameObject *)obj)->anim.currentMoveProgress < GXInit_BlackColor &&
         ((BaddieState *)p3)->unk294 > *(f32 *)((char *)((EarthWarriorSub *)p2)->unk400 + 0x1c) - GXInit_WhiteColor &&
         *(f32 *)((char *)p3 + 0x298) > lbl_803E82FC &&
         ((EarthWarriorSub *)p2)->unk488 >= 0x96) {
@@ -684,7 +685,7 @@ void fn_802BCA10(int obj, int q, int p2)
 #pragma peephole off
 int fn_802BCE14(int obj, int p2)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     int q = inner + 0xb58;
     ((ByteFlags *)((char *)q + 0x3f1))->b04 = 0;
     ((ByteFlags *)((char *)q + 0x3f1))->b08 = 0;
@@ -699,7 +700,7 @@ int fn_802BCE14(int obj, int p2)
         !((ByteFlags *)((char *)inner + 0x14ec))->b01 && (*(int *)((char *)p2 + 0x31c) & 0x100)) {
         buttonDisable(0, 0x100);
         ((ByteFlags *)((char *)inner + 0x14ec))->b01 = 1;
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x70) = 0;
+        *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
         ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E8304, 0);
         *(u8 *)((char *)p2 + 0x346) = 0;
         Sfx_PlayFromObject(obj, 0x121);
@@ -722,7 +723,7 @@ int fn_802BCE14(int obj, int p2)
         s16 sv;
         *(int *)((char *)q + 0x360) |= 0x1000000;
         *(f32 *)((char *)p2 + 0x2a0) = lbl_803E8300;
-        sv = (s16)(int)(lbl_803E8320 * *(f32 *)((char *)obj + 0x98) + (f32)(s32)*(int *)((char *)q + 0x858));
+        sv = (s16)(int)(lbl_803E8320 * ((GameObject *)obj)->anim.currentMoveProgress + (f32)(s32)*(int *)((char *)q + 0x858));
         *(s16 *)((char *)q + 0x478) = sv;
         *(int *)((char *)q + 0x494) = sv;
         if (*(s8 *)((char *)p2 + 0x346) != 0) {
@@ -737,7 +738,7 @@ int fn_802BCE14(int obj, int p2)
         }
         *(f32 *)((char *)p2 + 0x294) = *(f32 *)((char *)q + 0x844) * timeDelta + *(f32 *)((char *)p2 + 0x294);
         *(f32 *)((char *)q + 0x408) = lbl_803E8304;
-        if (*(f32 *)((char *)obj + 0x98) > GXInit_ClearColor && *(f32 *)((char *)obj + 0x98) < lbl_803E8318) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > GXInit_ClearColor && ((GameObject *)obj)->anim.currentMoveProgress < lbl_803E8318) {
             *(u16 *)((char *)q + 0x8d8) |= 8;
         }
     } else if (((ByteFlags *)((char *)q + 0x3f0))->b80) {
@@ -749,7 +750,7 @@ int fn_802BCE14(int obj, int p2)
         if (*(s8 *)((char *)p2 + 0x346) != 0) {
             ((ByteFlags *)((char *)inner + 0x14ec))->b01 = 0;
             ((ByteFlags *)((char *)q + 0x3f1))->b08 = 1;
-            *(u8 *)(*(int *)((char *)obj + 0x54) + 0x70) = 0;
+            *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
         }
         {
             f32 m1 = lbl_803E8314;
@@ -767,8 +768,8 @@ int fn_802BCE14(int obj, int p2)
                 *(f32 *)((char *)q + 0x408) = lim;
             }
         }
-        ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 0x15;
-        ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId = 2;
+        ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 0x15;
+        ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 2;
     }
     if (!((ByteFlags *)((char *)inner + 0x14ec))->b01 && !((ByteFlags *)((char *)q + 0x3f0))->b40 &&
         !((ByteFlags *)((char *)q + 0x3f0))->b80 &&
@@ -839,7 +840,7 @@ int fn_802BCE14(int obj, int p2)
             skip = 1;
             blend = lbl_803E8304;
         } else {
-            blend = *(f32 *)((char *)obj + 0x98);
+            blend = ((GameObject *)obj)->anim.currentMoveProgress;
         }
         i2 = (*(s8 *)((char *)q + 0x8cc) / 4) << 1;
         *(u8 *)((char *)q + 0x8b0) = (i2 >> 1) + 1;
@@ -874,9 +875,9 @@ int fn_802BCE14(int obj, int p2)
             }
         }
         if ((skip != 0 || *(int *)((char *)q + 0x3fc) != *(int *)((char *)q + 0x3f8) ||
-             *(s16 *)((char *)obj + 0xa0) != *(s16 *)(*(int *)((char *)q + 0x3f8) + *(s8 *)((char *)q + 0x8cc) * 2)) &&
+             ((GameObject *)obj)->anim.currentMove != *(s16 *)(*(int *)((char *)q + 0x3f8) + *(s8 *)((char *)q + 0x8cc) * 2)) &&
             (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent *)obj) == 0 || ((ByteFlags *)((char *)q + 0x3f2))->b10 != 0)) {
-            if (*(s16 *)((char *)obj + 0xa0) == 0x14) {
+            if (((GameObject *)obj)->anim.currentMove == 0x14) {
                 blend = lbl_803E8350;
             }
             ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)((char *)q + 0x3f8) + *(s8 *)((char *)q + 0x8cc) * 2), blend, 0);
@@ -898,7 +899,7 @@ int fn_802BCE14(int obj, int p2)
 #pragma peephole off
 int fn_802BD7AC(int obj, int p2)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     EarthWarriorSub *q = &inner->sub;
     int s;
     if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
@@ -911,14 +912,14 @@ int fn_802BD7AC(int obj, int p2)
     {
         f32 z = lbl_803E8304;
         ((BaddieState *)p2)->animSpeedB = z;
-        *(f32 *)((char *)obj + 0x24) = z;
-        *(f32 *)((char *)obj + 0x2c) = z;
+        ((GameObject *)obj)->anim.velocityX = z;
+        ((GameObject *)obj)->anim.velocityZ = z;
     }
     if (!((ByteFlags *)&q->flags3F0)->b80 && !((ByteFlags *)&q->flags3F0)->b40 &&
         !((ByteFlags *)&inner->sub.flags994)->b01 && (*(int *)&((BaddieState *)p2)->unk31C & 0x100)) {
         buttonDisable(0, 0x100);
         ((ByteFlags *)&inner->sub.flags994)->b01 = 1;
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x70) = 0;
+        *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
         ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E8304, 0);
         ((BaddieState *)p2)->moveDone = 0;
         return 3;
@@ -947,8 +948,8 @@ int fn_802BD7AC(int obj, int p2)
         *(f32 *)((char *)p2 + 0x2b8) = lbl_803E835C;
         ((BaddieState *)p2)->moveSpeed = lbl_803E8354;
     }
-    if (*(s16 *)((char *)obj + 0xa0) == *(s16 *)(q->unk3F8 + 0x30) ||
-        *(s16 *)((char *)obj + 0xa0) == *(s16 *)(q->unk3F8 + 0x32)) {
+    if (((GameObject *)obj)->anim.currentMove == *(s16 *)(q->unk3F8 + 0x30) ||
+        ((GameObject *)obj)->anim.currentMove == *(s16 *)(q->unk3F8 + 0x32)) {
         if (*(s8 *)&((BaddieState *)p2)->moveDone != 0 && ObjAnim_GetCurrentEventCountdown((ObjAnimComponent *)obj) == 0 &&
             !((ByteFlags *)&inner->sub.flags994)->b01) {
             ObjAnim_SetCurrentMove(obj, s, lbl_803E8304, 0);
@@ -999,10 +1000,10 @@ void DR_EarthWarrior_hitDetect(int obj)
         f32 mat[4];
     } v;
     EWColorTbl rows;
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
-    int p54 = *(int *)((char *)obj + 0x54);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
+    int p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
     rows = lbl_802C2CC0;
-    if (!(*(u16 *)((char *)obj + 0xb0) & 0x1000)) {
+    if (!(((GameObject *)obj)->unkB0 & 0x1000)) {
         if (((ObjHitsPriorityState *)p54)->contactFlags != 0) {
             int i = *(s8 *)((char *)p54 + 0xac);
             if (i < 0) {
@@ -1018,7 +1019,7 @@ void DR_EarthWarrior_hitDetect(int obj)
             v.mat[2] = *(f32 *)((char *)p54 + 0x40);
             v.mat[3] = *(f32 *)((char *)p54 + 0x44);
             (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*(int *)lbl_803DE4D0 + 0x4)))(0, 1, &v, 0x401, -1, rows.m[lbl_803352AC[i]]);
-            *(u8 *)(*(int *)((char *)obj + 0x54) + 0x70) = 1;
+            *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 1;
             doRumble(lbl_803E8330);
         }
         if (((ObjHitsPriorityState *)p54)->lastHitObject != 0) {
@@ -1067,16 +1068,16 @@ void DR_EarthWarrior_hitDetect(int obj)
                 inner->sub.unk410 = lbl_803E8370;
                 Sfx_PlayFromObject(obj, 0x404);
             }
-            if (*(u8 *)((char *)(char *)inner + 0x262) != 0 || ((*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags & 8)) {
+            if (*(u8 *)((char *)(char *)inner + 0x262) != 0 || ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8)) {
                 f32 spd;
                 f32 vcos;
                 f32 vsin;
-                spd = sqrtf(*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) + *(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c));
-                *(f32 *)((char *)obj + 0x24) = oneOverTimeDelta * (*(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)obj + 0x8c));
-                *(f32 *)((char *)obj + 0x2c) = oneOverTimeDelta * (*(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)obj + 0x94));
+                spd = sqrtf(((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX + ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ);
+                ((GameObject *)obj)->anim.velocityX = oneOverTimeDelta * (((GameObject *)obj)->anim.worldPosX - ((GameObject *)obj)->anim.previousWorldPosX);
+                ((GameObject *)obj)->anim.velocityZ = oneOverTimeDelta * (((GameObject *)obj)->anim.worldPosZ - ((GameObject *)obj)->anim.previousWorldPosZ);
                 vcos = fn_80293E80((lbl_803E8374 * (f32)(s32)inner->sub.unk484) / lbl_803E8320);
                 vsin = sin((lbl_803E8374 * (f32)(s32)inner->sub.unk484) / lbl_803E8320);
-                inner->baddie.animSpeedA = -*(f32 *)((char *)obj + 0x2c) * vsin - *(f32 *)((char *)obj + 0x24) * vcos;
+                inner->baddie.animSpeedA = -((GameObject *)obj)->anim.velocityZ * vsin - ((GameObject *)obj)->anim.velocityX * vcos;
                 inner->baddie.animSpeedA *= lbl_803E8314;
                 {
                     f32 vv = inner->baddie.animSpeedA;
@@ -1112,44 +1113,44 @@ void DR_EarthWarrior_hitDetect(int obj)
 #pragma peephole off
 void DR_EarthWarrior_update(int obj)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)obj + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)obj)->extra;
     Obj_GetPlayerObject();
     {
-        int p54 = *(int *)((char *)obj + 0x54);
+        int p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
         *(u8 *)(p54 + 0x6e) = 0;
         *(u8 *)(p54 + 0x6f) = 0;
     }
     if (*(void * *)&inner->unkB54 == NULL && Obj_IsLoadingLocked() != 0) {
         int setup = Obj_AllocObjectSetup(0x18, 0x6f5);
-        int newObj = Obj_SetupObject(setup, 4, *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30));
+        int newObj = Obj_SetupObject(setup, 4, *(s8 *)((char *)obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         ObjLink_AttachChild(obj, newObj, 2);
         inner->unkB54 = newObj;
     }
     inner->sub.unk986 = 5;
-    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     if (inner->sub.unk98E == 2) {
         setAButtonIcon(0x13);
-        *(u8 *)((char *)obj + 0xaf) |= 8;
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->lateralResponseWeight = 0xf4;
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->axialResponseWeight = 0xf4;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lateralResponseWeight = 0xf4;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->axialResponseWeight = 0xf4;
         fn_802BE6E8(obj, (int)timeDelta, -1);
     } else {
         f32 z;
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->lateralResponseWeight = 0;
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->axialResponseWeight = 0;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lateralResponseWeight = 0;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->axialResponseWeight = 0;
         z = lbl_803E8304;
         inner->baddie.unk294 = z;
         inner->baddie.animSpeedB = z;
         inner->baddie.animSpeedA = z;
-        *(f32 *)((char *)obj + 0x24) = z;
-        *(f32 *)((char *)obj + 0x28) = z;
-        *(f32 *)((char *)obj + 0x2c) = z;
+        ((GameObject *)obj)->anim.velocityX = z;
+        ((GameObject *)obj)->anim.velocityY = z;
+        ((GameObject *)obj)->anim.velocityZ = z;
         fn_802BE6E8(obj, framesThisStep, -1);
     }
     characterDoEyeAnims(obj, (int)((char *)inner + 0x38c));
     objAnimFn_80038f38(obj, (int)((char *)inner + 0x3bc));
     dll_2E_func03(obj, (int)((char *)inner + 0x3ec));
-    if (*(u8 *)((char *)obj + 0xaf) & 1) {
+    if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
         ((ByteFlags *)&inner->sub.flags994)->b10 = 1;
         if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0xc1) != 0) {
             (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
@@ -1169,13 +1170,13 @@ void DR_EarthWarrior_update(int obj)
     }
     *(s8 *)((char *)(char *)inner + 0x264) |= 0x10;
     {
-        f32 saved = *(f32 *)((char *)obj + 0x28);
+        f32 saved = ((GameObject *)obj)->anim.velocityY;
         u8 mode;
-        *(f32 *)((char *)obj + 0x28) = lbl_803E8304;
+        ((GameObject *)obj)->anim.velocityY = lbl_803E8304;
         *(int *)&inner->baddie.eventFlags &= ~7;
         mode = inner->sub.unk8A6;
         objAudioFn_8006edcc(obj, *(int *)&inner->baddie.eventFlags, mode, (int)((char *)inner + 0xb18), (int)((char *)inner + 0x4), inner->baddie.animSpeedA, (mode == 8) ? lbl_803E837C : lbl_803E8380);
-        *(f32 *)((char *)obj + 0x28) = saved;
+        ((GameObject *)obj)->anim.velocityY = saved;
     }
     if (inner->sub.flags8D8 & 8) {
         f32 vecA[3];
@@ -1188,15 +1189,15 @@ void DR_EarthWarrior_update(int obj)
         int p;
         f32 c835c;
         f32 c8338;
-        vecA[0] = lbl_803E833C * *(f32 *)((char *)obj + 0x24);
+        vecA[0] = lbl_803E833C * ((GameObject *)obj)->anim.velocityX;
         vecA[1] = lbl_803E8304;
-        vecA[2] = lbl_803E833C * *(f32 *)((char *)obj + 0x2c);
+        vecA[2] = lbl_803E833C * ((GameObject *)obj)->anim.velocityZ;
         c835c = lbl_803E835C;
         c8338 = lbl_803E8338;
         for (i = 0, p = (int)inner; i < 4; i++) {
-            w.mat[1] = c835c * *(f32 *)((char *)obj + 0x24) + *(f32 *)((char *)p + 0xb18);
+            w.mat[1] = c835c * ((GameObject *)obj)->anim.velocityX + *(f32 *)((char *)p + 0xb18);
             w.mat[2] = *(f32 *)((char *)p + 0xb1c);
-            w.mat[3] = c835c * *(f32 *)((char *)obj + 0x2c) + *(f32 *)((char *)p + 0xb20);
+            w.mat[3] = c835c * ((GameObject *)obj)->anim.velocityZ + *(f32 *)((char *)p + 0xb20);
             w.mat[0] = c8338;
             w.angles[0] = 2;
             for (j = 2; j != 0; j--) {
@@ -1215,7 +1216,7 @@ void DR_EarthWarrior_update(int obj)
 void DR_EarthWarrior_init(int obj, int p2)
 {
     register u8 *base = lbl_803351F8;
-    int inner = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     int stk;
     EWPathRange r2;
     EWPathRange r1;
@@ -1224,7 +1225,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     r2 = lbl_802C2CA8;
     r1 = lbl_802C2CB4;
     *(s16 *)obj = (s16)(*(s8 *)((char *)p2 + 0x18) << 8);
-    *(int *)((char *)obj + 0xbc) = (int)fn_802BDBE8;
+    *(int *)&((GameObject *)obj)->unkBC = (int)fn_802BDBE8;
     ObjGroup_AddObject(obj, 0xa);
     *(u8 *)((char *)inner + 0x14e8) = *(u8 *)((char *)p2 + 0x19);
     *(s16 *)((char *)inner + 0x14de) = 5;
@@ -1239,7 +1240,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     *(u8 *)((char *)q + 0x264) = 0x28;
     (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, q);
     ObjHits_EnableObject(obj);
-    *(s16 *)(*(int *)((char *)obj + 0x54) + 0xb2) = 9;
+    *(s16 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0xb2) = 9;
     dll_2E_func05(obj, inner + 0x3ec, -0x2000, 0x31c7, 2);
     dll_2E_func09(inner + 0x3ec, &r1, &r2, 2);
     fn_80113F94(inner + 0x3ec, lbl_803E8388);

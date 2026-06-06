@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
@@ -483,11 +484,11 @@ void dimcannon_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     u8 *sub;
     s16 saved;
 
-    def = *(u8**)((char*)obj + 0x4c);
-    if (*(s16*)((char*)obj + 0x46) == 0x1d6) {
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
+    if (((GameObject *)obj)->anim.seqId == 0x1d6) {
         objRenderFn_8003b8f4(lbl_803E48E8);
     } else {
-        sub = *(u8**)((char*)obj + 0xb8);
+        sub = ((GameObject *)obj)->extra;
         saved = *(s16*)obj;
         *(s16*)obj = (s16)((s8)def[0x28] << 8);
         objRenderFn_8003b8f4(lbl_803E48E8);
@@ -504,7 +505,7 @@ void dimlavasmash_hitDetect(void) {}
 #pragma peephole off
 void dimlavasmash_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     if (state[2] == 2 && visible != 0) {
         objRenderFn_8003b8f4(lbl_803E48F8);
     }
@@ -518,15 +519,15 @@ void dimlavasmash_update(int *obj) {
     extern int *gObjectTriggerInterface;
     u8 *sub;
     int *p;
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     if (sub[2] == 1) {
-        p = *(int**)((char*)obj + 0x54);
+        p = *(int**)&((GameObject *)obj)->anim.hitReactState;
         *(s16*)((char*)p + 0x60) = (s16)(*(s16*)((char*)p + 0x60) & ~1);
-    } else if (*(int*)((char*)obj + 0xf4) == 0) {
+    } else if (((GameObject *)obj)->unkF4 == 0) {
         if ((s8)sub[0] != -1) {
             ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])((s8)sub[0], obj, -1);
         }
-        *(int*)((char*)obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
 }
 #pragma peephole reset
@@ -566,8 +567,8 @@ typedef struct DimCannonState {
 } DimCannonState;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
-int dimcannon_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1d6) return 0xc; return 0xb4; }
-int dimcannon_getObjectTypeId(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1d6) return 0x0; return 0x0; }
+int dimcannon_getExtraSize(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x1d6) return 0xc; return 0xb4; }
+int dimcannon_getObjectTypeId(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x1d6) return 0x0; return 0x0; }
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
@@ -625,18 +626,18 @@ int dimlavasmash_SeqFn(int obj, int p2, int *r5_arg)
     int hit;
     int block;
     int *state;
-    state = *(int **)((char *)obj + 0xb8);
-    def = *(int **)((char *)obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    def = *(int **)&((GameObject *)obj)->anim.placementData;
     if (*(u8 *)((char *)state + 2) == 0) {
         if (GameBit_Get(*(s16 *)((char *)def + 0x20)) != 0) {
-            (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags |= 1;
+            (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0) {
                 if (*(s16 *)((char *)hit + 0x46) == 397) {
                     *(u8 *)((char *)state + 2) = 2;
                     Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff1);
-                    objPosToMapBlockIdx(*(f32 *)((char *)obj + 0xc),
-                                        *(f32 *)((char *)obj + 0x10),
-                                        *(f32 *)((char *)obj + 0x14));
+                    objPosToMapBlockIdx(((GameObject *)obj)->anim.localPosX,
+                                        ((GameObject *)obj)->anim.localPosY,
+                                        ((GameObject *)obj)->anim.localPosZ);
                     block = mapGetBlock();
                     if ((void *)block != NULL) {
                         dimlavasmash_setBlockSurfaceFlags(block, 1, *(u8 *)((char *)state + 1));
@@ -663,7 +664,7 @@ extern void Resource_Release(void *p);
 #pragma scheduling off
 #pragma peephole off
 void dimcannon_free(int *obj) {
-    if (*(s16 *)((char *)obj + 0x46) != 0x1d6) {
+    if (((GameObject *)obj)->anim.seqId != 0x1d6) {
         ((void (*)(void))((int **)*gGameUIInterface)[0x18])();
         Resource_Release(lbl_803DDB50);
         lbl_803DDB50 = NULL;
@@ -687,28 +688,28 @@ void dimcannon_init(int *obj, int *arg)
 {
     ObjMsg_AllocQueue(obj, 4);
 
-    if (*(s16 *)((char *)obj + 0x46) == 0x1d6) {
+    if (((GameObject *)obj)->anim.seqId == 0x1d6) {
         void *state;
         int *p;
-        *(int *)((char *)obj + 0xf4) = 0;
+        ((GameObject *)obj)->unkF4 = 0;
         p = *(int **)((char *)obj + 0x64);
         if (p != 0) {
             *(int *)((char *)p + 0x30) |= 0xc10;
             p = *(int **)((char *)obj + 0x64);
             *(int *)((char *)p + 0x30) |= 0x8000;
         }
-        state = *(void **)((char *)obj + 0xb8);
+        state = ((GameObject *)obj)->extra;
         *(s8 *)((char *)state + 0x9) = (s8)randomGetRange(-0x64, 0x64);
         *(s8 *)((char *)state + 0xa) = (s8)randomGetRange(-0x64, 0x64);
         *(s8 *)((char *)state + 0xb) = (s8)randomGetRange(-0x64, 0x64);
         *(u8 *)((char *)state + 0x7) = 1;
-        p = *(int **)((char *)obj + 0x54);
+        p = *(int **)&((GameObject *)obj)->anim.hitReactState;
         if (p != 0) {
             *(s16 *)((char *)p + 0xb2) = 1;
         }
-        *(u16 *)((char *)obj + 0xb0) |= 0x4000;
+        ((GameObject *)obj)->unkB0 |= 0x4000;
     } else {
-        void *state = *(void **)((char *)obj + 0xb8);
+        void *state = ((GameObject *)obj)->extra;
         u8 i;
 
         if (*(s8 *)((char *)obj + 0xac) == 0x13) {
@@ -721,39 +722,39 @@ void dimcannon_init(int *obj, int *arg)
 
         for (i = 0; i < 0xa; i += 5) {
             char *e = (char *)state + i * 4;
-            *(f32 *)(e + 0x14) = *(f32 *)((char *)obj + 0xc);
-            *(f32 *)(e + 0x3c) = *(f32 *)((char *)obj + 0x10);
-            *(f32 *)(e + 0x64) = *(f32 *)((char *)obj + 0x14);
-            *(f32 *)(e + 0x18) = *(f32 *)((char *)obj + 0xc);
-            *(f32 *)(e + 0x40) = *(f32 *)((char *)obj + 0x10);
-            *(f32 *)(e + 0x68) = *(f32 *)((char *)obj + 0x14);
-            *(f32 *)(e + 0x1c) = *(f32 *)((char *)obj + 0xc);
-            *(f32 *)(e + 0x44) = *(f32 *)((char *)obj + 0x10);
-            *(f32 *)(e + 0x6c) = *(f32 *)((char *)obj + 0x14);
-            *(f32 *)(e + 0x20) = *(f32 *)((char *)obj + 0xc);
-            *(f32 *)(e + 0x48) = *(f32 *)((char *)obj + 0x10);
-            *(f32 *)(e + 0x70) = *(f32 *)((char *)obj + 0x14);
-            *(f32 *)(e + 0x24) = *(f32 *)((char *)obj + 0xc);
-            *(f32 *)(e + 0x4c) = *(f32 *)((char *)obj + 0x10);
-            *(f32 *)(e + 0x74) = *(f32 *)((char *)obj + 0x14);
+            *(f32 *)(e + 0x14) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(e + 0x3c) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(e + 0x64) = ((GameObject *)obj)->anim.localPosZ;
+            *(f32 *)(e + 0x18) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(e + 0x40) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(e + 0x68) = ((GameObject *)obj)->anim.localPosZ;
+            *(f32 *)(e + 0x1c) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(e + 0x44) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(e + 0x6c) = ((GameObject *)obj)->anim.localPosZ;
+            *(f32 *)(e + 0x20) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(e + 0x48) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(e + 0x70) = ((GameObject *)obj)->anim.localPosZ;
+            *(f32 *)(e + 0x24) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(e + 0x4c) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(e + 0x74) = ((GameObject *)obj)->anim.localPosZ;
         }
 
         ((DimCannonState *)state)->unkAF = 0x80;
         ((DimCannonState *)state)->unk98 = lbl_803E48B8;
-        *(u8 *)((char *)obj + 0xaf) |= 0x8;
-        *(int *)((char *)obj + 0xbc) = (int)fn_801B2550;
-        *(s16 *)((char *)obj + 0x0) = (s16)((s8)*(s8 *)((char *)arg + 0x28) << 8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
+        *(int *)&((GameObject *)obj)->unkBC = (int)fn_801B2550;
+        ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)arg + 0x28) << 8);
         lbl_803DDB50 = Resource_Acquire(0x79, 1);
         if (GameBit_Get(*(s16 *)((char *)arg + 0x1a))) {
             *(u8 *)&((DimCannonState *)state)->unkB0 = 0x3c;
             ((DimCannonState *)state)->fireState = 5;
         }
-        ((DimCannonState *)state)->unk8C = *(f32 *)((char *)obj + 0xc);
-        ((DimCannonState *)state)->unk90 = *(f32 *)((char *)obj + 0x10);
-        ((DimCannonState *)state)->unk94 = *(f32 *)((char *)obj + 0x14);
+        ((DimCannonState *)state)->unk8C = ((GameObject *)obj)->anim.localPosX;
+        ((DimCannonState *)state)->unk90 = ((GameObject *)obj)->anim.localPosY;
+        ((DimCannonState *)state)->unk94 = ((GameObject *)obj)->anim.localPosZ;
     }
 
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -783,18 +784,18 @@ void dimcannon_update(int *obj)
 {
     char *state;
     void *player;
-    int *src = *(int **)((char *)obj + 0x4c);
+    int *src = *(int **)&((GameObject *)obj)->anim.placementData;
 
-    if (*(s16 *)((char *)obj + 0x46) == 0x1d6) {
+    if (((GameObject *)obj)->anim.seqId == 0x1d6) {
         DIMwooddoor_updateFallingDebris(obj);
         return;
     }
 
-    if ((*(u8 *)((char *)obj + 0xaf) & 0x8) && GameBit_Get(*(s16 *)((char *)src + 0x1a))) {
-        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x8) && GameBit_Get(*(s16 *)((char *)src + 0x1a))) {
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
     }
 
-    state = *(char **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     if (fn_802972A8(player) != 0) {
         *(int *)(state + 0x0) = 0;
@@ -802,7 +803,7 @@ void dimcannon_update(int *obj)
         *(void **)(state + 0x0) = player;
     }
 
-    *(s16 *)((char *)obj + 0x6) = (s16)(*(s16 *)((char *)obj + 0x6) & ~0x4000);
+    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
 
     switch (((DimCannonState *)state)->fireState) {
     case 0:
@@ -814,7 +815,7 @@ void dimcannon_update(int *obj)
         s8 t = ((DimCannonState *)state)->unkB0;
         if (t > 0) {
             ((DimCannonState *)state)->unkB0 = (s8)(t - framesThisStep);
-        } else if (*(u8 *)((char *)obj + 0xaf) & 0x1) {
+        } else if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x1) {
             int *focusObj;
             ((DimCannonState *)state)->unkAE = 0;
             ((DimCannonState *)state)->unkB1 = 0;
@@ -825,7 +826,7 @@ void dimcannon_update(int *obj)
             ((DimCannonState *)state)->fireState = 3;
             (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
             *(u8 *)&((DimCannonState *)state)->unkB0 = 0x3c;
-            *(u8 *)((char *)obj + 0xaf) |= 0x8;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
         }
         ((DimCannonState *)state)->unkAD = 0;
         ((DimCannonState *)state)->aimYaw = 0;
@@ -936,7 +937,7 @@ extern f32 lbl_803DBEFC;
 #pragma peephole off
 int fn_801B2550(int *obj, int p2, char *p3)
 {
-    int *src = *(int **)((char *)obj + 0x4c);
+    int *src = *(int **)&((GameObject *)obj)->anim.placementData;
     char *state;
     int camMode;
     u8 done = 0;
@@ -944,7 +945,7 @@ int fn_801B2550(int *obj, int p2, char *p3)
 
     *(u8 *)(p3 + 0x56) = 0;
     *(s16 *)(p3 + 0x6e) = (s16)(*(s16 *)(p3 + 0x6e) & ~0x608);
-    state = *(char **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
 
     if (*(u8 *)(state + 0xac) == 0x3) {
         s16 *vec;
@@ -1059,7 +1060,7 @@ int fn_801B2550(int *obj, int p2, char *p3)
                 *(u8 *)(state + 0xac) = 5;
                 *(u8 *)(state + 0xb0) = 0x3c;
                 *(u8 *)(p3 + 0x90) |= 0x4;
-                *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
                 if (Sfx_IsPlayingFromObjectChannel(obj, 8) != 0) {
                     Sfx_IsPlayingFromObjectChannel(obj, 0);
                 }
@@ -1069,11 +1070,11 @@ int fn_801B2550(int *obj, int p2, char *p3)
         }
     } else {
         s16 *vec2;
-        *(s16 *)((char *)obj + 0x6) = (s16)(*(s16 *)((char *)obj + 0x6) & ~0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
         vec2 = objModelGetVecFn_800395d8(obj, 0);
         *(s16 *)((char *)vec2 + 0x2) =
-            (s16)(*(s16 *)((char *)obj + 0x0) - ((s8)*(s8 *)((char *)src + 0x28) << 8));
-        *(s16 *)((char *)obj + 0x0) = (s16)((s8)*(s8 *)((char *)src + 0x28) << 8);
+            (s16)(((GameObject *)obj)->anim.rotX - ((s8)*(s8 *)((char *)src + 0x28) << 8));
+        ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)src + 0x28) << 8);
         *(u8 *)(state + 0xac) = 4;
     }
 

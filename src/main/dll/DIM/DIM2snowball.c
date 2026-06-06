@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 #include "main/objanim_internal.h"
@@ -149,7 +150,7 @@ void dim_levelcontrol_update(int obj)
     b = GameBit_Get(0xd0c);
     c = GameBit_Get(0xd0d);
     d = GameBit_Get(0xd0e);
-    st = *(DimLevelControlState **)(obj + 0xb8);
+    st = ((GameObject *)obj)->extra;
     if ((a && !st->b7) || (b && !st->b6) || (c && !st->b5) || (d && !st->b4)) {
         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     }
@@ -161,10 +162,10 @@ void dim_levelcontrol_update(int obj)
         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
         st->b3 = 1;
     }
-    if (*(int *)(obj + 0xf4) != 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
         if ((u32)GameBit_Get(0xa82) == 0 ||
             ((u32)GameBit_Get(0x17) != 0 && (u32)GameBit_Get(0xead) == 0)) {
-            if (*(int *)(obj + 0xf4) == 2) {
+            if (((GameObject *)obj)->unkF4 == 2) {
                 getEnvfxActImmediately(0, 0, 0x160, 0);
                 getEnvfxActImmediately(0, 0, 0x15a, 0);
                 getEnvfxActImmediately(0, 0, 0x15c, 0);
@@ -176,7 +177,7 @@ void dim_levelcontrol_update(int obj)
                 getEnvfxAct(0, 0, 0x15f, 0);
             }
         }
-        *(int *)(obj + 0xf4) = 0;
+        ((GameObject *)obj)->unkF4 = 0;
     }
     if (st->unkD != 0) {
         if ((u32)GameBit_Get(0x651) == 0) {
@@ -1173,13 +1174,13 @@ extern void Music_Trigger(int trackId, int restart);
 #pragma peephole off
 #pragma scheduling off
 void dim2conveyor_setScale(int *obj, int unused, f32 *outX, f32 *outY) {
-    f32 *state = *(f32 **)((char *)obj + 0xb8);
+    f32 *state = ((GameObject *)obj)->extra;
     int id;
     if (*(int *)((char *)state + 0x10) == 0) {
         Music_Trigger(0xdf, 1);
     }
     *(int *)((char *)state + 0x10) = 20;
-    id = *(int *)(*(int *)((char *)obj + 0x4c) + 0x14);
+    id = *(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14);
     switch (id) {
     case 7849:
         *outX = state[0];
@@ -1226,8 +1227,8 @@ void dll_1DA_hitDetect(int obj) {
     if (hit == 0xE) {
         player = Obj_GetPlayerObject();
         Vec_distance((float*)(obj + 0x18), (float*)((int)player + 0x18));
-        *(f32*)(obj + 0x24) = *(f32*)((int)hi + 0x24) * lbl_803E4ADC;
-        *(f32*)(obj + 0x2c) = *(f32*)((int)hi + 0x2c) * lbl_803E4ADC;
+        ((GameObject *)obj)->anim.velocityX = *(f32*)((int)hi + 0x24) * lbl_803E4ADC;
+        ((GameObject *)obj)->anim.velocityZ = *(f32*)((int)hi + 0x2c) * lbl_803E4ADC;
         Sfx_PlayFromObject(obj, SFXchar_puts_out_fire);
     }
 }
@@ -1243,7 +1244,7 @@ extern int* getTrickyObject(void);
 #pragma scheduling off
 int fn_801B6D40(int* obj, int v)
 {
-    u8* state = *(u8**)((char*)obj + 0xb8);
+    u8* state = ((GameObject *)obj)->extra;
     state[2] = (s8)(state[2] - v);
     return *(s8 *)(state + 2) == 0;
 }
@@ -1253,7 +1254,7 @@ int fn_801B6D40(int* obj, int v)
 #pragma peephole off
 u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     *p1 = (int*)((char*)state + 12);
     *p2 = (int*)((char*)state + 812);
     *p3 = (int*)((char*)state + 1612);
@@ -1265,7 +1266,7 @@ u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** 
 
 void dll_1D6_free(int* obj)
 {
-    u8* state = *(u8**)((char*)obj + 0xb8);
+    u8* state = ((GameObject *)obj)->extra;
     if ((state[29] & 4) != 0) {
         state[29] = (u8)(state[29] & ~4);
     }
@@ -1278,7 +1279,7 @@ void dim2pathgenerator_init(int* obj, int* def)
 {
     int* state;
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 28) << 8);
-    state = *(int**)((char*)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     *(s16*)((char*)state + 2464) = *(s16*)((char*)def + 24);
     *(s16*)((char*)state + 2462) = (s16)*(u8*)((char*)def + 29);
     *(s16*)((char*)state + 2466) = (s16)*(u16*)((char*)def + 30);
@@ -1291,28 +1292,28 @@ void dim2pathgenerator_init(int* obj, int* def)
         }
     }
     *(u8*)((char*)state + 2471) = (u8)(*(u8*)((char*)state + 2471) | 4);
-    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x2000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
 }
 
 void dimtruthhornice_init(int* obj, int* def)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     *(s8*)((char*)state + 2) = (s8)*(s16*)((char*)def + 26);
     *(s16*)state = *(s16*)((char*)def + 30);
-    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
     {
         s16 slot = *(s16*)state;
         if (slot != -1 && (u32)GameBit_Get(slot) != 0u) {
             ObjHits_DisableObject(obj);
             *(s8*)((char*)state + 3) = 2;
-            *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+            ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
         }
     }
 }
 
 void dim2snowball_init(int* obj, int* def)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     *(int*)((char*)state + 160) = *(int*)((char*)def + 20);
     *(u8*)((char*)state + 172) = (u8)(*(u8*)((char*)state + 172) | 4);
     *(int*)((char*)def + 20) = -1;
@@ -1325,16 +1326,16 @@ void dim2snowball_init(int* obj, int* def)
         }
     }
     *(int**)((char*)state + 156) = (int*)ObjList_FindObjectById(*(int*)((char*)state + 160));
-    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x2000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
 }
 
 void dll_1CF_init(int* obj, int* def)
 {
     if ((u32)GameBit_Get(*(s16*)((char*)def + 30)) != 0u) {
-        *(s16*)((char*)obj + 2) = (s16)(((s32)*(s16*)((char*)def + 26) << 13) / 45);
+        ((GameObject *)obj)->anim.rotY = (s16)(((s32)*(s16*)((char*)def + 26) << 13) / 45);
     }
     *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
-    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0xe000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0xe000);
 }
 
 extern f32 lbl_803E4A28;
@@ -1347,13 +1348,13 @@ void dim_levelcontrol_init(int obj)
     u8 i;
 
     randomGetRange(0, 11);
-    st = *(DimLevelControlState **)(obj + 0xb8);
+    st = ((GameObject *)obj)->extra;
     st->saveState = 0;
     st->timer = lbl_803E4A28;
     if (getSaveGameLoadStatus() != 0) {
-        *(int *)(obj + 0xf4) = 2;
+        ((GameObject *)obj)->unkF4 = 2;
     } else {
-        *(int *)(obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
     for (i = 1; i <= 38; i++) {
         gameBitFn_800ea2e0(i);
@@ -1369,13 +1370,13 @@ void dim_levelcontrol_init(int obj)
     st->b4 = (u8)GameBit_Get(0xd0e);
     st->b3 = (u8)GameBit_Get(0xa21);
     (*gMapEventInterface)->setMode(*(s8 *)(obj + 0xac), 1);
-    *(u16 *)(obj + 0xb0) |= 0x6000;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
     unlockLevel(0, 0, 1);
 }
 
 void dim_tricky_update(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     int* trickyObj = getTrickyObject();
     if (trickyObj == NULL) return;
     switch (*(u8*)state) {
@@ -1416,13 +1417,13 @@ void dim2conveyor_init(int *obj, u8 *params)
     f32 scale = (f32)*(s16 *)((char *)params + 0x1a) / lbl_803E4A64;
     int *extra;
     *(s16 *)obj = (s16)(*(s8 *)((char *)params + 0x18) << 8);
-    extra = *(int **)((char *)obj + 0xb8);
+    extra = ((GameObject *)obj)->extra;
     *(f32 *)extra = scale * fn_80293E80(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
     *(f32 *)((char *)extra + 4) = scale * sin(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
     *(f32 *)((char *)extra + 0xc) = lbl_803E4A60;
     *(int *)((char *)extra + 0x10) = 0;
     ObjGroup_AddObject(obj, 22);
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
     if (*(u32 *)((char *)params + 0x14) == 0x49b23) {
         GameBit_Set(3164, 1);
     }
@@ -1430,7 +1431,7 @@ void dim2conveyor_init(int *obj, u8 *params)
 
 void dim2conveyor_update(int *obj)
 {
-    int *extra = *(int **)((char *)obj + 0xb8);
+    int *extra = ((GameObject *)obj)->extra;
     Sfx_PlayFromObject((int)obj, SFXfoot_metal_scuff);
     if (*(int *)((char *)extra + 0x10) != 0) {
         *(int *)((char *)extra + 0x10) = *(int *)((char *)extra + 0x10) - 1;
@@ -1438,7 +1439,7 @@ void dim2conveyor_update(int *obj)
             Music_Trigger(223, 0);
         }
     }
-    switch (*(int *)((char *)*(int **)((char *)obj + 0x4c) + 0x14)) {
+    switch (*(int *)((char *)*(int **)&((GameObject *)obj)->anim.placementData + 0x14)) {
     case 0x49b23:
         if (GameBit_Get(3169) != 0) {
             *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0xc) + timeDelta;
@@ -1483,7 +1484,7 @@ void dll_1D6_init(int *obj, u8 *params)
     int i;
 
     *(s16 *)obj = (s16)(*(s8 *)((char *)params + 0x18) << 8);
-    extra = *(int **)((char *)obj + 0xb8);
+    extra = ((GameObject *)obj)->extra;
     model = DIM2snowball_GetActiveModel(obj);
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
     ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4A78);
@@ -1497,9 +1498,9 @@ void dll_1D6_init(int *obj, u8 *params)
     }
     {
         f32 k = lbl_803E4A88;
-        *(f32 *)((char *)extra + 8) = k * *(f32 *)((char *)obj + 8);
+        *(f32 *)((char *)extra + 8) = k * ((GameObject *)obj)->anim.rootMotionScale;
         *(f32 *)((char *)extra + 8) = *(f32 *)((char *)extra + 8) * *(f32 *)((char *)extra + 8);
-        *(f32 *)((char *)extra + 0xc) = k * *(f32 *)((char *)obj + 8);
+        *(f32 *)((char *)extra + 0xc) = k * ((GameObject *)obj)->anim.rootMotionScale;
         *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0xc) * *(f32 *)((char *)extra + 0xc);
     }
     *(u8 *)((char *)extra + 0x1d) = GameBit_Get(496) ? 2 : 0;
@@ -1515,7 +1516,7 @@ void dll_1D6_init(int *obj, u8 *params)
     *(int *)((char *)extra + 4) = mmAlloc(40, 18, 0);
     getTabEntry(*(int *)((char *)extra + 4), 12,
                 ((&lbl_803DBF18)[*(u8 *)((char *)extra + 0x1f)] + 1) * 40, 40);
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1530,8 +1531,8 @@ extern f32 lbl_803E4A4C;
 #pragma peephole off
 void dimtruthhornice_update(int *obj)
 {
-    int *extra = *(int **)((char *)obj + 0xb8);
-    *(u8 *)((char *)obj + 0xaf) |= 8;
+    int *extra = ((GameObject *)obj)->extra;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     switch (*(s8 *)((char *)extra + 3)) {
     case 0:
         if (*(s8 *)((char *)extra + 2) <= 0) {
@@ -1544,10 +1545,10 @@ void dimtruthhornice_update(int *obj)
         } else {
             int *tricky = (int *)getTrickyObject();
             if (tricky != NULL) {
-                if ((*(u8 *)((char *)obj + 0xaf) & 4) != 0) {
+                if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
                     (*(void (**)(int *, int *, int, int))(**(int **)((char *)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
                 }
-                *(u8 *)((char *)obj + 0xaf) &= ~8;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
             }
         }
         break;
@@ -1579,7 +1580,7 @@ void dimtruthhornice_update(int *obj)
         }
         break;
     case 2:
-        *(s16 *)((char *)obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         break;
     }
 }
@@ -1598,13 +1599,13 @@ extern u8 framesThisStep;
 void dim2pathgenerator_update(int *obj)
 {
     int *def;
-    int *extra = *(int **)((char *)obj + 0xb8);
+    int *extra = ((GameObject *)obj)->extra;
     int toggle;
     int **objs;
     int count;
     int i;
 
-    def = *(int **)((char *)obj + 0x4c);
+    def = *(int **)&((GameObject *)obj)->anim.placementData;
     if (GameBit_Get(*(s16 *)((char *)def + 0x22)) == 0) {
         return;
     }
@@ -1612,8 +1613,8 @@ void dim2pathgenerator_update(int *obj)
         if ((*(u8 *)((char *)extra + 0x9a7) & 2) == 0) {
             int n = 21;
             if (((int (*)(int *, int, int, f32, f32, f32))((int *)*gRomCurveInterface)[0x14 / 4])(
-                    &n, 1, 10, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
-                    *(f32 *)((char *)obj + 0x14)) != -1) {
+                    &n, 1, 10, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                    ((GameObject *)obj)->anim.localPosZ) != -1) {
                 int *cv = (int *)((int (*)(void))((int *)*gRomCurveInterface)[0x1c / 4])();
                 ((void (*)(void))((int *)*gRomCurveInterface)[0x74 / 4])();
                 *(u8 *)((char *)extra + 0x9a6) =
@@ -1627,9 +1628,9 @@ void dim2pathgenerator_update(int *obj)
             }
         }
     } else {
-        *(f32 *)extra = *(f32 *)((char *)obj + 0xc);
-        *(f32 *)((char *)extra + 4) = *(f32 *)((char *)obj + 0x10);
-        *(f32 *)((char *)extra + 8) = *(f32 *)((char *)obj + 0x14);
+        *(f32 *)extra = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)((char *)extra + 4) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)((char *)extra + 8) = ((GameObject *)obj)->anim.localPosZ;
     }
     {
         s16 t = *(s16 *)((char *)extra + 0x99e) - framesThisStep;
@@ -1705,8 +1706,8 @@ void dll_1D6_update(int *obj)
     s16 ang[6];
     f32 lx, ly, lz;
 
-    def = *(int **)((char *)obj + 0x4c);
-    extra = *(int **)((char *)obj + 0xb8);
+    def = *(int **)&((GameObject *)obj)->anim.placementData;
+    extra = ((GameObject *)obj)->extra;
 
     if ((*(u8 *)((char *)extra + 0x1d) & 1) != 0) {
         if ((*(u8 *)((char *)extra + 0x1d) & 4) == 0) {
@@ -1765,9 +1766,9 @@ void dll_1D6_update(int *obj)
         *(s16 *)((char *)tex + 0xa) = -v;
     }
     player = (int *)Obj_GetPlayerObject();
-    mtx[0] = -*(f32 *)((char *)obj + 0xc);
-    mtx[1] = -*(f32 *)((char *)obj + 0x10);
-    mtx[2] = -*(f32 *)((char *)obj + 0x14);
+    mtx[0] = -((GameObject *)obj)->anim.localPosX;
+    mtx[1] = -((GameObject *)obj)->anim.localPosY;
+    mtx[2] = -((GameObject *)obj)->anim.localPosZ;
     ang[0] = -*(s16 *)obj;
     ang[1] = 0;
     ang[2] = 0;
@@ -1775,7 +1776,7 @@ void dll_1D6_update(int *obj)
     Matrix_TransformPoint(&mtx[3], *(f32 *)((char *)player + 0xc), *(f32 *)((char *)player + 0x10),
                           *(f32 *)((char *)player + 0x14), &lx, &ly, &lz);
     if ((*(u8 *)((char *)extra + 0x1d) & 2) != 0) {
-        ly = *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)player + 0x10);
+        ly = ((GameObject *)obj)->anim.localPosY - *(f32 *)((char *)player + 0x10);
         if (ly < lbl_803E4A88) {
             ly = -ly;
         }
@@ -1786,7 +1787,7 @@ void dll_1D6_update(int *obj)
                 f32 lim;
                 model = DIM2snowball_GetActiveModel(obj);
                 row = *(int **)((char *)model + ((*(u16 *)((char *)model + 0x18) >> 1) & 1) * 4 + 4);
-                lim = *(f32 *)((char *)obj + 8) *
+                lim = ((GameObject *)obj)->anim.rootMotionScale *
                       (f32)(int)*(s16 *)((char *)row + *(u8 *)((char *)extra + 0x1e) * 16);
                 if (lx <= lim) {
                     ObjHits_RecordObjectHit(player, obj, 11, 4, 0);
@@ -1841,7 +1842,7 @@ extern f32 lbl_803E4AD0;
 #pragma peephole off
 void dim2snowball_update(int *obj)
 {
-    int *extra = *(int **)((char *)obj + 0xb8);
+    int *extra = ((GameObject *)obj)->extra;
     int **p;
     int **results;
     int count;
@@ -1878,15 +1879,15 @@ void dim2snowball_update(int *obj)
     }
 
     if ((*(u8 *)((char *)extra + 0xac) & 2) != 0) {
-        if (*(f32 *)((char *)obj + 0x10) < *(f32 *)((char *)extra + 0xa4)) {
-            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4AA4);
-            *(f32 *)((char *)obj + 0x28) = lbl_803E4AA8;
-            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
+        if (((GameObject *)obj)->anim.localPosY < *(f32 *)((char *)extra + 0xa4)) {
+            ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4AA4);
+            ((GameObject *)obj)->anim.velocityY = lbl_803E4AA8;
+            ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
             if ((*(u8 *)((char *)extra + 0xac) & 0x10) == 0) {
                 int **list;
                 int *hit;
-                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4AAC);
-                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
+                ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4AAC);
+                ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
                 *(u8 *)((char *)extra + 0xac) |= 0x18;
                 list = ObjList_GetObjects(&start, &count);
                 for (p = &list[start]; start < count; start++) {
@@ -1903,48 +1904,48 @@ checkHit:
                 }
                 Sfx_PlayFromObject((int)obj, SFXfoot_run_jingle1);
             }
-            evt[3] = *(f32 *)((char *)obj + 0xc);
-            evt[4] = *(f32 *)((char *)obj + 0x10);
-            evt[5] = *(f32 *)((char *)obj + 0x14);
+            evt[3] = ((GameObject *)obj)->anim.localPosX;
+            evt[4] = ((GameObject *)obj)->anim.localPosY;
+            evt[5] = ((GameObject *)obj)->anim.localPosZ;
             ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
                 obj, 518, evt, 4, -1, 0);
             if (*(u8 *)((char *)obj + 0x36) == 0) {
                 Obj_FreeObject(obj);
                 return;
             }
-            objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
-                    *(f32 *)((char *)obj + 0x28) * timeDelta,
-                    *(f32 *)((char *)obj + 0x2c) * timeDelta);
+            objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta,
+                    ((GameObject *)obj)->anim.velocityY * timeDelta,
+                    ((GameObject *)obj)->anim.velocityZ * timeDelta);
         } else {
             int bbox;
-            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4AB0);
-            *(f32 *)((char *)obj + 0x28) =
-                *(f32 *)((char *)obj + 0x28) - lbl_803E4AB4 * timeDelta;
-            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
-            objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
-                    *(f32 *)((char *)obj + 0x28) * timeDelta,
-                    *(f32 *)((char *)obj + 0x2c) * timeDelta);
+            ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4AB0);
+            ((GameObject *)obj)->anim.velocityY =
+                ((GameObject *)obj)->anim.velocityY - lbl_803E4AB4 * timeDelta;
+            ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
+            objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta,
+                    ((GameObject *)obj)->anim.velocityY * timeDelta,
+                    ((GameObject *)obj)->anim.velocityZ * timeDelta);
             bbox = objBboxFn_800640cc((char *)obj + 0x80, (char *)obj + 0xc, lbl_803E4AB8, 0, 0,
                                       obj, 8, -1, 0, 0);
             if (bbox != 0) {
-                *(f32 *)((char *)obj + 0x24) = -*(f32 *)((char *)obj + 0x24);
-                *(f32 *)((char *)obj + 0x2c) = -*(f32 *)((char *)obj + 0x2c);
-                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4ABC);
-                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
+                ((GameObject *)obj)->anim.velocityX = -((GameObject *)obj)->anim.velocityX;
+                ((GameObject *)obj)->anim.velocityZ = -((GameObject *)obj)->anim.velocityZ;
+                ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4ABC);
+                ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
             }
         }
     } else {
         int done = Curve_AdvanceAlongPath(extra, lbl_803E4AC0);
-        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)extra + 0x68);
-        *(f32 *)((char *)obj + 0x10) = (f32)(lbl_803E4AC8 + *(f32 *)((char *)extra + 0x6c));
-        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)extra + 0x70);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)extra + 0x68);
+        ((GameObject *)obj)->anim.localPosY = (f32)(lbl_803E4AC8 + *(f32 *)((char *)extra + 0x6c));
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)extra + 0x70);
         *(s16 *)obj = getAngle(*(f32 *)((char *)extra + 0x74), *(f32 *)((char *)extra + 0x7c));
-        *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) + framesThisStep * 800;
-        *(f32 *)((char *)obj + 0x24) =
-            oneOverTimeDelta * (*(f32 *)((char *)obj + 0xc) - *(f32 *)((char *)obj + 0x80));
-        *(f32 *)((char *)obj + 0x28) = lbl_803E4AD0;
-        *(f32 *)((char *)obj + 0x2c) =
-            oneOverTimeDelta * (*(f32 *)((char *)obj + 0x14) - *(f32 *)((char *)obj + 0x88));
+        ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + framesThisStep * 800;
+        ((GameObject *)obj)->anim.velocityX =
+            oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX);
+        ((GameObject *)obj)->anim.velocityY = lbl_803E4AD0;
+        ((GameObject *)obj)->anim.velocityZ =
+            oneOverTimeDelta * (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
         if (done != 0) {
             Obj_FreeObject(obj);
             return;
@@ -1953,15 +1954,15 @@ checkHit:
             if (GameBit_Get(648) != 0) {
                 int n;
                 *(u8 *)((char *)extra + 0xac) |= 2;
-                n = hitDetectFn_80065e50(obj, *(f32 *)((char *)obj + 0xc),
-                                         *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14),
+                n = hitDetectFn_80065e50(obj, ((GameObject *)obj)->anim.localPosX,
+                                         ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
                                          &results, 0, 0);
-                *(f32 *)((char *)extra + 0xa4) = *(f32 *)((char *)obj + 0x10);
+                *(f32 *)((char *)extra + 0xa4) = ((GameObject *)obj)->anim.localPosY;
                 while (n > 0) {
                     int *r;
                     n--;
                     r = results[n];
-                    if (*(f32 *)r < *(f32 *)((char *)obj + 0x10)) {
+                    if (*(f32 *)r < ((GameObject *)obj)->anim.localPosY) {
                         s8 t = *(s8 *)((char *)r + 0x14);
                         if (t == 26 || t == 8) {
                             *(f32 *)((char *)extra + 0xa4) = *(f32 *)r;
@@ -1969,14 +1970,14 @@ checkHit:
                         }
                     }
                 }
-                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4ABC);
-                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
+                ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4ABC);
+                ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
             }
         }
     }
 
     if (*(u8 *)((char *)obj + 0x36) == 255) {
-        int *m = *(int **)((char *)obj + 0x54);
+        int *m = *(int **)&((GameObject *)obj)->anim.hitReactState;
         if (m != NULL) {
             *(s16 *)((char *)m + 0x60) |= 1;
             *(u8 *)((char *)m + 0x6e) = 4;

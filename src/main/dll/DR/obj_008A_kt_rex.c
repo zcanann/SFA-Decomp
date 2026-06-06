@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 #include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
@@ -148,10 +149,10 @@ int ktrex_animEventCallback(int obj, int p2, u8 *arg) {
         }
     }
     ktrex_updateAttackEffects(obj);
-    if (*(int *)((char *)obj + 0xf8) == 0) {
-        *(int *)((char *)obj + 0xf8) = 1;
-    } else if (*(int *)((char *)obj + 0xf8) == 3) {
-        *(int *)((char *)obj + 0xf8) = 4;
+    if (((GameObject *)obj)->unkF8 == 0) {
+        ((GameObject *)obj)->unkF8 = 1;
+    } else if (((GameObject *)obj)->unkF8 == 3) {
+        ((GameObject *)obj)->unkF8 = 4;
     }
     return 0;
 }
@@ -222,7 +223,7 @@ int ktrex_isPlayerInLaneThreatRange(int obj) {
     switch (state) {
     case 1:
     case 2:
-        center = *(f32 *)((char *)obj + 0x14);
+        center = ((GameObject *)obj)->anim.localPosZ;
         lo = (center - lbl_803E683C) - *(f32 *)((char *)lbl_803DDD50 + 0x28);
         hi = (lbl_803E683C + center) - *(f32 *)((char *)lbl_803DDD50 + 0x28);
         if (lo > lbl_803E6840) {
@@ -234,7 +235,7 @@ int ktrex_isPlayerInLaneThreatRange(int obj) {
         return 0;
     case 4:
     case 8:
-        center = *(f32 *)((char *)obj + 0xc);
+        center = ((GameObject *)obj)->anim.localPosX;
         lo = (center - lbl_803E683C) - *(f32 *)((char *)lbl_803DDD50 + 0x24);
         hi = (lbl_803E683C + center) - *(f32 *)((char *)lbl_803DDD50 + 0x24);
         if (lo > lbl_803E6844) {
@@ -254,7 +255,7 @@ int ktrex_isPlayerInLaneThreatRange(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int ktrex_setScale(int obj) {
-    void *p = *(void **)((char *)obj + 0xb8);
+    void *p = ((GameObject *)obj)->extra;
     gKTRexRuntime = p;
     return *(s16 *)((char *)p + 0x274);
 }
@@ -298,7 +299,7 @@ void ktrex_hitDetect(int obj) {
 #pragma peephole off
 void ktrex_free(int obj) {
     int i;
-    gKTRexRuntime = *(void **)((char *)obj + 0xb8);
+    gKTRexRuntime = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 0x3);
     (*(void (**)(int, void *, int))((char *)*gBaddieControlInterface + 0x40))(obj, gKTRexRuntime, 0);
     Stack_Free(*(void **)gKTRexState);
@@ -462,11 +463,11 @@ void ktrex_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefi
     void *e;
     int i;
 
-    gKTRexRuntime = *(void **)((char *)obj + 0xb8);
+    gKTRexRuntime = ((GameObject *)obj)->extra;
     if (visible == 0) {
         return;
     }
-    if (*(int *)((char *)obj + 0xf4) != 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
         return;
     }
     if (((KTRexArenaState *)gKTRexState)->light != NULL) {
@@ -517,14 +518,14 @@ void ktrex_update(int obj) {
     int i;
     f32 dz, dx;
 
-    if (*(int *)((char *)obj + 0xf4) != 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
         return;
     }
-    runtime = *(void **)((char *)obj + 0xb8);
+    runtime = ((GameObject *)obj)->extra;
     gKTRexRuntime = runtime;
-    if (*(int *)((char *)obj + 0xf8) == 1) {
+    if (((GameObject *)obj)->unkF8 == 1) {
         Music_Trigger(40, 1);
-        *(int *)((char *)obj + 0xf8) = 2;
+        ((GameObject *)obj)->unkF8 = 2;
         ((KTRexRuntime *)runtime)->unk270 = 11;
         ((KTRexRuntime *)runtime)->unk27B = 1;
     }
@@ -532,9 +533,9 @@ void ktrex_update(int obj) {
     ((KTRexRuntime *)runtime)->unk2D0 = Obj_GetPlayerObject();
     if (((KTRexRuntime *)runtime)->unk2D0 != NULL) {
         player = ((KTRexRuntime *)runtime)->unk2D0;
-        d[0] = *(f32 *)((char *)player + 0x18) - *(f32 *)((char *)obj + 0x18);
-        d[1] = *(f32 *)((char *)player + 0x1c) - *(f32 *)((char *)obj + 0x1c);
-        d[2] = *(f32 *)((char *)player + 0x20) - *(f32 *)((char *)obj + 0x20);
+        d[0] = *(f32 *)((char *)player + 0x18) - ((GameObject *)obj)->anim.worldPosX;
+        d[1] = *(f32 *)((char *)player + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
+        d[2] = *(f32 *)((char *)player + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
         ((KTRexRuntime *)runtime)->unk2C0 = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
     characterDoEyeAnims(obj, (char *)gKTRexRuntime + 0x3ac);
@@ -575,7 +576,7 @@ void ktrex_update(int obj) {
     ObjHits_SetHitVolumeMasks(obj, 24, 2, 0x1fffff);
     (*(void (**)(int, void *, f32, f32, void **, void *))((char *)*gPlayerInterface + 0x8))(
         obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
-    *(f32 *)((char *)obj + 0x10) = ((KTRexArenaState *)gKTRexState)->unkEC;
+    ((GameObject *)obj)->anim.localPosY = ((KTRexArenaState *)gKTRexState)->unkEC;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -678,9 +679,9 @@ int ktrex_stateHandlerB03(int obj, int runtime) {
         ((KTRexArenaState *)gKTRexState)->homeYaw = *(s16 *)obj;
     }
     if (dir != 0) {
-        *(s16 *)obj = lbl_803E6814 * *(f32 *)((char *)obj + 0x98) + (f32)(int)((KTRexArenaState *)gKTRexState)->homeYaw;
+        *(s16 *)obj = lbl_803E6814 * ((GameObject *)obj)->anim.currentMoveProgress + (f32)(int)((KTRexArenaState *)gKTRexState)->homeYaw;
     } else {
-        *(s16 *)obj = (f32)(int)((KTRexArenaState *)gKTRexState)->homeYaw - lbl_803E6814 * *(f32 *)((char *)obj + 0x98);
+        *(s16 *)obj = (f32)(int)((KTRexArenaState *)gKTRexState)->homeYaw - lbl_803E6814 * ((GameObject *)obj)->anim.currentMoveProgress;
     }
     return 0;
 }
@@ -749,11 +750,11 @@ int ktrex_stateHandlerB01(int obj, int runtime) {
         ((KTRexRuntime *)gKTRexRuntime)->handlerState &= ~1;
         *(int *)&((KTRexArenaState *)gKTRexState)->phaseFlags |= mask;
     }
-    dx = oneOverTimeDelta * (((KTRexArenaState *)gKTRexState)->unkE8 - *(f32 *)((char *)obj + 0xc));
-    dz = oneOverTimeDelta * (((KTRexArenaState *)gKTRexState)->unkF0 - *(f32 *)((char *)obj + 0x14));
+    dx = oneOverTimeDelta * (((KTRexArenaState *)gKTRexState)->unkE8 - ((GameObject *)obj)->anim.localPosX);
+    dz = oneOverTimeDelta * (((KTRexArenaState *)gKTRexState)->unkF0 - ((GameObject *)obj)->anim.localPosZ);
     ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent *)obj, (f32 *)((char *)runtime + 0x2a0));
-    *(f32 *)((char *)obj + 0xc) = ((KTRexArenaState *)gKTRexState)->unkE8;
-    *(f32 *)((char *)obj + 0x14) = ((KTRexArenaState *)gKTRexState)->unkF0;
+    ((GameObject *)obj)->anim.localPosX = ((KTRexArenaState *)gKTRexState)->unkE8;
+    ((GameObject *)obj)->anim.localPosZ = ((KTRexArenaState *)gKTRexState)->unkF0;
     return 0;
 }
 #pragma peephole reset
@@ -802,9 +803,9 @@ int ktrex_stateHandlerB02(int obj, int runtime) {
     Matrix_TransformPoint(mtx, ((KTRexRuntime *)runtime)->unk284, lbl_803E67B8, -((KTRexRuntime *)runtime)->unk280,
                           (f32 *)((char *)obj + 0x24), &tmpY, (f32 *)((char *)obj + 0x2c));
     if (dir != 0) {
-        *(s16 *)obj = lbl_803E681C * *(f32 *)((char *)obj + 0x98) + (f32)(int)((KTRexArenaState *)gKTRexState)->homeYaw;
+        *(s16 *)obj = lbl_803E681C * ((GameObject *)obj)->anim.currentMoveProgress + (f32)(int)((KTRexArenaState *)gKTRexState)->homeYaw;
     } else {
-        *(s16 *)obj = (f32)(int)((KTRexArenaState *)gKTRexState)->homeYaw - lbl_803E681C * *(f32 *)((char *)obj + 0x98);
+        *(s16 *)obj = (f32)(int)((KTRexArenaState *)gKTRexState)->homeYaw - lbl_803E681C * ((GameObject *)obj)->anim.currentMoveProgress;
     }
     return 0;
 }
@@ -816,16 +817,16 @@ int ktrex_stateHandlerB02(int obj, int runtime) {
 void ktrex_init(int obj, char *arg) {
     int i;
     int cp;
-    gKTRexRuntime = *(void **)((char *)obj + 0xb8);
+    gKTRexRuntime = ((GameObject *)obj)->extra;
     (*(void (**)(int, char *, void *, int, int, int, int, f32))((char *)*gBaddieControlInterface + 0x58))(
         obj, arg, gKTRexRuntime, 9, 0xc, 0x100, 0x10 | (arg != 0), lbl_803E684C);
-    *(void **)((char *)obj + 0xbc) = (void *)ktrex_animEventCallback;
+    ((GameObject *)obj)->unkBC = (void *)ktrex_animEventCallback;
     (*(void (**)(int, void *, int))((char *)*gPlayerInterface + 0x14))(obj, gKTRexRuntime, 0);
     ((KTRexRuntime *)gKTRexRuntime)->unk270 = 2;
     *(int *)&((KTRexRuntime *)gKTRexRuntime)->unk2D0 = 0;
     ((KTRexRuntime *)gKTRexRuntime)->unk25F = 0;
     ((KTRexRuntime *)gKTRexRuntime)->unk349 = 0;
-    *(u8 *)((char *)obj + 0xaf) |= 0x88;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x88;
     ObjHits_EnableObject(obj);
     if (*(int *)((char *)obj + 0x64) != 0) {
         *(int *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x810;
@@ -863,13 +864,13 @@ void ktrex_init(int obj, char *arg) {
     ((KTRexArenaState *)gKTRexState)->unk102 = 4;
     ((KTRexRuntime *)gKTRexRuntime)->unk354 = 3;
     lbl_803DDD48 = (void *)Resource_Acquire(0x5a, 1);
-    *(int *)((char *)obj + 0xf8) = 0;
+    ((GameObject *)obj)->unkF8 = 0;
     lbl_803DDD50 = (void *)mapBlockFn_800592e4();
     ((KTRexArenaState *)gKTRexState)->light = objCreateLight(0, 1);
     if (((KTRexArenaState *)gKTRexState)->light != 0) {
         modelLightStruct_setLightKind(((KTRexArenaState *)gKTRexState)->light, 2);
-        modelLightStruct_setPosition(((KTRexArenaState *)gKTRexState)->light, *(f32 *)((char *)obj + 0xc),
-            *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14));
+        modelLightStruct_setPosition(((KTRexArenaState *)gKTRexState)->light, ((GameObject *)obj)->anim.localPosX,
+            ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
         modelLightStruct_setDiffuseColor(((KTRexArenaState *)gKTRexState)->light, 0xff, 0, 0, 0);
         modelLightStruct_setDistanceAttenuation(((KTRexArenaState *)gKTRexState)->light, lbl_803E6850, lbl_803E67F0);
         modelLightStruct_setupGlow(((KTRexArenaState *)gKTRexState)->light, 0, 0xff, 0, 0, 0x50, lbl_803E67F0);
@@ -1022,7 +1023,7 @@ void ktrex_updateAttackEffects(int obj) {
             obj, 0x487, (char *)gKTRexState + 0x10c, 0x200001, -1, (char *)gKTRexState + 0x16c);
     }
     ((KTRexArenaState *)gKTRexState)->phaseFlags &= 0x1800;
-    if ((*(ObjHitsPriorityState **)((char *)obj + 0x54))->lastHitObject == (int)Obj_GetPlayerObject()) {
+    if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject()) {
         Sfx_PlayFromObject((int)Obj_GetPlayerObject(), SFXbaddie_haga_talk1);
     }
 }
@@ -1094,9 +1095,9 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
         *(f32 *)((char *)lbl_803AD158 + 0x14) = playerMapOffsetZ + pt[3];
         (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(
             obj, 0x328, lbl_803AD158, 0x200001, -1, 0);
-        *(f32 *)((char *)lbl_803AD158 + 0xc) -= *(f32 *)((char *)obj + 0x18);
-        *(f32 *)((char *)lbl_803AD158 + 0x10) -= *(f32 *)((char *)obj + 0x1c);
-        *(f32 *)((char *)lbl_803AD158 + 0x14) -= *(f32 *)((char *)obj + 0x20);
+        *(f32 *)((char *)lbl_803AD158 + 0xc) -= ((GameObject *)obj)->anim.worldPosX;
+        *(f32 *)((char *)lbl_803AD158 + 0x10) -= ((GameObject *)obj)->anim.worldPosY;
+        *(f32 *)((char *)lbl_803AD158 + 0x14) -= ((GameObject *)obj)->anim.worldPosZ;
         *(f32 *)((char *)lbl_803AD158 + 0x8) = lbl_803E6818;
         *(s16 *)((char *)lbl_803AD158 + 0x0) = 0;
         *(s16 *)((char *)lbl_803AD158 + 0x2) = 0;
@@ -1122,7 +1123,7 @@ int ktrex_stateHandlerA02(int obj, int runtime) {
     int phase;
     int idx;
     u16 flags;
-    p = *(void **)((char *)obj + 0x4c);
+    p = ((GameObject *)obj)->anim.placementData;
     if ((s8)((KTRexRuntime *)runtime)->unk27B != 0) {
         (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 1);
         ((KTRexArenaState *)gKTRexState)->unkFC = 0;
@@ -1225,10 +1226,10 @@ int ktrex_stateHandlerA03(int obj, int runtime) {
         f4 = ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowBZ)[phase] - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase];
         if (__fabs(f5) > __fabs(f4)) {
             *(f32 *)((char *)gKTRexState + 8) =
-                (*(f32 *)((char *)obj + 0xc) - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAX)[phase]) / f5;
+                (((GameObject *)obj)->anim.localPosX - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAX)[phase]) / f5;
         } else {
             *(f32 *)((char *)gKTRexState + 8) =
-                (*(f32 *)((char *)obj + 0x14) - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase]) / f4;
+                (((GameObject *)obj)->anim.localPosZ - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase]) / f4;
         }
         popped = 0;
         if (Stack_IsEmpty(((KTRexArenaState *)gKTRexState)->stack) == 0) {
@@ -1246,7 +1247,7 @@ int ktrex_stateHandlerA03(int obj, int runtime) {
 int ktrex_stateHandlerA07(int obj, int runtime) {
     if ((s8)((KTRexRuntime *)runtime)->unk27B != 0) {
         (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 6);
-        *(u8 *)((char *)obj + 0xaf) &= ~8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
         ((KTRexArenaState *)gKTRexState)->unk101 += 1;
         ktrexlevel_clearPathGameBits();
         GameBit_Set(1394, ((KTRexArenaState *)gKTRexState)->unk101);
@@ -1271,7 +1272,7 @@ int ktrex_stateHandlerA04(int obj, int runtime) {
     void *p;
     int popped;
     f32 t;
-    p = *(void **)((char *)obj + 0x4c);
+    p = ((GameObject *)obj)->anim.placementData;
     if ((s8)((KTRexRuntime *)runtime)->unk27B != 0) {
         (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 4);
         *(f32 *)((char *)gKTRexState + 4) =
@@ -1303,7 +1304,7 @@ int ktrex_stateHandlerA05(int obj, int runtime) {
     void *p;
     int pushLo;
     int pushHi;
-    p = *(void **)((char *)obj + 0x4c);
+    p = ((GameObject *)obj)->anim.placementData;
     if ((s8)((KTRexRuntime *)runtime)->unk27B != 0) {
         (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 1);
         ((KTRexArenaState *)gKTRexState)->unkFC = 1;
@@ -1341,12 +1342,12 @@ int ktrex_stateHandlerA05(int obj, int runtime) {
 int ktrex_stateHandlerA08(int obj, int runtime) {
     void *p;
     f32 t;
-    p = *(void **)((char *)obj + 0x4c);
+    p = ((GameObject *)obj)->anim.placementData;
     if ((s8)((KTRexRuntime *)runtime)->unk27B != 0) {
         (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 7);
         *(f32 *)((char *)gKTRexState + 4) =
             (f32)(u32)*(u16 *)((char *)p + (((KTRexArenaState *)gKTRexState)->unk101 & ~1) + 0x4a);
-        *(u8 *)((char *)obj + 0xaf) &= ~8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
         return 0;
     }
     if ((((KTRexArenaState *)gKTRexState)->timerFA & 8) == 0) {
@@ -1364,7 +1365,7 @@ int ktrex_stateHandlerA08(int obj, int runtime) {
     if (((KTRexArenaState *)gKTRexState)->unk102 == 0) {
         return 2;
     }
-    *(u8 *)((char *)obj + 0xaf) |= 8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     return 10;
 }
 #pragma peephole reset
@@ -1402,10 +1403,10 @@ int ktrex_stateHandlerA11(int obj, int runtime) {
     f4 = ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowBZ)[phase] - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase];
     if (__fabs(f5) > __fabs(f4)) {
         *(f32 *)((char *)gKTRexState + 8) =
-            (*(f32 *)((char *)obj + 0xc) - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAX)[phase]) / f5;
+            (((GameObject *)obj)->anim.localPosX - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAX)[phase]) / f5;
     } else {
         *(f32 *)((char *)gKTRexState + 8) =
-            (*(f32 *)((char *)obj + 0x14) - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase]) / f4;
+            (((GameObject *)obj)->anim.localPosZ - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase]) / f4;
     }
     ((KTRexArenaState *)gKTRexState)->timerFA |= 0x40;
     return 3;
@@ -1442,7 +1443,7 @@ int ktrex_stateHandlerA10(int obj, int runtime) {
     u16 flags;
     int phase;
     int laneBit;
-    p = *(void **)((char *)obj + 0x4c);
+    p = ((GameObject *)obj)->anim.placementData;
     flags = ((KTRexArenaState *)gKTRexState)->timerFA;
     phase = (flags >> 1) & 3;
     laneBit = flags & 1;
@@ -1534,7 +1535,7 @@ int ktrex_stateHandlerA10(int obj, int runtime) {
 #pragma peephole off
 int ktrex_stateHandlerA01(int obj, int runtime) {
     if ((s8)((KTRexRuntime *)runtime)->unk27B != 0) {
-        *(u8 *)((char *)obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         ((KTRexRuntime *)runtime)->unk349 = 0;
         ((KTRexRuntime *)runtime)->unk25F = 0;
         *(f32 *)((char *)gKTRexState + 4) = lbl_803E67EC;
@@ -1542,9 +1543,9 @@ int ktrex_stateHandlerA01(int obj, int runtime) {
     }
     *(f32 *)((char *)gKTRexState + 4) -= timeDelta;
     if (*(f32 *)((char *)gKTRexState + 4) <= lbl_803E67F0) {
-        if (*(int *)((char *)obj + 0xf8) != 3) {
+        if (((GameObject *)obj)->unkF8 != 3) {
             (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 8))(30, 1);
-            *(int *)((char *)obj + 0xf8) = 3;
+            ((GameObject *)obj)->unkF8 = 3;
         }
     }
     if (*(f32 *)((char *)gKTRexState + 4) <= lbl_803E67B8) {

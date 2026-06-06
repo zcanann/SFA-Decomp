@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 
 typedef struct HighTopRuntime {
@@ -80,7 +81,7 @@ int hightop_setScale(void) { return 0x0; }
 #pragma peephole off
 void hightop_func11(int obj, int val) {
     u8 v = val;
-    HighTopRuntime *p = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *p = ((GameObject *)obj)->extra;
     p->unkC43 = v;
 }
 #pragma peephole reset
@@ -130,7 +131,7 @@ void hightop_free(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler00(int obj) {
-    int p = *(int *)((char *)obj + 0x4c);
+    int p = *(int *)&((GameObject *)obj)->anim.placementData;
     if (*(s8 *)(p + 0x19) != 0) {
         return 0xa;
     }
@@ -145,7 +146,7 @@ int hightop_stateHandler00(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler06(int obj, u8 *p2) {
-    HighTopRuntime *p = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *p = ((GameObject *)obj)->extra;
     if ((s8)p2[0x27a] != 0) {
         p->unk9FD |= 1;
     }
@@ -180,14 +181,14 @@ void hightop_func0F(int obj, f32 *ox, f32 *oy, f32 *oz) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler03(int obj, u8 *p2) {
-    HighTopRuntime *p = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *p = ((GameObject *)obj)->extra;
     f32 zero = lbl_803E6AA8;
     *(f32 *)(p2 + 0x294) = zero;
     *(f32 *)(p2 + 0x284) = zero;
     *(f32 *)(p2 + 0x280) = zero;
-    *(f32 *)((char *)obj + 0x24) = zero;
-    *(f32 *)((char *)obj + 0x28) = zero;
-    *(f32 *)((char *)obj + 0x2c) = zero;
+    ((GameObject *)obj)->anim.velocityX = zero;
+    ((GameObject *)obj)->anim.velocityY = zero;
+    ((GameObject *)obj)->anim.velocityZ = zero;
     if ((s8)p2[0x27a] != 0) {
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x78);
         if (*(u32 *)&p->unkC3C == 4) {
@@ -198,7 +199,7 @@ int hightop_stateHandler03(int obj, u8 *p2) {
             *(f32 *)(p2 + 0x2a0) = lbl_803E6AC8;
         }
     }
-    if (*(f32 *)((char *)obj + 0x98) > lbl_803E6B00) {
+    if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E6B00) {
         return p->unkC3C + 1;
     }
     return 0;
@@ -209,7 +210,7 @@ int hightop_stateHandler03(int obj, u8 *p2) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler05(int obj, u8 *p2) {
-    HighTopRuntime *p = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *p = ((GameObject *)obj)->extra;
     if ((s8)p2[0x27a] != 0) {
         p->flagsC49.b1 = 0;
         p->unkC4B = 0xa;
@@ -236,7 +237,7 @@ int hightop_stateHandler05(int obj, u8 *p2) {
 int hightop_interactionCallback(int obj) {
     HighTopRuntime *p;
     seqFn_800394a0(obj);
-    p = *(HighTopRuntime **)((char *)obj + 0xb8);
+    p = ((GameObject *)obj)->extra;
     p->unk9FD &= ~1;
     p->flagsC49.b4 = 0;
     p->flagsC49.b6 = 1;
@@ -281,9 +282,9 @@ void hightop_getLookTargetYaw(int obj, int mode, int *out) {
     switch (mode) {
     case 2:
         if (dll_2E_func0A(0x11, buf) != 0) {
-            yaw = getAngle(buf[3] - *(f32 *)((char *)obj + 0xc), buf[5] - *(f32 *)((char *)obj + 0x14));
+            yaw = getAngle(buf[3] - ((GameObject *)obj)->anim.localPosX, buf[5] - ((GameObject *)obj)->anim.localPosZ);
             *out = yaw + lbl_803DC328;
-            p = *(HighTopRuntime **)((char *)obj + 0xb8);
+            p = ((GameObject *)obj)->extra;
             p->lookTargetX = buf[3];
             p->lookTargetY = buf[4];
             p->lookTargetZ = buf[5];
@@ -316,7 +317,7 @@ void hightop_renderGroundMarker(int obj, f32 scale) {
     pos.rx = -0x8000;
     pos.ry = 0;
     pos.rz = 0;
-    pos.scale = scale / *(f32 *)(*(int *)((char *)obj + 0x50) + 0x4);
+    pos.scale = scale / *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x4);
     setMatrixFromObjectPos(lbl_803AD208, &pos);
     mtx44_mult(lbl_803AD208, mtx, lbl_803AD208);
     fn_8003B950(lbl_803AD208);
@@ -358,7 +359,7 @@ void hightop_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, unde
 #pragma peephole off
 void hightop_init(void *obj, u8 *arg) {
     u8 *base = lbl_8032AAB0;
-    HighTopRuntime *runtime = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *runtime = ((GameObject *)obj)->extra;
     char *pathObj;
     int *node;
     HtInitData local1;
@@ -368,7 +369,7 @@ void hightop_init(void *obj, u8 *arg) {
     local1 = lbl_802C2590;
     local2 = lbl_802C25A4;
     *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
-    *(int *)((char *)obj + 0xbc) = (int)hightop_interactionCallback;
+    *(int *)&((GameObject *)obj)->unkBC = (int)hightop_interactionCallback;
     runtime->unkC45 = arg[0x19];
     runtime->unkC16 = 5;
     *(s8 *)&runtime->unkC4B = -1;
@@ -393,7 +394,7 @@ void hightop_init(void *obj, u8 *arg) {
     runtime->unk9FD |= 8;
     runtime->unkC18 = *(s16 *)(arg + 0x1a);
     runtime->unk9FD |= 1;
-    *(u8 *)(*(int *)((char *)obj + 0x50) + 0x71) = 127;
+    *(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x71) = 127;
     runtime->flagsC49.b4 = 0;
     runtime->flagsC49.b7 = 0;
     lbl_803DC320 = *(s16 *)(arg + 0x1a);
@@ -411,7 +412,7 @@ void hightop_init(void *obj, u8 *arg) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler08(int obj, u8 *p2) {
-    HighTopRuntime *state = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *state = ((GameObject *)obj)->extra;
     if ((s8)p2[0x27a] != 0) {
         f32 zero;
         state->unkC30 = lbl_803E6AB4;
@@ -419,12 +420,12 @@ int hightop_stateHandler08(int obj, u8 *p2) {
         *(f32 *)(p2 + 0x294) = zero;
         *(f32 *)(p2 + 0x284) = zero;
         *(f32 *)(p2 + 0x280) = zero;
-        *(f32 *)((char *)obj + 0x24) = zero;
-        *(f32 *)((char *)obj + 0x28) = zero;
-        *(f32 *)((char *)obj + 0x2c) = zero;
+        ((GameObject *)obj)->anim.velocityX = zero;
+        ((GameObject *)obj)->anim.velocityY = zero;
+        ((GameObject *)obj)->anim.velocityZ = zero;
     }
     if ((s8)p2[0x346] != 0) {
-        s16 cur = *(s16 *)((char *)obj + 0xa0);
+        s16 cur = ((GameObject *)obj)->anim.currentMove;
         switch (cur) {
         case 10:
             if (*(f32 *)(p2 + 0x2a0) > lbl_803E6AA8) {
@@ -445,9 +446,9 @@ int hightop_stateHandler08(int obj, u8 *p2) {
             break;
         }
     }
-    if (*(s16 *)((char *)obj + 0xa0) == 10) {
+    if (((GameObject *)obj)->anim.currentMove == 10) {
         if (*(f32 *)(p2 + 0x2a0) < lbl_803E6AA8) {
-            if (*(f32 *)((char *)obj + 0x98) < lbl_803E6AC4) {
+            if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E6AC4) {
                 ObjAnim_SetCurrentMove(obj, 0, lbl_803E6AA8, 0);
                 *(f32 *)(p2 + 0x2a0) = lbl_803E6AC8;
                 return 8;
@@ -484,7 +485,7 @@ void hightop_initialise(void) {
 #pragma peephole off
 #pragma dont_inline on
 int hightop_handleMotionEvent(int obj, u8 event) {
-    HighTopRuntime *runtime = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *runtime = ((GameObject *)obj)->extra;
     switch (event) {
     case 5:
         (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)runtime, 8);
@@ -496,7 +497,7 @@ int hightop_handleMotionEvent(int obj, u8 event) {
     case 7:
         GameBit_Set(0x634, 0);
         GameBit_Set(0x631, 1);
-        *(u8 *)(*(int *)((char *)obj + 0x50) + 0x71) |= 1;
+        *(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x71) |= 1;
         runtime->unkC40 &= ~0x140;
         runtime->unk9FD &= ~2;
         (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)runtime, 7);
@@ -517,7 +518,7 @@ int hightop_handleMotionEvent(int obj, u8 event) {
 #pragma scheduling off
 #pragma peephole off
 void hightop_hitDetect(int obj) {
-    HighTopRuntime *p = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *p = ((GameObject *)obj)->extra;
     f32 l10;
     f32 lc;
     f32 l8;
@@ -553,16 +554,16 @@ void hightop_hitDetect(int obj) {
             if (Obj_IsLoadingLocked() != 0) {
                 int spawn = Obj_AllocObjectSetup(0x2c, 0xd4);
                 *(u8 *)(spawn + 0x4) = 2;
-                *(f32 *)(spawn + 0x8) = *(f32 *)((char *)obj + 0xc);
-                *(f32 *)(spawn + 0xc) = *(f32 *)((char *)obj + 0x10);
-                *(f32 *)(spawn + 0x10) = *(f32 *)((char *)obj + 0x14);
+                *(f32 *)(spawn + 0x8) = ((GameObject *)obj)->anim.localPosX;
+                *(f32 *)(spawn + 0xc) = ((GameObject *)obj)->anim.localPosY;
+                *(f32 *)(spawn + 0x10) = ((GameObject *)obj)->anim.localPosZ;
                 *(s16 *)(spawn + 0x1a) = 0x675;
                 *(s16 *)(spawn + 0x1c) = 0;
                 *(s16 *)(spawn + 0x1e) = -1;
-                Obj_SetupObject(spawn, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30));
+                Obj_SetupObject(spawn, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
             }
-            *(s16 *)((char *)obj + 0x2) = 0;
-            *(s16 *)((char *)obj + 0x4) = 0;
+            ((GameObject *)obj)->anim.rotY = 0;
+            ((GameObject *)obj)->anim.rotZ = 0;
             p->baddie.unk25F = 0;
             *(int *)p |= 0x1000000;
             GameBit_Set(0xb48, 1);
@@ -578,9 +579,9 @@ void hightop_hitDetect(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void hightop_update(int obj) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     *(s16 *)(p + 0xc16) = 5;
-    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     *(s8 *)(p + 0x25f) = !((BitFlags8 *)(p + 0xc49))->b4;
     *(u8 *)(p + 0x354) = 0;
     *(int *)p &= ~0x8000;
@@ -645,15 +646,15 @@ int hightop_stateHandler01(int obj, int p) {
     *(f32 *)((char *)p + 0x294) = v;
     *(f32 *)((char *)p + 0x284) = v;
     *(f32 *)((char *)p + 0x280) = v;
-    *(f32 *)((char *)obj + 0x24) = v;
-    *(f32 *)((char *)obj + 0x28) = v;
-    *(f32 *)((char *)obj + 0x2c) = v;
+    ((GameObject *)obj)->anim.velocityX = v;
+    ((GameObject *)obj)->anim.velocityY = v;
+    ((GameObject *)obj)->anim.velocityZ = v;
     *(int *)((char *)p + 0) |= 0x200000;
     if ((s8)*(u8 *)((char *)p + 0x27a) != 0) {
         *(s16 *)((char *)p + 0x338) = 0;
         *(f32 *)((char *)p + 0x2a0) = lbl_803E6B24;
         *(f32 *)((char *)p + 0x2b8) = lbl_803E6B28;
-        if (*(s16 *)((char *)obj + 0xa0) != lbl_803DC32C) {
+        if (((GameObject *)obj)->anim.currentMove != lbl_803DC32C) {
             ObjAnim_SetCurrentMove(obj, lbl_803DC32C, lbl_803E6AA8, 0);
         }
     }
@@ -673,16 +674,16 @@ int hightop_stateHandler01(int obj, int p) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler07(int obj, int p) {
-    HighTopRuntime *rt = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *rt = ((GameObject *)obj)->extra;
     f32 v;
     if ((s8)*(u8 *)((char *)p + 0x27a) != 0) {
         v = lbl_803E6AA8;
         *(f32 *)((char *)p + 0x294) = v;
         *(f32 *)((char *)p + 0x284) = v;
         *(f32 *)((char *)p + 0x280) = v;
-        *(f32 *)((char *)obj + 0x24) = v;
-        *(f32 *)((char *)obj + 0x28) = v;
-        *(f32 *)((char *)obj + 0x2c) = v;
+        ((GameObject *)obj)->anim.velocityX = v;
+        ((GameObject *)obj)->anim.velocityY = v;
+        ((GameObject *)obj)->anim.velocityZ = v;
         ObjHits_SyncObjectPositionIfDirty(obj);
         (*(void (**)(void))((char *)*gGameUIInterface + 0x60))();
         rt->flagsC49.b7 = 0;
@@ -693,7 +694,7 @@ int hightop_stateHandler07(int obj, int p) {
         ObjGroup_RemoveObject(obj, 10);
     }
     if ((s8)*(u8 *)((char *)p + 0x346) != 0) {
-        if (*(s16 *)((char *)obj + 0xa0) != 0) {
+        if (((GameObject *)obj)->anim.currentMove != 0) {
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E6AA8, 0);
             *(f32 *)((char *)p + 0x2a0) = lbl_803E6AC8;
         }
@@ -709,7 +710,7 @@ int hightop_stateHandler07(int obj, int p) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler04(int obj, int p) {
-    HighTopRuntime *state = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *state = ((GameObject *)obj)->extra;
     int move = -1;
     int count;
     int *player;
@@ -717,7 +718,7 @@ int hightop_stateHandler04(int obj, int p) {
         state->flagsC49.b1 = 1;
         state->unkC30 = (f32)(int)randomGetRange(0x1f4, 0x3e8);
         state->unkC4B = 0;
-        if (*(s16 *)((char *)obj + 0xa0) != 2) {
+        if (((GameObject *)obj)->anim.currentMove != 2) {
             move = 2;
             *(f32 *)((char *)p + 0x2a0) = lbl_803E6AAC;
         }
@@ -729,14 +730,14 @@ int hightop_stateHandler04(int obj, int p) {
         GameBit_Set(0x62f, 1);
         ObjHits_MarkObjectPositionDirty(obj);
         ObjHits_ClearSourceMask(obj, 1);
-        *(u8 *)(*(int *)((char *)obj + 0x50) + 0x71) &= ~1;
+        *(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x71) &= ~1;
         state->unkC4B = -1;
         state->unkC40 |= 0x40;
         state->unkC40 |= 0x20;
         state->flagsC49.b1 = 0;
         (*(void (**)(void *, int, int, void *))((char *)*gRomCurveInterface + 0xa8))(
             (char *)state + 0xa10, obj, 0x3463a, *gRomCurveInterface);
-        state2 = *(HighTopRuntime **)((char *)obj + 0xb8);
+        state2 = ((GameObject *)obj)->extra;
         state2->flagsC49.b7 = 1;
         (*(void (**)(int, int, void *))((char *)*gGameUIInterface + 0x58))(lbl_803DC320, 0x5ce, *gGameUIInterface);
         (*(void (**)(int, void *))((char *)*gGameUIInterface + 0x5c))(
@@ -750,7 +751,7 @@ int hightop_stateHandler04(int obj, int p) {
     }
     objModelAndSoundFn_80039118(obj, (char *)state + 0xb48);
     state->unkC30 -= (f32)(u32)framesThisStep;
-    if (*(s16 *)((char *)obj + 0xa0) != 9 && *(s16 *)((char *)obj + 0xa0) != 0x11) {
+    if (((GameObject *)obj)->anim.currentMove != 9 && ((GameObject *)obj)->anim.currentMove != 0x11) {
         RandomTimer_UpdateRangeTrigger((char *)state + 0xc34, lbl_803E6AD8, lbl_803E6ADC);
         if (count == 0) {
             if (state->unkC30 < lbl_803E6AA8) {
@@ -767,7 +768,7 @@ int hightop_stateHandler04(int obj, int p) {
         }
     }
     if ((s8)*(u8 *)((char *)p + 0x346) != 0) {
-        if (*(s16 *)((char *)obj + 0xa0) != 2) {
+        if (((GameObject *)obj)->anim.currentMove != 2) {
             move = 2;
             *(f32 *)((char *)p + 0x2a0) = lbl_803E6AAC;
         }
@@ -780,7 +781,7 @@ int hightop_stateHandler04(int obj, int p) {
     if (player == 0) {
         state->unk9FD &= ~1;
     } else {
-        f32 dy = *(f32 *)((char *)player + 0x10) - *(f32 *)((char *)obj + 0x10);
+        f32 dy = *(f32 *)((char *)player + 0x10) - ((GameObject *)obj)->anim.localPosY;
         f32 a = dy >= lbl_803E6AA8 ? dy : -dy;
         int doBlock;
         if (a < lbl_803E6AEC) {
@@ -793,8 +794,8 @@ int hightop_stateHandler04(int obj, int p) {
             state->unk9FD &= ~1;
         } else {
             state->unk9FD |= 1;
-            if (randomGetRange(0, 0x64) == 0 && *(s16 *)((char *)obj + 0xa0) != 9) {
-                f32 c = *(f32 *)((char *)player + 0x10) - *(f32 *)((char *)obj + 0x10);
+            if (randomGetRange(0, 0x64) == 0 && ((GameObject *)obj)->anim.currentMove != 9) {
+                f32 c = *(f32 *)((char *)player + 0x10) - ((GameObject *)obj)->anim.localPosY;
                 f32 ac = c >= lbl_803E6AA8 ? c : -c;
                 if (ac < lbl_803E6AEC) {
                     (*(void (**)(int, int, int, void *))((char *)*gObjectTriggerInterface + 0x48))(
@@ -811,7 +812,7 @@ int hightop_stateHandler04(int obj, int p) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler02(int obj, int p, f32 t) {
-    HighTopRuntime *state = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *state = ((GameObject *)obj)->extra;
     s16 d336;
     int absd;
     int conv;
@@ -866,16 +867,16 @@ int hightop_stateHandler02(int obj, int p, f32 t) {
     }
     *(f32 *)((char *)p + 0x294) =
         t * ((f31 - *(f32 *)((char *)p + 0x294)) / *(f32 *)((char *)p + 0x2b8)) + *(f32 *)((char *)p + 0x294);
-    if (*(s16 *)((char *)obj + 0x2) > 0) {
-        ang = f31 - lbl_803E6B14 * fn_80293E80(lbl_803E6B18 * (f32)*(s16 *)((char *)obj + 0x2) / lbl_803E6B1C);
+    if (((GameObject *)obj)->anim.rotY > 0) {
+        ang = f31 - lbl_803E6B14 * fn_80293E80(lbl_803E6B18 * (f32)((GameObject *)obj)->anim.rotY / lbl_803E6B1C);
     } else {
-        ang = f31 - lbl_803E6B20 * fn_80293E80(lbl_803E6B18 * (f32)*(s16 *)((char *)obj + 0x2) / lbl_803E6B1C);
+        ang = f31 - lbl_803E6B20 * fn_80293E80(lbl_803E6B18 * (f32)((GameObject *)obj)->anim.rotY / lbl_803E6B1C);
     }
     *(f32 *)((char *)p + 0x280) =
         t * ((ang - *(f32 *)((char *)p + 0x280)) / *(f32 *)((char *)p + 0x2b8)) + *(f32 *)((char *)p + 0x280);
-    moveSpeed = *(f32 *)((char *)obj + 0x98);
+    moveSpeed = ((GameObject *)obj)->anim.currentMoveProgress;
     band = 0;
-    while ((&lbl_803DC32C)[band] != *(s16 *)((char *)obj + 0xa0) && band < 2) {
+    while ((&lbl_803DC32C)[band] != ((GameObject *)obj)->anim.currentMove && band < 2) {
         band++;
     }
     if (band >= 2) {
@@ -914,8 +915,8 @@ int hightop_stateHandler02(int obj, int p, f32 t) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler09(int obj, int p) {
-    HighTopRuntime *state = *(HighTopRuntime **)((char *)obj + 0xb8);
-    int *sub = *(int **)((char *)obj + 0x4c);
+    HighTopRuntime *state = ((GameObject *)obj)->extra;
+    int *sub = *(int **)&((GameObject *)obj)->anim.placementData;
     int r25;
     int i;
     if ((s8)*(u8 *)((char *)p + 0x27a) != 0 || state->flagsC49.b6 != 0) {
@@ -931,7 +932,7 @@ int hightop_stateHandler09(int obj, int p) {
         *(u32 *)p |= 0x1000000;
         storeZeroToFloatParam((char *)state + 0xc2c);
         ObjHits_EnableObject(obj);
-        if (*(s16 *)((char *)obj + 0xa0) != 2) {
+        if (((GameObject *)obj)->anim.currentMove != 2) {
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x78);
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E6AA8, 0);
             *(f32 *)((char *)p + 0x2a0) = lbl_803E6AAC;
@@ -948,7 +949,7 @@ int hightop_stateHandler09(int obj, int p) {
         }
     }
     if (GameBit_Get(*(s16 *)((char *)sub + 0x1e)) == 0) {
-        *(u8 *)((char *)obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         if (randFn_80080100(0x64) != 0) {
             objSoundFn_800392f0(obj, (int)((char *)state + 0x3bc), &lbl_803DC308 + randomGetRange(0, 0) * 6, 1);
         }
@@ -993,7 +994,7 @@ int hightop_stateHandler09(int obj, int p) {
         return 0;
     }
     if ((s8)*(u8 *)((char *)p + 0x346) != 0) {
-        if (*(s16 *)((char *)obj + 0xa0) != 2) {
+        if (((GameObject *)obj)->anim.currentMove != 2) {
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x78);
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E6AA8, 0);
             *(f32 *)((char *)p + 0x2a0) = lbl_803E6AAC;
@@ -1028,7 +1029,7 @@ int hightop_stateHandler09(int obj, int p) {
 #pragma scheduling off
 #pragma peephole off
 int hightop_stateHandler10(int obj, int p) {
-    HighTopRuntime *rt = *(HighTopRuntime **)((char *)obj + 0xb8);
+    HighTopRuntime *rt = ((GameObject *)obj)->extra;
     int r;
     int i;
     if ((s8)*(u8 *)((char *)p + 0x27a) != 0) {
