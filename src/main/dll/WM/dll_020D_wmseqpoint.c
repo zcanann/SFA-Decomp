@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 
 typedef struct WmSeqPointState {
@@ -246,8 +247,8 @@ void wmseqpoint_init(int obj, int setup)
     WmSeqPointState *state;
 
     state = *(WmSeqPointState **)(obj + 0xb8);
-    *(void **)(obj + 0xbc) = wmseqpoint_SeqFn;
-    *(s16 *)(obj + 0) = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->unkBC = wmseqpoint_SeqFn;
+    ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
     state->radius = (f32)*(s16 *)(setup + 0x1a);
     state->triggerId = *(s16 *)(setup + 0x1c);
     state->done = 0;
