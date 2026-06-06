@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/dll/smallbasket.h"
+#include "main/objhits_types.h"
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006810();
@@ -2710,8 +2711,8 @@ void fn_8015A924(int* obj, u8* state)
     u8* tbl = *(u8**)((char*)lbl_8031FD48 + *(u16*)(state + 0x338) * 8);
     int i;
 
-    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6e) = 10;
-    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6f) = 1;
+    ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumePriority = 10;
+    ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumeId = 1;
     if (*(s16*)((char*)obj + 0xa0) == 0) {
         *(u8*)((char*)obj + 0xaf) = *(u8*)((char*)obj + 0xaf) | 8;
         ObjHits_DisableObject(obj);
@@ -2961,16 +2962,18 @@ void fn_80159284(int* obj, u8* state)
         }
     }
 
-    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6e) = 0;
-    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6f) = 0;
+    ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumePriority = 0;
+    ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumeId = 0;
     j = 1;
     p = t8 + 0xc;
     n = *(u8*)(t8 + 8);
     for (; j <= n; j++) {
         if (*(s16*)((char*)obj + 0xa0) == *(u8*)(p + 8)) {
-            *(s8*)(*(int*)((char*)obj + 0x54) + 0x6e) = (s8)*(int*)(t8 + j * 0xc + 4);
-            *(s8*)(*(int*)((char*)obj + 0x54) + 0x6f) = (s8)*(u8*)(t8 + j * 0xc + 9);
-            if (*(s8*)(*(int*)((char*)obj + 0x54) + 0x6e) == 0x1f) {
+            ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumePriority =
+                (s8)*(int*)(t8 + j * 0xc + 4);
+            ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumeId =
+                (s8)*(u8*)(t8 + j * 0xc + 9);
+            if (((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumePriority == 0x1f) {
                 *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x40;
             } else {
                 *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) & -65;
@@ -3821,17 +3824,19 @@ void fn_80158C2C(s16* obj, u8* state)
         }
     }
 
-    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6e) = 0;
-    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6f) = 0;
+    ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumePriority = 0;
+    ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumeId = 0;
     {
         int j = 1;
         u8* p = t18 + 0xc;
         int c;
         for (c = *(u8*)(t18 + 8); c >= 1; c--) {
             if (*(s16*)((char*)obj + 0xa0) == *(u8*)(p + 8)) {
-                *(s8*)(*(int*)((char*)obj + 0x54) + 0x6e) = (s8)*(int*)((char*)t18 + j * 0xc + 4);
-                *(s8*)(*(int*)((char*)obj + 0x54) + 0x6f) = (s8)*(u8*)((char*)t18 + j * 0xc + 9);
-                if (*(s8*)(*(int*)((char*)obj + 0x54) + 0x6e) == 0x1f) {
+                ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumePriority =
+                    (s8)*(int*)((char*)t18 + j * 0xc + 4);
+                ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumeId =
+                    (s8)*(u8*)((char*)t18 + j * 0xc + 9);
+                if (((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumePriority == 0x1f) {
                     *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x40;
                 } else {
                     *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) & ~0x40;

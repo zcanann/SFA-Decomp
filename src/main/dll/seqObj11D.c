@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/seqObj11D.h"
 #include "main/objanim.h"
+#include "main/objhits_types.h"
 
 
 extern undefined4 FUN_80006824();
@@ -637,19 +638,19 @@ void fn_8015165C(int obj, u8 *state)
                 }
             }
         }
-        *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 0;
-        *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 0;
+        ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 0;
+        ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 0;
         if (*(s16 *)(obj + 0xa0) == p20[8]) {
-            *(s8 *)(*(int *)(obj + 0x54) + 0x6e) = (s8)*(int *)(p20 + 4);
-            *(s8 *)(*(int *)(obj + 0x54) + 0x6f) = (s8)p20[9];
+            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = (s8)*(int *)(p20 + 4);
+            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = (s8)p20[9];
         }
         if (*(s16 *)(obj + 0xa0) == p20[0x14]) {
-            *(s8 *)(*(int *)(obj + 0x54) + 0x6e) = (s8)*(int *)(p20 + 0x10);
-            *(s8 *)(*(int *)(obj + 0x54) + 0x6f) = (s8)p20[0x15];
+            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = (s8)*(int *)(p20 + 0x10);
+            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = (s8)p20[0x15];
         }
         if (*(s16 *)(obj + 0xa0) == p20[0x20]) {
-            *(s8 *)(*(int *)(obj + 0x54) + 0x6e) = (s8)*(int *)(p20 + 0x1c);
-            *(s8 *)(*(int *)(obj + 0x54) + 0x6f) = (s8)p20[0x21];
+            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = (s8)*(int *)(p20 + 0x1c);
+            ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = (s8)p20[0x21];
         }
         if ((state[0x323] & 8) == 0) {
             fn_8014CF7C(obj, state, *(f32 *)(*(int *)(state + 0x29c) + 0xc),
