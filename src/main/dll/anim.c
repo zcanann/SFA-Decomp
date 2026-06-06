@@ -7598,9 +7598,9 @@ void dbegg_update(int obj)
             d[1] = *(f32 *)(obj + 0x10) - *(f32 *)(data + 0xc);
             d[2] = *(f32 *)(obj + 0x14) - *(f32 *)(data + 0x10);
             Sfx_KeepAliveLoopedObjectSound(obj, 0x442);
-            fz = d[2];
+            fz = *(f32 *)((int)d + 8);
             fz = fz >= lbl_803E61C8 ? fz : -fz;
-            fx = d[0];
+            fx = *(f32 *)((int)d + 0);
             fx = fx >= lbl_803E61C8 ? fx : -fx;
             if (fx + fz < lbl_803E625C) {
                 ObjHits_EnableObject(obj);
