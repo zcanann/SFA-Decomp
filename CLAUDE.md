@@ -1509,7 +1509,10 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     the cast doesn't always recover: high-pressure fns are ALL-OR-NOTHING
     (if the typed local shifts savegpr, no partial conversion of that fn
     survives — revert it to raw and document; DIM2flameburst's whole
-    explosion family + scarab's dll_CB_seqFn are reference-only this way);
+    explosion family + scarab's dll_CB_seqFn are reference-only this way).
+    EXPECT the family's MAIN update/SeqFn to be the all-or-nothing holdout
+    (dll_CB_seqFn, DIMSnowHorn1_update, hightop_update) — convert the rest,
+    leave it raw, don't grind;
     (e) variable-indexed member arrays (`s->segmentLit[j]`) CAN convert
     byte-exact — the #86 index-fold concern doesn't automatically bite;
     (f) shared ENGINE records discovered by containerization: BaddieState
