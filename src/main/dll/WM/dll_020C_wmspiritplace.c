@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 
 typedef struct WmSpiritPlaceState {
@@ -355,9 +356,9 @@ void wmspiritplace_init(int obj, int setup)
     WmSpiritPlaceState *state;
 
     state = *(WmSpiritPlaceState **)(obj + 0xb8);
-    *(void **)(obj + 0xbc) = wmspiritplace_SeqFn;
-    *(s16 *)(obj + 0) = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
-    *(s16 *)(obj + 2) = (s16)(*(s16 *)(setup + 0x1a) << 8);
+    ((GameObject *)obj)->unkBC = wmspiritplace_SeqFn;
+    ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)(*(s16 *)(setup + 0x1a) << 8);
     state->heightOffset = ((f32)(*(s16 *)(setup + 0x1c)) / lbl_803E5EF8) / lbl_803E5EFC;
     state->unk_04 = 0;
     state->unk_08 = 0;
@@ -366,15 +367,15 @@ void wmspiritplace_init(int obj, int setup)
     state->primaryGameBit = *(s16 *)(setup + 0x20);
     state->setupParam = (s16)*(s8 *)(setup + 0x19);
     state->f80 = 0;
-    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x6000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
     state->mapEventState = ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
 
     if (*(int *)(*(int *)(obj + 0x4c) + 0x14) == 0x47295) {
         if (GameBit_Get(0x1fc) != 0 || GameBit_Get(0xeaf) != 0 || state->mapEventState > 2) {
-            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) - lbl_803E5F00;
+            ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.localPosX - lbl_803E5F00;
         }
     } else if (*(int *)(*(int *)(obj + 0x4c) + 0x14) == 0x4a5e6 && state->mapEventState >= 6) {
-        *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + lbl_803E5F00;
+        ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.localPosX + lbl_803E5F00;
     }
 }
 #pragma scheduling reset
