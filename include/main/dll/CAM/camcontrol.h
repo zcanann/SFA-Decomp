@@ -4,6 +4,8 @@
 #include "global.h"
 #include "ghidra_import.h"
 
+typedef struct ObjAnimComponent ObjAnimComponent;
+
 typedef struct CamcontrolTriggeredAction {
   s8 actionKind;
   u8 pad01[0xC];
@@ -41,9 +43,9 @@ typedef struct CamcontrolCameraState {
   f32 worldY;
   f32 worldZ;
   u8 pad24[0x30 - 0x24];
-  u32 localFrameObj;
+  void *localFrameObj;
   u8 pad34[0xA4 - 0x34];
-  void *focusObj;
+  ObjAnimComponent *focusObj;
   f32 prevLocalX;
   f32 prevLocalY;
   f32 prevLocalZ;
@@ -143,7 +145,7 @@ extern u8 *pCamera;
 
 void camcontrol_updateTargetFeedback(void);
 void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
-                                    float *outZ,float *outDistanceXZ,int useWorldPosition);
+                                    float *outZ,float *outDistanceXZ,int useLocalPosition);
 void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue,f32 y,f32 z);
 int Camera_isZooming(void);
 void Camera_setTargetReticleOverride(int target);

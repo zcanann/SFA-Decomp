@@ -393,20 +393,22 @@ int Camera_getOverrideTarget(void)
 #pragma scheduling off
 #pragma peephole off
 void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
-                                    float *outZ,float *outDistanceXZ,int useWorldPosition)
+                                    float *outZ,float *outDistanceXZ,int useLocalPosition)
 {
-  int focusObj;
+  ObjAnimComponent *focusObj;
+  ObjAnimComponent *target;
 
-  focusObj = (int)CAMCONTROL_CAMERA->focusObj;
-  if (useWorldPosition != 0) {
-    *outX = *(float *)(targetObj + 0xc) - *(float *)(focusObj + 0xc);
-    *outY = *(float *)(targetObj + 0x10) - (*(float *)(focusObj + 0x10) + heightOffset);
-    *outZ = *(float *)(targetObj + 0x14) - *(float *)(focusObj + 0x14);
+  focusObj = CAMCONTROL_CAMERA->focusObj;
+  target = (ObjAnimComponent *)targetObj;
+  if (useLocalPosition != 0) {
+    *outX = target->localPosX - focusObj->localPosX;
+    *outY = target->localPosY - (focusObj->localPosY + heightOffset);
+    *outZ = target->localPosZ - focusObj->localPosZ;
   }
   else {
-    *outX = *(float *)(targetObj + 0x18) - *(float *)(focusObj + 0x18);
-    *outY = *(float *)(targetObj + 0x1c) - (*(float *)(focusObj + 0x1c) + heightOffset);
-    *outZ = *(float *)(targetObj + 0x20) - *(float *)(focusObj + 0x20);
+    *outX = target->worldPosX - focusObj->worldPosX;
+    *outY = target->worldPosY - (focusObj->worldPosY + heightOffset);
+    *outZ = target->worldPosZ - focusObj->worldPosZ;
   }
   if (outDistanceXZ != (float *)0x0) {
     *outDistanceXZ = *outX * *outX + *outZ * *outZ;
