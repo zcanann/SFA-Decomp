@@ -1,5 +1,4 @@
 #include "main/dll/CAM/camTalk.h"
-#include "main/camera_object.h"
 
 extern void *memset(void *dst, int val, u32 n);
 extern void *mmAlloc(int size, int heap, int flags);

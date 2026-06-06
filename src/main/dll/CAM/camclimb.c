@@ -1,5 +1,4 @@
 #include "ghidra_import.h"
-#include "main/camera_object.h"
 
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
                                            int obj);

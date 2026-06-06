@@ -1,5 +1,4 @@
 #include "ghidra_import.h"
-#include "main/camera_object.h"
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mm_free(void *ptr);

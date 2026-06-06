@@ -1,5 +1,4 @@
 #include "main/dll/CAM/camshipbattle5C.h"
-#include "main/camera_object.h"
 
 extern undefined4 FUN_80135810();
 extern undefined8 FUN_8028680c();
