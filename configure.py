@@ -1294,7 +1294,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_029E_Dummy29E.c"),
             Object(NonMatching, "main/dll/ARW/dll_029F_arwbombcoll.c"),
             Object(NonMatching, "main/dll/ring.c"),
-            Object(NonMatching, "main/dll/ARW/dll_02A1_arwlevelcon.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/ARW/dll_02A1_arwlevelcon.c"),
             Object(NonMatching, "main/dll/ARW/dll_02A2_arwspeedstr.c"),
             Object(NonMatching, "main/dll/dll_02A3.c"),
             Object(NonMatching, "main/dll/dll_02A4.c"),
