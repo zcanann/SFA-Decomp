@@ -1948,7 +1948,7 @@ void cutsceneEnterExit(int entering, int affectSounds) {
 
 #pragma push
 #pragma scheduling off
-void deathRenderFn_8001fd98(u32 h) {
+void removeButtonObject(u32 h) {
     int *p;
     int n;
     int i;
