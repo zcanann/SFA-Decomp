@@ -65,7 +65,7 @@ void cmbsrc_setExternalActive(int obj, u8 active)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling off
 void cmbsrc_free(int obj)
 {

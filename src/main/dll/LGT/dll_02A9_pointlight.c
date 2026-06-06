@@ -31,7 +31,7 @@ void pointlight_setEffectState(int obj, int flag)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling off
 void pointlight_free(int obj)
 {

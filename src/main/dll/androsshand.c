@@ -311,7 +311,7 @@ void androsshand_handleDamage(int obj, int hand)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling off
 void androsshand_init(int obj, u8 *setup)
 {
