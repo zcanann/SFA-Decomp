@@ -13557,7 +13557,7 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f60 = randomGetRange(0x29, 0x64);
         cfg.f44 = 0x80080108;
         if (param_2 == 0x3a2) {
-            cfg.f44 = cfg.f44 | 0x20000000;
+            cfg.f44 |= 0x20000000LL;
         }
         cfg.f48 = 0x8400820;
         break;
@@ -13880,7 +13880,7 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f48 = (u32)(0x410000 - 0x7fe0);
         cfg.f58 = 0x7d0;
         cfg.f5a = 0x7d0;
-        cfg.f5c = (s16)(randomGetRange(-0x1388, 0x1388) + 0x2710);
+        cfg.f5c = randomGetRange(-0x1388, 0x1388) + 0x2710;
         cfg.f4c = 0x1f40;
         cfg.f50 = 0x1f40;
         cfg.f54 = randomGetRange(-0x1388, 0x1388) + 0x2ee0;
@@ -13896,7 +13896,7 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f48 = (u32)(0x410000 - 0x7fe0);
         cfg.f58 = 0x7d0;
         cfg.f5a = 0x7d0;
-        cfg.f5c = (s16)(randomGetRange(-0x1388, 0x1388) + 0x4e20);
+        cfg.f5c = randomGetRange(-0x1388, 0x1388) + 0x4e20;
         cfg.f4c = 0x1f40;
         cfg.f50 = 0x1f40;
         cfg.f54 = randomGetRange(-0x1388, 0x1388) + 0x7d00;
@@ -14289,7 +14289,7 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f08 = randomGetRange(0x78, 0x8c);
         cfg.f60 = 0xff;
         cfg.f04 = 0x385;
-        cfg.f48 = 0x200800;
+        cfg.f48 = 0x200000;
         cfg.f44 = 0x1001100;
         cfg.f42 = 0xc0a;
         break;
