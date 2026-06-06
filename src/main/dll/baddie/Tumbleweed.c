@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/objanim.h"
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "stdarg.h"
@@ -4137,7 +4138,6 @@ typedef struct TitleAnimMoves {
     f32 moves[8];
 } TitleAnimMoves;
 extern TitleAnimMoves lbl_8031CE10[];
-extern void  ObjAnim_SetCurrentMove(void *obj, int n, f32 v, int m);
 extern void  ObjModel_SetRenderCallback(int* model, void* cb);
 extern void  AttractMovie_DrawTextureCallback(void);
 
@@ -4157,15 +4157,15 @@ void titlescreen_init(u8* obj, u8* p)
     if (v >= 0x77d && v < 0x781) {
         *(s8*)(a + 0x31) = (s8)(v - 0x77d);
         *(f32*)(a + 0x34) = lbl_8031CE10[*(s16*)(obj + 0x46) - 0x77d].moves[0];
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
     } else {
         *(f32*)(a + 0x34) = lbl_803E22F8;
         *(s8*)(a + 0x31) = -2;
         v = *(s16*)(obj + 0x46);
         if (v == 0x78a) {
-            ObjAnim_SetCurrentMove(obj, 1, lbl_803E22F8, 0);
+            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);
         } else if (v == 0x781) {
-            ObjAnim_SetCurrentMove(obj, 0, lbl_803E2318, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2318, 0);
             ObjModel_SetRenderCallback(*(int**)(*(int**)(obj + 0x7c)),
                                        (void*)AttractMovie_DrawTextureCallback);
         }
@@ -5265,7 +5265,6 @@ void fn_80134870(int obj, u8 *arr);
 void titlescreen_update(u8 *obj)
 {
     extern int  randomGetRange(int min, int max);
-    extern int  ObjAnim_AdvanceCurrentMove(void *obj, f32 scale, f32 dt, void *events);
     extern void characterDoEyeAnims(int obj, void *state);
     extern void fn_8003B228(int obj, void *p);
     extern int  ObjModel_HasActiveBlendChannels(int *model);
@@ -5296,18 +5295,18 @@ void titlescreen_update(u8 *obj)
             (c = state[0x30]) != 0 && c != 4 && c != 3) {
             if (*(s16 *)(obj + 0x46) == 0x77d || *(s16 *)(obj + 0x46) == 0x780) {
                 state[0x30] = 3;
-                ObjAnim_SetCurrentMove(obj, 1, lbl_803E2318, 0);
+                ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E2318, 0);
                 *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[3];
             } else {
                 state[0x30] = 0;
-                ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
+                ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
                 *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
             }
         }
         if ((s8)state[0x31] == (s8)lbl_803DD990 && (s8)lbl_803DD991 != 0 &&
             (c = state[0x30]) != 1 && c != 2 && c != 5) {
             state[0x30] = 1;
-            ObjAnim_SetCurrentMove(obj, 1, lbl_803E22F8, 0);
+            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);
             *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1];
             if (*(s16 *)(obj + 0x46) == 0x77e) {
                 Sfx_StopFromObject((int)obj, 0x370);
@@ -5329,26 +5328,26 @@ void titlescreen_update(u8 *obj)
             } else {
                 f = *(f32 *)(state + 0x34);
             }
-            evt = ObjAnim_AdvanceCurrentMove(obj, f, timeDelta, buf);
+            evt = ObjAnim_AdvanceCurrentMove(f, timeDelta, (int)obj, (ObjAnimEventList *)buf);
             if (evt != 0) {
                 if ((s8)state[0x31] == (s8)lbl_803DD990 && state[0x30] == 1) {
                     state[0x30] = 2;
-                    ObjAnim_SetCurrentMove(obj, 2, lbl_803E22F8, 0);
+                    ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E22F8, 0);
                     *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[2];
                 } else if (state[0x30] == 3) {
                     state[0x30] = 0;
-                    ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
+                    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
                     *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
                 } else if (*(s16 *)(obj + 0x46) >= 0x77d && *(s16 *)(obj + 0x46) < 0x781) {
                     if (randomGetRange(0, 4) == 0) {
                         if ((c = state[0x30]) == 0 || c == 4) {
                             state[0x30] = 4;
-                            ObjAnim_SetCurrentMove(obj, randomGetRange(3, 4), lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove((int)obj, randomGetRange(3, 4), lbl_803E22F8, 0);
                             *(f32 *)(state + 0x34) =
                                 lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1 + *(s16 *)(obj + 0xa0)];
                         } else {
                             state[0x30] = 5;
-                            ObjAnim_SetCurrentMove(obj, randomGetRange(5, 6), lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove((int)obj, randomGetRange(5, 6), lbl_803E22F8, 0);
                             *(f32 *)(state + 0x34) =
                                 lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1 + *(s16 *)(obj + 0xa0)];
                         }
@@ -5356,11 +5355,11 @@ void titlescreen_update(u8 *obj)
                         c = state[0x30];
                         if (c == 4) {
                             state[0x30] = 0;
-                            ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
                             *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
                         } else if (c == 5) {
                             state[0x30] = 2;
-                            ObjAnim_SetCurrentMove(obj, 2, lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E22F8, 0);
                             *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[2];
                         }
                     }
