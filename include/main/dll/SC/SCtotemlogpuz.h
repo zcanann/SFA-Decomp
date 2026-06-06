@@ -2,16 +2,11 @@
 #define MAIN_DLL_SC_SCTOTEMLOGPUZ_H_
 
 #include "ghidra_import.h"
+#include "main/mapEventTypes.h"
 
 typedef struct SCGameBitLatchState {
   int activeMask;
 } SCGameBitLatchState;
-
-typedef struct SCTotemLogPuzzleEventInterface {
-    u8 pad00[0x4C];
-    int (*getAnimEvent)(int animId, int eventId);
-    void (*setAnimEvent)(int animId, int eventId, int value);
-} SCTotemLogPuzzleEventInterface;
 
 typedef struct SCTotemLogPuzzleRuntime {
     u8 pad00[7];

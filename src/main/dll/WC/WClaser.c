@@ -1,6 +1,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/dll/WC/WClaser.h"
+#include "main/mapEventTypes.h"
 #include "main/objanim.h"
 
 extern uint GameBit_Get(int eventId);
@@ -17,13 +18,7 @@ extern void fn_80296BBC(int player);
 extern void buttonDisable(int controller, int mask);
 extern void textureFree(void *resource);
 
-typedef struct WCLaserMapEventInterface {
-    u8 pad00[0x4C];
-    int (*getAnimEvent)(int mapId, int eventId);
-    void (*setAnimEvent)(int mapId, int eventId, int value);
-} WCLaserMapEventInterface;
-
-extern WCLaserMapEventInterface **gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
 extern int *gModgfxInterface;

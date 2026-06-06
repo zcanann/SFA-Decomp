@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/WC/WCpressureSwitch.h"
+#include "main/mapEventTypes.h"
 
 
 #pragma peephole off
@@ -35,13 +36,7 @@ extern f32 lbl_803E696C;
 extern f32 lbl_803E6970;
 extern f32 lbl_803E6974;
 
-typedef struct WCGalleonMapEventInterface {
-    u8 pad00[0x4C];
-    int (*getAnimEvent)(int mapId, int eventId);
-    void (*setAnimEvent)(int mapId, int eventId, int value);
-} WCGalleonMapEventInterface;
-
-extern WCGalleonMapEventInterface **gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 #define WM_GALLEON_GAMEBIT_CUTSCENE_DONE 0x429
 #define WM_GALLEON_GAMEBIT_CLEAR_DOOR 0xD1

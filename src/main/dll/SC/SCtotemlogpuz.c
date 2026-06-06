@@ -12,7 +12,7 @@ extern void SH_LevelControl_setMusic(void *p);
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
 #define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS 0x20000000
 
-extern SCTotemLogPuzzleEventInterface **gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 /*
  * --INFO--
