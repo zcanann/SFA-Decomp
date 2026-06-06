@@ -80,7 +80,8 @@ void timer_addDuration(int obj, int duration)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma scheduling on
+#pragma peephole off
+#pragma scheduling off
 void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     void *light = *(void **)(*(int *)&((GameObject *)obj)->extra + 4);
@@ -93,6 +94,7 @@ void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     }
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -116,6 +118,7 @@ void timer_init(int obj, int setup)
 #pragma scheduling off
 void timer_update(int obj)
 {
+    int v;
     int state = *(int *)&((GameObject *)obj)->extra;
     int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     TimerFlags *f = (TimerFlags *)(state + 0xd);
@@ -126,8 +129,12 @@ void timer_update(int obj)
         if (f->manual == 0 && (u32)GameBit_Get(*(s16 *)(setup + 0x20)) == 0) {
             storeZeroToFloatParam((void *)state);
             if (*(u8 *)(state + 0xc) == 1) {
-                if (*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) != 0x466ED) {
+                switch (*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14)) {
+                case 0x466ED:
+                    break;
+                default:
                     Sfx_PlayFromObject(obj, SFXmn_sml_trex_fstep);
+                    break;
                 }
             }
             flag = 1;
@@ -141,6 +148,9 @@ void timer_update(int obj)
             f->expired = 1;
             switch (*(u8 *)(state + 0xc)) {
             case 1:
+                if (*(u8 *)(state + 0xc) == 0) {
+                    break;
+                }
                 gameTimerStop();
                 break;
             case 2:
@@ -162,20 +172,20 @@ void timer_update(int obj)
                 break;
             case 2:
                 *(int *)(state + 4) = modelLightStruct_createPointLight(obj, 255, 0, 0, 0);
-                if (*(int *)(state + 4) != 0) {
+                if (*(void **)(state + 4) != NULL) {
                     modelLightStruct_setupGlow((void *)*(int *)(state + 4), 0, 255, 0, 0, 100, lbl_803DC418);
                     modelLightStruct_setPosition((void *)*(int *)(state + 4), lbl_803E741C, lbl_803E7420,
-                                        lbl_803E741C);
+                                        *(f32 *)&lbl_803E741C);
                 }
                 break;
             }
         }
         if (*(u8 *)(state + 0xc) == 2 && fn_80080150(state) != 0) {
-            int hold = *(int *)(state + 4);
+            void *hold = *(void **)(state + 4);
+            f32 fm;
             int tv = (int)((f32)(*(s16 *)(setup + 0x1a) * 60) / *(f32 *)(state + 0) *
-                           lbl_803DC41C);
+                           (fm = lbl_803DC41C));
             int *texPtr = objFindTexture(obj, 0, 0);
-            int v;
             if (texPtr != 0) {
                 v = *texPtr + tv * framesThisStep;
                 if (v > 512) {
@@ -183,12 +193,12 @@ void timer_update(int obj)
                 }
                 *texPtr = v;
             }
-            if (hold != 0) {
+            if (hold != NULL) {
                 tv = v >> 8;
             } else {
                 tv = 0;
             }
-            if (*(int *)(state + 4) != 0) {
+            if (*(void **)(state + 4) != NULL) {
                 if (tv == 1 && tv != f->flag20) {
                     Sfx_PlayFromObject(obj, 986);
                 }
@@ -196,7 +206,7 @@ void timer_update(int obj)
             }
             f->flag20 = (u8)tv;
         }
-        if (*(int *)(state + 4) != 0) {
+        if (*(void **)(state + 4) != NULL) {
             modelLightStruct_updateGlowAlpha((void *)*(int *)(state + 4));
         }
     }
