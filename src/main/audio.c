@@ -2205,16 +2205,16 @@ foundTrigger:
     }
     if (id == 0xeb && arg == 1) {
         channel = gMusicChannels;
-        found = 0;
-        for (i = 0; i < 16; i++) {
-            if (channel->field_0 == 0x5e && channel->status != 0 && channel->status != 2 &&
+        for (i = 15; i >= 0; i--) {
+            if ((int)channel->field_0 == 0x5e && channel->status != 0 && channel->status != 2 &&
                 channel->status != 5) {
-                found = 1;
-                break;
+                goto foundActive;
             }
             channel++;
         }
-        if (found) {
+        channel = NULL;
+foundActive:
+        if (channel != NULL) {
             return;
         }
         if (GameBit_Get(0xa7f)) {
@@ -2223,7 +2223,7 @@ foundTrigger:
     }
     channel = gMusicChannels;
     found = 0;
-    for (i = 0; i < 16; i++) {
+    for (i = 15; i >= 0; i--) {
         if (channel->field_0 == (int)trigger->track && channel->status != 0 &&
             channel->status != 2 && channel->status != 5) {
             found = 1;
