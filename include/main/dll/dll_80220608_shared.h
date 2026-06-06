@@ -128,7 +128,7 @@ typedef struct EarthWalkerObject {
     u8 statusFlags;
     u8 padB0[0xB8 - 0xB0];
     EarthWalkerState *state;
-    int animEventCallback;
+    void *animEventCallback;
 } EarthWalkerObject;
 
 STATIC_ASSERT(offsetof(EarthWalkerObject, facingAngle) == 0x00);

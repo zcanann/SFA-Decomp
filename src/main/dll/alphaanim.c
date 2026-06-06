@@ -603,7 +603,7 @@ void seqobject_init(int *obj, u8 *params) {
     objAnim = (ObjAnimComponent *)obj;
     sub = ((GameObject *)obj)->extra;
     *(s16*)obj = (s16)(params[0x1c] << 8);
-    ((GameObject *)obj)->animEventCallback = (void*)&seqobject_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)seqobject_SeqFn;
     objAnim->bankIndex = params[0x1f];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
@@ -633,7 +633,7 @@ void immultiseq_init(int *obj, u8 *params) {
     objAnim = (ObjAnimComponent *)obj;
     sub = ((GameObject *)obj)->extra;
     *(s16*)obj = (s16)(params[0x28] << 8);
-    ((GameObject *)obj)->animEventCallback = (void*)&immultiseq_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)immultiseq_SeqFn;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
     objAnim->bankIndex = (s8)params[0x2a];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
@@ -756,7 +756,7 @@ void seqobj2_init(int* obj, int* def)
     int* state = ((GameObject *)obj)->extra;
     OSReport(sSeqObjNeedBitUsedBitFormat, ((ObjPlacement *)def)->mapId, *(s16*)((char*)def + 26), *(s16*)((char*)def + 24));
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 28) << 8);
-    ((GameObject *)obj)->animEventCallback = (void*)seqobj2_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)seqobj2_SeqFn;
     if (*(s16*)((char*)def + 32) > -1) {
         s16 slot = *(s16*)((char*)def + 24);
         if (slot != -1 && (u32)GameBit_Get(slot) != 0u) {

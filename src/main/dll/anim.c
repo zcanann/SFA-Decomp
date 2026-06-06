@@ -4260,7 +4260,7 @@ void dbholecontrol1_init(int *obj, u8 *params) {
     DbHoleControl1State *sub = ((GameObject *)obj)->extra;
     ObjGroup_AddObject(obj, 0x1e);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    ((GameObject *)obj)->animEventCallback = (void*)&dbholecontrol1_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dbholecontrol1_SeqFn;
     sub->gameBitA = *(s16*)(params + 0x1a);
     sub->gameBitB = *(s16*)(params + 0x1c);
 }
@@ -4289,7 +4289,7 @@ void dfpseqpoint_initialise(void) {}
 void dfpseqpoint_init(int *obj, u8 *init) {
     DfpSeqPointState *sub;
     sub = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->animEventCallback = (void*)&dfpseqpoint_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dfpseqpoint_SeqFn;
     *(s16*)obj = (s16)((s8)init[0x18] << 8);
     sub->triggerRadius = (f32)(s32)*(s16*)(init + 0x1a);
     sub->triggerId = *(s16*)(init + 0x1c);
@@ -4804,7 +4804,7 @@ void dfplevelcontrol_init(int obj, int param2)
     ((DfpFlags7 *)&state->flags07)->b80 = GameBit_Get(0xd5d);
     ((DfpFlags7 *)&state->flags07)->b40 = GameBit_Get(0xd59);
     ((DfpFlags7 *)&state->flags07)->b20 = GameBit_Get(0xd5a);
-    ((GameObject *)obj)->animEventCallback = dfplevelcontrol_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dfplevelcontrol_SeqFn;
     state->mode = 1;
     v = *(s16 *)(param2 + 0x1a);
     if (v != 0 && v <= 2) {

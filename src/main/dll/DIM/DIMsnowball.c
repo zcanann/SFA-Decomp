@@ -1220,7 +1220,7 @@ void cclightfoot_init(int* obj, int* def)
 {
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 26) << 8);
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
-    ((GameObject *)obj)->animEventCallback = (void*)ccqueen_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)ccqueen_SeqFn;
 }
 
 int cclevcontrol_SeqFn(int p1, int p2, u8* state)

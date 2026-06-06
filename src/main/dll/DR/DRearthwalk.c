@@ -1223,7 +1223,7 @@ void sh_beacon_init(int obj, int defData)
         ((ShBeaconState *)state)->childObj = loadObjectAtObject(obj, setup);
     }
 
-    ((GameObject *)obj)->animEventCallback = sh_beacon_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)sh_beacon_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset

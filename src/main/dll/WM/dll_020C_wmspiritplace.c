@@ -356,7 +356,7 @@ void wmspiritplace_init(int obj, int setup)
     WmSpiritPlaceState *state;
 
     state = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->animEventCallback = wmspiritplace_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)wmspiritplace_SeqFn;
     ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
     ((GameObject *)obj)->anim.rotY = (s16)(*(s16 *)(setup + 0x1a) << 8);
     state->heightOffset = ((f32)(*(s16 *)(setup + 0x1c)) / lbl_803E5EF8) / lbl_803E5EFC;

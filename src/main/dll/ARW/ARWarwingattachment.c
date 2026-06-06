@@ -1890,7 +1890,7 @@ void pressureswitch_init(int *obj, u8 *init) {
     uint mapId;
 
     sub = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->animEventCallback = (void*)&PressureSwitch_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)PressureSwitch_SeqFn;
     *(s16*)obj = (s16)((s8)init[0x18] << 8);
     sub->retriggerTimer = (s16)(*(s16*)(init + 0x1e) * 0x3c);
     sub->chimeLatch = 0;
@@ -2314,7 +2314,7 @@ void dll_200_init(int* obj, int* arg)
     Dll200State* b;
     ((GameObject *)obj)->unkF4 = 0;
     *(s16*)obj = (s16)((s32)*(s8*)((char*)arg + 0x18) << 8);
-    ((GameObject *)obj)->animEventCallback = (void*)dll_200_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dll_200_SeqFn;
     b = ((GameObject *)obj)->extra;
     b->defNoLow = (u8)*(s16*)arg;
     b->unk1C = 0;

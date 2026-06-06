@@ -247,7 +247,7 @@ void wmseqpoint_init(int obj, int setup)
     WmSeqPointState *state;
 
     state = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->animEventCallback = wmseqpoint_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)wmseqpoint_SeqFn;
     ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
     state->radius = (f32)*(s16 *)(setup + 0x1a);
     state->triggerId = *(s16 *)(setup + 0x1c);

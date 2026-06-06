@@ -647,7 +647,7 @@ void pressureswitchfb_init(u8* obj, u8* params) {
     *(int*)(sub + 0x20) = 0;
     *(int*)(sub + 0x24) = 0;
     *(int*)(sub + 0x28) = 0;
-    ((GameObject *)obj)->animEventCallback = (void*)&pressureswitchfb_updateStateMode;
+    ((GameObject *)obj)->animEventCallback = (void *)pressureswitchfb_updateStateMode;
 }
 #pragma peephole reset
 #pragma scheduling reset

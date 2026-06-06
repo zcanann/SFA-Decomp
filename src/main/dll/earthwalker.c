@@ -447,7 +447,7 @@ void earthwalker_init(int obj, int setup)
     int local;
 
     local = lbl_803E6CD8;
-    ewObj->animEventCallback = (int)earthwalker_animEventCallback;
+    ewObj->animEventCallback = (void *)earthwalker_animEventCallback;
     dll_2E_func05(obj, state, -8192, 12743, 2);
     dll_2E_func09(state, 0, &local, 2);
     fn_80113F94(state, lbl_803E6CE8);

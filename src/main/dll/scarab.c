@@ -4076,7 +4076,7 @@ void dll_CB_init(int *obj, u8 *params, int extra) {
     ((GameObject *)obj)->anim.rotY = (s16)((s8)params[0x28] << 8);
     ((GameObject *)obj)->anim.rotZ = (s16)((s8)params[0x27] << 8);
     ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(obj, params, (u8 *)sub, 4, 6, 0x82, flags, lbl_803E2EA8);
-    ((GameObject *)obj)->animEventCallback = (void*)&dll_CB_seqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dll_CB_seqFn;
     ((void(*)(int*, u8*, int))((void**)*(int*)gPlayerInterface)[5])(obj, (u8 *)sub, 0);
     sub->baddie.unk270 = 0;
     if (sub->aggroRange < 0x32) {

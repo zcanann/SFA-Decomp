@@ -2095,7 +2095,7 @@ void duster_init(int obj, u8 *params) {
     ObjHits_DisableObject(obj);
   }
   ObjMsg_AllocQueue((void *)obj,1);
-  ((GameObject *)obj)->animEventCallback = duster_SeqFn;
+  ((GameObject *)obj)->animEventCallback = (void *)duster_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset

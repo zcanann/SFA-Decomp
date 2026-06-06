@@ -2021,7 +2021,7 @@ void Lamp_init(int* obj, int* def)
     ((GameObject *)obj)->anim.rotZ = 0;
     ((GameObject *)obj)->unkF8 = 0;
     *(s8*)state = 1;
-    ((GameObject *)obj)->animEventCallback = (void*)Lamp_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)Lamp_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2531,7 +2531,7 @@ void SB_MiniFire_update(int obj)
 #pragma peephole off
 void SB_SeqDoor_init(int* obj, int* def)
 {
-    ((GameObject *)obj)->animEventCallback = (void*)SB_SeqDoor_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)SB_SeqDoor_SeqFn;
     *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
     {
         s8 b = *(s8*)((char*)def + 25);

@@ -803,7 +803,7 @@ void MoonSeedPlantingSpot_init(int *obj, u8 *init) {
     int mapId;
 
     sub = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->animEventCallback = (void*)&MoonSeedPlantingSpot_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)MoonSeedPlantingSpot_SeqFn;
     *(s16*)obj = (s16)(init[0x1f] << 8);
     sub[0] = 0;
     ObjGroup_AddObject((int)obj, 0x2e);

@@ -1417,7 +1417,7 @@ void cflevelcontrol_init(u8* obj, u8* params) {
     storeZeroToFloatParam(sub);
     s16toFloat(sub, 0x1e0);
     ((LevelControlFlags *)(sub + 0xc))->b6 = 0;
-    ((GameObject *)obj)->animEventCallback = (void*)&CFLevelControl_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)CFLevelControl_SeqFn;
     GameBit_Set(0x983, *(int*)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) != 0x2cef);
     if (GameBit_Get(0x2fe) == 0) {
         for (i = 0, p = lbl_80323008; i < 0x17; i++) {
