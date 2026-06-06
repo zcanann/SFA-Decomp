@@ -3307,6 +3307,7 @@ typedef struct SeqRunTables {
 int objRunSeq(int seqIdx, u8 *obj, int flags)
 {
     u8 *base;
+    SeqRunTables *st;
     u8 *walk2;
     u8 *walk;
     int packed;
@@ -3350,6 +3351,7 @@ int objRunSeq(int seqIdx, u8 *obj, int flags)
     f32 z;
 
     base = lbl_80396918;
+    st = (SeqRunTables *)base;
     srcSeq = *(u8 **)(obj + 0x4c);
     camArg = 0;
     doCam = 0;
@@ -3363,9 +3365,9 @@ int objRunSeq(int seqIdx, u8 *obj, int flags)
     }
 
     for (i = 0x19; i < 0x55; i++) {
-        if (*(s16 *)((base + i * 2) + 0x3a98) == 0) {
+        if (st->modes[i] == 0) {
             slot = i;
-            *(s16 *)((base + i * 2) + 0x3a98) = 1;
+            st->modes[i] = 1;
             blk = base + i * 0x80;
             for (j = 0; j < 16; j++) {
                 *(u8 **)blk = NULL;
@@ -3443,10 +3445,10 @@ checked:
     }
 
     i = 0;
-    base[*(s16 *)(obj + 0xb4) + 0x3538] = 0;
+    st->cmdFlags[*(s16 *)(obj + 0xb4)] = 0;
     base[*(s16 *)(obj + 0xb4) + 0x3334] = 0;
     lbl_8030ECF8[*(s16 *)(obj + 0xb4)] = 0;
-    ((SeqRunTables *)base)->handles[*(s16 *)(obj + 0xb4)] = *(s16 *)(obj + 0x46);
+    st->handles[*(s16 *)(obj + 0xb4)] = *(s16 *)(obj + 0x46);
 
     walk = buf;
     bit = 1;
@@ -3593,8 +3595,8 @@ checked:
             *(int *)(seq + 0x10c) = *(int *)walk2;
             *(s16 *)(seq + 0x70) = *(s16 *)(seq + 0x6e);
             if (idx == 0) {
-                ((SeqRunTables *)base)->cmdFlags[*(s16 *)(obj + 0xb4)] = *(u16 *)(walk2 + 4);
-                ((SeqRunTables *)base)->handles[*(s16 *)(obj + 0xb4)] =
+                st->cmdFlags[*(s16 *)(obj + 0xb4)] = *(u16 *)(walk2 + 4);
+                st->handles[*(s16 *)(obj + 0xb4)] =
                     *(int *)(*(u8 **)(newObj + 0x4c) + 0x14);
                 mapFlags = *(u32 *)(*(u8 **)(obj + 0x50) + 0x44);
                 if ((mapFlags & 0x40) && !(mapFlags & 0x8000)) {
@@ -3607,7 +3609,7 @@ checked:
         walk2 += 8;
     }
 
-    ((SeqRunTables *)base)->headings[*(s16 *)(obj + 0xb4)] = heading;
+    st->headings[*(s16 *)(obj + 0xb4)] = heading;
     j = 0;
     base[*(s16 *)(obj + 0xb4) + 0x3590] = 0;
     base[*(s16 *)(obj + 0xb4) + 0x338c] = 0;
@@ -3630,7 +3632,7 @@ checked:
     seqFlags = 0;
 gotFlags:
     if (seqFlags != 0) {
-        base[*(s16 *)(obj + 0xb4) + 0x3538] |= 0x10;
+        st->cmdFlags[*(s16 *)(obj + 0xb4)] |= 0x10;
     } else {
         lbl_803DD070 = 0;
         trackId = (u32)(*(s16 *)slotPtr - 1) & 0x3fff;
@@ -3649,14 +3651,14 @@ gotFlags:
         }
     }
 
-    ((SeqRunTables *)base)->dists[*(s16 *)(obj + 0xb4)] = (f32)seqFlags;
-    ((SeqRunTables *)base)->frames[*(s16 *)(obj + 0xb4)] = (f32)seqFlags;
+    st->dists[*(s16 *)(obj + 0xb4)] = (f32)seqFlags;
+    st->frames[*(s16 *)(obj + 0xb4)] = (f32)seqFlags;
 
     if (slot >= 0 && slot < 0x55) {
         if (lbl_803DD0BC < 0x1e) {
-            ((SeqRunTables *)base)->recs[lbl_803DD0BC].slot = slot;
-            ((SeqRunTables *)base)->recs[lbl_803DD0BC].count = count;
-            ((SeqRunTables *)base)->recs[lbl_803DD0BC++].flags = seqFlags;
+            st->recs[lbl_803DD0BC].slot = slot;
+            st->recs[lbl_803DD0BC].count = count;
+            st->recs[lbl_803DD0BC++].flags = seqFlags;
         }
     }
 
