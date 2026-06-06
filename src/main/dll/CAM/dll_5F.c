@@ -1,4 +1,5 @@
 #include "main/dll/CAM/dll_5F.h"
+#include "main/game_object.h"
 
 
 #pragma peephole off
@@ -84,7 +85,7 @@ void CameraModeTestStrength_update(short *cam)
     pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560[1]);
     pathcam_findTaggedNodeWindow(node, w2, lbl_803DD560[1]);
     pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
-    t2 = fn_8010AC48(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), w2);
+    t2 = fn_8010AC48(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, w2);
     if (t2 < lbl_803E1888) {
       if (w2[0] > -1) {
         lbl_803DD560[3] = w2[0];
@@ -95,7 +96,7 @@ void CameraModeTestStrength_update(short *cam)
           node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
           pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560[1]);
           pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
-          t2 = fn_8010AC48(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), w2);
+          t2 = fn_8010AC48(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, w2);
           *(f32 *)((char *)lbl_803DD560 + 0x58) += lbl_803E188C;
         } else {
           t2 = lbl_803E1888;
@@ -113,7 +114,7 @@ void CameraModeTestStrength_update(short *cam)
           node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
           pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560[1]);
           pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
-          t2 = fn_8010AC48(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), w2);
+          t2 = fn_8010AC48(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, w2);
           *(f32 *)((char *)lbl_803DD560 + 0x58) -= lbl_803E188C;
         } else {
           t2 = lbl_803E188C;
@@ -125,9 +126,9 @@ void CameraModeTestStrength_update(short *cam)
     t = lbl_803E18BC * (t2 - *(f32 *)((char *)lbl_803DD560 + 0x58)) +
         *(f32 *)((char *)lbl_803DD560 + 0x58);
     *(f32 *)((char *)lbl_803DD560 + 0x58) = t;
-    *(f32 *)((char *)cam + 0x18) = Curve_EvalBSpline(x, t, (f32 *)0);
-    *(f32 *)((char *)cam + 0x1c) = Curve_EvalBSpline(y, t, (f32 *)0);
-    *(f32 *)((char *)cam + 0x20) = Curve_EvalBSpline(z, t, (f32 *)0);
+    ((GameObject *)cam)->anim.worldPosX = Curve_EvalBSpline(x, t, (f32 *)0);
+    ((GameObject *)cam)->anim.worldPosY = Curve_EvalBSpline(y, t, (f32 *)0);
+    ((GameObject *)cam)->anim.worldPosZ = Curve_EvalBSpline(z, t, (f32 *)0);
     node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
     flags = *(u8 *)(node2 + 0x3b);
     m1 = flags & 1;
@@ -146,9 +147,9 @@ void CameraModeTestStrength_update(short *cam)
     if (*((u8 *)lbl_803DD560 + 0x64) == 0 && fn_8010AEA8(cam, flags) != 0) {
       *((u8 *)lbl_803DD560 + 0x64) = 1;
     }
-    dx = *(f32 *)((char *)cam + 0x18) - *(f32 *)(obj + 0x18);
-    dy = *(f32 *)((char *)cam + 0x1c) - *(f32 *)(obj + 0x1c);
-    dz = *(f32 *)((char *)cam + 0x20) - *(f32 *)(obj + 0x20);
+    dx = ((GameObject *)cam)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
+    dy = ((GameObject *)cam)->anim.worldPosY - ((GameObject *)obj)->anim.worldPosY;
+    dz = ((GameObject *)cam)->anim.worldPosZ - ((GameObject *)obj)->anim.worldPosZ;
     if (m1 != 0) {
       *cam = 0x8000 - getAngle(dx, dz);
     }
@@ -166,7 +167,7 @@ void CameraModeTestStrength_update(short *cam)
       cam[1] = cam[1] + ((int)(d * (u32)framesThisStep) >> 3);
     }
     if (m4 != 0) {
-      int d = cam[2] - (*(s16 *)(obj + 4) & 0xffff);
+      int d = cam[2] - (((GameObject *)obj)->anim.rotZ & 0xffff);
       if (d > 0x8000) {
         d -= 0xffff;
       }
@@ -177,18 +178,18 @@ void CameraModeTestStrength_update(short *cam)
     }
     if (*(void **)lbl_803DD560 != (void *)0) {
       f32 v;
-      v = *(f32 *)((char *)cam + 0x18);
+      v = ((GameObject *)cam)->anim.worldPosX;
       *(f32 *)(*(int *)lbl_803DD560 + 0x18) = v;
       *(f32 *)(*(int *)lbl_803DD560 + 0xc) = v;
-      v = *(f32 *)((char *)cam + 0x1c);
+      v = ((GameObject *)cam)->anim.worldPosY;
       *(f32 *)(*(int *)lbl_803DD560 + 0x1c) = v;
       *(f32 *)(*(int *)lbl_803DD560 + 0x10) = v;
-      v = *(f32 *)((char *)cam + 0x20);
+      v = ((GameObject *)cam)->anim.worldPosZ;
       *(f32 *)(*(int *)lbl_803DD560 + 0x20) = v;
       *(f32 *)(*(int *)lbl_803DD560 + 0x14) = v;
     }
-    Obj_TransformWorldPointToLocal(*(f32 *)((char *)cam + 0x18), *(f32 *)((char *)cam + 0x1c),
-                                   *(f32 *)((char *)cam + 0x20), (float *)(cam + 6),
+    Obj_TransformWorldPointToLocal(((GameObject *)cam)->anim.worldPosX, ((GameObject *)cam)->anim.worldPosY,
+                                   ((GameObject *)cam)->anim.worldPosZ, (float *)(cam + 6),
                                    (float *)(cam + 8), (float *)(cam + 10), *(int *)(cam + 0x18));
   }
 }
@@ -244,19 +245,19 @@ void CameraModeTestStrength_init(short *cam, int param2, int *param3)
   tags[0] = 9;
   tags[1] = 0x1b;
   lbl_803DD560[3] = (*(RomCurveFindFn *)(*(int *)gRomCurveInterface + 0x14))(
-      *(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), tags, 2, lbl_803DD560[1]);
+      ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, tags, 2, lbl_803DD560[1]);
   tags[0] = 8;
   tags[1] = 0x1a;
   lbl_803DD560[2] = (*(RomCurveFindFn *)(*(int *)gRomCurveInterface + 0x14))(
-      *(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), tags, 2, lbl_803DD560[1]);
-  fn_8010A104((int *)&lbl_803DD560[3], (int *)&lbl_803DD560[2], *(f32 *)(obj + 0x18),
-              *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), lbl_803DD560[1]);
+      ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, tags, 2, lbl_803DD560[1]);
+  fn_8010A104((int *)&lbl_803DD560[3], (int *)&lbl_803DD560[2], ((GameObject *)obj)->anim.worldPosX,
+              ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, lbl_803DD560[1]);
   romNode = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
   curveNode2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
   pathcam_findTaggedNodeWindow(romNode, prevW, lbl_803DD560[1]);
   pathcam_findTaggedNodeWindow(curveNode2, nextW, lbl_803DD560[1]);
   pathcam_buildWindowSamples(prevW, xS, yS, zS, pitchS, yawS, rollS, fovS);
-  t = fn_8010AC48(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), nextW);
+  t = fn_8010AC48(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, nextW);
   if (t < lbl_803E1888) {
     t = lbl_803E1888;
   } else if (t > lbl_803E188C) {
@@ -265,16 +266,16 @@ void CameraModeTestStrength_init(short *cam, int param2, int *param3)
   px = Curve_EvalBSpline(xS, t, (f32 *)0);
   py = Curve_EvalBSpline(yS, t, (f32 *)0);
   pz = Curve_EvalBSpline(zS, t, (f32 *)0);
-  dx = px - *(f32 *)(obj + 0x18);
-  dy = py - *(f32 *)(obj + 0x1c);
-  dz = pz - *(f32 *)(obj + 0x20);
+  dx = px - ((GameObject *)obj)->anim.worldPosX;
+  dy = py - ((GameObject *)obj)->anim.worldPosY;
+  dz = pz - ((GameObject *)obj)->anim.worldPosZ;
   if ((*(u8 *)(romNode + 0x3b) & 1) != 0) {
     pitch = (s16)(0x8000 - getAngle(dx, dz));
   } else {
     pitch = (s16)((int)Curve_EvalCatmullRom(pitchS, t, (f32 *)0) + 0x8000);
   }
   if ((*(u8 *)(romNode + 0x3b) & 4) != 0) {
-    roll = *(s16 *)(obj + 4);
+    roll = ((GameObject *)obj)->anim.rotZ;
   } else {
     roll = (int)Curve_EvalCatmullRom(rollS, t, (f32 *)0);
   }
@@ -291,11 +292,11 @@ void CameraModeTestStrength_init(short *cam, int param2, int *param3)
   if (*((u8 *)param3 + 4) == 0 && param2 != 3) {
     cameraModeTestStrengthFn_8010b238((int)cam, pos, pitch, yaw, roll);
   } else {
-    *(f32 *)((char *)cam + 0x18) = px;
-    *(f32 *)((char *)cam + 0x1c) = py;
-    *(f32 *)((char *)cam + 0x20) = pz;
-    Obj_TransformWorldPointToLocal(*(f32 *)((char *)cam + 0x18), *(f32 *)((char *)cam + 0x1c),
-                                   *(f32 *)((char *)cam + 0x20), (float *)(cam + 6),
+    ((GameObject *)cam)->anim.worldPosX = px;
+    ((GameObject *)cam)->anim.worldPosY = py;
+    ((GameObject *)cam)->anim.worldPosZ = pz;
+    Obj_TransformWorldPointToLocal(((GameObject *)cam)->anim.worldPosX, ((GameObject *)cam)->anim.worldPosY,
+                                   ((GameObject *)cam)->anim.worldPosZ, (float *)(cam + 6),
                                    (float *)(cam + 8), (float *)(cam + 10), *(int *)(cam + 0x18));
     cam[0] = pitch;
     cam[1] = yaw;
