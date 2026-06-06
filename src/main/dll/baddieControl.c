@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/baddieControl.h"
+#include "main/camera_object.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
 
@@ -3831,15 +3832,15 @@ void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
     *(s16 *)state = getAngle(c, s);
     camcontrol_getTargetPosition(obj, state, pos, 0);
     *(s16 *)state = yaw;
-    ((GameObject *)obj)->anim.worldPosX = pos[0];
-    *(f32 *)&((GameObject *)obj)->extra = pos[0];
-    ((GameObject *)obj)->anim.worldPosY = pos[1];
-    *(f32 *)&((GameObject *)obj)->animEventCallback = pos[1];
-    ((GameObject *)obj)->anim.worldPosZ = pos[2];
-    *(f32 *)&((GameObject *)obj)->unkC0 = pos[2];
-    Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ,
+    ((CameraObject *)obj)->anim.worldPosX = pos[0];
+    ((CameraObject *)obj)->probePosX = pos[0];
+    ((CameraObject *)obj)->anim.worldPosY = pos[1];
+    ((CameraObject *)obj)->probePosY = pos[1];
+    ((CameraObject *)obj)->anim.worldPosZ = pos[2];
+    ((CameraObject *)obj)->probePosZ = pos[2];
+    Obj_TransformWorldPointToLocal(((CameraObject *)obj)->anim.worldPosX, ((CameraObject *)obj)->anim.worldPosY, ((CameraObject *)obj)->anim.worldPosZ,
                                    (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
-                                   *(int *)&((GameObject *)obj)->anim.parent);
+                                   *(int *)&((CameraObject *)obj)->anim.parent);
     one = 1;
     ((u8 *)lbl_803DD598)[8] =
         (u8)((((u8 *)lbl_803DD598)[8] & ~0x80) | ((one << 7) & 0x80));
