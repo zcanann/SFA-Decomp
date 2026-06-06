@@ -5,6 +5,75 @@
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 
+/*
+ * Per-object extra state for the ShipBattle cloud-ball projectile
+ * (SB_CloudBall_getExtraSize == 0x24).
+ */
+typedef struct SBCloudBallState {
+    f32 velX; /* captured from obj+0x24.. on launch */
+    f32 velY;
+    f32 velZ;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    int light; /* objCreateLight handle */
+    u8 launched;
+    u8 pad1D[3];
+    f32 fadeTimer; /* nonzero = despawning */
+} SBCloudBallState;
+
+STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
+
+/*
+ * Per-object extra state for the ShipBattle fireball projectile
+ * (SB_FireBall_getExtraSize == SB_FIREBALL_EXTRA_SIZE == 0x18).
+ */
+typedef struct SBFireBallState {
+    void *owner; /* taken from obj+0xF8 */
+    s16 age; /* frames; gates the hitbox enable */
+    u8 pad06[2];
+    f32 velX;
+    f32 velY;
+    f32 velZ;
+    u8 launched;
+    u8 pad15[3];
+} SBFireBallState;
+
+STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
+
+/*
+ * Per-object extra state for the ShipBattle kyte cage
+ * (SB_KyteCage_getExtraSize == 0x8).
+ */
+typedef struct SBKyteCageState {
+    void *kyte; /* attached objType-0x121 child */
+    u8 seqLatch;
+    u8 doorChoice; /* picks trigger 2 vs 1 on release */
+    u8 pad06[2];
+} SBKyteCageState;
+
+STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
+
+/*
+ * Per-object extra state for the ShipBattle chain segment
+ * (ShipBattle_getExtraSize == 0x140). The head is handed to
+ * gObjectTriggerInterface (+0x1C/+0x24) - interface-owned record;
+ * only the locally-evidenced fields are named.
+ */
+typedef struct ShipBattleState {
+    u8 unk00[0x24];
+    f32 unk24; /* lbl/(lbl + def[0x24]) damping factor */
+    int unk28; /* -1 at init */
+    u8 unk2C[0x6A - 0x2C];
+    s16 unk6A; /* def+0x1A */
+    u8 pad6C[2];
+    s16 unk6E; /* -1 at init */
+    u8 unk70[0x140 - 0x70];
+} ShipBattleState;
+
+STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
+
+
 extern undefined4 getLActions();
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -2050,13 +2119,13 @@ void SB_CageKyte_update(int obj)
 #pragma peephole off
 void SB_CloudBall_free(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    SBCloudBallState* state = *(SBCloudBallState**)((char*)obj + 0xb8);
     ((void(*)(int*))((void**)*gExpgfxInterface)[6])(obj);
     {
-        int* child = *(int**)((char*)state + 24);
+        int* child = (int*)state->light;
         if (child != NULL) {
             ModelLightStruct_free(child);
-            *(int**)((char*)state + 24) = NULL;
+            state->light = 0;
         }
     }
 }
@@ -2070,18 +2139,18 @@ extern void projectileParticleFxFn_80099660(int *obj, f32 scale, int type);
 #pragma peephole off
 void SB_CloudBall_hitDetect(int *obj)
 {
-    int *state = *(int **)((char *)obj + 0xb8);
+    SBCloudBallState *state = *(SBCloudBallState **)((char *)obj + 0xb8);
     int *params = *(int **)((char *)obj + 0x54);
     int *target = *(int **)((char *)params + 0x50);
 
     if ((void *)target == NULL) return;
-    if (*(f32 *)((char *)state + 0x20) != lbl_803E58EC) return;
+    if (state->fadeTimer != lbl_803E58EC) return;
     if (*(s16 *)((char *)target + 0x46) == 142) {
         Sfx_PlayFromObject(obj, SFXen_rockshat16);
     }
     params = *(int **)((char *)obj + 0x54);
     *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
-    *(f32 *)((char *)state + 0x20) = lbl_803E58F0;
+    state->fadeTimer = lbl_803E58F0;
     *(u8 *)((char *)obj + 0x36) = 0;
     projectileParticleFxFn_80099660(obj, lbl_803E58E8, 2);
 }
@@ -2099,19 +2168,19 @@ extern f32 lbl_803E5914;
 #pragma peephole off
 void SB_CloudBall_init(int *obj)
 {
-    int *state = *(int **)((char *)obj + 0xb8);
+    SBCloudBallState *state = *(SBCloudBallState **)((char *)obj + 0xb8);
     int *params = *(int **)((char *)obj + 0x54);
 
     *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
     params = *(int **)((char *)obj + 0x54);
     *(u16 *)((char *)params + 0xb2) = (u16)(*(u16 *)((char *)params + 0xb2) | 1);
-    if (((void **)state)[6] == NULL) {
-        state[6] = objCreateLight(obj, 1);
-        if (((void **)state)[6] != NULL) {
-            modelLightStruct_setLightKind(state[6], 2);
-            modelLightStruct_setDiffuseColor(state[6], 0, 90, 150, 0);
-            lightSetFieldBC_8001db14(state[6], 1);
-            modelLightStruct_setDistanceAttenuation(state[6], lbl_803E5910, lbl_803E5914);
+    if ((void *)state->light == NULL) {
+        state->light = objCreateLight(obj, 1);
+        if ((void *)state->light != NULL) {
+            modelLightStruct_setLightKind(state->light, 2);
+            modelLightStruct_setDiffuseColor(state->light, 0, 90, 150, 0);
+            lightSetFieldBC_8001db14(state->light, 1);
+            modelLightStruct_setDistanceAttenuation(state->light, lbl_803E5910, lbl_803E5914);
         }
     }
 }
@@ -2131,14 +2200,14 @@ extern f32 lbl_803E58E0;
 #pragma peephole off
 void SB_CloudBall_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    SBCloudBallState *state = *(SBCloudBallState **)(obj + 0xb8);
     void *player = Obj_GetPlayerObject();
-    f32 timer = *(f32 *)(state + 0x20);
+    f32 timer = state->fadeTimer;
     f32 zero = lbl_803E58EC;
     if (timer != zero) {
-        *(f32 *)(state + 0x20) = timer - timeDelta;
-        if (*(f32 *)(state + 0x20) <= zero) {
-            *(f32 *)(state + 0x20) = zero;
+        state->fadeTimer = timer - timeDelta;
+        if (state->fadeTimer <= zero) {
+            state->fadeTimer = zero;
             Obj_FreeObject(obj);
         }
     } else {
@@ -2148,27 +2217,27 @@ void SB_CloudBall_update(int obj)
         *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
         *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
         *(f32 *)(obj + 0x8) = lbl_803E58F8 * (f32)(int)randomGetRange(-0x64, 0x64) + lbl_803E58F4;
-        if (*(s8 *)(state + 0x1c) == 0) {
-            *(f32 *)state = *(f32 *)(obj + 0x24);
-            *(f32 *)(state + 0x4) = *(f32 *)(obj + 0x28);
-            *(f32 *)(state + 0x8) = *(f32 *)(obj + 0x2c);
-            *(u8 *)(state + 0x1c) = 1;
-            *(f32 *)(state + 0xc) = *(f32 *)(obj + 0xc);
-            *(f32 *)(state + 0x10) = *(f32 *)(obj + 0x10);
-            *(f32 *)(state + 0x14) = *(f32 *)(obj + 0x14);
+        if (*(s8 *)&state->launched == 0) {
+            state->velX = *(f32 *)(obj + 0x24);
+            state->velY = *(f32 *)(obj + 0x28);
+            state->velZ = *(f32 *)(obj + 0x2c);
+            state->launched = 1;
+            state->posX = *(f32 *)(obj + 0xc);
+            state->posY = *(f32 *)(obj + 0x10);
+            state->posZ = *(f32 *)(obj + 0x14);
         }
         velocityScale = lbl_803E58FC;
-        *(f32 *)(state + 0xc) = velocityScale * (*(f32 *)state * timeDelta) + *(f32 *)(state + 0xc);
-        *(f32 *)(state + 0x10) = velocityScale * (*(f32 *)(state + 0x4) * timeDelta) + *(f32 *)(state + 0x10);
-        *(f32 *)(state + 0x14) = velocityScale * (*(f32 *)(state + 0x8) * timeDelta) + *(f32 *)(state + 0x14);
-        *(f32 *)(obj + 0xc) = *(f32 *)(state + 0xc);
-        *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x10);
-        *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x14);
+        state->posX = velocityScale * (state->velX * timeDelta) + state->posX;
+        state->posY = velocityScale * (state->velY * timeDelta) + state->posY;
+        state->posZ = velocityScale * (state->velZ * timeDelta) + state->posZ;
+        *(f32 *)(obj + 0xc) = state->posX;
+        *(f32 *)(obj + 0x10) = state->posY;
+        *(f32 *)(obj + 0x14) = state->posZ;
         *(int *)(obj + 0xf4) = *(int *)(obj + 0xf4) - framesThisStep;
         if (*(int *)(obj + 0xf4) < 0 || (player != NULL && (*(u16 *)((char *)player + 0xb0) & 0x1000) != 0)) {
-            if (*(f32 *)(state + 0x20) == lbl_803E58EC) {
+            if (state->fadeTimer == lbl_803E58EC) {
                 *(u8 *)(obj + 0x36) = 0;
-                *(f32 *)(state + 0x20) = lbl_803E58F0;
+                state->fadeTimer = lbl_803E58F0;
             }
         }
         *(s16 *)obj = (s16)getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
@@ -2178,14 +2247,14 @@ void SB_CloudBall_update(int obj)
         (*(ObjHitsPriorityState **)(obj + 0x54))->objectHitMask = 0x10;
         (*(ObjHitsPriorityState **)(obj + 0x54))->skeletonHitMask = 0x10;
         (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
-        if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0 && *(f32 *)(state + 0x20) == lbl_803E58EC) {
+        if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0 && state->fadeTimer == lbl_803E58EC) {
             projectileParticleFxFn_80099660((int *)obj, lbl_803E58E8, 2);
-            *(f32 *)(state + 0x20) = lbl_803E58F0;
+            state->fadeTimer = lbl_803E58F0;
             *(u8 *)(obj + 0x36) = 0;
         }
-        particleVelocity[0] = lbl_803E5900 * -*(f32 *)state;
-        particleVelocity[1] = lbl_803E5900 * -*(f32 *)(state + 0x4);
-        particleVelocity[2] = lbl_803E5900 * -*(f32 *)(state + 0x8);
+        particleVelocity[0] = lbl_803E5900 * -state->velX;
+        particleVelocity[1] = lbl_803E5900 * -state->velY;
+        particleVelocity[2] = lbl_803E5900 * -state->velZ;
         objfx_spawnFlaggedTrailBurst((int *)obj, lbl_803E5904, 2, 0x156, 0xf, particleVelocity);
         objfx_spawnFlaggedTrailBurst((int *)obj, lbl_803E5904, 2, 0x156, 0xf, particleVelocity);
         objfx_spawnFlaggedTrailBurst((int *)obj, lbl_803E5904, 2, 0x156, 0xf, particleVelocity);
@@ -2198,9 +2267,9 @@ void SB_CloudBall_update(int obj)
 #pragma scheduling off
 void SB_FireBall_init(int p)
 {
-    int *state = *(int **)(p + 0xb8);
+    SBFireBallState *state = *(SBFireBallState **)(p + 0xb8);
     *(int *)((char *)p + 0xf4) = 0x4b0;
-    *(u8 *)((char *)state + 0x14) = 0;
+    state->launched = 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -2208,15 +2277,15 @@ void SB_FireBall_init(int p)
 #pragma peephole off
 void SB_FireBall_update(int obj)
 {
-    int state;
+    SBFireBallState *state;
     f32 particleArgs[7];
 
-    state = *(int *)(obj + 0xb8);
-    if (*(void **)state == NULL) {
-        *(void **)state = *(void **)(obj + 0xf8);
+    state = *(SBFireBallState **)(obj + 0xb8);
+    if (state->owner == NULL) {
+        state->owner = *(void **)(obj + 0xf8);
     }
 
-    if (*(void **)state != NULL) {
+    if (state->owner != NULL) {
         *(s16 *)obj = 0;
         *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) + framesThisStep * SB_FIREBALL_SPIN_STEP);
         *(int *)(obj + 0xf4) -= framesThisStep;
@@ -2225,16 +2294,16 @@ void SB_FireBall_update(int obj)
             return;
         }
 
-        if (*(s8 *)(state + 0x14) == 0) {
-            *(f32 *)(state + 0x08) = *(f32 *)(obj + 0x24);
-            *(f32 *)(state + 0x0c) = *(f32 *)(obj + 0x28);
-            *(f32 *)(state + 0x10) = *(f32 *)(obj + 0x2c);
-            *(u8 *)(state + 0x14) = 1;
+        if (*(s8 *)&state->launched == 0) {
+            state->velX = *(f32 *)(obj + 0x24);
+            state->velY = *(f32 *)(obj + 0x28);
+            state->velZ = *(f32 *)(obj + 0x2c);
+            state->launched = 1;
         }
 
-        *(f32 *)(obj + 0x0c) += *(f32 *)(state + 0x08) * timeDelta;
-        *(f32 *)(obj + 0x10) += *(f32 *)(state + 0x0c) * timeDelta;
-        *(f32 *)(obj + 0x14) += *(f32 *)(state + 0x10) * timeDelta;
+        *(f32 *)(obj + 0x0c) += state->velX * timeDelta;
+        *(f32 *)(obj + 0x10) += state->velY * timeDelta;
+        *(f32 *)(obj + 0x14) += state->velZ * timeDelta;
 
         particleArgs[2] = lbl_803E58DC;
         objfx_spawnFlaggedTrailBurst((int *)obj, lbl_803E58E0, SB_FIREBALL_SETUP_SIZE,
@@ -2242,7 +2311,7 @@ void SB_FireBall_update(int obj)
         ((void (*)(int, int, f32 *, int, int, int))((void **)*gPartfxInterface)[2])(
             obj, SB_FIREBALL_TRAIL_PARTICLE_ID, particleArgs, 1, -1, 0);
 
-        if (*(s16 *)(state + 4) > SB_FIREBALL_HITBOX_ENABLE_DELAY) {
+        if (state->age > SB_FIREBALL_HITBOX_ENABLE_DELAY) {
             (*(ObjHitsPriorityState **)(obj + 0x54))->hitVolumePriority = SB_FIREBALL_HITBOX_TYPE;
             (*(ObjHitsPriorityState **)(obj + 0x54))->hitVolumeId = SB_FIREBALL_HITBOX_PRIORITY;
             (*(ObjHitsPriorityState **)(obj + 0x54))->objectHitMask = SB_FIREBALL_HITBOX_SIZE;
@@ -2252,7 +2321,7 @@ void SB_FireBall_update(int obj)
             (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~SB_FIREBALL_SOLID_HITBOX_FLAG;
         }
 
-        *(s16 *)(state + 4) += framesThisStep;
+        state->age += framesThisStep;
     }
 }
 #pragma peephole reset
@@ -2263,7 +2332,7 @@ void SB_FireBall_update(int obj)
 #pragma peephole off
 void SB_KyteCage_free(int* obj)
 {
-    void *child = **(void***)((char*)obj + 0xb8);
+    void *child = (*(SBKyteCageState**)((char*)obj + 0xb8))->kyte;
     if (child != NULL) {
         ObjLink_DetachChild(obj, child);
     }
@@ -2275,11 +2344,11 @@ void SB_KyteCage_free(int* obj)
 #pragma peephole off
 void SB_KyteCage_init(int *obj, int *params)
 {
-    int *state = *(int **)((char *)obj + 0xb8);
+    SBKyteCageState *state = *(SBKyteCageState **)((char *)obj + 0xb8);
     *(int (**)(int, int, int))((char *)obj + 0xbc) = SB_KyteCage_SeqFn;
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
-    *(u8 *)((char *)state + 0x4) = 0;
+    state->seqLatch = 0;
     if ((u32)GameBit_Get(117) == 0u) {
         getLActions(obj, obj, 88, 0, 0, 0);
         getLActions(obj, obj, 109, 0, 0, 0);
@@ -2296,9 +2365,9 @@ extern f32 lbl_803E591C;
 void SB_KyteCage_update(int obj)
 {
     extern uint GameBit_Get(int);
-    int state = *(int *)(obj + 0xb8);
+    SBKyteCageState *state = *(SBKyteCageState **)(obj + 0xb8);
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
-    if (*(void **)state == NULL) {
+    if (state->kyte == NULL) {
         int *head;
         int count;
         int i;
@@ -2306,8 +2375,8 @@ void SB_KyteCage_update(int obj)
         for (i = 0; i < count; i++) {
             int child = head[i];
             if (*(s16 *)(child + 0x46) == 0x121) {
-                *(int *)state = child;
-                ObjLink_AttachChild(obj, *(int *)state, 1);
+                *(int *)&state->kyte = child;
+                ObjLink_AttachChild(obj, *(int *)&state->kyte, 1);
                 i = count;
             }
         }
@@ -2324,11 +2393,11 @@ void SB_KyteCage_update(int obj)
     if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
         buttonDisable(0, 0x100);
         ((void (*)(int, int))((void **)*gObjectTriggerInterface)[0x84/4])(obj, 0);
-        if (*(u8 *)(state + 5) != 0) {
+        if (state->doorChoice != 0) {
             ((void (*)(int, int, int))((void **)*gObjectTriggerInterface)[0x48/4])(2, obj, -1);
         } else {
             ((void (*)(int, int, int))((void **)*gObjectTriggerInterface)[0x48/4])(1, obj, -1);
-            *(u8 *)(state + 5) = 1;
+            state->doorChoice = 1;
         }
     }
     if (*(void **)(obj + 0x30) != NULL) {
@@ -2531,21 +2600,21 @@ void ShipBattle_free(int* obj)
 #pragma peephole off
 void ShipBattle_init(int obj, int def)
 {
-    int state;
+    ShipBattleState *state;
     int light;
     int chainIndex;
 
-    state = *(int *)(obj + 0xb8);
-    *(s16 *)(state + 0x6a) = *(s16 *)(def + 0x1a);
-    *(s16 *)(state + 0x6e) = -1;
-    *(f32 *)(state + 0x24) =
+    state = *(ShipBattleState **)(obj + 0xb8);
+    state->unk6A = *(s16 *)(def + 0x1a);
+    state->unk6E = -1;
+    state->unk24 =
         lbl_803E595C / (lbl_803E595C + (f32)*(u8 *)(def + 0x24));
-    *(int *)(state + 0x28) = -1;
+    state->unk28 = -1;
 
     chainIndex = *(int *)(obj + 0xf4);
     if (chainIndex == 0) {
         if (*(s16 *)(def + 0x18) != 1) {
-            (*(void (**)(int, int))(*(int *)gObjectTriggerInterface + 0x1c))(state, def);
+            (*(void (**)(int, int))(*(int *)gObjectTriggerInterface + 0x1c))((int)state, def);
             *(int *)(obj + 0xf4) = *(s16 *)(def + 0x18) + 1;
             goto light_setup;
         }
@@ -2553,9 +2622,9 @@ void ShipBattle_init(int obj, int def)
 
     if (chainIndex != 0) {
         if (*(s16 *)(def + 0x18) != chainIndex - 1) {
-            (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x24))(state);
+            (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x24))((int)state);
             if (*(s16 *)(def + 0x18) != -1) {
-                (*(void (**)(int, int))(*(int *)gObjectTriggerInterface + 0x1c))(state, def);
+                (*(void (**)(int, int))(*(int *)gObjectTriggerInterface + 0x1c))((int)state, def);
             }
             *(int *)(obj + 0xf4) = *(s16 *)(def + 0x18) + 1;
         }
