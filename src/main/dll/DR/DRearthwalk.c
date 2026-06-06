@@ -1265,7 +1265,7 @@ void sh_beacon_update(int obj)
   switch (state[0x14]) {
   case 0:
     if (((*(u8 *)(obj + 0xaf) & 1) != 0) &&
-        ((*(int (*)(int))(*gGameUIInterface + 0x20))(0x194) != 0)) {
+        ((**(int (**)(int))(*gGameUIInterface + 0x20))(0x194) != 0)) {
       gameBitDecrement(0x194);
       GameBit_Set(*(s16 *)(def + 0x20), 1);
       if (Obj_IsLoadingLocked() != 0) {
