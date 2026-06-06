@@ -200,7 +200,23 @@ def audit_file(path, memo, hdr_decl_cache, text_cache):
     fwd_candidates = []
     statics = []
     defined_names = set()
+    def_end_by_name = {}
+    def_head_by_name = {}
+    seen_decl_text = {}
     stmts = list(top_level_statements(text))
+
+    # pre-pass: record fn definition positions for the decl-after-def class
+    for start, end, stmt, kind in stmts:
+        if kind != 'def':
+            continue
+        head = ' '.join(stmt.split('{', 1)[0].split())
+        if '(' in head and not PROTO_HEAD_SKIP.match(head) \
+                and not re.match(r'^\s*(struct|union|enum)\b[^(]*$', head) \
+                and '=' not in head.split('(')[0]:
+            nm = EA.declarator_name(head.rstrip())
+            if nm and nm not in def_end_by_name:
+                def_end_by_name[nm] = end
+                def_head_by_name[nm] = head
 
     for start, end, stmt, kind in stmts:
         s = ' '.join(stmt.split())
@@ -245,15 +261,37 @@ def audit_file(path, memo, hdr_decl_cache, text_cache):
         if len(names) != 1:
             continue
         name = names[0]
-        if name not in hsigs:
-            continue
+        line = text.count('\n', 0, start) + 1
         csig = EA.canon_signature('extern ' + body, name)
-        header_sig_set = hsigs[name]
-        if len(header_sig_set) == 1 and csig in header_sig_set:
-            line = text.count('\n', 0, start) + 1
+        # class: exact-text duplicate of an earlier top-level decl in this .c
+        if s in seen_decl_text:
             fwd_candidates.append({
                 'name': name, 'line': line, 'stmt': s[:160],
                 'sig': csig, 'span': [start, end],
+                'why': f'dup-in-file (first at L{seen_decl_text[s]})',
+            })
+            continue
+        seen_decl_text[s] = line
+        # class: prototype AFTER the function's own definition in this TU
+        if is_proto and name in def_end_by_name \
+                and def_end_by_name[name] < start:
+            dsig = EA.canon_signature('extern ' + def_head_by_name[name], name)
+            if dsig == csig:
+                fwd_candidates.append({
+                    'name': name, 'line': line, 'stmt': s[:160],
+                    'sig': csig, 'span': [start, end],
+                    'why': 'decl-after-def',
+                })
+                continue
+        # class: covered by a codegen-equivalent header decl in the closure
+        if name not in hsigs:
+            continue
+        header_sig_set = hsigs[name]
+        if len(header_sig_set) == 1 and csig in header_sig_set:
+            fwd_candidates.append({
+                'name': name, 'line': line, 'stmt': s[:160],
+                'sig': csig, 'span': [start, end],
+                'why': 'header-covered',
                 'headers': sorted(set(hwhere.get(name, [])))[:3],
             })
 
