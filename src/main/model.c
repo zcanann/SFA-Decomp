@@ -1806,8 +1806,9 @@ void modelAnimResetState(void *m, void *data)
 #pragma dont_inline on
 void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
 {
+    ObjAnimComponent *objAnim;
     int poff;
-    u8 *md;
+    ObjModelInstance *modelDef;
     int boff;
     int i;
     u32 u;
@@ -1825,14 +1826,14 @@ void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
         b1 = *(u8 **)(hdr + 0x68) + *(u16 *)(p2 + 0x44) * (((*(u8 *)(hdr + 0xf3) - 1) & ~7) + 8);
         b2 = *(u8 **)(hdr + 0x68) + *(u16 *)(p2 + 0x46) * (((*(u8 *)(hdr + 0xf3) - 1) & ~7) + 8);
     }
-    md = *(u8 **)(obj + 0x50);
+    objAnim = (ObjAnimComponent *)obj;
+    modelDef = objAnim->modelInstance;
     boff = 0;
     w = 0;
     i = 0;
     poff = 0;
-    for (; i < (int)*(u8 *)(md + 0x5a); i++) {
-        u = *(u8 *)(*(u8 **)(md + 0x10) + boff +
-                    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) + 1);
+    for (; i < (int)modelDef->jointCount; i++) {
+        u = *(u8 *)(modelDef->jointData + boff + objAnim->bankIndex + 1);
         if (u != 0xff) {
             p = (s16 *)(*(u8 **)(obj + 0x6c) + poff);
             v1 = *(s8 *)(b1 + u) << 6;
@@ -1847,7 +1848,7 @@ void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
             BLENDTBL_ENTRY(7, 0x1a)
             BLENDTBL_ENTRY(8, 0x1c)
         }
-        boff = *(s8 *)(md + offsetof(ObjModelInstance, modelCount)) + boff + 1;
+        boff = modelDef->modelCount + boff + 1;
         poff += 0x12;
     }
     ((s16 *)lbl_80340740)[w++] = 0x1000;
