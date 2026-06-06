@@ -2472,6 +2472,19 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   become `static` — symbols place by name via symbols.txt; the extern-should-
   be-static class is essentially EMPTY on this project (7 scope:local decls,
   all with data still in asm units).
+- `python3 tools/forward_decl_static_audit.py --audit [--out F.json]` then
+  `--apply F.json [--classes fwd,static,static-inline]` — redundant-decl +
+  dead-static detector/remover (task #171). Three fwd-decl classes: a .c
+  prototype/extern covered by a codegen-EQUIVALENT header decl in the file's
+  #include closure (extern_audit canonicalization — recipe #57 disagreements
+  are auto-excluded), exact-text dup-in-file, and decl-after-def. Apply mode
+  rebuilds just the TU and auto-reverts on ANY .o byte change (same-line-code
+  guard skips decls sharing a line with live code). Sweep result: 255 decls
+  across 64 TUs removed, zero .o byte changes. Dead statics are REPORT-ONLY
+  in practice: every unreferenced plain static found was EMITTED matched code
+  (musyx AddDpop, OS.c asm exception vectors — removal would LOSE bytes), and
+  unreferenced `static inline` helpers are usually staged accessors for
+  in-progress recovery — leave them.
 - **Gold-standard verification for refactor/cleanup commits: full-build .o
   hash comparison**, strictly stronger than report.json (catches reloc-encoding
   changes report.json doesn't surface). `find build -name '*.o' -exec md5sum

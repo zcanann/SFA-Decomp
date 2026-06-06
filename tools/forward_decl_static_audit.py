@@ -427,8 +427,9 @@ def run_apply(args):
         want_fwd = {(f['name'], f['stmt']) for f in v.get('fwd', [])} \
             if 'fwd' in classes else set()
         want_dead = {d['name'] for d in v.get('dead_static', [])
-                     if not d['inline'] and d.get('emitted') is False} \
-            if 'static' in classes else set()
+                     if (not d['inline'] and d.get('emitted') is False
+                         and 'static' in classes)
+                     or (d['inline'] and 'static-inline' in classes)}
         if not want_fwd and not want_dead:
             continue
         opath = o_path_for(p)
