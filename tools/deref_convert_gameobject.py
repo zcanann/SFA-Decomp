@@ -42,6 +42,7 @@ GO = {
 0x90:('anim.previousWorldPosY','F32'),0x94:('anim.previousWorldPosZ','F32'),
 0x98:('anim.currentMoveProgress','F32'),0x9c:('anim.activeMoveProgress','F32'),
 0xa0:('anim.currentMove','S16'),0xa2:('anim.activeMove','S16'),
+0xa4:('anim.targetObj','PTR'),
 0xa8:('anim.hitboxScale','F32'),0xad:('anim.bankIndex','S8'),
 0xae:('anim.activeHitboxMode','S8'),0xaf:('anim.resetHitboxMode','S8'),
 0xb0:('unkB0','U16'),0xb4:('unkB4','S16'),0xb8:('extra','PTR'),
