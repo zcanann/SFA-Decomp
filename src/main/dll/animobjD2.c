@@ -29,7 +29,7 @@ void *trickyFindCirclingTarget(void *obj, void *arg2) {
     f32 d1, d2, d3;
 
     target = *(void **)((u8 *)arg2 + 0x24);
-    if (*(s16 *)((u8 *)target + 0x46) == 0x6a3) {
+    if (((GameObject *)target)->anim.seqId == 0x6a3) {
         return target;
     }
 
@@ -39,9 +39,12 @@ void *trickyFindCirclingTarget(void *obj, void *arg2) {
     list = (void **)ObjGroup_GetObjects(3, &count);
     for (i = 0; i < count; i++) {
         if (list[i] == target) {
-            d1 = Vec_xzDistance((u8 *)obj + 0x18, (u8 *)target + 0x18);
-            d2 = Vec_xzDistance((u8 *)obj + 0x18, (u8 *)*(void **)((u8 *)arg2 + 0x4) + 0x18);
-            d3 = Vec_xzDistance((u8 *)target + 0x18, (u8 *)*(void **)((u8 *)arg2 + 0x4) + 0x18);
+            d1 = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX,
+                                &((GameObject *)target)->anim.worldPosX);
+            d2 = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX,
+                                &((GameObject *)*(void **)((u8 *)arg2 + 0x4))->anim.worldPosX);
+            d3 = Vec_xzDistance(&((GameObject *)target)->anim.worldPosX,
+                                &((GameObject *)*(void **)((u8 *)arg2 + 0x4))->anim.worldPosX);
             if ((d1 + d2) < lbl_803E23F8 * d3) {
                 return target;
             }
@@ -55,9 +58,10 @@ fail:
 #pragma dont_inline reset
 
 void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
-    void *p_24 = *(void **)((u8 *)p2 + 0x24);
-    f32 dx = *(f32 *)((u8 *)p_24 + 0x18) - *(f32 *)((u8 *)p1 + 0x18);
-    f32 dz = *(f32 *)((u8 *)p_24 + 0x20) - *(f32 *)((u8 *)p1 + 0x20);
+    GameObject *obj = (GameObject *)p1;
+    GameObject *target = *(GameObject **)((u8 *)p2 + 0x24);
+    f32 dx = target->anim.worldPosX - obj->anim.worldPosX;
+    f32 dz = target->anim.worldPosZ - obj->anim.worldPosZ;
     int angle = atan2_8002178c(dx, dz);
     s32 delta;
     s32 absDelta;
@@ -86,12 +90,12 @@ void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
     }
 
     *(f32 *)((u8 *)p2 + 0x708) =
-        *(f32 *)((u8 *)*(void **)((u8 *)p2 + 0x24) + 0x18) -
+        (*(GameObject **)((u8 *)p2 + 0x24))->anim.worldPosX -
         lbl_803E24D4 * fsin16Precise((u16)*(s32 *)((u8 *)p2 + 0x704));
     *(f32 *)((u8 *)p2 + 0x70c) =
-        *(f32 *)((u8 *)*(void **)((u8 *)p2 + 0x24) + 0x1c);
+        (*(GameObject **)((u8 *)p2 + 0x24))->anim.worldPosY;
     *(f32 *)((u8 *)p2 + 0x710) =
-        *(f32 *)((u8 *)*(void **)((u8 *)p2 + 0x24) + 0x20) -
+        (*(GameObject **)((u8 *)p2 + 0x24))->anim.worldPosZ -
         lbl_803E24D4 * fcos16Precise((u16)*(s32 *)((u8 *)p2 + 0x704));
 
     if (trickyFn_8013b368(p1, lbl_803E2488, p2) == 0) {
@@ -417,7 +421,7 @@ void fn_8013E0D0(int *obj, register u8 *st) {
     {
         int *t;
         void *found = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
-        if (found != NULL && *(s16 *)((char *)found + 0x46) == 0x6a3) {
+        if (found != NULL && ((GameObject *)found)->anim.seqId == 0x6a3) {
             t = (int *)found;
         } else {
             t = (int *)fn_80296118(*(void **)(st + 4));
