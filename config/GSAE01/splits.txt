@@ -797,9 +797,6 @@ main/dll/gcrobotlightbea.c:
 main/dll/exploder.c:
 	.text       start:0x801826E8 end:0x801826E8
 
-main/dll/dll_152.c:
-	.text       start:0x801826E8 end:0x801826E8
-
 main/dll/cfperch.c:
 	.text       start:0x801826E8 end:0x801833E4
 
@@ -830,9 +827,6 @@ main/dll/CF/CFPrisonGuard.c:
 
 main/dll/CF/dll_163.c:
 	.text       start:0x80189F5C end:0x8018A53C
-
-main/dll/CF/dll_164.c:
-	.text       start:0x8018A53C end:0x8018A53C
 
 main/dll/CF/dll_165.c:
 	.text       start:0x8018A53C end:0x8018AA60
@@ -1137,23 +1131,11 @@ main/dll/NW/dll_1DC.c:
 main/dll/NW/NWmammoth.c:
 	.text       start:0x801D1978 end:0x801D1E24
 
-main/dll/NW/NWtricky.c:
-	.text       start:0x801D1E24 end:0x801D1E24
-
-main/dll/dll_1DF.c:
-	.text       start:0x801D1E24 end:0x801D1E24
-
 main/dll/dim_boss.c:
 	.text       start:0x801D1E24 end:0x801D1E24
 
 main/dll/dim_bossgut.c:
 	.text       start:0x801D1E24 end:0x801D2C54
-
-main/dll/dim_bosstonsil.c:
-	.text       start:0x801D2C54 end:0x801D2C54
-
-main/dll/SH/SHmushroom.c:
-	.text       start:0x801D2C54 end:0x801D2C54
 
 main/dll/SH/SHkillermushroom.c:
 	.text       start:0x801D2C54 end:0x801D383C
@@ -1181,9 +1163,6 @@ main/dll/SH/SHroot.c:
 
 main/dll/SC/SClevelcontrol.c:
 	.text       start:0x801D5ED4 end:0x801D5F58
-
-main/dll/SC/SClightfoot.c:
-	.text       start:0x801D5F58 end:0x801D5F58
 
 main/dll/SC/SCchieflightfoot.c:
 	.text       start:0x801D5F58 end:0x801D6C04
@@ -1279,9 +1258,6 @@ main/dll/DB/DBstealerworm.c:
 main/dll/CR/CRsnowClaw.c:
 	.text       start:0x801E34C0 end:0x801E34C0
 
-main/dll/CR/CRfueltank.c:
-	.text       start:0x801E34C0 end:0x801E34C0
-
 main/dll/TREX/TREX_levelcontrol.c:
 	.text       start:0x801E34C0 end:0x801E42F8
 
@@ -1331,9 +1307,6 @@ main/dll/DR/DRpulley.c:
 main/dll/DR/DRhalolight.c:
 	.text       start:0x801ECF94 end:0x801ED428
 
-main/dll/DR/DRbarrelplace.c:
-	.text       start:0x801ED428 end:0x801ED428
-
 main/dll/BW/BWalphaanim.c:
 	.text       start:0x801ED428 end:0x801EE0C0
 
@@ -1354,9 +1327,6 @@ main/dll/WC/WCdial.c:
 
 main/dll/WC/WClaser.c:
 	.text       start:0x801F02F0 end:0x801F0B50
-
-main/dll/WC/WCfloortile.c:
-	.text       start:0x801F0B50 end:0x801F0B50
 
 main/dll/ARW/ARWarwingattachment.c:
 	.text       start:0x801F0B50 end:0x801F37CC
