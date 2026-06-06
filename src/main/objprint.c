@@ -1,12 +1,13 @@
 #include "main/objprint.h"
 #include "main/objanim_internal.h"
 
-#define OBJPRINT_MODEL_INSTANCE(obj) (*(void **)((char *)(obj) + offsetof(ObjAnimComponent, modelInstance)))
-#define OBJPRINT_BANK_TABLE(obj) (*(int ***)((char *)(obj) + offsetof(ObjAnimComponent, banks)))
-#define OBJPRINT_ACTIVE_BANK_INDEX(obj) (*(s8 *)((char *)(obj) + offsetof(ObjAnimComponent, bankIndex)))
-#define OBJPRINT_ACTIVE_BANK(obj) (OBJPRINT_BANK_TABLE(obj)[OBJPRINT_ACTIVE_BANK_INDEX(obj)])
-#define OBJPRINT_MODEL_COUNT(model) (*(s8 *)((char *)(model) + offsetof(ObjModelInstance, modelCount)))
-#define OBJPRINT_JOINT_COUNT(model) (*(u8 *)((char *)(model) + offsetof(ObjModelInstance, jointCount)))
+#define OBJPRINT_OBJECT(obj) ((ObjAnimComponent *)(obj))
+#define OBJPRINT_MODEL_INSTANCE(obj) (OBJPRINT_OBJECT(obj)->modelInstance)
+#define OBJPRINT_BANK_TABLE(obj) ((int **)OBJPRINT_OBJECT(obj)->banks)
+#define OBJPRINT_ACTIVE_BANK_INDEX(obj) (OBJPRINT_OBJECT(obj)->bankIndex)
+#define OBJPRINT_ACTIVE_BANK(obj) ((int *)OBJPRINT_BANK_TABLE(obj)[OBJPRINT_ACTIVE_BANK_INDEX(obj)])
+#define OBJPRINT_MODEL_COUNT(model) (((ObjDef *)(model))->modelCount)
+#define OBJPRINT_JOINT_COUNT(model) (((ObjDef *)(model))->jointCount)
 
 #pragma peephole off
 #pragma scheduling off
