@@ -2312,6 +2312,24 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   sits behind earlier unrelated diffs are otherwise missed (task #162 found
   4 hidden #81 sites this way, all -> 100%).
 - `rm -f build/GSAE01/report.json && timeout 30 ninja build/GSAE01/report.json` — refresh report
+- `python3 tools/extern_audit.py [--csv | --symbol X | --real-conflicts-only]` —
+  extern decl audit across src/+include/: canonicalizes signatures into
+  CODEGEN-equivalence classes (return width/signedness, param widths, f32/f64,
+  varargs — recipes #3/#11/#24/#58 aware) and reports REAL conflicts (recipe
+  #57 block-scope-override territory; per-file form is LOAD-BEARING, never
+  naively unify) vs cosmetic-only variants vs consistent dups vs static
+  candidates (cross-checked against symbols.txt scope). Key negative (task
+  #165): same-file `extern` forward decls of globally-placed symbols must NOT
+  become `static` — symbols place by name via symbols.txt; the extern-should-
+  be-static class is essentially EMPTY on this project (7 scope:local decls,
+  all with data still in asm units).
+- **Gold-standard verification for refactor/cleanup commits: full-build .o
+  hash comparison**, strictly stronger than report.json (catches reloc-encoding
+  changes report.json doesn't surface). `find build -name '*.o' -exec md5sum
+  {} + | sort > before.md5`, make the change, `ninja`, re-hash, `diff` — any
+  changed .o = revert that file. Task #165 swept ~917 dup extern lines across
+  ~150 files this way with zero regressions (2 parser-bug bad edits caught and
+  reverted by exactly this check).
 
 ### Matching-help corpus (Discord export + decomp.me scratches)
 
