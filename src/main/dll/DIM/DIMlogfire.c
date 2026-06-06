@@ -1,4 +1,4 @@
-#include "main/dll/DIM/DIMlogfire.h"
+#include "main/dll/DIM/dimlogfire.h"
 #include "main/mapEventTypes.h"
 
 extern undefined4 FUN_8000680c();

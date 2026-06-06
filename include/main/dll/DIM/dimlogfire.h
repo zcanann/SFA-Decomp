@@ -29,4 +29,7 @@ typedef struct DimLogFireState {
 
 STATIC_ASSERT(sizeof(DimLogFireState) == 0x24);
 
+int MoonSeedPlantingSpot_SeqFn(int obj);
+int CCGasVentControl_SeqFn(int obj);
+
 #endif /* MAIN_DLL_DIM_DIMLOGFIRE_H_ */
