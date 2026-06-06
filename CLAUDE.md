@@ -2180,6 +2180,33 @@ reverted. EDIT HAZARD: a bulk `&cfg.m -> p` sweep rewrites the DEF lines
 into `p = p;` — uninitialized-pointer code that builds green; always verify
 the addi exists in the .o after the sweep.
 
+98. **`#pragma opt_unroll_loops off` IS functional in GC/2.0 (extends the
+    #95/#96 corrections) — and the s64 fixed-point cap class is PARTIALLY
+    CRACKED by it + a pointer-deref halving spelling.** (render fn_80007F78,
+    0% -> 89.0%, 2212B.) Target shape for the unrolled rounding-division
+    sequences: ctr=N loop, K single-bit signed halvings per body, each
+    halving STORING both words to the stack slot but chaining values in
+    regs, one reload at loop top. Recipe: (a) spell each halving through a
+    pointer-to-local — `s64 tmp; s64 *q = &tmp; ... for (i = 0; i < 10;
+    i++) { *q /= 2; *q /= 2; *q /= 2; *q /= 2; *q /= 2; }` — the deref
+    defeats both the /2-chain constant-folding (plain or escaped scalars
+    fold to srawi-25 pairs; volatile reloads per use, both wrong) while
+    #94 value-tracking still resolves the address to direct sp stores;
+    (b) wrap the fn in `#pragma opt_unroll_loops off` ... `reset` to kill
+    MWCC's extra x5 re-unroll of the already-5-wide body (ctr=2 -> ctr=10).
+    Body-statement count = target's per-body group count (read it off the
+    ctr value x body groups). Other s64-class tells from the same dig:
+    u64 vars passed to byte-copy helpers (render_copyPackedU64Head/Tail)
+    must be SEPARATE address-taken locals, not a u64 array (`&buf[2]` call
+    args get hoisted into saved regs; separate `&bufA`/`&bufB` re-derive
+    per call matching target); a u16 field loaded then overwritten by a
+    derived value = ONE variable (`curB = posA + curB`); 64-bit
+    `(s64)bitpos > 64` compare emits the xoris/subfe/neg signed form while
+    `>> 3`/`& 7` stay logical on the u64. Residual at 89%: whole-fn
+    saved-reg rotation + frac/outPos hi-word spill-vs-reg balance
+    (#82-family); h-reuse and web-split A/Bs all scored lower — don't
+    re-grind them (masked-separate + curB-merged is the max found).
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/

@@ -12,6 +12,7 @@ int getLActions(int a, int b, u16 idx)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void render_copyPackedU64Tail(u64 *dst, u32 packed)
@@ -33,7 +34,9 @@ void render_copyPackedU64Tail(u64 *dst, u32 packed)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void render_copyPackedU64Head(u64 *dst, u32 packed)
@@ -55,6 +58,7 @@ void render_copyPackedU64Head(u64 *dst, u32 packed)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -183,6 +187,150 @@ int fn_80006B1C(ModelRenderInstrsState *src, ModelRenderInstrsState *dst, int co
     modelRenderInstrsState_setBit(dst, startBit + bitWidth);
     return ((u8 *)src->instrs)[(src->bit >> 3) + 1];
 }
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 floorf(f32);
+extern f32 lbl_803DE544;
+
+/* Refill the two parallel 64-bit bitstream windows from the next
+   byte-aligned position once the consumed bit count overruns 64. */
+#define RENDER_BITS_REFILL(nb)                       \
+    bitpos -= (nb);                                  \
+    bufA = bitpos >> 3;                              \
+    posA += bufA;                                    \
+    curB = bufA + curB;                              \
+    bitpos &= 7;                                     \
+    render_copyPackedU64Head(&bufA, posA);           \
+    render_copyPackedU64Tail(&bufA, posA + 7);       \
+    render_copyPackedU64Head(&bufB, curB);           \
+    render_copyPackedU64Tail(&bufB, curB + 7);       \
+    bufA <<= bitpos;                                 \
+    bufB <<= bitpos;                                 \
+    bitpos += (nb);
+
+#pragma opt_unroll_loops off
+#pragma scheduling off
+#pragma peephole off
+void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
+{
+    f32 t = *(f32 *)(anim + 0x4);
+    u64 outPos = (u32)out;
+    int curB = *(u16 *)(anim + 0x4c);
+    u64 posA = *(u32 *)(anim + 0x2c);
+    u64 tp = *(u32 *)(anim + 0x34) + 4;
+    u64 end;
+    s64 frac;
+    u64 bufA;
+    u64 bufB;
+    s64 tmp;
+    s64 *q = &tmp;
+    u64 bitpos;
+    u64 vA;
+    u64 maskConst = 0xFFF0;
+    int i;
+
+    curB = posA + curB;
+    end = (u32)(dst + 3);
+    t = t - floorf(t);
+    t = t * lbl_803DE544;
+    frac = (int)t;
+
+    render_copyPackedU64Head(&bufA, posA);
+    render_copyPackedU64Tail(&bufA, posA + 7);
+    render_copyPackedU64Head(&bufB, curB);
+    render_copyPackedU64Tail(&bufB, curB + 7);
+    bitpos = 0;
+
+    do {
+        u64 sample = 0;
+        u64 h = *(u16 *)(u32)tp;
+        u64 nib = h & 0xf;
+        u32 hw = h;
+        u64 masked = h & maskConst;
+
+        if (nib != 0) {
+            bitpos += nib;
+            if ((s64)bitpos > 64) {
+                RENDER_BITS_REFILL(nib)
+            }
+            tmp = 64 - nib;
+            vA = bufA >> tmp;
+            tmp = bufB >> tmp;
+            tmp = tmp - vA;
+            tmp = tmp << 50;
+            for (i = 0; i < 10; i++) {
+                *q /= 2;
+                *q /= 2;
+                *q /= 2;
+                *q /= 2;
+                *q /= 2;
+            }
+            tmp = tmp * frac;
+            for (i = 0; i < 7; i++) {
+                *q /= 2;
+                *q /= 2;
+            }
+            sample = masked + ((vA + tmp) << 2);
+            bufA <<= nib;
+            bufB <<= nib;
+        }
+        tp += 2;
+        *(u16 *)(u32)outPos = sample;
+        outPos += 2;
+
+        sample = 0;
+        if (hw & 0x10) {
+            u64 h2 = *(u16 *)(u32)tp;
+            u64 nib3;
+
+            if ((h2 & 0x10) != 0) {
+                u64 nib2 = h2 & 0xf;
+                if (nib2 != 0) {
+                    bitpos += nib2;
+                    if ((s64)bitpos > 64) {
+                        RENDER_BITS_REFILL(nib2)
+                    }
+                    bufA <<= nib2;
+                    bufB <<= nib2;
+                }
+                tp += 2;
+                if (!((u32)h2 & 0x20)) {
+                    goto storeSecond;
+                }
+                h2 = *(u16 *)(u32)tp;
+            }
+            nib3 = h2 & 0xf;
+            if (nib3 != 0) {
+                u64 masked2 = h2 & 0xFFF0;
+                bitpos += nib3;
+                if ((s64)bitpos > 64) {
+                    RENDER_BITS_REFILL(nib3)
+                }
+                tmp = 64 - nib3;
+                vA = bufA >> tmp;
+                tmp = bufB >> tmp;
+                tmp = tmp - vA;
+                tmp = tmp * frac;
+                for (i = 0; i < 7; i++) {
+                    *q /= 2;
+                    *q /= 2;
+                }
+                sample = masked2 + (vA + tmp);
+                bufA <<= nib3;
+                bufB <<= nib3;
+            }
+            tp += 2;
+        }
+    storeSecond:
+        *dst = sample;
+        dst++;
+    } while ((u64)(u32)dst != end);
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma opt_unroll_loops reset
+
 #pragma peephole reset
 #pragma scheduling reset
 
