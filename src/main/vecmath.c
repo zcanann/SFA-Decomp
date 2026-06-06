@@ -1313,8 +1313,8 @@ void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
     }
     {
         f32 s = lbl_803DE7D0;
-        f32 d = lbl_803DE7D4;
-        *out0 = s * yaw / d;
+        f32 d;
+        *out0 = s * yaw / (d = lbl_803DE7D4);
         *out1 = s * sinp / d;
         *out2 = s * roll / d;
     }
