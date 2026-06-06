@@ -80,7 +80,7 @@ extern f32 lbl_803E53F4;
 #define BOMBPLANTINGSPOT_READY_FLAG 0x10
 
 void bombplantspore_update(void *obj) {
-    void *state;
+    BombPlantSporeState *state;
     s32 particleAlpha;
     s16 hitId;
     void *hitObj;
@@ -91,8 +91,8 @@ void bombplantspore_update(void *obj) {
     u32 detonateMessage;
     int i;
 
-    state = *(void **)((u8 *)obj + 0xb8);
-    if ((*(u8 *)((u8 *)state + 0x2b0) >> 6 & 1) != 0) {
+    state = *(BombPlantSporeState **)((u8 *)obj + 0xb8);
+    if ((state->stateFlags >> 6 & 1) != 0) {
         detonateMessage = BOMBPLANTSPORE_MSG_DETONATE;
         while (ObjMsg_Pop(obj, &poppedMessage, &poppedSender, NULL) != 0) {
             if (poppedMessage == detonateMessage) {
@@ -104,14 +104,14 @@ void bombplantspore_update(void *obj) {
                     (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
                         obj, 0x3f3, 0, 4, -1, 0);
                 }
-                modelLightStruct_setEnabled(lbl_803E53AC, *(void **)((u8 *)state + 0x270), 0);
+                modelLightStruct_setEnabled(lbl_803E53AC, state->light, 0);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
                 *(s16 *)((u8 *)obj + 0x6) |= 0x4000;
                 ObjHits_DisableObject(obj);
-                *(u8 *)((u8 *)state + 0x2b0) &= ~BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK;
+                state->stateFlags &= ~BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK;
             }
         }
-        if ((*(u8 *)((u8 *)state + 0x2b0) >> 6 & 1) != 0) {
+        if ((state->stateFlags >> 6 & 1) != 0) {
             return;
         }
     }
@@ -125,16 +125,16 @@ void bombplantspore_update(void *obj) {
         return;
     }
 
-        if (*(f32 *)((u8 *)state + 0x274) < lbl_803E53C0) {
-            particleAlpha = (s32)-(lbl_803E53C8 * *(f32 *)((u8 *)state + 0x274) - lbl_803E53C4);
+        if (state->fuseTimer < lbl_803E53C0) {
+            particleAlpha = (s32)-(lbl_803E53C8 * state->fuseTimer - lbl_803E53C4);
             objfx_spawnDirectionalBurst(obj, 5, 7, 1, particleAlpha & 0xff, NULL, 0, lbl_803E53B0,
                            (f32)(lbl_803E53D8 *
-                                     (double)(lbl_803E53C0 - *(f32 *)((u8 *)state + 0x274)) +
+                                     (double)(lbl_803E53C0 - state->fuseTimer) +
                                  lbl_803E53D0));
         }
         ObjHits_GetPriorityHit(obj, hitPosition, 0, 0);
         hitObj = **(void ***)((u8 *)obj + 0x54);
-        if ((*(u8 *)((u8 *)state + 0x2b0) & 0x80) == 0) {
+        if ((state->stateFlags & 0x80) == 0) {
             *(f32 *)((u8 *)state + 0x284) -= timeDelta;
             if (*(f32 *)((u8 *)state + 0x284) < lbl_803E5394) {
                 *(f32 *)((u8 *)state + 0x284) = lbl_803E5394;
@@ -143,7 +143,7 @@ void bombplantspore_update(void *obj) {
             if (*(f32 *)((u8 *)state + 0x2a0) < lbl_803E5394) {
                 *(f32 *)((u8 *)state + 0x2a0) = lbl_803E5394;
             }
-            *(s16 *)obj += *(u16 *)((u8 *)state + 0x2ae);
+            *(s16 *)obj += *(u16 *)&state->yawStep;
             *(f32 *)((u8 *)obj + 0x28) = lbl_803E53E0 * timeDelta + *(f32 *)((u8 *)obj + 0x28);
             if (lbl_803E53E4 > *(f32 *)((u8 *)obj + 0x28)) {
                 *(f32 *)((u8 *)obj + 0x28) = lbl_803E53E4;
@@ -187,19 +187,19 @@ void bombplantspore_update(void *obj) {
                 (hitId = *(s16 *)((u8 *)hitObj + 0x46), hitId != 0x36d) &&
                 hitId != 0x198 && hitId != 0x63c) {
                 Sfx_PlayFromObject(obj, SFXen_tiles_lightup);
-                *(u8 *)((u8 *)state + 0x2b0) =
-                    *(u8 *)((u8 *)state + 0x2b0) & ~BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE |
+                state->stateFlags =
+                    state->stateFlags & ~BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE |
                     BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE;
-                if (lbl_803E53C0 < *(f32 *)((u8 *)state + 0x274)) {
-                    *(f32 *)((u8 *)state + 0x274) = lbl_803E53C0;
+                if (lbl_803E53C0 < state->fuseTimer) {
+                    state->fuseTimer = lbl_803E53C0;
                 }
             }
             if ((*(u8 *)((u8 *)state + 0x268) & 0x11) != 0) {
-                *(u8 *)((u8 *)state + 0x2b0) =
-                    *(u8 *)((u8 *)state + 0x2b0) & ~BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE |
+                state->stateFlags =
+                    state->stateFlags & ~BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE |
                     BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE;
-                if (lbl_803E53C0 < *(f32 *)((u8 *)state + 0x274)) {
-                    *(f32 *)((u8 *)state + 0x274) = lbl_803E53C0;
+                if (lbl_803E53C0 < state->fuseTimer) {
+                    state->fuseTimer = lbl_803E53C0;
                 }
             }
         }
@@ -207,13 +207,13 @@ void bombplantspore_update(void *obj) {
         if (hitObj == playerObj) {
             *(u16 *)state = BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE;
             ObjMsg_SendToObject(hitObj, BOMBPLANTSPORE_MSG_HIT_PLAYER, obj, state);
-            *(u8 *)((u8 *)state + 0x2b0) =
-                *(u8 *)((u8 *)state + 0x2b0) &
+            state->stateFlags =
+                state->stateFlags &
                     ~BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK |
                 BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK;
         } else {
-            *(f32 *)((u8 *)state + 0x274) -= timeDelta;
-            if (*(f32 *)((u8 *)state + 0x274) <= lbl_803E5394) {
+            state->fuseTimer -= timeDelta;
+            if (state->fuseTimer <= lbl_803E5394) {
                 Sfx_PlayFromObject(obj, SFXmv_torclp_6);
                 (*(void (***)(void *))gExpgfxInterface)[5](obj);
                 for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++) {
@@ -221,7 +221,7 @@ void bombplantspore_update(void *obj) {
                     (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
                         obj, 0x3f3, 0, 4, -1, 0);
                 }
-                modelLightStruct_setEnabled(lbl_803E53AC, *(void **)((u8 *)state + 0x270), 0);
+                modelLightStruct_setEnabled(lbl_803E53AC, state->light, 0);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
                 *(s16 *)((u8 *)obj + 0x6) |= 0x4000;
                 ObjHits_DisableObject(obj);
