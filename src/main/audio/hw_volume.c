@@ -35,8 +35,12 @@ void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefine
 
     aux_entry = lbl_803CC1E0 + *(u8 *)(voice + 0xef) * 0xbc;
 
-    salCalcVolumeMatrix(p2, out, aux, p7, (*(u32 *)(voice + 0xf0) & 0x80000000u) != 0,
+    {
+        extern void salCalcVolumeMatrix(int voltab_index, f32 *out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 a, f32 b, f32 c);
+        u32 f0w = *(u32 *)(voice + 0xf0);
+        salCalcVolumeMatrix(p2, out, aux, p7, (f0w & 0x80000000u) != 0,
                         *(u32 *)(aux_entry + 0x54) == 1, a, b, c);
+    }
 
     v0 = (s32)(lbl_803E78E4 * out[0]);
     v1 = (s32)(lbl_803E78E4 * out[1]);

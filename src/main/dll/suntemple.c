@@ -129,15 +129,17 @@ void suntemple_update(int obj)
         *(f32 *)(obj + 0x14) = *(f32 *)(cfg + 0x10);
         *(u8 *)(obj + 0xaf) &= ~0x08;
 
-        if (*(s16 *)(cfg + 0x22) == -1) {
-            *(u8 *)(obj + 0xaf) &= ~0x10;
-        } else if ((u32)GameBit_Get(*(s16 *)(cfg + 0x22)) != 0) {
-            *(u8 *)(obj + 0xaf) &= ~0x10;
-        } else {
-            *(u8 *)(obj + 0xaf) |= 0x10;
-            if ((*(u8 *)(cfg + 0x1b) & 0x10) != 0) {
-                *(u8 *)(obj + 0xaf) |= 0x08;
+        if (*(s16 *)(cfg + 0x22) != -1) {
+            if ((u32)GameBit_Get(*(s16 *)(cfg + 0x22)) != 0) {
+                *(u8 *)(obj + 0xaf) &= ~0x10;
+            } else {
+                *(u8 *)(obj + 0xaf) |= 0x10;
+                if ((*(u8 *)(cfg + 0x1b) & 0x10) != 0) {
+                    *(u8 *)(obj + 0xaf) |= 0x08;
+                }
             }
+        } else {
+            *(u8 *)(obj + 0xaf) &= ~0x10;
         }
 
         if (*(s16 *)(obj + 0x46) == 0x830 && gameTimerIsRunning() != 0) {
