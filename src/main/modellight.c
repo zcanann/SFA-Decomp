@@ -1332,9 +1332,8 @@ void modelLightStruct_setDistanceAttenuation(u8 *obj, f32 a, f32 b) {
 #pragma dont_inline on
 u8 modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
     f32 localPos[3];
-    f32 worldPos[3];
     f32 projected[3];
-    f32 cornerPos[3];
+    f32 worldPos[3];
     f32 corners[24];
     f32 extent;
     f32 scaledExtent;
@@ -1342,10 +1341,10 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
     u32 combinedClipMask;
     u32 *cornerWords;
     u32 *sourceWords;
+    f32 zero;
     int i;
 
-    extent = *(f32 *)(obj + 0xa8);
-    scaledExtent = *(f32 *)(obj + 8) * extent;
+    scaledExtent = *(f32 *)(obj + 8) * *(f32 *)(obj + 0xa8);
     cornerWords = (u32 *)corners;
     sourceWords = (u32 *)lbl_802C1A88;
     i = 12;
@@ -1362,46 +1361,47 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
     PSMTXMultVec((f32 *)(light + 0x170), worldPos, localPos);
 
     if (*(int *)(light + 0x168) == 0) {
-        if (*(f32 *)(light + 0x15c) < localPos[0] - extent ||
+        if (localPos[0] - (extent = *(f32 *)(obj + 0xa8)) > *(f32 *)(light + 0x15c) ||
             localPos[0] + scaledExtent < *(f32 *)(light + 0x158) ||
-            *(f32 *)(light + 0x150) < localPos[1] - extent ||
+            localPos[1] - extent > *(f32 *)(light + 0x150) ||
             localPos[1] + scaledExtent < *(f32 *)(light + 0x154) ||
-            *(f32 *)(light + 0x164) < localPos[2] - extent ||
+            localPos[2] - extent > *(f32 *)(light + 0x164) ||
             localPos[2] + scaledExtent < *(f32 *)(light + 0x160)) {
             return 0;
         }
         return 1;
     }
 
-    if (*(f32 *)(light + 0x164) < localPos[2] - extent ||
+    if (localPos[2] - *(f32 *)(obj + 0xa8) > *(f32 *)(light + 0x164) ||
         localPos[2] + scaledExtent < *(f32 *)(light + 0x160)) {
         return 0;
     }
 
+    zero = lbl_803DE75C;
     combinedClipMask = 0x3f;
     for (i = 0; i < 8; i++) {
-        cornerPos[0] = localPos[0] + scaledExtent * corners[i * 3 + 0];
-        cornerPos[1] = localPos[1] + scaledExtent * corners[i * 3 + 1];
-        cornerPos[2] = localPos[2] + scaledExtent * corners[i * 3 + 2];
-        PSMTXMultVec((f32 *)(light + 0x1f0), cornerPos, projected);
-        if (projected[2] != lbl_803DE75C) {
+        worldPos[0] = localPos[0] + scaledExtent * corners[i * 3 + 0];
+        worldPos[1] = localPos[1] + scaledExtent * corners[i * 3 + 1];
+        worldPos[2] = localPos[2] + scaledExtent * corners[i * 3 + 2];
+        PSMTXMultVec((f32 *)(light + 0x1f0), worldPos, projected);
+        if (projected[2] != zero) {
             projected[0] /= projected[2];
             projected[1] /= projected[2];
         }
 
         clipMask = 0;
-        if (cornerPos[2] < *(f32 *)(light + 0x160)) {
+        if (worldPos[2] < *(f32 *)(light + 0x160)) {
             clipMask |= 0x10;
         }
-        if (*(f32 *)(light + 0x164) < cornerPos[2]) {
+        if (*(f32 *)(light + 0x164) < worldPos[2]) {
             clipMask |= 0x20;
         }
-        if (projected[0] < lbl_803DE75C) {
+        if (projected[0] < zero) {
             clipMask |= 1;
         } else if (projected[0] > lbl_803DE760) {
             clipMask |= 2;
         }
-        if (projected[1] < lbl_803DE75C) {
+        if (projected[1] < zero) {
             clipMask |= 4;
         } else if (projected[1] > lbl_803DE760) {
             clipMask |= 8;
