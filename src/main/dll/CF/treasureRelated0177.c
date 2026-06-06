@@ -198,7 +198,7 @@ void dll_127_init(short *param_1,int param_2)
   b = *(u8 *)(param_2 + 0x19);
   fVar1 = (f32)(int)b;
   if ((f32)(int)b < lbl_803E3D64) {
-    fVar1 = lbl_803E3D64;
+    fVar1 = *(f32 *)&lbl_803E3D64;
   }
   fVar1 = fVar1 * lbl_803E3D68;
   *(float *)(param_1 + 4) = *(float *)(*(int *)(param_1 + 0x28) + 4) * fVar1;
@@ -561,7 +561,7 @@ void kt_torch_init(int obj, int p2)
     b = *(u8 *)(p2 + 0x1c);
     scale = (f32)(int)b;
     if ((f32)(int)b < lbl_803E3DC0) {
-        scale = lbl_803E3DC0;
+        scale = *(f32 *)&lbl_803E3DC0;
     }
     scale *= lbl_803E3DC4;
     *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4) * scale;

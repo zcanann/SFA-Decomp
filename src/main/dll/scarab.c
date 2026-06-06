@@ -1299,8 +1299,8 @@ void fn_8015EA48(int obj, u8 *p)
   extern f32 lbl_803E2DF4;
   extern f32 lbl_803E2DF8;
   extern f32 lbl_803E2DFC;
-  f32 t;
   f32 dur;
+  f32 t;
   int setup;
   u8 *o;
 
