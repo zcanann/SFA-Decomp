@@ -8,6 +8,9 @@ typedef unsigned long long u64;
 typedef int s32;
 typedef short s16;
 typedef float f32;
+typedef signed char s8;
+
+#include "main/audio/mcmd.h"
 
 #define SYNTH_MAX_VOICES 8
 #define SYNTH_CALLBACK_COUNT 0x100
@@ -91,31 +94,8 @@ typedef struct SynthDelayStorage {
     SynthDelayedNode* bucketHeads[SYNTH_DELAY_BUCKET_COUNT][3];
 } SynthDelayStorage;
 
-typedef struct SynthVoiceSlot {
-    u8 unk000[0xEC];
-    union {
-        u32 nextHandle;
-        u32 callbackNext;
-    };
-    u8 unk0F0[4];
-    union {
-        u32 handle;
-        u32 callbackLinkId;
-    };
-    u8 unk0F8[0x1C];
-    u32 inputFlags;
-    u32 flags;
-    u8 callbackActive;
-    u8 unk11D[5];
-    u8 studioIndex;
-    union {
-        u8 unk123;
-        u8 channelIndex;
-    };
-    u8 unk124[0x20B - 0x124];
-    u8 alternateStudioIndex;
-    u8 unk20C[0x404 - 0x20C];
-} SynthVoiceSlot;
+/* The 0x404 voice-slot record is the canonical McmdVoiceState (mcmd.h);
+ * the former McmdVoiceState view is retired. */
 
 typedef struct SynthFade {
     f32 current;
@@ -339,7 +319,7 @@ extern u8 gSynthInitialized;
 extern u8 gSynthDelayBucketCursor;
 extern SynthCallbackLink* gSynthFreeCallbacks;
 extern SynthVoice* gSynthCurrentVoice;
-extern SynthVoiceSlot* gSynthVoiceSlots;
+extern McmdVoiceState* gSynthVoiceSlots;
 extern u32 gSynthDelayedActionWord0;
 extern u32 gSynthDelayedActionWord1;
 extern SynthFade gSynthFades[0x20];
@@ -356,9 +336,9 @@ extern u32 gSynthNextHandle;
 #define SYNTH_VOICE_SLOT_FLAGS64(slot) (*(u64*)&(slot)->inputFlags)
 
 /* Recovered semantics for external audio helpers. */
-void synthReleaseVoiceSlot(SynthVoiceSlot* slot);
+void synthReleaseVoiceSlot(McmdVoiceState* slot);
 u32 synthLookupCallbackLinkId(u32 callbackId);
-void synthCopyControllerValue(u32 controller, SynthVoiceSlot* dst, SynthVoiceSlot* src);
+void synthCopyControllerValue(u32 controller, McmdVoiceState* dst, McmdVoiceState* src);
 void synthScaleFadeTime(s32* value);
 extern const f32 lbl_803E8430;
 extern const f32 lbl_803E8440;
@@ -370,7 +350,7 @@ extern const f32 lbl_803E846C;
 
 void synthInitVoices(void);
 void synthSetStudioChannelScale(s32 value, u8 studioIndex, u32 channelIndex);
-u32 synthGetVoiceSlotChannelScale(SynthVoiceSlot* slot);
+u32 synthGetVoiceSlotChannelScale(McmdVoiceState* slot);
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel);
 void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event);
 SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 groupIndex, u32* output);

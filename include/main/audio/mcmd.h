@@ -172,10 +172,14 @@ typedef struct McmdVoiceState {
     u8 unkA8[MCMD_VOICE_LOOP_COUNTER_OFFSET - 0xA8];
     u16 loopCounter;
     u32 localRegs[16];
-    u32 voiceNextHandle;
+    union {
+        u32 voiceNextHandle;
+        u32 callbackNext;
+    };
     u32 voicePrevHandle;
     union {
         u32 voiceHandle;
+        u32 callbackLinkId;
         u8 voiceHandleBytes[4];
     };
     McmdVidListNode *vidListNode;
@@ -191,7 +195,10 @@ typedef struct McmdVoiceState {
     u32 priorityValue;
     u32 inputFlags;
     u32 outputFlags;
-    u8 macroAllocating;
+    union {
+        u8 macroAllocating;
+        u8 callbackActive;
+    };
     u8 streamKind;
     u8 auxA;
     u8 auxB;

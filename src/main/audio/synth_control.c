@@ -237,7 +237,7 @@ void synthInit(u32 sampleRate, u32 voiceCount) {
     hwSetMesgCallback(synthHWMessageHandler);
 }
 
-void synthCopyVoiceSlotMixState(SynthVoiceSlot* dst, SynthVoiceSlot* src) {
+void synthCopyVoiceSlotMixState(McmdVoiceState* dst, McmdVoiceState* src) {
     synthCopyControllerValue(7, dst, src);
     synthCopyControllerValue(10, dst, src);
     synthCopyControllerValue(0x5B, dst, src);
@@ -253,7 +253,7 @@ s32 synthTriggerCallback(u32 callbackId) {
     if (gSynthInitialized != 0) {
         for (linkId = synthLookupCallbackLinkId(callbackId); linkId != SYNTH_INVALID_LINK_ID;
              linkId = gSynthVoiceSlots[linkId & 0xFF].callbackNext) {
-            SynthVoiceSlot* slot;
+            McmdVoiceState* slot;
 
             slot = &gSynthVoiceSlots[linkId & 0xFF];
             if (linkId == slot->callbackLinkId) {
