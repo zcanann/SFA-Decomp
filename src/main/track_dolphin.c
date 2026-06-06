@@ -6777,27 +6777,13 @@ void renderGlows(void)
 
 void gxErrorFn_80060b40(void)
 {
-    int iVar3 = 0;
-    int uVar2 = lbl_803DCE98;
-    int uVar4;
-    int iVar1;
+    int n;
+    int i;
 
-    if (uVar2 <= 0) {
-        return;
+    i = 0;
+    n = lbl_803DCE98;
+    for (; i < n; i++) {
     }
-    if ((8 < uVar2) && (uVar4 = uVar2 - 1 >> 3, 0 < uVar2 - 8)) {
-        do {
-            iVar3 = iVar3 + 8;
-            uVar4 = uVar4 - 1;
-        } while (uVar4 != 0);
-    }
-    iVar1 = uVar2 - iVar3;
-    if (uVar2 <= iVar3) {
-        return;
-    }
-    do {
-        iVar1 = iVar1 + -1;
-    } while (iVar1 != 0);
 }
 
 extern f32 lbl_8038D77C[];
