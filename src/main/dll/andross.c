@@ -1100,8 +1100,7 @@ LAB_8023c584:
             *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) + (f32)(lbl_803DC450);
     }
     fn_80239EAC(obj,(int)piVar14);
-    iVar12 = GameBit_Get(0x10);
-    if (iVar12 != 0) {
+    if ((u32)GameBit_Get(0x10) != 0) {
       GameBit_Set(0x10,0);
       piVar14[0x22] = 0x1a;
       lbl_803DDDB8 = lbl_803DC4D4;
@@ -1266,15 +1265,9 @@ LAB_8023cbdc:
     dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar18 = lbl_803E74D4;
-    dVar19 = dVar18;
-    if ((dVar18 <= dVar17) && (dVar19 = dVar17, dVar18 < dVar17)) {
-      dVar19 = dVar18;
-    }
+    dVar19 = (dVar17 < dVar18) ? dVar18 : ((dVar17 > dVar18) ? dVar18 : dVar17);
     dVar18 = lbl_803E74D4;
-    dVar17 = dVar18;
-    if ((dVar18 <= dVar16) && (dVar17 = dVar16, dVar18 < dVar16)) {
-      dVar17 = dVar18;
-    }
+    dVar17 = (dVar16 < dVar18) ? dVar18 : ((dVar16 > dVar18) ? dVar18 : dVar16);
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74D4 * dVar16 +
@@ -1318,15 +1311,9 @@ LAB_8023cbdc:
     dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar18 = lbl_803E74D4;
-    dVar19 = dVar18;
-    if ((dVar18 <= dVar17) && (dVar19 = dVar17, dVar18 < dVar17)) {
-      dVar19 = dVar18;
-    }
+    dVar19 = (dVar17 < dVar18) ? dVar18 : ((dVar17 > dVar18) ? dVar18 : dVar17);
     dVar18 = lbl_803E74D4;
-    dVar17 = dVar18;
-    if ((dVar18 <= dVar16) && (dVar17 = dVar16, dVar18 < dVar16)) {
-      dVar17 = dVar18;
-    }
+    dVar17 = (dVar16 < dVar18) ? dVar18 : ((dVar16 > dVar18) ? dVar18 : dVar16);
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74D4 * dVar16 +
@@ -1353,9 +1340,7 @@ LAB_8023cbdc:
     }
     *(f32 *)(piVar14 + 0x1a) = *(f32 *)(piVar14 + 0x1a) - lbl_803E751C;
     fVar2 = *(f32 *)(piVar14 + 0x1a);
-    if (fVar2 < lbl_803E74D4) {
-      fVar2 = lbl_803E74D4;
-    }
+    fVar2 = (lbl_803E74D4 <= fVar2) ? fVar2 : lbl_803E74D4;
     *(f32 *)(piVar14 + 0x1a) = fVar2;
     dVar19 = *(f32 *)(piVar14 + 0x1a);
     iVar8 = *(int *)Obj_GetActiveModel(obj);
@@ -1543,8 +1528,7 @@ LAB_8023db24:
     *(f32 *)(piVar14 + 0x33) = *(f32 *)(piVar14 + 0x16);
     *(f32 *)(piVar14 + 0x34) = *(f32 *)(piVar14 + 0x17);
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
-    iVar12 = GameBit_Get(0x10);
-    if ((iVar12 != 0) &&
+    if (((u32)GameBit_Get(0x10) != 0) &&
        (sVar3 = *(short *)(piVar14 + 0x26), *(short *)(piVar14 + 0x26) = sVar3 + -1, sVar3 == 0)) {
       GameBit_Set(0x10,0);
       piVar14[0x21] = 1;
@@ -1568,9 +1552,7 @@ LAB_8023db24:
     }
     *(f32 *)(piVar14 + 0x1a) = *(f32 *)(piVar14 + 0x1a) + lbl_803E751C;
     fVar2 = *(f32 *)(piVar14 + 0x1a);
-    if (lbl_803E7534 < fVar2) {
-      fVar2 = lbl_803E7534;
-    }
+    fVar2 = (lbl_803E7534 >= fVar2) ? fVar2 : lbl_803E7534;
     *(f32 *)(piVar14 + 0x1a) = fVar2;
     for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
       if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
