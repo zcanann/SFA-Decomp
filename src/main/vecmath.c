@@ -1260,14 +1260,16 @@ void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
 #pragma push
 #pragma scheduling off
 #pragma fp_contract off
-int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, f32 *timer) {
+int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void *timerp) {
     extern f32 oneOverTimeDelta;
     extern f32 lbl_803DE7F4;
+    f32 *timer = (f32 *)timerp;
     int trig;
     int range;
     int val;
     u32 rv;
     f32 freq;
+    f32 t;
 
     *timer += timeDelta / (freq = lbl_803DE7F4);
     if (*timer > lo) {
@@ -1279,8 +1281,13 @@ int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, f32 *timer) {
                 val = 0;
             } else {
                 rv = rand();
-                val = (int)((f32)rv / lbl_803DE7F8 *
-                            ((lbl_803DE7C4 + (f32)range) - lbl_803DE7C0) + lbl_803DE7C0);
+                {
+                    f32 acc = (f32)rv;
+                    acc = acc / lbl_803DE7F8;
+                    acc = acc * ((lbl_803DE7C4 + (f32)range) - (t = lbl_803DE7C0));
+                    acc = acc + t;
+                    val = (int)acc;
+                }
             }
             trig = !val;
         }
