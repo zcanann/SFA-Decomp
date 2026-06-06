@@ -122,7 +122,7 @@ void dll_199_update(int obj)
                     n = 1;
                 }
                 (**(void (**)(int, int))(*gTitleMenuControlInterface + 0x38))(3, n & 0xff);
-                n = (int)((f32)state[2] * ((lbl_803E5170 - (dz - lbl_803E5164)) / lbl_803E5170));
+                n = (int)((f32)state[2] * ((lbl_803E5170 - (dz - lbl_803E5164)) / *(f32 *)&lbl_803E5170));
                 if ((s16)n < 1) {
                     n = 1;
                 }
