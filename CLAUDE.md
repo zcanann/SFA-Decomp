@@ -242,6 +242,19 @@ Heuristic:
     usually only the anonymous `@jumptable` vs the named symbol (a ~2-instr reloc
     diff), leave that. Took drakorhoverpad_handlePathPointEvent (22-case) to 86%.
 
+    **Case-set COMPLETENESS shifts the binary-search pivot.** For a
+    compare-chain switch lowered to a binary tree, the PIVOT value is the
+    median of the case SET — a case the import dropped (because its body
+    equals default, e.g. an explicit `case 0: break;`) changes the pivot.
+    When target's first cmpwi tests a different value than yours, count
+    target's compare values to recover the full original case set and add
+    the missing `case K: break;` (drakormissile_update: adding
+    `case DRAKORMISSILE_STATE_IDLE: break;` moved the pivot 3→2 and
+    aligned the whole tree; 96.08→99.18). CAVEAT: MWCC eliminates an
+    empty case whose position lets it merge with default at the EDGE of
+    the value range (worldobj_render's 0x61e re-canonicalized both
+    directions) — works only when the case value sits INSIDE the range.
+
 14. **`int` parameter (not `u32`) for `(arg & bit)` flag tests → `cmpwi`.** A
     `u32` param makes a masked-flag compare emit `cmplwi`; an `int` param emits
     `cmpwi`. Use `int` when the caller passes a signed/int flag word. Mirror of
@@ -309,6 +322,12 @@ Heuristic:
     separate early-returns each emit their own branch island. Took two
     EmissionController predicates 82% → 95%. Clean C, no asm. (Pairs with #14
     `int`-param `cmpwi` and #3 `*(void**)` `cmplwi` for the individual compares.)
+
+    **Inverse-direction note: an embedded assignment in the merged guard
+    also DEFEATS the adjacent-value RANGE-FOLD.** `c == 72 || c == 71`
+    folds to `(c-71) <= 1`; writing the first term as
+    `(c = *(u8 *)(p+off)) == 72 || c == 71` keeps the separate beq tests
+    AND places the lbz at target's position (fn_802A98FC 95.13→100).
 
 18. **Model base+displacement indexed loads as a STRUCT member-array, not
     `*(T*)(base + idx*N + disp)`.** When target indexes a table with
@@ -1696,6 +1715,19 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       OFF — tells: extsb after lbz, extsh before sth, param deref via the
       mr copy, recipe #68) and recipe #46 base bugs (its 0xac read was
       obj, not p).
+    - Sub-patterns from the application sweeps (tasks #156/#159): (i)
+      `outLights[(*outCount)++] = x;` — the post-increment-index spelling
+      reproduces target's FRESH reload of the counter at the increment
+      site where the expanded `n = *cnt; *cnt = n + 1; out[n] = x;` form
+      CSEs it (modelLight selectBrightest/selectObject). (ii) Attenuation
+      polynomials may be DISTRIBUTED in the original: `a + (d*(c*d) +
+      b*d)` emits fmuls+fmuls+fmadds where `a + d*(c*d + b)` emits
+      fmadds-first — read the multiply count off target. (iii) A
+      score-vs-correctness TRAP: an import's semantically-suspect form
+      can score HIGHER than the corrected one (cMenuRotateFn_80124d80:
+      s16 diff with a dead >0x8000 test beats the live int form by 3.4) —
+      flag such fns for a #46 logic audit instead of "fixing" them by
+      score.
     - NEGATIVES (exhausted, don't retry): compiler versions 1.0-3.0a5 and
       -O0..4 (cmdline+pragma) all keep the join-flush with if-statements;
       opt_* pragmas/subflags, sched/peephole matrix, -inline
@@ -1712,7 +1744,7 @@ fn_8008020C+4). When a new `sym+0xNNN` regex census
 (`grep -rh "+0x" build/GSAE01/asm/main/dll/*.s`) surfaces more, verify the
 addend lands mid-function (not at a symbol boundary) before adding a range.
 
-78. **The "const-hoist-above-addr-arg" cap family is largely recipe #29 in
+84. **The "const-hoist-above-addr-arg" cap family is largely recipe #29 in
     disguise — the callee's REAL arg order puts the object/pointer FIRST.**
     Signature: T has `mr r3,rX` / `addi r3,...` BEFORE the `lfs` const loads;
     C emits the lfs first. The fix is the obj-first calling form:
@@ -1741,8 +1773,19 @@ addend lands mid-function (not at a symbol boundary) before adding a range.
     lfs AFTER the numerator (fn_8015F5B0 96.09→100, RandomTimer 96.3→99.8
     with the #32 acc-chain). Read the shape: call-arg hoist = cap;
     expression-operand hoist = embedded assignment.
+    **SAFETY: NEVER flip the callee's DEFINITION — cast at the CALL SITE
+    only.** Flipping modelWalkAnimFn_800248b8's def regressed the callee
+    230 instrs (param homing order matters in the body); the
+    fn-pointer-cast call form gets the caller win with zero callee risk.
+    **Cross-caller arbitration: when 3+ other call sites agree on an arg
+    order and one decl disagrees, the MAJORITY is target's real
+    signature** (hitDetectFn_80065e50: attention.c had the lone
+    float-first decl; objBboxFn_800640cc: main.c the lone radius-first).
+    More confirmed obj/int-first signatures: hitDetectFn_80065e50
+    (int obj first), gRomCurveInterface+0x4c slot (int,f32,f32,f32,f32*),
+    modelWalkAnimFn_800248b8 (...,f32,int last two swapped — via cast).
 
-79. **Recipe #32's CANONICAL form requires the SELF-REASSIGN chain — a fresh
+85. **Recipe #32's CANONICAL form requires the SELF-REASSIGN chain — a fresh
     temp gets copy-propagated away.** `fr = (f32)(s32)x; state[2] = lbl + fr;`
     compiles IDENTICALLY to the inline expression (the temp folds). The form
     that works pins every step through ONE variable:
@@ -1750,8 +1793,22 @@ addend lands mid-function (not at a symbol boundary) before adding a range.
     lands AFTER the conversion (target's order) and the result chains in one
     reg. Same for fmadds: `fr = (f32)(s32)x; fr = lbl * fr + other; dst = fr;`
     (enemymushroom_resetToSpawn 95.06→100, both sites.)
+    **WEB-TERMINATION meta-rule — the POSITION where the value web ENDS
+    (store / return / further-op) controls the allocator; read target's
+    endpoint and shape the last statement to match:**
+    - Chain ends in a fresh reg (f0) consumed by fneg/store → fold the
+      LAST op into the store expression: `dir[1] = -(fr * lbl);`
+      (ktrexfloorswitch_spawnEnergyArc 97.50→100 — fully-chained fr was
+      2 instrs off because the final mul self-accumulated).
+    - Subtract-then-store where target's result web dies AT the store
+      (fsubs f0; stfs f0, with v reloaded after) → STORE-EXPRESSION form:
+      `*(p) = v - k; v = *(p);` NOT `v -= k; *(p) = v;`
+      (playerUpdateWhileTimeStopped 96.29→100).
+    - Wrap-subtract clamp `if (x > k) x -= k` responds to the #81 launder
+      on the `-=` reference — same mechanism as the clamp-store form
+      (fn_80026C54 97.69→100).
 
-80. **Micro-cap: MWCC emits cheap `mr`/`li` set-ups BEFORE an adjacent
+86. **Micro-cap: MWCC emits cheap `mr`/`li` set-ups BEFORE an adjacent
     `lwz`/`lbz` regardless of statement order** — when target shows
     load-then-copy (`lwz rX,disp(rY); mr rZ,r3`) and yours shows the copy
     first, statement reorder, comma-for-init, and locals are all inert
@@ -1921,6 +1978,22 @@ MWCC then strength-reduces the index to exactly that induction-pointer form;
 `*outX++` produces a different pointer-walk. (mike7, curveFn_80010018 output
 loop → 99.5%.) Match whichever the target uses — neither form is universally
 right.
+**The SYMBOL-INIT MATERIALIZATION SHAPE is a tell for which form the source
+used** (task #160 minimal-repro proof): a walked pointer init'd from a global
+symbol (`p = sym; … *p; p++`) emits `lis; addi r0,rX,lo; mr rS,r0` (via-r0
+copy); the INDEX form (`sym[i]` + i++) emits the direct `addi rS,rX,lo` AND
+still strength-reduces to the same per-iter `addi rS,rS,K` bump. So target
+showing direct-addi + bump = index-form source; via-r0 copy + bump =
+pointer-walk source. CAVEAT — fixing the isel can break the COLORING: the
+SR-created web ranks differently from a walked-var web (renderParticles: index
+form got the direct addi but grabbed r31 instead of target's r26, rotating 5
+saved regs, net WORSE; decl-order rank flips inert). Only convert when the fn
+is otherwise clean or target's reg assignment survives; A/B mandatory. Also
+from #160: a GLOBAL inline/overlay change (e.g. re-basing gExpgfxTableEntries
+as runtime+0x980 per recipe #16 — confirmed correct for SOME target fns by
+`add rX,r31; lwz 2440(rX)`) can be per-fn MIXED — expgfx family nets NEGATIVE
+globally (+1.4 free, −3.9 expgfxRemove); apply per-fn, never per-inline,
+when the family's target uses both forms.
 
 **Loop induction-update ORDER is sometimes a hard cap (~1-3 instr).** Target
 emits `addi ptr; addi counter; cmpwi counter; b`; clean-C array-index form emits
