@@ -10124,12 +10124,8 @@ void fn_802B18BC(int obj, int state, f32 fv)
         ((ByteFlags *)((char *)state + 0x3f4))->b20 = 1;
         *(f32 *)((char *)state + 0x414) += fv;
         v = *(f32 *)((char *)state + 0x414);
-        if (v < lbl_803E7EA4) {
-            v = lbl_803E7EA4;
-        } else if (v > lbl_803E813C) {
-            v = lbl_803E813C;
-        }
-        *(f32 *)((char *)state + 0x414) = v;
+        *(f32 *)((char *)state + 0x414) =
+            (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E813C) ? lbl_803E813C : v);
     } else {
         ((ByteFlags *)((char *)state + 0x3f4))->b20 = 0;
         *(f32 *)((char *)state + 0x414) = lbl_803E7EA4;
@@ -10137,19 +10133,19 @@ void fn_802B18BC(int obj, int state, f32 fv)
 
     *(f32 *)((char *)state + 0x410) -= fv;
     if (*(f32 *)((char *)state + 0x410) < lbl_803E7EA4) {
-        *(f32 *)((char *)state + 0x410) = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x410) = *(f32 *)&lbl_803E7EA4;
     }
     *(f32 *)((char *)state + 0x878) -= fv;
     if (*(f32 *)((char *)state + 0x878) < lbl_803E7EA4) {
-        *(f32 *)((char *)state + 0x878) = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x878) = *(f32 *)&lbl_803E7EA4;
     }
     *(f32 *)((char *)state + 0x87c) -= fv;
     if (*(f32 *)((char *)state + 0x87c) < lbl_803E7EA4) {
-        *(f32 *)((char *)state + 0x87c) = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x87c) = *(f32 *)&lbl_803E7EA4;
     }
     *(f32 *)((char *)state + 0x880) -= fv;
     if (*(f32 *)((char *)state + 0x880) < lbl_803E7EA4) {
-        *(f32 *)((char *)state + 0x880) = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x880) = *(f32 *)&lbl_803E7EA4;
     }
 }
 #pragma dont_inline reset
