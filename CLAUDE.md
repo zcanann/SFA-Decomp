@@ -2280,6 +2280,47 @@ the addi exists in the .o after the sweep.
     A/B; a register yv copy of a PLAIN param routes through the param's
     stack home (stfs+lfs, 1 instr long).
 
+98. **K&R-style definition for a NARROW (u8/char) param = callee masks at
+    every use, caller passes the raw int — resolves the u8-param
+    caller-mask paradox.** When target's CALLEE re-masks a byte param at
+    each test (`clrlwi r0,rP,24; cmplwi`) but its CALLERS pass the arg with
+    NO conversion (plain `mr r3,rX`), no prototyped param type fits: a `u8`
+    prototype makes callers mask (clrlwi, often LICM-hoisted), `char` makes
+    them extsb, `int` kills the callee-side masks. The original was a K&R
+    definition (`void f(flag, a, b) u8 flag; int a; ...`) — the narrow param
+    undergoes default promotion, so the incoming reg is raw int and every
+    callee USE re-masks — paired with an int-typed prototype
+    (`void f(int flag, ...)`, legal C89 for promoted-type match) so callers
+    emit nothing. mapBlockRender_setVtxDcrs 36.69->100 byte-exact
+    (track_dolphin). Same family also fixed objBboxFn_800640cc's stack
+    byte-param (`u8 arg8` prototyped param reads `lbz` at slot+3).
+
+99. **Volatile-STORE spelling keeps every per-iteration store of an
+    accumulating stack slot that plain `+=` lets DSE collapse.** When
+    target's unrolled loop shows `lwz rX once; addi; stw; addi; stw; ...`
+    (one load, a store per source iteration) but your
+    `state[4] += 8;` loop collapses to a single `+= 8*K` store per unrolled
+    group, write the STORE volatile and the LOAD plain:
+    `((int volatile *)state)[4] = state[4] + 8;` — loads CSE within the
+    unrolled body (1 lwz/group) while every store stays (8 stw/group),
+    exactly target's shape. Full-volatile (`*(volatile int *)&state[4] += 8`)
+    over-produces (reloads per store). renderMapBlock 74.15->98.07
+    (track_dolphin). Sibling of #96's volatile-launder note, for the
+    store-side direction.
+
+**Recipe #95/#96 correction extension (probe-verified on vecmath
+mtx44_multSafe): `#pragma opt_loop_invariants`, `#pragma opt_propagation`
+and `#pragma opt_dead_assignments` are ALL FUNCTIONAL in GC/2.0** (removing
+each changed codegen; each was load-bearing for the matched form). The
+"silently ignored opt_*" list in #95 is narrower than first measured —
+A/B any opt_* pragma before assuming it inert. Same unit also proved the
+unroller keeps `(i << 2)`-spelled byte offsets unfolded as `li K; slwi`
+per copy while `i * 4` spellings fold to direct displacements (#28
+extension; mtx44_multSafe copy loop), and that an explicit `f32 *tp = tmp;`
+pointer local positions a stack array's base web in decl order where the
+bare array's base web is created first regardless of decl position
+(mtx44_multSafe 52.43->100).
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
