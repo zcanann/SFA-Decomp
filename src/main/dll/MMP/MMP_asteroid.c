@@ -1596,7 +1596,7 @@ void dimbossicesmash_update(u8 *obj)
     } else {
         setup = *(u8 **)(obj + 0x4c);
         if ((flags & 1) == 0) {
-            if (*(s8 *)(obj + 0xad) == 0) {
+            if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 0) {
                 t = GameBit_Get(*(s16 *)(setup + 0x40));
                 if (t != 0 || *(s16 *)(setup + 0x40) == -1) {
                     state[0x29e] = state[0x29e] | 1;
@@ -1808,7 +1808,7 @@ void dimbossicesmash_init(u8 *obj, u8 *params)
     u8 buf[12];
 
     buf[0] = 5;
-    *(u8 *)(obj + 0xad) = params[0x18];
+    *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = params[0x18];
     fz = lbl_803E4034;
     state = *(u8 **)(obj + 0xb8);
     *(f32 *)(state + 0x26c) = lbl_803E4034;
