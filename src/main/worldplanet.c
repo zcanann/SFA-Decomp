@@ -333,7 +333,7 @@ void worldplanet_update(int obj) {
         }
         galleon = ObjList_FindObjectById(0x4300c);
         *(u8 *)(*(int *)(galleon + 0xb8) + 0x27d) = state->selectionLocked;
-        prevPlanet = *(u8 *)((char *)state + 0x10);
+        prevPlanet = *(u8 *)&state->selectedPlanet;
         {
             u32 m = 0;
             int k = m;
