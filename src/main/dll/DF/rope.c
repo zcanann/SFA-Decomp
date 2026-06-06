@@ -339,7 +339,6 @@ void dimbossgut2_update(int obj)
     f32 f4c;
     f32 f48;
   } stk;
-  extern int ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, void *events);
 
   state = *(int *)(obj + 0xb8);
   if ((*(int *)(obj + 0xf4) == 0) &&
@@ -373,7 +372,7 @@ void dimbossgut2_update(int obj)
     *(u16 *)((int)pfVar4 + 0x16) += (u8)framesThisStep;
     fn_801BEEA0((s16 *)obj, (u8 *)state);
     dimbossgut2_updateTracking(obj, state);
-    ObjAnim_AdvanceCurrentMove(obj, lbl_803E4D20, timeDelta, NULL);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E4D20, timeDelta, NULL);
     ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 9;
     ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -430,7 +429,6 @@ void dimbossgut2_init(int obj, int def, int p3)
   int *list;
   u8 flags;
   f32 z;
-  extern int ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, void *events);
 
   state = *(int *)(obj + 0xb8);
   flags = 0x16;
@@ -464,7 +462,7 @@ void dimbossgut2_init(int obj, int def, int p3)
   }
   *(f32 *)(p + 0xc) += *(f32 *)(obj + 0x10);
   ObjAnim_SetCurrentMove(obj, 0, (f32)(int)randomGetRange(0, 0x63) / lbl_803E4D28, 0);
-  ObjAnim_AdvanceCurrentMove(obj, lbl_803E4D20, timeDelta, NULL);
+  ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E4D20, timeDelta, NULL);
   *(int *)(p + 0x18) = (int)objCreateLight(obj, 1);
   if (*(void **)(p + 0x18) != NULL) {
     modelLightStruct_setLightKind(*(int *)(p + 0x18), 2);
