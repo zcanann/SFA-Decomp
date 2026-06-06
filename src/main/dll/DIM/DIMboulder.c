@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
 #include "main/dll/DIM/DIMboulder.h"
@@ -1286,7 +1287,7 @@ void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     }
 }
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
-    if (*(s16 *)(obj + 0x46) == 0x172 && visible != 0) {
+    if (((GameObject *)obj)->anim.seqId == 0x172 && visible != 0) {
         objRenderFn_8003b8f4(lbl_803E473C);
     }
 }
@@ -1310,14 +1311,14 @@ f32 fn_801ACCFC(int obj) {
     f32 bestDist;
     f32 limit;
     count = hitDetectFn_80065e50(obj, &list, 0, 0,
-                                  *(f32 *)((char *)obj + 0xC),
-                                  *(f32 *)((char *)obj + 0x10),
-                                  *(f32 *)((char *)obj + 0x14));
+                                  ((GameObject *)obj)->anim.localPosX,
+                                  ((GameObject *)obj)->anim.localPosY,
+                                  ((GameObject *)obj)->anim.localPosZ);
     bestDist = lbl_803E4700;
     bestIdx = -1;
     limit = lbl_803E4704;
     for (i = 0; i < count; i++) {
-        f32 dy = *(f32 *)((char *)obj + 0x10) - *(f32 *)list[i];
+        f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)list[i];
         if (dy > limit && dy < bestDist) {
             bestDist = dy;
             bestIdx = i;
@@ -1327,13 +1328,13 @@ f32 fn_801ACCFC(int obj) {
         state->floorFound = 1;
         return *(f32 *)list[bestIdx];
     }
-    return *(f32 *)((char *)obj + 0x10);
+    return ((GameObject *)obj)->anim.localPosY;
 }
 #pragma dont_inline reset
 
 void magiclight_free(int obj) {
     MagicLightState *inner = *(MagicLightState **)(obj + 0xb8);
-    if (*(s16 *)(obj + 0x46) != 0x172) {
+    if (((GameObject *)obj)->anim.seqId != 0x172) {
         if ((s8)inner->inRange != 0) {
             getLActions(obj, obj, (u16)inner->leaveAction, 0, 0, 0);
         }
@@ -1341,12 +1342,12 @@ void magiclight_free(int obj) {
     }
 }
 void magiclight_update(int obj) {
-    if (*(s16 *)(obj + 0x46) != 0x172 && *(int *)(obj + 0xf4) == 0) {
+    if (((GameObject *)obj)->anim.seqId != 0x172 && ((GameObject *)obj)->unkF4 == 0) {
         *(s16 *)obj = 0;
-        *(s16 *)(obj + 2) = 0;
-        *(s16 *)(obj + 4) = 0;
+        ((GameObject *)obj)->anim.rotY = 0;
+        ((GameObject *)obj)->anim.rotZ = 0;
         (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
-        *(int *)(obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
 }
 #pragma peephole reset
@@ -1407,7 +1408,7 @@ void dll_16C_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
     int *p;
     int hit;
 
-    if (*(s16 *)((char *)obj + 0x46) != 883) {
+    if (((GameObject *)obj)->anim.seqId != 883) {
         if (GameBit_Get(110) != 0) {
             if (GameBit_Get(898) == 0) return;
         }
@@ -1420,11 +1421,11 @@ void dll_16C_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
             }
         }
         if (hit != 0) {
-            *(s16 *)((char *)obj + 6) |= 8;
+            ((GameObject *)obj)->anim.flags |= 8;
             visible = (s8)objUpdateOpacity(p);
             dll_16C_syncSubObjectTransform(obj, p, p1, p2, p3, p4, visible, extra->opacity, 1);
         } else {
-            *(s16 *)((char *)obj + 6) &= ~8;
+            ((GameObject *)obj)->anim.flags &= ~8;
         }
         if ((s8)visible != 0 && extra->opacity != 0) {
             u8 saved = *(u8 *)((char *)obj + 0x37);
@@ -1447,7 +1448,7 @@ void dll_16C_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma peephole off
 int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3) {
     int i;
-    *(u32 *)((char *)*(void **)((char *)obj + 0xb8) + 4) |= 1;
+    *(u32 *)((char *)((GameObject *)obj)->extra + 4) |= 1;
     for (i = 0; i < arg3[0x8b]; i++) {
         if (arg3[i + 0x81] == 2) {
             GameBit_Set(888, 0);
@@ -1465,7 +1466,7 @@ extern int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3);
 #pragma peephole off
 void dll_16C_init(void *obj, void *arg2) {
     Dll16CState *extra;
-    *(void **)((char *)obj + 0xbc) = (void *)dll_16C_SeqFn;
+    ((GameObject *)obj)->unkBC = (void *)dll_16C_SeqFn;
     if (*(void **)((char *)obj + 0x64) != NULL) {
         *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x4000;
         *(u8 *)(*(char **)((char *)obj + 0x64) + 0x3a) = 100;
@@ -1488,7 +1489,7 @@ int magiclight_SeqFn(int *obj) {
     int *player;
     f32 dist;
 
-    if (*(s16 *)((char *)obj + 0x46) == 370) return 0;
+    if (((GameObject *)obj)->anim.seqId == 370) return 0;
 
     state = *(MagicLightState **)((char *)obj + 0xb8);
     player = (int *)Obj_GetPlayerObject();
@@ -1566,7 +1567,7 @@ void imicemountain_updateEventState(int *obj)
             GameBit_Set(0xe6a, 1);
             GameBit_Set(0xe6b, 1);
         }
-        if (*(int *)((char *)obj + 0xf4) == 0) {
+        if (((GameObject *)obj)->unkF4 == 0) {
             getEnvfxAct(obj, obj, 0xa3, 0);
             getEnvfxAct(obj, obj, 0x9e, 0);
             getEnvfxAct(obj, obj, 0x119, 0);
@@ -1575,7 +1576,7 @@ void imicemountain_updateEventState(int *obj)
             getLActions(obj, obj, 0x17c, 0, 0, 0);
             getLActions(obj, obj, 0x17b, 0, 0, 0);
             ((void (*)(int))((int *)*gCloudActionInterface)[0x1c / 4])(1);
-            *(int *)((char *)obj + 0xf4) = 1;
+            ((GameObject *)obj)->unkF4 = 1;
         }
         break;
     case 4:
@@ -1626,7 +1627,7 @@ typedef struct { s16 v[5]; } Blob10;
 int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
 {
     int *p;
-    int *extra = *(int **)((char *)obj + 0xb8);
+    int *extra = ((GameObject *)obj)->extra;
     s16 ids[5];
 
     *(u8 *)((char *)extra + 0x20) = 0xff;
@@ -1638,10 +1639,10 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
     *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
 
     if (*(s8 *)((char *)extra + 0x21) != *(s8 *)((char *)extra + 0x22)) {
-        if (*(void **)((char *)obj + 0xc8) != NULL) {
-            Obj_FreeObject(*(int **)((char *)obj + 0xc8));
+        if (((GameObject *)obj)->unkC8 != NULL) {
+            Obj_FreeObject(((GameObject *)obj)->unkC8);
             *(int *)((char *)obj + 0xc8) = 0;
-            *(u8 *)((char *)obj + 0xeb) = 0;
+            ((GameObject *)obj)->unkEB = 0;
         }
         if (Obj_IsLoadingLocked()) {
             s8 idx = *(s8 *)((char *)extra + 0x21);
@@ -1649,7 +1650,7 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
                 *(int *)((char *)obj + 0xc8) =
                     Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
                                     *(int *)((char *)obj + 0x30));
-                *(u8 *)((char *)obj + 0xeb) = 1;
+                ((GameObject *)obj)->unkEB = 1;
             }
             *(s8 *)((char *)extra + 0x22) = *(s8 *)((char *)extra + 0x21);
         } else {
@@ -1739,12 +1740,12 @@ extern f32 lbl_803E46DC;
 void imicemountain_update(int *obj)
 {
     IMIceMountainState *extra = *(IMIceMountainState **)((char *)obj + 0xb8);
-    if (*(int *)((char *)obj + 0xf4) == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         getEnvfxAct(obj, obj, 0xa3, 0);
         getEnvfxAct(obj, obj, 0x9e, 0);
         getEnvfxAct(obj, obj, 0x104, 0);
         ((void (*)(int))((int *)*gCloudActionInterface)[0x1c / 4])(1);
-        *(int *)((char *)obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
     switch (extra->mapEventState) {
     case 1:
@@ -1808,10 +1809,10 @@ void dll_16C_update(int *obj)
 
     *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
     if (extra->subObjIndex != extra->subObjIndexApplied) {
-        if (*(void **)((char *)obj + 0xc8) != NULL) {
-            Obj_FreeObject(*(int **)((char *)obj + 0xc8));
+        if (((GameObject *)obj)->unkC8 != NULL) {
+            Obj_FreeObject(((GameObject *)obj)->unkC8);
             *(int *)((char *)obj + 0xc8) = 0;
-            *(u8 *)((char *)obj + 0xeb) = 0;
+            ((GameObject *)obj)->unkEB = 0;
         }
         if (Obj_IsLoadingLocked()) {
             s8 idx = extra->subObjIndex;
@@ -1819,7 +1820,7 @@ void dll_16C_update(int *obj)
                 *(int *)((char *)obj + 0xc8) =
                     Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
                                     *(int *)((char *)obj + 0x30));
-                *(u8 *)((char *)obj + 0xeb) = 1;
+                ((GameObject *)obj)->unkEB = 1;
             }
             extra->subObjIndexApplied = extra->subObjIndex;
         } else {
@@ -1833,7 +1834,7 @@ void dll_16C_update(int *obj)
         int i;
         int sel;
         objs = ObjGroup_GetObjects(10, &count);
-        switch (*(s16 *)((char *)obj + 0x46)) {
+        switch (((GameObject *)obj)->anim.seqId) {
         case 365:
         case 883:
         default:
@@ -1851,11 +1852,11 @@ void dll_16C_update(int *obj)
         }
     }
 
-    if (*(s16 *)((char *)obj + 0x46) == 883 || GameBit_Get(0x3a2) != 0) {
+    if (((GameObject *)obj)->anim.seqId == 883 || GameBit_Get(0x3a2) != 0) {
         int *sub = (int *)extra->linkedObj;
         f32 blend;
         f32 a, b;
-        if (*(s16 *)((char *)obj + 0xa0) != 0x100) {
+        if (((GameObject *)obj)->anim.currentMove != 0x100) {
             ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 0);
         }
         (*(void (**)(int *, f32 *))(**(int **)((char *)sub + 0x68) + 0x44))(sub, &blend);
@@ -1902,13 +1903,13 @@ void crrockfall_init(int *obj, u8 *params)
     int *p64;
 
     extra->mode = 0;
-    extra->startY = *(f32 *)((char *)obj + 0x10);
+    extra->startY = ((GameObject *)obj)->anim.localPosY;
     extra->fallDelay = *(s16 *)((char *)params + 0x1e);
-    *(f32 *)((char *)obj + 8) = (f32)(u32)params[0x1b] / lbl_803E4730;
+    ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)params[0x1b] / lbl_803E4730;
 
     sub = *(int **)((char *)obj + 0x54);
     if (sub != NULL) {
-        f32 scale = *(f32 *)((char *)obj + 8);
+        f32 scale = ((GameObject *)obj)->anim.rootMotionScale;
         ObjHitbox_SetCapsuleBounds(obj,
                                    (int)((f32)*(s16 *)((char *)sub + 0x5a) * scale),
                                    (int)((f32)*(s16 *)((char *)sub + 0x5c) * scale),
@@ -1920,12 +1921,12 @@ void crrockfall_init(int *obj, u8 *params)
     if (p64 != NULL) {
         *(u32 *)((char *)p64 + 0x30) |= 0xb0;
         *(u32 *)((char *)p64 + 0x30) |= 0xc00;
-        *(f32 *)((char *)p64 + 0x20) = *(f32 *)((char *)obj + 0xc);
-        *(f32 *)((char *)p64 + 0x28) = *(f32 *)((char *)obj + 0x14);
-        *(f32 *)((char *)p64 + 0) = *(f32 *)((char *)p64 + 0) * *(f32 *)((char *)obj + 8);
+        *(f32 *)((char *)p64 + 0x20) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)((char *)p64 + 0x28) = ((GameObject *)obj)->anim.localPosZ;
+        *(f32 *)((char *)p64 + 0) = *(f32 *)((char *)p64 + 0) * ((GameObject *)obj)->anim.rootMotionScale;
     }
 
-    if (*(s16 *)((char *)obj + 0x46) == 1536) {
+    if (((GameObject *)obj)->anim.seqId == 1536) {
         extra->cfg = (CrRockfallCfgEntry *)&lbl_803236B8[0xc];
     } else {
         extra->cfg = (CrRockfallCfgEntry *)lbl_803236B8;
@@ -1979,7 +1980,7 @@ void crrockfall_update(int *obj)
             f32 dist;
             int n;
             int *player;
-            frac = (*(f32 *)((char *)obj + 0x10) - ex->floorY) /
+            frac = (((GameObject *)obj)->anim.localPosY - ex->floorY) /
                    (ex->startY - ex->floorY);
             if (frac > lbl_803E4708) {
                 frac = lbl_803E4708;
@@ -2017,7 +2018,7 @@ void crrockfall_update(int *obj)
                     int *def = *(int **)((char *)obj + 0x4c);
                     f32 xz = Vec_xzDistance((f32 *)((char *)obj + 0x18),
                                             (f32 *)((char *)player + 0x18));
-                    f32 dy = *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)player + 0x10);
+                    f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)((char *)player + 0x10);
                     if (dy < lbl_803E46E8) {
                         dy = lbl_803E46E8;
                     }
@@ -2040,8 +2041,8 @@ void crrockfall_update(int *obj)
             case 1:
                 if (ex->fallStarted == 0) {
                     ex->fallStarted = 1;
-                    *(f32 *)((char *)obj + 0x28) = lbl_803E46E8;
-                    if (*(s16 *)((char *)obj + 0x46) == 103) {
+                    ((GameObject *)obj)->anim.velocityY = lbl_803E46E8;
+                    if (((GameObject *)obj)->anim.seqId == 103) {
                         Sfx_PlayFromObject(obj, SFXwp_sexpl2_c);
                     }
                     Sfx_PlayFromObject(obj, SFXmv_blockscrape_lp);
@@ -2051,14 +2052,14 @@ void crrockfall_update(int *obj)
                 *(int *)((char *)s54 + 0x4c) = 16;
                 *(u8 *)((char *)s54 + 0x6f) = 1;
                 *(u8 *)((char *)s54 + 0x6e) = 13;
-                *(f32 *)((char *)obj + 0x28) =
-                    lbl_803E4720 * timeDelta + *(f32 *)((char *)obj + 0x28);
-                *(f32 *)((char *)obj + 0x10) =
-                    *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
-                if (*(f32 *)((char *)obj + 0x10) <
+                ((GameObject *)obj)->anim.velocityY =
+                    lbl_803E4720 * timeDelta + ((GameObject *)obj)->anim.velocityY;
+                ((GameObject *)obj)->anim.localPosY =
+                    ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
+                if (((GameObject *)obj)->anim.localPosY <
                     ex->floorY + ex->cfg->restOffsetY) {
-                    *(f32 *)((char *)obj + 0x10) =
-                        ex->cfg->restOffsetY * *(f32 *)((char *)obj + 8) +
+                    ((GameObject *)obj)->anim.localPosY =
+                        ex->cfg->restOffsetY * ((GameObject *)obj)->anim.rootMotionScale +
                         ex->floorY;
                     ex->mode = 2;
                     if (ex->cfg->landSfx != 0) {
@@ -2080,7 +2081,7 @@ void crrockfall_update(int *obj)
                 *(s16 *)((char *)s54 + 0x60) &= ~1;
                 ex->mode = 3;
                 Sfx_StopObjectChannel(obj, 8);
-                if (*(s16 *)((char *)obj + 0x46) == 103) {
+                if (((GameObject *)obj)->anim.seqId == 103) {
                     Sfx_PlayFromObject(obj, SFXwp_simp1_c);
                 } else {
                     Sfx_PlayFromObject(obj, 955);
@@ -2093,8 +2094,8 @@ void crrockfall_update(int *obj)
 
     {
         f32 z = lbl_803E46E8;
-        *(f32 *)((char *)obj + 0x24) = z;
-        *(f32 *)((char *)obj + 0x2c) = z;
+        ((GameObject *)obj)->anim.velocityX = z;
+        ((GameObject *)obj)->anim.velocityZ = z;
     }
 }
 #pragma peephole reset
