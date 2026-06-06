@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/worldobj.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim.h"
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -578,7 +579,6 @@ extern int lbl_803DBFA0;
 extern int lbl_803DBFA4;
 extern int Curve_AdvanceAlongPath(u8 *cv, f32 t);
 extern void *gRomCurveInterface;
-extern void ObjAnim_SampleRootCurvePhase(short *obj, u8 *p2, f32 speed);
 extern int getAngle(f32 a, f32 b);
 extern f32 sqrtf(f32 x);
 
@@ -618,7 +618,8 @@ void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
         {
             f32 dx = *(f32 *)(cv + 0x68) - *(f32 *)((char *)obj + 0xc);
             f32 dz = *(f32 *)(cv + 0x70) - *(f32 *)((char *)obj + 0x14);
-            ObjAnim_SampleRootCurvePhase(obj, st + 0x4c, oneOverTimeDelta * sqrtf(dx * dx + dz * dz));
+            ObjAnim_SampleRootCurvePhase(oneOverTimeDelta * sqrtf(dx * dx + dz * dz),
+                                         (ObjAnimComponent *)obj, (float *)(st + 0x4c));
         }
         obj[0] = (s16)(getAngle(*(f32 *)(cv + 0x74), *(f32 *)(cv + 0x7c)) + 0x8000);
         *(f32 *)((char *)obj + 0xc) = *(f32 *)(cv + 0x68);
