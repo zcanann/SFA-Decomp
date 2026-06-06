@@ -11881,7 +11881,7 @@ int fn_802AE480(int obj, int inner, int state)
     f32 h;
     f32 lim;
 
-    *(int *)((char *)inner + 0x360) |= 0x1000000;
+    *(u32 *)((char *)inner + 0x360) |= 0x1000000LL;
     *(f32 *)((char *)state + 0x2a0) = lbl_803E7F20;
     h = *(f32 *)((char *)obj + 0x98);
     if (h > lbl_803E7EFC && h < lbl_803E7F44 &&
@@ -11901,7 +11901,7 @@ int fn_802AE480(int obj, int inner, int state)
             (lbl_803E7F14 + (*(f32 *)((char *)*(int *)((char *)inner + 0x400) + 0x14) +
                              *(f32 *)((char *)state + 0x294))) / lbl_803E7F30;
         *(s16 *)((char *)inner + 0x478) = *(s16 *)((char *)inner + 0x484);
-        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x484) + 0x8000;
+        *(s16 *)((char *)inner + 0x484) += 0x8000;
         *(f32 *)((char *)state + 0x294) = -*(f32 *)((char *)state + 0x294);
         *(f32 *)((char *)state + 0x280) = -*(f32 *)((char *)state + 0x280);
     }
