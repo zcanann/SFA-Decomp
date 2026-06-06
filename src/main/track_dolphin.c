@@ -4427,22 +4427,19 @@ int insertPoint(int val, s16 *arr, f32 x, f32 y, f32 z)
     base = lbl_803DCF38;
     p = base;
     n = lbl_803DCF5C;
-    if (n > 0) {
-        do {
-            if (x == p[0] && y == p[1] && z == p[2]) {
-                arr[i * 2 + 1] = (s16)val;
-                return i;
-            }
-            p += 3;
-            i++;
-        } while (--n != 0);
-        n = lbl_803DCF5C;
+    for (; i < n; i++) {
+        if (x == p[0] && y == p[1] && z == p[2]) {
+            s16 *q = arr + (i << 1);
+            q[1] = val;
+            return i;
+        }
+        p += 3;
     }
     base[n * 3] = x;
     lbl_803DCF38[lbl_803DCF5C * 3 + 1] = y;
     lbl_803DCF38[lbl_803DCF5C * 3 + 2] = z;
-    arr[lbl_803DCF5C * 2] = (s16)val;
-    arr[lbl_803DCF5C * 2 + 1] = -1;
+    arr[lbl_803DCF5C << 1] = (s16)val;
+    arr[(lbl_803DCF5C << 1) + 1] = -1;
     lbl_803DCF5C++;
     return lbl_803DCF5C - 1;
 }
