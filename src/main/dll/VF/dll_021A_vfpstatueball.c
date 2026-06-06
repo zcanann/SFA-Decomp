@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
 
@@ -129,12 +130,12 @@ void vfpstatueball_init(int *obj, u8 *init) {
     VfpStatueBallState *inner = *(VfpStatueBallState **)((char *)obj + 0xb8);
     inner->gameBit = *(s16 *)((char *)init + 0x1e);
     inner->timer = 0x19;
-    *(u16 *)((char *)obj + 0xb0) |= 0x4000;
+    ((GameObject *)obj)->unkB0 |= 0x4000;
     if (*(s16 *)((char *)init + 0x1a) > 2) {
         *(s16 *)((char *)init + 0x1a) = 2;
     }
     if (*(s16 *)((char *)init + 0x1c) > 1) {
-        *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * (f32)(s32)*(s16 *)((char *)init + 0x1c);
+        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * (f32)(s32)*(s16 *)((char *)init + 0x1c);
     }
     Obj_SetActiveModelIndex((int)obj, *(s16 *)((char *)init + 0x1a));
     inner->active = (u8)GameBit_Get(inner->gameBit);
