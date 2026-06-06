@@ -27,7 +27,7 @@ extern u8 gTrickyCurveBurstCounter;
 extern f64 DOUBLE_803e70d8;
 extern f64 DOUBLE_803e7108;
 extern f32 lbl_803DC074;
-extern f32 lbl_803E70D0;
+extern f32 lbl_803E6438;
 extern f32 lbl_803E70E0;
 extern f32 lbl_803E70F0;
 extern f32 lbl_803E70F4;
@@ -134,37 +134,37 @@ void TrickyCurve_updateBurstTrigger(int obj)
     GameBit_Set(*(s16 *)(state + 0xa), 0);
   }
 
-  if (dx <= lbl_803E70D0) {
+  if (dx <= 0.0f) {
     if (dx > -(f32)*(s16 *)state) {
       insideCount = 1;
       xSide = 1;
     }
   }
-  if (dx > lbl_803E70D0) {
+  if (dx > 0.0f) {
     if (dx < (f32)*(s16 *)state) {
       insideCount++;
       xSide--;
     }
   }
-  if (dz <= lbl_803E70D0) {
+  if (dz <= 0.0f) {
     if (dz > -(f32)*(s16 *)(state + 2)) {
       insideCount++;
       zSide = 1;
     }
   }
-  if (dz > lbl_803E70D0) {
+  if (dz > 0.0f) {
     if (dz < (f32)*(s16 *)(state + 2)) {
       insideCount++;
       zSide--;
     }
   }
-  if (dy <= lbl_803E70D0) {
+  if (dy <= 0.0f) {
     if (dy > -(f32)*(s16 *)(state + 4)) {
       insideCount++;
       ySide = 1;
     }
   }
-  if (dy > lbl_803E70D0) {
+  if (dy > 0.0f) {
     if (dy < (f32)*(s16 *)(state + 4)) {
       insideCount++;
       ySide--;
@@ -238,30 +238,30 @@ void TrickyCurve_updateBoundsTrigger(int param_1)
   fVar1 = *(float *)(iVar4 + 0xc) - *(float *)(param_1 + 0xc);
   fVar2 = *(float *)(iVar4 + 0x10) - *(float *)(param_1 + 0x10);
   fVar3 = *(float *)(iVar4 + 0x14) - *(float *)(param_1 + 0x14);
-  if ((fVar1 <= lbl_803E70D0) &&
+  if ((fVar1 <= lbl_803E6438) &&
      (-(float)((double)CONCAT44(0x43300000,(int)*psVar6 ^ 0x80000000) - DOUBLE_803e70d8) < fVar1)) {
     iVar5 = 1;
   }
-  if ((lbl_803E70D0 < fVar1) &&
+  if ((lbl_803E6438 < fVar1) &&
      (fVar1 < (float)((double)CONCAT44(0x43300000,(int)*psVar6 ^ 0x80000000) - DOUBLE_803e70d8))) {
     iVar5 = iVar5 + 1;
   }
-  if ((fVar3 <= lbl_803E70D0) &&
+  if ((fVar3 <= lbl_803E6438) &&
      (-(float)((double)CONCAT44(0x43300000,(int)psVar6[1] ^ 0x80000000) - DOUBLE_803e70d8) < fVar3))
   {
     iVar5 = iVar5 + 1;
   }
-  if ((lbl_803E70D0 < fVar3) &&
+  if ((lbl_803E6438 < fVar3) &&
      (fVar3 < (float)((double)CONCAT44(0x43300000,(int)psVar6[1] ^ 0x80000000) - DOUBLE_803e70d8)))
   {
     iVar5 = iVar5 + 1;
   }
-  if ((fVar2 <= lbl_803E70D0) &&
+  if ((fVar2 <= lbl_803E6438) &&
      (-(float)((double)CONCAT44(0x43300000,(int)psVar6[2] ^ 0x80000000) - DOUBLE_803e70d8) < fVar2))
   {
     iVar5 = iVar5 + 1;
   }
-  if ((lbl_803E70D0 < fVar2) &&
+  if ((lbl_803E6438 < fVar2) &&
      (fVar2 < (float)((double)CONCAT44(0x43300000,(int)psVar6[2] ^ 0x80000000) - DOUBLE_803e70d8)))
   {
     iVar5 = iVar5 + 1;
@@ -353,7 +353,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
     if (uVar4 != 0) {
       dVar10 = (double)FUN_80017698((int)psVar9[5],0);
     }
-    if (dVar14 <= (double)lbl_803E70D0) {
+    if (dVar14 <= (double)lbl_803E6438) {
       uStack_5c = (int)*psVar9 ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
@@ -362,7 +362,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         cVar7 = '\x01';
       }
     }
-    if ((double)lbl_803E70D0 < dVar14) {
+    if ((double)lbl_803E6438 < dVar14) {
       uStack_5c = (int)*psVar9 ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
@@ -371,7 +371,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         cVar7 = cVar7 + -1;
       }
     }
-    if (dVar13 <= (double)lbl_803E70D0) {
+    if (dVar13 <= (double)lbl_803E6438) {
       uStack_5c = (int)psVar9[1] ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
@@ -380,7 +380,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         cVar5 = '\x01';
       }
     }
-    if ((double)lbl_803E70D0 < dVar13) {
+    if ((double)lbl_803E6438 < dVar13) {
       uStack_5c = (int)psVar9[1] ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
@@ -389,7 +389,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         cVar5 = cVar5 + -1;
       }
     }
-    if (dVar12 <= (double)lbl_803E70D0) {
+    if (dVar12 <= (double)lbl_803E6438) {
       uStack_5c = (int)psVar9[2] ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
@@ -398,7 +398,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         cVar6 = '\x01';
       }
     }
-    if ((double)lbl_803E70D0 < dVar12) {
+    if ((double)lbl_803E6438 < dVar12) {
       uStack_5c = (int)psVar9[2] ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
