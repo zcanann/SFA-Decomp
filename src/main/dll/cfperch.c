@@ -288,7 +288,7 @@ void smallbasket_update(int obj)
     }
     if (((CfperchState *)state)->unk14 != 0) {
         flag = 0;
-        *(u8 *)(obj + 0x36) = flag;
+        ((GameObject *)obj)->anim.alpha = flag;
         ((CfperchState *)state)->unk14 -= (s16)(int)(timeDelta * animSpeed);
         if (((CfperchState *)state)->unk14 <= 0) {
             if ((Vec_distance((f32 *)(obj + 0x18), (f32 *)((int)Obj_GetPlayerObject() + 0x18)) > lbl_803E3930) &&
@@ -308,11 +308,11 @@ void smallbasket_update(int obj)
         }
     } else {
         if (((CfperchState *)state)->unk5 != 2) {
-            level = (int)(lbl_803E3978 * timeDelta + (f32)(u32)*(u8 *)(obj + 0x36));
+            level = (int)(lbl_803E3978 * timeDelta + (f32)(u32)((GameObject *)obj)->anim.alpha);
             if (level > 0xff) {
                 level = 0xff;
             }
-            *(u8 *)(obj + 0x36) = level;
+            ((GameObject *)obj)->anim.alpha = level;
         }
         if (((CfperchState *)state)->unkA != 0) {
             ObjHits_DisableObject(obj);

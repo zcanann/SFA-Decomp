@@ -396,12 +396,12 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
 
   if (control->spawnedDustObj != NULL) {
     if (control->hitFlashTimer <= lbl_803E3060) {
-      *(u8 *)((u8 *)control->spawnedDustObj + 0x36) = 0;
+      ((GameObject *)control->spawnedDustObj)->anim.alpha = 0;
       control->hitFlashTimer = lbl_803E3060;
     }
     else {
       rnd = randomGetRange(0, (u8)(s32)control->hitFlashTimer);
-      *(u8 *)((u8 *)control->spawnedDustObj + 0x36) = rnd;
+      ((GameObject *)control->spawnedDustObj)->anim.alpha = rnd;
       *(s16 *)((u8 *)control->spawnedDustObj + 4) = ((GameObject *)obj)->anim.rotZ;
       *(s16 *)((u8 *)control->spawnedDustObj + 2) = ((GameObject *)obj)->anim.rotY;
       *(s16 *)control->spawnedDustObj = *(s16 *)obj;
@@ -515,7 +515,7 @@ void kaldachom_update(int param_1)
       Sfx_PlayFromObject(param_1,SFXkr_pullup1);
       ObjAnim_SetCurrentMove(param_1,4,lbl_803E3060,0x10);
       *(undefined *)(iVar9 + 0x346) = 0;
-      *(undefined *)(param_1 + 0x36) = 0xff;
+      ((GameObject *)param_1)->anim.alpha = 0xff;
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
     }
   }

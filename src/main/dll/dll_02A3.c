@@ -63,12 +63,12 @@ void dll_2A3_update(int obj)
         }
     }
 
-    v = (f32)(u32) * (u8 *)(obj + 0x36);
+    v = (f32)(u32)((GameObject *)obj)->anim.alpha;
     v = lbl_803E7120 * timeDelta + v;
     if (v > lbl_803E7124) {
         v = lbl_803E7124;
     }
-    *(u8 *)(obj + 0x36) = (u8)v;
+    ((GameObject *)obj)->anim.alpha = (u8)v;
 
     ((GameObject *)obj)->anim.rotX = (s16)((f32) * (s16 *)(state + 4) * timeDelta + (f32) * (s16 *)(obj + 0));
     ((GameObject *)obj)->anim.rotY = (s16)((f32) * (s16 *)(state + 6) * timeDelta + (f32) * (s16 *)(obj + 2));
@@ -90,7 +90,7 @@ void dll_2A3_init(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
 
-    *(u8 *)(obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
     ((GameObject *)obj)->anim.rotX = randomGetRange(0, 0xffff);
     ((GameObject *)obj)->anim.rotY = randomGetRange(0, 0xffff);
     ((GameObject *)obj)->anim.rotZ = randomGetRange(0, 0xffff);

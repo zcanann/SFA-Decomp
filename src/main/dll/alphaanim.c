@@ -149,7 +149,7 @@ void FUN_8017c29c(int param_1)
       }
     }
     else if (*pcVar5 != '\0') {
-      *(undefined *)(param_1 + 0x36) = 0;
+      ((GameObject *)param_1)->anim.alpha = 0;
     }
     if (*pcVar5 == '\0') {
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;

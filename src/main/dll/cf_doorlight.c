@@ -135,7 +135,8 @@ int kaldachom_stateHandlerA07(int obj, int p)
       control->soundFlags |= 0x2;
     }
   }
-  *(u8 *)(obj + 0x36) = (s32)((lbl_803E3078 - ((GameObject *)obj)->anim.currentMoveProgress) * lbl_803E308C);
+  ((GameObject *)obj)->anim.alpha =
+      (s32)((lbl_803E3078 - ((GameObject *)obj)->anim.currentMoveProgress) * lbl_803E308C);
   return 0;
 }
 #pragma peephole reset

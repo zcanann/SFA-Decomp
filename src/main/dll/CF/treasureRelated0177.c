@@ -582,9 +582,9 @@ void kt_torch_init(int obj, int p2)
         s16 bit = *(s16 *)(p2 + 0x20);
         if (bit != -1) {
             if (GameBit_Get(bit) != 0) {
-                *(u8 *)(obj + 0x36) = 0xff;
+                ((GameObject *)obj)->anim.alpha = 0xff;
             } else {
-                *(u8 *)(obj + 0x36) = 0;
+                ((GameObject *)obj)->anim.alpha = 0;
             }
         }
     }
@@ -644,10 +644,10 @@ void kt_torch_update(int obj)
   bit = *(short *)(mapData + 0x20);
   if (bit != -1) {
     if (GameBit_Get(bit) != 0) {
-      *(u8 *)(obj + 0x36) = 0xff;
+      ((GameObject *)obj)->anim.alpha = 0xff;
     }
     else {
-      *(u8 *)(obj + 0x36) = 0;
+      ((GameObject *)obj)->anim.alpha = 0;
     }
   }
 }

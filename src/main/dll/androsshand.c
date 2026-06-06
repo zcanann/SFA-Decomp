@@ -73,7 +73,7 @@ void androsshand_update(int obj)
         return;
     }
 
-    *(u8 *)(obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     ((GameObject *)obj)->anim.rotZ = 0;
     ((GameObject *)obj)->anim.rotY = 0;
     ObjHits_SetHitVolumeSlot(obj, 5, 2, -1);
