@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
 extern f32 lbl_803E608C;
@@ -75,18 +76,18 @@ void vfpminifire_update(int obj)
     int i;
 
     if (lbl_803E608C == state->baseY) {
-        hitDetectFn_800658a4(obj, (f32 *)state, 0, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
-                             *(f32 *)(obj + 0x14));
-        state->baseY = *(f32 *)(obj + 0x10) - state->baseY;
+        hitDetectFn_800658a4(obj, (f32 *)state, 0, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                             ((GameObject *)obj)->anim.localPosZ);
+        state->baseY = ((GameObject *)obj)->anim.localPosY - state->baseY;
     }
 
-    if (*(f32 *)(obj + 0x28) > lbl_803E6090) {
-        *(f32 *)(obj + 0x28) += lbl_803E6094;
+    if (((GameObject *)obj)->anim.velocityY > lbl_803E6090) {
+        ((GameObject *)obj)->anim.velocityY += lbl_803E6094;
     }
 
-    *(f32 *)(obj + 0xc) += *(f32 *)(obj + 0x24) * timeDelta;
-    *(f32 *)(obj + 0x10) += *(f32 *)(obj + 0x28) * timeDelta;
-    *(f32 *)(obj + 0x14) += *(f32 *)(obj + 0x2c) * timeDelta;
+    ((GameObject *)obj)->anim.localPosX += ((GameObject *)obj)->anim.velocityX * timeDelta;
+    ((GameObject *)obj)->anim.localPosY += ((GameObject *)obj)->anim.velocityY * timeDelta;
+    ((GameObject *)obj)->anim.localPosZ += ((GameObject *)obj)->anim.velocityZ * timeDelta;
 
     args.x = lbl_803E608C;
     args.y = lbl_803E608C;
@@ -99,9 +100,9 @@ void vfpminifire_update(int obj)
         VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS);
     }
 
-    args.x = (*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80)) / lbl_803E6098;
-    args.y = (*(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84)) / lbl_803E6098;
-    args.z = (*(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88)) / lbl_803E6098;
+    args.x = (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX) / lbl_803E6098;
+    args.y = (((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY) / lbl_803E6098;
+    args.z = (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ) / lbl_803E6098;
     if (randomGetRange(0, 4) == 0) {
         VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS);
     }
@@ -124,7 +125,7 @@ void vfpminifire_update(int obj)
         *(int *)(linkedGfx + 0x4c) = 0x10;
     }
     if ((linkedGfx != 0 && *(int *)(linkedGfx + 0x50) != 0) ||
-        (*(f32 *)(obj + 0x10) < state->baseY && state->burstStarted == 0)) {
+        (((GameObject *)obj)->anim.localPosY < state->baseY && state->burstStarted == 0)) {
         state->burstStarted = 1;
         Sfx_StopObjectChannel(obj, 0x7f);
         for (i = VFPMINIFIRE_BURST_COUNT; i != 0; i--) {
@@ -140,7 +141,7 @@ void vfpminifire_update(int obj)
         *(u8 *)(obj + 0x36) = (u8)alpha;
     }
 
-    if (*(f32 *)(obj + 0x10) < state->baseY - lbl_803E60A0) {
+    if (((GameObject *)obj)->anim.localPosY < state->baseY - lbl_803E60A0) {
         Obj_FreeObject(obj);
     }
 }
@@ -150,12 +151,12 @@ void vfpminifire_update(int obj)
 #pragma peephole off
 #pragma scheduling off
 void vfpminifire_init(int *obj, u8 *init) {
-    *(f32 *)((char *)obj + 0x28) = lbl_803E6090;
-    *(f32 *)((char *)obj + 0x10) = lbl_803E60A4 + *(f32 *)((char *)init + 0xc);
-    *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * lbl_803E609C;
+    ((GameObject *)obj)->anim.velocityY = lbl_803E6090;
+    ((GameObject *)obj)->anim.localPosY = lbl_803E60A4 + *(f32 *)((char *)init + 0xc);
+    ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E609C;
     (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x38c, 0, 2, -1, 0);
     Sfx_PlayFromObject((int)obj, SFXqu_longsob2);
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
 }
 #pragma scheduling reset
 #pragma peephole reset
