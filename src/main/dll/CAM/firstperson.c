@@ -1,4 +1,5 @@
 #include "main/dll/CAM/firstperson.h"
+#include "main/camera_object.h"
 #include "main/game_object.h"
 
 
