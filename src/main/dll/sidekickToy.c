@@ -203,10 +203,10 @@ void objAnimFn_8014a9f0(short *obj, int state)
   int i;
   f32 v;
   f32 c;
-  f32 outY;
   f32 phase;
-  TrickyPosRot rec;
+  f32 outY;
   TrickyMoveResult res;
+  TrickyPosRot rec;
   f32 mtx[16];
 
   memcpy((void *)(state + 0x2c4), (void *)(state + 0x2b8), 0xc);
@@ -371,7 +371,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
       if (*(void **)(obj + 0x2a) != 0) {
         *(u8 *)(*(int *)(obj + 0x2a) + 0x70) = 0;
       }
-      *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) & ~0x100;
+      *(uint *)(state + 0x2dc) &= ~0x100LL;
       *(u8 *)(obj + 0x1b) = 0xff;
     }
     else {
@@ -451,10 +451,10 @@ void objAnimFn_8014a9f0(short *obj, int state)
   res.eventCount = 0;
   if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, *(f32 *)(state + 0x308), timeDelta,
                                  (ObjAnimEventList *)&res) != 0) {
-    *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) | 0x40000000;
+    *(uint *)(state + 0x2dc) |= 0x40000000LL;
   }
   else {
-    *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) & ~0x40000000;
+    *(uint *)(state + 0x2dc) &= ~0x40000000LL;
   }
   *(u16 *)(state + 0x2f8) = 0;
   for (i = 0; i < res.eventCount; i++) {
@@ -466,32 +466,11 @@ void objAnimFn_8014a9f0(short *obj, int state)
     vy = -(*(f32 *)(state + 0x300) * timeDelta - *(f32 *)(obj + 0x14));
   }
   v = *(f32 *)(obj + 0x12);
-  c = lbl_803E25CC;
-  if (v >= lbl_803E25CC) {
-    c = lbl_803E25D0;
-    if (v <= lbl_803E25D0) {
-      c = v;
-    }
-  }
-  *(f32 *)(obj + 0x12) = c;
+  *(f32 *)(obj + 0x12) = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
   v = *(f32 *)(obj + 0x14);
-  c = lbl_803E25CC;
-  if (v >= lbl_803E25CC) {
-    c = lbl_803E25D0;
-    if (v <= lbl_803E25D0) {
-      c = v;
-    }
-  }
-  *(f32 *)(obj + 0x14) = c;
+  *(f32 *)(obj + 0x14) = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
   v = *(f32 *)(obj + 0x16);
-  c = lbl_803E25CC;
-  if (v >= lbl_803E25CC) {
-    c = lbl_803E25D0;
-    if (v <= lbl_803E25D0) {
-      c = v;
-    }
-  }
-  *(f32 *)(obj + 0x16) = c;
+  *(f32 *)(obj + 0x16) = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
   mode = 0;
   if (((*(uint *)(state + 0x2e4) & 0x80) != 0) && (*(u8 *)(state + 0x323) != 0)) {
     mode = 1;
@@ -507,8 +486,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
   }
   if (mode == 1) {
     f32 zero;
-    dz = lbl_803E2574;
-    dx = dz;
+    dx = (dz = lbl_803E2574);
     dy = dz;
     if ((*(u8 *)(state + 0x323) & 2) != 0) {
       dx = res.dx * oneOverTimeDelta;
@@ -520,7 +498,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
       dz = -res.dz * oneOverTimeDelta;
     }
     if ((*(u8 *)(state + 0x323) & 8) != 0) {
-      obj[0] = obj[0] + res.dAngle;
+      obj[0] += res.dAngle;
     }
     rec.rx = obj[0];
     rec.ry = obj[1];
@@ -561,8 +539,8 @@ void objAnimFn_8014a9f0(short *obj, int state)
     }
   }
   else if ((*(uint *)(state + 0x2e4) & 0x20) != 0) {
-    f32 newY = -(lbl_803E25D4 * (*(f32 *)(state + 0x300) * (timeDelta * timeDelta))
-                 - (*(f32 *)(obj + 0x14) * timeDelta + *(f32 *)(obj + 8)));
+    f32 newY = (*(f32 *)(obj + 0x14) * timeDelta + *(f32 *)(obj + 8))
+                 - lbl_803E25D4 * (*(f32 *)(state + 0x300) * (timeDelta * timeDelta));
     if ((*(u8 *)(state + 0x2f1) & 0x80) == 0) {
       objMove(obj, *(f32 *)(obj + 0x12) * timeDelta, newY - *(f32 *)(obj + 8),
               *(f32 *)(obj + 0x16) * timeDelta);
