@@ -1,5 +1,4 @@
 #include "main/dll/CAM/camlockon.h"
-#include "main/camera_object.h"
 
 #pragma peephole off
 #pragma scheduling off
