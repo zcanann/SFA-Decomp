@@ -2256,6 +2256,30 @@ the addi exists in the .o after the sweep.
       lever at O0; a call-site CAST of the same flip scored WORSE, use the
       block/file-scope decl form.
 
+100. **MSL/Rare -O0 math units (e_sqrt powfCore*, k_* family): `register`-class
+    vars are the allocator model, and a narrowing cast assigned to an INT
+    register var forces extension AT THE DEF.** (e_sqrt 27.7 -> 98.4;
+    powfCoreHighPrecision -> 100.0.) Flags per the k_cos precedent:
+    `cflags=msl_math_o0_cflags` + `-O0 -opt peephole -inline auto
+    -use_lmw_stmw on -schedule off` (`-opt peephole` restores dot-form
+    fusion at -O0; appending plain `-O0` after `-O4,p` does NOT fully
+    override — use the o0 cflags base). Source model at -O0: long-lived
+    values = `register` locals (saved regs, assigned f31/r31 DESCENDING in
+    decl order, params after locals); plain locals = stack slots with
+    per-use loads/stores (first-declared gets the higher offset); a
+    Horner chain written as ONE nested expression keeps the accumulator in
+    f1 with no inter-statement stores; an if/else assigning one variable
+    emits per-arm stores while a TERNARY assignment emits a single store
+    at the join; `*(u32 *)&x` on a param gives the stfs-home + reload
+    shape. KEY extsh trick: `register s16 e; e = (s16)(expr);` defers the
+    extsh to the USE site (cascade-misaligns ~50 instrs, recipe #19
+    family); `register int e; e = (s16)(expr);` executes extsh at the def
+    into the var's home — the cast becomes part of the VALUE. A
+    `register float` param gets fmr'd from its arrival reg, but
+    param-vs-local allocation ORDER seems version/context dependent —
+    A/B; a register yv copy of a PLAIN param routes through the param's
+    stack home (stfs+lfs, 1 instr long).
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/

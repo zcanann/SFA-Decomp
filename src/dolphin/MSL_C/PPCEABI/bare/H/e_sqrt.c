@@ -53,113 +53,80 @@ typedef union FloatBits {
 } FloatBits;
 
 float powfCoreHighPrecision(float x, float y) {
-    FloatBits bits;
-    FloatBits result;
-    s16 exponent;
-    int scale;
-    double mantissa;
-    double poly;
-    double scaled;
-    double frac;
+    register double mantissa;
+    register double frac;
+    register double mantissa2;
+    register double scaleconv;
+    register u32 ix;
+    register int exponent;
+    register int scale;
+    register int ysign;
     float value;
+    float m;
 
-    if (x == lbl_803E7AB8) {
-        if (y != lbl_803E7AB8) {
-            return lbl_803E7AB8;
+    if (x != lbl_803E7AB8) {
+        ix = *(u32 *)&x;
+        exponent = (s16)(((ix >> 23) & 0xFF) - 127);
+        *(u32 *)&m = (ix & 0x7FFFFF) | 0x3F800000;
+        mantissa = m - lbl_803E7AC0;
+        mantissa2 = mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (lbl_803E7B60 * mantissa + lbl_803E7B58) + lbl_803E7B50) + lbl_803E7B48) + lbl_803E7B40) + lbl_803E7B38) + lbl_803E7B30) + lbl_803E7B28) + lbl_803E7B20) + lbl_803E7B18) + lbl_803E7B10) + lbl_803E7B08) + lbl_803E7B00) + lbl_803E7AF8) + lbl_803E7AF0) + lbl_803E7AE8) + lbl_803E7AE0) + lbl_803E7AD8) + lbl_803E7AD0) + lbl_803E7AC8);
+        mantissa = y * (mantissa2 + (double)exponent);
+        scale = (int)mantissa;
+        scaleconv = (double)scale;
+        frac = mantissa - scaleconv;
+
+        value = (frac != lbl_803E7B68) ? (float)(frac * (frac * (frac * (frac * (frac * (frac * (frac * (frac * (frac * (lbl_803E7BC0 * frac + lbl_803E7BB8) + lbl_803E7BB0) + lbl_803E7BA8) + lbl_803E7BA0) + lbl_803E7B98) + lbl_803E7B90) + lbl_803E7B88) + lbl_803E7B80) + lbl_803E7B78) + lbl_803E7B70) : lbl_803E7BC8;
+
+        if ((int)(ix & 0x80000000)) {
+            ysign = (int)y;
+            if (ysign & 1) {
+                value = -value;
+            }
         }
-        return lbl_803E7BC8;
+        *(u32 *)&value += (u32)scale << 23;
+        return value;
     }
-
-    bits.f = x;
-    exponent = (s16)(((bits.u >> 23) & 0xFF) - 127);
-    result.u = (bits.u & 0x7FFFFF) | 0x3F800000;
-    mantissa = result.f - lbl_803E7AC0;
-
-    poly = lbl_803E7B60 * mantissa + lbl_803E7B58;
-    poly = mantissa * poly + lbl_803E7B50;
-    poly = mantissa * poly + lbl_803E7B48;
-    poly = mantissa * poly + lbl_803E7B40;
-    poly = mantissa * poly + lbl_803E7B38;
-    poly = mantissa * poly + lbl_803E7B30;
-    poly = mantissa * poly + lbl_803E7B28;
-    poly = mantissa * poly + lbl_803E7B20;
-    poly = mantissa * poly + lbl_803E7B18;
-    poly = mantissa * poly + lbl_803E7B10;
-    poly = mantissa * poly + lbl_803E7B08;
-    poly = mantissa * poly + lbl_803E7B00;
-    poly = mantissa * poly + lbl_803E7AF8;
-    poly = mantissa * poly + lbl_803E7AF0;
-    poly = mantissa * poly + lbl_803E7AE8;
-    poly = mantissa * poly + lbl_803E7AE0;
-    poly = mantissa * poly + lbl_803E7AD8;
-    poly = mantissa * poly + lbl_803E7AD0;
-    poly = mantissa * poly + lbl_803E7AC8;
-    scaled = y * (mantissa * poly + (double)exponent);
-    scale = (int)scaled;
-    frac = scaled - (double)scale;
-
-    if (frac != lbl_803E7B68) {
-        poly = lbl_803E7BC0 * frac + lbl_803E7BB8;
-        poly = frac * poly + lbl_803E7BB0;
-        poly = frac * poly + lbl_803E7BA8;
-        poly = frac * poly + lbl_803E7BA0;
-        poly = frac * poly + lbl_803E7B98;
-        poly = frac * poly + lbl_803E7B90;
-        poly = frac * poly + lbl_803E7B88;
-        poly = frac * poly + lbl_803E7B80;
-        poly = frac * poly + lbl_803E7B78;
-        value = (float)(frac * poly + lbl_803E7B70);
-    } else {
-        value = lbl_803E7BC8;
+    if (y != lbl_803E7AB8) {
+        return lbl_803E7AB8;
     }
-
-    if ((bits.u & 0x80000000) && (((int)y) & 1)) {
-        value = -value;
-    }
-
-    result.f = value;
-    result.u += (u32)scale << 23;
-    return result.f;
+    return lbl_803E7BC8;
 }
 
-float powfCoreFast(float x, float y) {
-    FloatBits bits;
-    FloatBits result;
+float powfCoreFast(float x, register float y) {
+    register float yv;
+    register float scalef;
+    register float expf;
+    register u32 ix;
+    register int ysign;
+    float result;
+    float value;
     s16 exponent;
     s16 scale;
-    float value;
-    float frac;
 
-    if (x == lbl_803E7AB8) {
-        if (y != lbl_803E7AB8) {
-            return lbl_803E7AB8;
+    yv = y;
+    if (x != lbl_803E7AB8) {
+        ix = *(u32 *)&x;
+        exponent = ((ix >> 23) & 0xFF) - 127;
+        *(u32 *)&value = (ix & 0x7FFFFF) | 0x3F800000;
+        value = value - lbl_803E7BC8;
+        value = value * (value * (lbl_803E7BE4 * value + lbl_803E7BE0) + lbl_803E7BDC) + lbl_803E7BD8;
+        expf = fastCastS16ToFloat(&exponent);
+        value = yv * (value + expf);
+        fastCastFloatToS16(&scale, value);
+        scalef = fastCastS16ToFloat(&scale);
+        value = value - scalef;
+        result = (value != lbl_803E7AB8) ? (value * (lbl_803E7BF0 * value + lbl_803E7BEC) + lbl_803E7BE8) : lbl_803E7BC8;
+        if ((int)(ix & 0x80000000)) {
+            ysign = (int)yv;
+            if (ysign & 1) {
+                result = -result;
+            }
         }
-        return lbl_803E7BC8;
+        *(u32 *)&result += (u32)scale << 23;
+        return result;
     }
-
-    bits.f = x;
-    exponent = (s16)(((bits.u >> 23) & 0xFF) - 127);
-    result.u = (bits.u & 0x7FFFFF) | 0x3F800000;
-
-    value = result.f - lbl_803E7BC8;
-    value = ((lbl_803E7BE4 * value + lbl_803E7BE0) * value + lbl_803E7BDC) * value + lbl_803E7BD8;
-    value = y * (value + fastCastS16ToFloat(&exponent));
-
-    fastCastFloatToS16(&scale, value);
-    frac = fastCastS16ToFloat(&scale);
-    value -= frac;
-
-    if (value != lbl_803E7AB8) {
-        value = (lbl_803E7BF0 * value + lbl_803E7BEC) * value + lbl_803E7BE8;
-    } else {
-        value = lbl_803E7BC8;
+    if (yv != lbl_803E7AB8) {
+        return lbl_803E7AB8;
     }
-
-    if ((bits.u & 0x80000000) && (((int)y) & 1)) {
-        value = -value;
-    }
-
-    result.f = value;
-    result.u += (u32)scale << 23;
-    return result.f;
+    return lbl_803E7BC8;
 }
