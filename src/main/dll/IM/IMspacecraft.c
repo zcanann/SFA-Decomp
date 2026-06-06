@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/IM/IMspacecraft.h"
 
 /* SDK / engine externs */
@@ -169,7 +170,7 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma scheduling off
 #pragma peephole off
 void SpiritDoorLock_free(int obj) {
-    void *inner = *(void **)(obj + 0xb8);
+    void *inner = ((GameObject *)obj)->extra;
     if (*(void **)((char *)inner + SPIRITDOORLOCK_LIGHT_OFFSET) != NULL) {
         modelLightStruct_freeSlot(inner);
     }
@@ -219,15 +220,15 @@ void RollingBarrel_init(int obj, int *params)
     tmp[0] = lbl_803E4460;
     tmp[1] = lbl_803E4464;
     params[5] = -1;
-    *(s16 *)((char *)obj + 6) = (s16)(*(s16 *)((char *)obj + 6) & ~0x4000);
-    *(s16 *)((char *)obj + 4) = 0x4000;
+    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
+    ((GameObject *)obj)->anim.rotZ = 0x4000;
 
-    *(f32 *)((char *)obj + 12) = *(f32 *)((char *)params + 8);
-    *(f32 *)((char *)obj + 24) = *(f32 *)((char *)params + 8);
-    *(f32 *)((char *)obj + 16) = *(f32 *)((char *)params + 12);
-    *(f32 *)((char *)obj + 28) = *(f32 *)((char *)params + 12);
-    *(f32 *)((char *)obj + 20) = *(f32 *)((char *)params + 16);
-    *(f32 *)((char *)obj + 32) = *(f32 *)((char *)params + 16);
+    ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)params + 8);
+    ((GameObject *)obj)->anim.worldPosX = *(f32 *)((char *)params + 8);
+    ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)params + 12);
+    ((GameObject *)obj)->anim.worldPosY = *(f32 *)((char *)params + 12);
+    ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)params + 16);
+    ((GameObject *)obj)->anim.worldPosZ = *(f32 *)((char *)params + 16);
 
     ROLLINGBARREL_VERTICAL_SPEED(state) = (f32) * (s16 *)((char *)params + 0x1a) / lbl_803E447C;
     ROLLINGBARREL_CURVE_SPEED(state) = (f32) * (s16 *)((char *)params + 0x1c) / lbl_803E447C;
@@ -255,7 +256,7 @@ void SpiritDoorLock_init(int obj, int *params, int mode)
     if (mult < lbl_803E4430) {
         mult = lbl_803E4440;
     }
-    *(f32 *)((char *)obj + 8) = (*(f32 **)((char *)obj + 0x50))[1] * mult;
+    ((GameObject *)obj)->anim.rootMotionScale = (*(f32 **)((char *)obj + 0x50))[1] * mult;
     SPIRITDOORLOCK_SPIN_ANGLE(state) = 0;
 
     ObjHits_DisableObject(obj);
@@ -302,7 +303,7 @@ void SpiritDoorLock_update(int obj)
             SPIRITDOORLOCK_ACTIVE(state) =
                 GameBit_Get(*(s16 *)((char *)descriptor + SPIRITDOORLOCK_SETUP_ACTIVE_GAMEBIT));
             if (SPIRITDOORLOCK_ACTIVE(state) != 0) {
-                *(f32 *)((char *)obj + 8) =
+                ((GameObject *)obj)->anim.rootMotionScale =
                     (*(f32 **)((char *)obj + 0x50))[1] *
                     (f32)(int)*(s8 *)((char *)descriptor + SPIRITDOORLOCK_SETUP_SCALE) *
                     lbl_803E4448;
@@ -325,9 +326,9 @@ void SpiritDoorLock_update(int obj)
                     modelLightStruct_setDistanceAttenuation((void *)SPIRITDOORLOCK_LIGHT(state), (f32)(int)b,
                         (f32)(int)(b + 10));
                 }
-                *(f32 *)((char *)obj + 8) *= lbl_803E444C;
-                *(s16 *)((char *)obj + 4) =
-                    (s16)(s32)((f32)(int)*(s16 *)((char *)obj + 4) - lbl_803E4450 * timeDelta);
+                ((GameObject *)obj)->anim.rootMotionScale *= lbl_803E444C;
+                ((GameObject *)obj)->anim.rotZ =
+                    (s16)(s32)((f32)(int)((GameObject *)obj)->anim.rotZ - lbl_803E4450 * timeDelta);
             }
         }
     } else {
@@ -349,17 +350,17 @@ void SpiritDoorLock_update(int obj)
         max_dist = lbl_803E4458;
         for (i = 0; i < local_68; i++) {
             if (Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)((char *)list_ptr[i] + 0x18)) <= max_dist) {
-                *(s16 *)((char *)obj + 4) = angle;
+                ((GameObject *)obj)->anim.rotZ = angle;
                 Obj_TransformLocalVectorByWorldMatrix(obj, local_58, local_5c);
                 PSVECAdd((f32 *)((char *)obj + 0xc), local_5c, (f32 *)((char *)list_ptr[i] + 0xc));
                 *(s16 *)list_ptr[i] = *(s16 *)obj;
                 *(s16 *)((char *)list_ptr[i] + 4) = (s16)(angle + 0x8000);
-                *(f32 *)((char *)list_ptr[i] + 8) = *(f32 *)((char *)obj + 8);
+                *(f32 *)((char *)list_ptr[i] + 8) = ((GameObject *)obj)->anim.rootMotionScale;
                 angle = (s16)(angle + stride);
             }
         }
         SPIRITDOORLOCK_SPIN_ANGLE(state) += (int)lbl_803DBED0;
-        *(s16 *)((char *)obj + 4) = 0;
+        ((GameObject *)obj)->anim.rotZ = 0;
         if (local_68 == 0) {
             SPIRITDOORLOCK_ACTIVE(state) = 0;
             GameBit_Set(*(s16 *)((char *)descriptor + SPIRITDOORLOCK_SETUP_DONE_GAMEBIT), 1);
@@ -424,8 +425,8 @@ void RollingBarrel_update(int obj)
                         ((void (*)(int *))((void **)*gRomCurveInterface)[36])(state);
                     }
                     {
-                        f32 dx = *(f32 *)((char *)state + 0x68) - *(f32 *)((char *)obj + 0x80);
-                        f32 dz = *(f32 *)((char *)state + 0x70) - *(f32 *)((char *)obj + 0x88);
+                        f32 dx = *(f32 *)((char *)state + 0x68) - ((GameObject *)obj)->anim.previousLocalPosX;
+                        f32 dz = *(f32 *)((char *)state + 0x70) - ((GameObject *)obj)->anim.previousLocalPosZ;
                         dist_sq = dx * dx + dz * dz;
                     }
                 }
@@ -446,12 +447,12 @@ void RollingBarrel_update(int obj)
             }
 
             ROLLINGBARREL_VERTICAL_SPEED(state) = lbl_803E4498 * timeDelta + ROLLINGBARREL_VERTICAL_SPEED(state);
-            *(f32 *)((char *)obj + 0x10) =
-                ROLLINGBARREL_VERTICAL_SPEED(state) * timeDelta + *(f32 *)((char *)obj + 0x10);
+            ((GameObject *)obj)->anim.localPosY =
+                ROLLINGBARREL_VERTICAL_SPEED(state) * timeDelta + ((GameObject *)obj)->anim.localPosY;
 
-            if (*(f32 *)((char *)obj + 0x10) < floor_y) {
+            if (((GameObject *)obj)->anim.localPosY < floor_y) {
                 if (*(s16 *)descriptor == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE &&
-                    *(f32 *)((char *)obj + 0x10) < lbl_803E449C) {
+                    ((GameObject *)obj)->anim.localPosY < lbl_803E449C) {
                     blocked = 1;
                 }
                 if (blocked == 0 &&
@@ -459,29 +460,29 @@ void RollingBarrel_update(int obj)
                     Sfx_PlayFromObjectLimited(obj, 0x41e, 6);
                 }
                 ROLLINGBARREL_VERTICAL_SPEED(state) *= lbl_803E44A0;
-                *(f32 *)((char *)obj + 0x10) = lbl_803E44A4 * floor_y - *(f32 *)((char *)obj + 0x10);
+                ((GameObject *)obj)->anim.localPosY = lbl_803E44A4 * floor_y - ((GameObject *)obj)->anim.localPosY;
             }
-            *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)state + 0x68);
-            *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)state + 0x70);
+            ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)state + 0x68);
+            ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)state + 0x70);
             *(s16 *)obj = (s16)getAngle(*(f32 *)((char *)state + 0x74), *(f32 *)((char *)state + 0x7c));
 
             if (ROLLINGBARREL_PITCH_RISING(state) != 0) {
-                *(s16 *)((char *)obj + 4) =
-                    (s16)(s32)(lbl_803E44A8 * timeDelta + (f32)(int)*(s16 *)((char *)obj + 4));
-                if (*(s16 *)((char *)obj + 4) > 0x5000) {
+                ((GameObject *)obj)->anim.rotZ =
+                    (s16)(s32)(lbl_803E44A8 * timeDelta + (f32)(int)((GameObject *)obj)->anim.rotZ);
+                if (((GameObject *)obj)->anim.rotZ > 0x5000) {
                     ROLLINGBARREL_PITCH_RISING(state) = 0;
                 }
             } else {
-                *(s16 *)((char *)obj + 4) =
-                    (s16)(s32) - (lbl_803E44A8 * timeDelta - (f32)(int)*(s16 *)((char *)obj + 4));
-                if (*(s16 *)((char *)obj + 4) < 0x3a00) {
+                ((GameObject *)obj)->anim.rotZ =
+                    (s16)(s32) - (lbl_803E44A8 * timeDelta - (f32)(int)((GameObject *)obj)->anim.rotZ);
+                if (((GameObject *)obj)->anim.rotZ < 0x3a00) {
                     ROLLINGBARREL_PITCH_RISING(state) = 1;
                 }
             }
 
-            *(s16 *)((char *)obj + 2) =
+            ((GameObject *)obj)->anim.rotY =
                 (s16)(s32)(lbl_803E44AC * timeDelta * ROLLINGBARREL_CURVE_SPEED(state) +
-                           (f32)(int)*(s16 *)((char *)obj + 2));
+                           (f32)(int)((GameObject *)obj)->anim.rotY);
             hitResult = ObjHits_GetPriorityHit(obj, &hitInfo, &hitB, &hitC);
 
             if (blocked != 0 || hitInfo == Obj_GetPlayerObject() || (u32)(hitResult - 0xe) <= 1u ||
@@ -571,7 +572,7 @@ void fn_801A5D88(int obj, int unused) {
     }
     ROLLINGBARREL_STATE(state) = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     ROLLINGBARREL_TIMER(state) = lbl_803E4468;
-    *(s16*)(obj + 6) = (s16)(*(s16*)(obj + 6) | 0x4000);
+    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
     ObjHitbox_SetSphereRadius(obj,
         (s32)(lbl_803E446C * (f32)(u32) * (u8*)(*(int*)(obj + 0x50) + 0x62)));
     player = (int)Obj_GetPlayerObject();
