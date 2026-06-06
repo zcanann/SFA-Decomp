@@ -5276,10 +5276,10 @@ int fn_80061DD8(void *obj, void *u1, void *u2, int count, f32 *outBase, f32 *out
 void fn_8006135C(s16 *out, void *obj)
 {
   f32 dist;
-  f32 a[3];
-  f32 c[3];
   f32 b[3];
-  f32 d;
+  f32 c[3];
+  f32 a[3];
+  f64 d;
   f32 scale;
   f32 nd;
   f32 z;
@@ -5287,14 +5287,13 @@ void fn_8006135C(s16 *out, void *obj)
 
   if (fn_80065768((int)obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
                   ((GameObject *)obj)->anim.localPosZ, &dist, a, 0) != 0) {
-    *(u8 *)((char *)out + 0x18) = 0xff;
-    return;
+    goto fail;
   }
   PSVECNormalize(a, a);
   b[0] = lbl_803DEC68;
   b[1] = lbl_803DEC58;
   b[2] = lbl_803DEC58;
-  d = (f32)__fabs(PSVECDotProduct(a, b));
+  d = __fabs(PSVECDotProduct(a, b));
   if (d >= lbl_803DEC6C) {
     b[0] = lbl_803DEC58;
     b[2] = lbl_803DEC68;
@@ -5309,19 +5308,22 @@ void fn_8006135C(s16 *out, void *obj)
   nd = -dist;
   z = lbl_803DEC58;
   s = (&lbl_803DEC70)[1];
-  out[0] = (int)(s * ((z - b[0]) - c[0]));
-  out[1] = (int)(s * ((nd - b[1]) - c[1]));
-  out[2] = (int)(s * ((z - b[2]) - c[2]));
-  out[3] = (int)(s * ((z + b[0]) - c[0]));
-  out[4] = (int)(s * ((nd + b[1]) - c[1]));
-  out[5] = (int)(s * ((z + b[2]) - c[2]));
-  out[6] = (int)(s * (c[0] + (z + b[0])));
-  out[7] = (int)(s * (c[1] + (nd + b[1])));
-  out[8] = (int)(s * (c[2] + (z + b[2])));
-  out[9] = (int)(s * (c[0] + (z - b[0])));
-  out[10] = (int)(s * (c[1] + (nd - b[1])));
-  out[11] = (int)(s * (c[2] + (z - b[2])));
+  out[0] = (s * ((z - b[0]) - c[0]));
+  out[1] = (s * ((nd - b[1]) - c[1]));
+  out[2] = (s * ((z - b[2]) - c[2]));
+  out[3] = (s * ((z + b[0]) - c[0]));
+  out[4] = (s * ((nd + b[1]) - c[1]));
+  out[5] = (s * ((z + b[2]) - c[2]));
+  out[6] = (s * (c[0] + (z + b[0])));
+  out[7] = (s * (c[1] + (nd + b[1])));
+  out[8] = (s * (c[2] + (z + b[2])));
+  out[9] = (s * (c[0] + (z - b[0])));
+  out[10] = (s * (c[1] + (nd - b[1])));
+  out[11] = (s * (c[2] + (z - b[2])));
   *(u8 *)((char *)out + 0x18) = 1;
+  return;
+fail:
+  *(u8 *)((char *)out + 0x18) = 0xff;
 }
 
 void hitDetect_calcSweptSphereBounds(int *boundsOut, f32 *startPoints, f32 *endPoints, f32 *radii, int pointCount)
