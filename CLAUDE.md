@@ -1934,6 +1934,22 @@ MWCC then strength-reduces the index to exactly that induction-pointer form;
 `*outX++` produces a different pointer-walk. (mike7, curveFn_80010018 output
 loop → 99.5%.) Match whichever the target uses — neither form is universally
 right.
+**The SYMBOL-INIT MATERIALIZATION SHAPE is a tell for which form the source
+used** (task #160 minimal-repro proof): a walked pointer init'd from a global
+symbol (`p = sym; … *p; p++`) emits `lis; addi r0,rX,lo; mr rS,r0` (via-r0
+copy); the INDEX form (`sym[i]` + i++) emits the direct `addi rS,rX,lo` AND
+still strength-reduces to the same per-iter `addi rS,rS,K` bump. So target
+showing direct-addi + bump = index-form source; via-r0 copy + bump =
+pointer-walk source. CAVEAT — fixing the isel can break the COLORING: the
+SR-created web ranks differently from a walked-var web (renderParticles: index
+form got the direct addi but grabbed r31 instead of target's r26, rotating 5
+saved regs, net WORSE; decl-order rank flips inert). Only convert when the fn
+is otherwise clean or target's reg assignment survives; A/B mandatory. Also
+from #160: a GLOBAL inline/overlay change (e.g. re-basing gExpgfxTableEntries
+as runtime+0x980 per recipe #16 — confirmed correct for SOME target fns by
+`add rX,r31; lwz 2440(rX)`) can be per-fn MIXED — expgfx family nets NEGATIVE
+globally (+1.4 free, −3.9 expgfxRemove); apply per-fn, never per-inline,
+when the family's target uses both forms.
 
 **Loop induction-update ORDER is sometimes a hard cap (~1-3 instr).** Target
 emits `addi ptr; addi counter; cmpwi counter; b`; clean-C array-index form emits
