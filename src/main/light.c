@@ -1,7 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/light.h"
-#include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/objlib.h"
 
 extern bool FUN_800067f0();
@@ -740,7 +740,7 @@ void FUN_801fcbf4(undefined2 *param_1,int param_2)
     param_1[3] = param_1[3] | 0x4000;
   }
   if ((param_1[0x23] == 999) && (*(char *)(psVar2 + 1) < '\0')) {
-    *(undefined *)((int)param_1 + 0xad) = 1;
+    ((ObjAnimComponent *)param_1)->bankIndex = 1;
   }
   param_1[0x58] = param_1[0x58] | 0x2000;
   return;
