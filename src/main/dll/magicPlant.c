@@ -846,20 +846,20 @@ extern f32 lbl_803E28E8;
 void fn_80153790(int obj, int state, int p3, int msgFlag, int p5, int p6)
 {
     if (((GameObject *)obj)->anim.currentMove == 1) {
-        if ((((BaddieState *)state)->unk2DC & 0x40000000) != 0) {
+        if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
             return;
         }
     }
     if (msgFlag == 0x10) {
-        ((BaddieState *)state)->unk2E8 = ((BaddieState *)state)->unk2E8 | 0x20;
+        ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x20;
     } else {
-        ((BaddieState *)state)->unk2E8 = ((BaddieState *)state)->unk2E8 | 0x8;
-        if (p6 > (s32)((BaddieState *)state)->unk2B0) {
+        ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x8;
+        if (p6 > (s32)((BaddieState *)state)->hitCounter) {
             Sfx_PlayFromObject(obj, SFXfox_bigfallgrunt1);
-            *(s16 *)&((BaddieState *)state)->unk2B0 = 0;
+            *(s16 *)&((BaddieState *)state)->hitCounter = 0;
         } else {
             Sfx_PlayFromObject(obj, SFXfox_bigfallgrunt2);
-            ((BaddieState *)state)->unk2B0 = (u16)(((BaddieState *)state)->unk2B0 - p6);
+            ((BaddieState *)state)->hitCounter = (u16)(((BaddieState *)state)->hitCounter - p6);
         }
     }
 }
@@ -891,7 +891,7 @@ void fn_801534D8(int obj, int state)
     *(f32*)(state + 0x324) = lblB0;
     *(f32*)(state + 0x328) = lblB0;
     *(f32*)(state + 0x32c) = lblB0;
-    ((BaddieState *)state)->unk2FC = lblD0;
+    ((BaddieState *)state)->pathStep = lblD0;
     if (((GameObject *)obj)->anim.seqId == 0x7c6) {
         ((BaddieState *)state)->inWhirlpoolGroup = 1;
     } else {
@@ -929,14 +929,14 @@ void fn_80153040(int obj, int state)
         *(u8*)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
     }
     if (((BaddieState *)state)->inWhirlpoolGroup != 0) {
-        ((BaddieState *)state)->unk2E8 = ((BaddieState *)state)->unk2E8 | 0x80;
+        ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x80;
     }
-    if ((((BaddieState *)state)->unk2DC & 0x2000) != 0) {
-        if (Curve_AdvanceAlongPath(curve, ((BaddieState *)state)->unk2FC) != 0 || ((RomCurveWalker *)curve)->unk10 != 0) {
+    if ((((BaddieState *)state)->controlFlags & 0x2000) != 0) {
+        if (Curve_AdvanceAlongPath(curve, ((BaddieState *)state)->pathStep) != 0 || ((RomCurveWalker *)curve)->unk10 != 0) {
             if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
                 if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
                         *(int*)state, obj, lbl_803E28B8, &lbl_803DBCB8, -1, *(void**)gRomCurveInterface) != 0) {
-                    ((BaddieState *)state)->unk2DC = ((BaddieState *)state)->unk2DC & ~0x2000;
+                    ((BaddieState *)state)->controlFlags = ((BaddieState *)state)->controlFlags & ~0x2000;
                 }
             }
         }
@@ -1008,7 +1008,7 @@ void fn_80152EC0(int obj, int state)
     *(s16*)(state + 0x338) = 0;
     *(f32*)(state + 0x330) = zero;
     *(f32*)(state + 0x334) = zero;
-    ((BaddieState *)state)->unk2FC = lbl_803E28A8;
+    ((BaddieState *)state)->pathStep = lbl_803E28A8;
 
     fn_80293018((s32)(u32)*(u16*)(state + 0x338), &a, &b);
     ((GameObject *)obj)->anim.localPosX = a * ((BaddieState *)state)->unk2A8 + *(f32*)(state + 0x324);
@@ -1039,14 +1039,14 @@ void fn_8015355C(int obj, int p2)
         count = 1;
         break;
     case 5:
-        if ((((BaddieState *)p2)->unk2DC & 0x80000000) != 0) {
+        if ((((BaddieState *)p2)->controlFlags & 0x80000000) != 0) {
             count = 0xa;
         }
         break;
     case 7:
         break;
     }
-    if (count != 0 && (((BaddieState *)p2)->unk2DC & 0x40000000) == 0) {
+    if (count != 0 && (((BaddieState *)p2)->controlFlags & 0x40000000) == 0) {
         u8 spawn = count;
         while (spawn != 0) {
             (*(void(**)(int, int, int, int, int, int))(*gPartfxInterface + 0x8))(obj, 0x802, 0, 2, -1, 0);
@@ -1063,7 +1063,7 @@ void fn_8015355C(int obj, int p2)
 void fn_80153BFC(int obj, int p2)
 {
     ((BaddieState *)p2)->inWhirlpoolGroup = ((BaddieState *)p2)->inWhirlpoolGroup & 0xbf;
-    if ((((BaddieState *)p2)->unk2DC & 0x40000000) != 0 && ((GameObject *)obj)->anim.currentMove != 1) {
+    if ((((BaddieState *)p2)->controlFlags & 0x40000000) != 0 && ((GameObject *)obj)->anim.currentMove != 1) {
         Sfx_PlayFromObjectLimited(obj, 0x49c, 2);
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, p2, 1, lbl_803E290C, 0, 0);
     }
@@ -1094,7 +1094,7 @@ void fn_80153C90(int unused, int p2)
     ((BaddieState *)p2)->unk33A = 0;
     ((BaddieState *)p2)->inWhirlpoolGroup = 0;
     *(f32*)(p2 + 0x324) = lbl_803E2930;
-    ((BaddieState *)p2)->unk2FC = oc;
+    ((BaddieState *)p2)->pathStep = oc;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1105,17 +1105,17 @@ void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
 {
   if (((BaddieState *)p2)->inWhirlpoolGroup != 0) {
     if (msgFlag == 16) {
-      ((BaddieState *)p2)->unk2E8 = ((BaddieState *)p2)->unk2E8 | 0x28;
+      ((BaddieState *)p2)->reactionFlags = ((BaddieState *)p2)->reactionFlags | 0x28;
       Sfx_PlayFromObject(obj, SFXfox_climbgrunt4);
-      *(s16 *)&((BaddieState *)p2)->unk2B0 = 0;
+      *(s16 *)&((BaddieState *)p2)->hitCounter = 0;
     }
   } else if (msgFlag != 17) {
     if (msgFlag == 16) {
-      ((BaddieState *)p2)->unk2E8 = ((BaddieState *)p2)->unk2E8 | 0x20;
+      ((BaddieState *)p2)->reactionFlags = ((BaddieState *)p2)->reactionFlags | 0x20;
     } else {
-      ((BaddieState *)p2)->unk2E8 = ((BaddieState *)p2)->unk2E8 | 0x8;
+      ((BaddieState *)p2)->reactionFlags = ((BaddieState *)p2)->reactionFlags | 0x8;
       Sfx_PlayFromObject(obj, SFXfox_climbgrunt4);
-      *(s16 *)&((BaddieState *)p2)->unk2B0 = 0;
+      *(s16 *)&((BaddieState *)p2)->hitCounter = 0;
     }
   }
 }
@@ -1163,24 +1163,24 @@ void fn_80153248(int obj, int state)
 
     curve = *(int **)state;
     if (((BaddieState *)state)->inWhirlpoolGroup != 0) {
-        ((BaddieState *)state)->unk2E8 = ((BaddieState *)state)->unk2E8 | 0x80;
+        ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x80;
     }
-    if ((((BaddieState *)state)->unk2DC & 0x80000000) != 0) {
+    if ((((BaddieState *)state)->controlFlags & 0x80000000) != 0) {
         Sfx_PlayFromObject(obj, SFXfox_climbgrunt3);
     }
-    if ((((BaddieState *)state)->unk2DC & 0x2000) != 0) {
-        if (Curve_AdvanceAlongPath(curve, lbl_803E28D4 * ((BaddieState *)state)->unk2FC) != 0
+    if ((((BaddieState *)state)->controlFlags & 0x2000) != 0) {
+        if (Curve_AdvanceAlongPath(curve, lbl_803E28D4 * ((BaddieState *)state)->pathStep) != 0
             || ((RomCurveWalker *)curve)->unk10 != 0) {
             if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
                 if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
                         *(int*)state, obj, lbl_803E28B8, &lbl_803DBCB8, -1, *(void**)gRomCurveInterface) != 0) {
-                    ((BaddieState *)state)->unk2DC = ((BaddieState *)state)->unk2DC & ~0x2000;
+                    ((BaddieState *)state)->controlFlags = ((BaddieState *)state)->controlFlags & ~0x2000;
                 }
             }
         }
     }
     ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
-    p29c = *(int *)&((BaddieState *)state)->unk29C;
+    p29c = *(int *)&((BaddieState *)state)->trackedObj;
     vec[0] = ((GameObject *)p29c)->anim.localPosX - ((GameObject *)obj)->anim.localPosX;
     vec[1] = (lbl_803E28D8 + ((GameObject *)p29c)->anim.localPosY) - ((GameObject *)obj)->anim.localPosY;
     vec[2] = ((GameObject *)p29c)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ;
@@ -1199,7 +1199,7 @@ void fn_80153248(int obj, int state)
         worldPos[1] = ((RomCurveWalker *)curve)->unk6C;
         worldPos[2] = ((RomCurveWalker *)curve)->unk70;
         voxmaps_worldToGrid(worldPos, gridB);
-        if (((countLeadingZeros(((BaddieState *)state)->unk2DC) >> 5) & 0x01000000) != 0) {
+        if (((countLeadingZeros(((BaddieState *)state)->controlFlags) >> 5) & 0x01000000) != 0) {
             if (voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) == 0) {
                 *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 | 0x10000;
                 *(f32*)(state + 0x324) = lbl_803E28B0;
@@ -1234,13 +1234,13 @@ void fn_80153640(int obj, int state)
         *(u8*)(fx + 0x7) = 0xff;
         newObj = Obj_SetupObject((int)fx, 5, -1, -1, 0);
         if (newObj != 0) {
-            p29c = *(int *)&((BaddieState *)state)->unk29C;
+            p29c = *(int *)&((BaddieState *)state)->trackedObj;
             ((GameObject *)newObj)->anim.velocityX = lbl_803E28F4 * (((GameObject *)p29c)->anim.localPosX - ((GameObject *)fx)->anim.rootMotionScale);
             rnd = randomGetRange(-10, 10);
-            p29c = *(int *)&((BaddieState *)state)->unk29C;
+            p29c = *(int *)&((BaddieState *)state)->trackedObj;
             ((GameObject *)newObj)->anim.velocityY = lbl_803E28F4 *
                 ((lbl_803E28F0 + ((GameObject *)p29c)->anim.localPosY + (f32)(s32)rnd) - ((GameObject *)fx)->anim.localPosX);
-            p29c = *(int *)&((BaddieState *)state)->unk29C;
+            p29c = *(int *)&((BaddieState *)state)->trackedObj;
             ((GameObject *)newObj)->anim.velocityZ = lbl_803E28F4 * (((GameObject *)p29c)->anim.localPosZ - ((GameObject *)fx)->anim.localPosY);
             *(int *)&((GameObject *)newObj)->unkC4 = obj;
         }
@@ -1269,19 +1269,19 @@ void fn_8015383C(int obj, int state)
     ((BaddieState *)state)->inWhirlpoolGroup = ((BaddieState *)state)->inWhirlpoolGroup & 0x7f;
     losDetected = 0;
     {
-        int p29c = *(int *)&((BaddieState *)state)->unk29C;
+        int p29c = *(int *)&((BaddieState *)state)->trackedObj;
         vec[0] = ((GameObject *)obj)->anim.localPosX - ((GameObject *)p29c)->anim.localPosX;
         vec[1] = ((GameObject *)obj)->anim.localPosY - ((GameObject *)p29c)->anim.localPosY;
         vec[2] = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)p29c)->anim.localPosZ;
     }
     if (PSVECMag(vec) < lbl_803E2900
-        && (*(u16*)(*(int *)&((BaddieState *)state)->unk29C + 0xb0) & 0x1000) == 0) {
+        && (*(u16*)(*(int *)&((BaddieState *)state)->trackedObj + 0xb0) & 0x1000) == 0) {
         worldPos[0] = ((GameObject *)obj)->anim.localPosX;
         worldPos[1] = lbl_803E2904 + ((GameObject *)obj)->anim.localPosY;
         worldPos[2] = ((GameObject *)obj)->anim.localPosZ;
         voxmaps_worldToGrid(worldPos, gridA);
         {
-            int p29c = *(int *)&((BaddieState *)state)->unk29C;
+            int p29c = *(int *)&((BaddieState *)state)->trackedObj;
             worldPos[0] = ((GameObject *)p29c)->anim.localPosX;
             worldPos[1] = lbl_803E2908 + ((GameObject *)p29c)->anim.localPosY;
             worldPos[2] = ((GameObject *)p29c)->anim.localPosZ;
@@ -1289,7 +1289,7 @@ void fn_8015383C(int obj, int state)
         voxmaps_worldToGrid(worldPos, gridB);
         hit = (u8)voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0);
         if (hit != 0) {
-            int p29c = *(int *)&((BaddieState *)state)->unk29C;
+            int p29c = *(int *)&((BaddieState *)state)->trackedObj;
             fn_8014CF7C(obj, state, 0x14, 0, ((GameObject *)p29c)->anim.localPosX, ((GameObject *)p29c)->anim.localPosZ);
             angle = (s16)(getAngle(vec[0], vec[2]) - ((GameObject *)obj)->anim.rotX);
             if (angle > 0x8000) angle = angle + 1;
@@ -1306,7 +1306,7 @@ void fn_8015383C(int obj, int state)
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 2, lbl_803E290C, 0, 0);
         ((BaddieState *)state)->inWhirlpoolGroup = (u8)((((BaddieState *)state)->inWhirlpoolGroup) | 0x40);
         ((BaddieState *)state)->unk33A = 0;
-    } else if ((((BaddieState *)state)->unk2DC & 0x40000000) != 0) {
+    } else if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
         u8 mode;
         if ((u8)hit != 0) {
             if (((BaddieState *)state)->unk33A != 0) {
@@ -1376,12 +1376,12 @@ void fn_80153CF8(int obj, int state, int p3, int msgFlag)
 checkedKind:
     if (msgFlag == 0x10) {
         if (cond != 0) {
-            ((BaddieState *)state)->unk2E8 = ((BaddieState *)state)->unk2E8 | 0x20;
+            ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x20;
         }
     } else if (cond != 0) {
         if (((BaddieState *)state)->inWhirlpoolGroup == 0) {
-            ((BaddieState *)state)->unk2E8 = ((BaddieState *)state)->unk2E8 | 0x8;
-            *(s16 *)&((BaddieState *)state)->unk2B0 = 0;
+            ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x8;
+            *(s16 *)&((BaddieState *)state)->hitCounter = 0;
             Sfx_PlayFromObject(obj, SFXfox_healthgasp4);
         }
     } else if (msgFlag == 0x11) {
@@ -1391,7 +1391,7 @@ checkedKind:
         *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 | 0x10000;
         ((BaddieState *)state)->inWhirlpoolGroup = 0x3c;
     } else {
-        ((BaddieState *)state)->unk2E8 = ((BaddieState *)state)->unk2E8 | 0x10;
+        ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x10;
     }
 }
 #pragma peephole reset
@@ -1408,12 +1408,12 @@ void fn_80153E0C(int obj, int state)
     curve = *(int **)state;
     ((BaddieState *)state)->unk33A = 0;
     *(f32*)(state + 0x328) = lbl_803E294C;
-    if ((((BaddieState *)state)->unk2DC & 0x2000) != 0) {
-        if (Curve_AdvanceAlongPath(curve, ((BaddieState *)state)->unk2FC) != 0 || ((RomCurveWalker *)curve)->unk10 != 0) {
+    if ((((BaddieState *)state)->controlFlags & 0x2000) != 0) {
+        if (Curve_AdvanceAlongPath(curve, ((BaddieState *)state)->pathStep) != 0 || ((RomCurveWalker *)curve)->unk10 != 0) {
             if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
                 if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
                         *(int*)state, obj, lbl_803E2950, &lbl_803DBCC8, -1, *(void**)gRomCurveInterface) != 0) {
-                    ((BaddieState *)state)->unk2DC = ((BaddieState *)state)->unk2DC & ~0x2000;
+                    ((BaddieState *)state)->controlFlags = ((BaddieState *)state)->controlFlags & ~0x2000;
                 }
             }
         }
@@ -1435,10 +1435,10 @@ void fn_80153E0C(int obj, int state)
         if (*(f32*)(state + 0x32c) <= lbl_803E294C) {
             ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 6, lbl_803E2948, 0, 3);
             *(f32*)(state + 0x32c) = lbl_803E294C;
-        } else if ((((BaddieState *)state)->unk2DC & 0x40000000) != 0) {
+        } else if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
             ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 5, lbl_803E2954, 0, 3);
         }
-    } else if ((((BaddieState *)state)->unk2DC & 0x40000000) != 0) {
+    } else if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 0, lbl_803E2958, 0, 3);
     }
     ((GameObject *)obj)->anim.rotY = ((BaddieState *)state)->unk19C;
