@@ -4,6 +4,27 @@
 #include "main/objanim_internal.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/DB/DBstealerworm.h"
+#include "main/dll/DB/sbgalleon_state.h"
+
+/* SB_Propeller_getExtraSize == 0x10. */
+typedef struct SBPropellerState {
+    f32 smokeTimer; /* 0x00: countdown to the next smoke burst */
+    f32 spinBlend;  /* 0x04 */
+    int spinRate;   /* 0x08: init 1200 */
+    s8 health;      /* 0x0c: init 4 */
+    u8 pad0D[3];
+} SBPropellerState;
+STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
+
+/* SB_ShipHead_getExtraSize == 0x10. */
+typedef struct SBShipHeadState {
+    int target;     /* 0x00: the 0x8c galleon-side object */
+    s8 health;      /* 0x04: init 4 */
+    u8 pad05[3];
+    f32 swayA;      /* 0x08 */
+    f32 swayB;      /* 0x0c */
+} SBShipHeadState;
+STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #include "main/objhits_types.h"
 
 #pragma peephole off
@@ -192,20 +213,20 @@ int fn_801E1AAC(int obj, int p2, int msgSrc) {
     fn_801E1588(obj, state);
     {
         f32 z = lbl_803E56CC;
-        *(f32 *)(state + 0x44) = lbl_803E56CC;
-        *(f32 *)(state + 0x38) = z;
-        *(f32 *)(state + 0x3c) = z;
-        *(f32 *)(state + 0x40) = z;
+        ((SBGalleonState *)state)->moveScale = lbl_803E56CC;
+        ((SBGalleonState *)state)->swayX = z;
+        ((SBGalleonState *)state)->swayY = z;
+        ((SBGalleonState *)state)->swayZ = z;
     }
     *(void **)(msgSrc + 0xe8) = (void *)DBprotection_storeHomePosition;
     for (i = 0; i < *(u8 *)(msgSrc + 0x8b); i++) {
         switch (*(u8 *)(msgSrc + i + 0x81)) {
         case 2:
-            if (*(u8 *)(state + 0x79) == 1) {
-                *(u8 *)(state + 0x79) = 0;
+            if (((SBGalleonState *)state)->unk79 == 1) {
+                ((SBGalleonState *)state)->unk79 = 0;
             }
             else {
-                *(u8 *)(state + 0x79) = 1;
+                ((SBGalleonState *)state)->unk79 = 1;
             }
             break;
         case 3: {
@@ -214,22 +235,22 @@ int fn_801E1AAC(int obj, int p2, int msgSrc) {
             int *arr = (int *)ObjList_GetObjects(&start, &end);
             for (i = start; i < end; i++) {
                 if (*(s16 *)(arr[i] + 0x46) == 0xf7) {
-                    *(int *)(state + 0x4c) = arr[i];
+                    ((SBGalleonState *)state)->linkedActor = arr[i];
                     i = end;
                 }
             }
-            *(u8 *)(state + 0x85) = 1;
+            ((SBGalleonState *)state)->sprayActive = 1;
             break;
         }
         case 4:
-            *(u8 *)(state + 0x85) = 0;
+            ((SBGalleonState *)state)->sprayActive = 0;
             break;
         case 5:
-            if (*(u8 *)(state + 0x79) == 2) {
-                *(u8 *)(state + 0x79) = 0;
+            if (((SBGalleonState *)state)->unk79 == 2) {
+                ((SBGalleonState *)state)->unk79 = 0;
             }
             else {
-                *(u8 *)(state + 0x79) = 2;
+                ((SBGalleonState *)state)->unk79 = 2;
             }
             break;
         case 6:
@@ -239,52 +260,52 @@ int fn_801E1AAC(int obj, int p2, int msgSrc) {
             Sfx_StopFromObject(obj, 0x143);
             break;
         case 8:
-            if (*(u8 *)(state + 0x79) == 8) {
-                *(u8 *)(state + 0x79) = 1;
+            if (((SBGalleonState *)state)->unk79 == 8) {
+                ((SBGalleonState *)state)->unk79 = 1;
             }
             else {
-                *(u8 *)(state + 0x79) = 8;
+                ((SBGalleonState *)state)->unk79 = 8;
             }
             break;
         case 9:
-            *(u8 *)(state + 0xab) = 1;
+            ((SBGalleonState *)state)->skyFlag = 1;
             break;
         case 10:
-            *(u8 *)(state + 0xab) = 0;
+            ((SBGalleonState *)state)->skyFlag = 0;
             break;
         case 0xb:
             Sfx_PlayFromObject(fn_801E2570(), 0x2c6);
             break;
         case 0xc:
-            *(int *)(state + 0x9c) = 0xa3;
-            Music_Trigger(*(int *)(state + 0x9c), 1);
-            Music_Trigger(*(int *)(state + 0x98), 0);
+            ((SBGalleonState *)state)->musicIdB = 0xa3;
+            Music_Trigger(((SBGalleonState *)state)->musicIdB, 1);
+            Music_Trigger(((SBGalleonState *)state)->musicIdA, 0);
             break;
         case 0xd:
-            *(f32 *)(state + 0xac) = lbl_803E57F8;
-            *(u8 *)(state + 0x78) = 1;
-            *(f32 *)(state + 0x74) = lbl_803E56CC;
+            ((SBGalleonState *)state)->textTimer = lbl_803E57F8;
+            ((SBGalleonState *)state)->textRising = 1;
+            ((SBGalleonState *)state)->textAlpha = lbl_803E56CC;
             break;
         }
     }
     {
         f32 z = lbl_803E56CC;
-        if (*(f32 *)(state + 0xac) >= z) {
-            *(f32 *)(state + 0xac) = *(f32 *)(state + 0xac) - timeDelta;
-            if (*(f32 *)(state + 0xac) < z) {
-                *(f32 *)(state + 0xac) = z;
-                *(u8 *)(state + 0x78) = 0;
+        if (((SBGalleonState *)state)->textTimer >= z) {
+            ((SBGalleonState *)state)->textTimer = ((SBGalleonState *)state)->textTimer - timeDelta;
+            if (((SBGalleonState *)state)->textTimer < z) {
+                ((SBGalleonState *)state)->textTimer = z;
+                ((SBGalleonState *)state)->textRising = 0;
             }
         }
     }
-    if (*(u8 *)(state + 0x78) != 0) {
-        *(f32 *)(state + 0x74) = lbl_803E5790 * timeDelta + *(f32 *)(state + 0x74);
+    if (((SBGalleonState *)state)->textRising != 0) {
+        ((SBGalleonState *)state)->textAlpha = lbl_803E5790 * timeDelta + ((SBGalleonState *)state)->textAlpha;
     }
     else {
-        *(f32 *)(state + 0x74) = -(lbl_803E5790 * timeDelta - *(f32 *)(state + 0x74));
+        ((SBGalleonState *)state)->textAlpha = -(lbl_803E5790 * timeDelta - ((SBGalleonState *)state)->textAlpha);
     }
     {
-        f32 v = *(f32 *)(state + 0x74);
+        f32 v = ((SBGalleonState *)state)->textAlpha;
         f32 c = lbl_803E56CC;
         if (!(v < lbl_803E56CC)) {
             c = lbl_803E57F4;
@@ -292,15 +313,15 @@ int fn_801E1AAC(int obj, int p2, int msgSrc) {
                 c = v;
             }
         }
-        *(f32 *)(state + 0x74) = c;
+        ((SBGalleonState *)state)->textAlpha = c;
     }
-    if (*(f32 *)(state + 0x74) > lbl_803E56CC) {
-        gameTextSetColor(0xff, 0xff, 0xff, (int)*(f32 *)(state + 0x74));
+    if (((SBGalleonState *)state)->textAlpha > lbl_803E56CC) {
+        gameTextSetColor(0xff, 0xff, 0xff, (int)((SBGalleonState *)state)->textAlpha);
         gameTextShow(0x4b1);
     }
-    *(f32 *)(state + 0x2c) = *(f32 *)(obj + 0xc);
-    *(f32 *)(state + 0x30) = *(f32 *)(obj + 0x10);
-    *(f32 *)(state + 0x34) = *(f32 *)(obj + 0x14);
+    ((SBGalleonState *)state)->posX = *(f32 *)(obj + 0xc);
+    ((SBGalleonState *)state)->posY = *(f32 *)(obj + 0x10);
+    ((SBGalleonState *)state)->posZ = *(f32 *)(obj + 0x14);
     *(s16 *)(msgSrc + 0x6e) = *(s16 *)(msgSrc + 0x70);
     *(u8 *)(msgSrc + 0x56) = 0;
     return 0;
@@ -423,7 +444,7 @@ void fn_801E1588(int obj, int state)
   skySetOverrideLightDirection(lbl_803DDC28 * (d.x - c.x) + c.x,
                                lbl_803DDC28 * (d.y - c.y) + c.y,
                                lbl_803DDC28 * (d.z - c.z) + c.z, lbl_803E5724);
-  if (*(u8 *)(state + 0xab) == 0) {
+  if (((SBGalleonState *)state)->skyFlag == 0) {
     skyFn_800894a8(7, a.x, a.y, a.z);
   }
   else {
@@ -526,13 +547,13 @@ void SB_Propeller_update(int obj) {
     pf = *(f32 **)(obj + 0xb8);
     camA = (**(int (**)(int))(**(int **)(*(int *)(obj + 0x30) + 0x68) + 0x24))(*(int *)(obj + 0x30));
     camB = (**(int (**)(int))(**(int **)(*(int *)(obj + 0x30) + 0x68) + 0x28))(*(int *)(obj + 0x30));
-    if (((*(s8 *)((u8 *)pf + 0xc) != 0) && (camB < 6)) && (*(s16 *)(obj + 0x46) != 0x69c)) {
+    if (((((SBPropellerState *)pf)->health != 0) && (camB < 6)) && (*(s16 *)(obj + 0x46) != 0x69c)) {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x2c6);
     }
     camC = DBprotection_getCameraState(*(int *)(obj + 0x30));
-    if ((camC < 2) && (*(s8 *)((u8 *)pf + 0xc) < 1)) {
-        *pf = *pf - timeDelta;
-        if (*pf <= lbl_803E5814) {
+    if ((camC < 2) && (((SBPropellerState *)pf)->health < 1)) {
+        ((SBPropellerState *)pf)->smokeTimer = ((SBPropellerState *)pf)->smokeTimer - timeDelta;
+        if (((SBPropellerState *)pf)->smokeTimer <= lbl_803E5814) {
             f32 spd = lbl_803E5810;
             for (i = randomGetRange(10, 0x19); i != 0; i--) {
                 stk.b = *(f32 *)(obj + 0x18);
@@ -542,7 +563,7 @@ void SB_Propeller_update(int obj) {
                 (**(void (**)(int, int, u8 *, int, int, int))(*(int *)gPartfxInterface + 8))(
                     obj, 0x9f, stk.pad, 0x200001, -1, 0);
             }
-            *pf = (f32)(int)randomGetRange(0x5a, 0xf0);
+            ((SBPropellerState *)pf)->smokeTimer = (f32)(int)randomGetRange(0x5a, 0xf0);
         }
         if ((2 < camA) && (objAnim->bankIndex == 1)) {
             stk.a = lbl_803E5818;
@@ -559,12 +580,12 @@ void SB_Propeller_update(int obj) {
     }
     if (*(int *)(obj + 0x30) != 0) {
         if ((*(s16 *)(obj + 0x46) != 0x69c) && (*(int *)(*(int *)(obj + 0x30) + 0xf4) < 4)) {
-            pf[1] = (f32)*(int *)(pf + 2) / lbl_803E581C;
-            if (pf[1] < lbl_803E5814) {
-                pf[1] = -pf[1];
+            ((SBPropellerState *)pf)->spinBlend = (f32)((SBPropellerState *)pf)->spinRate / lbl_803E581C;
+            if (((SBPropellerState *)pf)->spinBlend < lbl_803E5814) {
+                ((SBPropellerState *)pf)->spinBlend = -((SBPropellerState *)pf)->spinBlend;
             }
-            if (pf[1] < lbl_803E5820) {
-                pf[1] = lbl_803E5820;
+            if (((SBPropellerState *)pf)->spinBlend < lbl_803E5820) {
+                ((SBPropellerState *)pf)->spinBlend = lbl_803E5820;
             }
         }
         *(int *)(obj + 0xf4) = *(int *)(obj + 0xf4) - framesThisStep;
@@ -580,9 +601,9 @@ void SB_Propeller_update(int obj) {
             && ((camA == 2 || (camA == 5)))) && (*(s16 *)(obj + 0x46) == 0x69c)) {
             Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
             Sfx_PlayFromObject(obj, 0x2c7);
-            *(s8 *)((u8 *)pf + 0xc) -= 1;
-            if (*(s8 *)((u8 *)pf + 0xc) <= 0) {
-                *(u8 *)((u8 *)pf + 0xc) = 0;
+            ((SBPropellerState *)pf)->health -= 1;
+            if (((SBPropellerState *)pf)->health <= 0) {
+                *(u8 *)&((SBPropellerState *)pf)->health = 0;
                 (**(void (**)(int))(**(int **)(*(int *)(obj + 0x30) + 0x68) + 0x20))(*(int *)(obj + 0x30));
                 ObjHits_DisableObject(obj);
                 *(u16 *)(obj + 6) = *(u16 *)(obj + 6) | 0x4000;
@@ -600,7 +621,7 @@ void SB_Propeller_update(int obj) {
         else {
             (*(ObjHitsPriorityState **)(obj + 0x54))->objectPairPriority = 0;
         }
-        *(s16 *)(obj + 4) = (int)-((f32)*(int *)(pf + 2) * timeDelta - (f32)*(s16 *)(obj + 4));
+        *(s16 *)(obj + 4) = (int)-((f32)((SBPropellerState *)pf)->spinRate * timeDelta - (f32)*(s16 *)(obj + 4));
     }
 }
 
@@ -626,10 +647,10 @@ void SB_Propeller_init(int param_1,int param_2)
   objAnim = (ObjAnimComponent *)param_1;
   pfVar2 = *(float **)(param_1 + 0xb8);
   uVar1 = randomGetRange(0x5a,0xf0);
-  *pfVar2 = (f32)(s32)(uVar1);
-  pfVar2[1] = lbl_803E64A8;
-  *(int *)(pfVar2 + 2) = 1200;
-  *(undefined *)(pfVar2 + 3) = 4;
+  ((SBPropellerState *)pfVar2)->smokeTimer = (f32)(s32)(uVar1);
+  ((SBPropellerState *)pfVar2)->spinBlend = lbl_803E64A8;
+  ((SBPropellerState *)pfVar2)->spinRate = 1200;
+  *(u8 *)&((SBPropellerState *)pfVar2)->health = 4;
   objAnim->bankIndex = (char)*(s16 *)(param_2 + 0x1a);
   if (*(short *)(param_1 + 0x46) != 0x69c) {
     DAT_803de8c0 = param_1;
@@ -668,13 +689,13 @@ void SB_ShipHead_render(int param_1,int param_2,int param_3,int param_4,int para
     iVar1 = *(int *)(param_1 + 0x30);
     if ((((iVar1 != 0) && (*(short *)(iVar1 + 0x46) == 0x8e)) &&
         (iVar1 = (**(code **)(**(int **)(iVar1 + 0x68) + 0x2c))(), iVar1 != 0)) && (iVar1 != 2)) {
-      *(float *)(iVar2 + 8) = *(float *)(iVar2 + 8) - lbl_803DC074;
-      if (*(float *)(iVar2 + 8) <= lbl_803E64CC) {
-        *(float *)(iVar2 + 8) = *(float *)(iVar2 + 8) + lbl_803E64D0;
+      ((SBShipHeadState *)iVar2)->swayA = ((SBShipHeadState *)iVar2)->swayA - lbl_803DC074;
+      if (((SBShipHeadState *)iVar2)->swayA <= lbl_803E64CC) {
+        ((SBShipHeadState *)iVar2)->swayA = ((SBShipHeadState *)iVar2)->swayA + lbl_803E64D0;
       }
-      *(float *)(iVar2 + 0xc) = *(float *)(iVar2 + 0xc) - lbl_803DC074;
-      if (*(float *)(iVar2 + 0xc) <= lbl_803E64CC) {
-        *(float *)(iVar2 + 0xc) = *(float *)(iVar2 + 0xc) + lbl_803E64C8;
+      ((SBShipHeadState *)iVar2)->swayB = ((SBShipHeadState *)iVar2)->swayB - lbl_803DC074;
+      if (((SBShipHeadState *)iVar2)->swayB <= lbl_803E64CC) {
+        ((SBShipHeadState *)iVar2)->swayB = ((SBShipHeadState *)iVar2)->swayB + lbl_803E64C8;
       }
       local_20 = lbl_803E64D4;
       local_22 = 0xc0a;
@@ -732,7 +753,7 @@ void SB_ShipHead_update(int obj) {
     int state;
     int i;
     int mode;
-    int *hs;
+    SBShipHeadState *hs;
     int proj;
     u8 *setup;
     int msg;
@@ -759,13 +780,13 @@ void SB_ShipHead_update(int obj) {
             }
         }
         state = *(int *)(galleon + 0xf4);
-        hs = *(int **)(obj + 0xb8);
-        if (*(void **)hs == 0) {
+        hs = *(SBShipHeadState **)(obj + 0xb8);
+        if (*(void **)&hs->target == 0) {
             int *arr = (int *)ObjList_GetObjects(&start, &end);
             for (i = start; i < end; i++) {
                 int o = arr[i];
                 if (*(s16 *)(o + 0x46) == 0x8c) {
-                    *hs = o;
+                    hs->target = o;
                     i = end;
                 }
             }
@@ -786,8 +807,8 @@ void SB_ShipHead_update(int obj) {
             && (*(s16 *)(hit + 0x46) != 0x114)) {
             Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
             Sfx_PlayFromObject(obj, 0x37);
-            *(s8 *)((int)hs + 4) -= 1;
-            if (*(s8 *)((int)hs + 4) <= 0) {
+            hs->health -= 1;
+            if (hs->health <= 0) {
                 (**(void (**)(u8 *))(**(int **)(galleon + 0x68) + 0x20))(galleon);
                 *(int *)(obj + 0xf8) = 300;
                 ObjHits_DisableObject(obj);
@@ -833,7 +854,7 @@ void SB_ShipHead_update(int obj) {
             *(f32 *)(proj + 0x28) = ddy * s;
             *(f32 *)(proj + 0x2c) = ddz * s;
             *(int *)(proj + 0xf4) = 0x78;
-            *(int *)(proj + 0xf8) = *hs;
+            *(int *)(proj + 0xf8) = hs->target;
         }
         if ((mode == 1) && (Obj_IsLoadingLocked() != 0)) {
             Sfx_PlayFromObject(obj, 0x38);
@@ -966,18 +987,18 @@ void SB_ShipGun_free(int param_1) {
 #pragma peephole off
 int SB_Galleon_setScale(int obj) {
     s8 *p = (s8*)((int**)obj)[0xb8/4];
-    int s = p[0x29];
+    int s = ((SBGalleonState *)p)->phase;
     if (s != 1) {
         if (s >= 2) {
             Sfx_PlayFromObject(obj, SFXen_diallp_c);
         }
-        p[0x2b] = p[0x2b] + 1;
+        ((SBGalleonState *)p)->stage = ((SBGalleonState *)p)->stage + 1;
         return 1;
     }
     {
-        int t = p[0x7a];
+        int t = *(s8 *)&((SBGalleonState *)p)->flightPattern;
         if (t == 0 || t == 1 || t == 2) {
-            p[0x7c] = p[0x7c] + 1;
+            ((SBGalleonState *)p)->unk7C = ((SBGalleonState *)p)->unk7C + 1;
             return 1;
         }
     }
@@ -1006,13 +1027,13 @@ void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
         f32 c;
     } stk;
     if (visible != 0) {
-        if ((s8)p[0x70] < 2) {
-            stk.mode = (u16)(s32)*(f32*)(p + 0x88);
+        if ((s8)((SBGalleonState *)p)->cameraState < 2) {
+            stk.mode = (u16)(s32)((SBGalleonState *)p)->wanderA;
             stk.a = lbl_803E5804;
             stk.b = lbl_803E5800;
             stk.c = lbl_803E57FC;
             (**(code **)(*gPartfxInterface + 8))(obj, 0xa3, stk.pad, 2, 0xffffffff, 0);
-            stk.mode = (u16)(s32)*(f32*)(p + 0x8c);
+            stk.mode = (u16)(s32)((SBGalleonState *)p)->wanderB;
             stk.a = lbl_803E5808;
             (**(code **)(*gPartfxInterface + 8))(obj, 0xa3, stk.pad, 2, 0xffffffff, 0);
         }
@@ -1031,14 +1052,14 @@ void SB_Galleon_hitDetect(int obj) {
         f32 c;
         f32 d;
     } stk;
-    if (*(u8*)((char*)p + 0x85) != 0 && *(int*)((char*)p + 0x4c) != 0) {
+    if (((SBGalleonState *)p)->sprayActive != 0 && ((SBGalleonState *)p)->linkedActor != 0) {
         stk.a = lbl_803E5738;
         stk.mode = 0xc0a;
         stk.b = lbl_803E56CC;
         stk.c = lbl_803E56F0;
         stk.d = lbl_803E56C8;
         for (i = 0; i < framesThisStep; i = i + 1) {
-            (**(code **)(*gPartfxInterface + 8))(*(int*)((char*)p + 0x4c), 0x7aa, stk.pad, 2, 0xffffffff, 0);
+            (**(code **)(*gPartfxInterface + 8))(((SBGalleonState *)p)->linkedActor, 0x7aa, stk.pad, 2, 0xffffffff, 0);
         }
     }
 }
@@ -1062,7 +1083,7 @@ extern MapEventInterface **gMapEventInterface;
 extern int *gObjectTriggerInterface;
 void SB_Galleon_update(int obj) {
     s8 *p = (s8 *)((int **)obj)[0xb8/4];
-    *(s8 *)(obj + 0xac) = *(s16 *)(p + 0x72);
+    *(s8 *)(obj + 0xac) = ((SBGalleonState *)p)->mapLayer;
     fn_801E1588(obj, (int)p);
     if (GameBit_Get(0x75) == 0) {
         (*gMapEventInterface)->setMode(0xb, 1);
@@ -1076,16 +1097,16 @@ void SB_Galleon_update(int obj) {
         *(int *)(obj + 0xf4) = 0;
     }
     else {
-        if ((*(u8 *)(p + 0x80) == 0) && (p[0x70] > 0)) {
-            p[0x80] = 1;
+        if ((((SBGalleonState *)p)->unk80 == 0) && (*(s8 *)&((SBGalleonState *)p)->cameraState > 0)) {
+            *(s8 *)&((SBGalleonState *)p)->unk80 = 1;
         }
-        switch (p[0x70]) {
+        switch (*(s8 *)&((SBGalleonState *)p)->cameraState) {
         case 0:
             fn_801DFA28(obj);
             break;
         case 1:
             (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(3, obj, -1);
-            p[0x70] = 2;
+            *(s8 *)&((SBGalleonState *)p)->cameraState = 2;
             break;
         case 2:
             DBprotection_updateShield(obj);
@@ -1094,7 +1115,7 @@ void SB_Galleon_update(int obj) {
             (*gMapEventInterface)->setMode(0xb, 1);
             *(s8 *)(obj + 0xac) = -1;
             (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(2, obj, -1);
-            p[0x70] = 4;
+            *(s8 *)&((SBGalleonState *)p)->cameraState = 4;
             break;
         }
         SCGameBitLatch_Update((u8 *)p + 0xb0, 1, -1, -1, 0xa71, 0xa4);
@@ -1119,36 +1140,36 @@ void SB_Galleon_init(int obj) {
     ObjGroup_AddObject(obj, 3);
     objSetSlot((void *)obj, 0x5a);
     *(void **)(obj + 0xbc) = (void *)fn_801E1AAC;
-    *(f32 *)(p + 0x2c) = *(f32 *)(obj + 0xc);
-    *(f32 *)(p + 0x30) = *(f32 *)(obj + 0x10);
-    *(f32 *)(p + 0x34) = *(f32 *)(obj + 0x14);
-    *(u8 *)(p + 0x2a) = 1;
-    *(s16 *)(p + 0x26) = 0xf0;
-    *(s16 *)(p + 0x6e) = 0xf0;
-    *(u8 *)(p + 0x79) = 0;
-    *(s16 *)(p + 0x82) = 200;
-    *(u8 *)(p + 0xa7) = 0x89;
-    *(u8 *)(p + 0xa8) = 0x95;
-    *(u8 *)(p + 0xa9) = 0x86;
-    *(u8 *)(p + 0xaa) = 0x88;
-    *(u8 *)(p + 0xa5) = 0x87;
-    *(u8 *)(p + 0xa6) = 0x97;
-    *(s16 *)(p + 0x72) = *(s8 *)(obj + 0xac);
+    ((SBGalleonState *)p)->posX = *(f32 *)(obj + 0xc);
+    ((SBGalleonState *)p)->posY = *(f32 *)(obj + 0x10);
+    ((SBGalleonState *)p)->posZ = *(f32 *)(obj + 0x14);
+    *(u8 *)&((SBGalleonState *)p)->sweepDir = 1;
+    ((SBGalleonState *)p)->timer26 = 0xf0;
+    ((SBGalleonState *)p)->phaseTimer = 0xf0;
+    ((SBGalleonState *)p)->unk79 = 0;
+    ((SBGalleonState *)p)->headingLatch = 200;
+    ((SBGalleonState *)p)->envfxActs[2] = 0x89;
+    ((SBGalleonState *)p)->envfxActs[3] = 0x95;
+    ((SBGalleonState *)p)->envfxActs[4] = 0x86;
+    ((SBGalleonState *)p)->envfxActs[5] = 0x88;
+    ((SBGalleonState *)p)->envfxActs[0] = 0x87;
+    ((SBGalleonState *)p)->envfxActs[1] = 0x97;
+    ((SBGalleonState *)p)->mapLayer = *(s8 *)(obj + 0xac);
     *(s16 *)obj = 0x4000;
     *(s16 *)(obj + 2) = 0;
     *(s16 *)(obj + 4) = 0;
     lbl_803DDC18 = (int)textureLoadAsset(0x16d);
     lbl_803DDC1C = (int)textureLoadAsset(0x89);
-    *(u8 *)(p + 0x84) = 100;
+    ((SBGalleonState *)p)->unk84 = 100;
     (*gMapEventInterface)->setMode(*(s8 *)(obj + 0xac), 1);
     getLActions(obj, obj, 0x58, 0, 0, 0);
-    *(f32 *)(p + 0x90) = lbl_803E56CC;
-    *(f32 *)(p + 0x94) = lbl_803E580C;
+    ((SBGalleonState *)p)->wanderTimerA = lbl_803E56CC;
+    ((SBGalleonState *)p)->wanderTimerB = lbl_803E580C;
     (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 0x1800;
     setDrawLights(0);
-    *(int *)(p + 0x98) = 0x92;
-    *(int *)(p + 0x9c) = 0x91;
-    Music_Trigger(*(int *)(p + 0x9c), 1);
+    ((SBGalleonState *)p)->musicIdA = 0x92;
+    ((SBGalleonState *)p)->musicIdB = 0x91;
+    Music_Trigger(((SBGalleonState *)p)->musicIdB, 1);
 }
 
 
@@ -1165,12 +1186,12 @@ void SB_Galleon_free(int obj, int p2) {
         lbl_803DDC1C = 0;
     }
     ObjGroup_RemoveObject(obj, 3);
-    if (p[0x80] != 0 && p2 == 0) {
-        p[0x80] = 0;
+    if (((SBGalleonState *)p)->unk80 != 0 && p2 == 0) {
+        ((SBGalleonState *)p)->unk80 = 0;
     }
     lbl_803DDC20 = 0;
-    Music_Trigger(*(s32*)(p + 0x9c), 0);
-    Music_Trigger(*(s32*)(p + 0x98), 0);
+    Music_Trigger(((SBGalleonState *)p)->musicIdB, 0);
+    Music_Trigger(((SBGalleonState *)p)->musicIdA, 0);
     GameBit_Set(0xac8, 1);
 }
 
@@ -1184,9 +1205,9 @@ void SB_ShipHead_init(int obj) {
     f32 *p = (f32*)((int**)obj)[0xb8/4];
     ObjGroup_AddObject(obj, 3);
     ObjMsg_AllocQueue(obj, 10);
-    *(s8*)((char*)p + 4) = 4;
-    p[0xc/4] = p[0xc/4] + lbl_803E5830;
-    p[0x8/4] = p[0x8/4] + lbl_803E5838;
+    ((SBShipHeadState *)p)->health = 4;
+    ((SBShipHeadState *)p)->swayB = ((SBShipHeadState *)p)->swayB + lbl_803E5830;
+    ((SBShipHeadState *)p)->swayA = ((SBShipHeadState *)p)->swayA + lbl_803E5838;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1215,12 +1236,12 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma scheduling off
 int SB_Galleon_modelMtxFn(int *obj) {
     u8 *p = (u8*)((int**)obj)[0xb8/4];
-    u8 b = p[0x29];
+    u8 b = *(u8 *)&((SBGalleonState *)p)->phase;
     if ((s8)b == 0) {
-        if (*(s16*)(p + 0x26) > 0) return -2;
+        if (((SBGalleonState *)p)->timer26 > 0) return -2;
     }
     if ((s8)b == 1) {
-        int t = (s8)p[0x7a];
+        int t = (s8)((SBGalleonState *)p)->flightPattern;
         if (t == 2) return -1;
         if (t == 3) return -1;
         if (t == 5) return -1;
@@ -1236,8 +1257,8 @@ int SB_Galleon_func0E(int *obj) {
     register s8 *p = (s8*)((int**)obj)[0xb8/4];
     s8 phase;
     int wrappedPhase;
-    if (p[0x29] == 1) {
-        phase = p[0x7c];
+    if (((SBGalleonState *)p)->phase == 1) {
+        phase = ((SBGalleonState *)p)->unk7C;
         if (phase >= 5) {
             wrappedPhase = phase - 5;
         } else {
