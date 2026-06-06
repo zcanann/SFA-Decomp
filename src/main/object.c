@@ -2465,45 +2465,51 @@ extern void mapLoadForObject(int id, void *obj);
 #pragma dont_inline on
 void Obj_RegisterObject(u8 *obj, int flags)
 {
+    ObjAnimComponent *object;
+    ObjHitsPriorityState *hitState;
     int id;
     int prev;
     int cur;
     int off;
 
-    if (*(void **)(obj + 0x30) != 0) {
-        ((void (*)(f32, f32, f32, u8 *, u8 *, u8 *, void *))Obj_TransformLocalPointToWorld)(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), obj + 0x18, obj + 0x1c, obj + 0x20, *(void **)(obj + 0x30));
+    object = (ObjAnimComponent *)obj;
+    if (object->parent != NULL) {
+        ((void (*)(f32, f32, f32, f32 *, f32 *, f32 *, void *))Obj_TransformLocalPointToWorld)(
+            object->localPosX, object->localPosY, object->localPosZ, &object->worldPosX,
+            &object->worldPosY, &object->worldPosZ, object->parent);
     } else {
-        *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
-        *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
-        *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+        object->worldPosX = object->localPosX;
+        object->worldPosY = object->localPosY;
+        object->worldPosZ = object->localPosZ;
     }
-    *(f32 *)(obj + 0x8c) = *(f32 *)(obj + 0x18);
-    *(f32 *)(obj + 0x90) = *(f32 *)(obj + 0x1c);
-    *(f32 *)(obj + 0x94) = *(f32 *)(obj + 0x20);
-    *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
-    *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
-    *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
-    Obj_RunInitCallback(obj, *(int *)(obj + 0x4c), 0);
-    if (*(u8 **)(obj + 0x54) != 0) {
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x10) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x14) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x18) = *(f32 *)(obj + 0x14);
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x1c) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x20) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(u8 **)(obj + 0x54) + 0x24) = *(f32 *)(obj + 0x14);
+    object->previousWorldPosX = object->worldPosX;
+    object->previousWorldPosY = object->worldPosY;
+    object->previousWorldPosZ = object->worldPosZ;
+    object->previousLocalPosX = object->localPosX;
+    object->previousLocalPosY = object->localPosY;
+    object->previousLocalPosZ = object->localPosZ;
+    Obj_RunInitCallback(obj, (int)object->placementData, 0);
+    hitState = (ObjHitsPriorityState *)object->hitReactState;
+    if (hitState != NULL) {
+        hitState->localPosX = object->localPosX;
+        hitState->localPosY = object->localPosY;
+        hitState->localPosZ = object->localPosZ;
+        hitState->worldPosX = object->localPosX;
+        hitState->worldPosY = object->localPosY;
+        hitState->worldPosZ = object->localPosZ;
     }
-    id = *(s16 *)(*(u8 **)(obj + 0x50) + 0x78);
+    id = *(s16 *)((u8 *)object->modelInstance + 0x78);
     if (id > -1) {
         mapLoadForObject(id, obj);
     }
-    if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40) {
+    if (object->modelInstance->flags & 0x40) {
         ObjGroup_AddObject((uint)obj, 6);
-        if (*(s8 *)(obj + 0xae) != 0x5a && (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40)) {
-            *(u8 *)(obj + 0xae) = 0x5a;
+        if (object->activeHitboxMode != 0x5a && (object->modelInstance->flags & 0x40)) {
+            object->activeHitboxMode = 0x5a;
         }
     } else {
-        if (*(s8 *)(obj + 0xae) == 0) {
-            *(u8 *)(obj + 0xae) = 0x50;
+        if (object->activeHitboxMode == 0) {
+            object->activeHitboxMode = 0x50;
         }
     }
     if (flags & 1) {
@@ -2513,17 +2519,17 @@ void Obj_RegisterObject(u8 *obj, int flags)
             prev = 0;
             cur = *(int *)((u8 *)&lbl_803DCB7C + 4);
             off = *(s16 *)((u8 *)&lbl_803DCB7C + 2);
-            while (cur != 0 && *(s8 *)(obj + 0xae) < *(s8 *)(cur + 0xae)) {
+            while (cur != 0 && object->activeHitboxMode < *(s8 *)(cur + 0xae)) {
                 prev = cur;
                 cur = *(int *)(cur + off);
             }
             objListAdd(&lbl_803DCB7C, prev, (int)obj);
         }
     }
-    if (*(s8 *)(*(u8 **)(obj + 0x50) + 0x56) > 0) {
+    if (*(s8 *)((u8 *)object->modelInstance + 0x56) > 0) {
         ObjGroup_AddObject((uint)obj, 8);
     }
-    if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 1) {
+    if (object->modelInstance->flags & 1) {
         lbl_803DCBC4 = 0;
     }
 }
