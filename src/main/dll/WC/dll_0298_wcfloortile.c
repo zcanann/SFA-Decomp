@@ -186,7 +186,7 @@ void fn_8022AE1C(int obj, int bounds) {
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling off
 void fn_8022AECC(int obj, int p)
 {
@@ -195,7 +195,7 @@ void fn_8022AECC(int obj, int p)
     int diff;
     int iv;
 
-    if (*(s8 *)(p + 0xac) == 0x26) {
+    if (*(s8 *)(obj + 0xac) == 0x26) {
         *(f32 *)(p + 0x44) = lbl_803E6ECC;
     }
     PSVECSubtract((void *)(p + 0x3c), (void *)(p + 0x48), v);
@@ -213,38 +213,35 @@ void fn_8022AECC(int obj, int p)
     if (diff > 0x8000) diff -= 0xffff;
     if (diff < -0x8000) diff += 0xffff;
     iv = (int)(f32)((int)((f32)diff * *(f32 *)(p + 0x34c)) - *(int *)(p + 0x350));
-    if (iv < -0x32) iv = -0x32;
-    else if (iv > 0x32) iv = 0x32;
-    *(int *)(p + 0x350) = (int)((f32)iv * timeDelta + (f32) * (int *)(p + 0x350));
+    iv = (iv < -0x32) ? -0x32 : ((iv > 0x32) ? 0x32 : iv);
+    *(int *)(p + 0x350) = (int)((f32)iv * timeDelta + (f32)*(int *)((u8 *)p + 0x350));
     *(int *)(p + 0x344) =
-        (int)((f32) * (int *)(p + 0x350) * timeDelta + (f32) * (int *)(p + 0x344));
+        (int)((f32) * (int *)(p + 0x350) * timeDelta + (f32)*(int *)((u8 *)p + 0x344));
 
     diff = *(int *)(p + 0x354) - (u16) * (int *)(p + 0x358);
     if (diff > 0x8000) diff -= 0xffff;
     if (diff < -0x8000) diff += 0xffff;
     iv = (int)(f32)((int)((f32)diff * *(f32 *)(p + 0x360)) - *(int *)(p + 0x364));
-    if (iv < -0x32) iv = -0x32;
-    else if (iv > 0x32) iv = 0x32;
-    *(int *)(p + 0x364) = (int)((f32)iv * timeDelta + (f32) * (int *)(p + 0x364));
+    iv = (iv < -0x32) ? -0x32 : ((iv > 0x32) ? 0x32 : iv);
+    *(int *)(p + 0x364) = (int)((f32)iv * timeDelta + (f32)*(int *)((u8 *)p + 0x364));
     *(int *)(p + 0x358) =
-        (int)((f32) * (int *)(p + 0x364) * timeDelta + (f32) * (int *)(p + 0x358));
+        (int)((f32) * (int *)(p + 0x364) * timeDelta + (f32)*(int *)((u8 *)p + 0x358));
 
     diff = *(int *)(p + 0x368) - (u16) * (int *)(p + 0x36c);
     if (diff > 0x8000) diff -= 0xffff;
     if (diff < -0x8000) diff += 0xffff;
     iv = (int)((f32)(int)((f32)diff * *(f32 *)(p + 0x374)) - *(f32 *)(p + 0x378));
-    if (iv < -0x64) iv = -0x64;
-    else if (iv > 0x64) iv = 0x64;
-    *(f32 *)(p + 0x378) = (f32)iv * timeDelta + *(f32 *)(p + 0x378);
+    iv = (iv < -0x64) ? -0x64 : ((iv > 0x64) ? 0x64 : iv);
+    *(f32 *)(p + 0x378) = (f32)iv * timeDelta + *(f32 *)((u8 *)p + 0x378);
     *(int *)(p + 0x36c) =
-        (int)(*(f32 *)(p + 0x378) * timeDelta + (f32) * (int *)(p + 0x36c));
+        (int)(*(f32 *)(p + 0x378) * timeDelta + (f32)*(int *)((u8 *)p + 0x36c));
 
     if (*(u8 *)(p + 0x478) == 0) {
         diff = *(int *)(p + 0x37c) - (u16) * (int *)(p + 0x380);
         if (diff > 0x8000) diff -= 0xffff;
         if (diff < -0x8000) diff += 0xffff;
         *(int *)(p + 0x380) =
-            (int)(timeDelta * ((f32)diff * *(f32 *)(p + 0x388)) + (f32) * (int *)(p + 0x380));
+            (int)(timeDelta * ((f32)diff * *(f32 *)(p + 0x388)) + (f32)*(int *)((u8 *)p + 0x380));
         if ((f32) * (int *)(p + 0x380) > *(f32 *)(p + 0x394) ||
             (f32) * (int *)(p + 0x380) < -*(f32 *)(p + 0x394)) {
             *(f32 *)(p + 0x38c) = *(f32 *)(p + 0x38c) - *(f32 *)(p + 0x390) * timeDelta;
@@ -265,7 +262,7 @@ void fn_8022AECC(int obj, int p)
     if (*(u8 *)(p + 0x478) == 1) {
         fn_8022AB68(obj, p);
     } else {
-        *(s16 *)(obj + 4) = (s16)(int)((f32) * (int *)(p + 0x36c) * *(f32 *)(p + 0x38c) +
+        *(s16 *)(obj + 4) = ((f32) * (int *)(p + 0x36c) * *(f32 *)(p + 0x38c) +
                                         (f32) * (int *)(p + 0x380));
         if (*(s16 *)(obj + 4) < -0x4000) {
             *(s16 *)(obj + 4) = -0x4000;
@@ -287,7 +284,7 @@ void fn_8022AECC(int obj, int p)
         *(f32 *)(p + 0x3dc) = lbl_803E6ED0;
     }
 
-    *(s16 *)(obj + 4) = (s16)(int)(*(f32 *)(p + 0x3dc) *
+    *(s16 *)(obj + 4) = (*(f32 *)(p + 0x3dc) *
                                        (*(f32 *)(p + 0x3bc) *
                                         fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3c0) /
                                                     lbl_803E6F00)) +
@@ -303,11 +300,11 @@ void fn_8022AECC(int obj, int p)
              fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3d8) / lbl_803E6F00)) +
         *(f32 *)(obj + 0x10);
     *(u16 *)(p + 0x3c0) =
-        (u16)(int)(*(f32 *)(p + 0x3b8) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3c0));
+        (*(f32 *)(p + 0x3b8) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3c0));
     *(u16 *)(p + 0x3cc) =
-        (u16)(int)(*(f32 *)(p + 0x3c4) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3cc));
+        (*(f32 *)(p + 0x3c4) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3cc));
     *(u16 *)(p + 0x3d8) =
-        (u16)(int)(*(f32 *)(p + 0x3d0) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3d8));
+        (*(f32 *)(p + 0x3d0) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3d8));
     fn_8022AE1C(obj, p);
 }
 #pragma scheduling reset

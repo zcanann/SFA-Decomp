@@ -3176,11 +3176,11 @@ extern void fn_80133934(void);
 #pragma peephole off
 void unloadMap(void)
 {
-    int layer;
+    int blk;
     int i;
+    int layer;
     s8* cur;
     int mapType;
-    int blk;
     int j;
     int k;
     int rb;
