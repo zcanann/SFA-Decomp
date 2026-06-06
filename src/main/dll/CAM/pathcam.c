@@ -1,4 +1,5 @@
 #include "main/dll/CAM/pathcam.h"
+#include "main/game_object.h"
 #include "string.h"
 
 
@@ -114,12 +115,12 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
         fVal = *(f32 *)(cam + 0xc);
         *(f32 *)(cam + 6) = fVal;
         *(f32 *)(cam + 0x5c) = fVal;
-        *(f32 *)(cam + 0x54) = fVal;
-        fVal = *(f32 *)(cam + 0xe);
+        ((GameObject *)cam)->anim.hitboxScale = fVal;
+        fVal = ((GameObject *)cam)->anim.worldPosY;
         *(f32 *)(cam + 8) = fVal;
         *(f32 *)(cam + 0x5e) = fVal;
         *(f32 *)(cam + 0x56) = fVal;
-        fVal = *(f32 *)(cam + 0x10);
+        fVal = ((GameObject *)cam)->anim.worldPosZ;
         *(f32 *)(cam + 10) = fVal;
         *(f32 *)(cam + 0x60) = fVal;
         *(f32 *)(cam + 0x58) = fVal;
@@ -131,7 +132,7 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
         break;
     case 4:
         camcontrol_getTargetPosition((int)cam, target, (f32 *)(cam + 0xc), cam + 1);
-        Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), *(f32 *)(cam + 0xe), *(f32 *)(cam + 0x10),
+        Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((GameObject *)cam)->anim.worldPosY, ((GameObject *)cam)->anim.worldPosZ,
                                        (f32 *)(cam + 6), (f32 *)(cam + 8), (f32 *)(cam + 10),
                                        *(int *)(cam + 0x18));
         ((void (*)(u16 *, f32 *, f32 *, f32 *, f32 *, f32, int))*(void **)(*gCameraInterface + 0x38))(
@@ -140,9 +141,9 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
         ((s16 *)cam)[1] = getAngle(vOutB, vOutD);
         cam[2] = 0;
         *(f32 *)(cam + 0x5c) = *(f32 *)(cam + 0xc);
-        *(f32 *)(cam + 0x5e) = *(f32 *)(cam + 0xe);
-        *(f32 *)(cam + 0x60) = *(f32 *)(cam + 0x10);
-        *(f32 *)(cam + 0x54) = *(f32 *)(cam + 6);
+        *(f32 *)(cam + 0x5e) = ((GameObject *)cam)->anim.worldPosY;
+        *(f32 *)(cam + 0x60) = ((GameObject *)cam)->anim.worldPosZ;
+        ((GameObject *)cam)->anim.hitboxScale = *(f32 *)(cam + 6);
         *(f32 *)(cam + 0x56) = *(f32 *)(cam + 8);
         *(f32 *)(cam + 0x58) = *(f32 *)(cam + 10);
         *(f32 *)(cam + 0x5a) = gCamcontrolModeSettings[0x1c];
@@ -207,7 +208,7 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
         gCamcontrolModeSettings[0x15] = gCamcontrolModeSettings[5];
         if ((data != NULL) && (data[0xd] != 0)) {
             camcontrol_getTargetPosition((int)cam, target, (f32 *)(cam + 0xc), cam + 1);
-            Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), *(f32 *)(cam + 0xe), *(f32 *)(cam + 0x10),
+            Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((GameObject *)cam)->anim.worldPosY, ((GameObject *)cam)->anim.worldPosZ,
                                            (f32 *)(cam + 6), (f32 *)(cam + 8), (f32 *)(cam + 10),
                                            *(int *)(cam + 0x18));
             *(s16 *)((char *)gCamcontrolModeSettings + 0x82) = 0;
@@ -216,20 +217,20 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
     case 3:
         *(f32 *)(cam + 0x5a) = gCamcontrolModeSettings[0x1c];
         *(f32 *)(cam + 0xc) = gCamcontrolModeSettings[0x1d];
-        *(f32 *)(cam + 0xe) = gCamcontrolModeSettings[0x1e];
-        *(f32 *)(cam + 0x10) = gCamcontrolModeSettings[0x1f];
-        Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), *(f32 *)(cam + 0xe), *(f32 *)(cam + 0x10),
+        ((GameObject *)cam)->anim.worldPosY = gCamcontrolModeSettings[0x1e];
+        ((GameObject *)cam)->anim.worldPosZ = gCamcontrolModeSettings[0x1f];
+        Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((GameObject *)cam)->anim.worldPosY, ((GameObject *)cam)->anim.worldPosZ,
                                        (f32 *)(cam + 6), (f32 *)(cam + 8), (f32 *)(cam + 10),
                                        *(int *)(cam + 0x18));
         ((s16 *)cam)[0] = *(s16 *)((char *)gCamcontrolModeSettings + 0x86);
         ((s16 *)cam)[1] = *(s16 *)((char *)gCamcontrolModeSettings + 0x88);
         ((s16 *)cam)[2] = *(s16 *)((char *)gCamcontrolModeSettings + 0x8a);
-        *(f32 *)(cam + 0x54) = *(f32 *)(cam + 6);
+        ((GameObject *)cam)->anim.hitboxScale = *(f32 *)(cam + 6);
         *(f32 *)(cam + 0x56) = *(f32 *)(cam + 8);
         *(f32 *)(cam + 0x58) = *(f32 *)(cam + 10);
         *(f32 *)(cam + 0x5c) = *(f32 *)(cam + 0xc);
-        *(f32 *)(cam + 0x5e) = *(f32 *)(cam + 0xe);
-        *(f32 *)(cam + 0x60) = *(f32 *)(cam + 0x10);
+        *(f32 *)(cam + 0x5e) = ((GameObject *)cam)->anim.worldPosY;
+        *(f32 *)(cam + 0x60) = ((GameObject *)cam)->anim.worldPosZ;
         *(s16 *)((char *)gCamcontrolModeSettings + 0x82) = 0;
         break;
     case 1:
