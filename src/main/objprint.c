@@ -3184,7 +3184,7 @@ void fn_8003A168(int p1, int p2)
         n = (s32)(u32)*(u8*)((char*)table + 0x5a);
         for (k = 0; k < n; k++) {
             u8* data = *(u8**)((char*)table + 0x10);
-            s32 offset = *(s8*)(p1 + 0xad);
+            s32 offset = OBJPRINT_ACTIVE_BANK_INDEX(p1);
             if (data[(offset + i) + 1] != 0xff && data[i] == 0) {
                 found = (s16*)((char*)*(void**)(p1 + 0x6c) + j);
             }
@@ -3221,7 +3221,7 @@ void objModelClearVecFn_8003aa40(int obj)
             n = (s32)(u32)*(u8*)((char*)table + 0x5a);
             for (k = 0; k < n; k++) {
                 u8* data = *(u8**)((char*)table + 0x10);
-                s32 offset = *(s8*)(obj + 0xad);
+                s32 offset = OBJPRINT_ACTIVE_BANK_INDEX(obj);
                 if (data[(offset + i) + 1] != 0xff && (int)data[i] == slot) {
                     found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
                 }
@@ -3257,7 +3257,7 @@ void fn_8003AC14(int obj, int* keys, int count)
             n = (s32)(u32)*(u8*)((char*)table + 0x5a);
             for (k = 0; k < n; k++) {
                 u8* data = *(u8**)((char*)table + 0x10);
-                s32 di = *(s8*)(obj + 0xad) + i + 1;
+                s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
                 if (data[di] != 0xff && (int)data[i] == key) {
                     found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
                 }
@@ -3294,7 +3294,7 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
             n = (s32)(u32)*(u8*)((char*)table + 0x5a);
             for (k = 0; k < n; k++) {
                 u8* data = *(u8**)((char*)table + 0x10);
-                s32 di = *(s8*)(obj + 0xad) + i + 1;
+                s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
                 if (data[di] != 0xff && (int)data[i] == key) {
                     found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
                 }
@@ -3332,7 +3332,7 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
             n = (s32)(u32)*(u8*)((char*)table + 0x5a);
             for (k = 0; k < n; k++) {
                 u8* data = *(u8**)((char*)table + 0x10);
-                s32 di = *(s8*)(obj + 0xad) + i + 1;
+                s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
                 if (data[di] != 0xff && (int)data[i] == key) {
                     found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
                 }
@@ -3568,7 +3568,7 @@ void fn_8003B500(int obj, int p4)
         n = (s32)(u32)*(u8*)((char*)table + 0x5a);
         for (k = 0; k < n; k++) {
             u8* data = *(u8**)((char*)table + 0x10);
-            s32 di = *(s8*)(obj + 0xad) + i + 1;
+            s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
             if (data[di] != 0xff && data[i] == 0) {
                 found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
             }
@@ -3641,7 +3641,7 @@ void objPosFn_80039510(int obj, int key, int out)
     for (k = 0; k < n; k++) {
         u8* data = *(u8**)((char*)table + 0x10);
         if (key == (int)data[i]) {
-            joint = *(u8*)(data + i + *(s8*)((char*)obj + 0xad) + 1);
+            joint = *(u8 *)(data + i + OBJPRINT_ACTIVE_BANK_INDEX(obj) + 1);
             break;
         }
         i = i + *(s8*)((char*)table + 0x55) + 1;
@@ -3815,7 +3815,7 @@ void fn_8003A230(int obj, int p2, f32 val)
         n = (s32)(u32)*(u8*)((char*)table + 0x5a);
         for (k = 0; k < n; k++) {
             u8* data = *(u8**)((char*)table + 0x10);
-            s32 di = *(s8*)(obj + 0xad) + i + 1;
+            s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
             if (data[di] != 0xff && data[i] == 0) {
                 found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
             }
@@ -3867,7 +3867,7 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
         n = (s32)(u32)*(u8*)((char*)table + 0x5a);
         for (k = 0; k < n; k++) {
             u8* data = *(u8**)((char*)table + 0x10);
-            s32 di = *(s8*)(obj + 0xad) + i + 1;
+            s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
             if (data[di] != 0xff && data[i] == 0) {
                 found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
             }
@@ -3928,7 +3928,7 @@ int fn_8003A8B4(int objArg, int *keyList, int countArg, char *p4Arg)
             int j;
             for (j = 0; j < n; j++) {
                 u8 *entries = *(u8 **)((char *)m + 0x10);
-                int idx = (s8)*(s8 *)(obj + 0xad) + entryIdx + 1;
+                int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
                 if ((int)entries[idx] != 0xff && key == entries[entryIdx]) {
                     found = *(int *)(obj + 0x6c) + vecOffset;
                 }
@@ -4299,7 +4299,7 @@ void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
         int j;
         for (j = 0; j < n; j++) {
             u8 *entries = *(u8 **)((char *)m + 0x10);
-            int idx = (s8)*(s8 *)(obj + 0xad) + entryIdx + 1;
+            int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
             if ((int)entries[idx] != 0xff && entries[entryIdx] == 0) {
                 found = (s16 *)((char *)*(void **)(obj + 0x6c) + vecOffset);
             }
@@ -4391,7 +4391,7 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
                 void *jm;
                 char *t;
                 jm = ObjModel_GetJointMatrix((int *)model,
-                    (s8)(*(u8 **)(*(char **)(staff + 0x50) + 0x2c))[off + (s8)*(s8 *)(staff + 0xad) + 0x2a]);
+                    (s8)(*(u8 **)(*(char **)(staff + 0x50) + 0x2c))[off + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a]);
                 t = *(char **)(*(char **)(staff + 0x50) + 0x2c);
                 vp[0] = *(f32 *)(t + (off + 0x18));
                 va[1] = *(f32 *)(t + (off + 0x1c));
@@ -4406,7 +4406,7 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
             if (k < *(u8 *)(*(char **)(staff + 0x50) + 0x58)) {
                 char *t = *(char **)(*(char **)(staff + 0x50) + 0x2c);
                 char *row = t + off;
-                int idx2 = (s8)*(s8 *)(row + (s8)*(s8 *)(staff + 0xad) + 0x12);
+                int idx2 = (s8)*(s8 *)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
                 char *mtx2 = *(char **)(model + ((*(u16 *)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40;
                 vb[0] = *(f32 *)row;
                 vb[1] = *(f32 *)(t + (off + 4));
@@ -4670,7 +4670,7 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
             int j;
             for (j = 0; j < n; j++) {
                 u8 *entries = *(u8 **)((char *)m + 0x10);
-                int idx = (s8)*(s8 *)(obj + 0xad) + entryIdx + 1;
+                int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
                 if ((int)entries[idx] != 0xff && key == entries[entryIdx]) {
                     found = (s16 *)((char *)*(void **)(obj + 0x6c) + vecOffset);
                 }

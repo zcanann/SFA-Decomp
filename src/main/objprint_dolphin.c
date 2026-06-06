@@ -2,6 +2,7 @@
 #include "main/objanim_internal.h"
 
 #define OBJPRINT_MODEL_DEF(obj) (((ObjAnimComponent *)(obj))->modelInstance)
+#define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent *)(obj))->bankIndex)
 
 #pragma peephole off
 #pragma scheduling off
@@ -4712,7 +4713,7 @@ void objRenderFn_80041018(int *obj) {
         i = 0;
         p = base;
         for (; i < *(u8 *)(*(int *)((char *)obj + 0x50) + 0x72); i++) {
-            int j = *(s8 *)(p + *(s8 *)((char *)obj + 0xad) + 0x12);
+            int j = *(s8 *)(p + OBJPRINT_ACTIVE_BANK_INDEX(obj) + 0x12);
             int *mtx;
             if (j >= 0) {
                 mtx = ObjModel_GetJointMatrix(model, j);
@@ -4888,7 +4889,7 @@ void objRenderChild(int *child, int *parent, u8 p3) {
         u8 *tbl = *(u8 **)(*(int *)((char *)parent + 0x50) + 0x2c);
         off = (*(u16 *)((char *)child + 0xb0) & 7) * 0x18;
         ent = (ChildEnt *)(tbl + off);
-        j = ent->joints[*(s8 *)((char *)parent + 0xad)];
+        j = ent->joints[OBJPRINT_ACTIVE_BANK_INDEX(parent)];
         blk.pos[0] = *(f32 *)(off + (char *)tbl);
         blk.pos[1] = ent->pos[1];
         blk.pos[2] = ent->pos[2];
