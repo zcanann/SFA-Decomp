@@ -100,9 +100,7 @@ void FUN_8016e668(uint param_1);
 void FUN_8016e7e8(int param_1);
 void FUN_8016e834(int param_1);
 void FUN_8016e858(int param_1);
-void FUN_8016e8cc(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9);
+void staff_func0E(void);
 void FUN_8016ecf8(int param_1);
 void FUN_8016edac(void);
 void FUN_8016edb0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
