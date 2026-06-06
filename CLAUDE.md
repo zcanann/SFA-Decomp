@@ -1716,6 +1716,13 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
           lbl_80326208 struct, WorldMap's lbl_803DD588, shrine counter
           chains — all inert across 4+ spellings each). Classify the base
           before probing.
+          **Reload taxonomy, 3rd member — TWO-LEVEL chain reload:** when T
+          re-reads BOTH the pointer and the field per test
+          (`lwz r3,80(r31); lwz r0,68(r3)`) where C caches a typed pointer
+          local, no field launder suffices — DROP the cached local at the
+          test sites and inline the full chain
+          (`((ObjModelInstance *)obj->def)->flags & 0x800`;
+          loadCharacter 94.63→96.50).
       (b) **f32-temp split for eval order** — when current HOISTS a
           float load (timeDelta) above a conversion that target evaluates
           in source order, split the statement:
@@ -2143,6 +2150,12 @@ dispatcher and all the siblings together (a real case: a GameBit dispatcher
 inlined 5 `fn_802A9xxx` siblings, all at 0%; wrapping the 5 callees lifted every
 one to 99-100%). Inserting a new function *after* its callees' definitions in
 the file also avoids forward-decl churn.
+
+**90-95-band triage order (standing protocol): (1) call-set diff (below),
+(2) frame check (#67 tells), (3) per-class recipe work.** On the 90-95
+≥1.5KB band the deficits are structural (inline victims, frame/spill bugs,
+import simplifications) — the call-set diff is the cheapest possible win
+and goes FIRST (newClouds 94.25→98.94 from one dont_inline).
 
 **Call-set diff = a systematic detector for inline victims.** Instead of
 guessing which leaf inlined, diff the partial's CALL SET against target
