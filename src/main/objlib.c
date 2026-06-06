@@ -3092,8 +3092,16 @@ uint ObjHitRegion_FindContainingId(f32 x,f32 y,f32 z)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+typedef struct PlayerBlinkState {
+    u8 pad[0x2b];
+    u8 mode;   /* 0x2b */
+    u8 timer;  /* 0x2c */
+    u8 amount; /* 0x2d */
+} PlayerBlinkState;
+
 void playerEyeAnimFn_80038988(int obj,int blinkState,uint flags)
 {
+  PlayerBlinkState *bs = (PlayerBlinkState *)blinkState;
   ObjAnimComponent *objAnim;
   u8 step;
   f32 leftScale;
@@ -3113,107 +3121,107 @@ void playerEyeAnimFn_80038988(int obj,int blinkState,uint flags)
   step = (u8)(s32)(lbl_803DE998 * timeDelta);
   leftScale = lbl_803DE99C;
   rightScale = leftScale;
-  state = *(u8 *)(blinkState + 0x2b);
+  state = bs->mode;
   if (state == 3) {
-    *(u8 *)(blinkState + 0x2c) = (u8)((f32)*(u8 *)(blinkState + 0x2c) + timeDelta);
-    if ((s16)*(u8 *)(blinkState + 0x2d) - (s16)step < 0) {
-      *(u8 *)(blinkState + 0x2b) = 0;
-      step = *(u8 *)(blinkState + 0x2d);
+    bs->timer = (u8)((f32)bs->timer + timeDelta);
+    if ((s16)bs->amount - (s16)step < 0) {
+      bs->mode = 0;
+      step = bs->amount;
     }
-    *(u8 *)(blinkState + 0x2d) -= step;
+    bs->amount -= step;
   }
   else if (state < 3) {
     if (state == 1) {
-      *(u8 *)(blinkState + 0x2c) = (u8)((f32)*(u8 *)(blinkState + 0x2c) + timeDelta);
-      if (0xff < (uint)((s16)*(u8 *)(blinkState + 0x2d) + (s16)step)) {
-        step = 0xff - *(u8 *)(blinkState + 0x2d);
-        *(u8 *)(blinkState + 0x2b) = 2;
+      bs->timer = (u8)((f32)bs->timer + timeDelta);
+      if (0xff < (uint)((s16)bs->amount + (s16)step)) {
+        step = 0xff - bs->amount;
+        bs->mode = 2;
       }
-      *(u8 *)(blinkState + 0x2d) += step;
+      bs->amount += step;
     }
     else if (state == 0) {
-      *(u8 *)(blinkState + 0x2c) = (u8)((f32)*(u8 *)(blinkState + 0x2c) + timeDelta);
-      *(u8 *)(blinkState + 0x2d) = 0;
+      bs->timer = (u8)((f32)bs->timer + timeDelta);
+      bs->amount = 0;
       if ((flags & 1) != 0) {
         if (randomGetRange(0,100) == 1) {
-          state = *(u8 *)(blinkState + 0x2b);
+          state = bs->mode;
           if (state == 3) {
-            *(u8 *)(blinkState + 0x2b) = 1;
+            bs->mode = 1;
           }
           else if ((state < 3) && (state == 0)) {
-            *(u8 *)(blinkState + 0x2b) = 1;
-            *(u8 *)(blinkState + 0x2c) = 0;
-            *(u8 *)(blinkState + 0x2d) = 0;
+            bs->mode = 1;
+            bs->timer = 0;
+            bs->amount = 0;
           }
         }
         else if (randomGetRange(0,0x4b) == 1) {
           if (randomGetRange(0,1) == 0) {
-            *(u8 *)(blinkState + 0x2b) = 4;
+            bs->mode = 4;
           }
           else {
-            *(u8 *)(blinkState + 0x2b) = 5;
+            bs->mode = 5;
           }
         }
       }
     }
     else {
-      *(u8 *)(blinkState + 0x2c) = (u8)((f32)*(u8 *)(blinkState + 0x2c) + timeDelta);
+      bs->timer = (u8)((f32)bs->timer + timeDelta);
       if (randomGetRange(0,100) == 1) {
-        state = *(u8 *)(blinkState + 0x2b);
+        state = bs->mode;
         if (state != 3) {
           if (state < 3) {
             if (state != 0) {
-              *(u8 *)(blinkState + 0x2b) = 3;
+              bs->mode = 3;
             }
           }
           else if (state < 6) {
-            *(u8 *)(blinkState + 0x2b) = 0;
+            bs->mode = 0;
           }
         }
       }
     }
   }
   else if (state == 5) {
-    *(u8 *)(blinkState + 0x2c) =
-        (u8)(lbl_803DE9A0 * timeDelta + (f32)*(u8 *)(blinkState + 0x2c));
-    *(u8 *)(blinkState + 0x2d) = 0xff;
+    bs->timer =
+        (u8)(lbl_803DE9A0 * timeDelta + (f32)bs->timer);
+    bs->amount = 0xff;
     leftScale = lbl_803DE9A4;
     if (randomGetRange(0,0x19) == 1) {
-      state = *(u8 *)(blinkState + 0x2b);
+      state = bs->mode;
       if (state != 3) {
         if (state < 3) {
           if (state != 0) {
-            *(u8 *)(blinkState + 0x2b) = 3;
+            bs->mode = 3;
           }
         }
         else if (state < 6) {
-          *(u8 *)(blinkState + 0x2b) = 0;
+          bs->mode = 0;
         }
       }
     }
   }
   else if (state < 5) {
-    *(u8 *)(blinkState + 0x2c) =
-        (u8)(lbl_803DE9A0 * timeDelta + (f32)*(u8 *)(blinkState + 0x2c));
-    *(u8 *)(blinkState + 0x2d) = 0xff;
+    bs->timer =
+        (u8)(lbl_803DE9A0 * timeDelta + (f32)bs->timer);
+    bs->amount = 0xff;
     rightScale = lbl_803DE9A4;
     if (randomGetRange(0,0x19) == 1) {
-      state = *(u8 *)(blinkState + 0x2b);
+      state = bs->mode;
       if (state != 3) {
         if (state < 3) {
           if (state != 0) {
-            *(u8 *)(blinkState + 0x2b) = 3;
+            bs->mode = 3;
           }
         }
         else if (state < 6) {
-          *(u8 *)(blinkState + 0x2b) = 0;
+          bs->mode = 0;
         }
       }
     }
   }
 
-  phase = lbl_803DE9AC * (f32)*(u8 *)(blinkState + 0x2c);
-  wave = (lbl_803DE9A8 * fn_802943F4(phase) * (f32)*(u8 *)(blinkState + 0x2d)) / lbl_803DE9B0;
+  phase = lbl_803DE9AC * (f32)bs->timer;
+  wave = (lbl_803DE9A8 * fn_802943F4(phase) * (f32)bs->amount) / lbl_803DE9B0;
   rotation = (s16)(s32)((lbl_803DE9B4 * (leftScale * wave)) / lbl_803DE9B8);
   joint = 0;
   model = objAnim->modelInstance;
