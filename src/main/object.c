@@ -1,21 +1,8 @@
 #include "ghidra_import.h"
 #include "main/model_light.h"
 #include "main/engine_8001746C_phantoms.h"
+#include "main/objlib.h"
 
-extern undefined4 ObjHits_TickPriorityHitCooldowns();
-extern undefined4 ObjHits_Update();
-extern uint ObjHitbox_AllocRotatedBounds();
-extern uint ObjHitReact_InitState();
-extern uint ObjHits_AllocObjectState();
-extern undefined8 ObjHitReact_UpdateResetObjects();
-extern undefined4 ObjHits_ResetWorkBuffers();
-extern undefined4 ObjHits_InitWorkBuffers();
-extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
-extern int ObjGroup_GetObjectGroup();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjGroup_ClearAll();
-extern undefined4 ObjContact_RemoveObjectCallbacks();
 extern void mm_free(void *ptr);
 
 /*
@@ -618,7 +605,7 @@ void objRemoveFromListFn_8002ce88(u8 *obj) {
 
 void *Obj_GetPlayerObject(void) {
     int count;
-    void **objs = ObjGroup_GetObjects(0, &count);
+    void **objs = (void **)ObjGroup_GetObjects(0, &count);
     if (count != 0) {
         return objs[0];
     }
@@ -691,7 +678,7 @@ typedef struct ObjListObject {
 
 void *getTrickyObject(void) {
     int count;
-    void **objs = ObjGroup_GetObjects(1, &count);
+    void **objs = (void **)ObjGroup_GetObjects(1, &count);
     if (count != 0) {
         return objs[0];
     }
@@ -1674,9 +1661,9 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     }
     obj->cullDist = max;
     if (*(u8 *)(def + 0x61) != 0) {
-        cursor = ObjHits_AllocObjectState(obj, cursor);
+        cursor = ObjHits_AllocObjectState((int)obj, cursor);
         if (*(s8 *)(def + 0x65) & 8) {
-            cursor = ObjHitbox_AllocRotatedBounds(obj, cursor);
+            cursor = ObjHitbox_AllocRotatedBounds((ObjHitbox *)obj, cursor);
         }
     }
     if (*(u8 *)(def + 0x5a) != 0) {
@@ -1696,7 +1683,9 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     }
     if (*(u8 *)(def + 0x61) != 0 && *(u8 *)(def + 0x66) != 0) {
         tmp = roundUpTo4(cursor);
-        cursor = ObjHitReact_InitState(obj->seqId, (int)*(u8 **)obj->models, obj->f54, tmp, obj);
+        cursor = ObjHitReact_InitState(obj->seqId, (ObjAnimBank *)*(u8 **)obj->models,
+                                       (ObjHitReactState *)obj->f54, tmp,
+                                       (ObjAnimComponent *)obj);
     }
     if (*(u8 *)(def + 0x72) != 0) {
         obj->f78 = roundUpTo4(cursor);
@@ -1781,7 +1770,7 @@ void objFreeObjDef(void *objp, int flag) {
     int type;
 
     if (*(s8 *)(obj + 0xe9) != 0) {
-        ObjContact_RemoveObjectCallbacks(obj);
+        ObjContact_RemoveObjectCallbacks((int)obj);
     }
     switch (*(s16 *)(obj + 0x46)) {
     case 0:
@@ -1802,7 +1791,7 @@ void objFreeObjDef(void *objp, int flag) {
     (*(void (**)(u8 *))(*(int *)gTitleMenuControlInterface + 0x48))(obj);
     (*(void (**)(u8 *))(*(int *)gExpgfxInterface + 0x28))(obj);
     if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40) {
-        ObjGroup_RemoveObject(obj, 6);
+        ObjGroup_RemoveObject((uint)obj, 6);
         if (flag == 0) {
             count = 0;
             for (i = 0; i < lbl_803DCB84; i++) {
@@ -1838,7 +1827,7 @@ void objFreeObjDef(void *objp, int flag) {
         }
     }
     if (*(s8 *)(*(u8 **)(obj + 0x50) + 0x56) > 0) {
-        ObjGroup_RemoveObject(obj, 8);
+        ObjGroup_RemoveObject((uint)obj, 8);
     }
     if (*(int *)(obj + 0x64) != 0) {
         if (*(s16 *)(*(u8 **)(obj + 0x50) + 0x48) == 1) {
@@ -1886,9 +1875,9 @@ void objFreeObjDef(void *objp, int flag) {
     if (*(u8 *)(obj + 0xe5) & 2) {
         Obj_ClearModelColorFadeRecursive(obj);
     }
-    group = ObjGroup_GetObjectGroup(obj);
+    group = ObjGroup_GetObjectGroup((uint)obj);
     if (group != 0) {
-        ObjGroup_RemoveObject(obj, group - 1);
+        ObjGroup_RemoveObject((uint)obj, group - 1);
     }
     type = *(s16 *)(obj + 0x48);
     if (*(s8 *)(lbl_803DCBA4 + type) == 0) {
@@ -2079,7 +2068,6 @@ skip:
 
 extern void objFn_80065604(void);
 extern void Obj_UpdateModelBlendStates(void);
-extern void ObjHitReact_ResetActiveObjects(int);
 extern int Obj_BuildTransformMatrixSlot(int obj);
 extern void playerDoHitDetection(int obj);
 
@@ -2508,7 +2496,7 @@ void Obj_RegisterObject(u8 *obj, int flags)
         mapLoadForObject(id, obj);
     }
     if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40) {
-        ObjGroup_AddObject(obj, 6);
+        ObjGroup_AddObject((uint)obj, 6);
         if (*(s8 *)(obj + 0xae) != 0x5a && (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40)) {
             *(u8 *)(obj + 0xae) = 0x5a;
         }
@@ -2532,7 +2520,7 @@ void Obj_RegisterObject(u8 *obj, int flags)
         }
     }
     if (*(s8 *)(*(u8 **)(obj + 0x50) + 0x56) > 0) {
-        ObjGroup_AddObject(obj, 8);
+        ObjGroup_AddObject((uint)obj, 8);
     }
     if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 1) {
         lbl_803DCBC4 = 0;

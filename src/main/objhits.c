@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/objhits.h"
+#include "main/objlib.h"
 
 
 #pragma peephole off
@@ -12,11 +13,6 @@ extern uint getAngle(f32 a, f32 b);
 extern undefined4 mtxRotateByVec3s();
 extern undefined4 setMatrixFromObjectPos();
 extern int ObjModel_GetJointMatrix(int *model,int jointIndex);
-extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
-extern int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sphereIndex);
-extern int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,char priority,
-                                     u8 hitVolume,u8 sphereIndex);
-extern void ObjContact_DispatchCallbacks(int objA,int objB);
 extern byte hitDetectFn_80067958(int obj,float *startPoints,float *endPoints,int pointCount,
                                  void *outHits,int flags);
 extern void hitDetectFn_800691c0(int obj,void *bounds,uint mask,int flags);
@@ -2634,7 +2630,7 @@ void ObjHits_Update(int objectCount)
   f32 axisDiff;
   f32 diff;
 
-  objectList = ObjList_GetObjects(&startIndex, &listCount);
+  objectList = (int *)ObjList_GetObjects(&startIndex, &listCount);
   sweepEntries = gObjHitsSweepEntries;
   sweepEntries->minX = lbl_803DE960;
   sweepEntries->maxX = lbl_803DE960;

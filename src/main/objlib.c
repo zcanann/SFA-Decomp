@@ -40,7 +40,7 @@ extern undefined4 FUN_80017a50();
 extern int *Obj_GetActiveModel(int obj);
 extern void *Obj_GetPlayerObject(void);
 extern void Obj_UpdateObject(ObjAnimComponent *obj,ObjModelInstance *modelInstance);
-extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
+extern void *ObjList_GetObjects(int *startIndex,int *objectCount);
 extern void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix);
 extern undefined4 FUN_80045328();
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
@@ -1658,14 +1658,14 @@ int ObjGroup_FindNearestObject(int group,uint obj,float *maxDistance)
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 * ObjGroup_GetObjects(int group,int *countOut)
+uint *ObjGroup_GetObjects(int group,int *countOut)
 {
   if ((group < 0) || (group >= OBJGROUP_COUNT)) {
     *countOut = 0;
-    return (undefined4 *)0x0;
+    return (uint *)0x0;
   }
   *countOut = (uint)gObjGroupOffsets[group + 1] - (uint)gObjGroupOffsets[group];
-  return (undefined4 *)(gObjGroupObjects + gObjGroupOffsets[group]);
+  return (uint *)(gObjGroupObjects + gObjGroupOffsets[group]);
 }
 #pragma peephole reset
 #pragma scheduling reset

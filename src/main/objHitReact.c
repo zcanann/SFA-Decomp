@@ -4,11 +4,11 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objhits.h"
+#include "main/objlib.h"
 
 extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
 extern void Sfx_PlayFromObject(int obj,u16 sfxId);
 extern void Resource_Release(void *handle);
-extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
 extern void objLightFn_8009a1dc(int obj,double scale,undefined2 *pos,u32 count,int *param_5);
 extern uint roundUpTo4(uint value);
 extern uint roundUpTo8(uint value);
@@ -138,7 +138,7 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
   int objectListCount;
   int startIndex;
 
-  objectList = ObjList_GetObjects(&startIndex,&objectListCount);
+  objectList = (int *)ObjList_GetObjects(&startIndex,&objectListCount);
   gObjHitReactResetObjectCount = 0;
   while (objectCount > 0) {
     obj = *objectList;
