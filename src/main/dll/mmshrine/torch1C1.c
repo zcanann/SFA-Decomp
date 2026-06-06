@@ -1,4 +1,5 @@
 #include "main/dll/mmshrine/torch1C1.h"
+#include "main/game_object.h"
 
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_800175cc();
@@ -251,7 +252,7 @@ extern f32 lbl_803E4FC8;
 #pragma scheduling off
 #pragma peephole off
 void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-    void **inner = *(void ***)((char *)obj + 0xb8);
+    void **inner = ((GameObject *)obj)->extra;
     if (visible == 0) {
         if (*inner != NULL) {
             modelLightStruct_setEnabled((int)*inner, 0, lbl_803E4FC8);
@@ -265,7 +266,7 @@ void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     objParticleFn_80099d84(obj, lbl_803E4FC8, 7, *(f32 *)&lbl_803E4FC8, (int)*inner);
 }
 void ecsh_shrine_free(int *obj) {
-    int *inner = *(int **)((char *)obj + 0xb8);
+    int *inner = ((GameObject *)obj)->extra;
     Music_Trigger(0xd8, 0);
     Music_Trigger(0xd9, 0);
     Music_Trigger(0x08, 0);
