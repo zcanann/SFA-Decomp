@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/game_object.h"
 
 #define VFP_OBJCREATOR_FALLING_MODE 1
 #define VFP_OBJCREATOR_PROJECTILE_MODE 6
@@ -55,7 +56,7 @@ void vfpobjcreator_init(int *obj, u8 *init) {
     state->spawnTimer = state->spawnInterval;
     state->spawnParam = placement->spawnParam;
     state->spawnRadius = placement->spawnRadius;
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -101,11 +102,11 @@ void vfpobjcreator_update(int *obj)
             o[4] = 2;
             o[5] = 1;
             *(f32 *)(o + 0x8) =
-                *(f32 *)((char *)obj + 0xc) +
+                ((GameObject *)obj)->anim.localPosX +
                 (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
-            *(f32 *)(o + 0xc) = *(f32 *)((char *)obj + 0x10);
+            *(f32 *)(o + 0xc) = ((GameObject *)obj)->anim.localPosY;
             *(f32 *)(o + 0x10) =
-                *(f32 *)((char *)obj + 0x14) +
+                ((GameObject *)obj)->anim.localPosZ +
                 (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
             *(s16 *)(o + 0x20) = 0x50;
             *(s16 *)(o + 0x1e) = (s16)(randomGetRange(0, 2) + 0x16a);
