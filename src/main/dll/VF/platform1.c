@@ -1,3 +1,4 @@
+#include "main/dll/paymentkiosk.h"
 #include "main/dll/VF/platform1.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -471,7 +472,7 @@ void sc_totemstrength_update(u8 *obj)
 u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
 {
     u8 *setup = *(u8 **)(obj + 0x4c);
-    u8 *st = *(u8 **)(obj + 0xb8);
+    PaymentKioskState *st = *(PaymentKioskState **)(obj + 0xb8);
     int player;
     u32 r;
 
@@ -480,13 +481,13 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
     if ((r & 0x100) == 0) {
         r = 0;
     } else {
-        st[2] = 0;
+        st->promptState = 0;
         if (playerGetMoney(player) >= *(s16 *)(setup + 0x1a)) {
             r = 1;
-            st[2] = 0;
+            st->promptState = 0;
         } else {
             r = 0;
-            st[2] = 2;
+            st->promptState = 2;
         }
         switch (ev) {
         case 0x14:
@@ -506,7 +507,7 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
 /* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
 int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
 {
-    u8 *st = *(u8 **)(obj + 0xb8);
+    PaymentKioskState *st = *(PaymentKioskState **)(obj + 0xb8);
     int setup = *(int *)(obj + 0x4c);
     int player;
     int i;
@@ -520,18 +521,18 @@ int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
         case 2:
             GameBit_Set(*(s16 *)(setup + 0x1e), 1);
             playerAddMoney(player, -*(s16 *)(setup + 0x1a));
-            st[0] = 2;
+            st->payState = 2;
             break;
         case 1:
-            st[2] = 1;
+            st->promptState = 1;
             break;
         }
     }
     gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-    if (st[2] == 1) {
-        gameTextShow(lbl_80327AF0[st[1]].approachText);
-    } else if (st[2] == 2) {
-        gameTextShow(lbl_80327AF0[st[1]].poorText);
+    if (st->promptState == 1) {
+        gameTextShow(lbl_80327AF0[st->textVariant].approachText);
+    } else if (st->promptState == 2) {
+        gameTextShow(lbl_80327AF0[st->textVariant].poorText);
     }
     return 0;
 }
@@ -539,16 +540,16 @@ int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
 /* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
 void paymentkiosk_update(int obj)
 {
-    u8 *st = *(u8 **)(obj + 0xb8);
+    PaymentKioskState *st = *(PaymentKioskState **)(obj + 0xb8);
     int setup = *(int *)(obj + 0x4c);
-    u8 b = st[0];
+    u8 b = st->payState;
 
     switch (b) {
     case 0:
         if (*(s16 *)(setup + 0x1e) != -1 && GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
-            st[0] = 2;
+            st->payState = 2;
         } else {
-            st[0] = 1;
+            st->payState = 1;
         }
         break;
     case 1:
@@ -561,7 +562,7 @@ void paymentkiosk_update(int obj)
         *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
         break;
     }
-    st[2] = 0;
+    st->promptState = 0;
     if ((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0 && *(void **)(obj + 0x74) != NULL) {
         objRenderFn_80041018(obj);
     }

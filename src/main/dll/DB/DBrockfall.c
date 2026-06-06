@@ -1,3 +1,4 @@
+#include "main/dll/paymentkiosk.h"
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/VF/platform1.h"
 #include "main/mapEventTypes.h"
@@ -48,16 +49,16 @@ extern void PaymentKiosk_SeqFn(void);
 void paymentkiosk_init(int obj, u8 *initData)
 {
     register int self = obj;
-    register int state = *(int *)(self + 0xb8);
+    register PaymentKioskState *state = *(PaymentKioskState **)(self + 0xb8);
     u32 secondaryFlag;
 
     *(void (**)(void))(self + 0xbc) = PaymentKiosk_SeqFn;
     *(short *)self = (short)((int)(signed char)initData[0x18] << 8);
-    *(u8 *)state = 0;
+    state->payState = 0;
     *(u16 *)(self + 0xb0) = (u16)((u32)*(u16 *)(self + 0xb0) | 0x6000);
     *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
     secondaryFlag = (*(short *)(self + 0x46) == 0x476) ? 1 : 0;
-    *(u8 *)(state + 1) = (u8)secondaryFlag;
+    state->textVariant = (u8)secondaryFlag;
 }
 #pragma peephole reset
 #pragma scheduling reset
