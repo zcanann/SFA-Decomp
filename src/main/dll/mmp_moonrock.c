@@ -42,44 +42,44 @@ typedef struct TexScrollMapLayer {
 
 #pragma scheduling off
 #pragma peephole off
-void texscroll2_applyMapTextureScroll(TexScroll2Object *obj, TexScroll2State* state)
+void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
 {
-    TexScrollPlacement *placement;
-    TexScrollMapBlock *block;
+    int* placement;
+    void* block;
     int* tables;
     void* tex;
     int i, j;
-    TexScrollMapLayer *layer;
-    TexScrollMapLayer *material;
+    void* layer;
+    void* material;
     int t1, t2;
 
-    placement = (TexScrollPlacement *)obj->objAnim.placementData;
+    placement = *(int**)((char*)obj + 0x4c);
     block = mapGetBlock(objPosToMapBlockIdx(
-        obj->objAnim.localPosX,
-        obj->objAnim.localPosY,
-        obj->objAnim.localPosZ));
+        *(f32*)((char*)obj + 0xc),
+        *(f32*)((char*)obj + 0x10),
+        *(f32*)((char*)obj + 0x14)));
     if (block == NULL) {
         state->needsApply = 1;
         return;
     }
     tables = (int*)getTablesBinEntry(TEXSCROLL_TABLE_ID);
     if (tables == NULL) return;
-    tex = getLoadedTexture(-tables[placement->textureTableIndex]);
+    tex = getLoadedTexture(-tables[(s32)*(s16*)((char*)placement + 0x18)]);
     if (tex == NULL) return;
 
-    for (i = 0; i < (s32)block->layerCount; i++) {
+    for (i = 0; i < (s32)*(u8*)((char*)block + 0xa2); i++) {
         layer = fn_8006070C(block, i);
         material = layer;
-        for (j = 0; j < (s32)layer->materialCount; j++) {
-            if (material->texture == tex) {
+        for (j = 0; j < (s32)*(u8*)((char*)layer + 0x41); j++) {
+            if (*(void**)((char*)material + 0x24) == tex) {
                 t1 = (s32)(u32)*(u16*)((char*)tex + 0xa) << 6;
                 t2 = (s32)(u32)*(u16*)((char*)tex + 0xc) << 6;
-                if (material->scrollSlot != TEXSCROLL_SLOT_UNALLOCATED) {
-                    int v = placement->mapId;
+                if (*(u8*)((char*)material + 0x2a) != TEXSCROLL_SLOT_UNALLOCATED) {
+                    int v = *(int*)((char*)*(int**)((char*)obj + 0x4c) + 0x14);
                     if (v == TEXSCROLL_GAMEBIT_GATED_MAP_A || v == TEXSCROLL_GAMEBIT_GATED_MAP_B) {
                         if (GameBit_Get(state->gameBit) != 0) {
                             mapTextureScrollSetStep(
-                                (s32)material->scrollSlot,
+                                (s32)*(u8*)((char*)material + 0x2a),
                                 (s32)state->stepX,
                                 (s32)state->stepY,
                                 t1, t2,
@@ -89,7 +89,7 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object *obj, TexScroll2State* st
                         }
                     } else {
                         mapTextureScrollSetStep(
-                            (s32)material->scrollSlot,
+                            (s32)*(u8*)((char*)material + 0x2a),
                             (s32)state->stepX,
                             (s32)state->stepY,
                             t1, t2,
@@ -98,7 +98,7 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object *obj, TexScroll2State* st
                             t1, t2);
                     }
                 } else {
-                    material->scrollSlot = (u8)mapTextureScrollAcquire(
+                    *(u8*)((char*)material + 0x2a) = (u8)mapTextureScrollAcquire(
                         (s32)state->stepX,
                         (s32)state->stepY,
                         t1, t2,
@@ -107,7 +107,7 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object *obj, TexScroll2State* st
                         t1, t2);
                 }
             }
-            material = (TexScrollMapLayer*)((char*)material + 8);
+            material = (void*)((char*)material + 8);
         }
     }
 }
@@ -134,7 +134,7 @@ void texscroll2_update(TexScroll2Object *obj) {
         if (mapId == TEXSCROLL_GAMEBIT_GATED_MAP_A || mapId == TEXSCROLL_GAMEBIT_GATED_MAP_B) {
             if (block != NULL) {
                 if (GameBit_Get(state->gameBit) != *(uint*)&state->previousGameBitValue && state->needsApply == 0) {
-                    texscroll2_applyMapTextureScroll(obj, state);
+                    texscroll2_applyMapTextureScroll((int)obj, state);
                     state->needsApply = 0;
                 }
             }
@@ -145,7 +145,7 @@ void texscroll2_update(TexScroll2Object *obj) {
         state->needsApply = 1;
     } else {
         if (state->needsApply != 0) {
-            texscroll2_applyMapTextureScroll(obj, state);
+            texscroll2_applyMapTextureScroll((int)obj, state);
             state->needsApply = 0;
         }
     }
@@ -182,7 +182,7 @@ void texscroll2_init(TexScroll2Object *obj, TexScrollPlacement *placement, int l
     *(u8 *)&state->secondaryStepX = placement->secondaryStepX;
     *(u8 *)&state->secondaryStepY = placement->secondaryStepY;
     if (loadFlags == 0) {
-        texscroll2_applyMapTextureScroll(obj, state);
+        texscroll2_applyMapTextureScroll((int)obj, state);
     }
     state->gameBit = placement->gameBit;
     state->previousGameBitValue = -1;
