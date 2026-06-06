@@ -159,33 +159,33 @@ void ediblemushroom_init(int obj, int aux)
 
 #pragma scheduling off
 #pragma peephole off
-void enemymushroom_resetToSpawn(s16 *obj,float *state,int enableTimer)
+void enemymushroom_resetToSpawn(EnemyMushroomObject *obj,EnemyMushroomState *state,int enableTimer)
 {
-  int objDef;
+  EnemyMushroomMapData *mapData;
   u32 randomValue;
   f32 fr;
 
-  objDef = *(int *)((u8 *)obj + 0x4c);
-  obj[2] = (s16)randomGetRange(-0x5dc,0x5dc);
-  obj[1] = (s16)randomGetRange(-0x5dc,0x5dc);
-  obj[0] = (s16)randomGetRange(-0x5dc,0x5dc);
-  *(u8 *)((u8 *)obj + 0x36) = 0xff;
-  obj[3] = (s16)(obj[3] & ~0x4000);
-  *(f32 *)((u8 *)obj + 0xc) = *(f32 *)(objDef + 8);
-  *(f32 *)((u8 *)obj + 0x10) = *(f32 *)(objDef + 0xc);
-  *(f32 *)((u8 *)obj + 0x14) = *(f32 *)(objDef + 0x10);
+  mapData = obj->mapData;
+  obj->rotZ = (s16)randomGetRange(-0x5dc,0x5dc);
+  obj->rotY = (s16)randomGetRange(-0x5dc,0x5dc);
+  obj->rotX = (s16)randomGetRange(-0x5dc,0x5dc);
+  obj->alpha = 0xff;
+  obj->flags = (s16)(obj->flags & ~0x4000);
+  obj->posX = mapData->posX;
+  obj->posY = mapData->posY;
+  obj->posZ = mapData->posZ;
   if (enableTimer != 0) {
-    *(f32 *)((u8 *)obj + 8) = lbl_803E52F8;
-    state[0] = lbl_803E52FC;
+    obj->scale = lbl_803E52F8;
+    state->timer = lbl_803E52FC;
     randomValue = randomGetRange(0,100);
     fr = (f32)(s32)randomValue;
     fr = lbl_803E5300 + fr;
-    state[2] = fr;
+    state->riseDuration = fr;
     randomValue = randomGetRange(-100,100);
     fr = (f32)(s32)randomValue;
-    fr = lbl_803E5304 * fr + state[3];
-    state[1] = fr;
-    state[4] = state[1] / state[2];
+    fr = lbl_803E5304 * fr + state->baseScale;
+    state->heightTarget = fr;
+    state->riseStep = state->heightTarget / state->riseDuration;
   }
   ObjHits_EnableObject((int)obj);
   ObjHits_RefreshObjectState((int)obj);
@@ -224,15 +224,15 @@ int enemymushroom_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int enemymushroom_getObjectTypeId(int obj)
+int enemymushroom_getObjectTypeId(EnemyMushroomObject *obj)
 {
-  return (*(byte *)(*(int *)(obj + 0x4c) + 0x1f) << 0xb) | 0x400;
+  return (*(byte *)(*(int *)((u8 *)obj + 0x4c) + 0x1f) << 0xb) | 0x400;
 }
 
-void enemymushroom_free(int obj)
+void enemymushroom_free(EnemyMushroomObject *obj)
 {
-  (*(void (**)(int))(*gExpgfxInterface + 0x14))(obj);
-  ObjGroup_RemoveObject(obj,3);
+  (*(void (**)(int))(*gExpgfxInterface + 0x14))((int)obj);
+  ObjGroup_RemoveObject((int)obj,3);
 }
 
 extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);

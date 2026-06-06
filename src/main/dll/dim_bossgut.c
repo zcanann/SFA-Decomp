@@ -209,29 +209,26 @@ extern f32 lbl_803E5350;
  * optionally resets to spawn, and registers in object group 3. */
 #pragma scheduling off
 #pragma peephole off
-void enemymushroom_init(int *obj, int *arg, int flag)
+void enemymushroom_init(EnemyMushroomObject *obj, EnemyMushroomMapData *arg, int flag)
 {
-    float *state = *(float **)((char *)obj + 0xb8);
+    EnemyMushroomState *state = obj->state;
     f32 z = lbl_803E52FC;
 
-    *(f32 *)((char *)state + 0x0)  = z;
-    *(f32 *)((char *)state + 0x2c) = z;
-    *(f32 *)((char *)state + 0xc)  = *(f32 *)((char *)obj + 0x8);
-    *(s16 *)((char *)state + 0x34) = (s16)*(u16 *)((char *)arg + 0x1a);
-    if (*(s16 *)((char *)state + 0x34) < 0x708) {
-        *(s16 *)((char *)state + 0x34) = 0x708;
+    state->timer = z;
+    state->hitRadius = z;
+    state->baseScale = obj->scale;
+    state->respawnFrameLimit = (s16)arg->respawnFrameLimit;
+    if (state->respawnFrameLimit < 0x708) {
+        state->respawnFrameLimit = 0x708;
     }
-    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)arg + 0xc) - lbl_803E5350;
-    {
-        int *p = *(int **)((char *)obj + 0x64);
-        if (p != 0) {
-            *(int *)((char *)p + 0x30) |= 0x810;
-        }
+    obj->posY = arg->posY - lbl_803E5350;
+    if (obj->modelState != NULL) {
+        obj->modelState->flags |= 0x810;
     }
     if (flag == 0) {
-        enemymushroom_resetToSpawn((s16 *)obj, state, 0);
+        enemymushroom_resetToSpawn(obj, state, 0);
     }
-    ObjGroup_AddObject(obj, 3);
+    ObjGroup_AddObject((int *)obj, 3);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -454,7 +451,7 @@ void enemymushroom_update(int *obj)
             *(u8 *)((char *)obj + 0x36) = (u8)t;
             *(f32 *)(state + 0x0) = *(f32 *)(state + 0x0) + timeDelta;
             if (*(f32 *)(state + 0x0) > (f32)*(s16 *)(state + 0x34)) {
-                enemymushroom_resetToSpawn((s16 *)obj, (float *)state, 1);
+                enemymushroom_resetToSpawn((EnemyMushroomObject *)obj, (EnemyMushroomState *)state, 1);
                 *(u8 *)(state + 0x36) = 1;
             }
         }
@@ -557,7 +554,7 @@ void enemymushroom_update(int *obj)
         ObjHits_DisableObject(obj);
         *(f32 *)(state + 0x0) = *(f32 *)(state + 0x0) + timeDelta;
         if (*(f32 *)(state + 0x0) > (f32)*(s16 *)(state + 0x34)) {
-            enemymushroom_resetToSpawn((s16 *)obj, (float *)state, 1);
+            enemymushroom_resetToSpawn((EnemyMushroomObject *)obj, (EnemyMushroomState *)state, 1);
             *(u8 *)(state + 0x36) = 1;
             objFn_8002b67c(obj);
         }
