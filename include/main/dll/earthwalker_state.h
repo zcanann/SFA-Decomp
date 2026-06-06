@@ -11,16 +11,16 @@
  */
 typedef struct EarthwalkerState {
     u8 unk0[0xA18 - 0x0];
-    f32 unkA18;
+    f32 nextPosX;
     u8 unkA1C[0xA20 - 0xA1C];
-    f32 unkA20;
-    f32 unkA24;
+    f32 nextPosZ;
+    f32 dirX;
     u8 unkA28[0xA2C - 0xA28];
-    f32 unkA2C;
+    f32 dirZ;
     u8 unkA30[0xAB8 - 0xA30];
     f32 unkAB8;
-    f32 unkABC;
-    u8 unkAC0;
+    f32 randomTimer;
+    u8 flagsAC0;
     u8 unkAC1[0xAC8 - 0xAC1];
 } EarthwalkerState;
 

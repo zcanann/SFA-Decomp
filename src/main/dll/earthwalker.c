@@ -293,7 +293,7 @@ int fn_802239A4(int obj, int ai)
     int result;
 
     if (*(s8 *)(ai + 0x27b) != 0) {
-        ((EarthwalkerState *)state)->unkAC0 &= ~1;
+        ((EarthwalkerState *)state)->flagsAC0 &= ~1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 3);
         result = 0;
     } else if (*(s8 *)(ai + 0x346) != 0) {
@@ -314,10 +314,10 @@ int fn_80223A1C(int obj, int ai)
     f32 dist;
 
     if (*(s8 *)(ai + 0x27b) != 0) {
-        ((EarthwalkerState *)state)->unkAC0 |= 1;
+        ((EarthwalkerState *)state)->flagsAC0 |= 1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 1);
     }
-    ((EarthwalkerState *)state)->unkABC -= timeDelta;
+    ((EarthwalkerState *)state)->randomTimer -= timeDelta;
     dist = ((EarthwalkerState *)state)->unkAB8;
     if (dist > lbl_803E6CF0) {
         return 2;
@@ -325,8 +325,8 @@ int fn_80223A1C(int obj, int ai)
     if (dist >= lbl_803E6CF4) {
         return 0;
     }
-    if (((EarthwalkerState *)state)->unkABC <= lbl_803E6CF8) {
-        ((EarthwalkerState *)state)->unkABC = (f32)randomGetRange(0x78, 0xfa);
+    if (((EarthwalkerState *)state)->randomTimer <= lbl_803E6CF8) {
+        ((EarthwalkerState *)state)->randomTimer = (f32)randomGetRange(0x78, 0xfa);
         return 4;
     }
     return 0;
@@ -342,7 +342,7 @@ int fn_80223AFC(int obj, int ai)
     int curve = state + 0x9b0;
 
     if (*(s8 *)(ai + 0x27b) != 0) {
-        ((EarthwalkerState *)state)->unkAC0 &= ~1;
+        ((EarthwalkerState *)state)->flagsAC0 &= ~1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 2);
     }
     if (Curve_AdvanceAlongPath(curve, lbl_803E6D08) != 0 || *(int *)(curve + 0x10) != 0) {
@@ -379,11 +379,11 @@ int fn_80223C34(int obj, int ai)
     EarthWalkerObject *ewObj = (EarthWalkerObject *)obj;
     int state = *(int *)&((GameObject *)obj)->extra;
 
-    ((GameObject *)obj)->anim.velocityX = oneOverTimeDelta * (((EarthwalkerState *)state)->unkA18 - ((GameObject *)obj)->anim.localPosX);
-    ((GameObject *)obj)->anim.velocityZ = oneOverTimeDelta * (((EarthwalkerState *)state)->unkA20 - ((GameObject *)obj)->anim.localPosZ);
-    ((GameObject *)obj)->anim.localPosX = ((EarthwalkerState *)state)->unkA18;
-    ((GameObject *)obj)->anim.localPosZ = ((EarthwalkerState *)state)->unkA20;
-    ewObj->facingAngle = getAngle(-((EarthwalkerState *)state)->unkA24, -((EarthwalkerState *)state)->unkA2C);
+    ((GameObject *)obj)->anim.velocityX = oneOverTimeDelta * (((EarthwalkerState *)state)->nextPosX - ((GameObject *)obj)->anim.localPosX);
+    ((GameObject *)obj)->anim.velocityZ = oneOverTimeDelta * (((EarthwalkerState *)state)->nextPosZ - ((GameObject *)obj)->anim.localPosZ);
+    ((GameObject *)obj)->anim.localPosX = ((EarthwalkerState *)state)->nextPosX;
+    ((GameObject *)obj)->anim.localPosZ = ((EarthwalkerState *)state)->nextPosZ;
+    ewObj->facingAngle = getAngle(-((EarthwalkerState *)state)->dirX, -((EarthwalkerState *)state)->dirZ);
     ObjAnim_SampleRootCurvePhase(
         sqrtf(((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX +
               ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ),
