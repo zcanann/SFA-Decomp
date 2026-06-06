@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/dll/cnthitobjec_state.h"
 
 #include "main/audio/sfx_ids.h"
@@ -129,7 +130,7 @@ void cnthitobjec_init(int obj, int setup)
     if (*(u8 *)(setup + 0x19) == 2) {
         *(s16 *)obj = *(s16 *)(setup + 0x1c);
     } else {
-        *(s16 *)(obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
     }
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
         ((CntHitFlags *)(state + 9))->disabled = 1;
