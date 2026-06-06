@@ -5412,7 +5412,7 @@ int objShadowFn_80062498(int *obj, int param2)
 }
 
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
-extern int fn_80067B84(int cur, u8 *desc, int model, int flags, f32 c, f32 x0, f64 y0, f32 z0, f32 x1, f64 y1, f32 z1);
+extern int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 c, f32 x0, f64 y0, f32 z0, f32 x1, f64 y1, f32 z1);
 extern int modelFileHeaderGetCullDistance(void *hdr);
 extern u32 lbl_803DCF70;
 extern s16 lbl_803DCF6E;
@@ -5496,7 +5496,7 @@ void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
 
             desc->firstTriangle = (s16)((cur - (int)lbl_803DCF30) / 0x4c);
             desc->object = o;
-            cur = fn_80067B84(cur, (u8 *)desc, (int)model, a & 0xff, lbl_803DECC4,
+            cur = fn_80067B84(cur, desc, (int)model, a & 0xff, lbl_803DECC4,
                               f31, f29, f27, f30, f28, f26);
             desc++;
             if ((u32)cur >= lbl_803DCF70) break;
@@ -7030,7 +7030,7 @@ extern f32 lbl_803DECF0;
 extern f32 lbl_803DECF4;
 extern f32 lbl_803DECF8;
 
-int fn_80067B84(int cur, u8 *desc, int model, int flags, f32 scale,
+int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 scale,
                 f32 x0, f64 y0d, f32 z0, f32 x1, f64 y1d, f32 z1)
 {
     f32 xd, xc, xb, xa;
@@ -7047,10 +7047,10 @@ int fn_80067B84(int cur, u8 *desc, int model, int flags, f32 scale,
     y1 = y1d;
     hdr = *(int *)model;
 
-    Matrix_TransformPoint(*(void **)(desc + 8), x0, y0d, z0, &xa, &ytmp, &za);
-    Matrix_TransformPoint(*(void **)(desc + 8), x0, y0, z1, &xb, &y0, &zb);
-    Matrix_TransformPoint(*(void **)(desc + 8), x1, y1, z0, &xc, &ytmp, &zc);
-    Matrix_TransformPoint(*(void **)(desc + 8), x1, y1, z1, &xd, &y1, &zd);
+    Matrix_TransformPoint(desc->currentMatrix, x0, y0d, z0, &xa, &ytmp, &za);
+    Matrix_TransformPoint(desc->currentMatrix, x0, y0, z1, &xb, &y0, &zb);
+    Matrix_TransformPoint(desc->currentMatrix, x1, y1, z0, &xc, &ytmp, &zc);
+    Matrix_TransformPoint(desc->currentMatrix, x1, y1, z1, &xd, &y1, &zd);
 
     x1 = xa;
     x0 = x1;
