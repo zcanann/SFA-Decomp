@@ -720,9 +720,30 @@ typedef struct SwarmBaddieState {
     u8 pad22[2];
 } SwarmBaddieState;
 
+/* Per-object extra state for Hagabon (hagabon_getExtraSize == 0x28). */
+typedef struct HagabonState {
+    int curve;
+    int player;
+    f32 curveStep;
+    f32 animSpeed;
+    f32 playerDistance;
+    f32 pathDistance;
+    f32 chaseRadius;
+    u8 pad1C[4];
+    u16 wavePhaseA; /* yaw wave */
+    u16 wavePhaseB; /* shared bob wave */
+    u16 wavePhaseC; /* pitch wave */
+    u8 flags;
+    u8 pad27;
+} HagabonState;
+
+STATIC_ASSERT(sizeof(HagabonState) == 0x28);
+STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
+STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
+
 #pragma scheduling off
 #pragma peephole off
-void fn_8014E1DC(int obj, int *state) {
+void fn_8014E1DC(int obj, HagabonState *state) {
     int curve;
     int player;
     int angleDelta;
@@ -736,38 +757,38 @@ void fn_8014E1DC(int obj, int *state) {
     f32 maxSpeed;
     f32 minSpeed;
 
-    curve = state[0];
-    flags = (unsigned char *)state + 0x26;
+    curve = state->curve;
+    flags = &state->flags;
 
-    if (((Curve_AdvanceAlongPath(curve, *(f32 *)(state + 2)) != 0) ||
+    if (((Curve_AdvanceAlongPath(curve, state->curveStep) != 0) ||
          (*(int *)(curve + 0x10) != *(int *)&lbl_803DDA58)) &&
         ((*(int (**)(int))(*(int *)gRomCurveInterface + 0x90))(curve) != 0) &&
         ((*(int (**)(int, f32, int, int *, int))(*(int *)gRomCurveInterface + 0x8c))
-             (state[0], lbl_803E2608, obj, &lbl_803DBC70, -1) != 0)) {
+             (state->curve, lbl_803E2608, obj, &lbl_803DBC70, -1) != 0)) {
         *flags &= 0xfe;
     }
 
     *(int *)&lbl_803DDA58 = *(int *)(curve + 0x10);
 
-    *(u16 *)((char *)state + 0x20) += (s16)(s32)(lbl_803E260C * timeDelta);
-    *(u16 *)((char *)state + 0x22) += (s16)(s32)(lbl_803E2610 * timeDelta);
-    *(u16 *)((char *)state + 0x24) += (s16)(s32)(lbl_803E2614 * timeDelta);
+    state->wavePhaseA += (s16)(s32)(lbl_803E260C * timeDelta);
+    state->wavePhaseB += (s16)(s32)(lbl_803E2610 * timeDelta);
+    state->wavePhaseC += (s16)(s32)(lbl_803E2614 * timeDelta);
 
-    waveA = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x22)) /
+    waveA = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseB) /
                         lbl_803E2620);
-    waveB = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x20)) /
+    waveB = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
                         lbl_803E2620);
     *(s16 *)(obj + 4) = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
 
-    waveA = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x24)) /
+    waveA = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseC) /
                         lbl_803E2620);
-    waveB = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x20)) /
+    waveB = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
                         lbl_803E2620);
     *(s16 *)(obj + 2) = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
 
     accel = lbl_803E2624;
     if ((*flags & 2) != 0) {
-        player = state[1];
+        player = state->player;
         *(f32 *)(obj + 0x24) += accel * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc));
         *(f32 *)(obj + 0x28) += accel *
                                 ((lbl_803E2628 + *(f32 *)(player + 0x10)) -
@@ -779,9 +800,9 @@ void fn_8014E1DC(int obj, int *state) {
         *(f32 *)(obj + 0x2c) += accel * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14));
     } else {
         *(f32 *)(obj + 0x24) += accel * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc));
-        waveA = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x22)) /
+        waveA = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseB) /
                             lbl_803E2620);
-        waveB = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x20)) /
+        waveB = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
                             lbl_803E2620);
         *(f32 *)(obj + 0x28) += accel *
                                 (((lbl_803E262C * (waveA + waveB)) +
@@ -821,10 +842,10 @@ void fn_8014E1DC(int obj, int *state) {
             *(f32 *)(obj + 0x24) * timeDelta,
             *(f32 *)(obj + 0x28) * timeDelta,
             *(f32 *)(obj + 0x2c) * timeDelta);
-    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *(f32 *)(state + 3), timeDelta,
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta,
                                (ObjAnimEventList *)animEvents);
 
-    player = state[1];
+    player = state->player;
     angle = (u16)getAngle(*(f32 *)(obj + 0x18) - *(f32 *)(player + 0x18),
                           *(f32 *)(obj + 0x20) - *(f32 *)(player + 0x20));
     angleDelta = angle - ((int)*(s16 *)obj & 0xffff);
@@ -869,36 +890,36 @@ void hagabon_free(int obj) {
     }
 }
 void swarmbaddie_init(int obj, int data, int skip_alloc) {
-    int state = *(int *)(obj + 0xB8);
-    *(f32 *)(state + 8) = (f32)(s32)*(s16 *)(data + 0x1A) / lbl_803E26CC;
-    *(f32 *)(state + 0x14) = lbl_803E2698 * (f32)(s32)*(s8 *)(data + 0x19);
-    *(f32 *)(state + 0x18) = lbl_803E26B4;
+    SwarmBaddieState *state = *(SwarmBaddieState **)(obj + 0xB8);
+    state->curveStep = (f32)(s32)*(s16 *)(data + 0x1A) / lbl_803E26CC;
+    state->chaseRadius = lbl_803E2698 * (f32)(s32)*(s8 *)(data + 0x19);
+    state->hitVolumeEnvelope = lbl_803E26B4;
     if (skip_alloc == 0) {
-        *(void **)state = mmAlloc(0x108, 0x1A, 0);
-        if (*(void **)state != NULL) {
-            memset(*(void **)state, 0, 0x108);
+        *(void **)&state->curve = mmAlloc(0x108, 0x1A, 0);
+        if (*(void **)&state->curve != NULL) {
+            memset(*(void **)&state->curve, 0, 0x108);
         }
         if ((u8)(*(int (*)(void *, int, f32, void *, int))(*(int *)((int)*gRomCurveInterface + 0x8C)))
-                (*(void **)state, obj, *(f32 *)(state + 0x14), &lbl_803DBC78, -1) == 0) {
-            *(u8 *)(state + 0x1C) |= 0x1;
+                (*(void **)&state->curve, obj, state->chaseRadius, &lbl_803DBC78, -1) == 0) {
+            *(u8 *)&state->flags |= 0x1;
         }
         Sfx_PlayFromObject(obj, SFXfox_treadwater422);
     }
     *(u16 *)(obj + 0xB0) |= 0x2000;
 }
 void hagabon_init(int obj, int data, int skip_alloc) {
-    int state = *(int *)(obj + 0xB8);
-    *(f32 *)(state + 8) = (f32)(s32)*(s16 *)(data + 0x1A) / lbl_803E266C;
-    *(f32 *)(state + 0xC) = lbl_803E2670;
-    *(f32 *)(state + 0x18) = lbl_803E2674 * (f32)(s32)*(s8 *)(data + 0x19);
+    HagabonState *state = *(HagabonState **)(obj + 0xB8);
+    state->curveStep = (f32)(s32)*(s16 *)(data + 0x1A) / lbl_803E266C;
+    state->animSpeed = lbl_803E2670;
+    state->chaseRadius = lbl_803E2674 * (f32)(s32)*(s8 *)(data + 0x19);
     if (skip_alloc == 0) {
-        *(void **)state = mmAlloc(0x108, 0x1A, 0);
-        if (*(void **)state != NULL) {
-            memset(*(void **)state, 0, 0x108);
+        *(void **)&state->curve = mmAlloc(0x108, 0x1A, 0);
+        if (*(void **)&state->curve != NULL) {
+            memset(*(void **)&state->curve, 0, 0x108);
         }
         if ((u8)(*(int (*)(void *, int, f32, void *, int))(*(int *)((int)*gRomCurveInterface + 0x8C)))
-                (*(void **)state, obj, *(f32 *)(state + 0x18), &lbl_803DBC70, -1) == 0) {
-            *(u8 *)(state + 0x26) |= 0x1;
+                (*(void **)&state->curve, obj, state->chaseRadius, &lbl_803DBC70, -1) == 0) {
+            state->flags |= 0x1;
         }
     }
     if (*(s16 *)(data + 0x20) != -1) {
@@ -908,17 +929,17 @@ void hagabon_init(int obj, int data, int skip_alloc) {
     }
 }
 void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-    int state = *(int *)(obj + 0xB8);
+    HagabonState *state = *(HagabonState **)(obj + 0xB8);
     s32 v = visible;
     if (v != 0) {
         if (*(int *)(obj + 0xF4) == 0) {
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
                 (obj, p2, p3, p4, p5, lbl_803E2650);
-            if ((*(u8 *)(state + 0x26) & 0x10) != 0) {
+            if ((state->flags & 0x10) != 0) {
                 objParticleFn_80099d84(obj, 3, 0, lbl_803E2650,
                     (f32)(u32)*(u8 *)(obj + 0x36) / lbl_803E2654);
             }
-            if ((*(u8 *)(state + 0x26) & 0x08) != 0) {
+            if ((state->flags & 0x08) != 0) {
                 objParticleFn_80099d84(obj, 4, 0, lbl_803E2650,
                     (f32)(u32)*(u8 *)(obj + 0x36) / lbl_803E2654);
             }
@@ -1104,7 +1125,7 @@ void fn_8014F620(int obj, int *state)
 void swarmbaddie_update(int obj)
 {
     int hitObj;
-    int *state;
+    SwarmBaddieState *state;
     f32 d[3];
     f32 sqz;
     f32 sqx;
@@ -1118,34 +1139,34 @@ void swarmbaddie_update(int obj)
     int hitB;
     int hitA;
 
-    state = *(int **)(obj + 0xb8);
-    oldTarget = state[0];
+    state = *(SwarmBaddieState **)(obj + 0xb8);
+    oldTarget = state->curve;
     if (ObjHits_GetPriorityHitWithPosition(obj, &hitD, &hitB, &hitA, &hitE, &hitC, &hitF) != 0) {
-        *(f32 *)(state + 6) = lbl_803E26B0;
+        state->hitVolumeEnvelope = lbl_803E26B0;
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
     ObjHits_EnableObject(obj);
-    if (*(f32 *)(state + 6) > lbl_803E26B4) {
-        *(f32 *)(state + 6) = *(f32 *)(state + 6) - lbl_803E26B8;
+    if (state->hitVolumeEnvelope > lbl_803E26B4) {
+        state->hitVolumeEnvelope = state->hitVolumeEnvelope - lbl_803E26B8;
     }
-    volume = *(f32 *)(state + 6);
+    volume = state->hitVolumeEnvelope;
     Sfx_SetObjectChannelVolume(
         lbl_803E26C0 * fn_80293E80((lbl_803E26A0 *
-                                    (f32)(*(s16 *)((u8 *)state + 0x1e) + *(s16 *)(state + 8))) /
+                                    (f32)(state->yawWavePhase + state->rollWavePhase)) /
                                    lbl_803E26A4) +
             volume,
         obj, 0x40, (int)(lbl_803E26BC * volume));
     (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 0x336, 0, 2, -1,
-                                                                       (int)(state + 6));
-    state[1] = Obj_GetPlayerObject();
-    if (*(void **)(state + 1) != NULL) {
-        d[0] = *(f32 *)(state[1] + 0x18) - *(f32 *)(obj + 0x18);
-        d[1] = *(f32 *)(state[1] + 0x1c) - *(f32 *)(obj + 0x1c);
-        d[2] = *(f32 *)(state[1] + 0x20) - *(f32 *)(obj + 0x20);
+                                                                       (int)&state->hitVolumeEnvelope);
+    state->player = Obj_GetPlayerObject();
+    if (*(void **)&state->player != NULL) {
+        d[0] = *(f32 *)(state->player + 0x18) - *(f32 *)(obj + 0x18);
+        d[1] = *(f32 *)(state->player + 0x1c) - *(f32 *)(obj + 0x1c);
+        d[2] = *(f32 *)(state->player + 0x20) - *(f32 *)(obj + 0x20);
         sqz = d[2] * d[2];
         sqx = d[0] * d[0];
         sqy = d[1] * d[1];
-        *(f32 *)(state + 3) = sqrtf(sqz + (sqx + sqy));
+        state->playerDistance = sqrtf(sqz + (sqx + sqy));
     }
     if ((void *)oldTarget != NULL) {
         d[0] = *(f32 *)(oldTarget + 0x68) - *(f32 *)(obj + 0x18);
@@ -1154,20 +1175,20 @@ void swarmbaddie_update(int obj)
         sqz = d[2] * d[2];
         sqx = d[0] * d[0];
         sqy = d[1] * d[1];
-        *(f32 *)(state + 4) = sqrtf(sqz + (sqx + sqy));
+        state->pathDistance = sqrtf(sqz + (sqx + sqy));
     }
-    if (((*(u8 *)(state + 7) & 2) != 0) && (*(f32 *)(state + 4) > lbl_803E26C4)) {
-        *(u8 *)(state + 7) = *(u8 *)(state + 7) & ~2;
-        *(u8 *)(state + 7) = *(u8 *)(state + 7) | 4;
+    if (((state->flags & 2) != 0) && (state->pathDistance > lbl_803E26C4)) {
+        state->flags = state->flags & ~2;
+        state->flags = state->flags | 4;
     }
-    if (((*(u8 *)(state + 7) & 4) != 0) && (*(f32 *)(state + 4) < lbl_803E26C8)) {
-        *(u8 *)(state + 7) = *(u8 *)(state + 7) & ~4;
+    if (((state->flags & 4) != 0) && (state->pathDistance < lbl_803E26C8)) {
+        state->flags = state->flags & ~4;
     }
-    if (((*(u8 *)(state + 7) & 6) == 0) && (*(void **)(state + 1) != NULL) &&
-        (*(f32 *)(state + 3) < *(f32 *)(state + 5))) {
-        *(u8 *)(state + 7) = *(u8 *)(state + 7) | 2;
+    if (((state->flags & 6) == 0) && (*(void **)&state->player != NULL) &&
+        (state->playerDistance < state->chaseRadius)) {
+        state->flags = state->flags | 2;
     }
-    fn_8014EE8C(obj, (SwarmBaddieState *)state);
+    fn_8014EE8C(obj, state);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1179,7 +1200,7 @@ void hagabon_update(int obj)
     int player;
     int data;
     int oldCurve;
-    int *state;
+    HagabonState *state;
     f32 dx;
     f32 dy;
     f32 dz;
@@ -1194,8 +1215,8 @@ void hagabon_update(int obj)
     PressureSwitchIntToDouble fadeAsDouble;
     PressureSwitchIntToDouble eventAsDouble;
 
-    state = *(int **)(obj + 0xb8);
-    oldCurve = state[0];
+    state = *(HagabonState **)(obj + 0xb8);
+    oldCurve = state->curve;
     data = *(int *)(obj + 0x4c);
 
     if (*(int *)(obj + 0xf4) != 0) {
@@ -1207,7 +1228,7 @@ void hagabon_update(int obj)
         }
         *(int *)(obj + 0xf4) = 0;
         *(u8 *)(obj + 0x36) = 1;
-        *(u8 *)((u8 *)state + 0x26) |= 8;
+        state->flags |= 8;
         Sfx_PlayFromObject(obj, SFXfox_treadwater122);
         return;
     }
@@ -1220,33 +1241,33 @@ void hagabon_update(int obj)
         Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
     }
 
-    if ((*(u8 *)(obj + 0x36) != 0) && ((*(u8 *)((u8 *)state + 0x26) & 0x18) != 0)) {
-        if ((*(u8 *)((u8 *)state + 0x26) & 0x10) != 0) {
+    if ((*(u8 *)(obj + 0x36) != 0) && ((state->flags & 0x18) != 0)) {
+        if ((state->flags & 0x10) != 0) {
             fadeAsDouble.bits = CONCAT44(0x43300000, (u32)*(u8 *)(obj + 0x36));
             fade = (int)((f32)(fadeAsDouble.value - lbl_803E2640) - timeDelta);
             *(u8 *)(obj + 0x36) = (u8)fade;
             if (*(u8 *)(obj + 0x36) < 7) {
                 *(int *)(obj + 0xf4) = 1;
                 *(u8 *)(obj + 0x36) = 0;
-                *(u8 *)((u8 *)state + 0x26) &= 0xef;
+                state->flags &= 0xef;
                 Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
             }
             ObjHits_DisableObject(obj);
         }
-        if ((*(u8 *)((u8 *)state + 0x26) & 8) != 0) {
+        if ((state->flags & 8) != 0) {
             fadeAsDouble.bits = CONCAT44(0x43300000, (u32)*(u8 *)(obj + 0x36));
             fade = (int)((f32)(fadeAsDouble.value - lbl_803E2640) + timeDelta);
             *(u8 *)(obj + 0x36) = (u8)fade;
             if (*(u8 *)(obj + 0x36) > 0xf8) {
                 *(u8 *)(obj + 0x36) = 0xff;
-                *(u8 *)((u8 *)state + 0x26) &= 0xf7;
+                state->flags &= 0xf7;
             }
         }
     } else {
         if (ObjHits_GetPriorityHitWithPosition(obj, &hitA, &hitB, &hitC, &hitX, &lightPos[1],
                                                &hitZ) != 0) {
             Sfx_StopObjectChannel(obj, 0x7f);
-            *(u8 *)((u8 *)state + 0x26) |= 0x10;
+            state->flags |= 0x10;
             Sfx_PlayFromObject(obj, SFXdoor_unlocked);
             Sfx_PlayFromObject(obj, SFXdoor_creak);
             Sfx_PlayFromObject(obj, SFXfox_treadwater222);
@@ -1269,29 +1290,29 @@ void hagabon_update(int obj)
     }
 
     player = Obj_GetPlayerObject();
-    state[1] = player;
+    state->player = player;
     if (player != 0) {
         dx = *(f32 *)(player + 0x18) - *(f32 *)(obj + 0x18);
         dy = *(f32 *)(player + 0x1c) - *(f32 *)(obj + 0x1c);
         dz = *(f32 *)(player + 0x20) - *(f32 *)(obj + 0x20);
-        *(f32 *)(state + 4) = sqrtf(dz * dz + dx * dx + dy * dy);
+        state->playerDistance = sqrtf(dz * dz + dx * dx + dy * dy);
     }
     if (oldCurve != 0) {
         dx = *(f32 *)(oldCurve + 0x68) - *(f32 *)(obj + 0x18);
         dy = *(f32 *)(oldCurve + 0x6c) - *(f32 *)(obj + 0x1c);
         dz = *(f32 *)(oldCurve + 0x70) - *(f32 *)(obj + 0x20);
-        *(f32 *)(state + 5) = sqrtf(dz * dz + dx * dx + dy * dy);
+        state->pathDistance = sqrtf(dz * dz + dx * dx + dy * dy);
     }
-    if (((*(u8 *)((u8 *)state + 0x26) & 2) != 0) && (lbl_803E2664 < *(f32 *)(state + 5))) {
-        *(u8 *)((u8 *)state + 0x26) &= 0xfd;
-        *(u8 *)((u8 *)state + 0x26) |= 4;
+    if (((state->flags & 2) != 0) && (lbl_803E2664 < state->pathDistance)) {
+        state->flags &= 0xfd;
+        state->flags |= 4;
     }
-    if (((*(u8 *)((u8 *)state + 0x26) & 4) != 0) && (*(f32 *)(state + 5) < lbl_803E2668)) {
-        *(u8 *)((u8 *)state + 0x26) &= 0xfb;
+    if (((state->flags & 4) != 0) && (state->pathDistance < lbl_803E2668)) {
+        state->flags &= 0xfb;
     }
-    if (((*(u8 *)((u8 *)state + 0x26) & 6) == 0) && (*(s16 *)(data + 0x1e) == 0) &&
-        (state[1] != 0) && (*(f32 *)(state + 4) < *(f32 *)(state + 6))) {
-        *(u8 *)((u8 *)state + 0x26) |= 2;
+    if (((state->flags & 6) == 0) && (*(s16 *)(data + 0x1e) == 0) &&
+        (state->player != 0) && (state->playerDistance < state->chaseRadius)) {
+        state->flags |= 2;
     }
     fn_8014E1DC(obj, state);
 }
