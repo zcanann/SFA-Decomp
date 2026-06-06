@@ -1,5 +1,5 @@
 #include "main/audio/snd_synth_api.h"
-#include "main/audio/synth_voice.h"
+#include "main/audio/mcmd.h"
 
 extern void sndBegin(void);
 extern void sndEnd(void);
@@ -290,9 +290,9 @@ void synthDeactivateStudio(u8 slot)
     offset = 0;
     for (; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; i++) {
         voice = synthVoice + offset;
-        if (slot == ((SynthVoice *)voice)->studio) {
-            if (((SynthVoice *)voice)->id != 0xffffffff) {
-                voiceKillById(*(u32 *)(((SynthVoice *)voice)->vidList + 8));
+        if (slot == ((McmdVoiceState *)voice)->auxB) {  /* 0x11f: mcmd names this auxB; MP4 layout says studio - naming-pass question */
+            if (((McmdVoiceState *)voice)->voiceHandle != 0xffffffff) {
+                voiceKillById(((McmdVoiceState *)voice)->vidListNode->id);
             } else {
                 if (hwIsActive(i) != 0) {
                     hwOff(i);

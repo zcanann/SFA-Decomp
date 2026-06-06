@@ -179,7 +179,7 @@ typedef struct McmdVoiceState {
         u8 voiceHandleBytes[4];
     };
     McmdVidListNode *vidListNode;
-    u32 unkFC;
+    McmdVidListNode *vidMasterListNode; /* 0xFC (MP4 vidMasterList; unkFC before voice_id adoption) */
     u16 baseSample;
     u16 instrumentKey;
     u8 keyGroup;
@@ -208,7 +208,7 @@ typedef struct McmdVoiceState {
     u8 portamentoMode;
     u16 portamentoCtrlValue;
     u32 portamentoDuration;
-    u8 unk138[0x13C - 0x138];
+    u32 portamentoCurPitch; /* 0x138: current portamento pitch, key<<16 + bend */
     u32 portamentoTime;
     s8 vibratoStart;
     s8 vibratoTarget;
@@ -306,5 +306,16 @@ typedef struct McmdVoiceState {
     u16 curOutputVolume;
     u8 unk402[2];
 } McmdVoiceState;
+
+#ifdef STATIC_ASSERT /* mcmd.h has no includes of its own; assert when global.h is in scope */
+STATIC_ASSERT(offsetof(McmdVoiceState, voiceNextHandle) == 0xEC);
+STATIC_ASSERT(offsetof(McmdVoiceState, voiceHandle) == 0xF4);
+STATIC_ASSERT(offsetof(McmdVoiceState, priorityGroup) == 0x10C);
+STATIC_ASSERT(offsetof(McmdVoiceState, inputFlags) == 0x114);
+STATIC_ASSERT(offsetof(McmdVoiceState, key) == 0x12C);
+STATIC_ASSERT(offsetof(McmdVoiceState, portamentoCurPitch) == 0x138);
+STATIC_ASSERT(offsetof(McmdVoiceState, inputDirtyFlags) == 0x214);
+STATIC_ASSERT(sizeof(McmdVoiceState) == 0x404);
+#endif
 
 #endif /* MAIN_AUDIO_MCMD_H_ */

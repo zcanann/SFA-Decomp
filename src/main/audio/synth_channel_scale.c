@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/audio/synth_voice.h"
+#include "main/audio/mcmd.h"
 
 extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD150[];
@@ -318,11 +318,11 @@ void synthSetStudioChannelScale(int value, u8 bank, u32 key)
  */
 int synthGetVoiceSlotChannelScale(u8 *state)
 {
-    SynthVoice *v = (SynthVoice *)state;
+    McmdVoiceState *v = (McmdVoiceState *)state;
     u32 a;
     int b;
-    if ((a = v->midiSet) == 0xff) a = 8;
-    b = v->section;
+    if ((a = v->midiEvent) == 0xff) a = 8;
+    b = v->midiLayer;
     return *(int *)(lbl_803BCD90 + a * 64 + b * 4);
 }
 
@@ -332,23 +332,23 @@ int synthGetVoiceSlotChannelScale(u8 *state)
  */
 void fn_8026F5B8(int state)
 {
-    SynthVoice *v = (SynthVoice *)state;
+    McmdVoiceState *v = (McmdVoiceState *)state;
     u64 flags;
 
-    flags = *(u64 *)&v->cFlags;
+    flags = *(u64 *)&v->inputFlags;
     if ((flags & 0x20000) != 0) {
         return;
     }
-    if (v->portType == 1) {
+    if (v->portamentoMode == 1) {
         if ((flags & 0x1000) == 0) {
-            v->portTime = 0;
+            v->portamentoTime = 0;
         } else {
-            v->portTime = v->portDuration;
+            v->portamentoTime = v->portamentoDuration;
         }
     } else {
-        v->portTime = v->portDuration;
+        v->portamentoTime = v->portamentoDuration;
     }
-    v->portCurPitch = (u32)v->lastNote << 0x10;
+    v->portamentoCurPitch = (u32)v->registeredKey << 0x10;
 }
 
 /*
@@ -359,8 +359,8 @@ int audioFn_8026f630(u8 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlag
     u32 i;
     u32 result;
     u32 previousId;
-    SynthVoice *voice;
-    SynthVoice *selectedVoice;
+    McmdVoiceState *voice;
+    McmdVoiceState *selectedVoice;
     u32 sawHeldVoice;
     u64 flags;
     s32 bend;
@@ -368,41 +368,41 @@ int audioFn_8026f630(u8 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlag
     sawHeldVoice = 0;
     result = -1;
     i = 0;
-    voice = (SynthVoice *)synthVoice;
+    voice = (McmdVoiceState *)synthVoice;
     while (i < lbl_803BD150[0x210]) {
-        if (voice->block == 0 && voice->id != 0xffffffff &&
-            voice->midi == (u8)slot && voice->midiSet == (u8)channel) {
-            flags = *(u64 *)&voice->cFlags;
+        if (voice->macroAllocating == 0 && voice->voiceHandle != 0xffffffff &&
+            voice->midiSlot == (u8)slot && voice->midiEvent == (u8)channel) {
+            flags = *(u64 *)&voice->inputFlags;
             if ((flags & 2) != 0) {
                 sawHeldVoice = 1;
             }
             if ((flags & 0x10) != 0 && (flags & 0x10000000008ULL) != 8 &&
                 hwIsActive(i) != 0) {
-                if (result == 0xffffffff && (*(u64 *)&voice->cFlags & 0x20002) == 0x20002) {
+                if (result == 0xffffffff && (*(u64 *)&voice->inputFlags & 0x20002) == 0x20002) {
                     *outFlags = 1;
                     return -1;
                 }
 
                 selectedVoice = voice;
-                bend = ((s32)voice->curDetune << 16) / 100;
-                voice->portCurPitch = ((u32)voice->curNote << 16) + bend;
-                voice->lastNote = voice->curNote;
-                voice->curNote =
-                    (u16)key + ((voice->curNote & 0xff) - voice->orgNote);
-                voice->orgNote = key;
-                voice->curDetune = 0;
-                voice->portTime = 0;
-                voice->cFlags[1] |= 0x20000;
+                bend = ((s32)voice->fineTune << 16) / 100;
+                voice->portamentoCurPitch = ((u32)voice->key << 16) + bend;
+                voice->registeredKey = voice->key;
+                voice->key =
+                    (u16)key + ((voice->key & 0xff) - voice->keyBase);
+                voice->keyBase = key;
+                voice->fineTune = 0;
+                voice->portamentoTime = 0;
+                voice->outputFlags |= 0x20000;
                 vidRemoveVoice((int)(synthVoice + i * 0x404));
                 if (result == 0xffffffff) {
-                    voice->child = 0xffffffff;
-                    voice->parent = 0xffffffff;
+                    voice->voiceNextHandle = 0xffffffff;
+                    voice->voicePrevHandle = 0xffffffff;
                     result = vidMakeNew((int)(synthVoice + i * 0x404), voiceGroup);
-                    previousId = voice->id;
+                    previousId = voice->voiceHandle;
                 } else {
-                    ((SynthVoice *)synthVoice)[previousId & 0xff].child = voice->id;
-                    voice->parent = previousId;
-                    previousId = voice->id;
+                    ((McmdVoiceState *)synthVoice)[previousId & 0xff].voiceNextHandle = voice->voiceHandle;
+                    voice->voicePrevHandle = previousId;
+                    previousId = voice->voiceHandle;
                     vidMakeNew((int)(synthVoice + i * 0x404), 0);
                 }
             }
@@ -415,8 +415,8 @@ int audioFn_8026f630(u8 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlag
         *outFlags = sawHeldVoice;
     } else {
         voiceRegister((int)selectedVoice);
-        inpSetMidiLastNote(selectedVoice->midi, selectedVoice->midiSet,
-                           selectedVoice->curNote & 0xff);
+        inpSetMidiLastNote(selectedVoice->midiSlot, selectedVoice->midiEvent,
+                           selectedVoice->key & 0xff);
         *outFlags = 0;
     }
     return result;
