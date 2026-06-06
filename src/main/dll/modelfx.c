@@ -2015,14 +2015,15 @@ extern f32 fn_80293E80(f32 x);
 void Effect10_func05(void)
 {
     f32 sum;
-    sum = lbl_803DB838 + lbl_803DFEB8 * timeDelta;
+    f32 step;
+    sum = lbl_803DB838 + (step = lbl_803DFEB8 * timeDelta);
     lbl_803DB838 = sum;
-    if (sum > lbl_803DFEC0) {
+    if (sum > 1.0f) {
         lbl_803DB838 = lbl_803DFEBC;
     }
-    sum = lbl_803DB83C + lbl_803DFEB8 * timeDelta;
+    sum = lbl_803DB83C + step;
     lbl_803DB83C = sum;
-    if (sum > lbl_803DFEC0) {
+    if (sum > 1.0f) {
         lbl_803DB83C = lbl_803DFEC8;
     }
     lbl_803DD3B0 = lbl_803DD3B0 + (s32)framesThisStep * 0x64;

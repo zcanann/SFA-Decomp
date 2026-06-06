@@ -2829,7 +2829,7 @@ int Effect19_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             return -1;
         }
         cfg.f44 = cfg.f44 | param_4;
-        if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+        if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
         if ((cfg.f44 & 1) != 0) {
             if ((param_4 & 0x200000) == 0) {
                 if (cfg.f00 != 0) {
@@ -2967,7 +2967,7 @@ int Effect13_func04(void *param_1, int param_2, s16 *param_3, u32 param_4, u8 pa
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -2986,7 +2986,7 @@ int Effect13_func04(void *param_1, int param_2, s16 *param_3, u32 param_4, u8 pa
 }
 
 int Effect17_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
-                    u8 param_5, int param_6)
+                    u8 param_5, s16 *param_6)
 {
     int uVar1;
     PartFxSpawn cfg;
@@ -3033,7 +3033,7 @@ int Effect17_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     switch (param_2) {
     case 0x73a:
         cfg.f28 = lbl_803E01D0 * (f32)(s32)randomGetRange(8, 0xa);
-        if (randomGetRange(0, 0x28) != 0) {
+        if ((int)randomGetRange(0, 0x28) != 0) {
             cfg.f3c = lbl_803E01B8 * (f32)(s32)randomGetRange(8, 0x14);
             cfg.f08 = randomGetRange(0x5a, 0x78);
         } else {
@@ -3154,7 +3154,7 @@ int Effect17_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f42 = 0x500;
         break;
     case 0x744:
-        if (randomGetRange(0, 4) == 4) {
+        if ((int)randomGetRange(0, 4) == 4) {
             cfg.f3c = lbl_803E0208;
             cfg.f60 = 0x9b;
             cfg.f44 = 0x480000;
@@ -3172,7 +3172,7 @@ int Effect17_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -3191,7 +3191,7 @@ int Effect17_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
 }
 
 int Effect16_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
-                    u8 param_5, int param_6)
+                    u8 param_5, s16 *param_6)
 {
     int uVar1;
     PartFxSpawn cfg;
@@ -3531,7 +3531,7 @@ int Effect16_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -3911,7 +3911,7 @@ int Effect15_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -4269,7 +4269,7 @@ int Effect18_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -6561,7 +6561,7 @@ LAB_800d20d4:
     cfg.f48 = 0x4400800;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) == 0) {
             if (cfg.f00 != 0) {

@@ -5836,7 +5836,7 @@ int Effect6_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -6308,7 +6308,7 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -6710,7 +6710,7 @@ int Effect8_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -10254,7 +10254,7 @@ LAB_800aeb28:
 LAB_800aeb30:
   cfg.f44 = (cfg.f44 | param_4);
   if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) {
-    cfg.f44 = (cfg.f44 ^ 2);
+    cfg.f44 ^= 2LL;
   }
   if ((cfg.f44 & 1) != 0) {
     if ((param_4 & 0x200000) == 0) {
@@ -11042,7 +11042,7 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -11409,7 +11409,7 @@ int Effect7_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f3c = lbl_803DFD20 * (f32)(s32)randomGetRange(0x23, 0x32);
         cfg.f08 = randomGetRange(0xa, 0x28) + 0xa;
         cfg.f42 = 0xc13;
-        cfg.f44 = 0x8108010;
+        cfg.f44 = 0x81080010;
         cfg.f48 = 0x482800;
         break;
     case 0xa8:
@@ -11458,7 +11458,7 @@ int Effect7_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) { u32 two = 2; cfg.f44 ^= two; }
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -11764,7 +11764,7 @@ int Effect5_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -12225,7 +12225,7 @@ int Effect3_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -13073,7 +13073,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         return -1;
     }
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;
@@ -14140,7 +14140,7 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     }
     /* ===== common dispatch tail (L_800B2F74) ===== */
     cfg.f44 = cfg.f44 | param_4;
-    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 ^= 2LL;
     if ((cfg.f44 & 1) != 0) {
         if ((param_4 & 0x200000) != 0) {
             cfg.f30 = cfg.f30 + cfg.f18;

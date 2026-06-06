@@ -93,3 +93,12 @@ export_all: true
 # Alternatively, you can set extab_padding on any affected objects in
 # configure.py, in order to exactly match the original DOL.
 clean_extab: false
+
+# Suppress dtk's false relocations into the middle of fn_8017FFD0 (0x8017FFD0..0x80180218).
+# The partfx Effect*_func04 family stores literal FLAG constants (0x80180100, 0x80180104,
+# 0x80180200, ...) into PartFxSpawn.f44; these values coincide with in-range code addresses
+# and dtk misinterprets the lis/addi pairs as address materializations. The original
+# compiler emitted plain immediates (MWCC never folds extern+const into reloc addends).
+block_relocations:
+- target: 0x80180100
+  end: 0x80180218
