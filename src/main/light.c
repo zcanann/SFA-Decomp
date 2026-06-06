@@ -1124,21 +1124,47 @@ void vfpdraghead_free(int obj) {
 extern void *Resource_Acquire(int id, int mode);
 extern f32 lbl_803E6138;
 
+/* Per-object extra state for VFPDragHead (vfpdraghead_getExtraSize == 0xC). */
+typedef struct VfpDragHeadState {
+    s16 gameBitA;     /* toggled by hits; drives the 0x390 breath fx */
+    s16 gameBitB;     /* suppresses idle fx when set (variant 2) */
+    s16 unk_04;       /* init: 100 */
+    s16 despawnTimer; /* variant 0x3C5: init 0x78, counts down to free */
+    u8 pad08[3];
+    u8 headIndex;     /* from def+0x1A; matched against lbl_803DDCC6 */
+} VfpDragHeadState;
+
+STATIC_ASSERT(sizeof(VfpDragHeadState) == 0xC);
+
+/* Per-object extra state for SeqPoint (seqpoint_getExtraSize == 0x10). */
+typedef struct SeqPointState {
+    f32 triggerRadius;
+    s16 conditionBit; /* gamebit gating modes 1-5 */
+    s16 disableBit;   /* gamebit that permanently disables the point */
+    s16 sequenceId;   /* trigger id fired at the player; switched in the SeqFn */
+    u8 pad0A[3];
+    u8 done;
+    u8 mode; /* 0 radius, 1 bit, 2 radius+bit, 3/4 bit-once (sets it), 5 bit repeat */
+    u8 pad0F;
+} SeqPointState;
+
+STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
+
 #pragma scheduling off
 #pragma peephole off
 void vfpdraghead_init(int obj, int data) {
-    int state = *(int *)(obj + 0xB8);
+    VfpDragHeadState *state = *(VfpDragHeadState **)(obj + 0xB8);
     if (*(s16 *)(obj + 0x46) == 0x3c5) {
-        *(s16 *)(state + 6) = 0x78;
+        state->despawnTimer = 0x78;
         *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4) * lbl_803E6138;
         ObjHits_SetHitVolumeSlot(obj, 0xE, 1, 0);
     } else {
         *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
     }
-    *(s16 *)state = *(s16 *)(data + 0x1e);
-    *(s16 *)(state + 2) = *(s16 *)(data + 0x20);
-    *(s16 *)(state + 4) = 0x64;
-    *(u8 *)(state + 0xB) = (u8)*(s16 *)(data + 0x1a);
+    state->gameBitA = *(s16 *)(data + 0x1e);
+    state->gameBitB = *(s16 *)(data + 0x20);
+    state->unk_04 = 0x64;
+    state->headIndex = (u8)*(s16 *)(data + 0x1a);
     if (*(s8 *)(data + 0x19) == 1) {
         *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4) * lbl_803E6138;
     }
@@ -1152,14 +1178,14 @@ extern void fn_801FC6F4(int, int, int);
 #pragma scheduling off
 #pragma peephole off
 void seqpoint_init(int obj, int data) {
-    int state = *(int *)(obj + 0xB8);
+    SeqPointState *state = *(SeqPointState **)(obj + 0xB8);
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801FC6F4;
     *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
-    *(f32 *)state = (f32)*(s16 *)(data + 0x1a);
-    *(s16 *)(state + 8) = *(s16 *)(data + 0x1c);
-    *(u8 *)(state + 0xe) = *(u8 *)(data + 0x19);
-    *(s16 *)(state + 4) = *(s16 *)(data + 0x1e);
-    *(s16 *)(state + 6) = *(s16 *)(data + 0x20);
+    state->triggerRadius = (f32)*(s16 *)(data + 0x1a);
+    state->sequenceId = *(s16 *)(data + 0x1c);
+    state->mode = *(u8 *)(data + 0x19);
+    state->conditionBit = *(s16 *)(data + 0x1e);
+    state->disableBit = *(s16 *)(data + 0x20);
     *(u16 *)(obj + 0xb0) |= 0x2000;
 }
 #pragma peephole reset
@@ -1298,60 +1324,60 @@ extern int *gObjectTriggerInterface;
 void seqpoint_update(int *obj)
 {
     void *player = Obj_GetPlayerObject();
-    char *self = *(char **)((char *)obj + 0xb8);
-    int key = *(s16 *)(self + 6);
+    SeqPointState *self = *(SeqPointState **)((char *)obj + 0xb8);
+    int key = self->disableBit;
 
     if (key != -1) {
-        if (*(u8 *)(self + 0xd) != 0) {
+        if (self->done != 0) {
             if (GameBit_Get(key) != 0) return;
-            GameBit_Set(*(s16 *)(self + 6), 1);
-            *(u8 *)(self + 0xd) = 1;
+            GameBit_Set(self->disableBit, 1);
+            self->done = 1;
             return;
         }
         if (GameBit_Get(key) != 0) {
-            *(u8 *)(self + 0xd) = 1;
+            self->done = 1;
             return;
         }
     }
-    if (*(u8 *)(self + 0xd) != 0) return;
-    switch (*(u8 *)(self + 0xe)) {
+    if (self->done != 0) return;
+    switch (self->mode) {
     case 0:
-        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= *(f32 *)self) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
-        *(u8 *)(self + 0xd) = 1;
+        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= self->triggerRadius) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
+        self->done = 1;
         break;
     case 1:
-        if (*(s16 *)(self + 4) == -1) return;
-        if (GameBit_Get(*(s16 *)(self + 4)) == 0) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
-        *(u8 *)(self + 0xd) = 1;
+        if (self->conditionBit == -1) return;
+        if (GameBit_Get(self->conditionBit) == 0) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
+        self->done = 1;
         break;
     case 2:
-        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= *(f32 *)self) return;
-        if (*(s16 *)(self + 4) == -1) return;
-        if (GameBit_Get(*(s16 *)(self + 4)) == 0) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
-        *(u8 *)(self + 0xd) = 1;
+        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= self->triggerRadius) return;
+        if (self->conditionBit == -1) return;
+        if (GameBit_Get(self->conditionBit) == 0) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
+        self->done = 1;
         break;
     case 3:
-        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= *(f32 *)self) return;
-        if (*(s16 *)(self + 4) == -1) return;
-        if (GameBit_Get(*(s16 *)(self + 4)) != 0) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
-        GameBit_Set(*(s16 *)(self + 4), 1);
-        *(u8 *)(self + 0xd) = 1;
+        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= self->triggerRadius) return;
+        if (self->conditionBit == -1) return;
+        if (GameBit_Get(self->conditionBit) != 0) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
+        GameBit_Set(self->conditionBit, 1);
+        self->done = 1;
         break;
     case 4:
-        if (*(s16 *)(self + 4) == -1) return;
-        if (GameBit_Get(*(s16 *)(self + 4)) != 0) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
-        GameBit_Set(*(s16 *)(self + 4), 1);
-        *(u8 *)(self + 0xd) = 1;
+        if (self->conditionBit == -1) return;
+        if (GameBit_Get(self->conditionBit) != 0) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
+        GameBit_Set(self->conditionBit, 1);
+        self->done = 1;
         break;
     case 5:
-        if (*(s16 *)(self + 4) == -1) return;
-        if (GameBit_Get(*(s16 *)(self + 4)) == 0) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
+        if (self->conditionBit == -1) return;
+        if (GameBit_Get(self->conditionBit) == 0) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
         break;
     }
 }
@@ -1369,35 +1395,35 @@ extern u8 lbl_803DDCC6;
 void vfpdraghead_update(int *obj)
 {
     int state = *(s8 *)(*(char **)((char *)obj + 0x4c) + 0x19);
-    char *self2;
+    VfpDragHeadState *self2;
 
     if (state == 2) {
-        self2 = *(char **)((char *)obj + 0xb8);
+        self2 = *(VfpDragHeadState **)((char *)obj + 0xb8);
         lbl_803DDCC4 -= (int)timeDelta;
-        if (GameBit_Get(*(s16 *)(self2 + 2)) != 0) return;
+        if (GameBit_Get(self2->gameBitB) != 0) return;
         if (lbl_803DDCC4 > 0xc8) return;
-        if (*(u8 *)(self2 + 0xb) != lbl_803DDCC6) return;
+        if (self2->headIndex != lbl_803DDCC6) return;
         if (randomGetRange(0, 2) != 0) return;
         (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x391, 0, 4, -1, 0);
     } else if (*(s16 *)((char *)obj + 0x46) == 0x3c5) {
-        self2 = *(char **)((char *)obj + 0xb8);
-        *(s16 *)(self2 + 6) -= (int)timeDelta;
+        self2 = *(VfpDragHeadState **)((char *)obj + 0xb8);
+        self2->despawnTimer -= (int)timeDelta;
         *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)obj + 0x24) * timeDelta + *(f32 *)((char *)obj + 0xc);
         *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
         *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)obj + 0x2c) * timeDelta + *(f32 *)((char *)obj + 0x14);
-        if (*(s16 *)(self2 + 6) > 0) return;
+        if (self2->despawnTimer > 0) return;
         Obj_FreeObject(obj);
     } else if (state == 0) {
-        self2 = *(char **)((char *)obj + 0xb8);
+        self2 = *(VfpDragHeadState **)((char *)obj + 0xb8);
         lbl_803DDCC4 -= (int)timeDelta;
         if (GameBit_Get(0x522) != 0) return;
         if (lbl_803DDCC4 > 0xc8) return;
-        if (*(u8 *)(self2 + 0xb) != lbl_803DDCC6) return;
+        if (self2->headIndex != lbl_803DDCC6) return;
         if (randomGetRange(0, 2) != 0) return;
         (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x391, 0, 4, -1, 0);
     } else if (state == 1) {
-        self2 = *(char **)((char *)obj + 0xb8);
-        if (GameBit_Get(*(s16 *)(self2 + 0)) != 0) {
+        self2 = *(VfpDragHeadState **)((char *)obj + 0xb8);
+        if (GameBit_Get(self2->gameBitA) != 0) {
             (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x390, 0, 4, -1, 0);
             (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x390, 0, 4, -1, 0);
             if (randomGetRange(0, 1) != 0) {
@@ -1405,7 +1431,7 @@ void vfpdraghead_update(int *obj)
             }
         }
         if ((s16)ObjHits_GetPriorityHit((int)obj, (int *)0, (int *)0, (uint *)0) != 0) {
-            GameBit_Set(*(s16 *)(self2 + 0), 1 - GameBit_Get(*(s16 *)(self2 + 0)));
+            GameBit_Set(self2->gameBitA, 1 - GameBit_Get(self2->gameBitA));
         }
     }
 }
@@ -1423,12 +1449,12 @@ extern void warpToMap(int, int);
 #pragma peephole off
 void fn_801FC6F4(int obj, int param2, int ctx)
 {
-    int state = *(int *)(obj + 0xb8);
+    SeqPointState *state = *(SeqPointState **)(obj + 0xb8);
     int i;
     *(s16 *)(ctx + 0x70) = -1;
     *(u8 *)(ctx + 0x56) = 0;
     for (i = 0; i < *(u8 *)(ctx + 0x8b); i++) {
-        switch (*(s16 *)(state + 8)) {
+        switch (state->sequenceId) {
         case 0:
             break;
         case 13:
