@@ -4187,8 +4187,7 @@ void fn_8015F5B0(short *obj)
     o = Obj_SetupObject(setup, 5, -1, -1, 0);
     if (o != NULL) {
       pl = Obj_GetPlayerObject();
-      sc = lbl_803E2E24;
-      *(f32 *)(o + 0x24) = (*(f32 *)(pl + 0xc) - *(f32 *)((char *)obj + 0xc)) / sc;
+      *(f32 *)(o + 0x24) = (*(f32 *)(pl + 0xc) - *(f32 *)((char *)obj + 0xc)) / (sc = lbl_803E2E24);
       *(f32 *)(o + 0x28) =
           ((*(f32 *)(pl + 0x10) + (f32)(u32)*(u8 *)(sub + 0x15)) - *(f32 *)((char *)obj + 0x10)) /
           sc;
