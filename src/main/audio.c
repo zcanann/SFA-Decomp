@@ -2092,13 +2092,13 @@ u32 Sfx_PlayFromObjectLimited(u32 obj, u32 sfxId, int limit)
 int AudioStream_Play(int id, void (*preparedCallback)(void))
 {
     char path[64];
+    u8 vol;
     u8* dvd = (u8 *)(int)lbl_80336C40;
     int* fadeTbl = lbl_802C5DB8;
     StreamEntry* s = gStreamsData;
     int count = gStreamsCount;
     int slot = -1;
     int i;
-    u8 vol;
     u8 stopped;
 
     if (id == 1228) {
@@ -2108,7 +2108,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
         Music_Trigger(0xA8, 0);
         Music_Trigger(0xF4, 1);
     }
-    if ((int)audioFlagFn_8000a188(8)) {
+    if ((int)audioFlagFn_8000a188(8) != 0) {
         return 0;
     }
 
@@ -2128,9 +2128,8 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     }
     gAudioStreamDvdState = 0;
 
-    if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name,
-                           sAdpExtension) == 0) {
-        return 0;
+    if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name, 0) == 0) {
+        goto ret0;
     }
     if (DVDOpen(path, dvd + 0x90) == 0) {
         return 0;
@@ -2155,16 +2154,16 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     }
 
     gAudioStreamEndPos = (f32)(u32)s->lengthRaw / lbl_803DE5D4;
-    if (gAudioStreamEndPos == lbl_803DE5D0) {
+    if (lbl_803DE5D0 == gAudioStreamEndPos) {
         gAudioStreamEndPos = lbl_803DE5D8;
     }
 
-    gAudioStreamMusicFadeFlagA = fadeTbl[(s->fadeBits >> 6) & 3] != 0 ? 1 : 0;
-    gAudioStreamMusicFadeFlagB = fadeTbl[(s->fadeBits >> 4) & 3] != 0 ? 1 : 0;
-    if ((s->fadeBits >> 2) & 3) {
+    gAudioStreamMusicFadeFlagA = fadeTbl[(s->fadeBits >> 6) & 3] == 0 ? 0 : 1;
+    gAudioStreamMusicFadeFlagB = fadeTbl[(s->fadeBits >> 4) & 3] == 0 ? 0 : 1;
+    if (((u32)s->fadeBits >> 2) & 3) {
         Sfx_StopAllObjectSounds();
     }
-    gAudioActiveChannelMask = ((s->volBits >> 7) & 1) ? 4 : 0;
+    gAudioActiveChannelMask = (((u32)s->volBits >> 7) & 1) ? 4 : 0;
 
     stopped = 0;
     while (gAudioStreamPlaying != 0) {
@@ -2193,9 +2192,11 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     gAudioStreamPreparedCallback = preparedCallback;
     gAudioStreamPreparingId = slot;
     gAudioStreamDvdState = 1;
-    DVDPrepareStreamAsync(lbl_80336C40 + 0x90, 0, 0, AudioStream_PrepareCallback);
-    DVDStopStreamAtEndAsync(lbl_80336C40 + 0x60, 0);
+    DVDPrepareStreamAsync(dvd + 0x90, 0, 0, AudioStream_PrepareCallback);
+    DVDStopStreamAtEndAsync(dvd + 0x60, 0);
     return 1;
+ret0:
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
