@@ -86,7 +86,7 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   int pointOffset;
 
   settings[3] = 1;
-  target = *(s16 **)(obj + 0xa4);
+  target = ((GameObject *)obj)->anim.targetObj;
 
   if (gCamcontrolPathState == NULL) {
     gCamcontrolPathState = mmAlloc(0x1c0, 0xf, 0);
