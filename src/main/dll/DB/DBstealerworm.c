@@ -506,6 +506,7 @@ extern f32 lbl_803E581C;
 extern f32 lbl_803E5820;
 extern f32 lbl_803E5824;
 void SB_Propeller_update(int obj) {
+    ObjAnimComponent *objAnim;
     int camA;
     int camB;
     int camC;
@@ -521,6 +522,7 @@ void SB_Propeller_update(int obj) {
         f32 d;
     } stk;
 
+    objAnim = (ObjAnimComponent *)obj;
     pf = *(f32 **)(obj + 0xb8);
     camA = (**(int (**)(int))(**(int **)(*(int *)(obj + 0x30) + 0x68) + 0x24))(*(int *)(obj + 0x30));
     camB = (**(int (**)(int))(**(int **)(*(int *)(obj + 0x30) + 0x68) + 0x28))(*(int *)(obj + 0x30));
@@ -542,7 +544,7 @@ void SB_Propeller_update(int obj) {
             }
             *pf = (f32)(int)randomGetRange(0x5a, 0xf0);
         }
-        if ((2 < camA) && (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 1)) {
+        if ((2 < camA) && (objAnim->bankIndex == 1)) {
             stk.a = lbl_803E5818;
             stk.mode = 0xc0a;
             ObjPath_GetPointWorldPosition(obj, 0, &stk.b, &stk.c, &stk.d, 0);
@@ -617,16 +619,18 @@ void SB_Propeller_update(int obj) {
  */
 void SB_Propeller_init(int param_1,int param_2)
 {
+  ObjAnimComponent *objAnim;
   uint uVar1;
   float *pfVar2;
   
+  objAnim = (ObjAnimComponent *)param_1;
   pfVar2 = *(float **)(param_1 + 0xb8);
   uVar1 = randomGetRange(0x5a,0xf0);
   *pfVar2 = (f32)(s32)(uVar1);
   pfVar2[1] = lbl_803E64A8;
   *(int *)(pfVar2 + 2) = 1200;
   *(undefined *)(pfVar2 + 3) = 4;
-  *(char *)(param_1 + offsetof(ObjAnimComponent, bankIndex)) = (char)*(s16 *)(param_2 + 0x1a);
+  objAnim->bankIndex = (char)*(s16 *)(param_2 + 0x1a);
   if (*(short *)(param_1 + 0x46) != 0x69c) {
     DAT_803de8c0 = param_1;
   }

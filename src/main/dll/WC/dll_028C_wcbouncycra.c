@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/objanim_internal.h"
 
 #define WCBLOCK_GRID_OBJECT_OFFSET 0x268
 #define WCBLOCK_CELL_X_OFFSET 0x27e
@@ -145,6 +146,7 @@ void wcbouncycra_initialise(void) {}
 #pragma scheduling off
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 {
+    ObjAnimComponent *objAnim;
     f32 cellX;
     f32 cellZ;
     f32 pos;
@@ -152,7 +154,8 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
     f32 max;
     WCBlockGridInterface *iface;
 
-    if ((s8)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == WCBLOCK_VARIANT_A) {
+    objAnim = (ObjAnimComponent *)obj;
+    if (objAnim->bankIndex == WCBLOCK_VARIANT_A) {
         iface = (WCBlockGridInterface *)WCBLOCK_GRID_IFACE(state);
         iface->getCellXYA(
             *(u8 *)(state + WCBLOCK_TILE_INDEX_OFFSET), (s16 *)(state + WCBLOCK_CELL_X_OFFSET),

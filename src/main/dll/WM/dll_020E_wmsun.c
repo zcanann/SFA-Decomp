@@ -58,6 +58,7 @@ extern s16 lbl_803DDCB0;
 #pragma peephole off
 void wmsun_init(int obj, int params)
 {
+    ObjAnimComponent *objAnim;
     int state = *(int *)(obj + 0xb8);
     u8 c;
     int c2;
@@ -65,6 +66,7 @@ void wmsun_init(int obj, int params)
     s16 i;
     s16 mode;
 
+    objAnim = (ObjAnimComponent *)obj;
     *(void **)(obj + 0xbc) = (void *)fn_801F6E8C;
     c = ((MapEventInterface *)*gMapEventInterface)->getMode((int)*(s8 *)(obj + 0xac));
     if (c == 3 && (u32)GameBit_Get(0x21b) == 0) {
@@ -93,8 +95,8 @@ void wmsun_init(int obj, int params)
         } else {
             *(f32 *)(obj + 8) = lbl_803E5F24;
         }
-        *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = *(u8 *)(params + 0x19);
-        c2 = *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex));
+        objAnim->bankIndex = *(u8 *)(params + 0x19);
+        c2 = objAnim->bankIndex;
         if (c2 == 0) {
             *(s16 *)(state + 2) = randomGetRange(300, 600);
             *(s16 *)(state + 4) = randomGetRange(300, 600);
@@ -139,6 +141,7 @@ extern f32 lbl_803E5F88;
 #pragma peephole off
 void wmsun_update(int obj)
 {
+    ObjAnimComponent *objAnim;
     int state = *(int *)(obj + 0xb8);
     s16 thresh;
     s16 mult;
@@ -148,6 +151,7 @@ void wmsun_update(int obj)
     u8 b;
     int v;
 
+    objAnim = (ObjAnimComponent *)obj;
     thresh = 0;
     mult = 1;
     spd = lbl_803E5F20;
@@ -223,7 +227,7 @@ void wmsun_update(int obj)
         return;
     }
     if (GameBit_Get(0x38f) != 0) {
-        c = *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex));
+        c = objAnim->bankIndex;
         if (c == 0 && (b = *(u8 *)(obj + 0x36)) != 0xff) {
             if (b < 0xff) {
                 v = (s16)(b + framesThisStep);
@@ -249,7 +253,7 @@ void wmsun_update(int obj)
             }
             *(u8 *)(obj + 0x36) = v;
         }
-        if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 0) {
+        if (objAnim->bankIndex == 0) {
             if ((int)randomGetRange(0, 0x96) == 0) {
                 randomGetRange(0, 0xffff);
                 randomGetRange(0, 0xffff);
@@ -261,7 +265,7 @@ void wmsun_update(int obj)
     } else {
         *(s16 *)(obj + 4) += *(s16 *)(state + 4);
         *(s16 *)obj += *(s16 *)(state + 2);
-        if (GameBit_Get(0x38d) != 0 && *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 0) {
+        if (GameBit_Get(0x38d) != 0 && objAnim->bankIndex == 0) {
             if (lbl_803DDCAA == 0) {
                 if (lbl_803DDCA8 > 600 && (int)randomGetRange(0, 10) == 0) {
                     CameraShake_SetAllMagnitudes(lbl_803E5F88);

@@ -797,6 +797,7 @@ void FUN_8005b744(void)
   int iVar9;
   uint uVar10;
   uint uVar11;
+  ObjModelInstance *modelDef;
   ushort *puVar12;
   float local_48;
   float fStack_44;
@@ -810,6 +811,7 @@ void FUN_8005b744(void)
   iVar5 = FUN_80017b0c(local_3c);
   for (uVar11 = 0; (int)uVar11 < local_3c[0]; uVar11 = uVar11 + 1) {
     puVar12 = (ushort *)*puVar4;
+    modelDef = ((ObjAnimComponent *)puVar12)->modelInstance;
     puVar12[0x58] = puVar12[0x58] & 0xf7ff;
     puVar6 = puVar12;
     for (iVar9 = 0; iVar9 < (int)(uint)*(byte *)((int)puVar12 + 0xeb); iVar9 = iVar9 + 1) {
@@ -822,14 +824,14 @@ void FUN_8005b744(void)
     if (iVar5 <= (int)uVar11) {
       uVar7 = FUN_80057690((int)puVar12);
       *pcVar3 = (char)uVar7;
-      if ((*pcVar3 == '\0') && ((*(uint *)(*(int *)(puVar12 + 0x28) + 0x44) & 0x200000) == 0)) {
+      if ((*pcVar3 == '\0') && ((modelDef->flags & 0x200000) == 0)) {
         iVar9 = *(int *)(puVar12 + 0x2a);
         if ((iVar9 != 0) && ((*(byte *)(iVar9 + 0x62) & 0x30) != 0)) {
           *(undefined *)(iVar9 + 0xaf) = 2;
         }
       }
       else {
-        if ((*(uint *)(*(int *)(puVar12 + 0x28) + 0x44) & 0x80000) == 0) {
+        if ((modelDef->flags & 0x80000) == 0) {
           if (*(int *)(puVar12 + 0x18) == 0) {
             FUN_80006944((double)(*(float *)(puVar12 + 6) - lbl_803DDA58),
                          (double)*(float *)(puVar12 + 8),
@@ -864,10 +866,10 @@ void FUN_8005b744(void)
         if (DAT_803ddb2e < 1000) {
           iVar9 = FUN_80017a54((int)puVar12);
           if (((*(char *)((int)puVar12 + 0x37) == -1) && ((puVar12[3] & 0x80) == 0)) &&
-             (((*(uint *)(*(int *)(puVar12 + 0x28) + 0x44) & 0x40000) == 0 &&
+             (((modelDef->flags & 0x40000) == 0 &&
               (*(int *)(iVar9 + 0x58) == 0)))) {
             uVar10 = 0x80000000;
-            if (((*(uint *)(*(int *)(puVar12 + 0x28) + 0x44) & 0x800000) != 0) &&
+            if (((modelDef->flags & 0x800000) != 0) &&
                ((*(byte *)((int)puVar12 + 0xe5) & 2) == 0)) {
               uVar10 = ((int)(short)puVar12[0x23] & 0x3ffU) << 0x14 | 0xc0000000;
             }
@@ -882,7 +884,7 @@ void FUN_8005b744(void)
             }
           }
           else {
-            if (((*(uint *)(*(int *)(puVar12 + 0x28) + 0x44) & 0x800) == 0) &&
+            if (((modelDef->flags & 0x800) == 0) &&
                ((*(byte *)(*(int *)(puVar12 + 0x28) + 0x5f) & 0x10) == 0)) {
               iVar9 = 7;
             }

@@ -1,5 +1,6 @@
 #include "main/frustum.h"
 #include "main/model_light.h"
+#include "main/objanim_internal.h"
 #include "main/track_dolphin.h"
 #include "dolphin/os/OSFastCast.h"
 
@@ -5457,7 +5458,7 @@ void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
             int hdr;
             f32 r, c;
 
-            if (flag80 && (*(u32 *)(*(int *)((char *)o + 0x50) + 0x44) & 0x01000000)) continue;
+            if (flag80 && (((ObjAnimComponent *)o)->modelInstance->flags & 0x01000000)) continue;
             p54 = *(int **)((char *)o + 0x54);
             if (p54 == NULL) continue;
             p58 = *(int **)((char *)o + 0x58);

@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
 
@@ -178,7 +179,7 @@ void arwingandrossstuff_init(int obj, u8 *setup)
         break;
     case 0x604:
         ObjHits_SetTargetMask(obj, 1);
-        if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) != 0) {
+        if (((ObjAnimComponent *)obj)->bankIndex != 0) {
             *(u8 *)state = 2;
             *(u8 *)(state + 0x18) = 2;
         } else {
@@ -270,7 +271,7 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable) {
     lightSetFieldBC_8001db14(*(void **)(state + 0x14), 1);
     if (*(s16 *)(obj + 0x46) == 0x6ae) {
         modelLightStruct_setDiffuseColor(*(void **)(state + 0x14), 0xff, 0x14, 0x50, 0);
-    } else if ((s8)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 0) {
+    } else if (((ObjAnimComponent *)obj)->bankIndex == 0) {
         modelLightStruct_setDiffuseColor(*(void **)(state + 0x14), 0x3c, 0xff, 0x5a, 0);
     } else {
         modelLightStruct_setDiffuseColor(*(void **)(state + 0x14), 0x3c, 0x5a, 0xff, 0);

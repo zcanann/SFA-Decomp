@@ -1,4 +1,5 @@
 #include "main/objprint_dolphin.h"
+#include "main/objanim_internal.h"
 
 
 #pragma peephole off
@@ -6068,7 +6069,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
         Obj_BuildWorldTransformMatrix(obj, wm, 0);
     }
     lbl_803DCC4C = 0;
-    if (*(u32 *)(*(u8 **)((char *)obj + 0x50) + 0x44) & 0x400) {
+    if (((ObjAnimComponent *)obj)->modelInstance->flags & 0x400) {
         int *player = Obj_GetPlayerObject();
         int *cam = ((int *(*)(void *))((void **)*(void **)gCameraInterface)[0xc / 4])(*(void **)gCameraInterface);
         if (player != NULL && !(*(u16 *)((char *)player + 0xb0) & 0x1000) && *(int **)((char *)cam + 0xa4) == player) {

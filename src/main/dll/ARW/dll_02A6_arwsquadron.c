@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
 #pragma peephole on
@@ -620,7 +621,7 @@ void arwsquadron_update(int obj)
     arwsquadron_handleDamage(obj, state);
     if (*(u8 *)(state + 0x15c) == 1)
         arwsquadron_emitEffects(obj, state);
-    if (*(int *)(*(int *)(obj + 0x50) + 0x44) == 0)
+    if (((ObjAnimComponent *)obj)->modelInstance->flags == 0)
         ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E71BC, timeDelta, 0);
 }
 #pragma scheduling reset
