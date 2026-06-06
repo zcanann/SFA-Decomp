@@ -846,7 +846,7 @@ void FUN_8010edc4(int param_1,int param_2)
   
   if (param_1 != 0) {
     iVar2 = (**(code **)(*DAT_803dd6d0 + 0xc))();
-    psVar4 = *(short **)(iVar2 + 0xa4);
+    psVar4 = *(short **)&((GameObject *)iVar2)->anim.targetObj;
     sVar1 = *psVar4;
     if (param_2 == 0) {
       uStack_34 = (int)sVar1 ^ 0x80000000;
@@ -1258,7 +1258,7 @@ void FUN_8010f760(int param_1,undefined4 param_2,undefined4 *param_3)
   undefined4 local_38;
   uint uStack_34;
   
-  psVar1 = *(short **)(param_1 + 0xa4);
+  psVar1 = *(short **)&((GameObject *)param_1)->anim.targetObj;
   uStack_34 = (int)*psVar1 ^ 0x80000000;
   local_38 = 0x43300000;
   dVar2 = (double)FUN_80293f90();
@@ -1432,7 +1432,7 @@ void FUN_8010fb90(int param_1,uint param_2,undefined4 *param_3)
   float fVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xa4);
+  iVar2 = *(int *)&((GameObject *)param_1)->anim.targetObj;
   if (DAT_803de230 == (undefined4 *)0x0) {
     DAT_803de230 = (undefined4 *)FUN_80017830(0x10,0xf);
   }
@@ -1839,7 +1839,7 @@ void FUN_80110a44(int param_1,int param_2)
 {
   int iVar1;
   
-  iVar1 = *(int *)(param_1 + 0xa4);
+  iVar1 = *(int *)&((GameObject *)param_1)->anim.targetObj;
   if (param_2 != 1) {
     DAT_803a502c = *(undefined4 *)(iVar1 + 0x18);
     DAT_803a5030 = *(undefined4 *)(iVar1 + 0x1c);
@@ -3640,7 +3640,7 @@ extern f32 lbl_803E1B88;
 #pragma peephole off
 #pragma scheduling off
 void CameraModePerv_update(u8 *obj) {
-    u8 *state = *(u8 **)(obj + 0xa4);
+    u8 *state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
 
     ((f32 *)lbl_803DD5C8)[0] -= lbl_803E1B78 * timeDelta;
     if (((f32 *)lbl_803DD5C8)[0] < lbl_803E1B7C) {
@@ -3680,7 +3680,7 @@ extern f32 lbl_803E1B18;
 #pragma peephole off
 #pragma scheduling off
 void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
-    u8 *state = *(u8 **)(obj + 0xa4);
+    u8 *state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
     f32 angle;
     f32 cosv, sinv;
     f32 baseX, baseZ;
@@ -4532,7 +4532,7 @@ void CameraModeCloudRunner_update(u8 *obj) {
 #pragma peephole off
 #pragma scheduling off
 void CameraModeForceBehind_update(u8 *obj) {
-    u8 *state = *(u8 **)(obj + 0xa4);
+    u8 *state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
     s16 extra;
     s16 pitch;
     s16 yaw;
@@ -4844,8 +4844,8 @@ void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
 
     yawA = (u16)getAngle(*(f32 *)(obj + 0x18) - *(f32 *)lbl_803DD584,
                          *(f32 *)(obj + 0x20) - *(f32 *)(lbl_803DD584 + 8));
-    yawB = (u16)getAngle(*(f32 *)(*(int *)(obj + 0xa4) + 0x18) - *(f32 *)lbl_803DD584,
-                         *(f32 *)(*(int *)(obj + 0xa4) + 0x20) - *(f32 *)(lbl_803DD584 + 8));
+    yawB = (u16)getAngle(*(f32 *)(*(int *)&((GameObject *)obj)->anim.targetObj + 0x18) - *(f32 *)lbl_803DD584,
+                         *(f32 *)(*(int *)&((GameObject *)obj)->anim.targetObj + 0x20) - *(f32 *)(lbl_803DD584 + 8));
     spd = *(int *)(lbl_803DD584 + 0x18);
     d1 = (yawB + spd) - yawA;
     if (d1 > 0x8000) {
@@ -4875,14 +4875,14 @@ void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
     if (mode != 6 && mode != 7 && (npc = getFocusedNpc()) != 0) {
         s16 sd;
         int dd;
-        sd = (s16)(yawB - (u16)**(s16 **)(obj + 0xa4));
+        sd = (s16)(yawB - (u16)**(s16 **)&((GameObject *)obj)->anim.targetObj);
         if (sd > 0x8000) {
             sd -= 0xffff;
         }
         if (sd < -0x8000) {
             sd += 0xffff;
         }
-        dd = sd - (u16)(s16)Obj_GetYawDeltaToObject(*(int *)(obj + 0xa4), npc, 0);
+        dd = sd - (u16)(s16)Obj_GetYawDeltaToObject(*(int *)&((GameObject *)obj)->anim.targetObj, npc, 0);
         if (dd > 0x8000) {
             dd -= 0xffff;
         }
@@ -4895,7 +4895,7 @@ void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
         }
     }
 
-    fn_8010DB7C(*(int *)(obj + 0xa4), &va, &vb, &vc);
+    fn_8010DB7C(*(int *)&((GameObject *)obj)->anim.targetObj, &va, &vb, &vc);
     camcontrol_traceMove((f32 *)(obj + 0x18), &va, (void *)(lbl_803DD584 + 0x24), &vd, 3, 1, 1,
                          lbl_803E1A20);
 }
@@ -5024,7 +5024,7 @@ extern f32 lbl_803E1BB0;
 #pragma peephole off
 #pragma scheduling off
 void CameraModeArwing_update(u8 *obj) {
-    u8 *state = *(u8 **)(obj + 0xa4);
+    u8 *state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
     int yaw0, pitch0;
     int d;
 
@@ -5156,7 +5156,7 @@ void CameraModeWorldMap_update(u8 *obj) {
     f32 mdx, mdz;
     s16 e;
 
-    state = *(u8 **)(obj + 0xa4);
+    state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
     objA = ObjList_FindObjectById(0x42fff);
     objB = ObjList_FindObjectById(0x4325b);
     buttons = (u16)getButtonsHeld(0);
@@ -5413,7 +5413,7 @@ extern f32 lbl_803DB9C4;
 #pragma scheduling off
 void CameraModeNpcSpeak_update(u8 *obj) {
     u8 *npc;
-    u8 *state = *(u8 **)(obj + 0xa4);
+    u8 *state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
     f32 ex, ey, ez;
     f32 dx, dy, dz;
 
