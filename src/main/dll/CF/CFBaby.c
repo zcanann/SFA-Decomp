@@ -1822,7 +1822,7 @@ extern f32 lbl_803E3B30;
 extern f32 lbl_803E3B34;
 extern void objRenderFn_8003b8f4(f32);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void objRemoveFromListFn_8002ce88(int obj);
+extern void Obj_RemoveFromUpdateList(int obj);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
 extern int cMenuGetSelectedItem(void);
@@ -1893,7 +1893,7 @@ void flammablevine_init(int obj, int def)
     ObjAnim_SetMoveProgress(lbl_803E3B00, (ObjAnimComponent *)obj);
 
     if (*(s16 *)(def + 0x1e) != -1 && GameBit_Get(*(s16 *)(def + 0x1e)) != 0) {
-        objRemoveFromListFn_8002ce88(obj);
+        Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
         *(u8 *)(obj + 0x36) = 0;
         state[0] = state[0] | 2;
@@ -1977,7 +1977,7 @@ checked_vine_use:
             *(f32 *)(state + 4) = zero;
             state[0] = state[0] & ~1;
             state[0] = state[0] | 2;
-            objRemoveFromListFn_8002ce88(obj);
+            Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
         }
     }

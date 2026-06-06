@@ -555,7 +555,7 @@ void bossdrakor_hitDetect(int obj)
             if (*(int *)((char *)inner + 0x170) < 0) {
                 GameBit_Set(*(s16 *)((char *)setup + 0x1e), 1);
                 spawnExplosion((int *)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
-                objRemoveFromListFn_8002ce88((int *)obj);
+                Obj_RemoveFromUpdateList((int *)obj);
                 (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x44)))(0x1d, 3);
                 GameBit_Set(0x83c, 1);
             } else {

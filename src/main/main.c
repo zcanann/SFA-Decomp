@@ -650,7 +650,7 @@ void FUN_801fe084(int param_1,int param_2)
 void dbegg_processMessages(int obj)
 {
   extern int gameBitIncrement(int);
-  extern void objRemoveFromListFn_8002ce88(int);
+  extern void Obj_RemoveFromUpdateList(int);
   extern void vecRotateZXY(void *, int);
   extern f32 lbl_803E61C8;
   extern f32 lbl_803E61CC;
@@ -706,7 +706,7 @@ void dbegg_processMessages(int obj)
           if (*(s16 *)(data + 0x2c) > 0) {
             gameBitIncrement(*(s16 *)(data + 0x2c));
           }
-          objRemoveFromListFn_8002ce88(obj);
+          Obj_RemoveFromUpdateList(obj);
           *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
           ObjGroup_RemoveObject(obj, 36);
           break;

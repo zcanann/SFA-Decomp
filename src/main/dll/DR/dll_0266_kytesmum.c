@@ -205,7 +205,7 @@ int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
     ObjHits_RegisterActiveHitVolumeObject(obj);
     for (i = 0; i < arg[0x8b]; i++) {
         if (arg[i + 0x81] == 1 && setup->mode != 0) {
-            objRemoveFromListFn_8002ce88(obj);
+            Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             *(s16 *)((char *)obj + 0x6) |= 0x4000;
         }
@@ -240,7 +240,7 @@ void kytesmum_init(int obj, char *arg) {
         runtime->eventSfxTable = (s16 *)&lbl_803DC2C8;
         ObjGroup_AddObject(obj, 0x3);
         if (runtime->questComplete != 0) {
-            objRemoveFromListFn_8002ce88(obj);
+            Obj_RemoveFromUpdateList(obj);
             *(s16 *)((char *)obj + 0x6) |= 0x4000;
         }
         ObjHits_RegisterActiveHitVolumeObject(obj);

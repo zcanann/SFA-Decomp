@@ -221,7 +221,7 @@ void drlasercannon_init(int obj, char *arg) {
     ObjHits_EnableObject(obj);
     if (GameBit_Get(*(s16 *)(arg + DR_LASERCANNON_SETUP_DESTROYED_GAMEBIT)) != 0) {
         *(s16 *)((char *)obj + 0x6) |= DR_LASERCANNON_HIDDEN_FLAG;
-        objRemoveFromListFn_8002ce88(obj);
+        Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
     }
     ObjGroup_AddObject(obj, DR_LASERCANNON_GROUP_ID);

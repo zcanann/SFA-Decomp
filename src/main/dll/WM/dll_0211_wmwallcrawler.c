@@ -11,7 +11,7 @@ void wmwallcrawler_initialise(void) {}
 
 
 extern int getTrickyObject(void);
-extern void objRemoveFromListFn_8002ce88(int obj);
+extern void Obj_RemoveFromUpdateList(int obj);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int fn_80080150(void *timer);
 extern int randFn_80080100(int max);
@@ -102,7 +102,7 @@ void wmwallcrawler_update(s16 *obj)
                     ObjHits_DisableObject((int)obj);
                     Obj_FreeObject((int)obj);
                 } else {
-                    objRemoveFromListFn_8002ce88((int)obj);
+                    Obj_RemoveFromUpdateList((int)obj);
                     ObjHits_DisableObject((int)obj);
                     ObjGroup_RemoveObject((int)obj, 3);
                     obj[3] |= 0x4000;
@@ -123,7 +123,7 @@ void wmwallcrawler_update(s16 *obj)
                         ObjHits_DisableObject((int)obj);
                         Obj_FreeObject((int)obj);
                     } else {
-                        objRemoveFromListFn_8002ce88((int)obj);
+                        Obj_RemoveFromUpdateList((int)obj);
                         ObjHits_DisableObject((int)obj);
                         ObjGroup_RemoveObject((int)obj, 3);
                         obj[3] |= 0x4000;
@@ -156,7 +156,7 @@ void wmwallcrawler_update(s16 *obj)
                                         ObjHits_DisableObject((int)obj);
                                         Obj_FreeObject((int)obj);
                                     } else {
-                                        objRemoveFromListFn_8002ce88((int)obj);
+                                        Obj_RemoveFromUpdateList((int)obj);
                                         ObjHits_DisableObject((int)obj);
                                         ObjGroup_RemoveObject((int)obj, 3);
                                         obj[3] |= 0x4000;
@@ -391,7 +391,7 @@ void wmwallcrawler_update(s16 *obj)
                 ObjHits_DisableObject((int)obj);
                 Obj_FreeObject((int)obj);
             } else {
-                objRemoveFromListFn_8002ce88((int)obj);
+                Obj_RemoveFromUpdateList((int)obj);
                 ObjHits_DisableObject((int)obj);
                 ObjGroup_RemoveObject((int)obj, 3);
                 obj[3] |= 0x4000;
@@ -468,7 +468,7 @@ void fn_801F8008(int a, f32* b)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern void objRemoveFromListFn_8002ce88(int obj);
+extern void Obj_RemoveFromUpdateList(int obj);
 extern f32 lbl_803E5FB8;
 typedef struct { u8 hit:1; u8 _r299:7; } WcHitBits;
 
@@ -485,7 +485,7 @@ void wmwallcrawler_hitDetect(int obj)
             ObjHits_DisableObject(obj);
             Obj_FreeObject(obj);
         } else {
-            objRemoveFromListFn_8002ce88(obj);
+            Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             ObjGroup_RemoveObject(obj, 3);
             *(s16*)(obj + 6) = *(s16*)(obj + 6) | 0x4000;

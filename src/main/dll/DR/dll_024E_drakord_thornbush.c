@@ -169,7 +169,7 @@ void drakord_thornbush_hitDetect(int obj)
             } else if (*(u32 *)((char *)setup + 0x14) == 0xffffffff) {
                 Obj_FreeObject(obj);
             } else {
-                objRemoveFromListFn_8002ce88((int *)obj);
+                Obj_RemoveFromUpdateList((int *)obj);
                 ObjHits_DisableObject(obj);
                 *(s16 *)((char *)obj + 6) |= 0x4000;
             }

@@ -11,8 +11,8 @@ extern int Obj_GetPlayerObject(void);
 extern u8 Obj_IsLoadingLocked(void);
 extern undefined4 Obj_FreeObject(int param_1);
 extern int loadObjectAtObject(FirePipeObject *obj, void *spawnDef);
-extern void fn_8002CE14(int obj);
-extern void objRemoveFromListFn_8002ce88(FirePipeObject *obj);
+extern void Obj_InsertIntoUpdateList(int obj);
+extern void Obj_RemoveFromUpdateList(FirePipeObject *obj);
 extern int mmSetFreeDelay(int delay);
 extern void mm_free(void *ptr);
 extern undefined4 ObjHits_EnableObject(FirePipeObject *obj);
@@ -283,7 +283,7 @@ int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *
             freeDelay = mmSetFreeDelay(0);
             mm_free(spawnDef);
             mmSetFreeDelay(freeDelay);
-            fn_8002CE14(effectObj);
+            Obj_InsertIntoUpdateList(effectObj);
             *(u16 *)(effectObj + 0xb0) &= ~0x8000;
             return effectObj;
         }
@@ -306,7 +306,7 @@ void firepipe_releaseEffectObject(FirePipeObject *obj)
     if ((*(u16 *)((int)obj + 0xb0) & 0x200) != 0) {
         ObjHits_DisableObject(obj);
         *(u16 *)((int)obj + 0xb0) &= ~0x200;
-        objRemoveFromListFn_8002ce88(obj);
+        Obj_RemoveFromUpdateList(obj);
         *(u16 *)((int)obj + 0xb0) |= 0x8000;
         *(s16 *)((int)obj + 6) |= 0x4000;
     } else {

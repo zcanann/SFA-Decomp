@@ -206,7 +206,7 @@ extern f32 lbl_803E69F0;
 extern f32 lbl_803AD208[];
 extern void ObjPath_GetPointLocalPosition(int obj, int idx, f32 *x, f32 *y, f32 *z);
 extern void ObjHits_RegisterActiveHitVolumeObject(int obj);
-extern void objRemoveFromListFn_8002ce88(int obj);
+extern void Obj_RemoveFromUpdateList(int obj);
 extern int dll_2E_func07(int obj, u8 *arg, char *p, int a, int b);
 extern f32 lbl_803E68C0;
 extern void modelLightStruct_setEnabled(void *light, int v, f32 f);

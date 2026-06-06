@@ -583,7 +583,7 @@ void *getTablesBinEntry(int i) {
     return lbl_803DCBB4 + lbl_803DCBB0[i] * 4;
 }
 
-void fn_8002CE14(u8 *obj) {
+void Obj_InsertIntoUpdateList(u8 *obj) {
     if (*(u16 *)(obj + 0xb0) & 0x10) {
         int *list = &lbl_803DCB7C;
         int prev = 0;
@@ -597,7 +597,7 @@ void fn_8002CE14(u8 *obj) {
     }
 }
 
-void objRemoveFromListFn_8002ce88(u8 *obj) {
+void Obj_RemoveFromUpdateList(u8 *obj) {
     if (*(u16 *)(obj + 0xb0) & 0x10) {
         objList_remove(&lbl_803DCB7C, obj);
     }
