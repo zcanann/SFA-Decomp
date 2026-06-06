@@ -1500,13 +1500,9 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
                 blue = intensity * (f32)light[0xaa];
                 blue = (blue < 0.0f) ? 0.0f
                      : ((blue > 255.0f) ? 255.0f : blue);
-                if (green < red) {
-                    green = red;
-                }
+                green = (green > red) ? green : red;
                 *(f32 *)(light + 0x130) = green;
-                if (blue < *(f32 *)(light + 0x130)) {
-                    blue = *(f32 *)(light + 0x130);
-                }
+                blue = (*(f32 *)(light + 0x130) > blue) ? *(f32 *)(light + 0x130) : blue;
                 *(f32 *)(light + 0x130) = blue;
 
                 selectedCount = candidateCount;
