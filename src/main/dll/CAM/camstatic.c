@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/camera_object.h"
 
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
                                            int obj);
@@ -82,7 +83,7 @@ void camstatic_update(short *param_1)
   undefined auStack_11c [112];
   undefined auStack_ac [116];
 
-  psVar4 = *(short **)(param_1 + 0x52);
+  psVar4 = ((CameraObject *)param_1)->anim.targetObj;
   if (psVar4 == (short *)0x0) {
     return;
   }
@@ -116,7 +117,7 @@ void camstatic_update(short *param_1)
   else {
     lbl_803DD52C = timeDelta;
   }
-  *(undefined *)(param_1 + 0x9f) = 0;
+  ((CameraObject *)param_1)->unk13E = 0;
   camcontrol_updateModeSettings((int)param_1);
   camMoveFn_80104040((int)param_1,(int)psVar4);
   firstperson_updatePosition((int)param_1,psVar4);
@@ -130,7 +131,7 @@ void camstatic_update(short *param_1)
                                   (f32 *)(gCamcontrolModeSettings + 0xa4));
   if (((CamFlagByte *)(gCamcontrolModeSettings + 0xc6))->b7 == 0) {
     *(undefined *)(gCamcontrolModeSettings + 0xc5) = *(u8 *)((int)param_1 + 0xa2);
-    if (((*(u8 *)((int)param_1 + 0x142) != 0) ||
+    if (((((CameraObject *)param_1)->unk142 != 0) ||
         ((*(u8 *)(gCamcontrolModeSettings + 0xc5) == 1 &&
          (*(f32 *)(param_1 + 0x1c) >= lbl_803E16AC)))) &&
        (((CamFlagByte *)(gCamcontrolModeSettings + 200))->b7 == 0)) {
@@ -149,8 +150,8 @@ void camstatic_update(short *param_1)
   }
   else {
     fVar1 = lbl_803E16AC;
-    *(float *)(param_1 + 0x98) = fVar1;
-    *(float *)(param_1 + 0x96) = fVar1;
+    ((CameraObject *)param_1)->unk130 = fVar1;
+    ((CameraObject *)param_1)->unk12C = fVar1;
     if ((*(u8 *)((int)param_1 + 0xa2) == 1) && (*(f32 *)(param_1 + 0x1c) < fVar1)) {
       ((CamFlagByte *)(gCamcontrolModeSettings + 0xc6))->b7 = 0;
     }
@@ -160,7 +161,7 @@ void camstatic_update(short *param_1)
     }
   }
   if (((CamFlagByte *)(gCamcontrolModeSettings + 200))->b7 != 0) {
-    if ((*(u8 *)(gCamcontrolModeSettings + 0xc5) == 1) || (*(u8 *)((int)param_1 + 0x142) != 0)) {
+    if ((*(u8 *)(gCamcontrolModeSettings + 0xc5) == 1) || (((CameraObject *)param_1)->unk142 != 0)) {
       *(u8 *)(gCamcontrolModeSettings + 199) += 1;
     }
     else {
@@ -177,9 +178,9 @@ void camstatic_update(short *param_1)
       }
       camcontrol_traceMove(lbl_803E1688,&local_128,(f32 *)(param_1 + 0xc),
                            (f32 *)(param_1 + 0xc),auStack_ac,3,1,1);
-      *(f32 *)(param_1 + 0x5c) = *(f32 *)(param_1 + 0xc);
-      *(f32 *)(param_1 + 0x5e) = *(f32 *)(param_1 + 0xe);
-      *(f32 *)(param_1 + 0x60) = *(f32 *)(param_1 + 0x10);
+      ((CameraObject *)param_1)->probePosX = *(f32 *)(param_1 + 0xc);
+      ((CameraObject *)param_1)->probePosY = *(f32 *)(param_1 + 0xe);
+      ((CameraObject *)param_1)->probePosZ = *(f32 *)(param_1 + 0x10);
       *(undefined *)(gCamcontrolModeSettings + 199) = 0;
     }
   }
@@ -201,9 +202,9 @@ void camstatic_update(short *param_1)
       }
       camcontrol_traceMove(lbl_803E1688,&local_134,(f32 *)(param_1 + 0xc),
                            (f32 *)(param_1 + 0xc),auStack_11c,3,1,1);
-      *(f32 *)(param_1 + 0x5c) = *(f32 *)(param_1 + 0xc);
-      *(f32 *)(param_1 + 0x5e) = *(f32 *)(param_1 + 0xe);
-      *(f32 *)(param_1 + 0x60) = *(f32 *)(param_1 + 0x10);
+      ((CameraObject *)param_1)->probePosX = *(f32 *)(param_1 + 0xc);
+      ((CameraObject *)param_1)->probePosY = *(f32 *)(param_1 + 0xe);
+      ((CameraObject *)param_1)->probePosZ = *(f32 *)(param_1 + 0x10);
       *(undefined *)(gCamcontrolModeSettings + 0xc3) = 0;
     }
   }
