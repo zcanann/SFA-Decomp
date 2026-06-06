@@ -635,7 +635,7 @@ FUN_801a7874(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     if (bVar1 == 2) {
       *pbVar4 = *pbVar4 & 0xf6;
       *pbVar4 = *pbVar4 | 0x30;
-      *(undefined *)(param_9 + 0xad) = 1;
+      ((ObjAnimComponent *)param_9)->bankIndex = 1;
     }
     else if (bVar1 < 2) {
       if (bVar1 == 0) {
@@ -1645,7 +1645,7 @@ int fn_801A6F4C(int obj, int p2, int data) {
         case 2:
             state[0] = state[0] & ~9;
             state[0] = state[0] | 0x30;
-            *(u8 *)(obj + 0xad) = 1;
+            ((ObjAnimComponent *)obj)->bankIndex = 1;
             break;
         case 3: {
             int r;

@@ -338,6 +338,7 @@ void drakormissile_free(int obj) {
 #pragma peephole off
 void drakormissile_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     char *p = *(char **)((char *)obj + 0xb8);
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     if (visible != 0 && *(u8 *)(p + DRAKORMISSILE_FIELD_STATE) != DRAKORMISSILE_STATE_FADEOUT) {
         s16 sv4 = *(s16 *)((char *)obj + 0x4);
         s16 sv2 = *(s16 *)((char *)obj + 0x2);
@@ -345,7 +346,7 @@ void drakormissile_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
         int *model;
         char *m;
         int i;
-        *(u8 *)((char *)obj + 0xad) = 1;
+        objAnim->bankIndex = 1;
         model = Obj_GetActiveModel();
         m = p;
         for (i = 0; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++) {
@@ -362,7 +363,7 @@ void drakormissile_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
         *(s16 *)((char *)obj + 0x4) = sv4;
         *(s16 *)((char *)obj + 0x2) = sv2;
         *(f32 *)((char *)obj + 0x8) = sv8;
-        *(u8 *)((char *)obj + 0xad) = 0;
+        objAnim->bankIndex = 0;
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6964);
         if (*(void **)(p + DRAKORMISSILE_FIELD_LIGHT) != 0 && modelLightStruct_getActiveState() != 0) {
             queueGlowRender(*(void **)(p + DRAKORMISSILE_FIELD_LIGHT));
