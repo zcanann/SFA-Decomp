@@ -1708,6 +1708,14 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
           — avoid. `volatile` also works but is semantically heavier.
           One laundering fixed a whole volatile-permutation cascade
           (fn_801EE668 98.70->99.87; fn_8022AECC x7 sites +0.96).
+          **LAUNDER DISCRIMINATOR (foxtrot-1, 5 fns):** launders bite on
+          LOCAL/param-derived addresses (pointer params: fn_8014CF7C; local
+          stack arrays: dbegg_update's `*(f32 *)((int)d + 8)` post-call
+          reads — dropped 2 cross-call FP saves, frame -112→-96 exact) but
+          are VALUE-NUMBERED THROUGH on GLOBAL-derived bases (ecsh's
+          lbl_80326208 struct, WorldMap's lbl_803DD588, shrine counter
+          chains — all inert across 4+ spellings each). Classify the base
+          before probing.
       (b) **f32-temp split for eval order** — when current HOISTS a
           float load (timeDelta) above a conversion that target evaluates
           in source order, split the statement:
