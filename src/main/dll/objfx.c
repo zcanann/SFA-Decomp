@@ -911,7 +911,7 @@ void itemPickupDoParticleFx(void *obj, int mode, u8 count, f32 fval) {
 
 #pragma scheduling off
 #pragma peephole off
-void objParticleFn_80099d84(void *obj, u8 type, void *light, f32 scale, f32 fextra) {
+void objParticleFn_80099d84(void *obj, f32 scale, u8 type, f32 fextra, void *light) {
     f32 p8 = fextra;
     PartfxParams params;
     ColorTbl colors = *(ColorTbl *)lbl_802C1FD8;

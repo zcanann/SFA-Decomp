@@ -181,7 +181,7 @@ extern f32 timeDelta;
 extern void gameTextShow(int id);
 extern int warpToMap(int id, int flags);
 extern void timeOfDayFn_80055000(void);
-extern void objParticleFn_80099d84(double s1, double s2, int obj, int type, int light);
+extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern f32 lbl_803E6514;
 extern f32 lbl_803E6518;
 extern f32 lbl_803E6520;
