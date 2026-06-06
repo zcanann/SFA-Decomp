@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/cnthitobjec_state.h"
 
 #include "main/audio/sfx_ids.h"
 #pragma peephole on
@@ -68,27 +69,27 @@ void cnthitobjec_hitDetect(int obj)
     int amount;
     int model;
 
-    if (*(int *)(state + 0) == 0) {
+    if (((CntHitObjectState *)state)->unk0 == 0) {
         return;
     }
     hit = ObjHits_GetPriorityHit(obj, 0, 0, &dmg);
     if (hit == 0) {
         return;
     }
-    if (*(u8 *)(state + 8) == 0) {
+    if (((CntHitObjectState *)state)->unk8 == 0) {
         return;
     }
-    if (arrayIndexOf(*(int *)(state + 4), *(u8 *)(state + 8), hit) == -1) {
+    if (arrayIndexOf(((CntHitObjectState *)state)->unk4, ((CntHitObjectState *)state)->unk8, hit) == -1) {
         return;
     }
-    *(int *)(state + 0) = *(int *)(state + 0) - dmg;
+    ((CntHitObjectState *)state)->unk0 = ((CntHitObjectState *)state)->unk0 - dmg;
     if (*(u8 *)(setup + 0x19) == 2) {
         Obj_SetModelColorFadeRecursive(obj, 30, 200, 0, 0, 1);
         Sfx_PlayFromObject(obj, 1174);
     }
-    if (*(int *)(state + 0) <= 0) {
+    if (((CntHitObjectState *)state)->unk0 <= 0) {
         int s = *(int *)(obj + 0x4c);
-        *(int *)(state + 0) = 0;
+        ((CntHitObjectState *)state)->unk0 = 0;
         GameBit_Set(*(s16 *)(s + 0x1e), 1);
         if (*(u8 *)(s + 0x19) != 0) {
             if (*(u8 *)(s + 0x19) == 2) {
@@ -118,10 +119,10 @@ void cnthitobjec_init(int obj, int setup)
 {
     int state = *(int *)(obj + 0xb8);
 
-    *(int *)(state + 0) = 0;
+    ((CntHitObjectState *)state)->unk0 = 0;
     *(s8 *)(setup + 0x18) = (s8)((u32)(s8)*(s8 *)(setup + 0x18) % 3);
-    *(int *)(state + 4) = lbl_8032BEF8[(s8)*(s8 *)(setup + 0x18)];
-    *(u8 *)(state + 8) = lbl_803DC42C[(s8)*(s8 *)(setup + 0x18)];
+    ((CntHitObjectState *)state)->unk4 = lbl_8032BEF8[(s8)*(s8 *)(setup + 0x18)];
+    ((CntHitObjectState *)state)->unk8 = lbl_803DC42C[(s8)*(s8 *)(setup + 0x18)];
     if (*(void **)(state + 4) == (void *)&lbl_803DC428) {
         ObjHits_ClearSourceMask(8);
     }
@@ -154,10 +155,10 @@ void cnthitobjec_update(int obj)
         }
     }
 
-    if (((CntHitFlags *)(state + 9))->disabled == 0 && *(int *)(state + 0) == 0 &&
+    if (((CntHitFlags *)(state + 9))->disabled == 0 && ((CntHitObjectState *)state)->unk0 == 0 &&
         (u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
         ObjHits_EnableObject(obj);
-        *(int *)(state + 0) = *(s16 *)(setup + 0x1a);
+        ((CntHitObjectState *)state)->unk0 = *(s16 *)(setup + 0x1a);
         if (*(u8 *)(setup + 0x19) != 2) {
             ObjHitbox_SetSphereRadius(obj, *(s16 *)(setup + 0x1c));
         }
