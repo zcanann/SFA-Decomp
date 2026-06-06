@@ -23,7 +23,7 @@ extern int FUN_80294d6c();
 
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern u8 gTrickyCurveBurstCounter;
 extern f64 DOUBLE_803e70d8;
 extern f64 DOUBLE_803e7108;
@@ -541,7 +541,7 @@ void sfxplayer_updateEffectHandlePositions(short *param_1)
   if ((((*(byte *)(iVar4 + 8) >> 4 & 1) != 0) && ((*(byte *)(iVar4 + 8) >> 5 & 1) == 0)) &&
      (0x32 < *(short *)(iVar4 + 4))) {
     FUN_800068c4((uint)param_1,0x459);
-    cVar2 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_1 + 0x56));
+    cVar2 = (*DAT_803dd72c)->getMode((int)*(char *)(param_1 + 0x56));
     if (cVar2 == '\x02') {
       uStack_1c = (uint)*(byte *)(iVar4 + 7);
       local_20 = 0x43300000;

@@ -46,7 +46,7 @@ extern undefined4 DAT_802c2a3c;
 extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4* DAT_803de760;
 extern undefined4 DAT_803de764;
 extern f64 DOUBLE_803e4908;
@@ -425,8 +425,7 @@ void FUN_8018b6ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uVar8 = GameBit_Get(0x91e);
     if (uVar8 != 0) {
       GameBit_Set(0x91e,0);
-      (**(code **)(*DAT_803dd72c + 0x50))
-                (*(undefined *)(iVar9 + 0x1f),*(undefined *)(iVar9 + 0x1a),0);
+      (*DAT_803dd72c)->setAnimEvent(*(undefined *)(iVar9 + 0x1f),*(undefined *)(iVar9 + 0x1a),0);
       (**(code **)(*DAT_803dd6d4 + 0x48))(1,uVar3,0xffffffff);
       FUN_80042b9c(0,0,1);
       *pbVar10 = 3;
@@ -475,10 +474,8 @@ void FUN_8018b6ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
         if (dVar11 <= (double)(float)(local_30 - DOUBLE_803e4908)) {
           if ((dVar11 < (double)FLOAT_803e48c8) && (uVar8 != 0)) {
             *pbVar10 = 2;
-            (**(code **)(*DAT_803dd72c + 0x50))
-                      (*(undefined *)(iVar9 + 0x1f),*(undefined *)(iVar9 + 0x1a),1);
-            (**(code **)(*DAT_803dd72c + 0x44))
-                      (*(undefined *)(iVar9 + 0x1f),*(undefined *)(iVar9 + 0x1b));
+            (*DAT_803dd72c)->setAnimEvent(*(undefined *)(iVar9 + 0x1f),*(undefined *)(iVar9 + 0x1a),1);
+            (*DAT_803dd72c)->setMode(*(undefined *)(iVar9 + 0x1f),*(undefined *)(iVar9 + 0x1b));
             (**(code **)(*DAT_803dd6d4 + 0x48))(0,uVar3,0xffffffff);
             (**(code **)(*DAT_803dd6d0 + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
           }

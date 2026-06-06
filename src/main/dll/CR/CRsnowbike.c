@@ -43,7 +43,7 @@ extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de878;
 extern undefined4 DAT_803de880;
 extern f32 lbl_803DC074;
@@ -367,7 +367,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
                            in_r7,in_r8,in_r9,in_r10);
       FUN_80006724(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x245,0,in_r7,
                    in_r8,in_r9,in_r10);
-      cVar5 = (**(code **)(*DAT_803dd72c + 0x4c))(0xe,5);
+      cVar5 = (*DAT_803dd72c)->getAnimEvent(0xe,5);
       if (cVar5 == '\0') {
         FUN_80006724(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x51,0,
                      in_r7,in_r8,in_r9,in_r10);
@@ -384,7 +384,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
                            in_r7,in_r8,in_r9,in_r10);
       FUN_80006728(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x245,0,in_r7,
                    in_r8,in_r9,in_r10);
-      cVar5 = (**(code **)(*DAT_803dd72c + 0x4c))(0xe,5);
+      cVar5 = (*DAT_803dd72c)->getAnimEvent(0xe,5);
       if (cVar5 == '\0') {
         FUN_80006728(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x51
                      ,0,in_r7,in_r8,in_r9,in_r10);
@@ -397,7 +397,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
     *(undefined4 *)(param_9 + 0xf4) = 0;
   }
   if ((-1 < *(char *)((int)pfVar8 + 0x22)) && (uVar3 = FUN_80017690(0xc53), uVar3 != 0)) {
-    (**(code **)(*DAT_803dd72c + 0x50))(0xe,10,1);
+    (*DAT_803dd72c)->setAnimEvent(0xe,10,1);
     *(byte *)((int)pfVar8 + 0x22) = *(byte *)((int)pfVar8 + 0x22) & 0x7f | 0x80;
   }
   if (*(char *)((int)pfVar8 + 0x1e) != '\x0e') {
@@ -405,16 +405,16 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
     if (iVar4 != 0xe) {
       return;
     }
-    bVar6 = (**(code **)(*DAT_803dd72c + 0x40))(0xe);
+    bVar6 = (*DAT_803dd72c)->getMode(0xe);
     FUN_80017a98();
     if (bVar6 == 1) {
       uVar3 = FUN_80017690(0x5f3);
       if (uVar3 != 0) {
-        (**(code **)(*DAT_803dd72c + 0x44))(0xe,2);
+        (*DAT_803dd72c)->setMode(0xe,2);
       }
     }
     else if (((bVar6 != 0) && (bVar6 < 6)) && (uVar3 = FUN_80017690(0x2d0), uVar3 != 0)) {
-      (**(code **)(*DAT_803dd72c + 0x44))(0xe,6);
+      (*DAT_803dd72c)->setMode(0xe,6);
     }
   }
   if ((pfVar8[5] == lbl_803E61F0) || ((*(ushort *)(iVar2 + 0xb0) & 0x1000) != 0)) {
@@ -470,9 +470,9 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
         pfVar8[3] = lbl_803E61F0;
       }
     }
-    cVar5 = (**(code **)(*DAT_803dd72c + 0x4c))(0xe,1);
+    cVar5 = (*DAT_803dd72c)->getAnimEvent(0xe,1);
     if (cVar5 == '\0') {
-      cVar5 = (**(code **)(*DAT_803dd72c + 0x4c))(0xe,5);
+      cVar5 = (*DAT_803dd72c)->getAnimEvent(0xe,5);
       if (cVar5 == '\0') {
         pfVar8[1] = lbl_803E61F4;
         pfVar8[2] = lbl_803E61F8;
@@ -620,11 +620,11 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
   if ((uVar3 == 0) && (uVar3 = FUN_80017690(0x2b5), uVar3 != 0)) {
     FUN_80017698(0x4d0,1);
     uVar7 = 1;
-    iVar2 = *DAT_803dd72c;
+    iVar2 = (int)*DAT_803dd72c;
     uVar9 = (**(code **)(iVar2 + 0x50))(0xe,2);
     FUN_80053c98(uVar9,dVar10,param_3,param_4,param_5,param_6,param_7,param_8,0x50,'\0',uVar7,iVar2,
                  in_r7,in_r8,in_r9,in_r10);
-    (**(code **)(*DAT_803dd72c + 0x50))(0xe,1,0);
+    (*DAT_803dd72c)->setAnimEvent(0xe,1,0);
   }
   iVar2 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
   if (iVar2 == 0) {

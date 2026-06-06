@@ -37,7 +37,7 @@ extern undefined4* DAT_803dd6f0;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de850;
 extern undefined4 DAT_803de858;
 extern f64 DOUBLE_803e5de0;
@@ -188,11 +188,11 @@ undefined4 FUN_801cab60(undefined4 param_1,undefined4 param_2,int param_3)
       if (*(char *)(param_3 + iVar2 + 0x81) == '\x01') {
         FUN_80294ccc(iVar1,0x10,1);
         FUN_80017698(0x174,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(0xb,4,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(0xb,0x1d,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(0xb,0x1e,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(0xb,0x1f,1);
-        (**(code **)(*DAT_803dd72c + 0x44))(0xb,6);
+        (*DAT_803dd72c)->setAnimEvent(0xb,4,1);
+        (*DAT_803dd72c)->setAnimEvent(0xb,0x1d,1);
+        (*DAT_803dd72c)->setAnimEvent(0xb,0x1e,1);
+        (*DAT_803dd72c)->setAnimEvent(0xb,0x1f,1);
+        (*DAT_803dd72c)->setMode(0xb,6);
       }
     }
   }
