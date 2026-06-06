@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/game_object.h"
 
 int wmspiritset_getExtraSize(void) { return 0x2; }
 
@@ -19,8 +20,8 @@ void wmspiritset_initialise(void) {}
 void wmspiritset_init(int *obj, u8 *init) {
     int *inner = *(int **)((char *)obj + 0xb8);
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
-    if (*(s16 *)((char *)obj + 0x46) == 0x264) {
-        *(f32 *)((char *)obj + 8) = lbl_803E5F94;
+    if (((GameObject *)obj)->anim.seqId == 0x264) {
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5F94;
     }
     *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
 }
