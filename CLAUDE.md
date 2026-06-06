@@ -1272,13 +1272,32 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     runtime `addi` — never matches. Check first that the addend is NOT a real
     function boundary (then it'd be a genuine callback needing a symbols.txt
     split). (modgfx Effect5/6/7/9_func04.)
+    **FULL fix = literal in C + dtk `block_relocations` in config.yml.** The
+    literal alone still scores a 2-instr mismatch per site (target .o carries
+    the synthesized reloc, our literal has none; MWCC NEVER folds extern+const
+    into a code reloc addend — probed 4 forms ×5 compiler versions, and MP4's
+    6526 ADDR16_HA relocs have zero addends). Suppress dtk's false relocs:
+    ```yaml
+    block_relocations:
+    - target: 0x80180100
+      end: 0x80180218
+    ```
+    (key is `block_relocations`, NOT `blocked_relocations` — dtk silently
+    ignores unknown keys). One range entry killed all 34 false-reloc sites
+    across modgfx/dim_partfx/modelfx → Effect7/16/17_func04 to 100%,
+    TOTAL +7216 in one config change.
 
-**Known 2-instr cap — `xori` vs `li;xor`.** Target modgfx/dim_partfx TUs
-contain ZERO `xori`; their `cfg.f44 ^= 2` sites all emit `li r0,2; xor`.
-Current MWCC config emits `xori r0,r3,2` for every C spelling tried
-(`x = x ^ 2`, `x ^= 2`, `2 ^ x`, `u32 two = 2; x ^= two` — constant-propped,
-explicit peephole-off wrap). Not peephole-controllable. ~2 instr per site;
-leave as residual. (10 sites in modgfx, 1 in dim_partfx.)
+74. **`x ^= 2LL;` (long-long constant) emits `li r0,2; xor` — the `xori`
+    divergence is CRACKED.** Target modgfx/dim_partfx TUs contain ZERO `xori`;
+    their `cfg.f44 ^= 2` sites all emit `li r0,2; xor`. Every 32-bit C
+    spelling (`x = x ^ 2`, `x ^= 2`, `2 ^ x`, local `two = 2` — const-propped,
+    peephole on/off, all 5 mwcc versions probed) emits `xori`. The 64-bit
+    spelling `x ^= 2LL;` (op widened to long long, truncated back into the u32
+    lvalue) makes MWCC materialize the constant low word and use register
+    `xor` — byte-matching target with no other codegen change. Swept 17 sites
+    → contributed to 4 fns reaching 100%. Probe-batch method (a /tmp probe.c
+    with 9 spellings × objdump grep) found it in minutes — use that pattern
+    for future isel mysteries.
 
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
