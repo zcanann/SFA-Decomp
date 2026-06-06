@@ -601,7 +601,7 @@ int bossdrakor_animEventCallback(int obj, int a2, int events)
     }
     for (i = 0; i < *(u8 *)((char *)events + 0x8b); i++) {
         eventOffset = i + 0x81;
-        eventId = *(u8 *)((char *)events + eventOffset);
+        eventId = *(u8 *)(events + eventOffset);
         switch (eventId) {
         case 6:
             target = ObjGroup_FindNearestObject(0x1e, obj, 0);
@@ -632,7 +632,8 @@ int bossdrakor_animEventCallback(int obj, int a2, int events)
         }
     }
     if (((DrakorFlags *)((char *)inner + 0x198))->b02) {
-        objParticleFn_80099d84(lbl_803E6518, lbl_803E651C, obj, 6, 0);
+        extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
+        objParticleFn_80099d84(obj, lbl_803E6518, 6, lbl_803E651C, 0);
     }
     return 0;
 }
