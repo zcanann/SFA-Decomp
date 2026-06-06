@@ -1177,6 +1177,16 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   pairs DO respond to the plain source flip (`best < v` → `v > best`,
   frustumPlanes 99.78→100) — flip when the BRANCH differs (ble vs bge),
   add a local when only REGISTERS differ.
+- **95-98 tier signatures (highest-yield)**: (a) tiny DENORMAL float
+  literals in import code (`1.68156e-42`-style) = a misinterpreted INT store
+  — decode the bits, store the int (SB_Propeller_init: int 1200). (b)
+  `lha`-vs-`lhz` runs in halfword COPIES = mixed s16/u16 fields; `lha`
+  requires s16 on BOTH sides of the assignment — `u16dst[i] = *(s16*)…`
+  still normalizes to lhz; write `((s16*)dst)[i] = ((s16*)src)[i]`
+  (fn_8018FF48 95.08→100). (c) struct-index form (recipe #18) fixes BOTH
+  the indexing shape AND the frame (drops the offset local's slot —
+  synthHWMessageHandler frame 40→32); base-is-a-pointer-global variants
+  keep an lbzx residual (#30's alias didn't bite there — partial).
 - **CAP — FP volatile reg-number permutation** within a statement window
   (fcmpo operand pairs, lfs/stfs bursts, fdivs/fmuls chains, fctiwz). Decl
   order, temp locals, statement order, compare-direction flips all invariant
