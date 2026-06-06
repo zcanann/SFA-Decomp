@@ -426,7 +426,7 @@ void hudDrawMagicBar(int p1, int p2, uint p3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int gameTextFn_80019b14(void);
+extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int charset, int arg);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShowStr(char *str, int box, int x, int y);
@@ -479,7 +479,7 @@ void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int *yP
       else {
         sprintf((char *)&buf1, &lbl_803DBB58, value);
       }
-      prevCharset = gameTextFn_80019b14();
+      prevCharset = gameTextGetCharset();
       gameTextSetCharset(3, 3);
       gameTextMeasureString((u8 *)&buf1, lbl_803E1E68, &width, NULL, NULL, NULL, -1);
       if ((showTarget == 0) && (value >= target)) {
@@ -1075,7 +1075,7 @@ void hudDrawButtons(int param1, int param2, int param3)
       else {
         gameTextSetColor(200, 0xE6, 0xFF, (int)lbl_803DD83C);
       }
-      prevCharset = gameTextFn_80019b14();
+      prevCharset = gameTextGetCharset();
       gameTextSetCharset(3, 3);
       if (aButtonIcon > 0x3E8) {
         textObj = gameTextGet();
@@ -1091,7 +1091,7 @@ void hudDrawButtons(int param1, int param2, int param3)
       }
       if (icon != 0 && (void *)textObj != NULL && *(u16 *)(textObj + 2) > *(gp = lbl_8031B6F0 + icon * 2 + 1)) {
         textPtr = *(int *)(*(int *)(textObj + 8) + *gp * 4);
-        prevCharset2 = gameTextFn_80019b14();
+        prevCharset2 = gameTextGetCharset();
         gameTextSetCharset(3, 3);
         gameTextMeasureFn_800163c4((char *)textPtr, 8, 0, 0, &am0, &am1, &am2, &am3);
         gameTextShowStr((char *)textPtr, 8, 0, 0);
@@ -1135,12 +1135,12 @@ void hudDrawButtons(int param1, int param2, int param3)
           icon = bi;
         }
       }
-      prevCharset = gameTextFn_80019b14();
+      prevCharset = gameTextGetCharset();
       gameTextSetCharset(3, 3);
       textObj = gameTextGet(0x2AD);
       if (icon != 0 && (void *)textObj != NULL && *(u16 *)(textObj + 2) > *(gp = lbl_8031B6F0 + icon * 2 + 1)) {
         textPtr = *(int *)(*(int *)(textObj + 8) + *gp * 4);
-        prevCharset2 = gameTextFn_80019b14();
+        prevCharset2 = gameTextGetCharset();
         gameTextSetCharset(3, 3);
         gameTextMeasureFn_800163c4((char *)textPtr, 9, 0, 0, &bm0, &bm1, &bm2, &bm3);
         gameTextShowStr((char *)textPtr, 9, 0, 0);
@@ -1197,7 +1197,7 @@ void hudDrawButtons(int param1, int param2, int param3)
     }
     else {
       gameTextSetColor(0xFF, 0xFF, 0xFF, (int)lbl_803DD83C);
-      prevCharset = gameTextFn_80019b14();
+      prevCharset = gameTextGetCharset();
       gameTextSetCharset(3, 3);
       gameTextShowStr(&lbl_803DBB5C, 0x93, 0x216, 0x22);
       gameTextSetCharset(prevCharset, 3);

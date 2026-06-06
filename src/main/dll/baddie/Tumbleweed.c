@@ -473,9 +473,9 @@ extern void  hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32
 extern void  hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32 *color);
 extern void  drawPartialTexture(void *tex, f32 x, f32 y, int alpha, int scale, u32 w, u32 h, u32 u, u32 v);
 extern void  drawHudBox(int id, int x, int y, int w, int alpha, int p6);
-extern void  gameTextFn_8001984c(int a, int b, int c);
-extern void  gameTextFn_80019804(int n);
-extern int   gameTextFn_80019b14(void);
+extern void  gameTextSetCursor(int a, int b, int c);
+extern void  gameTextResetCursor(int n);
+extern int   gameTextGetCharset(void);
 extern void  gameTextSetCharset(int a, int b);
 extern void  textureFree(void* tex);
 extern void* textureLoadAsset(s32);
@@ -829,73 +829,73 @@ int Minimap_update(void)
                     cwTri2 = col;
                     hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri2);
                 } else {
-                    gameTextFn_8001984c(box[1], box[5], 1);
-                    gameTextFn_80019804(1);
+                    gameTextSetCursor(box[1], box[5], 1);
+                    gameTextResetCursor(1);
                     n = lbl_803DBBC0;
                     box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
                     box[4] = (hw < box[0]) ? hw : box[0];
                     n = lbl_803DBBC4;
                     box[5] = (u16)((n > 2) ? n : 2);
-                    gameTextFn_8001984c(box[0], box[5], 2);
+                    gameTextSetCursor(box[0], box[5], 2);
                     gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
-                    cs = gameTextFn_80019b14();
+                    cs = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
                     gameTextShow(0x458);
                     gameTextSetCharset(cs, 3);
-                    gameTextFn_80019804(2);
+                    gameTextResetCursor(2);
                 }
                 break;
             case 1:
                 fn_80133718();
                 if ((u32)lbl_803DD934 == 0) {
                     fn_8013351C();
-                    gameTextFn_8001984c(box[1], box[5], 1);
-                    gameTextFn_80019804(1);
+                    gameTextSetCursor(box[1], box[5], 1);
+                    gameTextResetCursor(1);
                     n = lbl_803DBBC0;
                     box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
                     box[4] = (hw < box[0]) ? hw : box[0];
                     n = lbl_803DBBC4;
                     box[5] = (u16)((n > 2) ? n : 2);
-                    gameTextFn_8001984c(box[0], box[5], 2);
+                    gameTextSetCursor(box[0], box[5], 2);
                     gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
-                    cs = gameTextFn_80019b14();
+                    cs = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
                     gameTextShow(0x459);
                     gameTextSetCharset(cs, 3);
-                    gameTextFn_80019804(2);
+                    gameTextResetCursor(2);
                 }
                 break;
             case 2:
                 if (lbl_803DD7A2 != 0 && lbl_803DBA6E > -1) {
                     if (lbl_803DD928 == 0) {
-                        gameTextFn_8001984c(box[1], box[5], 1);
-                        gameTextFn_80019804(1);
+                        gameTextSetCursor(box[1], box[5], 1);
+                        gameTextResetCursor(1);
                         box[4] = (u16)lbl_803DBBC0;
                         box[5] = (u16)lbl_803DBBC4;
-                        gameTextFn_8001984c(box[1], box[5], 2);
+                        gameTextSetCursor(box[1], box[5], 2);
                         gameTextSetColor(0, 0xff, 0, lbl_803DD7A2 & 0xff);
                         gameTextShow(lbl_803DBA6E + 10000);
-                        gameTextFn_80019804(2);
+                        gameTextResetCursor(2);
                     }
                 } else if (lbl_803DBBB0 != 0) {
                     fn_8013351C();
-                    gameTextFn_8001984c(box[1], box[5], 1);
-                    gameTextFn_80019804(1);
+                    gameTextSetCursor(box[1], box[5], 1);
+                    gameTextResetCursor(1);
                     n = lbl_803DBBC0;
                     box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
                     box[4] = (hw < box[0]) ? hw : box[0];
                     n = lbl_803DBBC4;
                     box[5] = (u16)((n > 2) ? n : 2);
-                    gameTextFn_8001984c(box[0], box[5], 2);
+                    gameTextSetCursor(box[0], box[5], 2);
                     gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
-                    cs = gameTextFn_80019b14();
+                    cs = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
                     gameTextShow(0x45a);
                     gameTextSetCharset(cs, 3);
-                    gameTextFn_80019804(2);
+                    gameTextResetCursor(2);
                 }
                 break;
             }

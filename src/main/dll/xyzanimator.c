@@ -1522,7 +1522,7 @@ void pinponspike_update(int obj) {
 
     if (*(int *)(obj + 0xf4) > 0) {
         *(int *)(obj + 0xf4) = (int)((f32)*(int *)(obj + 0xf4) - timeDelta);
-        if (*(int *)(obj + 0xf4) < 1) {
+        if (*(int *)(obj + 0xf4) <= 0) {
             Obj_FreeObject(obj);
             return;
         }

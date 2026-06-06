@@ -1901,8 +1901,8 @@ extern f32 lbl_803E1C2C;
 f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char *st)
 {
     f32 dist;
-    f32 fx;
     f32 fz;
+    f32 fx;
     f32 c;
     f32 s;
     f32 dx;

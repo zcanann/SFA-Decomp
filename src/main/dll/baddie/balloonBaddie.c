@@ -782,7 +782,7 @@ void drawTrickyHudOverlay(int obj)
         (*(int (**)(int, int *))(*(int *)(*(int *)(tricky + 0x68)) + 0x48))(tricky, &local_8);
         if (gTrickyHudCachedIconTexture != 0) {
             if (gTrickyHudCachedIconIndex != local_8) {
-                textureFree();
+                ((void (*)(void *))textureFree)(gTrickyHudCachedIconTexture);
                 gTrickyHudCachedIconIndex = -1;
                 gTrickyHudCachedIconTexture = 0;
             }

@@ -15,7 +15,7 @@ extern undefined4 FUN_80006b58();
 extern undefined4 FUN_80006c1c();
 extern undefined8 FUN_80006c30();
 extern undefined8 FUN_80006c84();
-extern undefined4 gameTextFn_80017434();
+extern undefined4 gameTextSetWindow();
 extern undefined8 FUN_80017484();
 extern int FUN_800174a0();
 extern undefined4 FUN_800174b8();
@@ -1362,7 +1362,7 @@ extern u8 AudioStream_IsPreparing(void);
 extern void doNothing_8000CF54(int);
 extern void gameTextLoadTaskText(int);
 extern void subtitleFn_8001b700(void);
-extern void textFn_8001bb78(int);
+extern void subtitleStart(int);
 extern u32 lbl_803DB718;
 void streamCb_80080384(void)
 {
@@ -1374,7 +1374,7 @@ void streamCb_80080384(void)
         lbl_803DB714 = -1;
     } else if ((s32)lbl_803DB718 != -1) {
         subtitleFn_8001b700();
-        textFn_8001bb78(lbl_803DB718);
+        subtitleStart(lbl_803DB718);
         lbl_803DB718 = -1;
     }
 }

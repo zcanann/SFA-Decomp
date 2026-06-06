@@ -8,7 +8,7 @@ extern void mm_free(void *ptr);
 /*
  * --INFO--
  *
- * Function: gameTextFn_80017434
+ * Function: gameTextSetWindow
  * EN v1.0 Address: 0x80017434
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8001746C
@@ -2957,7 +2957,7 @@ void fn_8002A5DC(u8 *obj)
     extern f32 lbl_803DE888;
     extern f32 lbl_803DE894;
     extern f32 lbl_803DE898;
-    f32 m2[16];
+    f32 m2[12];
     f32 rot[12];
     f32 vecA[3];
     f32 vecB[3];

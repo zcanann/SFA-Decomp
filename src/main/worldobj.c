@@ -259,7 +259,7 @@ extern f32 lbl_803E6678;
 #pragma peephole off
 void worldobj_update(int obj) {
     s16 rot[3];
-    f32 vec[4];
+    f32 vec[10];
     struct {
         u8 pad0[6];
         s16 f6;

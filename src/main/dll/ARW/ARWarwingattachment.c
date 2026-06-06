@@ -2554,7 +2554,7 @@ void dll_1FF_update(int obj)
     char *t;
     u8 c;
     char *p;
-    int stk[3];
+    int stk[2];
 
     b = *(s16 **)(obj + 0xb8);
     player = Obj_GetPlayerObject();
