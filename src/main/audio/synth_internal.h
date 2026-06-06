@@ -319,7 +319,12 @@ extern u8 gSynthInitialized;
 extern u8 gSynthDelayBucketCursor;
 extern SynthCallbackLink* gSynthFreeCallbacks;
 extern SynthVoice* gSynthCurrentVoice;
-extern McmdVoiceState* gSynthVoiceSlots;
+/* WRONG-SYMBOL IMPORT BUG: lbl_803DEEE8 is the 0.2f constant in the .sdata2
+ * float pool (0x3E4CCCCD; intersect.c reads it as f32 correctly). The
+ * synth_control.c list-walk that indexes it as a voice array needs a
+ * matching pass to locate the true base symbol (likely the synth voice
+ * array). Semantics preserved as-imported; do not "fix" without asm. */
+extern McmdVoiceState* lbl_803DEEE8;
 extern u32 gSynthDelayedActionWord0;
 extern u32 gSynthDelayedActionWord1;
 extern SynthFade gSynthFades[0x20];

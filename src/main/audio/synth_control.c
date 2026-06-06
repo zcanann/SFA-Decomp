@@ -252,10 +252,10 @@ s32 synthTriggerCallback(u32 callbackId) {
     handled = 0;
     if (gSynthInitialized != 0) {
         for (linkId = synthLookupCallbackLinkId(callbackId); linkId != SYNTH_INVALID_LINK_ID;
-             linkId = gSynthVoiceSlots[linkId & 0xFF].callbackNext) {
+             linkId = lbl_803DEEE8[linkId & 0xFF].callbackNext) {
             McmdVoiceState* slot;
 
-            slot = &gSynthVoiceSlots[linkId & 0xFF];
+            slot = &lbl_803DEEE8[linkId & 0xFF];
             if (linkId == slot->callbackLinkId) {
                 synthReleaseVoiceSlot(slot);
                 handled = 1;

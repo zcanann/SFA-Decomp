@@ -1643,7 +1643,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
 void screenImageDraw(u8 alpha)
 {
     extern f32 lbl_803DEEE4, lbl_803DEEEC, lbl_803DEEF0;
-    extern f32 gSynthVoiceSlots;
+    extern f32 lbl_803DEEE8;
     extern f32 lbl_8030EA70[3][3];
     extern f32 lbl_8030EA88[3][3];
     extern Mtx hudMatrix;
@@ -1677,7 +1677,7 @@ void screenImageDraw(u8 alpha)
 
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
 
-    PSMTXScale(mtx_60, gSynthVoiceSlots, gSynthVoiceSlots, lbl_803DEEE4);
+    PSMTXScale(mtx_60, lbl_803DEEE8, lbl_803DEEE8, lbl_803DEEE4);
     mtx_60[1][3] = -fA;
     GXLoadTexMtxImm(mtx_60, 0x1e, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x1e, 0, 0x7d);
