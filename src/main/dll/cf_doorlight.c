@@ -53,10 +53,10 @@ int kaldachom_stateHandlerB05(int obj, int p)
 
 #pragma scheduling off
 #pragma peephole off
-int kaldachom_stateHandlerB04(int obj, u8 *state)
+int kaldachom_stateHandlerB04(int obj, GroundBaddieState *state)
 {
-    if ((s8)state[0x27b] != 0) {
-        ((void (*)(int, u8 *, int))((void **)*gPlayerInterface)[5])(obj, state, 1);
+    if ((s8)state->baddie.moveJustStartedB != 0) {
+        ((void (*)(int, GroundBaddieState *, int))((void **)*gPlayerInterface)[5])(obj, state, 1);
     }
     return 0;
 }
@@ -65,11 +65,11 @@ int kaldachom_stateHandlerB04(int obj, u8 *state)
 
 #pragma scheduling off
 #pragma peephole off
-int kaldachom_stateHandlerB03(int obj, u8 *state)
+int kaldachom_stateHandlerB03(int obj, GroundBaddieState *state)
 {
-    if ((s8)state[0x27b] != 0) {
-        u8 *extra = ((GameObject *)obj)->extra;
-        extra[0x405] = 0;
+    if ((s8)state->baddie.moveJustStartedB != 0) {
+        GroundBaddieState *extra = ((GameObject *)obj)->extra;
+        extra->unk405 = 0;
         GameBit_Set(((CfDoorlightState *)extra)->gameBitB, 0);
         GameBit_Set(((CfDoorlightState *)extra)->gameBitA, 1);
     }
@@ -145,12 +145,12 @@ extern f32 lbl_803E3080;
 
 #pragma scheduling off
 #pragma peephole off
-int kaldachom_stateHandlerB01(int* obj, u8* state) {
+int kaldachom_stateHandlerB01(int* obj, GroundBaddieState *state) {
     KaldaChomControl *control = ((CfDoorlightState *)((GameObject *)obj)->extra)->control;
-    if (*(s16*)((char*)state + 628) == 6) {
+    if (state->baddie.controlMode == 6) {
         f32 zero;
         f32 timer;
-        if ((s8)state[635] != 0) {
+        if ((s8)state->baddie.moveJustStartedB != 0) {
             control->returnStateTimer = lbl_803E3080;
         }
         timer = control->returnStateTimer;
@@ -164,19 +164,19 @@ int kaldachom_stateHandlerB01(int* obj, u8* state) {
             return 6;
         }
     } else {
-        if ((s8)state[838] != 0) return 6;
+        if ((s8)state->baddie.moveDone != 0) return 6;
     }
     return 0;
 }
 
-int kaldachom_stateHandlerB00(int* obj, u8* state) {
-    if (*(void**)((char*)state + 0x2d0) != NULL) {
-        if ((s8)state[635] != 0) {
+int kaldachom_stateHandlerB00(int* obj, GroundBaddieState *state) {
+    if (state->baddie.targetObj != NULL) {
+        if ((s8)state->baddie.moveJustStartedB != 0) {
             f32 fz = lbl_803E3060;
-            *(f32*)((char*)state + 0x284) = fz;
-            *(f32*)((char*)state + 0x280) = fz;
-            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
-        } else if ((s8)state[838] != 0) {
+            state->baddie.animSpeedB = fz;
+            state->baddie.animSpeedA = fz;
+            ((void(*)(int*, GroundBaddieState *, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+        } else if ((s8)state->baddie.moveDone != 0) {
             return 6;
         }
     }
@@ -187,7 +187,7 @@ int kaldachom_stateHandlerB00(int* obj, u8* state) {
 
 #pragma scheduling off
 #pragma peephole off
-int kaldachom_stateHandlerB02(int obj, int p2)
+int kaldachom_stateHandlerB02(int obj, GroundBaddieState *p2)
 {
   extern void ObjHits_DisableObject(int);
   extern void Obj_FreeObject(int);
@@ -195,15 +195,15 @@ int kaldachom_stateHandlerB02(int obj, int p2)
   extern f32 lbl_803E307C;
   int sub = *(int *)&((GameObject *)obj)->extra;
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
+  if ((s32)(s8)p2->baddie.moveJustStartedB != 0) {
     ((CfDoorlightState *)sub)->control->soundFlags = 0;
-    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 7);
+    (**(void (**)(int, GroundBaddieState *, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 7);
     ObjHits_DisableObject(obj);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     ((CfDoorlightState *)sub)->flags400 = (u16)(((CfDoorlightState *)sub)->flags400 | 0x20);
     ((CfDoorlightState *)sub)->unk3E8 = lbl_803E3078;
     ((CfDoorlightState *)sub)->unk3EC = lbl_803E307C;
-  } else if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
+  } else if ((s32)(s8)p2->baddie.moveDone != 0) {
     if (((GameObject *)obj)->anim.placementData == NULL) {
       Obj_FreeObject(obj);
       return 0;
