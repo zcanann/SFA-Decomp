@@ -429,7 +429,7 @@ void FUN_8015dbd4(undefined8 param_1,undefined8 param_2,double param_3,undefined
   uVar3 = 0x102;
   iVar5 = *DAT_803dd738;
   (**(code **)(iVar5 + 0x58))((double)lbl_803E3A50,param_9,param_10,iVar6);
-  *(undefined4 *)(param_9 + 0xbc) = 0;
+  ((GameObject *)param_9)->animEventCallback = NULL;
   dVar7 = (double)lbl_803E39BC;
   if ((float)(dVar7 * (double)(float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar6 + 0x3fe))
                                      - DOUBLE_803e39a0)) < lbl_803E39EC) {
@@ -1074,7 +1074,7 @@ void dll_CA_init(int obj, u8 *p, int flags)
   }
   (*(void (**)(int, u8 *, int, int, int, int, u8, f32))(*(int *)gBaddieControlInterface + 0x58))(
       obj, p, (int)sub, 14, 8, 0x102, mode, lbl_803E2DB8);
-  *(int *)&((GameObject *)obj)->animEventCallback = 0;
+  ((GameObject *)obj)->animEventCallback = NULL;
   if (lbl_803E2D24 * (f32)(u32)sub->aggroRange < lbl_803E2D54) {
     *(s16 *)&sub->aggroRange = 0x6e;
   }
@@ -1722,7 +1722,7 @@ void dll_CE_init(int obj, u8 *p, int flags)
   }
   (*(void (**)(int, u8 *, int, int, int, int, u8, f32))(*(int *)gBaddieControlInterface + 0x58))(
       obj, p, (int)sub, 7, 6, 0x102, mode, lbl_803E2E14);
-  *(int *)&((GameObject *)obj)->animEventCallback = 0;
+  ((GameObject *)obj)->animEventCallback = NULL;
   v = *(f32 **)&sub->control;
   *v = (f32)(int)randomGetRange(10, 300);
   ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
@@ -2139,7 +2139,7 @@ void FUN_8015f75c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar4 = 0x102;
   iVar6 = *DAT_803dd738;
   (**(code **)(iVar6 + 0x58))((double)lbl_803E3AAC,param_9,param_10,iVar8);
-  *(undefined4 *)(param_9 + 0xbc) = 0;
+  ((GameObject *)param_9)->animEventCallback = NULL;
   pfVar7 = *(float **)(iVar8 + 0x40c);
   uVar1 = randomGetRange(10,300);
   *pfVar7 = (f32)(s32)(uVar1);

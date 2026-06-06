@@ -369,7 +369,7 @@ void hightop_init(void *obj, u8 *arg) {
     local1 = lbl_802C2590;
     local2 = lbl_802C25A4;
     *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)hightop_interactionCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)hightop_interactionCallback;
     runtime->unkC45 = arg[0x19];
     runtime->unkC16 = 5;
     *(s8 *)&runtime->unkC4B = -1;

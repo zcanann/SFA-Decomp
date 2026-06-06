@@ -2081,7 +2081,7 @@ void Lamp_update(int obj)
 #pragma scheduling off
 void SB_CageKyte_init(int p)
 {
-    *(void **)((char *)p + 0xbc) = (void *)SB_CageKyte_SeqFn;
+    ((GameObject *)p)->animEventCallback = (void *)SB_CageKyte_SeqFn;
     *(u16 *)((char *)p + 0xb0) = (u16)((u32)*(u16 *)((char *)p + 0xb0) | 0x6000u);
 }
 #pragma scheduling reset
@@ -2346,7 +2346,7 @@ void SB_KyteCage_free(int* obj)
 void SB_KyteCage_init(int *obj, int *params)
 {
     SBKyteCageState *state = ((GameObject *)obj)->extra;
-    *(int (**)(int, int, int))((char *)obj + 0xbc) = SB_KyteCage_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)SB_KyteCage_SeqFn;
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
     state->seqLatch = 0;

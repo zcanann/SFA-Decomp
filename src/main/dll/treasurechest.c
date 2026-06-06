@@ -226,7 +226,7 @@ void dll_D3_init(int obj, int def, int flag)
     }
     ((void (*)(int, int, int, int, int, int, int, f32))((void **)*(int *)gBaddieControlInterface)[22])
         (obj, def, state, 5, 1, 0x108, setupFlags, lbl_803E3048);
-    *(int *)&((GameObject *)obj)->animEventCallback = 0;
+    ((GameObject *)obj)->animEventCallback = NULL;
 
     extra = *(LandedArwingState **)(state + 0x40c);
     memset((void *)extra, 0, 0x94);

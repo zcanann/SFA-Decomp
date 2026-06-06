@@ -2031,7 +2031,7 @@ extern char lbl_803AC948[];
 #pragma peephole off
 void imanimspacecraft_init(int *obj) {
     f32 v;
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)&imanimspacecraft_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)imanimspacecraft_SeqFn;
     v = lbl_803E4784;
     *(f32 *)(lbl_803AC948 + 0xc) = v;
     *(f32 *)(lbl_803AC948 + 0x10) = v;

@@ -72,7 +72,7 @@ void arwlevelcon_init(int obj, u8 *setup)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
 
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)arwlevelcon_ringEventCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)arwlevelcon_ringEventCallback;
     *(s16 *)(state + 0x14) = 1;
     *(s16 *)(state + 0x16) = 0x50;
     *(f32 *)(state + 0) = lbl_803E70EC;

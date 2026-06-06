@@ -367,7 +367,7 @@ void openPortalFn_801d4364(void *obj, void *state)
 void sh_queenearthwalker_init(void *obj, QueenEarthWalkerMapData *mapData)
 {
   *(s16 *)obj = (s16)(mapData->yawByte << 8);
-  *(int *)&((GameObject *)obj)->animEventCallback = (int)sh_queenearthwalker_processAnimEvents;
+  ((GameObject *)obj)->animEventCallback = (void *)sh_queenearthwalker_processAnimEvents;
   ((GameObject *)obj)->objectFlags |= 0x4000;
 }
 #pragma peephole reset

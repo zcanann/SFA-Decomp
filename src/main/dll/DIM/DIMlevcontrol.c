@@ -743,7 +743,7 @@ void dimcannon_init(int *obj, int *arg)
         ((DimCannonState *)state)->unkAF = 0x80;
         ((DimCannonState *)state)->unk98 = lbl_803E48B8;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
-        *(int *)&((GameObject *)obj)->animEventCallback = (int)fn_801B2550;
+        ((GameObject *)obj)->animEventCallback = (void *)fn_801B2550;
         ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)arg + 0x28) << 8);
         lbl_803DDB50 = Resource_Acquire(0x79, 1);
         if (GameBit_Get(*(s16 *)((char *)arg + 0x1a))) {

@@ -1,4 +1,5 @@
 #include "main/dll/DIM/DIMbosstonsil.h"
+#include "main/game_object.h"
 
 extern int GameBit_Get(int eventId);
 extern void *objCreateLight(int param_1,int param_2);
@@ -58,7 +59,7 @@ void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
     variant = variant | 1;
   }
   (*(code *)(*gBaddieControlInterface + 0x58))(lbl_803E4CCC,obj,param_2,state,2,2,0x102,variant);
-  *(void (**)(void))(obj + 0xbc) = (void (*)(void))dll_DIM_BossGutSpik_update;
+  ((GameObject *)obj)->animEventCallback = (void *)dll_DIM_BossGutSpik_update;
   (*(code *)(*gPlayerInterface + 0x14))(obj,state,0);
   *(s16 *)(state + 0x270) = 0;
   gDIMbosstonsilRoutePhase = (s8)GameBit_Get(0x20c);

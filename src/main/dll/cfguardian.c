@@ -723,7 +723,7 @@ void Door_init(int *obj, u8 *def) {
     u8 *state = ((GameObject *)obj)->extra;
     state[5] = 1;
     *(s16 *)obj = (s16)(def[0x1f] << 8);
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)Door_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)Door_SeqFn;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
     ((GameObject *)obj)->anim.rootMotionScale = ((f32)(u32)*(u8 *)((char *)def + 0x21) - lbl_803E3790) * lbl_803E3784;
     if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E3788) {

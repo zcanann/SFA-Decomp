@@ -1,5 +1,6 @@
 #include "main/dll/WC/WClaser.h"
 #include "main/dll/WC/WCpressureSwitch.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objlib.h"
@@ -172,7 +173,7 @@ void WM_Galleon_init(int *obj, WMGalleonSetup *setup)
         return;
     }
     objSetSlot(obj, 0x5a);
-    OBJ_PTR(obj, 0xbc) = (void *)WM_Galleon_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)WM_Galleon_SeqFn;
     OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
     OBJ_S32(obj, 0xf4) = 9;
     state->savedX = OBJ_F32(obj, 0xc);
@@ -295,7 +296,7 @@ void WM_seqobject_init(int *obj, s8 *def)
 
     angle = (s16)((s32)def[0x18] << 8);
     OBJ_S16(obj, 0) = angle;
-    OBJ_PTR(obj, 0xbc) = (void *)WM_seqobject_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)WM_seqobject_SeqFn;
     OBJ_S32(obj, 0xf8) = 0x14;
 }
 #pragma peephole reset
@@ -370,7 +371,7 @@ void dll_1FB_init(int *obj, u8 *def)
     state = (Dll1FBState *)OBJ_PTR(obj, 0xb8);
     setup = (Dll1FBSetup *)def;
     ObjMsg_AllocQueue(obj, 4);
-    OBJ_PTR(obj, 0xbc) = (void *)dll_1FB_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dll_1FB_SeqFn;
     OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
     OBJ_S16(obj, 2) = setup->objectParam;
     state->baseMove = setup->baseMove;

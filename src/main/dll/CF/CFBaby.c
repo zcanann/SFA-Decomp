@@ -156,7 +156,7 @@ void FireFlyLantern_init(int obj, int def)
   u32 childCount;
 
   state = ((GameObject *)obj)->extra;
-  *(int *)&((GameObject *)obj)->animEventCallback = (int)FireFlyLantern_SeqFn;
+  ((GameObject *)obj)->animEventCallback = (void *)FireFlyLantern_SeqFn;
   player = Obj_GetPlayerObject();
   if (*(s16 *)((u8 *)player + 0x46) != 0) {
     *(s16 *)(state + 0x20) = 0x13d;
@@ -2516,7 +2516,7 @@ void landed_arwing_init(int obj, int param) {
     if (GameBit_Get(*(s16*)((char*)param + 0x1c)) == 0) {
         unlockLevel(0, 0, 1);
     }
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)Landed_Arwing_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)Landed_Arwing_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2776,7 +2776,7 @@ void Fall_Ladders_init(int *obj, s8 *def) {
     state[2] = *(s16 *)((char *)def + 0x1e);
     *(f32 *)state = (f32)(s32)*(s16 *)((char *)def + 0x1a);
     ((GameObject *)obj)->objectFlags |= 0x6000;
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)Fall_Ladders_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)Fall_Ladders_SeqFn;
     ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY + *(f32 *)state;
     Obj_SetActiveModelIndex(obj, (s32)*(s8 *)((char *)def + 0x19));
     *(u8 *)((char *)state + 8) = 0;
@@ -2796,7 +2796,7 @@ extern int lbl_80321990[];
 void infopoint_init(int *obj, u8 *def) {
     u8 *state = ((GameObject *)obj)->extra;
     int *txt;
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)InfoPoint_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)InfoPoint_SeqFn;
     if (*(void **)lbl_803219A0 == NULL) {
         *(int *)lbl_803219A0 = textureLoadAsset(616);
     }

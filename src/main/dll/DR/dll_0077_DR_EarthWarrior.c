@@ -1225,7 +1225,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     r2 = lbl_802C2CA8;
     r1 = lbl_802C2CB4;
     *(s16 *)obj = (s16)(*(s8 *)((char *)p2 + 0x18) << 8);
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)fn_802BDBE8;
+    ((GameObject *)obj)->animEventCallback = (void *)fn_802BDBE8;
     ObjGroup_AddObject(obj, 0xa);
     *(u8 *)((char *)inner + 0x14e8) = *(u8 *)((char *)p2 + 0x19);
     *(s16 *)((char *)inner + 0x14de) = 5;

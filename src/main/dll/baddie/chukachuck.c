@@ -186,7 +186,7 @@ void dfpfloorbar_init(int obj, int params)
     DfpFloorbarState *state = ((GameObject *)obj)->extra;
 
     ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(params + 0x18) << 8);
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)&dfpfloorbar_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dfpfloorbar_SeqFn;
     state->modeIndex = *(u8 *)(params + 0x19);
     state->triggerGameBit = *(s16 *)(params + 0x1e);
     state->completionGameBit = *(s16 *)(params + 0x20);

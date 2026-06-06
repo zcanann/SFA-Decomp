@@ -375,7 +375,7 @@ void sc_totemstrength_render(void) { objRenderFn_8003b8f4(lbl_803E567C); }
 void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void sc_totemstrength_init(int *obj) {
     int *inner = ((GameObject *)obj)->extra;
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)&platform1_control;
+    ((GameObject *)obj)->animEventCallback = (void *)platform1_control;
     ((GameObject *)obj)->objectFlags |= 0x6000;
     *(s16 *)obj = (s16)-10496;
     inner[8] = -10496;

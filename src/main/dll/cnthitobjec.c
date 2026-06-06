@@ -136,7 +136,7 @@ void cnthitobjec_init(int obj, int setup)
         ((CntHitFlags *)(state + 9))->disabled = 1;
         ObjHits_DisableObject(obj);
     }
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)cnthitobjec_emitHitEvents;
+    ((GameObject *)obj)->animEventCallback = (void *)cnthitobjec_emitHitEvents;
 }
 #pragma scheduling reset
 #pragma peephole reset

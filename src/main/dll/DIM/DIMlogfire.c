@@ -1394,7 +1394,7 @@ void animsharpclaw_init(int *obj, u8 *init) {
     int *inner;
     int f4;
 
-    *(int *)&((GameObject *)obj)->animEventCallback = 0;
+    ((GameObject *)obj)->animEventCallback = NULL;
     objSetSlot(obj, 0x64);
     inner = ((GameObject *)obj)->extra;
     *(s16 *)((char *)inner + 0x6a) = *(s16 *)((char *)init + 0x1a);

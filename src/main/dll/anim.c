@@ -4214,7 +4214,7 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
     }
     ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*gBaddieControlInterface)[22])(obj, def, sub, 0x10, 7, 0x10a, mode, lbl_803E62FC);
     ObjGroup_AddObject(obj, 3);
-    *(int *)&((GameObject *)obj)->animEventCallback = 0;
+    ((GameObject *)obj)->animEventCallback = NULL;
     p40c = *(int**)&((GroundBaddieState *)sub)->control;
     memset(p40c, 0, 0x50);
     ((DbStealerwormControl *)p40c)->unk08 = lbl_803E62FC;

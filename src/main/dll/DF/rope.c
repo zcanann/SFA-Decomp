@@ -438,7 +438,7 @@ void dimbossgut2_init(int obj, int def, int p3)
   }
   (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int *)(*gBaddieControlInterface + 0x58)))(
       obj, def, state, 0, 0, 0x102, flags, lbl_803E4CE0);
-  *(int *)&((GameObject *)obj)->animEventCallback = 0;
+  ((GameObject *)obj)->animEventCallback = NULL;
   p = *(int *)(state + 0x40c);
   z = lbl_803E4CD8;
   *(f32 *)(p + 0x0) = z;
@@ -857,7 +857,7 @@ void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 void dimbosscrackpar_init(s16 *obj, s8 *def) {
     obj[0] = 0;
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E4D98;
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)&dimbosscrackpar_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dimbosscrackpar_SeqFn;
     obj[0] = (s16)((s32)def[0x24] << 8);
     obj[1] = (s16)((s32)def[0x23] << 8);
     obj[2] = (s16)((s32)def[0x22] << 8);
