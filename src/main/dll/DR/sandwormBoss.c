@@ -3570,27 +3570,7 @@ typedef struct SpiritDoorSpiritState {
     u8 active; /* gamebit not yet set: render + group 0x4e membership */
 } SpiritDoorSpiritState;
 
-/* Per-object extra state for the gunpowder barrel (carryable). */
-typedef struct GunpowderBarrelState {
-    u8 pad00[0x15];
-    u8 unk15;     /* blocks scaling/grabbing while set */
-    u8 pad16;
-    u8 unk17;     /* blocks scaling while set */
-    f32 unk18;    /* must be zero to grab */
-    u8 pad1C[4];
-    f32 velX;     /* launch/throw velocity */
-    f32 velY;
-    f32 velZ;
-    u8 pad2C[0xC];
-    f32 unk38;
-    u8 pad3C[0xC];
-    u8 flags48;   /* 0x40 = save position at the linked barrel */
-    u8 flags49;   /* 1 sleeping, 2 in flight */
-    u8 heldFlags; /* GpbHeldByte: held / playerHeld bits */
-    u8 pad4B[5];
-    s16 launchYaw;
-} GunpowderBarrelState;
-STATIC_ASSERT(offsetof(GunpowderBarrelState, launchYaw) == 0x50);
+#include "main/dll/DR/gunpowderbarrel_state.h"
 
 extern int cfpowerbase_SeqFn(int p1, int unused, int p3);
 

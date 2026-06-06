@@ -13,6 +13,62 @@ int drakorhoverpad_func14(void) { return 0x0; }
 
 void drakorhoverpad_func15(void) {}
 
+#include "global.h"
+
+/* Rom-curve follow block embedded at state+0x4 (passed to the curve
+ * interface; drakorhoverpad_update receives it as its first arg). */
+typedef struct DrakorPadCurve {
+    f32 unk00;
+    u8 pad04[0xc];
+    int unk10;
+    u8 pad14[0x54];
+    f32 unk68;
+    f32 unk6C;
+    f32 unk70;
+    f32 unk74;
+    f32 unk78;
+    f32 unk7C;
+    int pointIdx;    /* 0x80 */
+    u8 pad84[0xc];
+    int unk90;
+    u8 pad94[8];
+    u8 *pointDef;    /* 0x9c */
+    u8 *pointDef2;   /* 0xa0 */
+    void *unkA4;
+    u8 padA8[0x10];
+    f32 vecB8[4];
+    u8 padC8[0x10];
+    f32 vecD8[4];
+    u8 padE8[0x10];
+    f32 vecF8[4];
+} DrakorPadCurve;
+STATIC_ASSERT(sizeof(DrakorPadCurve) == 0x108);
+
+/* drakorhoverpad_getExtraSize == 0x17c. */
+typedef struct DrakorHoverpadState {
+    f32 unk00;
+    DrakorPadCurve curve; /* 0x004 */
+    u8 pad10C[4];
+    f32 speed;        /* 0x110 */
+    f32 targetSpeed;  /* 0x114 */
+    f32 unk118;
+    f32 unk11C;
+    f32 unk120;
+    u8 pad124[0x30];
+    f32 unk154;
+    f32 unk158;
+    f32 unk15C;
+    f32 unk160;
+    f32 unk164;
+    f32 unk168;
+    u8 pad16C[4];
+    int unk170;
+    s16 unk174;
+    s16 unk176;
+    u8 pad178[4];
+} DrakorHoverpadState;
+STATIC_ASSERT(sizeof(DrakorHoverpadState) == 0x17c);
+
 int drakorhoverpad_getExtraSize(void) { return 0x17c; }
 
 int drakorhoverpad_getObjectTypeId(void) { return 0x0; }
@@ -32,15 +88,15 @@ void drakorhoverpad_initMain(int obj, void *desc) {
     f32 v;
 
     *(s16 *)obj = (s16)(*(s8 *)((char *)desc + 0x18) << 8);
-    *(f32 *)(p + 0x118) = (f32)*(s16 *)((char *)desc + 0x1a);
+    ((DrakorHoverpadState *)p)->unk118 = (f32)*(s16 *)((char *)desc + 0x1a);
     v = lbl_803E6A3C;
-    *(f32 *)(p + 0x110) = v;
+    ((DrakorHoverpadState *)p)->speed = v;
     f->bit20 = 0;
     f->b40 = 1;
-    *(int *)(p + 0x170) = 0;
-    *(f32 *)(p + 0x11c) = v;
-    *(f32 *)(p + 0x120) = v;
-    *(s16 *)(p + 0x176) = 0;
+    ((DrakorHoverpadState *)p)->unk170 = 0;
+    ((DrakorHoverpadState *)p)->unk11C = v;
+    ((DrakorHoverpadState *)p)->unk120 = v;
+    ((DrakorHoverpadState *)p)->unk176 = 0;
     switch (*(s16 *)desc) {
     case 1812:
         g->f10 = 1;
@@ -67,7 +123,7 @@ int drakorhoverpad_init(int obj) {
 
     if (f->b40 == 0) {
         if (f->state > 3) {
-            if (lbl_803E6A3C == *(f32 *)(p + 0x110)) {
+            if (lbl_803E6A3C == ((DrakorHoverpadState *)p)->speed) {
                 f->state = 0;
             }
         }

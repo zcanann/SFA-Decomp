@@ -545,6 +545,22 @@ void cfforcefield_render(void) {}
 void cfforcefield_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
+#include "global.h"
+
+/* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
+typedef struct ExplodableState {
+    u8 pad000[0x690];
+    int children[15]; /* 0x690: spawned fragment objects */
+    u32 flags6CC;
+    int unk6D0;
+    u8 count6D4;
+    u8 pad6D5[0xf];
+    u8 phase6E4;
+    u8 unk6E5;
+    u8 pad6E6[2];
+} ExplodableState;
+STATIC_ASSERT(sizeof(ExplodableState) == 0x6e8);
+
 int explodable_getExtraSize(void) { return 0x6e8; }
 int cfforcefield_getExtraSize(void) { return 0x8; }
 int cfforcefield_getObjectTypeId(void) { return 0x0; }
@@ -563,7 +579,7 @@ void explodable_free(int obj, int flag) {
     if (flag == 0) {
         p = state - 4;
         while (p += 4, ++i < 15) {
-            o = *(void **)(p + 0x690);
+            o = *(void * *)&((ExplodableState *)p)->children[0];
             if (o != NULL) {
                 Obj_FreeObject((int)o);
             }
@@ -692,33 +708,33 @@ void explodable_init(int obj, int setup)
     if (c1 == 0) {
         c1 = 1;
     }
-    *(u8 *)(state + 0x6d4) = c1;
-    *(int *)(state + 0x6cc) = 0;
-    *(int *)(state + 0x690) = 0;
-    *(int *)(state + 0x694) = 0;
-    *(int *)(state + 0x698) = 0;
-    *(int *)(state + 0x69c) = 0;
-    *(int *)(state + 0x6a0) = 0;
-    *(int *)(state + 0x6a4) = 0;
-    *(int *)(state + 0x6a8) = 0;
-    *(int *)(state + 0x6ac) = 0;
-    *(int *)(state + 0x6b0) = 0;
-    *(int *)(state + 0x6b4) = 0;
-    *(int *)(state + 0x6b8) = 0;
-    *(int *)(state + 0x6bc) = 0;
-    *(int *)(state + 0x6c0) = 0;
-    *(int *)(state + 0x6c4) = 0;
-    *(int *)(state + 0x6c8) = 0;
+    ((ExplodableState *)state)->count6D4 = c1;
+    *(int *)&((ExplodableState *)state)->flags6CC = 0;
+    ((ExplodableState *)state)->children[0] = 0;
+    ((ExplodableState *)state)->children[1] = 0;
+    ((ExplodableState *)state)->children[2] = 0;
+    ((ExplodableState *)state)->children[3] = 0;
+    ((ExplodableState *)state)->children[4] = 0;
+    ((ExplodableState *)state)->children[5] = 0;
+    ((ExplodableState *)state)->children[6] = 0;
+    ((ExplodableState *)state)->children[7] = 0;
+    ((ExplodableState *)state)->children[8] = 0;
+    ((ExplodableState *)state)->children[9] = 0;
+    ((ExplodableState *)state)->children[10] = 0;
+    ((ExplodableState *)state)->children[11] = 0;
+    ((ExplodableState *)state)->children[12] = 0;
+    ((ExplodableState *)state)->children[13] = 0;
+    ((ExplodableState *)state)->children[14] = 0;
     *(s16 *)(obj + 0) = *(s16 *)(setup + 0x1a);
     *(s16 *)(obj + 2) = *(s16 *)(setup + 0x1c);
     *(s16 *)(obj + 4) = *(s16 *)(setup + 0x1e);
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x3e)) != 0) {
-        *(u8 *)(state + 0x6e4) = 2;
+        ((ExplodableState *)state)->phase6E4 = 2;
     }
     base = 0;
     for (tbl = lbl_80322DA0; base < 16; base++) {
         if (*(s16 *)(obj + 0x46) == tbl->key) {
-            *(u8 *)(state + 0x6e5) = base;
+            ((ExplodableState *)state)->unk6E5 = base;
             break;
         }
         tbl++;
@@ -729,7 +745,7 @@ void explodable_init(int obj, int setup)
     *(f32 *)(obj + 8) =
         *(f32 *)(*(int *)(obj + 0x50) + 4) * (f32)(int)*(s8 *)(setup + 0x3d) / lbl_803E435C;
     e = lbl_80322DA0;
-    if ((e[*(u8 *)(state + 0x6e5)].flags & 1) != 0) {
+    if ((e[((ExplodableState *)state)->unk6E5].flags & 1) != 0) {
         *(u16 *)(obj + 0xb0) |= 0x4000;
     }
 }
