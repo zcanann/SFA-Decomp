@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camslide.h"
+#include "main/camera_object.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -188,10 +189,10 @@ void camslide_update(int param_1, int param_2)
             }
         }
     }
-    if (*(f32 *)(param_1 + 0x1c) < low) {
-        step = low - *(f32 *)(param_1 + 0x1c);
-    } else if (*(f32 *)(param_1 + 0x1c) > high) {
-        step = high - *(f32 *)(param_1 + 0x1c);
+    if (((CameraObject *)param_1)->anim.worldPosY < low) {
+        step = low - ((CameraObject *)param_1)->anim.worldPosY;
+    } else if (((CameraObject *)param_1)->anim.worldPosY > high) {
+        step = high - ((CameraObject *)param_1)->anim.worldPosY;
     } else {
         step = lbl_803E16AC;
     }
@@ -200,14 +201,14 @@ void camslide_update(int param_1, int param_2)
     if ((f32)approach > lbl_803E16E8 && (f32)approach < lbl_803E16F4) {
         step = lbl_803E16AC;
     }
-    *(f32 *)(param_1 + 0x1c) = *(f32 *)(param_1 + 0x1c) + step;
-    if (*(f32 *)(param_1 + 0x1c) > lbl_803E16B8 + high) {
-        *(f32 *)(param_1 + 0x1c) = lbl_803E16B8 + high;
+    ((CameraObject *)param_1)->anim.worldPosY = ((CameraObject *)param_1)->anim.worldPosY + step;
+    if (((CameraObject *)param_1)->anim.worldPosY > lbl_803E16B8 + high) {
+        ((CameraObject *)param_1)->anim.worldPosY = lbl_803E16B8 + high;
     }
     if (gCamcontrolModeSettings[3] > gCamcontrolModeSettings[0x27]) {
         if (((CamSlideFlags *)(gCamcontrolModeSettings + 0x32))->heightLock &&
-            *(f32 *)(param_1 + 0x1c) > gCamcontrolModeSettings[0x2f]) {
-            *(f32 *)(param_1 + 0x1c) = gCamcontrolModeSettings[0x2f];
+            ((CameraObject *)param_1)->anim.worldPosY > gCamcontrolModeSettings[0x2f]) {
+            ((CameraObject *)param_1)->anim.worldPosY = gCamcontrolModeSettings[0x2f];
         }
         if (*(f32 *)(param_2 + 0x28) > lbl_803E16AC) {
             ((CamSlideFlags *)(gCamcontrolModeSettings + 0x32))->heightLock = 0;
