@@ -1377,6 +1377,52 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     with #74 — the "11 missing instructions" diagnosis was entirely this
     class.
 
+75. **`union { f32 m[16]; f64 a8; }` 8-ALIGNS a stack array — fixes the
+    "+4 stack-offset" frame residual.** When target places an f32 array at
+    an 8-aligned sp offset (e.g. 112) but yours lands at off-by-4 (108),
+    the original type carried 8-byte alignment. Declare the array inside a
+    union with an f64 member (`#define name u.m` keeps the body unchanged)
+    — reproduces the alignment hole with zero codegen change. Sibling of
+    recipe #16's `f32 m[16]`-vs-`Mtx` frame-size note, for ALIGNMENT rather
+    than size. (objWorldToLocalPos 96→100, with #31 whole-struct copy-out.)
+    **Related frame lever — frame size tracks the COUNT of homed locals,
+    even when codegen is otherwise identical.** A 64-vs-48 stwu delta with a
+    byte-identical body = too many distinct locals homed to stack slots.
+    Fold single-use block locals into their consuming expression (each
+    −4/−8B) until stwu matches; a fresh local ADDS 8. Complements #67's
+    probe method — the probe direction here is removing locals, not
+    resizing buffers. (synthUpdateVirtualSamples 95.93→100 — also needed:
+    test-via-global to unsplit the state web (addi lands straight in r30,
+    kills a spurious `addi r3,r3,0`), switch dispatch, struct ent[vid] form
+    (#18), OR operand swap (#66).)
+
+76. **`int key = id;` (u16 param widened to an int local) fixes BOTH `cmpw`
+    signedness AND a whole-function volatile rotation in one line.** When
+    target compares a u16-derived value with SIGNED `cmpw` (yours emits
+    `cmplw`) and the volatiles are rotated (r6/r7/r8 ↔ r7/r8/r6), the
+    original held the param in an `int` local (one `clrlwi` at the copy).
+    Semantically safe (both operands non-negative); the extra web shifts
+    every volatile into target's numbering. Inverse direction of #58.
+    (Sfx_FindTrigger binary-search 95.98→100.)
+
+77. **Param saved-reg relocation: `void *` params + cast-assigned typed
+    locals split the webs when same-type local copies get propagated
+    away.** To reproduce a param coloring permutation (T: p1=r30 p2=r28
+    p3=r29 vs C: r28/r29/r30), change the signature's pointer params to
+    `void *` and copy each into a typed local with an explicit cast —
+    local decl order then sets the coloring (first = highest free). A
+    same-typed copy (`short *p2 = arg1;`) gets merged back and changes
+    nothing; the cast is load-bearing. Pointer args are ABI- and
+    caller-codegen-neutral so the header change is conservation-safe.
+    Extends #16/babycloudrunner split-decls to params. Also works for
+    plain-locals coloring: babycloudrunner_func0B 95.89→100 via void* param
+    + split decls in target coloring order with assignments in target
+    statement order. (camcontrol_getTargetPosition 95.96→98.42; residual:
+    the PLACEMENT of `mr r31,r6` among the prologue copies is
+    allocator-internal — emission order follows neither statement order nor
+    cast-ness; don't grind it. Same fn: sqrtf store-then-round
+    `stfs f1; frsp f5,f1` vs round-then-store is also internal.)
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
