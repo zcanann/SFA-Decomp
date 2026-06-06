@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camdrakor.h"
+#include "main/camera_object.h"
 #include "main/game_object.h"
 
 
@@ -159,8 +160,8 @@ void CameraModeCombat_update(short *cam)
     short sVar2;
 
     if (*(u8 *)((int)lbl_803DD568 + 0x12) != 0) {
-        if (*(void **)((char *)cam + 0x11c) != NULL) {
-            if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (*(u8 *)((char *)cam + 0x141) & 2)) {
+        if (((CameraObject *)cam)->targetObj != NULL) {
+            if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                 return;
             }
             (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
@@ -169,8 +170,8 @@ void CameraModeCombat_update(short *cam)
     } else {
         focus = *(int *)((char *)cam + 0xa4);
         if (((GameObject *)focus)->anim.classId == 1 && objAnimFn_80296328(focus) == 0) {
-            if (*(void **)((char *)cam + 0x11c) != NULL) {
-                if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (*(u8 *)((char *)cam + 0x141) & 2)) {
+            if (((CameraObject *)cam)->targetObj != NULL) {
+                if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                     return;
                 }
                 (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
@@ -180,7 +181,7 @@ void CameraModeCombat_update(short *cam)
             tgt = *(char **)((char *)cam + 0x11c);
             if (tgt == NULL || (((GameObject *)tgt)->unkB0 & 0x40) || (*(u8 *)(tgt + 0xaf) & 0x28)) {
                 if (tgt != NULL) {
-                    if ((*(u8 *)(tgt + 0xaf) & 0x40) || (*(u8 *)((char *)cam + 0x141) & 2)) {
+                    if ((*(u8 *)(tgt + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                         return;
                     }
                     (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
@@ -191,8 +192,8 @@ void CameraModeCombat_update(short *cam)
                 if (path != NULL) {
                     range = (f32)(s32)((u32)*(u8 *)(*(int *)(*(int *)(tgt + 0x50) + 0x40) + 0xd) << 2);
                     if (((u16)getButtonsJustPressed(0) & 0x200) && (int)fn_8029630C(focus) != 0) {
-                        if (*(void **)((char *)cam + 0x11c) != NULL) {
-                            if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (*(u8 *)((char *)cam + 0x141) & 2)) {
+                        if (((CameraObject *)cam)->targetObj != NULL) {
+                            if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                                 return;
                             }
                             (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
@@ -219,11 +220,11 @@ void CameraModeCombat_update(short *cam)
                             dz = path[((GameObject *)tgt)->unkE4].z - ((GameObject *)focus)->anim.worldPosZ;
                         }
                         dist = sqrtf(dx * dx + dz * dz);
-                        *(u8 *)((char *)cam + 0x13b) = 0x30;
-                        *(u8 *)((char *)cam + 0x13c) = 1;
+                        ((CameraObject *)cam)->unk13B = 0x30;
+                        ((CameraObject *)cam)->unk13C = 1;
                         if (dist > range) {
-                            if (*(void **)((char *)cam + 0x11c) != NULL) {
-                                if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (*(u8 *)((char *)cam + 0x141) & 2)) {
+                            if (((CameraObject *)cam)->targetObj != NULL) {
+                                if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                                     return;
                                 }
                                 (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
@@ -288,15 +289,15 @@ void CameraModeCombat_update(short *cam)
                             dy = dy * lbl_803E1904;
                             dy = ty - dy;
                             dy = dy + lbl_803DD568[1];
-                            step = interpolate(((GameObject *)cam)->anim.worldPosY - dy, lbl_803E1908, timeDelta);
-                            ny = ((GameObject *)cam)->anim.worldPosY - step;
+                            step = interpolate(((CameraObject *)cam)->anim.worldPosY - dy, lbl_803E1908, timeDelta);
+                            ny = ((CameraObject *)cam)->anim.worldPosY - step;
                             PSVECSubtract(&nx, (f32 *)((char *)cam + 0x18), vec);
                             mag = PSVECMag(vec);
                             if (lbl_803E18C4 < mag) {
                                 PSVECNormalize(vec, vec);
                             }
                             speed = mag;
-                            if (*(f32 *)((char *)cam + 0xf4) <= lbl_803E18C4) {
+                            if (((CameraObject *)cam)->unkF4 <= lbl_803E18C4) {
                                 fVar1 = ((GameObject *)focus)->anim.previousWorldPosX - ((GameObject *)focus)->anim.worldPosX;
                                 fVar3 = ((GameObject *)focus)->anim.previousWorldPosZ - ((GameObject *)focus)->anim.worldPosZ;
                                 speed = sqrtf(fVar1 * fVar1 + fVar3 * fVar3);
@@ -350,10 +351,10 @@ void CameraModeCombat_update(short *cam)
                             }
                             lbl_803DD568[0] = lbl_803DD568[0] + fVar1;
                             turnOnBlurFilter(((GameObject *)tgt)->anim.worldPosX, ((GameObject *)tgt)->anim.worldPosY, ((GameObject *)tgt)->anim.worldPosZ, 1, 0);
-                            if (lbl_803E18C4 == *(f32 *)((char *)cam + 0xf4)) {
+                            if (lbl_803E18C4 == ((CameraObject *)cam)->unkF4) {
                                 ((CombatCamFlags *)((char *)cam + 0x143))->b80 = 1;
                             }
-                            Obj_TransformWorldPointToLocal(*(f32 *)((char *)cam + 0x18), ((GameObject *)cam)->anim.worldPosY, ((GameObject *)cam)->anim.worldPosZ,
+                            Obj_TransformWorldPointToLocal(*(f32 *)((char *)cam + 0x18), ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                                            (f32 *)((char *)cam + 0xc), (f32 *)((char *)cam + 0x10), (f32 *)((char *)cam + 0x14),
                                                            *(int *)((char *)cam + 0x30));
                         }
@@ -512,7 +513,7 @@ void CameraModeShipBattle_update(short *cam)
         lbl_803DD570[0] = -(fa * timeDelta - lbl_803DD570[0]);
         fa = fc * lbl_803DD570[1];
         lbl_803DD570[1] = -(fa * timeDelta - lbl_803DD570[1]);
-        ((GameObject *)cam)->anim.worldPosY = lbl_803DD570[1] + (*(f32 *)(focus + 0x1c) + lbl_803DD570[7]);
+        ((CameraObject *)cam)->anim.worldPosY = lbl_803DD570[1] + (*(f32 *)(focus + 0x1c) + lbl_803DD570[7]);
     } else {
         lbl_803DD570[0] = -(((f32)*(s16 *)(focus + 4) / lbl_803E1964) * timeDelta - lbl_803DD570[0]);
         lbl_803DD570[1] = -(((f32)*(s16 *)(focus + 2) / lbl_803E1968) * timeDelta - lbl_803DD570[1]);
@@ -521,14 +522,14 @@ void CameraModeShipBattle_update(short *cam)
         lbl_803DD570[0] = -(fa * timeDelta - lbl_803DD570[0]);
         fa = fc * lbl_803DD570[1];
         lbl_803DD570[1] = -(fa * timeDelta - lbl_803DD570[1]);
-        ((GameObject *)cam)->anim.worldPosY = lbl_803DD570[1] + (*(f32 *)(focus + 0x1c) + lbl_803DD570[7]);
+        ((CameraObject *)cam)->anim.worldPosY = lbl_803DD570[1] + (*(f32 *)(focus + 0x1c) + lbl_803DD570[7]);
     }
-    ((GameObject *)cam)->anim.worldPosX = (lbl_803E1970 + *(f32 *)(focus + 0x18)) + lbl_803DD570[2];
-    ((GameObject *)cam)->anim.worldPosZ = *(f32 *)(focus + 0x20) + lbl_803DD570[0];
+    ((CameraObject *)cam)->anim.worldPosX = (lbl_803E1970 + *(f32 *)(focus + 0x18)) + lbl_803DD570[2];
+    ((CameraObject *)cam)->anim.worldPosZ = *(f32 *)(focus + 0x20) + lbl_803DD570[0];
     cam[1] = 0x708;
     cam[0] = 0x4000;
     cam[2] = (s16)(-*(s16 *)(focus + 4) >> 3);
-    *(f32 *)((char *)cam + 0xb4) = lbl_803E1974;
+    ((CameraObject *)cam)->fov = lbl_803E1974;
     r = (lbl_803DD570[3] - lbl_803DD570[2]) / lbl_803E1978;
     if (r > lbl_803E197C) {
         r = lbl_803E197C;
@@ -537,7 +538,7 @@ void CameraModeShipBattle_update(short *cam)
     }
     r = r * timeDelta;
     lbl_803DD570[2] = lbl_803DD570[2] + r;
-    Obj_TransformWorldPointToLocal(((GameObject *)cam)->anim.worldPosX, ((GameObject *)cam)->anim.worldPosY, ((GameObject *)cam)->anim.worldPosZ,
+    Obj_TransformWorldPointToLocal(((CameraObject *)cam)->anim.worldPosX, ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                    (f32 *)((char *)cam + 0xc), (f32 *)((char *)cam + 0x10), (f32 *)((char *)cam + 0x14),
                                    *(int *)((char *)cam + 0x30));
 }
