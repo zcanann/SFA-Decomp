@@ -1304,12 +1304,13 @@ extern f32 lbl_803E4ADC;
 void dll_1DA_hitDetect(int obj) {
     void *hi;
     void *player;
+    f32 k;
     int hit = ObjHits_GetPriorityHit(obj, &hi, NULL, NULL);
     if (hit == 0xE) {
         player = Obj_GetPlayerObject();
         Vec_distance((float*)(obj + 0x18), (float*)((int)player + 0x18));
-        ((GameObject *)obj)->anim.velocityX = *(f32*)((int)hi + 0x24) * lbl_803E4ADC;
-        ((GameObject *)obj)->anim.velocityZ = *(f32*)((int)hi + 0x2c) * lbl_803E4ADC;
+        ((GameObject *)obj)->anim.velocityX = *(f32*)((int)hi + 0x24) * (k = lbl_803E4ADC);
+        ((GameObject *)obj)->anim.velocityZ = *(f32*)((int)hi + 0x2c) * k;
         Sfx_PlayFromObject(obj, SFXchar_puts_out_fire);
     }
 }
@@ -1635,11 +1636,13 @@ void dimtruthhornice_update(int *obj)
             }
         }
         break;
-    case 1:
+    case 1: {
+        f32 desc2[6];
         extra->timer = extra->timer + timeDelta;
         if (extra->timer > lbl_803E4A44) {
             int i;
             f32 scale = lbl_803E4A48;
+            f32 zinit = lbl_803E4A4C;
             extra->phase = 2;
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             Sfx_PlayFromObject((int)obj, 1147);
@@ -1648,20 +1651,18 @@ void dimtruthhornice_update(int *obj)
                 desc[3] = scale * (f32)(int)randomGetRange(-100, 100);
                 desc[4] = scale * (f32)(int)randomGetRange(0, 350);
                 desc[5] = scale * (f32)(int)randomGetRange(-100, 100);
-                desc[2] = lbl_803E4A4C;
+                desc[2] = zinit;
                 ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(obj, 2043, desc, 2, -1, 0);
                 ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(obj, 2044, desc, 2, -1, 0);
             }
         }
-        {
-            f32 desc[6];
-            desc[3] = lbl_803E4A48 * (f32)(int)randomGetRange(-100, 100);
-            desc[4] = lbl_803E4A48 * (f32)(int)randomGetRange(0, 350);
-            desc[5] = lbl_803E4A48 * (f32)(int)randomGetRange(-100, 100);
-            desc[2] = lbl_803E4A4C;
-            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(obj, 2044, desc, 2, -1, 0);
-        }
+        desc2[3] = lbl_803E4A48 * (f32)(int)randomGetRange(-100, 100);
+        desc2[4] = lbl_803E4A48 * (f32)(int)randomGetRange(0, 350);
+        desc2[5] = lbl_803E4A48 * (f32)(int)randomGetRange(-100, 100);
+        desc2[2] = lbl_803E4A4C;
+        ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(obj, 2044, desc2, 2, -1, 0);
         break;
+    }
     case 2:
         ((GameObject *)obj)->anim.flags |= 0x4000;
         break;
