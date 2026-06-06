@@ -243,5 +243,5 @@ void firstperson_updatePitch(f32 param_1, int param_2)
     d = interpolate((f64)(f32)v,
                     (f64)(lbl_803E16A4 / (f32)*((u8 *)gCamcontrolModeSettings + 0xc2)),
                     (f64)timeDelta);
-    *(s16 *)(param_2 + 2) = (s16)(*(s16 *)(param_2 + 2) + (int)d);
+    *(s16 *)(param_2 + 2) = (s16)((int)d + *(s16 *)(param_2 + 2));
 }
