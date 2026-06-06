@@ -1403,6 +1403,7 @@ void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
 
 #pragma push
 #pragma scheduling off
+#pragma peephole off
 #pragma fp_contract off
 int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void *timerp) {
     extern f32 oneOverTimeDelta;
