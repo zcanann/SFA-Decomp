@@ -1,4 +1,7 @@
 #include "main/dll/CF/CFwalltorch.h"
+#include "main/dll/CF/CFchuckobj.h"
+#include "main/dll/CF/warp_pad.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
 extern undefined8 FUN_80006724();
@@ -15,7 +18,6 @@ extern undefined8 FUN_80053c98();
 extern undefined8 FUN_8005d17c();
 extern undefined4 FUN_80080f28();
 extern undefined8 FUN_80080f3c();
-extern void warpPadFn_8019042c(int obj);
 extern uint FUN_80286840();
 extern undefined4 FUN_8028688c();
 
@@ -56,18 +58,18 @@ extern f32 lbl_803E3E98;
 int Transporter_SeqFn(int* obj, int p2, u8* seq)
 {
     int i;
-    int* setup = *(int**)((char*)obj + 0x4c);
-    u8* state = *(u8**)((char*)obj + 0xb8);
+    WarpPadPlacement *setup = (WarpPadPlacement *)((GameObject *)obj)->anim.placementData;
+    WarpPadState *state = ((GameObject *)obj)->extra;
     int id;
 
     for (i = 0; i < *(u8*)(seq + 0x8b); i++) {
         switch (seq[i + 0x81]) {
         case 7:
-            state[0xe] = state[0xe] | 4;
+            state->flags = state->flags | 4;
             Sfx_PlayFromObject(obj, 0x420);
             break;
         case 2:
-            id = *(int*)((char*)setup + 0x14);
+            id = setup->destinationId;
             switch (id) {
             case 0x49c33:
                 GameBit_Set(0x884, 1);
@@ -150,36 +152,36 @@ int Transporter_SeqFn(int* obj, int p2, u8* seq)
             }
             break;
         case 3:
-            switch (*(int*)((char*)setup + 0x14)) {
+            switch (setup->destinationId) {
             case 0x47064:
                 unlockLevel(0, 0, 1);
                 break;
             }
             break;
         case 5:
-            switch (*(int*)((char*)setup + 0x14)) {
+            switch (setup->destinationId) {
             case 0x47064:
                 setLoadedFileFlags_blocks1();
                 break;
             }
             break;
         case 6:
-            switch (*(int*)((char*)setup + 0x14)) {
+            switch (setup->destinationId) {
             case 0x47064:
                 clearLoadedFileFlags_blocks1();
                 break;
             }
             break;
         case 1:
-            switch (*(int*)((char*)setup + 0x14)) {
+            switch (setup->destinationId) {
             case 0x47064:
                 clearLoadedFileFlags_blocks1();
                 break;
             }
-            warpToMap(*(s8*)((char*)setup + 0x1a), 0);
+            warpToMap(setup->warpId, 0);
             break;
         case 8:
-            id = *(int*)((char*)setup + 0x14);
+            id = setup->destinationId;
             switch (id) {
             case 0x43f83:
             case 0x4977d:
@@ -261,7 +263,6 @@ int transporter_getExtraSize(void)
 
 extern void objRenderFn_80041018(int obj);
 extern uint GameBit_Get(int eventId);
-extern void warpPadPlayerStandingOn(int obj);
 extern short lbl_803DCEB8;
 
 /*
@@ -276,8 +277,8 @@ extern short lbl_803DCEB8;
 void transporter_update(int obj)
 {
     register int self = obj;
-    register int state2 = *(int *)(self + 0x4c);
-    if ((int)(signed char)*(u8 *)(state2 + 0x1a) != -1) {
+    register WarpPadPlacement *setup = (WarpPadPlacement *)((GameObject *)self)->anim.placementData;
+    if ((int)setup->warpId != -1) {
         warpPadPlayerStandingOn(self);
     }
     warpPadFn_8019042c(self);
@@ -297,31 +298,31 @@ void transporter_update(int obj)
 void transporter_hitDetect(int obj)
 {
     register int self = obj;
-    register int state2 = *(int *)(self + 0x4c);
-    register int state = *(int *)(self + 0xb8);
+    register WarpPadPlacement *setup = (WarpPadPlacement *)((GameObject *)self)->anim.placementData;
+    register WarpPadState *state = ((GameObject *)self)->extra;
 
     if ((int)lbl_803DCEB8 > -1) {
-        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xffffffe7);
-        *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) | 1);
+        *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode & 0xffffffe7);
+        state->flags = (u8)((u32)state->flags | 1);
         if (*(u32 *)(self + 0x74) != 0) {
             objRenderFn_80041018(self);
         }
         return;
     }
 
-    if ((int)(signed char)*(u8 *)(state2 + 0x1a) != -1
-        && (*(u8 *)(state + 0xe) & 0x20) == 0) {
-        if (*(u8 *)(state + 0xd) != 0 || *(u8 *)(state + 0xc) != 0) {
-            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
-            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & ~1);
-        } else if ((int)*(short *)(state2 + 0x20) != -1
-                   && GameBit_Get((int)*(short *)(state2 + 0x20)) == 0) {
-            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xfffffff7);
-            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x10);
-            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & ~1);
+    if ((int)setup->warpId != -1
+        && (state->flags & 0x20) == 0) {
+        if (state->triggerMode != 0 || state->countdownActive != 0) {
+            *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode | 0x8);
+            state->flags = (u8)((u32)state->flags & ~1);
+        } else if ((int)setup->enableGameBit != -1
+                   && GameBit_Get((int)setup->enableGameBit) == 0) {
+            *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode & 0xfffffff7);
+            *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode | 0x10);
+            state->flags = (u8)((u32)state->flags & ~1);
         } else {
-            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xffffffe7);
-            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) | 1);
+            *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode & 0xffffffe7);
+            state->flags = (u8)((u32)state->flags | 1);
         }
         if (*(u32 *)(self + 0x74) != 0) {
             objRenderFn_80041018(self);
@@ -330,13 +331,13 @@ void transporter_hitDetect(int obj)
     }
 
     /* Branch C */
-    if ((*(u8 *)(state + 0xe) & 0x40) != 0) {
-        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
+    if ((state->flags & 0x40) != 0) {
+        *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode | 0x8);
     } else {
-        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xfffffff7);
-        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x10);
+        *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode & 0xfffffff7);
+        *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode | 0x10);
     }
-    *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & ~1);
+    state->flags = (u8)((u32)state->flags & ~1);
 }
 #pragma scheduling reset
 #pragma peephole reset

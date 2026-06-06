@@ -1,0 +1,42 @@
+#ifndef MAIN_DLL_CF_WARP_PAD_H_
+#define MAIN_DLL_CF_WARP_PAD_H_
+
+#include "global.h"
+
+typedef struct WarpPadPlacement {
+    u8 pad00[0x14];
+    s32 destinationId;
+    u8 rotXHigh;
+    u8 pad19;
+    s8 warpId;
+    u8 pad1B[0x20 - 0x1B];
+    s16 enableGameBit;
+} WarpPadPlacement;
+
+/*
+ * Per-object extra state for the warp-pad transporter
+ * (transporter_getExtraSize == 0x10; helpers shared by the
+ * CFwalltorch/mmp_asteroid transporter updates).
+ */
+typedef struct WarpPadState {
+    f32 pulseTimer; /* counts up while flag 4; periodic idle fx */
+    f32 cooldownTimer; /* counts down; on expiry unk0A is reset to -1 */
+    s16 activateDelay; /* frames loaded into obj+0xF4 when triggered */
+    s16 unk0A;
+    u8 countdownActive;
+    u8 triggerMode; /* 0 = proximity warp, 1 = trigger/gamebit warp */
+    u8 flags; /* 0x80 gamebit-disabled, 0x40/0x10/0x8 warp fx type, 4 pulse fx, 2 latch */
+    u8 pad0F;
+} WarpPadState;
+
+STATIC_ASSERT(sizeof(WarpPadState) == 0x10);
+STATIC_ASSERT(offsetof(WarpPadPlacement, destinationId) == 0x14);
+STATIC_ASSERT(offsetof(WarpPadPlacement, rotXHigh) == 0x18);
+STATIC_ASSERT(offsetof(WarpPadPlacement, warpId) == 0x1A);
+STATIC_ASSERT(offsetof(WarpPadPlacement, enableGameBit) == 0x20);
+STATIC_ASSERT(offsetof(WarpPadState, activateDelay) == 0x08);
+STATIC_ASSERT(offsetof(WarpPadState, countdownActive) == 0x0C);
+STATIC_ASSERT(offsetof(WarpPadState, triggerMode) == 0x0D);
+STATIC_ASSERT(offsetof(WarpPadState, flags) == 0x0E);
+
+#endif /* MAIN_DLL_CF_WARP_PAD_H_ */

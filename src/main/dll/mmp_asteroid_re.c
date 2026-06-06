@@ -1,5 +1,6 @@
 #include "main/dll/mmp_asteroid_re.h"
 #include "main/dll/CF/CFwalltorch.h"
+#include "main/dll/CF/warp_pad.h"
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
@@ -48,34 +49,36 @@ typedef struct BarrelPadParticleArgs {
  * PAL Size: TODO
  *
  * Recovered: large switch on params[20] (32-bit id) that sets bits in
- * state->_0e per map/area id. Six GameBit-guarded cases set bit 0x20 only
+ * state->flags per map/area id. Six GameBit-guarded cases set bit 0x20 only
  * when any of 3 listed event bits is set; the rest set 0x68, 0x08, 0x30, or
- * 0x10 directly. Tail: if state->_0e & 0x40 (which 0x68 includes), set
+ * 0x10 directly. Tail: if state->flags & 0x40 (which 0x68 includes), set
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
 #pragma peephole off
 #pragma scheduling off
 void transporter_init(int obj, u8 *params)
 {
-  u8 *state;
+  WarpPadPlacement *placement;
+  WarpPadState *state;
   int id;
 
+  placement = (WarpPadPlacement *)params;
   state = ((GameObject *)obj)->extra;
-  *(s16 *)(state + 8) = 400;
-  *(s8 *)(state + 0xe) = 0;
-  *(s16 *)obj = (s16)((u16)(params[0x18] << 8));
+  state->activateDelay = 400;
+  state->flags = 0;
+  ((GameObject *)obj)->anim.rotX = (s16)((u16)(placement->rotXHigh << 8));
   ((GameObject *)obj)->unkF4 = 0;
   ((GameObject *)obj)->animEventCallback = (void *)Transporter_SeqFn;
   *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
 
-  id = *(int *)(params + 0x14);
+  id = placement->destinationId;
   switch (id) {
   case 0x4670D:
   case 0x4827E:
   case 0x49267:
   case 0x4CB6A:
   case 0x4CB84:
-    *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x68);
+    state->flags = (u8)(state->flags | 0x68);
     break;
   case 0x48506:
   case 0x45753:
@@ -85,47 +88,47 @@ void transporter_init(int obj, u8 *params)
   case 0x49C33:
   case 0x4B666:
   case 0x4B667:
-    *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x08);
+    state->flags = (u8)(state->flags | 0x08);
     break;
   case 0x4C986:
-    *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x30);
+    state->flags = (u8)(state->flags | 0x30);
     break;
   case 0x47064:
-    *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x10);
+    state->flags = (u8)(state->flags | 0x10);
     break;
   case 0x43F83:
     if (GameBit_Get(2984) != 0 || GameBit_Get(790) != 0 || GameBit_Get(1297) != 0) {
-      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
+      state->flags = (u8)(state->flags | 0x20);
     }
     break;
   case 0x2BA7:
     if (GameBit_Get(3069) != 0 || GameBit_Get(666) != 0 || GameBit_Get(667) != 0) {
-      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
+      state->flags = (u8)(state->flags | 0x20);
     }
     break;
   case 0x46A40:
     if (GameBit_Get(255) != 0 || GameBit_Get(2208) != 0 || GameBit_Get(2210) != 0) {
-      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
+      state->flags = (u8)(state->flags | 0x20);
     }
     break;
   case 0x497F4:
     if (GameBit_Get(3182) != 0 || GameBit_Get(3184) != 0 || GameBit_Get(3185) != 0) {
-      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
+      state->flags = (u8)(state->flags | 0x20);
     }
     break;
   case 0x4800C:
     if (GameBit_Get(3205) != 0 || GameBit_Get(3253) != 0 || GameBit_Get(3254) != 0) {
-      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
+      state->flags = (u8)(state->flags | 0x20);
     }
     break;
   case 0x4A533:
     if (GameBit_Get(372) != 0 || GameBit_Get(3255) != 0 || GameBit_Get(3256) != 0) {
-      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
+      state->flags = (u8)(state->flags | 0x20);
     }
     break;
   }
 
-  if ((*(u8 *)(state + 0xe) & 0x40) != 0) {
+  if ((state->flags & 0x40) != 0) {
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
   }
 }

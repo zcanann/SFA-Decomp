@@ -1,6 +1,7 @@
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/game_object.h"
 #include "main/dll/CF/CFTreasSharpy.h"
+#include "main/dll/CF/warp_pad.h"
 
 extern undefined4 FUN_80006824();
 extern int FUN_80006a10();
@@ -909,24 +910,6 @@ void FUN_80190008(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-/*
- * Per-object extra state for the warp-pad transporter
- * (transporter_getExtraSize == 0x10; helpers shared by the
- * CFwalltorch/mmp_asteroid transporter updates).
- */
-typedef struct WarpPadState {
-    f32 pulseTimer; /* counts up while flag 4; periodic idle fx */
-    f32 cooldownTimer; /* counts down; on expiry unk0A is reset to -1 */
-    s16 activateDelay; /* frames loaded into obj+0xF4 when triggered */
-    s16 unk0A;
-    u8 countdownActive;
-    u8 triggerMode; /* 0 = proximity warp, 1 = trigger/gamebit warp */
-    u8 flags; /* 0x80 gamebit-disabled, 0x40/0x10/0x8 warp fx type, 4 pulse fx, 2 latch */
-    u8 pad0F;
-} WarpPadState;
-
-STATIC_ASSERT(sizeof(WarpPadState) == 0x10);
-
 void warpPadFn_8019042c(int param_1)
 {
     WarpPadState *state;
