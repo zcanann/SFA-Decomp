@@ -20,7 +20,7 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void *Obj_GetPlayerObject(void);
 extern void objSetSlot(int obj, int slot);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
-extern void objLightFn_8009a1dc(int obj, f32 *pos, int kind, int p4);
+extern void objLightFn_8009a1dc(int obj, f32 scale, void *pos, int mode, int param);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void *vec, f32 f, int flag);
 extern void vecRotateZXY(int obj, void *vec);
 extern f32 sqrtf(f32 x);
@@ -95,15 +95,14 @@ typedef struct SCMusicTreeSetup {
 void sc_musictree_update(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
-    f32 stk;
+    f32 stk[7];
+    f32 vec[3];
+    f32 vec2[3];
     int rcType;
-    f32 hx, hy, hz;
     int hr1, hr2, hr3;
     int i;
     int *p;
     int *q;
-    f32 vec[3];
-    s16 dist;
 
     ObjAnim_AdvanceCurrentMove(*(f32 *)(inner + 0x34), timeDelta, obj,
                                (ObjAnimEventList *)&stk);
@@ -123,11 +122,11 @@ void sc_musictree_update(int obj)
             if (*(void **)p == NULL) {
                 sc_musictree_spawnAmbientEffect(obj, inner, framesThisStep, (s8)i);
             } else {
-                int r = (*(int (**)(int))(*(int *)(*p + 0x68) + 0x28))(*p);
+                int r = (*(int (**)(int))(*(int *)(*(int *)(*p + 0x68)) + 0x28))(*p);
                 if (r > 3) {
                     *p = 0;
                 } else {
-                    (*(void (**)(int, int))(*(int *)(*(int *)*p + 0x68) + 0x24))(*p, (int)q + 0xc);
+                    (*(void (**)(int, int))(*(int *)(*(int *)(*p + 0x68)) + 0x24))(*p, (int)q + 0xc);
                 }
             }
             p = (int *)((char *)p + 4);
@@ -138,20 +137,20 @@ void sc_musictree_update(int obj)
         goto end;
     }
     if (*(u8 *)(inner + 0x4c) & 0xc0) {
-        rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, &hr3, &hx, &hy, &hz);
+        rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, &hr3, &vec[0], &vec[1], &vec[2]);
     } else {
         rcType = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int *)(inner + 0x44));
     }
-    if (*(f32 *)(inner + 0x40) > lbl_803E5590) {
+    if (*(f32 *)(inner + 0x40) >= lbl_803E5590) {
         *(f32 *)(inner + 0x40) = *(f32 *)(inner + 0x40) - timeDelta;
     }
     if (rcType == 0) goto end;
     if (rcType == 0x11) goto end;
-    if (*(f32 *)(inner + 0x40) >= lbl_803E5590) goto end;
+    if (!(*(f32 *)(inner + 0x40) <= lbl_803E5590)) goto end;
     if (*(u8 *)(inner + 0x4c) & 0xc0) {
-        hx = hx + playerMapOffsetX;
-        hz = hz + playerMapOffsetZ;
-        objLightFn_8009a1dc(obj, &hx, 1, 0);
+        vec[0] = vec[0] + playerMapOffsetX;
+        vec[2] = vec[2] + playerMapOffsetZ;
+        objLightFn_8009a1dc(obj, lbl_803E559C, vec2, 1, 0);
         Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
         sc_musictree_handleHitObject(obj, inner, *(u8 *)(inner + 0x4c) & 0xf);
     } else {
@@ -163,17 +162,17 @@ void sc_musictree_update(int obj)
         vec[0] = zero;
         vec[1] = lbl_803E55A0 * *(f32 *)(inner + 0x38);
         vec[2] = zero;
-        objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0x14, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
+        objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0x14, vec2, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
     }
     *(f32 *)(inner + 0x34) = lbl_803E5588;
     *(f32 *)(inner + 0x40) = lbl_803E55A8;
     if (*(u8 *)(inner + 0x4c) & 0x80) {
-        int *pp = (int *)inner;
+        int *pp;
         int idx;
-        for (idx = 0; idx < 3; idx++) {
+        for (idx = 0, pp = (int *)inner; idx < 3; idx++) {
             int rc = *pp;
-            if (rc != 0) {
-                int rr = (*(int (**)(int))(*(int *)(*(int *)rc + 0x68) + 0x28))(rc);
+            if ((u32)rc != 0) {
+                int rr = (*(int (**)(int))(*(int *)(*(int *)(rc + 0x68)) + 0x28))(rc);
                 if (rr > 1) {
                     ObjHits_RecordObjectHit(*pp, obj, 0xe, 1, 0);
                 }
@@ -187,15 +186,12 @@ end:
         f32 dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)((char *)player + 0xc);
         f32 dz = ((GameObject *)obj)->anim.localPosZ - *(f32 *)((char *)player + 0x14);
         f32 d = sqrtf(dx * dx + dz * dz);
-        s32 dl = (s32)d;
-        u16 du = (u16)dl;
-        s16 hr = *(s16 *)(inner + 0x48);
-        if (du < (u16)hr) {
-            if ((*(u8 *)(inner + 0x4c) & 0x10) && (u16)*(s16 *)(inner + 0x4a) >= du && *(f32 *)(inner + 0x3c) <= lbl_803E5590) {
+        if ((u16)(s32)d < *(u16 *)(inner + 0x48)) {
+            if ((*(u8 *)(inner + 0x4c) & 0x10) && *(u16 *)(inner + 0x4a) >= (u16)(s32)d && *(f32 *)(inner + 0x3c) <= lbl_803E5590) {
                 vec[0] = lbl_803E5590;
                 vec[1] = lbl_803E55AC * (lbl_803E55A0 * *(f32 *)(inner + 0x38));
                 vec[2] = lbl_803E5590;
-                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0xa, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 1);
+                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0xa, vec2, lbl_803E55A4 * *(f32 *)(inner + 0x38), 1);
                 *(f32 *)(inner + 0x3c) = lbl_803E55B0;
             }
             *(f32 *)(inner + 0x30) = *(f32 *)(inner + 0x30) - timeDelta;
@@ -204,12 +200,11 @@ end:
                 vec[1] = lbl_803E55A0 * *(f32 *)(inner + 0x38);
                 vec[2] = lbl_803E5590;
                 vecRotateZXY(obj, vec);
-                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 1, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
+                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 1, vec2, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
                 *(f32 *)(inner + 0x30) = *(f32 *)(inner + 0x30) + lbl_803E55B4;
             }
         }
-        dist = (s16)dl;
-        *(s16 *)(inner + 0x4a) = dist;
+        *(u16 *)(inner + 0x4a) = (s32)d;
     }
 }
 #pragma scheduling reset
@@ -220,8 +215,7 @@ end:
 void sc_musictree_init(int obj, SCMusicTreeSetup *setup)
 {
     SCMusicTreeState *state = ((GameObject *)obj)->extra;
-    f32 stk;
-    u32 rnd;
+    f32 stk[7];
     f32 ratio;
     f32 zero;
 
@@ -238,12 +232,11 @@ void sc_musictree_init(int obj, SCMusicTreeSetup *setup)
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E55B8 * setup->scale;
     ((GameObject *)obj)->unkF8 = 0;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
-    rnd = randomGetRange(1, 99);
-    ratio = (f32)(s32)rnd / lbl_803E55BC;
+    ratio = (f32)(s32)randomGetRange(1, 99) / lbl_803E55BC;
     ObjAnim_SetCurrentMove(obj, 0, ratio, 0);
-    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E558C, lbl_803E558C,
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E558C, *(f32 *)&lbl_803E558C,
                                (ObjAnimEventList *)&stk);
-    ObjHitbox_SetCapsuleBounds(obj, (s16)(s32)(lbl_803E55C0 * state->scale), -5, 0xff);
+    ObjHitbox_SetCapsuleBounds(obj, (s32)(lbl_803E55C0 * state->scale), -5, 0xff);
     if (state->flags & 0x80) {
         state->flags = state->flags | 0x20;
     }
@@ -272,7 +265,9 @@ typedef struct SCTotemPoleState {
 #define SC_TOTEMPOLE_SETUP_LEFT 0x4490F
 
 #pragma dont_inline on
-int sc_totempole_sortCompletionGameBits(u16 *bits, int param2)
+#pragma peephole off
+#pragma scheduling off
+int sc_totempole_sortCompletionGameBits(u16 *bits, u16 param2)
 {
     u16 stk[4];
     u8 i, j;
@@ -282,14 +277,13 @@ int sc_totempole_sortCompletionGameBits(u16 *bits, int param2)
         u16 v = (u16)GameBit_Get(bits[i]);
         stk[i] = v;
     }
-    stk[3] = (u16)param2;
+    stk[3] = param2;
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
-            u16 a = stk[j + 1];
-            if (a != 0) {
+            if (stk[j + 1] != 0) {
                 u16 b = stk[j];
-                if ((a < b) || (b == 0)) {
-                    stk[j] = a;
+                if ((stk[j + 1] < b) || (b == 0)) {
+                    stk[j] = stk[j + 1];
                     stk[j + 1] = b;
                     changed = 1;
                 }
@@ -301,6 +295,8 @@ int sc_totempole_sortCompletionGameBits(u16 *bits, int param2)
     }
     return changed;
 }
+#pragma scheduling reset
+#pragma peephole reset
 #pragma dont_inline reset
 
 int sc_totempole_getExtraSize(void) { return 0x8; }
@@ -313,16 +309,16 @@ void sc_totempole_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s
 
 void sc_totempole_hitDetect(void) {}
 
+#pragma peephole off
 #pragma scheduling off
 void sc_totempole_update(int obj)
 {
     SCTotemPoleState *state = ((GameObject *)obj)->extra;
-    f32 stk;
+    f32 stk[8];
     int played;
-    int i;
     int *arr;
-    int idx;
     int count;
+    int idx;
 
     state->previousState = state->currentState;
     state->currentState = (u8)GameBit_Get(state->gameBit);
@@ -338,18 +334,15 @@ void sc_totempole_update(int obj)
                 Sfx_PlayFromObject(0, 0x7e);
                 played = 1;
                 arr = ObjList_GetObjects(&idx, &count);
-                for (i = idx; i < count; i++) {
-                    if (arr[i] != obj && *(s16 *)(arr[i] + 0x46) == SC_TOTEMPOLE_OBJECT_TYPE) {
-                        (*(void (**)(int, int))(*(int *)(*(int *)(arr[i] + 0x68)) + 0x20))(arr[i], 6);
+                for (; idx < count; idx++) {
+                    void *o = (void *)arr[idx];
+                    if (o != (void *)obj && *(s16 *)((char *)o + 0x46) == SC_TOTEMPOLE_OBJECT_TYPE) {
+                        (*(void (**)(int, int))(*(int *)(*(int *)(arr[idx] + 0x68)) + 0x20))(arr[idx], 6);
                         break;
                     }
                 }
-                {
-                    f64 d = (f64)fn_8001461C() / (f64)lbl_803E55D8;
-                    s32 t = (s32)d;
-                    (void)t;
-                }
-                sc_totempole_sortCompletionGameBits((u16 *)&lbl_803DC068, 0);
+                ((int (*)(u16 *, int))sc_totempole_sortCompletionGameBits)(
+                    (u16 *)&lbl_803DC068, (s32)(fn_8001461C() / lbl_803E55D8));
             }
             if (!played) {
                 Sfx_PlayFromObject(0, 0x109);
@@ -363,6 +356,7 @@ void sc_totempole_update(int obj)
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int *)&lbl_803DDC08);
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -544,7 +538,7 @@ void sc_cloudrunnera_init(int obj, int p2)
         }
         *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
     }
-    if (*(int *)(obj + 0x64) != 0) {
+    if (*(void **)(obj + 0x64) != NULL) {
         *(u8 *)(*(int *)(obj + 0x64) + 0x3a) = 0x64;
         *(u8 *)(*(int *)(obj + 0x64) + 0x3b) = 0x96;
     }
