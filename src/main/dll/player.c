@@ -5849,11 +5849,10 @@ void fn_8029A420(int obj)
 void playerUpdateWhileTimeStopped(int obj)
 {
     int inner = *(int *)((char *)obj + 0xb8);
-    f32 zero = lbl_803E7EA4;
     f32 v = *(f32 *)((char *)inner + 0x820);
+    f32 zero = lbl_803E7EA4;
     if (v > zero) {
-        v -= lbl_803E7EE0;
-        *(f32 *)((char *)inner + 0x820) = v;
+        *(f32 *)((char *)inner + 0x820) = v - lbl_803E7EE0;
         v = *(f32 *)((char *)inner + 0x820);
         if (v <= zero) {
             cutsceneEnterExit(0, 0);

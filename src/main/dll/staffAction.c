@@ -1122,6 +1122,7 @@ void fn_80165B3C(int obj,int state)
     f32 hitRadius;
     undefined pad[0x10];
     undefined hitType;
+    undefined pad2[0x1f];
   } hitScratch;
   f32 damping;
   int hitFound;
@@ -1144,7 +1145,11 @@ void fn_80165B3C(int obj,int state)
   hitDetectFn_800691c0(obj,bounds,0,1);
   hitFound = hitDetectFn_80067958(obj,start,end,1,hitScratch.hit,0x20);
   if (hitFound != 0) {
-    *(u8 *)(state + 0x92) = *(u8 *)(state + 0x92) & 0xfb;
+    {
+        struct StaffFlag92 { u8 b80:1, b40:1, b20:1, b10:1, b08:1, b04:1, b02:1, b01:1; };
+        int zero = 0;
+        ((struct StaffFlag92 *)(state + 0x92))->b04 = zero;
+    }
     fn_80166840(obj,state,hitScratch.hit,end);
   } else {
     *(f32 *)(obj + 0xc) = end[0];
