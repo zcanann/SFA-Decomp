@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dll_138.h"
+#include "main/dll/pushable.h"
 
 
 extern undefined4 FUN_80003494();
@@ -61,7 +62,7 @@ extern f32 lbl_803E3584;
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80174A80(int obj, int ext)
+void fn_80174A80(int obj, PushableState *ext)
 {
     int def;
     u8 *tex;
@@ -70,37 +71,37 @@ void fn_80174A80(int obj, int ext)
     f32 lim;
 
     def = *(int *)(obj + 0x4c);
-    *(f32 *)(ext + 0xcc) = lbl_803E3580;
+    ext->eyeOpenSpeed = lbl_803E3580;
     f = lbl_803E3584;
-    *(f32 *)(ext + 0xd0) = f;
-    *(f32 *)(ext + 0xd4) = f;
-    *(f32 *)(ext + 0xe4) = lbl_803E3564 * (f32)(int)randomGetRange(0x19, 0x4b);
-    *(f32 *)(ext + 0xe8) = *(f32 *)(ext + 0xe4) / (f32)(int)randomGetRange(0x28, 0x46);
+    ext->eyeDriftSpeedX = f;
+    ext->eyeDriftSpeedY = f;
+    ext->blinkInterval = lbl_803E3564 * (f32)(int)randomGetRange(0x19, 0x4b);
+    ext->blinkStep = ext->blinkInterval / (f32)(int)randomGetRange(0x28, 0x46);
     f = lbl_803E3528;
-    *(f32 *)(ext + 0xec) = f;
-    *(short *)(ext + 0xac) = *(short *)(def + 0x18);
-    *(short *)(ext + 0xae) = *(short *)(def + 0x1a);
-    *(f32 *)(ext + 0xf0) = f;
-    *(int *)(ext + 0xbc) = 0;
-    GameBit_Set(*(short *)(ext + 0xac), 0);
+    ext->blinkPhase = f;
+    ext->gameBit = *(short *)(def + 0x18);
+    ext->gameBit2 = *(short *)(def + 0x1a);
+    ext->unk_F0 = f;
+    ext->nearestObj = NULL;
+    GameBit_Set(ext->gameBit, 0);
     tex = (u8 *)objFindTexture(obj, 0, 0);
 
-    *(f32 *)(ext + 0xdc) = *(f32 *)(ext + 0xdc) + *(f32 *)(ext + 0xd0);
-    v = *(f32 *)(ext + 0xdc);
+    ext->eyePosX = ext->eyePosX + ext->eyeDriftSpeedX;
+    v = ext->eyePosX;
     lim = lbl_803E356C;
     if (v > lim) {
-        *(f32 *)(ext + 0xdc) = lim;
+        ext->eyePosX = lim;
     } else if (v < lbl_803E3528) {
-        *(f32 *)(ext + 0xdc) = lim;
+        ext->eyePosX = lim;
     }
 
-    *(f32 *)(ext + 0xe0) = *(f32 *)(ext + 0xe0) + *(f32 *)(ext + 0xd4);
-    v = *(f32 *)(ext + 0xe0);
+    ext->eyePosY = ext->eyePosY + ext->eyeDriftSpeedY;
+    v = ext->eyePosY;
     lim = lbl_803E356C;
     if (v > lim) {
-        *(f32 *)(ext + 0xe0) = lim;
+        ext->eyePosY = lim;
     } else if (v < lbl_803E3528) {
-        *(f32 *)(ext + 0xe0) = lim;
+        ext->eyePosY = lim;
     }
 
     tex[0xc] = 10;
@@ -169,7 +170,7 @@ void fn_80174BFC(int obj, int ext)
     Dll138HitInfo hit;
 
     def = *(int *)(obj + 0x4c);
-    velBase = (f32 *)(ext + 0x18);
+    velBase = (f32 *)((PushableState *)ext)->probeLocal;
     Obj_GetPlayerObject();
     savedX = *(f32 *)(obj + 0xc);
     savedY = *(f32 *)(obj + 0x10);
@@ -190,7 +191,7 @@ void fn_80174BFC(int obj, int ext)
         ptOut = points;
         vel = velBase;
         extPtr = ext;
-        for (; i < *(s8 *)(ext + 0xb4); i++) {
+        for (; i < ((PushableState *)ext)->pointCount; i++) {
             pose.rot[0] = *(s16 *)(obj + 0);
             pose.rot[1] = *(s16 *)(obj + 2);
             pose.rot[2] = *(s16 *)(obj + 4);
@@ -208,9 +209,9 @@ void fn_80174BFC(int obj, int ext)
                 } else {
                     int angle;
                     int delta;
-                    if (hit.id != -1 && (*(u16 *)(ext + 0x100) & 1) == 0) {
+                    if (hit.id != -1 && (((PushableState *)ext)->flags & 1) == 0) {
                         int gamebit;
-                        *(u16 *)(ext + 0x100) |= 1;
+                        ((PushableState *)ext)->flags |= 1;
                         gamebit = *(s16 *)(def + 0x18);
                         if (gamebit > -1) {
                             switch (*(s16 *)(obj + 0x46)) {
@@ -218,22 +219,22 @@ void fn_80174BFC(int obj, int ext)
                             case 0x21e:
                                 break;
                             case 0x7df:
-                                *(u16 *)(ext + 0x100) &= ~1;
-                                if (hit.id == *(u8 *)(ext + 0x144)) {
+                                ((PushableState *)ext)->flags &= ~1;
+                                if (hit.id == ((PushableState *)ext)->requiredHitId) {
                                     int *tex = objFindTexture(obj, 0, 0);
                                     if (tex != NULL) {
                                         *tex = 0x100;
                                     }
                                     GameBit_Set(*(s16 *)(def + 0x18), 1);
                                     *(u8 *)(obj + 0xaf) |= 8;
-                                    *(u16 *)(ext + 0x100) |= 0x80;
+                                    ((PushableState *)ext)->flags |= 0x80;
                                 }
                                 break;
                             case 0x1cb:
                                 if (hit.id == 1) {
                                     GameBit_Set(gamebit, 1);
                                     Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-                                    *(u16 *)(ext + 0x100) |= 0x80;
+                                    ((PushableState *)ext)->flags |= 0x80;
                                     *(u8 *)(obj + 0xaf) |= 8;
                                     saveGame_saveObjectPos(obj);
                                 }
@@ -249,10 +250,10 @@ void fn_80174BFC(int obj, int ext)
                             }
                         }
                     }
-                    fn_80293E80(lbl_803E3590 * (f32)*(int *)(ext + 0x140) / lbl_803E3594);
-                    sin(lbl_803E3590 * (f32)*(int *)(ext + 0x140) / lbl_803E3594);
+                    fn_80293E80(lbl_803E3590 * (f32)((PushableState *)ext)->yaw / lbl_803E3594);
+                    sin(lbl_803E3590 * (f32)((PushableState *)ext)->yaw / lbl_803E3594);
                     angle = getAngle(hit.angleX, hit.angleZ);
-                    delta = *(int *)(ext + 0x140) - (angle & 0xffff);
+                    delta = ((PushableState *)ext)->yaw - (angle & 0xffff);
                     if (delta > 0x8000) {
                         delta -= 0xffff;
                     }
@@ -261,17 +262,17 @@ void fn_80174BFC(int obj, int ext)
                     }
                     delta = delta / 0xb6;
                     if (delta > -0x1e && delta < 0x1e) {
-                        *(u16 *)(ext + 0x100) |= 0x100;
-                        *(f32 *)(ext + 0x108) = lbl_803E3528;
+                        ((PushableState *)ext)->flags |= 0x100;
+                        ((PushableState *)ext)->pushAmountX = lbl_803E3528;
                     } else if (delta > 0x96 || delta < -0x96) {
-                        *(u16 *)(ext + 0x100) |= 0x200;
-                        *(f32 *)(ext + 0x108) = lbl_803E3528;
+                        ((PushableState *)ext)->flags |= 0x200;
+                        ((PushableState *)ext)->pushAmountX = lbl_803E3528;
                     } else if (delta > 0x3c && delta < 0x78) {
-                        *(u16 *)(ext + 0x100) |= 0x800;
-                        *(f32 *)(ext + 0x10c) = lbl_803E3528;
+                        ((PushableState *)ext)->flags |= 0x800;
+                        ((PushableState *)ext)->pushAmountZ = lbl_803E3528;
                     } else if (delta < -0x3c && delta > -0x78) {
-                        *(u16 *)(ext + 0x100) |= 0x400;
-                        *(f32 *)(ext + 0x10c) = lbl_803E3528;
+                        ((PushableState *)ext)->flags |= 0x400;
+                        ((PushableState *)ext)->pushAmountZ = lbl_803E3528;
                     }
                     memcpy((void *)(extPtr + 0x78), ptOut, 0xc);
                     mtx[12] = ptOut[0];
@@ -286,7 +287,7 @@ void fn_80174BFC(int obj, int ext)
             extPtr += 0xc;
         }
     }
-    memcpy((void *)(ext + 0x78), points, *(s8 *)(ext + 0xb4) * 0xc);
+    memcpy(((PushableState *)ext)->cornerWorld, points, ((PushableState *)ext)->pointCount * 0xc);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -310,14 +311,14 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
 {
   uint uVar1;
   int iVar2;
-  int iVar3;
+  PushableState *iVar3;
   f32 dx;
   f32 dz;
   f32 len;
   f32 k;
   
-  iVar3 = *(int *)(param_1 + 0x5c);
-  *(undefined *)(iVar3 + 0x145) = 0x3c;
+  iVar3 = *(PushableState **)(param_1 + 0x5c);
+  iVar3->savePosDelay = 0x3c;
   if (param_1[0x5a] != -1) {
     (*(void (**)(short *))((char *)*gCameraInterface + 0x4c))(param_1);
   }
@@ -376,9 +377,9 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
         dz = dz / len;
       }
       k = lbl_803E3598;
-      *(float *)(iVar3 + 0xc0) = k * dx;
-      *(float *)(iVar3 + 0xc4) = lbl_803E3528;
-      *(float *)(iVar3 + 200) = k * dz;
+      iVar3->unk_C0 = k * dx;
+      iVar3->unk_C4 = lbl_803E3528;
+      iVar3->unk_C8 = k * dz;
       return 4;
     }
   }
@@ -404,17 +405,17 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
 #pragma peephole off
 void fn_80175428(int obj)
 {
-  int state;
+  PushableState *state;
   int msgSender;
   int msg;
   int msgParam;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(PushableState **)(obj + 0xb8);
   msgParam = 0;
   while (ObjMsg_Pop(obj,&msg,&msgSender,&msgParam) != 0) {
     switch (msg) {
     case 0xf0003:
-      *(int *)(state + 0xb8) = msgSender;
+      state->msgSenderObj = msgSender;
       break;
     case 0xe:
       if ((*(short *)(obj + 0x46) != 0x21e) && (*(short *)(obj + 0x46) != 0x411)) {
@@ -423,10 +424,10 @@ void fn_80175428(int obj)
       break;
     case 0x40001:
       if (*(short *)(obj + 0x46) == 0x21e) {
-        *(float *)(state + 0xf0) = *(float *)msgParam;
+        state->unk_F0 = *(float *)msgParam;
       }
       if (*(short *)(obj + 0x46) == 0x411) {
-        *(float *)(state + 0xf0) = *(float *)msgParam;
+        state->unk_F0 = *(float *)msgParam;
       }
       break;
     }
@@ -450,7 +451,7 @@ void fn_80175428(int obj)
  */
 int pushable_render2(int obj)
 {
-  return *(ushort *)(*(int *)(obj + 0xb8) + 0x100) & 1;
+  return (*(PushableState **)(obj + 0xb8))->flags & 1;
 }
 
 /*

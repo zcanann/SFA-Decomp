@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/pushable.h"
 #include "main/dll/transporter.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -1150,24 +1151,24 @@ extern int lbl_803AC6E0[];
 #pragma peephole off
 void pushable_free(int *obj) {
     u8 *def = *(u8**)((char*)obj + 0x4c);
-    u8 *sub = *(u8**)((char*)obj + 0xb8);
+    PushableState *sub = *(PushableState **)((char*)obj + 0xb8);
     s16 type = *(s16*)((char*)obj + 0x46);
     int v;
 
     switch (type) {
     case 0x21e:
-        GameBit_Set(*(s16*)(sub + 0xac), 0);
+        GameBit_Set(sub->gameBit, 0);
         break;
     case 0x411:
-        GameBit_Set(*(s16*)(sub + 0xac), 0);
+        GameBit_Set(sub->gameBit, 0);
         break;
     default:
-        if (*(s16*)(def + 0x18) > -1 && type != 0x54a && type != 0x5ae && type != 0x108 && sub[0x146] != 0) {
+        if (*(s16*)(def + 0x18) > -1 && type != 0x54a && type != 0x5ae && type != 0x108 && sub->savePosEnabled != 0) {
             saveGame_saveObjectPos(obj);
         }
         break;
     }
-    if ((*(u16*)(sub + 0x100) & 1) != 0) {
+    if ((sub->flags & 1) != 0) {
         int val = *(int*)(def + 0x14);
         v = lbl_803DDAB8;
         lbl_803DDAB8 = v + 1;
@@ -1546,35 +1547,29 @@ extern u32 GameBit_Get(int eventId);
 extern int *gObjectTriggerInterface;
 extern int fn_80295A04(void *player, int a);
 extern void pushable_savePos(int *obj);
-extern int fn_80174668(int *obj, u8 *state);
-extern void fn_80174438(int *obj, u8 *state);
+extern int fn_80174668(int *obj, PushableState *state);
+extern void fn_80174438(int *obj, PushableState *state);
 extern void Sfx_PlayFromObject(int *obj, int sfxId);
 extern void Obj_RemoveFromUpdateList(int *obj);
 extern f32 lbl_803E3528;
 extern f64 lbl_803E3530;
 extern f64 lbl_803E3538;
 
-typedef struct {
-    u8 b7 : 1;
-    u8 b6 : 1;
-    u8 rest : 6;
-} PushableFlags114;
-
 #pragma scheduling off
 #pragma peephole off
 void pushable_update(int *obj) {
-    u8 *state;
+    PushableState *state;
     u8 *def;
     void *player;
 
     def = *(u8 **)((char *)obj + 0x4c);
-    state = *(u8 **)((char *)obj + 0xb8);
-    *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) & ~2;
-    ((PushableFlags114 *)(state + 0x114))->b7 = 0;
+    state = *(PushableState **)((char *)obj + 0xb8);
+    state->flags = state->flags & ~2;
+    state->moveFlags.b7 = 0;
     if (lbl_803E3528 != *(f32 *)((char *)obj + 0x28)) {
-        *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 2;
+        state->flags = state->flags | 2;
     }
-    if (((PushableFlags114 *)(state + 0x114))->b6 == 0) {
+    if (state->moveFlags.b6 == 0) {
         if (playerIsDisguised(Obj_GetPlayerObject()) != 0) goto LAB_clear;
         *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) | 0x10;
     } else {
@@ -1587,13 +1582,13 @@ void pushable_update(int *obj) {
         return;
     }
     player = Obj_GetPlayerObject();
-    if ((player != NULL && fn_80295A04(player, 10) != 0) || (*(u16 *)(state + 0x100) & 4) != 0) {
-        state[0x145] = 0x78;
+    if ((player != NULL && fn_80295A04(player, 10) != 0) || (state->flags & 4) != 0) {
+        state->savePosDelay = 0x78;
     }
-    if (state[0x145] != 0) {
-        state[0x145] -= 1;
+    if (state->savePosDelay != 0) {
+        state->savePosDelay -= 1;
     } else {
-        if (state[0x146] != 0) {
+        if (state->savePosEnabled != 0) {
             pushable_savePos(obj);
         }
     }
@@ -1605,7 +1600,7 @@ void pushable_update(int *obj) {
         if (fn_80174668(obj, state) == 0) break;
         return;
     case 0x54a:
-        if (GameBit_Get(*(s16 *)(state + 0xac)) != 0) {
+        if (GameBit_Get(state->gameBit) != 0) {
             *(f32 *)((char *)obj + 0xc) = (f32)((f64)*(f32 *)(def + 8) - lbl_803E3530);
             *(f32 *)((char *)obj + 0x10) = *(f32 *)(def + 0xc);
             *(f32 *)((char *)obj + 0x14) = (f32)(lbl_803E3538 + (f64)*(f32 *)(def + 0x10));
@@ -1613,7 +1608,7 @@ void pushable_update(int *obj) {
         fn_80174438(obj, state);
         break;
     case 0x108:
-        if (lbl_803E3528 == *(f32 *)(state + 0xf8) && *(f32 *)(state + 0xf4) > lbl_803E3528) {
+        if (lbl_803E3528 == state->prevWaterDepth && state->waterDepth > lbl_803E3528) {
             Sfx_PlayFromObject(obj, 0x68);
             GameBit_Set(0x272, 1);
         }
@@ -1626,8 +1621,8 @@ void pushable_update(int *obj) {
     }
     {
         s16 t = *(s16 *)((char *)obj + 0x46);
-        if (t != 0x54a && t != 0x5ae && t != 0x108 && state[0x146] != 0 &&
-            (*(u16 *)(state + 0x100) & 8) == 0) {
+        if (t != 0x54a && t != 0x5ae && t != 0x108 && state->savePosEnabled != 0 &&
+            (state->flags & 8) == 0) {
             saveGame_saveObjectPos(obj);
         }
     }
@@ -1928,7 +1923,7 @@ extern f32 lbl_803E3588;
 #pragma scheduling off
 #pragma peephole off
 void pushable_init(s16 *obj, char *def) {
-    u8 *state;
+    PushableState *state;
     int *model;
     int *entry;
     f32 *mtx;
@@ -1946,16 +1941,16 @@ void pushable_init(s16 *obj, char *def) {
     ObjGroup_AddObject(obj, 5);
     objSetSlot(obj, 0x5a);
     *(void **)((char *)obj + 0xbc) = (void *)fn_8017510C;
-    state = *(u8 **)((char *)obj + 0xb8);
-    state[0xb4] = 0;
+    state = *(PushableState **)((char *)obj + 0xb8);
+    state->pointCount = 0;
     entry = Transporter_GetActiveModel(obj);
     model = (int *)*entry;
-    *(int *)(state + 0xb0) = *(int *)(def + 0x1c);
-    *(f32 *)(state + 0x10) = (f32)*(u16 *)(def + 0x20) / lbl_803E35CC;
-    *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
-    *(f32 *)(state + 0xc) = *(f32 *)(state + 0x10) * (f32)(u16)modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
-    *(f32 *)(state + 0x14) = lbl_803E3528;
-    *(s16 *)(state + 0xac) = *(s16 *)(def + 0x18);
+    state->unk_B0 = *(int *)(def + 0x1c);
+    state->scale = (f32)*(u16 *)(def + 0x20) / lbl_803E35CC;
+    state->scale = state->scale * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
+    state->cullDistance = state->scale * (f32)(u16)modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
+    state->timer_0x14 = lbl_803E3528;
+    state->gameBit = *(s16 *)(def + 0x18);
     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E3528, 0);
     ObjMsg_AllocQueue(obj, 4);
     ObjHits_EnableObject(obj);
@@ -1972,7 +1967,7 @@ void pushable_init(s16 *obj, char *def) {
             if (vtx[1] == minY) {
                 int found = 0;
                 int j = 0;
-                u8 cnt = state[0xb4];
+                u8 cnt = *(u8 *)&state->pointCount;
 
                 for (; j < (s8)cnt; j++) {
                     char *p = (char *)state + j * 0xc;
@@ -1982,16 +1977,16 @@ void pushable_init(s16 *obj, char *def) {
                     }
                 }
                 if (found == 0) {
-                    *(f32 *)(state + (s8)cnt * 0xc + 0x48) = vtx[0];
-                    *(f32 *)(state + *(s8 *)(state + 0xb4) * 0xc + 0x4c) = vtx[1];
-                    *(f32 *)(state + *(s8 *)(state + 0xb4) * 0xc + 0x50) = vtx[2];
-                    state[0xb4] += 1;
+                    *(f32 *)((u8 *)state + (s8)cnt * 0xc + 0x48) = vtx[0];
+                    *(f32 *)((u8 *)state + state->pointCount * 0xc + 0x4c) = vtx[1];
+                    *(f32 *)((u8 *)state + state->pointCount * 0xc + 0x50) = vtx[2];
+                    state->pointCount += 1;
                 }
             }
         }
     }
-    if (*(s8 *)(state + 0xb4) > 4) {
-        state[0xb4] = 4;
+    if (state->pointCount > 4) {
+        state->pointCount = 4;
         debugPrintf(sPushPullObjectHitpointOverflow);
     }
     {
@@ -2002,7 +1997,7 @@ void pushable_init(s16 *obj, char *def) {
     e = (char *)state;
     {
         f32 zero = lbl_803E3528;
-        for (; i < *(s8 *)(state + 0xb4); i++) {
+        for (; i < state->pointCount; i++) {
             f32 v;
             *(f32 *)(e + 0x18) = *(f32 *)(e + 0x48);
             *(f32 *)(e + 0x1c) = *(f32 *)(e + 0x4c);
@@ -2024,14 +2019,14 @@ void pushable_init(s16 *obj, char *def) {
                 *(f32 *)(e + 0x48) = v + lbl_803E3588;
             } else {
                 *(f32 *)(e + 0x48) = v - lbl_803E3588;
-                state[0x104] = i;
+                state->cornerIdxPosX = i;
             }
             v = *(f32 *)(e + 0x50);
             if (v < zero) {
                 *(f32 *)(e + 0x50) = v + lbl_803E3588;
             } else {
                 *(f32 *)(e + 0x50) = v - lbl_803E3588;
-                state[0x102] = i;
+                state->cornerIdxPosZ = i;
             }
             Matrix_TransformPoint(mtx, *(f32 *)(e + 0x18), *(f32 *)(e + 0x1c), *(f32 *)(e + 0x20),
                                   (f32 *)(e + 0x78), (f32 *)(e + 0x7c), (f32 *)(e + 0x80));
@@ -2040,20 +2035,20 @@ void pushable_init(s16 *obj, char *def) {
     }
     i = 0;
     e = (char *)state;
-    for (; i < *(s8 *)(state + 0xb4); i++) {
-        if (i != state[0x104] && *(f32 *)(e + 0x48) < lbl_803E3528) {
-            if ((int)*(f32 *)(e + 0x50) == (int)*(f32 *)(state + state[0x104] * 0xc + 0x50)) {
-                state[0x105] = i;
+    for (; i < state->pointCount; i++) {
+        if (i != state->cornerIdxPosX && *(f32 *)(e + 0x48) < lbl_803E3528) {
+            if ((int)*(f32 *)(e + 0x50) == (int)*(f32 *)((u8 *)state + state->cornerIdxPosX * 0xc + 0x50)) {
+                state->cornerIdxNegX = i;
             }
         }
-        if (i != state[0x102] && *(f32 *)(e + 0x50) < lbl_803E3528) {
-            if ((int)*(f32 *)(e + 0x48) == (int)*(f32 *)(state + state[0x102] * 0xc + 0x48)) {
-                state[0x103] = i;
+        if (i != state->cornerIdxPosZ && *(f32 *)(e + 0x50) < lbl_803E3528) {
+            if ((int)*(f32 *)(e + 0x48) == (int)*(f32 *)((u8 *)state + state->cornerIdxPosZ * 0xc + 0x48)) {
+                state->cornerIdxNegZ = i;
             }
         }
         e += 0xc;
     }
-    state[0x146] = 1;
+    state->savePosEnabled = 1;
     switch (*(s16 *)((char *)obj + 0x46)) {
     case 0x21e:
         fn_80174A80(obj, state);
@@ -2066,15 +2061,15 @@ void pushable_init(s16 *obj, char *def) {
         break;
     case 0x1cb:
         if (*(s16 *)(def + 0x18) > -1 && GameBit_Get(*(s16 *)(def + 0x18)) != 0) {
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x81;
+            state->flags = state->flags | 0x81;
             *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) | 8;
             pushable_savePos((int *)obj);
         }
-        state[0x146] = 0;
+        state->savePosEnabled = 0;
         break;
     default:
         if (*(s16 *)(def + 0x18) > -1 && GameBit_Get(*(s16 *)(def + 0x18)) != 0) {
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 1;
+            state->flags = state->flags | 1;
         }
         break;
     }
@@ -2086,9 +2081,9 @@ void pushable_init(s16 *obj, char *def) {
             (*(char **)((char *)obj + 0x64))[0x3b] = 0x40;
         }
     }
-    *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x40;
+    state->flags = state->flags | 0x40;
     if (arrayIndexOf(lbl_803AC6E0, lbl_803DDAB8, *(int *)(def + 0x14)) != -1) {
-        *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 1;
+        state->flags = state->flags | 1;
         fn_8007FE04(lbl_803AC6E0, &lbl_803DDAB8, *(int *)(def + 0x14));
     }
 }
@@ -2120,7 +2115,7 @@ typedef struct { u8 pad[0x24]; f32 vx; u8 pad2[4]; f32 vz; } PushableObjPos;
 #pragma scheduling off
 #pragma peephole off
 void pushable_hitDetect(int *obj) {
-    u8 *state;
+    PushableState *state;
     f32 *w;
     f32 *wp;
     u8 *e;
@@ -2141,28 +2136,28 @@ void pushable_hitDetect(int *obj) {
 
     box = *(PushableBox16 *)lbl_802C2270;
     Obj_GetPlayerObject();
-    state = *(u8 **)((char *)obj + 0xb8);
-    *(f32 *)(state + 0x110) = *(f32 *)(state + 0x110) - timeDelta;
-    if (*(f32 *)(state + 0x110) <= lbl_803E3528) {
-        *(f32 *)(state + 0x110) = lbl_803E3528;
+    state = *(PushableState **)((char *)obj + 0xb8);
+    state->timer_0x110 = state->timer_0x110 - timeDelta;
+    if (state->timer_0x110 <= lbl_803E3528) {
+        state->timer_0x110 = lbl_803E3528;
     }
-    if (((PushableFlags114 *)(state + 0x114))->b7 == 0) {
+    if (state->moveFlags.b7 == 0) {
         f32 k;
         if (fn_802969F0() == 0xd) {
             k = lbl_803E35A8;
         } else {
             k = lbl_803E35AC;
         }
-        *(f32 *)(state + 0x108) = *(f32 *)(state + 0x108) * k;
-        if (*(f32 *)(state + 0x108) < lbl_803E35B0 && *(f32 *)(state + 0x108) > lbl_803E35B4) {
-            *(f32 *)(state + 0x108) = lbl_803E3528;
+        state->pushAmountX = state->pushAmountX * k;
+        if (state->pushAmountX < lbl_803E35B0 && state->pushAmountX > lbl_803E35B4) {
+            state->pushAmountX = lbl_803E3528;
         }
-        *(f32 *)(state + 0x10c) = *(f32 *)(state + 0x10c) * k;
-        if (*(f32 *)(state + 0x10c) < lbl_803E35B0 && *(f32 *)(state + 0x10c) > lbl_803E35B4) {
-            *(f32 *)(state + 0x10c) = lbl_803E3528;
+        state->pushAmountZ = state->pushAmountZ * k;
+        if (state->pushAmountZ < lbl_803E35B0 && state->pushAmountZ > lbl_803E35B4) {
+            state->pushAmountZ = lbl_803E3528;
         }
-        if (lbl_803E3528 != *(f32 *)(state + 0x108) || lbl_803E3528 != *(f32 *)(state + 0x10c)) {
-            vec.dir[0] = *(int *)(state + 0x140);
+        if (lbl_803E3528 != state->pushAmountX || lbl_803E3528 != state->pushAmountZ) {
+            vec.dir[0] = state->yaw;
             vec.dir[1] = 0;
             vec.dir[2] = 0;
             vec.pos[0] = lbl_803E3588;
@@ -2170,16 +2165,16 @@ void pushable_hitDetect(int *obj) {
             vec.pos[2] = lbl_803E3528;
             vec.pos[3] = lbl_803E3528;
             setMatrixFromObjectPos(mtx, &vec);
-            Matrix_TransformPoint(mtx, *(f32 *)(state + 0x10c), lbl_803E3528, *(f32 *)(state + 0x108),
+            Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX,
                                   (f32 *)((char *)obj + 0x24), &tmpY, (f32 *)((char *)obj + 0x2c));
             objMove(obj, ((f32 *)obj)[9], lbl_803E3528, ((f32 *)obj)[11]);
-            if ((*(u16 *)(state + 0x100) & 4) == 0) {
+            if ((state->flags & 4) == 0) {
                 fn_80174BFC(obj, state);
             }
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 2;
+            state->flags = state->flags | 2;
         }
     }
-    ((PushableFlags114 *)(state + 0x114))->b6 = 1;
+    state->moveFlags.b6 = 1;
     switch (*(s16 *)((char *)obj + 0x46)) {
     case 0x108:
         if (GameBit_Get(0x272) != 0) {
@@ -2187,38 +2182,38 @@ void pushable_hitDetect(int *obj) {
         }
         break;
     case 0x21e:
-        if (GameBit_Get(*(s16 *)(state + 0xac)) != 0) {
+        if (GameBit_Get(state->gameBit) != 0) {
             return;
         }
         break;
     case 0x411:
-        if (GameBit_Get(*(s16 *)(state + 0xac)) != 0) {
+        if (GameBit_Get(state->gameBit) != 0) {
             return;
         }
         break;
     case 0x85a:
-        ((PushableFlags114 *)(state + 0x114))->b6 = 0;
+        state->moveFlags.b6 = 0;
         break;
     case 0x54a:
         break;
     }
-    if ((*(u16 *)(state + 0x100) & 4) != 0) {
+    if ((state->flags & 4) != 0) {
         *(f32 *)((char *)obj + 0x28) = -(lbl_803E35B8 * timeDelta - *(f32 *)((char *)obj + 0x28));
         *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
     }
-    if ((*(u16 *)(state + 0x100) & 2) != 0 || (*(u16 *)(state + 0x100) & 4) != 0) {
+    if ((state->flags & 2) != 0 || (state->flags & 4) != 0) {
         Obj_BuildTransformMatrices(obj);
         i = 0;
         wp = wpos;
         w = wp;
-        e = state;
-        for (; i < *(s8 *)(state + 0xb4); i++) {
+        e = (u8 *)state;
+        for (; i < state->pointCount; i++) {
             Obj_TransformLocalPointToWorld(*(f32 *)(e + 0x48), *(f32 *)(e + 0x4c), *(f32 *)(e + 0x50),
                                            w, w + 1, w + 2, obj);
             w += 3;
             e += 0xc;
         }
-        hitDetect_calcSweptSphereBounds(sweep, (f32 *)(state + 0x78), wpos, (int *)&box, 4);
+        hitDetect_calcSweptSphereBounds(sweep, (f32 *)state->cornerWorld, wpos, (int *)&box, 4);
         sweep[1] = (int)((f32)sweep[1] - lbl_803E35BC);
         sweep[4] = (int)((f32)sweep[4] + lbl_803E35BC);
         hitDetectFn_800691c0(obj, sweep, 1, 1);
@@ -2227,7 +2222,7 @@ void pushable_hitDetect(int *obj) {
         cntE = 0;
         i = 0;
         hp = hp4;
-        for (; i < *(s8 *)(state + 0xb4); i++) {
+        for (; i < state->pointCount; i++) {
             f32 y = wp[1];
             s8 found;
 
@@ -2267,27 +2262,27 @@ void pushable_hitDetect(int *obj) {
             wp += 3;
             hp++;
         }
-        *(f32 *)(state + 0xf8) = *(f32 *)(state + 0xf4);
+        state->prevWaterDepth = state->waterDepth;
         if (cntE != 0) {
-            *(f32 *)(state + 0xf4) = acc / (f32)cntE;
+            state->waterDepth = acc / (f32)cntE;
         } else {
-            *(f32 *)(state + 0xf4) = lbl_803E3528;
+            state->waterDepth = lbl_803E3528;
         }
-        if (cnt2 != 0 && *(f32 *)(state + 0x110) <= lbl_803E3528) {
+        if (cnt2 != 0 && state->timer_0x110 <= lbl_803E3528) {
             *(f32 *)((char *)obj + 0x28) = lbl_803E3528;
             *(f32 *)((char *)obj + 0x10) = lbl_803E358C + tmpY / (f32)cnt2;
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) & ~0xc;
+            state->flags = state->flags & ~0xc;
         } else {
-            if ((*(u16 *)(state + 0x100) & 4) == 0) {
-                *(f32 *)(state + 0x110) = lbl_803E35C8;
+            if ((state->flags & 4) == 0) {
+                state->timer_0x110 = lbl_803E35C8;
             }
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0xc;
+            state->flags = state->flags | 0xc;
         }
     }
     Obj_BuildTransformMatrices(obj);
     i = 0;
-    e = state;
-    for (; i < *(s8 *)(state + 0xb4); i++) {
+    e = (u8 *)state;
+    for (; i < state->pointCount; i++) {
         Obj_TransformLocalPointToWorld(*(f32 *)(e + 0x18), *(f32 *)(e + 0x1c), *(f32 *)(e + 0x20),
                                        (f32 *)(e + 0x78), (f32 *)(e + 0x7c), (f32 *)(e + 0x80), obj);
         e += 0xc;
@@ -2320,7 +2315,7 @@ typedef struct {
 #pragma peephole off
 int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
     SetScaleParams *pp;
-    u8 *state;
+    PushableState *state;
     char ret;
     void *player;
     int hit;
@@ -2341,7 +2336,7 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
     f32 tmpY;
 
     player = Obj_GetPlayerObject();
-    state = *(u8 **)((char *)obj + 0xb8);
+    state = *(PushableState **)((char *)obj + 0xb8);
     ret = 0;
     i = 5;
     p = (char *)state + 0x14;
@@ -2349,8 +2344,8 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
         *(f32 *)(p + 0x118) = *(f32 *)(p + 0x114);
         *(f32 *)(p + 0x12c) = *(f32 *)(p + 0x128);
     }
-    *(f32 *)(state + 0x118) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)(state + 0x12c) = *(f32 *)((char *)obj + 0x14);
+    state->posHistX[0] = *(f32 *)((char *)obj + 0xc);
+    state->posHistZ[0] = *(f32 *)((char *)obj + 0x14);
     start[0] = *(f32 *)((char *)tgt + 0xc);
     start[1] = lbl_803E359C + *(f32 *)((char *)tgt + 0x10);
     start[2] = *(f32 *)((char *)tgt + 0x14);
@@ -2361,9 +2356,9 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
     pp->h2c = 0;
     hit = 0;
     if (dx > lbl_803E3528) {
-        end[0] = lbl_803E35A0 * fn_80293E80(lbl_803E3590 * (f32)*(int *)(state + 0x140) / lbl_803E3594) + start[0];
+        end[0] = lbl_803E35A0 * fn_80293E80(lbl_803E3590 * (f32)state->yaw / lbl_803E3594) + start[0];
         end[1] = start[1];
-        end[2] = lbl_803E35A0 * sin(lbl_803E3590 * (f32)*(int *)(state + 0x140) / lbl_803E3594) + start[2];
+        end[2] = lbl_803E35A0 * sin(lbl_803E3590 * (f32)state->yaw / lbl_803E3594) + start[2];
         hitDetect_calcSweptSphereBounds(sweep, start, end, (int *)pp, 1);
         hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
@@ -2372,15 +2367,15 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
         }
         if (hit != 0) {
             f32 t;
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x200;
+            state->flags = state->flags | 0x200;
             t = lbl_803E3528;
-            *(f32 *)(state + 0x108) = t;
-            *(f32 *)(state + 0x10c) = t;
+            state->pushAmountX = t;
+            state->pushAmountZ = t;
         }
     } else if (dz > lbl_803E3528) {
-        end[0] = lbl_803E35A4 * fn_80293E80(lbl_803E3590 * (f32)(*(int *)(state + 0x140) + 0x4000) / lbl_803E3594) + start[0];
+        end[0] = lbl_803E35A4 * fn_80293E80(lbl_803E3590 * (f32)(state->yaw + 0x4000) / lbl_803E3594) + start[0];
         end[1] = start[1];
-        end[2] = lbl_803E35A4 * sin(lbl_803E3590 * (f32)(*(int *)(state + 0x140) + 0x4000) / lbl_803E3594) + start[2];
+        end[2] = lbl_803E35A4 * sin(lbl_803E3590 * (f32)(state->yaw + 0x4000) / lbl_803E3594) + start[2];
         hitDetect_calcSweptSphereBounds(sweep, start, end, (int *)pp, 1);
         hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
@@ -2389,15 +2384,15 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
         }
         if (hit != 0) {
             f32 t;
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x800;
+            state->flags = state->flags | 0x800;
             t = lbl_803E3528;
-            *(f32 *)(state + 0x108) = t;
-            *(f32 *)(state + 0x10c) = t;
+            state->pushAmountX = t;
+            state->pushAmountZ = t;
         }
     } else if (dz < lbl_803E3528) {
-        end[0] = lbl_803E35A4 * fn_80293E80(lbl_803E3590 * (f32)(*(int *)(state + 0x140) - 0x4000) / lbl_803E3594) + start[0];
+        end[0] = lbl_803E35A4 * fn_80293E80(lbl_803E3590 * (f32)(state->yaw - 0x4000) / lbl_803E3594) + start[0];
         end[1] = start[1];
-        end[2] = lbl_803E35A4 * sin(lbl_803E3590 * (f32)(*(int *)(state + 0x140) - 0x4000) / lbl_803E3594) + start[2];
+        end[2] = lbl_803E35A4 * sin(lbl_803E3590 * (f32)(state->yaw - 0x4000) / lbl_803E3594) + start[2];
         hitDetect_calcSweptSphereBounds(sweep, start, end, (int *)pp, 1);
         hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
@@ -2406,45 +2401,45 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
         }
         if (hit != 0) {
             f32 t;
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x400;
+            state->flags = state->flags | 0x400;
             t = lbl_803E3528;
-            *(f32 *)(state + 0x108) = t;
-            *(f32 *)(state + 0x10c) = t;
+            state->pushAmountX = t;
+            state->pushAmountZ = t;
         }
     }
-    if (playerIsDisguised(player) == 0 && ((PushableFlags114 *)(state + 0x114))->b6 == 0) {
+    if (playerIsDisguised(player) == 0 && state->moveFlags.b6 == 0) {
         hit = 1;
         if (dx > lbl_803E3528) {
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x200;
+            state->flags = state->flags | 0x200;
         } else if (dx < lbl_803E3528) {
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x100;
+            state->flags = state->flags | 0x100;
         } else if (dz > lbl_803E3528) {
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x800;
+            state->flags = state->flags | 0x800;
         } else {
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x400;
+            state->flags = state->flags | 0x400;
         }
         {
             f32 t = lbl_803E3528;
-            *(f32 *)(state + 0x108) = t;
-            *(f32 *)(state + 0x10c) = t;
+            state->pushAmountX = t;
+            state->pushAmountZ = t;
         }
     }
-    if (flag != 0 && (*(u16 *)(state + 0x100) & 8) == 0) {
-        *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 2;
-        state[0x115] -= 1;
-        if (*(s8 *)(state + 0x115) <= 0) {
-            *(s8 *)(state + 0x115) = randomGetRange(0x28, 0x3c);
-            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x20;
+    if (flag != 0 && (state->flags & 8) == 0) {
+        state->flags = state->flags | 2;
+        state->pushSfxTimer -= 1;
+        if (state->pushSfxTimer <= 0) {
+            state->pushSfxTimer = randomGetRange(0x28, 0x3c);
+            state->flags = state->flags | 0x20;
         }
-        if ((*(u16 *)(state + 0x100) & 0x80) != 0) {
+        if ((state->flags & 0x80) != 0) {
             f32 t = lbl_803E3528;
-            *(f32 *)(state + 0x108) = t;
-            *(f32 *)(state + 0x10c) = t;
+            state->pushAmountX = t;
+            state->pushAmountZ = t;
         } else if (hit == 0) {
-            *(f32 *)(state + 0x108) = dx;
-            *(f32 *)(state + 0x10c) = dz;
+            state->pushAmountX = dx;
+            state->pushAmountZ = dz;
         }
-        *(int *)(state + 0x140) = *tgt;
+        state->yaw = *tgt;
         vec.dir[0] = *tgt;
         vec.dir[1] = 0;
         vec.dir[2] = 0;
@@ -2453,15 +2448,15 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
         vec.pos[2] = lbl_803E3528;
         vec.pos[3] = lbl_803E3528;
         setMatrixFromObjectPos(mtx, &vec);
-        Matrix_TransformPoint(mtx, *(f32 *)(state + 0x10c), lbl_803E3528, *(f32 *)(state + 0x108),
+        Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX,
                               (f32 *)((char *)obj + 0x24), &tmpY, (f32 *)((char *)obj + 0x2c));
-        ((PushableFlags114 *)(state + 0x114))->b7 = 1;
+        state->moveFlags.b7 = 1;
         objMove(obj, ((PushableObjPos *)obj)->vx, lbl_803E3528, ((PushableObjPos *)obj)->vz);
         Obj_BuildTransformMatrices(obj);
         w = wpos;
         e2 = (f32 *)state;
         d = deltas;
-        for (i = 0; i < *(s8 *)(state + 0xb4); i++) {
+        for (i = 0; i < state->pointCount; i++) {
             Obj_TransformLocalPointToWorld(*(f32 *)((char *)e2 + 0x18), *(f32 *)((char *)e2 + 0x1c),
                                            *(f32 *)((char *)e2 + 0x20), w, w + 1, w + 2, obj);
             d[0] = *(f32 *)((char *)obj + 0xc) - w[0];
@@ -2471,17 +2466,17 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
             e2 = (f32 *)((char *)e2 + 0xc);
             d += 3;
         }
-        if ((*(u16 *)(state + 0x100) & 4) == 0) {
+        if ((state->flags & 4) == 0) {
             fn_80174BFC(obj, state);
         }
         Obj_BuildTransformMatrices(obj);
-        if (lbl_803E3528 != *(f32 *)(state + 0x108) || lbl_803E3528 != *(f32 *)(state + 0x10c)) {
-            u8 *st2 = *(u8 **)((char *)obj + 0xb8);
+        if (lbl_803E3528 != state->pushAmountX || lbl_803E3528 != state->pushAmountZ) {
+            PushableState *st2 = *(PushableState **)((char *)obj + 0xb8);
             char *def2 = *(char **)((char *)obj + 0x4c);
-            u16 fl2 = *(u16 *)(st2 + 0x100);
+            u16 fl2 = st2->flags;
             if ((fl2 & 1) != 0) {
                 s16 t;
-                *(u16 *)(st2 + 0x100) = fl2 & ~1;
+                st2->flags = fl2 & ~1;
                 t = *(s16 *)(def2 + 0x18);
                 if (t > -1) {
                     switch (*(s16 *)((char *)obj + 0x46)) {
@@ -2501,18 +2496,18 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
             }
         }
         {
-            f32 f5 = *(f32 *)((char *)obj + 0xc) - *(f32 *)(state + 0x128);
-            f32 f6 = *(f32 *)((char *)obj + 0x14) - *(f32 *)(state + 0x13c);
-            if (f5 * f5 + f6 * f6 > lbl_803E3588 && (*(u16 *)(state + 0x100) & 0x20) != 0) {
+            f32 f5 = *(f32 *)((char *)obj + 0xc) - state->posHistX[4];
+            f32 f6 = *(f32 *)((char *)obj + 0x14) - state->posHistZ[4];
+            if (f5 * f5 + f6 * f6 > lbl_803E3588 && (state->flags & 0x20) != 0) {
                 Sfx_PlayFromObject(obj, 100);
-                *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) & ~0x20;
+                state->flags = state->flags & ~0x20;
             }
         }
     } else {
         char *mi = *(char **)((char *)obj + 0x58);
         f32 *mtx2 = (f32 *)(mi + ((*(u8 *)(mi + 0x10c) + 2) << 4) * 4);
         e2 = (f32 *)state;
-        for (i = 0; i < *(s8 *)(state + 0xb4); i++) {
+        for (i = 0; i < state->pointCount; i++) {
             Matrix_TransformPoint(mtx2, *(f32 *)((char *)e2 + 0x18), *(f32 *)((char *)e2 + 0x1c),
                                   *(f32 *)((char *)e2 + 0x20), (f32 *)((char *)e2 + 0x78),
                                   (f32 *)((char *)e2 + 0x7c), (f32 *)((char *)e2 + 0x80));
@@ -2520,7 +2515,7 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
         }
     }
     {
-        u16 fl = *(u16 *)(state + 0x100);
+        u16 fl = state->flags;
         if ((fl & 0x100) != 0) {
             ret = 1;
         } else if ((fl & 0x200) != 0) {
@@ -2532,7 +2527,7 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
         } else if ((fl & 8) != 0) {
             ret = 5;
         }
-        *(u16 *)(state + 0x100) = fl & ~0xf00;
+        state->flags = fl & ~0xf00;
     }
     return ret;
 }
@@ -2545,25 +2540,25 @@ extern void fn_8003B5E0(int a, int b, int c, int d);
 #pragma peephole off
 void pushable_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
     if (visible != 0) {
-        u8 *state = *(u8 **)((char *)obj + 0xb8);
+        PushableState *state = *(PushableState **)((char *)obj + 0xb8);
         switch (*(s16 *)((char *)obj + 0x46)) {
         case 0x21e:
-            if (GameBit_Get(*(s16 *)(state + 0xac)) == 0) {
+            if (GameBit_Get(state->gameBit) == 0) {
                 break;
             }
             return;
         case 0x411:
-            if (GameBit_Get(*(s16 *)(state + 0xac)) == 0) {
+            if (GameBit_Get(state->gameBit) == 0) {
                 break;
             }
             return;
         case 0x54a: {
-            f32 v = *(f32 *)(state + 0x14);
+            f32 v = state->timer_0x14;
             f32 zero = lbl_803E3528;
             if (v > zero) {
-                *(f32 *)(state + 0x14) = v - timeDelta;
-                if (*(f32 *)(state + 0x14) <= zero) {
-                    *(f32 *)(state + 0x14) = zero;
+                state->timer_0x14 = v - timeDelta;
+                if (state->timer_0x14 <= zero) {
+                    state->timer_0x14 = zero;
                 } else {
                     fn_8003B5E0(0xc8, 0, 0, 0xff);
                 }

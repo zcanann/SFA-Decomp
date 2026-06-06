@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/lightning.h"
+#include "main/dll/pushable.h"
 #include "main/objanim_internal.h"
 
 #pragma peephole off
@@ -815,28 +816,28 @@ void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80174588(int obj, int p2)
+void fn_80174588(int obj, PushableState *p2)
 {
   extern int *objFindTexture(int, int, int);
   int data = *(int *)(obj + 0x4c);
 
   switch (*(int *)(data + 0x14)) {
     case 0x49B2C:
-      *(u8 *)(p2 + 0x144) = 10;
+      p2->requiredHitId = 10;
       break;
     case 0x49B5D:
-      *(u8 *)(p2 + 0x144) = 11;
+      p2->requiredHitId = 11;
       ((ObjAnimComponent *)obj)->bankIndex = 1;
       break;
     case 0x49B5E:
-      *(u8 *)(p2 + 0x144) = 12;
+      p2->requiredHitId = 12;
       ((ObjAnimComponent *)obj)->bankIndex = 1;
       break;
   }
 
   if (GameBit_Get(*(s16 *)(data + 0x18)) != 0) {
     int *tex;
-    *(u16 *)(p2 + 0x100) = (u16)(*(u16 *)(p2 + 0x100) | 0x80);
+    p2->flags = (u16)(p2->flags | 0x80);
     tex = objFindTexture(obj, 0, 0);
     if (tex != NULL) {
       *tex = 256;
@@ -979,25 +980,25 @@ void effectbox_update(int obj)
  * EN v1.0 Address: 0x80174438
  * EN v1.0 Size: 336b
  */
-int fn_80174438(int obj, int state)
+int fn_80174438(int obj, PushableState *state)
 {
   int def;
   void *player;
 
   def = *(int *)(obj + 0x4c);
   player = Obj_GetPlayerObject();
-  if (((*(u16 *)(state + 0x100) & 0x80) != 0) || (fn_80295A04(player, 10) != 0)) {
+  if (((state->flags & 0x80) != 0) || (fn_80295A04(player, 10) != 0)) {
     Sfx_StopObjectChannel(obj, 8);
     return 0;
   }
   Sfx_PlayFromObject(obj, 0x66);
-  *(u16 *)(state + 0x100) |= 2;
-  if ((*(u16 *)(state + 0x100) & 4) == 0) {
+  state->flags |= 2;
+  if ((state->flags & 4) == 0) {
     fn_80174BFC(obj, state);
   }
   if (*(f32 *)(obj + 0xc) <= lbl_803E352C + *(f32 *)(def + 8)) {
-    GameBit_Set(*(s16 *)(state + 0xac), 1);
-    *(u16 *)(state + 0x100) |= 0x80;
+    GameBit_Set(state->gameBit, 1);
+    state->flags |= 0x80;
     *(f32 *)(obj + 0xc) = (f32)(*(f32 *)(def + 8) - lbl_803E3530);
     *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
     *(f32 *)(obj + 0x14) = (f32)(lbl_803E3538 + *(f32 *)(def + 0x10));
@@ -1018,7 +1019,7 @@ int fn_80174438(int obj, int state)
  * EN v1.0 Address: 0x80174668
  * EN v1.0 Size: 1048b
  */
-int fn_80174668(int obj, int state)
+int fn_80174668(int obj, PushableState *state)
 {
   u8 flag;
   int *tex;
@@ -1033,7 +1034,7 @@ int fn_80174668(int obj, int state)
   flag = 0;
   dist[0] = lbl_803E3540;
   fn_80175428(obj, 0);
-  if (GameBit_Get(*(s16 *)(state + 0xac)) != 0) {
+  if (GameBit_Get(state->gameBit) != 0) {
     cur = *(f32 *)(obj + 8);
     bound = lbl_803E3544;
     if (cur > bound) {
@@ -1046,24 +1047,24 @@ int fn_80174668(int obj, int state)
     }
     return 1;
   }
-  if (*(void **)(state + 0xbc) == NULL) {
-    *(int *)(state + 0xbc) = ObjGroup_FindNearestObject(0x11, obj, dist);
+  if (state->nearestObj == NULL) {
+    state->nearestObj = (void *)ObjGroup_FindNearestObject(0x11, obj, dist);
   }
-  if (*(void **)(state + 0xbc) == NULL) {
+  if (state->nearestObj == NULL) {
     return 0;
   }
-  if (*(f32 *)(state + 0xd8) < lbl_803E3550) {
-    *(f32 *)(state + 0xd8) = lbl_803E3550;
+  if (state->eyeOpenAmount < lbl_803E3550) {
+    state->eyeOpenAmount = lbl_803E3550;
   }
-  dy = *(f32 *)(*(int *)(state + 0xbc) + 0x14) - *(f32 *)(obj + 0x14);
+  dy = *(f32 *)((int)state->nearestObj + 0x14) - *(f32 *)(obj + 0x14);
   if (dy < lbl_803E3528) {
     dy = dy * lbl_803E3554;
   }
-  cur = *(f32 *)(state + 0xf0);
+  cur = state->unk_F0;
   if (cur < lbl_803E3558 + dy) {
     return 0;
   }
-  dx = *(f32 *)(*(int *)(state + 0xbc) + 0xc) - *(f32 *)(obj + 0xc);
+  dx = *(f32 *)((int)state->nearestObj + 0xc) - *(f32 *)(obj + 0xc);
   if (dx < lbl_803E3528) {
     dx = dx * lbl_803E3554;
   }
@@ -1075,18 +1076,18 @@ int fn_80174668(int obj, int state)
     GameBit_Set(0x1c9, 1);
   }
   tex = (int *)objFindTexture(obj, 0, 0);
-  *(f32 *)(state + 0xec) = *(f32 *)(state + 0xe8) * timeDelta + *(f32 *)(state + 0xec);
-  if (*(f32 *)(state + 0xec) >= *(f32 *)(state + 0xe4)) {
-    *(f32 *)(state + 0xe8) = *(f32 *)(state + 0xe8) * lbl_803E3554;
-  } else if (*(f32 *)(state + 0xec) < lbl_803E3528) {
-    *(f32 *)(state + 0xe4) = lbl_803E3564 * (f32)(int)randomGetRange(0x19, 0x4b);
-    *(f32 *)(state + 0xe8) = *(f32 *)(state + 0xe4) / (f32)(int)randomGetRange(0x28, 0x46);
-    *(f32 *)(state + 0xec) = lbl_803E3528;
+  state->blinkPhase = state->blinkStep * timeDelta + state->blinkPhase;
+  if (state->blinkPhase >= state->blinkInterval) {
+    state->blinkStep = state->blinkStep * lbl_803E3554;
+  } else if (state->blinkPhase < lbl_803E3528) {
+    state->blinkInterval = lbl_803E3564 * (f32)(int)randomGetRange(0x19, 0x4b);
+    state->blinkStep = state->blinkInterval / (f32)(int)randomGetRange(0x28, 0x46);
+    state->blinkPhase = lbl_803E3528;
   }
   if (tex != NULL) {
-    *(f32 *)(state + 0xd8) = *(f32 *)(state + 0xd8) + *(f32 *)(state + 0xcc);
-    if (*(f32 *)(state + 0xd8) >= lbl_803E3568) {
-      GameBit_Set(*(s16 *)(state + 0xac), 1);
+    state->eyeOpenAmount = state->eyeOpenAmount + state->eyeOpenSpeed;
+    if (state->eyeOpenAmount >= lbl_803E3568) {
+      GameBit_Set(state->gameBit, 1);
       if (flag) {
         GameBit_Set(0x1c9, 0);
       }
@@ -1096,21 +1097,21 @@ int fn_80174668(int obj, int state)
       Resource_Release(tex);
       Sfx_PlayFromObject(obj, 0x65);
     } else {
-      *(f32 *)(state + 0xdc) = *(f32 *)(state + 0xdc) + *(f32 *)(state + 0xd0);
-      if (*(f32 *)(state + 0xdc) > lbl_803E356C) {
-        *(f32 *)(state + 0xdc) = lbl_803E356C;
-      } else if (*(f32 *)(state + 0xdc) < lbl_803E3528) {
-        *(f32 *)(state + 0xdc) = lbl_803E356C;
+      state->eyePosX = state->eyePosX + state->eyeDriftSpeedX;
+      if (state->eyePosX > lbl_803E356C) {
+        state->eyePosX = lbl_803E356C;
+      } else if (state->eyePosX < lbl_803E3528) {
+        state->eyePosX = lbl_803E356C;
       }
-      *(f32 *)(state + 0xe0) = *(f32 *)(state + 0xe0) + *(f32 *)(state + 0xd4);
-      if (*(f32 *)(state + 0xe0) > lbl_803E356C) {
-        *(f32 *)(state + 0xe0) = lbl_803E356C;
-      } else if (*(f32 *)(state + 0xe0) < lbl_803E3528) {
-        *(f32 *)(state + 0xe0) = lbl_803E356C;
+      state->eyePosY = state->eyePosY + state->eyeDriftSpeedY;
+      if (state->eyePosY > lbl_803E356C) {
+        state->eyePosY = lbl_803E356C;
+      } else if (state->eyePosY < lbl_803E3528) {
+        state->eyePosY = lbl_803E356C;
       }
-      p1 = *(f32 *)(state + 0xdc) * (lbl_803E3570 + *(f32 *)(state + 0xec));
-      p2 = *(f32 *)(state + 0xe0) * (lbl_803E3570 + *(f32 *)(state + 0xec));
-      *(u8 *)((char *)tex + 0xc) = (u8)(int)*(f32 *)(state + 0xd8);
+      p1 = state->eyePosX * (lbl_803E3570 + state->blinkPhase);
+      p2 = state->eyePosY * (lbl_803E3570 + state->blinkPhase);
+      *(u8 *)((char *)tex + 0xc) = (u8)(int)state->eyeOpenAmount;
       *(u8 *)((char *)tex + 0xd) = (u8)(int)p1;
       *(u8 *)((char *)tex + 0xe) = (u8)(int)p2;
     }

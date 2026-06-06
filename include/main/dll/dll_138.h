@@ -3,7 +3,8 @@
 
 #include "ghidra_import.h"
 
-void fn_80174A80(int param_1,int param_2);
+struct PushableState;
+void fn_80174A80(int param_1, struct PushableState *param_2);
 void fn_80174BFC(int obj, int ext);
 undefined4 fn_8017510C(short *param_1,short *param_2,int param_3);
 void fn_80175428(int obj);
