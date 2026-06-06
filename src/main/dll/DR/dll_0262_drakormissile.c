@@ -265,7 +265,7 @@ void drakormissile_update(int obj) {
         if (result != 0) {
             *(u8 *)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_EXPLODING;
             *(int *)(p + DRAKORMISSILE_FIELD_TIMER) = 0;
-            if ((*(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) & 8) != 0) {
+            if (((*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags & 8) != 0) {
                 Sfx_PlayFromObject(obj, SFXwp_barrel_bounce1);
             }
             if (*(s8 *)((char *)obj + 0xac) == 2) {

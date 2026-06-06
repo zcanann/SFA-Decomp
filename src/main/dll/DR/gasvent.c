@@ -295,7 +295,7 @@ void FUN_801a1654(undefined8 param_1,double param_2,double param_3,undefined8 pa
   iVar8 = *(int *)(uVar1 + 0xb8);
   iVar2 = ObjHits_GetPriorityHit(uVar1,auStack_54,(int *)0x0,(uint *)0x0);
   if ((iVar2 != 0) ||
-     ((*(char *)(*(int *)(uVar1 + 0x54) + 0xad) != '\0' && ((*(byte *)(iVar8 + 0x49) & 2) != 0)))) {
+     (((*(ObjHitsPriorityState **)(uVar1 + 0x54))->contactFlags != 0 && ((*(byte *)(iVar8 + 0x49) & 2) != 0)))) {
     *(char *)(iVar8 + 0x16) = *(char *)(iVar8 + 0x16) + '\x01';
     *(byte *)(iVar8 + 0x49) = *(byte *)(iVar8 + 0x49) | 1;
   }

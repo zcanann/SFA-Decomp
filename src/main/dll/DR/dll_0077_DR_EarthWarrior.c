@@ -963,7 +963,7 @@ void DR_EarthWarrior_hitDetect(int obj)
                 *(f32 *)((char *)inner + 0xf68) = lbl_803E8370;
                 Sfx_PlayFromObject(obj, 0x404);
             }
-            if (*(u8 *)((char *)inner + 0x262) != 0 || (*(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) & 8)) {
+            if (*(u8 *)((char *)inner + 0x262) != 0 || ((*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags & 8)) {
                 f32 spd;
                 f32 vcos;
                 f32 vsin;

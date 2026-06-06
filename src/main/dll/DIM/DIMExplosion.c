@@ -224,7 +224,7 @@ void dimbarrier_update(int *obj)
         if (v < 0) {
             v = 0;
         }
-        *(s16 *)((char *)*(int **)((char *)obj + 0x54) + 0x60) &= ~1;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~1;
         *(u8 *)((char *)obj + 0x36) = v;
         *(s16 *)extra = *(s16 *)extra - framesThisStep;
         if (*(s16 *)extra <= 0) {

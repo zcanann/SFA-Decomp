@@ -457,8 +457,7 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
   piVar2 = *(int **)(param_9 + 0xb8);
   *(undefined *)(param_9 + 0x36) = 0;
   *(undefined4 *)(param_9 + 0xf4) = 0xdc;
-  *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-       *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
+  (*(ObjHitsPriorityState **)(param_9 + 0x54))->flags &= ~1;
   if (*piVar2 != 0) {
     FUN_800175cc((double)lbl_803E3D78,*piVar2,'\0');
   }
@@ -672,7 +671,7 @@ void kaldachompspit_burst(int obj)
     state = *(u32 **)(obj + 0xb8);
     *(u8 *)(obj + 0x36) = 0;
     *(int *)(obj + 0xf4) = 0xdc;
-    *(s16 *)(*(int *)(obj + 0x54) + 0x60) &= ~1;
+    (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
     if (*state != 0) {
         modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);
     }

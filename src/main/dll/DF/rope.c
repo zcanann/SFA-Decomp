@@ -652,9 +652,9 @@ void DIMbossspit_update(int obj)
       i = i + 1;
     } while (i < 3);
     if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0) {
-      *(f32 *)(obj + 0xc) = *(f32 *)(*(int *)(obj + 0x54) + 0x3c);
-      *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)(obj + 0x54) + 0x40) - lbl_803E4D50;
-      *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)(obj + 0x54) + 0x44);
+      *(f32 *)(obj + 0xc) = (*(ObjHitsPriorityState **)(obj + 0x54))->contactPosX;
+      *(f32 *)(obj + 0x10) = (*(ObjHitsPriorityState **)(obj + 0x54))->contactPosY - lbl_803E4D50;
+      *(f32 *)(obj + 0x14) = (*(ObjHitsPriorityState **)(obj + 0x54))->contactPosZ;
       *(s16 *)state = 1;
     }
   }
