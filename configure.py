@@ -1165,7 +1165,6 @@ config.libs = [
             Object(NonMatching, "main/dll/creator1D6.c"),
             Object(NonMatching, "main/dll/flybaddie1D7.c"),
             Object(NonMatching, "main/dll/projball1D8.c"),
-            Object(NonMatching, "main/dll/torch1D9.c"),
             Object(NonMatching, "main/dll/NW/NWsfx.c"),
             Object(NonMatching, "main/dll/NW/dll_1DB.c"),
             Object(NonMatching, "main/dll/NW/dll_1DC.c"),
