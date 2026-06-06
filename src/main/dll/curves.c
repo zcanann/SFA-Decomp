@@ -1285,22 +1285,19 @@ int RomCurve_func20(RomCurvePlacementDef *curve, f32 *outX, f32 *outY, f32 *outZ
         outX[mB] = curve->base.x;
         outY[mB] = curve->base.y;
         outZ[mB] = curve->base.z;
-        mB++;
-        outX[mB] = next->base.x;
-        outY[mB] = next->base.y;
-        outZ[mB] = next->base.z;
-        mB++;
+        outX[mB + 1] = next->base.x;
+        outY[mB + 1] = next->base.y;
+        outZ[mB + 1] = next->base.z;
         n += 2;
-        outX[mB] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
-        outY[mB] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotY)));
+        outX[mB + 2] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
+        outY[mB + 2] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotY)));
         outZ[n] = lbl_803E0610 * ((f32)curve->rotX * sin(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
         n++;
-        mB++;
-        outX[mB] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
-        outY[mB] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotY)));
+        outX[mB + 3] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
+        outY[mB + 3] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotY)));
         outZ[n] = lbl_803E0610 * ((f32)next->rotX * sin(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
         n++;
-        mB++;
+        mB += 4;
       }
       curve = next;
     }
@@ -1328,22 +1325,19 @@ int RomCurve_func20(RomCurvePlacementDef *curve, f32 *outX, f32 *outY, f32 *outZ
         outX[mA] = curve->base.x;
         outY[mA] = curve->base.y;
         outZ[mA] = curve->base.z;
-        mA++;
-        outX[mA] = next->base.x;
-        outY[mA] = next->base.y;
-        outZ[mA] = next->base.z;
-        mA++;
+        outX[mA + 1] = next->base.x;
+        outY[mA + 1] = next->base.y;
+        outZ[mA + 1] = next->base.z;
         n += 2;
-        outX[mA] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
-        outY[mA] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotY)));
+        outX[mA + 2] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
+        outY[mA + 2] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotY)));
         outZ[n] = lbl_803E0610 * ((f32)curve->rotX * sin(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
         n++;
-        mA++;
-        outX[mA] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
-        outY[mA] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotY)));
+        outX[mA + 3] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
+        outY[mA + 3] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotY)));
         outZ[n] = lbl_803E0610 * ((f32)next->rotX * sin(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
         n++;
-        mA++;
+        mA += 4;
       }
       curve = next;
     }
