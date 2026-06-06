@@ -2713,9 +2713,9 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
   extern f32 lbl_803E2E8C;
   extern f32 lbl_803E2E98;
   extern f32 lbl_803E2E9C;
-  int sub;
   int setup;
   int *path;
+  int sub;
 
   setup = *(int *)((char *)obj + 0x4c);
   sub = *(int *)((char *)obj + 0xb8);
