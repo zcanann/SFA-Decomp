@@ -11450,8 +11450,8 @@ void fn_802B4C18(int obj, int state, f32 fv)
     *(int *)((char *)state + 0x318) = *(u16 *)((char *)state + 0x6e0);
     ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 0;
     ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId = 0;
-    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6c) = 0;
-    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6d) = 0;
+    (*(ObjHitsPriorityState **)((char *)obj + 0x54))->objectPairPriority = 0;
+    (*(ObjHitsPriorityState **)((char *)obj + 0x54))->objectPairHitVolume = 0;
     *(u8 *)((char *)state + 0x25f) = 1;
     *(u32 *)((char *)state + 0x4) &= ~0x8100000;
     playerShadowFn_80062a30(obj);

@@ -596,7 +596,7 @@ void SB_Propeller_update(int obj) {
             hitState->skeletonHitMask = 0x10;
         }
         else {
-            *(u8 *)(*(int *)(obj + 0x54) + 0x6c) = 0;
+            (*(ObjHitsPriorityState **)(obj + 0x54))->objectPairPriority = 0;
         }
         *(s16 *)(obj + 4) = (int)-((f32)*(int *)(pf + 2) * timeDelta - (f32)*(s16 *)(obj + 4));
     }

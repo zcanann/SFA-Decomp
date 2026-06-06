@@ -644,8 +644,8 @@ int fn_8015E3A0(int obj, int p2)
     ObjHits_EnableObject(obj);
   }
   ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-  *(u8 *)(*(int *)(obj + 0x54) + 0x6c) = 10;
-  *(u8 *)(*(int *)(obj + 0x54) + 0x6d) = 1;
+  (*(ObjHitsPriorityState **)(obj + 0x54))->objectPairPriority = 10;
+  (*(ObjHitsPriorityState **)(obj + 0x54))->objectPairHitVolume = 1;
   ObjHits_RegisterActiveHitVolumeObject(obj);
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
@@ -1104,8 +1104,8 @@ int fn_8015E5DC(short *obj, u8 *p)
     ObjHits_EnableObject(obj);
   }
   ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-  *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6c) = 10;
-  *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6d) = 1;
+  (*(ObjHitsPriorityState **)((char *)obj + 0x54))->objectPairPriority = 10;
+  (*(ObjHitsPriorityState **)((char *)obj + 0x54))->objectPairHitVolume = 1;
   ObjHits_RegisterActiveHitVolumeObject(obj);
   if (*(char *)(p + 0x27a) != '\0') {
     objs = ObjList_GetObjects(&i, &count);
@@ -1273,8 +1273,8 @@ int fn_8015E8BC(int obj, u8 *p)
     ObjHits_EnableObject(obj);
   } else {
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6c) = 10;
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6d) = 1;
+    (*(ObjHitsPriorityState **)(obj + 0x54))->objectPairPriority = 10;
+    (*(ObjHitsPriorityState **)(obj + 0x54))->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
   }
   if (*(char *)(p + 0x346) != '\0') {
@@ -1363,8 +1363,8 @@ FUN_8015e678(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   iVar3 = -1;
   ObjHits_SetHitVolumeSlot(param_9,10,1,-1);
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6c) = 10;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6d) = 1;
+  (*(ObjHitsPriorityState **)(param_9 + 0x54))->objectPairPriority = 10;
+  (*(ObjHitsPriorityState **)(param_9 + 0x54))->objectPairHitVolume = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(char *)(param_10 + 0x27a) != '\0') {
     iVar1 = FUN_80017b00(&local_18,&local_14);
@@ -1418,8 +1418,8 @@ FUN_8015e88c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   uVar1 = 0xffffffff;
   ObjHits_SetHitVolumeSlot(param_9,10,1,-1);
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6c) = 10;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6d) = 1;
+  (*(ObjHitsPriorityState **)(param_9 + 0x54))->objectPairPriority = 10;
+  (*(ObjHitsPriorityState **)(param_9 + 0x54))->objectPairHitVolume = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
   *(float *)(param_10 + 0x2a0) = lbl_803E3A70;
   if (*(char *)(param_10 + 0x27a) != '\0') {
@@ -1464,8 +1464,8 @@ FUN_8015e9f4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   iVar4 = -1;
   ObjHits_SetHitVolumeSlot(param_9,10,1,-1);
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6c) = 10;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6d) = 1;
+  (*(ObjHitsPriorityState **)(param_9 + 0x54))->objectPairPriority = 10;
+  (*(ObjHitsPriorityState **)(param_9 + 0x54))->objectPairHitVolume = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(char *)(param_10 + 0x27a) != '\0') {
     iVar1 = FUN_80017b00(&local_28,local_24);
@@ -4554,8 +4554,8 @@ int fn_8015E520(int* obj, u8* state)
         ObjHits_EnableObject(obj);
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6c) = 10;
-    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6d) = 1;
+    (*(ObjHitsPriorityState **)((char*)obj + 0x54))->objectPairPriority = 10;
+    (*(ObjHitsPriorityState **)((char*)obj + 0x54))->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     *(f32*)((char*)state + 0x2a0) = lbl_803E2DD8;
     if ((s8)state[634] != 0) {

@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/backpack.h"
 #include "main/objanim.h"
+#include "main/objhits_types.h"
 
 
 extern void tumbleweed_updateStateMachine(int obj);
@@ -452,7 +453,7 @@ int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
         ObjAnim_SetCurrentMove(obj, 3, lbl_803E2FDC, 0);
         *(f32 *)(state + 0x44) = lbl_803E2FE0;
     }
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6d) = 0;
+    (*(ObjHitsPriorityState **)(obj + 0x54))->objectPairHitVolume = 0;
     *stateWord = *stateWord | 0x4000;
     *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (horizontalDamping = lbl_803E2FE4);
     *(f32 *)(obj + 0x28) = lbl_803E2FE8 * (*(f32 *)(obj + 0x28) - lbl_803E2FEC);

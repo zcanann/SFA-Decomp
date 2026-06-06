@@ -1,6 +1,7 @@
 #include "main/dll/landedArwing.h"
 #include "main/objanim.h"
 #include "main/objlib.h"
+#include "main/objhits_types.h"
 
 extern void *Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
@@ -24,8 +25,8 @@ extern f32 lbl_803E3008;
 extern f32 lbl_803E300C;
 extern f32 lbl_803E3010;
 
-#define LANDED_ARWING_HIT_VOLUME_SLOT 9
-#define LANDED_ARWING_HIT_VOLUME_FRAME 1
+#define LANDED_ARWING_OBJECT_PAIR_PRIORITY 9
+#define LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME 1
 
 #define LANDED_ARWING_SCRIPT_MODE 6
 
@@ -86,9 +87,9 @@ undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
         *(f32 *)(sub + 0x44) = lbl_803E3008;
     }
 
-    ObjHits_SetHitVolumeSlot(objLocal, LANDED_ARWING_HIT_VOLUME_SLOT, LANDED_ARWING_HIT_VOLUME_FRAME, -1);
-    *(u8 *)(*(int *)(objLocal + 0x54) + 0x6c) = LANDED_ARWING_HIT_VOLUME_SLOT;
-    *(u8 *)(*(int *)(objLocal + 0x54) + 0x6d) = LANDED_ARWING_HIT_VOLUME_FRAME;
+    ObjHits_SetHitVolumeSlot(objLocal, LANDED_ARWING_OBJECT_PAIR_PRIORITY, LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME, -1);
+    (*(ObjHitsPriorityState **)(objLocal + 0x54))->objectPairPriority = LANDED_ARWING_OBJECT_PAIR_PRIORITY;
+    (*(ObjHitsPriorityState **)(objLocal + 0x54))->objectPairHitVolume = LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME;
     ObjHits_RegisterActiveHitVolumeObject(objLocal);
 
     (*(code *)(*(int *)gPathControlInterface + 0x18))(objLocal, stateWord + 4, (double)timeDelta);
