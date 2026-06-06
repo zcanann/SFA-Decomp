@@ -1076,9 +1076,11 @@ void *Obj_SetupObject(int a, int b, int c, int d, int e) {
 
 #pragma scheduling off
 void *loadObjectAtObject(u8 *src, int arg1) {
-    int type = *(s8 *)(src + 0xac);
-    int objF30 = *(int *)(src + 0x30);
     void *obj;
+    int type;
+    int objF30;
+    objF30 = *(int *)(src + 0x30);
+    type = *(s8 *)(src + 0xac);
     if (getLoadedFileFlags(0) & 0x100000) {
         OSReport(sObjSetupObjectLoadingLockedWarning, -1);
         obj = NULL;
