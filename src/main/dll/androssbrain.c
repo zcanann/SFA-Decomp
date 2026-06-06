@@ -6,8 +6,8 @@
  * (androssbrain_getExtraSize == 0x28).
  */
 typedef struct AndrossBrainState {
-    void *andross; /* objId 0x47B77 main andross object */
-    void *lightning; /* objId 0x4C611, androssligh target */
+    GameObject *andross; /* objId 0x47B77 main andross object */
+    GameObject *lightning; /* objId 0x4C611, androssligh target */
     u8 pad08[0x1C - 0x08];
     s8 brainState; /* 0 shielded, 1 vulnerable, 2 defeated */
     s8 prevState;
@@ -17,6 +17,12 @@ typedef struct AndrossBrainState {
 } AndrossBrainState;
 
 STATIC_ASSERT(sizeof(AndrossBrainState) == 0x28);
+STATIC_ASSERT(offsetof(AndrossBrainState, andross) == 0x0);
+STATIC_ASSERT(offsetof(AndrossBrainState, lightning) == 0x4);
+STATIC_ASSERT(offsetof(AndrossBrainState, brainState) == 0x1C);
+STATIC_ASSERT(offsetof(AndrossBrainState, prevState) == 0x1D);
+STATIC_ASSERT(offsetof(AndrossBrainState, health) == 0x1E);
+STATIC_ASSERT(offsetof(AndrossBrainState, flashTimer) == 0x1F);
 
 
 #pragma peephole on
@@ -61,14 +67,14 @@ void androssbrain_setState(int obj, int newState, u8 force)
     if ((void *)obj == NULL) {
         return;
     }
-    state = *(AndrossBrainState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if (state->brainState != 2 || force != 0) {
         state->brainState = (s8)newState;
         if (force != 0) {
             state->health = 0x50;
         }
     } else {
-        andross_setPartSignal(*(int *)&state->andross, 1);
+        andross_setPartSignal((int)state->andross, 1);
     }
 }
 #pragma scheduling reset
@@ -78,7 +84,7 @@ void androssbrain_setState(int obj, int newState, u8 force)
 #pragma scheduling off
 void androssbrain_init(int obj)
 {
-    AndrossBrainState *state = *(AndrossBrainState **)(obj + 0xb8);
+    AndrossBrainState *state = ((GameObject *)obj)->extra;
 
     state->health = 0x50;
     ObjHits_SetTargetMask(obj, 4);
@@ -90,7 +96,7 @@ void androssbrain_init(int obj)
 #pragma scheduling off
 void androssbrain_update(int obj)
 {
-    AndrossBrainState *state = *(AndrossBrainState **)(obj + 0xb8);
+    AndrossBrainState *state = ((GameObject *)obj)->extra;
     u8 flag = 0;
     int hitObj;
     int sphereIdx;
@@ -100,17 +106,17 @@ void androssbrain_update(int obj)
     u8 currentState;
 
     if (state->andross == NULL) {
-        *(int *)&state->andross = ObjList_FindObjectById(0x47b77);
+        state->andross = (GameObject *)ObjList_FindObjectById(0x47b77);
     }
     if (state->lightning == NULL) {
-        *(int *)&state->lightning = ObjList_FindObjectById(0x4c611);
+        state->lightning = (GameObject *)ObjList_FindObjectById(0x4c611);
     }
     ObjHits_SetHitVolumeSlot(obj, 5, 2, -1);
     ObjHits_EnableObject(obj);
     if (state->andross != NULL) {
-        ((GameObject *)obj)->anim.localPosX = *(f32 *)(*(int *)&state->andross + 0xc);
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(*(int *)&state->andross + 0x10);
-        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(*(int *)&state->andross + 0x14);
+        ((GameObject *)obj)->anim.localPosX = state->andross->anim.localPosX;
+        ((GameObject *)obj)->anim.localPosY = state->andross->anim.localPosY;
+        ((GameObject *)obj)->anim.localPosZ = state->andross->anim.localPosZ;
     }
     currentState = *(u8 *)&state->brainState;
     if ((s8)currentState != state->prevState) {
@@ -122,7 +128,7 @@ void androssbrain_update(int obj)
         if (flag != 0) {
             (*(void (**)(void))(*gGameUIInterface + 0x64))();
         }
-        *(s16 *)obj = *(s16 *)(*(int *)&state->andross);
+        ((GameObject *)obj)->anim.rotX = state->andross->anim.rotX;
         ((GameObject *)obj)->anim.flags |= 0x4000;
         break;
     case 1:
@@ -144,7 +150,7 @@ void androssbrain_update(int obj)
                 state->health -= 1;
                 if (state->health == 0) {
                     *(u8 *)&state->brainState = 2;
-                    andross_setPartSignal(*(int *)&state->andross, 1);
+                    andross_setPartSignal((int)state->andross, 1);
                     Sfx_PlayFromObject(obj, 0x485);
                 } else {
                     Sfx_PlayFromObject(obj, 0x484);
@@ -155,11 +161,11 @@ void androssbrain_update(int obj)
         break;
     case 2:
         if (flag != 0) {
-            androssligh_setState(*(int *)&state->lightning, 2, 0);
+            androssligh_setState((int)state->lightning, 2, 0);
             (*(void (**)(void))(*gGameUIInterface + 0x64))();
         }
         ((GameObject *)obj)->anim.flags |= 0x4000;
-        andross_setPartSignal(*(int *)&state->andross, 8);
+        andross_setPartSignal((int)state->andross, 8);
         break;
     }
 }
