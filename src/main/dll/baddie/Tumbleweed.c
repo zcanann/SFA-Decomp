@@ -581,8 +581,8 @@ int Minimap_update(void)
     i = 0;
     k = 0;
     found = 0;
-    ox = lbl_803E2208;
-    oy = ox;
+    ox = 0.0f;
+    oy = 0.0f;
     col = lbl_803E2204;
     player = Obj_GetPlayerObject();
     if (player != NULL) {
@@ -630,13 +630,13 @@ int Minimap_update(void)
                             r2 = &rows[j];
                             if (marker == r2->mapId) {
                                 m = r2->x0;
-                                lbl_803DBBD0 = (m < lbl_803DBBD0) ? m : lbl_803DBBD0;
+                                lbl_803DBBD0 = (m >= lbl_803DBBD0) ? lbl_803DBBD0 : m;
                                 m = r2->x1;
-                                lbl_803DD948 = (m > lbl_803DD948) ? m : lbl_803DD948;
+                                lbl_803DD948 = (m <= lbl_803DD948) ? lbl_803DD948 : m;
                                 m = r2->z0;
-                                lbl_803DBBD2 = (m < lbl_803DBBD2) ? m : lbl_803DBBD2;
+                                lbl_803DBBD2 = (m >= lbl_803DBBD2) ? lbl_803DBBD2 : m;
                                 m = r2->z1;
-                                lbl_803DD94A = (m > lbl_803DD94A) ? m : lbl_803DD94A;
+                                lbl_803DD94A = (m <= lbl_803DD94A) ? lbl_803DD94A : m;
                             }
                         }
                         lbl_803DD946 = rows[k].texU;
@@ -657,10 +657,10 @@ int Minimap_update(void)
             pauseMenuState != 0 || lbl_803DD75B != 0) {
             marker = 0;
             lbl_803DD930 -= 0x20;
-            sv = lbl_803DD930;
-            if (sv < 0) sv = 0;
-            else if (sv > 0xff) sv = 0xff;
-            lbl_803DD930 = sv;
+            n = lbl_803DD930;
+            if (n < 0) n = 0;
+            else if (n > 0xff) n = 0xff;
+            lbl_803DD930 = n;
             lbl_803DBBC0 -= 10;
             n = lbl_803DBBC0;
             if (n < 0) n = 0;
@@ -678,20 +678,20 @@ int Minimap_update(void)
             else if (n > 100) n = 100;
             lbl_803DBBC4 = n;
             lbl_803DD930 += 0x20;
-            sv = lbl_803DD930;
-            if (sv < 0) sv = 0;
-            else if (sv > 0xff) sv = 0xff;
-            lbl_803DD930 = sv;
+            n = lbl_803DD930;
+            if (n < 0) n = 0;
+            else if (n > 0xff) n = 0xff;
+            lbl_803DD930 = n;
         }
         if ((int)lbl_803DD92C == marker) {
             lbl_803DD932 += 0x20;
-            sv = lbl_803DD932;
-            if (sv < 0) {
-                sv = 0;
+            n = lbl_803DD932;
+            if (n < 0) {
+                n = 0;
             } else {
-                sv = (s16)((sv <= lbl_803DD930) ? sv : lbl_803DD930);
+                n = (s16)((n > lbl_803DD930) ? lbl_803DD930 : n);
             }
-            lbl_803DD932 = sv;
+            lbl_803DD932 = n;
         } else {
             lbl_803DD932 -= 0x20;
             if (lbl_803DD932 < 0) {
@@ -747,15 +747,17 @@ int Minimap_update(void)
                         xrel = -*(f32 *)(player + 0x18) + (f32)lbl_803DD948;
                         yrel = -*(f32 *)(player + 0x20) + (f32)lbl_803DD94A;
                     }
-                    e = ((f32)bw - (f32)texW * lbl_803DBBB4) * lbl_803E220C;
-                    t = lbl_803E2208;
+                    e = (f32)bw - (f32)texW * lbl_803DBBB4;
+                    e = e * 0.5f;
+                    t = 0.0f;
                     t = (t > e) ? t : e;
                     panx = -t;
-                    e = ((f32)bh - (f32)texH * lbl_803DBBB4) * lbl_803E220C;
-                    t = lbl_803E2208;
+                    e = (f32)bh - (f32)texH * lbl_803DBBB4;
+                    e = e * 0.5f;
+                    t = 0.0f;
                     t = (t > e) ? t : e;
                     pany = -t;
-                    t = lbl_803E2208;
+                    t = 0.0f;
                     if (t == panx) {
                         a = lbl_803DBBB4 * (xrel * lbl_803DBBEC) - (f32)(bw / 2);
                         t = (t > a) ? t : a;
@@ -763,7 +765,7 @@ int Minimap_update(void)
                         t = (t < b) ? t : b;
                         ox = t;
                     }
-                    t = lbl_803E2208;
+                    t = *(f32 *)&lbl_803E2208;
                     if (t == pany) {
                         a = lbl_803DBBB4 * (yrel * lbl_803DBBEC) - (f32)(bh / 2);
                         t = (t > a) ? t : a;
@@ -782,15 +784,16 @@ int Minimap_update(void)
                     ((u8 *)&col)[2] = 0x84;
                     cwRect = col;
                     hudDrawRect(0x32, lbl_803DD938, bw + 0x32, lbl_803DD938 + bh, &cwRect);
+                    fv = lbl_803DBBB4 * (vq - (f32)vv);
                     drawPartialTexture(minimapTexture,
                                        (lbl_803E2210 - panx) - frac,
-                                       ((f32)(int)lbl_803DD938 - pany) - lbl_803DBBB4 * (vq - (f32)vv),
+                                       ((f32)(int)lbl_803DD938 - pany) - fv,
                                        (u8)lbl_803DD932,
-                                       (int)(lbl_803E2214 * lbl_803DBBB4),
+                                       (int)(lbl_803E2214 * *(f32 *)&lbl_803DBBB4),
                                        texW - u, texH - vv, u, vv);
-                    cx = lbl_803E220C +
+                    cx = 0.5f +
                          ((lbl_803DBBB4 * (xrel * lbl_803DBBEC) + lbl_803E2210) - ox - panx);
-                    cy = lbl_803E220C +
+                    cy = 0.5f +
                          ((lbl_803DBBB4 * (yrel * lbl_803DBBEC) + (f32)(int)lbl_803DD938) - oy - pany);
                     ((u8 *)&col)[3] = (u8)lbl_803DD932;
                     ((u8 *)&col)[0] = 0;
@@ -834,7 +837,7 @@ int Minimap_update(void)
                     n = lbl_803DBBC0;
                     box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
-                    box[4] = (hw < box[0]) ? hw : box[0];
+                    box[4] = (hw >= box[0]) ? box[0] : hw;
                     n = lbl_803DBBC4;
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
@@ -855,7 +858,7 @@ int Minimap_update(void)
                     n = lbl_803DBBC0;
                     box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
-                    box[4] = (hw < box[0]) ? hw : box[0];
+                    box[4] = (hw >= box[0]) ? box[0] : hw;
                     n = lbl_803DBBC4;
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
@@ -886,7 +889,7 @@ int Minimap_update(void)
                     n = lbl_803DBBC0;
                     box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
-                    box[4] = (hw < box[0]) ? hw : box[0];
+                    box[4] = (hw >= box[0]) ? box[0] : hw;
                     n = lbl_803DBBC4;
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
