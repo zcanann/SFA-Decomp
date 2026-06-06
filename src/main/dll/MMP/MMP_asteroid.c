@@ -1869,13 +1869,13 @@ void fogcontrol_update(int obj)
             st->full = 0;
         }
         if (st->blend <= lbl_803E4070) {
-            st->blend = lbl_803E4070;
+            st->blend = *(f32 *)&lbl_803E4070;
             st->on = 0;
             disableHeavyFog();
         } else {
             st->on = 1;
             if (st->blend > lbl_803E4074) {
-                st->blend = lbl_803E4074;
+                st->blend = *(f32 *)&lbl_803E4074;
                 st->full = 1;
             }
             t = *(f32 *)(obj + 0x10) +
