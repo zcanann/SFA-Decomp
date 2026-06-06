@@ -5303,7 +5303,7 @@ void dfplevelcontrol_update(int obj)
         GameBit_Set(0x5e8, 1);
     }
     coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
-    mode = (u8)(**(int (**)(int))((char *)*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
+    mode = ((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     switch (mode) {
     case 1:
         if (lbl_803DC180 != 0) {
@@ -5551,8 +5551,8 @@ void fn_80204098(int obj)
         }
     }
     if (GameBit_Get(0x7a1) != 0) {
-        if ((u8)(**(int (**)(int, int))((char *)*(int *)gMapEventInterface + 0x4c))(*(s8 *)(obj + 0xac), 6) == 0) {
-            (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 6, 1);
+        if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 6) == 0) {
+            ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 1);
         }
     }
 }

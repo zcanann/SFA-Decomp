@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMlavaball.h"
+#include "main/mapEventTypes.h"
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
@@ -2304,7 +2305,7 @@ void mmp_moonrock_update(int obj) {
     }
     grabbed = 0;
     if ((*(u16 *)(state + 0x24) & 8) != 0 &&
-        (u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4C))(0x12, 6) == 0) {
+        ((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(0x12, 6) == 0) {
         *(u16 *)(state + 0x24) |= 1;
     } else if ((*(u16 *)(state + 0x24) & 0x400) == 0) {
         if (*(s16 *)(def + 0x20) != -1 && GameBit_Get(*(s16 *)(def + 0x20)) == 0) {
