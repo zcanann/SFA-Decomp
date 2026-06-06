@@ -1903,8 +1903,14 @@ compare's immediate and subtract 1 for the real case value.
     a volatile f0 hop), and the `B - A*C` spelling to get `fnmsubs` where
     `-(A*C - B)` splits into fmsubs+fneg.
 
-92. **CAP — the `bge +8; b far` two-branch guard (branch-to-NEXT over an
-    unconditional b) is NOT source-reproducible.** Target shape:
+92. **CAP — the INT-compare `bge +8; b far` two-branch guard with
+    STATEMENT-BLOCK arms (branch-to-NEXT over an unconditional b) is NOT
+    source-reproducible.** ⚠️ SCOPE: applies to INTEGER compares whose arms
+    are statement blocks ONLY. The visually-identical fcmpo+cror
+    `bne +8; b far; fneg` shape is recipe #63's keep-or-negate TERNARY
+    (`x = (cond) ? x : -x;`) and IS recoverable — scarab_update cleared two
+    such sites (95.76→97.31). Classify by compare type + arm content before
+    declaring the cap.** Target shape:
     `cmpwi r0,K; bge L1; b Lfar; L1:` where L1 is the literal next
     instruction. Every spelling — `&&` chains, negated-`||`, DeMorgan
     variants, and even explicit `if (cond) goto L1; goto Lfar; L1:` — gets
