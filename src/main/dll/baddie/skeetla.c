@@ -200,12 +200,13 @@ extern void RomCurve_stepClamped(int state, f32 dt);
 #pragma scheduling off
 int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
 {
-    f32 maxSq, dist, f29_val;
     f32 limit;
-    int result = 0;
+    f32 maxSq, dist, f29_val;
     int iter;
+    int result;
     f32 tmp;
 
+    result = 0;
     tmp = lbl_803E244C * (param_1 * timeDelta);
     maxSq = tmp * tmp;
     dist = getXZDistance((f32 *)(param_3 + 0x68), (f32 *)(param_2 + 0x18));
@@ -214,8 +215,9 @@ int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
     } else {
         f29_val = lbl_803E23F8;
     }
+    iter = 0;
     limit = lbl_803E2424;
-    for (iter = 0; iter < 5; iter++) {
+    for (; iter < 5; iter++) {
         if (dist > limit && maxSq < dist) {
             return result;
         }
