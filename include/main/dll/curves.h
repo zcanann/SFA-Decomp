@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/dll/curve_walker.h"
 
 #define ROMCURVE_MAX_CURVES 0x514
 #define ROMCURVE_DEF_SIZE 0x2c

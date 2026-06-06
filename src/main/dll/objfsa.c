@@ -5,28 +5,9 @@
 extern void OSReport(const char *fmt, ...);
 typedef struct RomCurveDef RomCurveDef;
 
-/* rom-curve walker record (the f32* "state" the RomCurve_* family walks).
- * Local to objfsa.c until lifted into dll/curves.h (shared with areas). */
-typedef struct RomCurveWalker {
-    f32 phase; /* 0x00: position along the current segment */
-    u8 unk04[0x80 - 0x04];
-    s32 reverse; /* 0x80: walk direction */
-    void *unk84;
-    void *unk88;
-    void *unk8C;
-    s32 moveNetwork; /* 0x90 */
-    void *node94; /* curve-node history: oldest.. */
-    void *node98;
-    void *node9C;
-    void *nodeA0; /* current node */
-    void *nodeA4; /* next node */
-    f32 hermX[4]; /* 0xA8: hermite endpoints+tangents, X */
-    f32 hermX2[4]; /* 0xB8: previous-segment X set */
-    f32 hermY[4]; /* 0xC8 */
-    f32 hermY2[4]; /* 0xD8 */
-    f32 hermZ[4]; /* 0xE8 */
-    f32 hermZ2[4]; /* 0xF8 */
-} RomCurveWalker;
+/* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
+ * deref-cleanup wave; curves.h re-exports it). */
+#include "main/dll/curve_walker.h"
 
 typedef struct RomCurveSegmentProjection {
   f32 startX;
