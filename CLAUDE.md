@@ -1335,14 +1335,6 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   still fold to `oris`. ⚠️ **SUPERSEDED by recipe #74** — the LL-suffix
   spelling (`x |= 0x20000LL;`) materializes the constant; warpDarkIceMines
   recovered (see #74's refinement note).
-- **CAP — GVN small-constant web merging (4-instance family, skip on
-  sight):** T copies a zero/small-const from another reg (`mr rX,rY` after
-  `li rY,K`) where C re-materializes a separate `li rX,K` — the #51
-  chained-assignment spellings const-prop back to separate li's; allocator-
-  internal, ~1-2 instrs/site. Instances: fn_802A0680 (li r4,0 merged with an
-  LL high-zero), Tricky_update (li r5,-1 with stb), worldplanet_update
-  (mr r21,r22 k=m chain), dll_0B_func04 ×4 (li r5,0; mr r4,r5 chained-zero
-  inits). (foxtrot-1, four fns across one session.)
 
 70. **@NNN-vs-named-lbl SDA21 relocs are SCORE-NEUTRAL — the "pool cap" was a
     misattribution; the deficit is always real codegen divergence elsewhere.**
