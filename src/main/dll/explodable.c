@@ -1,4 +1,5 @@
 #include "main/dll/explodable.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/explodable_state.h"
 
@@ -371,7 +372,7 @@ void largecrate_update(int obj)
     if (((GameObject *)obj)->anim.parent != NULL) {
         *(u8 *)(obj + 0xaf) |= 8;
     }
-    if ((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(def + 0x14)) == 0) {
+    if ((**(int (**)(int))(*gMapEventInterface + 0x68))(((ObjPlacement *)def)->mapId) == 0) {
         ObjHits_DisableObject(obj);
     } else {
     if (((ExplodableState *)state)->unk4 > (thresh = lbl_803E39B8)) {
@@ -402,16 +403,16 @@ void largecrate_update(int obj)
                 if (*(int *)state > 0) {
                     ((ExplodableState *)state)->unk4 = lbl_803E39AC;
                     (**(void (**)(int, f32))(*gMapEventInterface + 0x64))(
-                        *(int *)(def + 0x14), (f32)*(int *)state);
+                        ((ObjPlacement *)def)->mapId, (f32)*(int *)state);
                 } else {
                     ((ExplodableState *)state)->unk4 = lbl_803E39AC;
                 }
-                ((GameObject *)obj)->anim.localPosX = *(f32 *)(def + 0x8);
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
-                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(def + 0x10);
-                ((GameObject *)obj)->anim.previousLocalPosX = *(f32 *)(def + 0x8);
-                ((GameObject *)obj)->anim.previousLocalPosY = *(f32 *)(def + 0xc);
-                ((GameObject *)obj)->anim.previousLocalPosZ = *(f32 *)(def + 0x10);
+                ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)def)->posX;
+                ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
+                ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)def)->posZ;
+                ((GameObject *)obj)->anim.previousLocalPosX = ((ObjPlacement *)def)->posX;
+                ((GameObject *)obj)->anim.previousLocalPosY = ((ObjPlacement *)def)->posY;
+                ((GameObject *)obj)->anim.previousLocalPosZ = ((ObjPlacement *)def)->posZ;
                 thresh = lbl_803E39B8;
                 ((GameObject *)obj)->anim.velocityX = thresh;
                 ((GameObject *)obj)->anim.velocityY = thresh;
