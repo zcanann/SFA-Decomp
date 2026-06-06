@@ -249,7 +249,7 @@ void worldplanet_update(int obj) {
     u8 prevPlanet;
     int buttons;
     u32 mask;
-    u32 i;
+    u8 i;
     u8 b;
     int objId;
     int galleon;
@@ -340,7 +340,7 @@ void worldplanet_update(int obj) {
             u8 *hints = lbl_803DC1B8;
             do {
                 if (GameBit_Get(*ids) != 0) {
-                    int ok = 1;
+                    u8 ok = 1;
                     if (*hints != 0 && (s32)getNextTaskHintText() > 0xad) {
                         ok = 0;
                     }
@@ -385,18 +385,19 @@ void worldplanet_update(int obj) {
         if (lbl_803E662C <= lbl_803DDD2C) {
             lbl_803DDD2C = lbl_803E65F8;
         }
-        for (i = 0; (i & 0xff) < 5; i++) {
-            int planet = ObjList_FindObjectById((tbl + (i & 0xff))[10]);
+        for (i = 0; i < 5; i++) {
+            int planet = ObjList_FindObjectById(((struct { int ids[10]; int objs[5]; } *)tbl)->objs[i]);
             int pstate = *(int *)(planet + 0xb8);
             *(s16 *)(planet + 2) = *(s16 *)(obj + 2);
             *(s16 *)planet = *(s16 *)obj;
-            if ((u8)state->selectionLocked != 0 || (((int)(u32)state->unlockedPlanetMask >> (i & 0xff)) & 1) == 0) {
+            if ((u8)state->selectionLocked != 0 || (((int)(u32)state->unlockedPlanetMask >> i) & 1) == 0) {
                 *(u8 *)(pstate + 0x27d) = 0;
-                if ((int)(i & 0xff) == state->selectedPlanet) {
+                if ((int)i == state->selectedPlanet) {
                     *(s16 *)(galleon + 6) = *(s16 *)(galleon + 6) | 0x4000;
                 }
             } else {
-                if ((int)(i & 0xff) == state->selectedPlanet) {
+                if ((int)i == state->selectedPlanet) {
+                    extern int getAngle(f32, f32);
                     u32 fi = (int)lbl_803DDD2C & 0xff;
                     u32 ni = (fi + 2) & 0xff;
                     f32 frac = lbl_803DDD2C - (f32)fi;
@@ -407,7 +408,7 @@ void worldplanet_update(int obj) {
                     f32 y1 = *(f32 *)(seg + 0x2c);
                     f32 z0 = *(f32 *)(seg + 0x18);
                     f32 z1 = *(f32 *)(seg + 0x30);
-                    u16 yaw;
+                    s16 yaw;
                     s16 dyaw;
                     *(u8 *)(pstate + 0x27d) = 2;
                     yaw = getAngle(x1 - x0, z1 - z0);
@@ -429,10 +430,7 @@ void worldplanet_update(int obj) {
                     } else {
                         *(s16 *)(galleon + 6) = *(s16 *)(galleon + 6) & ~0x4000;
                     }
-                    {
-                        f32 fd = frac * (f32)dyaw;
-                        *(s16 *)galleon = (s16)(int)(fd + (f32)yaw);
-                    }
+                    *(s16 *)galleon = (s16)(int)(frac * (f32)dyaw + (f32)yaw);
                     *(f32 *)(galleon + 0xc) = frac * (x1 - x0) + x0;
                     *(f32 *)(galleon + 0x10) = frac * (y1 - y0) + y0;
                     *(f32 *)(galleon + 0x14) = frac * (z1 - z0) + z0;
@@ -479,8 +477,8 @@ void worldplanet_update(int obj) {
             case 1:
                 Pause_ResetMenuFrameCounter();
                 {
-                    int neq = lbl_803DDD00 != lbl_803E65F8;
-                    if (!neq) {
+                    int eq = !(lbl_803DDD00 != lbl_803E65F8);
+                    if (eq != 0) {
                         lbl_803DDD00 = lbl_803E6618;
                     }
                 }
