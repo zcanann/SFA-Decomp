@@ -1308,6 +1308,24 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   caps pending a new recipe. ⚠️ **PARTIALLY SUPERSEDED by recipe #74** — the
   ~9 materialized-mask sites recovered via the LL-suffix spelling (see #74's
   refinement note); the top-pair allocation-order cap above still stands.
+- **CAP -- GVN small-constant web merging (4 instances: fn_802A0680,
+  Tricky_update, worldplanet_update, dll_0B_func04 x4 sites).** Target
+  materializes a small constant FRESH at its use (`li r0,0` / `li r0,-1` at
+  a store) or CHAINS it (`li rY,K; mr rX,rY`) where our compile MERGES the
+  webs the other way: a #74 LL high-word zero, an adjacent store's -1, or
+  a chained `k = m;` init gets value-numbered into ONE early li (or the
+  chain const-props back to separate li's). Every spelling probed -- #51
+  chains, (s16)/(u8) casts on the stored constant, int-vs-u8 locals --
+  is inert; GVN keys on the VALUE. ~1-2 instrs per site; classify on
+  sight and skip. (Same family from both directions: ours-merges-T-fresh
+  AND T-chains-ours-rematerializes.)
+- **VN-internal negatives (dll_0B_func04, don't retry):** distributive
+  factoring `(e+c)*48` vs separate `e*48 + c*48` products is
+  value-numbering-internal -- statement split and two-locals spellings
+  both fold back (split scored WORSE: partial-burst misalignment).
+  And the #6 const-lift there is LOAD-BEARING: inlining the lifted
+  fz430/fz434 f32 locals regressed 92.3->88.9 (T just places the single
+  loads lazily; the lift itself is correct).
 - **CAP — web-split reload coloring** (reloaded pointer gets a fresh saved
   reg where target reuses the original — MoonSeedPlantingSpot_setScale;
   decl-perms and second-local splits all regress) and **reverse-order saved
