@@ -198,22 +198,25 @@ void drakormissile_update(int obj) {
         break;
     case DRAKORMISSILE_STATE_HOMING:
         player = (int)Obj_GetPlayerObject();
-        mag = lbl_803E695C;
-        if (*(f32 *)((char *)player + 0x24) != mag || *(f32 *)((char *)player + 0x28) != mag ||
+        if (*(f32 *)((char *)player + 0x24) != (mag = lbl_803E695C) || *(f32 *)((char *)player + 0x28) != mag ||
             *(f32 *)((char *)player + 0x2c) != mag) {
-            mag = PSVECMag((f32 *)((char *)player + 0x24));
+            mag = PSVECMag((f32 *)((int)player + 0x24));
         }
         mag = lbl_803DC2B8 + mag;
         fn_80221C18(player, mag, (f32 *)((char *)obj + 0xc), toTarget);
-        PSVECSubtract(toTarget, (f32 *)((char *)obj + 0xc), dir);
+        PSVECSubtract(toTarget, (f32 *)((int)obj + 0xc), dir);
         PSVECNormalize(dir, dir);
         PSVECScale(dir, dir, mag * lbl_803DC2B4);
         PSVECScale((f32 *)((char *)obj + 0x24), (f32 *)((char *)obj + 0x24), lbl_803DC2B0);
         PSVECAdd((f32 *)((char *)obj + 0x24), dir, (f32 *)((char *)obj + 0x24));
         mag = sqrtf(*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
                     *(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c));
-        *(s16 *)obj = getAngle(*(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x2c));
-        *(s16 *)((char *)obj + 2) = getAngle(*(f32 *)((char *)obj + 0x28), mag);
+        {
+            int tmpAng = getAngle(*(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x2c));
+            *(s16 *)obj = tmpAng;
+            tmpAng = getAngle(*(f32 *)((char *)obj + 0x28), mag);
+            *(s16 *)((char *)obj + 2) = tmpAng;
+        }
         objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
                 *(f32 *)((char *)obj + 0x28) * timeDelta,
                 *(f32 *)((char *)obj + 0x2c) * timeDelta);
@@ -228,6 +231,8 @@ void drakormissile_update(int obj) {
         }
         break;
     }
+    case DRAKORMISSILE_STATE_IDLE:
+        break;
     }
     if (moving) {
         near = *(int **)(*(int *)((char *)obj + 0x54) + 0x50);
@@ -275,7 +280,7 @@ void drakormissile_update(int obj) {
         *(int *)(*(int *)((char *)obj + 0x54) + 0x48) = 0x10;
     }
     if (*(void **)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL && modelLightStruct_getActiveState()) {
-        modelLightStruct_updateGlowAlpha(*(void **)(p + DRAKORMISSILE_FIELD_LIGHT));
+        modelLightStruct_updateGlowAlpha(*(void **)((int)p + DRAKORMISSILE_FIELD_LIGHT));
     }
 }
 #pragma peephole reset
