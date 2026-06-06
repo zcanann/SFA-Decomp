@@ -2290,8 +2290,8 @@ void fn_8015FBEC(int obj)
 static inline u8 scarab_isObjectInList(void *o)
 {
   extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
-  int count;
   int i;
+  int count;
   int *objs = ObjList_GetObjects(&i, &count);
   while (i < count) {
     if (o == (void *)objs[i++]) {
