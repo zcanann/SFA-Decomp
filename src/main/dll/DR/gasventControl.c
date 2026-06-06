@@ -550,18 +550,57 @@ void cfforcefield_hitDetect(void) {}
 #include "global.h"
 
 /* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
-typedef struct ExplodableState {
-    u8 pad000[0x690];
+/* Per-fragment record inside DrExplodableState (stride 0x70). */
+typedef struct DrExplodableChunk {
+    u8 pad00[4];
+    f32 centroidX;   /* 0x04: model vertex average */
+    f32 centroidY;   /* 0x08 */
+    f32 centroidZ;   /* 0x0c */
+    f32 offX;        /* 0x10: rotated launch offset */
+    f32 offY;        /* 0x14 */
+    f32 offZ;        /* 0x18 */
+    f32 spinX;       /* 0x1c */
+    f32 spinY;       /* 0x20 */
+    f32 spinZ;       /* 0x24 */
+    f32 unk28;
+    f32 unk2C;
+    f32 unk30;
+    f32 unk34;
+    f32 unk38;
+    f32 unk3C;
+    f32 velX;        /* 0x40 */
+    f32 velY;        /* 0x44 */
+    f32 velZ;        /* 0x48 */
+    f32 posX;        /* 0x4c */
+    f32 posY;        /* 0x50 */
+    f32 posZ;        /* 0x54 */
+    f32 unk58;
+    int unk5C;
+    int unk60;       /* 0x60: per-fragment delay roll, -1 = none */
+    s16 unk64;       /* 0x64: from def+0x1e */
+    s16 unk66;       /* 0x66: from def+0x1c */
+    s16 unk68;       /* 0x68: from def+0x1a */
+    u8 unk6A;        /* 0x6a: gamebit-gated mode */
+    u8 unk6B;        /* 0x6b: init 0xff */
+    u8 launchFlags;  /* 0x6c: axis sign bits */
+    u8 spinScale;    /* 0x6d */
+    u8 pad6E[2];
+} DrExplodableChunk;
+STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
+
+typedef struct DrExplodableState {
+    DrExplodableChunk chunks[15]; /* 0x000 */
     int children[15]; /* 0x690: spawned fragment objects */
     u32 flags6CC;
     int unk6D0;
     u8 count6D4;
-    u8 pad6D5[0xf];
+    u8 spawnedFlags[15]; /* 0x6d5 */
     u8 phase6E4;
     u8 unk6E5;
     u8 pad6E6[2];
-} ExplodableState;
-STATIC_ASSERT(sizeof(ExplodableState) == 0x6e8);
+} DrExplodableState;
+STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
+STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 int explodable_getExtraSize(void) { return 0x6e8; }
 int cfforcefield_getExtraSize(void) { return 0x8; }
@@ -581,7 +620,7 @@ void explodable_free(int obj, int flag) {
     if (flag == 0) {
         p = state - 4;
         while (p += 4, ++i < 15) {
-            o = *(void * *)&((ExplodableState *)p)->children[0];
+            o = *(void * *)&((DrExplodableState *)p)->children[0];
             if (o != NULL) {
                 Obj_FreeObject((int)o);
             }
@@ -640,14 +679,14 @@ void explodable_update(int obj)
 
     state = *(int *)&((GameObject *)obj)->extra;
     def = *(int *)&((GameObject *)obj)->anim.placementData;
-    if (*(u8 *)(state + 0x6e4) != 2) {
-        if (*(u8 *)(state + 0x6e4) == 0) {
+    if (((DrExplodableState *)state)->phase6E4 != 2) {
+        if (((DrExplodableState *)state)->phase6E4 == 0) {
             if ((u32)GameBit_Get(*(s16 *)(def + 0x40)) != 0) {
                 fn_801A2E80(obj, def, 0, state);
-                if (*(int *)(state + 0x6d0) != 0) {
-                    Sfx_PlayFromObject(obj, *(int *)(state + 0x6d0) & 0xffff);
+                if (((DrExplodableState *)state)->unk6D0 != 0) {
+                    Sfx_PlayFromObject(obj, ((DrExplodableState *)state)->unk6D0 & 0xffff);
                 }
-                *(u8 *)(state + 0x6e4) = 1;
+                ((DrExplodableState *)state)->phase6E4 = 1;
                 *(u8 *)(obj + 0x36) = 0;
             } else {
                 return;
@@ -667,8 +706,8 @@ void explodable_update(int obj)
                         break;
                     case 0:
                         GameBit_Set(*(s16 *)(def + 0x3e), 1);
-                        if ((*(u32 *)(state + 0x6cc) & (1 << i)) == 0) {
-                            *(u32 *)(state + 0x6cc) |= 1 << i;
+                        if ((((DrExplodableState *)state)->flags6CC & (1 << i)) == 0) {
+                            ((DrExplodableState *)state)->flags6CC |= 1 << i;
                         }
                         break;
                     }
@@ -710,33 +749,33 @@ void explodable_init(int obj, int setup)
     if (c1 == 0) {
         c1 = 1;
     }
-    ((ExplodableState *)state)->count6D4 = c1;
-    *(int *)&((ExplodableState *)state)->flags6CC = 0;
-    ((ExplodableState *)state)->children[0] = 0;
-    ((ExplodableState *)state)->children[1] = 0;
-    ((ExplodableState *)state)->children[2] = 0;
-    ((ExplodableState *)state)->children[3] = 0;
-    ((ExplodableState *)state)->children[4] = 0;
-    ((ExplodableState *)state)->children[5] = 0;
-    ((ExplodableState *)state)->children[6] = 0;
-    ((ExplodableState *)state)->children[7] = 0;
-    ((ExplodableState *)state)->children[8] = 0;
-    ((ExplodableState *)state)->children[9] = 0;
-    ((ExplodableState *)state)->children[10] = 0;
-    ((ExplodableState *)state)->children[11] = 0;
-    ((ExplodableState *)state)->children[12] = 0;
-    ((ExplodableState *)state)->children[13] = 0;
-    ((ExplodableState *)state)->children[14] = 0;
+    ((DrExplodableState *)state)->count6D4 = c1;
+    *(int *)&((DrExplodableState *)state)->flags6CC = 0;
+    ((DrExplodableState *)state)->children[0] = 0;
+    ((DrExplodableState *)state)->children[1] = 0;
+    ((DrExplodableState *)state)->children[2] = 0;
+    ((DrExplodableState *)state)->children[3] = 0;
+    ((DrExplodableState *)state)->children[4] = 0;
+    ((DrExplodableState *)state)->children[5] = 0;
+    ((DrExplodableState *)state)->children[6] = 0;
+    ((DrExplodableState *)state)->children[7] = 0;
+    ((DrExplodableState *)state)->children[8] = 0;
+    ((DrExplodableState *)state)->children[9] = 0;
+    ((DrExplodableState *)state)->children[10] = 0;
+    ((DrExplodableState *)state)->children[11] = 0;
+    ((DrExplodableState *)state)->children[12] = 0;
+    ((DrExplodableState *)state)->children[13] = 0;
+    ((DrExplodableState *)state)->children[14] = 0;
     ((GameObject *)obj)->anim.rotX = *(s16 *)(setup + 0x1a);
     ((GameObject *)obj)->anim.rotY = *(s16 *)(setup + 0x1c);
     ((GameObject *)obj)->anim.rotZ = *(s16 *)(setup + 0x1e);
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x3e)) != 0) {
-        ((ExplodableState *)state)->phase6E4 = 2;
+        ((DrExplodableState *)state)->phase6E4 = 2;
     }
     base = 0;
     for (tbl = lbl_80322DA0; base < 16; base++) {
         if (((GameObject *)obj)->anim.seqId == tbl->key) {
-            ((ExplodableState *)state)->unk6E5 = base;
+            ((DrExplodableState *)state)->unk6E5 = base;
             break;
         }
         tbl++;
@@ -747,7 +786,7 @@ void explodable_init(int obj, int setup)
     ((GameObject *)obj)->anim.rootMotionScale =
         *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(int)*(s8 *)(setup + 0x3d) / lbl_803E435C;
     e = lbl_80322DA0;
-    if ((e[((ExplodableState *)state)->unk6E5].flags & 1) != 0) {
+    if ((e[((DrExplodableState *)state)->unk6E5].flags & 1) != 0) {
         ((GameObject *)obj)->objectFlags |= 0x4000;
     }
 }
@@ -766,6 +805,7 @@ int fn_801A2BDC(int p1, int p2, int p3, int p4)
 {
     int s;
     f32 f1;
+    DrExplodableChunk *c = (DrExplodableChunk *)p3;
 
     if (Obj_IsLoadingLocked() == 0) {
         return 0;
@@ -780,27 +820,27 @@ int fn_801A2BDC(int p1, int p2, int p3, int p4)
     *(f32 *)(s + 0xc) = *(f32 *)(p1 + 0x10);
     *(f32 *)(s + 0x10) = *(f32 *)(p1 + 0x14);
     f1 = lbl_803E4350;
-    *(u16 *)(s + 0x20) = lbl_803E4350 * *(f32 *)(p3 + 0x40);
-    *(u16 *)(s + 0x22) = f1 * *(f32 *)(p3 + 0x44);
-    *(u16 *)(s + 0x24) = f1 * *(f32 *)(p3 + 0x48);
-    *(s16 *)(s + 0x1a) = *(s16 *)(p3 + 0x68);
-    *(s16 *)(s + 0x1c) = *(s16 *)(p3 + 0x66);
-    *(s16 *)(s + 0x1e) = *(s16 *)(p3 + 0x64);
-    *(u16 *)(s + 0x2c) = *(f32 *)(p3 + 0x1c) * (f32)(u32)*(u8 *)(p3 + 0x6d);
-    *(u16 *)(s + 0x2e) = *(f32 *)(p3 + 0x20) * (f32)(u32)*(u8 *)(p3 + 0x6d);
-    *(u16 *)(s + 0x30) = *(f32 *)(p3 + 0x24) * (f32)(u32)*(u8 *)(p3 + 0x6d);
+    *(u16 *)(s + 0x20) = lbl_803E4350 * c->velX;
+    *(u16 *)(s + 0x22) = f1 * c->velY;
+    *(u16 *)(s + 0x24) = f1 * c->velZ;
+    *(s16 *)(s + 0x1a) = c->unk68;
+    *(s16 *)(s + 0x1c) = c->unk66;
+    *(s16 *)(s + 0x1e) = c->unk64;
+    *(u16 *)(s + 0x2c) = c->spinX * (f32)(u32)c->spinScale;
+    *(u16 *)(s + 0x2e) = c->spinY * (f32)(u32)c->spinScale;
+    *(u16 *)(s + 0x30) = c->spinZ * (f32)(u32)c->spinScale;
     f1 = lbl_803E4354;
-    *(u16 *)(s + 0x32) = lbl_803E4354 * *(f32 *)(p3 + 0x28);
-    *(u16 *)(s + 0x36) = f1 * *(f32 *)(p3 + 0x30);
-    *(u16 *)(s + 0x34) = f1 * *(f32 *)(p3 + 0x2c);
+    *(u16 *)(s + 0x32) = lbl_803E4354 * c->unk28;
+    *(u16 *)(s + 0x36) = f1 * c->unk30;
+    *(u16 *)(s + 0x34) = f1 * c->unk2C;
     f1 = lbl_803E4358;
-    *(u16 *)(s + 0x26) = lbl_803E4358 * *(f32 *)(p3 + 0x34);
-    *(u16 *)(s + 0x28) = f1 * *(f32 *)(p3 + 0x38);
-    *(u16 *)(s + 0x2a) = f1 * *(f32 *)(p3 + 0x3c);
+    *(u16 *)(s + 0x26) = lbl_803E4358 * c->unk34;
+    *(u16 *)(s + 0x28) = f1 * c->unk38;
+    *(u16 *)(s + 0x2a) = f1 * c->unk3C;
     *(u8 *)(s + 0x18) = p4;
     *(s8 *)(s + 0x3d) = (s8)(int)(lbl_803E435C * (*(f32 *)(p1 + 8) / *(f32 *)(*(int *)(p1 + 0x50) + 4)));
-    *(u16 *)(s + 0x38) = *(int *)(p3 + 0x5c);
-    *(u16 *)(s + 0x3a) = (int)*(f32 *)(p3 + 0x58);
+    *(u16 *)(s + 0x38) = c->unk5C;
+    *(u16 *)(s + 0x3a) = (int)c->unk58;
     return Obj_SetupObject(s, 5, (int)*(s8 *)(p1 + 0xac), -1, 0);
 }
 #pragma peephole reset
@@ -831,15 +871,15 @@ void fn_801A2E80(int obj, int def, int p3, int state)
     } s;
 
     e = (GasVentTableEntry *)lbl_80322DA0;
-    iVar12 = e[*(u8 *)(state + 0x6e5)].objType;
-    *(int *)(state + 0x6d0) = e[*(u8 *)(state + 0x6e5)].sfx;
-    uVar1 = e[*(u8 *)(state + 0x6e5)].mode;
+    iVar12 = e[((DrExplodableState *)state)->unk6E5].objType;
+    ((DrExplodableState *)state)->unk6D0 = e[((DrExplodableState *)state)->unk6E5].sfx;
+    uVar1 = e[((DrExplodableState *)state)->unk6E5].mode;
     if (iVar12 != -1) {
         i13 = 0;
         i15 = state;
         i14 = 0;
         i8 = state;
-        for (; i13 < *(u8 *)(state + 0x6d4); i13++) {
+        for (; i13 < ((DrExplodableState *)state)->count6D4; i13++) {
             *(u8 *)(state + i13 + 0x6d5) = 1;
             *(u8 *)(i15 + 0x6d) = uVar1;
             if (p3 == 0) {
@@ -897,65 +937,66 @@ void fn_801A30C0(int obj, int slot, int def)
     f32 mag;
     f32 scale;
     int max2;
+    DrExplodableChunk *c = (DrExplodableChunk *)slot;
     int max;
 
-    vecRotateZXY((s16 *)(def + 0x1a), (f32 *)(slot + 0x10));
-    *(f32 *)(slot + 0x4c) = *(f32 *)(slot + 0x10) * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)def)->posX;
-    *(f32 *)(slot + 0x50) = *(f32 *)(slot + 0x14) * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)def)->posY;
-    *(f32 *)(slot + 0x54) = *(f32 *)(slot + 0x18) * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)def)->posZ;
-    *(s16 *)(slot + 0x68) = *(s16 *)(def + 0x1a);
-    *(s16 *)(slot + 0x66) = *(s16 *)(def + 0x1c);
-    *(s16 *)(slot + 0x64) = *(s16 *)(def + 0x1e);
-    dx = *(f32 *)(slot + 0x10) - (f32)*(s16 *)(def + 0x20);
-    dy = *(f32 *)(slot + 0x14) - (f32)*(s16 *)(def + 0x22);
-    dz = *(f32 *)(slot + 0x18) - (f32)*(s16 *)(def + 0x24);
+    vecRotateZXY((s16 *)(def + 0x1a), &c->offX);
+    c->posX = c->offX * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)def)->posX;
+    c->posY = c->offY * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)def)->posY;
+    c->posZ = c->offZ * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)def)->posZ;
+    c->unk68 = *(s16 *)(def + 0x1a);
+    c->unk66 = *(s16 *)(def + 0x1c);
+    c->unk64 = *(s16 *)(def + 0x1e);
+    dx = c->offX - (f32)*(s16 *)(def + 0x20);
+    dy = c->offY - (f32)*(s16 *)(def + 0x22);
+    dz = c->offZ - (f32)*(s16 *)(def + 0x24);
     mag = sqrtf(dz * dz + (dx * dx + dy * dy));
     if (mag != lbl_803E4368) {
         scale = (f32)*(s16 *)(def + 0x2c) / (lbl_803E4370 * mag);
         if (dx != lbl_803E4368 || dy != lbl_803E4368 || dz != lbl_803E4368) {
             normalize(&dx, &dy, &dz);
         }
-        *(f32 *)(slot + 0x40) = dx * scale;
-        *(f32 *)(slot + 0x44) = dy * scale;
-        *(f32 *)(slot + 0x48) = dz * scale;
+        c->velX = dx * scale;
+        c->velY = dy * scale;
+        c->velZ = dz * scale;
         max = (int)(lbl_803E4374 * (lbl_803E4378 + scale));
-        *(f32 *)(slot + 0x1c) = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
-        *(f32 *)(slot + 0x20) = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
-        *(f32 *)(slot + 0x24) = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
+        c->spinX = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
+        c->spinY = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
+        c->spinZ = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
         scale = (f32)*(s16 *)(def + 0x30) / lbl_803E4358;
         if (((GameObject *)obj)->anim.velocityX > lbl_803E4368) {
-            *(u8 *)(slot + 0x6c) |= 1;
+            c->launchFlags |= 1;
         }
         if (((GameObject *)obj)->anim.velocityZ > lbl_803E4368) {
-            *(u8 *)(slot + 0x6c) |= 2;
+            c->launchFlags |= 2;
         }
-        if (*(f32 *)(slot + 0x1c) > lbl_803E4368) {
-            *(u8 *)(slot + 0x6c) |= 4;
+        if (c->spinX > lbl_803E4368) {
+            c->launchFlags |= 4;
         }
-        if (*(f32 *)(slot + 0x20) > lbl_803E4368) {
-            *(u8 *)(slot + 0x6c) |= 8;
+        if (c->spinY > lbl_803E4368) {
+            c->launchFlags |= 8;
         }
-        if (*(f32 *)(slot + 0x24) > lbl_803E4368) {
-            *(u8 *)(slot + 0x6c) |= 0x10;
+        if (c->spinZ > lbl_803E4368) {
+            c->launchFlags |= 0x10;
         }
         max2 = (int)(lbl_803E4374 * (lbl_803E4378 + scale));
-        *(f32 *)(slot + 0x28) = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
-        *(f32 *)(slot + 0x2c) = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
-        *(f32 *)(slot + 0x30) = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
-        *(f32 *)(slot + 0x34) = dx * scale;
-        *(f32 *)(slot + 0x38) = dy * scale - lbl_803E4380;
-        *(f32 *)(slot + 0x3c) = dz * scale;
+        c->unk28 = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        c->unk2C = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        c->unk30 = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        c->unk34 = dx * scale;
+        c->unk38 = dy * scale - lbl_803E4380;
+        c->unk3C = dz * scale;
         {
             int height = *(s16 *)(def + 0x2e);
             if (height != 0) {
-                *(f32 *)(slot + 0x58) = (f32)height;
+                c->unk58 = (f32)height;
             }
         }
-        *(u32 *)(slot + 0x5c) = *(u16 *)(def + 0x38);
+        *(u32 *)&c->unk5C = *(u16 *)(def + 0x38);
         if (*(u16 *)(def + 0x38) != 0) {
-            *(int *)(slot + 0x60) = (int)(*(u16 *)(def + 0x38) * (randomGetRange(0, 100) + 100)) / 200;
+            c->unk60 = (int)(*(u16 *)(def + 0x38) * (randomGetRange(0, 100) + 100)) / 200;
         } else {
-            *(int *)(slot + 0x60) = -1;
+            c->unk60 = -1;
         }
     }
 }
