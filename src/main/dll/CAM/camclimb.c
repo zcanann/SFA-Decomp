@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/camera_object.h"
 
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
                                            int obj);
@@ -71,7 +72,7 @@ void camclimb_update(short *param_1)
       }
       *lbl_803DD538 = *(int *)(param_1 + 0x18);
     }
-    psVar4 = *(short **)(param_1 + 0x52);
+    psVar4 = ((CameraObject *)param_1)->anim.targetObj;
     local_24 = *(float *)(param_1 + 8);
     cVar2 = camcontrol_samplePathState(&local_28, &local_24, local_20, psVar4, param_1);
     *(float *)(param_1 + 6) = local_28;
@@ -85,7 +86,7 @@ void camclimb_update(short *param_1)
     (*(code *)(**(int **)(iVar3 + 4) + 0x24))(param_1, 1, 3,
                                                  (int)lbl_803DD538 + 0x14,
                                                  (int)lbl_803DD538 + 0x18);
-    if ((param_1[0x50] != 0) || (*(u8 *)(param_1 + 0xa1) != 0)) {
+    if ((param_1[0x50] != 0) || (((CameraObject *)param_1)->unk142 != 0)) {
       *(float *)((int)lbl_803DD538 + 0x11c) = *(float *)((int)lbl_803DD538 + 0x11c) + timeDelta;
     }
     if (*(float *)((int)lbl_803DD538 + 0x11c) > lbl_803E1740) {
@@ -93,9 +94,9 @@ void camclimb_update(short *param_1)
       if (cVar2 == 1) {
         doNothing_80103660(1);
       }
-      *(float *)(param_1 + 0x5c) = *(float *)(param_1 + 0xc);
-      *(float *)(param_1 + 0x5e) = *(float *)(param_1 + 0xe);
-      *(float *)(param_1 + 0x60) = *(float *)(param_1 + 0x10);
+      ((CameraObject *)param_1)->probePosX = *(float *)(param_1 + 0xc);
+      ((CameraObject *)param_1)->probePosY = *(float *)(param_1 + 0xe);
+      ((CameraObject *)param_1)->probePosZ = *(float *)(param_1 + 0x10);
       cVar2 = 1;
     }
     (*(code *)(*(int *)gCameraInterface + 0x38))
