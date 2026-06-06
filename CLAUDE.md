@@ -2207,6 +2207,42 @@ the addi exists in the .o after the sweep.
     (#82-family); h-reuse and web-split A/Bs all scored lower — don't
     re-grind them (masked-separate + curB-merged is the max found).
 
+99. **O0-SHAPED bodies in an -O4 unit = per-fn `#pragma optimization_level 0`
+    region; `#pragma optimize_for_size on` is FUNCTIONAL and supplies the
+    `_savefpr_NN`/`stmw` helper-save prologue; both work under GC/1.2.5n
+    (extending #95's GC/2.0 finding).** (e_atan2 unit 76.6 -> 100.0, all 3
+    capped fns.) Recognize the class: a fn whose TARGET homes params to
+    stack/saved-regs with redundant `mr r3,r31` re-derives before calls,
+    keeps every named float local in its own callee-saved FP reg (f30, f31),
+    and re-reads locals per use — inside a unit whose other fns are normal
+    -O4 matches. That is NOT a coloring cap; the original wrapped the fn in
+    a per-function O0 region. Levers, all probe-verified:
+    - `#pragma optimization_level 0` reproduces the param-homing body
+      (params spill to stack when address-taken or implicitly via
+      `*(u32 *)&x` bit-reads; multi-use pointer params register-home with
+      `mr r31,r3`).
+    - `#pragma optimize_for_size on` (NOT in the ignored-pragma set) flips
+      inline `stfd f31/stfd f30` saves to the `bl _savefpr_30` helper AND
+      GPR saves to `stmw` — matching SDK-style prologues. Without it the O0
+      region emits inline saves and the frame mismatches.
+    - PEEPHOLE state is per-fn within the region: peephole OFF reproduces
+      the `mr r3,r31`-before-first-call re-derive (recipe #68 copy-prop
+      direction); peephole ON keeps the fused dot-form `clrrwi./clrlwi.`
+      compares. Read the target: unfused compares + home-derived call args
+      => off; fused record-form compares => on (powfBitEstimate needed ON,
+      Vec_normalize/trigReduceQuadrant needed OFF — same unit).
+    - At O0 a union round-trip (`bits.f = x; u = bits.u`) emits an extra
+      copy slot; target reading the PARAM's own home as int = spell it
+      `x_bits = *(u32 *)&x;` directly, with separate plain float locals per
+      logical value (`*(u32 *)&frac = ...; frac + e`) instead of one reused
+      union. #34/#5 decl-order then places the address-taken locals
+      (first-declared = HIGHEST offset).
+    - A FLIPPED per-file extern prototype (`fastCastFloatToU16(float, u16*)`
+      vs the definition's `(u16*, float)`) is ABI-safe (float->f1, ptr->r3
+      regardless of position) and controls O0 arg-eval order — the #29/#87
+      lever at O0; a call-site CAST of the same flip scored WORSE, use the
+      block/file-scope decl form.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/

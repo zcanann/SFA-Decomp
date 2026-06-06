@@ -15,33 +15,35 @@ extern float lbl_803E7BF8;
 
 void Vec_scale(void* v_in, void* v_out, float s);
 float Vec_lengthSquared(void* v);
-void fastCastFloatToU16(u16* p, float x);
+void fastCastFloatToU16(float x, u16* p);
 float fastCastU16ToFloat(u16* p);
 
+#pragma optimization_level 0
+#pragma optimize_for_size on
 float powfBitEstimate(float x, float y) {
-    union {
-        float f;
-        u32 u;
-    } bits;
-    s16 exponent;
     u32 x_bits;
+    float result;
+    float frac;
+    s16 exponent;
+    float expFloat;
     int y_int;
 
     if (x != lbl_803E7AB8) {
-        bits.f = x;
-        x_bits = bits.u;
+        x_bits = *(u32 *)&x;
         exponent = (s16)(((x_bits >> 23) & 0xFF) - 128);
-        bits.u = (x_bits & 0x7FFFFF) | 0x3F800000;
-        bits.f = (lbl_803E7BF4 * y) * (bits.f + fastCastS16ToFloat(&exponent));
+        *(u32 *)&frac = (x_bits & 0x7FFFFF) | 0x3F800000;
+        expFloat = fastCastS16ToFloat(&exponent);
+        frac = (lbl_803E7BF4 * y) * (frac + expFloat);
+        *(u32 *)&result = (u32)(int)frac + 0x3F800000;
 
-        y_int = (int)bits.f;
-        bits.u = (u32)y_int + 0x3F800000;
-
-        if ((x_bits & 0x80000000) && ((int)y & 1)) {
-            bits.u ^= 0x80000000;
+        if (x_bits & 0x80000000) {
+            y_int = (int)y;
+            if (y_int & 1) {
+                *(u32 *)&result ^= 0x80000000;
+            }
         }
 
-        return bits.f;
+        return result;
     }
 
     if (y != lbl_803E7AB8) {
@@ -50,11 +52,18 @@ float powfBitEstimate(float x, float y) {
 
     return lbl_803E7BC8;
 }
+#pragma optimize_for_size reset
+#pragma optimization_level reset
 
+#pragma optimization_level 0
+#pragma peephole off
+#pragma optimize_for_size on
 void Vec_normalize(void* v_in, void* v_out) {
-    float scale = invSqrt(Vec_lengthSquared(v_in));
-    Vec_scale(v_in, v_out, scale);
+    Vec_scale(v_in, v_out, invSqrt(Vec_lengthSquared(v_in)));
 }
+#pragma optimize_for_size reset
+#pragma peephole reset
+#pragma optimization_level reset
 
 void Vec_scale(void* v_in, void* v_out, float s) {
     Vec3f* in = v_in;
@@ -69,9 +78,17 @@ float Vec_lengthSquared(void* v) {
     return vec->z * vec->z + (vec->x * vec->x + vec->y * vec->y);
 }
 
+#pragma optimization_level 0
+#pragma peephole off
+#pragma optimize_for_size on
 float trigReduceQuadrant(u16* p, float x) {
     float scaled = lbl_803E7BF8 * __fabsf(x);
-    fastCastFloatToU16(p, scaled);
+    float reduced;
+    fastCastFloatToU16(scaled, p);
     *p = (*p + 1) & 0xFFFE;
-    return scaled - fastCastU16ToFloat(p);
+    reduced = fastCastU16ToFloat(p);
+    return scaled - reduced;
 }
+#pragma optimize_for_size reset
+#pragma peephole reset
+#pragma optimization_level reset
