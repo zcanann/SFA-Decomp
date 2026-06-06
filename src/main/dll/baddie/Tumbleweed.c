@@ -4872,16 +4872,20 @@ int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
   extern f32 vec3f_distanceSquared(int, int);
   extern f32 lbl_803E23DC;
   int *objs;
-  int closest = 0;
+  int *tmpList;
+  int closest;
+  int i;
   f32 bestDistSq;
   int count;
-  int i;
 
   bestDistSq = maxRadius;
-  objs = ObjGroup_GetObjects(3, &count);
+  closest = 0;
+  tmpList = ObjGroup_GetObjects(3, &count);
   bestDistSq = bestDistSq * bestDistSq;
+  i = 0;
+  objs = tmpList;
 
-  for (i = 0; i < count; i++) {
+  for (; i < count; i++) {
     int *data;
     f32 obj_extra;
     int v1, v2;
