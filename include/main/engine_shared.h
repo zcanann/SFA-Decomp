@@ -1573,7 +1573,7 @@ void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 void CameraShake_SetAllMagnitudes(f32 magnitude);
 void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
 void* fn_8000E814(void);
-void Camera_LoadModelViewMatrix(f32 scale, void* unused0, void* unused1, CameraViewSlot* transform, f32* matrix);
+void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* transform, f32 scale, f32* matrix);
 void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32* outZ);
 void screenFn_8000e944(void* viewportArg);
 void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, f32* outViewZ);

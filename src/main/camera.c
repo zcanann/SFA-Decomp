@@ -184,6 +184,7 @@ void Obj_GetWorldPosition(u32 obj, f32 *outX, f32 *outY, f32 *outZ)
 #pragma peephole off
 void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
 {
+    u8 *base;
     u32 ancestors[4];
     ObjMatrixBuildTransform inverseTransform;
     u32 current;
@@ -192,12 +193,13 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
     f32 *inverseYawMatrix;
     f32 savedScale;
     s8 ancestorCount;
-    s32 hasParent;
+    s8 hasParent;
 
     current = obj;
+    base = (u8 *)gObjInverseYawTransformMatrices;
     matrixIndex = yawIndex << 4;
-    inverseYawMatrix = (f32 *)((u8 *)gObjInverseYawTransformMatrices + (matrixIndex << 2));
-    yawMatrix = (f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2));
+    yawMatrix = (f32 *)(base + (matrixIndex << 2) + 1920);
+    inverseYawMatrix = (f32 *)(base + (matrixIndex << 2));
     hasParent = 0;
     ancestorCount = 0;
     while (current != 0) {
@@ -211,8 +213,8 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
         if (hasParent == 0) {
             setMatrixFromObjectPos(yawMatrix, (void *)current);
         } else {
-            setMatrixFromObjectPos((f32 *)&DAT_80338c30, (void *)current);
-            mtx44_multSafe(yawMatrix, (f32 *)&DAT_80338c30, yawMatrix);
+            setMatrixFromObjectPos((f32 *)(base + 3904), (void *)current);
+            mtx44_multSafe(yawMatrix, (f32 *)(base + 3904), yawMatrix);
         }
 
         *(f32 *)(current + 0x08) = savedScale;
@@ -395,7 +397,7 @@ void* fn_8000E814(void)
 
 #pragma scheduling off
 #pragma peephole off
-void Camera_LoadModelViewMatrix(f32 scale, void* unused0, void* unused1, CameraViewSlot* transform, f32* matrix)
+void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* transform, f32 scale, f32* matrix)
 {
     f32* modelMatrix;
 
@@ -430,12 +432,18 @@ void Camera_LoadModelViewMatrix(f32 scale, void* unused0, void* unused1, CameraV
 #pragma peephole off
 void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32* outZ)
 {
+    f32 t;
+
     if (outX != NULL) {
-        *outX = (s32)(ndcX * (f32)(lbl_802C5ED0[0] >> 2) + (f32)(lbl_802C5ED0[4] >> 2));
+        t = ndcX * (f32)(lbl_802C5ED0[0] >> 2);
+        t = t + (f32)(lbl_802C5ED0[4] >> 2);
+        *outX = (s32)t;
     }
 
     if (outY != NULL) {
-        *outY = (s32)(ndcY * (f32)(lbl_802C5ED0[1] >> 2) + (f32)(lbl_802C5ED0[5] >> 2));
+        t = ndcY * (f32)(lbl_802C5ED0[1] >> 2);
+        t = t + (f32)(lbl_802C5ED0[5] >> 2);
+        *outY = (s32)t;
         *outY = 0x1E0 - *outY;
     }
 
