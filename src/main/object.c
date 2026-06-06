@@ -1392,10 +1392,10 @@ typedef struct LoadedObj {
     u8 pad4a[0x2];
     s16 *data;
     u8 *def;
-    void *f54;
+    ObjHitReactState *hitReactState;
     u8 pad58[0x4];
     int f5c;
-    int f60;
+    int objAnimEventTable;
     u8 pad64[0x4];
     int **dll;
     int f6c;
@@ -1634,10 +1634,10 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     if ((flags29 & 0x40) || (*(u32 *)(obj->def + 0x44) & 0x400000)) {
         seq2 = obj->seqId;
         tmp = roundUpTo4(cursor);
-        obj->f60 = tmp;
+        obj->objAnimEventTable = tmp;
         cursor = roundUpTo8(tmp + 8);
-        *(int *)(obj->f60 + 4) = cursor;
-        ObjAnim_LoadMoveEvents((u8 *)obj, seq2, (int *)obj->f60, 0, 1);
+        *(int *)(obj->objAnimEventTable + 4) = cursor;
+        ObjAnim_LoadMoveEvents((u8 *)obj, seq2, (int *)obj->objAnimEventTable, 0, 1);
         cursor += 0x50;
     }
     if ((flags29 & 0x100) && *(void **)obj->models != NULL) {
@@ -1689,8 +1689,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     if (*(u8 *)(def + 0x61) != 0 && *(u8 *)(def + 0x66) != 0) {
         tmp = roundUpTo4(cursor);
         cursor = ObjHitReact_InitState(obj->seqId, (ObjAnimBank *)*(u8 **)obj->models,
-                                       (ObjHitReactState *)obj->f54, tmp,
-                                       (ObjAnimComponent *)obj);
+                                       obj->hitReactState, tmp, (ObjAnimComponent *)obj);
     }
     if (*(u8 *)(def + 0x72) != 0) {
         obj->f78 = roundUpTo4(cursor);

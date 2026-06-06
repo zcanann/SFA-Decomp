@@ -91,6 +91,33 @@ extern ObjHitReactEntry gEarthWalkerHitReactEntries[];
 extern f32 lbl_803E6CE4;
 extern f32 lbl_803E6CDC;
 
+typedef struct EarthWalkerState {
+    u8 pad000[0x600];
+    u8 animPhase;
+    u8 pad601[0x610 - 0x601];
+    u8 hitTriggerId;
+    u8 pad611[0x624 - 0x611];
+    u8 eyeAnimState[0x654 - 0x624];
+    f32 hitReactStepScale;
+    u8 interactionState;
+    u8 flags;
+    u8 hitReactState;
+    u8 encounterType;
+    s8 lastTriggeredState;
+    u8 pad65D[0x660 - 0x65D];
+} EarthWalkerState;
+
+STATIC_ASSERT(sizeof(EarthWalkerState) == 0x660);
+STATIC_ASSERT(offsetof(EarthWalkerState, animPhase) == 0x600);
+STATIC_ASSERT(offsetof(EarthWalkerState, hitTriggerId) == 0x610);
+STATIC_ASSERT(offsetof(EarthWalkerState, eyeAnimState) == 0x624);
+STATIC_ASSERT(offsetof(EarthWalkerState, hitReactStepScale) == 0x654);
+STATIC_ASSERT(offsetof(EarthWalkerState, interactionState) == 0x658);
+STATIC_ASSERT(offsetof(EarthWalkerState, flags) == 0x659);
+STATIC_ASSERT(offsetof(EarthWalkerState, hitReactState) == 0x65A);
+STATIC_ASSERT(offsetof(EarthWalkerState, encounterType) == 0x65B);
+STATIC_ASSERT(offsetof(EarthWalkerState, lastTriggeredState) == 0x65C);
+
 
 extern f32 lbl_803E6D20;
 extern f32 lbl_803E6D24;

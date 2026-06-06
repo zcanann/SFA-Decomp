@@ -39,9 +39,10 @@ void earthwalker_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void earthwalker_hitDetect(int obj)
 {
     int state = *(int *)(obj + 0xb8);
+    EarthWalkerState *ewState = (EarthWalkerState *)state;
 
     if (*(s16 *)(obj + 0xa0) == 0x203) {
-        fn_8003AAE0(obj, seqFn_800394a0(), *(u8 *)(state + 0x610), 0, 0x186a0);
+        fn_8003AAE0(obj, seqFn_800394a0(), ewState->hitTriggerId, 0, 0x186a0);
     }
 }
 #pragma scheduling reset
@@ -64,16 +65,18 @@ void earthwalker_initialise(void) {}
 void earthwalker_update(int obj)
 {
     int state = *(int *)(obj + 0xb8);
+    EarthWalkerState *ewState = (EarthWalkerState *)state;
     int prevAnim;
     int hitOut;
 
-    hitOut = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1, *(u8 *)(state + 0x65a), (f32 *)(state + 0x654));
-    *(u8 *)(state + 0x65a) = hitOut;
+    hitOut = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1, ewState->hitReactState,
+                                &ewState->hitReactStepScale);
+    ewState->hitReactState = hitOut;
     if ((u8)hitOut != 0) {
         return;
     }
 
-    if (*(u8 *)(state + 0x65b) >= 4 && *(u8 *)(state + 0x65b) <= 8) {
+    if (ewState->encounterType >= 4 && ewState->encounterType <= 8) {
         if (*(s16 *)(obj + 0xa0) != 0x203) {
             ObjAnim_SetCurrentMove(obj, 0x203, lbl_803E6CE4, 0);
         }
@@ -83,25 +86,25 @@ void earthwalker_update(int obj)
         }
     }
 
-    prevAnim = *(u8 *)(state + 0x600);
+    prevAnim = ewState->animPhase;
     dll_2E_func03(obj, state);
-    if (*(u8 *)(state + 0x65b) >= 4 && *(u8 *)(state + 0x65b) <= 7 && prevAnim != 1 &&
-        *(u8 *)(state + 0x600) == 1) {
+    if (ewState->encounterType >= 4 && ewState->encounterType <= 7 && prevAnim != 1 &&
+        ewState->animPhase == 1) {
         Sfx_PlayFromObject(obj, 0x3e6);
     }
 
-    characterDoEyeAnims(obj, state + 0x624);
-    if (*(u8 *)(state + 0x659) & 1) {
+    characterDoEyeAnims(obj, (int)ewState->eyeAnimState);
+    if (ewState->flags & 1) {
         return;
     }
 
-    switch (*(u8 *)(state + 0x658)) {
+    switch (ewState->interactionState) {
     case 0:
         if (*(u8 *)(obj + 0xaf) & 1) {
             buttonDisable(0, 0x100);
             GameBit_Set(0x7fb, 1);
-            *(u8 *)(state + 0x658) = 2;
-            *(u8 *)(state + 0x659) |= 1;
+            ewState->interactionState = 2;
+            ewState->flags |= 1;
         }
         break;
     case 1:
@@ -109,10 +112,10 @@ void earthwalker_update(int obj)
     case 2:
         if (*(u8 *)(obj + 0xaf) & 1) {
             int newState;
-            switch (*(u8 *)(state + 0x65b)) {
+            switch (ewState->encounterType) {
             case 0:
                 if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
-                    if (*(s8 *)(state + 0x65c) == 0x14) {
+                    if (ewState->lastTriggeredState == 0x14) {
                         newState = 0x15;
                     } else {
                         newState = 0x14;
@@ -125,9 +128,9 @@ void earthwalker_update(int obj)
                     newState = 3;
                 } else if (GameBit_Get(0x7fc) != 0) {
                     newState = 3;
-                } else if (*(s8 *)(state + 0x65c) == 0) {
+                } else if (ewState->lastTriggeredState == 0) {
                     newState = 1;
-                } else if (*(s8 *)(state + 0x65c) == 1) {
+                } else if (ewState->lastTriggeredState == 1) {
                     newState = 2;
                 } else {
                     newState = 0;
@@ -135,7 +138,7 @@ void earthwalker_update(int obj)
                 break;
             case 9:
                 if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
-                    if (*(s8 *)(state + 0x65c) == 0x16) {
+                    if (ewState->lastTriggeredState == 0x16) {
                         newState = 0x17;
                     } else {
                         newState = 0x16;
@@ -148,7 +151,7 @@ void earthwalker_update(int obj)
                     newState = 8;
                 } else if (GameBit_Get(0x7fc) != 0) {
                     newState = 8;
-                } else if (*(s8 *)(state + 0x65c) == 6) {
+                } else if (ewState->lastTriggeredState == 6) {
                     newState = 7;
                 } else {
                     newState = 6;
@@ -156,11 +159,11 @@ void earthwalker_update(int obj)
                 break;
             case 10:
                 if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
-                    if (*(s8 *)(state + 0x65c) == 0x18) {
+                    if (ewState->lastTriggeredState == 0x18) {
                         newState = 0x19;
-                    } else if (*(s8 *)(state + 0x65c) == 0x19) {
+                    } else if (ewState->lastTriggeredState == 0x19) {
                         newState = 0x1a;
-                    } else if (*(s8 *)(state + 0x65c) == 0x1a) {
+                    } else if (ewState->lastTriggeredState == 0x1a) {
                         newState = 0x1b;
                     } else {
                         newState = 0x18;
@@ -172,7 +175,7 @@ void earthwalker_update(int obj)
                 } else if (GameBit_Get(0xc55) != 0) {
                     newState = 0xd;
                 } else if (GameBit_Get(0x7fc) != 0) {
-                    if (*(s8 *)(state + 0x65c) == 0xb) {
+                    if (ewState->lastTriggeredState == 0xb) {
                         newState = 0xc;
                     } else {
                         newState = 0xb;
@@ -181,11 +184,11 @@ void earthwalker_update(int obj)
                 break;
             case 11:
                 if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
-                    if (*(s8 *)(state + 0x65c) == 0x1c) {
+                    if (ewState->lastTriggeredState == 0x1c) {
                         newState = 0x1d;
-                    } else if (*(s8 *)(state + 0x65c) == 0x1d) {
+                    } else if (ewState->lastTriggeredState == 0x1d) {
                         newState = 0x1e;
-                    } else if (*(s8 *)(state + 0x65c) == 0x1e) {
+                    } else if (ewState->lastTriggeredState == 0x1e) {
                         newState = 0x1f;
                     } else {
                         newState = 0x1c;
@@ -193,7 +196,7 @@ void earthwalker_update(int obj)
                 } else if (GameBit_Get(0xc90) != 0) {
                     newState = 0x13;
                 } else if (GameBit_Get(0xc36) != 0) {
-                    if (*(s8 *)(state + 0x65c) == 0x11) {
+                    if (ewState->lastTriggeredState == 0x11) {
                         newState = 0x12;
                     } else {
                         newState = 0x11;
@@ -255,7 +258,7 @@ void earthwalker_update(int obj)
             if (newState != -1) {
                 buttonDisable(0, 0x100);
                 (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(newState, obj, -1);
-                *(s8 *)(state + 0x65c) = newState;
+                ewState->lastTriggeredState = newState;
             }
         }
         break;
@@ -402,10 +405,11 @@ int fn_80223CF0(int obj, int ai)
 int earthwalker_animEventCallback(int obj, int p2, int p3, int p4)
 {
     int state = *(int *)(obj + 0xb8);
+    EarthWalkerState *ewState = (EarthWalkerState *)state;
     int i;
 
-    *(u8 *)(state + 0x659) &= ~1;
-    characterDoEyeAnims(obj, state + 0x624);
+    ewState->flags &= ~1;
+    characterDoEyeAnims(obj, (int)ewState->eyeAnimState);
     if (dll_2E_func07(obj, p3, state, 0, 0) != 0) {
         return 0;
     }
@@ -432,6 +436,7 @@ int earthwalker_animEventCallback(int obj, int p2, int p3, int p4)
 void earthwalker_init(int obj, int setup)
 {
     int state = *(int *)(obj + 0xb8);
+    EarthWalkerState *ewState = (EarthWalkerState *)state;
     int local;
 
     local = lbl_803E6CD8;
@@ -441,18 +446,18 @@ void earthwalker_init(int obj, int setup)
     fn_80113F94(state, lbl_803E6CE8);
     *(u8 *)(state + 0x611) |= 2;
     *(s16 *)obj = (s16)((s8)*(s8 *)(setup + 0x18) << 8);
-    *(u8 *)(state + 0x65b) = *(u8 *)(setup + 0x19);
-    if (*(u8 *)(state + 0x65b) == 1) {
+    ewState->encounterType = *(u8 *)(setup + 0x19);
+    if (ewState->encounterType == 1) {
         if (GameBit_Get(0x7fc) != 0 ||
             ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
-            *(u8 *)(state + 0x658) = 2;
+            ewState->interactionState = 2;
         } else {
-            *(u8 *)(state + 0x658) = 0;
+            ewState->interactionState = 0;
         }
     } else {
-        *(u8 *)(state + 0x658) = 2;
+        ewState->interactionState = 2;
     }
-    *(s8 *)(state + 0x65c) = -1;
+    ewState->lastTriggeredState = -1;
 }
 #pragma scheduling reset
 #pragma peephole reset
