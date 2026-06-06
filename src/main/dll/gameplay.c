@@ -16623,7 +16623,6 @@ extern u32 lbl_803E0730;
 extern const f32 lbl_803E0734, lbl_803E0738, lbl_803E073C, lbl_803E0740, lbl_803E0744;
 extern const f32 lbl_803E0748, lbl_803E074C, lbl_803E0750, lbl_803E0754;
 
-#pragma peephole on
 int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param_5, s16 *param_6)
 {
   struct { s16 lo, hi; } r;
@@ -16631,8 +16630,8 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
   struct { GfxCmd *cmds; u8 *ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
     u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
-  int ret = 0;
   u8 *base = lbl_80311E30;
+  int ret = 0;
   u8 *spr;
   u8 *obj;
   GfxCmd *entries;
