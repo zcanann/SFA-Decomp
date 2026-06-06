@@ -5563,7 +5563,7 @@ int fn_8029EBCC(int obj, int state)
             (int)(lbl_803E7FAC * -*(f32 *)((char *)inner + 0x7bc)));
     }
     *(s16 *)((char *)inner + 0x4d0) =
-        (int)((f32)*(s16 *)((char *)inner + 0x4d0) * powfBitEstimate(lbl_803E7FF4, timeDelta));
+        (f32)*(s16 *)((char *)inner + 0x4d0) * powfBitEstimate(lbl_803E7FF4, timeDelta);
     *(s16 *)((char *)inner + 0x4d6) =
         (int)((f32)*(s16 *)((char *)inner + 0x4d6) * powfBitEstimate(lbl_803E7F1C, timeDelta));
     *(s16 *)((char *)inner + 0x4d2) = (int)(lbl_803E7FB0 * *(f32 *)((char *)inner + 0x7b8));
@@ -14232,7 +14232,7 @@ int fn_802ABFBC(int obj, int state, int inner)
     f32 pos2[3];
 
     *(s16 *)((char *)inner + 0x4d0) =
-        (int)((f32)*(s16 *)((char *)inner + 0x4d0) * powfBitEstimate(lbl_803E7FF4, timeDelta));
+        (f32)*(s16 *)((char *)inner + 0x4d0) * powfBitEstimate(lbl_803E7FF4, timeDelta);
     sub = *(void **)((char *)inner + 0x4b8);
     if (sub != NULL && *(u8 *)(*(int *)((char *)sub + 0x50) + 0x58) != 0) {
         int d;
@@ -14255,7 +14255,7 @@ int fn_802ABFBC(int obj, int state, int inner)
         if (d < -0x8000) d += 0xffff;
         adj = (int)((f32)d * lbl_803E7EB4);
         *(s16 *)((char *)inner + 0x4d6) =
-            (int)((f32)adj * timeDelta + (f32)*(s16 *)((char *)inner + 0x4d6));
+            (f32)adj * timeDelta + (f32)*(s16 *)((int)inner + 0x4d6);
 
         d = (u16)getAngle(-dx, -dz) - (u16)*(s16 *)((char *)inner + 0x478);
         if (d > 0x8000) d -= 0xffff;
@@ -14267,11 +14267,11 @@ int fn_802ABFBC(int obj, int state, int inner)
         if (d < -0x8000) d += 0xffff;
         adj = (int)((f32)d * lbl_803E7EB4);
         *(s16 *)((char *)inner + 0x4d4) =
-            (int)((f32)adj * timeDelta + (f32)*(s16 *)((char *)inner + 0x4d4));
+            (f32)adj * timeDelta + (f32)*(s16 *)((int)inner + 0x4d4);
         *(s16 *)((char *)inner + 0x4d2) = *(s16 *)((char *)inner + 0x4d4) / 2;
     } else {
         *(s16 *)((char *)inner + 0x4d6) =
-            (int)((f32)*(s16 *)((char *)inner + 0x4d6) * powfBitEstimate(lbl_803E7F1C, timeDelta));
+            (f32)*(s16 *)((char *)inner + 0x4d6) * powfBitEstimate(lbl_803E7F1C, timeDelta);
     }
     return 0;
 }
