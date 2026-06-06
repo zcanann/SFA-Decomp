@@ -171,10 +171,10 @@ uint FUN_80175740(int param_1,int param_2)
   int iVar4;
   double dVar5;
   
-  iVar4 = *(int *)(param_1 + 0xb8);
-  fVar1 = *(float *)(param_2 + 0xc) - *(float *)(param_1 + 0xc);
-  fVar2 = *(float *)(param_2 + 0x10) - *(float *)(param_1 + 0x10);
-  fVar3 = *(float *)(param_2 + 0x14) - *(float *)(param_1 + 0x14);
+  iVar4 = ((PushableState *)param_1)->msgSenderObj;
+  fVar1 = ((PushableState *)param_2)->cullDistance - ((PushableState *)param_1)->cullDistance;
+  fVar2 = ((PushableState *)param_2)->scale - ((PushableState *)param_1)->scale;
+  fVar3 = ((PushableState *)param_2)->timer_0x14 - ((PushableState *)param_1)->timer_0x14;
   dVar5 = FUN_80293900((double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2));
   return ((uint)(byte)((dVar5 < (double)*(float *)(iVar4 + 0xc)) << 3) << 0x1c) >> 0x1f;
 }
