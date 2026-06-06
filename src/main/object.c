@@ -2482,7 +2482,7 @@ void Obj_RegisterObject(u8 *obj, int flags)
     int off;
 
     if (*(void **)(obj + 0x30) != 0) {
-        Obj_TransformLocalPointToWorld(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), obj + 0x18, obj + 0x1c, obj + 0x20);
+        ((void (*)(f32, f32, f32, u8 *, u8 *, u8 *, void *))Obj_TransformLocalPointToWorld)(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), obj + 0x18, obj + 0x1c, obj + 0x20, *(void **)(obj + 0x30));
     } else {
         *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
         *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
