@@ -164,7 +164,7 @@ static inline RomCurveDef *RomCurve_FindByIdInline(u32 curveId) {
 
   high = nRomCurves - 1;
   low = 0;
-  while (low <= high) {
+  while (high >= low) {
     mid = (high + low) >> 1;
     curve = romCurves[mid];
     if (curveId > curve->id) {
@@ -912,7 +912,7 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef *curve,int *types,int typeCount,
       } else {
         high = top;
         low = 0;
-        while (high >= low) {
+        while (low <= high) {
           mid = (high + low) >> 1;
           linkedCurve = romCurves[mid];
           if ((u32)linkId > linkedCurve->id) {
@@ -1183,7 +1183,7 @@ RomCurveDef *RomCurve_findByIdWithIndex(uint curveId,int *outIndex)
   }
   high = nRomCurves + -1;
   low = 0;
-  while (high >= low) {
+  while (low <= high) {
     mid = high + low >> 1;
     if (curveId > RomCurve_GetId(romCurves[mid])) {
       low = mid + 1;
@@ -1369,11 +1369,11 @@ int RomCurve_func20(RomCurvePlacementDef *curve, f32 *outX, f32 *outY, f32 *outZ
  */
 int RomCurve_countRandomPoints(RomCurveDef *curve)
 {
-  int count;
+  uint mask;
   int linkCount;
   int link;
+  int count;
   int id;
-  uint mask;
   int i;
   int ids[ROMCURVE_LINK_COUNT];
 
