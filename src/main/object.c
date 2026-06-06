@@ -1527,12 +1527,12 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     } else {
         flags29 = fnFlags | 1;
     }
-    if (*(s16 *)(def + 0x48) != 0) {
+    if (modelDef->shadowType != 0) {
         flags29 |= 2;
     } else {
         flags29 &= ~2;
     }
-    if (*(s16 *)(def + 0x48) == 3) {
+    if (modelDef->shadowType == 3) {
         flags29 |= 0x8000;
     }
     if (modelDef->flags & 1) {
@@ -1576,7 +1576,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
             if (((ObjModelInstance *)obj->def)->flags & 0x800) {
                 ObjModel_SetRenderCallback(obj->models[idx], objCallback_80074d04);
             } else {
-                cb = *(u8 *)(obj->def + 0x5f);
+                cb = ((ObjModelInstance *)obj->def)->renderFlags;
                 if (cb & 1) {
                     ObjModel_SetRenderCallback(obj->models[idx], modelCb_80073d04);
                 } else if (cb & 0x80) {
@@ -1597,7 +1597,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
             if (((ObjModelInstance *)obj->def)->flags & 0x800) {
                 ObjModel_SetRenderCallback(obj->models[i], objCallback_80074d04);
             } else {
-                cb = *(u8 *)(obj->def + 0x5f);
+                cb = ((ObjModelInstance *)obj->def)->renderFlags;
                 if (cb & 1) {
                     ObjModel_SetRenderCallback(obj->models[i], modelCb_80073d04);
                 } else if (cb & 0x80) {
@@ -1642,7 +1642,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
         *(int *)(obj->f5c + 4) = cursor;
         cursor += 0x800;
     }
-    if ((flags29 & 2) && *(s16 *)(def + 0x48) != 0) {
+    if ((flags29 & 2) && modelDef->shadowType != 0) {
         cursor = shadowInit(obj, cursor, 0);
     }
     max = lbl_803DE8CC;
@@ -1830,14 +1830,14 @@ void objFreeObjDef(void *objp, int flag) {
         ObjGroup_RemoveObject((uint)obj, 8);
     }
     if (*(int *)(obj + 0x64) != 0) {
-        if (*(s16 *)(*(u8 **)(obj + 0x50) + 0x48) == 1) {
+        if (objAnim->modelInstance->shadowType == 1) {
             setShadowFlag_803db658(1);
         }
         if (*(int *)(*(u8 **)(obj + 0x64) + 4) != 0) {
             curTex = textureFn_8006c5c4();
             tex = *(u8 **)(*(u8 **)(obj + 0x64) + 4);
             if (tex != curTex) {
-                if ((*(u8 *)(*(u8 **)(obj + 0x50) + 0x5f) & 4) == 0) {
+                if ((objAnim->modelInstance->renderFlags & 4) == 0) {
                     textureFree(tex);
                 } else {
                     mm_free(tex);
@@ -2808,7 +2808,7 @@ int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
     if (flags & 0x100) {
         size = roundUpTo8(roundUpTo4(size) + 8) + 0x800;
     }
-    if ((flags & 2) && *(s16 *)(def + 0x48) != 0) {
+    if ((flags & 2) && modelDef->shadowType != 0) {
         size = roundUpTo4(size) + 0x44;
     }
     if (*(u8 *)(def + 0x61) != 0) {
