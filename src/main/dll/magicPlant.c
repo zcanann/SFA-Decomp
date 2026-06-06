@@ -1,5 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/magicPlant.h"
+#include "main/dll/baddie_state.h"
+#include "main/game_object.h"
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
@@ -842,7 +844,7 @@ extern f32 lbl_803E28E8;
 #pragma peephole off
 void fn_80153790(int obj, int state, int p3, int msgFlag, int p5, int p6)
 {
-    if (*(s16*)(obj + 0xa0) == 1) {
+    if (((GameObject *)obj)->anim.currentMove == 1) {
         if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
             return;
         }
@@ -871,28 +873,28 @@ void fn_801534D8(int obj, int state)
     f32 lblB0;
     f32 lblD0;
 
-    *(f32*)(state + 0x2ac) = lbl_803E28DC;
-    *(u32*)(state + 0x2e4) = 0x1009;
-    *(f32*)(state + 0x308) = lbl_803E28E0;
-    *(f32*)(state + 0x300) = lbl_803E28E4;
-    *(f32*)(state + 0x304) = lbl_803E28E8;
-    *(u8*)(state + 0x320) = 0;
+    ((BaddieState *)state)->unk2AC = lbl_803E28DC;
+    *(u32 *)&((BaddieState *)state)->unk2E4 = 0x1009;
+    ((BaddieState *)state)->unk308 = lbl_803E28E0;
+    ((BaddieState *)state)->unk300 = lbl_803E28E4;
+    ((BaddieState *)state)->unk304 = lbl_803E28E8;
+    ((BaddieState *)state)->unk320 = 0;
     lblBC = lbl_803E28BC;
-    *(f32*)(state + 0x314) = lblBC;
-    *(u8*)(state + 0x321) = 1;
+    *(f32 *)&((BaddieState *)state)->eventFlags = lblBC;
+    ((BaddieState *)state)->unk321 = 1;
     lblD0 = lbl_803E28D0;
-    *(f32*)(state + 0x318) = lblD0;
-    *(u8*)(state + 0x322) = 0;
-    *(f32*)(state + 0x31c) = lblBC;
+    ((BaddieState *)state)->unk318 = lblD0;
+    ((BaddieState *)state)->unk322 = 0;
+    ((BaddieState *)state)->unk31C = lblBC;
     lblB0 = lbl_803E28B0;
     *(f32*)(state + 0x324) = lblB0;
     *(f32*)(state + 0x328) = lblB0;
     *(f32*)(state + 0x32c) = lblB0;
     *(f32*)(state + 0x2fc) = lblD0;
-    if (*(s16*)(obj + 0x46) == 0x7c6) {
-        *(u8*)(state + 0x33b) = 1;
+    if (((GameObject *)obj)->anim.seqId == 0x7c6) {
+        ((BaddieState *)state)->inWhirlpoolGroup = 1;
     } else {
-        *(u8*)(state + 0x33b) = 0;
+        ((BaddieState *)state)->inWhirlpoolGroup = 0;
     }
 }
 #pragma peephole reset
@@ -922,10 +924,10 @@ void fn_80153040(int obj, int state)
     f32 vec[3];
 
     curve = *(int**)state;
-    if (*(void**)(obj + 0x54) != NULL) {
-        *(u8*)(*(int*)(obj + 0x54) + 0x70) = 0;
+    if (((GameObject *)obj)->anim.hitReactState != NULL) {
+        *(u8*)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
     }
-    if (*(u8*)(state + 0x33b) != 0) {
+    if (((BaddieState *)state)->inWhirlpoolGroup != 0) {
         *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x80;
     }
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
@@ -941,14 +943,14 @@ void fn_80153040(int obj, int state)
 
     fn_8014CF7C(obj, state, 0xf, 0, *(f32*)((char*)curve + 0x68), *(f32*)((char*)curve + 0x70));
 
-    vec[0] = *(f32*)((char*)curve + 0x68) - *(f32*)(obj + 0xc);
-    vec[1] = *(f32*)((char*)curve + 0x6c) - *(f32*)(obj + 0x10);
-    vec[2] = *(f32*)((char*)curve + 0x70) - *(f32*)(obj + 0x14);
+    vec[0] = *(f32*)((char*)curve + 0x68) - ((GameObject *)obj)->anim.localPosX;
+    vec[1] = *(f32*)((char*)curve + 0x6c) - ((GameObject *)obj)->anim.localPosY;
+    vec[2] = *(f32*)((char*)curve + 0x70) - ((GameObject *)obj)->anim.localPosZ;
     fn_8014C678(obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
 
     *(f32*)(state + 0x324) = *(f32*)(state + 0x324) + timeDelta;
     if (*(f32*)(state + 0x324) > lbl_803E28C8) {
-        *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) & 0xfffeffff;
+        *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 & 0xfffeffff;
         *(f32*)(state + 0x324) = lbl_803E28B0;
     }
 
@@ -985,31 +987,31 @@ void fn_80152EC0(int obj, int state)
     f32 a, b;
 
     zero = lbl_803E286C;
-    *(f32*)(state + 0x2ac) = zero;
-    *(int*)(state + 0x2e4) = 1;
-    *(f32*)(state + 0x308) = lbl_803E28A0;
-    *(f32*)(state + 0x300) = lbl_803E28A4;
+    ((BaddieState *)state)->unk2AC = zero;
+    ((BaddieState *)state)->unk2E4 = 1;
+    ((BaddieState *)state)->unk308 = lbl_803E28A0;
+    ((BaddieState *)state)->unk300 = lbl_803E28A4;
     lblA = lbl_803E2894;
-    *(f32*)(state + 0x304) = lblA;
-    *(u8*)(state + 0x320) = 1;
-    *(f32*)(state + 0x314) = lblA;
-    *(u8*)(state + 0x321) = 3;
-    *(f32*)(state + 0x318) = lblA;
-    *(u8*)(state + 0x322) = 1;
-    *(f32*)(state + 0x31c) = lblA;
-    *(f32*)(state + 0x324) = *(f32*)(obj + 0xc);
-    *(f32*)(state + 0x328) = *(f32*)(obj + 0x10);
-    *(f32*)(state + 0x32c) = *(f32*)(obj + 0x14);
-    *(u8*)(state + 0x33a) = 0;
-    *(u8*)(state + 0x33b) = 0;
+    ((BaddieState *)state)->unk304 = lblA;
+    ((BaddieState *)state)->unk320 = 1;
+    *(f32 *)&((BaddieState *)state)->eventFlags = lblA;
+    ((BaddieState *)state)->unk321 = 3;
+    ((BaddieState *)state)->unk318 = lblA;
+    ((BaddieState *)state)->unk322 = 1;
+    ((BaddieState *)state)->unk31C = lblA;
+    *(f32*)(state + 0x324) = ((GameObject *)obj)->anim.localPosX;
+    *(f32*)(state + 0x328) = ((GameObject *)obj)->anim.localPosY;
+    *(f32*)(state + 0x32c) = ((GameObject *)obj)->anim.localPosZ;
+    ((BaddieState *)state)->unk33A = 0;
+    ((BaddieState *)state)->inWhirlpoolGroup = 0;
     *(s16*)(state + 0x338) = 0;
     *(f32*)(state + 0x330) = zero;
     *(f32*)(state + 0x334) = zero;
     *(f32*)(state + 0x2fc) = lbl_803E28A8;
 
     fn_80293018((s32)(u32)*(u16*)(state + 0x338), &a, &b);
-    *(f32*)(obj + 0xc) = a * *(f32*)(state + 0x2a8) + *(f32*)(state + 0x324);
-    *(f32*)(obj + 0x14) = b * *(f32*)(state + 0x2a8) + *(f32*)(state + 0x32c);
+    ((GameObject *)obj)->anim.localPosX = a * ((BaddieState *)state)->unk2A8 + *(f32*)(state + 0x324);
+    ((GameObject *)obj)->anim.localPosZ = b * ((BaddieState *)state)->unk2A8 + *(f32*)(state + 0x32c);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1025,7 +1027,7 @@ extern int* gPartfxInterface;
 void fn_8015355C(int obj, int p2)
 {
     u8 count = 0;
-    switch (*(s16*)(obj + 0xa0)) {
+    switch (((GameObject *)obj)->anim.currentMove) {
     case 1:
         count = 1;
         break;
@@ -1059,8 +1061,8 @@ void fn_8015355C(int obj, int p2)
 #pragma peephole off
 void fn_80153BFC(int obj, int p2)
 {
-    *(u8*)(p2 + 0x33b) = *(u8*)(p2 + 0x33b) & 0xbf;
-    if ((*(u32*)(p2 + 0x2dc) & 0x40000000) != 0 && *(s16*)(obj + 0xa0) != 1) {
+    ((BaddieState *)p2)->inWhirlpoolGroup = ((BaddieState *)p2)->inWhirlpoolGroup & 0xbf;
+    if ((*(u32*)(p2 + 0x2dc) & 0x40000000) != 0 && ((GameObject *)obj)->anim.currentMove != 1) {
         Sfx_PlayFromObjectLimited(obj, 0x49c, 2);
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, p2, 1, lbl_803E290C, 0, 0);
     }
@@ -1075,21 +1077,21 @@ void fn_80153C90(int unused, int p2)
 {
     f32 ten;
     f32 oc;
-    *(f32*)(p2 + 0x2ac) = lbl_803E2924;
-    *(int*)(p2 + 0x2e4) = 1;
-    *(f32*)(p2 + 0x308) = lbl_803E28F4;
-    *(f32*)(p2 + 0x300) = lbl_803E2928;
-    *(f32*)(p2 + 0x304) = lbl_803E292C;
-    *(u8*)(p2 + 0x320) = 0;
+    ((BaddieState *)p2)->unk2AC = lbl_803E2924;
+    ((BaddieState *)p2)->unk2E4 = 1;
+    ((BaddieState *)p2)->unk308 = lbl_803E28F4;
+    ((BaddieState *)p2)->unk300 = lbl_803E2928;
+    ((BaddieState *)p2)->unk304 = lbl_803E292C;
+    ((BaddieState *)p2)->unk320 = 0;
     ten = lbl_803E2910;
-    *(f32*)(p2 + 0x314) = ten;
-    *(u8*)(p2 + 0x321) = 7;
+    *(f32 *)&((BaddieState *)p2)->eventFlags = ten;
+    ((BaddieState *)p2)->unk321 = 7;
     oc = lbl_803E290C;
-    *(f32*)(p2 + 0x318) = oc;
-    *(u8*)(p2 + 0x322) = 0;
-    *(f32*)(p2 + 0x31c) = ten;
-    *(u8*)(p2 + 0x33a) = 0;
-    *(u8*)(p2 + 0x33b) = 0;
+    ((BaddieState *)p2)->unk318 = oc;
+    ((BaddieState *)p2)->unk322 = 0;
+    ((BaddieState *)p2)->unk31C = ten;
+    ((BaddieState *)p2)->unk33A = 0;
+    ((BaddieState *)p2)->inWhirlpoolGroup = 0;
     *(f32*)(p2 + 0x324) = lbl_803E2930;
     *(f32*)(p2 + 0x2fc) = oc;
 }
@@ -1100,7 +1102,7 @@ void fn_80153C90(int unused, int p2)
 #pragma peephole off
 void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
 {
-  if (*(u8 *)(p2 + 0x33b) != 0) {
+  if (((BaddieState *)p2)->inWhirlpoolGroup != 0) {
     if (msgFlag == 16) {
       *(u32 *)(p2 + 0x2e8) = *(u32 *)(p2 + 0x2e8) | 0x28;
       Sfx_PlayFromObject(obj, SFXfox_climbgrunt4);
@@ -1159,7 +1161,7 @@ void fn_80153248(int obj, int state)
     int p29c;
 
     curve = *(int **)state;
-    if (*(u8*)(state + 0x33b) != 0) {
+    if (((BaddieState *)state)->inWhirlpoolGroup != 0) {
         *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x80;
     }
     if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
@@ -1178,19 +1180,19 @@ void fn_80153248(int obj, int state)
     }
     ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
     p29c = *(int*)(state + 0x29c);
-    vec[0] = *(f32*)(p29c + 0xc) - *(f32*)(obj + 0xc);
-    vec[1] = (lbl_803E28D8 + *(f32*)(p29c + 0x10)) - *(f32*)(obj + 0x10);
-    vec[2] = *(f32*)(p29c + 0x14) - *(f32*)(obj + 0x14);
+    vec[0] = ((GameObject *)p29c)->anim.localPosX - ((GameObject *)obj)->anim.localPosX;
+    vec[1] = (lbl_803E28D8 + ((GameObject *)p29c)->anim.localPosY) - ((GameObject *)obj)->anim.localPosY;
+    vec[2] = ((GameObject *)p29c)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ;
     PSVECMag(vec);
     *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) + timeDelta;
     if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > lbl_803E28C8) {
-        *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) | 0x10000;
+        *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 | 0x10000;
         *(f32*)(state + 0x324) = lbl_803E28B0;
         *(f32*)(state + 0x32c) = lbl_803E28B0;
     } else {
-        worldPos[0] = *(f32*)(obj + 0xc);
-        worldPos[1] = *(f32*)(obj + 0x10);
-        worldPos[2] = *(f32*)(obj + 0x14);
+        worldPos[0] = ((GameObject *)obj)->anim.localPosX;
+        worldPos[1] = ((GameObject *)obj)->anim.localPosY;
+        worldPos[2] = ((GameObject *)obj)->anim.localPosZ;
         voxmaps_worldToGrid(worldPos, gridA);
         worldPos[0] = *(f32*)((char*)curve + 0x68);
         worldPos[1] = *(f32*)((char*)curve + 0x6c);
@@ -1198,7 +1200,7 @@ void fn_80153248(int obj, int state)
         voxmaps_worldToGrid(worldPos, gridB);
         if (((countLeadingZeros(*(u32*)(state + 0x2dc)) >> 5) & 0x01000000) != 0) {
             if (voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) == 0) {
-                *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) | 0x10000;
+                *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 | 0x10000;
                 *(f32*)(state + 0x324) = lbl_803E28B0;
                 *(f32*)(state + 0x32c) = lbl_803E28B0;
             }
@@ -1222,9 +1224,9 @@ void fn_80153640(int obj, int state)
 
     if ((u8)Obj_IsLoadingLocked() != 0) {
         fx = (u8 *)Obj_AllocObjectSetup(0x24, 0x51b);
-        *(f32*)(fx + 0x8) = *(f32*)(obj + 0xc);
-        *(f32*)(fx + 0xc) = lbl_803E28F0 + *(f32*)(obj + 0x10);
-        *(f32*)(fx + 0x10) = *(f32*)(obj + 0x14);
+        ((GameObject *)fx)->anim.rootMotionScale = ((GameObject *)obj)->anim.localPosX;
+        ((GameObject *)fx)->anim.localPosX = lbl_803E28F0 + ((GameObject *)obj)->anim.localPosY;
+        ((GameObject *)fx)->anim.localPosY = ((GameObject *)obj)->anim.localPosZ;
         *(u8*)(fx + 0x4) = 1;
         *(u8*)(fx + 0x5) = 1;
         *(u8*)(fx + 0x6) = 0xff;
@@ -1232,14 +1234,14 @@ void fn_80153640(int obj, int state)
         newObj = Obj_SetupObject((int)fx, 5, -1, -1, 0);
         if (newObj != 0) {
             p29c = *(int*)(state + 0x29c);
-            *(f32*)(newObj + 0x24) = lbl_803E28F4 * (*(f32*)(p29c + 0xc) - *(f32*)(fx + 0x8));
+            ((GameObject *)newObj)->anim.velocityX = lbl_803E28F4 * (((GameObject *)p29c)->anim.localPosX - ((GameObject *)fx)->anim.rootMotionScale);
             rnd = randomGetRange(-10, 10);
             p29c = *(int*)(state + 0x29c);
-            *(f32*)(newObj + 0x28) = lbl_803E28F4 *
-                ((lbl_803E28F0 + *(f32*)(p29c + 0x10) + (f32)(s32)rnd) - *(f32*)(fx + 0xc));
+            ((GameObject *)newObj)->anim.velocityY = lbl_803E28F4 *
+                ((lbl_803E28F0 + ((GameObject *)p29c)->anim.localPosY + (f32)(s32)rnd) - ((GameObject *)fx)->anim.localPosX);
             p29c = *(int*)(state + 0x29c);
-            *(f32*)(newObj + 0x2c) = lbl_803E28F4 * (*(f32*)(p29c + 0x14) - *(f32*)(fx + 0x10));
-            *(int*)(newObj + 0xc4) = obj;
+            ((GameObject *)newObj)->anim.velocityZ = lbl_803E28F4 * (((GameObject *)p29c)->anim.localPosZ - ((GameObject *)fx)->anim.localPosY);
+            *(int *)&((GameObject *)newObj)->unkC4 = obj;
         }
         Sfx_PlayFromObject(obj, 0x49a);
     }
@@ -1263,32 +1265,32 @@ void fn_8015383C(int obj, int state)
     u32 rnd;
     s16 angle;
 
-    *(u8*)(state + 0x33b) = *(u8*)(state + 0x33b) & 0x7f;
+    ((BaddieState *)state)->inWhirlpoolGroup = ((BaddieState *)state)->inWhirlpoolGroup & 0x7f;
     losDetected = 0;
     {
         int p29c = *(int*)(state + 0x29c);
-        vec[0] = *(f32*)(obj + 0xc) - *(f32*)(p29c + 0xc);
-        vec[1] = *(f32*)(obj + 0x10) - *(f32*)(p29c + 0x10);
-        vec[2] = *(f32*)(obj + 0x14) - *(f32*)(p29c + 0x14);
+        vec[0] = ((GameObject *)obj)->anim.localPosX - ((GameObject *)p29c)->anim.localPosX;
+        vec[1] = ((GameObject *)obj)->anim.localPosY - ((GameObject *)p29c)->anim.localPosY;
+        vec[2] = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)p29c)->anim.localPosZ;
     }
     if (PSVECMag(vec) < lbl_803E2900
         && (*(u16*)(*(int*)(state + 0x29c) + 0xb0) & 0x1000) == 0) {
-        worldPos[0] = *(f32*)(obj + 0xc);
-        worldPos[1] = lbl_803E2904 + *(f32*)(obj + 0x10);
-        worldPos[2] = *(f32*)(obj + 0x14);
+        worldPos[0] = ((GameObject *)obj)->anim.localPosX;
+        worldPos[1] = lbl_803E2904 + ((GameObject *)obj)->anim.localPosY;
+        worldPos[2] = ((GameObject *)obj)->anim.localPosZ;
         voxmaps_worldToGrid(worldPos, gridA);
         {
             int p29c = *(int*)(state + 0x29c);
-            worldPos[0] = *(f32*)(p29c + 0xc);
-            worldPos[1] = lbl_803E2908 + *(f32*)(p29c + 0x10);
-            worldPos[2] = *(f32*)(p29c + 0x14);
+            worldPos[0] = ((GameObject *)p29c)->anim.localPosX;
+            worldPos[1] = lbl_803E2908 + ((GameObject *)p29c)->anim.localPosY;
+            worldPos[2] = ((GameObject *)p29c)->anim.localPosZ;
         }
         voxmaps_worldToGrid(worldPos, gridB);
         hit = (u8)voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0);
         if (hit != 0) {
             int p29c = *(int*)(state + 0x29c);
-            fn_8014CF7C(obj, state, 0x14, 0, *(f32*)(p29c + 0xc), *(f32*)(p29c + 0x14));
-            angle = (s16)(getAngle(vec[0], vec[2]) - *(s16*)obj);
+            fn_8014CF7C(obj, state, 0x14, 0, ((GameObject *)p29c)->anim.localPosX, ((GameObject *)p29c)->anim.localPosZ);
+            angle = (s16)(getAngle(vec[0], vec[2]) - ((GameObject *)obj)->anim.rotX);
             if (angle > 0x8000) angle = angle + 1;
             if (angle < -0x8000) angle = angle - 1;
             if (angle < 0) angle = -angle;
@@ -1297,26 +1299,26 @@ void fn_8015383C(int obj, int state)
     } else {
         hit = 0;
     }
-    flagByte = *(u8*)(state + 0x33b);
+    flagByte = ((BaddieState *)state)->inWhirlpoolGroup;
     if ((flagByte & 0x40) == 0) {
         Sfx_PlayFromObjectLimited(obj, 0x49b, 2);
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 2, lbl_803E290C, 0, 0);
-        *(u8*)(state + 0x33b) = (u8)((*(u8*)(state + 0x33b)) | 0x40);
-        *(u8*)(state + 0x33a) = 0;
+        ((BaddieState *)state)->inWhirlpoolGroup = (u8)((((BaddieState *)state)->inWhirlpoolGroup) | 0x40);
+        ((BaddieState *)state)->unk33A = 0;
     } else if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
         u8 mode;
         if ((u8)hit != 0) {
-            if (*(u8*)(state + 0x33a) != 0) {
-                *(u8*)(state + 0x33a) = *(u8*)(state + 0x33a) - 1;
-                mode = (u8)*(s16*)(obj + 0xa0);
-            } else if (*(s16*)(obj + 0xa0) != 5 && losDetected) {
+            if (((BaddieState *)state)->unk33A != 0) {
+                ((BaddieState *)state)->unk33A = ((BaddieState *)state)->unk33A - 1;
+                mode = (u8)((GameObject *)obj)->anim.currentMove;
+            } else if (((GameObject *)obj)->anim.currentMove != 5 && losDetected) {
                 mode = 5;
-                *(u8*)(state + 0x33a) = lbl_803DBCC0[*(u8*)(state + 0x33b) & 3];
-                *(u8*)(state + 0x33b) = (u8)((*(s8*)(state + 0x33b) + 1) & 0xc3);
+                ((BaddieState *)state)->unk33A = lbl_803DBCC0[((BaddieState *)state)->inWhirlpoolGroup & 3];
+                ((BaddieState *)state)->inWhirlpoolGroup = (u8)((*(s8 *)&((BaddieState *)state)->inWhirlpoolGroup + 1) & 0xc3);
             } else {
                 mode = 4;
                 rnd = randomGetRange(1, 2);
-                *(u8*)(state + 0x33a) = (u8)rnd;
+                ((BaddieState *)state)->unk33A = (u8)rnd;
             }
         } else {
             rnd = randomGetRange(2, 4);
@@ -1329,10 +1331,10 @@ void fn_8015383C(int obj, int state)
         }
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, mode, lbl_803E2910, 0, 0);
     }
-    if (*(s16*)(obj + 0xa0) == 5) {
-        f32 sct = *(f32*)(obj + 0x98);
+    if (((GameObject *)obj)->anim.currentMove == 5) {
+        f32 sct = ((GameObject *)obj)->anim.currentMoveProgress;
         if ((double)sct >= lbl_803E2918
-            && (double)sct < lbl_803E2918 + *(f32*)(state + 0x308) * timeDelta) {
+            && (double)sct < lbl_803E2918 + ((BaddieState *)state)->unk308 * timeDelta) {
             fn_80153640(obj, state);
             fn_8015355C(obj, state);
             return;
@@ -1354,11 +1356,11 @@ void fn_8015383C(int obj, int state)
 void fn_80153CF8(int obj, int state, int p3, int msgFlag)
 {
     int cond = 0;
-    int kind = *(s16*)(obj + 0xa0);
+    int kind = ((GameObject *)obj)->anim.currentMove;
     if (kind == 5) {
     } else if (kind == 4) {
     } else if (kind == 6) {
-        if ((double)*(f32*)(obj + 0x98) < lbl_803E2938) {
+        if ((double)((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2938) {
         } else {
             goto checkedKind;
         }
@@ -1376,7 +1378,7 @@ checkedKind:
             *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x20;
         }
     } else if (cond != 0) {
-        if (*(u8*)(state + 0x33b) == 0) {
+        if (((BaddieState *)state)->inWhirlpoolGroup == 0) {
             *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x8;
             *(s16*)(state + 0x2b0) = 0;
             Sfx_PlayFromObject(obj, SFXfox_healthgasp4);
@@ -1385,8 +1387,8 @@ checkedKind:
         *(f32*)(state + 0x32c) = lbl_803E2940;
         *(f32*)(state + 0x324) = lbl_803E2944;
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 4, lbl_803E2948, 0, 3);
-        *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) | 0x10000;
-        *(u8*)(state + 0x33b) = 0x3c;
+        *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 | 0x10000;
+        ((BaddieState *)state)->inWhirlpoolGroup = 0x3c;
     } else {
         *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x10;
     }
@@ -1403,7 +1405,7 @@ void fn_80153E0C(int obj, int state)
     u8 ctr;
 
     curve = *(int **)state;
-    *(u8*)(state + 0x33a) = 0;
+    ((BaddieState *)state)->unk33A = 0;
     *(f32*)(state + 0x328) = lbl_803E294C;
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
         if (Curve_AdvanceAlongPath(curve, *(f32*)(state + 0x2fc)) != 0 || curve[0x10/4] != 0) {
@@ -1415,13 +1417,13 @@ void fn_80153E0C(int obj, int state)
             }
         }
         if (lbl_803E294C == *(f32*)(state + 0x32c)) {
-            if (*(s16*)(obj + 0xa0) == 0) {
+            if (((GameObject *)obj)->anim.currentMove == 0) {
                 fn_8014CF7C(obj, state, 0x3c, 0, *(f32*)((char*)curve + 0x68), *(f32*)((char*)curve + 0x70));
             }
             if (*(f32*)(state + 0x324) > lbl_803E294C) {
                 *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
                 if (*(f32*)(state + 0x324) <= lbl_803E294C) {
-                    *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) & 0xfffeffff;
+                    *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 & 0xfffeffff;
                     *(f32*)(state + 0x324) = lbl_803E294C;
                 }
             }
@@ -1438,17 +1440,17 @@ void fn_80153E0C(int obj, int state)
     } else if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 0, lbl_803E2958, 0, 3);
     }
-    *(s16*)(obj + 0x2) = *(s16*)(state + 0x19c);
-    *(s16*)(obj + 0x4) = *(s16*)(state + 0x19e);
+    ((GameObject *)obj)->anim.rotY = ((BaddieState *)state)->unk19C;
+    ((GameObject *)obj)->anim.rotZ = ((BaddieState *)state)->unk19E;
     *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
     if (*(f32*)(state + 0x330) <= lbl_803E294C) {
         rnd = randomGetRange(0x3c, 0x78);
         *(f32*)(state + 0x330) = (f32)(s32)rnd;
         Sfx_PlayFromObject(obj, SFXfox_healthgasp3);
     }
-    ctr = *(u8*)(state + 0x33b);
+    ctr = ((BaddieState *)state)->inWhirlpoolGroup;
     if (ctr != 0) {
-        *(u8*)(state + 0x33b) = ctr - 1;
+        ((BaddieState *)state)->inWhirlpoolGroup = ctr - 1;
     }
 }
 #pragma peephole reset
