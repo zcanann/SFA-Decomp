@@ -4,6 +4,57 @@
 #include "main/objanim_internal.h"
 #include "main/dll/DR/DRpushcart.h"
 
+/* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
+typedef struct ShopItemState {
+    u8 pad00[4];
+    f32 controlX[4];  /* 0x04: B-spline control ring (address-passed, raw) */
+    f32 controlY[4];  /* 0x14 */
+    f32 controlZ[4];  /* 0x24 */
+    u8 pad34[0xC];
+    f32 splineT;      /* 0x40 */
+    f32 splineSpeed;  /* 0x44 */
+    u8 pad48[0x20];
+    u8 segCounter;    /* 0x68 */
+    u8 pad69[0x1F];
+    s16 msgParam;     /* 0x88: ObjMsg payload (address-used, raw) */
+    u8 pad8A[6];
+    int vendorObj;    /* 0x90: nearest group-9 shop manager */
+    s16 helpTextId;   /* 0x94 */
+    u8 pad96;
+    u8 flags97;       /* 0x97: PushcartState97 overlay */
+    u8 pad98[0xEC - 0x98];
+} ShopItemState;
+STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
+
+/* shopkeeper_getExtraSize == 0x9d8. */
+typedef struct ShopkeeperState {
+    u8 pad000[0x280];
+    f32 animSpeed;    /* 0x280 */
+    u8 pad284[0x35C - 0x284];
+    u8 dll2EBlock[0x96D - 0x35C]; /* 0x35c: dll_2E look-controller block (address-used) */
+    u8 unk96D;        /* 0x96d */
+    u8 pad96E[0x980 - 0x96E];
+    u8 eyeAnimBlock[0x9B0 - 0x980]; /* 0x980: characterDoEyeAnims block (address-used) */
+    void *msgStack;   /* 0x9b0: Stack_Free'd on free */
+    int vendorObj;    /* 0x9b4: nearest group-9 shop manager */
+    f32 unk9B8;       /* 0x9b8 */
+    u8 pad9BC[8];
+    f32 textTimer;    /* 0x9c4: gameTextShow 0x433 countdown */
+    s16 playerMoney;  /* 0x9c8 */
+    u8 pad9CA[2];
+    s16 price;        /* 0x9cc */
+    s16 unk9CE;       /* 0x9ce */
+    s16 priceShown;   /* 0x9d0 */
+    u8 unk9D2;        /* 0x9d2 */
+    u8 pad9D3;
+    u8 flags9D4;      /* 0x9d4: 2 purchased-event, 4 facing, 0x10 leave, 0x20 tick */
+    u8 unk9D5;        /* 0x9d5 */
+    u8 opacity;       /* 0x9d6: copied to obj alpha */
+    u8 pad9D7;
+} ShopkeeperState;
+STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
+STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
+
 
 extern undefined4 FUN_80006824();
 extern double FUN_80006a38();
@@ -423,7 +474,7 @@ void fn_801E7DC8(int p1, int p2, int count)
     *(u8 *)(o + 7) = 255;
     *(u8 *)(o + 4) = 16;
     *(u8 *)(o + 6) = 6;
-    *(int *)(o + 20) = *(int *)(p2 + 0x9b4);
+    *(int *)(o + 20) = ((ShopkeeperState *)p2)->vendorObj;
     Obj_SetupObject(o, 5, (s32)(s8)*(u8 *)(p1 + 0xac), -1, *(int *)(p1 + 0x30));
   }
 
@@ -439,7 +490,7 @@ void fn_801E7DC8(int p1, int p2, int count)
     *(u8 *)(o + 4) = 16;
     *(u8 *)(o + 6) = 6;
     *(u8 *)(o + 25) = 1;
-    *(int *)(o + 20) = *(int *)(p2 + 0x9b4);
+    *(int *)(o + 20) = ((ShopkeeperState *)p2)->vendorObj;
     Obj_SetupObject(o, 5, (s32)(s8)*(u8 *)(p1 + 0xac), -1, *(int *)(p1 + 0x30));
   }
 }
@@ -922,13 +973,13 @@ int fn_801E86F4(int obj, int p2, int p3)
 
   switch (((GameObject *)obj)->anim.seqId) {
   case 1127: {
-    f32 t = *(f32 *)(sub + 0x40);
+    f32 t = ((ShopItemState *)sub)->splineT;
     if (t > lbl_803E5A30) {
       u32 v;
-      *(f32 *)(sub + 0x40) = t - lbl_803E5A30;
-      v = *(u8 *)(sub + 0x68);
+      ((ShopItemState *)sub)->splineT = t - lbl_803E5A30;
+      v = ((ShopItemState *)sub)->segCounter;
       if (v >= 4) {
-        *(u8 *)(sub + 0x68) = v + 1;
+        ((ShopItemState *)sub)->segCounter = v + 1;
       } else {
         fn_801F4D54(obj, sub);
       }
@@ -936,10 +987,10 @@ int fn_801E86F4(int obj, int p2, int p3)
     }
   }
   {
-    ((GameObject *)obj)->anim.localPosX = Curve_EvalBSpline(sub + 4, *(f32 *)(sub + 0x40), 0);
-    ((GameObject *)obj)->anim.localPosY = Curve_EvalBSpline(sub + 0x14, *(f32 *)(sub + 0x40), 0);
-    ((GameObject *)obj)->anim.localPosZ = Curve_EvalBSpline(sub + 0x24, *(f32 *)(sub + 0x40), 0);
-    *(f32 *)(sub + 0x40) = *(f32 *)(sub + 0x44) * timeDelta + *(f32 *)(sub + 0x40);
+    ((GameObject *)obj)->anim.localPosX = Curve_EvalBSpline(sub + 4, ((ShopItemState *)sub)->splineT, 0);
+    ((GameObject *)obj)->anim.localPosY = Curve_EvalBSpline(sub + 0x14, ((ShopItemState *)sub)->splineT, 0);
+    ((GameObject *)obj)->anim.localPosZ = Curve_EvalBSpline(sub + 0x24, ((ShopItemState *)sub)->splineT, 0);
+    ((ShopItemState *)sub)->splineT = ((ShopItemState *)sub)->splineSpeed * timeDelta + ((ShopItemState *)sub)->splineT;
     ((GameObject *)obj)->anim.rotX = (s16)getAngle(
         ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
         ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
@@ -1092,27 +1143,27 @@ void shopkeeper_update(int obj) {
     player = Obj_GetPlayerObject();
     state = *(int *)&((GameObject *)obj)->extra;
     dist = lbl_803E5A20;
-    *(u8 *)(state + 0x9D4) &= ~0x20;
-    if (*(f32 *)(state + 0x9C4) > lbl_803E59DC) {
+    ((ShopkeeperState *)state)->flags9D4 &= ~0x20;
+    if (((ShopkeeperState *)state)->textTimer > lbl_803E59DC) {
         gameTextShow(0x433);
-        *(f32 *)(state + 0x9C4) = *(f32 *)(state + 0x9C4) - timeDelta;
-        if (*(f32 *)(state + 0x9C4) < lbl_803E59DC) {
-            *(f32 *)(state + 0x9C4) = *(f32 *)&lbl_803E59DC;
+        ((ShopkeeperState *)state)->textTimer = ((ShopkeeperState *)state)->textTimer - timeDelta;
+        if (((ShopkeeperState *)state)->textTimer < lbl_803E59DC) {
+            ((ShopkeeperState *)state)->textTimer = *(f32 *)&lbl_803E59DC;
         }
     }
-    if ((*(u8 *)(state + 0x9D4) & 0x04) != 0) {
+    if ((((ShopkeeperState *)state)->flags9D4 & 0x04) != 0) {
         shopKeeperRotateFn_801e7c4c((s16 *)obj, player, 1);
     }
     ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
-    if (*(void **)(state + 0x9B4) == NULL) {
-        *(int *)(state + 0x9B4) = ObjGroup_FindNearestObject(9, obj, &dist);
+    if (*(void **)&((ShopkeeperState *)state)->vendorObj == NULL) {
+        ((ShopkeeperState *)state)->vendorObj = ObjGroup_FindNearestObject(9, obj, &dist);
     }
-    *(s16 *)(state + 0x9C8) = (s16)playerGetMoney(player);
+    ((ShopkeeperState *)state)->playerMoney = (s16)playerGetMoney(player);
     ((void (*)(int, int, f32, f32, void *, void *))(*(int *)((int)*gPlayerInterface + 8)))
         (obj, state, timeDelta, timeDelta, lbl_803AD068, &lbl_803DDC58);
     dll_2E_func03(obj, state + 0x35C);
     characterDoEyeAnims(obj, state + 0x980);
-    *(u8 *)(obj + 0x36) = *(u8 *)(state + 0x9D6);
+    *(u8 *)(obj + 0x36) = ((ShopkeeperState *)state)->opacity;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1166,12 +1217,12 @@ void shopkeeper_init(int obj) {
     ((GameObject *)obj)->objectFlags |= 0x2000;
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E76A0;
     *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
-    *(f32 *)(state + 0x9B8) = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
-    *(void **)(state + 0x9B0) = allocModelStruct_800139e8(4, 4);
-    *(u8 *)(state + 0x9D6) = 0xFF;
-    *(f32 *)(state + 0x9C4) = lbl_803E5A28;
+    ((ShopkeeperState *)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
+    ((ShopkeeperState *)state)->msgStack = allocModelStruct_800139e8(4, 4);
+    ((ShopkeeperState *)state)->opacity = 0xFF;
+    ((ShopkeeperState *)state)->textTimer = lbl_803E5A28;
     dll_2E_func05(obj, state + 0x35C, -0x1C71, 0x3555, 2);
-    *(u8 *)(state + 0x96D) |= 0x12;
+    ((ShopkeeperState *)state)->unk96D |= 0x12;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1182,6 +1233,8 @@ typedef struct {
     u8 _rest : 6;
 } PushcartState97;
 
+
+
 #pragma scheduling off
 #pragma peephole off
 void fn_801E8660(int obj) {
@@ -1189,7 +1242,7 @@ void fn_801E8660(int obj) {
     int def = *(int *)&((GameObject *)obj)->anim.placementData;
     PushcartState97 *b = (PushcartState97 *)(state + 0x97);
     if (b->flag_40 == 0) {
-        int *vptr = *(int **)(state + 0x90);
+        int *vptr = (int *)((ShopItemState *)state)->vendorObj;
         int *cls = **(int ***)((char *)vptr + 0x68);
         if ((*(int (*)(int *, int))cls[0x2C / 4])(vptr, *(u8 *)(def + 0x19)) != 0) {
             b->flag_80 = 1;
@@ -1197,7 +1250,7 @@ void fn_801E8660(int obj) {
     }
     hudFn_8011f38c(0);
     {
-        int *vptr2 = *(int **)(state + 0x90);
+        int *vptr2 = (int *)((ShopItemState *)state)->vendorObj;
         int *cls2 = **(int ***)((char *)vptr2 + 0x68);
         (*(void (*)(int *, int))cls2[0x40 / 4])(vptr2, -1);
     }
@@ -1238,29 +1291,29 @@ void shopitem_update(int obj)
         b->flag_80 = 0;
         b->flag_40 = 1;
     } else {
-        if (*(u32 *)(state + 0x90) == 0) {
+        if (*(u32 *)&((ShopItemState *)state)->vendorObj == 0) {
             int item;
-            *(int *)(state + 0x90) = ObjGroup_FindNearestObject(9, obj, &range);
-            item = *(int *)(state + 0x90);
+            ((ShopItemState *)state)->vendorObj = ObjGroup_FindNearestObject(9, obj, &range);
+            item = ((ShopItemState *)state)->vendorObj;
             if ((u32)item != 0) {
                 if ((*(int (**)(int, int))((char *)**(int ***)(item + 0x68) + 0x28))(item, *(u8 *)(def + 0x19)) == 0
-                    || (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x2C))(*(int *)(state + 0x90), *(u8 *)(def + 0x19)) != 0) {
+                    || (*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x2C))(((ShopItemState *)state)->vendorObj, *(u8 *)(def + 0x19)) != 0) {
                     b->flag_40 = 1;
                     ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
                     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
                     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 }
-                *(s16 *)(state + 0x94) = (s16)(*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x3C))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
+                ((ShopItemState *)state)->helpTextId = (s16)(*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x3C))(((ShopItemState *)state)->vendorObj, *(u8 *)(def + 0x19));
             }
         } else {
             if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) {
                 forceAButtonIcon(0x12);
-                showHelpText(*(s16 *)(state + 0x94));
+                showHelpText(((ShopItemState *)state)->helpTextId);
             }
             if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
                 money = playerGetMoney(player);
-                price = (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x38))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
-                (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x40))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
+                price = (*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x38))(((ShopItemState *)state)->vendorObj, *(u8 *)(def + 0x19));
+                (*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x40))(((ShopItemState *)state)->vendorObj, *(u8 *)(def + 0x19));
                 switch (((GameObject *)obj)->anim.seqId) {
                 case 0x467:
                     ((GameObject *)obj)->anim.localPosY = lbl_803E5A68 + *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0xC);
@@ -1276,22 +1329,22 @@ void shopitem_update(int obj)
             }
             switch (((GameObject *)obj)->anim.seqId) {
             case 0x467: {
-                f32 t = *(f32 *)(state + 0x40);
+                f32 t = ((ShopItemState *)state)->splineT;
                 if (t > lbl_803E5A30) {
                     u32 v;
-                    *(f32 *)(state + 0x40) = t - lbl_803E5A30;
-                    v = *(u8 *)(state + 0x68);
+                    ((ShopItemState *)state)->splineT = t - lbl_803E5A30;
+                    v = ((ShopItemState *)state)->segCounter;
                     if (v >= 4) {
-                        *(u8 *)(state + 0x68) = v + 1;
+                        ((ShopItemState *)state)->segCounter = v + 1;
                     } else {
                         fn_801F4D54(obj, state);
                     }
                     fn_801F4ECC(obj, state);
                 }
-                ((GameObject *)obj)->anim.localPosX = Curve_EvalBSpline(state + 4, *(f32 *)(state + 0x40), 0);
-                ((GameObject *)obj)->anim.localPosY = Curve_EvalBSpline(state + 0x14, *(f32 *)(state + 0x40), 0);
-                ((GameObject *)obj)->anim.localPosZ = Curve_EvalBSpline(state + 0x24, *(f32 *)(state + 0x40), 0);
-                *(f32 *)(state + 0x40) = *(f32 *)(state + 0x44) * timeDelta + *(f32 *)(state + 0x40);
+                ((GameObject *)obj)->anim.localPosX = Curve_EvalBSpline(state + 4, ((ShopItemState *)state)->splineT, 0);
+                ((GameObject *)obj)->anim.localPosY = Curve_EvalBSpline(state + 0x14, ((ShopItemState *)state)->splineT, 0);
+                ((GameObject *)obj)->anim.localPosZ = Curve_EvalBSpline(state + 0x24, ((ShopItemState *)state)->splineT, 0);
+                ((ShopItemState *)state)->splineT = ((ShopItemState *)state)->splineSpeed * timeDelta + ((ShopItemState *)state)->splineT;
                 ((GameObject *)obj)->anim.rotX = (s16)getAngle(
                     ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
                     ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
@@ -1342,8 +1395,8 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
     state = state2 = *(int *)&((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     range = lbl_803E59D8;
-    *(u8 *)(state + 0x9D4) &= ~0x20;
-    if (*(u8 *)(state + 0x9D4) & 0x10) {
+    ((ShopkeeperState *)state)->flags9D4 &= ~0x20;
+    if (((ShopkeeperState *)state)->flags9D4 & 0x10) {
         if ((*(int (**)(void))(*(int *)gScreenTransitionInterface + 0x14))() != 0) {
             (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 0xC))(0x1E, 1);
             (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x4C))(*(s8 *)(data + 0x57));
@@ -1356,20 +1409,20 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
     *(void (**)(int))(data + 0xE8) = DRlaserturret_startTimedChallenge;
     *(s16 *)(data + 0x6E) = (s16)(*(s16 *)(data + 0x6E) & ~0x20);
     speed = lbl_803E59DC;
-    *(f32 *)(state2 + 0x280) = speed;
-    *(u8 *)(state + 0x9D4) |= 4;
+    ((ShopkeeperState *)state2)->animSpeed = speed;
+    ((ShopkeeperState *)state)->flags9D4 |= 4;
     if (advance != 0) {
         ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, speed, timeDelta, NULL);
     }
     if (((GameObject *)obj)->unkB4 == -1) {
         if (*(s8 *)(data + 0x56) != 0) {
-            slot = (*(int (**)(int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x44))(*(int *)(state + 0x9B4));
+            slot = (*(int (**)(int))((char *)**(int ***)(((ShopkeeperState *)state)->vendorObj + 0x68) + 0x44))(((ShopkeeperState *)state)->vendorObj);
             if (slot != -1) {
-                *(s16 *)(state + 0x9CC) = (s16)(*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x38))(*(int *)(state + 0x9B4), slot);
-                *(s16 *)(state + 0x9CE) = (s16)(*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x30))(*(int *)(state + 0x9B4), slot);
-                *(s16 *)(state + 0x9D0) = *(s16 *)(state + 0x9CC);
-                *(u8 *)(state + 0x9D2) = 0;
-                digit = *(s16 *)(state + 0x9CC);
+                ((ShopkeeperState *)state)->price = (s16)(*(int (**)(int, int))((char *)**(int ***)(((ShopkeeperState *)state)->vendorObj + 0x68) + 0x38))(((ShopkeeperState *)state)->vendorObj, slot);
+                ((ShopkeeperState *)state)->unk9CE = (s16)(*(int (**)(int, int))((char *)**(int ***)(((ShopkeeperState *)state)->vendorObj + 0x68) + 0x30))(((ShopkeeperState *)state)->vendorObj, slot);
+                ((ShopkeeperState *)state)->priceShown = ((ShopkeeperState *)state)->price;
+                ((ShopkeeperState *)state)->unk9D2 = 0;
+                digit = ((ShopkeeperState *)state)->price;
                 tex = (int *)objFindTexture(obj, 8, 0);
                 *tex = (digit % 10) * 0x100;
                 tex = (int *)objFindTexture(obj, 7, 0);
@@ -1384,7 +1437,7 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
             *(u8 *)(data + 0x56) = 0;
             *(void (**)(int))(data + 0xEC) = DRlaserturret_handlePromptChoice;
         }
-        if ((*(int (**)(int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x44))(*(int *)(state + 0x9B4)) != -1) {
+        if ((*(int (**)(int))((char *)**(int ***)(((ShopkeeperState *)state)->vendorObj + 0x68) + 0x44))(((ShopkeeperState *)state)->vendorObj) != -1) {
             setAButtonIcon(0x12);
             setBButtonIcon(0xA);
         }
@@ -1392,18 +1445,18 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
     for (i = 0; i < *(u8 *)(data + 0x8B); i++) {
         switch (*(u8 *)(data + i + 0x81)) {
         case 1:
-            fn_801E7DC8(obj, state, *(u8 *)(state + 0x9D5));
-            *(u8 *)(state + 0x9D4) |= 2;
+            fn_801E7DC8(obj, state, ((ShopkeeperState *)state)->unk9D5);
+            ((ShopkeeperState *)state)->flags9D4 |= 2;
             break;
         case 2:
             (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state2, 3);
             (*(void (**)(int, int, f32 *, int, int))(*(int *)lbl_803DCAB4 + 0xC))(obj, 0x7EF, &range, 0x50, 0);
-            *(u8 *)(state + 0x9D6) = 0;
+            ((ShopkeeperState *)state)->opacity = 0;
             break;
         case 3:
             (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state2, 2);
-            *(u8 *)(state + 0x9D4) |= 0x20;
-            *(u8 *)(state + 0x9D6) = 0xFF;
+            ((ShopkeeperState *)state)->flags9D4 |= 0x20;
+            ((ShopkeeperState *)state)->opacity = 0xFF;
             break;
         case 4:
             if (*(s16 *)((char *)player + 0x46) == 0) {
@@ -1431,17 +1484,17 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
             }
             break;
         case 9:
-            playerAddMoney(player, *(u8 *)(state + 0x9D5));
+            playerAddMoney(player, ((ShopkeeperState *)state)->unk9D5);
             break;
         case 10:
-            playerAddMoney(player, -(int)*(u8 *)(state + 0x9D5));
+            playerAddMoney(player, -(int)((ShopkeeperState *)state)->unk9D5);
             break;
         case 0xB:
             (*(void (**)(int, int, f32 *, int, int))(*(int *)lbl_803DCAB4 + 0xC))(obj, 0x7EF, &range, 0x50, 0);
             break;
         case 0xC:
-            *(u8 *)(state + 0x9D5) = 1;
-            digit = *(u8 *)(state + 0x9D5);
+            ((ShopkeeperState *)state)->unk9D5 = 1;
+            digit = ((ShopkeeperState *)state)->unk9D5;
             tex = (int *)objFindTexture(obj, 8, 0);
             *tex = (digit % 10) * 0x100;
             tex = (int *)objFindTexture(obj, 7, 0);
@@ -1455,7 +1508,7 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
             break;
         }
     }
-    *(u8 *)(obj + 0x36) = *(u8 *)(state + 0x9D6);
+    *(u8 *)(obj + 0x36) = ((ShopkeeperState *)state)->opacity;
     return 0;
 }
 #pragma peephole reset
