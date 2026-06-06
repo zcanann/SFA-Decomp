@@ -1803,8 +1803,11 @@ void cclightfoot_update(int obj)
     s16 angle;
     u32 o2;
     u32 o1;
+    u32 oFar;
+    u32 oNear;
     s16 diff;
     int valid;
+    u32 off;
     u8 i;
     f32 dist;
     int hitObj;
@@ -1822,38 +1825,47 @@ void cclightfoot_update(int obj)
     }
     o1 = state[2];
     if (o1 != 0) {
-        valid = !(fn_8014C5D0(o1) > lbl_803E4680)
-                ? 0 : (GameBit_Get(*(s16 *)(*(int *)(o1 + 0x4c) + 0x18)) != 0 ? 0 : 1);
-        if (valid != 0
-            && (o2 = state[3],
-                valid = !(fn_8014C5D0(o2) > lbl_803E4680)
-                        ? 0 : (GameBit_Get(*(s16 *)(*(int *)(o2 + 0x4c) + 0x18)) != 0 ? 0 : 1),
-                valid != 0)) {
+        if (!(fn_8014C5D0(o1) > lbl_803E4680)) {
+            valid = 0;
+        } else {
+            valid = GameBit_Get(*(s16 *)(*(int *)(o1 + 0x4c) + 0x18)) != 0 ? 0 : 1;
+        }
+        if (valid != 0) {
+            o2 = state[3];
+            if (!(fn_8014C5D0(o2) > lbl_803E4680)) {
+                valid = 0;
+            } else {
+                valid = GameBit_Get(*(s16 *)(*(int *)(o2 + 0x4c) + 0x18)) != 0 ? 0 : 1;
+            }
+        }
+        if (valid != 0) {
             dist = getXZDistance((f32 *)(state[1] + 0x18), (f32 *)(state[3] + 0x18));
             if (getXZDistance((f32 *)(state[1] + 0x18), (f32 *)(state[2] + 0x18)) < dist) {
-                o2 = state[2];
-                o1 = state[3];
+                oNear = state[2];
+                oFar = state[3];
             } else {
-                o2 = state[3];
-                o1 = state[2];
+                oNear = state[3];
+                oFar = state[2];
             }
             if ((getXZDistance((f32 *)(obj + 0x18), (f32 *)(state[1] + 0x18)) < lbl_803E4684
                  || fn_80296118(state[1]) == *(void **)(state + 2)
                  || fn_80296118(state[1]) == *(void **)(state + 3))
                 && playerIsDisguised(state[1]) == 0) {
-                if (fn_80296118(state[1]) == (void *)o1) {
-                    u32 tmp = o1 ^ o2;
-                    o2 = o2 ^ tmp;
-                    o1 = tmp ^ o2;
+                if (fn_80296118(state[1]) == (void *)oFar) {
+                    u32 tmp = oFar ^ oNear;
+                    oNear = oNear ^ tmp;
+                    oFar = tmp ^ oNear;
                 }
-                fn_8014C66C(o2, state[1]);
-                fn_8014C66C(o1, obj);
-                targetObj = o1;
-                dist = getXZDistance((f32 *)(obj + 0x18), (f32 *)(o1 + 0x18));
+                fn_8014C66C(oNear, state[1]);
+                fn_8014C66C(oFar, obj);
+                targetObj = oFar;
+                dist = getXZDistance((f32 *)(obj + 0x18), (f32 *)(oFar + 0x18));
             } else {
                 for (i = 0; i < 2; i++) {
-                    dists[i] = getXZDistance((f32 *)(obj + 0x18), (f32 *)(state[i + 2] + 0x18));
-                    fn_8014C66C(state[i + 2], obj);
+                    off = i * 4;
+                    *(f32 *)((u8 *)dists + off) =
+                        getXZDistance((f32 *)(obj + 0x18), (f32 *)(*(int *)((u8 *)state + off + 8) + 0x18));
+                    fn_8014C66C(*(int *)((u8 *)state + off + 8), obj);
                 }
                 if (dists[0] < dists[1]) {
                     targetObj = state[2];
@@ -1865,14 +1877,20 @@ void cclightfoot_update(int obj)
             }
         } else {
             o2 = state[2];
-            valid = !(fn_8014C5D0(o2) > lbl_803E4680)
-                    ? 0 : (GameBit_Get(*(s16 *)(*(int *)(o2 + 0x4c) + 0x18)) != 0 ? 0 : 1);
+            if (!(fn_8014C5D0(o2) > lbl_803E4680)) {
+                valid = 0;
+            } else {
+                valid = GameBit_Get(*(s16 *)(*(int *)(o2 + 0x4c) + 0x18)) != 0 ? 0 : 1;
+            }
             if (valid != 0) {
                 fallback = state[2];
             }
             o2 = state[3];
-            valid = !(fn_8014C5D0(o2) > lbl_803E4680)
-                    ? 0 : (GameBit_Get(*(s16 *)(*(int *)(o2 + 0x4c) + 0x18)) != 0 ? 0 : 1);
+            if (!(fn_8014C5D0(o2) > lbl_803E4680)) {
+                valid = 0;
+            } else {
+                valid = GameBit_Get(*(s16 *)(*(int *)(o2 + 0x4c) + 0x18)) != 0 ? 0 : 1;
+            }
             if (valid != 0) {
                 fallback = state[3];
             }
@@ -2075,12 +2093,15 @@ void cclightfoot_update(int obj)
         }
     }
     m = *((u8 *)state + 0x10);
-    animId = tbl->animIds[m];
-    if (animId != *(s16 *)(obj + 0xa0)) {
-        if (tbl->stateFlags[m] & 2) {
-            ObjAnim_SetCurrentMove(obj, animId, lbl_803E4698, 0);
-        } else {
-            ObjAnim_SetCurrentMove(obj, animId, lbl_803E4680, 0);
+    {
+        u8 *pa = &tbl->stateFlags[m];
+        animId = pa[0x10];
+        if (animId != *(s16 *)(obj + 0xa0)) {
+            if (pa[0] & 2) {
+                ObjAnim_SetCurrentMove(obj, animId, lbl_803E4698, 0);
+            } else {
+                ObjAnim_SetCurrentMove(obj, animId, lbl_803E4680, 0);
+            }
         }
     }
     if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, tbl->animSpeeds[*((u8 *)state + 0x10)], timeDelta,
