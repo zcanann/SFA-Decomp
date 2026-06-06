@@ -1496,7 +1496,7 @@ void *_audioAlloc(u32 size);
 void Music_ChannelLoadedCallback(MusicBank *bank, MusicChannel *channel, MusicTrigParam *trigger);
 int Sfx_ReadTriggerParams(SfxTriggerFull *trigger, u16 *outSfxId, u8 *outVol, f32 *outF6, f32 *outF7, f32 *outF8, int *outI9, int *outI10, int *outI11);
 SfxTrigger *Sfx_FindTrigger(u16 id);
-SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, f32 pitch, int c, int d);
+SfxObjectChannel *Sfx_AllocObjectChannel(int a, int b, double pitch, int c, int d);
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v);
 f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta);
 void AudioStream_StopAll(void);

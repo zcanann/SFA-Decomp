@@ -250,7 +250,12 @@ SfxTrigger *Sfx_FindTrigger(u16 id)
 
 #pragma scheduling off
 #pragma peephole off
-SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, f32 pitch, int c, int d)
+SfxObjectChannel *Sfx_AllocObjectChannel(a, b, pitch, c, d)
+s16 a;
+int b;
+double pitch;
+int c;
+int d;
 {
     extern f32 lbl_803DE594;
     SfxObjectChannel *ch;
@@ -1325,10 +1330,10 @@ void Sfx_PlayFromObjectEx(u32 obj, f32 *pos, u32 channel, u16 sfxId)
         i9 = (u8)channel;
     }
     if (obj != 0 && i9 != 0) {
-        if ((u8)i9 != 0 && obj != 0) {
-            found = Sfx_FindObjectChannel(obj, (u8)i9, 0, 0);
-        } else {
+        if ((u8)i9 == 0 || obj == 0) {
             found = NULL;
+        } else {
+            found = Sfx_FindObjectChannel(obj, (u8)i9, 0, 0);
         }
         if (found != NULL) {
             if (i10 == 0) {
@@ -1344,7 +1349,7 @@ void Sfx_PlayFromObjectEx(u32 obj, f32 *pos, u32 channel, u16 sfxId)
             found = NULL;
         }
         if (found != NULL) {
-            if (i10 != 0 || gSfxObjectChannelMatchCount == 3) {
+            if (i10 != 0 || (int)gSfxObjectChannelMatchCount == 3) {
                 sndFXKeyOff(found->handle);
                 found->handle = (u32)-1;
             }
