@@ -1,4 +1,5 @@
 #include "main/newshadows.h"
+#include "main/objanim_internal.h"
 
 extern float ABS();
 extern undefined4 FUN_800033a8();
@@ -1042,9 +1043,9 @@ void newshadows_queueShadowCaster(int object)
     }
     iVar4 = (uint)DAT_803ddbf8 * 0xc;
     *(float *)(&DAT_8038ef0c + iVar4) = (float)((double)**(float **)(object + 100) / dVar6);
-    if (*(short *)(*(int *)(object + 0x50) + 0x48) == 2) {
+    if (((ObjAnimComponent *)object)->modelInstance->shadowType == 2) {
       (&DAT_8038ef10)[iVar4] = 1;
-      if ((*(byte *)(*(int *)(object + 0x50) + 0x5f) & 4) != 0) {
+      if ((((ObjAnimComponent *)object)->modelInstance->renderFlags & 4) != 0) {
         (&DAT_8038ef10)[iVar4] = 2;
         *(float *)(&DAT_8038ef0c + iVar4) = lbl_803DFA10;
       }
@@ -3692,9 +3693,9 @@ void shadowCreate(int *obj) {
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
         *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) =
             *(f32 *)(*(int *)((char *)obj + 0x64)) / dist;
-        if (*(s16 *)(*(int *)((char *)obj + 0x50) + 0x48) == 2) {
+        if (((ObjAnimComponent *)obj)->modelInstance->shadowType == 2) {
             *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 1;
-            if (*(u8 *)(*(int *)((char *)obj + 0x50) + 0x5f) & 4) {
+            if (((ObjAnimComponent *)obj)->modelInstance->renderFlags & 4) {
                 *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 2;
                 *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) = Ydchuff_803DED80[4];
             }
