@@ -7403,7 +7403,7 @@ void dbegg_update(int obj)
             if (*(int *)(obj + 0xf8) == 0) {
                 (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
             }
-            if (fn_801FE560(obj, &h, lbl_803E61C8, lbl_803E61C8, 1) == 0) {
+            if (fn_801FE560(obj, &h, lbl_803E61C8, *(f32 *)&lbl_803E61C8, 1) == 0) {
                 *(u8 *)(blob + 0x118) = 2;
                 break;
             }
@@ -7530,7 +7530,7 @@ void dbegg_update(int obj)
             *(u8 *)(obj + 0xaf) |= 8;
             return;
         case 7:
-            fn_801FE560(obj, &h, lbl_803E61C8, lbl_803E61C8, 0);
+            fn_801FE560(obj, &h, lbl_803E61C8, *(f32 *)&lbl_803E61C8, 0);
             v = h;
             v = v >= lbl_803E61C8 ? v : -v;
             if (v < lbl_803E6220) {

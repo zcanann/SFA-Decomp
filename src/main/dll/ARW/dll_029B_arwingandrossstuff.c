@@ -144,7 +144,7 @@ void arwprojectile_placeForward(int obj, f32 dist)
     src.rot[2] = 0;
     src.scale = lbl_803E701C;
     setMatrixFromObjectPos(mtx, &src);
-    Matrix_TransformPoint(mtx, lbl_803E7008, lbl_803E7008, *(f32 *)(state + 8),
+    Matrix_TransformPoint(mtx, lbl_803E7008, *(f32 *)&lbl_803E7008, *(f32 *)(state + 8),
                           (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
     *(s16 *)obj += 0x8000;
     *(s16 *)(obj + 2) = -*(s16 *)(obj + 2);
