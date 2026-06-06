@@ -693,9 +693,7 @@ int fn_802BCE14(int obj, int p2)
     if (!((ByteFlags *)((char *)q + 0x3f0))->b40 && !((ByteFlags *)((char *)q + 0x3f1))->b04) {
         f32 v = interpolate(*(f32 *)((char *)q + 0x408) - *(f32 *)((char *)p2 + 0x294), *(f32 *)((char *)q + 0x438), timeDelta);
         f32 r = lbl_803E834C * timeDelta;
-        if ((lbl_803E834C * timeDelta <= v) && (r = v, GXInit_ClearColor * timeDelta < v)) {
-            r = GXInit_ClearColor * timeDelta;
-        }
+        r = (v < r) ? r : ((v > GXInit_ClearColor * timeDelta) ? GXInit_ClearColor * timeDelta : v);
         if (*(int *)((char *)q + 0x488) >= 0x96 && r > lbl_803E8304) {
             r = lbl_803E8314 * -r;
         }
@@ -703,9 +701,7 @@ int fn_802BCE14(int obj, int p2)
         {
             f32 vv = *(f32 *)((char *)p2 + 0x294);
             f32 t = **(f32 **)((char *)q + 0x400);
-            if ((t <= vv) && (t = vv, *(f32 *)((char *)q + 0x404) < vv)) {
-                t = *(f32 *)((char *)q + 0x404);
-            }
+            t = (vv < t) ? t : ((vv > *(f32 *)((char *)q + 0x404)) ? *(f32 *)((char *)q + 0x404) : vv);
             *(f32 *)((char *)p2 + 0x294) = t;
         }
         *(f32 *)((char *)p2 + 0x284) = lbl_803E8304;
@@ -713,9 +709,7 @@ int fn_802BCE14(int obj, int p2)
         f32 vv = *(f32 *)((char *)p2 + 0x294);
         f32 h = *(f32 *)((char *)q + 0x404);
         f32 t = -h;
-        if ((-h <= vv) && (t = vv, h < vv)) {
-            t = h;
-        }
+        t = (vv < t) ? t : ((vv > h) ? h : vv);
         *(f32 *)((char *)p2 + 0x294) = t;
     }
     *(f32 *)((char *)p2 + 0x280) += interpolate(*(f32 *)((char *)p2 + 0x294) - *(f32 *)((char *)p2 + 0x280), *(f32 *)((char *)q + 0x82c), timeDelta);
@@ -970,17 +964,13 @@ void DR_EarthWarrior_hitDetect(int obj)
                 {
                     f32 vv = *(f32 *)((char *)inner + 0x280);
                     f32 t = lbl_803E8378;
-                    if ((lbl_803E8378 <= vv) && (t = vv, *(f32 *)((char *)inner + 0xf5c) < vv)) {
-                        t = *(f32 *)((char *)inner + 0xf5c);
-                    }
+                    t = (vv < t) ? t : ((vv > *(f32 *)((char *)inner + 0xf5c)) ? *(f32 *)((char *)inner + 0xf5c) : vv);
                     *(f32 *)((char *)inner + 0x280) = t;
                 }
                 {
                     f32 vv = *(f32 *)((char *)inner + 0x280);
                     f32 t = lbl_803E8304;
-                    if ((lbl_803E8304 <= vv) && (t = vv, spd < vv)) {
-                        t = spd;
-                    }
+                    t = (vv < t) ? t : ((vv > spd) ? spd : vv);
                     *(f32 *)((char *)inner + 0x280) = t;
                 }
                 if (!((ByteFlags *)((char *)inner + 0xf48))->b40) {

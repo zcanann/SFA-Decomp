@@ -65,10 +65,7 @@ void camcontrol_applyState(short *param_1)
       PSVECNormalize(delta,delta);
     }
     fVar6 = interpolate(fVar5,lbl_803E1668,timeDelta);
-    fVar5 = lbl_803E1630;
-    if ((fVar5 <= fVar6) && (fVar5 = fVar6, (lbl_803E166C * timeDelta) < fVar6)) {
-      fVar5 = lbl_803E166C * timeDelta;
-    }
+    fVar5 = (fVar6 < lbl_803E1630) ? lbl_803E1630 : ((fVar6 > lbl_803E166C * timeDelta) ? lbl_803E166C * timeDelta : fVar6);
     *(float *)(psVar3 + 6) = fVar5 * delta[0] + *(float *)(psVar3 + 6);
     *(float *)(psVar3 + 8) = fVar5 * delta[1] + *(float *)(psVar3 + 8);
     *(float *)(psVar3 + 10) = fVar5 * delta[2] + *(float *)(psVar3 + 10);
@@ -84,9 +81,7 @@ void camcontrol_applyState(short *param_1)
     *(float *)(param_1 + 0x7a) =
          -(*(float *)(param_1 + 0x7c) * timeDelta - *(float *)(param_1 + 0x7a));
     fVar1 = *(float *)(param_1 + 0x7a);
-    if ((fVar2 <= fVar1) && (fVar2 = fVar1, lbl_803E162C < fVar1)) {
-      fVar2 = lbl_803E162C;
-    }
+    fVar2 = (fVar1 < fVar2) ? fVar2 : ((fVar1 > lbl_803E162C) ? lbl_803E162C : fVar1);
     *(float *)(param_1 + 0x7a) = fVar2;
     if (pCamera[0x139] == '\x02') {
       fVar2 = *(float *)(param_1 + 0x7a);
