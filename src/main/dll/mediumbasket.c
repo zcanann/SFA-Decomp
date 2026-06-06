@@ -256,21 +256,21 @@ void FUN_8015b218(int param_1,int param_2)
   float fVar1;
   uint uVar2;
   
-  *(float *)(param_2 + 0x2ac) = lbl_803E3958;
-  *(char *)(param_2 + 0x33b) = (char)(int)*(float *)(param_2 + 0x2a8);
-  *(float *)(param_2 + 0x2a8) = lbl_803E395C;
+  ((GroundBaddieState *)param_2)->baddie.unk2AC = lbl_803E3958;
+  *(char *)(param_2 + 0x33b) = (char)(int)((GroundBaddieState *)param_2)->baddie.unk2A8;
+  ((GroundBaddieState *)param_2)->baddie.unk2A8 = lbl_803E395C;
   *(undefined4 *)(param_2 + 0x2e4) = 0x42003;
-  *(float *)(param_2 + 0x308) = lbl_803E3960;
-  *(float *)(param_2 + 0x300) = lbl_803E3964;
-  *(float *)(param_2 + 0x304) = lbl_803E3968;
-  *(undefined *)(param_2 + 800) = 0;
+  ((GroundBaddieState *)param_2)->baddie.unk308 = lbl_803E3960;
+  ((GroundBaddieState *)param_2)->baddie.unk300 = lbl_803E3964;
+  ((GroundBaddieState *)param_2)->baddie.unk304 = lbl_803E3968;
+  ((GroundBaddieState *)param_2)->baddie.unk320 = 0;
   fVar1 = lbl_803E396C;
   *(float *)(param_2 + 0x314) = lbl_803E396C;
-  *(undefined *)(param_2 + 0x321) = 10;
-  *(float *)(param_2 + 0x318) = fVar1;
-  *(undefined *)(param_2 + 0x322) = 7;
-  *(float *)(param_2 + 0x31c) = fVar1;
-  *(undefined *)(param_2 + 0x33a) = 1;
+  ((GroundBaddieState *)param_2)->baddie.unk321 = 10;
+  ((GroundBaddieState *)param_2)->baddie.unk318 = fVar1;
+  ((GroundBaddieState *)param_2)->baddie.unk322 = 7;
+  ((GroundBaddieState *)param_2)->baddie.unk31C = fVar1;
+  ((GroundBaddieState *)param_2)->baddie.unk33A = 1;
   uVar2 = countLeadingZeros(0x84b - *(short *)(param_1 + 0x46));
   *(short *)(param_2 + 0x338) = (short)(uVar2 >> 5);
   return;
@@ -362,22 +362,22 @@ void FUN_8015b3d4(int param_1,int param_2)
   float fVar1;
   int iVar2;
   
-  *(float *)(param_2 + 0x2ac) = lbl_803E3980;
-  *(char *)(param_2 + 0x33b) = (char)(int)*(float *)(param_2 + 0x2a8);
-  *(float *)(param_2 + 0x2a8) = lbl_803E3984;
+  ((GroundBaddieState *)param_2)->baddie.unk2AC = lbl_803E3980;
+  *(char *)(param_2 + 0x33b) = (char)(int)((GroundBaddieState *)param_2)->baddie.unk2A8;
+  ((GroundBaddieState *)param_2)->baddie.unk2A8 = lbl_803E3984;
   *(undefined4 *)(param_2 + 0x2e4) = 0x42001;
-  *(float *)(param_2 + 0x308) = lbl_803E3988;
-  *(float *)(param_2 + 0x300) = lbl_803E398C;
-  *(float *)(param_2 + 0x304) = lbl_803E3990;
-  *(undefined *)(param_2 + 800) = 0;
+  ((GroundBaddieState *)param_2)->baddie.unk308 = lbl_803E3988;
+  ((GroundBaddieState *)param_2)->baddie.unk300 = lbl_803E398C;
+  ((GroundBaddieState *)param_2)->baddie.unk304 = lbl_803E3990;
+  ((GroundBaddieState *)param_2)->baddie.unk320 = 0;
   fVar1 = lbl_803E3994;
   *(float *)(param_2 + 0x314) = lbl_803E3994;
-  *(undefined *)(param_2 + 0x321) = 5;
-  *(float *)(param_2 + 0x318) = fVar1;
-  *(undefined *)(param_2 + 0x322) = 7;
-  *(float *)(param_2 + 0x31c) = fVar1;
-  *(undefined *)(param_2 + 0x33a) = 1;
-  *(undefined *)(param_2 + 0x33b) = 0;
+  ((GroundBaddieState *)param_2)->baddie.unk321 = 5;
+  ((GroundBaddieState *)param_2)->baddie.unk318 = fVar1;
+  ((GroundBaddieState *)param_2)->baddie.unk322 = 7;
+  ((GroundBaddieState *)param_2)->baddie.unk31C = fVar1;
+  ((GroundBaddieState *)param_2)->baddie.unk33A = 1;
+  ((GroundBaddieState *)param_2)->baddie.inWhirlpoolGroup = 0;
   iVar2 = FUN_80017a54(param_1);
   FUN_80017964(iVar2,FUN_8006fb00);
   return;
@@ -635,9 +635,9 @@ undefined4 FUN_8015bbc8(int param_1,int param_2)
   
   if (*(char *)(param_2 + 0x27b) != '\0') {
     iVar1 = *(int *)(param_1 + 0xb8);
-    *(undefined *)(iVar1 + 0x405) = 0;
-    GameBit_Set((int)*(short *)(iVar1 + 0x3f4),0);
-    GameBit_Set((int)*(short *)(iVar1 + 0x3f2),1);
+    ((GroundBaddieState *)iVar1)->unk405 = 0;
+    GameBit_Set((int)((GroundBaddieState *)iVar1)->gameBitB,0);
+    GameBit_Set((int)((GroundBaddieState *)iVar1)->gameBitA,1);
   }
   return 0;
 }
@@ -747,15 +747,15 @@ undefined4 FUN_8015be40(int param_1,int param_2)
   iVar3 = *(int *)(param_1 + 0xb8);
   if (*(int *)(param_2 + 0x2d0) != 0) {
     if (*(char *)(param_2 + 0x27b) != '\0') {
-      *(float *)(param_2 + 0x284) = lbl_803E39AC;
-      *(float *)(param_2 + 0x280) = fVar1;
-      if (*(byte *)(iVar3 + 0x406) < 0x33) {
+      ((GroundBaddieState *)param_2)->baddie.animSpeedB = lbl_803E39AC;
+      ((GroundBaddieState *)param_2)->baddie.animSpeedA = fVar1;
+      if (((GroundBaddieState *)iVar3)->aggression < 0x33) {
         (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,1);
       }
-      else if ((*(float *)(param_2 + 0x2c0) <
+      else if ((((GroundBaddieState *)param_2)->baddie.unk2C0 <
                 lbl_803E39BC *
-                (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar3 + 0x3fe)) -
-                       DOUBLE_803e39a0)) || ((*(byte *)(iVar3 + 0x404) & 2) != 0)) {
+                (float)((double)CONCAT44(0x43300000,(uint)((GroundBaddieState *)iVar3)->unk3FE) -
+                       DOUBLE_803e39a0)) || ((((GroundBaddieState *)iVar3)->configFlags & 2) != 0)) {
         (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,0);
       }
       else {
@@ -769,8 +769,8 @@ undefined4 FUN_8015be40(int param_1,int param_2)
         return 5;
       }
       if ((lbl_803E39BC *
-           (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar3 + 0x3fe)) - DOUBLE_803e39a0)
-           <= *(float *)(param_2 + 0x2c0)) && ((*(byte *)(iVar3 + 0x404) & 2) == 0)) {
+           (float)((double)CONCAT44(0x43300000,(uint)((GroundBaddieState *)iVar3)->unk3FE) - DOUBLE_803e39a0)
+           <= ((GroundBaddieState *)param_2)->baddie.unk2C0) && ((((GroundBaddieState *)iVar3)->configFlags & 2) == 0)) {
         return 7;
       }
       return 8;
@@ -1843,18 +1843,18 @@ void FUN_8015e038(int param_1,int param_2,int param_3)
   uint uVar2;
   
   ObjHits_DisableObject(param_1);
-  if ((*(byte *)(param_2 + 0x404) & 4) == 0) {
-    if ((*(byte *)(param_2 + 0x404) & 8) == 0) {
+  if ((((GroundBaddieState *)param_2)->configFlags & 4) == 0) {
+    if ((((GroundBaddieState *)param_2)->configFlags & 8) == 0) {
       iVar1 = (**(code **)(*DAT_803dd738 + 0x48))
                         ((double)(float)((double)CONCAT44(0x43300000,
-                                                          (uint)*(ushort *)(param_2 + 0x3fe)) -
+                                                          (uint)((GroundBaddieState *)param_2)->unk3FE) -
                                         DOUBLE_803e39a0),param_1,param_3,0x8000);
     }
     else {
       iVar1 = (**(code **)(*DAT_803dd738 + 0x48))
                         ((double)(lbl_803E39BC *
                                  (float)((double)CONCAT44(0x43300000,
-                                                          (uint)*(ushort *)(param_2 + 0x3fe)) -
+                                                          (uint)((GroundBaddieState *)param_2)->unk3FE) -
                                         DOUBLE_803e39a0)),param_1,param_3,0x8000);
     }
   }
@@ -1870,7 +1870,7 @@ void FUN_8015e038(int param_1,int param_2,int param_3)
   }
   if (iVar1 != 0) {
     (**(code **)(*DAT_803dd738 + 0x28))
-              (param_1,param_3,param_2 + 0x35c,(int)*(short *)(param_2 + 0x3f4),0,0,0,8,0xffffffff);
+              (param_1,param_3,param_2 + 0x35c,(int)((GroundBaddieState *)param_2)->gameBitB,0,0,0,8,0xffffffff);
     *(int *)(param_3 + 0x2d0) = iVar1;
     *(undefined *)(param_3 + 0x349) = 0;
     *(undefined2 *)(param_2 + 0x402) = 1;
