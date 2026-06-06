@@ -20,6 +20,10 @@ static inline int *Player_GetActiveModel(int obj) {
     return (int *)objAnim->banks[objAnim->bankIndex];
 }
 
+static inline ObjHitsPriorityState *Player_GetObjHitsState(int obj) {
+    return (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+}
+
 #pragma scheduling off
 #pragma peephole off
 int fn_80295CE4(int obj)
@@ -5127,7 +5131,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         lbl_803DE459 = 0;
         changed = 1;
         inner->flags360 &= ~0x40;
-        *(u8 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+        Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
         {
             f32 z = lbl_803E7EA4;
             inner->unk828 = z;
@@ -5192,7 +5196,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             }
         }
         if (((GameObject *)obj)->anim.hitReactState != NULL) {
-            *(u8 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+            Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
         }
         inner->unk8CD = -1;
         if (*(s16 *)((char *)path + 0x44) == 0x2d) {
@@ -5265,7 +5269,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             int ent = inner->unk3DC + stride + off;
             if (((GameObject *)obj)->anim.currentMoveProgress >= *(f32 *)(ent + 0x30) &&
                 ((GameObject *)obj)->anim.currentMoveProgress <= *(f32 *)(ent + 0x3c)) {
-                if (*(s8 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) == 0) {
+                if (Player_GetObjHitsState(obj)->suppressOutgoingHits == 0) {
                     int bits;
                     switch (*(s8 *)((char *)inner->unk3DC + stride + i + 0x5d)) {
                     case -1:
@@ -5293,7 +5297,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                     ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->objectHitMask = bits;
                 }
                 if (i != inner->unk8CD) {
-                    *(u8 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+                    Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
                     inner->unk8CD = (s8)i;
                     inner->unk8AB = 0;
                     inner->unk828 = lbl_803E7EA4;
@@ -5324,7 +5328,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                     return 0x32;
                 }
             } else if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
-                *(u8 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+                Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
                 inner->unk8CD = -1;
                 (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x30)))(obj, state, fv, 2);
                 {
@@ -5338,7 +5342,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         }
         return 0;
     } else {
-        *(u8 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+        Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
         if (((PlayerState *)state)->baddie.targetObj == NULL) {
             inner->unk3F1 = (inner->unk3F1 & 0x7f) | 0x80;
             inner->flags360 |= 0x800000;
@@ -7526,7 +7530,7 @@ void playerDoHitDetection(int obj)
             if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0 &&
                 (*(void **)((sub = *(int *)((char *)lbl_803DE44C + 0x54)) + 0x50) != NULL ||
                  (*(s8 *)(sub + 0xad) != 0 && *(s8 *)(sub + 0xac) != 0xe))) {
-                *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 1;
+                Player_GetObjHitsState(obj)->suppressOutgoingHits = 1;
                 ((PlayerState *)inner)->unk7D8 = lbl_803E7EA4;
                 *(u8 *)((char *)inner + 0x8ce) = *(u8 *)((char *)inner + 0x8cd);
                 {
@@ -7579,8 +7583,8 @@ void playerDoHitDetection(int obj)
                     }
                 }
             }
-            if (*(void **)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x50) != NULL) {
-                *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 1;
+            if (Player_GetObjHitsState(obj)->lastHitObject != 0) {
+                Player_GetObjHitsState(obj)->suppressOutgoingHits = 1;
                 ((PlayerState *)inner)->unk7D8 = lbl_803E7EA4;
                 *(u8 *)((char *)inner + 0x8ce) = *(u8 *)((char *)inner + 0x8cd);
                 {
@@ -7604,7 +7608,7 @@ void playerDoHitDetection(int obj)
                         (f32)(u32)((PlayerState *)inner)->unk8AD;
                     ((PlayerState *)inner)->unk8AB += 1;
                     ((PlayerState *)inner)->unk4C0 =
-                        *(int *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x50);
+                        Player_GetObjHitsState(obj)->lastHitObject;
                 }
                 }
             }
@@ -10515,7 +10519,7 @@ int fn_8029BC4C(int obj, int state, f32 fv)
         lbl_803DE459 = 0;
     }
     if (*(s8 *)((char *)state + 0x346) != 0) {
-        *(u8 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+        Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
         if (((PlayerState *)state)->baddie.targetObj != NULL) {
             *(int *)((char *)state + 0x308) = (int)fn_8029C8C8;
             return 0x25;
