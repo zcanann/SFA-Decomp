@@ -574,7 +574,6 @@ extern void DCInvalidateRange(void *p, u32 n);
 extern int DVDReadAsyncPrio(void *fi, void *addr, int len, int off, void (*cb)(), int prio);
 extern void mergeTableFiles(void *buf, int a, int b, int n);
 extern void texRestructRefs(int a);
-extern void piRomLoadSection(int a, int idx, int b);
 extern void animCurvReadCb();
 extern void animCurvTabReadCb();
 extern void voxMapReadCb();

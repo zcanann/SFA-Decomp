@@ -368,7 +368,6 @@ extern u8 *Obj_GetPlayerObject(void);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_PlayAtPositionFromObject(u8 *obj, f32 x, f32 y, f32 z, int sfxId);
 extern int randomGetRange(int min, int max);
-void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type);
 
 #pragma peephole off
 #pragma scheduling off
@@ -7317,11 +7316,7 @@ s32 saveGameGetStatus(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void cardShowLoadingMsg(u8);
 extern int saveGame_prepareAndWrite(int, int, int, int, int, void*);
-extern void showMemCardError(u8);
-extern int cardCb_8007e6d4(u8, int, void*, void*);
-extern int saveCb_8007e748(int, int, void*);
 extern void saveCb_8007e77c(void);
 extern u8 lbl_803DD058;
 
