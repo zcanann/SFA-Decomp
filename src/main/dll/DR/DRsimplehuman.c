@@ -160,7 +160,7 @@ void spdrape_update(int obj)
         }
         break;
     }
-    *(u8 *)((char *)state + 0x16) = ObjAnim_AdvanceCurrentMove(*state, timeDelta, obj, NULL);
+    *(u8 *)((char *)state + 0x16) = ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *state, timeDelta, NULL);
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -1040,7 +1040,7 @@ int fn_801B2550(int *obj, int p2, char *p3)
                 }
                 Sfx_StopObjectChannel(obj, 2);
             }
-            ObjAnim_AdvanceCurrentMove(lbl_803DBEF4, timeDelta, (int)obj, NULL);
+            ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803DBEF4, timeDelta, NULL);
         }
     } else {
         s16 *vec2;

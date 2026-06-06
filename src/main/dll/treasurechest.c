@@ -113,7 +113,7 @@ void dll_D3_update(int *obj)
         }
     }
 
-    ObjAnim_AdvanceCurrentMove(*(f32 *)((char *)extra + 0x44), timeDelta, (int)obj, NULL);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, *(f32 *)((char *)extra + 0x44), timeDelta, NULL);
 
     if (*(s16 *)((char *)state + 0x402) != 1) {
         rc = ((int (*)(f32, int *, int *, int))((void **)*(int *)gBaddieControlInterface)[0x48 / 4])(

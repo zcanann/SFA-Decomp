@@ -107,7 +107,7 @@ void ediblemushroom_init(int obj, int aux)
         ((f32)*(u8 *)(aux + 0x1c) / lbl_803E52E8);
 
     ObjAnim_SetCurrentMove(obj, 1, lbl_803E5288, 0);
-    ObjAnim_AdvanceCurrentMove(lbl_803E52A8, lbl_803E52A8, obj, &animEvents);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E52A8, lbl_803E52A8, &animEvents);
     *(f32 *)(state + 0x118) = animEvents.rootDeltaX;
     if (*(f32 *)(state + 0x118) < lbl_803E5288) {
         *(f32 *)(state + 0x118) = -*(f32 *)(state + 0x118);
@@ -116,7 +116,7 @@ void ediblemushroom_init(int obj, int aux)
     *(f32 *)(state + 0x118) = *(f32 *)(state + 0x118) + lbl_803E52A0;
 
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E5288, 0);
-    ObjAnim_AdvanceCurrentMove(lbl_803E52A8, lbl_803E52A8, obj, &animEvents);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E52A8, lbl_803E52A8, &animEvents);
     *(f32 *)(state + 0x11c) = animEvents.rootDeltaZ;
     if (*(f32 *)(state + 0x11c) < lbl_803E5288) {
         *(f32 *)(state + 0x11c) = -*(f32 *)(state + 0x11c);

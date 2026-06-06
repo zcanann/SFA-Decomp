@@ -1508,7 +1508,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
             }
 
             if (action != NULL) {
-                ObjAnim_AdvanceCurrentMove(speed, lbl_803DEFC8, (int)activeObj,
+                ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)activeObj, speed, lbl_803DEFC8,
                                            (ObjAnimEventList *)(seq + 0xf0));
                 if (mode != 0) {
                     if (*(f32 *)(seq + 0x20) > lbl_803DEFB0) {
@@ -2581,7 +2581,7 @@ int ObjSeq_update(u8 *obj, f32 t)
                 }
 
                 if (action != NULL) {
-                    ObjAnim_AdvanceCurrentMove(scratch[1], lbl_803DEFC8, (int)activeObj,
+                    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)activeObj, scratch[1], lbl_803DEFC8,
                                                (ObjAnimEventList *)(seq + 0xf0));
                     if (*(f32 *)(seq + 0x20) > lbl_803DEFB0) {
                         if (*(s16 *)(seq + 0xd6) != 0) {

@@ -233,7 +233,7 @@ void snowclaw_updateMountAttack(int obj, int mount) {
                                             *(u16 *)(inner + 0xa8) + 2, magnitude);
     }
 
-    if (ObjAnim_AdvanceCurrentMove(moveStep, (f32)(u8)framesThisStep, obj, NULL) != 0 &&
+    if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, moveStep, (f32)(u8)framesThisStep, NULL) != 0 &&
         *(s16 *)(obj + 0xa0) != *(u16 *)(inner + 0xa8)) {
         *(f32 *)(inner + 0x30) = lbl_803E66EC;
         delay = *(int *)(inner + 0x9c);

@@ -1689,7 +1689,7 @@ void Tricky_update(int obj)
   if (*(f32 *)(state + 0x34) == lbl_803E23DC) {
     ObjAnim_SetMoveProgress(*(f32 *)(state + 0x3c),(ObjAnimComponent *)obj);
   }
-  if (ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 0x34),timeDelta,obj,(void *)(state + 0x80c)) != 0) {
+  if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj,*(f32 *)(state + 0x34),timeDelta,(void *)(state + 0x80c)) != 0) {
     *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x8000000;
   } else {
     *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xf7ffffff;

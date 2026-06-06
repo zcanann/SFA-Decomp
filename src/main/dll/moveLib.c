@@ -1867,7 +1867,7 @@ int dll_2E_func07(int obj, char *state, char *st, s16 a, s16 b)
                 break;
             }
             *(int *)(st + 0x604) = player;
-            ObjAnim_AdvanceCurrentMove(*(f32 *)(st + 0x0), (f32)framesThisStep, obj, NULL);
+            ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *(f32 *)(st + 0x0), (f32)framesThisStep, NULL);
             if (*(u8 *)(st + 0x600) == 7) {
                 s16 *v;
                 *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 8;

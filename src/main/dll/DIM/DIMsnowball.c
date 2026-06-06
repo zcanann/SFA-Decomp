@@ -2088,8 +2088,8 @@ void cclightfoot_update(int obj)
             ObjAnim_SetCurrentMove(obj, animId, lbl_803E4680, 0);
         }
     }
-    if (ObjAnim_AdvanceCurrentMove(tbl->animSpeeds[*((u8 *)state + 0x10)], timeDelta,
-                                   obj, NULL) != 0) {
+    if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, tbl->animSpeeds[*((u8 *)state + 0x10)], timeDelta,
+                                   NULL) != 0) {
         *((u8 *)state + 0x11) |= 1;
     } else {
         *((u8 *)state + 0x11) &= ~1;

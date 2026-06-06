@@ -209,7 +209,7 @@ void drbarrelgr_update(int obj)
         break;
     }
 
-    ObjAnim_AdvanceCurrentMove(lbl_803E6CC0, timeDelta, obj, 0);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6CC0, timeDelta, 0);
     if (newMode != -1 && newMode != *(int *)(state + 0)) {
         *(int *)(state + 4) = *(int *)(state + 0);
         *(int *)(state + 0) = newMode;

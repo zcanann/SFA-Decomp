@@ -211,7 +211,7 @@ void nw_mammoth_update(int obj,int param_2)
     }
     *(f32 *)(state + 0x4c) = NW_MAMMOTH_MOVE_STEP_SCALES(table)[state[0x408]];
   }
-  if (ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 0x4c), timeDelta, obj,
+  if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *(f32 *)(state + 0x4c), timeDelta,
                                  (ObjAnimEventList *)(state + 0x440)) != 0) {
     state[0x43c] = (u8)(state[0x43c] | NW_MAMMOTH_RUNTIME_ANIM_ENDED);
   } else {

@@ -131,7 +131,7 @@ void tree_init(int obj, u8 *setup)
         *(f32 *)(state + 0x48) = lbl_803E7308;
     }
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E72F8, 0);
-    ObjAnim_AdvanceCurrentMove(lbl_803E7308, lbl_803E7308, obj, &animOut);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7308, lbl_803E7308, &animOut);
     if (*(u16 *)(state + 0x58) & 0x80) {
         *(u16 *)(state + 0x58) |= 0x20;
     }

@@ -200,7 +200,7 @@ void camcontrol_updateTargetFeedback(void)
       }
     }
     else {
-      ObjAnim_AdvanceCurrentMove(lbl_803E1670,timeDelta,(int)reticle,
+      ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)reticle,lbl_803E1670,timeDelta,
                                  (ObjAnimEventList *)0x0);
     }
   }

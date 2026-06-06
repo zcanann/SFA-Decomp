@@ -1291,7 +1291,7 @@ void deathseq_update(int* obj)
             AudioStream_Play(0x51e1, (void*)AudioStream_StartPrepared);
             ObjAnim_SetCurrentMove((int)obj, 0x92, lbl_803E3D1C, 0);
         }
-        ObjAnim_AdvanceCurrentMove(lbl_803E3D20, timeDelta, (int)obj, NULL);
+        ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3D20, timeDelta, NULL);
         if (*(f32*)((char*)obj + 0x98) > lbl_803E3D24) {
             tex = objFindTexture(obj, 5, 0);
             *tex = 0;
@@ -1318,7 +1318,7 @@ void deathseq_update(int* obj)
     } else {
         state->distTarget = lbl_803E3D2C;
         if (((int(*)(void))((void**)*gScreenTransitionInterface)[5])() != 0) {
-            ObjAnim_AdvanceCurrentMove(lbl_803E3D20, timeDelta, (int)obj, NULL);
+            ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3D20, timeDelta, NULL);
             ready = 1;
         }
         if (*(f32*)((char*)obj + 0x98) > lbl_803E3D24) {
