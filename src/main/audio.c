@@ -1629,7 +1629,7 @@ int musicInitMidiWad(void)
     if (!gMidiWadLoadStarted) {
         gMidiWadLoadStarted = 1;
         ch = gMusicChannels;
-        for (i = 0; i < 16; i++) {
+        for (i = 16; i != 0; i--) {
             ch->field_0 = -1;
             ch->seqHandle = -1;
             ch->bankData = NULL;
@@ -1669,11 +1669,13 @@ int musicInitMidiWad(void)
                 found->offset = arenaOffset;
                 found->size = ((int *)gMidiWadFileData)[track];
             }
-            size = found->size;
-            if (size & 0x1f) {
-                size = (size | 0x1f) + 1;
+            {
+                u32 size2 = found->size;
+                if (size2 & 0x1f) {
+                    size2 = (size2 | 0x1f) + 1;
+                }
+                arenaOffset += size2;
             }
-            arenaOffset += size;
         }
         fn_80008F38(gMidiWadPayloadStart, gMidiWadArenaSize, gMidiWadPayloadSize);
         saved = mmSetFreeDelay(0);
