@@ -1,4 +1,5 @@
 #include "main/audio/inp_midi.h"
+#include "main/audio/mcmd.h"
 
 extern void *memcpy(void *dst, const void *src, u32 n);
 extern int inpTranslateExCtrl(int input);
@@ -174,20 +175,33 @@ void inpResetChannelDefaults(u8 a, u8 b)
  *
  * EN v1.1 Address: 0x80281E30, size 156b
  */
+typedef struct InpCtrlRing {
+    struct {
+        u8 ctrl;   /* 0x0 */
+        u8 flags;  /* 0x1 */
+        u8 pad[2];
+        int value; /* 0x4 */
+    } slots[4];    /* 0x00 */
+    u8 pad20[2];   /* 0x20 */
+    u8 count;      /* 0x22 */
+} InpCtrlRing;
+
 void inpAddCtrl(int obj, int b, int c, int d, u32 flag)
 {
+    InpCtrlRing *ring = (InpCtrlRing *)obj;
     u8 counter;
     if ((d & 0xff) == 0) {
-        *(u8 *)(obj + 0x22) = 0;
+        ring->count = 0;
     }
-    counter = *(u8 *)(obj + 0x22);
+    counter = ring->count;
     if (counter < 4) {
-        *(u8 *)(obj + 0x22) = counter + 1;
+        ring->count = counter + 1;
         if (flag == 0) {
             b = inpTranslateExCtrl(b);
         } else {
             d |= 0x10;
         }
+        /* raw: slots[counter].ctrl member form emits stbx, target has add+stb 0 */
         *(u8 *)(obj + counter * 8) = (u8)b;
         *(u8 *)(obj + counter * 8 + 1) = (u8)d;
         *(int *)(obj + counter * 8 + 4) = c;
@@ -206,8 +220,8 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
     u8 *bank;
 
     ctrl = controller & 0xff;
-    dstVoice = *(u32 *)(dstState + 0xf4) & 0xff;
-    srcVoice = *(u32 *)(srcState + 0xf4) & 0xff;
+    dstVoice = ((McmdVoiceState *)dstState)->voiceHandle & 0xff;
+    srcVoice = ((McmdVoiceState *)srcState)->voiceHandle & 0xff;
     stateBase = (u8 *)lbl_803CD760;
 
     if (ctrl < 0x40) {
