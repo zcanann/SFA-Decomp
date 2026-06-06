@@ -3,6 +3,45 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/object_descriptor.h"
+#include "main/objanim_internal.h"
+
+extern ObjectDescriptor gFXEmitObjDescriptor;
+
+#define FXEMIT_DLL_ID 0x012B
+#define FXEMIT_CLASS_ID 0x006B
+#define FXEMIT_DEF_ID 0x05A7
+#define FXEMIT_OBJECT_DEF_BYTES 0xA0
+#define FXEMIT_PLACEMENT_BYTES 0x2C
+#define FXEMIT_EXTRA_STATE_BYTES 0x20
+#define FXEMIT_SPAWN_MODE_OBJECT 0
+#define FXEMIT_SPAWN_MODE_OBJECT_ALT 1
+#define FXEMIT_SPAWN_MODE_WORLD 2
+#define FXEMIT_SPAWN_MODE_NONE 3
+#define FXEMIT_ROTATION_STEP_AUTO 0x7F
+#define FXEMIT_SFX_SUPPRESS 0xFF
+
+typedef struct FxEmitObject FxEmitObject;
+typedef int (*FxEmitSeqCallback)(FxEmitObject *obj, int unused, int events);
+
+typedef struct FxEmitPlacement {
+    u8 pad00[0x18];
+    s8 triggerRadius;
+    s8 effectMode;
+    s16 effectId;
+    s16 emitCount;
+    s16 enableBit;
+    s16 stopBit;
+    s8 initialRoll;
+    s8 initialPitch;
+    s8 initialYaw;
+    s8 rollStep;
+    s8 pitchStep;
+    s8 yawStep;
+    u8 spawnMode;
+    u8 sfxPeriod;
+    s16 sfxId;
+} FxEmitPlacement;
 
 /*
  * Per-object extra state for the fxemit particle emitter
@@ -11,7 +50,7 @@
  */
 typedef struct FxEmitState {
     f32 triggerRadius; /* (s8)setup[0x18] << 2; sentinel value = always emit */
-    f32 unk04; /* obj X at init */
+    f32 initialX; /* object X at init */
     s16 effectMode; /* 0 partfx, 1 resource id+0x58, 2 resource id+0xAB */
     s16 effectId;
     s16 altEffectId; /* spawned instead when emitCount <= 0 on the args path */
@@ -26,7 +65,48 @@ typedef struct FxEmitState {
     u8 pad1D[3];
 } FxEmitState;
 
-STATIC_ASSERT(sizeof(FxEmitState) == 0x20);
+struct FxEmitObject {
+    ObjAnimComponent objAnim;
+    u16 objectFlags;
+    u8 padB2[0xB8 - 0xB2];
+    FxEmitState *state;
+    FxEmitSeqCallback seqCallback;
+    u8 padC0[0xF4 - 0xC0];
+    s32 emitCooldown;
+};
+
+STATIC_ASSERT(sizeof(FxEmitPlacement) == FXEMIT_PLACEMENT_BYTES);
+STATIC_ASSERT(offsetof(FxEmitPlacement, triggerRadius) == 0x18);
+STATIC_ASSERT(offsetof(FxEmitPlacement, effectMode) == 0x19);
+STATIC_ASSERT(offsetof(FxEmitPlacement, effectId) == 0x1A);
+STATIC_ASSERT(offsetof(FxEmitPlacement, emitCount) == 0x1C);
+STATIC_ASSERT(offsetof(FxEmitPlacement, enableBit) == 0x1E);
+STATIC_ASSERT(offsetof(FxEmitPlacement, stopBit) == 0x20);
+STATIC_ASSERT(offsetof(FxEmitPlacement, initialRoll) == 0x22);
+STATIC_ASSERT(offsetof(FxEmitPlacement, initialPitch) == 0x23);
+STATIC_ASSERT(offsetof(FxEmitPlacement, initialYaw) == 0x24);
+STATIC_ASSERT(offsetof(FxEmitPlacement, rollStep) == 0x25);
+STATIC_ASSERT(offsetof(FxEmitPlacement, pitchStep) == 0x26);
+STATIC_ASSERT(offsetof(FxEmitPlacement, yawStep) == 0x27);
+STATIC_ASSERT(offsetof(FxEmitPlacement, spawnMode) == 0x28);
+STATIC_ASSERT(offsetof(FxEmitPlacement, sfxPeriod) == 0x29);
+STATIC_ASSERT(offsetof(FxEmitPlacement, sfxId) == 0x2A);
+STATIC_ASSERT(sizeof(FxEmitState) == FXEMIT_EXTRA_STATE_BYTES);
+STATIC_ASSERT(offsetof(FxEmitState, initialX) == 0x04);
+STATIC_ASSERT(offsetof(FxEmitState, effectMode) == 0x08);
+STATIC_ASSERT(offsetof(FxEmitState, effectId) == 0x0A);
+STATIC_ASSERT(offsetof(FxEmitState, altEffectId) == 0x0C);
+STATIC_ASSERT(offsetof(FxEmitState, emitCount) == 0x0E);
+STATIC_ASSERT(offsetof(FxEmitState, startDelay) == 0x12);
+STATIC_ASSERT(offsetof(FxEmitState, enableBit) == 0x14);
+STATIC_ASSERT(offsetof(FxEmitState, stopBit) == 0x16);
+STATIC_ASSERT(offsetof(FxEmitState, suppressed) == 0x18);
+STATIC_ASSERT(offsetof(FxEmitState, sfxTimer) == 0x1A);
+STATIC_ASSERT(offsetof(FxEmitState, seqToggle) == 0x1C);
+STATIC_ASSERT(offsetof(FxEmitObject, objAnim) == 0x00);
+STATIC_ASSERT(offsetof(FxEmitObject, state) == 0xB8);
+STATIC_ASSERT(offsetof(FxEmitObject, seqCallback) == 0xBC);
+STATIC_ASSERT(offsetof(FxEmitObject, emitCooldown) == 0xF4);
 
 /*
  * Per-object extra state for the cfccrate multi-prop handler
@@ -67,13 +147,15 @@ STATIC_ASSERT(sizeof(CfCcrateState) == 0x4C);
 STATIC_ASSERT(offsetof(CfCcrateState, sfxTable) == 0x44);
 
 void cfccrate_init(int obj, int aux);
-void fxemit_emitEffect(int obj);
-int fxemit_SeqFn(int obj, int unused, int events);
+void fxemit_emitEffect(FxEmitObject *obj);
+int fxemit_SeqFn(FxEmitObject *obj, int unused, int events);
 void cfccrate_release(void);
 void cfccrate_initialise(void);
 int fxemit_getExtraSize(void);
 int fxemit_getObjectTypeId(void);
-void fxemit_free(int obj);
+void fxemit_free(FxEmitObject *obj);
 void fxemit_hitDetect(void);
+void fxemit_update(FxEmitObject *obj);
+void fxemit_init(FxEmitObject *obj, FxEmitPlacement *setup);
 
 #endif /* MAIN_DLL_CF_CFTREASSHARPY_H_ */

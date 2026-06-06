@@ -85,8 +85,6 @@ extern undefined4 FUN_800810f8();
 extern undefined4 FUN_8011e868();
 extern int Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(int curve, f32 progress);
-extern int fxemit_SeqFn(int obj, int unused, int events);
-extern void fxemit_emitEffect(int obj);
 extern void getTabEntry(void* dst, int fileId, int offset, int size);
 extern void* mmAlloc(int size, int heap, int flags);
 extern undefined4 FUN_80286838();
@@ -185,40 +183,40 @@ extern void setAButtonIcon(int iconId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fxemit_init(int obj, int setup)
+void fxemit_init(FxEmitObject *obj, FxEmitPlacement *setup)
 {
   FxEmitState *state;
   s16 emitCount;
 
-  *(s16 *)(obj + 0) = 0;
-  *(int (**)(int, int, int))(obj + 0xbc) = fxemit_SeqFn;
-  state = *(FxEmitState **)(obj + 0xb8);
+  obj->objAnim.rotX = 0;
+  obj->seqCallback = fxemit_SeqFn;
+  state = obj->state;
 
-  state->triggerRadius = (f32)((s32)*(s8 *)(setup + 0x18) << 2);
-  state->effectMode = *(s8 *)(setup + 0x19);
-  state->effectId = *(s16 *)(setup + 0x1a);
-  emitCount = *(s16 *)(setup + 0x1c);
+  state->triggerRadius = (f32)((s32)setup->triggerRadius << 2);
+  state->effectMode = setup->effectMode;
+  state->effectId = setup->effectId;
+  emitCount = setup->emitCount;
   state->emitCount = emitCount;
-  *(f32 *)(obj + 8) = lbl_803E3E50;
-  state->enableBit = *(s16 *)(setup + 0x1e);
-  state->stopBit = *(s16 *)(setup + 0x20);
+  obj->objAnim.rootMotionScale = lbl_803E3E50;
+  state->enableBit = setup->enableBit;
+  state->stopBit = setup->stopBit;
   state->suppressed = 0;
 
   if (emitCount < 1) {
-    *(s32 *)(obj + 0xf4) = emitCount;
+    obj->emitCooldown = emitCount;
   } else {
-    *(s32 *)(obj + 0xf4) = 0;
+    obj->emitCooldown = 0;
   }
 
   if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0) {
     state->suppressed = 1;
   }
 
-  *(s16 *)(obj + 0) = (s16)(*(s8 *)(setup + 0x24) << 8);
-  *(s16 *)(obj + 2) = (s16)(*(s8 *)(setup + 0x23) << 8);
-  *(s16 *)(obj + 4) = (s16)(*(s8 *)(setup + 0x22) << 8);
-  state->sfxTimer = (s16)(*(u8 *)(setup + 0x29) * 100);
-  state->unk04 = *(f32 *)(obj + 0xc);
+  obj->objAnim.rotX = (s16)(setup->initialYaw << 8);
+  obj->objAnim.rotY = (s16)(setup->initialPitch << 8);
+  obj->objAnim.rotZ = (s16)(setup->initialRoll << 8);
+  state->sfxTimer = (s16)(setup->sfxPeriod * 100);
+  state->initialX = obj->objAnim.localPosX;
   state->startDelay = (s16)randomGetRange(0, 10);
   state->altEffectId = 0;
 }
@@ -379,7 +377,7 @@ void FUN_8018f1b4(short *param_1)
           }
           dVar9 = FUN_80293900((double)(fVar4 * fVar4 + fVar2 * fVar2 + fVar3 * fVar3));
           if ((dVar9 <= (double)*pfVar8) || ((double)FLOAT_803e4ae4 == (double)*pfVar8)) {
-            fxemit_emitEffect((int)param_1);
+            fxemit_emitEffect((FxEmitObject *)param_1);
           }
           *(int *)(param_1 + 0x7a) = -(int)*(short *)((int)pfVar8 + 0xe);
         }

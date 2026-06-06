@@ -2,12 +2,13 @@
 #define MAIN_DLL_CF_CFCHUCKOBJ_H_
 
 #include "ghidra_import.h"
+#include "main/dll/CF/CFTreasSharpy.h"
 #include "main/object_descriptor.h"
 
 extern ObjectDescriptor gAreaFXEmitObjDescriptor;
 extern ObjectDescriptor12 gLFXEmitterObjDescriptor;
 
-void fxemit_init(int obj, int setup);
+void fxemit_init(FxEmitObject *obj, FxEmitPlacement *setup);
 void FUN_8018f158(undefined4 param_1);
 void FUN_8018f1b4(short *param_1);
 void FUN_8018f4fc(undefined2 *param_1,int param_2);
