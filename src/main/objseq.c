@@ -3117,6 +3117,7 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
 void ObjSeq_objLoadAnimData(u8 *seq, u8 *obj)
 {
     u8 *base = lbl_80396918;
+    s16 size;
     int animId;
     int fileOffset;
     struct {
@@ -3151,13 +3152,14 @@ void ObjSeq_objLoadAnimData(u8 *seq, u8 *obj)
         return;
     }
 
+    size = hdr.size;
     *(s16 *)(seq + 0x62) = hdr.count;
-    if (hdr.size == 0) {
+    if (size == 0) {
         fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
         return;
     }
 
-    *(void **)(seq + 0x94) = mmAlloc(hdr.size, 0x11, 0);
+    *(void **)(seq + 0x94) = mmAlloc(size, 0x11, 0);
     if (*(void **)(seq + 0x94) == NULL) {
         fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
         return;
