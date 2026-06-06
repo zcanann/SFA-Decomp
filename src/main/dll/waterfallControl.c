@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/waterfallControl.h"
 
 
@@ -181,7 +182,7 @@ void tumbleweed_modelMtxFn(int obj)
     ObjHits_EnableObject(obj);
     *(u8 *)(state + 0x278) = 2;
     *(u8 *)(state + 0x27a) |= 3;
-    if (*(s16 *)(obj + 0x46) == 0x4c1) {
+    if (((GameObject *)obj)->anim.seqId == 0x4c1) {
       *(f32 *)(state + 0x2a0) = lbl_803E2F9C;
     }
   }
@@ -240,7 +241,7 @@ void tumbleweed_free(int *obj)
   int limit;
   int target_id;
 
-  switch (*(s16 *)((int)obj + 0x46)) {
+  switch (((GameObject *)obj)->anim.seqId) {
   case 0x39d:
     target_id = 0x28d;
     break;
