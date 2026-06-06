@@ -303,16 +303,10 @@ main/dll/dll_8C.c:
 main/dll/dll_8D.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
-main/dll/dll_8E.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
 main/dll/dll_8F.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
 main/dll/dll_90.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_91.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
 main/dll/dll_92.c:
@@ -321,16 +315,10 @@ main/dll/dll_92.c:
 main/dll/dll_93.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
-main/dll/dll_94.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
 main/dll/dll_95.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
 main/dll/dll_96.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_97.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
 main/dll/dll_98.c:
@@ -339,16 +327,10 @@ main/dll/dll_98.c:
 main/dll/dll_99.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
-main/dll/dll_9A.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
 main/dll/dll_9B.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
 main/dll/dll_9C.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_9D.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
 main/dll/dll_9E.c:
@@ -357,16 +339,10 @@ main/dll/dll_9E.c:
 main/dll/dll_9F.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
-main/dll/dll_A0.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
 main/dll/dll_A1.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
 main/dll/dll_A2.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_A3.c:
 	.text       start:0x80100AA4 end:0x80100AA4
 
 main/dll/dll_A4.c:
@@ -384,25 +360,16 @@ main/dll/dll_A7.c:
 main/dll/dll_A8.c:
 	.text       start:0x80100C90 end:0x80100C90
 
-main/dll/dll_A9.c:
-	.text       start:0x80100C90 end:0x80100C90
-
 main/dll/dll_AA.c:
 	.text       start:0x80100C90 end:0x80100C90
 
 main/dll/dll_AB.c:
 	.text       start:0x80100C90 end:0x80100C90
 
-main/dll/dll_AC.c:
-	.text       start:0x80100C90 end:0x80100C90
-
 main/dll/dll_AD.c:
 	.text       start:0x80100C90 end:0x80100C90
 
 main/dll/dll_AE.c:
-	.text       start:0x80100C90 end:0x80100C90
-
-main/dll/dll_B0.c:
 	.text       start:0x80100C90 end:0x80100C90
 
 main/dll/dll_B1.c:
@@ -417,9 +384,6 @@ main/dll/dll_B3.c:
 main/dll/dll_B4.c:
 	.text       start:0x80100FA0 end:0x801010B4
 
-main/dll/dll_B5.c:
-	.text       start:0x801010B4 end:0x801010B4
-
 main/dll/dll_B6.c:
 	.text       start:0x801010B4 end:0x80101690
 
@@ -428,12 +392,6 @@ main/dll/dll_B7.c:
 
 main/dll/dll_B8.c:
 	.text       start:0x801018A8 end:0x80101980
-
-main/dll/dll_B9.c:
-	.text       start:0x80101980 end:0x80101980
-
-main/dll/dll_BA.c:
-	.text       start:0x80101980 end:0x80101980
 
 main/dll/dll_BB.c:
 	.text       start:0x80101980 end:0x8010210C
@@ -448,15 +406,6 @@ main/dll/dll_BF.c:
 	.text       start:0x8010224C end:0x8010224C
 
 main/dll/dll_C4.c:
-	.text       start:0x8010224C end:0x8010224C
-
-main/dll/dll_C5.c:
-	.text       start:0x8010224C end:0x8010224C
-
-main/dll/animatedobj.c:
-	.text       start:0x8010224C end:0x8010224C
-
-main/dll/dll_C0.c:
 	.text       start:0x8010224C end:0x8010224C
 
 main/dll/CAM/camcontrol.c:
