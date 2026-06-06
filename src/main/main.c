@@ -4,6 +4,7 @@
 #include "main/dll/CF/laser.h"
 #include "main/dll/anim_internal.h"
 #include "main/main.h"
+#include "main/objlib.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();
@@ -19,15 +20,6 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ad0();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
-extern int ObjGroup_FindNearestObject();
-extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
 extern int FUN_80039520();
 extern undefined4 FUN_8003b56c();
 extern undefined4 FUN_8003b818();
@@ -157,7 +149,7 @@ void FUN_801fd398(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         (**(code **)(*DAT_803dd708 + 8))(param_9,0x391,0,4,0xffffffff,0);
       }
     }
-    iVar3 = ObjHits_GetPriorityHit(param_9,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+    iVar3 = ObjHits_GetPriorityHit(param_9,(int *)0x0,(int *)0x0,(uint *)0x0);
     if ((short)iVar3 != 0) {
       uVar2 = GameBit_Get((int)*psVar4);
       GameBit_Set((int)*psVar4,1 - uVar2);
@@ -657,14 +649,9 @@ void FUN_801fe084(int param_1,int param_2)
 #pragma peephole off
 void dbegg_processMessages(int obj)
 {
-  extern void ObjGroup_RemoveObject(int, int);
-  extern void ObjGroup_AddObject(int, int);
-  extern void ObjHits_DisableObject(int);
-  extern void ObjHits_EnableObject(int);
   extern int gameBitIncrement(int);
   extern void objRemoveFromListFn_8002ce88(int);
   extern void vecRotateZXY(void *, int);
-  extern int ObjMsg_Pop(int, int *, int *, int *);
   extern f32 lbl_803E61C8;
   extern f32 lbl_803E61CC;
 
@@ -677,7 +664,7 @@ void dbegg_processMessages(int obj)
   sub = *(int *)(obj + 0xb8);
   data = *(int *)(obj + 0x4c);
 
-  while (ObjMsg_Pop(obj, (int *)&msgType, &msgArg, &msgFlag) != 0) {
+  while (ObjMsg_Pop((void *)obj, &msgType, (uint *)&msgArg, (uint *)&msgFlag) != 0) {
     if (msgType == 17) {
       switch (msgFlag) {
         case 18:
@@ -890,7 +877,8 @@ LAB_801fe91c:
   while( true ) {
     while( true ) {
       do {
-        iVar2 = ObjMsg_Pop(param_1,&local_30,(uint *)&local_38,&local_34);
+        iVar2 = ObjMsg_Pop((void *)param_1,(uint *)&local_30,(uint *)&local_38,
+                           (uint *)&local_34);
         if (iVar2 == 0) {
           return;
         }
