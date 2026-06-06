@@ -603,7 +603,7 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
   extern f32 lbl_803E4C28;
   extern f32 lbl_803E4C2C;
   extern f32 lbl_803E4C30;
-  int *lightSlot = (int *)(*(int *)(*(int *)&((GameObject *)obj)->extra + 0x40c));
+  int *lightSlot = (int *)*(int *)&((GroundBaddieState *)*(int *)&((GameObject *)obj)->extra)->control;
 
   if (*(void **)lightSlot != NULL) return;
 

@@ -3,6 +3,28 @@
 #include "main/dll/CR/CRsnowbike.h"
 #include "main/mapEventTypes.h"
 
+#include "global.h"
+
+/* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
+typedef struct ScLevelControlState {
+    f32 fogNear;    /* 0x00: enableHeavyFog base */
+    f32 fog04;      /* 0x04 */
+    f32 fog08;      /* 0x08 */
+    f32 fog0C;      /* 0x0c */
+    f32 timer10;    /* 0x10 */
+    f32 fadeTimer;  /* 0x14 */
+    u8 pad18[4];
+    u8 musicStep;   /* 0x1c: index into the lbl_803DC060 cue table */
+    u8 mode;        /* 0x1d: anim-event mode latch */
+    u8 areaCell;    /* 0x1e: 0xff until the player enters map 0xe */
+    u8 flags1F;     /* 0x1f */
+    u8 musicTrack;  /* 0x20 */
+    s8 unk21;       /* 0x21 */
+    u8 flags22;     /* 0x22: SnowFlags22 overlay (bit 7) */
+    u8 pad23;
+} ScLevelControlState;
+STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
+
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
@@ -200,10 +222,10 @@ undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjA
       }
     }
     else if (eventId < 4) {
-      *(byte *)(iVar4 + 0x1f) = *(byte *)(iVar4 + 0x1f) | 2;
+      ((ScLevelControlState *)iVar4)->flags1F = ((ScLevelControlState *)iVar4)->flags1F | 2;
     }
   }
-  *(byte *)(iVar4 + 0x1f) = *(byte *)(iVar4 + 0x1f) | 1;
+  ((ScLevelControlState *)iVar4)->flags1F = ((ScLevelControlState *)iVar4)->flags1F | 1;
   FUN_80017698(0x60f,0);
   iVar3 = *(int *)(param_1 + 0xb8);
   FUN_80017a98();
@@ -215,8 +237,8 @@ undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjA
       if (uVar1 != 0) {
         FUN_80017698(0x85,1);
       }
-      *(float *)(iVar3 + 0x10) = lbl_803E61E8;
-      *(undefined *)(iVar3 + 0x1d) = 0;
+      ((ScLevelControlState *)iVar3)->timer10 = lbl_803E61E8;
+      ((ScLevelControlState *)iVar3)->mode = 0;
       FUN_80006824(0,SFXsp_skeep_mumb1);
       FUN_800067c0((int *)0xef,0);
     }
@@ -243,10 +265,10 @@ void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2)
   int iVar2;
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  *(undefined *)(iVar2 + 0x1d) = param_2;
+  ((ScLevelControlState *)iVar2)->mode = param_2;
   cVar1 = *(char *)(iVar2 + 0x1d);
   if (cVar1 == '\x02') {
-    *(undefined *)(iVar2 + 0x1d) = 0;
+    ((ScLevelControlState *)iVar2)->mode = 0;
   }
   else if (cVar1 == '\x05') {
     FUN_80017698(0x2b8,1);
@@ -258,18 +280,18 @@ void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2)
   }
   else if (cVar1 == '\x03') {
     FUN_80006b54(0x1d,0x3c);
-    *(undefined *)(iVar2 + 0x1d) = 0;
+    ((ScLevelControlState *)iVar2)->mode = 0;
     FUN_800067c0((int *)0xc7,1);
     FUN_80006b50();
   }
   else if (cVar1 == '\x06') {
     FUN_800067c0((int *)0xef,0);
-    *(undefined *)(iVar2 + 0x1d) = 0;
-    *(float *)(iVar2 + 0x14) = lbl_803E61E8;
+    ((ScLevelControlState *)iVar2)->mode = 0;
+    ((ScLevelControlState *)iVar2)->fadeTimer = lbl_803E61E8;
     FUN_80006b4c();
   }
   else if (cVar1 == '\x04') {
-    *(undefined *)(iVar2 + 0x1d) = 0;
+    ((ScLevelControlState *)iVar2)->mode = 0;
     FUN_800067c0((int *)0xc7,0);
     FUN_80006b4c();
   }
@@ -454,7 +476,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
       FUN_80017698(1999,1);
     }
   }
-  dVar10 = (double)*(float *)(iVar2 + 0x14);
+  dVar10 = (double)((ScLevelControlState *)iVar2)->fadeTimer;
   iVar2 = FUN_8005b024();
   *(char *)((int)pfVar8 + 0x1e) = (char)iVar2;
   uVar3 = FUN_80017690(0xcdc);
@@ -610,8 +632,8 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
       if (uVar3 != 0) {
         FUN_80017698(0x85,1);
       }
-      *(float *)(iVar2 + 0x10) = lbl_803E61E8;
-      *(undefined *)(iVar2 + 0x1d) = 0;
+      ((ScLevelControlState *)iVar2)->timer10 = lbl_803E61E8;
+      ((ScLevelControlState *)iVar2)->mode = 0;
       FUN_80006824(0,SFXsp_skeep_mumb1);
       FUN_800067c0((int *)0xef,0);
     }
@@ -764,22 +786,22 @@ int sc_levelcontrol_processAnimEventsCallback(int obj, int p2, int p3)
             sc_levelcontrol_applyAnimEventState(obj, 5);
             break;
         case 3:
-            *(u8 *)(state + 0x1f) |= 2;
+            ((ScLevelControlState *)state)->flags1F |= 2;
             break;
         }
     }
-    *(u8 *)(state + 0x1f) |= 1;
+    ((ScLevelControlState *)state)->flags1F |= 1;
     GameBit_Set(0x60f, 0);
     state = *(int *)&((GameObject *)obj)->extra;
     Obj_GetPlayerObject();
-    if (*(u8 *)(state + 0x1d) == 5) {
+    if (((ScLevelControlState *)state)->mode == 5) {
         GameBit_Set(0x60f, 1);
         if (isGameTimerDisabled()) {
             if ((u32)GameBit_Get(0x7a) != 0) {
                 GameBit_Set(0x85, 1);
             }
-            *(f32 *)(state + 0x10) = lbl_803E5550;
-            *(u8 *)(state + 0x1d) = 0;
+            ((ScLevelControlState *)state)->timer10 = lbl_803E5550;
+            ((ScLevelControlState *)state)->mode = 0;
             Sfx_PlayFromObject(0, 0x10a);
             Music_Trigger(0xef, 0);
         }
@@ -796,10 +818,10 @@ void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
     int state = *(int *)&((GameObject *)obj)->extra;
     u8 v;
 
-    *(u8 *)(state + 0x1d) = scale;
-    v = *(u8 *)(state + 0x1d);
+    ((ScLevelControlState *)state)->mode = scale;
+    v = ((ScLevelControlState *)state)->mode;
     if (v == 2) {
-        *(u8 *)(state + 0x1d) = 0;
+        ((ScLevelControlState *)state)->mode = 0;
     } else if (v == 5) {
         GameBit_Set(0x2b8, 1);
         GameBit_Set(0x4bd, 0);
@@ -809,16 +831,16 @@ void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
         timerSetToCountUp();
     } else if (v == 3) {
         gameTimerInit(0x1d, 0x3c);
-        *(u8 *)(state + 0x1d) = 0;
+        ((ScLevelControlState *)state)->mode = 0;
         Music_Trigger(199, 1);
         timerSetToCountUp();
     } else if (v == 6) {
         Music_Trigger(0xef, 0);
-        *(u8 *)(state + 0x1d) = 0;
-        *(f32 *)(state + 0x14) = lbl_803E5550;
+        ((ScLevelControlState *)state)->mode = 0;
+        ((ScLevelControlState *)state)->fadeTimer = lbl_803E5550;
         gameTimerStop();
     } else if (v == 4) {
-        *(u8 *)(state + 0x1d) = 0;
+        ((ScLevelControlState *)state)->mode = 0;
         Music_Trigger(199, 0);
         gameTimerStop();
     }
@@ -842,13 +864,13 @@ typedef struct { u8 bit7 : 1; u8 lo : 7; } SnowFlags22;
 #pragma scheduling off
 void sc_levelcontrol_init(int obj)
 {
-    f32 *st = ((GameObject *)obj)->extra;
+    ScLevelControlState *st = ((GameObject *)obj)->extra;
     int state = (int)st;
     f32 v;
 
-    ((SnowFlags22 *)(state + 0x22))->bit7 = 0;
-    *(u8 *)(state + 0x1e) = 0xff;
-    *(u8 *)(state + 0x1d) = 0;
+    ((SnowFlags22 *)&((ScLevelControlState *)state)->flags22)->bit7 = 0;
+    ((ScLevelControlState *)state)->areaCell = 0xff;
+    ((ScLevelControlState *)state)->mode = 0;
     ((GameObject *)obj)->animEventCallback = (void *)sc_levelcontrol_processAnimEventsCallback;
     GameBit_Set(0x60f, 1);
     GameBit_Set(0x2b8, 0);
@@ -857,12 +879,12 @@ void sc_levelcontrol_init(int obj)
     GameBit_Set(0x82, 0);
     GameBit_Set(0x83, 0);
     GameBit_Set(0x84, 0);
-    st[3] = lbl_803E5580;
+    st->fog0C = lbl_803E5580;
     v = lbl_803E5564;
-    st[0] = lbl_803E5564;
-    st[1] = v;
-    st[2] = lbl_803E5568;
-    enableHeavyFog(lbl_803E5570 + st[0], st[0], lbl_803E5574, lbl_803E5578, lbl_803E557C, 0);
+    st->fogNear = lbl_803E5564;
+    st->fog04 = v;
+    st->fog08 = lbl_803E5568;
+    enableHeavyFog(lbl_803E5570 + st->fogNear, st->fogNear, lbl_803E5574, lbl_803E5578, lbl_803E557C, 0);
     if ((u32)GameBit_Get(0x7a) != 0) {
         GameBit_Set(0x85, 1);
     }
@@ -1013,11 +1035,11 @@ void sc_levelcontrol_update(int obj)
         }
         ((GameObject *)obj)->unkF4 = 0;
     }
-    if (((SnowFlags22 *)(state + 0x22))->bit7 == 0 && (u32)GameBit_Get(0xc53) != 0) {
+    if (((SnowFlags22 *)&((ScLevelControlState *)state)->flags22)->bit7 == 0 && (u32)GameBit_Get(0xc53) != 0) {
         (*gMapEventInterface)->setAnimEvent(0xe, 0xa, 1);
-        ((SnowFlags22 *)(state + 0x22))->bit7 = 1;
+        ((SnowFlags22 *)&((ScLevelControlState *)state)->flags22)->bit7 = 1;
     }
-    if (*(u8 *)(state + 0x1e) != 0xe) {
+    if (((ScLevelControlState *)state)->areaCell != 0xe) {
         if (coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14)) == 0xe) {
             u8 c = (*gMapEventInterface)->getMode(0xe);
             Obj_GetPlayerObject();
@@ -1040,15 +1062,15 @@ void sc_levelcontrol_update(int obj)
             return;
         }
     }
-    if (*(f32 *)(state + 0x14) != lbl_803E5558) {
+    if (((ScLevelControlState *)state)->fadeTimer != lbl_803E5558) {
         if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
-            if (lbl_803E5550 == *(f32 *)(state + 0x14)) {
+            if (lbl_803E5550 == ((ScLevelControlState *)state)->fadeTimer) {
                 (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0x8))(0x73, 1);
             }
-            *(f32 *)(state + 0x14) -= timeDelta;
-            if (*(f32 *)(state + 0x14) <= lbl_803E5558) {
-                *(f32 *)(state + 0x14) = lbl_803E5558;
-                *(f32 *)(state + 0x10) = lbl_803E5558;
+            ((ScLevelControlState *)state)->fadeTimer -= timeDelta;
+            if (((ScLevelControlState *)state)->fadeTimer <= lbl_803E5558) {
+                ((ScLevelControlState *)state)->fadeTimer = lbl_803E5558;
+                ((ScLevelControlState *)state)->timer10 = lbl_803E5558;
                 GameBit_Set(0x2b8, 0);
                 GameBit_Set(0x4bd, 1);
                 GameBit_Set(0x81, 0);
@@ -1059,15 +1081,15 @@ void sc_levelcontrol_update(int obj)
                 GameBit_Set(0x7cf, 1);
             }
         }
-    } else if (*(f32 *)(state + 0x10) != lbl_803E5558) {
+    } else if (((ScLevelControlState *)state)->timer10 != lbl_803E5558) {
         if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
-            if (lbl_803E5550 == *(f32 *)(state + 0x10)) {
+            if (lbl_803E5550 == ((ScLevelControlState *)state)->timer10) {
                 (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0x8))(0x73, 1);
             }
-            *(f32 *)(state + 0x10) -= timeDelta;
-            if (*(f32 *)(state + 0x10) <= lbl_803E5558) {
+            ((ScLevelControlState *)state)->timer10 -= timeDelta;
+            if (((ScLevelControlState *)state)->timer10 <= lbl_803E5558) {
                 GameBit_Set(0x640, 1);
-                *(f32 *)(state + 0x10) = lbl_803E5558;
+                ((ScLevelControlState *)state)->timer10 = lbl_803E5558;
                 GameBit_Set(0x2b8, 0);
                 GameBit_Set(0x4bd, 1);
                 GameBit_Set(0x81, 0);
@@ -1077,42 +1099,42 @@ void sc_levelcontrol_update(int obj)
             }
         }
     }
-    *(u8 *)(state + 0x1e) = coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
+    ((ScLevelControlState *)state)->areaCell = coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
     if ((u32)GameBit_Get(0xcdc) != 0) {
-        if (*(f32 *)(state + 0xc) > lbl_803E5558) {
+        if (((ScLevelControlState *)state)->fog0C > lbl_803E5558) {
             gameTextShow(0x429);
-            *(f32 *)(state + 0xc) -= timeDelta;
-            if (*(f32 *)(state + 0xc) < lbl_803E5558) {
-                *(f32 *)(state + 0xc) = lbl_803E5558;
+            ((ScLevelControlState *)state)->fog0C -= timeDelta;
+            if (((ScLevelControlState *)state)->fog0C < lbl_803E5558) {
+                ((ScLevelControlState *)state)->fog0C = lbl_803E5558;
             }
         }
         if ((*gMapEventInterface)->getAnimEvent(0xe, 1) != 0) {
-            *(f32 *)(state + 0x4) = lbl_803E555C;
-            *(f32 *)(state + 0x8) = lbl_803E5560;
+            ((ScLevelControlState *)state)->fog04 = lbl_803E555C;
+            ((ScLevelControlState *)state)->fog08 = lbl_803E5560;
         } else if ((*gMapEventInterface)->getAnimEvent(0xe, 5) != 0) {
-            *(f32 *)(state + 0x4) = lbl_803E5564;
-            *(f32 *)(state + 0x8) = lbl_803E5568;
+            ((ScLevelControlState *)state)->fog04 = lbl_803E5564;
+            ((ScLevelControlState *)state)->fog08 = lbl_803E5568;
             if (((GameObject *)obj)->unkF8 != 0) {
                 skyFn_80088e54(1, lbl_803E5554);
                 ((GameObject *)obj)->unkF8 = 0;
             }
         } else {
-            *(f32 *)(state + 0x4) = lbl_803E555C;
-            *(f32 *)(state + 0x8) = lbl_803E5560;
+            ((ScLevelControlState *)state)->fog04 = lbl_803E555C;
+            ((ScLevelControlState *)state)->fog08 = lbl_803E5560;
         }
     } else {
-        *(f32 *)(state + 0x4) = lbl_803E556C;
-        *(f32 *)(state + 0x8) = lbl_803E5568;
+        ((ScLevelControlState *)state)->fog04 = lbl_803E556C;
+        ((ScLevelControlState *)state)->fog08 = lbl_803E5568;
     }
-    if (*(f32 *)(state + 0x4) != *(f32 *)state) {
-        *(f32 *)state = *(f32 *)(state + 0x8) * timeDelta + *(f32 *)state;
-        if (*(f32 *)(state + 0x8) < lbl_803E5558) {
-            if (*(f32 *)state < *(f32 *)(state + 0x4)) {
-                *(f32 *)state = *(f32 *)(state + 0x4);
+    if (((ScLevelControlState *)state)->fog04 != *(f32 *)state) {
+        *(f32 *)state = ((ScLevelControlState *)state)->fog08 * timeDelta + *(f32 *)state;
+        if (((ScLevelControlState *)state)->fog08 < lbl_803E5558) {
+            if (*(f32 *)state < ((ScLevelControlState *)state)->fog04) {
+                *(f32 *)state = ((ScLevelControlState *)state)->fog04;
             }
         } else {
-            if (*(f32 *)state > *(f32 *)(state + 0x4)) {
-                *(f32 *)state = *(f32 *)(state + 0x4);
+            if (*(f32 *)state > ((ScLevelControlState *)state)->fog04) {
+                *(f32 *)state = ((ScLevelControlState *)state)->fog04;
             }
         }
         enableHeavyFog(lbl_803E5570 + *(f32 *)state, *(f32 *)state, lbl_803E5574, lbl_803E5578,
@@ -1120,32 +1142,32 @@ void sc_levelcontrol_update(int obj)
     }
     if ((u32)GameBit_Get(0x7d) != 0) {
         GameBit_Set(0x7d, 0);
-        if (lbl_803DC060[*(u8 *)(state + 0x1c)] == 0x7d) {
-            *(u8 *)(state + 0x1c) += 1;
+        if (lbl_803DC060[((ScLevelControlState *)state)->musicStep] == 0x7d) {
+            ((ScLevelControlState *)state)->musicStep += 1;
         } else {
-            *(u8 *)(state + 0x1c) = 0;
+            ((ScLevelControlState *)state)->musicStep = 0;
         }
     } else if ((u32)GameBit_Get(0x7e) != 0) {
         GameBit_Set(0x7e, 0);
-        if (lbl_803DC060[*(u8 *)(state + 0x1c)] == 0x7e) {
-            *(u8 *)(state + 0x1c) += 1;
+        if (lbl_803DC060[((ScLevelControlState *)state)->musicStep] == 0x7e) {
+            ((ScLevelControlState *)state)->musicStep += 1;
         } else {
-            *(u8 *)(state + 0x1c) = 0;
+            ((ScLevelControlState *)state)->musicStep = 0;
         }
     } else if ((u32)GameBit_Get(0x7f) != 0) {
         GameBit_Set(0x7f, 0);
-        if (lbl_803DC060[*(u8 *)(state + 0x1c)] == 0x7f) {
-            *(u8 *)(state + 0x1c) += 1;
+        if (lbl_803DC060[((ScLevelControlState *)state)->musicStep] == 0x7f) {
+            ((ScLevelControlState *)state)->musicStep += 1;
         } else {
-            *(u8 *)(state + 0x1c) = 0;
+            ((ScLevelControlState *)state)->musicStep = 0;
         }
     }
-    if (*(u8 *)(state + 0x1c) >= 3) {
+    if (((ScLevelControlState *)state)->musicStep >= 3) {
         GameBit_Set(0x80, 1);
-        *(u8 *)(state + 0x1c) = 0;
+        ((ScLevelControlState *)state)->musicStep = 0;
     }
-    if ((*(u8 *)(state + 0x1f) & 1) != 0) {
-        *(u8 *)(state + 0x1f) &= ~1;
+    if ((((ScLevelControlState *)state)->flags1F & 1) != 0) {
+        ((ScLevelControlState *)state)->flags1F &= ~1;
         GameBit_Set(0x60f, 1);
         if ((u32)GameBit_Get(0x7a) == 0) {
             if ((u32)GameBit_Get(0x627) != 0 && (u32)GameBit_Get(0x63e) != 0) {
@@ -1157,21 +1179,21 @@ void sc_levelcontrol_update(int obj)
             }
         }
     }
-    if (*(u8 *)(state + 0x1d) == 0) {
+    if (((ScLevelControlState *)state)->mode == 0) {
         if ((u32)GameBit_Get(0x60e) != 0) {
             GameBit_Set(0x60e, 0);
             timeListFn_8012df14();
         }
-    } else if (*(u8 *)(state + 0x1d) == 5) {
+    } else if (((ScLevelControlState *)state)->mode == 5) {
         if ((u32)GameBit_Get(0x60e) != 0) {
             GameBit_Set(0x60e, 0);
             gameTimerStop();
             if ((u32)GameBit_Get(0x7a) != 0) {
                 GameBit_Set(0x85, 1);
             }
-            *(f32 *)(state + 0x10) = lbl_803E5550;
+            ((ScLevelControlState *)state)->timer10 = lbl_803E5550;
             (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0x8))(0x73, 1);
-            *(u8 *)(state + 0x1d) = 0;
+            ((ScLevelControlState *)state)->mode = 0;
             Sfx_PlayFromObject(0, 0x10a);
         }
     }
@@ -1193,14 +1215,14 @@ void sc_levelcontrol_update(int obj)
     {
         int state2 = *(int *)&((GameObject *)obj)->extra;
         Obj_GetPlayerObject();
-        if (*(u8 *)(state2 + 0x1d) == 5) {
+        if (((ScLevelControlState *)state2)->mode == 5) {
             GameBit_Set(0x60f, 1);
             if (isGameTimerDisabled()) {
                 if ((u32)GameBit_Get(0x7a) != 0) {
                     GameBit_Set(0x85, 1);
                 }
-                *(f32 *)(state2 + 0x10) = lbl_803E5550;
-                *(u8 *)(state2 + 0x1d) = 0;
+                ((ScLevelControlState *)state2)->timer10 = lbl_803E5550;
+                ((ScLevelControlState *)state2)->mode = 0;
                 Sfx_PlayFromObject(0, 0x10a);
                 Music_Trigger(0xef, 0);
             }
@@ -1215,29 +1237,29 @@ void sc_levelcontrol_update(int obj)
         }
     }
     if ((*(int (**)(int))((char *)*gSHthorntailAnimationInterface + 0x24))(0) != 0) {
-        if (*(u8 *)(state + 0x20) != 0x2d) {
-            *(u8 *)(state + 0x20) = 0x2d;
+        if (((ScLevelControlState *)state)->musicTrack != 0x2d) {
+            ((ScLevelControlState *)state)->musicTrack = 0x2d;
             Music_Trigger(0x2d, 1);
         }
-        if (*(s8 *)(state + 0x21) != -1) {
-            *(s8 *)(state + 0x21) = -1;
+        if (((ScLevelControlState *)state)->unk21 != -1) {
+            ((ScLevelControlState *)state)->unk21 = -1;
             Music_Trigger(0x22, 0);
         }
     } else {
-        if (*(u8 *)(state + 0x20) != 0x33) {
-            *(u8 *)(state + 0x20) = 0x33;
+        if (((ScLevelControlState *)state)->musicTrack != 0x33) {
+            ((ScLevelControlState *)state)->musicTrack = 0x33;
             Music_Trigger(0x33, 1);
         }
-        if (*(s8 *)(state + 0x21) != 0x22) {
-            *(s8 *)(state + 0x21) = 0x22;
+        if (((ScLevelControlState *)state)->unk21 != 0x22) {
+            ((ScLevelControlState *)state)->unk21 = 0x22;
             Music_Trigger(0x22, 1);
         }
     }
     SCGameBitLatch_Update(state + 0x18, 1, -1, -1, 0xe1e, 0x36);
     SCGameBitLatch_Update(state + 0x18, 2, -1, -1, 0xcbb, 0xc4);
-    if ((*(u8 *)(state + 0x1f) & 2) != 0) {
+    if ((((ScLevelControlState *)state)->flags1F & 2) != 0) {
         GameBit_Set(0x60e, 1);
-        *(u8 *)(state + 0x1f) &= ~2;
+        ((ScLevelControlState *)state)->flags1F &= ~2;
     }
 }
 #pragma peephole reset
