@@ -1,4 +1,3 @@
-#include "global.h"
 #include "main/dll/dll_4D.h"
 
 extern MenuPanelGroup lbl_8031ACB8;
