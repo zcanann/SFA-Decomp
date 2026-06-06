@@ -146,13 +146,27 @@ typedef struct DIMbossBoneParticleEffectInterface {
 } DIMbossBoneParticleEffectInterface;
 
 typedef struct DIMbossBaddieControlInterface {
-  u8 pad00[0x2C];
+  u8 pad00[0x28];
+  void (*startMove)(DIMbossObject *obj,DIMbossRuntime *runtime,void *moveScratch,int moveId,
+                    u8 *hitReactMode,int param_6,int param_7,int param_8,int param_9);
   void (*applyHitReact)(DIMbossObject *obj,DIMbossRuntime *runtime,f32 amount);
   int (*updateState)(DIMbossObject *obj,DIMbossRuntime *runtime,int flags);
   int (*updateHitDetect)(DIMbossObject *obj,ObjAnimUpdateState *animUpdate,
                          DIMbossRuntime *runtime,void *hitDetectAnimTable,void *animTable,
                          int flags);
+  u8 pad38[0x40 - 0x38];
+  void (*releaseState)(DIMbossObject *obj,DIMbossRuntime *runtime,int flags);
+  u8 pad44[0x58 - 0x44];
+  DIMbossAnimSetupFn setupAnim;
 } DIMbossBaddieControlInterface;
+
+typedef struct DIMbossPlayerInterface {
+  u8 pad00[0x08];
+  DIMbossPlayerHitReactFn applyHitReact;
+  void (*updateHitDetect)(DIMbossObject *obj,DIMbossRuntime *runtime,void *hitDetectAnimTable);
+  u8 pad10[0x14 - 0x10];
+  void (*init)(DIMbossObject *obj,DIMbossRuntime *runtime,int mode);
+} DIMbossPlayerInterface;
 
 typedef struct DIMbossMapEventInterface {
   u8 pad00[0x40];
@@ -164,7 +178,9 @@ typedef struct DIMbossMapEventInterface {
 } DIMbossMapEventInterface;
 
 typedef struct DIMbossObjectTriggerInterface {
-  u8 pad00[0x50];
+  u8 pad00[0x48];
+  void (*spawnAnimObject)(int objectType,DIMbossObject *parent,int timer);
+  u8 pad4C[0x50 - 0x4C];
   void (*spawnObject)(int objectType,int spawnMode,DIMbossObject *parent,int timer);
   u8 pad54[0x58 - 0x54];
   void (*triggerEvent)(ObjAnimUpdateState *animUpdate,int eventId);
@@ -181,6 +197,10 @@ static inline DIMbossBaddieControlInterface *DIMboss_GetBaddieControlInterface(v
 
 static inline DIMbossBoneParticleEffectInterface *DIMboss_GetBoneParticleEffectInterface(void) {
   return *gBoneParticleEffectInterface;
+}
+
+static inline DIMbossPlayerInterface *DIMboss_GetPlayerInterface(void) {
+  return (DIMbossPlayerInterface *)*(int *)gPlayerInterface;
 }
 
 static inline DIMbossObjectTriggerInterface *DIMboss_GetObjectTriggerInterface(void) {
@@ -400,10 +420,10 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       fn_801BC7E4(obj,animUpdate,(int)runtime,(int)runtime);
       if (runtime->hitReactMode == 1) {
         runtime->field270 = 0;
-        ((DIMbossPlayerHitReactFn)(*(code **)(*(int *)gPlayerInterface + 8)))
-            (obj,runtime,lbl_803E4C44,lbl_803E4C44,
-             animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
-             animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
+        DIMboss_GetPlayerInterface()->applyHitReact(
+            obj,runtime,lbl_803E4C44,lbl_803E4C44,
+            animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
+            animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
         animUpdate->sequenceEventActive = 0;
       }
     }
@@ -529,7 +549,7 @@ void DIMboss_free(DIMbossObject *obj)
     Obj_FreeObject(childObject);
     obj->childObject = NULL;
   }
-  (*(code *)(*gBaddieControlInterface + 0x40))(obj,runtime,0x20);
+  DIMboss_GetBaddieControlInterface()->releaseState(obj,runtime,0x20);
   if (gDIMbossHitEffectResource != 0) {
     Resource_Release(gDIMbossHitEffectResource);
   }
@@ -591,7 +611,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
  */
 void DIMboss_hitDetect(DIMbossObject *obj)
 {
-  (*(code *)(*(int *)gPlayerInterface + 0xc))(obj,obj->runtime,gDIMbossHitDetectAnimTable);
+  DIMboss_GetPlayerInterface()->updateHitDetect(obj,obj->runtime,gDIMbossHitDetectAnimTable);
 }
 
 /*
@@ -635,14 +655,14 @@ void DIMboss_update(DIMbossObject *obj)
       obj->posX = config->spawnX;
       obj->posY = config->spawnY;
       obj->posZ = config->spawnZ;
-      (*(code *)(*gObjectTriggerInterface + 0x48))((int)config->animObjId,obj,0xffffffff);
+      DIMboss_GetObjectTriggerInterface()->spawnAnimObject((int)config->animObjId,obj,-1);
       obj->updateInitialized = 1;
     }
     else {
       if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_START_MOVE) != 0) {
-        (*(code *)(*gBaddieControlInterface + 0x28))
-                  (obj,runtime,runtime->moveScratch,(int)runtime->activeMoveId,
-                   &runtime->hitReactMode,0,0,0,1);
+        DIMboss_GetBaddieControlInterface()->startMove(
+            obj,runtime,runtime->moveScratch,(int)runtime->activeMoveId,&runtime->hitReactMode,
+            0,0,0,1);
         runtime->stateFlags &= ~DIMBOSS_STATE_FLAG_START_MOVE;
         obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
         obj->objectFlags |= DIMBOSS_OBJECT_FLAG_ACTIVE;
@@ -738,11 +758,11 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   if (param_3 != 0) {
     animFlags |= 1;
   }
-  ((DIMbossAnimSetupFn)(*(code *)(*gBaddieControlInterface + 0x58)))
-      (obj,param_2,runtime,0xc,6,0x102,animFlags,lbl_803E4C28);
+  DIMboss_GetBaddieControlInterface()->setupAnim(
+      obj,param_2,runtime,0xc,6,0x102,animFlags,lbl_803E4C28);
   obj->updateState = DIMboss_updateState;
   runtime->phase = DIMBOSS_PHASE_START;
-  (*(code *)(*(int *)gPlayerInterface + 0x14))(obj,runtime,0);
+  DIMboss_GetPlayerInterface()->init(obj,runtime,0);
   runtime->field270 = 0;
   runtime->animMode = 3;
   obj->objectFlags = (u8)(obj->objectFlags |
