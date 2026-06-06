@@ -392,10 +392,7 @@ void scarab_update(int obj)
                     dy = **p - *(f32 *)(obj + 0x10);
                     if (dy > lbl_803DBDC8) {
                     } else {
-                        if (dy >= lbl_803E39F8) {
-                        } else {
-                            dy = -dy;
-                        }
+                        dy = (dy >= lbl_803E39F8) ? dy : -dy;
                         if (dy < bestDist) {
                             best = i;
                             bestDist = dy;
@@ -403,20 +400,17 @@ void scarab_update(int obj)
                     }
                     p++;
                 }
-                if (list == NULL) {
-                    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xc);
-                } else {
+                if (list != NULL) {
                     *(f32 *)(obj + 0x10) = *list[best];
                     dy = list[best][2];
-                    if (dy >= lbl_803E39F8) {
-                    } else {
-                        dy = -dy;
-                    }
+                    dy = (dy >= lbl_803E39F8) ? dy : -dy;
                     if (dy < lbl_803DBDC4) {
                         flag = 1;
                     } else {
                         fn_801845FC(obj, (int)list[best], 1, hitBuf);
                     }
+                } else {
+                    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xc);
                 }
                 if (*(s16 *)(obj + 0x46) != 0x3d6) {
                     *(s16 *)obj = (s16)(*(s16 *)obj + (int)randomGetRange(-1460, 1460));
@@ -445,12 +439,9 @@ void scarab_update(int obj)
                 }
                 if (flag != 0) {
                     ang = (u16)getAngle(list[best][1], list[best][3]);
-                    *(s16 *)obj = (int)(lbl_803DBDCC * (f32)ang + lbl_803E3A2C);
-                    {
-                        f32 k = lbl_803E39F4;
-                        *(f32 *)(obj + 0xc) = timeDelta * (k * list[best][1]) + *(f32 *)(obj + 0xc);
-                        *(f32 *)(obj + 0x14) = timeDelta * (k * list[best][3]) + *(f32 *)(obj + 0x14);
-                    }
+                    *(s16 *)obj = (f32)ang * lbl_803DBDCC + lbl_803E3A2C;
+                    *(f32 *)(obj + 0xc) = timeDelta * (lbl_803E39F4 * list[best][1]) + *(f32 *)(obj + 0xc);
+                    *(f32 *)(obj + 0x14) = timeDelta * (lbl_803E39F4 * list[best][3]) + *(f32 *)(obj + 0x14);
                     *(f32 *)(obj + 0x24) = list[best][1];
                     *(f32 *)(obj + 0x2c) = list[best][3];
                 } else {
@@ -473,7 +464,7 @@ void scarab_update(int obj)
                     ((hits & 1) != 0 && (hits & 0x10) == 0)) {
                     PSVECSubtract((void *)(*(int *)(obj + 0x4c) + 8), (void *)(obj + 0xc), vsub);
                     ang = (u16)getAngle(vsub[0], vsub[2]);
-                    *(s16 *)obj = (int)(lbl_803DBDD0 * (f32)ang + lbl_803E3A2C);
+                    *(s16 *)obj = (f32)ang * lbl_803DBDD0 + lbl_803E3A2C;
                 }
             } else {
                 bestDist = lbl_803E3A28;
