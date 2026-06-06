@@ -2610,13 +2610,13 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   ExpgfxSlot *slot;
   ExpgfxAttachedSourceState *attachedSource;
   ExpgfxResourceHandle *resourceHandle;
+  ExpgfxRuntimeDataLayout *runtime;
+  ExpgfxTrackedSourceFrameMask *trackedFrameMask;
   void *playerObj;
-  u8 *expgfxBase;
   uint behaviorFlags;
   int resourceTableIndex;
   int expTabIndex;
   int attachedTableKey;
-  uint trackedMaskPair;
   uint bit;
   uint maskHighWord;
   uint maskLowWord;
@@ -2631,10 +2631,9 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   u8 *poolSourceModesByte;
   u8 modeFlag;
   uint *slotPoolBases;
-  u32 *trackedFrameMasks;
   ExpgfxQuadVertex *quadVertices;
 
-  expgfxBase = gExpgfxRuntimeData;
+  runtime = EXPGFX_RUNTIME_DATA;
   poolIndex = 0;
   slotIndex = 0;
   texS1 = 0;
@@ -2650,28 +2649,25 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
     return EXPGFX_INVALID_POOL_INDEX;
   }
   {
-  slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
-  trackedFrameMasks = (u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET);
+  slotPoolBases = runtime->slotPoolBases;
 
   if ((int)poolIndex < EXPGFX_POOL_COUNT) {
-    *(int *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET + ((int)poolIndex << 2)) =
-        (int)config->attachedSource;
+    runtime->poolSourceIds[(int)poolIndex] = (int)config->attachedSource;
   }
+  trackedFrameMask = &runtime->trackedSourceFrameMasks[(uint)poolIndex & 1];
   if ((int)poolIndex < EXPGFX_POOL_COUNT &&
       (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0) {
-    trackedMaskPair = ((uint)poolIndex & 1) * 2;
-    maskHighWord = trackedFrameMasks[trackedMaskPair];
-    maskLowWord = trackedFrameMasks[trackedMaskPair + 1];
+    maskHighWord = trackedFrameMask->highWord;
+    maskLowWord = trackedFrameMask->lowWord;
     bit = 1 << ((int)poolIndex >> 1);
-    trackedFrameMasks[trackedMaskPair + 1] = maskLowWord | bit;
-    trackedFrameMasks[trackedMaskPair] = maskHighWord | (uint)((int)bit >> 0x1f);
+    trackedFrameMask->lowWord = maskLowWord | bit;
+    trackedFrameMask->highWord = maskHighWord | (uint)((int)bit >> 0x1f);
   } else {
-    trackedMaskPair = ((uint)poolIndex & 1) * 2;
-    maskHighWord = trackedFrameMasks[trackedMaskPair];
-    maskLowWord = trackedFrameMasks[trackedMaskPair + 1];
+    maskHighWord = trackedFrameMask->highWord;
+    maskLowWord = trackedFrameMask->lowWord;
     inverseBit = ~(uint)(1 << ((int)poolIndex >> 1));
-    trackedFrameMasks[trackedMaskPair + 1] = maskLowWord & inverseBit;
-    trackedFrameMasks[trackedMaskPair] = maskHighWord & (uint)((int)inverseBit >> 0x1f);
+    trackedFrameMask->lowWord = maskLowWord & inverseBit;
+    trackedFrameMask->highWord = maskHighWord & (uint)((int)inverseBit >> 0x1f);
   }
   slot = (ExpgfxSlot *)(slotPoolBases[(int)poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
   quadVertices = (ExpgfxQuadVertex *)slot;
@@ -2689,8 +2685,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
     expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
-  resourceHandle =
-      (ExpgfxResourceHandle *)*(u32 *)(expgfxBase + (resourceTableIndex << EXPGFX_TABLE_ENTRY_SHIFT));
+  resourceHandle = (ExpgfxResourceHandle *)runtime->resourceTable[resourceTableIndex].resource;
   if (resourceHandle == NULL) {
     expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
@@ -2882,15 +2877,14 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
     expgfx_initSlotQuad(slot);
   }
 
-  poolSourceModesByte = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET + (s16)poolIndex;
+  poolSourceModesByte = &runtime->poolSourceModes[(s16)poolIndex];
   modeFlag = (config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0 ? 1 : 0;
   *poolSourceModesByte = modeFlag;
   if (*poolSourceModesByte != 0 &&
       (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) == 0) {
     *poolSourceModesByte = *poolSourceModesByte + 1;
   }
-  *(expgfxBase + EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET + (s16)poolIndex) =
-      boundsTemplateId;
+  runtime->poolBoundsTemplateIds[(s16)poolIndex] = boundsTemplateId;
 
   DCFlushRange(slot, EXPGFX_SLOT_SIZE);
   gExpgfxLastAddedSlot = (int)slot;
