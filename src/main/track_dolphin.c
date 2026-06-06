@@ -1997,7 +1997,7 @@ int FUN_800614dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
   *(uint *)(param_9 + 100) = uVar1;
   puVar4 = *(undefined4 **)(param_9 + 100);
   modelDef = ((ObjAnimComponent *)param_9)->modelInstance;
-  if ((*(short *)((char *)modelDef + 0x4a) == -1) || (modelDef->shadowType == 2)) {
+  if ((modelDef->shadowTextureId == -1) || (modelDef->shadowType == 2)) {
     if ((modelDef->renderFlags & 4) == 0) {
       if ((modelDef->renderFlags & 2) == 0) {
         uVar3 = newshadows_getSmallShadowTexture();
@@ -5022,32 +5022,31 @@ void *shadowInit(int *obj, int size)
 {
   int rounded;
   void *base;
-  void *state;
+  ObjModelInstance *modelDef;
   s16 texId;
 
   rounded = roundUpTo4(size);
   *(int *)((char *)obj + 0x64) = rounded;
   base = *(void **)((char *)obj + 0x64);
-  state = *(void **)((char *)obj + 0x50);
-  texId = *(s16 *)((char *)state + 0x4a);
-  if (texId != -1 && *(s16 *)((char *)state + 0x48) != 2) {
+  modelDef = ((ObjAnimComponent *)obj)->modelInstance;
+  texId = modelDef->shadowTextureId;
+  if (texId != -1 && modelDef->shadowType != 2) {
     *(int *)((char *)base + 0x4) = textureLoad(-texId, 0);
-  } else if (*(u8 *)((char *)state + 0x5f) & 0x4) {
+  } else if (modelDef->renderFlags & 0x4) {
     *(int *)((char *)base + 0x4) = textureAlloc512();
-  } else if (*(u8 *)((char *)state + 0x5f) & 0x2) {
+  } else if (modelDef->renderFlags & 0x2) {
     *(int *)((char *)base + 0x4) = 0;
     *(int *)((char *)base + 0x8) = 0;
   } else {
     *(int *)((char *)base + 0x4) = textureFn_8006c5c4();
   }
-  state = *(void **)((char *)obj + 0x50);
-  if (*(s16 *)((char *)state + 0x48) == 1) {
+  if (modelDef->shadowType == 1) {
     *(int *)((char *)base + 0x10) = 0;
   } else {
     *(int *)((char *)base + 0x10) = -1;
   }
-  *(f32 *)base = *(f32 *)*(void **)((char *)obj + 0x50);
-  *(f32 *)((char *)base + 0x2c) = *(f32 *)((char *)*(void **)((char *)obj + 0x50) + 0x88);
+  *(f32 *)base = *(f32 *)modelDef;
+  *(f32 *)((char *)base + 0x2c) = *(f32 *)((char *)modelDef + 0x88);
   *(f32 *)((char *)base + 0x14) = lbl_803DCED8;
   *(f32 *)((char *)base + 0x18) = lbl_803DB650;
   *(f32 *)((char *)base + 0x1c) = lbl_803DCEDC;

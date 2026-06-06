@@ -145,7 +145,8 @@ typedef struct ObjDef {
   u8 pad28[0x44 - 0x28];
   u32 flags;
   s16 shadowType;
-  u8 pad4A[0x4E - 0x4A];
+  s16 shadowTextureId;
+  u8 pad4C[0x4E - 0x4C];
   s16 hitboxFlags;
   u8 pad50[0x55 - 0x50];
   s8 modelCount;
@@ -305,6 +306,7 @@ STATIC_ASSERT(offsetof(ObjDef, jointData) == 0x10);
 STATIC_ASSERT(offsetof(ObjDef, hitReactMoveTable) == 0x24);
 STATIC_ASSERT(offsetof(ObjDef, flags) == 0x44);
 STATIC_ASSERT(offsetof(ObjDef, shadowType) == 0x48);
+STATIC_ASSERT(offsetof(ObjDef, shadowTextureId) == 0x4A);
 STATIC_ASSERT(offsetof(ObjDef, hitboxFlags) == 0x4E);
 STATIC_ASSERT(offsetof(ObjDef, modelCount) == 0x55);
 STATIC_ASSERT(offsetof(ObjDef, group8RegistrationCount) == 0x56);
