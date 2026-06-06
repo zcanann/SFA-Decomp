@@ -2426,7 +2426,7 @@ void SB_MiniFire_update(int obj)
     buf[2] = lbl_803E5928;
     if (*(int *)(obj + 0xf4) <= 0x3c) {
         buf[2] = (f32)*(int *)(obj + 0xf4) / lbl_803E5930;
-        *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E5934 * ((f32)*(int *)(obj + 0xf4) / lbl_803E5930));
+        *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E5934 * ((f32)*(int *)(obj + 0xf4) / *(f32 *)&lbl_803E5930));
     }
     *(s16 *)((char *)buf + 4) = 0;
     *(s16 *)((char *)buf + 2) = 0;
@@ -2559,7 +2559,7 @@ void ShipBattle_init(int obj, int def)
 light_setup:
     if (*(s16 *)(obj + 0x46) == 0x171) {
         light = objCreateLight((int *)obj, 1);
-        if (light != 0) {
+        if ((u32)light != 0) {
             modelLightStruct_setLightKind(light, 2);
             modelLightStruct_setDiffuseColor(light, 200, 60, 0, 0);
             modelLightStruct_setDistanceAttenuation(light, lbl_803E5970, lbl_803E5974);
