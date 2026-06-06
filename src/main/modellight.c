@@ -1094,37 +1094,34 @@ void modelLightStruct_loadChannelLight(int channel, u8 *light, u8 *obj) {
     f32 viewDir[3];
     f32 localDir[3];
     u32 color;
-    f32 *view;
     int lightId;
-    int offset;
+    f32 *view;
     int lightType;
 
-    offset = channel * 0x10;
     if (gModelLightChannelStates[channel].mode == 0 || gModelLightChannelStates[channel].mode == 2) {
         modelLightStruct_loadDiffuseGXLight(light, obj, gModelLightNextGXLightId);
     } else {
         lightId = gModelLightNextGXLightId;
         view = Camera_GetViewMatrix();
         lightType = *(int *)(light + 0x50);
-        if (lightType != 3) {
-            if (lightType < 3) {
-                if (lightType < 2) {
-                } else {
-                    PSVECSubtract((f32 *)(obj + 0xc), (f32 *)(light + 0x10), localDir);
-                    PSVECNormalize(localDir, localDir);
-                    if (*(int *)(light + 0x60) == 0) {
-                        PSMTXMultVecSR(view, localDir, viewDir);
-                    } else {
-                        *(int *)&viewDir[0] = *(int *)&localDir[0];
-                        *(int *)&viewDir[1] = *(int *)&localDir[1];
-                        *(int *)&viewDir[2] = *(int *)&localDir[2];
-                    }
-                    GXInitSpecularDir(light + 0xc0, viewDir[0], viewDir[1], viewDir[2]);
-                }
-            } else if (lightType < 5) {
-                GXInitSpecularDir(light + 0xc0, *(f32 *)(light + 0x40), *(f32 *)(light + 0x44),
-                                  *(f32 *)(light + 0x48));
+        switch (lightType) {
+        case 2:
+            PSVECSubtract((f32 *)(obj + 0xc), (f32 *)(light + 0x10), localDir);
+            PSVECNormalize(localDir, localDir);
+            if (*(int *)(light + 0x60) == 0) {
+                PSMTXMultVecSR(view, localDir, viewDir);
+            } else {
+                typedef struct { int x, y, z; } IVec3;
+                *(IVec3 *)viewDir = *(IVec3 *)localDir;
             }
+            GXInitSpecularDir(light + 0xc0, viewDir[0], viewDir[1], viewDir[2]);
+            break;
+        case 3:
+            break;
+        case 4:
+            GXInitSpecularDir(light + 0xc0, *(f32 *)(light + 0x40), *(f32 *)(light + 0x44),
+                              *(f32 *)(light + 0x48));
+            break;
         }
         color = *(u32 *)(light + 0x100);
         GXInitLightColor(light + 0xc0, &color);
