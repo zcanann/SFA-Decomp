@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
 typedef union VFPLevelControlLatch {
@@ -46,7 +47,7 @@ void vfplevelcontrol_update(int obj) {
     int player = (int)Obj_GetPlayerObject();
     u8 mapEventState;
 
-    if (*(int *)((char *)obj + 0xf4) == 0 && GameBit_Get(0xef6) == 0) {
+    if (((GameObject *)obj)->unkF4 == 0 && GameBit_Get(0xef6) == 0) {
         if (GameBit_Get(0xd72) != 0) {
             getEnvfxActImmediately(obj, obj, 0x10c, 0);
             getEnvfxActImmediately(obj, obj, 0x10d, 0);
@@ -54,7 +55,7 @@ void vfplevelcontrol_update(int obj) {
             skyFn_80088e54(1, lbl_803E6060);
             GameBit_Set(0xd72, 0);
         }
-        *(int *)((char *)obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
 
     coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
@@ -144,7 +145,7 @@ void vfplevelcontrol_init(int *obj, u8 *init) {
     ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)((char *)obj + 0xac));
     state->cueTimers[4] = 0;
     state->cueTimers[5] = 0;
-    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
     timeOfDayFn_80055038();
     GameBit_Set(0xdcf, 1);
     unlockLevel(0, 0, 1);
