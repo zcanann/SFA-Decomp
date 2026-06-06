@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objanim.h"
+#include "main/objhits_types.h"
 
 extern undefined4 getLActions();
 extern undefined4 FUN_80006728();
@@ -3665,7 +3666,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     ((Bit80*)(sub + 8))->top = 0;
     if (*(void**)((char*)obj + 0xc4) == NULL) return;
     if (ObjHits_GetPriorityHit((int)obj, &hit, 0, 0) == 0) {
-        hit = *(void**)((char*)*(void**)((char*)obj + 0x54) + 0x50);
+        hit = (void *)(*(ObjHitsPriorityState **)((char *)obj + 0x54))->lastHitObject;
         if (hit == NULL) return;
     }
     if (hit != Obj_GetPlayerObject()) return;
@@ -5808,7 +5809,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
                 *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x28) * timeDelta + *(f32*)((char*)obj + 0x10);
                 hitDetectFn_800658a4(obj, *(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14), &ground, 0);
                 *(s16*)obj = (s16)((0xc0 << (*(s16*)obj + 8)) >> 1);
-                *(s16*)(*(char**)((char*)obj + 0x54) + 0x60) &= ~0x400;
+                (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~0x400;
                 if (ground <= lbl_803E4130) {
                     *(int*)(sub + 0xa94) = 2;
                     *(f32*)((char*)obj + 0x10) -= ground;
@@ -5964,7 +5965,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             *(u8*)(sub + 0xa98) = 1;
         }
         *(u8*)((char*)obj + 0x36) = 0;
-        *(s16*)(*(char**)((char*)obj + 0x54) + 0x60) &= ~1;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~1;
         Obj_RemoveFromUpdateList(obj);
         *(s16*)((char*)obj + 6) |= 0x4000;
         *(u8*)(sub + 0xa80) = 0xf;
@@ -6003,7 +6004,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
     case 15:
         *(s16*)((char*)obj + 6) |= 0x4000;
         Obj_RemoveFromUpdateList(obj);
-        *(s16*)(*(char**)((char*)obj + 0x54) + 0x60) &= ~1;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~1;
         break;
     }
     dll_2E_func03(obj, sub);
