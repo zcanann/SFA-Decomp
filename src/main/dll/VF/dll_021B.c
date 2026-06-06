@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/game_object.h"
 
 int dll_21B_getExtraSize_ret_4(void) { return 0x4; }
 
@@ -41,7 +42,7 @@ void dll_21B_init(int *obj, u8 *init) {
     Dll21BState *inner = *(Dll21BState **)((char *)obj + 0xb8);
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     inner->gameBit = *(s16 *)((char *)init + 0x1e);
-    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -56,17 +57,17 @@ void dll_21B_update(int obj)
 
     if ((s8)setup[0x19] == 1) {
         if (DLL_21B_BIT_SET(state->gameBit) &&
-            *(f32 *)(setup + 0x10) - lbl_803E60D0 < *(f32 *)(obj + 0x14)) {
-            *(f32 *)(obj + 0x14) -= lbl_803E60D4;
+            *(f32 *)(setup + 0x10) - lbl_803E60D0 < ((GameObject *)obj)->anim.localPosZ) {
+            ((GameObject *)obj)->anim.localPosZ -= lbl_803E60D4;
             if (DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_A) &&
                 DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_B)) {
                 GameBit_Set(DLL_21B_MOVING_BIT, 1);
             }
             limit = *(f32 *)(setup + 0x10) - lbl_803E60D0;
-            if (limit < *(f32 *)(obj + 0x14)) {
+            if (limit < ((GameObject *)obj)->anim.localPosZ) {
                 return;
             }
-            *(f32 *)(obj + 0x14) = limit;
+            ((GameObject *)obj)->anim.localPosZ = limit;
             if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A)) {
                 return;
             }
@@ -77,14 +78,14 @@ void dll_21B_update(int obj)
             return;
         }
         if (DLL_21B_BIT_CLEAR(state->gameBit) &&
-            *(f32 *)(obj + 0x14) < *(f32 *)(setup + 0x10)) {
-            *(f32 *)(obj + 0x14) -= lbl_803E60D4;
+            ((GameObject *)obj)->anim.localPosZ < *(f32 *)(setup + 0x10)) {
+            ((GameObject *)obj)->anim.localPosZ -= lbl_803E60D4;
             if (DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_A) &&
                 DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_B)) {
                 GameBit_Set(DLL_21B_MOVING_BIT, 1);
             }
-            if (*(f32 *)(setup + 0x10) < *(f32 *)(obj + 0x14)) {
-                *(f32 *)(obj + 0x14) = *(f32 *)(setup + 0x10);
+            if (*(f32 *)(setup + 0x10) < ((GameObject *)obj)->anim.localPosZ) {
+                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(setup + 0x10);
                 if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A) &&
                     DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_B)) {
                     GameBit_Set(DLL_21B_RESET_BIT, 0);
@@ -94,17 +95,17 @@ void dll_21B_update(int obj)
         }
     } else {
         if (DLL_21B_BIT_SET(state->gameBit) &&
-            *(f32 *)(obj + 0x14) < lbl_803E60D0 + *(f32 *)(setup + 0x10)) {
-            *(f32 *)(obj + 0x14) += lbl_803E60D4;
+            ((GameObject *)obj)->anim.localPosZ < lbl_803E60D0 + *(f32 *)(setup + 0x10)) {
+            ((GameObject *)obj)->anim.localPosZ += lbl_803E60D4;
             if (DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_A) &&
                 DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_B)) {
                 GameBit_Set(DLL_21B_MOVING_BIT, 1);
             }
             limit = lbl_803E60D0 + *(f32 *)(setup + 0x10);
-            if (*(f32 *)(obj + 0x14) < limit) {
+            if (((GameObject *)obj)->anim.localPosZ < limit) {
                 return;
             }
-            *(f32 *)(obj + 0x14) = limit;
+            ((GameObject *)obj)->anim.localPosZ = limit;
             if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A)) {
                 return;
             }
@@ -115,14 +116,14 @@ void dll_21B_update(int obj)
             return;
         }
         if (DLL_21B_BIT_CLEAR(state->gameBit) &&
-            *(f32 *)(setup + 0x10) < *(f32 *)(obj + 0x14)) {
-            *(f32 *)(obj + 0x14) -= lbl_803E60D4;
+            *(f32 *)(setup + 0x10) < ((GameObject *)obj)->anim.localPosZ) {
+            ((GameObject *)obj)->anim.localPosZ -= lbl_803E60D4;
             if (DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_A) &&
                 DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_B)) {
                 GameBit_Set(DLL_21B_MOVING_BIT, 1);
             }
-            if (*(f32 *)(obj + 0x14) < *(f32 *)(setup + 0x10)) {
-                *(f32 *)(obj + 0x14) = *(f32 *)(setup + 0x10);
+            if (((GameObject *)obj)->anim.localPosZ < *(f32 *)(setup + 0x10)) {
+                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(setup + 0x10);
                 if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A) &&
                     DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_B)) {
                     GameBit_Set(DLL_21B_RESET_BIT, 0);
