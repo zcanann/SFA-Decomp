@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objhits_types.h"
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
 
@@ -5249,8 +5250,8 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             *(int *)((char *)inner + 0x4c0) = 0;
         }
     }
-    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6e) = 0xb;
-    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6f) =
+    ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 0xb;
+    ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId =
         ((u8 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0x14];
     {
         int slot = *(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0;
@@ -5292,7 +5293,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         int i;
         int n;
         off = 0;
-        *(int *)((char *)*(int *)((char *)obj + 0x54) + 0x48) = 0;
+        ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->objectHitMask = 0;
         i = 0;
         n = 3;
         do {
@@ -5325,7 +5326,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                         bits = 0;
                         break;
                     }
-                    *(int *)((char *)*(int *)((char *)obj + 0x54) + 0x48) = bits;
+                    ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->objectHitMask = bits;
                 }
                 if (i != *(s8 *)((char *)inner + 0x8cd)) {
                     *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x70) = 0;
@@ -5756,7 +5757,7 @@ int fn_802A7160(int obj, int state)
 #pragma peephole off
 void fn_8029BC08(int obj)
 {
-    *(int *)((char *)*(int *)((char *)obj + 0x54) + 0x48) = 0;
+    ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->objectHitMask = 0;
     if (*(s16 *)((char *)lbl_803DE44C + 0x44) == 0x2d) {
         objSetAnimField48to0((int *)lbl_803DE44C);
     }
@@ -11447,8 +11448,8 @@ void fn_802B4C18(int obj, int state, f32 fv)
     *(f32 *)((char *)state + 0x28c) = *(f32 *)((char *)state + 0x6d8);
     *(int *)((char *)state + 0x31c) = *(u16 *)((char *)state + 0x6e2);
     *(int *)((char *)state + 0x318) = *(u16 *)((char *)state + 0x6e0);
-    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6e) = 0;
-    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6f) = 0;
+    ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 0;
+    ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId = 0;
     *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6c) = 0;
     *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6d) = 0;
     *(u8 *)((char *)state + 0x25f) = 1;
