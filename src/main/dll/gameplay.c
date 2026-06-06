@@ -1,10 +1,16 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
 
 
 typedef struct { u32 mode; f32 x, y, z; void *tex; s16 flags; u8 layer; } GfxCmd;
 extern undefined4* gModgfxInterface;
+
+static inline u8 *Gameplay_GetActiveModel(void *obj) {
+  ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+  return (u8 *)objAnim->banks[objAnim->bankIndex];
+}
 
 
 
@@ -4521,7 +4527,7 @@ void FUN_800eb6f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   uVar14 = FUN_80286820();
   iVar2 = (int)((ulonglong)uVar14 >> 0x20);
   uVar6 = (uint)uVar14;
-  piVar7 = *(int **)(*(int *)(iVar2 + 0x7c) + *(char *)(iVar2 + 0xad) * 4);
+  piVar7 = (int *)Gameplay_GetActiveModel((void *)iVar2);
   local_418 = DAT_803e13b0;
   if (param_14 != (undefined4 *)0x0) {
     local_418 = *param_14;
@@ -16639,7 +16645,7 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
   void *tex;
   int n;
   int cnt;
-  spr = *(u8 **)(*(u8 ***)(param_1 + 0x7c) + *(s8 *)(param_1 + 0xad));
+  spr = Gameplay_GetActiveModel(param_1);
   *(u32 *)&r = lbl_803E0730;
   if (param_6 != (s16 *)0) {
     r.lo = param_6[0];
