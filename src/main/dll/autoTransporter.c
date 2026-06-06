@@ -1,4 +1,51 @@
 #include "main/dll/autoTransporter.h"
+#include "global.h"
+
+/*
+ * Per-object extra state for the doorf4 auto door
+ * (doorf4_getExtraSize == 0x24).
+ */
+typedef struct DoorF4State {
+    f32 cosYaw; /* cos/sin of spawn yaw; door plane normal */
+    f32 sinYaw;
+    f32 planeD; /* -(cos*x + sin*z) plane offset */
+    f32 openRange; /* per-type approach distance */
+    int gameBitA; /* params+0x1E; open latch */
+    int gameBitB; /* per-type (68/152/-1) secondary gate */
+    int unk18; /* params+0x20 */
+    u16 sfxOpen; /* 830 for types 318/890 */
+    u16 sfxClose; /* 831 */
+    u8 active; /* gamebit-derived open state */
+    u8 triggerLatch;
+    u8 toggled;
+    u8 pad23;
+} DoorF4State;
+
+STATIC_ASSERT(sizeof(DoorF4State) == 0x24);
+
+/*
+ * Per-object extra state for the sidekick (Tricky) ball
+ * (sidekickball_getExtraSize == 0x2CC). Only locally-evidenced
+ * fields are named.
+ */
+typedef struct SidekickBallState {
+    u8 unk000[0x25B];
+    u8 unk25B; /* hittable latch */
+    u8 pad25C[0x26C - 0x25C];
+    f32 fadeTimer; /* 0x26C */
+    u8 pad270[4];
+    u8 ballMode; /* 0 idle, 1/2 active, 3 thrown */
+    u8 pad275[0x298 - 0x275];
+    f32 unk298;
+    u8 pad29C[0x2B0 - 0x29C];
+    f32 launchX; /* obj position at throw */
+    f32 launchY;
+    f32 launchZ;
+    u8 pad2BC[0x2CC - 0x2BC];
+} SidekickBallState;
+
+STATIC_ASSERT(sizeof(SidekickBallState) == 0x2CC);
+
 
 extern undefined4 FUN_80006728();
 extern bool FUN_800067f8();
@@ -753,43 +800,43 @@ extern void ObjHits_SyncObjectPositionIfDirty(int* obj);
 
 void fn_8017962C(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
-    u8 b = *(u8*)((char*)state + 628);
+    SidekickBallState* state = *(SidekickBallState**)((char*)obj + 0xb8);
+    u8 b = state->ballMode;
     if (b != 3 && b != 2) return;
-    *(f32*)((char*)state + 620) = lbl_803E369C;
+    state->fadeTimer = lbl_803E369C;
 }
 
 int fn_80179650(int* obj)
 {
     int r = 0;
-    u8 b = *(u8*)((char*)*(int**)((char*)obj + 0xb8) + 628);
+    u8 b = (*(SidekickBallState**)((char*)obj + 0xb8))->ballMode;
     if (b == 2 || b == 1) r = 1;
     return r;
 }
 
 void fn_80179678(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
-    *(f32*)((char*)state + 620) = lbl_803E369C;
-    *(u8*)((char*)state + 628) = 0;
+    SidekickBallState* state = *(SidekickBallState**)((char*)obj + 0xb8);
+    state->fadeTimer = lbl_803E369C;
+    state->ballMode = 0;
     ObjHits_DisableObject(obj);
-    *(u8*)((char*)state + 603) = 0;
+    state->unk25B = 0;
 }
 
 void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
-    *(u8*)((char*)state + 628) = 3;
-    *(f32*)((char*)state + 620) = lbl_803E369C;
+    SidekickBallState* state = *(SidekickBallState**)((char*)obj + 0xb8);
+    state->ballMode = 3;
+    state->fadeTimer = lbl_803E369C;
     *(f32*)((char*)obj + 36) = a;
     *(f32*)((char*)obj + 40) = b;
     *(f32*)((char*)obj + 44) = c;
     ObjHits_EnableObject(obj);
     ObjHits_SyncObjectPositionIfDirty(obj);
-    *(u8*)((char*)state + 603) = 1;
-    *(f32*)((char*)state + 688) = *(f32*)((char*)obj + 12);
-    *(f32*)((char*)state + 692) = *(f32*)((char*)obj + 16);
-    *(f32*)((char*)state + 696) = *(f32*)((char*)obj + 20);
+    state->unk25B = 1;
+    state->launchX = *(f32*)((char*)obj + 12);
+    state->launchY = *(f32*)((char*)obj + 16);
+    state->launchZ = *(f32*)((char*)obj + 20);
 }
 
 extern int *Obj_GetPlayerObject(void);
@@ -893,8 +940,8 @@ extern u32 GameBit_Get(int eventId);
 extern int **gObjectTriggerInterface;
 void doorf4_update(int *obj)
 {
-    int *state = *(int **)((char *)obj + 0xb8);
-    *(u8 *)((char *)state + 0x21) = 0;
+    DoorF4State *state = *(DoorF4State **)((char *)obj + 0xb8);
+    state->triggerLatch = 0;
     if (*(int *)((char *)obj + 0xf4) == 0) {
         int *src = *(int **)((char *)obj + 0x4c);
         s16 type;
@@ -904,15 +951,15 @@ void doorf4_update(int *obj)
         *(s16 *)obj = (s16)((s8) * (s8 *)((char *)src + 0x18) << 8);
         type = *(s16 *)((char *)obj + 0x46);
         if (type == 0x151) {
-            if (GameBit_Get(*(int *)((char *)state + 0x10)) != 0) {
+            if (GameBit_Get(state->gameBitA) != 0) {
                 ((void (*)(int *, int))((int *)(*gObjectTriggerInterface))[0x54 / 4])(obj, 0x75);
-                *(u8 *)((char *)state + 0x21) = 1;
+                state->triggerLatch = 1;
             }
             ((void (*)(int, int *, int))((int *)(*gObjectTriggerInterface))[0x48 / 4])(0, obj, -1);
         } else if (type == 0x37a) {
-            if (GameBit_Get(*(int *)((char *)state + 0x10)) != 0) {
+            if (GameBit_Get(state->gameBitA) != 0) {
                 ((void (*)(int *, int))((int *)(*gObjectTriggerInterface))[0x54 / 4])(obj, 0x8a);
-                *(u8 *)((char *)state + 0x21) = 1;
+                state->triggerLatch = 1;
             }
             ((void (*)(int, int *, int))((int *)(*gObjectTriggerInterface))[0x48 / 4])(0, obj, -1);
         } else {
@@ -932,7 +979,7 @@ extern f32 sin(f32 x);
 
 void doorf4_init(int *obj, int *params)
 {
-    int *state = *(int **)((char *)obj + 0xb8);
+    DoorF4State *state = *(DoorF4State **)((char *)obj + 0xb8);
     s16 type;
 
     ObjMsg_AllocQueue(obj, 4);
@@ -940,37 +987,37 @@ void doorf4_init(int *obj, int *params)
     *(void **)((char *)obj + 0xbc) = (void *)doorf4_SeqFn;
     *(u8 *)((char *)obj + 0xaf) |= 8;
     *(u16 *)((char *)obj + 0xb0) |= 0x6000;
-    state[4] = *(s16 *)((char *)params + 0x1e);
-    state[6] = *(s16 *)((char *)params + 0x20);
-    *(f32 *)((char *)state + 0xc) = lbl_803E3654;
+    state->gameBitA = *(s16 *)((char *)params + 0x1e);
+    state->unk18 = *(s16 *)((char *)params + 0x20);
+    state->openRange = lbl_803E3654;
 
     type = *(s16 *)((char *)obj + 0x46);
     switch (type) {
     case 193:
     case 196:
-        state[5] = 68;
+        state->gameBitB = 68;
         break;
     case 283:
-        state[5] = 152;
+        state->gameBitB = 152;
         break;
     case 318:
     case 890:
-        *(s16 *)((char *)state + 0x1c) = 830;
-        *(s16 *)((char *)state + 0x1e) = 831;
+        *(s16 *)&state->sfxOpen = 830;
+        *(s16 *)&state->sfxClose = 831;
         break;
     case 200:
-        *(f32 *)((char *)state + 0xc) = lbl_803E3684;
+        state->openRange = lbl_803E3684;
         break;
     default:
-        state[5] = -1;
+        state->gameBitB = -1;
     }
 
     ObjGroup_AddObject(obj, 14);
 
-    *(f32 *)state = fn_80293E80(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
-    *(f32 *)((char *)state + 4) = sin(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
-    *(f32 *)((char *)state + 8) = -(*(f32 *)state * *(f32 *)((char *)obj + 12) +
-                                    *(f32 *)((char *)state + 4) * *(f32 *)((char *)obj + 20));
+    state->cosYaw = fn_80293E80(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
+    state->sinYaw = sin(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
+    state->planeD = -(state->cosYaw * *(f32 *)((char *)obj + 12) +
+                      state->sinYaw * *(f32 *)((char *)obj + 20));
 }
 
 #pragma peephole reset
@@ -1003,7 +1050,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     int *player;
     int i;
     u8 *def;
-    f32 *sub;
+    DoorF4State *sub;
     int **walk;
     f32 *vs;
     u8 ev;
@@ -1016,7 +1063,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     f32 thr;
 
     def = *(u8 **)((char *)obj + 0x4c);
-    sub = *(f32 **)((char *)obj + 0xb8);
+    sub = *(DoorF4State **)((char *)obj + 0xb8);
     sd = lbl_803E3648;
     list = ObjList_GetObjects(&objIdx, &objCount);
     seq[0x56] = 0;
@@ -1024,22 +1071,22 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     dx = *(f32 *)((char *)player + 0xc) - *(f32 *)(def + 8);
     dy = *(f32 *)((char *)player + 0x14) - *(f32 *)(def + 0x10);
     dist = sqrtf(dx * dx + dy * dy);
-    if (*(int *)(sub + 4) == -1) {
+    if (sub->gameBitA == -1) {
         gb = 1;
     } else {
-        gb = GameBit_Get(*(int *)(sub + 4));
+        gb = GameBit_Get(sub->gameBitA);
     }
     if (ObjMsg_Peek(obj, &msg, 0, 0) != 0) {
         switch (msg) {
         case 0x30002:
-            *(u8 *)((char *)sub + 0x20) = 1;
+            *(u8 *)&sub->active = 1;
             break;
         case 0x30003:
-            *(u8 *)((char *)sub + 0x20) = 0;
+            *(u8 *)&sub->active = 0;
             break;
         }
     }
-    active = *(s8 *)((char *)sub + 0x20);
+    active = *(s8 *)&sub->active;
     switch (*(s8 *)(def + 0x19)) {
     case 6:
         if (gb != 0) {
@@ -1052,11 +1099,11 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
         s = sin(ang);
         sd = -(*(f32 *)(def + 8) * sd + *(f32 *)(def + 0x10) * s)
            + (sd * *(f32 *)((char *)player + 0xc) + s * *(f32 *)((char *)player + 0x14));
-        thr = sub[3];
+        thr = sub->openRange;
         if (dist < thr && gb != 0 && sd < thr && sd > -thr) {
             active = 1;
         }
-        if (active != 0 && *(u8 *)((char *)sub + 0x22) == 0) {
+        if (active != 0 && sub->toggled == 0) {
             if (*(s16 *)((char *)obj + 0x46) == 200) {
                 if (GameBit_Get(0x57) != 0) {
                     getEnvfxAct(0, 0, 0x7f, 0);
@@ -1064,12 +1111,12 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
                     getEnvfxAct(0, 0, 0x7c, 0);
                 }
             }
-            *(u8 *)((char *)sub + 0x22) = 1;
-        } else if (active == 0 && *(u8 *)((char *)sub + 0x22) == 1) {
+            sub->toggled = 1;
+        } else if (active == 0 && sub->toggled == 1) {
             if (*(s16 *)((char *)obj + 0x46) == 200 && sd <= lbl_803E3648) {
                 getEnvfxAct(0, 0, 0xe, 0);
             }
-            *(u8 *)((char *)sub + 0x22) = 0;
+            sub->toggled = 0;
         }
         break;
     case 1:
@@ -1097,7 +1144,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             }
             if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
                 *(u8 *)((char *)obj + 0xaf) |= 8;
-                GameBit_Set(*(int *)(sub + 4), 1);
+                GameBit_Set(sub->gameBitA, 1);
             }
         } else if (gb != 0) {
             active = 1;
@@ -1154,11 +1201,11 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
         }
         break;
     case 5:
-        if (GameBit_Get(*(int *)(sub + 5)) != 0 && gb == 0) {
+        if (GameBit_Get(sub->gameBitB) != 0 && gb == 0) {
             *(u8 *)((char *)obj + 0xaf) &= ~8;
             if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
                 *(u8 *)((char *)obj + 0xaf) |= 8;
-                GameBit_Set(*(int *)(sub + 4), 1);
+                GameBit_Set(sub->gameBitA, 1);
                 ((void (*)(int, int *, int))((int *)(*gObjectTriggerInterface))[0x48 / 4])(1, obj, -1);
                 gb = 1;
             }
@@ -1178,7 +1225,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     }
     *(int *)((char *)obj + 0xf8) = active;
     if ((*(s16 *)((char *)obj + 0x46) == 0x13e || *(s16 *)((char *)obj + 0x46) == 0x151)
-        && *(u8 *)((char *)sub + 0x21) != 0) {
+        && sub->triggerLatch != 0) {
         seq[0x90] |= 1;
     }
     while (ObjMsg_Pop(obj, &msg, 0, 0) != 0) {
@@ -1189,7 +1236,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             switch (ev) {
             case 1:
                 vs = Camera_GetCurrentViewSlot();
-                if (sub[2] + (sub[0] * vs[3] + sub[1] * vs[5]) < lbl_803E3648) {
+                if (sub->planeD + (sub->cosYaw * vs[3] + sub->sinYaw * vs[5]) < lbl_803E3648) {
                     if (*(s16 *)(def + 0x20) != -1) {
                         GameBit_Set(*(s16 *)(def + 0x20),
                                     (u8)((u8)GameBit_Get(*(s16 *)(def + 0x20)) ^ (u8)*(s16 *)(def + 0x1c)));
@@ -1228,24 +1275,24 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
                 }
                 /* fall through */
             case 3:
-                if (*(u16 *)((char *)sub + 0x1c) != 0) {
-                    Sfx_PlayFromObject((int)obj, *(u16 *)((char *)sub + 0x1c));
+                if (sub->sfxOpen != 0) {
+                    Sfx_PlayFromObject((int)obj, sub->sfxOpen);
                 }
                 break;
             case 4:
-                if (*(u16 *)((char *)sub + 0x1c) != 0
-                    && Sfx_IsPlayingFromObject((int)obj, *(u16 *)((char *)sub + 0x1c)) != 0) {
-                    Sfx_StopFromObject((int)obj, *(u16 *)((char *)sub + 0x1c));
+                if (sub->sfxOpen != 0
+                    && Sfx_IsPlayingFromObject((int)obj, sub->sfxOpen) != 0) {
+                    Sfx_StopFromObject((int)obj, sub->sfxOpen);
                 }
                 break;
             case 5:
-                if (*(u16 *)((char *)sub + 0x1e) != 0 && GameBit_Get(0xcbb) == 0) {
-                    Sfx_PlayFromObject((int)obj, *(u16 *)((char *)sub + 0x1e));
+                if (sub->sfxClose != 0 && GameBit_Get(0xcbb) == 0) {
+                    Sfx_PlayFromObject((int)obj, sub->sfxClose);
                 }
                 break;
             case 2:
                 vs = Camera_GetCurrentViewSlot();
-                if (sub[2] + (sub[0] * vs[3] + sub[1] * vs[5]) < lbl_803E3648) {
+                if (sub->planeD + (sub->cosYaw * vs[3] + sub->sinYaw * vs[5]) < lbl_803E3648) {
                     if (*(s16 *)(def + 0x20) != -1) {
                         GameBit_Set(*(s16 *)(def + 0x20),
                                     (u8)((u8)GameBit_Get(*(s16 *)(def + 0x20)) ^ (u8)*(s16 *)(def + 0x1c)));
