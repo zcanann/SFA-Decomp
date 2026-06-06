@@ -963,9 +963,27 @@ void FUN_80190008(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+/*
+ * Per-object extra state for the warp-pad transporter
+ * (transporter_getExtraSize == 0x10; helpers shared by the
+ * CFwalltorch/mmp_asteroid transporter updates).
+ */
+typedef struct WarpPadState {
+    f32 pulseTimer; /* counts up while flag 4; periodic idle fx */
+    f32 cooldownTimer; /* counts down; on expiry unk0A is reset to -1 */
+    s16 activateDelay; /* frames loaded into obj+0xF4 when triggered */
+    s16 unk0A;
+    u8 countdownActive;
+    u8 triggerMode; /* 0 = proximity warp, 1 = trigger/gamebit warp */
+    u8 flags; /* 0x80 gamebit-disabled, 0x40/0x10/0x8 warp fx type, 4 pulse fx, 2 latch */
+    u8 pad0F;
+} WarpPadState;
+
+STATIC_ASSERT(sizeof(WarpPadState) == 0x10);
+
 void warpPadFn_8019042c(int param_1)
 {
-    int state;
+    WarpPadState *state;
     int player;
     u8 flags;
     u8 i;
@@ -979,12 +997,12 @@ void warpPadFn_8019042c(int param_1)
         f32 pos[3];
     } fx;
 
-    state = *(int *)(param_1 + 0xb8);
+    state = *(WarpPadState **)(param_1 + 0xb8);
     player = Obj_GetPlayerObject();
     fx.pos[0] = lbl_803E3E98;
     fx.pos[1] = lbl_803E3E9C;
     fx.pos[2] = lbl_803E3E98;
-    flags = *(u8 *)(state + 0xe);
+    flags = state->flags;
 
     if ((flags & 0x40) != 0) {
         if ((flags & 8) != 0) {
@@ -999,7 +1017,7 @@ void warpPadFn_8019042c(int param_1)
         }
     } else if ((flags & 8) != 0) {
         if (vec3f_distanceSquared((f32 *)(param_1 + 0x18), (f32 *)(player + 0x18)) < lbl_803E3EA0) {
-            if (((*(u8 *)(state + 0xe) & 0xa0) != 0) && (*(u8 *)(state + 0xc) == 0)) {
+            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0)) {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             } else {
@@ -1011,7 +1029,7 @@ void warpPadFn_8019042c(int param_1)
         fx.mode = 1;
     } else if ((flags & 0x10) != 0) {
         if (vec3f_distanceSquared((f32 *)(param_1 + 0x18), (f32 *)(player + 0x18)) < lbl_803E3EA0) {
-            if (((*(u8 *)(state + 0xe) & 0xa0) != 0) && (*(u8 *)(state + 0xc) == 0)) {
+            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0)) {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             } else {
@@ -1023,7 +1041,7 @@ void warpPadFn_8019042c(int param_1)
         fx.mode = 2;
     } else {
         if (vec3f_distanceSquared((f32 *)(param_1 + 0x18), (f32 *)(player + 0x18)) < lbl_803E3EA0) {
-            if (((*(u8 *)(state + 0xe) & 0xa0) != 0) && (*(u8 *)(state + 0xc) == 0)) {
+            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0)) {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             } else {
@@ -1035,8 +1053,8 @@ void warpPadFn_8019042c(int param_1)
         fx.mode = 0;
     }
 
-    if ((*(u8 *)(state + 0xe) & 4) != 0) {
-        timer = *(f32 *)state;
+    if ((state->flags & 4) != 0) {
+        timer = state->pulseTimer;
         if (timer < lbl_803E3EB4) {
             if ((f32)(s32)randomGetRange(0, 0x1e0) < timer * lbl_803E3EB0) {
                 (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
@@ -1052,14 +1070,14 @@ void warpPadFn_8019042c(int param_1)
             fx.scale = lbl_803E3EC0 * ((timer - lbl_803E3EB4) / lbl_803E3EC4);
             (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
                 param_1, 0x7d2, &fx, 2, -1, 0);
-            *(u8 *)(state + 0xe) = *(u8 *)(state + 0xe) | 2;
+            state->flags = state->flags | 2;
         } else if (timer < lbl_803E3EC8) {
             if ((f32)(s32)randomGetRange(0, 0x1e0) < timer * lbl_803E3EB0) {
                 (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
                     param_1, 0x7ca, &fx, 2, -1, 0);
             }
-            if ((*(u8 *)(state + 0xe) & 2) != 0) {
-                *(u8 *)(state + 0xe) = *(u8 *)(state + 0xe) & ~2;
+            if ((state->flags & 2) != 0) {
+                state->flags = state->flags & ~2;
                 fx.count = 0x46;
                 fx.scale = lbl_803E3ECC;
                 for (i = 0xf; i != 0; i--) {
@@ -1068,10 +1086,10 @@ void warpPadFn_8019042c(int param_1)
                 }
             }
         } else if (timer >= lbl_803E3ED0) {
-            *(f32 *)state = lbl_803E3E98;
-            *(u8 *)(state + 0xe) = *(u8 *)(state + 0xe) & ~4;
+            state->pulseTimer = lbl_803E3E98;
+            state->flags = state->flags & ~4;
         }
-        *(f32 *)state = *(f32 *)state + timeDelta;
+        state->pulseTimer = state->pulseTimer + timeDelta;
     }
 }
 
@@ -1461,18 +1479,18 @@ void lfxemitter_update(int obj)
 void warpPadPlayerStandingOn(int obj)
 {
     int def;
-    int state;
+    WarpPadState *state;
     int player;
     s16 gameBit;
 
     def = *(int*)(obj + 0x4c);
-    state = *(int*)(obj + 0xb8);
+    state = *(WarpPadState **)(obj + 0xb8);
     gameBit = *(s16*)(def + 0x20);
     if (gameBit != -1) {
         if (GameBit_Get(gameBit) != 0) {
-            *(u8*)(state + 0xe) = *(u8*)(state + 0xe) & 0x7f;
+            state->flags = state->flags & 0x7f;
         } else {
-            *(u8*)(state + 0xe) = *(u8*)(state + 0xe) | 0x80;
+            state->flags = state->flags | 0x80;
         }
     }
 
@@ -1490,15 +1508,15 @@ void warpPadPlayerStandingOn(int obj)
         return;
     }
 
-    if ((*(u8*)(state + 0xd) == 0) && (*(u8*)(state + 0xc) == 0) &&
+    if ((state->triggerMode == 0) && (state->countdownActive == 0) &&
         ((*(u16*)(obj + 0xb0) & 0x1000) == 0)) {
         if (lbl_803DCEB8 > -1) {
             player = Obj_GetPlayerObject();
             if (Vec_xzDistance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < lbl_803E3EE0) {
                 (*(void (**)(int, int, int))(*(int*)(*gObjectTriggerInterface) + 0x48))(1, obj, -1);
-                *(s32*)(obj + 0xf4) = *(s16*)(state + 8);
-                *(u8*)(state + 0xd) = 0;
-                *(u8*)(state + 0xc) = 1;
+                *(s32*)(obj + 0xf4) = state->activateDelay;
+                state->triggerMode = 0;
+                state->countdownActive = 1;
                 lbl_803DCDE0 = 2;
                 goto updateTimer;
             }
@@ -1508,25 +1526,25 @@ void warpPadPlayerStandingOn(int obj)
              ((GameBit_Get(gameBit) != 0) && ((*(u8*)(obj + 0xaf) & 4) != 0))) &&
             (ObjTrigger_IsSet(obj) != 0)) {
             (*(void (**)(int, int, int))(*(int*)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
-            *(s32*)(obj + 0xf4) = *(s16*)(state + 8);
-            *(u8*)(state + 0xd) = 1;
-            *(u8*)(state + 0xc) = 1;
+            *(s32*)(obj + 0xf4) = state->activateDelay;
+            state->triggerMode = 1;
+            state->countdownActive = 1;
         }
     }
 
 updateTimer:
-    if (*(u8*)(state + 0xc) != 0) {
+    if (state->countdownActive != 0) {
         if (*(s32*)(obj + 0xf4) > 0) {
             *(s32*)(obj + 0xf4) = *(s32*)(obj + 0xf4) - framesThisStep;
         } else {
             *(s32*)(obj + 0xf4) = 0;
-            *(u8*)(state + 0xc) = 0;
+            state->countdownActive = 0;
         }
     }
-    *(f32*)(state + 4) = *(f32*)(state + 4) - timeDelta;
-    if (*(f32*)(state + 4) <= lbl_803E3E98) {
-        *(f32*)(state + 4) = lbl_803E3E98;
-        *(s16*)(state + 0xa) = -1;
+    state->cooldownTimer = state->cooldownTimer - timeDelta;
+    if (state->cooldownTimer <= lbl_803E3E98) {
+        state->cooldownTimer = lbl_803E3E98;
+        state->unk0A = -1;
     }
 }
 
