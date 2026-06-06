@@ -1456,6 +1456,19 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     allocator-internal — emission order follows neither statement order nor
     cast-ness; don't grind it. Same fn: sqrtf store-then-round
     `stfs f1; frsp f5,f1` vs round-then-store is also internal.)
+    **#77 addendum — struct-container conversions (task #178): retyping an
+    `int`/`u8 *` state param/local to the family struct pointer is
+    byte-neutral on MOST fns but flips saved-reg coloring on high-pressure
+    ones, and the FALLBACK is per-fn too.** fn_80174BFC needed the int param
+    KEPT + inline `((T *)ext)->field` casts (pointer retype flipped its
+    r23→r31 web); swarmbaddie_update was the OPPOSITE (inline casts
+    regressed, typed local byte-exact). Order: typed local/param first,
+    inline casts second, byte-verify every touched fn. Member access at
+    constant offsets is otherwise codegen-identical to the raw cast forms;
+    leave stride-walker loops and `base + idx*stride` arithmetic RAW (#18 —
+    converting those changes isel). 30+ fns across 11 TUs converted
+    byte-exact this way (Pushable/LandedArwing/PaymentKiosk/DbshSymbol/
+    SeqPoint/VfpDragHead/Hagabon containers).
 
 78. **Triple-multiply REGROUP: `A * lbl * conv` → `A * (lbl * conv)` —
     Ghidra always left-flattens; target groups the constant-by-conversion
