@@ -157,11 +157,13 @@ void fn_80154C24(int obj, int state)
     *(float *)(state + 0x328) = fVar1;
     *(float *)(state + 0x32c) = *(float *)(obj + 0x10);
     uVar2 = randomGetRange(0, 0xff);
-    *(char *)(state + 0x33a) = (u8)uVar2;
+    *(u8 *)(state + 0x33a) = uVar2;
     *(undefined *)(state + 0x33b) = 0;
     *(float *)(state + 0x330) = lbl_803E29F4;
     uVar2 = randomGetRange(0x32, 0x4b);
-    *(float *)(state + 0x2fc) = (f32)(s32)uVar2 * lbl_803E29F8;
+    fVar1 = (f32)(s32)uVar2;
+    fVar1 = lbl_803E29F8 * fVar1;
+    *(float *)(state + 0x2fc) = fVar1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -193,8 +195,7 @@ void fn_80154D0C(int obj, int state, u16 *outAngle, float *outDistance)
     PSVECSubtract(vecA, (f32 *)(obj + 0xc), tmpA);
     d = PSVECDotProduct(tmpA, (f32 *)(state + 0x344));
     vecA[0] = *(f32 *)(state + 0x344) * d + *(f32 *)(obj + 0xc);
-    objY = *(f32 *)(obj + 0x10);
-    vecA[1] = *(f32 *)(state + 0x348) * d + objY;
+    vecA[1] = *(f32 *)(state + 0x348) * d + (objY = *(f32 *)(obj + 0x10));
     vecA[2] = *(f32 *)(state + 0x34c) * d + *(f32 *)(obj + 0x14);
     axisA[0] = lbl_803E2A00;
     axisA[1] = lbl_803E2A04;
@@ -230,8 +231,8 @@ void fn_80154D0C(int obj, int state, u16 *outAngle, float *outDistance)
     }
     dx = dx - d;
     targetY = objY - targetY;
-    angle = getAngle(-targetY, dx);
-    delta = (angle & 0xffff) - (*(s16 *)(obj + 2) & 0xffff);
+    angle = getAngle(-targetY, dx) & 0xffff;
+    delta = angle - (*(s16 *)(obj + 2) & 0xffff);
     if (delta > 0x8000) {
         delta = delta - 0xffff;
     }
