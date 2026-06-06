@@ -1,4 +1,5 @@
 #include "main/audio/hw_stream.h"
+#include "main/audio/dsp_voice.h"
 
 extern void salRemoveStudioInput(void *p, void *input);
 extern int aramGetStreamBufferAddress(int stream, void *out);
@@ -40,18 +41,18 @@ int hwChangeStudio(int slot) {
     offset = slot * 0xf4;
     base = dspVoice;
     voice = base + offset;
-    if (*(u8 *)(voice + 0xec) != 2) {
+    if (((DspVoice *)voice)->state != 2) {
         return 0;
     }
-    mode = *(u8 *)(voice + 0x90);
+    mode = ((DspVoice *)voice)->smp_info.compType;
     switch (mode) {
     case 0:
     case 1:
     case 4:
     case 5:
         voice = base + offset;
-        pos = *(u32 *)(voice + 0x20);
-        samplePos = ((pos - 2 * *(int *)(voice + 0x78)) >> 4) * 0xe;
+        pos = ((DspVoice *)voice)->currentAddr;
+        samplePos = ((pos - 2 * *(int *)&((DspVoice *)voice)->smp_info.addr) >> 4) * 0xe;
         lowBits = pos & 0xf;
         if (lowBits < 2) {
             return samplePos;
@@ -59,9 +60,9 @@ int hwChangeStudio(int slot) {
         samplePos += lowBits;
         return samplePos - 2;
     case 3:
-        return *(int *)(voice + 0x20) - *(int *)(voice + 0x78);
+        return (int)((DspVoice *)voice)->currentAddr - *(int *)&((DspVoice *)voice)->smp_info.addr;
     case 2:
-        return *(int *)(voice + 0x20) - (*(u32 *)(voice + 0x78) >> 1);
+        return (int)((DspVoice *)voice)->currentAddr - (*(u32 *)&((DspVoice *)voice)->smp_info.addr >> 1);
     default:
         return slot;
     }

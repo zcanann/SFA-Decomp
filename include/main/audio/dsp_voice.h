@@ -4,6 +4,19 @@
 #include "global.h"
 #include "main/audio/adsr.h"
 
+/* MP4 musyx/synthdata.h SAMPLE_INFO. */
+typedef struct DspSampleInfo {
+    u32 info;        /* 0x00 */
+    void *addr;      /* 0x04 */
+    void *extraData; /* 0x08 */
+    u32 offset;      /* 0x0c */
+    u32 length;      /* 0x10 */
+    u32 loop;        /* 0x14 */
+    u32 loopLength;  /* 0x18 */
+    u8 compType;     /* 0x1c */
+    u8 pad1D[3];
+} DspSampleInfo; /* size 0x20 */
+
 /* SAL DSP voice record, stride 0xF4 off dspVoice; field names/offsets from
  * upstream musyx (MP4 musyx/dspvoice.h), verified against hw_* codegen.
  * Unverified middle regions left padded. */
@@ -26,7 +39,7 @@ typedef struct DspVoice {
     u8 pad5E[0x70 - 0x5e];
     u16 smp_id;      /* 0x70 */
     u8 pad72[2];
-    u32 smpInfo[8];  /* 0x74: SAMPLE_INFO */
+    DspSampleInfo smp_info; /* 0x74 */
     u8 pad94[0xa4 - 0x94];
     ADSR_VARS adsr;  /* 0xa4 */
     u16 srcTypeSelect; /* 0xcc */
@@ -40,7 +53,10 @@ typedef struct DspVoice {
         u8 volA;     /* 0xe6 */
         u8 volB;     /* 0xe7 */
     } lastUpdate;
-    u8 padE8[0xef - 0xe8];
+    u8 padE8[0xec - 0xe8];
+    u8 state;        /* 0xec */
+    u8 postBreak;    /* 0xed */
+    u8 startupBreak; /* 0xee */
     u8 studio;       /* 0xef */
     u32 flags;       /* 0xf0 */
 } DspVoice; /* size 0xf4 */
@@ -48,6 +64,8 @@ typedef struct DspVoice {
 STATIC_ASSERT(offsetof(DspVoice, volL) == 0x4c);
 STATIC_ASSERT(offsetof(DspVoice, prio) == 0x1c);
 STATIC_ASSERT(offsetof(DspVoice, smp_id) == 0x70);
+STATIC_ASSERT(offsetof(DspVoice, smp_info) == 0x74);
+STATIC_ASSERT(offsetof(DspVoice, state) == 0xec);
 STATIC_ASSERT(offsetof(DspVoice, adsr) == 0xa4);
 STATIC_ASSERT(offsetof(DspVoice, itdShiftL) == 0xd0);
 STATIC_ASSERT(offsetof(DspVoice, studio) == 0xef);
