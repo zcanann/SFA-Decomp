@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/modgfx.h"
+#include "main/objanim_internal.h"
 
 typedef struct ModgfxVertexData {
   s16 posX;
@@ -34,6 +35,11 @@ typedef struct ModgfxState {
   u8 pad10E[0x130 - 0x10E];
   u8 activeVertexBufferIndex;
 } ModgfxState;
+
+static inline int *Modgfx_GetActiveModel(void *obj) {
+  ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+  return (int *)objAnim->banks[objAnim->bankIndex];
+}
 
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
@@ -2707,7 +2713,7 @@ void FUN_800a1f80(undefined4 param_1,undefined4 param_2,uint param_3)
     DAT_803ddf3c = 0xf;
     FUN_80006824(param_3,SFXsc_mumble01);
   }
-  piVar16 = *(int **)(*(int *)(param_3 + 0x7c) + *(char *)(param_3 + 0xad) * 4);
+  piVar16 = Modgfx_GetActiveModel((void *)param_3);
   if (6 < DAT_803ddf34) {
     DAT_803ddf34 = 0;
   }
@@ -4725,7 +4731,7 @@ void boneParticleEffect_update(void *ctx, int p2, u8 *o)
         lbl_803DD2BC = 0xf;
         Sfx_PlayFromObject(o, 0x281);
     }
-    m = *(int **)(*(int *)(o + 0x7c) + *(s8 *)(o + 0xad) * 4);
+    m = Modgfx_GetActiveModel((void *)o);
     if (lbl_803DD2B4 > 6) {
         lbl_803DD2B4 = 0;
     }
