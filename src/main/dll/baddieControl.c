@@ -4612,14 +4612,15 @@ extern f32 lbl_803E1B68;
 #pragma peephole off
 #pragma scheduling off
 void dll_54_update(u8 *obj) {
-    int count;
     int i;
+    int count;
+    f32 zz, xx;
     f32 dx, dy, dz;
-    f32 xx, zz;
     f32 dist;
     f32 nx, nz;
     f32 fx, fz;
-    f32 d2, t, h;
+    f32 d2, h, t;
+    f32 t2;
     f32 lim;
     s16 cur;
     s16 d;
@@ -4628,7 +4629,7 @@ void dll_54_update(u8 *obj) {
         (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(
             0x42, 0, 1, 0, 0, 0, 0xff);
     } else {
-        if (*(int *)(lbl_803DD5C0 + 4) == 0) {
+        if (*(void **)(lbl_803DD5C0 + 4) == NULL) {
             int *arr = (int *)ObjList_GetObjects(&i, &count);
             for (; i < count; i++) {
                 int o = arr[i];
@@ -4639,13 +4640,13 @@ void dll_54_update(u8 *obj) {
                 }
             }
         }
-        if (*(int *)(lbl_803DD5C0 + 8) == 0) {
+        if (*(void **)(lbl_803DD5C0 + 8) == NULL) {
             *(int *)(lbl_803DD5C0 + 8) = Obj_GetPlayerObject();
         }
         {
             int a = *(int *)(lbl_803DD5C0 + 4);
-            int b = *(int *)lbl_803DD5C0;
-            dx = *(f32 *)(a + 0x18) - *(f32 *)(b + 0x18);
+            int b;
+            dx = *(f32 *)(a + 0x18) - *(f32 *)((b = *(int *)lbl_803DD5C0) + 0x18);
             dy = *(f32 *)(a + 0x1c) - *(f32 *)(b + 0x1c);
             dz = *(f32 *)(a + 0x20) - *(f32 *)(b + 0x20);
         }
@@ -4671,37 +4672,32 @@ void dll_54_update(u8 *obj) {
             -getAngle(-(lbl_803E1B60 * (dist / lbl_803E1B64) - dy), sqrtf(xx + zz));
 
         if (*(u8 *)(lbl_803DD5C0 + 12) == 0) {
-            t = *(f32 *)(lbl_803DD5C0 + 16) / lbl_803E1B5C;
+            t2 = *(f32 *)(lbl_803DD5C0 + 16) / lbl_803E1B5C;
             *(f32 *)(obj + 0x18) =
-                t * (*(f32 *)(lbl_803DD5C0 + 20) - *(f32 *)(obj + 0x18)) + *(f32 *)(obj + 0x18);
+                t2 * (*(f32 *)(lbl_803DD5C0 + 20) - *(f32 *)(obj + 0x18)) + *(f32 *)(obj + 0x18);
             *(f32 *)(obj + 0x1c) =
-                t * (*(f32 *)(lbl_803DD5C0 + 24) - *(f32 *)(obj + 0x1c)) + *(f32 *)(obj + 0x1c);
+                t2 * (*(f32 *)(lbl_803DD5C0 + 24) - *(f32 *)(obj + 0x1c)) + *(f32 *)(obj + 0x1c);
             *(f32 *)(obj + 0x20) =
-                t * (*(f32 *)(lbl_803DD5C0 + 28) - *(f32 *)(obj + 0x20)) + *(f32 *)(obj + 0x20);
+                t2 * (*(f32 *)(lbl_803DD5C0 + 28) - *(f32 *)(obj + 0x20)) + *(f32 *)(obj + 0x20);
 
             cur = *(s16 *)obj;
             d = (s16)(*(s16 *)(lbl_803DD5C0 + 32) - (u16)cur);
             if (d > 0x8000) {
-                d -= 0xffff;
+                d = (s16)(d - 0xffff);
             }
             if (d < -0x8000) {
                 d += 0xffff;
             }
-            *(s16 *)obj = (s16)(s32)((f32)d * t + (f32)cur);
+            *(s16 *)obj = (f32)d * t2 + (f32)cur;
 
             cur = *(s16 *)(obj + 2);
             d = (s16)(*(s16 *)(lbl_803DD5C0 + 34) - (u16)cur);
-            if (d > 0x8000) {
-                d -= 0xffff;
-            }
-            if (d < -0x8000) {
-                d += 0xffff;
-            }
-            *(s16 *)(obj + 2) = (s16)(s32)((f32)d * t + (f32)cur);
+            d = (d > 0x8000) ? (s16)(d - 0xffff) : d;
+            d = (d < -0x8000) ? (s16)(d + 0xffff) : d;
+            *(s16 *)(obj + 2) = (f32)d * t2 + (f32)cur;
 
             *(f32 *)(lbl_803DD5C0 + 16) -= timeDelta;
-            lim = lbl_803E1B68;
-            if (*(f32 *)(lbl_803DD5C0 + 16) < lim) {
+            if (*(f32 *)(lbl_803DD5C0 + 16) < (lim = *(f32 *)&lbl_803E1B68)) {
                 *(u8 *)(lbl_803DD5C0 + 12) = 1;
                 *(f32 *)(lbl_803DD5C0 + 16) = lim;
             }
