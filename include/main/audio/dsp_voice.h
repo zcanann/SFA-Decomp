@@ -2,6 +2,7 @@
 #define MAIN_AUDIO_DSP_VOICE_H_
 
 #include "global.h"
+#include "main/audio/adsr.h"
 
 /* SAL DSP voice record, stride 0xF4 off dspVoice; field names/offsets from
  * upstream musyx (MP4 musyx/dspvoice.h), verified against hw_* codegen.
@@ -19,7 +20,10 @@ typedef struct DspVoice {
     u16 volLb;       /* 0x58 */
     u16 volRb;       /* 0x5a */
     u16 volSb;       /* 0x5c */
-    u8 pad5E[0xd0 - 0x5e];
+    u8 pad5E[0xa4 - 0x5e];
+    ADSR_VARS adsr;  /* 0xa4 */
+    u16 srcTypeSelect; /* 0xcc */
+    u16 srcCoefSelect; /* 0xce */
     u16 itdShiftL;   /* 0xd0 */
     u16 itdShiftR;   /* 0xd2 */
     u8 padD4[0xe4 - 0xd4];
@@ -35,6 +39,7 @@ typedef struct DspVoice {
 } DspVoice; /* size 0xf4 */
 
 STATIC_ASSERT(offsetof(DspVoice, volL) == 0x4c);
+STATIC_ASSERT(offsetof(DspVoice, adsr) == 0xa4);
 STATIC_ASSERT(offsetof(DspVoice, itdShiftL) == 0xd0);
 STATIC_ASSERT(offsetof(DspVoice, studio) == 0xef);
 STATIC_ASSERT(sizeof(DspVoice) == 0xf4);
