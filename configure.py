@@ -1203,7 +1203,6 @@ config.libs = [
             Object(NonMatching, "main/dll/WM/deaddino.c"),
             Object(NonMatching, "main/dll/WM/WMlevcontrol.c"),
             Object(NonMatching, "main/dll/WM/WMcrystal.c"),
-            Object(NonMatching, "main/dll/VF/VFlevcontrol.c"),
             Object(NonMatching, "main/dll/VF/platform1.c"),
             Object(NonMatching, "main/dll/VF/draghead.c"),
             Object(NonMatching, "main/dll/VF/lavaflow.c"),

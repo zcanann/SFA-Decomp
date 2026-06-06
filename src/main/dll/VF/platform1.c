@@ -16,7 +16,6 @@ extern int FUN_8002fc3c();
 extern undefined4 FUN_80080eec();
 extern undefined4 FUN_8011e800();
 extern undefined4 setAButtonIcon();
-extern undefined4 sc_totemstrength_sortCompletionGameBits();
 extern uint FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern u8 *Obj_GetPlayerObject(void);
