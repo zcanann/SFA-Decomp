@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "dolphin/mtx.h"
 #include "main/dll/collectable.h"
+#include "main/dll/baddie/skeetla.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 
@@ -154,9 +155,6 @@ extern undefined4 FUN_8013651c();
 extern int trickyFindNearestUsableBaddie(int obj,int param_2,f32 maxRadius);
 extern undefined4 FUN_801367b4();
 extern int FUN_80136870();
-extern undefined4 FUN_8013939c();
-extern undefined4 FUN_80139a4c();
-extern undefined4 FUN_8013a408();
 extern void fn_8013ADFC(int obj);
 extern void Tricky_emitQueuedPathParticles(int obj,int state);
 extern int trickyFn_8013b368();
@@ -1236,7 +1234,6 @@ extern f32 lbl_803E2550;
 extern int trickySelectQueuedCommandTarget(int state, int type);
 void trickyDebugPrint(const char *fmt, ...);
 extern int trickyFoodFn_8013db3c(int obj, int state);
-extern void trickyUpdateCollisionAndPathState(int obj);
 extern void memmove(void *dst, void *src, int n);
 extern void fn_801B17F4(void);
 extern void fn_801B6D40(void);
@@ -1794,7 +1791,7 @@ void Tricky_update(int obj)
   if (((TrickyState *)state)->unk7A0f > lbl_803E23DC) {
     TRICKY_VOICE(obj, st, 0x29c, 0x100);
   }
-  trickyUpdateCollisionAndPathState(obj);
+  trickyUpdateCollisionAndPathState((u8 *)obj);
   if ((((TrickyState *)state)->unk54 & 0x80000000) != 0) {
     ((TrickyState *)state)->unk808 -= timeDelta;
     if (((TrickyState *)state)->unk808 <= lbl_803E23DC) {

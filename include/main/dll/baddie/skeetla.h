@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8013939c(uint param_1);
+void trickyUpdateCollisionAndPathState(u8 *obj);
 undefined4 FUN_80139800(double param_1,int param_2,float *param_3);
 int FUN_80139910(ushort *param_1,ushort param_2);
 void FUN_80139a48(void);
