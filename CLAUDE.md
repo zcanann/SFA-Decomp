@@ -2306,6 +2306,11 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   disassembly side-by-side for each differing instruction. **The empirical
   finding** (recipe #60): out of 14 fns at 99.9-99.99%, ZERO were purely
   cosmetic. Use as a screening pass before grinding any 99%+ partial.
+  **CAVEAT — output truncates to the first ~3 differing instructions per fn**:
+  when sweeping for a specific signature (e.g. recipe #81's lfs-pair/fcmpo
+  swap), grep ALL printed lines, not just per-fn heads — fns whose signature
+  sits behind earlier unrelated diffs are otherwise missed (task #162 found
+  4 hidden #81 sites this way, all -> 100%).
 - `rm -f build/GSAE01/report.json && timeout 30 ninja build/GSAE01/report.json` — refresh report
 
 ### Matching-help corpus (Discord export + decomp.me scratches)
