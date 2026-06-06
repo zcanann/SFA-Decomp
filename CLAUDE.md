@@ -1547,6 +1547,25 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       promotes regardless of spelling (natural form, (int)-cast form, and
       #55 block-scope local all tested inert). Import-written `int buf[N]`
       + `&buf[K]` call args inside loops are the tell.
+    - PROJECT-WIDE SWEEP RESULTS (task #158, 75 prologue-signature hits
+      A/B'd): 7 wins (linkb_levcontrol_init ->100%, dll_93 +3.0, dll_61
+      +2.5, dll_7A +1.3, dll_98 +1.0, dll_AA +0.7, AudioStream_Play +0.5),
+      rest resist. The signature (`addi rV,rH,lo; mr rS,rV` in current,
+      direct in target) is NECESSARY-NOT-SUFFICIENT; resist sub-shapes,
+      A/B before keeping:
+      (a) WALKED loop pointers (`p++`/`p+=K` on the base) resist EVERY
+      spelling — laundering, second-local split, scalar-extern override,
+      init reorder all inert or regress (fn_80204098,
+      CameraShake_ApplyRadial, renderParticles' walk set).
+      Allocator-internal; skip on sight.
+      (b) ARRAY-typed externs (`extern T sym[]`) without a plain/offset
+      use SPLIT resist decl laundering (dbstealerworm st — regressed).
+      (c) Some textually-identical SPLIT siblings still regress (dll_63,
+      dll_7B: both-parts and arg-only WORSE, decl-only inert) — their
+      real residual is another class and the launder perturbs it.
+      Decl-only laundering (without an arg rewrite) DOES win on some
+      OFFS-only shapes (dll_61, dll_98) — try it cheaply before the
+      full 2-part fix.
 
 81. **fcmpo-on-RELOADED-value cap CRACKED — `*(f32 *)&lbl` launder on ONE of
     the clamp constant's two references flips the reload/limit register pair.**
