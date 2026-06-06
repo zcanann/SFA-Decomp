@@ -4810,7 +4810,10 @@ int fn_80161880(short *obj, u8 *p, f32 spd)
   r = sqrtf(a.x * a.x + a.z * a.z);
   d = r;
   a.x = r;
-  obj[1] = ((*(s8 *)(hit + 0x45) << 1) - 1) * (s16)getAngle(a.y, (f32)d);
+  {
+    int ang = (s16)getAngle(a.y, (f32)d);
+    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+  }
   if (*(char *)(p + 0x346) != '\0') {
     return 5;
   }
@@ -4893,7 +4896,10 @@ int fn_80161AF8(short *obj, u8 *p)
   r = sqrtf(a.x * a.x + a.z * a.z);
   d = r;
   a.x = r;
-  obj[1] = ((*(s8 *)(hit + 0x45) << 1) - 1) * (s16)getAngle(a.y, (f32)d);
+  {
+    int ang = (s16)getAngle(a.y, (f32)d);
+    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+  }
   return 0;
 }
 
@@ -4933,7 +4939,10 @@ int fn_80161C44(short *obj, u8 *p)
   r = sqrtf(a.x * a.x + a.z * a.z);
   d = r;
   a.x = r;
-  obj[1] = ((*(s8 *)(hit + 0x45) << 1) - 1) * (s16)getAngle(a.y, (f32)d);
+  {
+    int ang = (s16)getAngle(a.y, (f32)d);
+    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+  }
   if (*(char *)(p + 0x346) != '\0') {
     return 6;
   }
@@ -4976,7 +4985,10 @@ int fn_80161DA8(short *obj, u8 *p)
   r = sqrtf(a.x * a.x + a.z * a.z);
   d = r;
   a.x = r;
-  obj[1] = ((*(s8 *)(hit + 0x45) << 1) - 1) * (s16)getAngle(a.y, (f32)d);
+  {
+    int ang = (s16)getAngle(a.y, (f32)d);
+    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+  }
   if (*(char *)(p + 0x346) != '\0') {
     return 1;
   }
