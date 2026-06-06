@@ -57,6 +57,7 @@ void MMP_levelcontrol_initialise(void);
 
 int MoonSeedBush_getExtraSize(void);
 int MoonSeedBush_getObjectTypeId(void);
+int MoonSeedBush_SeqFn(int obj, int unused, u8 *events);
 void MoonSeedBush_free(void);
 void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void MoonSeedBush_hitDetect(void);

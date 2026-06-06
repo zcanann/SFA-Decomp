@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMlavaball.h"
+#include "main/dll/IM/IMspacecraft.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
@@ -1493,7 +1494,6 @@ void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 
 extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;
-extern int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3);
 
 extern int *gObjectTriggerInterface;
 #pragma scheduling off
@@ -1523,7 +1523,6 @@ void MoonSeedBush_update(int obj) {
 extern int getSaveGameLoadStatus(void);
 extern int mapGetDirIdx(int);
 extern void unlockLevel(int, int, int);
-extern void MMP_LevelControl_SeqFn(int);
 extern f32 lbl_803E44C8;
 extern u8 framesThisStep;
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
@@ -1594,7 +1593,7 @@ void MMP_levelcontrol_init(int obj) {
         ((GameObject *)obj)->unkF4 = 1;
     }
     *(u32 *)&((GameObject *)obj)->unkF8 = GameBit_Get(0xF33);
-    *(void (**)(int))(obj + 0xBC) = MMP_LevelControl_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)MMP_LevelControl_SeqFn;
     unlockLevel(mapGetDirIdx(0x12), 0, 0);
     lbl_803DDB28 = lbl_803E44C8;
     lbl_803DDB2C = 0;
@@ -1788,7 +1787,7 @@ void MoonSeedBush_init(int obj, int data) {
     MoonSeedBushState *state = ((GameObject *)obj)->extra;
     state->flags = 1;
     *(s16 *)obj = (s16)((*(u8 *)(data + 0x1F)) << 8);
-    *(void (**)(int))(obj + 0xBC) = (void (*)(int))MoonSeedBush_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)MoonSeedBush_SeqFn;
     ((GameObject *)obj)->objectFlags |= 0x2000;
     ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)(*(u8 *)(data + 0x21)) * lbl_803E44D4;
     if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E44D8) {

@@ -31,5 +31,6 @@ STATIC_ASSERT(sizeof(DimLogFireState) == 0x24);
 
 int MoonSeedPlantingSpot_SeqFn(int obj);
 int CCGasVentControl_SeqFn(int obj);
+int dimlogfire_SeqFn(int *obj, int unused, int *events);
 
 #endif /* MAIN_DLL_DIM_DIMLOGFIRE_H_ */

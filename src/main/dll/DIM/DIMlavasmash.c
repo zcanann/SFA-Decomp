@@ -48,7 +48,6 @@ extern undefined4 FUN_8005fe14();
 extern undefined4 FUN_80081110();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
-extern void dimlogfire_SeqFn(void);
 
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;

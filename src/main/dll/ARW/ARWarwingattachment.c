@@ -1874,7 +1874,6 @@ void pressureswitch_hitDetect(void) {}
 void pressureswitch_release(void) {}
 void pressureswitch_initialise(void) {}
 
-extern int PressureSwitch_SeqFn(int p1, int p2, void* p3);
 extern f32 lbl_803E5D78;
 
 typedef struct PressureSwitchFlags {
@@ -2307,7 +2306,6 @@ void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
  * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
  * fixed bytes, the three float position-quaternion from arg+8/c/10,
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
-int dll_200_SeqFn(int p1, int p2, int p3, int p4);
 extern f32 lbl_803E5D98;
 #pragma scheduling off
 #pragma peephole off
