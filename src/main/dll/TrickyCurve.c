@@ -296,10 +296,10 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
   uint uVar2;
   int iVar3;
   uint uVar4;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
+  undefined4 unusedArg7;
+  undefined4 unusedArg8;
+  undefined4 unusedArg9;
+  undefined4 unusedArg10;
   char cVar5;
   char cVar6;
   char cVar7;
@@ -307,15 +307,15 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
   short *psVar9;
   double dVar10;
   undefined8 uVar11;
-  double in_f29;
+  double savedF29;
   double dVar12;
-  double in_f30;
+  double savedF30;
   double dVar13;
-  double in_f31;
+  double savedF31;
   double dVar14;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
+  double savedPs29;
+  double savedPs30;
+  double savedPs31;
   undefined2 local_78;
   undefined2 local_76;
   undefined2 local_74;
@@ -332,12 +332,12 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
   float local_8;
   float fStack_4;
   
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
+  local_8 = (float)savedF31;
+  fStack_4 = (float)savedPs31;
+  local_18 = (float)savedF30;
+  fStack_14 = (float)savedPs30;
+  local_28 = (float)savedF29;
+  fStack_24 = (float)savedPs29;
   uVar2 = FUN_80286838();
   psVar9 = *(short **)(uVar2 + 0xb8);
   iVar3 = FUN_80017a98();
@@ -422,7 +422,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
       uVar4 = FUN_80017690(0x1d9);
       if (uVar4 == 0) {
         ObjMsg_SendToObject(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x60004,
-                     uVar2,1,in_r7,in_r8,in_r9,in_r10);
+                     uVar2,1,unusedArg7,unusedArg8,unusedArg9,unusedArg10);
         (**(code **)(*DAT_803dd708 + 8))(uVar2,0x5ed,&local_78,2,0xffffffff,0);
         iVar3 = 9;
         do {
@@ -433,7 +433,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
       else {
         uVar11 = FUN_80017698(0x468,1);
         ObjMsg_SendToObject(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x60004,
-                     uVar2,0,in_r7,in_r8,in_r9,in_r10);
+                     uVar2,0,unusedArg7,unusedArg8,unusedArg9,unusedArg10);
         (**(code **)(*DAT_803dd708 + 8))(uVar2,0x5ed,&local_78,2,0xffffffff,0);
         iVar3 = 9;
         do {
