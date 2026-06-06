@@ -1884,6 +1884,26 @@ compare's immediate and subtract 1 for the real case value.
     f31 + psq spills) even when t is otherwise dead — re-confirmed, never
     embed assignments in call args. (fn_80154870 95.55→99.85.)
 
+91. **The #25 counter-caveat cap (target has cror-FREE `bge`/`ble` clamps
+    where your `>=`/`<=` if-chain emits the cror combine) is CRACKED — write
+    the STRICT-compare nested ternary.** Target shape per clamp:
+    `lfs v; lfs lo; fcmpo; bge L1; b Lstore; L1: lfs hi; fcmpo; ble L2;
+    b Lstore; L2: fmr f0,v; Lstore: stfs f0` — the BOUND stays in f0 from its
+    own compare, so the out-of-range arms are EMPTY (the b exits with the
+    bound already in place). The C is
+    `*p = (v < lo) ? lo : ((v > hi) ? hi : v);` — strict `<`/`>` compile to
+    single-bit branches (no cror) and the value flow coalesces each arm onto
+    the compare operand. The if-statement chain
+    (`c = lo; if (v >= lo) { c = hi; if (v <= hi) c = v; } *p = c;`)
+    produces identical VALUE flow but cror'd compares — that was the
+    documented #25 counter-caveat "genuine residual"; it is now fixable.
+    Cleared 6 cror sites (3 clamps) in objAnimFn_8014a9f0 (97.46→100, 3.7KB).
+    Same fn also banked: `dx = (dz = lbl); dy = dz;` embedded-chain form for
+    a direct `lfs f30` constant load + left-to-right fmr copy order (plain
+    chain `dx=dy=dz=lbl` copies right-to-left; separate statements route via
+    a volatile f0 hop), and the `B - A*C` spelling to get `fnmsubs` where
+    `-(A*C - B)` splits into fmsubs+fneg.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
