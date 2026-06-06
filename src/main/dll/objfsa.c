@@ -5396,15 +5396,14 @@ fail:
 #pragma peephole off
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx) {
     int candidates[4];
+    int neighbor;
     int count = 0;
     u32 mask = 1;
-    int neighbor;
     int i;
     for (i = 0; i < 4; i++) {
         neighbor = *(int *)(curve + 0x1C + i * 4);
         if (neighbor > -1 && ((s32)*(s8 *)(curve + 0x1B) & mask) == 0 && neighbor != exclude) {
-            candidates[count] = neighbor;
-            count++;
+            candidates[count++] = neighbor;
         }
         mask <<= 1;
     }
@@ -5420,15 +5419,14 @@ int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx) {
 
 int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
     int candidates[4];
+    int neighbor;
     int count = 0;
     u32 mask = 1;
-    int neighbor;
     int i;
     for (i = 0; i < 4; i++) {
         neighbor = *(int *)(curve + 0x1C + i * 4);
         if (neighbor > -1 && ((s32)*(s8 *)(curve + 0x1B) & mask) != 0 && neighbor != exclude) {
-            candidates[count] = neighbor;
-            count++;
+            candidates[count++] = neighbor;
         }
         mask <<= 1;
     }
@@ -5459,7 +5457,7 @@ int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outP
   float lateralOffset;
   float verticalOffset;
   float phase;
-  int adjacentWindow[8];
+  int adjacentWindow[4];
 
   while (!((*(int *)(curve + 0x1c) == -1 || (*(u8 *)(curve + 0x1b) & 1) != 0) &&
            (*(int *)(curve + 0x20) == -1 || (*(u8 *)(curve + 0x1b) & 2) != 0) &&
