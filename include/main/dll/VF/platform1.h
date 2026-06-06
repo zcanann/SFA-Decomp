@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_VF_PLATFORM1_H_
 #define MAIN_DLL_VF_PLATFORM1_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
@@ -20,6 +21,18 @@ typedef struct Platform1State {
   s16 transitionStep;
   u8 flags;
 } Platform1State;
+
+STATIC_ASSERT(sizeof(Platform1State) == 0x34);
+STATIC_ASSERT(offsetof(Platform1State, linkedObject) == 0x00);
+STATIC_ASSERT(offsetof(Platform1State, motionValue0) == 0x04);
+STATIC_ASSERT(offsetof(Platform1State, offsetVelocity) == 0x08);
+STATIC_ASSERT(offsetof(Platform1State, savedPosX) == 0x0C);
+STATIC_ASSERT(offsetof(Platform1State, playerSfxTimer) == 0x18);
+STATIC_ASSERT(offsetof(Platform1State, currentTrackOffset) == 0x20);
+STATIC_ASSERT(offsetof(Platform1State, loopSfxHandle) == 0x24);
+STATIC_ASSERT(offsetof(Platform1State, prevTrackOffset) == 0x28);
+STATIC_ASSERT(offsetof(Platform1State, transitionStep) == 0x2E);
+STATIC_ASSERT(offsetof(Platform1State, flags) == 0x30);
 
 #define PLATFORM1_TRIGGER_MASK 0x03
 #define PLATFORM1_TRIGGER_FLAG_01 0x01

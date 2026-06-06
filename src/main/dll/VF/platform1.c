@@ -46,15 +46,10 @@ extern f32 lbl_803E6334;
 extern f32 lbl_803E6338;
 extern f32 lbl_803E633C;
 
-#define PLATFORM1_OBJECT_TYPE_OFFSET 0x46
-#define PLATFORM1_TRACK_VALUE_OFFSET 0x98
-#define PLATFORM1_MODEL_ID_OFFSET 0xa0
-#define PLATFORM1_STATE_OFFSET 0xb8
-
-#define PLATFORM1_ANCHOR_OBJECT_TYPE 0x3ff
-#define PLATFORM1_PEER_OBJECT_TYPE 0x282
-#define PLATFORM1_ACTIVE_MODEL_ID 0x401
-#define PLATFORM1_IDLE_MODEL_ID 0
+#define PLATFORM1_ANCHOR_SEQ_ID 0x3ff
+#define PLATFORM1_PEER_SEQ_ID 0x282
+#define PLATFORM1_PLAYER_PULL_MOVE_ID 0x401
+#define PLATFORM1_IDLE_PULL_MOVE_ID 0
 
 #define PLATFORM1_LOOP_SFX_ID 0x3af
 #define PLATFORM1_PLAYER_SFX_ID 0x13a
@@ -112,7 +107,9 @@ extern f32  lbl_803E56A4;
 #pragma peephole off
 int platform1_control(int obj, int p2, u8 *data)
 {
+    GameObject *self;
     Platform1State *st;
+    GameObject *playerObj;
     int player;
     int *list;
     int *p;
@@ -133,8 +130,10 @@ int platform1_control(int obj, int p2, u8 *data)
         u8 flag;
     } evt;
 
-    st = *(Platform1State **)(obj + PLATFORM1_STATE_OFFSET);
-    player = (int)Obj_GetPlayerObject();
+    self = (GameObject *)obj;
+    st = self->extra;
+    playerObj = (GameObject *)Obj_GetPlayerObject();
+    player = (int)playerObj;
     st->flags = (u8)(st->flags | PLATFORM1_FLAG_ACTIVE);
     setAButtonIcon(0xf);
     lbl_803DDC10 = 0;
@@ -142,7 +141,7 @@ int platform1_control(int obj, int p2, u8 *data)
     list = (int *)ObjList_GetObjects(&idx1, &cnt1);
     while (idx1 < cnt1) {
         st->linkedObject = list[idx1++];
-        if (*(s16 *)(st->linkedObject + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_ANCHOR_OBJECT_TYPE) {
+        if (((GameObject *)st->linkedObject)->anim.seqId == PLATFORM1_ANCHOR_SEQ_ID) {
             idx1 = cnt1;
         }
     }
@@ -161,9 +160,9 @@ int platform1_control(int obj, int p2, u8 *data)
             list = (int *)ObjList_GetObjects(&idx2, &cnt2);
             p = &list[idx2];
             for (; idx2 < cnt2; idx2++) {
-                if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                if ((u32)*p != (u32)obj && ((GameObject *)*p)->anim.seqId == PLATFORM1_PEER_SEQ_ID) {
                     o = list[idx2];
-                    ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 2);
+                    ((void (*)(int, int))*(void **)((char *)*((GameObject *)o)->anim.dll + 0x20))(o, 2);
                     break;
                 }
                 p++;
@@ -173,9 +172,9 @@ int platform1_control(int obj, int p2, u8 *data)
             list = (int *)ObjList_GetObjects(&idx3, &cnt3);
             p = &list[idx3];
             for (; idx3 < cnt3; idx3++) {
-                if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                if ((u32)*p != (u32)obj && ((GameObject *)*p)->anim.seqId == PLATFORM1_PEER_SEQ_ID) {
                     o = list[idx3];
-                    ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 3);
+                    ((void (*)(int, int))*(void **)((char *)*((GameObject *)o)->anim.dll + 0x20))(o, 3);
                     break;
                 }
                 p++;
@@ -183,12 +182,12 @@ int platform1_control(int obj, int p2, u8 *data)
             break;
         case 5:
             if ((u32)st->linkedObject != 0) {
-                *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E5668;
-                *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E5668;
-                ObjAnim_SetCurrentMove(player, PLATFORM1_ACTIVE_MODEL_ID,
-                                       *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET), 0);
-                ObjAnim_SetCurrentMove(st->linkedObject, PLATFORM1_IDLE_MODEL_ID,
-                                       *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET), 0);
+                playerObj->anim.currentMoveProgress = lbl_803E5668;
+                ((GameObject *)st->linkedObject)->anim.currentMoveProgress = lbl_803E5668;
+                ObjAnim_SetCurrentMove(player, PLATFORM1_PLAYER_PULL_MOVE_ID,
+                                       playerObj->anim.currentMoveProgress, 0);
+                ObjAnim_SetCurrentMove(st->linkedObject, PLATFORM1_IDLE_PULL_MOVE_ID,
+                                       ((GameObject *)st->linkedObject)->anim.currentMoveProgress, 0);
                 st->prevTrackOffset = st->currentTrackOffset;
             }
             break;
@@ -204,14 +203,14 @@ int platform1_control(int obj, int p2, u8 *data)
             evt.flag = 1;
             (*(void (**)(int, int, int, int, void *, int, int))((char *)(*gCameraInterface) + 0x1c))(0x48, 1, 3, 8, &evt, 0, 0xff);
         }
-        if (*(s16 *)(player + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_ACTIVE_MODEL_ID) {
-            ObjAnim_SetCurrentMove(player, PLATFORM1_ACTIVE_MODEL_ID,
-                                   *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET), 0);
+        if (playerObj->anim.currentMove != PLATFORM1_PLAYER_PULL_MOVE_ID) {
+            ObjAnim_SetCurrentMove(player, PLATFORM1_PLAYER_PULL_MOVE_ID,
+                                   playerObj->anim.currentMoveProgress, 0);
         }
         o = st->linkedObject;
-        if (*(s16 *)(o + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_IDLE_MODEL_ID) {
-            ObjAnim_SetCurrentMove(o, PLATFORM1_IDLE_MODEL_ID,
-                                   *(f32 *)(o + PLATFORM1_TRACK_VALUE_OFFSET), 0);
+        if (((GameObject *)o)->anim.currentMove != PLATFORM1_IDLE_PULL_MOVE_ID) {
+            ObjAnim_SetCurrentMove(o, PLATFORM1_IDLE_PULL_MOVE_ID,
+                                   ((GameObject *)o)->anim.currentMoveProgress, 0);
         }
         *(u16 *)(data + 0x6e) = 0xffff;
         data[0x56] = 0;
@@ -255,9 +254,9 @@ int platform1_control(int obj, int p2, u8 *data)
                 list = (int *)ObjList_GetObjects(&idx4, &cnt4);
                 p = &list[idx4];
                 for (; idx4 < cnt4; idx4++) {
-                    if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                    if ((u32)*p != (u32)obj && ((GameObject *)*p)->anim.seqId == PLATFORM1_PEER_SEQ_ID) {
                         o = list[idx4];
-                        ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 4);
+                        ((void (*)(int, int))*(void **)((char *)*((GameObject *)o)->anim.dll + 0x20))(o, 4);
                         break;
                     }
                     p++;
@@ -279,9 +278,9 @@ int platform1_control(int obj, int p2, u8 *data)
                 list = (int *)ObjList_GetObjects(&idx5, &cnt5);
                 p = &list[idx5];
                 for (; idx5 < cnt5; idx5++) {
-                    if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                    if ((u32)*p != (u32)obj && ((GameObject *)*p)->anim.seqId == PLATFORM1_PEER_SEQ_ID) {
                         o = list[idx5];
-                        ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 4);
+                        ((void (*)(int, int))*(void **)((char *)*((GameObject *)o)->anim.dll + 0x20))(o, 4);
                         break;
                     }
                     p++;
@@ -303,15 +302,14 @@ int platform1_control(int obj, int p2, u8 *data)
             }
             if (ObjAnim_AdvanceCurrentMove(((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / c569C,
                                            timeDelta, player, 0) != 0 &&
-                *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET) < c5678) {
-                *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET) =
-                    c567C + *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET);
+                playerObj->anim.currentMoveProgress < c5678) {
+                playerObj->anim.currentMoveProgress = c567C + playerObj->anim.currentMoveProgress;
             }
             if (ObjAnim_AdvanceCurrentMove(((f32)st->currentTrackOffset - (f32)st->prevTrackOffset) / c569C,
                                            timeDelta, st->linkedObject, 0) != 0) {
-                t = *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET);
+                t = ((GameObject *)st->linkedObject)->anim.currentMoveProgress;
                 if (t < c5678) {
-                    *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = c567C + t;
+                    ((GameObject *)st->linkedObject)->anim.currentMoveProgress = c567C + t;
                 }
             }
             st->prevTrackOffset = st->currentTrackOffset;
@@ -374,16 +372,17 @@ extern void objRenderFn_8003b8f4(f32);
 void sc_totemstrength_render(void) { objRenderFn_8003b8f4(lbl_803E567C); }
 void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void sc_totemstrength_init(int *obj) {
-    int *inner = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->animEventCallback = (void *)platform1_control;
-    ((GameObject *)obj)->objectFlags |= 0x6000;
-    *(s16 *)obj = (s16)-10496;
-    inner[8] = -10496;
-    *(s16 *)((char *)inner + 0x2e) = 0;
-    inner[0] = 0;
-    *(f32 *)((char *)inner + 0xc) = ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)((char *)inner + 0x10) = ((GameObject *)obj)->anim.localPosY;
-    *(f32 *)((char *)inner + 0x14) = ((GameObject *)obj)->anim.localPosZ;
+    GameObject *self = (GameObject *)obj;
+    Platform1State *st = self->extra;
+    self->animEventCallback = (void *)platform1_control;
+    self->objectFlags |= 0x6000;
+    self->anim.rotX = (s16)-10496;
+    st->currentTrackOffset = -10496;
+    st->transitionStep = 0;
+    st->linkedObject = 0;
+    st->savedPosX = self->anim.localPosX;
+    st->savedPosY = self->anim.localPosY;
+    st->savedPosZ = self->anim.localPosZ;
 }
 #pragma peephole reset
 #pragma scheduling reset
