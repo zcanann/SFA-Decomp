@@ -804,6 +804,24 @@ Heuristic:
     Keep the local; just type it correctly. Took dataGetMacro 98.38→100% in
     one line. (Found via MP4 musyx synthdata.c reference + objdiff
     instruction-level inspection.)
+    **Struct-FIELD width is the same lever, but A/B project-wide before
+    flipping a shared typedef — mixed-width fields need per-site LAUNDERS,
+    not typedef flips.** (task #169, hit-state naming recovery.) When a
+    naming sweep replaces raw casts with `obj->field` access, the field's
+    declared type sets the width at EVERY site at once: `int lastHitObject`
+    → `u32` restored recipe-#3 `cmplwi` pointer compares across 5 fns
+    (+1556); `u8 contactFlags` → `s8` restored `lbz+extsb+cmpwi` value
+    compares across 4 fns (+1888). BUT `s8 hitVolumeId` → `u8` was NET
+    NEGATIVE (−104): the player.c store wanted no extension while two
+    objlib 100%s NEED the s8 extsb. When sites disagree, keep the
+    majority-correct type and launder the minority site through a cast
+    pointer: store `*(u8 *)&s->field = v;` (kills the extsb), bit-test
+    `(*(u16 *)&s->field & 8)` (lhz not lha), load `m = *(u8 *)&s->arr[i];`
+    into an s8 local (extsb lands at the ASSIGN, recipe #15 family). The
+    launder keeps the field NAME visible — naming intent preserved.
+    Audit method for any rename sweep: per touched file, build the
+    pre-sweep file state and per-fn-diff report.json (full rebuild first —
+    stale .o files fake regressions, e.g. fn_801DFA28's phantom −1.6).
 
 59. **Defeat MWCC's commutative-FP-reassociation by lifting the LEADING term
     to its own statement BEFORE the dot/sum expression.** When target's
