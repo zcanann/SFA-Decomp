@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
 
 #define WCBEACON_EXTRA_SIZE 0x8
 
@@ -65,8 +66,9 @@ int wcbeacon_getExtraSize(void) { return WCBEACON_EXTRA_SIZE; }
 #pragma scheduling off
 int wcbeacon_getObjectTypeId(int obj)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCBEACON_SETUP_MODEL_INDEX_OFFSET);
-    int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
+    int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -158,9 +160,10 @@ void wcbeacon_init(u8 *obj, u8 *setup)
     ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     objType = (s16)((s8)setup[WCBEACON_SETUP_TYPE_OFFSET] << 8);
     *(s16 *)obj = objType;
-    obj[0xad] = setup[WCBEACON_SETUP_MODEL_INDEX_OFFSET];
-    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        obj[0xad] = 0;
+    obj[offsetof(ObjAnimComponent, bankIndex)] = setup[WCBEACON_SETUP_MODEL_INDEX_OFFSET];
+    if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
+        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
+        obj[offsetof(ObjAnimComponent, bankIndex)] = 0;
     }
     if ((u32)GameBit_Get(*(s16 *)(setup + WCBEACON_SETUP_ARM_BIT_OFFSET)) != 0) {
         if ((u32)GameBit_Get(*(s16 *)(setup + WCBEACON_SETUP_SOLVED_BIT_OFFSET)) != 0) {

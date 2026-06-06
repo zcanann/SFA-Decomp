@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/objanim_internal.h"
 
 typedef struct WCTileIface WCTileIface;
 struct WCTileIface {
@@ -88,8 +89,9 @@ int wctile_getExtraSize(void) { return WCTILE_EXTRA_SIZE; }
 #pragma scheduling off
 int wctile_getObjectTypeId(int obj)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCTILE_MODEL_INDEX_OFFSET);
-    int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
+    int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -126,13 +128,14 @@ void wctile_hitDetect(void) {}
 #pragma scheduling off
 void wctile_init(u8 *obj, u8 *setupBytes)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     WCTileState *state = *(WCTileState **)(obj + 0xb8);
     WCTileSetup *setup = (WCTileSetup *)setupBytes;
 
     *(f32 *)(obj + 0x10) = lbl_803E6DFC + setup->yOffset;
-    obj[0xad] = setup->modelIndex;
-    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        obj[0xad] = 0;
+    objAnim->bankIndex = setup->modelIndex;
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+        objAnim->bankIndex = 0;
     }
     state->targetTile = setup->initialTile;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
@@ -157,6 +160,7 @@ void wctile_initialise(void) {}
 #pragma scheduling off
 void wctile_update(int obj)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     f32 nearest = lbl_803E6DF4;
     WCTileState *state = *(WCTileState **)(obj + 0xb8);
 
@@ -167,7 +171,7 @@ void wctile_update(int obj)
     }
     *(s16 *)(obj + 0) += (s16)(lbl_803E6DF8 * timeDelta);
     if (state->mode != WCTILE_MODE_HIDDEN) {
-        if ((s8)*(u8 *)(obj + 0xad) == WCTILE_VARIANT_A) {
+        if (objAnim->bankIndex == WCTILE_VARIANT_A) {
             if ((u32)GameBit_Get(WCTILE_GAMEBIT_A_HIDE) != 0)
                 state->mode = WCTILE_MODE_HIDDEN;
             else if ((u32)GameBit_Get(WCTILE_GAMEBIT_A_FADE) != 0)
@@ -181,7 +185,7 @@ void wctile_update(int obj)
     }
     switch (state->mode) {
     case WCTILE_MODE_INIT_MOVE:
-        if ((s8)*(u8 *)(obj + 0xad) == WCTILE_VARIANT_A) {
+        if (objAnim->bankIndex == WCTILE_VARIANT_A) {
             WCTILE_STATE_IFACE(state)->getTileXYA(state->targetTile, &state->tileX,
                                                   &state->tileY, WCTILE_STATE_IFACE(state));
             WCTILE_STATE_IFACE(state)->moveToTileA(obj, state->tileX, state->tileY, obj + 0xc,
@@ -209,7 +213,7 @@ void wctile_update(int obj)
             *(u8 *)(obj + 0x36) = v;
         }
         if (*(u8 *)(obj + 0x36) == 0) {
-            if ((s8)*(u8 *)(obj + 0xad) == WCTILE_VARIANT_A) {
+            if (objAnim->bankIndex == WCTILE_VARIANT_A) {
                 WCTILE_STATE_IFACE(state)->getTileXYA(state->targetTile, &state->tileX,
                                                       &state->tileY, WCTILE_STATE_IFACE(state));
                 WCTILE_STATE_IFACE(state)->moveToTileA(obj, state->tileX, state->tileY, obj + 0xc,
@@ -242,7 +246,7 @@ void wctile_update(int obj)
                 v = WCTILE_ALPHA_OPAQUE;
             *(u8 *)(obj + 0x36) = v;
         }
-        if ((s8)*(u8 *)(obj + 0xad) == WCTILE_VARIANT_A) {
+        if (objAnim->bankIndex == WCTILE_VARIANT_A) {
             if (state->targetTile !=
                 (u8)WCTILE_STATE_IFACE(state)->getTileIndexA(state->tileX, state->tileY,
                                                              WCTILE_STATE_IFACE(state)))

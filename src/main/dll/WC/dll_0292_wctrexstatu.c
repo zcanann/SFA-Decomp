@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
 
 #define WCTREXSTATU_CALLBACK_COMMANDS_OFFSET 0x81
 #define WCTREXSTATU_CALLBACK_COMMAND_COUNT_OFFSET 0x8b
@@ -54,8 +55,9 @@ int wctrexstatu_getExtraSize(void) { return 0; }
 #pragma scheduling off
 int wctrexstatu_getObjectTypeId(int obj)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
-    int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
+    int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -86,8 +88,10 @@ void wctrexstatu_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling off
 void wctrexstatu_hitDetect(u8 *obj)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+
     if (*(int *)(obj + WCTREXSTATU_TRIGGERED_FLAG_OFFSET) != 0 && randomGetRange(0, WCTREXSTATU_PARTFX_CHANCE) == 0) {
-        if (*(s8 *)(obj + 0xad) == 0) {
+        if (objAnim->bankIndex == 0) {
             (*(void (**)(u8 *, int, int, int, int, u8 *))(*gPartfxInterface + 8))(
                 obj, WCTREXSTATU_PARTFX_VARIANT_0, 0, WCTREXSTATU_PARTFX_KIND, WCTREXSTATU_PARTFX_INVALID_HANDLE,
                 obj);
@@ -111,10 +115,11 @@ void wctrexstatu_update(void) {}
 #pragma scheduling off
 void wctrexstatu_init(int obj, int setup, int fromLoad)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     *(void **)(obj + 0xbc) = wctrexstatu_interactCallback;
-    *(u8 *)(obj + 0xad) = *(u8 *)(setup + WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
-    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        *(u8 *)(obj + 0xad) = 0;
+    objAnim->bankIndex = *(u8 *)(setup + WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+        objAnim->bankIndex = 0;
     }
 
     *(s16 *)obj = (s16)((s8)*(u8 *)(setup + WCTREXSTATU_SETUP_TYPE_OFFSET) << 8);

@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
 
 #define WCPUSHBLOCK_EXTRA_SIZE 0x288
 #define WCPUSHBLOCK_RENDER_TYPE_BASE 0x400
@@ -121,8 +122,9 @@ int wcpushblock_getExtraSize(void) { return WCPUSHBLOCK_EXTRA_SIZE; }
 #pragma scheduling off
 int wcpushblock_getObjectTypeId(int obj)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCPUSHBLOCK_MODEL_INDEX_OFFSET);
-    int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
+    int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -159,15 +161,16 @@ void wcpushblock_hitDetect(void) {}
 #pragma scheduling off
 void wcpushblock_init(int obj, int setup)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     WCPushBlockRuntimeState *state = *(WCPushBlockRuntimeState **)(obj + 0xb8);
     WCPushBlockSetup *setupData = (WCPushBlockSetup *)setup;
 
     *(u8 *)(obj + 0x36) = 0;
-    *(u8 *)(obj + 0xad) = setupData->modelIndex;
-    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        *(u8 *)(obj + 0xad) = 0;
+    objAnim->bankIndex = setupData->modelIndex;
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+        objAnim->bankIndex = 0;
     }
-    ObjHitbox_SetStateIndex(obj, *(int *)(obj + 0x54), *(s8 *)(obj + 0xad));
+    ObjHitbox_SetStateIndex(obj, *(int *)(obj + 0x54), objAnim->bankIndex);
     state->initialTile = (u8)setupData->initialTile;
     state->baseY = lbl_803E6DA0 + setupData->y;
 }
@@ -190,6 +193,7 @@ void wcpushblock_initialise(void) {}
 #pragma scheduling off
 void wcpushblock_update(int obj)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int state = *(int *)(obj + 0xb8);
     int player = Obj_GetPlayerObject();
     f32 range = lbl_803E6D58;
@@ -209,7 +213,7 @@ void wcpushblock_update(int obj)
     *(u16 *)(obj + 0xb0) &= ~WCPUSHBLOCK_OBJFLAG_LOCKED;
 
     if (WCPUSHBLOCK_FLAGS(state).phase != WCPUSHBLOCK_PHASE_SOLVED) {
-        if ((s8)*(u8 *)(obj + 0xad) == WCPUSHBLOCK_VARIANT_A) {
+        if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
             if ((u32)GameBit_Get(WCPUSHBLOCK_GAMEBIT_A_SOLVED) != 0) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_SOLVED;
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x34))(
@@ -237,7 +241,7 @@ void wcpushblock_update(int obj)
     {
         u32 ph = WCPUSHBLOCK_FLAGS(state).phase;
         if (ph != WCPUSHBLOCK_PHASE_FADE_OUT && ph != WCPUSHBLOCK_PHASE_FADE_IN) {
-            if ((s8)*(u8 *)(obj + 0xad) == WCPUSHBLOCK_VARIANT_A) {
+            if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
                 objfx_spawnBoxBurst(obj, 1, WCPUSHBLOCK_BOX_BURST_VARIANT_A, 1, lbl_803E6D5C, lbl_803E6D60, lbl_803E6D5C,
                                     lbl_803E6D60, 50, 0, 0);
             } else {
@@ -249,7 +253,7 @@ void wcpushblock_update(int obj)
 
     switch (WCPUSHBLOCK_FLAGS(state).phase) {
     case WCPUSHBLOCK_PHASE_INIT_MOVE:
-        if ((s8)*(u8 *)(obj + 0xad) == WCPUSHBLOCK_VARIANT_A) {
+        if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
             (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x30))(
                 WCPUSHBLOCK_INITIAL_TILE(state), state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y, WCPUSHBLOCK_IFACE);
             (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x20))(
@@ -279,7 +283,7 @@ void wcpushblock_update(int obj)
         }
         if (fn_80296414(player, obj, state + WCPUSHBLOCK_STATE_PUSH_DIR) != 0) {
             u32 dir = WCPUSHBLOCK_PUSH_DIR(state);
-            if ((s8)*(u8 *)(obj + 0xad) == WCPUSHBLOCK_VARIANT_A) {
+            if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
                 if (dir == WCPUSHBLOCK_DIR_POS_X) {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         (*(int (**)(int, int, int, f32 *, f32 *, int, int, int))(WCPUSHBLOCK_IFACE + 0x38))(
@@ -411,7 +415,7 @@ void wcpushblock_update(int obj)
             u32 r = WCPUSHBLOCK_MOVE_RESULT(state);
             if (r == WCPUSHBLOCK_MOVE_RESULT_LOCKED) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_LOCKED;
-                if ((s8)*(u8 *)(obj + 0xad) == WCPUSHBLOCK_VARIANT_A) {
+                if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
                     if (gameBitIncrement(WCPUSHBLOCK_GAMEBIT_A_COUNT) != WCPUSHBLOCK_REQUIRED_LOCK_COUNT) {
                         Sfx_PlayFromObject(0, SFXsc_lockon3_off);
                     }
@@ -427,7 +431,7 @@ void wcpushblock_update(int obj)
                     Sfx_PlayFromObject(obj, SFXsc_lockon3_on);
                 }
             } else {
-                if ((s8)*(u8 *)(obj + 0xad) == WCPUSHBLOCK_VARIANT_A) {
+                if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
                     GameBit_Set(WCPUSHBLOCK_GAMEBIT_A_FADE, 1);
                 } else {
                     GameBit_Set(WCPUSHBLOCK_GAMEBIT_B_FADE, 1);
@@ -435,7 +439,7 @@ void wcpushblock_update(int obj)
             }
         }
         if (WCPUSHBLOCK_FLAGS(state).phase != WCPUSHBLOCK_PHASE_FADE_OUT) {
-            if ((s8)*(u8 *)(obj + 0xad) == WCPUSHBLOCK_VARIANT_A) {
+            if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x28))(
                     0, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, f32, f32, int, int, int))(WCPUSHBLOCK_IFACE + 0x24))(
@@ -470,7 +474,7 @@ void wcpushblock_update(int obj)
         }
         if (*(u8 *)(obj + 0x36) == 0) {
             if (wcblock_isPlayerAwayFromStoredCell(obj, state, Obj_GetPlayerObject()) != 0) {
-                if ((s8)*(u8 *)(obj + 0xad) == WCPUSHBLOCK_VARIANT_A) {
+                if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
                     (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x30))(
                         WCPUSHBLOCK_INITIAL_TILE(state), state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y, WCPUSHBLOCK_IFACE);
                     (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x20))(

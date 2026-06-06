@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim_internal.h"
 
 #define WCTEMPLE_DIA_EXTRA_SIZE 0x14
 #define WCTEMPLE_DIA_STAGE_COUNT 3
@@ -186,11 +187,13 @@ void wctempledia_init(int obj, int setup)
     int i;
 
     *(s16 *)obj = (s16)((s8)*(u8 *)(setup + WCTEMPLE_DIA_SETUP_TYPE_OFFSET) << 8);
-    *(u8 *)(obj + 0xad) = *(u8 *)(setup + WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET);
-    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        *(u8 *)(obj + 0xad) = 0;
+    *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) =
+        *(u8 *)(setup + WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET);
+    if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
+        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
+        *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
     }
-    if (*(s8 *)(obj + 0xad) == 0) {
+    if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 0) {
         WCTEMPLE_DIA_GAMEBITS(state) = &lbl_803DC3B8;
         WCTEMPLE_DIA_TARGET_TABLE(state) = lbl_8032B348;
     } else {

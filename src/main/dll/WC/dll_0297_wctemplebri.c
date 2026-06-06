@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/objanim_internal.h"
 
 #define WCTEMPLEBRI_EXTRA_SIZE 0x68
 #define WCTEMPLEBRI_RENDER_TYPE_BASE 0x400
@@ -131,8 +132,9 @@ int wctemplebri_getExtraSize(void) { return WCTEMPLEBRI_EXTRA_SIZE; }
 #pragma scheduling off
 int wctemplebri_getObjectTypeId(int obj)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
-    int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
+    int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -252,9 +254,11 @@ void wctemplebri_init(int obj, int initData)
     int done;
 
     *(s16 *)(obj + 0) = (s16)((s8)*(u8 *)(initData + WCTEMPLEBRI_SETUP_TYPE_OFFSET) << 8);
-    *(u8 *)(obj + 0xad) = *(u8 *)(initData + WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
-    if ((s8)*(u8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55))
-        *(u8 *)(obj + 0xad) = 0;
+    *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) =
+        *(u8 *)(initData + WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
+    if ((s8)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
+        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount)))
+        *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
     *(void **)(obj + 0xbc) = (void *)wctemplebri_interactCallback;
     state = *(int *)(obj + 0xb8);
     maxY = 0;

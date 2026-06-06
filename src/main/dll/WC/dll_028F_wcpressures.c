@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/objanim_internal.h"
 
 #define WCPRESSURES_OBJECT_DEF_ID 0x0128
 #define WCPRESSURES_DLL_ID 0x028f
@@ -39,14 +40,11 @@
 #define WCPRESSURES_SOLVED_TIMER 0x1e
 
 #define WCPRESSURES_OBJECT_SETUP_OFFSET 0x4c
-#define WCPRESSURES_OBJECT_MODEL_DATA_OFFSET 0x50
 #define WCPRESSURES_OBJECT_Y_OFFSET 0x10
 #define WCPRESSURES_OBJECT_Z_OFFSET 0x14
-#define WCPRESSURES_OBJECT_MODEL_INDEX_OFFSET 0xad
 #define WCPRESSURES_OBJECT_FLAGS_OFFSET 0xb0
 #define WCPRESSURES_OBJECT_STATE_OFFSET 0xb8
 #define WCPRESSURES_OBJECT_TILE_CALLBACK_OFFSET 0xbc
-#define WCPRESSURES_MODEL_COUNT_OFFSET 0x55
 
 #define WCPRESSURES_CALLBACK_COMMAND_OFFSET 0x80
 #define WCPRESSURES_CALLBACK_NONE 0
@@ -156,10 +154,10 @@ int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
 #pragma scheduling off
 int wcpressures_getObjectTypeId(int obj)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int modelIndex = *(u8 *)(*(int *)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET) +
                              WCPRESSURES_SETUP_MODEL_INDEX_OFFSET);
-    int modelCount = (s8)*(u8 *)(*(int *)(obj + WCPRESSURES_OBJECT_MODEL_DATA_OFFSET) +
-                                  WCPRESSURES_MODEL_COUNT_OFFSET);
+    int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -297,6 +295,7 @@ void wcpressures_update(int obj)
 #pragma scheduling off
 void wcpressures_init(u8 *obj, u8 *setup)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     WCPressuresState *state = *(WCPressuresState **)(obj + 0xb8);
     WCPressuresSetup *setupData = (WCPressuresSetup *)setup;
     s16 objType;
@@ -309,9 +308,9 @@ void wcpressures_init(u8 *obj, u8 *setup)
     objFlags = *(u16 *)(obj + 0xb0) | 0x6000;
     *(u16 *)(obj + 0xb0) = objFlags;
     modelIndex = (s8)setupData->modelIndex;
-    *(s8 *)(obj + 0xad) = modelIndex;
-    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        obj[0xad] = 0;
+    objAnim->bankIndex = modelIndex;
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+        objAnim->bankIndex = 0;
     }
 
     if ((u32)GameBit_Get(setupData->solvedBit) != 0) {
