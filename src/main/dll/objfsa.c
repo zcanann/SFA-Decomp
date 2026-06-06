@@ -5449,15 +5449,19 @@ extern f32 lbl_803E0654;
 
 #pragma scheduling off
 #pragma peephole off
-#pragma opt_strength_reduction off
 int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outPhase)
 {
   int projected;
-  uint linkId;
+  int linkId;
   float lateralOffset;
   float verticalOffset;
   float phase;
   int adjacentWindow[4];
+  int candidates[4];
+  u32 mask;
+  int count;
+  int n;
+  int k;
 
   while (!((*(int *)(curve + 0x1c) == -1 || (*(u8 *)(curve + 0x1b) & 1) != 0) &&
            (*(int *)(curve + 0x20) == -1 || (*(u8 *)(curve + 0x1b) & 2) != 0) &&
@@ -5472,18 +5476,26 @@ int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outP
       return curve;
     }
 
-    linkId = RomCurve_getControlPointId_2A(curve, 0, -1);
-    if ((int)linkId < 0) {
-      curve = 0;
-    } else {
-      curve = Objfsa_FindRomCurveById(linkId);
+    count = 0;
+    mask = 1;
+    for (k = 0; k < 4; k++) {
+      n = *(int *)(curve + 0x1C + k * 4);
+      if (n > -1 && (*(s8 *)(curve + 0x1B) & mask) == 0 && n != 0) {
+        candidates[count++] = n;
+      }
+      mask <<= 1;
     }
+    if (count != 0) {
+      linkId = candidates[(int)randomGetRange(0, count - 1)];
+    } else {
+      linkId = -1;
+    }
+    curve = Objfsa_FindRomCurveById(linkId);
   }
 
   *outPhase = gFloatZero;
   return curve;
 }
-#pragma opt_strength_reduction reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -5493,15 +5505,29 @@ void curves_getPos(f32 phase,int curve,float *outX,float *outY,float *outZ)
 {
   f32 dy;
   f32 dz;
-  uint linkId;
+  int linkId;
   int c2;
+  int candidates[4];
+  u32 mask;
+  int count;
+  int n;
+  int k;
 
-  linkId = RomCurve_getControlPointId_2A(curve, 0, -1);
-  if ((int)linkId < 0) {
-    c2 = 0;
-  } else {
-    c2 = Objfsa_FindRomCurveById(linkId);
+  count = 0;
+  mask = 1;
+  for (k = 0; k < 4; k++) {
+    n = *(int *)(curve + 0x1C + k * 4);
+    if (n > -1 && (*(s8 *)(curve + 0x1B) & mask) == 0 && n != 0) {
+      candidates[count++] = n;
+    }
+    mask <<= 1;
   }
+  if (count != 0) {
+    linkId = candidates[(int)randomGetRange(0, count - 1)];
+  } else {
+    linkId = -1;
+  }
+  c2 = Objfsa_FindRomCurveById(linkId);
 
   if (c2 == 0) {
     *outX = *(f32 *)(curve + 8);
