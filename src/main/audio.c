@@ -1507,42 +1507,39 @@ SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mod
     SfxObjectChannel* objectChannel = gSfxObjectChannels;
     SfxObjectChannel* bestChannel = NULL;
     u64 bestAge;
-    u32 channelMask = (u8)channel;
+    int channelMask;
     s32 i;
 
-    if (mode == 2) {
-        bestAge = 0;
-    } else {
-        bestAge = (u64)-1;
-    }
+    bestAge = (mode == 2) ? 0 : -1;
     gSfxObjectChannelMatchCount = 0;
+    channelMask = (u8)channel;
 
     for (i = SFX_OBJECT_CHANNEL_COUNT; i != 0; i--) {
         if ((objectChannel->handle != (u32)-1) &&
             ((obj == 0) || (objectChannel->object == obj)) &&
-            ((channelMask == 0) || ((objectChannel->channelMask & channelMask) != 0)) &&
+            (((u8)channel == 0) || ((objectChannel->channelMask & channelMask) != 0)) &&
             (((u16)sfxId == 0) || (objectChannel->sfxId == (u16)sfxId))) {
             gSfxObjectChannelMatchCount++;
 
             switch (mode) {
-            case 2:
-                if (objectChannel->age > bestAge) {
-                    bestChannel = objectChannel;
-                    bestAge = objectChannel->age;
-                }
-                break;
             case 0:
                 return objectChannel;
+            case 2:
+                if (objectChannel->age > bestAge) {
+                    bestAge = objectChannel->age;
+                    bestChannel = objectChannel;
+                }
+                break;
             case 1:
             case 3:
                 if (objectChannel->age < bestAge) {
-                    bestChannel = objectChannel;
                     bestAge = objectChannel->age;
+                    bestChannel = objectChannel;
                 }
                 break;
             }
 
-            if ((mode != 3) && (gSfxObjectChannelMatchCount == 3)) {
+            if ((mode != 3) && ((int)gSfxObjectChannelMatchCount == 3)) {
                 return bestChannel;
             }
         }
