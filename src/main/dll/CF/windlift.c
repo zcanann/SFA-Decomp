@@ -4,6 +4,102 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/dll/CF/windlift.h"
+#include "global.h"
+
+/* scarab_getExtraSize == 0x34 (collectible money beetle). */
+typedef struct ScarabState {
+    f32 velX;        /* 0x00 */
+    f32 velZ;        /* 0x04 */
+    f32 riseAmount;  /* 0x08 */
+    f32 baseY;       /* 0x0c: def spawn height */
+    s16 despawnTimer;/* 0x10 */
+    u8 pad12[2];
+    s16 mode;        /* 0x14 */
+    s16 yawSpeed;    /* 0x16 */
+    s16 spawnYaw;    /* 0x18 */
+    s16 fleeTimer;   /* 0x1a */
+    s16 riseLimit;   /* 0x1c */
+    s16 pickupSfx;   /* 0x1e */
+    s16 particleId;  /* 0x20 */
+    s16 unk22;       /* 0x22 */
+    u8 phase;        /* 0x24 */
+    u8 pad25[2];
+    u8 moneyKind;    /* 0x27 */
+    u8 flags28;      /* 0x28: 1 = collected, waiting on the money message */
+    u8 pad29[3];
+    s16 msgParamA;   /* 0x2c */
+    s16 msgParamB;   /* 0x2e */
+    f32 msgParamC;   /* 0x30 */
+} ScarabState;
+STATIC_ASSERT(sizeof(ScarabState) == 0x34);
+
+/* dll_107_getExtraSize == 0x2c (CF wind lift / blow vent). */
+typedef struct WindLift107State {
+    int holdTimer;   /* 0x00: countdown while the vent is plugged */
+    int holdReload;  /* 0x04 */
+    f32 radius;      /* 0x08 */
+    s16 yawLow;      /* 0x0c */
+    s16 yawHigh;     /* 0x0e */
+    s16 ventState;   /* 0x10 */
+    s16 maxDist;     /* 0x12 */
+    s16 unk14;       /* 0x14 */
+    s16 unk16;       /* 0x16 */
+    s16 unk18;       /* 0x18 */
+    s16 liftTimer;   /* 0x1a */
+    u8 pad1C[2];
+    s16 spitTimer;   /* 0x1e */
+    u8 pad20;
+    u8 rideState;    /* 0x21 */
+    u8 riding;       /* 0x22 */
+    u8 launchPhase;  /* 0x23 */
+    u8 pad24;
+    u8 unk25;        /* 0x25 */
+    u8 glowPulse;    /* 0x26 */
+    u8 unk27;        /* 0x27 */
+    u8 pad28[4];
+} WindLift107State;
+STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
+
+/* portalspelldoor_getExtraSize == 0x10. */
+typedef struct PortalSpellDoorState {
+    u8 pad00[4];
+    f32 openAmount;  /* 0x04 */
+    int openTimer;   /* 0x08 */
+    u8 flags0C;      /* 0x0c: bit 7 = open (via PortalFlags cast) */
+    u8 pad0D[3];
+} PortalSpellDoorState;
+STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
+
+/* LanternFireFly_getExtraSize == 0x74. */
+typedef struct LanternFireFlyState {
+    void *light;     /* 0x00 */
+    f32 histX[4];    /* 0x04: position-history ring (oldest first) */
+    f32 histY[4];    /* 0x14 */
+    f32 histZ[4];    /* 0x24 */
+    f32 offX;        /* 0x34: current offset from the lantern base */
+    f32 offY;        /* 0x38 */
+    f32 offZ;        /* 0x3c */
+    u8 pad40[4];
+    f32 stepBlend;   /* 0x44 */
+    u8 pad48[4];
+    f32 hoverHeight; /* 0x4c */
+    f32 ceilingY;    /* 0x50 */
+    f32 baseX;       /* 0x54 */
+    f32 baseY;       /* 0x58 */
+    f32 baseZ;       /* 0x5c */
+    int idleTimer;   /* 0x60 */
+    s16 wanderYaw;   /* 0x64 */
+    u8 pad66[2];
+    s16 yawRange;    /* 0x68 */
+    u8 unk6A;        /* 0x6a */
+    u8 pad6B;
+    u8 stepsLeft;    /* 0x6c */
+    u8 pad6D[2];
+    u8 unk6F;        /* 0x6f */
+    u8 flags70;      /* 0x70: bits 6..7 = lantern slot kind */
+    u8 pad71[3];
+} LanternFireFlyState;
+STATIC_ASSERT(sizeof(LanternFireFlyState) == 0x74);
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
@@ -1051,30 +1147,30 @@ void fn_80185868(int obj, f32 arg)
     f32 val;
     u8 pad2[12];
   } stk;
-  int sub;
+  WindLift107State *sub;
   f32 fz;
 
-  sub = *(int *)(obj + 0xb8);
-  stk.val = *(f32 *)(sub + 8);
+  sub = *(WindLift107State **)(obj + 0xb8);
+  stk.val = sub->radius;
   (*(code *)(*(int *)lbl_803DDAD0 + 4))(obj, 0xf, 0, 2, -1, 0);
   (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stk.pad, 2, -1, 0);
   Sfx_PlayFromObject(obj, SFXmn_eggylaugh116);
   fz = lbl_803E3A58;
   *(f32 *)(obj + 0x24) = fz;
   *(f32 *)(obj + 0x2c) = fz;
-  *(s16 *)(sub + 0x10) = 0x32;
-  *(s16 *)(sub + 0x1a) = 800;
-  *(u8 *)(sub + 0x23) = 0;
-  *(u8 *)(sub + 0x21) = 0;
+  sub->ventState = 0x32;
+  sub->liftTimer = 800;
+  sub->launchPhase = 0;
+  sub->rideState = 0;
   *(int *)(obj + 0xf8) = 0;
   *(int *)(obj + 0xf4) = 2;
   ObjHits_EnableObject(obj);
   ObjHits_MarkObjectPositionDirty(obj);
-  *(s16 *)(sub + 0x1e) = 0;
-  if (arg < *(f32 *)(sub + 8)) {
+  sub->spitTimer = 0;
+  if (arg < sub->radius) {
     ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x60004, obj, 0);
   }
-  ObjHitbox_SetCapsuleBounds(obj, (int)*(f32 *)(sub + 8), -5, 10);
+  ObjHitbox_SetCapsuleBounds(obj, (int)sub->radius, -5, 10);
   ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
   ObjHits_EnableObject(obj);
 }
@@ -1102,11 +1198,11 @@ void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
     extern void fn_8003B5E0(int a, int b, int c, int d);
     extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 scale);
     extern f32 lbl_803E3A5C;
-    int state;
+    WindLift107State *state;
     s16 t;
 
-    state = *(int *)(obj + 0xb8);
-    if ((*(s16 *)(state + 0x10) == 0 || *(s16 *)(state + 0x10) > 50) && *(int *)state == 0) {
+    state = *(WindLift107State **)(obj + 0xb8);
+    if ((state->ventState == 0 || state->ventState > 50) && state->holdTimer == 0) {
         goto ok;
     }
     goto end;
@@ -1121,20 +1217,20 @@ ok:
             goto end;
         }
     }
-    t = *(s16 *)(state + 0x1e);
+    t = state->spitTimer;
     if (t != 0) {
         if (t < 60) {
-            *(u8 *)(state + 0x26) = *(u8 *)(state + 0x26) + framesThisStep * 10;
-            if (*(u8 *)(state + 0x26) > 0x80) {
-                *(u8 *)(state + 0x26) = 0;
+            state->glowPulse = state->glowPulse + framesThisStep * 10;
+            if (state->glowPulse > 0x80) {
+                state->glowPulse = 0;
             }
-            fn_8003B5E0(200, 30, 30, *(u8 *)(state + 0x26));
+            fn_8003B5E0(200, 30, 30, state->glowPulse);
         } else if (t < 240) {
-            *(u8 *)(state + 0x26) = *(u8 *)(state + 0x26) + framesThisStep * 5;
-            if (*(u8 *)(state + 0x26) > 0x80) {
-                *(u8 *)(state + 0x26) = 0;
+            state->glowPulse = state->glowPulse + framesThisStep * 5;
+            if (state->glowPulse > 0x80) {
+                state->glowPulse = 0;
             }
-            fn_8003B5E0(200, 30, 30, *(u8 *)(state + 0x26));
+            fn_8003B5E0(200, 30, 30, state->glowPulse);
         }
     }
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3A5C);
@@ -1191,7 +1287,7 @@ void fn_80185B74(int obj)
     u8 yawBuf[4];
     int player;
     int p4c;
-    int state;
+    WindLift107State *state;
     int sub;
     f32 dist;
     u8 ph;
@@ -1201,13 +1297,13 @@ void fn_80185B74(int obj)
     p4c = *(int *)(obj + 0x4c);
     spd = lbl_803E3A5C;
     (*(code *)(*(int *)gSHthorntailAnimationInterface + 0x18))(&spd);
-    state = *(int *)(obj + 0xb8);
+    state = *(WindLift107State **)(obj + 0xb8);
     player = Obj_GetPlayerObject();
     sub = *(int *)(player + 0xb8);
     dist = Vec_distance((void *)(player + 0x18), (void *)(obj + 0x18));
-    if (*(s16 *)(state + 0x1a) <= 0) {
-        *(s16 *)(state + 0x10) = 1;
-        *(u8 *)(state + 0x23) = 0;
+    if (state->liftTimer <= 0) {
+        state->ventState = 1;
+        state->launchPhase = 0;
         *(u8 *)(obj + 0xaf) |= 8;
         {
             f32 fz = lbl_803E3A58;
@@ -1215,58 +1311,58 @@ void fn_80185B74(int obj)
             *(f32 *)(obj + 0x2c) = fz;
         }
     }
-    if (*(s16 *)(state + 0x1e) != 0) {
+    if (state->spitTimer != 0) {
         Sfx_PlayFromObject(obj, SFXmn_dimspit6);
-        *(s16 *)(state + 0x1e) -= framesThisStep;
+        state->spitTimer -= framesThisStep;
         if ((int)randomGetRange(0, 2) == 2) {
             (*(code *)(*(int *)gPartfxInterface + 8))(obj, 0x51c, 0, 1, -1, 0);
         }
-        if (*(s16 *)(state + 0x1e) <= 0) {
+        if (state->spitTimer <= 0) {
             fn_80185868(obj, dist);
             return;
         }
     }
-    if (*(int *)state != 0) {
-        *(int *)state = *(int *)state - (s16)(int)(timeDelta * spd);
-        if (*(int *)state <= 0) {
-            *(int *)state = 0;
-            *(s16 *)(state + 0x10) = 0;
+    if (state->holdTimer != 0) {
+        state->holdTimer = state->holdTimer - (s16)(int)(timeDelta * spd);
+        if (state->holdTimer <= 0) {
+            state->holdTimer = 0;
+            state->ventState = 0;
             ObjHits_EnableObject(obj);
             *(u8 *)(obj + 0xaf) &= ~8;
             *(int *)(obj + 0xf4) = 0;
         }
         return;
     }
-    if (*(s16 *)(state + 0x10) != 0) {
+    if (state->ventState != 0) {
         Sfx_StopObjectChannel(obj, SFXen_firlp6);
-        *(s16 *)(state + 0x10) -= framesThisStep;
-        if (*(s16 *)(state + 0x10) <= 0) {
-            if (*(int *)(state + 4) != 0) {
-                *(int *)state = *(int *)(state + 4);
+        state->ventState -= framesThisStep;
+        if (state->ventState <= 0) {
+            if (state->holdReload != 0) {
+                state->holdTimer = state->holdReload;
             } else {
-                *(int *)state = 1;
+                state->holdTimer = 1;
             }
         }
-        if (*(s16 *)(state + 0x10) <= 50) {
+        if (state->ventState <= 50) {
             return;
         }
     }
-    if (*(s8 *)(state + 0x23) == 0) {
-        if (*(s8 *)(state + 0x21) == 0) {
+    if (*(s8 *)&state->launchPhase == 0) {
+        if (*(s8 *)&state->rideState == 0) {
             int cam = (*(code *)(*(int *)gCameraInterface + 0x3c))();
             on = 0;
             if ((void *)cam != (void *)obj &&
                 (*(u8 *)(obj + 0xaf) & 1) != 0 && *(int *)(obj + 0xf8) == 0) {
                 buttonDisable(0, 0x100);
                 Obj_GetYawDeltaToObject(obj, player, yawBuf);
-                *(s16 *)(state + 0xc) = -32768;
-                *(s16 *)(state + 0xe) = 0;
+                state->yawLow = -32768;
+                state->yawHigh = 0;
                 on = 1;
             }
-            *(s8 *)(state + 0x21) = on;
-            if (*(s8 *)(state + 0x21) != 0) {
-                *(u8 *)(state + 0x22) = 1;
-                *(s16 *)(state + 0x1e) = 600;
+            *(s8 *)&state->rideState = on;
+            if (*(s8 *)&state->rideState != 0) {
+                state->riding = 1;
+                state->spitTimer = 600;
             }
             if (*(int *)(obj + 0xf8) == 0) {
                 ObjHits_EnableObject(obj);
@@ -1283,21 +1379,21 @@ void fn_80185B74(int obj)
             *(f32 *)(*(int *)(obj + 0x54) + 0x18) = *(f32 *)(obj + 0x14);
             *(u8 *)(obj + 0xaf) |= 8;
             if ((getButtonsJustPressed(0) & 0x100) != 0) {
-                *(u8 *)(state + 0x22) = 0;
+                state->riding = 0;
             }
-            if (*(s8 *)(state + 0x22) != 0) {
-                *(s16 *)(state + 0x10) = 0;
-                *(int *)state = 0;
+            if (*(s8 *)&state->riding != 0) {
+                state->ventState = 0;
+                state->holdTimer = 0;
                 ObjMsg_SendToObject(player, 0x100010, obj,
-                                    (*(s16 *)(state + 0xe) << 0x10) | ((u16)*(s16 *)(state + 0xc)));
+                                    (state->yawHigh << 0x10) | ((u16)state->yawLow));
             }
             if (*(int *)(obj + 0xf8) == 1) {
-                *(u8 *)(state + 0x21) = 2;
+                state->rideState = 2;
             }
-            st21 = *(u8 *)(state + 0x21);
+            st21 = state->rideState;
             if ((s8)st21 == 2 && *(int *)(obj + 0xf8) == 0 && *(s16 *)(player + 0xa0) != 0x447) {
-                *(u8 *)(state + 0x21) = 0;
-                *(u8 *)(state + 0x23) = 1;
+                state->rideState = 0;
+                state->launchPhase = 1;
                 {
                     f32 fz = lbl_803E3A58;
                     *(f32 *)(obj + 0x24) = fz;
@@ -1315,8 +1411,8 @@ void fn_80185B74(int obj)
                 Sfx_PlayFromObject(obj, SFXmn_dimbos46);
             } else if ((s8)st21 == 2 && *(int *)(obj + 0xf8) == 0) {
                 f32 fz;
-                *(u8 *)(state + 0x21) = 0;
-                *(u8 *)(state + 0x23) = 2;
+                state->rideState = 0;
+                state->launchPhase = 2;
                 fz = lbl_803E3A58;
                 *(f32 *)(obj + 0x24) = fz;
                 *(f32 *)(obj + 0x28) = fz;
@@ -1325,18 +1421,18 @@ void fn_80185B74(int obj)
             }
         }
     }
-    ph = *(u8 *)(state + 0x23);
-    if ((s8)ph == 0 && *(s8 *)(state + 0x21) == 0) {
+    ph = state->launchPhase;
+    if ((s8)ph == 0 && *(s8 *)&state->rideState == 0) {
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
             sub = *(int *)(obj + 0xb8);
-            stkA.val = *(f32 *)(sub + 8);
+            stkA.val = ((WindLift107State *)sub)->radius;
             (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stkA.pad, 2, -1, 0);
-            *(s16 *)(sub + 0x1e) = 1;
+            ((WindLift107State *)sub)->spitTimer = 1;
             return;
         }
     } else if ((s8)ph != 0) {
-        *(s16 *)(state + 0x1a) -= framesThisStep;
-        if (*(s8 *)(state + 0x23) == 1) {
+        state->liftTimer -= framesThisStep;
+        if (*(s8 *)&state->launchPhase == 1) {
             ObjHits_SetHitVolumeSlot(obj, 0xe, 3, 0);
             if (*(f32 *)(obj + 0x28) > lbl_803E3A70) {
                 *(f32 *)(obj + 0x28) = lbl_803E3A74 * timeDelta + *(f32 *)(obj + 0x28);
@@ -1344,21 +1440,21 @@ void fn_80185B74(int obj)
             ObjHits_EnableObject(obj);
         }
         held = (*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags;
-        if ((s8)held != 0 && *(s8 *)(state + 0x23) == 1) {
+        if ((s8)held != 0 && *(s8 *)&state->launchPhase == 1) {
             *(f32 *)(obj + 0x28) = lbl_803E3A58;
-            *(u8 *)(state + 0x23) = 0;
+            state->launchPhase = 0;
             sub = *(int *)(obj + 0xb8);
-            stkB.val = *(f32 *)(sub + 8);
+            stkB.val = ((WindLift107State *)sub)->radius;
             (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stkB.pad, 2, -1, 0);
-            *(s16 *)(sub + 0x1e) = 1;
+            ((WindLift107State *)sub)->spitTimer = 1;
             return;
         }
-        if ((s8)held != 0 && *(s8 *)(state + 0x23) == 2) {
-            *(u8 *)(state + 0x23) = 0;
+        if ((s8)held != 0 && *(s8 *)&state->launchPhase == 2) {
+            state->launchPhase = 0;
             sub = *(int *)(obj + 0xb8);
-            stkC.val = *(f32 *)(sub + 8);
+            stkC.val = ((WindLift107State *)sub)->radius;
             (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stkC.pad, 2, -1, 0);
-            *(s16 *)(sub + 0x1e) = 1;
+            ((WindLift107State *)sub)->spitTimer = 1;
             *(f32 *)(obj + 0x28) = lbl_803E3A58;
             return;
         }
@@ -1369,15 +1465,15 @@ void fn_80185B74(int obj)
     *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
     *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
     *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
-    *(s16 *)(state + 0x16) -= framesThisStep;
-    if (*(s8 *)(state + 0x21) != 0) {
+    state->unk16 -= framesThisStep;
+    if (*(s8 *)&state->rideState != 0) {
         if (getXZDistance((void *)(obj + 0x18), (void *)(p4c + 8)) >=
-            (f32)(*(s16 *)(state + 0x12) * *(s16 *)(state + 0x12))) {
+            (f32)(state->maxDist * state->maxDist)) {
             f32 fz = lbl_803E3A58;
             *(f32 *)(obj + 0x24) = fz;
             *(f32 *)(obj + 0x2c) = fz;
-            *(s16 *)(state + 0x10) = 500;
-            *(u8 *)(state + 0x23) = 0;
+            state->ventState = 500;
+            state->launchPhase = 0;
             *(int *)(obj + 0xf8) = 0;
             ObjHits_EnableObject(obj);
             *(u8 *)(obj + 0xaf) &= ~8;
@@ -1399,11 +1495,11 @@ void fn_801862CC(int obj, int p)
   extern f32 lbl_803E3A78;
   extern f32 lbl_803E3A80;
   extern f32 lbl_803E3A84;
-  int sub;
+  WindLift107State *sub;
   int p54;
   int p64;
 
-  sub = *(int *)(obj + 0xb8);
+  sub = *(WindLift107State **)(obj + 0xb8);
   *(s16 *)(obj + 0) = 0;
   p54 = *(int *)(obj + 0x54);
   *(int *)(p54 + 0x4c) = 16;
@@ -1411,36 +1507,36 @@ void fn_801862CC(int obj, int p)
   *(int *)(p54 + 0x48) = 16;
   ObjHits_DisableObject(obj);
   ObjGroup_AddObject(obj, 16);
-  *(s16 *)(sub + 0x10) = 0;
-  *(u8 *)(sub + 0x23) = 0;
+  sub->ventState = 0;
+  sub->launchPhase = 0;
   {
     s16 v = *(s16 *)(p + 0x1c);
     if (v == 0) {
-      *(int *)(sub + 4) = 0;
+      sub->holdReload = 0;
     } else {
-      *(int *)(sub + 4) = v * 0x34BC0;
+      sub->holdReload = v * 0x34BC0;
     }
   }
-  *(int *)(sub + 0) = 0;
-  *(u8 *)(sub + 0x25) = 0;
+  sub->holdTimer = 0;
+  sub->unk25 = 0;
   lbl_803DDAD0 = Resource_Acquire(91, 1);
   lbl_803DDAD4 = Resource_Acquire(170, 1);
-  *(s16 *)(sub + 0x16) = 100;
-  *(s16 *)(sub + 0x18) = 400;
+  sub->unk16 = 100;
+  sub->unk18 = 400;
   *(s16 *)(obj + 0) = (s16)(*(char *)(p + 0x18) << 8);
-  *(s16 *)(sub + 0x14) = *(s16 *)(p + 0x1e);
-  *(s16 *)(sub + 0x12) = *(s16 *)(p + 0x20);
-  if (*(s16 *)(sub + 0x12) == 0) {
-    *(s16 *)(sub + 0x12) = 30;
+  sub->unk14 = *(s16 *)(p + 0x1e);
+  sub->maxDist = *(s16 *)(p + 0x20);
+  if (sub->maxDist == 0) {
+    sub->maxDist = 30;
   }
-  *(s16 *)(sub + 0x1a) = 800;
-  *(s16 *)(sub + 0x1e) = 0;
-  *(u8 *)(sub + 0x26) = 0xff;
-  *(u8 *)(sub + 0x27) = 0;
+  sub->liftTimer = 800;
+  sub->spitTimer = 0;
+  sub->glowPulse = 0xff;
+  sub->unk27 = 0;
   if (*(char *)(p + 0x19) != '\0') {
-    *(f32 *)(sub + 8) = lbl_803E3A80 * (f32)(s32)*(char *)(p + 0x19);
+    sub->radius = lbl_803E3A80 * (f32)(s32)*(char *)(p + 0x19);
   } else {
-    *(f32 *)(sub + 8) = lbl_803E3A84;
+    sub->radius = lbl_803E3A84;
   }
   *(int *)(obj + 0xf4) = 0;
   if (*(void **)(obj + 0x64) != NULL) {
@@ -1477,33 +1573,33 @@ void portalspelldoor_update(int obj)
     typedef struct {
         u8 open : 1;
     } PortalFlags;
-    int state;
+    PortalSpellDoorState *state;
     int player;
     int p4c;
     int t;
 
     player = Obj_GetPlayerObject();
-    state = *(int *)(obj + 0xb8);
+    state = *(PortalSpellDoorState **)(obj + 0xb8);
     p4c = *(int *)(obj + 0x4c);
     if (playerHasSpell(player, 3) != 0) {
         *(u8 *)(obj + 0xaf) &= ~0x10;
     } else {
         *(u8 *)(obj + 0xaf) |= 0x10;
     }
-    if (((PortalFlags *)(state + 0xc))->open) {
+    if (((PortalFlags *)&state->flags0C)->open) {
         *(s16 *)(obj + 6) |= 0x4000;
         if (objGetAnimState80A(player) == 0x5bd) {
             fn_80296B78(player, -1);
         }
         GameBit_Set(*(s16 *)(p4c + 0x1e), 1);
     } else {
-        if (objGetAnimState80A(player) == 0x5bd && *(int *)(state + 8) == -1) {
-            *(int *)(state + 8) = 0;
+        if (objGetAnimState80A(player) == 0x5bd && state->openTimer == -1) {
+            state->openTimer = 0;
         }
     }
-    if (*(int *)(state + 8) != -1) {
-        t = *(int *)(state + 8) - framesThisStep;
-        *(int *)(state + 8) = t;
+    if (state->openTimer != -1) {
+        t = state->openTimer - framesThisStep;
+        state->openTimer = t;
         if (t < 0) {
             int tricky;
             *(u8 *)(obj + 0xaf) |= 8;
@@ -1512,8 +1608,8 @@ void portalspelldoor_update(int obj)
             if ((void *)tricky != NULL) {
                 trickyImpress(tricky);
             }
-            ((PortalFlags *)(state + 0xc))->open = 1;
-            *(int *)(state + 8) = -1;
+            ((PortalFlags *)&state->flags0C)->open = 1;
+            state->openTimer = -1;
         }
     }
 }
@@ -1550,10 +1646,10 @@ int LanternFireFly_getObjectTypeId(void) { return 0x0; }
 /* LanternFireFly_modelMtxFn: receives (obj, f1, f2, f3) and stores the
  * three floats into obj->_b8 at +0x54/+0x58/+0x5c. */
 void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c) {
-    u8* sub = *(u8**)(obj + 0xb8);
-    *(f32*)(sub + 0x54) = a;
-    *(f32*)(sub + 0x58) = b;
-    *(f32*)(sub + 0x5c) = c;
+    LanternFireFlyState* sub = *(LanternFireFlyState**)(obj + 0xb8);
+    sub->baseX = a;
+    sub->baseY = b;
+    sub->baseZ = c;
 }
 
 typedef struct LanternFireFlyVectorParams {
@@ -1572,7 +1668,7 @@ typedef struct LanternFireFlyVectorParams {
 void LanternFireFly_func0B(int obj)
 {
     typedef struct { u8 mode : 2; } LFFlags;
-    int state;
+    LanternFireFlyState *state;
     int setup;
     int p;
     f32 vec[3];
@@ -1580,13 +1676,13 @@ void LanternFireFly_func0B(int obj)
     f32 py;
     f32 y2;
 
-    state = *(int *)(obj + 0xb8);
+    state = *(LanternFireFlyState **)(obj + 0xb8);
     setup = *(int *)(obj + 0x4c);
-    *(s16 *)(state + 0x68) = *(s8 *)(setup + 0x18);
-    *(u8 *)(state + 0x6a) = *(u8 *)(setup + 0x19);
-    *(f32 *)(state + 0x4c) = lbl_803E3AA0;
-    *(f32 *)(state + 0x50) = (f32)(int)*(s16 *)(setup + 0x1c);
-    *(u8 *)(state + 0x6f) = 0;
+    state->yawRange = *(s8 *)(setup + 0x18);
+    state->unk6A = *(u8 *)(setup + 0x19);
+    state->hoverHeight = lbl_803E3AA0;
+    state->ceilingY = (f32)(int)*(s16 *)(setup + 0x1c);
+    state->unk6F = 0;
     objHitDetectFn_80062e84(obj, 0, 1);
     p = Obj_GetPlayerObject();
     vec[0] = *(f32 *)(p + 0x18);
@@ -1596,18 +1692,18 @@ void LanternFireFly_func0B(int obj)
     vec[1] = py + lbl_803E3AA4;
     y2 = lbl_803E3AA8 + py;
     {
-        int st = *(int *)(obj + 0xb8);
-        *(f32 *)(st + 0x54) = vec[0];
-        *(f32 *)(st + 0x58) = y2;
-        *(f32 *)(st + 0x5c) = vec[2];
-        st = *(int *)(obj + 0xb8);
-        vec[0] = vec[0] - *(f32 *)(st + 0x54);
-        vec[1] = vec[1] - *(f32 *)(st + 0x58);
-        vec[2] = vec[2] - *(f32 *)(st + 0x5c);
-        *(f32 *)(st + 0x34) = vec[0];
-        *(f32 *)(st + 0x38) = vec[1];
-        *(f32 *)(st + 0x3c) = vec[2];
-        *(u8 *)(st + 0x6c) = 4;
+        LanternFireFlyState *st = *(LanternFireFlyState **)(obj + 0xb8);
+        st->baseX = vec[0];
+        st->baseY = y2;
+        st->baseZ = vec[2];
+        st = *(LanternFireFlyState **)(obj + 0xb8);
+        vec[0] = vec[0] - st->baseX;
+        vec[1] = vec[1] - st->baseY;
+        vec[2] = vec[2] - st->baseZ;
+        st->offX = vec[0];
+        st->offY = vec[1];
+        st->offZ = vec[2];
+        st->stepsLeft = 4;
     }
     fn_801869DC(obj);
     fn_801869DC(obj);
@@ -1615,8 +1711,8 @@ void LanternFireFly_func0B(int obj)
     fn_801869DC(obj);
     fn_801869DC(obj);
     fn_801869DC(obj);
-    ((LFFlags *)(state + 0x70))->mode = 1;
-    *(int *)(state + 0x60) = *(s16 *)(setup + 0x1a);
+    ((LFFlags *)&state->flags70)->mode = 1;
+    state->idleTimer = *(s16 *)(setup + 0x1a);
     gameBitIncrement(0x698);
 }
 
@@ -1625,21 +1721,21 @@ void fn_801868D0(int obj)
     typedef struct { s16 ang; s16 b; s16 c; f32 scale; f32 x; f32 y; f32 z; } LFRot;
     extern f32 lbl_803E3ABC;
     LFRot rot;
-    int state;
+    LanternFireFlyState *state;
     s16 r;
     f32 fz;
 
-    state = *(int *)(obj + 0xb8);
-    *(f32 *)(state + 0x34) = lbl_803E3AB8;
-    *(f32 *)(state + 0x38) = (f32)(int)randomGetRange(-*(s16 *)(state + 0x68), *(s16 *)(state + 0x68));
-    if (*(f32 *)(state + 0x50) < lbl_803E3ABC) {
-        *(f32 *)(state + 0x3c) = lbl_803E3AB8;
+    state = *(LanternFireFlyState **)(obj + 0xb8);
+    state->offX = lbl_803E3AB8;
+    state->offY = (f32)(int)randomGetRange(-state->yawRange, state->yawRange);
+    if (state->ceilingY < lbl_803E3ABC) {
+        state->offZ = lbl_803E3AB8;
     } else {
-        *(f32 *)(state + 0x3c) = *(f32 *)(state + 0x50) -
-                                 (f32)(int)randomGetRange(0x14, (s16)(int)*(f32 *)(state + 0x50));
+        state->offZ = state->ceilingY -
+                      (f32)(int)randomGetRange(0x14, (s16)(int)state->ceilingY);
     }
     r = (s16)randomGetRange(3000, 5000);
-    *(s16 *)(state + 0x64) += r;
+    state->wanderYaw += r;
     fz = lbl_803E3AB8;
     rot.x = fz;
     rot.y = fz;
@@ -1647,35 +1743,35 @@ void fn_801868D0(int obj)
     rot.scale = lbl_803E3AA0;
     rot.c = 0;
     rot.b = 0;
-    rot.ang = *(s16 *)(state + 0x64);
-    vecRotateZXY(&rot, (f32 *)(state + 0x34));
+    rot.ang = state->wanderYaw;
+    vecRotateZXY(&rot, &state->offX);
 }
 
 void fn_801869DC(int obj)
 {
     typedef struct { u8 mode : 2; } LFF2;
-    u8 *state;
+    LanternFireFlyState *state;
 
-    state = *(u8 **)(obj + 0xb8);
-    *(f32 *)(state + 0x04) = *(f32 *)(state + 0x08);
-    *(f32 *)(state + 0x14) = *(f32 *)(state + 0x18);
-    *(f32 *)(state + 0x24) = *(f32 *)(state + 0x28);
-    *(f32 *)(state + 0x08) = *(f32 *)(state + 0x0c);
-    *(f32 *)(state + 0x18) = *(f32 *)(state + 0x1c);
-    *(f32 *)(state + 0x28) = *(f32 *)(state + 0x2c);
-    *(f32 *)(state + 0x0c) = *(f32 *)(state + 0x10);
-    *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x20);
-    *(f32 *)(state + 0x2c) = *(f32 *)(state + 0x30);
-    if (((LFF2 *)(state + 0x70))->mode == 1) {
+    state = *(LanternFireFlyState **)(obj + 0xb8);
+    state->histX[0] = state->histX[1];
+    state->histY[0] = state->histY[1];
+    state->histZ[0] = state->histZ[1];
+    state->histX[1] = state->histX[2];
+    state->histY[1] = state->histY[2];
+    state->histZ[1] = state->histZ[2];
+    state->histX[2] = state->histX[3];
+    state->histY[2] = state->histY[3];
+    state->histZ[2] = state->histZ[3];
+    if (((LFF2 *)&state->flags70)->mode == 1) {
         int player = Obj_GetPlayerObject();
-        *(f32 *)(state + 0x44) =
+        state->stepBlend =
             lbl_803E3AC4 * Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) + lbl_803E3AC0;
     } else {
-        *(f32 *)(state + 0x44) = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
+        state->stepBlend = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
     }
-    *(f32 *)(state + 0x10) = *(f32 *)(state + 0x34);
-    *(f32 *)(state + 0x20) = *(f32 *)(state + 0x38);
-    *(f32 *)(state + 0x30) = *(f32 *)(state + 0x3c);
+    state->histX[3] = state->offX;
+    state->histY[3] = state->offY;
+    state->histZ[3] = state->offZ;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1689,19 +1785,19 @@ extern f32 lbl_803E3A90;
 #pragma scheduling off
 #pragma peephole off
 void portalspelldoor_init(u8* obj, u8* data) {
-    u8* sub = *(u8**)(obj + 0xb8);
+    PortalSpellDoorState* sub = *(PortalSpellDoorState**)(obj + 0xb8);
     *(s16*)obj = (s16)((s32)(s8)data[0x18] << 8);
     *(s16*)(obj + 0x2) = (s16)((s32)*(s16*)(data + 0x1c) << 8);
     *(f32*)(obj + 0x8) = lbl_803E3A8C;
     {
         f32 _ab = *(f32*)(obj + 0xa8) * *(f32*)(obj + 0x8);
-        *(f32*)(sub + 0x4) = _ab * lbl_803E3A90;
+        sub->openAmount = _ab * lbl_803E3A90;
     }
     if (GameBit_Get(*(s16*)(data + 0x1e)) != 0) {
         *(s16*)(obj + 0x6) = (s16)(*(s16*)(obj + 0x6) | 0x4000);
         *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0xe000);
     }
-    *(s32*)(sub + 0x8) = -1;
+    sub->openTimer = -1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1710,14 +1806,14 @@ void portalspelldoor_init(u8* obj, u8* data) {
  * vec), copy the result to sub->_34..3c, set sub->_6c = 4. */
 #pragma scheduling off
 void LanternFireFly_setScale(u8* obj, f32* vec) {
-    u8* sub = *(u8**)(obj + 0xb8);
-    vec[0] = vec[0] - *(f32*)(sub + 0x54);
-    vec[1] = vec[1] - *(f32*)(sub + 0x58);
-    vec[2] = vec[2] - *(f32*)(sub + 0x5c);
-    *(f32*)(sub + 0x34) = vec[0];
-    *(f32*)(sub + 0x38) = vec[1];
-    *(f32*)(sub + 0x3c) = vec[2];
-    sub[0x6c] = 4;
+    LanternFireFlyState* sub = *(LanternFireFlyState**)(obj + 0xb8);
+    vec[0] = vec[0] - sub->baseX;
+    vec[1] = vec[1] - sub->baseY;
+    vec[2] = vec[2] - sub->baseZ;
+    sub->offX = vec[0];
+    sub->offY = vec[1];
+    sub->offZ = vec[2];
+    sub->stepsLeft = 4;
 }
 #pragma scheduling reset
 
@@ -1731,12 +1827,12 @@ extern void *gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void LanternFireFly_free(u8* obj, int p2) {
-    u8* sub = *(u8**)(obj + 0xb8);
-    if (*(void**)sub != NULL) {
-        ModelLightStruct_free(*(void**)sub);
-        *(void**)sub = NULL;
+    LanternFireFlyState* sub = *(LanternFireFlyState**)(obj + 0xb8);
+    if (sub->light != NULL) {
+        ModelLightStruct_free(sub->light);
+        sub->light = NULL;
     }
-    if (p2 == 0 && *(void**)sub != NULL && ((sub[0x70] >> 6) & 3) != 1u) {
+    if (p2 == 0 && sub->light != NULL && ((sub->flags70 >> 6) & 3) != 1u) {
         lbl_803DDAD8 = 0;
     }
     ObjGroup_RemoveObject(obj, 0x30);
@@ -1789,43 +1885,43 @@ extern u8 lbl_803DBDB8;
 #pragma scheduling off
 #pragma peephole off
 void scarab_init(int *obj, u8 *def) {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    ScarabState *state = *(ScarabState **)((char *)obj + 0xb8);
     int *model;
-    state[0x24] = 0;
-    *(s16 *)((char *)state + 0x14) = *(s16 *)((char *)def + 0x1a);
-    *(s16 *)((char *)state + 0x16) = (s16)randomGetRange(0x3e8, 0xfa0);
-    *(s16 *)((char *)state + 0x1c) = (s16)randomGetRange(0x32, 0x64);
-    *(f32 *)((char *)state + 0xc) = *(f32 *)((char *)def + 0xc);
+    state->phase = 0;
+    state->mode = *(s16 *)((char *)def + 0x1a);
+    state->yawSpeed = (s16)randomGetRange(0x3e8, 0xfa0);
+    state->riseLimit = (s16)randomGetRange(0x32, 0x64);
+    state->baseY = *(f32 *)((char *)def + 0xc);
     model = (int *)Obj_GetActiveModel(obj);
     switch (*(s16 *)((char *)obj + 0x46)) {
     case 0x3d3:
         *(u8 *)((char *)*(int *)((char *)model + 0x34) + 8) = (&lbl_803DBDB0)[randomGetRange(0, 2)];
-        *(s16 *)((char *)state + 0x1e) = 0x41;
-        *(s16 *)((char *)state + 0x20) = 4;
-        *(s16 *)((char *)state + 0x22) = 2;
-        state[0x27] = 0;
+        state->pickupSfx = 0x41;
+        state->particleId = 4;
+        state->unk22 = 2;
+        state->moneyKind = 0;
         break;
     case 0x3d4:
         *(u8 *)((char *)*(int *)((char *)model + 0x34) + 8) = (&lbl_803DBDB4)[randomGetRange(0, 1)];
-        *(s16 *)((char *)state + 0x1e) = 0x42;
-        *(s16 *)((char *)state + 0x20) = 1;
-        *(s16 *)((char *)state + 0x22) = 5;
-        state[0x27] = 1;
+        state->pickupSfx = 0x42;
+        state->particleId = 1;
+        state->unk22 = 5;
+        state->moneyKind = 1;
         break;
     case 0x3d5:
         *(u8 *)((char *)*(int *)((char *)model + 0x34) + 8) = (&lbl_803DBDB8)[randomGetRange(0, 3)];
-        *(s16 *)((char *)state + 0x1e) = 0x43;
-        *(s16 *)((char *)state + 0x20) = 2;
-        *(s16 *)((char *)state + 0x22) = 4;
-        state[0x27] = 2;
+        state->pickupSfx = 0x43;
+        state->particleId = 2;
+        state->unk22 = 4;
+        state->moneyKind = 2;
         break;
     case 0x3d6:
     default:
         *(u8 *)((char *)*(int *)((char *)model + 0x34) + 8) = 5;
-        *(s16 *)((char *)state + 0x1e) = 0x44;
-        *(s16 *)((char *)state + 0x20) = 6;
-        *(s16 *)((char *)state + 0x22) = 1;
-        state[0x27] = 3;
+        state->pickupSfx = 0x44;
+        state->particleId = 6;
+        state->unk22 = 1;
+        state->moneyKind = 3;
         break;
     }
     ObjMsg_AllocQueue(obj, 2);
