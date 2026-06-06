@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/FRONT/n_rareware.h"
 
 extern void *OSGetArenaHi(void);

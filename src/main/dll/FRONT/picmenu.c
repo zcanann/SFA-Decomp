@@ -1,6 +1,4 @@
 #include "dolphin/ai.h"
-#include "dolphin/dvd.h"
-#include "dolphin/os.h"
 #include "main/dll/FRONT/attract_movie.h"
 #include "dolphin/thp/THPPlayer.h"
 #include "string.h"

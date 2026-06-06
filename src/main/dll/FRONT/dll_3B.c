@@ -1,10 +1,7 @@
-#include "ghidra_import.h"
 #include "main/dll/FRONT/dll_3B.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "dolphin/os.h"
 #include "dolphin/thp/THPAudio.h"
-#include "dolphin/thp/THPFile.h"
-#include "dolphin/thp/THPInfo.h"
 
 extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
 extern void audioStopByMask(int mask);
