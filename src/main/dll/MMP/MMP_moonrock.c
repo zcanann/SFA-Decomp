@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/MMP/MMP_moonrock.h"
 
 extern undefined4 FUN_80006810();
