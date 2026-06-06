@@ -252,45 +252,45 @@ SfxTrigger *Sfx_FindTrigger(u16 id)
 #pragma peephole off
 SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, f32 pitch, int c, int d)
 {
+    extern f32 lbl_803DE594;
     SfxObjectChannel *ch;
     s32 i;
     u32 handle;
 
-    if (audioFlagFn_8000a188(4)) {
+    if ((int)audioFlagFn_8000a188(4) != 0) {
         return 0;
     }
 
-    ch = gSfxObjectChannels;
+    ch = (SfxObjectChannel *)(int)gSfxObjectChannels;
     for (i = SFX_OBJECT_CHANNEL_COUNT - 1; i >= 0; i--) {
-        if (ch->handle == (u32)-1) {
-            break;
+        if (ch->handle != (u32)-1) {
+            ch++;
+        } else {
+            goto found;
         }
-        ch++;
     }
-    if (i < 0) {
-        ch = NULL;
-    }
+    ch = NULL;
+found:
     if (ch == NULL) {
         return 0;
     }
 
     handle = sndFXStartEx(a, b, c, 0);
     if (handle == (u32)-1) {
-        ch->handle = (u32)-1;
-        return 0;
+        goto fail;
     }
     if (lbl_803DC838 != 0 && d == 0) {
-        sndFXCtrl(handle, 0x5b, 0);
+        sndFXCtrl(handle, 0x5b, lbl_803DC838);
     }
 
+    ch->object = 0;
+    ch->channelMask = 0;
+    ch->paused = 0;
+    ch->hasPosition = 0;
+    ch->tracksObjectPosition = 0;
+    ch->handle = handle;
     {
         f32 fz = lbl_803DE570;
-        ch->object = 0;
-        ch->channelMask = 0;
-        ch->paused = 0;
-        ch->hasPosition = 0;
-        ch->tracksObjectPosition = 0;
-        ch->handle = handle;
         ch->x = fz;
         ch->y = fz;
         ch->z = fz;
@@ -298,16 +298,22 @@ SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, f32 pitch, int c, int d)
     *(s16 *)((u8 *)ch + 8) = a;
     ch->volume = 0x64;
     *(f32 *)((u8 *)ch + 0x20) = lbl_803DE590;
-    *(f32 *)((u8 *)ch + 0x24) = *(f32 *)((u8 *)&lbl_803DE593 + 1);
+    *(f32 *)((u8 *)ch + 0x24) = lbl_803DE594;
     ch->globalCtrlDisabled = (u8)d;
 
-    ch->age = ((u64)gSfxObjectChannelAgeHi << 32) | gSfxObjectChannelAgeLo;
     {
-        u64 next = (((u64)gSfxObjectChannelAgeHi << 32) | gSfxObjectChannelAgeLo) + 1;
-        gSfxObjectChannelAgeHi = (u32)(next >> 32);
+        u32 hi = gSfxObjectChannelAgeHi;
+        u32 lo = gSfxObjectChannelAgeLo;
+        u64 age = ((u64)hi << 32) | lo;
+        u64 next = age + 1;
         gSfxObjectChannelAgeLo = (u32)next;
+        gSfxObjectChannelAgeHi = (u32)(next >> 32);
+        ch->age = age;
     }
     return ch;
+fail:
+    ch->handle = (u32)-1;
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1933,7 +1939,7 @@ void streamsLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x4;
         s = gStreamsData;
         count = gStreamsCount;
-        for (i = 0; i < count; i++) {
+        for (i = count; i != 0; i--) {
             s->flag = 0;
             s++;
         }
