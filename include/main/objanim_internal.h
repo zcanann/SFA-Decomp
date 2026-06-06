@@ -15,6 +15,7 @@ typedef struct ObjAnimHitReactRow {
 } ObjAnimHitReactRow;
 
 #define OBJANIM_DEF_FLAG_CACHED_MOVES 0x40
+#define OBJANIM_DEF_FLAG_SKELETON_HITBOXES 0x1000
 /* Bits copied from set-move flags into ObjAnimState during move advancement. */
 #define OBJANIM_MOVE_CONTROL_HOLD_EVENT_COUNTDOWN 0x02
 #define OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP 0x08
