@@ -2359,6 +2359,22 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   swap), grep ALL printed lines, not just per-fn heads — fns whose signature
   sits behind earlier unrelated diffs are otherwise missed (task #162 found
   4 hidden #81 sites this way, all -> 100%).
+- `python3 tools/offset_deref_scan.py [path-filter]` — find Ghidra-style
+  `*(T*)((u8*)var + 0xNN)` derefs replaceable with typed `var->field` access.
+  Parses every typedef struct to compute field offsets, drops structs whose
+  layout contradicts a STATIC_ASSERT, then scope-aware-scans each function for
+  derefs landing on a named field of a struct-typed variable. TYPEOK hits are
+  byte-safe to replace; TYPEDIFF hits (deref width/signedness != field type)
+  need manual review — a u16-deref of an s16 field flips lhz/lha, an int-deref
+  of a pointer field flips cmpwi/cmplwi. Re-run after new structs land to find
+  newly-mappable derefs. (Task #164 swept the inventory to zero.)
+- **Byte-exact cleanup verification (task #164 pattern)**: baseline = objdump
+  `-d -j .text` of every `.o` under `build/GSAE01/src` (NOT `build/GSAE01/obj`
+  — that is the dtk-extracted TARGET tree and never changes); edit; rebuild;
+  diff every disasm vs baseline; commit only on zero diffs. **TRAP: after every
+  `git pull`/`git pull --rebase`, OTHER hunters' match commits make THEIR .o
+  files flag as changed — confirm any flagged .o is yours, then re-save the
+  baseline after every pull+build before the next edit.**
 - `rm -f build/GSAE01/report.json && timeout 30 ninja build/GSAE01/report.json` — refresh report
 - `python3 tools/extern_audit.py [--csv | --symbol X | --real-conflicts-only]` —
   extern decl audit across src/+include/: canonicalizes signatures into
