@@ -13,7 +13,6 @@
  * functions in the unit.
  */
 
-#include "ghidra_import.h"
 #include "main/dll/baddie/wispBaddie.h"
 
 extern f32   fn_80293E80(f32 x);
