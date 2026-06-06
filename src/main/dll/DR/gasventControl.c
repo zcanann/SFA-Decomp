@@ -687,7 +687,7 @@ void explodable_update(int obj)
                     Sfx_PlayFromObject(obj, ((DrExplodableState *)state)->unk6D0 & 0xffff);
                 }
                 ((DrExplodableState *)state)->phase6E4 = 1;
-                *(u8 *)(obj + 0x36) = 0;
+                ((GameObject *)obj)->anim.alpha = 0;
             } else {
                 return;
             }

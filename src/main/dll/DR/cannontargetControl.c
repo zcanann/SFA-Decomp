@@ -610,7 +610,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
         else {
           uVar13 = ObjHits_EnableObject(uVar2);
           FUN_801a1654(uVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-          *(undefined *)(uVar2 + 0x36) = 0xff;
+          ((GameObject *)uVar2)->anim.alpha = 0xff;
           if (*(char *)(iVar12 + 0x15) != '\0') {
             *(undefined *)(iVar12 + 0x15) = 0;
             uVar4 = FUN_80294cf0((int)psVar3);
@@ -1164,7 +1164,7 @@ void gunpowderbarrel_update(int obj)
         (((BarrelBits *)(st + 0x4a))->b1 != 0 && playerIsDisguised(player) == 0)) {
         ObjHits_EnableObject(obj);
         fn_801A1230(obj);
-        *(u8 *)(obj + 0x36) = 0xff;
+        ((GameObject *)obj)->anim.alpha = 0xff;
         if (((GunpowderBarrelState *)st)->unk15 != 0) {
             ((GunpowderBarrelState *)st)->unk15 = 0;
             if (fn_802966B4(player) != 0) {

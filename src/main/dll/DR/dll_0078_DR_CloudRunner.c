@@ -143,8 +143,8 @@ int DR_CloudRunner_stateHandler07(int obj)
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
     u8 v;
     if (inner->unkBB0 == 0) {
-        v = *(u8 *)((char *)obj + 0x36);
-        *(u8 *)((char *)obj + 0x36) = v - framesThisStep;
+        v = ((GameObject *)obj)->anim.alpha;
+        ((GameObject *)obj)->anim.alpha = v - framesThisStep;
     }
     return 0;
 }

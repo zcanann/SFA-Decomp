@@ -1163,7 +1163,7 @@ void shopkeeper_update(int obj) {
         (obj, state, timeDelta, timeDelta, lbl_803AD068, &lbl_803DDC58);
     dll_2E_func03(obj, state + 0x35C);
     characterDoEyeAnims(obj, state + 0x980);
-    *(u8 *)(obj + 0x36) = ((ShopkeeperState *)state)->opacity;
+    ((GameObject *)obj)->anim.alpha = ((ShopkeeperState *)state)->opacity;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1508,7 +1508,7 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
             break;
         }
     }
-    *(u8 *)(obj + 0x36) = ((ShopkeeperState *)state)->opacity;
+    ((GameObject *)obj)->anim.alpha = ((ShopkeeperState *)state)->opacity;
     return 0;
 }
 #pragma peephole reset

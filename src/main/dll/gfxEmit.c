@@ -799,7 +799,7 @@ void collectible_update(int obj)
             if (((GfxEmitState *)state)->hideFrames <= 0) {
                 ((GfxEmitState *)state)->hideFrames = 0;
                 state[0x37] &= ~1;
-                *(u8 *)(obj + 0x36) = 255;
+                ((GameObject *)obj)->anim.alpha = 255;
                 ((GameObject *)obj)->unkF4 = 0;
             }
         }

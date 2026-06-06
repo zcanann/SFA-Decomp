@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/dll/CF/CFforcecontrol.h"
@@ -739,7 +740,7 @@ void FUN_8018c928(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
           *(undefined4 *)(param_9 + 0xc) = *(undefined4 *)(iVar4 + 8);
           *(undefined4 *)(param_9 + 0x10) = *(undefined4 *)(iVar4 + 0xc);
           *(undefined4 *)(param_9 + 0x14) = *(undefined4 *)(iVar4 + 0x10);
-          *(undefined *)(param_9 + 0x36) = 0xff;
+          ((GameObject *)param_9)->anim.alpha = 0xff;
           *(byte *)(puVar5 + 0x2e) = *(byte *)(puVar5 + 0x2e) & 0xef;
         }
       }
@@ -1091,7 +1092,7 @@ void fuelcell_update(int* obj)
                     *(f32*)((char*)obj + 0xc) = setup->homeX;
                     *(f32*)((char*)obj + 0x10) = setup->homeY;
                     *(f32*)((char*)obj + 0x14) = setup->homeZ;
-                    *(u8*)((char*)obj + 0x36) = 0xff;
+                    ((GameObject *)obj)->anim.alpha = 0xff;
                     state->resetPos = 0;
                 }
                 dy = *(f32*)((char*)obj + 0x10) - *(f32*)((char*)player + 0x10);
