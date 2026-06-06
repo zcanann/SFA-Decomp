@@ -27,12 +27,6 @@ void arwproximit_free(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
-void arwproximit_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
-
 #pragma peephole off
 #pragma scheduling off
 void arwproximit_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
@@ -46,38 +40,9 @@ void arwproximit_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
-void arwproximit_init(int obj, int setup, int p3)
-{
-    int state = *(int *)&((GameObject *)obj)->extra;
-
-    *(s16 *)(state + 0) = (s16)randomGetRange(0x64, 0x12c);
-    *(u8 *)(state + 0x15) = *(u8 *)(setup + 0x31);
-    if (p3 == 0) {
-        ((GameObject *)obj)->anim.rotY = (s16)randomGetRange(0, 0xffff);
-        ((GameObject *)obj)->anim.rotZ = (s16)randomGetRange(0, 0xffff);
-        ((GameObject *)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
-        ((GameObject *)obj)->anim.flags |= 0x4000;
-        *(u8 *)(obj + 0x36) = 0;
-    }
-    storeZeroToFloatParam((void *)(state + 0xc));
-    storeZeroToFloatParam((void *)(state + 0x10));
-    ObjHits_DisableObject(obj);
-    ObjHits_MarkObjectPositionDirty(obj);
-}
-#pragma scheduling reset
-#pragma peephole reset
-
 #pragma peephole on
 #pragma scheduling on
-void arwproximit_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole on
-#pragma scheduling on
-void arwproximit_initialise(void) {}
+void arwproximit_hitDetect(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -207,5 +172,40 @@ void arwproximit_update(int obj)
     if (*(void **)(state + 4) != NULL && modelLightStruct_getActiveState(*(void **)(state + 4)) != 0)
         modelLightStruct_updateGlowAlpha(*(void **)(state + 4));
 }
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void arwproximit_init(int obj, int setup, int p3)
+{
+    int state = *(int *)&((GameObject *)obj)->extra;
+
+    *(s16 *)(state + 0) = (s16)randomGetRange(0x64, 0x12c);
+    *(u8 *)(state + 0x15) = *(u8 *)(setup + 0x31);
+    if (p3 == 0) {
+        ((GameObject *)obj)->anim.rotY = (s16)randomGetRange(0, 0xffff);
+        ((GameObject *)obj)->anim.rotZ = (s16)randomGetRange(0, 0xffff);
+        ((GameObject *)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
+        ((GameObject *)obj)->anim.flags |= 0x4000;
+        *(u8 *)(obj + 0x36) = 0;
+    }
+    storeZeroToFloatParam((void *)(state + 0xc));
+    storeZeroToFloatParam((void *)(state + 0x10));
+    ObjHits_DisableObject(obj);
+    ObjHits_MarkObjectPositionDirty(obj);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole on
+#pragma scheduling on
+void arwproximit_release(void) {}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole on
+#pragma scheduling on
+void arwproximit_initialise(void) {}
 #pragma scheduling reset
 #pragma peephole reset
