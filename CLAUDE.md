@@ -1614,7 +1614,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     - Diagnostic: reduced /tmp probes do NOT reproduce these permutations —
       the coloring depends on whole-function web pressure; A/B in the real
       TU.
-81. **Fresh-slot paradox CRACKED (task #151) — MWCC's conversion-temp pool
+83. **Fresh-slot paradox CRACKED (task #151) — MWCC's conversion-temp pool
     is flushed by STATEMENT-level control-flow joins, NOT by ternary
     expressions; plus the co-located CSE divergences that actually move the
     score.** Test bed: drawHudBox 98.65->100, fn_801EE668 97.04->99.87,
