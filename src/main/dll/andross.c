@@ -2022,7 +2022,7 @@ LAB_8023de5c:
        (short)((-(int)*(s16 *)(obj + 2) / lbl_803DC430 - (int)*(short *)(piVar14 + 0x29)) / lbl_803DC434);
   *(s16 *)obj = *(s16 *)obj + *(short *)((int)piVar14 + 0xa2);
   *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + *(short *)(piVar14 + 0x29);
-  ObjAnim_AdvanceCurrentMove(*(f32 *)(piVar14 + 0x19),timeDelta,obj,0);
+  ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj,*(f32 *)(piVar14 + 0x19),timeDelta,0);
   fn_8023A3E4(obj,(int)piVar14);
   fn_8023A87C(obj,(int)piVar14);
   iVar12 = piVar14[5];

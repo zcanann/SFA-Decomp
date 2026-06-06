@@ -871,7 +871,7 @@ void fn_801EE668(s16 *obj, u8 *state) {
             ObjAnim_SetCurrentMove((int)obj, 256, lbl_803E5C70, 0);
         }
     }
-    ObjAnim_AdvanceCurrentMove(spd, timeDelta, (int)obj, (ObjAnimEventList *)&events);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, spd, timeDelta, (ObjAnimEventList *)&events);
 
     *(f32 *)(obj + 6) = *(f32 *)(state + 0x4c);
     *(f32 *)(obj + 8) = *(f32 *)(state + 0x50);

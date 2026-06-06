@@ -8745,7 +8745,7 @@ s16 fn_802A71E0(int obj, int a, int b, int *p6, int *p7, f32 e, f32 f, int n, in
     sel = uf & 0x4;
     if (sel != 0) {
         ObjAnim_SetCurrentMove(obj, a, lbl_803E7EA4, mf);
-        ObjAnim_AdvanceCurrentMove(f, lbl_803E7EA4, obj, NULL);
+        ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, f, lbl_803E7EA4, NULL);
         ObjModel_SampleJointTransform(model, 0, 0, e, *(f32 *)((char *)obj + 0x8), buf1, buf2);
     } else {
         Object_ObjAnimSetMove(lbl_803E7EA4, obj, a, mf);
@@ -8826,7 +8826,7 @@ int fn_8029F6E4(int obj, int state)
         }
         ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)((char *)inner + 0x6e8) + 0x2),
                                lbl_803E7EA4, 0);
-        ObjAnim_AdvanceCurrentMove(lbl_803E7EA4, lbl_803E7EA4, obj, NULL);
+        ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7EA4, lbl_803E7EA4, NULL);
     }
     if ((*(u8 *)((char *)inner + 0x6ec) & 0x4) != 0) {
         ObjAnim_SetMoveProgress(*(f32 *)((char *)sub + 0x98), (ObjAnimComponent *)obj);

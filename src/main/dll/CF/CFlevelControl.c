@@ -118,10 +118,10 @@ void cfccrate_update(int obj)
     case 0x65c:
         break;
     case 0x65d:
-        ObjAnim_AdvanceCurrentMove(lbl_803E3DF8, timeDelta, obj, NULL);
+        ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E3DF8, timeDelta, NULL);
         break;
     case 0x6b4:
-        ObjAnim_AdvanceCurrentMove(lbl_803E3DF8, timeDelta, obj, NULL);
+        ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E3DF8, timeDelta, NULL);
         break;
     case 0x708:
         if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) != 0) {

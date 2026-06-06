@@ -819,7 +819,7 @@ void fn_8014E1DC(int obj, int *state) {
             *(f32 *)(obj + 0x24) * timeDelta,
             *(f32 *)(obj + 0x28) * timeDelta,
             *(f32 *)(obj + 0x2c) * timeDelta);
-    ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 3), timeDelta, obj,
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *(f32 *)(state + 3), timeDelta,
                                (ObjAnimEventList *)animEvents);
 
     player = state[1];

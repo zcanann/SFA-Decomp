@@ -101,7 +101,7 @@ void kytesmum_update(int obj) {
         objSoundFn_800392f0(obj, (int)runtime->modelSoundState,
                             (void *)((char *)runtime->idleSfxTable + randomGetRange(0, 3) * 6), 0);
     }
-    if (ObjAnim_AdvanceCurrentMove(runtime->animSpeed, timeDelta, obj,
+    if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, runtime->animSpeed, timeDelta,
                                    (ObjAnimEventList *)runtime->animEvents) != 0) {
         if (randomGetRange(0, 7) != 0) {
             moveIdx = 0;

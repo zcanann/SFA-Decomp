@@ -843,7 +843,7 @@ void SB_ShipHead_update(int obj) {
             setup[7] = 0xff;
             Obj_SetupObject(setup, 5, -1, -1, 0);
         }
-        proj = ObjAnim_AdvanceCurrentMove(lbl_803E585C, timeDelta, obj, NULL);
+        proj = ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E585C, timeDelta, NULL);
         if ((*(s16 *)(obj + 0xa0) == 1) && (proj != 0)) {
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E5834, 0);
         }

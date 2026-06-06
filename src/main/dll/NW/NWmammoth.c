@@ -107,7 +107,7 @@ void ediblemushroom_init(int obj, int aux)
         ((f32)*(u8 *)(aux + 0x1c) / lbl_803E52E8);
 
     ObjAnim_SetCurrentMove(obj, 1, lbl_803E5288, 0);
-    ObjAnim_AdvanceCurrentMove(lbl_803E52A8, lbl_803E52A8, obj, &animEvents);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E52A8, lbl_803E52A8, &animEvents);
     *(f32 *)(state + 0x118) = animEvents.rootDeltaX;
     if (*(f32 *)(state + 0x118) < lbl_803E5288) {
         *(f32 *)(state + 0x118) = -*(f32 *)(state + 0x118);
@@ -116,7 +116,7 @@ void ediblemushroom_init(int obj, int aux)
     *(f32 *)(state + 0x118) = *(f32 *)(state + 0x118) + lbl_803E52A0;
 
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E5288, 0);
-    ObjAnim_AdvanceCurrentMove(lbl_803E52A8, lbl_803E52A8, obj, &animEvents);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E52A8, lbl_803E52A8, &animEvents);
     *(f32 *)(state + 0x11c) = animEvents.rootDeltaZ;
     if (*(f32 *)(state + 0x11c) < lbl_803E5288) {
         *(f32 *)(state + 0x11c) = -*(f32 *)(state + 0x11c);
@@ -165,6 +165,7 @@ void enemymushroom_resetToSpawn(s16 *obj,float *state,int enableTimer)
 {
   int objDef;
   u32 randomValue;
+  f32 fr;
 
   objDef = *(int *)((u8 *)obj + 0x4c);
   obj[2] = (s16)randomGetRange(-0x5dc,0x5dc);
@@ -179,9 +180,13 @@ void enemymushroom_resetToSpawn(s16 *obj,float *state,int enableTimer)
     *(f32 *)((u8 *)obj + 8) = lbl_803E52F8;
     state[0] = lbl_803E52FC;
     randomValue = randomGetRange(0,100);
-    state[2] = lbl_803E5300 + (f32)(s32)randomValue;
+    fr = (f32)(s32)randomValue;
+    fr = lbl_803E5300 + fr;
+    state[2] = fr;
     randomValue = randomGetRange(-100,100);
-    state[1] = lbl_803E5304 * (f32)(s32)randomValue + state[3];
+    fr = (f32)(s32)randomValue;
+    fr = lbl_803E5304 * fr + state[3];
+    state[1] = fr;
     state[4] = state[1] / state[2];
   }
   ObjHits_EnableObject((int)obj);

@@ -1300,7 +1300,7 @@ void shopitem_update(int obj)
             }
         }
         if (*(s16 *)(obj + 0x46) != 0x464 && *(s16 *)(obj + 0x46) != 0x467) {
-            ObjAnim_AdvanceCurrentMove(lbl_803E5A60, timeDelta, obj, NULL);
+            ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5A60, timeDelta, NULL);
         }
         if ((*(u8 *)(obj + 0xAF) & 8) == 0) {
             objRenderFn_80041018(obj);
@@ -1358,7 +1358,7 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
     *(f32 *)(state2 + 0x280) = speed;
     *(u8 *)(state + 0x9D4) |= 4;
     if (advance != 0) {
-        ObjAnim_AdvanceCurrentMove(speed, timeDelta, obj, NULL);
+        ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, speed, timeDelta, NULL);
     }
     if (*(s16 *)(obj + 0xB4) == -1) {
         if (*(s8 *)(data + 0x56) != 0) {

@@ -491,7 +491,7 @@ void drlasercannon_update(int obj) {
             (*(void (**)(int, int, int, int))(*(int *)(*(int *)((char *)tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
         }
     }
-    hit = ObjAnim_AdvanceCurrentMove(*(f32 *)((char *)state + DR_LASERCANNON_STATE_ANIM_STEP_SCALE), timeDelta, obj, 0);
+    hit = ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *(f32 *)((char *)state + DR_LASERCANNON_STATE_ANIM_STEP_SCALE), timeDelta, 0);
     if (*(s16 *)((char *)obj + 0xa0) == 1 && hit != 0) {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E690C, 0);
         *(f32 *)((char *)state + DR_LASERCANNON_STATE_ANIM_STEP_SCALE) = lbl_803E6920;

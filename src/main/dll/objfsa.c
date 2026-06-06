@@ -4958,8 +4958,8 @@ void playerRunStateMachine(char *pos, char *state, float dt, int stateFns) {
         int i;
 
         animEvents[0x1b] = 0;
-        *(s8 *)(state + 0x346) = ObjAnim_AdvanceCurrentMove(
-            *(f32 *)(state + 0x2a0), dt, (int)pos, (ObjAnimEventList *)animEvents);
+        *(s8 *)(state + 0x346) = ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(
+            (int)pos, *(f32 *)(state + 0x2a0), dt, (ObjAnimEventList *)animEvents);
         *(u32 *)(state + 0x314) = 0;
         for (i = 0; i < (s8)animEvents[0x1b]; i++) {
             *(u32 *)(state + 0x314) |= 1 << (s32)(s8)animEvents[0x13 + i];

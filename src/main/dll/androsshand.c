@@ -224,7 +224,7 @@ void androsshand_update(int obj)
     } else {
         *(s16 *)(obj + 6) &= ~0x4000;
     }
-    ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 0x14), timeDelta, obj, 0);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *(f32 *)(state + 0x14), timeDelta, 0);
 }
 #pragma scheduling reset
 #pragma peephole reset

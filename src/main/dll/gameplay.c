@@ -13849,7 +13849,7 @@ void dll_6B_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 5; e[0].tex = &lbl_80313A40[84]; e[0].mode = 4;
@@ -14146,7 +14146,7 @@ void dll_59_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 1; e[0].flags = 0x11; e[0].tex = &lbl_80311C58[220]; e[0].mode = 0x4000;
@@ -14203,7 +14203,7 @@ void dll_5C_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x15; e[0].tex = &lbl_80311F20[432]; e[0].mode = 4;
@@ -14264,7 +14264,7 @@ void dll_5D_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x15; e[0].tex = &lbl_80312130[432]; e[0].mode = 4;
@@ -14325,7 +14325,7 @@ void dll_5F_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x32; e[0].tex = (void *)0; e[0].mode = 0x800000;
@@ -14462,7 +14462,7 @@ void dll_62_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x15; e[0].tex = &lbl_803129C8[432]; e[0].mode = 4;
@@ -14595,7 +14595,7 @@ void dll_65_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 7; e[0].tex = &lbl_80312E58[240]; e[0].mode = 8;
@@ -14660,7 +14660,7 @@ void dll_66_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x15; e[0].tex = &lbl_803131A8[432]; e[0].mode = 4;
@@ -14737,7 +14737,7 @@ void dll_67_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x15; e[0].tex = &lbl_803133B8[432]; e[0].mode = 4;
@@ -14790,7 +14790,7 @@ void dll_68_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x15; e[0].tex = &lbl_803135C8[432]; e[0].mode = 4;
@@ -15004,7 +15004,7 @@ void dll_6D_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0xe; e[0].tex = &lbl_80313AF0[212]; e[0].mode = 0x80;
@@ -15055,7 +15055,7 @@ void dll_6E_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 5; e[0].tex = &lbl_80313C30[84]; e[0].mode = 4;
@@ -15106,7 +15106,7 @@ void dll_6F_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x18; e[0].tex = &lbl_80313CC0[336]; e[0].mode = 2;
@@ -15205,7 +15205,7 @@ void dll_70_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x12; e[0].tex = &lbl_80313E98[336]; e[0].mode = 4;
@@ -15298,7 +15298,7 @@ void dll_71_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x15; e[0].tex = &lbl_80314060[432]; e[0].mode = 4;
@@ -15365,7 +15365,7 @@ void dll_72_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x15; e[0].tex = &lbl_80314288[432]; e[0].mode = 4;
@@ -15495,7 +15495,7 @@ void dll_76_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x8c; e[0].tex = (void *)0; e[0].mode = 0x20000000;
@@ -15514,7 +15514,7 @@ void dll_76_func03(int param_1, int param_2, int param_3, uint param_4)
   ctx = param_1;
   buf.ctx = ctx;
   buf.v44 = param_2;
-  buf.pos[0] = lbl_803E0C54; buf.pos[1] = lbl_803E0C54; buf.pos[2] = lbl_803E0C54;
+  buf.pos[0] = lbl_803E0C4C; buf.pos[1] = lbl_803E0C4C; buf.pos[2] = lbl_803E0C4C;
   buf.col[0] = lbl_803E0C4C; buf.col[1] = lbl_803E0C4C; buf.col[2] = lbl_803E0C4C;
   buf.scale = lbl_803E0C54;
   buf.v40 = 0;
@@ -15529,14 +15529,14 @@ void dll_76_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags = 0x10c00;
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
-    if (ctx == 0) {
-      buf.pos[0] = lbl_803E0C54 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0C54 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0C54 + *(f32 *)(param_3 + 0x14);
-    } else {
+    if ((u32)ctx != 0) {
       buf.pos[0] = lbl_803E0C54 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0C54 + *(f32 *)(ctx + 0x1c);
       buf.pos[2] = lbl_803E0C54 + *(f32 *)(ctx + 0x20);
+    } else {
+      buf.pos[0] = lbl_803E0C54 + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E0C54 + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E0C54 + *(f32 *)(param_3 + 0x14);
     }
   }
   (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0, 0, 0, 0, 0, 0);
@@ -15546,7 +15546,7 @@ void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x8c; e[0].tex = (void *)0; e[0].mode = 0x20000000;
@@ -15565,7 +15565,7 @@ void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
   ctx = param_1;
   buf.ctx = ctx;
   buf.v44 = param_2;
-  buf.pos[0] = lbl_803E0C6C; buf.pos[1] = lbl_803E0C6C; buf.pos[2] = lbl_803E0C6C;
+  buf.pos[0] = lbl_803E0C64; buf.pos[1] = lbl_803E0C64; buf.pos[2] = lbl_803E0C64;
   buf.col[0] = lbl_803E0C64; buf.col[1] = lbl_803E0C64; buf.col[2] = lbl_803E0C64;
   buf.scale = lbl_803E0C6C;
   buf.v40 = 0;
@@ -15580,14 +15580,14 @@ void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags = 0x10c00;
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
-    if (ctx == 0) {
-      buf.pos[0] = lbl_803E0C6C + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0C6C + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0C6C + *(f32 *)(param_3 + 0x14);
-    } else {
+    if ((u32)ctx != 0) {
       buf.pos[0] = lbl_803E0C6C + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0C6C + *(f32 *)(ctx + 0x1c);
       buf.pos[2] = lbl_803E0C6C + *(f32 *)(ctx + 0x20);
+    } else {
+      buf.pos[0] = lbl_803E0C6C + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E0C6C + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E0C6C + *(f32 *)(param_3 + 0x14);
     }
   }
   (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0, 0, 0, 0, 0, 0);
@@ -15836,7 +15836,7 @@ void dll_A3_func03(int param_1, int param_2, int param_3, uint param_4)
 {
   struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
   int ctx;
   e[0].layer = 0; e[0].flags = 0x15; e[0].tex = &lbl_80312F98[432]; e[0].mode = 4;

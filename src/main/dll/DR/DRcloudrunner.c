@@ -241,7 +241,7 @@ void sc_musictree_init(int obj, SCMusicTreeSetup *setup)
     rnd = randomGetRange(1, 99);
     ratio = (f32)(s32)rnd / lbl_803E55BC;
     ObjAnim_SetCurrentMove(obj, 0, ratio, 0);
-    ObjAnim_AdvanceCurrentMove(lbl_803E558C, lbl_803E558C, obj,
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E558C, lbl_803E558C,
                                (ObjAnimEventList *)&stk);
     ObjHitbox_SetCapsuleBounds(obj, (s16)(s32)(lbl_803E55C0 * state->scale), -5, 0xff);
     if (state->flags & 0x80) {
@@ -359,7 +359,7 @@ void sc_totempole_update(int obj)
             state->animSpeed = lbl_803E55DC;
         }
     }
-    ObjAnim_AdvanceCurrentMove(state->animSpeed, timeDelta, obj, (ObjAnimEventList *)&stk);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta, (ObjAnimEventList *)&stk);
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int *)&lbl_803DDC08);
 }
 #pragma scheduling reset

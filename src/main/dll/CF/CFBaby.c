@@ -2600,7 +2600,7 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState *state) {
             ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
                                                       state->hitCooldown);
         }
-        ObjAnim_AdvanceCurrentMove(state->path8Fx, timeDelta, obj,
+        ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta,
                                    (ObjAnimEventList *)animScratch);
     }
 }

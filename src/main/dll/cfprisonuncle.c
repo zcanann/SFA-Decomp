@@ -591,7 +591,7 @@ void MagicPlant_update(int obj)
       break;
   }
 
-  ObjAnim_AdvanceCurrentMove(state->animStepScale, timeDelta, obj, NULL);
+  ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->animStepScale, timeDelta, NULL);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2216,7 +2216,7 @@ void duster_update(int obj) {
   }
 
   if (state->settleTimer == 0 && state->hitReactTimer == 0) {
-    if (ObjAnim_AdvanceCurrentMove(state->moveStepScale, timeDelta, obj, NULL) != 0 ||
+    if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->moveStepScale, timeDelta, NULL) != 0 ||
         state->priorityHit != 0) {
       Sfx_PlayFromObject(obj, SFXen_riverloop11);
       (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
@@ -2591,7 +2591,7 @@ void curvefish_update(int obj) {
     }
   }
 
-  ObjAnim_AdvanceCurrentMove(state->moveStepScale, timeDelta, obj, NULL);
+  ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->moveStepScale, timeDelta, NULL);
   state->animTimer += timeDelta;
 }
 #pragma peephole reset

@@ -3303,7 +3303,7 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
             *(int*)((char*)c + 0xc0) = 0;
             ObjAnim_SetCurrentMove((int)a, 0, lbl_803E4218, 0);
         } else {
-            ObjAnim_AdvanceCurrentMove(lbl_803E423C, timeDelta, (int)a, 0);
+            ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)a, lbl_803E423C, timeDelta, 0);
         }
     } else {
         if (*(int*)((char*)c + 0xc0) == 0) {
@@ -3639,7 +3639,7 @@ void cfprisonuncle_update(int* obj)
             ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(1, obj, -1);
         } else {
             objAnimFn_80038f38((int)obj, (char*)sub + 0x34);
-            ObjAnim_AdvanceCurrentMove(lbl_803E428C, (f32)(u32)framesThisStep, (int)obj, 0);
+            ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E428C, (f32)(u32)framesThisStep, 0);
         }
     } else {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);

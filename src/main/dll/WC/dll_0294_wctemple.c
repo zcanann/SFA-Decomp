@@ -55,7 +55,7 @@ void wctemple_update(int obj)
 
     WCTEMPLE_TIMER(state) -= timeDelta;
     if (WCTEMPLE_TIMER(state) < lbl_803E6E24) {
-        WCTEMPLE_TIMER(state) = lbl_803E6E24;
+        WCTEMPLE_TIMER(state) = *(f32 *)&lbl_803E6E24;
     }
 
     if (WCTEMPLE_TRIGGER_SLOT(state) == WCTEMPLE_SEQUENCE_SLOT_CLOSED) {

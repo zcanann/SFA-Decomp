@@ -449,7 +449,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
     *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) & 0x7fffffff;
   }
   res.eventCount = 0;
-  if (ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 0x308), timeDelta, (int)obj,
+  if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, *(f32 *)(state + 0x308), timeDelta,
                                  (ObjAnimEventList *)&res) != 0) {
     *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) | 0x40000000;
   }

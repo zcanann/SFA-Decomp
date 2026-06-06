@@ -193,8 +193,8 @@ void wmwallcrawler_update(s16 *obj)
                             speed = sqrtf(sq);
                         }
                         *(f32 *)(st + 0x284) = lbl_803E5FDC * speed;
-                        ObjAnim_AdvanceCurrentMove(*(f32 *)(st + 0x284), (f32)framesThisStep,
-                                                   (int)obj, NULL);
+                        ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, *(f32 *)(st + 0x284), (f32)framesThisStep,
+                                                   NULL);
                         *(f32 *)(obj + 6) = *(f32 *)(obj + 0x12) * timeDelta + *(f32 *)(obj + 6);
                         *(f32 *)(obj + 10) = *(f32 *)(obj + 0x16) * timeDelta + *(f32 *)(obj + 10);
                         *(u16 *)(st + 0x290) -= framesThisStep;
@@ -358,8 +358,8 @@ void wmwallcrawler_update(s16 *obj)
                                     *(f32 *)(st + 0x284) = lbl_803E5FCC;
                                     break;
                                 }
-                                if (ObjAnim_AdvanceCurrentMove(*(f32 *)(st + 0x284), (f32)framesThisStep,
-                                                               (int)obj, NULL) != 0 && obj[0x50] != 0) {
+                                if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, *(f32 *)(st + 0x284), (f32)framesThisStep,
+                                                               NULL) != 0 && obj[0x50] != 0) {
                                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E5FB0, 0);
                                 }
                                 *(f32 *)(obj + 6) = *(f32 *)(obj + 0x12) * timeDelta + *(f32 *)(obj + 6);

@@ -457,7 +457,7 @@ void scarab_update(int obj)
                     sumsq = sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) +
                                   *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c));
                     ObjAnim_SampleRootCurvePhase(sumsq, (ObjAnimComponent *)obj, &phase);
-                    ObjAnim_AdvanceCurrentMove(phase, timeDelta, obj, NULL);
+                    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, phase, timeDelta, NULL);
                 }
                 flag = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3A00, 0, hitResults, obj, 8, -1, 0, 0);
                 sph.vals[0] = lbl_803E3A00;

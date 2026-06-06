@@ -1207,7 +1207,7 @@ void dim2icicle_update(int obj)
         }
         *(f32 *)(obj + 0x28) = -(lbl_803E4B74 * timeDelta - *(f32 *)(obj + 0x28));
         if (*(f32 *)(obj + 0x28) < lbl_803E4B78) {
-            *(f32 *)(obj + 0x28) = lbl_803E4B78;
+            *(f32 *)(obj + 0x28) = *(f32 *)&lbl_803E4B78;
         }
         *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
         if (*(f32 *)(obj + 0x10) < *(f32 *)sub) {
@@ -1274,7 +1274,8 @@ void dll_1DB_update(int obj)
     i = 0;
     base = *(int *)(obj + 0x58);
     for (n = (int)*(s8 *)(base + 0x10f); n > 0; n--) {
-        if (player == *(u32 *)(base + i + 0x100)) {
+        u32 entry = *(u32 *)(base + i + 0x100);
+        if (entry == player) {
             found = 1;
             break;
         }
@@ -1322,7 +1323,7 @@ void dll_1DB_update(int obj)
         {
             f32 v = *(f32 *)sub;
             if (v > lbl_803E4B18) {
-                *(f32 *)sub = lbl_803E4B18;
+                *(f32 *)sub = *(f32 *)&lbl_803E4B18;
             }
         }
         *(f32 *)(obj + 0x10) = *(f32 *)sub * timeDelta + *(f32 *)(obj + 0x10);
@@ -1341,7 +1342,7 @@ void dll_1DB_update(int obj)
         {
             f32 v = *(f32 *)sub;
             if (v < lbl_803E4B20) {
-                *(f32 *)sub = lbl_803E4B20;
+                *(f32 *)sub = *(f32 *)&lbl_803E4B20;
             }
         }
         *(f32 *)(obj + 0x10) = *(f32 *)sub * timeDelta + *(f32 *)(obj + 0x10);
