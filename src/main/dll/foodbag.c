@@ -1729,9 +1729,9 @@ void dll_85_func03(int param_1,int param_2,int param_3,uint param_4)
 {
   FbBuf buf;
   u8 *base = (u8 *)(int)lbl_80315FA8;
-  FbCmd *e = buf.entries;
+  s16 *base16 = (s16 *)base;
   FbCmd *p;
-  f32 t;
+  FbCmd *e = buf.entries;
   f32 rv;
 
   if (param_2 == 4) {
@@ -1744,12 +1744,14 @@ void dll_85_func03(int param_1,int param_2,int param_3,uint param_4)
     e[2].y = lbl_803E0F74; e[2].z = lbl_803E0F80;
     p = &e[3];
   } else {
-    t = *(f32 *)(param_1 + 8);
     e[0].layer = 0; e[0].flags = 2; e[0].tex = &lbl_803DB8F0; e[0].mode = 2;
-    e[0].x = lbl_803E0F84 * t; e[0].y = lbl_803E0F88 * t; e[0].z = lbl_803E0F8C;
+    e[0].x = lbl_803E0F84 * *(f32 *)(param_1 + 8);
+    e[0].y = lbl_803E0F88 * *(f32 *)(param_1 + 8);
+    e[0].z = lbl_803E0F8C;
     e[1].layer = 0; e[1].flags = 2; e[1].tex = &lbl_803DB8FC; e[1].mode = 2;
-    t /= *(f32 *)(*(int *)(param_1 + 0x50) + 4);
-    e[1].x = lbl_803E0F90 * t; e[1].y = lbl_803E0F88 * t; e[1].z = lbl_803E0F8C;
+    e[1].x = lbl_803E0F90 * (*(f32 *)(param_1 + 8) / *(f32 *)(*(int *)(param_1 + 0x50) + 4));
+    e[1].y = lbl_803E0F88 * (*(f32 *)(param_1 + 8) / *(f32 *)(*(int *)(param_1 + 0x50) + 4));
+    e[1].z = lbl_803E0F8C;
     rv = (f32)(int)randomGetRange(0, 0xfffe);
     e[2].layer = 0; e[2].flags = 0; e[2].tex = (void *)0; e[2].mode = 0x80;
     e[2].x = rv; e[2].y = lbl_803E0F94; e[2].z = lbl_803E0F74;
@@ -1763,11 +1765,12 @@ void dll_85_func03(int param_1,int param_2,int param_3,uint param_4)
   if (param_2 == 4) {
     p[2].layer = 2; p[2].flags = 0; p[2].tex = (void *)0; p[2].mode = 0x100;
     p[2].x = lbl_803E0F9C; p[2].y = lbl_803E0F74; p[2].z = lbl_803E0F74;
+    p += 3;
   } else {
     p[2].layer = 1; p[2].flags = 0; p[2].tex = (void *)0; p[2].mode = 0x80;
     p[2].x = rv; p[2].y = lbl_803E0F94; p[2].z = lbl_803E0F74;
+    p += 3;
   }
-  p += 3;
   rv = (f32)(int)randomGetRange(0, 0xfffe);
   if (param_2 == 4) {
     p->layer = 2; p->flags = 0; p->tex = (void *)0; p->mode = 0x100;
@@ -1830,7 +1833,7 @@ void dll_85_func03(int param_1,int param_2,int param_3,uint param_4)
     }
   }
   (*(code *)(*gModgfxInterface + 8))(&buf,0,4,(u8 *)(int)lbl_80315FA8,2,base + 0x28,
-      *(s16 *)(base + (param_2 * 2 + (int)randomGetRange(0, 1)) * 2 + 0x44),0);
+      base16[param_2 * 2 + (int)randomGetRange(0, 1) + 0x22],0);
 }
 
 /*
