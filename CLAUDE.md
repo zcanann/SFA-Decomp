@@ -1905,7 +1905,7 @@ compare's immediate and subtract 1 for the real case value.
 
 92. **CAP — the INT-compare `bge +8; b far` two-branch guard with
     STATEMENT-BLOCK arms (branch-to-NEXT over an unconditional b) is NOT
-    source-reproducible.** ⚠️ SCOPE: applies to INTEGER compares whose arms
+    source-reproducible.** ⚠️ **SCOPE: applies to INTEGER compares whose arms
     are statement blocks ONLY. The visually-identical fcmpo+cror
     `bne +8; b far; fneg` shape is recipe #63's keep-or-negate TERNARY
     (`x = (cond) ? x : -x;`) and IS recoverable — scarab_update cleared two
