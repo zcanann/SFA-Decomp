@@ -914,7 +914,7 @@ void ecsh_creator_init(s16 *obj, s8 *def) {
     inner[0] = 100;
     inner[1] = 0;
     *(u8 *)((char *)obj + 0x37) = 0xff;
-    *(u8 *)((char *)obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     inner[2] = *(s16 *)(def + 0x18);
     inner[4] = 2;
     inner[4] = inner[4] + (u8)def[0x20];
@@ -1138,9 +1138,9 @@ void fn_801C70F0(s16 *obj) {
             *obj = (s16)(*(s16 *)(int)obj + (int)(((f32)diff * timeDelta) / lbl_803E5020));
             dist = Vec_xzDistance((f32 *)((int)obj + 0x18), (f32 *)((int)player + 0x18));
             if (dist <= lbl_803E5024) {
-                *(u8 *)((char *)obj + 0x36) = (u8)(int)(lbl_803E5028 * (dist / lbl_803E5024));
+                ((GameObject *)obj)->anim.alpha = (u8)(int)(lbl_803E5028 * (dist / lbl_803E5024));
             } else {
-                *(u8 *)((char *)obj + 0x36) = 0xff;
+                ((GameObject *)obj)->anim.alpha = 0xff;
             }
         }
     }

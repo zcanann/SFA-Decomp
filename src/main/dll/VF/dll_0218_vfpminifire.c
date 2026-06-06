@@ -49,7 +49,7 @@ void vfpminifire_initialise(void) {}
 #pragma peephole off
 #pragma scheduling off
 void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
-    if (vis != 0 && *(u8 *)(p1 + 0x36) != 0) {
+    if (vis != 0 && ((GameObject *)p1)->anim.alpha != 0) {
         fn_80053ED0(8);
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6088);
         fn_80053EBC(8);
@@ -134,11 +134,11 @@ void vfpminifire_update(int obj)
     }
 
     if (state->burstStarted != 0) {
-        s16 alpha = (u8)*(u8 *)(obj + 0x36) - (s16)(int)timeDelta;
+        s16 alpha = ((GameObject *)obj)->anim.alpha - (s16)(int)timeDelta;
         if (alpha < 0) {
             alpha = 0;
         }
-        *(u8 *)(obj + 0x36) = (u8)alpha;
+        ((GameObject *)obj)->anim.alpha = (u8)alpha;
     }
 
     if (((GameObject *)obj)->anim.localPosY < state->baseY - lbl_803E60A0) {

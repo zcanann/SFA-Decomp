@@ -124,7 +124,7 @@ void dimbarrier_init(int obj, s8 *p) {
         inner[3] = 0;
         o54 = *(char **)&((GameObject *)obj)->anim.hitReactState;
         *(s16 *)(o54 + 0x60) = (s16)(*(s16 *)(o54 + 0x60) & ~1);
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         inner[2] = 2;
     }
 }
@@ -221,12 +221,12 @@ void dimbarrier_update(int *obj)
         break;
     }
     case 1: {
-        int v = *(u8 *)((char *)obj + 0x36) - framesThisStep * 16;
+        int v = ((GameObject *)obj)->anim.alpha - framesThisStep * 16;
         if (v < 0) {
             v = 0;
         }
         (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
-        *(u8 *)((char *)obj + 0x36) = v;
+        ((GameObject *)obj)->anim.alpha = v;
         *(s16 *)extra = *(s16 *)extra - framesThisStep;
         if (*(s16 *)extra <= 0) {
             GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);

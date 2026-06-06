@@ -376,7 +376,7 @@ void largecrate_update(int obj)
         ObjHits_DisableObject(obj);
     } else {
     if (((ExplodableState *)state)->animTimer > (thresh = lbl_803E39B8)) {
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         if (*(int *)state != -1) {
             ((ExplodableState *)state)->animTimer = -(timeDelta * animSpeed - ((ExplodableState *)state)->animTimer);
             if (((ExplodableState *)state)->animTimer <= thresh) {
@@ -392,11 +392,11 @@ void largecrate_update(int obj)
             }
         }
     } else {
-        level = (int)(lbl_803E39DC * timeDelta + (f32)(u32)*(u8 *)(obj + 0x36));
+        level = (int)(lbl_803E39DC * timeDelta + (f32)(u32)((GameObject *)obj)->anim.alpha);
         if (level > 0xff) {
             level = 0xff;
         }
-        *(u8 *)(obj + 0x36) = level;
+        ((GameObject *)obj)->anim.alpha = level;
         if (((ExplodableState *)state)->explodeTimer != 0) {
             ObjHits_DisableObject(obj);
             if ((((ExplodableState *)state)->explodeTimer -= framesThisStep) <= 0) {

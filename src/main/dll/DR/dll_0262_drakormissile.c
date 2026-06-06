@@ -75,7 +75,7 @@ void drakormissile_startActiveLaunch(int obj) {
         modelLightStruct_setDistanceAttenuation(*(void **)(p + DRAKORMISSILE_FIELD_LIGHT), lbl_803E6950,
             lbl_803E6954);
     }
-    *(u8 *)((char *)obj + 0x36) = 255;
+    ((GameObject *)obj)->anim.alpha = 255;
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E6958 * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     *(int *)(p + DRAKORMISSILE_FIELD_TIMER) = DRAKORMISSILE_ACTIVE_TIMER;
     ObjHits_SetTargetMask(obj, DRAKORMISSILE_TARGET_MASK);
@@ -154,7 +154,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed) {
         modelLightStruct_setGlowProjectionRadius(light, lbl_803E694C);
     }
     *(void **)(p + DRAKORMISSILE_FIELD_LIGHT) = light;
-    *(u8 *)((char *)obj + 0x36) = 255;
+    ((GameObject *)obj)->anim.alpha = 255;
     *(f32 *)((char *)obj + 8) = lbl_803E6958 * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
     Sfx_PlayFromObject(obj, SFXwp_barrel_bounce2);
 }
@@ -187,7 +187,7 @@ void drakormissile_update(int obj) {
                 *(f32 *)((char *)obj + 0x2c) * timeDelta);
         break;
     case DRAKORMISSILE_STATE_EXPLODING:
-        *(u8 *)((char *)obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         if (*(int *)(p + DRAKORMISSILE_FIELD_TIMER) == 0) {
             ObjHits_DisableObject(obj);
         }

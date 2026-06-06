@@ -286,7 +286,7 @@ void bombplant_init(void *obj, void *param, int flag)
   bitId = *(s16 *)((u8 *)param + 0x1c);
   if (bitId != -1 && GameBit_Get(bitId) == 0) {
     p4c = ((GameObject *)obj)->anim.placementData;
-    *(u8 *)((u8 *)obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     ((GameObject *)obj)->anim.flags &= ~0x4000;
     ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
     ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
@@ -301,7 +301,7 @@ void bombplant_init(void *obj, void *param, int flag)
     *(u8 *)((u8 *)state + 0x14) = 1;
   } else {
     p4c = ((GameObject *)obj)->anim.placementData;
-    *(u8 *)((u8 *)obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     ((GameObject *)obj)->anim.flags &= ~0x4000;
     ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
     ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
@@ -383,7 +383,7 @@ void bombplant_update(void *obj)
       Sfx_PlayFromObject(obj, SFXmv_sliftloop11);
       *(u8 *)((u8 *)state + 0x15) &= ~0x2;
       p4c = ((GameObject *)obj)->anim.placementData;
-      *(u8 *)((u8 *)obj + 0x36) = 0xff;
+      ((GameObject *)obj)->anim.alpha = 0xff;
       ((GameObject *)obj)->anim.flags &= ~0x4000;
       ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
       ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);

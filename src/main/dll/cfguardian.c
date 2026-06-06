@@ -339,7 +339,7 @@ void FUN_8017b3bc(undefined4 param_1,undefined4 param_2,int param_3)
   uVar1 = FUN_8028683c();
   puVar8 = *(ushort **)(uVar1 + 0xb8);
   iVar7 = *(int *)(uVar1 + 0x4c);
-  if (*(char *)(uVar1 + 0x36) == '\0') {
+  if (((GameObject *)uVar1)->anim.alpha == 0) {
     ObjHits_DisableObject(uVar1);
   }
   if (*(char *)(*(int *)(uVar1 + 0x50) + 0x59) != '\0') {
@@ -838,7 +838,7 @@ int Door_SeqFn(int obj, int p2, int seq)
 
   state = *(int *)&((GameObject *)obj)->extra;
   def = *(int *)&((GameObject *)obj)->anim.placementData;
-  if (*(u8 *)(obj + 0x36) == 0) {
+  if (((GameObject *)obj)->anim.alpha == 0) {
     ObjHits_DisableObject(obj);
   }
   if (*(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x59) != 0) {
@@ -984,7 +984,7 @@ void doorlock_update(int obj)
     *(u8 *)state = GameBit_Get(*(s16 *)(def + 0x1c));
     if ((*(u8 *)(def + 0x1b) & 1) != 0) {
       if (*(u8 *)state != 0) {
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
       }
     } else if ((*(s16 *)(def + 0x26) & 1) != 0) {
       if (*(u8 *)state != 0) {
