@@ -1,4 +1,5 @@
 #include "main/dll/explodable.h"
+#include "main/game_object.h"
 #include "main/dll/explodable_state.h"
 
 extern u8 Obj_IsLoadingLocked(void);
@@ -92,13 +93,13 @@ int fn_801833E4(int obj, int player, int state)
     switch (*(u8 *)(state + 0x11)) {
     case 1:
         setup = Obj_AllocObjectSetup(0x24, 0x3d3);
-        *(f32 *)(setup + 0x8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 400;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-        *(f32 *)(newObj + 0x24) = *(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc);
-        *(f32 *)(newObj + 0x2c) = *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14);
+        *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+        *(f32 *)(newObj + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         len = *(f32 *)(newObj + 0x24) * *(f32 *)(newObj + 0x24) +
               *(f32 *)(newObj + 0x2c) * *(f32 *)(newObj + 0x2c);
         if (len != lbl_803E39B8) {
@@ -134,13 +135,13 @@ int fn_801833E4(int obj, int player, int state)
     case 2:
         setup = Obj_AllocObjectSetup(0x24, 0x3d4);
         *(s8 *)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
-        *(f32 *)(setup + 0x8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 400;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-        *(f32 *)(newObj + 0x24) = *(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc);
-        *(f32 *)(newObj + 0x2c) = *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14);
+        *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+        *(f32 *)(newObj + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         len = *(f32 *)(newObj + 0x24) * *(f32 *)(newObj + 0x24) +
               *(f32 *)(newObj + 0x2c) * *(f32 *)(newObj + 0x2c);
         if (len != lbl_803E39B8) {
@@ -176,13 +177,13 @@ int fn_801833E4(int obj, int player, int state)
     case 3:
         setup = Obj_AllocObjectSetup(0x24, 0x3d5);
         *(s8 *)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
-        *(f32 *)(setup + 0x8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 2000;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-        *(f32 *)(newObj + 0x24) = *(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc);
-        *(f32 *)(newObj + 0x2c) = *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14);
+        *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+        *(f32 *)(newObj + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         len = *(f32 *)(newObj + 0x24) * *(f32 *)(newObj + 0x24) +
               *(f32 *)(newObj + 0x2c) * *(f32 *)(newObj + 0x2c);
         if (len != lbl_803E39B8) {
@@ -225,9 +226,9 @@ int fn_801833E4(int obj, int player, int state)
         *(u8 *)(setup + 0x1a) = 0x14;
         *(s16 *)(setup + 0x2c) = -1;
         *(s16 *)(setup + 0x1c) = -1;
-        *(f32 *)(setup + 0x8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(setup + 0xc) = lbl_803E39C0 + *(f32 *)(obj + 0x10);
-        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(setup + 0xc) = lbl_803E39C0 + ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x24) = -1;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
         (**(void (**)(f32, f32, f32))(**(int **)(newObj + 0x68) + 0x2c))(
@@ -240,9 +241,9 @@ int fn_801833E4(int obj, int player, int state)
     case 9:
         if (Obj_IsLoadingLocked() != 0) {
             setup = Obj_AllocObjectSetup(0x24, 0x259);
-            *(f32 *)(setup + 0x8) = *(f32 *)(obj + 0xc);
-            *(f32 *)(setup + 0xc) = lbl_803E39A8 + *(f32 *)(obj + 0x10);
-            *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+            *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(setup + 0xc) = lbl_803E39A8 + ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
             *(u8 *)(setup + 0x4) = 4;
             *(u8 *)(setup + 0x6) = 200;
             *(s16 *)(setup + 0x20) = -1;
@@ -303,15 +304,15 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
   if (((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(*(int *)(obj + 0x4c) + 0x14)) == 0) ||
       (((timer = ((ExplodableState *)state)->unk8) != 0) && (timer <= 0x32)) ||
       (((ExplodableState *)state)->unk4 > lbl_803E39B8)) {
-    *(s16 *)(obj + 0x6) = *(s16 *)(obj + 0x6) | 0x4000;
+    ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
   } else {
-    if (*(int *)(obj + 0xf8) != 0) {
+    if (((GameObject *)obj)->unkF8 != 0) {
       if (renderState != -1) {
-        *(s16 *)(obj + 0x6) = *(s16 *)(obj + 0x6) | 0x4000;
+        ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
         return;
       }
     } else if (renderState == 0) {
-      *(s16 *)(obj + 0x6) = *(s16 *)(obj + 0x6) | 0x4000;
+      ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
       return;
     }
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E39AC);
@@ -367,7 +368,7 @@ void largecrate_update(int obj)
     (**(void (**)(f32 *))(*gSHthorntailAnimationInterface + 0x18))(&animSpeed);
     state = *(int *)(obj + 0xb8);
     player = Obj_GetPlayerObject();
-    if (*(void **)(obj + 0x30) != NULL) {
+    if (((GameObject *)obj)->anim.parent != NULL) {
         *(u8 *)(obj + 0xaf) |= 8;
     }
     if ((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(def + 0x14)) == 0) {
@@ -385,7 +386,7 @@ void largecrate_update(int obj)
                     ((ExplodableState *)state)->unk8 = 0;
                     ObjHits_EnableObject(obj);
                     *(u8 *)(obj + 0xaf) &= ~0x8;
-                    *(s16 *)(obj + 0x6) &= ~0x4000;
+                    ((GameObject *)obj)->anim.flags &= ~0x4000;
                 }
             }
         }
@@ -405,32 +406,32 @@ void largecrate_update(int obj)
                 } else {
                     ((ExplodableState *)state)->unk4 = lbl_803E39AC;
                 }
-                *(f32 *)(obj + 0xc) = *(f32 *)(def + 0x8);
-                *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
-                *(f32 *)(obj + 0x14) = *(f32 *)(def + 0x10);
-                *(f32 *)(obj + 0x80) = *(f32 *)(def + 0x8);
-                *(f32 *)(obj + 0x84) = *(f32 *)(def + 0xc);
-                *(f32 *)(obj + 0x88) = *(f32 *)(def + 0x10);
+                ((GameObject *)obj)->anim.localPosX = *(f32 *)(def + 0x8);
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
+                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(def + 0x10);
+                ((GameObject *)obj)->anim.previousLocalPosX = *(f32 *)(def + 0x8);
+                ((GameObject *)obj)->anim.previousLocalPosY = *(f32 *)(def + 0xc);
+                ((GameObject *)obj)->anim.previousLocalPosZ = *(f32 *)(def + 0x10);
                 thresh = lbl_803E39B8;
-                *(f32 *)(obj + 0x24) = thresh;
-                *(f32 *)(obj + 0x28) = thresh;
-                *(f32 *)(obj + 0x2c) = thresh;
+                ((GameObject *)obj)->anim.velocityX = thresh;
+                ((GameObject *)obj)->anim.velocityY = thresh;
+                ((GameObject *)obj)->anim.velocityZ = thresh;
             }
             if (((ExplodableState *)state)->unk8 <= 0x32) {
                 return;
             }
         }
-        *(s16 *)(obj + 0x2) = ((ExplodableState *)state)->unk18;
+        ((GameObject *)obj)->anim.rotY = ((ExplodableState *)state)->unk18;
         ((ExplodableState *)state)->unk18 = (f32)((ExplodableState *)state)->unk18 * lbl_803E39E0;
-        if ((*(s16 *)(obj + 0x2) < 10) && (-10 < *(s16 *)(obj + 0x2))) {
-            *(s16 *)(obj + 0x2) = 0;
+        if ((((GameObject *)obj)->anim.rotY < 10) && (-10 < ((GameObject *)obj)->anim.rotY)) {
+            ((GameObject *)obj)->anim.rotY = 0;
         }
         hit = ObjHits_GetPriorityHitWithPosition(obj, hitInfo, &local40, &hitDamage, &pos.x, &pos.y, &pos.z);
         if (hit == 0x10) {
             Obj_StartModelFadeIn(obj, 300);
             hit = 0;
         }
-        if ((hit != 0) && (*(void **)(obj + 0x30) == NULL)) {
+        if ((hit != 0) && (((GameObject *)obj)->anim.parent == NULL)) {
             ((ExplodableState *)state)->unk13 = ((ExplodableState *)state)->unk13 + hitDamage;
             Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
             pos.x = pos.x + playerMapOffsetX;
@@ -440,7 +441,7 @@ void largecrate_update(int obj)
                 if (Sfx_IsPlayingFromObject(0, (u16)((ExplodableState *)state)->unk14) == 0) {
                     Sfx_PlayFromObject(obj, (u16)((ExplodableState *)state)->unk14);
                 }
-                if (*(s16 *)(obj + 0x46) == 0x3de) {
+                if (((GameObject *)obj)->anim.seqId == 0x3de) {
                     ((ExplodableState *)state)->unk18 = (s16)randomGetRange(600, 800);
                 }
             } else {
@@ -460,7 +461,7 @@ void largecrate_update(int obj)
         if ((((ExplodableState *)state)->unkA -= framesThisStep) <= 0) {
             ((ExplodableState *)state)->unkA = (s16)(randomGetRange(0, 100) + 0x12c);
         }
-        if (*(void **)(obj + 0x30) != NULL) {
+        if (((GameObject *)obj)->anim.parent != NULL) {
             fn_80183250(obj, state);
         }
     }
