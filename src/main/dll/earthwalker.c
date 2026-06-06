@@ -1,5 +1,4 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/objanim.h"
 #include "main/mapEventTypes.h"
 
 #pragma peephole on

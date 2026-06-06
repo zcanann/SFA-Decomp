@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/dll_B2.h"
 
 extern u8 *pCamera;

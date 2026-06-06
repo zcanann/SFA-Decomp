@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/dll_B4.h"
 
 extern u8 *Obj_AllocObjectSetup(int size, int type);
