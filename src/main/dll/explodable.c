@@ -303,8 +303,8 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
 
   state = *(int *)(obj + 0xb8);
   if (((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(*(int *)(obj + 0x4c) + 0x14)) == 0) ||
-      (((timer = ((ExplodableState *)state)->unk8) != 0) && (timer <= 0x32)) ||
-      (((ExplodableState *)state)->unk4 > lbl_803E39B8)) {
+      (((timer = ((ExplodableState *)state)->explodeTimer) != 0) && (timer <= 0x32)) ||
+      (((ExplodableState *)state)->animTimer > lbl_803E39B8)) {
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
   } else {
     if (((GameObject *)obj)->unkF8 != 0) {
@@ -375,16 +375,16 @@ void largecrate_update(int obj)
     if ((**(int (**)(int))(*gMapEventInterface + 0x68))(((ObjPlacement *)def)->mapId) == 0) {
         ObjHits_DisableObject(obj);
     } else {
-    if (((ExplodableState *)state)->unk4 > (thresh = lbl_803E39B8)) {
+    if (((ExplodableState *)state)->animTimer > (thresh = lbl_803E39B8)) {
         *(u8 *)(obj + 0x36) = 0;
         if (*(int *)state != -1) {
-            ((ExplodableState *)state)->unk4 = -(timeDelta * animSpeed - ((ExplodableState *)state)->unk4);
-            if (((ExplodableState *)state)->unk4 <= thresh) {
+            ((ExplodableState *)state)->animTimer = -(timeDelta * animSpeed - ((ExplodableState *)state)->animTimer);
+            if (((ExplodableState *)state)->animTimer <= thresh) {
                 if (!(Vec_distance((f32 *)(obj + 0x18), (f32 *)(Obj_GetPlayerObject() + 0x18)) > lbl_803E39D0)) {
-                    ((ExplodableState *)state)->unk4 = lbl_803E39AC;
+                    ((ExplodableState *)state)->animTimer = lbl_803E39AC;
                 } else {
-                    ((ExplodableState *)state)->unk4 = lbl_803E39B8;
-                    ((ExplodableState *)state)->unk8 = 0;
+                    ((ExplodableState *)state)->animTimer = lbl_803E39B8;
+                    ((ExplodableState *)state)->explodeTimer = 0;
                     ObjHits_EnableObject(obj);
                     *(u8 *)(obj + 0xaf) &= ~0x8;
                     ((GameObject *)obj)->anim.flags &= ~0x4000;
@@ -397,15 +397,15 @@ void largecrate_update(int obj)
             level = 0xff;
         }
         *(u8 *)(obj + 0x36) = level;
-        if (((ExplodableState *)state)->unk8 != 0) {
+        if (((ExplodableState *)state)->explodeTimer != 0) {
             ObjHits_DisableObject(obj);
-            if ((((ExplodableState *)state)->unk8 -= framesThisStep) <= 0) {
+            if ((((ExplodableState *)state)->explodeTimer -= framesThisStep) <= 0) {
                 if (*(int *)state > 0) {
-                    ((ExplodableState *)state)->unk4 = lbl_803E39AC;
+                    ((ExplodableState *)state)->animTimer = lbl_803E39AC;
                     (**(void (**)(int, f32))(*gMapEventInterface + 0x64))(
                         ((ObjPlacement *)def)->mapId, (f32)*(int *)state);
                 } else {
-                    ((ExplodableState *)state)->unk4 = lbl_803E39AC;
+                    ((ExplodableState *)state)->animTimer = lbl_803E39AC;
                 }
                 ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)def)->posX;
                 ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
@@ -418,12 +418,12 @@ void largecrate_update(int obj)
                 ((GameObject *)obj)->anim.velocityY = thresh;
                 ((GameObject *)obj)->anim.velocityZ = thresh;
             }
-            if (((ExplodableState *)state)->unk8 <= 0x32) {
+            if (((ExplodableState *)state)->explodeTimer <= 0x32) {
                 return;
             }
         }
-        ((GameObject *)obj)->anim.rotY = ((ExplodableState *)state)->unk18;
-        ((ExplodableState *)state)->unk18 = (f32)((ExplodableState *)state)->unk18 * lbl_803E39E0;
+        ((GameObject *)obj)->anim.rotY = ((ExplodableState *)state)->spinSpeed;
+        ((ExplodableState *)state)->spinSpeed = (f32)((ExplodableState *)state)->spinSpeed * lbl_803E39E0;
         if ((((GameObject *)obj)->anim.rotY < 10) && (-10 < ((GameObject *)obj)->anim.rotY)) {
             ((GameObject *)obj)->anim.rotY = 0;
         }
@@ -433,34 +433,34 @@ void largecrate_update(int obj)
             hit = 0;
         }
         if ((hit != 0) && (((GameObject *)obj)->anim.parent == NULL)) {
-            ((ExplodableState *)state)->unk13 = ((ExplodableState *)state)->unk13 + hitDamage;
+            ((ExplodableState *)state)->damageTaken = ((ExplodableState *)state)->damageTaken + hitDamage;
             Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
             pos.x = pos.x + playerMapOffsetX;
             pos.z = pos.z + playerMapOffsetZ;
             objLightFn_8009a1dc(obj, lbl_803E39E4, &lightPos, 1, 0);
-            if (((ExplodableState *)state)->unk13 < ((ExplodableState *)state)->unk28) {
-                if (Sfx_IsPlayingFromObject(0, (u16)((ExplodableState *)state)->unk14) == 0) {
-                    Sfx_PlayFromObject(obj, (u16)((ExplodableState *)state)->unk14);
+            if (((ExplodableState *)state)->damageTaken < ((ExplodableState *)state)->damageThreshold) {
+                if (Sfx_IsPlayingFromObject(0, (u16)((ExplodableState *)state)->hitSfxId) == 0) {
+                    Sfx_PlayFromObject(obj, (u16)((ExplodableState *)state)->hitSfxId);
                 }
                 if (((GameObject *)obj)->anim.seqId == 0x3de) {
-                    ((ExplodableState *)state)->unk18 = (s16)randomGetRange(600, 800);
+                    ((ExplodableState *)state)->spinSpeed = (s16)randomGetRange(600, 800);
                 }
             } else {
                 Sfx_StopObjectChannel(obj, 0x7f);
                 (**(void (**)(int, int, int, int, int, int))(*lbl_803DDAC8 + 0x4))(
                     obj, 1, 0, 2, -1, 0);
-                if (Sfx_IsPlayingFromObject(0, (u16)((ExplodableState *)state)->unk16) == 0) {
-                    Sfx_PlayFromObject(obj, (u16)((ExplodableState *)state)->unk16);
+                if (Sfx_IsPlayingFromObject(0, (u16)((ExplodableState *)state)->explodeSfxId) == 0) {
+                    Sfx_PlayFromObject(obj, (u16)((ExplodableState *)state)->explodeSfxId);
                 }
-                ((ExplodableState *)state)->unk8 = 0x32;
-                ((ExplodableState *)state)->unk13 = 0;
+                ((ExplodableState *)state)->explodeTimer = 0x32;
+                ((ExplodableState *)state)->damageTaken = 0;
                 fn_801833E4(obj, player, state);
                 *(u8 *)(obj + 0xaf) |= 8;
             }
         }
         vec3f_distanceSquared((f32 *)(Obj_GetPlayerObject() + 0x18), (f32 *)(obj + 0x18));
-        if ((((ExplodableState *)state)->unkA -= framesThisStep) <= 0) {
-            ((ExplodableState *)state)->unkA = (s16)(randomGetRange(0, 100) + 0x12c);
+        if ((((ExplodableState *)state)->randomTimer -= framesThisStep) <= 0) {
+            ((ExplodableState *)state)->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
         }
         if (((GameObject *)obj)->anim.parent != NULL) {
             fn_80183250(obj, state);

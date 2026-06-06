@@ -12,19 +12,19 @@
  */
 typedef struct ExplodableState {
     u8 unk0[0x4 - 0x0];
-    f32 unk4;
-    s16 unk8;
-    s16 unkA;
+    f32 animTimer;
+    s16 explodeTimer;
+    s16 randomTimer;
     u8 unkC[0x13 - 0xC];
-    u8 unk13;
-    s16 unk14;
-    s16 unk16;
-    s16 unk18;
+    u8 damageTaken;
+    s16 hitSfxId;
+    s16 explodeSfxId;
+    s16 spinSpeed;
     u8 unk1A[0x28 - 0x1A];
-    u8 unk28;
+    u8 damageThreshold;
     u8 unk29[0x30 - 0x29];
 } ExplodableState;
 
-STATIC_ASSERT(offsetof(ExplodableState, unk14) == 0x14);
+STATIC_ASSERT(offsetof(ExplodableState, hitSfxId) == 0x14);
 
 #endif /* MAIN_DLL_EXPLODABLE_STATE_H_ */
