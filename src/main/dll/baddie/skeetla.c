@@ -41,7 +41,7 @@ extern int trickyDebugPrint(const char *fmt, ...);
 /* trickyUpdateCollisionAndPathState  addr=0x8013939C  size=0x498  linkage=global */
 void trickyUpdateCollisionAndPathState(u8 *obj)
 {
-    u8 *state;
+    TrickyState *state;
     f32 hitOffsetY;
     void *lastContactObj;
     f32 nearestDistance;
@@ -52,24 +52,24 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
     int doHeightSnap;
     int hitKind;
 
-    state = ((GameObject *)obj)->extra;
+    state = (TrickyState *)((GameObject *)obj)->extra;
     doGroundSnap = 0;
     nearestDistance = lbl_803E2424;
 
     if ((objPosToMapBlockIdx(*(f32 *)(obj + 0x18), ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ) == -1) &&
-        ((((TrickyState *)state)->unk54 & 0x80000) == 0)) {
-        ((TrickyState *)state)->unk353 = 0;
+        ((state->unk54 & 0x80000) == 0)) {
+        state->unk353 = 0;
         ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.previousLocalPosY;
         ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
     }
 
-    ((TrickyState *)state)->unk54 &= 0xfff7ffff;
+    state->unk54 &= 0xfff7ffff;
 
-    if (((TrickyState *)state)->unk374 != 0) {
-        ((TrickyState *)state)->unk374 -= 1;
+    if (state->unk374 != 0) {
+        state->unk374 -= 1;
         doGroundSnap = 1;
-    } else if ((((TrickyState *)state)->unk54 & 0x2000) != 0) {
+    } else if ((state->unk54 & 0x2000) != 0) {
         doGroundSnap = 1;
     }
 
@@ -77,16 +77,16 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
         hitDetectFn_800658a4(obj, *(f32 *)(obj + 0x18), ((GameObject *)obj)->anim.worldPosY,
                              ((GameObject *)obj)->anim.worldPosZ, &hitOffsetY, 0);
         ((GameObject *)obj)->anim.localPosY -= hitOffsetY;
-        ((TrickyState *)state)->unk353 = 0;
+        state->unk353 = 0;
     }
 
-    if (*(s8 *)(state + 0x353) != 0) {
-        if ((((TrickyState *)state)->unk58 & 0x20) == 0) {
-            if (((TrickyState *)state)->unk2AC == lbl_803E23DC) {
+    if ((s8)state->unk353 != 0) {
+        if ((state->unk58 & 0x20) == 0) {
+            if (state->unk2AC == lbl_803E23DC) {
                 doHeightSnap = 0;
-            } else if (((TrickyState *)state)->unk2B0 == lbl_803E2410) {
+            } else if (state->unk2B0 == lbl_803E2410) {
                 doHeightSnap = 1;
-            } else if (((TrickyState *)state)->unk2B4 - ((TrickyState *)state)->unk2B0 > lbl_803E2414) {
+            } else if (state->unk2B4 - state->unk2B0 > lbl_803E2414) {
                 doHeightSnap = 1;
             } else {
                 doHeightSnap = 0;
@@ -94,7 +94,7 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
 
             if (doHeightSnap != 0) {
                 ((GameObject *)obj)->anim.velocityY = lbl_803E23DC;
-                ((GameObject *)obj)->anim.localPosY = ((TrickyState *)state)->unk2B4 - lbl_803E23EC;
+                ((GameObject *)obj)->anim.localPosY = state->unk2B4 - lbl_803E23EC;
             } else {
                 ((GameObject *)obj)->anim.velocityY += lbl_803E2428 * timeDelta;
                 ((GameObject *)obj)->anim.localPosY += ((GameObject *)obj)->anim.velocityY * timeDelta;
@@ -112,35 +112,35 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
         lastContactObj = NULL;
     }
 
-    if ((((TrickyState *)state)->unk54 & 8) != 0) {
-        *(f32 *)(state + 0x364) += timeDelta;
-        if (*(f32 *)(state + 0x364) >= lbl_803E242C) {
+    if ((state->unk54 & 8) != 0) {
+        state->contactTimer += timeDelta;
+        if (state->contactTimer >= lbl_803E242C) {
             if (vec3f_distanceSquared((f32 *)(obj + 0x18),
                                       (f32 *)(Obj_GetPlayerObject() + 0x18)) > lbl_803E2430) {
-                *(f32 *)(state + 0x364) -= lbl_803E242C;
+                state->contactTimer -= lbl_803E242C;
                 *(u8 *)(*(u8 **)(obj + 0x50) + 0x71) = 0x7f;
-                ((TrickyState *)state)->unk54 &= ~8;
+                state->unk54 &= ~8;
             }
         }
-    } else if ((*(void **)(state + 0x360) != NULL) &&
-               (*(void **)(state + 0x360) == lastContactObj)) {
-        *(f32 *)(state + 0x364) += timeDelta;
-        if (*(f32 *)(state + 0x364) >= lbl_803E23E0) {
-            *(f32 *)(state + 0x364) -= lbl_803E23E0;
-            ((TrickyState *)state)->unk54 |= 8;
+    } else if ((state->lastContactObj != NULL) &&
+               (state->lastContactObj == lastContactObj)) {
+        state->contactTimer += timeDelta;
+        if (state->contactTimer >= lbl_803E23E0) {
+            state->contactTimer -= lbl_803E23E0;
+            state->unk54 |= 8;
             *(u8 *)(*(u8 **)(obj + 0x50) + 0x71) = 0x7e;
         }
     } else {
-        *(f32 *)(state + 0x364) = lbl_803E23DC;
+        state->contactTimer = lbl_803E23DC;
     }
 
-    *(void **)(state + 0x360) = lastContactObj;
+    state->lastContactObj = lastContactObj;
     hitPosPtr = hitPos;
-    hitKind = ObjHits_PollPriorityHitWithCooldown(obj, (f32 *)(state + 0x370),
+    hitKind = ObjHits_PollPriorityHitWithCooldown(obj, &state->hitCooldown,
                                                   (void **)&lastContactObj, hitPosPtr);
-    ((TrickyState *)state)->unk368 = hitKind;
+    state->unk368 = hitKind;
 
-    switch (((TrickyState *)state)->unk368) {
+    switch (state->unk368) {
         case 1:
         case 2:
         case 4:
@@ -164,27 +164,27 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
             }
             break;
         case 0x1f:
-            ((TrickyState *)state)->unk838 = lbl_803E2438;
+            state->unk838 = lbl_803E2438;
             break;
     }
 
-    if (*(s8 *)(state + 0x353) == 0) {
-        (*(void (**)(u8 *, u8 *))(*(int *)gPathControlInterface + 0x20))(obj, state + 0xf8);
+    if ((s8)state->unk353 == 0) {
+        (*(void (**)(u8 *, u8 *))(*(int *)gPathControlInterface + 0x20))(obj, (u8 *)state + 0xf8);
     }
 
     if ((coordsToMapCell(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ) == 0xe) ||
         (ObjGroup_FindNearestObject(5, obj, &nearestDistance) != 0)) {
-        *(u32 *)(state + 0xf8) &= ~4;
+        *(u32 *)((u8 *)state + 0xf8) &= ~4;
     } else {
-        *(u32 *)(state + 0xf8) |= 4;
+        *(u32 *)((u8 *)state + 0xf8) |= 4;
     }
 
-    (*(void (**)(u8 *, u8 *, f32))(*(int *)gPathControlInterface + 0x10))(obj, state + 0xf8, timeDelta);
-    (*(void (**)(u8 *, u8 *))(*(int *)gPathControlInterface + 0x14))(obj, state + 0xf8);
-    (*(void (**)(u8 *, u8 *, f32))(*(int *)gPathControlInterface + 0x18))(obj, state + 0xf8, timeDelta);
+    (*(void (**)(u8 *, u8 *, f32))(*(int *)gPathControlInterface + 0x10))(obj, (u8 *)state + 0xf8, timeDelta);
+    (*(void (**)(u8 *, u8 *))(*(int *)gPathControlInterface + 0x14))(obj, (u8 *)state + 0xf8);
+    (*(void (**)(u8 *, u8 *, f32))(*(int *)gPathControlInterface + 0x18))(obj, (u8 *)state + 0xf8, timeDelta);
 
-    ((GameObject *)obj)->anim.rotY = *(s16 *)(state + 0x290);
-    ((GameObject *)obj)->anim.rotZ = *(s16 *)(state + 0x292);
+    ((GameObject *)obj)->anim.rotY = state->pathRotY;
+    ((GameObject *)obj)->anim.rotZ = state->pathRotZ;
 }
 #pragma scheduling reset
 #pragma peephole reset

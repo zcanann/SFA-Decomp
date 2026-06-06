@@ -68,8 +68,8 @@ typedef struct TrickyState {
     u8 pad262[0x264 - 0x262];
     u8 unk264;
     u8 pad265[0x290 - 0x265];
-    s16 unk290;
-    s16 unk292;
+    s16 pathRotY;
+    s16 pathRotZ;
     u8 pad294[0x29C - 0x294];
     u32 unk29C;
     u8 pad2A0[0x2AC - 0x2A0];
@@ -110,11 +110,11 @@ typedef struct TrickyState {
     u8 pad354[0x358 - 0x354];
     s8 unk358;
     u8 pad359[0x360 - 0x359];
-    void *unk360; /* hit-object link (skeetla) */
-    f32 unk364; /* flash/accumulate timer (skeetla) */
+    void *lastContactObj;
+    f32 contactTimer;
     int unk368; /* object link */
     int unk36C; /* object link */
-    u8 pad370[0x374 - 0x370];
+    f32 hitCooldown;
     u8 unk374;
     u8 pad375[0x378 - 0x375];
     u8 unk378;
@@ -204,5 +204,8 @@ typedef struct TrickyState {
 
 STATIC_ASSERT(sizeof(TrickyState) == 0x840);
 STATIC_ASSERT(offsetof(TrickyState, unk54) == 0x54);
+STATIC_ASSERT(offsetof(TrickyState, pathRotY) == 0x290);
+STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
+STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
 
 #endif /* MAIN_DLL_TRICKY_STATE_H_ */
