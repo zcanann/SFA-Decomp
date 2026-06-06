@@ -3,6 +3,120 @@
 #include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
+#include "global.h"
+
+/* Per-object extra state for the WM laser beam emitter. */
+typedef struct LaserBeamState {
+    int texture;
+    u8 pad04[8];
+    f32 beamX;        /* 0x0c: beam base position */
+    f32 beamX2;       /* 0x10 */
+    f32 beamZ;        /* 0x14 */
+    f32 beamZ2;       /* 0x18 */
+    f32 sweepPhase;   /* 0x1c */
+    u8 pad20[4];
+    u8 unk24;
+    u8 unk25;
+    u8 unk26;
+    s8 unk27;
+    s16 unk28;
+    s16 sweepYaw;     /* 0x2a */
+    s16 fireTimer;    /* 0x2c */
+    s16 unk2E;
+    s16 firePeriod;   /* 0x30 */
+    s16 emitterSlot;  /* 0x32: modgfx handle head */
+    u8 pad34[0xc];
+    f32 targetX;      /* 0x40 */
+    u8 pad44[4];
+    f32 targetZ;      /* 0x48 */
+    u8 unk4C;
+    u8 active;        /* 0x4d */
+    u8 beamKind;      /* 0x4e: 30/1/other texture pick */
+} LaserBeamState;
+STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
+
+/* pressureswitch_getExtraSize == 0x8. */
+typedef struct PressureSwitchState {
+    s8 holdTimer;      /* frames the switch stays pressed */
+    s8 chimeLatch;
+    s16 retriggerTimer;
+    s16 mapGameBit;    /* 0xf45/0xf46 per-map bit, -1 none */
+    u8 flags;          /* PressureSwitchFlags / PswFlags overlay */
+    u8 pad7;
+} PressureSwitchState;
+
+/* wmlasertarget_getExtraSize == 0x4. */
+typedef struct WmLaserTargetState {
+    s16 cooldown;
+    u8 toggleQueued;
+    u8 pad3;
+} WmLaserTargetState;
+
+/* WM_colrise_getExtraSize == 0x4. */
+typedef struct WMColriseState {
+    s16 gameBit;
+    u8 raiseTimer;
+    u8 pad3;
+} WMColriseState;
+
+/* wmtorch_getExtraSize == 0x10. */
+typedef struct WmTorchState {
+    void *linkedObj;
+    f32 unk04;
+    u8 pad08[2];
+    s16 unk0A;
+    u8 torchType;  /* params[0x19]: 0 / 0x7f / other */
+    u8 pad0D[3];
+} WmTorchState;
+
+/* lightsource_getExtraSize == 0x1c. */
+typedef struct LightSourceState {
+    void *light;
+    f32 fxTimer;
+    u8 pad08[4];
+    f32 sparkTimer;
+    int gameBit;    /* 0x10: -1 none */
+    u8 mode;        /* 0x14: 1 = hit-toggleable */
+    u8 fxType;
+    u8 fxArg;
+    u8 lit;         /* 0x17 */
+    u8 litPrev;
+    u8 sparks;      /* 0x19 */
+    u8 loopFlags;   /* 0x1a: LightSourceFlagByte */
+    u8 pad1B;
+} LightSourceState;
+STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
+
+/* dll_1FF_getExtraSize == 0x8 (grabbable hook). */
+typedef struct Dll1FFState {
+    s16 msgLo;
+    s16 msgHi;
+    u8 pad4;
+    s8 grabPhase;  /* 0 free, 1 held, 2 releasing */
+    u8 sendFlag;   /* 0x6 */
+    u8 pad7;
+} Dll1FFState;
+
+/* dll_200_getExtraSize == 0x28 (kid attachment actor). */
+typedef struct Dll200State {
+    f32 homeX;
+    f32 homeY;
+    f32 homeZ;
+    f32 animSpeed;    /* 0x0c */
+    f32 hitReactVec;  /* 0x10: head of the f32 pair ObjHitReact_Update fills */
+    f32 unk14;
+    s16 unk18;
+    u8 pad1A[2];
+    u32 unk1C;
+    s16 modeTimer;    /* 0x20 */
+    u8 mode;          /* 0x22: 1-5 wander, 12 turn, 13 play */
+    u8 prevMode;      /* 0x23 */
+    u8 latch24;       /* 0x24: GameBit 0xd0 latch */
+    u8 mode25;        /* 0x25: trigger pick */
+    u8 defNoLow;      /* 0x26 */
+    s8 counter27;     /* 0x27: hug/talk counter */
+} Dll200State;
+STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
 #pragma peephole off
 #pragma scheduling off
@@ -1770,30 +1884,30 @@ typedef struct PressureSwitchFlags {
 #pragma peephole off
 void pressureswitch_init(int *obj, u8 *init) {
     extern uint GameBit_Get(int id);
-    u8 *sub;
+    PressureSwitchState *sub;
     uint mapId;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = *(PressureSwitchState**)((char*)obj + 0xb8);
     *(void**)((char*)obj + 0xbc) = (void*)&PressureSwitch_SeqFn;
     *(s16*)obj = (s16)((s8)init[0x18] << 8);
-    *(s16*)(sub + 2) = (s16)(*(s16*)(init + 0x1e) * 0x3c);
-    sub[1] = 0;
+    sub->retriggerTimer = (s16)(*(s16*)(init + 0x1e) * 0x3c);
+    sub->chimeLatch = 0;
     mapId = *(int*)(*(int*)((char*)obj + 0x4c) + 0x14);
     if (mapId == 0x1f1a) {
-        *(s16*)(sub + 4) = 0xf45;
+        sub->mapGameBit = 0xf45;
     } else if (mapId == 0x47293) {
-        *(s16*)(sub + 4) = 0xf46;
+        sub->mapGameBit = 0xf46;
     } else {
-        *(s16*)(sub + 4) = -1;
+        sub->mapGameBit = -1;
     }
-    if (*(s16*)(sub + 4) != -1) {
-        if (GameBit_Get(*(s16*)(sub + 4)) != 0) {
-            ((PressureSwitchFlags *)(sub + 6))->mapBitLatched = 1;
+    if (sub->mapGameBit != -1) {
+        if (GameBit_Get(sub->mapGameBit) != 0) {
+            ((PressureSwitchFlags *)&sub->flags)->mapBitLatched = 1;
         }
     }
     if (GameBit_Get(*(s16*)(init + 0x1c)) != 0) {
         *(f32*)((char*)obj + 0x10) = *(f32*)(init + 0xc) - lbl_803E5D78;
-        sub[0] = 0x1e;
+        sub->holdTimer = 0x1e;
     }
 }
 #pragma peephole reset
@@ -1816,15 +1930,15 @@ void wmlasertarget_update(int *obj) {
     extern void GameBit_Set(int slot, int val);
     extern u32 GameBit_Get(int slot);
     u8 *def;
-    u8 *sub;
+    WmLaserTargetState *sub;
 
     def = *(u8**)((char*)obj + 0x4c);
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = *(WmLaserTargetState**)((char*)obj + 0xb8);
     if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
-        sub[2] = 1;
-        *(s16*)sub = *(s16*)(def + 0x1a);
+        sub->toggleQueued = 1;
+        sub->cooldown = *(s16*)(def + 0x1a);
     }
-    if (*(s16*)sub <= 0 && sub[2] != 0) {
+    if (sub->cooldown <= 0 && sub->toggleQueued != 0) {
         if (GameBit_Get(*(s16*)(def + 0x1e)) != 0) {
             Obj_SetActiveModelIndex(obj, 0);
             GameBit_Set(*(s16*)(def + 0x1e), 0);
@@ -1834,11 +1948,11 @@ void wmlasertarget_update(int *obj) {
             GameBit_Set(*(s16*)(def + 0x1e), 1);
             GameBit_Set(*(s16*)(def + 0x20), 1);
         }
-        sub[2] = 0;
-        *(s16*)sub = *(s16*)(def + 0x1a);
-    } else if (*(s16*)sub > 0) {
+        sub->toggleQueued = 0;
+        sub->cooldown = *(s16*)(def + 0x1a);
+    } else if (sub->cooldown > 0) {
         u8 fs = framesThisStep;
-        *(s16*)sub -= fs;
+        sub->cooldown -= fs;
     }
 }
 #pragma peephole reset
@@ -1866,27 +1980,27 @@ extern f32 lbl_803E5DE0;
 #pragma peephole off
 void WM_colrise_update(int *obj) {
     u8 *def;
-    u8 *sub;
+    WMColriseState *sub;
     s32 reached;
     f32 detectDistance;
     f32 target;
     int i;
 
     def = *(u8**)((char*)obj + 0x4c);
-    sub = *(u8**)((char*)obj + 0xb8);
-    sub[2] -= 1;
-    if ((s8)sub[2] < 0) sub[2] = 0;
+    sub = *(WMColriseState**)((char*)obj + 0xb8);
+    sub->raiseTimer -= 1;
+    if ((s8)sub->raiseTimer < 0) sub->raiseTimer = 0;
     if ((s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f) > 0) {
         detectDistance = lbl_803E5DCC;
         for (i = 0; i < (s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f); i++) {
             int *p = *(int**)((char*)*(int**)((char*)obj + 0x58) + 0x100 + i * 4);
             if (*(f32*)((char*)p + 0x10) - *(f32*)((char*)obj + 0x10) > detectDistance) {
-                sub[2] = 0x3c;
+                sub->raiseTimer = 0x3c;
             }
         }
     }
     reached = 0;
-    if ((*(s16*)sub == -1 || (u32)GameBit_Get(*(s16*)sub) != 0) && (s8)sub[2] != 0) {
+    if ((sub->gameBit == -1 || (u32)GameBit_Get(sub->gameBit) != 0) && (s8)sub->raiseTimer != 0) {
         target = lbl_803E5DD0 + (lbl_803E5DD4 + *(f32*)(def + 0xc));
         if (*(f32*)((char*)obj + 0x10) > target) {
             *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) - lbl_803E5DD8 * timeDelta;
@@ -1931,28 +2045,28 @@ extern void Resource_Release(u32);
 #pragma peephole off
 #pragma scheduling off
 void wmtorch_init(u8* obj, u8* params) {
-    u8* sub;
+    WmTorchState* sub;
     u32 res;
     f32 v[5];
 
-    sub = *(u8**)(obj + 0xb8);
+    sub = *(WmTorchState**)(obj + 0xb8);
     if (*(s16*)(params + 0x1a) != 0) {
-        *(f32*)(sub + 4) = (f32)(s32)*(s16*)(params + 0x1a);
+        sub->unk04 = (f32)(s32)*(s16*)(params + 0x1a);
     } else {
-        *(f32*)(sub + 4) = lbl_803E5DEC;
+        sub->unk04 = lbl_803E5DEC;
     }
     if (*(s16*)(params + 0x1c) != 0) {
-        *(s16*)(sub + 0xa) = *(s16*)(params + 0x1c);
+        sub->unk0A = *(s16*)(params + 0x1c);
     } else {
-        *(s16*)(sub + 0xa) = 0x8c;
+        sub->unk0A = 0x8c;
     }
-    sub[0xc] = params[0x19];
+    sub->torchType = params[0x19];
     v[4] = lbl_803E5DF0;
-    if (sub[0xc] == 0) {
+    if (sub->torchType == 0) {
         res = Resource_Acquire(0x69, 1);
         *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF4;
         ((void(*)(u8*, int, f32*, int, int, int))((void**)*(int*)res)[1])(obj, 1, v, 0x10004, -1, 0);
-    } else if (sub[0xc] == 0x7f) {
+    } else if (sub->torchType == 0x7f) {
         res = Resource_Acquire(0x69, 1);
         *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF4;
         ((void(*)(u8*, int, f32*, int, int, int))((void**)*(int*)res)[1])(obj, 2, v, 0x10004, -1, 0);
@@ -2016,7 +2130,7 @@ void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32
 void lightsource_render(void *obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void *obj, int p1, int p2, int p3, int p4, f32 alpha);
-    void *light = *(void **)*(int *)((char *)obj + 0xb8);
+    void *light = (*(LightSourceState **)((char *)obj + 0xb8))->light;
     if (light != NULL && *(u8 *)((char *)light + 0x2f8) != 0 && *(u8 *)((char *)light + 0x4c) != 0) {
         queueGlowRender(light);
     }
@@ -2065,10 +2179,10 @@ void dll_1FF_init(s16* a, s8* b)
 #pragma scheduling off
 #pragma peephole off
 void WM_colrise_init(s16 *a, s8 *b) {
-    s16 *inner = *(s16 **)((char*)a + 0xb8);
+    WMColriseState *inner = *(WMColriseState **)((char*)a + 0xb8);
     *(void **)((char*)a + 0xbc) = (void *)WM_colrise_SeqFn;
     a[0] = (s16)((s32)b[0x18] << 8);
-    *inner = *(s16 *)(b + 0x1e);
+    inner->gameBit = *(s16 *)(b + 0x1e);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2077,10 +2191,10 @@ extern int GameBit_Get(int id);
 #pragma scheduling off
 #pragma peephole off
 void wmlasertarget_init(char *obj, s8 *p) {
-    char *inner = *(char **)(obj + 0xb8);
+    WmLaserTargetState *inner = *(WmLaserTargetState **)(obj + 0xb8);
     ((ObjAnimComponent *)obj)->bankIndex = (s8)GameBit_Get(*(s16 *)(p + 0x1e));
-    *(s16 *)inner = *(s16 *)(p + 0x1a);
-    inner[2] = 0;
+    inner->cooldown = *(s16 *)(p + 0x1a);
+    inner->toggleQueued = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2092,7 +2206,7 @@ extern f32 lbl_803E5DE8;
 #pragma peephole off
 void wmtorch_update(int obj) {
     int state = *(int *)(obj + 0xb8);
-    if (*(u8 *)(state + 0xc) == 2) {
+    if (((WmTorchState *)state)->torchType == 2) {
         *(s16 *)obj += 0x32;
     }
     if (Vec_distance((f32 *)(Obj_GetPlayerObject() + 0x18), (f32 *)(obj + 0x18)) < lbl_803E5DE8) {
@@ -2111,8 +2225,8 @@ extern void Obj_FreeObject(void *o);
 #pragma peephole off
 void wmtorch_free(int obj, int mode) {
     int state = *(int *)(obj + 0xb8);
-    if (mode == 0 && *(void **)state != 0) {
-        Obj_FreeObject(*(void **)state);
+    if (mode == 0 && ((WmTorchState *)state)->linkedObj != 0) {
+        Obj_FreeObject(((WmTorchState *)state)->linkedObj);
     }
     (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x18)))(obj);
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
@@ -2126,8 +2240,8 @@ extern void ModelLightStruct_free(void *light);
 void lightsource_free(int obj) {
     int state = *(int *)(obj + 0xb8);
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
-    if (*(void **)state != 0) {
-        ModelLightStruct_free(*(void **)state);
+    if (((LightSourceState *)state)->light != 0) {
+        ModelLightStruct_free(((LightSourceState *)state)->light);
     }
 }
 #pragma peephole reset
@@ -2196,24 +2310,24 @@ extern f32 lbl_803E5D98;
 #pragma peephole off
 void dll_200_init(int* obj, int* arg)
 {
-    u8* b;
+    Dll200State* b;
     *(int*)((char*)obj + 0xf4) = 0;
     *(s16*)obj = (s16)((s32)*(s8*)((char*)arg + 0x18) << 8);
     *(void**)((char*)obj + 0xbc) = (void*)dll_200_SeqFn;
-    b = *(u8**)((char*)obj + 0xb8);
-    *(u8*)(b + 0x26) = (u8)*(s16*)arg;
-    *(u32*)(b + 0x1c) = 0;
-    *(s16*)(b + 0x18) = 0;
-    *(f32*)(b + 0x0) = *(f32*)((char*)arg + 0x8);
-    *(f32*)(b + 0x4) = *(f32*)((char*)arg + 0xc);
-    *(f32*)(b + 0x8) = *(f32*)((char*)arg + 0x10);
-    *(u8*)(b + 0x24) = (u8)GameBit_Get(0xd0);
-    *(u8*)(b + 0x27) = 0;
-    *(u8*)(b + 0x22) = 1;
-    *(u8*)(b + 0x23) = 0xc;
-    *(s16*)(b + 0x20) = 0x12c;
-    *(f32*)(b + 0xc) = lbl_803E5D98;
-    *(f32*)(b + 0x14) = lbl_803E5DC0;
+    b = *(Dll200State**)((char*)obj + 0xb8);
+    b->defNoLow = (u8)*(s16*)arg;
+    b->unk1C = 0;
+    b->unk18 = 0;
+    b->homeX = *(f32*)((char*)arg + 0x8);
+    b->homeY = *(f32*)((char*)arg + 0xc);
+    b->homeZ = *(f32*)((char*)arg + 0x10);
+    b->latch24 = (u8)GameBit_Get(0xd0);
+    b->counter27 = 0;
+    b->mode = 1;
+    b->prevMode = 0xc;
+    b->modeTimer = 0x12c;
+    b->animSpeed = lbl_803E5D98;
+    b->unk14 = lbl_803E5DC0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2249,7 +2363,7 @@ int dll_200_SeqFn(int p1, int p2, int p3, int p4)
             case 0:
                 break;
             case 1:
-                if (*(u8 *)((char *)state + 0x27) >= 2) {
+                if (*(u8 *)&((Dll200State *)state)->counter27 >= 2) {
                     GameBit_Set(0x314, 1);
                 }
                 break;
@@ -2284,7 +2398,7 @@ int fn_801F2974(int* arg0, int arg1, int* arg2, int arg3)
     *(u8*)((char*)arg0 + 0xaf) = (u8)(*(u8*)((char*)arg0 + 0xaf) | 8);
 
     for (i = 0; i < (int)*(u8*)((char*)arg2 + 0x8b); i++) {
-        u8 mode = *(u8*)((char*)state + 0x25);
+        u8 mode = ((Dll200State *)state)->mode25;
         if (mode == 1) {
             if (*((u8*)arg2 + (i + 0x81)) == 4) {
                 playerAddRemoveMagic(player, 5);
@@ -2293,7 +2407,7 @@ int fn_801F2974(int* arg0, int arg1, int* arg2, int arg3)
             u8 v = *((u8*)arg2 + (i + 0x81));
             if (v == 1) {
                 GameBit_Set(208, 1);
-                *(u8*)((char*)state + 0x24) = 1;
+                ((Dll200State *)state)->latch24 = 1;
             } else if (v == 2) {
                 fn_80296474(player, 0, 1);
                 playerAddRemoveMagic(player, 5);
@@ -2312,32 +2426,32 @@ extern f32 lbl_803E5D10;
 #pragma peephole off
 void LaserBeam_free(s16 *obj, char *arg)
 {
-    char *b;
+    LaserBeamState *b;
 
-    b = *(char **)((char *)obj + 0xb8);
+    b = *(LaserBeamState **)((char *)obj + 0xb8);
     ObjMsg_AllocQueue(obj, 2);
     *obj = (s16)((s32)*(s8 *)(arg + 0x18) << 8);
     if (*(s16 *)(arg + 0x1c) == 0) {
-        *(s16 *)(b + 0x30) = (s16)(randomGetRange(-80, 80) + 400);
+        b->firePeriod = (s16)(randomGetRange(-80, 80) + 400);
     } else {
-        *(s16 *)(b + 0x30) = *(s16 *)(arg + 0x1c);
+        b->firePeriod = *(s16 *)(arg + 0x1c);
     }
-    *(s16 *)(b + 0x2c) = *(s16 *)(b + 0x30);
-    *(u8 *)(b + 0x4d) = 0;
-    *(f32 *)(b + 0x1c) = lbl_803E5D10;
-    *(u8 *)(b + 0x4e) = *(u8 *)(arg + 0x19);
-    *(s16 *)(b + 0x2e) = 0x118;
-    *(s16 *)(b + 0x32) = -1;
-    if (*(u8 *)(b + 0x4e) == 30) {
-        if (*(void **)b == NULL) {
-            *(int *)b = textureLoadAsset(0x3e9);
+    b->fireTimer = b->firePeriod;
+    b->active = 0;
+    b->sweepPhase = lbl_803E5D10;
+    b->beamKind = *(u8 *)(arg + 0x19);
+    b->unk2E = 0x118;
+    b->emitterSlot = -1;
+    if (b->beamKind == 30) {
+        if (*(void **)&b->texture == NULL) {
+            b->texture = textureLoadAsset(0x3e9);
         }
-    } else if (*(u8 *)(b + 0x4e) == 1) {
-        if (*(void **)b == NULL) {
-            *(int *)b = textureLoadAsset(0x23d);
+    } else if (b->beamKind == 1) {
+        if (*(void **)&b->texture == NULL) {
+            b->texture = textureLoadAsset(0x23d);
         }
-    } else if (*(void **)b == NULL) {
-        *(int *)b = textureLoadAsset(0xd9);
+    } else if (*(void **)&b->texture == NULL) {
+        b->texture = textureLoadAsset(0xd9);
     }
 }
 #pragma peephole reset
@@ -2356,16 +2470,16 @@ void dll_200_update(int obj)
     extern f32 lbl_803E5D9C;
     u8 ev;
     u8 ret;
-    char *b;
+    Dll200State *b;
 
-    b = *(char **)(obj + 0xb8);
+    b = *(Dll200State **)(obj + 0xb8);
     ret = ObjHitReact_Update(obj, lbl_80328898, 11,
-                             (u8)((*(u8 *)(b + 0x22) & 0x80) ? 1 : 0),
-                             (float *)(b + 0x10));
+                             (u8)((b->mode & 0x80) ? 1 : 0),
+                             &b->hitReactVec);
     if (ret != 0) {
-        *(u8 *)(b + 0x22) = (u8)(*(u8 *)(b + 0x22) | 0x80);
+        b->mode = (u8)(b->mode | 0x80);
     } else {
-        *(u8 *)(b + 0x22) = (u8)(*(u8 *)(b + 0x22) & ~0x80);
+        b->mode = (u8)(b->mode & ~0x80);
         ev = (*gMapEventInterface)->getMode((int)*(s8 *)(obj + 0xac));
         switch (ev) {
         case 1:
@@ -2423,7 +2537,7 @@ void lightsource_update(int obj)
     extern f32 lbl_803E5E14;
     extern f32 lbl_803E5E18;
     extern f32 lbl_803E5E1C;
-    char *b;
+    LightSourceState *b;
     char *t;
     s16 sum;
     u8 sfxFlag;
@@ -2434,39 +2548,39 @@ void lightsource_update(int obj)
         u8 pad2[0xc];
     } fx;
 
-    b = *(char **)(obj + 0xb8);
-    switch (*(u8 *)(b + 0x14)) {
+    b = *(LightSourceState **)(obj + 0xb8);
+    switch (b->mode) {
     case 0:
         break;
     case 1:
-        *(u8 *)(b + 0x18) = *(u8 *)(b + 0x17);
+        b->litPrev = b->lit;
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
-            *(u8 *)(b + 0x17) = (u8)(1 - *(u8 *)(b + 0x17));
+            b->lit = (u8)(1 - b->lit);
         }
-        if (*(u8 *)(b + 0x17) != *(u8 *)(b + 0x18)) {
-            if (*(u8 *)(b + 0x17) != 0) {
-                if (*(int *)(b + 0x10) != -1 && GameBit_Get(*(int *)(b + 0x10)) == 0) {
-                    GameBit_Set(*(int *)(b + 0x10), 1);
+        if (b->lit != b->litPrev) {
+            if (b->lit != 0) {
+                if (b->gameBit != -1 && GameBit_Get(b->gameBit) == 0) {
+                    GameBit_Set(b->gameBit, 1);
                 }
                 Sfx_PlayFromObject(obj, 0x80);
             } else {
                 (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
-                if (*(int *)(b + 0x10) != -1 && GameBit_Get(*(int *)(b + 0x10)) != 0) {
-                    GameBit_Set(*(int *)(b + 0x10), 0);
+                if (b->gameBit != -1 && GameBit_Get(b->gameBit) != 0) {
+                    GameBit_Set(b->gameBit, 0);
                 }
             }
         }
         break;
     }
-    if (*(u8 *)(b + 0x17) != 0 && (*(u16 *)(obj + 0xb0) & 0x800)) {
-        *(f32 *)(b + 4) = *(f32 *)(b + 4) - timeDelta;
-        if (*(f32 *)(b + 4) <= lbl_803E5E0C) {
-            sfxFlag = *(u8 *)(b + 0x16);
-            *(f32 *)(b + 4) = *(f32 *)(b + 4) + lbl_803E5E10;
+    if (b->lit != 0 && (*(u16 *)(obj + 0xb0) & 0x800)) {
+        b->fxTimer = b->fxTimer - timeDelta;
+        if (b->fxTimer <= lbl_803E5E0C) {
+            sfxFlag = b->fxArg;
+            b->fxTimer = b->fxTimer + lbl_803E5E10;
         } else {
             sfxFlag = 0;
         }
-        if (*(u8 *)(b + 0x15) != 0 || *(u8 *)(b + 0x16) != 0) {
+        if (b->fxType != 0 || b->fxArg != 0) {
             vec[0] = lbl_803E5E0C;
             if (*(s16 *)(obj + 0x46) == 0x717) {
                 vec[1] = vec[0];
@@ -2474,19 +2588,19 @@ void lightsource_update(int obj)
                 vec[1] = lbl_803E5E14;
             }
             vec[2] = lbl_803E5E0C;
-            fn_80098B18(obj, lbl_803E5E18 * *(f32 *)(obj + 8), *(u8 *)(b + 0x15), sfxFlag, 0, vec);
+            fn_80098B18(obj, lbl_803E5E18 * *(f32 *)(obj + 8), b->fxType, sfxFlag, 0, vec);
         }
-        if (*(u8 *)(b + 0x19) != 0) {
-            *(f32 *)(b + 0xc) = *(f32 *)(b + 0xc) - timeDelta;
-            if (*(f32 *)(b + 0xc) <= lbl_803E5E0C) {
+        if (b->sparks != 0) {
+            b->sparkTimer = b->sparkTimer - timeDelta;
+            if (b->sparkTimer <= lbl_803E5E0C) {
                 fx.scale = lbl_803E5E08;
                 (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
                     obj, 0x7cb, &fx, 2, -1, 0);
-                *(f32 *)(b + 0xc) = *(f32 *)(b + 0xc) + lbl_803E5E1C;
+                b->sparkTimer = b->sparkTimer + lbl_803E5E1C;
             }
         }
     }
-    t = *(char **)b;
+    t = (char *)b->light;
     if (t != NULL && *(u8 *)(t + 0x2f8) != 0 && *(u8 *)(t + 0x4c) != 0) {
         sum = (s16)(*(u8 *)(t + 0x2f9) + *(s8 *)(t + 0x2fa));
         if (sum < 0) {
@@ -2496,18 +2610,18 @@ void lightsource_update(int obj)
             sum = 255;
             *(u8 *)(t + 0x2fa) = 0;
         }
-        *(u8 *)(*(char **)b + 0x2f9) = (u8)sum;
+        *(u8 *)((char *)b->light + 0x2f9) = (u8)sum;
     }
     if (*(s16 *)(obj + 0x46) != 0x705 && *(s16 *)(obj + 0x46) != 0x712) {
-        if (*(u8 *)(b + 0x17) != 0) {
-            if (!((LightSourceFlagByte *)(b + 0x1a))->looped) {
+        if (b->lit != 0) {
+            if (!((LightSourceFlagByte *)&b->loopFlags)->looped) {
                 Sfx_AddLoopedObjectSound(obj, 0x72);
-                ((LightSourceFlagByte *)(b + 0x1a))->looped = 1;
+                ((LightSourceFlagByte *)&b->loopFlags)->looped = 1;
             }
         } else {
-            if (((LightSourceFlagByte *)(b + 0x1a))->looped) {
+            if (((LightSourceFlagByte *)&b->loopFlags)->looped) {
                 Sfx_RemoveLoopedObjectSound(obj, 0x72);
-                ((LightSourceFlagByte *)(b + 0x1a))->looped = 0;
+                ((LightSourceFlagByte *)&b->loopFlags)->looped = 0;
             }
         }
     }
@@ -2542,7 +2656,7 @@ void dll_1FF_update(int obj)
     extern const f32 lbl_803E5D88;
     extern const f32 lbl_803E5D8C;
     void *player;
-    s16 *b;
+    Dll1FFState *b;
     int flag;
     int count;
     char *found;
@@ -2552,19 +2666,19 @@ void dll_1FF_update(int obj)
     char *p;
     int stk[2];
 
-    b = *(s16 **)(obj + 0xb8);
+    b = *(Dll1FFState **)(obj + 0xb8);
     player = Obj_GetPlayerObject();
-    if (*(s8 *)((char *)b + 5) == 0) {
+    if (b->grabPhase == 0) {
         flag = 0;
         if ((*(u8 *)(obj + 0xaf) & 1) != 0 && *(int *)(obj + 0xf8) == 0) {
-            b[0] = (s16)flag;
-            b[1] = 0x28;
+            b->msgLo = (s16)flag;
+            b->msgHi = 0x28;
             buttonDisable(0, 0x100);
             flag = 1;
         }
-        *(s8 *)((char *)b + 5) = (s8)flag;
-        if (*(s8 *)((char *)b + 5) != 0) {
-            *(u8 *)(b + 3) = 1;
+        b->grabPhase = (s8)flag;
+        if (b->grabPhase != 0) {
+            b->sendFlag = 1;
         }
         if (*(int *)(obj + 0xf8) == 0) {
             ObjHits_EnableObject(obj);
@@ -2597,19 +2711,19 @@ void dll_1FF_update(int obj)
         ObjHits_DisableObject(obj);
         *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
         if ((getButtonsJustPressed(0) & 0x100) != 0) {
-            *(u8 *)(b + 3) = 0;
+            b->sendFlag = 0;
             buttonDisable(0, 0x100);
         }
         if (*(int *)(obj + 0xf8) == 1) {
-            *(s8 *)((char *)b + 5) = 2;
+            b->grabPhase = 2;
         }
-        if (*(s8 *)((char *)b + 5) == 2 && *(int *)(obj + 0xf8) == 0) {
-            *(s8 *)((char *)b + 5) = 0;
-            *(u8 *)(b + 3) = 0;
+        if (b->grabPhase == 2 && *(int *)(obj + 0xf8) == 0) {
+            b->grabPhase = 0;
+            b->sendFlag = 0;
         }
-        if (*(s8 *)(b + 3) != 0) {
+        if (*(s8 *)&b->sendFlag != 0) {
             ObjMsg_SendToObject(player, 0x100008, obj,
-                                ((int)b[1] << 16) | ((int)b[0] & 0xffff));
+                                ((int)b->msgHi << 16) | ((int)b->msgLo & 0xffff));
         }
     }
 }
@@ -2643,7 +2757,7 @@ void pressureswitch_update(int obj)
     extern f32 lbl_803E5D74;
     extern f32 lbl_803E5D70;
     char *t;
-    char *b;
+    PressureSwitchState *b;
     s8 far;
     int i;
     void *player;
@@ -2659,34 +2773,34 @@ void pressureswitch_update(int obj)
 
     player = Obj_GetPlayerObject();
     t = *(char **)(obj + 0x4c);
-    b = *(char **)(obj + 0xb8);
+    b = *(PressureSwitchState **)(obj + 0xb8);
     far = 0;
     if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) > lbl_803E5D5C) {
         far = 1;
     }
-    *b -= 1;
-    if (*(s8 *)b < 0) {
-        *b = 0;
-        b[1] = 0;
+    b->holdTimer -= 1;
+    if (b->holdTimer < 0) {
+        b->holdTimer = 0;
+        b->chimeLatch = 0;
     }
-    ((PswFlags *)(b + 6))->active = 0;
+    ((PswFlags *)&b->flags)->active = 0;
     if (*(char **)(obj + 0x58) != NULL && *(s8 *)(*(char **)(obj + 0x58) + 0x10f) > 0) {
-        *(s16 *)(b + 2) = (s16)(*(s16 *)(t + 0x1e) * 60);
+        b->retriggerTimer = (s16)(*(s16 *)(t + 0x1e) * 60);
         i = 0;
         thr = lbl_803E5D60;
         for (; i < *(s8 *)((slots = *(char **)(obj + 0x58)) + 0x10f); i++) {
             char *ent = *(char **)(slots + i * 4 + 0x100);
             if (*(s16 *)(ent + 0x46) == 0x6d) {
-                ((PswFlags *)(b + 6))->active = 1;
+                ((PswFlags *)&b->flags)->active = 1;
             }
             if (*(f32 *)(ent + 0x10) - *(f32 *)(obj + 0x10) > thr) {
-                *b = 5;
+                b->holdTimer = 5;
             }
-            if (*(s8 *)(b + 1) == 0 && ent != NULL && *(s16 *)(ent + 0x46) == 0x146) {
+            if (b->chimeLatch == 0 && ent != NULL && *(s16 *)(ent + 0x46) == 0x146) {
                 if (far == 0) {
                     Sfx_PlayFromObject(obj, 0x7e);
                 }
-                b[1] = 1;
+                b->chimeLatch = 1;
             }
         }
     } else {
@@ -2694,14 +2808,14 @@ void pressureswitch_update(int obj)
         if (ac == 11 && (*gMapEventInterface)->getMode(ac) == 3 &&
             (tricky = getTrickyObject()) != NULL &&
             Vec_distance((char *)obj + 0x18, (char *)tricky + 0x18) < lbl_803E5D64) {
-            *b = 5;
+            b->holdTimer = 5;
         }
     }
     ac = *(s8 *)(obj + 0xac);
     if (ac == 11 && (*gMapEventInterface)->getMode(ac) == 1 && far == 0) {
-        if (*(s8 *)b != 0) {
+        if (b->holdTimer != 0) {
             f = *(f32 *)(t + 0xc) - *(f32 *)(obj + 0x10);
-            if (f > lbl_803E5D68 && f < lbl_803E5D6C && GameBit_Get(*(s16 *)(b + 4)) == 0) {
+            if (f > lbl_803E5D68 && f < lbl_803E5D6C && GameBit_Get(b->mapGameBit) == 0) {
                 GameBit_Set(0x905, 1);
             } else if (GameBit_Get(0x905) != 0) {
                 GameBit_Set(0x905, 0);
@@ -2711,7 +2825,7 @@ void pressureswitch_update(int obj)
         }
     }
     played = 0;
-    if (*(s8 *)b != 0) {
+    if (b->holdTimer != 0) {
         lim = *(f32 *)(t + 0xc) - lbl_803E5D6C;
         cur = *(f32 *)(obj + 0x10);
         if (cur < lim) {
@@ -2720,19 +2834,19 @@ void pressureswitch_update(int obj)
                 *(f32 *)(obj + 0x10) = lim;
             }
             GameBit_Set(*(s16 *)(t + 0x1c), 1);
-            if (((PswFlags *)(b + 6))->active) {
-                GameBit_Set(*(s16 *)(b + 4), 1);
+            if (((PswFlags *)&b->flags)->active) {
+                GameBit_Set(b->mapGameBit, 1);
             }
         } else {
             *(f32 *)(obj + 0x10) = -(lbl_803E5D74 * timeDelta - cur);
             if (*(f32 *)(obj + 0x10) < lim) {
                 *(f32 *)(obj + 0x10) = lim;
                 GameBit_Set(*(s16 *)(t + 0x1c), 1);
-                v = *(s16 *)(b + 4);
+                v = b->mapGameBit;
                 if (v != -1) {
                     GameBit_Set(v, 1);
-                    if (((PswFlags *)(b + 6))->active) {
-                        ((PswFlags *)(b + 6))->latched = 1;
+                    if (((PswFlags *)&b->flags)->active) {
+                        ((PswFlags *)&b->flags)->latched = 1;
                     }
                 }
             } else {
@@ -2740,7 +2854,7 @@ void pressureswitch_update(int obj)
             }
         }
     } else {
-        if (*(s16 *)(b + 2) == 0) {
+        if (b->retriggerTimer == 0) {
             *(f32 *)(obj + 0x10) = lbl_803E5D74 * timeDelta + *(f32 *)(obj + 0x10);
             if (*(f32 *)(obj + 0x10) > *(f32 *)(t + 0xc)) {
                 *(f32 *)(obj + 0x10) = *(f32 *)(t + 0xc);
@@ -2748,9 +2862,9 @@ void pressureswitch_update(int obj)
                 played = 1;
             }
             GameBit_Set(*(s16 *)(t + 0x1c), 0);
-            v = *(s16 *)(b + 4);
+            v = b->mapGameBit;
             if (v != -1) {
-                if (!((PswFlags *)(b + 6))->latched) {
+                if (!((PswFlags *)&b->flags)->latched) {
                     GameBit_Set(v, 0);
                 }
             }
@@ -2761,10 +2875,10 @@ void pressureswitch_update(int obj)
     } else {
         Sfx_StopObjectChannel(obj, 8);
     }
-    if (*(s16 *)(b + 2) != 0) {
-        *(s16 *)(b + 2) -= framesThisStep;
-        if (*(s16 *)(b + 2) < 0) {
-            *(s16 *)(b + 2) = 0;
+    if (b->retriggerTimer != 0) {
+        b->retriggerTimer -= framesThisStep;
+        if (b->retriggerTimer < 0) {
+            b->retriggerTimer = 0;
         }
     }
 }
@@ -2808,7 +2922,7 @@ void fn_801F2290(int obj)
     extern f32 lbl_803E5DAC;
     extern f32 lbl_803E5DB0;
     extern f32 lbl_803E5DB4;
-    char *b;
+    Dll200State *b;
     u8 m;
     s16 ang;
     s16 diff;
@@ -2819,54 +2933,54 @@ void fn_801F2290(int obj)
     IntVec3 stk;
     ObjAnimEventList animEvents;
 
-    b = *(char **)(obj + 0xb8);
+    b = *(Dll200State **)(obj + 0xb8);
     Obj_GetPlayerObject();
     stk = *(IntVec3 *)lbl_802C2470;
-    *(f32 *)(obj + 0x10) = *(f32 *)(b + 4);
+    *(f32 *)(obj + 0x10) = b->homeY;
     if (GameBit_Get(0x1fc) != 0) {
         *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
         if ((*(u8 *)(obj + 0xaf) & 1) != 0 &&
             (**(int (**)(IntVec3 *, int))(*gGameUIInterface + 0x24))(&stk, 3) > -1) {
             GameBit_Set(0x4d1, 1);
-            *(s8 *)(b + 0x27) += 1;
+            b->counter27 += 1;
             GameBit_Set(0x310, 1);
             buttonDisable(0, 0x100);
         }
     } else {
         *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
-        if (*(s16 *)(b + 0x20) <= 0) {
+        if (b->modeTimer <= 0) {
             switch (randomGetRange(1, 4)) {
             case 1:
-                b[0x23] = b[0x22];
-                *(u8 *)(b + 0x22) = 1;
-                *(s16 *)(b + 0x20) = 400;
+                b->prevMode = (u8)b->mode;
+                b->mode = 1;
+                b->modeTimer = 400;
                 break;
             case 2:
-                b[0x23] = b[0x22];
-                *(u8 *)(b + 0x22) = 2;
-                *(s16 *)(b + 0x20) = 400;
+                b->prevMode = (u8)b->mode;
+                b->mode = 2;
+                b->modeTimer = 400;
                 break;
             case 3:
-                b[0x23] = b[0x22];
-                *(u8 *)(b + 0x22) = 3;
-                *(s16 *)(b + 0x20) = 400;
+                b->prevMode = (u8)b->mode;
+                b->mode = 3;
+                b->modeTimer = 400;
                 break;
             case 4:
-                b[0x23] = b[0x22];
-                *(u8 *)(b + 0x22) = 4;
-                *(s16 *)(b + 0x20) = 400;
+                b->prevMode = (u8)b->mode;
+                b->mode = 4;
+                b->modeTimer = 400;
                 break;
             case 5:
-                b[0x23] = b[0x22];
-                *(u8 *)(b + 0x22) = 5;
-                *(s16 *)(b + 0x20) = 400;
+                b->prevMode = (u8)b->mode;
+                b->mode = 5;
+                b->modeTimer = 400;
                 break;
             }
         } else {
-            m = *(u8 *)(b + 0x22);
+            m = b->mode;
             if (m == 12) {
-                ang = getAngle(lbl_80328974[*(u8 *)(b + 0x23)].x,
-                               lbl_80328974[*(u8 *)(b + 0x23)].y);
+                ang = getAngle(lbl_80328974[b->prevMode].x,
+                               lbl_80328974[b->prevMode].y);
                 diff = (s16)(ang - *(s16 *)obj);
                 fn_80137948(sArwingAttachmentDiffFormat, diff);
                 if (diff < -1000 || diff > 1000) {
@@ -2876,46 +2990,46 @@ void fn_801F2290(int obj)
                         *(s16 *)obj = (s16)(*(s16 *)obj - framesThisStep * 100);
                     }
                 } else {
-                    ObjAnim_SetCurrentMove(obj, (int)lbl_80328974[*(u8 *)(b + 0x23)].moveId,
+                    ObjAnim_SetCurrentMove(obj, (int)lbl_80328974[b->prevMode].moveId,
                                            lbl_803E5D98, 0);
-                    *(f32 *)(b + 0xc) = lbl_80328974[*(u8 *)(b + 0x23)].speed;
-                    *(u8 *)(b + 0x22) = 13;
+                    b->animSpeed = lbl_80328974[b->prevMode].speed;
+                    b->mode = 13;
                 }
             } else if (m == 13) {
                 if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-                        (obj, *(f32 *)(b + 0xc), timeDelta, &animEvents) != 0) {
+                        (obj, b->animSpeed, timeDelta, &animEvents) != 0) {
                     if ((f32)(int)*(s16 *)(obj + 0xa0) ==
-                        lbl_80328974[*(u8 *)(b + 0x23)].moveId) {
+                        lbl_80328974[b->prevMode].moveId) {
                         ObjAnim_SetCurrentMove(obj,
-                                               (int)lbl_80328974[*(u8 *)(b + 0x23)].altMoveId,
+                                               (int)lbl_80328974[b->prevMode].altMoveId,
                                                lbl_803E5D98, 0);
-                        *(f32 *)(b + 0xc) = lbl_80328974[*(u8 *)(b + 0x23)].speed;
+                        b->animSpeed = lbl_80328974[b->prevMode].speed;
                     }
                 }
-                *(s16 *)(b + 0x20) -= framesThisStep;
-                if (*(s16 *)(b + 0x20) <= 0) {
-                    *(s16 *)(b + 0x20) = 0;
+                b->modeTimer -= framesThisStep;
+                if (b->modeTimer <= 0) {
+                    b->modeTimer = 0;
                 }
             } else {
-                dx = lbl_80328974[m].x - (*(f32 *)(obj + 0xc) - *(f32 *)b);
-                dy = lbl_80328974[m].y - (*(f32 *)(obj + 0x14) - *(f32 *)(b + 8));
+                dx = lbl_80328974[m].x - (*(f32 *)(obj + 0xc) - b->homeX);
+                dy = lbl_80328974[m].y - (*(f32 *)(obj + 0x14) - b->homeZ);
                 dist = sqrtf(dx * dx + dy * dy);
                 ang = getAngle(dx, dy);
                 diff = (s16)(ang - *(s16 *)obj);
                 if (diff >= -1000 && diff <= 1000) {
                     if (*(s16 *)(obj + 0xa0) != 59) {
                         ObjAnim_SetCurrentMove(obj, 59, lbl_803E5D98, 0);
-                        *(f32 *)(b + 0xc) = lbl_803E5DA8;
+                        b->animSpeed = lbl_803E5DA8;
                     }
                     spd = lbl_803E5DAC;
                     *(f32 *)(obj + 0x24) = spd * (dx / dist);
                     *(f32 *)(obj + 0x2c) = spd * (dy / dist);
                     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)
-                        (obj, spd, (float *)(b + 0xc));
+                        (obj, spd, &b->animSpeed);
                 } else {
                     if (*(s16 *)(obj + 0xa0) != 12) {
                         ObjAnim_SetCurrentMove(obj, 12, lbl_803E5D98, 0);
-                        *(f32 *)(b + 0xc) = lbl_803E5DB0;
+                        b->animSpeed = lbl_803E5DB0;
                     }
                     if (diff > 0) {
                         *(s16 *)obj = (s16)(*(s16 *)obj + framesThisStep * 300);
@@ -2924,8 +3038,8 @@ void fn_801F2290(int obj)
                     }
                 }
                 if (dist < lbl_803E5DB4) {
-                    b[0x23] = b[0x22];
-                    *(u8 *)(b + 0x22) = 12;
+                    b->prevMode = (u8)b->mode;
+                    b->mode = 12;
                     spd = lbl_803E5D98;
                     *(f32 *)(obj + 0x24) = spd;
                     *(f32 *)(obj + 0x2c) = spd;
@@ -2933,7 +3047,7 @@ void fn_801F2290(int obj)
                 *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
                 *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
                 ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-                    (obj, *(f32 *)(b + 0xc), timeDelta, &animEvents);
+                    (obj, b->animSpeed, timeDelta, &animEvents);
             }
         }
     }
