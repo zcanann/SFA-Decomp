@@ -273,7 +273,7 @@ extern f32 lbl_803DF380;
 extern void vecRotateZXY(void *obj, f32 *vec);
 extern void Camera_ProjectWorldPointWithOffset(f32 *ox, f32 *oy, f32 *oz, f32 x, f32 y, f32 z, f32 w);
 extern void Camera_NdcToScreen(int *sx, int *sy, int *sz, f32 x, f32 y, f32 z);
-extern int maybeReadDepthBuffer(int x, int y, void *obj);
+extern int depthReadRequestPoll(int x, int y, void *obj);
 extern int lbl_802C20EC[];
 extern int lbl_802C2104[];
 extern f32 gExpgfxFrameTimerA;

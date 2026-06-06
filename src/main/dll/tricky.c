@@ -3098,7 +3098,7 @@ extern int lbl_803DBAE8;
 extern char lbl_803DBB18, lbl_803DBB1C, lbl_803DBB20, lbl_803DBB24, lbl_803DBB28, lbl_803DBB2C, lbl_803DBB30, lbl_803DBB34, lbl_803DBB38;
 extern f32 Camera_GetFarPlane(void);
 extern f32 Camera_GetNearPlane(void);
-extern int maybeReadDepthBuffer(int x, int y, void *fn);
+extern int depthReadRequestPoll(int x, int y, void *fn);
 extern u16 lbl_803DD7EC;
 extern int lbl_803E1E2C;
 extern char sTrickyDebugXCoordFormat[];
@@ -3375,7 +3375,7 @@ void drawViewFinderHud(void) {
         {
             f32 farP = Camera_GetFarPlane();
             f32 nearP = Camera_GetNearPlane();
-            int depth = maybeReadDepthBuffer(0x140, 0xf0, (void *)drawViewFinderHud);
+            int depth = depthReadRequestPoll(0x140, 0xf0, (void *)drawViewFinderHud);
             f32 dist = (-farP * nearP) / (((f32)(u32)depth / lbl_803E1F94 - lbl_803E1E68) * (farP - nearP) - nearP);
             if (dist > lbl_803E1E3C && dist < lbl_803E1F98) {
                 sprintf(buf, &lbl_803DBB40, dist / lbl_803E1EC4);

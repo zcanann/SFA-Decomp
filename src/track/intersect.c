@@ -903,7 +903,7 @@ void mapInitFn_8006fccc(void)
 /*
  * --INFO--
  *
- * Function: maybeReadDepthBuffer
+ * Function: depthReadRequestPoll
  * EN v1.0 Address: 0x8006F690
  * EN v1.0 Size: 212b
  * EN v1.1 Address: 0x8006FF74
@@ -915,7 +915,10 @@ void mapInitFn_8006fccc(void)
  */
 #pragma peephole off
 #pragma scheduling off
-int maybeReadDepthBuffer(int x, int y, int id)
+/* Queues a GXPeekZ read at (x,y) tagged by an opaque requestKey (callers pass
+ * any unique value - object ptrs, loop indices, even a function address) and
+ * returns the previously completed result for that key, 0 until ready. */
+int depthReadRequestPoll(int x, int y, int requestKey)
 {
     bool ok;
     u8* row;
@@ -935,14 +938,14 @@ int maybeReadDepthBuffer(int x, int y, int id)
             u8* slot = (u8*)&gDepthReadPendingQueue + n * 0xC;
             *(u16*)(slot + 0x0) = (u16)x;
             *(u16*)(slot + 0x2) = (u16)y;
-            *(int*)(slot + 0x8) = id;
+            *(int*)(slot + 0x8) = requestKey;
             gDepthReadPendingCount++;
         }
         i = 0;
         row = (u8*)&gDepthReadResults;
         n = (u32)gDepthReadResultCount;
         while (n != 0) {
-            if (id == *(int*)(row + 0x8)) {
+            if (requestKey == *(int*)(row + 0x8)) {
                 found = (int*)((u8*)&gDepthReadResults + i * 0xC);
                 return found[1];
             }

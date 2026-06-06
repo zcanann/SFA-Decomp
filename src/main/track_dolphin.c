@@ -6587,7 +6587,7 @@ extern void fn_800897D4(int a, f32 *x, f32 *y, f32 *z);
 extern void skyBuildSunModelMatrix(f32 *out);
 extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 *ox, f32 *oy, f32 *oz);
 extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int *ox, int *oy, int *oz);
-extern int maybeReadDepthBuffer(int x, int y, void *p);
+extern int depthReadRequestPoll(int x, int y, void *p);
 extern int pauseMenuGetState(void);
 extern void fn_8008912C(void);
 extern void getAmbientColor(int a, u8 *r, u8 *g, u8 *b);
@@ -6660,7 +6660,7 @@ void renderGlows(void)
                 lbl_803DCE14 = 0x1e0 - lbl_803DCE0C;
             occ = 0;
             for (i = 0; i < 5; i++) {
-                int d = maybeReadDepthBuffer(sx + lbl_8030E634[i * 2], sy + lbl_8030E634[i * 2 + 1], (void *)i);
+                int d = depthReadRequestPoll(sx + lbl_8030E634[i * 2], sy + lbl_8030E634[i * 2 + 1], (void *)i);
                 if (sz <= d && pauseMenuGetState() == 0)
                     occ++;
             }
@@ -6717,7 +6717,7 @@ void renderGlows(void)
                                                e->worldZ - playerMapOffsetZ,
                                                e->glowProjectionRadius, &px, &py, &pz);
             Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
-            d = maybeReadDepthBuffer(sx, sy, e);
+            d = depthReadRequestPoll(sx, sy, e);
             if (sz <= d && pauseMenuGetState() == 0)
                 e->glowAlphaStep = 0x10;
             else

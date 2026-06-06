@@ -607,7 +607,7 @@ void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32
                 ((GameObject *)obj)->anim.worldPosZ - playerMapOffsetZ, lbl_803DF384);
         }
         Camera_NdcToScreen(&screen[2], &screen[1], &screen[0], proj[2], proj[1], proj[0]);
-        depth = maybeReadDepthBuffer(screen[2], screen[1], obj);
+        depth = depthReadRequestPoll(screen[2], screen[1], obj);
         if (screen[0] > depth) {
             switch (mode) {
             case 1:

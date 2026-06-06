@@ -4599,7 +4599,7 @@ extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy
 extern void objRotateFn_8003bce8(f32 *m, s16 *a, s16 *b, s16 *c);
 extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 *a, f32 *b, f32 *c);
 extern void Camera_NdcToScreen(f32 a, f32 b, f32 c, int *x, int *y, int *z);
-extern int maybeReadDepthBuffer(int x, int y, int *obj);
+extern int depthReadRequestPoll(int x, int y, int *obj);
 extern void objShadowFn_8006c5f0(int *obj, int *a, f32 *b, int *c, int *d);
 extern void hudDrawColored(int a, int b, int c, u32 *col, int d, int e);
 void objMtxFn_80041104(f32 *mtx, f32 *out, s16 *in, int flag, int *obj, int e);
@@ -4838,7 +4838,7 @@ void objRenderModel(int *obj) {
         *(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8),
         &px, &py, &pz);
     Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
-    if (sz <= maybeReadDepthBuffer(sx, sy, obj)) {
+    if (sz <= depthReadRequestPoll(sx, sy, obj)) {
         *(s16 *)(*(int *)((char *)obj + 0x64) + 0x36) = 0x20;
     } else {
         *(s16 *)(*(int *)((char *)obj + 0x64) + 0x36) = -0x20;

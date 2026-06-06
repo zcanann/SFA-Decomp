@@ -10,7 +10,7 @@ void drawFn_8006f500(void);
 void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type);
 void fn_8006FC00(int param_1);
 void mapInitFn_8006fccc(void);
-int maybeReadDepthBuffer(int x, int y, int id);
+int depthReadRequestPoll(int x, int y, int id);
 uint getScreenResolution(void);
 void setScreenWidth(u32 param_1);
 void clearScreenWidth(void);
