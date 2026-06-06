@@ -2321,6 +2321,108 @@ pointer local positions a stack array's base web in decl order where the
 bare array's base web is created first regardless of decl position
 (mtx44_multSafe 52.43->100).
 
+101. **dtk PHANTOM BOUNDARY symbols: a ~50-60% fn whose missing tail is a
+    zero-reference gap/sibling symbol = a symbols.txt SIZE fix, not a code
+    problem.** Two confirmed shapes: (a) a noreturn-style fn whose dead
+    MWCC auto-epilogue retail kept inline got split into a separate phantom
+    fn (OSReboot Run 54.5->100: retail Run = body + dead fralloc epilogue,
+    dtk split the 20-byte tail into fn_80244C78 with ZERO refs anywhere;
+    merged via size 0x2C->0x40); (b) a 2-instruction leaf split mid-fn into
+    fn + gap_XX_text (wctrexstatu_getExtraSize size 0x4 + gap holding the
+    blr; every sibling getExtraSize is 0x8). SANCTIONED procedure (team-lead
+    ratified): size/boundary corrections are allowed -- distinct from the
+    banned TYPE retyping -- when the absorbed symbol has zero references
+    anywhere AND the merged span is byte-verified against the retail dol.
+    Cheap-win class hiding in the 50-60%% tier; check sibling fns' sizes.
+
+102. **Scan-loop found-flag idiom: `found = 1; goto checked;` in-loop +
+    `found = 0;` on fallthrough + `checked:` label -- with `int found`,
+    NO pre-loop init.** Target tell: no `li rX,0` before the loop, `li 1; b`
+    at the hit, `li 0` after the loop tail, `cmpwi` on the test. The
+    import's `found = 0;` pre-init + `break` form emits an extra li and a
+    cmplwi (u32 found). Three audio fns matched on this
+    (Sfx_AddLoopedObjectSound 89->95, Sfx_KeepAliveLoopedObjectSoundLimited
+    82.7->98.8, Music_Trigger's scan). Sibling form: when the loop's found
+    RESULT is the walker pointer itself, drop the flag entirely --
+    `goto found; ... ptr = NULL; found: if (ptr ...)` (Music_Trigger,
+    Music_LoadChannelForTrigger). Related width note: a u64 local
+    initialized from an INT-typed expression (`bestAge = (mode == 2) ? 0 :
+    -1;`) emits per-arm `li` + ONE shared `srawi hi,lo,31` sign-extension,
+    where u64-typed constants emit two `li`s per arm
+    (Sfx_FindObjectChannel 78.9->100).
+
+103. **Repeated branchy ternaries CSE at TREE level -- statement-split
+    if/else + #40 embedded bound assignment reproduces target's
+    double-evaluation.** When target evaluates `(t > K ? t : K)` TWICE
+    (two fcmpo/branch diamonds, the constant load CSE'd but not the
+    ternary), a single expression `(t > K ? t : K) > L ? L : (t > K ? t :
+    K)` folds to ONE evaluation -- MWCC shares the repeated subtree before
+    lowering. The escape: spell it as `if ((t > K ? t : K) > (t2 = L)) {}
+    else { t2 = (t > K ? t : K); }` -- separate STATEMENTS defeat the tree
+    share, the embedded `(t2 = L)` in the condition places the bound's load
+    at target's position AND coalesces the result web onto the bound's reg
+    (empty then-arm, fmr only in the recompute arms).
+    (Sfx_GetListenerRelativeDistance; #26/#40/#63 family.)
+
+104. **Self-reassign accumulator chains pin FP product groups (#85
+    extension): plain single-use product temps copy-propagate AWAY; the
+    in-place form survives.** When target computes ALL of a group's fmuls
+    before the fadds/fsubs pair (x*ca, z*ca, x*sa, z*sa, add, sub), 4
+    fresh temps fold back into 2-op expressions and reorder. Write
+    `t0 = x*ca; t1 = z*ca; A = x*sa; p = z*sa; A = A + t1; p = p - t0;` --
+    the A/p SELF-reassignments pin evaluation order and keep all four
+    products live. Carry a variable's web through phases by reusing it
+    (`p = p * sb; ... p = p + t0; v[2] = p;` -- p's reg becomes C with no
+    fmr). Sfx_RotateVectorByAngles 84.7->98.8.
+
+**NAMED CAP -- member-address reassociation on address ARGS (the audio
+memmove family).** Target computes `&table->member[idx]` as `slwi; add
+base,idx; addi +memberOff` (add-then-addi); our compile of the SAME
+expression emits `slwi; addi +memberOff; add base` when idx is a
+clrlwi'd/bounded web. Probed inert: raw-sum spelling `(u8 *)table + idx *
+size + OFF`, int/u16/s16 index retypes, n-local size precompute,
+member/array spellings (6+ forms, 3 fns). Reassociation is VN-internal.
+~2 instrs per address arg; classify on sight, don't re-probe.
+(Sfx_RemoveLoopedObjectSound/ForObject, Sfx_UpdateLoopedObjectSounds.)
+
+**Recipe #92 caveat STRENGTHENED (audio probe session + MP4 cross-check):
+the int-compare branch-over-branch (`cmp; bne +8; b far`) in LOOP-BREAK
+position is NOT source-reproducible for VARIABLE compares.** Additionally
+probed and folded: `if (!=) {ch++;} else goto found;`, the empty-then
+variant, `do { if (!=) break; goto found; } while (0);`, and a single-case
+`switch` (which also degrades the addis/cmplwi ==-1u idiom to plain cmpwi).
+MP4 cross-check: 377 int-compare instances of the shape across the matched
+corpus are ALL switch-lowering compare-chains (multi-case), ZERO from
+if-in-loop. Cost model: ~1 instr x unroll factor on every unrolled scan
+loop -- this names the score FLOOR of the audio 85-93 band
+(Sfx_AllocObjectChannel x8, Music_LoadChannelForTrigger x17 copies).
+Skip on sight.
+
+## Flipping a unit to MatchingFor (team-lead-adopted standard)
+
+100%% objdiff fuzzy is NOT flip-sufficient -- objdiff scores per-symbol
+regardless of .o layout and pool placement. Before any NonMatching ->
+MatchingFor flip (status edits remain the team-lead's):
+
+1. **Symbol layout**: `objdump -t` the unit's .o; every fn's offset/size
+   must equal the symbols.txt address deltas (source fn ORDER must mirror
+   address order -- a swapped pair shifts the whole linked unit; objdiff
+   still says 100%%).
+2. **Pool claim**: `objdump -h` for non-empty .sdata2/.sdata/.data. Any
+   compiler-emitted pool entries (int->f32 biases, float literals) need the
+   TU's retail pool range claimed in splits.txt and our .o's pool bytes ==
+   retail's at that range (arwproximit: claiming
+   `.sdata2 0x803E7208-0x803E7218` made the 2 f64 biases link at retail's
+   addresses; the unreferenced float slice stayed in the auto unit).
+3. **Post-flip gate**: DEFAULT-target build (report-only builds do NOT
+   relink main.dol -- stale-dol trap), byte-compare the unit's dol region
+   against orig/GSAE01/sys/main.dol, and confirm the dol md5. "dol changed
+   after a flip" is never self-evidently fine.
+
+(arwproximit case study: the premature flip shifted the unit +4B (fn order)
+and appended duplicate pool entries at a fresh sdata2 address -- 440+2
+diverged words vs retail, invisible to objdiff and to a report-only gate.)
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
