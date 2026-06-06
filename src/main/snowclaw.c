@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
@@ -102,8 +103,8 @@ void snowclaw_initialise(void) {}
 #pragma scheduling off
 #pragma peephole off
 void snowclaw_free(int obj) {
-    if (*(void **)(obj + 0xc8) != NULL) {
-        Obj_FreeObject(*(int *)(obj + 0xc8));
+    if (((GameObject *)obj)->unkC8 != NULL) {
+        Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
     }
 }
 #pragma peephole reset
@@ -176,19 +177,19 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
         *(u8 *)(obj2 + 0x5) = 1;
         *(u8 *)(obj2 + 0x7) = 0xff;
         *(s8 *)(obj2 + 0x19) = (s8)b;
-        *(f32 *)(obj2 + 0x8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(obj2 + 0xc) = lbl_803E66E0 + *(f32 *)(obj + 0x10);
-        *(f32 *)(obj2 + 0x10) = *(f32 *)(obj + 0x14);
-        *(s8 *)(obj2 + 0x18) = (s8)(u8)((((getAngle(*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc),
-                                                   *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) & 0xffff) >> 8) + 0x8000) >> 8);
+        *(f32 *)(obj2 + 0x8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(obj2 + 0xc) = lbl_803E66E0 + ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(obj2 + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        *(s8 *)(obj2 + 0x18) = (s8)(u8)((((getAngle(((GameObject *)player)->anim.localPosX - ((GameObject *)obj)->anim.localPosX,
+                                                   ((GameObject *)player)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ) & 0xffff) >> 8) + 0x8000) >> 8);
         Sfx_PlayFromObject(obj, SFXswapstone_mumble);
         switch ((u8)b) {
         case 0:
             *(s16 *)(obj2 + 0x1a) = (s16)lbl_803DDD38;
             break;
         case 1:
-            *(s16 *)(obj2 + 0x1a) = (s16)(getAngle(*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc),
-                                                    *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) + 0x8000);
+            *(s16 *)(obj2 + 0x1a) = (s16)(getAngle(((GameObject *)player)->anim.localPosX - ((GameObject *)obj)->anim.localPosX,
+                                                    ((GameObject *)player)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ) + 0x8000);
             break;
         }
         spawned = loadObjectAtObject(obj, obj2);
@@ -215,7 +216,7 @@ void snowclaw_updateMountAttack(int obj, int mount) {
     int moveId;
     int delay;
 
-    inner = *(char **)(obj + 0xb8);
+    inner = ((GameObject *)obj)->extra;
     movePhase = (*(f32 (*)(int, f32 *))(*(int *)(*(int *)(*(int *)(mount + 0x68)) + 0x44)))(mount, &moveStep);
     moveStep = lbl_803DC224 + lbl_803E66E4 * (movePhase * lbl_803DC224);
     (*(void (*)(int, f32 *, int *))(*(int *)(*(int *)(*(int *)(mount + 0x68)) + 0x40)))(mount, &mountPhase, &mountFlag);
@@ -224,7 +225,7 @@ void snowclaw_updateMountAttack(int obj, int mount) {
         magnitude = -magnitude;
     }
 
-    if (mountFlag != 0 && *(s16 *)(obj + 0xa0) == *(u16 *)(inner + 0xa8)) {
+    if (mountFlag != 0 && ((GameObject *)obj)->anim.currentMove == *(u16 *)(inner + 0xa8)) {
         Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj,
                                             *(u16 *)(inner + 0xa8) + 1, magnitude);
     } else {
@@ -233,7 +234,7 @@ void snowclaw_updateMountAttack(int obj, int mount) {
     }
 
     if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, moveStep, (f32)(u8)framesThisStep, NULL) != 0 &&
-        *(s16 *)(obj + 0xa0) != *(u16 *)(inner + 0xa8)) {
+        ((GameObject *)obj)->anim.currentMove != *(u16 *)(inner + 0xa8)) {
         *(f32 *)(inner + 0x30) = lbl_803E66EC;
         delay = *(int *)(inner + 0x9c);
         if (delay < 1) {
@@ -281,25 +282,25 @@ void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p
         (*(void (*)(int, int, int, int, int, int))(*(int *)(*(int *)(*(int *)(sub + 0x68)) + 0x10)))(sub, p2, p3, p4, p5, -1);
         *(u8 *)(sub + 0x37) = saved;
     }
-    *(f32 *)(obj + 0x8c) = *(f32 *)(obj + 0x18);
-    *(f32 *)(obj + 0x90) = *(f32 *)(obj + 0x1c);
-    *(f32 *)(obj + 0x94) = *(f32 *)(obj + 0x20);
-    *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
-    *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
-    *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+    ((GameObject *)obj)->anim.previousWorldPosX = ((GameObject *)obj)->anim.worldPosX;
+    ((GameObject *)obj)->anim.previousWorldPosY = ((GameObject *)obj)->anim.worldPosY;
+    ((GameObject *)obj)->anim.previousWorldPosZ = ((GameObject *)obj)->anim.worldPosZ;
+    ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosX;
+    ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
     (*(void (*)(int, f32 *, f32 *, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x68)) + 0x28)))(sub, &va, &vb, &vc);
-    *(f32 *)(obj + 0xc) = va;
-    *(f32 *)(obj + 0x10) = vb;
-    *(f32 *)(obj + 0x14) = vc;
-    *(s16 *)(obj + 0x0) = *(s16 *)(sub + 0x0);
-    *(s16 *)(obj + 0x2) = *(s16 *)(sub + 0x2);
-    *(s16 *)(obj + 0x4) = *(s16 *)(sub + 0x4);
-    *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
-    *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
-    *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
-    *(f32 *)(obj + 0x24) = *(f32 *)(sub + 0x24);
-    *(f32 *)(obj + 0x28) = *(f32 *)(sub + 0x28);
-    *(f32 *)(obj + 0x2c) = *(f32 *)(sub + 0x2c);
+    ((GameObject *)obj)->anim.localPosX = va;
+    ((GameObject *)obj)->anim.localPosY = vb;
+    ((GameObject *)obj)->anim.localPosZ = vc;
+    ((GameObject *)obj)->anim.rotX = *(s16 *)(sub + 0x0);
+    ((GameObject *)obj)->anim.rotY = *(s16 *)(sub + 0x2);
+    ((GameObject *)obj)->anim.rotZ = *(s16 *)(sub + 0x4);
+    ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
+    ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
+    ((GameObject *)obj)->anim.velocityX = *(f32 *)(sub + 0x24);
+    ((GameObject *)obj)->anim.velocityY = *(f32 *)(sub + 0x28);
+    ((GameObject *)obj)->anim.velocityZ = *(f32 *)(sub + 0x2c);
 }
 #pragma dont_inline reset
 #pragma peephole reset
@@ -316,7 +317,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
     int near;
 
     dist = lbl_803E6708;
-    inner = *(int **)(obj + 0xb8);
+    inner = ((GameObject *)obj)->extra;
     sub = *(int *)inner;
     if (*(u8 *)((char *)obj + 0x36) < 5) {
         *(f32 *)((char *)inner + 0xac) = lbl_803E66F0;
@@ -378,7 +379,7 @@ void snowclaw_hitDetect(int obj) {
     int hit;
     s8 a5;
 
-    inner = *(int **)(obj + 0xb8);
+    inner = ((GameObject *)obj)->extra;
     dist = lbl_803E6720;
     sub = *(int **)inner;
     if (sub == 0) {
@@ -464,7 +465,7 @@ void snowclaw_update(int obj) {
     SnowClawAnimTbl dropTable;
 
     pulseTable = lbl_802C2520;
-    inner = *(char **)(obj + 0xb8);
+    inner = ((GameObject *)obj)->extra;
     if (*(u8 *)(inner + 0xa1) != 0 && (u32)((*(u8 *)(inner + 0xaa) >> 6) & 1) != 0) {
         *(f32 *)(inner + 0xac) = lbl_803E66F0;
     }
@@ -474,7 +475,7 @@ void snowclaw_update(int obj) {
     healthState = *(s8 *)(inner + 0xa4);
     if (healthState < 0) {
         if (healthState < -10) {
-            *(s16 *)(obj + 6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
             *(s16 *)(*(int *)inner + 6) |= 0x4000;
             ObjHits_DisableObject(obj);
             ObjHits_DisableObject(*(int *)inner);
@@ -492,23 +493,23 @@ void snowclaw_update(int obj) {
 
     dropTable = *(SnowClawAnimTbl *)(pulseTable + 8);
     if (*(s8 *)(inner + 0xa2) != *(s8 *)(inner + 0xa3)) {
-        if (*(void **)(obj + 0xc8) != NULL) {
-            Obj_FreeObject(*(int *)(obj + 0xc8));
-            *(int *)(obj + 0xc8) = 0;
-            *(u8 *)(obj + 0xeb) = 0;
+        if (((GameObject *)obj)->unkC8 != NULL) {
+            Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
+            *(int *)&((GameObject *)obj)->unkC8 = 0;
+            ((GameObject *)obj)->unkEB = 0;
         }
         if (*(s8 *)(inner + 0xa2) > 0 && Obj_IsLoadingLocked() != 0) {
-            *(int *)(obj + 0xc8) =
+            *(int *)&((GameObject *)obj)->unkC8 =
                 Obj_SetupObject(Obj_AllocObjectSetup(0x18, dropTable.v[*(s8 *)(inner + 0xa2)]),
-                                4, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
-            *(u8 *)(obj + 0xeb) = 1;
+                                4, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+            ((GameObject *)obj)->unkEB = 1;
         }
         *(u8 *)(inner + 0xa3) = *(u8 *)(inner + 0xa2);
     }
 
     if (*(void **)inner == NULL) {
         objects = ObjGroup_GetObjects(0xa, &objectCount);
-        targetType = seqStreamLookupFn_8007fff8(lbl_8032A310, 6, *(s16 *)(obj + 0x46));
+        targetType = seqStreamLookupFn_8007fff8(lbl_8032A310, 6, ((GameObject *)obj)->anim.seqId);
         for (i = 0; i < objectCount; i++) {
             if (*(s16 *)(objects[i] + 0x46) == targetType) {
                 *(int *)inner = objects[i];
@@ -523,12 +524,12 @@ void snowclaw_update(int obj) {
 
     sub = *(int **)inner;
     if (sub != 0 && *(s8 *)(inner + 0xa4) != 0 &&
-        *(s16 *)(obj + 0xa0) == *(u16 *)(inner + 0xa8) && fn_801EC9F4((int)sub) != 0 &&
+        ((GameObject *)obj)->anim.currentMove == *(u16 *)(inner + 0xa8) && fn_801EC9F4((int)sub) != 0 &&
         timerCountDown(inner + 0x98) != 0) {
         choice = randomGetRange(0, 1);
         *(int *)(inner + 0x94) = *(u16 *)(inner + 0xa8) + 5;
         turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, Obj_GetPlayerObject(), 0) >> 31;
-        if (turnSign == 0 || *(s16 *)(obj + 0x46) == 0x389) {
+        if (turnSign == 0 || ((GameObject *)obj)->anim.seqId == 0x389) {
             ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                 (obj, *(u16 *)(inner + 0xa8) + 6, lbl_803E66F0, 0);
             snowclaw_spawnDropBomb(*(int *)inner, obj, (u8)choice, 2);

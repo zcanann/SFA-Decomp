@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
@@ -484,9 +485,9 @@ void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,ObjHitsSkeletonH
   float local_78;
   float local_74;
   
-  local_dc = *(float *)(obj + 0x18) - *(float *)(obj + 0x8c);
-  local_d8 = *(float *)(obj + 0x10) - *(float *)(obj + 0x90);
-  local_d4 = *(float *)(obj + 0x20) - *(float *)(obj + 0x94);
+  local_dc = ((GameObject *)obj)->anim.worldPosX - ((GameObject *)obj)->anim.previousWorldPosX;
+  local_d8 = ((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousWorldPosY;
+  local_d4 = ((GameObject *)obj)->anim.worldPosZ - ((GameObject *)obj)->anim.previousWorldPosZ;
   dVar7 = radius;
   dVar6 = Vec3_Length(&local_dc);
   local_dc = (float)(local_dc * t);
@@ -1355,8 +1356,8 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   uint local_174;
   
   local_1a8 = 0;
-  iVar25 = *(int *)(objA + 0x54);
-  iVar24 = *(int *)(objB + 0x54);
+  iVar25 = *(int *)&((GameObject *)objA)->anim.hitReactState;
+  iVar24 = *(int *)&((GameObject *)objB)->anim.hitReactState;
   local_198 = *(int *)(srcObj + 0x54);
   if ((((*(byte *)(local_198 + 0xb6) & 0x10) == 0) ||
       ((*(char *)(local_198 + 0xaf) == '\0' && (*(char *)(local_198 + 0xae) == '\0')))) &&
@@ -1372,9 +1373,9 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
       local_190 = auStack_248;
       bVar6 = (*(byte *)(iVar25 + 0xb6) & 2) != 0;
       fVar2 = (f32)*(s16 *)(iVar25 + 100);
-      local_214 = (float)(*(float *)(objA + 0x18) - playerMapOffsetX);
+      local_214 = (float)(((GameObject *)objA)->anim.worldPosX - playerMapOffsetX);
       local_210 = *(undefined4 *)(objA + 0x1c);
-      local_20c = (float)(*(float *)(objA + 0x20) - playerMapOffsetZ);
+      local_20c = (float)(((GameObject *)objA)->anim.worldPosZ - playerMapOffsetZ);
       local_1f4 = (float)(*(float *)(iVar25 + 0x1c) - playerMapOffsetX);
       local_1f0 = *(undefined4 *)(iVar25 + 0x20);
       local_1ec = (float)(*(float *)(iVar25 + 0x24) - playerMapOffsetZ);
@@ -1397,7 +1398,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
       } else {
         fVar2 = *(float *)(iVar25 + 0x34);
       }
-      if ((*(ushort *)(objA + 6) & 0x4000) != 0) goto LAB_80033418;
+      if ((*(ushort *)&((GameObject *)objA)->anim.flags & 0x4000) != 0) goto LAB_80033418;
     }
     dVar44 = fVar2;
     if (((checkA == '\0') || ((*(byte *)(iVar24 + 0xb6) & 0x10) == 0)) &&
@@ -1407,9 +1408,9 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
       local_194 = auStack_230;
       bVar7 = (*(byte *)(iVar24 + 0xb6) & 2) != 0;
       fVar2 = (f32)*(s16 *)(iVar24 + 100);
-      local_204 = (float)(*(float *)(objB + 0x18) - playerMapOffsetX);
+      local_204 = (float)(((GameObject *)objB)->anim.worldPosX - playerMapOffsetX);
       local_200 = *(undefined4 *)(objB + 0x1c);
-      local_1fc = (float)(*(float *)(objB + 0x20) - playerMapOffsetZ);
+      local_1fc = (float)(((GameObject *)objB)->anim.worldPosZ - playerMapOffsetZ);
       local_1e8 = local_218;
       local_1e4 = (float)(*(float *)(iVar25 + 0x1c) - playerMapOffsetX);
       local_1e0 = *(undefined4 *)(iVar25 + 0x20);
@@ -1426,15 +1427,15 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
       local_188 = (float *)piVar11[0x14];
       local_194 = *(undefined **)(iVar16 + 0x58);
       fVar2 = *(float *)(iVar24 + 0x34);
-      if ((*(ushort *)(objB + 6) & 0x4000) != 0) goto LAB_80033418;
+      if ((*(ushort *)&((GameObject *)objB)->anim.flags & 0x4000) != 0) goto LAB_80033418;
     }
     dVar42 = fVar2;
     if ((0x40 < local_174) || (0x40 < local_178)) {
       debugPrintf(sObjHitsTooManyHitSpheresWarning);
     }
-    dVar41 = (*(float *)(objA + 0x18) - *(float *)(objB + 0x18));
-    dVar40 = (*(float *)(objA + 0x1c) - *(float *)(objB + 0x1c));
-    dVar39 = (*(float *)(objA + 0x20) - *(float *)(objB + 0x20));
+    dVar41 = (((GameObject *)objA)->anim.worldPosX - ((GameObject *)objB)->anim.worldPosX);
+    dVar40 = (((GameObject *)objA)->anim.worldPosY - ((GameObject *)objB)->anim.worldPosY);
+    dVar39 = (((GameObject *)objA)->anim.worldPosZ - ((GameObject *)objB)->anim.worldPosZ);
     dVar32 = sqrtf((float)(dVar39 * dVar39 +
                                          (float)(dVar41 * dVar41 +
                                                         (float)(dVar40 * dVar40))));
@@ -1706,11 +1707,11 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
       }
       else {
         if (((*(ushort *)(iVar25 + 0x60) & 0x80) != 0) &&
-           (objA = *(int *)(objA + 0x54), objA != 0)) {
+           (objA = *(int *)&((GameObject *)objA)->anim.hitReactState, objA != 0)) {
           *(ushort *)(objA + 0x60) = *(ushort *)(objA + 0x60) & ~1;
         }
         if (((*(ushort *)(iVar24 + 0x60) & 0x80) != 0) &&
-           (objA = *(int *)(objB + 0x54), objA != 0)) {
+           (objA = *(int *)&((GameObject *)objB)->anim.hitReactState, objA != 0)) {
           *(ushort *)(objA + 0x60) = *(ushort *)(objA + 0x60) & ~1;
         }
       }
@@ -1768,8 +1769,8 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
   uint mask;
   u8 result;
 
-  stateA = *(ObjHitsPriorityState **)(objA + 0x54);
-  stateB = *(ObjHitsPriorityState **)(objB + 0x54);
+  stateA = (ObjHitsPriorityState *)((GameObject *)objA)->anim.hitReactState;
+  stateB = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
   if (attA != 0) {
     attStateA = *(ObjHitsPriorityState **)(attA + 0x54);
   } else {
@@ -1782,7 +1783,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
   }
   result = 0;
   if ((stateA->objectHitMask != 0) && (*(s8 *)((int)stateA + 0x70) == 0)) {
-    if (*(s16 *)(objA + 0x44) == 1) {
+    if (((GameObject *)objA)->anim.classId == 1) {
       hitboxBuf = ObjHits_GetActiveModel(objA);
       bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
       if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
@@ -1821,14 +1822,14 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
         (mask = stateA->objectHitMask & 0xf, mask != 0)) {
       result = ObjHits_CheckHitVolumes(attA, objB, objA, 1, 0, mask, stateA->skeletonHitMask & 0xf);
     }
-    if ((result == 0) && (*(s16 *)(objA + 0x44) == 1)) {
+    if ((result == 0) && (((GameObject *)objA)->anim.classId == 1)) {
       doNothing_800333C8(objA, objB, attA, stateA, attStateA, dt);
     }
   }
   result = 0;
   if (((stateB->sourceMask & 0x80) == 0) && (stateB->objectHitMask != 0) &&
       (*(s8 *)((int)stateB + 0x70) == 0)) {
-    if (*(s16 *)(objB + 0x44) == 1) {
+    if (((GameObject *)objB)->anim.classId == 1) {
       hitboxBuf = ObjHits_GetActiveModel(objB);
       bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
       if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
@@ -1867,7 +1868,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
         (mask = stateB->objectHitMask & 0xf, mask != 0)) {
       result = ObjHits_CheckHitVolumes(attB, objA, objB, 1, 0, mask, stateB->skeletonHitMask & 0xf);
     }
-    if ((result == 0) && (*(s16 *)(objB + 0x44) == 1)) {
+    if ((result == 0) && (((GameObject *)objB)->anim.classId == 1)) {
       doNothing_800333C8(objB, objA, attB, stateB, attStateB, dt);
     }
   }
@@ -1945,86 +1946,86 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
   f32 invBlend;
 
   ObjContact_DispatchCallbacks(objA, objB);
-  stateA = *(ObjHitsPriorityState **)(objA + 0x54);
-  stateB = *(ObjHitsPriorityState **)(objB + 0x54);
+  stateA = (ObjHitsPriorityState *)((GameObject *)objA)->anim.hitReactState;
+  stateB = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
   stateA->flags = stateA->flags | 8;
   stateB->flags = stateB->flags | 8;
   *(int *)stateA = objB;
   *(int *)stateB = objA;
-  if (*(int *)(objA + 0x30) != 0) {
-    Obj_TransformWorldVectorToLocal(x, y, z, &localAx, &localAy, &localAz, *(int *)(objA + 0x30));
+  if (*(int *)&((GameObject *)objA)->anim.parent != 0) {
+    Obj_TransformWorldVectorToLocal(x, y, z, &localAx, &localAy, &localAz, *(int *)&((GameObject *)objA)->anim.parent);
   } else {
     localAx = x;
     localAy = y;
     localAz = z;
   }
-  if (*(int *)(objB + 0x30) != 0) {
-    Obj_TransformWorldVectorToLocal(x, y, z, &localBx, &localBy, &localBz, *(int *)(objB + 0x30));
+  if (*(int *)&((GameObject *)objB)->anim.parent != 0) {
+    Obj_TransformWorldVectorToLocal(x, y, z, &localBx, &localBy, &localBz, *(int *)&((GameObject *)objB)->anim.parent);
   } else {
     localBx = x;
     localBy = y;
     localBz = z;
   }
-  if ((*(s16 *)(objA + 0x44) == 1) && (stateA->lateralResponseWeight != 0) &&
+  if ((((GameObject *)objA)->anim.classId == 1) && (stateA->lateralResponseWeight != 0) &&
       ((stateB->flags & 0x400) == 0)) {
-    *(f32 *)(objA + 0xc) = *(f32 *)(objA + 0xc) - localAx;
-    *(f32 *)(objA + 0x10) = *(f32 *)(objA + 0x10) - localAy;
-    *(f32 *)(objA + 0x14) = *(f32 *)(objA + 0x14) - localAz;
+    ((GameObject *)objA)->anim.localPosX = ((GameObject *)objA)->anim.localPosX - localAx;
+    ((GameObject *)objA)->anim.localPosY = ((GameObject *)objA)->anim.localPosY - localAy;
+    ((GameObject *)objA)->anim.localPosZ = ((GameObject *)objA)->anim.localPosZ - localAz;
     if (flag != 0) {
-      *(f32 *)(objA + 0x18) = *(f32 *)(objA + 0x18) - x;
-      *(f32 *)(objA + 0x1c) = *(f32 *)(objA + 0x1c) - y;
-      *(f32 *)(objA + 0x20) = *(f32 *)(objA + 0x20) - z;
+      ((GameObject *)objA)->anim.worldPosX = ((GameObject *)objA)->anim.worldPosX - x;
+      ((GameObject *)objA)->anim.worldPosY = ((GameObject *)objA)->anim.worldPosY - y;
+      ((GameObject *)objA)->anim.worldPosZ = ((GameObject *)objA)->anim.worldPosZ - z;
     } else {
-      Obj_TransformLocalPointToWorld(*(f32 *)(objA + 0xc), *(f32 *)(objA + 0x10),
-                                     *(f32 *)(objA + 0x14), (f32 *)(objA + 0x18),
+      Obj_TransformLocalPointToWorld(((GameObject *)objA)->anim.localPosX, ((GameObject *)objA)->anim.localPosY,
+                                     ((GameObject *)objA)->anim.localPosZ, (f32 *)(objA + 0x18),
                                      (f32 *)(objA + 0x1c), (f32 *)(objA + 0x20),
-                                     *(int *)(objA + 0x30));
+                                     *(int *)&((GameObject *)objA)->anim.parent);
     }
-  } else if ((*(s16 *)(objB + 0x44) == 1) && (stateB->lateralResponseWeight != 0) &&
+  } else if ((((GameObject *)objB)->anim.classId == 1) && (stateB->lateralResponseWeight != 0) &&
              ((stateA->flags & 0x400) == 0)) {
-    *(f32 *)(objB + 0xc) = *(f32 *)(objB + 0xc) + localBx;
-    *(f32 *)(objB + 0x10) = *(f32 *)(objB + 0x10) + localBy;
-    *(f32 *)(objB + 0x14) = *(f32 *)(objB + 0x14) + localBz;
+    ((GameObject *)objB)->anim.localPosX = ((GameObject *)objB)->anim.localPosX + localBx;
+    ((GameObject *)objB)->anim.localPosY = ((GameObject *)objB)->anim.localPosY + localBy;
+    ((GameObject *)objB)->anim.localPosZ = ((GameObject *)objB)->anim.localPosZ + localBz;
     if (flag != 0) {
-      *(f32 *)(objB + 0x18) = *(f32 *)(objB + 0x18) + x;
-      *(f32 *)(objB + 0x1c) = *(f32 *)(objB + 0x1c) + y;
-      *(f32 *)(objB + 0x20) = *(f32 *)(objB + 0x20) + z;
+      ((GameObject *)objB)->anim.worldPosX = ((GameObject *)objB)->anim.worldPosX + x;
+      ((GameObject *)objB)->anim.worldPosY = ((GameObject *)objB)->anim.worldPosY + y;
+      ((GameObject *)objB)->anim.worldPosZ = ((GameObject *)objB)->anim.worldPosZ + z;
     } else {
-      Obj_TransformLocalPointToWorld(*(f32 *)(objB + 0xc), *(f32 *)(objB + 0x10),
-                                     *(f32 *)(objB + 0x14), (f32 *)(objB + 0x18),
+      Obj_TransformLocalPointToWorld(((GameObject *)objB)->anim.localPosX, ((GameObject *)objB)->anim.localPosY,
+                                     ((GameObject *)objB)->anim.localPosZ, (f32 *)(objB + 0x18),
                                      (f32 *)(objB + 0x1c), (f32 *)(objB + 0x20),
-                                     *(int *)(objB + 0x30));
+                                     *(int *)&((GameObject *)objB)->anim.parent);
     }
   } else if (stateB->lateralResponseWeight == 0) {
     if (stateA->lateralResponseWeight != 0) {
-      *(f32 *)(objA + 0xc) = *(f32 *)(objA + 0xc) - localAx;
-      *(f32 *)(objA + 0x10) = *(f32 *)(objA + 0x10) - localAy;
-      *(f32 *)(objA + 0x14) = *(f32 *)(objA + 0x14) - localAz;
+      ((GameObject *)objA)->anim.localPosX = ((GameObject *)objA)->anim.localPosX - localAx;
+      ((GameObject *)objA)->anim.localPosY = ((GameObject *)objA)->anim.localPosY - localAy;
+      ((GameObject *)objA)->anim.localPosZ = ((GameObject *)objA)->anim.localPosZ - localAz;
       if (flag != 0) {
-        *(f32 *)(objA + 0x18) = *(f32 *)(objA + 0x18) - x;
-        *(f32 *)(objA + 0x1c) = *(f32 *)(objA + 0x1c) - y;
-        *(f32 *)(objA + 0x20) = *(f32 *)(objA + 0x20) - z;
+        ((GameObject *)objA)->anim.worldPosX = ((GameObject *)objA)->anim.worldPosX - x;
+        ((GameObject *)objA)->anim.worldPosY = ((GameObject *)objA)->anim.worldPosY - y;
+        ((GameObject *)objA)->anim.worldPosZ = ((GameObject *)objA)->anim.worldPosZ - z;
       } else {
-        Obj_TransformLocalPointToWorld(*(f32 *)(objA + 0xc), *(f32 *)(objA + 0x10),
-                                       *(f32 *)(objA + 0x14), (f32 *)(objA + 0x18),
+        Obj_TransformLocalPointToWorld(((GameObject *)objA)->anim.localPosX, ((GameObject *)objA)->anim.localPosY,
+                                       ((GameObject *)objA)->anim.localPosZ, (f32 *)(objA + 0x18),
                                        (f32 *)(objA + 0x1c), (f32 *)(objA + 0x20),
-                                       *(int *)(objA + 0x30));
+                                       *(int *)&((GameObject *)objA)->anim.parent);
       }
     }
   } else if (stateA->lateralResponseWeight == 0) {
     if (stateB->lateralResponseWeight != 0) {
-      *(f32 *)(objB + 0xc) = *(f32 *)(objB + 0xc) + localBx;
-      *(f32 *)(objB + 0x10) = *(f32 *)(objB + 0x10) + localBy;
-      *(f32 *)(objB + 0x14) = *(f32 *)(objB + 0x14) + localBz;
+      ((GameObject *)objB)->anim.localPosX = ((GameObject *)objB)->anim.localPosX + localBx;
+      ((GameObject *)objB)->anim.localPosY = ((GameObject *)objB)->anim.localPosY + localBy;
+      ((GameObject *)objB)->anim.localPosZ = ((GameObject *)objB)->anim.localPosZ + localBz;
       if (flag != 0) {
-        *(f32 *)(objB + 0x18) = *(f32 *)(objB + 0x18) + x;
-        *(f32 *)(objB + 0x1c) = *(f32 *)(objB + 0x1c) + y;
-        *(f32 *)(objB + 0x20) = *(f32 *)(objB + 0x20) + z;
+        ((GameObject *)objB)->anim.worldPosX = ((GameObject *)objB)->anim.worldPosX + x;
+        ((GameObject *)objB)->anim.worldPosY = ((GameObject *)objB)->anim.worldPosY + y;
+        ((GameObject *)objB)->anim.worldPosZ = ((GameObject *)objB)->anim.worldPosZ + z;
       } else {
-        Obj_TransformLocalPointToWorld(*(f32 *)(objB + 0xc), *(f32 *)(objB + 0x10),
-                                       *(f32 *)(objB + 0x14), (f32 *)(objB + 0x18),
+        Obj_TransformLocalPointToWorld(((GameObject *)objB)->anim.localPosX, ((GameObject *)objB)->anim.localPosY,
+                                       ((GameObject *)objB)->anim.localPosZ, (f32 *)(objB + 0x18),
                                        (f32 *)(objB + 0x1c), (f32 *)(objB + 0x20),
-                                       *(int *)(objB + 0x30));
+                                       *(int *)&((GameObject *)objB)->anim.parent);
       }
     }
   } else {
@@ -2060,21 +2061,21 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
     }
     sum = weightA + weightB;
     blend = (sum > gObjHitsScalarZero) ? weightB / sum : gObjHitsScalarZero;
-    *(f32 *)(objA + 0xc) = *(f32 *)(objA + 0xc) - localAx * blend;
-    *(f32 *)(objA + 0x10) = *(f32 *)(objA + 0x10) - localAy * blend;
-    *(f32 *)(objA + 0x14) = *(f32 *)(objA + 0x14) - localAz * blend;
-    Obj_TransformLocalPointToWorld(*(f32 *)(objA + 0xc), *(f32 *)(objA + 0x10),
-                                   *(f32 *)(objA + 0x14), (f32 *)(objA + 0x18),
+    ((GameObject *)objA)->anim.localPosX = ((GameObject *)objA)->anim.localPosX - localAx * blend;
+    ((GameObject *)objA)->anim.localPosY = ((GameObject *)objA)->anim.localPosY - localAy * blend;
+    ((GameObject *)objA)->anim.localPosZ = ((GameObject *)objA)->anim.localPosZ - localAz * blend;
+    Obj_TransformLocalPointToWorld(((GameObject *)objA)->anim.localPosX, ((GameObject *)objA)->anim.localPosY,
+                                   ((GameObject *)objA)->anim.localPosZ, (f32 *)(objA + 0x18),
                                    (f32 *)(objA + 0x1c), (f32 *)(objA + 0x20),
-                                   *(int *)(objA + 0x30));
+                                   *(int *)&((GameObject *)objA)->anim.parent);
     invBlend = gObjHitsScalarOne - blend;
-    *(f32 *)(objB + 0xc) = localBx * invBlend + *(f32 *)(objB + 0xc);
-    *(f32 *)(objB + 0x10) = localBy * invBlend + *(f32 *)(objB + 0x10);
-    *(f32 *)(objB + 0x14) = localBz * invBlend + *(f32 *)(objB + 0x14);
-    Obj_TransformLocalPointToWorld(*(f32 *)(objB + 0xc), *(f32 *)(objB + 0x10),
-                                   *(f32 *)(objB + 0x14), (f32 *)(objB + 0x18),
+    ((GameObject *)objB)->anim.localPosX = localBx * invBlend + ((GameObject *)objB)->anim.localPosX;
+    ((GameObject *)objB)->anim.localPosY = localBy * invBlend + ((GameObject *)objB)->anim.localPosY;
+    ((GameObject *)objB)->anim.localPosZ = localBz * invBlend + ((GameObject *)objB)->anim.localPosZ;
+    Obj_TransformLocalPointToWorld(((GameObject *)objB)->anim.localPosX, ((GameObject *)objB)->anim.localPosY,
+                                   ((GameObject *)objB)->anim.localPosZ, (f32 *)(objB + 0x18),
                                    (f32 *)(objB + 0x1c), (f32 *)(objB + 0x20),
-                                   *(int *)(objB + 0x30));
+                                   *(int *)&((GameObject *)objB)->anim.parent);
   }
 }
 
@@ -2131,14 +2132,14 @@ void ObjHits_DetectObjectPair(int objA,int objB)
   f32 len;
   f32 diff;
 
-  stateA = *(ObjHitsPriorityState **)(objA + 0x54);
-  stateB = *(ObjHitsPriorityState **)(objB + 0x54);
+  stateA = (ObjHitsPriorityState *)((GameObject *)objA)->anim.hitReactState;
+  stateB = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
   if ((stateA->activeHitboxMode != 0) || (stateB->activeHitboxMode != 0)) goto end;
-  dx = *(f32 *)(objB + 0x18) - *(f32 *)(objA + 0x18);
-  yB = *(f32 *)(objB + 0x1c);
-  yA = *(f32 *)(objA + 0x1c);
+  dx = ((GameObject *)objB)->anim.worldPosX - ((GameObject *)objA)->anim.worldPosX;
+  yB = ((GameObject *)objB)->anim.worldPosY;
+  yA = ((GameObject *)objA)->anim.worldPosY;
   dy = yB - yA;
-  dz = *(f32 *)(objB + 0x20) - *(f32 *)(objA + 0x20);
+  dz = ((GameObject *)objB)->anim.worldPosZ - ((GameObject *)objA)->anim.worldPosZ;
   radiusA = (f32)stateA->primaryRadius;
   radiusB = (f32)stateB->primaryRadius;
   vertical = 0;
@@ -2192,22 +2193,22 @@ void ObjHits_DetectObjectPair(int objA,int objB)
   if ((stateB->flags & OBJHITS_PRIORITY_STATE_ENABLED) != 0) {
     sumRadius = radiusB + radiusA;
     bx = stateA->worldPosX;
-    sx = *(f32 *)(objA + 0x18) - bx;
+    sx = ((GameObject *)objA)->anim.worldPosX - bx;
     by = stateA->worldPosY;
     bz = stateA->worldPosZ;
-    sz = *(f32 *)(objA + 0x20) - bz;
-    sy = *(f32 *)(objA + 0x1c) - by;
+    sz = ((GameObject *)objA)->anim.worldPosZ - bz;
+    sy = ((GameObject *)objA)->anim.worldPosY - by;
     if (vertical) {
       sy = gObjHitsScalarZero;
     }
     segSq = sz * sz + sx * sx + sy * sy;
     if (segSq > gObjHitsScalarOne) {
-      t = (sz * (*(f32 *)(objB + 0x20) - bz) + sx * (*(f32 *)(objB + 0x18) - bx) +
-           sy * (*(f32 *)(objB + 0x1c) - by)) / segSq;
+      t = (sz * (((GameObject *)objB)->anim.worldPosZ - bz) + sx * (((GameObject *)objB)->anim.worldPosX - bx) +
+           sy * (((GameObject *)objB)->anim.worldPosY - by)) / segSq;
       if ((t >= gObjHitsScalarZero) && (t <= gObjHitsScalarOne)) {
-        cz = (t * sz + bz) - *(f32 *)(objB + 0x20);
-        cx = (t * sx + bx) - *(f32 *)(objB + 0x18);
-        cy = (t * sy + by) - *(f32 *)(objB + 0x1c);
+        cz = (t * sz + bz) - ((GameObject *)objB)->anim.worldPosZ;
+        cx = (t * sx + bx) - ((GameObject *)objB)->anim.worldPosX;
+        cy = (t * sy + by) - ((GameObject *)objB)->anim.worldPosY;
         dist = sqrtf(cz * cz + cx * cx + cy * cy);
       }
     }
@@ -2281,23 +2282,23 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
   ObjHitsVec3 point3D;
   ObjHitsVec3 pointXZ;
 
-  objBState = *(ObjHitsPriorityState **)(objB + 0x54);
-  objAState = *(ObjHitsPriorityState **)(objA + 0x54);
+  objBState = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
+  objAState = (ObjHitsPriorityState *)((GameObject *)objA)->anim.hitReactState;
   if (((objAState->resetHitboxMode == 0) && (objBState->resetHitboxMode == 0)) &&
       (objBState->activeHitboxMode == 0) && (objAState->activeHitboxMode == 0)) {
     hitboxBuf = ObjHits_GetActiveModel(objA);
     shapeFlags = objBState->shapeFlags;
     if ((shapeFlags & OBJHITBOX_SHAPE_SKELETON_3D) != 0) {
-      point.x = *(f32 *)(objB + 0x18) - playerMapOffsetX;
-      point.y = *(f32 *)(objB + 0x1c);
-      point.z = *(f32 *)(objB + 0x20) - playerMapOffsetZ;
+      point.x = ((GameObject *)objB)->anim.worldPosX - playerMapOffsetX;
+      point.y = ((GameObject *)objB)->anim.worldPosY;
+      point.z = ((GameObject *)objB)->anim.worldPosZ - playerMapOffsetZ;
       point3D = point;
       hitCount = ObjHits_CollectSkeletonHits3D(&point3D.x, (f32)objBState->primaryRadius,
                                                (ObjHitsSkeletonJointData *)hitboxBuf[5], hitboxBuf,
                                                (ObjHitsSkeletonHit *)hits, &bestHit, &outAxial);
       if (hitCount != 0) {
-        ratio = (*(f32 *)(objB + 0xa8) * *(f32 *)(objB + 8)) /
-                (*(f32 *)(objA + 0xa8) * *(f32 *)(objA + 8));
+        ratio = (((GameObject *)objB)->anim.hitboxScale * ((GameObject *)objB)->anim.rootMotionScale) /
+                (((GameObject *)objA)->anim.hitboxScale * ((GameObject *)objA)->anim.rootMotionScale);
 
         clamped = gObjHitsScalarZero;
         if (ratio < clamped) {
@@ -2345,9 +2346,9 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
         ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], fVar4, 0);
       }
     } else if ((shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
-      point.x = *(f32 *)(objB + 0x18) - playerMapOffsetX;
-      point.y = *(f32 *)(objB + 0x1c);
-      point.z = *(f32 *)(objB + 0x20) - playerMapOffsetZ;
+      point.x = ((GameObject *)objB)->anim.worldPosX - playerMapOffsetX;
+      point.y = ((GameObject *)objB)->anim.worldPosY;
+      point.z = ((GameObject *)objB)->anim.worldPosZ - playerMapOffsetZ;
       pointXZ = point;
       hitCount = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, (f32)objBState->primaryRadius,
                                                (ObjHitsSkeletonJointData *)hitboxBuf[5], hitboxBuf,
@@ -2356,8 +2357,8 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
                                                point.y + (f32)objBState->primaryCapsuleOffsetA,
                                                &outAxial);
       if (hitCount != 0) {
-        ratio = (*(f32 *)(objB + 0xa8) * *(f32 *)(objB + 8)) /
-                (*(f32 *)(objA + 0xa8) * *(f32 *)(objB + 8));
+        ratio = (((GameObject *)objB)->anim.hitboxScale * ((GameObject *)objB)->anim.rootMotionScale) /
+                (((GameObject *)objA)->anim.hitboxScale * ((GameObject *)objB)->anim.rootMotionScale);
 
         clamped = gObjHitsScalarZero;
         if (ratio < clamped) {
@@ -2460,7 +2461,7 @@ void ObjHits_CheckTrackContact(int objA,int objB)
   int local_44 [5];
   f32 fConv;
 
-  iVar6 = *(int *)(objA + 0x54);
+  iVar6 = *(int *)&((GameObject *)objA)->anim.hitReactState;
   if ((uint)objB == (uint)objA) {
     mask2 = *(uint *)(iVar6 + 0x48) >> 4;
   }
@@ -2468,7 +2469,7 @@ void ObjHits_CheckTrackContact(int objA,int objB)
     mask2 = *(uint *)(iVar6 + 0x48) & 0xf;
   }
   if ((mask2 != 0) && (*(char *)(iVar6 + 0x70) == '\0')) {
-    iVar6 = *(int *)(objB + 0x54);
+    iVar6 = *(int *)&((GameObject *)objB)->anim.hitReactState;
     if ((*(byte *)(iVar6 + 0xb6) & 0x10) != 0) {
       piVar9 = ObjHits_GetActiveModel(objB);
       iVar12 = *piVar9;
@@ -2538,13 +2539,13 @@ void ObjHits_CheckTrackContact(int objA,int objB)
       }
     }
     else {
-      local_e8[0] = *(float *)(objA + 0x18);
-      local_e8[1] = *(float *)(objA + 0x1c);
-      local_e8[2] = *(float *)(objA + 0x20);
-      local_130[0] = *(float *)(objA + 0x8c);
-      local_130[1] = *(float *)(objA + 0x90);
-      local_130[2] = *(float *)(objA + 0x94);
-      fConv = (f32)(u32)*(u8 *)(*(int *)(objA + 0x50) + 0x8f);
+      local_e8[0] = ((GameObject *)objA)->anim.worldPosX;
+      local_e8[1] = ((GameObject *)objA)->anim.worldPosY;
+      local_e8[2] = ((GameObject *)objA)->anim.worldPosZ;
+      local_130[0] = ((GameObject *)objA)->anim.previousWorldPosX;
+      local_130[1] = ((GameObject *)objA)->anim.previousWorldPosY;
+      local_130[2] = ((GameObject *)objA)->anim.previousWorldPosZ;
+      fConv = (f32)(u32)*(u8 *)(*(int *)&((GameObject *)objA)->anim.modelInstance + 0x8f);
       if (fConv < lbl_803DE91C) {
         fConv = lbl_803DE91C;
       }
@@ -2647,7 +2648,7 @@ void ObjHits_Update(int objectCount)
   for (; objectCount > 0; objectCount--) {
     {
       obj = *objectList;
-      objState = *(ObjHitsPriorityState **)(obj + 0x54);
+      objState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
       if (objState != NULL) {
         if (((objState->flags &
               (OBJHITS_PRIORITY_STATE_ENABLED |
@@ -2655,16 +2656,16 @@ void ObjHits_Update(int objectCount)
             (objState->shapeFlags != 8) && (slotCount < 400)) {
           *entrySlot = nextEntry;
           (*entrySlot)->obj = obj;
-          (*entrySlot)->minX = *(f32 *)(obj + 0x18) - objState->sweepRadiusX;
+          (*entrySlot)->minX = ((GameObject *)obj)->anim.worldPosX - objState->sweepRadiusX;
           nextEntry++;
           entrySlot++;
-          gObjHitsSweepEntryPtrs[slotCount++]->maxX = *(f32 *)(obj + 0x18) + objState->sweepRadiusX;
+          gObjHitsSweepEntryPtrs[slotCount++]->maxX = ((GameObject *)obj)->anim.worldPosX + objState->sweepRadiusX;
         }
         objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
         objState->contactFlags = 0;
         *(s8 *)&objState->contactHitVolume = -1;
         *(int *)objState = 0;
-        attachedObj = *(uint *)(obj + 0xc8);
+        attachedObj = *(uint *)&((GameObject *)obj)->unkC8;
         if ((attachedObj != 0) && (*(s16 *)(attachedObj + 0x44) == 0x2d)) {
           objState = *(ObjHitsPriorityState **)(attachedObj + 0x54);
           objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
@@ -2683,8 +2684,8 @@ void ObjHits_Update(int objectCount)
   for (; slotIndex < slotCount; slotIndex++, entrySlot++) {
     entry = *entrySlot;
     obj = entry->obj;
-    objState = *(ObjHitsPriorityState **)(obj + 0x54);
-    attachedObj = *(uint *)(obj + 0xc8);
+    objState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+    attachedObj = *(uint *)&((GameObject *)obj)->unkC8;
     if ((attachedObj != 0) &&
         ((*(void **)(attachedObj + 0x54) == NULL) ||
          (((*(ObjHitsPriorityState **)(attachedObj + 0x54))->flags &
@@ -2713,15 +2714,15 @@ void ObjHits_Update(int objectCount)
         {
           candObj = candidateEntry->obj;
           candState = *(ObjHitsPriorityState **)(candObj + 0x54);
-          if ((slotIndex != candidateIndex) && (*(uint *)(obj + 0x30) != (uint)candObj)) {
-            axisDiff = *(f32 *)(obj + 0x20) - *(f32 *)(candObj + 0x20);
+          if ((slotIndex != candidateIndex) && (*(uint *)&((GameObject *)obj)->anim.parent != (uint)candObj)) {
+            axisDiff = ((GameObject *)obj)->anim.worldPosZ - *(f32 *)(candObj + 0x20);
             if (axisDiff > gObjHitsScalarZero) {
               diff = axisDiff;
             } else {
               diff = -axisDiff;
             }
             if (diff < objState->primaryRadiusXZ + candState->primaryRadiusXZ) {
-              diff = *(f32 *)(obj + 0x1c) - *(f32 *)(candObj + 0x1c);
+              diff = ((GameObject *)obj)->anim.worldPosY - *(f32 *)(candObj + 0x1c);
               if (diff > gObjHitsScalarZero) {
               } else {
                 diff = -diff;
@@ -2730,7 +2731,7 @@ void ObjHits_Update(int objectCount)
                   ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                   ((candState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                   (((candState->flags & 4) == 0) || (slotIndex >= candidateIndex)) &&
-                  ((*(u8 *)(*(int *)(obj + 0x50) + 0x71) & candState->targetMask) != 0) &&
+                  ((*(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x71) & candState->targetMask) != 0) &&
                   ((*(u8 *)(*(int *)(candObj + 0x50) + 0x71) & objState->targetMask) != 0)) {
                 if ((candState->shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) {
                   ((void (*)(int, int, void *, void *, void *, void *, void *, int))
@@ -2754,7 +2755,7 @@ void ObjHits_Update(int objectCount)
               }
             }
             if (diff < objState->secondaryRadiusXZ + candState->secondaryRadiusXZ) {
-              axisDiff = *(f32 *)(obj + 0x1c) - *(f32 *)(candObj + 0x1c);
+              axisDiff = ((GameObject *)obj)->anim.worldPosY - *(f32 *)(candObj + 0x1c);
               if (axisDiff > gObjHitsScalarZero) {
               } else {
                 axisDiff = -axisDiff;
@@ -2783,10 +2784,10 @@ void ObjHits_Update(int objectCount)
   entrySlot = entrySlotBase;
   for (slotIndex = 1; slotIndex < slotCount; slotIndex++, entrySlot++) {
     obj = (*entrySlot)->obj;
-    if (((*(ObjHitsPriorityState **)(obj + 0x54))->flags &
+    if (((((GameObject *)obj)->anim.hitReactState)->flags &
          OBJHITS_PRIORITY_STATE_TRACK_CONTACT) != 0) {
       ObjHits_CheckTrackContact(obj, obj);
-      attachedObj = *(uint *)(obj + 0xc8);
+      attachedObj = *(uint *)&((GameObject *)obj)->unkC8;
       if (attachedObj != 0) {
         ObjHits_CheckTrackContact(obj, attachedObj);
       }
@@ -2794,18 +2795,18 @@ void ObjHits_Update(int objectCount)
   }
   for (slotIndex = 1; slotIndex < slotCount; slotIndex++, entrySlotBase++) {
     obj = (*entrySlotBase)->obj;
-    objState = *(ObjHitsPriorityState **)(obj + 0x54);
-    objState->localPosX = *(f32 *)(obj + 0xc);
-    objState->localPosY = *(f32 *)(obj + 0x10);
-    objState->localPosZ = *(f32 *)(obj + 0x14);
-    if (*(int *)(obj + 0x30) != 0) {
+    objState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+    objState->localPosX = ((GameObject *)obj)->anim.localPosX;
+    objState->localPosY = ((GameObject *)obj)->anim.localPosY;
+    objState->localPosZ = ((GameObject *)obj)->anim.localPosZ;
+    if (*(int *)&((GameObject *)obj)->anim.parent != 0) {
       Obj_TransformLocalPointToWorld(objState->localPosX, objState->localPosY, objState->localPosZ,
                                      &objState->worldPosX, &objState->worldPosY,
-                                     &objState->worldPosZ, *(int *)(obj + 0x30));
+                                     &objState->worldPosZ, *(int *)&((GameObject *)obj)->anim.parent);
     } else {
-      objState->worldPosX = *(f32 *)(obj + 0xc);
-      objState->worldPosY = *(f32 *)(obj + 0x10);
-      objState->worldPosZ = *(f32 *)(obj + 0x14);
+      objState->worldPosX = ((GameObject *)obj)->anim.localPosX;
+      objState->worldPosY = ((GameObject *)obj)->anim.localPosY;
+      objState->worldPosZ = ((GameObject *)obj)->anim.localPosZ;
     }
     objState->activeHitboxMode = 0;
     objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
@@ -2813,8 +2814,8 @@ void ObjHits_Update(int objectCount)
          ((objState->flags & OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED) != 0)) &&
         ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
         ((objState->flags & 0x4000) == 0)) {
-      *(f32 *)(obj + 0x24) = oneOverTimeDelta * (*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80));
-      *(f32 *)(obj + 0x2c) = oneOverTimeDelta * (*(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+      ((GameObject *)obj)->anim.velocityX = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX);
+      ((GameObject *)obj)->anim.velocityZ = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
     }
   }
   for (slotIndex = 0; slotIndex < 5; slotIndex++) {

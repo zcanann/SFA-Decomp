@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/model_light.h"
 #include "main/engine_8001746C_phantoms.h"
@@ -273,12 +274,12 @@ void Obj_ClearModelColorFadeRecursive(u8 *obj) {
     int i;
     u8 *childScan;
 
-    *(s16 *)(obj + 0xe6) = 0;
-    obj[0xe5] &= ~0x6;
+    ((GameObject *)obj)->unkE6 = 0;
+    ((GameObject *)obj)->unkE5 &= ~0x6;
     i = 0;
     childScan = obj;
-    while (i < obj[0xeb]) {
-        Obj_ClearModelColorFadeRecursive(*(u8 **)(childScan + 0xc8));
+    while (i < ((GameObject *)obj)->unkEB) {
+        Obj_ClearModelColorFadeRecursive(((GameObject *)childScan)->unkC8);
         childScan += 4;
         i++;
     }
@@ -289,7 +290,7 @@ void Obj_TickModelColorFadeRecursive(u8 *obj) {
     int i;
     u8 *childScan;
 
-    if ((obj[0xe5] & 4) != 0) {
+    if ((((GameObject *)obj)->unkE5 & 4) != 0) {
         alpha = (f32)obj[0xef] + lbl_803DE89C * timeDelta;
     } else {
         alpha = (f32)obj[0xef] - lbl_803DE89C * timeDelta;
@@ -297,24 +298,24 @@ void Obj_TickModelColorFadeRecursive(u8 *obj) {
 
     if (alpha < lbl_803DE88C) {
         alpha = -alpha;
-        obj[0xe5] ^= 4;
+        ((GameObject *)obj)->unkE5 ^= 4;
     } else if (alpha > lbl_803DE8A0) {
         alpha = lbl_803DE8A0 - (alpha - lbl_803DE8A0);
-        obj[0xe5] ^= 4;
+        ((GameObject *)obj)->unkE5 ^= 4;
     }
 
-    *(s8 *)(obj + 0xef) = (int)alpha;
-    if ((obj[0xe5] & 8) == 0) {
-        *(s16 *)(obj + 0xe6) -= framesThisStep;
-        if (*(s16 *)(obj + 0xe6) <= 0 && *(void **)(obj + 0xc4) == NULL) {
+    ((GameObject *)obj)->unkEF = (int)alpha;
+    if ((((GameObject *)obj)->unkE5 & 8) == 0) {
+        ((GameObject *)obj)->unkE6 -= framesThisStep;
+        if (((GameObject *)obj)->unkE6 <= 0 && ((GameObject *)obj)->unkC4 == NULL) {
             Obj_ClearModelColorFadeRecursive(obj);
         }
     }
 
     i = 0;
     childScan = obj;
-    while (i < obj[0xeb]) {
-        Obj_TickModelColorFadeRecursive(*(u8 **)(childScan + 0xc8));
+    while (i < ((GameObject *)obj)->unkEB) {
+        Obj_TickModelColorFadeRecursive(((GameObject *)childScan)->unkC8);
         childScan += 4;
         i++;
     }
@@ -325,16 +326,16 @@ void Obj_SetModelColorFadeRecursive(u8 *obj, int frames, u8 red, u8 green, u8 bl
     int i;
     u8 *childScan;
 
-    *(s16 *)(obj + 0xe6) = (s16)frames;
-    obj[0xe5] &= ~4;
-    obj[0xe5] |= 2;
+    ((GameObject *)obj)->unkE6 = (s16)frames;
+    ((GameObject *)obj)->unkE5 &= ~4;
+    ((GameObject *)obj)->unkE5 |= 2;
     obj[0xec] = red;
     obj[0xed] = green;
     obj[0xee] = blue;
     if (frames == 10000) {
-        obj[0xe5] |= 8;
+        ((GameObject *)obj)->unkE5 |= 8;
     } else {
-        obj[0xe5] &= ~8;
+        ((GameObject *)obj)->unkE5 &= ~8;
     }
     if (startAtHalf != 0) {
         obj[0xef] = 0x7f;
@@ -344,8 +345,8 @@ void Obj_SetModelColorFadeRecursive(u8 *obj, int frames, u8 red, u8 green, u8 bl
 
     i = 0;
     childScan = obj;
-    while (i < obj[0xeb]) {
-        Obj_SetModelColorFadeRecursive(*(u8 **)(childScan + 0xc8), frames, red, green, blue, startAtHalf);
+    while (i < ((GameObject *)obj)->unkEB) {
+        Obj_SetModelColorFadeRecursive(((GameObject *)childScan)->unkC8, frames, red, green, blue, startAtHalf);
         childScan += 4;
         i++;
     }
@@ -357,28 +358,28 @@ void Obj_SetModelColorOverrideRecursive(u8 *obj, u8 red, u8 green, u8 blue, u8 a
     u8 *childScan;
 
     if (enabled != 0) {
-        obj[0xe5] |= 0x10;
+        ((GameObject *)obj)->unkE5 |= 0x10;
         obj[0xec] = red;
         obj[0xed] = green;
         obj[0xee] = blue;
         obj[0xef] = alpha;
     } else {
-        obj[0xe5] &= ~0x10;
+        ((GameObject *)obj)->unkE5 &= ~0x10;
     }
 
     i = 0;
     childScan = obj;
-    while (i < obj[0xeb]) {
-        Obj_SetModelColorOverrideRecursive(*(u8 **)(childScan + 0xc8), red, green, blue, alpha, enabled);
+    while (i < ((GameObject *)obj)->unkEB) {
+        Obj_SetModelColorOverrideRecursive(((GameObject *)childScan)->unkC8, red, green, blue, alpha, enabled);
         childScan += 4;
         i++;
     }
 }
 
 void Obj_ResetModelColorState(u8 *obj) {
-    *(s16 *)(obj + 0xe6) = 0;
-    obj[0xe5] &= ~1;
-    obj[0xf0] = 0;
+    ((GameObject *)obj)->unkE6 = 0;
+    ((GameObject *)obj)->unkE5 &= ~1;
+    ((GameObject *)obj)->unkF0 = 0;
     ObjModel_ClearRenderAttachment((u8 *)Obj_GetActiveModel(obj));
     (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fb, 0, 0x50, 0);
     (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x32, 0);
@@ -393,25 +394,25 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
 
     objAnim = (ObjAnimComponent *)obj;
     fadeLimit = 10;
-    objType = *(s16 *)(obj + 0x44);
+    objType = ((GameObject *)obj)->anim.classId;
     if (objType == 0x1c || objType == 0x6d || objType == 0x2a) {
         fadeLimit = 40;
     }
-    if ((*(u8 *)(*(u8 **)(obj + 0x50) + 0x76) & 1) != 0) {
-        if (obj[0xf0] < fadeLimit) {
-            obj[0xf0]++;
+    if ((*(u8 *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x76) & 1) != 0) {
+        if (((GameObject *)obj)->unkF0 < fadeLimit) {
+            ((GameObject *)obj)->unkF0++;
             Obj_SetModelColorFadeRecursive(obj, 0x1e, 0xa0, 0xff, 0xff, 0);
         }
-        if (obj[0xf0] == fadeLimit) {
-            if ((obj[0xe5] & 2) != 0) {
+        if (((GameObject *)obj)->unkF0 == fadeLimit) {
+            if ((((GameObject *)obj)->unkE5 & 2) != 0) {
                 Obj_ClearModelColorFadeRecursive(obj);
             }
-            *(s16 *)(obj + 0xe6) = (s16)frames;
-            obj[0xe5] = (u8)(obj[0xe5] | 1);
+            ((GameObject *)obj)->unkE6 = (s16)frames;
+            ((GameObject *)obj)->unkE5 = (u8)(((GameObject *)obj)->unkE5 | 1);
             Obj_BuildWorldTransformMatrix(obj, mtx, 0);
             ((void (*)(u8 *, u8 *, f32 *, int, f32))ObjModel_EnableDefaultRenderCallback)(
                 obj, (u8 *)objAnim->banks[objAnim->bankIndex], mtx, 1,
-                *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8));
+                ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale);
             (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x64, 0);
         }
     }
@@ -436,11 +437,11 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
 #pragma dont_inline reset
 
 int objIsFrozen(u8 *obj) {
-    return obj[0xe5] & 1;
+    return ((GameObject *)obj)->unkE5 & 1;
 }
 
 int objGetFlagsE5_2(u8 *obj) {
-    return obj[0xe5] & 2;
+    return ((GameObject *)obj)->unkE5 & 2;
 }
 
 #pragma peephole off
@@ -511,7 +512,7 @@ void objSetHintTextIdx(u8 *obj, u16 idx) {
     if (idx > 4) {
         idx = 0;
     }
-    obj[0xe8] = (u8)idx;
+    ((GameObject *)obj)->unkE8 = (u8)idx;
 }
 #pragma pop
 
@@ -536,7 +537,7 @@ void objSetSlot(u8 *obj, s8 slot) {
             return;
         }
     }
-    *(s8 *)(obj + 0xae) = slot;
+    ((GameObject *)obj)->anim.activeHitboxMode = slot;
 }
 
 void fn_8002B758(void *v) {
@@ -592,7 +593,7 @@ void *getTablesBinEntry(int i) {
 }
 
 void Obj_InsertIntoUpdateList(u8 *obj) {
-    if (*(u16 *)(obj + 0xb0) & 0x10) {
+    if (((GameObject *)obj)->unkB0 & 0x10) {
         int *list = &lbl_803DCB7C;
         int prev = 0;
         int cur = list[1];
@@ -606,7 +607,7 @@ void Obj_InsertIntoUpdateList(u8 *obj) {
 }
 
 void Obj_RemoveFromUpdateList(u8 *obj) {
-    if (*(u16 *)(obj + 0xb0) & 0x10) {
+    if (((GameObject *)obj)->unkB0 & 0x10) {
         objList_remove(&lbl_803DCB7C, obj);
     }
 }
@@ -749,13 +750,13 @@ void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag) 
     f32 savedZ;
     f32 mtx[16];
     if (flag) {
-        savedZ = *(f32 *)(obj + 8);
-        *(f32 *)(obj + 8) = lbl_803DE890;
+        savedZ = ((GameObject *)obj)->anim.rootMotionScale;
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803DE890;
     }
     Obj_BuildWorldTransformMatrix(obj, mtx, 0);
     PSMTXMultVec(mtx, src, dst);
     if (flag) {
-        *(f32 *)(obj + 8) = savedZ;
+        ((GameObject *)obj)->anim.rootMotionScale = savedZ;
     }
     dst[0] += playerMapOffsetX;
     dst[2] += playerMapOffsetZ;
@@ -850,9 +851,9 @@ extern void *memcpy(void *dst, const void *src, int n);
 #pragma peephole off
 int objMove(u8 *obj, f32 dx, f32 dy, f32 dz) {
     int n;
-    *(f32 *)(obj + 0xc) += dx;
-    *(f32 *)(obj + 0x10) += dy;
-    *(f32 *)(obj + 0x14) += dz;
+    ((GameObject *)obj)->anim.localPosX += dx;
+    ((GameObject *)obj)->anim.localPosY += dy;
+    ((GameObject *)obj)->anim.localPosZ += dz;
     ObjGroup_GetObjects(0, &n);
     return 0;
 }
@@ -904,8 +905,8 @@ void objFn_8002b67c(u8 *obj) {
     if (dst == NULL) {
         return;
     }
-    src = *(u8 **)(*(u8 **)(obj + 0x50) + 0x40);
-    idx = obj[0xe4];
+    src = *(u8 **)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x40);
+    idx = ((GameObject *)obj)->unkE4;
     src += idx * 0x18;
     dst += idx * 5;
     dst[0] = src[0xc];
@@ -933,9 +934,9 @@ extern f32 lbl_803DE8B8;
 #pragma dont_inline reset
 
 int objApplyVelocity(u8 *obj) {
-    *(f32 *)(obj + 0xc) += timeDelta * (lbl_803DE8B8 * (*(f32 *)(obj + 0xfc) + *(f32 *)(obj + 0x24)));
-    *(f32 *)(obj + 0x10) += timeDelta * (lbl_803DE8B8 * (*(f32 *)(obj + 0x100) + *(f32 *)(obj + 0x28)));
-    *(f32 *)(obj + 0x14) += timeDelta * (lbl_803DE8B8 * (*(f32 *)(obj + 0x104) + *(f32 *)(obj + 0x2c)));
+    ((GameObject *)obj)->anim.localPosX += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->unkFC + ((GameObject *)obj)->anim.velocityX));
+    ((GameObject *)obj)->anim.localPosY += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->unk100 + ((GameObject *)obj)->anim.velocityY));
+    ((GameObject *)obj)->anim.localPosZ += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->unk104 + ((GameObject *)obj)->anim.velocityZ));
     return 1;
 }
 
@@ -945,11 +946,11 @@ void Obj_ApplyPendingParentLinks(void) {
         u8 *obj = ((u8 **)lbl_803DCB88)[i];
         obj[0xaf] &= ~7;
         {
-            u8 *parent = *(u8 **)(obj + 0xc0);
-            if (parent != NULL && *(void **)(obj + 0x30) == NULL &&
+            u8 *parent = ((GameObject *)obj)->unkC0;
+            if (parent != NULL && ((GameObject *)obj)->anim.parent == NULL &&
                 *(void **)(parent + 0x30) != NULL) {
-                *(void **)(obj + 0x30) = *(void **)(parent + 0x30);
-                *(void **)(obj + 0xc0) = NULL;
+                ((GameObject *)obj)->anim.parent = *(void **)(parent + 0x30);
+                ((GameObject *)obj)->unkC0 = NULL;
             }
         }
     }
@@ -1005,7 +1006,7 @@ void fn_8002B6D8(u8 *obj, int a, int b, int c, u8 d, u8 e) {
     if (p == NULL) {
         return;
     }
-    p += obj[0xe4] * 5;
+    p += ((GameObject *)obj)->unkE4 * 5;
     if (a != 0) {
         p[0] = a >> 2;
     }
@@ -1113,11 +1114,11 @@ void ObjModel_Release(u8 *model);
 extern void objLoadPlayerFromSave(u8 *obj);
 
 void Obj_RunInitCallback(u8 *obj, int cb, int unused) {
-    s16 mode = *(s16 *)(obj + 0x46);
+    s16 mode = ((GameObject *)obj)->anim.seqId;
     if (mode == 0x1f || mode == 0) {
         objLoadPlayerFromSave(obj);
     } else {
-        int *p = *(int **)(obj + 0x68);
+        int *p = (int *)((GameObject *)obj)->anim.dll;
         if (p != NULL) {
             int fn = ((int *)*p)[1];
             if (fn != -1 && (void *)fn != NULL) {
@@ -1133,16 +1134,16 @@ void Obj_RunInitCallback(u8 *obj, int cb, int unused) {
     }
     {
         f32 v;
-        *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
-        *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
-        *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
-        *(f32 *)(obj + 0x8c) = *(f32 *)(obj + 0xc);
-        *(f32 *)(obj + 0x90) = *(f32 *)(obj + 0x10);
-        *(f32 *)(obj + 0x94) = *(f32 *)(obj + 0x14);
+        ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosX;
+        ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
+        ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
+        ((GameObject *)obj)->anim.previousWorldPosX = ((GameObject *)obj)->anim.localPosX;
+        ((GameObject *)obj)->anim.previousWorldPosY = ((GameObject *)obj)->anim.localPosY;
+        ((GameObject *)obj)->anim.previousWorldPosZ = ((GameObject *)obj)->anim.localPosZ;
         v = lbl_803DE88C;
-        *(f32 *)(obj + 0xfc) = v;
-        *(f32 *)(obj + 0x100) = v;
-        *(f32 *)(obj + 0x104) = v;
+        ((GameObject *)obj)->unkFC = v;
+        ((GameObject *)obj)->unk100 = v;
+        ((GameObject *)obj)->unk104 = v;
     }
 }
 #pragma pop
@@ -1155,7 +1156,7 @@ void objGetWeaponDa(u8 *obj, int dummy, int *out, int key, u8 load) {
     s16 *tbl;
     s16 da2;
 
-    tbl = (s16 *)*(int *)(*(u8 **)(obj + 0x50) + 0x28);
+    tbl = (s16 *)*(int *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x28);
     *out = 0;
     if (tbl == NULL) {
         return;
@@ -1188,7 +1189,7 @@ void ObjAnim_LoadMoveEvents(u8 *obj, int dummy, int *out, int key, u8 load) {
     s16 *tbl;
     s16 da2;
 
-    tbl = (s16 *)*(int *)(*(u8 **)(obj + 0x50) + 0x20);
+    tbl = (s16 *)*(int *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x20);
     *out = 0;
     if (tbl == NULL) {
         return;
@@ -1240,22 +1241,22 @@ void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out) {
     ObjPathTransform transform;
     f32 rotMtx[16];
 
-    if (*(void **)(obj + 0x30) == NULL) {
-        *(f32 *)(obj + 0xc) -= playerMapOffsetX;
-        *(f32 *)(obj + 0x14) -= playerMapOffsetZ;
+    if (((GameObject *)obj)->anim.parent == NULL) {
+        ((GameObject *)obj)->anim.localPosX -= playerMapOffsetX;
+        ((GameObject *)obj)->anim.localPosZ -= playerMapOffsetZ;
     }
-    transform.x = -*(f32 *)(obj + 0xc);
-    transform.y = -*(f32 *)(obj + 0x10);
-    transform.z = -*(f32 *)(obj + 0x14);
-    transform.rotX = -*(s16 *)(obj + 0x0);
-    transform.rotY = -*(s16 *)(obj + 0x2);
-    transform.rotZ = -*(s16 *)(obj + 0x4);
+    transform.x = -((GameObject *)obj)->anim.localPosX;
+    transform.y = -((GameObject *)obj)->anim.localPosY;
+    transform.z = -((GameObject *)obj)->anim.localPosZ;
+    transform.rotX = -((GameObject *)obj)->anim.rotX;
+    transform.rotY = -((GameObject *)obj)->anim.rotY;
+    transform.rotZ = -((GameObject *)obj)->anim.rotZ;
     transform.scale = lbl_803DE890;
     mtxRotateByVec3s(rotMtx, &transform);
     mtx44Transpose(rotMtx, out);
-    if (*(void **)(obj + 0x30) == NULL) {
-        *(f32 *)(obj + 0xc) += playerMapOffsetX;
-        *(f32 *)(obj + 0x14) += playerMapOffsetZ;
+    if (((GameObject *)obj)->anim.parent == NULL) {
+        ((GameObject *)obj)->anim.localPosX += playerMapOffsetX;
+        ((GameObject *)obj)->anim.localPosZ += playerMapOffsetZ;
     }
 }
 #pragma pop
@@ -1319,24 +1320,24 @@ void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags) {
     f32 parentMtx[16];
     void *parent;
 
-    if (*(void **)(obj + 0x30) == NULL) {
-        *(f32 *)(obj + 0xc) -= playerMapOffsetX;
-        *(f32 *)(obj + 0x14) -= playerMapOffsetZ;
+    if (((GameObject *)obj)->anim.parent == NULL) {
+        ((GameObject *)obj)->anim.localPosX -= playerMapOffsetX;
+        ((GameObject *)obj)->anim.localPosZ -= playerMapOffsetZ;
     }
     if ((u8)flags != 0) {
-        savedZ = *(f32 *)(obj + 0x8);
-        if ((*(u16 *)(obj + 0xb0) & 0x8) == 0) {
-            *(f32 *)(obj + 0x8) = lbl_803DE890;
+        savedZ = ((GameObject *)obj)->anim.rootMotionScale;
+        if ((((GameObject *)obj)->unkB0 & 0x8) == 0) {
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803DE890;
         }
     }
     setMatrixFromObjectTransposed(obj, mtx);
     if ((u8)flags != 0) {
-        *(f32 *)(obj + 0x8) = savedZ;
+        ((GameObject *)obj)->anim.rootMotionScale = savedZ;
     }
-    parent = *(void **)(obj + 0x30);
+    parent = ((GameObject *)obj)->anim.parent;
     if (parent == NULL) {
-        *(f32 *)(obj + 0xc) += playerMapOffsetX;
-        *(f32 *)(obj + 0x14) += playerMapOffsetZ;
+        ((GameObject *)obj)->anim.localPosX += playerMapOffsetX;
+        ((GameObject *)obj)->anim.localPosZ += playerMapOffsetZ;
     } else {
         Obj_BuildWorldTransformMatrix(parent, (f32 *)parentMtx, 1);
         PSMTXConcat((f32 *)parentMtx, mtx, mtx);
@@ -1769,22 +1770,22 @@ void objFreeObjDef(void *objp, int flag) {
     int group;
     int type;
 
-    if (*(s8 *)(obj + 0xe9) != 0) {
+    if (((GameObject *)obj)->unkE9 != 0) {
         ObjContact_RemoveObjectCallbacks((int)obj);
     }
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0:
     case 0x1f:
         fn_802B4DE0(obj, flag);
         break;
     default:
-        if (*(int **)(obj + 0x68) != NULL) {
-            fp = (void (*)(u8 *, int))*(int *)(*(int *)(obj + 0x68) + 0x14);
+        if (((GameObject *)obj)->anim.dll != NULL) {
+            fp = (void (*)(u8 *, int))*(int *)(*(int *)&((GameObject *)obj)->anim.dll + 0x14);
             if (fp != NULL) {
                 fp(obj, flag);
             }
-            Resource_Release(*(void **)(obj + 0x68));
-            *(int *)(obj + 0x68) = 0;
+            Resource_Release(((GameObject *)obj)->anim.dll);
+            *(int *)&((GameObject *)obj)->anim.dll = 0;
         }
         break;
     }
@@ -1796,9 +1797,9 @@ void objFreeObjDef(void *objp, int flag) {
             count = 0;
             for (i = 0; i < lbl_803DCB84; i++) {
                 o = ((u8 **)lbl_803DCB88)[i];
-                if (*(u8 **)(o + 0x30) == obj) {
-                    *(int *)(o + 0x30) = 0;
-                    if (*(int *)(o + 0x4c) != 0) {
+                if (((GameObject *)o)->anim.parent == obj) {
+                    *(int *)&((GameObject *)o)->anim.parent = 0;
+                    if (*(int *)&((GameObject *)o)->anim.placementData != 0) {
                         defs[count] = (int)o;
                         count++;
                     }
@@ -1810,7 +1811,7 @@ void objFreeObjDef(void *objp, int flag) {
             fn_80059A50(*(u8 *)(obj + 0x34));
         }
     }
-    if (flag == 0 && *(s16 *)(obj + 0x44) == 0x10) {
+    if (flag == 0 && ((GameObject *)obj)->anim.classId == 0x10) {
         for (i = 0; i < lbl_803DCB84; i++) {
             if (*(u8 **)(((u8 **)lbl_803DCB88)[i] + 0xc0) == obj) {
                 *(int *)(((u8 **)lbl_803DCB88)[i] + 0xc0) = 0;
@@ -1852,9 +1853,9 @@ void objFreeObjDef(void *objp, int flag) {
             mm_free((void *)t2);
         }
     }
-    if (*(int *)(obj + 0xdc) != 0) {
-        mm_free(*(void **)(obj + 0xdc));
-        *(int *)(obj + 0xdc) = 0;
+    if (*(int *)&((GameObject *)obj)->unkDC != 0) {
+        mm_free(((GameObject *)obj)->unkDC);
+        *(int *)&((GameObject *)obj)->unkDC = 0;
     }
     modelCount = objAnim->modelInstance->modelCount;
     for (i = 0; i < modelCount; i++) {
@@ -1862,24 +1863,24 @@ void objFreeObjDef(void *objp, int flag) {
             ObjModel_Release((u8 *)objAnim->banks[i]);
         }
     }
-    if (*(u8 *)(obj + 0xe5) & 1) {
-        *(u16 *)(obj + 0xe6) = 0;
-        *(u8 *)(obj + 0xe5) = *(u8 *)(obj + 0xe5) & ~1;
-        *(u8 *)(obj + 0xf0) = 0;
+    if (((GameObject *)obj)->unkE5 & 1) {
+        *(u16 *)&((GameObject *)obj)->unkE6 = 0;
+        ((GameObject *)obj)->unkE5 = ((GameObject *)obj)->unkE5 & ~1;
+        ((GameObject *)obj)->unkF0 = 0;
         ObjModel_ClearRenderAttachment((u8 *)objAnim->banks[objAnim->bankIndex]);
         cb2 = (void (*)(u8 *, int, int, int, int))*(int *)(*(int *)lbl_803DCAB4 + 0xc);
         cb2(obj, 0x7fb, 0, 0x50, 0);
         cb2 = (void (*)(u8 *, int, int, int, int))*(int *)(*(int *)lbl_803DCAB4 + 0xc);
         cb2(obj, 0x7fc, 0, 0x32, 0);
     }
-    if (*(u8 *)(obj + 0xe5) & 2) {
+    if (((GameObject *)obj)->unkE5 & 2) {
         Obj_ClearModelColorFadeRecursive(obj);
     }
     group = ObjGroup_GetObjectGroup((uint)obj);
     if (group != 0) {
         ObjGroup_RemoveObject((uint)obj, group - 1);
     }
-    type = *(s16 *)(obj + 0x48);
+    type = ((GameObject *)obj)->anim.defId;
     if (*(s8 *)(lbl_803DCBA4 + type) == 0) {
         debugPrintf(sObjFreeObjdefError);
     } else {
@@ -1895,15 +1896,15 @@ void objFreeObjDef(void *objp, int flag) {
             mm_free(o);
         }
     }
-    if (*(s16 *)(obj + 0xb4) >= 0) {
+    if (((GameObject *)obj)->unkB4 >= 0) {
         if (flag == 0) {
             cb3 = (void (*)(void))*(int *)(*(int *)gObjectTriggerInterface + 0x4c);
             cb3();
         }
-        *(s16 *)(obj + 0xb4) = 0xffff;
+        ((GameObject *)obj)->unkB4 = 0xffff;
     }
-    if ((*(u16 *)(obj + 6) & 0x2000) && *(int *)(obj + 0x4c) != 0) {
-        mm_free(*(void **)(obj + 0x4c));
+    if ((*(u16 *)&((GameObject *)obj)->anim.flags & 0x2000) && *(int *)&((GameObject *)obj)->anim.placementData != 0) {
+        mm_free(((GameObject *)obj)->anim.placementData);
     }
     mm_free(obj);
 }
@@ -1969,7 +1970,7 @@ void Obj_UpdateObject(u8 *obj)
     void (*cb2)(u8 *);
 
     object = (ObjAnimComponent *)obj;
-    if (*(u16 *)(obj + 0xb0) & 0x40) {
+    if (((GameObject *)obj)->unkB0 & 0x40) {
         return;
     }
     if (lbl_803DCB78 & 1) {
@@ -1990,12 +1991,12 @@ void Obj_UpdateObject(u8 *obj)
         }
         return;
     }
-    if (*(u8 *)(obj + 0xe5) != 0 && *(int *)(obj + 0xc4) == 0 && (*(u8 *)(obj + 0xe5) & 2)) {
+    if (((GameObject *)obj)->unkE5 != 0 && *(int *)&((GameObject *)obj)->unkC4 == 0 && (((GameObject *)obj)->unkE5 & 2)) {
         Obj_TickModelColorFadeRecursive(obj);
     }
-    if (*(int *)(obj + 0xc0) != 0) {
-        if (*(int *)(obj + 0xc8) != 0) {
-            t = *(u8 **)(*(u8 **)(obj + 0xc8) + 0x54);
+    if (*(int *)&((GameObject *)obj)->unkC0 != 0) {
+        if (*(int *)&((GameObject *)obj)->unkC8 != 0) {
+            t = *(u8 **)((u8 *)((GameObject *)obj)->unkC8 + 0x54);
             if (t != 0) {
                 childHitState = (ObjHitsPriorityState *)t;
                 childHitState->lastHitObject = 0;
@@ -2018,15 +2019,15 @@ void Obj_UpdateObject(u8 *obj)
         object->previousWorldPosY = object->worldPosY;
         object->previousWorldPosZ = object->worldPosZ;
     }
-    *(f32 *)(obj + 0xfc) = object->velocityX;
-    *(f32 *)(obj + 0x100) = object->velocityY;
-    *(f32 *)(obj + 0x104) = object->velocityZ;
-    if (*(u8 *)(obj + 0xe5) != 0 && *(int *)(obj + 0xc4) == 0 && (*(u8 *)(obj + 0xe5) & 1)) {
-        *(s16 *)(obj + 0xe6) = (s16)(int)((f32)*(s16 *)(obj + 0xe6) - timeDelta);
-        if (*(s16 *)(obj + 0xe6) <= 0) {
-            *(s16 *)(obj + 0xe6) = 0;
-            *(u8 *)(obj + 0xe5) &= ~1;
-            *(u8 *)(obj + 0xf0) = 0;
+    ((GameObject *)obj)->unkFC = object->velocityX;
+    ((GameObject *)obj)->unk100 = object->velocityY;
+    ((GameObject *)obj)->unk104 = object->velocityZ;
+    if (((GameObject *)obj)->unkE5 != 0 && *(int *)&((GameObject *)obj)->unkC4 == 0 && (((GameObject *)obj)->unkE5 & 1)) {
+        ((GameObject *)obj)->unkE6 = (s16)(int)((f32)((GameObject *)obj)->unkE6 - timeDelta);
+        if (((GameObject *)obj)->unkE6 <= 0) {
+            ((GameObject *)obj)->unkE6 = 0;
+            ((GameObject *)obj)->unkE5 &= ~1;
+            ((GameObject *)obj)->unkF0 = 0;
             ObjModel_ClearRenderAttachment((u8 *)object->banks[object->bankIndex]);
             cb = (void (*)(u8 *, int, int, int, int))*(int *)(*lbl_803DCAB4 + 0xc);
             cb(obj, 0x7fb, 0, 0x50, 0);
@@ -2035,7 +2036,7 @@ void Obj_UpdateObject(u8 *obj)
             Sfx_PlayFromObject(obj, 0x47b);
         }
     }
-    if ((*(u16 *)(obj + 0xb0) & 0x8000) == 0) {
+    if ((((GameObject *)obj)->unkB0 & 0x8000) == 0) {
         switch (object->seqId) {
         case 0:
         case 0x1f:
@@ -2056,8 +2057,8 @@ void Obj_UpdateObject(u8 *obj)
 skip:
     hitState = (ObjHitsPriorityState *)object->hitReactState;
     if (hitState != NULL) {
-        if (*(int *)(obj + 0xc8) != 0) {
-            t = *(u8 **)(*(u8 **)(obj + 0xc8) + 0x54);
+        if (*(int *)&((GameObject *)obj)->unkC8 != 0) {
+            t = *(u8 **)((u8 *)((GameObject *)obj)->unkC8 + 0x54);
             if (t != 0) {
                 childHitState = (ObjHitsPriorityState *)t;
                 childHitState->lastHitObject = 0;
@@ -2120,7 +2121,7 @@ void Obj_UpdateAllObjects(u8 flags)
         ObjHitReact_UpdateResetObjects();
     }
     for (; obj != 0; obj = *(int *)(obj + off)) {
-        t = *(u8 **)(obj + 0x54);
+        t = (void *)((GameObject *)obj)->anim.hitReactState;
         if (t != 0) {
             if ((*(u8 *)(t + 0x62) & 8) == 0 || (*(s16 *)(t + 0x60) & 1) == 0) {
                 Obj_UpdateObject((u8 *)obj);
@@ -2135,25 +2136,25 @@ void Obj_UpdateAllObjects(u8 flags)
     } else {
         obj2 = 0;
     }
-    if (obj2 != 0 && *(u8 **)(obj2 + 0xc8) != 0) {
-        *(int *)(*(u8 **)(obj2 + 0xc8) + 0x30) = *(int *)(obj2 + 0x30);
-        Obj_UpdateObject(*(u8 **)(obj2 + 0xc8));
+    if (obj2 != 0 && ((GameObject *)obj2)->unkC8 != 0) {
+        *(int *)((u8 *)((GameObject *)obj2)->unkC8 + 0x30) = *(int *)&((GameObject *)obj2)->anim.parent;
+        Obj_UpdateObject(((GameObject *)obj2)->unkC8);
     }
     if (timeStop == 0) {
         ObjHits_Update(lbl_803DCB84);
         obj = *(int *)((u8 *)&lbl_803DCB7C + 4);
         for (; obj != 0; obj = *(int *)(obj + off)) {
-            if ((*(u16 *)(obj + 0xb0) & 0x2000) == 0) {
-                switch (*(s16 *)(obj + 0x46)) {
+            if ((((GameObject *)obj)->unkB0 & 0x2000) == 0) {
+                switch (((GameObject *)obj)->anim.seqId) {
                 case 0:
                 case 0x1f:
                     playerDoHitDetection(obj);
                     break;
                 default:
-                    if (*(int **)(obj + 0x68) == 0) {
+                    if (((GameObject *)obj)->anim.dll == 0) {
                         goto next;
                     }
-                    cb = (void (*)(int))*(int *)(**(int **)(obj + 0x68) + 0xc);
+                    cb = (void (*)(int))*(int *)((u8 *)*((GameObject *)obj)->anim.dll + 0xc);
                     if (cb == 0) {
                         goto next;
                     }
@@ -2170,20 +2171,20 @@ void Obj_UpdateAllObjects(u8 flags)
         } else {
             obj2 = 0;
         }
-        if (obj2 != 0 && *(u8 **)(obj2 + 0xc8) != 0) {
-            *(int *)(*(u8 **)(obj2 + 0xc8) + 0x30) = *(int *)(obj2 + 0x30);
-            child = *(int *)(obj2 + 0xc8);
-            if ((*(u16 *)(child + 0xb0) & 0x2000) == 0) {
-                switch (*(s16 *)(child + 0x46)) {
+        if (obj2 != 0 && ((GameObject *)obj2)->unkC8 != 0) {
+            *(int *)((u8 *)((GameObject *)obj2)->unkC8 + 0x30) = *(int *)&((GameObject *)obj2)->anim.parent;
+            child = *(int *)&((GameObject *)obj2)->unkC8;
+            if ((((GameObject *)child)->unkB0 & 0x2000) == 0) {
+                switch (((GameObject *)child)->anim.seqId) {
                 case 0:
                 case 0x1f:
                     playerDoHitDetection(child);
                     break;
                 default:
-                    if (*(int **)(child + 0x68) == 0) {
+                    if (((GameObject *)child)->anim.dll == 0) {
                         goto done;
                     }
-                    cb = (void (*)(int))*(int *)(**(int **)(child + 0x68) + 0xc);
+                    cb = (void (*)(int))*(int *)((u8 *)*((GameObject *)child)->anim.dll + 0xc);
                     if (cb == 0) {
                         goto done;
                     }
@@ -2289,7 +2290,7 @@ void mapSetupPlayer(void)
                 obj = loadCharacter((s16 *)&spawn, 1, -1, -1, 0, 0);
                 if (obj != 0) {
                     Obj_RegisterObject(obj, 1);
-                    OSReport((char *)(base + 0x5c), *(int *)(obj + 0x50) + 0x91);
+                    OSReport((char *)(base + 0x5c), *(int *)&((GameObject *)obj)->anim.modelInstance + 0x91);
                 }
             }
         }
@@ -2430,7 +2431,7 @@ void Obj_UpdateModelBlendStates(void)
             }
             j = 0;
             walker = obj;
-            for (; j < *(u8 *)(obj + 0xeb); j++) {
+            for (; j < ((GameObject *)obj)->unkEB; j++) {
                 child = *(u8 **)(walker + 0xc8);
                 childAnim = (ObjAnimComponent *)child;
                 if (child != 0 && childAnim->modelInstance != NULL) {
@@ -2440,7 +2441,7 @@ void Obj_UpdateModelBlendStates(void)
                         if (m != 0) {
                             *(u16 *)(m + 0x18) &= ~8;
                             if (*(u8 *)(*(u8 **)m + 0xf9) != 0) {
-                                c0 = *(u8 **)(child + 0xc0);
+                                c0 = ((GameObject *)child)->unkC0;
                                 if (c0 != 0) {
                                     bp = *(u8 **)(c0 + 0xb8);
                                 } else {
@@ -2519,9 +2520,9 @@ void Obj_RegisterObject(u8 *obj, int flags)
         }
     }
     if (flags & 1) {
-        *(u16 *)(obj + 0xb0) |= 0x10;
+        ((GameObject *)obj)->unkB0 |= 0x10;
         ((u8 **)lbl_803DCB88)[lbl_803DCB84++] = obj;
-        if (*(u16 *)(obj + 0xb0) & 0x10) {
+        if (((GameObject *)obj)->unkB0 & 0x10) {
             prev = 0;
             cur = *(int *)((u8 *)&lbl_803DCB7C + 4);
             off = *(s16 *)((u8 *)&lbl_803DCB7C + 2);
@@ -2560,12 +2561,12 @@ void Obj_FreeObject(u8 *obj)
     int off;
     u8 *q;
 
-    if (*(u16 *)(obj + 0xb0) & 0x40) {
+    if (((GameObject *)obj)->unkB0 & 0x40) {
         return;
     }
     Sfx_RemoveLoopedObjectSoundForObject(obj);
     Sfx_StopObjectChannel(obj, 0x7f);
-    if (*(u16 *)(obj + 0xb0) & 0x10) {
+    if (((GameObject *)obj)->unkB0 & 0x10) {
         i = 0;
         p = (u8 **)lbl_803DCB88;
         for (n = lbl_803DCB84; n > 0; n--) {
@@ -2586,15 +2587,15 @@ void Obj_FreeObject(u8 *obj)
         } else {
             OSReport(sObjFreeNonExistentObjectWarning);
         }
-        if (*(u16 *)(obj + 0xb0) & 0x10) {
+        if (((GameObject *)obj)->unkB0 & 0x10) {
             objList_remove(&lbl_803DCB7C, obj);
         }
         lbl_803DCBC4 = 0;
     }
     for (i = 0; i < lbl_803DCB94; i++) {
     }
-    *(u16 *)(obj + 0xb0) |= 0x40;
-    if (*(u8 *)(obj + 0xea) != 0) {
+    ((GameObject *)obj)->unkB0 |= 0x40;
+    if (((GameObject *)obj)->unkEA != 0) {
         i = 0;
         base = (u8 **)lbl_803DCB90;
         p = base;
@@ -2983,10 +2984,10 @@ void fn_8002A5DC(u8 *obj)
     f32 denom;
     f32 sum;
 
-    denom = lbl_803DE888 * *(f32 *)(obj + 0xa8);
-    denom *= *(f32 *)(obj + 8);
-    dx = ((*(f32 *)(obj + 0x88) - lbl_803DCECC) - (*(f32 *)(obj + 0x14) - playerMapOffsetZ)) / denom;
-    dz = ((*(f32 *)(obj + 0xc) - lbl_803DCED0) - (*(f32 *)(obj + 0x80) - playerMapOffsetX)) / denom;
+    denom = lbl_803DE888 * ((GameObject *)obj)->anim.hitboxScale;
+    denom *= ((GameObject *)obj)->anim.rootMotionScale;
+    dx = ((((GameObject *)obj)->anim.previousLocalPosZ - lbl_803DCECC) - (((GameObject *)obj)->anim.localPosZ - playerMapOffsetZ)) / denom;
+    dz = ((((GameObject *)obj)->anim.localPosX - lbl_803DCED0) - (((GameObject *)obj)->anim.previousLocalPosX - playerMapOffsetX)) / denom;
     sum = dz * dz + dx * dx;
     if (sum > lbl_803DE88C) {
         len = sqrtf(sum);
