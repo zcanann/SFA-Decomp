@@ -1,4 +1,5 @@
 #include "main/dll/alphaanim.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 
 
@@ -603,9 +604,9 @@ void seqobject_init(int *obj, u8 *params) {
     u8 *sub;
 
     objAnim = (ObjAnimComponent *)obj;
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     *(s16*)obj = (s16)(params[0x1c] << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)&seqobject_SeqFn;
+    ((GameObject *)obj)->unkBC = (void*)&seqobject_SeqFn;
     objAnim->bankIndex = params[0x1f];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
@@ -619,7 +620,7 @@ void seqobject_init(int *obj, u8 *params) {
         }
     }
     sub[1] = 0;
-    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x2000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -633,10 +634,10 @@ void immultiseq_init(int *obj, u8 *params) {
     int i;
 
     objAnim = (ObjAnimComponent *)obj;
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     *(s16*)obj = (s16)(params[0x28] << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)&immultiseq_SeqFn;
-    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
+    ((GameObject *)obj)->unkBC = (void*)&immultiseq_SeqFn;
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
     objAnim->bankIndex = (s8)params[0x2a];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
@@ -720,11 +721,11 @@ extern int seqobj2_SeqFn(int* obj, int* anim, u8* buf);
  * if the polarity flips (GameBit != mask bit) dispatch vtable[0x13] to
  * advance. Always latches state[1] bit 0 before returning 0. */
 int immultiseq_SeqFn(int* obj, int* anim, u8* buf) {
-    u8* state = *(u8**)((char*)obj + 0xb8);
-    u8* def = *(u8**)((char*)obj + 0x4c);
+    u8* state = ((GameObject *)obj)->extra;
+    u8* def = *(u8**)&((GameObject *)obj)->anim.placementData;
     *(s16*)((char*)buf + 0x6e) = *(s16*)((char*)buf + 0x70);
     *(u8*)((char*)buf + 0x56) = 0;
-    if (*(s16*)((char*)obj + 0xb4) == -1) {
+    if (((GameObject *)obj)->unkB4 == -1) {
         return 0;
     }
     {
@@ -737,7 +738,7 @@ int immultiseq_SeqFn(int* obj, int* anim, u8* buf) {
                 if (gbit != -1) {
                     int bv = GameBit_Get(gbit);
                     if ((u32)!((def[0x30] >> next) & 1) == (u32)bv) {
-                        ((void (*)(int))((int **)*gObjectTriggerInterface)[0x13])(*(s16 *)((char *)obj + 0xb4));
+                        ((void (*)(int))((int **)*gObjectTriggerInterface)[0x13])(((GameObject *)obj)->unkB4);
                     }
                 }
             }
@@ -750,16 +751,16 @@ int immultiseq_SeqFn(int* obj, int* anim, u8* buf) {
 void fn_8017C294(int* obj)
 {
     if (obj != NULL) {
-        ((void(*)(int*, int*, int))((void**)*(*(int***)((char*)obj + 104)))[1])(obj, *(int**)((char*)obj + 76), 0);
+        ((void(*)(int*, int*, int))((void**)*(*(int***)&((GameObject *)obj)->anim.dll))[1])(obj, *(int**)&((GameObject *)obj)->anim.placementData, 0);
     }
 }
 
 void seqobj2_init(int* obj, int* def)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     OSReport(sSeqObjNeedBitUsedBitFormat, *(int*)((char*)def + 20), *(s16*)((char*)def + 26), *(s16*)((char*)def + 24));
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 28) << 8);
-    *(void**)((char*)obj + 188) = (void*)seqobj2_SeqFn;
+    ((GameObject *)obj)->unkBC = (void*)seqobj2_SeqFn;
     if (*(s16*)((char*)def + 32) > -1) {
         s16 slot = *(s16*)((char*)def + 24);
         if (slot != -1 && (u32)GameBit_Get(slot) != 0u) {
@@ -767,13 +768,13 @@ void seqobj2_init(int* obj, int* def)
         }
     }
     ObjGroup_AddObject(obj, 15);
-    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x6000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
 }
 
 int seqobj2_SeqFn(int* obj, int* anim, u8* buf)
 {
-    int* state = *(int**)((char*)obj + 0x4c);
-    int* flagPtr = *(int**)((char*)obj + 0xb8);
+    int* state = *(int**)&((GameObject *)obj)->anim.placementData;
+    int* flagPtr = ((GameObject *)obj)->extra;
     int i;
     for (i = 0; i < buf[0x8b]; i++) {
         int op = buf[0x81 + i];
@@ -797,11 +798,11 @@ int seqobject_SeqFn(int* obj, int* anim, u8* buf)
     int* state;
     int* flagPtr;
     int i;
-    if (*(s16*)((char*)obj + 0xb4) == -1) {
+    if (((GameObject *)obj)->unkB4 == -1) {
         return 0;
     }
-    state = *(int**)((char*)obj + 0x4c);
-    flagPtr = *(int**)((char*)obj + 0xb8);
+    state = *(int**)&((GameObject *)obj)->anim.placementData;
+    flagPtr = ((GameObject *)obj)->extra;
     buf[0x56] = 0;
     for (i = 0; i < buf[0x8b]; i++) {
         int op = buf[0x81 + i];
@@ -835,8 +836,8 @@ void seqobject_update(int *obj)
     u8 *def;
     s32 bitValue;
 
-    state = *(u8 **)((char *)obj + 0xb8);
-    def = *(u8 **)((char *)obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    def = *(u8 **)&((GameObject *)obj)->anim.placementData;
 
     if ((state[0] & SEQOBJECT_STATE_SEQUENCE_DONE) != 0) {
         u8 flags = def[0x1d];
@@ -905,8 +906,8 @@ void seqobj2_update(int *obj)
     u32 bitValue;
 
     descriptor = (char *)&gSeqObj2ObjDescriptor;
-    state = *(u8 **)((char *)obj + 0xb8);
-    def = *(u8 **)((char *)obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    def = *(u8 **)&((GameObject *)obj)->anim.placementData;
 
     if ((state[0] & SEQOBJECT_STATE_OPEN) != 0) {
         if ((def[0x1d] & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) != 0) {
@@ -964,8 +965,8 @@ void immultiseq_update(int *obj)
     int prevStep;
     s16 bitId;
 
-    state = *(u8 **)((char *)obj + 0xb8);
-    def = *(u8 **)((char *)obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    def = *(u8 **)&((GameObject *)obj)->anim.placementData;
 
     if ((state[1] & IMMULTISEQ_LATCH_ADVANCE_BIT) != 0) {
         step = state[0];
@@ -1008,11 +1009,11 @@ void immultiseq_update(int *obj)
 }
 
 int dll_115_seqFn(int *obj, int p2, void *p3) {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
-    s16 *def = *(s16 **)((char *)obj + 0x4c);
+    u8 *state = ((GameObject *)obj)->extra;
+    s16 *def = *(s16 **)&((GameObject *)obj)->anim.placementData;
     *(s16 *)((char *)p3 + 0x6e) = *(s16 *)((char *)p3 + 0x70);
     *(u8 *)((char *)p3 + 0x56) = 0;
-    if (*(s16 *)((char *)obj + 0xb4) == -1) {
+    if (((GameObject *)obj)->unkB4 == -1) {
         return 0;
     }
     {
@@ -1024,7 +1025,7 @@ int dll_115_seqFn(int *obj, int p2, void *p3) {
                 s16 newId = nextDef[0x14];
                 if (newId != -1 && newId != curDef[0x14]) {
                     if (GameBit_Get(newId) != 0) {
-                        ((void (*)(int))((int **)*gObjectTriggerInterface)[0x13])(*(s16 *)((char *)obj + 0xb4));
+                        ((void (*)(int))((int **)*gObjectTriggerInterface)[0x13])(((GameObject *)obj)->unkB4);
                     }
                 }
             }
