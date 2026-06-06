@@ -1,4 +1,6 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/baddie_state.h"
+#include "main/dll/campfire_state.h"
 #include "main/dll/campfire.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -338,12 +340,12 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
   piVar8 = *(int **)(stateWithBaddieData + 0x40c);
   st.p = *(KaldaCombatParams *)lbl_802C2210;
   playerObj = Obj_GetPlayerObject();
-  if (*(void **)(state + 0x2d0) != NULL) {
+  if (((GroundBaddieState *)state)->baddie.targetObj != NULL) {
     int target = *(int *)(state + 0x2d0);
     st.dx = *(f32 *)(target + 0x18) - *(f32 *)(obj + 0x18);
     st.dy = *(f32 *)(target + 0x1c) - *(f32 *)(obj + 0x1c);
     st.dz = *(f32 *)(target + 0x20) - *(f32 *)(obj + 0x20);
-    *(f32 *)(state + 0x2c0) = sqrtf(st.dz * st.dz + (st.dx * st.dx + st.dy * st.dy));
+    ((GroundBaddieState *)state)->baddie.unk2C0 = sqrtf(st.dz * st.dz + (st.dx * st.dx + st.dy * st.dy));
   }
   (*(void (**)(int, int, int, int, int, int, int, int))(*(int *)gBaddieControlInterface + 0x54))(
       obj, state, stateWithBaddieData + 0x35c, *(s16 *)(stateWithBaddieData + 0x3f4), 0, 0, 0, 4);
@@ -357,12 +359,12 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
       if ((result != 0x10) && (result != 0x11)) {
         objLightFn_8009a1dc(lbl_803E30BC, obj, lbl_803AC668, 3, 0);
         (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 4);
-        *(u8 *)(state + 0x354) -= 1;
+        ((GroundBaddieState *)state)->baddie.unk354 -= 1;
         Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
         Sfx_PlayFromObject(obj, SFXen_blkscrp6);
       }
       if (*(s8 *)(state + 0x354) < 1) {
-        *(s16 *)(state + 0x270) = 2;
+        ((GroundBaddieState *)state)->baddie.unk270 = 2;
       }
     }
   }
@@ -387,11 +389,11 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
         }
       }
       else {
-        if (*(s16 *)(state + 0x270) != 1) {
+        if (((GroundBaddieState *)state)->baddie.unk270 != 1) {
           (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 6);
-          *(u8 *)(state + 0x27b) = 1;
-          *(u8 *)(state + 0x27a) = 1;
-          *(s16 *)(state + 0x270) = 1;
+          ((GroundBaddieState *)state)->baddie.moveJustStartedB = 1;
+          ((GroundBaddieState *)state)->baddie.moveJustStartedA = 1;
+          ((GroundBaddieState *)state)->baddie.unk270 = 1;
           objLightFn_8009a1dc(lbl_803E30BC, obj, lbl_803AC668, 1, 0);
           Sfx_PlayFromObject(obj, SFXen_blkscrp6);
           Sfx_PlayFromObject(obj, 0x3ac);
@@ -399,7 +401,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
       }
     }
     if (*(s8 *)(state + 0x354) < 1) {
-      *(s16 *)(state + 0x270) = 2;
+      ((GroundBaddieState *)state)->baddie.unk270 = 2;
     }
   }
 
@@ -479,7 +481,7 @@ void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if ((*(ushort *)(state + 0x400) & 0x60) != 0) {
       objParticleFn_80099d84(obj,lbl_803E3078,3,*(float *)(state + 1000),0);
     }
-    pathData = *(int *)(state + 0x40c);
+    pathData = ((CampfireState *)state)->unk40C;
     ObjPath_GetPointWorldPosition(obj,2,pathData + 0x10,pathData + 0x14,pathData + 0x18,0);
     ObjPath_GetPointWorldPosition(obj,1,pathData + 0x28,pathData + 0x2c,pathData + 0x30,0);
   }
@@ -515,7 +517,7 @@ void kaldachom_update(int param_1)
   iVar9 = *(int *)(param_1 + 0xb8);
   iVar8 = *(int *)(param_1 + 0x4c);
   if (*(int *)(param_1 + 0xf4) != 0) {
-    if ((*(short *)(iVar9 + 0x270) != 3) &&
+    if ((((CampfireState *)iVar9)->unk270 != 3) &&
         (iVar1 = ((MapEventInterface *)*gMapEventInterface)->isTimedEventActive(*(int *)(iVar8 + 0x14)), iVar1 != 0))
     {
       (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
@@ -535,7 +537,7 @@ void kaldachom_update(int param_1)
     else {
       kaldachom_updateCombat(param_1,iVar9,iVar9);
       if (*(short *)(iVar9 + 0x402) == 0) {
-        iVar8 = *(int *)(iVar9 + 0x40c);
+        iVar8 = ((CampfireState *)iVar9)->unk40C;
         *(float *)(iVar8 + 0x34) = *(float *)(iVar8 + 0x34) - timeDelta;
         if (*(float *)(iVar8 + 0x34) <= lbl_803E3060) {
           Sfx_PlayFromObject(param_1,SFXkr_pullup2);
@@ -543,20 +545,20 @@ void kaldachom_update(int param_1)
         }
         uVar3 = Obj_GetPlayerObject();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;
-        if (*(short *)(iVar9 + 0x274) != 6) {
+        if (((CampfireState *)iVar9)->unk274 != 6) {
           (**(code **)(*gPlayerInterface + 0x30))((double)timeDelta,param_1,iVar9,5);
         }
         iVar8 = (**(code **)(*gBaddieControlInterface + 0x48))
-                          ((f64)(f32)(u32)*(u16 *)(iVar9 + 0x3fe),param_1,iVar9,0x8000);
+                          ((f64)(f32)(u32)((CampfireState *)iVar9)->unk3FE,param_1,iVar9,0x8000);
         if (iVar8 != 0) {
           (**(code **)(*gBaddieControlInterface + 0x28))
-                    (param_1,iVar9,iVar9 + 0x35c,(int)*(short *)(iVar9 + 0x3f4),0,0,0,4,0xffffffff);
+                    (param_1,iVar9,iVar9 + 0x35c,(int)((CampfireState *)iVar9)->unk3F4,0,0,0,4,0xffffffff);
           *(undefined *)(iVar9 + 0x349) = 0;
           *(undefined2 *)(iVar9 + 0x402) = 1;
         }
       }
       else {
-        iVar8 = *(int *)(iVar9 + 0x40c);
+        iVar8 = ((CampfireState *)iVar9)->unk40C;
         piVar3 = (int *)objFindTexture(param_1,0,0);
         *(short *)(iVar8 + 0x48) = *(short *)(iVar8 + 0x48) + 0x1000;
         dVar10 = fn_80293E80((lbl_803E30B4 * (f32)(s32)*(s16 *)(iVar8 + 0x48)) / lbl_803E30B8);
@@ -565,7 +567,7 @@ void kaldachom_update(int param_1)
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;
         kaldachom_handleAnimEvents(param_1,iVar9,iVar9);
         (**(code **)(*gBaddieControlInterface + 0x2c))((double)lbl_803E3060,param_1,iVar9,0xffffffff);
-        if (*(short *)(iVar9 + 0x274) != 6) {
+        if (((CampfireState *)iVar9)->unk274 != 6) {
           (**(code **)(*gPlayerInterface + 0x30))((double)timeDelta,param_1,iVar9,5);
         }
         *(undefined4 *)(iVar9 + 0x3e0) = *(undefined4 *)(param_1 + 0xc0);
@@ -616,7 +618,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
   *(float *)(state + 0x2a0) = lbl_803E307C;
   *(float *)(state + 0x280) = lbl_803E3060;
   player = Obj_GetPlayerObject();
-  *(int *)(state + 0x2d0) = player;
+  ((CampfireState *)state)->unk2D0 = player;
   *(undefined *)(state + 0x25f) = 0;
   ObjHits_DisableObject(obj);
   pathData[0xd] = (f32)(int)randomGetRange(300,600);

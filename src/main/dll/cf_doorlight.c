@@ -1,4 +1,6 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/baddie_state.h"
+#include "main/dll/cf_doorlight_state.h"
 #include "main/dll/cf_doorlight.h"
 #include "main/objanim.h"
 
@@ -103,16 +105,16 @@ int fn_80167764(int obj, int p)
   int def;
 
   state = *(int *)(obj + 0xb8);
-  timer = *(int *)(state + 0x40c);
-  if (*(short *)(p + 0x274) == 2) {
+  timer = ((CfDoorlightState *)state)->unk40C;
+  if (((GroundBaddieState *)p)->baddie.controlMode == 2) {
     *(f32 *)(timer + 0x34) = *(f32 *)(timer + 0x34) - timeDelta;
     if (*(f32 *)(timer + 0x34) <= lbl_803E3060) {
-      *(u8 *)(p + 0x346) = 1;
+      ((GroundBaddieState *)p)->baddie.moveDone = 1;
     }
   }
-  if ((s8)*(u8 *)(p + 0x346) != 0 || (s8)*(u8 *)(p + 0x27b) != 0) {
+  if ((s8)((GroundBaddieState *)p)->baddie.moveDone != 0 || (s8)((GroundBaddieState *)p)->baddie.moveJustStartedB != 0) {
     if (((int (*)(int, int, f32, int))((void **)*(int *)gBaddieControlInterface)[0x11])
-            (obj, p, (f32)(u32)*(u16 *)(state + 0x3fe), 1) != 0) {
+            (obj, p, (f32)(u32)((CfDoorlightState *)state)->unk3FE, 1) != 0) {
       return 5;
     }
     def = *(int *)(obj + 0x4c);
@@ -147,8 +149,8 @@ int fn_8016792C(int obj, u8 *state)
     if ((s8)state[0x27b] != 0) {
         u8 *extra = *(u8 **)(obj + 0xb8);
         extra[0x405] = 0;
-        GameBit_Set(*(s16 *)(extra + 0x3f4), 0);
-        GameBit_Set(*(s16 *)(extra + 0x3f2), 1);
+        GameBit_Set(((CfDoorlightState *)extra)->unk3F4, 0);
+        GameBit_Set(((CfDoorlightState *)extra)->unk3F2, 1);
     }
     return 0;
 }
@@ -251,7 +253,7 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
   int iVar3;
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  iVar3 = *(int *)(iVar2 + 0x40c);
+  iVar3 = ((CfDoorlightState *)iVar2)->unk40C;
   if ((*(short *)(param_2 + 0x274) == 2) &&
      (*(float *)(iVar3 + 0x34) = *(float *)(iVar3 + 0x34) - lbl_803DC074,
      *(float *)(iVar3 + 0x34) <= lbl_803E3CF8)) {
@@ -295,11 +297,11 @@ int fn_80167B60(int obj, int p)
 
   b8 = *(int *)(obj + 0xb8);
   *(s8 *)(p + 0x34d) = 3;
-  *(f32 *)(p + 0x2a0) = lbl_803E3084;
+  ((GroundBaddieState *)p)->baddie.moveSpeed = lbl_803E3084;
   {
     f32 fz = lbl_803E3060;
-    *(f32 *)(p + 0x280) = fz;
-    *(f32 *)(p + 0x284) = fz;
+    ((GroundBaddieState *)p)->baddie.animSpeedA = fz;
+    ((GroundBaddieState *)p)->baddie.animSpeedB = fz;
     if (*(char *)(p + 0x27a) != '\0') {
       ObjAnim_SetCurrentMove(obj, 5, fz, 0);
       *(s8 *)(p + 0x346) = 0;
@@ -312,7 +314,7 @@ int fn_80167B60(int obj, int p)
       fn_80169360(obj, 2);
     }
   }
-  b8_40c = *(int *)(b8 + 0x40c);
+  b8_40c = ((CfDoorlightState *)b8)->unk40C;
   if ((*(u8 *)(b8_40c + 0x4b) & 0x1) == 0) {
     Sfx_PlayFromObject(obj, SFXkr_climb2);
     Sfx_PlayFromObject(obj, SFXsc_attack01);
@@ -320,7 +322,7 @@ int fn_80167B60(int obj, int p)
     *(u8 *)(b8_40c + 0x4b) |= 0x1;
     {
       char *r;
-      if (*(s16 *)(b8 + 0x3f0) != 0) {
+      if (((CfDoorlightState *)b8)->unk3F0 != 0) {
         r = ((char *(*)(int, int, int, int))((void **)*gBaddieControlInterface)[0x13])(obj, 6, -1, 0);
       } else {
         r = NULL;
@@ -398,13 +400,13 @@ int fn_80167988(int obj, int p2)
   int sub = *(int *)(obj + 0xb8);
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
-    *(u8 *)(*(int *)(sub + 0x40c) + 0x4b) = 0;
+    *(u8 *)(((CfDoorlightState *)sub)->unk40C + 0x4b) = 0;
     (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 7);
     ObjHits_DisableObject(obj);
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
-    *(u16 *)(sub + 0x400) = (u16)(*(u16 *)(sub + 0x400) | 0x20);
-    *(f32 *)(sub + 0x3e8) = lbl_803E3078;
-    *(f32 *)(sub + 0x3ec) = lbl_803E307C;
+    ((CfDoorlightState *)sub)->unk400 = (u16)(((CfDoorlightState *)sub)->unk400 | 0x20);
+    ((CfDoorlightState *)sub)->unk3E8 = lbl_803E3078;
+    ((CfDoorlightState *)sub)->unk3EC = lbl_803E307C;
   } else if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
     if (*(void **)(obj + 0x4c) == NULL) {
       Obj_FreeObject(obj);

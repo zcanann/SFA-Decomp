@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/earthwalker_state.h"
 #include "main/mapEventTypes.h"
 
 #pragma peephole on
@@ -291,7 +292,7 @@ int fn_802239A4(int obj, int ai)
     int result;
 
     if (*(s8 *)(ai + 0x27b) != 0) {
-        *(u8 *)(state + 0xac0) &= ~1;
+        ((EarthwalkerState *)state)->unkAC0 &= ~1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 3);
         result = 0;
     } else if (*(s8 *)(ai + 0x346) != 0) {
@@ -312,19 +313,19 @@ int fn_80223A1C(int obj, int ai)
     f32 dist;
 
     if (*(s8 *)(ai + 0x27b) != 0) {
-        *(u8 *)(state + 0xac0) |= 1;
+        ((EarthwalkerState *)state)->unkAC0 |= 1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 1);
     }
-    *(f32 *)(state + 0xabc) -= timeDelta;
-    dist = *(f32 *)(state + 0xab8);
+    ((EarthwalkerState *)state)->unkABC -= timeDelta;
+    dist = ((EarthwalkerState *)state)->unkAB8;
     if (dist > lbl_803E6CF0) {
         return 2;
     }
     if (dist >= lbl_803E6CF4) {
         return 0;
     }
-    if (*(f32 *)(state + 0xabc) <= lbl_803E6CF8) {
-        *(f32 *)(state + 0xabc) = (f32)randomGetRange(0x78, 0xfa);
+    if (((EarthwalkerState *)state)->unkABC <= lbl_803E6CF8) {
+        ((EarthwalkerState *)state)->unkABC = (f32)randomGetRange(0x78, 0xfa);
         return 4;
     }
     return 0;
@@ -340,13 +341,13 @@ int fn_80223AFC(int obj, int ai)
     int curve = state + 0x9b0;
 
     if (*(s8 *)(ai + 0x27b) != 0) {
-        *(u8 *)(state + 0xac0) &= ~1;
+        ((EarthwalkerState *)state)->unkAC0 &= ~1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 2);
     }
     if (Curve_AdvanceAlongPath(curve, lbl_803E6D08) != 0 || *(int *)(curve + 0x10) != 0) {
         (*(void (**)(int))(*gRomCurveInterface + 0x90))(curve);
     }
-    if (*(f32 *)(state + 0xab8) < lbl_803E6D0C) {
+    if (((EarthwalkerState *)state)->unkAB8 < lbl_803E6D0C) {
         return 3;
     }
     return 0;
@@ -377,11 +378,11 @@ int fn_80223C34(int obj, int ai)
     EarthWalkerObject *ewObj = (EarthWalkerObject *)obj;
     int state = *(int *)(obj + 0xb8);
 
-    *(f32 *)(obj + 0x24) = oneOverTimeDelta * (*(f32 *)(state + 0xa18) - *(f32 *)(obj + 0xc));
-    *(f32 *)(obj + 0x2c) = oneOverTimeDelta * (*(f32 *)(state + 0xa20) - *(f32 *)(obj + 0x14));
-    *(f32 *)(obj + 0xc) = *(f32 *)(state + 0xa18);
-    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0xa20);
-    ewObj->facingAngle = getAngle(-*(f32 *)(state + 0xa24), -*(f32 *)(state + 0xa2c));
+    *(f32 *)(obj + 0x24) = oneOverTimeDelta * (((EarthwalkerState *)state)->unkA18 - *(f32 *)(obj + 0xc));
+    *(f32 *)(obj + 0x2c) = oneOverTimeDelta * (((EarthwalkerState *)state)->unkA20 - *(f32 *)(obj + 0x14));
+    *(f32 *)(obj + 0xc) = ((EarthwalkerState *)state)->unkA18;
+    *(f32 *)(obj + 0x14) = ((EarthwalkerState *)state)->unkA20;
+    ewObj->facingAngle = getAngle(-((EarthwalkerState *)state)->unkA24, -((EarthwalkerState *)state)->unkA2C);
     ObjAnim_SampleRootCurvePhase(
         sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) +
               *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c)),

@@ -1,4 +1,5 @@
 #include "main/dll/landedArwing.h"
+#include "main/dll/treasurechest_state.h"
 #include "main/objanim.h"
 #include "main/object_descriptor.h"
 
@@ -114,56 +115,56 @@ void dll_D3_update(int *obj)
 
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, extra->animSpeed, timeDelta, NULL);
 
-    if (*(s16 *)((char *)state + 0x402) != 1) {
+    if (((TreasureChestState *)state)->unk402 != 1) {
         rc = ((int (*)(f32, int *, int *, int))((void **)*(int *)gBaddieControlInterface)[0x48 / 4])(
-            (f32)((double)(u32)*(u16 *)((char *)state + 0x3fe) - lbl_803E3040),
+            (f32)((double)(u32)((TreasureChestState *)state)->unk3FE - lbl_803E3040),
             obj, state, 0x18000);
         if (rc != 0) {
             ((void (*)(int *, int *, int, int, int, int, int, int, int))((void **)*(int *)gBaddieControlInterface)[0x28 / 4])(
                 obj, state,
                 (int)state + 0x35c,
-                (int)*(s16 *)((char *)state + 0x3f4),
+                (int)((TreasureChestState *)state)->unk3F4,
                 0, 0, 1, 0, -1);
-            *(int *)((char *)state + 0x2d0) = rc;
-            *(u8 *)((char *)state + 0x349) = 0;
-            *(s16 *)((char *)state + 0x402) = 1;
-            *(u8 *)((char *)state + 0x405) = 2;
+            ((TreasureChestState *)state)->unk2D0 = rc;
+            ((TreasureChestState *)state)->unk349 = 0;
+            ((TreasureChestState *)state)->unk402 = 1;
+            ((TreasureChestState *)state)->unk405 = 2;
         }
     }
 
-    if (*(int *)((char *)state + 0x2d0) != 0 &&
-        *(s16 *)((char *)state + 0x402) == 2) {
-        if (*(f32 *)((char *)state + 0x2c0) <=
-            (f32)((double)(u32)*(u16 *)((char *)state + 0x3fe) - lbl_803E3040)) {
-            *(s16 *)((char *)state + 0x402) = 1;
+    if (((TreasureChestState *)state)->unk2D0 != 0 &&
+        ((TreasureChestState *)state)->unk402 == 2) {
+        if (((TreasureChestState *)state)->unk2C0 <=
+            (f32)((double)(u32)((TreasureChestState *)state)->unk3FE - lbl_803E3040)) {
+            ((TreasureChestState *)state)->unk402 = 1;
         }
     }
 
-    if (*(int *)((char *)state + 0x2d0) != 0) {
-        local_8c = *(f32 *)((char *)(*(int *)((char *)state + 0x2d0)) + 0x18) -
+    if (((TreasureChestState *)state)->unk2D0 != 0) {
+        local_8c = *(f32 *)((char *)(((TreasureChestState *)state)->unk2D0) + 0x18) -
                    *(f32 *)((char *)obj + 0x18);
-        local_88 = *(f32 *)((char *)(*(int *)((char *)state + 0x2d0)) + 0x1c) -
+        local_88 = *(f32 *)((char *)(((TreasureChestState *)state)->unk2D0) + 0x1c) -
                    *(f32 *)((char *)obj + 0x1c);
-        local_84 = *(f32 *)((char *)(*(int *)((char *)state + 0x2d0)) + 0x20) -
+        local_84 = *(f32 *)((char *)(((TreasureChestState *)state)->unk2D0) + 0x20) -
                    *(f32 *)((char *)obj + 0x20);
-        *(f32 *)((char *)state + 0x2c0) =
+        ((TreasureChestState *)state)->unk2C0 =
             sqrtf(local_8c * local_8c + local_88 * local_88 + local_84 * local_84);
     }
 
     ((void (*)(int *, int *, int, int, int, int, int, int))((void **)*(int *)gBaddieControlInterface)[0x54 / 4])(
         obj, state,
         (int)((char *)state + 0x35c),
-        (int)*(s16 *)((char *)state + 0x3f4),
+        (int)((TreasureChestState *)state)->unk3F4,
         0, 0, 0, 0);
 
-    hits = (int)*(s8 *)((char *)state + 0x354);
+    hits = (int)((TreasureChestState *)state)->unk354;
     if (hits > 0) {
         ((void (*)(int *, int *, int, int, int *, int *, int, int *))((void **)*(int *)gBaddieControlInterface)[0x50 / 4])(
             obj, state,
             (int)((char *)state + 0x35c),
-            (int)*(s16 *)((char *)state + 0x3f4),
+            (int)((TreasureChestState *)state)->unk3F4,
             lbl_803202E8, lbl_80320360, 0, lbl_803AC638);
-        if ((int)*(s8 *)((char *)state + 0x354) < hits) {
+        if ((int)((TreasureChestState *)state)->unk354 < hits) {
             (*(void (**)(void))(*(int **)(*(int *)((char *)player + 0xc8) + 0x68) + 0x50 / 4))();
             *(f32 *)((char *)lbl_803AC638 + 0xc)  = *(f32 *)((char *)obj + 0xc);
             *(f32 *)((char *)lbl_803AC638 + 0x10) = *(f32 *)((char *)obj + 0x10);
@@ -175,13 +176,13 @@ void dll_D3_update(int *obj)
     ((void (*)(int *, int *, f32, int))((void **)*(int *)gBaddieControlInterface)[0x2c / 4])(
         obj, state, lbl_803E2FDC, -1);
 
-    *(int *)((char *)state + 0x3e0) = *(int *)((char *)obj + 0xc0);
+    ((TreasureChestState *)state)->unk3E0 = *(int *)((char *)obj + 0xc0);
     *(int *)((char *)obj + 0xc0) = 0;
 
     ((void (*)(f32, f32, int *, int *, void **, void *))((void **)*(int *)gPlayerInterface)[8 / 4])(
         timeDelta, timeDelta, obj, state, lbl_803AC650, &lbl_803DDA88);
 
-    *(int *)((char *)obj + 0xc0) = *(int *)((char *)state + 0x3e0);
+    *(int *)((char *)obj + 0xc0) = ((TreasureChestState *)state)->unk3E0;
 
     if ((extra->flags92 & 1) == 0 &&
         extra->surfaceMode == 6) {
@@ -245,11 +246,11 @@ void dll_D3_init(int obj, int def, int flag)
     } else {
         ftag = 0;
     }
-    *(s16 *)(state + 0x274) = ftag;
-    *(s16 *)(state + 0x270) = 0;
-    *(s16 *)(state + 0x402) = 0;
-    *(u8 *)(state + 0x405) = 0;
-    *(u8 *)(state + 0x25f) = 0;
+    ((TreasureChestState *)state)->unk274 = ftag;
+    ((TreasureChestState *)state)->unk270 = 0;
+    ((TreasureChestState *)state)->unk402 = 0;
+    ((TreasureChestState *)state)->unk405 = 0;
+    ((TreasureChestState *)state)->unk25F = 0;
     ObjHits_DisableObject(obj);
 
     fz = lbl_803E2FF4;

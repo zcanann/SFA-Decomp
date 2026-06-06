@@ -1,4 +1,5 @@
 #include "main/dll/tFrameAnimator.h"
+#include "main/dll/tframeanimator_state.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
 
@@ -40,7 +41,7 @@ undefined4 sidekickball_init(int obj)
   memset(state, 0, 0x2cc);
   Obj_GetPlayerObject();
   state[0x274] = 0;
-  *(f32 *)(state + 0x26c) = lbl_803E369C;
+  ((TFrameAnimatorState *)state)->unk26C = lbl_803E369C;
   *(u16 *)(obj + 0xb0) |= 0x2000;
   objDef = *(int *)(obj + 0x54);
   *(f32 *)(state + 0x268) = (f32)*(s16 *)(objDef + 0x5a);
@@ -145,17 +146,17 @@ void levelname_init(int obj, int objDef)
     state = *(int **)(obj + 0xb8);
     *(void **)(obj + 0xbc) = levelname_SeqFn;
     text = gameTextGet(*(int *)(objDef + 0x1c));
-    state[1] = **(int **)(text + 2);
-    state[2] = 0x64;
-    state[0] = (int)text;
-    *(u8 *)((char *)state + 0xc) = *(u8 *)(objDef + 0x20);
-    *(s16 *)((char *)state + 0xe) = *(s16 *)(objDef + 0x18);
-    *(u8 *)((char *)state + 0x14) = 0;
-    *(s16 *)((char *)state + 0x12) = 0;
-    *(s16 *)((char *)state + 0x10) = 0;
-    if (*(s16 *)((char *)state + 0xe) != -1) {
-        if (GameBit_Get(*(s16 *)((char *)state + 0xe)) != 0) {
-            *(u8 *)((char *)state + 0x14) = 4;
+    ((TFrameAnimatorState *)state)->unk4 = **(int **)(text + 2);
+    ((TFrameAnimatorState *)state)->unk8 = 0x64;
+    ((TFrameAnimatorState *)state)->unk0 = (int)text;
+    ((TFrameAnimatorState *)state)->unkC = *(u8 *)(objDef + 0x20);
+    ((TFrameAnimatorState *)state)->unkE = *(s16 *)(objDef + 0x18);
+    ((TFrameAnimatorState *)state)->unk14 = 0;
+    ((TFrameAnimatorState *)state)->unk12 = 0;
+    ((TFrameAnimatorState *)state)->unk10 = 0;
+    if (((TFrameAnimatorState *)state)->unkE != -1) {
+        if (GameBit_Get(((TFrameAnimatorState *)state)->unkE) != 0) {
+            ((TFrameAnimatorState *)state)->unk14 = 4;
         }
     }
     *(u16 *)(obj + 0xb0) |= 0x2000;

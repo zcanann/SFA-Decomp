@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/trickycurve_state.h"
 #include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
@@ -126,12 +127,12 @@ void TrickyCurve_updateBurstTrigger(int obj)
   dy = *(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10);
   dz = *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14);
 
-  if ((*(s16 *)(state + 8) != -1) && (GameBit_Get(*(s16 *)(state + 8)) != 0)) {
+  if ((((TrickyCurveObjState *)state)->unk8 != -1) && (GameBit_Get(((TrickyCurveObjState *)state)->unk8) != 0)) {
     return;
   }
 
-  if (GameBit_Get(*(s16 *)(state + 0xa)) != 0) {
-    GameBit_Set(*(s16 *)(state + 0xa), 0);
+  if (GameBit_Get(((TrickyCurveObjState *)state)->unkA) != 0) {
+    GameBit_Set(((TrickyCurveObjState *)state)->unkA, 0);
   }
 
   if (dx <= 0.0f) {
@@ -147,25 +148,25 @@ void TrickyCurve_updateBurstTrigger(int obj)
     }
   }
   if (dz <= 0.0f) {
-    if (dz > -(f32)*(s16 *)(state + 2)) {
+    if (dz > -(f32)((TrickyCurveObjState *)state)->unk2) {
       insideCount++;
       zSide = 1;
     }
   }
   if (dz > 0.0f) {
-    if (dz < (f32)*(s16 *)(state + 2)) {
+    if (dz < (f32)((TrickyCurveObjState *)state)->unk2) {
       insideCount++;
       zSide--;
     }
   }
   if (dy <= 0.0f) {
-    if (dy > -(f32)*(s16 *)(state + 4)) {
+    if (dy > -(f32)((TrickyCurveObjState *)state)->unk4) {
       insideCount++;
       ySide = 1;
     }
   }
   if (dy > 0.0f) {
-    if (dy < (f32)*(s16 *)(state + 4)) {
+    if (dy < (f32)((TrickyCurveObjState *)state)->unk4) {
       insideCount++;
       ySide--;
     }
@@ -199,7 +200,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
         (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(obj, 0x5fd, &fxParams, 2, -1, 0);
       } while (burstParticles-- != 0);
     }
-    GameBit_Set(*(s16 *)(state + 0xa), 1);
+    GameBit_Set(((TrickyCurveObjState *)state)->unkA, 1);
     Sfx_PlayFromObject(obj, SFXfoot_water_walk_3);
   }
 
@@ -833,16 +834,16 @@ void TrickyCurve_free(int obj) {
 void TrickyCurve_init(int *obj, u8 *def) {
     u8 *state = *(u8 **)((char *)obj + 0xb8);
     state[0xc] = def[0x19];
-    *(s16 *)((char *)state + 4) = (s16)((s32)*(s8 *)((char *)def + 0x18) << 2);
+    ((TrickyCurveObjState *)state)->unk4 = (s16)((s32)*(s8 *)((char *)def + 0x18) << 2);
     *(s16 *)state = *(s16 *)((char *)def + 0x1a);
-    *(s16 *)((char *)state + 2) = *(s16 *)((char *)def + 0x1c);
+    ((TrickyCurveObjState *)state)->unk2 = *(s16 *)((char *)def + 0x1c);
     state[0xe] = def[0x19];
     state[0x10] = 0;
     state[0x11] = 0;
     state[0x12] = 0;
-    *(s16 *)((char *)state + 8) = *(s16 *)((char *)def + 0x20);
-    *(s16 *)((char *)state + 0xa) = *(s16 *)((char *)def + 0x1e);
-    *(s16 *)((char *)state + 6) = 0;
+    ((TrickyCurveObjState *)state)->unk8 = *(s16 *)((char *)def + 0x20);
+    ((TrickyCurveObjState *)state)->unkA = *(s16 *)((char *)def + 0x1e);
+    ((TrickyCurveObjState *)state)->unk6 = 0;
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
 }
 #pragma peephole reset

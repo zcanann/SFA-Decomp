@@ -1,4 +1,5 @@
 #include "main/dll/texframeanimator.h"
+#include "main/dll/texframeanimator_state.h"
 #include "main/objanim_internal.h"
 
 extern uint GameBit_Get(int eventId);
@@ -90,55 +91,55 @@ void collectible_init(int obj,int setup)
     objAnim->bankIndex = 0;
   }
   *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
-  *(u8 *)(state + 0xc) = *(u8 *)(setup + 0x19);
-  *(u8 *)(state + 0xd) = *(u8 *)(setup + 0x1a);
-  *(u8 *)(state + 0xf) = 0;
+  ((TexFrameAnimatorState *)state)->unkC = *(u8 *)(setup + 0x19);
+  ((TexFrameAnimatorState *)state)->unkD = *(u8 *)(setup + 0x1a);
+  ((TexFrameAnimatorState *)state)->unkF = 0;
   *(s32 *)(state + 0x18) = -2;
-  *(u8 *)(state + 0x1d) = 0;
-  *(s16 *)(state + 0x14) = *(s16 *)(setup + 0x24);
+  ((TexFrameAnimatorState *)state)->unk1D = 0;
+  ((TexFrameAnimatorState *)state)->unk14 = *(s16 *)(setup + 0x24);
   *(s32 *)(state + 0x20) = *(s32 *)(setup + 0x14);
-  *(f32 *)(state + 0x24) = *(f32 *)(obj + 0xc);
-  *(f32 *)(state + 0x28) = *(f32 *)(obj + 0x10);
-  *(f32 *)(state + 0x2c) = *(f32 *)(obj + 0x14);
-  *(u8 *)(state + 0x36) = *(u8 *)(setup + 0x27);
-  *(u8 *)(state + 0x3e) = 0;
-  if (*(s16 *)(state + 0x14) != -1) {
-    *(u8 *)(state + 0x1e) = (u8)((u32)__cntlzw(GameBit_Get(*(s16 *)(state + 0x14))) >> 5);
+  ((TexFrameAnimatorState *)state)->unk24 = *(f32 *)(obj + 0xc);
+  ((TexFrameAnimatorState *)state)->unk28 = *(f32 *)(obj + 0x10);
+  ((TexFrameAnimatorState *)state)->unk2C = *(f32 *)(obj + 0x14);
+  ((TexFrameAnimatorState *)state)->unk36 = *(u8 *)(setup + 0x27);
+  ((TexFrameAnimatorState *)state)->unk3E = 0;
+  if (((TexFrameAnimatorState *)state)->unk14 != -1) {
+    ((TexFrameAnimatorState *)state)->unk1E = (u8)((u32)__cntlzw(GameBit_Get(((TexFrameAnimatorState *)state)->unk14)) >> 5);
   }
-  *(s16 *)(state + 0x10) = *(s16 *)(setup + 0x1c);
-  if (*(s16 *)(state + 0x10) != -1) {
-    *(u32 *)(obj + 0xf4) = GameBit_Get(*(s16 *)(state + 0x10));
+  ((TexFrameAnimatorState *)state)->unk10 = *(s16 *)(setup + 0x1c);
+  if (((TexFrameAnimatorState *)state)->unk10 != -1) {
+    *(u32 *)(obj + 0xf4) = GameBit_Get(((TexFrameAnimatorState *)state)->unk10);
   } else {
     *(u32 *)(obj + 0xf4) = 0;
   }
   if (*(s32 *)(obj + 0xf4) == 0) {
     data = *(u8 **)(*(int *)(obj + 0x50) + 0x18);
     if (data != 0) {
-      *(f32 *)(state + 4) = (f32)*(s8 *)(data + 8);
+      ((TexFrameAnimatorState *)state)->unk4 = (f32)*(s8 *)(data + 8);
     } else {
-      *(f32 *)(state + 4) = lbl_803E3494;
+      ((TexFrameAnimatorState *)state)->unk4 = lbl_803E3494;
     }
     data = *(u8 **)(*(int *)(obj + 0x50) + 0x40);
     if (data != 0) {
-      *(f32 *)(state + 4) = (f32)(s32)(*(u8 *)(data + 0xc) << 2);
+      ((TexFrameAnimatorState *)state)->unk4 = (f32)(s32)(*(u8 *)(data + 0xc) << 2);
     }
     if (((((ObjAnimComponent *)obj)->modelInstance->flags & 0x10000) != 0) &&
-        (*(u8 *)(state + 0x36) != 0)) {
-      *(u8 *)(state + 0x38) = *(u8 *)(setup + 0x28);
-      *(u8 *)(state + 0x39) = *(u8 *)(setup + 0x29);
-      *(u8 *)(state + 0x3a) = *(u8 *)(setup + 0x2a);
+        (((TexFrameAnimatorState *)state)->unk36 != 0)) {
+      ((TexFrameAnimatorState *)state)->unk38 = *(u8 *)(setup + 0x28);
+      ((TexFrameAnimatorState *)state)->unk39 = *(u8 *)(setup + 0x29);
+      ((TexFrameAnimatorState *)state)->unk3A = *(u8 *)(setup + 0x2a);
     }
     switch (*(s16 *)(obj + 0x46)) {
       case 0xb:
-        *(f32 *)(state + 0x40) = lbl_803E345C;
-        *(f32 *)(state + 0x44) = lbl_803E3498;
+        ((TexFrameAnimatorState *)state)->unk40 = lbl_803E345C;
+        ((TexFrameAnimatorState *)state)->unk44 = lbl_803E3498;
         break;
       case 0x3cd:
-        *(f32 *)(state + 0x40) = lbl_803E349C;
-        *(f32 *)(state + 0x44) = lbl_803E3498;
+        ((TexFrameAnimatorState *)state)->unk40 = lbl_803E349C;
+        ((TexFrameAnimatorState *)state)->unk44 = lbl_803E3498;
         break;
       default:
-        *(f32 *)(state + 0x40) = lbl_803E34A0;
+        ((TexFrameAnimatorState *)state)->unk40 = lbl_803E34A0;
         break;
     }
     (*(void (**)(u8 *,int,int,int))(*(int *)gPathControlInterface + 4))(state + 0x50,0,0x40006,1);

@@ -1,4 +1,6 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/crackanim_state.h"
+#include "main/dll/baddie_state.h"
 #include "main/dll/crackanim.h"
 
 
@@ -169,7 +171,7 @@ void appleontree_update(int param_1)
         *(undefined *)(iVar8 + 0x3a) = 5;
       }
       else {
-        if (fVar13 > *(float *)(iVar8 + 0x14)) {
+        if (fVar13 > ((GroundBaddieState *)iVar8)->baddie.posX) {
           iVar7 = 0;
           do {
             (*(void (**)(undefined2 *, int, int, int, int, int))(*gPartfxInterface + 8))(puVar2,0x55a,0,2,0xffffffff,0);
@@ -189,7 +191,7 @@ void appleontree_update(int param_1)
       }
       break;
     case 2:
-      if (fVar13 > *(float *)(iVar8 + 0x18)) {
+      if (fVar13 > ((GroundBaddieState *)iVar8)->baddie.posY) {
         iVar3 = *(int *)(puVar2 + 0x5c);
         puVar4 = (undefined4 *)FUN_80039520((int)puVar2,0);
         *puVar4 = 0;
@@ -221,7 +223,7 @@ void appleontree_update(int param_1)
       break;
     case 3:
       *(float *)(iVar8 + 8) = fVar11 - timeDelta;
-      if (fVar13 > *(float *)(iVar8 + 0x1c)) {
+      if (fVar13 > ((GroundBaddieState *)iVar8)->baddie.posZ) {
         FUN_8017db40((uint)puVar2,0);
       }
       else {
@@ -245,7 +247,7 @@ void appleontree_update(int param_1)
         do {
           f32 t = *(float *)(iVar8 + 0xc);
           if (iVar7 != 0) break;
-          fVar11 = t * (*(float *)(iVar8 + 0x40) + *(float *)(iVar8 + 0x3c));
+          fVar11 = t * (((GroundBaddieState *)iVar8)->baddie.velZ + ((GroundBaddieState *)iVar8)->baddie.velY);
           fVar10 = t * fVar11 + (*(float *)(iVar8 + 0x44) * t + *(float *)(iVar8 + 0x2c));
           if (*(float *)(iVar8 + 0x28) <= fVar12) {
             iVar7 = FUN_8017e15c(fVar10,puVar2,iVar8);
@@ -333,27 +335,27 @@ void appleontree_init(int obj, int def)
 
     state = *(int *)(obj + 0xb8);
 
-    *(u32 *)(state + 0x00) = *(u32 *)(def + 0x18);
-    *(f32 *)(state + 0x04) = (f32)*(u16 *)(def + 0x1c);
-    *(f32 *)(state + 0x08) = (f32)*(u16 *)(def + 0x1e);
-    *(f32 *)(state + 0x10) = (f32)*(u8 *)(def + 0x20) / lbl_803E3828;
-    *(f32 *)(state + 0x14) = *(f32 *)(state + 0x10) + (f32)*(u8 *)(def + 0x21) / lbl_803E3828;
-    *(f32 *)(state + 0x18) = *(f32 *)(state + 0x14) + (f32)*(u8 *)(def + 0x22) / lbl_803E3828;
-    *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x18) + (f32)*(u8 *)(def + 0x23) / lbl_803E3828;
-    *(f32 *)(state + 0x20) = (f32)*(u8 *)(def + 0x24) / lbl_803E3828;
-    *(f32 *)(state + 0x28) = (f32)*(s8 *)(def + 0x25) / lbl_803E3828;
-    *(f32 *)(state + 0x28) = *(f32 *)(state + 0x28) * lbl_803E37DC;
-    *(f32 *)(state + 0x24) = lbl_803E37C8;
-    *(u16 *)(state + 0x38) = 0;
+    ((CrackAnimState *)state)->unk0 = *(u32 *)(def + 0x18);
+    ((CrackAnimState *)state)->unk4 = (f32)*(u16 *)(def + 0x1c);
+    ((CrackAnimState *)state)->unk8 = (f32)*(u16 *)(def + 0x1e);
+    ((CrackAnimState *)state)->unk10 = (f32)*(u8 *)(def + 0x20) / lbl_803E3828;
+    ((CrackAnimState *)state)->unk14 = ((CrackAnimState *)state)->unk10 + (f32)*(u8 *)(def + 0x21) / lbl_803E3828;
+    ((CrackAnimState *)state)->unk18 = ((CrackAnimState *)state)->unk14 + (f32)*(u8 *)(def + 0x22) / lbl_803E3828;
+    ((CrackAnimState *)state)->unk1C = ((CrackAnimState *)state)->unk18 + (f32)*(u8 *)(def + 0x23) / lbl_803E3828;
+    ((CrackAnimState *)state)->unk20 = (f32)*(u8 *)(def + 0x24) / lbl_803E3828;
+    ((CrackAnimState *)state)->unk28 = (f32)*(s8 *)(def + 0x25) / lbl_803E3828;
+    ((CrackAnimState *)state)->unk28 = ((CrackAnimState *)state)->unk28 * lbl_803E37DC;
+    ((CrackAnimState *)state)->unk24 = lbl_803E37C8;
+    ((CrackAnimState *)state)->unk38 = 0;
     zeroScale = lbl_803E37D4;
-    *(f32 *)(state + 0x3c) = zeroScale;
-    *(f32 *)(state + 0x40) = lbl_803E382C;
-    *(f32 *)(state + 0x44) = zeroScale;
+    ((CrackAnimState *)state)->unk3C = zeroScale;
+    ((CrackAnimState *)state)->unk40 = lbl_803E382C;
+    ((CrackAnimState *)state)->unk44 = zeroScale;
 
-    timeScale = *(f32 *)(state + 0x04) * *(f32 *)(state + 0x18);
+    timeScale = ((CrackAnimState *)state)->unk4 * ((CrackAnimState *)state)->unk18;
     timeScale *= timeScale;
     timeScale *= timeScale;
-    *(f32 *)(state + 0x54) = (timeScale * timeScale) * lbl_803E3830;
+    ((CrackAnimState *)state)->unk54 = (timeScale * timeScale) * lbl_803E3830;
 
     *(s16 *)(obj + 0x00) = (s16)randomGetRange(-0x8000, 0x7fff);
     *(f32 *)(obj + 0x08) = lbl_803E3834;
@@ -361,25 +363,25 @@ void appleontree_init(int obj, int def)
 
     eventBit = *(s16 *)(def + 0x26);
     if ((eventBit != -1) && (GameBit_Get(eventBit) != 0)) {
-        *(f32 *)(state + 0x08) = lbl_803E3838;
-        *(u8 *)(state + 0x3a) = 6;
+        ((CrackAnimState *)state)->unk8 = lbl_803E3838;
+        ((CrackAnimState *)state)->unk3A = 6;
     } else {
-        progress = *(f32 *)(state + 0x08) / *(f32 *)(state + 0x04);
-        if (progress < *(f32 *)(state + 0x10)) {
-            *(u8 *)(state + 0x3a) = 0;
-        } else if (progress < *(f32 *)(state + 0x14)) {
+        progress = ((CrackAnimState *)state)->unk8 / ((CrackAnimState *)state)->unk4;
+        if (progress < ((CrackAnimState *)state)->unk10) {
+            ((CrackAnimState *)state)->unk3A = 0;
+        } else if (progress < ((CrackAnimState *)state)->unk14) {
             *(f32 *)(obj + 0x08) = *(f32 *)(*(int *)(obj + 0x50) + 4);
-            *(u8 *)(state + 0x3a) = 1;
-        } else if (progress < *(f32 *)(state + 0x18)) {
-            *(u8 *)(state + 0x3a) = 2;
+            ((CrackAnimState *)state)->unk3A = 1;
+        } else if (progress < ((CrackAnimState *)state)->unk18) {
+            ((CrackAnimState *)state)->unk3A = 2;
         } else {
             state = *(int *)(obj + 0xb8);
             texture = objFindTexture(obj, 0, 0);
             *texture = 0;
-            *(f32 *)(state + 0x24) = lbl_803E37C8;
+            ((CrackAnimState *)state)->unk24 = lbl_803E37C8;
             *(f32 *)(obj + 0x08) = *(f32 *)(*(int *)(obj + 0x50) + 4);
             Obj_SetActiveModelIndex(obj, 1);
-            *(u8 *)(state + 0x3a) = 3;
+            ((CrackAnimState *)state)->unk3A = 3;
         }
     }
 
