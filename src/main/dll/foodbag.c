@@ -1057,7 +1057,7 @@ void dll_7E_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
   if (param_6 != (f32 *)0) {
     s = *param_6;
   }
-  if (param_3 != 0) {
+  if ((uint)param_3 != 0) {
     s = *(f32 *)(param_3 + 8);
   }
   e = buf.entries;
@@ -1245,22 +1245,26 @@ void dll_80_func03(int param_1,int param_2,int param_3,uint param_4)
   FbBuf buf;
   u8 *base = lbl_80315468;
   FbCmd *e = buf.entries;
+  FbCmd *p;
+  u32 fl;
 
   e[0].layer = 0; e[0].flags = 9; e[0].tex = base + 0x8c; e[0].mode = 0x80;
   e[0].x = lbl_803E0E58; e[0].y = lbl_803E0E58; e[0].z = lbl_803E0E5C;
   if (param_2 == 1) {
     e[1].layer = 0; e[1].flags = 8; e[1].tex = base + 0xa0; e[1].mode = 2;
     e[1].x = lbl_803E0E60; e[1].y = lbl_803E0E60; e[1].z = lbl_803E0E64;
+    p = e + 2;
   } else {
     e[1].layer = 0; e[1].flags = 8; e[1].tex = base + 0xa0; e[1].mode = 2;
     e[1].x = lbl_803E0E68; e[1].y = lbl_803E0E68; e[1].z = lbl_803E0E6C;
+    p = e + 2;
   }
-  e[2].layer = 1; e[2].flags = 8; e[2].tex = base + 0x8c; e[2].mode = 2;
-  e[2].x = lbl_803E0E6C; e[2].y = lbl_803E0E6C; e[2].z = lbl_803E0E70;
-  e[3].layer = 1; e[3].flags = 9; e[3].tex = base + 0x8c; e[3].mode = 0x100;
-  e[3].x = lbl_803E0E74; e[3].y = lbl_803E0E58; e[3].z = lbl_803E0E58;
-  e[4].layer = 1; e[4].flags = 9; e[4].tex = base + 0x8c; e[4].mode = 4;
-  e[4].x = lbl_803E0E58; e[4].y = lbl_803E0E58; e[4].z = lbl_803E0E58;
+  p[0].layer = 1; p[0].flags = 8; p[0].tex = base + 0x8c; p[0].mode = 2;
+  p[0].x = lbl_803E0E6C; p[0].y = lbl_803E0E6C; p[0].z = lbl_803E0E70;
+  p[1].layer = 1; p[1].flags = 9; p[1].tex = base + 0x8c; p[1].mode = 0x100;
+  p[1].x = lbl_803E0E74; p[1].y = lbl_803E0E58; p[1].z = lbl_803E0E58;
+  p[2].layer = 1; p[2].flags = 9; p[2].tex = base + 0x8c; p[2].mode = 4;
+  p[2].x = lbl_803E0E58; p[2].y = lbl_803E0E58; p[2].z = lbl_803E0E58;
   buf.ctx = param_1;
   buf.v44 = (s16)param_2;
   buf.pos[0] = lbl_803E0E58; buf.pos[1] = lbl_803E0E58; buf.pos[2] = lbl_803E0E58;
@@ -1271,15 +1275,17 @@ void dll_80_func03(int param_1,int param_2,int param_3,uint param_4)
   buf.v59 = 9;
   buf.v5a = 0;
   buf.v5b = 0x20;
-  buf.flags = 0x4000010;
-  buf.count = (FbCmd *)((u8 *)e + 120) - e;
+  buf.count = &p[3] - e;
   buf.hw[0] = *(s16 *)(base + 0xb0); buf.hw[1] = *(s16 *)(base + 0xb2);
   buf.hw[2] = *(s16 *)(base + 0xb4); buf.hw[3] = *(s16 *)(base + 0xb6);
   buf.hw[4] = *(s16 *)(base + 0xb8); buf.hw[5] = *(s16 *)(base + 0xba);
   buf.hw[6] = *(s16 *)(base + 0xbc);
   buf.cmds = (FbCmd *)((u8 *)&buf + 0x60);
-  buf.flags |= param_4;
-  if ((buf.flags & 1) != 0) {
+  fl = 0x4000010;
+  buf.flags = fl;
+  fl |= param_4;
+  buf.flags = fl;
+  if (fl & 1) {
     if ((uint)param_1 != 0) {
       buf.pos[0] = lbl_803E0E58 + *(f32 *)(param_1 + 0x18);
       buf.pos[1] = lbl_803E0E58 + *(f32 *)(param_1 + 0x1c);
