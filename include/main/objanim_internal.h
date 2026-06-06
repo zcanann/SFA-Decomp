@@ -183,7 +183,9 @@ typedef struct ObjAnimComponent {
   f32 activeMoveProgress;
   s16 currentMove;
   s16 activeMove;
-  u8 padA4[0xAD - 0xA4];
+  u8 padA4[0xA8 - 0xA4];
+  f32 hitboxScale;
+  u8 padAC[0xAD - 0xAC];
   s8 bankIndex;
   s8 activeHitboxMode;
   s8 resetHitboxMode;
@@ -277,6 +279,7 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, currentMoveProgress) == 0x98);
 STATIC_ASSERT(offsetof(ObjAnimComponent, activeMoveProgress) == 0x9C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, currentMove) == 0xA0);
 STATIC_ASSERT(offsetof(ObjAnimComponent, activeMove) == 0xA2);
+STATIC_ASSERT(offsetof(ObjAnimComponent, hitboxScale) == 0xA8);
 STATIC_ASSERT(offsetof(ObjAnimComponent, bankIndex) == 0xAD);
 STATIC_ASSERT(offsetof(ObjAnimComponent, activeHitboxMode) == 0xAE);
 STATIC_ASSERT(offsetof(ObjAnimComponent, resetHitboxMode) == 0xAF);

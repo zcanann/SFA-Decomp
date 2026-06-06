@@ -67,6 +67,7 @@
 #define OBJHITBOX_DEF_NO_SEPARATION_RESPONSE 0x0002
 #define OBJHITBOX_DEF_CLAMP_Y 0x0800
 #define OBJHITBOX_DEF_CLAMP_Z 0x1000
+#define OBJHITBOX_DEFAULT_CAPSULE_SCALE 0x400
 #define OBJHITBOX_SHAPE_SKELETON_3D 0x01
 #define OBJHITBOX_SHAPE_VERTICAL_SPAN 0x02
 #define OBJHITBOX_SHAPE_CHECK_REVERSE 0x20
@@ -251,8 +252,18 @@ STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadiusXZ) == 0x34);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, sweepRadiusX) == 0x38);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, objectHitMask) == 0x48);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, skeletonHitMask) == 0x4C);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, capsuleScale) == 0x58);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryRadius) == 0x5A);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryCapsuleOffsetA) == 0x5C);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryCapsuleOffsetB) == 0x5E);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, flags) == 0x60);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, shapeFlags) == 0x62);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadius) == 0x64);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryCapsuleOffsetA) == 0x66);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryCapsuleOffsetB) == 0x68);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, lateralResponseWeight) == 0x6A);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, axialResponseWeight) == 0x6B);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryShapeFlags) == 0xB6);
 
 STATIC_ASSERT(sizeof(ObjHitsModelJointInfo) == 0x1C);
 STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, joints) == 0x3C);
