@@ -115,7 +115,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         } else if (ratio <= lbl_803E3944) {
             if ((int)randomGetRange(0, (s16)(int)(ratio - lbl_803E3940)) < 7) {
                 mode = 6;
-                max = (s16)(int)(den * lbl_803E393C);
+                max = (s16)(den * lbl_803E393C);
                 if (max < 1) {
                     max = 1;
                 }
