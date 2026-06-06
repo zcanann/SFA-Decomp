@@ -1,10 +1,11 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling off
 void mcstaffeffe_render(int obj)
 {
-    fn_80098B18(obj, *(f32 *)(obj + 0x8), (u8)*(int *)(obj + 0xf4), 0, 0, 0);
+    fn_80098B18(obj, ((GameObject *)obj)->anim.rootMotionScale, (u8)((GameObject *)obj)->unkF4, 0, 0, 0);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -22,24 +23,24 @@ void mcstaffeffe_init(int obj, int setup)
     *(int *)(obj + 0xbc) = (int)mcstaffeffe_SeqFn;
     switch (*(u8 *)(setup + 0x1b)) {
     case 0:
-        *(int *)(obj + 0xf4) = 4;
-        *(int *)(obj + 0xf8) = 1;
+        ((GameObject *)obj)->unkF4 = 4;
+        ((GameObject *)obj)->unkF8 = 1;
         break;
     case 1:
-        *(int *)(obj + 0xf4) = 5;
-        *(int *)(obj + 0xf8) = 5;
+        ((GameObject *)obj)->unkF4 = 5;
+        ((GameObject *)obj)->unkF8 = 5;
         break;
     case 2:
-        *(int *)(obj + 0xf4) = 6;
-        *(int *)(obj + 0xf8) = 2;
+        ((GameObject *)obj)->unkF4 = 6;
+        ((GameObject *)obj)->unkF8 = 2;
         break;
     case 3:
-        *(int *)(obj + 0xf4) = 0xb;
-        *(int *)(obj + 0xf8) = 3;
+        ((GameObject *)obj)->unkF4 = 0xb;
+        ((GameObject *)obj)->unkF8 = 3;
         break;
     default:
-        *(int *)(obj + 0xf4) = 4;
-        *(int *)(obj + 0xf8) = 1;
+        ((GameObject *)obj)->unkF4 = 4;
+        ((GameObject *)obj)->unkF8 = 1;
         break;
     }
 }
