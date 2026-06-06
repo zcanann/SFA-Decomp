@@ -1847,6 +1847,13 @@ addend lands mid-function (not at a symbol boundary) before adding a range.
     so the flip is ABI-neutral; other TUs' block externs with the old order
     keep compiling and matching (recipe #57). Definition-side mirror of #29.
     (fn_80154FB4 — part of 96.2→100.)
+    **Elided-arg-move read (signature arbitration):** an arg with NO visible
+    setup before the `bl` = the value is ALREADY HOME in its arg register
+    (e.g. a `cmpwi r4,K` just before the call proves the tested var owns r4)
+    — its register identity pins the whole param ordering when
+    reconstructing an unknown signature from target eval order
+    (quakeSpellFn's objfx_spawnArcedBurst: 11 params, u8s interleaved
+    between floats, decoded from one elided move; 96.87→99.74).
 
 88. **Multi-def web SPLIT flips saved-FP pair coloring where decl-order is
     inert.** When a saved-FP PAIR is number-swapped (T objY=f31/targetY=f30,
