@@ -8409,21 +8409,16 @@ cfg.f08 = 0x32;
             cfg.f2c = lbl_803DF4EC * (f32)(s32)randomGetRange(0xfffffffc,4);
             cfg.f28 = lbl_803DF5D0 * (f32)(s32)randomGetRange(0x28,0x50);
             cfg.f3c = lbl_803DF5FC * (f32)(s32)randomGetRange(0x28,0x50);
-            if (cfg.f10 == 1) {
+            switch (cfg.f10) {
+            case 0:
+              cfg.f42 = 0xdd;
+              break;
+            case 1:
               cfg.f42 = 0x160;
-            }
-            else if (cfg.f10 < 1) {
-              if (cfg.f10 < 0) {
-LAB_800a97c8:
-                cfg.f42 = 0xdf;
-              }
-              else {
-                cfg.f42 = 0xdd;
-              }
-            }
-            else {
-              if (2 < cfg.f10) goto LAB_800a97c8;
+              break;
+            case 2:
               cfg.f42 = 0xdf;
+              break;
             }
             cfg.f10 = 0;
     break;
