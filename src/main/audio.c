@@ -696,44 +696,47 @@ void Sfx_ClearLoopedObjectSounds(void)
 void Sfx_UpdateLoopedObjectSounds(void)
 {
     SfxLoopedObjectSoundTable *table = &gSfxLoopedObjectSoundFlags;
-    u8 *flags = table->flags;
-    u16 *ids = table->ids;
-    u32 *objects = table->objects;
     s16 i;
     u32 obj;
-    u16 sfxId;
     u16 oldCount;
     u16 index;
     u32 removeSound;
 
-    for (i = (s16)(gSfxLoopedObjectSoundCount - 1); i >= 0; i--) {
-        removeSound = 0;
-        if (((flags[i] & SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE) != 0) &&
-            ((flags[i] & SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN) == 0)) {
-            removeSound = 1;
-        }
-        obj = objects[i];
-        if (((obj != 0) && ((*(u16 *)(obj + 0xB0) & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)) || removeSound) {
-            Sfx_StopFromObject(obj, ids[i]);
-            oldCount = gSfxLoopedObjectSoundCount;
-            gSfxLoopedObjectSoundCount = (u16)(oldCount - 1);
-            index = (u16)i;
-            memmove(&objects[index], &objects[index + 1],
-                    (((oldCount - 1) - index) * sizeof(u32)) & 0xFFFC);
-            memmove(&ids[index], &ids[index + 1],
-                    ((gSfxLoopedObjectSoundCount - index) * sizeof(u16)) & 0xFFFE);
-            memmove(&flags[index], &flags[index + 1],
-                    (gSfxLoopedObjectSoundCount - index) & 0xFFFF);
-        } else {
-            flags[i] &= ~SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
+    {
+        u8 *flags = table->flags;
+        u16 *ids = table->ids;
+        u32 *objects = table->objects;
+        for (i = (s16)(gSfxLoopedObjectSoundCount - 1); i >= 0; i--) {
+            removeSound = 0;
+            if (((flags[i] & SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE) != 0) &&
+                ((flags[i] & SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN) == 0)) {
+                removeSound = 1;
+            }
+            obj = objects[i];
+            if (((obj != 0) && ((*(u16 *)(obj + 0xB0) & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)) || removeSound) {
+                Sfx_StopFromObject(obj, ids[i]);
+                oldCount = gSfxLoopedObjectSoundCount;
+                gSfxLoopedObjectSoundCount = (u16)(oldCount - 1);
+                index = (u16)i;
+                memmove(&objects[index], &objects[index + 1],
+                        (u16)(((oldCount - 1) - index) * sizeof(u32)));
+                memmove(&ids[index], &ids[index + 1],
+                        (u16)((gSfxLoopedObjectSoundCount - index) * sizeof(u16)));
+                memmove(&flags[index], &flags[index + 1],
+                        (u16)(gSfxLoopedObjectSoundCount - index));
+            } else {
+                flags[i] &= ~SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
+            }
         }
     }
 
-    for (i = 0; i < gSfxLoopedObjectSoundCount; i++) {
-        obj = objects[i];
-        sfxId = ids[i];
-        if (Sfx_IsPlayingFromObject(obj, sfxId) == 0) {
-            Sfx_PlayFromObject(obj, sfxId);
+    {
+        u16 *ids = table->ids;
+        u32 *objects = table->objects;
+        for (i = 0; i < gSfxLoopedObjectSoundCount; i++) {
+            if (Sfx_IsPlayingFromObject(objects[i], ids[i]) == 0) {
+                Sfx_PlayFromObject(objects[i], ids[i]);
+            }
         }
     }
 }
