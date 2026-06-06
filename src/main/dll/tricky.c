@@ -275,7 +275,9 @@ extern f32 lbl_803DE490;
 extern f32 lbl_803DE494;
 extern f32 lbl_803DE498;
 extern f32 lbl_803DE4BC;
-extern f32 gDIMSnowHorn1DefaultStateHandler;
+extern f32 lbl_803DD7F0; /* viewfinder fade level - the drift import wrongly
+ * referenced lbl_803DD7F0 (803DE4C4); target asm shows
+ * lbl_803DD7F0 (drawViewFinderHud v1.0 recovery agrees) */
 extern f32 lbl_803DE4D0;
 extern f32 lbl_803E2ABC;
 extern f32 lbl_803E2AC0;
@@ -1710,18 +1712,18 @@ void FUN_8011f438(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       (dVar10 <= (double)DAT_803a9f60)) || (DAT_803de418 != 0)) {
     dVar10 = (double)lbl_803E2B40;
   }
-  dVar12 = (double)gDIMSnowHorn1DefaultStateHandler;
+  dVar12 = (double)lbl_803DD7F0;
   if (dVar10 <= dVar12) {
     if ((dVar10 < dVar12) &&
-       (gDIMSnowHorn1DefaultStateHandler = -(float)((double)lbl_803E2C20 * (double)lbl_803DC074 - dVar12),
-       gDIMSnowHorn1DefaultStateHandler < lbl_803E2ABC)) {
-      gDIMSnowHorn1DefaultStateHandler = lbl_803E2ABC;
+       (lbl_803DD7F0 = -(float)((double)lbl_803E2C20 * (double)lbl_803DC074 - dVar12),
+       lbl_803DD7F0 < lbl_803E2ABC)) {
+      lbl_803DD7F0 = lbl_803E2ABC;
     }
   }
   else {
-    gDIMSnowHorn1DefaultStateHandler = (float)((double)lbl_803E2C20 * (double)lbl_803DC074 + dVar12);
-    if (lbl_803E2B40 < gDIMSnowHorn1DefaultStateHandler) {
-      gDIMSnowHorn1DefaultStateHandler = lbl_803E2B40;
+    lbl_803DD7F0 = (float)((double)lbl_803E2C20 * (double)lbl_803DC074 + dVar12);
+    if (lbl_803E2B40 < lbl_803DD7F0) {
+      lbl_803DD7F0 = lbl_803E2B40;
     }
   }
   uVar7 = (uint)lbl_803DE4BC;
