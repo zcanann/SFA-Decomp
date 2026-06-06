@@ -2201,6 +2201,7 @@ void FUN_800e49c0(int param_1,uint *param_2)
 
 void fn_800E56A4(int obj,f32 *state)
 {
+  CurvesCollisionState *collision;
   RomCurvePoint *point;
   RomCurvePoint *points;
   u32 hitCount;
@@ -2210,25 +2211,26 @@ void fn_800E56A4(int obj,f32 *state)
   f32 startX;
   f32 startZ;
 
-  startX = state[5];
-  startZ = state[7];
-  if ((*(s32 *)state & 0x100000) == 0) {
+  collision = (CurvesCollisionState *)state;
+  startX = collision->points[1][0];
+  startZ = collision->points[1][2];
+  if ((s32)(collision->flags & 0x100000) == 0) {
     *(f32 *)(obj + 0x18) = startX;
     *(f32 *)(obj + 0x20) = startZ;
-    *(f32 *)(obj + 0x1c) = state[3];
+    *(f32 *)(obj + 0x1c) = collision->points[0][1];
   }
 
-  points = curves_getCurves(obj,state[5],state[7],&hitCount,0);
+  points = curves_getCurves(obj,collision->points[1][0],collision->points[1][2],&hitCount,0);
   for (pointIndex = 0, point = points; pointIndex < (int)hitCount; ) {
     if (((s8)point->type != 0xe) && (point->z > lbl_803E0678) &&
-        (point->x <= state[6]) && (point->x > state[3])) {
-      state[0xe] = state[5];
-      state[0xf] = state[6];
-      state[0x10] = state[7];
-      state[2] = state[5];
-      state[3] = points[pointIndex].x;
-      state[4] = state[7];
-      hitDetectFn_80067958(obj,state + 0xe,state + 2,1,state + 0x1a,0);
+        (point->x <= collision->points[1][1]) && (point->x > collision->points[0][1])) {
+      collision->traceStart[0] = collision->points[1][0];
+      collision->traceStart[1] = collision->points[1][1];
+      collision->traceStart[2] = collision->points[1][2];
+      collision->points[0][0] = collision->points[1][0];
+      collision->points[0][1] = points[pointIndex].x;
+      collision->points[0][2] = collision->points[1][2];
+      hitDetectFn_80067958(obj,collision->traceStart,collision->points[0],1,collision->segmentHitPlanes,0);
       break;
     }
     point++;
@@ -2236,34 +2238,34 @@ void fn_800E56A4(int obj,f32 *state)
   }
 
   if (*(s16 *)(obj + 0x44) == 1) {
-    state[0x14] = state[5];
-    state[0x15] = state[6];
-    state[0x16] = state[7];
-    state[8] = state[5];
-    state[9] = lbl_803E067C + state[6];
-    state[10] = state[7];
+    collision->traceStartB[0] = collision->points[1][0];
+    collision->traceStartB[1] = collision->points[1][1];
+    collision->traceStartB[2] = collision->points[1][2];
+    collision->points[2][0] = collision->points[1][0];
+    collision->points[2][1] = lbl_803E067C + collision->points[1][1];
+    collision->points[2][2] = collision->points[1][2];
     hitScratch.scale = lbl_803E0680;
     hitScratch.type = 3;
-    hitDetectFn_80067958(obj,state + 0x14,state + 8,1,&hitScratch,0);
+    hitDetectFn_80067958(obj,collision->traceStartB,collision->points[2],1,&hitScratch,0);
   }
 
-  PSVECSubtract((f32 *)(state + 2),(f32 *)(state + 5),delta);
-  if (((*(s32 *)state & 0x8000000) != 0) || (PSVECMag(delta) > lbl_803E0684)) {
-    state[0xe] = state[5];
-    state[0xf] = state[6];
-    state[0x10] = state[7];
-    state[2] = state[5];
-    state[3] = state[6] - lbl_803E0688;
-    state[4] = state[7];
-    hitDetectFn_80067958(obj,state + 0xe,state + 2,1,state + 0x1a,0);
+  PSVECSubtract(collision->points[0],collision->points[1],delta);
+  if (((s32)(collision->flags & 0x8000000) != 0) || (PSVECMag(delta) > lbl_803E0684)) {
+    collision->traceStart[0] = collision->points[1][0];
+    collision->traceStart[1] = collision->points[1][1];
+    collision->traceStart[2] = collision->points[1][2];
+    collision->points[0][0] = collision->points[1][0];
+    collision->points[0][1] = collision->points[1][1] - lbl_803E0688;
+    collision->points[0][2] = collision->points[1][2];
+    hitDetectFn_80067958(obj,collision->traceStart,collision->points[0],1,collision->segmentHitPlanes,0);
   }
 
-  state[0x68] = state[0x1a];
-  state[0x69] = state[0x1b];
-  state[0x6a] = state[0x1c];
-  ((u32 *)state)[0x36] = ((u32 *)state)[0x31];
-  if (((u32 *)state)[0x36] != 0) {
-    ObjHits_AddContactObject(((u32 *)state)[0x36],obj);
+  collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
+  collision->surfaceNormalY = collision->segmentHitPlanes[0][1];
+  collision->surfaceNormalZ = collision->segmentHitPlanes[0][2];
+  collision->contactObj = collision->traceHitObj;
+  if (collision->contactObj != 0) {
+    ObjHits_AddContactObject(collision->contactObj,obj);
   }
 }
 
@@ -2305,9 +2307,9 @@ void fn_800E58FC(int obj,f32 *state)
   s16 angle;
 
   collision = (CurvesCollisionState *)state;
-  state[0x68] = state[0x1a];
-  state[0x69] = state[0x1b];
-  state[0x6a] = state[0x1c];
+  collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
+  collision->surfaceNormalY = collision->segmentHitPlanes[0][1];
+  collision->surfaceNormalZ = collision->segmentHitPlanes[0][2];
   pointCount = collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT;
   if ((pointCount == 2) || (pointCount == 4)) {
     zero = lbl_803E0668;
@@ -2331,7 +2333,7 @@ void fn_800E58FC(int obj,f32 *state)
     *(f32 *)(obj + 0x1c) *= averageScale;
     *(f32 *)(obj + 0x20) *= averageScale;
 
-    if ((*(u32 *)state & 0x8600) != 0) {
+    if ((collision->flags & 0x8600) != 0) {
       transform.angles[0] = -*(s16 *)obj;
       transform.angles[1] = -*(s16 *)(obj + 2);
       transform.angles[2] = -*(s16 *)(obj + 4);
@@ -2361,31 +2363,31 @@ void fn_800E58FC(int obj,f32 *state)
         idx2 = 1;
         idx3 = 1;
       }
-      if ((*(u32 *)state & 0x8000) != 0) {
+      if ((collision->flags & 0x8000) != 0) {
         angle = getAngle((localX[0] + localX[idx1]) - (localX[idx2] + localX[idx3]),
                          (localZ[0] + localZ[idx1]) - (localZ[idx2] + localZ[idx3]));
         *(s16 *)obj += (s16)(angle - 0x8000) >> 2;
       }
-      if ((*(u32 *)state & 0x200) != 0) {
+      if ((collision->flags & 0x200) != 0) {
         angle = getAngle(((localY[idx2] - localY[idx1]) + (localY[idx3] - localY[0])) *
                              lbl_803E0690,
                          ((localZ[idx2] - localZ[idx1]) + (localZ[idx3] - localZ[0])) *
                              lbl_803E0690);
-        *(s16 *)((u8 *)state + 0x198) = -angle;
+        collision->tiltPitch = -angle;
       }
-      if ((pointCount == 4) && ((*(u32 *)state & 0x400) != 0)) {
+      if ((pointCount == 4) && ((collision->flags & 0x400) != 0)) {
         angle = getAngle(((localY[idx1] - localY[0]) + (localY[idx2] - localY[idx3])) *
                              lbl_803E0690,
                          ((localX[idx1] - localX[0]) + (localX[idx2] - localX[idx3])) *
                              lbl_803E0690);
-        *(s16 *)((u8 *)state + 0x19a) = angle;
+        collision->tiltRoll = angle;
       }
     }
   }
   else {
-    *(f32 *)(obj + 0x18) = state[2];
-    *(f32 *)(obj + 0x1c) = state[3];
-    *(f32 *)(obj + 0x20) = state[4];
+    *(f32 *)(obj + 0x18) = collision->points[0][0];
+    *(f32 *)(obj + 0x1c) = collision->points[0][1];
+    *(f32 *)(obj + 0x20) = collision->points[0][2];
   }
 }
 
@@ -2432,33 +2434,33 @@ void fn_800E5CBC(short *param_1,int param_2)
     local_5c = lbl_803E0668;
     local_58 = lbl_803E0668;
     mtxRotateByVec3s(afStack_54,local_6c);
-    Matrix_TransformPoint(afStack_54,(double)*(float *)(param_2 + 0x1a0),
-                 (double)*(float *)(param_2 + 0x1a4),(double)*(float *)(param_2 + 0x1a8),
+    Matrix_TransformPoint(afStack_54,(double)collision->surfaceNormalX,
+                 (double)collision->surfaceNormalY,(double)collision->surfaceNormalZ,
                  &local_70,&local_74,&local_78);
     iVar3 = getAngle(local_74,local_78);
     sVar2 = 0x4000 - (short)iVar3;
-    *(short *)(param_2 + 0x19c) = sVar2;
-    *(short *)(param_2 + 0x198) =
-         *(short *)(param_2 + 0x198) +
-         ((int)((uint)framesThisStep * ((int)sVar2 - (int)*(short *)(param_2 + 0x198))) >> 3);
+    collision->tiltPitchTarget = sVar2;
+    collision->tiltPitch =
+         collision->tiltPitch +
+         ((int)((uint)framesThisStep * ((int)sVar2 - (int)collision->tiltPitch)) >> 3);
     iVar3 = getAngle(local_74,local_70);
     sVar2 = -(0x4000 - (short)iVar3);
-    *(short *)(param_2 + 0x19e) = sVar2;
-    *(short *)(param_2 + 0x19a) =
-         *(short *)(param_2 + 0x19a) +
-         ((int)((uint)framesThisStep * ((int)sVar2 - (int)*(short *)(param_2 + 0x19a))) >> 3);
+    collision->tiltRollTarget = sVar2;
+    collision->tiltRoll =
+         collision->tiltRoll +
+         ((int)((uint)framesThisStep * ((int)sVar2 - (int)collision->tiltRoll)) >> 3);
   }
   else {
-    *(short *)(param_2 + 0x198) =
-         *(short *)(param_2 + 0x198) -
-         ((int)((int)*(short *)(param_2 + 0x198) * (uint)framesThisStep) >> 3);
-    *(short *)(param_2 + 0x19a) =
-         *(short *)(param_2 + 0x19a) -
-         ((int)((int)*(short *)(param_2 + 0x19a) * (uint)framesThisStep) >> 3);
+    collision->tiltPitch =
+         collision->tiltPitch -
+         ((int)((int)collision->tiltPitch * (uint)framesThisStep) >> 3);
+    collision->tiltRoll =
+         collision->tiltRoll -
+         ((int)((int)collision->tiltRoll * (uint)framesThisStep) >> 3);
     fVar1 = lbl_803E0668;
-    *(float *)(param_2 + 0x1a0) = lbl_803E0668;
-    *(float *)(param_2 + 0x1a4) = lbl_803E068C;
-    *(float *)(param_2 + 0x1a8) = fVar1;
+    collision->surfaceNormalX = lbl_803E0668;
+    collision->surfaceNormalY = lbl_803E068C;
+    collision->surfaceNormalZ = fVar1;
   }
   return;
 }
@@ -2488,7 +2490,7 @@ void fn_800E5E38(int obj,f32 *state)
   RomCurvePoint *point;
 
   collision = (CurvesCollisionState *)state;
-  point = curves_getCurves(obj,state[2],state[4],&hitCount,0);
+  point = curves_getCurves(obj,collision->points[0][0],collision->points[0][2],&hitCount,0);
   hitIndex = hitCount - 1;
   currentY = *(f32 *)(obj + 0x1c);
   window = lbl_803E06A0;
@@ -2497,9 +2499,9 @@ void fn_800E5E38(int obj,f32 *state)
     if ((s8)point->type != 0xe) {
       if ((currentY <= point->x) && (currentY >= (point->x - window))) {
         *(f32 *)(obj + 0x1c) = point->x;
-        *(f32 *)((u8 *)state + 0x1a0) = point->y;
-        *(f32 *)((u8 *)state + 0x1a4) = point->z;
-        *(f32 *)((u8 *)state + 0x1a8) = point->w;
+        collision->surfaceNormalX = point->y;
+        collision->surfaceNormalY = point->z;
+        collision->surfaceNormalZ = point->w;
         collision->surfaceFlags |= 0x11;
         collision->surfaceCounter++;
       }
@@ -2543,59 +2545,59 @@ void fn_800E5F1C(int obj,f32 *state)
   zero = lbl_803E0668;
   one = lbl_803E068C;
   foundBelow = 0;
-  points = curves_getCurves(obj,state[2],state[4],&hitCount,0);
-  *(f32 *)((u8 *)state + 0x200) = topSentinel;
-  *(f32 *)((u8 *)state + 0x1f0) = topSentinel;
-  *(f32 *)((u8 *)state + 0x1d0) = floorSentinel;
-  *(f32 *)((u8 *)state + 0x1e0) = zero;
-  *(f32 *)((u8 *)state + 0x1c0) = zero;
-  *(f32 *)((u8 *)state + 0x210) = zero;
-  *(f32 *)((u8 *)state + 0x220) = one;
-  *(f32 *)((u8 *)state + 0x230) = zero;
+  points = curves_getCurves(obj,collision->points[0][0],collision->points[0][2],&hitCount,0);
+  collision->waterY[0] = topSentinel;
+  collision->floorY[0] = topSentinel;
+  collision->ceilingY[0] = floorSentinel;
+  collision->waterDepth[0] = zero;
+  collision->floorGap[0] = zero;
+  collision->waterNormalX[0] = zero;
+  collision->waterNormalY[0] = one;
+  collision->waterNormalZ[0] = zero;
   point = points;
   for (i = 0; i < (int)hitCount; i++) {
     if ((s8)point->type != 0xe) {
-      if ((foundBelow == 0) && (point->x < (state[3] + lbl_803E06AC)) &&
+      if ((foundBelow == 0) && (point->x < (collision->points[0][1] + lbl_803E06AC)) &&
           (point->z > lbl_803E0678)) {
-        *(f32 *)((u8 *)state + 0x1f0) = point->x;
-        *(f32 *)((u8 *)state + 0x1c0) = state[3] - point->x;
+        collision->floorY[0] = point->x;
+        collision->floorGap[0] = collision->points[0][1] - point->x;
         if (collision->segmentHitTypes[0] == -1) {
           collision->segmentHitTypes[0] = point->type;
         }
         foundBelow = 1;
       }
-      else if ((point->x >= (state[3] + lbl_803E06AC)) && (point->z < zero)) {
-        *(f32 *)((u8 *)state + 0x1d0) = point->x;
+      else if ((point->x >= (collision->points[0][1] + lbl_803E06AC)) && (point->z < zero)) {
+        collision->ceilingY[0] = point->x;
       }
     }
     point++;
   }
   if (foundBelow == 0) {
-    *(f32 *)((u8 *)state + 0x1c0) = lbl_803E06B0;
+    collision->floorGap[0] = lbl_803E06B0;
   }
   if (((s8)collision->surfaceFlags & 0x10) != 0) {
-    *(f32 *)((u8 *)state + 0x1c0) = zero;
+    collision->floorGap[0] = zero;
   }
   point = points;
   for (i = 0; i < (int)hitCount; i++) {
     if (((s8)point->type == 0xe) && (point->z > lbl_803E06B4) &&
-        (point->x < *(f32 *)((u8 *)state + 0x1d0)) &&
-        (point->x > *(f32 *)((u8 *)state + 0x1f0))) {
-      *(f32 *)((u8 *)state + 0x200) = point->x;
-      *(f32 *)((u8 *)state + 0x210) = point->y;
-      *(f32 *)((u8 *)state + 0x220) = point->z;
-      *(f32 *)((u8 *)state + 0x230) = point->w;
+        (point->x < collision->ceilingY[0]) &&
+        (point->x > collision->floorY[0])) {
+      collision->waterY[0] = point->x;
+      collision->waterNormalX[0] = point->y;
+      collision->waterNormalY[0] = point->z;
+      collision->waterNormalZ[0] = point->w;
     }
     point++;
   }
-  if (*(f32 *)((u8 *)state + 0x200) != topSentinel) {
-    *(f32 *)((u8 *)state + 0x1e0) = *(f32 *)((u8 *)state + 0x200) - state[3];
+  if (collision->waterY[0] != topSentinel) {
+    collision->waterDepth[0] = collision->waterY[0] - collision->points[0][1];
   }
-  *(f32 *)((u8 *)state + 0x1bc) = *(f32 *)((u8 *)state + 0x200);
-  *(f32 *)((u8 *)state + 0x1b8) = *(f32 *)((u8 *)state + 0x1f0);
-  *(f32 *)((u8 *)state + 0x1b0) = *(f32 *)((u8 *)state + 0x1d0);
-  *(f32 *)((u8 *)state + 0x1b4) = *(f32 *)((u8 *)state + 0x1e0);
-  *(f32 *)((u8 *)state + 0x1ac) = *(f32 *)((u8 *)state + 0x1c0);
+  collision->resultWaterY = collision->waterY[0];
+  collision->resultFloorY = collision->floorY[0];
+  collision->resultCeilingY = collision->ceilingY[0];
+  collision->resultWaterDepth = collision->waterDepth[0];
+  collision->resultFloorGap = collision->floorGap[0];
 }
 
 /*
@@ -2674,7 +2676,7 @@ void curves_updateLocalPointCollision(int obj,f32 *state)
   pointIndex = 0;
   point = state;
   while (pointIndex < pointCount) {
-    if ((s32)(*(u32 *)state & 0x200000) != 0) {
+    if ((s32)(collision->flags & 0x200000) != 0) {
       mode = 2;
     }
     else {
@@ -2682,8 +2684,8 @@ void curves_updateLocalPointCollision(int obj,f32 *state)
     }
     collision->localPointHitMask |= objBboxFn_800640cc(
         point + 0x45,point + 0x39,*(f32 *)((u8 *)collision->localPointRadii + radiusOffset),mode,
-        state + 0x51,obj,collision->primaryHitType,-1,0,(s8)collision->activeTimer) << pointIndex;
-    flags = *(u32 *)state;
+        (f32 *)collision->localHitPlanes,obj,collision->primaryHitType,-1,0,(s8)collision->activeTimer) << pointIndex;
+    flags = collision->flags;
     if ((s32)(flags & 0x2000000) != 0) {
       if ((s32)(flags & 0x200000) != 0) {
         mode = 2;
@@ -2693,7 +2695,7 @@ void curves_updateLocalPointCollision(int obj,f32 *state)
       }
       objBboxFn_800640cc(point + 0x45,point + 0x39,
                          *(f32 *)((u8 *)collision->localPointRadii + radiusOffset),mode,
-                         state + 0x51,obj,collision->secondaryHitType,-1,0,
+                         (f32 *)collision->localHitPlanes,obj,collision->secondaryHitType,-1,0,
                          (s8)collision->activeTimer);
     }
     radiusOffset += sizeof(f32);
