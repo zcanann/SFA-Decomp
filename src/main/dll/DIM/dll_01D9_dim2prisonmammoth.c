@@ -1,4 +1,5 @@
 #include "main/objHitReact.h"
+#include "main/game_object.h"
 
 /* DLL 0x76 (DIMSnowHorn1 / dim2prisonmammoth) fragment: head/vtable live in placeholder_802BACC0 + placeholder_802BB4B0; consolidate when those adjacent units are graduated. */
 
@@ -599,7 +600,7 @@ void dim2prisonmammoth_hitDetect(void) {}
 #pragma scheduling off
 #pragma peephole off
 int fn_802BC36C(int* obj) {
-    int* sub = *(int**)((char*)obj + 76);
+    int* sub = *(int**)&((GameObject *)obj)->anim.placementData;
     switch ((s8)*(s8*)((char*)sub + 25)) {
         case 0:
             if ((u32)GameBit_Get(548) != 0) return 3;
@@ -650,9 +651,9 @@ int fn_802BC0D8(int obj, int p2)
     *(f32 *)((char *)p2 + 0x294) = fz;
     *(f32 *)((char *)p2 + 0x284) = fz;
     *(f32 *)((char *)p2 + 0x280) = fz;
-    *(f32 *)((char *)obj + 0x24) = fz;
-    *(f32 *)((char *)obj + 0x28) = fz;
-    *(f32 *)((char *)obj + 0x2c) = fz;
+    ((GameObject *)obj)->anim.velocityX = fz;
+    ((GameObject *)obj)->anim.velocityY = fz;
+    ((GameObject *)obj)->anim.velocityZ = fz;
     *(int *)((char *)p2 + 0) |= 0x200000;
     if (*(s8 *)((char *)p2 + 0x27a) != 0) {
         int k = randomGetRange(0, 1);
@@ -671,22 +672,22 @@ int fn_802BC0D8(int obj, int p2)
 #pragma peephole off
 int fn_802BC19C(int obj, int p2)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     f32 fz = lbl_803E82C0;
     *(f32 *)((char *)p2 + 0x294) = fz;
     *(f32 *)((char *)p2 + 0x284) = fz;
     *(f32 *)((char *)p2 + 0x280) = fz;
-    *(f32 *)((char *)obj + 0x24) = fz;
-    *(f32 *)((char *)obj + 0x28) = fz;
-    *(f32 *)((char *)obj + 0x2c) = fz;
+    ((GameObject *)obj)->anim.velocityX = fz;
+    ((GameObject *)obj)->anim.velocityY = fz;
+    ((GameObject *)obj)->anim.velocityZ = fz;
     *(int *)((char *)p2 + 0) |= 0x200000;
     *(f32 *)((char *)p2 + 0x2a0) = lbl_803E82C4;
-    if (*(s16 *)((char *)obj + 0xa0) != 0) {
+    if (((GameObject *)obj)->anim.currentMove != 0) {
         ObjAnim_SetCurrentMove(obj, 0, fz, 0);
     }
     *(s16 *)((char *)inner + 0x38c) = randomGetRange(0x4b0, 0x960);
-    *(u8 *)((char *)obj + 0xaf) &= ~8;
-    if (*(u8 *)((char *)obj + 0xaf) & 1) {
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
+    if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
         (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
         buttonDisable(0, 0x100);
     }
@@ -699,23 +700,23 @@ int fn_802BC19C(int obj, int p2)
 #pragma peephole off
 int fn_802BC27C(int obj, int p2)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     f32 fz = lbl_803E82C0;
     *(f32 *)((char *)p2 + 0x294) = fz;
     *(f32 *)((char *)p2 + 0x284) = fz;
     *(f32 *)((char *)p2 + 0x280) = fz;
-    *(f32 *)((char *)obj + 0x24) = fz;
-    *(f32 *)((char *)obj + 0x28) = fz;
-    *(f32 *)((char *)obj + 0x2c) = fz;
+    ((GameObject *)obj)->anim.velocityX = fz;
+    ((GameObject *)obj)->anim.velocityY = fz;
+    ((GameObject *)obj)->anim.velocityZ = fz;
     *(int *)((char *)p2 + 0) |= 0x200000;
     if (*(s8 *)((char *)p2 + 0x27a) != 0) {
         *(f32 *)((char *)p2 + 0x2a0) = lbl_803E82C4;
-        if (*(s16 *)((char *)obj + 0xa0) != 5) {
+        if (((GameObject *)obj)->anim.currentMove != 5) {
             ObjAnim_SetCurrentMove(obj, 5, fz, 0);
         }
         *(s16 *)((char *)inner + 0x38c) = randomGetRange(0x4b0, 0x960);
     }
-    if (*(u8 *)((char *)obj + 0xaf) & 1) {
+    if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
         GameBit_Set(0x223, 1);
         buttonDisable(0, 0x100);
     }
@@ -732,16 +733,16 @@ int fn_802BC27C(int obj, int p2)
 void dim2prisonmammoth_init(int obj, int p2)
 {
     int inner;
-    *(s16 *)((char *)obj + 0) = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
-    *(int *)((char *)obj + 0xbc) = (int)fn_802BC3F0;
-    inner = *(int *)((char *)obj + 0xb8);
+    ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
+    *(int *)&((GameObject *)obj)->unkBC = (int)fn_802BC3F0;
+    inner = *(int *)&((GameObject *)obj)->extra;
     if (*(void **)((char *)obj + 0x64) != NULL) {
         *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0xa10;
         *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0x8020;
     }
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
     *(u8 *)((char *)inner + 0x25f) = 0;
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -760,16 +761,16 @@ int fn_802BC3F0(int obj, int p2, int p3)
 
     *(u8 *)((char *)p3 + 0x56) = 0;
     *(s16 *)((char *)p3 + 0x6e) = *(s16 *)((char *)p3 + 0x70);
-    inner = *(int *)((char *)obj + 0xb8);
+    inner = *(int *)&((GameObject *)obj)->extra;
     (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 2);
 
-    v.mat[1] = *(f32 *)((char *)obj + 0xc);
-    v.mat[2] = *(f32 *)((char *)obj + 0x10);
-    v.mat[3] = *(f32 *)((char *)obj + 0x14);
-    v.angles[0] = *(s16 *)((char *)obj + 0);
-    v.angles[1] = *(s16 *)((char *)obj + 2);
-    v.angles[2] = *(s16 *)((char *)obj + 4);
-    v.mat[0] = *(f32 *)((char *)obj + 8);
+    v.mat[1] = ((GameObject *)obj)->anim.localPosX;
+    v.mat[2] = ((GameObject *)obj)->anim.localPosY;
+    v.mat[3] = ((GameObject *)obj)->anim.localPosZ;
+    v.angles[0] = ((GameObject *)obj)->anim.rotX;
+    v.angles[1] = ((GameObject *)obj)->anim.rotY;
+    v.angles[2] = ((GameObject *)obj)->anim.rotZ;
+    v.mat[0] = ((GameObject *)obj)->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, v.angles);
 
     p = *(int *)((char *)obj + 0x64);
@@ -789,9 +790,9 @@ void dim2prisonmammoth_update(int obj)
         f32 mat[4];
     } v;
     f32 matrix[16];
-    int inner = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     int p;
-    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     if (((&lbl_803DC750)[*(s16 *)((char *)inner + 0x274)] & 8) == 0) {
         *(u8 *)((char *)inner + 0x5fc) = ((u8 (*)(int, ObjHitReactEntry *, u32, u32, f32 *))ObjHitReact_Update)(obj, lbl_803351A8, 1, *(u8 *)((char *)inner + 0x5fc), (f32 *)(inner + 0x390));
         if (*(u8 *)((char *)inner + 0x5fc) != 0) {
@@ -801,13 +802,13 @@ void dim2prisonmammoth_update(int obj)
         }
     }
     characterDoEyeAnims(obj, inner + 0x35c);
-    v.mat[1] = *(f32 *)((char *)obj + 0xc);
-    v.mat[2] = *(f32 *)((char *)obj + 0x10);
-    v.mat[3] = *(f32 *)((char *)obj + 0x14);
-    v.angles[0] = *(s16 *)((char *)obj + 0);
-    v.angles[1] = *(s16 *)((char *)obj + 2);
-    v.angles[2] = *(s16 *)((char *)obj + 4);
-    v.mat[0] = *(f32 *)((char *)obj + 8);
+    v.mat[1] = ((GameObject *)obj)->anim.localPosX;
+    v.mat[2] = ((GameObject *)obj)->anim.localPosY;
+    v.mat[3] = ((GameObject *)obj)->anim.localPosZ;
+    v.angles[0] = ((GameObject *)obj)->anim.rotX;
+    v.angles[1] = ((GameObject *)obj)->anim.rotY;
+    v.angles[2] = ((GameObject *)obj)->anim.rotZ;
+    v.mat[0] = ((GameObject *)obj)->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, v.angles);
     p = *(int *)((char *)obj + 0x64);
     Matrix_TransformPoint(matrix, lbl_803E82C0, lbl_803E82C0, lbl_803E82C0,

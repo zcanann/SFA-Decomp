@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 
 #pragma peephole off
@@ -90,7 +91,7 @@ void bombplantspore_update(void *obj) {
     u32 detonateMessage;
     int i;
 
-    state = *(BombPlantSporeState **)((u8 *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if ((state->stateFlags >> 6 & 1) != 0) {
         detonateMessage = BOMBPLANTSPORE_MSG_DETONATE;
         while (ObjMsg_Pop(obj, &poppedMessage, &poppedSender, NULL) != 0) {
@@ -105,7 +106,7 @@ void bombplantspore_update(void *obj) {
                 }
                 modelLightStruct_setEnabled(lbl_803E53AC, state->light, 0);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
-                *(s16 *)((u8 *)obj + 0x6) |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= 0x4000;
                 ObjHits_DisableObject(obj);
                 state->stateFlags &= ~BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK;
             }
@@ -132,7 +133,7 @@ void bombplantspore_update(void *obj) {
                                  lbl_803E53D0));
         }
         ObjHits_GetPriorityHit(obj, hitPosition, 0, 0);
-        hitObj = **(void ***)((u8 *)obj + 0x54);
+        hitObj = **(void ***)&((GameObject *)obj)->anim.hitReactState;
         if ((state->stateFlags & 0x80) == 0) {
             *(f32 *)((u8 *)state + 0x284) -= timeDelta;
             if (*(f32 *)((u8 *)state + 0x284) < lbl_803E5394) {
@@ -143,14 +144,14 @@ void bombplantspore_update(void *obj) {
                 *(f32 *)((u8 *)state + 0x2a0) = lbl_803E5394;
             }
             *(s16 *)obj += *(u16 *)&state->yawStep;
-            *(f32 *)((u8 *)obj + 0x28) = lbl_803E53E0 * timeDelta + *(f32 *)((u8 *)obj + 0x28);
-            if (lbl_803E53E4 > *(f32 *)((u8 *)obj + 0x28)) {
-                *(f32 *)((u8 *)obj + 0x28) = lbl_803E53E4;
+            ((GameObject *)obj)->anim.velocityY = lbl_803E53E0 * timeDelta + ((GameObject *)obj)->anim.velocityY;
+            if (lbl_803E53E4 > ((GameObject *)obj)->anim.velocityY) {
+                ((GameObject *)obj)->anim.velocityY = lbl_803E53E4;
             }
-            if (*(f32 *)((u8 *)obj + 0x28) > lbl_803E5394) {
-                *(f32 *)((u8 *)obj + 0x28) *= lbl_803E53E8;
+            if (((GameObject *)obj)->anim.velocityY > lbl_803E5394) {
+                ((GameObject *)obj)->anim.velocityY *= lbl_803E53E8;
             }
-            if (*(f32 *)((u8 *)obj + 0x28) < lbl_803E5394) {
+            if (((GameObject *)obj)->anim.velocityY < lbl_803E5394) {
                 ObjHits_EnableObject(obj);
             }
             bombplantspore_updateDrift(obj, state);
@@ -170,15 +171,15 @@ void bombplantspore_update(void *obj) {
                         timeDelta +
                     *(f32 *)((u8 *)state + 0x27c);
             }
-            *(f32 *)((u8 *)obj + 0x24) =
+            ((GameObject *)obj)->anim.velocityX =
                 *(f32 *)((u8 *)state + 0x290) * *(f32 *)((u8 *)state + 0x27c) +
                 *(f32 *)((u8 *)state + 0x288);
-            *(f32 *)((u8 *)obj + 0x2c) =
+            ((GameObject *)obj)->anim.velocityZ =
                 *(f32 *)((u8 *)state + 0x294) * *(f32 *)((u8 *)state + 0x27c) +
                 *(f32 *)((u8 *)state + 0x28c);
-            objMove(*(f32 *)((u8 *)obj + 0x24) * timeDelta,
-                    *(f32 *)((u8 *)obj + 0x28) * timeDelta,
-                    *(f32 *)((u8 *)obj + 0x2c) * timeDelta, obj);
+            objMove(((GameObject *)obj)->anim.velocityX * timeDelta,
+                    ((GameObject *)obj)->anim.velocityY * timeDelta,
+                    ((GameObject *)obj)->anim.velocityZ * timeDelta, obj);
             (*(void (***)(f32, void *, void *))gPathControlInterface)[4](timeDelta, obj, (u8 *)state + 4);
             (*(void (***)(void *, void *))gPathControlInterface)[5](obj, (u8 *)state + 4);
             (*(void (***)(f32, void *, void *))gPathControlInterface)[6](timeDelta, obj, (u8 *)state + 4);
@@ -222,7 +223,7 @@ void bombplantspore_update(void *obj) {
                 }
                 modelLightStruct_setEnabled(lbl_803E53AC, state->light, 0);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
-                *(s16 *)((u8 *)obj + 0x6) |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= 0x4000;
                 ObjHits_DisableObject(obj);
             }
     }
@@ -235,11 +236,11 @@ void bombplantspore_init(void *obj, void *param2) {
     u32 randAsDouble[2];
     u8 events[8];
 
-    state = *(BombPlantSporeState **)((u8 *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     events[0] = 5;
     state->fuseTimer = lbl_803E53F0;
-    *(u16 *)((u8 *)obj + 0xb0) |= 0x6000;
-    *(f32 *)((u8 *)obj + 0x28) = lbl_803E53F4;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->anim.velocityY = lbl_803E53F4;
     ObjHits_DisableObject(obj);
     state->spinAngle = (s16)randomGetRange(0, 0xffff);
 
@@ -269,48 +270,48 @@ void bombplantspore_init(void *obj, void *param2) {
 }
 
 void bombplantingspot_update(void *obj) {
-    BombPlantingSpotMapData *mapData = *(BombPlantingSpotMapData **)((u8 *)obj + 0x4c);
+    BombPlantingSpotMapData *mapData = *(BombPlantingSpotMapData **)&((GameObject *)obj)->anim.placementData;
     s32 trigBit;
 
     *(s16 *)obj = (s16)(mapData->yawByte << 8);
 
     trigBit = mapData->requiredGameBit;
     if (trigBit != -1 && GameBit_Get(trigBit) == 0) {
-        *(u8 *)((u8 *)obj + 0xaf) |= BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
         return;
     }
 
     if (GameBit_Get(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES) == 0) {
-        *(u8 *)((u8 *)obj + 0xaf) |= BOMBPLANTINGSPOT_READY_FLAG;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= BOMBPLANTINGSPOT_READY_FLAG;
     } else {
-        *(u8 *)((u8 *)obj + 0xaf) &= ~BOMBPLANTINGSPOT_READY_FLAG;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~BOMBPLANTINGSPOT_READY_FLAG;
     }
 
     if (ObjTrigger_IsSetById(obj, BOMBPLANT_GAME_BIT_AVAILABLE_SPORES) != 0) {
         gameBitDecrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
         GameBit_Set(mapData->plantedGameBit, 1);
         (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](1, obj, -1);
-    } else if ((*(u8 *)((u8 *)obj + 0xaf) & 0x4) != 0 &&
+    } else if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x4) != 0 &&
                GameBit_Get(BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER) == 0) {
         (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](0, obj, -1);
         GameBit_Set(BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER, 1);
     }
 
     if (GameBit_Get(mapData->plantedGameBit) == 0) {
-        *(u8 *)((u8 *)obj + 0xaf) &= ~BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
         objRenderFn_80041018(obj);
     } else {
-        *(u8 *)((u8 *)obj + 0xaf) |= BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
     }
 }
 
 void bombplantingspot_init(void *obj, BombPlantingSpotMapData *mapData) {
-    *(u16 *)((u8 *)obj + 0xb0) |= 0x4000;
+    ((GameObject *)obj)->unkB0 |= 0x4000;
     *(s16 *)obj = (s16)(mapData->yawByte << 8);
 }
 
 int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, ObjAnimUpdateState *animUpdate) {
-    void *pState = *(void **)((u8 *)obj + 0xb8);
+    void *pState = ((GameObject *)obj)->extra;
     int i;
     u8 b2;
 

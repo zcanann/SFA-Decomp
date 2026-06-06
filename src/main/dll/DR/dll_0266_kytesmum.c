@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 #include "main/objhits_types.h"
 
 typedef int (*KytesMumUpdateCallback)(int obj);
@@ -164,7 +165,7 @@ void kytesmum_free(int obj) {
 #pragma peephole off
 int kytesmum_spawnInteractionCallback(int obj) {
     Obj_GetPlayerObject();
-    if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         buttonDisable(0, 0x100);
         if ((*(int (**)(void *))((char *)*gGameUIInterface + 0x1c))(*gGameUIInterface) == 0) {
             (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(0, obj, -1);
@@ -208,7 +209,7 @@ int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
         if (arg[i + 0x81] == 1 && setup->mode != 0) {
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
-            *(s16 *)((char *)obj + 0x6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
         }
     }
     return !!dll_2E_func07(obj, arg, (char *)runtime, runtime->moveSet->moves[2], runtime->moveSet->moves[2]);
@@ -242,7 +243,7 @@ void kytesmum_init(int obj, char *arg) {
         ObjGroup_AddObject(obj, 0x3);
         if (runtime->questComplete != 0) {
             Obj_RemoveFromUpdateList(obj);
-            *(s16 *)((char *)obj + 0x6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
         }
         ObjHits_RegisterActiveHitVolumeObject(obj);
         kytesMum->interactionCallback = (void *)kytesmum_animEventCallback;
@@ -276,17 +277,17 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
     if (objGetAnimState80A(player) == 0x40) {
         return 1;
     }
-    if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         if ((*(int (**)(void *))((char *)*gGameUIInterface + 0x1c))(*gGameUIInterface) == 0) {
             buttonDisable(0, 0x100);
-            ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 0xb;
-            ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId = 4;
+            ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
+            ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 4;
             (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(randomGetRange(0, 1), obj, -1);
         }
     }
     if ((tricky != 0 && Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)tricky + 0x18)) < lbl_803E6988) ||
         (player != 0 && Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18)) < lbl_803E6988)) {
-        if (*(s16 *)((char *)obj + 0xa0) != 9) {
+        if (((GameObject *)obj)->anim.currentMove != 9) {
             ObjAnim_SetCurrentMove(obj, 9, lbl_803E698C, 0);
             runtime->animSpeed = lbl_803E6990;
             if (tricky != 0) {
@@ -294,9 +295,9 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
             }
         }
     }
-    if (*(s16 *)((char *)obj + 0xa0) == 9) {
-        ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 0xb;
-        ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId = 4;
+    if (((GameObject *)obj)->anim.currentMove == 9) {
+        ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
+        ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 4;
         ObjHits_SetHitVolumeSlot(obj, 0xb, 4, 7);
         ObjHits_RegisterActiveHitVolumeObject(obj);
     }
@@ -317,7 +318,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg) {
     *(QuestTriple *)triggerIds = *(QuestTriple *)lbl_802C2584;
     count = 0;
     Obj_GetPlayerObject();
-    runtime = *(char **)((char *)obj + 0xb8);
+    runtime = ((GameObject *)obj)->extra;
     saveGame_saveObjectPos(obj);
     ObjHits_DisableObject(obj);
     for (; questBits[count] != -1 && GameBit_Get(questBits[count]) != 0; count++) {
@@ -329,11 +330,11 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg) {
     GameBit_Set(0xeb9, count == 1);
     next = triggerIds[count];
     if (next == -1) {
-        *(u8 *)((char *)obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         return 1;
     }
     if (ObjTrigger_IsSet(obj) != 0) {
-        *(void **)((char *)obj + 0xbc) = (void *)kytesmum_idleCallback;
+        ((GameObject *)obj)->unkBC = (void *)kytesmum_idleCallback;
         (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(next, obj, -1);
     }
     return 0;

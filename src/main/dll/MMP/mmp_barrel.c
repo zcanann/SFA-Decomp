@@ -1,4 +1,5 @@
 #include "main/dll/MMP/mmp_barrel.h"
+#include "main/game_object.h"
 
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
@@ -1487,7 +1488,7 @@ void visanimator_init(int *obj, int *desc)
     u32 gate;
     u8 tmp;
     int sv;
-    *(u16*)((char*)obj + 0xB0) |= 0x6000;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
     vstate = (u8*)((int**)obj)[0xB8/4];
     sv = *(s8*)((char*)desc + 0x1B);
     ((s8*)vstate)[1] = (s8)sv;
@@ -1496,9 +1497,9 @@ void visanimator_init(int *obj, int *desc)
     if ((vstate[4] & gate) != 0) {
         ((s8*)vstate)[1] = ((s8*)vstate)[1] ^ 1;
     }
-    mapGetBlock(objPosToMapBlockIdx((double)*(f32*)((char*)obj + 0xC),
-                                     (double)*(f32*)((char*)obj + 0x10),
-                                     (double)*(f32*)((char*)obj + 0x14)));
+    mapGetBlock(objPosToMapBlockIdx((double)((GameObject *)obj)->anim.localPosX,
+                                     (double)((GameObject *)obj)->anim.localPosY,
+                                     (double)((GameObject *)obj)->anim.localPosZ));
     gate = (u32)GameBit_Get(*(s16*)((char*)desc + 0x18));
     tmp = (u8)(vstate[4] & gate);
     vstate[2] = tmp;
@@ -1510,9 +1511,9 @@ void visanimator_update(int *obj)
 {
     int *state = ((int**)obj)[0x4C / 4];
     u8 *vstate = (u8*)((int**)obj)[0xB8 / 4];
-    int idx = objPosToMapBlockIdx((double)*(f32*)((char*)obj + 0xC),
-                                  (double)*(f32*)((char*)obj + 0x10),
-                                  (double)*(f32*)((char*)obj + 0x14));
+    int idx = objPosToMapBlockIdx((double)((GameObject *)obj)->anim.localPosX,
+                                  (double)((GameObject *)obj)->anim.localPosY,
+                                  (double)((GameObject *)obj)->anim.localPosZ);
     if (mapGetBlock(idx) == NULL) {
         vstate[0] |= 1;
         return;
@@ -1602,9 +1603,9 @@ void groundanimator_free(int *obj, int flag) {
     w = (int *)obj[46];
     r21 = (int *)obj[19];
     if (flag == 0) {
-        block = mapGetBlock(objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
-                                                (double)*(f32 *)((char *)obj + 0x10),
-                                                (double)*(f32 *)((char *)obj + 0x14)));
+        block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject *)obj)->anim.localPosX,
+                                                (double)((GameObject *)obj)->anim.localPosY,
+                                                (double)((GameObject *)obj)->anim.localPosZ));
         if (block != NULL) {
             off = 0;
             for (blkIdx = 0; blkIdx < *(u16 *)((char *)block + 0x9a); blkIdx++) {
@@ -1655,12 +1656,12 @@ f32 groundanimator_setScale(int *obj, int *target) {
     f32 r;
     g = (int *)obj[46];
     r31 = (int *)obj[19];
-    dy = *(f32 *)((char *)target + 0x10) - *(f32 *)((char *)obj + 0x10);
+    dy = *(f32 *)((char *)target + 0x10) - ((GameObject *)obj)->anim.localPosY;
     if (dy < lbl_803E3FA8 || dy > lbl_803E3FAC) {
         return lbl_803E3FB0;
     }
-    dx = *(f32 *)((char *)target + 0xc) - *(f32 *)((char *)obj + 0xc);
-    dz = *(f32 *)((char *)target + 0x14) - *(f32 *)((char *)obj + 0x14);
+    dx = *(f32 *)((char *)target + 0xc) - ((GameObject *)obj)->anim.localPosX;
+    dz = *(f32 *)((char *)target + 0x14) - ((GameObject *)obj)->anim.localPosZ;
     r = lbl_803E3FB4 + *(f32 *)((char *)g + 0x14);
     if (dx * dx + dz * dz > r * r) {
         return lbl_803E3FB8;
@@ -1702,19 +1703,19 @@ void fn_801932C8(int *obj, int *p2, int *p3) {
     f32 radsq;
     f32 clampMax;
     f32 vpos[3];
-    block = mapGetBlock(objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
-                                            (double)*(f32 *)((char *)obj + 0x10),
-                                            (double)*(f32 *)((char *)obj + 0x14)));
+    block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject *)obj)->anim.localPosX,
+                                            (double)((GameObject *)obj)->anim.localPosY,
+                                            (double)((GameObject *)obj)->anim.localPosZ));
     if (block == NULL) {
         return;
     }
     if ((*(u16 *)((char *)block + 4) & 8) == 0) {
         return;
     }
-    ix = (int)fastFloorf((*(f32 *)((char *)obj + 0xc) - playerMapOffsetX) / lbl_803E3FC0);
-    iz = (int)fastFloorf((*(f32 *)((char *)obj + 0x14) - playerMapOffsetZ) / lbl_803E3FC0);
-    fracX = *(f32 *)((char *)obj + 0xc) - (lbl_803E3FC0 * (f32)ix + playerMapOffsetX);
-    fracZ = *(f32 *)((char *)obj + 0x14) - (lbl_803E3FC0 * (f32)iz + playerMapOffsetZ);
+    ix = (int)fastFloorf((((GameObject *)obj)->anim.localPosX - playerMapOffsetX) / lbl_803E3FC0);
+    iz = (int)fastFloorf((((GameObject *)obj)->anim.localPosZ - playerMapOffsetZ) / lbl_803E3FC0);
+    fracX = ((GameObject *)obj)->anim.localPosX - (lbl_803E3FC0 * (f32)ix + playerMapOffsetX);
+    fracZ = ((GameObject *)obj)->anim.localPosZ - (lbl_803E3FC0 * (f32)iz + playerMapOffsetZ);
     *(u8 *)((char *)p2 + 0x2a) = 0;
     radsq = *(f32 *)((char *)p2 + 0x14) * *(f32 *)((char *)p2 + 0x14);
     foff = 0;
@@ -1783,9 +1784,9 @@ void groundanimator_update(int *obj) {
     if (*(u8 *)((char *)r20 + 0x25) == 0) {
         return;
     }
-    bi = objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
-                             (double)*(f32 *)((char *)obj + 0x10),
-                             (double)*(f32 *)((char *)obj + 0x14));
+    bi = objPosToMapBlockIdx((double)((GameObject *)obj)->anim.localPosX,
+                             (double)((GameObject *)obj)->anim.localPosY,
+                             (double)((GameObject *)obj)->anim.localPosZ);
     oldbit = *(u8 *)((char *)g + 0x2d) & 1;
     if (bi > -1) {
         *(u8 *)((char *)g + 0x2d) = *(u8 *)((char *)g + 0x2d) | 1;
@@ -1822,17 +1823,17 @@ void groundanimator_update(int *obj) {
                     if ((*(u8 *)((char *)g + 0x2d) & 2) == 0) {
                         fn_801A80F0(near, 1);
                     }
-                    fn_801A80C4(near, *(f32 *)((char *)obj + 0xc),
-                                *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)g + 0x18),
-                                *(f32 *)((char *)obj + 0x14));
+                    fn_801A80C4(near, ((GameObject *)obj)->anim.localPosX,
+                                ((GameObject *)obj)->anim.localPosY - *(f32 *)((char *)g + 0x18),
+                                ((GameObject *)obj)->anim.localPosZ);
                 } else {
                     if ((*(u8 *)((char *)g + 0x2d) & 2) == 0) {
                         (*(code *)(*(int *)(*(int *)((char *)near + 0x68)) + 0x24))(near, 1);
                     }
                     (*(code *)(*(int *)(*(int *)((char *)near + 0x68)) + 0x38))(
-                        near, *(f32 *)((char *)obj + 0xc),
-                        *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)g + 0x18),
-                        *(f32 *)((char *)obj + 0x14));
+                        near, ((GameObject *)obj)->anim.localPosX,
+                        ((GameObject *)obj)->anim.localPosY - *(f32 *)((char *)g + 0x18),
+                        ((GameObject *)obj)->anim.localPosZ);
                 }
             }
         } else if ((*(u16 *)((char *)g[2] + 0xb0) & 0x40) != 0) {
@@ -1910,16 +1911,16 @@ void groundanimator_update(int *obj) {
     if ((*(u8 *)((char *)g + 0x2d) & 2) == 0 && allow != 0) {
         tricky = getTrickyObject();
         if (tricky != NULL && GameBit_Get(0x4e4) != 0) {
-            *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) & ~0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10;
         } else {
-            *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) | 0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x10;
         }
-        *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) & ~0x8;
-        if (tricky != NULL && (*(u8 *)((char *)obj + 0xaf) & 4) != 0) {
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8;
+        if (tricky != NULL && (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
             (*(code *)(*(int *)(*(int *)((char *)tricky + 0x68)) + 0x28))(tricky, obj, 1, 1);
         }
     } else {
-        *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) | 0x8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8;
     }
     objRenderFn_80041018(obj);
 }
@@ -1937,9 +1938,9 @@ void alphaanimator_update(int *obj) {
     d = (int *)obj[19];
     s = (int *)obj[46];
     mode = *(u8 *)((char *)d + 0x20) & 3;
-    block = mapGetBlock(objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
-                                            (double)*(f32 *)((char *)obj + 0x10),
-                                            (double)*(f32 *)((char *)obj + 0x14)));
+    block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject *)obj)->anim.localPosX,
+                                            (double)((GameObject *)obj)->anim.localPosY,
+                                            (double)((GameObject *)obj)->anim.localPosZ));
     if (block == NULL) {
         *(u8 *)((char *)s + 0x18) = 0;
         return;

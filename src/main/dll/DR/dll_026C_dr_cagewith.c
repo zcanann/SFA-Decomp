@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 
 int drcagewith_getExtraSize(void) { return 0x34; }
 
@@ -13,7 +14,7 @@ void drcagewith_update(void) {}
 #pragma scheduling off
 #pragma peephole off
 void drcagewith_hitDetect(int obj) {
-    int *q = *(int **)((char *)obj + 0x4c);
+    int *q = *(int **)&((GameObject *)obj)->anim.placementData;
     u8 *p;
     BitFlags8 *bf31;
     f32 maxDist;
@@ -26,16 +27,16 @@ void drcagewith_hitDetect(int obj) {
     f32 div;
 
     maxDist = lbl_803E69F4;
-    p = *(u8 **)((char *)obj + 0xb8);
+    p = ((GameObject *)obj)->extra;
     bf31 = (BitFlags8 *)(p + 0x31);
 
     if (bf31->b1 != 0) {
         objParticleFn_80099d84(obj, lbl_803E69F8, 6, lbl_803E69F0, 0);
     }
 
-    if (*(s16 *)((char *)obj + 0x46) == 2154 || *(s16 *)((char *)obj + 0x46) == 2155) {
+    if (((GameObject *)obj)->anim.seqId == 2154 || ((GameObject *)obj)->anim.seqId == 2155) {
         if (GameBit_Get(1545) != 0) {
-            *(s16 *)((char *)obj + 6) &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~0x4000;
         }
         return;
     }
@@ -45,11 +46,11 @@ void drcagewith_hitDetect(int obj) {
             *(u8 *)(spawned + 4) = 2;
             *(u8 *)(spawned + 5) = 1;
             *(u8 *)(spawned + 5) = (u8)(*(u8 *)(spawned + 5) | (*(u8 *)((char *)q + 5) & 0x18));
-            *(f32 *)(spawned + 8) = *(f32 *)((char *)obj + 0xc);
-            *(f32 *)(spawned + 0xc) = *(f32 *)((char *)obj + 0x10);
-            *(f32 *)(spawned + 0x10) = *(f32 *)((char *)obj + 0x14);
+            *(f32 *)(spawned + 8) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(spawned + 0xc) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(spawned + 0x10) = ((GameObject *)obj)->anim.localPosZ;
             spawned = Obj_SetupObject(spawned, 5, *(s8 *)((char *)obj + 0xac), -1,
-                                      *(int *)((char *)obj + 0x30));
+                                      *(int *)&((GameObject *)obj)->anim.parent);
             *(s16 *)(spawned + 6) |= 0x4000;
             *(int *)(spawned + 0xf4) = 1;
             *(int *)p = spawned;
@@ -59,7 +60,7 @@ void drcagewith_hitDetect(int obj) {
     if (bf31->b0 == 0) {
         if (GameBit_Get(1545) != 0) {
             ObjHits_DisableObject(obj);
-            *(s16 *)((char *)obj + 6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
             bf31->b0 = 1;
             nearest = (int *)ObjGroup_FindNearestObject(10, obj, &maxDist);
             if (nearest != NULL && *(s16 *)((char *)nearest + 0x46) == 1049) {
@@ -68,7 +69,7 @@ void drcagewith_hitDetect(int obj) {
             }
             return;
         }
-        v = oneOverTimeDelta * (*(f32 *)((char *)obj + 0xc) - *(f32 *)((char *)obj + 0x80)) * lbl_803E69FC;
+        v = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX) * lbl_803E69FC;
         v = interpolate(v - *(f32 *)(p + 0x24), lbl_803E6A00, timeDelta);
         clamped = lbl_803E6A04 * timeDelta;
         if (v >= clamped) {
@@ -101,7 +102,7 @@ void drcagewith_hitDetect(int obj) {
     }
     if (bf31->b0 == 0) {
         if (GameBit_Get(3175) != 0) {
-            px = *(f32 *)((char *)obj + 0xc);
+            px = ((GameObject *)obj)->anim.localPosX;
             if (px >= lbl_803E6A10 && px <= lbl_803E6A14) {
                 GameBit_Set(*(s16 *)((char *)q + 0x1e), 1);
             } else {
@@ -118,7 +119,7 @@ void drcagewith_hitDetect(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int drcagewith_setScale(int obj) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    u8 *p = ((GameObject *)obj)->extra;
     return p[0x30];
 }
 #pragma peephole reset
@@ -127,7 +128,7 @@ int drcagewith_setScale(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void drcagewith_free(int obj, int arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     char *x = *(char **)p;
     if (x != 0 && arg == 0 && *(void **)(x + 0x50) != 0) {
         char *y = *(char **)(p + 0x4);
@@ -145,7 +146,7 @@ void drcagewith_free(int obj, int arg) {
 #pragma scheduling off
 #pragma peephole off
 int drcagewith_toggleRopeStateCallback(int obj, int unused, u8 *arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     int i;
     for (i = 0; i < arg[0x8b]; i++) {
         if (arg[i + 0x81] == 1) {
@@ -160,7 +161,7 @@ int drcagewith_toggleRopeStateCallback(int obj, int unused, u8 *arg) {
 #pragma scheduling off
 #pragma peephole off
 void drcagewith_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     int *b;
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E69F0);
@@ -183,20 +184,20 @@ void drcagewith_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, u
 #pragma scheduling off
 #pragma peephole off
 void drcagewith_init(int obj, char *arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     s16 type;
     f32 fz;
-    *(void **)((char *)obj + 0xbc) = (void *)drcagewith_toggleRopeStateCallback;
-    type = *(s16 *)((char *)obj + 0x46);
+    ((GameObject *)obj)->unkBC = (void *)drcagewith_toggleRopeStateCallback;
+    type = ((GameObject *)obj)->anim.seqId;
     if (type == 0x86a || type == 0x86b) {
         if (GameBit_Get(0x609) == 0) {
-            *(s16 *)((char *)obj + 0x6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
         }
     } else {
         ObjHits_EnableObject(obj);
         if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
             ObjHits_DisableObject(obj);
-            *(s16 *)((char *)obj + 0x6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
             ((BitFlags8 *)(p + 0x31))->b0 = 1;
         } else {
             GameBit_Set(0x7aa, 5);

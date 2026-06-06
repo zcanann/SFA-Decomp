@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2flameburst.h"
 #include "main/objanim.h"
@@ -1744,8 +1745,8 @@ void dimmagicbridge_init(u8* obj, u8* params) {
     s16 hh;
 
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
-    *(void**)(obj + 0xbc) = (void*)&dimmagicbridge_flameSeqFn;
-    sub = *(DimMagicBridgeState**)(obj + 0xb8);
+    ((GameObject *)obj)->unkBC = (void*)&dimmagicbridge_flameSeqFn;
+    sub = ((GameObject *)obj)->extra;
     minY = 0;
     model = Obj_GetActiveModel((int)obj);
     modelData = *(int*)model;
@@ -1851,7 +1852,7 @@ void dimmagicbridge_update(int obj)
     DimMagicBridgeState* sub;
     void* player;
     player = Obj_GetPlayerObject();
-    sub = *(DimMagicBridgeState**)((u8*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     dimmagicbridge_scrollTextureChannels(obj, (u8 *)sub);
     dimmagicbridge_updateVertexWave(obj, (u8 *)sub);
     if (sub->ignited == 0) {
@@ -1875,15 +1876,15 @@ void dimwooddoor2_init(u8* obj, u8* params)
     DimWoodDoor2State* sub;
     f32 fz;
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
-    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
-    sub = *(DimWoodDoor2State**)(obj + 0xb8);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
+    sub = ((GameObject *)obj)->extra;
     sub->burnState = 3;
     fz = lbl_803E49D4;
     sub->animSpeed = fz;
     sub->riseSpeed = fz;
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
         sub->burnState = 0;
-        (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
         *(u8*)(obj + 0x36) = 0;
     }
 }
@@ -1896,12 +1897,12 @@ void dll_1CE_init(u8* obj, u8* params)
 {
     Dll1CEState* sub;
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
-    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x2000);
-    sub = *(Dll1CEState**)(obj + 0xb8);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
+    sub = ((GameObject *)obj)->extra;
     sub->igniteCountdown = 1;
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
         sub->igniteCountdown = 0;
-        (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
         *(u8*)(obj + 0x36) = 0;
     }
     sub->openVelocity = lbl_803E49F0;
@@ -1913,7 +1914,7 @@ void dll_1CE_init(u8* obj, u8* params)
 extern void ModelLightStruct_free(void *);
 void explosion_free(int obj)
 {
-    void *p = *(void **)(*(int *)(obj + 0xb8) + 0xa40);
+    void *p = *(void **)(*(int *)&((GameObject *)obj)->extra + 0xa40);
     if (p != NULL) {
         ModelLightStruct_free(p);
     }
@@ -1924,7 +1925,7 @@ void explosion_free(int obj)
 int explosion_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int idx = (int)*(short *)(*(int *)(obj + 0x4c) + 0x1c) & 3;
+    int idx = (int)*(short *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x1c) & 3;
     if (idx >= objAnim->modelInstance->modelCount) {
         idx = 0;
     }
@@ -1986,7 +1987,7 @@ void dimmagicbridge_scrollTextureChannels(int param_1, u8* obj)
 #pragma peephole off
 int dimmagicbridge_flameSeqFn(int* obj, int p2, u8* p3)
 {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    u8* sub = ((GameObject *)obj)->extra;
     int j;
     int i;
     p3[0x56] = 0;
@@ -2033,19 +2034,19 @@ extern f32 lbl_803E49E4;
 #pragma peephole off
 void dimwooddoor2_update(int* obj)
 {
-    int* q = *(int**)((char*)obj + 0x4c);
-    DimWoodDoor2State* sub = *(DimWoodDoor2State**)((char*)obj + 0xb8);
+    int* q = *(int**)&((GameObject *)obj)->anim.placementData;
+    DimWoodDoor2State* sub = ((GameObject *)obj)->extra;
     ObjAnim_AdvanceCurrentMove(sub->animSpeed, timeDelta, (int)obj, 0);
-    *(f32*)((char*)obj + 0x14) = *(f32*)((char*)obj + 0x14) + sub->riseSpeed;
+    ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ + sub->riseSpeed;
     if (sub->riseSpeed != lbl_803E49D4) {
         sub->riseSpeed = sub->riseSpeed * lbl_803E49D8;
         if (sub->riseSpeed > lbl_803E49D4) {
             sub->riseSpeed = lbl_803E49D4;
         }
     }
-    if ((s8)sub->burnState <= 0 && *(s16*)q == 0x338 && *(f32*)((char*)obj + 0x98) > lbl_803E49DC) {
+    if ((s8)sub->burnState <= 0 && *(s16*)q == 0x338 && ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E49DC) {
         int v = *(u8*)((char*)obj + 0x36) - framesThisStep * 16;
-        int* q2 = *(int**)((char*)obj + 0x54);
+        int* q2 = *(int**)&((GameObject *)obj)->anim.hitReactState;
         if (v < 0) v = 0;
         *(s16*)((char*)q2 + 0x60) = (s16)(*(s16*)((char*)q2 + 0x60) & ~1);
         *(u8*)((char*)obj + 0x36) = (u8)v;
@@ -2089,11 +2090,11 @@ extern f32 lbl_803E49FC;
 #pragma peephole off
 void dll_1CE_update(int* obj)
 {
-    int* q = *(int**)((char*)obj + 0x4c);
-    Dll1CEState* sub = *(Dll1CEState**)((char*)obj + 0xb8);
+    int* q = *(int**)&((GameObject *)obj)->anim.placementData;
+    Dll1CEState* sub = ((GameObject *)obj)->extra;
     if (*(u8*)((char*)obj + 0x36) == 0) return;
     if ((s8)sub->igniteCountdown <= 0) {
-        int* q2 = *(int**)((char*)obj + 0x54);
+        int* q2 = *(int**)&((GameObject *)obj)->anim.hitReactState;
         *(s16*)((char*)q2 + 0x60) = (s16)(*(s16*)((char*)q2 + 0x60) & ~1);
         if (sub->opened == 1) {
             sub->openProgress = sub->openVelocity * timeDelta + sub->openProgress;
@@ -2106,7 +2107,7 @@ void dll_1CE_update(int* obj)
             }
         }
     }
-    if (*(s16*)((char*)obj + 0x46) == 0x334) return;
+    if (((GameObject *)obj)->anim.seqId == 0x334) return;
     {
         int found = 0;
         int i;
@@ -2254,8 +2255,8 @@ void fn_801B40B8(u8 mode, u8 *out, f32 a, f32 b);
 #pragma peephole off
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
 {
-    int p4c = *(int *)((char *)obj + 0x4c);
-    int state = *(int *)((char *)obj + 0xb8);
+    int p4c = *(int *)&((GameObject *)obj)->anim.placementData;
+    int state = *(int *)&((GameObject *)obj)->extra;
     u8 idx;
     int off;
     int e;
@@ -2407,7 +2408,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     int i;
     colA = lbl_803E4928;
     colB = lbl_803E8468;
-    state = *(int *)((char *)obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     model = Obj_GetActiveModel((int)obj);
     if (visible != 0) {
         GXClearVtxDesc();
@@ -2470,8 +2471,8 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         if (*(int *)((char *)state + 0xa4c) < *(int *)((char *)state + 0xa50) && *(s8 *)((char *)state + 0xa59) != 0) {
             p = state;
             for (i = 0; i < *(u8 *)((char *)state + 0xa59); i++) {
-                *(s16 *)((char *)obj + 0x2) = *(s16 *)((char *)p + 0xa44);
-                *(s16 *)((char *)obj + 0x0) = *(s16 *)((char *)p + 0xa46);
+                ((GameObject *)obj)->anim.rotY = *(s16 *)((char *)p + 0xa44);
+                ((GameObject *)obj)->anim.rotX = *(s16 *)((char *)p + 0xa46);
                 objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (f32)visible);
                 if (i < *(u8 *)((char *)state + 0xa59) - 1) {
                     *(u16 *)((char *)model + 0x18) &= ~8;
@@ -2494,7 +2495,7 @@ void explosion_update(int obj)
     f32 vpos[3];
     f32 m[12];
     u8 rgb[3];
-    int state = *(int *)((char *)obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int i;
     int p;
     lbl_803DDB58 += 1;
@@ -2521,7 +2522,7 @@ void explosion_update(int obj)
                         (*(int *)((char *)p + 0x20) -= framesThisStep, *(int *)((char *)p + 0x20) <= 0)) {
                         u8 c = *(u8 *)((char *)p + 0x2d);
                         f32 sp2 = *(f32 *)((char *)p + 0x1c);
-                        int st2 = *(int *)((char *)obj + 0xb8);
+                        int st2 = *(int *)&((GameObject *)obj)->extra;
                         f32 sv;
                         vpos[0] = *(f32 *)((char *)p + 0xc) * (lbl_803E495C * (f32)(int)randomGetRange(-5, 3) + lbl_803E492C);
                         vpos[1] = lbl_803E4960;
@@ -2642,7 +2643,7 @@ void explosion_update(int obj)
             }
             {
                 f32 frac = (f32)(int)*(int *)((char *)state + 0xa4c) / (f32)(int)*(int *)((char *)state + 0xa50);
-                *(f32 *)((char *)obj + 0x8) = lbl_803E49A4 * frac * *(f32 *)((char *)state + 0xa54);
+                ((GameObject *)obj)->anim.rootMotionScale = lbl_803E49A4 * frac * *(f32 *)((char *)state + 0xa54);
                 *(s8 *)((char *)obj + 0x36) = (s8)(int)-(lbl_803E4938 * frac - lbl_803E4938);
             }
             if (*(s8 *)((char *)state + 0xa5b) == 0 && (*(int *)((char *)state + 0xa50) >> 1) <= *(int *)((char *)state + 0xa4c)) {
@@ -2670,7 +2671,7 @@ void explosion_init(int obj, int p2)
     f32 vsp[3];
     f32 mA[12];
     f32 mB[12];
-    int state = *(int *)((char *)obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     f32 scale;
     int p;
     int i;
@@ -2684,8 +2685,8 @@ void explosion_init(int obj, int p2)
             scale = lbl_803E49A8;
         }
     }
-    fn_801B3DE4(obj, 0, lbl_803E49AC * scale, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14));
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    fn_801B3DE4(obj, 0, lbl_803E49AC * scale, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
+    ((GameObject *)obj)->unkB0 |= 0x2000;
     *(u8 *)((char *)state + 0xa5d) = *(s16 *)((char *)p2 + 0x1c) & 3;
     Obj_SetActiveModelIndex(obj, *(u8 *)((char *)state + 0xa5d));
     if (*(s16 *)((char *)p2 + 0x1c) & 4) {
@@ -2694,13 +2695,13 @@ void explosion_init(int obj, int p2)
         *(f32 *)((char *)state + 0xa3c) = lbl_803E4960;
     }
     *(u8 *)((char *)state + 0xa5c) = 0;
-    if (hitDetectFn_800658a4(obj, state + 0x960, 0, *(f32 *)((char *)obj + 0xc), lbl_803E49B0 + *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14)) == 0) {
+    if (hitDetectFn_800658a4(obj, state + 0x960, 0, ((GameObject *)obj)->anim.localPosX, lbl_803E49B0 + ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ) == 0) {
         if (*(f32 *)((char *)state + 0x960) < lbl_803E49B4) {
             *(u8 *)((char *)state + 0xa5c) = 1;
         }
-        *(f32 *)((char *)state + 0x960) = *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)state + 0x960);
+        *(f32 *)((char *)state + 0x960) = ((GameObject *)obj)->anim.localPosY - *(f32 *)((char *)state + 0x960);
     } else {
-        *(f32 *)((char *)state + 0x960) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)state + 0x960) = ((GameObject *)obj)->anim.localPosY;
     }
     if (*(s16 *)((char *)p2 + 0x1c) & 0x10) {
         n = (int)((f32)(lbl_803E49B8 * scale) / lbl_803E49A8);
@@ -2725,9 +2726,9 @@ void explosion_init(int obj, int p2)
                 PSMTXConcat(mA, mB, mB);
                 PSMTXMultVecSR(mB, vsp, vsp);
             }
-            *(int *)((char *)p + 0x964) = *(int *)((char *)obj + 0xc);
-            *(int *)((char *)p + 0x968) = *(int *)((char *)obj + 0x10);
-            *(int *)((char *)p + 0x96c) = *(int *)((char *)obj + 0x14);
+            *(int *)((char *)p + 0x964) = *(int *)&((GameObject *)obj)->anim.localPosX;
+            *(int *)((char *)p + 0x968) = *(int *)&((GameObject *)obj)->anim.localPosY;
+            *(int *)((char *)p + 0x96c) = *(int *)&((GameObject *)obj)->anim.localPosZ;
             *(f32 *)((char *)p + 0x970) = vsp[0];
             *(f32 *)((char *)p + 0x974) = vsp[1];
             *(f32 *)((char *)p + 0x978) = vsp[2];
@@ -2745,7 +2746,7 @@ void explosion_init(int obj, int p2)
         *(int *)((char *)state + 0xa40) = objCreateLight(0, 1);
         if (*(int *)((char *)state + 0xa40) != 0) {
             modelLightStruct_setLightKind(*(int *)((char *)state + 0xa40), 2);
-            modelLightStruct_setPosition(*(int *)((char *)state + 0xa40), *(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c), *(f32 *)((char *)obj + 0x20));
+            modelLightStruct_setPosition(*(int *)((char *)state + 0xa40), ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ);
             modelLightStruct_setAffectsAabbLightSelection(*(int *)((char *)state + 0xa40), 1);
             modelLightStruct_setEnabled(*(int *)((char *)state + 0xa40), 1, lbl_803E4960);
             modelLightStruct_setDistanceAttenuation(*(int *)((char *)state + 0xa40), (f32)(lbl_803E49CC * scale), (f32)(lbl_803E4958 * scale));
@@ -2781,7 +2782,7 @@ void explosion_init(int obj, int p2)
         *(int *)((char *)state + 0xa50) = v;
     }
     *(f32 *)((char *)state + 0xa54) = scale;
-    *(f32 *)((char *)obj + 0x8) = lbl_803E4960;
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E4960;
 }
 #pragma peephole reset
 #pragma scheduling reset

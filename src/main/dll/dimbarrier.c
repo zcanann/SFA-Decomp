@@ -1,4 +1,5 @@
 #include "main/dll/dimbarrier.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 
 extern undefined4 FUN_800067e8();
@@ -73,7 +74,7 @@ void ecsh_cup_update(short *obj)
     u8 buf[4];
     CupVec3 v;
     char *player = (char *)Obj_GetPlayerObject();
-    char *state = *(char **)((char *)obj + 0xb8);
+    char *state = ((GameObject *)obj)->extra;
     f32 a;
 
     v = *(CupVec3 *)lbl_802C23B8;
@@ -100,10 +101,10 @@ void ecsh_cup_update(short *obj)
             *(s8 *)(state + 0x2e) = *(u8 *)(state + 0x2e) * -1;
             *(f32 *)(state + 0x20) = lbl_803E5070;
         }
-        *(f32 *)((char *)obj + 0x10) = lbl_803E5074 * (f32)*(s8 *)(state + 0x2e) + *(f32 *)((char *)obj + 0x10);
+        ((GameObject *)obj)->anim.localPosY = lbl_803E5074 * (f32)*(s8 *)(state + 0x2e) + ((GameObject *)obj)->anim.localPosY;
         if (mode == 1 && *(int *)(state + 0x24) == 1) {
-            *(f32 *)((char *)obj + 0xc) = *(f32 *)(state + 0xc) * timeDelta + *(f32 *)((char *)obj + 0xc);
-            *(f32 *)((char *)obj + 0x14) = *(f32 *)(state + 0x14) * timeDelta + *(f32 *)((char *)obj + 0x14);
+            ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 0xc) * timeDelta + ((GameObject *)obj)->anim.localPosX;
+            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x14) * timeDelta + ((GameObject *)obj)->anim.localPosZ;
             ObjHits_EnableObject((int)obj);
             ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
             ObjHits_SyncObjectPositionIfDirty((int)obj);
@@ -113,8 +114,8 @@ void ecsh_cup_update(short *obj)
             ObjHits_SyncObjectPositionIfDirty((int)obj);
         }
         if (mode == 6) {
-            if (*(f32 *)((char *)obj + 0x10) < *(f32 *)(state + 0x18)) {
-                *(f32 *)((char *)obj + 0x10) = lbl_803E5078 * timeDelta + *(f32 *)((char *)obj + 0x10);
+            if (((GameObject *)obj)->anim.localPosY < *(f32 *)(state + 0x18)) {
+                ((GameObject *)obj)->anim.localPosY = lbl_803E5078 * timeDelta + ((GameObject *)obj)->anim.localPosY;
             }
             if (*(u8 *)((char *)obj + 0x37) != 0xff) {
                 a = (f32)(u32)*(u8 *)((char *)obj + 0x37);
@@ -130,8 +131,8 @@ void ecsh_cup_update(short *obj)
                 (*(void (*)(short *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x271, 0, 0, -1, 0);
             }
         } else if (mode == 7) {
-            if (*(f32 *)((char *)obj + 0x10) > *(f32 *)(state + 0x18) - lbl_803E5084) {
-                *(f32 *)((char *)obj + 0x10) = -(lbl_803E5078 * timeDelta - *(f32 *)((char *)obj + 0x10));
+            if (((GameObject *)obj)->anim.localPosY > *(f32 *)(state + 0x18) - lbl_803E5084) {
+                ((GameObject *)obj)->anim.localPosY = -(lbl_803E5078 * timeDelta - ((GameObject *)obj)->anim.localPosY);
                 *(f32 *)(state + 0x1c) -= timeDelta;
                 if (*(f32 *)(state + 0x1c) <= lbl_803E5068) {
                     *(f32 *)(state + 0x1c) = lbl_803E506C;
@@ -155,10 +156,10 @@ void ecsh_cup_update(short *obj)
             *(int *)(state + 0x24) = mode;
         } else if (mode == 1 && mode != *(int *)(state + 0x24)) {
             (*(void (*)(int, f32 *, f32 *))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x24))((u8)*(int *)(state + 0x28), &v.x, &v.z);
-            *(f32 *)(state + 0xc) = (v.x - *(f32 *)((char *)obj + 0xc)) / lbl_803E5070;
-            *(f32 *)(state + 0x14) = (v.z - *(f32 *)((char *)obj + 0x14)) / lbl_803E5070;
-            *(f32 *)(state + 0) = *(f32 *)((char *)obj + 0xc);
-            *(f32 *)(state + 8) = *(f32 *)((char *)obj + 0x14);
+            *(f32 *)(state + 0xc) = (v.x - ((GameObject *)obj)->anim.localPosX) / lbl_803E5070;
+            *(f32 *)(state + 0x14) = (v.z - ((GameObject *)obj)->anim.localPosZ) / lbl_803E5070;
+            *(f32 *)(state + 0) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(state + 8) = ((GameObject *)obj)->anim.localPosZ;
             *(int *)(state + 0x24) = mode;
         } else if (mode == 0 && mode != *(int *)(state + 0x24)) {
             *(f32 *)(state + 0xc) = lbl_803E5068;
@@ -167,14 +168,14 @@ void ecsh_cup_update(short *obj)
         } else if (mode == 2 && mode != *(int *)(state + 0x24)) {
             *(f32 *)(state + 0xc) = lbl_803E5068;
             *(f32 *)(state + 0x14) = lbl_803E5068;
-            (*(void (*)(int, f32, f32))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x2c))((u8)*(int *)(state + 0x28), *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x14));
+            (*(void (*)(int, f32, f32))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x2c))((u8)*(int *)(state + 0x28), ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ);
             *(int *)(state + 0x24) = mode;
         } else if (mode == 3 && mode != *(int *)(state + 0x24)) {
             *(int *)(state + 0x24) = mode;
         } else if (mode == 4 && mode != *(int *)(state + 0x24)) {
             (*(void (*)(int, f32 *, f32 *))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x24))((u8)*(int *)(state + 0x28), &v.x, &v.z);
-            *(f32 *)((char *)obj + 0xc) = v.x;
-            *(f32 *)((char *)obj + 0x14) = v.z;
+            ((GameObject *)obj)->anim.localPosX = v.x;
+            ((GameObject *)obj)->anim.localPosZ = v.z;
             *(int *)(state + 0x24) = mode;
         } else if (mode == 5) {
             if (player != NULL) {
@@ -242,14 +243,14 @@ void ecsh_cup_init(int obj, int p2)
     int t;
     f32 ftmp;
 
-    t = *(int *)(obj + 0xb8);
+    t = *(int *)&((GameObject *)obj)->extra;
     ftmp = lbl_803E5064;
     lbl_803DDBC8 = 0;
-    *(f32 *)(t + 0x0) = *(f32 *)(obj + 0xc);
-    *(f32 *)(t + 0x4) = *(f32 *)(obj + 0x10);
-    *(f32 *)(t + 0x8) = *(f32 *)(obj + 0x14);
-    *(f32 *)(t + 0x18) = *(f32 *)(obj + 0x10);
-    *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E5084;
+    *(f32 *)(t + 0x0) = ((GameObject *)obj)->anim.localPosX;
+    *(f32 *)(t + 0x4) = ((GameObject *)obj)->anim.localPosY;
+    *(f32 *)(t + 0x8) = ((GameObject *)obj)->anim.localPosZ;
+    *(f32 *)(t + 0x18) = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E5084;
     {
         f32 fz = lbl_803E5068;
         *(f32 *)(t + 0xc) = fz;

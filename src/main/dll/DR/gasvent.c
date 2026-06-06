@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gasvent.h"
 #include "main/objanim_internal.h"
@@ -443,13 +444,13 @@ void gunpowderbarrel_render(int *obj, int param_2, int param_3, int param_4, int
   int result;
   int *child;
 
-  sub = *(u8 **)((char *)obj + 0xb8);
+  sub = ((GameObject *)obj)->extra;
   if (sub[0x17] != 0 || ((GpbHeld4A *)(sub + 0x4a))->held_) {
     return;
   }
   if (sub[0x15] != 0) {
-    *(s16 *)((char *)obj + 4) = 0;
-    *(s16 *)((char *)obj + 2) = 0;
+    ((GameObject *)obj)->anim.rotZ = 0;
+    ((GameObject *)obj)->anim.rotY = 0;
   }
   result = (*(int (**)(int *, int))(*(int *)gCarryableInterface + 0xc))(obj, visFlag);
   if (result != 0 || visFlag == -1) {
@@ -517,15 +518,15 @@ void gunpowderbarrel_triggerExplosion(int *obj)
     u8 *tricky;
     int *timer;
 
-    sub = *(u8 **)((char *)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, 0) != 0 ||
-        ((*(ObjHitsPriorityState **)((char *)obj + 0x54))->contactFlags != 0 && (sub[0x49] & 2) != 0)) {
+        ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0 && (sub[0x49] & 2) != 0)) {
         sub[0x16] += 1;
         sub[0x49] = (u8)(sub[0x49] | 1);
     }
     if (sub[0x16] != 0) {
         if (((GpbFlags48 *)(sub + 0x48))->returnHome) {
-            int *def = *(int **)((char *)obj + 0x4c);
+            int *def = *(int **)&((GameObject *)obj)->anim.placementData;
             int *best = 0;
             int **objs;
             int i;
@@ -545,16 +546,16 @@ void gunpowderbarrel_triggerExplosion(int *obj)
             }
             if (best != 0) {
                 f32 x, y, z;
-                x = *(f32 *)((char *)obj + 0xc);
-                y = *(f32 *)((char *)obj + 0x10);
-                z = *(f32 *)((char *)obj + 0x14);
-                *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)best + 0xc);
-                *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)best + 0x10);
-                *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)best + 0x14);
+                x = ((GameObject *)obj)->anim.localPosX;
+                y = ((GameObject *)obj)->anim.localPosY;
+                z = ((GameObject *)obj)->anim.localPosZ;
+                ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)best + 0xc);
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)best + 0x10);
+                ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)best + 0x14);
                 saveGame_saveObjectPos(obj);
-                *(f32 *)((char *)obj + 0xc) = x;
-                *(f32 *)((char *)obj + 0x10) = y;
-                *(f32 *)((char *)obj + 0x14) = z;
+                ((GameObject *)obj)->anim.localPosX = x;
+                ((GameObject *)obj)->anim.localPosY = y;
+                ((GameObject *)obj)->anim.localPosZ = z;
             }
         }
         ObjHits_ClearFlags(obj, 0x80);
@@ -563,7 +564,7 @@ void gunpowderbarrel_triggerExplosion(int *obj)
         ObjHits_EnableObject(obj);
         ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
         Sfx_PlayFromObject(obj, SFXsk_bapt11_c);
-        *(f32 *)((char *)obj + 0x10) += lbl_803E4308;
+        ((GameObject *)obj)->anim.localPosY += lbl_803E4308;
         spawnExplosion(obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
         if (sub[0x15] != 0) {
             (*(void (**)(int *, u8 *))(*(int *)gCarryableInterface + 0x30))(obj, sub);
@@ -572,7 +573,7 @@ void gunpowderbarrel_triggerExplosion(int *obj)
         sub[0x17] = 1;
         ((GpbFlags4A *)(sub + 0x4a))->held = 0;
         ObjGroup_RemoveObject(obj, 0x19);
-        if (*(void **)((char *)obj + 0x30) != 0) {
+        if (((GameObject *)obj)->anim.parent != 0) {
             *(f32 *)(sub + 0x34) = lbl_803E42C4;
         } else {
             *(f32 *)(sub + 0x34) = lbl_803E42C4;
@@ -599,12 +600,12 @@ void gunpowderbarrel_updatePhysics(int *obj)
     int block;
     f32 dt;
 
-    sub = *(u8 **)((char *)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     if (((GpbFlags4A *)(sub + 0x4a))->held) {
         return;
     }
-    block = objPosToMapBlockIdx(*(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
-                                *(f32 *)((char *)obj + 0x14));
+    block = objPosToMapBlockIdx(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                                ((GameObject *)obj)->anim.localPosZ);
     if (block == -1) {
         if (sub[0x49] & 2) {
             sub[0x16] = 4;
@@ -630,12 +631,12 @@ void gunpowderbarrel_updatePhysics(int *obj)
         f32 v = *(f32 *)(sub + 0x28);
         *(f32 *)(sub + 0x28) = (v < lbl_803E4314) ? lbl_803E4314 : ((v > lbl_803E4318) ? lbl_803E4318 : v);
     }
-    *(f32 *)((char *)obj + 0x24) = *(f32 *)(sub + 0x20);
-    *(f32 *)((char *)obj + 0x28) = *(f32 *)(sub + 0x24);
-    *(f32 *)((char *)obj + 0x2c) = *(f32 *)(sub + 0x28);
+    ((GameObject *)obj)->anim.velocityX = *(f32 *)(sub + 0x20);
+    ((GameObject *)obj)->anim.velocityY = *(f32 *)(sub + 0x24);
+    ((GameObject *)obj)->anim.velocityZ = *(f32 *)(sub + 0x28);
     dt = timeDelta;
-    objMove(obj, *(f32 *)((char *)obj + 0x24) * dt, *(f32 *)((char *)obj + 0x28) * dt,
-            *(f32 *)((char *)obj + 0x2c) * dt);
+    objMove(obj, ((GameObject *)obj)->anim.velocityX * dt, ((GameObject *)obj)->anim.velocityY * dt,
+            ((GameObject *)obj)->anim.velocityZ * dt);
     ((GpbFlags4A *)(sub + 0x4a))->onGround = 0;
     if (!(sub[0x49] & 2)) {
         f32 top;
@@ -643,8 +644,8 @@ void gunpowderbarrel_updatePhysics(int *obj)
         int below;
         int result;
 
-        top = *(f32 *)((char *)obj + 0x84);
-        bottom = *(f32 *)((char *)obj + 0x10);
+        top = ((GameObject *)obj)->anim.previousLocalPosY;
+        bottom = ((GameObject *)obj)->anim.localPosY;
         below = top < bottom;
         if (below) {
             bottom += lbl_803E4318;
@@ -652,7 +653,7 @@ void gunpowderbarrel_updatePhysics(int *obj)
         if (!below) {
             top += lbl_803E4318;
         }
-        result = fn_80062D60(obj, *(f32 *)((char *)obj + 0xc), top, *(f32 *)((char *)obj + 0x14),
+        result = fn_80062D60(obj, ((GameObject *)obj)->anim.localPosX, top, ((GameObject *)obj)->anim.localPosZ,
                              bottom, &outY, &contact);
         if (result != 0) {
             if (result == 2) {
@@ -666,15 +667,15 @@ void gunpowderbarrel_updatePhysics(int *obj)
                     }
                 }
                 ((GpbFlags4A *)(sub + 0x4a))->onGround = 1;
-                *(f32 *)((char *)obj + 0x10) = outY;
+                ((GameObject *)obj)->anim.localPosY = outY;
             }
         }
     }
     if (((GpbFlags4A *)(sub + 0x4a))->onGround) {
         f32 z = lbl_803E42C0;
-        *(f32 *)((char *)obj + 0x24) = z;
-        *(f32 *)((char *)obj + 0x28) = z;
-        *(f32 *)((char *)obj + 0x2c) = z;
+        ((GameObject *)obj)->anim.velocityX = z;
+        ((GameObject *)obj)->anim.velocityY = z;
+        ((GameObject *)obj)->anim.velocityZ = z;
         *(f32 *)(sub + 0x20) = z;
         *(f32 *)(sub + 0x24) = z;
         *(f32 *)(sub + 0x28) = z;
@@ -697,7 +698,7 @@ void gunpowderbarrel_updatePhysics(int *obj)
             fn_801A0F58(obj, *(s16 *)(sub + 0x44), *(s16 *)(sub + 0x46));
         }
         if (!((GpbFlags4A *)(sub + 0x4a))->held && !((GpbFlags4A *)(sub + 0x4a))->playerHeld) {
-            *(f32 *)(sub + 0x38) += *(f32 *)((char *)obj + 0x28);
+            *(f32 *)(sub + 0x38) += ((GameObject *)obj)->anim.velocityY;
             if (*(f32 *)(sub + 0x38) < -lbl_803DBE88) {
                 sub[0x16] = 4;
             }

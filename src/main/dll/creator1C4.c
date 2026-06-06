@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/creator1C4.h"
 #include "main/mapEventTypes.h"
 
@@ -91,7 +92,7 @@ extern f32 lbl_803E5040;
 void gpsh_shrine_update(int obj)
 {
     int count;
-    int data = *(int *)((char *)obj + 0xb8);
+    int data = *(int *)&((GameObject *)obj)->extra;
     char *player = Obj_GetPlayerObject();
     u8 b149;
     u8 b14c;
@@ -132,9 +133,9 @@ void gpsh_shrine_update(int obj)
                 Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             }
         }
-        if (*(int *)((char *)obj + 0xf4) != 0) {
-            *(int *)((char *)obj + 0xf4) -= 1;
-            if (*(int *)((char *)obj + 0xf4) == 0) {
+        if (((GameObject *)obj)->unkF4 != 0) {
+            ((GameObject *)obj)->unkF4 -= 1;
+            if (((GameObject *)obj)->unkF4 == 0) {
                 skyFn_80088c94(7, 1);
                 getEnvfxAct(obj, (int)player, 0xcc, 0);
                 getEnvfxAct(obj, (int)player, 0xcd, 0);
@@ -155,14 +156,14 @@ void gpsh_shrine_update(int obj)
         } else {
             switch (*(u8 *)((char *)data + 0x14)) {
             case 0:
-                *(s16 *)((char *)obj + 6) &= ~0x4000;
+                ((GameObject *)obj)->anim.flags &= ~0x4000;
                 t = *(f32 *)((char *)data + 8) - timeDelta;
                 *(f32 *)((char *)data + 8) = t;
                 if (t <= k) {
                     Sfx_PlayFromObject(obj, 0x343);
                     *(f32 *)((char *)data + 8) = (f32)(int)randomGetRange(500, 1000);
                 }
-                if (*(u8 *)((char *)obj + 0xaf) & 1) {
+                if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
                     *(u8 *)((char *)data + 0x14) = 5;
                     GameBit_Set(0x129, 0);
                     GameBit_Set(0x5af, 0);
@@ -175,7 +176,7 @@ void gpsh_shrine_update(int obj)
                 *(f32 *)((char *)data + 4) = lbl_803E5040;
                 (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(0x1e, 1);
                 *(u8 *)((char *)data + 0x14) = 1;
-                *(s16 *)((char *)obj + 6) |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= 0x4000;
                 break;
             case 1:
                 if (((GpshShrineFlags *)((char *)data + 0x15))->b80 == 1) {
@@ -286,12 +287,12 @@ void gpsh_shrine_update(int obj)
 void gpsh_shrine_init(int *obj, int *def) {
     u8 *state;
 
-    state = *(u8 **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     *(s16 *)obj = 0;
-    *(void **)((char *)obj + 0xbc) = (void *)gpsh_shrine_SeqFn;
-    *(f32 *)((char *)obj + 0x18) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)((char *)obj + 0x1c) = *(f32 *)((char *)obj + 0x10);
-    *(f32 *)((char *)obj + 0x20) = *(f32 *)((char *)obj + 0x14);
+    ((GameObject *)obj)->unkBC = (void *)gpsh_shrine_SeqFn;
+    ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
+    ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
     state[0x14] = 0;
     state[0x15] &= 0x7f;
     GameBit_Set(0x129, 1);
@@ -302,7 +303,7 @@ void gpsh_shrine_init(int *obj, int *def) {
     GameBit_Set(0x14e, 0);
     GameBit_Set(0x14a, 0);
     GameBit_Set(0x14b, 0);
-    *(int *)((char *)obj + 0xf4) = 1;
+    ((GameObject *)obj)->unkF4 = 1;
     if (*(void **)state == NULL) {
         *(void **)state = objCreateLight(0, 1);
     }
@@ -336,18 +337,18 @@ void gpsh_objcreator_update(int *obj) {
     u8 *sub;
     void *setup;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     if (GameBit_Get(0x5af) != 0) {
-        *(int*)((char*)obj + 0xf8) = 0;
+        ((GameObject *)obj)->unkF8 = 0;
         ((GpshShrineFlags *)(sub + 5))->b80 = 0;
         *(u8*)((char*)obj + 0x37) = 0xff;
         *(u8*)((char*)obj + 0x36) = 0xff;
     }
     if (((GpshShrineFlags *)(sub + 5))->b80) return;
-    if (*(int*)((char*)obj + 0xf8) == 0) {
+    if (((GameObject *)obj)->unkF8 == 0) {
         if (GameBit_Get(0x148) != 0) {
             *(f32*)sub = lbl_803E504C;
-            *(int*)((char*)obj + 0xf8) = 1;
+            ((GameObject *)obj)->unkF8 = 1;
         }
     }
     if ((u8)Obj_IsLoadingLocked() == 0) return;
@@ -361,13 +362,13 @@ void gpsh_objcreator_update(int *obj) {
         *(u8*)((char*)setup + 7) = 0xff;
         *(u8*)((char*)setup + 4) = 0x20;
         *(u8*)((char*)setup + 5) = 2;
-        *(f32*)((char*)setup + 8) = *(f32*)((char*)obj + 0xc);
-        *(f32*)((char*)setup + 0xc) = *(f32*)((char*)obj + 0x10);
-        *(f32*)((char*)setup + 0x10) = *(f32*)((char*)obj + 0x14);
+        *(f32*)((char*)setup + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32*)((char*)setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32*)((char*)setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(s16*)setup = (s16)(sub[4] + 0x1f4);
         *(u8*)((char*)setup + 0x18) = (u8)((s32)*(s16*)obj >> 8);
         *(s16*)((char*)setup + 0x1a) = lbl_803263B8[sub[4]];
-        Obj_SetupObject(setup, 5, *(s8*)((char*)obj + 0xac), -1, *(void**)((char*)obj + 0x30));
+        Obj_SetupObject(setup, 5, *(s8*)((char*)obj + 0xac), -1, *(void**)&((GameObject *)obj)->anim.parent);
     }
 }
 #pragma peephole reset
@@ -406,18 +407,18 @@ void ecsh_cup_free(int *obj) {
 }
 void gpsh_scene_init(int *obj, int *def) {
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
-    *(f32 *)((char *)obj + 0x18) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)((char *)obj + 0x1c) = *(f32 *)((char *)obj + 0x10);
-    *(f32 *)((char *)obj + 0x20) = *(f32 *)((char *)obj + 0x14);
-    *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+    ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
+    ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
 }
 void gpsh_objcreator_init(int *obj, int *def) {
     register u32 zero;
     register int *state;
-    state = *(int **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x1e) << 8);
     zero = 0;
-    *(int *)((char *)obj + 0xf8) = zero;
+    ((GameObject *)obj)->unkF8 = zero;
     *(u8 *)((char *)state + 4) = (u8)*(s16 *)((char *)def + 0x1a);
     ((GpshShrineFlags *)((char *)state + 5))->b80 = 0;
     *(u8 *)((char *)obj + 0x37) = 0xff;

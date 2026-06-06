@@ -1,4 +1,5 @@
 #include "main/dll/landedArwing.h"
+#include "main/game_object.h"
 #include "main/dll/treasurechest_state.h"
 #include "main/objanim.h"
 #include "main/object_descriptor.h"
@@ -68,8 +69,8 @@ void dll_D3_update(int *obj)
     int aiStack_80[20];
     char local_30;
 
-    trans = *(int *)((char *)obj + 0x4c);
-    state = *(int **)((char *)obj + 0xb8);
+    trans = *(int *)&((GameObject *)obj)->anim.placementData;
+    state = ((GameObject *)obj)->extra;
     extra = *(LandedArwingState **)((char *)state + 0x40c);
     player = (int *)Obj_GetPlayerObject();
     local_90 = lbl_803E3034;
@@ -91,15 +92,15 @@ void dll_D3_update(int *obj)
         }
     }
 
-    if (*(int *)((char *)obj + 0xf4) != 0) return;
+    if (((GameObject *)obj)->unkF4 != 0) return;
 
-    if (*(int *)((char *)obj + 0xf8) == 0) {
-        *(f32 *)((char *)obj + 0xc)  = *(f32 *)((char *)trans + 0x8);
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)trans + 0xc);
-        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)trans + 0x10);
+    if (((GameObject *)obj)->unkF8 == 0) {
+        ((GameObject *)obj)->anim.localPosX  = *(f32 *)((char *)trans + 0x8);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)trans + 0xc);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)trans + 0x10);
         (*(void (**)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[0x48 / 4])(
             (int)*(s8 *)((char *)trans + 0x2e), obj, -1);
-        *(int *)((char *)obj + 0xf8) = 1;
+        ((GameObject *)obj)->unkF8 = 1;
         return;
     }
 
@@ -142,11 +143,11 @@ void dll_D3_update(int *obj)
 
     if (((TreasureChestState *)state)->targetObj != 0) {
         local_8c = *(f32 *)((char *)(((TreasureChestState *)state)->targetObj) + 0x18) -
-                   *(f32 *)((char *)obj + 0x18);
+                   ((GameObject *)obj)->anim.worldPosX;
         local_88 = *(f32 *)((char *)(((TreasureChestState *)state)->targetObj) + 0x1c) -
-                   *(f32 *)((char *)obj + 0x1c);
+                   ((GameObject *)obj)->anim.worldPosY;
         local_84 = *(f32 *)((char *)(((TreasureChestState *)state)->targetObj) + 0x20) -
-                   *(f32 *)((char *)obj + 0x20);
+                   ((GameObject *)obj)->anim.worldPosZ;
         ((TreasureChestState *)state)->targetDistance =
             sqrtf(local_8c * local_8c + local_88 * local_88 + local_84 * local_84);
     }
@@ -166,9 +167,9 @@ void dll_D3_update(int *obj)
             lbl_803202E8, lbl_80320360, 0, lbl_803AC638);
         if ((int)((TreasureChestState *)state)->hitPoints < hits) {
             (*(void (**)(void))(*(int **)(*(int *)((char *)player + 0xc8) + 0x68) + 0x50 / 4))();
-            *(f32 *)((char *)lbl_803AC638 + 0xc)  = *(f32 *)((char *)obj + 0xc);
-            *(f32 *)((char *)lbl_803AC638 + 0x10) = *(f32 *)((char *)obj + 0x10);
-            *(f32 *)((char *)lbl_803AC638 + 0x14) = *(f32 *)((char *)obj + 0x14);
+            *(f32 *)((char *)lbl_803AC638 + 0xc)  = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)((char *)lbl_803AC638 + 0x10) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)((char *)lbl_803AC638 + 0x14) = ((GameObject *)obj)->anim.localPosZ;
             objLightFn_8009a1dc(obj, lbl_803E3038, 1, 0);
         }
     }
@@ -176,13 +177,13 @@ void dll_D3_update(int *obj)
     ((void (*)(int *, int *, f32, int))((void **)*(int *)gBaddieControlInterface)[0x2c / 4])(
         obj, state, lbl_803E2FDC, -1);
 
-    ((TreasureChestState *)state)->savedObjC0 = *(int *)((char *)obj + 0xc0);
-    *(int *)((char *)obj + 0xc0) = 0;
+    ((TreasureChestState *)state)->savedObjC0 = *(int *)&((GameObject *)obj)->unkC0;
+    *(int *)&((GameObject *)obj)->unkC0 = 0;
 
     ((void (*)(f32, f32, int *, int *, void **, void *))((void **)*(int *)gPlayerInterface)[8 / 4])(
         timeDelta, timeDelta, obj, state, gLandedArwingStateHandlers, &gLandedArwingDefaultStateHandler);
 
-    *(int *)((char *)obj + 0xc0) = ((TreasureChestState *)state)->savedObjC0;
+    *(int *)&((GameObject *)obj)->unkC0 = ((TreasureChestState *)state)->savedObjC0;
 
     if ((extra->flags92 & 1) == 0 &&
         extra->surfaceMode == 6) {
@@ -218,14 +219,14 @@ void dll_D3_init(int obj, int def, int flag)
     f32 fz;
     s16 ftag;
 
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     setupFlags = 6;
     if (flag != 0) {
         setupFlags |= 1;
     }
     ((void (*)(int, int, int, int, int, int, int, f32))((void **)*(int *)gBaddieControlInterface)[22])
         (obj, def, state, 5, 1, 0x108, setupFlags, lbl_803E3048);
-    *(int *)(obj + 0xbc) = 0;
+    *(int *)&((GameObject *)obj)->unkBC = 0;
 
     extra = *(LandedArwingState **)(state + 0x40c);
     memset((void *)extra, 0, 0x94);
@@ -235,10 +236,10 @@ void dll_D3_init(int obj, int def, int flag)
     extra->surfaceNormalX = fz;
     extra->surfaceNormalY = lbl_803E2FF4;
     extra->surfaceNormalZ = fz;
-    extra->surfacePlaneD = -*(f32 *)(obj + 0x10);
-    extra->scriptTargetX = *(f32 *)(obj + 0xc);
-    extra->scriptTargetY = *(f32 *)(obj + 0x10);
-    extra->scriptTargetZ = *(f32 *)(obj + 0x14);
+    extra->surfacePlaneD = -((GameObject *)obj)->anim.localPosY;
+    extra->scriptTargetX = ((GameObject *)obj)->anim.localPosX;
+    extra->scriptTargetY = ((GameObject *)obj)->anim.localPosY;
+    extra->scriptTargetZ = ((GameObject *)obj)->anim.localPosZ;
 
     ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
     if (*(u8 *)(def + 0x2b) != 0) {
@@ -303,7 +304,7 @@ typedef struct SkeetlaWallState {
 #pragma peephole off
 void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     if (visible != 0) {
-        if (*(int *)((char *)obj + 0xF4) != 0) {
+        if (((GameObject *)obj)->unkF4 != 0) {
         } else {
             ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3058);
         }
@@ -311,7 +312,7 @@ void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 }
 
 void skeetlawall_init(int obj, u8 *def) {
-    SkeetlaWallState *state = *(SkeetlaWallState **)((char *)obj + 0xB8);
+    SkeetlaWallState *state = ((GameObject *)obj)->extra;
     state->negXExtent = def[0x18];
     state->posXExtent = def[0x19];
     state->posZExtent = def[0x1A];
@@ -347,7 +348,7 @@ ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
 #pragma scheduling off
 #pragma peephole off
 void fn_80167550(int *obj) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     ((void (*)(int *, int *, int))((void **)*gPlayerInterface)[5])(obj, state, 2);
 }
 #pragma peephole reset
@@ -356,13 +357,13 @@ void fn_80167550(int *obj) {
 #pragma scheduling off
 #pragma peephole off
 void skeetlawall_setScale(int *obj, f32 *outVec, u8 *outByte) {
-    SkeetlaWallState *state = *(SkeetlaWallState **)((char *)obj + 0xb8);
-    outVec[0] = *(f32 *)((char *)obj + 0x18) - (f32)(u32)state->negXExtent;
-    outVec[1] = *(f32 *)((char *)obj + 0x18) + (f32)(u32)state->posXExtent;
-    outVec[2] = *(f32 *)((char *)obj + 0x20) + (f32)(u32)state->posZExtent;
-    outVec[3] = *(f32 *)((char *)obj + 0x20) - (f32)(u32)state->negZExtent;
-    outVec[4] = *(f32 *)((char *)obj + 0x1c) + (f32)(u32)state->posYExtent;
-    outVec[5] = *(f32 *)((char *)obj + 0x1c) - (f32)(u32)state->negYExtent;
+    SkeetlaWallState *state = ((GameObject *)obj)->extra;
+    outVec[0] = ((GameObject *)obj)->anim.worldPosX - (f32)(u32)state->negXExtent;
+    outVec[1] = ((GameObject *)obj)->anim.worldPosX + (f32)(u32)state->posXExtent;
+    outVec[2] = ((GameObject *)obj)->anim.worldPosZ + (f32)(u32)state->posZExtent;
+    outVec[3] = ((GameObject *)obj)->anim.worldPosZ - (f32)(u32)state->negZExtent;
+    outVec[4] = ((GameObject *)obj)->anim.worldPosY + (f32)(u32)state->posYExtent;
+    outVec[5] = ((GameObject *)obj)->anim.worldPosY - (f32)(u32)state->negYExtent;
     outByte[0] = state->shapeFlag;
 }
 #pragma peephole reset

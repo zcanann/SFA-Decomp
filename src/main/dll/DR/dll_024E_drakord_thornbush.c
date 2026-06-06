@@ -1,4 +1,5 @@
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/game_object.h"
 
 /*
  * Function: drakord_thornbush_getExtraSize
@@ -44,8 +45,8 @@ void drakord_thornbush_initialise(void)
 
 void drakord_thornbush_free(int obj)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
-    if (*(s16 *)((char *)obj + 0x46) == 0x709) {
+    int inner = *(int *)&((GameObject *)obj)->extra;
+    if (((GameObject *)obj)->anim.seqId == 0x709) {
         fn_80221978(obj, inner + 0x14, 3, inner + 0x64, lbl_803E6588);
     }
     if (*(void **)((char *)inner + 0x64) != NULL) {
@@ -69,8 +70,8 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 
 void drakord_thornbush_update(int obj)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
-    int setup = *(int *)((char *)obj + 0x4c);
+    int inner = *(int *)&((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     int s2;
     if (fn_80080150((int)((char *)inner + 0xc)) != 0) {
         if (*(f32 *)((char *)inner + 0xc) < (f32)(s32)*(s16 *)((char *)setup + 0x1c)) {
@@ -78,7 +79,7 @@ void drakord_thornbush_update(int obj)
             ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E65A8 + (f32)(s32)*(s16 *)((char *)setup + 0x1c) - *(f32 *)((char *)inner + 0xc)));
         }
         if (timerCountDown((f32 *)((char *)inner + 0xc)) != 0) {
-            *(s16 *)((char *)obj + 6) &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~0x4000;
             ((DrakorFlags *)((char *)inner + 0x79))->b80 = 1;
             if (*(u32 *)((char *)setup + 0x14) == 0xffffffff) {
                 Obj_FreeObject(obj);
@@ -89,7 +90,7 @@ void drakord_thornbush_update(int obj)
         if (((DrakorFlags *)((char *)inner + 0x79))->b80) {
             ((DrakorFlags *)((char *)inner + 0x79))->b80 = 0;
         }
-        switch (*(s16 *)((char *)obj + 0x46)) {
+        switch (((GameObject *)obj)->anim.seqId) {
         case 0x727:
             if (fn_802972A8((int)Obj_GetPlayerObject()) != NULL) {
                 ObjHits_ClearHitVolumes(obj);
@@ -106,16 +107,16 @@ void drakord_thornbush_update(int obj)
             break;
         }
         if (*(int *)((char *)inner + 0) == 0) {
-            s2 = *(int *)((char *)obj + 0x4c);
+            s2 = *(int *)&((GameObject *)obj)->anim.placementData;
             ObjHits_EnableObject(obj);
             *(int *)((char *)inner + 0) = *(u8 *)((char *)s2 + 0x19);
             ObjHitbox_SetSphereRadius(obj, (s16)*(int *)((char *)inner + 0x74));
         }
-        if (*(s16 *)((char *)obj + 0x46) == 0x709) {
+        if (((GameObject *)obj)->anim.seqId == 0x709) {
             if (*(f32 *)((char *)inner + 0x68) < lbl_803E658C) {
                 *(f32 *)((char *)inner + 0x68) = lbl_803E65AC * (f32)(u32)framesThisStep + *(f32 *)((char *)inner + 0x68);
-                *(f32 *)((char *)obj + 8) =
-                    *(f32 *)((char *)inner + 0x68) * (*(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4) * (f32)(s32)*(s16 *)((char *)setup + 0x1c)) / lbl_803E65B0;
+                ((GameObject *)obj)->anim.rootMotionScale =
+                    *(f32 *)((char *)inner + 0x68) * (*(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(s32)*(s16 *)((char *)setup + 0x1c)) / lbl_803E65B0;
             }
         }
     }
@@ -123,7 +124,7 @@ void drakord_thornbush_update(int obj)
 
 void drakord_thornbush_hitDetect(int obj)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     f32 v2;
     f32 v1;
     f32 v0;
@@ -150,9 +151,9 @@ void drakord_thornbush_hitDetect(int obj)
             *(int *)((char *)inner + 8) = 0;
         }
         if (flag != 0) {
-            setup = *(int *)((char *)obj + 0x4c);
+            setup = *(int *)&((GameObject *)obj)->anim.placementData;
             *(int *)((char *)inner + 0) = 0;
-            switch (*(s16 *)((char *)obj + 0x46)) {
+            switch (((GameObject *)obj)->anim.seqId) {
             case 0x727:
                 spawnExplosion((int *)obj, (f32)(s32)*(s16 *)((char *)setup + 0x1c), 1, 0, 0, 0, 0, 1, 1);
                 break;
@@ -164,14 +165,14 @@ void drakord_thornbush_hitDetect(int obj)
             }
             if (*(s16 *)((char *)setup + 0x1a) != 0) {
                 s16toFloat((void *)((char *)inner + 0xc), *(s16 *)((char *)setup + 0x1a));
-                *(s16 *)((char *)obj + 6) |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= 0x4000;
                 ObjHits_DisableObject(obj);
             } else if (*(u32 *)((char *)setup + 0x14) == 0xffffffff) {
                 Obj_FreeObject(obj);
             } else {
                 Obj_RemoveFromUpdateList((int *)obj);
                 ObjHits_DisableObject(obj);
-                *(s16 *)((char *)obj + 6) |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= 0x4000;
             }
         }
     }
@@ -179,29 +180,29 @@ void drakord_thornbush_hitDetect(int obj)
 
 void drakord_thornbush_init(int obj, u8 *init)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     *(int *)((char *)inner + 0) = 0;
     ObjHits_SetTargetMask(obj, 4);
-    *(s16 *)((char *)obj + 2) = (s16)((s8)init[0x18] << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)((s8)init[0x18] << 8);
     if (*(u32 *)((char *)init + 0x14) == 0xffffffff) {
         ((DrakorFlags *)((char *)inner + 0x79))->b80 = 1;
     }
     storeZeroToFloatParam((f32 *)((char *)inner + 0xc));
     storeZeroToFloatParam((f32 *)((char *)inner + 0x10));
     *(int *)((char *)inner + 8) = 0;
-    switch (*(s16 *)((char *)obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x727:
         *(void **)((char *)inner + 0x6c) = &lbl_803DC1A8;
         ObjHitbox_SetSphereRadius(obj, *(s16 *)((char *)init + 0x1c));
         *(int *)((char *)inner + 0x74) = *(s16 *)((char *)init + 0x1c);
         *(f32 *)((char *)inner + 0x70) = lbl_803E65C0;
-        *(f32 *)((char *)obj + 8) =
-            *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4) * (f32)(s32)*(s16 *)((char *)init + 0x1c) / lbl_803E6590;
+        ((GameObject *)obj)->anim.rootMotionScale =
+            *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(s32)*(s16 *)((char *)init + 0x1c) / lbl_803E6590;
         break;
     case 0x709:
         *(void **)((char *)inner + 0x6c) = &lbl_803DC1A0;
-        *(f32 *)((char *)obj + 8) =
-            *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4) * (f32)(s32)*(s16 *)((char *)init + 0x1c) / lbl_803E65C4;
+        ((GameObject *)obj)->anim.rootMotionScale =
+            *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(s32)*(s16 *)((char *)init + 0x1c) / lbl_803E65C4;
         ObjHitbox_SetSphereRadius(obj, (s16)(*(s16 *)((char *)init + 0x1c) / 7));
         s16toFloat((f32 *)((char *)inner + 0x10), (int)lbl_803DC1B0);
         *(f32 *)((char *)inner + 0x70) = lbl_803E65C8;

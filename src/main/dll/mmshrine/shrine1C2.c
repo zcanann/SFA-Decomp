@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/mmshrine/shrine1C2.h"
@@ -183,7 +184,7 @@ void ecsh_shrine_update(s16 *obj)
     f32 fv;
 
     ps = (EcshPuzzleState *)lbl_80326208;
-    sub = *(u8 **)((char *)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     *(EcshIntPair *)&t[0] = *(EcshIntPair *)&lbl_803E8470;
     if (sub[0x32] == 0) {
@@ -193,9 +194,9 @@ void ecsh_shrine_update(s16 *obj)
             (*(void (**)(int, int, int, int))(*(int *)gGameUIInterface + 0x38))(0x285, 0x14, 0x8c, 1);
         }
     }
-    if (*(int *)((char *)obj + 0xf4) != 0) {
-        *(int *)((char *)obj + 0xf4) = *(int *)((char *)obj + 0xf4) - 1;
-        if (*(int *)((char *)obj + 0xf4) == 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
+        ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - 1;
+        if (((GameObject *)obj)->unkF4 == 0) {
             skyFn_80088c94(7, 1);
             getEnvfxAct(obj, player, 0x221, 0);
             getEnvfxAct(obj, player, 0x220, 0);
@@ -220,14 +221,14 @@ void ecsh_shrine_update(s16 *obj)
     } else {
         switch (sub[0x2f]) {
         case 0:
-            *(s16 *)((char *)obj + 6) &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~0x4000;
             fv = *(f32 *)(sub + 0x10) - timeDelta;
             *(f32 *)(sub + 0x10) = fv;
             if (fv <= z) {
                 Sfx_PlayFromObject(obj, 0x343);
                 *(f32 *)(sub + 0x10) = (f32)(int)randomGetRange(500, 1000);
             }
-            if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
+            if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
                 sub[0x2f] = 1;
                 GameBit_Set(0x129, 0);
                 (*(void (**)(int, s16 *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
@@ -266,7 +267,7 @@ void ecsh_shrine_update(s16 *obj)
                 GameBit_Set(0xb9d, 1);
                 (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 0xc))(0x78, 1);
             }
-            *(s16 *)((char *)obj + 6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
             break;
         case 2:
             sub[0x2f] = 3;
@@ -855,7 +856,7 @@ extern f32 lbl_803E5038;
 #pragma peephole off
 void gpsh_shrine_free(int *obj)
 {
-    void **state = *(void ***)((char *)obj + 0xb8);
+    void **state = ((GameObject *)obj)->extra;
     void *light = state[0];
 
     if (light != NULL) {
@@ -878,7 +879,7 @@ void gpsh_shrine_free(int *obj)
 #pragma peephole off
 void gpsh_shrine_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    void **state = *(void ***)((char *)obj + 0xb8);
+    void **state = ((GameObject *)obj)->extra;
 
     if (visible == 0) {
         void *light = state[0];
@@ -906,9 +907,9 @@ void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s
 #pragma scheduling off
 #pragma peephole off
 void ecsh_creator_init(s16 *obj, s8 *def) {
-    s16 *inner = *(s16 **)((char *)obj + 0xb8);
+    s16 *inner = ((GameObject *)obj)->extra;
     obj[0] = (s16)((s32)def[0x1e] << 8);
-    *(int *)((char *)obj + 0xf8) = 0;
+    ((GameObject *)obj)->unkF8 = 0;
     inner[0] = 100;
     inner[1] = 0;
     *(u8 *)((char *)obj + 0x37) = 0xff;
@@ -940,7 +941,7 @@ int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
     u8 ev;
     void *light;
 
-    sub = *(u8 **)((char *)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     *(s16 *)((char *)seq + 0x70) = -1;
     seq[0x56] = 0;
@@ -959,14 +960,14 @@ int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
                 (*gMapEventInterface)->setMode(0xb, 5);
                 break;
             case 14:
-                *(s16 *)((char *)obj + 6) |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= 0x4000;
                 light = *(void **)sub;
                 if (light != NULL) {
                     modelLightStruct_setEnabled(light, 0, lbl_803E5038);
                 }
                 break;
             case 15:
-                *(s16 *)((char *)obj + 6) &= ~0x4000;
+                ((GameObject *)obj)->anim.flags &= ~0x4000;
                 light = *(void **)sub;
                 if (light != NULL) {
                     modelLightStruct_setEnabled(light, 0, lbl_803E5038);
@@ -980,7 +981,7 @@ int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
 }
 
 void ecsh_shrine_init(s16 *obj, s8 *def) {
-    int *sub = *(int **)((char *)obj + 0xb8);
+    int *sub = ((GameObject *)obj)->extra;
     u8 gv;
     lbl_803DDBC0 = 0;
     lbl_803DDBC4 = 0;
@@ -994,7 +995,7 @@ void ecsh_shrine_init(s16 *obj, s8 *def) {
     *(s16 *)((char *)sub + 0x26) = -1;
     *(u8 *)((char *)sub + 0x2e) = 0;
     *(int *)((char *)sub + 0x34) = 0;
-    *(void **)((char *)obj + 0xbc) = (void *)fn_801C5CE4;
+    ((GameObject *)obj)->unkBC = (void *)fn_801C5CE4;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0xba5, 1);
     GameBit_Set(0x129, 1);
@@ -1008,7 +1009,7 @@ void ecsh_shrine_init(s16 *obj, s8 *def) {
     *(u8 *)((char *)sub + 0x32) = gv;
     lbl_803DDBC4 = obj;
     ObjGroup_AddObject(obj, 0xb);
-    *(int *)((char *)obj + 0xf4) = 1;
+    ((GameObject *)obj)->unkF4 = 1;
     if (*(void **)sub == NULL) {
         *(int *)sub = objCreateLight(0, 1);
     }
@@ -1029,16 +1030,16 @@ void ecsh_creator_update(s16 *obj) {
     u8 *p;
     int ret;
 
-    def = *(u8 **)((char *)obj + 0x4c);
-    sub = *(s16 **)((char *)obj + 0xb8);
-    if (*(int *)((char *)obj + 0xf8) == 0 && GameBit_Get(sub[2]) != 0) {
+    def = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    sub = ((GameObject *)obj)->extra;
+    if (((GameObject *)obj)->unkF8 == 0 && GameBit_Get(sub[2]) != 0) {
         res = Resource_Acquire(0x82, 1);
         (*(void (**)(s16 *, int, int, int, int, int))(*(int *)res + 4))(obj, 0, 0, 1, -1, 0);
         (*(void (**)(s16 *, int, int, int, int, int))(*(int *)res + 4))(obj, 1, 0, 1, -1, 0);
         Sfx_PlayFromObject(obj, 0x16d);
         Resource_Release(res);
         sub[1] = 1;
-        *(int *)((char *)obj + 0xf8) = 1;
+        ((GameObject *)obj)->unkF8 = 1;
     }
     if (sub[1] != 0) {
         *sub = *sub - sub[1] * framesThisStep;
@@ -1070,7 +1071,7 @@ void ecsh_creator_update(s16 *obj) {
         *(u16 *)(p + 0x34) = 0xFFFF;
         *(s16 *)(p + 0x1a) = 0;
         *(u8 *)(p + 0x32) = sub[4];
-        ret = Obj_SetupObject(p, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30));
+        ret = Obj_SetupObject(p, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         if (ret != 0) {
             *(u8 *)(*(int *)(ret + 0xb8) + 0x404) = 0x20;
         }
@@ -1103,17 +1104,17 @@ void fn_801C70F0(s16 *obj) {
     f32 c1;
     f32 dist;
 
-    def = *(u8 **)((char *)obj + 0x4c);
-    sub = *(u8 **)((char *)obj + 0xb8);
+    def = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    sub = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
-    if ((*(s16 *)((char *)obj + 6) & 0x4000) != 0) {
+    if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) {
         *obj = 0;
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)(def + 0xc);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
     } else {
         *(s16 *)(sub + 0xc) = (s16)(*(s16 *)(sub + 0xc) + (int)(lbl_803E5000 * timeDelta));
         *(s16 *)(sub + 0xe) = (s16)(*(s16 *)(sub + 0xe) + (int)(lbl_803E5004 * timeDelta));
         *(s16 *)(sub + 0x10) = (s16)(*(s16 *)(sub + 0x10) + (int)(lbl_803E5008 * timeDelta));
-        *(f32 *)((char *)obj + 0x10) =
+        ((GameObject *)obj)->anim.localPosY =
             lbl_803E500C + (*(f32 *)(def + 0xc)
                             + fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014));
         c1 = fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xe)) / lbl_803E5014);

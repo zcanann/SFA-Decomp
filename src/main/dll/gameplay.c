@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
@@ -1109,11 +1110,11 @@ void saveGame_unsaveObjectPos(u8 *obj)
     SaveGameObjectPosition *slot;
     u32 objectId;
 
-    if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
+    if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
         return;
     }
     if (lbl_803DD488 == 0) {
-        objectId = *(u32 *)(*(u8 **)(obj + 0x4c) + 0x14);
+        objectId = *(u32 *)(*(u8 **)&((GameObject *)obj)->anim.placementData + 0x14);
         saveBase = lbl_803A32A8;
         for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++) {
             if (((SaveGameObjectPosition *)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId == objectId) {
@@ -13227,18 +13228,18 @@ int Carryable_updateHeld(u8 *obj)
   f32 **list;
   u8 *held;
   void *player;
-  held = *(u8 **)(obj + 0xb8);
+  held = ((GameObject *)obj)->extra;
   *(u8 *)(held + 8) = 0;
   *(u8 *)(held + 7) &= ~1;
   player = Obj_GetPlayerObject();
   if (*(s8 *)(held + 5) == 0) {
     struct { u8 a, b, c, d, e; } *t;
     int v = 0;
-    t = (void *)(*(u8 **)(obj + 0x78) + *(u8 *)(obj + 0xe4) * 5);
+    t = (void *)(*(u8 **)(obj + 0x78) + ((GameObject *)obj)->unkE4 * 5);
     if ((t->e & 0xf) == 6
         && (buttonGetDisabled(0) & 0x100) == 0
-        && (*(u8 *)(obj + 0xaf) & 1) != 0
-        && *(int *)(obj + 0xf8) == 0) {
+        && (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0
+        && ((GameObject *)obj)->unkF8 == 0) {
       *(s16 *)held = 0;
       buttonDisable(0, 0x100);
       v = 1;
@@ -13248,26 +13249,26 @@ int Carryable_updateHeld(u8 *obj)
       *(u8 *)(held + 7) |= 1;
       *(u8 *)(held + 6) = 1;
     }
-    if (*(int *)(obj + 0xf8) == 0) {
+    if (((GameObject *)obj)->unkF8 == 0) {
       int cnt, i, j;
       f32 **p;
       u8 *hit;
       ObjHits_SyncObjectPositionIfDirty(obj);
-      *(u8 *)(obj + 0xaf) &= ~8;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
       if ((*(u8 *)(held + 7) & 2) == 0) {
-        *(f32 *)(obj + 0x28) = -(lbl_803E06DC * timeDelta - *(f32 *)(obj + 0x28));
-        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+        ((GameObject *)obj)->anim.velocityY = -(lbl_803E06DC * timeDelta - ((GameObject *)obj)->anim.velocityY);
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
       }
-      cnt = hitDetectFn_80065e50(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), &list, 0, 1);
+      cnt = hitDetectFn_80065e50(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, &list, 0, 1);
       hit = (u8 *)0;
       i = 0;
       p = list;
       for (j = cnt; j > 0; j--) {
         if (*(s8 *)((u8 *)*p + 0x14) != 0xe) {
-          if (*(f32 *)(obj + 0x10) < **p && *(f32 *)(obj + 0x10) > **p - lbl_803E06E0) {
+          if (((GameObject *)obj)->anim.localPosY < **p && ((GameObject *)obj)->anim.localPosY > **p - lbl_803E06E0) {
             hit = *(u8 **)(list[i] + 4);
-            *(f32 *)(obj + 0x10) = *list[i];
-            *(f32 *)(obj + 0x28) = lbl_803E06E4;
+            ((GameObject *)obj)->anim.localPosY = *list[i];
+            ((GameObject *)obj)->anim.velocityY = lbl_803E06E4;
             break;
           }
         }
@@ -13276,7 +13277,7 @@ int Carryable_updateHeld(u8 *obj)
       }
       i = 0;
       for (; cnt > 0; cnt--) {
-        f32 d = *(f32 *)(obj + 0x10) - *list[i];
+        f32 d = ((GameObject *)obj)->anim.localPosY - *list[i];
         if (d < lbl_803E06E4) {
           d = -d;
         }
@@ -13299,7 +13300,7 @@ int Carryable_updateHeld(u8 *obj)
     }
   } else {
     ObjHits_MarkObjectPositionDirty(obj);
-    *(u8 *)(obj + 0xaf) |= 8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     if ((getButtonsJustPressed(0) & 0x100) != 0) {
       if ((*(u8 *)(held + 7) & 4) != 0 || fn_80295BF0(player) == 0) {
         Sfx_PlayFromObject(0, 0x10a);
@@ -13308,17 +13309,17 @@ int Carryable_updateHeld(u8 *obj)
         *(u8 *)(held + 6) = 0;
       }
     }
-    if (*(int *)(obj + 0xf8) == 1) {
+    if (((GameObject *)obj)->unkF8 == 1) {
       *(s8 *)(held + 5) = 2;
     }
-    if (*(s8 *)(held + 5) == 2 && *(int *)(obj + 0xf8) == 0) {
-      u8 *h2 = *(u8 **)(obj + 0xb8);
+    if (*(s8 *)(held + 5) == 2 && ((GameObject *)obj)->unkF8 == 0) {
+      u8 *h2 = ((GameObject *)obj)->extra;
       *(u8 *)(h2 + 5) = 0;
       *(u8 *)(h2 + 6) = 0;
       if ((*(u8 *)(h2 + 7) & 8) == 0) {
-        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + lbl_803E06D8;
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + lbl_803E06D8;
         saveGame_saveObjectPos((int *)obj);
-        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E06D8;
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E06D8;
       }
     }
     if (*(s8 *)(held + 6) != 0) {
@@ -13329,40 +13330,40 @@ int Carryable_updateHeld(u8 *obj)
 }
 
 void objSaveFn_800ea774(int *obj) {
-    u8 *sub = *(u8 **)((char *)obj + 0xb8);
+    u8 *sub = ((GameObject *)obj)->extra;
     sub[5] = 0;
     sub[6] = 0;
     if ((sub[7] & 8) == 0) {
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) + lbl_803E06D8;
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + lbl_803E06D8;
         saveGame_saveObjectPos(obj);
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) - lbl_803E06D8;
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E06D8;
     }
 }
 void saveGame_saveObjectPos(int *obj) {
     register u8 *slot;
     register int v;
     register int i;
-    if (*(s16 *)((char *)obj + 6) & 0x2000) return;
+    if (((GameObject *)obj)->anim.flags & 0x2000) return;
     if (lbl_803DD488 == 0) {
         slot = lbl_803A32A8;
         for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++) {
             v = *(int *)(slot + SAVEGAME_OBJECT_POSITION_OFFSET);
             if (v == 0) break;
-            if (*(u32 *)(*(u8 **)((char *)obj + 0x4c) + 0x14) == (u32)v) break;
+            if (*(u32 *)(*(u8 **)&((GameObject *)obj)->anim.placementData + 0x14) == (u32)v) break;
             slot += sizeof(SaveGameObjectPosition);
         }
         if (i == SAVEGAME_OBJECT_POSITION_COUNT) return;
         {
-            register int objectId = *(int *)(*(int *)((char *)obj + 0x4c) + 0x14);
+            register int objectId = *(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14);
             register char *entry = (char *)lbl_803A32A8 + i * sizeof(SaveGameObjectPosition);
             *(int *)(entry + SAVEGAME_OBJECT_POSITION_OFFSET) = objectId;
-            *(f32 *)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 4) = *(f32 *)((char *)obj + 0xc);
-            *(f32 *)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 8) = *(f32 *)((char *)obj + 0x10);
-            *(f32 *)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 0xc) = *(f32 *)((char *)obj + 0x14);
+            *(f32 *)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 4) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 8) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 0xc) = ((GameObject *)obj)->anim.localPosZ;
         }
-        *(f32 *)(*(int *)((char *)obj + 0x4c) + 8) = *(f32 *)((char *)obj + 0xc);
-        *(f32 *)(*(int *)((char *)obj + 0x4c) + 0xc) = *(f32 *)((char *)obj + 0x10);
-        *(f32 *)(*(int *)((char *)obj + 0x4c) + 0x10) = *(f32 *)((char *)obj + 0x14);
+        *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x10) = ((GameObject *)obj)->anim.localPosZ;
     }
 }
 void Carryable_stopCarrying(int *obj, u8 *param2) {
@@ -13375,15 +13376,15 @@ void Carryable_stopCarrying(int *obj, u8 *param2) {
     }
 }
 int Carryable_updateRenderState(int *obj, int flag) {
-    int *p50 = *(int **)((char *)obj + 0x50);
+    int *p50 = *(int **)&((GameObject *)obj)->anim.modelInstance;
     if (*(s16 *)((char *)p50 + 0x48) == 2) {
-        if (*(s16 *)((char *)obj + 0xb4) == -1) {
+        if (((GameObject *)obj)->unkB4 == -1) {
             *(u32 *)((char *)*(int **)((char *)obj + 0x64) + 0x30) &= ~0x1000;
         } else {
             *(u32 *)((char *)*(int **)((char *)obj + 0x64) + 0x30) |= 0x1000;
         }
     }
-    if (*(int *)((char *)obj + 0xf8) != 0) {
+    if (((GameObject *)obj)->unkF8 != 0) {
         if (flag != -1) return 0;
     } else {
         if (flag == 0) return 0;
@@ -16687,7 +16688,7 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
   }
   entries = buf.entries;
   for (; n != 0; n--) {
-    tex = textureIdxToPtr(**(int **)(obj + 0x20));
+    tex = textureIdxToPtr(**(int **)&((GameObject *)obj)->anim.worldPosZ);
     entries[0].layer = 0; entries[0].flags = 1; entries[0].tex = &lbl_803DB8B0; entries[0].mode = 8;
     entries[0].x = lbl_803E0734; entries[0].y = lbl_803E0734; entries[0].z = lbl_803E0734;
     if (param_2 == 0xc || param_2 == 5) {

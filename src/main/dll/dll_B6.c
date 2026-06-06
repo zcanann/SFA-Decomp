@@ -1,4 +1,5 @@
 #include "main/dll/dll_B6.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
 
@@ -81,23 +82,23 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         data = *(u8 **)(obj + 0x78);
         if (data == NULL
            || *(u8 *)(obj + 0x36) != 0xff
-           || (*(u8 *)(obj + 0xaf) & 0x28)
-           || (!(*(u16 *)(obj + 0xb0) & 0x800) && !(((ObjAnimComponent *)obj)->modelInstance->flags & 1))
-           || (*(s16 *)(obj + 6) & 0x4000)
-           || (*(u16 *)(obj + 0xb0) & 0x40)
-           || (lbl_803DB992 & ((ok = 1) << (data[*(u8 *)(obj + 0xe4) * 5 + 4] & 0xf))) == 0) {
+           || (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x28)
+           || (!(((GameObject *)obj)->unkB0 & 0x800) && !(((ObjAnimComponent *)obj)->modelInstance->flags & 1))
+           || (((GameObject *)obj)->anim.flags & 0x4000)
+           || (((GameObject *)obj)->unkB0 & 0x40)
+           || (lbl_803DB992 & ((ok = 1) << (data[((GameObject *)obj)->unkE4 * 5 + 4] & 0xf))) == 0) {
             ok = 0;
         }
         if (ok == 0) {
             continue;
         }
-        if ((int)*(u8 *)(*(u8 **)(*(u8 **)(obj + 0x50) + 0x40) + *(u8 *)(obj + 0xe4) * 0x18 + 0x11) < bestPri) {
+        if ((int)*(u8 *)(*(u8 **)(*(u8 **)&((GameObject *)obj)->anim.modelInstance + 0x40) + ((GameObject *)obj)->unkE4 * 0x18 + 0x11) < bestPri) {
             continue;
         }
-        if ((*(u8 *)(obj + 0xaf) & 0x80) || (data[*(u8 *)(obj + 0xe4) * 5 + 4] & 0x80)) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x80) || (data[((GameObject *)obj)->unkE4 * 5 + 4] & 0x80)) {
             dy = lbl_803E1630;
         } else {
-            dy = *(f32 *)(f + 0x1c) - *(f32 *)(*(u8 **)(obj + 0x74) + *(u8 *)(obj + 0xe4) * 0x18 + 0x10);
+            dy = *(f32 *)(f + 0x1c) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->unkE4 * 0x18 + 0x10);
         }
         if (dy <= lbl_803E1644) {
             continue;
@@ -105,10 +106,10 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         if (dy >= lbl_803E1648) {
             continue;
         }
-        dx = *(f32 *)(f + 0x18) - *(f32 *)(*(u8 **)(obj + 0x74) + *(u8 *)(obj + 0xe4) * 0x18 + 0xc);
-        dz = *(f32 *)(f + 0x20) - *(f32 *)(*(u8 **)(obj + 0x74) + *(u8 *)(obj + 0xe4) * 0x18 + 0x14);
+        dx = *(f32 *)(f + 0x18) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->unkE4 * 0x18 + 0xc);
+        dz = *(f32 *)(f + 0x20) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->unkE4 * 0x18 + 0x14);
         distsq = dz * dz + dx * dx;
-        entry = data + *(u8 *)(obj + 0xe4) * 5;
+        entry = data + ((GameObject *)obj)->unkE4 * 5;
         range = (f32)(int)(entry[2] << 2);
         if (distsq >= range * range) {
             continue;
@@ -120,7 +121,7 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         if (canTarget == 0) {
             continue;
         }
-        bestPri = *(u8 *)(*(u8 **)(*(u8 **)(obj + 0x50) + 0x40) + *(u8 *)(obj + 0xe4) * 0x18 + 0x11);
+        bestPri = *(u8 *)(*(u8 **)(*(u8 **)&((GameObject *)obj)->anim.modelInstance + 0x40) + ((GameObject *)obj)->unkE4 * 0x18 + 0x11);
         i = 0;
         pa = arr;
         while (i < count
@@ -189,7 +190,7 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
 #pragma peephole off
 void camcontrol_updateMoveAverage(int *obj, void *p) {
     f32 mag;
-    *(f32 *)((char *)obj + 0xc8) = *(f32 *)((char *)obj + 0xcc);
+    *(f32 *)&((GameObject *)obj)->unkC8 = *(f32 *)((char *)obj + 0xcc);
     *(f32 *)((char *)obj + 0xcc) = *(f32 *)((char *)obj + 0xd0);
     *(f32 *)((char *)obj + 0xd0) = *(f32 *)((char *)obj + 0xd4);
     *(f32 *)((char *)obj + 0xd4) = *(f32 *)((char *)obj + 0xd8);
@@ -198,15 +199,15 @@ void camcontrol_updateMoveAverage(int *obj, void *p) {
         mag = sqrtf(mag);
     }
     *(f32 *)((char *)obj + 0xd8) = mag;
-    *(f32 *)((char *)obj + 0xc4) = lbl_803E1630;
-    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) + *(f32 *)((char *)obj + 0xc8);
-    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) + *(f32 *)((char *)obj + 0xcc);
-    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) + *(f32 *)((char *)obj + 0xd0);
-    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) + *(f32 *)((char *)obj + 0xd4);
-    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) + *(f32 *)((char *)obj + 0xd8);
-    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) * lbl_803E1658;
-    if (*(f32 *)((char *)obj + 0xc4) < lbl_803E1630) {
-        *(f32 *)((char *)obj + 0xc4) = -*(f32 *)((char *)obj + 0xc4);
+    *(f32 *)&((GameObject *)obj)->unkC4 = lbl_803E1630;
+    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)&((GameObject *)obj)->unkC8;
+    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)((char *)obj + 0xcc);
+    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)((char *)obj + 0xd0);
+    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)((char *)obj + 0xd4);
+    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)((char *)obj + 0xd8);
+    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 * lbl_803E1658;
+    if (*(f32 *)&((GameObject *)obj)->unkC4 < lbl_803E1630) {
+        *(f32 *)&((GameObject *)obj)->unkC4 = -*(f32 *)&((GameObject *)obj)->unkC4;
     }
 }
 #pragma peephole reset

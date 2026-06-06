@@ -1,4 +1,5 @@
 #include "main/dll/CF/CFtoggleswitch.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
 
@@ -625,12 +626,12 @@ void trickyguardspot_update(TrickyGuardSpotObject *obj) {
     ObjAnimComponent *tricky;
     TrickyGuardSpotStateFlags *flags;
 
-    sub = *(u8 **)((char *)obj + 0xb8);
-    def = *(u8 **)((char *)obj + 0x4c);
+    sub = ((GameObject *)obj)->extra;
+    def = *(u8 **)&((GameObject *)obj)->anim.placementData;
     tricky = (ObjAnimComponent *)getTrickyObject();
     flags = (TrickyGuardSpotStateFlags *)(sub + 4);
-    *(u8 *)((char *)obj + 0xaf) =
-        (u8)(*(u8 *)((char *)obj + 0xaf) | TRICKY_GUARD_SPOT_ACTIVE_HITBOX_FLAG);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode =
+        (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | TRICKY_GUARD_SPOT_ACTIVE_HITBOX_FLAG);
     flags->trickyInRange = 0;
     if (tricky != NULL) {
         if ((u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) != 0) {
@@ -643,12 +644,12 @@ void trickyguardspot_update(TrickyGuardSpotObject *obj) {
     }
     if (*(u32 *)sub != 0) {
         if (tricky != NULL && (u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) == 0) {
-            if ((*(u8 *)((char *)obj + 0xaf) & TRICKY_GUARD_SPOT_VISIBLE_HITBOX_FLAG) != 0) {
+            if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & TRICKY_GUARD_SPOT_VISIBLE_HITBOX_FLAG) != 0) {
                 TRICKY_GUARD_SPOT_VTABLE(tricky)->setGuardSpotAction(
                     tricky, obj, TRICKY_GUARD_SPOT_ACTION, TRICKY_GUARD_SPOT_ACTION_PARAM);
             }
-            *(u8 *)((char *)obj + 0xaf) =
-                (u8)(*(u8 *)((char *)obj + 0xaf) & ~TRICKY_GUARD_SPOT_ACTIVE_HITBOX_FLAG);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode =
+                (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~TRICKY_GUARD_SPOT_ACTIVE_HITBOX_FLAG);
             objRenderFn_80041018((int)obj);
         }
     } else if (tricky != NULL) {
@@ -688,19 +689,19 @@ void trickyguardspot_init(TrickyGuardSpotObject *obj, TrickyGuardSpotPlacement *
 
 void infotext_init(int obj, s8 *def) {
     u32 v;
-    v = (u32)*(u16 *)((char *)obj + 0xB0) | 0x6000;
-    *(u16 *)((char *)obj + 0xB0) = (u16)v;
+    v = (u32)((GameObject *)obj)->unkB0 | 0x6000;
+    ((GameObject *)obj)->unkB0 = (u16)v;
     *(s16 *)obj = (s16)((s32)(u8)def[0x18] << 8);
     objSetHintTextIdx(obj, (int)(u8)def[0x19]);
 }
 
 void cctestinfot_init(int obj, s8 *def) {
     u32 v;
-    v = (u32)*(u16 *)((char *)obj + 0xB0) | 0x6000;
-    *(u16 *)((char *)obj + 0xB0) = (u16)v;
+    v = (u32)((GameObject *)obj)->unkB0 | 0x6000;
+    ((GameObject *)obj)->unkB0 = (u16)v;
     *(s16 *)obj = (s16)((s32)(u8)def[0x1A] << 8);
-    *(s16 *)((char *)obj + 2) = (s16)((s32)(u8)def[0x19] << 8);
-    *(s16 *)((char *)obj + 4) = (s16)((s32)(u8)def[0x18] << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)((s32)(u8)def[0x19] << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)((s32)(u8)def[0x18] << 8);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -717,7 +718,7 @@ extern f32 lbl_803E3C8C;
 #pragma peephole off
 void cctestinfot_update(int *obj) {
     extern void *Obj_GetPlayerObject(void);
-    u8 *sub = *(u8**)((char*)obj + 0xb8);
+    u8 *sub = ((GameObject *)obj)->extra;
     Obj_GetPlayerObject();
     if (sub[4] != 0) {
         if (playerIsDisguised() == 0) {
@@ -734,11 +735,11 @@ void cctestinfot_update(int *obj) {
         *(f32*)sub = lbl_803E3C88;
     }
     if (*(f32*)sub > lbl_803E3C8C) {
-        if ((*(u8*)((char*)obj + 0xaf) & 4) == 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) == 0) {
             *(f32*)sub = lbl_803E3C8C;
         } else {
             *(f32*)sub = *(f32*)sub - timeDelta;
-            showHelpText(*(s16*)((char*)*(int**)((char*)obj + 0x50) + 0x7c + sub[4] * 2));
+            showHelpText(*(s16*)((char*)*(int**)&((GameObject *)obj)->anim.modelInstance + 0x7c + sub[4] * 2));
         }
     }
 }
@@ -751,9 +752,9 @@ extern f32 lbl_803E3C4C;
 #pragma scheduling off
 #pragma peephole off
 void magiccavetop_init(int *obj, s8 *def) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     int *refs;
-    *(u16 *)((char *)obj + 0xb0) = (u16)((u32)*(u16 *)((char *)obj + 0xb0) | 0x6000);
+    ((GameObject *)obj)->unkB0 = (u16)((u32)((GameObject *)obj)->unkB0 | 0x6000);
     if (GameBit_Get(*(s16 *)((char *)def + 0x1c)) != 0) {
         *(f32 *)((char *)state + 4) = lbl_803E3C4C;
     }
@@ -780,8 +781,8 @@ extern void mapUnload(int idx, int flags);
 #pragma scheduling off
 #pragma peephole off
 void magiccavetop_free(int *obj) {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
-    u8 *def = *(u8 **)((char *)obj + 0x4c);
+    u8 *state = ((GameObject *)obj)->extra;
+    u8 *def = *(u8 **)&((GameObject *)obj)->anim.placementData;
     void *p;
     void *r;
     stopRumble2();
@@ -811,8 +812,8 @@ extern int *gObjectTriggerInterface;
 #pragma scheduling off
 #pragma peephole off
 void magiccavebottom_update(int *obj) {
-    u8 *def = *(u8 **)((char *)obj + 0x4c);
-    u8 *sub = *(u8 **)((char *)obj + 0xb8);
+    u8 *def = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    u8 *sub = ((GameObject *)obj)->extra;
 
     *(s16 *)obj = (s16)((s32)def[0x1a] << 8);
     switch (*sub) {
@@ -833,7 +834,7 @@ void magiccavebottom_update(int *obj) {
         *sub = 2;
         break;
     case 2:
-        if ((*(u8 *)((char *)obj + 0xaf) & 4) != 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
             setAButtonIcon(0x19);
         }
         if (ObjTrigger_IsSet((int)obj) != 0) {
@@ -862,16 +863,16 @@ extern f32 lbl_803E3C84;
 #pragma scheduling off
 #pragma peephole off
 void infotext_update(int *obj) {
-    f32 *sub = *(f32 **)((char *)obj + 0xb8);
+    f32 *sub = ((GameObject *)obj)->extra;
     if (ObjTrigger_IsSet((int)obj) != 0 && fn_801334E0() == 0) {
         *sub = lbl_803E3C80;
     }
     if (*sub > lbl_803E3C84) {
-        if ((*(u8 *)((char *)obj + 0xaf) & 4) == 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) == 0) {
             *sub = lbl_803E3C84;
         } else {
             *sub = *sub - timeDelta;
-            showHelpText(*(s16 *)((char *)*(int **)((char *)obj + 0x50) + 0x7c + (*(u8 **)((char *)obj + 0x4c))[0x19] * 2));
+            showHelpText(*(s16 *)((char *)*(int **)&((GameObject *)obj)->anim.modelInstance + 0x7c + (*(u8 **)&((GameObject *)obj)->anim.placementData)[0x19] * 2));
         }
     }
     if ((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0) {
@@ -931,8 +932,8 @@ void magiccavetop_update(int *obj) {
     f32 t;
 
     player = (int *)Obj_GetPlayerObject();
-    sub = *(u8 **)((char *)obj + 0xb8);
-    def = *(u8 **)((char *)obj + 0x4c);
+    sub = ((GameObject *)obj)->extra;
+    def = *(u8 **)&((GameObject *)obj)->anim.placementData;
     gb = 0;
     if (player != NULL) {
         if (GameBit_Get(0x91e) != 0) {

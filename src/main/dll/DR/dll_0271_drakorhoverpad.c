@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 int drakorhoverpad_func0B(void) { return 0x1; }
@@ -82,7 +83,7 @@ void drakorhoverpad_release(void) {}
 #pragma scheduling off
 #pragma peephole off
 void drakorhoverpad_initMain(int obj, void *desc) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    u8 *p = ((GameObject *)obj)->extra;
     HoverpadFlags *f = (HoverpadFlags *)(p + 0x178);
     Flags377 *g = (Flags377 *)(p + 0x179);
     f32 v;
@@ -118,7 +119,7 @@ void drakorhoverpad_initMain(int obj, void *desc) {
 #pragma scheduling off
 #pragma peephole off
 int drakorhoverpad_init(int obj) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    u8 *p = ((GameObject *)obj)->extra;
     HoverpadFlags *f = (HoverpadFlags *)(p + 0x178);
 
     if (f->b40 == 0) {
@@ -158,18 +159,18 @@ int drakorhoverpad_init(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void drakorhoverpad_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    u8 *p = ((GameObject *)obj)->extra;
     if (visible) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6A48);
         *(s16 *)(p + 0x176) += framesThisStep;
         if (*(s16 *)(p + 0x176) == 0 || *(s16 *)(p + 0x176) > 10) {
             *(s16 *)(p + 0x176) = 0;
-            *(f32 *)(p + 0x154) = *(f32 *)((char *)obj + 0xc) + (f32)(int)randomGetRange(-30, 30);
-            *(f32 *)(p + 0x158) = *(f32 *)((char *)obj + 0x10);
-            *(f32 *)(p + 0x15c) = *(f32 *)((char *)obj + 0x14) + (f32)(int)randomGetRange(-30, 30);
-            *(f32 *)(p + 0x160) = *(f32 *)((char *)obj + 0xc) + (f32)(int)randomGetRange(-120, 120);
-            *(f32 *)(p + 0x164) = *(f32 *)((char *)obj + 0x10) - lbl_803E6A88;
-            *(f32 *)(p + 0x168) = *(f32 *)((char *)obj + 0x14) + (f32)(int)randomGetRange(-120, 120);
+            *(f32 *)(p + 0x154) = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-30, 30);
+            *(f32 *)(p + 0x158) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(p + 0x15c) = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-30, 30);
+            *(f32 *)(p + 0x160) = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-120, 120);
+            *(f32 *)(p + 0x164) = ((GameObject *)obj)->anim.localPosY - lbl_803E6A88;
+            *(f32 *)(p + 0x168) = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-120, 120);
         }
     }
 }
@@ -319,8 +320,8 @@ int drakorhoverpad_update(void *curve, int arg) {
 #pragma scheduling off
 #pragma peephole off
 void drakorhoverpad_updateMain(int obj) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
-    int q = *(int *)((char *)obj + 0x4c);
+    u8 *p = ((GameObject *)obj)->extra;
+    int q = *(int *)&((GameObject *)obj)->anim.placementData;
     HoverpadFlags *f = (HoverpadFlags *)(p + 0x178);
     Flags377 *g = (Flags377 *)(p + 0x179);
     u8 *curve;
@@ -349,9 +350,9 @@ void drakorhoverpad_updateMain(int obj) {
             (*(void (**)(int, int, f32, int *, int))((char *)*gRomCurveInterface + 0x8c))(
                 (int)(p + 4), obj, lbl_803E6A4C, &curveArg, -1);
             Curve_AdvanceAlongPath(p + 4, lbl_803E6A50);
-            *(f32 *)((char *)obj + 0xc) = *(f32 *)(p + 0x6c);
-            *(f32 *)((char *)obj + 0x10) = *(f32 *)(p + 0x70);
-            *(f32 *)((char *)obj + 0x14) = *(f32 *)(p + 0x74);
+            ((GameObject *)obj)->anim.localPosX = *(f32 *)(p + 0x6c);
+            ((GameObject *)obj)->anim.localPosY = *(f32 *)(p + 0x70);
+            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(p + 0x74);
             *(f32 *)p = lbl_803E6A38;
             Sfx_PlayFromObject(obj, SFXfend_fox_keytap2);
             Sfx_PlayFromObject(obj, SFXfend_pep_wakeup);
@@ -436,32 +437,32 @@ void drakorhoverpad_updateMain(int obj) {
                 yawDelta = 0x200;
             }
             *(s16 *)obj = (s16)(*(s16 *)obj + yawDelta);
-            if (*(s16 *)((char *)obj + 2) != 0) {
-                c = *(s16 *)((char *)obj + 2);
+            if (((GameObject *)obj)->anim.rotY != 0) {
+                c = ((GameObject *)obj)->anim.rotY;
                 if (c < -0x100) {
                     c = -0x100;
                 } else if (c > 0x100) {
                     c = 0x100;
                 }
-                *(s16 *)((char *)obj + 2) = (s16)(*(s16 *)((char *)obj + 2) - c);
+                ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY - c);
             }
-            *(s16 *)((char *)obj + 4) = (s16)(yawDelta * lbl_803DC2FC);
+            ((GameObject *)obj)->anim.rotZ = (s16)(yawDelta * lbl_803DC2FC);
         }
     } else {
         phase = sqrtf(*(f32 *)(curve + 0x74) * *(f32 *)(curve + 0x74) +
                       *(f32 *)(curve + 0x7c) * *(f32 *)(curve + 0x7c));
         yawDelta = (s16)((s16)(getAngle(*(f32 *)(curve + 0x74), *(f32 *)(curve + 0x7c)) + 0x8000) -
                          *(s16 *)obj);
-        *(s16 *)((char *)obj + 2) = getAngle(*(f32 *)(curve + 0x78), phase);
+        ((GameObject *)obj)->anim.rotY = getAngle(*(f32 *)(curve + 0x78), phase);
         if (yawDelta < -0x800) {
             yawDelta = -0x800;
         } else if (yawDelta > 0x800) {
             yawDelta = 0x800;
         }
         if (*(f32 *)(p + 0x110) < lbl_803E6A3C) {
-            *(s16 *)((char *)obj + 4) = yawDelta;
+            ((GameObject *)obj)->anim.rotZ = yawDelta;
         } else {
-            *(s16 *)((char *)obj + 4) = -yawDelta;
+            ((GameObject *)obj)->anim.rotZ = -yawDelta;
         }
         c = yawDelta;
         if (c < -0x100) {
@@ -470,13 +471,13 @@ void drakorhoverpad_updateMain(int obj) {
             c = 0x100;
         }
         *(s16 *)obj = (s16)(*(s16 *)obj + c);
-        c = *(s16 *)((char *)obj + 2);
+        c = ((GameObject *)obj)->anim.rotY;
         if (c < -0x64) {
             c = -0x64;
         } else if (c > 0x64) {
             c = 0x64;
         }
-        *(s16 *)((char *)obj + 2) = c;
+        ((GameObject *)obj)->anim.rotY = c;
     }
     PSVECSubtract(curvePos, (f32 *)((char *)obj + 0xc), diff);
     Obj_SteerVelocityTowardVector(obj, (f32 *)((char *)obj + 0x24), diff, lbl_803DC2F8,
@@ -489,7 +490,7 @@ void drakorhoverpad_updateMain(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    u8 *p = ((GameObject *)obj)->extra;
     HoverpadFlags *f = (HoverpadFlags *)(p + 0x178);
     Flags377 *g = (Flags377 *)(p + 0x179);
     int player;
@@ -721,7 +722,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
 #pragma scheduling off
 #pragma peephole off
 int drakorhoverpad_setScale(int obj) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    u8 *p = ((GameObject *)obj)->extra;
     return (p[0x179] >> 2) & 1;
 }
 #pragma peephole reset
@@ -730,7 +731,7 @@ int drakorhoverpad_setScale(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int drakorhoverpad_render2(int obj) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    u8 *p = ((GameObject *)obj)->extra;
     return ((p[0x179] >> 2) & 1) == 0;
 }
 #pragma peephole reset
@@ -748,9 +749,9 @@ void drakorhoverpad_func12(int obj, f32 *a, int *b) {
 #pragma scheduling off
 #pragma peephole off
 void drakorhoverpad_modelMtxFn(int obj, f32 *a, f32 *b, f32 *c) {
-    *a = *(f32 *)((char *)obj + 0xc);
-    *b = lbl_803E6A40 + *(f32 *)((char *)obj + 0x10);
-    *c = *(f32 *)((char *)obj + 0x14);
+    *a = ((GameObject *)obj)->anim.localPosX;
+    *b = lbl_803E6A40 + ((GameObject *)obj)->anim.localPosY;
+    *c = ((GameObject *)obj)->anim.localPosZ;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -816,7 +817,7 @@ void drakorhoverpad_func0F(int obj, f32 *ox, f32 *oy, f32 *oz) {
 #pragma scheduling off
 #pragma peephole off
 void drakorhoverpad_resetPendingMotion(int obj) {
-    char *p = *(char **)((char *)obj + 0xb8);
+    char *p = ((GameObject *)obj)->extra;
     if (((BitFlags8 *)(p + 0x179))->b6 != 0) {
         ((BitFlags8 *)(p + 0x179))->b6 = 0;
         *(f32 *)p = lbl_803E6A38;
@@ -837,7 +838,7 @@ void drakorhoverpad_func16(int obj, f32 scale) {
     pos.rx = 0;
     pos.ry = 0;
     pos.rz = 0;
-    pos.scale = scale / *(f32 *)(*(int *)((char *)obj + 0x50) + 0x4);
+    pos.scale = scale / *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x4);
     setMatrixFromObjectPos(lbl_803AD1C8, &pos);
     mtx44_mult(lbl_803AD1C8, mtx, lbl_803AD1C8);
     fn_8003B950(lbl_803AD1C8);
