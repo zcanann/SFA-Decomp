@@ -967,10 +967,6 @@ extern f32 lbl_803E73B8;
 extern f32 lbl_803E73BC;
 extern f32 lbl_803E73C0;
 
-typedef struct CmbsrcHitFlag {
-    u8 disabled : 1;
-} CmbsrcHitFlag;
-
 #pragma dont_inline on
 
 

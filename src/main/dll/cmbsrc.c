@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/cmbsrc.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -38,11 +39,12 @@ int cmbsrc_updateAndReturnZero(int obj)
 #pragma scheduling off
 int cmbsrc_getColorIndex(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
+    CmbSrcState *state = cmbsrc->state;
+    CmbSrcMapData *setup = (CmbSrcMapData *)cmbsrc->objAnim.placementData;
 
-    if (*(u8 *)(setup + 0x1b) == 0xf) {
-        int colorIndex = *(u8 *)(state + 0x23);
+    if (setup->colorIndex == CMBSRC_MODE_COLOR_CYCLE) {
+        int colorIndex = state->colorCycleIndex;
         return (s8)colorIndex;
     }
     return -1;
@@ -54,12 +56,12 @@ int cmbsrc_getColorIndex(int obj)
 #pragma scheduling off
 void cmbsrc_setExternalActive(int obj, u8 active)
 {
-    int state = *(int *)(obj + 0xb8);
+    CmbSrcState *state = ((CmbSrcObject *)obj)->state;
 
     if (active != 0) {
-        *(u8 *)(state + 0x22) |= 0x2;
+        state->flags |= CMBSRC_STATE_EXTERNAL_ACTIVE;
     } else {
-        *(u8 *)(state + 0x22) &= ~0x2;
+        state->flags &= ~CMBSRC_STATE_EXTERNAL_ACTIVE;
     }
 }
 #pragma scheduling reset
@@ -69,13 +71,13 @@ void cmbsrc_setExternalActive(int obj, u8 active)
 #pragma scheduling off
 void cmbsrc_free(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    CmbSrcState *state = ((CmbSrcObject *)obj)->state;
 
     (*(void (**)(int))(*gExpgfxInterface + 0x14))(obj);
-    if (*(void **)state != NULL) {
-        ModelLightStruct_free(*(void **)state);
+    if (state->light != NULL) {
+        ModelLightStruct_free(state->light);
     }
-    Sfx_StopObjectChannel(obj, 0x40);
+    Sfx_StopObjectChannel(obj, CMBSRC_LOOP_SOUND_CHANNEL);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -84,16 +86,17 @@ void cmbsrc_free(int obj)
 #pragma scheduling off
 void cmbsrc_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
+    CmbSrcState *state = cmbsrc->state;
+    CmbSrcMapData *setup = (CmbSrcMapData *)cmbsrc->objAnim.placementData;
 
     if (visible != 0) {
-        *(u8 *)(state + 0x22) |= 0x1;
-        if (*(void **)state != NULL && *(u8 *)(*(int *)state + 0x2f8) != 0 &&
-            *(u8 *)(*(int *)state + 0x4c) != 0) {
-            queueGlowRender(*(void **)state);
+        state->flags |= CMBSRC_STATE_RENDERED;
+        if (state->light != NULL && *(u8 *)((int)state->light + 0x2f8) != 0 &&
+            *(u8 *)((int)state->light + 0x4c) != 0) {
+            queueGlowRender(state->light);
         }
-        if ((*(u8 *)(setup + 0x29) & 0x8) != 0) {
+        if ((setup->flags & CMBSRC_MAP_RENDER_MODEL) != 0) {
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E738C);
         }
     }
@@ -105,22 +108,24 @@ void cmbsrc_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling off
 int cmbsrc_shouldActivate(int obj, int state, int setup)
 {
+    CmbSrcState *sourceState = (CmbSrcState *)state;
+    CmbSrcMapData *mapData = (CmbSrcMapData *)setup;
     int result = 0;
     int hitOut;
 
-    if (*(void **)state != NULL && modelLightStruct_getActiveState(*(void **)state) != 0) {
+    if (sourceState->light != NULL && modelLightStruct_getActiveState(sourceState->light) != 0) {
         return 0;
     }
-    if (*(s16 *)(setup + 0x24) != -1 && GameBit_Get(*(s16 *)(setup + 0x24)) != 0) {
+    if (mapData->gameBit != -1 && GameBit_Get(mapData->gameBit) != 0) {
         result = 1;
-    } else if ((*(u8 *)(state + 0x22) & 0x4) != 0 &&
+    } else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 &&
                (*(int (**)(int *))(*gSHthorntailAnimationInterface + 0x24))(&hitOut) != 0) {
         result = 1;
     }
-    if ((*(u8 *)(setup + 0x2a) & 0x30) == 0x10) {
-        if (*(f32 *)(state + 0x14) != lbl_803E7360) {
-            *(f32 *)(state + 0x14) -= timeDelta;
-            if (*(f32 *)(state + 0x14) <= lbl_803E7360) {
+    if ((mapData->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) == 0x10) {
+        if (sourceState->inactiveTimer != lbl_803E7360) {
+            sourceState->inactiveTimer -= timeDelta;
+            if (sourceState->inactiveTimer <= lbl_803E7360) {
                 result = 1;
             }
         }
@@ -134,19 +139,21 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
 #pragma scheduling off
 int cmbsrc_shouldDeactivate(int obj, int state, int setup)
 {
+    CmbSrcState *sourceState = (CmbSrcState *)state;
+    CmbSrcMapData *mapData = (CmbSrcMapData *)setup;
     int result = 0;
     int hitOut;
 
-    if (*(void **)state != NULL && modelLightStruct_getActiveState(*(void **)state) != 2) {
+    if (sourceState->light != NULL && modelLightStruct_getActiveState(sourceState->light) != 2) {
         return 0;
     }
-    if (*(s16 *)(setup + 0x24) != -1 && (u32)GameBit_Get(*(s16 *)(setup + 0x24)) == 0) {
+    if (mapData->gameBit != -1 && (u32)GameBit_Get(mapData->gameBit) == 0) {
         result = 1;
-    } else if ((*(u8 *)(state + 0x22) & 0x4) != 0 &&
+    } else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 &&
                (*(int (**)(int *))(*gSHthorntailAnimationInterface + 0x24))(&hitOut) == 0) {
         result = 1;
-    } else if (*(s8 *)(state + 0x26) == 0) {
-        *(f32 *)(state + 0x14) = (f32)(u32)*(u16 *)(state + 0x20);
+    } else if (sourceState->hitCharge == 0) {
+        sourceState->inactiveTimer = (f32)(u32)sourceState->inactiveFrameCount;
         result = 1;
     }
     return result;
@@ -158,31 +165,32 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
 #pragma scheduling off
 void cmbsrc_hitDetect(int obj)
 {
-    int setup = *(int *)(obj + 0x4c);
-    int state = *(int *)(obj + 0xb8);
+    CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
+    CmbSrcMapData *setup = (CmbSrcMapData *)cmbsrc->objAnim.placementData;
+    CmbSrcState *state = cmbsrc->state;
     int v;
 
-    *(u8 *)(state + 0x24) = 0;
-    if ((*(u8 *)(setup + 0x2a) & 0x30) != 0) {
-        *(u8 *)(state + 0x24) = (u8)ObjHits_GetPriorityHit(obj, 0, 0, 0);
-        if (*(u8 *)(state + 0x24) == 0x10) {
-            *(u8 *)(state + 0x26) -= 1;
-            *(f32 *)(state + 0x1c) = lbl_803E7384;
+    state->priorityHitType = 0;
+    if ((setup->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) != 0) {
+        state->priorityHitType = (u8)ObjHits_GetPriorityHit(obj, 0, 0, 0);
+        if (state->priorityHitType == CMBSRC_HIT_TYPE_DAMAGE) {
+            state->hitCharge -= 1;
+            state->hitRecoverTimer = lbl_803E7384;
         }
-        if (*(f32 *)(state + 0x1c) != lbl_803E7360) {
-            *(f32 *)(state + 0x1c) -= timeDelta;
-            if (*(f32 *)(state + 0x1c) <= lbl_803E7360) {
-                *(u8 *)(state + 0x26) += 1;
-                *(f32 *)(state + 0x1c) = lbl_803E7384;
+        if (state->hitRecoverTimer != lbl_803E7360) {
+            state->hitRecoverTimer -= timeDelta;
+            if (state->hitRecoverTimer <= lbl_803E7360) {
+                state->hitCharge += 1;
+                state->hitRecoverTimer = lbl_803E7384;
             }
         }
-        v = *(s8 *)(state + 0x26);
+        v = state->hitCharge;
         if (v < 0) {
             v = 0;
-        } else if (v > 0xf) {
-            v = 0xf;
+        } else if (v > CMBSRC_MAX_HIT_CHARGE) {
+            v = CMBSRC_MAX_HIT_CHARGE;
         }
-        *(s8 *)(state + 0x26) = (s8)v;
+        state->hitCharge = (s8)v;
     }
 }
 #pragma scheduling reset
@@ -192,39 +200,41 @@ void cmbsrc_hitDetect(int obj)
 #pragma scheduling off
 int cmbsrc_cycleColor(int obj, int state)
 {
-    int setup = *(int *)(obj + 0x4c);
+    CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
+    CmbSrcState *sourceState = (CmbSrcState *)state;
+    CmbSrcMapData *setup = (CmbSrcMapData *)cmbsrc->objAnim.placementData;
     int idx;
 
-    *(f32 *)(state + 0x10) -= timeDelta;
-    if (*(f32 *)(state + 0x10) <= lbl_803E7360) {
-        *(f32 *)(state + 0x10) = lbl_803E7364;
-        *(u8 *)(state + 0x23) += 1;
-        if (*(u8 *)(state + 0x23) >= 3) {
-            *(u8 *)(state + 0x23) = 0;
+    sourceState->colorCycleTimer -= timeDelta;
+    if (sourceState->colorCycleTimer <= lbl_803E7360) {
+        sourceState->colorCycleTimer = lbl_803E7364;
+        sourceState->colorCycleIndex += 1;
+        if (sourceState->colorCycleIndex >= CMBSRC_COLOR_CYCLE_COUNT) {
+            sourceState->colorCycleIndex = 0;
         }
-        idx = lbl_803DC3E0[*(u8 *)(state + 0x23)];
-        if (*(void **)state != NULL) {
+        idx = lbl_803DC3E0[sourceState->colorCycleIndex];
+        if (sourceState->light != NULL) {
             int base = idx * 3;
-            modelLightStruct_setDiffuseColor(*(void **)state, lbl_8032BD50[base],
+            modelLightStruct_setDiffuseColor(sourceState->light, lbl_8032BD50[base],
                                            lbl_8032BD50[base + 1], lbl_8032BD50[base + 2], 0xff);
-            modelLightStruct_setSpecularColor(*(void **)state, lbl_8032BD50[base],
+            modelLightStruct_setSpecularColor(sourceState->light, lbl_8032BD50[base],
                                              lbl_8032BD50[base + 1], lbl_8032BD50[base + 2], 0xff);
-            modelLightStruct_setDiffuseTargetColor(*(void **)state,
+            modelLightStruct_setDiffuseTargetColor(sourceState->light,
                             (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base]),
                             (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base + 1]),
                             (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base + 2]), 0xff);
-            if (*(u8 *)(setup + 0x29) & 0x40) {
-                if (*(u8 *)(setup + 0x29) & 0x80) {
-                    modelLightStruct_setupGlow(*(void **)state, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
-                                lbl_8032BD50[base + 2], 0x87, lbl_803E736C * *(f32 *)(obj + 8));
+            if (setup->flags & CMBSRC_MAP_GLOW) {
+                if (setup->flags & CMBSRC_MAP_GLOW_LARGE) {
+                    modelLightStruct_setupGlow(sourceState->light, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
+                                lbl_8032BD50[base + 2], 0x87, lbl_803E736C * cmbsrc->objAnim.rootMotionScale);
                 } else {
-                    modelLightStruct_setupGlow(*(void **)state, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
-                                lbl_8032BD50[base + 2], 0x87, lbl_803E7370 * *(f32 *)(obj + 8));
+                    modelLightStruct_setupGlow(sourceState->light, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
+                                lbl_8032BD50[base + 2], 0x87, lbl_803E7370 * cmbsrc->objAnim.rootMotionScale);
                 }
             }
         }
     } else {
-        idx = lbl_803DC3E0[*(u8 *)(state + 0x23)];
+        idx = lbl_803DC3E0[sourceState->colorCycleIndex];
     }
     return idx;
 }
@@ -235,7 +245,9 @@ int cmbsrc_cycleColor(int obj, int state)
 #pragma scheduling off
 void cmbsrc_updateVisuals(int obj, int state)
 {
-    int setup = *(int *)(obj + 0x4c);
+    CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
+    CmbSrcState *sourceState = (CmbSrcState *)state;
+    CmbSrcMapData *setup = (CmbSrcMapData *)cmbsrc->objAnim.placementData;
     int colorIdx = 0;
     int effectMode = 0;
     int subMode = 0;
@@ -245,102 +257,102 @@ void cmbsrc_updateVisuals(int obj, int state)
     f32 param[3];
 
     viewSlot = Camera_GetCurrentViewSlot();
-    if (*(u8 *)(state + 0x25) == 0) {
-        *(f32 *)(state + 0x18) = lbl_803E7374 * *(f32 *)(setup + 0x20);
+    if (sourceState->active == 0) {
+        sourceState->radius = lbl_803E7374 * setup->radius;
     } else {
-        *(f32 *)(state + 0x18) += interpolate(
-            (f32)*(s8 *)(state + 0x26) / lbl_803E7378 *
-                    (lbl_803E7374 * *(f32 *)(setup + 0x20) -
-                     *(f32 *)(setup + 0x20) * lbl_803E737C) +
-                *(f32 *)(setup + 0x20) * lbl_803E737C - *(f32 *)(state + 0x18),
+        sourceState->radius += interpolate(
+            (f32)sourceState->hitCharge / lbl_803E7378 *
+                    (lbl_803E7374 * setup->radius -
+                     setup->radius * lbl_803E737C) +
+                setup->radius * lbl_803E737C - sourceState->radius,
             lbl_803E7380, timeDelta);
     }
     dist = Vec_distance(viewSlot + 0x44, obj + 0x18);
-    if (*(u8 *)(state + 0x25) == 1) {
-        if (dist <= (f32)(u32)(*(u8 *)(setup + 0x26) << 3)) {
-            if (*(u8 *)(setup + 0x1b) == 0xf) {
+    if (sourceState->active == 1) {
+        if (dist <= (f32)(u32)(setup->colorDistance << 3)) {
+            if (setup->colorIndex == CMBSRC_MODE_COLOR_CYCLE) {
                 colorIdx = (u8)cmbsrc_cycleColor(obj, state);
             } else {
-                colorIdx = *(u8 *)(setup + 0x1b);
+                colorIdx = setup->colorIndex;
             }
         }
     }
-    *(f32 *)(state + 0x4) -= timeDelta;
-    *(f32 *)(state + 0x8) -= timeDelta;
-    if (*(f32 *)(state + 0x4) <= lbl_803E7360) {
-        if (*(u8 *)(setup + 0x1c) < 9) {
-            if (dist <= (f32)(u32)(*(u8 *)(setup + 0x27) << 3)) {
-                effectMode = *(u8 *)(setup + 0x1c);
+    sourceState->effectTimer -= timeDelta;
+    sourceState->pulseTimer -= timeDelta;
+    if (sourceState->effectTimer <= lbl_803E7360) {
+        if (setup->effectMode < CMBSRC_EFFECT_MODE_COUNT) {
+            if (dist <= (f32)(u32)(setup->effectDistance << 3)) {
+                effectMode = setup->effectMode;
             }
         }
-        if (*(u8 *)(state + 0x25) == 0) {
-            if (dist <= (f32)(u32)(*(u8 *)(setup + 0x26) << 3) &&
-                (*(u8 *)(state + 0x22) & 0x8) == 0) {
-                effectMode = *(u8 *)(setup + 0x1c);
-                if (*(u8 *)(setup + 0x1c) == 0) {
+        if (sourceState->active == 0) {
+            if (dist <= (f32)(u32)(setup->colorDistance << 3) &&
+                (sourceState->flags & CMBSRC_STATE_SUPPRESS_IDLE_EFFECT) == 0) {
+                effectMode = setup->effectMode;
+                if (setup->effectMode == 0) {
                     effectMode = 2;
                 }
             } else {
                 effectMode = 0;
             }
         }
-        if (*(u8 *)(state + 0x25) == 1) {
-            *(f32 *)(state + 0x4) += lbl_803E7384;
+        if (sourceState->active == 1) {
+            sourceState->effectTimer += lbl_803E7384;
         } else {
-            *(f32 *)(state + 0x4) += lbl_803E7378;
+            sourceState->effectTimer += lbl_803E7378;
         }
     }
-    if ((*(u16 *)(obj + 0xb0) & 0x800) || (*(u8 *)(state + 0x22) & 0x2)) {
-        switch (*(s16 *)(obj + 0x46)) {
-        case 0x758:
-            if (*(u8 *)(state + 0x25) == 1) {
-                if (dist <= (f32)(u32)(*(u8 *)(setup + 0x26) << 3)) {
-                    subMode = *(u8 *)(setup + 0x1d);
+    if ((cmbsrc->objectFlags & 0x800) || (sourceState->flags & CMBSRC_STATE_EXTERNAL_ACTIVE)) {
+        switch (cmbsrc->objAnim.seqId) {
+        case CMBSRC_SEQ_THUSTER_SOURCE:
+            if (sourceState->active == 1) {
+                if (dist <= (f32)(u32)(setup->colorDistance << 3)) {
+                    subMode = setup->pulseSubMode;
                 }
             }
-            objfx_spawnLightPulse(obj, *(f32 *)(state + 0x18), colorIdx, effectMode, subMode,
-                                  (f32)(u32)*(u8 *)(setup + 0x28) / lbl_803E7388, 0);
+            objfx_spawnLightPulse(obj, sourceState->radius, colorIdx, effectMode, subMode,
+                                  (f32)(u32)setup->pulseDistance / lbl_803E7388, 0);
             break;
-        case 0x6e8:
+        case CMBSRC_SEQ_DEFAULT:
         default:
-            if (*(u8 *)(state + 0x25) == 1) {
-                if (*(f32 *)(state + 0x8) <= lbl_803E7360) {
-                    if (*(u8 *)(setup + 0x1d) < 4) {
-                        if (dist <= (f32)(u32)(*(u8 *)(setup + 0x28) << 3)) {
-                            subMode = *(u8 *)(setup + 0x1d);
+            if (sourceState->active == 1) {
+                if (sourceState->pulseTimer <= lbl_803E7360) {
+                    if (setup->pulseSubMode < CMBSRC_SUBMODE_COUNT) {
+                        if (dist <= (f32)(u32)(setup->pulseDistance << 3)) {
+                            subMode = setup->pulseSubMode;
                         }
                     }
-                    *(f32 *)(state + 0x8) += lbl_803E738C;
+                    sourceState->pulseTimer += lbl_803E738C;
                 }
             }
             vec[0] = lbl_803E7360;
-            if (*(s16 *)(obj + 0x46) == 0x853) {
-                if (*(u8 *)(state + 0x25) == 0) {
+            if (cmbsrc->objAnim.seqId == CMBSRC_SEQ_TWALL) {
+                if (sourceState->active == 0) {
                     vec[1] = lbl_803E7390;
                 } else {
                     vec[1] = lbl_803E7394;
                 }
             } else {
-                if (*(u8 *)(state + 0x25) == 0) {
+                if (sourceState->active == 0) {
                     vec[1] = lbl_803E7390;
                 } else {
                     vec[1] = lbl_803E7360;
                 }
             }
             vec[2] = lbl_803E7360;
-            fn_80098B18(obj, *(f32 *)(state + 0x18), colorIdx, effectMode, subMode, vec);
+            fn_80098B18(obj, sourceState->radius, colorIdx, effectMode, subMode, vec);
             break;
         }
     }
-    if (*(u8 *)(state + 0x25) == 1 && (*(u8 *)(setup + 0x2a) & 0x2)) {
-        *(f32 *)(state + 0xc) -= timeDelta;
-        if (*(f32 *)(state + 0xc) <= lbl_803E7360) {
-            if (*(u16 *)(obj + 0xb0) & 0x800) {
-                param[2] = *(f32 *)(state + 0x18);
+    if (sourceState->active == 1 && (setup->behaviorFlags & CMBSRC_BEHAVIOR_ACTIVE_PARTICLES)) {
+        sourceState->particleTimer -= timeDelta;
+        if (sourceState->particleTimer <= lbl_803E7360) {
+            if (cmbsrc->objectFlags & 0x800) {
+                param[2] = sourceState->radius;
                 (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 0x8))(
-                    obj, 0x7cb, param, 2, -1, 0);
+                    obj, CMBSRC_PARTICLE_EFFECT_ID, param, 2, -1, 0);
             }
-            *(f32 *)(state + 0xc) += lbl_803E7398;
+            sourceState->particleTimer += lbl_803E7398;
         }
     }
 }
@@ -351,63 +363,64 @@ void cmbsrc_updateVisuals(int obj, int state)
 #pragma scheduling off
 int cmbsrc_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
+    CmbSrcState *state = cmbsrc->state;
+    CmbSrcMapData *setup = (CmbSrcMapData *)cmbsrc->objAnim.placementData;
 
-    switch (*(u8 *)(state + 0x25)) {
+    switch (state->active) {
     case 1:
-        if (cmbsrc_shouldDeactivate(obj, state, setup)) {
-            *(u8 *)(state + 0x25) = 0;
-            if (*(void **)state != NULL) {
-                modelLightStruct_setEnabled(*(void **)state, 0, lbl_803E7374);
+        if (cmbsrc_shouldDeactivate(obj, (int)state, (int)setup)) {
+            state->active = 0;
+            if (state->light != NULL) {
+                modelLightStruct_setEnabled(state->light, 0, lbl_803E7374);
             }
-            if (*(u8 *)(setup + 0x29) & 0x2) {
-                Sfx_StopObjectChannel(obj, 0x40);
+            if (setup->flags & CMBSRC_MAP_LOOP_SOUND) {
+                Sfx_StopObjectChannel(obj, CMBSRC_LOOP_SOUND_CHANNEL);
             }
             ObjHits_DisableObject(obj);
-            if (*(s16 *)(setup + 0x24) != -1) {
-                GameBit_Set(*(s16 *)(setup + 0x24), 0);
+            if (setup->gameBit != -1) {
+                GameBit_Set(setup->gameBit, 0);
             }
         } else {
-            if (*(u8 *)(setup + 0x29) & 0x2) {
+            if (setup->flags & CMBSRC_MAP_LOOP_SOUND) {
                 Sfx_KeepAliveLoopedObjectSound(obj,
-                    lbl_8032BD00[*(u8 *)(*(int *)(obj + 0x4c) + 0x1b)]);
+                    lbl_8032BD00[setup->colorIndex]);
             }
-            if (*(void **)state != NULL && *(u8 *)(*(int *)state + 0x2f8) != 0 &&
-                *(u8 *)(*(int *)state + 0x4c) != 0) {
-                s16 v = (s16)(*(u8 *)(*(int *)state + 0x2f9) + *(s8 *)(*(int *)state + 0x2fa));
+            if (state->light != NULL && *(u8 *)((int)state->light + 0x2f8) != 0 &&
+                *(u8 *)((int)state->light + 0x4c) != 0) {
+                s16 v = (s16)(*(u8 *)((int)state->light + 0x2f9) + *(s8 *)((int)state->light + 0x2fa));
                 if (v < 0) {
                     v = 0;
-                    *(u8 *)(*(int *)state + 0x2fa) = 0;
+                    *(u8 *)((int)state->light + 0x2fa) = 0;
                 } else if (v > 0xc) {
                     v = (s16)(v + randomGetRange(-0xc, 0xc));
                     if (v > 0xff) {
                         v = 0xff;
-                        *(u8 *)(*(int *)state + 0x2fa) = 0;
+                        *(u8 *)((int)state->light + 0x2fa) = 0;
                     }
                 }
-                *(u8 *)(*(int *)state + 0x2f9) = (u8)v;
+                *(u8 *)((int)state->light + 0x2f9) = (u8)v;
             }
         }
         break;
     case 0:
-        if (cmbsrc_shouldActivate(obj, state, setup)) {
-            *(u8 *)(state + 0x25) = 1;
-            if (*(void **)state != NULL) {
-                modelLightStruct_setEnabled(*(void **)state, 1, lbl_803E7374);
+        if (cmbsrc_shouldActivate(obj, (int)state, (int)setup)) {
+            state->active = 1;
+            if (state->light != NULL) {
+                modelLightStruct_setEnabled(state->light, 1, lbl_803E7374);
             }
-            if (!((CmbsrcHitFlag *)(state + 0x27))->disabled) {
+            if (!state->hitFlags.disabled) {
                 ObjHits_EnableObject(obj);
             }
-            if (*(s16 *)(setup + 0x24) != -1) {
-                GameBit_Set(*(s16 *)(setup + 0x24), 1);
+            if (setup->gameBit != -1) {
+                GameBit_Set(setup->gameBit, 1);
             }
-            *(u8 *)(state + 0x26) = 0xf;
-            *(f32 *)(state + 0x14) = lbl_803E7360;
+            state->hitCharge = CMBSRC_MAX_HIT_CHARGE;
+            state->inactiveTimer = lbl_803E7360;
         }
         break;
     }
-    cmbsrc_updateVisuals(obj, state);
+    cmbsrc_updateVisuals(obj, (int)state);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -416,134 +429,136 @@ int cmbsrc_update(int obj)
 #pragma scheduling off
 void cmbsrc_init(int obj, u8 *setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
+    CmbSrcMapData *mapData = (CmbSrcMapData *)setup;
+    CmbSrcState *state = cmbsrc->state;
     int lightVariant;
 
-    switch (*(s16 *)(obj + 0x46)) {
-    case 0x758:
+    switch (cmbsrc->objAnim.seqId) {
+    case CMBSRC_SEQ_THUSTER_SOURCE:
         lightVariant = 1;
         break;
-    case 0x6e8:
+    case CMBSRC_SEQ_DEFAULT:
     default:
         lightVariant = 0;
         break;
     }
-    *(s16 *)(obj + 4) = (s16)(setup[0x18] << 8);
-    *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
-    *(s16 *)(obj + 0) = (s16)(setup[0x1a] << 8);
-    *(u8 *)(state + 0x25) = 1;
-    *(u8 *)(state + 0x26) = 0xf;
-    if (setup[0x2b] == 0) {
-        *(u16 *)(state + 0x20) = 0x258;
+    cmbsrc->objAnim.rotZ = (s16)(mapData->rotZ << 8);
+    cmbsrc->objAnim.rotY = (s16)(mapData->rotY << 8);
+    cmbsrc->objAnim.rotX = (s16)(mapData->rotX << 8);
+    state->active = 1;
+    state->hitCharge = CMBSRC_MAX_HIT_CHARGE;
+    if (mapData->inactiveSeconds == 0) {
+        state->inactiveFrameCount = CMBSRC_DEFAULT_INACTIVE_FRAMES;
     } else {
-        *(u16 *)(state + 0x20) = setup[0x2b] * 0x3c;
+        state->inactiveFrameCount = mapData->inactiveSeconds * 0x3c;
     }
-    if (setup[0x29] & 0x1) {
-        *(u8 *)(state + 0x22) |= 0x2;
+    if (mapData->flags & CMBSRC_MAP_START_ACTIVE) {
+        state->flags |= CMBSRC_STATE_EXTERNAL_ACTIVE;
     }
-    if (setup[0x2a] & 0x1) {
-        *(u8 *)(state + 0x22) |= 0x4;
+    if (mapData->behaviorFlags & CMBSRC_BEHAVIOR_THORNTAIL_GATE) {
+        state->flags |= CMBSRC_STATE_THORNTAIL_GATE;
     }
-    if (setup[0x2a] & 0x80) {
-        *(u8 *)(state + 0x22) |= 0x8;
+    if (mapData->behaviorFlags & CMBSRC_BEHAVIOR_SUPPRESS_IDLE_EFFECT) {
+        state->flags |= CMBSRC_STATE_SUPPRESS_IDLE_EFFECT;
     }
-    if (setup[0x29] & 0x10) {
+    if (mapData->flags & CMBSRC_MAP_CREATE_LIGHT) {
         u8 *colorTbl;
         int ci;
         int local;
 
-        if (*(void **)state == NULL) {
-            *(void **)state = objCreateLight(obj, 1);
+        if (state->light == NULL) {
+            state->light = objCreateLight(obj, 1);
         }
-        if (*(void **)state != NULL) {
-            modelLightStruct_setLightKind(*(void **)state, 2);
-            if (*(s16 *)(obj + 0x46) == 0x758) {
-                modelLightStruct_setPosition(*(void **)state, lbl_803E7360, lbl_803E7360, lbl_803E7360);
+        if (state->light != NULL) {
+            modelLightStruct_setLightKind(state->light, 2);
+            if (cmbsrc->objAnim.seqId == CMBSRC_SEQ_THUSTER_SOURCE) {
+                modelLightStruct_setPosition(state->light, lbl_803E7360, lbl_803E7360, lbl_803E7360);
             } else {
-                modelLightStruct_setPosition(*(void **)state, lbl_803E7360, lbl_803E73A8, lbl_803E7360);
+                modelLightStruct_setPosition(state->light, lbl_803E7360, lbl_803E73A8, lbl_803E7360);
             }
             colorTbl = &lbl_8032BD50[lightVariant * 0x30];
-            ci = setup[0x1b] * 3;
-            modelLightStruct_setDiffuseColor(*(void **)state, colorTbl[ci], colorTbl[ci + 1],
+            ci = mapData->colorIndex * 3;
+            modelLightStruct_setDiffuseColor(state->light, colorTbl[ci], colorTbl[ci + 1],
                                            colorTbl[ci + 2], 0xff);
-            modelLightStruct_setSpecularColor(*(void **)state, colorTbl[ci], colorTbl[ci + 1],
+            modelLightStruct_setSpecularColor(state->light, colorTbl[ci], colorTbl[ci + 1],
                                              colorTbl[ci + 2], 0xff);
             {
-                int n = (int)((setup[0x2a] & 0x8 ? lbl_803E73AC : lbl_803E73B0) *
-                              *(f32 *)(obj + 8));
-                modelLightStruct_setDistanceAttenuation(*(void **)state, (f32)n, lbl_803E73B4 + (f32)n);
+                int n = (int)((mapData->behaviorFlags & CMBSRC_BEHAVIOR_WIDE_ATTENUATION ?
+                               lbl_803E73AC : lbl_803E73B0) * cmbsrc->objAnim.rootMotionScale);
+                modelLightStruct_setDistanceAttenuation(state->light, (f32)n, lbl_803E73B4 + (f32)n);
             }
-            if (*(u8 *)(state + 0x22) & 0x4) {
+            if (state->flags & CMBSRC_STATE_THORNTAIL_GATE) {
                 if ((*(int (**)(void *))(*gSHthorntailAnimationInterface + 0x24))(&local) != 0) {
-                    modelLightStruct_setEnabled(*(void **)state, 1, lbl_803E7374);
+                    modelLightStruct_setEnabled(state->light, 1, lbl_803E7374);
                 } else {
-                    modelLightStruct_setEnabled(*(void **)state, 0, lbl_803E7374);
-                    *(u8 *)(state + 0x25) = 0;
+                    modelLightStruct_setEnabled(state->light, 0, lbl_803E7374);
+                    state->active = 0;
                 }
             }
-            modelLightStruct_startColorFade(*(void **)state, 1, 3);
-            modelLightStruct_setDiffuseTargetColor(*(void **)state,
+            modelLightStruct_startColorFade(state->light, 1, 3);
+            modelLightStruct_setDiffuseTargetColor(state->light,
                             (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci]),
                             (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci + 1]),
                             (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci + 2]), 0xff);
-            if (setup[0x29] & 0x20) {
-                modelLightStruct_setAffectsAabbLightSelection(*(void **)state, 1);
+            if (mapData->flags & CMBSRC_MAP_AFFECTS_AABB_LIGHT) {
+                modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
             }
-            if (setup[0x29] & 0x40) {
-                if (setup[0x29] & 0x80) {
-                    modelLightStruct_setupGlow(*(void **)state, 0, colorTbl[ci], colorTbl[ci + 1],
-                                colorTbl[ci + 2], 0x87, lbl_803E73B8 * *(f32 *)(obj + 8));
+            if (mapData->flags & CMBSRC_MAP_GLOW) {
+                if (mapData->flags & CMBSRC_MAP_GLOW_LARGE) {
+                    modelLightStruct_setupGlow(state->light, 0, colorTbl[ci], colorTbl[ci + 1],
+                                colorTbl[ci + 2], 0x87, lbl_803E73B8 * cmbsrc->objAnim.rootMotionScale);
                 } else {
-                    modelLightStruct_setupGlow(*(void **)state, 0, colorTbl[ci], colorTbl[ci + 1],
-                                colorTbl[ci + 2], 0x87, lbl_803E7370 * *(f32 *)(obj + 8));
+                    modelLightStruct_setupGlow(state->light, 0, colorTbl[ci], colorTbl[ci + 1],
+                                colorTbl[ci + 2], 0x87, lbl_803E7370 * cmbsrc->objAnim.rootMotionScale);
                 }
             }
             {
-                int m = setup[0x2c] & 0x3;
+                int m = mapData->glowProjectionMode & 0x3;
                 if (m == 0) {
-                    modelLightStruct_setGlowProjectionRadius(*(void **)state, lbl_803E73BC);
+                    modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E73BC);
                 } else if (m == 1) {
-                    modelLightStruct_setGlowProjectionRadius(*(void **)state, lbl_803E7384);
+                    modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E7384);
                 } else if (m == 2) {
-                    modelLightStruct_setGlowProjectionRadius(*(void **)state, lbl_803E73C0);
+                    modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E73C0);
                 } else {
-                    modelLightStruct_setGlowProjectionRadius(*(void **)state, lbl_803E7360);
+                    modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E7360);
                 }
             }
-            if (setup[0x2a] & 0x4) {
-                lightSetField4D(*(void **)state, 0);
+            if (mapData->behaviorFlags & CMBSRC_BEHAVIOR_DISABLE_FIELD4D) {
+                lightSetField4D(state->light, 0);
             } else {
-                lightSetField4D(*(void **)state, 1);
+                lightSetField4D(state->light, 1);
             }
         }
     }
-    if (*(void **)(obj + 0x54) != NULL) {
-        ((CmbsrcHitFlag *)(state + 0x27))->disabled = 1;
+    if (cmbsrc->objAnim.hitReactState != NULL) {
+        state->hitFlags.disabled = 1;
         ObjHitbox_SetSphereRadius(obj,
             (int)(lbl_803E7374 *
-                  (*(f32 *)(setup + 0x20) * (*(f32 *)(obj + 8) * lbl_8032BD10[setup[0x1b]]))));
-        if (setup[0x29] & 0x4) {
-            ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
-            ((CmbsrcHitFlag *)(state + 0x27))->disabled = 0;
+                  (mapData->radius * (cmbsrc->objAnim.rootMotionScale * lbl_8032BD10[mapData->colorIndex]))));
+        if (mapData->flags & CMBSRC_MAP_ENABLE_HIT_VOLUME) {
+            ObjHits_SetHitVolumeSlot(obj, CMBSRC_HIT_VOLUME_SLOT, 1, 0);
+            state->hitFlags.disabled = 0;
         } else {
             ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
         }
-        if (setup[0x2a] & 0x40) {
+        if (mapData->behaviorFlags & CMBSRC_BEHAVIOR_SYNC_HIT_POSITION) {
             ObjHits_SyncObjectPositionIfDirty(obj);
-            ((CmbsrcHitFlag *)(state + 0x27))->disabled = 0;
+            state->hitFlags.disabled = 0;
         } else {
             ObjHits_MarkObjectPositionDirty(obj);
         }
-        if (setup[0x2a] & 0x30) {
-            ((CmbsrcHitFlag *)(state + 0x27))->disabled = 0;
+        if (mapData->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) {
+            state->hitFlags.disabled = 0;
         }
-        if (((CmbsrcHitFlag *)(state + 0x27))->disabled) {
+        if (state->hitFlags.disabled) {
             ObjHits_DisableObject(obj);
         }
     }
-    *(f32 *)(state + 0x10) = (f32)randomGetRange(0, 0x64);
-    *(f32 *)(state + 0x18) = lbl_803E7374 * *(f32 *)(setup + 0x20);
-    *(void **)(obj + 0xbc) = (void *)cmbsrc_updateAndReturnZero;
+    state->colorCycleTimer = (f32)randomGetRange(0, 0x64);
+    state->radius = lbl_803E7374 * mapData->radius;
+    cmbsrc->updateCallback = cmbsrc_updateAndReturnZero;
 }
 #pragma scheduling reset
 #pragma peephole reset
