@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/wallanimator.h"
 #include "main/objanim.h"
@@ -73,7 +74,7 @@ void kaldachompme_setLinkedMouthMode(u8 *obj, u8 mode)
     if (obj == NULL) {
         return;
     }
-    switch (*(int *)(*(int *)(obj + 0x4c) + 0x14)) {
+    switch (*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14)) {
     case 0x43d14:
         obj2 = ObjList_FindObjectById(0x4b3b5);
         break;
@@ -175,7 +176,7 @@ void kaldachompme_update(int obj)
   float step;
   KaldaChompMeState *extra;
 
-  extra = *(KaldaChompMeState **)(obj + 0xb8);
+  extra = ((GameObject *)obj)->extra;
   current = extra->progress;
   target = extra->targetProgress;
   if (current != target) {
@@ -206,10 +207,10 @@ void kaldachompme_update(int obj)
 #pragma peephole off
 void kaldachompme_init(int obj,int params)
 {
-  *(s16 *)(obj + 4) = (s16)(*(u8 *)(params + 0x18) << 8);
-  *(s16 *)(obj + 2) = (s16)(*(u8 *)(params + 0x19) << 8);
-  *(s16 *)(obj + 0) = (s16)(*(u8 *)(params + 0x1a) << 8);
-  *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
+  ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(params + 0x18) << 8);
+  ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(params + 0x19) << 8);
+  ((GameObject *)obj)->anim.rotX = (s16)(*(u8 *)(params + 0x1a) << 8);
+  ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
   ObjAnim_SetCurrentMove(obj,0,lbl_803E30D4,0);
 }
 #pragma peephole reset
@@ -517,7 +518,7 @@ extern void ModelLightStruct_free(void *p);
 #pragma scheduling off
 #pragma peephole off
 void kaldachompspit_free(int *obj) {
-    void *p = *(void **)*(void **)((char *)obj + 0xb8);
+    void *p = *(void **)((GameObject *)obj)->extra;
     if (p != NULL) {
         ModelLightStruct_free(p);
     }
@@ -529,7 +530,7 @@ void kaldachompspit_free(int *obj) {
 #pragma peephole off
 void kaldachompspit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    u8 *light = **(u8 ***)((char *)obj + 0xb8);
+    u8 *light = **(u8 ***)&((GameObject *)obj)->extra;
     if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0) {
         queueGlowRender(light);
     }
@@ -585,14 +586,14 @@ void kaldachompspit_update(int obj)
     u8 glow;
     s8 drift;
 
-    state = *(u32 **)(obj + 0xb8);
-    *(int *)(obj + 0xf4) = (int)((f32)*(int *)(obj + 0xf4) - timeDelta);
-    if (*(int *)(obj + 0xf4) < 0) {
+    state = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->unkF4 = (int)((f32)((GameObject *)obj)->unkF4 - timeDelta);
+    if (((GameObject *)obj)->unkF4 < 0) {
         Sfx_StopObjectChannel(obj, 0x7f);
         Obj_FreeObject(obj);
     } else if (*(u8 *)(obj + 0x36) != 0) {
-        if (*(int *)(obj + 0xf4) < 0x11b) {
-            *(f32 *)(obj + 0x28) = -(lbl_803E30F0 * timeDelta - *(f32 *)(obj + 0x28));
+        if (((GameObject *)obj)->unkF4 < 0x11b) {
+            ((GameObject *)obj)->anim.velocityY = -(lbl_803E30F0 * timeDelta - ((GameObject *)obj)->anim.velocityY);
             if ((f32)(u32)*(u8 *)(obj + 0x36) - (t = lbl_803E30F4 * timeDelta) > lbl_803E30F8) {
                 *(u8 *)(obj + 0x36) = (f32)(u32)*(u8 *)(obj + 0x36) - t;
             } else {
@@ -601,35 +602,35 @@ void kaldachompspit_update(int obj)
             }
             Sfx_SetObjectChannelVolume(obj, 0x40, (u8)(*(u8 *)(obj + 0x36) >> 1), lbl_803E30FC);
         }
-        vx = *(f32 *)(obj + 0x24) * timeDelta;
-        vy = *(f32 *)(obj + 0x28) * timeDelta;
-        vz = *(f32 *)(obj + 0x2c) * timeDelta;
+        vx = ((GameObject *)obj)->anim.velocityX * timeDelta;
+        vy = ((GameObject *)obj)->anim.velocityY * timeDelta;
+        vz = ((GameObject *)obj)->anim.velocityZ * timeDelta;
         objMove(obj, vx, vy, vz);
-        if (*(s16 *)(obj + 0x46) == 0x869) {
+        if (((GameObject *)obj)->anim.seqId == 0x869) {
             ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
-            *(s16 *)(obj + 0x0) += 0x100;
-            *(s16 *)(obj + 0x2) += 0x800;
+            ((GameObject *)obj)->anim.rotX += 0x100;
+            ((GameObject *)obj)->anim.rotY += 0x800;
         } else {
             ObjHits_SetHitVolumeSlot(obj, 0xa, 1, 0);
-            *(s16 *)(obj + 0x0) = getAngle(vx, vz) - 0x8000;
-            *(s16 *)(obj + 0x2) = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
+            ((GameObject *)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
+            ((GameObject *)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         }
         ObjHits_EnableObject(obj);
-        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
-            if (*(int *)(obj + 0xf4) < 0x17c) {
+        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0) {
+            if (((GameObject *)obj)->unkF4 < 0x17c) {
                 kaldachompspit_burst(obj);
                 return;
             }
-            if (((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == Obj_GetPlayerObject()) ||
-                ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == getTrickyObject())) {
+            if (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == Obj_GetPlayerObject()) ||
+                ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == getTrickyObject())) {
                 kaldachompspit_burst(obj);
                 return;
             }
         }
-        if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0) {
+        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0) {
             kaldachompspit_burst(obj);
         } else {
-            if (*(s16 *)(obj + 0x46) == 0x869) {
+            if (((GameObject *)obj)->anim.seqId == 0x869) {
                 fn_80098B18(obj, lbl_803E30E0, 1, 0, 0, 0);
             } else {
                 (**(void (**)(int, int, int, int, int, void *))(*gPartfxInterface + 0x8))(
@@ -676,14 +677,14 @@ void kaldachompspit_burst(int obj)
     u32 *state;
     u8 rnd;
 
-    state = *(u32 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     *(u8 *)(obj + 0x36) = 0;
-    *(int *)(obj + 0xf4) = 0xdc;
-    (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
+    ((GameObject *)obj)->unkF4 = 0xdc;
+    (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
     if (*state != 0) {
         modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);
     }
-    if (*(s16 *)(obj + 0x46) == 0x869) {
+    if (((GameObject *)obj)->anim.seqId == 0x869) {
         rnd = randomGetRange(0, 1);
         spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
     } else {
