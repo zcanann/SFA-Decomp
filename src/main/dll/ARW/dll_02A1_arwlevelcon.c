@@ -67,6 +67,7 @@ void arwlevelcon_initialise(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
+#pragma peephole off
 #pragma scheduling off
 void arwlevelcon_init(int obj, u8 *setup)
 {
@@ -75,8 +76,11 @@ void arwlevelcon_init(int obj, u8 *setup)
     ((GameObject *)obj)->animEventCallback = (void *)arwlevelcon_ringEventCallback;
     *(s16 *)(state + 0x14) = 1;
     *(s16 *)(state + 0x16) = 0x50;
-    *(f32 *)(state + 0) = lbl_803E70EC;
-    *(f32 *)(state + 4) = lbl_803E70EC;
+    {
+        f32 fz = lbl_803E70EC;
+        *(f32 *)(state + 0) = fz;
+        *(f32 *)(state + 4) = fz;
+    }
     *(f32 *)(state + 8) = lbl_803E70F0;
     *(f32 *)(state + 0xc) = lbl_803E70F4;
     if (*(int *)(setup + 0x14) == 0x48f7e) {
@@ -107,15 +111,18 @@ void arwlevelcon_init(int obj, u8 *setup)
         *(int *)(state + 0x1c) = 0x51be;
         *(s16 *)(state + 0x20) = 0x6e1;
         break;
+    case 0x3e:
     default:
         *(int *)(state + 0x1c) = 0x51c0;
         *(s16 *)(state + 0x20) = 0x6e0;
         break;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling on
+#pragma peephole off
+#pragma scheduling off
 int arwlevelcon_ringEventCallback(int obj, int p2, int data)
 {
     int i;
@@ -149,12 +156,14 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
     }
     return 0;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
 void arwlevelcon_update(int obj)
 {
+    extern u8 AudioStream_IsPreparing(void);
     int state = *(int *)&((GameObject *)obj)->extra;
     int arwing = getArwing();
 
