@@ -2678,12 +2678,13 @@ void Checkpoint_func0D(u32 v)
 void Effect16_func05(void)
 {
     f32 sum;
-    sum = lbl_803DB848 + lbl_803E00A8 * timeDelta;
+    f32 step;
+    sum = lbl_803DB848 + (step = lbl_803E00A8 * timeDelta);
     lbl_803DB848 = sum;
-    if (sum > lbl_803E00B0) lbl_803DB848 = lbl_803E00AC;
-    sum = lbl_803DB84C + lbl_803E00A8 * timeDelta;
+    if (sum > 1.0f) lbl_803DB848 = lbl_803E00AC;
+    sum = lbl_803DB84C + step;
     lbl_803DB84C = sum;
-    if (sum > lbl_803E00B0) lbl_803DB84C = lbl_803E00B8;
+    if (sum > 1.0f) lbl_803DB84C = lbl_803E00B8;
     lbl_803DD3C0 = lbl_803DD3C0 + (s32)framesThisStep * 0x64;
     if (lbl_803DD3C0 > 0x7fff) lbl_803DD3C0 = 0;
     lbl_803DD3CC = fn_80293E80(lbl_803E0108 * (f32)(s16)lbl_803DD3C0 / lbl_803E010C);
@@ -2695,12 +2696,13 @@ void Effect16_func05(void)
 void Effect17_func05(void)
 {
     f32 sum;
-    sum = lbl_803DB858 + lbl_803E01B8 * timeDelta;
+    f32 step;
+    sum = lbl_803DB858 + (step = lbl_803E01B8 * timeDelta);
     lbl_803DB858 = sum;
-    if (sum > lbl_803E01C0) lbl_803DB858 = lbl_803E01BC;
-    sum = lbl_803DB85C + lbl_803E01B8 * timeDelta;
+    if (sum > 1.0f) lbl_803DB858 = lbl_803E01BC;
+    sum = lbl_803DB85C + step;
     lbl_803DB85C = sum;
-    if (sum > lbl_803E01C0) lbl_803DB85C = lbl_803E01C8;
+    if (sum > 1.0f) lbl_803DB85C = lbl_803E01C8;
     lbl_803DD3D0 = lbl_803DD3D0 + (s32)framesThisStep * 0x64;
     if (lbl_803DD3D0 > 0x7fff) lbl_803DD3D0 = 0;
     lbl_803DD3DC = fn_80293E80(lbl_803E0218 * (f32)(s16)lbl_803DD3D0 / lbl_803E021C);
@@ -2712,12 +2714,13 @@ void Effect17_func05(void)
 void Effect18_func05(void)
 {
     f32 sum;
-    sum = lbl_803DB868 + lbl_803E0220 * timeDelta;
+    f32 step;
+    sum = lbl_803DB868 + (step = lbl_803E0220 * timeDelta);
     lbl_803DB868 = sum;
-    if (sum > lbl_803E0228) lbl_803DB868 = lbl_803E0224;
-    sum = lbl_803DB86C + lbl_803E0220 * timeDelta;
+    if (sum > 1.0f) lbl_803DB868 = lbl_803E0224;
+    sum = lbl_803DB86C + step;
     lbl_803DB86C = sum;
-    if (sum > lbl_803E0228) lbl_803DB86C = lbl_803E0230;
+    if (sum > 1.0f) lbl_803DB86C = lbl_803E0230;
     lbl_803DD3E0 = lbl_803DD3E0 + (s32)framesThisStep * 0x64;
     if (lbl_803DD3E0 > 0x7fff) lbl_803DD3E0 = 0;
     lbl_803DD3EC = fn_80293E80(lbl_803E02D0 * (f32)(s16)lbl_803DD3E0 / lbl_803E02D4);
@@ -2752,10 +2755,11 @@ typedef struct PartFxSpawn {
     u32 f4c;
     u32 f50;
     u32 f54;
-    s16 f58;
-    s16 f5a;
-    s16 f5c;
+    u16 f58;
+    u16 f5a;
+    u16 f5c;
     u8  f5e;
+    u8  pad5f[1];
     u8  f60;
     u8  f61;
     u8  f62;
@@ -2768,9 +2772,9 @@ int Effect19_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     PartFxSpawn cfg;
 
     lbl_803DB870 = lbl_803DB870 + lbl_803E02D8;
-    if (lbl_803DB870 > lbl_803E02E0) lbl_803DB870 = lbl_803E02DC;
+    if (lbl_803DB870 > 1.0f) lbl_803DB870 = lbl_803E02DC;
     lbl_803DB874 = lbl_803DB874 + lbl_803E02E4;
-    if (lbl_803DB874 > lbl_803E02E0) lbl_803DB874 = lbl_803E02E8;
+    if (lbl_803DB874 > 1.0f) lbl_803DB874 = lbl_803E02E8;
     if (param_1 == 0) {
         uVar1 = -1;
     } else {
@@ -2988,9 +2992,9 @@ int Effect17_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     PartFxSpawn cfg;
 
     lbl_803DB850 = lbl_803DB850 + lbl_803E01B8;
-    if (lbl_803DB850 > lbl_803E01C0) lbl_803DB850 = lbl_803E01BC;
+    if (lbl_803DB850 > 1.0f) lbl_803DB850 = lbl_803E01BC;
     lbl_803DB854 = lbl_803DB854 + lbl_803E01C4;
-    if (lbl_803DB854 > lbl_803E01C0) lbl_803DB854 = lbl_803E01C8;
+    if (lbl_803DB854 > 1.0f) lbl_803DB854 = lbl_803E01C8;
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
@@ -3193,9 +3197,9 @@ int Effect16_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     PartFxSpawn cfg;
 
     lbl_803DB840 = lbl_803DB840 + lbl_803E00A8;
-    if (lbl_803DB840 > lbl_803E00B0) lbl_803DB840 = lbl_803E00AC;
+    if (lbl_803DB840 > 1.0f) lbl_803DB840 = lbl_803E00AC;
     lbl_803DB844 = lbl_803DB844 + lbl_803E00B4;
-    if (lbl_803DB844 > lbl_803E00B0) lbl_803DB844 = lbl_803E00B8;
+    if (lbl_803DB844 > 1.0f) lbl_803DB844 = lbl_803E00B8;
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
@@ -3933,9 +3937,9 @@ int Effect18_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     PartFxSpawn cfg;
 
     lbl_803DB860 = lbl_803DB860 + lbl_803E0220;
-    if (lbl_803DB860 > lbl_803E0228) lbl_803DB860 = lbl_803E0224;
+    if (lbl_803DB860 > 1.0f) lbl_803DB860 = lbl_803E0224;
     lbl_803DB864 = lbl_803DB864 + lbl_803E022C;
-    if (lbl_803DB864 > lbl_803E0228) lbl_803DB864 = lbl_803E0230;
+    if (lbl_803DB864 > 1.0f) lbl_803DB864 = lbl_803E0230;
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
@@ -4286,12 +4290,13 @@ int Effect18_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
 void Effect19_func05(void)
 {
     f32 sum;
-    sum = lbl_803DB878 + lbl_803E02D8 * timeDelta;
+    f32 step;
+    sum = lbl_803DB878 + (step = lbl_803E02D8 * timeDelta);
     lbl_803DB878 = sum;
-    if (sum > lbl_803E02E0) lbl_803DB878 = lbl_803E02DC;
-    sum = lbl_803DB87C + lbl_803E02D8 * timeDelta;
+    if (sum > 1.0f) lbl_803DB878 = lbl_803E02DC;
+    sum = lbl_803DB87C + step;
     lbl_803DB87C = sum;
-    if (sum > lbl_803E02E0) lbl_803DB87C = lbl_803E02E8;
+    if (sum > 1.0f) lbl_803DB87C = lbl_803E02E8;
     lbl_803DD3F0 = lbl_803DD3F0 + (s32)framesThisStep * 0x64;
     if (lbl_803DD3F0 > 0x7fff) lbl_803DD3F0 = 0;
     lbl_803DD3FC = fn_80293E80(lbl_803E0308 * (f32)(s16)lbl_803DD3F0 / lbl_803E030C);
@@ -4425,9 +4430,9 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
 
     ret = 0;
     lbl_803DB880 = lbl_803DB880 + lbl_803E0310;
-    if (lbl_803DB880 > lbl_803E0318) lbl_803DB880 = lbl_803E0314;
+    if (lbl_803DB880 > 1.0f) lbl_803DB880 = lbl_803E0314;
     lbl_803DB884 = lbl_803DB884 + lbl_803E031C;
-    if (lbl_803DB884 > lbl_803E0318) lbl_803DB884 = lbl_803E0320;
+    if (lbl_803DB884 > 1.0f) lbl_803DB884 = lbl_803E0320;
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
@@ -6578,12 +6583,13 @@ LAB_800d20d4:
 void Effect20_func05(void)
 {
     f32 sum;
-    sum = lbl_803DB888 + lbl_803E0310 * timeDelta;
+    f32 step;
+    sum = lbl_803DB888 + (step = lbl_803E0310 * timeDelta);
     lbl_803DB888 = sum;
-    if (sum > lbl_803E0318) lbl_803DB888 = lbl_803E0314;
-    sum = lbl_803DB88C + lbl_803E0310 * timeDelta;
+    if (sum > 1.0f) lbl_803DB888 = lbl_803E0314;
+    sum = lbl_803DB88C + step;
     lbl_803DB88C = sum;
-    if (sum > lbl_803E0318) lbl_803DB88C = lbl_803E0320;
+    if (sum > 1.0f) lbl_803DB88C = lbl_803E0320;
     lbl_803DD400 = lbl_803DD400 + (s32)framesThisStep * 0x64;
     if (lbl_803DD400 > 0x7fff) lbl_803DD400 = 0;
     lbl_803DD40C = fn_80293E80(lbl_803E0344 * (f32)(s16)lbl_803DD400 / lbl_803E0348);
