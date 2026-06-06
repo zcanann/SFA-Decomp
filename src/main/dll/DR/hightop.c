@@ -1,5 +1,6 @@
 #include "main/dll/DR/hightop.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim.h"
 
 extern undefined4 getLActions();
 extern undefined8 FUN_80006728();
@@ -1415,9 +1416,7 @@ extern int findRomCurvePointNearObject(int obj, int sel, int p3, int p4);
 extern int fn_8019B1D8(int obj, void *buf, f32 t, int p4);
 extern int Curve_AdvanceAlongPath(int p1);
 extern int hitDetectFn_800658a4(f32 x, f32 y, f32 z, int obj, f32 *out, int p6);
-extern void ObjAnim_SampleRootCurvePhase(int obj, f32 t, int p3);
 extern s16 getAngle(f32 a, f32 b);
-extern void ObjAnim_SetCurrentMove(int obj, int move, f32 t, int p4);
 extern f32 lbl_803E4110;
 extern f32 lbl_803E4120;
 typedef struct {
@@ -1475,7 +1474,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
             *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - ground;
         }
     }
-    ObjAnim_SampleRootCurvePhase(obj, t, p4);
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, t, (float *)p4);
     if (moved != 0) {
         v = (s16)(getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
                            *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88)) + 0x8000);

@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
+#include "main/objanim.h"
 #include "main/objhits_types.h"
 
 #pragma peephole off
@@ -6002,8 +6003,6 @@ void baddieinterestp_update(int *obj)
 #pragma scheduling reset
 
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
-extern void ObjAnim_SetCurrentMove(int *obj, int move, f32 blend, int flag);
-extern void ObjAnim_AdvanceCurrentMove(int *obj, f32 a, f32 b, int flag);
 extern f32 lbl_803E322C;
 
 #pragma scheduling off
@@ -6064,8 +6063,9 @@ void animatedobj_update(int *obj)
                         alloc = Obj_AllocObjectSetup(0x18, 0x69);
                         child = Obj_SetupObject(alloc, 4, -1, -1, (void *)0);
                         ObjLink_AttachChild(obj, child, 0);
-                        ObjAnim_SetCurrentMove(child, 0, lbl_803E322C, 0);
-                        ObjAnim_AdvanceCurrentMove(child, lbl_803E3228, timeDelta, 0);
+                        ObjAnim_SetCurrentMove((int)child, 0, lbl_803E322C, 0);
+                        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+                            (int)child, lbl_803E3228, timeDelta, NULL);
                     }
                 }
             }
@@ -7305,7 +7305,8 @@ void staff_update(int *obj)
     int n;
     int *model = Obj_GetActiveModel((int)obj);
     *(u16 *)((char *)model + 0x18) &= ~0x8;
-    ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(state + 0x50), timeDelta, 0);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+        (int)obj, *(f32 *)(state + 0x50), timeDelta, NULL);
 
     swp = state;
     for (n = 3; n != 0; n--) {

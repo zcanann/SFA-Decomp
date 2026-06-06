@@ -1,4 +1,5 @@
 #include "main/dll/baddie/dll_DF.h"
+#include "main/objanim.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -139,7 +140,6 @@ extern void fn_800D9EE8(void *route);
 extern void fn_8004B31C(void *search, u32 route, void *target, int pathId, u32 dir);
 extern int fn_8004B218(void *search, int timeout);
 extern void trickyTurnTowardYaw(u8 *obj, int yaw);
-extern void ObjAnim_SampleRootCurvePhase(u8 *obj, f32 speed, u8 *animState);
 extern void objHitDetectFn_80062e84(u8 *obj, int a, int b);
 
 /*
@@ -863,13 +863,15 @@ state_selected:
             }
         }
         if (*(f32 *)(obj + 0x98) < lbl_803E24A8) {
-            ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(state + 0x14), state + 0x34);
+            ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
+                (int)obj, *(f32 *)(state + 0x14), (float *)(state + 0x34));
             *(f32 *)(obj + 0xc) =
                 timeDelta * *(f32 *)(state + 0x2c) * *(f32 *)(state + 0x14) + *(f32 *)(obj + 0xc);
             *(f32 *)(obj + 0x14) =
                 timeDelta * *(f32 *)(state + 0x30) * *(f32 *)(state + 0x14) + *(f32 *)(obj + 0x14);
         } else {
-            ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(state + 0x14) * lbl_803E24AC, state + 0x34);
+            ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
+                (int)obj, *(f32 *)(state + 0x14) * lbl_803E24AC, (float *)(state + 0x34));
             k = lbl_803E24AC;
             *(f32 *)(obj + 0xc) =
                 timeDelta * *(f32 *)(state + 0x2c) * *(f32 *)(state + 0x14) * k +

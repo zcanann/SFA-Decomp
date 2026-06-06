@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
+#include "main/objanim.h"
 #include "main/objhits_types.h"
 
 extern undefined4 getLActions();
@@ -1711,9 +1712,6 @@ extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int GameBit_Get(int);
 extern void GameBit_Set(int slot, int val);
 extern u8 framesThisStep;
-extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
-extern int ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, int events);
-extern void ObjAnim_SetMoveProgress(f32 progress, int obj);
 extern void *Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void *a, void *b);
 extern void ObjGroup_RemoveObject(int* obj, int group);
@@ -1760,7 +1758,7 @@ void Flag_init(int* obj, int* def)
 {
     if (*(s16*)((char*)obj + 0x46) != 0x803) {
         *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 0x18) << 8);
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803E5998, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E5998, 0);
     }
 }
 #pragma peephole reset
@@ -1772,7 +1770,9 @@ void Flag_update(int obj)
     int linkedObj;
 
     if (*(s16 *)(obj + 0x46) == 0x187) {
-        ObjAnim_AdvanceCurrentMove(obj, lbl_803E59AC, (f32)(u32)framesThisStep, 0);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E59AC,
+                                                                     (f32)(u32)framesThisStep,
+                                                                     NULL);
     } else if (*(s16 *)(obj + 0x46) == 0x803) {
         Obj_GetPlayerObject();
         linkedObj = *(int *)(obj + 0x30);
@@ -1783,7 +1783,9 @@ void Flag_update(int obj)
             *(s16 *)(obj + 4) = (s16)((f32)*(s16 *)(obj + 4) + *(f32 *)(obj + 0x24));
         }
     } else {
-        ObjAnim_AdvanceCurrentMove(obj, lbl_803E59B0, (f32)(u32)framesThisStep, 0);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E59B0,
+                                                                     (f32)(u32)framesThisStep,
+                                                                     NULL);
     }
 }
 #pragma peephole reset
@@ -1812,7 +1814,8 @@ int SB_KyteCage_SeqFn(int obj, int unused, int seqState)
     *(s16 *)(seqState + 0x6e) = -4;
     if (*(s16 *)(obj + 0xb4) != -1) {
         *(s16 *)(seqState + 0x6e) = (s16)(*(s16 *)(seqState + 0x6e) & ~4);
-        if (ObjAnim_AdvanceCurrentMove(obj, lbl_803E5918, timeDelta, 0) != 0) {
+        if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5918,
+                                                                         timeDelta, NULL) != 0) {
             Sfx_PlayFromObject((int *)obj, SFXfend_rob_beep2);
         }
     }
@@ -1972,9 +1975,11 @@ void Lamp_update(int obj)
     if (*(s16 *)(obj + 0x46) != 0x3e4) {
         if (*(int *)(obj + 0xf8) == 0) {
             *(int *)(obj + 0xf8) = 1;
-            ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 90) / lbl_803E5980, obj);
+            ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 90) / lbl_803E5980,
+                                    (ObjAnimComponent *)obj);
         }
-        ObjAnim_AdvanceCurrentMove(obj, lbl_803E5984, timeDelta, 0);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5984,
+                                                                     timeDelta, NULL);
     }
 
     if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
@@ -2332,13 +2337,14 @@ void SB_KyteCage_update(int obj)
         int *mvec = objModelGetVecFn_800395d8(obj, 0);
         if (mvec != 0 && kind < 9 && *(s16 *)(obj + 0xa0) != 5) {
             *(s16 *)((char *)mvec + 4) = *(s16 *)(*(int *)(obj + 0x30) + 4);
-            ObjAnim_SetCurrentMove((int *)obj, 5, lbl_803E591C, 0);
+            ObjAnim_SetCurrentMove(obj, 5, lbl_803E591C, 0);
         } else if (mvec != 0 && kind >= 9 && *(s16 *)(obj + 0xa0) != 9) {
             *(s16 *)((char *)mvec + 4) = 0;
-            ObjAnim_SetCurrentMove((int *)obj, 9, lbl_803E591C, 0);
+            ObjAnim_SetCurrentMove(obj, 9, lbl_803E591C, 0);
         }
     }
-    if (ObjAnim_AdvanceCurrentMove(obj, lbl_803E5918, timeDelta, 0) != 0) {
+    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5918,
+                                                                     timeDelta, NULL) != 0) {
         Sfx_PlayFromObject((int *)obj, SFXfend_rob_beep2);
     }
 }
