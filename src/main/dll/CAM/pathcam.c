@@ -1,4 +1,5 @@
 #include "main/dll/CAM/pathcam.h"
+#include "main/camera_object.h"
 #include "main/game_object.h"
 #include "string.h"
 
@@ -110,29 +111,29 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
         gCamcontrolModeSettings[9] = lbl_803E16D0;
         gCamcontrolModeSettings[8] = lbl_803E16D4;
         *((char *)gCamcontrolModeSettings + 0xc1) = 1;
-        gCamcontrolModeSettings[0x1c] = *(f32 *)(cam + 0x5a);
+        gCamcontrolModeSettings[0x1c] = ((CameraObject *)cam)->fov;
         camcontrol_getTargetPosition((int)cam, target, (f32 *)(cam + 0xc), cam + 1);
         fVal = *(f32 *)(cam + 0xc);
         *(f32 *)(cam + 6) = fVal;
-        *(f32 *)(cam + 0x5c) = fVal;
-        ((GameObject *)cam)->anim.hitboxScale = fVal;
-        fVal = ((GameObject *)cam)->anim.worldPosY;
+        ((CameraObject *)cam)->probePosX = fVal;
+        ((CameraObject *)cam)->anim.hitboxScale = fVal;
+        fVal = ((CameraObject *)cam)->anim.worldPosY;
         *(f32 *)(cam + 8) = fVal;
-        *(f32 *)(cam + 0x5e) = fVal;
+        ((CameraObject *)cam)->probePosY = fVal;
         *(f32 *)(cam + 0x56) = fVal;
-        fVal = ((GameObject *)cam)->anim.worldPosZ;
+        fVal = ((CameraObject *)cam)->anim.worldPosZ;
         *(f32 *)(cam + 10) = fVal;
-        *(f32 *)(cam + 0x60) = fVal;
+        ((CameraObject *)cam)->probePosZ = fVal;
         *(f32 *)(cam + 0x58) = fVal;
         cam[0] = 0;
         cam[2] = 0;
         if (data != NULL) {
-            *(f32 *)(cam + 0x5a) = (f32)(u32)data[0x19];
+            ((CameraObject *)cam)->fov = (f32)(u32)data[0x19];
         }
         break;
     case 4:
         camcontrol_getTargetPosition((int)cam, target, (f32 *)(cam + 0xc), cam + 1);
-        Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((GameObject *)cam)->anim.worldPosY, ((GameObject *)cam)->anim.worldPosZ,
+        Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                        (f32 *)(cam + 6), (f32 *)(cam + 8), (f32 *)(cam + 10),
                                        *(int *)(cam + 0x18));
         ((void (*)(u16 *, f32 *, f32 *, f32 *, f32 *, f32, int))*(void **)(*gCameraInterface + 0x38))(
@@ -140,13 +141,13 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
         vOutB = *(f32 *)(cam + 8) - (*(f32 *)(target + 8) + gCamcontrolModeSettings[0x23]);
         ((s16 *)cam)[1] = getAngle(vOutB, vOutD);
         cam[2] = 0;
-        *(f32 *)(cam + 0x5c) = *(f32 *)(cam + 0xc);
-        *(f32 *)(cam + 0x5e) = ((GameObject *)cam)->anim.worldPosY;
-        *(f32 *)(cam + 0x60) = ((GameObject *)cam)->anim.worldPosZ;
-        ((GameObject *)cam)->anim.hitboxScale = *(f32 *)(cam + 6);
+        ((CameraObject *)cam)->probePosX = *(f32 *)(cam + 0xc);
+        ((CameraObject *)cam)->probePosY = ((CameraObject *)cam)->anim.worldPosY;
+        ((CameraObject *)cam)->probePosZ = ((CameraObject *)cam)->anim.worldPosZ;
+        ((CameraObject *)cam)->anim.hitboxScale = *(f32 *)(cam + 6);
         *(f32 *)(cam + 0x56) = *(f32 *)(cam + 8);
         *(f32 *)(cam + 0x58) = *(f32 *)(cam + 10);
-        *(f32 *)(cam + 0x5a) = gCamcontrolModeSettings[0x1c];
+        ((CameraObject *)cam)->fov = gCamcontrolModeSettings[0x1c];
         *(s16 *)((char *)gCamcontrolModeSettings + 0x82) = 0;
         break;
     case 2:
@@ -201,40 +202,40 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
         gCamcontrolModeSettings[0x11] = gCamcontrolModeSettings[3];
         gCamcontrolModeSettings[0xb] = gCamcontrolModeSettings[0];
         gCamcontrolModeSettings[0xd] = gCamcontrolModeSettings[1];
-        gCamcontrolModeSettings[0x1b] = *(f32 *)(cam + 0x5a);
+        gCamcontrolModeSettings[0x1b] = ((CameraObject *)cam)->fov;
         gCamcontrolModeSettings[0x17] = gCamcontrolModeSettings[6];
         gCamcontrolModeSettings[0x19] = gCamcontrolModeSettings[7];
         gCamcontrolModeSettings[0x13] = gCamcontrolModeSettings[4];
         gCamcontrolModeSettings[0x15] = gCamcontrolModeSettings[5];
         if ((data != NULL) && (data[0xd] != 0)) {
             camcontrol_getTargetPosition((int)cam, target, (f32 *)(cam + 0xc), cam + 1);
-            Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((GameObject *)cam)->anim.worldPosY, ((GameObject *)cam)->anim.worldPosZ,
+            Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                            (f32 *)(cam + 6), (f32 *)(cam + 8), (f32 *)(cam + 10),
                                            *(int *)(cam + 0x18));
             *(s16 *)((char *)gCamcontrolModeSettings + 0x82) = 0;
         }
         break;
     case 3:
-        *(f32 *)(cam + 0x5a) = gCamcontrolModeSettings[0x1c];
+        ((CameraObject *)cam)->fov = gCamcontrolModeSettings[0x1c];
         *(f32 *)(cam + 0xc) = gCamcontrolModeSettings[0x1d];
-        ((GameObject *)cam)->anim.worldPosY = gCamcontrolModeSettings[0x1e];
-        ((GameObject *)cam)->anim.worldPosZ = gCamcontrolModeSettings[0x1f];
-        Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((GameObject *)cam)->anim.worldPosY, ((GameObject *)cam)->anim.worldPosZ,
+        ((CameraObject *)cam)->anim.worldPosY = gCamcontrolModeSettings[0x1e];
+        ((CameraObject *)cam)->anim.worldPosZ = gCamcontrolModeSettings[0x1f];
+        Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                        (f32 *)(cam + 6), (f32 *)(cam + 8), (f32 *)(cam + 10),
                                        *(int *)(cam + 0x18));
         ((s16 *)cam)[0] = *(s16 *)((char *)gCamcontrolModeSettings + 0x86);
         ((s16 *)cam)[1] = *(s16 *)((char *)gCamcontrolModeSettings + 0x88);
         ((s16 *)cam)[2] = *(s16 *)((char *)gCamcontrolModeSettings + 0x8a);
-        ((GameObject *)cam)->anim.hitboxScale = *(f32 *)(cam + 6);
+        ((CameraObject *)cam)->anim.hitboxScale = *(f32 *)(cam + 6);
         *(f32 *)(cam + 0x56) = *(f32 *)(cam + 8);
         *(f32 *)(cam + 0x58) = *(f32 *)(cam + 10);
-        *(f32 *)(cam + 0x5c) = *(f32 *)(cam + 0xc);
-        *(f32 *)(cam + 0x5e) = ((GameObject *)cam)->anim.worldPosY;
-        *(f32 *)(cam + 0x60) = ((GameObject *)cam)->anim.worldPosZ;
+        ((CameraObject *)cam)->probePosX = *(f32 *)(cam + 0xc);
+        ((CameraObject *)cam)->probePosY = ((CameraObject *)cam)->anim.worldPosY;
+        ((CameraObject *)cam)->probePosZ = ((CameraObject *)cam)->anim.worldPosZ;
         *(s16 *)((char *)gCamcontrolModeSettings + 0x82) = 0;
         break;
     case 1:
-        *(f32 *)(cam + 0x5a) = gCamcontrolModeSettings[0x1c];
+        ((CameraObject *)cam)->fov = gCamcontrolModeSettings[0x1c];
         ((CamcontrolFlagByte *)((char *)gCamcontrolModeSettings + 0xc6))->b7 =
             ((CamcontrolFlagByte *)((char *)gCamcontrolModeSettings + 0xc6))->b6;
         break;
