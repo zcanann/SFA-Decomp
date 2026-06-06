@@ -1511,19 +1511,18 @@ f32 modelLightStruct_getObjectIntensity(u8 *light, u8 *obj) {
 #pragma dont_inline on
 void modelLightStruct_selectBrightestAabbLights(u8 **outLights, int maxLights, int *outCount, f32 minX, f32 minY, f32 minZ, f32 maxX,
                  f32 maxY, f32 maxZ) {
-    f32 center[3];
+    int i;
     f32 delta[3];
+    f32 center[3];
     u8 *candidates[20];
     u8 *light;
     f32 dist;
-    f32 radius;
     f32 intensity;
     f32 red;
     f32 green;
     f32 blue;
     int candidateCount;
     int selectedCount;
-    int i;
 
     center[0] = lbl_803DE790 * (minX + maxX);
     center[1] = lbl_803DE790 * (minY + maxY);
@@ -1536,34 +1535,24 @@ void modelLightStruct_selectBrightestAabbLights(u8 **outLights, int maxLights, i
             light[0x2fb] != 0) {
             PSVECSubtract(center, (f32 *)(light + 0x10), delta);
             dist = PSVECMag(delta);
-            radius = *(f32 *)(light + 0x144);
-            if (*(f32 *)(light + 0x10) + radius >= minX &&
-                *(f32 *)(light + 0x14) + radius >= minY &&
-                *(f32 *)(light + 0x18) + radius >= minZ &&
-                *(f32 *)(light + 0x10) - radius <= maxX &&
-                *(f32 *)(light + 0x14) - radius <= maxY &&
-                *(f32 *)(light + 0x18) - radius <= maxZ) {
+            if (*(f32 *)(light + 0x10) + *(f32 *)(light + 0x144) >= minX &&
+                *(f32 *)(light + 0x14) + *(f32 *)(light + 0x144) >= minY &&
+                *(f32 *)(light + 0x18) + *(f32 *)(light + 0x144) >= minZ &&
+                *(f32 *)(light + 0x10) - *(f32 *)(light + 0x144) <= maxX &&
+                *(f32 *)(light + 0x14) - *(f32 *)(light + 0x144) <= maxY &&
+                *(f32 *)(light + 0x18) - *(f32 *)(light + 0x144) <= maxZ) {
                 intensity = lbl_803DE760 /
                             (*(f32 *)(light + 0x124) +
-                             dist * (*(f32 *)(light + 0x12c) * dist + *(f32 *)(light + 0x128)));
+                             (dist * (*(f32 *)(light + 0x12c) * dist) + *(f32 *)(light + 0x128) * dist));
                 red = intensity * (f32)light[0xa8];
-                if (red < lbl_803DE75C) {
-                    red = lbl_803DE75C;
-                } else if (red > lbl_803DE76C) {
-                    red = lbl_803DE76C;
-                }
+                red = (red < 0.0f) ? 0.0f
+                     : ((red > 255.0f) ? 255.0f : red);
                 green = intensity * (f32)light[0xa9];
-                if (green < lbl_803DE75C) {
-                    green = lbl_803DE75C;
-                } else if (green > lbl_803DE76C) {
-                    green = lbl_803DE76C;
-                }
+                green = (green < 0.0f) ? 0.0f
+                     : ((green > 255.0f) ? 255.0f : green);
                 blue = intensity * (f32)light[0xaa];
-                if (blue < lbl_803DE75C) {
-                    blue = lbl_803DE75C;
-                } else if (blue > lbl_803DE76C) {
-                    blue = lbl_803DE76C;
-                }
+                blue = (blue < 0.0f) ? 0.0f
+                     : ((blue > 255.0f) ? 255.0f : blue);
                 if (green < red) {
                     green = red;
                 }
@@ -1596,9 +1585,7 @@ void modelLightStruct_selectBrightestAabbLights(u8 **outLights, int maxLights, i
                 intensity = *(f32 *)(light + 0x130);
             }
         }
-        selectedCount = *outCount;
-        *outCount = selectedCount + 1;
-        outLights[selectedCount] = light;
+        outLights[(*outCount)++] = light;
         *(f32 *)(light + 0x130) = lbl_803DE75C;
     }
 }
@@ -1648,23 +1635,14 @@ void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights,
                 intensity = modelLightStruct_getObjectIntensity(light, obj);
                 *(f32 *)(light + 0x134) = intensity;
                 red = intensity * (f32)light[0xa8];
-                if (red < lbl_803DE75C) {
-                    red = lbl_803DE75C;
-                } else if (red > lbl_803DE76C) {
-                    red = lbl_803DE76C;
-                }
+                red = (red < 0.0f) ? 0.0f
+                     : ((red > 255.0f) ? 255.0f : red);
                 green = intensity * (f32)light[0xa9];
-                if (green < lbl_803DE75C) {
-                    green = lbl_803DE75C;
-                } else if (green > lbl_803DE76C) {
-                    green = lbl_803DE76C;
-                }
+                green = (green < 0.0f) ? 0.0f
+                     : ((green > 255.0f) ? 255.0f : green);
                 blue = intensity * (f32)light[0xaa];
-                if (blue < lbl_803DE75C) {
-                    blue = lbl_803DE75C;
-                } else if (blue > lbl_803DE76C) {
-                    blue = lbl_803DE76C;
-                }
+                blue = (blue < 0.0f) ? 0.0f
+                     : ((blue > 255.0f) ? 255.0f : blue);
                 if (green < red) {
                     green = red;
                 }
@@ -1700,9 +1678,7 @@ void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights,
                 intensity = *(f32 *)(light + 0x130);
             }
         }
-        selectedCount = *outCount;
-        *outCount = selectedCount + 1;
-        outLights[selectedCount] = light;
+        outLights[(*outCount)++] = light;
         *(f32 *)(light + 0x130) = -*(f32 *)(light + 0x130);
     }
 }
