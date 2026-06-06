@@ -1316,6 +1316,13 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     flag handlers, the ~70%-capped tiny flag fns) with this spelling.
     Probe-batch method (a /tmp probe.c with N spellings × objdump grep)
     found it in minutes — use that pattern for future isel mysteries.
+    REFINEMENT (foxtrot): the LVALUE must be u32 — an `int` lvalue widens
+    SIGNED and emits an extra `srawi rX,rY,31` for the high word
+    (fn_80296BBC needed `*(u32 *)(...) &= ~2LL`, recovering the historic
+    70%-capped tiny-flag-fn example from the old recipe #2 inverse note to
+    100%). player_SeqFn's 9 mask sites + warpDarkIceMines also recovered
+    with #74 — the "11 missing instructions" diagnosis was entirely this
+    class.
 
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
