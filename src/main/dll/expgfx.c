@@ -2,6 +2,7 @@
 #include "dolphin/os/OSCache.h"
 #include "main/expgfx.h"
 #include "main/expgfx_internal.h"
+#include "main/game_object.h"
 
 extern undefined4 ABS();
 extern int Camera_GetViewMatrix(void);
@@ -685,6 +686,18 @@ typedef struct ExpgfxRotateParams {
   f32 z;
 } ExpgfxRotateParams;
 
+typedef struct ExpgfxCameraViewSlot {
+  s16 yaw;
+  s16 pitch;
+  s16 roll;
+  u8 pad06[0x0C - 0x06];
+  f32 x;
+  f32 y;
+  f32 z;
+} ExpgfxCameraViewSlot;
+
+STATIC_ASSERT(offsetof(ExpgfxCameraViewSlot, x) == 0x0C);
+
 /*
  * --INFO--
  *
@@ -716,12 +729,12 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
   s16 texT0;
   s16 texS1;
   u8 *nextBuf;
-  void *player;
-  void *tricky;
+  GameObject *player;
+  GameObject *tricky;
   int pool;
   int sky;
   f32 *minYPtr;
-  u8 *srcObj;
+  ExpgfxSourceObject *srcObj;
   u32 resource;
   s16 texS0;
   s8 *scan;
@@ -763,8 +776,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
   attractRatio = lbl_803DF354;
   trickyRange = lbl_803DF35C;
   playerRange = trickyRange;
-  player = Obj_GetPlayerObject();
-  tricky = getTrickyObject();
+  player = (GameObject *)Obj_GetPlayerObject();
+  tricky = (GameObject *)getTrickyObject();
   cache = getCache();
   gExpgfxPhaseAngleA += (int)(lbl_803DF3C8 * timeDelta);
   gExpgfxPhaseAngleB += (int)(lbl_803DF3CC * timeDelta);
@@ -876,7 +889,7 @@ foundFirst:
         }
         entry = &runtime->expTab[((u32)slot->encodedTableIndex >> 1) &
                                   EXPGFX_SLOT_TABLE_INDEX_MASK];
-        srcObj = (u8 *)entry->sourceId;
+        srcObj = (ExpgfxSourceObject *)entry->sourceId;
         resource = entry->resource;
         slot->stateBits.bits.frameParity = 0;
         slot->stateBits.bits.quadReady = 1;
@@ -917,19 +930,19 @@ foundFirst:
           workA = workB;
           if ((slot->renderFlags & 0x10000000) != 0 && player != NULL && srcObj != NULL &&
               playerRange > lbl_803DF3E0) {
-            vecBuf[0] = *(f32 *)((u8 *)player + 0x18) -
-                        (*(f32 *)&slot->startPosX + *(f32 *)(srcObj + 0xc));
-            vecBuf[2] = *(f32 *)((u8 *)player + 0x20) -
-                        (*(f32 *)&slot->startPosZ + *(f32 *)(srcObj + 0x14));
+            vecBuf[0] = player->anim.worldPosX -
+                        (*(f32 *)&slot->startPosX + srcObj->localPosX);
+            vecBuf[2] = player->anim.worldPosZ -
+                        (*(f32 *)&slot->startPosZ + srcObj->localPosZ);
             workB = vecBuf[0] * vecBuf[0] + vecBuf[2] * vecBuf[2];
             attractRatio = playerRange / workB;
           }
           if (workB > lbl_803DF3B0 && (slot->renderFlags & 0x20000000) != 0 &&
               tricky != NULL && srcObj != NULL && trickyRange > lbl_803DF3E0) {
-            vecBuf[0] = *(f32 *)((u8 *)tricky + 0x18) -
-                        (*(f32 *)&slot->startPosX + *(f32 *)(srcObj + 0xc));
-            vecBuf[2] = *(f32 *)((u8 *)tricky + 0x20) -
-                        (*(f32 *)&slot->startPosZ + *(f32 *)(srcObj + 0x14));
+            vecBuf[0] = tricky->anim.worldPosX -
+                        (*(f32 *)&slot->startPosX + srcObj->localPosX);
+            vecBuf[2] = tricky->anim.worldPosZ -
+                        (*(f32 *)&slot->startPosZ + srcObj->localPosZ);
             workA = vecBuf[0] * vecBuf[0] + vecBuf[2] * vecBuf[2];
             attractRatio = trickyRange / workB;
           }
@@ -1029,9 +1042,9 @@ foundFirst:
             rot.angleY = 0;
             rot.angleX = 0;
             if (srcObj != NULL) {
-              rot.x = *(f32 *)&slot->posX + *(f32 *)(srcObj + 0xc);
-              rot.y = *(f32 *)&slot->posY + *(f32 *)(srcObj + 0x10);
-              rot.z = *(f32 *)&slot->posZ + *(f32 *)(srcObj + 0x14);
+              rot.x = *(f32 *)&slot->posX + srcObj->localPosX;
+              rot.y = *(f32 *)&slot->posY + srcObj->localPosY;
+              rot.z = *(f32 *)&slot->posZ + srcObj->localPosZ;
             } else {
               rot.x = *(f32 *)&slot->posX + *(f32 *)&slot->sourcePosY;
               rot.y = *(f32 *)&slot->posY + *(f32 *)&slot->sourcePosZ;
@@ -1098,9 +1111,9 @@ foundFirst:
                 rot.y = lbl_803DF35C;
                 rot.z = *(f32 *)&slot->posZ;
               } else if (srcObj != NULL) {
-                rot.x = *(f32 *)&slot->posX + *(f32 *)(srcObj + 0x18);
-                rot.y = *(f32 *)(srcObj + 0x1c);
-                rot.z = *(f32 *)&slot->posZ + *(f32 *)(srcObj + 0x20);
+                rot.x = *(f32 *)&slot->posX + srcObj->worldPosX;
+                rot.y = srcObj->worldPosY;
+                rot.z = *(f32 *)&slot->posZ + srcObj->worldPosZ;
               } else {
                 rot.x = *(f32 *)&slot->posX;
                 rot.y = lbl_803DF35C;
@@ -1112,7 +1125,7 @@ foundFirst:
               (*(ExpgfxWaterRippleFnB *)(*gWaterfxInterface + 0x10))(rot.x, rot.y, rot.z,
                                                                      gExpgfxSlotMotionStep, 0);
               if (srcObj != NULL &&
-                  coordsToMapCell(*(f32 *)(srcObj + 0xc), *(f32 *)(srcObj + 0x14)) == 0x10) {
+                  coordsToMapCell(srcObj->localPosX, srcObj->localPosZ) == 0x10) {
                 Sfx_PlayFromObject(srcObj, 0x285);
               }
               slot->soundHandle = -1;
@@ -1131,9 +1144,9 @@ foundFirst:
               rot.y = *(f32 *)&slot->posY;
               rot.z = *(f32 *)&slot->posZ;
             } else if (srcObj != NULL) {
-              rot.x = *(f32 *)&slot->posX + *(f32 *)(srcObj + 0xc);
-              rot.y = *(f32 *)&slot->posY + *(f32 *)(srcObj + 0x10);
-              rot.z = *(f32 *)&slot->posZ + *(f32 *)(srcObj + 0x14);
+              rot.x = *(f32 *)&slot->posX + srcObj->localPosX;
+              rot.y = *(f32 *)&slot->posY + srcObj->localPosY;
+              rot.z = *(f32 *)&slot->posZ + srcObj->localPosZ;
             } else {
               rot.x = *(f32 *)&slot->posX;
               rot.y = *(f32 *)&slot->posY;
@@ -1266,9 +1279,9 @@ foundFirst:
             sz = sx;
             if ((slot->behaviorFlags & 1) == 0) {
               if (srcObj != NULL) {
-                sx = *(f32 *)(srcObj + 0x18);
-                sy = *(f32 *)(srcObj + 0x1c);
-                sz = *(f32 *)(srcObj + 0x20);
+                sx = srcObj->worldPosX;
+                sy = srcObj->worldPosY;
+                sz = srcObj->worldPosZ;
               } else {
                 sx = *(f32 *)&slot->sourcePosY;
                 sy = *(f32 *)&slot->sourcePosZ;
@@ -1526,9 +1539,9 @@ foundFirst:
           rot.angleX = 0;
           if ((slot->behaviorFlags & 0x4000000) == 0 && (slot->behaviorFlags & 4) != 0) {
             if (srcObj != NULL) {
-              rot.angleX = *(s16 *)srcObj;
-              rot.angleY = *(s16 *)(srcObj + 2);
-              rot.angleZ = *(s16 *)(srcObj + 4);
+              rot.angleX = srcObj->rotX;
+              rot.angleY = srcObj->rotY;
+              rot.angleZ = srcObj->rotZ;
             } else {
               rot.angleX = slot->sourceVecX;
               rot.angleY = slot->sourceVecY;
@@ -1543,9 +1556,9 @@ foundFirst:
           }
           if ((slot->behaviorFlags & 1) == 0) {
             if (srcObj != NULL) {
-              srcVel[0] = *(f32 *)(srcObj + 0x18);
-              srcVel[1] = *(f32 *)(srcObj + 0x1c);
-              srcVel[2] = *(f32 *)(srcObj + 0x20);
+              srcVel[0] = srcObj->worldPosX;
+              srcVel[1] = srcObj->worldPosY;
+              srcVel[2] = srcObj->worldPosZ;
             } else {
               srcVel[0] = *(f32 *)&slot->sourcePosY;
               srcVel[1] = *(f32 *)&slot->sourcePosZ;
@@ -1911,7 +1924,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
   int blendMode;
   int alphaMode;
   void *viewMatrix;
-  void *cameraSlot;
+  ExpgfxCameraViewSlot *cameraSlot;
   ExpgfxSlot *slot;
   ExpgfxTableEntry *tabEntry;
   ExpgfxSourceObject *sourceObject;
@@ -1962,7 +1975,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
   if ((short)renderModeSetOrGet(-1) == 1) {
     return;
   }
-  cameraSlot = Camera_GetCurrentViewSlot();
+  cameraSlot = (ExpgfxCameraViewSlot *)Camera_GetCurrentViewSlot();
   _textSetColor(0, 0xff, 0xff, 0xff, 0xff);
   alphaMode = -1;
   blendMode = -1;
@@ -2056,9 +2069,9 @@ void drawGlow(uint slotPoolBase,int poolIndex)
         angleB = 0;
       } else if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH) != 0) {
         if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_SOURCE_OBJECT) != 0 && sourceObject != NULL) {
-          aimDelta[0] = *(f32 *)((char *)cameraSlot + 0xc) - sourceObject->posX;
-          aimDelta[1] = *(f32 *)((char *)cameraSlot + 0x10) - sourceObject->posY;
-          aimDelta[2] = *(f32 *)((char *)cameraSlot + 0x14) - sourceObject->posZ;
+          aimDelta[0] = cameraSlot->x - sourceObject->worldPosX;
+          aimDelta[1] = cameraSlot->y - sourceObject->worldPosY;
+          aimDelta[2] = cameraSlot->z - sourceObject->worldPosZ;
           PSVECNormalize((Vec *)aimDelta, (Vec *)aimDelta);
           {
             f32 absX = (f32)__fabs(aimDelta[0]);
@@ -2073,11 +2086,11 @@ void drawGlow(uint slotPoolBase,int poolIndex)
             angleA = getAngle(aimDelta[0], aimDelta[2]);
           }
         } else {
-          angleA = (s16)(0x10000 - *(s16 *)cameraSlot);
-          angleB = *(s16 *)((char *)cameraSlot + 2);
+          angleA = (s16)(0x10000 - cameraSlot->yaw);
+          angleB = cameraSlot->pitch;
         }
       } else {
-        angleA = (s16)(0x10000 - *(s16 *)cameraSlot);
+        angleA = (s16)(0x10000 - cameraSlot->yaw);
       }
     }
 
@@ -2589,7 +2602,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   ExpgfxResourceHandle *resourceHandle;
   ExpgfxRuntimeDataLayout *runtime;
   ExpgfxTrackedSourceFrameMask *trackedFrameMask;
-  void *playerObj;
+  GameObject *playerObj;
   uint behaviorFlags;
   int resourceTableIndex;
   int expTabIndex;
@@ -2783,39 +2796,39 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
     f32 dz;
     f32 distSq;
     f32 inv;
-    playerObj = Obj_GetPlayerObject();
+    playerObj = (GameObject *)Obj_GetPlayerObject();
     slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_AIM_AT_ACTOR;
     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
-      dx = *(f32 *)((char *)playerObj + 0x18) - *(f32 *)&slot->startPosX;
-      dz = *(f32 *)((char *)playerObj + 0x20) - *(f32 *)&slot->startPosZ;
+      dx = playerObj->anim.worldPosX - *(f32 *)&slot->startPosX;
+      dz = playerObj->anim.worldPosZ - *(f32 *)&slot->startPosZ;
       distSq = dx * dx + dz * dz;
       if (distSq < lbl_803DF424
-          && lbl_803DF35C != *(f32 *)((char *)playerObj + 0x24)
-          && lbl_803DF35C != *(f32 *)((char *)playerObj + 0x2c)) {
+          && lbl_803DF35C != playerObj->anim.velocityX
+          && lbl_803DF35C != playerObj->anim.velocityZ) {
         slot->velocityX = slot->velocityX + dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
         slot->velocityY = slot->velocityY +
-            ((lbl_803DF428 + *(f32 *)((char *)playerObj + 0x1c)) - *(f32 *)&slot->startPosY) /
+            ((lbl_803DF428 + playerObj->anim.worldPosY) - *(f32 *)&slot->startPosY) /
                 (f32)(s32)((int)slot->lifetimeFrame << 1);
         slot->velocityZ = slot->velocityZ +
-            (*(f32 *)((char *)playerObj + 0x20) - *(f32 *)&slot->startPosZ) /
+            (playerObj->anim.worldPosZ - *(f32 *)&slot->startPosZ) /
                 (f32)(s32)((int)slot->lifetimeFrame << 1);
       }
     } else {
-      dx = *(f32 *)((char *)playerObj + 0x18) -
+      dx = playerObj->anim.worldPosX -
            (*(f32 *)&slot->startPosX + *(f32 *)((char *)config + 0xc));
-      dz = *(f32 *)((char *)playerObj + 0x20) -
+      dz = playerObj->anim.worldPosZ -
            (*(f32 *)&slot->startPosZ + *(f32 *)((char *)config + 0x14));
       distSq = dx * dx + dz * dz;
       if (distSq < lbl_803DF424
-          && lbl_803DF35C != *(f32 *)((char *)playerObj + 0x24)
-          && lbl_803DF35C != *(f32 *)((char *)playerObj + 0x2c)) {
+          && lbl_803DF35C != playerObj->anim.velocityX
+          && lbl_803DF35C != playerObj->anim.velocityZ) {
         slot->velocityX = slot->velocityX - dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
         slot->velocityY = slot->velocityY -
-            ((lbl_803DF428 + *(f32 *)((char *)playerObj + 0x1c)) -
+            ((lbl_803DF428 + playerObj->anim.worldPosY) -
              (*(f32 *)&slot->startPosY + *(f32 *)((char *)config + 0x10))) /
                 (f32)(s32)((int)slot->lifetimeFrame << 1);
         slot->velocityZ = slot->velocityZ -
-            (*(f32 *)((char *)playerObj + 0x20) -
+            (playerObj->anim.worldPosZ -
              (*(f32 *)&slot->startPosZ + *(f32 *)((char *)config + 0x14))) /
                 (f32)(s32)((int)slot->lifetimeFrame << 1);
       }

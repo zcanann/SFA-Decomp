@@ -130,16 +130,31 @@ typedef struct ExpgfxCurrentSource {
 } ExpgfxCurrentSource;
 
 typedef struct ExpgfxSourceObject {
-  u8 pad00[0x18];
-  f32 posX;
-  f32 posY;
-  f32 posZ;
-  u8 pad24[0x36 - 0x24];
+  s16 rotX;
+  s16 rotY;
+  s16 rotZ;
+  u8 pad06[0x0C - 0x06];
+  f32 localPosX;
+  f32 localPosY;
+  f32 localPosZ;
+  f32 worldPosX;
+  f32 worldPosY;
+  f32 worldPosZ;
+  f32 velocityX;
+  f32 velocityY;
+  f32 velocityZ;
+  u8 pad30[0x36 - 0x30];
   u8 alpha;
   u8 pad37[0x46 - 0x37];
   /* Type 0xD4 updates frame flags for every tracked pool, not just pointer matches. */
   s16 objType;
 } ExpgfxSourceObject;
+
+STATIC_ASSERT(offsetof(ExpgfxSourceObject, localPosX) == 0x0C);
+STATIC_ASSERT(offsetof(ExpgfxSourceObject, worldPosX) == 0x18);
+STATIC_ASSERT(offsetof(ExpgfxSourceObject, velocityX) == 0x24);
+STATIC_ASSERT(offsetof(ExpgfxSourceObject, alpha) == 0x36);
+STATIC_ASSERT(offsetof(ExpgfxSourceObject, objType) == 0x46);
 
 typedef struct ExpgfxPoolSourcePosition {
   u8 pad00[0x0C];
