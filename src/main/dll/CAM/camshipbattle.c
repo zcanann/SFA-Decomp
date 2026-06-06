@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camshipbattle.h"
+#include "main/camera_object.h"
 
 extern u32 getButtonsJustPressed(int port);
 extern undefined4 FUN_80017814();
