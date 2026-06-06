@@ -251,11 +251,13 @@ void fn_801C5990(MmShrineAnimObj *obj)
 
     trigA = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitB) / lbl_803E4FA4);
     trigB = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
-    obj->roll = lbl_803E4FA8 * (trigB + trigA);
+    trigB = trigB + trigA;
+    obj->roll = lbl_803E4FA8 * trigB;
 
     trigA = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitC) / lbl_803E4FA4);
     trigB = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
-    obj->pitch = lbl_803E4FA8 * (trigB + trigA);
+    trigB = trigB + trigA;
+    obj->pitch = lbl_803E4FA8 * trigB;
 
     ObjAnim_AdvanceCurrentMove(lbl_803E4FAC, timeDelta, (int)obj,
                                (ObjAnimEventList *)&animEvents);
@@ -271,8 +273,8 @@ void fn_801C5990(MmShrineAnimObj *obj)
             angleDelta += 0xFFFF;
         }
 
-        obj->yaw = (s16)(obj->yaw + (s32)(((f32)angleDelta * timeDelta) / lbl_803E4FB0));
-        distance = Vec_xzDistance(&obj->posX, (f32 *)((u8 *)player + 0x18));
+        obj->yaw = (s16)(*(s16 *)(int)&obj->yaw + (s32)(((f32)angleDelta * timeDelta) / lbl_803E4FB0));
+        distance = Vec_xzDistance((f32 *)((int)&obj->posX), (f32 *)((int)player + 0x18));
         if (distance <= lbl_803E4FB4) {
             obj->fadeAlpha = (u8)(s32)(lbl_803E4FB8 * (distance / lbl_803E4FB4));
         } else {
