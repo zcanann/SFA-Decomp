@@ -5,6 +5,88 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+/*
+ * Per-object extra state for the dimwooddoor2 burnable door
+ * (dimwooddoor2_getExtraSize == 0xC).
+ */
+typedef struct DimWoodDoor2State {
+    u8 burnState; /* 3 intact; 0 burned (gamebit rung) */
+    u8 pad01[3];
+    f32 animSpeed;
+    f32 riseSpeed; /* added to obj Z, decays back to rest */
+} DimWoodDoor2State;
+
+STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
+
+/*
+ * Per-object extra state for the dll_1CE hatch door
+ * (dll_1CE_getExtraSize == 0xC).
+ */
+typedef struct Dll1CEState {
+    f32 openProgress; /* clamped lid coast */
+    f32 openVelocity;
+    u8 opened; /* 1 once triggered */
+    u8 igniteCountdown; /* 1 at init; gamebit + spawn at 0 */
+    u8 pad0A[2];
+} Dll1CEState;
+
+STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
+
+/*
+ * Per-object extra state for the dimmagicbridge flame bridge
+ * (dimmagicbridge_getExtraSize == 0x68). init/SeqFn here, dll_199/19A
+ * variants in dimmagicbridge.c use their own layout.
+ */
+typedef struct DimMagicBridgeState {
+    f32 minVertexY; /* lowest model vertex, wave reference */
+    f32 unk04[0xF];
+    u8 segmentLit[0xF]; /* per-segment ignition flags */
+    u8 segmentCount; /* 10 */
+    u8 segmentGlow[0xF]; /* per-segment burn ramp 0..0xFF */
+    u8 ignited; /* gamebit 0x1E9 / anim event 1 */
+    u16 wavePhase;
+    u8 pad62[2];
+    s16 igniteTimer; /* 0x10-frame cadence between segment ignitions */
+    u8 pad66[2];
+} DimMagicBridgeState;
+
+STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
+
+/*
+ * Per-object extra state for the explosion effect
+ * (explosion_getExtraSize == 0xA60). The flame pool (50 x 0x30 records)
+ * and the debris pool (6 x 0x24 at 0x964) are walked with raw stride
+ * pointers in update/render and stay untyped. REFERENCE-ONLY for now:
+ * every consumer keeps raw derefs - retyping the state local (or adding
+ * (int) casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
+ * (recipe #36/#77); the layout is documented here for a future pass.
+ */
+typedef struct ExplosionState {
+    u8 flames[0x960];
+    f32 groundY;
+    u8 debris[0xD8];
+    f32 driftYSpeed; /* upward drift while flag 4 variant */
+    int light; /* objCreateLight handle or 0 */
+    s16 rayYawA; /* light-ray pair angles */
+    s16 rayPitchA;
+    s16 rayYawB;
+    s16 rayPitchB;
+    int frameCounter;
+    int lifeFrames; /* scale-derived, clamped 0..60 */
+    f32 scale;
+    u8 unkA58;
+    u8 rayMode; /* 0 none, 1 grounded pair, 2 random pair */
+    u8 debrisCount;
+    s8 unkA5B;
+    s8 nearGround; /* spawned close to the probed floor */
+    u8 modelKind; /* params & 3, active model index */
+    u8 padA5E[2];
+} ExplosionState;
+
+STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
+STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
+
+
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
@@ -1649,7 +1731,7 @@ extern void fn_80065574(int a, int b, int c);
 #pragma peephole off
 #pragma scheduling off
 void dimmagicbridge_init(u8* obj, u8* params) {
-    u8* sub;
+    DimMagicBridgeState* sub;
     int model;
     int modelData;
     s32 minY;
@@ -1663,7 +1745,7 @@ void dimmagicbridge_init(u8* obj, u8* params) {
 
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
     *(void**)(obj + 0xbc) = (void*)&dimmagicbridge_flameSeqFn;
-    sub = *(u8**)(obj + 0xb8);
+    sub = *(DimMagicBridgeState**)(obj + 0xb8);
     minY = 0;
     model = Obj_GetActiveModel((int)obj);
     modelData = *(int*)model;
@@ -1683,7 +1765,7 @@ void dimmagicbridge_init(u8* obj, u8* params) {
         stable = 1;
         j = 0;
         p = (f32*)sub;
-        while (j < (int)sub[0x4f] - 1) {
+        while (j < (int)sub->segmentCount - 1) {
             a = p[1];
             b = p[2];
             if (a < b) {
@@ -1696,16 +1778,16 @@ void dimmagicbridge_init(u8* obj, u8* params) {
         }
     }
 
-    sub[0x4f] = 0xa;
-    *(f32*)sub = (f32)minY;
+    sub->segmentCount = 0xa;
+    sub->minVertexY = (f32)minY;
 
     if (GameBit_Get(0x1e9) != 0) {
-        sub[0x5f] = 1;
+        sub->ignited = 1;
     }
-    if (sub[0x5f] != 0) {
-        for (i = 0; i < (int)sub[0x4f]; i++) {
-            sub[0x50 + i] = 0xff;
-            sub[0x40 + i] = 1;
+    if (sub->ignited != 0) {
+        for (i = 0; i < (int)sub->segmentCount; i++) {
+            sub->segmentGlow[i] = 0xff;
+            sub->segmentLit[i] = 1;
             fn_80065574(0x11, 0, 0);
         }
     }
@@ -1766,13 +1848,13 @@ extern int EmissionController_IsLingering(void* player);
 #pragma scheduling off
 void dimmagicbridge_update(int obj)
 {
-    u8* sub;
+    DimMagicBridgeState* sub;
     void* player;
     player = Obj_GetPlayerObject();
-    sub = *(u8**)((u8*)obj + 0xb8);
-    dimmagicbridge_scrollTextureChannels(obj, sub);
-    dimmagicbridge_updateVertexWave(obj, sub);
-    if (sub[0x5f] == 0) {
+    sub = *(DimMagicBridgeState**)((u8*)obj + 0xb8);
+    dimmagicbridge_scrollTextureChannels(obj, (u8 *)sub);
+    dimmagicbridge_updateVertexWave(obj, (u8 *)sub);
+    if (sub->ignited == 0) {
         if (GameBit_Get(0x1ef) != 0) {
             if (EmissionController_IsLingering(player) != 0) {
                 GameBit_Set(0x1e8, 1);
@@ -1790,17 +1872,17 @@ void dimmagicbridge_update(int obj)
 #pragma scheduling off
 void dimwooddoor2_init(u8* obj, u8* params)
 {
-    u8* sub;
+    DimWoodDoor2State* sub;
     f32 fz;
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
     *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
-    sub = *(u8**)(obj + 0xb8);
-    sub[0] = 3;
+    sub = *(DimWoodDoor2State**)(obj + 0xb8);
+    sub->burnState = 3;
     fz = lbl_803E49D4;
-    *(f32*)(sub + 4) = fz;
-    *(f32*)(sub + 8) = fz;
+    sub->animSpeed = fz;
+    sub->riseSpeed = fz;
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
-        sub[0] = 0;
+        sub->burnState = 0;
         (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
         *(u8*)(obj + 0x36) = 0;
     }
@@ -1812,17 +1894,17 @@ void dimwooddoor2_init(u8* obj, u8* params)
 #pragma scheduling off
 void dll_1CE_init(u8* obj, u8* params)
 {
-    u8* sub;
+    Dll1CEState* sub;
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
     *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x2000);
-    sub = *(u8**)(obj + 0xb8);
-    sub[9] = 1;
+    sub = *(Dll1CEState**)(obj + 0xb8);
+    sub->igniteCountdown = 1;
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
-        sub[9] = 0;
+        sub->igniteCountdown = 0;
         (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
         *(u8*)(obj + 0x36) = 0;
     }
-    *(f32*)(sub + 4) = lbl_803E49F0;
+    sub->openVelocity = lbl_803E49F0;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1909,7 +1991,7 @@ int dimmagicbridge_flameSeqFn(int* obj, int p2, u8* p3)
     int i;
     p3[0x56] = 0;
     *(s16*)(p3 + 0x6e) = (s16)(*(s16*)(p3 + 0x6e) & ~0x40);
-    dimmagicbridge_scrollTextureChannels((int)obj, sub);
+    dimmagicbridge_scrollTextureChannels((int)obj, (u8 *)sub);
     if (p3[0x80] == 1) {
         p3[0x80] = 0;
         sub[0x5f] = 1;
@@ -1930,7 +2012,7 @@ int dimmagicbridge_flameSeqFn(int* obj, int p2, u8* p3)
             }
         }
     }
-    dimmagicbridge_updateVertexWave((int)obj, sub);
+    dimmagicbridge_updateVertexWave((int)obj, (u8 *)sub);
     return 0;
 }
 #pragma peephole reset
@@ -1952,16 +2034,16 @@ extern f32 lbl_803E49E4;
 void dimwooddoor2_update(int* obj)
 {
     int* q = *(int**)((char*)obj + 0x4c);
-    u8* sub = *(u8**)((char*)obj + 0xb8);
-    ObjAnim_AdvanceCurrentMove(*(f32*)(sub + 4), timeDelta, (int)obj, 0);
-    *(f32*)((char*)obj + 0x14) = *(f32*)((char*)obj + 0x14) + *(f32*)(sub + 8);
-    if (*(f32*)(sub + 8) != lbl_803E49D4) {
-        *(f32*)(sub + 8) = *(f32*)(sub + 8) * lbl_803E49D8;
-        if (*(f32*)(sub + 8) > lbl_803E49D4) {
-            *(f32*)(sub + 8) = lbl_803E49D4;
+    DimWoodDoor2State* sub = *(DimWoodDoor2State**)((char*)obj + 0xb8);
+    ObjAnim_AdvanceCurrentMove(sub->animSpeed, timeDelta, (int)obj, 0);
+    *(f32*)((char*)obj + 0x14) = *(f32*)((char*)obj + 0x14) + sub->riseSpeed;
+    if (sub->riseSpeed != lbl_803E49D4) {
+        sub->riseSpeed = sub->riseSpeed * lbl_803E49D8;
+        if (sub->riseSpeed > lbl_803E49D4) {
+            sub->riseSpeed = lbl_803E49D4;
         }
     }
-    if ((s8)sub[0] <= 0 && *(s16*)q == 0x338 && *(f32*)((char*)obj + 0x98) > lbl_803E49DC) {
+    if ((s8)sub->burnState <= 0 && *(s16*)q == 0x338 && *(f32*)((char*)obj + 0x98) > lbl_803E49DC) {
         int v = *(u8*)((char*)obj + 0x36) - framesThisStep * 16;
         int* q2 = *(int**)((char*)obj + 0x54);
         if (v < 0) v = 0;
@@ -1980,9 +2062,9 @@ void dimwooddoor2_update(int* obj)
             }
         }
         if (found) {
-            *(f32*)(sub + 4) = lbl_803E49E0;
-            *(f32*)(sub + 8) = lbl_803E49E4;
-            sub[0] = 0;
+            sub->animSpeed = lbl_803E49E0;
+            sub->riseSpeed = lbl_803E49E4;
+            sub->burnState = 0;
             GameBit_Set(*(s16*)((char*)q + 0x1e), 1);
             Sfx_PlayFromObject((int)obj, 0x3e1);
         }
@@ -2008,19 +2090,19 @@ extern f32 lbl_803E49FC;
 void dll_1CE_update(int* obj)
 {
     int* q = *(int**)((char*)obj + 0x4c);
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    Dll1CEState* sub = *(Dll1CEState**)((char*)obj + 0xb8);
     if (*(u8*)((char*)obj + 0x36) == 0) return;
-    if ((s8)sub[9] <= 0) {
+    if ((s8)sub->igniteCountdown <= 0) {
         int* q2 = *(int**)((char*)obj + 0x54);
         *(s16*)((char*)q2 + 0x60) = (s16)(*(s16*)((char*)q2 + 0x60) & ~1);
-        if (sub[8] == 1) {
-            *(f32*)(sub + 0) = *(f32*)(sub + 4) * timeDelta + *(f32*)(sub + 0);
-            if (*(f32*)(sub + 0) > lbl_803E49EC) {
-                *(f32*)(sub + 0) = lbl_803E49EC;
-                *(f32*)(sub + 4) = lbl_803E49F0;
-            } else if (*(f32*)(sub + 0) < lbl_803E49F4) {
-                *(f32*)(sub + 0) = lbl_803E49F4;
-                *(f32*)(sub + 4) = lbl_803E49F8;
+        if (sub->opened == 1) {
+            sub->openProgress = sub->openVelocity * timeDelta + sub->openProgress;
+            if (sub->openProgress > lbl_803E49EC) {
+                sub->openProgress = lbl_803E49EC;
+                sub->openVelocity = lbl_803E49F0;
+            } else if (sub->openProgress < lbl_803E49F4) {
+                sub->openProgress = lbl_803E49F4;
+                sub->openVelocity = lbl_803E49F8;
             }
         }
     }
@@ -2039,10 +2121,10 @@ void dll_1CE_update(int* obj)
         }
         if (!found) return;
     }
-    sub[9] = sub[9] - 1;
-    if ((s8)sub[9] > 0) return;
+    sub->igniteCountdown = sub->igniteCountdown - 1;
+    if ((s8)sub->igniteCountdown > 0) return;
     GameBit_Set(*(s16*)((char*)q + 0x1e), 1);
-    sub[8] = 1;
+    sub->opened = 1;
     if ((s16)*(s16*)((char*)q + 0x1a) != (int)GameBit_Get(0x46d)) return;
     if (Obj_IsLoadingLocked() == 0) return;
     {
