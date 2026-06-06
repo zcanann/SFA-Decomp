@@ -430,78 +430,73 @@ extern char s_trackIntersect__FUNC_OVERFLOW__d_8030f43c[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void mapBlockRender_setVtxDcrs(char param_1,undefined4 param_2,int param_3,int *param_4)
+void mapBlockRender_setVtxDcrs(flag, param_2, sh, bs)
+u8 flag;
+int *param_2;
+int sh;
+int *bs;
 {
-  undefined uVar1;
-  undefined uVar2;
-  undefined uVar3;
-  uint3 uVar4;
-  int iVar5;
-  uint uVar6;
-  
-  if (param_1 != '\0') {
-    FUN_80257b5c();
-  }
-  uVar6 = param_4[4];
-  uVar3 = *(undefined *)(*param_4 + ((int)uVar6 >> 3));
-  iVar5 = *param_4 + ((int)uVar6 >> 3);
-  uVar1 = *(undefined *)(iVar5 + 1);
-  uVar2 = *(undefined *)(iVar5 + 2);
-  param_4[4] = uVar6 + 1;
-  if (param_1 != '\0') {
-    if ((CONCAT12(uVar2,CONCAT11(uVar1,uVar3)) >> (uVar6 & 7) & 1) == 0) {
-      uVar6 = 2;
+    extern void GXClearVtxDesc(void);
+    extern void GXSetVtxDesc(int attr, int type);
+    u32 val;
+    int pos;
+    int off;
+    u8 *p;
+    int bit;
+    u32 val2;
+    int pos2;
+    int off2;
+    u8 *q;
+    int bit2;
+    u32 val3;
+    int pos3;
+    int off3;
+    u8 *r;
+    int bit3;
+    int i;
+
+    if (flag != 0) {
+        GXClearVtxDesc();
     }
-    else {
-      uVar6 = 3;
+    pos = bs[4];
+    off = pos >> 3;
+    val = *(u8 *)(bs[0] + off);
+    p = (u8 *)bs[0] + off;
+    val |= p[1] << 8;
+    val |= p[2] << 16;
+    bs[4] = pos + 1;
+    bit = (val >> (pos & 7)) & 1;
+    if (flag != 0) {
+        GXSetVtxDesc(9, bit ? 3 : 2);
     }
-    FUN_802570dc(9,uVar6);
-  }
-  uVar6 = param_4[4];
-  uVar3 = *(undefined *)(*param_4 + ((int)uVar6 >> 3));
-  iVar5 = *param_4 + ((int)uVar6 >> 3);
-  uVar1 = *(undefined *)(iVar5 + 1);
-  uVar2 = *(undefined *)(iVar5 + 2);
-  param_4[4] = uVar6 + 1;
-  if (param_1 != '\0') {
-    if ((CONCAT12(uVar2,CONCAT11(uVar1,uVar3)) >> (uVar6 & 7) & 1) == 0) {
-      uVar6 = 2;
+    pos2 = bs[4];
+    off2 = pos2 >> 3;
+    val2 = *(u8 *)(bs[0] + off2);
+    q = (u8 *)bs[0] + off2;
+    val2 |= q[1] << 8;
+    val2 |= q[2] << 16;
+    bs[4] = pos2 + 1;
+    bit2 = (val2 >> (pos2 & 7)) & 1;
+    if (flag != 0) {
+        GXSetVtxDesc(11, bit2 ? 3 : 2);
     }
-    else {
-      uVar6 = 3;
-    }
-    FUN_802570dc(0xb,uVar6);
-  }
-  uVar6 = param_4[4];
-  uVar3 = *(undefined *)(*param_4 + ((int)uVar6 >> 3));
-  iVar5 = *param_4 + ((int)uVar6 >> 3);
-  uVar1 = *(undefined *)(iVar5 + 1);
-  uVar2 = *(undefined *)(iVar5 + 2);
-  param_4[4] = uVar6 + 1;
-  uVar4 = CONCAT12(uVar2,CONCAT11(uVar1,uVar3)) >> (uVar6 & 7);
-  if (param_1 != '\0') {
-    if ((param_3 == 0) || ((*(uint *)(param_3 + 0x3c) & 0x80000000) != 0)) {
-      if ((uVar4 & 1) == 0) {
-        uVar6 = 2;
-      }
-      else {
-        uVar6 = 3;
-      }
-      FUN_802570dc(0xd,uVar6);
-    }
-    else {
-      for (iVar5 = 0; iVar5 < (int)(uint)*(byte *)(param_3 + 0x41); iVar5 = iVar5 + 1) {
-        if ((uVar4 & 1) == 0) {
-          uVar6 = 2;
+    pos3 = bs[4];
+    off3 = pos3 >> 3;
+    val3 = *(u8 *)(bs[0] + off3);
+    r = (u8 *)bs[0] + off3;
+    val3 |= r[1] << 8;
+    val3 |= r[2] << 16;
+    bs[4] = pos3 + 1;
+    bit3 = (val3 >> (pos3 & 7)) & 1;
+    if (flag != 0) {
+        if ((u32)sh != 0 && (*(u32 *)(sh + 0x3c) & 0x80000000) == 0) {
+            for (i = 0; i < *(u8 *)(sh + 0x41); i++) {
+                GXSetVtxDesc(i + 13, bit3 ? 3 : 2);
+            }
+        } else {
+            GXSetVtxDesc(13, bit3 ? 3 : 2);
         }
-        else {
-          uVar6 = 3;
-        }
-        FUN_802570dc(iVar5 + 0xd,uVar6);
-      }
     }
-  }
-  return;
 }
 
 /*
@@ -607,7 +602,7 @@ void FUN_8005fb68(void)
       uVar4 = uVar3 & 0xf;
       if (uVar4 == 3) {
         local_68 = uVar10;
-        mapBlockRender_setVtxDcrs((char)iVar11,iVar6,iVar12,local_78);
+        mapBlockRender_setVtxDcrs(iVar11,(int *)iVar6,iVar12,local_78);
         uVar10 = local_68;
       }
       else if (uVar4 < 3) {
@@ -711,73 +706,86 @@ void setupToRenderMapBlock(int *block, void *posMtx) {
 
 extern void *Camera_GetViewMatrix(void);
 extern void modelRenderInstrsState_init(int *state, int ptr, int a, int b);
-extern int mapBlockRender_setShader(char a, int *obj, int *state);
+extern int mapBlockRender_setShader(int a, int *obj, int *state);
 extern void mapBlockRender_callList(int a, int b, int *obj, int shader, int *state, f32 *m);
 
-void renderMapBlock(int *obj, u8 type)
+#pragma push
+#pragma scheduling off
+void renderMapBlock(void *objp, u8 type)
 {
+    int *o = (int *)objp;
     int state[5];
-    f32 m[12];
+    f32 m[16];
     int ptr;
     int count;
-    int shader = 0;
-    int flag = 0;
+    int shader;
+    int flag;
     int done;
     void *viewMtx;
 
+    shader = 0;
+    flag = 0;
     if (type == 1) {
-        ptr = *(int *)&((GameObject *)obj)->anim.banks;
-        count = *(u16 *)((char *)obj + 0x86);
+        ptr = *(int *)((char *)o + 0x7c);
+        count = *(u16 *)((char *)o + 0x86);
     } else if (type == 2) {
-        ptr = *(int *)&((GameObject *)obj)->anim.previousLocalPosX;
-        count = *(u16 *)((char *)obj + 0x88);
+        ptr = *(int *)((char *)o + 0x80);
+        count = *(u16 *)((char *)o + 0x88);
     } else {
-        ptr = *(int *)((char *)obj + 0x78);
-        count = *(u16 *)((char *)obj + 0x84);
+        ptr = *(int *)((char *)o + 0x78);
+        count = *(u16 *)((char *)o + 0x84);
         flag = 1;
     }
     if ((u16)count == 0) return;
     viewMtx = Camera_GetViewMatrix();
-    PSMTXConcat(viewMtx, (char *)obj + 0xc, m);
-    if (flag != 0)
-        setupToRenderMapBlock(obj, m);
-    modelRenderInstrsState_init(state, ptr, count << 3, count << 3);
+    PSMTXConcat(viewMtx, (char *)o + 0xc, m);
+    if ((u32)(u8)flag != 0)
+        setupToRenderMapBlock(o, m);
+    modelRenderInstrsState_init(state, ptr, (u16)count << 3, (u16)count << 3);
     done = 0;
     while (!done) {
+        u32 word;
+        int op;
         int pos = state[4];
         u8 *bp = (u8 *)(state[0] + (pos >> 3));
-        int word = bp[0] | (bp[1] << 8) | (bp[2] << 16);
-        int op;
+        word = bp[0];
+        word |= bp[1] << 8;
+        word |= bp[2] << 16;
         state[4] = pos + 4;
         op = (word >> (pos & 7)) & 0xf;
         switch (op) {
         case 3:
-            mapBlockRender_setVtxDcrs((char)flag, (int)obj, shader, state);
+            mapBlockRender_setVtxDcrs(flag, o, shader, state);
             break;
         case 1:
-            shader = mapBlockRender_setShader((char)flag, obj, state);
+            shader = mapBlockRender_setShader(flag, o, state);
             break;
         case 2:
-            mapBlockRender_callList(flag, 0, obj, shader, state, m);
-            break;
-        case 5:
-            done = 1;
+            mapBlockRender_callList(flag, 0, o, shader, state, m);
             break;
         case 4: {
-            int pos2 = state[4];
-            u8 *bp2 = (u8 *)(state[0] + (pos2 >> 3));
-            int word2 = bp2[0] | (bp2[1] << 8) | (bp2[2] << 16);
+            u32 word2;
             int cnt;
             int j;
+            u8 *bp2;
+            int pos2 = pos + 4;
+            bp2 = (u8 *)(state[0] + (pos2 >> 3));
+            word2 = bp2[0];
+            word2 |= bp2[1] << 8;
+            word2 |= bp2[2] << 16;
             state[4] = pos2 + 4;
             cnt = (word2 >> (pos2 & 7)) & 0xf;
             for (j = 0; j < cnt; j++)
-                state[4] += 8;
+                ((int volatile *)state)[4] = state[4] + 8;
             break;
         }
+        case 5:
+            done = 1;
+            break;
         }
     }
 }
+#pragma pop
 
 /*
  * --INFO--
