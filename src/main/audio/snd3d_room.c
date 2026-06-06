@@ -206,15 +206,16 @@ void s3dUpdateRoomDistances(void)
     if (listenerCount != 0) {
         for (entry = s3dRoomRoot; entry != NULL; entry = entry->next) {
             f32 distanceSq;
+            struct { f32 x, y, z; } d;
 
             if (entry->assignedVoice != 0xff) {
                 distanceSq = lbl_803E7880;
                 for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
-                    f32 dx = entry->posX - listener->posX;
-                    f32 dy = entry->posY - listener->posY;
-                    f32 dz = entry->posZ - listener->posZ;
+                    d.x = entry->posX - listener->posX;
+                    d.y = entry->posY - listener->posY;
+                    d.z = entry->posZ - listener->posZ;
 
-                    distanceSq += dz * dz + (dx * dx + dy * dy);
+                    distanceSq += d.z * d.z + (d.x * d.x + d.y * d.y);
                 }
                 entry->averageDistanceSq = distanceSq / (f32)listenerCount;
             }
@@ -248,14 +249,15 @@ void s3dAllocateRoomStudios(void)
                 u32 studioCount;
                 f32 distanceSq;
                 int listenerOwned;
+                struct { f32 x, y, z; } d;
 
                 distanceSq = lbl_803E7880;
                 for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
-                    f32 dx = entry->posX - listener->posX;
-                    f32 dy = entry->posY - listener->posY;
-                    f32 dz = entry->posZ - listener->posZ;
+                    d.x = entry->posX - listener->posX;
+                    d.y = entry->posY - listener->posY;
+                    d.z = entry->posZ - listener->posZ;
 
-                    distanceSq += dz * dz + (dx * dx + dy * dy);
+                    distanceSq += d.z * d.z + (d.x * d.x + d.y * d.y);
                 }
                 listenerOwned = false;
                 distanceSq = distanceSq / (f32)listenerCount;
