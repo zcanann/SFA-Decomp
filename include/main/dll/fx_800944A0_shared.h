@@ -307,7 +307,7 @@ extern void modelLightStruct_setDiffuseColor(void *light, int r, int g, int b, i
 extern void modelLightStruct_setSpecularColor(void *light, int r, int g, int b, int a);
 extern void modelLightStruct_setDistanceAttenuation(void *light, f32 a, f32 b);
 extern void lightSetField4D(void *light, int v);
-extern void modelLightStruct_setEnabled(void *light, f32 a, int b);
+extern void modelLightStruct_setEnabled(void *light, int b, f32 a);
 extern void modelLightStruct_startColorFade(void *light, int a, int b);
 extern void modelLightStruct_setAffectsAabbLightSelection(void *light, int v);
 

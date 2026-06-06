@@ -984,8 +984,8 @@ void objParticleFn_80099d84(void *obj, f32 scale, u8 type, f32 fextra, void *lig
                                          cbuf[type * 3 + 2], 0xff);
         modelLightStruct_setDistanceAttenuation(light, lbl_803DF34C, lbl_803DF398);
         lightSetField4D(light, 0);
-        modelLightStruct_setEnabled(light, lbl_803DF35C, 1);
-        modelLightStruct_setEnabled(light, lbl_803DF354, 0);
+        modelLightStruct_setEnabled(light, 1, lbl_803DF35C);
+        modelLightStruct_setEnabled(light, 0, lbl_803DF354);
         modelLightStruct_startColorFade(light, 0, 0);
         modelLightStruct_setAffectsAabbLightSelection(light, 1);
     }
@@ -1115,8 +1115,8 @@ void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *ligh
         modelLightStruct_setSpecularColor(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1], lbl_8030FA30[type * 3 + 2], 0xff);
         modelLightStruct_setDistanceAttenuation(light, lbl_803DF394, lbl_803DF39C);
         lightSetField4D(light, 0);
-        modelLightStruct_setEnabled(light, lbl_803DF35C, 1);
-        modelLightStruct_setEnabled(light, lbl_803DF358, 0);
+        modelLightStruct_setEnabled(light, 1, lbl_803DF35C);
+        modelLightStruct_setEnabled(light, 0, lbl_803DF358);
         modelLightStruct_startColorFade(light, 0, 0);
         modelLightStruct_setAffectsAabbLightSelection(light, 1);
     }
