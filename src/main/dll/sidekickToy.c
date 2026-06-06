@@ -2385,7 +2385,7 @@ extern void fn_8014B878(int *node, int *sub);
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8014BE1C(int *node, int p2, u8 *cmds)
+int enemy_animEventCallback(int *node, int p2, u8 *cmds)
 {
     char *sub = *(char **)((char *)node + 0xb8);
     s8 *n29 = *(s8 **)((char *)node + 0x4c);

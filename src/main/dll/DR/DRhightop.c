@@ -360,7 +360,7 @@ void fn_801EB334(int *obj) {
 /*
  * --INFO--
  *
- * Function: fn_801EB420
+ * Function: SnowBike_animEventCallback
  * EN v1.0 Address: 0x801EB420
  * EN v1.0 Size: 532b
  * EN v1.1 Address: 0x801EBA58
@@ -370,7 +370,7 @@ void fn_801EB334(int *obj) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fn_801EB420(short *param_1,undefined4 param_2,int param_3)
+undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,int param_3)
 {
   typedef struct HightopMatrixSeed {
     s16 rotX;

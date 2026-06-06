@@ -807,7 +807,7 @@ extern void smallbasket_initScaledVariantState(int obj, u8 *state);
 extern void fn_8014FF58(int obj, u8 *state);
 extern void smallbasket_initModelVariantState(int obj, u8 *state);
 extern void smallbasket_initTailModelState(int obj, u8 *state);
-extern void fn_8014BE1C();
+extern void enemy_animEventCallback();
 extern void *memset(void *p, int c, int n);
 extern int *gRomCurveInterface;
 extern f32 lbl_803DBC58;
@@ -897,7 +897,7 @@ void enemy_init(int obj, u8 *setup, int flag)
         ((EnemyState *)state)->unk2B6 = ((EnemyState *)state)->unk2B4;
         *(u16 *)(obj + 0xb0) |= *(s8 *)(setup + 0x28) & 7;
         ((EnemyState *)state)->unk2B0 = setup[0x32];
-        *(int *)(obj + 0xbc) = (int)fn_8014BE1C;
+        *(int *)(obj + 0xbc) = (int)enemy_animEventCallback;
         switch (*(s16 *)(obj + 0x46)) {
         case 17:
         case 314:

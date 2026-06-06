@@ -67,7 +67,7 @@ extern int lbl_80320158[];
 extern void objRenderFn_8003b8f4(f32);
 extern void *gGrimbleStateHandlersA[11];
 extern void *gGrimbleStateHandlersB[6];
-int fn_801627EC(void);
+int grimble_animEventCallback(void);
 void fn_801627F4(int obj);
 
 extern f32 lbl_803E2EB8;
@@ -432,7 +432,7 @@ void grimble_init(int obj, int p2, int p3)
   }
   (*(void (**)(int, int, char *, int, int, int, u8, f32))(*(int *)gBaddieControlInterface + 0x58))(
       obj, p2, state, 0, 0, 0, flags, lbl_803E2F28);
-  *(void **)(obj + 0xbc) = (void *)fn_801627EC;
+  *(void **)(obj + 0xbc) = (void *)grimble_animEventCallback;
   (*(void (**)(int, char *, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 0);
   *(s16 *)(state + 0x270) = 0;
   *(f32 *)(state + 0x280) = lbl_803E2EB8;
@@ -1024,7 +1024,7 @@ void cannonclaw_free(void) {}
 void cannonclaw_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801627EC(void) { return 0x0; }
+int grimble_animEventCallback(void) { return 0x0; }
 int grimble_getExtraSize(void) { return 0x46c; }
 int grimble_getObjectTypeId(void) { return 0x59; }
 int cannonclaw_getExtraSize(void) { return 0x0; }

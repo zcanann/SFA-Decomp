@@ -79,7 +79,7 @@ extern u8 *mmAlloc(int size, int tag, int a);
 extern void *memcpy(void *dst, const void *src, int n);
 extern void Obj_ClearModelSlotIndex(int obj);
 extern void fn_801EC928(int obj, u8 *state);
-extern void fn_801EB420();
+extern void SnowBike_animEventCallback();
 extern void ObjGroup_AddObject(int obj, int group);
 extern int *gGameUIInterface;
 extern int *gPathControlInterface;
@@ -161,7 +161,7 @@ void SnowBike_init(int obj, u8 *params, int flag)
     ((SnowBikeState *)state)->unk00C = *(f32 *)(obj + 0xc);
     ((SnowBikeState *)state)->unk010 = *(f32 *)(obj + 0x10);
     ((SnowBikeState *)state)->unk014 = *(f32 *)(obj + 0x14);
-    *(int *)(obj + 0xbc) = (int)fn_801EB420;
+    *(int *)(obj + 0xbc) = (int)SnowBike_animEventCallback;
     ObjGroup_AddObject(obj, 10);
     if (flag == 0) {
         i = 0;

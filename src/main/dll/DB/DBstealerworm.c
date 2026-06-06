@@ -183,7 +183,7 @@ extern undefined2 uRam803de8b6;
 /*
  * --INFO--
  *
- * Function: fn_801E1AAC
+ * Function: SB_Galleon_animEventCallback
  * EN v1.0 Address: 0x801E1AAC
  * EN v1.0 Size: 764b
  * EN v1.1 Address: 0x801E18DC
@@ -206,7 +206,7 @@ extern f32 lbl_803E57F4;
 extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
 extern f32 timeDelta;
-int fn_801E1AAC(int obj, int p2, int msgSrc) {
+int SB_Galleon_animEventCallback(int obj, int p2, int msgSrc) {
     int state = *(int *)(obj + 0xb8);
     int i;
     *(s8 *)(obj + 0xac) = -1;
@@ -1139,7 +1139,7 @@ void SB_Galleon_init(int obj) {
     lbl_803DDC20 = obj;
     ObjGroup_AddObject(obj, 3);
     objSetSlot((void *)obj, 0x5a);
-    *(void **)(obj + 0xbc) = (void *)fn_801E1AAC;
+    *(void **)(obj + 0xbc) = (void *)SB_Galleon_animEventCallback;
     ((SBGalleonState *)p)->posX = *(f32 *)(obj + 0xc);
     ((SBGalleonState *)p)->posY = *(f32 *)(obj + 0x10);
     ((SBGalleonState *)p)->posZ = *(f32 *)(obj + 0x14);

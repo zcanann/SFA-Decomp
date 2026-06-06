@@ -404,7 +404,7 @@ void wmwallcrawler_update(s16 *obj)
 
 #pragma peephole off
 #pragma scheduling off
-int fn_801F7FF4(int obj) {
+int wmwallcrawler_animEventCallback(int obj) {
     *(u8 *)(*(int *)(obj + 0xb8) + 0x296) = 1;
     return 0;
 }
@@ -557,7 +557,7 @@ void wmwallcrawler_init(int obj, int spawn)
         (*(void (**)(int, int))(*(int*)gPathControlInterface + 0x20))(obj, inner);
         *(u32*)inner |= 0x40008;
     }
-    *(int*)(obj + 0xbc) = (int)fn_801F7FF4;
+    *(int*)(obj + 0xbc) = (int)wmwallcrawler_animEventCallback;
     ObjHits_EnableObject(obj);
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
