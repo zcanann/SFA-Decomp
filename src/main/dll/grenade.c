@@ -1,4 +1,5 @@
 #include "main/dll/grenade.h"
+#include "main/game_object.h"
 #include "main/dll/tricky_state.h"
 
 
@@ -217,14 +218,14 @@ void trickyDigTunnel(u8 *obj, u8 *state)
             *(f32 *)(state + 0x70c) *= lbl_803E2424;
             ptr = *(u8 **)(obj + 0xb8);
             if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
                 && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
             }
         }
         spd = ((f32 (**)(u8 *, u8 *))(**(u8 ***)(((TrickyState *)state)->unk24 + 0x68)))[8](((TrickyState *)state)->unk24, obj);
-        *(f32 *)(obj + 0xc) = ((TrickyState *)state)->unk2C * spd + *(f32 *)(((TrickyState *)state)->unk700 + 8);
-        *(f32 *)(obj + 0x14) = ((TrickyState *)state)->unk30 * spd + *(f32 *)(((TrickyState *)state)->unk700 + 0x10);
+        ((GameObject *)obj)->anim.localPosX = ((TrickyState *)state)->unk2C * spd + *(f32 *)(((TrickyState *)state)->unk700 + 8);
+        ((GameObject *)obj)->anim.localPosZ = ((TrickyState *)state)->unk30 * spd + *(f32 *)(((TrickyState *)state)->unk700 + 0x10);
         vx = *(f32 *)(*(u8 **)(obj + 0xb8) + 0x2c);
         vz = *(f32 *)(*(u8 **)(obj + 0xb8) + 0x30);
         if (vx * vx + vz * vz > lbl_803E23EC) {
@@ -249,7 +250,7 @@ void trickyDigTunnel(u8 *obj, u8 *state)
             id = *(u16 *)((char *)&sfxTable + randomGetRange(0, 1) * 2);
             ptr = *(u8 **)(obj + 0xb8);
             if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
                 && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, id, 0x500, -1, 0);
             }
@@ -408,8 +409,8 @@ void trickyFn_80141fec(u8 *obj, u8 *state)
         ((TrickyState *)state)->unk710 -= timeDelta;
         if (*(f32 *)(state + 0x700) >= lbl_803E24F8) {
             state[0xa] = 4;
-            *(f32 *)(state + 0x704) = *(f32 *)(obj + 0x18);
-            *(f32 *)(state + 0x708) = *(f32 *)(obj + 0x20);
+            *(f32 *)(state + 0x704) = ((GameObject *)obj)->anim.worldPosX;
+            *(f32 *)(state + 0x708) = ((GameObject *)obj)->anim.worldPosZ;
             ptr = ((TrickyState *)state)->unk70C;
             if (ptr != NULL) {
                 ((TrickyState *)state)->unk2C = *(f32 *)(ptr + 8) - *(f32 *)(((TrickyState *)state)->unk24 + 0x18);
@@ -429,14 +430,14 @@ void trickyFn_80141fec(u8 *obj, u8 *state)
             ((TrickyState *)state)->unk710 *= lbl_803E2424;
             ptr = *(u8 **)(obj + 0xb8);
             if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
                 && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
             }
         }
         spd = ((f32 (**)(u8 *, u8 *))(**(u8 ***)(pc + 0x68)))[8](pc, obj);
-        *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x704) - ((TrickyState *)state)->unk2C * spd;
-        *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x708) - ((TrickyState *)state)->unk30 * spd;
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 0x704) - ((TrickyState *)state)->unk2C * spd;
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x708) - ((TrickyState *)state)->unk30 * spd;
         if (((u8 (**)(u8 *))(**(u8 ***)(pc + 0x68)))[9](pc) != 0) {
             Sfx_RemoveLoopedObjectSound(obj, 0x13d);
             **(u8 **)state -= 4;
@@ -453,7 +454,7 @@ void trickyFn_80141fec(u8 *obj, u8 *state)
             id = *(u16 *)((char *)&sfxTable + randomGetRange(0, 1) * 2);
             ptr = *(u8 **)(obj + 0xb8);
             if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
                 && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, id, 0x500, -1, 0);
             }
@@ -498,7 +499,7 @@ void trickyFn_80142524(u8 *obj, u8 *state)
             if ((int)state[0x7d0] == 1) {
                 target = ((TrickyState *)state)->unk7D4;
                 other = *(u8 **)(obj + 0xb8);
-                if ((*(u16 *)(obj + 0xb0) & 0x1000) == 0) {
+                if ((((GameObject *)obj)->unkB0 & 0x1000) == 0) {
                     if ((((TrickyState *)other)->unk54 & 0x10) == 0) {
                         ((TrickyState *)other)->unk24 = target;
                         if (((TrickyState *)other)->unk28 != target + 0x18) {
@@ -521,7 +522,7 @@ void trickyFn_80142524(u8 *obj, u8 *state)
                         ((TrickyState *)state)->unk740 = (f32)(int)randomGetRange(500, 0x2ee);
                         ptr = *(u8 **)(obj + 0xb8);
                         if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-                            && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
                             && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
                             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
                         }
@@ -541,7 +542,7 @@ void trickyFn_80142524(u8 *obj, u8 *state)
                         ((TrickyState *)state)->unk838 = lbl_803E23DC;
                         trickyDebugPrint((char *)(base + 0x184));
                     } else {
-                        switch (*(s16 *)(obj + 0xa0)) {
+                        switch (((GameObject *)obj)->anim.currentMove) {
                         case 0xd:
                             if (((TrickyState *)state)->unk54 & 0x8000000) {
                                 objAnimFn_8013a3f0((int)obj, 0x31, lbl_803E243C, 0);
@@ -574,12 +575,12 @@ void trickyFn_80142524(u8 *obj, u8 *state)
         ((TrickyState *)state)->unk54 &= ~0x20000;
         ((TrickyState *)state)->unk54 &= ~0x40000;
         ((TrickyState *)state)->unkD = -1;
-        *(f32 *)(obj + 0xc) = *(f32 *)(found + 0xc);
-        *(f32 *)(obj + 0x10) = *(f32 *)(found + 0x10);
-        *(f32 *)(obj + 0x14) = *(f32 *)(found + 0x14);
-        *(f32 *)(obj + 0x18) = *(f32 *)(found + 0x18);
-        *(f32 *)(obj + 0x1c) = *(f32 *)(found + 0x1c);
-        *(f32 *)(obj + 0x20) = *(f32 *)(found + 0x20);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(found + 0xc);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(found + 0x10);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(found + 0x14);
+        ((GameObject *)obj)->anim.worldPosX = *(f32 *)(found + 0x18);
+        ((GameObject *)obj)->anim.worldPosY = *(f32 *)(found + 0x1c);
+        ((GameObject *)obj)->anim.worldPosZ = *(f32 *)(found + 0x20);
         ObjHits_SyncObjectPosition((int)obj);
         *(s16 *)obj = *(s16 *)found;
         state[9] = 0;
@@ -663,7 +664,7 @@ int trickyFn_80142a14(int obj, int state)
   sfxId = randomGetRange(862, 863);
   tex = *(int *)(obj + 0xb8);
   if (((*(u8 *)(tex + 0x58) >> 6) & 1) == 0) {
-    sVar = *(short *)(obj + 0xa0);
+    sVar = ((GameObject *)obj)->anim.currentMove;
     if (sVar >= 48 || sVar < 41) {
       if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0) {
         objAudioFn_800393f8(obj, (void *)(tex + 0x3a8), sfxId, 1280, -1, 0);
@@ -702,9 +703,9 @@ int trickyFlameFn_80142b6c(u8 *obj, u8 *state)
     u8 *ptr;
     u8 *e;
 
-    switch (*(s16 *)(obj + 0xa0)) {
+    switch (((GameObject *)obj)->anim.currentMove) {
     case 0x1a:
-        if (*(f32 *)(obj + 0x98) > lbl_803E24AC && (((TrickyState *)state)->unk54 & 0x800) == 0) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E24AC && (((TrickyState *)state)->unk54 & 0x800) == 0) {
             if (Obj_IsLoadingLocked() != 0) {
                 ((TrickyState *)state)->unk54 |= 0x800;
                 p = state;
@@ -713,7 +714,7 @@ int trickyFlameFn_80142b6c(u8 *obj, u8 *state)
                     e[4] = 2;
                     e[5] = 1;
                     *(s16 *)(e + 0x1a) = i;
-                    *(u8 **)(p + 0x700) = Obj_SetupObject(e, 5, *(s8 *)(obj + 0xac), -1, *(void **)(obj + 0x30));
+                    *(u8 **)(p + 0x700) = Obj_SetupObject(e, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
                     p += 4;
                 }
                 Sfx_PlayFromObject((int)obj, 0x3db);
@@ -731,7 +732,7 @@ int trickyFlameFn_80142b6c(u8 *obj, u8 *state)
                 Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
                 ptr = *(u8 **)(obj + 0xb8);
                 if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-                    && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                    && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
                     && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
                     objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x29d, 0, -1, 0);
                 }
@@ -791,7 +792,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
     }
     tex = *(int *)(obj + 0xb8);
     if (((*(u8 *)(tex + 0x58) >> 6) & 1) == 0) {
-      sVar = *(short *)(obj + 0xa0);
+      sVar = ((GameObject *)obj)->anim.currentMove;
       if (sVar >= 48 || sVar < 41) {
         if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0) {
           objAudioFn_800393f8(obj, (void *)(tex + 0x3a8), 861, 1280, -1, 0);
@@ -840,7 +841,7 @@ int trickyFn_80142eb0(int obj, int state)
     return 1;
   }
   *(u8 *)(obj + 0xaf) = *(u8 *)(obj + 0xaf) | 0x10;
-  sVar = *(short *)(obj + 0xa0);
+  sVar = ((GameObject *)obj)->anim.currentMove;
   if (sVar == 46) {
     if (((*(int *)(state + 0x54) & 0x8000000) != 0) &&
         (((*(int *)(state + 0x54) & 0x10000) != 0 || randomGetRange(0, 2) == 0) ||
@@ -907,7 +908,7 @@ int trickyFn_801430e0(u8 *obj, u8 *state)
         if (((TrickyState *)state)->unk7B0 != NULL) {
             ptr = *(u8 **)(obj + 0xb8);
             if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
                 && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x357, 0, -1, 0);
             }
@@ -1200,7 +1201,7 @@ int trickyFoodFn_801437d4(u8 *obj, u8 *state)
     if (((TrickyState *)state)->unk738 < lbl_803E23DC) {
         ptr = *(u8 **)(obj + 0xb8);
         if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-            && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
             && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x29a, 0x100, -1, 0);
         }
@@ -1232,7 +1233,7 @@ int trickyFoodFn_801437d4(u8 *obj, u8 *state)
             idx = -1;
         }
         ((TrickyPackedSlots *)(state + 0x7bc))->c = idx;
-        ((TrickyState *)state)->unk7B8 = Obj_SetupObject(e, 4, -1, -1, *(void **)(obj + 0x30));
+        ((TrickyState *)state)->unk7B8 = Obj_SetupObject(e, 4, -1, -1, ((GameObject *)obj)->anim.parent);
         ObjLink_AttachChild(obj, ((TrickyState *)state)->unk7B8, ((TrickyPackedSlots *)(state + 0x7bc))->c);
         z = lbl_803E23DC;
         ((TrickyState *)state)->unk7C0 = z;
@@ -1245,7 +1246,7 @@ int trickyFoodFn_801437d4(u8 *obj, u8 *state)
         objAnimFn_8013a3f0((int)obj, 0x29, lbl_803E2444, 0);
         ptr = *(u8 **)(obj + 0xb8);
         if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-            && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
             && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x354, 0x1000, -1, 0);
         }
@@ -1373,7 +1374,7 @@ int trickyFn_80143c04(int obj, int state)
     if ((*(int *)(state + 0x54) & 2) != 0) {
       tex = *(int *)(obj + 0xb8);
       if (((*(u8 *)(tex + 0x58) >> 6) & 1) == 0) {
-        sVar = *(short *)(obj + 0xa0);
+        sVar = ((GameObject *)obj)->anim.currentMove;
         if (sVar >= 48 || sVar < 41) {
           if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0) {
             objAudioFn_800393f8(obj, (void *)(tex + 0x3a8), 861, 1280, -1, 0);
@@ -1571,9 +1572,9 @@ void objAnimFn_801441c0(u8 *obj, u8 *state)
     case 1:
         sv = randomGetRange(0x20, 0xff);
         ang = lbl_803E2454 * (f32)(s16)((*(s16 *)obj + sv) * 0x100) / lbl_803E2458;
-        *(f32 *)(state + 0x72c) = (f32)(lbl_803E2528 * -fn_80293E80(ang) + *(f32 *)(obj + 0xc));
+        *(f32 *)(state + 0x72c) = (f32)(lbl_803E2528 * -fn_80293E80(ang) + ((GameObject *)obj)->anim.localPosX);
         ((TrickyState *)state)->unk730 = *(u32 *)(obj + 0x10);
-        ((TrickyState *)state)->unk734 = (f32)((f64)lbl_803E2484 * -sin(ang) + *(f32 *)(obj + 0x14));
+        ((TrickyState *)state)->unk734 = (f32)((f64)lbl_803E2484 * -sin(ang) + ((GameObject *)obj)->anim.localPosZ);
         if (((TrickyState *)state)->unk28 != state + 0x72c) {
             ((TrickyState *)state)->unk28 = state + 0x72c;
             ((TrickyState *)state)->unk54 &= ~0x400;
@@ -1590,7 +1591,7 @@ void objAnimFn_801441c0(u8 *obj, u8 *state)
         objAnimFn_8013a3f0((int)obj, 0x29, lbl_803E2444, 0);
         ptr = *(u8 **)(obj + 0xb8);
         if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-            && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
             && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x354, 0x1000, -1, 0);
         }
@@ -1847,7 +1848,7 @@ void fn_80144B50(u8 *obj, u8 *state)
             ((TrickyState *)state)->unk720 = fv + lbl_803E24EC;
             ptr = *(u8 **)(obj + 0xb8);
             if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
                 && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x34f, 0x500, -1, 0);
             }
@@ -1874,14 +1875,14 @@ void fn_80144B50(u8 *obj, u8 *state)
                         }
                         ptr = *(u8 **)(obj + 0xb8);
                         if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-                            && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
                             && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
                             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
                         }
                     } else {
                         ptr = *(u8 **)(obj + 0xb8);
                         if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-                            && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
                             && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
                             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
                         }
@@ -1889,7 +1890,7 @@ void fn_80144B50(u8 *obj, u8 *state)
                 } else {
                     ptr = *(u8 **)(obj + 0xb8);
                     if (((u32)((TrickyState *)ptr)->unk58 >> 6 & 1) == 0
-                        && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                        && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
                         && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
                         objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
                     }
