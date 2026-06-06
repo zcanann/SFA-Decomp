@@ -1864,6 +1864,15 @@ addend lands mid-function (not at a symbol boundary) before adding a range.
     (dll_54_update: region-1 d-clamps as ifs, region-2 as ternaries —
     frame -176→-208 = target, zero instr cost.)
 
+**#13 addendum — a DEAD `cmpwi <K>` followed by an unconditional `b end` in a
+binary-search switch tree = an EMPTY `case K-1: break;` the import dropped.**
+MWCC emits `cmpwi case+1; b end` (compare dead, no beq) for a single empty
+case in the tree's interior. Writing `case 0x60a: break;` reproduced target's
+`cmpwi r0,1547; b` exactly (arwbombcoll_update 98.30→99.89). A PAIR of empty
+cases emits `cmpwi last+1` instead; a lone case spelled as the dead VALUE
+itself (0x60b) emits cmpwi 1547 + a surviving beq (+1 instr). Read the dead
+compare's immediate and subtract 1 for the real case value.
+
 90. **#81 launder kills the pre-call HOIST of a doubled float arg while
     keeping the `fmr` CSE.** When a call passes the same named f32 extern in
     two arg slots (`f(.., lblK, lblK, ..)`), MWCC hoists the shared `lfs` to
