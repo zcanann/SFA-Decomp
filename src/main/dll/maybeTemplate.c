@@ -842,11 +842,9 @@ extern void gameTextMeasureFn_800163c4(char *str, int n, int a, int b, int *x0, 
 extern void textureFree(int texture);
 extern int textureLoadAsset(int id);
 extern void fn_8005D118(int a, int b, int c, int d, int e);
-extern s16 cMenuFadeCounter;
 extern int lbl_803DD8B0;
 extern s16 lbl_803DD8B4;
 extern s8 lbl_803DD8B6;
-extern s16 lbl_803DD796;
 extern u8 lbl_803DD848[7];
 extern u8 lbl_803DD8D4;
 extern int hudYButtonItemIconTexture;

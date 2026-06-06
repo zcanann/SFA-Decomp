@@ -311,7 +311,6 @@ void dll_92_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
 #pragma scheduling reset
 #pragma peephole reset
 extern u8 lbl_80317260[];
-extern undefined4 *gModgfxInterface;
 extern f32 lbl_803E1240;
 extern f32 lbl_803E1244;
 extern f32 lbl_803E1248;

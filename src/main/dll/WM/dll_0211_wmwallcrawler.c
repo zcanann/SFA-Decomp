@@ -503,7 +503,6 @@ void wmwallcrawler_hitDetect(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern int* gPathControlInterface;
 extern u16 lbl_80328DD0[];
 extern u8 lbl_80328DE0[];
 extern u8 lbl_803DC134;

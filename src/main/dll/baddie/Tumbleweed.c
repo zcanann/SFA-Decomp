@@ -3936,7 +3936,6 @@ LAB_801396fc:
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-extern u32 lbl_803DD938;
 extern u8  lbl_803DD988;
 extern u32 lbl_803DD9B8;
 extern u32 lbl_803DD9BC;
@@ -4396,7 +4395,6 @@ int fn_80138920(u8* obj, int arg1, int arg2)
 
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int obj, int b, int c, int d, int e);
-extern f32 lbl_803E2208;
 extern f32 lbl_803E2284;
 extern f32 lbl_803E2288;
 extern f32 lbl_803E228C;
@@ -4481,7 +4479,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objRender(int a, int b, int c, int d, void *obj, int f);
 extern int *Obj_GetActiveModel(void *obj);
 extern u8 lbl_803DD92A;
-extern int lbl_803DD934;
 extern f32 lbl_803E2278;
 extern f32 lbl_803E227C;
 extern f32 lbl_803E2280;
@@ -4646,7 +4643,6 @@ extern void* lbl_803DD984;
 extern void* lbl_803DD980;
 extern f32   lbl_803DD97C;
 extern f32   lbl_803E22E0;
-extern u8    lbl_803DD993;
 extern u16   lbl_803DD994;
 extern u16   lbl_803DD996;
 extern u16   lbl_803DD998;
@@ -4801,9 +4797,6 @@ void fn_801388D0(s16 a, u32 b, u32 c, u32 d) {
 /* EN v1.0 0x801334E0  size: 60b  Gate: when lbl_803DD944 == 2 (s8 compare)
  * and lbl_803DBBB0 != 0, latch lbl_803DD928 = 5 and return 1; else
  * return 0 without touching the latch. */
-extern s8 lbl_803DD944;
-extern u8 lbl_803DBBB0;
-extern u8 lbl_803DD928;
 #pragma peephole off
 #pragma scheduling off
 u8 fn_801334E0(void)
@@ -4973,7 +4966,6 @@ extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23E4;
-extern f32 lbl_803E23E8;
 extern f32 lbl_803E23EC;
 extern f32 lbl_803E23F0;
 extern f32 lbl_803E23F4;
@@ -5583,7 +5575,6 @@ extern int loadUiDll(int dllId);
 extern void TitleMenu_setSelection(int sel);
 extern void streamFn_8000a380(int a, int b, int c);
 extern void gameTextFn_80016810(int textId, int a, int b);
-extern int* gCameraInterface;
 typedef struct { u16 a; u16 b; } CreditEntry;
 extern CreditEntry lbl_8031CE90[];
 
@@ -5719,7 +5710,6 @@ typedef struct {
 } CreditsPage;
 
 extern CreditsPage lbl_8031C620[];
-extern f32 lbl_803E22A8;
 extern f32 lbl_803E22AC;
 extern f32 lbl_803E22B0;
 extern f32 lbl_803E22B4;
@@ -5788,10 +5778,7 @@ int Credits_frameStart(void)
 #pragma scheduling reset
 
 extern u32 lbl_803E2200;
-extern s16 lbl_803DD930;
 extern f32 lbl_803DD94C;
-extern f32 lbl_803E2220;
-extern f32 lbl_803E2224;
 extern f32 lbl_803E2260;
 extern f32 lbl_803E2264;
 extern f32 lbl_803E2268;
@@ -6029,16 +6016,10 @@ extern int ObjGroup_FindNearestObject(int type, int obj, f32 *distOut);
 extern s16 *Camera_GetCurrentViewSlot(void);
 extern int getAngle(f32 dx, f32 dz);
 extern int *gGameUIInterface;
-extern u8 pauseMenuState;
 extern u8 lbl_803DD945;
 extern u8 lbl_803DD929;
 extern s8 lbl_803DBBB1;
-extern u8 lbl_803DD7BA;
-extern s16 lbl_803DBA6E;
 extern int lbl_803DBBE8;
-extern f32 lbl_803DBBB4;
-extern f32 lbl_803DBBB8;
-extern f32 lbl_803DBBBC;
 extern f32 lbl_803DBBD4;
 extern f32 lbl_803DBBD8;
 extern f32 lbl_803DBBDC;
@@ -6436,7 +6417,6 @@ extern u32 __cvt_fp2unsigned(f32 x);
 extern u8 lbl_803DD9C0;
 extern f32 lbl_803E22F0;
 extern f32 lbl_803E22F4;
-extern f32 lbl_803E22F8;
 extern f32 lbl_803E22FC;
 extern f32 lbl_803E2300;
 extern f32 lbl_803E2304;

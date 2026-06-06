@@ -190,7 +190,6 @@ void FUN_8010b428(void)
 void CameraModeTestStrength_copyToCurrent_nop(void) {}
 
 /* fn_X(lbl); lbl = 0; */
-extern u32 lbl_803DD560;
 extern void mm_free(u32);
 #pragma scheduling off
 #pragma peephole off
