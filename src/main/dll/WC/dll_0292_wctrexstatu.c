@@ -24,12 +24,13 @@
 #define WCTREXSTATU_MAPEVENT_RAISED 2
 
 #pragma scheduling off
+#pragma opt_strength_reduction off
 int wctrexstatu_interactCallback(int obj, int unused, int callbackData)
 {
     int i;
 
     for (i = 0; i < *(u8 *)(callbackData + WCTREXSTATU_CALLBACK_COMMAND_COUNT_OFFSET); i++) {
-        if (*(u8 *)(callbackData + WCTREXSTATU_CALLBACK_COMMANDS_OFFSET + i) == WCTREXSTATU_CALLBACK_TRIGGER) {
+        if (((u8 *)callbackData)[i + WCTREXSTATU_CALLBACK_COMMANDS_OFFSET] == WCTREXSTATU_CALLBACK_TRIGGER) {
             int *texture = objFindTexture(obj, 0, 0);
 
             if (texture != NULL) {
@@ -41,6 +42,7 @@ int wctrexstatu_interactCallback(int obj, int unused, int callbackData)
 
     return 0;
 }
+#pragma opt_strength_reduction reset
 #pragma scheduling reset
 
 #pragma scheduling on
