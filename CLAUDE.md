@@ -1494,6 +1494,32 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     converting those changes isel). 30+ fns across 11 TUs converted
     byte-exact this way (Pushable/LandedArwing/PaymentKiosk/DbshSymbol/
     SeqPoint/VfpDragHead/Hagabon containers).
+    **#77 round-2 addendum (task #180, ~20 containers incl. the engine-wide
+    BaddieState):**
+    (a) retyping an `int` state local to a pointer flips its null-compare
+    `cmpwi`→`cmplwi` — launder with `if (((int)state != 0) ...)`;
+    (b) `&state->field` as a call arg breaks the import's `(char*)base+K`
+    address-CSE — keep the ORIGINAL arg spelling (`(char *)state + K`);
+    (c) field signedness/width must mirror the original deref EXACTLY:
+    a u8-array decrement (`sub[9] -= 1`) needs a u8 field to keep the
+    `clrlwi` (s8 emits `extsb` under peephole-off); an int-deref'd flag
+    word needs `s32`, not `u32` (cmpwi vs cmplwi on `(x & K) != 0`);
+    (d) a `p = (int)state;` walker-alias cast after a retype is a recipe
+    #36 trap (cast inflates the web; savegpr shifts) — and dropping ONLY
+    the cast doesn't always recover: high-pressure fns are ALL-OR-NOTHING
+    (if the typed local shifts savegpr, no partial conversion of that fn
+    survives — revert it to raw and document; DIM2flameburst's whole
+    explosion family + scarab's dll_CB_seqFn are reference-only this way);
+    (e) variable-indexed member arrays (`s->segmentLit[j]`) CAN convert
+    byte-exact — the #86 index-fold concern doesn't automatically bite;
+    (f) shared ENGINE records discovered by containerization: BaddieState
+    (0x410, include/main/dll/baddie_state.h — obj+0xB8 prefix for
+    gBaddieControlInterface/gPlayerInterface actors incl. player.c's
+    "inner"; converted in scarab/mediumbasket, adoption pending elsewhere)
+    and the gCarryableInterface record (lbl_803DCAC0; mmp_moonrock/
+    sandwormBoss/CFBaby/gasvent/groundAnimator) — when a "family" state's
+    offsets recur across TUs, check for an interface vtable taking the
+    state pointer before defining a private struct.
 
 78. **Triple-multiply REGROUP: `A * lbl * conv` → `A * (lbl * conv)` —
     Ghidra always left-flattens; target groups the constant-by-conversion
