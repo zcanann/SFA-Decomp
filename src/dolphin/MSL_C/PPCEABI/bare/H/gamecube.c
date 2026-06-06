@@ -1,4 +1,3 @@
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/critical_regions.gamecube.h"
 
 void __kill_critical_regions(void) {}
 

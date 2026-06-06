@@ -1,4 +1,3 @@
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/mem_funcs.h"
 
 int memcmp(const void* lhs, const void* rhs, size_t count)

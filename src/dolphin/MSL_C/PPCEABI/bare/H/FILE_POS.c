@@ -1,7 +1,5 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ansi_files.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/buffer_io.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/errno.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/critical_regions.h"
 
 inline fpos_t _ftell(FILE* file) {
     int charsInUndoBuffer = 0;
