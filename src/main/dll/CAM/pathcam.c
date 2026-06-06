@@ -72,7 +72,7 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
     *((char *)gCamcontrolModeSettings + 0xc7) = 0;
     ((CamcontrolFlagByte *)((char *)gCamcontrolModeSettings + 0xc8))->b7 = 0;
     *((char *)gCamcontrolModeSettings + 0xc2) = 8;
-    target = *(s16 **)(cam + 0x52);
+    target = ((GameObject *)cam)->anim.targetObj;
     switch (mode) {
     case 0:
         memset(gCamcontrolModeSettings, 0, 0xcc);
