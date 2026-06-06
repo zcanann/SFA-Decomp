@@ -1133,11 +1133,12 @@ void dll_7F_func03(int param_1,int param_2,int param_3,uint param_4)
 {
   FbBuf buf;
   u8 *base = lbl_80315328;
+  FbCmd *p;
   FbCmd *e = buf.entries;
-  FbCmd *p = &e[1];
 
   e[0].layer = 0; e[0].flags = 0x8c; e[0].tex = (void *)0; e[0].mode = 0x20000000;
   e[0].x = lbl_803E0E20; e[0].y = lbl_803E0E24; e[0].z = lbl_803E0E28;
+  p = &e[1];
   if (param_2 != 2) {
     p->layer = 0; p->flags = 9; p->tex = base + 0xe8; p->mode = 0x80;
     p->x = lbl_803E0E2C; p->y = lbl_803E0E2C; p->z = lbl_803E0E30;
@@ -1167,7 +1168,6 @@ void dll_7F_func03(int param_1,int param_2,int param_3,uint param_4)
     p++;
     p->layer = 1; p->flags = 1; p->tex = &lbl_803DB8E8; p->mode = 0x4000;
     p->x = lbl_803E0E4C; p->y = lbl_803E0E4C; p->z = lbl_803E0E2C;
-    p++;
   } else if (param_2 == 1) {
     p->layer = 1; p->flags = 9; p->tex = base + 0xe8; p->mode = 0x100;
     p->x = lbl_803E0E50; p->y = lbl_803E0E2C; p->z = lbl_803E0E2C;
@@ -1179,16 +1179,16 @@ void dll_7F_func03(int param_1,int param_2,int param_3,uint param_4)
     p++;
     p->layer = 2; p->flags = 1; p->tex = &lbl_803DB8E8; p->mode = 0x4000;
     p->x = lbl_803E0E4C; p->y = lbl_803E0E4C; p->z = lbl_803E0E2C;
-    p++;
   } else if (param_2 == 1) {
     p->layer = 2; p->flags = 9; p->tex = base + 0xe8; p->mode = 0x100;
     p->x = lbl_803E0E50; p->y = lbl_803E0E2C; p->z = lbl_803E0E2C;
     p++;
   }
-  p[0].layer = 2; p[0].flags = 9; p[0].tex = base + 0xe8; p[0].mode = 4;
-  p[0].x = lbl_803E0E2C; p[0].y = lbl_803E0E2C; p[0].z = lbl_803E0E2C;
-  p[1].layer = 3; p[1].flags = 0; p[1].tex = (void *)0; p[1].mode = 0x20000000;
-  p[1].x = lbl_803E0E20; p[1].y = lbl_803E0E24; p[1].z = lbl_803E0E28;
+  p->layer = 2; p->flags = 9; p->tex = base + 0xe8; p->mode = 4;
+  p->x = lbl_803E0E2C; p->y = lbl_803E0E2C; p->z = lbl_803E0E2C;
+  p++;
+  p->layer = 3; p->flags = 0; p->tex = (void *)0; p->mode = 0x20000000;
+  p->x = lbl_803E0E20; p->y = lbl_803E0E24; p->z = lbl_803E0E28;
   buf.ctx = param_1;
   buf.v44 = (s16)param_2;
   buf.pos[0] = lbl_803E0E2C; buf.pos[1] = lbl_803E0E2C; buf.pos[2] = lbl_803E0E2C;
@@ -1199,7 +1199,7 @@ void dll_7F_func03(int param_1,int param_2,int param_3,uint param_4)
   buf.v59 = 9;
   buf.v5a = 0;
   buf.v5b = 0x20;
-  buf.count = (FbCmd *)((u8 *)p + 0x30) - e;
+  buf.count = (FbCmd *)((u8 *)p + 0x18) - e;
   buf.hw[0] = *(s16 *)(base + 0x10c); buf.hw[1] = *(s16 *)(base + 0x10e);
   buf.hw[2] = *(s16 *)(base + 0x110); buf.hw[3] = *(s16 *)(base + 0x112);
   buf.hw[4] = *(s16 *)(base + 0x114); buf.hw[5] = *(s16 *)(base + 0x116);
