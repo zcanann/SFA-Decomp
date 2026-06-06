@@ -2650,12 +2650,13 @@ void dll_8D_func03(int param_1,int param_2,int param_3,uint param_4)
 void dll_8E_func03(int param_1,int param_2,int param_3,uint param_4)
 {
   FbBuf buf;
+  FbCmd *p;
   FbCmd *e = buf.entries;
-  FbCmd *p = e;
   u8 *base;
   f32 rz;
   f32 ry;
 
+  p = e;
   if (param_2 == 0) {
     p->layer = 0; p->flags = 3; p->tex = &lbl_803DB918; p->mode = 8;
     p->x = (f32)(int)(randomGetRange(0, 0x69) + 0x8c);
@@ -2680,7 +2681,7 @@ void dll_8E_func03(int param_1,int param_2,int param_3,uint param_4)
   p[2].y = lbl_803E1144 * (f32)(int)randomGetRange(0, 0x32) + lbl_803E1140;
   p[2].z = lbl_803E1144 * (f32)(int)randomGetRange(0, 0x14) + lbl_803E1148;
   p[3].layer = 1; p[3].flags = 3; p[3].tex = &lbl_803DB918; p[3].mode = 4;
-  if (randomGetRange(0, 0xa) == 0) {
+  if ((int)randomGetRange(0, 0xa) == 0) {
     p[3].x = lbl_803E114C + (f32)(int)randomGetRange(0, 0x1e);
   } else {
     p[3].x = lbl_803E1150 + (f32)(int)randomGetRange(0, 0xa);
@@ -2721,7 +2722,7 @@ void dll_8E_func03(int param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)(base + 4); buf.hw[3] = *(s16 *)(base + 6);
   buf.hw[4] = *(s16 *)(base + 8); buf.hw[5] = *(s16 *)(base + 0xa);
   buf.hw[6] = *(s16 *)(base + 0xc);
-  buf.cmds = buf.entries;
+  buf.cmds = (FbCmd *)((u8 *)&buf + 0x60);
   buf.flags = 0x4000410;
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
