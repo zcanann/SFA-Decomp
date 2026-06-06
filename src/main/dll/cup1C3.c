@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cup1C3.h"
 #include "main/objanim.h"
+#include "main/objlib.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -37,7 +38,7 @@ extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void *a, void *b);
 extern void objUpdateOpacity(int obj);
-extern int ObjHits_GetPriorityHit(int obj, int *outHit, int *outIdx, int *outVol);
+extern int ObjHits_GetPriorityHit(int obj, int *outHit, int *outIdx, u32 *outVol);
 extern int Resource_Acquire(int id, int mode);
 extern void Resource_Release(int handle);
 
@@ -109,7 +110,6 @@ extern void timerSetToCountUp(void);
 extern void gameTimerStop(void);
 extern int isGameTimerDisabled(void);
 extern int getButtonsJustPressedIfNotBusy(int p);
-extern int ObjList_GetObjects(int *idx, int *count);
 extern f32 timeDelta;
 extern f32 lbl_803E50E0;
 extern f32 lbl_803E50E4;

@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_B6.h"
+#include "main/objlib.h"
 
 extern void *Obj_GetPlayerObject(void);
 extern int objAnimFn_80296328(void);
-extern u8 **ObjList_GetObjects(int *idx, int *count);
 extern int fn_80295C24(void *player);
 extern void voxmaps_worldToGrid(f32 *world, int *grid);
 extern u8 voxmaps_traceLine(int *from, int *to, int *out, u8 *occOut, int e);
@@ -73,7 +73,7 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         objAnimFn_80296328() == 0) {
         return NULL;
     }
-    ptr = ObjList_GetObjects(&objIndex, &objCount);
+    ptr = (u8 **)ObjList_GetObjects(&objIndex, &objCount);
     idx = objIndex;
     ptr += idx;
     for (; idx < objCount; ptr++, idx++) {

@@ -1,12 +1,12 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
+#include "main/objlib.h"
 #include "main/dll/baddie/chuka.h"
 #include "main/dll/baddie/chukachuck.h"
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern u8 *Obj_GetPlayerObject(void);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 
@@ -88,7 +88,7 @@ void dfpfloorbar_update(int param_1)
         int idx_init;
         int count;
         int idx;
-        items = ObjList_GetObjects(&idx_init, &count);
+        items = (int *)ObjList_GetObjects(&idx_init, &count);
         idx = idx_init;
         for (; idx < count; idx++) {
             int o = items[idx];
