@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/dim_tricky.h"
 
 
@@ -185,10 +186,10 @@ void dll_19E_init(u8 *obj, Dll19ESetup *setup)
   state = *(Dll19EState **)(obj + 0xb8);
   *(s16 *)obj = (s16)(((s32)setup->objectType & 0x3f) << 10);
   if (setup->scaleTimer > 0) {
-    *(f32 *)(obj + 0x8) = (f32)setup->scaleTimer / lbl_803E51E4;
+    ((GameObject *)obj)->anim.rootMotionScale = (f32)setup->scaleTimer / lbl_803E51E4;
   }
   else {
-    *(f32 *)(obj + 0x8) = lbl_803E51E8;
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E51E8;
   }
 
   state->mode = setup->mode;
