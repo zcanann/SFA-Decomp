@@ -1600,7 +1600,7 @@ void MIDIWADLoadedCallback(int status, void* fileInfo)
     } else {
         DVDClose(fileInfo);
         mm_free(fileInfo);
-        gAudioPendingLoadFlags &= ~0x800;
+        gAudioPendingLoadFlags &= ~0x800LL;
         gAudioCompletedLoadFlags |= 0x800;
     }
 }
@@ -1696,7 +1696,7 @@ void poolDataMLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x8;
+        gAudioPendingLoadFlags &= ~0x8LL;
         gAudioCompletedLoadFlags |= 0x8;
     }
 }
@@ -1719,7 +1719,7 @@ void poolDataSLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x80;
+        gAudioPendingLoadFlags &= ~0x80LL;
         gAudioCompletedLoadFlags |= 0x80;
     }
 }
@@ -1742,7 +1742,7 @@ void projectDataMLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x10;
+        gAudioPendingLoadFlags &= ~0x10LL;
         gAudioCompletedLoadFlags |= 0x10;
     }
 }
@@ -1765,7 +1765,7 @@ void projectDataSLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x100;
+        gAudioPendingLoadFlags &= ~0x100LL;
         gAudioCompletedLoadFlags |= 0x100;
     }
 }
@@ -1788,7 +1788,7 @@ void sampleBufferMLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x40;
+        gAudioPendingLoadFlags &= ~0x40LL;
         gAudioCompletedLoadFlags |= 0x40;
     }
 }
@@ -1811,7 +1811,7 @@ void sampleBufferSLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x400;
+        gAudioPendingLoadFlags &= ~0x400LL;
         gAudioCompletedLoadFlags |= 0x400;
     }
 }
@@ -1834,7 +1834,7 @@ void sampleDirectoryMLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x20;
+        gAudioPendingLoadFlags &= ~0x20LL;
         gAudioCompletedLoadFlags |= 0x20;
     }
 }
@@ -1857,7 +1857,7 @@ void sampleDirectorySLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x200;
+        gAudioPendingLoadFlags &= ~0x200LL;
         gAudioCompletedLoadFlags |= 0x200;
     }
 }
@@ -1880,7 +1880,7 @@ void sfxTriggersLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x2;
+        gAudioPendingLoadFlags &= ~0x2LL;
         gAudioCompletedLoadFlags |= 0x2;
     }
 }
@@ -1903,7 +1903,7 @@ void musicTriggersLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x1;
+        gAudioPendingLoadFlags &= ~0x1LL;
         gAudioCompletedLoadFlags |= 0x1;
     }
 }
@@ -1929,7 +1929,7 @@ void streamsLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x4;
+        gAudioPendingLoadFlags &= ~0x4LL;
         gAudioCompletedLoadFlags |= 0x4;
         s = gStreamsData;
         count = gStreamsCount;
