@@ -2641,12 +2641,10 @@ void audioSetSoundMode(int mode, u8 forceFlag)
             break;
         }
     }
-    if ((u8)mode == 2) {
-        if (gAudioSoundMode != 2) {
+    if ((((u8)mode == 2) && (gAudioSoundMode != 2)) || (((u8)mode != 2) && (gAudioSoundMode == 2))) {
+        if ((u8)mode == 2) {
             OSSetSoundMode(0);
-        }
-    } else {
-        if (gAudioSoundMode == 2) {
+        } else {
             OSSetSoundMode(1);
         }
     }
