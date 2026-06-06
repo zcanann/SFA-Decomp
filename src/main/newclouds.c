@@ -1,3 +1,4 @@
+#include "main/newclouds_state.h"
 #include "main/newclouds.h"
 
 typedef struct ObjSeqBgCmd {
@@ -1426,7 +1427,7 @@ void snowFreeSnowCloud(int cloudId) {
     }
     for (i = 0; i < 8; i++) {
         p = lbl_8039A828[i];
-        if (p != NULL && cloudId == *(int *)(p + 0x13f0)) {
+        if (p != NULL && cloudId == ((NewCloud *)p)->unk13F0) {
             break;
         }
     }
@@ -1437,7 +1438,7 @@ void snowFreeSnowCloud(int cloudId) {
     if (i == 8) {
         return;
     }
-    if (cloudId != *(int *)(p + 0x13f0)) {
+    if (cloudId != ((NewCloud *)p)->unk13F0) {
         debugPrintf(sSnowFreeSnowCloudInvalidCloudId, cloudId);
         return;
     }
@@ -1665,7 +1666,7 @@ void snowCloudInitFlakes(f32 *buf, int cloudId, f32 a, f32 b) {
     amp = a * b * lbl_803DF1E0;
     for (i = 0; i < 8; i++) {
         p = lbl_8039A828[i];
-        if (p != NULL && cloudId == *(int *)(p + 0x13f0)) {
+        if (p != NULL && cloudId == ((NewCloud *)p)->unk13F0) {
             break;
         }
     }
@@ -1676,11 +1677,11 @@ void snowCloudInitFlakes(f32 *buf, int cloudId, f32 a, f32 b) {
     if (lbl_803DF1E4 == lbl_803DD1AC) {
         return;
     }
-    if (cloudId != *(int *)(p + 0x13f0)) {
+    if (cloudId != ((NewCloud *)p)->unk13F0) {
         debugPrintf(sSnowFreeSnowCloudInvalidCloudId, cloudId);
         return;
     }
-    if (*(int *)(p + 0x13f4) == 4) {
+    if (((NewCloud *)p)->unk13F4 == 4) {
         size = lbl_803DF1E4;
     } else {
         size = lbl_803DF1E8;
@@ -2369,7 +2370,7 @@ void snowReposSnowCloud(int cloudId) {
     srand(randomGetRange(1, 0xffff));
     for (i = 0; i < 8; i++) {
         p = lbl_8039A828[i];
-        if (p != NULL && cloudId == *(int *)(p + 0x13f0)) {
+        if (p != NULL && cloudId == ((NewCloud *)p)->unk13F0) {
             break;
         }
     }
@@ -2380,7 +2381,7 @@ void snowReposSnowCloud(int cloudId) {
     if (i == 8) {
         return;
     }
-    if (cloudId != *(int *)(p + 0x13f0)) {
+    if (cloudId != ((NewCloud *)p)->unk13F0) {
         debugPrintf(lbl_8030F670, cloudId);
         return;
     }
@@ -2507,15 +2508,15 @@ void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
         return;
     }
     memset(lbl_8039A828[id], 0, 0x1454);
-    *(int *)(NC_CLOUD + 0x13f0) = id;
+    ((NewCloud *)NC_CLOUD)->unk13F0 = id;
     NC_CLOUD[0x1453] = 0;
-    *(int *)(NC_CLOUD + 0x13f4) = params[0x5c];
+    ((NewCloud *)NC_CLOUD)->unk13F4 = params[0x5c];
     *(void **)(NC_CLOUD + 0x0) = owner;
     NC_CLOUD[0x144a] = params[0x58];
     NC_CLOUD[0x144b] = params[0x59];
-    *(f32 *)(NC_CLOUD + 0x140c) = x;
-    *(f32 *)(NC_CLOUD + 0x1410) = y;
-    *(f32 *)(NC_CLOUD + 0x1414) = z;
+    ((NewCloud *)NC_CLOUD)->unk140C = x;
+    ((NewCloud *)NC_CLOUD)->unk1410 = y;
+    ((NewCloud *)NC_CLOUD)->unk1414 = z;
     if (params[0x58] & 1) {
         NC_CLOUD[0x1451] = 1;
     }
@@ -2524,53 +2525,53 @@ void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
     }
     NC_CLOUD[0x1452] = 1;
     NC_CLOUD[0x144d] = params[0x5d];
-    if (*(int *)(NC_CLOUD + 0x13f4) == 0) {
-        *(int *)(NC_CLOUD + 0x13fc) = *(u16 *)(params + 0x28) << 3;
+    if (((NewCloud *)NC_CLOUD)->unk13F4 == 0) {
+        ((NewCloud *)NC_CLOUD)->unk13FC = *(u16 *)(params + 0x28) << 3;
     } else {
-        *(int *)(NC_CLOUD + 0x13fc) = *(u16 *)(params + 0x28);
+        ((NewCloud *)NC_CLOUD)->unk13FC = *(u16 *)(params + 0x28);
     }
     if (*(u16 *)(params + 0x2a) != 0) {
-        *(f32 *)(NC_CLOUD + 0x142c) =
-            (f32)*(int *)(NC_CLOUD + 0x13fc) / (f32)*(u16 *)(params + 0x2a);
+        ((NewCloud *)NC_CLOUD)->unk142C =
+            (f32)((NewCloud *)NC_CLOUD)->unk13FC / (f32)*(u16 *)(params + 0x2a);
     } else {
-        *(f32 *)(NC_CLOUD + 0x142c) = (f32)*(int *)(NC_CLOUD + 0x13fc);
+        ((NewCloud *)NC_CLOUD)->unk142C = (f32)((NewCloud *)NC_CLOUD)->unk13FC;
     }
     if (*(u16 *)(params + 0x2c) != 0) {
-        *(f32 *)(NC_CLOUD + 0x1430) =
-            (f32)*(int *)(NC_CLOUD + 0x13fc) / (f32)*(u16 *)(params + 0x2c);
+        ((NewCloud *)NC_CLOUD)->unk1430 =
+            (f32)((NewCloud *)NC_CLOUD)->unk13FC / (f32)*(u16 *)(params + 0x2c);
     } else {
-        *(f32 *)(NC_CLOUD + 0x1430) = (f32)*(int *)(NC_CLOUD + 0x13fc);
+        ((NewCloud *)NC_CLOUD)->unk1430 = (f32)((NewCloud *)NC_CLOUD)->unk13FC;
     }
-    *(f32 *)(NC_CLOUD + 0x1438) = *(f32 *)(params + 8);
-    if (*(int *)(NC_CLOUD + 0x13f4) == 0) {
-        *(f32 *)(NC_CLOUD + 0x1418) = lbl_803DF234;
-        *(f32 *)(NC_CLOUD + 0x141c) = lbl_803DF238;
+    ((NewCloud *)NC_CLOUD)->unk1438 = *(f32 *)(params + 8);
+    if (((NewCloud *)NC_CLOUD)->unk13F4 == 0) {
+        ((NewCloud *)NC_CLOUD)->unk1418 = lbl_803DF234;
+        ((NewCloud *)NC_CLOUD)->unk141C = lbl_803DF238;
     } else {
-        *(f32 *)(NC_CLOUD + 0x1418) = *(f32 *)(params + 4);
-        *(f32 *)(NC_CLOUD + 0x141c) = lbl_803DF1E4 * *(f32 *)(params + 0);
+        ((NewCloud *)NC_CLOUD)->unk1418 = *(f32 *)(params + 4);
+        ((NewCloud *)NC_CLOUD)->unk141C = lbl_803DF1E4 * *(f32 *)(params + 0);
     }
     if (*(f32 *)(params + 8) < lbl_803DF1A4) {
         *(f32 *)(params + 8) = lbl_803DF1A0;
     }
     if (lbl_803DF1A0 != *(f32 *)(params + 8)) {
-        *(f32 *)(NC_CLOUD + 0x1444) = lbl_803DF23C;
-        *(f32 *)(NC_CLOUD + 0x143c) =
+        ((NewCloud *)NC_CLOUD)->unk1444 = lbl_803DF23C;
+        ((NewCloud *)NC_CLOUD)->unk143C =
             (f32)(int)randomGetRange(1, (int)*(f32 *)(params + 8)) * lbl_803DF214;
     }
-    *(int *)(NC_CLOUD + 0x1400) = 1;
+    ((NewCloud *)NC_CLOUD)->unk1400 = 1;
     fl = NC_CLOUD[0x144b];
     if (fl & 8) {
-        *(s16 *)(NC_CLOUD + 0x1448) = 0x320;
+        ((NewCloud *)NC_CLOUD)->unk1448 = 0x320;
     } else if (fl & 0x10) {
-        *(s16 *)(NC_CLOUD + 0x1448) = 0xc8;
+        ((NewCloud *)NC_CLOUD)->unk1448 = 0xc8;
     } else if (fl & 0x20) {
-        *(s16 *)(NC_CLOUD + 0x1448) = 0x64;
+        ((NewCloud *)NC_CLOUD)->unk1448 = 0x64;
     }
-    snowCloudInitFlakes((f32 *)(NC_CLOUD + 8), id, *(f32 *)(NC_CLOUD + 0x1418),
-                         *(f32 *)(NC_CLOUD + 0x141c));
-    snowCloudBuildBoxVerts((f32 *)(NC_CLOUD + 0x1378), *(f32 *)(NC_CLOUD + 0x1418),
-                *(f32 *)(NC_CLOUD + 0x141c));
-    *(void **)(NC_CLOUD + 4) = mmAlloc(*(int *)(NC_CLOUD + 0x13fc) * 0x18, 0x17, 0);
+    snowCloudInitFlakes((f32 *)(NC_CLOUD + 8), id, ((NewCloud *)NC_CLOUD)->unk1418,
+                         ((NewCloud *)NC_CLOUD)->unk141C);
+    snowCloudBuildBoxVerts((f32 *)(NC_CLOUD + 0x1378), ((NewCloud *)NC_CLOUD)->unk1418,
+                ((NewCloud *)NC_CLOUD)->unk141C);
+    *(void **)(NC_CLOUD + 4) = mmAlloc(((NewCloud *)NC_CLOUD)->unk13FC * 0x18, 0x17, 0);
     if (*(void **)(NC_CLOUD + 4) == NULL) {
         ok = 0;
     }
@@ -2580,17 +2581,17 @@ void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
         lbl_8039A828[id] = NULL;
         return;
     }
-    for (i = 0; i < *(int *)(NC_CLOUD + 0x13fc); i++) {
+    for (i = 0; i < ((NewCloud *)NC_CLOUD)->unk13FC; i++) {
         *(f32 *)(NC_PARTS + i * 0x18) =
-            (f32)(int)randomGetRange((int)*(f32 *)(NC_CLOUD + 0x1378),
-                                     (int)*(f32 *)(NC_CLOUD + 0x139c));
-        *(f32 *)(NC_PARTS + i * 0x18 + 4) = *(f32 *)(NC_CLOUD + 0x1388);
+            (f32)(int)randomGetRange((int)((NewCloud *)NC_CLOUD)->unk1378,
+                                     (int)((NewCloud *)NC_CLOUD)->unk139C);
+        *(f32 *)(NC_PARTS + i * 0x18 + 4) = ((NewCloud *)NC_CLOUD)->unk1388;
         *(f32 *)(NC_PARTS + i * 0x18 + 8) =
-            (f32)(int)randomGetRange((int)*(f32 *)(NC_CLOUD + 0x1380),
-                                     (int)*(f32 *)(NC_CLOUD + 0x13b0));
+            (f32)(int)randomGetRange((int)((NewCloud *)NC_CLOUD)->unk1380,
+                                     (int)((NewCloud *)NC_CLOUD)->unk13B0);
         *(u16 *)(NC_PARTS + i * 0x18 + 0x10) = (u16)randomGetRange(0, 0x3d0);
         *(u16 *)(NC_PARTS + i * 0x18 + 0x12) = (u16)randomGetRange(0, 0x13);
-        if (*(int *)(NC_CLOUD + 0x13f4) == 0) {
+        if (((NewCloud *)NC_CLOUD)->unk13F4 == 0) {
             *(s8 *)(NC_PARTS + i * 0x18 + 0x14) =
                 (s8)(randomGetRange(*(int *)(strs + params[0x5a] * 8 + 0x58),
                                     *(int *)(strs + params[0x5a] * 8 + 0x5c)) /
@@ -2598,7 +2599,7 @@ void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
             *(f32 *)(NC_PARTS + i * 0x18 + 0xc) =
                 (f32)(int)randomGetRange(0x4b, 0x64) / lbl_803DF1FC;
             *(u8 *)(NC_PARTS + i * 0x18 + 0x16) =
-                (u8)(i / (*(int *)(NC_CLOUD + 0x13fc) / 4));
+                (u8)(i / (((NewCloud *)NC_CLOUD)->unk13FC / 4));
         } else {
             *(s8 *)(NC_PARTS + i * 0x18 + 0x14) =
                 (s8)(randomGetRange(*(int *)(strs + params[0x5a] * 8 + 0x58),
@@ -2789,11 +2790,11 @@ void newclouds_update(u8 *objA, u8 *objB, u8 *params) {
                     if ((s8)env[*(u16 *)(params + 0x26) + 0x41] != 0) {
                         return;
                     }
-                    *(f32 *)(NC_CLOUD + 0x140c) =
+                    ((NewCloud *)NC_CLOUD)->unk140C =
                         (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x14);
-                    *(f32 *)(NC_CLOUD + 0x1410) =
+                    ((NewCloud *)NC_CLOUD)->unk1410 =
                         (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x18);
-                    *(f32 *)(NC_CLOUD + 0x1414) =
+                    ((NewCloud *)NC_CLOUD)->unk1414 =
                         (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x1c);
                     break;
                 case 1:
@@ -2808,11 +2809,11 @@ void newclouds_update(u8 *objA, u8 *objB, u8 *params) {
                     if ((s8)env[*(u16 *)(params + 0x26) + 0x41] != 0) {
                         return;
                     }
-                    *(f32 *)(NC_CLOUD + 0x140c) =
+                    ((NewCloud *)NC_CLOUD)->unk140C =
                         (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x14);
-                    *(f32 *)(NC_CLOUD + 0x1410) =
+                    ((NewCloud *)NC_CLOUD)->unk1410 =
                         (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x18);
-                    *(f32 *)(NC_CLOUD + 0x1414) =
+                    ((NewCloud *)NC_CLOUD)->unk1414 =
                         (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x1c);
                     break;
                 case 2:
@@ -2827,11 +2828,11 @@ void newclouds_update(u8 *objA, u8 *objB, u8 *params) {
                     if ((s8)env[*(u16 *)(params + 0x26) + 0x41] != 0) {
                         return;
                     }
-                    *(f32 *)(NC_CLOUD + 0x140c) =
+                    ((NewCloud *)NC_CLOUD)->unk140C =
                         (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x14);
-                    *(f32 *)(NC_CLOUD + 0x1410) =
+                    ((NewCloud *)NC_CLOUD)->unk1410 =
                         (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x18);
-                    *(f32 *)(NC_CLOUD + 0x1414) =
+                    ((NewCloud *)NC_CLOUD)->unk1414 =
                         (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x1c);
                     break;
                 }
@@ -2860,15 +2861,15 @@ void newclouds_update(u8 *objA, u8 *objB, u8 *params) {
             args.fa = 0;
             args.f8 = *(s16 *)objA;
             vecRotateZXY(&args.f8, vec);
-            *(f32 *)(NC_CLOUD + 0x140c) = vec[0] + *(f32 *)(objA + 0x18);
-            *(f32 *)(NC_CLOUD + 0x1410) = vec[1] + *(f32 *)(objA + 0x1c);
-            *(f32 *)(NC_CLOUD + 0x1414) = vec[2] + *(f32 *)(objA + 0x20);
-            if (*(f32 *)(NC_CLOUD + 0x1438) > lbl_803DF27C) {
-                Music_Trigger(lbl_8030F5A0[*(int *)(NC_CLOUD + 0x13f4)], 0);
+            ((NewCloud *)NC_CLOUD)->unk140C = vec[0] + *(f32 *)(objA + 0x18);
+            ((NewCloud *)NC_CLOUD)->unk1410 = vec[1] + *(f32 *)(objA + 0x1c);
+            ((NewCloud *)NC_CLOUD)->unk1414 = vec[2] + *(f32 *)(objA + 0x20);
+            if (((NewCloud *)NC_CLOUD)->unk1438 > lbl_803DF27C) {
+                Music_Trigger(lbl_8030F5A0[((NewCloud *)NC_CLOUD)->unk13F4], 0);
             }
         } else {
-            if (*(f32 *)(NC_CLOUD + 0x1438) > lbl_803DF27C) {
-                Music_Trigger(lbl_8030F5A0[*(int *)(NC_CLOUD + 0x13f4)], 1);
+            if (((NewCloud *)NC_CLOUD)->unk1438 > lbl_803DF27C) {
+                Music_Trigger(lbl_8030F5A0[((NewCloud *)NC_CLOUD)->unk13F4], 1);
             }
         }
         if ((s8)env[*(u16 *)(params + 0x26) + 0x41] == 0) {
@@ -2882,18 +2883,18 @@ void newclouds_update(u8 *objA, u8 *objB, u8 *params) {
         if (p[0x144f] != 0) {
             p[0x144f] = 0;
         }
-        *(int *)(NC_CLOUD + 0x13f8) = 1 - *(int *)(NC_CLOUD + 0x13f8);
+        ((NewCloud *)NC_CLOUD)->unk13F8 = 1 - ((NewCloud *)NC_CLOUD)->unk13F8;
         if (*(u16 *)(params + 0x2a) != 0) {
-            *(f32 *)(NC_CLOUD + 0x142c) =
-                (f32)*(int *)(NC_CLOUD + 0x13fc) / (f32)*(u16 *)(params + 0x2a);
+            ((NewCloud *)NC_CLOUD)->unk142C =
+                (f32)((NewCloud *)NC_CLOUD)->unk13FC / (f32)*(u16 *)(params + 0x2a);
         } else {
-            *(f32 *)(NC_CLOUD + 0x142c) = (f32)(*(int *)(NC_CLOUD + 0x13fc) - 1);
+            ((NewCloud *)NC_CLOUD)->unk142C = (f32)(((NewCloud *)NC_CLOUD)->unk13FC - 1);
         }
         if (*(u16 *)(params + 0x2c) != 0) {
-            *(f32 *)(NC_CLOUD + 0x1430) =
-                -((f32)*(int *)(NC_CLOUD + 0x13fc) / (f32)*(u16 *)(params + 0x2c));
+            ((NewCloud *)NC_CLOUD)->unk1430 =
+                -((f32)((NewCloud *)NC_CLOUD)->unk13FC / (f32)*(u16 *)(params + 0x2c));
         } else {
-            *(f32 *)(NC_CLOUD + 0x1430) = (f32)(-(*(int *)(NC_CLOUD + 0x13fc) - 1));
+            ((NewCloud *)NC_CLOUD)->unk1430 = (f32)(-(((NewCloud *)NC_CLOUD)->unk13FC - 1));
         }
     }
 }
@@ -2985,39 +2986,39 @@ void dll_07_func06(void) {
         p = D7_CLOUD;
         if (p != NULL &&
             (*(u8 **)p == NULL || !(*(u16 *)(*(u8 **)p + 0xb0) & 0x40))) {
-            snowFreeSnowCloud(*(int *)(p + 0x13f0));
+            snowFreeSnowCloud(((NewCloud *)p)->unk13F0);
             continue;
         }
-        if (p != NULL && *(int *)(p + 0x1400) != 0) {
-            snowCloudInitFlakes((f32 *)(p + 8), i, *(f32 *)(p + 0x1418),
-                                 *(f32 *)(p + 0x141c));
+        if (p != NULL && ((NewCloud *)p)->unk1400 != 0) {
+            snowCloudInitFlakes((f32 *)(p + 8), i, ((NewCloud *)p)->unk1418,
+                                 ((NewCloud *)p)->unk141C);
         } else if (p != NULL && p[0x144f] == 0) {
-            if (*(int *)(p + 0x13f4) == 4) {
+            if (((NewCloud *)p)->unk13F4 == 4) {
                 lbl_803DD19B = 1;
             }
-            if (*(int *)(p + 0x13f8) != 0) {
-                *(f32 *)(p + 0x1434) =
-                    (f32)framesThisStep * *(f32 *)(p + 0x1430) + *(f32 *)(p + 0x1434);
-                if (*(f32 *)(D7_CLOUD + 0x1434) <= lbl_803DF1A0) {
+            if (((NewCloud *)p)->unk13F8 != 0) {
+                ((NewCloud *)p)->unk1434 =
+                    (f32)framesThisStep * ((NewCloud *)p)->unk1430 + ((NewCloud *)p)->unk1434;
+                if (((NewCloud *)D7_CLOUD)->unk1434 <= lbl_803DF1A0) {
                     D7_CLOUD[0x144f] = 1;
                 }
             } else {
-                if ((int)*(f32 *)(p + 0x1434) < *(int *)(p + 0x13fc)) {
-                    *(f32 *)(p + 0x1434) = (f32)framesThisStep * *(f32 *)(p + 0x142c) +
-                                           *(f32 *)(p + 0x1434);
+                if ((int)((NewCloud *)p)->unk1434 < ((NewCloud *)p)->unk13FC) {
+                    ((NewCloud *)p)->unk1434 = (f32)framesThisStep * ((NewCloud *)p)->unk142C +
+                                           ((NewCloud *)p)->unk1434;
                 }
             }
-            if ((int)*(f32 *)(D7_CLOUD + 0x1434) > *(int *)(D7_CLOUD + 0x13fc)) {
-                *(f32 *)(D7_CLOUD + 0x1434) = (f32)*(int *)(D7_CLOUD + 0x13fc);
+            if ((int)((NewCloud *)D7_CLOUD)->unk1434 > ((NewCloud *)D7_CLOUD)->unk13FC) {
+                ((NewCloud *)D7_CLOUD)->unk1434 = (f32)((NewCloud *)D7_CLOUD)->unk13FC;
             }
-            if (*(f32 *)(D7_CLOUD + 0x1434) < lbl_803DF1A0) {
-                *(f32 *)(D7_CLOUD + 0x1434) = lbl_803DF1A0;
+            if (((NewCloud *)D7_CLOUD)->unk1434 < lbl_803DF1A0) {
+                ((NewCloud *)D7_CLOUD)->unk1434 = lbl_803DF1A0;
             }
             if (*(u8 **)D7_CLOUD != NULL) {
                 Obj_GetWorldPosition(*(u8 **)D7_CLOUD, &pos[0], py, pz);
             }
             if (D7_CLOUD[0x1452] != 0 && cam != NULL) {
-                if (*(int *)(D7_CLOUD + 0x13f4) == 4) {
+                if (((NewCloud *)D7_CLOUD)->unk13F4 == 4) {
                     vec[0] = lbl_803DF1A0;
                     vec[1] = lbl_803DF1A0;
                     vec[2] = lbl_803DF1FC;
@@ -3038,66 +3039,66 @@ void dll_07_func06(void) {
                     pos[2] = *(f32 *)((u8 *)cam + 0x4c);
                 }
             }
-            *(f32 *)(D7_CLOUD + 0x1440) = (f32)framesThisStep * *(f32 *)(D7_CLOUD + 0x1444) +
-                                          *(f32 *)(D7_CLOUD + 0x1440);
-            if (lbl_803DF1A0 != *(f32 *)(D7_CLOUD + 0x1438)) {
-                if (*(f32 *)(D7_CLOUD + 0x1440) > *(f32 *)(D7_CLOUD + 0x143c)) {
-                    *(f32 *)(D7_CLOUD + 0x1444) =
-                        *(f32 *)(D7_CLOUD + 0x1444) * lbl_803DF244;
-                    *(f32 *)(D7_CLOUD + 0x1440) = *(f32 *)(D7_CLOUD + 0x143c);
-                } else if (*(f32 *)(D7_CLOUD + 0x1440) < lbl_803DF1A0) {
-                    *(f32 *)(D7_CLOUD + 0x1444) =
-                        *(f32 *)(D7_CLOUD + 0x1444) * lbl_803DF244;
-                    *(f32 *)(D7_CLOUD + 0x143c) = (f32)(int)randomGetRange(
-                        1, (int)(lbl_803DF1C8 * *(f32 *)(D7_CLOUD + 0x1438)));
-                    *(f32 *)(D7_CLOUD + 0x1440) = lbl_803DF1A0;
+            ((NewCloud *)D7_CLOUD)->unk1440 = (f32)framesThisStep * ((NewCloud *)D7_CLOUD)->unk1444 +
+                                          ((NewCloud *)D7_CLOUD)->unk1440;
+            if (lbl_803DF1A0 != ((NewCloud *)D7_CLOUD)->unk1438) {
+                if (((NewCloud *)D7_CLOUD)->unk1440 > ((NewCloud *)D7_CLOUD)->unk143C) {
+                    ((NewCloud *)D7_CLOUD)->unk1444 =
+                        ((NewCloud *)D7_CLOUD)->unk1444 * lbl_803DF244;
+                    ((NewCloud *)D7_CLOUD)->unk1440 = ((NewCloud *)D7_CLOUD)->unk143C;
+                } else if (((NewCloud *)D7_CLOUD)->unk1440 < lbl_803DF1A0) {
+                    ((NewCloud *)D7_CLOUD)->unk1444 =
+                        ((NewCloud *)D7_CLOUD)->unk1444 * lbl_803DF244;
+                    ((NewCloud *)D7_CLOUD)->unk143C = (f32)(int)randomGetRange(
+                        1, (int)(lbl_803DF1C8 * ((NewCloud *)D7_CLOUD)->unk1438));
+                    ((NewCloud *)D7_CLOUD)->unk1440 = lbl_803DF1A0;
                 }
             }
             if (D7_CLOUD[0x144d] == 0) {
                 inpos[0] = pos[0];
                 inpos[1] = pos[1];
                 inpos[2] = pos[2];
-                snowCloudComputeDrift(wind, inpos, *(f32 *)(D7_CLOUD + 0x1438));
-                if (*(int *)(D7_CLOUD + 0x13f4) == 0) {
-                    *(f32 *)(D7_CLOUD + 0x1420) = -wind[0];
-                    *(f32 *)(D7_CLOUD + 0x1424) = -wind[2];
+                snowCloudComputeDrift(wind, inpos, ((NewCloud *)D7_CLOUD)->unk1438);
+                if (((NewCloud *)D7_CLOUD)->unk13F4 == 0) {
+                    ((NewCloud *)D7_CLOUD)->unk1420 = -wind[0];
+                    ((NewCloud *)D7_CLOUD)->unk1424 = -wind[2];
                 } else {
-                    *(f32 *)(D7_CLOUD + 0x1420) =
-                        -(wind[0] + *(f32 *)(D7_CLOUD + 0x1440));
-                    *(f32 *)(D7_CLOUD + 0x1424) =
-                        -(wind[2] + *(f32 *)(D7_CLOUD + 0x1440));
-                    *(f32 *)(D7_CLOUD + 0x1428) = lbl_803DF1A0;
+                    ((NewCloud *)D7_CLOUD)->unk1420 =
+                        -(wind[0] + ((NewCloud *)D7_CLOUD)->unk1440);
+                    ((NewCloud *)D7_CLOUD)->unk1424 =
+                        -(wind[2] + ((NewCloud *)D7_CLOUD)->unk1440);
+                    ((NewCloud *)D7_CLOUD)->unk1428 = lbl_803DF1A0;
                 }
-                *(f32 *)(D7_CLOUD + 0x140c) = pos[0];
-                *(f32 *)(D7_CLOUD + 0x1410) = pos[1];
-                *(f32 *)(D7_CLOUD + 0x1414) = pos[2];
+                ((NewCloud *)D7_CLOUD)->unk140C = pos[0];
+                ((NewCloud *)D7_CLOUD)->unk1410 = pos[1];
+                ((NewCloud *)D7_CLOUD)->unk1414 = pos[2];
             } else {
-                inpos[0] = *(f32 *)(p + 0x140c);
-                inpos[1] = *(f32 *)(p + 0x1410);
-                inpos[2] = *(f32 *)(p + 0x1414);
-                snowCloudComputeDrift(wind, inpos, *(f32 *)(p + 0x1438));
-                *(f32 *)(D7_CLOUD + 0x1420) = -wind[0] + *(f32 *)(D7_CLOUD + 0x1440);
-                *(f32 *)(D7_CLOUD + 0x1424) = -wind[2] + *(f32 *)(D7_CLOUD + 0x1440);
-                *(f32 *)(D7_CLOUD + 0x1428) = lbl_803DF1A0;
+                inpos[0] = ((NewCloud *)p)->unk140C;
+                inpos[1] = ((NewCloud *)p)->unk1410;
+                inpos[2] = ((NewCloud *)p)->unk1414;
+                snowCloudComputeDrift(wind, inpos, ((NewCloud *)p)->unk1438);
+                ((NewCloud *)D7_CLOUD)->unk1420 = -wind[0] + ((NewCloud *)D7_CLOUD)->unk1440;
+                ((NewCloud *)D7_CLOUD)->unk1424 = -wind[2] + ((NewCloud *)D7_CLOUD)->unk1440;
+                ((NewCloud *)D7_CLOUD)->unk1428 = lbl_803DF1A0;
             }
             if (D7_CLOUD[0x1453] != 0) {
-                *(f32 *)(D7_CLOUD + 0x13e4) = *(f32 *)(D7_CLOUD + 0x13d8);
-                *(f32 *)(D7_CLOUD + 0x13e8) = *(f32 *)(D7_CLOUD + 0x13dc);
-                *(f32 *)(D7_CLOUD + 0x13ec) = *(f32 *)(D7_CLOUD + 0x13e0);
+                ((NewCloud *)D7_CLOUD)->unk13E4 = ((NewCloud *)D7_CLOUD)->unk13D8;
+                ((NewCloud *)D7_CLOUD)->unk13E8 = ((NewCloud *)D7_CLOUD)->unk13DC;
+                ((NewCloud *)D7_CLOUD)->unk13EC = ((NewCloud *)D7_CLOUD)->unk13E0;
             } else {
-                *(f32 *)(D7_CLOUD + 0x13e4) = pos[0];
-                *(f32 *)(D7_CLOUD + 0x13e8) = pos[1];
-                *(f32 *)(D7_CLOUD + 0x13ec) = pos[2];
+                ((NewCloud *)D7_CLOUD)->unk13E4 = pos[0];
+                ((NewCloud *)D7_CLOUD)->unk13E8 = pos[1];
+                ((NewCloud *)D7_CLOUD)->unk13EC = pos[2];
                 D7_CLOUD[0x1453] = 1;
             }
-            *(f32 *)(D7_CLOUD + 0x13d8) = pos[0];
-            *(f32 *)(D7_CLOUD + 0x13dc) = pos[1];
-            *(f32 *)(D7_CLOUD + 0x13e0) = pos[2];
-            snowReposSnowCloud(*(int *)(D7_CLOUD + 0x13f0));
-            if (*(f32 *)(D7_CLOUD + 0x1434) > lbl_803DF1A0) {
-                d[0] = *(f32 *)(D7_CLOUD + 0x140c) - *(f32 *)((u8 *)cam + 0xc);
-                d[1] = *(f32 *)(D7_CLOUD + 0x1410) - *(f32 *)((u8 *)cam + 0x10);
-                d[2] = *(f32 *)(D7_CLOUD + 0x1414) - *(f32 *)((u8 *)cam + 0x14);
+            ((NewCloud *)D7_CLOUD)->unk13D8 = pos[0];
+            ((NewCloud *)D7_CLOUD)->unk13DC = pos[1];
+            ((NewCloud *)D7_CLOUD)->unk13E0 = pos[2];
+            snowReposSnowCloud(((NewCloud *)D7_CLOUD)->unk13F0);
+            if (((NewCloud *)D7_CLOUD)->unk1434 > lbl_803DF1A0) {
+                d[0] = ((NewCloud *)D7_CLOUD)->unk140C - *(f32 *)((u8 *)cam + 0xc);
+                d[1] = ((NewCloud *)D7_CLOUD)->unk1410 - *(f32 *)((u8 *)cam + 0x10);
+                d[2] = ((NewCloud *)D7_CLOUD)->unk1414 - *(f32 *)((u8 *)cam + 0x14);
                 mag = PSVECMag(d);
                 if (mag < nearest) {
                     nearest = mag;
@@ -3105,7 +3106,7 @@ void dll_07_func06(void) {
                 }
             }
         }
-        if (D7_CLOUD != NULL && *(int *)(D7_CLOUD + 0x13f4) == 4 &&
+        if (D7_CLOUD != NULL && ((NewCloud *)D7_CLOUD)->unk13F4 == 4 &&
             D7_CLOUD[0x144d] == 0) {
             activeCount++;
         }
@@ -3240,7 +3241,7 @@ int snowPrintSnowCloud(int arg, int cloudId) {
     }
     for (i = 0; i < 8; i++) {
         p = lbl_8039A828[i];
-        if (p != NULL && cloudId == *(int *)(p + 0x13f0)) {
+        if (p != NULL && cloudId == ((NewCloud *)p)->unk13F0) {
             break;
         }
     }
@@ -3248,7 +3249,7 @@ int snowPrintSnowCloud(int arg, int cloudId) {
     if (p == NULL || i == 8) {
         return 0;
     }
-    if (cloudId != *(int *)(p + 0x13f0)) {
+    if (cloudId != ((NewCloud *)p)->unk13F0) {
         debugPrintf(sSnowPrintSnowCloudInvalidCloudId, cloudId);
         return 0;
     }
@@ -3263,12 +3264,12 @@ int snowPrintSnowCloud(int arg, int cloudId) {
     mtxB[5] = lbl_803DF1A4;
     mtxB[10] = lbl_803DF1A4;
     mtxB[15] = lbl_803DF1A4;
-    if (*(int *)(p + 0x13f4) != 4 && p[0x1451] != 0) {
+    if (((NewCloud *)p)->unk13F4 != 4 && p[0x1451] != 0) {
         mtxB[0] = sin((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
         mtxB[1] = -fn_80293E80((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
         mtxB[4] = fn_80293E80((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
         mtxB[5] = sin((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
-    } else if (*(int *)(p + 0x13f4) == 4) {
+    } else if (((NewCloud *)p)->unk13F4 == 4) {
         if (p[0x144a] & 0x80) {
             mtxB[0] = sin(lbl_803DF204);
             mtxB[1] = -fn_80293E80(lbl_803DF204);
@@ -3276,22 +3277,22 @@ int snowPrintSnowCloud(int arg, int cloudId) {
             mtxB[5] = sin(lbl_803DF204);
         } else if (p[0x1451] != 0) {
             lbl_803DD1A4 =
-                lbl_803DF20C * (*(f32 *)(p + 0x1440) / lbl_803DF210) + lbl_803DF208;
+                lbl_803DF20C * (((NewCloud *)p)->unk1440 / lbl_803DF210) + lbl_803DF208;
             mtxB[0] = sin((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
             mtxB[1] = -fn_80293E80((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
             mtxB[4] = fn_80293E80((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
             mtxB[5] = sin((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
         }
     }
-    mtxB[12] = *(f32 *)(p + 0x140c) - playerMapOffsetX;
-    mtxB[13] = *(f32 *)(p + 0x1410);
-    mtxB[14] = *(f32 *)(p + 0x1414) - playerMapOffsetZ;
+    mtxB[12] = ((NewCloud *)p)->unk140C - playerMapOffsetX;
+    mtxB[13] = ((NewCloud *)p)->unk1410;
+    mtxB[14] = ((NewCloud *)p)->unk1414 - playerMapOffsetZ;
     mtx44_mult(mtxA, mtxB, mtxOut);
     mtx44Transpose(mtxOut, mtxT);
     PSMTXConcat((void *)Camera_GetViewMatrix(), (void *)mtxT, (void *)mtxT);
     GXLoadPosMtxImm(mtxT, 0);
     texIdx = 0;
-    if (*(int *)(p + 0x13f4) == 0) {
+    if (((NewCloud *)p)->unk13F4 == 0) {
         selectTexture(lbl_8039A818[0], 0);
     } else {
         selectTexture(lbl_803DD1C4, 0);
@@ -3300,9 +3301,9 @@ int snowPrintSnowCloud(int arg, int cloudId) {
     textureSetupFn_800799c0();
     textRenderSetupFn_800795e8();
     textRenderSetupFn_80079804();
-    if (*(int *)(p + 0x13f4) == 4) {
+    if (((NewCloud *)p)->unk13F4 == 4) {
         setTextColor(arg, 0x7d, 0x7d, 0x9b, 0xff);
-    } else if (*(int *)(p + 0x13f4) == 0) {
+    } else if (((NewCloud *)p)->unk13F4 == 0) {
         getAmbientColor(0, &cr, &cg, &cb);
         setTextColor(arg, cr, cg, cb, 0xff);
     }
@@ -3317,56 +3318,56 @@ int snowPrintSnowCloud(int arg, int cloudId) {
     GXSetVtxDesc(9, 1);
     GXSetVtxDesc(0xd, 1);
     hudHidden = getHudHiddenFrameCount();
-    driftX = lbl_803DF1E4 * (*(f32 *)(p + 0x13e4) - *(f32 *)(p + 0x13d8));
-    stepX = lbl_803DF214 * *(f32 *)(p + 0x1378);
+    driftX = lbl_803DF1E4 * (((NewCloud *)p)->unk13E4 - ((NewCloud *)p)->unk13D8);
+    stepX = lbl_803DF214 * ((NewCloud *)p)->unk1378;
     if (driftX < stepX) {
     } else {
-        stepX = lbl_803DF214 * *(f32 *)(p + 0x1390);
+        stepX = lbl_803DF214 * ((NewCloud *)p)->unk1390;
         if (driftX > stepX) {
         } else {
             stepX = driftX;
         }
     }
-    driftZ = lbl_803DF1E4 * (*(f32 *)(p + 0x13ec) - *(f32 *)(p + 0x13e0));
-    stepZ = lbl_803DF214 * *(f32 *)(p + 0x1380);
+    driftZ = lbl_803DF1E4 * (((NewCloud *)p)->unk13EC - ((NewCloud *)p)->unk13E0);
+    stepZ = lbl_803DF214 * ((NewCloud *)p)->unk1380;
     if (driftZ < stepZ) {
     } else {
-        stepZ = lbl_803DF214 * *(f32 *)(p + 0x13b0);
+        stepZ = lbl_803DF214 * ((NewCloud *)p)->unk13B0;
         if (driftZ > stepZ) {
         } else {
             stepZ = driftZ;
         }
     }
-    if (*(int *)(p + 0x13f4) == 4) {
-        GXBegin(0x90, 4, (u16)(*(int *)(p + 0x13fc) * 3));
+    if (((NewCloud *)p)->unk13F4 == 4) {
+        GXBegin(0x90, 4, (u16)(((NewCloud *)p)->unk13FC * 3));
     } else {
-        GXBegin(0x90, 4, (u16)(*(int *)(p + 0x13fc) * 3 / 4));
+        GXBegin(0x90, 4, (u16)(((NewCloud *)p)->unk13FC * 3 / 4));
     }
     part = *(u8 **)(p + 4);
-    for (j = 0; j < *(int *)(p + 0x13fc); j++) {
+    for (j = 0; j < ((NewCloud *)p)->unk13FC; j++) {
         if (part[0x16] != (u8)texIdx) {
             texIdx = part[0x16];
             selectTexture(lbl_8039A818[texIdx], 0);
-            GXBegin(0x90, 4, (u16)(*(int *)(p + 0x13fc) * 3 / 4));
+            GXBegin(0x90, 4, (u16)(((NewCloud *)p)->unk13FC * 3 / 4));
         }
         if (hudHidden == 0) {
             if (p[0x144d] == 0) {
                 *(f32 *)part = *(f32 *)part + stepX;
                 *(f32 *)(part + 8) = *(f32 *)(part + 8) + stepZ;
             }
-            *(f32 *)part = *(f32 *)(p + 0x1420) * timeDelta + *(f32 *)part;
-            *(f32 *)(part + 8) = *(f32 *)(p + 0x1424) * timeDelta + *(f32 *)(part + 8);
-            if (*(f32 *)part < *(f32 *)(p + 0x1378)) {
-                *(f32 *)part = lbl_803DF1C8 * *(f32 *)(p + 0x1390) + *(f32 *)part;
-            } else if (*(f32 *)part > *(f32 *)(p + 0x1390)) {
-                *(f32 *)part = *(f32 *)part - lbl_803DF1C8 * *(f32 *)(p + 0x1390);
+            *(f32 *)part = ((NewCloud *)p)->unk1420 * timeDelta + *(f32 *)part;
+            *(f32 *)(part + 8) = ((NewCloud *)p)->unk1424 * timeDelta + *(f32 *)(part + 8);
+            if (*(f32 *)part < ((NewCloud *)p)->unk1378) {
+                *(f32 *)part = lbl_803DF1C8 * ((NewCloud *)p)->unk1390 + *(f32 *)part;
+            } else if (*(f32 *)part > ((NewCloud *)p)->unk1390) {
+                *(f32 *)part = *(f32 *)part - lbl_803DF1C8 * ((NewCloud *)p)->unk1390;
             }
-            if (*(f32 *)(part + 8) < *(f32 *)(p + 0x1380)) {
+            if (*(f32 *)(part + 8) < ((NewCloud *)p)->unk1380) {
                 *(f32 *)(part + 8) =
-                    lbl_803DF1C8 * *(f32 *)(p + 0x13b0) + *(f32 *)(part + 8);
-            } else if (*(f32 *)(part + 8) > *(f32 *)(p + 0x13b0)) {
+                    lbl_803DF1C8 * ((NewCloud *)p)->unk13B0 + *(f32 *)(part + 8);
+            } else if (*(f32 *)(part + 8) > ((NewCloud *)p)->unk13B0) {
                 *(f32 *)(part + 8) =
-                    *(f32 *)(part + 8) - lbl_803DF1C8 * *(f32 *)(p + 0x13b0);
+                    *(f32 *)(part + 8) - lbl_803DF1C8 * ((NewCloud *)p)->unk13B0;
             }
         }
         yb = *(f32 *)(part + 4) - *(f32 *)(p + *(u16 *)(part + 0x10) * 4 + 8);

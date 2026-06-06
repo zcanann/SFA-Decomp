@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/objanim_internal.h"
 
@@ -218,7 +219,7 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma dont_inline reset
 
 void objSetEventName(u8 *obj, void *name) {
-    *(void **)(obj + 0x60) = name;
+    ((GameObject *)obj)->anim.eventTable = name;
 }
 
 #pragma peephole off
@@ -1028,9 +1029,9 @@ void modelLightStruct_loadDiffuseGXLight(u8 *light, u8 *obj, int lightId) {
         if (gModelLightUseModelRelativePositions != 0) {
             f32 worldPos[3];
             if (*(int *)(light + 0x60) == 0) {
-                worldPos[0] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
-                worldPos[1] = *(f32 *)(obj + 0x10);
-                worldPos[2] = *(f32 *)(obj + 0x14) - playerMapOffsetZ;
+                worldPos[0] = ((GameObject *)obj)->anim.localPosX - playerMapOffsetX;
+                worldPos[1] = ((GameObject *)obj)->anim.localPosY;
+                worldPos[2] = ((GameObject *)obj)->anim.localPosZ - playerMapOffsetZ;
                 PSMTXMultVec(view, worldPos, viewPos);
             } else {
                 *(IVec3 *)viewPos = *(IVec3 *)(obj + 0xc);
@@ -1066,9 +1067,9 @@ void modelLightStruct_loadDiffuseGXLight(u8 *light, u8 *obj, int lightId) {
         u32 color;
         if (obj != NULL) {
             if (*(int *)(light + 0x60) == 0) {
-                worldPos[0] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
-                worldPos[1] = *(f32 *)(obj + 0x10);
-                worldPos[2] = *(f32 *)(obj + 0x14) - playerMapOffsetZ;
+                worldPos[0] = ((GameObject *)obj)->anim.localPosX - playerMapOffsetX;
+                worldPos[1] = ((GameObject *)obj)->anim.localPosY;
+                worldPos[2] = ((GameObject *)obj)->anim.localPosZ - playerMapOffsetZ;
                 PSMTXMultVec(view, worldPos, viewPos);
             } else {
                 *(IVec3 *)viewPos = *(IVec3 *)(obj + 0xc);
@@ -1351,7 +1352,7 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
     f32 zero;
     int i;
 
-    scaledExtent = *(f32 *)(obj + 8) * *(f32 *)(obj + 0xa8);
+    scaledExtent = ((GameObject *)obj)->anim.rootMotionScale * ((GameObject *)obj)->anim.hitboxScale;
     cornerWords = (u32 *)corners;
     sourceWords = (u32 *)lbl_802C1A88;
     i = 12;
@@ -1362,13 +1363,13 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
         sourceWords += 2;
     } while (--i != 0);
 
-    worldPos[0] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
-    worldPos[1] = *(f32 *)(obj + 0x10);
-    worldPos[2] = *(f32 *)(obj + 0x14) - playerMapOffsetZ;
+    worldPos[0] = ((GameObject *)obj)->anim.localPosX - playerMapOffsetX;
+    worldPos[1] = ((GameObject *)obj)->anim.localPosY;
+    worldPos[2] = ((GameObject *)obj)->anim.localPosZ - playerMapOffsetZ;
     PSMTXMultVec((f32 *)(light + 0x170), worldPos, localPos);
 
     if (*(int *)(light + 0x168) == 0) {
-        if (localPos[0] - (extent = *(f32 *)(obj + 0xa8)) > *(f32 *)(light + 0x15c) ||
+        if (localPos[0] - (extent = ((GameObject *)obj)->anim.hitboxScale) > *(f32 *)(light + 0x15c) ||
             localPos[0] + scaledExtent < *(f32 *)(light + 0x158) ||
             localPos[1] - extent > *(f32 *)(light + 0x150) ||
             localPos[1] + scaledExtent < *(f32 *)(light + 0x154) ||
@@ -1379,7 +1380,7 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
         return 1;
     }
 
-    if (localPos[2] - *(f32 *)(obj + 0xa8) > *(f32 *)(light + 0x164) ||
+    if (localPos[2] - ((GameObject *)obj)->anim.hitboxScale > *(f32 *)(light + 0x164) ||
         localPos[2] + scaledExtent < *(f32 *)(light + 0x160)) {
         return 0;
     }
@@ -1432,12 +1433,12 @@ f32 modelLightStruct_getObjectIntensity(u8 *light, u8 *obj) {
     f32 dist;
     f32 amount;
 
-    if (*(void **)(obj + 0xc4) != NULL) {
-        obj = *(u8 **)(obj + 0xc4);
+    if (((GameObject *)obj)->unkC4 != NULL) {
+        obj = ((GameObject *)obj)->unkC4;
     }
 
     PSVECSubtract((f32 *)(obj + 0x18), (f32 *)(light + 0x10), delta);
-    dist = PSVECMag(delta) - *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8);
+    dist = PSVECMag(delta) - ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale;
     if (dist > lbl_803DE768 || dist > *(f32 *)(light + 0x144)) {
         return lbl_803DE75C;
     }
@@ -1554,7 +1555,7 @@ void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights,
     int lightType;
 
     if (obj != NULL) {
-        objectLightMask = 1 << *(u8 *)(*(u32 *)(obj + 0x50) + 0x8d);
+        objectLightMask = 1 << *(u8 *)(*(u32 *)&((GameObject *)obj)->anim.modelInstance + 0x8d);
     } else {
         objectLightMask = 1;
     }

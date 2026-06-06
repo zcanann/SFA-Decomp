@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/worldplanet.h"
 
@@ -84,7 +85,7 @@ void worldplanet_init(int obj) {
     int layer;
     int j;
 
-    state = *(WorldPlanetState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     lbl_803DDD04 = 0;
     GameBit_Set(0xa63, 1);
     mask = 0;
@@ -135,7 +136,7 @@ void worldplanet_init(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void worldplanet_readMapInput(int obj, u8 *outX, u8 *outY) {
-    WorldPlanetState *state = *(WorldPlanetState **)(obj + 0xb8);
+    WorldPlanetState *state = ((GameObject *)obj)->extra;
     int stickX;
     int stickY;
     int resX;
@@ -258,22 +259,22 @@ void worldplanet_update(int obj) {
     u8 inY;
 
     tbl = lbl_8032A178;
-    state = *(WorldPlanetState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     done = 0;
     state->foxSpawnTimer -= 1;
     if (state->foxSpawnTimer == 1) {
         int def;
         state->foxSpawnTimer = randomGetRange(0x708, 3000);
-        def = *(int *)(obj + 0x4c);
+        def = *(int *)&((GameObject *)obj)->anim.placementData;
         if (Obj_IsLoadingLocked() != 0) {
             int setup = Obj_AllocObjectSetup(0x20, 0x80f);
             *(u8 *)(setup + 4) = *(u8 *)(def + 4);
             *(u8 *)(setup + 6) = *(u8 *)(def + 6);
             *(u8 *)(setup + 5) = *(u8 *)(def + 5);
             *(u8 *)(setup + 7) = *(u8 *)(def + 7);
-            *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
-            *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-            *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+            *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
             Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, 0);
         }
     }
@@ -321,13 +322,13 @@ void worldplanet_update(int obj) {
         pfx.z = lbl_803E6624;
         (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x6f2, &pfx, 2, -1, 0);
         worldplanet_readMapInput(obj, (u8 *)inX, &inY);
-        *(s16 *)(obj + 4) -= 10;
-        *(s16 *)(obj + 2) = 0x3448;
+        ((GameObject *)obj)->anim.rotZ -= 10;
+        ((GameObject *)obj)->anim.rotY = 0x3448;
         *(s16 *)obj = 0x4000;
         {
             int fox = ObjList_FindObjectById(0x42ff5);
-            *(s16 *)(fox + 4) = *(s16 *)(obj + 4);
-            *(s16 *)(fox + 2) = *(s16 *)(obj + 2);
+            *(s16 *)(fox + 4) = ((GameObject *)obj)->anim.rotZ;
+            *(s16 *)(fox + 2) = ((GameObject *)obj)->anim.rotY;
             *(s16 *)fox = *(s16 *)obj;
         }
         galleon = ObjList_FindObjectById(0x4300c);
@@ -365,8 +366,8 @@ void worldplanet_update(int obj) {
                 done = 1;
             }
             pauseMenuSetupTitle(0x2a7, lbl_803DC1D0[state->selectedPlanet], 0x19, 0);
-            if (prevPlanet != state->selectedPlanet || *(int *)(obj + 0xf4) == 0) {
-                if (*(int *)(obj + 0xf4) != 0) {
+            if (prevPlanet != state->selectedPlanet || ((GameObject *)obj)->unkF4 == 0) {
+                if (((GameObject *)obj)->unkF4 != 0) {
                     objId = tbl[lbl_803DC1C8[state->selectedPlanet]];
                     (*(void (*)(int *, int))*(int *)(*gCameraInterface + 0x60))(&objId, 1);
                     Sfx_PlayFromObject(0, 0x97);
@@ -378,7 +379,7 @@ void worldplanet_update(int obj) {
                     p = ObjList_FindObjectById(tbl[lbl_803DC1C8[state->selectedPlanet]]);
                     *(u8 *)(*(int *)(p + 0xb8) + 0x27d) = 1;
                 }
-                *(int *)(obj + 0xf4) = 1;
+                ((GameObject *)obj)->unkF4 = 1;
             }
         }
         lbl_803DDD2C = lbl_803DDD2C + lbl_803E6628;
@@ -388,7 +389,7 @@ void worldplanet_update(int obj) {
         for (i = 0; i < 5; i++) {
             int planet = ObjList_FindObjectById(((struct { int ids[10]; int objs[5]; } *)tbl)->objs[i]);
             int pstate = *(int *)(planet + 0xb8);
-            *(s16 *)(planet + 2) = *(s16 *)(obj + 2);
+            *(s16 *)(planet + 2) = ((GameObject *)obj)->anim.rotY;
             *(s16 *)planet = *(s16 *)obj;
             if ((u8)state->selectionLocked != 0 || (((int)(u32)state->unlockedPlanetMask >> i) & 1) == 0) {
                 *(u8 *)(pstate + 0x27d) = 0;
@@ -509,7 +510,7 @@ void worldplanet_update(int obj) {
             Pause_ResetMenuFrameCounter();
         }
         {
-            u32 ang = -*(s16 *)(obj + 4) & 0xffff;
+            u32 ang = -((GameObject *)obj)->anim.rotZ & 0xffff;
             f32 r;
             for (b = 0; b < 5; b++) {
                 int p = ObjList_FindObjectById(tbl[b + 10]);
@@ -527,9 +528,9 @@ void worldplanet_update(int obj) {
                 if (*(u32 *)((char *)state + 0x14) > 2) {
                     Sfx_KeepAliveLoopedObjectSound(p, 0x96);
                 }
-                *(f32 *)(p + 6) = r * fsin16Approx((ang + *off) & 0xffff) * fcos16Approx(3000) + *(f32 *)(obj + 0xc);
-                *(f32 *)(p + 8) = r * fsin16Approx((ang + *off) & 0xffff) * fsin16Approx(3000) + *(f32 *)(obj + 0x10);
-                *(f32 *)(p + 10) = r * fcos16Approx((ang + *off) & 0xffff) + *(f32 *)(obj + 0x14);
+                *(f32 *)(p + 6) = r * fsin16Approx((ang + *off) & 0xffff) * fcos16Approx(3000) + ((GameObject *)obj)->anim.localPosX;
+                *(f32 *)(p + 8) = r * fsin16Approx((ang + *off) & 0xffff) * fsin16Approx(3000) + ((GameObject *)obj)->anim.localPosY;
+                *(f32 *)(p + 10) = r * fcos16Approx((ang + *off) & 0xffff) + ((GameObject *)obj)->anim.localPosZ;
             }
         }
         *(int *)((char *)state + 0x14) += 1;

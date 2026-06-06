@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/maketex.h"
 #include "main/objanim.h"
 #include "main/objlib.h"
@@ -1472,9 +1473,9 @@ void cameraFocusNpc(int param1, u8 *obj)
     lbl_803DD0FC = (u32)obj;
     p = *(f32 **)(obj + 0x74);
     if (p == NULL || param1 == 7 || param1 == 6) {
-        buf.vec[0] = *(f32 *)(obj + 0x18);
-        buf.vec[1] = *(f32 *)(obj + 0x1c);
-        buf.vec[2] = *(f32 *)(obj + 0x20);
+        buf.vec[0] = ((GameObject *)obj)->anim.worldPosX;
+        buf.vec[1] = ((GameObject *)obj)->anim.worldPosY;
+        buf.vec[2] = ((GameObject *)obj)->anim.worldPosZ;
     } else {
         buf.vec[0] = p[0];
         buf.vec[1] = p[1];
@@ -2175,13 +2176,13 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
             f32 *dp = d;
             f32 *ovr = *(f32 **)(obj + 0x74);
             if (ovr == NULL) {
-                dp[0] = *(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc);
-                dp[1] = *(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10);
-                dp[2] = *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14);
+                dp[0] = ((GameObject *)player)->anim.localPosX - ((GameObject *)obj)->anim.localPosX;
+                dp[1] = ((GameObject *)player)->anim.localPosY - ((GameObject *)obj)->anim.localPosY;
+                dp[2] = ((GameObject *)player)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ;
             } else {
-                dp[0] = *(f32 *)(player + 0xc) - ovr[0];
-                dp[1] = *(f32 *)(player + 0x10) - ovr[1];
-                dp[2] = *(f32 *)(player + 0x14) - ovr[2];
+                dp[0] = ((GameObject *)player)->anim.localPosX - ovr[0];
+                dp[1] = ((GameObject *)player)->anim.localPosY - ovr[1];
+                dp[2] = ((GameObject *)player)->anim.localPosZ - ovr[2];
             }
             dp[1] += 30.0f;
             dist = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
@@ -2223,7 +2224,7 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         if (*(f32 *)(state + 0x4c) > 1.0f) {
             *(f32 *)(state + 0x4c) = 1.0001f;
         }
-        *(s16 *)(obj + 0x0) += (s16)(*(f32 *)(state + 0x24) * (f32)*(s16 *)(state + 0x50));
+        ((GameObject *)obj)->anim.rotX += (s16)(*(f32 *)(state + 0x24) * (f32)*(s16 *)(state + 0x50));
         v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
         if (v != NULL) {
             *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~8;
@@ -2328,11 +2329,11 @@ void endObjSequence(int seq)
     objs = ret;
     for (; i < objCount; i++) {
         int obj = *objs;
-        if (*(s16 *)(obj + 0xb4) == seq) {
-            *(s16 *)(obj + 0xb4) = -1;
+        if (((GameObject *)obj)->unkB4 == seq) {
+            ((GameObject *)obj)->unkB4 = -1;
         }
-        if (*(s16 *)(obj + 0x44) == 0x10) {
-            int st = *(int *)(obj + 0xb8);
+        if (((GameObject *)obj)->anim.classId == 0x10) {
+            int st = *(int *)&((GameObject *)obj)->extra;
             if ((s8)*(u8 *)(st + 0x57) == seq) {
                 if ((void *)obj == lbl_803DD0B8) {
                     lbl_803DD0B8 = 0;

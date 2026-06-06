@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/expgfx.h"
 #include "main/frustum.h"
 #include "main/lightmap.h"
@@ -2733,14 +2734,14 @@ void renderShadowType3(u8 *obj, u32 b, s32 offset) {
         sceneDrawTransparentPolys();
         lbl_803DCE30 = 0;
     }
-    if (*(void **)(obj + 0x30) != NULL) {
-        stk[0] = *(f32 *)(obj + 0x18);
-        stk[1] = *(f32 *)(obj + 0x1c);
-        stk[2] = *(f32 *)(obj + 0x20);
+    if (((GameObject *)obj)->anim.parent != NULL) {
+        stk[0] = ((GameObject *)obj)->anim.worldPosX;
+        stk[1] = ((GameObject *)obj)->anim.worldPosY;
+        stk[2] = ((GameObject *)obj)->anim.worldPosZ;
     } else {
-        stk[0] = *(f32 *)(obj + 0x18) - playerMapOffsetX;
-        stk[1] = *(f32 *)(obj + 0x1c);
-        stk[2] = *(f32 *)(obj + 0x20) - playerMapOffsetZ;
+        stk[0] = ((GameObject *)obj)->anim.worldPosX - playerMapOffsetX;
+        stk[1] = ((GameObject *)obj)->anim.worldPosY;
+        stk[2] = ((GameObject *)obj)->anim.worldPosZ - playerMapOffsetZ;
     }
     PSMTXMultVec(Camera_GetViewMatrix(), stk, stk);
     t = (s32)-stk[2] + offset;
@@ -2767,7 +2768,7 @@ void fn_8005D3B4(u8 *obj, u8 *model, s32 b) {
     }
     timing = CurrTiming_803DEC20;
     stk[0] = displayOffsetH_803DEBFC *
-             (((f32)*(s16 *)(obj + 6) * timing + *(f32 *)(model + 0x18)) +
+             (((f32)((GameObject *)obj)->anim.flags * timing + *(f32 *)(model + 0x18)) +
               ((f32)*(s16 *)(obj + 12) * timing + *(f32 *)(model + 0x18)));
     stk[1] = displayOffsetH_803DEBFC *
              (((f32)*(s16 *)(obj + 8) * timing + *(f32 *)(model + 0x28)) +
@@ -2830,7 +2831,7 @@ void renderObjects(s8 *arg0) {
     for (i = 1; i < (int)gVisibleObjectSortKeyCount; i++) {
         idx = gVisibleObjectSortKeys[i] & 0x3ff;
         obj = (u8 *)objects[idx];
-        state = *(u8 **)(obj + 0x50);
+        state = (void *)((GameObject *)obj)->anim.modelInstance;
         flags = *(u32 *)(state + 0x44);
         if ((flags & 0x800) != 0 || (state[0x5f] & 0x10) != 0) {
             if (arg0[idx] != 0 && lbl_803DCDF0 < 0x14) {
@@ -2848,7 +2849,7 @@ void renderObjects(s8 *arg0) {
                 renderShadowType3(obj, 0x13, 0);
                 lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 2;
                 lbl_803DCE30++;
-            } else if (*(s16 *)(state + 0x48) == 3 && (*(s16 *)(obj + 6) & 0x4000) == 0 && (p[12] & 0x4)) {
+            } else if (*(s16 *)(state + 0x48) == 3 && (((GameObject *)obj)->anim.flags & 0x4000) == 0 && (p[12] & 0x4)) {
                 renderShadowType3(obj, 0x13, 0);
                 lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 3;
                 lbl_803DCE30++;
@@ -3879,10 +3880,10 @@ void getVisibleObjects(s8 *opacity)
     for (; i < count; i++) {
         o = (u8 *)*p;
         modelDef = ((ObjAnimComponent *)o)->modelInstance;
-        *(u16 *)(o + 0xb0) &= ~0x800;
+        ((GameObject *)o)->unkB0 &= ~0x800;
         j = 0;
         sub = o;
-        for (; j < *(u8 *)(o + 0xeb); j++) {
+        for (; j < ((GameObject *)o)->unkEB; j++) {
             att = *(u8 **)(sub + 0xc8);
             if (att != NULL) {
                 *(u16 *)(att + 0xb0) &= ~0x800;
@@ -3893,22 +3894,22 @@ void getVisibleObjects(s8 *opacity)
             *cur = (s8)objUpdateOpacity(o);
             if (*cur != 0 || (modelDef->flags & 0x200000) != 0) {
                 if ((modelDef->flags & 0x80000) != 0) {
-                    *(f32 *)(o + 0xa4) = (f32)(*(u8 *)(*(u8 **)(o + 0x50) + 0x74) * 100);
+                    *(f32 *)(o + 0xa4) = (f32)(*((u8 *)((GameObject *)o)->anim.modelInstance + 0x74) * 100);
                     depthInt = (int)*(f32 *)(o + 0xa4);
                 } else {
-                    if (*(void **)(o + 0x30) != NULL) {
-                        Camera_ProjectWorldPoint(*(f32 *)(o + 0x18), *(f32 *)(o + 0x1c),
-                                                 *(f32 *)(o + 0x20), &a, &b, &depth,
+                    if (((GameObject *)o)->anim.parent != NULL) {
+                        Camera_ProjectWorldPoint(((GameObject *)o)->anim.worldPosX, ((GameObject *)o)->anim.worldPosY,
+                                                 ((GameObject *)o)->anim.worldPosZ, &a, &b, &depth,
                                                  (f32 *)(o + 0xa4));
                     } else {
-                        Camera_ProjectWorldPoint(*(f32 *)(o + 0xc) - playerMapOffsetX,
-                                                 *(f32 *)(o + 0x10),
-                                                 *(f32 *)(o + 0x14) - playerMapOffsetZ, &a, &b,
+                        Camera_ProjectWorldPoint(((GameObject *)o)->anim.localPosX - playerMapOffsetX,
+                                                 ((GameObject *)o)->anim.localPosY,
+                                                 ((GameObject *)o)->anim.localPosZ - playerMapOffsetZ, &a, &b,
                                                  &depth, (f32 *)(o + 0xa4));
                     }
                     depthInt = (int)(changed_803DEC08.hi * (lbl_803DEBDC + depth));
                 }
-                if ((*(s16 *)(o + 6) & 0x4000) == 0 && *(void **)(o + 0x64) != NULL &&
+                if ((((GameObject *)o)->anim.flags & 0x4000) == 0 && *(void **)(o + 0x64) != NULL &&
                     (*(u32 *)(*(u8 **)(o + 0x64) + 0x30) & 4) != 0) {
                     t = modelDef->shadowType;
                     if (t == 2 || t == 1) {
@@ -3920,21 +3921,21 @@ void getVisibleObjects(s8 *opacity)
                 if (gVisibleObjectSortKeyCount < 1000) {
                     key = 0;
                     model = Obj_GetActiveModel((int *)o);
-                    if (*(u8 *)(o + 0x37) == 0xff && (*(s16 *)(o + 6) & 0x80) == 0 &&
+                    if (*(u8 *)(o + 0x37) == 0xff && (((GameObject *)o)->anim.flags & 0x80) == 0 &&
                         ((tf = modelDef->flags) & 0x40000) == 0 &&
                         *(void **)(model + 0x16) == NULL) {
                         key |= 0x80000000;
                         t1000 = 1000 - (depthInt & 0xffff);
-                        if ((tf & 0x800000) != 0 && (*(u8 *)(o + 0xe5) & 2) == 0) {
+                        if ((tf & 0x800000) != 0 && (((GameObject *)o)->unkE5 & 2) == 0) {
                             key |= 0x40000000;
-                            key |= (*(s16 *)(o + 0x46) & 0x3ff) << 20;
+                            key |= (((GameObject *)o)->anim.seqId & 0x3ff) << 20;
                         }
                         gVisibleObjectSortKeys[gVisibleObjectSortKeyCount] =
                             (i & 0x3ff) | (((t1000 & 0x3ff) << 10) | key);
                         gVisibleObjectSortKeyCount++;
                         if ((modelDef->renderFlags & 0x20) != 0 &&
-                            (*(u16 *)(o + 0xb0) & 0x400) == 0 &&
-                            (*(s16 *)(o + 6) & 0x4000) == 0) {
+                            (((GameObject *)o)->unkB0 & 0x400) == 0 &&
+                            (((GameObject *)o)->anim.flags & 0x4000) == 0) {
                             renderShadowType3(o, 7, 0x50);
                             lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 1;
                             lbl_803DCE30++;
@@ -3950,7 +3951,7 @@ void getVisibleObjects(s8 *opacity)
                         lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 0;
                         lbl_803DCE30++;
                         if ((modelDef->renderFlags & 0x20) != 0 &&
-                            (*(s16 *)(o + 6) & 0x4000) == 0) {
+                            (((GameObject *)o)->anim.flags & 0x4000) == 0) {
                             renderShadowType3(o, 7, 0x50);
                             lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 1;
                             lbl_803DCE30++;
@@ -3958,7 +3959,7 @@ void getVisibleObjects(s8 *opacity)
                     }
                 }
             } else {
-                s54 = *(u8 **)(o + 0x54);
+                s54 = (void *)((GameObject *)o)->anim.hitReactState;
                 if (s54 != NULL && (s54[0x62] & 0x30) != 0) {
                     s54[0xaf] = 2;
                 }
