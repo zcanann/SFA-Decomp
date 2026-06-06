@@ -178,7 +178,7 @@ void saveSelectOpenFile(int sel, int slot)
   pp = (TitleMenuTextEntry **)lbl_8031A7BC;
   if (sel == 0) {
     if (lbl_803DD6B8 != NULL) {
-      ((void (**)(void))gTitleMenuItemInterface->vtable)[4]();
+      ((void (**)(void *))gTitleMenuItemInterface->vtable)[4](lbl_803DD6B8);
       lbl_803DD6B8 = NULL;
     }
     Sfx_PlayFromObject(0,0x419);
