@@ -4388,17 +4388,21 @@ void fn_80060BB0(void)
     int j;
     int byteOff;
     int innerOff;
-    int* blk;
-    char* arr;
+    int zero;
+    int *blk;
+    char *arr;
 
+    i = 0;
     byteOff = 0;
-    for (i = 0; i < (int)lbl_803DCE98; i++) {
-        blk = *(int**)((char*)&lbl_803DCE9C + byteOff);
+    zero = byteOff;
+    for (; i < (int)lbl_803DCE98; i++) {
+        blk = *(int **)((char *)lbl_803DCE9C + byteOff);
         if (blk != NULL) {
+            j = 0;
             innerOff = 0;
-            for (j = 0; j < (int)*(u8*)((char*)blk + 0xa1); j++) {
-                arr = *(char**)((char*)blk + 0x68);
-                arr[innerOff + 0x12] = 0;
+            for (; j < (int)*(u8 *)((char *)blk + 0xa1); j++) {
+                arr = *(char **)((char *)blk + 0x68);
+                arr[innerOff + 0x12] = zero;
                 innerOff += 0x1c;
             }
         }
