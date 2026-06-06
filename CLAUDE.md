@@ -1019,6 +1019,33 @@ Heuristic:
     slot-neutral on 2.0. Sensitivity probe: an address-taken `f32 probe[N]`
     passed to any callee moves the frame in 8B quanta — use it to measure
     the demand gap before hunting the source form.
+    **(b) is by far the most productive sub-case — sweep findings (7 fns,
+    5 to 100%):** the Ghidra import routinely GUESSED address-taken
+    out-buffer array sizes, and the frame delta is the tell. Wins:
+    wmgeneralscales_SeqFn `u8 buf[20]→[16]` (100%), fn_801B9ECC
+    `u16 anim[4]→[2]` (100%), dll_19_func08 `u8 bboxOut[0x80]→[0x54]`
+    (matches sibling TRICKY_BBOX_HIT_SCRATCH_SIZE; 100%),
+    player_applyVelocityStep `f32 mtx[12]→[16]` (64B matrix slot; 100% with
+    #15+#34 on top), fn_8002A5DC `f32 m2[16]→[12]`, worldobj_update
+    `f32 vec[4]→[10]`, dll_1FF_update `int stk[3]→[2]`.
+    METHOD: (1) in-place SIZE-PROBE the suspect array (edit, `ninja <unit>.o`,
+    objdump the stwu) until the frame matches — several sizes can give the
+    same frame (alignment), so ALSO align the conversion-scratch base (the
+    first `stw r0,K(r1)` of an int↔f32 pair) against target before picking;
+    disambiguate ties by sibling-code constants/callee semantics.
+    (2) STATEMENT-DELETION PROBES localize which construct owns phantom
+    slots when no array is obvious — deleting one statement often drops the
+    frame in 16B steps (slot demand is thresholded, not linear).
+    Census tool: compare per-fn stwu immediates across all <100% fns by
+    objdumping target vs current .o (273 mismatches project-wide at last
+    run) — but FULL-REBUILD FIRST; stale .o files produce false candidates.
+    Block-local placement traps seen: MWCC 2.0 ignores decl order for
+    sibling block locals (rot/vec landed reversed vs target regardless of
+    order) — a wrapping struct pins the layout (recipe #8 cousin) but can
+    perturb the sth/addi schedule and net-lose; measure before keeping.
+    GXColor-style by-value struct args each take an 8B caller temp slot —
+    same threshold behavior (objFn_8003dc50 capped: target allocates 2
+    fewer temps for identical call sites; no source form found).
 
 68. **`mr rS,r3`-copy forward-prop into early derefs is a PEEPHOLE opt —
     `#pragma peephole off` makes pre-call derefs use the COPY, matching
