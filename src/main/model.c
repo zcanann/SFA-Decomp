@@ -3065,7 +3065,7 @@ void ObjModel_UpdateAnimMatrices(u8 *model, u8 *blend, u8 *obj, u8 *dst) {
         lbl_803DC7A8 = rot[2];
     }
     if (*(u16 *)(*(u8 **)model + 2) & 8) {
-        modelWalkAnimFn_800248b8(dst, model, *(u8 **)(model + 0x2c), 0x7f, *(f32 *)(obj + 0x98));
+        ((void (*)(u8 *, u8 *, u8 *, f32, int))modelWalkAnimFn_800248b8)(dst, model, *(u8 **)(model + 0x2c), *(f32 *)(obj + 0x98), 0x7f);
     } else if ((s8)(*(u8 **)(model + 0x2c))[0x63] & 8) {
         ch2 = *(u8 **)(model + 0x30);
         modelAnimFn_800246a0(dst, model, ch, *(f32 *)(obj + 0x98), 0x7f, 0, 0, 2, 0x14,
@@ -3077,7 +3077,7 @@ void ObjModel_UpdateAnimMatrices(u8 *model, u8 *blend, u8 *obj, u8 *dst) {
         modelAnimFn_800246a0(dst, model, ch, *(f32 *)(obj + 0x98), 0x7f, 0, 1, 1, 1,
                              (s16)*(u16 *)(ch + 0x58));
     } else {
-        modelWalkAnimFn_800248b8(dst, model, *(u8 **)(model + 0x2c), 0x7f, *(f32 *)(obj + 0x98));
+        ((void (*)(u8 *, u8 *, u8 *, f32, int))modelWalkAnimFn_800248b8)(dst, model, *(u8 **)(model + 0x2c), *(f32 *)(obj + 0x98), 0x7f);
         ch2 = *(u8 **)(model + 0x30);
         if (ch2 != NULL && *(s16 *)(obj + 0xa2) > -1) {
             ObjModel_BuildAnimBlendTable(obj, *(u8 **)(model + 0x30), blend);
