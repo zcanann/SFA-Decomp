@@ -256,7 +256,7 @@ void wctemplebri_init(int obj, int initData)
     objAnim->bankIndex = *(u8 *)(initData + WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;
-    ((GameObject *)obj)->unkBC = (void *)wctemplebri_interactCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)wctemplebri_interactCallback;
     state = *(int *)&((GameObject *)obj)->extra;
     maxY = 0;
     model = Obj_GetActiveModel(obj);

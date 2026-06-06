@@ -1712,7 +1712,7 @@ void VFP_lavapool_init(int obj, int def) {
     int extra;
 
     extra = *(int *)&((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkBC = (void *)return1_801FDA08;
+    ((GameObject *)obj)->animEventCallback = (void *)return1_801FDA08;
     *(s16 *)(extra + 4) = 7000;
     *(s16 *)(extra + 6) = 2000;
     if (*(s16 *)(def + 0x1a) == 0) {

@@ -162,7 +162,7 @@ void SnowBike_init(int obj, u8 *params, int flag)
     ((SnowBikeState *)state)->unk00C = ((GameObject *)obj)->anim.localPosX;
     ((SnowBikeState *)state)->unk010 = ((GameObject *)obj)->anim.localPosY;
     ((SnowBikeState *)state)->unk014 = ((GameObject *)obj)->anim.localPosZ;
-    *(int *)&((GameObject *)obj)->unkBC = (int)SnowBike_animEventCallback;
+    *(int *)&((GameObject *)obj)->animEventCallback = (int)SnowBike_animEventCallback;
     ObjGroup_AddObject(obj, 10);
     if (flag == 0) {
         i = 0;

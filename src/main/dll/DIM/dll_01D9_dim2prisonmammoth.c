@@ -734,7 +734,7 @@ void dim2prisonmammoth_init(int obj, int p2)
 {
     int inner;
     ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
-    *(int *)&((GameObject *)obj)->unkBC = (int)fn_802BC3F0;
+    *(int *)&((GameObject *)obj)->animEventCallback = (int)fn_802BC3F0;
     inner = *(int *)&((GameObject *)obj)->extra;
     if (*(void **)((char *)obj + 0x64) != NULL) {
         *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0xa10;

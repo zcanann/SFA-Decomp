@@ -274,7 +274,7 @@ void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, int action)
     ((GameObject *)obj)->anim.previousWorldPosY = ((GameObject *)obj)->anim.worldPosY;
     ((GameObject *)obj)->anim.previousWorldPosZ = ((GameObject *)obj)->anim.worldPosZ;
 
-    if (((GameObject *)obj)->unkBC != NULL) {
+    if (((GameObject *)obj)->animEventCallback != NULL) {
         callbackResult = (*(int (**)(void))(obj + 0xbc))();
         if (callbackResult == 4) {
             lbl_803DD0DA = 1;

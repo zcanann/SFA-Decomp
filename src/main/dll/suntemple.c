@@ -90,7 +90,7 @@ void suntemple_init(u8 *obj, u8 *setup)
     ((GameObject *)obj)->anim.rotX = (s16)(setup[0x18] << 8);
     ((GameObject *)obj)->anim.rotY = (s16)(setup[0x19] << 8);
     ((GameObject *)obj)->anim.rotZ = (s16)(setup[0x1a] << 8);
-    ((GameObject *)obj)->unkBC = (void *)suntemple_interactCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)suntemple_interactCallback;
     objAnim->bankIndex = setup[0x21];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;

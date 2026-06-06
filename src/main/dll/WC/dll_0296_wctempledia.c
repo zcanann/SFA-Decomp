@@ -216,7 +216,7 @@ void wctempledia_init(int obj, int setup)
         WCTEMPLE_DIA_SPEED(state) = WCTEMPLE_DIA_TARGET_TABLE(state)[0];
     }
     WCTEMPLE_DIA_TARGET_SPEED(state) = WCTEMPLE_DIA_SPEED(state);
-    ((GameObject *)obj)->unkBC = (void *)wctempledia_interactCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)wctempledia_interactCallback;
     wctempledia_syncPartVisibility(obj, WCTEMPLE_DIA_STAGE_MASK_BYTE(state));
 }
 #pragma scheduling reset

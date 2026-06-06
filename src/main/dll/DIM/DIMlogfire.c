@@ -803,7 +803,7 @@ void MoonSeedPlantingSpot_init(int *obj, u8 *init) {
     int mapId;
 
     sub = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkBC = (void*)&MoonSeedPlantingSpot_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void*)&MoonSeedPlantingSpot_SeqFn;
     *(s16*)obj = (s16)(init[0x1f] << 8);
     sub[0] = 0;
     ObjGroup_AddObject((int)obj, 0x2e);
@@ -931,7 +931,7 @@ void ccgasventcontrol_free(int obj) {
 }
 void ccgasventcontrol_init(int obj, u8 *p) {
     char *inner = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkBC = (void *)CCGasVentControl_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)CCGasVentControl_SeqFn;
     *(s16 *)obj = (s16)((u32)p[0x1a] << 8);
     if (GameBit_Get(0xa3) != 0) {
         *(u8 *)inner = 7;
@@ -1394,7 +1394,7 @@ void animsharpclaw_init(int *obj, u8 *init) {
     int *inner;
     int f4;
 
-    *(int *)&((GameObject *)obj)->unkBC = 0;
+    *(int *)&((GameObject *)obj)->animEventCallback = 0;
     objSetSlot(obj, 0x64);
     inner = ((GameObject *)obj)->extra;
     *(s16 *)((char *)inner + 0x6a) = *(s16 *)((char *)init + 0x1a);

@@ -708,7 +708,7 @@ void bossdrakor_init(int obj, u8 *init)
     storeZeroToFloatParam((f32 *)((char *)inner + 0x10));
     ObjGroup_AddObject(obj, 0x45);
     storeZeroToFloatParam((f32 *)((char *)inner + 0x18));
-    ((GameObject *)obj)->unkBC = (void *)bossdrakor_animEventCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)bossdrakor_animEventCallback;
     Music_Trigger(0x26, 1);
     Music_Trigger(0x96, 1);
     ((BossDrakorState *)inner)->lightObj = 0;

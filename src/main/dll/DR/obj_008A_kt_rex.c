@@ -820,7 +820,7 @@ void ktrex_init(int obj, char *arg) {
     gKTRexRuntime = ((GameObject *)obj)->extra;
     (*(void (**)(int, char *, void *, int, int, int, int, f32))((char *)*gBaddieControlInterface + 0x58))(
         obj, arg, gKTRexRuntime, 9, 0xc, 0x100, 0x10 | (arg != 0), lbl_803E684C);
-    ((GameObject *)obj)->unkBC = (void *)ktrex_animEventCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)ktrex_animEventCallback;
     (*(void (**)(int, void *, int))((char *)*gPlayerInterface + 0x14))(obj, gKTRexRuntime, 0);
     ((KTRexRuntime *)gKTRexRuntime)->unk270 = 2;
     *(int *)&((KTRexRuntime *)gKTRexRuntime)->unk2D0 = 0;

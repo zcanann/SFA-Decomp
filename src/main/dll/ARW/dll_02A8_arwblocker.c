@@ -58,7 +58,7 @@ void arwblocker_init(int obj, int setup)
     int state = *(int *)&((GameObject *)obj)->extra;
     ((GameObject *)obj)->anim.rotX = -0x8000;
     ((GameObject *)obj)->anim.rotZ = (s16)(*(s8 *)(setup + 0x18) << 8);
-    ((GameObject *)obj)->unkBC = (void *)arwblocker_getBlockState;
+    ((GameObject *)obj)->animEventCallback = (void *)arwblocker_getBlockState;
     *(u8 *)(state + 0) = *(u8 *)(setup + 0x19);
     ((GameObject *)obj)->anim.flags |= 0x4000;
     *(u8 *)(obj + 0x36) = 0;

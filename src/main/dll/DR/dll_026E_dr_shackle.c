@@ -105,7 +105,7 @@ void drshackle_init(int obj, char *arg) {
     ObjGroup_AddObject(obj, 0x37);
     ((BitFlags8 *)(p + 0x1a))->b0 = (GameBit_Get(*(s16 *)(arg + 0x1e)) == 0);
     *(u8 *)(p + 0x1b) = (s8)arg[0x18] % 2;
-    ((GameObject *)obj)->unkBC = (void *)drshackle_toggleEventCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)drshackle_toggleEventCallback;
     if (*(s16 *)(arg + 0x1c) == 1) {
         *(int *)(p + 0x14) = 2;
         *(u8 *)(p + 0x1c) = 1 - *(u8 *)(p + 0x1b);

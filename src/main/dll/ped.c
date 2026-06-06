@@ -48,7 +48,7 @@ void treebird_init(int obj,int setup)
   TreeBirdState *state;
 
   state = ((GameObject *)obj)->extra;
-  ((GameObject *)obj)->unkBC = TreeBird_SeqFn;
+  ((GameObject *)obj)->animEventCallback = TreeBird_SeqFn;
   *(s16 *)obj = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
   ((GameObject *)obj)->anim.rotY = *(s16 *)(setup + 0x1a);
   ((GameObject *)obj)->anim.rotZ = *(s16 *)(setup + 0x1c);
@@ -82,7 +82,7 @@ extern int NW_geyser_SeqFn(int *obj, int p2, void *p3);
 void nw_geyser_init(int obj)
 {
   ((GameObject *)obj)->unkB0 = (ushort)(((GameObject *)obj)->unkB0 | 0x6000);
-  ((GameObject *)obj)->unkBC = NW_geyser_SeqFn;
+  ((GameObject *)obj)->animEventCallback = NW_geyser_SeqFn;
 }
 
 char *fn_801CDE70(int *obj) { return *(char **)&((GameObject *)obj)->extra + 0xc; }

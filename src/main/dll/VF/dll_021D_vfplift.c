@@ -271,7 +271,7 @@ void vfplift_hitDetect(int obj) {
 void vfplift_init(int *obj, u8 *init) {
     VFPLiftState *st = ((GameObject *)obj)->extra;
     int *inner = (int *)st;
-    ((GameObject *)obj)->unkBC = (void *)vfplift_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)vfplift_SeqFn;
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     *(s16 *)((char *)inner + 0xa) = 0;
     *(s16 *)((char *)inner + 0xc) = *(s16 *)((char *)init + 0x20);

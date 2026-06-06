@@ -15,7 +15,7 @@ void ktfallingrocks_release(void) {}
 #pragma scheduling off
 #pragma peephole off
 void ktfallingrocks_init(int obj) {
-    *(int *)&((GameObject *)obj)->unkBC = 0;
+    *(int *)&((GameObject *)obj)->animEventCallback = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

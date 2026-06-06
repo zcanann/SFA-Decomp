@@ -996,7 +996,7 @@ void ecsh_shrine_init(s16 *obj, s8 *def) {
     *(s16 *)((char *)sub + 0x26) = -1;
     *(u8 *)((char *)sub + 0x2e) = 0;
     *(int *)((char *)sub + 0x34) = 0;
-    ((GameObject *)obj)->unkBC = (void *)fn_801C5CE4;
+    ((GameObject *)obj)->animEventCallback = (void *)fn_801C5CE4;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0xba5, 1);
     GameBit_Set(0x129, 1);

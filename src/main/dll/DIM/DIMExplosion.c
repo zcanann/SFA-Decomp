@@ -108,7 +108,7 @@ void dimgate_init(int obj, s8 *p_unused_passthrough) {
     } else {
         inner[0] = 0;
     }
-    ((GameObject *)obj)->unkBC = (void *)dimgate_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dimgate_SeqFn;
     *(s16 *)obj = (s16)((s32)param[0x18] << 8);
     ((GameObject *)obj)->unkB0 |= 0x6000;
 }

@@ -1221,7 +1221,7 @@ void cclightfoot_init(int* obj, int* def)
 {
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 26) << 8);
     ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
-    ((GameObject *)obj)->unkBC = (void*)ccqueen_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void*)ccqueen_SeqFn;
 }
 
 int cclevcontrol_SeqFn(int p1, int p2, u8* state)
@@ -1285,7 +1285,7 @@ void cclevcontrol_init(int *obj) {
     int *state;
     envfxTable = lbl_80323548;
     state = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkBC = (void *)cclevcontrol_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)cclevcontrol_SeqFn;
     fn_80088870((char *)envfxTable + 0x38, envfxTable, (char *)envfxTable + 0x70, (char *)envfxTable + 0xa8);
     if (getSaveGameLoadStatus() != 0) {
         envFxActFn_800887f8(0x3f);

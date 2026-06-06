@@ -417,7 +417,7 @@ void DR_CloudRunner_init(int obj, int p2)
     int inner;
     int r;
     ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
-    *(int *)&((GameObject *)obj)->unkBC = (int)DR_CloudRunner_SeqFn;
+    *(int *)&((GameObject *)obj)->animEventCallback = (int)DR_CloudRunner_SeqFn;
     ObjGroup_AddObject(obj, 0xa);
     inner = *(int *)&((GameObject *)obj)->extra;
     *(u8 *)((char *)inner + 0xbb4) = *(u8 *)((char *)p2 + 0x19);

@@ -65,7 +65,7 @@ void transporter_init(int obj, u8 *params)
   *(s8 *)(state + 0xe) = 0;
   *(s16 *)obj = (s16)((u16)(params[0x18] << 8));
   ((GameObject *)obj)->unkF4 = 0;
-  ((GameObject *)obj)->unkBC = (void *)Transporter_SeqFn;
+  ((GameObject *)obj)->animEventCallback = (void *)Transporter_SeqFn;
   *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
 
   id = *(int *)(params + 0x14);

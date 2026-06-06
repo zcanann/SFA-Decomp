@@ -141,7 +141,7 @@ void gf_levelcon_free(void)
 #pragma scheduling off
 void gf_levelcon_update(int obj)
 {
-    ((GameObject *)obj)->unkBC = (void *)gf_levelcon_handleScriptEvents;
+    ((GameObject *)obj)->animEventCallback = (void *)gf_levelcon_handleScriptEvents;
 }
 #pragma scheduling reset
 #pragma peephole reset

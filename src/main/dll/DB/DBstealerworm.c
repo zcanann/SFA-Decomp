@@ -1140,7 +1140,7 @@ void SB_Galleon_init(int obj) {
     lbl_803DDC20 = obj;
     ObjGroup_AddObject(obj, 3);
     objSetSlot((void *)obj, 0x5a);
-    ((GameObject *)obj)->unkBC = (void *)SB_Galleon_animEventCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)SB_Galleon_animEventCallback;
     ((SBGalleonState *)p)->posX = ((GameObject *)obj)->anim.localPosX;
     ((SBGalleonState *)p)->posY = ((GameObject *)obj)->anim.localPosY;
     ((SBGalleonState *)p)->posZ = ((GameObject *)obj)->anim.localPosZ;

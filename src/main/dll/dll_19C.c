@@ -750,7 +750,7 @@ void dfsh_shrine_init(int *obj, u8 *init) {
     sub[0x1a] = 4;
     flags->openedBySequence = 0;
     *(s16*)(sub + 0x12) = 0;
-    ((GameObject *)obj)->unkBC = (void*)&dfsh_shrine_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void*)&dfsh_shrine_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     sub[0x1b] = 0;

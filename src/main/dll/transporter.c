@@ -1323,7 +1323,7 @@ void flameblast_init(int *obj, u8 *def) {
 
 void WarpPoint_init(int *obj, u8 *def) {
     s16 *state = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkBC = (void *)WarpPoint_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)WarpPoint_SeqFn;
     *(s16 *)obj = (s16)((u32)def[0x18] << 8);
     state[0] = 0x1e;
     *(f32 *)((char *)state + 8) = (f32)((s32)*(s8 *)((char *)def + 0x1e) << 2);
@@ -1942,7 +1942,7 @@ void pushable_init(s16 *obj, char *def) {
     ((GameObject *)obj)->anim.localPosY = lbl_803E358C + ((ObjPlacement *)def)->posY;
     ObjGroup_AddObject(obj, 5);
     objSetSlot(obj, 0x5a);
-    ((GameObject *)obj)->unkBC = (void *)fn_8017510C;
+    ((GameObject *)obj)->animEventCallback = (void *)fn_8017510C;
     state = ((GameObject *)obj)->extra;
     state->pointCount = 0;
     entry = Transporter_GetActiveModel(obj);

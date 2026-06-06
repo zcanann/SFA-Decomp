@@ -359,7 +359,7 @@ void dll_19B_init(u8 *obj, u8 *params) {
     sub[0x14] = 0;
     *(s16*)(sub + 2) = 0;
     sub[0x12] = 0;
-    ((GameObject *)obj)->unkBC = (void*)&dll_19B_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void*)&dll_19B_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     GameBit_Set(0x1d2, 0);

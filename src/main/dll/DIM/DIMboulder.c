@@ -1466,7 +1466,7 @@ extern int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3);
 #pragma peephole off
 void dll_16C_init(void *obj, void *arg2) {
     Dll16CState *extra;
-    ((GameObject *)obj)->unkBC = (void *)dll_16C_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dll_16C_SeqFn;
     if (*(void **)((char *)obj + 0x64) != NULL) {
         *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x4000;
         *(u8 *)(*(char **)((char *)obj + 0x64) + 0x3a) = 100;

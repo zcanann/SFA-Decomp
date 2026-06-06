@@ -334,7 +334,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg) {
         return 1;
     }
     if (ObjTrigger_IsSet(obj) != 0) {
-        ((GameObject *)obj)->unkBC = (void *)kytesmum_idleCallback;
+        ((GameObject *)obj)->animEventCallback = (void *)kytesmum_idleCallback;
         (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(next, obj, -1);
     }
     return 0;

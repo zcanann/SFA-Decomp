@@ -1050,7 +1050,7 @@ extern void *Resource_Acquire(int id, int mode);
 #pragma peephole off
 void SB_CloudRunner_init(int *obj) {
     int *state = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkBC = (void *)SB_CloudRunner_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)SB_CloudRunner_SeqFn;
     *(f32 *)((char *)state + 0x4c) = ((GameObject *)obj)->anim.localPosX;
     *(f32 *)((char *)state + 0x50) = ((GameObject *)obj)->anim.localPosY;
     *(f32 *)((char *)state + 0x54) = ((GameObject *)obj)->anim.localPosZ;

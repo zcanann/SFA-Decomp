@@ -51,7 +51,7 @@ void drgenerator_init(int obj, char *arg) {
     f32 fv;
     if (((GameObject *)obj)->anim.seqId == 0x72e) {
         int *t;
-        ((GameObject *)obj)->unkBC = (void *)drgenerator_eventCallback;
+        ((GameObject *)obj)->animEventCallback = (void *)drgenerator_eventCallback;
         t = objFindTexture(obj, 0, 0);
         if (t != 0) {
             *t = 0x100;

@@ -28,7 +28,7 @@ void explodeplan_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, 
 #pragma peephole off
 void explodeplan_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkBC = (void *)explodeplan_updateTriggerCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)explodeplan_updateTriggerCallback;
     if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
         ((BitFlags8 *)(p + 0x4))->b2 = 1;
         *(int *)p = 2;

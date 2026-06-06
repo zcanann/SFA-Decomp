@@ -250,11 +250,11 @@ extern void nw_tricky_SeqFn(void);
 #pragma scheduling off
 #pragma peephole off
 void nw_tricky_init(int *obj) {
-    ((GameObject *)obj)->unkBC = (void *)nw_tricky_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)nw_tricky_SeqFn;
     ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
 }
 void nw_animice_init(int *obj) {
-    ((GameObject *)obj)->unkBC = (void *)nw_animice_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)nw_animice_SeqFn;
     ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
     ObjGroup_AddObject(obj, 0x3d);
 }

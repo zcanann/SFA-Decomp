@@ -289,7 +289,7 @@ void gpsh_shrine_init(int *obj, int *def) {
 
     state = ((GameObject *)obj)->extra;
     *(s16 *)obj = 0;
-    ((GameObject *)obj)->unkBC = (void *)gpsh_shrine_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)gpsh_shrine_SeqFn;
     ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
     ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
     ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;

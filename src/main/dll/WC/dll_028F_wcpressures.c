@@ -323,7 +323,7 @@ void wcpressures_init(u8 *obj, u8 *setup)
     for (i = 0; i < 10; i++) {
         state->objects[i] = 0;
     }
-    ((GameObject *)obj)->unkBC = wcpressures_tileStateCallback;
+    ((GameObject *)obj)->animEventCallback = wcpressures_tileStateCallback;
 }
 #pragma scheduling reset
 #pragma peephole reset

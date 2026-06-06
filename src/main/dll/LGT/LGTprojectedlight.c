@@ -573,7 +573,7 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void wmgeneralscales_init(int *obj) {
     int *state = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkBC = (void *)wmgeneralscales_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)wmgeneralscales_SeqFn;
     *(f32 *)state = lbl_803E5E98;
     *(u8 *)((char *)state + 4) = 1;
     *(int *)&((GameObject *)obj)->unkC8 = 0;

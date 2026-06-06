@@ -33,7 +33,7 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
 
     objAnim = (ObjAnimComponent *)obj;
     obj[0] = (s16)((s32)def[0x18] << 8);
-    *(int *)&((GameObject *)obj)->unkBC = (int)&dimlavasmash_SeqFn;
+    *(int *)&((GameObject *)obj)->animEventCallback = (int)&dimlavasmash_SeqFn;
     inner = ((GameObject *)obj)->extra;
     *(u8 *)(inner + 1) = (u8)*(s16 *)(def + 0x1a);
     *(s8 *)(inner + 0) = (s8)*(s16 *)(def + 0x1c);
@@ -150,7 +150,7 @@ extern int dimbridgecogmai_SeqFn(int obj, int p2, char *r5);
 void dimbridgecogmai_init(int *obj, int *def) {
     *(u8 *)((GameObject *)obj)->extra = 100;
     *(s16 *)obj = (s16)((u32)*(u8 *)((char *)def + 0x1c) << 8);
-    ((GameObject *)obj)->unkBC = (void *)dimbridgecogmai_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dimbridgecogmai_SeqFn;
     ObjGroup_AddObject(obj, 15);
     if ((u8)GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
         ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x8000);

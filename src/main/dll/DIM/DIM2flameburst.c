@@ -1745,7 +1745,7 @@ void dimmagicbridge_init(u8* obj, u8* params) {
     s16 hh;
 
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
-    ((GameObject *)obj)->unkBC = (void*)&dimmagicbridge_flameSeqFn;
+    ((GameObject *)obj)->animEventCallback = (void*)&dimmagicbridge_flameSeqFn;
     sub = ((GameObject *)obj)->extra;
     minY = 0;
     model = Obj_GetActiveModel((int)obj);

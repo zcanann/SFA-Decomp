@@ -68,7 +68,7 @@ void wmsun_init(int obj, int params)
     s16 mode;
 
     objAnim = (ObjAnimComponent *)obj;
-    ((GameObject *)obj)->unkBC = (void *)fn_801F6E8C;
+    ((GameObject *)obj)->animEventCallback = (void *)fn_801F6E8C;
     c = ((MapEventInterface *)*gMapEventInterface)->getMode((int)*(s8 *)(obj + 0xac));
     if (c == 3 && (u32)GameBit_Get(0x21b) == 0) {
         GameBit_Set(0x21b, 1);

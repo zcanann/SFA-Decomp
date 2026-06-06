@@ -792,7 +792,7 @@ void dbsh_symbol_init(int* obj)
     state->flags.active = 1;
 
     ((GameObject *)obj)->anim.localPosY -= lbl_803E5118;
-    ((GameObject *)obj)->unkBC = (int*)DBSH_Symbol_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (int*)DBSH_Symbol_SeqFn;
 
     otherPtr = *(int**)((char*)obj + 0x64);
     *(u32 *)((char *)otherPtr + 0x30) &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;

@@ -849,7 +849,7 @@ void sc_levelcontrol_init(int obj)
     ((SnowFlags22 *)(state + 0x22))->bit7 = 0;
     *(u8 *)(state + 0x1e) = 0xff;
     *(u8 *)(state + 0x1d) = 0;
-    ((GameObject *)obj)->unkBC = (void *)sc_levelcontrol_processAnimEventsCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)sc_levelcontrol_processAnimEventsCallback;
     GameBit_Set(0x60f, 1);
     GameBit_Set(0x2b8, 0);
     GameBit_Set(0x4bd, 1);

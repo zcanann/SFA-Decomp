@@ -985,7 +985,7 @@ void doorf4_init(int *obj, int *params)
 
     ObjMsg_AllocQueue(obj, 4);
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
-    ((GameObject *)obj)->unkBC = (void *)doorf4_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)doorf4_SeqFn;
     *(u8 *)((char *)obj + 0xaf) |= 8;
     ((GameObject *)obj)->unkB0 |= 0x6000;
     state->gameBitA = *(s16 *)((char *)params + 0x1e);

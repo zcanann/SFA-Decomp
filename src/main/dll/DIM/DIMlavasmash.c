@@ -292,7 +292,7 @@ void dimlogfire_init(int obj, int def)
     int radius;
     DimLogFireState *state;
 
-    ((GameObject *)obj)->unkBC = (void *)dimlogfire_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dimlogfire_SeqFn;
     ObjGroup_AddObject(obj, 0x31);
     state = ((GameObject *)obj)->extra;
     state->unk20 = 0;

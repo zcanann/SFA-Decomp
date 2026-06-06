@@ -4017,7 +4017,7 @@ void dll_22C_init(int obj, char *p)
   int b8;
 
   b8 = *(int *)&((GameObject *)obj)->extra;
-  *(int *)&((GameObject *)obj)->unkBC = (int)dll_22C_SeqFn;
+  *(int *)&((GameObject *)obj)->animEventCallback = (int)dll_22C_SeqFn;
   ((GameObject *)obj)->anim.rotX = (s16)(*(char *)(p + 0x18) << 8);
   ((Dll22CState *)b8)->mode = 0;
   ((Dll22CState *)b8)->gameBit = *(s16 *)(p + 0x20);
@@ -4224,7 +4224,7 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
     }
     ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*gBaddieControlInterface)[22])(obj, def, sub, 0x10, 7, 0x10a, mode, lbl_803E62FC);
     ObjGroup_AddObject(obj, 3);
-    *(int *)&((GameObject *)obj)->unkBC = 0;
+    *(int *)&((GameObject *)obj)->animEventCallback = 0;
     p40c = *(int**)&((GroundBaddieState *)sub)->control;
     memset(p40c, 0, 0x50);
     ((DbStealerwormControl *)p40c)->unk08 = lbl_803E62FC;
@@ -4270,7 +4270,7 @@ void dbholecontrol1_init(int *obj, u8 *params) {
     DbHoleControl1State *sub = ((GameObject *)obj)->extra;
     ObjGroup_AddObject(obj, 0x1e);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    ((GameObject *)obj)->unkBC = (void*)&dbholecontrol1_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void*)&dbholecontrol1_SeqFn;
     sub->gameBitA = *(s16*)(params + 0x1a);
     sub->gameBitB = *(s16*)(params + 0x1c);
 }
@@ -4301,7 +4301,7 @@ extern int dfpseqpoint_SeqFn(int obj, int p2, int p3);
 void dfpseqpoint_init(int *obj, u8 *init) {
     DfpSeqPointState *sub;
     sub = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkBC = (void*)&dfpseqpoint_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void*)&dfpseqpoint_SeqFn;
     *(s16*)obj = (s16)((s8)init[0x18] << 8);
     sub->triggerRadius = (f32)(s32)*(s16*)(init + 0x1a);
     sub->triggerId = *(s16*)(init + 0x1c);
@@ -4816,7 +4816,7 @@ void dfplevelcontrol_init(int obj, int param2)
     ((DfpFlags7 *)&state->flags07)->b80 = GameBit_Get(0xd5d);
     ((DfpFlags7 *)&state->flags07)->b40 = GameBit_Get(0xd59);
     ((DfpFlags7 *)&state->flags07)->b20 = GameBit_Get(0xd5a);
-    ((GameObject *)obj)->unkBC = dfplevelcontrol_SeqFn;
+    ((GameObject *)obj)->animEventCallback = dfplevelcontrol_SeqFn;
     state->mode = 1;
     v = *(s16 *)(param2 + 0x1a);
     if (v != 0 && v <= 2) {

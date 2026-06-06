@@ -74,7 +74,7 @@ void vfpladders_init(int *obj, u8 *init) {
     *(s16 *)((char *)inner + 2) = *(s16 *)((char *)init + 0x20);
     *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
     ((GameObject *)obj)->unkB0 |= 0x6000;
-    ((GameObject *)obj)->unkBC = (void *)vfpladders_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)vfpladders_SeqFn;
 }
 #pragma scheduling reset
 #pragma peephole reset

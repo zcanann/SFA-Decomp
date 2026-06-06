@@ -1224,7 +1224,7 @@ void arwarwing_init(int obj)
     cfg.c = lbl_802C25E8.c;
     state = *(int *)&((GameObject *)obj)->extra;
     sub = state + 0xc0;
-    *(int *)&((GameObject *)obj)->unkBC = (int)arwarwing_SeqFn;
+    *(int *)&((GameObject *)obj)->animEventCallback = (int)arwarwing_SeqFn;
     (*(void (**)(int, int, int, int))(*gPathControlInterface + 4))(sub, 4, 0x1040006, 1);
     (*(void (**)(int, int, void *, void *, void *))(*gPathControlInterface + 0xc))(sub, 3, lbl_8032B408, lbl_8032B480, &cfg);
     (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, sub);

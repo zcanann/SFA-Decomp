@@ -194,7 +194,7 @@ void dfropenode_init(DFropenodeObject *obj, u8 *objDef)
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags & ~0x80;
   }
   ObjGroup_AddObject((int)obj, 0x17);
-  ((GameObject *)obj)->unkBC = dfropenode_syncRopeToEndpoints;
+  ((GameObject *)obj)->animEventCallback = dfropenode_syncRopeToEndpoints;
   extra->rope = NULL;
   extra->linkedObj = NULL;
   *(u8 *)((u8 *)obj + 0x36) = 0x46;

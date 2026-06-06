@@ -1885,7 +1885,7 @@ void Tricky_init(int obj)
   if (GameBit_Get(0x25) != 0) {
     GameBit_Set(0x3f8,1);
   }
-  ((GameObject *)obj)->unkBC = (void *)tricky_SeqFn;
+  ((GameObject *)obj)->animEventCallback = (void *)tricky_SeqFn;
   ObjGroup_AddObject(obj,1);
   trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[0]);
   trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[1]);

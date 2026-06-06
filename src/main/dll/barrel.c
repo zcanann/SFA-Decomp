@@ -433,7 +433,7 @@ void grimble_init(int obj, int p2, int p3)
   }
   (*(void (**)(int, int, char *, int, int, int, u8, f32))(*(int *)gBaddieControlInterface + 0x58))(
       obj, p2, state, 0, 0, 0, flags, lbl_803E2F28);
-  ((GameObject *)obj)->unkBC = (void *)grimble_animEventCallback;
+  ((GameObject *)obj)->animEventCallback = (void *)grimble_animEventCallback;
   (*(void (**)(int, char *, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 0);
   *(s16 *)(state + 0x270) = 0;
   *(f32 *)(state + 0x280) = lbl_803E2EB8;

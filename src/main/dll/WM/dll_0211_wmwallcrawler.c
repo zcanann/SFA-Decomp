@@ -558,7 +558,7 @@ void wmwallcrawler_init(int obj, int spawn)
         (*(void (**)(int, int))(*(int*)gPathControlInterface + 0x20))(obj, inner);
         *(u32*)inner |= 0x40008;
     }
-    *(int *)&((GameObject *)obj)->unkBC = (int)wmwallcrawler_animEventCallback;
+    *(int *)&((GameObject *)obj)->animEventCallback = (int)wmwallcrawler_animEventCallback;
     ObjHits_EnableObject(obj);
     ObjHits_SyncObjectPositionIfDirty(obj);
 }

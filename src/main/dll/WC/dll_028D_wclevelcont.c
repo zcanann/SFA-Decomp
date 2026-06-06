@@ -399,7 +399,7 @@ void wclevelcont_init(int obj)
     int state = *(int *)&((GameObject *)obj)->extra;
     u16 flags;
 
-    ((GameObject *)obj)->unkBC = (void *)wcpushblock_levelControlTriggerCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)wcpushblock_levelControlTriggerCallback;
     GameBit_Set(0x810, 0);
     memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
     GameBit_Set(0x811, 0);

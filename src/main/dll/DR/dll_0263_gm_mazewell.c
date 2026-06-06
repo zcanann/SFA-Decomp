@@ -28,7 +28,7 @@ void gmmazewell_init(int obj) {
     p[0] = 0;
     GameBit_Set(0xefc, 1);
     Music_Trigger(0x36, 1);
-    ((GameObject *)obj)->unkBC = (void *)gmmazewell_clearPendingTriggerCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)gmmazewell_clearPendingTriggerCallback;
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -1074,7 +1074,7 @@ void dll_CA_init(int obj, u8 *p, int flags)
   }
   (*(void (**)(int, u8 *, int, int, int, int, u8, f32))(*(int *)gBaddieControlInterface + 0x58))(
       obj, p, (int)sub, 14, 8, 0x102, mode, lbl_803E2DB8);
-  *(int *)&((GameObject *)obj)->unkBC = 0;
+  *(int *)&((GameObject *)obj)->animEventCallback = 0;
   if (lbl_803E2D24 * (f32)(u32)sub->aggroRange < lbl_803E2D54) {
     *(s16 *)&sub->aggroRange = 0x6e;
   }
@@ -1722,7 +1722,7 @@ void dll_CE_init(int obj, u8 *p, int flags)
   }
   (*(void (**)(int, u8 *, int, int, int, int, u8, f32))(*(int *)gBaddieControlInterface + 0x58))(
       obj, p, (int)sub, 7, 6, 0x102, mode, lbl_803E2E14);
-  *(int *)&((GameObject *)obj)->unkBC = 0;
+  *(int *)&((GameObject *)obj)->animEventCallback = 0;
   v = *(f32 **)&sub->control;
   *v = (f32)(int)randomGetRange(10, 300);
   ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
@@ -4076,7 +4076,7 @@ void dll_CB_init(int *obj, u8 *params, int extra) {
     ((GameObject *)obj)->anim.rotY = (s16)((s8)params[0x28] << 8);
     ((GameObject *)obj)->anim.rotZ = (s16)((s8)params[0x27] << 8);
     ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(obj, params, (u8 *)sub, 4, 6, 0x82, flags, lbl_803E2EA8);
-    ((GameObject *)obj)->unkBC = (void*)&dll_CB_seqFn;
+    ((GameObject *)obj)->animEventCallback = (void*)&dll_CB_seqFn;
     ((void(*)(int*, u8*, int))((void**)*(int*)gPlayerInterface)[5])(obj, (u8 *)sub, 0);
     sub->baddie.unk270 = 0;
     if (sub->aggroRange < 0x32) {

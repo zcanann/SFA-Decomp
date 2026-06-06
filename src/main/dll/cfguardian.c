@@ -647,7 +647,7 @@ void pressureswitchfb_init(u8* obj, u8* params) {
     *(int*)(sub + 0x20) = 0;
     *(int*)(sub + 0x24) = 0;
     *(int*)(sub + 0x28) = 0;
-    ((GameObject *)obj)->unkBC = (void*)&pressureswitchfb_updateStateMode;
+    ((GameObject *)obj)->animEventCallback = (void*)&pressureswitchfb_updateStateMode;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -723,7 +723,7 @@ void Door_init(int *obj, u8 *def) {
     u8 *state = ((GameObject *)obj)->extra;
     state[5] = 1;
     *(s16 *)obj = (s16)(def[0x1f] << 8);
-    *(int *)&((GameObject *)obj)->unkBC = (int)Door_SeqFn;
+    *(int *)&((GameObject *)obj)->animEventCallback = (int)Door_SeqFn;
     ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
     ((GameObject *)obj)->anim.rootMotionScale = ((f32)(u32)*(u8 *)((char *)def + 0x21) - lbl_803E3790) * lbl_803E3784;
     if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E3788) {

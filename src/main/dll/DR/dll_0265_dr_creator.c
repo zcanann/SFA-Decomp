@@ -27,7 +27,7 @@ void drcreator_init(int obj, char *arg) {
     *(int *)p = (u8)arg[0x20];
     ((BitFlags8 *)(p + 0x18))->b0 = 1;
     GameBit_Set(0x5dd, 0);
-    ((GameObject *)obj)->unkBC = (void *)drcreator_spawnProjectileCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)drcreator_spawnProjectileCallback;
 }
 #pragma peephole reset
 #pragma scheduling reset

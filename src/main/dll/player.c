@@ -11634,7 +11634,7 @@ void objLoadPlayerFromSave(int obj)
     ObjGroup_AddObject(obj, 0x25);
     objSetSlot(obj, 0x3c);
     ObjMsg_AllocQueue(obj, 0x14);
-    *(int *)&((GameObject *)obj)->unkBC = (int)player_SeqFn;
+    *(int *)&((GameObject *)obj)->animEventCallback = (int)player_SeqFn;
     *(int *)&((GameObject *)obj)->anim.placementData = 0;
     ((PlayerState *)inner)->heldObj = 0;
     ((PlayerState *)inner)->unk35C =

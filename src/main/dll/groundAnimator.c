@@ -175,7 +175,7 @@ void dll_115_init(short *obj, int mapData)
 
   state = ((GameObject *)obj)->extra;
   *obj = (s16)(*(u8 *)(mapData + 0x38) << 8);
-  ((GameObject *)obj)->unkBC = dll_115_seqFn;
+  ((GameObject *)obj)->animEventCallback = dll_115_seqFn;
   ((GameObject *)obj)->unkB0 |= 0x6000;
   ObjGroup_AddObject((int)obj, 0xf);
   step = 0;

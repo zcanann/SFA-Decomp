@@ -279,7 +279,7 @@ void firefly_init(int obj, int def)
     mapData = (FireFlyMapData *)def;
     fn_801F4C28(obj, state);
     *(u8 *)(obj + 0x36) = 0;
-    ((GameObject *)obj)->unkBC = fn_801F4C04;
+    ((GameObject *)obj)->animEventCallback = fn_801F4C04;
     ObjMsg_AllocQueue(obj, 1);
     storeZeroToFloatParam(state->activateDelay);
     if (mapData->startDelayKind == 0x7f) {

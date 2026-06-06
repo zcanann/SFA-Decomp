@@ -111,7 +111,7 @@ void wctrexstatu_update(void) {}
 void wctrexstatu_init(int obj, int setup, int fromLoad)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    ((GameObject *)obj)->unkBC = wctrexstatu_interactCallback;
+    ((GameObject *)obj)->animEventCallback = wctrexstatu_interactCallback;
     objAnim->bankIndex = *(u8 *)(setup + WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;

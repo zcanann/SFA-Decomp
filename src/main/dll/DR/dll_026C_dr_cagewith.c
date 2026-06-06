@@ -187,7 +187,7 @@ void drcagewith_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     s16 type;
     f32 fz;
-    ((GameObject *)obj)->unkBC = (void *)drcagewith_toggleRopeStateCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)drcagewith_toggleRopeStateCallback;
     type = ((GameObject *)obj)->anim.seqId;
     if (type == 0x86a || type == 0x86b) {
         if (GameBit_Get(0x609) == 0) {

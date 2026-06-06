@@ -242,7 +242,7 @@ void warpstone_init(int obj, u8 *setup)
   state = *(int *)&((GameObject *)obj)->extra;
   setupYaw = (s16)(setup[0x1a] << 8);
   *(s16 *)obj = setupYaw;
-  ((GameObject *)obj)->unkBC = warpstone_updateMenuAnimObj;
+  ((GameObject *)obj)->animEventCallback = warpstone_updateMenuAnimObj;
   *(s16 *)(state + 0xe) = 0x15a;
   *(s16 *)(state + 0x10) = 0x886;
   ObjHits_EnableObject(obj);

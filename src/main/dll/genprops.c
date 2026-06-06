@@ -5291,7 +5291,7 @@ void depthoffieldpoint_init(int *obj)
 {
     DofState *s = ((GameObject *)obj)->extra;
     s->enabled = 0;
-    ((GameObject *)obj)->unkBC = (void *)depthoffieldpoint_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)depthoffieldpoint_SeqFn;
     s->field1 = 0;
     ((GameObject *)obj)->unkB0 |= 0x4000;
 }
@@ -6378,7 +6378,7 @@ void fireball_init(int *obj)
             *(u16 *)(p + 0x66) = randomGetRange(-1024, 1024);
             p += 2;
         }
-        *(int *)&((GameObject *)obj)->unkBC = (int)Fireball_SeqFn;
+        *(int *)&((GameObject *)obj)->animEventCallback = (int)Fireball_SeqFn;
         ObjGroup_AddObject((int)obj, 2);
         if (((GameObject *)obj)->anim.seqId != 2110 && *(s16 *)((char *)params + 0x1a) != 0) {
             *(f32 *)((char *)state + 0x3c) = lbl_803E3380;

@@ -3834,7 +3834,7 @@ void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
     ((GameObject *)obj)->anim.worldPosX = pos[0];
     *(f32 *)&((GameObject *)obj)->extra = pos[0];
     ((GameObject *)obj)->anim.worldPosY = pos[1];
-    *(f32 *)&((GameObject *)obj)->unkBC = pos[1];
+    *(f32 *)&((GameObject *)obj)->animEventCallback = pos[1];
     ((GameObject *)obj)->anim.worldPosZ = pos[2];
     *(f32 *)&((GameObject *)obj)->unkC0 = pos[2];
     Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ,

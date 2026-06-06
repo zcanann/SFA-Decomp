@@ -35,7 +35,8 @@ typedef struct GameObject {
     s16 unkB4;
     u8 unkB6[2];
     void *extra; /* per-class state block */
-    void *unkBC;
+    void *animEventCallback; /* obj+0xBC anim-event callback slot;
+        LinkALevelControlObject/EarthWalkerObject STATIC_ASSERT this at 0xBC */
     void *unkC0;
     void *unkC4;
     void *unkC8;

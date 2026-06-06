@@ -102,7 +102,7 @@ void andross_init(int obj, u8 *setup)
     ((AndrossState *)state)->unk78 = lbl_803E7530;
     ((AndrossState *)state)->unkBC = 1;
     ObjHits_SetTargetMask(obj, 4);
-    ((GameObject *)obj)->unkBC = (void *)andross_updateModelAlpha;
+    ((GameObject *)obj)->animEventCallback = (void *)andross_updateModelAlpha;
     fn_8006CB50();
     model = *(int *)Obj_GetActiveModel(obj);
     for (i = 0; i < *(u8 *)(model + 0xf8); i++) {

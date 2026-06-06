@@ -1469,7 +1469,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     int q;
     s8 idx;
     ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
-    *(int *)&((GameObject *)obj)->unkBC = (int)DIMSnowHorn1_animEventCallback;
+    *(int *)&((GameObject *)obj)->animEventCallback = (int)DIMSnowHorn1_animEventCallback;
     ObjGroup_AddObject(obj, 0xa);
     inner = ((GameObject *)obj)->extra;
     inner->unkA8C = *(u8 *)((char *)p2 + 0x19);
