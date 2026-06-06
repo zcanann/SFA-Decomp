@@ -2484,7 +2484,9 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   in practice: every unreferenced plain static found was EMITTED matched code
   (musyx AddDpop, OS.c asm exception vectors — removal would LOSE bytes), and
   unreferenced `static inline` helpers are usually staged accessors for
-  in-progress recovery — leave them.
+  in-progress recovery — leave them. Rule of thumb: an unreferenced static
+  may be EMITTED matched code (exception vectors, musyx helpers) — check
+  symbols.txt presence before treating it as dead.
 - **Gold-standard verification for refactor/cleanup commits: full-build .o
   hash comparison**, strictly stronger than report.json (catches reloc-encoding
   changes report.json doesn't surface). `find build -name '*.o' -exec md5sum
