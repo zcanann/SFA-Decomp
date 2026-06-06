@@ -1,4 +1,5 @@
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/game_object.h"
 
 extern f32 lbl_8030F9D8[];
 extern s16 lbl_803DB788[4];
@@ -40,9 +41,9 @@ void WM_newcrystalFn_800969b0(void *obj, s16 *state, u8 flags, f32 period, f32 x
             params.vec[2] = cZero;
             *(u16 *)state += 0x7fff;
             vecRotateZXY(state, params.vec);
-            params.vec[0] += *(f32 *)((char *)obj + 0xc);
-            params.vec[1] += *(f32 *)((char *)obj + 0x10);
-            params.vec[2] += *(f32 *)((char *)obj + 0x14);
+            params.vec[0] += ((GameObject *)obj)->anim.localPosX;
+            params.vec[1] += ((GameObject *)obj)->anim.localPosY;
+            params.vec[2] += ((GameObject *)obj)->anim.localPosZ;
             params.f8 = cOne;
             spawnFlags = 0x200001;
             if (flags != 0) {
@@ -574,7 +575,7 @@ void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32
         break;
     case 4: {
         int flags = 2;
-        if ((*(s16 *)((char *)obj + 6) & 0x40080) != 0) {
+        if ((((GameObject *)obj)->anim.flags & 0x40080) != 0) {
             flags |= 0x20000000;
         }
         params.f6 = 0xc0e;
@@ -595,15 +596,15 @@ void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32
             vecRotateZXY(obj, lvec);
             Camera_ProjectWorldPointWithOffset(
                 &proj[2], &proj[1], &proj[0],
-                *(f32 *)((char *)obj + 0x18) + lvec[0] - playerMapOffsetX,
-                *(f32 *)((char *)obj + 0x1c) + lvec[1],
-                *(f32 *)((char *)obj + 0x20) + lvec[2] - playerMapOffsetZ, lbl_803DF384);
+                ((GameObject *)obj)->anim.worldPosX + lvec[0] - playerMapOffsetX,
+                ((GameObject *)obj)->anim.worldPosY + lvec[1],
+                ((GameObject *)obj)->anim.worldPosZ + lvec[2] - playerMapOffsetZ, lbl_803DF384);
         } else {
             Camera_ProjectWorldPointWithOffset(
                 &proj[2], &proj[1], &proj[0],
-                *(f32 *)((char *)obj + 0x18) - playerMapOffsetX,
-                *(f32 *)((char *)obj + 0x1c),
-                *(f32 *)((char *)obj + 0x20) - playerMapOffsetZ, lbl_803DF384);
+                ((GameObject *)obj)->anim.worldPosX - playerMapOffsetX,
+                ((GameObject *)obj)->anim.worldPosY,
+                ((GameObject *)obj)->anim.worldPosZ - playerMapOffsetZ, lbl_803DF384);
         }
         Camera_NdcToScreen(&screen[2], &screen[1], &screen[0], proj[2], proj[1], proj[0]);
         depth = maybeReadDepthBuffer(screen[2], screen[1], obj);
@@ -973,9 +974,9 @@ void objParticleFn_80099d84(void *obj, u8 type, void *light, f32 scale, f32 fext
 
     if (light != NULL) {
         modelLightStruct_setLightKind(light, 2);
-        modelLightStruct_setPosition(light, *(f32 *)((char *)obj + 0x18),
-                            *(f32 *)((char *)obj + 0x1c) + zoff,
-                            *(f32 *)((char *)obj + 0x20));
+        modelLightStruct_setPosition(light, ((GameObject *)obj)->anim.worldPosX,
+                            ((GameObject *)obj)->anim.worldPosY + zoff,
+                            ((GameObject *)obj)->anim.worldPosZ);
         cbuf = (u8 *)&colors;
         modelLightStruct_setDiffuseColor(light, cbuf[type * 3], cbuf[type * 3 + 1],
                                        cbuf[type * 3 + 2], 0xff);
@@ -1134,7 +1135,7 @@ void fn_8009A8C8(u8 *obj, f32 thresh) {
         return;
     }
     {
-        f32 d = Camera_DistanceToCurrentViewPosition(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20));
+        f32 d = Camera_DistanceToCurrentViewPosition(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ);
         if (d <= thresh) {
             f32 t = lbl_803DF354 - d / thresh;
             CameraShake_Start(lbl_803DF3A0 * t, lbl_803DF384 * t, lbl_803DF3A4);
