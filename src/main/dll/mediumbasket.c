@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/baddie_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/mediumbasket.h"
 #include "main/objanim.h"
@@ -1030,12 +1031,12 @@ int mediumbasket_updateOpenState(int obj, int p)
   extern f32 lbl_803E2D70;
   extern f32 lbl_803E2D74;
   extern f32 lbl_803E2D78;
-  int sub;
+  BaddieState *sub;
   int sub_40c;
   int p54;
 
-  sub = *(int *)(obj + 0xb8);
-  sub_40c = *(int *)(sub + 0x40c);
+  sub = *(BaddieState **)(obj + 0xb8);
+  sub_40c = *(int *)&sub->control;
   p54 = *(int *)(obj + 0x54);
   *(s16 *)(p54 + 0x60) |= 1;
   *(u8 *)(p + 0x25f) = 1;
@@ -1044,14 +1045,14 @@ int mediumbasket_updateOpenState(int obj, int p)
     *(s8 *)(p + 0x346) = 0;
   }
   if (*(char *)(p + 0x27a) != '\0') {
-    GameBit_Set(*(s16 *)(sub + 0x3f4), 1);
+    GameBit_Set(sub->gameBitB, 1);
     *(u8 *)(obj + 0xaf) &= ~0x8;
     *(u8 *)(obj + 0x36) = 0xff;
     *(s8 *)(p + 0x34d) = 1;
-    *(f32 *)(p + 0x2a0) = lbl_803E2D70 + (f32)(u32)*(u8 *)(sub + 0x406) / lbl_803E2D74;
+    *(f32 *)(p + 0x2a0) = lbl_803E2D70 + (f32)(u32)sub->aggression / lbl_803E2D74;
   }
   if (*(s8 *)(p + 0x346) != 0) {
-    *(s16 *)(sub + 0x402) = 1;
+    sub->targetState = 1;
   }
   {
     int v = *(int *)(p + 0x314);
@@ -1080,12 +1081,12 @@ int mediumbasket_updateOpenHitState(int obj, int p)
   extern f32 lbl_803E2D78;
   extern f32 lbl_803E2D7C;
   extern f32 lbl_803E2D80;
-  int sub;
+  BaddieState *sub;
   int sub_40c;
   int p54;
 
-  sub = *(int *)(obj + 0xb8);
-  sub_40c = *(int *)(sub + 0x40c);
+  sub = *(BaddieState **)(obj + 0xb8);
+  sub_40c = *(int *)&sub->control;
   p54 = *(int *)(obj + 0x54);
   *(s16 *)(p54 + 0x60) |= 1;
   *(u8 *)(p + 0x25f) = 1;
@@ -1099,14 +1100,14 @@ int mediumbasket_updateOpenHitState(int obj, int p)
     *(s8 *)(p + 0x346) = 0;
   }
   if (*(char *)(p + 0x27a) != '\0') {
-    GameBit_Set(*(s16 *)(sub + 0x3f4), 1);
+    GameBit_Set(sub->gameBitB, 1);
     *(u8 *)(obj + 0xaf) &= ~0x8;
     *(u8 *)(obj + 0x36) = 0xff;
     *(s8 *)(p + 0x34d) = 1;
-    *(f32 *)(p + 0x2a0) = lbl_803E2D7C + (f32)(u32)*(u8 *)(sub + 0x406) / lbl_803E2D80;
+    *(f32 *)(p + 0x2a0) = lbl_803E2D7C + (f32)(u32)sub->aggression / lbl_803E2D80;
   }
   if (*(s8 *)(p + 0x346) != 0) {
-    *(s16 *)(sub + 0x402) = 1;
+    sub->targetState = 1;
   }
   {
     int v = *(int *)(p + 0x314);
@@ -1998,13 +1999,13 @@ void mediumbasket_spawnContactObject(int *obj, int *state);
 #pragma peephole off
 void dll_CA_func0B(int obj, int message)
 {
-    int state = *(int *)(obj + 0xb8);
+    BaddieState *state = *(BaddieState **)(obj + 0xb8);
 
     switch ((u8)message) {
     case 0x80:
-        ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 2);
-        *(s16 *)(state + 0x270) = 4;
-        *(u8 *)(state + 0x27b) = 1;
+        ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, (int)state, 2);
+        state->unk270 = 4;
+        state->moveJustStartedB = 1;
         break;
     }
 }
@@ -2027,13 +2028,13 @@ int fn_8015B5CC(int obj, int state)
 #pragma peephole off
 int fn_8015B614(int obj, int state)
 {
-    int sub;
+    BaddieState *sub;
 
     if ((s8)*(u8 *)(state + 0x27b) != 0) {
-        sub = *(int *)(obj + 0xb8);
-        *(u8 *)(sub + 0x405) = 0;
-        GameBit_Set((s32)*(s16 *)(sub + 0x3f4), 0);
-        GameBit_Set((s32)*(s16 *)(sub + 0x3f2), 1);
+        sub = *(BaddieState **)(obj + 0xb8);
+        sub->unk405 = 0;
+        GameBit_Set((s32)sub->gameBitB, 0);
+        GameBit_Set((s32)sub->gameBitA, 1);
     }
     return 0;
 }
@@ -2068,7 +2069,7 @@ int fn_8015B670(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateLandingState(int obj, int state)
 {
-    int sub = *(int *)(obj + 0xb8);
+    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
     int player;
     f32 noBlend;
 
@@ -2097,7 +2098,7 @@ playLandingExtras:
         Sfx_PlayFromObject(obj, SFXdoor_creak);
         *(u8 *)(state + 0x356) |= 2;
         ((void (*)(int, int, int, int))((void **)*gBaddieControlInterface)[19])(
-            obj, (s32)*(s16 *)(sub + 0x3f0), -1, 0);
+            obj, (s32)sub->unk3F0, -1, 0);
     }
     return 0;
 }
@@ -2108,14 +2109,14 @@ playLandingExtras:
 #pragma peephole off
 int mediumbasket_updateContactHitState(int obj, int state)
 {
-    int sub = *(int *)(obj + 0xb8);
+    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
     int control;
     f32 noBlend;
 
     ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
     ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
-    if (*(u8 *)(sub + 0x406) > 0x32) {
+    if (sub->aggression > 0x32) {
         if ((s8)*(u8 *)(state + 0x27a) != 0) {
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E2D14, 0);
             *(u8 *)(state + 0x346) = 0;
@@ -2126,12 +2127,12 @@ int mediumbasket_updateContactHitState(int obj, int state)
     }
     *(u8 *)(state + 0x34d) = 3;
     *(f32 *)(state + 0x2a0) = lbl_803E2D28;
-    control = *(int *)(sub + 0x40c);
+    control = *(int *)&sub->control;
     *(u8 *)(control + 0x44) |= 0xc;
     noBlend = lbl_803E2D14;
     *(f32 *)(state + 0x280) = noBlend;
     *(f32 *)(state + 0x284) = noBlend;
-    if ((*(u8 *)(sub + 0x404) & 2) == 0) {
+    if ((sub->configFlags & 2) == 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D30 + *(f32 *)(obj + 0x98);
     }
     return 0;
@@ -2143,22 +2144,22 @@ int mediumbasket_updateContactHitState(int obj, int state)
 #pragma peephole off
 int fn_8015BC18(int obj, int state)
 {
-    int sub = *(int *)(obj + 0xb8);
+    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
     int control;
 
     if ((s8)*(u8 *)(state + 0x27a) == 0) {
         if ((s8)*(u8 *)(state + 0x346) != 0) {
-            *(s16 *)(sub + 0x402) = 3;
+            sub->targetState = 3;
         }
     } else {
         *(u8 *)(obj + 0xaf) |= 8;
         ObjAnim_SetCurrentMove(obj, 2, lbl_803E2D14, 0);
         *(u8 *)(state + 0x346) = 0;
-        *(s16 *)(sub + 0x402) = 2;
+        sub->targetState = 2;
         *(u8 *)(state + 0x34d) = 1;
         *(f32 *)(state + 0x2a0) = lbl_803E2D34;
     }
-    control = *(int *)(sub + 0x40c);
+    control = *(int *)&sub->control;
     *(u8 *)(control + 0x44) |= 4;
     if ((s32)(*(u32 *)(state + 0x314) & 0x200) != 0) {
         *(u32 *)(state + 0x314) &= ~0x200;
@@ -2206,8 +2207,8 @@ playDropExtras:
 #pragma peephole off
 int mediumbasket_updateCommDownState(int obj, int state)
 {
-    int sub = *(int *)(obj + 0xb8);
-    int control = *(int *)(sub + 0x40c);
+    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    int control = *(int *)&sub->control;
 
     *(u8 *)(control + 0x44) |= 4;
     *(f32 *)(state + 0x2a0) = lbl_803E2D38;
@@ -2217,7 +2218,7 @@ int mediumbasket_updateCommDownState(int obj, int state)
     }
     *(u8 *)(state + 0x34d) = 1;
     if ((*(s32 *)(state + 0x314) & 1) != 0) {
-        control = *(int *)(sub + 0x40c);
+        control = *(int *)&sub->control;
         *(u32 *)(state + 0x314) &= ~1;
         *(u8 *)(control + 0x44) |= 2;
         Sfx_PlayFromObject(obj, SFXsc_fox_commdown);
@@ -2265,10 +2266,10 @@ int mediumbasket_updateHeightBlendState(int obj, int state)
 #pragma peephole off
 int fn_8015C0B4(int obj, int state)
 {
-    int sub = *(int *)(obj + 0xb8);
+    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
     int choice;
 
-    *(u8 *)(*(int *)(sub + 0x40c) + 0x44) |= 4;
+    *(u8 *)(*(int *)&sub->control + 0x44) |= 4;
     ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
     ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -2287,16 +2288,16 @@ int fn_8015C0B4(int obj, int state)
             }
         }
         *(u8 *)(state + 0x34d) = 1;
-        *(f32 *)(state + 0x2a0) = lbl_803E2D4C + (f32)*(u8 *)(sub + 0x406) / lbl_803E2D50;
+        *(f32 *)(state + 0x2a0) = lbl_803E2D4C + (f32)sub->aggression / lbl_803E2D50;
     }
-    if (*(u8 *)(sub + 0x406) <= 50 || (*(u8 *)(sub + 0x404) & 2) != 0) {
+    if (sub->aggression <= 50 || (sub->configFlags & 2) != 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D14;
     } else if (*(f32 *)(state + 0x2c0) <= lbl_803E2D54 || (s8)*(u8 *)(state + 0x346) != 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D14;
     } else {
         *(f32 *)(state + 0x280) = *(f32 *)(state + 0x2c0) / lbl_803E2D54 - lbl_803E2D48;
         *(f32 *)(state + 0x280) =
-            *(f32 *)(state + 0x280) * ((f32)*(u8 *)(sub + 0x406) / lbl_803E2D58);
+            *(f32 *)(state + 0x280) * ((f32)sub->aggression / lbl_803E2D58);
     }
     ((void (*)(int, int, f32, int))((void **)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
@@ -2308,10 +2309,10 @@ int fn_8015C0B4(int obj, int state)
 #pragma peephole off
 int fn_8015C2AC(int obj, int state)
 {
-    int sub = *(int *)(obj + 0xb8);
+    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
     int choice;
 
-    *(u8 *)(*(int *)(sub + 0x40c) + 0x44) |= 4;
+    *(u8 *)(*(int *)&sub->control + 0x44) |= 4;
     ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
     ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -2331,16 +2332,16 @@ int fn_8015C2AC(int obj, int state)
             }
         }
         *(u8 *)(state + 0x34d) = 1;
-        *(f32 *)(state + 0x2a0) = lbl_803E2D4C + (f32)*(u8 *)(sub + 0x406) / lbl_803E2D50;
+        *(f32 *)(state + 0x2a0) = lbl_803E2D4C + (f32)sub->aggression / lbl_803E2D50;
     }
-    if (*(u8 *)(sub + 0x406) <= 50 || (*(u8 *)(sub + 0x404) & 2) != 0) {
+    if (sub->aggression <= 50 || (sub->configFlags & 2) != 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D14;
     } else if (*(f32 *)(state + 0x2c0) <= lbl_803E2D54 || (s8)*(u8 *)(state + 0x346) != 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D14;
     } else {
         *(f32 *)(state + 0x280) = *(f32 *)(state + 0x2c0) / lbl_803E2D54 - lbl_803E2D48;
         *(f32 *)(state + 0x280) =
-            *(f32 *)(state + 0x280) * ((f32)*(u8 *)(sub + 0x406) / lbl_803E2D58);
+            *(f32 *)(state + 0x280) * ((f32)sub->aggression / lbl_803E2D58);
     }
     ((void (*)(int, int, f32, int))((void **)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
@@ -2352,18 +2353,18 @@ int fn_8015C2AC(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateSpinState(int obj, int state)
 {
-    int sub = *(int *)(obj + 0xb8);
+    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
     int control;
 
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
         ObjAnim_SetCurrentMove(obj, 9, lbl_803E2D14, 0);
         *(u8 *)(state + 0x346) = 0;
     }
-    control = *(int *)(sub + 0x40c);
+    control = *(int *)&sub->control;
     *(u8 *)(control + 0x44) |= 0xc;
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
         *(u8 *)(obj + 0xaf) |= 8;
-        *(s16 *)(sub + 0x402) = 4;
+        sub->targetState = 4;
     }
     *(s16 *)obj = (s16)(lbl_803E2D5C *
                         (((f32)*(s16 *)(state + 0x336) * timeDelta) / lbl_803E2D60) +
@@ -2379,8 +2380,8 @@ int mediumbasket_updateSpinState(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateImpactHitState(int obj, int state)
 {
-    int sub = *(int *)(obj + 0xb8);
-    int control = *(int *)(sub + 0x40c);
+    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
+    int control = *(int *)&sub->control;
 
     ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 10;
     ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
@@ -2408,14 +2409,14 @@ int mediumbasket_updateImpactHitState(int obj, int state)
 #pragma peephole off
 int mediumbasket_updateHideResetState(int obj, int state)
 {
-    int sub = *(int *)(obj + 0xb8);
+    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
     int hitState;
 
     if (*(s16 *)(state + 0x276) != 4 && (s8)*(u8 *)(state + 0x27a) != 0) {
         ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E2D14, 0);
         *(u8 *)(state + 0x346) = 0;
     }
-    *(u8 *)(*(int *)(sub + 0x40c) + 0x44) |= 0xc;
+    *(u8 *)(*(int *)&sub->control + 0x44) |= 0xc;
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
         hitState = *(int *)(obj + 0x54);
         *(s16 *)(hitState + 0x60) &= ~1;
@@ -2423,12 +2424,12 @@ int mediumbasket_updateHideResetState(int obj, int state)
         *(f32 *)(state + 0x280) = lbl_803E2D14;
     }
     if ((s8)*(u8 *)(state + 0x346) != 0) {
-        GameBit_Set((s32)*(s16 *)(sub + 0x3f4), 0);
+        GameBit_Set((s32)sub->gameBitB, 0);
         ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0);
         *(int *)(state + 0x2d0) = 0;
         *(u8 *)(state + 0x25f) = 0;
         *(u8 *)(state + 0x349) = 0;
-        *(s16 *)(sub + 0x402) = 0;
+        sub->targetState = 0;
         *(u8 *)(obj + 0xaf) |= 8;
     }
     return 0;
@@ -2440,7 +2441,7 @@ int mediumbasket_updateHideResetState(int obj, int state)
 #pragma peephole off
 int fn_8015B2A0(int obj, int state)
 {
-    int sub = *(int *)(obj + 0xb8);
+    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
     int route;
     f32 neutralBlend;
 
@@ -2451,26 +2452,26 @@ int fn_8015B2A0(int obj, int state)
     }
     if ((s8)*(u8 *)(state + 0x27b) != 0) {
         ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 0xb);
-    } else if (*(s16 *)(sub + 0x402) == 3) {
+    } else if (sub->targetState == 3) {
         ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 4);
-    } else if (*(s16 *)(sub + 0x402) == 4) {
+    } else if (sub->targetState == 4) {
         if (*(f32 *)(state + 0x2c0) < lbl_803E2D10 && (s8)*(u8 *)(state + 0x346) != 0) {
-            if (*(u8 *)(sub + 0x406) > 50) {
+            if (sub->aggression > 50) {
                 ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 0);
             } else {
                 ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 1);
             }
         }
-    } else if (*(s16 *)(sub + 0x402) == 1) {
+    } else if (sub->targetState == 1) {
         return 8;
     }
-    route = sub + 0x35c;
+    route = (int)sub->unk35C;
     neutralBlend = lbl_803E2D14;
     *(f32 *)(state + 0x290) = neutralBlend;
     *(f32 *)(state + 0x28c) = neutralBlend;
     memcpy((void *)route, (void *)(obj + 0xc), 0xc);
-    memcpy((void *)(sub + 0x368), (void *)(*(int *)(state + 0x2d0) + 0xc), 0xc);
-    voxmaps_updateRoutePath((void *)route, (void *)(sub + 0x384));
+    memcpy((void *)(sub->unk35C + 0xc), (void *)(*(int *)(state + 0x2d0) + 0xc), 0xc);
+    voxmaps_updateRoutePath((void *)route, (void *)(sub->unk35C + 0x28));
     if (*(u8 *)(route + 0x25) == 0) {
         ((void (*)(int, int, f32, f32, f32, f32, f32))((void **)*gPlayerInterface)[7])(
             obj, state, *(f32 *)(route + 0x18), *(f32 *)(route + 0x20), lbl_803E2D14,
@@ -2482,7 +2483,7 @@ int fn_8015B2A0(int obj, int state)
     }
     if (*(s16 *)(state + 0x32e) > 0x78 &&
         ((int (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[17])(
-            obj, state, (f32)*(u16 *)(sub + 0x3fe), 1) != 0) {
+            obj, state, (f32)sub->unk3FE, 1) != 0) {
         return 5;
     }
     return 0;
@@ -2494,15 +2495,15 @@ int fn_8015B2A0(int obj, int state)
 #pragma peephole off
 int fn_8015AF10(int obj, int state)
 {
-    int sub = *(int *)(obj + 0xb8);
+    BaddieState *sub = *(BaddieState **)(obj + 0xb8);
 
     if ((s8)*(u8 *)(state + 0x27b) != 0) {
         if ((s32)*(f32 *)(state + 0x2c0) > 0x37) {
-            if ((*(u8 *)(sub + 0x404) & 2) == 0) {
+            if ((sub->configFlags & 2) == 0) {
                 ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 7);
             } else {
-                int control = *(int *)(sub + 0x40c);
-                if ((*(u8 *)(sub + 0x404) & 0x10) != 0) {
+                int control = *(int *)&sub->control;
+                if ((sub->configFlags & 0x10) != 0) {
                     int attackIndex = *(s16 *)(control + 4);
                     *(u16 *)(control + 4) = attackIndex + 1;
                     ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(
@@ -2530,15 +2531,15 @@ int fn_8015AF10(int obj, int state)
             return 5;
         }
         if (((int (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[17])(
-                obj, state, (f32)*(u16 *)(sub + 0x3fe), 1) != 0) {
+                obj, state, (f32)sub->unk3FE, 1) != 0) {
             return 5;
         }
         if ((s32)*(f32 *)(state + 0x2c0) > 0x37) {
-            if ((*(u8 *)(sub + 0x404) & 2) == 0) {
+            if ((sub->configFlags & 2) == 0) {
                 ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 7);
             } else {
-                int control = *(int *)(sub + 0x40c);
-                if ((*(u8 *)(sub + 0x404) & 0x10) != 0) {
+                int control = *(int *)&sub->control;
+                if ((sub->configFlags & 0x10) != 0) {
                     int attackIndex = *(s16 *)(control + 4);
                     *(u16 *)(control + 4) = attackIndex + 1;
                     ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(
@@ -2788,7 +2789,7 @@ int dll_CA_getObjectTypeId(void) { return 0x49; }
 #pragma peephole off
 void dll_CA_free(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    BaddieState *state = *(BaddieState **)(obj + 0xb8);
 
     Camera_DisableViewYOffset();
     ObjGroup_RemoveObject(obj, 3);
@@ -2796,7 +2797,7 @@ void dll_CA_free(int obj)
         Obj_FreeObject(*(int *)(obj + 0xc8));
         *(int *)(obj + 0xc8) = 0;
     }
-    ((void (*)(int, int, int))((void **)*gBaddieControlInterface)[16])(obj, state, 0x20);
+    ((void (*)(int, int, int))((void **)*gBaddieControlInterface)[16])(obj, (int)state, 0x20);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2805,7 +2806,7 @@ void dll_CA_free(int obj)
 #pragma peephole off
 void dll_CA_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
 {
-    int state = *(int *)(obj + 0xb8);
+    BaddieState *state = *(BaddieState **)(obj + 0xb8);
 
     if (visible == 0) {
         goto done;
@@ -2813,17 +2814,17 @@ void dll_CA_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
     if (*(int *)(obj + 0xf4) != 0) {
         goto done;
     }
-    if (*(s16 *)(state + 0x402) != 0) {
+    if (state->targetState != 0) {
         goto render;
     }
     goto done;
 
 render:
-    if (*(f32 *)(state + 0x3e8) != lbl_803E2D14) {
-        fn_8003B5E0(0xc8, 0, 0, (int)*(f32 *)(state + 0x3e8));
+    if (state->unk3E8 != lbl_803E2D14) {
+        fn_8003B5E0(0xc8, 0, 0, (int)state->unk3E8);
     }
     objRenderFn_8003b8f4(obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
-    fn_8015CE68(obj, state);
+    fn_8015CE68(obj, (int)state);
 done:;
 }
 #pragma peephole reset
@@ -2840,24 +2841,24 @@ void dll_CA_hitDetect(int obj)
 #pragma scheduling reset
 
 #pragma scheduling off
-void mediumbasket_initWhirlpoolState(int* obj, u8* state) {
+void mediumbasket_initWhirlpoolState(int* obj, BaddieState *state) {
     f32 fz;
-    *(f32*)((char*)state + 684) = lbl_803E2CE8;
-    *(char *)((char *)state + 827) = (int)*(f32*)((char*)state + 680);
-    *(f32*)((char*)state + 680) = lbl_803E2CEC;
-    *(int*)((char*)state + 740) = 0x42001;
-    *(f32*)((char*)state + 776) = lbl_803E2CF0;
-    *(f32*)((char*)state + 768) = lbl_803E2CF4;
-    *(f32*)((char*)state + 772) = lbl_803E2CF8;
-    state[800] = 0;
+    state->unk2AC = lbl_803E2CE8;
+    *(char *)&state->inWhirlpoolGroup = (int)state->unk2A8;
+    state->unk2A8 = lbl_803E2CEC;
+    state->unk2E4 = 0x42001;
+    state->unk308 = lbl_803E2CF0;
+    state->unk300 = lbl_803E2CF4;
+    state->unk304 = lbl_803E2CF8;
+    state->unk320 = 0;
     fz = lbl_803E2CFC;
-    *(f32*)((char*)state + 788) = fz;
-    state[801] = 5;
-    *(f32*)((char*)state + 792) = fz;
-    state[802] = 7;
-    *(f32*)((char*)state + 796) = fz;
-    state[826] = 1;
-    state[827] = 0;
+    *(f32 *)&state->eventFlags = fz;
+    state->unk321 = 5;
+    state->unk318 = fz;
+    state->unk322 = 7;
+    state->unk31C = fz;
+    state->unk33A = 1;
+    state->inWhirlpoolGroup = 0;
     ObjModel_SetRenderCallback(Obj_GetActiveModel(obj), (void*)renderWhirlpool);
 }
 #pragma scheduling reset
@@ -2892,28 +2893,28 @@ void mediumbasket_spawnContactObject(int* obj, int* state) {
     }
 }
 
-int mediumbasket_updateControlMove5State(int* obj, u8* state) {
+int mediumbasket_updateControlMove5State(int* obj, BaddieState *state) {
     u8* t = *(u8**)((char*)(*(int**)((char*)obj + 0xb8)) + 0x40c);
     t[0x44] |= 4;
-    *(f32*)((char*)state + 0x2a0) = lbl_803E2D38;
-    if ((s8)state[634] != 0) {
+    state->moveSpeed = lbl_803E2D38;
+    if ((s8)state->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2D14, 0);
-        state[838] = 0;
+        state->moveDone = 0;
     }
-    state[845] = 1;
-    ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
+    state->unk34D = 1;
+    ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, (u8 *)state, timeDelta, 4);
     return 0;
 }
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015B524(int* obj, u8* state) {
-    if ((s8)state[635] != 0) {
-        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 3);
+int fn_8015B524(int* obj, BaddieState *state) {
+    if ((s8)state->moveJustStartedB != 0) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 3);
     }
-    if ((s8)state[838] != 0) {
-        if (*(s16*)((char*)state + 628) == 3) {
-            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+    if ((s8)state->moveDone != 0) {
+        if (state->controlMode == 3) {
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 0);
         } else {
             return 8;
         }
@@ -2923,15 +2924,15 @@ int fn_8015B524(int* obj, u8* state) {
 #pragma peephole reset
 #pragma scheduling reset
 
-int fn_8015B748(int* obj, u8* state) {
-    int* sub = *(int**)((char*)obj + 0xb8);
-    if ((s8)state[852] < 1) return 3;
-    if ((s8)state[838] != 0) {
-        if (*(s16*)((char*)state + 628) == 12) {
-            if (*(u8*)((char*)sub + 1030) > 50) {
-                ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+int fn_8015B748(int* obj, BaddieState *state) {
+    BaddieState* sub = *(BaddieState**)((char*)obj + 0xb8);
+    if ((s8)state->unk354 < 1) return 3;
+    if ((s8)state->moveDone != 0) {
+        if (state->controlMode == 12) {
+            if (sub->aggression > 50) {
+                ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 0);
             } else {
-                ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+                ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 1);
             }
         } else {
             return 8;
@@ -2942,10 +2943,10 @@ int fn_8015B748(int* obj, u8* state) {
 
 #pragma scheduling off
 #pragma peephole off
-void mediumbasket_leaveWhirlpoolGroup(int* obj, u8* state) {
-    if (state[827] != 0) {
+void mediumbasket_leaveWhirlpoolGroup(int* obj, BaddieState *state) {
+    if (state->inWhirlpoolGroup != 0) {
         ObjGroup_RemoveObject(obj, 80);
-        state[827] = 0;
+        state->inWhirlpoolGroup = 0;
     }
     *(u16*)obj = (float)(int)*(s16*)obj - lbl_803E2CD8 * timeDelta;
 }
@@ -2954,10 +2955,10 @@ void mediumbasket_leaveWhirlpoolGroup(int* obj, u8* state) {
 
 #pragma scheduling off
 #pragma peephole off
-void mediumbasket_enterWhirlpoolGroup(int* obj, u8* state) {
-    if (state[827] == 0) {
+void mediumbasket_enterWhirlpoolGroup(int* obj, BaddieState *state) {
+    if (state->inWhirlpoolGroup == 0) {
         ObjGroup_AddObject(obj, 80);
-        state[827] = 1;
+        state->inWhirlpoolGroup = 1;
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
     *(u8*)(*(int*)((char*)obj + 0x54) + 0x70) = 0;
@@ -3024,7 +3025,7 @@ int mediumbasket_checkTargetState(int obj, int p2)
   extern f32 lbl_803E2D00;
   extern f32 lbl_803E2D14;
   extern f32 lbl_803E2D24;
-  int sub = *(int *)(obj + 0xb8);
+  BaddieState *sub = *(BaddieState **)(obj + 0xb8);
   f32 neutralBlend;
 
   if (*(void **)(p2 + 0x2d0) == NULL) goto return0;
@@ -3033,9 +3034,9 @@ int mediumbasket_checkTargetState(int obj, int p2)
     neutralBlend = lbl_803E2D14;
     *(f32 *)(p2 + 0x284) = neutralBlend;
     *(f32 *)(p2 + 0x280) = neutralBlend;
-    if ((u32)*(u8 *)(sub + 0x406) > 50) {
-      if (*(f32 *)(p2 + 0x2c0) < lbl_803E2D24 * (f32)(u32)*(u16 *)(sub + 0x3fe)
-          || (*(u8 *)(sub + 0x404) & 0x2) != 0) {
+    if ((u32)sub->aggression > 50) {
+      if (*(f32 *)(p2 + 0x2c0) < lbl_803E2D24 * (f32)(u32)sub->unk3FE
+          || (sub->configFlags & 0x2) != 0) {
         (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 0);
       } else {
         (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 1);
@@ -3052,8 +3053,8 @@ int mediumbasket_checkTargetState(int obj, int p2)
     return 5;
   }
 
-  if (*(f32 *)(p2 + 0x2c0) < lbl_803E2D24 * (f32)(u32)*(u16 *)(sub + 0x3fe)
-      || (*(u8 *)(sub + 0x404) & 0x2) != 0) {
+  if (*(f32 *)(p2 + 0x2c0) < lbl_803E2D24 * (f32)(u32)sub->unk3FE
+      || (sub->configFlags & 0x2) != 0) {
     return 8;
   }
   return 7;
