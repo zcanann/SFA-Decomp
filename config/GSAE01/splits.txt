@@ -794,9 +794,6 @@ main/dll/gcrobotlightbea.c:
 	.text       start:0x801816F8 end:0x801826E8
 	.data       start:0x803216B8 end:0x803216F0
 
-main/dll/exploder.c:
-	.text       start:0x801826E8 end:0x801826E8
-
 main/dll/cfperch.c:
 	.text       start:0x801826E8 end:0x801833E4
 
@@ -1254,9 +1251,6 @@ main/dll/DB/DBbonedust.c:
 
 main/dll/DB/DBstealerworm.c:
 	.text       start:0x801E1588 end:0x801E34C0
-
-main/dll/CR/CRsnowClaw.c:
-	.text       start:0x801E34C0 end:0x801E34C0
 
 main/dll/TREX/TREX_levelcontrol.c:
 	.text       start:0x801E34C0 end:0x801E42F8
