@@ -1366,50 +1366,50 @@ void waveanimator_init(int *obj, int *desc)
 
 #pragma peephole off
 #pragma scheduling off
-void hitanimator_update(int *obj)
+void hitanimator_update(HitAnimatorObject *obj)
 {
-    int *state = ((int**)obj)[0x4C/4];
-    u8 *vstate = (u8*)((int**)obj)[0xB8/4];
+    HitAnimatorPlacement *setup = (HitAnimatorPlacement *)obj->objAnim.placementData;
+    HitAnimatorState *state = obj->state;
     void *block;
     block = mapGetBlock(objPosToMapBlockIdx(
-        (double)*(f32*)((char*)obj + 0xC),
-        (double)*(f32*)((char*)obj + 0x10),
-        (double)*(f32*)((char*)obj + 0x14)));
+        (double)obj->objAnim.localPosX,
+        (double)obj->objAnim.localPosY,
+        (double)obj->objAnim.localPosZ));
     if (block == NULL) {
-        vstate[1] &= ~1;
-        vstate[1] |= 4;
+        state->flags &= ~HITANIMATOR_STATE_FLAG_TOGGLE_PENDING;
+        state->flags |= HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
         return;
     }
-    vstate[2] = (u8)GameBit_Get(*(s16*)((char*)state + 0x18));
-    if (vstate[3] != vstate[2]) {
-        ((s8*)vstate)[0] = ((s8*)vstate)[0] ^ 1;
-        if (*(u8*)((char*)state + 0x1A) == 1) {
-            vstate[1] |= 1;
+    state->gameBitValue = (u8)GameBit_Get(setup->gameBit);
+    if (state->previousGameBitValue != state->gameBitValue) {
+        state->activeBit = state->activeBit ^ 1;
+        if (setup->toggleMode == 1) {
+            state->flags |= HITANIMATOR_STATE_FLAG_TOGGLE_PENDING;
         }
-        if ((*(u8*)((char*)state + 0x1C) & 8) != 0) {
-            vstate[1] |= 2;
+        if ((setup->flags & HITANIMATOR_SETUP_FLAG_SOUND) != 0) {
+            state->flags |= HITANIMATOR_STATE_FLAG_SOUND_PENDING;
         }
-        if ((*(u8*)((char*)state + 0x1C) & 4) != 0) {
-            vstate[1] |= 4;
+        if ((setup->flags & HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE) != 0) {
+            state->flags |= HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
         }
     }
-    vstate[3] = vstate[2];
-    if ((*(u8*)((char*)state + 0x1C) & 8) != 0) {
+    state->previousGameBitValue = state->gameBitValue;
+    if ((setup->flags & HITANIMATOR_SETUP_FLAG_SOUND) != 0) {
         if (fn_80065640() != 0) {
-            vstate[1] |= 2;
+            state->flags |= HITANIMATOR_STATE_FLAG_SOUND_PENDING;
         }
-        if ((vstate[1] & 2) != 0) {
+        if ((state->flags & HITANIMATOR_STATE_FLAG_SOUND_PENDING) != 0) {
             if (fn_80065640() == 0) {
-                fn_80065574(*(u8*)((char*)state + 0x1D), *(int*)((char*)obj + 0x30), ((s8*)vstate)[0]);
-                vstate[1] &= ~2;
+                fn_80065574(setup->soundId, (int)obj->objAnim.parent, state->activeBit);
+                state->flags &= ~HITANIMATOR_STATE_FLAG_SOUND_PENDING;
             }
         }
     }
-    if ((*(u8*)((char*)state + 0x1C) & 4) != 0) {
-        if (*(u8*)((char*)state + 0x1B) != 0) {
-            if ((vstate[1] & 4) != 0) {
-                hitAnimatorFn_80193dbc(block, obj, vstate, (u8 *)state);
-                vstate[1] &= ~4;
+    if ((setup->flags & HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE) != 0) {
+        if (setup->blockEffectId != 0) {
+            if ((state->flags & HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING) != 0) {
+                hitAnimatorFn_80193dbc(block, (int *)obj, (u8 *)state, (u8 *)setup);
+                state->flags &= ~HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
             }
         }
     }
@@ -1443,38 +1443,38 @@ void groundanimator_init(int *obj, int *desc)
 
 #pragma peephole off
 #pragma scheduling off
-void hitanimator_init(int *obj, int *desc)
+void hitanimator_init(HitAnimatorObject *obj, HitAnimatorPlacement *desc)
 {
-    u8 *vstate = (u8*)((int**)obj)[0xB8/4];
+    HitAnimatorState *state = obj->state;
     void *block;
     u8 g;
     s8 init_bit;
-    init_bit = (s8)(*(u8*)((char*)desc + 0x1C) & 1);
-    ((s8*)vstate)[0] = init_bit;
-    vstate[1] = 0;
-    if (GameBit_Get(*(s16*)((char*)desc + 0x18)) != 0) {
-        ((s8*)vstate)[0] = ((s8*)vstate)[0] ^ 1;
-        if (*(u8*)((char*)desc + 0x1A) == 1) {
-            vstate[1] |= 1;
+    init_bit = (s8)(desc->flags & HITANIMATOR_SETUP_FLAG_INITIAL_INVERT);
+    state->activeBit = init_bit;
+    state->flags = 0;
+    if (GameBit_Get(desc->gameBit) != 0) {
+        state->activeBit = state->activeBit ^ 1;
+        if (desc->toggleMode == 1) {
+            state->flags |= HITANIMATOR_STATE_FLAG_TOGGLE_PENDING;
         }
     }
     block = mapGetBlock(objPosToMapBlockIdx(
-        (double)*(f32*)((char*)obj + 0xC),
-        (double)*(f32*)((char*)obj + 0x10),
-        (double)*(f32*)((char*)obj + 0x14)));
+        (double)obj->objAnim.localPosX,
+        (double)obj->objAnim.localPosY,
+        (double)obj->objAnim.localPosZ));
     if (block != NULL) {
-        if ((*(u8*)((char*)desc + 0x1C) & 4) != 0 && *(u8*)((char*)desc + 0x1B) != 0) {
-            hitAnimatorFn_80193dbc(block, obj, vstate, (u8 *)desc);
+        if ((desc->flags & HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE) != 0 && desc->blockEffectId != 0) {
+            hitAnimatorFn_80193dbc(block, (int *)obj, (u8 *)state, (u8 *)desc);
         }
     }
-    vstate[1] |= 2;
-    if ((*(u8*)((char*)desc + 0x1C) & 4) != 0) {
-        vstate[1] |= 4;
+    state->flags |= HITANIMATOR_STATE_FLAG_SOUND_PENDING;
+    if ((desc->flags & HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE) != 0) {
+        state->flags |= HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
     }
-    g = (u8)GameBit_Get(*(s16*)((char*)desc + 0x18));
-    vstate[2] = g;
-    vstate[3] = g;
-    *(u16*)((char*)obj + 0xB0) |= 0x6000;
+    g = (u8)GameBit_Get(desc->gameBit);
+    state->gameBitValue = g;
+    state->previousGameBitValue = g;
+    obj->objectFlags |= HITANIMATOR_OBJECT_FLAGS_ENABLED;
 }
 #pragma scheduling reset
 #pragma peephole reset

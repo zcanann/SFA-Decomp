@@ -3,10 +3,68 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_internal.h"
 
 extern ObjectDescriptor14 gWaveAnimatorObjDescriptor;
 extern ObjectDescriptor gAlphaAnimatorObjDescriptor;
 extern ObjectDescriptor14 gGroundAnimatorObjDescriptor;
+extern ObjectDescriptor gHitAnimatorObjDescriptor;
+
+#define HITANIMATOR_DLL_ID 0x0139
+#define HITANIMATOR_CLASS_ID 0x004B
+#define HITANIMATOR_DEF_ID 0x04BC
+#define HITANIMATOR_OBJECT_DEF_BYTES 0xA0
+#define HITANIMATOR_PLACEMENT_BYTES 0x20
+#define HITANIMATOR_EXTRA_STATE_BYTES 0x04
+
+#define HITANIMATOR_SETUP_FLAG_INITIAL_INVERT 0x01
+#define HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE 0x04
+#define HITANIMATOR_SETUP_FLAG_SOUND 0x08
+
+#define HITANIMATOR_STATE_FLAG_TOGGLE_PENDING 0x01
+#define HITANIMATOR_STATE_FLAG_SOUND_PENDING 0x02
+#define HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING 0x04
+
+#define HITANIMATOR_OBJECT_FLAGS_ENABLED 0x6000
+
+typedef struct HitAnimatorPlacement {
+  u8 pad00[0x18];
+  s16 gameBit;
+  u8 toggleMode;
+  u8 blockEffectId;
+  u8 flags;
+  u8 soundId;
+  u8 pad1E[HITANIMATOR_PLACEMENT_BYTES - 0x1E];
+} HitAnimatorPlacement;
+
+typedef struct HitAnimatorState {
+  s8 activeBit;
+  u8 flags;
+  u8 gameBitValue;
+  u8 previousGameBitValue;
+} HitAnimatorState;
+
+typedef struct HitAnimatorObject {
+  ObjAnimComponent objAnim;
+  u16 objectFlags;
+  u8 padB2[0xB8 - 0xB2];
+  HitAnimatorState *state;
+} HitAnimatorObject;
+
+STATIC_ASSERT(sizeof(HitAnimatorPlacement) == HITANIMATOR_PLACEMENT_BYTES);
+STATIC_ASSERT(offsetof(HitAnimatorPlacement, gameBit) == 0x18);
+STATIC_ASSERT(offsetof(HitAnimatorPlacement, toggleMode) == 0x1A);
+STATIC_ASSERT(offsetof(HitAnimatorPlacement, blockEffectId) == 0x1B);
+STATIC_ASSERT(offsetof(HitAnimatorPlacement, flags) == 0x1C);
+STATIC_ASSERT(offsetof(HitAnimatorPlacement, soundId) == 0x1D);
+STATIC_ASSERT(sizeof(HitAnimatorState) == HITANIMATOR_EXTRA_STATE_BYTES);
+STATIC_ASSERT(offsetof(HitAnimatorState, activeBit) == 0x00);
+STATIC_ASSERT(offsetof(HitAnimatorState, flags) == 0x01);
+STATIC_ASSERT(offsetof(HitAnimatorState, gameBitValue) == 0x02);
+STATIC_ASSERT(offsetof(HitAnimatorState, previousGameBitValue) == 0x03);
+STATIC_ASSERT(offsetof(HitAnimatorObject, objAnim) == 0x00);
+STATIC_ASSERT(offsetof(HitAnimatorObject, objectFlags) == 0xB0);
+STATIC_ASSERT(offsetof(HitAnimatorObject, state) == 0xB8);
 
 #define WALLANIMATOR_DONE_TIMER 3000
 
@@ -64,5 +122,9 @@ void groundanimator_free(int *obj, int flag);
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void groundanimator_update(int *obj);
 void groundanimator_init(int *obj, int *desc);
+
+int hitanimator_getExtraSize(void);
+void hitanimator_update(HitAnimatorObject *obj);
+void hitanimator_init(HitAnimatorObject *obj, HitAnimatorPlacement *desc);
 
 #endif /* MAIN_DLL_MMP_MMP_BARREL_H_ */
