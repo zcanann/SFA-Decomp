@@ -3710,12 +3710,12 @@ void dll_15_func06(short *curveObj,int *state)
       radWrite = radWrite + 1;
       walk = walk + 3;
     }
-    state[0x90] = (int)minX;
-    state[0x93] = (int)maxX;
-    state[0x91] = (int)(minY - (f32)collision->heightPadding);
-    state[0x94] = (int)(maxY + (f32)collision->heightPadding);
-    state[0x92] = (int)minZ;
-    state[0x95] = (int)maxZ;
+    collision->hitBounds[0] = (int)minX;
+    collision->hitBounds[3] = (int)maxX;
+    collision->hitBounds[1] = (int)(minY - (f32)collision->heightPadding);
+    collision->hitBounds[4] = (int)(maxY + (f32)collision->heightPadding);
+    collision->hitBounds[2] = (int)minZ;
+    collision->hitBounds[5] = (int)maxZ;
   }
 }
 
