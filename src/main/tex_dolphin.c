@@ -14,7 +14,7 @@ typedef union {
 extern void modelLightStruct_getDiffuseColor(void *light, u8 *a, u8 *b, u8 *c, u8 *d);
 extern f32 modelLightStruct_getRadius(void *light);
 extern void modelLightStruct_getPosition(void *light, void *a, void *b, void *c);
-extern void modelLightStruct_selectBrightestAabbLights(undefined *dest, int count, int *out, f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2);
+extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2, undefined *dest, int count, int *out);
 extern int Shader_getLayer();
 extern void selectTexture();
 extern void fn_8004CE0C();
@@ -337,13 +337,14 @@ void mapBlockRender_drawDimmedAabbLights(undefined4 param_1,undefined4 param_2,i
   byte local_9;
   byte local_8;
 
-  modelLightStruct_selectBrightestAabbLights((undefined*)&lbl_803DCE20,2,&local_C,
+  modelLightStruct_selectBrightestAabbLights(
               (f32)(*(short *)((int)param_1 + 6) >> 3) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX,
               (f32)(*(short *)((int)param_1 + 8) >> 3) + *(float *)((int)param_2 + 0x28),
               (f32)(*(short *)((int)param_1 + 10) >> 3) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ,
               (f32)(*(short *)((int)param_1 + 0xc) >> 3) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX,
               (f32)(*(short *)((int)param_1 + 0xe) >> 3) + *(float *)((int)param_2 + 0x28),
-              (f32)(*(short *)((int)param_1 + 0x10) >> 3) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ);
+              (f32)(*(short *)((int)param_1 + 0x10) >> 3) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ,
+              (undefined*)&lbl_803DCE20,2,&local_C);
   resetLotsOfRenderVars();
   fn_8004CE0C(param_3);
   param_3 = 0;
@@ -588,8 +589,9 @@ void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float
           count = 0;
         }
         else {
-          modelLightStruct_selectBrightestAabbLights((undefined *)&lbl_803DCE28,2,&count,x1 + playerMapOffsetX,y1,
-                      z1 + playerMapOffsetZ,x2 + playerMapOffsetX,y2,z2 + playerMapOffsetZ);
+          modelLightStruct_selectBrightestAabbLights(x1 + playerMapOffsetX,y1,
+                      z1 + playerMapOffsetZ,x2 + playerMapOffsetX,y2,z2 + playerMapOffsetZ,
+                      (undefined *)&lbl_803DCE28,2,&count);
         }
         if ((obj == NULL) ||
             (((*(uint *)(obj + 0x3c) & 0x800) == 0 && ((*(uint *)(obj + 0x3c) & 0x1000) == 0)))) {

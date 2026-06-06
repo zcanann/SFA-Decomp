@@ -1456,8 +1456,8 @@ f32 modelLightStruct_getObjectIntensity(u8 *light, u8 *obj) {
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void modelLightStruct_selectBrightestAabbLights(u8 **outLights, int maxLights, int *outCount, f32 minX, f32 minY, f32 minZ, f32 maxX,
-                 f32 maxY, f32 maxZ) {
+void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f32 maxX, f32 maxY, f32 maxZ,
+                 u8 **outLights, int maxLights, int *outCount) {
     int i;
     f32 delta[3];
     f32 center[3];
