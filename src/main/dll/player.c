@@ -10465,7 +10465,7 @@ void fn_802B07D8(int obj, int state)
     int setup;
     int b;
 
-    if ((int)lbl_803DE44C == 0 && Obj_IsLoadingLocked()) {
+    if (lbl_803DE44C == NULL && Obj_IsLoadingLocked()) {
         setup = Obj_AllocObjectSetup(0x18, 0x69);
         setup = Obj_SetupObject(setup, 4, -1, -1, *(int *)((char *)obj + 0x30));
         lbl_803DE44C = (void *)setup;
@@ -10486,7 +10486,7 @@ void fn_802B07D8(int obj, int state)
 
     fn_8011F34C((u8)(int)*(f32 *)((char *)state + 0x7d4));
 
-    if (obj != 0) {
+    if ((u32)obj != 0) {
         b = (*(s8 *)((char *)obj + 0xad) != 0);
     } else {
         b = 0;
