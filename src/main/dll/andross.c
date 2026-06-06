@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/mapEventTypes.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -1967,7 +1968,7 @@ LAB_8023de5c:
     if (((iVar12 != 0) || (iVar12 = GameBit_Get(3), iVar12 != 0)) ||
        (iVar12 = GameBit_Get(4), iVar12 != 0)) {
       GameBit_Set(0x405,0);
-      (*(void (*)())*(int *)(*gMapEventInterface + 0x44))(0xb,7);
+      ((MapEventInterface *)*gMapEventInterface)->setMode(0xb, 7);
       unlockLevel(0,0,1);
       loadMapAndParent(mapGetDirIdx(0xb));
       uVar9 = mapGetDirIdx(0xb);

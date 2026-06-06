@@ -7110,14 +7110,14 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
         switch (*(s16 *)(blob + 8)) {
         case 1:
             if (*(u8 *)(p3 + i + 0x81) == 1) {
-                if ((u8)(**(int (**)(int))((char *)*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 1) {
-                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 5, 0);
-                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 6, 0);
-                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 7, 0);
-                } else if ((u8)(**(int (**)(int))((char *)*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
-                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 5, 0);
-                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 6, 0);
-                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 7, 0);
+                if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1) {
+                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 0);
+                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 0);
+                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 7, 0);
+                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
+                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 0);
+                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 0);
+                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 7, 0);
                 }
             }
             break;
@@ -7126,11 +7126,11 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
                 if (*(u32 *)(data + 0x14) == 0x49de8) {
                     ((DfpFlags7 *)(blob + 0xf))->b80 = 1;
                 } else {
-                    if ((u8)(**(int (**)(int))((char *)*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 1 ||
-                        (u8)(**(int (**)(int))((char *)*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                    if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1 ||
+                        ((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
                         unlockLevel(0, 0, 1);
                         lockLevel(mapGetDirIdx(0x32), 0);
-                        (**(void (**)(int, int))((char *)*(int *)gMapEventInterface + 0x44))(0x32, 2);
+                        ((MapEventInterface *)*(int *)gMapEventInterface)->setMode(0x32, 2);
                         warpToMap(0x73, 0);
                     }
                 }

@@ -1,4 +1,5 @@
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/mapEventTypes.h"
 
 /*
  * Function: bossdrakor_release
@@ -556,7 +557,7 @@ void bossdrakor_hitDetect(int obj)
                 GameBit_Set(*(s16 *)((char *)setup + 0x1e), 1);
                 spawnExplosion((int *)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
                 Obj_RemoveFromUpdateList((int *)obj);
-                (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x44)))(0x1d, 3);
+                ((MapEventInterface *)*gMapEventInterface)->setMode(0x1d, 3);
                 GameBit_Set(0x83c, 1);
             } else {
                 Obj_SpawnHitLightAndFade(obj, &hx, lbl_803E6554);
