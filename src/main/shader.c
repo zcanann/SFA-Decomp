@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/shader.h"
 
 
@@ -309,7 +310,7 @@ int objShouldLoad(int param_1,int param_2,int param_3)
     f32 range;
 
     strs = (char*)lbl_8030E4B0;
-    if (*(u32*)(param_1 + 0x14) == 0x49054) {
+    if (*(u32 *)&((GameObject *)param_1)->anim.localPosZ == 0x49054) {
         verbose = 1;
     } else {
         verbose = 0;
@@ -350,8 +351,8 @@ test:
         return 0;
     }
     if ((s8)param_2 == 0) {
-        bx = (int)fastFloorf((*(f32*)(param_1 + 8) - playerMapOffsetX) / gMapBlockWorldSize);
-        bz = (int)fastFloorf((*(f32*)(param_1 + 0x10) - playerMapOffsetZ) / gMapBlockWorldSize);
+        bx = (int)fastFloorf((((GameObject *)param_1)->anim.rootMotionScale - playerMapOffsetX) / gMapBlockWorldSize);
+        bz = (int)fastFloorf((((GameObject *)param_1)->anim.localPosY - playerMapOffsetZ) / gMapBlockWorldSize);
         if (bx < 0 || bz < 0 || bx >= 16 || bz >= 16) {
             if (verbose) {
                 OSReport(strs + 0x200, param_1 + 8, param_1 + 0xc, param_1 + 0x10);
@@ -399,9 +400,9 @@ test:
         z = p[2];
     }
     range = (f32)(*(u8*)(param_1 + 6) << 3);
-    d = x - *(f32*)(param_1 + 8);
-    dy = y - *(f32*)(param_1 + 0xc);
-    dz = z - *(f32*)(param_1 + 0x10);
+    d = x - ((GameObject *)param_1)->anim.rootMotionScale;
+    dy = y - ((GameObject *)param_1)->anim.localPosX;
+    dz = z - ((GameObject *)param_1)->anim.localPosY;
     d = d * d + dy * dy + dz * dz;
     if (d < range * range) {
         if (verbose) {
@@ -1904,7 +1905,7 @@ undefined4 FUN_80057690(int param_1)
     *(undefined *)(param_1 + 0x37) = 0;
     return 0;
   }
-  iVar5 = *(int *)(param_1 + 0x4c);
+  iVar5 = *(int *)&((GameObject *)param_1)->anim.placementData;
   if ((iVar5 == 0) || ((*(byte *)(iVar5 + 5) & 1) == 0)) {
     dVar9 = (double)*(float *)(param_1 + 0x40);
     if (dVar9 < (double)lbl_803DF838) {
@@ -1913,9 +1914,9 @@ undefined4 FUN_80057690(int param_1)
     }
     iVar2 = FUN_80017a98();
     if (((iVar5 == 0) || ((*(byte *)(iVar5 + 5) & 2) == 0)) || (iVar2 == 0)) {
-      dVar8 = (double)FUN_80006958((double)*(float *)(param_1 + 0x18),
-                                   (double)*(float *)(param_1 + 0x1c),
-                                   (double)*(float *)(param_1 + 0x20));
+      dVar8 = (double)FUN_80006958((double)((GameObject *)param_1)->anim.worldPosX,
+                                   (double)((GameObject *)param_1)->anim.worldPosY,
+                                   (double)((GameObject *)param_1)->anim.worldPosZ);
     }
     else {
       dVar8 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
@@ -1931,10 +1932,10 @@ undefined4 FUN_80057690(int param_1)
                     (lbl_803DF85C - (float)(dVar8 - dVar7) / (float)(dVar9 - dVar7)));
       local_30 = (double)(longlong)(int)uVar6;
     }
-    FUN_8000693c((double)(*(float *)(param_1 + 0x18) - lbl_803DDA58),
-                 (double)*(float *)(param_1 + 0x1c),
-                 (double)(*(float *)(param_1 + 0x20) - lbl_803DDA5C),
-                 (double)(*(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8)),auStack_34,
+    FUN_8000693c((double)(((GameObject *)param_1)->anim.worldPosX - lbl_803DDA58),
+                 (double)((GameObject *)param_1)->anim.worldPosY,
+                 (double)(((GameObject *)param_1)->anim.worldPosZ - lbl_803DDA5C),
+                 (double)(((GameObject *)param_1)->anim.hitboxScale * ((GameObject *)param_1)->anim.rootMotionScale),auStack_34,
                  auStack_38,&fStack_3c,&local_40,&fStack_44,&fStack_48);
     fVar1 = ABS(local_40) * lbl_803DF834;
     if (fVar1 < lbl_803DF860) {
@@ -1957,11 +1958,11 @@ undefined4 FUN_80057690(int param_1)
   else {
     for (bVar4 = 0; bVar4 < 5; bVar4 = bVar4 + 1) {
       uVar6 = (uint)bVar4;
-      if (*(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8) +
+      if (((GameObject *)param_1)->anim.hitboxScale * ((GameObject *)param_1)->anim.rootMotionScale +
           (float)(&DAT_803885a8)[uVar6 * 5] +
-          (float)(&DAT_803885a4)[uVar6 * 5] * (*(float *)(param_1 + 0x20) - lbl_803DDA5C) +
-          *(float *)(param_1 + 0x1c) * (float)(&DAT_803885a0)[uVar6 * 5] +
-          (float)(&DAT_8038859c)[uVar6 * 5] * (*(float *)(param_1 + 0x18) - lbl_803DDA58) <
+          (float)(&DAT_803885a4)[uVar6 * 5] * (((GameObject *)param_1)->anim.worldPosZ - lbl_803DDA5C) +
+          ((GameObject *)param_1)->anim.worldPosY * (float)(&DAT_803885a0)[uVar6 * 5] +
+          (float)(&DAT_8038859c)[uVar6 * 5] * (((GameObject *)param_1)->anim.worldPosX - lbl_803DDA58) <
           lbl_803DF84C) {
         return 0;
       }
@@ -2955,8 +2956,8 @@ int mapProcessRomList(int slot)
         char* obj = *(char**)(cur + 0x20);
         for (j = 0; j < *(u16*)(cur + 8); ) {
             if (saveGame_restoreObjectPosToRomList(obj) == 0) {
-                *(f32*)(obj + 8) += dx;
-                *(f32*)(obj + 0x10) += dz;
+                ((GameObject *)obj)->anim.rootMotionScale += dx;
+                ((GameObject *)obj)->anim.localPosY += dz;
             }
             step = *(u8*)(obj + 2) * 4;
             j += step;
@@ -3804,7 +3805,7 @@ int objUpdateOpacity(char* obj)
         *(u8*)(obj + 0x37) = 0;
         return 0;
     }
-    ptr = *(char**)(obj + 0x4C);
+    ptr = (void *)((GameObject *)obj)->anim.placementData;
     if (ptr != 0 && (*(u8*)(ptr + 5) & 1)) {
         *(u8*)(obj + 0x37) = (u8)(((op + 1) * 255) >> 8);
     } else {
@@ -3817,8 +3818,8 @@ int objUpdateOpacity(char* obj)
         if (ptr != 0 && (*(u8*)(ptr + 5) & 2) && player != 0) {
             d = Vec_distance((f32*)(obj + 0x18), (f32*)((char*)player + 0x18));
         } else {
-            d = Camera_DistanceToCurrentViewPosition(*(f32*)(obj + 0x18), *(f32*)(obj + 0x1c),
-                                                     *(f32*)(obj + 0x20));
+            d = Camera_DistanceToCurrentViewPosition(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY,
+                                                     ((GameObject *)obj)->anim.worldPosZ);
         }
         if (d > range) {
             *(u8*)(obj + 0x37) = 0;
@@ -3831,9 +3832,9 @@ int objUpdateOpacity(char* obj)
             d = d - near;
             alpha = (int)(lbl_803DEBD8 * (lbl_803DEBDC - d / range));
         }
-        Camera_ProjectWorldSphere(*(f32*)(obj + 0x18) - playerMapOffsetX, *(f32*)(obj + 0x1c),
-                                  *(f32*)(obj + 0x20) - playerMapOffsetZ,
-                                  *(f32*)(obj + 0xa8) * *(f32*)(obj + 8),
+        Camera_ProjectWorldSphere(((GameObject *)obj)->anim.worldPosX - playerMapOffsetX, ((GameObject *)obj)->anim.worldPosY,
+                                  ((GameObject *)obj)->anim.worldPosZ - playerMapOffsetZ,
+                                  ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale,
                                   &o1, &o2, &o3, &sz, &o5, &o6);
         sz = __fabs(sz);
         sz = sz * gMapBlockWorldSize;
@@ -3849,12 +3850,12 @@ int objUpdateOpacity(char* obj)
     if (*(u8*)(obj + 0x37) == 0) {
         return 0;
     } else {
-        prod = *(f32*)(obj + 0xa8) * *(f32*)(obj + 8);
+        prod = ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale;
         for (i = 0; i < 5; i++) {
             FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
-            if (*(f32*)(obj + 0x1c) * plane->normalY +
-                    plane->normalX * (*(f32*)(obj + 0x18) - playerMapOffsetX) +
-                    plane->normalZ * (*(f32*)(obj + 0x20) - playerMapOffsetZ) + plane->distance + prod <
+            if (((GameObject *)obj)->anim.worldPosY * plane->normalY +
+                    plane->normalX * (((GameObject *)obj)->anim.worldPosX - playerMapOffsetX) +
+                    plane->normalZ * (((GameObject *)obj)->anim.worldPosZ - playerMapOffsetZ) + plane->distance + prod <
                 lbl_803DEBCC)
                 return 0;
         }
@@ -3928,21 +3929,21 @@ void mapLoadUnloadObjects(int flag)
         int* objs = ObjList_GetObjects(&i, &n);
         while (i < n) {
             obj = (char*)objs[i];
-            fp = *(char**)(obj + 0x4C);
+            fp = (void *)((GameObject *)obj)->anim.placementData;
             i++;
             unload = 0;
             if (*(s8*)(obj + 0xAC) > -1) {
                 u8 fl = *(u8*)(fp + 4);
                 if (!(fl & 2)) {
                     if (fl & 0x10) {
-                        if (*(s16*)(obj + 0x44) > -1 && objShouldUnload(obj)) {
+                        if (((GameObject *)obj)->anim.classId > -1 && objShouldUnload(obj)) {
                             unload = 1;
                         } else if (*(s8*)(obj + 0xAC) < 80 &&
                                    *(void**)(base + 0x83A8 + *(s8*)(obj + 0xAC) * 4) == 0) {
                             unload = 1;
                         }
                     } else {
-                        if (*(s16*)(obj + 0x44) > -1 && objShouldUnload(obj)) {
+                        if (((GameObject *)obj)->anim.classId > -1 && objShouldUnload(obj)) {
                             unload = 1;
                         } else if (*(s8*)(obj + 0xAC) < 80 &&
                                    *(s8*)(obj + 0xAC) != lbl_803DCEC8) {
@@ -3961,7 +3962,7 @@ void mapLoadUnloadObjects(int flag)
                         *(s8*)(bb + ix) = bb[ix] & ~(1 << (tbit & 7));
                     }
                 }
-                if (*(s16*)(obj + 0x46) == 0x72) {
+                if (((GameObject *)obj)->anim.seqId == 0x72) {
                     s8 mid = *(s8*)(obj + 0xAC);
                     s16 j3 = 0;
                     s16* w2 = list;

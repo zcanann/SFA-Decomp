@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/objprint.h"
 #include "main/objanim_internal.h"
 
@@ -225,7 +226,7 @@ void objAnimFn_80038f38(int obj, char *p2)
             u8 *entries = *(u8 **)((char *)m + 0x10);
             int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
             if ((int)entries[idx] != 0xff && entries[entryIdx] == 1) {
-                found = (s16 *)((char *)*(void **)(obj + 0x6c) + vecOffset);
+                found = (s16 *)((char *)((GameObject *)obj)->anim.jointPoseData + vecOffset);
             }
             entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
             vecOffset += 0x12;
@@ -3214,7 +3215,7 @@ void objModelClearVecFn_8003aa40(int obj)
 
     for (slot = 0; slot < 0x16; slot++) {
         found = NULL;
-        table = *(int**)(obj + 0x50);
+        table = (void *)((GameObject *)obj)->anim.modelInstance;
         if (table != NULL) {
             i = 0;
             j = 0;
@@ -3223,7 +3224,7 @@ void objModelClearVecFn_8003aa40(int obj)
                 u8* data = *(u8**)((char*)table + 0x10);
                 s32 offset = OBJPRINT_ACTIVE_BANK_INDEX(obj);
                 if (data[(offset + i) + 1] != 0xff && (int)data[i] == slot) {
-                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                    found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
                 }
                 i = i + *(s8*)((char*)table + 0x55) + 1;
                 j += 0x12;
@@ -3250,7 +3251,7 @@ void fn_8003AC14(int obj, int* keys, int count)
     for (idx = 0; idx < count; idx++) {
         int key = *keys;
         found = NULL;
-        table = *(int**)(obj + 0x50);
+        table = (void *)((GameObject *)obj)->anim.modelInstance;
         if (table != NULL) {
             i = 0;
             j = 0;
@@ -3259,7 +3260,7 @@ void fn_8003AC14(int obj, int* keys, int count)
                 u8* data = *(u8**)((char*)table + 0x10);
                 s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
                 if (data[di] != 0xff && (int)data[i] == key) {
-                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                    found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
                 }
                 i = i + *(s8*)((char*)table + 0x55) + 1;
                 j += 0x12;
@@ -3287,7 +3288,7 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
     for (idx = 0; idx < count; idx++) {
         int key = *keys;
         found = NULL;
-        table = *(int**)(obj + 0x50);
+        table = (void *)((GameObject *)obj)->anim.modelInstance;
         if (table != NULL) {
             i = 0;
             j = 0;
@@ -3296,7 +3297,7 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
                 u8* data = *(u8**)((char*)table + 0x10);
                 s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
                 if (data[di] != 0xff && (int)data[i] == key) {
-                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                    found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
                 }
                 i = i + *(s8*)((char*)table + 0x55) + 1;
                 j += 0x12;
@@ -3325,7 +3326,7 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
     for (idx = 0; idx < count; idx++) {
         int key = *keys;
         found = NULL;
-        table = *(int**)(obj + 0x50);
+        table = (void *)((GameObject *)obj)->anim.modelInstance;
         if (table != NULL) {
             i = 0;
             j = 0;
@@ -3334,7 +3335,7 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
                 u8* data = *(u8**)((char*)table + 0x10);
                 s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
                 if (data[di] != 0xff && (int)data[i] == key) {
-                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                    found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
                 }
                 i = i + *(s8*)((char*)table + 0x55) + 1;
                 j += 0x12;
@@ -3374,7 +3375,7 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
     s8 timer;
 
     foundA = NULL;
-    table = *(int**)(obj + 0x50);
+    table = (void *)((GameObject *)obj)->anim.modelInstance;
     if (table != NULL) {
         list = *(u8**)((char*)table + 0xc);
         if (list != NULL) {
@@ -3456,7 +3457,7 @@ void fn_8003B228(int obj, int p2)
     int val;
 
     foundA = NULL;
-    table = *(int**)(obj + 0x50);
+    table = (void *)((GameObject *)obj)->anim.modelInstance;
     if (table != NULL) {
         list = *(u8**)((char*)table + 0xc);
         if (list != NULL) {
@@ -3561,7 +3562,7 @@ void fn_8003B500(int obj, int p4)
     int n;
 
     found = NULL;
-    table = *(int**)(obj + 0x50);
+    table = (void *)((GameObject *)obj)->anim.modelInstance;
     if (table != NULL) {
         i = 0;
         j = 0;
@@ -3570,7 +3571,7 @@ void fn_8003B500(int obj, int p4)
             u8* data = *(u8**)((char*)table + 0x10);
             s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
             if (data[di] != 0xff && data[i] == 0) {
-                found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
             }
             i = i + *(s8*)((char*)table + 0x55) + 1;
             j += 0x12;
@@ -3635,7 +3636,7 @@ void objPosFn_80039510(int obj, int key, int out)
     int joint;
     int model;
 
-    table = *(int**)(obj + 0x50);
+    table = (void *)((GameObject *)obj)->anim.modelInstance;
     i = 0;
     n = (s32)(u32)*(u8*)((char*)table + 0x5a);
     for (k = 0; k < n; k++) {
@@ -3808,7 +3809,7 @@ void fn_8003A230(int obj, int p2, f32 val)
     int flag;
 
     found = NULL;
-    table = *(int**)(obj + 0x50);
+    table = (void *)((GameObject *)obj)->anim.modelInstance;
     if (table != NULL) {
         i = 0;
         j = 0;
@@ -3817,7 +3818,7 @@ void fn_8003A230(int obj, int p2, f32 val)
             u8* data = *(u8**)((char*)table + 0x10);
             s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
             if (data[di] != 0xff && data[i] == 0) {
-                found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
             }
             i = i + *(s8*)((char*)table + 0x55) + 1;
             j += 0x12;
@@ -3860,7 +3861,7 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     s16 limit;
 
     found = NULL;
-    table = *(int**)(obj + 0x50);
+    table = (void *)((GameObject *)obj)->anim.modelInstance;
     if (table != NULL) {
         i = 0;
         j = 0;
@@ -3869,7 +3870,7 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
             u8* data = *(u8**)((char*)table + 0x10);
             s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
             if (data[di] != 0xff && data[i] == 0) {
-                found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
             }
             i = i + *(s8*)((char*)table + 0x55) + 1;
             j += 0x12;
@@ -3878,7 +3879,7 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     if (found != NULL) {
         angle = (s16)getAngle(*(f32*)((char*)obj + 0xc) - *(f32*)((char*)p2 + 0xc),
                               *(f32*)((char*)obj + 0x14) - *(f32*)((char*)p2 + 0x14));
-        *(s16*)((char*)p3 + 0x14) = (s16)(angle - *(s16*)(obj + 0));
+        *(s16*)((char*)p3 + 0x14) = (s16)(angle - ((GameObject *)obj)->anim.rotX);
         limit = (s16)(int)(lbl_803DE9EC * (f32)(s32)p4);
         if (*(s16*)((char*)p3 + 0x14) > limit) {
             *(s16*)((char*)p3 + 0x14) = limit;
@@ -3920,7 +3921,7 @@ int fn_8003A8B4(int objArg, int *keyList, int countArg, char *p4Arg)
 
         key = *keys;
         found = 0;
-        m = *(void **)(obj + 0x50);
+        m = (void *)((GameObject *)obj)->anim.modelInstance;
         if (m != NULL) {
             int entryIdx = found;
             int vecOffset = found;
@@ -3930,7 +3931,7 @@ int fn_8003A8B4(int objArg, int *keyList, int countArg, char *p4Arg)
                 u8 *entries = *(u8 **)((char *)m + 0x10);
                 int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
                 if ((int)entries[idx] != 0xff && key == entries[entryIdx]) {
-                    found = *(int *)(obj + 0x6c) + vecOffset;
+                    found = *(int *)&((GameObject *)obj)->anim.jointPoseData + vecOffset;
                 }
                 entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
                 vecOffset += 0x12;
@@ -4241,8 +4242,8 @@ void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 val)
         } else {
             int angle;
             int n;
-            angle = getAngle(*(f32 *)(obj + 0xc) - *(f32 *)((char *)curve + 4),
-                             *(f32 *)(obj + 0x14) - *(f32 *)((char *)curve + 0xc));
+            angle = getAngle(((GameObject *)obj)->anim.localPosX - *(f32 *)((char *)curve + 4),
+                             ((GameObject *)obj)->anim.localPosZ - *(f32 *)((char *)curve + 0xc));
             curve[10] = (s16)(angle - (u16)*(s16 *)obj);
             if (curve[10] > 0x8000) {
                 curve[10] = (s16)(curve[10] - 0xffff);
@@ -4292,7 +4293,7 @@ void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
     void *m;
 
     found = NULL;
-    m = *(void **)(obj + 0x50);
+    m = (void *)((GameObject *)obj)->anim.modelInstance;
     if (m != NULL) {
         int entryIdx = 0, vecOffset = 0;
         int n = *(u8 *)((char *)m + 0x5a);
@@ -4301,7 +4302,7 @@ void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
             u8 *entries = *(u8 **)((char *)m + 0x10);
             int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
             if ((int)entries[idx] != 0xff && entries[entryIdx] == 0) {
-                found = (s16 *)((char *)*(void **)(obj + 0x6c) + vecOffset);
+                found = (s16 *)((char *)((GameObject *)obj)->anim.jointPoseData + vecOffset);
             }
             entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
             vecOffset += 0x12;
@@ -4312,9 +4313,9 @@ void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
             found[1] = found[1] >> 1;
             found[0] = found[0] >> 1;
         } else {
-            f32 dx = *(f32 *)(obj + 0xc) - *(f32 *)(tgt + 0xc);
-            f32 dy = *(f32 *)(obj + 0x14) - *(f32 *)(tgt + 0x14);
-            f32 dz = *(f32 *)(obj + 0x10) - *(f32 *)(tgt + 0x10);
+            f32 dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)(tgt + 0xc);
+            f32 dy = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(tgt + 0x14);
+            f32 dz = ((GameObject *)obj)->anim.localPosY - *(f32 *)(tgt + 0x10);
             f32 dist = sqrtf(dx * dx + dy * dy);
             s16 limA;
             int minB;
@@ -4457,7 +4458,7 @@ void characterDoEyeAnims(int obj, int p2)
     void *m;
 
     a = NULL;
-    m = *(void **)(obj + 0x50);
+    m = (void *)((GameObject *)obj)->anim.modelInstance;
     if (m != NULL) {
         u8 *p = *(u8 **)((char *)m + 0xc);
         if (p == NULL) {
@@ -4626,9 +4627,9 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
 
     p = (char *)p4;
     sp2 = spd + 0xf;
-    dx = pos[0] - *(f32 *)(obj + 0xc);
-    dz = pos[2] - *(f32 *)(obj + 0x14);
-    dy = (pos[1] + yOff) - *(f32 *)(obj + 0x10);
+    dx = pos[0] - ((GameObject *)obj)->anim.localPosX;
+    dz = pos[2] - ((GameObject *)obj)->anim.localPosZ;
+    dy = (pos[1] + yOff) - ((GameObject *)obj)->anim.localPosY;
     dist = sqrtf(dx * dx + dz * dz);
 
     ang[2] = (s16)getAngle(dx, dz) - (u16)*(s16 *)obj;
@@ -4663,7 +4664,7 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
 
         key = *keys;
         found = NULL;
-        m = *(void **)(obj + 0x50);
+        m = (void *)((GameObject *)obj)->anim.modelInstance;
         if (m != NULL) {
             int entryIdx = 0, vecOffset = 0;
             int n = *(u8 *)((char *)m + 0x5a);
@@ -4672,7 +4673,7 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
                 u8 *entries = *(u8 **)((char *)m + 0x10);
                 int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
                 if ((int)entries[idx] != 0xff && key == entries[entryIdx]) {
-                    found = (s16 *)((char *)*(void **)(obj + 0x6c) + vecOffset);
+                    found = (s16 *)((char *)((GameObject *)obj)->anim.jointPoseData + vecOffset);
                 }
                 entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
                 vecOffset += 0x12;
