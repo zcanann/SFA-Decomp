@@ -4426,12 +4426,8 @@ void CameraModeCrawl_update(u8 *obj) {
         v20 = *(f32 *)(obj + 12) - *(f32 *)(state + 24);
         v12 = *(f32 *)(obj + 20) - *(f32 *)(state + 32);
         delta = (0x8000 - (u16)getAngle(v20, v12)) - (u16)*(s16 *)obj;
-        if (delta > 0x8000) {
-            delta -= 0xffff;
-        }
-        if (delta < -0x8000) {
-            delta += 0xffff;
-        }
+        delta = (delta > 0x8000) ? delta - 0xffff : delta;
+        delta = (delta < -0x8000) ? delta + 0xffff : delta;
         *(s16 *)obj = (s32)((f32)(s32)*(s16 *)obj +
                             interpolate((f32)(s32)delta, lbl_803E1AD8, timeDelta));
         *(s16 *)obj = (s16)(0x8000 - getAngle(v20, v12));
@@ -4441,12 +4437,8 @@ void CameraModeCrawl_update(u8 *obj) {
         (*(void (**)(u8 *, f32 *, f32 *, f32 *, f32 *, f32, int))(*(int *)gCameraInterface + 56))(
             obj, &v20, &v16, &v12, &v8, lbl_803E1ADC, 0);
         delta = (0x8000 - (u16)getAngle(v20, v12)) - (u16)*(s16 *)obj;
-        if (delta > 0x8000) {
-            delta -= 0xffff;
-        }
-        if (delta < -0x8000) {
-            delta += 0xffff;
-        }
+        delta = (delta > 0x8000) ? delta - 0xffff : delta;
+        delta = (delta < -0x8000) ? delta + 0xffff : delta;
         *(s16 *)obj = (s16)(*(s16 *)obj + delta);
         (*(void (**)(u8 *, f32, f32))(*(int *)(*(int *)(other + 4)) + 24))(
             obj, *(f32 *)(state + 28), v8);

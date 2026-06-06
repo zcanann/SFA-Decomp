@@ -33,7 +33,7 @@ typedef struct ChestHitBlock {
   f32 scale;
   f32 x;
   f32 y;
-  f32 z[2];
+  f32 z[1];
 } ChestHitBlock;
 
 extern ChestHitParams lbl_802C22B0;
@@ -111,7 +111,7 @@ void treasurechest_update(int obj)
       blk.a = 0;
       if (lbl_803DDAE4 == 0) {
         (*(void (**)(int,int,u16 *,int,int,ChestHitParams *))(*lbl_803DDAE0 + 4))
-            (0,1,&blk.a,0x401,0xffffffff,&blk.params);
+            (0,1,(u16 *)((int)&blk + 16),0x401,0xffffffff,&blk.params);
         lbl_803DDAE4 = 0x3c;
       }
     }

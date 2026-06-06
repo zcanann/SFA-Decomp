@@ -1876,7 +1876,7 @@ void dll_86_func03(int param_1,int param_2,int param_3,uint param_4)
   e[1].y = lbl_803E0FD4;
   e[1].z = (f32)(int)randomGetRange(-0x4b0, -0x320);
   rx = e[1].x;
-  rz = *(f32 *)((int)e + 0x44);
+  rz = *(f32 *)((int)e + 0x20);
   e[2].layer = 1; e[2].flags = 0; e[2].tex = (void *)0; e[2].mode = 0x40000000;
   e[2].x = rx; e[2].y = lbl_803E0FD4; e[2].z = rz;
   e[3].layer = 1; e[3].flags = 0x65; e[3].tex = (void *)0; e[3].mode = 0x800000;
@@ -1902,7 +1902,7 @@ void dll_86_func03(int param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)(base + 4); buf.hw[3] = *(s16 *)(base + 6);
   buf.hw[4] = *(s16 *)(base + 8); buf.hw[5] = *(s16 *)(base + 0xa);
   buf.hw[6] = *(s16 *)(base + 0xc);
-  buf.cmds = e;
+  buf.cmds = (FbCmd *)((u8 *)&buf + 0x60);
   buf.flags = 0x10400;
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
@@ -2724,8 +2724,8 @@ void dll_8E_func03(int param_1,int param_2,int param_3,uint param_4)
   } else if (param_2 == 1) {
     buf.pos[1] = lbl_803E116C;
   }
-  buf.pos[2] = lbl_803E1138;
-  buf.col[0] = lbl_803E1138; buf.col[1] = lbl_803E1138; buf.col[2] = lbl_803E1138;
+  buf.pos[2] = *(f32 *)&lbl_803E1138;
+  buf.col[0] = *(f32 *)&lbl_803E1138; buf.col[1] = *(f32 *)&lbl_803E1138; buf.col[2] = *(f32 *)&lbl_803E1138;
   buf.scale = lbl_803E1164;
   buf.v40 = 1;
   buf.v3c = 0;
