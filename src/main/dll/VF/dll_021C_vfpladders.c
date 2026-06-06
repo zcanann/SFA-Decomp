@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 extern f32 lbl_803E60D8;
@@ -21,7 +22,7 @@ void vfpladders_update(int obj) {
     int setup = *(int *)(obj + 0x4c);
     int countdown;
 
-    if (*(s16 *)(obj + 0x46) == 0x548) {
+    if (((GameObject *)obj)->anim.seqId == 0x548) {
         if ((u32)GameBit_Get(*(s16 *)(state + 2)) != 0) {
             if ((u32)GameBit_Get(*(s16 *)state) == 0) {
                 (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
@@ -47,11 +48,11 @@ void vfpladders_update(int obj) {
                 *(s16 *)(state + 6) = 0x5a;
             }
             if (*(s16 *)(state + 4) == 1 &&
-                *(f32 *)(obj + 0x10) > *(f32 *)(setup + 0xc) - lbl_803E60D8) {
-                *(f32 *)(obj + 0x10) =
-                    *(f32 *)(obj + 0x10) - lbl_803E60DC * timeDelta;
-                if (*(f32 *)(obj + 0x10) < *(f32 *)(setup + 0xc) - lbl_803E60D8) {
-                    *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) - lbl_803E60D8;
+                ((GameObject *)obj)->anim.localPosY > *(f32 *)(setup + 0xc) - lbl_803E60D8) {
+                ((GameObject *)obj)->anim.localPosY =
+                    ((GameObject *)obj)->anim.localPosY - lbl_803E60DC * timeDelta;
+                if (((GameObject *)obj)->anim.localPosY < *(f32 *)(setup + 0xc) - lbl_803E60D8) {
+                    ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) - lbl_803E60D8;
                     *(s16 *)(state + 4) = 2;
                 }
             }
@@ -72,8 +73,8 @@ void vfpladders_init(int *obj, u8 *init) {
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     *(s16 *)((char *)inner + 2) = *(s16 *)((char *)init + 0x20);
     *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
-    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
-    *(void **)((char *)obj + 0xbc) = (void *)vfpladders_SeqFn;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
+    ((GameObject *)obj)->unkBC = (void *)vfpladders_SeqFn;
 }
 #pragma scheduling reset
 #pragma peephole reset
