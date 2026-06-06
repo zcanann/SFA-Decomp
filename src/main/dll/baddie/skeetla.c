@@ -5,6 +5,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/skeetla.h"
+#include "main/objhits_types.h"
 
 
 extern f32 lbl_803E23DC;
@@ -103,8 +104,8 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
         *(f32 *)(obj + 0x28) = lbl_803E23DC;
     }
 
-    lastContactObj = **(void ***)(obj + 0x54);
-    if (((*(u16 *)(*(u8 **)(obj + 0x54) + 0x60) & 8) == 0) ||
+    lastContactObj = (void *)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject;
+    if (((*(ObjHitsPriorityState **)(obj + 0x54))->flags & 8) == 0 ||
         (*(s16 *)((u8 *)lastContactObj + 0x46) == 0x1f)) {
         lastContactObj = NULL;
     }
@@ -1294,8 +1295,8 @@ void FUN_8013939c(uint param_1)
            *(float *)(param_1 + 0x28) * FLOAT_803dc074 + *(float *)(param_1 + 0x10);
     }
   }
-  local_34 = **(int **)(param_1 + 0x54);
-  if (((*(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & 8) == 0) ||
+  local_34 = (*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject;
+  if (((*(ObjHitsPriorityState **)(param_1 + 0x54))->flags & 8) == 0 ||
      (*(short *)(local_34 + 0x46) == 0x1f)) {
     local_34 = 0;
   }
@@ -2206,7 +2207,7 @@ void FUN_8013a804(undefined4 param_1,undefined4 param_2,float *param_3)
     iVar5 = *piVar2;
     uVar4 = (uint)*(ushort *)(*(int *)(iVar5 + 0x50) + 0x84);
     if (((uVar4 != 0) && (*(int *)(iVar5 + 0x54) != 0)) &&
-       ((*(ushort *)(*(int *)(iVar5 + 0x54) + 0x60) & 1) != 0)) {
+       (((*(ObjHitsPriorityState **)(iVar5 + 0x54))->flags & 1) != 0)) {
       local_40 = 0x43300000;
       uStack_44 = (uint)*(ushort *)(*(int *)(iVar5 + 0x50) + 0x86);
       local_48 = 0x43300000;
