@@ -904,7 +904,6 @@ extern f32 lbl_803E21F0;
 extern f32 lbl_803E21F4;
 extern f32 lbl_803E21F8;
 extern s8 padGetStickX(int port);
-extern u32 getButtonsJustPressed(int port);
 extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u32 sfxId);
 extern void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume);
@@ -1129,7 +1128,6 @@ void Dummy3E_initialise(void) {}
 
 extern u8  linkTextures[0x30];
 extern s16 lbl_8031C2A8[6];
-extern void* lbl_803A9DB8[6];
 extern void mm_free(void);
 extern void fn_8001BDD4(int);
 
@@ -1166,16 +1164,12 @@ void TitleMenuItem_initialise(void)
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void* textureLoadAsset(int id);
 extern void textureFree(void* p);
-extern void fn_8001BDD4(int a);
 extern void fn_8001BE2C(int mode);
 extern void* mmAlloc(int size, int heap, int flags);
 extern void* memcpy(void* dst, const void* src, int size);
 extern void OSReport(const char* fmt, ...);
 extern void padFn_80014b18(int value);
 extern s16 linkItemOpacity;
-extern s16 linkCount_803dd90e;
-extern u8 linkIsRotated;
-extern u8 linkFlag_803dd8f8;
 extern s16 lbl_803DD8FA;
 extern s16 lbl_803DD8FC;
 extern s16 lbl_803DD8FE;
@@ -1183,12 +1177,7 @@ extern s16 lbl_803DD900;
 extern s16 lbl_803DD902;
 extern s16 lbl_803DD904;
 extern const char* lbl_803DD908;
-extern s8 lbl_803DD910;
-extern s8 lbl_803DD911;
-extern s8 linkSelected;
-extern s8 lbl_803DD913;
 extern char lbl_8031C1A8[];
-extern LinkMenuItem lbl_803A9458[40];
 extern void linkInitTextures(LinkMenuItem* item);
 
 #pragma scheduling off

@@ -1975,7 +1975,6 @@ void wmtorch_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
 }
 #pragma peephole reset
 
-extern u32 Resource_Acquire(int id, int mode);
 extern u32 lbl_803DDC80;
 #pragma scheduling off
 #pragma peephole off
@@ -2048,8 +2047,6 @@ int WM_colrise_SeqFn(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1;
 #pragma scheduling reset
 
 /* fn_X(lbl); lbl = 0; */
-extern u32 lbl_803DDC80;
-extern void Resource_Release(u32);
 #pragma scheduling off
 #pragma peephole off
 void LaserBeam_release(void) { Resource_Release(lbl_803DDC80); lbl_803DDC80 = 0; }
@@ -2171,7 +2168,6 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
  * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
  * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
 extern MapEventInterface **gMapEventInterface;
-extern int GameBit_Get(int);
 extern f32 lbl_803E5DC0;
 #pragma scheduling off
 #pragma peephole off

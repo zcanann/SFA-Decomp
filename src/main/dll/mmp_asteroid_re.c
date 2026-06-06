@@ -303,18 +303,18 @@ void cf_doorlight_update(int obj) {
 }
 
 void cf_doorlight_init(int *obj, s8 *def) {
-    register u8 *state = *(u8 **)((char *)obj + 0xb8);
+    register CfDoorLightState *state = *(CfDoorLightState **)((char *)obj + 0xb8);
     u32 b;
-    *(int *)state = 0;
+    state->textureId = 0;
     *(s16 *)obj = (s16)((s32)def[0x19] << 9);
-    *(int *)(state + 8) = (int)*(s16 *)((char *)def + 0x1a) << 8;
-    *(u8 *)(state + 4) = (u8)*(s16 *)((char *)def + 0x1c);
-    *(int *)(state + 0xc) = (int)def[0x18] << 8;
+    state->maxFrame = (int)*(s16 *)((char *)def + 0x1a) << 8;
+    state->frameStep = (u8)*(s16 *)((char *)def + 0x1c);
+    state->resetFrame = (int)def[0x18] << 8;
     b = (u32)(u8)GameBit_Get(*(s16 *)((char *)def + 0x1e));
-    state[0x14] = (u8)((state[0x14] & ~0x40) | ((b & 1) << 6));
-    if (((u32)state[0x14] >> 6) & 1) {
-        *(int *)(state + 0x10) = *(int *)(state + 8);
-        state[0x14] |= 0x20;
+    state->flags = (u8)((state->flags & ~0x40) | ((b & 1) << 6));
+    if (((u32)state->flags >> 6) & 1) {
+        state->currentFrame = state->maxFrame;
+        state->flags |= 0x20;
     }
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
     *(u16 *)((char *)obj + 0xb0) |= 0x4000;

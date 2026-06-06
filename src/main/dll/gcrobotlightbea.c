@@ -354,8 +354,6 @@ extern void hitDetect_calcSweptSphereBounds(u32 *boundsOut, f32 *startPoints, f3
 extern void hitDetectFn_800691c0(u8 *obj, void *bounds, uint mask, int flags);
 extern u8 hitDetectFn_80067958(u8 *obj, f32 *startPoints, f32 *endPoints, int pointCount,
                                void *outHits, int flags);
-extern f32 lbl_803AC790[];
-extern f32 lbl_803E3938;
 extern f32 lbl_803E3970;
 
 /*
@@ -511,14 +509,10 @@ void smallbasket_free(int param_1)
 #pragma scheduling reset
 
 extern undefined4* gMapEventInterface;
-extern f32 lbl_803E3938;
-extern f32 lbl_803E3950;
-extern f32 lbl_803E3958;
 extern f32 lbl_803E3974;
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
                                  undefined4 p5, double scale);
 extern void* Obj_GetPlayerObject(void);
-extern void vecRotateZXY(void* in, void* out);
 
 /*
  * --INFO--

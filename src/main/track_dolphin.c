@@ -4335,7 +4335,6 @@ extern u8 lbl_803DCE06;
 extern int lbl_80382038[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 lbl_803DEBCC;
 extern char gViewFrustumPlanes[];
 
 #pragma scheduling off
@@ -4633,8 +4632,6 @@ void fn_80062808(void)
     lbl_803DCF0C = lbl_803DCF20;
 }
 
-extern int lbl_803DCF34;
-extern s16 lbl_803DCF5E;
 
 void fn_80065574(int matchVal, int obj, int flag)
 {
@@ -4688,7 +4685,6 @@ void MapBlock_init(int obj)
     }
 }
 
-extern void *mmAlloc(int size, int type, int flag);
 extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
 extern int lbl_803DCE80;
 
@@ -5619,7 +5615,6 @@ int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8
 extern f32 lbl_803DECB8;
 extern f32 lbl_803DECBC;
 extern f32 lbl_803DECC0;
-extern f32 lbl_803DECC4;
 extern f32 lbl_803DECC8;
 extern f32 lbl_803DCF54;
 extern f32 lbl_803DCF50;
@@ -5924,7 +5919,6 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f)
 }
 
 extern void Matrix_TransformVector(void *mtx, f32 *in, f32 *out);
-extern f32 lbl_803DECC0;
 extern f32 lbl_803DECE0[2];
 
 void fn_800659A8(f32 a, f32 b, void *p3, void *p4, void *desc, int e)
@@ -6233,10 +6227,7 @@ u8 hitDetectFn_80067958(void *param_1, int param_2, int param_3, int param_4, vo
 typedef union { u8 u8; u16 u16; u32 u32; s16 s16; s32 s32; f32 f32; } GolfWGPipe;
 extern volatile GolfWGPipe GXWGFifo : (0xCC008000);
 
-extern void *Camera_GetViewMatrix(void);
 extern void Obj_BuildWorldTransformMatrix(int obj, f32 *out, int flag);
-extern void PSMTXConcat(void *a, void *b, void *out);
-extern void GXLoadPosMtxImm(void *mtx, int id);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetNumTexGens(int n);
@@ -6444,7 +6435,6 @@ extern void objectShadow_setupSwappedProjectedTexture(int hdr, void *col, void *
 extern void objectShadow_setupProjectedTexture(int hdr, void *col, void *mtx);
 extern void fn_80077AD8(int hdr, void *col, void *mtx, f32 f);
 extern void fn_80077EF8(int hdr, void *col, void *mtx, f32 f);
-extern void memcpy(void *dst, void *src, int n);
 extern f32 lbl_803DEC78[2];
 extern f32 lbl_803DEC80[2];
 
@@ -6597,7 +6587,6 @@ extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern void gxBlendFn_800789ac(void);
 extern u8 skyFn_8008919c(int);
 extern void fn_800897D4(int a, f32 *x, f32 *y, f32 *z);
-extern f32 PSVECDotProduct(f32 *a, f32 *b);
 extern void skyBuildSunModelMatrix(f32 *out);
 extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 *ox, f32 *oy, f32 *oz);
 extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int *ox, int *oy, int *oz);
@@ -6606,7 +6595,6 @@ extern int pauseMenuGetState(void);
 extern void fn_8008912C(void);
 extern void getAmbientColor(int a, u8 *r, u8 *g, u8 *b);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
-extern void GXLoadPosMtxImm(void *mtx, int id);
 extern int lbl_803E8440;
 extern int renderFlags;
 extern u8 colorScale;
@@ -7605,7 +7593,6 @@ extern u8 *mapGetBlockIdx(int layer);
 extern u8 *mapGetBlock(int idx);
 extern int getHudHiddenFrameCount(void);
 extern u8 lbl_803DCF44;
-extern int lbl_803DCF3C;
 extern int lbl_803DCF40;
 
 void trackIntersect(void)
@@ -8179,7 +8166,6 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
 
 /* hitDetect_800667ec — sweep each input sphere against the gathered triangle
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
-extern f32 Vec3_Normalize(f32 *v);
 extern char sTrackHitOverflowError[];
 extern void fn_80137948(char *fmt, ...);
 

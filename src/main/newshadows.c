@@ -633,35 +633,35 @@ void newshadows_renderQueuedShadowCasters(void)
   double dVar20;
   double dVar21;
   double dVar22;
-  double in_f21;
-  double in_f22;
-  double in_f23;
+  double savedF21;
+  double savedF22;
+  double savedF23;
   double dVar23;
-  double in_f24;
-  double in_f25;
+  double savedF24;
+  double savedF25;
   double dVar24;
-  double in_f26;
+  double savedF26;
   double dVar25;
-  double in_f27;
+  double savedF27;
   double dVar26;
-  double in_f28;
+  double savedF28;
   double dVar27;
-  double in_f29;
-  double in_f30;
+  double savedF29;
+  double savedF30;
   double dVar28;
-  double in_f31;
+  double savedF31;
   double dVar29;
-  double in_ps21_1;
-  double in_ps22_1;
-  double in_ps23_1;
-  double in_ps24_1;
-  double in_ps25_1;
-  double in_ps26_1;
-  double in_ps27_1;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
+  double savedPs21;
+  double savedPs22;
+  double savedPs23;
+  double savedPs24;
+  double savedPs25;
+  double savedPs26;
+  double savedPs27;
+  double savedPs28;
+  double savedPs29;
+  double savedPs30;
+  double savedPs31;
   undefined4 uStack_260;
   undefined4 uStack_25c;
   float local_258;
@@ -721,28 +721,28 @@ void newshadows_renderQueuedShadowCasters(void)
   float local_8;
   float fStack_4;
   
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  local_48 = (float)in_f27;
-  fStack_44 = (float)in_ps27_1;
-  local_58 = (float)in_f26;
-  fStack_54 = (float)in_ps26_1;
-  local_68 = (float)in_f25;
-  fStack_64 = (float)in_ps25_1;
-  local_78 = (float)in_f24;
-  fStack_74 = (float)in_ps24_1;
-  local_88 = (float)in_f23;
-  fStack_84 = (float)in_ps23_1;
-  local_98 = (float)in_f22;
-  fStack_94 = (float)in_ps22_1;
-  local_a8 = (float)in_f21;
-  fStack_a4 = (float)in_ps21_1;
+  local_8 = (float)savedF31;
+  fStack_4 = (float)savedPs31;
+  local_18 = (float)savedF30;
+  fStack_14 = (float)savedPs30;
+  local_28 = (float)savedF29;
+  fStack_24 = (float)savedPs29;
+  local_38 = (float)savedF28;
+  fStack_34 = (float)savedPs28;
+  local_48 = (float)savedF27;
+  fStack_44 = (float)savedPs27;
+  local_58 = (float)savedF26;
+  fStack_54 = (float)savedPs26;
+  local_68 = (float)savedF25;
+  fStack_64 = (float)savedPs25;
+  local_78 = (float)savedF24;
+  fStack_74 = (float)savedPs24;
+  local_88 = (float)savedF23;
+  fStack_84 = (float)savedPs23;
+  local_98 = (float)savedF22;
+  fStack_94 = (float)savedPs22;
+  local_a8 = (float)savedF21;
+  fStack_a4 = (float)savedPs21;
   FUN_8028680c();
   if (DAT_803ddbf8 != 0) {
     FUN_800069b8();
@@ -1631,17 +1631,17 @@ void newshadows_updateFrameState(void)
   char cVar3;
   undefined *puVar4;
   double dVar5;
-  double in_f31;
+  double savedF31;
   double dVar6;
-  double in_ps31_1;
+  double savedPs31;
   float local_28;
   float local_24;
   undefined8 local_20;
   float local_8;
   float fStack_4;
   
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
+  local_8 = (float)savedF31;
+  fStack_4 = (float)savedPs31;
   iVar2 = FUN_800176d0();
   if (iVar2 == 0) {
     lbl_803DDC2C = lbl_803DFA14 * lbl_803DC074 + lbl_803DDC2C;
@@ -3150,7 +3150,6 @@ void drawReflectionTexture(void)
 #pragma scheduling reset
 
 /* Copy the frame buffer into both reflection textures, optionally preload. */
-extern u32 lbl_803DCFDC;
 extern void GXInvalidateTexAll(void);
 extern void GXPixModeSync(void);
 #pragma scheduling off
@@ -3315,8 +3314,6 @@ extern double floor(double);
 extern f32 Yachuff_803DEDE0[2];
 extern f32 __PADFixBits;
 extern f32 lbl_80391978[];
-extern u8 lbl_8038E268[0x40];
-extern u32 lbl_803DCFE0;
 extern f32 lbl_803DCFA8, lbl_803DCFAC;
 #pragma scheduling off
 void initFn_8006d020(void) {
@@ -3732,14 +3729,12 @@ extern f32 timeDelta;
 extern int *Camera_GetCurrentViewSlot(void);
 extern u8 framesThisStep;
 extern f32 Udchuff_803DEDA0[2];
-extern double floor(double);
 extern void fn_80060BB0(void);
 extern u8 lbl_803DCF80;
 extern int isHeavyFogEnabled(void);
 extern f32 *Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32 *a, f32 *b);
 extern f32 Dev_803DED1C;
-extern void fn_80069EB8();
 extern u16 lbl_803DCFA0;
 #pragma scheduling off
 void maybeHudFn_8006c91c(void) {
@@ -3833,7 +3828,6 @@ void shadowRenderFn_8006b558(int *obj) {
 }
 #pragma scheduling reset
 
-extern f32 Vdchuff_803DEDC0[2];
 extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
 #pragma scheduling off
 #pragma peephole off
@@ -3907,7 +3901,6 @@ extern f32 lbl_803DED70, lbl_803DED74, lbl_803DED78, lbl_803DED7C;
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40;
 extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
 extern f32 FinishQueue_803DED64;
-extern f32 Ydchuff_803DED80[];
 extern u8 lbl_803DB668[8];
 extern f32 lbl_803DB670;
 extern int lbl_803DCCF0;

@@ -474,7 +474,6 @@ void *getCache(void);
 #pragma pop
 
 extern f32 lbl_803DE854;
-extern f32 timeDelta;
 
 #pragma push
 #pragma scheduling off
@@ -582,7 +581,6 @@ void ObjModel_SetBlendChannelWeight(u8 *model, int channel, f32 weight) {
 #pragma pop
 
 typedef f32 Mtx[3][4];
-extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern void PSVECNormalize(f32 *src, f32 *dst);
 
@@ -599,9 +597,6 @@ extern void PSVECNormalize(f32 *src, f32 *dst);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -615,7 +610,6 @@ extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 #pragma pop
 
 extern int *lbl_803DCB60;
-extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
 
 #pragma peephole off
 #pragma dont_inline on
@@ -639,8 +633,6 @@ int modelGetAmapSize(int a, int b, int c) {
 #pragma dont_inline reset
 #pragma peephole reset
 
-extern void *mmAlloc(int size, int type, int flag);
-extern void *memset(void *dst, int val, int n);
 
 extern void *getCurrentDataFile(int id);
 extern int lbl_803DCB68;
@@ -867,7 +859,6 @@ extern void DCInvalidateRange(void *addr, u32 nBytes);
 extern void LCEnable(void);
 extern void ObjModel_InitScratchBuffers(void);
 extern void setGQR6_2(int a, int b, int c, int d);
-extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern f32 PSVECDotProduct(f32 *a, f32 *b);
 
 #pragma push
@@ -901,7 +892,6 @@ typedef struct {
     s16 *iter;
 } ModelStream;
 extern ModelStream *lbl_803DCB54;
-extern void *memset(void *dst, int val, int n);
 
 void modelFn_800292e0(void) {
     u8 buf[8];
@@ -940,7 +930,6 @@ void *animationLoad(int id, s16 a, s16 b, int e, int f);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
 void model_multMtxs(u8 *model, f32 *out) {
     u8 *hdr = *(u8 **)model;
@@ -972,7 +961,6 @@ void model_multMtxs(u8 *model, f32 *out) {
 
 #pragma pop
 
-extern void textureFree(void *tex);
 
 #pragma push
 #pragma scheduling off
@@ -1047,7 +1035,6 @@ void Model_GetVertexPosition(u8 *model, int vertexIndex, f32 *out) {
 
 #pragma pop
 
-extern void DCFlushRange(void *addr, u32 nBytes);
 
 #pragma push
 #pragma scheduling off
@@ -1100,7 +1087,6 @@ void ObjModel_InitScratchBuffers(void) {
 #pragma pop
 
 extern void ObjModel_SetBlendChannelTargets(u8 *model, int ch, int a, int b, f32 w, int c);
-extern f32 lbl_803DE828;
 
 #pragma push
 #pragma scheduling off
@@ -1347,7 +1333,6 @@ extern int modelLoadAnimations(void *model, int id, void *animBase);
 extern int modelLoad_calcSizes(void *model, int arg, int *out, int flag);
 extern int ModelList_getHeader(void *list, int index, void *out);
 extern void modelInitModelList(void *list, s16 index, void *out);
-extern int textureLoad(int id, int flag);
 extern s16 *lbl_803DCB64;
 
 void *ObjModel_Load(int id, int arg2, int *outSize) {
@@ -1395,7 +1380,6 @@ void *ObjModel_Load(int id, int arg2, int *outSize) {
 
 extern void ShaderDef_free(int *def);
 extern void model_adjustModelList(void *list, int index);
-extern void *textureIdxToPtr(int id);
 extern void model_findIdxInModelList(void *list, void *header, int *outIndex);
 extern void *lbl_803DCB50;
 extern void *allocModelStruct(int size, int align);
@@ -1453,7 +1437,6 @@ void ObjModel_Release(u8 *model) {
 #pragma pop
 
 extern void setGQR6(u32 v);
-extern void *memset(void *dst, int val, int n);
 
 #pragma push
 #pragma scheduling off
@@ -3407,8 +3390,6 @@ extern f32 lbl_803DE838;
 extern f32 lbl_803DE83C;
 extern f32 lbl_803DCED0;
 extern f32 lbl_803DCECC;
-extern f32 playerMapOffsetZ;
-extern f32 playerMapOffsetX;
 
 #pragma dont_inline off
 static int boneBlendSlotLimit(u8 *model) {

@@ -36,12 +36,12 @@ void edibleMushroomFn_801d083c(undefined8 param_1,double param_2,double param_3,
 {
   uint uVar1;
   int iVar2;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
+  undefined4 unusedArg7;
+  undefined4 unusedArg8;
+  undefined4 unusedArg9;
+  undefined4 unusedArg10;
   float *pfVar3;
-  undefined8 extraout_f1;
+  undefined8 animSpeed;
   undefined8 uVar4;
   
   pfVar3 = *(float **)(param_9 + 0xb8);
@@ -64,14 +64,14 @@ void edibleMushroomFn_801d083c(undefined8 param_1,double param_2,double param_3,
   FUN_80080f18(&DAT_803276c4,&DAT_8032768c,&DAT_803276fc,&DAT_80327734);
   iVar2 = FUN_800e8b98();
   if (iVar2 == 0) {
-    uVar4 = FUN_80080f14(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x1f);
-    FUN_80006728(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x23c,0,in_r7,
-                 in_r8,in_r9,in_r10);
+    uVar4 = FUN_80080f14(animSpeed,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x1f);
+    FUN_80006728(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x23c,0,unusedArg7,
+                 unusedArg8,unusedArg9,unusedArg10);
   }
   else {
-    uVar4 = FUN_80080f14(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x3f);
-    FUN_80006724(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x23c,0,in_r7,
-                 in_r8,in_r9,in_r10);
+    uVar4 = FUN_80080f14(animSpeed,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x3f);
+    FUN_80006724(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x23c,0,unusedArg7,
+                 unusedArg8,unusedArg9,unusedArg10);
   }
   (*DAT_803dd72c)->setAnimEvent(7,0,0);
   (*DAT_803dd72c)->setAnimEvent(7,2,0);

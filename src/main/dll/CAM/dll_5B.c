@@ -115,17 +115,6 @@ extern void fn_802961D4(short *obj, int v);
 extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 fov);
 extern void Sfx_StopFromObject(int obj, int sfxId);
-extern f32 lbl_803E17E0;
-extern f32 lbl_803E17EC;
-extern f32 lbl_803E17F0;
-extern f32 lbl_803E17F4;
-extern f32 lbl_803E17F8;
-extern f32 lbl_803E17FC;
-extern f32 lbl_803E1800;
-extern f32 lbl_803E1804;
-extern f32 lbl_803E1808;
-extern f32 lbl_803E180C;
-extern f32 lbl_803E1810;
 
 /*
  * --INFO--
@@ -389,14 +378,6 @@ void CameraModeViewfinder_free(int param_1)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern f32 lbl_803E1814;
-extern f32 lbl_803E1820;
-extern f32 lbl_803E1824;
-extern f32 lbl_803E1828;
-extern f32 lbl_803E182C;
-extern f32 lbl_803E17C0;
-extern f32 lbl_803E17C4;
-extern f32 lbl_803E17E8;
 extern int Curve_AdvanceAlongPath(void *path, f32 step);
 extern void Rcp_SetViewFinderHudEnabled(int on);
 extern void buttonDisable(int port, int mask);
@@ -569,11 +550,6 @@ void CameraModeViewfinder_update(s16 *param_1)
 
 extern u32 GameBit_Get(int bit);
 extern void *memset(void *dst, int v, int n);
-extern f32 lbl_803E17C8;
-extern f32 lbl_803E17CC;
-extern f32 lbl_803E17D0;
-extern f32 lbl_803E17E4;
-extern f32 lbl_803E1830;
 extern f32 lbl_803E1834;
 extern f64 lbl_803E1838x;
 

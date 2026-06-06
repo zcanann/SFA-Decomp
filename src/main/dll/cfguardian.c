@@ -571,8 +571,6 @@ void mmp_bridge_initialise(void) {}
 
 extern f32 lbl_803E3778;
 extern void pressureswitchfb_updateStateMode(int obj, int p2, int stateParam);
-extern int *objFindTexture(int *obj, int a, int b);
-extern u32 GameBit_Get(int eventId);
 extern int *gObjectTriggerInterface;
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 extern void fn_80137948(char *fmt, ...);
@@ -674,8 +672,6 @@ void doorlock_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *objFindTexture(int *obj, int a, int b);
-extern u32 GameBit_Get(int eventId);
 #pragma scheduling off
 #pragma peephole off
 void mmp_bridge_init(int *obj) {
@@ -716,7 +712,6 @@ render_basic:
 #pragma peephole reset
 
 int Door_SeqFn(int obj, int p2, int seq);
-extern f32 lbl_803E3780;
 extern f32 lbl_803E3784;
 extern f32 lbl_803E3788;
 extern f32 lbl_803E3790;
@@ -814,10 +809,8 @@ void mmp_bridge_update(int *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern int Sfx_StopFromObject(int obj, int sfxId);
-extern int GameBit_Set(int eventId, int value);
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
 extern void buttonDisable(int index, int mask);

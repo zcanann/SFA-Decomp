@@ -300,7 +300,6 @@ void Vec3_ScaleAdd(f32 *a, f32 s, f32 *b, f32 *out) {
 
 extern float fn_802924B4(float y, float x);
 extern double lbl_803DE7D8;
-extern f32 timeDelta;
 
 #pragma push
 #pragma scheduling off
@@ -580,7 +579,6 @@ void Matrix_TransformPoint(f32 *m, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *o
 
 #pragma pop
 
-extern f32 lbl_803DE808;
 extern f32 lbl_803DE810;
 
 #pragma push
@@ -713,7 +711,6 @@ void Vec3_Normalize(f32 *v) {
 #pragma peephole off
 #pragma pop
 
-extern void mtxRotateByVec3s(f32 *mtx, void *transform);
 
 #pragma push
 #pragma scheduling off

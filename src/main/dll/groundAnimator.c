@@ -1055,7 +1055,6 @@ int appleontree_getExtraSize(void) { return 0x64; }
 u8 appleontree_modelMtxFn(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x3a); }
 
 extern void ***gExpgfxInterface;
-extern f32 lbl_803E37C8;
 #pragma scheduling off
 #pragma peephole off
 void appleontree_free(int *obj) {

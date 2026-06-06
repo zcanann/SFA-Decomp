@@ -1579,8 +1579,6 @@ void waveanimator_hitDetect(int *obj) {
     }
     lbl_803DDAF8 = 1;
 }
-extern int objPosToMapBlockIdx(double x, double y, double z);
-extern void *mapGetBlock(int idx);
 extern void *mapBlockFn_800606ec(void *block, int idx);
 extern int mapBlockFn_80060678(void *entry);
 extern void *fn_800606DC(void *block, int idx);

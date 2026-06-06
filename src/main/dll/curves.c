@@ -3190,9 +3190,6 @@ LAB_800e6f44:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803E0668;
-extern f32 lbl_803E066C;
-extern f32 lbl_803E068C;
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
 
 void dll_15_func08(short *curveObj,int *state,uint updateValue,f32 step)

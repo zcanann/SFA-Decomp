@@ -901,15 +901,12 @@ void fn_801534D8(int obj, int state)
 
 extern f32 lbl_803E286C;
 extern f32 lbl_803E2894;
-extern f32 lbl_803E28B0;
 extern f32 lbl_803E28B4;
 extern f32 lbl_803E28B8;
-extern f32 lbl_803E28BC;
 extern f32 lbl_803E28C0;
 extern f32 lbl_803E28C4;
 extern f32 lbl_803E28C8;
 extern f32 lbl_803E28CC;
-extern f32 lbl_803E28D0;
 extern int* gRomCurveInterface;
 extern int lbl_803DBCB8;
 extern f32 timeDelta;
@@ -1126,7 +1123,6 @@ void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
 extern f32 lbl_803E28D4;
 extern f32 lbl_803E28D8;
 extern f32 lbl_803E28F0;
-extern f32 lbl_803E28F4;
 extern f32 lbl_803E2900;
 extern f32 lbl_803E2904;
 extern f32 lbl_803E2908;
@@ -1140,7 +1136,6 @@ extern f32 lbl_803E294C;
 extern f32 lbl_803E2950;
 extern f32 lbl_803E2954;
 extern f32 lbl_803E2958;
-extern int lbl_803DBCB8;
 extern u8 lbl_803DBCC0[8];
 extern int lbl_803DBCC8;
 extern uint countLeadingZeros(uint x);

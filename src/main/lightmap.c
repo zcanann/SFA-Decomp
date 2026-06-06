@@ -2717,8 +2717,6 @@ void FUN_8005e1d8(undefined4 param_1,undefined4 param_2,int param_3)
 extern u32 lbl_8037E0C0[];
 extern s32 lbl_803DCE30;
 extern void sceneDrawTransparentPolys(void);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern int Camera_GetViewMatrix(void);
 extern void PSMTXMultVec(int m, f32 *in, f32 *out);
 #pragma dont_inline on
@@ -2753,7 +2751,6 @@ void renderShadowType3(u8 *obj, u32 b, s32 offset) {
 #pragma dont_inline reset
 
 extern f32 CurrTiming_803DEC20;
-extern f32 displayOffsetH_803DEBFC;
 #pragma scheduling off
 #pragma peephole off
 void fn_8005D3B4(u8 *obj, u8 *model, s32 b) {
@@ -2858,14 +2855,12 @@ void renderObjects(s8 *arg0) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u32 renderFlags;
 extern s8 lbl_803DCEA4;
 extern int lbl_803DCEA8;
 extern void Camera_UpdateProjection(int a, int b);
 extern void Camera_EnableViewYOffset(void);
 extern void Camera_UpdateViewMatrices(void);
 extern void Camera_RebuildProjectionMatrix(void);
-extern int Camera_GetCurrentViewSlot(void);
 extern void playerVecFn_8005a9b0(void);
 extern void updateLights(void);
 extern void sceneDraw(void);
@@ -2898,14 +2893,12 @@ void doNothing_8005D148(void) {}
 void doNothing_8005D14C(void) {}
 
 /* return (lbl & 1<<bit). */
-extern u32 renderFlags;
 u32 getDrawDistanceFlag_8005cd48(void) { return renderFlags & 0x10000; }
 u32 isWidescreen(void) { return renderFlags & 0x8; }
 u32 shouldDrawShadows(void) { return renderFlags & 0x80; }
 u32 shouldDrawClouds(void) { return renderFlags & 0x10; }
 
 /* return (lbl >> bit) & 1 via cntlzw-equivalent (rlwinm; neg; or; srwi). */
-extern u32 renderFlags;
 #pragma scheduling off
 #pragma peephole off
 u32 isOvercast(void) {
@@ -2952,8 +2945,6 @@ void *RomList_GetLoadedPages(void) {
     return gLoadedRomListPages;
 }
 
-extern f32 gMapBlockWorldSize;
-extern f32 fastFloorf(f32 v);
 #pragma scheduling off
 #pragma peephole off
 void mapGetBlockOriginForPos(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z) {
@@ -2968,8 +2959,6 @@ void mapGetBlockOriginForPos(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int lbl_803DCDD0;
-extern int lbl_803DCDD4;
 extern void *gMapBlockLayerTables[];
 #pragma scheduling off
 #pragma peephole off
@@ -3316,9 +3305,6 @@ extern int *Obj_GetActiveModel(int *obj);
 extern void objShadowFn_80062498(int *obj, int p2, int p3, u8 frames);
 extern void objDrawFn_80061654(int *obj, int *model);
 extern void fn_8000F9B4(void);
-extern void Camera_ApplyFullViewport(void);
-extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
-extern int Camera_GetViewMatrix(void);
 extern int *Obj_GetPlayerObject(void);
 extern int playerIsDisguised(int *obj);
 extern void fn_802B4ED8(int *obj, int a, int b);
@@ -3337,7 +3323,6 @@ extern void setupToRenderMapBlock(int *block, void *posMtx);
 extern u32 cloudGetLayerTextureSize(f32 *a, f32 *b);
 extern u32 lbl_803DCE34;
 extern f32 shdwChangeMode_803DEC10;
-extern f32 lbl_803DEBCC;
 extern int Camera_GetInverseViewMatrix(void);
 extern void mapDebugRender(void *p);
 extern void fn_80062894(void);
@@ -3349,15 +3334,11 @@ void getVisibleObjects(s8 *opacity);
 extern void gxTextureFn_80052efc(void);
 extern void perspectiveFn_80129db4(void);
 extern void GXPixModeSync(void);
-extern void Camera_UpdateProjection(int a, int b);
-extern void Camera_UpdateViewMatrices(void);
-extern void Camera_RebuildProjectionMatrix(void);
 extern void *gSHthorntailAnimationInterface;
 extern void *gCloudActionInterface;
 extern void *gSky2Interface;
 extern void *gNewCloudsInterface;
 extern s32 heatEffectIntensity;
-extern f32 lbl_803DEBDC;
 extern void drawSkyStars(void);
 extern u8 lbl_803DCE05;
 extern void screenImageDraw(void);
@@ -3382,7 +3363,6 @@ extern u8 bBlurFilterUseArea;
 extern u8 bBiggerBlurFilter;
 extern void doBlurFilter(f32 a, f32 b, f32 c, u8 d, u8 e);
 extern void doHeatEffect(int v);
-extern void objRender(int a, int b, int c, int d, void *obj, int f);
 extern void renderParticles(void);
 void sceneDrawTransparentPolys(void);
 extern void quakeSpellTextureFn_8016dbf4(void);
@@ -3862,7 +3842,6 @@ extern void shadowCreate(u8 *obj);
 extern void shadowRenderFn_8006b558(u8 *obj);
 extern void renderShadows(int a, int b, int c);
 void sortVisibleObjectKeysDescending(u32 *arr, int n);
-extern F32Pair changed_803DEC08;
 
 #pragma scheduling off
 #pragma peephole off
@@ -4020,13 +3999,7 @@ void sortVisibleObjectKeysDescending(u32 *arr, int n)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern int *Obj_GetActiveModel(int *obj);
 extern void objRenderFn_8003d980(int *obj, int *model);
-extern void renderResetFn_8003fc60(void);
-extern void objShadowFn_80062498(int *obj, int p2, int p3, u8 frames);
-extern void objDrawFn_80061654(int *obj, int *model);
-extern void fn_8000F9B4(void);
-extern u8 framesThisStep;
 
 void objDrawFn_8005da48(int *obj)
 {
@@ -4192,17 +4165,12 @@ void drawFn_8005cf8c(int verts, u8 *indices, int count) {
 #pragma peephole reset
 
 extern void envFxFn_80088884(void);
-extern void *gCloudActionInterface;
-extern void *gSky2Interface;
-extern void *gSHthorntailAnimationInterface;
-extern void *gNewCloudsInterface;
 extern void *gMinimapInterface;
 extern void *lbl_803DCAB0;
 extern int textureAnimFn_80053f2c(void *tex, void *a, void *b);
 extern void loadNextMap(void);
 extern f32 timeDelta;
 extern s32 lbl_803DCE00;
-extern s32 heatEffectIntensity;
 
 #pragma scheduling off
 #pragma peephole off

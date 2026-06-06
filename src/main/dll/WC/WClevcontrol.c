@@ -908,7 +908,6 @@ extern int ObjHits_GetPriorityHitWithPosition(int obj, int *outHit, int *p3, int
 extern int objGetFlagsE5_2(int obj);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void doRumble(f32 val);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void GameBit_Set(int id, int v);
 extern void *gPartfxInterface;
 extern f32 lbl_803E5CB8;
@@ -958,7 +957,6 @@ void SB_CloudRunner_HandlePriorityHit(int obj, u8 *state) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E5C74;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32 *mtx);
@@ -1069,10 +1067,7 @@ void SB_CloudRunner_init(int *obj) {
 extern void setAButtonIcon(int idx);
 extern int padGetStickX(int controller);
 extern int padGetStickY(int controller);
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E5CA0;
-extern f32 lbl_803E5CB8;
 extern f32 lbl_803E5CBC;
 extern f32 lbl_803E5CC0;
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);

@@ -759,7 +759,6 @@ int trickyFlameFn_80142b6c(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int *gGameUIInterface;
 extern u32 lbl_802C21DC[];
 
 #pragma scheduling off
@@ -825,8 +824,6 @@ skip:
 extern f32 lbl_803E23F0;
 extern f32 lbl_803E249C;
 extern int *gPartfxInterface;
-extern char sInWaterMessage[];
-extern char lbl_8031D478[];
 
 #pragma scheduling off
 #pragma peephole off
@@ -1538,7 +1535,6 @@ extern f64 lbl_803E2528;
 extern f32 lbl_803E2454;
 extern f32 lbl_803E2458;
 extern f32 lbl_803E2484;
-extern f32 lbl_803E2524;
 extern f32 lbl_803E2530;
 
 void objAnimFn_801441c0(u8 *obj, u8 *state)

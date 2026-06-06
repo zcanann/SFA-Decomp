@@ -127,12 +127,12 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1,double param_2,double p
   byte *pbVar19;
   char cVar20;
   byte *pbVar21;
-  double extraout_f1;
-  double extraout_f1_00;
-  double extraout_f1_01;
+  double tmpF1a;
+  double tmpF1b;
+  double tmpF1c;
   double dVar22;
-  double extraout_f1_02;
-  double extraout_f1_03;
+  double tmpF1d;
+  double tmpF1e;
   undefined8 uVar23;
   int local_38;
   int local_34 [13];
@@ -143,7 +143,7 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1,double param_2,double p
   pbVar19 = *(byte **)(psVar7 + 0x5c);
   pbVar21 = (byte *)(*(int *)(psVar7 + 0x26) + 0x18);
   bVar18 = 0;
-  dVar22 = extraout_f1;
+  dVar22 = tmpF1a;
   do {
     dVar4 = DOUBLE_803e4d68;
     cVar20 = (char)param_11;
@@ -314,7 +314,7 @@ code_r0x80199a48:
             if (bVar16 == 0) {
 LAB_80199dec:
               iVar10 = ObjGroup_FindNearestObject(0xf,psVar7,(float *)0x0);
-              dVar22 = extraout_f1_00;
+              dVar22 = tmpF1b;
               if (iVar10 != 0) {
                 dVar22 = (double)(**(code **)(*DAT_803dd6d4 + 0x48))(pbVar21[3],iVar10,0xffffffff);
               }
@@ -580,10 +580,10 @@ LAB_80199ef0:
             bVar16 = pbVar21[2];
             if (bVar16 == 2) {
               iVar13 = ObjGroup_FindNearestObject(0x32,iVar10,(float *)0x0);
-              dVar22 = extraout_f1_02;
+              dVar22 = tmpF1d;
               if (iVar13 == 0) {
                 iVar13 = ObjGroup_FindNearestObject(0x31,iVar10,(float *)0x0);
-                dVar22 = extraout_f1_03;
+                dVar22 = tmpF1e;
               }
               if (iVar13 != 0) {
                 dVar22 = (double)(**(code **)(**(int **)(iVar10 + 0x68) + 0x38))(iVar10);
@@ -654,7 +654,7 @@ LAB_80199ef0:
           break;
         case 0x2f:
           iVar10 = ObjGroup_FindNearestObject(0x4c,psVar7,(float *)0x0);
-          dVar22 = extraout_f1_01;
+          dVar22 = tmpF1c;
           if (iVar10 != 0) {
             dVar22 = (double)FUN_8020a908(iVar10,(uint)pbVar21[3] * 0x3c);
           }
@@ -1999,7 +1999,6 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
 #pragma scheduling reset
 
 extern int fn_802972A8(void);
-extern int getArwing(void);
 extern int return1_800202BC(void);
 extern int fn_80198B68(int obj, int p2);
 extern void objSeqFn_801992ec(int obj, int target);

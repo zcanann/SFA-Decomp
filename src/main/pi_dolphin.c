@@ -1637,7 +1637,6 @@ extern void OSRestoreInterrupts(int s);
 extern char sDirBlockTag;
 extern int strncmp(const char *a, const char *b, u32 n);
 extern void *memcpy(void *dst, const void *src, u32 n);
-extern char *sResourceFileNameTable[];
 extern int zlbDecompress(void *dst, int size, int out, void *src);
 extern void DCStoreRange(void *p, u32 n);
 extern u32 ObjModel_GetUnpackedResourceSize(int p, u32 size);
@@ -2639,11 +2638,8 @@ void FUN_80044424(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 extern int lbl_8035F208[];
 extern u32 lbl_8035F3E8[];
 extern char *sMapFileNameTable[];
-extern char sRomlistZlbPathFormat[];
 extern int lbl_803DCC74;
 extern void romListReadCb();
-extern int zlbDecompress(void *dst, int size, int out, void *src);
-extern void DCStoreRange(void *p, u32 n);
 #pragma scheduling off
 #pragma peephole off
 void piRomLoadSection(int param_1,int param_2,int param_3)
@@ -7426,10 +7422,6 @@ int fn_8004B31C(int *param_1, int param_2, int param_3, int param_4, u8 param_5)
     return 0;
 }
 
-extern char sDirBlockTag;
-extern u32 lbl_8035F3E8[];
-extern void *memcpy(void *dst, const void *src, u32 n);
-extern int strncmp(const char *a, const char *b, u32 n);
 void texPreGetMipmap(u32 param_1, int param_2, int *param_3, int *param_4, int param_5, u8 *param_6, int param_7) {
     u32 base = lbl_8035F3E8[0x4f];
     if (base != 0) {
@@ -7453,9 +7445,6 @@ void texPreGetMipmap(u32 param_1, int param_2, int *param_3, int *param_4, int p
     }
 }
 
-extern int OSDisableInterrupts(void);
-extern void OSRestoreInterrupts(int s);
-extern int lbl_803DCC80;
 void tex0GetFrame(int param_1, int param_2, int *param_3, int *param_4, int param_5, u8 *param_6, int param_7) {
     int idx = -1;
     if (lbl_8035F3E8[0x23] != 0 || lbl_8035F3E8[0x4d] != 0) {
@@ -7492,13 +7481,6 @@ void tex0GetFrame(int param_1, int param_2, int *param_3, int *param_4, int para
     }
 }
 
-extern char *sResourceFileNameTable[];
-extern void *mmAlloc(int size, int align, int zone);
-extern void mm_free(void *p);
-extern int DVDOpen(char *fileName, void *fileInfo);
-extern int DVDRead(void *fileInfo, void *addr, int length, int offset);
-extern int DVDClose(void *fileInfo);
-extern void DCStoreRange(void *p, u32 n);
 void tex1GetFrame(u32 param_1, int param_2, int *param_3, int *param_4, int param_5, u8 *param_6, int param_7) {
     int idx = -1;
     if (lbl_8035F3E8[0x20] != 0 || lbl_8035F3E8[0x4b] != 0) {
@@ -7574,13 +7556,10 @@ void tex1GetFrame(u32 param_1, int param_2, int *param_3, int *param_4, int para
 
 extern u32 sMapFileNameIndexRemapTable[];
 extern u8 lbl_803DB5D0;
-extern u8 lbl_803DCD28;
 extern u8 lbl_803DCD31;
 extern f32 lbl_803DCD34;
 extern f32 lbl_803DCD38;
 extern f32 lbl_803DCD3C;
-extern f32 lbl_803DCD40;
-extern f32 lbl_803DCD44;
 
 int mapGetDirIdx(int idx) {
     if (idx >= 0x4b) return 5;
@@ -7640,14 +7619,12 @@ void gxPerfFn_8004a77c(int param_1) {
 }
 #pragma dont_inline reset
 
-extern void *mmAlloc(int size, int align, int zone);
 extern void *lbl_803DCD10;
 void allocSomething32bytes(void) {
     lbl_803DCD10 = mmAlloc(0x20, 0xff, 0);
 }
 
 extern u32 lbl_8035F0A8[];
-extern u32 lbl_8035F3E8[];
 u32 getDataFileSize(int idx) {
     if (lbl_8035F3E8[idx] != 0) {
         return lbl_8035F0A8[idx];
@@ -7668,7 +7645,6 @@ void viFn_8004a56c(int val) {
 }
 #pragma peephole reset
 
-extern void mm_free(void *p);
 void freeAndNull(void **p) {
     if (*p != NULL) {
         mm_free(*p);
@@ -8013,20 +7989,16 @@ extern void gxSetZMode_(int a, int b, int c);
 extern void GXSetAlphaUpdate(u8 v);
 extern void GXFlush(void);
 extern void GXGetFifoPtrs(void *fifo, void **out_g, void **out_p);
-extern int OSDisableInterrupts(void);
-extern void OSRestoreInterrupts(int s);
 extern void Queue_Push(void *q, void *item);
 extern void GXEnableBreakPt(void *p);
 extern void GXSetDrawSync(u16 v);
 extern void GXCopyDisp(void *fb, u8 clear);
-extern void VISetBlack(int black);
 extern void *lbl_803DCCD4;
 extern void *lbl_803DCCD0;
 extern void *lbl_803DCCEC;
 extern void *lbl_803DCCE8;
 extern u8 lbl_803DCCA7;
 extern u16 lbl_803DB5CE;
-extern u8 lbl_803DB5CC;
 extern char lbl_8035F730[];
 #pragma scheduling off
 int GXFlush_(u8 visible, int unused) {
@@ -8115,7 +8087,6 @@ void selectTexture(u8 *tex, int mapId) {
         GXLoadTexObj(base, mapId);
     }
 }
-extern int lbl_803DCC80;
 #pragma scheduling off
 #pragma peephole off
 void loadModelsBin(int a, int *p1c, int *p20, int *p18, int *p4) {
@@ -8153,8 +8124,6 @@ void loadModelsBin(int a, int *p1c, int *p20, int *p18, int *p4) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern char sZlbBlockTag[];
-extern int strncmp(const char *a, const char *b, u32 n);
 #pragma scheduling off
 #pragma peephole off
 void checkLoadBlock(int a, int *pc, int *p8) {
@@ -8423,10 +8392,8 @@ extern IndTexMtx23 lbl_802C1E28;
 extern u8 *lbl_803DCD2C;
 extern int lbl_803DB5F4;
 extern u8 lbl_803DB5F8;
-extern u8 lbl_803DCD68;
 extern f32 Prepared_803DEAD8;
 extern f32 lbl_803DEAE0;
-extern f32 lbl_803DEADC;
 extern int lbl_803DCD7C;
 extern u8 *textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e, int f);
 extern u32 randomGetRange(int min, int max);
@@ -8531,7 +8498,6 @@ extern int lbl_803DEAC0;
 extern int lbl_803DCD74;
 extern int lbl_803DCD70;
 extern int lbl_803DCD6C;
-extern f32 lbl_803DEACC;
 extern void GXSetTevKAlphaSel(int tev, int sel);
 extern void GXSetTevColorS10(int id, void *color);
 extern void GXSetTevKColor(int id, void *color);
@@ -8629,16 +8595,13 @@ extern void mapTextureScrollGetOffset(u8 idx, f32 *x, f32 *y);
 extern void PSMTXIdentity(f32 m[3][4]);
 extern void PSMTXRotRad(f32 m[3][4], int axis, f32 rad);
 extern void GXSetIndTexCoordScale(int ind_stage, int scale_s, int scale_t);
-extern f32 lbl_803DB5F0;
 extern f32 SaveEnd_803DEAD4;
-extern f32 lbl_803DEAC8;
 extern f32 lbl_803DEB04;
 extern f32 lbl_803DEB08;
 extern f32 lbl_803DEB0C;
 extern f32 lbl_803DEB10;
 extern f32 lbl_803DEB14;
 extern f32 lbl_803DEB18;
-extern int lbl_803DCD80;
 void fn_8004DA54(char *p1) {
     f32 mtxf4[3][4];
     f32 mtxc4[3][4];
@@ -9145,10 +9108,6 @@ void textureFn_8004ff20(void *p1) {
         lbl_803DCD6A = lbl_803DCD6A + 1;
     }
 }
-extern int lbl_803DCD70;
-extern int lbl_803DCD6C;
-extern int lbl_803DCD74;
-extern void GXSetTevKColor(int id, void *color);
 void gxTextureFn_8004bf88(void *bufp, u8 flag1, u8 flag2, int *out1, int *out2) {
     u8 *buf = bufp;
     u8 found1 = 0;
@@ -9252,17 +9211,11 @@ void gxTextureFn_8004d5b4(void *p1) {
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
 struct piIndMtx { f32 m[2][3]; };
-extern struct piIndMtx lbl_802C1D50;
 extern u8 lbl_803DB5E8;
-extern int lbl_803DCD7C;
 extern int lbl_8030CEE0[];
 extern f32 lbl_803DEB38;
 extern f32 lbl_803DEB3C;
 extern void *textureIdxToPtr(int idx);
-extern void GXSetIndTexMtx(int id, f32 offset[2][3], int scale_exp);
-extern void GXSetIndTexOrder(int ind_stage, int tex_coord, int tex_map);
-extern void GXSetIndTexCoordScale(int ind_stage, int scale_s, int scale_t);
-extern void GXSetTevIndirect(int tev, int ind, int fmt, int bias, int mtx, int ws, int wt, int addprev, int utclod, int alpha);
 extern void GXSetTevOp(int stage, int mode);
 int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
     struct piIndMtx indmtx;
@@ -9324,10 +9277,8 @@ int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
     return result;
 }
 extern f32 fn_8006C670(void);
-extern f32 lbl_803DEADC;
 extern struct piIndMtx lbl_802C1E10;
 extern f32 lbl_80396820[3][4];
-extern void getTextureFn_8006c5e4(void *out);
 extern void selectReflectionTexture(int id);
 void fn_8004D6D8(void) {
     struct piIndMtx indmtx;
@@ -9375,7 +9326,6 @@ void fn_8004D6D8(void) {
     lbl_803DCD68++;
 }
 extern void fn_8006C540(u8 **out);
-extern int lbl_803DCD6C;
 void fn_8004F380(f32 param_1, int *param_2, f32 *param_3) {
     f32 matA[3][4];
     f32 matB[3][4];
@@ -9615,7 +9565,6 @@ void fn_8004FA30(f32 param_1, int *param_2, f32 *param_3) {
         lbl_803DCD6A = lbl_803DCD6A + 2;
     }
 }
-extern void *Camera_GetInverseViewMatrix(void);
 extern void fn_8006C5B8(void *out);
 void fn_8005011C(int param_1) {
     u8 *local_48;
@@ -9776,7 +9725,6 @@ extern int fn_8006C754(void);
 extern int fn_8006C74C(void);
 extern u8 *Obj_GetPlayerObject(void);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
-extern void GXSetTevKAlphaSel(int tev, int sel);
 extern f32 lbl_803DEAF4;
 extern f32 lbl_803DEAF8;
 extern f32 lbl_803DEAFC;
@@ -9872,9 +9820,7 @@ void fn_8004D230(void) {
     lbl_803DCD6A += 2;
     lbl_803DCD69 += 2;
 }
-extern void newshadows_getReflectionScrollOffsets(f32 *x, f32 *y);
 extern int lbl_803DCD84;
-extern f32 lbl_803DEAE0;
 extern f32 bootThisDol;
 extern f32 lbl_803DEAEC;
 extern f32 lbl_803DEAF0;
@@ -9974,7 +9920,6 @@ extern void fn_80137948(char *fmt, ...);
 extern char sAssetHaltFormat[];
 extern int lbl_8035EF48[];
 extern s16 lbl_803DCC78;
-extern int lbl_803DCC70;
 extern void loadTableFiles(void);
 void loadDataFiles(void) {
     int *ids;
@@ -10042,9 +9987,6 @@ void trickyVoxAllocFn_8004b5d4(int *out) {
     out[1] = out[0] + 0xfe0;
     out[2] = out[1] + 0x7f0;
 }
-extern int DVDOpen(char *fileName, void *fileInfo);
-extern int DVDRead(void *fileInfo, void *addr, int length, int offset);
-extern void *memcpy(void *dst, const void *src, u32 n);
 void *fileLoad(int id) {
     u8 fileInfo[0x3c];
     if (lbl_8035F3E8[id] != 0) {
@@ -10097,7 +10039,6 @@ int fileLoadToBufferOffset(int id, void *buffer, int offset, int size) {
     DCStoreRange(buffer, size);
     return size;
 }
-extern u8 lbl_803DCD30;
 void fn_8004EECC(void) {
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
@@ -10137,8 +10078,6 @@ void fn_8004F080(void) {
     lbl_803DCD6A = lbl_803DCD6A + 3;
 }
 extern void textureFn_8006c75c(int a);
-extern void GXSetTevKColorSel(int tev, int sel);
-extern int lbl_803DCD84;
 void fn_8004D928(void) {
     textureFn_8006c75c(lbl_803DCD8C);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0x24, 0, 0x7d);
@@ -10236,7 +10175,6 @@ extern void OSStartStopwatch(void *sw);
 extern int OSGetCurrentThread(void);
 extern int Queue_GetCount(void *q);
 extern void OSSleepThread(void *q);
-extern void OSRestoreInterrupts(int lvl);
 extern void Camera_ApplyFullViewport(void);
 extern void GXInvalidateVtxCache(void);
 extern void GXInvalidateTexAll(void);
@@ -10252,30 +10190,21 @@ extern void GXInitFifoBase(void *fifo, void *base, u32 size);
 extern void GXSetCPUFifo(void *fifo);
 extern void GXSetGPFifo(void *fifo);
 extern int GXInit(void *base, u32 size);
-extern void Queue_Push(void *q, void *e);
 extern void OSWakeupThread(void *q);
 extern int Queue_Peek(void *q, void *out);
 extern void Queue_Pop(void *q, void *out);
 extern void GXDisableBreakPt(void);
-extern void gxPerfFn_8004a77c(int v);
 extern void THPPlayerPostDrawDone(void);
 extern void GXPeekZ(int x, int y, void *out);
 extern f32 lbl_803DCCC0;
 extern f64 lbl_803DEA80;
-extern u8 gDvdErrorPauseActive;
-extern f32 timeDelta;
-extern f32 oneOverTimeDelta;
-extern u8 framesThisStep;
 extern f32 lbl_803DEA9C;
 extern f32 lbl_803DEAA0;
-extern f32 lbl_803DEA70;
 extern f32 lbl_803DEA74;
-extern f32 lbl_803DEA78;
 extern f32 lbl_803DEA7C;
 extern f32 lbl_803DCCB4;
 extern u8 lbl_803DB411;
 extern int lbl_803DCCDC;
-extern char lbl_8035F730[];
 extern int lbl_803DCCAC;
 extern char lbl_803DCCC4;
 extern int lbl_803DCCA0;
@@ -10434,15 +10363,9 @@ void waitNextFrame(void)
 #pragma scheduling reset
 
 void logGpuHang(void);
-extern u8 lbl_803DCCB0;
-extern void *lbl_803DCCD0;
-extern void *lbl_803DCCD4;
 extern void *lbl_803DCCD8;
 extern void *lbl_803DCCE4;
-extern u8 lbl_803DCCA7;
 extern void *lbl_803DCCCC;
-extern void *lbl_803DCCEC;
-extern void *lbl_803DCCE8;
 #pragma scheduling off
 #pragma peephole off
 void videoSwapFrameBuffers(void)

@@ -2253,7 +2253,6 @@ typedef struct WaterfxCfg {
 extern WaterfxCfg lbl_8039C440;
 
 extern f32 lbl_803DB850; extern f32 lbl_803DB854;
-extern f32 lbl_803E01B8; extern f32 lbl_803E01BC;
 extern f32 lbl_803E01C0; extern f32 lbl_803E01C4;
 extern f32 lbl_803E01C8; extern f32 lbl_803E01CC;
 extern f32 lbl_803E01D0; extern f32 lbl_803E01D4;
@@ -2300,7 +2299,6 @@ extern f32 lbl_803DD408; extern f32 lbl_803DD40C;
 extern f32 lbl_803E0344; extern f32 lbl_803E0348;
 
 extern f32 lbl_803DB860; extern f32 lbl_803DB864;
-extern f32 lbl_803E0220; extern f32 lbl_803E0224;
 extern f32 lbl_803E0228; extern f32 lbl_803E022C;
 extern f32 lbl_803E0230; extern f32 lbl_803E0234;
 extern f32 lbl_803E0238; extern f32 lbl_803E023C;
@@ -4411,8 +4409,6 @@ extern f32 lbl_803E04BC;
 extern f32 lbl_803E04C0;
 extern f32 lbl_803E04C4;
 extern f32 lbl_803E04C8;
-extern u8 framesThisStep;
-extern f32 sin(f32 x);
 extern void vecRotateZXY(void *params, f32 *vec);
 extern int randFn_80080100(int range);
 

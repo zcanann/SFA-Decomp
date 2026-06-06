@@ -290,8 +290,6 @@ void mmsh_shrine_hitDetect(void)
 {
 }
 
-extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
-extern void fn_8011F6D4(int p);
 extern void ModelLightStruct_free(void *p);
 extern void Music_Trigger(int id, int p2);
 extern void objRenderFn_8003b8f4(int p1, undefined4 p2, undefined4 p3, undefined4 p4,

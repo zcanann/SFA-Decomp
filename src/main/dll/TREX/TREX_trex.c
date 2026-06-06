@@ -1723,7 +1723,6 @@ extern f32 Vec_distance(void *a, void *b);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern void ModelLightStruct_free(int* p);
-extern void skyFn_80088c94(int a, int b);
 extern void Music_Trigger(int a, int b);
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 extern f32 lbl_803E5998;
@@ -2062,7 +2061,6 @@ void SB_CloudBall_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern f32 lbl_803E58E8;
 extern f32 lbl_803E58EC;
 extern f32 lbl_803E58F0;
 extern void projectileParticleFxFn_80099660(int *obj, f32 scale, int type);
@@ -2126,11 +2124,8 @@ extern f32 lbl_803E5904;
 extern f64 lbl_803E5908;
 extern f32 lbl_803E58E8_;  // dummy to avoid duplicate
 extern void Obj_FreeObject(int obj);
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E58DC;
 extern f32 lbl_803E58E0;
-extern void *Obj_GetPlayerObject(void);
 #pragma scheduling off
 #pragma peephole off
 void SB_CloudBall_update(int obj)
@@ -2297,10 +2292,7 @@ void SB_KyteCage_init(int *obj, int *params)
 extern int *ObjList_GetObjects(int *out_head, int *out_count);
 extern void buttonDisable(int controller, int mask);
 extern int *objModelGetVecFn_800395d8(int obj, int idx);
-extern int ObjAnim_AdvanceCurrentMove(int obj, f32 b, f32 dt, int a);
-extern f32 lbl_803E5918;
 extern f32 lbl_803E591C;
-extern f32 timeDelta;
 #pragma scheduling off
 #pragma peephole off
 void SB_KyteCage_update(int obj)
@@ -2422,9 +2414,6 @@ extern f32 lbl_803E5930;
 extern f32 lbl_803E5934;
 extern f32 lbl_803E5938;
 extern f32 lbl_803E593C;
-extern f32 timeDelta;
-extern u8 framesThisStep;
-extern void Obj_FreeObject(int obj);
 #pragma scheduling off
 #pragma peephole off
 void SB_MiniFire_update(int obj)
@@ -2522,7 +2511,6 @@ void SB_ShipGunBroke_update(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern int* gTitleMenuControlInterfaceCopy;
 
 #pragma scheduling off
 #pragma peephole off
@@ -2717,7 +2705,6 @@ void shop_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern int* gObjectTriggerInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -2762,7 +2749,6 @@ void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
 #pragma peephole reset
 #pragma scheduling reset
 /* shop_getItem* helpers — table lookup */
-extern u8 lbl_80327FD0[];
 #pragma peephole off
 #pragma scheduling off
 int shop_getItemPrice(int p, int idx)
@@ -2820,8 +2806,6 @@ void shop_init(int obj, int objDef)
 /* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
  * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and
  * unset.  (i.e. open by default, gated when slot != -1.) */
-extern void* Obj_GetPlayerObject(void);
-extern int GameBit_Get(int);
 #pragma scheduling off
 #pragma peephole off
 int shop_isItemAvailable(int p, int idx)

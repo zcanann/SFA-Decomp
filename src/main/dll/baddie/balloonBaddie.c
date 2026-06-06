@@ -734,21 +734,17 @@ int modelFn_80124794(int obj, int param2, int param3)
 #pragma scheduling reset
 
 extern void *Obj_GetPlayerObject(void);
-extern int getTrickyObject(void);
 extern void GXSetScissor(int a, int b, int c, int d);
 extern void hudDrawTimedElement(int obj, void *p);
 extern void drawViewFinderHud(void);
 extern int getHudHiddenFrameCount(void);
 extern void textureFree(void);
-extern void *textureLoadAsset(int idx);
 extern void drawTexture(void *p, f32 a, f32 b, int c, int d);
 extern int *gCameraInterface;
 extern u8 pauseMenuState;
 extern int hudTextures[];
 extern u8 lbl_803A9398[];
 extern s16 gTrickyHudIconTextureIds[];
-extern int gTrickyHudItemMask;
-extern int gTrickyHudActionMask;
 extern s16 gTrickyHudCachedIconIndex;
 extern void *gTrickyHudCachedIconTexture;
 extern f32 lbl_803E2018;
@@ -856,7 +852,6 @@ extern void Camera_SetFovY(f32 fov);
 extern int Obj_GetActiveModel(int obj);
 extern void objRender(int p1, int p2, int p3, int p4, int obj, int p6);
 extern void GXSetViewport(f32 x, f32 y, f32 w, f32 h, f32 nearz, f32 farz);
-extern void GXSetScissor(int x, int y, int w, int h);
 extern f32 sin(f32 x);
 extern s8 cMenuState;
 extern u8 framesThisStep;

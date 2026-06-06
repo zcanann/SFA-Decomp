@@ -2242,9 +2242,6 @@ void link_levcontrol_init(int *obj) {
 
 extern u8 lbl_803238D8[];
 extern MapEventInterface **gMapEventInterface;
-extern void fn_80088870(u8 *a, u8 *b, u8 *c, u8 *d);
-extern void envFxActFn_800887f8(int id);
-extern void getEnvfxAct(int a, int b, int c, int d);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern int *getTrickyObject(void);
 extern void fn_80138908(int *tricky, int mode);
@@ -2966,7 +2963,6 @@ void imspacethruster_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E4814;
 
 #pragma scheduling off
 #pragma peephole off

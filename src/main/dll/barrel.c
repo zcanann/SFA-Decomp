@@ -1067,10 +1067,7 @@ void fn_80162FC0(void) {
 #pragma dont_inline reset
 void grimble_initialise(void) { fn_80162FC0(); }
 
-extern void *gBaddieControlInterface;
-extern void *gPlayerInterface;
 extern f32 lbl_803E2F30;
-extern void objRenderFn_8003b8f4(f32);
 
 #pragma scheduling off
 #pragma peephole off

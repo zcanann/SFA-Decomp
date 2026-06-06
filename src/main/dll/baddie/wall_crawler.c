@@ -354,7 +354,7 @@ void fn_8012F04C(undefined8 param_1,double param_2,double param_3,undefined8 par
   int iVar4;
   undefined4 uVar5;
   undefined4 uVar6;
-  undefined8 extraout_f1;
+  undefined8 timeDeltaF;
   undefined8 uVar7;
   float local_38;
   float local_34[2];
@@ -365,7 +365,7 @@ void fn_8012F04C(undefined8 param_1,double param_2,double param_3,undefined8 par
   uVar7 = FUN_80286840();
   uVar1 = (undefined4)((ulonglong)uVar7 >> 0x20);
   uVar5 = (undefined4)uVar7;
-  uVar7 = extraout_f1;
+  uVar7 = timeDeltaF;
   iVar2 = FUN_80017a98();
   iVar3 = FUN_8020a6fc();
   iVar4 = FUN_80017674();
@@ -1274,7 +1274,6 @@ extern s16 lbl_803DD79E;
 extern s8  lbl_803DD7A0;
 extern s16 lbl_803DD7B6;
 extern u8  lbl_803DD7BA;
-extern s16 lbl_803DD88C;
 extern s16 lbl_803DD88E;
 extern s16 lbl_803DD890;
 extern s16 lbl_803DD892;

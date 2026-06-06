@@ -3936,7 +3936,6 @@ LAB_801396fc:
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-extern u32 lbl_803DD938;
 extern u8  lbl_803DD988;
 extern u32 lbl_803DD9B8;
 extern u32 lbl_803DD9BC;
@@ -4027,8 +4026,6 @@ extern u8    lbl_803DD970;
 extern void* lbl_803DD974;
 extern void* lbl_803DD96C;
 extern void* gameTextGet(s32);
-extern void* textureLoadAsset(s32);
-extern void  textureFree(void*);
 
 /* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
  * buffer at lbl_803DD9D4 and walk the 19-slot table at lbl_803A9F98
@@ -4303,22 +4300,15 @@ int trickyFn_80138f14(u8* obj)
 }
 #pragma peephole reset
 
-extern u8    lbl_803A9FE4[0x34];
-extern f32   lbl_803E22F8;
 extern f32   lbl_803E2344;
 extern f32   lbl_803E2348;
 extern f32   lbl_803E234C;
 extern f32   lbl_803E2350;
-extern f32   lbl_803E2318;
 extern f32   lbl_803DD9C8;
-extern f32   lbl_803DD9B4;
-extern f32   lbl_803DD9B0;
 extern void  PSMTXTrans(void*, f32, f32, f32);
 
 extern void* lbl_803DBBC8[2];
 extern void  Obj_FreeObject(void*);
-extern void* minimapTexture;
-extern void* lbl_803DD940;
 
 extern f32   lbl_803E23B8;
 extern f32   lbl_803DD9D8;
@@ -4405,7 +4395,6 @@ int fn_80138920(u8* obj, int arg1, int arg2)
 
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int obj, int b, int c, int d, int e);
-extern f32 lbl_803E2208;
 extern f32 lbl_803E2284;
 extern f32 lbl_803E2288;
 extern f32 lbl_803E228C;
@@ -4490,7 +4479,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objRender(int a, int b, int c, int d, void *obj, int f);
 extern int *Obj_GetActiveModel(void *obj);
 extern u8 lbl_803DD92A;
-extern int lbl_803DD934;
 extern f32 lbl_803E2278;
 extern f32 lbl_803E227C;
 extern f32 lbl_803E2280;
@@ -4585,14 +4573,7 @@ void titleScreenPositionElements(f32 a, f32 b)
 #pragma scheduling reset
 
 extern void* lbl_803DD960;
-extern void* lbl_803DD974;
-extern void* lbl_803DD96C;
-extern u8    lbl_803DD970;
 /* lbl_803DD940 declared later as void* */
-extern u8    lbl_803DD990;
-extern u8    lbl_803DD991;
-extern s8    lbl_803DBC08;
-extern s8    lbl_803DBC09;
 extern f32   lbl_803E2408;
 
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
@@ -4660,12 +4641,8 @@ void trickyImpress(u8* obj)
 
 extern void* lbl_803DD984;
 extern void* lbl_803DD980;
-extern void* minimapTexture;
-extern void* lbl_803DD92C;
 extern f32   lbl_803DD97C;
 extern f32   lbl_803E22E0;
-extern u8    lbl_803DD993;
-extern u8    lbl_803DD9AA;
 extern u16   lbl_803DD994;
 extern u16   lbl_803DD996;
 extern u16   lbl_803DD998;
@@ -4820,9 +4797,6 @@ void fn_801388D0(s16 a, u32 b, u32 c, u32 d) {
 /* EN v1.0 0x801334E0  size: 60b  Gate: when lbl_803DD944 == 2 (s8 compare)
  * and lbl_803DBBB0 != 0, latch lbl_803DD928 = 5 and return 1; else
  * return 0 without touching the latch. */
-extern s8 lbl_803DD944;
-extern u8 lbl_803DBBB0;
-extern u8 lbl_803DD928;
 #pragma peephole off
 #pragma scheduling off
 u8 fn_801334E0(void)
@@ -4992,7 +4966,6 @@ extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23E4;
-extern f32 lbl_803E23E8;
 extern f32 lbl_803E23EC;
 extern f32 lbl_803E23F0;
 extern f32 lbl_803E23F4;
@@ -5077,9 +5050,6 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void* gameTextGetBox(int boxId);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
 extern f32 lbl_803DD99C;
 extern u8  lbl_803DD9A0;
 extern f32 lbl_803E231C;
@@ -5165,7 +5135,6 @@ void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void GXSetScissor(int x, int y, int w, int h);
 
 #pragma scheduling off
 #pragma peephole off
@@ -5258,7 +5227,6 @@ extern f32 lbl_803E2384;
 extern f32 lbl_803E2388;
 extern f32 lbl_803DBC0C;
 extern u8  lbl_803A9F50[0x48];
-extern int *gCameraInterface;
 extern void Sfx_StopFromObject(int obj, int id);
 void fn_80134870(int obj, u8 *arr);
 
@@ -5607,7 +5575,6 @@ extern int loadUiDll(int dllId);
 extern void TitleMenu_setSelection(int sel);
 extern void streamFn_8000a380(int a, int b, int c);
 extern void gameTextFn_80016810(int textId, int a, int b);
-extern int* gCameraInterface;
 typedef struct { u16 a; u16 b; } CreditEntry;
 extern CreditEntry lbl_8031CE90[];
 
@@ -5658,7 +5625,6 @@ void creditsStart_(void)
 #pragma peephole reset
 
 extern void CMenu_SetFadeCounter(int v);
-extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern int lbl_803DD978;
 extern int lbl_803DBBF8;
 extern int lbl_803DBBFC;
@@ -5744,7 +5710,6 @@ typedef struct {
 } CreditsPage;
 
 extern CreditsPage lbl_8031C620[];
-extern f32 lbl_803E22A8;
 extern f32 lbl_803E22AC;
 extern f32 lbl_803E22B0;
 extern f32 lbl_803E22B4;
@@ -5812,21 +5777,14 @@ int Credits_frameStart(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 fn_80293E80(f32);
-extern f32 sin(f32);
-extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32 *color);
 extern u32 lbl_803E2200;
-extern s16 lbl_803DD930;
 extern f32 lbl_803DD94C;
-extern f32 lbl_803E2220;
-extern f32 lbl_803E2224;
 extern f32 lbl_803E2260;
 extern f32 lbl_803E2264;
 extern f32 lbl_803E2268;
 extern f32 lbl_803E226C;
 extern f32 lbl_803E2270;
 extern f32 lbl_803E2274;
-extern f32 lbl_803E2278;
 
 #pragma scheduling off
 #pragma peephole off
@@ -6051,32 +6009,17 @@ int fn_80136A40(int p1, int c)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int Camera_GetViewportYOffset(void);
-extern int objIsCurModelNotZero(int obj);
-extern void Sfx_StopFromObject(int obj, int id);
 extern int getButtonsHeld(int p);
 extern int getButtonsJustPressed(int p);
 extern f32 powfCoreFast(f32 base, f32 exp);
 extern int ObjGroup_FindNearestObject(int type, int obj, f32 *distOut);
 extern s16 *Camera_GetCurrentViewSlot(void);
 extern int getAngle(f32 dx, f32 dz);
-extern int *gCameraInterface;
 extern int *gGameUIInterface;
-extern u8 pauseMenuState;
 extern u8 lbl_803DD945;
-extern u8 lbl_803DD928;
 extern u8 lbl_803DD929;
-extern u8 lbl_803DD92A;
-extern u8 lbl_803DBBB0;
 extern s8 lbl_803DBBB1;
-extern u8 lbl_803DD7BA;
-extern s8 lbl_803DD944;
-extern int lbl_803DD934;
-extern s16 lbl_803DBA6E;
 extern int lbl_803DBBE8;
-extern f32 lbl_803DBBB4;
-extern f32 lbl_803DBBB8;
-extern f32 lbl_803DBBBC;
 extern f32 lbl_803DBBD4;
 extern f32 lbl_803DBBD8;
 extern f32 lbl_803DBBDC;
@@ -6265,10 +6208,8 @@ void fn_8013396C(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32 *color);
 extern void GXSetTevColor(int id, int *color);
 extern void setTextColor(int p);
-extern u32 lbl_803DDA08;
 extern u16 lbl_803DDA14;
 extern u16 lbl_803DDA16;
 extern u16 lbl_803DBC10;
@@ -6476,7 +6417,6 @@ extern u32 __cvt_fp2unsigned(f32 x);
 extern u8 lbl_803DD9C0;
 extern f32 lbl_803E22F0;
 extern f32 lbl_803E22F4;
-extern f32 lbl_803E22F8;
 extern f32 lbl_803E22FC;
 extern f32 lbl_803E2300;
 extern f32 lbl_803E2304;
@@ -6624,7 +6564,6 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u16 *lbl_803DCCE8;
 extern u16 *debugFrameBuffer;
 extern u16  lbl_803DDA40_u;
 extern char lbl_803DBC18;

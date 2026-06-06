@@ -596,7 +596,6 @@ void immultiseq_initialise(void) {}
 
 extern int immultiseq_SeqFn(int* obj, int* anim, u8* buf);
 extern int seqobject_SeqFn(int* obj, int* anim, u8* buf);
-extern uint GameBit_Get(int eventId);
 
 #pragma scheduling off
 #pragma peephole off
@@ -699,9 +698,7 @@ extern const char lbl_80321208[];
 extern int GameBit_Set(int eventId, int value);
 extern int warpToMap(int id, int flags);
 extern int **gObjectTriggerInterface;
-extern int seqobject_SeqFn(int* obj, int* anim, u8* buf);
 extern int seqobj2_SeqFn(int* obj, int* anim, u8* buf);
-extern int immultiseq_SeqFn(int* obj, int* anim, u8* buf);
 
 #define SEQOBJECT_STATE_OPEN 0x01
 #define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02

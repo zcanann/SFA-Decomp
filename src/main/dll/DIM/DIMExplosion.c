@@ -76,7 +76,6 @@ void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 void dimbarrier_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4898); }
 #pragma peephole reset
 
-extern u32 GameBit_Get(int id);
 #pragma scheduling off
 #pragma peephole off
 void dimsnowball1c2_init(int obj, u8 *p) {

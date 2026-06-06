@@ -2403,8 +2403,6 @@ void mapBlockFn_80059c2c(u8* outFlags) {
 #pragma scheduling reset
 
 /* 136b 5-plane view-frustum sphere visibility test. */
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803DEBCC;
 extern char gViewFrustumPlanes[];
 
@@ -2468,7 +2466,6 @@ void loadMapForCameraPos(float x, float y, float z) {
 /* 80b current map block lookup. */
 extern int lbl_803DB648;
 extern void* lbl_803DCEA0;
-extern void* gLoadedRomListPages[];
 
 #pragma scheduling off
 void* mapBlockFn_800592e4(void) {
@@ -2526,11 +2523,8 @@ void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, i
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 gMapBlockWorldSize;
 extern s8 lbl_803DB624;
 extern int lbl_803DCE78;
-extern int* gMapEventInterface;
-extern f32 fastFloorf(f32 v);
 extern int mapCoordsToId(int x, int z, int layer);
 extern int getDataFileSize(int kind);
 extern void getTabEntry(int base, int kind, int offset, int size);
@@ -2585,7 +2579,6 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int gMapBlockLayerTables[5];
 extern s16* lbl_803DCE94;
 extern u8 lbl_803DCE98;
 extern u8* lbl_803DCE8C;
@@ -2676,7 +2669,6 @@ extern _PlaneDirPack sPlayerFrustumPlaneDirs;
 extern _ScalePack sPlayerFrustumPlaneScales;
 extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 PostCB_803DEBF4;
-extern int* Obj_GetPlayerObject(void);
 extern int* Camera_GetCurrentViewSlot(void);
 extern f32* Camera_GetInverseViewRotationMatrix(void);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
@@ -2740,7 +2732,6 @@ void playerVecFn_8005a9b0(void)
 
 extern int* lbl_803DCE9C;
 extern void setMapBlockFlag(void);
-extern void OSReport(const char* fmt, ...);
 extern char sTrackLoadBlockOverrunError[];
 
 #pragma scheduling off
@@ -3057,7 +3048,6 @@ void mapInitSetRects(s16 *rect, u8 *bitmap, int p3, int p4, int idx)
 
 extern void Obj_UpdateWorldTransform(void);
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
-extern u8 lbl_80386648[];
 
 #pragma scheduling off
 #pragma peephole off
@@ -4354,7 +4344,6 @@ extern void clearForceLoadImmediately(void);
 extern void loadModelAndAnimTabs(void);
 extern int getCurrentDataFile(int id);
 extern void setShadowFlag_803db658(int v);
-extern void gameTextLoadDir(int dir);
 extern char sTrackPiLockedFormat[];
 extern int lbl_803DCE88;
 extern int lbl_803DCE1C;

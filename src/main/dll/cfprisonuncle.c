@@ -1876,10 +1876,7 @@ u32 MagicPlant_getObjectTypeId(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] +
 void StayPoint_init(u16 *obj) { u32 v; v = *(u16*)((char*)obj + 0xb0); v |= 0x4000; *(u16*)((char*)obj + 0xb0) = (u16)v; }
 #pragma peephole reset
 
-extern void Obj_FreeObject(int obj);
 extern void objRenderFn_8003b8f4(int obj, float arg);
-extern f32 lbl_803E3858;
-extern f32 lbl_803E38B0;
 
 #pragma scheduling off
 #pragma peephole off
@@ -2316,8 +2313,6 @@ void duster_update(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E385C;
-extern void *gMapEventInterface;
 
 #pragma scheduling off
 #pragma peephole off

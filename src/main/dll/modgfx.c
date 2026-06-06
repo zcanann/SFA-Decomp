@@ -1303,12 +1303,12 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefine
                                   undefined4 param_4,undefined4 param_5)
 {
   undefined4 uVar1;
-  ushort extraout_r4;
+  ushort setupValue;
   
   uVar1 = FUN_80286840();
   FUN_800033a8((int)&gExpgfxSpawnConfig,0,EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
-  DAT_8039cb50 = (undefined)extraout_r4;
-  DAT_8039cb3c = extraout_r4 & 0xff;
+  DAT_8039cb50 = (undefined)setupValue;
+  DAT_8039cb3c = setupValue & 0xff;
   DAT_8039cb24 = lbl_803E00B0;
   DAT_8039cb28 = lbl_803E00B0;
   DAT_8039cb2c = lbl_803E00B0;

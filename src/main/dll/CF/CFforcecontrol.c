@@ -837,7 +837,6 @@ void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 #pragma peephole reset
 
 /* Drift-recovery: add new fns with v1.0 names. */
-extern void setScreenTransitionPause(int v);
 extern void setPendingMapLoad(int v);
 extern void removeButtonObject(int* obj);
 extern void* Obj_GetActiveModel(int* obj);

@@ -189,9 +189,7 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
 extern f32 lbl_803E244C;
 extern f32 lbl_803E2448;
 extern f32 lbl_803E23F8;
-extern f32 lbl_803E2424;
 extern f32 lbl_803E2450;
-extern f32 timeDelta;
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern void RomCurve_stepClamped(int state, f32 dt);
 
@@ -607,7 +605,6 @@ int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags)
 #pragma peephole reset
 
 extern void *gRomCurveInterface;
-extern u32 GameBit_Get(int bit);
 
 static void *skeetla_validateRouteEntry(void *entry)
 {
@@ -969,7 +966,6 @@ typedef struct SkeetlaParticleSpawnArgs {
 #define SKEETLA_PARTICLE_SPAWN_FLAGS 0x200001
 #define SKEETLA_PARTICLE_RANDOM_RATE 4
 
-extern u32 randomGetRange(int min, int max);
 extern void *gPartfxInterface;
 
 /* skeetla_spawnLinkedSparks  addr=0x8013ADFC  size=0x1E4  linkage=global */
@@ -1153,7 +1149,6 @@ extern uint FUN_80017690();
 extern double FUN_80017708();
 extern double FUN_80017714();
 extern int FUN_80017730();
-extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern int FUN_80017b00();
 extern int ObjGroup_FindNearestObject();

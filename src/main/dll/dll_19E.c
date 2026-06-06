@@ -138,7 +138,6 @@ void dfsh_objcreator_update(int obj)
  */
 extern undefined4 *gModgfxInterface;
 extern void *lbl_803DDBB8;
-extern void Resource_Release(void *handle);
 extern void textureFree(void *tex);
 #pragma scheduling off
 #pragma peephole off

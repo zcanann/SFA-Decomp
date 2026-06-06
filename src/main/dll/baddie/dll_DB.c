@@ -1092,7 +1092,6 @@ void linkDrawFn_80130484(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern u8 lbl_803DD911;
 #pragma scheduling off
 #pragma peephole off
 void Link_func0F(void)
@@ -1105,8 +1104,6 @@ void Link_func0F(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern void *textureLoadAsset(int id);
-extern void textureFree(void *p);
 
 #pragma scheduling off
 #pragma peephole off

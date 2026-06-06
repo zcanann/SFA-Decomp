@@ -27,7 +27,7 @@ void sc_totemstrength_sortCompletionGameBits(void)
   ushort uVar2;
   int iVar3;
   uint uVar4;
-  undefined2 extraout_r4;
+  undefined2 lastBitValue;
   byte bVar5;
   byte bVar6;
   ushort local_28 [20];
@@ -37,7 +37,7 @@ void sc_totemstrength_sortCompletionGameBits(void)
     uVar4 = GameBit_Get((uint)*(ushort *)(iVar3 + (uint)bVar6 * 2));
     local_28[bVar6] = (ushort)uVar4;
   }
-  local_28[3] = extraout_r4;
+  local_28[3] = lastBitValue;
   for (bVar6 = 0; bVar6 < 3; bVar6 = bVar6 + 1) {
     for (bVar5 = 0; bVar5 < 3; bVar5 = bVar5 + 1) {
       uVar1 = local_28[bVar5 + 1];

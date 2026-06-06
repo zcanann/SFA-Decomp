@@ -459,7 +459,6 @@ extern MmRegion gMmRegionTable[];
 #pragma dont_inline reset
 #pragma peephole reset
 
-extern void *mmAlloc(int size, int type, int flag);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -771,7 +770,6 @@ void mmFree(void *p) {
     OSReport(sMmAllocFreeMessageBlock, p);
 }
 
-extern void *gMmStoreArray[];
 extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
 extern char sMmMemoryStoreMessageBlock[];
 
@@ -852,12 +850,6 @@ void mmInit(void) {
 }
 
 extern char sMmSpawnedUnalignedSlotWarning[];
-extern int lbl_803DCB1C;
-extern char sMemStatsFormat[];
-extern int lbl_803DCB20;
-extern int lbl_803DCB24;
-extern int lbl_803DCB28;
-extern int lbl_803DCB2C;
 
 int printHeapStats(void) {
     OSReport(sMemStatsFormat,
@@ -1208,7 +1200,6 @@ void copyToCache(void *dst, void *src, u32 count) {
 
 #pragma pop
 
-extern void DCFlushRange(void *addr, u32 nBytes);
 extern void LCStoreBlocks(void *destAddr, void *srcTag, u32 numBlocks);
 
 #pragma push
@@ -1218,7 +1209,6 @@ extern void LCStoreBlocks(void *destAddr, void *srcTag, u32 numBlocks);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void OSReport(char *fmt, ...);
 
 #pragma dont_inline on
 void memcpyToCache(void *dst, void *src, u32 count) {
@@ -1276,7 +1266,6 @@ void memcpyToCache(void *dst, void *src, u32 count) {
 #pragma peephole off
 #pragma pop
 
-extern void OSReport(char *fmt, ...);
 
 #pragma peephole off
 #pragma scheduling off

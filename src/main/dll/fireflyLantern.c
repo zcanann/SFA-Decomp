@@ -13,7 +13,7 @@ extern void fn_8014C678(int obj, int *state, f32 *vec, f32 a, f32 b, f32 c, int 
 extern void fn_8014CD1C(int obj, int *state, int a, f32 x, f32 y, int b);
 extern void fn_8014CF7C(int obj, int *state, f32 x, f32 z, int a, int b);
 extern void fn_80154328(int obj, int *state);
-extern void fn_8015536C(f32 a, f32 b, f32 *out, f32 *axis);
+extern void fn_8015536C(f32 *out, f32 *axis, f32 a, f32 b);
 extern void PSVECSubtract(float *, float *, float *);
 extern f32 PSVECDotProduct(float *, float *);
 extern void PSVECCrossProduct(float *, float *, float *);
@@ -157,11 +157,13 @@ void fn_80154C24(int obj, int state)
     *(float *)(state + 0x328) = fVar1;
     *(float *)(state + 0x32c) = *(float *)(obj + 0x10);
     uVar2 = randomGetRange(0, 0xff);
-    *(char *)(state + 0x33a) = (u8)uVar2;
+    *(u8 *)(state + 0x33a) = uVar2;
     *(undefined *)(state + 0x33b) = 0;
     *(float *)(state + 0x330) = lbl_803E29F4;
     uVar2 = randomGetRange(0x32, 0x4b);
-    *(float *)(state + 0x2fc) = (f32)(s32)uVar2 * lbl_803E29F8;
+    fVar1 = (f32)(s32)uVar2;
+    fVar1 = lbl_803E29F8 * fVar1;
+    *(float *)(state + 0x2fc) = fVar1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -193,8 +195,7 @@ void fn_80154D0C(int obj, int state, u16 *outAngle, float *outDistance)
     PSVECSubtract(vecA, (f32 *)(obj + 0xc), tmpA);
     d = PSVECDotProduct(tmpA, (f32 *)(state + 0x344));
     vecA[0] = *(f32 *)(state + 0x344) * d + *(f32 *)(obj + 0xc);
-    objY = *(f32 *)(obj + 0x10);
-    vecA[1] = *(f32 *)(state + 0x348) * d + objY;
+    vecA[1] = *(f32 *)(state + 0x348) * d + (objY = *(f32 *)(obj + 0x10));
     vecA[2] = *(f32 *)(state + 0x34c) * d + *(f32 *)(obj + 0x14);
     axisA[0] = lbl_803E2A00;
     axisA[1] = lbl_803E2A04;
@@ -216,8 +217,7 @@ void fn_80154D0C(int obj, int state, u16 *outAngle, float *outDistance)
     PSVECSubtract(vecB, targetPos, tmpB);
     d = PSVECDotProduct(tmpB, (f32 *)(state + 0x344));
     vecB[0] = *(f32 *)(state + 0x344) * d + targetPos[0];
-    targetY = targetPos[1];
-    vecB[1] = *(f32 *)(state + 0x348) * d + targetY;
+    vecB[1] = *(f32 *)(state + 0x348) * d + (targetY = targetPos[1]);
     vecB[2] = *(f32 *)(state + 0x34c) * d + targetPos[2];
     axisB[0] = lbl_803E2A00;
     axisB[1] = lbl_803E2A04;
@@ -231,8 +231,8 @@ void fn_80154D0C(int obj, int state, u16 *outAngle, float *outDistance)
     }
     dx = dx - d;
     targetY = objY - targetY;
-    angle = getAngle(-targetY, dx);
-    delta = (angle & 0xffff) - (*(s16 *)(obj + 2) & 0xffff);
+    angle = getAngle(-targetY, dx) & 0xffff;
+    delta = angle - (*(s16 *)(obj + 2) & 0xffff);
     if (delta > 0x8000) {
         delta = delta - 0xffff;
     }
@@ -246,7 +246,7 @@ void fn_80154D0C(int obj, int state, u16 *outAngle, float *outDistance)
     *outDistance = sqrtf(dx * dx + targetY * targetY);
 }
 
-uint fn_80154FB4(f32 maxDistance, short *obj, int state, uint turnTime)
+uint fn_80154FB4(short *obj, int state, uint turnTime, f32 maxDistance)
 {
     f32 moveTarget[3];
     f32 moveDelta[3];
@@ -261,6 +261,7 @@ uint fn_80154FB4(f32 maxDistance, short *obj, int state, uint turnTime)
     f32 axisB[3];
     f32 objY;
     f32 targetY;
+    f32 dy;
     f32 dxA;
     f32 dxDiff;
     f32 d;
@@ -277,8 +278,7 @@ uint fn_80154FB4(f32 maxDistance, short *obj, int state, uint turnTime)
     PSVECSubtract(vecA, (f32 *)(obj + 6), tmpA);
     d = PSVECDotProduct(tmpA, (f32 *)(state + 0x344));
     vecA[0] = *(f32 *)(state + 0x344) * d + *(f32 *)(obj + 6);
-    objY = *(f32 *)(obj + 8);
-    vecA[1] = *(f32 *)(state + 0x348) * d + objY;
+    vecA[1] = *(f32 *)(state + 0x348) * d + (objY = *(f32 *)(obj + 8));
     vecA[2] = *(f32 *)(state + 0x34c) * d + *(f32 *)(obj + 10);
     axisA[0] = lbl_803E2A00;
     axisA[1] = lbl_803E2A04;
@@ -300,8 +300,7 @@ uint fn_80154FB4(f32 maxDistance, short *obj, int state, uint turnTime)
     PSVECSubtract(vecB, targetPos, tmpB);
     d = PSVECDotProduct(tmpB, (f32 *)(state + 0x344));
     vecB[0] = *(f32 *)(state + 0x344) * d + targetPos[0];
-    targetY = targetPos[1];
-    vecB[1] = *(f32 *)(state + 0x348) * d + targetY;
+    vecB[1] = *(f32 *)(state + 0x348) * d + (targetY = targetPos[1]);
     vecB[2] = *(f32 *)(state + 0x34c) * d + targetPos[2];
     axisB[0] = lbl_803E2A00;
     axisB[1] = lbl_803E2A04;
@@ -314,10 +313,10 @@ uint fn_80154FB4(f32 maxDistance, short *obj, int state, uint turnTime)
         d = (targetPos[2] - *(f32 *)(state + 0x364)) / crossB[2];
     }
     dxDiff = dxA - d;
-    targetY = objY - targetY;
-    angle = getAngle(-targetY, dxDiff);
+    dy = objY - targetY;
+    angle = getAngle(-dy, dxDiff) & 0xffff;
     rot = obj[1];
-    delta = (angle & 0xffff) - (rot & 0xffff);
+    delta = angle - (rot & 0xffff);
     if (delta > 0x8000) {
         delta = delta - 0xffff;
     }
@@ -333,18 +332,21 @@ uint fn_80154FB4(f32 maxDistance, short *obj, int state, uint turnTime)
     obj[2] = 0x4000;
     obj[1] = *obj;
     *obj = (s16)getAngle(*(f32 *)(state + 0x34c), -*(f32 *)(state + 0x344));
-    fVar1 = sqrtf(dxDiff * dxDiff + targetY * targetY);
+    fVar1 = sqrtf(dxDiff * dxDiff + dy * dy);
     if (fVar1 > maxDistance) {
         f32 ratio = lbl_803E2A04 / fVar1;
         dxDiff = maxDistance * (dxDiff * ratio);
-        targetY = maxDistance * (targetY * ratio);
+        dy = maxDistance * (dy * ratio);
     }
-    fn_8015536C(dxA - dxDiff, objY - targetY, moveTarget, (f32 *)(state + 0x344));
+    dxA -= dxDiff;
+    fVar1 = objY - dy;
+    fn_8015536C(moveTarget, (f32 *)(state + 0x344), dxA, fVar1);
     PSVECSubtract(moveTarget, (f32 *)(obj + 6), moveDelta);
     objMove(obj, moveDelta[0], moveDelta[1], moveDelta[2]);
-    *(f32 *)(obj + 0x12) = lbl_803E2A00;
-    *(f32 *)(obj + 0x14) = lbl_803E2A00;
-    *(f32 *)(obj + 0x16) = lbl_803E2A00;
+    fVar1 = lbl_803E2A00;
+    *(f32 *)(obj + 0x12) = fVar1;
+    *(f32 *)(obj + 0x14) = fVar1;
+    *(f32 *)(obj + 0x16) = fVar1;
     if (angleStep < 0) {
         angleStep = -angleStep;
     }

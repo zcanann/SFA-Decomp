@@ -3443,7 +3443,6 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
     }
 }
 
-extern u8 framesThisStep;
 
 void fn_8003B228(int obj, int p2)
 {

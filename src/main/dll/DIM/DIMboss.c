@@ -88,7 +88,6 @@ extern undefined4 ModelLightStruct_free();
 extern undefined4 Obj_FreeObject();
 extern undefined4 Obj_GetPlayerObject();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern undefined8 ObjGroup_RemoveObject();
 extern void objRenderFn_8003b8f4(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,
                                  undefined4 param_4,undefined4 param_5,f32 scale);
 extern undefined4 timeOfDayFn_80055000();

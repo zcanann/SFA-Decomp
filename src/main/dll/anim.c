@@ -4206,7 +4206,6 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma scheduling reset
 
 extern int *gExpgfxInterface;
-extern int *gPlayerInterface;
 extern int lbl_803AD0F4[];
 extern int GCRobotBlast_SeqFn(int, int, int);
 #pragma scheduling off
@@ -4267,7 +4266,6 @@ int DrakorEnergy_setScale(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x8) 
 #pragma scheduling reset
 
 /* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
-extern f32 lbl_803E62A8;
 #pragma peephole off
 #pragma scheduling off
 int fn_80200460(int p1, int p2)
@@ -4288,7 +4286,6 @@ int fn_80200460(int p1, int p2)
 #pragma scheduling reset
 
 /* baddie anim update: fires vtable[0x13] when flag set */
-extern void **gBaddieControlInterface;
 #pragma peephole off
 #pragma scheduling off
 int fn_8020032C(int p1, int p2)
@@ -4367,7 +4364,6 @@ void dfplevelcontrol_initialise(void) {
     p[8] = 0;
 }
 
-extern void Obj_FreeObject(int obj);
 void dfpobjcreator_free(int obj, int flag) {
     int *state = *(int **)((char *)obj + 0xB8);
     if (flag == 0) {
@@ -4673,7 +4669,6 @@ void dfplevelcontrol_init(int obj, int param2)
 #pragma scheduling reset
 
 extern f32 lbl_803E62F4;
-extern f32 lbl_803E62A8;
 
 #pragma peephole off
 #pragma scheduling off

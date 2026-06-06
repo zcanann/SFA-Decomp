@@ -1041,8 +1041,6 @@ extern void *lbl_8039A828[];
 extern void *lbl_803DD1C8;
 extern void *lbl_803DD1C4;
 extern void *lbl_803DD1A0;
-extern u8 lbl_803DD1C0;
-extern f32 lbl_803DF1A0;
 extern f32 lbl_803DF1A4;
 extern f32 lbl_803DB760;
 extern f32 lbl_803DB764;
@@ -1119,9 +1117,7 @@ extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void fogFn_80070404(f32 a, f32 b);
 extern void setTextColor(int unused, int a, int b, int c, int d);
 extern f32 lbl_803DF14C;
-extern f32 lbl_803DF108;
 extern f32 lbl_803DF148;
-extern f32 lbl_803DF118;
 extern s8 lbl_803DB750;
 
 #pragma push
@@ -1247,7 +1243,6 @@ typedef struct ObjCurveKey {
 #pragma peephole off
 #pragma pop
 
-extern void getEnvfxActImmediately(void *obj, void *target, int effectId, int flags);
 
 #pragma push
 #pragma scheduling off
@@ -1406,7 +1401,6 @@ extern int getSaveGameLoadStatus(void);
 #pragma pop
 
 extern char sSnowFreeSnowCloudInvalidCloudId[];
-extern void mm_free(void *p);
 
 /*
  * --INFO--
@@ -1487,8 +1481,6 @@ typedef struct WindSource {
 extern WindSource lbl_8039A848[];
 extern s16 renderModeSetOrGet(int mode);
 extern void normalize(f32 *x, f32 *y, f32 *z);
-extern f32 lbl_803DF1A4;
-extern f32 lbl_803DF1DC;
 
 /*
  * --INFO--
@@ -2327,7 +2319,6 @@ void titleScreenDrawFn_80093db4(void) {
 #pragma pop
 
 extern void Sfx_PlayAtPositionFromObject(int obj, int sfx, f32 x, f32 y, f32 z);
-extern u8 framesThisStep;
 extern char lbl_8030F670[];
 extern f32 lbl_803DF228;
 extern f32 lbl_803DF22C;

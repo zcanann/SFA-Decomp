@@ -896,7 +896,6 @@ extern int  Sfx_IsPlayingFromObjectChannel(int *obj, int channel);
 extern void Sfx_StopObjectChannel(int *obj, int channel);
 extern void Sfx_KeepAliveLoopedObjectSound(int *obj, int id);
 
-extern int *gGameUIInterface;
 extern u8  lbl_803DBF00;
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;

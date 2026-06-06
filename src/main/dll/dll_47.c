@@ -149,7 +149,6 @@ extern void *lbl_803A8658[10];
 extern FrontendSaveSlot *saveFileSelect_saveSlotsBase;
 extern FrontendSaveSlot *saveFileSelect_saveSlots;
 extern int lbl_803DB9FC;
-extern u8 lbl_803DB424;
 extern char sFrontendStringFormat;
 extern char lbl_803DBA20;
 extern int saveSelect_getInfo(void);
@@ -554,7 +553,6 @@ extern TitleMenuControl *gMapEventInterface;
 extern void *lbl_803DD498;
 extern char sFrontendFoxName;
 extern char sSaveGameBinPathFormat[];
-extern void *lbl_803A8658[10];
 
 /*
  * --INFO--

@@ -1392,10 +1392,7 @@ void cflevelcontrol_release(void) {}
 void cflevelcontrol_initialise(void) {}
 
 extern void storeZeroToFloatParam(void* p);
-extern void s16toFloat(void* p, int duration);
 extern int CFLevelControl_SeqFn(int p1, int p2, void *p3);
-extern void GameBit_Set(int eventId, int value);
-extern uint GameBit_Get(int eventId);
 extern void objSetSlot(void *obj, int resourceId);
 extern s16 lbl_80323008[];
 extern int *gMapEventInterface;
@@ -1522,7 +1519,6 @@ void cfmagicwall_update(int obj) {
 
 extern int ObjList_FindObjectById(int objectId);
 extern void fn_8017C294(int obj);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void getEnvfxActImmediately(void *obj, void *target, int animId, int flags);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern void unlockLevel(int a, int b, int c);
@@ -1751,12 +1747,9 @@ extern int slidingdoor_SeqFn(u8* obj, int unused, u8* data);
 extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
 extern f32 lbl_803E4428;
-extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int atan2i(int y, int x);
-extern void GameBit_Set(int eventId, int value);
-extern uint GameBit_Get(int eventId);
 
 /* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
@@ -1951,9 +1944,7 @@ void slidingdoor_init(u8* obj, u8* data) {
 #pragma scheduling reset
 
 /* CFLevelControl_SeqFn: loop through u8 array at +0x81 of param 3; on element==1, do game state setup. */
-extern void GameBit_Set(int eventId, int value);
 extern void loadMapAndParent(int mapId);
-extern void unlockLevel(int a, int b, int c);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int dirIdx, int b);
 #pragma scheduling off
@@ -1979,8 +1970,6 @@ int CFLevelControl_SeqFn(int p1, int p2, void *p3) {
 #pragma scheduling reset
 
 /* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
-extern uint GameBit_Get(int eventId);
-extern void storeZeroToFloatParam(void *p);
 #pragma scheduling off
 #pragma peephole off
 void cfforcefield_init(s16 *obj, void *data) {
@@ -2002,9 +1991,7 @@ void cfforcefield_init(s16 *obj, void *data) {
 
 extern void Obj_TransformLocalPointByWorldMatrix(void *obj, void *state, f32 *out, int flags);
 extern void fn_80065684(double x, double y, double z, void *obj, f32 *out, int flags);
-extern f32 timeDelta;
 extern f32 lbl_803E43F0;
-extern f32 lbl_803E43F4;
 extern f32 lbl_803E4400;
 extern f32 lbl_803E4404;
 extern f32 lbl_803E4408;

@@ -1934,7 +1934,6 @@ void player_updateCurve(int* obj, int* state, f32 t)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 sqrtf(f32 x);
 extern f32 lbl_803E0574;
 extern f32 lbl_803E0578;
 extern f32 lbl_803E057C;
@@ -1984,14 +1983,11 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 sin(f32 x);
-extern f32 fn_80293E80(f32 x);
 extern u8 lbl_803DD434;
 extern f32 lbl_803E05A4;
 extern f32 lbl_803E05A8;
 extern f32 lbl_803E05AC;
 extern f32 lbl_803E05B0;
-extern f32 lbl_803E0570;
 
 #pragma scheduling off
 #pragma peephole off
@@ -2145,8 +2141,6 @@ void Checkpoint_remove(int *obj) {
     }
 }
 #pragma opt_common_subs reset
-extern int getAngle(f32 a, f32 b);
-extern f32 lbl_803E0584;
 extern f32 timeDelta;
 #pragma scheduling off
 #pragma peephole off
@@ -2229,8 +2223,6 @@ void player_applyVelocityStep(int *p, int *ctx, f32 t) {
     objMove(p, *(f32 *)((char *)p + 0x24) * t, *(f32 *)((char *)p + 0x28) * t,
             *(f32 *)((char *)p + 0x2c) * t);
 }
-extern float sqrtf(float x);
-extern f32 lbl_803E0578;
 extern f32 lbl_803E0590;
 extern f32 lbl_803E0594;
 extern s16 lbl_803DD44C;
@@ -2275,8 +2267,6 @@ void fn_800D8414(int *obj, int *ctx) {
         *(u8 *)((char *)ctx + 0x34b) = (u8)(4 - diff / 0x4000);
     }
 }
-extern f32 lbl_803E0574;
-extern f32 lbl_803E057C;
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
@@ -2314,7 +2304,6 @@ void player_getExtraSize(int *a, int *ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 s
     }
 }
 #pragma opt_common_subs reset
-extern u8 lbl_803DD434;
 extern f32 lbl_803E05A0;
 #pragma scheduling off
 #pragma peephole off

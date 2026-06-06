@@ -311,7 +311,6 @@ void dll_92_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
 #pragma scheduling reset
 #pragma peephole reset
 extern u8 lbl_80317260[];
-extern undefined4 *gModgfxInterface;
 extern f32 lbl_803E1240;
 extern f32 lbl_803E1244;
 extern f32 lbl_803E1248;
@@ -399,22 +398,11 @@ extern f32 lbl_803E1304;
 extern f32 lbl_803E1308;
 extern f32 lbl_803E130C;
 extern f32 lbl_803E1310;
-extern f32 lbl_803E1318;
-extern f32 lbl_803E131C;
-extern f32 lbl_803E1320;
-extern f32 lbl_803E1324;
-extern f32 lbl_803E132C;
-extern f32 lbl_803E1330;
-extern f32 lbl_803E1334;
-extern f32 lbl_803E1340;
-extern f32 lbl_803E1344;
 extern f32 lbl_803E134C;
 extern f32 lbl_803E1354;
-extern f32 lbl_803E1358;
 extern f32 lbl_803E135C;
 extern f32 lbl_803E1360;
 extern f32 lbl_803E1364;
-extern f32 lbl_803E1368;
 #pragma peephole off
 #pragma scheduling off
 void dll_94_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,f32 *param_6
@@ -493,23 +481,7 @@ void dll_94_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
 }
 #pragma scheduling reset
 #pragma peephole reset
-extern u8 lbl_80317528[];
 extern u8 lbl_803175E8[];
-extern f32 lbl_803E1298;
-extern f32 lbl_803E129C;
-extern f32 lbl_803E12A0;
-extern f32 lbl_803E12A4;
-extern f32 lbl_803E12A8;
-extern f32 lbl_803E12AC;
-extern f32 lbl_803E12B0;
-extern f32 lbl_803E12B4;
-extern f32 lbl_803E12B8;
-extern f32 lbl_803E12C0;
-extern f32 lbl_803E12C8;
-extern f32 lbl_803E12CC;
-extern f32 lbl_803E12D0;
-extern f32 lbl_803E12D4;
-extern f32 lbl_803E12D8;
 #pragma peephole off
 #pragma scheduling off
 void dll_95_func03(int param_1,int param_2,int param_3)

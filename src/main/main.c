@@ -1454,7 +1454,6 @@ int dbegg_func0B(int obj, f32 *v) {
 #pragma scheduling reset
 
 extern u32 Resource_Acquire(int id, int mode);
-extern u32 lbl_803DDCD8;
 #pragma scheduling off
 #pragma peephole off
 void vfplavastar_initialise(void) {

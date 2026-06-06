@@ -167,7 +167,6 @@ void pathcam_buildWindowSamples(int *nodes, f32 *o1, f32 *o2, f32 *o3, f32 *o4,
 
 extern char sPathCamNeedTwoControlPointsError[];
 extern void debugPrintf(const char *fmt, ...);
-extern void *gRomCurveInterface;
 
 /*
  * --INFO--
@@ -252,7 +251,6 @@ void pathcam_findTaggedNodeWindow(u8 *node, int *out, int tag)
 
 extern float sqrtf(float x);
 extern f32 lbl_803E18A8;
-extern f32 lbl_803E1888;
 #pragma scheduling off
 #pragma peephole off
 f32 fn_8010AC48(int *obj, f32 px, f32 py, f32 pz) {

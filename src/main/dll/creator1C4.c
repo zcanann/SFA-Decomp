@@ -326,7 +326,6 @@ extern void hitDetectFn_80097070(int *obj, f32 e, int a, int b, int c, int d);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int v);
 extern void *Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void *setup, int a, int b, int c, void *d);
-extern f32 timeDelta;
 extern f32 lbl_803E504C;
 extern f32 lbl_803E5050;
 extern f32 lbl_803E5054;

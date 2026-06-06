@@ -38,9 +38,9 @@ void dll_21B_free(int obj) {
 #pragma peephole off
 #pragma scheduling off
 void dll_21B_init(int *obj, u8 *init) {
-    int *inner = *(int **)((char *)obj + 0xb8);
+    Dll21BState *inner = *(Dll21BState **)((char *)obj + 0xb8);
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
-    *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
+    inner->gameBit = *(s16 *)((char *)init + 0x1e);
     *(u16 *)((char *)obj + 0xb0) |= 0x6000;
 }
 #pragma scheduling reset

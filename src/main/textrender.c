@@ -597,7 +597,6 @@ extern u8 *lbl_803DC974;
 extern int lbl_803DC978;
 extern int lbl_803DC97C;
 extern f32 timeDelta;
-extern f32 lbl_803DE704;
 extern f32 lbl_803DE71C;
 extern char lbl_803DB3D4[];
 extern char *sMapDirectoryNameTable[];
@@ -902,8 +901,6 @@ extern u8 framesThisStep;
 #pragma pop
 
 /* Global game-state / text accessors. */
-extern int curLanguage;
-extern void *curGameTextDir;
 
 #pragma dont_inline on
 int getGameState(void);
@@ -935,9 +932,6 @@ void *getCurGameText(void) {
 #pragma peephole reset
 
 /* Simple field/global accessors. */
-extern int lbl_803DC9E8;
-extern void *gameTextDrawFunc;
-extern u8 *gameTextFonts;
 
 #pragma dont_inline on
 int gameTextGetCharset(void) {
@@ -1043,7 +1037,6 @@ extern void *textureLoadAsset(int assetId);
 extern void gameTextInitFn_8001c794(void);
 extern void gameTextLoadDir(int dirId);
 extern u8 lbl_803DC980;
-extern f32 timeDelta;
 
 #pragma push
 #pragma scheduling off
@@ -1200,7 +1193,6 @@ void gameTextResetCursor(int flags) {
     }
 }
 
-extern u8 lbl_802C7400[];
 extern void *lbl_803DC9CC;
 
 void gameTextSetWindow(u8 *param_1) {
@@ -1252,12 +1244,9 @@ void gameTextSetCursor(s16 x, s16 y, int flags) {
 #pragma pop
 
 typedef f32 Mtx[3][4];
-extern int lbl_803DC9F0;
 extern int lbl_803DB3E0;
-extern int lbl_803DCA04;
 extern s16 lbl_802C9EE8[];
 extern int lbl_803DC9FC;
-extern void *lbl_803DC9F8;
 extern u8 lbl_803DC9F7;
 extern u8 lbl_803DC9F6;
 extern u8 lbl_803DC9F5;
@@ -1353,7 +1342,6 @@ int subtitleIsActive(void) {
 #pragma dont_inline reset
 #pragma peephole reset
 
-extern void *mmAlloc(int size, int type, int flag);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -1401,11 +1389,6 @@ extern void *memcpy(void *dst, const void *src, int n);
 #pragma dont_inline reset
 #pragma pop
 
-extern u8 lbl_803DC9A7;
-extern u8 lbl_803DC9A6;
-extern u8 lbl_803DC9A5;
-extern u8 lbl_803DC9A4;
-extern u8 lbl_802C7400[];
 
 #pragma push
 #pragma scheduling off
@@ -1456,17 +1439,9 @@ void gameTextSetWindowStrPos(int idx, int x, int y) {
 }
 #pragma pop
 
-extern void textureFree(void *tex);
-extern void *textureLoadAsset(int asset);
 extern void *lbl_8033BE54[];
 extern void *lbl_8033B240[];
 extern int lbl_803DCA14;
-extern int lbl_803DC9FC;
-extern void *lbl_803DC9F8;
-extern u8 lbl_803DC9F7;
-extern u8 lbl_803DC9F6;
-extern u8 lbl_803DC9F5;
-extern u8 lbl_803DC9F4;
 
 #pragma push
 #pragma scheduling off
@@ -1592,7 +1567,6 @@ void subtitleStart(int x) {
 
 #pragma pop
 
-extern void DCFlushRange(void *addr, u32 nBytes);
 
 #pragma push
 #pragma scheduling off
@@ -1749,16 +1723,11 @@ typedef struct {
 #define GAMETEXT_LANGUAGE_COUNT 6
 #define GAMETEXT_SEQUENCE_SOURCE_ID 1
 
-extern u8 lbl_80339980[];
 extern int lbl_803DC9D0;
 extern int lbl_803DC9D4;
-extern int lbl_803DC9D8;
 extern int lbl_803DC9E0;
-extern char *sMapDirectoryNameTable[];
-extern char *sLanguageNameTable[][2];
 extern char sGameTextMapPathFormat[];
 extern char sGameTextSequencePathFormat[];
-extern int sprintf(char *s, const char *format, ...);
 extern void setFileInfo(void *fileInfo);
 extern void *loadFileByPathAsync(char *path, void *fileInfo, int flags, void *callback);
 extern void DVDCancelAsync(void *fileInfo, void *callback);
@@ -1766,26 +1735,12 @@ extern void setLanguageFn_8001ad64(void *slot);
 extern void textDisplayFn_800168dc(int a, int b);
 extern void gameTextFn_8001658c(int a, int b, int c);
 extern void gameTextRenderStrs(int a, int b);
-extern void hudDrawRect(int x0, int y0, int x1, int y1, void *color);
 extern void Sfx_StopFromObject(int obj, int sfxId);
-extern f32 lbl_803DE704;
-extern f32 lbl_803DE71C;
-extern char lbl_803DB3D4[];
-extern int lbl_803DB3C8;
-extern int lbl_803DC99C;
 extern int lbl_803DC984;
-extern int lbl_803DC988;
-extern int lbl_803DC98C;
 extern u8 lbl_803DC990;
 extern u8 lbl_803DC991;
 extern u8 lbl_803DC992;
-extern void *lbl_803DC9CC;
 extern u8 *lbl_803DC9C4;
-extern int lbl_803DC9BC;
-extern int lbl_803DC97C;
-extern u8 *lbl_803DC974;
-extern int lbl_803DC978;
-extern u8 lbl_803DC980;
 extern int lbl_803DB378;
 extern void gameTextLoadGraphicsFn_8001a918(void);
 
@@ -3337,9 +3292,6 @@ void gameTextInitFn_8001c794(void) {
 #pragma peephole off
 #pragma pop
 
-extern int lbl_803DCA18;
-extern int lbl_803DCA08;
-extern int lbl_803DCA10;
 extern f32 lbl_803DE730;
 extern f32 lbl_803DE734;
 int GameText_CountPrintableChars(u8 *str);
