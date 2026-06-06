@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DB/DBbonedust.h"
+#include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
@@ -3755,7 +3756,8 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 loadUiDll(1);
                 break;
             case 0x19:
-                (**(void (**)(void))((char *)(*gMapEventInterface) + 0x28))();
+                ((MapEventInterface *)*gMapEventInterface)->finishCurrentEvent(
+                    (MapEventInterface *)*gMapEventInterface);
                 break;
             case 0x1c:
                 fn_80295CF4(obj, 0);
@@ -3854,7 +3856,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 hudFn_8011f38c(0);
                 break;
             case 0x2a:
-                if ((*(u8 (*)(int))*(int *)((char *)(*gMapEventInterface) + 0x40))(0xb) == 7) {
+                if (((MapEventInterface *)*gMapEventInterface)->getMode(0xb) == 7) {
                     getEnvfxActImmediately(obj, obj, 0x1fb, 0);
                     getEnvfxActImmediately(obj, obj, 0x1ff, 0);
                     getEnvfxActImmediately(obj, obj, 0x249, 0);
@@ -6854,7 +6856,8 @@ void playerUpdate(int obj)
             playerProcessQueuedItemCommand(obj, inner);
             if (((ByteFlags *)((char *)inner + 0x3f3))->b20 != 0 &&
                 (*(int (*)(void))(*(int *)(*gScreenTransitionInterface + 0x14)))() != 0) {
-                (*(void (*)(void))(*(int *)(*gMapEventInterface + 0x28)))();
+                ((MapEventInterface *)*gMapEventInterface)->finishCurrentEvent(
+                    (MapEventInterface *)*gMapEventInterface);
             }
             if (((ByteFlags *)((char *)inner + 0x3f3))->b20 == 0 &&
                 (*(int *)((char *)inner + 0x310) & 1) != 0) {
@@ -11712,7 +11715,7 @@ void objLoadPlayerFromSave(int obj)
     *(u16 *)((char *)inner + 0x81a) =
         (u8)(*(int (*)(int))(*(int *)(*gMapEventInterface + 0x74)))(*gMapEventInterface);
     Obj_SetActiveModelIndex(obj, *(s16 *)((char *)inner + 0x81a));
-    me = (*(int (*)(int))(*(int *)(*gMapEventInterface + 0x90)))(*gMapEventInterface);
+    me = (int)((MapEventInterface *)*gMapEventInterface)->getWarpPos();
     *(s16 *)((char *)obj + 0) = (s16)(*(s8 *)((char *)me + 0xc) << 8);
     *(s16 *)((char *)inner + 0x478) = *(s16 *)((char *)obj + 0);
     *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)obj + 0);

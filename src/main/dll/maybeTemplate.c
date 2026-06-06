@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/maybeTemplate.h"
+#include "main/mapEventTypes.h"
 
 
 #pragma peephole off
@@ -540,7 +541,7 @@ extern f32 lbl_803E1FC4;
 extern f32 lbl_803E1FC8;
 
 #define PMDS_MAP_EVENT_GET_STATUS() \
-  ((u8 *(*)(void))(*(u32 *)((u8 *)*gMapEventInterface + 0x94)))()
+  ((MapEventInterface *)*gMapEventInterface)->getProgressPtr()
 #define PMDS_SCREEN_GET_FADE() \
   ((f32 (*)(void))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x18)))()
 #define PMDS_CAMERA_GET_STATE() \

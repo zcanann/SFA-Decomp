@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/transporter.h"
+#include "main/mapEventTypes.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068f8();
@@ -1798,8 +1799,8 @@ void WarpPoint_update(int *obj) {
     }
     if (*(u8 *)(def + 0x1f) != 0 && *(u8 *)((char *)state + 0xd) == 0 && lbl_803DCEB8 > -1 &&
         lbl_803DCEB8 == *(s8 *)(def + 0x19)) {
-        (*(void (*)(f32 *, int, int, int))*(int *)(*gMapEventInterface + 0x1c))(
-            (f32 *)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
+        ((MapEventInterface *)*gMapEventInterface)->triggerEvent((int)(player + 0xc), *(s16 *)player,
+                                                                 0, getCurMapLayer());
         *(u8 *)((char *)state + 0xd) = 1;
     }
     switch (*(s8 *)(def + 0x1d)) {
@@ -1814,8 +1815,8 @@ void WarpPoint_update(int *obj) {
                 *(u32 *)(player + 0x30) == *(u32 *)((char *)obj + 0x30)) {
                 if (*(s16 *)((char *)obj + 0x46) == 0x27e) {
                     GameBit_Set(0xd53, 1);
-                    (*(void (*)(f32 *, int, int, int))*(int *)(*gMapEventInterface + 0x1c))(
-                        (f32 *)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
+                    ((MapEventInterface *)*gMapEventInterface)->triggerEvent(
+                        (int)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
                 }
                 (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(state[2], obj, -1);
                 GameBit_Set(0xd53, 0);

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMlogfire.h"
+#include "main/mapEventTypes.h"
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
@@ -1049,11 +1050,12 @@ void ccgasventcontrol_update(int obj)
         }
         break;
     case 4:
-        (*(void (*)(void))(*(int *)(*gMapEventInterface + 0x28)))();
+        ((MapEventInterface *)*gMapEventInterface)->finishCurrentEvent(
+            (MapEventInterface *)*gMapEventInterface);
         break;
     case 5: {
         int player = Obj_GetPlayerObject();
-        (*(void (*)(int, int, int, int))(*(int *)(*gMapEventInterface + 0x1c)))(player + 0xc, *(s16 *)player, 1, 0);
+        ((MapEventInterface *)*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
         *(u8 *)ex = 6;
         break;
     }
