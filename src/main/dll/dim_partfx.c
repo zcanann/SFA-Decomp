@@ -2564,10 +2564,10 @@ s32 Checkpoint_func0F(PartFxItem *p)
 /* Find item in lbl_803DD418 array whose rank equals target_rank. */
 PartFxItem *Checkpoint_func10(s32 target_rank)
 {
-    s32 i;
+    s32 i = 0;
     PartFxItem **outer = (PartFxItem **)lbl_803DD418;
     s32 n = lbl_803DD414;
-    for (i = 0; i < n; i++) {
+    for (; i < n; i++) {
         PartFxItem *cur = *outer;
         s32 rank = 1;
         PartFxItem **inner = (PartFxItem **)lbl_803DD418;
@@ -4716,12 +4716,12 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       cfg.f60 = 0xff;
       cfg.f44 = 0x80100;
       cfg.f48 = 0x4010020;
+      cfg.f58 = (u16)(param_3[3] >> 1);
+      cfg.f5a = (u16)(param_3[3] >> 1);
+      cfg.f5c = (u16)(param_3[3] >> 1);
       cfg.f4c = (uint)param_3[3];
-      cfg.f58 = (ushort)((int)cfg.f4c >> 1);
-      cfg.f50 = cfg.f4c;
-      cfg.f54 = cfg.f4c;
-      cfg.f5a = cfg.f58;
-      cfg.f5c = cfg.f58;
+      cfg.f50 = (uint)param_3[3];
+      cfg.f54 = (uint)param_3[3];
     }
     break;
   case 0x7ae:
@@ -4888,8 +4888,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       cfg.f38 = *(f32 *)(param_3 + 4) * (f32)(s32)randomGetRange(0xffffffec,0x14);
       cfg.f3c = *(f32 *)(param_3 + 4) * (lbl_803E0310 * (f32)(s32)randomGetRange(0x5a,100));
       cfg.f60 = randomGetRange(0x9b,0xff);
-      cfg.f08 = randomGetRange(1,0x14);
-      cfg.f08 = param_3[2] + cfg.f08;
+      cfg.f08 = param_3[2] + randomGetRange(1,0x14);
       if (param_3[1] != 0) {
         cfg.f44 = 0x80080000;
       }
@@ -5371,12 +5370,12 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       cfg.f60 = 0xff;
       cfg.f44 = 0x20080100;
       cfg.f48 = 0x4010020;
+      cfg.f58 = (u16)(param_3[3] >> 1);
+      cfg.f5a = (u16)(param_3[3] >> 1);
+      cfg.f5c = (u16)(param_3[3] >> 1);
       cfg.f4c = (uint)param_3[3];
-      cfg.f58 = (ushort)((int)cfg.f4c >> 1);
-      cfg.f50 = cfg.f4c;
-      cfg.f54 = cfg.f4c;
-      cfg.f5a = cfg.f58;
-      cfg.f5c = cfg.f58;
+      cfg.f50 = (uint)param_3[3];
+      cfg.f54 = (uint)param_3[3];
     }
     break;
   case 0x7d1:
@@ -5431,8 +5430,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       cfg.f28 = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f2c = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f3c = lbl_803E0430 * (f32)(s32)randomGetRange(10,0x14);
-      cfg.f08 = randomGetRange(1,0x28);
-      cfg.f08 = param_3[1] + cfg.f08;
+      cfg.f08 = param_3[1] + randomGetRange(1,0x28);
       cfg.f42 = param_3[3];
       cfg.f60 = 0xff;
       cfg.f44 = 0x480104;
@@ -5448,8 +5446,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       cfg.f28 = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f2c = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f3c = lbl_803E0430 * (f32)(s32)randomGetRange(10,0x14);
-      cfg.f08 = randomGetRange(1,0x28);
-      cfg.f08 = param_3[1] + cfg.f08;
+      cfg.f08 = param_3[1] + randomGetRange(1,0x28);
       cfg.f42 = param_3[3];
       cfg.f60 = 0xff;
       cfg.f44 = 0x1480104;
@@ -5465,8 +5462,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       cfg.f28 = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f2c = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f3c = lbl_803E0430 * (f32)(s32)randomGetRange(10,0x14);
-      cfg.f08 = randomGetRange(1,0x28);
-      cfg.f08 = param_3[1] + cfg.f08;
+      cfg.f08 = param_3[1] + randomGetRange(1,0x28);
       cfg.f42 = param_3[3];
       cfg.f60 = 0xff;
       cfg.f44 = 0x48010c;
@@ -5482,8 +5478,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       cfg.f28 = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f2c = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f3c = lbl_803E0430 * (f32)(s32)randomGetRange(10,0x14);
-      cfg.f08 = randomGetRange(1,0x28);
-      cfg.f08 = param_3[1] + cfg.f08;
+      cfg.f08 = param_3[1] + randomGetRange(1,0x28);
       cfg.f42 = param_3[3];
       cfg.f60 = 0xff;
       cfg.f44 = 0x40480104;
@@ -5576,8 +5571,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       cfg.f28 = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f2c = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f3c = ((f32)param_3[2] / lbl_803E0444) * (lbl_803E033C * (f32)(s32)randomGetRange(5,100));
-      cfg.f08 = randomGetRange(1,0x28);
-      cfg.f08 = param_3[1] + cfg.f08;
+      cfg.f08 = param_3[1] + randomGetRange(1,0x28);
       cfg.f60 = randomGetRange(0x20,0x40);
       cfg.f60 = *param_3 + cfg.f60;
       cfg.f42 = 0x605;
@@ -6410,8 +6404,7 @@ LAB_800d20d4:
       cfg.f28 = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f2c = *(f32 *)(param_3 + 4) * (lbl_803E042C * (f32)(s32)randomGetRange(0xffffff9c,100));
       cfg.f3c = lbl_803E0430 * (f32)(s32)randomGetRange(10,0x14);
-      cfg.f08 = randomGetRange(1,0x28);
-      cfg.f08 = param_3[1] + cfg.f08;
+      cfg.f08 = param_3[1] + randomGetRange(1,0x28);
       cfg.f42 = 0xdf;
       cfg.f60 = 0xff;
       cfg.f44 = 0x480100;
