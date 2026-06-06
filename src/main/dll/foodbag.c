@@ -1320,8 +1320,8 @@ void dll_81_func03(int param_1,int param_2,int param_3,uint param_4)
   FbBuf buf;
   u8 *base = (u8 *)(int)lbl_80315548;
   f32 sy = lbl_803E0E78;
-  FbCmd *e;
   FbCmd *p;
+  FbCmd *e;
   if (param_2 == 0 || param_2 == 2 || param_2 == 0x1e) {
     *(s16 *)(base + 0x1fa) = 0xc;
   } else if (param_2 == 1 || param_2 == 3) {
@@ -1544,6 +1544,7 @@ void dll_83_func03(int param_1,int param_2,int param_3,uint param_4)
 {
   FbBuf buf;
   u8 *base = (u8 *)(int)lbl_80315998;
+  int *base32 = (int *)base;
   FbCmd *e = buf.entries;
 
   e[0].layer = 0; e[0].flags = 0x9; e[0].tex = base + 0x1c8; e[0].mode = 0x2;
@@ -1616,7 +1617,7 @@ void dll_83_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E0EE4 + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf,0,0x24,(u8 *)(int)lbl_80315998,0x10,base + 0x168,*(int *)((base + param_2 * 4) + 0x2dc),0);
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,0x24,(u8 *)(int)lbl_80315998,0x10,base + 0x168,base32[param_2 + 0xb7],0);
 }
 
 /*
