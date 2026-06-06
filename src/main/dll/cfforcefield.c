@@ -1,4 +1,5 @@
 #include "main/dll/cfforcefield.h"
+#include "main/game_object.h"
 #include "main/dll/cfforcefield_state.h"
 
 
@@ -78,10 +79,10 @@ void largecrate_init(int obj, u8 *initData)
   ((CfForcefieldState *)state)->unkA = (short)(r3rand + LARGECRATE_RANDOM_DELAY_BASE);
   ((CfForcefieldState *)state)->unkC = LARGECRATE_DEFAULT_COUNTDOWN;
   ((CfForcefieldState *)state)->unk12 = (u8)*(short *)(initData + 0x1a);
-  *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | LARGECRATE_OBJECT_FLAGS);
+  ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | LARGECRATE_OBJECT_FLAGS);
   *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
 
-  id = *(short *)(obj + 0x46);
+  id = ((GameObject *)obj)->anim.seqId;
   if (id == LARGECRATE_VARIANT_A) {
     ((CfForcefieldState *)state)->unk11 = (u8)constArrA.entries[((CfForcefieldState *)state)->unk11];
     ((CfForcefieldState *)state)->unk14 = LARGECRATE_VARIANT_A_SFX_A;
@@ -98,9 +99,9 @@ void largecrate_init(int obj, u8 *initData)
   fr = (float)(int)r3rand;
   fr = lbl_803E39E8 + fr;
   *(float *)(state + 0x1c) = fr;
-  *(float *)(state + 0x24) = *(float *)(obj + 0xc);
+  *(float *)(state + 0x24) = ((GameObject *)obj)->anim.localPosX;
 
-  if (*(short *)(obj + 0x46) == LARGECRATE_VARIANT_C) {
+  if (((GameObject *)obj)->anim.seqId == LARGECRATE_VARIANT_C) {
     ((CfForcefieldState *)state)->unk28 = 0;
   }
   else {
@@ -156,12 +157,12 @@ int objHitboxFn_801843c0(int obj)
 
   state = *(u8 **)(obj + 0x54);
   if (state != 0) {
-    endPoints[0] = *(float *)(obj + 0xc);
-    endPoints[1] = *(float *)(obj + 0x10);
-    endPoints[2] = *(float *)(obj + 0x14);
-    startPoints[0] = *(float *)(obj + 0x80);
-    startPoints[1] = *(float *)(obj + 0x84);
-    startPoints[2] = *(float *)(obj + 0x88);
+    endPoints[0] = ((GameObject *)obj)->anim.localPosX;
+    endPoints[1] = ((GameObject *)obj)->anim.localPosY;
+    endPoints[2] = ((GameObject *)obj)->anim.localPosZ;
+    startPoints[0] = ((GameObject *)obj)->anim.previousLocalPosX;
+    startPoints[1] = ((GameObject *)obj)->anim.previousLocalPosY;
+    startPoints[2] = ((GameObject *)obj)->anim.previousLocalPosZ;
     results.radii[0] = lbl_803E39F4;
     *(s8 *)&results.axisTable[0] = -1;
     results.axisTable[4] = 0x3;
@@ -198,21 +199,21 @@ int objHitboxFn_801843c0(int obj)
 
   if (results.solidFlags[idx] != 0) {
     *(s8 *)(state + 0xad) = *(u8 *)(state + 0xad) | 2;
-    *(float *)(obj + 0xc) = *(float *)(state + 0x3c);
-    *(float *)(obj + 0x10) = *(float *)(state + 0x40);
-    *(float *)(obj + 0x14) = *(float *)(state + 0x44);
-    *(float *)(state + 0x10) = *(float *)(obj + 0x80);
-    *(float *)(state + 0x14) = *(float *)(obj + 0x84);
-    *(float *)(state + 0x18) = *(float *)(obj + 0x88);
+    ((GameObject *)obj)->anim.localPosX = *(float *)(state + 0x3c);
+    ((GameObject *)obj)->anim.localPosY = *(float *)(state + 0x40);
+    ((GameObject *)obj)->anim.localPosZ = *(float *)(state + 0x44);
+    *(float *)(state + 0x10) = ((GameObject *)obj)->anim.previousLocalPosX;
+    *(float *)(state + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
+    *(float *)(state + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
     return 1;
   }
   *(s8 *)(state + 0xad) = *(u8 *)(state + 0xad) | 1;
-  *(float *)(obj + 0xc) = *(float *)(state + 0x3c);
-  *(float *)(obj + 0x10) = *(float *)(state + 0x40);
-  *(float *)(obj + 0x14) = *(float *)(state + 0x44);
-  *(float *)(state + 0x10) = *(float *)(obj + 0x80);
-  *(float *)(state + 0x14) = *(float *)(obj + 0x84);
-  *(float *)(state + 0x18) = *(float *)(obj + 0x88);
+  ((GameObject *)obj)->anim.localPosX = *(float *)(state + 0x3c);
+  ((GameObject *)obj)->anim.localPosY = *(float *)(state + 0x40);
+  ((GameObject *)obj)->anim.localPosZ = *(float *)(state + 0x44);
+  *(float *)(state + 0x10) = ((GameObject *)obj)->anim.previousLocalPosX;
+  *(float *)(state + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
+  *(float *)(state + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
   return 1;
   }
   return 0;
