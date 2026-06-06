@@ -814,8 +814,6 @@ config.libs = [
             Object(NonMatching, "main/lightmap.c"),
             Object(NonMatching, "main/textblock.c"),
             Object(NonMatching, "main/objHitReact.c"),
-            Object(NonMatching, "main/expr.c"),
-            Object(NonMatching, "main/timer.c"),
             Object(NonMatching, "main/objhits.c"),
             Object(NonMatching, "main/light.c"),
             Object(NonMatching, "main/main.c"),

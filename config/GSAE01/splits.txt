@@ -1403,12 +1403,6 @@ main/light.c:
 main/main.c:
 	.text       start:0x801FD398 end:0x801FEB30
 
-main/expr.c:
-	.text       start:0x801FEB30 end:0x801FEB30
-
-main/timer.c:
-	.text       start:0x801FEB30 end:0x801FEB30
-
 main/dll/anim.c:
 	.text       start:0x801FEB30 end:0x8020637C
 
