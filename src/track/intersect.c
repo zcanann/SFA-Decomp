@@ -3864,7 +3864,7 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
  */
 #pragma peephole off
 #pragma scheduling off
-void drawRect(int x, int y, f32 sx, f32 sy)
+void drawRect(f32 sx, f32 sy, int x, int y)
 {
     extern Mtx hudMatrix;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
@@ -7928,7 +7928,7 @@ void cardShowLoadingMsg(u8 kind)
     extern void** gScreenTransitionInterface;
     extern f32 lbl_803DEF98;
     extern f32 lbl_803DEF9C;
-    extern void drawRect(int, int, f32, f32);
+    extern void drawRect(f32, f32, int, int);
     extern int objRenderFn_8003b8f4(int, int, int, int, int, f32);
     extern void curUiDllDraw(int, int, int, int);
     extern int lbl_803DB708;
@@ -7958,7 +7958,7 @@ void cardShowLoadingMsg(u8 kind)
             draw = (void (*)(int, int, int))((void**)*gScreenTransitionInterface)[1];
             draw(0, 0, 0);
             rectAlpha = lbl_803DEF98;
-            drawRect(0x280, 0x1E0, rectAlpha, rectAlpha);
+            drawRect(rectAlpha, rectAlpha, 0x280, 0x1E0);
             for (j = 0; j < count; j++) {
                 objRenderFn_8003b8f4(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
             }
