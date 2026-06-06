@@ -235,7 +235,7 @@ void voiceRemovePriority(int state)
     VoicePrioRootRec *pr;
 
     vb = (VoicePrioBlockRec *)vidListNodes;
-    vps = &vb->prioVoices[*(u32 *)(state + 0xf4) & 0xff];
+    vps = (VoicePrioVoiceRec *)((u8 *)vb + ((*(u32 *)(state + 0xf4) & 0xff) << 2) + 2240);
     if (vps->user != 1) {
         return;
     }
@@ -247,9 +247,12 @@ void voiceRemovePriority(int state)
     if (vps->next != 0xff) {
         vb->prioVoices[vps->next].prev = vps->prev;
     } else if (vps->prev == 0xff) {
-        pr = &vb->prioRootList[*(u8 *)(state + 0x10c)];
-        if (pr->prev != 0xffff) {
-            vb->prioRootList[pr->prev].next = pr->next;
+        u32 prevv;
+        pr = (VoicePrioRootRec *)((u8 *)vb + ((u32)*(u8 *)(state + 0x10c) << 2));
+        prevv = *(u16 *)((u8 *)pr + 2754);
+        pr = (VoicePrioRootRec *)((u8 *)pr + 2752);
+        if (prevv != 0xffff) {
+            vb->prioRootList[prevv].next = pr->next;
         } else {
             voicePrioSortRootListRoot = pr->next;
         }
