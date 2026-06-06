@@ -1761,7 +1761,7 @@ void dll_CE_update(int obj, int p2, int p3)
   int setup;
   u8 *hit;
   int n;
-  int buf[5];
+  int buf[4];
 
   sub = *(int *)(obj + 0xb8);
   setup = *(int *)(obj + 0x4c);
