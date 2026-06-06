@@ -3,21 +3,7 @@
 #include "main/objanim.h"
 #include "global.h"
 
-/* sh_staff per-object extra state (0x74). */
-typedef struct ShStaffState {
-    u8 phase;        /* 0x00: 0 idle, 1 armed, 3/4/5 carry-render modes, 6 done */
-    u8 hudFlag;      /* 0x01 */
-    u8 flags;        /* 0x02: 1/4 = spawn columns, 2/8 = columns full, 0x10 fade, 0x20 converge */
-    u8 mapLoaded;    /* 0x03 */
-    f32 fadeTimer;   /* 0x04 */
-    f32 carryMtx[12];/* 0x08: player-relative carry transform */
-    int slots[10];   /* 0x38: spawned haze objects */
-    u8 pending[10];  /* 0x60: per-slot respawn requests */
-    u8 pad6A[2];
-    f32 pulseTimer;  /* 0x6c */
-    f32 sfxTimer;    /* 0x70 */
-} ShStaffState;
-STATIC_ASSERT(sizeof(ShStaffState) == 0x74);
+#include "main/dll/DR/shstaff_state.h"
 
 /* sh_beacon_getExtraSize == 0x18. */
 typedef struct ShBeaconState {
