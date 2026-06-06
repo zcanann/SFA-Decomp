@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/andross.h"
 #include "main/mapEventTypes.h"
 
 #pragma peephole on
@@ -48,7 +49,7 @@ void andross_setPartSignal(int obj, int signal)
         return;
     }
     state = *(int *)(obj + 0xb8);
-    *(u8 *)(state + 0xad) |= signal;
+    ((AndrossState *)state)->unkAD |= signal;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -82,23 +83,23 @@ void andross_init(int obj, u8 *setup)
     int i;
     int model;
 
-    *(f32 *)(state + 0x58) = *(f32 *)(setup + 8);
-    *(f32 *)(state + 0x5c) = *(f32 *)(setup + 0xc);
-    *(f32 *)(state + 0x60) = *(f32 *)(setup + 0x10);
-    *(s16 *)(state + 0x98) = 0;
-    *(int *)(state + 0x88) = 0;
-    *(int *)(state + 0x8c) = -1;
-    *(f32 *)(state + 0x64) = lbl_803E7590;
-    *(u8 *)(state + 0xb6) = 5;
-    *(int *)(state + 0x7c) = 1;
-    *(int *)(state + 0x80) = -1;
-    *(s16 *)(state + 0xa0) = -0x8000;
+    ((AndrossState *)state)->unk58 = *(f32 *)(setup + 8);
+    ((AndrossState *)state)->unk5C = *(f32 *)(setup + 0xc);
+    ((AndrossState *)state)->unk60 = *(f32 *)(setup + 0x10);
+    ((AndrossState *)state)->unk98 = 0;
+    ((AndrossState *)state)->unk88 = 0;
+    ((AndrossState *)state)->unk8C = -1;
+    ((AndrossState *)state)->unk64 = lbl_803E7590;
+    ((AndrossState *)state)->unkB6 = 5;
+    ((AndrossState *)state)->unk7C = 1;
+    ((AndrossState *)state)->unk80 = -1;
+    ((AndrossState *)state)->unkA0 = -0x8000;
     *(s16 *)obj = -0x8000;
-    *(f32 *)(state + 0x6c) = lbl_803E7594;
-    *(f32 *)(state + 0xa8) = lbl_803E74D4;
-    *(f32 *)(state + 0x74) = lbl_803E7598;
-    *(f32 *)(state + 0x78) = lbl_803E7530;
-    *(u8 *)(state + 0xbc) = 1;
+    ((AndrossState *)state)->unk6C = lbl_803E7594;
+    ((AndrossState *)state)->unkA8 = lbl_803E74D4;
+    ((AndrossState *)state)->unk74 = lbl_803E7598;
+    ((AndrossState *)state)->unk78 = lbl_803E7530;
+    ((AndrossState *)state)->unkBC = 1;
     ObjHits_SetTargetMask(obj, 4);
     *(void **)(obj + 0xbc) = (void *)andross_updateModelAlpha;
     fn_8006CB50();
@@ -120,21 +121,21 @@ void fn_8023A87C(int p1, int p2)
     spawned = *(void **)(p2 + 0x10);
     if (spawned != NULL) {
         *(f32 *)((char *)spawned + 0x14) -= lbl_803E74D8;
-        *(int *)(p2 + 0x90) -= framesThisStep;
-        if (*(int *)(p2 + 0x90) < 0) {
-            fn_8022F558(*(int *)(p2 + 0x10), 5);
-            *(int *)(p2 + 0x90) = 0;
-            *(int *)(p2 + 0x10) = 0;
+        ((AndrossState *)p2)->unk90 -= framesThisStep;
+        if (((AndrossState *)p2)->unk90 < 0) {
+            fn_8022F558(((AndrossState *)p2)->unk10, 5);
+            ((AndrossState *)p2)->unk90 = 0;
+            ((AndrossState *)p2)->unk10 = 0;
         }
     } else {
-        f32 v = *(f32 *)(p2 + 0x6c);
+        f32 v = ((AndrossState *)p2)->unk6C;
         f32 zero = lbl_803E74D4;
         if (v >= zero) {
-            *(f32 *)(p2 + 0x6c) = v - timeDelta;
-            if (*(f32 *)(p2 + 0x6c) < zero)
+            ((AndrossState *)p2)->unk6C = v - timeDelta;
+            if (((AndrossState *)p2)->unk6C < zero)
                 fn_80239DD8(p1, p2);
         } else if ((u32)GameBit_Get(0x12) != 0) {
-            *(f32 *)(p2 + 0x6c) = (f32)(int)randomGetRange(1, 0x14);
+            ((AndrossState *)p2)->unk6C = (f32)(int)randomGetRange(1, 0x14);
             GameBit_Set(0x12, 0);
         }
     }
