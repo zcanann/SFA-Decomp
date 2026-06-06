@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
+#include "main/objanim_internal.h"
 
 int ktrex_stateHandlerA00(void) { return 0x0; }
 
@@ -917,7 +918,7 @@ void ktrex_updateAttackEffects(int obj) {
             obj, 0x487, (char *)gKTRexState + 0x10c, 0x200001, -1, (char *)gKTRexState + 0x16c);
     }
     *(u32 *)((char *)gKTRexState + 0x104) &= 0x1800;
-    if (*(int *)(*(int *)((char *)obj + 0x54) + 0x50) == (int)Obj_GetPlayerObject()) {
+    if ((*(ObjAnimComponent **)((char *)obj + 0x54))->modelInstance == Obj_GetPlayerObject()) {
         Sfx_PlayFromObject((int)Obj_GetPlayerObject(), SFXbaddie_haga_talk1);
     }
 }

@@ -116,7 +116,7 @@ void androsshand_update(int obj)
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E75AC, 0);
             *(f32 *)(*(int *)(obj + 0xb8) + 0x14) = lbl_8032C270[1];
         }
-        if (*(int *)(*(int *)(obj + 0x54) + 0x50) != 0) {
+        if ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance != NULL) {
             struct {
                 f32 x, y, z;
             } v, w;
@@ -157,7 +157,7 @@ void androsshand_update(int obj)
         } else {
             *(f32 *)(state + 0x14) = lbl_803E75DC;
         }
-        if (*(int *)(*(int *)(obj + 0x54) + 0x50) != 0) {
+        if ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance != NULL) {
             struct {
                 f32 x, y, z;
             } v, w;
