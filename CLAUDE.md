@@ -2418,7 +2418,12 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   to override). Full-sweep findings: ~680 includes removed across ~590 TUs
   (`ghidra_import.h` import-era cruft was ~480 sites); `NEEDED-codegen`
   verdicts (bytes change, no compile error) are real macro/typedef-width
-  effects — never remove those by eye.
+  effects — never remove those by eye. Audit artifacts GO STALE: each
+  applied removal changes the joint include state, so a deferred queue
+  from an old `--audit` run accumulates now-divergent entries (task #170
+  found all 24 deferred dolphin/audio candidates flipped to NEEDED after
+  sierra-1's sweep) — always re-audit before applying a saved report;
+  `--apply`'s per-file byte gate makes stale entries safe but wasted work.
 - `python3 tools/extern_audit.py [--csv | --symbol X | --real-conflicts-only]` —
   extern decl audit across src/+include/: canonicalizes signatures into
   CODEGEN-equivalence classes (return width/signedness, param widths, f32/f64,
