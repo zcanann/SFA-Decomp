@@ -772,12 +772,14 @@ void ObjModel_ResolveRenderOpTextures(u8 *m) {
         } else {
             *(int *)(op + 0x38) = 0;
         }
-        if (*(int *)(op + 0x1c) == -1) {
-            *(int *)(op + 0x1c) = 0;
-        } else if (*(int *)(op + 0x1c) == -2) {
-            *(int *)(op + 0x1c) = 0;
+        if (*(int *)(op + 0x1c) != -1) {
+            if (*(int *)(op + 0x1c) == -2) {
+                *(int *)(op + 0x1c) = 0;
+            } else {
+                *(int *)(op + 0x1c) = 1;
+            }
         } else {
-            *(int *)(op + 0x1c) = 1;
+            *(int *)(op + 0x1c) = 0;
         }
         if (*(int *)(op + 0x18) != -1) {
             *(int *)(op + 0x18) = ((int *)*(u8 **)(m + 0x20))[*(int *)(op + 0x18)];
