@@ -877,6 +877,17 @@ Heuristic:
     fn_802C0A5C inner-before-q → p2/q=r31/r30). Try this BEFORE declaring a
     recipe #16 coloring cap.
 
+61c. **Limit of #61b — 2-variable chained-deref pairs (`p = load; q = *(p+off)`)
+    do NOT respond to decl-order.** When the ONLY divergence is a 2-reg
+    permutation across a load chain (target q=r5/p=r6, yours p=r5/q=r6, every
+    use cascading), decl-order flips were tried both ways and failed on 5
+    separate fns in one session (getLoadedTexture, saveFileStruct_isCheatActive,
+    playerAddHealth, fn_8002CE14, ObjModel_CopyJointTranslation — also the
+    `lwz+mr` copy-pair direction in dimlogfire_init/curUiDllDraw). #61b works
+    when there are ≥3 independent locals to reorder; the 2-var chain coloring
+    is allocator-internal. Classify on sight and skip — the residual is
+    ~5-10 bytes.
+
 62. **`(int)`-cast the store base to defeat address-CSE with a later
     `(u8 *)p + off` call arg — restores the displacement-form store.** When a
     function stores to `*(u8 *)((u8 *)p + off) = K` AND later passes the same
