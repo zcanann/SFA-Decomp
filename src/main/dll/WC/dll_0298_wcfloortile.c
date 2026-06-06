@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/objhits_types.h"
 #pragma peephole on
 #pragma scheduling on
 int wcfloortile_getExtraSize(void) { return 8; }
@@ -43,7 +44,7 @@ void wcfloortile_init(int obj)
     int state = *(int *)(obj + 0xb8);
 
     *(s16 *)obj = -0x4000;
-    *(s16 *)(*(int *)(obj + 0x54) + 0x60) |= 0x1800;
+    (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 0x1800;
     *(u8 *)(state + 7) |= 2;
 }
 #pragma scheduling reset

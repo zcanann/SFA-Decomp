@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/mediumbasket.h"
 #include "main/objanim.h"
+#include "main/objhits_types.h"
 
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006824();
@@ -1466,8 +1467,7 @@ FUN_8015d324(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   *(byte *)(*(int *)(iVar1 + 0x40c) + 0x44) = *(byte *)(*(int *)(iVar1 + 0x40c) + 0x44) | 0xc;
   if (*(char *)(param_10 + 0x27a) != '\0') {
-    *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
+    (*(ObjHitsPriorityState **)(param_9 + 0x54))->flags &= ~1;
     *(float *)(param_10 + 0x2a0) = lbl_803E39D0;
     *(float *)(param_10 + 0x280) = lbl_803E39AC;
   }
@@ -1508,7 +1508,7 @@ FUN_8015d518(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   
   iVar2 = *(int *)(param_9 + 0xb8);
   iVar1 = *(int *)(iVar2 + 0x40c);
-  *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) = *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) | 1;
+  (*(ObjHitsPriorityState **)(param_9 + 0x54))->flags |= 1;
   *(undefined *)(param_10 + 0x25f) = 1;
   if (*(char *)(param_10 + 0x27a) != '\0') {
     FUN_800305f8((double)lbl_803E39AC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -1564,10 +1564,10 @@ FUN_8015d6ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   
   iVar2 = *(int *)(param_9 + 0xb8);
   iVar1 = *(int *)(iVar2 + 0x40c);
-  *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) = *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) | 1;
+  (*(ObjHitsPriorityState **)(param_9 + 0x54))->flags |= 1;
   *(undefined *)(param_10 + 0x25f) = 1;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 9;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
+  (*(ObjHitsPriorityState **)(param_9 + 0x54))->hitVolumePriority = 9;
+  (*(ObjHitsPriorityState **)(param_9 + 0x54))->hitVolumeId = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(char *)(param_10 + 0x27a) != '\0') {
     FUN_800305f8((double)lbl_803E39AC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,

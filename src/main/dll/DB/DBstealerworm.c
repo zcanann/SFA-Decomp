@@ -5,6 +5,7 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/DB/DBbonedust.h"
 #include "main/dll/DB/DBstealerworm.h"
+#include "main/objhits_types.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -1148,7 +1149,7 @@ void SB_Galleon_init(int obj) {
     getLActions(obj, obj, 0x58, 0, 0, 0);
     *(f32 *)(p + 0x90) = lbl_803E56CC;
     *(f32 *)(p + 0x94) = lbl_803E580C;
-    *(s16 *)(*(int *)(obj + 0x54) + 0x60) = *(s16 *)(*(int *)(obj + 0x54) + 0x60) | 0x1800;
+    (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 0x1800;
     setDrawLights(0);
     *(int *)(p + 0x98) = 0x92;
     *(int *)(p + 0x9c) = 0x91;

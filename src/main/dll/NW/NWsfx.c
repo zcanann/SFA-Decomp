@@ -2,6 +2,7 @@
 #include "main/dll/NW/NWsfx.h"
 #include "main/dll/SH/SHthorntail_internal.h"
 #include "main/objanim.h"
+#include "main/objhits_types.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 extern int hitDetectFn_80065e50(void *obj, f32 x, f32 y, f32 z, void *hitsOut, int p6, int p7);
@@ -474,7 +475,7 @@ void ediblemushroom_hitDetect(u8 *obj) {
     mapObj = *(u8 **)(obj + 0x4c);
 
     if (((*(u16 *)(obj + 0xb0) & 0x1000) == 0) &&
-        (((state[0x137] & 8) != 0) || ((*(s16 *)(*(int *)(obj + 0x54) + 0x60) & 8) != 0))) {
+        (((state[0x137] & 8) != 0) || (((*(ObjHitsPriorityState **)(obj + 0x54))->flags & 8) != 0))) {
         hitCount = hitDetectFn_80065e50(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
                                         *(f32 *)(obj + 0x14), &hits, 0, 0);
         i = 0;
