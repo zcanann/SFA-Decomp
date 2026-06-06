@@ -831,11 +831,11 @@ extern void buttonDisable(int index, int mask);
 #pragma peephole off
 int Door_SeqFn(int obj, int p2, int seq)
 {
+  int i;
   int state;
   int def;
   int opened;
   int closeReady;
-  int i;
   int *tex;
   int ret;
 
