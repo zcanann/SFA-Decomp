@@ -53,6 +53,19 @@ Heuristic:
    global-off). MWCC then regenerates the jump table for that fn while the rest
    of the file stays peephole-off — combine with #13 case-order. Took
    `dvdCheckError` to 99.2% inside a global-peephole-off unit (placeholder_800066E0).
+   **Pragma regions are per-REGION, not per-function — SPLIT a multi-fn region
+   to capture asymmetric wins.** When one `peephole on` region wraps 2+ fns and
+   whole-pair removal regresses a sibling (the gate-revert), move the `on` to
+   wrap ONLY the fn that needs it and leave the other at the outer state:
+   object.c fn_8002B758 67.46→78.69 with sibling fn_8002B860 held at 100.
+   **Sweep finding (task #173, all 477 `peephole on` sites A/B'd): ~60 wrappers
+   were INERT** (byte-identical .o with or without — the site sits in default
+   peephole-ON context, the wrapper was defensive dead weight) and were removed;
+   only 4 sites were genuinely load-bearing (waterfallControl
+   tumbleweed_updateRollingMotion, lightmap drawFn_8005cf8c, mm.c mmFreeTick,
+   shrine1CE dll_19B_update — kept). Before ADDING a `peephole on` wrapper,
+   check the file's effective pragma state — in a default-ON file it does
+   nothing.
    **Treat the two pragmas independently — `scheduling off` ALONE is often the
    win.** For vtable-dispatch / call-heavy / FP-heavy functions, `scheduling
    off` by itself takes 40-70% → 95-100% (it stops MWCC reordering loads/stores
