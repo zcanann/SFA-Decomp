@@ -999,9 +999,10 @@ void modelLightStruct_setDirection(ModelLightStruct *s, f32 x, f32 y, f32 z) {
     if (s->transformMode == 0) {
         PSMTXMultVecSR(view, &s->worldDirX, &s->viewDirX);
     } else {
-        *(int *)&s->viewDirX = *(int *)&s->worldDirX;
-        *(int *)&s->viewDirY = *(int *)&s->worldDirY;
-        *(int *)&s->viewDirZ = *(int *)&s->worldDirZ;
+        {
+            typedef struct { int x, y, z; } IVec3;
+            *(IVec3 *)&s->viewDirX = *(IVec3 *)&s->worldDirX;
+        }
     }
 }
 
