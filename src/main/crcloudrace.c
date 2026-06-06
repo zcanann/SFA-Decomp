@@ -130,10 +130,10 @@ ObjectDescriptor gCrCloudRaceObjDescriptor = {
 #pragma scheduling off
 #pragma peephole off
 int crcloudrace_completionCallback(int obj, int arg2, u8 *data) {
-    int *inner = *(int **)(obj + 0xb8);
+    CrCloudRaceState *state = ((CrCloudRaceObject *)obj)->state;
     int i;
 
-    *(u8 *)((char *)inner + 9) |= 1;
+    state->flags |= CRCLOUDRACE_STATE_FLAG_COMPLETION_CALLBACK;
     for (i = 0; i < *(u8 *)((char *)data + 0x8b); i++) {
         switch (data[i + 0x81]) {
         case 1:
@@ -174,7 +174,7 @@ void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state) {
         if (GameBit_Get(0x4a9) != 0 && fn_802972A8(player) == 0) {
             near = ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if (near != 0) {
-                (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)(near + 0x68)) + 0x20)))(near, 1);
+                (*(void (**)(int, int))((char *)*((GameObject *)near)->anim.dll + 0x20))(near, 1);
             }
             state->phase = 5;
         }
@@ -187,10 +187,12 @@ void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state) {
 #pragma scheduling off
 #pragma peephole off
 void crcloudrace_updateRaceState(int obj) {
+    CrCloudRaceObject *raceObj;
     CrCloudRaceState *inner;
     int player;
 
-    inner = *(CrCloudRaceState **)(obj + 0xb8);
+    raceObj = (CrCloudRaceObject *)obj;
+    inner = raceObj->state;
     player = Obj_GetPlayerObject();
     switch (inner->phase) {
     case 2:
