@@ -13,7 +13,7 @@ replace byte-exactly; TYPEDIFF hits need manual review (lha/lhz, cmpwi/cmplwi).
 
 Usage: python3 tools/offset_deref_scan.py [path-substring-filter]
 """
-import re, glob, sys
+import re, glob, sys, os
 
 SIZES = {'u8':1,'s8':1,'char':1,'undefined':1,'bool':1,
          'u16':2,'s16':2,'short':2,'ushort':2,'undefined2':2,
@@ -74,7 +74,7 @@ def main():
     filt = sys.argv[1] if len(sys.argv) > 1 else ''
     files = [f for f in glob.glob('include/**/*.h', recursive=True)
              + glob.glob('src/main/**/*.[ch]', recursive=True)
-             if 'reference_projects' not in f]
+             if 'reference_projects' not in f and os.path.isfile(f)]
 
     structs = {}
     for _ in range(2):  # two passes for nested structs

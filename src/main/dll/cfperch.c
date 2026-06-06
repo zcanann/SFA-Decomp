@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/dll/cfperch_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfperch.h"
@@ -76,7 +77,7 @@ extern f64 lbl_803E39C8;
 #pragma peephole off
 f32 fn_80183204(int obj)
 {
-    u8* state = *(u8**)(obj + 0xb8);
+    u8* state = ((GameObject *)obj)->extra;
     return lbl_803E39AC - (f32)(u32)state[0x13] / (f32)(u32)state[0x28];
 }
 #pragma peephole reset
@@ -94,7 +95,7 @@ void smallbasket_init(int obj, int def)
     s16 v1c;
     s16 mode;
 
-    state = *(int*)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     ObjHits_DisableObject(obj);
     ObjGroup_AddObject(obj, 0x10);
 
@@ -115,18 +116,18 @@ void smallbasket_init(int obj, int def)
         ((CfperchState *)state)->unkC = 0x14;
     }
     ((CfperchState *)state)->unk12 = 0x320;
-    *(u16*)(obj + 0xb0) |= 0x2000;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
     ((CfperchState *)state)->unk1E = *(u8*)(def + 0x19);
-    *(f32*)(obj + 0x80) = *(f32*)(obj + 0xc);
-    *(f32*)(obj + 0x84) = *(f32*)(obj + 0x10);
-    *(f32*)(obj + 0x80) = *(f32*)(obj + 0x14);
+    ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosX;
+    ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosZ;
 
     if ((u32)GameBit_Get(((CfperchState *)state)->unk1C) != 0) {
         ((CfperchState *)state)->unk14 = 1;
         ObjHits_DisableObject(obj);
     }
 
-    mode = *(s16*)(obj + 0x46);
+    mode = ((GameObject *)obj)->anim.seqId;
     if (mode == 0x3cf) {
         ((CfperchState *)state)->unk10 = 0x60;
     } else if (mode == 0x662) {
@@ -151,17 +152,17 @@ void fn_80183250(int obj, int def)
     u32 v;
     f32 limit;
 
-    state31 = *(int *)(obj + 0x4c);
+    state31 = *(int *)&((GameObject *)obj)->anim.placementData;
     player = (int)Obj_GetPlayerObject();
-    if ((*(u16 *)(*(int *)(obj + 0x30) + 0xb0) & 0x1000) != 0) {
-        *(f32 *)(obj + 0xc) = *(f32 *)(def + 0x24);
-        *(f32 *)(obj + 0x24) = lbl_803E39B8;
+    if ((*(u16 *)(*(int *)&((GameObject *)obj)->anim.parent + 0xb0) & 0x1000) != 0) {
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(def + 0x24);
+        ((GameObject *)obj)->anim.velocityX = lbl_803E39B8;
     } else {
-        oldVel = *(f32 *)(obj + 0x24);
-        sum = *(s16 *)(*(int *)(obj + 0x30) + 0x4) + *(u16 *)(def + 0x20);
-        *(f32 *)(obj + 0x24) = -(f32)sum / *(f32 *)(def + 0x1c);
-        if ((oldVel <= (limit = lbl_803E39B8) && *(f32 *)(obj + 0x24) >= limit) ||
-            (oldVel >= lbl_803E39B8 && *(f32 *)(obj + 0x24) <= lbl_803E39B8)) {
+        oldVel = ((GameObject *)obj)->anim.velocityX;
+        sum = *(s16 *)(*(int *)&((GameObject *)obj)->anim.parent + 0x4) + *(u16 *)(def + 0x20);
+        ((GameObject *)obj)->anim.velocityX = -(f32)sum / *(f32 *)(def + 0x1c);
+        if ((oldVel <= (limit = lbl_803E39B8) && ((GameObject *)obj)->anim.velocityX >= limit) ||
+            (oldVel >= lbl_803E39B8 && ((GameObject *)obj)->anim.velocityX <= lbl_803E39B8)) {
             v = *(u32 *)(state31 + 0x14);
             adj = v - SMALLBASKET_LINKED_ID_BASE;
             if ((adj == SMALLBASKET_ROB_WAVE_ID_65D7) ||
@@ -176,13 +177,13 @@ void fn_80183250(int obj, int def)
                 }
             }
         }
-        *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + *(f32 *)(obj + 0x24);
-        if (*(f32 *)(obj + 0xc) > (limit = lbl_803E39C0 + *(f32 *)(def + 0x24))) {
-            *(f32 *)(obj + 0xc) = limit;
+        ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.localPosX + ((GameObject *)obj)->anim.velocityX;
+        if (((GameObject *)obj)->anim.localPosX > (limit = lbl_803E39C0 + *(f32 *)(def + 0x24))) {
+            ((GameObject *)obj)->anim.localPosX = limit;
         } else {
             limit = *(f32 *)(def + 0x24) - lbl_803E39C4;
-            if (*(f32 *)(obj + 0xc) < limit) {
-                *(f32 *)(obj + 0xc) = limit;
+            if (((GameObject *)obj)->anim.localPosX < limit) {
+                ((GameObject *)obj)->anim.localPosX = limit;
             }
         }
     }
@@ -266,10 +267,10 @@ void smallbasket_update(int obj)
     BasketMathArgs blk;
 
     player = (int)Obj_GetPlayerObject();
-    def = *(int *)(obj + 0x4c);
+    def = *(int *)&((GameObject *)obj)->anim.placementData;
     animSpeed = lbl_803E3950;
     (**(void (**)(f32 *))(*gSHthorntailAnimationInterface + 0x18))(&animSpeed);
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     if ((*gMapEventInterface)->isTimedEventActive(*(int *)(def + 0x14)) == 0) {
         return;
     }
@@ -278,11 +279,11 @@ void smallbasket_update(int obj)
         ((CfperchState *)state)->unk12 = 800;
         ((CfperchState *)state)->unkA = 1;
         ((CfperchState *)state)->unk9 = 0;
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         fn_801816F8(obj, player, state);
         zf = lbl_803E3938;
-        *(f32 *)(obj + 0x24) = zf;
-        *(f32 *)(obj + 0x2c) = zf;
+        ((GameObject *)obj)->anim.velocityX = zf;
+        ((GameObject *)obj)->anim.velocityZ = zf;
     }
     if (((CfperchState *)state)->unk14 != 0) {
         flag = 0;
@@ -300,8 +301,8 @@ void smallbasket_update(int obj)
                 ((CfperchState *)state)->unkA = 0;
                 ObjHits_EnableObject(obj);
                 ObjHits_SyncObjectPositionIfDirty(obj);
-                *(u8 *)(obj + 0xaf) &= ~0x8;
-                *(s16 *)(obj + 0x6) &= ~0x4000;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
+                ((GameObject *)obj)->anim.flags &= ~0x4000;
             }
         }
     } else {
@@ -322,16 +323,16 @@ void smallbasket_update(int obj)
                     ((CfperchState *)state)->unk14 = 1;
                 }
                 (*gMapEventInterface)->startTimedEvent(*(int *)(def + 0x14), (f32)((CfperchState *)state)->unk18);
-                *(f32 *)(obj + 0xc) = *(f32 *)(def + 0x8);
-                *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
-                *(f32 *)(obj + 0x14) = *(f32 *)(def + 0x10);
-                *(f32 *)(obj + 0x80) = *(f32 *)(def + 0x8);
-                *(f32 *)(obj + 0x84) = *(f32 *)(def + 0xc);
-                *(f32 *)(obj + 0x88) = *(f32 *)(def + 0x10);
+                ((GameObject *)obj)->anim.localPosX = *(f32 *)(def + 0x8);
+                ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
+                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(def + 0x10);
+                ((GameObject *)obj)->anim.previousLocalPosX = *(f32 *)(def + 0x8);
+                ((GameObject *)obj)->anim.previousLocalPosY = *(f32 *)(def + 0xc);
+                ((GameObject *)obj)->anim.previousLocalPosZ = *(f32 *)(def + 0x10);
                 zf = lbl_803E3938;
-                *(f32 *)(obj + 0x24) = zf;
-                *(f32 *)(obj + 0x28) = zf;
-                *(f32 *)(obj + 0x2c) = zf;
+                ((GameObject *)obj)->anim.velocityX = zf;
+                ((GameObject *)obj)->anim.velocityY = zf;
+                ((GameObject *)obj)->anim.velocityZ = zf;
             }
             if (((CfperchState *)state)->unkA <= 0x32) {
                 return;
@@ -340,7 +341,7 @@ void smallbasket_update(int obj)
         if (*(s8 *)(state + 0x9) != 1) {
             if (((CfperchState *)state)->unk5 == 0) {
                 flag = 0;
-                if (((buttonGetDisabled(0) & 0x100) == 0) && (*(int *)(obj + 0xf8) == 0) &&
+                if (((buttonGetDisabled(0) & 0x100) == 0) && (((GameObject *)obj)->unkF8 == 0) &&
                     (ObjTrigger_IsSet(obj) != 0)) {
                     ((CfperchState *)state)->unk0 = -0x8000;
                     ((CfperchState *)state)->unk2 = 0;
@@ -351,20 +352,20 @@ void smallbasket_update(int obj)
                 if (((CfperchState *)state)->unk5 != 0) {
                     ((CfperchState *)state)->unk6 = 1;
                 }
-                if (*(int *)(obj + 0xf8) == 0) {
+                if (((GameObject *)obj)->unkF8 == 0) {
                     ObjHits_EnableObject(obj);
                     if ((((CfperchState *)state)->unk20 != 0) && (playerIsDisguised(player) == 0)) {
-                        *(u8 *)(obj + 0xaf) |= 0x10;
+                        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
                     } else {
-                        *(u8 *)(obj + 0xaf) &= ~0x10;
+                        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
                     }
                 }
-                *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
-                *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x14);
-                *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+                ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosX;
+                ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosZ;
+                ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
             } else {
                 ObjHits_DisableObject(obj);
-                *(u8 *)(obj + 0xaf) |= 8;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 if ((playerGetStateFlag310(player) & 0x4000) != 0) {
                     setAButtonIcon(5);
                 } else {
@@ -378,16 +379,16 @@ void smallbasket_update(int obj)
                         Sfx_PlayFromObject(0, 0x10a);
                     }
                 }
-                if (*(int *)(obj + 0xf8) == 1) {
+                if (((GameObject *)obj)->unkF8 == 1) {
                     *(u8 *)(state + 0x5) = 2;
                 }
-                if (((((CfperchState *)state)->unk5 == 2) && (*(int *)(obj + 0xf8) == 0)) ||
+                if (((((CfperchState *)state)->unk5 == 2) && (((GameObject *)obj)->unkF8 == 0)) ||
                     ((((CfperchState *)state)->unk20 != 0) && (playerIsDisguised(player) == 0))) {
                     if (fn_8029669C(player) != 0) {
                         *(u8 *)(state + 0x5) = 0;
                         ((CfperchState *)state)->unk9 = 1;
-                        *(f32 *)(obj + 0x28) = lbl_803E397C * *(f32 *)(playerState + 0x298) + lbl_803E3958;
-                        *(f32 *)(obj + 0x2c) = lbl_803E3980 * *(f32 *)(playerState + 0x298) + lbl_803E3974;
+                        ((GameObject *)obj)->anim.velocityY = lbl_803E397C * *(f32 *)(playerState + 0x298) + lbl_803E3958;
+                        ((GameObject *)obj)->anim.velocityZ = lbl_803E3980 * *(f32 *)(playerState + 0x298) + lbl_803E3974;
                         blk.fy = lbl_803E3938;
                         blk.fz = lbl_803E3938;
                         blk.fw = lbl_803E3938;
@@ -404,17 +405,17 @@ void smallbasket_update(int obj)
                         *(u8 *)(state + 0x5) = 0;
                         ((CfperchState *)state)->unk9 = 2;
                         zf = lbl_803E3938;
-                        *(f32 *)(obj + 0x24) = zf;
-                        *(f32 *)(obj + 0x28) = zf;
-                        *(f32 *)(obj + 0x2c) = zf;
+                        ((GameObject *)obj)->anim.velocityX = zf;
+                        ((GameObject *)obj)->anim.velocityY = zf;
+                        ((GameObject *)obj)->anim.velocityZ = zf;
                         ObjHits_EnableObject(obj);
-                        *(u8 *)(obj + 0xaf) &= ~0x8;
+                        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
                         ObjHits_ClearHitVolumes(obj);
                     } else {
                         *(u8 *)(state + 0x5) = 0;
                         ((CfperchState *)state)->unk9 = 1;
-                        *(f32 *)(obj + 0x28) = lbl_803E3988 * *(f32 *)(playerState + 0x298) + lbl_803E3984;
-                        *(f32 *)(obj + 0x2c) = lbl_803E3990 * *(f32 *)(playerState + 0x298) + lbl_803E398C;
+                        ((GameObject *)obj)->anim.velocityY = lbl_803E3988 * *(f32 *)(playerState + 0x298) + lbl_803E3984;
+                        ((GameObject *)obj)->anim.velocityZ = lbl_803E3990 * *(f32 *)(playerState + 0x298) + lbl_803E398C;
                         blk.fy = lbl_803E3938;
                         blk.fz = lbl_803E3938;
                         blk.fw = lbl_803E3938;
@@ -425,7 +426,7 @@ void smallbasket_update(int obj)
                         vecRotateZXY(&blk, (void *)(obj + 0x24));
                         Sfx_PlayFromObject(obj, 0x6b);
                         ((CfperchState *)state)->unk6 = 0;
-                        *(u8 *)(obj + 0xaf) |= 8;
+                        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                     }
                 }
                 if (*(s8 *)(state + 0x6) != 0) {
@@ -439,41 +440,41 @@ void smallbasket_update(int obj)
             ((CfperchState *)state)->unk12 -= framesThisStep;
             if (*(s8 *)(state + 0x9) == 1) {
                 ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
-                if (*(f32 *)(obj + 0x28) > lbl_803E3994) {
-                    *(f32 *)(obj + 0x28) = lbl_803E3998 * timeDelta + *(f32 *)(obj + 0x28);
+                if (((GameObject *)obj)->anim.velocityY > lbl_803E3994) {
+                    ((GameObject *)obj)->anim.velocityY = lbl_803E3998 * timeDelta + ((GameObject *)obj)->anim.velocityY;
                 }
                 ObjHits_EnableObject(obj);
             }
-            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
-            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
-            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
+            ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.velocityX * timeDelta + ((GameObject *)obj)->anim.localPosX;
+            ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
+            ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * timeDelta + ((GameObject *)obj)->anim.localPosZ;
             fn_801821FC(obj);
             c = (*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags;
             if ((c != 0) && (*(s8 *)(state + 0x9) == 1)) {
-                blk.fy = *(f32 *)(obj + 0xc);
-                blk.fz = *(f32 *)(obj + 0x10);
-                blk.fw = *(f32 *)(obj + 0x14);
+                blk.fy = ((GameObject *)obj)->anim.localPosX;
+                blk.fz = ((GameObject *)obj)->anim.localPosY;
+                blk.fw = ((GameObject *)obj)->anim.localPosZ;
                 objLightFn_8009a1dc(obj, lbl_803E3934, &blk, 1, 0);
                 (**(void (**)(int, int, int, int, int, int))(*(int *)lbl_803DDAC0 + 0x4))(
                     obj, 1, 0, 2, -1, 0);
                 Sfx_PlayFromObject(obj, (u16)((CfperchState *)state)->unk10);
                 ((CfperchState *)state)->unkA = 0x32;
                 ((CfperchState *)state)->unk9 = 0;
-                *(u8 *)(obj + 0xaf) |= 8;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 fn_801816F8(obj, player, state);
                 zf = lbl_803E3938;
-                *(f32 *)(obj + 0x24) = zf;
-                *(f32 *)(obj + 0x2c) = zf;
+                ((GameObject *)obj)->anim.velocityX = zf;
+                ((GameObject *)obj)->anim.velocityZ = zf;
                 ObjHits_ClearHitVolumes(obj);
             } else if ((c != 0) && (*(s8 *)(state + 0x9) == 2)) {
                 zf = lbl_803E3938;
-                *(f32 *)(obj + 0x24) = zf;
-                *(f32 *)(obj + 0x2c) = zf;
+                ((GameObject *)obj)->anim.velocityX = zf;
+                ((GameObject *)obj)->anim.velocityZ = zf;
                 ((CfperchState *)state)->unkA = 500;
                 ((CfperchState *)state)->unk9 = 0;
-                *(int *)(obj + 0xf8) = 0;
+                ((GameObject *)obj)->unkF8 = 0;
                 ObjHits_EnableObject(obj);
-                *(u8 *)(obj + 0xaf) &= ~0x8;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
                 ObjHits_ClearHitVolumes(obj);
             }
         }
@@ -482,13 +483,13 @@ void smallbasket_update(int obj)
             if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(def + 0x8)) >=
                 (f32)(((CfperchState *)state)->unkC * ((CfperchState *)state)->unkC)) {
                 zf = lbl_803E3938;
-                *(f32 *)(obj + 0x24) = zf;
-                *(f32 *)(obj + 0x2c) = zf;
+                ((GameObject *)obj)->anim.velocityX = zf;
+                ((GameObject *)obj)->anim.velocityZ = zf;
                 ((CfperchState *)state)->unkA = 500;
                 ((CfperchState *)state)->unk9 = 0;
-                *(int *)(obj + 0xf8) = 0;
+                ((GameObject *)obj)->unkF8 = 0;
                 ObjHits_EnableObject(obj);
-                *(u8 *)(obj + 0xaf) &= ~0x8;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
                 ObjHits_ClearHitVolumes(obj);
             }
         } else {
@@ -504,8 +505,8 @@ void smallbasket_update(int obj)
                 ((CfperchState *)state)->unkE = (s16)(randomGetRange(0, 100) + 0x12c);
             }
         }
-        if (*(int *)(obj + 0xf8) == 0) {
-            *(s16 *)(obj + 0x6) &= ~0x4000;
+        if (((GameObject *)obj)->unkF8 == 0) {
+            ((GameObject *)obj)->anim.flags &= ~0x4000;
         }
     }
 }
