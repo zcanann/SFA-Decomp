@@ -2745,9 +2745,9 @@ scaleAverage:
     *(f32 *)(obj + 0xc) *= averageScale;
     *(f32 *)(obj + 0x14) *= averageScale;
   }
-  else if ((s32)(*(u32 *)state & 0x100000) == 0) {
-    *(f32 *)(obj + 0xc) = state[0x39];
-    *(f32 *)(obj + 0x14) = state[0x3b];
+  else if ((s32)(collision->flags & 0x100000) == 0) {
+    *(f32 *)(obj + 0xc) = collision->localPointWorld[0][0];
+    *(f32 *)(obj + 0x14) = collision->localPointWorld[0][2];
   }
 buildTransform:
   transform.angles[0] = *(s16 *)obj;
@@ -2875,24 +2875,24 @@ void curves_preparePointCollisionFrame(int obj,u32 *state)
       }
     }
     if (*(s16 *)(obj + 0x44) == 1) {
-      state[8] = *(u32 *)(obj + 0x18);
-      state[0x14] = *(u32 *)(obj + 0x18);
-      *(f32 *)(state + 9) = lbl_803E06BC + *(f32 *)(obj + 0x1c);
-      *(f32 *)(state + 0x15) = *(f32 *)(state + 9);
-      state[10] = *(u32 *)(obj + 0x20);
-      state[0x16] = *(u32 *)(obj + 0x20);
+      *(u32 *)&collision->points[2][0] = *(u32 *)(obj + 0x18);
+      *(u32 *)&collision->traceStart[2][0] = *(u32 *)(obj + 0x18);
+      collision->points[2][1] = lbl_803E06BC + *(f32 *)(obj + 0x1c);
+      collision->traceStart[2][1] = collision->points[2][1];
+      *(u32 *)&collision->points[2][2] = *(u32 *)(obj + 0x20);
+      *(u32 *)&collision->traceStart[2][2] = *(u32 *)(obj + 0x20);
     }
     collision->surfaceFlags = 0;
     collision->surfaceHitMask = 0;
     resetRange = lbl_803E06A4;
-    *(f32 *)(stateBytes + 0x1bc) = resetRange;
-    *(f32 *)(stateBytes + 0x1b8) = resetRange;
+    collision->resultWaterY = resetRange;
+    collision->resultFloorY = resetRange;
     resetMin = lbl_803E06A8;
-    *(f32 *)(stateBytes + 0x1b0) = resetMin;
+    collision->resultCeilingY = resetMin;
     resetZero = lbl_803E0668;
-    *(f32 *)(stateBytes + 0x1b4) = resetZero;
-    *(f32 *)(stateBytes + 0x1ac) = resetZero;
-    state[0x36] = 0;
+    collision->resultWaterDepth = resetZero;
+    collision->resultFloorGap = resetZero;
+    collision->contactObj = 0;
     point = (f32 *)state;
     for (pointIndex = 0;
          pointIndex < ((s8)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
@@ -3223,7 +3223,7 @@ void dll_15_func08(short *curveObj,int *state,uint updateValue,f32 step)
   }
   one = lbl_803E068C;
   invStep = one / step;
-  state[0x36] = 0;
+  collision->contactObj = 0;
   if (collision->subtype == 1) {
     sCurvesCachedHitObj = 0;
     sCurvesCachedHitCount = 0;
@@ -3311,7 +3311,7 @@ void dll_15_func08(short *curveObj,int *state,uint updateValue,f32 step)
         outOff = outOff + 3;
       }
       if ((*state & 2) != 0) {
-        *(char *)(state + 0x98) = hitDetectFn_80067958((int)curveObj, state + 0xe, state + 2,
+        *(char *)&collision->surfaceFlags = hitDetectFn_80067958((int)curveObj, state + 0xe, state + 2,
                                                        (int)(uint)collision->pointCounts >>
                                                            CURVES_POINT_COUNT_SEGMENT_SHIFT,
                                                        state + 0x1a, 0);
