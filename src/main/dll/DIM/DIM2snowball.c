@@ -1340,7 +1340,6 @@ void dll_1CF_init(int* obj, int* def)
 extern f32 lbl_803E4A28;
 extern int getSaveGameLoadStatus(void);
 extern void gameBitFn_800ea2e0(u8 n);
-extern MapEventInterface **gMapEventInterface;
 extern void unlockLevel(int a, int b, int c);
 void dim_levelcontrol_init(int obj)
 {
@@ -1404,7 +1403,6 @@ void dim_tricky_update(int* obj)
 
 extern f32 sin(f32 x);
 extern f32 fn_80293E80(f32 x);
-extern f32 timeDelta;
 extern f32 lbl_803E4A5C;
 extern f32 lbl_803E4A60;
 extern f32 lbl_803E4A64;
@@ -1474,7 +1472,6 @@ extern void getTabEntry(int dst, int a, int off, int size);
 extern void ObjModel_SetBlendChannelTargets(int *model, int a, int b, int c, f32 w, int d);
 extern void ObjModel_SetBlendChannelWeight(int *model, int a, f32 w);
 extern s16 lbl_803DBF18;
-extern f32 lbl_803E4A78;
 extern f32 lbl_803E4A88;
 
 #pragma scheduling off

@@ -4027,7 +4027,6 @@ extern u8    lbl_803DD970;
 extern void* lbl_803DD974;
 extern void* lbl_803DD96C;
 extern void* gameTextGet(s32);
-extern void* textureLoadAsset(s32);
 extern void  textureFree(void*);
 
 /* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
@@ -4303,22 +4302,15 @@ int trickyFn_80138f14(u8* obj)
 }
 #pragma peephole reset
 
-extern u8    lbl_803A9FE4[0x34];
-extern f32   lbl_803E22F8;
 extern f32   lbl_803E2344;
 extern f32   lbl_803E2348;
 extern f32   lbl_803E234C;
 extern f32   lbl_803E2350;
-extern f32   lbl_803E2318;
 extern f32   lbl_803DD9C8;
-extern f32   lbl_803DD9B4;
-extern f32   lbl_803DD9B0;
 extern void  PSMTXTrans(void*, f32, f32, f32);
 
 extern void* lbl_803DBBC8[2];
 extern void  Obj_FreeObject(void*);
-extern void* minimapTexture;
-extern void* lbl_803DD940;
 
 extern f32   lbl_803E23B8;
 extern f32   lbl_803DD9D8;
@@ -4585,14 +4577,7 @@ void titleScreenPositionElements(f32 a, f32 b)
 #pragma scheduling reset
 
 extern void* lbl_803DD960;
-extern void* lbl_803DD974;
-extern void* lbl_803DD96C;
-extern u8    lbl_803DD970;
 /* lbl_803DD940 declared later as void* */
-extern u8    lbl_803DD990;
-extern u8    lbl_803DD991;
-extern s8    lbl_803DBC08;
-extern s8    lbl_803DBC09;
 extern f32   lbl_803E2408;
 
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
@@ -4660,12 +4645,9 @@ void trickyImpress(u8* obj)
 
 extern void* lbl_803DD984;
 extern void* lbl_803DD980;
-extern void* minimapTexture;
-extern void* lbl_803DD92C;
 extern f32   lbl_803DD97C;
 extern f32   lbl_803E22E0;
 extern u8    lbl_803DD993;
-extern u8    lbl_803DD9AA;
 extern u16   lbl_803DD994;
 extern u16   lbl_803DD996;
 extern u16   lbl_803DD998;
@@ -5258,7 +5240,6 @@ extern f32 lbl_803E2384;
 extern f32 lbl_803E2388;
 extern f32 lbl_803DBC0C;
 extern u8  lbl_803A9F50[0x48];
-extern int *gCameraInterface;
 extern void Sfx_StopFromObject(int obj, int id);
 void fn_80134870(int obj, u8 *arr);
 
@@ -5826,7 +5807,6 @@ extern f32 lbl_803E2268;
 extern f32 lbl_803E226C;
 extern f32 lbl_803E2270;
 extern f32 lbl_803E2274;
-extern f32 lbl_803E2278;
 
 #pragma scheduling off
 #pragma peephole off
@@ -6053,25 +6033,18 @@ int fn_80136A40(int p1, int c)
 
 extern int Camera_GetViewportYOffset(void);
 extern int objIsCurModelNotZero(int obj);
-extern void Sfx_StopFromObject(int obj, int id);
 extern int getButtonsHeld(int p);
 extern int getButtonsJustPressed(int p);
 extern f32 powfCoreFast(f32 base, f32 exp);
 extern int ObjGroup_FindNearestObject(int type, int obj, f32 *distOut);
 extern s16 *Camera_GetCurrentViewSlot(void);
 extern int getAngle(f32 dx, f32 dz);
-extern int *gCameraInterface;
 extern int *gGameUIInterface;
 extern u8 pauseMenuState;
 extern u8 lbl_803DD945;
-extern u8 lbl_803DD928;
 extern u8 lbl_803DD929;
-extern u8 lbl_803DD92A;
-extern u8 lbl_803DBBB0;
 extern s8 lbl_803DBBB1;
 extern u8 lbl_803DD7BA;
-extern s8 lbl_803DD944;
-extern int lbl_803DD934;
 extern s16 lbl_803DBA6E;
 extern int lbl_803DBBE8;
 extern f32 lbl_803DBBB4;
@@ -6268,7 +6241,6 @@ void fn_8013396C(void)
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32 *color);
 extern void GXSetTevColor(int id, int *color);
 extern void setTextColor(int p);
-extern u32 lbl_803DDA08;
 extern u16 lbl_803DDA14;
 extern u16 lbl_803DDA16;
 extern u16 lbl_803DBC10;
@@ -6624,7 +6596,6 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u16 *lbl_803DCCE8;
 extern u16 *debugFrameBuffer;
 extern u16  lbl_803DDA40_u;
 extern char lbl_803DBC18;

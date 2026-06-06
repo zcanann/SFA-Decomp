@@ -366,7 +366,6 @@ void synthSetFadeAction(u32 fadeIndex, u8 action) {
 extern void sndBegin(void);
 extern void sndEnd(void);
 extern void salFree(void* ptr);
-extern u8* synthVoice;
 
 void synthExit(void) {
     salFree(synthVoice);

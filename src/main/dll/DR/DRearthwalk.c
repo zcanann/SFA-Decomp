@@ -867,7 +867,6 @@ extern f32 lbl_803E5520;
 extern f32 lbl_803E5528;
 extern f32 lbl_803E552C;
 extern int lbl_803DDC00;
-extern f32 timeDelta;
 
 /* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
 #pragma scheduling off
@@ -953,10 +952,6 @@ extern int *Obj_AllocObjectSetup(int a, int b);
 extern int loadObjectAtObject(int obj, int *setup);
 extern void hudFn_8011f38c(int a);
 extern void fn_801DA4A8(int obj, int state, int a);
-extern f32 lbl_803E54D0;
-extern f32 lbl_803E54D4;
-extern f32 lbl_803E54D8;
-extern f32 lbl_803E54E0;
 extern f32 lbl_803E5508;
 #pragma scheduling off
 #pragma peephole off
@@ -1041,25 +1036,16 @@ int sh_staff_SeqFn(int obj, int unused, u8 *buf)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern f32 lbl_803E5508;
 
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern void *fn_802966CC(int player);
 extern int fn_80295CF4(int player, int a);
 extern int fn_8029672C(int player, int a);
 extern int ObjTrigger_IsSet(int obj);
-extern u8 Obj_IsLoadingLocked(void);
-extern int *Obj_AllocObjectSetup(int a, int b);
-extern int loadObjectAtObject(int obj, int *setup);
 extern void mapUnload(int idx, int flags);
 extern void loadMapAndParent(int mapId);
-extern void hudFn_8011f38c(int a);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int *gObjectTriggerInterface;
-extern f32 lbl_803E54D0;
-extern f32 lbl_803E54D4;
-extern f32 lbl_803E54D8;
-extern f32 lbl_803E54E0;
 extern f32 lbl_803E550C;
 extern f32 lbl_803E5510;
 extern f32 lbl_803E5514;
@@ -1232,7 +1218,6 @@ extern int GameBit_Set(int eventId, int value);
 extern void gameBitDecrement(int eventId);
 extern void *getTrickyObject(void);
 extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
-extern f32 lbl_803E5528;
 extern f32 lbl_803E5530;
 extern f32 lbl_803E5534;
 extern f32 lbl_803E5538;

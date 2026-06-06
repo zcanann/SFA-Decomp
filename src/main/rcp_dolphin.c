@@ -2547,7 +2547,6 @@ extern f32 distortionFilterVector[3];
 extern f32 distortionFilterAngle1;
 extern f32 distortionFilterAngle2;
 extern u8 distortionFilterColor[3];
-extern u8 bEnableDistortionFilter;
 void turnOnDistortionFilter(f32 *vec, u8 *color, f32 angle2, f32 angle1) {
     distortionFilterVector[0] = vec[0];
     distortionFilterVector[1] = vec[1];

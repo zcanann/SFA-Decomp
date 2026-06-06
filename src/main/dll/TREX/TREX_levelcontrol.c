@@ -383,8 +383,6 @@ void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58D8); }
 #pragma peephole reset
 
-extern undefined4 *gPartfxInterface;
-extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E58BC;
 extern f64 lbl_803E58C0;

@@ -881,9 +881,6 @@ int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
 
 extern void ModelLightStruct_free(void *light);
 extern void gameTimerStop(void);
-extern void Music_Trigger(int id, int restart);
-extern void GameBit_Set(int bit, int value);
-extern int GameBit_Get(int bit);
 extern void modelLightStruct_setEnabled(void *light, int enabled, f32 scale);
 extern void objRenderFn_8003b8f4(f32);
 extern void objParticleFn_80099d84(void *obj, int type, void *light, f32 scale, f32 extraScale);
@@ -958,15 +955,12 @@ void ecsh_creator_init(s16 *obj, s8 *def) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *Obj_GetPlayerObject(void);
 extern void fn_80296518(int *player, int a, int b);
 extern MapEventInterface **gMapEventInterface;
 extern int fn_801C5CE4(void *objArg, int unused, void *eventListArg);
 extern int objCreateLight(int a, int b);
 extern int lbl_803DDBC0;
 extern s16 *lbl_803DDBC4;
-extern f32 lbl_803E4FCC;
-extern f32 lbl_803E4FD0;
 
 typedef struct EcshShrineByte15 {
     u8 flag : 1;
@@ -1058,7 +1052,6 @@ void ecsh_shrine_init(s16 *obj, s8 *def) {
 
 extern int *Resource_Acquire(int id, int b);
 extern void Resource_Release(int *res);
-extern void Sfx_PlayFromObject(s16 *obj, int sfxId);
 extern u8 *mmAlloc(int size, int tag, int p);
 extern int Obj_SetupObject(u8 *def, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
@@ -1123,7 +1116,6 @@ void ecsh_creator_update(s16 *obj) {
 
 extern int getAngle(f32 dx, f32 dz);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
-extern f32 timeDelta;
 extern f32 lbl_803E5000;
 extern f32 lbl_803E5004;
 extern f32 lbl_803E5008;

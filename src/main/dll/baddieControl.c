@@ -3435,12 +3435,7 @@ void CameraModeCloudRunner_init(int *p1, int p2, f32 *p3)
     }
 }
 
-extern u8 lbl_803DD5D2;
-extern u8 lbl_803DD5D1;
-extern u8 lbl_803DD5D0;
-extern f32 lbl_803E1BE0;
 extern f32 lbl_803E1BE4;
-extern f32 lbl_803DB9D8;
 extern void Movie_SetVolumeFade(int p1, int p2);
 extern void Music_Trigger(int id, int mode);
 void CameraModeTitle_moveCam(u8 newCam)
@@ -3465,18 +3460,9 @@ void CameraModeTitle_moveCam(u8 newCam)
 #pragma peephole reset
 
 /* misc 8b leaves */
-extern f32 lbl_803DB9D8;
 f32 titleScreenGetCamProgress(void) { return lbl_803DB9D8; }
 
 /* fn_X(lbl); lbl = 0; */
-extern u32 lbl_803DD588;
-extern void mm_free(u32);
-extern u32 lbl_803DD590;
-extern u32 lbl_803DD598;
-extern u32 lbl_803DD5A0;
-extern u32 lbl_803DD5B8;
-extern u32 lbl_803DD5C0;
-extern u32 lbl_803DD5C8;
 #pragma scheduling off
 #pragma peephole off
 void CameraModeWorldMap_free(void) { mm_free(lbl_803DD588); lbl_803DD588 = 0; }
@@ -3813,7 +3799,6 @@ int dll_19_func10(int p1, u8 *p2, int p3, int p4, s16 p5, f32 *p6, f32 *p7, int 
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, int mtx);
 extern f32 lbl_803E1AC0;
 extern f32 lbl_803E1AC4;
 
@@ -4397,7 +4382,6 @@ void dll_19_func18(int p1, u8 *p2, u8 *p3, int p4, int p5, int p6, f32 fparam, i
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern f32 lbl_803E1AD0;
 extern f32 lbl_803E1AD4;
 extern f32 lbl_803E1AD8;
@@ -4450,7 +4434,6 @@ void CameraModeCrawl_update(u8 *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_8029697C(int state, s16 *a, s16 *b);
 extern int fn_802972A8(int state);
 extern void setMatrixFromObjectPos(f32 *matrix, void *objpos);
 extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
@@ -4543,8 +4526,6 @@ void CameraModeCloudRunner_update(u8 *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803DD5A8;
-extern f32 lbl_803E1B18;
 
 /* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
 #pragma peephole off
@@ -4930,10 +4911,6 @@ typedef struct {
 } TitleCamPos;
 
 extern TitleCamPos lbl_803A4420;
-extern u8 lbl_803DD5D0;
-extern u8 lbl_803DD5D1;
-extern u8 lbl_803DD5D2;
-extern f32 lbl_803E1BE0;
 extern f32 lbl_803E1BE8;
 extern f32 lbl_803E1BEC;
 extern f32 lbl_803E1BF0;
@@ -5042,7 +5019,6 @@ void CameraModeTitle_update(u8 *obj) {
 extern int fn_8022D750(int state);
 extern int fn_8022D710(int state);
 extern f32 lbl_803E1BA0;
-extern f32 lbl_803E1BA4;
 extern f32 lbl_803E1BA8;
 extern f32 lbl_803E1BAC;
 extern f32 lbl_803E1BB0;

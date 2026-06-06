@@ -1992,10 +1992,6 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
 /* sda21 externs for Effect10_func05 tick. */
 extern f32 lbl_803DB838;
 extern f32 lbl_803DB83C;
-extern f32 lbl_803DFEB8;
-extern f32 lbl_803DFEBC;
-extern f32 lbl_803DFEC0;
-extern f32 lbl_803DFEC8;
 extern s32 lbl_803DD3B0;
 extern s32 lbl_803DD3B4;
 extern f32 lbl_803DD3B8;

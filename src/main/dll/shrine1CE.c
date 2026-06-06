@@ -283,16 +283,12 @@ void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 #pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern void ObjHits_ClearHitVolumes(int obj);
 extern void Obj_FreeObject(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfx);
-extern int Resource_Acquire(int id, int mode);
-extern void Resource_Release(int handle);
 extern f32 lbl_803E51B4;
 
 #pragma scheduling off
@@ -345,8 +341,6 @@ void dll_19C_update(int *obj) {
 #pragma scheduling reset
 
 extern void dll_19B_SeqFn(int p1, int p2, void *p3);
-extern int GameBit_Set(int eventId, int value);
-extern void *gTitleMenuControlInterface;
 
 #pragma scheduling off
 #pragma peephole off

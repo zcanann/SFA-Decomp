@@ -382,7 +382,6 @@ void *getCache(void);
 
 extern void Sfx_SetObjectSoundsPaused(s32 paused);
 extern void gameTextLoadDir(int dirId);
-extern f32 timeDelta;
 
 #pragma push
 #pragma scheduling off
@@ -555,14 +554,12 @@ void cutsceneFadeInOut(int a) {
 #pragma peephole off
 #pragma pop
 
-extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
 
 #pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
 #pragma peephole reset
 
-extern void *memset(void *dst, int val, int n);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -653,7 +650,6 @@ int cacheAllocAndCopy(u32 srcAddr, u32 size, u32 *cacheCursor, u32 *outEnd, u32 
 
 void ObjModel_InitRenderBuffers(void);
 
-extern void *memset(void *dst, int val, int n);
 
 #pragma dont_inline on
 void *animationLoad(int id, s16 a, s16 b, int e, int f) {
@@ -782,7 +778,6 @@ u32 GameBit_Get(int eventId) {
 extern int isSaveGameLoading(void);
 extern void gameBitFn_800ea2e0(int a);
 extern char lbl_802CA4E0[];
-extern void OSReport(char *fmt, ...);
 #define GameBit_RequestSync gameBitFn_800ea2e0
 #define sGameBitSetDuringSaveLoadWarning lbl_802CA4E0
 
@@ -912,10 +907,7 @@ void Obj_FlushDeferredFreeList(void);
 #pragma peephole off
 #pragma pop
 
-extern int textureLoad(int id, int flag);
 
-extern void OSReport(char *fmt, ...);
-extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
 
 #pragma peephole off
 #pragma scheduling off
@@ -936,7 +928,6 @@ void ObjModel_InitResourceCaches(void);
 #pragma pop
 
 extern void mapSetup();
-extern void *memset(void *dst, int val, int n);
 extern void Music_Trigger(int triggerId, int mode);
 extern u8 lbl_803DCA38;
 extern int lbl_803DCAF8;

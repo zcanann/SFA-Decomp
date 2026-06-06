@@ -107,7 +107,6 @@ void texscroll2_hitDetect(void) {}
 void texscroll2_release(void) {}
 void texscroll2_initialise(void) {}
 
-extern uint GameBit_Get(int eventId);
 
 #pragma scheduling off
 #pragma peephole off

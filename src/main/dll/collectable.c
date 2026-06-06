@@ -638,7 +638,6 @@ extern void characterDoEyeAnims(int obj,void *p);
 extern int fn_80138D7C(int obj,int state);
 extern void Tricky_updateBlendChannelWeight(int obj,int state);
 extern int *gObjectTriggerInterface;
-extern f32 lbl_803E23E8;
 
 int tricky_SeqFn(int obj,int unused,int seq)
 {
@@ -3662,14 +3661,10 @@ int Tricky_getCurrentCommandType(int *obj, int *out) {
 #pragma scheduling reset
 #pragma peephole reset
 
-extern u32 GameBit_Get(int bit);
 extern u8 Objfsa_GetWalkGroupIndexAtPoint(void *pos,int param_2);
 extern int Objfsa_GetPatchGroupIdAtPoint(void *pos);
 extern void walkPath_writeU16LE(int pathId,u8 *out);
-extern int Obj_AllocObjectSetup();
-extern int Obj_SetupObject(int setup,int param_2,int param_3,int param_4,int param_5);
 extern int Objfsa_FindNearestEnabledCurveType24(void *pos,int param_2,int param_3);
-extern f32 lbl_803E23DC;
 
 /* trickyFn_801451d8: 300b - seed Tricky's path state and ensure the helper object exists. */
 #pragma peephole off
@@ -3847,13 +3842,9 @@ void trickyReportError(const char *fmt, ...) { }
 void trickyDebugPrint(const char *fmt, ...) { }
 
 extern f32 lbl_803E25A4;
-extern f32 lbl_803E2594;
-extern f32 lbl_803E2538;
 extern f32 lbl_803E2500;
 extern f32 lbl_803E2418;
-extern f32 lbl_803E23DC;
 
-extern f32 getXZDistance(f32 *a, f32 *b);
 /* Tricky_findNearestGroup4BObject: find nearest object within distance threshold. */
 #pragma scheduling off
 int Tricky_findNearestGroup4BObject(int *obj, int *p) {

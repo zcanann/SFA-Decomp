@@ -2702,8 +2702,6 @@ extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
 extern u8 lbl_803DBD28[4];
 extern u8 lbl_803DBD2C[4];
 extern u8 lbl_803DBD30[4];
-extern f32 lbl_803E2CA0;
-extern f32 lbl_803E2CA4;
 
 #pragma scheduling off
 #pragma peephole off
@@ -3008,7 +3006,6 @@ extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
 extern f32 lbl_803E2C74;
 extern f32 lbl_803E2C30;
 extern f32 lbl_803E2C34;
-extern f32 lbl_803E2C24;
 extern f32 lbl_803E2C10;
 extern f32 lbl_803E2C14;
 extern f32 lbl_803E2C18;
@@ -3287,7 +3284,6 @@ void fn_80157004(s16* obj, u8* state)
 #pragma scheduling reset
 
 extern f32 lbl_803DDA70;
-extern f32 lbl_803E2BA8;
 extern f32 lbl_803E2BAC;
 extern f32 lbl_803E2BB0;
 extern f32 lbl_803E2BB4;

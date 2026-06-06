@@ -236,10 +236,8 @@ extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c
 extern void ObjLink_AttachChild(int obj, int child, int slot);
 extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int flag);
 extern int objFindTexture(int obj, int a, int b);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern u8 *Camera_GetCurrentViewSlot(void);
 extern f32 lbl_8032A200[];
-extern int lbl_803DDD34;
 extern f32 lbl_803E667C;
 extern f32 lbl_803E6680;
 extern f32 lbl_803E6684;
@@ -253,7 +251,6 @@ extern f32 lbl_803E66A4;
 extern f32 lbl_803E66A8;
 extern f32 lbl_803E66B0;
 extern f32 lbl_803E66B8;
-extern f32 lbl_803E6678;
 
 #pragma scheduling off
 #pragma peephole off

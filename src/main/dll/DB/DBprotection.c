@@ -166,14 +166,11 @@ extern void setMatrixFromObjectPos(f32 *matrix, void *objPos);
 extern void Matrix_TransformPoint(f32 x, f32 y, f32 z, f32 *matrix, f32 *outX, f32 *outY, f32 *outZ);
 
 extern f32 lbl_803E56C8;
-extern f32 lbl_803E56CC;
 extern f32 lbl_803E56D0;
 extern f32 lbl_803E56D4;
 extern f32 lbl_803E56D8;
 extern f32 lbl_803E56DC;
 extern f32 lbl_803E56E0;
-extern f32 lbl_803E56E4;
-extern f32 lbl_803E56E8;
 extern f32 lbl_803E56EC;
 extern f32 lbl_803E56F0;
 extern f32 lbl_803E56F4;

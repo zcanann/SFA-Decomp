@@ -722,7 +722,6 @@ extern void dfsh_shrine_SeqFn(int p1, int p2, void *p3);
 extern int mapGetDirIdx(int id);
 extern void unlockLevel(int idx, int a, int b);
 extern void *objCreateLight(int *obj, int v);
-extern f32 lbl_803E4E8C;
 
 typedef struct DfshShrineFlags {
     u8 openedBySequence : 1;
@@ -770,7 +769,6 @@ void SpiritPrize_hitDetect(void) {}
 void SpiritPrize_release(void) {}
 void SpiritPrize_initialise(void) {}
 
-extern void *gObjectTriggerInterface;
 extern void ModelLightStruct_free(void *light);
 
 typedef struct SpiritPrizeState {
@@ -812,7 +810,6 @@ void SpiritPrize_free(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void *objCreateLight(int *obj, int v);
 extern void modelLightStruct_setLightKind(void *light, int v);
 extern void modelLightStruct_setDiffuseColor(void *light, int a, int b, int c, int d);
 extern void modelLightStruct_setDistanceAttenuation(void *light, f32 a, f32 b);

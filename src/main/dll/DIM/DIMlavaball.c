@@ -1452,10 +1452,7 @@ extern void unlockLevel(int, int, int);
 extern void Music_Trigger(int, int);
 extern void MMP_LevelControl_SeqFn(int);
 extern f32 lbl_803E44C8;
-extern f32 lbl_803DDB28;
-extern int lbl_803DDB2C;
 extern u8 framesThisStep;
-extern u32 randomGetRange(int min, int max);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern int *gPartfxInterface;
 
@@ -1549,7 +1546,6 @@ extern f32 lbl_803E455C;
 extern f32 lbl_803E4560;
 extern f32 lbl_803E4564;
 extern f32 lbl_803E4568;
-extern f32 timeDelta;
 
 #pragma scheduling off
 #pragma peephole off
@@ -1835,9 +1831,7 @@ void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void *Obj_GetPlayerObject(void);
 extern void vecRotateZXY(void *in, void *out);
-extern f32 lbl_803E4554;
 extern f32 lbl_803E456C;
 extern f32 lbl_803E4570;
 extern f32 lbl_803E4574;
@@ -2135,7 +2129,6 @@ extern void doRumble(f32 duration);
 extern char lbl_803231D0[];
 extern char lbl_803AC900[];
 extern int lbl_803DDB30;
-extern f32 lbl_803E44F8;
 extern f32 lbl_803E44FC;
 extern f32 lbl_803E4500;
 extern f32 lbl_803E4504;

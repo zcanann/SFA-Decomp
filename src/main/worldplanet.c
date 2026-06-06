@@ -225,7 +225,6 @@ extern u8 lbl_803DC1D8[6];
 extern s16 getAngle(f32 a, f32 b);
 extern u8 fn_8012DDAC(void);
 extern void Pause_ResetMenuFrameCounter(void);
-extern int getLoadedFileFlags(int file);
 extern int loadMapAndParent(int mapId);
 extern void lockLevel(int idx, int p2);
 extern void loadModelAndAnimTabs(void);

@@ -663,13 +663,6 @@ extern u8 lbl_8031DD30[];
 #pragma scheduling off
 #pragma peephole off
 extern void fn_8014D08C(int obj, int state, int moveId, f32 speed, int p5, int flags);
-extern void fn_801513AC(int obj, int state);
-extern f32 lbl_803E2740;
-extern f32 lbl_803E2744;
-extern f32 lbl_803E2748;
-extern f32 lbl_803E274C;
-extern f32 lbl_803E2750;
-extern f32 lbl_803E2754;
 
 u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent) {
     u8 *base = lbl_8031DD30;

@@ -242,11 +242,6 @@ void dll_199_update(int obj)
 #pragma peephole off
 extern int dll_199_SeqFn(int obj, int p2, u8 *p3);
 extern void ObjMsg_AllocQueue(int obj, int n);
-extern int GameBit_Set(int eventId, int value);
-extern u32 GameBit_Get(int eventId);
-extern int *Resource_Acquire(int id, int kind);
-extern void Resource_Release(int *res);
-extern int *gTitleMenuControlInterface;
 
 /*
  * --INFO--
@@ -292,7 +287,6 @@ void dll_199_init(int obj, int def)
     Resource_Release(res);
 }
 
-extern byte framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int typeId);
 extern char *Obj_SetupObject(int setup, int a, int b, int c, int d);

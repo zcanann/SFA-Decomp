@@ -1916,8 +1916,6 @@ undefined4 * FUN_800e87a8(void)
  * PAL Size: TODO
  */
 extern int maybeTryLoadSave(int a);
-extern void *memset(void *dst, int val, u32 n);
-extern u8 saveData[228];
 
 #pragma scheduling off
 #pragma peephole off
@@ -1954,10 +1952,7 @@ int saveFn_800e8508(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern s8 lbl_803DB890;
-extern u8 *lbl_803DD498;
 extern u32 pRestartPoint;
-extern void *memcpy(void *dst, const void *src, u32 n);
 extern int _saveGame(int a, int b, int c);
 
 void gplaySaveGame(int param)
@@ -13058,7 +13053,6 @@ int Dummy58_func03_ret_0(void) { return 0x0; }
 int Dummy6C_func03_ret_0(void) { return 0x0; }
 
 /* sda21 accessors. */
-extern u8 lbl_803DD488;
 u8 getSaveGameLoadStatus(void) { return lbl_803DD488; }
 
 void setSaveGameLoadingFlag(void) { if (lbl_803DD488 == 2) lbl_803DD488 = 1; }
@@ -13122,7 +13116,6 @@ void Carryable_setFlag02Inverted(u8 *state, u8 clear)
 u8 Carryable_getSurfaceType(u8 *state) { return state[8]; }
 
 /* if (lbl) fn(lbl); */
-extern u32 pRestartPoint;
 extern void mm_free(u32);
 #pragma scheduling off
 #pragma peephole off
@@ -13135,10 +13128,7 @@ enum {
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
-extern MapBitTransient gTransientMapBits[];
 extern s8 lbl_803DD494;
-extern int lbl_803DD48C;
-extern u8 *lbl_803DD498;
 void SaveGame_initialise(void) {
     s8 *base = (s8 *)gTransientMapBits;
     int i;
@@ -13174,7 +13164,6 @@ u8 getNextTaskHintText(void) { u8 *p = (u8*)getLastSavedGameTexts(); return p[5]
 #pragma scheduling off
 #pragma peephole off
 void SaveGame_gplayClearRestartPoint(void) { if (pRestartPoint != 0) { mm_free(pRestartPoint); pRestartPoint = 0; } }
-extern void *memcpy(void *dst, const void *src, u32 n);
 extern void loadMapForCurrentSaveGame(void);
 void SaveGame_gplayGotoRestartPoint(void) {
     if (pRestartPoint != 0) {
@@ -13229,7 +13218,6 @@ extern int fn_80295BF0(void *player);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int hitDetectFn_80065e50(u8 *obj, f32 x, f32 y, f32 z, f32 ***list, int a, int b);
 extern f32 timeDelta;
-extern f32 lbl_803E06D8;
 void saveGame_saveObjectPos(int *obj);
 extern const f32 lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;
 
@@ -13412,7 +13400,6 @@ void *SaveGame_getLast(void) { return lbl_803A32A8; }
 s32 SaveGame_getCamActionNo(void) { return *(s16 *)((char *)lbl_803A32A8 + 0x6a4); }
 void *saveGameGetEnvState(void) { return (char *)lbl_803A32A8 + 0x6a8; }
 f32 SaveGame_getPlayTime(void) { return *(f32 *)((char *)lbl_803A32A8 + 0x560); }
-extern f32 timeDelta;
 extern f32 lbl_803E06D0;
 extern f32 lbl_803E06D4;
 void SaveGame_updateTimes(void) {
@@ -13509,9 +13496,7 @@ void *SaveGame_getCurCharacterState(void) {
     return (char *)lbl_803A32A8 + idx * 12;
 }
 s32 SaveGame_gplayGetRestartGameNotCleared(void) { return pRestartPoint != 0; }
-extern u16 lbl_80311810[];
 u16 SaveGame_getMapObjGroupBit(int idx) { return lbl_80311810[idx]; }
-extern u8 gExtendedMapActLookup[];
 void SaveGame_setMapActLut(int val, int idx) { *(u8 *)((char *)gExtendedMapActLookup + idx - SAVEGAME_EXTENDED_MAP_THRESHOLD) = (u8)val; }
 extern u32 lbl_803DD4A0;
 extern u32 lbl_803DD4A4;
@@ -13523,7 +13508,6 @@ void screens_initialise(void) {
     lbl_803DD4A4 = 0;
     lbl_803DD4A8 = 0;
 }
-extern u8 *lbl_803DD498;
 void updateSavedHealth(void) {
     int idx = *(u8*)((char*)lbl_803A32A8 + 0x20) * 12;
     *((u8*)lbl_803A32A8 + idx) = lbl_803DD498[idx];
@@ -13533,7 +13517,6 @@ extern void *getLastSavedGameTexts(void);
 void *saveGameGetCurHint(void) {
     return gameTextGet((s32)*(u8*)((char*)getLastSavedGameTexts() + 0x5) + 0xf4);
 }
-extern u32 gMapObjGroupStatuses[];
 u32 SaveGame_mapGetObjGroups(int idx) {
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) idx = *(u8*)((char*)gExtendedMapActLookup + idx - SAVEGAME_EXTENDED_MAP_THRESHOLD);
     return gMapObjGroupStatuses[idx];
@@ -13546,7 +13529,6 @@ void SaveGame_resetObjGroups(int idx) {
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) idx = *(u8*)((char*)gExtendedMapActLookup + idx - SAVEGAME_EXTENDED_MAP_THRESHOLD);
     gMapObjGroupStatuses[idx] = 0;
 }
-extern u32 GameBit_Get(int eventId);
 void SaveGame_mapUpdateObjGroups(int idx) {
     u16 bit;
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) idx = *(u8*)((char*)gExtendedMapActLookup + idx - SAVEGAME_EXTENDED_MAP_THRESHOLD);
@@ -13555,7 +13537,6 @@ void SaveGame_mapUpdateObjGroups(int idx) {
         gMapObjGroupStatuses[idx] = GameBit_Get(bit);
     }
 }
-extern u16 lbl_80311720[];
 u8 SaveGame_getMapAct(int idx) {
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) idx = *(u8*)((char*)gExtendedMapActLookup + idx - SAVEGAME_EXTENDED_MAP_THRESHOLD);
     if (idx != lbl_803DD494) {
@@ -13576,7 +13557,6 @@ int SaveGame_gplayGetObjGroupStatus(int idx, int shift) {
     }
     return ((&lbl_803DD48C)[1] >> shift) & 1;
 }
-extern void GameBit_Set(int eventId, int value);
 void SaveGame_gplaySetAct(int idx, int act) {
     int j;
     u16 bit;
@@ -13707,7 +13687,6 @@ void hintTextFn_800ea174(u8 *out) {
 }
 extern int getCurGameText(void);
 extern void gameTextLoadDir(int dirId);
-extern u8 lbl_803A4218[];
 int hintTextMapFn_800ea264(void) {
     int r = getCurGameText();
     u8 *t = (u8 *)getLastSavedGameTexts();
@@ -13806,7 +13785,6 @@ void screens_remove2(void) {
     }
 }
 extern void loadAssetFileById(void **out, int id);
-extern void *mmAlloc(int size, int heap, int flags);
 extern void getTabEntry(void *dst, int fileId, int offset, int size);
 void screens_show(int id) {
     int *asset = NULL;

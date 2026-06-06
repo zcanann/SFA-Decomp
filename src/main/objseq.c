@@ -163,18 +163,7 @@ typedef struct SeqRunFlags {
 } SeqRunFlags;
 extern SeqRunFlags lbl_803DD0B4;
 extern u8 *lbl_803DD07C;
-extern u8 lbl_803DD078;
-extern u8 lbl_803DD0D9;
-extern int lbl_803DB714;
-extern int lbl_803DB71C;
-extern int lbl_803DB72C;
-extern s16 lbl_8030ECF8[];
-extern int fn_80296C2C(void *obj);
-extern void fn_80297284(void *obj);
-extern void fn_8029726C(void *obj);
-extern void fn_80297254(void *obj);
 extern void gameTextLoadTaskText(int taskId);
-extern void cameraFocusNpc(int param1, u8 *obj);
 
 
 void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)

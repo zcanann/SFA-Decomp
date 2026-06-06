@@ -411,11 +411,9 @@ extern void fn_8003B950(int mtx);
 
 extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
 extern void Resource_Release(int handle);
-extern u8 framesThisStep;
 extern void *lbl_803DE4D0;
 
 extern int GameBit_Set(int id, int value);
-extern int *gGameUIInterface;
 extern int lbl_803DB1C0[];
 extern void *lbl_803DE4E0;
 extern int fn_802C0B84(int obj);
@@ -447,7 +445,6 @@ extern s16 lbl_803DC754;
 extern int randomGetRange(int lo, int hi);
 extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
 extern int *gObjectTriggerInterface;
-extern void buttonDisable(int a, int b);
 extern void Sfx_PlayFromObject(int obj, int id);
 
 extern f32 lbl_803E83F4;
@@ -456,8 +453,6 @@ extern f32 lbl_803E83BC;
 extern f32 lbl_803E8408;
 extern f32 lbl_803E840C;
 extern s16 lbl_803DC79A;
-extern f32 Vec_distance(int a, int b);
-extern void *Obj_GetPlayerObject(void);
 extern void fn_802BF0C8(int obj, int p2, int mode);
 extern f32 lbl_803E8304;
 extern f32 GX_F32_256;
@@ -468,12 +463,10 @@ extern void CameraShake_SetAllMagnitudes(f32 m);
 extern void playerAddHealth(int obj, int amt);
 
 extern void dll_2E_func06();
-extern f32 lbl_803E8338;
 extern f32 lbl_803E83A8;
 extern f32 lbl_803E8360;
 extern f32 lbl_803E8354;
 extern f32 lbl_803E8364;
-extern f32 lbl_803E8304;
 
 extern void fn_80026C88(int p);
 extern int Obj_FreeObject(int obj);
@@ -484,7 +477,6 @@ extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
 extern void *lbl_803DE4C0;
 
-extern int *gObjectTriggerInterface;
 
 extern int *gRomCurveInterface;
 extern f32 lbl_803E8410;
@@ -492,11 +484,7 @@ extern f32 lbl_803E8410;
 extern int *gPlayerInterface;
 int fn_802BC3F0(int obj, int p2, int p3);
 
-extern void setMatrixFromObjectPos(f32 *out, void *vec);
-extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
-extern f32 lbl_803E82C0;
 
-extern void *Obj_GetPlayerObject(void);
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
 
@@ -521,19 +509,15 @@ extern void *lbl_803DE4C4;
 extern s16 lbl_803DC730;
 extern int textureLoad(int id, int p2);
 
-extern u8 lbl_80335030[];
 extern void DIMSnowHorn1_animEventCallback();
 extern int lbl_803E8230;
 extern int lbl_803DC734;
 extern f32 lbl_803E82B8;
-extern int *gPathControlInterface;
 extern void dll_2E_func05(int obj, int q, int a, int b, int c);
 
 extern int dll_2E_func07(int obj, int p3, void *q, int a, int b);
-extern int *gPathControlInterface;
 
 extern int dll_2E_func0A(int a, void *out);
-extern void dll_2E_func05(int obj, int q, int a, int b, int c);
 extern void dll_2E_func08(int q, int a, int b);
 extern f32 lbl_803E8414;
 extern f32 lbl_803E8424;
@@ -542,8 +526,6 @@ void fn_802BF0C8(int obj, int inner, int bit);
 extern u8 lbl_803DC750;
 extern ObjHitReactEntry lbl_803351A8[];
 extern f32 timeDelta;
-extern void fn_8003A168(int obj, int q);
-extern void characterDoEyeAnims(int obj, int q);
 extern void saveGame_saveObjectPos(int obj);
 
 extern u8 lbl_803356F0[];
@@ -571,15 +553,11 @@ extern void fn_802B1B28(int obj, f32 t);
 
 extern void fn_80137948(const char *fmt, ...);
 extern char sOnCloudFormat[];
-extern void buttonDisable(int a, int b);
-extern void fn_8003B500(int obj, int q, f32 f);
-extern int *gMapEventInterface;
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
 extern f32 lbl_803E8420;
 
 extern u8 Obj_IsLoadingLocked(int obj);
-extern void Sfx_PlayFromObject(int obj, int id);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int s, int b, int c, int d, int e);
 extern void vecRotateZXY(void *a, void *b);

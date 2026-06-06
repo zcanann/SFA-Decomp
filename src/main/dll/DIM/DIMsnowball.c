@@ -1189,7 +1189,6 @@ int cclevcontrol_getExtraSize(void) { return 0x10; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E46CC;
-extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off
 #pragma peephole off
 void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
@@ -1450,7 +1449,6 @@ void ccqueen_init(int *obj, u8 *init) {
 extern f32 lbl_803E4664;
 extern f32 lbl_803E4668;
 extern f32 timeDelta;
-extern uint GameBit_Get(int eventId);
 extern unsigned long GameBit_Set(int eventId, int value);
 extern f32 vec3f_distanceSquared(f32* p1, f32* p2);
 extern void characterDoEyeAnims(int obj, void* p);

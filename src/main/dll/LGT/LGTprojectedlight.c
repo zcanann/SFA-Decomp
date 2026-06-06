@@ -555,7 +555,6 @@ void wmgeneralscales_initialise(void) {}
 int wmgeneralscales_getExtraSize(void) { return 0x8; }
 int wmgeneralscales_getObjectTypeId(void) { return 0x9; }
 
-extern void ObjLink_DetachChild(int *parent, int *child);
 #pragma scheduling off
 #pragma peephole off
 void wmgeneralscales_free(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) ObjLink_DetachChild(obj, p); }

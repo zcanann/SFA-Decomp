@@ -381,7 +381,6 @@ int dbsh_symbol_getExtraSize(void)
   return 0x24;
 }
 
-extern void gameTimerStop(void);
 
 /*
  * --INFO--
@@ -414,7 +413,6 @@ void dbsh_symbol_free(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803E5104;
 extern void objRenderFn_8003b8f4(f32);
 void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
     objRenderFn_8003b8f4(lbl_803E5104);
@@ -656,14 +654,12 @@ int dll_197_getExtraSize(void) { return 0x10; }
 int dll_197_getObjectTypeId(void) { return 0x1; }
 
 /* Render-side line-of-sight particle callback for the cup object. */
-extern f32 lbl_803E5104;
 extern f32 lbl_803E5120;
 extern f32 lbl_803E5124;
 extern f32 lbl_803E5128;
 extern f32 lbl_803E512C;
 extern f32 lbl_803E5130;
 extern f32 lbl_803E5134;
-extern void objRenderFn_8003b8f4(f32);
 extern void *Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
 extern void voxmaps_worldToGrid(void *world, void *grid);
@@ -757,7 +753,6 @@ void dll_197_free(int obj)
     (*(void (**)(int))(*(int *)gExpgfxInterface + 0x18))(obj);
 }
 
-extern f32 lbl_803E50EC;
 extern f32 lbl_803E5118;
 
 #pragma scheduling off

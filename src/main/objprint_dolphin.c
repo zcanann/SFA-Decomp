@@ -4577,7 +4577,6 @@ extern f32 lbl_803DEA6C;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern u8 lbl_803DB488[4];
-extern u8 lbl_803DCC29;
 extern void ObjModel_SetRenderCallback(int *model, void *cb);
 extern int *ObjModel_GetJointMatrix(int *model, int joint);
 extern void modelRenderCb_8003c268();
@@ -5265,7 +5264,6 @@ extern f32 *Camera_GetViewMatrix(void);
 extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
 extern void gxTextureFn_80072dfc(u8 *obj, int *p2, int p3);
 extern void GXBegin(int prim, int fmt, u16 count);
-extern u32 randomGetRange(int min, int max);
 extern int *gPartfxInterface;
 typedef void (*ObjPartfxFn)(u8 *obj, int id, void *blk, int flags, int p5, int p6);
 
@@ -5655,8 +5653,6 @@ extern u8 isHeavyFogEnabled(void);
 extern void getColor803dd01c(f32 *c);
 extern void renderHeavyFog(f32 *c);
 extern void textureFn_800528bc(void);
-extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
-extern void GXSetNumChans(int n);
 extern void selectTexture(void *tex, int p2);
 extern void GXSetTevKColor(int id, u32 *color);
 extern void GXSetArray(int attr, int ptr, int stride);
@@ -6014,7 +6010,6 @@ extern u16 lbl_803DEA4A[3];
 extern f32 lbl_803DEA50;
 extern f32 lbl_803DEA54;
 extern f32 lbl_803DCC50;
-extern s32 lbl_803DCC40;
 extern u8 lbl_803DCC35;
 extern u8 lbl_803DCC20;
 extern u8 lbl_803DCC3E;
@@ -6509,7 +6504,6 @@ u8 modelRenderFn_8003e98c(u8 *obj, u8 *shader, u32 *p3, int mask, int p5, int p6
     return ok;
 }
 
-extern u32 *ObjModel_GetRenderOpTextureRefs(int *am, int idx);
 extern ObjModelRenderCb ObjModel_GetPostRenderCallback(int *am);
 extern u8 textureFn_80050ad8(void *tex, int n, int p3, u32 p4);
 extern void textureFn_80051348(u32 ref, int p2);
@@ -6931,7 +6925,6 @@ void defragMemory(int mode) {
     texFlagFn_80023cbc(0);
 }
 
-extern u8 lbl_80345E10[];
 void *getCurrentDataFile(int id) {
     u8 *base = lbl_80345E10;
     switch (id) {
@@ -6951,7 +6944,6 @@ extern u32 lbl_803DCC84;
 extern void *lbl_803DCC8C;
 extern u32 lbl_8035F3E8[];
 extern u32 lbl_80345F70[];
-extern void mm_free(void *);
 extern void AtomicSList_Push(void *list, void *item);
 extern int DVDClose(void *fileInfo);
 
@@ -7057,7 +7049,6 @@ void tex1tab2readCb(s32 result, void *fileInfo)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u32 lbl_803DCC74;
 
 void romListReadCb(s32 result, void *fileInfo)
 {

@@ -178,7 +178,6 @@ void OptionsScreen_render(int arg)
 extern void gameTextLoadDir(int);
 extern u8 lbl_803DD70C;
 extern u32 lbl_803DD708;
-extern s8 lbl_803DD706;
 extern u8 lbl_803DD705;
 extern u8 lbl_803DD6F9;
 extern u8 lbl_803DD6F8;
@@ -558,9 +557,7 @@ void Dummy39_release(void) { textureFree(lbl_803DD72C); }
 #pragma scheduling reset
 
 extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
-extern int *gTitleMenuLinkInterface;
 extern void warpToMap(int mapId, int spawnId);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void cutsceneExit(void);
 extern void buttonDisable(int index, int flags);
 extern f32 timeDelta;
@@ -569,7 +566,6 @@ extern s8 lbl_803DD712;
 extern s16 lbl_803DD710;
 extern u8 lbl_803DD713;
 extern u32 lbl_8031AD20[];
-extern u8 framesThisStep;
 extern void loadUiDll(int);
 #pragma scheduling off
 #pragma peephole off
@@ -636,15 +632,10 @@ void WeirdUnusedMenu_release(void) {
 #pragma scheduling reset
 
 extern u32 lbl_803DD720;
-extern s16 lbl_803DD710;
-extern u8 lbl_803DD713;
-extern u32 lbl_8031AD20[];
 extern u32 lbl_8031AD98[];
 extern u32 textureLoadAsset(int);
 extern u32 gameTextGet(int);
 extern int Obj_GetPlayerObject(void);
-extern u8 framesThisStep;
-extern void loadUiDll(int);
 #pragma scheduling off
 #pragma peephole off
 int Dummy39_run(void) {

@@ -1999,7 +1999,6 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
 #pragma scheduling reset
 
 extern int fn_802972A8(void);
-extern int getArwing(void);
 extern int return1_800202BC(void);
 extern int fn_80198B68(int obj, int p2);
 extern void objSeqFn_801992ec(int obj, int target);

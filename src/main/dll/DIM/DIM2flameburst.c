@@ -1758,7 +1758,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 extern int EmissionController_IsLingering(void* player);
-extern void fn_80065574(int a, int b, int c);
 
 /* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
@@ -1996,7 +1995,6 @@ extern int Obj_IsLoadingLocked(void);
 extern int *Obj_AllocObjectSetup(int a, int b);
 extern void Obj_SetupObject(int *obj, int a, int b, int c, int d);
 extern f32 lbl_803E49EC;
-extern f32 lbl_803E49F0;
 extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
@@ -2125,7 +2123,6 @@ extern f32 lbl_803DCDD8;
 extern f32 lbl_803DCDDC;
 extern f32 lbl_80325528[];
 extern FbTexTbl lbl_802C2328;
-extern u8 framesThisStep;
 extern int *gPartfxInterface;
 extern f32 lbl_803E4A00;
 extern f32 lbl_803E4A04;

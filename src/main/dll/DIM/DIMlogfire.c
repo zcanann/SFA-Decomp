@@ -963,7 +963,6 @@ int CCGasVentControl_SeqFn(int obj)
 }
 #pragma scheduling reset
 
-extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
 extern int *ObjGroup_GetObjects(int group, int *count);
 extern f32 lbl_803E4618;
 extern f32 timeDelta;
@@ -1071,11 +1070,9 @@ void ccgasventcontrol_update(int obj)
 #pragma scheduling reset
 
 extern f32 getXZDistance(f32 *a, f32 *b);
-extern int *ObjGroup_GetObjects(int group, int *count);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_SetObjectSfxVolume(int obj, int sound, int vol, f32 v);
-extern f32 lbl_803E4618;
 extern f32 lbl_803E461C;
 
 #pragma scheduling off
@@ -1294,7 +1291,6 @@ int fn_801A8F88(int obj, int arg2)
 
 extern f32 lbl_803E4610;
 extern f32 lbl_803E4614;
-extern int *gPartfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -1358,7 +1354,6 @@ int MoonSeedPlantingSpot_setScale(int *obj, int arg) {
 #pragma scheduling reset
 
 extern f32 lbl_803E45D8;
-extern f32 lbl_803E45DC;
 extern f32 lbl_803E45E0;
 extern f32 lbl_803E45E4;
 extern f32 fn_80293E80(f32 x);

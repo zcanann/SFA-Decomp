@@ -691,16 +691,9 @@ void DIMbossspit_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void *objCreateLight(int obj, int n);
-extern void modelLightStruct_setLightKind(int light, int v);
-extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setSpecularColor(int light, int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void lightSetField4D(int light, int v);
-extern void modelLightStruct_setEnabled(int light, int v, f32 f);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
-extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void *cb);
 extern void postRenderSetAlphaBlendState(void);
@@ -834,7 +827,6 @@ void magicmaker_update(int obj)
 }
 
 extern f32 lbl_803E4D98;
-extern undefined4 *gPartfxInterface;
 #pragma scheduling off
 #pragma peephole off
 int dimbosscrackpar_SeqFn(int *obj) {
@@ -923,7 +915,6 @@ int dimbossfire_getExtraSize(void) { return 0x14; }
 int dimbossfire_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4D88;
 #pragma peephole off
 void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4D88); }
 #pragma peephole reset

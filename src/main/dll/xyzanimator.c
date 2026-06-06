@@ -1402,7 +1402,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern f32 lbl_803E313C;
 extern f32 lbl_803E3148;
 
 #pragma scheduling off
@@ -1460,7 +1459,6 @@ extern f32 lbl_803E3178;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3180;
 extern f64 lbl_803E3188;
-extern f64 lbl_803E3190;
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 a, f32 b);
 extern void objMove(int obj, f32 x, f32 y, f32 z);

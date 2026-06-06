@@ -371,11 +371,9 @@ void FUN_801c845c(int param_1, int param_2, int param_3, int param_4, int param_
   return;
 }
 
-extern void *Obj_GetPlayerObject(void);
 extern f32 fn_80293E80(f32 v);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 Vec_xzDistance(float *a, float *b);
-extern f32 timeDelta;
 extern f32 lbl_803E50A0;
 extern f32 lbl_803E50A4;
 extern f32 lbl_803E50A8;

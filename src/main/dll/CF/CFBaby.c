@@ -1821,12 +1821,10 @@ extern f32 lbl_803E3B2C;
 extern f32 lbl_803E3B30;
 extern f32 lbl_803E3B34;
 extern void objRenderFn_8003b8f4(f32);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
 extern int cMenuGetSelectedItem(void);
-extern f32 timeDelta;
 extern void *getTrickyObject(void);
 extern f32 lbl_803E3B70;
 extern f32 lbl_803E3B78;
@@ -2034,7 +2032,6 @@ void Fall_Ladders_free(int obj) {
 extern f32 lbl_803E3B68;
 extern f32 lbl_803E3B6C;
 extern int fn_80295C40(int obj);
-extern undefined4* gObjectTriggerInterface;
 typedef void (*InfoPtUpdateFn)(int, int, int);
 #pragma scheduling off
 #pragma peephole off
@@ -2414,9 +2411,6 @@ int Landed_Arwing_SeqFn(int obj, int unused, u8 *events) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void fn_8022F270(int obj, int arg);
 extern void fn_8022F27C(int obj);
 extern int fn_802972A8(int obj);
@@ -2531,7 +2525,6 @@ extern f32 lbl_803E3BB8;
 extern f32 lbl_803E3BBC;
 extern f32 lbl_803E3BC0;
 extern f32 lbl_803E3BC4;
-extern f32 timeDelta;
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
@@ -2655,7 +2648,6 @@ void landed_arwing_updateDamageTexture(int obj, LandedArwingState *state) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *lbl_803DCAC0;
 #define gCarryableInterface lbl_803DCAC0
 #pragma scheduling off
 #pragma peephole off
@@ -2698,7 +2690,6 @@ int InfoPoint_SeqFn(int obj, int unused, u8 *p3) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *lbl_803DCAC0;
 #pragma scheduling off
 void dll_109_free(int obj) {
     (*(void (*)(int))(*(int *)(*gCarryableInterface + 0x10)))(obj);
@@ -2824,7 +2815,6 @@ void infopoint_init(int *obj, u8 *def) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E3B78;
 extern f32 lbl_803E3B7C;
 extern f64 lbl_803E3B80;
 extern f32 lbl_803E3B88;

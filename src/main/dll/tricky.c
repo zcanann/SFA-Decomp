@@ -2068,7 +2068,6 @@ void GameUI_airMeterSetShutdown(void) {
 #pragma scheduling reset
 
 extern void *textureLoadAsset(int id);
-extern const f32 lbl_803E1E3C;
 extern int lbl_803A9398[];
 
 extern void textureFree(int handle);
@@ -2133,12 +2132,6 @@ void GameUI_initAirMeter(int a, int b) {
 
 extern int *gMapEventInterface;
 extern u8 lbl_803DB424;
-extern int lbl_803DD8DC;
-extern int lbl_803DD7D8;
-extern f32 lbl_803DD764;
-extern f32 lbl_803E1E60;
-extern void pauseMenuInit(void);
-extern int getCurGameText(void);
 extern void gameTextLoadDir(int);
 #pragma scheduling off
 #pragma peephole off
@@ -2237,7 +2230,6 @@ void gameUiResetMenuState(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern const f32 lbl_803E1E68;
 #pragma scheduling off
 #pragma peephole off
 void GameUI_airMeterInitType0(int a, int b, int c) {
@@ -2292,7 +2284,6 @@ extern f32 lbl_803E1FA0;
 extern f32 lbl_803E1FA4;
 extern int lbl_803DD740;
 extern int lbl_803A9428[];
-extern void textureFree(int handle);
 extern void drawTexture(void *p, f32 a, f32 b, int c, int d);
 #pragma scheduling off
 #pragma peephole off
@@ -2613,8 +2604,6 @@ extern const f32 lbl_803E1E94;
 extern f32 lbl_803E1E90, lbl_803E1E98;
 extern f32 lbl_803DBB04, lbl_803DBB08, lbl_803DBB0C;
 extern f32 lbl_803DBAF4, lbl_803DBAF8, lbl_803DBAFC, lbl_803DBB00;
-extern char lbl_803A87F0[];
-extern char *lbl_803DD860[];
 #pragma scheduling off
 #pragma peephole off
 void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4) {

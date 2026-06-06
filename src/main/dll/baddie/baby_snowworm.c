@@ -1037,10 +1037,8 @@ extern void* gameTextGetBox(s32);
 
 extern u16 curGameText;
 extern u8  lbl_803DD7A9;
-extern u8  lbl_803DD8B8;
 extern u8  lbl_803DD8C8;
 extern s16 lbl_803DD8CA;
-extern s16 lbl_803DD8C2;
 extern s16 lbl_803DD8D0;
 extern u8  lbl_803A9440[0x18];
 
@@ -1845,7 +1843,6 @@ extern f64 lbl_803E1F60;
 extern f32 lbl_803E2168;
 extern int lbl_803DD81C;
 extern u8  lbl_803DD781;
-extern s16 lbl_803DD784;
 extern GridEntry lbl_8031BD30[];
 extern int  randomGetRange(s32 lo, s32 hi);
 extern void AudioStream_Play(s32 id, void *cb);
@@ -2058,7 +2055,6 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
 #pragma scheduling reset
 
 
-extern u8  lbl_803DD77A;
 extern u8  lbl_803DBA94[8];
 extern int *gMapEventInterface;
 

@@ -1632,7 +1632,6 @@ void dll_2E_func06(int obj, char *st, int point)
 #pragma scheduling reset
 
 extern s16 getAngle(f32 x, f32 z);
-extern f32 sqrtf(f32 x);
 
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */
@@ -1892,7 +1891,6 @@ int dll_2E_func07(int obj, char *state, char *st, s16 a, s16 b)
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
                                            u32 obj);
 extern f32 lbl_803E1C40;
-extern f32 lbl_803E1C2C;
 
 /* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
  * object's facing plane and returns the lateral offset of the result. */

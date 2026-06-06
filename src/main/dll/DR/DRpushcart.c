@@ -981,7 +981,6 @@ void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, 0x406); }
 #pragma scheduling reset
 
 extern f32 lbl_803E5A30;
-extern void objRenderFn_8003b8f4(f32);
 extern void fn_801E83B0(int obj, int, int, int, int);
 
 #pragma scheduling off
@@ -1313,7 +1312,6 @@ void shopitem_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E59D8;
 extern void DRlaserturret_startTimedChallenge(int);
 extern void DRlaserturret_handlePromptChoice(int);
 extern void setAButtonIcon(int icon);

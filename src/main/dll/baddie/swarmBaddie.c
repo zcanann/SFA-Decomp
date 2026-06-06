@@ -165,7 +165,6 @@ extern u8 lbl_8031AF34[];
 extern int lbl_803A93F8[];
 extern f32 lbl_8031BFA8[];
 extern int hudTextures[];
-extern u32 randomGetRange(int min, int max);
 extern f32 timeDelta;
 extern f32 lbl_803E1E3C;
 extern f32 lbl_803E1E68;
@@ -631,7 +630,6 @@ void FUN_80126044(void)
   return;
 }
 
-extern int lbl_803A93F8[];
 extern void Obj_FreeObject(int* obj);
 
 void fn_80125D04(void) {
@@ -651,16 +649,12 @@ void fn_80125D04(void) {
     }
 }
 
-extern u8 lbl_803DD85A;
-extern u8 lbl_803DD85B;
-extern u8 lbl_803DD7A8;
 extern u8 lbl_803DD7A9;
 extern u8 lbl_803DD8C8;
 extern s16 lbl_803DD8CA;
 extern f32 lbl_803DD8CC;
 extern u16 lbl_803DD8D0;
 extern u16 curGameText;
-extern u8 lbl_8031AF34[];
 extern u8 lbl_803A9440[];
 extern u8 AudioStream_IsPreparing(void);
 extern void AudioStream_StartPrepared(void);
@@ -714,7 +708,6 @@ void gameTextFn_80125ba4(int idx) {
 extern int lbl_8031BF90[];
 extern u8 *Obj_AllocObjectSetup(int size, int def);
 extern int Obj_SetupObject(u8 *def, int a, int b, int c, int d);
-extern f32 lbl_803E1E3C;
 extern f32 lbl_803E1E5C;
 extern f32 lbl_803E205C;
 
@@ -757,14 +750,11 @@ extern int arwarwing_getBombCount(int *arwing);
 extern int arwarwing_getCollectedRingCount(int *arwing);
 extern int arwarwing_getRequiredRingCount(int *arwing);
 extern int arwarwing_getScore(int *arwing);
-extern void drawTexture(int tex, f32 x, f32 y, int alpha, int scale);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShowStr(char *str, int x, int y, int z);
 extern void sprintf(char *buf, char *fmt, ...);
 extern u8 arwingHudVisible;
 extern s16 arwingHudAlpha;
-extern u8 framesThisStep;
-extern int hudTextures[];
 extern char lbl_803DBB60;
 extern int lbl_803E1E08;
 extern u8 lbl_803E1E0C;

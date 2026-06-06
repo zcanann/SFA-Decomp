@@ -2864,8 +2864,6 @@ void mediumbasket_initWhirlpoolState(int* obj, u8* state) {
 
 #pragma scheduling off
 #pragma peephole off
-extern f32 lbl_803E2D38;
-extern f32 lbl_803E2D14;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);

@@ -178,7 +178,6 @@ extern void fn_8003A230(int obj, void* p, f32 f);
 extern void characterDoEyeAnims(int obj, void* p);
 extern u8 lbl_803268B4[];
 extern f32 lbl_803E5214;
-extern f32 lbl_803E520C;
 
 #pragma scheduling off
 #pragma peephole off

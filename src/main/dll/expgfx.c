@@ -1878,17 +1878,12 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void *getCache(void);
 extern int getHudHiddenFrameCount(void);
-extern void copyToCache(void *dst, void *src, int blockCount);
-extern void cacheQueueWait(int wait);
 extern int Camera_GetProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
-extern void *Camera_GetCurrentViewSlot(void);
 extern void _textSetColor(int reg, u8 r, u8 g, u8 b, u8 a);
 extern void fn_8000F83C(void);
 extern void expgfx_updateResourceEntries(int unused);
-extern u32 randomGetRange(int min, int max);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern void angleToVec2(int angle, f32 *cosOut, f32 *sinOut);
 extern void selectTexture(int handle, int slot);
@@ -1904,11 +1899,8 @@ extern void gxSetPeControl_ZCompLoc_(u32 a);
 
 extern u32 gExpgfxSlotActiveMasks[];
 extern f32 lbl_803967C0[3][4];
-extern f32 lbl_803DF410;
 extern f32 lbl_803DF414;
 extern f32 lbl_803DB790;
-extern u16 gExpgfxPhaseAngleA;
-extern u16 gExpgfxPhaseAngleB;
 
 #pragma scheduling off
 #pragma peephole off
@@ -2579,7 +2571,6 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
  * PAL Size: TODO
  */
 extern int expgfx_acquireResourceEntry(int resourceId);
-extern void *Obj_GetPlayerObject(void);
 extern f32 lbl_803DF350;
 extern f32 lbl_803DF41C;
 extern f32 lbl_803DF420;

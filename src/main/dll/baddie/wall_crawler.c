@@ -1274,7 +1274,6 @@ extern s16 lbl_803DD79E;
 extern s8  lbl_803DD7A0;
 extern s16 lbl_803DD7B6;
 extern u8  lbl_803DD7BA;
-extern s16 lbl_803DD88C;
 extern s16 lbl_803DD88E;
 extern s16 lbl_803DD890;
 extern s16 lbl_803DD892;

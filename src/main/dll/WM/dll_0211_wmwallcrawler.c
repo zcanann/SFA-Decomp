@@ -439,7 +439,6 @@ void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
 #pragma peephole reset
 
 extern void vecRotateZXY(void* mtx, f32* vec);
-extern f32 lbl_803E5FB0;
 typedef struct { s16 r0, r1, r2; f32 m8, mc, m10, m14; } WcXf;
 
 #pragma peephole off
@@ -468,7 +467,6 @@ void fn_801F8008(int a, f32* b)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern void Obj_RemoveFromUpdateList(int obj);
 extern f32 lbl_803E5FB8;
 typedef struct { u8 hit:1; u8 _r299:7; } WcHitBits;
 

@@ -4779,7 +4779,6 @@ extern void *memset(void *dst, int val, u32 n);
 extern f32 lbl_803E05BC;
 extern f32 lbl_803E05C8;
 extern f32 lbl_803E05CC;
-extern f32 lbl_803E05F0;
 extern f32 lbl_803E05F4;
 extern int Curve_AdvanceAlongPath(float *p, f32 dt);
 #pragma scheduling off
@@ -4855,10 +4854,8 @@ extern u8 lbl_803DD44E;
 extern u8 lbl_803DD44F;
 extern f32 timeDelta;
 extern float sqrtf(float x);
-extern u8 lbl_803DD440;
 extern u8 lbl_803DD450;
 extern f64 lbl_803E0598;
-extern f32 lbl_803E0570;
 extern f32 lbl_803E0588;
 extern f32 lbl_803E05B4;
 extern f32 lbl_803E05C0;
@@ -5188,7 +5185,6 @@ extern void curvesMove(float *state);
 extern void curvesSetupMoveNetworkCurve(float *state);
 extern f32 gFloatZero;
 extern f32 gFloatNegOne;
-extern f32 gFloatOne;
 extern void *memcpy(void *dst, const void *src, u32 n);
 extern u8 RomCurve_goNextPoint(float *state);
 
@@ -5574,7 +5570,6 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 gFloatZero;
 extern f32 lbl_803E0648;
 extern f32 lbl_803E064C;
 extern f32 lbl_803E0650;
@@ -6199,7 +6194,6 @@ void *Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u32 randomGetRange(int min, int max);
 
 
 
@@ -6208,7 +6202,6 @@ extern f32 lbl_803E0600;
 extern f32 lbl_803E0604;
 extern f32 lbl_803E05FC;
 
-extern f32 lbl_803E05FC;
 extern f32 lbl_803E0608;
 extern f32 lbl_803E060C;
 extern char sObjfsaMissingPatchExitPoint0[];

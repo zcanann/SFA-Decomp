@@ -633,11 +633,8 @@ extern f32 lbl_803E2954;
 extern f32 lbl_803E2980;
 extern f32 lbl_803E2984;
 extern f32 lbl_803E2988;
-extern f32 lbl_803E294C;
 extern f32 lbl_803E298C;
-extern f32 lbl_803E2958;
 
-extern f32 lbl_803E29A4;
 
 #pragma scheduling off
 #pragma peephole off

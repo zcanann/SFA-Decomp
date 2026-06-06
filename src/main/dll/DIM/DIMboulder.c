@@ -1861,7 +1861,6 @@ extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int 
 extern f32 lbl_803E46E8;
 extern f32 lbl_803E46EC;
 extern f32 lbl_803E46F0;
-extern f32 lbl_803E4708;
 extern f32 lbl_803E470C;
 extern f32 lbl_803E4710;
 extern f32 lbl_803E4714;

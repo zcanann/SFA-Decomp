@@ -364,7 +364,6 @@ extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
 extern void fn_801DD170(int obj);
 extern int *objFindTexture(int obj, int a, int b);
-extern uint GameBit_Get(int eventId);
 extern int randomGetRange(int lo, int hi);
 
 #pragma peephole off

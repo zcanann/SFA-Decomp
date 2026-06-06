@@ -1382,7 +1382,6 @@ void iceblast_update(int *obj) {
 #pragma scheduling reset
 
 extern s16 *getTrickyObject(void);
-extern void Obj_FreeObject(int *obj);
 extern int fn_80138F90(void);
 extern f32 *trickyGetQueuedPathParticlePos(s16 *tricky);
 extern f32 lbl_803E361C;

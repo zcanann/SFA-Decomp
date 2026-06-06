@@ -344,9 +344,7 @@ int fn_80167B60(int obj, int p)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E3060;
 extern f32 lbl_803E3080;
-extern f32 timeDelta;
 
 #pragma scheduling off
 #pragma peephole off

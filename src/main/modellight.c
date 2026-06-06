@@ -653,9 +653,6 @@ void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct *p, int n) {
 
 #pragma pop
 
-extern void GXInitLightAttnA(u8 *lt_obj, f32 a0, f32 a1, f32 a2);
-extern f32 lbl_803DE760;
-extern f32 lbl_803DE75C;
 extern f32 lbl_803DE764;
 extern f32 lbl_803DE778;
 extern f32 lbl_803DE78C;
@@ -882,7 +879,6 @@ void modelLightStruct_setProjectionNearZ(ModelLightStruct *p, f32 v) {
 
 extern u8 gModelLightUseModelRelativePositions;
 extern int gModelLightNextGXLightId;
-extern f32 timeDelta;
 
 typedef struct {
     u8 active;
@@ -952,7 +948,6 @@ void modelLightChannels_reset(u8 v) {
 #pragma pop
 
 typedef f32 Mtx[3][4];
-extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern void PSVECNormalize(f32 *src, f32 *dst);
 
@@ -970,16 +965,11 @@ extern void PSVECNormalize(f32 *src, f32 *dst);
 void Obj_TransformLocalVectorByWorldMatrix(void *obj, f32 *src, f32 *dst);
 #pragma dont_inline reset
 
-extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 #pragma dont_inline on
 void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag);
 #pragma dont_inline reset
 
-extern void Vec_normalize(f32 *dst, f32 *src);
-extern f32 *Camera_GetViewMatrix(void);
 
 void modelLightStruct_setDirection(ModelLightStruct *s, f32 x, f32 y, f32 z) {
     f32 *view;
@@ -1046,7 +1036,6 @@ extern void PSVECScale(f32 *src, f32 *dst, f32 scale);
 extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
 extern f32 lbl_803DE7A4;
 extern f32 *Camera_GetInverseViewMatrix(void);
-extern void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
 #pragma push
@@ -1322,8 +1311,6 @@ void updateLights(void) {
 #pragma dont_inline reset
 #pragma peephole reset
 
-extern void *mmAlloc(int size, int type, int flag);
-extern void *memset(void *dst, int val, int n);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -1340,18 +1327,9 @@ extern void *memset(void *dst, int val, int n);
 #pragma pop
 
 extern void GXInitLightSpot(u8 *lt_obj, f32 cutoff, int spot_func);
-extern void GXInitLightDistAttn(u8 *lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
-extern void GXGetLightAttnK(u8 *lt_obj, f32 *k0, f32 *k1, f32 *k2);
-extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern f32 PSVECMag(f32 *v);
-extern void PSVECScale(f32 *src, f32 *dst, f32 scale);
 extern f32 PSVECDotProduct(f32 *a, f32 *b);
-extern f32 lbl_803DE760;
-extern f32 lbl_803DE75C;
 extern f32 lbl_803DE768;
-extern f32 lbl_803DE76C;
-extern f32 lbl_803DE758;
-extern f32 lbl_803DE790;
 extern f32 lbl_802C1A88[];
 
 #pragma push
@@ -1364,7 +1342,6 @@ extern f32 lbl_802C1A88[];
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void *memset(void *dst, int val, int n);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -1691,7 +1668,6 @@ void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights,
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -1721,7 +1697,6 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct *light) {
 
 #pragma pop
 
-extern void textureFree(void *tex);
 extern void *textureLoadAsset(int asset);
 
 #pragma push
@@ -1750,7 +1725,6 @@ int randomGetRange(int lo, int hi);
 #pragma pop
 
 extern void C_MTXLightPerspective(f32 *m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
-extern f32 lbl_803DE790;
 
 #pragma push
 #pragma scheduling off
@@ -1791,7 +1765,6 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct *obj, f32 a, f32 b, 
 #pragma dont_inline reset
 #pragma pop
 
-extern void GXInitLightAttn(u8 *lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
 
 #pragma push
 #pragma scheduling off
@@ -1853,7 +1826,6 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct *obj, f32 a, f32 b
 #pragma peephole off
 #pragma pop
 
-extern void *memset(void *dst, int val, int n);
 
 #pragma push
 #pragma scheduling off
@@ -2289,8 +2261,6 @@ void *mmAlloc(int size, int type, int flag);
 #pragma peephole off
 #pragma pop
 
-extern f32 playerMapOffsetZ;
-extern f32 playerMapOffsetX;
 
 #pragma dont_inline off
 

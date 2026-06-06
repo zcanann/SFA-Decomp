@@ -326,7 +326,6 @@ done:
  */
 extern u32 OSGetTick(void);
 extern f32 lbl_803E16A0;
-extern f32 lbl_803E16A4;
 extern f32 lbl_803E16A8;
 extern f32 lbl_803E16B0;
 extern f32 lbl_803E16B4;

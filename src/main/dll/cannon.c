@@ -114,7 +114,6 @@ extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
 extern int getAngle(f32 x, f32 z);
 extern int randomGetRange(int min, int max);
-extern f32 getXZDistance(float *a, float *b);
 extern void *ObjGroup_GetObjects(int group, int *count);
 extern f32 lbl_803E23EC;
 extern f32 lbl_803E23F4;

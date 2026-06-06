@@ -1553,8 +1553,6 @@ void fn_801FBAC8(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gObjectTriggerInterface;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 #pragma scheduling off
 #pragma peephole off

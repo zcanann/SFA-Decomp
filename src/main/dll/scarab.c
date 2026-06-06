@@ -4628,9 +4628,6 @@ void dll_CE_initialise(void)
     lbl_803AC598[5] = (void*)fn_8015DC04;
 }
 
-extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
-extern f32 lbl_803E2E68;
-extern f32 lbl_803E2E8C;
 extern f32 lbl_803E2E90;
 extern f32 lbl_803E2E94;
 
@@ -5063,7 +5060,6 @@ ObjectDescriptor gIceBallObjDescriptor = {
     iceball_getExtraSize,
 };
 
-extern int getAngle(f32 a, f32 b);
 extern f32 sqrtf(f32);
 extern f32 lbl_803E2EB0;
 extern f32 lbl_803E2EB4;

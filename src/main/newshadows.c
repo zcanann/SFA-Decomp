@@ -3150,7 +3150,6 @@ void drawReflectionTexture(void)
 #pragma scheduling reset
 
 /* Copy the frame buffer into both reflection textures, optionally preload. */
-extern u32 lbl_803DCFDC;
 extern void GXInvalidateTexAll(void);
 extern void GXPixModeSync(void);
 #pragma scheduling off
@@ -3315,8 +3314,6 @@ extern double floor(double);
 extern f32 Yachuff_803DEDE0[2];
 extern f32 __PADFixBits;
 extern f32 lbl_80391978[];
-extern u8 lbl_8038E268[0x40];
-extern u32 lbl_803DCFE0;
 extern f32 lbl_803DCFA8, lbl_803DCFAC;
 #pragma scheduling off
 void initFn_8006d020(void) {
@@ -3732,14 +3729,12 @@ extern f32 timeDelta;
 extern int *Camera_GetCurrentViewSlot(void);
 extern u8 framesThisStep;
 extern f32 Udchuff_803DEDA0[2];
-extern double floor(double);
 extern void fn_80060BB0(void);
 extern u8 lbl_803DCF80;
 extern int isHeavyFogEnabled(void);
 extern f32 *Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32 *a, f32 *b);
 extern f32 Dev_803DED1C;
-extern void fn_80069EB8();
 extern u16 lbl_803DCFA0;
 #pragma scheduling off
 void maybeHudFn_8006c91c(void) {
@@ -3833,7 +3828,6 @@ void shadowRenderFn_8006b558(int *obj) {
 }
 #pragma scheduling reset
 
-extern f32 Vdchuff_803DEDC0[2];
 extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
 #pragma scheduling off
 #pragma peephole off
@@ -3907,7 +3901,6 @@ extern f32 lbl_803DED70, lbl_803DED74, lbl_803DED78, lbl_803DED7C;
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40;
 extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
 extern f32 FinishQueue_803DED64;
-extern f32 Ydchuff_803DED80[];
 extern u8 lbl_803DB668[8];
 extern f32 lbl_803DB670;
 extern int lbl_803DCCF0;

@@ -1975,7 +1975,6 @@ void wmtorch_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
 }
 #pragma peephole reset
 
-extern u32 Resource_Acquire(int id, int mode);
 extern u32 lbl_803DDC80;
 #pragma scheduling off
 #pragma peephole off
@@ -2048,8 +2047,6 @@ int WM_colrise_SeqFn(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1;
 #pragma scheduling reset
 
 /* fn_X(lbl); lbl = 0; */
-extern u32 lbl_803DDC80;
-extern void Resource_Release(u32);
 #pragma scheduling off
 #pragma peephole off
 void LaserBeam_release(void) { Resource_Release(lbl_803DDC80); lbl_803DDC80 = 0; }

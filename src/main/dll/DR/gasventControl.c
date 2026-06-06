@@ -743,7 +743,6 @@ extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern f32 lbl_803E4350;
 extern f32 lbl_803E4354;
 extern f32 lbl_803E4358;
-extern f32 lbl_803E435C;
 #pragma scheduling off
 #pragma peephole off
 int fn_801A2BDC(int p1, int p2, int p3, int p4)
@@ -865,7 +864,6 @@ void fn_801A2E80(int obj, int def, int p3, int state)
 extern void vecRotateZXY(s16 *rot, f32 *vec);
 extern f32 sqrtf(f32 x);
 extern void normalize(f32 *x, f32 *y, f32 *z);
-extern f32 lbl_803E4368;
 extern f32 lbl_803E4370;
 extern f32 lbl_803E4374;
 extern f32 lbl_803E4378;

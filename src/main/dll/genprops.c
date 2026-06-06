@@ -5032,7 +5032,6 @@ s32 staff_func16(int *obj) { return ((StaffState*)((int**)obj)[0xb8/4])->fieldB9
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E31E8;
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3220;
 extern f32 lbl_803E33F0;
 extern f32 lbl_803E31F8;
@@ -5050,7 +5049,6 @@ void gcbaddieshield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3388;
-extern f32 lbl_803E3420;
 #pragma scheduling off
 #pragma peephole off
 void flamethrowerspe_render(void) { objRenderFn_8003b8f4(lbl_803E3388); }
@@ -5117,7 +5115,6 @@ void collectible_render2(int *obj, f32 f1, f32 f2, f32 f3) {
     *(f32*)((char*)obj + 0x2c) = f3;
 }
 
-extern u32 GameBit_Get(int eventId);
 extern void saveGame_saveObjectPos(int obj);
 
 #pragma scheduling off
@@ -5249,7 +5246,6 @@ void staff_func15(int *obj, s16 idx, f32 f1, f32 f2) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 
@@ -5380,7 +5376,6 @@ void staff_release(void)
 }
 
 extern void fn_80065684(int obj, f32 a, f32 b, f32 c, f32 *out, int flag);
-extern f32 lbl_803E31D8;
 void mikabombshadow_init(int *obj)
 {
     int *state = *(int **)((char *)obj + 0xb8);
@@ -6025,7 +6020,6 @@ void baddieinterestp_update(int *obj)
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern void ObjAnim_SetCurrentMove(int *obj, int move, f32 blend, int flag);
 extern void ObjAnim_AdvanceCurrentMove(int *obj, f32 a, f32 b, int flag);
-extern f32 lbl_803E3228;
 extern f32 lbl_803E322C;
 
 #pragma scheduling off
@@ -6194,7 +6188,6 @@ extern f32 lbl_803E3260;
 extern f32 lbl_803E3264;
 extern f32 lbl_803E3268;
 extern f32 lbl_803E326C;
-extern f32 lbl_803E3270;
 extern f32 lbl_803E3274;
 extern f32 lbl_803E3278;
 extern f32 lbl_803E327C;
@@ -6815,8 +6808,6 @@ typedef struct DllF7Vec {
 extern DllF7Vec lbl_802C2260;
 extern void Sfx_PlayAtPositionFromObject(int *obj, f32 x, f32 y, f32 z, int sfx);
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
-extern f32 lbl_803E3400;
-extern f32 lbl_803E3404;
 extern f32 lbl_803E3408;
 extern f32 lbl_803E340C;
 extern f32 lbl_803E3410;
@@ -8080,7 +8071,6 @@ extern f32 lbl_803E328C;
 extern f32 lbl_803E3298;
 extern f32 lbl_803E329C;
 extern f32 lbl_803E32A0;
-extern f32 lbl_803E32AC;
 extern f32 lbl_803E32B0;
 extern f32 lbl_803E32B8;
 extern f32 lbl_803E32BC;

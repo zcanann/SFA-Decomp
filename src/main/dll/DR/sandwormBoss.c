@@ -3471,8 +3471,6 @@ void cfpowerbase_init(int* obj, u8* params) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gGameUIInterface;
-extern int *gObjectTriggerInterface;
 
 /* EN v1.0 0x8019D77C  size: 312b  cfpowerbase_update: track its gamebit's
  * lit state, fire the queued state-change trigger, and when the base is
@@ -3541,7 +3539,6 @@ extern f32 lbl_803E4268;
 extern f32 Vec_distance(void *a, void *b);
 extern int waterfx_consumePendingImpactNearPoint(f32 *vec, f32 r);
 extern int objGetAnimState80A(void *obj);
-extern int *gObjectTriggerInterface;
 extern void *Obj_GetPlayerObject(void);
 
 #pragma scheduling off
@@ -3594,7 +3591,6 @@ void cfprisonuncle_initialise(void) {}
 extern int  objModelGetVecFn_800395d8(int obj, int idx);
 extern void objAudioFn_80039270(int obj, void* p, int id);
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
-extern int *gObjectTriggerInterface;
 extern u8   framesThisStep;
 extern f32  lbl_803E428C;
 
@@ -3740,7 +3736,6 @@ int spiritdoorspirit_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4190;
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E41D0;
 extern f32 lbl_803E4210;
 extern f32 lbl_803E42B0;
@@ -3861,7 +3856,6 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer) {
 
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
 extern u32 GameBit_Get(int);
-extern void* Obj_GetPlayerObject(void);
 extern void playerAddRemoveMagic(void*, int);
 #pragma peephole off
 int fn_8019FC84(int *obj, int p2, void *p3) {
@@ -3893,14 +3887,12 @@ void cfguardian_update(void) { waterSpellStone1Fn_8019b4c8(); }
 extern int* gExpgfxInterface;
 extern int fn_801A04F4(int p1, int p2, void* p3);
 extern f32 lbl_803E42B8;
-extern f32 lbl_803E42C0;
 extern f32 lbl_803E4130;
 extern f32 lbl_803E416C;
 extern void modelLightStruct_freeSlot(int* p);
 /* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 extern void dll_2E_func06(int* a, int* b, int c);
 extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
-extern void* Obj_GetPlayerObject(void);
 extern f32 fn_80296214(void* p);
 /* ObjMsg_AllocQueue already declared as undefined */
 extern int fn_8019FC84(int* obj, int p2, void* p3);
@@ -4087,7 +4079,6 @@ void cfprisoncage_hitDetect(int* obj)
 }
 
 extern int cfprisoncage_SeqFn(int* obj, int p2, u8* p3);
-extern int *gObjectTriggerInterface;
 extern f32 lbl_803E42B4;
 #pragma scheduling off
 #pragma peephole off
@@ -4325,12 +4316,8 @@ void cfmaincrystal_init(int *obj, u8 *def) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void* Obj_GetPlayerObject(void);
 extern void vecRotateZXY(s16* rotIn, f32* outVec);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void saveGame_saveObjectPos(int obj);
 extern int barrelgener_getLinkId(int barrel);
-extern f32 lbl_803E42C0;
 extern f32 lbl_803E42C4;
 extern f32 lbl_803E42C8;
 extern f32 lbl_803E42CC;
@@ -4568,7 +4555,6 @@ extern u8  lbl_80322A68[];
 extern f32 lbl_803E41C8;
 extern f32 lbl_803E41CC;
 extern f32 lbl_803E4168;
-extern f32 lbl_803E416C;
 
 typedef struct {
     int i0;
@@ -4653,8 +4639,6 @@ void windlift_init(int* obj, u8* def)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E42C0;
-extern f32 lbl_803E42DC;
 extern f32 lbl_803E42E0;
 extern f32 lbl_803E42E4;
 extern const f32 lbl_803E42E8;
@@ -4977,7 +4961,6 @@ extern f32 lbl_803E4180;
 extern f32 lbl_803E4184;
 extern f32 lbl_803E4188;
 extern f32 lbl_803E418C;
-extern f32 lbl_803E4190;
 extern f32 lbl_803E4194;
 extern f32 lbl_803E4198;
 extern f32 lbl_803E419C;
