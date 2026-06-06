@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/model_light.h"
 
 typedef struct {

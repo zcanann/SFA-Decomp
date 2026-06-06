@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/expgfx.h"
 #include "main/frustum.h"
 #include "main/lightmap.h"

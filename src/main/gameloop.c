@@ -1,5 +1,4 @@
 #include "ghidra_import.h"
-#include "main/model_light.h"
 
 extern undefined8 camcontrol_playTargetTypeSfx();
 extern undefined8 runLoadingScreens();

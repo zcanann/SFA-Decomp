@@ -1,7 +1,4 @@
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
-#include "main/mapEvent.h"
-#include "main/dll/CF/laser.h"
 #include "main/dll/anim_internal.h"
 #include "main/main.h"
 #include "main/objlib.h"

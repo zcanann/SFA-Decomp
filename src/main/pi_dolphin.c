@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/pi_dolphin.h"
 
 extern undefined4 FUN_80003494();

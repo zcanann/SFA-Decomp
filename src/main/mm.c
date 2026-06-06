@@ -1,5 +1,4 @@
 #include "ghidra_import.h"
-#include "main/model_light.h"
 
 extern void mm_free(void *ptr);
 

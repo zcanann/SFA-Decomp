@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/newclouds.h"
 
 typedef struct ObjSeqBgCmd {

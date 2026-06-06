@@ -1,5 +1,4 @@
 #include "ghidra_import.h"
-#include "main/model_light.h"
 
 extern f32 powfBitEstimate(f32 x, f32 y);
 

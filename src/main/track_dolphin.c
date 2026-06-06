@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/frustum.h"
 #include "main/model_light.h"
 #include "main/track_dolphin.h"

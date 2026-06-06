@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/model_light.h"
 #include "main/objanim_internal.h"
 
 extern void gxSetPeControl_ZCompLoc_();

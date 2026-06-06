@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/mapEvent.h"
 #include "main/crcloudrace.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 

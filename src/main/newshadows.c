@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/newshadows.h"
 
 extern float ABS();
