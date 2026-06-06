@@ -29,6 +29,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/baby_snowworm.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
 
 
 extern undefined4 FUN_800067c0();
@@ -1812,7 +1813,6 @@ extern GridEntry lbl_8031BD30[];
 extern int  randomGetRange(s32 lo, s32 hi);
 extern void AudioStream_Play(s32 id, void *cb);
 extern void AudioStream_StartPrepared(void);
-extern void ObjAnim_SetCurrentMove(void *anim, int active, f32 t, int mode);
 extern void fn_8012C000(void);
 
 /* EN v1.0 0x8012B77C  size: 508b  Pause-menu open/close animator. Advances
@@ -1855,7 +1855,7 @@ void pauseMenuFn_8012b77c(void)
             break;
         }
         for (i = 1; i < 4; i++) {
-            ObjAnim_SetCurrentMove(lbl_803A9410[i], i == (s8)lbl_803DD781, 0.0f, 0);
+            ObjAnim_SetCurrentMove((int)lbl_803A9410[i], i == (s8)lbl_803DD781, 0.0f, 0);
         }
     }
 
@@ -3390,7 +3390,7 @@ void pauseMenuFn_80129ee0(void)
             pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
             if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentId() == 0 &&
                 AudioStream_IsPreparing() == 0) {
-                ObjAnim_SetCurrentMove((int *)hud->anims[(s8)lbl_803DD781], 0, 0.0f, 0);
+                ObjAnim_SetCurrentMove((int)hud->anims[(s8)lbl_803DD781], 0, 0.0f, 0);
                 lbl_803DD781 = 0;
             }
             if ((s8)a1 == 0 || lbl_803DD78C == 0 ||
@@ -4017,7 +4017,6 @@ void fn_80128A7C(u8 i, s16 p2, int p3)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int  ObjAnim_AdvanceCurrentMove(f32 scale, f32 dt, void *obj, void *events);
 extern int  fn_802972A8(void *player);
 extern f32  lbl_8031BFA8[30];
 extern s16  lbl_803DD782;
@@ -4057,7 +4056,7 @@ void fn_8012C000(void)
     f32 c1EC8;
     f32 c2190;
     f32 base;
-    u8 animOut[0x20];
+    ObjAnimEventList animEvents;
 
     player = Obj_GetPlayerObject();
     step = 5;
@@ -4114,7 +4113,7 @@ void fn_8012C000(void)
         f32 spin = lbl_803E218C * (f32)lbl_803DD78C;
         *(f32 *)((u8 *)lbl_803DD868[1] + 0x8) = spin * lbl_803E2190;
     }
-    ObjAnim_AdvanceCurrentMove(lbl_803E1E58, timeDelta, lbl_803DD868[1], animOut);
+    ObjAnim_AdvanceCurrentMove(lbl_803E1E58, timeDelta, (int)lbl_803DD868[1], &animEvents);
     watermark = 0x90000000;
     c2010 = lbl_803E2010;
     c2050 = lbl_803E2050;
@@ -4137,7 +4136,7 @@ void fn_8012C000(void)
         sel = (f32)lbl_803DD784 * sel;
         *(f32 *)((u8 *)lbl_803A9410[k] + 0x8) = sel * c2190;
         *((u8 *)lbl_803A9410[k] + 0x37) = 0xff;
-        ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[k], timeDelta, lbl_803A9410[k], animOut);
+        ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[k], timeDelta, (int)lbl_803A9410[k], &animEvents);
         kk *= step;
         a = c1E64 * fn_80293E80(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
         a = (f32)lbl_803DD784 * a;

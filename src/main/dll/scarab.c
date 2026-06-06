@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/scarab.h"
+#include "main/objanim.h"
 #include "main/objhits_types.h"
 
 extern undefined8 FUN_80003494();
@@ -205,7 +206,6 @@ extern f32 lbl_803E3B94;
 #pragma peephole off
 void dll_CA_update(int obj, int p2, int p3)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern void Sfx_PlayFromObject(int obj, int sfx);
   extern int fn_8015D3C0(int obj, int sub, int sub2);
   extern void mediumbasket_updateControlEffects(int obj, int sub);
@@ -230,7 +230,7 @@ void dll_CA_update(int obj, int p2, int p3)
           obj, setup, sub, 14, 8, 0x102, 0x26, lbl_803E2DB8);
       *(s16 *)(sub + 0x402) = 0;
       Sfx_PlayFromObject(obj, SFXfoxcom_find);
-      ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0x10);
+      ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0x10);
       *(s8 *)(sub + 0x346) = 0;
       *(u8 *)(obj + 0x36) = 0xff;
       *(u8 *)(obj + 0xaf) |= 8;
@@ -632,7 +632,6 @@ int fn_8015E3A0(int obj, int p2)
   extern void ObjHits_EnableObject(int);
   extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
   extern void ObjHits_RegisterActiveHitVolumeObject(int);
-  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern int *ObjList_GetObjects(int *, int *);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DD8;
@@ -662,7 +661,7 @@ int fn_8015E3A0(int obj, int p2)
   *(f32 *)(p2 + 0x2a0) = lbl_803E2DD8;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    ObjAnim_SetCurrentMove(obj, 10, lbl_803E2DC8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 10, lbl_803E2DC8, 0);
     *(u8 *)(p2 + 0x346) = 0;
   }
   *(u8 *)(p2 + 0x34d) = 1;
@@ -734,7 +733,6 @@ FUN_8015e0d0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 int fn_8015E210(int *obj, u8 *p)
 {
   extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
-  extern void ObjAnim_SetCurrentMove(int *obj, int n, f32 v, int m);
   extern void *Obj_GetPlayerObject(void);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DD4;
@@ -746,7 +744,7 @@ int fn_8015E210(int *obj, u8 *p)
   int r;
 
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 0, lbl_803E2DC8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2DC8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   if (*(char *)(p + 0x27a) != '\0') {
@@ -1054,7 +1052,6 @@ void fn_8015DAE8(void)
 
 void dll_CA_init(int obj, u8 *p, int flags)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern int *gBaddieControlInterface;
   extern int *gPlayerInterface;
   extern f64 lbl_803E2D08;
@@ -1079,7 +1076,7 @@ void dll_CA_init(int obj, u8 *p, int flags)
   if (lbl_803E2D24 * (f32)(u32)*(u16 *)(sub + 0x3fe) < lbl_803E2D54) {
     *(s16 *)(sub + 0x3fe) = 0x6e;
   }
-  ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0);
+  ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0);
   *(u8 *)(obj + 0xaf) |= 8;
   (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, sub, 0);
   *(s16 *)(sub + 0x270) = 0;
@@ -1089,7 +1086,6 @@ void dll_CA_init(int obj, u8 *p, int flags)
 int fn_8015E5DC(short *obj, u8 *p)
 {
   extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
-  extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
   extern int randomGetRange(int min, int max);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DDC;
@@ -1118,12 +1114,12 @@ int fn_8015E5DC(short *obj, u8 *p)
     }
     if (randomGetRange(0, 1) != 0) {
       if (*(char *)(p + 0x27a) != '\0') {
-        ObjAnim_SetCurrentMove(obj, 6, lbl_803E2DC8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 6, lbl_803E2DC8, 0);
         *(s8 *)(p + 0x346) = 0;
       }
     } else {
       if (*(char *)(p + 0x27a) != '\0') {
-        ObjAnim_SetCurrentMove(obj, 7, lbl_803E2DC8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E2DC8, 0);
         *(s8 *)(p + 0x346) = 0;
       }
     }
@@ -1167,7 +1163,6 @@ int fn_8015DF20(int obj, u8 *p)
 
 int fn_8015E0C8(int obj, u8 *p)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern int Obj_GetPlayerObject(void);
   extern void Sfx_PlayFromObject(int obj, int sfx);
   extern int *gBaddieControlInterface;
@@ -1184,7 +1179,7 @@ int fn_8015E0C8(int obj, u8 *p)
   *(f32 *)(p + 0x280) = spd;
   *(f32 *)(p + 0x284) = spd;
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 1, spd, 0);
+    ObjAnim_SetCurrentMove((int)obj, 1, spd, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   if ((*(u8 *)(p + 0x356) & 1) == 0) {
@@ -1208,7 +1203,6 @@ int fn_8015E0C8(int obj, u8 *p)
 
 int fn_8015E798(int obj, u8 *p)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern void GameBit_Set(int bit, int val);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DD8;
@@ -1218,7 +1212,7 @@ int fn_8015E798(int obj, u8 *p)
 
   sub = *(int *)(obj + 0xb8);
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 14, lbl_803E2DC8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 14, lbl_803E2DC8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   if (*(f32 *)(obj + 0x98) > lbl_803E2DE4) {
@@ -1232,7 +1226,7 @@ int fn_8015E798(int obj, u8 *p)
   }
   if (*(char *)(p + 0x346) != '\0') {
     GameBit_Set(*(s16 *)(sub + 0x3f4), 0);
-    ObjAnim_SetCurrentMove(obj, 8, lbl_803E2DC8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
     *(int *)(p + 0x2d0) = 0;
     *(s8 *)(p + 0x25f) = 0;
     *(s8 *)(p + 0x349) = 0;
@@ -1246,7 +1240,6 @@ int fn_8015E798(int obj, u8 *p)
 
 int fn_8015E8BC(int obj, u8 *p)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern void GameBit_Set(int bit, int val);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DE8;
@@ -1259,7 +1252,7 @@ int fn_8015E8BC(int obj, u8 *p)
   sub = *(int *)(obj + 0xb8);
   hit = *(u8 **)(sub + 0x40c);
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 11, lbl_803E2DC8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 11, lbl_803E2DC8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   if (*(char *)(p + 0x27a) != '\0') {
@@ -1707,7 +1700,6 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_CE_init(int obj, u8 *p, int flags)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern int randomGetRange(int min, int max);
   extern int *gBaddieControlInterface;
   extern int *gPlayerInterface;
@@ -1731,7 +1723,7 @@ void dll_CE_init(int obj, u8 *p, int flags)
   *(int *)(obj + 0xbc) = 0;
   v = *(f32 **)(sub + 0x40c);
   *v = (f32)(int)randomGetRange(10, 300);
-  ObjAnim_SetCurrentMove(obj, 8, lbl_803E2DC8, 0);
+  ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
   *(u8 *)(obj + 0xaf) |= 8;
   (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, sub, 0);
   *(s16 *)(sub + 0x270) = 0;
@@ -1741,7 +1733,6 @@ void dll_CE_init(int obj, u8 *p, int flags)
 
 void dll_CE_update(int obj, int p2, int p3)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern void Sfx_PlayFromObject(int obj, int sfx);
   extern void fn_8015ED1C(int p1, int p2, int p3);
   extern void fn_8015EB6C(int obj, int p2, int p3);
@@ -1774,7 +1765,7 @@ void dll_CE_update(int obj, int p2, int p3)
           obj, setup, sub, 7, 6, 0x102, 0x26, lbl_803E2E14);
       *(s16 *)(sub + 0x402) = 0;
       Sfx_PlayFromObject(obj, SFXfoxcom_find);
-      ObjAnim_SetCurrentMove(obj, 8, lbl_803E2DC8, 0x10);
+      ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0x10);
       *(s8 *)(sub + 0x346) = 0;
       *(u8 *)(obj + 0x36) = 0xff;
       *(u8 *)(obj + 0xaf) |= 8;
@@ -4504,13 +4495,12 @@ extern f64 lbl_803E2E80;
 extern f32 lbl_803E2E88;
 extern f32 lbl_803E2EB8;
 extern f32 lbl_803E2EE8;
-extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
 
 int fn_801616AC(int* obj, u8* state)
 {
     int* sub = *(int**)((char*)obj + 0xb8);
     if ((s8)state[634] != 0) {
-        ObjAnim_SetCurrentMove(obj, 8, lbl_803E2EB8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2EB8, 0);
         state[838] = 0;
     }
     *(f32*)((char*)state + 0x2a0) = lbl_803E2EE8;
@@ -4559,7 +4549,7 @@ int fn_8015E520(int* obj, u8* state)
     ObjHits_RegisterActiveHitVolumeObject(obj);
     *(f32*)((char*)state + 0x2a0) = lbl_803E2DD8;
     if ((s8)state[634] != 0) {
-        ObjAnim_SetCurrentMove(obj, 5, lbl_803E2DC8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2DC8, 0);
         state[838] = 0;
     }
     state[845] = 1;
@@ -4636,7 +4626,7 @@ int fn_801605D4(int* obj, u8* def)
 {
     int* state = *(int**)((char*)obj + 0xb8);
     if ((s8)def[634] != 0) {
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803E2E68, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2E68, 0);
         *(s8*)(def + 838) = 0;
     }
     *(s8*)(def + 607) = 1;
@@ -4718,7 +4708,6 @@ int fn_801614D4(int obj, u8 *p)
 
 int fn_801615C8(int obj, u8 *p)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern f32 lbl_803E2EB8;
   extern f32 lbl_803E2EE0;
   extern f32 lbl_803E2EE4;
@@ -4734,7 +4723,7 @@ int fn_801615C8(int obj, u8 *p)
   if (*(char *)(p + 0x27a) != '\0') {
     Sfx_PlayFromObject(obj, SFXsc_death02);
     if (*(char *)(p + 0x27a) != '\0') {
-      ObjAnim_SetCurrentMove(obj, 2, lbl_803E2EB8, 0);
+      ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E2EB8, 0);
       *(s8 *)(p + 0x346) = 0;
     }
     *(f32 *)(p + 0x2a0) = lbl_803E2EE4;
@@ -4750,7 +4739,6 @@ int fn_801615C8(int obj, u8 *p)
 
 int fn_80161880(short *obj, u8 *p, f32 spd)
 {
-  extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);
   extern int randomGetRange(int min, int max);
@@ -4776,11 +4764,11 @@ int fn_80161880(short *obj, u8 *p, f32 spd)
   ObjHits_RegisterActiveHitVolumeObject(obj);
   if (randomGetRange(0, 100) < 50) {
     if (*(char *)(p + 0x27a) != '\0') {
-      ObjAnim_SetCurrentMove(obj, 1, lbl_803E2EB8, 0);
+      ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E2EB8, 0);
       *(s8 *)(p + 0x346) = 0;
     }
   } else if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 4, lbl_803E2EB8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E2EB8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   *(f32 *)(p + 0x2a0) = lbl_803E2EF0;
@@ -4817,7 +4805,6 @@ int fn_80161880(short *obj, u8 *p, f32 spd)
 
 int fn_8016176C(short *obj, u8 *p)
 {
-  extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
   extern f32 lbl_803E2EB8;
   extern f32 lbl_803E2EEC;
   int hit;
@@ -4827,7 +4814,7 @@ int fn_8016176C(short *obj, u8 *p)
 
   hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 7, lbl_803E2EB8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E2EB8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   if (*(char *)(p + 0x27a) != '\0') {
@@ -4857,7 +4844,6 @@ int fn_8016176C(short *obj, u8 *p)
 
 int fn_80161AF8(short *obj, u8 *p)
 {
-  extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);
   extern f32 lbl_803E2EB8;
@@ -4875,7 +4861,7 @@ int fn_80161AF8(short *obj, u8 *p)
 
   hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 6, lbl_803E2EB8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 6, lbl_803E2EB8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   *(f32 *)(p + 0x2a0) = lbl_803E2EF0;
@@ -4900,7 +4886,6 @@ int fn_80161AF8(short *obj, u8 *p)
 
 int fn_80161C44(short *obj, u8 *p)
 {
-  extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);
   extern f32 lbl_803E2EB8;
@@ -4918,7 +4903,7 @@ int fn_80161C44(short *obj, u8 *p)
 
   hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 5, lbl_803E2EB8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2EB8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   *(f32 *)(p + 0x2a0) = lbl_803E2EF0;
@@ -4946,7 +4931,6 @@ int fn_80161C44(short *obj, u8 *p)
 
 int fn_80161DA8(short *obj, u8 *p)
 {
-  extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);
   extern f32 lbl_803E2EB8;
@@ -4964,7 +4948,7 @@ int fn_80161DA8(short *obj, u8 *p)
 
   hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 2, lbl_803E2EB8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E2EB8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   *(f32 *)(p + 0x2a0) = lbl_803E2EE4;

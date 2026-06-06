@@ -1271,7 +1271,6 @@ void FUN_801f1d3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 #pragma peephole off
 void fn_801F20D4(int obj)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern void ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, int n);
   extern void *Obj_GetPlayerObject(void);
   extern int *gGameUIInterface;
@@ -1471,7 +1470,6 @@ undefined4 FUN_801f26a8(int param_1,undefined4 param_2,int param_3)
 #pragma peephole off
 void fn_801F27E4(int obj)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern void ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, int n);
   extern void *Obj_GetPlayerObject(void);
   extern int fn_80296A14(void);
@@ -2798,7 +2796,6 @@ void fn_801F2290(int obj)
     extern int getAngle(f32 x, f32 y);
     extern f32 sqrtf(f32 x);
     extern void fn_80137948(char *fmt, ...);
-    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
     extern int ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, void *events);
     extern void ObjAnim_SampleRootCurvePhase(int obj, void *p);
     extern int *gGameUIInterface;

@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
+#include "main/objanim.h"
 #include "main/objhits_types.h"
 
 #pragma peephole off
@@ -1425,7 +1426,6 @@ FUN_802014c8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 #pragma peephole off
 int fn_802015EC(int obj, int p)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern int Stack_IsFull(int sp);
   extern void Stack_Push(int sp, int *args);
   extern f32 lbl_803E62A8;
@@ -1474,7 +1474,7 @@ int fn_802015EC(int obj, int p)
   }
   *(s8 *)(p + 0x34d) = 18;
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 16, lbl_803E62A8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 16, lbl_803E62A8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   if (*(s8 *)(p + 0x346) != 0) {
@@ -1881,7 +1881,6 @@ int fn_802020B0(int obj, int p2)
 {
   extern void ObjHits_DisableObject(int);
   extern void ObjGroup_RemoveObject(int, int);
-  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern int gameBitIncrement(int);
   extern void Obj_FreeObject(int);
   extern void Stack_Pop(int, int *);
@@ -1918,7 +1917,7 @@ int fn_802020B0(int obj, int p2)
     }
   }
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    ObjAnim_SetCurrentMove(obj, 1, lbl_803E62A8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E62A8, 0);
     *(u8 *)(p2 + 0x346) = 0;
   }
   *(f32 *)(p2 + 0x2a0) = lbl_803E6334;
@@ -2052,7 +2051,6 @@ void FUN_80202268(undefined8 param_1,double param_2,double param_3,undefined8 pa
 #pragma peephole off
 int fn_80202294(int obj, int p)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern void *Obj_GetPlayerObject(void);
   extern int lbl_80329650[];
   extern int Stack_IsFull(int sp);
@@ -2064,7 +2062,7 @@ int fn_80202294(int obj, int p)
 
   sub_40c = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 0, lbl_803E62A8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E62A8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   if (*(char *)(p + 0x27a) != '\0') {
@@ -2157,7 +2155,6 @@ int fn_80202524(int obj, int p)
 {
   extern void ObjHits_EnableObject(int obj);
   extern void ObjHits_SetHitVolumeSlot(int obj, int slot, int a, int b);
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern f32 lbl_803E62A8;
   extern f32 lbl_803E62F4;
 
@@ -2167,7 +2164,7 @@ int fn_80202524(int obj, int p)
   ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
   *(f32 *)(p + 0x2a0) = lbl_803E62F4;
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 5, lbl_803E62A8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E62A8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   *(s8 *)(p + 0x34d) = 1;
@@ -2262,7 +2259,6 @@ void FUN_802026cc(undefined4 param_1,undefined4 param_2,int param_3)
 #pragma peephole off
 int fn_80202720(int obj, int p)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern int *gPlayerInterface;
   extern int lbl_80329640[];
   extern f32 lbl_803E62A8;
@@ -2277,7 +2273,7 @@ int fn_80202720(int obj, int p)
   p4c = *(int *)(obj + 0x4c);
   sub_40c = *(int *)(sub + 0x40c);
   if (*(char *)(p + 0x27a) != '\0') {
-    ObjAnim_SetCurrentMove(obj, 14, lbl_803E62A8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 14, lbl_803E62A8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
   *(u8 *)(obj + 0xaf) |= 0x8;
@@ -2292,7 +2288,7 @@ int fn_80202720(int obj, int p)
   if (*(s8 *)(p + 0x346) != 0) {
     Sfx_PlayFromObject(obj, SFXfoot_ice_run_2);
     *(f32 *)(sub_40c + 4) = lbl_803E62C8;
-    ObjAnim_SetCurrentMove(obj, 8, lbl_803E62A8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
     *(u32 *)(p + 0x2d0) = 0;
     *(u8 *)(p + 0x25f) = 0;
     *(u8 *)(p + 0x349) = 0;
@@ -4041,8 +4037,6 @@ extern f32 lbl_803E62A8;
 extern f32 lbl_803E62FC;
 extern u8 lbl_80329514[];
 extern void *memset(void *dst, int v, int n);
-extern void ObjAnim_SetCurrentMove(void *obj, int move, f32 weight, int flag);
-
 #pragma scheduling off
 #pragma peephole off
 void dbstealerworm_init(int *obj, u8 *def, int param3) {
@@ -4068,7 +4062,7 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
     *(u8*)((char*)p40c + 0x44) = (u8)((*(u8*)((char*)p40c + 0x44) & ~0x20) | ((def[0x2b] & 1) << 5));
     *(u8*)((char*)p40c + 0x44) = (u8)(*(u8*)((char*)p40c + 0x44) | 0x10);
     *(int*)((char*)p40c + 0x18) = 0;
-    ObjAnim_SetCurrentMove(obj, 8, lbl_803E62A8, 0);
+    ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
     *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
     ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, sub, 3);
     *(s16*)(sub + 0x270) = 0;
@@ -4683,7 +4677,7 @@ int fn_80202428(int obj, int param2)
     ObjHits_SetHitVolumeSlot(obj, 0xa, 1, -1);
     *(f32 *)(param2 + 0x2a0) = lbl_803E62F4;
     if (*(s8 *)(param2 + 0x27a) != 0) {
-        ObjAnim_SetCurrentMove((void *)obj, 0xa, lbl_803E62A8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0xa, lbl_803E62A8, 0);
         *(u8 *)(param2 + 0x346) = 0;
     }
     *(u8 *)(param2 + 0x34d) = 1;
@@ -4714,7 +4708,7 @@ int fn_80200750(int obj, int param2)
     *(u8 *)(sub + 0x15) = *(u8 *)(sub + 0x15) | 0x4;
     *(f32 *)(param2 + 0x2a0) = lbl_803E62E8;
     if (*(s8 *)(param2 + 0x27a) != 0) {
-        ObjAnim_SetCurrentMove((void *)obj, 0x11, lbl_803E62A8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
         *(u8 *)(param2 + 0x346) = 0;
     }
     *(u8 *)(param2 + 0x34d) = 0x1f;
@@ -4953,7 +4947,6 @@ int fn_802025C0(int obj, int p2)
 {
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
-    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
     extern f32 lbl_803E62A8;
     extern f32 lbl_803E6344;
     extern f32 lbl_803E6348;
@@ -4967,12 +4960,12 @@ int fn_802025C0(int obj, int p2)
     if (*(s8 *)(p2 + 0x27a) != 0) {
         if ((int)randomGetRange(0, 1) != 0) {
             if (*(s8 *)(p2 + 0x27a) != 0) {
-                ObjAnim_SetCurrentMove(obj, 6, lbl_803E62A8, 0);
+                ObjAnim_SetCurrentMove((int)obj, 6, lbl_803E62A8, 0);
                 *(u8 *)(p2 + 0x346) = 0;
             }
         } else {
             if (*(s8 *)(p2 + 0x27a) != 0) {
-                ObjAnim_SetCurrentMove(obj, 7, lbl_803E62A8, 0);
+                ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E62A8, 0);
                 *(u8 *)(p2 + 0x346) = 0;
             }
         }
@@ -5035,7 +5028,6 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole off
 int fn_80200850(int obj, int p2)
 {
-    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int *args);
     extern f32 sqrtf(f32 x);
@@ -5066,7 +5058,7 @@ int fn_80200850(int obj, int p2)
     *(f32 *)(p2 + 0x284) = *(f32 *)(p2 + 0x284) / d;
     *(f32 *)(p2 + 0x2a0) = lbl_803E62F4;
     if (*(s8 *)(p2 + 0x27a) != 0) {
-        ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E62A8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
         *(u8 *)(p2 + 0x346) = 0;
     }
     *(u8 *)(p2 + 0x34d) = 0x1f;
@@ -5655,7 +5647,6 @@ int fn_80201358(int obj, int p2)
     extern void Stack_Push(int sp, int *args);
     extern void ObjMsg_SendToObject(int, int, int, int);
     extern int Obj_GetYawDeltaToObject(int, int, f32 *);
-    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
     extern f32 sqrtf(f32 x);
     extern f32 lbl_803E62A8;
     extern f32 lbl_803E6310;
@@ -5734,7 +5725,7 @@ int fn_80201358(int obj, int p2)
         *(s16 *)(obj + 0) += Obj_GetYawDeltaToObject(obj, *(int *)(p2 + 0x2d0), 0);
         *(u8 *)(p2 + 0x34d) = 0x11;
         if (*(s8 *)(p2 + 0x27a) != 0) {
-            ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E62A8, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x12, lbl_803E62A8, 0);
             *(u8 *)(p2 + 0x346) = 0;
         }
         if (*(s8 *)(p2 + 0x346) != 0) {
@@ -5757,7 +5748,6 @@ int fn_80200E44(int obj, int p2, f32 t)
     extern int ObjGroup_FindNearestObject(int, int, f32 *);
     extern int Obj_GetPlayerObject(void);
     extern int Obj_GetYawDeltaToObject(int, int, f32 *);
-    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
     extern int *seqFn_800394a0(void);
     extern s16 *objModelGetVecFn_800395d8(int, int);
     extern f32 lbl_803E62A8;
@@ -5868,7 +5858,7 @@ int fn_80200E44(int obj, int p2, f32 t)
     sub = *(int *)(blob + 0x40c);
     *(u8 *)(p2 + 0x34d) = 0x1f;
     if (*(s8 *)(p2 + 0x27a) != 0) {
-        ObjAnim_SetCurrentMove(obj, 0xf, lbl_803E62A8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0xf, lbl_803E62A8, 0);
         *(u8 *)(p2 + 0x346) = 0;
     }
     if (*(void **)(sub + 0x3c) != NULL) {
@@ -5966,8 +5956,6 @@ int fn_80201BD8(int obj, int p2, f32 t)
     extern void ObjHits_ClearHitVolumes(int);
     extern int RandomTimer_UpdateRangeTrigger(int, f32, f32);
     extern void Sfx_PlayFromObject(int, int);
-    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
-    extern void ObjAnim_SampleRootCurvePhase(int, f32, int);
     extern int Obj_GetPlayerObject(void);
     extern int Obj_GetYawDeltaToObject(int, int, f32 *);
     extern int *seqFn_800394a0(void);
@@ -6039,7 +6027,7 @@ int fn_80201BD8(int obj, int p2, f32 t)
             *(s16 *)(sub + 0x1c) = -1;
         }
         if (*(s8 *)(p2 + 0x27a) != 0) {
-            ObjAnim_SetCurrentMove(obj, 0xf, lbl_803E62A8, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0xf, lbl_803E62A8, 0);
             *(u8 *)(p2 + 0x346) = 0;
         }
         frac = (f32)*(u8 *)(blob + 0x406) / lbl_803E62C4;
@@ -6051,7 +6039,7 @@ int fn_80201BD8(int obj, int p2, f32 t)
             Sfx_PlayFromObject(obj, 0x440);
         }
         if (*(s8 *)(p2 + 0x27a) != 0) {
-            ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E62A8, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
             *(u8 *)(p2 + 0x346) = 0;
         }
         *(f32 *)(p2 + 0x2a0) = lbl_803E6300;
@@ -6150,7 +6138,8 @@ int fn_80201BD8(int obj, int p2, f32 t)
             ptr++;
         }
     }
-    ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(p2 + 0x280), p2 + 0x2a0);
+    ObjAnim_SampleRootCurvePhase(*(f32 *)(p2 + 0x280), (ObjAnimComponent *)obj,
+                                 (float *)(p2 + 0x2a0));
     return 0;
 }
 #pragma peephole reset
@@ -6165,7 +6154,6 @@ void dbstealerworm_update(u8 *objp)
     extern int allocModelStruct_800139e8(int, int);
     extern uint GameBit_Get(int);
     extern void ObjGroup_AddObject(int, int);
-    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
     extern int ObjMsg_Pop(int, u32 *, int *, int *);
     extern void ObjMsg_SendToObject(int, int, int, int);
     extern void objLightFn_8009a1dc(int, f32, int, int, int);
@@ -6219,7 +6207,7 @@ void dbstealerworm_update(u8 *objp)
                 ((void (*)(int, int, int, int, int, int, int, f32))((void **)*gBaddieControlInterface)[22])(obj, data, blob, 0x10, 7, 0x10a, 0x26, lbl_803E62FC);
                 ObjGroup_AddObject(obj, 3);
                 *(s16 *)(blob + 0x402) = 0;
-                ObjAnim_SetCurrentMove(obj, 8, lbl_803E62A8, 0x10);
+                ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0x10);
                 *(u8 *)(blob + 0x346) = 0;
                 *(u8 *)(obj + 0x36) = 0xff;
                 *(u8 *)(obj + 0xaf) |= 8;
@@ -6249,7 +6237,7 @@ void dbstealerworm_update(u8 *objp)
                         ObjMsg_SendToObject(*(int *)(sub2 + 0x18), 0x11, obj, 0x14);
                         *(int *)(sub2 + 0x18) = 0;
                         *(s16 *)(sub2 + 0x1c) = -1;
-                        ObjAnim_SetCurrentMove(obj, 0xf, lbl_803E62A8, 0);
+                        ObjAnim_SetCurrentMove((int)obj, 0xf, lbl_803E62A8, 0);
                     }
                 }
                 if (((int (*)(int, int, int, int, char *, char *, int, char *))((void **)*gBaddieControlInterface)[20])(obj, blob, blob + 0x35c, *(s16 *)(blob + 0x3f4), tbl + 0x2ac, tbl + 0x324, 1, st) != 0) {
@@ -6288,8 +6276,6 @@ int fn_802017A4(int obj, int p2, f32 t)
     extern void Stack_Push(int sp, int *args);
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_ClearHitVolumes(int);
-    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
-    extern void ObjAnim_SampleRootCurvePhase(int, f32, int);
     extern int Obj_GetPlayerObject(void);
     extern int Obj_GetYawDeltaToObject(int, int, f32 *);
     extern int *seqFn_800394a0(void);
@@ -6358,7 +6344,7 @@ int fn_802017A4(int obj, int p2, f32 t)
         }
     } else {
         if (*(s8 *)(p2 + 0x27a) != 0) {
-            ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E62A8, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
             *(u8 *)(p2 + 0x346) = 0;
         }
         *(f32 *)(p2 + 0x2a0) = lbl_803E6300;
@@ -6457,7 +6443,8 @@ int fn_802017A4(int obj, int p2, f32 t)
             ptr++;
         }
     }
-    ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(p2 + 0x280), p2 + 0x2a0);
+    ObjAnim_SampleRootCurvePhase(*(f32 *)(p2 + 0x280), (ObjAnimComponent *)obj,
+                                 (float *)(p2 + 0x2a0));
     return 0;
 }
 #pragma peephole reset
@@ -6608,7 +6595,6 @@ int fn_80200A70(int obj, int p2, f32 t)
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int *args);
     extern void fn_80137948(char *, ...);
-    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
     extern int Obj_GetPlayerObject(void);
     extern int *ObjGroup_GetObjects(int, int *);
     extern f32 Vec_xzDistance(int, int);
@@ -6664,7 +6650,7 @@ int fn_80200A70(int obj, int p2, f32 t)
         return 0;
     }
     if (*(s8 *)(p2 + 0x27a) != 0) {
-        ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E62A8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E62A8, 0);
         *(u8 *)(p2 + 0x346) = 0;
     }
     *(f32 *)(p2 + 0x2a0) = lbl_803E6300;
@@ -7234,7 +7220,6 @@ int fn_802004B0(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int *args);
-    extern void ObjAnim_SampleRootCurvePhase(int, f32, int);
     extern f32 Vec_xzDistance(int, int);
     extern int randomGetRange(int, int);
     extern f32 lbl_803E62A8;
@@ -7322,7 +7307,8 @@ int fn_802004B0(int obj, int p2, f32 t)
         *(u8 *)(sub + 0x34) = 1;
         return 0;
     }
-    ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(p2 + 0x280), p2 + 0x2a0);
+    ObjAnim_SampleRootCurvePhase(*(f32 *)(p2 + 0x280), (ObjAnimComponent *)obj,
+                                 (float *)(p2 + 0x2a0));
     return 0;
 }
 #pragma peephole reset
