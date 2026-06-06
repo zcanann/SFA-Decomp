@@ -1098,7 +1098,7 @@ void shopkeeper_update(int obj) {
         gameTextShow(0x433);
         *(f32 *)(state + 0x9C4) = *(f32 *)(state + 0x9C4) - timeDelta;
         if (*(f32 *)(state + 0x9C4) < lbl_803E59DC) {
-            *(f32 *)(state + 0x9C4) = lbl_803E59DC;
+            *(f32 *)(state + 0x9C4) = *(f32 *)&lbl_803E59DC;
         }
     }
     if ((*(u8 *)(state + 0x9D4) & 0x04) != 0) {

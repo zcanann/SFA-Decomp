@@ -1013,14 +1013,14 @@ void ccgasventcontrol_update(int obj)
             int player = Obj_GetPlayerObject();
             *(f32 *)((char *)ex + 8) = *(f32 *)((char *)ex + 8) + timeDelta / lbl_803E4618;
             if (*(f32 *)((char *)ex + 8) > lbl_803E4628) {
-                *(f32 *)((char *)ex + 8) = lbl_803E4628;
+                *(f32 *)((char *)ex + 8) = *(f32 *)&lbl_803E4628;
             }
             if (*(f32 *)((char *)player + 0x10) <= *(f32 *)((char *)obj + 0x10) + *(f32 *)((char *)ex + 8)) {
                 *(f32 *)((char *)ex + 4) = -(timeDelta * (f32)b - *(f32 *)((char *)ex + 4));
             } else {
                 *(f32 *)((char *)ex + 4) = lbl_803E462C * timeDelta + *(f32 *)((char *)ex + 4);
                 if (*(f32 *)((char *)ex + 4) > lbl_803E4624) {
-                    *(f32 *)((char *)ex + 4) = lbl_803E4624;
+                    *(f32 *)((char *)ex + 4) = *(f32 *)&lbl_803E4624;
                 }
             }
             enableHeavyFog(*(f32 *)((char *)obj + 0x10) + *(f32 *)((char *)ex + 8),
@@ -1242,7 +1242,7 @@ void MoonSeedPlantingSpot_update(int obj)
         }
         *(f32 *)((char *)ex + 0x10) = *(f32 *)((char *)ex + 0x10) - timeDelta;
         if (*(f32 *)((char *)ex + 0x10) < lbl_803E45F4) {
-            *(f32 *)((char *)ex + 0x10) = lbl_803E45F4;
+            *(f32 *)((char *)ex + 0x10) = *(f32 *)&lbl_803E45F4;
         }
         break;
     }
