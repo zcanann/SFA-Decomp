@@ -562,8 +562,8 @@ void collectible_hitDetect(void)
 }
 
 extern uint GameBit_Get(int);
-extern f32 sin(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 mathSinf(f32 x);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern int* gPartfxInterface;
 extern f32 lbl_803E3454;
@@ -598,8 +598,8 @@ int collectible_SeqFn(int obj, int unused, u8* data)
     for (i = 0; i < (s32)data[0x8b]; i++) {
         u8 cmd = data[0x81 + i];
         if (cmd == 1) {
-            s_val = lbl_803E3484 * sin(lbl_803E3488);
-            c_val = lbl_803E3484 * fn_80293E80(lbl_803E3488);
+            s_val = lbl_803E3484 * mathCosf(lbl_803E3488);
+            c_val = lbl_803E3484 * mathSinf(lbl_803E3488);
             *(u8*)((char*)((GameObject *)obj)->extra + 0x1d) = 8;
             ((GameObject *)obj)->anim.velocityX = c_val;
             ((GameObject *)obj)->anim.velocityY = lbl_803E3460;

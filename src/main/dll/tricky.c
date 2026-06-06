@@ -3074,8 +3074,8 @@ void hudDrawFn_80121440(void) {
 extern int Camera_GetCurrentViewSlot(void);
 extern u8 Rcp_GetViewFinderHudEnabled(void);
 extern int getAngle(f32, f32);
-extern f32 fn_80293E80(f32);
-extern f32 sin(f32);
+extern f32 mathSinf(f32);
+extern f32 mathCosf(f32);
 extern void drawViewFinderLine(u8 *color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
 extern f32 fn_8029454C(f32);
 extern const f64 lbl_803E1EA0, lbl_803E1EA8, lbl_803E1EB0, lbl_803E1EB8;
@@ -3113,8 +3113,8 @@ extern int sprintf(char *, ...);
     _c.a = hudElementOpacity * lbl_803DD7F0; \
     _a = (s16)getAngle(gA1, gA2); \
     _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94; \
-    _cs = fn_80293E80(_r); \
-    _sn = sin(_r); \
+    _cs = mathSinf(_r); \
+    _sn = mathCosf(_r); \
     _c2 = _c; \
     _cx = lbl_803E1E68 * _cs; \
     _sx = lbl_803E1E68 * _sn; \
@@ -3130,8 +3130,8 @@ extern int sprintf(char *, ...);
     _c.a = hudElementOpacity * lbl_803DD7F0; \
     _a = (s16)getAngle(gA1, gA2); \
     _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94; \
-    _cs = fn_80293E80(_r); \
-    _sn = sin(_r); \
+    _cs = mathSinf(_r); \
+    _sn = mathCosf(_r); \
     _c2 = _c; \
     _cx = lbl_803E1E68 * _cs; \
     _sx = lbl_803E1E68 * _sn; \
@@ -3179,7 +3179,7 @@ void drawViewFinderHud(void) {
             _c.a = hudElementOpacity * lbl_803DD7F0;
             _a = (s16)getAngle(lbl_803E1E3C, lbl_803E1F08 - f18v);
             _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
-            _cs = fn_80293E80(_r); _sn = sin(_r);
+            _cs = mathSinf(_r); _sn = mathCosf(_r);
             _c2 = _c;
             _cx = lbl_803E1E68 * _cs;
             _sx = lbl_803E1E68 * _sn;
@@ -3191,7 +3191,7 @@ void drawViewFinderHud(void) {
             _c.a = hudElementOpacity * lbl_803DD7F0;
             _a = (s16)getAngle(lbl_803E1E3C, (f19v = lbl_803E1F14 + f15v) - f15v);
             _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
-            _cs = fn_80293E80(_r); _sn = sin(_r);
+            _cs = mathSinf(_r); _sn = mathCosf(_r);
             _c2 = _c;
             _cx = lbl_803E1F18 * _cs;
             _sx = lbl_803E1F18 * _sn;
@@ -3231,18 +3231,18 @@ void drawViewFinderHud(void) {
                     u8 alpha = kF30 * lbl_803DD7F0;
                     f31 = kEC4 + f27;
                     f30 = kF34 - f31;
-                    _sn = lbl_803DBAE4 * sin(kEC8 * (f30 * lbl_803DBAE0) / kE94);
+                    _sn = lbl_803DBAE4 * mathCosf(kEC8 * (f30 * lbl_803DBAE0) / kE94);
                     f15 = (f32)(lbl_803DD7F4 + (kF38 + _sn));
                     f29 = kF34 - f27;
-                    _sn = lbl_803DBAE4 * sin(kEC8 * (f29 * lbl_803DBAE0) / kE94);
+                    _sn = lbl_803DBAE4 * mathCosf(kEC8 * (f29 * lbl_803DBAE0) / kE94);
                     f16 = (f32)(lbl_803DD7F4 + (kF38 + _sn));
                     *(int *)&_c = lbl_803E1E2C;
                     _c.a = alpha;
                     fdx = f31 - f27;
                     _a = (s16)getAngle(fdx, f15 - f16);
                     _r = kEC8 * (f32)_a / kE94;
-                    _cs = fn_80293E80(_r);
-                    _sn = sin(_r);
+                    _cs = mathSinf(_r);
+                    _sn = mathCosf(_r);
                     _c2 = _c;
                     _cx = kE68 * _cs;
                     _sx = kE68 * _sn;
@@ -3252,16 +3252,16 @@ void drawViewFinderHud(void) {
                     GXColor _c2; GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
                     u8 alpha = kF30 * lbl_803DD7F0;
                     f32 f16, f15;
-                    _sn = lbl_803DBAE4 * sin(kEC8 * (f30 * lbl_803DBAE0) / kE94);
+                    _sn = lbl_803DBAE4 * mathCosf(kEC8 * (f30 * lbl_803DBAE0) / kE94);
                     f16 = (f32)(lbl_803DD7F4 + (kF40 + _sn));
-                    _sn = lbl_803DBAE4 * sin(kEC8 * (f29 * lbl_803DBAE0) / kE94);
+                    _sn = lbl_803DBAE4 * mathCosf(kEC8 * (f29 * lbl_803DBAE0) / kE94);
                     f15 = (f32)(lbl_803DD7F4 + (kF40 + _sn));
                     *(int *)&_c = lbl_803E1E2C;
                     _c.a = alpha;
                     _a = (s16)getAngle(fdx, f16 - f15);
                     _r = kEC8 * (f32)_a / kE94;
-                    _cs = fn_80293E80(_r);
-                    _sn = sin(_r);
+                    _cs = mathSinf(_r);
+                    _sn = mathCosf(_r);
                     _c2 = _c;
                     _cx = kE68 * _cs;
                     _sx = kE68 * _sn;
@@ -3271,16 +3271,16 @@ void drawViewFinderHud(void) {
                     GXColor _c2; GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
                     u8 alpha = kOpac * lbl_803DD7F0;
                     f32 f16, f15;
-                    _sn = lbl_803DBAE4 * sin(kEC8 * (f30 * lbl_803DBAE0) / kE94);
+                    _sn = lbl_803DBAE4 * mathCosf(kEC8 * (f30 * lbl_803DBAE0) / kE94);
                     f16 = lbl_803DD7F4 + (kF48 + _sn);
-                    _sn = lbl_803DBAE4 * sin(kEC8 * (f29 * lbl_803DBAE0) / kE94);
+                    _sn = lbl_803DBAE4 * mathCosf(kEC8 * (f29 * lbl_803DBAE0) / kE94);
                     f15 = lbl_803DD7F4 + (kF48 + _sn);
                     *(int *)&_c = lbl_803E1E2C;
                     _c.a = alpha;
                     _a = (s16)getAngle(fdx, f16 - f15);
                     _r = kEC8 * (f32)_a / kE94;
-                    _cs = fn_80293E80(_r);
-                    _sn = sin(_r);
+                    _cs = mathSinf(_r);
+                    _sn = mathCosf(_r);
                     _c2 = _c;
                     _cx = kE68 * _cs;
                     _sx = kE68 * _sn;
@@ -3341,7 +3341,7 @@ void drawViewFinderHud(void) {
                 if ((u8)r27v != 0) {
                     f32 sn;
                     gameTextSetColor(0, 0xff, 0, (int)((f32)(u8)r27v * lbl_803DD7F0));
-                    sn = lbl_803DBAE4 * sin(lbl_803E1EC8 * ((lbl_803E1F34 - f18) * lbl_803DBAE0) / lbl_803E1E94);
+                    sn = lbl_803DBAE4 * mathCosf(lbl_803E1EC8 * ((lbl_803E1F34 - f18) * lbl_803DBAE0) / lbl_803E1E94);
                     gameTextShowStr(buf, 0x93,
                         (int)(lbl_803E1F88 * (f18 - lbl_803E1F78) + lbl_803E1F78),
                         (int)(lbl_803DD7F4 + (lbl_803E1F90 + sn)));
@@ -3352,17 +3352,17 @@ void drawViewFinderHud(void) {
                     f32 f15 = lbl_803E1F34 - f18;
                     f32 f16;
                     f64 fx;
-                    _sn = lbl_803DBAE4 * sin(lbl_803E1EC8 * (f15 * lbl_803DBAE0) / lbl_803E1E94);
+                    _sn = lbl_803DBAE4 * mathCosf(lbl_803E1EC8 * (f15 * lbl_803DBAE0) / lbl_803E1E94);
                     f16 = lbl_803DD7F4 + ((f32)((u8)r25v + 0x1e0) + _sn);
-                    _sn = lbl_803DBAE4 * sin(lbl_803E1EC8 * (f15 * lbl_803DBAE0) / lbl_803E1E94);
+                    _sn = lbl_803DBAE4 * mathCosf(lbl_803E1EC8 * (f15 * lbl_803DBAE0) / lbl_803E1E94);
                     f15 = lbl_803DD7F4 + (lbl_803E1F48 + _sn);
                     *(int *)&_c = lbl_803E1E2C;
                     _c.a = alpha;
                     fx = lbl_803E1F88 * (f18 - lbl_803E1F78) + lbl_803E1F78;
                     _a = (s16)getAngle((f32)fx - f18, f16 - f15);
                     _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
-                    _cs = fn_80293E80(_r);
-                    _sn = sin(_r);
+                    _cs = mathSinf(_r);
+                    _sn = mathCosf(_r);
                     _c2 = _c;
                     _cx = lbl_803E1E68 * _cs;
                     _sx = lbl_803E1E68 * _sn;

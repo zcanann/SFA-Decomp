@@ -989,8 +989,8 @@ extern void saveGame_saveObjectPos(int obj);
 extern int  fn_802966B4(u8 *player);
 extern int  fn_8029669C(u8 *player);
 extern f32  fn_80296214(u8 *player);
-extern f32  fn_80293E80(f32 x);
-extern f32  sin(f32 x);
+extern f32  mathSinf(f32 x);
+extern f32  mathCosf(f32 x);
 extern void gunpowderbarrel_updatePhysics(int obj);
 extern void fn_801A1230(int obj);
 extern u8  *Obj_GetPlayerObject(void);
@@ -1176,16 +1176,16 @@ void gunpowderbarrel_update(int obj)
                 gunpowderbarrel_launchAtTarget(obj, 0);
             } else if (((GunpowderBarrelState *)st)->unk17 == 0) {
                 *(f32 *)(obj + 0x24) = ((GunpowderBarrelState *)st)->velX =
-                    fn_80293E80(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340);
+                    mathSinf(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340);
                 *(f32 *)(obj + 0x28) = ((GunpowderBarrelState *)st)->velY = lbl_803E42C0;
                 *(f32 *)(obj + 0x2c) = ((GunpowderBarrelState *)st)->velZ =
-                    sin(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340);
+                    mathCosf(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340);
                 *(f32 *)(obj + 0xc) =
-                    lbl_803DBE80 * -fn_80293E80(lbl_803E433C * (f32)*(s16 *)player /
+                    lbl_803DBE80 * -mathSinf(lbl_803E433C * (f32)*(s16 *)player /
                                                 lbl_803E4340) +
                     *(f32 *)(obj + 0xc);
                 *(f32 *)(obj + 0x14) =
-                    lbl_803DBE80 * -sin(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340) +
+                    lbl_803DBE80 * -mathCosf(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340) +
                     *(f32 *)(obj + 0x14);
                 ObjGroup_AddObject(obj, 0x16);
             }

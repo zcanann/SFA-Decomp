@@ -61,7 +61,7 @@ double floor(double x);
 double frexp(double x, int *exp);
 double ldexp(double x, int exp);
 double modf(double x, double *intpart);
-double sin(double x);
+double mathCosf(double x);
 double tan(double x);
 double acos(double x);
 double asin(double x);
@@ -86,7 +86,7 @@ _MATH_INLINE float fabsf(float x)
 }
 _MATH_INLINE float sinf(float x)
 {
-    return (float)sin((double)x);
+    return (float)mathCosf((double)x);
 }
 _MATH_INLINE float cosf(float x)
 {

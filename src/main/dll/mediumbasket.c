@@ -1989,8 +1989,8 @@ extern u8 lbl_8031FE48[];
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void *memcpy(void *dst, const void *src, u32 size);
-extern f32 fn_80293E80(f32 angle);
-extern f32 sin(f32 angle);
+extern f32 mathSinf(f32 angle);
+extern f32 mathCosf(f32 angle);
 extern void Matrix_TransformPoint(void *mtx, f32 *x, f32 *y, f32 *z);
 extern void voxmaps_updateRoutePath(void *from, void *to);
 void mediumbasket_spawnContactObject(int *obj, int *state);
@@ -2611,10 +2611,10 @@ void fn_8015CE68(int obj, int state)
     *(f32 *)(control + 0x30) = lbl_803E2D90 + *(f32 *)(obj + 0x10);
     angle = (lbl_803E2D98 * (f32)*(s16 *)obj) / lbl_803E2D9C;
     *(f32 *)(control + 0x2c) =
-        *(f32 *)(control + 0x2c) - scale * (lbl_803E2D94 * fn_80293E80(angle));
+        *(f32 *)(control + 0x2c) - scale * (lbl_803E2D94 * mathSinf(angle));
     angle = (lbl_803E2D98 * (f32)*(s16 *)obj) / lbl_803E2D9C;
     *(f32 *)(control + 0x34) =
-        *(f32 *)(control + 0x34) - scale * (lbl_803E2D94 * sin(angle));
+        *(f32 *)(control + 0x34) - scale * (lbl_803E2D94 * mathCosf(angle));
     pathX = lbl_803E2D14;
     pathY = lbl_803E2DA0;
     pathZ = lbl_803E2DA4;

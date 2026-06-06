@@ -41,8 +41,8 @@ extern void cameraGetPrevPos2();
 extern int fn_80295C0C(int);
 extern int objFn_802962b4(int);
 extern int objFn_80296700(int);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern f64 sqrtf(f64 x);
 extern int getAngle(f32 dx, f32 dy);
 
@@ -207,8 +207,8 @@ undefined camcontrol_getTargetPosition(int arg0,void *arg1,void *arg2,void *arg3
   param_2 = (short *)arg1;
   param_3 = (float *)arg2;
   param_4 = (short *)arg3;
-  cosv = fn_80293E80((lbl_803E168C * (f32)*param_2) / lbl_803E1690);
-  sinv = sin((lbl_803E168C * (f32)*param_2) / lbl_803E1690);
+  cosv = mathSinf((lbl_803E168C * (f32)*param_2) / lbl_803E1690);
+  sinv = mathCosf((lbl_803E168C * (f32)*param_2) / lbl_803E1690);
   d2 = cameraMtxVar57[1] * cameraMtxVar57[1] - cameraMtxVar57[2] * cameraMtxVar57[2];
   if (d2 < lbl_803E1694) {
     d2 = *(f32 *)&lbl_803E1694;
@@ -409,8 +409,8 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
       dz = spinB;
       tgt = *(int *)((char *)cam + 0xa4);
       rad = (lbl_803E168C * (f32)(s16)ang) / lbl_803E1690;
-      cosv = fn_80293E80(rad);
-      sinv = sin(rad);
+      cosv = mathSinf(rad);
+      sinv = mathCosf(rad);
       t = dz * sinv - dx * cosv;
       v = t * cosv + dx * sinv;
       t = t + ((GameObject *)tgt)->anim.worldPosX;
@@ -429,8 +429,8 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
       dz = spinB;
       tgt = *(int *)((char *)cam + 0xa4);
       rad = (lbl_803E168C * (f32)(s16)(-s * 0xb6)) / lbl_803E1690;
-      cosv = fn_80293E80(rad);
-      sinv = sin(rad);
+      cosv = mathSinf(rad);
+      sinv = mathCosf(rad);
       t = dz * sinv - dx * cosv;
       v = t * cosv + dx * sinv;
       t = t + ((GameObject *)tgt)->anim.worldPosX;
@@ -596,8 +596,8 @@ void camMoveFn_80104040(int cam, short *tgt)
   kB = lbl_803E1690;
   do {
     rad = (kA * (f32)(s16)ang) / kB;
-    cosv = fn_80293E80(rad);
-    sinv = sin(rad);
+    cosv = mathSinf(rad);
+    sinv = mathCosf(rad);
     t = dx * sinv - dz * cosv;
     z = t * cosv + dz * sinv;
     z = z + ((GameObject *)tgt)->anim.worldPosZ;
@@ -605,8 +605,8 @@ void camMoveFn_80104040(int cam, short *tgt)
     p[1] = *(f32 *)(cam + 0x1c);
     p[2] = z;
     rad = (kA * (f32)(s16)(-i * 0xaaa)) / kB;
-    cosv = fn_80293E80(rad);
-    sinv = sin(rad);
+    cosv = mathSinf(rad);
+    sinv = mathCosf(rad);
     t = dx * sinv - dz * cosv;
     z = t * cosv + dz * sinv;
     z = z + ((GameObject *)tgt)->anim.worldPosZ;
@@ -642,8 +642,8 @@ void camMoveFn_80104040(int cam, short *tgt)
     spin = (s16)(int)*(f32 *)((char *)cameraMtxVar57 + 0x28);
     if ((spin < -0x1e) || (0x1e < spin)) {
       rad = (lbl_803E168C * (f32)spin) / lbl_803E1690;
-      cosv = fn_80293E80(rad);
-      sinv = sin(rad);
+      cosv = mathSinf(rad);
+      sinv = mathCosf(rad);
       t = dx * sinv - dz * cosv;
       *(f32 *)(cam + 0x18) = t + ((GameObject *)tgt)->anim.worldPosX;
       z = t * cosv + dz * sinv;

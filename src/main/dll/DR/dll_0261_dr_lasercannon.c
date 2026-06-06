@@ -502,7 +502,7 @@ void drlasercannon_update(int obj) {
                    (f32)(u32)*(u16 *)((char *)state + DR_LASERCANNON_STATE_BOB_PHASE));
     *(f32 *)((char *)state + DR_LASERCANNON_STATE_BOB_OFFSET) =
         lbl_803E68EC *
-        fn_80293E80(lbl_803E6928 * (f32)(u32)*(u16 *)((char *)state + DR_LASERCANNON_STATE_BOB_PHASE) /
+        mathSinf(lbl_803E6928 * (f32)(u32)*(u16 *)((char *)state + DR_LASERCANNON_STATE_BOB_PHASE) /
                     lbl_803E692C);
     ((GameObject *)obj)->anim.localPosY += *(f32 *)((char *)state + DR_LASERCANNON_STATE_BOB_OFFSET);
 }

@@ -69,9 +69,9 @@ void drcreator_update(int obj) {
                     if (p != NULL) {
                         *(s16 *)(p + 2) = 0;
                         *(s16 *)p = (s16)randomGetRange(0, 65535);
-                        *(f32 *)(p + 0x24) = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -fn_80293E80((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
+                        *(f32 *)(p + 0x24) = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -mathSinf((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
                         *(f32 *)(p + 0x28) = lbl_803E69B8 * ((f32)*(int *)runtime * (lbl_803E69C8 * (f32)(int)randomGetRange(0, 1000)));
-                        *(f32 *)(p + 0x2c) = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -sin((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
+                        *(f32 *)(p + 0x2c) = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -mathCosf((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
                         *(int *)(p + 0xc4) = obj;
                     }
                     *(s16 *)(runtime + 8) = *(s16 *)(runtime + 6) + randomGetRange(0, *(s16 *)(runtime + 0xa));

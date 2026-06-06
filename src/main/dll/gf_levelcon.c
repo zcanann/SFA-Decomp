@@ -342,8 +342,8 @@ void fn_80239FCC(int p1, int p2)
         rndDur = randomGetRange(0x64, 0x12c);
         newObj = Obj_AllocObjectSetup(0x20, 0x859);
         ang = lbl_803E74A0 * (f32)(u32)rndYaw / lbl_803E74A4;
-        *(f32 *)(newObj + 8) = (f32)(u32)rndDur * fn_80293E80(ang) + *(f32 *)(*(int *)p2 + 0xc);
-        *(f32 *)(newObj + 0xc) = (f32)(u32)rndDur * sin(ang) + *(f32 *)(*(int *)p2 + 0x10);
+        *(f32 *)(newObj + 8) = (f32)(u32)rndDur * mathSinf(ang) + *(f32 *)(*(int *)p2 + 0xc);
+        *(f32 *)(newObj + 0xc) = (f32)(u32)rndDur * mathCosf(ang) + *(f32 *)(*(int *)p2 + 0x10);
         *(f32 *)(newObj + 0x10) = *(f32 *)(p2 + 0xc8) - lbl_803E74A8;
         *(u8 *)(newObj + 0x1a) = (*(s16 *)p1 + yaw) >> 8;
         *(u8 *)(newObj + 0x19) = lbl_803DDDC0;

@@ -1483,8 +1483,8 @@ void dim_tricky_update(int* obj)
 #pragma scheduling reset
 #pragma scheduling reset
 
-extern f32 sin(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 mathSinf(f32 x);
 extern f32 lbl_803E4A5C;
 extern f32 lbl_803E4A60;
 extern f32 lbl_803E4A64;
@@ -1499,8 +1499,8 @@ void dim2conveyor_init(int *obj, u8 *params)
     Dim2ConveyorState *extra;
     *(s16 *)obj = (s16)(*(s8 *)((char *)params + 0x18) << 8);
     extra = ((GameObject *)obj)->extra;
-    extra->scrollX = scale * fn_80293E80(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
-    extra->scrollY = scale * sin(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
+    extra->scrollX = scale * mathSinf(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
+    extra->scrollY = scale * mathCosf(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
     extra->swapTimer = lbl_803E4A60;
     extra->musicHold = 0;
     ObjGroup_AddObject(obj, 22);

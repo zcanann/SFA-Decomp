@@ -569,7 +569,7 @@ extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern void Sfx_SetObjectSfxVolume(f32 ratio, s16 *obj, int sfx, int vol);
 extern f32 powfBitEstimate(f32 base, f32 exp);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 
 void fn_801EB940(short *param_1,int param_2)
 {
@@ -631,10 +631,10 @@ void fn_801EB940(short *param_1,int param_2)
        *(float *)(param_2 + 0x590) * powfBitEstimate(lbl_803E5BCC,timeDelta);
   *(float *)(param_2 + 0x594) =
        *(float *)(param_2 + 0x58c) *
-       fn_80293E80((lbl_803E5BD0 * (f32)(s32)*(short *)(param_2 + 0x588)) / lbl_803E5BD4);
+       mathSinf((lbl_803E5BD0 * (f32)(s32)*(short *)(param_2 + 0x588)) / lbl_803E5BD4);
   *(float *)(param_2 + 0x598) =
        *(float *)(param_2 + 0x590) *
-       fn_80293E80((lbl_803E5BD0 * (f32)(s32)*(short *)(param_2 + 0x58a)) / lbl_803E5BD4);
+       mathSinf((lbl_803E5BD0 * (f32)(s32)*(short *)(param_2 + 0x58a)) / lbl_803E5BD4);
   iVar4 = (int)*param_1 - ((int)*(short *)(param_2 + 0x40e) & 0xffffU);
   if (0x8000 < iVar4) {
     iVar4 = iVar4 + -0xffff;

@@ -3090,8 +3090,8 @@ void dll_4F_init(void)
 }
 
 extern f32 Curve_EvalHermite(f32 *pts, int mode, f32 t);
-extern f32 sin(f32);
-extern f32 fn_80293E80(f32);
+extern f32 mathCosf(f32);
+extern f32 mathSinf(f32);
 extern f32 timeDelta;
 extern f32 lbl_803E1A8C;
 extern f32 lbl_803E1A90;
@@ -3123,8 +3123,8 @@ void dll_4F_update(int *obj) {
     a = (s16)(a + (s32)(lbl_803E1A90 * fz));
     {
         f32 t = (lbl_803E1A94 * (f32)(s32)a) / lbl_803E1A98;
-        sn = sin(t);
-        cs = fn_80293E80(t);
+        sn = mathCosf(t);
+        cs = mathSinf(t);
     }
     *(f32*)((char*)obj + 0xc) = *(f32*)((char*)r30 + 0x18) + (lbl_803E1A9C * sn - lbl_803E1AA0 * cs);
     *(f32*)((char*)obj + 0x14) = *(f32*)((char*)r30 + 0x20) + (lbl_803E1A9C * cs + lbl_803E1AA0 * sn);
@@ -3648,11 +3648,11 @@ void CameraModePerv_update(u8 *obj) {
     }
     ((GameObject *)obj)->anim.localPosX =
         ((GameObject *)state)->anim.worldPosX -
-        lbl_803E1B80 * fn_80293E80(lbl_803E1B84 * (f32)(s32)*(s16 *)state / lbl_803E1B88);
+        lbl_803E1B80 * mathSinf(lbl_803E1B84 * (f32)(s32)*(s16 *)state / lbl_803E1B88);
     ((GameObject *)obj)->anim.localPosY = ((f32 *)lbl_803DD5C8)[1];
     ((GameObject *)obj)->anim.localPosZ =
         ((GameObject *)state)->anim.worldPosZ -
-        lbl_803E1B80 * sin(lbl_803E1B84 * (f32)(s32)*(s16 *)state / lbl_803E1B88);
+        lbl_803E1B80 * mathCosf(lbl_803E1B84 * (f32)(s32)*(s16 *)state / lbl_803E1B88);
     ((GameObject *)obj)->anim.rotX = 0;
     ((GameObject *)obj)->anim.rotY = -0x4000;
     ((GameObject *)obj)->anim.rotZ = 0;
@@ -3692,8 +3692,8 @@ void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
         int a = *(s16 *)state;
         angle = lbl_803E1B00 * (f32)a / lbl_803E1B04;
     }
-    cosv = fn_80293E80(angle);
-    sinv = sin(angle);
+    cosv = mathSinf(angle);
+    sinv = mathCosf(angle);
     pos[0] = cosv * lbl_803DB9C8 + (baseX = ((GameObject *)state)->anim.worldPosX);
     pos[1] = lbl_803E1B08 + ((GameObject *)state)->anim.worldPosY;
     baseZ = ((GameObject *)state)->anim.worldPosZ;
@@ -3822,11 +3822,11 @@ void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
     yaw = *(s16 *)state;
 
     if (param2 == 0) {
-        c = fn_80293E80(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
-        s = sin(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+        c = mathSinf(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+        s = mathCosf(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
     } else {
-        c = -fn_80293E80(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
-        s = -sin(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+        c = -mathSinf(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+        s = -mathCosf(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
     }
     *(s16 *)state = getAngle(c, s);
     camcontrol_getTargetPosition(obj, state, pos, 0);
@@ -3920,11 +3920,11 @@ void CameraModeCannon_update(u8 *obj) {
     *(s16 *)obj = (s16)(s32)((f32)(s32)yaw + (f32)(s32)delta / lbl_803E1AE0);
     *(f32 *)(obj + 12) =
         *(f32 *)(*(int *)lbl_803DD5A0 + 12) -
-        lbl_803E1AE4 * fn_80293E80(lbl_803E1AE8 * (f32)(s32)(-*(s16 *)obj) / lbl_803E1AEC);
+        lbl_803E1AE4 * mathSinf(lbl_803E1AE8 * (f32)(s32)(-*(s16 *)obj) / lbl_803E1AEC);
     *(f32 *)(obj + 16) = lbl_803E1AF0 + *(f32 *)(*(int *)lbl_803DD5A0 + 16);
     *(f32 *)(obj + 20) =
         *(f32 *)(*(int *)lbl_803DD5A0 + 20) -
-        lbl_803E1AE4 * sin(lbl_803E1AE8 * (f32)(s32)(-*(s16 *)obj) / lbl_803E1AEC);
+        lbl_803E1AE4 * mathCosf(lbl_803E1AE8 * (f32)(s32)(-*(s16 *)obj) / lbl_803E1AEC);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4402,10 +4402,10 @@ void CameraModeCrawl_update(u8 *obj) {
     }
     if (((WmFlags *)(lbl_803DD598 + 8))->b7 == 0) {
         *(f32 *)(obj + 24) =
-            lbl_803E1AD0 * fn_80293E80(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
+            lbl_803E1AD0 * mathSinf(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
             *(f32 *)(state + 24);
         *(f32 *)(obj + 32) =
-            lbl_803E1AD0 * sin(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
+            lbl_803E1AD0 * mathCosf(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
             *(f32 *)(state + 32);
         *(f32 *)(obj + 28) = lbl_803E1AD4 + *(f32 *)(state + 28);
         v20 = *(f32 *)(obj + 12) - *(f32 *)(state + 24);
@@ -4508,10 +4508,10 @@ void CameraModeCloudRunner_update(u8 *obj) {
 
     *(s16 *)(obj + 4) = (s16)(*(s16 *)(state + 4) * lbl_803DB9D4);
 
-    cosYaw = fn_80293E80(lbl_803E1B30 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B34);
-    sinYaw = sin(lbl_803E1B30 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B34);
-    sinPitch = sin(lbl_803E1B30 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B34);
-    cosPitch = fn_80293E80(lbl_803E1B30 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B34);
+    cosYaw = mathSinf(lbl_803E1B30 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B34);
+    sinYaw = mathCosf(lbl_803E1B30 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B34);
+    sinPitch = mathCosf(lbl_803E1B30 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B34);
+    cosPitch = mathSinf(lbl_803E1B30 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B34);
     radius = *(f32 *)(lbl_803DD5B8 + 12);
     ry = radius * cosPitch;
     rs = radius * sinPitch;
@@ -4545,8 +4545,8 @@ void CameraModeForceBehind_update(u8 *obj) {
     f32 radius;
 
     angle = lbl_803E1B00 * (f32)(0x8000 - *(s16 *)obj) / lbl_803E1B04;
-    cosv = fn_80293E80(angle);
-    sinv = sin(angle);
+    cosv = mathSinf(angle);
+    sinv = mathCosf(angle);
     sx = ((GameObject *)state)->anim.worldPosX;
     pos[0] = cosv * lbl_803DB9C8 + sx;
     pos[1] = lbl_803E1B08 + ((GameObject *)state)->anim.worldPosY;
@@ -4581,10 +4581,10 @@ void CameraModeForceBehind_update(u8 *obj) {
     *(s16 *)(obj + 2) = (s16)(s32)((f32)(s32)*(s16 *)(obj + 2) +
                                    interpolate((f32)pitch, lbl_803E1B18, timeDelta));
 
-    cosYaw = fn_80293E80(lbl_803E1B00 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B04);
-    sinYaw = sin(lbl_803E1B00 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B04);
-    sinPitch = sin(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
-    cosPitch = fn_80293E80(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
+    cosYaw = mathSinf(lbl_803E1B00 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B04);
+    sinYaw = mathCosf(lbl_803E1B00 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B04);
+    sinPitch = mathCosf(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
+    cosPitch = mathSinf(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
     radius = lbl_803DD5A8;
     *(f32 *)(obj + 24) = baseX + radius * sinPitch * sinYaw;
     *(f32 *)(obj + 28) = baseY + radius * cosPitch;
@@ -5263,10 +5263,10 @@ void CameraModeWorldMap_update(u8 *obj) {
                     f32 snYaw, csYaw, snPit, csPit;
                     f32 r, vy, h, px, pz;
                     f32 dxx, dyy, dzz;
-                    snYaw = -sin(lbl_803E1A48 * (f32)*(s16 *)obj / lbl_803E1A4C);
-                    csYaw = fn_80293E80(lbl_803E1A48 * (f32)*(s16 *)obj / lbl_803E1A4C);
-                    snPit = sin(lbl_803E1A48 * (f32)(((GameObject *)obj)->anim.rotY + 0x320) / lbl_803E1A4C);
-                    csPit = fn_80293E80(lbl_803E1A48 * (f32)(((GameObject *)obj)->anim.rotY + 0x320) /
+                    snYaw = -mathCosf(lbl_803E1A48 * (f32)*(s16 *)obj / lbl_803E1A4C);
+                    csYaw = mathSinf(lbl_803E1A48 * (f32)*(s16 *)obj / lbl_803E1A4C);
+                    snPit = mathCosf(lbl_803E1A48 * (f32)(((GameObject *)obj)->anim.rotY + 0x320) / lbl_803E1A4C);
+                    csPit = mathSinf(lbl_803E1A48 * (f32)(((GameObject *)obj)->anim.rotY + 0x320) /
                                         lbl_803E1A4C);
                     r = *(f32 *)lbl_803DD588;
                     vy = r * csPit;
@@ -5331,10 +5331,10 @@ void CameraModeWorldMap_update(u8 *obj) {
                     f32 t6, t5, px, pz;
                     f32 dxx, dyy, dzz;
                     a = lbl_803E1A48 * (f32)(u16)(ang - 0x39dc) / lbl_803E1A4C;
-                    sn = -sin(a);
-                    cs = fn_80293E80(a);
-                    sn54 = sin(lbl_803E1A54);
-                    cs54 = fn_80293E80(lbl_803E1A54);
+                    sn = -mathCosf(a);
+                    cs = mathSinf(a);
+                    sn54 = mathCosf(lbl_803E1A54);
+                    cs54 = mathSinf(lbl_803E1A54);
                     t6 = lbl_803E1A58 * cs54;
                     t5 = lbl_803E1A58 * sn54;
                     px = t5 * cs;
@@ -5356,8 +5356,8 @@ void CameraModeWorldMap_update(u8 *obj) {
                 }
                 {
                     f32 b = lbl_803E1A48 * (f32)my / lbl_803E1A4C;
-                    f32 sb = sin(b);
-                    f32 cb = -fn_80293E80(b);
+                    f32 sb = mathCosf(b);
+                    f32 cb = -mathSinf(b);
                     ((GameObject *)g)->anim.localPosX = lbl_803E1A60 * cb + ((GameObject *)obj)->anim.worldPosX;
                     ((GameObject *)g)->anim.localPosY =
                         ((GameObject *)obj)->anim.worldPosY + lbl_80319DF8[(s8)*(u8 *)&((GameObject *)g)->anim.bankIndex];
@@ -5387,11 +5387,11 @@ void CameraModeWorldMap_update(u8 *obj) {
         f32 lim = lbl_803E1A28;
         if (lbl_803E1A28 <=
             lbl_803E1A6C *
-                (sin(lbl_803E1A48 * (f32)((*(s16 *)objB - 0x2198) * 2) / lbl_803E1A4C) *
-                 sin(lbl_803E1A48 * (f32)((((GameObject *)objB)->anim.rotY - 0x4000) * 2) / lbl_803E1A4C))) {
+                (mathCosf(lbl_803E1A48 * (f32)((*(s16 *)objB - 0x2198) * 2) / lbl_803E1A4C) *
+                 mathCosf(lbl_803E1A48 * (f32)((((GameObject *)objB)->anim.rotY - 0x4000) * 2) / lbl_803E1A4C))) {
             lim = lbl_803E1A6C *
-                  (sin(lbl_803E1A48 * (f32)((*(s16 *)objB - 0x2198) * 2) / lbl_803E1A4C) *
-                   sin(lbl_803E1A48 * (f32)((((GameObject *)objB)->anim.rotY - 0x4000) * 2) / lbl_803E1A4C));
+                  (mathCosf(lbl_803E1A48 * (f32)((*(s16 *)objB - 0x2198) * 2) / lbl_803E1A4C) *
+                   mathCosf(lbl_803E1A48 * (f32)((((GameObject *)objB)->anim.rotY - 0x4000) * 2) / lbl_803E1A4C));
         }
         *(s8 *)(objB + 0x36) = (s32)lim;
     } else {

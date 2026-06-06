@@ -2800,7 +2800,7 @@ void cMenuRun(void)
 extern void gameTextSetDrawFunc(void *fn);
 extern void pauseMenuTextDrawFn(void);
 extern void gameTextFn_8001628c(int phrase, int a, int b, int *o1, int *o2, int *o3, int *o4);
-extern f32  fn_80293E80(f32 x);
+extern f32  mathSinf(f32 x);
 extern GridEntry lbl_8031B818[];
 extern s16  lbl_803DBA8A;
 extern f32  lbl_803DBA8C;
@@ -2853,7 +2853,7 @@ void fn_80128470(int p1)
     fn_80128A7C((u8)lbl_803DD7D8, p1, 0);
     {
         f32 base = lbl_803DBAC0;
-        f32 s = fn_80293E80(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94);
+        f32 s = mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94);
         fn_80128A7C((u8)lbl_803DD7D8, (int)((base * s + base) * (f32)(s16)p1), 4);
     }
     gameTextSetColor(0xff, 0xff, 0xff,
@@ -3976,7 +3976,7 @@ void fn_80128A7C(u8 i, s16 p2, int p3)
             f32 pr;
             v = p2;
             spd = (f32)(spd * (lbl_803E1F60 + (f64)lbl_803DD75C / lbl_803E2118));
-            spd += lbl_803E20BC * fn_80293E80(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) /
+            spd += lbl_803E20BC * mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) /
                                               lbl_803E1E94) +
                    lbl_803E2090;
             dx = lbl_803E1F34 - x;
@@ -4033,7 +4033,7 @@ extern f32  lbl_803E2188;
 extern f32  lbl_803E218C;
 extern f32  lbl_803E2190;
 extern f32  lbl_803E2194;
-extern f32  sin(f32 x);
+extern f32  mathCosf(f32 x);
 
 /* EN v1.0 0x8012C000  size: 1368b  Pause-menu character carousel driver:
  * eases the swivel angle lbl_803DD782 toward the selected slot, spins the
@@ -4101,9 +4101,9 @@ void fn_8012C000(void)
     lbl_803DD78A += framesThisStep;
     *(s16 *)lbl_803DD868[0] = (s16)(lbl_803DD78A << 9);
     *(s16 *)((u8 *)lbl_803DD868[0] + 0x4) =
-        lbl_803E2178 * fn_80293E80(lbl_803E1EC8 * (f32)(lbl_803DD78A * 1000) / lbl_803E1E94);
+        lbl_803E2178 * mathSinf(lbl_803E1EC8 * (f32)(lbl_803DD78A * 1000) / lbl_803E1E94);
     *(f32 *)((u8 *)lbl_803DD868[0] + 0x10) =
-        (f32)(lbl_803E2180 * fn_80293E80(lbl_803E1EC8 * (f32)(lbl_803DD78A * 400) / lbl_803E1E94) +
+        (f32)(lbl_803E2180 * mathSinf(lbl_803E1EC8 * (f32)(lbl_803DD78A * 400) / lbl_803E1E94) +
               lbl_803E217C);
     {
         int d = 0x400 - lbl_803DD78C;
@@ -4140,16 +4140,16 @@ void fn_8012C000(void)
         *((u8 *)lbl_803A9410[k] + 0x37) = 0xff;
         ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[k], timeDelta, (int)lbl_803A9410[k], &animEvents);
         kk *= step;
-        a = c1E64 * fn_80293E80(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
+        a = c1E64 * mathSinf(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
         a = (f32)lbl_803DD784 * a;
         *(f32 *)((u8 *)lbl_803A9410[k] + 0xc) =
             a * c2190 + *(f32 *)((u8 *)lbl_803DD868[0] + 0xc);
-        base = c2050 * fn_80293E80(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94) +
+        base = c2050 * mathSinf(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94) +
                (*(f32 *)((u8 *)lbl_803DD868[0] + 0x10) + c2010);
-        a = c1E64 - sin(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
+        a = c1E64 - mathCosf(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
         a = (f32)lbl_803DD784 * a;
         *(f32 *)((u8 *)lbl_803A9410[k] + 0x10) = a * c2190 + base;
-        a = c1E64 * sin(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
+        a = c1E64 * mathCosf(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
         a = (f32)lbl_803DD784 * a;
         *(f32 *)((u8 *)lbl_803A9410[k] + 0x14) =
             a * c2190 + *(f32 *)((u8 *)lbl_803DD868[0] + 0x14);

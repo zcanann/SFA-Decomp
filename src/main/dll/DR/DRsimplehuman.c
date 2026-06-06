@@ -417,8 +417,8 @@ extern f32 lbl_803E5AC0;
 extern f32 lbl_803E5AC4;
 extern f32 lbl_803E5AC8;
 extern f32 lbl_803E5ACC;
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern unsigned long randomGetRange(int a, int b);
 
 #pragma scheduling off
@@ -434,8 +434,8 @@ void spdrape_init(int *obj, u8 *def) {
         *(f32 *)((char *)obj + 8) = (f32)(s32)*(s16 *)((char *)def + 0x1a) / lbl_803E5AC4 * lbl_803E5AC0;
     }
     state[0] = lbl_803E5ABC;
-    state[1] = fn_80293E80(lbl_803E5AC8 * (f32)(s32)*(s16 *)obj / lbl_803E5ACC);
-    state[2] = sin(lbl_803E5AC8 * (f32)(s32)*(s16 *)obj / lbl_803E5ACC);
+    state[1] = mathSinf(lbl_803E5AC8 * (f32)(s32)*(s16 *)obj / lbl_803E5ACC);
+    state[2] = mathCosf(lbl_803E5AC8 * (f32)(s32)*(s16 *)obj / lbl_803E5ACC);
     state[3] = -(state[1] * *(f32 *)((char *)obj + 0xc) + state[2] * *(f32 *)((char *)obj + 0x14));
     *(s16 *)((char *)state + 0x14) = (s16)randomGetRange(0xb4, 0x12c);
     player = (int *)Obj_GetPlayerObject();

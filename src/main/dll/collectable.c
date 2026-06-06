@@ -199,8 +199,8 @@ extern void trickyReportError(const char *fmt, ...);
 extern void objParticleFn_80099d84(int obj,f32 param_1,int param_4,f32 param_2,int param_5);
 extern int objBboxFn_800640cc(Vec *from,Vec *to,f32 radius,int mode,void *hit,int obj,int param_7,
                               int param_8,int param_9,int param_10);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 
 extern undefined4 DAT_802c2948;
 extern undefined4 DAT_802c294c;
@@ -2600,9 +2600,9 @@ void baddieFn_8014a304(f32 radius,int obj,int state)
   maxDistance = lbl_803E25B0;
   for (i = 0; i < 4; i++) {
     angle = (angleScale * (f32)((s32)baseAngle + ((u32)(u16)i << 0xe))) / angleDivisor;
-    probe.x = *(f32 *)(obj + 0x18) - (radius * fn_80293E80(angle));
+    probe.x = *(f32 *)(obj + 0x18) - (radius * mathSinf(angle));
     probe.y = *(f32 *)(obj + 0x1c);
-    probe.z = *(f32 *)(obj + 0x20) - (radius * sin(angle));
+    probe.z = *(f32 *)(obj + 0x20) - (radius * mathCosf(angle));
     setupId = *(s16 *)(obj + 0x46);
     if (((((setupId != 0x613) && (setupId != 0x642)) && (setupId != 0x3fe)) &&
         ((setupId != 0x7c6) && (setupId != 0x7c8))) &&
@@ -3886,10 +3886,10 @@ void trickyFn_80144f50(int obj, int state) {
 
     if (trickyFoodFn_8014460c(obj, state) == 0) {
         ((TrickyState *)state)->unk72C =
-            *(f32*)(obj + 0x18) - fn_80293E80((lbl_803E2454 * (f32)*(s16*)obj) / lbl_803E2458);
+            *(f32*)(obj + 0x18) - mathSinf((lbl_803E2454 * (f32)*(s16*)obj) / lbl_803E2458);
         *(f32 *)&((TrickyState *)state)->unk730 = *(f32*)(obj + 0x1c);
         ((TrickyState *)state)->unk734 =
-            *(f32*)(obj + 0x20) - sin((lbl_803E2454 * (f32)*(s16*)obj) / lbl_803E2458);
+            *(f32*)(obj + 0x20) - mathCosf((lbl_803E2454 * (f32)*(s16*)obj) / lbl_803E2458);
 
         if (trickyFn_8013b368(obj, lbl_803E247C, state) != 1) {
             ((TrickyState *)state)->unk740 -= timeDelta;

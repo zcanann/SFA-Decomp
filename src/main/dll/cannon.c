@@ -151,8 +151,8 @@ extern void objAudioFn_800393f8(int obj, void *p2, int p3, int p4, int p5, int p
 extern char lbl_8031D2E8[];
 extern void **gRomCurveInterface;
 extern f32 timeDelta;
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern int getAngle(f32 x, f32 z);
 extern int randomGetRange(int min, int max);
 extern void *ObjGroup_GetObjects(int group, int *count);
@@ -466,10 +466,10 @@ void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
         trickyDebugPrint(strBase + 0x648);
         trickyState->guardWalkGroup = Objfsa_GetWalkGroupIndexAtPoint(trickyState->targetPosition, (void *)0x0);
         trickyState->guardPoint[0] = (f32)(trickyState->homeObj->worldPosX - lbl_803E247C *
-            fn_80293E80((lbl_803E2454 * (int)trickyState->homeObj->rotX) / lbl_803E2458));
+            mathSinf((lbl_803E2454 * (int)trickyState->homeObj->rotX) / lbl_803E2458));
         trickyState->guardPoint[1] = trickyState->homeObj->worldPosY;
         trickyState->guardPoint[2] = (f32)(trickyState->homeObj->worldPosZ - lbl_803E247C *
-            sin((lbl_803E2454 * (int)trickyState->homeObj->rotX) / lbl_803E2458));
+            mathCosf((lbl_803E2454 * (int)trickyState->homeObj->rotX) / lbl_803E2458));
         trickyState->guardCanSpawnHelpers = 0;
         trickyState->guardState = 1;
         break;

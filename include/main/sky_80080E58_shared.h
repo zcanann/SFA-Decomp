@@ -4340,8 +4340,8 @@ typedef struct RomCurveInterpState {
 #define ROM_CURVE_NODE_SCALE(node) (lbl_803DF008 * (f32)(u8)((node)->tangentScale))
 
 extern void **gRomCurveInterface;
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 x, f32 z);
 extern void Curve_SampleSegmentPoints(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ,

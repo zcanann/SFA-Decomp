@@ -693,7 +693,7 @@ extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void objLightFn_8009a1dc(int obj, f32 radius, void *pos, int type, int flags);
 extern f32 sqrtf(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern int getAngle(f32 dx, f32 dz);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 
@@ -775,15 +775,15 @@ void fn_8014E1DC(int obj, HagabonState *state) {
     state->wavePhaseB += (s16)(s32)(lbl_803E2610 * timeDelta);
     state->wavePhaseC += (s16)(s32)(lbl_803E2614 * timeDelta);
 
-    waveA = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseB) /
+    waveA = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseB) /
                         lbl_803E2620);
-    waveB = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
+    waveB = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
                         lbl_803E2620);
     ((GameObject *)obj)->anim.rotZ = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
 
-    waveA = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseC) /
+    waveA = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseC) /
                         lbl_803E2620);
-    waveB = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
+    waveB = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
                         lbl_803E2620);
     ((GameObject *)obj)->anim.rotY = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
 
@@ -801,9 +801,9 @@ void fn_8014E1DC(int obj, HagabonState *state) {
         ((GameObject *)obj)->anim.velocityZ += accel * (*(f32 *)(curve + 0x70) - ((GameObject *)obj)->anim.localPosZ);
     } else {
         ((GameObject *)obj)->anim.velocityX += accel * (*(f32 *)(curve + 0x68) - ((GameObject *)obj)->anim.localPosX);
-        waveA = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseB) /
+        waveA = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseB) /
                             lbl_803E2620);
-        waveB = fn_80293E80((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
+        waveB = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
                             lbl_803E2620);
         ((GameObject *)obj)->anim.velocityY += accel *
                                 (((lbl_803E262C * (waveA + waveB)) +
@@ -1031,11 +1031,11 @@ void fn_8014EE8C(int obj, SwarmBaddieState *state)
 
     *(s16 *)obj += (s16)(lbl_803E2698 *
                          (lbl_803E269C *
-                          fn_80293E80((lbl_803E26A0 * (f32)state->yawWavePhase) / lbl_803E26A4)));
+                          mathSinf((lbl_803E26A0 * (f32)state->yawWavePhase) / lbl_803E26A4)));
 
     ((GameObject *)obj)->anim.rotZ += (s16)(lbl_803E2698 *
                                (lbl_803E269C *
-                                fn_80293E80((lbl_803E26A0 * (f32)state->rollWavePhase) / lbl_803E26A4)));
+                                mathSinf((lbl_803E26A0 * (f32)state->rollWavePhase) / lbl_803E26A4)));
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1053,7 +1053,7 @@ void fn_8014F620(int obj, int *state)
     *(s16 *)((u8 *)state + 0x26) += (s16)(lbl_803E26D0 * timeDelta);
     *(s16 *)(state + 10) += (s16)(lbl_803E26D4 * timeDelta);
 
-    wave = lbl_803E26D8 + fn_80293E80((lbl_803E26DC * (f32)*(s16 *)((u8 *)state + 0x26)) /
+    wave = lbl_803E26D8 + mathSinf((lbl_803E26DC * (f32)*(s16 *)((u8 *)state + 0x26)) /
                                       lbl_803E26E0);
     done = Curve_AdvanceAlongPath(curve, *(f32 *)(state + 2) * wave);
     if (((done != 0) || (*(int *)(curve + 0x10) != lbl_803DDA68)) &&
@@ -1069,7 +1069,7 @@ void fn_8014F620(int obj, int *state)
             lbl_803E26E8 * (*(f32 *)(state[1] + 0xc) - ((GameObject *)obj)->anim.localPosX) +
             ((GameObject *)obj)->anim.velocityX;
 
-        wave = fn_80293E80((lbl_803E26DC * (f32)*(s16 *)(state + 10)) /
+        wave = mathSinf((lbl_803E26DC * (f32)*(s16 *)(state + 10)) /
                            lbl_803E26E0);
         ((GameObject *)obj)->anim.velocityY =
             ((lbl_803E26F0 * wave + (lbl_803E26EC + *(f32 *)(state[1] + 0x10))) -
@@ -1082,7 +1082,7 @@ void fn_8014F620(int obj, int *state)
         ((GameObject *)obj)->anim.velocityX = lbl_803E26E8 * (*(f32 *)(curve + 0x68) - ((GameObject *)obj)->anim.localPosX) +
                                ((GameObject *)obj)->anim.velocityX;
 
-        wave = fn_80293E80((lbl_803E26DC * (f32)*(s16 *)(state + 10)) /
+        wave = mathSinf((lbl_803E26DC * (f32)*(s16 *)(state + 10)) /
                            lbl_803E26E0);
         ((GameObject *)obj)->anim.velocityY =
             ((lbl_803E26F0 * wave + *(f32 *)(curve + 0x6c)) - ((GameObject *)obj)->anim.localPosY) *
@@ -1152,7 +1152,7 @@ void swarmbaddie_update(int obj)
     }
     volume = state->hitVolumeEnvelope;
     Sfx_SetObjectChannelVolume(
-        lbl_803E26C0 * fn_80293E80((lbl_803E26A0 *
+        lbl_803E26C0 * mathSinf((lbl_803E26A0 *
                                     (f32)(state->yawWavePhase + state->rollWavePhase)) /
                                    lbl_803E26A4) +
             volume,

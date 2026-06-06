@@ -35,7 +35,7 @@ extern undefined4 _restgpr_23();
 extern undefined4 _restgpr_24();
 extern undefined4 _restgpr_27();
 extern f32 sqrtf(f32 v);
-extern f32 sin(f32 v);
+extern f32 mathCosf(f32 v);
 
 extern ObjHitsSweepEntry *gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
@@ -2048,11 +2048,11 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
     if (angleB < -0x8000) {
       angleB += 0xffff;
     }
-    sinVal = sin((lbl_803DE948 * (f32)angleA) / lbl_803DE94C);
+    sinVal = mathCosf((lbl_803DE948 * (f32)angleA) / lbl_803DE94C);
     sinSq = sinVal * sinVal;
     weightA = (f32)stateA->lateralResponseWeight * sinSq +
               (f32)stateA->axialResponseWeight * (gObjHitsScalarOne - sinSq);
-    sinVal = sin((lbl_803DE948 * (f32)angleB) / lbl_803DE94C);
+    sinVal = mathCosf((lbl_803DE948 * (f32)angleB) / lbl_803DE94C);
     sinSq = sinVal * sinVal;
     weightB = (f32)stateB->lateralResponseWeight * sinSq +
               (f32)stateB->axialResponseWeight * (gObjHitsScalarOne - sinSq);

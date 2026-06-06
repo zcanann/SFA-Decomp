@@ -301,7 +301,7 @@ float fn_80293DA4(float x) {
     }
 }
 
-float fn_80293E80(float x) {
+float mathSinf(float x) {
     union {
         float f;
         u32 u;

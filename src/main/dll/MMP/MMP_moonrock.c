@@ -66,8 +66,8 @@ extern int *gCameraInterface;
 extern int *gRomCurveInterface;
 extern u8 *Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 value);
-extern f32 fn_80293E80(f32 angle);
-extern f32 sin(f32 angle);
+extern f32 mathSinf(f32 angle);
+extern f32 mathCosf(f32 angle);
 extern int getCurSeqNo(void);
 extern void Sfx_KeepAliveLoopedObjectSound(u8 *obj, int sfxId);
 extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
@@ -644,10 +644,10 @@ int fn_80198B68(u8 *obj, f32 *point)
     pointY = point[1];
     pointZ = point[2];
 
-    yawCos = fn_80293E80(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
-    yawSin = sin(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
-    pitchCos = fn_80293E80(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)(obj + 2)));
-    pitchSin = sin(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)(obj + 2)));
+    yawCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
+    yawSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
+    pitchCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)(obj + 2)));
+    pitchSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)(obj + 2)));
 
     relX = pointX - *(f32 *)(obj + 0x18);
     relY = pointY - *(f32 *)(obj + 0x1c);

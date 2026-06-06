@@ -63,7 +63,7 @@ double floor(double x);
 double frexp(double x, int *exp);
 double ldexp(double x, int exp);
 double modf(double x, double *intpart);
-double sin(double x);
+double mathCosf(double x);
 double tan(double x);
 double acos(double x);
 double asin(double x);

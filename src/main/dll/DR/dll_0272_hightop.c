@@ -868,9 +868,9 @@ int hightop_stateHandler02(int obj, int p, f32 t) {
     *(f32 *)((char *)p + 0x294) =
         t * ((f31 - *(f32 *)((char *)p + 0x294)) / *(f32 *)((char *)p + 0x2b8)) + *(f32 *)((char *)p + 0x294);
     if (((GameObject *)obj)->anim.rotY > 0) {
-        ang = f31 - lbl_803E6B14 * fn_80293E80(lbl_803E6B18 * (f32)((GameObject *)obj)->anim.rotY / lbl_803E6B1C);
+        ang = f31 - lbl_803E6B14 * mathSinf(lbl_803E6B18 * (f32)((GameObject *)obj)->anim.rotY / lbl_803E6B1C);
     } else {
-        ang = f31 - lbl_803E6B20 * fn_80293E80(lbl_803E6B18 * (f32)((GameObject *)obj)->anim.rotY / lbl_803E6B1C);
+        ang = f31 - lbl_803E6B20 * mathSinf(lbl_803E6B18 * (f32)((GameObject *)obj)->anim.rotY / lbl_803E6B1C);
     }
     *(f32 *)((char *)p + 0x280) =
         t * ((ang - *(f32 *)((char *)p + 0x280)) / *(f32 *)((char *)p + 0x2b8)) + *(f32 *)((char *)p + 0x280);

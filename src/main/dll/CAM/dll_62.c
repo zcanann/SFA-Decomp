@@ -8,8 +8,8 @@ extern uint getAngle(f32 dx, f32 dz);
 extern void camcontrol_traceMove(f32 *from, void *to, f32 *out, void *work, int a, int b, int c, f32 radius);
 
 typedef void (*CameraGetTargetFn)(short *cam, f32 *outX, f32 *outY, f32 *outZ, f32 *outW, f64 dist, int flags);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 
 extern u8 framesThisStep;
 extern undefined4* gCameraInterface;
@@ -88,14 +88,14 @@ void CameraModeClimb_update(short *param_1)
   local_d8 = local_d8 - lbl_803DD578[1];
   local_d8 = local_d8 * (lbl_803E19A4 * timeDelta);
   lbl_803DD578[1] = lbl_803DD578[1] + local_d8;
-  trigValue = fn_80293E80((lbl_803E19AC * (f32)(s32)*psVar5) / lbl_803E19B0);
+  trigValue = mathSinf((lbl_803E19AC * (f32)(s32)*psVar5) / lbl_803E19B0);
   traceFrom[0] = lbl_803E19A8 * trigValue + *(f32 *)(psVar5 + 0xc);
   traceFrom[1] = *(f32 *)(psVar5 + 0xe);
-  trigValue = sin((lbl_803E19AC * (f32)(s32)*psVar5) / lbl_803E19B0);
+  trigValue = mathCosf((lbl_803E19AC * (f32)(s32)*psVar5) / lbl_803E19B0);
   traceFrom[2] = lbl_803E19A8 * trigValue + *(f32 *)(psVar5 + 0x10);
-  trigValue = fn_80293E80((lbl_803E19AC * (f32)(s32)*psVar5) / lbl_803E19B0);
+  trigValue = mathSinf((lbl_803E19AC * (f32)(s32)*psVar5) / lbl_803E19B0);
   *(f32 *)(param_1 + 0xc) = lbl_803DD578[1] * trigValue + traceFrom[0];
-  trigValue = sin((lbl_803E19AC * (f32)(s32)*psVar5) / lbl_803E19B0);
+  trigValue = mathCosf((lbl_803E19AC * (f32)(s32)*psVar5) / lbl_803E19B0);
   *(f32 *)(param_1 + 0x10) = lbl_803DD578[1] * trigValue + traceFrom[2];
   camcontrol_traceMove(traceFrom,param_1 + 0xc,traceOut,auStack176,3,1,1,lbl_803E19B4);
   *(f32 *)(param_1 + 0xc) = traceOut[0];

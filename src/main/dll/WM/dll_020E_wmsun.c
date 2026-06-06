@@ -335,7 +335,7 @@ extern f32 lbl_803E5F60;
 extern f32 lbl_803E5F64;
 extern f32 lbl_803E5F68;
 extern f32 sqrtf(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern int Camera_GetCurrentViewSlot(void);
 extern void vecRotateZXY(s16 *ang, WmSunVec3 *vec);
 #pragma scheduling off
@@ -406,7 +406,7 @@ void fn_801F6EA4(int obj)
                 g.vx = lbl_803E5F2C * hx;
                 g.vy = lbl_803E5F20;
                 g.vz = lbl_803E5F2C * hz;
-                f = fn_80293E80((lbl_803E5F30 * lbl_803E5F34 * (cosang - lbl_803E5F28)) / lbl_803E5F38) - lbl_803DDCA0;
+                f = mathSinf((lbl_803E5F30 * lbl_803E5F34 * (cosang - lbl_803E5F28)) / lbl_803E5F38) - lbl_803DDCA0;
                 if (f > lbl_803E5F3C || f < lbl_803E5F40) {
                     lbl_803DDCA0 = lbl_803DDCA0 + f / timeDelta;
                 }

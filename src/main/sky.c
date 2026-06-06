@@ -2796,7 +2796,7 @@ void skyFn_8008aee8(void)
         widthF = (f32)(u32)*(u16 *)(texC + 0xc);
         sinProd = widthF * frac / lbl_803DF0D8;
         sinProd *= lbl_803DF0DC;
-        sinProd *= sin(lbl_803DF0E0 * (f32)-cam[0x2a] / lbl_803DF0E4);
+        sinProd *= mathCosf(lbl_803DF0E0 * (f32)-cam[0x2a] / lbl_803DF0E4);
         angle = widthF * lbl_803DF068 - lbl_803DF0E8 -
                 lbl_803DF0DC * (widthF * (f32)cam[0x29]) / lbl_803DF0E4 + sinProd;
         angle *= lbl_803DF0EC;

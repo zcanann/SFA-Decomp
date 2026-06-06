@@ -96,8 +96,8 @@ extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void Obj_BuildWorldTransformMatrix(void *obj, f32 *mtx, int flags);
 extern void PSMTXMultVecSR(f32 *mtx, f32 *src, f32 *dst);
-extern f32 sin(f32 angle);
-extern f32 fn_80293E80(f32 angle);
+extern f32 mathCosf(f32 angle);
+extern f32 mathSinf(f32 angle);
 extern int fn_80080150(void *timer);
 extern void s16toFloat(void *p, int duration);
 extern int timerCountDown(void *timer);
@@ -199,10 +199,10 @@ void cfforcefield_update(u8 *obj)
         for (; angle < 0x7fff; angle += *stepPtr) {
           local[0] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
                      kA0 * (strength * lbl_803DBE90) *
-                         sin(kA4 * (f32)(angle + (s32)(kA8 * *wavePtr)) / kAC);
+                         mathCosf(kA4 * (f32)(angle + (s32)(kA8 * *wavePtr)) / kAC);
           local[1] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
                      kA0 * (strength * lbl_803DBE90) *
-                         fn_80293E80(kA4 * (f32)(angle + (s32)(kA8 * *wavePtr)) / kAC);
+                         mathSinf(kA4 * (f32)(angle + (s32)(kA8 * *wavePtr)) / kAC);
           local[2] = kZero;
           PSMTXMultVecSR((f32 *)mtx, local, local);
           world[3] = local[0] + ((GameObject *)obj)->anim.localPosX;

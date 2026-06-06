@@ -2000,7 +2000,7 @@ extern f32 lbl_803DFF30;
 extern f32 lbl_803DFF34;
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 
 /* Advance two periodic counters; compute sin of phase. */
 #pragma push
@@ -2023,12 +2023,12 @@ void Effect10_func05(void)
     if (lbl_803DD3B0 > 0x7fff) {
         lbl_803DD3B0 = 0;
     }
-    lbl_803DD3BC = fn_80293E80(lbl_803DFF30 * (f32)(s16)lbl_803DD3B0 / lbl_803DFF34);
+    lbl_803DD3BC = mathSinf(lbl_803DFF30 * (f32)(s16)lbl_803DD3B0 / lbl_803DFF34);
     lbl_803DD3B4 = lbl_803DD3B4 + (s32)framesThisStep * 0x32;
     if (lbl_803DD3B4 > 0x7fff) {
         lbl_803DD3B4 = 0;
     }
-    lbl_803DD3B8 = fn_80293E80(lbl_803DFF30 * (f32)(s16)lbl_803DD3B4 / lbl_803DFF34);
+    lbl_803DD3B8 = mathSinf(lbl_803DFF30 * (f32)(s16)lbl_803DD3B4 / lbl_803DFF34);
 }
 #pragma pop
 

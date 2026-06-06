@@ -4821,8 +4821,8 @@ void player_init(int unused, void *obj, int a, int b) {
 #pragma scheduling on
 
 /* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
-extern float fn_80293E80(double angle);
-extern float sin(double x);
+extern float mathSinf(double angle);
+extern float mathCosf(double x);
 extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
@@ -4838,30 +4838,30 @@ int fn_800D9F38(void *a, void *b) {
         f32 t;
         *(f32 *)(A + 0xa8) = *(f32 *)(B + 0x8);
         t = (float)(u32)*(u8 *)(B + 0x2e) *
-            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+            mathSinf(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
         *(f32 *)(A + 0xb0) = lbl_803E05D0 * t;
         *(f32 *)(A + 0xc8) = *(f32 *)(B + 0xc);
         t = (float)(u32)*(u8 *)(B + 0x2e) *
-            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2d)) << 8) / lbl_803E05D8);
+            mathSinf(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2d)) << 8) / lbl_803E05D8);
         *(f32 *)(A + 0xd0) = lbl_803E05D0 * t;
         *(f32 *)(A + 0xe8) = *(f32 *)(B + 0x10);
         t = (float)(u32)*(u8 *)(B + 0x2e) *
-            sin(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+            mathCosf(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
         *(f32 *)(A + 0xf0) = lbl_803E05D0 * t;
     } else {
         /* branch2 */
         f32 t;
         *(f32 *)(A + 0xbc) = *(f32 *)(B + 0x8);
         t = (float)(u32)*(u8 *)(B + 0x2e) *
-            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+            mathSinf(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
         *(f32 *)(A + 0xc4) = lbl_803E05D0 * t;
         *(f32 *)(A + 0xdc) = *(f32 *)(B + 0xc);
         t = (float)(u32)*(u8 *)(B + 0x2e) *
-            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2d)) << 8) / lbl_803E05D8);
+            mathSinf(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2d)) << 8) / lbl_803E05D8);
         *(f32 *)(A + 0xe4) = lbl_803E05D0 * t;
         *(f32 *)(A + 0xfc) = *(f32 *)(B + 0x10);
         t = (float)(u32)*(u8 *)(B + 0x2e) *
-            sin(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+            mathCosf(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
         *(f32 *)(A + 0x104) = lbl_803E05D0 * t;
     }
     return 0;
@@ -5147,8 +5147,8 @@ void player_update(char *pos, char *state, float dt, float pathDt, int stateFns,
 void player_updateVel(char *p, char *obj, int unused) {
     float fcos, fsin;
     if (((s32)(s8)*(obj + 0x34c) & 1) != 0) {
-        fcos = fn_80293E80(lbl_803E05A4 * (float)(s32)*(s16 *)p / lbl_803E05A8);
-        fsin = sin(lbl_803E05A4 * (float)(s32)*(s16 *)p / lbl_803E05A8);
+        fcos = mathSinf(lbl_803E05A4 * (float)(s32)*(s16 *)p / lbl_803E05A8);
+        fsin = mathCosf(lbl_803E05A4 * (float)(s32)*(s16 *)p / lbl_803E05A8);
         if (((s32)(s8)*(obj + 0x34c) & 8) != 0) {
             *(f32 *)(obj + 0x280) = -*(f32 *)(p + 0x2c) * fsin - *(f32 *)(p + 0x24) * fcos;
             *(f32 *)(obj + 0x294) = *(f32 *)(obj + 0x280);
@@ -5184,15 +5184,15 @@ void RomCurve_setA4(void *a, void *b) {
         *(void **)(A + 0xa4) = b;
         *(f32 *)(A + 0xbc) = *(f32 *)((*(char **)(A + 0xa4)) + 0x8);
         t = (float)(u32)*(u8 *)((*(char **)(A + 0xa4)) + 0x2e) *
-            fn_80293E80(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
+            mathSinf(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
         *(f32 *)(A + 0xc4) = lbl_803E0610 * t;
         *(f32 *)(A + 0xdc) = *(f32 *)((*(char **)(A + 0xa4)) + 0xc);
         t = (float)(u32)*(u8 *)((*(char **)(A + 0xa4)) + 0x2e) *
-            fn_80293E80(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2d)) << 8) / lbl_803E0618);
+            mathSinf(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2d)) << 8) / lbl_803E0618);
         *(f32 *)(A + 0xe4) = lbl_803E0610 * t;
         *(f32 *)(A + 0xfc) = *(f32 *)((*(char **)(A + 0xa4)) + 0x10);
         t = (float)(u32)*(u8 *)((*(char **)(A + 0xa4)) + 0x2e) *
-            sin(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
+            mathCosf(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
         *(f32 *)(A + 0x104) = lbl_803E0610 * t;
     }
 }
@@ -5229,12 +5229,12 @@ int RomCurve_setClosed(float *state, int closed) {
     ((RomCurveWalker *)state)->hermX2[0] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0x8);
     ((RomCurveWalker *)state)->hermX2[1] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0x8);
     t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0x2e) *
-        fn_80293E80(lbl_803E0614 *
+        mathSinf(lbl_803E0614 *
                     (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA0 + 0x2c)) << 8) /
                     lbl_803E0618);
     ((RomCurveWalker *)state)->hermX2[2] = lbl_803E0610 * t;
     t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0x2e) *
-        fn_80293E80(lbl_803E0614 *
+        mathSinf(lbl_803E0614 *
                     (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA4 + 0x2c)) << 8) /
                     lbl_803E0618);
     ((RomCurveWalker *)state)->hermX2[3] = lbl_803E0610 * t;
@@ -5242,12 +5242,12 @@ int RomCurve_setClosed(float *state, int closed) {
     ((RomCurveWalker *)state)->hermY2[0] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0xc);
     ((RomCurveWalker *)state)->hermY2[1] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0xc);
     t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0x2e) *
-        fn_80293E80(lbl_803E0614 *
+        mathSinf(lbl_803E0614 *
                     (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA0 + 0x2d)) << 8) /
                     lbl_803E0618);
     ((RomCurveWalker *)state)->hermY2[2] = lbl_803E0610 * t;
     t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0x2e) *
-        fn_80293E80(lbl_803E0614 *
+        mathSinf(lbl_803E0614 *
                     (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA4 + 0x2d)) << 8) /
                     lbl_803E0618);
     ((RomCurveWalker *)state)->hermY2[3] = lbl_803E0610 * t;
@@ -5255,11 +5255,11 @@ int RomCurve_setClosed(float *state, int closed) {
     ((RomCurveWalker *)state)->hermZ2[0] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0x10);
     ((RomCurveWalker *)state)->hermZ2[1] = *(f32 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0x10);
     t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA0 + 0x2e) *
-        sin(lbl_803E0614 *
+        mathCosf(lbl_803E0614 *
             (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA0 + 0x2c)) << 8) / lbl_803E0618);
     ((RomCurveWalker *)state)->hermZ2[2] = lbl_803E0610 * t;
     t = (float)(u32)*(u8 *)((char *)((RomCurveWalker *)state)->nodeA4 + 0x2e) *
-        sin(lbl_803E0614 *
+        mathCosf(lbl_803E0614 *
             (float)((s32)((s8)*((char *)((RomCurveWalker *)state)->nodeA4 + 0x2c)) << 8) / lbl_803E0618);
     ((RomCurveWalker *)state)->hermZ2[3] = lbl_803E0610 * t;
 
@@ -5290,35 +5290,35 @@ int RomCurve_setClosed(float *state, int closed) {
     *(f32 *)(stateBytes + 0xb8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0x8);    \
     *(f32 *)(stateBytes + 0xbc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0x8); \
     t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
-        fn_80293E80(lbl_803E0614 *                                                \
+        mathSinf(lbl_803E0614 *                                                \
                     (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2c) << 8) / \
                     lbl_803E0618);                                                \
     *(f32 *)(stateBytes + 0xc0) = lbl_803E0610 * t;                               \
     t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
-        fn_80293E80(lbl_803E0614 *                                                \
+        mathSinf(lbl_803E0614 *                                                \
                     (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2c) << 8) / \
                     lbl_803E0618);                                                \
     *(f32 *)(stateBytes + 0xc4) = lbl_803E0610 * t;                               \
     *(f32 *)(stateBytes + 0xd8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0xc);    \
     *(f32 *)(stateBytes + 0xdc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0xc); \
     t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
-        fn_80293E80(lbl_803E0614 *                                                \
+        mathSinf(lbl_803E0614 *                                                \
                     (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2d) << 8) / \
                     lbl_803E0618);                                                \
     *(f32 *)(stateBytes + 0xe0) = lbl_803E0610 * t;                               \
     t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
-        fn_80293E80(lbl_803E0614 *                                                \
+        mathSinf(lbl_803E0614 *                                                \
                     (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2d) << 8) / \
                     lbl_803E0618);                                                \
     *(f32 *)(stateBytes + 0xe4) = lbl_803E0610 * t;                               \
     *(f32 *)(stateBytes + 0xf8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0x10);   \
     *(f32 *)(stateBytes + 0xfc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0x10); \
     t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
-        sin(lbl_803E0614 *                                                        \
+        mathCosf(lbl_803E0614 *                                                        \
             (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2c) << 8) / lbl_803E0618); \
     *(f32 *)(stateBytes + 0x100) = lbl_803E0610 * t;                              \
     t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
-        sin(lbl_803E0614 *                                                        \
+        mathCosf(lbl_803E0614 *                                                        \
             (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2c) << 8) / \
             lbl_803E0618);                                                        \
     *(f32 *)(stateBytes + 0x104) = lbl_803E0610 * t
@@ -5429,9 +5429,9 @@ static inline f32 RomCurveNode_GetHermiteTangent(void *node, int angleOffset, in
 
     angle = lbl_803E05D4 * (f32)((s32)*(s8 *)((char *)node + angleOffset) << 8) / lbl_803E05D8;
     if (useSin) {
-        trig = sin(angle);
+        trig = mathCosf(angle);
     } else {
-        trig = fn_80293E80(angle);
+        trig = mathSinf(angle);
     }
     return lbl_803E05D0 * ((f32)(u32)*(u8 *)((char *)node + 0x2e) * trig);
 }

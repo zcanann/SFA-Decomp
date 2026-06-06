@@ -975,8 +975,8 @@ extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
 extern f32 lbl_803E364C;
 extern f32 lbl_803E3650;
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 
 void doorf4_init(int *obj, int *params)
 {
@@ -1015,8 +1015,8 @@ void doorf4_init(int *obj, int *params)
 
     ObjGroup_AddObject(obj, 14);
 
-    state->cosYaw = fn_80293E80(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
-    state->sinYaw = sin(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
+    state->cosYaw = mathSinf(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
+    state->sinYaw = mathCosf(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
     state->planeD = -(state->cosYaw * ((GameObject *)obj)->anim.localPosX +
                       state->sinYaw * ((GameObject *)obj)->anim.localPosZ);
 }
@@ -1096,8 +1096,8 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
         break;
     case 0:
         ang = (lbl_803E364C * (f32)(*(s8 *)(def + 0x18) << 8)) / lbl_803E3650;
-        sd = fn_80293E80(ang);
-        s = sin(ang);
+        sd = mathSinf(ang);
+        s = mathCosf(ang);
         sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
            + (sd * *(f32 *)((char *)player + 0xc) + s * *(f32 *)((char *)player + 0x14));
         thr = sub->openRange;
@@ -1123,8 +1123,8 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     case 1:
         if (dist < lbl_803E3654 && gb != 0) {
             ang = (lbl_803E364C * (f32)(*(s8 *)(def + 0x18) << 8)) / lbl_803E3650;
-            sd = fn_80293E80(ang);
-            s = sin(ang);
+            sd = mathSinf(ang);
+            s = mathCosf(ang);
             sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
                + (sd * *(f32 *)((char *)player + 0xc) + s * *(f32 *)((char *)player + 0x14));
             if (((GameObject *)obj)->unkF8 == 0) {
@@ -1163,8 +1163,8 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
                     dy = *(f32 *)((char *)other + 0x14) - ((ObjPlacement *)def)->posZ;
                     if (sqrtf(dx * dx + dy * dy) < lbl_803E3660) {
                         ang = (lbl_803E364C * (f32)(*(s8 *)(def + 0x18) << 8)) / lbl_803E3650;
-                        sd = fn_80293E80(ang);
-                        s = sin(ang);
+                        sd = mathSinf(ang);
+                        s = mathCosf(ang);
                         sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
                            + (sd * *(f32 *)((char *)other + 0xc) + s * *(f32 *)((char *)other + 0x14));
                         if (sd < lbl_803E3664 && sd > lbl_803E3668) {
@@ -1192,8 +1192,8 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     case 3:
         if (dist < lbl_803E3654 && gb != 0) {
             ang = (lbl_803E364C * (f32)(*(s8 *)(def + 0x18) << 8)) / lbl_803E3650;
-            sd = fn_80293E80(ang);
-            s = sin(ang);
+            sd = mathSinf(ang);
+            s = mathCosf(ang);
             sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
                + (sd * *(f32 *)((char *)player + 0xc) + s * *(f32 *)((char *)player + 0x14));
             if (sd < lbl_803E366C && sd > lbl_803E3670) {

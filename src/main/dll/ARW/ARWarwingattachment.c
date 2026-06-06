@@ -246,8 +246,8 @@ void LaserBeam_update(int param_1)
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
     extern int objGetAnimState80A(void *obj);
-    extern f32 sin(f32 x);
-    extern f32 fn_80293E80(f32 x);
+    extern f32 mathCosf(f32 x);
+    extern f32 mathSinf(f32 x);
     extern int *lbl_803DDC80;
     extern int *gModgfxInterface;
     extern int *gPartfxInterface;
@@ -368,8 +368,8 @@ void LaserBeam_update(int param_1)
     }
     dz = (f32)(int)*(s16 *)(t + 0x1a);
     dz2 = dz * dz;
-    sinv = sin((lbl_803E5D20 * (f32)(int)*(s16 *)param_1) / lbl_803E5D24);
-    cosv = fn_80293E80((lbl_803E5D20 * (f32)(int)*(s16 *)param_1) / lbl_803E5D24);
+    sinv = mathCosf((lbl_803E5D20 * (f32)(int)*(s16 *)param_1) / lbl_803E5D24);
+    cosv = mathSinf((lbl_803E5D20 * (f32)(int)*(s16 *)param_1) / lbl_803E5D24);
     dot = -(*(f32 *)(param_1 + 0xc) * sinv + *(f32 *)(param_1 + 0x14) * cosv);
     player = Obj_GetPlayerObject();
     *(s8 *)(b + 0x27) = (s8)(*(s8 *)(b + 0x27) - framesThisStep);

@@ -77,7 +77,7 @@ extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern f32 sqrtf(f32 value);
-extern f32 fn_80293E80(f32 value);
+extern f32 mathSinf(f32 value);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
@@ -188,7 +188,7 @@ void LanternFireFly_update(int obj)
             f32 atten;
 
             atten = (f32)state->timer *
-                fn_80293E80((lbl_803E3ACC * (f32)(state->timer << 0xb)) / lbl_803E3AD0);
+                mathSinf((lbl_803E3ACC * (f32)(state->timer << 0xb)) / lbl_803E3AD0);
             Sfx_KeepAliveLoopedObjectSound(0, 0x460);
             modelLightStruct_setDistanceAttenuation(state->light, atten, lbl_803E3AD4 + atten);
         }

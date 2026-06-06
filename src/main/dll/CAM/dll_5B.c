@@ -45,8 +45,8 @@ extern undefined4 FUN_80135814();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern f32 sqrtf(f32 x);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern undefined4 FUN_80294c64();
 extern undefined4 FUN_80294d00();
 
@@ -615,8 +615,8 @@ void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3)
     dz = dz / dist;
   }
   firstPersonPlaceCamera((int)camObj, 1);
-  cosv = -fn_80293E80((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
-  sinv = -sin((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
+  cosv = -mathSinf((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
+  sinv = -mathCosf((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
   *(f32 *)((int)lbl_803DD548 + 0x10) = *(f32 *)(param_1 + 0xc);
   ((ViewfinderState *)lbl_803DD548)->unk14 = ((ViewfinderState *)lbl_803DD548)->unk120;
   ((ViewfinderState *)lbl_803DD548)->unk18 = -dz * spinRate;
@@ -751,10 +751,10 @@ void CameraModeDebug_update(short *param_1)
   *(s16 *)cam = (s16)(*(s16 *)cam - (s8)padGetCX(0) * 3);
   *(s16 *)(cam + 2) = (s16)(*(s16 *)(cam + 2) + (s8)padGetCY(0) * 3);
   {
-    f32 cosYaw = fn_80293E80(lbl_803E185C * (f32)(s32)(*(s16 *)cam - 0x4000) / lbl_803E1860);
-    f32 sinYaw = sin(lbl_803E185C * (f32)(s32)(*(s16 *)cam - 0x4000) / lbl_803E1860);
-    f32 sinPitch = sin(lbl_803E185C * (f32)(s32)(*(s16 *)(cam + 2) - 0x4000) / lbl_803E1860);
-    f32 cosPitch = fn_80293E80(lbl_803E185C * (f32)(s32)(*(s16 *)(cam + 2) - 0x4000) / lbl_803E1860);
+    f32 cosYaw = mathSinf(lbl_803E185C * (f32)(s32)(*(s16 *)cam - 0x4000) / lbl_803E1860);
+    f32 sinYaw = mathCosf(lbl_803E185C * (f32)(s32)(*(s16 *)cam - 0x4000) / lbl_803E1860);
+    f32 sinPitch = mathCosf(lbl_803E185C * (f32)(s32)(*(s16 *)(cam + 2) - 0x4000) / lbl_803E1860);
+    f32 cosPitch = mathSinf(lbl_803E185C * (f32)(s32)(*(s16 *)(cam + 2) - 0x4000) / lbl_803E1860);
     radius = *lbl_803DD550;
     *(f32 *)(cam + 24) = *(f32 *)(state + 24) + radius * sinPitch * sinYaw;
     *(f32 *)(cam + 28) = lbl_803E1854 + *(f32 *)(state + 28) + radius * cosPitch;

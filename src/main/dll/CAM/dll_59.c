@@ -15,8 +15,8 @@ extern void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 ta
 extern int Camera_GetCurrentViewSlot();
 extern undefined4 FUN_8028688c();
 extern f32 sqrtf(f32 value);
-extern f32 fn_80293E80(f32 angle);
-extern f32 sin(f32 angle);
+extern f32 mathSinf(f32 angle);
+extern f32 mathCosf(f32 angle);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Curve_EvalBSpline(void);
 extern void Curve_BuildBSplineCoeffs(void);
@@ -102,8 +102,8 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   gCamcontrolPathState[0x1bc] = 0;
   *(int *)gCamcontrolPathState = *(int *)(obj + 0x30);
 
-  cosFacing = fn_80293E80(CameraModeStaffAnim_angleToRadians(target[0]));
-  sinFacing = sin(CameraModeStaffAnim_angleToRadians(target[0]));
+  cosFacing = mathSinf(CameraModeStaffAnim_angleToRadians(target[0]));
+  sinFacing = mathCosf(CameraModeStaffAnim_angleToRadians(target[0]));
 
   if (*(s16 **)gCamcontrolPathState != NULL) {
     facingDelta = target[0] - (*(s16 **)gCamcontrolPathState)[0];
@@ -113,8 +113,8 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   }
 
   relAngleRad = CameraModeStaffAnim_angleToRadians(facingDelta);
-  relCos = fn_80293E80(relAngleRad);
-  relSin = sin(relAngleRad);
+  relCos = mathSinf(relAngleRad);
+  relSin = mathCosf(relAngleRad);
 
   approachAngle = target[0] - (u16)getAngle(((GameObject *)obj)->anim.worldPosX - *(f32 *)(target + 0xc),
                                             ((GameObject *)obj)->anim.worldPosZ - *(f32 *)(target + 0x10));
@@ -190,7 +190,7 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
     }
 
     if (absTurn != 0) {
-      pathScale = pathRadius / fn_80293E80(CameraModeStaffAnim_angleToRadians(absTurn));
+      pathScale = pathRadius / mathSinf(CameraModeStaffAnim_angleToRadians(absTurn));
     }
     else {
       pathScale = lbl_803E1740;

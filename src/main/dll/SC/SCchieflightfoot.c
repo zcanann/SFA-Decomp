@@ -22,8 +22,8 @@ extern undefined4 dll_2E_func05();
 extern undefined4 dll_2E_func08();
 extern void dll_2E_func03(SHthorntailObject *obj,SHthorntailRuntime *runtime);
 extern undefined4 FUN_80286888();
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 
 extern u8 gSHthorntailDataTables[];
 extern u8 gSHthorntailPathHeaders[0x30];
@@ -219,10 +219,10 @@ void SHthorntail_update(SHthorntailObject *obj)
       }
       facingAngleRadians =
           (lbl_803E5454 * (f32)(s32)runtime->storedFacingAngle) / lbl_803E5458;
-      facingCos = -fn_80293E80(facingAngleRadians);
+      facingCos = -mathSinf(facingAngleRadians);
       facingAngleRadians =
           (lbl_803E5454 * (f32)(s32)runtime->storedFacingAngle) / lbl_803E5458;
-      facingSin = -sin(facingAngleRadians);
+      facingSin = -mathCosf(facingAngleRadians);
       obj->modelPos.x = facingCos * -animEvents.rootDeltaZ + obj->modelPos.x;
       obj->modelPos.z = -facingSin * -animEvents.rootDeltaZ + obj->modelPos.z;
       obj->modelPos.x = -facingSin * animEvents.rootDeltaX + obj->modelPos.x;

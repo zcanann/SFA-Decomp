@@ -42,7 +42,7 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_8028688c();
 extern f32 sqrtf(f32);
 extern double FUN_80293900();
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294c68();
 extern undefined4 fn_802961FC();
@@ -561,7 +561,7 @@ void kaldachom_update(int param_1)
         iVar8 = ((CampfireState *)iVar9)->control;
         piVar3 = (int *)objFindTexture(param_1,0,0);
         *(short *)(iVar8 + 0x48) = *(short *)(iVar8 + 0x48) + 0x1000;
-        dVar10 = fn_80293E80((lbl_803E30B4 * (f32)(s32)*(s16 *)(iVar8 + 0x48)) / lbl_803E30B8);
+        dVar10 = mathSinf((lbl_803E30B4 * (f32)(s32)*(s16 *)(iVar8 + 0x48)) / lbl_803E30B8);
         *piVar3 = (int)(lbl_803E30B0 * (lbl_803E3078 + dVar10));
         uVar3 = Obj_GetPlayerObject();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;

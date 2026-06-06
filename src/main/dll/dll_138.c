@@ -140,8 +140,8 @@ typedef struct Dll138HitInfo {
 extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ);
 extern int objBboxFn_800640cc(f32 *from, f32 *to, f32 radius, int mode, void *hit, int obj, int p7, int p8, u8 p9, int p10);
 extern int getAngle(f32 a, f32 b);
-extern f32 fn_80293E80(f32);
-extern f32 sin(f32);
+extern f32 mathSinf(f32);
+extern f32 mathCosf(f32);
 extern void memcpy(void *dst, void *src, int n);
 extern void saveGame_saveObjectPos(int obj);
 extern int Sfx_PlayFromObject(int a, int b);
@@ -251,8 +251,8 @@ void fn_80174BFC(int obj, int ext)
                             }
                         }
                     }
-                    fn_80293E80(lbl_803E3590 * (f32)((PushableState *)ext)->yaw / lbl_803E3594);
-                    sin(lbl_803E3590 * (f32)((PushableState *)ext)->yaw / lbl_803E3594);
+                    mathSinf(lbl_803E3590 * (f32)((PushableState *)ext)->yaw / lbl_803E3594);
+                    mathCosf(lbl_803E3590 * (f32)((PushableState *)ext)->yaw / lbl_803E3594);
                     angle = getAngle(hit.angleX, hit.angleZ);
                     delta = ((PushableState *)ext)->yaw - (angle & 0xffff);
                     if (delta > 0x8000) {

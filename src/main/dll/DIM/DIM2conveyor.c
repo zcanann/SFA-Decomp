@@ -100,8 +100,8 @@ void dimdismountpoint_update(int *obj) {
 extern f32 lbl_803E4908;
 extern f32 lbl_803E4914;
 extern f32 lbl_803E4918;
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern unsigned long GameBit_Set(int eventId, int value);
 
 #pragma peephole off
@@ -112,9 +112,9 @@ void dimdismountpoint_init(u8* obj, u8* params) {
     ObjGroup_AddObject(obj, 0x13);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     sub = *(f32**)(obj + 0xb8);
-    sub[0] = fn_80293E80(lbl_803E4914 * (f32)(s32)*(s16*)obj / lbl_803E4918);
+    sub[0] = mathSinf(lbl_803E4914 * (f32)(s32)*(s16*)obj / lbl_803E4918);
     sub[1] = lbl_803E4908;
-    sub[2] = sin(lbl_803E4914 * (f32)(s32)*(s16*)obj / lbl_803E4918);
+    sub[2] = mathCosf(lbl_803E4914 * (f32)(s32)*(s16*)obj / lbl_803E4918);
     sub[3] = -(sub[0] * *(f32*)(obj + 0xc) + sub[1] * *(f32*)(obj + 0x10) + sub[2] * *(f32*)(obj + 0x14));
     *(int*)(obj + 0xf8) = 1;
 }

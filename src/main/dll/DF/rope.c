@@ -137,8 +137,8 @@ extern f32 lbl_803E4D64;
 extern f32 lbl_803E4D68;
 extern f32 lbl_803E4D6C;
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern f32 lbl_803E4CD0;
 extern f32 lbl_803E4CD4;
 extern f32 lbl_803E4CD8;
@@ -360,9 +360,9 @@ void dimbossgut2_update(int obj)
          (int)(uint)*(u16 *)((int)pfVar4 + 0x16) > (int)uVar2)) {
         fscale = lbl_803E4CE0 * pfVar4[4];
         stk.f50 = *(f32 *)(obj + 0xc) -
-                  fscale * fn_80293E80(lbl_803E4CE4 * (f32)*(s16 *)obj / lbl_803E4CE8);
+                  fscale * mathSinf(lbl_803E4CE4 * (f32)*(s16 *)obj / lbl_803E4CE8);
         stk.f48 = *(f32 *)(obj + 0x14) -
-                  fscale * sin(lbl_803E4CE4 * (f32)*(s16 *)obj / lbl_803E4CE8);
+                  fscale * mathCosf(lbl_803E4CE4 * (f32)*(s16 *)obj / lbl_803E4CE8);
         stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - fdiff / lbl_803E4CDC);
         (*((int (***)(int, int, void *, int, int, int))gPartfxInterface))[2](
             obj, 0x32b, &stk, 1, -1, 0);

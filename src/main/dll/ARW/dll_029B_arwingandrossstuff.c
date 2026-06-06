@@ -84,8 +84,8 @@ void arwingandrossstuff_hitDetect(int obj)
                                    ((GameObject *)obj)->anim.localPosY - *(f32 *)(arwing + 0x10));
             f32 ang = lbl_803E7030 * (f32)a / lbl_803E7034;
 
-            v.x = lbl_803E702C * fn_80293E80(ang);
-            v.y = lbl_803E7038 * sin(ang);
+            v.x = lbl_803E702C * mathSinf(ang);
+            v.y = lbl_803E7038 * mathCosf(ang);
             v.z = lbl_803E7008;
             w = v;
             fn_8022D4AC(arwing, (int)&w);

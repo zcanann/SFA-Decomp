@@ -2634,8 +2634,8 @@ void smallbasket_checkNearbyActiveBasket(int obj, u8* state) {
 #pragma scheduling reset
 #pragma dont_inline reset
 
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern f32 lbl_803E2C98;
 extern f32 lbl_803E2C9C;
 extern f32 lbl_803E2CA0;
@@ -2658,9 +2658,9 @@ void fn_8015A52C(s16* obj)
         *(u8*)((char*)setup + 7) = 0xff;
         setup = Obj_SetupObject(setup, 5, -1, -1, 0);
         if (setup != NULL) {
-            ((GameObject *)setup)->anim.velocityX = lbl_803E2C9C * -fn_80293E80((lbl_803E2CA0 * (f32)*(s16*)obj) / lbl_803E2CA4);
+            ((GameObject *)setup)->anim.velocityX = lbl_803E2C9C * -mathSinf((lbl_803E2CA0 * (f32)*(s16*)obj) / lbl_803E2CA4);
             ((GameObject *)setup)->anim.velocityY = lbl_803E2CA8;
-            ((GameObject *)setup)->anim.velocityZ = lbl_803E2C9C * -sin((lbl_803E2CA0 * (f32)*(s16*)obj) / lbl_803E2CA4);
+            ((GameObject *)setup)->anim.velocityZ = lbl_803E2C9C * -mathCosf((lbl_803E2CA0 * (f32)*(s16*)obj) / lbl_803E2CA4);
         }
     }
 }
@@ -2750,8 +2750,8 @@ void fn_8015A924(int* obj, u8* state)
             int r = randomGetRange(0, ((BaddieState *)state)->inWhirlpoolGroup);
             s16 a = randomGetRange(-0x8000, 0x7fff);
             f32 angle = (lbl_803E2CA0 * (f32)a) / lbl_803E2CA4;
-            ((GameObject *)obj)->anim.localPosX = (f32)r * fn_80293E80(angle) + *(f32*)(*(int *)&((GameObject *)obj)->anim.placementData + 8);
-            ((GameObject *)obj)->anim.localPosZ = (f32)r * sin(angle) + *(f32*)(*(int *)&((GameObject *)obj)->anim.placementData + 0x10);
+            ((GameObject *)obj)->anim.localPosX = (f32)r * mathSinf(angle) + *(f32*)(*(int *)&((GameObject *)obj)->anim.placementData + 8);
+            ((GameObject *)obj)->anim.localPosZ = (f32)r * mathCosf(angle) + *(f32*)(*(int *)&((GameObject *)obj)->anim.placementData + 0x10);
             fn_8014CF7C(obj, state, *(f32*)(*(int*)(state + 0x29c) + 0xc),
                         *(f32*)(*(int*)(state + 0x29c) + 0x14), 1, 0);
         }

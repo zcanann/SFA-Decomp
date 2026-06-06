@@ -7,8 +7,8 @@ extern undefined4 GameBit_Set(int eventId,int value);
 extern void ObjHits_DisableObject(int obj);
 extern void ObjGroup_AddObject(int obj, int group);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
-extern f32 fn_80293E80(f32 angle);
-extern f32 sin(f32 angle);
+extern f32 mathSinf(f32 angle);
+extern f32 mathCosf(f32 angle);
 
 extern int *gGameUIInterface;
 extern f32 lbl_803E3BBC;
@@ -95,24 +95,24 @@ void staffactivated_init(int obj, int setup)
     *(f32 *)state = -(lbl_803E3C14 *
                       (((GameObject *)obj)->anim.rootMotionScale *
                        (lbl_803E3C18 *
-                        fn_80293E80((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) -
+                        mathSinf((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) -
                      ((GameObject *)obj)->anim.localPosX);
     *(f32 *)(state + 4) = -(lbl_803E3C14 *
                             (((GameObject *)obj)->anim.rootMotionScale *
                              (lbl_803E3C18 *
-                              sin((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) -
+                              mathCosf((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) -
                            ((GameObject *)obj)->anim.localPosZ);
     break;
   case 3:
     *(f32 *)state = lbl_803E3C14 *
                     (((GameObject *)obj)->anim.rootMotionScale *
                      (lbl_803E3C18 *
-                      fn_80293E80((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) +
+                      mathSinf((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) +
                     ((GameObject *)obj)->anim.localPosX;
     *(f32 *)(state + 4) = lbl_803E3C14 *
                           (((GameObject *)obj)->anim.rootMotionScale *
                            (lbl_803E3C18 *
-                            sin((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) +
+                            mathCosf((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) +
                           ((GameObject *)obj)->anim.localPosZ;
     break;
   default:

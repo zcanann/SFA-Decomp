@@ -95,8 +95,8 @@ void androsshand_update(int obj)
 
         angle = lbl_803E75B8 *
                 (f32)(s16)(int)((f32)*(s16 *)(*(int *)&state->andross + 0) + fScale) / lbl_803E75BC;
-        fScale = fn_80293E80(angle);
-        sv = sin(angle);
+        fScale = mathSinf(angle);
+        sv = mathCosf(angle);
         ((GameObject *)obj)->anim.localPosX = lbl_803DC4F0 * fScale + *(f32 *)(*(int *)&state->andross + 0xc);
         ((GameObject *)obj)->anim.localPosY = *(f32 *)(*(int *)&state->andross + 0x10) + lbl_803DC4F4;
         ((GameObject *)obj)->anim.localPosZ =

@@ -2114,7 +2114,7 @@ extern f32 lbl_803E3F58;
 extern f32 lbl_803E3F5C;
 extern f32 lbl_803E3F60;
 extern f32 lbl_803E3F64;
-extern f32 fn_80293E80(f32);
+extern f32 mathSinf(f32);
 
 #pragma scheduling off
 #pragma peephole off
@@ -2152,9 +2152,9 @@ void fn_801923F8(int *cfg)
     for (i = 0; i < cfg[7]; i++) {
         f32 xv = c48 * (f32)x;
         for (j = 0; j < cfg[7]; j++) {
-            f32 s1 = fn_80293E80((c48 * (f32)y) / c4C);
+            f32 s1 = mathSinf((c48 * (f32)y) / c4C);
             f32 a = *(f32 *)(cfg + 5) * s1;
-            f32 s2 = fn_80293E80(xv / c4C);
+            f32 s2 = mathSinf(xv / c4C);
             ((f32 *)lbl_803DDAF4)[flat] = *(f32 *)(cfg + 4) * s2 + a;
             if (((f32 *)lbl_803DDAF4)[flat] < *(f32 *)(cfg + 9)) {
                 *(f32 *)(cfg + 9) = ((f32 *)lbl_803DDAF4)[flat];

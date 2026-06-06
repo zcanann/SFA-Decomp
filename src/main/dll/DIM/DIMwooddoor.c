@@ -48,8 +48,8 @@ extern int Obj_SetupObject(u8 *setup, int group, int mapLayer, int param4, int p
 extern int Obj_GetPlayerObject(void);
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 value);
-extern f32 sin(f32 value);
-extern f32 fn_80293E80(f32 value);
+extern f32 mathCosf(f32 value);
+extern f32 mathSinf(f32 value);
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
@@ -117,10 +117,10 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
             launchScale = lbl_803E48AC * launchSpeed;
             *(s16 *)shard = *(s16 *)obj + modelVec[1];
             angle = (lbl_803E48B0 * (f32)(s32)*(s16 *)shard) / lbl_803E48B4;
-            *(f32 *)(shard + 0x24) = launchScale * -fn_80293E80(angle);
+            *(f32 *)(shard + 0x24) = launchScale * -mathSinf(angle);
             *(f32 *)(shard + 0x28) = launchSpeed;
             angle = (lbl_803E48B0 * (f32)(s32)*(s16 *)shard) / lbl_803E48B4;
-            *(f32 *)(shard + 0x2c) = launchScale * -sin(angle);
+            *(f32 *)(shard + 0x2c) = launchScale * -mathCosf(angle);
 
             state->shouldSpawnShard = 0;
             state->cooldown = 50;

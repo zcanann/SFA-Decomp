@@ -815,8 +815,8 @@ void fn_80151C68(int obj, u8 *state)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 sin(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 mathSinf(f32 x);
 extern f32 sqrtf(f32 x);
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int mtx);
 extern f32 lbl_803E27D8;
@@ -849,13 +849,13 @@ void fn_80151DB8(int obj, u8 *state)
     if (dy > lbl_803E27DC) {
         return;
     }
-    px0 = *(f32 *)(setup + 8) - lbl_803E27DC * fn_80293E80(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
-    pz0 = *(f32 *)(setup + 0x10) - lbl_803E27DC * sin(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
+    px0 = *(f32 *)(setup + 8) - lbl_803E27DC * mathSinf(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
+    pz0 = *(f32 *)(setup + 0x10) - lbl_803E27DC * mathCosf(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
     dx = *(f32 *)(player + 0x18) - px0;
     dz = *(f32 *)(player + 0x20) - pz0;
     if (sqrtf(dx * dx + dz * dz) < *(f32 *)(state + 0x2ac)) {
-        cosA = fn_80293E80(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
-        sinA = sin(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
+        cosA = mathSinf(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
+        sinA = mathCosf(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
         base = -(cosA * (px0 - cosA) + sinA * (pz0 - sinA));
         f5 = base + (cosA * *(f32 *)(player + 0x8c) + sinA * *(f32 *)(player + 0x94));
         f2v = base + (cosA * *(f32 *)(player + 0x18) + sinA * *(f32 *)(player + 0x20));

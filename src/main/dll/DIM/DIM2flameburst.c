@@ -2215,7 +2215,7 @@ extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
 
 extern f32 expf(f32 x);
 extern f32 sqrtf(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern void Sfx_PlayFromObjectLimited(int obj, int id, int n);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
@@ -2824,9 +2824,9 @@ void dimmagicbridge_updateVertexWave(int obj, u8 *sub)
         s16 *vb = (s16 *)ObjModel_GetBaseVertexCoords(mdl, i);
         int u = (u16)(int)(lbl_803E4A00 * ((f32)(int)vc[2] / *(f32 *)sub)) + *(u16 *)(sub + 0x60);
         if (*vb > 0) {
-            *vc = lbl_803E4A04 * fn_80293E80((lbl_803E4A08 * (f32)(int)u) / lbl_803E4A0C) + (f32)(int)*vb;
+            *vc = lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)u) / lbl_803E4A0C) + (f32)(int)*vb;
         } else {
-            *vc = -(lbl_803E4A04 * fn_80293E80((lbl_803E4A08 * (f32)(int)u) / lbl_803E4A0C) - (f32)(int)*vb);
+            *vc = -(lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)u) / lbl_803E4A0C) - (f32)(int)*vb);
         }
     }
     DCStoreRange((void *)ObjModel_GetCurrentVertexCoords(model, 0), cnt * 6);

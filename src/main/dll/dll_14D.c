@@ -15,8 +15,8 @@ extern void *Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void ObjLink_DetachChild(int obj, int childObj);
 extern s16 getAngle(f32 dx, f32 dz);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 
 extern int *gObjectTriggerInterface;
@@ -193,9 +193,9 @@ void fn_8017F334(int obj, void *setup, void *stateArg)
     randomGetRange(((u16)angle) - 0x1000, ((u16)angle) + 0x1000);
 
     *(f32 *)(childObj + 0x24) =
-        launchSpeed * fn_80293E80((lbl_803E3878 * (f32)*(s16 *)obj) / lbl_803E387C);
+        launchSpeed * mathSinf((lbl_803E3878 * (f32)*(s16 *)obj) / lbl_803E387C);
     *(f32 *)(childObj + 0x2c) =
-        launchSpeed * sin((lbl_803E3878 * (f32)*(s16 *)obj) / lbl_803E387C);
+        launchSpeed * mathCosf((lbl_803E3878 * (f32)*(s16 *)obj) / lbl_803E387C);
     Sfx_PlayFromObject(obj, 0x5e);
   }
 

@@ -108,12 +108,12 @@ int wctemplebri_interactCallback(int obj, int p2, int p3)
                   WCTEMPLEBRI_WAVE_PHASE_A(state);
         if (*(s16 *)(base + 0) > 0)
             *(s16 *)(curr + 0) =
-                (int)(lbl_803E6E74 * fn_80293E80(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
+                (int)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
                       (f32)*(s16 *)(base + 0));
         else
             *(s16 *)(curr + 0) =
                 (int)((f32)*(s16 *)(base + 0) -
-                      lbl_803E6E74 * fn_80293E80(lbl_803E6E78 * (f32)idx / lbl_803E6E7C));
+                      lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C));
     }
     return 0;
 }
@@ -203,12 +203,12 @@ void wctemplebri_update(int obj)
                   WCTEMPLEBRI_WAVE_PHASE_A(state);
         if (*(s16 *)(base + 0) > 0)
             *(s16 *)(curr + 0) =
-                (int)(lbl_803E6E74 * fn_80293E80(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
+                (int)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
                       (f32)*(s16 *)(base + 0));
         else
             *(s16 *)(curr + 0) =
                 (int)((f32)*(s16 *)(base + 0) -
-                      lbl_803E6E74 * fn_80293E80(lbl_803E6E78 * (f32)idx / lbl_803E6E7C));
+                      lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C));
     }
     if (WCTEMPLEBRI_ACTIVE(state) != 0) {
         if ((WCTEMPLEBRI_FLAGS(state) & WCTEMPLEBRI_FLAG_SOLVED) == 0) {

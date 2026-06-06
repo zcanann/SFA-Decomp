@@ -2292,8 +2292,8 @@ void pushable_hitDetect(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern int hitDetectFn_80067958(int a, f32 *start, f32 *end, int b, void *buf, int c);
 extern int objBboxFn_800640cc(f32 *start, f32 *end, f32 radius, int a, int b, int *obj, int c, int d, int e, int f);
 extern f32 lbl_803E3590;
@@ -2357,9 +2357,9 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
     pp->h2c = 0;
     hit = 0;
     if (dx > lbl_803E3528) {
-        end[0] = lbl_803E35A0 * fn_80293E80(lbl_803E3590 * (f32)state->yaw / lbl_803E3594) + start[0];
+        end[0] = lbl_803E35A0 * mathSinf(lbl_803E3590 * (f32)state->yaw / lbl_803E3594) + start[0];
         end[1] = start[1];
-        end[2] = lbl_803E35A0 * sin(lbl_803E3590 * (f32)state->yaw / lbl_803E3594) + start[2];
+        end[2] = lbl_803E35A0 * mathCosf(lbl_803E3590 * (f32)state->yaw / lbl_803E3594) + start[2];
         hitDetect_calcSweptSphereBounds(sweep, start, end, (int *)pp, 1);
         hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
@@ -2374,9 +2374,9 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
             state->pushAmountZ = t;
         }
     } else if (dz > lbl_803E3528) {
-        end[0] = lbl_803E35A4 * fn_80293E80(lbl_803E3590 * (f32)(state->yaw + 0x4000) / lbl_803E3594) + start[0];
+        end[0] = lbl_803E35A4 * mathSinf(lbl_803E3590 * (f32)(state->yaw + 0x4000) / lbl_803E3594) + start[0];
         end[1] = start[1];
-        end[2] = lbl_803E35A4 * sin(lbl_803E3590 * (f32)(state->yaw + 0x4000) / lbl_803E3594) + start[2];
+        end[2] = lbl_803E35A4 * mathCosf(lbl_803E3590 * (f32)(state->yaw + 0x4000) / lbl_803E3594) + start[2];
         hitDetect_calcSweptSphereBounds(sweep, start, end, (int *)pp, 1);
         hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
@@ -2391,9 +2391,9 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
             state->pushAmountZ = t;
         }
     } else if (dz < lbl_803E3528) {
-        end[0] = lbl_803E35A4 * fn_80293E80(lbl_803E3590 * (f32)(state->yaw - 0x4000) / lbl_803E3594) + start[0];
+        end[0] = lbl_803E35A4 * mathSinf(lbl_803E3590 * (f32)(state->yaw - 0x4000) / lbl_803E3594) + start[0];
         end[1] = start[1];
-        end[2] = lbl_803E35A4 * sin(lbl_803E3590 * (f32)(state->yaw - 0x4000) / lbl_803E3594) + start[2];
+        end[2] = lbl_803E35A4 * mathCosf(lbl_803E3590 * (f32)(state->yaw - 0x4000) / lbl_803E3594) + start[2];
         hitDetect_calcSweptSphereBounds(sweep, start, end, (int *)pp, 1);
         hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);

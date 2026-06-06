@@ -15,8 +15,8 @@ extern f32 getXZDistance(void *a, void *b);
 extern int fn_8029622C(int player);
 extern u8 framesThisStep;
 extern char sMagicDustCollectedMessage[];
-extern f32 sin(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 mathSinf(f32 x);
 extern int Obj_GetActiveModel(int obj);
 extern u16 lbl_803E34A8;
 extern u16 lbl_803E34AC;
@@ -393,8 +393,8 @@ void magicdust_init(int param_1,int param_2)
   uVar3 = randomGetRange(0,0xffff);
   spd = (f32)(int)randomGetRange(0x27,0x2c) / lbl_803E34E4;
   ang = (lbl_803E34E8 * (f32)(int)uVar3) / lbl_803E34EC;
-  ((GameObject *)param_1)->anim.velocityX = spd * fn_80293E80(ang);
-  ((GameObject *)param_1)->anim.velocityZ = spd * sin(ang);
+  ((GameObject *)param_1)->anim.velocityX = spd * mathSinf(ang);
+  ((GameObject *)param_1)->anim.velocityZ = spd * mathCosf(ang);
   ((GameObject *)param_1)->anim.velocityY = (f32)(int)randomGetRange(0x28,0x32) / lbl_803E34F0;
   sVar1 = *(short *)(param_2 + 0x2e);
   if (sVar1 == 1) {
@@ -936,10 +936,10 @@ void effectbox_update(int obj)
   def = *(int *)&((GameObject *)obj)->anim.placementData;
   gb = ((GameObject *)obj)->unkF8;
   if ((gb <= -1) || (*(u8 *)(def + 0x1f) != GameBit_Get(gb))) {
-    sinY = sin((lbl_803E350C * (f32)-(*(u8 *)(def + 0x18) << 8)) / lbl_803E3510);
-    cosY = fn_80293E80((lbl_803E350C * (f32)-(*(u8 *)(def + 0x18) << 8)) / lbl_803E3510);
-    sinX = sin((lbl_803E350C * (f32)-(*(u8 *)(def + 0x19) << 8)) / lbl_803E3510);
-    cosX = fn_80293E80((lbl_803E350C * (f32)-(*(u8 *)(def + 0x19) << 8)) / lbl_803E3510);
+    sinY = mathCosf((lbl_803E350C * (f32)-(*(u8 *)(def + 0x18) << 8)) / lbl_803E3510);
+    cosY = mathSinf((lbl_803E350C * (f32)-(*(u8 *)(def + 0x18) << 8)) / lbl_803E3510);
+    sinX = mathCosf((lbl_803E350C * (f32)-(*(u8 *)(def + 0x19) << 8)) / lbl_803E3510);
+    cosX = mathSinf((lbl_803E350C * (f32)-(*(u8 *)(def + 0x19) << 8)) / lbl_803E3510);
     extX = (f32)*(u8 *)(def + 0x1a);
     extYNeg = (f32)-(*(u8 *)(def + 0x1b) << 1);
     extZ = (f32)*(u8 *)(def + 0x1c);

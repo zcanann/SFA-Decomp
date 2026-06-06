@@ -3435,9 +3435,9 @@ checked:
     heading = *(s16 *)obj;
     if (lbl_803DD078 != 0) {
         x -= *(f32 *)(obj + 8) *
-             (*(f32 *)(obj + 0xa8) * fn_80293E80((lbl_803DEFE8 * (f32)*(s16 *)obj) / lbl_803DEFEC));
+             (*(f32 *)(obj + 0xa8) * mathSinf((lbl_803DEFE8 * (f32)*(s16 *)obj) / lbl_803DEFEC));
         z -= *(f32 *)(obj + 8) *
-             (*(f32 *)(obj + 0xa8) * sin((lbl_803DEFE8 * (f32)*(s16 *)obj) / lbl_803DEFEC));
+             (*(f32 *)(obj + 0xa8) * mathCosf((lbl_803DEFE8 * (f32)*(s16 *)obj) / lbl_803DEFEC));
     }
 
     i = 0;
@@ -4110,18 +4110,18 @@ void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState *out, RomCurveNode
 
     xPoints[0] = curve->x;
     xPoints[1] = next->x;
-    xPoints[2] = curveScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(curve->yaw));
-    xPoints[3] = nextScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(next->yaw));
+    xPoints[2] = curveScale * mathSinf(ROM_CURVE_NODE_ANGLE(curve->yaw));
+    xPoints[3] = nextScale * mathSinf(ROM_CURVE_NODE_ANGLE(next->yaw));
 
     yPoints[0] = curve->y;
     yPoints[1] = next->y;
-    yPoints[2] = curveScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(curve->pitch));
-    yPoints[3] = nextScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(next->pitch));
+    yPoints[2] = curveScale * mathSinf(ROM_CURVE_NODE_ANGLE(curve->pitch));
+    yPoints[3] = nextScale * mathSinf(ROM_CURVE_NODE_ANGLE(next->pitch));
 
     zPoints[0] = curve->z;
     zPoints[1] = next->z;
-    zPoints[2] = curveScale * sin(ROM_CURVE_NODE_ANGLE(curve->yaw));
-    zPoints[3] = nextScale * sin(ROM_CURVE_NODE_ANGLE(next->yaw));
+    zPoints[2] = curveScale * mathCosf(ROM_CURVE_NODE_ANGLE(curve->yaw));
+    zPoints[3] = nextScale * mathCosf(ROM_CURVE_NODE_ANGLE(next->yaw));
 
     Curve_SampleSegmentPoints(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
                      Curve_BuildHermiteCoeffs);
@@ -4289,18 +4289,18 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState *state, f32 *offse
 
         xPoints[0] = from->x;
         xPoints[1] = to->x;
-        xPoints[2] = fromScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(from->yaw));
-        xPoints[3] = toScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(to->yaw));
+        xPoints[2] = fromScale * mathSinf(ROM_CURVE_NODE_ANGLE(from->yaw));
+        xPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->yaw));
 
         yPoints[0] = from->y;
         yPoints[1] = to->y;
-        yPoints[2] = fromScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(from->pitch));
-        yPoints[3] = toScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(to->pitch));
+        yPoints[2] = fromScale * mathSinf(ROM_CURVE_NODE_ANGLE(from->pitch));
+        yPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->pitch));
 
         zPoints[0] = from->z;
         zPoints[1] = to->z;
-        zPoints[2] = fromScale * sin(ROM_CURVE_NODE_ANGLE(from->yaw));
-        zPoints[3] = toScale * sin(ROM_CURVE_NODE_ANGLE(to->yaw));
+        zPoints[2] = fromScale * mathCosf(ROM_CURVE_NODE_ANGLE(from->yaw));
+        zPoints[3] = toScale * mathCosf(ROM_CURVE_NODE_ANGLE(to->yaw));
 
         outPos[0] = Curve_EvalHermite(segmentT, xPoints, &xTangent);
         if ((s8)ignoreY == 0) {
@@ -4335,8 +4335,8 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState *state, f32 *offse
     }
     outPos[2] = from->z;
     angle = ROM_CURVE_NODE_ANGLE(from->yaw);
-    outPos[0] += offset[0] * sin(angle);
-    outPos[2] += offset[0] * fn_80293E80(angle);
+    outPos[0] += offset[0] * mathCosf(angle);
+    outPos[2] += offset[0] * mathSinf(angle);
     *outAngle = (s16)(((s32)from->yaw << 8) - 0x8000);
     return 1;
 }
@@ -4367,8 +4367,8 @@ void ObjSeq_UpdateCurvePosition(u8 *obj, u8 *seq) {
     if (((ObjSeqState *)seq)->curveId < 0) {
         dx = *(f32 *)(obj + 0x0c) - *(f32 *)(base + 0x08);
         dz = *(f32 *)(obj + 0x14) - *(f32 *)(base + 0x10);
-        angleCos = fn_80293E80((lbl_803DEFE8 * (f32)((ObjSeqState *)seq)->heading) / lbl_803DEFEC);
-        angleSin = sin((lbl_803DEFE8 * (f32)((ObjSeqState *)seq)->heading) / lbl_803DEFEC);
+        angleCos = mathSinf((lbl_803DEFE8 * (f32)((ObjSeqState *)seq)->heading) / lbl_803DEFEC);
+        angleSin = mathCosf((lbl_803DEFE8 * (f32)((ObjSeqState *)seq)->heading) / lbl_803DEFEC);
         *(f32 *)(obj + 0x0c) = angleCos * dz + (angleSin * dx + *(f32 *)(base + 0x08));
         *(f32 *)(obj + 0x14) = -(angleCos * dx - (angleSin * dz + *(f32 *)(base + 0x10)));
         return;
@@ -4407,8 +4407,8 @@ void ObjSeq_UpdateCurvePosition(u8 *obj, u8 *seq) {
         return;
     }
 
-    angleCos = fn_80293E80((lbl_803DEFE8 * (f32)((ObjSeqState *)seq)->heading) / lbl_803DEFEC);
-    angleSin = sin((lbl_803DEFE8 * (f32)((ObjSeqState *)seq)->heading) / lbl_803DEFEC);
+    angleCos = mathSinf((lbl_803DEFE8 * (f32)((ObjSeqState *)seq)->heading) / lbl_803DEFEC);
+    angleSin = mathCosf((lbl_803DEFE8 * (f32)((ObjSeqState *)seq)->heading) / lbl_803DEFEC);
     *(f32 *)(obj + 0x0c) = angleCos * offset[2] + (angleSin * offset[0] + *(f32 *)(base + 0x08));
     *(f32 *)(obj + 0x14) = -(angleCos * offset[0] - (angleSin * offset[2] + *(f32 *)(base + 0x10)));
 }

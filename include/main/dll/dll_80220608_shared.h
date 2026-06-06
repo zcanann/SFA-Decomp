@@ -162,7 +162,7 @@ extern int Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32 *out);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 sqrtf(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern void objfx_spawnBoxBurst(int obj, int a, int b, int c, f32 e, f32 f, f32 g, f32 h,
                                 int i, int j, int k);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sound);
@@ -692,7 +692,7 @@ extern int ObjHits_GetPriorityHit(int obj, int *outHit, int *outIdx, int *outVol
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int limit);
 extern int getAngle(f32 dx, f32 dz);
-extern f32 sin(f32 x);
+extern f32 mathCosf(f32 x);
 extern void fn_8022D4AC(int arwing, int in);
 extern void doRumble(f32 v);
 extern int fn_8022D738(int arwing);
@@ -746,7 +746,7 @@ extern f32 lbl_803E6FF4;
 extern f32 lbl_803E6FF8;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern void Obj_BuildWorldTransformMatrix(int obj, void *mtx, int p3);
 extern void PSMTXMultVec(void *mtx, void *src, void *dst);
 extern void fn_8008020C(int rx, int ry, int rz, f32 x, f32 y, f32 z, f32 p7);
@@ -1128,7 +1128,7 @@ extern void fn_8022B764(int p, int q, int idx);
 extern f32 lbl_803E6ED0;
 extern f32 lbl_803E6EFC;
 extern f32 lbl_803E6F00;
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern void fn_8022AB68(int obj, int p);
 extern void PSVECScale(void *dst, void *src, f32 scale);
 extern void PSVECSubtract(void *a, void *b, void *ab);
@@ -1237,7 +1237,7 @@ extern void staffSetGlow(int staff, int p2, int p3);
 
 
 
-extern f32 sin(f32 x);
+extern f32 mathCosf(f32 x);
 extern f32 lbl_803E6BF0;
 extern f32 lbl_803E6BF4;
 extern f32 lbl_803E6BF8;
@@ -1672,8 +1672,8 @@ extern f32 lbl_803E70CC;
 extern int getArwing(void);
 extern int Obj_GetPlayerObject(void);
 extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
-extern f32 sin(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 mathSinf(f32 x);
 
 typedef struct {
     /* 0x0 */ int f0;

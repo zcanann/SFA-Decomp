@@ -281,29 +281,29 @@ int drakorhoverpad_update(void *curve, int arg) {
     if (*(int *)(p + 0x80) != 0) {
         *(f32 *)(p + 0xb8) = *(f32 *)(*(u8 **)(p + 0xa0) + 8);
         *(f32 *)(p + 0xbc) = *(f32 *)(*(u8 **)(p + 0x9c) + 8);
-        *(f32 *)(p + 0xc0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xc4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xc0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xc4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2c) << 8) / lbl_803E6A58));
         *(f32 *)(p + 0xd8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0xc);
         *(f32 *)(p + 0xdc) = *(f32 *)(*(u8 **)(p + 0x9c) + 0xc);
-        *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2d) << 8) / lbl_803E6A58));
         *(f32 *)(p + 0xf8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0x10);
         *(f32 *)(p + 0xfc) = *(f32 *)(*(u8 **)(p + 0x9c) + 0x10);
-        *(f32 *)(p + 0x100) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * sin(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0x104) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * sin(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0x100) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0x104) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2c) << 8) / lbl_803E6A58));
     } else {
         *(f32 *)(p + 0xb8) = *(f32 *)(*(u8 **)(p + 0xa0) + 8);
         *(f32 *)(p + 0xbc) = *(f32 *)(*(u8 **)(p + 0xa0) + 8);
-        *(f32 *)(p + 0xc0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xc4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xc0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xc4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
         *(f32 *)(p + 0xd8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0xc);
         *(f32 *)(p + 0xdc) = *(f32 *)(*(u8 **)(p + 0xa0) + 0xc);
-        *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
         *(f32 *)(p + 0xf8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0x10);
         *(f32 *)(p + 0xfc) = *(f32 *)(*(u8 **)(p + 0xa0) + 0x10);
-        *(f32 *)(p + 0x100) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * sin(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0x104) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * sin(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0x100) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0x104) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
     }
     if (*(int *)(p + 0x90) != 0) {
         curvesSetupMoveNetworkCurve(curve);
@@ -366,8 +366,8 @@ void drakorhoverpad_updateMain(int obj) {
                                          *(f32 *)(curve + 0x7c) * *(f32 *)(curve + 0x7c)),
                                    *(f32 *)(curve + 0x78)) /
                 lbl_803E6A58;
-        wobbleY = lbl_803E6A8C * sin(phase);
-        limit = lbl_803E6A90 * (lbl_803E6A94 * fn_80293E80(phase));
+        wobbleY = lbl_803E6A8C * mathCosf(phase);
+        limit = lbl_803E6A90 * (lbl_803E6A94 * mathSinf(phase));
         if (f->b40 != 0) {
             absH = *(f32 *)p;
             if (absH < lbl_803E6A3C) {
@@ -423,7 +423,7 @@ void drakorhoverpad_updateMain(int obj) {
     curvePos[0] = *(f32 *)(curve + 0x68);
     curvePos[1] = *(f32 *)(curve + 0x6c);
     curvePos[2] = *(f32 *)(curve + 0x70);
-    curvePos[1] = curvePos[1] + (lbl_803E6A48 + fn_80293E80(lbl_803E6A54 *
+    curvePos[1] = curvePos[1] + (lbl_803E6A48 + mathSinf(lbl_803E6A54 *
                                                             (f32)(int)*(s16 *)(p + 0x174) /
                                                             lbl_803E6A58));
     *(s16 *)(p + 0x174) = (s16)(*(s16 *)(p + 0x174) + framesThisStep * 0x320);

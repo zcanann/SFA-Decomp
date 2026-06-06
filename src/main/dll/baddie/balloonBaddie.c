@@ -851,7 +851,7 @@ extern void Camera_SetFovY(f32 fov);
 extern int Obj_GetActiveModel(int obj);
 extern void objRender(int p1, int p2, int p3, int p4, int obj, int p6);
 extern void GXSetViewport(f32 x, f32 y, f32 w, f32 h, f32 nearz, f32 farz);
-extern f32 sin(f32 x);
+extern f32 mathCosf(f32 x);
 extern s8 cMenuState;
 extern u8 framesThisStep;
 extern s16 lbl_803DD796;
@@ -941,7 +941,7 @@ void hudDrawCMenu(int p1, int p2, int p3) {
     div = lbl_803E1E94;
     do {
         *u = 0;
-        *v = sin(mul * (f32)*(s16 *)*objs / div);
+        *v = mathCosf(mul * (f32)*(s16 *)*objs / div);
         u++;
         objs++;
         v++;

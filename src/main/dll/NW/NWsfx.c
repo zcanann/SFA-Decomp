@@ -11,8 +11,8 @@ extern int objBboxFn_800640cc(void *from, void *to, f32 radius, int mode, void *
 
 extern void *Obj_GetPlayerObject(void);
 extern int getAngle(f32 dx, f32 dz);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern int Curve_AdvanceAlongPath(u8 *curve, f32 t);
 extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u8 *obj, int sfxId);
@@ -373,9 +373,9 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
     }
 
     ((GameObject *)obj)->anim.velocityX =
-        speed * fn_80293E80((lbl_803E52B4 * (f32)((EdibleMushroomState *)state)->unk130) / lbl_803E52B8);
+        speed * mathSinf((lbl_803E52B4 * (f32)((EdibleMushroomState *)state)->unk130) / lbl_803E52B8);
     ((GameObject *)obj)->anim.velocityZ =
-        speed * sin((lbl_803E52B4 * (f32)((EdibleMushroomState *)state)->unk130) / lbl_803E52B8);
+        speed * mathCosf((lbl_803E52B4 * (f32)((EdibleMushroomState *)state)->unk130) / lbl_803E52B8);
 
     objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, lbl_803E5288,
             ((GameObject *)obj)->anim.velocityZ * timeDelta);
@@ -412,8 +412,8 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
     angle = getAngle(-(*(f32 *)(obj + 0xc) - ((GameObject *)player)->anim.localPosX),
                      -(((GameObject *)obj)->anim.localPosZ - ((GameObject *)player)->anim.localPosZ));
     rad = (lbl_803E52B4 * (f32)angle) / lbl_803E52B8;
-    c = fn_80293E80(rad);
-    s = sin(rad);
+    c = mathSinf(rad);
+    s = mathCosf(rad);
     vec[0] = *(f32 *)(obj + 0xc) - dist * c;
     vec[1] = ((GameObject *)obj)->anim.localPosY;
     vec[2] = ((GameObject *)obj)->anim.localPosZ - dist * s;
@@ -422,11 +422,11 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
         angleMinus = angle;
         cosM = c;
         cosP = c;
-        cosStepP = fn_80293E80(lbl_803E52D4);
-        cosStepM = fn_80293E80(lbl_803E52D8);
+        cosStepP = mathSinf(lbl_803E52D4);
+        cosStepM = mathSinf(lbl_803E52D8);
         sinM = s;
-        sinStepP = sin(lbl_803E52D4);
-        sinStepM = sin(lbl_803E52D8);
+        sinStepP = mathCosf(lbl_803E52D4);
+        sinStepM = mathCosf(lbl_803E52D8);
         for (i = 0; i < 8; i++) {
             f32 t;
 

@@ -754,7 +754,7 @@ void viewportEffectFn_8000e380(void)
         }
 
         sinePhase = (lbl_803DE5F8 * (lbl_803DE5FC * slot->shakeDuration * shakeTimer)) / lbl_803DE600;
-        slot->shakeMagnitude = slot->shakeMagnitudeTarget * expTerm * sin(sinePhase);
+        slot->shakeMagnitude = slot->shakeMagnitudeTarget * expTerm * mathCosf(sinePhase);
         if ((slot->shakeMagnitude < lbl_803DE604) && (slot->shakeMagnitude > lbl_803DE608)) {
             slot->shakeMagnitude = lbl_803DE60C;
             slot->shakeActive = -1;

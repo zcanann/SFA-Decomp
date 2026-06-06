@@ -40,8 +40,8 @@ extern void Sfx_KeepAliveLoopedObjectSound(void *obj, int sndId);
 extern void Obj_StartModelFadeIn(void *obj, int duration);
 extern void objLightFn_8009a1dc(void *obj, f32 *pos, int a, int b, f32 intensity);
 extern void Obj_SetModelColorFadeRecursive(void *obj, int a, int b, int c, int d, int e);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 
 extern f32 lbl_803E5358;
 extern f32 lbl_803E535C;
@@ -179,9 +179,9 @@ void bombplantspore_startDriftBurst(void *obj, void *state)
   *(f32 *)((u8 *)state + 0x27c) = lbl_803E5394;
 
   *(f32 *)((u8 *)state + 0x290) =
-      fn_80293E80((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2aa)) / lbl_803E539C);
+      mathSinf((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2aa)) / lbl_803E539C);
   *(f32 *)((u8 *)state + 0x294) =
-      sin((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2aa)) / lbl_803E539C);
+      mathCosf((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2aa)) / lbl_803E539C);
 }
 
 /*
@@ -254,10 +254,10 @@ void bombplantspore_updateDrift(void *obj, void *state)
 
   *(f32 *)((u8 *)state + 0x288) =
       *(f32 *)((u8 *)state + 0x278) *
-      fn_80293E80((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2a8)) / lbl_803E539C);
+      mathSinf((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2a8)) / lbl_803E539C);
   *(f32 *)((u8 *)state + 0x28c) =
       *(f32 *)((u8 *)state + 0x278) *
-      sin((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2a8)) / lbl_803E539C);
+      mathCosf((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2a8)) / lbl_803E539C);
 }
 
 /*

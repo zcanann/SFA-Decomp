@@ -518,7 +518,7 @@ void wcpushblock_update(int obj)
 
     WCPUSHBLOCK_BOB_ANGLE(state) = lbl_803E6D88 * timeDelta + (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state);
     WCPUSHBLOCK_BOB_Y(state) =
-        lbl_803E6D8C * fn_80293E80(lbl_803E6D90 * (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state) / lbl_803E6D94);
+        lbl_803E6D8C * mathSinf(lbl_803E6D90 * (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state) / lbl_803E6D94);
     ((GameObject *)obj)->anim.localPosY = WCPUSHBLOCK_BASE_Y(state) + WCPUSHBLOCK_BOB_Y(state);
 }
 #pragma scheduling reset

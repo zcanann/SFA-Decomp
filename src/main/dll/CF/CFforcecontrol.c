@@ -1257,8 +1257,8 @@ extern int* objFindTexture(int* obj, int idx, int p3);
 extern void cutsceneFadeInOut(int v);
 extern void Obj_FreeObject(int* obj);
 extern void showDeathMenu(void);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern void Camera_SetFovY(f32 fov);
 extern void Rcp_SetViewFinderHudEnabled(int v);
@@ -1337,10 +1337,10 @@ void deathseq_update(int* obj)
     }
 
     if (ready != 0) {
-        f32 cos30 = fn_80293E80(lbl_803E3D30);
-        f32 sin30 = sin(lbl_803E3D30);
-        f32 sin34 = sin(lbl_803E3D34);
-        f32 cos34 = fn_80293E80(lbl_803E3D34);
+        f32 cos30 = mathSinf(lbl_803E3D30);
+        f32 sin30 = mathCosf(lbl_803E3D30);
+        f32 sin34 = mathCosf(lbl_803E3D34);
+        f32 cos34 = mathSinf(lbl_803E3D34);
         f32 xTerm;
         f32 negSin;
         f32 fz;
@@ -1351,8 +1351,8 @@ void deathseq_update(int* obj)
         sin34 = sin34 * cos30;
         cam[0] = 0x2000;
         cam[1] = 0x1000;
-        xTerm = lbl_803E3D38 * -fn_80293E80((lbl_803E3D3C * (f32)*(s16*)obj) / lbl_803E3D40);
-        negSin = -sin((lbl_803E3D3C * (f32)*(s16*)obj) / lbl_803E3D40);
+        xTerm = lbl_803E3D38 * -mathSinf((lbl_803E3D3C * (f32)*(s16*)obj) / lbl_803E3D40);
+        negSin = -mathCosf((lbl_803E3D3C * (f32)*(s16*)obj) / lbl_803E3D40);
         fz = lbl_803E3D38;
         zTerm = fz * negSin;
         *(f32*)((char*)cam + 0xc) = sin30 + (*(f32*)((char*)obj + 0x18) + xTerm);

@@ -1686,8 +1686,8 @@ extern void voxmaps_worldToGrid(f32 *world, int *grid);
 extern u8 voxmaps_traceLine(int *from, int *to, int a, u8 *outFlag, int b);
 extern int objBboxFn_800640cc(void *pos, f32 *world, f32 rad, int a, void *out, int obj, int b,
                               int c, int d, int e);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern const f32 lbl_803E1C68;
 extern const f32 lbl_803E1C80;
 extern const f32 lbl_803E1C84;
@@ -1724,9 +1724,9 @@ u8 dll_19_func08(int obj, char *st, f32 dist)
     }
     for (i = 0; i < 4; i++) {
         a = lbl_803E1C80 * (f32)((s16)cur + (i << 14)) / lbl_803E1C84;
-        world[0] = *(f32 *)(obj + 0xc) - dist * fn_80293E80(a);
+        world[0] = *(f32 *)(obj + 0xc) - dist * mathSinf(a);
         world[1] = lbl_803E1C68 + *(f32 *)(obj + 0x10);
-        world[2] = *(f32 *)(obj + 0x14) - dist * sin(a);
+        world[2] = *(f32 *)(obj + 0x14) - dist * mathCosf(a);
         voxmaps_worldToGrid(world, grid1);
         if (*(void **)(obj + 0x30) != NULL) {
             ok = 1;
@@ -1913,8 +1913,8 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char *st)
         f32 base;
         f32 d1;
         f32 d2;
-        c = fn_80293E80(lbl_803E1C80 * (f32)*(s16 *)(obj + 0x0) / lbl_803E1C84);
-        s = sin(lbl_803E1C80 * (f32)*(s16 *)(obj + 0x0) / lbl_803E1C84);
+        c = mathSinf(lbl_803E1C80 * (f32)*(s16 *)(obj + 0x0) / lbl_803E1C84);
+        s = mathCosf(lbl_803E1C80 * (f32)*(s16 *)(obj + 0x0) / lbl_803E1C84);
         base = -(c * (px - c) + s * (pz - s));
         d1 = base + (c * *(f32 *)(st + 0x18) + s * *(f32 *)(st + 0x20));
         d2 = base + (c * *(f32 *)(st + 0x8c) + s * *(f32 *)(st + 0x94));
@@ -1936,8 +1936,8 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char *st)
         fx = px;
         fz = pz;
     }
-    c = fn_80293E80(lbl_803E1C80 * (f32)(*(s16 *)(obj + 0x0) + 0x4000) / lbl_803E1C84);
-    s = sin(lbl_803E1C80 * (f32)(*(s16 *)(obj + 0x0) + 0x4000) / lbl_803E1C84);
+    c = mathSinf(lbl_803E1C80 * (f32)(*(s16 *)(obj + 0x0) + 0x4000) / lbl_803E1C84);
+    s = mathCosf(lbl_803E1C80 * (f32)(*(s16 *)(obj + 0x0) + 0x4000) / lbl_803E1C84);
     return -(-(*(f32 *)(obj + 0xc) * c + *(f32 *)(obj + 0x14) * s) + (c * fx + s * fz));
 }
 #pragma peephole reset
@@ -2015,7 +2015,7 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32 *out, u8 *flags)
         if (delta < -0x8000) {
             delta = delta + 0xffff;
         }
-        speed = speed * -sin(lbl_803E1CBC * (f32)delta / lbl_803E1CC0);
+        speed = speed * -mathCosf(lbl_803E1CBC * (f32)delta / lbl_803E1CC0);
         ObjAnim_SampleRootCurvePhase(speed, (ObjAnimComponent *)obj, out);
     }
     return 0;

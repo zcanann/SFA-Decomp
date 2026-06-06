@@ -2194,7 +2194,7 @@ extern f32 lbl_803E0500;
 /* Globals for tick functions Effect16_func05 / Effect17_func05 / Effect18_func05 / Effect19_func05 / Effect20_func05. */
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 
 extern f32 lbl_803DB848; extern f32 lbl_803DB84C;
 extern f32 lbl_803E00A8; extern f32 lbl_803E00AC;
@@ -2363,7 +2363,7 @@ extern f32 lbl_803E04D8;
 extern f32 lbl_803E04DC;
 extern f32 lbl_803E04E0;
 extern f32 lbl_803E04E4;
-extern f32 sin(f32 x);
+extern f32 mathCosf(f32 x);
 
 typedef struct CheckpointPair {
     u8 pad[0x20];
@@ -2401,10 +2401,10 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
         return 0;
     }
 
-    cosA = -fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x29) << 8) / lbl_803E04DC);
-    sinA = -sin(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x29) << 8) / lbl_803E04DC);
-    cosB = -fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x29) << 8) / lbl_803E04DC);
-    sinB = -sin(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x29) << 8) / lbl_803E04DC);
+    cosA = -mathSinf(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x29) << 8) / lbl_803E04DC);
+    sinA = -mathCosf(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x29) << 8) / lbl_803E04DC);
+    cosB = -mathSinf(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x29) << 8) / lbl_803E04DC);
+    sinB = -mathCosf(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x29) << 8) / lbl_803E04DC);
     sclA = lbl_803E04E0 * (f32)(u32)*(u8 *)(p + 0x2a);
     sclB = lbl_803E04E0 * (f32)(u32)*(u8 *)(q + 0x2a);
 
@@ -2436,9 +2436,9 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
             qq = q + i;
             out1[1] = (f32)*(s8 *)(qq + 0x2d) * prodB + *(f32 *)(q + 8);
             out1[2] = kE4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
-                             fn_80293E80(kD8 * (f32)(*(u8 *)(p + 0x3e) << 8) / kDC));
+                             mathSinf(kD8 * (f32)(*(u8 *)(p + 0x3e) << 8) / kDC));
             out1[3] = kE4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
-                             fn_80293E80(kD8 * (f32)(*(u8 *)(q + 0x3e) << 8) / kDC));
+                             mathSinf(kD8 * (f32)(*(u8 *)(q + 0x3e) << 8) / kDC));
             out2[0] = sclA * (f32)*(s8 *)(pp + 0x31) + *(f32 *)(p + 0xc);
             out2[1] = sclB * (f32)*(s8 *)(qq + 0x31) + *(f32 *)(q + 0xc);
             out2[2] = kE8;
@@ -2446,9 +2446,9 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
             v3[0] = (f32)*(s8 *)(pp + 0x2d) * prodC + *(f32 *)(p + 0x10);
             v3[1] = (f32)*(s8 *)(qq + 0x2d) * prodD + *(f32 *)(q + 0x10);
             v3[2] = kE4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
-                           sin(kD8 * (f32)(*(u8 *)(p + 0x3e) << 8) / kDC));
+                           mathCosf(kD8 * (f32)(*(u8 *)(p + 0x3e) << 8) / kDC));
             v3[3] = kE4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
-                           sin(kD8 * (f32)(*(u8 *)(q + 0x3e) << 8) / kDC));
+                           mathCosf(kD8 * (f32)(*(u8 *)(q + 0x3e) << 8) / kDC));
             i += 1;
             out1 += 4;
             out2 += 4;
@@ -2459,9 +2459,9 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
         out1[0] = fa * (sclA * sinA) + *(f32 *)(p + 8);
         out1[1] = fa * (sclB * sinB) + *(f32 *)(q + 8);
         out1[2] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
-                                  fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
+                                  mathSinf(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
         out1[3] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
-                                  fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
+                                  mathSinf(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
         out2[0] = sclA * fb + *(f32 *)(p + 0xc);
         out2[1] = sclB * fb + *(f32 *)(q + 0xc);
         {
@@ -2472,9 +2472,9 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
         out3[0] = fa * (sclA * -cosA) + *(f32 *)(p + 0x10);
         out3[1] = fa * (sclB * -cosB) + *(f32 *)(q + 0x10);
         out3[2] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
-                                  sin(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
+                                  mathCosf(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
         out3[3] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
-                                  sin(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
+                                  mathCosf(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
     } else {
         u8 *pp;
         u8 *qq;
@@ -2483,9 +2483,9 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
         qq = q + (mode - 2);
         out1[1] = (f32)*(s8 *)(qq + 0x2d) * (sclB * sinB) + *(f32 *)(q + 8);
         out1[2] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
-                                  fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
+                                  mathSinf(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
         out1[3] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
-                                  fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
+                                  mathSinf(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
         out2[0] = sclA * (f32)*(s8 *)(pp + 0x31) + *(f32 *)(p + 0xc);
         out2[1] = sclB * (f32)*(s8 *)(qq + 0x31) + *(f32 *)(q + 0xc);
         {
@@ -2496,9 +2496,9 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
         out3[0] = (f32)*(s8 *)(pp + 0x2d) * (sclA * -cosA) + *(f32 *)(p + 0x10);
         out3[1] = (f32)*(s8 *)(qq + 0x2d) * (sclB * -cosB) + *(f32 *)(q + 0x10);
         out3[2] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
-                                  sin(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
+                                  mathCosf(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
         out3[3] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
-                                  sin(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
+                                  mathCosf(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
     }
     return ret;
 }
@@ -2685,10 +2685,10 @@ void Effect16_func05(void)
     if (sum > 1.0f) lbl_803DB84C = lbl_803E00B8;
     lbl_803DD3C0 = lbl_803DD3C0 + (s32)framesThisStep * 0x64;
     if (lbl_803DD3C0 > 0x7fff) lbl_803DD3C0 = 0;
-    lbl_803DD3CC = fn_80293E80(lbl_803E0108 * (f32)(s16)lbl_803DD3C0 / lbl_803E010C);
+    lbl_803DD3CC = mathSinf(lbl_803E0108 * (f32)(s16)lbl_803DD3C0 / lbl_803E010C);
     lbl_803DD3C4 = lbl_803DD3C4 + (s32)framesThisStep * 0x32;
     if (lbl_803DD3C4 > 0x7fff) lbl_803DD3C4 = 0;
-    lbl_803DD3C8 = fn_80293E80(lbl_803E0108 * (f32)(s16)lbl_803DD3C4 / lbl_803E010C);
+    lbl_803DD3C8 = mathSinf(lbl_803E0108 * (f32)(s16)lbl_803DD3C4 / lbl_803E010C);
 }
 
 void Effect17_func05(void)
@@ -2703,10 +2703,10 @@ void Effect17_func05(void)
     if (sum > 1.0f) lbl_803DB85C = lbl_803E01C8;
     lbl_803DD3D0 = lbl_803DD3D0 + (s32)framesThisStep * 0x64;
     if (lbl_803DD3D0 > 0x7fff) lbl_803DD3D0 = 0;
-    lbl_803DD3DC = fn_80293E80(lbl_803E0218 * (f32)(s16)lbl_803DD3D0 / lbl_803E021C);
+    lbl_803DD3DC = mathSinf(lbl_803E0218 * (f32)(s16)lbl_803DD3D0 / lbl_803E021C);
     lbl_803DD3D4 = lbl_803DD3D4 + (s32)framesThisStep * 0x32;
     if (lbl_803DD3D4 > 0x7fff) lbl_803DD3D4 = 0;
-    lbl_803DD3D8 = fn_80293E80(lbl_803E0218 * (f32)(s16)lbl_803DD3D4 / lbl_803E021C);
+    lbl_803DD3D8 = mathSinf(lbl_803E0218 * (f32)(s16)lbl_803DD3D4 / lbl_803E021C);
 }
 
 void Effect18_func05(void)
@@ -2721,10 +2721,10 @@ void Effect18_func05(void)
     if (sum > 1.0f) lbl_803DB86C = lbl_803E0230;
     lbl_803DD3E0 = lbl_803DD3E0 + (s32)framesThisStep * 0x64;
     if (lbl_803DD3E0 > 0x7fff) lbl_803DD3E0 = 0;
-    lbl_803DD3EC = fn_80293E80(lbl_803E02D0 * (f32)(s16)lbl_803DD3E0 / lbl_803E02D4);
+    lbl_803DD3EC = mathSinf(lbl_803E02D0 * (f32)(s16)lbl_803DD3E0 / lbl_803E02D4);
     lbl_803DD3E4 = lbl_803DD3E4 + (s32)framesThisStep * 0x32;
     if (lbl_803DD3E4 > 0x7fff) lbl_803DD3E4 = 0;
-    lbl_803DD3E8 = fn_80293E80(lbl_803E02D0 * (f32)(s16)lbl_803DD3E4 / lbl_803E02D4);
+    lbl_803DD3E8 = mathSinf(lbl_803E02D0 * (f32)(s16)lbl_803DD3E4 / lbl_803E02D4);
 }
 
 typedef struct PartFxSpawn {
@@ -4296,10 +4296,10 @@ void Effect19_func05(void)
     if (sum > 1.0f) lbl_803DB87C = lbl_803E02E8;
     lbl_803DD3F0 = lbl_803DD3F0 + (s32)framesThisStep * 0x64;
     if (lbl_803DD3F0 > 0x7fff) lbl_803DD3F0 = 0;
-    lbl_803DD3FC = fn_80293E80(lbl_803E0308 * (f32)(s16)lbl_803DD3F0 / lbl_803E030C);
+    lbl_803DD3FC = mathSinf(lbl_803E0308 * (f32)(s16)lbl_803DD3F0 / lbl_803E030C);
     lbl_803DD3F4 = lbl_803DD3F4 + (s32)framesThisStep * 0x32;
     if (lbl_803DD3F4 > 0x7fff) lbl_803DD3F4 = 0;
-    lbl_803DD3F8 = fn_80293E80(lbl_803E0308 * (f32)(s16)lbl_803DD3F4 / lbl_803E030C);
+    lbl_803DD3F8 = mathSinf(lbl_803E0308 * (f32)(s16)lbl_803DD3F4 / lbl_803E030C);
 }
 
 /* ---- Effect20_func04 (FUN_800cd430, v1.0) ---- */
@@ -4545,9 +4545,9 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
   case 0x7a3:
     iVar1 = randomGetRange(0xffff8001,0x7fff);
     fVar8 = (lbl_803E0344 * (f32)(s32)iVar1) / lbl_803E0348;
-    fVar7 = sin(fVar8);
+    fVar7 = mathCosf(fVar8);
     cfg.f24 = (lbl_803E0340 * (f32)(s32)randomGetRange(100,0x96)) * fVar7;
-    fVar7 = fn_80293E80(fVar8);
+    fVar7 = mathSinf(fVar8);
     cfg.f28 = (lbl_803E0340 * (f32)(s32)randomGetRange(100,0x96)) * fVar7;
     cfg.f2c = lbl_803E0324;
     cfg.f08 = randomGetRange(0x14,0x1e);
@@ -4573,9 +4573,9 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
   case 0x7a5:
     iVar1 = randomGetRange(0xffff8001,0x7fff);
     fVar8 = (lbl_803E0344 * (f32)(s32)iVar1) / lbl_803E0348;
-    fVar7 = sin(fVar8);
+    fVar7 = mathCosf(fVar8);
     cfg.f24 = (lbl_803E0330 * (f32)(s32)randomGetRange(100,0x96)) * fVar7;
-    fVar7 = fn_80293E80(fVar8);
+    fVar7 = mathSinf(fVar8);
     cfg.f28 = (lbl_803E0330 * (f32)(s32)randomGetRange(100,0x96)) * fVar7;
     cfg.f2c = lbl_803E0324;
     cfg.f08 = randomGetRange(0x1e,0x28);
@@ -5127,10 +5127,10 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       iVar1 = randomGetRange(0, 0xffff);
       fVar9 = lbl_803E0330 * (f32)(s32)randomGetRange(0xffffff9c,100) + (f32)param_3[3];
       fVar8 = (lbl_803E0344 * (f32)(s32)iVar1) / lbl_803E0348;
-      fVar7 = fn_80293E80(fVar8);
+      fVar7 = mathSinf(fVar8);
       cfg.f30 = fVar9 * fVar7 + *(f32 *)(param_3 + 6);
       cfg.f34 = lbl_803E0314 * (f32)(s32)randomGetRange(0,(s32)param_3[2]) + *(f32 *)(param_3 + 8);
-      fVar7 = sin(fVar8);
+      fVar7 = mathCosf(fVar8);
       cfg.f38 = fVar9 * fVar7 + *(f32 *)(param_3 + 10);
       cfg.f08 = randomGetRange(10,0x28);
       cfg.f42 = 0x156;
@@ -6551,10 +6551,10 @@ void Effect20_func05(void)
     if (sum > 1.0f) lbl_803DB88C = lbl_803E0320;
     lbl_803DD400 = lbl_803DD400 + (s32)framesThisStep * 0x64;
     if (lbl_803DD400 > 0x7fff) lbl_803DD400 = 0;
-    lbl_803DD40C = fn_80293E80(lbl_803E0344 * (f32)(s16)lbl_803DD400 / lbl_803E0348);
+    lbl_803DD40C = mathSinf(lbl_803E0344 * (f32)(s16)lbl_803DD400 / lbl_803E0348);
     lbl_803DD404 = lbl_803DD404 + (s32)framesThisStep * 0x32;
     if (lbl_803DD404 > 0x7fff) lbl_803DD404 = 0;
-    lbl_803DD408 = fn_80293E80(lbl_803E0344 * (f32)(s16)lbl_803DD404 / lbl_803E0348);
+    lbl_803DD408 = mathSinf(lbl_803E0344 * (f32)(s16)lbl_803DD404 / lbl_803E0348);
 }
 #pragma pop
 

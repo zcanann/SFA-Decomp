@@ -8398,7 +8398,7 @@ extern u8 *textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e
 extern u32 randomGetRange(int min, int max);
 extern void DCFlushRange(void *p, u32 n);
 extern void newshadows_getReflectionScrollOffsets(f32 *x, f32 *y);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern void GXSetIndTexMtx(int id, f32 offset[2][3], int scale_exp);
 extern void GXSetIndTexOrder(int ind_stage, int tex_coord, int tex_map);
 extern void GXSetTevIndirect(int tev, int ind, int fmt, int bias, int mtx, int ws, int wt, int addprev, int utclod, int alpha);
@@ -8431,8 +8431,8 @@ void textureFn_8004c330(void *p1, void *mtx) {
         DCFlushRange(lbl_803DCD2C + 0x60, *(u32 *)(lbl_803DCD2C + 0x44));
     }
     newshadows_getReflectionScrollOffsets(&sx, &sy);
-    m.v[0][1] = lbl_803DEAE0 * fn_80293E80(Prepared_803DEAD8 * sx) + lbl_803DEADC;
-    m.v[1][2] = lbl_803DEAE0 * fn_80293E80(Prepared_803DEAD8 * sy) + lbl_803DEADC;
+    m.v[0][1] = lbl_803DEAE0 * mathSinf(Prepared_803DEAD8 * sx) + lbl_803DEADC;
+    m.v[1][2] = lbl_803DEAE0 * mathSinf(Prepared_803DEAD8 * sy) + lbl_803DEADC;
     GXSetTevOrder(lbl_803DCD90, 0, lbl_803DCD8C + 1, 8);
     GXSetTevSwapMode(lbl_803DCD90, 0, 0);
     if (mtx != 0) {
@@ -8586,7 +8586,7 @@ void fn_8004C7AC(void *p1, void *p2, void *p3, int w, int h) {
 }
 extern IndTexMtx23 lbl_802C1DC8;
 extern IndTexMtx23 lbl_802C1DE0;
-extern f32 sin(f32 x);
+extern f32 mathCosf(f32 x);
 extern void fn_80293C64(f32 angle, f32 *s, f32 *c);
 extern void fn_8006C504(void *out);
 extern void getTextureFn_8006c5e4(void *out);
@@ -8636,7 +8636,7 @@ void fn_8004DA54(char *p1) {
     GXSetTexCoordGen2(3, 1, 4, 0x3c, 0, 0x7d);
     newshadows_getReflectionScrollOffsets(&rx, &ry);
     fn_80293C64(Prepared_803DEAD8 * rx, &sv, &cv);
-    s = sin(Prepared_803DEAD8 * ry);
+    s = mathCosf(Prepared_803DEAD8 * ry);
     k = (lbl_803DEB08 * s + lbl_803DEB04) * lbl_803DB5F0;
     cv = cv * k;
     sv = sv * k;
@@ -8645,7 +8645,7 @@ void fn_8004DA54(char *p1) {
     m1.v[1][0] = -sv;
     m1.v[1][1] = cv;
     fn_80293C64(Prepared_803DEAD8 * -ry, &sv, &cv);
-    s = sin(Prepared_803DEAD8 * rx);
+    s = mathCosf(Prepared_803DEAD8 * rx);
     f31v = lbl_803DEADC * s + lbl_803DEADC;
     k = (lbl_803DEB08 * s + lbl_803DEB04) * lbl_803DB5F0;
     cv = cv * k;

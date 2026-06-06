@@ -168,8 +168,8 @@ int fn_8023A6A4(int p1, f32 a, f32 b, f32 c)
     else if (val > a)
         val = a;
     ang = lbl_803E74A0 * (f32)yaw / lbl_803E74A4;
-    *(f32 *)(p1 + 0xd8) = val * fn_80293E80(ang);
-    *(f32 *)(p1 + 0xdc) = val * sin(ang);
+    *(f32 *)(p1 + 0xd8) = val * mathSinf(ang);
+    *(f32 *)(p1 + 0xdc) = val * mathCosf(ang);
     fn_8022D48C((int)vel, *(int *)p1);
     *(f32 *)(p1 + 0xd8) -= vel[0] * lbl_803DC4C4;
     *(f32 *)(p1 + 0xdc) -= vel[1] * lbl_803DC4C4;
@@ -604,11 +604,11 @@ void andross_update(int obj)
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74EC) ? lbl_803E74EC : ((dVar17 > lbl_803E74F0) ? lbl_803E74F0 : dVar17);
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -637,11 +637,11 @@ void andross_update(int obj)
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74EC) ? lbl_803E74EC : ((dVar17 > lbl_803E74F0) ? lbl_803E74F0 : dVar17);
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -672,11 +672,11 @@ void andross_update(int obj)
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74EC) ? lbl_803E74EC : ((dVar17 > lbl_803E74F0) ? lbl_803E74F0 : dVar17);
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -712,11 +712,11 @@ void andross_update(int obj)
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74EC) ? lbl_803E74EC : ((dVar17 > lbl_803E74F0) ? lbl_803E74F0 : dVar17);
     dVar17 = (dVar16 < lbl_803E7500) ? lbl_803E7500 : ((dVar16 > lbl_803E74CC) ? lbl_803E74CC : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -739,11 +739,11 @@ void andross_update(int obj)
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74EC) ? lbl_803E74EC : ((dVar17 > lbl_803E74F0) ? lbl_803E74F0 : dVar17);
     dVar17 = (dVar16 < lbl_803E7500) ? lbl_803E7500 : ((dVar16 > lbl_803E74CC) ? lbl_803E74CC : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -788,11 +788,11 @@ LAB_8023bb18:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74EC) ? lbl_803E74EC : ((dVar17 > lbl_803E74F0) ? lbl_803E74F0 : dVar17);
     dVar17 = (dVar16 < lbl_803E7500) ? lbl_803E7500 : ((dVar16 > lbl_803E74CC) ? lbl_803E74CC : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -816,11 +816,11 @@ LAB_8023bb18:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E7508) ? lbl_803E7508 : ((dVar17 > lbl_803E750C) ? lbl_803E750C : dVar17);
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -846,11 +846,11 @@ LAB_8023bb18:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E7508) ? lbl_803E7508 : ((dVar17 > lbl_803E750C) ? lbl_803E750C : dVar17);
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -876,11 +876,11 @@ LAB_8023bb18:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74EC) ? lbl_803E74EC : ((dVar17 > lbl_803E74F0) ? lbl_803E74F0 : dVar17);
     dVar17 = (dVar16 < lbl_803E7500) ? lbl_803E7500 : ((dVar16 > lbl_803E74CC) ? lbl_803E74CC : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -906,11 +906,11 @@ LAB_8023bb18:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74EC) ? lbl_803E74EC : ((dVar17 > lbl_803E74F0) ? lbl_803E74F0 : dVar17);
     dVar17 = (dVar16 < lbl_803E7500) ? lbl_803E7500 : ((dVar16 > lbl_803E74CC) ? lbl_803E74CC : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -949,11 +949,11 @@ LAB_8023bb18:
       dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
       dVar19 = (dVar17 < lbl_803E7508) ? lbl_803E7508 : ((dVar17 > lbl_803E750C) ? lbl_803E750C : dVar17);
       dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
-            dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA))
+            dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA))
                                             / lbl_803E74A4));
       *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
                        (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-            dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8))
+            dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8))
                                             / lbl_803E74A4));
       *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                        (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -1011,11 +1011,11 @@ LAB_8023c584:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E7510) ? lbl_803E7510 : ((dVar17 > lbl_803E74FC) ? lbl_803E74FC : dVar17);
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74FC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E7514 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -1079,11 +1079,11 @@ LAB_8023c584:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74EC) ? lbl_803E74EC : ((dVar17 > lbl_803E74F0) ? lbl_803E74F0 : dVar17);
     dVar17 = (dVar16 < lbl_803E7508) ? lbl_803E7508 : ((dVar16 > lbl_803E750C) ? lbl_803E750C : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74FC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E7514 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -1162,11 +1162,11 @@ LAB_8023cbdc:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar17 > lbl_803E74F8) ? lbl_803E74F8 : dVar17);
     dVar17 = (dVar16 < lbl_803E7510) ? lbl_803E7510 : ((dVar16 > lbl_803E74FC) ? lbl_803E74FC : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74FC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E7514 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -1243,11 +1243,11 @@ LAB_8023cbdc:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E7500) ? lbl_803E7500 : ((dVar17 > lbl_803E74CC) ? lbl_803E74CC : dVar17);
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -1270,11 +1270,11 @@ LAB_8023cbdc:
     dVar19 = (dVar17 < dVar18) ? dVar18 : ((dVar17 > dVar18) ? dVar18 : dVar17);
     dVar18 = lbl_803E74D4;
     dVar17 = (dVar16 < dVar18) ? dVar18 : ((dVar16 > dVar18) ? dVar18 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74D4 * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74D4 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -1316,11 +1316,11 @@ LAB_8023cbdc:
     dVar19 = (dVar17 < dVar18) ? dVar18 : ((dVar17 > dVar18) ? dVar18 : dVar17);
     dVar18 = lbl_803E74D4;
     dVar17 = (dVar16 < dVar18) ? dVar18 : ((dVar16 > dVar18) ? dVar18 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74D4 * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74D4 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -1372,11 +1372,11 @@ LAB_8023d59c:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74EC) ? lbl_803E74EC : ((dVar17 > lbl_803E74F0) ? lbl_803E74F0 : dVar17);
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -1420,11 +1420,11 @@ LAB_8023d7cc:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E7520) ? lbl_803E7520 : ((dVar17 > lbl_803E74A8) ? lbl_803E74A8 : dVar17);
     dVar17 = (dVar16 < lbl_803E7524) ? lbl_803E7524 : ((dVar16 > lbl_803E7528) ? lbl_803E7528 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -1494,11 +1494,11 @@ LAB_8023db24:
     dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = (dVar17 < lbl_803E74EC) ? lbl_803E74EC : ((dVar17 > lbl_803E74F0) ? lbl_803E74F0 : dVar17);
     dVar17 = (dVar16 < lbl_803E752C) ? lbl_803E752C : ((dVar16 > lbl_803E74E8) ? lbl_803E74E8 : dVar16);
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+        dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
                      (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+        dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
@@ -1701,14 +1701,14 @@ LAB_8023de5c:
     }
     dVar19 = ((GameObject *)obj)->anim.currentMoveProgress;
     if (dVar19 < lbl_803E7540) {
-      dVar19 = fn_80293E80(((lbl_803E74A0 *
+      dVar19 = mathSinf(((lbl_803E74A0 *
                                              (float)(lbl_803E7548 *
                                                     lbl_803E7550 * (dVar19 / lbl_803E7540))) /
                                             lbl_803E74A4));
       *(f32 *)(piVar14 + 0x35) = (lbl_803E74A8 * dVar19 + *(f32 *)(piVar14 + 0x18));
     }
     else {
-      dVar19 = fn_80293E80(((lbl_803E74A0 *
+      dVar19 = mathSinf(((lbl_803E74A0 *
                                              (float)(lbl_803E7548 *
                                                     (lbl_803E7558 *
                                                      ((dVar19 - lbl_803E7540) / lbl_803E7560)

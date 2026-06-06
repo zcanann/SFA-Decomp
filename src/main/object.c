@@ -2219,8 +2219,8 @@ extern f32 lbl_803DE8BC;
 extern f32 lbl_803DE8C0;
 extern f32 lbl_803DE8C4;
 extern f32 lbl_803DE8C8;
-extern f32 fn_80293E80(f32);
-extern f32 sin(f32);
+extern f32 mathSinf(f32);
+extern f32 mathCosf(f32);
 extern int getCurUiDll(void);
 extern u8 *Camera_GetCurrentViewSlot(void);
 extern int lbl_803DCB70;
@@ -2294,9 +2294,9 @@ void mapSetupPlayer(void)
                 }
             }
         }
-        *(f32 *)(base + 8) = lbl_803DE8BC * fn_80293E80((lbl_803DE8C0 * (f32)(*(s8 *)((u8 *)pos + 0xc) << 8)) / lbl_803DE8C4) + x;
+        *(f32 *)(base + 8) = lbl_803DE8BC * mathSinf((lbl_803DE8C0 * (f32)(*(s8 *)((u8 *)pos + 0xc) << 8)) / lbl_803DE8C4) + x;
         *(f32 *)(base + 0xc) = lbl_803DE8C8 + y;
-        *(f32 *)(base + 0x10) = lbl_803DE8BC * sin((lbl_803DE8C0 * (f32)(*(s8 *)((u8 *)pos + 0xc) << 8)) / lbl_803DE8C4) + z;
+        *(f32 *)(base + 0x10) = lbl_803DE8BC * mathCosf((lbl_803DE8C0 * (f32)(*(s8 *)((u8 *)pos + 0xc) << 8)) / lbl_803DE8C4) + z;
         uiDll = getCurUiDll();
         if ((u32)(uiDll - 2) <= 4 || uiDll == 7) {
             (*(void (**)(u8 *, f32, f32, f32))(*(int *)gCameraInterface + 4))(obj, *(f32 *)(base + 8), *(f32 *)(base + 0xc), *(f32 *)(base + 0x10));

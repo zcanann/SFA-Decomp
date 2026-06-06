@@ -2,8 +2,8 @@
 #include "main/objanim_internal.h"
 
 extern f32 sqrtf(f32 x);
-extern f32 sin(double x);
-extern f32 fn_80293E80(double x); /* cos-like */
+extern f32 mathCosf(double x);
+extern f32 mathSinf(double x); /* cos-like */
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
@@ -140,10 +140,10 @@ void spscarab_init(int param_1, int param_2)
     *(s16 *)(param_1) = (s16)((s32)(s8)*(u8 *)(param_2 + 0x18) << 8);
 
     *(f32 *)(param_1 + 0x24) =
-        -fn_80293E80(lbl_803E5A8C * (f32)(s32)*(s16 *)(param_1) /
+        -mathSinf(lbl_803E5A8C * (f32)(s32)*(s16 *)(param_1) /
                      lbl_803E5A90);
     *(f32 *)(param_1 + 0x2c) =
-        -sin(lbl_803E5A8C * (f32)(s32)*(s16 *)(param_1) /
+        -mathCosf(lbl_803E5A8C * (f32)(s32)*(s16 *)(param_1) /
              lbl_803E5A90);
 
     objAnim->bankIndex = (s8)(1 - *(u8 *)(param_2 + 0x19));

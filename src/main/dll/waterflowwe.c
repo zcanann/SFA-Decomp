@@ -48,8 +48,8 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
                 radius = lbl_803E72BC * (f32)(u32)(*(u8 **)(other + 0x4c))[0x19];
                 if (distance < radius) {
                     strength = ((radius - distance) / radius) * (lbl_803E72C0 * *(f32 *)(other + 8));
-                    currentX += strength * fn_80293E80((lbl_803E72C4 * (f32)*(s16 *)other) / lbl_803E72C8);
-                    currentZ += strength * sin((lbl_803E72C4 * (f32)*(s16 *)other) / lbl_803E72C8);
+                    currentX += strength * mathSinf((lbl_803E72C4 * (f32)*(s16 *)other) / lbl_803E72C8);
+                    currentZ += strength * mathCosf((lbl_803E72C4 * (f32)*(s16 *)other) / lbl_803E72C8);
                 }
             }
         }
@@ -76,8 +76,8 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
             if (distance < radius) {
                 strength = ((radius - distance) / radius) * objectStrength;
                 angle = (lbl_803E72C4 * (f32)currentAngle) / lbl_803E72C8;
-                currentX += strength * fn_80293E80(angle);
-                currentZ += strength * sin(angle);
+                currentX += strength * mathSinf(angle);
+                currentZ += strength * mathCosf(angle);
             }
         }
     }

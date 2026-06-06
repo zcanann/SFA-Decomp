@@ -2196,7 +2196,7 @@ void mmp_trenchfx_update(int obj) {
 #pragma scheduling reset
 
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
-extern f32 fn_80293E80(f32);
+extern f32 mathSinf(f32);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern void doRumble(f32 duration);
 extern char lbl_803231D0[];
@@ -2250,12 +2250,12 @@ void mmp_asteroid_re_update(int obj) {
             *(s16 *)&state->rollPhase = lbl_803E4510 * timeDelta + (f32)state->rollPhase;
             *(s16 *)&state->pitchPhase = lbl_803E4514 * timeDelta + (f32)state->pitchPhase;
             ((void (*)(int, f32, f32, f32))objMove)(obj, lbl_803E4518, ((GameObject *)obj)->anim.velocityY * timeDelta, lbl_803E4518);
-            ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + fn_80293E80((lbl_803E451C * (f32)state->bobPhase) / lbl_803E4520);
+            ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + mathSinf((lbl_803E451C * (f32)state->bobPhase) / lbl_803E4520);
             if (((GameObject *)obj)->anim.localPosY < state->baseY) {
                 ((GameObject *)obj)->anim.localPosY = state->baseY;
             }
-            ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (int)(lbl_803E4524 * fn_80293E80((lbl_803E451C * (f32)state->rollPhase) / lbl_803E4520)));
-            ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + (int)(lbl_803E4524 * fn_80293E80((lbl_803E451C * (f32)state->pitchPhase) / lbl_803E4520)));
+            ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (int)(lbl_803E4524 * mathSinf((lbl_803E451C * (f32)state->rollPhase) / lbl_803E4520)));
+            ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + (int)(lbl_803E4524 * mathSinf((lbl_803E451C * (f32)state->pitchPhase) / lbl_803E4520)));
             *(f32 *)(lbl_803AC900 + 8) = lbl_803E44F8;
             *(f32 *)(lbl_803AC900 + 0xC) = ((GameObject *)obj)->anim.localPosX;
             *(f32 *)(lbl_803AC900 + 0x10) = state->baseY - lbl_803E4528;
@@ -2458,12 +2458,12 @@ void mmp_moonrock_update(int obj) {
     state->rollPhase += 0xDAC;
     state->pitchPhase += 0x800;
     ((void (*)(int, f32, f32, f32))objMove)(obj, lbl_803E4554, ((GameObject *)obj)->anim.velocityY * timeDelta, lbl_803E4554);
-    ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + fn_80293E80((lbl_803E4598 * (f32)state->bobPhase) / lbl_803E459C);
+    ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + mathSinf((lbl_803E4598 * (f32)state->bobPhase) / lbl_803E459C);
     if (((GameObject *)obj)->anim.localPosY < state->baseY) {
         ((GameObject *)obj)->anim.localPosY = state->baseY;
     }
-    ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (int)(lbl_803E45A0 * fn_80293E80((lbl_803E4598 * (f32)state->rollPhase) / lbl_803E459C)));
-    ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + (int)(lbl_803E45A0 * fn_80293E80((lbl_803E4598 * (f32)state->pitchPhase) / lbl_803E459C)));
+    ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (int)(lbl_803E45A0 * mathSinf((lbl_803E4598 * (f32)state->rollPhase) / lbl_803E459C)));
+    ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + (int)(lbl_803E45A0 * mathSinf((lbl_803E4598 * (f32)state->pitchPhase) / lbl_803E459C)));
     *(f32 *)(lbl_803AC918 + 8) = lbl_803E457C;
     *(f32 *)(lbl_803AC918 + 0xC) = ((GameObject *)obj)->anim.localPosX;
     *(f32 *)(lbl_803AC918 + 0x10) = state->baseY;

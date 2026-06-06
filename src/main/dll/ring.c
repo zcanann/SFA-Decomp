@@ -289,13 +289,13 @@ void ring_update(int obj)
                     for (ang = -0x7fff; ang < 0x7fff;
                          ang += lbl_8032B720[RING_MODE(state)].f8) {
                         dir[0] = lbl_803E70C4 *
-                                 sin(lbl_803E70C8 *
+                                 mathCosf(lbl_803E70C8 *
                                      (f32)(ang +
                                            (int)(RING_PULL_TIMER(state) *
                                                  lbl_8032B720[RING_MODE(state)].f14)) /
                                      lbl_803E70CC);
                         dir[1] = lbl_803E70C4 *
-                                 fn_80293E80(lbl_803E70C8 *
+                                 mathSinf(lbl_803E70C8 *
                                              (f32)(ang +
                                                    (int)(RING_PULL_TIMER(state) *
                                                          lbl_8032B720[RING_MODE(state)].f14)) /

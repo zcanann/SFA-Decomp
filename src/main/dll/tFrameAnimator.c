@@ -84,7 +84,7 @@ void levelname_initialise(void) {}
 
 extern u8 framesThisStep;
 extern f32 Vec_distance(f32 *a, f32 *b);
-extern f32 fn_80293E80(f32 v);
+extern f32 mathSinf(f32 v);
 extern f32 lbl_803E36E0;
 extern f32 lbl_803E36E4;
 extern f32 lbl_803E36E8;
@@ -119,7 +119,7 @@ void levelname_update(int *obj) {
         if ((u32)*(s16*)(sub + 0x10) > (u32)*(int*)(sub + 8)) {
             sub[0x14] = 3;
         }
-        *(s16*)(sub + 0x12) = (s16)((s32)(lbl_803E36E0 * fn_80293E80((lbl_803E36E4 * (f32)((s32)*(s16*)(sub + 0x10) * 0x500)) / lbl_803E36E8)) + 0xdc);
+        *(s16*)(sub + 0x12) = (s16)((s32)(lbl_803E36E0 * mathSinf((lbl_803E36E4 * (f32)((s32)*(s16*)(sub + 0x10) * 0x500)) / lbl_803E36E8)) + 0xdc);
         break;
     }
     case 3:

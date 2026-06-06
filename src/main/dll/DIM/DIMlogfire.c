@@ -1354,7 +1354,7 @@ int MoonSeedPlantingSpot_setScale(int *obj, int arg) {
 extern f32 lbl_803E45D8;
 extern f32 lbl_803E45E0;
 extern f32 lbl_803E45E4;
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern void fn_8003B608(int r, int g, int b);
 
 #pragma scheduling off
@@ -1368,7 +1368,7 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
                 f32 s;
                 int iv;
                 *(s16 *)(inner + 0xc) += 0x1000;
-                s = fn_80293E80(lbl_803E45E0 * (f32)*(s16 *)(inner + 0xc) / lbl_803E45E4);
+                s = mathSinf(lbl_803E45E0 * (f32)*(s16 *)(inner + 0xc) / lbl_803E45E4);
                 iv = (int)(lbl_803E45D8 * (lbl_803E45DC + s));
                 fn_8003B608((u8)(iv + 0x7f), 0xff, 0xff);
             }

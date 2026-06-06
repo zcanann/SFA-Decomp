@@ -326,13 +326,13 @@ void objfx_spawnArcedBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
         case 4:
             val = (u16)(int)(lbl_803DF350 * f29);
             a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
-            f29 = lbl_803DF358 * (lbl_803DF354 + (f32)sin(a));
+            f29 = lbl_803DF358 * (lbl_803DF354 + (f32)mathCosf(a));
             params.vec[0] = lbl_803DF354 - f30 * f30;
             break;
         case 5:
             val = (u16)(int)(lbl_803DF350 * f29);
             a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
-            f29 = lbl_803DF358 * (lbl_803DF354 + fn_80293E80(a));
+            f29 = lbl_803DF358 * (lbl_803DF354 + mathSinf(a));
             params.vec[0] = lbl_803DF354 - f30 * f30;
             break;
         case 6:
@@ -403,14 +403,14 @@ void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *o
             params.vec[0] -= lbl_803DF358;
             val = (u16)(int)(lbl_803DF350 * params.vec[1]);
             a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
-            params.vec[1] = lbl_803DF358 * sin(a);
+            params.vec[1] = lbl_803DF358 * mathCosf(a);
             params.vec[2] -= lbl_803DF358;
             break;
         case 5:
             params.vec[0] -= lbl_803DF358;
             val = (u16)(int)(lbl_803DF350 * params.vec[1]);
             a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
-            params.vec[1] = lbl_803DF358 * fn_80293E80(a);
+            params.vec[1] = lbl_803DF358 * mathSinf(a);
             params.vec[2] -= lbl_803DF358;
             break;
         case 6:

@@ -24,7 +24,7 @@ extern int hitDetectFn_80065e50(void *obj, float x, float y, float z, void *out,
 extern void hudFn_8011f38c(int);
 extern void hudFn_8011f6f0(int);
 extern double shopKeeperRotateFn_801e7c4c(void *obj, void *playerObj, int p3);
-extern float fn_80293E80(double);
+extern float mathSinf(double);
 extern int playerGetMoney(void *playerObj);
 
 extern void *gScreenTransitionInterface;
@@ -85,7 +85,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject *obj, DRLaserTurretAnimState *a
     shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
     obj->y =
         state->bobAmplitude *
-            fn_80293E80(
+            mathSinf(
                 (double)(lbl_803E59E8 *
                          (float)(uint)state->bobPhase /
                          lbl_803E59EC)) +
@@ -213,7 +213,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimStat
     }
     obj->y =
         state->bobAmplitude *
-            fn_80293E80(
+            mathSinf(
                 (double)(lbl_803E59E8 *
                          (float)(uint)state->bobPhase /
                          lbl_803E59EC)) +

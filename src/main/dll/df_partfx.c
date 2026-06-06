@@ -96,8 +96,8 @@ extern f32 lbl_803E1230;
  */
 extern int* Checkpoint_find(int id, int* slot);
 extern int getAngle(f32 dx, f32 dz);
-extern f32 sin(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 mathSinf(f32 x);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E04D8;
 extern f32 lbl_803E04DC;
@@ -135,8 +135,8 @@ int Checkpoint_func07(int* obj, int* state)
         *(int*)((char*)state + 0x18) = -1;
         return 0;
     }
-    cosv = fn_80293E80((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
-    sinv = sin((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+    cosv = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+    sinv = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
     offs = -(*(f32*)(cp + 8) * cosv + *(f32*)(cp + 0x10) * sinv);
     dist = offs + (cosv * ((GameObject *)obj)->anim.localPosX + sinv * ((GameObject *)obj)->anim.localPosZ);
     if (*(int*)(cp + 0x18) > -1 && dist >= lbl_803E04E8) {
@@ -150,8 +150,8 @@ int Checkpoint_func07(int* obj, int* state)
     }
     cp2 = (char*)Checkpoint_find(*(int*)(cp + 0x20), &slotC);
     ang = getAngle(*(f32*)(cp2 + 8) - *(f32*)(cp + 8), *(f32*)(cp2 + 0x10) - *(f32*)(cp + 0x10));
-    cos2 = fn_80293E80((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
-    sin2 = sin((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
+    cos2 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
+    sin2 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
     offs2 = -(*(f32*)(cp2 + 8) * cos2 + *(f32*)(cp2 + 0x10) * sin2);
     dist2 = offs2 + (cos2 * ((GameObject *)obj)->anim.localPosX + sin2 * ((GameObject *)obj)->anim.localPosZ);
     zero = lbl_803E04E8;
@@ -2000,8 +2000,8 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
     *(s8*)((char*)state + 0x34c) |= 1;
     if ((s8)lbl_803DD434 == 0) {
         ang = (lbl_803E05A4 * (f32)angle) / lbl_803E05A8;
-        vx = scale * (*(f32*)((char*)state + 0x298) * -fn_80293E80(ang));
-        vz = scale * (*(f32*)((char*)state + 0x298) * -sin(ang));
+        vx = scale * (*(f32*)((char*)state + 0x298) * -mathSinf(ang));
+        vz = scale * (*(f32*)((char*)state + 0x298) * -mathCosf(ang));
         if (*(f32*)((char*)state + 0x298) < lbl_803E05AC) {
             vx = lbl_803E0570;
             vz = vx;
@@ -2023,8 +2023,8 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
         ((GameObject *)obj)->anim.velocityX = z;
         ((GameObject *)obj)->anim.velocityZ = z;
     }
-    c = fn_80293E80((lbl_803E05A4 * (f32)*obj) / lbl_803E05A8);
-    s = sin((lbl_803E05A4 * (f32)*obj) / lbl_803E05A8);
+    c = mathSinf((lbl_803E05A4 * (f32)*obj) / lbl_803E05A8);
+    s = mathCosf((lbl_803E05A4 * (f32)*obj) / lbl_803E05A8);
     *(f32*)((char*)state + 0x284) = ((GameObject *)obj)->anim.velocityX * s - ((GameObject *)obj)->anim.velocityZ * c;
     *(f32*)((char*)state + 0x280) = -((GameObject *)obj)->anim.velocityZ * s - ((GameObject *)obj)->anim.velocityX * c;
 }
@@ -2639,11 +2639,11 @@ void Checkpoint_func06(int* obj, int* state, int filter)
         for (k = 0; k < 2; k++) {
             n = (char*)Checkpoint_find(*(int*)(p + 0x20), &slot);
             if (n != NULL) {
-                cos1 = fn_80293E80((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
-                sin1 = sin((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+                cos1 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+                sin1 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
                 offs1 = -(*(f32*)(cp + 8) * cos1 + *(f32*)(cp + 0x10) * sin1);
-                cos2 = fn_80293E80((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
-                sin2 = sin((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
+                cos2 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
+                sin2 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
                 offs2 = -(*(f32*)(n + 8) * cos2 + *(f32*)(n + 0x10) * sin2);
                 dist1 = offs1 + (cos1 * ((GameObject *)obj)->anim.localPosX + sin1 * ((GameObject *)obj)->anim.localPosZ);
                 dist2 = offs2 + (cos2 * ((GameObject *)obj)->anim.localPosX + sin2 * ((GameObject *)obj)->anim.localPosZ);

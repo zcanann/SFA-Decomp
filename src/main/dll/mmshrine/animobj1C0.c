@@ -13,7 +13,7 @@ extern double FUN_80194a70();
 extern void *Obj_GetPlayerObject(void);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern void fn_80296518(void *obj, int arg, int enable);
 extern void GameBit_Set(int eventId, int value);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
@@ -246,15 +246,15 @@ void fn_801C5990(MmShrineAnimObj *obj)
 
     obj->posY = lbl_803E4F9C +
                 (*(f32 *)(config + 0xC) +
-                 fn_80293E80((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4));
+                 mathSinf((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4));
 
-    trigA = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitB) / lbl_803E4FA4);
-    trigB = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
+    trigA = mathSinf((lbl_803E4FA0 * (f32)state->orbitB) / lbl_803E4FA4);
+    trigB = mathSinf((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
     trigB = trigB + trigA;
     obj->roll = lbl_803E4FA8 * trigB;
 
-    trigA = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitC) / lbl_803E4FA4);
-    trigB = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
+    trigA = mathSinf((lbl_803E4FA0 * (f32)state->orbitC) / lbl_803E4FA4);
+    trigB = mathSinf((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
     trigB = trigB + trigA;
     obj->pitch = lbl_803E4FA8 * trigB;
 

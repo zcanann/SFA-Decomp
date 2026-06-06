@@ -2674,8 +2674,8 @@ extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
 extern f32 lbl_803E4800, lbl_803E4804, lbl_803E4808;
 extern u8 lbl_802C2318[];
 extern void vecRotateZXY(void *in, void *out);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern int ObjList_FindObjectById(int id);
 extern u8 *objCreateLight(s16 *obj, int b);
 extern void modelLightStruct_setLightKind(u8 *light, int value);
@@ -2718,9 +2718,9 @@ void lavaball1be_init(s16 *obj, u8 *p) {
         *(f32 *)(state + 8) = ((GameObject *)obj)->anim.localPosY;
         *(int *)(state + 0xc) = *(int *)(p + 0x14);
         *(int *)(p + 0x14) = -1;
-        ((GameObject *)obj)->anim.velocityX = vxz * -fn_80293E80(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
+        ((GameObject *)obj)->anim.velocityX = vxz * -mathSinf(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
         ((GameObject *)obj)->anim.velocityY = vy;
-        ((GameObject *)obj)->anim.velocityZ = vxz * -sin(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
+        ((GameObject *)obj)->anim.velocityZ = vxz * -mathCosf(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
         sub = *(int **)&((GameObject *)obj)->anim.hitReactState;
         if (sub != NULL) {
             *((u8 *)sub + 0x6a) = 0;
@@ -3047,9 +3047,9 @@ void lavaball1be_setScale(s16 *obj, int p2, int p3) {
     ((GameObject *)obj)->anim.previousWorldPosZ = x;
     ((GameObject *)obj)->anim.previousLocalPosZ = x;
     obj[0] = (s16)((s32)*(s8 *)(setup + 0x18) << 8);
-    ((GameObject *)obj)->anim.velocityX = vxz * -fn_80293E80(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
+    ((GameObject *)obj)->anim.velocityX = vxz * -mathSinf(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
     ((GameObject *)obj)->anim.velocityY = lbl_803E47D8 * (f32)p2;
-    ((GameObject *)obj)->anim.velocityZ = vxz * -sin(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
+    ((GameObject *)obj)->anim.velocityZ = vxz * -mathCosf(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
     obj[3] &= ~0x4000;
     ObjHits_EnableObject(obj);
     state[0x10] &= ~0x10;

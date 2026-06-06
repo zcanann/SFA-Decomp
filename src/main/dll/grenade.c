@@ -1526,8 +1526,8 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-extern f32 fn_80293E80(f64 x);
-extern f64 sin(f64 x);
+extern f32 mathSinf(f64 x);
+extern f64 mathCosf(f64 x);
 extern f64 lbl_803E2528;
 extern f32 lbl_803E2454;
 extern f32 lbl_803E2458;
@@ -1569,9 +1569,9 @@ void objAnimFn_801441c0(u8 *obj, u8 *state)
     case 1:
         sv = randomGetRange(0x20, 0xff);
         ang = lbl_803E2454 * (f32)(s16)((*(s16 *)obj + sv) * 0x100) / lbl_803E2458;
-        *(f32 *)(state + 0x72c) = (f32)(lbl_803E2528 * -fn_80293E80(ang) + ((GameObject *)obj)->anim.localPosX);
+        *(f32 *)(state + 0x72c) = (f32)(lbl_803E2528 * -mathSinf(ang) + ((GameObject *)obj)->anim.localPosX);
         ((TrickyState *)state)->unk730 = *(u32 *)(obj + 0x10);
-        ((TrickyState *)state)->unk734 = (f32)((f64)lbl_803E2484 * -sin(ang) + ((GameObject *)obj)->anim.localPosZ);
+        ((TrickyState *)state)->unk734 = (f32)((f64)lbl_803E2484 * -mathCosf(ang) + ((GameObject *)obj)->anim.localPosZ);
         if (((TrickyState *)state)->unk28 != state + 0x72c) {
             ((TrickyState *)state)->unk28 = state + 0x72c;
             ((TrickyState *)state)->unk54 &= ~0x400;

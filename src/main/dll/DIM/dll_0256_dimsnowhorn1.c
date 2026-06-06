@@ -663,11 +663,11 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
 
     if (*(s16 *)((char *)obj + 2) > 0) {
         target = target -
-                 lbl_803E8260 * fn_80293E80(lbl_803E8264 * (f32)(s16) * (s16 *)((char *)obj + 2) /
+                 lbl_803E8260 * mathSinf(lbl_803E8264 * (f32)(s16) * (s16 *)((char *)obj + 2) /
                                             lbl_803E8268);
     } else {
         target = target -
-                 lbl_803E826C * fn_80293E80(lbl_803E8264 * (f32)(s16) * (s16 *)((char *)obj + 2) /
+                 lbl_803E826C * mathSinf(lbl_803E8264 * (f32)(s16) * (s16 *)((char *)obj + 2) /
                                             lbl_803E8268);
     }
     if (target < lbl_80335128[2]) {

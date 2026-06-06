@@ -17,7 +17,7 @@ extern void textureFree(void *resource);
 extern void *textureLoadAsset(int assetId);
 extern s32 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathCosf(f32 x);
 extern u8 framesThisStep;
 extern int lbl_803DBF40;
 extern void *lbl_803DBF48;
@@ -307,7 +307,7 @@ int DFSH_Door2Speci_SeqFn(int obj)
       phaseBitsRaw = CONCAT44(0x43300000, (u32)extra->phase);
       phaseBits = *(f64 *)&phaseBitsRaw;
       phase = (lbl_803E4E3C * ((f32)phaseBits - (f32)lbl_803E4E48)) / lbl_803E4E40;
-      *texture = (s32)-(lbl_803E4E34 * (lbl_803E4E38 - sin(phase)) - lbl_803E4E30);
+      *texture = (s32)-(lbl_803E4E34 * (lbl_803E4E38 - mathCosf(phase)) - lbl_803E4E30);
     }
     break;
   }

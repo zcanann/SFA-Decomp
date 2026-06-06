@@ -1600,8 +1600,8 @@ extern f64 lbl_803E6210;
 extern void *getTrickyObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int *objFindTexture(int obj, int idx, int p3);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int ***listOut, int p6, int p7);
 extern int *gPartfxInterface;
@@ -1670,7 +1670,7 @@ void fn_801FD6B4(int obj) {
         Sfx_PlayFromObject(obj, 0x111);
         speed = lbl_803E6170;
     }
-    lbl_803DDCD0 = fn_80293E80((lbl_803E6174 * (f32)(s16)(int)*(f32 *)(extra + 0xc)) / lbl_803E6178);
+    lbl_803DDCD0 = mathSinf((lbl_803E6174 * (f32)(s16)(int)*(f32 *)(extra + 0xc)) / lbl_803E6178);
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E617C * *(f32 *)(extra + 8) + lbl_803E6180 * *(f32 *)(extra + 8) * lbl_803DDCD0;
     c = *(f32 *)(extra + 0xc);
     if (c > lbl_803E6184 && c < lbl_803E6188) {
@@ -1952,8 +1952,8 @@ void fn_801FE774(int cam, f32 *vel) {
             if (dist < radius) {
                 force = (radius - dist) / radius;
                 force = force * (lbl_803E61F4 * *(f32 *)(o + 8));
-                sumX += force * fn_80293E80((lbl_803E61F8 * (f32)(int)*(s16 *)o) / lbl_803E61FC);
-                sumZ += force * sin((lbl_803E61F8 * (f32)(int)*(s16 *)o) / lbl_803E61FC);
+                sumX += force * mathSinf((lbl_803E61F8 * (f32)(int)*(s16 *)o) / lbl_803E61FC);
+                sumZ += force * mathCosf((lbl_803E61F8 * (f32)(int)*(s16 *)o) / lbl_803E61FC);
             }
         }
         objs++;

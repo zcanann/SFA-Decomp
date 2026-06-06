@@ -295,18 +295,18 @@ void fn_8022AECC(int obj, int p)
 
     ((GameObject *)obj)->anim.rotZ = (*(f32 *)(p + 0x3dc) *
                                        (*(f32 *)(p + 0x3bc) *
-                                        fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3c0) /
+                                        mathSinf(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3c0) /
                                                     lbl_803E6F00)) +
                                    (f32) * (s16 *)(obj + 4));
     ((GameObject *)obj)->anim.localPosX =
         *(f32 *)(p + 0x3dc) *
             (*(f32 *)(p + 0x3c8) *
-             fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3cc) / lbl_803E6F00)) +
+             mathSinf(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3cc) / lbl_803E6F00)) +
         ((GameObject *)obj)->anim.localPosX;
     ((GameObject *)obj)->anim.localPosY =
         *(f32 *)(p + 0x3dc) *
             (*(f32 *)(p + 0x3d4) *
-             fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3d8) / lbl_803E6F00)) +
+             mathSinf(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3d8) / lbl_803E6F00)) +
         ((GameObject *)obj)->anim.localPosY;
     *(u16 *)(p + 0x3c0) =
         (*(f32 *)(p + 0x3b8) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3c0));

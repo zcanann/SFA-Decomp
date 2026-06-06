@@ -39,7 +39,7 @@ float fastCastS16ToFloat(s16* p);
 float trigReduceQuadrant(u16* p, float x);
 double tan(int* out_n, float x);
 
-float sin(float x) {
+float mathCosf(float x) {
     u16 n;
     float y = trigReduceQuadrant(&n, x);
     float y2 = y * y;

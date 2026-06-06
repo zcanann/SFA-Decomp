@@ -868,8 +868,8 @@ void mtxRotateByVec3s(f32 *mtx, void *transform) {
 #pragma dont_inline reset
 #pragma pop
 
-extern f32 fn_80293E80(f32);
-extern f32 sin(f32);
+extern f32 mathSinf(f32);
+extern f32 mathCosf(f32);
 
 #pragma push
 #pragma scheduling off
@@ -1018,28 +1018,28 @@ void vecRotateYXZ(s16 *a, f32 *v)
     y = v[1];
     z = v[2];
 
-    c = fn_80293E80((lbl_803DE7E8 * (f32)a[0]) / lbl_803DE7EC);
+    c = mathSinf((lbl_803DE7E8 * (f32)a[0]) / lbl_803DE7EC);
     s1 = x * c;
     s2 = z * c;
-    c = sin((lbl_803DE7E8 * (f32)a[0]) / lbl_803DE7EC);
+    c = mathCosf((lbl_803DE7E8 * (f32)a[0]) / lbl_803DE7EC);
     x *= c;
     z *= c;
     x += s2;
     z -= s1;
 
-    c = fn_80293E80((lbl_803DE7E8 * (f32)a[1]) / lbl_803DE7EC);
+    c = mathSinf((lbl_803DE7E8 * (f32)a[1]) / lbl_803DE7EC);
     s1 = y * c;
     s2 = z * c;
-    c = sin((lbl_803DE7E8 * (f32)a[1]) / lbl_803DE7EC);
+    c = mathCosf((lbl_803DE7E8 * (f32)a[1]) / lbl_803DE7EC);
     y *= c;
     z *= c;
     y -= s2;
     z += s1;
 
-    c = fn_80293E80((lbl_803DE7E8 * (f32)a[2]) / lbl_803DE7EC);
+    c = mathSinf((lbl_803DE7E8 * (f32)a[2]) / lbl_803DE7EC);
     s1 = x * c;
     s2 = y * c;
-    c = sin((lbl_803DE7E8 * (f32)a[2]) / lbl_803DE7EC);
+    c = mathCosf((lbl_803DE7E8 * (f32)a[2]) / lbl_803DE7EC);
     x *= c;
     y *= c;
     x -= s2;

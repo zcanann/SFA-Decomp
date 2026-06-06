@@ -1093,7 +1093,7 @@ extern f32 lbl_803E501C;
 extern f32 lbl_803E5020;
 extern f32 lbl_803E5024;
 extern f32 lbl_803E5028;
-extern f32 fn_80293E80(f32 angle);
+extern f32 mathSinf(f32 angle);
 
 void fn_801C70F0(s16 *obj) {
     u8 buf[32];
@@ -1116,13 +1116,13 @@ void fn_801C70F0(s16 *obj) {
         *(s16 *)(sub + 0x10) = (s16)(*(s16 *)(sub + 0x10) + (int)(lbl_803E5008 * timeDelta));
         ((GameObject *)obj)->anim.localPosY =
             lbl_803E500C + (*(f32 *)(def + 0xc)
-                            + fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014));
-        c1 = fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xe)) / lbl_803E5014);
+                            + mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014));
+        c1 = mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xe)) / lbl_803E5014);
         obj[2] = lbl_803E5018
-                 * (fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1);
-        c1 = fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0x10)) / lbl_803E5014);
+                 * (mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1);
+        c1 = mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0x10)) / lbl_803E5014);
         obj[1] = lbl_803E5018
-                 * (fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1);
+                 * (mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1);
         ObjAnim_AdvanceCurrentMove(lbl_803E501C, timeDelta, (int)obj, (ObjAnimEventList *)buf);
         if (player != NULL) {
             diff = (getAngle(((f32 *)obj)[6] - ((f32 *)player)[6],

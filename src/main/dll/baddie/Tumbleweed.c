@@ -469,8 +469,8 @@ extern void  gameTextSetColor(int r, int g, int b, int a);
 extern void  gameTextShow(int id);
 extern void  GXSetScissor(int x, int y, int w, int h);
 extern void  drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
-extern f32   fn_80293E80(f32);
-extern f32   sin(f32);
+extern f32   mathSinf(f32);
+extern f32   mathCosf(f32);
 extern void  hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32 *color);
 extern void  hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32 *color);
 extern void  drawPartialTexture(void *tex, f32 x, f32 y, int alpha, int scale, u32 w, u32 h, u32 u, u32 v);
@@ -805,32 +805,32 @@ int Minimap_update(void)
                     fv = lbl_803E221C;
                     lbl_803DD954 = fv;
                     lbl_803DD950 = fv;
-                    c1 = lbl_803DD958 * fn_80293E80(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
-                    s1 = lbl_803DD958 * sin(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
+                    c1 = lbl_803DD958 * mathSinf(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
+                    s1 = lbl_803DD958 * mathCosf(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
                     c2 = lbl_803DD954 *
-                         fn_80293E80(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
+                         mathSinf(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
                     s2 = lbl_803DD954 *
-                         sin(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
+                         mathCosf(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
                     c3 = lbl_803DD950 *
-                         fn_80293E80(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
+                         mathSinf(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
                     s3 = lbl_803DD950 *
-                         sin(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
+                         mathCosf(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
                     cwTri1 = col;
                     hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri1);
                     ((u8 *)&col)[3] = (u8)lbl_803DD932;
                     ((u8 *)&col)[0] = 0xff;
                     ((u8 *)&col)[1] = 0xff;
                     ((u8 *)&col)[2] = 0;
-                    c1 = lbl_803E2228 * fn_80293E80(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
-                    s1 = lbl_803E2228 * sin(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
+                    c1 = lbl_803E2228 * mathSinf(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
+                    s1 = lbl_803E2228 * mathCosf(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
                     c2 = lbl_803E222C *
-                         fn_80293E80(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
+                         mathSinf(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
                     s2 = lbl_803E222C *
-                         sin(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
+                         mathCosf(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
                     c3 = lbl_803E222C *
-                         fn_80293E80(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
+                         mathSinf(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
                     s3 = lbl_803E222C *
-                         sin(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
+                         mathCosf(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
                     cwTri2 = col;
                     hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri2);
                 } else {
@@ -5815,12 +5815,12 @@ void fn_8013351C(void)
     if (lbl_803DD94C > lbl_803E2224) {
         lbl_803DD94C = lbl_803DD94C - lbl_803E2264;
     }
-    c0 = lbl_803E2268 * fn_80293E80((lbl_803E2220 * lbl_803DD94C) / lbl_803E2224);
-    s0 = lbl_803E2268 * sin((lbl_803E2220 * lbl_803DD94C) / lbl_803E2224);
-    c1 = lbl_803E226C * fn_80293E80((lbl_803E2220 * (lbl_803DD94C + lbl_803E2270)) / lbl_803E2224);
-    s1 = lbl_803E226C * sin((lbl_803E2220 * (lbl_803DD94C + lbl_803E2270)) / lbl_803E2224);
-    cc2 = lbl_803E226C * fn_80293E80((lbl_803E2220 * (lbl_803DD94C + lbl_803E2274)) / lbl_803E2224);
-    s2 = lbl_803E226C * sin((lbl_803E2220 * (lbl_803DD94C + lbl_803E2274)) / lbl_803E2224);
+    c0 = lbl_803E2268 * mathSinf((lbl_803E2220 * lbl_803DD94C) / lbl_803E2224);
+    s0 = lbl_803E2268 * mathCosf((lbl_803E2220 * lbl_803DD94C) / lbl_803E2224);
+    c1 = lbl_803E226C * mathSinf((lbl_803E2220 * (lbl_803DD94C + lbl_803E2270)) / lbl_803E2224);
+    s1 = lbl_803E226C * mathCosf((lbl_803E2220 * (lbl_803DD94C + lbl_803E2270)) / lbl_803E2224);
+    cc2 = lbl_803E226C * mathSinf((lbl_803E2220 * (lbl_803DD94C + lbl_803E2274)) / lbl_803E2224);
+    s2 = lbl_803E226C * mathCosf((lbl_803E2220 * (lbl_803DD94C + lbl_803E2274)) / lbl_803E2224);
     y = (int)lbl_803DD938 + 0x32;
     c2 = col;
     hudDrawTriangle(lbl_803E2278 - c0, (f32)y - s0,
@@ -6456,7 +6456,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         lbl_803DD9C4 = lbl_803DD9C4 - lbl_803E22F0;
     }
     lbl_803DD9C0 = (int)(lbl_803E232C *
-                             sin(lbl_803E2330 * (lbl_803E2334 * lbl_803DD9C4) / lbl_803E22F0) +
+                             mathCosf(lbl_803E2330 * (lbl_803E2334 * lbl_803DD9C4) / lbl_803E22F0) +
                          lbl_803E2328);
     if (lbl_803DD9C8 > lbl_803E22F8) {
         xb = *(s16 *)((char *)lbl_803A9F98 + 0x58);

@@ -29,8 +29,8 @@ extern undefined4 ObjGroup_AddObject(int obj, int groupId);
 extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810ec();
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 
 extern undefined4 DAT_80326928;
 extern undefined4 DAT_8032692a;
@@ -412,8 +412,8 @@ void fn_801C0BF8(void *templateData,int angle,float *startNode,float *endNode,sh
   vertex = out;
   for (i = 0; i < 6; i++) {
     vertexX = (float)(int)*vertex;
-    *vertex = (short)(int)(vertexX * sin(angleRadians));
-    vertex[2] = (short)(int)(-vertexX * fn_80293E80(angleRadians));
+    *vertex = (short)(int)(vertexX * mathCosf(angleRadians));
+    vertex[2] = (short)(int)(-vertexX * mathSinf(angleRadians));
     vertex += 8;
   }
 

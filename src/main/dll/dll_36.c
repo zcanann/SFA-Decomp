@@ -10,7 +10,7 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
 extern void gameTextShowStr(void *str, int id, int x, int y);
 extern void *gameTextGetStr(int id);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern void nameEntryTextDrawFunc(void);
 extern void titleScreenTextDrawFunc(void);
 extern void titleScreenShowCopyright(u8 arg);
@@ -72,9 +72,9 @@ void EnterSaveNameScreen_render(void)
   lbl_803DD6D8 = (f32)lbl_803DD6D8 + timeDelta;
 
   gameTextSetColor(
-      (int)(fn_80293E80(lbl_803E1D94 * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
-      (int)(fn_80293E80(lbl_803E1D98 * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
-      (int)(fn_80293E80(lbl_803E1D9C * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
+      (int)(mathSinf(lbl_803E1D94 * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
+      (int)(mathSinf(lbl_803E1D98 * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
+      (int)(mathSinf(lbl_803E1D9C * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
       0xff);
 
   i = lbl_803DD6E4;

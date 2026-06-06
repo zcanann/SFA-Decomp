@@ -69,8 +69,8 @@ extern void ObjHits_EnableObject(ScTotemBondObject *obj);
 extern u8 sc_totempuzzle_checkSolvedSequence(ScTotemPuzzleObject *obj, ScTotemPuzzleState *state);
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
-extern f32 fn_80293E80(f32 angle);
-extern f32 sin(f32 angle);
+extern f32 mathSinf(f32 angle);
+extern f32 mathCosf(f32 angle);
 extern int *gObjectTriggerInterface;
 extern int *gGameUIInterface;
 extern int *gScreenTransitionInterface;
@@ -255,10 +255,10 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *stat
     while (i < SC_TOTEMBOND_ORB_COUNT) {
       definition = obj->definition;
       setup = Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE,SC_TOTEMBOND_ORB_OBJECT_ID);
-      *(f32 *)(setup + 0x08) = radius * fn_80293E80(
+      *(f32 *)(setup + 0x08) = radius * mathSinf(
           (angleScale * (f32)(s32)(obj->yaw + angleOffset)) / angleDivisor) + obj->x;
       *(f32 *)(setup + 0x0c) = obj->y;
-      *(f32 *)(setup + 0x10) = radius * sin(
+      *(f32 *)(setup + 0x10) = radius * mathCosf(
           (angleScale * (f32)(s32)(obj->yaw + angleOffset)) / angleDivisor) + obj->z;
       setup[0x04] = definition[0x04];
       setup[0x05] = (definition[0x05] & ~1) | 4;

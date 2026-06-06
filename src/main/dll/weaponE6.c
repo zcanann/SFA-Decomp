@@ -37,8 +37,8 @@ extern void fn_80179678(int slot, int obj);
 extern void fn_8017962C(int slot);
 extern int fn_801793A4(int obj);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern int ViewFrustum_IsSphereVisible(int posPtr, float radius);
 extern void Obj_FreeObject(int obj);
 
@@ -214,9 +214,9 @@ void fn_8013F100(int obj, register int state)
         if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E24FC) {
             iVar2 = *(int *)(state + 0x700);
             *(float *)(iVar2 + 0x10) += lbl_803E2488;
-            dVar = -sin(lbl_803E2454 * (f32)(s32)*(short *)obj / lbl_803E2458);
+            dVar = -mathCosf(lbl_803E2454 * (f32)(s32)*(short *)obj / lbl_803E2458);
             fn_801796BC(*(int *)(state + 0x700), obj,
-                        -fn_80293E80(lbl_803E2454 * (f32)(s32)*(short *)obj / lbl_803E2458),
+                        -mathSinf(lbl_803E2454 * (f32)(s32)*(short *)obj / lbl_803E2458),
                         lbl_803E23E8, dVar);
             ((TrickyState *)state)->unkA = 2;
         }

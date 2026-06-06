@@ -5500,8 +5500,8 @@ void dfplevelcontrol_update(int obj)
 int fn_80202A2C(int obj, int *objs, f32 *weights, int n, f32 limit)
 {
     extern int ObjGroup_FindNearestObjectForObject(int, int, f32 *);
-    extern f32 fn_80293E80(f32);
-    extern f32 sin(f32);
+    extern f32 mathSinf(f32);
+    extern f32 mathCosf(f32);
     extern f32 lbl_803E62A8;
     extern f32 lbl_803E635C;
     extern f32 lbl_803E62C8;
@@ -5555,8 +5555,8 @@ int fn_80202A2C(int obj, int *objs, f32 *weights, int n, f32 limit)
         po++;
         pw++;
     }
-    cosv = fn_80293E80(lbl_803E6360 * (f32)*(s16 *)(obj + 0) / lbl_803E6364);
-    sinv = sin(lbl_803E6360 * (f32)*(s16 *)(obj + 0) / lbl_803E6364);
+    cosv = mathSinf(lbl_803E6360 * (f32)*(s16 *)(obj + 0) / lbl_803E6364);
+    sinv = mathCosf(lbl_803E6360 * (f32)*(s16 *)(obj + 0) / lbl_803E6364);
     state->animSpeedB = state->animSpeedB + (accX * sinv - accZ * cosv);
     state->animSpeedA = state->animSpeedA + (-accZ * sinv - accX * cosv);
     v = state->animSpeedA;
@@ -7152,7 +7152,7 @@ void drakorenergy_update(int obj)
     extern f32 Vec_xzDistance(int, int);
     extern void playerAddHealth(int, int);
     extern void Sfx_PlayFromObject(int, int);
-    extern f32 fn_80293E80(f32);
+    extern f32 mathSinf(f32);
     extern void fn_80221C18(int, int, f32 *, f32);
     extern void PSVECSubtract(f32 *, f32 *, f32 *);
     extern void PSVECNormalize(f32 *, f32 *);
@@ -7213,7 +7213,7 @@ void drakorenergy_update(int obj)
         (**(void (**)(int, int, s16 *, int, int, int))((char *)*gPartfxInterface + 8))(obj, 0x357, trio, 0, -1, 0);
         break;
     case 2:
-        *(f32 *)(obj + 0x28) = lbl_803DC160 * fn_80293E80(lbl_803E628C * (f32)((DrakorEnergyState *)blob)->phase / lbl_803E6290);
+        *(f32 *)(obj + 0x28) = lbl_803DC160 * mathSinf(lbl_803E628C * (f32)((DrakorEnergyState *)blob)->phase / lbl_803E6290);
         objMove(obj, *(f32 *)(obj + 0x24), *(f32 *)(obj + 0x28), *(f32 *)(obj + 0x2c));
         if (Vec_distance(obj + 0x18, player + 0x18) < lbl_803DC164) {
             ((DrakorEnergyState *)blob)->mode = 3;

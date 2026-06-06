@@ -371,7 +371,7 @@ void FUN_801c845c(int param_1, int param_2, int param_3, int param_4, int param_
   return;
 }
 
-extern f32 fn_80293E80(f32 v);
+extern f32 mathSinf(f32 v);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 Vec_xzDistance(float *a, float *b);
 extern f32 lbl_803E50A0;
@@ -424,12 +424,12 @@ void fn_801C8B68(int obj)
         + (int)(lbl_803E50A8 * timeDelta));
 
     *(float *)(self + 0x10) = lbl_803E50AC + (*(float *)(state2 + 0xc) +
-        fn_80293E80((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0xe)) / lbl_803E50B4));
-    angA = fn_80293E80((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0x10)) / lbl_803E50B4);
-    angB = fn_80293E80((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0xe)) / lbl_803E50B4);
+        mathSinf((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0xe)) / lbl_803E50B4));
+    angA = mathSinf((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0x10)) / lbl_803E50B4);
+    angB = mathSinf((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0xe)) / lbl_803E50B4);
     *(short *)(self + 0x4) = (short)(int)(lbl_803E50B8 * (angA + angB));
-    angA = fn_80293E80((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0x12)) / lbl_803E50B4);
-    angB = fn_80293E80((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0xe)) / lbl_803E50B4);
+    angA = mathSinf((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0x12)) / lbl_803E50B4);
+    angB = mathSinf((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0xe)) / lbl_803E50B4);
     *(short *)(self + 0x2) = (short)(int)(lbl_803E50B8 * (angA + angB));
 
     ObjAnim_AdvanceCurrentMove(lbl_803E50BC, timeDelta, self, (ObjAnimEventList *)&local_var);

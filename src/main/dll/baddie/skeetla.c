@@ -307,8 +307,8 @@ extern char lbl_803DBC4C;
 extern char lbl_8031D2E8[];
 extern u32 lbl_803E23D4;
 extern u16 lbl_803E23D8;
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 x, f32 z);
 extern int Sfx_IsPlayingFromObjectChannel(u8 *obj, int channel);
@@ -371,8 +371,8 @@ static void skeetla_updateFacingFromMoveVector(u8 *obj, s16 *turnDeltaOut)
     if ((xx + zz) > lbl_803E23EC) {
         yaw = getAngle(-dx, -dz);
         *turnDeltaOut = trickyTurnTowardYaw(obj, yaw);
-        ((TrickyState *)state)->unk2C = -fn_80293E80((lbl_803E2454 * (f32)(int)*(s16 *)obj) / lbl_803E2458);
-        ((TrickyState *)state)->unk30 = -sin((lbl_803E2454 * (f32)(int)*(s16 *)obj) / lbl_803E2458);
+        ((TrickyState *)state)->unk2C = -mathSinf((lbl_803E2454 * (f32)(int)*(s16 *)obj) / lbl_803E2458);
+        ((TrickyState *)state)->unk30 = -mathCosf((lbl_803E2454 * (f32)(int)*(s16 *)obj) / lbl_803E2458);
     }
 }
 

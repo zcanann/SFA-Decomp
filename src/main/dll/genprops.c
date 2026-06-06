@@ -6390,8 +6390,8 @@ void fireball_init(int *obj)
 extern f32 Vec3_Length(f32 *v);
 extern int hitDetectFn_800658a4(int *obj, f32 x, f32 y, f32 z, f32 *out, int flag);
 extern int *gWaterfxInterface;
-extern f32 fn_80293E80(f32 v);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 v);
+extern f32 mathCosf(f32 x);
 extern void fn_8016F260(int *obj, int *state, int *other);
 extern f32 lbl_803E3334;
 extern f32 lbl_803E3338;
@@ -6511,9 +6511,9 @@ void fireball_update(int *obj)
         *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)state + 0x2c);
         if (other != NULL) {
             *(f32 *)((char *)obj + 0xc) += lbl_803E3334 *
-                fn_80293E80(lbl_803E3338 * (f32)*(u16 *)((char *)state + 0x46) / lbl_803E333C);
+                mathSinf(lbl_803E3338 * (f32)*(u16 *)((char *)state + 0x46) / lbl_803E333C);
             *(f32 *)((char *)obj + 0x14) += lbl_803E3334 *
-                sin(lbl_803E3338 * (f32)*(u16 *)((char *)state + 0x46) / lbl_803E333C);
+                mathCosf(lbl_803E3338 * (f32)*(u16 *)((char *)state + 0x46) / lbl_803E333C);
         }
         if ((*(int *)((char *)obj + 0xf4) -= framesThisStep) < 0) {
             Obj_FreeObject(obj);
@@ -6652,12 +6652,12 @@ void fn_8016F260(int *obj, int *state, int *other)
         angP += framesThisStep * difP;
 
         f = lbl_803E3338 * (f32)angY / lbl_803E333C;
-        *(f32 *)((char *)obj + 0x24) = fn_80293E80(f);
-        *(f32 *)((char *)obj + 0x2c) = sin(f);
+        *(f32 *)((char *)obj + 0x24) = mathSinf(f);
+        *(f32 *)((char *)obj + 0x2c) = mathCosf(f);
         f = lbl_803E3338 * (f32)angP / lbl_803E333C;
-        c = fn_80293E80(f);
-        if (lbl_803E3330 != sin(f)) {
-            c = c / sin(f);
+        c = mathSinf(f);
+        if (lbl_803E3330 != mathCosf(f)) {
+            c = c / mathCosf(f);
         }
         *(f32 *)((char *)obj + 0x28) = c;
 
@@ -7556,8 +7556,8 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
             ang += **(s16 **)(obj + 0x30);
         }
         angle = (lbl_803E3304 * (f32)(int)-ang) / lbl_803E3308;
-        cosv = fn_80293E80(angle);
-        sinv = sin(angle);
+        cosv = mathSinf(angle);
+        sinv = mathCosf(angle);
         model2 = *(u8 **)((char *)Obj_GetActiveModel((int)obj) + 0x2c);
         if (*(int **)(obj + 0x5c) != NULL && **(int **)(obj + 0x5c) > 0) {
             f32 sw;

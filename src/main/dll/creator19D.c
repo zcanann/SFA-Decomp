@@ -22,8 +22,8 @@ extern int padGetStickX(int controller);
 extern u32 randomGetRange(int min,int max);
 extern void *Resource_Acquire(int id,int count);
 extern void *textureLoadAsset(int id);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern int objGetAnimState80A(void *obj);
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
@@ -260,8 +260,8 @@ void DFSH_LaserBeam_update(uint param_1)
 
   range = (f32)((double)config->rangeAngle - lbl_803E4F00);
   rangeSq = range * range;
-  yawSin = sin((lbl_803E4ED8 * (f32)obj->yaw) / lbl_803E4EDC);
-  yawCos = fn_80293E80((lbl_803E4ED8 * (f32)obj->yaw) / lbl_803E4EDC);
+  yawSin = mathCosf((lbl_803E4ED8 * (f32)obj->yaw) / lbl_803E4EDC);
+  yawCos = mathSinf((lbl_803E4ED8 * (f32)obj->yaw) / lbl_803E4EDC);
   beamPlane = -(obj->posX * yawSin + obj->posZ * yawCos);
   playerObj = Obj_GetPlayerObject();
 
@@ -464,18 +464,18 @@ void fn_801C4664(void *objArg)
 
   obj->posY = lbl_803E4F14 +
               (*(f32 *)((u8 *)config + 0xC) +
-               fn_80293E80((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
+               mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
                             lbl_803E4F1C));
 
-  trigA = fn_80293E80((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_B(runtime)) /
+  trigA = mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_B(runtime)) /
                       lbl_803E4F1C);
-  trigB = fn_80293E80((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
+  trigB = mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
                       lbl_803E4F1C);
   obj->roll = (s16)(int)(lbl_803E4F20 * (trigB + trigA));
 
-  trigA = fn_80293E80((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_C(runtime)) /
+  trigA = mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_C(runtime)) /
                       lbl_803E4F1C);
-  trigB = fn_80293E80((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
+  trigB = mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
                       lbl_803E4F1C);
   obj->pitch = (s16)(int)(lbl_803E4F20 * (trigB + trigA));
 

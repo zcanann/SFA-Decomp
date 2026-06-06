@@ -9,7 +9,7 @@ extern void mtxRotateByVec3s(void *matrix, void *angles);
 extern void Matrix_TransformPoint(void *matrix, f64 x, f64 y, f64 z, f32 *outX, f32 *outY, f32 *outZ);
 extern f64 interpolate(f64 value, f64 rate, f64 t);
 extern f32 sqrtf(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern f32 fn_802966F4(int obj);
 
 extern u8 framesThisStep;
@@ -112,9 +112,9 @@ void camslide_update(int param_1, int param_2)
     }
     cur = *(s32 *)(gCamcontrolModeSettings + 0x2b);
     if (cur < 0) {
-        slide = gCamcontrolModeSettings[7] * fn_80293E80((lbl_803E168C * (f32)cur) / lbl_803E1690);
+        slide = gCamcontrolModeSettings[7] * mathSinf((lbl_803E168C * (f32)cur) / lbl_803E1690);
     } else if (cur > 0) {
-        slide = gCamcontrolModeSettings[6] * fn_80293E80((lbl_803E168C * (f32)cur) / lbl_803E1690);
+        slide = gCamcontrolModeSettings[6] * mathSinf((lbl_803E168C * (f32)cur) / lbl_803E1690);
     } else {
         slide = lbl_803E16AC;
     }

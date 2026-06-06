@@ -15,7 +15,7 @@
 
 #include "main/dll/baddie/wispBaddie.h"
 
-extern f32   fn_80293E80(f32 x);
+extern f32   mathSinf(f32 x);
 extern void  pauseMenuDrawElement(void* tex, f32 a, f32 b, s16 x, u8 alpha, s32 mode, s32 flag);
 
 extern u8 hudTextures[0x198];
@@ -29,7 +29,7 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextLoadDir(int dirId);
 extern void gameTextFn_80016810(int textId, int arg1, int arg2);
 extern void pauseMenuDoSave(void);
-extern f32  sin(f32 x);
+extern f32  mathCosf(f32 x);
 extern f32  fn_802943F4(f32 x);
 extern void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4);
 extern int *Obj_GetActiveModel(void *obj);
@@ -197,7 +197,7 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
     case 3:
         pauseMenuDoSave();
         alpha = (s32)(hudElementOpacity * lbl_803DD760);
-        lbl_803DD850 = sin(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
+        lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
         lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
         lbl_803DD752 = (s16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
@@ -253,7 +253,7 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
     case 4:
         pauseMenuDoSave();
         alpha = (s32)(hudElementOpacity * lbl_803DD760);
-        lbl_803DD850 = sin(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
+        lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
         lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
         lbl_803DD752 = (s16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
@@ -327,7 +327,7 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
     case 10:
         pauseMenuDoSave();
         alpha = (s32)(hudElementOpacity * lbl_803DD760);
-        lbl_803DD850 = sin(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
+        lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
         lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
         lbl_803DD752 = (s16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
@@ -425,7 +425,7 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         }
         break;
     case 11:
-        lbl_803DD850 = sin(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
+        lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
         lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
         lbl_803DD752 = (s16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
@@ -506,7 +506,7 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
 
     pauseMenuDoSave();
     alpha = (s32)(hudElementOpacity * lbl_803DD760);
-    lbl_803DD850 = sin(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
+    lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
     lbl_803DD748 = lbl_803DD748 + timeDelta;
     lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
     lbl_803DD752 = (s16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
@@ -669,7 +669,7 @@ void fn_80127F24(s32 param_1) {
     s32 i;
 
     phase = lbl_803E1F18 *
-            fn_80293E80(lbl_803E1EC8 * (lbl_803DD748 * lbl_803E201C) /
+            mathSinf(lbl_803E1EC8 * (lbl_803DD748 * lbl_803E201C) /
                         lbl_803E1E94);
 
     for (i = 10; (s8)i >= 0; i -= 2) {

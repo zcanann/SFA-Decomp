@@ -219,9 +219,9 @@ void worldobj_init(int obj, int arg) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 sin(f32 x);
+extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
@@ -304,10 +304,10 @@ void worldobj_update(int obj) {
                 *(int *)(state + 0x270) =
                     (int)((f32)*(s8 *)(state + 0x280) * timeDelta + (f32)*(int *)(state + 0x270));
                 vec[0] = *(f32 *)(state + 0x260) *
-                          sin(lbl_803E6680 * (f32)*(int *)(state + 0x270) / lbl_803E6684);
+                          mathCosf(lbl_803E6680 * (f32)*(int *)(state + 0x270) / lbl_803E6684);
                 vec[1] = lbl_803E665C;
                 vec[2] = *(f32 *)(state + 0x25c) *
-                          fn_80293E80(lbl_803E6680 * (f32)*(int *)(state + 0x270) / lbl_803E6684);
+                          mathSinf(lbl_803E6680 * (f32)*(int *)(state + 0x270) / lbl_803E6684);
                 dx = ((GameObject *)objB)->anim.localPosX - ((GameObject *)objA)->anim.localPosX;
                 dz = ((GameObject *)objB)->anim.localPosZ - ((GameObject *)objA)->anim.localPosZ;
                 rot[0] = getAngle(dx, dz);
@@ -393,7 +393,7 @@ void worldobj_update(int obj) {
         ((GameObject *)obj)->anim.rotY += *(s8 *)(state + 0x27f);
         ((GameObject *)obj)->anim.rotZ += *(s8 *)(state + 0x27e);
         *(u8 *)(state + 0x27c) += 2;
-        sv = sin(lbl_803E6680 * (f32)(s16)(*(u8 *)(state + 0x27c) << 8) / lbl_803E6684);
+        sv = mathCosf(lbl_803E6680 * (f32)(s16)(*(u8 *)(state + 0x27c) << 8) / lbl_803E6684);
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E669C * (lbl_803E6678 + sv) + lbl_803E6698;
         break;
     case 0x5db:

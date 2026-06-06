@@ -45,8 +45,8 @@ extern void ObjHits_RecordObjectHit(int *sub, int hit, int c, int d, int e);
 extern void ObjLink_DetachChild(int obj, int *child);
 extern void spawnExplosion(int obj, f32 f, int a, int b, int c, int d, int e, int g, int h);
 extern int *gObjectTriggerInterface;
-extern f32 fn_80293E80(f32 a);
-extern f32 sin(f32 a);
+extern f32 mathSinf(f32 a);
+extern f32 mathCosf(f32 a);
 extern u32 lbl_8032A350[8];
 extern u8 framesThisStep;
 extern f32 lbl_803E6720;
@@ -416,9 +416,9 @@ void snowclaw_hitDetect(int obj) {
                 }
                 ((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 = 1;
                 *(f32 *)((char *)inner + 0xac) = lbl_803E670C;
-                *(f32 *)((char *)inner + 0x24) = lbl_803E6728 * fn_80293E80((f32)*(s16 *)((char *)obj + 0) * lbl_803E672C / lbl_803E6730);
+                *(f32 *)((char *)inner + 0x24) = lbl_803E6728 * mathSinf((f32)*(s16 *)((char *)obj + 0) * lbl_803E672C / lbl_803E6730);
                 *(f32 *)((char *)inner + 0x28) = lbl_803E6734 * (f32)(int)randomGetRange(0x28, 0x64);
-                *(f32 *)((char *)inner + 0x2c) = lbl_803E6728 * sin((f32)*(s16 *)((char *)obj + 0) * lbl_803E672C / lbl_803E6730);
+                *(f32 *)((char *)inner + 0x2c) = lbl_803E6728 * mathCosf((f32)*(s16 *)((char *)obj + 0) * lbl_803E672C / lbl_803E6730);
                 player = (int *)fn_802972A8(Obj_GetPlayerObject());
                 if (player != 0) {
                     int *sub3 = *(int **)((char *)player + 0xb8);

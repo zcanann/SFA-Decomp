@@ -17,7 +17,7 @@ extern u8 *Obj_GetPlayerObject(void);
 extern void fn_80296518(void *obj,int arg,int enable);
 extern s16 getAngle(f32 deltaX,f32 deltaZ);
 extern f32 Vec_xzDistance(void *a,void *b);
-extern f32 fn_80293E80(f32 angle);
+extern f32 mathSinf(f32 angle);
 extern MapEventInterface **gMapEventInterface;
 extern void modelLightStruct_setEnabled(int light,int mode,f32 value);
 
@@ -241,15 +241,15 @@ void fn_801C2914(int obj)
   ((GameObject *)obj)->anim.localPosY =
       lbl_803E4E5C +
       (*(f32 *)(def + 0xc) +
-       fn_80293E80((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64));
+       mathSinf((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64));
 
-  trigA = fn_80293E80((lbl_803E4E60 * (f32)state->orbitB) / lbl_803E4E64);
-  trigB = fn_80293E80((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
+  trigA = mathSinf((lbl_803E4E60 * (f32)state->orbitB) / lbl_803E4E64);
+  trigB = mathSinf((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
   trigB = trigB + trigA;
   ((GameObject *)obj)->anim.rotZ = lbl_803E4E68 * trigB;
 
-  trigA = fn_80293E80((lbl_803E4E60 * (f32)state->orbitC) / lbl_803E4E64);
-  trigB = fn_80293E80((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
+  trigA = mathSinf((lbl_803E4E60 * (f32)state->orbitC) / lbl_803E4E64);
+  trigB = mathSinf((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
   trigB = trigB + trigA;
   ((GameObject *)obj)->anim.rotY = lbl_803E4E68 * trigB;
 

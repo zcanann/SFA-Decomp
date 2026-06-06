@@ -1188,8 +1188,8 @@ typedef struct RomCurveInterpState {
 #define ROM_CURVE_NODE_SCALE(node) (lbl_803DF008 * (f32)(u8)((node)->tangentScale))
 
 extern void **gRomCurveInterface;
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 x, f32 z);
 extern void Curve_SampleSegmentPoints(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ,
@@ -1724,8 +1724,8 @@ void snowCloudInitFlakes(f32 *buf, int cloudId, f32 a, f32 b) {
             lbl_803DD1AC = 0.0f;
             lbl_803DD1B0 = 0.0f;
         }
-        fn_80293E80((lbl_803DF1F0 * (f32)lbl_803DD1A8) / lbl_803DF1F4);
-        sin((lbl_803DF1F0 * (f32)lbl_803DD1A8) / lbl_803DF1F4);
+        mathSinf((lbl_803DF1F0 * (f32)lbl_803DD1A8) / lbl_803DF1F4);
+        mathCosf((lbl_803DF1F0 * (f32)lbl_803DD1A8) / lbl_803DF1F4);
         *dst = lbl_803DD1AC * amp;
         lbl_803DD1A8 = (f32)lbl_803DD1A8 + lbl_803DF1F8;
         lbl_803DD1AC = lbl_803DD1AC + lbl_803DF1A4;
@@ -3265,23 +3265,23 @@ int snowPrintSnowCloud(int arg, int cloudId) {
     mtxB[10] = lbl_803DF1A4;
     mtxB[15] = lbl_803DF1A4;
     if (((NewCloud *)p)->unk13F4 != 4 && p[0x1451] != 0) {
-        mtxB[0] = sin((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
-        mtxB[1] = -fn_80293E80((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
-        mtxB[4] = fn_80293E80((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
-        mtxB[5] = sin((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
+        mtxB[0] = mathCosf((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
+        mtxB[1] = -mathSinf((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
+        mtxB[4] = mathSinf((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
+        mtxB[5] = mathCosf((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
     } else if (((NewCloud *)p)->unk13F4 == 4) {
         if (p[0x144a] & 0x80) {
-            mtxB[0] = sin(lbl_803DF204);
-            mtxB[1] = -fn_80293E80(lbl_803DF204);
-            mtxB[4] = fn_80293E80(lbl_803DF204);
-            mtxB[5] = sin(lbl_803DF204);
+            mtxB[0] = mathCosf(lbl_803DF204);
+            mtxB[1] = -mathSinf(lbl_803DF204);
+            mtxB[4] = mathSinf(lbl_803DF204);
+            mtxB[5] = mathCosf(lbl_803DF204);
         } else if (p[0x1451] != 0) {
             lbl_803DD1A4 =
                 lbl_803DF20C * (((NewCloud *)p)->unk1440 / lbl_803DF210) + lbl_803DF208;
-            mtxB[0] = sin((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
-            mtxB[1] = -fn_80293E80((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
-            mtxB[4] = fn_80293E80((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
-            mtxB[5] = sin((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
+            mtxB[0] = mathCosf((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
+            mtxB[1] = -mathSinf((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
+            mtxB[4] = mathSinf((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
+            mtxB[5] = mathCosf((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
         }
     }
     mtxB[12] = ((NewCloud *)p)->unk140C - playerMapOffsetX;

@@ -5,8 +5,8 @@ extern void mm_free(void *ptr);
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, s32 param);
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
-extern f32 fn_80293E80(f32 x);
-extern float sin(float x);
+extern f32 mathSinf(f32 x);
+extern float mathCosf(float x);
 extern void Rcp_DisableBlurFilter(void);
 extern void memset(void *dst, int val, int size);
 
@@ -132,8 +132,8 @@ void fn_8010DB7C(f32 *param_1, f32 *param_2, f32 *param_3, f32 *param_4) {
     dx += pfVar2[0];
     dz += pfVar2[2];
 
-    cosVal = fn_80293E80(lbl_803E19D0 * (f32)(s32)((angle & 0xFFFF) + *(s32 *)&lbl_803DD584[6]) / lbl_803E19D4);
-    sinVal = sin(lbl_803E19D0 * (f32)(s32)((angle & 0xFFFF) + *(s32 *)&lbl_803DD584[6]) / lbl_803E19D4);
+    cosVal = mathSinf(lbl_803E19D0 * (f32)(s32)((angle & 0xFFFF) + *(s32 *)&lbl_803DD584[6]) / lbl_803E19D4);
+    sinVal = mathCosf(lbl_803E19D0 * (f32)(s32)((angle & 0xFFFF) + *(s32 *)&lbl_803DD584[6]) / lbl_803E19D4);
 
     if (dist < lbl_803DD584[16]) {
         dist = lbl_803DD584[16];

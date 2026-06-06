@@ -86,8 +86,8 @@ extern WCPushBlockObject *Obj_SetupObject(WCPushBlockObjectSetup *setup, int mod
                                           int linkId, void *parent);
 extern void ObjPath_GetPointWorldPosition(s16 *path, int pointIndex, f32 *outX, f32 *outY,
                                           f32 *outZ, int useInputPosition);
-extern f32 sin(f32 x);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 mathSinf(f32 x);
 
 extern WCPushBlockCloudActionInterface **gCloudActionInterface;
 extern u8 framesThisStep;
@@ -187,9 +187,9 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState *state)
     (*gCloudActionInterface)->setRotorAngle(state->rotorAngle);
 
     angle = (lbl_803E5C84 * (f32)state->rotorAngle) / lbl_803E5C88;
-    angleSin = sin(angle);
+    angleSin = mathCosf(angle);
     angle = (lbl_803E5C84 * (f32)state->rotorAngle) / lbl_803E5C88;
-    angleCos = fn_80293E80(angle);
+    angleCos = mathSinf(angle);
 
     if (state->linkedPushBlock != NULL) {
         targetLift = (f32)state->pushRoll / lbl_803E5C8C;

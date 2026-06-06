@@ -20,9 +20,9 @@ extern int getAngle(f32 dx,f32 dz);
 extern void *getSbGalleon(void);
 extern int DBprotection_getCameraState(int *obj);
 extern double FUN_80293900();
-extern f32 fn_80293E80(f32);
+extern f32 mathSinf(f32);
 extern f32 sqrtf(f32 value);
-extern f32 sin(f32);
+extern f32 mathCosf(f32);
 extern void cameraGetPrevPos2(int obj, float *x, float *y, float *z);
 
 extern int *gCameraInterface;
@@ -140,10 +140,10 @@ void CameraModeBike_update(short *param_1)
       sVar4 = sVar4 + -1;
     }
     param_1[1] = param_1[1] + (sVar4 >> 3);
-    dVar6 = fn_80293E80(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0);
-    dVar7 = sin(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0);
-    dVar8 = sin(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
-    dVar9 = fn_80293E80(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
+    dVar6 = mathSinf(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0);
+    dVar7 = mathCosf(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0);
+    dVar8 = mathCosf(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
+    dVar9 = mathSinf(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
     fVar2 = -*(float *)(lbl_803DD540 + 0x24) / lbl_803E17A4;
     fVar3 = (fVar2 < lbl_803E1780) ? lbl_803E1780 : ((fVar2 > lbl_803E1788) ? lbl_803E1788 : fVar2);
     *(float *)(lbl_803DD540 + 0x28) =

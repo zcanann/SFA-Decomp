@@ -1388,7 +1388,7 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
             f32 m;
             *(s16 *)((char *)setup + 0x0) = *(s16 *)((char *)slot + 0x0);
             fov = lbl_803E7F94 * (Camera_GetFovY() * lbl_803E80D4) / lbl_803E7F98;
-            cot = lbl_803E7F5C * (fn_80293E80(fov) / sin(fov));
+            cot = lbl_803E7F5C * (mathSinf(fov) / mathCosf(fov));
             fx = cot * -((inner->unk788 - (f32)(int)((res & 0xffff) >> 1)) /
                          (f32)(int)((res & 0xffff) >> 1) * Camera_GetAspectRatio());
             cot = cot * ((inner->unk78C - (f32)half) / (f32)half);
@@ -1449,10 +1449,10 @@ void playerCalcWaterCurrent(f32 *outX, f32 *outZ, int player)
                         ratio = (thresh - dist) / thresh;
                     }
                     ratio = ratio * (lbl_803E7ED8 * *(f32 *)((char *)o + 0x8));
-                    sumC = ratio * fn_80293E80(lbl_803E7F94 * (f32)(int)*(s16 *)((char *)o + 0) /
+                    sumC = ratio * mathSinf(lbl_803E7F94 * (f32)(int)*(s16 *)((char *)o + 0) /
                                                lbl_803E7F98) +
                            sumC;
-                    sumS = ratio * sin(lbl_803E7F94 * (f32)(int)*(s16 *)((char *)o + 0) /
+                    sumS = ratio * mathCosf(lbl_803E7F94 * (f32)(int)*(s16 *)((char *)o + 0) /
                                        lbl_803E7F98) +
                            sumS;
                 }
@@ -1481,8 +1481,8 @@ void playerCalcWaterCurrent(f32 *outX, f32 *outZ, int player)
                 }
                 ratio = ratio * strength;
                 angle = lbl_803E7F94 * (f32)(int)a22 / lbl_803E7F98;
-                sumC = ratio * fn_80293E80(angle) + sumC;
-                sumS = ratio * sin(angle) + sumS;
+                sumC = ratio * mathSinf(angle) + sumC;
+                sumS = ratio * mathCosf(angle) + sumS;
             }
         }
     }
@@ -1959,10 +1959,10 @@ int fn_802A5384(int obj, int state)
         u32 fl1 = *(u8 *)((char *)inner + 0x3f1);
         if ((fl1 >> 5 & 1) != 0) {
             spd = *(f32 *)((char *)inner + 0x404) *
-                  (t * -fn_80293E80((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) /
+                  (t * -mathSinf((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) /
                                     lbl_803E7F98));
             ya = *(f32 *)((char *)inner + 0x404) *
-                 (t * -sin((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) /
+                 (t * -mathCosf((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) /
                            lbl_803E7F98));
             t = interpolate(spd - *(f32 *)((char *)inner + 0x4c8),
                             *(f32 *)((char *)inner + 0x438), timeDelta);
@@ -1988,10 +1988,10 @@ int fn_802A5384(int obj, int state)
                 }
                 ((PlayerState *)state)->baddie.unk294 = m;
             }
-            t = fn_80293E80((lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478)) /
+            t = mathSinf((lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478)) /
                             lbl_803E7F98);
             {
-                f32 sn = sin((lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478)) /
+                f32 sn = mathCosf((lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478)) /
                              lbl_803E7F98);
                 f32 nx = -*(f32 *)((char *)inner + 0x4cc) * sn -
                          *(f32 *)((char *)inner + 0x4c8) * t;
@@ -2075,11 +2075,11 @@ int fn_802A5384(int obj, int state)
             } else if (((u32)*(u8 *)((char *)inner + 0x3f0) >> 3 & 1) != 0 ||
                        ((u32)*(u8 *)((char *)inner + 0x3f0) >> 2 & 1) != 0) {
                 t = *(f32 *)((char *)inner + 0x408) *
-                    -fn_80293E80((lbl_803E7F94 *
+                    -mathSinf((lbl_803E7F94 *
                                   (lbl_803E7F00 * (f32)*(int *)((char *)inner + 0x48c))) /
                                  lbl_803E7F98);
                 ya = *(f32 *)((char *)inner + 0x408) *
-                     sin((lbl_803E7F94 *
+                     mathCosf((lbl_803E7F94 *
                           (lbl_803E7F00 * (f32)*(int *)((char *)inner + 0x48c))) /
                          lbl_803E7F98);
                 if (((u32)*(u8 *)((char *)inner + 0x3f0) >> 2 & 1) != 0) {
@@ -3654,9 +3654,9 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                           lbl_803E8158;
                 }
                 sp3 = spd *
-                      -sin(lbl_803E7F94 * (f32)*(s16 *)(obj2 + 0x478) / lbl_803E7F98);
+                      -mathCosf(lbl_803E7F94 * (f32)*(s16 *)(obj2 + 0x478) / lbl_803E7F98);
                 (**(void (**)(f32, f32, f32))((char *)(*gObjectTriggerInterface) + 0x80))(
-                    spd * -fn_80293E80(lbl_803E7F94 * (f32)*(s16 *)(obj2 + 0x478) /
+                    spd * -mathSinf(lbl_803E7F94 * (f32)*(s16 *)(obj2 + 0x478) /
                                        lbl_803E7F98),
                     dy2, sp3);
                 (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(
@@ -3966,9 +3966,9 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
            (f32)((u16)getAngle(*(f32 *)(p3 + 0x290), -*(f32 *)(p3 + 0x28c)) -
                  *(s16 *)(p3 + 0x330))) /
           lbl_803E7F98;
-    rot[0] = -fn_80293E80(ang);
+    rot[0] = -mathSinf(ang);
     rot[1] = lbl_803E7EA4;
-    rot[2] = -sin(ang);
+    rot[2] = -mathCosf(ang);
     fn_802A81B8(obj, p2, vec);
     sc1[0] = lbl_803E808C * rot[0];
     sc1[1] = lbl_803E808C * rot[1];
@@ -7443,10 +7443,10 @@ active:
         f32 vx;
         f32 vz;
         f32 c;
-        c = fn_80293E80((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) /
+        c = mathSinf((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) /
                         lbl_803E7F98);
         vx = *(f32 *)((char *)inner + 0x404) * (t * -c);
-        c = sin((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) / lbl_803E7F98);
+        c = mathCosf((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) / lbl_803E7F98);
         vz = *(f32 *)((char *)inner + 0x404) * (t * -c);
         vx = interpolate(vx - *(f32 *)((char *)inner + 0x4c8),
                          *(f32 *)((char *)inner + 0x438), timeDelta);
@@ -7666,10 +7666,10 @@ void playerDoHitDetection(int obj)
                         ((PlayerState *)inner)->unk410 = lbl_803E7F30;
                         Sfx_PlayFromObject(obj, 0x404);
                     }
-                    dt = fn_80293E80((lbl_803E7F94 * (f32)((PlayerState *)inner)->yaw) /
+                    dt = mathSinf((lbl_803E7F94 * (f32)((PlayerState *)inner)->yaw) /
                                      lbl_803E7F98);
                     {
-                        f32 s = sin((lbl_803E7F94 * (f32)((PlayerState *)inner)->yaw) /
+                        f32 s = mathCosf((lbl_803E7F94 * (f32)((PlayerState *)inner)->yaw) /
                                     lbl_803E7F98);
                         ((PlayerState *)inner)->baddie.animSpeedA =
                             -*(f32 *)((char *)obj + 0x2c) * s -
@@ -9158,8 +9158,8 @@ int fn_80299BB0(int obj, int p2)
         dir[2] = *(f32 *)((char *)near + 0x14) - *(f32 *)((char *)obj + 0x14);
         dir[1] = fz;
         Vec3_Normalize(dir);
-        cosv = fn_80293E80(lbl_803E7F94 * (f32)inner->targetYaw / lbl_803E7F98);
-        sinv = sin(lbl_803E7F94 * (f32)inner->targetYaw / lbl_803E7F98);
+        cosv = mathSinf(lbl_803E7F94 * (f32)inner->targetYaw / lbl_803E7F98);
+        sinv = mathCosf(lbl_803E7F94 * (f32)inner->targetYaw / lbl_803E7F98);
         switch (*(u8 *)(*(int *)((char *)near + 0x50) + 0x75)) {
         case 3:
             if (dir[2] * cosv - dir[0] * sinv > lbl_803E7EA4) {
@@ -10144,9 +10144,9 @@ void fn_802B1BF8(EmitObj *a, int b, int state)
         a->z = a->z + *(f32 *)((char *)b + 0x894);
     } else {
         int cosI =
-            (int)fn_80293E80(lbl_803E7F94 * (f32)*(s16 *)((char *)b + 0x484) / lbl_803E7F98);
+            (int)mathSinf(lbl_803E7F94 * (f32)*(s16 *)((char *)b + 0x484) / lbl_803E7F98);
         int sinI =
-            (int)sin(lbl_803E7F94 * (f32)*(s16 *)((char *)b + 0x484) / lbl_803E7F98);
+            (int)mathCosf(lbl_803E7F94 * (f32)*(s16 *)((char *)b + 0x484) / lbl_803E7F98);
         *(f32 *)((char *)state + 0x284) = a->x * (f32)sinI - a->z * (f32)cosI;
         *(f32 *)((char *)state + 0x280) = -a->z * (f32)sinI - a->x * (f32)cosI;
     }
@@ -12402,15 +12402,15 @@ void fn_802A81B8(int obj, int state, f32 *out)
         if (mag > lbl_803E7EA4) {
             PSVECScale(out, out, lbl_803E7EE0 / mag);
         } else {
-            out[0] = -fn_80293E80(lbl_803E7F94 * (f32)((PlayerState *)state)->targetYaw /
+            out[0] = -mathSinf(lbl_803E7F94 * (f32)((PlayerState *)state)->targetYaw /
                                   lbl_803E7F98);
             out[1] = lbl_803E7EA4;
-            out[2] = -sin(lbl_803E7F94 * (f32)((PlayerState *)state)->targetYaw / lbl_803E7F98);
+            out[2] = -mathCosf(lbl_803E7F94 * (f32)((PlayerState *)state)->targetYaw / lbl_803E7F98);
         }
     } else {
-        out[0] = -fn_80293E80(lbl_803E7F94 * (f32)((PlayerState *)state)->targetYaw / lbl_803E7F98);
+        out[0] = -mathSinf(lbl_803E7F94 * (f32)((PlayerState *)state)->targetYaw / lbl_803E7F98);
         out[1] = lbl_803E7EA4;
-        out[2] = -sin(lbl_803E7F94 * (f32)((PlayerState *)state)->targetYaw / lbl_803E7F98);
+        out[2] = -mathCosf(lbl_803E7F94 * (f32)((PlayerState *)state)->targetYaw / lbl_803E7F98);
     }
 }
 #pragma peephole reset
@@ -12627,11 +12627,11 @@ int fn_8029C9C8(int obj, int state)
     }
     {
         f32 ang = lbl_803E7F94 * (f32)(int)inner->unk474 / lbl_803E7F98;
-        vx = inner->unk404 * (ratio * -fn_80293E80(ang));
+        vx = inner->unk404 * (ratio * -mathSinf(ang));
     }
     {
         f32 ang = lbl_803E7F94 * (f32)(int)inner->unk474 / lbl_803E7F98;
-        vy = inner->unk404 * (ratio * -sin(ang));
+        vy = inner->unk404 * (ratio * -mathCosf(ang));
     }
     {
         f32 a = interpolate(vx - inner->unk4C8, lbl_803E7F44, timeDelta);
@@ -12657,11 +12657,11 @@ int fn_8029C9C8(int obj, int state)
     }
     {
         f32 ang = lbl_803E7F94 * (f32)inner->targetYaw / lbl_803E7F98;
-        c = fn_80293E80(ang);
+        c = mathSinf(ang);
     }
     {
         f32 ang = lbl_803E7F94 * (f32)inner->targetYaw / lbl_803E7F98;
-        s = sin(ang);
+        s = mathCosf(ang);
     }
     {
         f32 c8 = inner->unk4C8;
@@ -14237,9 +14237,9 @@ int fn_8029CF30(int obj, int state, f32 fv)
         if (t <= ang) ang = t;
     }
     vx = inner->unk404 *
-         (ang * -fn_80293E80(lbl_803E7F94 * (f32)inner->unk474 / lbl_803E7F98));
+         (ang * -mathSinf(lbl_803E7F94 * (f32)inner->unk474 / lbl_803E7F98));
     vy = inner->unk404 *
-         (ang * -sin(lbl_803E7F94 * (f32)inner->unk474 / lbl_803E7F98));
+         (ang * -mathCosf(lbl_803E7F94 * (f32)inner->unk474 / lbl_803E7F98));
     dx = interpolate(vx - inner->unk4C8, lbl_803E7F44, timeDelta);
     dy = interpolate(vy - inner->unk4CC, lbl_803E7F44, timeDelta);
     inner->unk4C8 += dx;
@@ -14370,7 +14370,7 @@ void fn_802AA014(int obj)
             hw = res >> 17;
             *(s16 *)((char *)o + 0) = *(s16 *)((char *)slot + 0);
             fov = (lbl_803E7F94 * (Camera_GetFovY() * lbl_803E80D4)) / lbl_803E7F98;
-            cot = lbl_803E7F5C * (fn_80293E80(fov) / sin(fov));
+            cot = lbl_803E7F5C * (mathSinf(fov) / mathCosf(fov));
             aspect = Camera_GetAspectRatio();
             h2 = (u16)res >> 1;
             ycomp = cot * -(((inner->unk788 - (f32)h2) / (f32)h2) * aspect);
@@ -14729,7 +14729,7 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
     }
     if (*(u16 *)((char *)data + 0x24) < 4) {
         int v = (s16)(int)(lbl_803E81B0 *
-                           fn_80293E80(lbl_803E81B4 * (f32)*(u16 *)((char *)data + 0x18) /
+                           mathSinf(lbl_803E81B4 * (f32)*(u16 *)((char *)data + 0x18) /
                                        lbl_803E81B8));
         int w = (u16)(int)(lbl_803E81B0 * t->scales[*(u8 *)((char *)data + 0x2d)]);
         if (*(int *)((char *)obj + 0xf8) == 0) {
@@ -14769,7 +14769,7 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
             fearTestMeterSetRange(0x60,
                         (u8)(int)(lbl_803E81BC * t->scales[*(u8 *)((char *)data + 0x2d)]),
                         (int)(lbl_803E81B0 *
-                              fn_80293E80(lbl_803E81B4 * (f32)*(u16 *)((char *)data + 0x18) /
+                              mathSinf(lbl_803E81B4 * (f32)*(u16 *)((char *)data + 0x18) /
                                           lbl_803E81B8)));
             fn_8011F6D4(1);
             setAButtonIcon(6);
@@ -15342,7 +15342,7 @@ void fn_802ADE80(int obj, int inner, int state)
     int i;
 
     angle = *(f32 *)((char *)inner + 0x83c) +
-            fn_80293E80(lbl_803E7F94 * (f32)(u32)*(u16 *)((char *)inner + 0x89c) / lbl_803E7F98);
+            mathSinf(lbl_803E7F94 * (f32)(u32)*(u16 *)((char *)inner + 0x89c) / lbl_803E7F98);
     *(s16 *)((char *)inner + 0x89c) =
         lbl_803E8114 * timeDelta + (f32)(u32)*(u16 *)((char *)inner + 0x89c);
     {
@@ -15368,8 +15368,8 @@ void fn_802ADE80(int obj, int inner, int state)
     }
     ((void (*)(f32 *, f32 *, f32, int))playerCalcWaterCurrent)(&waterX, &waterZ, lbl_803E7EE0, obj);
     {
-        f32 cosv = fn_80293E80(lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478) / lbl_803E7F98);
-        f32 sinv = sin(lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478) / lbl_803E7F98);
+        f32 cosv = mathSinf(lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478) / lbl_803E7F98);
+        f32 sinv = mathCosf(lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478) / lbl_803E7F98);
         f32 a = -waterZ * sinv - waterX * cosv;
         *(f32 *)((char *)inner + 0x440) =
             timeDelta * (lbl_803E7EFC * ((waterX * sinv - waterZ * cosv) - *(f32 *)((char *)inner + 0x440))) +
@@ -15927,11 +15927,11 @@ int fn_802994D0(int obj, int state, f32 fv)
         fromVec[1] = lbl_803E7ED8 + *(f32 *)((char *)obj + 0x10);
         fromVec[2] = *(f32 *)((char *)obj + 0x14);
         toVec[0] = fromVec[0] -
-                   lbl_803E7F5C * fn_80293E80(lbl_803E7F94 * (f32)(int)inner->targetYaw /
+                   lbl_803E7F5C * mathSinf(lbl_803E7F94 * (f32)(int)inner->targetYaw /
                                               lbl_803E7F98);
         toVec[1] = fromVec[1];
         toVec[2] = fromVec[2] -
-                   lbl_803E7F5C * sin(lbl_803E7F94 * (f32)(int)inner->targetYaw /
+                   lbl_803E7F5C * mathCosf(lbl_803E7F94 * (f32)(int)inner->targetYaw /
                                       lbl_803E7F98);
         if (objBboxFn_800640cc(lbl_803E7EA4, fromVec, toVec, 3, hitBuf, obj, 1, 1, 0xff, 0) != 0) {
             lbl_803DE490 = *(f32 *)(hitBuf + 0x3c) - lbl_803E7F30;

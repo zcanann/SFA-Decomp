@@ -56,12 +56,12 @@ extern undefined4 FUN_80286884();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 extern f32 fn_802943F4(f32 x);
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern undefined4 FUN_802949e8();
-extern f32 sin(f32 x);
+extern f32 mathCosf(f32 x);
 extern int playerIsDisguised(int obj);
 extern int objGetAnimState80A(void *obj);
 
@@ -3042,12 +3042,12 @@ uint ObjHitRegion_FindContainingId(f32 x,f32 y,f32 z)
       while (entryOffset < (int)(uint)list->entryBytes) {
         if (entry->type == OBJHITREGION_ROM_ENTRY_TYPE) {
           f32 yawCos =
-              fn_80293E80(lbl_803DE980 * (f32)-(s32)((uint)entry->yaw << 8) / lbl_803DE984);
-          f32 yawSin = sin(lbl_803DE980 * (f32)-(s32)((uint)entry->yaw << 8) / lbl_803DE984);
+              mathSinf(lbl_803DE980 * (f32)-(s32)((uint)entry->yaw << 8) / lbl_803DE984);
+          f32 yawSin = mathCosf(lbl_803DE980 * (f32)-(s32)((uint)entry->yaw << 8) / lbl_803DE984);
           f32 pitchCos =
-              fn_80293E80(lbl_803DE980 * (f32)-(s32)((uint)entry->pitch << 8) / lbl_803DE984);
+              mathSinf(lbl_803DE980 * (f32)-(s32)((uint)entry->pitch << 8) / lbl_803DE984);
           f32 pitchSin =
-              sin(lbl_803DE980 * (f32)-(s32)((uint)entry->pitch << 8) / lbl_803DE984);
+              mathCosf(lbl_803DE980 * (f32)-(s32)((uint)entry->pitch << 8) / lbl_803DE984);
           f32 deltaX = x - entry->x;
           f32 deltaY = y - entry->y;
           f32 deltaZ = z - entry->z;

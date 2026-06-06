@@ -39,7 +39,7 @@ extern int Obj_GetPlayerObject(void);
 extern int ObjList_FindObjectById(int id);
 extern void getEnvfxAct(int effectObj, int playerObj, int action, int unused);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 fn_80293E80(f32 x);
+extern f32 mathSinf(f32 x);
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6cc;
@@ -154,7 +154,7 @@ extern u8 framesThisStep;
 extern int *gCameraInterface;
 extern int *gMapEventInterface;
 extern f32 sqrtf(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathCosf(f32 x);
 extern int getAngle(f32 dx, f32 dz);
 extern int ObjList_GetObjects(int *startIndex, int *objectCount);
 extern void Sfx_StopFromObject(int obj, int sfxId);
@@ -368,9 +368,9 @@ void fn_801DFA28(u8 *obj)
     DBPROT_CAMERA_SHAKE(&camShake, 0);
     *(int *)(obj + 0xF4) = 1;
     tx = *(f32 *)(state + 0x50) - lbl_803E56DC;
-    tz = lbl_803E56E0 * sin((lbl_803E56E4 * (f32)((SBGalleonState *)state)->bobPhase) / lbl_803E56E8) +
+    tz = lbl_803E56E0 * mathCosf((lbl_803E56E4 * (f32)((SBGalleonState *)state)->bobPhase) / lbl_803E56E8) +
          *(f32 *)(state + 0x58);
-    ty = lbl_803E56F0 * fn_80293E80((lbl_803E56E4 * (f32)((SBGalleonState *)state)->bobPhase) / lbl_803E56E8) +
+    ty = lbl_803E56F0 * mathSinf((lbl_803E56E4 * (f32)((SBGalleonState *)state)->bobPhase) / lbl_803E56E8) +
          (*(f32 *)(state + 0x54) - lbl_803E56EC);
     ((SBGalleonState *)state)->bobPhase = ((SBGalleonState *)state)->bobPhase + framesThisStep * 0xB6;
     dx = tx - *(f32 *)(obj + 0xC);
@@ -935,7 +935,7 @@ void DBprotection_updateShield(int *obj)
   CLOUD_ACTION_SET(lbl_803E57C8, lbl_803E56CC);
   CLOUD_ACTION_ENABLE(0);
 
-  angleCos = fn_80293E80((lbl_803E56E4 * (f32)state->shieldAngle) / lbl_803E56E8);
+  angleCos = mathSinf((lbl_803E56E4 * (f32)state->shieldAngle) / lbl_803E56E8);
   if (state->shieldSfxLatch == 0) {
     if (angleCos < lbl_803E57CC) {
       if (GameBit_Get(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0) {

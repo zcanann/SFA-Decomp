@@ -134,9 +134,9 @@ void drcloudper_init(int obj, int setup)
     setupData = (DrCloudPerSetup *)setup;
     cloud->yaw = (s16)(setupData->yawByte << 8);
     state = cloud->state;
-    state->normalX = fn_80293E80(lbl_803E6BF0 * (f32)cloud->yaw / lbl_803E6BF4);
+    state->normalX = mathSinf(lbl_803E6BF0 * (f32)cloud->yaw / lbl_803E6BF4);
     state->normalY = lbl_803E6BF8;
-    state->normalZ = sin(lbl_803E6BF0 * (f32)cloud->yaw / lbl_803E6BF4);
+    state->normalZ = mathCosf(lbl_803E6BF0 * (f32)cloud->yaw / lbl_803E6BF4);
     state->planeDistance =
         -(state->normalZ * cloud->posZ) +
         (state->normalX * cloud->posX + state->normalY * cloud->posY);

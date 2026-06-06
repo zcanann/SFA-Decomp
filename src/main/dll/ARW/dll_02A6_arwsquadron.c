@@ -478,9 +478,9 @@ void arwsquadron_followLeader(int p1, int p2)
     src.rot[0] = *(s16 *)(leader + 0);
     src.rot[1] = *(s16 *)(leader + 2);
     src.rot[2] = *(s16 *)(leader + 4);
-    out[0] = lbl_803E7190 * fn_80293E80(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk146 / lbl_803E7198) +
+    out[0] = lbl_803E7190 * mathSinf(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk146 / lbl_803E7198) +
              lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x26);
-    out[1] = lbl_803E7190 * fn_80293E80(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk148 / lbl_803E7198) +
+    out[1] = lbl_803E7190 * mathSinf(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk148 / lbl_803E7198) +
              lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x27);
     out[2] = lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x1e);
     setMatrixFromObjectTransposed(&src, mtx);
@@ -493,7 +493,7 @@ void arwsquadron_followLeader(int p1, int p2)
     if (!((SquadCmdFlags *)(p2 + 0x160))->f08) {
         *(s16 *)(p1 + 4) =
             ((ArwSquadronState *)leaderState)->unk138 *
-                fn_80293E80(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk146 / lbl_803E7198) +
+                mathSinf(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk146 / lbl_803E7198) +
             (f32)*(s16 *)(leader + 4);
     }
     ((SquadCmdFlags *)(p2 + 0x160))->f80 = ((SquadCmdFlags *)(leaderState + 0x160))->f80;

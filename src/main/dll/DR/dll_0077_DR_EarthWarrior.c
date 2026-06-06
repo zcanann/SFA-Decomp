@@ -179,8 +179,8 @@ extern void fn_80026C54(int h);
 extern int objGetFlagsE5_2(int obj);
 extern void Obj_SpawnHitLightAndFade(int obj, void *pos, f32 v);
 extern void doRumble(f32 v);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern void storeZeroToFloatParam(int p);
 extern void s16toFloat(int p, int v);
 extern void fn_802BC788(void);
@@ -1075,8 +1075,8 @@ void DR_EarthWarrior_hitDetect(int obj)
                 spd = sqrtf(((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX + ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ);
                 ((GameObject *)obj)->anim.velocityX = oneOverTimeDelta * (((GameObject *)obj)->anim.worldPosX - ((GameObject *)obj)->anim.previousWorldPosX);
                 ((GameObject *)obj)->anim.velocityZ = oneOverTimeDelta * (((GameObject *)obj)->anim.worldPosZ - ((GameObject *)obj)->anim.previousWorldPosZ);
-                vcos = fn_80293E80((lbl_803E8374 * (f32)(s32)inner->sub.unk484) / lbl_803E8320);
-                vsin = sin((lbl_803E8374 * (f32)(s32)inner->sub.unk484) / lbl_803E8320);
+                vcos = mathSinf((lbl_803E8374 * (f32)(s32)inner->sub.unk484) / lbl_803E8320);
+                vsin = mathCosf((lbl_803E8374 * (f32)(s32)inner->sub.unk484) / lbl_803E8320);
                 inner->baddie.animSpeedA = -((GameObject *)obj)->anim.velocityZ * vsin - ((GameObject *)obj)->anim.velocityX * vcos;
                 inner->baddie.animSpeedA *= lbl_803E8314;
                 {

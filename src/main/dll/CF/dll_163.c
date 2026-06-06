@@ -4,8 +4,8 @@
 extern undefined8 ObjGroup_RemoveObject();
 extern f32 lbl_803E3BBC;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 fn_80293E80(f32 x);
-extern f32 sin(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 extern f64 lbl_803E3BD0;
 extern f32 lbl_803E3BF0;
 extern f32 lbl_803E3BF4;
@@ -86,23 +86,23 @@ lbl_gt2:
     goto lbl_case3;
 
 lbl_case2:
-    *outX = -(lbl_803E3BF0 * fn_80293E80(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) - pfVar1[0]);
-    *outZ = -(lbl_803E3BF0 * sin(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) - pfVar1[1]);
+    *outX = -(lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) - pfVar1[0]);
+    *outZ = -(lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) - pfVar1[1]);
     goto lbl_done;
 
 lbl_case3:
-    *outX = lbl_803E3BF0 * fn_80293E80(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + pfVar1[0];
-    *outZ = lbl_803E3BF0 * sin(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + pfVar1[1];
+    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + pfVar1[0];
+    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + pfVar1[1];
     goto lbl_done;
 
 lbl_case0:
-    *outX = lbl_803E3BFC * fn_80293E80(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0xc);
-    *outZ = lbl_803E3BFC * sin(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0x14);
+    *outX = lbl_803E3BFC * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0xc);
+    *outZ = lbl_803E3BFC * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0x14);
     goto lbl_done;
 
 lbl_default:
-    *outX = lbl_803E3BF0 * fn_80293E80(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0xc);
-    *outZ = lbl_803E3BF0 * sin(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0x14);
+    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0xc);
+    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + *(float *)(obj + 0x14);
 
 lbl_done:;
 }

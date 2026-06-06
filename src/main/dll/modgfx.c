@@ -5239,7 +5239,7 @@ extern f32 lbl_803DD320;
 extern f32 lbl_803DD324;
 extern f32 lbl_803DF718;
 extern f32 lbl_803DF71C;
-extern f32 fn_80293E80(f32);
+extern f32 mathSinf(f32);
 
 /* EN v1.0 0x800AEC50  size: 1992b  tick global effect phases and expire
  * the 20 cached particle resource slots. */
@@ -5259,12 +5259,12 @@ void ParticleEffectController_func05(void)
     if (lbl_803DD318 > 0x7fff) {
         lbl_803DD318 = 0;
     }
-    lbl_803DD324 = fn_80293E80(lbl_803DF718 * (f32)(s16)lbl_803DD318 / lbl_803DF71C);
+    lbl_803DD324 = mathSinf(lbl_803DF718 * (f32)(s16)lbl_803DD318 / lbl_803DF71C);
     lbl_803DD31C = lbl_803DD31C + framesThisStep * 0x32;
     if (lbl_803DD31C > 0x7fff) {
         lbl_803DD31C = 0;
     }
-    lbl_803DD320 = fn_80293E80(lbl_803DF718 * (f32)(s16)lbl_803DD31C / lbl_803DF71C);
+    lbl_803DD320 = mathSinf(lbl_803DF718 * (f32)(s16)lbl_803DD31C / lbl_803DF71C);
     if (((s16 *)lbl_8039C2E0)[0] != 0 && (((s16 *)lbl_8039C2E0)[0] -= framesThisStep) <= 0) {
         if (lbl_803DD2C8 != NULL) Resource_Release(lbl_803DD2C8);
         lbl_803DD2C8 = NULL;
@@ -5482,12 +5482,12 @@ void Effect1_func05(void)
   if (lbl_803DD328 > 0x7fff) {
     lbl_803DD328 = 0;
   }
-  lbl_803DD334 = fn_80293E80(lbl_803DF868 * (f32)(s16)lbl_803DD328 / lbl_803DF86C);
+  lbl_803DD334 = mathSinf(lbl_803DF868 * (f32)(s16)lbl_803DD328 / lbl_803DF86C);
   lbl_803DD32C = lbl_803DD32C + framesThisStep * 0x32;
   if (lbl_803DD32C > 0x7fff) {
     lbl_803DD32C = 0;
   }
-  lbl_803DD330 = fn_80293E80(lbl_803DF868 * (f32)(s16)lbl_803DD32C / lbl_803DF86C);
+  lbl_803DD330 = mathSinf(lbl_803DF868 * (f32)(s16)lbl_803DD32C / lbl_803DF86C);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -5597,12 +5597,12 @@ void Effect2_func05(void)
   if (lbl_803DD338 > 0x7fff) {
     lbl_803DD338 = 0;
   }
-  lbl_803DD344 = fn_80293E80(lbl_803DF9C8 * (f32)(s16)lbl_803DD338 / lbl_803DF9CC);
+  lbl_803DD344 = mathSinf(lbl_803DF9C8 * (f32)(s16)lbl_803DD338 / lbl_803DF9CC);
   lbl_803DD33C = lbl_803DD33C + framesThisStep * 0x32;
   if (lbl_803DD33C > 0x7fff) {
     lbl_803DD33C = 0;
   }
-  lbl_803DD340 = fn_80293E80(lbl_803DF9C8 * (f32)(s16)lbl_803DD33C / lbl_803DF9CC);
+  lbl_803DD340 = mathSinf(lbl_803DF9C8 * (f32)(s16)lbl_803DD33C / lbl_803DF9CC);
 }
 void Effect4_func05(void)
 {
@@ -5622,12 +5622,12 @@ void Effect4_func05(void)
   if (lbl_803DD350 > 0x7fff) {
     lbl_803DD350 = 0;
   }
-  lbl_803DD35C = fn_80293E80(lbl_803DFBD8 * (f32)(s16)lbl_803DD350 / lbl_803DFBDC);
+  lbl_803DD35C = mathSinf(lbl_803DFBD8 * (f32)(s16)lbl_803DD350 / lbl_803DFBDC);
   lbl_803DD354 = lbl_803DD354 + framesThisStep * 0x32;
   if (lbl_803DD354 > 0x7fff) {
     lbl_803DD354 = 0;
   }
-  lbl_803DD358 = fn_80293E80(lbl_803DFBD8 * (f32)(s16)lbl_803DD354 / lbl_803DFBDC);
+  lbl_803DD358 = mathSinf(lbl_803DFBD8 * (f32)(s16)lbl_803DD354 / lbl_803DFBDC);
 }
 void Effect5_func05(void)
 {
@@ -5647,12 +5647,12 @@ void Effect5_func05(void)
   if (lbl_803DD360 > 0x7fff) {
     lbl_803DD360 = 0;
   }
-  lbl_803DD36C = fn_80293E80(lbl_803DFC78 * (f32)(s16)lbl_803DD360 / lbl_803DFC7C);
+  lbl_803DD36C = mathSinf(lbl_803DFC78 * (f32)(s16)lbl_803DD360 / lbl_803DFC7C);
   lbl_803DD364 = lbl_803DD364 + framesThisStep * 0x32;
   if (lbl_803DD364 > 0x7fff) {
     lbl_803DD364 = 0;
   }
-  lbl_803DD368 = fn_80293E80(lbl_803DFC78 * (f32)(s16)lbl_803DD364 / lbl_803DFC7C);
+  lbl_803DD368 = mathSinf(lbl_803DFC78 * (f32)(s16)lbl_803DD364 / lbl_803DFC7C);
 }
 
 typedef struct PartFxSpawn {
@@ -5916,12 +5916,12 @@ void Effect6_func05(void)
   if (lbl_803DD370 > 0x7fff) {
     lbl_803DD370 = 0;
   }
-  lbl_803DD37C = fn_80293E80(lbl_803DFCD0 * (f32)(s16)lbl_803DD370 / lbl_803DFCD4);
+  lbl_803DD37C = mathSinf(lbl_803DFCD0 * (f32)(s16)lbl_803DD370 / lbl_803DFCD4);
   lbl_803DD374 = lbl_803DD374 + framesThisStep * 0x32;
   if (lbl_803DD374 > 0x7fff) {
     lbl_803DD374 = 0;
   }
-  lbl_803DD378 = fn_80293E80(lbl_803DFCD0 * (f32)(s16)lbl_803DD374 / lbl_803DFCD4);
+  lbl_803DD378 = mathSinf(lbl_803DFCD0 * (f32)(s16)lbl_803DD374 / lbl_803DFCD4);
 }
 void Effect7_func05(void)
 {
@@ -5941,12 +5941,12 @@ void Effect7_func05(void)
   if (lbl_803DD380 > 0x7fff) {
     lbl_803DD380 = 0;
   }
-  lbl_803DD38C = fn_80293E80(lbl_803DFD90 * (f32)(s16)lbl_803DD380 / lbl_803DFD94);
+  lbl_803DD38C = mathSinf(lbl_803DFD90 * (f32)(s16)lbl_803DD380 / lbl_803DFD94);
   lbl_803DD384 = lbl_803DD384 + framesThisStep * 0x32;
   if (lbl_803DD384 > 0x7fff) {
     lbl_803DD384 = 0;
   }
-  lbl_803DD388 = fn_80293E80(lbl_803DFD90 * (f32)(s16)lbl_803DD384 / lbl_803DFD94);
+  lbl_803DD388 = mathSinf(lbl_803DFD90 * (f32)(s16)lbl_803DD384 / lbl_803DFD94);
 }
 void Effect8_func05(void)
 {
@@ -5966,12 +5966,12 @@ void Effect8_func05(void)
   if (lbl_803DD390 > 0x7fff) {
     lbl_803DD390 = 0;
   }
-  lbl_803DD39C = fn_80293E80(lbl_803DFE20 * (f32)(s16)lbl_803DD390 / lbl_803DFE24);
+  lbl_803DD39C = mathSinf(lbl_803DFE20 * (f32)(s16)lbl_803DD390 / lbl_803DFE24);
   lbl_803DD394 = lbl_803DD394 + framesThisStep * 0x32;
   if (lbl_803DD394 > 0x7fff) {
     lbl_803DD394 = 0;
   }
-  lbl_803DD398 = fn_80293E80(lbl_803DFE20 * (f32)(s16)lbl_803DD394 / lbl_803DFE24);
+  lbl_803DD398 = mathSinf(lbl_803DFE20 * (f32)(s16)lbl_803DD394 / lbl_803DFE24);
 }
 
 typedef struct FxNode9 { s16 x, y, z; s16 pad6; f32 f8; f32 fc; f32 f10; f32 f14; } FxNode9;
@@ -11818,7 +11818,7 @@ int Effect5_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     return uVar1;
 }
 
-extern f32 sin(f32);
+extern f32 mathCosf(f32);
 extern FxNode9 lbl_8039C350;
 extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
@@ -12236,8 +12236,8 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
             cfg.f38 = (f32)(s32)randomGetRange(-5, 5);
             a = lbl_803DF9E0 * (f32)(s32)randomGetRange(0, 0x258) + lbl_803DFA54;
             cfg.f28 = lbl_803DFA10 * (f32)(s32)randomGetRange(0, 0xc8) + lbl_803DF9D4;
-            cfg.f24 = fn_80293E80(lbl_803DFA58 * (f32)*(s16 *)param_1 / lbl_803DFA5C);
-            cfg.f2c = sin(lbl_803DFA58 * (f32)*(s16 *)param_1 / lbl_803DFA5C);
+            cfg.f24 = mathSinf(lbl_803DFA58 * (f32)*(s16 *)param_1 / lbl_803DFA5C);
+            cfg.f2c = mathCosf(lbl_803DFA58 * (f32)*(s16 *)param_1 / lbl_803DFA5C);
             b = a * (lbl_803DFA60 * (f32)(s32)randomGetRange(0, 0x14)) + lbl_803DF9D8;
             cfg.f24 = cfg.f24 * b;
             cfg.f2c = cfg.f2c * b;
@@ -14335,12 +14335,12 @@ void Effect9_func05(void)
   if (lbl_803DD3A0 > 0x7fff) {
     lbl_803DD3A0 = 0;
   }
-  lbl_803DD3AC = fn_80293E80(lbl_803DFEB0 * (f32)(s16)lbl_803DD3A0 / lbl_803DFEB4);
+  lbl_803DD3AC = mathSinf(lbl_803DFEB0 * (f32)(s16)lbl_803DD3A0 / lbl_803DFEB4);
   lbl_803DD3A4 = lbl_803DD3A4 + framesThisStep * 0x32;
   if (lbl_803DD3A4 > 0x7fff) {
     lbl_803DD3A4 = 0;
   }
-  lbl_803DD3A8 = fn_80293E80(lbl_803DFEB0 * (f32)(s16)lbl_803DD3A4 / lbl_803DFEB4);
+  lbl_803DD3A8 = mathSinf(lbl_803DFEB0 * (f32)(s16)lbl_803DD3A4 / lbl_803DFEB4);
 }
 #pragma peephole reset
 #pragma scheduling reset
