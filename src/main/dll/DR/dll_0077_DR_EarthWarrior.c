@@ -598,10 +598,7 @@ int fn_802BCE14(int obj, int p2)
     {
         f32 ph = (*(f32 *)((char *)p2 + 0x298) - lbl_803E8308) / lbl_803E82FC;
         f32 a = *(f32 *)((char *)q + 0x404) - lbl_803E833C;
-        f32 t = lbl_803E8304;
-        if ((lbl_803E8304 <= ph) && (t = ph, lbl_803E8338 < ph)) {
-            t = lbl_803E8338;
-        }
+        f32 t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         *(f32 *)((char *)q + 0x408) = a * (t * *(f32 *)((char *)q + 0x840));
     }
     if (((ByteFlags *)((char *)q + 0x3f0))->b40) {
@@ -825,10 +822,7 @@ int fn_802BD7AC(int obj, int p2)
     {
         f32 ph = (*(f32 *)((char *)p2 + 0x298) - lbl_803E8308) / lbl_803E82FC;
         f32 a = *(f32 *)((char *)q + 0x404) - lbl_803E833C;
-        f32 t = lbl_803E8304;
-        if ((lbl_803E8304 <= ph) && (t = ph, lbl_803E8338 < ph)) {
-            t = lbl_803E8338;
-        }
+        f32 t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         *(f32 *)((char *)q + 0x408) = a * (t * *(f32 *)((char *)q + 0x840));
     }
     *(f32 *)((char *)p2 + 0x294) += interpolate(*(f32 *)((char *)q + 0x408) - *(f32 *)((char *)p2 + 0x294), *(f32 *)((char *)q + 0x438), timeDelta);

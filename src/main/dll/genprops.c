@@ -2237,10 +2237,7 @@ void FUN_8016dddc(void)
             dVar22 = (double)fVar2;
             pfVar13[3] = fVar2;
             fVar2 = lbl_803E3F8C * (float)(dVar26 - (double)pfVar13[3]) * lbl_803E3FA8;
-            fVar3 = lbl_803E3F4C;
-            if ((lbl_803E3F4C <= fVar2) && (fVar3 = fVar2, lbl_803E3F8C < fVar2)) {
-              fVar3 = lbl_803E3F8C;
-            }
+            fVar3 = (fVar2 < lbl_803E3F4C) ? lbl_803E3F4C : ((fVar2 > lbl_803E3F8C) ? lbl_803E3F8C : fVar2);
             local_a8 = (double)(longlong)(int)(lbl_803E3F8C - fVar3);
             *(short *)(pfVar13 + 4) = (short)(int)(lbl_803E3F8C - fVar3);
             dVar23 = FUN_80006a38(dVar21,local_e8,(float *)0x0);
@@ -2263,10 +2260,7 @@ void FUN_8016dddc(void)
                                 (double)*(float *)(extraout_r4 + 0x94));
             pfVar13[8] = (float)dVar22;
             fVar2 = lbl_803E3F8C * (float)(dVar26 - (double)pfVar13[8]) * lbl_803E3FA8;
-            fVar3 = lbl_803E3F4C;
-            if ((lbl_803E3F4C <= fVar2) && (fVar3 = fVar2, lbl_803E3F8C < fVar2)) {
-              fVar3 = lbl_803E3F8C;
-            }
+            fVar3 = (fVar2 < lbl_803E3F4C) ? lbl_803E3F4C : ((fVar2 > lbl_803E3F8C) ? lbl_803E3F8C : fVar2);
             local_b0 = (double)(longlong)(int)(lbl_803E3F8C - fVar3);
             *(short *)(pfVar13 + 9) = (short)(int)(lbl_803E3F8C - fVar3);
             *(short *)((int)piVar17 + 0x12) = *(short *)((int)piVar17 + 0x12) + 2;

@@ -961,22 +961,13 @@ void FUN_801a8454(int param_1)
     ObjHits_EnableObject(param_1);
     *(float *)(param_1 + 0x28) = -(lbl_803E51F4 * lbl_803DC074 - *(float *)(param_1 + 0x28));
     fVar1 = *(float *)(param_1 + 0x24);
-    fVar2 = lbl_803E51F8;
-    if ((lbl_803E51F8 <= fVar1) && (fVar2 = fVar1, lbl_803E51FC < fVar1)) {
-      fVar2 = lbl_803E51FC;
-    }
+    fVar2 = (fVar1 < lbl_803E51F8) ? lbl_803E51F8 : ((fVar1 > lbl_803E51FC) ? lbl_803E51FC : fVar1);
     *(float *)(param_1 + 0x24) = fVar2;
     fVar1 = *(float *)(param_1 + 0x28);
-    fVar2 = lbl_803E51F8;
-    if ((lbl_803E51F8 <= fVar1) && (fVar2 = fVar1, lbl_803E51FC < fVar1)) {
-      fVar2 = lbl_803E51FC;
-    }
+    fVar2 = (fVar1 < lbl_803E51F8) ? lbl_803E51F8 : ((fVar1 > lbl_803E51FC) ? lbl_803E51FC : fVar1);
     *(float *)(param_1 + 0x28) = fVar2;
     fVar1 = *(float *)(param_1 + 0x24);
-    fVar2 = lbl_803E51F8;
-    if ((lbl_803E51F8 <= fVar1) && (fVar2 = fVar1, lbl_803E51FC < fVar1)) {
-      fVar2 = lbl_803E51FC;
-    }
+    fVar2 = (fVar1 < lbl_803E51F8) ? lbl_803E51F8 : ((fVar1 > lbl_803E51FC) ? lbl_803E51FC : fVar1);
     *(float *)(param_1 + 0x24) = fVar2;
     FUN_80017a88((double)(*(float *)(param_1 + 0x24) * lbl_803DC074),
                  (double)(*(float *)(param_1 + 0x28) * lbl_803DC074),

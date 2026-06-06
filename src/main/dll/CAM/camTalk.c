@@ -144,10 +144,7 @@ void CameraModeBike_update(short *param_1)
     dVar8 = sin(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
     dVar9 = fn_80293E80(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
     fVar2 = -*(float *)(lbl_803DD540 + 0x24) / lbl_803E17A4;
-    fVar3 = lbl_803E1780;
-    if ((lbl_803E1780 <= fVar2) && (fVar3 = fVar2, lbl_803E1788 < fVar2)) {
-      fVar3 = lbl_803E1788;
-    }
+    fVar3 = (fVar2 < lbl_803E1780) ? lbl_803E1780 : ((fVar2 > lbl_803E1788) ? lbl_803E1788 : fVar2);
     *(float *)(lbl_803DD540 + 0x28) =
          lbl_803E17A8 *
          ((lbl_803E17B0 * fVar3 + lbl_803E17AC) - *(float *)(lbl_803DD540 + 0x28)) +

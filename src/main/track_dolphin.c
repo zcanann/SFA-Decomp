@@ -1795,10 +1795,7 @@ int FUN_80061024(int param_1,uint param_2)
                                ,(double)*(float *)(param_1 + 0x20));
   fVar1 = (float)(dVar5 - (double)(f32)(s32)(uVar4)) /
           (f32)(s32)(iVar3 - uVar4);
-  fVar2 = lbl_803DF8D8;
-  if ((lbl_803DF8D8 <= fVar1) && (fVar2 = fVar1, lbl_803DF8E8 < fVar1)) {
-    fVar2 = lbl_803DF8E8;
-  }
+  fVar2 = (fVar1 < lbl_803DF8D8) ? lbl_803DF8D8 : ((fVar1 > lbl_803DF8E8) ? lbl_803DF8E8 : fVar1);
   return (int)((int)((float)((double)CONCAT44(0x43300000,param_2 & 0xff) - DOUBLE_803df908) *
                     (lbl_803DF8E8 - fVar2)) * (*(byte *)(param_1 + 0x37) + 1)) >> 8;
 }

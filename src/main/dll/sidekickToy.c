@@ -1093,22 +1093,13 @@ LAB_8014b804:
     dVar13 = -(double)((float)param_10[0xc0] * lbl_803DC074 - *(float *)(param_9 + 0x14));
   }
   fVar2 = *(float *)(param_9 + 0x12);
-  fVar4 = lbl_803E3260;
-  if ((lbl_803E3260 <= fVar2) && (fVar4 = fVar2, lbl_803E3264 < fVar2)) {
-    fVar4 = lbl_803E3264;
-  }
+  fVar4 = (fVar2 < lbl_803E3260) ? lbl_803E3260 : ((fVar2 > lbl_803E3264) ? lbl_803E3264 : fVar2);
   *(float *)(param_9 + 0x12) = fVar4;
   fVar2 = *(float *)(param_9 + 0x14);
-  fVar4 = lbl_803E3260;
-  if ((lbl_803E3260 <= fVar2) && (fVar4 = fVar2, lbl_803E3264 < fVar2)) {
-    fVar4 = lbl_803E3264;
-  }
+  fVar4 = (fVar2 < lbl_803E3260) ? lbl_803E3260 : ((fVar2 > lbl_803E3264) ? lbl_803E3264 : fVar2);
   *(float *)(param_9 + 0x14) = fVar4;
   fVar2 = *(float *)(param_9 + 0x16);
-  fVar4 = lbl_803E3260;
-  if ((lbl_803E3260 <= fVar2) && (fVar4 = fVar2, lbl_803E3264 < fVar2)) {
-    fVar4 = lbl_803E3264;
-  }
+  fVar4 = (fVar2 < lbl_803E3260) ? lbl_803E3260 : ((fVar2 > lbl_803E3264) ? lbl_803E3264 : fVar2);
   *(float *)(param_9 + 0x16) = fVar4;
   iVar6 = 0;
   uVar5 = param_10[0xb9];

@@ -355,10 +355,7 @@ void FUN_801ae378(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar7 = FUN_80017a98();
       dVar9 = (double)FUN_8001771c((float *)(*piVar8 + 0x18),(float *)(iVar7 + 0x18));
       fVar1 = (float)(dVar9 - (double)lbl_803E53F4) / lbl_803E53F8;
-      fVar2 = lbl_803E53E0;
-      if ((lbl_803E53E0 <= fVar1) && (fVar2 = fVar1, lbl_803E53F0 < fVar1)) {
-        fVar2 = lbl_803E53F0;
-      }
+      fVar2 = (fVar1 < lbl_803E53E0) ? lbl_803E53E0 : ((fVar1 > lbl_803E53F0) ? lbl_803E53F0 : fVar1);
       *(char *)(piVar8 + 8) = (char)(int)(lbl_803E53FC * (lbl_803E53F0 - fVar2));
       iVar7 = *(int *)(param_9 + 100);
       if (iVar7 != 0) {
