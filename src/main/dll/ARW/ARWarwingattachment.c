@@ -799,7 +799,7 @@ void FUN_801f15b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   else if (renderState != -1) {
     return;
   }
-  if (*(short *)(*(int *)(param_1 + 0x50) + 0x48) == 2) {
+  if (((ObjAnimComponent *)param_1)->modelInstance->shadowType == 2) {
     if (*(short *)(param_1 + 0xb4) == -1) {
       *(uint *)(*(int *)(param_1 + 100) + 0x30) =
            *(uint *)(*(int *)(param_1 + 100) + 0x30) & 0xffffefff;
@@ -2150,7 +2150,7 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
         v = visible;
         if (v == 0) return;
     }
-    if (*(s16*)(*(char**)((char*)obj + 0x50) + 0x48) == 2) {
+    if (((ObjAnimComponent *)obj)->modelInstance->shadowType == 2) {
         if (*(s16*)((char*)obj + 0xb4) == -1) {
             *(u32*)(*(char**)((char*)obj + 0x64) + 0x30) &= ~0x1000;
         } else {
