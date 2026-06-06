@@ -65,7 +65,7 @@ args = sys.argv[2:]
 # be mis-mapped to a byte offset.
 bytecast_only = '--bytecast-only' in args
 varnames = [a for a in args if not a.startswith('--')]
-src = open(path).read()
+src = open(path, encoding='latin-1').read()  # byte-preserving (SJIS-safe)
 stats = collections.Counter()
 
 for var in varnames:
@@ -122,5 +122,5 @@ for var in varnames:
     if not bytecast_only:
         src = re.sub(r'\b%s\[(0x[0-9a-fA-F]+|\d+)\]' % re.escape(var), irepl, src)
 
-open(path,'w').write(src)
+open(path,'w',encoding='latin-1',newline='').write(src)
 print(dict(stats))

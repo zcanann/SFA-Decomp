@@ -99,7 +99,7 @@ def main():
             continue
         M[off] = (fname, cls, ty)
 
-    src = open(path).read()
+    src = open(path, encoding='latin-1').read()  # byte-preserving (SJIS-safe)
     stats = collections.Counter()
     for var in varnames:
         def drepl(m, var=var):
@@ -131,7 +131,7 @@ def main():
             r'\*\(\s*([A-Za-z0-9_]+(?:\s*\*+)?)\s*\*\)\s*\(\s*'
             r'(?:\(\s*(?:char|u8|s8|byte|undefined)\s*\*\)\s*)?%s\s*\+\s*'
             r'(0x[0-9a-fA-F]+|\d+)\s*\)' % re.escape(var), drepl, src)
-    open(path, 'w').write(src)
+    open(path, 'w', encoding='latin-1', newline='').write(src)
     print(dict(stats))
 
 
