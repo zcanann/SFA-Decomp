@@ -126,6 +126,28 @@ typedef struct DbshSymbolFlags {
     u8 active : 1;
 } DbshSymbolFlags;
 
+/*
+ * Per-object extra state for the DBSH spin-symbol minigame
+ * (dbsh_symbol_getExtraSize == 0x24).
+ */
+typedef struct DbshSymbolState {
+    void *partnerObj; /* nearest objType-0x20F symbol, spun in mirror */
+    f32 spinSpeed;
+    f32 sfxTimerB; /* object creak sfx 0x4A3 */
+    f32 sfxTimerA; /* player grunt sfx 0x13A */
+    int spinProgress; /* 0..0x7EF4 = fully turned */
+    int prevSpinProgress;
+    int triggerHandle;
+    u8 pad1C[2];
+    s16 phase; /* update: 0 hide, 1 scuff, 2 arm trigger, 3 resolve */
+    DbshSymbolFlags flags;
+    u8 pad21[3];
+} DbshSymbolState;
+
+STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
+STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
+STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
+
 int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
 {
     f32 maxSpeed;
@@ -137,9 +159,9 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
     int idx;
     int i;
     int player;
-    int *state;
+    DbshSymbolState *state;
 
-    state = *(int **)((char *)obj + 0xb8);
+    state = *(DbshSymbolState **)((char *)obj + 0xb8);
     player = Obj_GetPlayerObject();
     Sfx_SetObjectSfxVolume((int)obj, 0x3af, 10, lbl_803E50E0);
     Sfx_KeepAliveLoopedObjectSound((int)obj, 0x3af);
@@ -148,24 +170,24 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
         if (seq[i + 0x81] == 1) {
             gameTimerInit(0x1d, 0x3c);
             timerSetToCountUp();
-            ((DbshSymbolFlags *)((char *)state + 0x20))->active = 0;
+            state->flags.active = 0;
             *(u32 *)(*(int *)((char *)obj + 0x64) + 0x30) |= 4;
         }
     }
-    if (((DbshSymbolFlags *)((char *)state + 0x20))->active == 0) {
+    if (state->flags.active == 0) {
         return 0;
     }
-    if (*(void **)state == NULL) {
+    if (state->partnerObj == NULL) {
         list = (int *)ObjList_GetObjects(&idx, &count);
         while (idx < count) {
-            *state = list[idx];
-            if (*(s16 *)(*state + 0x46) == 0x20f) {
+            *(int *)&state->partnerObj = list[idx];
+            if (*(s16 *)(*(int *)&state->partnerObj + 0x46) == 0x20f) {
                 break;
             }
             idx++;
         }
     }
-    if (*(void **)state == NULL) {
+    if (state->partnerObj == NULL) {
         return 0;
     }
     maxSpeed = lbl_803E50E8;
@@ -174,81 +196,81 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
     for (i = 0; i < framesThisStep; i++) {
         if (isGameTimerDisabled() != 0) {
             Sfx_PlayFromObject((int)obj, 0x1d4);
-            ((DbshSymbolFlags *)((char *)state + 0x20))->finished = 0;
-            ((DbshSymbolFlags *)((char *)state + 0x20))->active = 1;
+            state->flags.finished = 0;
+            state->flags.active = 1;
             (*(void (**)(u8 *, int))(*gObjectTriggerInterface + 0x58))(seq, 0xbd);
         }
         if ((getButtonsJustPressedIfNotBusy(0) & 0x100) != 0) {
-            *(f32 *)((char *)state + 4) = *(f32 *)((char *)state + 4) + lbl_803E50E4;
+            state->spinSpeed = state->spinSpeed + lbl_803E50E4;
         }
-        if (*(f32 *)((char *)state + 4) > maxSpeed) {
-            *(f32 *)((char *)state + 4) = maxSpeed;
+        if (state->spinSpeed > maxSpeed) {
+            state->spinSpeed = maxSpeed;
         }
-        *(int *)((char *)state + 0x10) = (int)((f32)*(int *)((char *)state + 0x10) + *(f32 *)((char *)state + 4));
-        if (*(int *)((char *)state + 0x10) >= 0x7ef4) {
+        state->spinProgress = (int)((f32)state->spinProgress + state->spinSpeed);
+        if (state->spinProgress >= 0x7ef4) {
             gameTimerStop();
             Sfx_PlayFromObject((int)obj, 0x1d4);
             ObjAnim_SetCurrentMove(player, 0, lbl_803E50EC, 0);
-            ((DbshSymbolFlags *)((char *)state + 0x20))->finished = 1;
-            ((DbshSymbolFlags *)((char *)state + 0x20))->active = 1;
-            *(int *)((char *)state + 0x10) = 0x7ef4;
+            state->flags.finished = 1;
+            state->flags.active = 1;
+            state->spinProgress = 0x7ef4;
             (*(void (**)(u8 *, int))(*gObjectTriggerInterface + 0x58))(seq, 0xbd);
             return 0;
         }
-        (*(void (**)(int))(*gObjectTriggerInterface + 0x74))(*(int *)((char *)state + 0x18));
-        if (*(int *)((char *)state + 0x10) < 0) {
-            *(int *)((char *)state + 0x10) = 0;
-            if (*(f32 *)((char *)state + 4) < lbl_803E50EC) {
-                *(f32 *)((char *)state + 4) = lbl_803E50EC;
+        (*(void (**)(int))(*gObjectTriggerInterface + 0x74))(state->triggerHandle);
+        if (state->spinProgress < 0) {
+            state->spinProgress = 0;
+            if (state->spinSpeed < lbl_803E50EC) {
+                state->spinSpeed = lbl_803E50EC;
             }
-            *(int *)((char *)state + 0x14) = *(int *)((char *)state + 0x10);
-            if (*(f32 *)((char *)state + 4) > lbl_803E50F0) {
-                *(f32 *)((char *)state + 4) = *(f32 *)((char *)state + 4) - lbl_803E50F4;
+            state->prevSpinProgress = state->spinProgress;
+            if (state->spinSpeed > lbl_803E50F0) {
+                state->spinSpeed = state->spinSpeed - lbl_803E50F4;
             }
             return 0;
         }
-        if (*(f32 *)((char *)state + 4) > spdThresh) {
-            *(f32 *)((char *)state + 4) = *(f32 *)((char *)state + 4) - lbl_803E50FC;
+        if (state->spinSpeed > spdThresh) {
+            state->spinSpeed = state->spinSpeed - lbl_803E50FC;
         }
         if (ObjAnim_AdvanceCurrentMove(
-                ((f32)*(int *)((char *)state + 0x10) - (f32)*(int *)((char *)state + 0x14)) / animDiv,
+                ((f32)state->spinProgress - (f32)state->prevSpinProgress) / animDiv,
                 timeDelta, player, NULL) != 0) {
             if (*(f32 *)(player + 0x98) < lbl_803E50EC) {
                 *(f32 *)(player + 0x98) = lbl_803E5104 + *(f32 *)(player + 0x98);
             }
         }
-        if (*(void **)state != NULL) {
+        if (state->partnerObj != NULL) {
             if (ObjAnim_AdvanceCurrentMove(
-                    -((f32)*(int *)((char *)state + 0x10) - (f32)*(int *)((char *)state + 0x14)) / lbl_803E5100,
-                    timeDelta, *state, NULL) != 0) {
-                f32 h = *(f32 *)(*state + 0x98);
+                    -((f32)state->spinProgress - (f32)state->prevSpinProgress) / lbl_803E5100,
+                    timeDelta, *(int *)&state->partnerObj, NULL) != 0) {
+                f32 h = *(f32 *)(*(int *)&state->partnerObj + 0x98);
                 if (h < lbl_803E50EC) {
-                    *(f32 *)(*state + 0x98) = lbl_803E5104 + h;
+                    *(f32 *)(*(int *)&state->partnerObj + 0x98) = lbl_803E5104 + h;
                 }
             }
         }
-        *(int *)((char *)state + 0x14) = *(int *)((char *)state + 0x10);
+        state->prevSpinProgress = state->spinProgress;
     }
-    *(f32 *)((char *)state + 0xc) = *(f32 *)((char *)state + 0xc) - timeDelta;
-    if (*(f32 *)((char *)state + 0xc) < lbl_803E50EC) {
-        if (*(f32 *)((char *)state + 4) < lbl_803E50EC) {
-            *(f32 *)((char *)state + 0xc) = (f32)(int)randomGetRange(0x28, 0x64);
+    state->sfxTimerA = state->sfxTimerA - timeDelta;
+    if (state->sfxTimerA < lbl_803E50EC) {
+        if (state->spinSpeed < lbl_803E50EC) {
+            state->sfxTimerA = (f32)(int)randomGetRange(0x28, 0x64);
         } else {
-            *(f32 *)((char *)state + 0xc) = (f32)(int)randomGetRange(0x78, 0xf0);
+            state->sfxTimerA = (f32)(int)randomGetRange(0x78, 0xf0);
         }
         Sfx_PlayFromObject(player, 0x13a);
     }
-    *(f32 *)((char *)state + 8) = *(f32 *)((char *)state + 8) - timeDelta;
-    if (*(f32 *)((char *)state + 8) < lbl_803E50EC) {
-        if (*(f32 *)((char *)state + 4) > lbl_803E50EC) {
-            *(f32 *)((char *)state + 8) = (f32)(int)randomGetRange(0x28, 0x64);
+    state->sfxTimerB = state->sfxTimerB - timeDelta;
+    if (state->sfxTimerB < lbl_803E50EC) {
+        if (state->spinSpeed > lbl_803E50EC) {
+            state->sfxTimerB = (f32)(int)randomGetRange(0x28, 0x64);
         } else {
-            *(f32 *)((char *)state + 8) = (f32)(int)randomGetRange(0x78, 0xf0);
+            state->sfxTimerB = (f32)(int)randomGetRange(0x78, 0xf0);
         }
         Sfx_PlayFromObject((int)obj, 0x4a3);
     }
     {
-        f32 vol = lbl_803E5108 * *(f32 *)((char *)state + 4);
+        f32 vol = lbl_803E5108 * state->spinSpeed;
         if (vol >= lbl_803E50EC) {
         } else {
             vol = -vol;
@@ -318,44 +340,44 @@ void dbsh_symbol_update(uint param_1)
   short sVar1;
   uint uVar2;
   undefined4 uVar3;
-  undefined4 *puVar4;
+  DbshSymbolState *puVar4;
   
-  puVar4 = *(undefined4 **)(param_1 + 0xb8);
+  puVar4 = *(DbshSymbolState **)(param_1 + 0xb8);
   uVar2 = GameBit_Get(0x16a);
   if (uVar2 == 0) {
-    *(undefined2 *)((int)puVar4 + 0x1e) = 0;
-    *puVar4 = 0;
+    puVar4->phase = 0;
+    *(int *)&puVar4->partnerObj = 0;
     GameBit_Set(0x16c,0);
   }
   else {
-    sVar1 = *(short *)((int)puVar4 + 0x1e);
+    sVar1 = puVar4->phase;
     if (sVar1 == 0) {
       *(u32 *)(*(int *)(param_1 + 100) + 0x30) &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
-      *(undefined2 *)((int)puVar4 + 0x1e) = 1;
+      puVar4->phase = 1;
     }
     else if (sVar1 == 2) {
-      *(undefined2 *)((int)puVar4 + 0x1e) = 3;
+      puVar4->phase = 3;
       uVar3 = ((int (*)(int, uint, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0,param_1,0xffffffff);
-      puVar4[6] = uVar3;
+      puVar4->triggerHandle = uVar3;
     }
     else if (sVar1 == 1) {
       if (lbl_803DBF68 != '\0') {
         lbl_803DBF68 = 0;
         Sfx_PlayFromObject(param_1,SFXfoot_stone_scuff);
       }
-      *(undefined2 *)((int)puVar4 + 0x1e) = 2;
+      puVar4->phase = 2;
       lbl_803DBF68 = '\x01';
     }
     else if (sVar1 == 3) {
       *(u32 *)(*(int *)(param_1 + 100) + 0x30) &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
-      if (((DbshSymbolFlags *)((char *)puVar4 + 0x20))->finished != 0) {
+      if (puVar4->flags.finished != 0) {
         GameBit_Set(0x16b,1);
       }
       else {
         GameBit_Set(0x16c,1);
       }
       Sfx_StopObjectChannel(param_1,0x7f);
-      ((DbshSymbolFlags *)((char *)puVar4 + 0x20))->active = 1;
+      puVar4->flags.active = 1;
     }
   }
   return;
@@ -757,16 +779,16 @@ extern f32 lbl_803E5118;
 #pragma peephole off
 void dbsh_symbol_init(int* obj)
 {
-    u8* state = *(u8**)((char*)obj + 0xb8);
+    DbshSymbolState* state = *(DbshSymbolState**)((char*)obj + 0xb8);
     int* otherPtr;
 
-    *(f32*)(state + 0x4) = lbl_803E50EC;
-    *(int*)(state + 0x10) = 0;
-    *(int*)(state + 0x14) = 0;
-    *(s16*)(state + 0x1e) = 0;
-    *(int*)(state + 0x0) = 0;
-    ((DbshSymbolFlags *)(state + 0x20))->finished = 0;
-    ((DbshSymbolFlags *)(state + 0x20))->active = 1;
+    state->spinSpeed = lbl_803E50EC;
+    state->spinProgress = 0;
+    state->prevSpinProgress = 0;
+    state->phase = 0;
+    *(int*)&state->partnerObj = 0;
+    state->flags.finished = 0;
+    state->flags.active = 1;
 
     *(f32*)((char*)obj + 0x10) -= lbl_803E5118;
     *(int**)((char*)obj + 0xbc) = (int*)DBSH_Symbol_SeqFn;
