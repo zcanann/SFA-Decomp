@@ -1577,6 +1577,36 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       precolored f1 call-arg web nearby (cfprisonguard_render 99.79) — that's
       the FP volatile-permutation cap; launders tested inert there.
 
+82. **The "FP volatile reg-number permutation" CAP tier DECOMPOSES — classify
+    by WEB KIND before declaring it capped.** (task #153; 3 more fns to 100%,
+    1 partial.) The triage-table entry ("decl order, temp locals, statement
+    order, compare-direction flips all invariant — skip on sight") is too
+    broad. Sub-classes, by what kind of value-webs hold the permuted regs:
+    - **Symbol-CSE web in the pair (a multi-use named constant)** →
+      recipe #81 launder (`*(f32 *)&lbl_X` on ONE reference) re-ranks it.
+      Works for the local-variable clamp variant too (`v = (f32)(int)b;
+      if ((f32)(int)b < lbl) v = lbl;` — launder the assignment):
+      dll_127_init + kt_torch_init → 100%. For MULTI-symbol permutations
+      (4-const matrix-build), launder combinations move the whole rank
+      ordering — A/B which reference(s); each (symbol, ref-position) pick a
+      different permutation (fn_8004E0FC 99.65→99.82, B20@both-m1e8-refs;
+      enumerate p-variants and keep the best).
+    - **Two NAMED f32 locals swapped (t/dur)** → plain DECL-ORDER swap (#5/
+      #16) DOES flip FP named-local pairs (fn_8015EA48 → 100%). The triage
+      "decl order invariant" claim is wrong for this sub-class — always try
+      the swap first.
+    - **EXPRESSION-TEMP pairs (no name, no symbol): conversion biases (@lfd),
+      fctiwz results, stack-array element reads** → genuinely allocator-
+      internal. Confirmed inert across 25+ variants: decl-order, named
+      locals, block-locals (#66), launders on adjacent webs, statement
+      reorder, term-order swaps (canonicalized), pointer-form stores,
+      embedded assigns (LanternFireFly_func0B 12 forms, exploded_
+      seedDebrisMotion 6, Curve_SampleSegmentPoints Z-block 3, drawTexture
+      fctiwz, cfprisonguard_render reload-f2). Skip on sight ONLY for this
+      sub-class — the residual is 1-8 bytes.
+    - Diagnostic: reduced /tmp probes do NOT reproduce these permutations —
+      the coloring depends on whole-function web pressure; A/B in the real
+      TU.
 **dtk `block_relocations` ranges currently in config/GSAE01/config.yml**
 (recipe #73 instances — flag constants that coincide with code addresses):
 `0x80180100–0x80180218` (fn_8017FFD0 interior), `0x80080108–0x80080120`
