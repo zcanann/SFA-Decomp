@@ -89,23 +89,23 @@ void envFxFn_80088884(void)
     if ((flags & 0x10) == 0) {
         return;
     }
-    flags &= ~0x10;
+    flags = (u8)(flags & ~0x10);
     lbl_803DD140 = flags;
-    if (lbl_803DD130 != 0 && (flags & 0x2) != 0 && GameBit_Get(0x3ac) == 0) {
+    if ((u32)lbl_803DD130 != 0 && (flags & 0x2) != 0 && GameBit_Get(0x3ac) == 0) {
         if ((lbl_803DD140 & 0x20) != 0) {
             getEnvfxActImmediately(0, 0, (u16)((s16 *)lbl_803DD130)[b], 0);
         } else {
             getEnvfxAct(0, 0, (u16)((s16 *)lbl_803DD130)[b], 0);
         }
     }
-    if (lbl_803DD13C != 0 && (lbl_803DD140 & 0x4) != 0) {
+    if ((u32)lbl_803DD13C != 0 && (lbl_803DD140 & 0x4) != 0) {
         if ((lbl_803DD140 & 0x20) != 0) {
             getEnvfxActImmediately(0, 0, (u16)((s16 *)lbl_803DD13C)[b], 0);
         } else {
             getEnvfxAct(0, 0, (u16)((s16 *)lbl_803DD13C)[b], 0);
         }
     }
-    if (lbl_803DD138 != 0 && (lbl_803DD140 & 0x1) != 0 && GameBit_Get(0x3ab) == 0) {
+    if ((u32)lbl_803DD138 != 0 && (lbl_803DD140 & 0x1) != 0 && GameBit_Get(0x3ab) == 0) {
         if ((lbl_803DD140 & 0x20) != 0) {
             getEnvfxActImmediately(0, 0, (u16)((s16 *)lbl_803DD138)[b], 0);
         } else {
@@ -1098,7 +1098,7 @@ void fn_8008DAE8(int obj) {
 
 #pragma peephole off
 #pragma scheduling off
-void playerEnvFxFn_80088ad4(int idx) {
+void playerEnvFxFn_80088ad4(u8 idx) {
     void *player;
     int alt;
     s16 val;

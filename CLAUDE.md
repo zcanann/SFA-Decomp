@@ -1472,6 +1472,63 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
        store, a game-visible data-corruption bug).
     Audit signature counts for the remaining modgfx fns are in task #147.
 
+80. **Saved-reg HOIST-COUNT cap CRACKED — the "one extra saved reg +
+    `mr rX,rY` copy at the prologue" class is a named-pointer-local
+    USE-BINDING SPLIT, fixed by cast-laundering the init + spelling the
+    call's PLAIN-pointer arg as the same laundered constant.** (task #149;
+    foodbag dll_8X family: 12 fns lifted, 10 to 100% — 7C 7D 7E 82 83 84
+    85 87 88 89 8A 8F 90.) The mechanism, nailed by /tmp probe-batch
+    bisection (recipe #74 method):
+    - `u8 *base = lbl_X;` (named local init'd from a symbol address) makes
+      MWCC split uses into TWO webs: body offset-uses (`base+K` derefs/
+      derives) bind to the SYMBOL-CSE web; the trailing call's PLAIN value
+      arg (`f(..., base, ...)`) binds to the VAR web. Both live from the
+      prologue -> can't coalesce -> `mr r8,r7` copy at top + one extra
+      volatile consumed -> the lowest-ranked constant web (e.g. `li 2`)
+      overflows into a SAVED reg (`li r31,2` vs target `li r12,2`),
+      shifting every saved slot (savegpr_24-vs-23 cascade, 40-150 bytes).
+    - DIAGNOSIS: prologue shows `lis r7; addi r7,r7,lo; mr r8,r7` where
+      target has `lis r7; addi r8,r7,lo` (separate-dest, single web), plus
+      one extra `stw r2N` save. Bisection probes: removing the base+K
+      DEREF uses or the plain call arg makes the split vanish; register
+      pressure is NOT the cause.
+    - FIX (all three parts, byte-exact on dll_87 97.17->100): (1) launder
+      the init: `u8 *base = (u8 *)(int)lbl_X;` — ALSO corrects the
+      saved-reg RANK rotation (the addi-derived `base+K` web then outranks
+      the li-consts for r31, matching target; recipe #36's cast-priority
+      effect); (2) spell the call's plain-pointer arg as the IDENTICAL
+      laundered expression `(u8 *)(int)lbl_X` instead of `base` —
+      value-numbers onto the same web -> `mr r6,r8` from the shared reg,
+      no copy web. A BARE `lbl_X` arg also unifies but leaves the saved
+      rank rotated; `base+K` args stay spelled via `base`. (3) check the
+      import-guessed stack-array size (recipe #67(b)) — dll_87/89/8F
+      needed entries[33]->[32] (frame -912 vs -896 was the tell).
+    - NEGATIVES (don't retry): `#pragma optimization_level 3`/`2` are
+      byte-identical to 4 (only <=1 changes codegen — and destroys all
+      CSE); struct-overlay member access does NOT hide the symbol fold;
+      `(int)` cast at the ARG with an uncast init keeps the split;
+      `base + 0` keeps the split; MP4 has no instance of the shape.
+    - SAME-MECHANISM SIBLING: a named `f32 t = *(f32 *)(p + 8);` local
+      loads at the ASSIGN position while target loads lazily at first use
+      (CSE temp) — inline the deref at every use and let MWCC CSE it
+      (dll_85 95.97->100, with per-arm `p += 3` phi (#146b) + s16-alias
+      (#30)). Mirror of the base-web story for FP loads. Pair with #66/#5
+      (p-decl-BEFORE-e flips the e/p coloring — worked on dll_81/85 where
+      decl swaps were inert BEFORE the web fix) and #30 (the alias must be
+      a DECLARED named local — inline `((int*)base)[i]` casts do NOT
+      work — for `add base; lwz disp` table reads, dll_83 95.21->100).
+    - Bonus same-sweep import bugs: dll_7D returns the dispatcher result
+      (void->int, #148 class — tell: target uses r4 not r3 for a post-
+      bctrl scratch); dll_8F e[5].layer = 1 in v1.0 (import had v1.1's 2).
+    - Residuals still capped after this recipe: value-ISEL
+      `addi r0,rX,-1` deriving 0xFFFF from a live 0x10000 where target
+      re-materializes `li r0,-1` at ONE of two identical sites (dll_81
+      99.86; spelling-insensitive: -1/0xffff/65535u/(s16)-1 all inert);
+      `buf.cmds = e` storing via `mr r0,r31; stw r0` in target vs our
+      direct `stw r31` (dll_86 99.53; copy-var and call-parking inert);
+      the `addi r0,rH,lo; mr rX,r0` saved-home materialization
+      (dll_8B — pre-existing triage-table cap, NOT this class).
+
 **dtk `block_relocations` ranges currently in config/GSAE01/config.yml**
 (recipe #73 instances — flag constants that coincide with code addresses):
 `0x80180100–0x80180218` (fn_8017FFD0 interior), `0x80080108–0x80080120`

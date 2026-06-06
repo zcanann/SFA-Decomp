@@ -41,7 +41,7 @@ extern void objSeqInitFn_80080078(void *entries, int count);
 extern int ObjSeq_func20(void *obj, u8 *seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
 extern int ObjSeq_EvaluateCondition(int condition, u8 *seq, int obj);
 extern int isGameTimerDisabled(void);
-extern void playerEnvFxFn_80088ad4(int envFxValue);
+extern void playerEnvFxFn_80088ad4(u8 envFxValue);
 extern void renderSunAndMoon();
 extern void AudioStream_CancelPrepared(void);
 extern void *Obj_AllocObjectSetup(int size, int objectId);
@@ -4649,7 +4649,7 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState *state, f32 *offse
 void ObjSeq_UpdateCurvePosition(u8 *obj, u8 *seq);
 void animatedObjFreeAndSavePlayerPos(u8 *obj, u8 *seqObj, u8 *seq);
 f32 objCurveInterpolate(ObjCurveKey *keys, int count, int frame);
-void playerEnvFxFn_80088ad4(int idx);
+void playerEnvFxFn_80088ad4(u8 idx);
 void dll_06_func09(s32 *x, s32 *y, s32 *z);
 void dll_07_func07(int arg);
 void newclouds_snowKillSnowCloud(int cloudId, int flag);
