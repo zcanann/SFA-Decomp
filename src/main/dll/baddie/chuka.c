@@ -6,7 +6,6 @@ extern undefined4* gExpgfxInterface;
 extern u8 gChukaModeTable[9];
 extern f32 lbl_803E63F8;
 extern f32 lbl_803E63FC;
-extern int chuka_SeqFn(void);
 
 /*
  * --INFO--

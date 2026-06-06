@@ -10,8 +10,6 @@ extern void GameBit_Set(int eventId, int value);
 extern u8 *Obj_GetPlayerObject(void);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 
-extern void dfpfloorbar_SeqFn(void);
-
 u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
     0, 0, 0, 0,
     0, 0, 0, 0,

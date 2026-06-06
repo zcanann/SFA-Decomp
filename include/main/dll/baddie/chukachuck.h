@@ -20,6 +20,7 @@ typedef struct DfpFloorbarState {
 } DfpFloorbarState;
 
 void dfpfloorbar_update(int param_1);
+int dfpfloorbar_SeqFn(void);
 void dfpfloorbar_release(void);
 void dfpfloorbar_init(int obj, int params);
 void dfpfloorbar_initialise(void);

@@ -16,6 +16,7 @@ STATIC_ASSERT(offsetof(ChukaState, linkedObject) == 0x4);
 STATIC_ASSERT(sizeof(ChukaState) == 0xC);
 
 void chuka_init(int obj, int params);
+int chuka_SeqFn(void);
 void dfpfloorbar_free(int *obj);
 void chuka_release(void);
 void chuka_initialise(void);
@@ -23,5 +24,6 @@ int dfpfloorbar_getObjectTypeId(void);
 int dfpfloorbar_getExtraSize(void);
 void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 p6);
 void dfpfloorbar_hitDetect(int *obj);
+int dfpfloorbar_SeqFn(void);
 
 #endif /* MAIN_DLL_BADDIE_CHUKA_H_ */

@@ -18,7 +18,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
-extern undefined4 Lock_DoorLock_SeqFn();
 
 extern undefined4* DAT_803dd6d4;
 
@@ -44,7 +43,7 @@ void doorlock_init(short *obj,int config)
   *obj = (short)((byte)*(byte *)(config + 0x18) << 8);
   obj[1] = (short)((byte)*(byte *)(config + 0x19) << 8);
   obj[2] = (short)((byte)*(byte *)(config + 0x1a) << 8);
-  *(code *)(obj + 0x5e) = Lock_DoorLock_SeqFn;
+  ((GameObject *)obj)->animEventCallback = (void *)Lock_DoorLock_SeqFn;
   objAnim->bankIndex = *(u8 *)(config + 0x21);
   if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
     objAnim->bankIndex = 0;
@@ -595,9 +594,6 @@ void immultiseq_hitDetect(void) {}
 void immultiseq_release(void) {}
 void immultiseq_initialise(void) {}
 
-extern int immultiseq_SeqFn(int* obj, int* anim, u8* buf);
-extern int seqobject_SeqFn(int* obj, int* anim, u8* buf);
-
 #pragma scheduling off
 #pragma peephole off
 void seqobject_init(int *obj, u8 *params) {
@@ -701,7 +697,6 @@ extern const char lbl_80321208[];
 extern int GameBit_Set(int eventId, int value);
 extern int warpToMap(int id, int flags);
 extern int **gObjectTriggerInterface;
-extern int seqobj2_SeqFn(int* obj, int* anim, u8* buf);
 
 #define SEQOBJECT_STATE_OPEN 0x01
 #define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02

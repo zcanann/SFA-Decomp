@@ -9,6 +9,7 @@ extern ObjectDescriptor gSeqObjectObjDescriptor;
 extern ObjectDescriptor gSeqObj2ObjDescriptor;
 extern ObjectDescriptor gIMMultiSeqObjDescriptor;
 
+int Lock_DoorLock_SeqFn(int obj, int unused, int seq);
 void doorlock_init(short *obj,int config);
 void FUN_8017c230(int param_1);
 void FUN_8017c254(int param_1,int p1,int p2,int p3,int p4,s8 visible);
@@ -25,9 +26,11 @@ void seqObject_render(int param_1,int p1,int p2,int p3,int p4,s8 visible);
 void seqObject_update(int param_1);
 void seqObject_init(short *param_1,int param_2);
 undefined4 FUN_8017ca44(int param_1,undefined4 param_2,int param_3);
+int seqobject_SeqFn(int *obj, int *anim, u8 *events);
 void seqObj2_free(int param_1);
 void seqObj2_update(int param_1);
 void seqObj2_init(short *param_1,int param_2);
+int seqobj2_SeqFn(int *obj, int *anim, u8 *events);
 
 int doorlock_getExtraSize(void);
 void doorlock_free(void);
@@ -60,5 +63,6 @@ void immultiseq_update(int *obj);
 void immultiseq_init(int *obj, u8 *params);
 void immultiseq_release(void);
 void immultiseq_initialise(void);
+int immultiseq_SeqFn(int *obj, int *anim, u8 *events);
 
 #endif /* MAIN_DLL_ALPHAANIM_H_ */
