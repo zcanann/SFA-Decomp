@@ -1,7 +1,5 @@
 #include "ghidra_import.h"
-#include "main/audio/mcmd.h"
-
-extern int _GetInputValue(int obj, int buf, u8 a, u8 b);
+#include "main/audio/inp_ctrl.h"
 
 /*
  * --INFO--
@@ -18,16 +16,16 @@ extern int _GetInputValue(int obj, int buf, u8 a, u8 b);
  */
 int inpGetSurPanning(McmdVoiceState *state)
 {
-    int obj;
+    /* recipe #57: int return - the inp_ctrl.h u16 prototype adds clrlwi */
+    extern int _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u8 midiSlot, u8 midiEvent);
     int flags;
 
-    obj = (int)state;
-    flags = *(int *)(obj + 0x214);
+    flags = state->inputDirtyFlags;
     if ((flags & MCMD_INPUT_DIRTY_SUR_PANNING) == 0) {
-        return *(u16 *)(obj + 0x280);
+        return *(u16 *)&state->surPanningInput.cachedValue;
     }
-    *(int *)(obj + 0x214) = flags & ~MCMD_INPUT_DIRTY_SUR_PANNING;
-    return _GetInputValue(obj, obj + 0x260, *(u8 *)(obj + 0x121), *(u8 *)(obj + 0x122));
+    state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_SUR_PANNING;
+    return _GetInputValue(state, &state->surPanningInput, state->midiSlot, state->midiEvent);
 }
 
 /*
@@ -39,14 +37,13 @@ int inpGetSurPanning(McmdVoiceState *state)
  */
 int inpGetPitchBend(McmdVoiceState *state)
 {
-    int obj;
+    extern int _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u8 midiSlot, u8 midiEvent);
     int flags;
 
-    obj = (int)state;
-    flags = *(int *)(obj + 0x214);
+    flags = state->inputDirtyFlags;
     if ((flags & MCMD_INPUT_DIRTY_PITCH_BEND) == 0) {
-        return *(u16 *)(obj + 0x2a4);
+        return *(u16 *)&state->pitchBendInput.cachedValue;
     }
-    *(int *)(obj + 0x214) = flags & ~MCMD_INPUT_DIRTY_PITCH_BEND;
-    return _GetInputValue(obj, obj + 0x284, *(u8 *)(obj + 0x121), *(u8 *)(obj + 0x122));
+    state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_PITCH_BEND;
+    return _GetInputValue(state, &state->pitchBendInput, state->midiSlot, state->midiEvent);
 }
