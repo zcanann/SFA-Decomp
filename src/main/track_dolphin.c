@@ -6440,17 +6440,18 @@ extern void objectShadow_setupSwappedProjectedTexture(int hdr, void *col, void *
 extern void objectShadow_setupProjectedTexture(int hdr, void *col, void *mtx);
 extern void fn_80077AD8(int hdr, void *col, void *mtx, f32 f);
 extern void fn_80077EF8(int hdr, void *col, void *mtx, f32 f);
-extern f32 lbl_803DEC78[2];
-extern f32 lbl_803DEC80[2];
+extern struct { f32 lo; f32 hi; } lbl_803DEC78;
+extern f32 lbl_803DEC80;
 
 void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *p7, void *buf48, f32 f)
 {
     u8 col[4];
-    u8 save_c[12];
     u8 save_18[12];
-    f32 outMtx[16];
+    u8 save_c[12];
     f32 mtx[16];
+    f32 outMtx[16];
     f32 f31, f30;
+    f32 kf;
     s16 s31, s30, s29;
     u32 handle;
     int hdr;
@@ -6468,7 +6469,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     s29 = ((GameObject *)obj)->anim.rotY;
     handle = *(u32 *)((char *)blockData + 0x10);
     if (handle == 0 || handle != 0xFFFFFFFF)
-        ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC78[0];
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC78.lo;
     else
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC68;
     ((GameObject *)obj)->anim.rotX = 0;
@@ -6478,8 +6479,8 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     if (*(u32 *)((char *)blockData + 0x30) & 0x20) {
         memcpy(save_c, (char *)obj + 0xc, 0xc);
         memcpy(save_18, (char *)obj + 0x18, 0xc);
-        memcpy((char *)obj + 0x18, (char *)blockData + 0x20, 0xc);
-        memcpy((char *)obj + 0xc, (char *)blockData + 0x20, 0xc);
+        memcpy((char *)((int)obj + 0x18), (char *)blockData + 0x20, 0xc);
+        memcpy((char *)((int)obj + 0xc), (char *)((int)blockData + 0x20), 0xc);
     }
     Obj_BuildWorldTransformMatrix((int)obj, mtx, 0);
     viewMtx = Camera_GetViewMatrix();
@@ -6490,27 +6491,28 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
         objectShadow_setupSwappedProjectedTexture(*(int *)((char *)blockData + 0xc), &c, mtx);
     } else {
         if (obj == Obj_GetPlayerObject())
-            f30 = lbl_803DEC78[1];
+            f30 = lbl_803DEC78.hi;
         else
             f30 = ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale;
         handle = *(u32 *)((char *)blockData + 0x10);
         if (handle == 0xFFFFFFFF) {
-            textureFn_8006c5c4();
+            u32 h2 = textureFn_8006c5c4();
             hdr = *(int *)((char *)blockData + 0xc);
-            if (*(u32 *)(hdr + 0x60) != handle) {
-                if (*(u8 *)(hdr + 0x65) == 0xff) {
-                    int c = *(int *)col;
-                    fn_80077AD8(hdr, &c, mtx, f30);
-                } else {
-                    int c = *(int *)col;
-                    fn_80077EF8(hdr, &c, mtx, f30);
-                }
-                goto afterDraw;
-            }
+            if (*(u32 *)(hdr + 0x60) != h2)
+                goto drawSpecial;
         }
         {
             int c = *(int *)col;
             objectShadow_setupProjectedTexture(*(int *)((char *)blockData + 0xc), &c, mtx);
+        }
+        goto afterDraw;
+    drawSpecial:
+        if (*(u8 *)(hdr + 0x65) == 0xff) {
+            int c = *(int *)col;
+            fn_80077AD8(*(int *)((char *)blockData + 0xc), &c, mtx, f30);
+        } else {
+            int c = *(int *)col;
+            fn_80077EF8(*(int *)((char *)blockData + 0xc), &c, mtx, f30);
         }
     afterDraw:;
     }
@@ -6520,42 +6522,52 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     ((GameObject *)obj)->anim.rotX = s31;
     ((GameObject *)obj)->anim.rotY = s29;
     ((GameObject *)obj)->anim.rotZ = s30;
-    if (*(int *)((char *)blockData + 0x10) == 0) {
+    if (*(u32 *)((char *)blockData + 0x10) == 0) {
         f32 *cv;
         int off;
         int i;
-        int *vbuf = (int *)mmAlloc(slot * 0x12 + 8, 0x18, 0);
-        *(int *)((char *)blockData + 0x10) = (int)vbuf;
+        int *vbuf;
+        *(int *)((char *)blockData + 0x10) = (int)mmAlloc(slot * 0x12 + 8, 0x18, 0);
+        vbuf = *(int **)((char *)blockData + 0x10);
         if (vbuf == NULL) return;
         vbuf[0] = (int)vbuf + 8;
-        vbuf[1] = slot * 3;
+        *(int *)(*(int *)((char *)blockData + 0x10) + 4) = slot * 3;
+        i = 0;
         cv = (f32 *)cache;
         off = 0;
-        for (i = 0; i < *(int *)(*(int *)((char *)blockData + 0x10) + 4); i++) {
-            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 0) = (s16)(int)(lbl_803DEC80[0] * cv[0]);
-            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 2) = (s16)(int)(lbl_803DEC80[0] * cv[1]);
-            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 4) = (s16)(int)(lbl_803DEC80[0] * cv[2]);
+        kf = lbl_803DEC80;
+        for (; (u32)i < *(u32 *)(*(int *)((char *)blockData + 0x10) + 4); off += 6) {
+            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 0) = kf * cv[0];
+            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 2) = kf * cv[1];
+            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 4) = kf * cv[2];
             cv += 3;
-            off += 6;
+            i++;
         }
     }
     handle = *(u32 *)((char *)blockData + 0x10);
     if (handle != 0xFFFFFFFF) {
         int k;
-        int off = 0;
+        int off;
         GXBegin(0x90, 0, *(int *)(*(int *)((char *)blockData + 0x10) + 4) & 0xffff);
-        for (k = 0; k < *(int *)(*(int *)((char *)blockData + 0x10) + 4); k++) {
+        k = 0;
+        off = k;
+        for (; (u32)k < *(u32 *)(*(int *)((char *)blockData + 0x10) + 4); off += 6) {
             s16 *ep = (s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off);
-            GXWGFifo.s16 = ep[0];
-            GXWGFifo.s16 = ep[1];
-            GXWGFifo.s16 = ep[2];
-            off += 6;
+            s16 e2 = ep[2];
+            s16 e1 = ep[1];
+            s16 e0 = ep[0];
+            GXWGFifo.s16 = e0;
+            GXWGFifo.s16 = e1;
+            GXWGFifo.s16 = e2;
+            k++;
         }
     } else {
         int i;
-        int vi = 0;
-        int off = 0;
+        int vi;
+        int off;
         GXBegin(0x90, 2, (slot * 3) & 0xffff);
+        vi = 0;
+        off = vi;
         for (i = 0; i < slot; i++) {
             f32 *v0 = (f32 *)((char *)cache + off);
             GXWGFifo.f32 = v0[0];
@@ -6578,8 +6590,8 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
         }
     }
     if (*(u32 *)((char *)blockData + 0x30) & 0x20) {
-        memcpy((char *)obj + 0xc, save_c, 0xc);
-        memcpy((char *)obj + 0x18, save_18, 0xc);
+        memcpy((char *)((int)obj + 0xc), save_c, 0xc);
+        memcpy((char *)((int)obj + 0x18), save_18, 0xc);
     }
 }
 
