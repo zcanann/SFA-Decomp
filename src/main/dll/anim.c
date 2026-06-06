@@ -7475,8 +7475,12 @@ void dbegg_update(int obj)
             randomGetRange(0x64, 0x1388);
             randomGetRange(0x64, 0x1388);
             objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
-            if (randomGetRange(0, 10) == 0 && ((h < lbl_803E6200) < 0 ? -(h < lbl_803E6200) : (h < lbl_803E6200))) {
+            if (randomGetRange(0, 10) == 0) {
+                int nb = h < lbl_803E6200;
+                nb = (nb < 0) ? -nb : nb;
+                if (nb != 0) {
                 (**(void (**)(int, int, f32, f32, f32, f32))((char *)*gWaterfxInterface + 0x14))(*(s16 *)obj, 1, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10) - *(f32 *)blob, *(f32 *)(obj + 0x14), (f32)randomGetRange(1, 10));
+                }
             }
             if (GameBit_Get(0x426) != 0) {
                 *(u8 *)(obj + 0xaf) &= ~8;
