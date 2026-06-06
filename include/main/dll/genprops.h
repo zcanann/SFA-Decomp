@@ -2,7 +2,9 @@
 #define MAIN_DLL_GENPROPS_H_
 
 #include "ghidra_import.h"
+#include "main/dll/curves.h"
 #include "main/object_descriptor.h"
+#include "main/objanim.h"
 
 int mikabomb_getExtraSize();
 int mikabomb_getObjectTypeId();
@@ -143,6 +145,13 @@ void FUN_80171354(int param_1,int param_2);
 void FUN_801713ac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
+void curve_setScale(void);
+void curve_free(void);
+int curve_func11(void);
+int curve_getExtraSize(void);
+int curve_getObjectTypeId(void);
+void curve_init(ObjAnimComponent *obj, CurvePlacementParams *params);
+void curve_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
 int dll_F7_getExtraSize(void);
 int dll_F7_getObjectTypeId(void);
 void dll_F7_hitDetect(void);

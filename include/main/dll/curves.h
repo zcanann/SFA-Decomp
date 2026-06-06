@@ -24,7 +24,12 @@
 #define ROMCURVE_PLACEMENT_ROT_Y_OFFSET 0x2d
 #define ROMCURVE_PLACEMENT_ROT_X_OFFSET 0x2e
 #define ROMCURVE_PLACEMENT_EXT_SIZE 0x30
+#define ROMCURVE_PLACEMENT_SPECIAL_ANGLE_OFFSET 0x38
 #define ROMCURVE_TYPE_ACTION 0x15
+#define ROMCURVE_TYPE_SPECIAL_ANGLE_8 0x08
+#define ROMCURVE_TYPE_SPECIAL_ANGLE_1A 0x1a
+#define ROMCURVE_TYPE_SCALE_OVERRIDE_15 0x15
+#define ROMCURVE_TYPE_SCALE_OVERRIDE_16 0x16
 #define ROMCURVE_GETCURVES_MAX_POINTS 0x23
 #define CURVES_COLLISION_STATE_SIZE 0x268
 #define CURVES_COLLISION_STATE_ACTIVE 0x04000000
@@ -55,6 +60,12 @@ typedef struct RomCurvePlacementDef {
   u8 rotX;
   u8 pad2F;
 } RomCurvePlacementDef;
+
+typedef struct CurvePlacementParams {
+  RomCurvePlacementDef placement;
+  u8 pad30[ROMCURVE_PLACEMENT_SPECIAL_ANGLE_OFFSET - ROMCURVE_PLACEMENT_EXT_SIZE];
+  s16 specialAngle;
+} CurvePlacementParams;
 
 typedef struct RomCurvePoint {
   f32 x;
@@ -148,6 +159,7 @@ STATIC_ASSERT(sizeof(RomCurvePlacementDef) == ROMCURVE_PLACEMENT_EXT_SIZE);
 STATIC_ASSERT(offsetof(RomCurvePlacementDef, rotZ) == ROMCURVE_PLACEMENT_ROT_Z_OFFSET);
 STATIC_ASSERT(offsetof(RomCurvePlacementDef, rotY) == ROMCURVE_PLACEMENT_ROT_Y_OFFSET);
 STATIC_ASSERT(offsetof(RomCurvePlacementDef, rotX) == ROMCURVE_PLACEMENT_ROT_X_OFFSET);
+STATIC_ASSERT(offsetof(CurvePlacementParams, specialAngle) == ROMCURVE_PLACEMENT_SPECIAL_ANGLE_OFFSET);
 
 STATIC_ASSERT(sizeof(RomCurvePoint) == ROMCURVE_POINT_SIZE);
 STATIC_ASSERT(offsetof(RomCurvePoint, flags) == 0x10);
