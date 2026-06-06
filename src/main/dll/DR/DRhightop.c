@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
+#include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/DR/DRhightop.h"
 
@@ -170,35 +171,36 @@ void fn_801EAE4C(short *param_9,int param_10)
   float fVar1;
   float fVar2;
   uint uVar3;
+  SnowBikeState *st = (SnowBikeState *)param_10;
   short sVar4;
   uint uVar6;
   int iVar7;
   ushort uRet;
   s8 ch;
 
-  if ((u32)(*(u8 *)(param_10 + 0x428) >> 3 & 1) == 0) {
-    *(undefined4 *)(param_10 + 0x38) = 0xffffffff;
-    *(undefined4 *)(param_10 + 0x3c) = 0xffffffff;
-    *(undefined4 *)(param_10 + 0x40) = 0xffffffff;
-    *(undefined4 *)(param_10 + 0x44) = 0;
+  if ((u32)(st->flags428 >> 3 & 1) == 0) {
+    st->unk038 = 0xffffffff;
+    st->unk03C = 0xffffffff;
+    st->unk040 = 0xffffffff;
+    st->unk044 = 0;
     lbl_803DC0BC = -1;
-    uVar3 = GameBit_Get((int)**(short **)(param_10 + 0x60));
+    uVar3 = GameBit_Get((int)*(short *)st->unk060);
     if (uVar3 != 0) {
-      ((HightopFlags3 *)(param_10 + 0x428))->active = 1;
+      ((HightopFlags3 *)&st->flags428)->active = 1;
     }
-    if ((u32)(*(u8 *)(param_10 + 0x428) >> 3 & 1) != 0) {
-      if ((u32)(*(u8 *)(param_10 + 0x428) >> 1 & 1) != 0) {
+    if ((u32)(st->flags428 >> 3 & 1) != 0) {
+      if ((u32)(st->flags428 >> 1 & 1) != 0) {
         SnowBike_func15(param_9);
       }
       else {
         (*(code *)(*gCheckpointInterface + 0x10))(param_9,param_10 + 0x28,
-                                                  *(u8 *)(param_10 + 0x5c));
+                                                  st->unk05C);
       }
       (*(code *)(*gCheckpointInterface + 0x28))(param_10 + 0x28);
     }
   }
   else {
-    if ((u32)(*(u8 *)(param_10 + 0x428) >> 1 & 1) == 0) {
+    if ((u32)(st->flags428 >> 1 & 1) == 0) {
       uRet = (*(code *)(*gCheckpointInterface + 0x14))(param_9,param_10 + 0x28);
       sVar4 = *param_9 - uRet;
       if (0x8000 < sVar4) {
@@ -217,29 +219,29 @@ void fn_801EAE4C(short *param_9,int param_10)
       else {
         fVar1 = -timeDelta;
       }
-      *(float *)(param_10 + 0x68) = *(float *)(param_10 + 0x68) + fVar1;
-      fVar1 = *(float *)(param_10 + 0x68);
-      *(float *)(param_10 + 0x68) =
+      st->unk068 = st->unk068 + fVar1;
+      fVar1 = st->unk068;
+      st->unk068 =
           (fVar1 < lbl_803E5AE8) ? lbl_803E5AE8
                                  : ((fVar1 > lbl_803E5B68) ? lbl_803E5B68 : fVar1);
-      if (*(float *)(param_10 + 0x68) > lbl_803E5B7C) {
+      if (st->unk068 > lbl_803E5B7C) {
         gameTextShow(0x475);
       }
       (*(code *)(*gCheckpointInterface + 0x2c))(param_10 + 0x28);
-      *(s8 *)(param_10 + 0x422) = (s8)(*(code *)(*gCheckpointInterface + 0x34))(param_10 + 0x28);
-      ch = *(s8 *)(param_10 + 0x422);
+      st->unk422 = (s8)(*(code *)(*gCheckpointInterface + 0x34))(param_10 + 0x28);
+      ch = st->unk422;
       if ((ch == 1) && (lbl_803DC0BC == -1)) {
         lbl_803DC0BC = -1;
       }
       else {
         lbl_803DC0BC = ch;
-        *(int *)(lbl_803AD088 + 0x1c) = *(int *)(param_10 + 0x44);
-        *(f32 *)(lbl_803AD088 + 0xc) = *(f32 *)(param_10 + 0x34);
+        *(int *)(lbl_803AD088 + 0x1c) = st->unk044;
+        *(f32 *)(lbl_803AD088 + 0xc) = st->unk034;
       }
     }
-    uVar3 = GameBit_Get((int)*(short *)(*(int *)(param_10 + 0x60) + 2));
+    uVar3 = GameBit_Get((int)*(short *)(st->unk060 + 2));
     if (uVar3 != 0) {
-      ((HightopFlags3 *)(param_10 + 0x428))->active = 0;
+      ((HightopFlags3 *)&st->flags428)->active = 0;
     }
   }
   return;
@@ -258,51 +260,52 @@ void fn_801EAE4C(short *param_9,int param_10)
  */
 void fn_801EB0D4(uint param_1,int param_2)
 {
+  SnowBikeState *st = (SnowBikeState *)param_2;
   float fVar1;
   float fVar2;
   float fVar3;
   float td;
   float v;
 
-  if ((u32)(*(u8 *)(param_2 + 0x428) >> 5 & 1) != 0) {
-    if (*(float *)(param_2 + 0x4bc) >= lbl_803E5AE8) {
+  if ((u32)(st->flags428 >> 5 & 1) != 0) {
+    if (st->unk4BC >= lbl_803E5AE8) {
       td = timeDelta;
-      *(float *)(param_2 + 0x4bc) -=
-           td * lbl_803DC0D8 + (f32)(s32)(*(float *)(param_2 + 0x4c0) *
-                                          (td * PSVECMag((float *)(param_2 + 0x494))));
+      st->unk4BC -=
+           td * lbl_803DC0D8 + (f32)(s32)(st->unk4C0 *
+                                          (td * PSVECMag(&st->unk494)));
       fVar2 = lbl_803E5AE8;
-      if (fVar2 != *(float *)(param_2 + 0x4c4)) {
+      if (fVar2 != st->unk4C4) {
         fVar3 = lbl_803E5B14;
-        *(float *)(param_2 + 0x4bc) =
-             fVar3 * timeDelta + *(float *)(param_2 + 0x4bc);
-        *(float *)(param_2 + 0x4c4) =
-             *(float *)(param_2 + 0x4c4) - (f32)(s32)(fVar3 * timeDelta);
-        fVar1 = *(float *)(param_2 + 0x4c4);
-        *(float *)(param_2 + 0x4c4) =
+        st->unk4BC =
+             fVar3 * timeDelta + st->unk4BC;
+        st->unk4C4 =
+             st->unk4C4 - (f32)(s32)(fVar3 * timeDelta);
+        fVar1 = st->unk4C4;
+        st->unk4C4 =
             (fVar1 < fVar2) ? fVar2
                             : ((fVar1 > lbl_803E5B80) ? lbl_803E5B80 : fVar1);
-        fVar1 = *(float *)(param_2 + 0x4bc);
-        *(float *)(param_2 + 0x4bc) =
+        fVar1 = st->unk4BC;
+        st->unk4BC =
             (fVar1 < lbl_803E5AE8) ? lbl_803E5AE8
-                                   : ((fVar1 > *(float *)(param_2 + 0x4b8))
-                                          ? *(float *)(param_2 + 0x4b8)
+                                   : ((fVar1 > st->unk4B8)
+                                          ? st->unk4B8
                                           : fVar1);
       }
-      if (*(float *)(param_2 + 0x4bc) < lbl_803E5B84) {
+      if (st->unk4BC < lbl_803E5B84) {
         Sfx_KeepAliveLoopedObjectSound(param_1,0x44e);
       }
-      (*(void (**)(int))((char *)*gGameUIInterface + 0x5c))((s32)*(float *)(param_2 + 0x4bc));
+      (*(void (**)(int))((char *)*gGameUIInterface + 0x5c))((s32)st->unk4BC);
     }
     else {
       Sfx_StopObjectChannel(param_1,0x7f);
-      if (*(float *)(param_2 + 0x464) > lbl_803E5B20) {
+      if (st->unk464 > lbl_803E5B20) {
         if ((u32)randomGetRange(0,10) == 0) {
           Sfx_PlayFromObject(0,SFXsp_lfoot_taunt7);
         }
-        PSVECScale((float *)(param_2 + 0x464),(float *)(param_2 + 0x464),lbl_803E5B88);
-        if ((u32)(*(u8 *)(param_2 + 0x428) >> 7 & 1) != 0) {
-          if (*(float *)(param_2 + 0x464) < lbl_803E5B20) {
-            *(float *)(param_2 + 0x464) = lbl_803E5B20;
+        PSVECScale(&st->unk464,&st->unk464,lbl_803E5B88);
+        if ((u32)(st->flags428 >> 7 & 1) != 0) {
+          if (st->unk464 < lbl_803E5B20) {
+            st->unk464 = lbl_803E5B20;
           }
         }
       }
@@ -311,9 +314,9 @@ void fn_801EB0D4(uint param_1,int param_2)
         (*(void (**)(int, uint, int))((char *)*gObjectTriggerInterface + 0x48))
             (0,param_1,0xffffffff);
         fVar2 = lbl_803E5B8C;
-        *(float *)(param_2 + 0x464) = lbl_803E5B8C;
-        *(float *)(param_2 + 0x468) = fVar2;
-        *(float *)(param_2 + 0x46c) = fVar2;
+        st->unk464 = lbl_803E5B8C;
+        st->unk468 = fVar2;
+        st->unk46C = fVar2;
       }
     }
   }
@@ -332,19 +335,19 @@ typedef struct HightopFlags {
 #pragma scheduling off
 #pragma peephole off
 void fn_801EB334(int *obj) {
-    int *state = ((GameObject *)obj)->extra;
-    if ((u32)((*(u8 *)((char *)state + 0x428) >> 1) & 1) == 0) {
+    SnowBikeState *state = ((GameObject *)obj)->extra;
+    if ((u32)((state->flags428 >> 1) & 1) == 0) {
         s16 sv;
         f32 fz = lbl_803E5AE8;
-        *(f32 *)((char *)state + 0x494) = fz;
-        *(f32 *)((char *)state + 0x498) = fz;
-        *(f32 *)((char *)state + 0x49c) = lbl_803E5B9C;
-        ((HightopFlags *)((char *)state + 0x428))->resetLatch = 0;
-        *(f32 *)((char *)state + 0x424) = fz;
+        state->unk494 = fz;
+        state->unk498 = fz;
+        state->unk49C = lbl_803E5B9C;
+        ((HightopFlags *)&state->flags428)->resetLatch = 0;
+        state->unk424 = fz;
         sv = *(s16 *)obj;
-        *(s16 *)((char *)state + 0x40e) = sv;
-        *(s16 *)((char *)state + 0x40c) = sv;
-        *(f32 *)((char *)state + 0x430) = lbl_803E5B74;
+        state->unk40E = sv;
+        state->unk40C = sv;
+        state->unk430 = lbl_803E5B74;
     }
     ObjHits_EnableObject(obj);
     (*(void (**)(int *, char *))((char *)*gPathControlInterface + 32))(obj, (char *)state + 0x178);
@@ -411,13 +414,13 @@ undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,int para
     }
   }
 
-  if (*(s8 *)(state + 0x421) == 2) {
+  if (((SnowBikeState *)state)->unk421 == 2) {
     xSpeed = (double)(float)(oneOverTimeDelta *
-                             (*(float *)(param_1 + 6) - *(float *)(state + 0x16c)));
+                             (*(float *)(param_1 + 6) - ((SnowBikeState *)state)->unk16C));
     ySpeed = (double)(float)(oneOverTimeDelta *
-                             (*(float *)(param_1 + 8) - *(float *)(state + 0x170)));
+                             (*(float *)(param_1 + 8) - ((SnowBikeState *)state)->unk170));
     zSpeed = (double)(float)(oneOverTimeDelta *
-                             (*(float *)(param_1 + 10) - *(float *)(state + 0x174)));
+                             (*(float *)(param_1 + 10) - ((SnowBikeState *)state)->unk174));
 
     transform.x = lbl_803E5AE8;
     transform.y = lbl_803E5AE8;
@@ -430,17 +433,17 @@ undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,int para
     Matrix_TransformPoint(matrix, xSpeed, ySpeed, zSpeed, (float *)(state + 0x494),
                           (float *)(state + 0x498), (float *)(state + 0x49c));
 
-    *(s8 *)(state + 0x460) = *(s8 *)(state + 0x460) + (framesThisStep << 3);
-    if (*(s8 *)(state + 0x460) > 0x46) {
-      *(s8 *)(state + 0x460) = 0x46;
+    ((SnowBikeState *)state)->unk460 = ((SnowBikeState *)state)->unk460 + (framesThisStep << 3);
+    if (((SnowBikeState *)state)->unk460 > 0x46) {
+      ((SnowBikeState *)state)->unk460 = 0x46;
     }
 
-    fn_801EA240(*(float *)(state + 0x49c), (int)param_1, state,
-                (int)(lbl_803E5BA0 * -*(float *)(state + 0x430)),
+    fn_801EA240(((SnowBikeState *)state)->unk49C, (int)param_1, state,
+                (int)(lbl_803E5BA0 * -((SnowBikeState *)state)->unk430),
                 state + 0x461, 4);
   }
 
-  ((HightopFlags3 *)(state + 0x428))->active = 0;
+  ((HightopFlags3 *)&((SnowBikeState *)state)->flags428)->active = 0;
   return 0;
 }
 
@@ -472,6 +475,7 @@ extern int arrayIndexOf();
 
 void fn_801EB634(int param_1,int param_2)
 {
+  SnowBikeState *st = (SnowBikeState *)param_2;
   int iVar2;
   int iVar3;
   int uVar4;
@@ -484,7 +488,7 @@ void fn_801EB634(int param_1,int param_2)
 
   iVar3 = *(int *)(param_1 + 0x54);
   if (ObjHits_IsObjectEnabled(param_1) != 0) {
-    if ((u32)(*(u8 *)(param_2 + 0x428) >> 1 & 1) == 0) {
+    if ((u32)(st->flags428 >> 1 & 1) == 0) {
       ObjHits_SetHitVolumeSlot(param_1,0x15,1,0);
     }
     else {
@@ -494,34 +498,34 @@ void fn_801EB634(int param_1,int param_2)
     iVar2 = ObjHits_GetPriorityHit(param_1,&local_38,&iStack_30,&uStack_34);
     switch (iVar2) {
     case 0xd:
-      if ((u32)(*(u8 *)(param_2 + 0x428) >> 1 & 1) == 0) {
-        *(int *)(param_2 + 0x42c) = local_38;
-        *(float *)(param_2 + 0x3e0) = lbl_803E5AEC;
+      if ((u32)(st->flags428 >> 1 & 1) == 0) {
+        st->unk42C = local_38;
+        st->unk3E0 = lbl_803E5AEC;
       }
       break;
     case 0x15:
-      if (*(float *)(param_2 + 0x3e4) == lbl_803E5AE8) {
+      if (st->unk3E4 == lbl_803E5AE8) {
         PSVECNormalize((float *)(param_1 + 0x24),afStack_2c);
         dot = PSVECDotProduct(afStack_2c,(float *)(local_38 + 0x24));
-        PSVECScale((f32 *)(param_2 + 0x494),(f32 *)(param_2 + 0x494),
-                   dot * *(f32 *)(param_2 + 0x4ac) + lbl_803E5AEC);
-        *(float *)(param_2 + 0x498) = *(float *)(param_2 + 0x498) * lbl_803E5BA8;
-        *(float *)(param_2 + 0x3e4) = lbl_803E5AF4;
-        *(float *)(param_2 + 0x3e0) = lbl_803E5AEC;
+        PSVECScale(&st->unk494,&st->unk494,
+                   dot * st->unk4AC + lbl_803E5AEC);
+        st->unk498 = st->unk498 * lbl_803E5BA8;
+        st->unk3E4 = lbl_803E5AF4;
+        st->unk3E0 = lbl_803E5AEC;
       }
       break;
     case 0x1d:
-      if ((u32)(*(u8 *)(param_2 + 0x428) >> 1 & 1) == 0) {
+      if ((u32)(st->flags428 >> 1 & 1) == 0) {
         setMotionBlur(lbl_803E5BAC,1);
-        *(float *)(param_2 + 0x3e4) = (f32)(s32)lbl_803DC0D0;
-        *(float *)(param_2 + 0x3e0) = lbl_803DC0C8;
-        *(float *)(param_2 + 0x4c4) = (f32)(s32)lbl_803DC0CC;
+        st->unk3E4 = (f32)(s32)lbl_803DC0D0;
+        st->unk3E0 = lbl_803DC0C8;
+        st->unk4C4 = (f32)(s32)lbl_803DC0CC;
       }
       break;
     }
     hit = *(uint *)(iVar3 + 0x50);
     if (((hit != 0) &&
-        (local_38 = hit, *(uint *)(param_2 + 0x42c) = hit, *(float *)(param_2 + 0x3e4) == lbl_803E5AE8)) &&
+        (local_38 = hit, *(u32 *)&st->unk42C = hit, st->unk3E4 == lbl_803E5AE8)) &&
        (iVar2 = arrayIndexOf(lbl_8032852C,0xc,(int)*(short *)(local_38 + 0x46)), iVar2 != -1)) {
       fn_8009A8C8((double)lbl_803E5BB0,param_1);
       (*(code *)(*gPartfxInterface + 8))(param_1,0x551,0,4,0xffffffff,0);
@@ -531,10 +535,10 @@ void fn_801EB634(int param_1,int param_2)
       while (uVar4-- != 0) {
         (*(code *)(*gPartfxInterface + 8))(param_1,0x553,0,2,0xffffffff,0);
       }
-      *(float *)(param_2 + 0x3e4) = lbl_803E5AF4;
-      *(float *)(param_2 + 0x3e0) = lbl_803E5AEC;
-      if ((u32)(*(u8 *)(param_2 + 0x428) >> 1 & 1) == 0) {
-        *(float *)(param_2 + 0x3e4) = (f32)(s32)lbl_803DC0D4;
+      st->unk3E4 = lbl_803E5AF4;
+      st->unk3E0 = lbl_803E5AEC;
+      if ((u32)(st->flags428 >> 1 & 1) == 0) {
+        st->unk3E4 = (f32)(s32)lbl_803DC0D4;
       }
     }
   }
@@ -573,6 +577,7 @@ extern f32 mathSinf(f32 x);
 
 void fn_801EB940(short *param_1,int param_2)
 {
+  SnowBikeState *st = (SnowBikeState *)param_2;
   float fVar1;
   float fVar2;
   short sVar3;
@@ -585,67 +590,67 @@ void fn_801EB940(short *param_1,int param_2)
   (*(code *)((char *)*gPathControlInterface + 0x18))((double)timeDelta,param_1,iVar5);
   iVar5 = 2;
   if (*(char *)(param_2 + 0x3d9) == '\0') {
-    *(float *)(param_2 + 0x424) = *(float *)(param_2 + 0x424) + timeDelta;
-    fVar1 = *(float *)(param_2 + 0x424);
-    *(float *)(param_2 + 0x424) =
+    st->unk424 = st->unk424 + timeDelta;
+    fVar1 = st->unk424;
+    st->unk424 =
         (fVar1 < lbl_803E5AE8) ? lbl_803E5AE8
                                : ((fVar1 > lbl_803E5BB4) ? lbl_803E5BB4 : fVar1);
-    if (*(float *)(param_2 + 0x424) >= lbl_803E5BB8) {
-      if ((u32)(*(u8 *)(param_2 + 0x428) >> 7 & 1) == 0) {
-        *(float *)(param_2 + 0x584) = lbl_803E5AE8;
+    if (st->unk424 >= lbl_803E5BB8) {
+      if ((u32)(st->flags428 >> 7 & 1) == 0) {
+        st->unk584 = lbl_803E5AE8;
       }
-      ((HightopFlagsB *)(param_2 + 0x428))->resetLatch = 1;
+      ((HightopFlagsB *)&st->flags428)->resetLatch = 1;
     }
   }
   else {
-    if ((u32)(*(u8 *)(param_2 + 0x428) >> 7 & 1) != 0) {
+    if ((u32)(st->flags428 >> 7 & 1) != 0) {
       iVar5 = 0;
       fVar1 = lbl_803E5BBC;
-      *(float *)(param_2 + 0x58c) = fVar1 * (f32)(s32)param_1[1];
-      *(float *)(param_2 + 0x590) = fVar1 * (f32)(s32)param_1[2];
-      *(short *)(param_2 + 0x588) = iVar5;
-      *(short *)(param_2 + 0x58a) = iVar5;
-      if ((u32)(*(u8 *)(param_2 + 0x428) >> 1 & 1) == 0) {
-        doRumble(*(float *)(param_2 + 0x424) * fVar1);
+      st->unk58C = fVar1 * (f32)(s32)param_1[1];
+      st->unk590 = fVar1 * (f32)(s32)param_1[2];
+      st->unk588 = iVar5;
+      st->unk58A = iVar5;
+      if ((u32)(st->flags428 >> 1 & 1) == 0) {
+        doRumble(st->unk424 * fVar1);
         Camera_EnableViewYOffset();
-        CameraShake_SetAllMagnitudes(*(float *)(param_2 + 0x424) / lbl_803E5BC0);
+        CameraShake_SetAllMagnitudes(st->unk424 / lbl_803E5BC0);
         Sfx_PlayFromObject((int)param_1,0x3bc);
-        fVar2 = (lbl_803E5B40 < lbl_803E5BC4 * *(float *)(param_2 + 0x424))
+        fVar2 = (lbl_803E5B40 < lbl_803E5BC4 * st->unk424)
                     ? lbl_803E5B40
-                    : lbl_803E5BC4 * *(float *)(param_2 + 0x424);
+                    : lbl_803E5BC4 * st->unk424;
         Sfx_SetObjectSfxVolume(lbl_803E5B20,param_1,0x3bc,(int)fVar2);
       }
     }
-    ((HightopFlagsB *)(param_2 + 0x428))->resetLatch = 0;
-    *(float *)(param_2 + 0x424) = lbl_803E5AE8;
-    *(u8 *)(param_2 + 0x4b4) = *(u8 *)(param_2 + 0x230);
+    ((HightopFlagsB *)&st->flags428)->resetLatch = 0;
+    st->unk424 = lbl_803E5AE8;
+    st->unk4B4 = st->unk230;
   }
   fVar1 = lbl_803E5BC8;
-  *(short *)(param_2 + 0x588) =
-       fVar1 * timeDelta + (f32)(s32)*(short *)(param_2 + 0x588);
-  *(short *)(param_2 + 0x58a) =
-       fVar1 * timeDelta + (f32)(s32)*(short *)(param_2 + 0x58a);
-  *(float *)(param_2 + 0x58c) =
-       *(float *)(param_2 + 0x58c) * powfBitEstimate(lbl_803E5BCC,timeDelta);
-  *(float *)(param_2 + 0x590) =
-       *(float *)(param_2 + 0x590) * powfBitEstimate(lbl_803E5BCC,timeDelta);
-  *(float *)(param_2 + 0x594) =
-       *(float *)(param_2 + 0x58c) *
-       mathSinf((lbl_803E5BD0 * (f32)(s32)*(short *)(param_2 + 0x588)) / lbl_803E5BD4);
-  *(float *)(param_2 + 0x598) =
-       *(float *)(param_2 + 0x590) *
-       mathSinf((lbl_803E5BD0 * (f32)(s32)*(short *)(param_2 + 0x58a)) / lbl_803E5BD4);
-  iVar4 = (int)*param_1 - ((int)*(short *)(param_2 + 0x40e) & 0xffffU);
+  st->unk588 =
+       fVar1 * timeDelta + (f32)(s32)st->unk588;
+  st->unk58A =
+       fVar1 * timeDelta + (f32)(s32)st->unk58A;
+  st->unk58C =
+       st->unk58C * powfBitEstimate(lbl_803E5BCC,timeDelta);
+  st->unk590 =
+       st->unk590 * powfBitEstimate(lbl_803E5BCC,timeDelta);
+  st->unk594 =
+       st->unk58C *
+       mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk588) / lbl_803E5BD4);
+  st->unk598 =
+       st->unk590 *
+       mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk58A) / lbl_803E5BD4);
+  iVar4 = (int)*param_1 - ((int)st->unk40E & 0xffffU);
   if (0x8000 < iVar4) {
     iVar4 = iVar4 + -0xffff;
   }
   if (iVar4 < -0x8000) {
     iVar4 = iVar4 + 0xffff;
   }
-  *(short *)(param_2 + 0x40e) = *(short *)(param_2 + 0x40e) + (short)iVar4;
-  *(short *)(param_2 + 0x40c) = *(short *)(param_2 + 0x40c) + (short)iVar4;
-  param_1[1] = param_1[1] + (short)((int)*(short *)(param_2 + 0x310) >> iVar5);
-  param_1[2] = param_1[2] + (short)((int)*(short *)(param_2 + 0x312) >> iVar5);
+  st->unk40E = st->unk40E + (short)iVar4;
+  st->unk40C = st->unk40C + (short)iVar4;
+  param_1[1] = param_1[1] + (short)((int)st->unk310 >> iVar5);
+  param_1[2] = param_1[2] + (short)((int)st->unk312 >> iVar5);
   sVar3 = param_1[1];
   if (sVar3 < -0x2000) {
     sVar3 = -0x2000;
@@ -691,6 +696,7 @@ void fn_801EBD60(int param_1,int param_2)
     f32 z;
   } HightopPartfxTransform;
 
+  SnowBikeState *st = (SnowBikeState *)param_2;
   u8 flags;
   s16 motionFrame;
   f32 fVar1;
@@ -706,18 +712,18 @@ void fn_801EBD60(int param_1,int param_2)
   f32 k;
   HightopPartfxTransform effect;
 
-  speed = sqrtf(*(f32 *)(param_2 + 0x49c) * *(f32 *)(param_2 + 0x49c) +
-                (*(f32 *)(param_2 + 0x494) * *(f32 *)(param_2 + 0x494) +
-                 *(f32 *)(param_2 + 0x498) * *(f32 *)(param_2 + 0x498)));
-  *(f32 *)(param_2 + 0x43c) -= timeDelta;
-  fVar1 = *(f32 *)(param_2 + 0x43c);
-  *(f32 *)(param_2 + 0x43c) =
+  speed = sqrtf(st->unk49C * st->unk49C +
+                (st->unk494 * st->unk494 +
+                 st->unk498 * st->unk498));
+  st->unk43C -= timeDelta;
+  fVar1 = st->unk43C;
+  st->unk43C =
       (fVar1 < lbl_803E5AE8) ? lbl_803E5AE8
                              : ((fVar1 > lbl_803E5B1C) ? lbl_803E5B1C : fVar1);
 
-  flags = *(u8 *)(param_2 + 0x428);
+  flags = st->flags428;
   if ((u32)(flags >> 7 & 1) == 0) {
-    switch (*(u8 *)(param_2 + 0x4b4)) {
+    switch (st->unk4B4) {
     case 0xd:
       target558 = lbl_803E5BD8;
       target534 = lbl_803E5BDC;
@@ -727,8 +733,8 @@ void fn_801EBD60(int param_1,int param_2)
       target540 = lbl_803E5BE8;
       target544 = lbl_803E5AF8;
       if (((u32)(flags >> 1 & 1) == 0) &&
-          (*(f32 *)(param_2 + 0x43c) <= lbl_803E5AE8)) {
-        *(f32 *)(param_2 + 0x43c) = (f32)(s32)randomGetRange(5,10);
+          (st->unk43C <= lbl_803E5AE8)) {
+        st->unk43C = (f32)(s32)randomGetRange(5,10);
         if (PSVECMag((void *)(param_1 + 0x24)) > lbl_803E5BC4) {
           doRumble((f32)(s32)randomGetRange(1,3));
         }
@@ -768,7 +774,7 @@ void fn_801EBD60(int param_1,int param_2)
       break;
     }
 
-    motionFrame = *(s16 *)(param_2 + 0x44c);
+    motionFrame = st->unk44C;
     if (((motionFrame >= 0x1e) && (motionFrame <= 0x3c)) ||
         ((motionFrame >= 0x12c) && (motionFrame <= 0x14a))) {
       target558 *= lbl_803E5B20;
@@ -781,26 +787,26 @@ void fn_801EBD60(int param_1,int param_2)
       }
     }
   } else {
-    target558 = *(f32 *)(param_2 + 0x578);
-    target534 = *(f32 *)(param_2 + 0x574);
-    target530 = *(f32 *)(param_2 + 0x56c);
-    target548 = *(f32 *)(param_2 + 0x57c);
-    target54c = *(f32 *)(param_2 + 0x580);
+    target558 = st->unk578;
+    target534 = st->unk574;
+    target530 = st->unk56C;
+    target548 = st->unk57C;
+    target54c = st->unk580;
     target540 = lbl_803E5B20;
     target544 = lbl_803E5AF8;
   }
 
-  if ((u32)((*(u8 *)(param_2 + 0x428) >> 1) & 1) != 0) {
+  if ((u32)((st->flags428 >> 1) & 1) != 0) {
     target558 = lbl_803E5AF8;
   }
-  *(f32 *)(param_2 + 0x558) += timeDelta * (lbl_803E5C14 *
+  st->unk558 += timeDelta * (lbl_803E5C14 *
       (((target558 < lbl_803E5BD8) ? lbl_803E5BD8
                                    : ((target558 > lbl_803E5AEC) ? lbl_803E5AEC : target558)) -
-       *(f32 *)(param_2 + 0x558)));
-  *(f32 *)(param_2 + 0x534) += timeDelta * (lbl_803E5BBC * (target534 - *(f32 *)(param_2 + 0x534)));
-  *(f32 *)(param_2 + 0x530) += timeDelta * (lbl_803E5C14 * (target530 - *(f32 *)(param_2 + 0x530)));
-  *(f32 *)(param_2 + 0x548) += timeDelta * ((k = lbl_803E5B20) * (target548 - *(f32 *)(param_2 + 0x548)));
-  *(f32 *)(param_2 + 0x54c) += timeDelta * (k * (target54c - *(f32 *)(param_2 + 0x54c)));
-  *(f32 *)(param_2 + 0x540) += timeDelta * (k * (target540 - *(f32 *)(param_2 + 0x540)));
-  *(f32 *)(param_2 + 0x544) += timeDelta * (k * (target544 - *(f32 *)(param_2 + 0x544)));
+       st->unk558));
+  st->unk534 += timeDelta * (lbl_803E5BBC * (target534 - st->unk534));
+  st->unk530 += timeDelta * (lbl_803E5C14 * (target530 - st->unk530));
+  st->unk548 += timeDelta * ((k = lbl_803E5B20) * (target548 - st->unk548));
+  st->unk54C += timeDelta * (k * (target54c - st->unk54C));
+  st->unk540 += timeDelta * (k * (target540 - st->unk540));
+  st->unk544 += timeDelta * (k * (target544 - st->unk544));
 }

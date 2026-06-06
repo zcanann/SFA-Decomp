@@ -1,6 +1,7 @@
 #include "main/dll/DR/DRhalolight.h"
 #include "main/game_object.h"
 #include "main/objhits_types.h"
+#include "main/dll/BW/BWalphaanim.h"
 
 /*
  * --INFO--
@@ -54,7 +55,7 @@ typedef struct {
 #pragma peephole off
 void SnowBike_hitDetect(int obj)
 {
-    u8 *state;
+    SnowBikeState *state;
     u8 *other;
     int vol;
     f32 mag;
@@ -70,35 +71,35 @@ void SnowBike_hitDetect(int obj)
     if (((GameObject *)obj)->unkC0 != NULL) {
         return;
     }
-    if (*(s8 *)(state + 0x421) == 2) {
-        fn_801EB940(obj, state);
-        *(s16 *)(state + 0x41c) = ((GameObject *)obj)->anim.rotY;
-        *(s16 *)(state + 0x41e) = ((GameObject *)obj)->anim.rotZ;
-        ((GameObject *)obj)->anim.rotY = (f32)((GameObject *)obj)->anim.rotY + *(f32 *)(state + 0x594);
-        ((GameObject *)obj)->anim.rotZ = (f32)((GameObject *)obj)->anim.rotZ + ((f32)*(int *)(state + 0x410) + *(f32 *)(state + 0x598));
+    if (state->unk421 == 2) {
+        fn_801EB940(obj, (u8 *)state);
+        state->unk41C = ((GameObject *)obj)->anim.rotY;
+        state->unk41E = ((GameObject *)obj)->anim.rotZ;
+        ((GameObject *)obj)->anim.rotY = (f32)((GameObject *)obj)->anim.rotY + state->unk594;
+        ((GameObject *)obj)->anim.rotZ = (f32)((GameObject *)obj)->anim.rotZ + ((f32)state->unk410 + state->unk598);
     }
-    if (*(s8 *)(state + 0x3d9) == 4 || state[0x3d6] != 0) {
+    if (state->unk3D9 == 4 || state->unk3D6 != 0) {
         ((GameObject *)obj)->anim.velocityY = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY);
-        *(f32 *)(state + 0x498) = ((GameObject *)obj)->anim.velocityY;
+        state->unk498 = ((GameObject *)obj)->anim.velocityY;
     }
-    if (state[0x3d6] == 0) {
+    if (state->unk3D6 == 0) {
         if (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) != 0
             && arrayIndexOf(lbl_8032855C, 10, *(s16 *)(other + 0x46)) == -1) {
         } else {
-            if (*(void **)(state + 0x42c) == NULL) {
+            if (*(void **)&state->unk42C == NULL) {
                 goto clamp;
             }
-            if (*(f32 *)(state + 0x3e0) <= lbl_803E5AEC) {
+            if (state->unk3E0 <= lbl_803E5AEC) {
                 goto clamp;
             }
         }
     }
     mag = PSVECMag((f32 *)(obj + 0x24));
     if (mag > lbl_803E5AEC) {
-        if (!((HaloSnowBikeFlags *)(state + 0x428))->b02) {
+        if (!((HaloSnowBikeFlags *)&state->flags428)->b02) {
             doRumble(lbl_803E5BC4 * mag);
         }
-        *(f32 *)(state + 0x430) = *(f32 *)(state + 0x430) * lbl_803E5BBC;
+        state->unk430 = state->unk430 * lbl_803E5BBC;
         if (((GameObject *)obj)->anim.seqId == 114 || ((GameObject *)obj)->anim.seqId == 908) {
             vol = (int)(lbl_803E5C4C * mag);
             if (vol > 80) {
@@ -112,16 +113,16 @@ void SnowBike_hitDetect(int obj)
             }
         }
     }
-    if (!((HaloSnowBikeFlags *)(state + 0x428))->b02 && mag > lbl_803E5BC4) {
+    if (!((HaloSnowBikeFlags *)&state->flags428)->b02 && mag > lbl_803E5BC4) {
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(mag * lbl_803E5AF8);
     }
-    if (*(void **)(state + 0x42c) != NULL) {
+    if (*(void **)&state->unk42C != NULL) {
         k = lbl_803E5C00;
         OSReport(&lbl_803DC0E4, mag);
-        if (*(s16 *)(*(int *)(state + 0x42c) + 0x46) == 909
-            || *(s16 *)(*(int *)(state + 0x42c) + 0x46) == 910
-            || *(s16 *)(*(int *)(state + 0x42c) + 0x46) == 1236) {
+        if (*(s16 *)(state->unk42C + 0x46) == 909
+            || *(s16 *)(state->unk42C + 0x46) == 910
+            || *(s16 *)(state->unk42C + 0x46) == 1236) {
             k = lbl_803E5B88;
         }
         ((GameObject *)obj)->anim.velocityX = k * (oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX));
@@ -131,11 +132,11 @@ void SnowBike_hitDetect(int obj)
         ((GameObject *)obj)->anim.velocityX = k2 * (oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX));
         ((GameObject *)obj)->anim.velocityZ = k2 * (oneOverTimeDelta * (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ));
     }
-    Matrix_TransformPoint((f32 *)(state + 0x12c), ((GameObject *)obj)->anim.velocityX, lbl_803E5AE8, ((GameObject *)obj)->anim.velocityZ,
-                          (f32 *)(state + 0x494), &dummy, (f32 *)(state + 0x49c));
+    Matrix_TransformPoint((f32 *)((u8 *)state + 0x12c), ((GameObject *)obj)->anim.velocityX, lbl_803E5AE8, ((GameObject *)obj)->anim.velocityZ,
+                          &state->unk494, &dummy, &state->unk49C);
 clamp:
-    v = *(f32 *)(state + 0x494);
-    lim = *(f32 *)(state + 0x47c);
+    v = state->unk494;
+    lim = state->unk47C;
     if (v < -lim) {
         c = -lim;
     } else if (v > lim) {
@@ -143,12 +144,12 @@ clamp:
     } else {
         c = v;
     }
-    *(f32 *)(state + 0x494) = c;
-    if (*(f32 *)(state + 0x494) < lbl_803E5B8C && *(f32 *)(state + 0x494) > lbl_803E5BA4) {
-        *(f32 *)(state + 0x494) = lbl_803E5AE8;
+    state->unk494 = c;
+    if (state->unk494 < lbl_803E5B8C && state->unk494 > lbl_803E5BA4) {
+        state->unk494 = lbl_803E5AE8;
     }
-    v = *(f32 *)(state + 0x498);
-    lim = *(f32 *)(state + 0x480);
+    v = state->unk498;
+    lim = state->unk480;
     if (v < -lim) {
         c = -lim;
     } else if (v > lbl_803E5AEC) {
@@ -156,12 +157,12 @@ clamp:
     } else {
         c = v;
     }
-    *(f32 *)(state + 0x498) = c;
-    if (*(f32 *)(state + 0x498) < lbl_803E5B8C && *(f32 *)(state + 0x498) > lbl_803E5BA4) {
-        *(f32 *)(state + 0x498) = lbl_803E5AE8;
+    state->unk498 = c;
+    if (state->unk498 < lbl_803E5B8C && state->unk498 > lbl_803E5BA4) {
+        state->unk498 = lbl_803E5AE8;
     }
-    v = *(f32 *)(state + 0x49c);
-    lim = *(f32 *)(state + 0x484);
+    v = state->unk49C;
+    lim = state->unk484;
     if (v < -lim) {
         c = -lim;
     } else if (v > lim) {
@@ -169,14 +170,14 @@ clamp:
     } else {
         c = v;
     }
-    *(f32 *)(state + 0x49c) = c;
-    if (*(f32 *)(state + 0x49c) < lbl_803E5B8C && *(f32 *)(state + 0x49c) > lbl_803E5BA4) {
-        *(f32 *)(state + 0x49c) = lbl_803E5AE8;
+    state->unk49C = c;
+    if (state->unk49C < lbl_803E5B8C && state->unk49C > lbl_803E5BA4) {
+        state->unk49C = lbl_803E5AE8;
     }
-    *(f32 *)(state + 0x16c) = ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)(state + 0x170) = ((GameObject *)obj)->anim.localPosY;
-    *(f32 *)(state + 0x174) = ((GameObject *)obj)->anim.localPosZ;
-    *(int *)(state + 0x42c) = 0;
+    state->unk16C = ((GameObject *)obj)->anim.localPosX;
+    state->unk170 = ((GameObject *)obj)->anim.localPosY;
+    state->unk174 = ((GameObject *)obj)->anim.localPosZ;
+    state->unk42C = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
