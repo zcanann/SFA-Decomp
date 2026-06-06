@@ -596,7 +596,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
     initMode = 7;
   }
   (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,obj,data,state,8,6,0,initMode);
-  *(undefined4 *)(obj + 0xbc) = 0;
+  ((GameObject *)obj)->animEventCallback = NULL;
   pathData = *(f32 **)(state + 0x40c);
   ObjAnim_SetCurrentMove(obj,4,lbl_803E3060,0x10);
   ((GameObject *)obj)->anim.currentMoveProgress = lbl_803E307C;

@@ -240,7 +240,7 @@ void lightfoot_init(int obj, int p2, int p3)
     }
     (*(void (*)(int, int, int, int, int, int, int, f32))(*(int *)(*gBaddieControlInterface + 0x58)))(
         obj, p2, inner, 5, 3, 0x108, flags, lbl_803E8228);
-    *(int *)((char *)obj + 0xbc) = (int)Lightfoot_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)Lightfoot_SeqFn;
     ((GroundBaddieState *)inner)->baddie.controlMode = 0;
     ((GroundBaddieState *)inner)->baddie.unk270 = 0;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
@@ -363,4 +363,3 @@ void lightfoot_init(int obj, int p2, int p3)
 }
 #pragma peephole reset
 #pragma scheduling reset
-

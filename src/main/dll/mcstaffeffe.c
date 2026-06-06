@@ -20,7 +20,7 @@ void mcstaffeffe_update(void) {}
 #pragma scheduling off
 void mcstaffeffe_init(int obj, int setup)
 {
-    *(int *)(obj + 0xbc) = (int)mcstaffeffe_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)mcstaffeffe_SeqFn;
     switch (*(u8 *)(setup + 0x1b)) {
     case 0:
         ((GameObject *)obj)->unkF4 = 4;

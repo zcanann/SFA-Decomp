@@ -48,6 +48,6 @@ void mcupgradema_update(int obj)
 
 #pragma peephole on
 #pragma scheduling off
-void mcupgradema_init(int obj) { *(int *)(obj + 0xbc) = (int)mcupgradema_SeqFn; }
+void mcupgradema_init(int obj) { ((GameObject *)obj)->animEventCallback = (void *)mcupgradema_SeqFn; }
 #pragma scheduling reset
 #pragma peephole reset

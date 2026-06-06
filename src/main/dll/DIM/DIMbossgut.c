@@ -1,4 +1,5 @@
 #include "main/dll/DIM/DIMbossgut.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 
 extern void objSetSlot(void *obj, int resourceId);
@@ -51,7 +52,7 @@ void DIMbossgut_init(void *obj)
   int objArg;
 
   objSetSlot(obj, 0x5a);
-  *(void **)((char *)obj + 0xbc) = DIMbossgut_updateState;
+  ((GameObject *)obj)->animEventCallback = (void *)DIMbossgut_updateState;
   objArg = (int)obj;
   ObjAnim_SetCurrentMove(objArg, 0, lbl_803E4C88, 0);
   ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)

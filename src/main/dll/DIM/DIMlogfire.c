@@ -376,7 +376,7 @@ void FUN_801a9ab4(int param_1,int param_2)
   int iVar1;
   int iVar2;
   
-  *(undefined4 *)(param_1 + 0xbc) = 0;
+  ((GameObject *)param_1)->animEventCallback = NULL;
   FUN_80017a7c(param_1,'d');
   iVar2 = *(int *)(param_1 + 0xb8);
   *(undefined2 *)(iVar2 + 0x6a) = *(undefined2 *)(param_2 + 0x1a);

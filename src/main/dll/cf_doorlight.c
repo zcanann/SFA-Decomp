@@ -64,7 +64,7 @@ void FUN_80167764(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar4 = 0x108;
   iVar6 = *DAT_803dd738;
   (**(code **)(iVar6 + 0x58))((double)lbl_803E3CE0,param_9,param_10,iVar8);
-  *(undefined4 *)(param_9 + 0xbc) = 0;
+  ((GameObject *)param_9)->animEventCallback = NULL;
   iVar7 = *(int *)(iVar8 + 0x40c);
   FUN_800033a8(iVar7,0,0x94);
   *(undefined *)(iVar7 + 0x90) = 5;
