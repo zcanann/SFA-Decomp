@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camshipbattle.h"
+#include "main/camera_object.h"
 
 extern u32 getButtonsJustPressed(int port);
 extern undefined4 FUN_80017814();
@@ -56,7 +57,7 @@ checkActiveTarget:
       }
     }
 checkOverrideFlag:
-    if ((*(byte *)(param_1 + 0x141) & 2) != 0) {
+    if ((((CameraObject *)param_1)->unk141 & 2) != 0) {
 sendFollowAction:
       (*(code *)(*gCameraInterface + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
       goto done;
