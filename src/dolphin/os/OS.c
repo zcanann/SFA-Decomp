@@ -1,13 +1,7 @@
 #include <__ppc_eabi_linker.h>
-#include <dolphin/DVDPriv.h>
-#include <dolphin/OSRtcPriv.h>
 #include <dolphin/PPCArch.h>
 #include <dolphin/db.h>
-#include <dolphin/exi.h>
 #include <dolphin/os.h>
-#include <dolphin/os/OSBootInfo.h>
-#include <dolphin/os/OSPriv.h>
-#include <dolphin/sipriv.h>
 
 extern OSTime __OSGetSystemTime();
 extern char _db_stack_end[];

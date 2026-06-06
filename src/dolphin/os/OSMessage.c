@@ -1,5 +1,4 @@
 #include <dolphin.h>
-#include <dolphin/os.h>
 
 void OSInitMessageQueue(OSMessageQueue* mq, void* msgArray, s32 msgCount) {
     OSInitThreadQueue(&mq->queueSend);

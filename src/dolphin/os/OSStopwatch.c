@@ -1,5 +1,4 @@
 #include <dolphin.h>
-#include <dolphin/os.h>
 
 void OSStartStopwatch(OSStopwatch* sw) {
     sw->running = TRUE;
