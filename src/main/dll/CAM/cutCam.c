@@ -1,4 +1,5 @@
 #include "main/dll/CAM/cutCam.h"
+#include "main/camera_object.h"
 #include "main/game_object.h"
 
 
@@ -377,10 +378,10 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
       (cam, &spinB, &spinC, &spinD, &spinA, *(f32 *)((char *)cameraMtxVar57 + 0x8c), 0);
   tgt0 = *(int *)((char *)cam + 0xa4);
   *(int *)&probe[35] = tgt0;
-  probe[1] = ((GameObject *)cam)->anim.worldPosY;
-  pathA[0] = ((GameObject *)cam)->anim.worldPosX;
-  pathA[1] = ((GameObject *)cam)->anim.worldPosY;
-  pathA[2] = ((GameObject *)cam)->anim.worldPosZ;
+  probe[1] = ((CameraObject *)cam)->anim.worldPosY;
+  pathA[0] = ((CameraObject *)cam)->anim.worldPosX;
+  pathA[1] = ((CameraObject *)cam)->anim.worldPosY;
+  pathA[2] = ((CameraObject *)cam)->anim.worldPosZ;
   pathB[0] = pathA[0];
   pathB[1] = pathA[1];
   pathB[2] = pathA[2];
@@ -498,7 +499,7 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
     if (d < 0) {
       d = -d;
     }
-    f = *(f32 *)((char *)cam + 0xc4) * *(f32 *)((char *)cam + 0xc4);
+    f = ((CameraObject *)cam)->unkC4 * ((CameraObject *)cam)->unkC4;
     if (f < lbl_803E16A4) {
       f = lbl_803E16A4;
     }
