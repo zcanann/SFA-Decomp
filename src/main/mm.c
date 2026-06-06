@@ -1044,16 +1044,19 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10v
 }
 
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag) {
-    MmRegion *reg = &gMmRegionTable[region];
-    HeapItem *base = (HeapItem *)reg->start;
+    MmRegion *reg;
     int oldSize;
+    int ni;
+    HeapItem *base;
+    reg = &gMmRegionTable[region];
+    base = (HeapItem *)reg->start;
     base[idx].type = type;
     oldSize = base[idx].size;
     base[idx].size = newSize;
     base[idx].f10 = f10val;
     if (oldSize > newSize) {
         s16 oldNext;
-        int ni = base[reg->f4++].stack;
+        ni = base[reg->f4++].stack;
         base[ni].key = (char *)base[idx].key + newSize;
         if ((int)base[ni].key % 32 != 0) {
             OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
