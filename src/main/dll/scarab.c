@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/scarab.h"
+#include "main/dll/baddie_state.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 
@@ -217,21 +218,21 @@ void dll_CA_update(int obj, int p2, int p3)
   extern f32 lbl_803E2D14;
   extern f32 lbl_803E2D90;
   extern f32 lbl_803E2DB8;
-  int sub;
+  BaddieState *sub;
   int setup;
 
-  sub = *(int *)(obj + 0xb8);
+  sub = *(BaddieState **)(obj + 0xb8);
   setup = *(int *)(obj + 0x4c);
   if (*(int *)(obj + 0xf4) != 0) {
-    if ((*(s16 *)(sub + 0x270) != 3 || (*(u8 *)(sub + 0x404) & 1) != 0) &&
+    if ((sub->unk270 != 3 || (sub->configFlags & 1) != 0) &&
         (*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(*(int *)(setup + 0x14)) != 0) {
       (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                             0x58))(
-          obj, setup, sub, 14, 8, 0x102, 0x26, lbl_803E2DB8);
-      *(s16 *)(sub + 0x402) = 0;
+          obj, setup, (int)sub, 14, 8, 0x102, 0x26, lbl_803E2DB8);
+      sub->targetState = 0;
       Sfx_PlayFromObject(obj, SFXfoxcom_find);
       ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0x10);
-      *(s8 *)(sub + 0x346) = 0;
+      *(s8 *)&sub->moveDone = 0;
       *(u8 *)(obj + 0x36) = 0xff;
       *(u8 *)(obj + 0xaf) |= 8;
     }
@@ -243,17 +244,17 @@ void dll_CA_update(int obj, int p2, int p3)
         *(s8 *)(setup + 0x2e), obj, -1);
     *(int *)(obj + 0xf8) = 1;
   } else {
-    if ((*(int (**)(int, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, sub, 0) == 0) {
-      *(s16 *)(sub + 0x402) = 0;
+    if ((*(int (**)(int, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, (int)sub, 0) == 0) {
+      sub->targetState = 0;
     } else {
-      fn_8015D3C0(obj, sub, sub);
-      mediumbasket_updateControlEffects(obj, sub);
-      if (*(s16 *)(sub + 0x402) == 0) {
-        mediumbasket_tryAcquireTarget(obj, sub, sub);
+      fn_8015D3C0(obj, (int)sub, (int)sub);
+      mediumbasket_updateControlEffects(obj, (int)sub);
+      if (sub->targetState == 0) {
+        mediumbasket_tryAcquireTarget(obj, (int)sub, (int)sub);
       } else {
-        mediumbasket_updateTargetMotion(obj, sub, sub);
+        mediumbasket_updateTargetMotion(obj, (int)sub, (int)sub);
       }
-      if ((*(u8 *)(sub + 0x404) & 2) != 0) {
+      if ((sub->configFlags & 2) != 0) {
         *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) - lbl_803E2D90;
       }
     }
@@ -635,7 +636,7 @@ int fn_8015E3A0(int obj, int p2)
   extern int *ObjList_GetObjects(int *, int *);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DD8;
-  int sub = *(int *)(obj + 0xb8);
+  BaddieState *sub = *(BaddieState **)(obj + 0xb8);
   int count;
   int idx;
 
@@ -667,7 +668,7 @@ int fn_8015E3A0(int obj, int p2)
   *(u8 *)(p2 + 0x34d) = 1;
 
   if ((*(u32 *)(p2 + 0x314) & 0x1) != 0U) {
-    int child = *(int *)(sub + 0x40c);
+    int child = *(int *)&sub->control;
     *(u32 *)(p2 + 0x314) = *(u32 *)(p2 + 0x314) & ~0x1;
     *(u8 *)(child + 0x8) = (u8)(*(u8 *)(child + 0x8) | 0x1);
     Sfx_PlayFromObject(obj, SFXfoxcom_heel);
@@ -730,7 +731,7 @@ FUN_8015e0d0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015E210(int *obj, u8 *p)
+int fn_8015E210(int *obj, BaddieState *p)
 {
   extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
   extern void *Obj_GetPlayerObject(void);
@@ -743,11 +744,11 @@ int fn_8015E210(int *obj, u8 *p)
   int *player;
   int r;
 
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&p->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2DC8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&p->moveDone = 0;
   }
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&p->moveJustStartedA != '\0') {
     objs = ObjList_GetObjects(&i, &count);
     for (; i < count; i++) {
       void *o = (void *)objs[i];
@@ -774,9 +775,9 @@ int fn_8015E210(int *obj, u8 *p)
     }
     Sfx_PlayFromObject(obj, SFXfoxcom_stay);
   }
-  *(s8 *)(p + 0x34d) = 3;
-  *(f32 *)(p + 0x2a0) = lbl_803E2DD4;
-  *(f32 *)(p + 0x280) = lbl_803E2DC8;
+  *(s8 *)&p->unk34D = 3;
+  p->moveSpeed = lbl_803E2DD4;
+  p->animSpeedA = lbl_803E2DC8;
   return 0;
 }
 #pragma peephole reset
@@ -935,7 +936,7 @@ FUN_8015e488(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015DC04(int obj, u8 *p)
+int fn_8015DC04(int obj, BaddieState *p)
 {
   extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
   extern int randomGetRange(int min, int max);
@@ -944,7 +945,7 @@ int fn_8015DC04(int obj, u8 *p)
   extern f64 lbl_803E2DC0;
   int count;
   int i;
-  int sub;
+  BaddieState *sub;
   u8 *hit;
   int maxr;
   int four;
@@ -952,11 +953,11 @@ int fn_8015DC04(int obj, u8 *p)
   int r;
   int rnd;
 
-  sub = *(int *)(obj + 0xb8);
-  if (*(char *)(p + 0x346) != '\0' || *(char *)(p + 0x27b) != '\0') {
-    hit = *(u8 **)(sub + 0x40c);
+  sub = *(BaddieState **)(obj + 0xb8);
+  if (*(char *)&p->moveDone != '\0' || *(char *)&p->moveJustStartedB != '\0') {
+    hit = *(u8 **)&sub->control;
     r = (*(int (**)(int, u8 *, f32, int))(*(int *)gBaddieControlInterface + 0x44))(
-        obj, p, (f32)(u32)*(u16 *)(sub + 0x3fe), 1);
+        obj, (u8 *)p, (f32)(u32)sub->unk3FE, 1);
     if (r != 0) {
       hit[9] &= ~2;
       return 5;
@@ -976,22 +977,22 @@ int fn_8015DC04(int obj, u8 *p)
         }
       }
     }
-    rnd = randomGetRange(0, *(u8 *)(sub + 0x406));
+    rnd = randomGetRange(0, sub->aggression);
     if (maxr >= 5 || (hit[9] & 1) != 0) {
-      if ((*(u8 *)(sub + 0x404) & 2) != 0) {
+      if ((sub->configFlags & 2) != 0) {
         hit[9] |= 1;
       }
-      (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 4);
+      (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 4);
     } else if (rnd > 32) {
       if (four > 1) {
-        (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 2);
+        (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 2);
       } else {
-        (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 4);
+        (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 4);
       }
     } else if (rnd > 16) {
-      (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 2);
+      (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 2);
     } else {
-      (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 3);
+      (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 3);
     }
   }
   return 0;
@@ -1059,10 +1060,10 @@ void dll_CA_init(int obj, u8 *p, int flags)
   extern f32 lbl_803E2D24;
   extern f32 lbl_803E2D54;
   extern f32 lbl_803E2DB8;
-  int sub;
+  BaddieState *sub;
   u8 mode;
 
-  sub = *(int *)(obj + 0xb8);
+  sub = *(BaddieState **)(obj + 0xb8);
   mode = 6;
   if (flags != 0) {
     mode |= 1;
@@ -1071,19 +1072,19 @@ void dll_CA_init(int obj, u8 *p, int flags)
     mode |= 8;
   }
   (*(void (**)(int, u8 *, int, int, int, int, u8, f32))(*(int *)gBaddieControlInterface + 0x58))(
-      obj, p, sub, 14, 8, 0x102, mode, lbl_803E2DB8);
+      obj, p, (int)sub, 14, 8, 0x102, mode, lbl_803E2DB8);
   *(int *)(obj + 0xbc) = 0;
-  if (lbl_803E2D24 * (f32)(u32)*(u16 *)(sub + 0x3fe) < lbl_803E2D54) {
-    *(s16 *)(sub + 0x3fe) = 0x6e;
+  if (lbl_803E2D24 * (f32)(u32)sub->unk3FE < lbl_803E2D54) {
+    *(s16 *)&sub->unk3FE = 0x6e;
   }
   ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0);
   *(u8 *)(obj + 0xaf) |= 8;
-  (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, sub, 0);
-  *(s16 *)(sub + 0x270) = 0;
-  *(s8 *)(sub + 0x25f) = 0;
+  (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, (int)sub, 0);
+  sub->unk270 = 0;
+  *(s8 *)&sub->unk25F = 0;
 }
 
-int fn_8015E5DC(short *obj, u8 *p)
+int fn_8015E5DC(short *obj, BaddieState *p)
 {
   extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
   extern int randomGetRange(int min, int max);
@@ -1092,18 +1093,18 @@ int fn_8015E5DC(short *obj, u8 *p)
   extern f32 lbl_803E2DE0;
   int count;
   int i;
-  int sub;
+  BaddieState *sub;
   int *objs;
 
-  sub = *(int *)((char *)obj + 0xb8);
-  if (*(char *)(p + 0x27a) != '\0') {
+  sub = *(BaddieState **)((char *)obj + 0xb8);
+  if (*(char *)&p->moveJustStartedA != '\0') {
     ObjHits_EnableObject(obj);
   }
   ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
   (*(ObjHitsPriorityState **)((char *)obj + 0x54))->objectPairPriority = 10;
   (*(ObjHitsPriorityState **)((char *)obj + 0x54))->objectPairHitVolume = 1;
   ObjHits_RegisterActiveHitVolumeObject(obj);
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&p->moveJustStartedA != '\0') {
     objs = ObjList_GetObjects(&i, &count);
     for (; i < count; i++) {
       void *o = (void *)objs[i];
@@ -1113,44 +1114,44 @@ int fn_8015E5DC(short *obj, u8 *p)
       }
     }
     if (randomGetRange(0, 1) != 0) {
-      if (*(char *)(p + 0x27a) != '\0') {
+      if (*(char *)&p->moveJustStartedA != '\0') {
         ObjAnim_SetCurrentMove((int)obj, 6, lbl_803E2DC8, 0);
-        *(s8 *)(p + 0x346) = 0;
+        *(s8 *)&p->moveDone = 0;
       }
     } else {
-      if (*(char *)(p + 0x27a) != '\0') {
+      if (*(char *)&p->moveJustStartedA != '\0') {
         ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E2DC8, 0);
-        *(s8 *)(p + 0x346) = 0;
+        *(s8 *)&p->moveDone = 0;
       }
     }
-    *(s8 *)(p + 0x34d) = 1;
-    *(f32 *)(p + 0x2a0) = lbl_803E2DDC + (f32)(u32)*(u8 *)(sub + 0x406) / lbl_803E2DE0;
+    *(s8 *)&p->unk34D = 1;
+    p->moveSpeed = lbl_803E2DDC + (f32)(u32)sub->aggression / lbl_803E2DE0;
   }
-  *(f32 *)(p + 0x280) = lbl_803E2DC8;
+  p->animSpeedA = lbl_803E2DC8;
   return 0;
 }
 
-int fn_8015DF20(int obj, u8 *p)
+int fn_8015DF20(int obj, BaddieState *p)
 {
   extern int *gPlayerInterface;
   extern void Obj_FreeObject(int *obj);
   extern f32 lbl_803E2DC8;
-  int sub = *(int *)(obj + 0xb8);
+  BaddieState *sub = *(BaddieState **)(obj + 0xb8);
   f32 *v;
   f32 z;
 
-  if (*(char *)(p + 0x27b) != '\0') {
-    v = *(f32 **)(sub + 0x40c);
+  if (*(char *)&p->moveJustStartedB != '\0') {
+    v = *(f32 **)&sub->control;
     z = lbl_803E2DC8;
     v[0] = z;
     v[1] = z;
-    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 6);
-    *(int *)(p + 0x2d0) = 0;
-    *(s8 *)(p + 0x25f) = 0;
-    *(s8 *)(p + 0x349) = 0;
+    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 6);
+    *(int *)&p->targetObj = 0;
+    *(s8 *)&p->unk25F = 0;
+    *(s8 *)&p->unk349 = 0;
     ObjHits_DisableObject(obj);
     *(u8 *)(obj + 0xaf) |= 8;
-  } else if (*(char *)(p + 0x346) != '\0') {
+  } else if (*(char *)&p->moveDone != '\0') {
     ObjMsg_SendToObjects(0, 3, obj, 0xe0000, obj);
     if (*(void **)(obj + 0x4c) == NULL) {
       Obj_FreeObject((int *)obj);
@@ -1161,7 +1162,7 @@ int fn_8015DF20(int obj, u8 *p)
   return 0;
 }
 
-int fn_8015E0C8(int obj, u8 *p)
+int fn_8015E0C8(int obj, BaddieState *p)
 {
   extern int Obj_GetPlayerObject(void);
   extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -1169,20 +1170,20 @@ int fn_8015E0C8(int obj, u8 *p)
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DCC;
   extern f32 lbl_803E2DD0;
-  int sub;
+  BaddieState *sub;
   f32 spd;
 
-  sub = *(int *)(obj + 0xb8);
-  *(s8 *)(p + 0x34d) = 3;
-  *(f32 *)(p + 0x2a0) = lbl_803E2DCC;
+  sub = *(BaddieState **)(obj + 0xb8);
+  *(s8 *)&p->unk34D = 3;
+  p->moveSpeed = lbl_803E2DCC;
   spd = lbl_803E2DC8;
-  *(f32 *)(p + 0x280) = spd;
-  *(f32 *)(p + 0x284) = spd;
-  if (*(char *)(p + 0x27a) != '\0') {
+  p->animSpeedA = spd;
+  p->animSpeedB = spd;
+  if (*(char *)&p->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 1, spd, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&p->moveDone = 0;
   }
-  if ((*(u8 *)(p + 0x356) & 1) == 0) {
+  if ((p->unk356 & 1) == 0) {
     if (*(s16 *)(Obj_GetPlayerObject() + 0x46) != 0) {
       Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
     } else {
@@ -1190,47 +1191,47 @@ int fn_8015E0C8(int obj, u8 *p)
     }
     Sfx_PlayFromObject(obj, SFXdoor_unlocked);
     Sfx_PlayFromObject(obj, SFXfoxcom_find);
-    *(u8 *)(p + 0x356) |= 1;
+    p->unk356 |= 1;
   }
-  if ((*(u8 *)(p + 0x356) & 2) == 0 && *(f32 *)(obj + 0x98) > lbl_803E2DD0) {
+  if ((p->unk356 & 2) == 0 && *(f32 *)(obj + 0x98) > lbl_803E2DD0) {
     Sfx_PlayFromObject(obj, SFXdoor_creak);
-    *(u8 *)(p + 0x356) |= 2;
+    p->unk356 |= 2;
     (*(void (**)(int, int, int, int))(*(int *)gBaddieControlInterface + 0x4c))(
-        obj, *(s16 *)(sub + 0x3f0), -1, 0);
+        obj, sub->unk3F0, -1, 0);
   }
   return 0;
 }
 
-int fn_8015E798(int obj, u8 *p)
+int fn_8015E798(int obj, BaddieState *p)
 {
   extern void GameBit_Set(int bit, int val);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DD8;
   extern f32 lbl_803E2DE4;
-  int sub;
+  BaddieState *sub;
   u8 *hit;
 
-  sub = *(int *)(obj + 0xb8);
-  if (*(char *)(p + 0x27a) != '\0') {
+  sub = *(BaddieState **)(obj + 0xb8);
+  if (*(char *)&p->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 14, lbl_803E2DC8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&p->moveDone = 0;
   }
   if (*(f32 *)(obj + 0x98) > lbl_803E2DE4) {
-    hit = *(u8 **)(sub + 0x40c);
+    hit = *(u8 **)&sub->control;
     hit[8] |= 2;
   }
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&p->moveJustStartedA != '\0') {
     ObjHits_DisableObject(obj);
-    *(f32 *)(p + 0x2a0) = lbl_803E2DD8;
-    *(f32 *)(p + 0x280) = lbl_803E2DC8;
+    p->moveSpeed = lbl_803E2DD8;
+    p->animSpeedA = lbl_803E2DC8;
   }
-  if (*(char *)(p + 0x346) != '\0') {
-    GameBit_Set(*(s16 *)(sub + 0x3f4), 0);
+  if (*(char *)&p->moveDone != '\0') {
+    GameBit_Set(sub->gameBitB, 0);
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
-    *(int *)(p + 0x2d0) = 0;
-    *(s8 *)(p + 0x25f) = 0;
-    *(s8 *)(p + 0x349) = 0;
-    *(s16 *)(sub + 0x402) = 0;
+    *(int *)&p->targetObj = 0;
+    *(s8 *)&p->unk25F = 0;
+    *(s8 *)&p->unk349 = 0;
+    sub->targetState = 0;
     if ((hit[9] & 2) == 0) {
       *(u8 *)(obj + 0xaf) |= 8;
     }
@@ -1238,31 +1239,31 @@ int fn_8015E798(int obj, u8 *p)
   return 0;
 }
 
-int fn_8015E8BC(int obj, u8 *p)
+int fn_8015E8BC(int obj, BaddieState *p)
 {
   extern void GameBit_Set(int bit, int val);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DE8;
   extern f32 lbl_803E2DEC;
   extern f32 lbl_803E2DF0;
-  int sub;
+  BaddieState *sub;
   u8 *hit;
   u32 flags;
 
-  sub = *(int *)(obj + 0xb8);
-  hit = *(u8 **)(sub + 0x40c);
-  if (*(char *)(p + 0x27a) != '\0') {
+  sub = *(BaddieState **)(obj + 0xb8);
+  hit = *(u8 **)&sub->control;
+  if (*(char *)&p->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 11, lbl_803E2DC8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&p->moveDone = 0;
   }
-  if (*(char *)(p + 0x27a) != '\0') {
-    *(s8 *)(p + 0x25f) = 1;
-    GameBit_Set(*(s16 *)(sub + 0x3f4), 1);
+  if (*(char *)&p->moveJustStartedA != '\0') {
+    *(s8 *)&p->unk25F = 1;
+    GameBit_Set(sub->gameBitB, 1);
     *(u8 *)(obj + 0xaf) &= ~8;
     *(u8 *)(obj + 0x36) = 0xff;
-    *(s8 *)(p + 0x34d) = 1;
-    *(f32 *)(p + 0x2a0) =
-        lbl_803E2DE8 + (f32)(u32)*(u8 *)(sub + 0x406) / lbl_803E2DEC;
+    *(s8 *)&p->unk34D = 1;
+    p->moveSpeed =
+        lbl_803E2DE8 + (f32)(u32)sub->aggression / lbl_803E2DEC;
     ObjHits_EnableObject(obj);
   } else {
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
@@ -1270,12 +1271,12 @@ int fn_8015E8BC(int obj, u8 *p)
     (*(ObjHitsPriorityState **)(obj + 0x54))->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
   }
-  if (*(char *)(p + 0x346) != '\0') {
-    *(s16 *)(sub + 0x402) = 1;
+  if (*(char *)&p->moveDone != '\0') {
+    sub->targetState = 1;
   }
-  flags = *(u32 *)(p + 0x314);
+  flags = p->eventFlags;
   if ((flags & 0x200) != 0) {
-    *(u32 *)(p + 0x314) = flags & ~0x200;
+    p->eventFlags = flags & ~0x200;
     hit[8] |= 4;
   }
   if (*(f32 *)(obj + 0x98) < lbl_803E2DF0) {
@@ -1284,7 +1285,7 @@ int fn_8015E8BC(int obj, u8 *p)
   return 0;
 }
 
-void fn_8015EA48(int obj, u8 *p)
+void fn_8015EA48(int obj, BaddieState *p)
 {
   extern u8 Obj_IsLoadingLocked(void);
   extern int Obj_AllocObjectSetup(int size, int id);
@@ -1309,14 +1310,14 @@ void fn_8015EA48(int obj, u8 *p)
     *(u8 *)(setup + 7) = 0xff;
     o = Obj_SetupObject(setup, 5, -1, -1, 0);
     if (o != NULL) {
-      t = *(f32 *)(p + 0x2c0) / (f32)(u32)*(u16 *)(p + 0x3fe);
+      t = p->unk2C0 / (f32)(u32)p->unk3FE;
       dur = lbl_803E2DF8 * t;
       *(f32 *)(o + 0x24) =
-          (*(f32 *)(*(int *)(p + 0x2d0) + 0xc) - *(f32 *)(obj + 0xc)) / dur;
+          (*(f32 *)(*(int *)&p->targetObj + 0xc) - *(f32 *)(obj + 0xc)) / dur;
       *(f32 *)(o + 0x28) =
-          ((lbl_803E2DFC * t + *(f32 *)(*(int *)(p + 0x2d0) + 0x10)) - *(f32 *)(obj + 0x10)) / dur;
+          ((lbl_803E2DFC * t + *(f32 *)(*(int *)&p->targetObj + 0x10)) - *(f32 *)(obj + 0x10)) / dur;
       *(f32 *)(o + 0x2c) =
-          (*(f32 *)(*(int *)(p + 0x2d0) + 0x14) - *(f32 *)(obj + 0x14)) / dur;
+          (*(f32 *)(*(int *)&p->targetObj + 0x14) - *(f32 *)(obj + 0x14)) / dur;
       *(int *)(o + 0xc4) = obj;
     }
   }
@@ -1663,18 +1664,18 @@ void dll_CE_func0B(int obj, int v)
 {
   extern void Sfx_PlayFromObject(int obj, int sfx);
   extern int *gPlayerInterface;
-  int sub = *(int *)(obj + 0xb8);
+  BaddieState *sub = *(BaddieState **)(obj + 0xb8);
 
   switch ((u8)v) {
   case 0x80:
-    *(u8 *)(*(int *)(sub + 0x40c) + 9) |= 2;
+    *(u8 *)(*(int *)&sub->control + 9) |= 2;
     Sfx_PlayFromObject(obj, SFXfoxcom_flame);
-    (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, sub, 1);
-    *(s16 *)(sub + 0x270) = 4;
-    *(s8 *)(sub + 0x27b) = 1;
+    (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, (int)sub, 1);
+    sub->unk270 = 4;
+    *(s8 *)&sub->moveJustStartedB = 1;
     break;
   case 0x81:
-    *(u8 *)(sub + 0x404) &= ~4;
+    sub->configFlags &= ~4;
     break;
   }
 }
@@ -1685,11 +1686,11 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
   extern void fn_8003B5E0(int, int, int, int);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2E10;
-  int sub = *(int *)(p1 + 0xb8);
+  BaddieState *sub = *(BaddieState **)(p1 + 0xb8);
   f32 t;
 
-  if (visible != 0 && *(int *)(p1 + 0xf4) == 0 && *(s16 *)(sub + 0x402) != 0) {
-    t = *(f32 *)(sub + 0x3e8);
+  if (visible != 0 && *(int *)(p1 + 0xf4) == 0 && sub->targetState != 0) {
+    t = sub->unk3E8;
     if (t != lbl_803E2DC8) {
       fn_8003B5E0(200, 0, 0, (int)t);
     }
@@ -1706,11 +1707,11 @@ void dll_CE_init(int obj, u8 *p, int flags)
   extern f64 lbl_803E2E08;
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2E14;
-  int sub;
+  BaddieState *sub;
   u8 mode;
   f32 *v;
 
-  sub = *(int *)(obj + 0xb8);
+  sub = *(BaddieState **)(obj + 0xb8);
   mode = 6;
   if (flags != 0) {
     mode |= 1;
@@ -1719,15 +1720,15 @@ void dll_CE_init(int obj, u8 *p, int flags)
     mode |= 8;
   }
   (*(void (**)(int, u8 *, int, int, int, int, u8, f32))(*(int *)gBaddieControlInterface + 0x58))(
-      obj, p, sub, 7, 6, 0x102, mode, lbl_803E2E14);
+      obj, p, (int)sub, 7, 6, 0x102, mode, lbl_803E2E14);
   *(int *)(obj + 0xbc) = 0;
-  v = *(f32 **)(sub + 0x40c);
+  v = *(f32 **)&sub->control;
   *v = (f32)(int)randomGetRange(10, 300);
   ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
   *(u8 *)(obj + 0xaf) |= 8;
-  (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, sub, 0);
-  *(s16 *)(sub + 0x270) = 0;
-  *(s8 *)(sub + 0x25f) = 0;
+  (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, (int)sub, 0);
+  sub->unk270 = 0;
+  *(s8 *)&sub->unk25F = 0;
   ObjHits_DisableObject(obj);
 }
 
@@ -1749,24 +1750,24 @@ void dll_CE_update(int obj, int p2, int p3)
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2E14;
   extern f32 lbl_803E2E18;
-  int sub;
+  BaddieState *sub;
   int setup;
   u8 *hit;
   int n;
   int buf[4];
 
-  sub = *(int *)(obj + 0xb8);
+  sub = *(BaddieState **)(obj + 0xb8);
   setup = *(int *)(obj + 0x4c);
   if (*(int *)(obj + 0xf4) != 0) {
-    if ((*(s16 *)(sub + 0x270) != 3 || (*(u8 *)(sub + 0x404) & 1) != 0) &&
+    if ((sub->unk270 != 3 || (sub->configFlags & 1) != 0) &&
         (*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(*(int *)(setup + 0x14)) != 0) {
       (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                             0x58))(
-          obj, setup, sub, 7, 6, 0x102, 0x26, lbl_803E2E14);
-      *(s16 *)(sub + 0x402) = 0;
+          obj, setup, (int)sub, 7, 6, 0x102, 0x26, lbl_803E2E14);
+      sub->targetState = 0;
       Sfx_PlayFromObject(obj, SFXfoxcom_find);
       ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0x10);
-      *(s8 *)(sub + 0x346) = 0;
+      *(s8 *)&sub->moveDone = 0;
       *(u8 *)(obj + 0x36) = 0xff;
       *(u8 *)(obj + 0xaf) |= 8;
     }
@@ -1778,17 +1779,17 @@ void dll_CE_update(int obj, int p2, int p3)
         *(s8 *)(setup + 0x2e), obj, -1);
     *(int *)(obj + 0xf8) = 1;
   } else {
-    if ((*(int (**)(int, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, sub, 0) == 0) {
-      *(s16 *)(sub + 0x402) = 0;
-    } else if ((*(u8 *)(sub + 0x404) & 0x10) != 0 &&
+    if ((*(int (**)(int, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, (int)sub, 0) == 0) {
+      sub->targetState = 0;
+    } else if ((sub->configFlags & 0x10) != 0 &&
                (*(int (**)(int *))(*(int *)gSHthorntailAnimationInterface + 0x24))(buf) == 0) {
-      *(s16 *)(sub + 0x402) = 0;
+      sub->targetState = 0;
     } else {
-      fn_8015ED1C(obj, sub, sub);
-      if (*(s16 *)(sub + 0x402) == 0) {
-        fn_8015EB6C(obj, sub, sub);
+      fn_8015ED1C(obj, (int)sub, (int)sub);
+      if (sub->targetState == 0) {
+        fn_8015EB6C(obj, (int)sub, (int)sub);
       } else {
-        hit = *(u8 **)(sub + 0x40c);
+        hit = *(u8 **)&sub->control;
         if ((hit[8] & 1) != 0) {
           fn_8015EA48(obj, (u8 *)sub);
         }
@@ -1805,15 +1806,13 @@ void dll_CE_update(int obj, int p2, int p3)
           } while (n < 10);
         }
         hit[8] = 0;
-        (*(void (**)(int, int, f32, int))(*(int *)gBaddieControlInterface + 0x2c))(
-            obj, sub, lbl_803E2DC8, -1);
-        (*(void (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, sub, timeDelta,
+        (*(void (**)(int, int, f32, int))(*(int *)gBaddieControlInterface + 0x2c))(obj, (int)sub, lbl_803E2DC8, -1);
+        (*(void (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, (int)sub, timeDelta,
                                                                             4);
-        *(int *)(sub + 0x3e0) = *(int *)(obj + 0xc0);
+        sub->savedObjC0 = *(int *)(obj + 0xc0);
         *(int *)(obj + 0xc0) = 0;
-        (*(void (**)(int, int, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(
-            obj, sub, timeDelta, timeDelta, lbl_803AC5B0, lbl_803AC598);
-        *(int *)(obj + 0xc0) = *(int *)(sub + 0x3e0);
+        (*(void (**)(int, int, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(obj, (int)sub, timeDelta, timeDelta, lbl_803AC5B0, lbl_803AC598);
+        *(int *)(obj + 0xc0) = sub->savedObjC0;
       }
       *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) - lbl_803E2E18;
     }
@@ -2537,7 +2536,7 @@ void iceball_update(undefined2 *param_1,int param_2)
   }
 }
 
-int fn_801601C4(int obj, u8 *p)
+int fn_801601C4(int obj, BaddieState *p)
 {
   extern int *gPlayerInterface;
   extern void *memcpy(void *dst, const void *src, int n);
@@ -2547,51 +2546,51 @@ int fn_801601C4(int obj, u8 *p)
   extern f32 lbl_803E2E70;
   extern f32 lbl_803E2E74;
   extern f32 lbl_803E2E78;
-  int sub;
+  BaddieState *sub;
   char *wp;
   f32 z;
 
-  sub = *(int *)(obj + 0xb8);
-  if (*(void **)(p + 0x2d0) != NULL) {
-    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 1);
-    wp = (char *)(sub + 0x35c);
+  sub = *(BaddieState **)(obj + 0xb8);
+  if (*(void **)&p->targetObj != NULL) {
+    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 1);
+    wp = (char *)sub->unk35C;
     z = lbl_803E2E68;
-    *(f32 *)(p + 0x290) = z;
-    *(f32 *)(p + 0x28c) = z;
+    p->unk290 = z;
+    p->unk28C = z;
     memcpy(wp, (void *)(obj + 0xc), 12);
-    memcpy((void *)(sub + 0x368), (void *)(*(int *)(p + 0x2d0) + 0xc), 12);
-    voxmaps_updateRoutePath(wp, (char *)(sub + 0x384));
-    if (*(f32 *)(p + 0x2c0) < lbl_803E2E6C && *(u8 *)(sub + 0x405) == 2) {
+    memcpy((void *)(sub->unk35C + 0xc), (void *)(*(int *)&p->targetObj + 0xc), 12);
+    voxmaps_updateRoutePath(wp, (char *)(sub->unk35C + 0x28));
+    if (p->unk2C0 < lbl_803E2E6C && sub->unk405 == 2) {
       return 5;
     }
     if (*(u8 *)(wp + 0x25) == 0) {
       (*(void (**)(int, u8 *, f32, f32, f32, f32, f32))(*(int *)gPlayerInterface + 0x1c))(
-          obj, p, *(f32 *)(wp + 0x18), *(f32 *)(wp + 0x20), lbl_803E2E68, lbl_803E2E68,
+          obj, (u8 *)p, *(f32 *)(wp + 0x18), *(f32 *)(wp + 0x20), lbl_803E2E68, lbl_803E2E68,
           lbl_803E2E70);
     } else {
       (*(void (**)(int, u8 *, f32, f32, f32, f32, f32))(*(int *)gPlayerInterface + 0x1c))(
-          obj, p, *(f32 *)(wp + 0x18), *(f32 *)(wp + 0x20), lbl_803E2E74, lbl_803E2E78,
+          obj, (u8 *)p, *(f32 *)(wp + 0x18), *(f32 *)(wp + 0x20), lbl_803E2E74, lbl_803E2E78,
           lbl_803E2E70);
     }
   } else {
-    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 0);
-    *(s8 *)(p + 0x346) = 0;
+    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 0);
+    *(s8 *)&p->moveDone = 0;
   }
   return 0;
 }
 
-int fn_8016043C(int obj, u8 *p)
+int fn_8016043C(int obj, BaddieState *p)
 {
   extern int *gPlayerInterface;
   extern int Obj_GetPlayerObject(void);
   extern void ObjMsg_SendToObject(int target, int msg, int from, int a);
   extern void Obj_FreeObject(int *obj);
 
-  if (*(char *)(p + 0x27b) != '\0') {
-    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 3);
-    *(int *)(p + 0x2d0) = 0;
-    *(s8 *)(p + 0x25f) = 0;
-    *(s8 *)(p + 0x349) = 0;
+  if (*(char *)&p->moveJustStartedB != '\0') {
+    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 3);
+    *(int *)&p->targetObj = 0;
+    *(s8 *)&p->unk25F = 0;
+    *(s8 *)&p->unk349 = 0;
     (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
     *(u8 *)(obj + 0xaf) |= 8;
   } else {
@@ -2606,7 +2605,7 @@ int fn_8016043C(int obj, u8 *p)
 }
 
 #pragma dont_inline on
-void fn_801606F0(int obj, void *p2, int sub, u8 *p)
+void fn_801606F0(int obj, void *p2, int sub, BaddieState *p)
 {
   extern int *gBaddieControlInterface;
   extern int *gObjectTriggerInterface;
@@ -2619,11 +2618,11 @@ void fn_801606F0(int obj, void *p2, int sub, u8 *p)
   int setup;
 
   setup = *(int *)(obj + 0x4c);
-  *(s8 *)(p + 0x346) = 1;
+  *(s8 *)&p->moveDone = 1;
   if ((*(int (**)(int, u8 *, f32, int))(*(int *)gBaddieControlInterface + 0x44))(
-          obj, p, (f32)(u32)*(u16 *)(sub + 0x3fe), 1) != 0) {
-    *(int *)(p + 0x2d0) = *(int *)(sub + 0x3e0);
-    *(s8 *)(p + 0x349) = 0;
+          obj, (u8 *)p, (f32)(u32)*(u16 *)(sub + 0x3fe), 1) != 0) {
+    *(int *)&p->targetObj = *(int *)(sub + 0x3e0);
+    *(s8 *)&p->unk349 = 0;
     if (*(char *)(setup + 0x2e) != -1) {
       if (p2 != NULL) {
         (*(void (**)(void *, int))(*(int *)gObjectTriggerInterface + 0x58))(
@@ -2631,22 +2630,22 @@ void fn_801606F0(int obj, void *p2, int sub, u8 *p)
       }
       *(s8 *)(sub + 0x405) = 1;
     } else {
-      *(int *)(p + 0x2d0) = 0;
+      *(int *)&p->targetObj = 0;
     }
   }
-  (*(void (**)(int, u8 *, f32, int))(*(int *)gBaddieControlInterface + 0x2c))(obj, p,
+  (*(void (**)(int, u8 *, f32, int))(*(int *)gBaddieControlInterface + 0x2c))(obj, (u8 *)p,
                                                                               lbl_803E2E9C, 1);
   *(int *)(sub + 0x3e0) = *(int *)(obj + 0xc0);
   *(int *)(obj + 0xc0) = 0;
   (*(void (**)(int, u8 *, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(
-      obj, p, timeDelta, timeDelta, lbl_803AC5E8, lbl_803AC5D0);
+      obj, (u8 *)p, timeDelta, timeDelta, lbl_803AC5E8, lbl_803AC5D0);
   *(int *)(obj + 0xc0) = *(int *)(sub + 0x3e0);
 }
 #pragma dont_inline reset
 
 #pragma dont_inline on
 #pragma fp_contract off
-void fn_8016083C(int *obj, u8 *sub, u8 *p)
+void fn_8016083C(int *obj, BaddieState *sub, BaddieState *p)
 {
   extern void characterDoEyeAnims(int *obj, u8 *a);
   extern f32 sqrtf(f32);
@@ -2664,27 +2663,27 @@ void fn_8016083C(int *obj, u8 *sub, u8 *p)
   if (*(void **)((char *)obj + 0xc8) != NULL) {
     *(int *)(*(int *)((char *)obj + 0xc8) + 0x30) = *(int *)((char *)obj + 0x30);
   }
-  o = *(char **)(p + 0x2d0);
+  o = *(char **)&p->targetObj;
   if (o != NULL) {
     d.x = *(f32 *)(o + 0x18) - *(f32 *)((char *)obj + 0x18);
     d.y = *(f32 *)(o + 0x1c) - *(f32 *)((char *)obj + 0x1c);
     d.z = *(f32 *)(o + 0x20) - *(f32 *)((char *)obj + 0x20);
-    *(f32 *)(p + 0x2c0) = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
+    p->unk2C0 = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
   }
-  characterDoEyeAnims(obj, sub + 0x3ac);
-  if ((*(u8 *)(sub + 0x404) & 1) == 0) {
+  characterDoEyeAnims(obj, sub->unk35C + 0x50);
+  if ((sub->configFlags & 1) == 0) {
     (*(void (**)(int *, u8 *, u8 *, int, int, int, int))(*(int *)gBaddieControlInterface + 0x3c))(
-        obj, p, sub + 0x400, 2, 3, *(s16 *)(sub + 0x3fc), *(s16 *)(sub + 0x3fa));
+        obj, (u8 *)p, (u8 *)&sub->flags400, 2, 3, sub->unk3FC, sub->unk3FA);
   }
   (*(void (**)(int *, u8 *, u8 *, int, u8 *, int, int, int))(*(int *)gBaddieControlInterface +
                                                              0x54))(
-      obj, p, sub + 0x35c, *(s16 *)(sub + 0x3f4), sub + 0x405, 0, 0, 0);
+      obj, (u8 *)p, sub->unk35C, sub->gameBitB, &sub->unk405, 0, 0, 0);
   t = (*(int (**)(int *, u8 *, u8 *, int, u8 *, u8 *, int, int))(*(int *)gBaddieControlInterface +
                                                                  0x50))(
-      obj, p, sub + 0x35c, *(s16 *)(sub + 0x3f4), lbl_80320008, lbl_80320080, 1, 0);
+      obj, (u8 *)p, sub->unk35C, sub->gameBitB, lbl_80320008, lbl_80320080, 1, 0);
   if (t >= 4) {
-    *(s8 *)(sub + 0x405) = 2;
-    *(int *)(p + 0x2d0) = Obj_GetPlayerObject();
+    *(s8 *)&sub->unk405 = 2;
+    *(int *)&p->targetObj = Obj_GetPlayerObject();
   }
 }
 #pragma fp_contract reset
@@ -2718,7 +2717,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
         0) {
       return 1;
     }
-    fn_8016083C((int *)obj, (u8 *)sub, (u8 *)sub);
+    fn_8016083C((int *)obj, (BaddieState *)sub, (BaddieState *)sub);
     if (*(s16 *)(sub + 0x3f6) != -1 && GameBit_Get(*(s16 *)(sub + 0x3f6)) != 0) {
       (*(void (**)(u8 *, int))(*(int *)gObjectTriggerInterface + 0x58))(e,
                                                                         *(s16 *)(setup + 0x2c));
@@ -2727,7 +2726,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
     switch (*(u8 *)(sub + 0x405)) {
     case 2:
       *(s16 *)(e + 0x6e) = 0;
-      fn_801606F0((int)obj, e, sub, (u8 *)sub);
+      fn_801606F0((int)obj, e, sub, (BaddieState *)sub);
       if (*(u8 *)(sub + 0x405) == 1) {
         *(s16 *)(sub + 0x270) = 5;
         (*(void (**)(short *, int, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(
@@ -2739,8 +2738,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       if ((*(int (**)(short *, u8 *, int, void *, void *, int))(*(int *)gBaddieControlInterface +
                                                                 0x34))(
               obj, e, sub, lbl_803AC5E8, lbl_803AC5D0, 0) != 0) {
-        (*(void (**)(short *, int, f32, int))(*(int *)gBaddieControlInterface + 0x2c))(
-            obj, sub, lbl_803E2E9C, 1);
+        (*(void (**)(short *, int, f32, int))(*(int *)gBaddieControlInterface + 0x2c))(obj, sub, lbl_803E2E9C, 1);
       }
       break;
     case 0:
@@ -4067,21 +4065,21 @@ extern f32 lbl_803E2EA8;
 void dll_CB_init(int *obj, u8 *params, int extra) {
     extern int *gBaddieControlInterface;
     extern int *gPlayerInterface;
-    u8 *sub;
+    BaddieState *sub;
     u8 flags;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = *(BaddieState**)((char*)obj + 0xb8);
     flags = 0x16;
     if (extra != 0) flags |= 1;
     if ((params[0x2b] & 1) == 0) flags |= 8;
     *(s16*)((char*)obj + 2) = (s16)((s8)params[0x28] << 8);
     *(s16*)((char*)obj + 4) = (s16)((s8)params[0x27] << 8);
-    ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(obj, params, sub, 4, 6, 0x82, flags, lbl_803E2EA8);
+    ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(obj, params, (u8 *)sub, 4, 6, 0x82, flags, lbl_803E2EA8);
     *(void**)((char*)obj + 0xbc) = (void*)&dll_CB_seqFn;
-    ((void(*)(int*, u8*, int))((void**)*(int*)gPlayerInterface)[5])(obj, sub, 0);
-    *(s16*)(sub + 0x270) = 0;
-    if (*(u16*)(sub + 0x3fe) < 0x32) {
-        *(u16*)(sub + 0x3fe) = 0x32;
+    ((void(*)(int*, u8*, int))((void**)*(int*)gPlayerInterface)[5])(obj, (u8 *)sub, 0);
+    sub->unk270 = 0;
+    if (sub->unk3FE < 0x32) {
+        sub->unk3FE = 0x32;
     }
 }
 #pragma peephole reset
@@ -4097,12 +4095,12 @@ extern f32 lbl_803E2E98;
 void dll_CB_update(int *obj) {
     extern int *gBaddieControlInterface;
     extern int *gRomCurveInterface;
-    u8 *sub;
+    BaddieState *sub;
     u8 *def;
     int *path;
     int one_local;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = *(BaddieState**)((char*)obj + 0xb8);
     def = *(u8**)((char*)obj + 0x4c);
     if (*(int*)((char*)obj + 0xf4) != 0) return;
     if (*(int*)((char*)obj + 0xf8) == 0) {
@@ -4112,21 +4110,21 @@ void dll_CB_update(int *obj) {
         *(int*)((char*)obj + 0xf8) = 1;
         return;
     }
-    if ((*(u16*)(sub + 0x400) & 2) != 0) {
+    if ((sub->flags400 & 2) != 0) {
         one_local = 1;
-        ((void(*)(u8*, u8*, s16, u8*, int, int, int, int*))((int**)*(int**)gBaddieControlInterface)[10])(sub, sub + 0x35c, *(s16*)(sub + 0x3f4), sub + 0x405, 0, 0, 0, &one_local);
-        *(u16*)(sub + 0x400) = (u16)(*(u16*)(sub + 0x400) & ~2);
+        ((void(*)(u8*, u8*, s16, u8*, int, int, int, int*))((int**)*(int**)gBaddieControlInterface)[10])((u8 *)sub, sub->unk35C, sub->gameBitB, &sub->unk405, 0, 0, 0, &one_local);
+        sub->flags400 = (u16)(sub->flags400 & ~2);
     }
-    if (((int(*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, sub, 1) == 0) return;
+    if (((int(*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, (u8 *)sub, 1) == 0) return;
     fn_8016083C(obj, sub, sub);
-    path = *(int**)(sub + 0x3dc);
-    if ((*(u16*)(sub + 0x400) & 8) == 0) return;
-    if (Curve_AdvanceAlongPath(path, *(f32*)(sub + 0x280)) != 0 || path[4] != 0) {
+    path = *(int **)&sub->path;
+    if ((sub->flags400 & 8) == 0) return;
+    if (Curve_AdvanceAlongPath(path, sub->animSpeedA) != 0 || path[4] != 0) {
         if ((u8)((int(*)(int*))((int**)*(int**)gRomCurveInterface)[36])(path) != 0) {
-            *(u16*)(sub + 0x400) = (u16)(*(u16*)(sub + 0x400) & ~8);
+            sub->flags400 = (u16)(sub->flags400 & ~8);
         }
     }
-    *(f32*)(sub + 0x280) = lbl_803E2E98;
+    sub->animSpeedA = lbl_803E2E98;
     *(s16*)obj = (s16)(getAngle(*(f32*)((char*)path + 0x74), *(f32*)((char*)path + 0x7c)) + 0x8000);
     *(s16*)((char*)obj + 2) = (s16)(getAngle(*(f32*)((char*)path + 0x7c), *(f32*)((char*)path + 0x78)) + 0x4000);
     *(s16*)((char*)obj + 4) = (s16)(getAngle(*(f32*)((char*)path + 0x78), *(f32*)((char*)path + 0x74)) + 0x4000);
@@ -4375,25 +4373,25 @@ extern void GameBit_Set(int eventId, int value);
 #pragma peephole off
 #pragma scheduling off
 int fn_80161130(int* obj, u8* obj2) {
-    u8* x = *(u8**)((char*)obj + 0xb8);
+    BaddieState* x = *(BaddieState**)((char*)obj + 0xb8);
     if ((s8)obj2[0x27b] != 0) {
-        *(u8*)(x + 0x405) = 0;
-        GameBit_Set(*(s16*)(x + 0x3f4), 0);
-        GameBit_Set(*(s16*)(x + 0x3f2), 1);
+        x->unk405 = 0;
+        GameBit_Set(x->gameBitB, 0);
+        GameBit_Set(x->gameBitA, 1);
     }
     return 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
 
-/* fn_801603E8 (84B). If obj2->27b != 0, vtable call through gBaddieControlInterface with (obj, *(s16*)(x+0x3f0), -1, 0). */
+/* fn_801603E8 (84B). If obj2->27b != 0, vtable call through gBaddieControlInterface with (obj, x->unk3F0, -1, 0). */
 extern undefined4* gBaddieControlInterface;
 #pragma peephole off
 #pragma scheduling off
 int fn_801603E8(int* obj, u8* obj2) {
-    u8* x = *(u8**)((char*)obj + 0xb8);
+    BaddieState* x = *(BaddieState**)((char*)obj + 0xb8);
     if ((s8)obj2[0x27b] != 0) {
-        (*(code*)((char*)(*gBaddieControlInterface) + 0x4c))(obj, *(s16*)(x + 0x3f0), -1, 0);
+        (*(code*)((char*)(*gBaddieControlInterface) + 0x4c))(obj, x->unk3F0, -1, 0);
     }
     return 0;
 }
@@ -4459,14 +4457,14 @@ extern u8 framesThisStep;
 #pragma scheduling off
 #pragma peephole off
 
-int fn_8015DE50(int* obj, u8* state)
+int fn_8015DE50(int* obj, BaddieState *state)
 {
-    int* sub = *(int**)((char*)obj + 0xb8);
-    if ((s8)state[635] != 0) {
+    BaddieState* sub = *(BaddieState**)((char*)obj + 0xb8);
+    if ((s8)state->moveJustStartedB != 0) {
         f32 fz;
-        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 1);
         {
-            f32* p = *(f32**)((char*)sub + 1036);
+            f32* p = *(f32 **)&sub->control;
             fz = lbl_803E2DC8;
             p[0] = fz;
             p[1] = fz;
@@ -4475,32 +4473,32 @@ int fn_8015DE50(int* obj, u8* state)
     return 0;
 }
 
-int fn_8015DEB4(int* obj, u8* state)
+int fn_8015DEB4(int* obj, BaddieState *state)
 {
-    u8* sub;
-    if ((s8)state[635] != 0) {
-        sub = *(u8**)((char*)obj + 0xb8);
-        sub[1029] = 0;
-        if (*(s16*)(sub + 1012) != -1) {
-            GameBit_Set(*(s16*)(sub + 1012), 0);
+    BaddieState* sub;
+    if ((s8)state->moveJustStartedB != 0) {
+        sub = *(BaddieState**)((char*)obj + 0xb8);
+        sub->unk405 = 0;
+        if (sub->gameBitB != -1) {
+            GameBit_Set(sub->gameBitB, 0);
         }
-        if (*(s16*)(sub + 1010) != -1) {
-            GameBit_Set(*(s16*)(sub + 1010), 1);
+        if (sub->gameBitA != -1) {
+            GameBit_Set(sub->gameBitA, 1);
         }
     }
     return 0;
 }
 
-int fn_8015E044(int* obj, u8* state)
+int fn_8015E044(int* obj, BaddieState *state)
 {
-    if (*(int**)((char*)state + 720) != NULL) {
-        if ((s8)state[635] != 0) {
+    if (*(int **)&state->targetObj != NULL) {
+        if ((s8)state->moveJustStartedB != 0) {
             f32 fz = lbl_803E2DC8;
-            *(f32*)((char*)state + 644) = fz;
-            *(f32*)((char*)state + 640) = fz;
-            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+            state->animSpeedB = fz;
+            state->animSpeedA = fz;
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 0);
         }
-        if ((s8)state[838] != 0) {
+        if ((s8)state->moveDone != 0) {
             return 6;
         }
     }
@@ -4514,73 +4512,73 @@ extern f32 lbl_803E2E88;
 extern f32 lbl_803E2EB8;
 extern f32 lbl_803E2EE8;
 
-int fn_801616AC(int* obj, u8* state)
+int fn_801616AC(int* obj, BaddieState *state)
 {
-    int* sub = *(int**)((char*)obj + 0xb8);
-    if ((s8)state[634] != 0) {
+    BaddieState* sub = *(BaddieState**)((char*)obj + 0xb8);
+    if ((s8)state->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2EB8, 0);
-        state[838] = 0;
+        state->moveDone = 0;
     }
-    *(f32*)((char*)state + 0x2a0) = lbl_803E2EE8;
-    if ((*(int*)((char*)state + 0x314) & 0x200) != 0) {
+    state->moveSpeed = lbl_803E2EE8;
+    if ((*(int *)&state->eventFlags & 0x200) != 0) {
         Sfx_PlayFromObject(obj, SFXdoor_creak);
-        *(int*)((char*)state + 0x314) &= ~0x200;
-        ((void(*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, *(s16*)((char*)sub + 0x3f0), -1, 1);
+        *(int *)&state->eventFlags &= ~0x200;
+        ((void(*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, sub->unk3F0, -1, 1);
     }
     return 0;
 }
 
-int fn_8016032C(int* obj, u8* state)
+int fn_8016032C(int* obj, BaddieState *state)
 {
-    if ((s8)state[635] != 0) {
+    if ((s8)state->moveJustStartedB != 0) {
         f32 fz;
-        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 0);
         fz = lbl_803E2E7C;
         *(f32*)((char*)obj + 0x28) = fz;
-        *(f32*)((char*)state + 0x280) = fz;
-        *(f32*)((char*)state + 0x294) = fz;
+        state->animSpeedA = fz;
+        state->unk294 = fz;
     }
     if (*(f32*)((char*)obj + 0x28) < lbl_803E2E80) {
         f32 fz = lbl_803E2E68;
         *(f32*)((char*)obj + 0x28) = fz;
-        *(f32*)((char*)state + 0x280) = fz;
-        *(f32*)((char*)state + 0x294) = fz;
+        state->animSpeedA = fz;
+        state->unk294 = fz;
         return 6;
     }
     {
         f32 d = lbl_803E2E88;
         *(f32*)((char*)obj + 0x28) = *(f32*)((char*)obj + 0x28) / d;
-        *(f32*)((char*)state + 0x280) = *(f32*)((char*)state + 0x280) / d;
-        *(f32*)((char*)state + 0x294) = *(f32*)((char*)state + 0x294) / d;
+        state->animSpeedA = state->animSpeedA / d;
+        state->unk294 = state->unk294 / d;
     }
     return 0;
 }
 
-int fn_8015E520(int* obj, u8* state)
+int fn_8015E520(int* obj, BaddieState *state)
 {
-    if ((s8)state[634] != 0) {
+    if ((s8)state->moveJustStartedA != 0) {
         ObjHits_EnableObject(obj);
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
     (*(ObjHitsPriorityState **)((char*)obj + 0x54))->objectPairPriority = 10;
     (*(ObjHitsPriorityState **)((char*)obj + 0x54))->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
-    *(f32*)((char*)state + 0x2a0) = lbl_803E2DD8;
-    if ((s8)state[634] != 0) {
+    state->moveSpeed = lbl_803E2DD8;
+    if ((s8)state->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2DC8, 0);
-        state[838] = 0;
+        state->moveDone = 0;
     }
-    state[845] = 1;
+    state->unk34D = 1;
     return 0;
 }
 
-int fn_8016118C(int* obj, u8* state)
+int fn_8016118C(int* obj, BaddieState *state)
 {
-    if ((s8)state[0x27b] != 0) {
-        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 8);
-        *(int*)((char*)state + 0x2d0) = 0;
-        state[0x25f] = 0;
-        state[0x349] = 0;
+    if ((s8)state->moveJustStartedB != 0) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 8);
+        *(int *)&state->targetObj = 0;
+        state->unk25F = 0;
+        state->unk349 = 0;
         ObjHits_DisableObject((int)obj);
         *(u8*)((char*)obj + 0xaf) |= 8;
     }
@@ -4595,7 +4593,7 @@ int fn_8016118C(int* obj, u8* state)
 }
 
 extern void* lbl_803AC5D0[];
-extern int fn_801605D4(int* obj, u8* def);
+extern int fn_801605D4(int* obj, BaddieState* def);
 int fn_80160534(int* obj);
 
 extern void* lbl_803AC5B0[];
@@ -4623,18 +4621,18 @@ extern f32 lbl_803E2E94;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801605D4(int* obj, u8* def)
+int fn_801605D4(int* obj, BaddieState *def)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
-    if ((s8)def[634] != 0) {
+    BaddieState* state = *(BaddieState**)((char*)obj + 0xb8);
+    if ((s8)def->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2E68, 0);
-        *(s8*)(def + 838) = 0;
+        *(s8 *)&def->moveDone = 0;
     }
-    *(s8*)(def + 607) = 1;
-    *(s16*)((char*)obj + 4) = *(s16*)(def + 414);
-    *(s16*)((char*)obj + 2) = *(s16*)(def + 412);
-    ((void(*)(int*, u8*, int*, f32, f32))((void**)*gBaddieControlInterface)[4])(obj, def, state, lbl_803E2E8C, lbl_803E2E90);
-    *(f32*)(def + 672) = lbl_803E2E94 * *(f32*)(def + 640);
+    *(s8 *)&def->unk25F = 1;
+    *(s16*)((char*)obj + 4) = def->unk19E;
+    *(s16*)((char*)obj + 2) = def->unk19C;
+    ((void(*)(int*, u8*, int*, f32, f32))((void**)*gBaddieControlInterface)[4])(obj, (u8 *)def, (int *)state, lbl_803E2E8C, lbl_803E2E90);
+    def->moveSpeed = lbl_803E2E94 * def->animSpeedA;
     return 0;
 }
 #pragma peephole reset
@@ -4657,32 +4655,32 @@ void dll_CB_initialise(void)
 #pragma peephole reset
 int fn_80160534(int* obj)
 {
-    u8* sub = *(u8**)((char*)obj + 0xb8);
+    BaddieState* sub = *(BaddieState**)((char*)obj + 0xb8);
     if (*(u8*)((char*)obj + 54) >= framesThisStep) {
         *(u8*)((char*)obj + 54) = *(u8*)((char*)obj + 54) - framesThisStep;
     } else {
         *(u8*)((char*)obj + 54) = 0;
     }
     if (*(u8*)((char*)obj + 54) == 0) {
-        GameBit_Set(*(s16*)(sub + 1012), 0);
-        GameBit_Set(*(s16*)(sub + 1010), 1);
+        GameBit_Set(sub->gameBitB, 0);
+        GameBit_Set(sub->gameBitA, 1);
     }
     return 0;
 }
 #pragma peephole off
 
-int fn_80161468(int* obj, u8* state)
+int fn_80161468(int* obj, BaddieState *state)
 {
-    if ((s8)state[635] != 0) {
-        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 9);
+    if ((s8)state->moveJustStartedB != 0) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 9);
     }
-    if ((s8)state[838] != 0) {
+    if ((s8)state->moveDone != 0) {
         return 1;
     }
     return 0;
 }
 
-int fn_801614D4(int obj, u8 *p)
+int fn_801614D4(int obj, BaddieState *p)
 {
   extern f32 timeDelta;
   extern f64 lbl_803E2ED8;
@@ -4692,53 +4690,53 @@ int fn_801614D4(int obj, u8 *p)
   u16 b;
   u16 c;
 
-  if (*(void **)(p + 0x2d0) != NULL && *(s16 *)(p + 0x274) != 2) {
-    if ((f32)*(s16 *)(p + 0x32e) > lbl_803E2ED0 * timeDelta) {
+  if (*(void **)&p->targetObj != NULL && p->controlMode != 2) {
+    if ((f32)p->unk32E > lbl_803E2ED0 * timeDelta) {
       (*(void (**)(int, int, int, u16 *, u16 *, u16 *))((char *)*gBaddieControlInterface + 0x14))(
-          obj, *(int *)(p + 0x2d0), 16, &a, &b, &c);
+          obj, *(int *)&p->targetObj, 16, &a, &b, &c);
       if (a < 4 || a > 11) {
         return 3;
       }
-      (*(void (**)(int, u8 *, int))((char *)*gPlayerInterface + 0x14))(obj, p, 2);
-      *(f32 *)(p + 0x2a0) = lbl_803E2ED4;
-      *(s8 *)(p + 0x346) = 0;
+      (*(void (**)(int, u8 *, int))((char *)*gPlayerInterface + 0x14))(obj, (u8 *)p, 2);
+      p->moveSpeed = lbl_803E2ED4;
+      *(s8 *)&p->moveDone = 0;
     }
   }
   return 0;
 }
 
-int fn_801615C8(int obj, u8 *p)
+int fn_801615C8(int obj, BaddieState *p)
 {
   extern f32 lbl_803E2EB8;
   extern f32 lbl_803E2EE0;
   extern f32 lbl_803E2EE4;
-  int sub;
+  BaddieState *sub;
   f32 spd;
 
-  sub = *(int *)(obj + 0xb8);
-  *(s8 *)(p + 0x34d) = 0;
-  *(f32 *)(p + 0x2a0) = lbl_803E2EE0;
+  sub = *(BaddieState **)(obj + 0xb8);
+  *(s8 *)&p->unk34D = 0;
+  p->moveSpeed = lbl_803E2EE0;
   spd = lbl_803E2EB8;
-  *(f32 *)(p + 0x280) = spd;
-  *(f32 *)(p + 0x284) = spd;
-  if (*(char *)(p + 0x27a) != '\0') {
+  p->animSpeedA = spd;
+  p->animSpeedB = spd;
+  if (*(char *)&p->moveJustStartedA != '\0') {
     Sfx_PlayFromObject(obj, SFXsc_death02);
-    if (*(char *)(p + 0x27a) != '\0') {
+    if (*(char *)&p->moveJustStartedA != '\0') {
       ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E2EB8, 0);
-      *(s8 *)(p + 0x346) = 0;
+      *(s8 *)&p->moveDone = 0;
     }
-    *(f32 *)(p + 0x2a0) = lbl_803E2EE4;
-    *(s8 *)(p + 0x346) = 0;
+    p->moveSpeed = lbl_803E2EE4;
+    *(s8 *)&p->moveDone = 0;
     *(u8 *)(obj + 0x36) = 0xff;
-    *(u16 *)(sub + 0x400) |= 0x100;
+    sub->flags400 |= 0x100;
   }
-  if (*(char *)(p + 0x346) != '\0') {
+  if (*(char *)&p->moveDone != '\0') {
     return 1;
   }
   return 0;
 }
 
-int fn_80161880(short *obj, u8 *p, f32 spd)
+int fn_80161880(short *obj, BaddieState *p, f32 spd)
 {
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);
@@ -4764,19 +4762,19 @@ int fn_80161880(short *obj, u8 *p, f32 spd)
   ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId = 1;
   ObjHits_RegisterActiveHitVolumeObject(obj);
   if (randomGetRange(0, 100) < 50) {
-    if (*(char *)(p + 0x27a) != '\0') {
+    if (*(char *)&p->moveJustStartedA != '\0') {
       ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E2EB8, 0);
-      *(s8 *)(p + 0x346) = 0;
+      *(s8 *)&p->moveDone = 0;
     }
-  } else if (*(char *)(p + 0x27a) != '\0') {
+  } else if (*(char *)&p->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E2EB8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&p->moveDone = 0;
   }
-  *(f32 *)(p + 0x2a0) = lbl_803E2EF0;
-  (*(void (**)(short *, u8 *, f32, int))((char *)*gPlayerInterface + 0x20))(obj, p, spd, 1);
+  p->moveSpeed = lbl_803E2EF0;
+  (*(void (**)(short *, u8 *, f32, int))((char *)*gPlayerInterface + 0x20))(obj, (u8 *)p, spd, 1);
   (*(void (**)(void *, void *, f32))(**(int **)(*(int *)(hit + 0x38) + 0x68) + 0x28))(
       *(void **)(hit + 0x38), (void *)(hit + 0x48),
-      *(f32 *)(p + 0x280) * (f32)(1 - (*(s8 *)(hit + 0x45) << 1)));
+      p->animSpeedA * (f32)(1 - (*(s8 *)(hit + 0x45) << 1)));
   if (*(f32 *)(hit + 0x48) < lbl_803E2EF4) {
     *(f32 *)(hit + 0x48) = lbl_803E2EF4;
   } else if (*(f32 *)(hit + 0x48) > lbl_803E2EF8) {
@@ -4798,13 +4796,13 @@ int fn_80161880(short *obj, u8 *p, f32 spd)
     int ang = (s16)getAngle(a.y, (f32)d);
     obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
   }
-  if (*(char *)(p + 0x346) != '\0') {
+  if (*(char *)&p->moveDone != '\0') {
     return 5;
   }
   return 0;
 }
 
-int fn_8016176C(short *obj, u8 *p)
+int fn_8016176C(short *obj, BaddieState *p)
 {
   extern f32 lbl_803E2EB8;
   extern f32 lbl_803E2EEC;
@@ -4814,14 +4812,14 @@ int fn_8016176C(short *obj, u8 *p)
   f32 spd;
 
   hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&p->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E2EB8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&p->moveDone = 0;
   }
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&p->moveJustStartedA != '\0') {
     Sfx_PlayFromObject(obj, SFXsc_attack04);
   }
-  *(f32 *)(p + 0x2a0) = lbl_803E2EEC;
+  p->moveSpeed = lbl_803E2EEC;
   yaw = *(s16 *)(hit + 0x58);
   diff = *obj - (yaw & 0xffff);
   if (diff > 0x8000) {
@@ -4835,15 +4833,15 @@ int fn_8016176C(short *obj, u8 *p)
     *obj += 0x8000;
   }
   spd = lbl_803E2EB8;
-  *(f32 *)(p + 0x280) = spd;
-  *(f32 *)(p + 0x284) = spd;
-  if (*(char *)(p + 0x346) != '\0') {
+  p->animSpeedA = spd;
+  p->animSpeedB = spd;
+  if (*(char *)&p->moveDone != '\0') {
     return 1;
   }
   return 0;
 }
 
-int fn_80161AF8(short *obj, u8 *p)
+int fn_80161AF8(short *obj, BaddieState *p)
 {
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);
@@ -4861,11 +4859,11 @@ int fn_80161AF8(short *obj, u8 *p)
   } a;
 
   hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&p->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 6, lbl_803E2EB8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&p->moveDone = 0;
   }
-  *(f32 *)(p + 0x2a0) = lbl_803E2EF0;
+  p->moveSpeed = lbl_803E2EF0;
   (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
                                                   0x24))(
       *(void **)(hit + 0x38), *(f32 *)(hit + 0x48) - lbl_803E2EFC, &a.x, &a.y, &a.z);
@@ -4885,7 +4883,7 @@ int fn_80161AF8(short *obj, u8 *p)
   return 0;
 }
 
-int fn_80161C44(short *obj, u8 *p)
+int fn_80161C44(short *obj, BaddieState *p)
 {
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);
@@ -4903,11 +4901,11 @@ int fn_80161C44(short *obj, u8 *p)
   } a;
 
   hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&p->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2EB8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&p->moveDone = 0;
   }
-  *(f32 *)(p + 0x2a0) = lbl_803E2EF0;
+  p->moveSpeed = lbl_803E2EF0;
   (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
                                                   0x24))(
       *(void **)(hit + 0x38), *(f32 *)(hit + 0x48) - lbl_803E2EFC, &a.x, &a.y, &a.z);
@@ -4924,13 +4922,13 @@ int fn_80161C44(short *obj, u8 *p)
     int ang = (s16)getAngle(a.y, (f32)d);
     obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
   }
-  if (*(char *)(p + 0x346) != '\0') {
+  if (*(char *)&p->moveDone != '\0') {
     return 6;
   }
   return 0;
 }
 
-int fn_80161DA8(short *obj, u8 *p)
+int fn_80161DA8(short *obj, BaddieState *p)
 {
   extern f32 sqrtf(f32);
   extern int getAngle(f32 a, f32 b);
@@ -4948,11 +4946,11 @@ int fn_80161DA8(short *obj, u8 *p)
   } a;
 
   hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&p->moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E2EB8, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&p->moveDone = 0;
   }
-  *(f32 *)(p + 0x2a0) = lbl_803E2EE4;
+  p->moveSpeed = lbl_803E2EE4;
   (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
                                                   0x24))(
       *(void **)(hit + 0x38), *(f32 *)(hit + 0x48) - lbl_803E2EFC, &a.x, &a.y, &a.z);
@@ -4969,7 +4967,7 @@ int fn_80161DA8(short *obj, u8 *p)
     int ang = (s16)getAngle(a.y, (f32)d);
     obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
   }
-  if (*(char *)(p + 0x346) != '\0') {
+  if (*(char *)&p->moveDone != '\0') {
     return 1;
   }
   return 0;
@@ -4977,7 +4975,7 @@ int fn_80161DA8(short *obj, u8 *p)
 
 void dll_CB_free(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    BaddieState* state = *(BaddieState**)((char*)obj + 0xb8);
     ObjGroup_RemoveObject(obj, 3);
     {
         int* sub = *(int**)((char*)obj + 200);
@@ -4986,12 +4984,12 @@ void dll_CB_free(int* obj)
             *(int**)((char*)obj + 200) = NULL;
         }
     }
-    ((void(*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, state, 1);
+    ((void(*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int *)state, 1);
 }
 
 void dll_CE_free(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    BaddieState* state = *(BaddieState**)((char*)obj + 0xb8);
     ObjGroup_RemoveObject(obj, 3);
     {
         int* sub = *(int**)((char*)obj + 200);
@@ -5000,7 +4998,7 @@ void dll_CE_free(int* obj)
             *(int**)((char*)obj + 200) = NULL;
         }
     }
-    ((void(*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, state, 32);
+    ((void(*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int *)state, 32);
 }
 
 #pragma peephole reset
@@ -5060,24 +5058,24 @@ extern f32 lbl_803E2ECC;
  * otherwise it's sqrtf(dx*dx + dz*dz) - lbl_803E2EB4. The signed magnitude
  * drives three threshold checks against lbl_803E2EBC/EC0/EC4 that issue
  * vtable[5] calls with mode 6 (close), 1 (medium-out), or 1 (close-in)
- * depending on the current mode at state[0x274] and the latch byte at
- * state[0x346]. When mode == 1, picks one of two scalars (lbl_803E2EC8 or
- * lbl_803E2ECC) for state[0x2a0]. Returns 0. */
+ * depending on the current mode at (*(u8 *)&state->controlMode) and the latch byte at
+ * state->moveDone. When mode == 1, picks one of two scalars (lbl_803E2EC8 or
+ * lbl_803E2ECC) for (*(u8 *)&state->moveSpeed). Returns 0. */
 #pragma scheduling off
 #pragma peephole off
-int scarab_updateProximityGate(int* obj, u8* state) {
+int scarab_updateProximityGate(int* obj, BaddieState *state) {
     int* target;
     f32 dx;
     f32 dz;
     f32 magAbs;
     u32 rel;
 
-    target = *(int**)(state + 0x2d0);
+    target = *(int **)&state->targetObj;
     if (target == NULL) {
-        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 0);
         return 1;
     }
-    if (*(s16*)(state + 0x274) != 6) {
+    if (state->controlMode != 6) {
     dx = *(f32*)((char*)obj + 0xc) - *(f32*)((char*)target + 0xc);
     dz = *(f32*)((char*)obj + 0x14) - *(f32*)((char*)target + 0x14);
     rel = (getAngle(dx, dz) - *(s16*)obj) & 0xffff;
@@ -5088,28 +5086,28 @@ int scarab_updateProximityGate(int* obj, u8* state) {
     }
     magAbs = dx < lbl_803E2EB8 ? -dx : dx;
     if (magAbs < lbl_803E2EBC) {
-        if (*(s16*)(state + 0x274) == 1 ||
-            (*(s16*)(state + 0x274) == 5 && (s8)state[0x346] != 0)) {
-            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 6);
+        if (state->controlMode == 1 ||
+            (state->controlMode == 5 && (s8)state->moveDone != 0)) {
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 6);
             goto post;
         }
     }
-    if (*(s16*)(state + 0x274) == 1) goto post;
+    if (state->controlMode == 1) goto post;
     if (dx > lbl_803E2EC0) {
-        if (*(s16*)(state + 0x274) != 4 &&
-            (*(s16*)(state + 0x274) != 5 || (s8)state[0x346] != 0)) {
-            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+        if (state->controlMode != 4 &&
+            (state->controlMode != 5 || (s8)state->moveDone != 0)) {
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 1);
         }
     }
     if (dx < lbl_803E2EC4) {
-        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 1);
     }
 post:
-    if (*(s16*)(state + 0x274) == 1) {
+    if (state->controlMode == 1) {
         if (dx > lbl_803E2EB8) {
-            *(f32*)(state + 0x2a0) = lbl_803E2EC8;
+            state->moveSpeed = lbl_803E2EC8;
         } else {
-            *(f32*)(state + 0x2a0) = lbl_803E2ECC;
+            state->moveSpeed = lbl_803E2ECC;
         }
     }
     }
