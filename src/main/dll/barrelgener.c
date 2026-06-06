@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/objanim.h"
 
 #include "main/audio/sfx_ids.h"
 #pragma peephole on
@@ -123,7 +124,7 @@ void barrelgener_update(int obj)
                 *(f32 *)(o + 44) = c2c;
                 *(f32 *)(o + 40) = c2c;
                 *(f32 *)(o + 36) = c2c;
-                ObjGroup_AddObject(o, 25);
+                ObjGroup_AddObject(*(int *)(state + 0), 25);
                 *(int *)(state + 0) = 0;
             }
         }
@@ -135,7 +136,7 @@ void barrelgener_update(int obj)
                 *(u8 *)(state + 0xc) = 1;
             }
         }
-        *(u8 *)(state + 4) = !ObjAnim_AdvanceCurrentMove(lbl_803E6C34, timeDelta, obj, 0);
+        *(u8 *)(state + 4) = !((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6C34, timeDelta, 0);
     }
 }
 #pragma scheduling reset
