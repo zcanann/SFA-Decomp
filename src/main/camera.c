@@ -1,4 +1,5 @@
 #include "main/engine_shared.h"
+#include "main/game_object.h"
 
 #pragma scheduling off
 #pragma peephole off
@@ -165,15 +166,15 @@ void Obj_GetWorldPosition(u32 obj, f32 *outX, f32 *outY, f32 *outZ)
     u32 parent;
     s32 matrixIndex;
 
-    parent = *(u32 *)(obj + 0x30);
+    parent = *(u32 *)&((GameObject *)obj)->anim.parent;
     if (parent == 0) {
-        *outX = *(f32 *)(obj + 0x0C);
-        *outY = *(f32 *)(obj + 0x10);
-        *outZ = *(f32 *)(obj + 0x14);
+        *outX = ((GameObject *)obj)->anim.localPosX;
+        *outY = ((GameObject *)obj)->anim.localPosY;
+        *outZ = ((GameObject *)obj)->anim.localPosZ;
     } else {
         matrixIndex = *(s8 *)(parent + 0x35) << 4;
-        Matrix_TransformPoint((f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2)), *(f32 *)(obj + 0x0C),
-                              *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), outX, outY, outZ);
+        Matrix_TransformPoint((f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2)), ((GameObject *)obj)->anim.localPosX,
+                              ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, outX, outY, outZ);
     }
 }
 #pragma peephole reset

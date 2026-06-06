@@ -1,4 +1,5 @@
 #include "main/sky_state.h"
+#include "main/game_object.h"
 #include "main/sky_80080E58_shared.h"
 
 #pragma peephole off
@@ -1775,9 +1776,9 @@ void fn_8008923C(u8 *obj, f32 *x, f32 *y, f32 *z)
                     }
                 }
                 modelLightStruct_getWorldPosition(cur, &lx, &ly, &lz);
-                dir[0] = *(f32 *)(obj + 0x18) - lx;
-                dir[1] = *(f32 *)(obj + 0x1c) - ly;
-                dir[2] = *(f32 *)(obj + 0x20) - lz;
+                dir[0] = ((GameObject *)obj)->anim.worldPosX - lx;
+                dir[1] = ((GameObject *)obj)->anim.worldPosY - ly;
+                dir[2] = ((GameObject *)obj)->anim.worldPosZ - lz;
                 mag = PSVECMag(dir);
                 if (mag > pEXIInputFlag) {
                     PSVECScale(EXIInputFlag / mag, dir, dir);

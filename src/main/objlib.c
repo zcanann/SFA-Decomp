@@ -1,4 +1,5 @@
 #include "main/objanim_internal.h"
+#include "main/game_object.h"
 #include "main/objlib.h"
 
 
@@ -1209,7 +1210,7 @@ int ObjHits_GetPriorityHitWithPosition(int obj,int *outHitObject,int *outSphereI
   u8 bestPriority;
   s8 bestHitSlot;
 
-  hitState = *(ObjHitsPriorityState **)(obj + 0x54);
+  hitState = *(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState;
   if (hitState == 0) {
     return 0;
   }
@@ -1273,7 +1274,7 @@ int ObjHits_GetPriorityHit(int obj,int *outHitObject,int *outSphereIndex,uint *o
   u8 bestPriority;
   s8 bestHitSlot;
 
-  hitState = *(ObjHitsPriorityState **)(obj + 0x54);
+  hitState = *(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState;
   if (hitState == 0) {
     return 0;
   }
@@ -1995,7 +1996,7 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
   for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
     obj = (void *)objects[objectIndex];
     if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
-        ((*(short *)((byte *)obj + 0x46) == (short)targetId ||
+        ((((GameObject *)obj)->anim.seqId == (short)targetId ||
           ((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0))) &&
         ((Vec_distance((float *)((byte *)sender + 0x18),(float *)((byte *)obj + 0x18)) < radius &&
           (obj != (void *)0x0)) &&
@@ -2010,7 +2011,7 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
         queue->count = queue->count + 1;
       } else {
         debugPrintf(sObjMsgOverflowInObjectWarning,message,
-                     (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
+                     (int)((GameObject *)obj)->anim.classId,(int)((GameObject *)obj)->anim.seqId,
                      (int)*(short *)((byte *)sender + 0x46));
       }
     }
@@ -2053,7 +2054,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
       obj = (void *)objects[objectIndex];
       if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
           (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 ||
-            (targetId == *(short *)((byte *)obj + 0x46)))) &&
+            (targetId == ((GameObject *)obj)->anim.seqId))) &&
           ((obj != (void *)0x0 &&
             (queue = *(ObjMsgQueue **)((byte *)obj + OBJMSG_QUEUE_OFFSET),
              queue != (ObjMsgQueue *)0x0)))) {
@@ -2066,7 +2067,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
           queue->count = queue->count + 1;
         } else {
           debugPrintf(sObjMsgOverflowInObjectWarning,message,
-                       (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
+                       (int)((GameObject *)obj)->anim.classId,(int)((GameObject *)obj)->anim.seqId,
                        (int)*(short *)((byte *)sender + 0x46));
         }
       }
@@ -2077,7 +2078,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
       obj = (void *)objects[objectIndex];
       if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
           (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 ||
-            (targetId == *(short *)((byte *)obj + 0x44)))) &&
+            (targetId == ((GameObject *)obj)->anim.classId))) &&
           ((obj != (void *)0x0 &&
             (queue = *(ObjMsgQueue **)((byte *)obj + OBJMSG_QUEUE_OFFSET),
              queue != (ObjMsgQueue *)0x0)))) {
@@ -2090,7 +2091,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
           queue->count = queue->count + 1;
         } else {
           debugPrintf(sObjMsgOverflowInObjectWarning,message,
-                       (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
+                       (int)((GameObject *)obj)->anim.classId,(int)((GameObject *)obj)->anim.seqId,
                        (int)*(short *)((byte *)sender + 0x46));
         }
       }
