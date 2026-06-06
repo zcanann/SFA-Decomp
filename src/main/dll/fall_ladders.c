@@ -382,7 +382,7 @@ void fn_80154328(int obj, int p)
 {
     extern u32 randomGetRange(int min, int max);
     extern void setMatrixFromObjectPos(void *mtx, s16 *args);
-    extern void Matrix_TransformPoint(f32 x, f32 y, f32 z, void *mtx, f32 *px, f32 *py, f32 *pz);
+    extern void Matrix_TransformPoint(void *mtx, f32 x, f32 y, f32 z, f32 *px, f32 *py, f32 *pz);
     extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
     extern f32 sqrtf(f32 x);
     extern int *gWaterfxInterface;
@@ -408,7 +408,7 @@ void fn_80154328(int obj, int p)
         setMatrixFromObjectPos(mtx, stk.in);
         tx = lbl_803E2998 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         tz = lbl_803E29A0 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
-        Matrix_TransformPoint(tx, lbl_803E2990, tz, mtx, &tx, &ox, &tz);
+        Matrix_TransformPoint(mtx, tx, lbl_803E2990, tz, &tx, &ox, &tz);
         (**(void (**)(f32, f32, f32, f32, int, int))(*gWaterfxInterface + 0x14))(
             tx, *(f32 *)(p + 0x32c), tz, lbl_803E2990, 0, 3);
         if (sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c)) > lbl_803E29A4) {

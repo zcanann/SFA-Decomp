@@ -8,7 +8,7 @@ extern undefined4 FUN_80006a30();
 extern int FUN_80017730();
 extern void vecRotateZXY(void *param_1, void *outVec);
 extern undefined4 setMatrixFromObjectPos();
-extern void Matrix_TransformPoint(f32 x, f32 y, f32 z, void *matrix, f32 *outX, f32 *outY, f32 *outZ);
+extern void Matrix_TransformPoint(void *matrix, f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ);
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 camcontrol_getTargetPosition(int param_1,int param_2,float *outPos,void *outAngle);
@@ -121,7 +121,7 @@ void CameraModeBike_update(short *param_1)
     local_fc.pitch = (undefined2)(int)*(float *)(lbl_803DD540 + 0x30);
     local_fc.roll = 0;
     setMatrixFromObjectPos(afStack_e4,&local_fc);
-    Matrix_TransformPoint(lbl_803E1780,lbl_803E178C,lbl_803E1780,afStack_e4,
+    Matrix_TransformPoint(afStack_e4,lbl_803E1780,lbl_803E178C,lbl_803E1780,
                  &local_100,&local_104,&local_108);
     *param_1 = -0x8000 - *puVar5;
     *(float *)(lbl_803DD540 + 0x20) =
