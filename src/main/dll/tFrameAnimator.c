@@ -149,15 +149,15 @@ void levelname_init(int obj, int objDef)
     text = gameTextGet(*(int *)(objDef + 0x1c));
     ((TFrameAnimatorState *)state)->unk4 = **(int **)(text + 2);
     ((TFrameAnimatorState *)state)->unk8 = 0x64;
-    ((TFrameAnimatorState *)state)->unk0 = (int)text;
+    ((TFrameAnimatorState *)state)->textRecord = (int)text;
     ((TFrameAnimatorState *)state)->unkC = *(u8 *)(objDef + 0x20);
-    ((TFrameAnimatorState *)state)->unkE = *(s16 *)(objDef + 0x18);
-    ((TFrameAnimatorState *)state)->unk14 = 0;
+    ((TFrameAnimatorState *)state)->enableGameBit = *(s16 *)(objDef + 0x18);
+    ((TFrameAnimatorState *)state)->phase = 0;
     ((TFrameAnimatorState *)state)->unk12 = 0;
     ((TFrameAnimatorState *)state)->unk10 = 0;
-    if (((TFrameAnimatorState *)state)->unkE != -1) {
-        if (GameBit_Get(((TFrameAnimatorState *)state)->unkE) != 0) {
-            ((TFrameAnimatorState *)state)->unk14 = 4;
+    if (((TFrameAnimatorState *)state)->enableGameBit != -1) {
+        if (GameBit_Get(((TFrameAnimatorState *)state)->enableGameBit) != 0) {
+            ((TFrameAnimatorState *)state)->phase = 4;
         }
     }
     ((GameObject *)obj)->unkB0 |= 0x2000;

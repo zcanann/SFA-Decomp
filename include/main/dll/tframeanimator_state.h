@@ -10,15 +10,15 @@
  * span covers every observed access - the true allocation may be larger.
  */
 typedef struct TFrameAnimatorState {
-    int unk0;
+    int textRecord;
     int unk4;
     int unk8;
     u8 unkC;
     u8 unkD[0xE - 0xD];
-    s16 unkE;
+    s16 enableGameBit;
     s16 unk10;
     s16 unk12;
-    u8 unk14;
+    u8 phase;
     u8 unk15[0x268 - 0x15];
     f32 unk268;
     f32 unk26C;
