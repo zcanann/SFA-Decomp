@@ -2075,6 +2075,27 @@ compare's immediate and subtract 1 for the real case value.
     read (`*(volatile s16 *)&x > 5`) reproduces a fresh reload WITHOUT the
     loop shape (use only when the hoisted-li/compound-home tells are absent).
 
+97. **Conversion-CSE divergence: a LIFTED `f32 x = (f32)intGlobal;` local
+    CSEs the int->f32 conversion across its uses; target RE-CONVERTS per
+    use (load CSE'd, conversion not) — fix with an INT local + per-use
+    `(f32)` cast.** When target shows one `lwz` of an int global but a FULL
+    conversion blob (xoris/0x43300000/lfd/fsubs) before EACH consuming
+    statement (`fadds f31..; fadds f29..` each with its own blob), while
+    your lifted f32 local converts once and reuses the register, rewrite:
+    `int ox = lbl_X; fx0 = fx0 + (f32)ox; fx1 = fx1 + (f32)ox;` — MWCC
+    CSEs the load but NOT the per-statement cast. Conversion-side sibling
+    of #83(a) fresh-reload laundering. Three sites took textRenderStr
+    +1.6pp (ox/oy pair, `int shift = lbl << 2` with `- (f32)shift` per
+    line). Inverse direction (target converts ONCE): keep the f32 local.
+    Same session, two more #87 confirmations (read the prologue save order
+    off the target: mr/fmr interleave = param order; flips are ABI-neutral
+    because GPR/FPR slots assign per-class) — gameTextMeasureString scale
+    is param 2, textRenderStr mode is LAST; both cross-caller arbitrated
+    per #84. Also: u32-typed char vars make 0xE000/0xF8FF range tests emit
+    `cmplwi` IMMEDIATES (the int form materializes the constants via
+    lis/addi into saved regs and signed cmpw — a whole-fn coloring shift
+    from one decl; recipe #58 at fn scale).
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
