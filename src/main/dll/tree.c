@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -10,7 +11,7 @@ int tree_getExtraSize(void) { return 0x5c; }
 #pragma scheduling off
 void tree_spawnAmbientEffect(int obj, int p2, s8 index)
 {
-    int setup = *(int *)(obj + 0x4c);
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     int idx;
     int newObj;
 
@@ -35,7 +36,7 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
         *(s16 *)(newObj + 0x26) = -1;
         *(int *)(newObj + 0x18) = 0;
         *(int *)(p2 + idx * 4) =
-            Obj_SetupObject(newObj, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+            Obj_SetupObject(newObj, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
     }
 }
 #pragma scheduling reset
@@ -49,7 +50,7 @@ void tree_updateAmbientEffects(int obj, int p2)
     int handlePtr;
     int posPtr;
 
-    if (*(int *)(obj + 0xf8) != 0) {
+    if (((GameObject *)obj)->unkF8 != 0) {
         handlePtr = p2;
         posPtr = p2;
         for (i = 0; i < 3; i++) {
@@ -80,8 +81,8 @@ void tree_updateAmbientEffects(int obj, int p2)
 #pragma scheduling off
 void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int setup = *(int *)(obj + 0x4c);
-    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    int state = *(int *)&((GameObject *)obj)->extra;
     int i;
 
     if (visible != 0) {
@@ -94,7 +95,7 @@ void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 state += 0xc;
             }
         }
-        *(int *)(obj + 0xf8) = 1;
+        ((GameObject *)obj)->unkF8 = 1;
     }
 }
 #pragma scheduling reset
@@ -104,7 +105,7 @@ void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling off
 void tree_init(int obj, u8 *setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     ObjAnimEventList animOut;
 
     *(f32 *)(state + 0x44) = lbl_803E730C;
@@ -114,19 +115,19 @@ void tree_init(int obj, u8 *setup)
     *(u16 *)(state + 0x58) = *(u16 *)(state + 0x58) << 8;
     *(u16 *)(state + 0x58) |= setup[0x1c];
     *(f32 *)(state + 0x3c) = lbl_803E72F8;
-    *(s16 *)(obj + 4) = (s16)(setup[0x18] << 8);
-    *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
-    *(s16 *)(obj + 0) = (s16)(setup[0x1a] << 8);
-    *(u8 *)(obj + 0xaf) |= 0x8;
-    *(u16 *)(obj + 0xb0) |= 0x2000;
-    *(int *)(obj + 0xf8) = 0;
+    ((GameObject *)obj)->anim.rotZ = (s16)(setup[0x18] << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)(setup[0x19] << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)(setup[0x1a] << 8);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
+    ((GameObject *)obj)->unkB0 |= 0x2000;
+    ((GameObject *)obj)->unkF8 = 0;
     if (setup[0x1b] != 0) {
         *(f32 *)(state + 0x48) = (f32)(u32)setup[0x1b] / lbl_803E7328;
-        *(f32 *)(obj + 8) = *(f32 *)(state + 0x48);
-        if (*(f32 *)(obj + 8) == lbl_803E72F8) {
-            *(f32 *)(obj + 8) = lbl_803E7308;
+        ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(state + 0x48);
+        if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E72F8) {
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E7308;
         }
-        *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
+        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     } else {
         *(f32 *)(state + 0x48) = lbl_803E7308;
     }
@@ -135,7 +136,7 @@ void tree_init(int obj, u8 *setup)
     if (*(u16 *)(state + 0x58) & 0x80) {
         *(u16 *)(state + 0x58) |= 0x20;
     }
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x798:
         *(u16 *)(state + 0x5a) = 0xa;
         break;
@@ -147,7 +148,7 @@ void tree_init(int obj, u8 *setup)
         break;
     case 0x70c:
         *(u16 *)(state + 0x5a) = 0x7;
-        ObjHitbox_SetCapsuleBounds(obj, (int)(lbl_803E732C * *(f32 *)(obj + 8)), -0x5, 0x64);
+        ObjHitbox_SetCapsuleBounds(obj, (int)(lbl_803E732C * ((GameObject *)obj)->anim.rootMotionScale), -0x5, 0x64);
         break;
     case 0x625:
         *(u16 *)(state + 0x5a) = 0x6;
@@ -182,7 +183,7 @@ void tree_init(int obj, u8 *setup)
 #pragma scheduling off
 void tree_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int hit;
     int player;
     int i;
@@ -255,8 +256,8 @@ void tree_update(int obj)
         }
         player = Obj_GetPlayerObject();
         if (player != 0 && !(*(u16 *)(state + 0x58) & 0x100) && (*(u16 *)(state + 0x58) & 0xf)) {
-            dx = *(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc);
-            dz = *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14);
+            dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+            dz = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
             dist = sqrtf(dx * dx + dz * dz);
             hit = (int)dist;
             if ((u16)hit < *(u16 *)(state + 0x54)) {

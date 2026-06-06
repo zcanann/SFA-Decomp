@@ -72,6 +72,15 @@ for var in varnames:
             return m.group(0)
         name,fcls = GO[off]
         mem = '((GameObject *)%s)->%s' % (var,name)
+        # A PTR field is void* in GameObject; if the original cast was a more
+        # specific pointer AND the result is immediately dereferenced (->) or
+        # indexed ([), a bare member access loses the type and won't compile.
+        # Launder to preserve the exact cast type (still byte-identical).
+        if cls=='PTR' and ty != 'void *':
+            after = m.string[m.end():m.end()+4].lstrip(')')
+            if after.startswith('->') or after.startswith('['):
+                stats['launder'] += 1
+                return '*(%s*)&%s' % (ty,mem)
         if cls==fcls:
             stats['member'] += 1
             return mem
