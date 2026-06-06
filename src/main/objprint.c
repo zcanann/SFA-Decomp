@@ -4826,8 +4826,8 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     extern u32 lbl_803DEA00;
     extern u32 lbl_803DB470;
     extern u32 lbl_803DB468;
-    extern s8 lbl_803DB498;
-    extern s8 lbl_803DB49C;
+    extern int lbl_803DB498;
+    extern int lbl_803DB49C;
     extern f32 lbl_803DEA28;
     extern f32 lbl_803DEA2C;
     extern f32 lbl_803DEA30;
@@ -4889,8 +4889,8 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     GXSetTevKColor(0, kc);
     GXSetTevKAlphaSel(1, 0x1c);
     GXSetTevKColorSel(1, 0xc);
-    PSMTXScale(mtx3, lbl_803DEA2C, lbl_803DEA2C, lbl_803DEA04);
-    PSMTXTrans(mtx2, lbl_803DEA28, lbl_803DEA28, lbl_803DEA1C);
+    PSMTXScale(mtx3, lbl_803DEA2C, *(f32 *)&lbl_803DEA2C, lbl_803DEA04);
+    PSMTXTrans(mtx2, lbl_803DEA28, *(f32 *)&lbl_803DEA28, lbl_803DEA1C);
     PSMTXConcat(mtx2, mtx3, mtx3);
     GXLoadTexMtxImm(mtx3, 0x43, 0);
     GXSetTexCoordGen2(0, 1, 1, 0x1e, 0, 0x43);
@@ -4905,7 +4905,7 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     getTextureFn_8006c5e4(&t164);
     selectTexture((void *)t164, 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
-    PSMTXTrans(mtxR, lbl_803DEA28 * sx, lbl_803DEA28 * sy, lbl_803DEA04);
+    PSMTXTrans(mtxR, lbl_803DEA28 * sx, *(f32 *)&lbl_803DEA28 * sy, lbl_803DEA04);
     mtxR[0] = lbl_803DEA1C;
     mtxR[5] = lbl_803DEA1C;
     GXLoadTexMtxImm(mtxR, 0x46, 0);
@@ -4914,7 +4914,7 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
-    GXSetIndTexMtx(1, &mtxA, lbl_803DB498);
+    GXSetIndTexMtx(1, &mtxA, (s8)lbl_803DB498);
     GXSetTevIndirect(2, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(2, 0xff, 0xff, 0xff);
     GXSetTevSwapMode(2, 0, 0);
@@ -4928,10 +4928,10 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     GXSetIndTexCoordScale(1, 0, 0);
     mtxB.m[1] = fz;
     mtxB.m[5] = fz;
-    GXSetIndTexMtx(2, &mtxB, lbl_803DB49C);
+    GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB49C);
     GXSetTevIndirect(3, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     selectTexture(*(void **)(texTbl + lbl_803DCC44 * 4), 3);
-    PSMTXScale(mtx4, lbl_803DEA30, lbl_803DEA30, lbl_803DEA1C);
+    PSMTXScale(mtx4, lbl_803DEA30, *(f32 *)&lbl_803DEA30, lbl_803DEA1C);
     GXLoadTexMtxImm(mtx4, 0x40, 0);
     GXSetTexCoordGen2(4, 1, 4, 0x3c, 1, 0x40);
     GXSetTevKColorSel(3, 4);
@@ -4966,7 +4966,7 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
         GXSetTevKColorSel(5, 0xc);
         fn_8006C4C0(&a174, &b178, &stk380);
         selectTexture(*(void **)(a174 + (lbl_803DCC44 + (u32)lbl_803DCC3D * b178 - 0xc) * 4), 5);
-        PSMTXScale(mtx5, lbl_803DEA38, lbl_803DEA38, lbl_803DEA1C);
+        PSMTXScale(mtx5, lbl_803DEA38, *(f32 *)&lbl_803DEA38, lbl_803DEA1C);
         GXLoadTexMtxImm(mtx5, 0x49, 0);
         GXSetTexCoordGen2(5, 1, 4, 0x3c, 1, 0x49);
         GXSetTevDirect(4);
@@ -4989,8 +4989,7 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     }
     GXSetCullMode(2);
     {
-        f32 g = lbl_803DEA04;
-        GXSetFog(0, g, g, g, g, *(ObjPrintGXColor *)&lbl_803DB468);
+        GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor *)&lbl_803DB468);
     }
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
@@ -5055,8 +5054,8 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     extern u8 lbl_803DCC60;
     extern int lbl_803DCC64;
     extern u32 lbl_803DB468;
-    extern s8 lbl_803DB48C;
-    extern s8 lbl_803DB490;
+    extern int lbl_803DB48C;
+    extern int lbl_803DB490;
     extern f32 lbl_803DEA28;
     extern f32 lbl_803DEA2C;
     extern f32 lbl_803DEA30;
@@ -5139,8 +5138,8 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
         s10.a = *(u8 *)(obj + 0x37) - 0xff;
     }
     GXSetTevColorS10(3, s10);
-    PSMTXScale(mtx3, lbl_803DEA2C, lbl_803DEA2C, lbl_803DEA04);
-    PSMTXTrans(mtx2, lbl_803DEA28, lbl_803DEA28, lbl_803DEA1C);
+    PSMTXScale(mtx3, lbl_803DEA2C, *(f32 *)&lbl_803DEA2C, lbl_803DEA04);
+    PSMTXTrans(mtx2, lbl_803DEA28, *(f32 *)&lbl_803DEA28, lbl_803DEA1C);
     PSMTXConcat(mtx2, mtx3, mtx3);
     GXLoadTexMtxImm(mtx3, 0x43, 0);
     GXSetTexCoordGen2(0, 1, 1, 0x1e, 0, 0x43);
@@ -5199,7 +5198,7 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     getTextureFn_8006c5e4(&t150);
     selectTexture((void *)t150, 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
-    PSMTXTrans(mtxR, lbl_803DEA28 * sx, lbl_803DEA28 * sy, lbl_803DEA04);
+    PSMTXTrans(mtxR, lbl_803DEA28 * sx, *(f32 *)&lbl_803DEA28 * sy, lbl_803DEA04);
     mtxR[0] = lbl_803DEA1C;
     mtxR[5] = lbl_803DEA1C;
     GXLoadTexMtxImm(mtxR, 0x46, 0);
@@ -5208,7 +5207,7 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
-    GXSetIndTexMtx(1, &mtxA, lbl_803DB48C);
+    GXSetIndTexMtx(1, &mtxA, (s8)lbl_803DB48C);
     GXSetTevIndirect(stage, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(stage, 0xff, 0xff, 0xff);
     GXSetTevSwapMode(stage, 0, 0);
@@ -5223,7 +5222,7 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
         GXSetIndTexCoordScale(1, 0, 0);
         mtxB.m[1] = fz;
         mtxB.m[5] = fz;
-        GXSetIndTexMtx(2, &mtxB, lbl_803DB490);
+        GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB490);
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     } else {
         GXSetIndTexOrder(1, 3, 2);
@@ -5234,7 +5233,7 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 0);
     }
     selectTexture(*(void **)(texTbl + lbl_803DCC44 * 4), 3);
-    PSMTXScale(mtx4, lbl_803DEA30, lbl_803DEA30, lbl_803DEA1C);
+    PSMTXScale(mtx4, lbl_803DEA30, *(f32 *)&lbl_803DEA30, lbl_803DEA1C);
     GXLoadTexMtxImm(mtx4, 0x40, 0);
     GXSetTexCoordGen2(4, 1, 4, 0x3c, 1, 0x40);
     GXSetTevKColorSel(stage + 1, 4);
@@ -5259,8 +5258,7 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     GXSetNumIndStages(2);
     GXSetCullMode(2);
     if ((*(u16 *)(*p2 + 2) & 0x100) != 0) {
-        f32 g = lbl_803DEA04;
-        GXSetFog(0, g, g, g, g, *(ObjPrintGXColor *)&lbl_803DB468);
+        GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor *)&lbl_803DB468);
     } else {
         _gxSetFogParams();
     }
