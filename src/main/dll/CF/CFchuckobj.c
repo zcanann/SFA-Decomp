@@ -1,6 +1,59 @@
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll/CF/CFTreasSharpy.h"
 
+/*
+ * Per-object extra state for the areafxemit volume particle emitter
+ * (areafxemit_getExtraSize == 0x20).
+ */
+typedef struct AreaFxEmitState {
+    f32 triggerRadius; /* (s8)setup[0x18] << 2; sentinel value = always emit */
+    f32 lastDistance; /* player distance at the last emit check */
+    u8 emitType; /* setup[0x1f]; 4/6 = world-positioned spawn (flag 0x200001), >3 bursts on approach */
+    u8 pad09;
+    u16 effectId;
+    s16 emitCount; /* setup+0x22; >0: spawns per emit; <=0: negated re-emit cooldown; 0 also suppresses */
+    s16 enableBit; /* gamebit gate, -1 = always on */
+    s16 stopBit; /* gamebit; once set the emitter suppresses */
+    s16 suppressed;
+    u16 extentX; /* setup[0x1c] << 2 — random offset half-extents */
+    u16 extentZ; /* setup[0x1d] << 2 */
+    u16 extentY; /* setup[0x1e] << 2 */
+    s16 emitAngles[3]; /* yaw/pitch/roll, mirrored to obj+0/2/4 */
+} AreaFxEmitState;
+
+STATIC_ASSERT(sizeof(AreaFxEmitState) == 0x20);
+
+/*
+ * Per-object extra state for the lfxemitter curve-following emitter
+ * (lfxemitter_getExtraSize == 0x124). The leading 0x108 bytes are the
+ * rom-curve walker record (the state pointer itself is handed to
+ * Curve_AdvanceAlongPath / gRomCurveInterface).
+ */
+typedef struct LfxEmitterState {
+    u8 curve00[0x10];
+    int curveIdx; /* Curve.idx */
+    u8 curve14[0x68 - 0x14];
+    f32 curveSample[3]; /* Curve.sample — walked world position */
+    u8 curve74[0x108 - 0x74];
+    void *config; /* mmAlloc(0x28) copy of the lbl_803AC7B0-format record */
+    f32 curveSpeed; /* (s8)setup[0x25] / lbl_803E3E84 */
+    s16 lifeTimer; /* setup+0x20; frames until Obj_FreeObject when armed */
+    s16 configIndex; /* setup+0x1e; tab entry index */
+    s16 unk114; /* -2 at init */
+    s16 enableBit; /* setup+0x22; gamebit gate, -1 = always on */
+    s16 spinRoll; /* setup+0x18 -> obj+4 */
+    s16 spinPitch; /* setup+0x1a -> obj+2 */
+    s16 spinYaw; /* setup+0x1c -> obj+0 */
+    u8 hasLifeTimer;
+    u8 configLoaded;
+    u8 flags; /* 1 = follow curve, 2 = damp upward Y velocity */
+    u8 pad121[3];
+} LfxEmitterState;
+
+STATIC_ASSERT(sizeof(LfxEmitterState) == 0x124);
+STATIC_ASSERT(offsetof(LfxEmitterState, config) == 0x108);
+
+
 extern undefined4 FUN_80006824();
 extern int FUN_80006a10();
 extern undefined4 FUN_80006b0c();
@@ -175,40 +228,40 @@ void fxemit_init(int obj, int setup)
 #pragma dont_inline on
 void areafxemit_emitBurst(int obj, int count)
 {
-  int sub;
+  AreaFxEmitState *sub;
   s16 i;
   struct {
     s16 hw[6];
     f32 vec[3];
   } args;
 
-  sub = *(int *)(obj + 0xb8);
+  sub = *(AreaFxEmitState **)(obj + 0xb8);
   if (count > 0) {
     for (i = 0; i < count; i++) {
       {
-        u16 sx = *(u16 *)(sub + 0x14);
+        u16 sx = sub->extentX;
         args.vec[0] = (f32)(s32)randomGetRange(-sx, sx);
       }
       {
-        u16 sy = *(u16 *)(sub + 0x18);
+        u16 sy = sub->extentY;
         args.vec[1] = (f32)(s32)randomGetRange(-sy, sy);
       }
       {
-        u16 sz = *(u16 *)(sub + 0x16);
+        u16 sz = sub->extentZ;
         args.vec[2] = (f32)(s32)randomGetRange(-sz, sz);
       }
-      vecRotateZXY((s16 *)(sub + 0x1a), args.vec);
+      vecRotateZXY(sub->emitAngles, args.vec);
       {
-        u8 type = *(u8 *)(sub + 8);
+        u8 type = sub->emitType;
         if (type == 4 || type == 6) {
           args.vec[0] += *(f32 *)(obj + 0xc);
           args.vec[1] += *(f32 *)(obj + 0x10);
           args.vec[2] += *(f32 *)(obj + 0x14);
           (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
-              obj, *(u16 *)(sub + 0xa), &args, 0x200001, -1, 0);
+              obj, sub->effectId, &args, 0x200001, -1, 0);
         } else {
           (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
-              obj, *(u16 *)(sub + 0xa), &args, 2, -1, 0);
+              obj, sub->effectId, &args, 2, -1, 0);
         }
       }
     }
@@ -1030,6 +1083,7 @@ extern void mm_free(void* p);
 #pragma scheduling off
 #pragma peephole off
 
+
 typedef struct CFEmitterFxArgs {
     u32 unk0;
     u32 unk4;
@@ -1040,11 +1094,11 @@ typedef struct CFEmitterFxArgs {
 #define CF_EMITTER_RANDOMIZE_OFFSET(state, pos)               \
     do {                                                      \
         u16 range;                                            \
-        range = *(u16*)((state) + 0x14);                      \
+        range = (state)->extentX;                      \
         (pos)[0] = (f32)(s32)randomGetRange(-range, range);   \
-        range = *(u16*)((state) + 0x18);                      \
+        range = (state)->extentY;                      \
         (pos)[1] = (f32)(s32)randomGetRange(-range, range);   \
-        range = *(u16*)((state) + 0x16);                      \
+        range = (state)->extentZ;                      \
         (pos)[2] = (f32)(s32)randomGetRange(-range, range);   \
     } while (0)
 
@@ -1055,9 +1109,9 @@ typedef struct CFEmitterFxArgs {
 #define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args)            \
     do {                                                          \
         s16 rot[3];                                               \
-        rot[0] = *(s16*)((state) + 0x1a);                         \
-        rot[1] = *(s16*)((state) + 0x1c);                         \
-        rot[2] = *(s16*)((state) + 0x1e);                         \
+        rot[0] = (state)->emitAngles[0];                         \
+        rot[1] = (state)->emitAngles[1];                         \
+        rot[2] = (state)->emitAngles[2];                         \
         if (*(int*)((obj) + 0x30) != 0) {                         \
             rot[2] += *(s16*)(*(int*)((obj) + 0x30) + 4);         \
         }                                                         \
@@ -1074,7 +1128,7 @@ typedef struct CFEmitterFxArgs {
 void areafxemit_emitEffect(int* obj)
 {
     int object;
-    int state;
+    AreaFxEmitState *state;
     int count;
     s16 i;
     u8 type;
@@ -1082,10 +1136,10 @@ void areafxemit_emitEffect(int* obj)
     CFEmitterFxArgs args;
 
     object = (int)obj;
-    state = *(int*)(object + 0xb8);
+    state = *(AreaFxEmitState **)(object + 0xb8);
     args.scale = lbl_803E3E68;
-    type = *(u8*)(state + 8);
-    count = *(s16*)(state + 0xc);
+    type = state->emitType;
+    count = state->emitCount;
 
     if (type == 0) {
         if (count > 0) {
@@ -1093,16 +1147,16 @@ void areafxemit_emitEffect(int* obj)
                 CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
                 CF_EMITTER_ROTATE_FROM_LOCAL(object, state, &args);
                 CF_EMITTER_ADD_OBJECT_POSITION(object, &args);
-                CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 0x200001, -1, 0);
+                CF_EMITTER_SPAWN_PARTFX(object, state->effectId, &args, 0x200001, -1, 0);
             }
         } else {
             CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
             CF_EMITTER_ROTATE_FROM_LOCAL(object, state, &args);
             CF_EMITTER_ADD_OBJECT_POSITION(object, &args);
-            CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 0x200001, -1, 0);
+            CF_EMITTER_SPAWN_PARTFX(object, state->effectId, &args, 0x200001, -1, 0);
         }
     } else if (type == 1) {
-        resource = Resource_Acquire((u16)(*(u16*)(state + 0xa) + 0x58), 1);
+        resource = Resource_Acquire((u16)(state->effectId + 0x58), 1);
         if (count > 0) {
             for (i = 0; i < count; i++) {
                 (*(void (**)(int*, int, int, int, int, int))(*(int*)resource + 4))(obj, 0, 0, 1, -1, 0);
@@ -1112,15 +1166,15 @@ void areafxemit_emitEffect(int* obj)
         }
         Resource_Release(resource);
     } else if (type == 2) {
-        resource = Resource_Acquire((u16)(*(u16*)(state + 0xa) + 0xab), 1);
+        resource = Resource_Acquire((u16)(state->effectId + 0xab), 1);
         if (count > 0) {
             for (i = 0; i < count; i++) {
                 (*(void (**)(int*, int, int, int, int, int, int))(*(int*)resource + 4))(
-                    obj, 0, 0, 1, -1, *(u16*)(state + 0xa) & 0xff, 0);
+                    obj, 0, 0, 1, -1, state->effectId & 0xff, 0);
             }
         } else {
             (*(void (**)(int*, int, int, int, int, int, int))(*(int*)resource + 4))(
-                obj, 0, 0, 1, -1, *(u16*)(state + 0xa) & 0xff, 0);
+                obj, 0, 0, 1, -1, state->effectId & 0xff, 0);
         }
         Resource_Release(resource);
     } else if (type == 3) {
@@ -1128,33 +1182,33 @@ void areafxemit_emitEffect(int* obj)
             for (i = 0; i < count; i++) {
                 CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
                 CF_EMITTER_ROTATE_FROM_LOCAL(object, state, &args);
-                CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 2, -1, 0);
+                CF_EMITTER_SPAWN_PARTFX(object, state->effectId, &args, 2, -1, 0);
             }
         } else {
             CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
             CF_EMITTER_ROTATE_FROM_LOCAL(object, state, &args);
-            CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 2, -1, 0);
+            CF_EMITTER_SPAWN_PARTFX(object, state->effectId, &args, 2, -1, 0);
         }
     } else if (type > 5) {
         if (count > 0) {
             for (i = 0; i < count; i++) {
                 CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-                vecRotateZXY((s16*)(state + 0x1a), args.pos);
-                if (*(u8*)(state + 8) == 6) {
+                vecRotateZXY(state->emitAngles, args.pos);
+                if (state->emitType == 6) {
                     CF_EMITTER_ADD_OBJECT_POSITION(object, &args);
-                    CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 0x200001, -1, 0);
+                    CF_EMITTER_SPAWN_PARTFX(object, state->effectId, &args, 0x200001, -1, 0);
                 } else {
-                    CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 2, -1, 0);
+                    CF_EMITTER_SPAWN_PARTFX(object, state->effectId, &args, 2, -1, 0);
                 }
             }
         } else {
             CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-            vecRotateZXY((s16*)(state + 0x1a), args.pos);
-            if (*(u8*)(state + 8) == 6) {
+            vecRotateZXY(state->emitAngles, args.pos);
+            if (state->emitType == 6) {
                 CF_EMITTER_ADD_OBJECT_POSITION(object, &args);
-                CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 0x200001, -1, 0);
+                CF_EMITTER_SPAWN_PARTFX(object, state->effectId, &args, 0x200001, -1, 0);
             } else {
-                CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 2, -1, 0);
+                CF_EMITTER_SPAWN_PARTFX(object, state->effectId, &args, 2, -1, 0);
             }
         }
     }
@@ -1175,7 +1229,7 @@ int areafxemit_SeqFn(int* obj, int p2, u8* state)
 
 void areafxemit_update(int* obj)
 {
-    int state;
+    AreaFxEmitState *state;
     int player;
     s16 period;
     f32 xDelta;
@@ -1184,33 +1238,33 @@ void areafxemit_update(int* obj)
     f32 distance;
     f32 radius;
 
-    state = *(int*)((u8*)obj + 0xb8);
+    state = *(AreaFxEmitState **)((u8*)obj + 0xb8);
     player = Obj_GetPlayerObject();
     if ((player != 0) &&
-        (((*(s16*)(state + 0xe) == -1) || (GameBit_Get(*(s16*)(state + 0xe)) != 0)) &&
-         (*(s16*)(state + 0x12) == 0))) {
-        if (GameBit_Get(*(s16*)(state + 0x10)) != 0) {
-            *(s16*)(state + 0x12) = 1;
+        (((state->enableBit == -1) || (GameBit_Get(state->enableBit) != 0)) &&
+         (state->suppressed == 0))) {
+        if (GameBit_Get(state->stopBit) != 0) {
+            state->suppressed = 1;
         }
-        period = *(s16*)(state + 0xc);
+        period = state->emitCount;
         if ((-1 < period) || ((-1 >= period && (*(s32*)((u8*)obj + 0xf4) < 1)))) {
             xDelta = *(f32*)((u8*)obj + 0x18) - *(f32*)(player + 0x18);
             yDelta = *(f32*)((u8*)obj + 0x1c) - *(f32*)(player + 0x1c);
             zDelta = *(f32*)((u8*)obj + 0x20) - *(f32*)(player + 0x20);
             if (period == 0) {
-                *(s16*)(state + 0x12) = 1;
+                state->suppressed = 1;
             }
             distance = sqrtf(zDelta * zDelta + xDelta * xDelta + yDelta * yDelta);
-            radius = *(f32*)(state + 0);
+            radius = state->triggerRadius;
             if (distance <= radius || radius == lbl_803E3E6C) {
-                if ((3 < *(u8*)(state + 8)) &&
-                    ((*(f32*)(state + 4) > radius && (radius != lbl_803E3E6C)))) {
+                if ((3 < state->emitType) &&
+                    ((state->lastDistance > radius && (radius != lbl_803E3E6C)))) {
                     areafxemit_emitBurst((int)obj, 0x23);
                 }
                 areafxemit_emitEffect(obj);
             }
             *(s32*)((u8*)obj + 0xf4) = -period;
-            *(f32*)(state + 4) = distance;
+            state->lastDistance = distance;
         } else if ((period < 0) && (0 < *(s32*)((u8*)obj + 0xf4))) {
             *(s32*)((u8*)obj + 0xf4) = *(s32*)((u8*)obj + 0xf4) - (u32)framesThisStep;
         }
@@ -1219,33 +1273,33 @@ void areafxemit_update(int* obj)
 
 void areafxemit_init(int obj, int setup)
 {
-    int state;
+    AreaFxEmitState *state;
     s16 period;
     s16 angle;
 
     *(int (**)(int*, int, u8*))(obj + 0xbc) = areafxemit_SeqFn;
-    state = *(int*)(obj + 0xb8);
+    state = *(AreaFxEmitState **)(obj + 0xb8);
 
-    *(f32*)(state + 0) = (f32)((s32)*(s8*)(setup + 0x18) << 2);
-    *(u8*)(state + 8) = *(u8*)(setup + 0x1f);
-    *(u16*)(state + 0xa) = *(u16*)(setup + 0x20);
+    state->triggerRadius = (f32)((s32)*(s8*)(setup + 0x18) << 2);
+    state->emitType = *(u8*)(setup + 0x1f);
+    state->effectId = *(u16*)(setup + 0x20);
     period = *(s16*)(setup + 0x22);
-    *(s16*)(state + 0xc) = period;
-    *(s16*)(state + 0xe) = *(s16*)(setup + 0x24);
-    *(s16*)(state + 0x10) = *(s16*)(setup + 0x26);
-    *(s16*)(state + 0x12) = 0;
-    *(u16*)(state + 0x14) = (u16)(*(u8*)(setup + 0x1c) << 2);
-    *(u16*)(state + 0x16) = (u16)(*(u8*)(setup + 0x1d) << 2);
-    *(u16*)(state + 0x18) = (u16)(*(u8*)(setup + 0x1e) << 2);
+    state->emitCount = period;
+    state->enableBit = *(s16*)(setup + 0x24);
+    state->stopBit = *(s16*)(setup + 0x26);
+    state->suppressed = 0;
+    state->extentX = (u16)(*(u8*)(setup + 0x1c) << 2);
+    state->extentZ = (u16)(*(u8*)(setup + 0x1d) << 2);
+    state->extentY = (u16)(*(u8*)(setup + 0x1e) << 2);
 
     angle = (s16)(*(s8*)(setup + 0x19) << 8);
-    *(s16*)(state + 0x1e) = angle;
+    state->emitAngles[2] = angle;
     *(s16*)(obj + 4) = angle;
     angle = (s16)(*(s8*)(setup + 0x1a) << 8);
-    *(s16*)(state + 0x1c) = angle;
+    state->emitAngles[1] = angle;
     *(s16*)(obj + 2) = angle;
     angle = (s16)(*(s8*)(setup + 0x1b) << 8);
-    *(s16*)(state + 0x1a) = angle;
+    state->emitAngles[0] = angle;
     *(s16*)(obj + 0) = angle;
     *(f32*)(obj + 8) = lbl_803E3E70;
 
@@ -1255,8 +1309,8 @@ void areafxemit_init(int obj, int setup)
         *(s32*)(obj + 0xf4) = 0;
     }
 
-    if (*(s16*)(state + 0x10) != -1 && GameBit_Get(*(s16*)(state + 0x10)) != 0) {
-        *(s16*)(state + 0x12) = 1;
+    if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0) {
+        state->suppressed = 1;
     }
 }
 
