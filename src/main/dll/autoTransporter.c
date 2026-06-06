@@ -848,7 +848,7 @@ extern int fn_80295BF0(int *player);
 extern int fn_8029669C(int *player);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void vecRotateZXY(void *inParams, f32 *outVec);
-/* extern void ObjMsg_SendToObject(int *target, int msg, int *src, int p4); — already declared */
+/* extern void ObjMsg_SendToObject(int *target, int msg, int *src, int p4); -- already declared */
 extern f32 lbl_803E3688;
 extern f32 lbl_803E368C;
 extern f32 lbl_803E3690;

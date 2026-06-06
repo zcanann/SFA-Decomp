@@ -1908,7 +1908,7 @@ void hudFn_8011f38c(u8 x) { lbl_803DD792 = x; }
 void hudFn_8011f6f0(u8 x) { lbl_803DD75A = x; }
 void GameUI_func0E(u8 x) { lbl_803DBA88 = x; }
 
-/* sth (s16 store) of zero-extended u8 — extsh + sth pattern */
+/* sth (s16 store) of zero-extended u8 -- extsh + sth pattern */
 extern s16 lbl_803DD76E;
 void fn_8011F6D4(u32 x) {
     lbl_803DD76E = (s16)(u8)x;
@@ -2046,7 +2046,7 @@ u16 getYButtonItem(s16 *out) {
     return yButtonState;
 }
 
-/* GameUI_airMeterSetShutdown: set bit 7 of (*p)+0x44 if p non-null — uses bitfield insert (rlwimi) */
+/* GameUI_airMeterSetShutdown: set bit 7 of (*p)+0x44 if p non-null -- uses bitfield insert (rlwimi) */
 typedef struct {
     char pad[0x44];
     u8 bit7 : 1;
