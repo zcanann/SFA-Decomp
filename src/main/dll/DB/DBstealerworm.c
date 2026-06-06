@@ -589,10 +589,11 @@ void SB_Propeller_update(int obj) {
             }
         }
         if (*(int *)(obj + 0xf4) == 0) {
-            *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 6;
-            *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
-            *(int *)(*(int *)(obj + 0x54) + 0x48) = 0x10;
-            *(int *)(*(int *)(obj + 0x54) + 0x4c) = 0x10;
+            ObjHitsPriorityState *hitState = *(ObjHitsPriorityState **)(obj + 0x54);
+            hitState->hitVolumePriority = 6;
+            hitState->hitVolumeId = 1;
+            hitState->objectHitMask = 0x10;
+            hitState->skeletonHitMask = 0x10;
         }
         else {
             *(u8 *)(*(int *)(obj + 0x54) + 0x6c) = 0;

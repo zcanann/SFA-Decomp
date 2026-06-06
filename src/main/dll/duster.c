@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/duster.h"
 #include "main/objanim.h"
+#include "main/objhits_types.h"
 
 #pragma scheduling off
 #pragma peephole off
@@ -1068,8 +1069,8 @@ void fn_80156B0C(uint param_9,int param_10)
 {
   int iVar1;
   
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 10;
-  *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumePriority = 10;
+  ((ObjHitsPriorityState *)*(int *)(param_9 + 0x54))->hitVolumeId = 1;
   if (((*(uint *)(param_10 + 0x2dc) & 0x80000000) != 0) && (*(byte *)(param_10 + 0x33a) <= 1)) {
     *(undefined *)(param_10 + 0x33a) = 1;
     *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x40000000;

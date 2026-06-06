@@ -278,8 +278,8 @@ void drakormissile_update(int obj) {
                 *(void **)(p + DRAKORMISSILE_FIELD_LIGHT) = NULL;
             }
         }
-        *(int *)(*(int *)((char *)obj + 0x54) + 0x4c) = 0x10;
-        *(int *)(*(int *)((char *)obj + 0x54) + 0x48) = 0x10;
+        ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->skeletonHitMask = 0x10;
+        ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->objectHitMask = 0x10;
     }
     if (*(void **)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL && modelLightStruct_getActiveState()) {
         modelLightStruct_updateGlowAlpha(*(void **)((int)p + DRAKORMISSILE_FIELD_LIGHT));
@@ -378,8 +378,8 @@ void drakormissile_init(int obj, char *arg) {
     char *p = *(char **)((char *)obj + 0xb8);
     int s;
     int i;
-    *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6e) = 0x13;
-    *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6f) = 1;
+    ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 0x13;
+    ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId = 1;
     s = *(int *)((char *)obj + 0x54);
     *(s16 *)(s + 0x60) = *(s16 *)(s + 0x60) & ~1;
     *(f32 *)((char *)obj + 0xc) = *(f32 *)(arg + DRAKORMISSILE_SETUP_POS_X);

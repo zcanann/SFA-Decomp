@@ -374,8 +374,8 @@ void dimbossgut2_update(int obj)
     fn_801BEEA0((s16 *)obj, (u8 *)state);
     dimbossgut2_updateTracking(obj, state);
     ObjAnim_AdvanceCurrentMove(obj, lbl_803E4D20, timeDelta, NULL);
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 9;
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
+    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumePriority = 9;
+    ((ObjHitsPriorityState *)*(int *)(obj + 0x54))->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     iVar1 = *(int *)(state + 0x40c);
     p = *(u8 **)(iVar1 + 0x18);

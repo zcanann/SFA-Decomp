@@ -654,8 +654,8 @@ int fn_802BCE14(int obj, int p2)
                 *(f32 *)((char *)q + 0x408) = lim;
             }
         }
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6e) = 0x15;
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6f) = 2;
+        ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumePriority = 0x15;
+        ((ObjHitsPriorityState *)*(int *)((char *)obj + 0x54))->hitVolumeId = 2;
     }
     if (!((ByteFlags *)((char *)inner + 0x14ec))->b01 && !((ByteFlags *)((char *)q + 0x3f0))->b40 &&
         !((ByteFlags *)((char *)q + 0x3f0))->b80 &&
