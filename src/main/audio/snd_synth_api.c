@@ -290,7 +290,7 @@ void synthDeactivateStudio(u8 slot)
     offset = 0;
     for (; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; i++) {
         voice = synthVoice + offset;
-        if (slot == ((McmdVoiceState *)voice)->auxB) {  /* 0x11f: mcmd names this auxB; MP4 layout says studio - naming-pass question */
+        if (slot == ((McmdVoiceState *)voice)->studio) {
             if (((McmdVoiceState *)voice)->voiceHandle != 0xffffffff) {
                 voiceKillById(((McmdVoiceState *)voice)->vidListNode->id);
             } else {

@@ -200,9 +200,9 @@ typedef struct McmdVoiceState {
         u8 callbackActive;
     };
     u8 streamKind;
-    u8 auxA;
-    u8 auxB;
+    u8 vGroup;
     u8 studio;
+    u8 track;
     u8 midiSlot;
     u8 midiEvent;
     u8 midiLayer;
@@ -281,9 +281,9 @@ typedef struct McmdVoiceState {
     u8 startupMidiSlot;
     u8 startupMidiEvent;
     u8 startupMidiLayer;
+    u8 startupTrack;
+    u8 startupVGroup;
     u8 startupStudio;
-    u8 startupAuxA;
-    u8 startupAuxB;
     u8 startupDeferStart;
     u8 unk211[3];
     u32 inputDirtyFlags;

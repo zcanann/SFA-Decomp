@@ -400,7 +400,7 @@ void macHandleActive(McmdVoiceState *sv)
         sv->midiSlot = sv->startupMidiSlot;
         sv->midiEvent = sv->startupMidiEvent;
         sv->midiLayer = sv->startupMidiLayer;
-        sv->studio = sv->startupStudio;
+        sv->track = sv->startupTrack;
         sv->itdMode = sv->startupDeferStart;
         sv->keyGroup = 0;
         sv->vibratoModAddScale = 0;
@@ -415,8 +415,8 @@ void macHandleActive(McmdVoiceState *sv)
 
         inpSetMidiLastNote(sv->midiSlot, sv->midiEvent, sv->keyBase);
         voiceRegister((int)sv);
-        sv->auxA = sv->startupAuxA;
-        sv->auxB = sv->startupAuxB;
+        sv->vGroup = sv->startupVGroup;
+        sv->studio = sv->startupStudio;
         sv->portamentoTime = 0;
         sv->portamentoDuration = 25600;
         sv->portamentoMode = 0;
@@ -942,7 +942,7 @@ void macHandleActive(McmdVoiceState *sv)
         {
             u8 i = *para1 >> 0x18;
             SelectSource(sv,
-                         (McmdInputSlot *)(lbl_803BDEF4 + sv->auxB * 0x90 + i * 0x24),
+                         (McmdInputSlot *)(lbl_803BDEF4 + sv->studio * 0x90 + i * 0x24),
                          &lbl_803DE2E8, ((MacDataTables *)lbl_8032EDD0)->auxAMask[i],
                          ((MacDataTables *)lbl_8032EDD0)->auxADirty[i]);
             break;
@@ -951,7 +951,7 @@ void macHandleActive(McmdVoiceState *sv)
         {
             u8 i = *para1 >> 0x18;
             SelectSource(sv,
-                         (McmdInputSlot *)(lbl_803BDA74 + sv->auxB * 0x90 + i * 0x24),
+                         (McmdInputSlot *)(lbl_803BDA74 + sv->studio * 0x90 + i * 0x24),
                          &lbl_803DE2E8, ((MacDataTables *)lbl_8032EDD0)->auxBMask[i],
                          ((MacDataTables *)lbl_8032EDD0)->auxBDirty[i]);
             break;
@@ -1349,14 +1349,14 @@ u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
             sv->fineTune = 0;
             sv->startupVolume = vol;
             sv->startupPan = panning;
-            sv->startupStudio = trackid;
+            sv->startupTrack = trackid;
             sv->macroStackDepth = 0;
             sv->macroStackIndex = 0;
             sv->voiceNextHandle = 0xffffffff;
             sv->voicePrevHandle = 0xffffffff;
             sv->cloneVidListNode = (McmdVidListNode *)0xffffffff;
-            sv->startupAuxA = vGroup;
-            sv->startupAuxB = studio;
+            sv->startupVGroup = vGroup;
+            sv->startupStudio = studio;
             sv->startupDeferStart = itd != 0 ? 0 : 1;
             sv->queuedMessageWriteIndex = 0;
             sv->queuedMessageReadIndex = 0;
