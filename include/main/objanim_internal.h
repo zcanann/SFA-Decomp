@@ -187,9 +187,18 @@ typedef struct ObjAnimBank {
 } ObjAnimBank;
 
 typedef struct ObjAnimComponent {
-  u8 pad00[0x08];
+  s16 rotX;
+  s16 rotY;
+  s16 rotZ;
+  u8 pad06[0x08 - 0x06];
   f32 rootMotionScale;
-  u8 pad0C[0x46 - 0x0C];
+  f32 localPosX;
+  f32 localPosY;
+  f32 localPosZ;
+  f32 worldPosX;
+  f32 worldPosY;
+  f32 worldPosZ;
+  u8 pad24[0x46 - 0x24];
   s16 objType;
   u8 pad48[0x50 - 0x48];
   ObjModelInstance *modelInstance;
@@ -304,7 +313,16 @@ STATIC_ASSERT(offsetof(ObjAnimBank, currentState) == 0x2C);
 STATIC_ASSERT(offsetof(ObjAnimBank, activeState) == 0x30);
 
 STATIC_ASSERT(sizeof(ObjAnimComponent) == 0xB0);
+STATIC_ASSERT(offsetof(ObjAnimComponent, rotX) == 0x00);
+STATIC_ASSERT(offsetof(ObjAnimComponent, rotY) == 0x02);
+STATIC_ASSERT(offsetof(ObjAnimComponent, rotZ) == 0x04);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rootMotionScale) == 0x08);
+STATIC_ASSERT(offsetof(ObjAnimComponent, localPosX) == 0x0C);
+STATIC_ASSERT(offsetof(ObjAnimComponent, localPosY) == 0x10);
+STATIC_ASSERT(offsetof(ObjAnimComponent, localPosZ) == 0x14);
+STATIC_ASSERT(offsetof(ObjAnimComponent, worldPosX) == 0x18);
+STATIC_ASSERT(offsetof(ObjAnimComponent, worldPosY) == 0x1C);
+STATIC_ASSERT(offsetof(ObjAnimComponent, worldPosZ) == 0x20);
 STATIC_ASSERT(offsetof(ObjAnimComponent, objType) == 0x46);
 STATIC_ASSERT(offsetof(ObjAnimComponent, modelInstance) == 0x50);
 STATIC_ASSERT(offsetof(ObjAnimComponent, hitReactState) == 0x54);

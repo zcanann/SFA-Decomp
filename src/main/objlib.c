@@ -697,10 +697,12 @@ void ObjHits_MarkObjectPositionDirty(int objPtr)
 #pragma peephole off
 void ObjHits_SyncObjectPositionIfDirty(u32 objPtr)
 {
+  ObjAnimComponent *obj;
   ObjHitsPriorityState *hitState;
   s16 flags;
 
-  hitState = (ObjHitsPriorityState *)((ObjAnimComponent *)objPtr)->hitReactState;
+  obj = (ObjAnimComponent *)objPtr;
+  hitState = (ObjHitsPriorityState *)obj->hitReactState;
   if (hitState == 0) {
     return;
   }
@@ -709,12 +711,12 @@ void ObjHits_SyncObjectPositionIfDirty(u32 objPtr)
     return;
   }
   hitState->flags = (s16)(flags & ~OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
-  hitState->localPosX = *(f32 *)(objPtr + OBJ_POSITION_X_OFFSET);
-  hitState->localPosY = *(f32 *)(objPtr + OBJ_POSITION_Y_OFFSET);
-  hitState->localPosZ = *(f32 *)(objPtr + OBJ_POSITION_Z_OFFSET);
-  hitState->worldPosX = *(f32 *)(objPtr + OBJ_WORLD_POSITION_X_OFFSET);
-  hitState->worldPosY = *(f32 *)(objPtr + OBJ_WORLD_POSITION_Y_OFFSET);
-  hitState->worldPosZ = *(f32 *)(objPtr + OBJ_WORLD_POSITION_Z_OFFSET);
+  hitState->localPosX = obj->localPosX;
+  hitState->localPosY = obj->localPosY;
+  hitState->localPosZ = obj->localPosZ;
+  hitState->worldPosX = obj->worldPosX;
+  hitState->worldPosY = obj->worldPosY;
+  hitState->worldPosZ = obj->worldPosZ;
   return;
 }
 #pragma peephole reset
@@ -762,10 +764,12 @@ void ObjHits_DisableObject(u32 objPtr)
 #pragma peephole off
 void ObjHits_EnableObject(u32 objPtr)
 {
+  ObjAnimComponent *obj;
   ObjHitsPriorityState *hitState;
   s16 flags;
 
-  hitState = (ObjHitsPriorityState *)((ObjAnimComponent *)objPtr)->hitReactState;
+  obj = (ObjAnimComponent *)objPtr;
+  hitState = (ObjHitsPriorityState *)obj->hitReactState;
   if (hitState == 0) {
     return;
   }
@@ -774,12 +778,12 @@ void ObjHits_EnableObject(u32 objPtr)
     return;
   }
   hitState->flags = (s16)(flags | OBJHITS_PRIORITY_STATE_ENABLED);
-  hitState->localPosX = *(f32 *)(objPtr + OBJ_POSITION_X_OFFSET);
-  hitState->localPosY = *(f32 *)(objPtr + OBJ_POSITION_Y_OFFSET);
-  hitState->localPosZ = *(f32 *)(objPtr + OBJ_POSITION_Z_OFFSET);
-  hitState->worldPosX = *(f32 *)(objPtr + OBJ_WORLD_POSITION_X_OFFSET);
-  hitState->worldPosY = *(f32 *)(objPtr + OBJ_WORLD_POSITION_Y_OFFSET);
-  hitState->worldPosZ = *(f32 *)(objPtr + OBJ_WORLD_POSITION_Z_OFFSET);
+  hitState->localPosX = obj->localPosX;
+  hitState->localPosY = obj->localPosY;
+  hitState->localPosZ = obj->localPosZ;
+  hitState->worldPosX = obj->worldPosX;
+  hitState->worldPosY = obj->worldPosY;
+  hitState->worldPosZ = obj->worldPosZ;
   return;
 }
 #pragma peephole reset
@@ -818,18 +822,20 @@ ushort ObjHits_IsObjectEnabled(int objPtr)
  */
 void ObjHits_SyncObjectPosition(u32 objPtr)
 {
+  ObjAnimComponent *obj;
   ObjHitsPriorityState *hitState;
 
-  hitState = (ObjHitsPriorityState *)((ObjAnimComponent *)objPtr)->hitReactState;
+  obj = (ObjAnimComponent *)objPtr;
+  hitState = (ObjHitsPriorityState *)obj->hitReactState;
   if (hitState == 0) {
     return;
   }
-  hitState->localPosX = *(f32 *)(objPtr + OBJ_POSITION_X_OFFSET);
-  hitState->localPosY = *(f32 *)(objPtr + OBJ_POSITION_Y_OFFSET);
-  hitState->localPosZ = *(f32 *)(objPtr + OBJ_POSITION_Z_OFFSET);
-  hitState->worldPosX = *(f32 *)(objPtr + OBJ_WORLD_POSITION_X_OFFSET);
-  hitState->worldPosY = *(f32 *)(objPtr + OBJ_WORLD_POSITION_Y_OFFSET);
-  hitState->worldPosZ = *(f32 *)(objPtr + OBJ_WORLD_POSITION_Z_OFFSET);
+  hitState->localPosX = obj->localPosX;
+  hitState->localPosY = obj->localPosY;
+  hitState->localPosZ = obj->localPosZ;
+  hitState->worldPosX = obj->worldPosX;
+  hitState->worldPosY = obj->worldPosY;
+  hitState->worldPosZ = obj->worldPosZ;
   return;
 }
 
@@ -1010,18 +1016,22 @@ void ObjHits_RefreshObjectState(int objPtr)
 #pragma peephole off
 int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sphereIndex)
 {
+  ObjAnimComponent *sourceObj;
+  ObjAnimComponent *targetObj;
   ObjHitsPriorityState *hitState;
   int hitSlot;
   
   if (priority == '\0') {
     return 0;
   }
-  hitState = *(ObjHitsPriorityState **)(obj + 0x54);
+  sourceObj = (ObjAnimComponent *)obj;
+  targetObj = (ObjAnimComponent *)hitObj;
+  hitState = (ObjHitsPriorityState *)sourceObj->hitReactState;
   if ((hitState->flags & OBJHITS_PRIORITY_STATE_ENABLED) == 0) {
     return 0;
   }
-  if (((void *)hitObj != NULL) && (*(void **)(hitObj + 0x54) != NULL)) {
-    (*(ObjHitsPriorityState **)(hitObj + 0x54))->lastHitObject = obj;
+  if ((targetObj != NULL) && (targetObj->hitReactState != NULL)) {
+    ((ObjHitsPriorityState *)targetObj->hitReactState)->lastHitObject = obj;
   }
   hitSlot = 0;
   while (hitSlot < hitState->priorityHitCount) {
@@ -1030,9 +1040,9 @@ int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sph
         hitState->sphereIndices[hitSlot] = sphereIndex;
         hitState->priorities[hitSlot] = priority;
         hitState->hitVolumes[hitSlot] = hitVolume;
-        hitState->hitPosX[hitSlot] = *(float *)(obj + 0xc);
-        hitState->hitPosY[hitSlot] = *(float *)(obj + 0x10);
-        hitState->hitPosZ[hitSlot] = *(float *)(obj + 0x14);
+        hitState->hitPosX[hitSlot] = sourceObj->localPosX;
+        hitState->hitPosY[hitSlot] = sourceObj->localPosY;
+        hitState->hitPosZ[hitSlot] = sourceObj->localPosZ;
       }
       hitSlot = hitState->priorityHitCount + 1;
     }
@@ -1044,9 +1054,9 @@ int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sph
     *(char *)((int)hitState->priorities + hitState->priorityHitCount) = priority;
     *(undefined *)((int)hitState->hitVolumes + hitState->priorityHitCount) = hitVolume;
     hitState->hitObjects[hitState->priorityHitCount] = hitObj;
-    hitState->hitPosX[hitState->priorityHitCount] = *(float *)(obj + 0xc);
-    hitState->hitPosY[hitState->priorityHitCount] = *(float *)(obj + 0x10);
-    hitState->hitPosZ[hitState->priorityHitCount] = *(float *)(obj + 0x14);
+    hitState->hitPosX[hitState->priorityHitCount] = sourceObj->localPosX;
+    hitState->hitPosY[hitState->priorityHitCount] = sourceObj->localPosY;
+    hitState->hitPosZ[hitState->priorityHitCount] = sourceObj->localPosZ;
     hitState->priorityHitCount = hitState->priorityHitCount + '\x01';
   }
   return 1;
@@ -1072,18 +1082,22 @@ int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sph
 int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,char priority,
                               u8 hitVolume,u8 sphereIndex)
 {
+  ObjAnimComponent *sourceObj;
+  ObjAnimComponent *targetObj;
   ObjHitsPriorityState *hitState;
   int hitSlot;
   
   if (priority == '\0') {
     return 0;
   }
-  hitState = *(ObjHitsPriorityState **)(obj + 0x54);
+  sourceObj = (ObjAnimComponent *)obj;
+  targetObj = (ObjAnimComponent *)hitObj;
+  hitState = (ObjHitsPriorityState *)sourceObj->hitReactState;
   if ((hitState->flags & OBJHITS_PRIORITY_STATE_ENABLED) == 0) {
     return 0;
   }
-  if (((void *)hitObj != NULL) && (*(void **)(hitObj + 0x54) != NULL)) {
-    (*(ObjHitsPriorityState **)(hitObj + 0x54))->lastHitObject = obj;
+  if ((targetObj != NULL) && (targetObj->hitReactState != NULL)) {
+    ((ObjHitsPriorityState *)targetObj->hitReactState)->lastHitObject = obj;
   }
   hitSlot = 0;
   while (hitSlot < hitState->priorityHitCount) {
