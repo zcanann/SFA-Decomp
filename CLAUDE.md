@@ -2382,6 +2382,13 @@ MatchingFor flip (status edits remain the team-lead's):
 and appended duplicate pool entries at a fresh sdata2 address -- 440+2
 diverged words vs retail, invisible to objdiff and to a report-only gate.)
 
+*(Numbering note: recipes #105-106 below originally landed as a second
+#98/#99 pair (track_dolphin discoveries, commit 3feef4d3a) colliding with
+the MSL #98-100 set above; renumbered in 0815cd372. Older commit messages
+citing "#98 K&R narrow-param" or "#99 volatile-store" mean #105/#106 here.
+Conversely the e_sqrt commit's "recipe #99 -O0 source model" citation means
+today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
+
 105. **K&R-style definition for a NARROW (u8/char) param = callee masks at
     every use, caller passes the raw int — resolves the u8-param
     caller-mask paradox.** When target's CALLEE re-masks a byte param at
