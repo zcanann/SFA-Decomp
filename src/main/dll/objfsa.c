@@ -4793,7 +4793,6 @@ void player_init(int unused, void *obj, int a, int b) {
     *(s32 *)((char *)obj + 0x340) = -1;
     *(u8 *)((char *)obj + 0x358) = 0;
 }
-#pragma peephole on
 #pragma scheduling on
 
 /* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
@@ -4843,7 +4842,6 @@ int fn_800D9F38(void *a, void *b) {
     return 0;
 }
 #pragma scheduling on
-#pragma peephole on
 
 /* player_updateVel */
 extern f32 lbl_803E05A4;
@@ -5146,7 +5144,6 @@ void player_updateVel(char *p, char *obj, int unused) {
     }
 }
 #pragma scheduling on
-#pragma peephole on
 
 
 /* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
@@ -5175,7 +5172,6 @@ void RomCurve_setA4(void *a, void *b) {
     }
 }
 #pragma scheduling on
-#pragma peephole on
 
 extern void Curve_BuildHermiteCoeffs(void);
 extern void Curve_EvalHermite(void);
@@ -5257,7 +5253,6 @@ int RomCurve_setClosed(float *state, int closed) {
     return 0;
 }
 #pragma scheduling on
-#pragma peephole on
 
 #define ROMCURVE_ADD_LINK(off, mask, wantSet)                                     \
     neighborId = *(s32 *)(curve + (off));                                         \
@@ -6656,7 +6651,6 @@ void UIController_render(void *p, int a, int b) {
     (**(void (**)(void *, int, int))(*gGameUIInterface + 0xc))(p, a, b);
 }
 #pragma scheduling on
-#pragma peephole on
 
 /* player_setState */
 #pragma peephole off
@@ -6685,7 +6679,6 @@ end:
     if (q != 0) *(u8 *)((char *)q + 0x70) = 0;
 }
 #pragma scheduling on
-#pragma peephole on
 
 /* walkPath_writeU16LE: split a path id into two little-endian bytes. */
 #pragma peephole off
@@ -6696,7 +6689,6 @@ void walkPath_writeU16LE(u32 v, u8 *dst) {
     dst[1] = (u8)((s32)v >> 8);
 }
 #pragma scheduling on
-#pragma peephole on
 
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 void fn_800D9EE8(float *p) {
