@@ -207,6 +207,14 @@ extern const f32 lbl_803E77B0;
 extern const f32 lbl_803E77B4;
 extern const f32 lbl_803E77B8;
 
+typedef struct KeymapEntry {
+    u16 id;         /* 0x0 */
+    s8 transpose;   /* 0x2 */
+    u8 panning;     /* 0x3 */
+    s16 prioOffset; /* 0x4 */
+    u8 reserved[2]; /* 0x6 */
+} KeymapEntry; /* size 0x8, MP4 musyx/synthdata.h KEYMAP */
+
 /*
  * Resolve an indirection-table sample entry, then dispatch the resolved
  * sample or nested sample group.
@@ -216,7 +224,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                            u8 vGroup, u8 studio, u32 itd)
 {
     u8 *keymap;
-    u8 *entry;
+    KeymapEntry *entry;
     s32 p;
     s32 k;
     u32 handle;
@@ -224,9 +232,9 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
     u32 rejected;
 
     if ((keymap = dataGetKeymap(id)) != 0) {
-        entry = keymap + (key & 0x7F) * 8;
-        if (*(u16 *)entry != 0xFFFF && (*(u16 *)entry & 0xC000) != 0x4000) {
-            if ((entry[3] & 0x80) == 0) {
+        entry = (KeymapEntry *)(keymap + (key & 0x7F) * 8);
+        if (entry->id != 0xFFFF && (entry->id & 0xC000) != 0x4000) {
+            if ((entry->panning & 0x80) == 0) {
                 p = (keymap[key * 8 + 3] - 0x40) + pan;
                 if (p < 0) {
                     pan = 0;
@@ -239,21 +247,21 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                 pan = 0x80;
             }
 
-            k = (key & 0x7F) + *(s8 *)(entry + 2);
+            k = (key & 0x7F) + entry->transpose;
             if (k > 0x7F) {
                 k = 0x7F;
             } else if (k < 0) {
                 k = 0;
             }
 
-            prio += *(s16 *)(entry + 4);
+            prio += entry->prioOffset;
             if (prio > 0xFF) {
                 prio = 0xFF;
             } else if (prio < 0) {
                 prio = 0;
             }
 
-            if ((*(u16 *)entry & 0xC000) == 0) {
+            if ((entry->id & 0xC000) == 0) {
                 if (inpGetMidiCtrl(0x41, midi, midiSet) > 0x1F80) {
                     handle = audioFn_8026f630(k & 0x7F, midi, midiSet, vidFlag, &rejected);
                     ok = !rejected;
@@ -267,11 +275,11 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                 if (handle != 0xFFFFFFFF) {
                     return handle;
                 }
-                return macStart(*(u16 *)entry, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                return macStart(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
                                         pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
                                         studio, itd);
             }
-            return audioLayerFn_8026f8b8(*(u16 *)entry, prio, maxVoices, allocId, k | (key & 0x80), vol,
+            return audioLayerFn_8026f8b8(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
                                          pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
                                          studio, itd);
         }
