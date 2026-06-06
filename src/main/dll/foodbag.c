@@ -965,9 +965,10 @@ void dll_7C_func03(int param_1,int param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_7D_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,
+int dll_7D_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,
                  f32 *param_6)
 {
+  int ret;
   FbBuf buf;
   u8 *base = (u8 *)(int)lbl_80315030;
   f32 s = lbl_803E0DD8;
@@ -1026,11 +1027,12 @@ void dll_7D_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
       buf.pos[2] = lbl_803E0DDC + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf,0,0x15,(u8 *)(int)lbl_80315030,0x18,base + 0xd4,0x89,0);
+  ret = (*(code *)(*gModgfxInterface + 8))(&buf,0,0x15,(u8 *)(int)lbl_80315030,0x18,base + 0xd4,0x89,0);
   lbl_803DD4B0 += 1;
   if (lbl_803DD4B0 == 5) {
     lbl_803DD4B0 = 0;
   }
+  return ret;
 }
 
 /*
@@ -2787,7 +2789,7 @@ void dll_8F_func03(int param_1,int param_2,int param_3,uint param_4)
   e[3].x = lbl_803E1188; e[3].y = lbl_803E1178; e[3].z = lbl_803E1178;
   e[4].layer = 1; e[4].flags = 18; e[4].tex = base + 0x128; e[4].mode = 2;
   e[4].x = lbl_803E118C; e[4].y = lbl_803E1190; e[4].z = lbl_803E118C;
-  e[5].layer = 2; e[5].flags = 18; e[5].tex = base + 0x128; e[5].mode = 256;
+  e[5].layer = 1; e[5].flags = 18; e[5].tex = base + 0x128; e[5].mode = 256;
   e[5].x = lbl_803E1178; e[5].y = lbl_803E1178; e[5].z = lbl_803E1184;
   e[6].layer = 2; e[6].flags = 18; e[6].tex = base + 0x128; e[6].mode = 256;
   e[6].x = lbl_803E1178; e[6].y = lbl_803E1178; e[6].z = lbl_803E1184;

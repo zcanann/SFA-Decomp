@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 void dll_7C_func03(int param_1,int param_2,int param_3,uint param_4);
-void dll_7D_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,
+int dll_7D_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,
                  f32 *param_6);
 void dll_7E_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,f32 *param_6
                  );
