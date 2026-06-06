@@ -21,8 +21,8 @@ extern int *gPlayerInterface;
 extern int lbl_803202E8[];
 extern int lbl_80320360[];
 extern int lbl_803AC638[];
-extern void *lbl_803AC650[];
-extern void *lbl_803DDA88;
+extern void *gLandedArwingStateHandlers[];
+extern void *gLandedArwingDefaultStateHandler;
 
 extern f32 timeDelta;
 extern double lbl_803E3040;
@@ -180,7 +180,7 @@ void dll_D3_update(int *obj)
     *(int *)((char *)obj + 0xc0) = 0;
 
     ((void (*)(f32, f32, int *, int *, void **, void *))((void **)*(int *)gPlayerInterface)[8 / 4])(
-        timeDelta, timeDelta, obj, state, lbl_803AC650, &lbl_803DDA88);
+        timeDelta, timeDelta, obj, state, gLandedArwingStateHandlers, &gLandedArwingDefaultStateHandler);
 
     *(int *)((char *)obj + 0xc0) = ((TreasureChestState *)state)->savedObjC0;
 
@@ -266,12 +266,12 @@ void dll_D3_init(int obj, int def, int flag)
 #pragma peephole off
 void dll_D3_initialise(void)
 {
-    lbl_803AC650[0] = fn_801659B8;
-    lbl_803AC650[1] = LandedArwing_UpdateFlightChase;
-    lbl_803AC650[2] = LandedArwing_UpdateRetreatChase;
-    lbl_803AC650[3] = LandedArwing_UpdateBounceFade;
-    lbl_803AC650[4] = LandedArwing_TriggerLaunchTarget;
-    lbl_803DDA88 = LandedArwing_ReturnZero;
+    gLandedArwingStateHandlers[0] = fn_801659B8;
+    gLandedArwingStateHandlers[1] = LandedArwing_UpdateFlightChase;
+    gLandedArwingStateHandlers[2] = LandedArwing_UpdateRetreatChase;
+    gLandedArwingStateHandlers[3] = LandedArwing_UpdateBounceFade;
+    gLandedArwingStateHandlers[4] = LandedArwing_TriggerLaunchTarget;
+    gLandedArwingDefaultStateHandler = LandedArwing_ReturnZero;
 }
 #pragma peephole reset
 #pragma scheduling reset
