@@ -2,10 +2,75 @@
 #define MAIN_DLL_DLL_14F_H_
 
 #include "ghidra_import.h"
+#include "global.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_internal.h"
 
-typedef struct MagicPlantSetup MagicPlantSetup;
-typedef struct MagicPlantState MagicPlantState;
+#define MAGICPLANT_DLL_ID 0x00FE
+#define MAGICPLANT_CLASS_ID 0x0065
+#define MAGICPLANT_DEF_ID 0x04FE
+#define MAGICPLANT_OBJECT_DEF_BYTES 0x100
+#define MAGICPLANT_PLACEMENT_BYTES 0x20
+#define MAGICPLANT_EXTRA_STATE_BYTES 0x10
+#define MAGICPLANT_OBJECT_TYPE_BASE 0x400
+#define MAGICPLANT_OBJECT_TYPE_MODEL_SHIFT 11
+#define MAGICPLANT_OBJECT_FLAGS_CHILD_EFFECTS 0x2000
+
+typedef struct MagicPlantSetup {
+  u8 pad00[0x14];
+  int eventId;
+  u16 eventDuration;
+  u8 pad1A;
+  u8 variant;
+  u8 modelIndex;
+  u8 yawByte;
+  u8 pad1E[MAGICPLANT_PLACEMENT_BYTES - 0x1E];
+} MagicPlantSetup;
+
+typedef struct MagicPlantState {
+  u32 childObject;
+  f32 animProgress;
+  f32 animStepScale;
+  s16 idleTimer;
+  u8 pad0E;
+  s8 mode;
+} MagicPlantState;
+
+typedef struct MagicPlantObject {
+  ObjAnimComponent objAnim;
+  u16 objectFlags;
+  u8 padB2[0xB8 - 0xB2];
+  MagicPlantState *state;
+  void *seqCallback;
+  u8 padC0[0xEB - 0xC0];
+  u8 childLinkActive;
+} MagicPlantObject;
+
+enum MagicPlantMode {
+  MAGICPLANT_MODE_WAIT_FOR_EVENT,
+  MAGICPLANT_MODE_ACTIVE,
+  MAGICPLANT_MODE_FADE_OUT,
+  MAGICPLANT_MODE_FADE_IN,
+  MAGICPLANT_MODE_HIT_REACT
+};
+
+STATIC_ASSERT(sizeof(MagicPlantSetup) == MAGICPLANT_PLACEMENT_BYTES);
+STATIC_ASSERT(sizeof(MagicPlantState) == MAGICPLANT_EXTRA_STATE_BYTES);
+STATIC_ASSERT(offsetof(MagicPlantState, childObject) == 0x00);
+STATIC_ASSERT(offsetof(MagicPlantState, animProgress) == 0x04);
+STATIC_ASSERT(offsetof(MagicPlantState, animStepScale) == 0x08);
+STATIC_ASSERT(offsetof(MagicPlantState, idleTimer) == 0x0c);
+STATIC_ASSERT(offsetof(MagicPlantState, mode) == 0x0f);
+STATIC_ASSERT(offsetof(MagicPlantSetup, eventId) == 0x14);
+STATIC_ASSERT(offsetof(MagicPlantSetup, eventDuration) == 0x18);
+STATIC_ASSERT(offsetof(MagicPlantSetup, variant) == 0x1b);
+STATIC_ASSERT(offsetof(MagicPlantSetup, modelIndex) == 0x1c);
+STATIC_ASSERT(offsetof(MagicPlantSetup, yawByte) == 0x1d);
+STATIC_ASSERT(offsetof(MagicPlantObject, objAnim) == 0x00);
+STATIC_ASSERT(offsetof(MagicPlantObject, objectFlags) == 0xB0);
+STATIC_ASSERT(offsetof(MagicPlantObject, state) == 0xB8);
+STATIC_ASSERT(offsetof(MagicPlantObject, seqCallback) == 0xBC);
+STATIC_ASSERT(offsetof(MagicPlantObject, childLinkActive) == 0xEB);
 
 void fn_8017F4F4(int obj, MagicPlantSetup *setup, MagicPlantState *state);
 void fn_8017F7B8(int obj,int objectId);
@@ -14,7 +79,7 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  uint param_9,undefined4 param_10,int *param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 int MagicPlant_getExtraSize(void);
-u32 MagicPlant_getObjectTypeId(int *obj);
+u32 MagicPlant_getObjectTypeId(MagicPlantObject *obj);
 void MagicPlant_free(int obj, int param_2);
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void MagicPlant_update(int obj);

@@ -221,45 +221,6 @@ extern void *gMapEventInterface;
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 extern void vecRotateZXY(void *angles,void *outVec);
 
-struct MagicPlantSetup {
-  u8 pad00[0x14];
-  int eventId;
-  u16 eventDuration;
-  u8 pad1A;
-  u8 variant;
-  u8 modelIndex;
-  u8 yawByte;
-};
-
-struct MagicPlantState {
-  u32 childObject;
-  f32 animProgress;
-  f32 animStepScale;
-  s16 idleTimer;
-  u8 pad0E;
-  s8 mode;
-};
-
-enum MagicPlantMode {
-  MAGICPLANT_MODE_WAIT_FOR_EVENT,
-  MAGICPLANT_MODE_ACTIVE,
-  MAGICPLANT_MODE_FADE_OUT,
-  MAGICPLANT_MODE_FADE_IN,
-  MAGICPLANT_MODE_HIT_REACT
-};
-
-STATIC_ASSERT(sizeof(MagicPlantState) == 0x10);
-STATIC_ASSERT(offsetof(MagicPlantState, childObject) == 0x00);
-STATIC_ASSERT(offsetof(MagicPlantState, animProgress) == 0x04);
-STATIC_ASSERT(offsetof(MagicPlantState, animStepScale) == 0x08);
-STATIC_ASSERT(offsetof(MagicPlantState, idleTimer) == 0x0c);
-STATIC_ASSERT(offsetof(MagicPlantState, mode) == 0x0f);
-STATIC_ASSERT(offsetof(MagicPlantSetup, eventId) == 0x14);
-STATIC_ASSERT(offsetof(MagicPlantSetup, eventDuration) == 0x18);
-STATIC_ASSERT(offsetof(MagicPlantSetup, variant) == 0x1b);
-STATIC_ASSERT(offsetof(MagicPlantSetup, modelIndex) == 0x1c);
-STATIC_ASSERT(offsetof(MagicPlantSetup, yawByte) == 0x1d);
-
 typedef struct MagicPlantChildSetup {
   u8 pad00[4];
   u8 mapByte4;
@@ -491,6 +452,7 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
 #pragma peephole off
 void MagicPlant_update(int obj)
 {
+  MagicPlantObject *plant;
   MagicPlantSetup *setup;
   MagicPlantState *state;
   int hitObj;
@@ -504,16 +466,17 @@ void MagicPlant_update(int obj)
   f32 fz;
   int divisor;
 
-  setup = *(MagicPlantSetup **)(obj + 0x4c);
-  state = *(MagicPlantState **)(obj + 0xb8);
+  plant = (MagicPlantObject *)obj;
+  setup = (MagicPlantSetup *)plant->objAnim.placementData;
+  state = plant->state;
 
-  if ((state->childObject != 0) && (*(u8 *)(obj + 0xeb) == 0)) {
+  if ((state->childObject != 0) && (plant->childLinkActive == 0)) {
     state->childObject = 0;
     Obj_FreeObject(obj);
     return;
   }
 
-  *(u8 *)(obj + 0xaf) |= 8;
+  plant->objAnim.resetHitboxMode |= 8;
   if (objIsFrozen(obj) != 0) {
     hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, &hitA, &hitB, &hitPos[0], &hitPos[1], &hitPos[2]);
     if ((hitKind != 0) && (hitKind != 0x10)) {
@@ -546,7 +509,7 @@ void MagicPlant_update(int obj)
         }
         state->animProgress = lbl_803E3858 - progress;
       }
-      if (*(s16 *)(obj + 0xa0) != 0) {
+      if (plant->objAnim.currentMove != 0) {
         ObjAnim_SetCurrentMove(obj, 0, state->animProgress, 0);
       }
       ObjAnim_SetMoveProgress(state->animProgress, (ObjAnimComponent *)obj);
@@ -557,7 +520,7 @@ void MagicPlant_update(int obj)
       break;
 
     case MAGICPLANT_MODE_FADE_OUT:
-      if (*(f32 *)(obj + 0x98) >= lbl_803E3858) {
+      if (plant->objAnim.currentMoveProgress >= lbl_803E3858) {
         alpha = *(u8 *)(obj + 0x36);
         alpha -= framesThisStep * 2;
         if (alpha < 0) {
@@ -1867,8 +1830,12 @@ int MagicPlant_SeqFn(u8* obj) {
 }
 #pragma scheduling reset
 
-/* state encode: ((obj->_X)->_Y << shift) | const. */
-u32 MagicPlant_getObjectTypeId(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x1c) << 11) | 0x400; }
+u32 MagicPlant_getObjectTypeId(MagicPlantObject *obj)
+{
+    MagicPlantSetup *setup = (MagicPlantSetup *)obj->objAnim.placementData;
+
+    return (setup->modelIndex << MAGICPLANT_OBJECT_TYPE_MODEL_SHIFT) | MAGICPLANT_OBJECT_TYPE_BASE;
+}
 
 /* obj->u16_X |= MASK */
 #pragma peephole off
@@ -1879,16 +1846,18 @@ extern void objRenderFn_8003b8f4(int obj, float arg);
 
 #pragma scheduling off
 #pragma peephole off
-void MagicPlant_free(int param_1, int param_2) {
-  int obj = param_1;
-  int *state;
-  state = *(int **)(obj + 0xb8);
+void MagicPlant_free(int obj, int param_2) {
+  MagicPlantObject *plant;
+  MagicPlantState *state;
+
+  plant = (MagicPlantObject *)obj;
+  state = plant->state;
   ObjGroup_RemoveObject(obj, 0x34);
   ObjGroup_RemoveObject(obj, 0x3e);
-  if (*(u8 *)(obj + 0xeb) != 0) {
-    ObjLink_DetachChild(obj, *state);
+  if (plant->childLinkActive != 0) {
+    ObjLink_DetachChild(obj, state->childObject);
     if (param_2 == 0) {
-      Obj_FreeObject(*state);
+      Obj_FreeObject(state->childObject);
     }
   }
 }
@@ -1897,14 +1866,17 @@ void MagicPlant_free(int param_1, int param_2) {
 #pragma peephole off
 #pragma scheduling off
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-  int *state;
+  MagicPlantObject *plant;
+  MagicPlantState *state;
   void *s0;
   s32 v;
-  state = *(int **)(obj + 0xb8);
+
+  plant = (MagicPlantObject *)obj;
+  state = plant->state;
   v = visible;
   if (v != 0) {
     objRenderFn_8003b8f4(obj, lbl_803E3858);
-    s0 = *(void **)state;
+    s0 = (void *)state->childObject;
     if (s0 != NULL) {
       if (*(void **)((char *)s0 + 0xc4) != NULL) {
         ObjPath_GetPointWorldPosition(obj, 0, (float *)((char *)s0 + 0xc), (float *)((char *)s0 + 0x10), (float *)((char *)s0 + 0x14), 0);
@@ -2316,14 +2288,16 @@ void duster_update(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void MagicPlant_init(int obj, MagicPlantSetup *setup) {
+    MagicPlantObject *plant;
     ObjAnimComponent *objAnim;
     MagicPlantState *state;
     s32 r;
     f32 t;
     int divisor;
 
-    objAnim = (ObjAnimComponent *)obj;
-    state = *(MagicPlantState **)(obj + 0xb8);
+    plant = (MagicPlantObject *)obj;
+    objAnim = &plant->objAnim;
+    state = plant->state;
     ObjGroup_AddObject(obj, 52);
     ObjGroup_AddObject(obj, 62);
     r = ((MapEventInterface *)*(int *)gMapEventInterface)->isTimedEventActive(setup->eventId);
@@ -2344,8 +2318,8 @@ void MagicPlant_init(int obj, MagicPlantSetup *setup) {
     state->mode = MAGICPLANT_MODE_WAIT_FOR_EVENT;
     state->animStepScale = lbl_803E385C;
     ObjAnim_SetMoveProgress((double)state->animProgress, (ObjAnimComponent *)obj);
-    *(s16 *)obj = (s16)((u32)setup->yawByte << 8);
-    *(u16 *)(obj + 0xb0) |= 0x2000;
+    objAnim->rotX = (s16)((u32)setup->yawByte << 8);
+    plant->objectFlags |= MAGICPLANT_OBJECT_FLAGS_CHILD_EFFECTS;
     objAnim->bankIndex = (s8)setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
@@ -2353,7 +2327,7 @@ void MagicPlant_init(int obj, MagicPlantSetup *setup) {
     if (*(void **)(obj + 0x64) != NULL) {
         *(u32 *)(*(int *)(obj + 0x64) + 48) |= 0x810;
     }
-    *(void **)(obj + 0xbc) = (void *)MagicPlant_SeqFn;
+    plant->seqCallback = (void *)MagicPlant_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset
