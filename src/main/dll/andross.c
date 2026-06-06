@@ -114,7 +114,7 @@ void andross_init(int obj, u8 *setup)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling off
 void fn_8023A87C(int p1, int p2)
 {

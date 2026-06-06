@@ -402,6 +402,7 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void fn_80175428(int obj)
 {
   int state;
@@ -432,6 +433,7 @@ void fn_80175428(int obj)
     }
   }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*

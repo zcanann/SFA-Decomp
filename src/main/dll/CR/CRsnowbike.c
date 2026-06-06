@@ -837,7 +837,7 @@ extern f32 lbl_803E5574;
 extern f32 lbl_803E5578;
 extern f32 lbl_803E557C;
 typedef struct { u8 bit7 : 1; u8 lo : 7; } SnowFlags22;
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling off
 void sc_levelcontrol_init(int obj)
 {
@@ -914,7 +914,7 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 #pragma peephole reset
 
 extern f32 lbl_803E5588;
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling off
 void sc_musictree_handleHitObject(int p1, int p2, int effectType)
 {

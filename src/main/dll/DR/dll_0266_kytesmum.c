@@ -307,11 +307,11 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
 #pragma scheduling off
 #pragma peephole off
 int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg) {
+    int next;
     int questBits[3];
     int triggerIds[3];
     int count;
     char *runtime;
-    int next;
     *(QuestTriple *)questBits = *(QuestTriple *)lbl_802C2578;
     *(QuestTriple *)triggerIds = *(QuestTriple *)lbl_802C2584;
     count = 0;

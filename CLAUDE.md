@@ -1006,6 +1006,26 @@ Heuristic:
     passed to any callee moves the frame in 8B quanta — use it to measure
     the demand gap before hunting the source form.
 
+68. **`mr rS,r3`-copy forward-prop into early derefs is a PEEPHOLE opt —
+    `#pragma peephole off` makes pre-call derefs use the COPY, matching
+    target.** The recurring 1-2 instr residual where target derefs the param
+    through its saved-reg copy (`mr r30,r3; lwz r31,184(r30)`) but yours
+    derefs through r3 directly (`lwz r31,184(r3)`) is NOT a coloring cap and
+    NOT fixable by source restructure (param reassign, local copy, (u32)
+    casts, typed params, statement moves all tested null on
+    earthwalker_hitDetect) — it is the PEEPHOLE pass propagating the copy
+    source into subsequent uses. Flip the fn to `#pragma peephole off` (or
+    wrap `off`/`reset` if the fn sits in a reset/default region). ONE
+    discovery recovered 11 fns to 100% in one pass: earthwalker_hitDetect,
+    sc_levelcontrol_init, sc_musictree_handleHitObject, fn_80185868,
+    fn_801F654C, drcloudper_setScale, cmbsrc_free, fn_80175428, fn_8023A87C,
+    androsshand_init, pointlight_free. Signature to recognize: ndiff 1-3,
+    all derefs of 184(rN)/76(rN)-style param fields, target reg = the mr
+    copy, yours = r3/r4. CAVEAT: vecmath's vecRotateZXY/setMatrixFromObjectPos
+    show the same signature but are ALREADY peephole-off — that variant
+    (deref via the copy of a NON-r3 param) remains a cap. Supersedes the
+    "param-relocation cap class" note in the triage table below.
+
 ### 99.5%+ tier sweep findings (task #142) — category triage table
 
 Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py

@@ -14,6 +14,7 @@ typedef struct WmSeqPointState {
 } WmSeqPointState;
 
 #pragma scheduling off
+#pragma peephole off
 void fn_801F654C(int obj)
 {
     WmSeqPointState *state;
@@ -43,6 +44,7 @@ void fn_801F654C(int obj)
         }
     }
 }
+#pragma peephole reset
 
 #pragma scheduling reset
 

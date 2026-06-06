@@ -1501,7 +1501,7 @@ int fn_801B9ECC(int a, int obj)
     DimAnimTable *base;
     u16 pad;
     u16 dist;
-    u16 anim[4];
+    u16 anim[2];
 
     base = (DimAnimTable *)lbl_80325960;
     if (*(s8 *)(obj + 0x346) != 0 || *(s8 *)(obj + 0x27b) != 0) {

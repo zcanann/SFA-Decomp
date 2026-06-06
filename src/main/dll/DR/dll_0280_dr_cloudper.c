@@ -90,7 +90,7 @@ void drcloudper_initialise(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling off
 int drcloudper_setScale(int obj)
 {

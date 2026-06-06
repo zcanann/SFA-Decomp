@@ -1023,7 +1023,7 @@ int ktrex_stateHandlerA02(int obj, int runtime) {
         *(u8 *)((char *)gKTRexState + 0xfc) = 0;
         *(u16 *)((char *)gKTRexState + 0xfa) &= ~0x20;
         *(f32 *)((char *)runtime + 0x294) =
-            *(f32 *)((char *)p + *(u8 *)((char *)gKTRexState + 0xfc) * 4 + 0x38) / lbl_803E67C4;
+            *(f32 *)(((char *)p + *(u8 *)((char *)gKTRexState + 0xfc) * 4) + 0x38) / lbl_803E67C4;
     }
     if (ktrex_updateArenaPathProgress(runtime) != 0) {
         int push = 2;
@@ -1196,14 +1196,14 @@ int ktrex_stateHandlerA04(int obj, int runtime) {
 #pragma peephole off
 int ktrex_stateHandlerA05(int obj, int runtime) {
     void *p;
-    int pushHi;
     int pushLo;
+    int pushHi;
     p = *(void **)((char *)obj + 0x4c);
     if ((s8)*(u8 *)((char *)runtime + 0x27b) != 0) {
         (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 1);
         *(u8 *)((char *)gKTRexState + 0xfc) = 1;
-        *(f32 *)((char *)runtime + 0x294) =
-            *(f32 *)((char *)p + *(u8 *)((char *)gKTRexState + 0xfc) * 4 + 0x38) / lbl_803E67C4;
+        p = (char *)p + *(u8 *)((char *)gKTRexState + 0xfc) * 4;
+        *(f32 *)((char *)runtime + 0x294) = *(f32 *)((char *)p + 0x38) / lbl_803E67C4;
     }
     if (RandomTimer_UpdateRangeTrigger((char *)gKTRexState + 0x190, lbl_803E67C8, lbl_803E67CC) != 0) {
         Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
@@ -1345,7 +1345,7 @@ int ktrex_stateHandlerA10(int obj, int runtime) {
         (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 1);
         *(u8 *)((char *)gKTRexState + 0xfc) = 2;
         *(f32 *)((char *)runtime + 0x294) =
-            *(f32 *)((char *)p + *(u8 *)((char *)gKTRexState + 0xfc) * 4 + 0x38) / lbl_803E67C4;
+            *(f32 *)(((char *)p + *(u8 *)((char *)gKTRexState + 0xfc) * 4) + 0x38) / lbl_803E67C4;
     }
     if (ktrex_updateArenaPathProgress(runtime) != 0) {
         int push = 0xa;

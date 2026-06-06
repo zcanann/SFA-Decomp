@@ -1179,8 +1179,9 @@ extern f32 lbl_803E40F8;
 #pragma scheduling off
 void Trigger_free(void *obj)
 {
+    u8 i;
     u8 *entry = *(u8 **)((char *)obj + 0x4c) + 0x18;
-    u8 i = 0;
+    i = 0;
 
     while (i < 8) {
         if ((entry[0] & 3) != 0 && entry[1] != 3 && entry[1] == 4) {

@@ -1046,6 +1046,7 @@ LAB_80185bfc:
  */
 #pragma dont_inline on
 #pragma scheduling off
+#pragma peephole off
 void fn_80185868(int obj, f32 arg)
 {
   extern void *lbl_803DDAD0;
@@ -1084,6 +1085,7 @@ void fn_80185868(int obj, f32 arg)
   ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
   ObjHits_EnableObject(obj);
 }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
 
