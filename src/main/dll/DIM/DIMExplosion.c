@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMExplosion.h"
+#include "main/objanim_internal.h"
 
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
@@ -324,7 +325,7 @@ void DIMwooddoor_updateFallingDebris(int *obj)
             (GameBit_Get(2164) != 0 && GameBit_Get(3118) == 0)) {
             *(int *)((char *)obj + 0xf4) = 1200;
         }
-        if (*(s8 *)((char *)*(int **)((char *)obj + 0x54) + 0xad) != 0) {
+        if ((*(ObjAnimComponent **)((char *)obj + 0x54))->bankIndex != 0) {
             ObjHitbox_SetSphereRadius(obj, *(s8 *)((char *)extra + 5));
             spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
             *(int *)((char *)obj + 0xf4) = 1180;

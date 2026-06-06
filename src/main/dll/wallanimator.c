@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/wallanimator.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 
 extern undefined4 FUN_80006824();
@@ -606,18 +607,18 @@ void kaldachompspit_update(int obj)
             *(s16 *)(obj + 0x2) = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         }
         ObjHits_EnableObject(obj);
-        if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL) {
+        if ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance != NULL) {
             if (*(int *)(obj + 0xf4) < 0x17c) {
                 kaldachompspit_burst(obj);
                 return;
             }
-            if ((*(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)Obj_GetPlayerObject()) ||
-                (*(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)getTrickyObject())) {
+            if (((*(ObjAnimComponent **)(obj + 0x54))->modelInstance == (void *)Obj_GetPlayerObject()) ||
+                ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance == (void *)getTrickyObject())) {
                 kaldachompspit_burst(obj);
                 return;
             }
         }
-        if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0) {
+        if ((*(ObjAnimComponent **)(obj + 0x54))->bankIndex != 0) {
             kaldachompspit_burst(obj);
         } else {
             if (*(s16 *)(obj + 0x46) == 0x869) {
