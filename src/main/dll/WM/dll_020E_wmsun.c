@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
 
@@ -25,7 +26,7 @@ void wmsun_initialise(void) {}
 #pragma peephole off
 #pragma scheduling off
 void wmsun_free(int obj) {
-    int *inner = *(int **)(obj + 0xb8);
+    int *inner = ((GameObject *)obj)->extra;
     if (*(void **)((char *)inner + 8) != NULL) {
         mm_free(*(void **)((char *)inner + 8));
     }
@@ -59,7 +60,7 @@ extern s16 lbl_803DDCB0;
 void wmsun_init(int obj, int params)
 {
     ObjAnimComponent *objAnim;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     u8 c;
     int c2;
     int j;
@@ -67,21 +68,21 @@ void wmsun_init(int obj, int params)
     s16 mode;
 
     objAnim = (ObjAnimComponent *)obj;
-    *(void **)(obj + 0xbc) = (void *)fn_801F6E8C;
+    ((GameObject *)obj)->unkBC = (void *)fn_801F6E8C;
     c = ((MapEventInterface *)*gMapEventInterface)->getMode((int)*(s8 *)(obj + 0xac));
     if (c == 3 && (u32)GameBit_Get(0x21b) == 0) {
         GameBit_Set(0x21b, 1);
     }
     *(int *)(state + 8) = 0;
     *(u8 *)(state + 0xd) = 1;
-    mode = *(s16 *)(obj + 0x46);
+    mode = ((GameObject *)obj)->anim.seqId;
     if (mode == 0x262) {
         *(s16 *)obj = (s16)(*(s8 *)(params + 0x18) << 8);
         *(s16 *)(state + 2) = 100;
         if (*(s16 *)(params + 0x1c) >= 1000) {
-            *(f32 *)(obj + 8) = (f32)*(s16 *)(params + 0x1c) / lbl_803E5F8C;
+            ((GameObject *)obj)->anim.rootMotionScale = (f32)*(s16 *)(params + 0x1c) / lbl_803E5F8C;
         } else {
-            *(f32 *)(obj + 8) = lbl_803E5F24;
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5F24;
         }
     } else if (mode == 0x2bd) {
         lbl_803DDCB0 = 800;
@@ -91,9 +92,9 @@ void wmsun_init(int obj, int params)
         lbl_803DDCA8 = 800;
         *(s16 *)obj = (s16)(*(s8 *)(params + 0x18) << 8);
         if (*(s16 *)(params + 0x1c) >= 0) {
-            *(f32 *)(obj + 8) = (f32)*(s16 *)(params + 0x1c) / lbl_803E5F8C;
+            ((GameObject *)obj)->anim.rootMotionScale = (f32)*(s16 *)(params + 0x1c) / lbl_803E5F8C;
         } else {
-            *(f32 *)(obj + 8) = lbl_803E5F24;
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5F24;
         }
         objAnim->bankIndex = *(u8 *)(params + 0x19);
         c2 = objAnim->bankIndex;
@@ -121,7 +122,7 @@ void wmsun_init(int obj, int params)
         }
         *(u8 *)(obj + 0x36) = 0;
         if (*(s16 *)(params + 0x1c) != 0) {
-            *(f32 *)(obj + 8) = lbl_803E5F24 / ((f32)*(s16 *)(params + 0x1c) / lbl_803E5F8C);
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5F24 / ((f32)*(s16 *)(params + 0x1c) / lbl_803E5F8C);
         }
     }
 }
@@ -142,7 +143,7 @@ extern f32 lbl_803E5F88;
 void wmsun_update(int obj)
 {
     ObjAnimComponent *objAnim;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     s16 thresh;
     s16 mult;
     f32 spd;
@@ -155,7 +156,7 @@ void wmsun_update(int obj)
     thresh = 0;
     mult = 1;
     spd = lbl_803E5F20;
-    if (*(s16 *)(obj + 0x46) == 0x262) {
+    if (((GameObject *)obj)->anim.seqId == 0x262) {
         if (GameBit_Get(0x38f) != 0) {
             Obj_FreeObject(obj);
         } else {
@@ -188,8 +189,8 @@ void wmsun_update(int obj)
             }
             if (*(s16 *)(state + 2) < thresh) {
                 *(s16 *)(state + 2) = *(s16 *)(state + 2) + framesThisStep * mult;
-                *(f32 *)(obj + 8) = -(spd * timeDelta - *(f32 *)(obj + 8));
-                *(f32 *)(obj + 0x10) = lbl_803E5F7C * (spd * timeDelta) + *(f32 *)(obj + 0x10);
+                ((GameObject *)obj)->anim.rootMotionScale = -(spd * timeDelta - ((GameObject *)obj)->anim.rootMotionScale);
+                ((GameObject *)obj)->anim.localPosY = lbl_803E5F7C * (spd * timeDelta) + ((GameObject *)obj)->anim.localPosY;
             } else if (GameBit_Get(0x222) != 0 && GameBit_Get(0x38d) == 0) {
                 GameBit_Set(0x38d, 1);
                 GameBit_Set(0x370, 0);
@@ -206,7 +207,7 @@ void wmsun_update(int obj)
         }
         return;
     }
-    if (*(s16 *)(obj + 0x46) == 0x2c2) {
+    if (((GameObject *)obj)->anim.seqId == 0x2c2) {
         if (GameBit_Get(0x38f) != 0) {
             b = *(u8 *)(obj + 0x36);
             if (b < 0xfa) {
@@ -263,7 +264,7 @@ void wmsun_update(int obj)
             fn_801F6EA4(obj);
         }
     } else {
-        *(s16 *)(obj + 4) += *(s16 *)(state + 4);
+        ((GameObject *)obj)->anim.rotZ += *(s16 *)(state + 4);
         *(s16 *)obj += *(s16 *)(state + 2);
         if (GameBit_Get(0x38d) != 0 && objAnim->bankIndex == 0) {
             if (lbl_803DDCAA == 0) {
@@ -365,9 +366,9 @@ void fn_801F6EA4(int obj)
     if ((void *)cam != NULL) {
         g.ang[0] = 0x8000 - *(s16 *)cam;
         vecRotateZXY(g.ang, &sun);
-        dx = *(f32 *)(obj + 0xc) - *(f32 *)(cam + 0xc);
-        dy = *(f32 *)(obj + 0x10) - *(f32 *)(cam + 0x10);
-        dz = *(f32 *)(obj + 0x14) - *(f32 *)(cam + 0x14);
+        dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)(cam + 0xc);
+        dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)(cam + 0x10);
+        dz = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(cam + 0x14);
         len = sqrtf(dz * dz + (dx * dx + dy * dy));
         if (lbl_803E5F20 != len) {
             dx = dx / len;
@@ -387,9 +388,9 @@ void fn_801F6EA4(int obj)
         }
         zero = lbl_803E5F20;
         if (cosang > zero) {
-            hx = *(f32 *)(obj + 0xc) - *(f32 *)(cam + 0xc);
+            hx = ((GameObject *)obj)->anim.localPosX - *(f32 *)(cam + 0xc);
             hy = zero;
-            hz = *(f32 *)(obj + 0x14) - *(f32 *)(cam + 0x14);
+            hz = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(cam + 0x14);
             hlen = sqrtf(hz * hz + (hx * hx + hy));
             if (lbl_803E5F20 != hlen) {
                 hx = hx / hlen;

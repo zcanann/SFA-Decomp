@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #define WCAPERTURES_EXTRA_SIZE 8
 #define WCAPERTURES_RENDER_TYPE_BASE 0x400
@@ -56,7 +57,7 @@ int wcapertures_getExtraSize(void) { return WCAPERTURES_EXTRA_SIZE; }
 int wcapertures_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCAPERTURES_SETUP_MODEL_INDEX_OFFSET);
+    int modelIndex = *(s8 *)(*(int *)&((GameObject *)obj)->anim.placementData + WCAPERTURES_SETUP_MODEL_INDEX_OFFSET);
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
@@ -71,7 +72,7 @@ int wcapertures_getObjectTypeId(int obj)
 #pragma scheduling off
 void wcapertures_free(int obj)
 {
-    void *light = WCAPERTURES_LIGHT(*(int *)(obj + 0xb8));
+    void *light = WCAPERTURES_LIGHT(*(int *)&((GameObject *)obj)->extra);
 
     if (light != NULL) {
         ModelLightStruct_free(light);
@@ -84,7 +85,7 @@ void wcapertures_free(int obj)
 #pragma scheduling off
 void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    char *state = *(char **)(obj + 0xb8);
+    char *state = ((GameObject *)obj)->extra;
     u8 *light;
 
     if (visible != 0) {
@@ -108,7 +109,7 @@ void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void wcapertures_hitDetect(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     if (WCAPERTURES_MODE(state) == WCAPERTURES_MODE_OPEN) {
         s16 ev[18];
@@ -146,7 +147,7 @@ void wcapertures_initialise(void) {}
 #pragma scheduling off
 int wcapertures_interactCallback(int obj, int p2, int p3)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int i;
 
     for (i = 0; i < *(u8 *)(p3 + WCAPERTURES_CALLBACK_COMMAND_COUNT_OFFSET); i++) {
@@ -163,10 +164,10 @@ int wcapertures_interactCallback(int obj, int p2, int p3)
 void wcapertures_init(int obj, int initData)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
-    *(s16 *)(obj + 0) = (s16)((s8)*(u8 *)(initData + WCAPERTURES_SETUP_TYPE_OFFSET) << 8);
-    *(void **)(obj + 0xbc) = (void *)wcapertures_interactCallback;
+    ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(initData + WCAPERTURES_SETUP_TYPE_OFFSET) << 8);
+    ((GameObject *)obj)->unkBC = (void *)wcapertures_interactCallback;
     objAnim->bankIndex = *(u8 *)(initData + WCAPERTURES_SETUP_MODEL_INDEX_OFFSET);
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;
@@ -198,8 +199,8 @@ void wcapertures_init(int obj, int initData)
 #pragma scheduling off
 void wcapertures_update(int obj)
 {
-    int setup = *(int *)(obj + 0x4c);
-    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    int state = *(int *)&((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
     void *light;
     int alpha, target;
@@ -215,7 +216,7 @@ void wcapertures_update(int obj)
         if ((*(int (**)(void))(*gCameraInterface + 0x10))() == WCAPERTURES_CAMERA_MODE &&
             fn_802969F0(player) == WCAPERTURES_PLAYER_STATE) {
             WCAPERTURES_TARGET_ALPHA(state) = WCAPERTURES_ALPHA_OPAQUE;
-            if (Camera_GetFovY() <= lbl_803E6E38 && (*(u16 *)(obj + 0xb0) & WCAPERTURES_ACCEPT_OBJECT_FLAG)) {
+            if (Camera_GetFovY() <= lbl_803E6E38 && (((GameObject *)obj)->unkB0 & WCAPERTURES_ACCEPT_OBJECT_FLAG)) {
                 GameBit_Set(*(s16 *)(setup + WCAPERTURES_SETUP_OPEN_BIT_OFFSET), 1);
                 WCAPERTURES_MODE(state) = WCAPERTURES_MODE_OPEN;
             }

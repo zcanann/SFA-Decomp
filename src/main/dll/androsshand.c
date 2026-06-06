@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/objhits_types.h"
 
 /*
@@ -58,7 +59,7 @@ void androsshand_render(int obj, int p2, int p3, int p4, int p5)
 void androsshand_update(int obj)
 {
     f32 fScale = lbl_803DC4F8;
-    AndrossHandState *state = *(AndrossHandState **)(obj + 0xb8);
+    AndrossHandState *state = ((GameObject *)obj)->extra;
     u8 changed = 0;
 
     if (*(int *)&state->andross == 0) {
@@ -73,8 +74,8 @@ void androsshand_update(int obj)
     }
 
     *(u8 *)(obj + 0x36) = 0xff;
-    *(s16 *)(obj + 4) = 0;
-    *(s16 *)(obj + 2) = 0;
+    ((GameObject *)obj)->anim.rotZ = 0;
+    ((GameObject *)obj)->anim.rotY = 0;
     ObjHits_SetHitVolumeSlot(obj, 5, 2, -1);
     ObjHits_EnableObject(obj);
 
@@ -83,7 +84,7 @@ void androsshand_update(int obj)
         f32 angle;
         f32 sv;
 
-        *(s16 *)(obj + 0) = *(s16 *)(*(int *)&state->andross + 0);
+        ((GameObject *)obj)->anim.rotX = *(s16 *)(*(int *)&state->andross + 0);
         if (state->unk22 != 0) {
             fScale = fScale * lbl_803E75B4;
         }
@@ -96,9 +97,9 @@ void androsshand_update(int obj)
                 (f32)(s16)(int)((f32)*(s16 *)(*(int *)&state->andross + 0) + fScale) / lbl_803E75BC;
         fScale = fn_80293E80(angle);
         sv = sin(angle);
-        *(f32 *)(obj + 0xc) = lbl_803DC4F0 * fScale + *(f32 *)(*(int *)&state->andross + 0xc);
-        *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)&state->andross + 0x10) + lbl_803DC4F4;
-        *(f32 *)(obj + 0x14) =
+        ((GameObject *)obj)->anim.localPosX = lbl_803DC4F0 * fScale + *(f32 *)(*(int *)&state->andross + 0xc);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(*(int *)&state->andross + 0x10) + lbl_803DC4F4;
+        ((GameObject *)obj)->anim.localPosZ =
             state->unk18 + (lbl_803DC4F0 * sv + *(f32 *)(*(int *)&state->andross + 0x14));
     }
 
@@ -114,15 +115,15 @@ void androsshand_update(int obj)
     case 0:
         if (changed) {
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E75AC, 0);
-            *(f32 *)(*(int *)(obj + 0xb8) + 0x14) = lbl_8032C270[0];
+            *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x14) = lbl_8032C270[0];
         }
         break;
     case 2:
         if (changed) {
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E75AC, 0);
-            *(f32 *)(*(int *)(obj + 0xb8) + 0x14) = lbl_8032C270[4];
+            *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x14) = lbl_8032C270[4];
         }
-        if (*(f32 *)(obj + 0x98) >= lbl_803E75B0) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E75B0) {
             *(u8 *)&state->handState = 3;
             *(u8 *)&state->prevState = 3;
         }
@@ -130,9 +131,9 @@ void androsshand_update(int obj)
     case 1:
         if (changed) {
             ObjAnim_SetCurrentMove(obj, 5, lbl_803E75AC, 0);
-            *(f32 *)(*(int *)(obj + 0xb8) + 0x14) = lbl_8032C270[5];
+            *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x14) = lbl_8032C270[5];
         }
-        if (*(f32 *)(obj + 0x98) >= lbl_803E75B0) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E75B0) {
             *(u8 *)&state->handState = 3;
         }
         break;
@@ -140,9 +141,9 @@ void androsshand_update(int obj)
         if (changed) {
             state->unk29 = 0;
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E75AC, 0);
-            *(f32 *)(*(int *)(obj + 0xb8) + 0x14) = lbl_8032C270[1];
+            *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x14) = lbl_8032C270[1];
         }
-        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
+        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0) {
             struct {
                 f32 x, y, z;
             } v, w;
@@ -153,16 +154,16 @@ void androsshand_update(int obj)
             fn_8022D4AC(*(int *)&state->otherHand, (int)&w);
             doRumble(lbl_803E75C8);
         }
-        if (*(f32 *)(obj + 0x98) < lbl_803E75D0) {
+        if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E75D0) {
             state->animSpeed = lbl_803E75D8;
         } else {
             state->animSpeed = lbl_803E75DC;
         }
-        if (*(f32 *)(obj + 0x98) >= lbl_803E75E0 && state->unk29 == 0) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E75E0 && state->unk29 == 0) {
             state->unk29 = 1;
             Sfx_PlayFromObject(obj, 0x471);
         }
-        if (*(f32 *)(obj + 0x98) >= lbl_803E75B0) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E75B0) {
             andross_setPartSignal(*(int *)&state->andross, 1);
             *(u8 *)&state->handState = 3;
         }
@@ -172,18 +173,18 @@ void androsshand_update(int obj)
         if (changed) {
             state->unk29 = 0;
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E75AC, 0);
-            *(f32 *)(*(int *)(obj + 0xb8) + 0x14) = lbl_8032C270[2];
+            *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x14) = lbl_8032C270[2];
         }
-        if (state->unk22 != 0 && *(f32 *)(obj + 0x98) >= lbl_803E75B0) {
+        if (state->unk22 != 0 && ((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E75B0) {
             andross_setPartSignal(*(int *)&state->andross, 1);
             *(u8 *)&state->handState = 3;
         }
-        if (*(f32 *)(obj + 0x98) < lbl_803E75E8) {
+        if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E75E8) {
             state->animSpeed = lbl_803E75F0;
         } else {
             state->animSpeed = lbl_803E75DC;
         }
-        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
+        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0) {
             struct {
                 f32 x, y, z;
             } v, w;
@@ -194,16 +195,16 @@ void androsshand_update(int obj)
             fn_8022D4AC(*(int *)&state->otherHand, (int)&w);
             doRumble(lbl_803E75C8);
         }
-        if (*(f32 *)(obj + 0x98) >= lbl_803E75E0 && *(f32 *)(obj + 0x98) < lbl_803E75F8 &&
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E75E0 && ((GameObject *)obj)->anim.currentMoveProgress < lbl_803E75F8 &&
             state->unk29 == 0) {
             state->unk29 = 1;
             Sfx_PlayFromObject(obj, 0x472);
         }
-        if (*(f32 *)(obj + 0x98) >= lbl_803E75F8 && state->unk29 != 0) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E75F8 && state->unk29 != 0) {
             state->unk29 = 0;
             Sfx_PlayFromObject(obj, 0x473);
         }
-        if (*(f32 *)(obj + 0x98) >= lbl_803E75B0) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E75B0) {
             if (state->unk22 != 0) {
                 andross_setPartSignal(*(int *)&state->andross, 1);
             }
@@ -214,11 +215,11 @@ void androsshand_update(int obj)
     case 6:
         if (changed) {
             ObjAnim_SetCurrentMove(obj, 3, lbl_803E75AC, 0);
-            *(f32 *)(*(int *)(obj + 0xb8) + 0x14) = lbl_8032C270[3];
+            *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x14) = lbl_8032C270[3];
             state->unk20 = -1;
         }
         state->unk20 -= framesThisStep;
-        if (*(f32 *)(obj + 0x98) < lbl_803E75D0) {
+        if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E75D0) {
             state->animSpeed = lbl_803E75F0;
         } else {
             Sfx_KeepAliveLoopedObjectSound(obj, 0x467);
@@ -228,7 +229,7 @@ void androsshand_update(int obj)
                 state->unk20 = lbl_803DC504;
             }
         }
-        if (*(f32 *)(obj + 0x98) >= lbl_803E75B0) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E75B0) {
             andross_setPartSignal(*(int *)&state->andross, 1);
             *(u8 *)&state->handState = 3;
         }
@@ -237,7 +238,7 @@ void androsshand_update(int obj)
     case 3:
         if (changed) {
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E75AC, 0);
-            *(f32 *)(*(int *)(obj + 0xb8) + 0x14) = lbl_8032C270[0];
+            *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x14) = lbl_8032C270[0];
         }
         break;
     case 9:
@@ -246,9 +247,9 @@ void androsshand_update(int obj)
     }
 
     if (state->handState == 9) {
-        *(s16 *)(obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
     } else {
-        *(s16 *)(obj + 6) &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~0x4000;
     }
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta, 0);
 }
@@ -269,7 +270,7 @@ void androsshand_setState(int obj, int newState, u8 force)
     if ((void *)obj == NULL) {
         return;
     }
-    state = *(AndrossHandState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if (state->handState != 9 || force != 0) {
         state->handState = (s8)newState;
         if (force != 0) {
@@ -340,7 +341,7 @@ void androsshand_handleDamage(int obj, int hand)
 #pragma scheduling off
 void androsshand_init(int obj, u8 *setup)
 {
-    AndrossHandState *state = *(AndrossHandState **)(obj + 0xb8);
+    AndrossHandState *state = ((GameObject *)obj)->extra;
     int animState;
 
     state->unk22 = setup[0x1b];
@@ -349,10 +350,10 @@ void androsshand_init(int obj, u8 *setup)
     state->unk27 = 5;
     *(u8 *)&state->handState = 3;
     *(u8 *)&state->prevState = 3;
-    animState = *(int *)(obj + 0xb8);
+    animState = *(int *)&((GameObject *)obj)->extra;
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E75AC, 0);
     *(f32 *)(animState + 0x14) = lbl_8032C270[4];
-    *(f32 *)(obj + 0x98) = lbl_803E75B0;
+    ((GameObject *)obj)->anim.currentMoveProgress = lbl_803E75B0;
     ObjHits_SetTargetMask(obj, 4);
 }
 #pragma scheduling reset

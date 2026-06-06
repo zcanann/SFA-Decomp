@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 
@@ -122,7 +123,7 @@ int wcpushblock_getExtraSize(void) { return WCPUSHBLOCK_EXTRA_SIZE; }
 int wcpushblock_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCPUSHBLOCK_MODEL_INDEX_OFFSET);
+    int modelIndex = *(s8 *)(*(int *)&((GameObject *)obj)->anim.placementData + WCPUSHBLOCK_MODEL_INDEX_OFFSET);
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
@@ -160,7 +161,7 @@ void wcpushblock_hitDetect(void) {}
 void wcpushblock_init(int obj, int setup)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    WCPushBlockRuntimeState *state = *(WCPushBlockRuntimeState **)(obj + 0xb8);
+    WCPushBlockRuntimeState *state = ((GameObject *)obj)->extra;
     WCPushBlockSetup *setupData = (WCPushBlockSetup *)setup;
 
     *(u8 *)(obj + 0x36) = 0;
@@ -168,7 +169,7 @@ void wcpushblock_init(int obj, int setup)
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
-    ObjHitbox_SetStateIndex(obj, *(int *)(obj + 0x54), objAnim->bankIndex);
+    ObjHitbox_SetStateIndex(obj, *(int *)&((GameObject *)obj)->anim.hitReactState, objAnim->bankIndex);
     state->initialTile = (u8)setupData->initialTile;
     state->baseY = lbl_803E6DA0 + setupData->y;
 }
@@ -191,7 +192,7 @@ void wcpushblock_initialise(void) {}
 void wcpushblock_update(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
     f32 range = lbl_803E6D58;
     f32 dist;
@@ -207,7 +208,7 @@ void wcpushblock_update(int obj)
     if (tex != 0) {
         *tex = WCPUSHBLOCK_TEXTURE_DEFAULT;
     }
-    *(u16 *)(obj + 0xb0) &= ~WCPUSHBLOCK_OBJFLAG_LOCKED;
+    ((GameObject *)obj)->unkB0 &= ~WCPUSHBLOCK_OBJFLAG_LOCKED;
 
     if (WCPUSHBLOCK_FLAGS(state).phase != WCPUSHBLOCK_PHASE_SOLVED) {
         if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
@@ -275,8 +276,8 @@ void wcpushblock_update(int obj)
         }
         {
             f32 zero = lbl_803E6D64;
-            *(f32 *)(obj + 0x24) = zero;
-            *(f32 *)(obj + 0x2c) = zero;
+            ((GameObject *)obj)->anim.velocityX = zero;
+            ((GameObject *)obj)->anim.velocityZ = zero;
         }
         if (fn_80296414(player, obj, state + WCPUSHBLOCK_STATE_PUSH_DIR) != 0) {
             u32 dir = WCPUSHBLOCK_PUSH_DIR(state);
@@ -325,8 +326,8 @@ void wcpushblock_update(int obj)
                             (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_X), (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_Z), 0, 1, WCPUSHBLOCK_IFACE);
                 }
             }
-            if (WCPUSHBLOCK_TARGET_X(state) == *(f32 *)(obj + 0xc) &&
-                WCPUSHBLOCK_TARGET_Z(state) == *(f32 *)(obj + 0x10)) {
+            if (WCPUSHBLOCK_TARGET_X(state) == ((GameObject *)obj)->anim.localPosX &&
+                WCPUSHBLOCK_TARGET_Z(state) == ((GameObject *)obj)->anim.localPosY) {
                 ;
             } else {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_SLIDING;
@@ -334,9 +335,9 @@ void wcpushblock_update(int obj)
         }
         break;
     case WCPUSHBLOCK_PHASE_SLIDING:
-        if (lbl_803E6D64 != *(f32 *)(obj + 0x24) || lbl_803E6D64 != *(f32 *)(obj + 0x2c)) {
-            f32 speed = sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) +
-                              *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c)) -
+        if (lbl_803E6D64 != ((GameObject *)obj)->anim.velocityX || lbl_803E6D64 != ((GameObject *)obj)->anim.velocityZ) {
+            f32 speed = sqrtf(((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX +
+                              ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ) -
                         lbl_803E6D68;
             if (speed < lbl_803E6D64) {
                 speed = lbl_803E6D64;
@@ -349,64 +350,64 @@ void wcpushblock_update(int obj)
             Sfx_SetObjectSfxVolume(obj, SFXsc_lockon2_off, (int)dist, lbl_803E6D78);
             WCPUSHBLOCK_FLAGS(state).sfxActive = 1;
         }
-        objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, lbl_803E6D64,
-                *(f32 *)(obj + 0x2c) * timeDelta);
+        objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, lbl_803E6D64,
+                ((GameObject *)obj)->anim.velocityZ * timeDelta);
         moved = 0;
         {
             u32 dir = WCPUSHBLOCK_PUSH_DIR(state);
             if (dir == WCPUSHBLOCK_DIR_POS_X) {
-                if (*(f32 *)(obj + 0x24) < lbl_803E6D7C) {
-                    *(f32 *)(obj + 0x24) = lbl_803E6D80 * timeDelta + *(f32 *)(obj + 0x24);
+                if (((GameObject *)obj)->anim.velocityX < lbl_803E6D7C) {
+                    ((GameObject *)obj)->anim.velocityX = lbl_803E6D80 * timeDelta + ((GameObject *)obj)->anim.velocityX;
                 }
-                if (*(f32 *)(obj + 0xc) >= WCPUSHBLOCK_TARGET_X(state)) {
-                    *(f32 *)(obj + 0xc) = WCPUSHBLOCK_TARGET_X(state);
+                if (((GameObject *)obj)->anim.localPosX >= WCPUSHBLOCK_TARGET_X(state)) {
+                    ((GameObject *)obj)->anim.localPosX = WCPUSHBLOCK_TARGET_X(state);
                     moved = 1;
                 }
             } else if (dir == WCPUSHBLOCK_DIR_NEG_X) {
-                if (*(f32 *)(obj + 0x24) > lbl_803E6D84) {
-                    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) - lbl_803E6D80 * timeDelta;
+                if (((GameObject *)obj)->anim.velocityX > lbl_803E6D84) {
+                    ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX - lbl_803E6D80 * timeDelta;
                 }
-                if (*(f32 *)(obj + 0xc) <= WCPUSHBLOCK_TARGET_X(state)) {
-                    *(f32 *)(obj + 0xc) = WCPUSHBLOCK_TARGET_X(state);
+                if (((GameObject *)obj)->anim.localPosX <= WCPUSHBLOCK_TARGET_X(state)) {
+                    ((GameObject *)obj)->anim.localPosX = WCPUSHBLOCK_TARGET_X(state);
                     moved = 1;
                 }
             } else if (dir == WCPUSHBLOCK_DIR_POS_Z) {
-                if (*(f32 *)(obj + 0x2c) < lbl_803E6D7C) {
-                    *(f32 *)(obj + 0x2c) = lbl_803E6D80 * timeDelta + *(f32 *)(obj + 0x2c);
+                if (((GameObject *)obj)->anim.velocityZ < lbl_803E6D7C) {
+                    ((GameObject *)obj)->anim.velocityZ = lbl_803E6D80 * timeDelta + ((GameObject *)obj)->anim.velocityZ;
                 }
-                if (*(f32 *)(obj + 0x14) >= WCPUSHBLOCK_TARGET_Z(state)) {
-                    *(f32 *)(obj + 0x14) = WCPUSHBLOCK_TARGET_Z(state);
+                if (((GameObject *)obj)->anim.localPosZ >= WCPUSHBLOCK_TARGET_Z(state)) {
+                    ((GameObject *)obj)->anim.localPosZ = WCPUSHBLOCK_TARGET_Z(state);
                     moved = 1;
                 }
             } else if (dir == WCPUSHBLOCK_DIR_NEG_Z) {
-                if (*(f32 *)(obj + 0x2c) > lbl_803E6D84) {
-                    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) - lbl_803E6D80 * timeDelta;
+                if (((GameObject *)obj)->anim.velocityZ > lbl_803E6D84) {
+                    ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ - lbl_803E6D80 * timeDelta;
                 }
-                if (*(f32 *)(obj + 0x14) <= WCPUSHBLOCK_TARGET_Z(state)) {
-                    *(f32 *)(obj + 0x14) = WCPUSHBLOCK_TARGET_Z(state);
+                if (((GameObject *)obj)->anim.localPosZ <= WCPUSHBLOCK_TARGET_Z(state)) {
+                    ((GameObject *)obj)->anim.localPosZ = WCPUSHBLOCK_TARGET_Z(state);
                     moved = 1;
                 }
             }
         }
-        if (*(f32 *)(obj + 0x24) > lbl_803E6D7C) {
-            *(f32 *)(obj + 0x24) = lbl_803E6D7C;
+        if (((GameObject *)obj)->anim.velocityX > lbl_803E6D7C) {
+            ((GameObject *)obj)->anim.velocityX = lbl_803E6D7C;
         }
-        if (*(f32 *)(obj + 0x24) < lbl_803E6D84) {
-            *(f32 *)(obj + 0x24) = lbl_803E6D84;
+        if (((GameObject *)obj)->anim.velocityX < lbl_803E6D84) {
+            ((GameObject *)obj)->anim.velocityX = lbl_803E6D84;
         }
-        if (*(f32 *)(obj + 0x2c) > lbl_803E6D7C) {
-            *(f32 *)(obj + 0x2c) = lbl_803E6D7C;
+        if (((GameObject *)obj)->anim.velocityZ > lbl_803E6D7C) {
+            ((GameObject *)obj)->anim.velocityZ = lbl_803E6D7C;
         }
-        if (*(f32 *)(obj + 0x2c) < lbl_803E6D84) {
-            *(f32 *)(obj + 0x2c) = lbl_803E6D84;
+        if (((GameObject *)obj)->anim.velocityZ < lbl_803E6D84) {
+            ((GameObject *)obj)->anim.velocityZ = lbl_803E6D84;
         }
         if (moved == 0) {
             break;
         }
         {
             f32 zero = lbl_803E6D64;
-            *(f32 *)(obj + 0x24) = zero;
-            *(f32 *)(obj + 0x2c) = zero;
+            ((GameObject *)obj)->anim.velocityX = zero;
+            ((GameObject *)obj)->anim.velocityZ = zero;
         }
         {
             u32 r = WCPUSHBLOCK_MOVE_RESULT(state);
@@ -440,7 +441,7 @@ void wcpushblock_update(int obj)
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x28))(
                     0, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, f32, f32, int, int, int))(WCPUSHBLOCK_IFACE + 0x24))(
-                    obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x14), state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y,
+                    obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ, state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y,
                     WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x28))(
                     WCPUSHBLOCK_INITIAL_TILE(state), WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
@@ -449,7 +450,7 @@ void wcpushblock_update(int obj)
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x44))(
                     0, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, f32, f32, int, int, int))(WCPUSHBLOCK_IFACE + 0x40))(
-                    obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x14), state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y,
+                    obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ, state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y,
                     WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x44))(
                     WCPUSHBLOCK_INITIAL_TILE(state), WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
@@ -511,14 +512,14 @@ void wcpushblock_update(int obj)
         if (tex != 0) {
             *tex = WCPUSHBLOCK_TEXTURE_LOCKED;
         }
-        *(u16 *)(obj + 0xb0) |= WCPUSHBLOCK_OBJFLAG_LOCKED;
+        ((GameObject *)obj)->unkB0 |= WCPUSHBLOCK_OBJFLAG_LOCKED;
         break;
     }
 
     WCPUSHBLOCK_BOB_ANGLE(state) = lbl_803E6D88 * timeDelta + (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state);
     WCPUSHBLOCK_BOB_Y(state) =
         lbl_803E6D8C * fn_80293E80(lbl_803E6D90 * (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state) / lbl_803E6D94);
-    *(f32 *)(obj + 0x10) = WCPUSHBLOCK_BASE_Y(state) + WCPUSHBLOCK_BOB_Y(state);
+    ((GameObject *)obj)->anim.localPosY = WCPUSHBLOCK_BASE_Y(state) + WCPUSHBLOCK_BOB_Y(state);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -767,7 +768,7 @@ void wcpushblock_updateLevelControlState(int obj, int state)
 #pragma scheduling off
 int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int i;
 
     *(u16 *)(state + 0x1a) |= 0x1;
@@ -814,14 +815,14 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy)
         int bi = b;
         if (dx == -1) {
             f32 pz, px;
-            mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            mapGetBlockOriginForPos(&px, &pz, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
             *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + lbl_803E6DBC);
             *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + (f32)(bi * 48));
             a += 1;
             limit = 8;
         } else {
             f32 pz, px;
-            mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            mapGetBlockOriginForPos(&px, &pz, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
             *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + lbl_803E6DA8);
             *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + (f32)(bi * 48));
             a -= 1;
@@ -832,13 +833,13 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy)
                 if (lbl_803AD298[i][b] <= 4) {
                     f32 pz, px;
                     i += dx;
-                    mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    mapGetBlockOriginForPos(&px, &pz, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
                     *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + (f32)((s16)i * 48));
                     return 1;
                 }
                 {
                     f32 pz, px;
-                    mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    mapGetBlockOriginForPos(&px, &pz, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
                     *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + (f32)((s16)i * 48));
                     return 2;
                 }
@@ -849,14 +850,14 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy)
         int ai = a;
         if (dy == -1) {
             f32 pz, px;
-            mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            mapGetBlockOriginForPos(&px, &pz, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
             *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + (f32)(ai * 48));
             *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + lbl_803E6DBC);
             b += 1;
             limit = 8;
         } else {
             f32 pz, px;
-            mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            mapGetBlockOriginForPos(&px, &pz, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
             *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + (f32)(ai * 48));
             *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + lbl_803E6DA8);
             b -= 1;
@@ -867,13 +868,13 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy)
                 if (lbl_803AD298[a][i] <= 4) {
                     f32 pz, px;
                     i += dy;
-                    mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    mapGetBlockOriginForPos(&px, &pz, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
                     *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + (f32)((s16)i * 48));
                     return 1;
                 }
                 {
                     f32 pz, px;
-                    mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    mapGetBlockOriginForPos(&px, &pz, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
                     *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + (f32)((s16)i * 48));
                     return 2;
                 }

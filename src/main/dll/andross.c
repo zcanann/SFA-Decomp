@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/dll/andross.h"
 #include "main/mapEventTypes.h"
 
@@ -48,7 +49,7 @@ void andross_setPartSignal(int obj, int signal)
     if ((void *)obj == NULL) {
         return;
     }
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     ((AndrossState *)state)->unkAD |= signal;
 }
 #pragma scheduling reset
@@ -57,7 +58,7 @@ void andross_setPartSignal(int obj, int signal)
 #pragma scheduling off
 int andross_updateModelAlpha(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int i;
     f32 v;
     f32 alpha;
@@ -79,7 +80,7 @@ int andross_updateModelAlpha(int obj)
 #pragma scheduling off
 void andross_init(int obj, u8 *setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int i;
     int model;
 
@@ -101,7 +102,7 @@ void andross_init(int obj, u8 *setup)
     ((AndrossState *)state)->unk78 = lbl_803E7530;
     ((AndrossState *)state)->unkBC = 1;
     ObjHits_SetTargetMask(obj, 4);
-    *(void **)(obj + 0xbc) = (void *)andross_updateModelAlpha;
+    ((GameObject *)obj)->unkBC = (void *)andross_updateModelAlpha;
     fn_8006CB50();
     model = *(int *)Obj_GetActiveModel(obj);
     for (i = 0; i < *(u8 *)(model + 0xf8); i++) {
@@ -339,7 +340,7 @@ void andross_update(int obj)
   f32 local_78;
   u32 uStack100;
   f32 local_50;
-    piVar14 = *(int **)(obj + 0xb8);
+    piVar14 = ((GameObject *)obj)->extra;
   moveChanged = 0;
   stateChanged = 0;
   pathFlag = 0;
@@ -371,18 +372,18 @@ void andross_update(int obj)
     if (*(void **)((int)piVar14 + uVar6 * 4 + 0x18) == NULL) {
       *(int *)((int)piVar14 + uVar6 * 4 + 0x18) = ObjList_FindObjectById(lbl_8032C088[uVar6]);
       if (*(void **)((int)piVar14 + uVar6 * 4 + 0x18) != NULL) {
-        *(f32 *)(piVar14 + uVar6 * 3 + 10) = *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0xc) - *(float *)(obj + 0xc);
-        *(f32 *)(piVar14 + uVar6 * 3 + 0xb) = *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0x10) - *(float *)(obj + 0x10);
-        *(f32 *)(piVar14 + uVar6 * 3 + 0xc) = *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0x14) - *(float *)(obj + 0x14);
+        *(f32 *)(piVar14 + uVar6 * 3 + 10) = *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0xc) - ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(piVar14 + uVar6 * 3 + 0xb) = *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0x10) - ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(piVar14 + uVar6 * 3 + 0xc) = *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0x14) - ((GameObject *)obj)->anim.localPosZ;
       }
     }
     else {
-      *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0xc) = *(float *)(obj + 0xc) + *(f32 *)(piVar14 + uVar6 * 3 + 10)
+      *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0xc) = ((GameObject *)obj)->anim.localPosX + *(f32 *)(piVar14 + uVar6 * 3 + 10)
       ;
       *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0x10) =
-           *(float *)(obj + 0x10) + *(f32 *)(piVar14 + uVar6 * 3 + 0xb);
+           ((GameObject *)obj)->anim.localPosY + *(f32 *)(piVar14 + uVar6 * 3 + 0xb);
       *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0x14) =
-           *(float *)(obj + 0x14) + *(f32 *)(piVar14 + uVar6 * 3 + 0xc);
+           ((GameObject *)obj)->anim.localPosZ + *(f32 *)(piVar14 + uVar6 * 3 + 0xc);
     }
   }
   iVar5 = piVar14[0x1f];
@@ -587,7 +588,7 @@ void andross_update(int obj)
   switch(piVar14[0x22]) {
   case 0:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
       if (piVar14[0x1f] == 1) {
@@ -626,7 +627,7 @@ void andross_update(int obj)
     break;
   case 1:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0xc,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0C8[0];
     }
@@ -645,7 +646,7 @@ void andross_update(int obj)
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
-    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+    if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       piVar14[0x22] = 2;
       piVar14[0x21] = 0;
     }
@@ -659,7 +660,7 @@ void andross_update(int obj)
     break;
   case 2:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0xe,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0D0[0];
       *(f32 *)(piVar14 + 0x27) = lbl_803E74F0;
@@ -701,7 +702,7 @@ void andross_update(int obj)
     break;
   case 3:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0xd,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0CC[0];
     }
@@ -720,13 +721,13 @@ void andross_update(int obj)
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
-    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+    if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
   case 4:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
       GameBit_Set(0xd,1);
@@ -762,7 +763,7 @@ void andross_update(int obj)
     break;
   case 0x15:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
       GameBit_Set(0xd,1);
@@ -804,7 +805,7 @@ LAB_8023bb18:
     break;
   case 6:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
       androsshand_setState(piVar14[2],4,0);
@@ -825,7 +826,7 @@ LAB_8023bb18:
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     bVar15 = 0;
-    iVar5 = *(int *)(obj + 0xb8);
+    iVar5 = *(int *)&((GameObject *)obj)->extra;
     bVar13 = *(u8 *)(iVar5 + 0xad);
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
@@ -855,7 +856,7 @@ LAB_8023bb18:
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     bVar15 = 0;
-    iVar5 = *(int *)(obj + 0xb8);
+    iVar5 = *(int *)&((GameObject *)obj)->extra;
     bVar13 = *(u8 *)(iVar5 + 0xad);
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
@@ -885,7 +886,7 @@ LAB_8023bb18:
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     bVar15 = 0;
-    iVar5 = *(int *)(obj + 0xb8);
+    iVar5 = *(int *)&((GameObject *)obj)->extra;
     bVar13 = *(u8 *)(iVar5 + 0xad);
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
@@ -915,7 +916,7 @@ LAB_8023bb18:
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     bVar15 = 0;
-    iVar5 = *(int *)(obj + 0xb8);
+    iVar5 = *(int *)&((GameObject *)obj)->extra;
     bVar13 = *(u8 *)(iVar5 + 0xad);
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
@@ -962,7 +963,7 @@ LAB_8023bb18:
         androsshand_setState(piVar14[2],5,0);
       }
       bVar15 = 0;
-      iVar5 = *(int *)(obj + 0xb8);
+      iVar5 = *(int *)&((GameObject *)obj)->extra;
       bVar13 = *(u8 *)(iVar5 + 0xad);
       if ((bVar13 & 1) != 0) {
         *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
@@ -976,7 +977,7 @@ LAB_8023bb18:
   case 0xb:
   case 0xd:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,1,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C09C[0];
       if (piVar14[0x1f] < 5) {
@@ -1019,7 +1020,7 @@ LAB_8023c584:
     *(f32 *)(piVar14 + 0x34) = (lbl_803E7514 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
-    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+    if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       switch (piVar14[0x22]) {
       default:
       case 0xb:
@@ -1031,7 +1032,7 @@ LAB_8023c584:
         break;
       }
     }
-    fVar2 = lbl_803E74B8 * *(float *)(obj + 0x98);
+    fVar2 = lbl_803E74B8 * ((GameObject *)obj)->anim.currentMoveProgress;
     if (fVar2 < lbl_803E74B8) {
       dVar19 = -(lbl_803E74C0 * (lbl_803E74C4 * fVar2) - lbl_803E74BC);
       if (fVar2 < lbl_803E74C8) {
@@ -1048,7 +1049,7 @@ LAB_8023c584:
     turnOnDistortionFilter((f32 *)(piVar14 + 0x30),dVar19,&lbl_803DC4CC,lbl_803DDDB8);
     break;
   case 0xe:
-    fVar2 = lbl_803E74B8 * *(float *)(obj + 0x98) + lbl_803E74B8;
+    fVar2 = lbl_803E74B8 * ((GameObject *)obj)->anim.currentMoveProgress + lbl_803E74B8;
     if (fVar2 < lbl_803E74B8) {
       dVar19 = -(lbl_803E74C0 * (lbl_803E74C4 * fVar2) - lbl_803E74BC);
       if (fVar2 < lbl_803E74C8) {
@@ -1064,7 +1065,7 @@ LAB_8023c584:
     }
     turnOnDistortionFilter((f32 *)(piVar14 + 0x30),dVar19,&lbl_803DC4CC,lbl_803DDDB8);
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,2,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0A0[0];
       *(undefined *)((int)piVar14 + 0xb1) = 0;
@@ -1114,7 +1115,7 @@ LAB_8023c584:
     }
     break;
   case 0xc:
-    fVar2 = lbl_803E74B8 * *(float *)(obj + 0x98) + lbl_803E74B8;
+    fVar2 = lbl_803E74B8 * ((GameObject *)obj)->anim.currentMoveProgress + lbl_803E74B8;
     if (fVar2 < lbl_803E74B8) {
       dVar19 = -(lbl_803E74C0 * (lbl_803E74C4 * fVar2) - lbl_803E74BC);
       if (fVar2 < lbl_803E74C8) {
@@ -1130,7 +1131,7 @@ LAB_8023c584:
     }
     turnOnDistortionFilter((f32 *)(piVar14 + 0x30),dVar19,&lbl_803DC4CC,lbl_803DDDB8);
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,2,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0A0[0];
       if (piVar14[0x1f] < 5) {
@@ -1232,7 +1233,7 @@ LAB_8023cbdc:
     break;
   case 0xf:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x10,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0D8[0];
     }
@@ -1251,13 +1252,13 @@ LAB_8023cbdc:
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
-    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+    if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
   case 0x10:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x10,lbl_803E74D4,0);
       *(float *)(iVar12 + 100) = lbl_803E7518;
     }
@@ -1289,7 +1290,7 @@ LAB_8023cbdc:
       fVar2 = lbl_803E74EC;
     }
     *(f32 *)(piVar14 + 0x2a) = fVar2;
-    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+    if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       *(s16 *)(*piVar14 + 6) = *(s16 *)(*piVar14 + 6) | 0x4000;
       piVar14[0x22] = 0x11;
     }
@@ -1297,7 +1298,7 @@ LAB_8023cbdc:
   case 0x11:
     if (moveChanged) {
       Sfx_PlayFromObject(obj,0x468);
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x15,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0EC[0];
       arwarwing_addShield(*piVar14,0xfffffffc);
@@ -1324,13 +1325,13 @@ LAB_8023cbdc:
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74D4 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
-    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+    if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
   case 0x12:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x12,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0E0[0];
       androsshand_setState(piVar14[1],0,0);
@@ -1380,13 +1381,13 @@ LAB_8023d59c:
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
-    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+    if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       piVar14[0x22] = 0x13;
     }
     break;
   case 0x13:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x13,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0E4[0];
       if (piVar14[0x1f] == 5) {
@@ -1468,7 +1469,7 @@ LAB_8023d7cc:
     break;
   case 0x14:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x14,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0E8[0];
     }
@@ -1502,7 +1503,7 @@ LAB_8023db24:
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
-    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+    if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
@@ -1510,11 +1511,11 @@ LAB_8023db24:
   case 0x1a:
     if (moveChanged) {
       Sfx_PlayFromObject(obj,0x4a6);
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,4,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0A8[0];
     }
-    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+    if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
@@ -1545,9 +1546,9 @@ LAB_8023db24:
       *(f32 *)(piVar14 + 0x34) = *(f32 *)(piVar14 + 0x17);
       *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
       fVar2 = lbl_803E74D4;
-      *(float *)(obj + 0x24) = lbl_803E74D4;
-      *(float *)(obj + 0x28) = fVar2;
-      *(float *)(obj + 0x2c) = fVar2;
+      ((GameObject *)obj)->anim.velocityX = lbl_803E74D4;
+      ((GameObject *)obj)->anim.velocityY = fVar2;
+      ((GameObject *)obj)->anim.velocityZ = fVar2;
       *(f32 *)(piVar14 + 0x1d) = lbl_803E74C8;
       *(f32 *)(piVar14 + 0x1e) = lbl_803E7530;
     }
@@ -1623,9 +1624,9 @@ LAB_8023de5c:
       *(f32 *)(piVar14 + 0x34) = *(float *)(*piVar14 + 0x10) + lbl_803DC47C;
       *(f32 *)(piVar14 + 0x35) = *(float *)(*piVar14 + 0x14) + lbl_803DC480;
       fVar2 = lbl_803E74D4;
-      *(float *)(obj + 0x24) = lbl_803E74D4;
-      *(float *)(obj + 0x28) = fVar2;
-      *(float *)(obj + 0x2c) = fVar2;
+      ((GameObject *)obj)->anim.velocityX = lbl_803E74D4;
+      ((GameObject *)obj)->anim.velocityY = fVar2;
+      ((GameObject *)obj)->anim.velocityZ = fVar2;
       iVar12 = randomGetRange(0,1);
       if (iVar12 == 0) {
         uVar9 = 0x472;
@@ -1650,7 +1651,7 @@ LAB_8023de5c:
         uVar9 = 0x471;
       }
       Sfx_PlayFromObject(obj,uVar9);
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
     }
@@ -1692,13 +1693,13 @@ LAB_8023de5c:
     iVar5 = *(int *)(piVar14[2] + 0xb8);
     if (moveChanged) {
       Sfx_PlayFromObject(obj,0x470);
-      iVar8 = *(int *)(obj + 0xb8);
+      iVar8 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x16,lbl_803E74D4,0);
       *(f32 *)(iVar8 + 100) = lbl_8032C0F0[0];
       ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f80 = 0;
       ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f40 = 0;
     }
-    dVar19 = *(float *)(obj + 0x98);
+    dVar19 = ((GameObject *)obj)->anim.currentMoveProgress;
     if (dVar19 < lbl_803E7540) {
       dVar19 = fn_80293E80(((lbl_803E74A0 *
                                              (float)(lbl_803E7548 *
@@ -1715,7 +1716,7 @@ LAB_8023de5c:
             *(f32 *)(piVar14 + 0x35) = ((f32)(lbl_803DC48C) * dVar19 +
                        *(f32 *)(piVar14 + 0x18));
     }
-    if ((*(float *)(obj + 0x98) > lbl_803E7568) &&
+    if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7568) &&
        ((*(u8 *)(piVar14 + 0x3a) >> 6 & 1) == 0)) {
       iVar8 = randomGetRange(0,1);
       if (iVar8 == 0) {
@@ -1727,17 +1728,17 @@ LAB_8023de5c:
       Sfx_PlayFromObject(obj,uVar9);
       ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f40 = 1;
     }
-    if ((*(float *)(obj + 0x98) > lbl_803E7570) && (((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f80 == 0)) {
+    if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7570) && (((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f80 == 0)) {
       Sfx_PlayFromObject(obj,0x46d);
       ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f80 = 1;
     }
     cVar11 = *(char *)(iVar12 + 0x23);
     if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
         (cVar11 = *(char *)(iVar5 + 0x23), cVar11 != '\x02')) && (cVar11 != '\x01')) {
-      if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+      if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
         piVar14[0x21] = 1;
       }
-      else if (*(float *)(obj + 0x98) > lbl_803E7568) {
+      else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7568) {
         *(s16 *)(piVar14 + 0x28) = 0;
           androsshand_setState(piVar14[1],1,(u8)((piVar14[0x1f] == 4) + 1));
         androsshand_setState(piVar14[2],1,(u8)((piVar14[0x1f] == 4) + 1));
@@ -1747,7 +1748,7 @@ LAB_8023de5c:
     break;
   case 0x17:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,3,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0A4[0];
       *(f32 *)(piVar14 + 0x39) = lbl_803E74D4;
@@ -1758,10 +1759,10 @@ LAB_8023de5c:
       Sfx_PlayFromObject(obj,0x46f);
       ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 1;
     }
-    if (*(float *)(obj + 0x98) <= lbl_803DC490) {
-      *(f32 *)(piVar14 + 0x30) = *(float *)(obj + 0xc);
-      *(f32 *)(piVar14 + 0x31) = *(float *)(obj + 0x10) - lbl_803E757C;
-      *(f32 *)(piVar14 + 0x32) = *(float *)(obj + 0x14) - lbl_803E7580;
+    if (((GameObject *)obj)->anim.currentMoveProgress <= lbl_803DC490) {
+      *(f32 *)(piVar14 + 0x30) = ((GameObject *)obj)->anim.localPosX;
+      *(f32 *)(piVar14 + 0x31) = ((GameObject *)obj)->anim.localPosY - lbl_803E757C;
+      *(f32 *)(piVar14 + 0x32) = ((GameObject *)obj)->anim.localPosZ - lbl_803E7580;
       iVar12 = *piVar14;
       local_114.x = (*(f32 *)(piVar14 + 0x30) - *(float *)(iVar12 + 0xc)) * lbl_803DC494;
       local_114.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC494;
@@ -1788,18 +1789,18 @@ LAB_8023de5c:
       local_b4 = local_9c;
       fn_8022D4AC(*piVar14,(int)&local_b4);
     }
-    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+    if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
   case 0x18:
     if (moveChanged) {
-      iVar12 = *(int *)(obj + 0xb8);
+      iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x11,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0DC[0];
       ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 0;
     }
-    if (*(float *)(obj + 0x98) <= lbl_803DC4A0) {
+    if (((GameObject *)obj)->anim.currentMoveProgress <= lbl_803DC4A0) {
       iVar12 = *piVar14;
       local_12c.x = (*(f32 *)(piVar14 + 0x30) - *(float *)(iVar12 + 0xc)) * lbl_803DC4A4;
       local_12c.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC4A4;
@@ -1830,7 +1831,7 @@ LAB_8023de5c:
         ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 1;
       }
     }
-    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
+    if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
@@ -1851,21 +1852,21 @@ LAB_8023de5c:
   }
   local_134 = lbl_803E7584 + *(f32 *)(piVar14 + 0x2a);
   (*(void (*)())*(int *)(*gCameraInterface + 0x60))(&local_134,4);
-  *(float *)(obj + 0x24) =
-       *(f32 *)(piVar14 + 0x1d) * (*(f32 *)(piVar14 + 0x33) - *(float *)(obj + 0xc)) +
-       *(float *)(obj + 0x24);
-  *(float *)(obj + 0x28) =
-       *(f32 *)(piVar14 + 0x1d) * (*(f32 *)(piVar14 + 0x34) - *(float *)(obj + 0x10)) +
-       *(float *)(obj + 0x28);
-  *(float *)(obj + 0x2c) =
-       *(f32 *)(piVar14 + 0x1d) * (*(f32 *)(piVar14 + 0x35) - *(float *)(obj + 0x14)) +
-       *(float *)(obj + 0x2c);
-  *(float *)(obj + 0x24) = *(float *)(obj + 0x24) * *(f32 *)(piVar14 + 0x1e);
-  *(float *)(obj + 0x28) = *(float *)(obj + 0x28) * *(f32 *)(piVar14 + 0x1e);
-  *(float *)(obj + 0x2c) = *(float *)(obj + 0x2c) * *(f32 *)(piVar14 + 0x1e);
-  *(float *)(obj + 0xc) = *(float *)(obj + 0xc) + *(float *)(obj + 0x24);
-  *(float *)(obj + 0x10) = *(float *)(obj + 0x10) + *(float *)(obj + 0x28);
-  *(float *)(obj + 0x14) = *(float *)(obj + 0x14) + *(float *)(obj + 0x2c);
+  ((GameObject *)obj)->anim.velocityX =
+       *(f32 *)(piVar14 + 0x1d) * (*(f32 *)(piVar14 + 0x33) - ((GameObject *)obj)->anim.localPosX) +
+       ((GameObject *)obj)->anim.velocityX;
+  ((GameObject *)obj)->anim.velocityY =
+       *(f32 *)(piVar14 + 0x1d) * (*(f32 *)(piVar14 + 0x34) - ((GameObject *)obj)->anim.localPosY) +
+       ((GameObject *)obj)->anim.velocityY;
+  ((GameObject *)obj)->anim.velocityZ =
+       *(f32 *)(piVar14 + 0x1d) * (*(f32 *)(piVar14 + 0x35) - ((GameObject *)obj)->anim.localPosZ) +
+       ((GameObject *)obj)->anim.velocityZ;
+  ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * *(f32 *)(piVar14 + 0x1e);
+  ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY * *(f32 *)(piVar14 + 0x1e);
+  ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * *(f32 *)(piVar14 + 0x1e);
+  ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.localPosX + ((GameObject *)obj)->anim.velocityX;
+  ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + ((GameObject *)obj)->anim.velocityY;
+  ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ + ((GameObject *)obj)->anim.velocityZ;
   if (lbl_803E74D4 == *(f32 *)(piVar14 + 0x38)) {
     if (*(u8 *)(piVar14 + 0x2e) != 0) {
       fn_8023A6A4((int)piVar14,lbl_803DC4B4,lbl_803DC4B8,lbl_803E74D4);
@@ -1890,9 +1891,9 @@ LAB_8023de5c:
        (short)(((int)sVar3 / lbl_803DC430 - (int)*(short *)((int)piVar14 + 0xa2)) / lbl_803DC434);
   *(short *)(piVar14 + 0x29) =
        *(short *)(piVar14 + 0x29) +
-       (short)((-(int)*(s16 *)(obj + 2) / lbl_803DC430 - (int)*(short *)(piVar14 + 0x29)) / lbl_803DC434);
+       (short)((-(int)((GameObject *)obj)->anim.rotY / lbl_803DC430 - (int)*(short *)(piVar14 + 0x29)) / lbl_803DC434);
   *(s16 *)obj = *(s16 *)obj + *(short *)((int)piVar14 + 0xa2);
-  *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + *(short *)(piVar14 + 0x29);
+  ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + *(short *)(piVar14 + 0x29);
   ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj,*(f32 *)(piVar14 + 0x19),timeDelta,0);
   fn_8023A3E4(obj,(int)piVar14);
   fn_8023A87C(obj,(int)piVar14);
@@ -1915,9 +1916,9 @@ LAB_8023de5c:
       }
       if ((*(short *)(iVar12 + 0x44) != 0x10) ||
          (iVar5 = animatedObjGetSeqId(*(int *)(iVar12 + 0xb8)), iVar5 != 0x598)) {
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = ((GameObject *)obj)->anim.localPosZ;
       }
     }
     local_13c = lbl_803E7490;
@@ -1928,9 +1929,9 @@ LAB_8023de5c:
       }
       if ((*(short *)(iVar12 + 0x44) != 0x10) ||
          (iVar5 = animatedObjGetSeqId(*(int *)(iVar12 + 0xb8)), iVar5 != 0x598)) {
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = ((GameObject *)obj)->anim.localPosZ;
       }
     }
     local_140 = lbl_803E7490;
@@ -1941,9 +1942,9 @@ LAB_8023de5c:
       }
       if ((*(short *)(iVar12 + 0x44) != 0x10) ||
          (iVar5 = animatedObjGetSeqId(*(int *)(iVar12 + 0xb8)), iVar5 != 0x598)) {
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = ((GameObject *)obj)->anim.localPosZ;
       }
     }
     local_144 = lbl_803E7490;
@@ -1954,9 +1955,9 @@ LAB_8023de5c:
       }
       if ((*(short *)(iVar12 + 0x44) != 0x10) ||
          (iVar5 = animatedObjGetSeqId(*(int *)(iVar12 + 0xb8)), iVar5 != 0x598)) {
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = ((GameObject *)obj)->anim.localPosZ;
       }
     }
     local_148 = lbl_803E7490;
@@ -1967,9 +1968,9 @@ LAB_8023de5c:
       }
       if ((*(short *)(iVar12 + 0x44) != 0x10) ||
          (iVar5 = animatedObjGetSeqId(*(int *)(iVar12 + 0xb8)), iVar5 != 0x598)) {
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = ((GameObject *)obj)->anim.localPosZ;
       }
     }
   }

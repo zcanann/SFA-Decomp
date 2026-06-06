@@ -1,10 +1,11 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
 int arwarwinggu_getExtraSize(int obj)
 {
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x606:
         return 8;
     case 0x610:
@@ -46,10 +47,10 @@ void arwarwinggu_hitDetect(void) {}
 #pragma scheduling on
 void arwarwinggu_init(int obj)
 {
-    if (*(s16 *)(obj + 0x46) == 0x606) {
+    if (((GameObject *)obj)->anim.seqId == 0x606) {
         return;
     }
-    *(s16 *)(obj + 6) |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= 0x4000;
     *(u8 *)(obj + 0x36) = 0;
 }
 #pragma scheduling reset
@@ -58,15 +59,15 @@ void arwarwinggu_init(int obj)
 #pragma scheduling off
 void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     if (active != 0) {
         Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
-        *(s16 *)(obj + 6) &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~0x4000;
         *(u8 *)(obj + 0x36) = 0xff;
         *(f32 *)state = lbl_803E7058;
     } else {
-        *(s16 *)(obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         *(u8 *)(obj + 0x36) = 0;
     }
 }
@@ -89,9 +90,9 @@ void arwarwinggu_initialise(void) {}
 #pragma scheduling off
 void arwarwinggu_update(int obj)
 {
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x606: {
-        int state = *(int *)(obj + 0xb8);
+        int state = *(int *)&((GameObject *)obj)->extra;
         int model = Obj_GetActiveModel(obj);
         int texture = (int)objFindTexture(obj, 0, 0);
         int anim = ObjModel_GetTexture(*(int *)model, 0);
@@ -101,7 +102,7 @@ void arwarwinggu_update(int obj)
     }
     case 0x610:
     case 0x615: {
-        int state = *(int *)(obj + 0xb8);
+        int state = *(int *)&((GameObject *)obj)->extra;
         if (*(f32 *)state > lbl_803E7060) {
             *(f32 *)state -= timeDelta;
             if (*(f32 *)state <= lbl_803E7060) {
@@ -112,7 +113,7 @@ void arwarwinggu_update(int obj)
         break;
     }
     case 0x611: {
-        int state = *(int *)(obj + 0xb8);
+        int state = *(int *)&((GameObject *)obj)->extra;
         f32 v;
         if (*(u8 *)state != 0) {
             v = lbl_803E705C * timeDelta + (f32)(u32)*(u8 *)(obj + 0x36);
@@ -134,14 +135,14 @@ void arwarwinggu_update(int obj)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022F270(int obj, int p2) { *(int *)(*(int *)(obj + 0xb8) + 0x4) = p2; }
+void fn_8022F270(int obj, int p2) { *(int *)(*(int *)&((GameObject *)obj)->extra + 0x4) = p2; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling on
 void fn_8022F27C(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int model = Obj_GetActiveModel(obj);
     int *texture = objFindTexture(obj, 0, 0);
     int anim = ObjModel_GetTexture(*(int *)model, 0);

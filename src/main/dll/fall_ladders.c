@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/fall_ladders.h"
 
 extern undefined4 FUN_80006820();
@@ -283,11 +284,11 @@ void fn_801540A0(int obj, int p)
         done = 1;
         *(f32 *)(p + 0x324) = lbl_803E2968;
         *(f32 *)(p + 0x32c) = lbl_803E294C;
-        if (*(s16 *)(obj + 0xa0) != 0) {
+        if (((GameObject *)obj)->anim.currentMove != 0) {
             fn_8014D08C(obj, p, 2, lbl_803E2958, 0, 3);
         }
     }
-    if (*(s16 *)(obj + 0xa0) != 3) {
+    if (((GameObject *)obj)->anim.currentMove != 3) {
         fn_8014CF7C(obj, p, *(f32 *)(*(int *)(p + 0x29c) + 0xc), *(f32 *)(*(int *)(p + 0x29c) + 0x14), 0x3c, 0);
     } else {
         *(f32 *)(p + 0x328) -= timeDelta;
@@ -309,8 +310,8 @@ void fn_801540A0(int obj, int p)
         fn_8014CF7C(obj, p, *(f32 *)(*(int *)(p + 0x29c) + 0xc), *(f32 *)(*(int *)(p + 0x29c) + 0x14), 1, 0);
         Sfx_PlayFromObject(obj, SFXfox_healthgasp2);
     }
-    *(s16 *)(obj + 2) = *(s16 *)(p + 0x19c);
-    *(s16 *)(obj + 4) = *(s16 *)(p + 0x19e);
+    ((GameObject *)obj)->anim.rotY = *(s16 *)(p + 0x19c);
+    ((GameObject *)obj)->anim.rotZ = *(s16 *)(p + 0x19e);
     if (*(u8 *)(p + 0x33b) != 0) {
         *(u8 *)(p + 0x33b) -= 1;
     }
@@ -328,16 +329,16 @@ void fn_80154584(int obj, int p)
 
     curve = *(int *)p;
     *(u8 *)(p + 0x33b) = 0;
-    *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
+    *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
     if ((*(u32 *)(p + 0x2dc) & 0x2000) != 0) {
         if ((Curve_AdvanceAlongPath(curve, *(f32 *)(p + 0x2fc)) != 0 || *(int *)(curve + 0x10) != 0) &&
             (**(u8 (**)(int))(*gRomCurveInterface + 0x90))(curve) != 0 &&
             (**(u8 (**)(int, int, f32, f64 *, int))(*gRomCurveInterface + 0x8c))(*(int *)p, obj, lbl_803E29B0, &lbl_803DBCD0, -1) != 0) {
             *(u32 *)(p + 0x2dc) &= ~0x2000;
         }
-        vec[0] = *(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc);
+        vec[0] = *(f32 *)(curve + 0x68) - ((GameObject *)obj)->anim.localPosX;
         vec[1] = lbl_803E2990;
-        vec[2] = *(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14);
+        vec[2] = *(f32 *)(curve + 0x70) - ((GameObject *)obj)->anim.localPosZ;
         fn_8014C678(obj, p, vec, lbl_803E29A0, lbl_803E29B4, *(f32 *)&lbl_803E29B4, 1);
         *(f32 *)(p + 0x324) += timeDelta;
         if (*(f32 *)(p + 0x324) > lbl_803E29B8) {
@@ -346,18 +347,18 @@ void fn_80154584(int obj, int p)
         }
     }
     {
-        int a = (int)-(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)(p + 0x33a)) - (f32)*(s16 *)(obj + 2));
-        *(s16 *)(obj + 2) = a;
+        int a = (int)-(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)(p + 0x33a)) - (f32)((GameObject *)obj)->anim.rotY);
+        ((GameObject *)obj)->anim.rotY = a;
     }
     fn_8014CD1C(obj, p, 0xf, lbl_803E29C4, lbl_803E2994, 0);
     if ((*(u32 *)(p + 0x2dc) & 0x40000000) != 0) {
-        if (*(f32 *)(obj + 0x98) < lbl_803E29C8) {
+        if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E29C8) {
             rnd = randomGetRange(0, 200);
         } else {
             rnd = randomGetRange(0, 0x3c);
         }
         if (rnd == 0) {
-            if (*(f32 *)(obj + 0x98) > lbl_803E29C8) {
+            if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E29C8) {
                 Sfx_PlayFromObject(obj, 0x24b);
                 *(f32 *)(p + 0x308) = lbl_803E29D0;
             } else {
@@ -368,8 +369,8 @@ void fn_80154584(int obj, int p)
     }
     *(u8 *)(p + 0x33a) += 1;
     {
-        int a = (int)(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)(p + 0x33a)) + (f32)*(s16 *)(obj + 2));
-        *(s16 *)(obj + 2) = a;
+        int a = (int)(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)(p + 0x33a)) + (f32)((GameObject *)obj)->anim.rotY);
+        ((GameObject *)obj)->anim.rotY = a;
     }
     fn_80154328(obj, p);
 }
@@ -398,9 +399,9 @@ void fn_80154328(int obj, int p)
     *(f32 *)(p + 0x330) -= timeDelta;
     if (*(f32 *)(p + 0x330) <= lbl_803E2990) {
         *(f32 *)(p + 0x330) = (f32)(s32)randomGetRange(30, 60);
-        stk.pos[0] = *(f32 *)(obj + 0xc);
+        stk.pos[0] = ((GameObject *)obj)->anim.localPosX;
         stk.pos[1] = lbl_803E2990;
-        stk.pos[2] = *(f32 *)(obj + 0x14);
+        stk.pos[2] = ((GameObject *)obj)->anim.localPosZ;
         stk.in[0] = *(s16 *)obj;
         stk.in[1] = 0;
         stk.in[2] = 0;
@@ -411,7 +412,7 @@ void fn_80154328(int obj, int p)
         Matrix_TransformPoint(mtx, tx, lbl_803E2990, tz, &tx, &ox, &tz);
         (**(void (**)(f32, f32, f32, f32, int, int))(*gWaterfxInterface + 0x14))(
             tx, *(f32 *)(p + 0x32c), tz, lbl_803E2990, 0, 3);
-        if (sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c)) > lbl_803E29A4) {
+        if (sqrtf(((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX + ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ) > lbl_803E29A4) {
             Sfx_PlayAtPositionFromObject(obj, stk.pos[0], stk.pos[1], stk.pos[2], SFXstaff_proj_putaway);
         }
     }

@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/objhits_types.h"
@@ -45,9 +46,9 @@ void arwarwingbo_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling off
 void arwarwingbo_init(int obj, int setup)
 {
-    *(s16 *)(obj + 0) = (s16)(*(u8 *)(setup + 0x1a) << 8);
-    *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
-    *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)(*(u8 *)(setup + 0x1a) << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(setup + 0x19) << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(setup + 0x18) << 8);
     ObjGroup_AddObject(obj, 0x52);
 }
 #pragma scheduling reset
@@ -57,14 +58,14 @@ void arwarwingbo_init(int obj, int setup)
 #pragma scheduling off
 void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (active != 0) {
         Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
         *(u8 *)(state + 0) = 1;
-        *(s16 *)(obj + 6) &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~0x4000;
     } else {
         *(u8 *)(state + 0) = 0;
-        *(s16 *)(obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
     }
 }
 #pragma scheduling reset
@@ -86,7 +87,7 @@ void arwarwingbo_initialise(void) {}
 #pragma scheduling off
 void arwarwingbo_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int arwing = getArwing();
 
     if (*(u16 *)(arwing + 0xb0) & 0x1000) {
@@ -103,42 +104,42 @@ void arwarwingbo_update(int obj)
     if (*(f32 *)(state + 0) > lbl_803E7044) {
         *(f32 *)(state + 0) -= timeDelta;
         if (*(f32 *)(state + 0) <= lbl_803E7044) {
-            state = *(int *)(obj + 0xb8);
+            state = *(int *)&((GameObject *)obj)->extra;
             fn_8022D4F8(getArwing());
             Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
             *(f32 *)(state + 8) = lbl_803E7040;
             *(f32 *)(state + 0) = lbl_803E7044;
             *(u8 *)(obj + 0x36) = 0;
-            (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~0x200;
+            (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~0x200;
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0x280);
             ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
-            *(f32 *)(obj + 0x24) = lbl_803E7044;
-            *(f32 *)(obj + 0x28) = lbl_803E7044;
-            *(f32 *)(obj + 0x2c) = lbl_803E7044;
+            ((GameObject *)obj)->anim.velocityX = lbl_803E7044;
+            ((GameObject *)obj)->anim.velocityY = lbl_803E7044;
+            ((GameObject *)obj)->anim.velocityZ = lbl_803E7044;
         }
         (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 0x79e, 0, 1, -1, obj + 0x24);
         (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 0x79e, 0, 1, -1, obj + 0x24);
         ObjHits_SetHitVolumeSlot(obj, 0xf, 0, 0);
-        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 ||
-            (*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0 ||
+        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 ||
+            (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0 ||
             (getButtonsJustPressed(0) & 0x200)) {
-            state = *(int *)(obj + 0xb8);
+            state = *(int *)&((GameObject *)obj)->extra;
             fn_8022D4F8(getArwing());
             Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
             *(f32 *)(state + 8) = lbl_803E7040;
             *(f32 *)(state + 0) = lbl_803E7044;
             *(u8 *)(obj + 0x36) = 0;
-            (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~0x200;
+            (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~0x200;
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0x280);
             ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
-            *(f32 *)(obj + 0x24) = lbl_803E7044;
-            *(f32 *)(obj + 0x28) = lbl_803E7044;
-            *(f32 *)(obj + 0x2c) = lbl_803E7044;
+            ((GameObject *)obj)->anim.velocityX = lbl_803E7044;
+            ((GameObject *)obj)->anim.velocityY = lbl_803E7044;
+            ((GameObject *)obj)->anim.velocityZ = lbl_803E7044;
         }
-        objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
-                *(f32 *)(obj + 0x2c) * timeDelta);
+        objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
+                ((GameObject *)obj)->anim.velocityZ * timeDelta);
     }
 }
 #pragma scheduling reset

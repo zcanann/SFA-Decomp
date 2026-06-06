@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 
 #define WCBLOCK_GRID_OBJECT_OFFSET 0x268
@@ -76,7 +77,7 @@ void wcbouncycra_hitDetect(void) {}
 #pragma scheduling off
 void wcbouncycra_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     if ((WBOUNCY_FLAGS(state) & WBOUNCY_FLAG_ACTIVE) == 0) {
         int n = (int)((f32)WBOUNCY_COOLDOWN(state) - timeDelta);
@@ -94,23 +95,23 @@ void wcbouncycra_update(int obj)
             } else {
                 dist = (lbl_803E6D38 - (v - lbl_803E6D28) / lbl_803E6D34) * lbl_803E6D2C;
             }
-            *(f32 *)(obj + 0x28) = dist;
+            ((GameObject *)obj)->anim.velocityY = dist;
             WBOUNCY_FLAGS(state) |= WBOUNCY_FLAG_ACTIVE;
             WBOUNCY_BOUNCE_COUNT(state) = 0;
         }
     } else {
-        *(f32 *)(obj + 0x28) = lbl_803E6D3C * timeDelta + *(f32 *)(obj + 0x28);
-        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
-        if (*(f32 *)(obj + 0x10) <= WBOUNCY_HOME_Y(state)) {
-            *(f32 *)(obj + 0x10) =
-                *(f32 *)(obj + 0x10) + (WBOUNCY_HOME_Y(state) - *(f32 *)(obj + 0x10));
-            *(f32 *)(obj + 0x28) = lbl_803E6D40 * -*(f32 *)(obj + 0x28);
+        ((GameObject *)obj)->anim.velocityY = lbl_803E6D3C * timeDelta + ((GameObject *)obj)->anim.velocityY;
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
+        if (((GameObject *)obj)->anim.localPosY <= WBOUNCY_HOME_Y(state)) {
+            ((GameObject *)obj)->anim.localPosY =
+                ((GameObject *)obj)->anim.localPosY + (WBOUNCY_HOME_Y(state) - ((GameObject *)obj)->anim.localPosY);
+            ((GameObject *)obj)->anim.velocityY = lbl_803E6D40 * -((GameObject *)obj)->anim.velocityY;
             WBOUNCY_BOUNCE_COUNT(state) += 1;
             if (WBOUNCY_BOUNCE_COUNT(state) > WBOUNCY_MAX_BOUNCES) {
                 WBOUNCY_FLAGS(state) &= ~WBOUNCY_FLAG_ACTIVE;
                 WBOUNCY_COOLDOWN(state) = WBOUNCY_RESET_COOLDOWN;
-                *(f32 *)(obj + 0x10) = WBOUNCY_HOME_Y(state);
-                *(f32 *)(obj + 0x28) = lbl_803E6D24;
+                ((GameObject *)obj)->anim.localPosY = WBOUNCY_HOME_Y(state);
+                ((GameObject *)obj)->anim.velocityY = lbl_803E6D24;
             }
         }
     }
@@ -122,7 +123,7 @@ void wcbouncycra_update(int obj)
 #pragma scheduling off
 void wcbouncycra_init(int obj, int setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     WBOUNCY_HOME_Y(state) = *(f32 *)(setup + 0xc);
     WBOUNCY_COOLDOWN(state) = WBOUNCY_RESET_COOLDOWN;

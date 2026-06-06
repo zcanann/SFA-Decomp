@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/objhits_types.h"
 
 #pragma peephole on
@@ -17,7 +18,7 @@ int arwproximit_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void arwproximit_free(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (*(void **)(state + 4) != NULL) {
         ModelLightStruct_free(*(void **)(state + 4));
         *(void **)(state + 4) = NULL;
@@ -35,7 +36,7 @@ void arwproximit_hitDetect(void) {}
 #pragma scheduling on
 void arwproximit_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (*(void **)(state + 4) != NULL && modelLightStruct_getActiveState(*(void **)(state + 4)) != 0) {
         queueGlowRender(*(void **)(state + 4));
     }
@@ -47,15 +48,15 @@ void arwproximit_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling off
 void arwproximit_init(int obj, int setup, int p3)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     *(s16 *)(state + 0) = (s16)randomGetRange(0x64, 0x12c);
     *(u8 *)(state + 0x15) = *(u8 *)(setup + 0x31);
     if (p3 == 0) {
-        *(s16 *)(obj + 2) = (s16)randomGetRange(0, 0xffff);
-        *(s16 *)(obj + 4) = (s16)randomGetRange(0, 0xffff);
-        *(s16 *)(obj + 0) = (s16)randomGetRange(0, 0xffff);
-        *(s16 *)(obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.rotY = (s16)randomGetRange(0, 0xffff);
+        ((GameObject *)obj)->anim.rotZ = (s16)randomGetRange(0, 0xffff);
+        ((GameObject *)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         *(u8 *)(obj + 0x36) = 0;
     }
     storeZeroToFloatParam((void *)(state + 0xc));
@@ -82,7 +83,7 @@ void arwproximit_initialise(void) {}
 #pragma scheduling off
 void arwproximit_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     if (*(u8 *)(state + 0x15) == 1) {
         char *arwing = (char *)getArwing();
@@ -113,7 +114,7 @@ void arwproximit_update(int obj)
             }
             ObjHits_EnableObject(obj);
             ObjHits_MarkObjectPositionDirty(obj);
-            *(s16 *)(obj + 6) &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~0x4000;
             *(u8 *)(state + 0x14) = 1;
         }
         return;
@@ -153,8 +154,8 @@ void arwproximit_update(int obj)
             modelLightStruct_setGlowColor(*(void **)(state + 4), b0, b1, b2, 0x64);
         }
         if (timerCountDown((void *)(state + 0xc)) != 0 ||
-            ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
-             (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == getArwing())) {
+            ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 &&
+             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == getArwing())) {
             storeZeroToFloatParam((void *)(state + 0xc));
             s16toFloat((void *)(state + 0x10), 0x14);
             if (*(void **)(state + 4) != NULL)
@@ -162,7 +163,7 @@ void arwproximit_update(int obj)
             spawnExplosion(obj, lbl_803E71E0, 1, 0, 1, 1, 0, 0, 1);
             ObjHitbox_SetSphereRadius(obj, 0x12c);
             ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
-            *(s16 *)(obj + 6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
             ObjHits_MarkObjectPositionDirty(obj);
             *(u8 *)(state + 0x14) = 3;
         }
@@ -191,14 +192,14 @@ void arwproximit_update(int obj)
                 modelLightStruct_setEnabled(*(void **)(state + 4), 0, lbl_803E71D8);
             spawnExplosion(obj, lbl_803E71DC, 1, 0, 0, 0, 0, 0, 1);
             ObjHits_DisableObject(obj);
-            *(s16 *)(obj + 6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
             ObjHits_MarkObjectPositionDirty(obj);
             *(u8 *)(state + 0x14) = 4;
         }
-        *(s16 *)(obj + 4) =
-            timeDelta * (f32)*(s16 *)(state + 0) + (f32)*(s16 *)(obj + 4);
-        *(s16 *)(obj + 2) =
-            timeDelta * (f32)*(s16 *)(state + 0) + (f32)*(s16 *)(obj + 2);
+        ((GameObject *)obj)->anim.rotZ =
+            timeDelta * (f32)*(s16 *)(state + 0) + (f32)((GameObject *)obj)->anim.rotZ;
+        ((GameObject *)obj)->anim.rotY =
+            timeDelta * (f32)*(s16 *)(state + 0) + (f32)((GameObject *)obj)->anim.rotY;
     }
 
     if (*(void **)(state + 4) != NULL && modelLightStruct_getActiveState(*(void **)(state + 4)) != 0)

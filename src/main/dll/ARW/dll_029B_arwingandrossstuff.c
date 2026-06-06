@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
@@ -20,7 +21,7 @@ int arwingandrossstuff_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void arwingandrossstuff_free(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     ObjGroup_RemoveObject(obj, 0x2);
     if (*(void **)(state + 0x14) != NULL) {
@@ -60,27 +61,27 @@ void arwingandrossstuff_hitDetect(int obj)
     struct {
         f32 x, y, z;
     } d, v, w;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int arwing = getArwing();
 
-    if (*(s16 *)(obj + 0x46) == 0x80d) {
+    if (((GameObject *)obj)->anim.seqId == 0x80d) {
         int hit;
         int vol;
 
         if (ObjHits_GetPriorityHit(obj, &hit, 0, &vol) != 0) {
             spawnExplosion(obj, lbl_803E7014, 1, 0, 0, 1, 0, 0, 3);
-            *(s16 *)(obj + 6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
             ObjHits_DisableObject(obj);
             *(f32 *)(state + 0x10) = lbl_803E7028;
         }
     }
-    if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 && *(u8 *)(state + 1) == 0) {
-        if (*(s16 *)(obj + 0x46) != 0x6ae) {
+    if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 && *(u8 *)(state + 1) == 0) {
+        if (((GameObject *)obj)->anim.seqId != 0x6ae) {
             Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
         }
-        if (*(s16 *)(obj + 0x46) == 0x7e4) {
-            s16 a = (s16)-getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc),
-                                   *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10));
+        if (((GameObject *)obj)->anim.seqId == 0x7e4) {
+            s16 a = (s16)-getAngle(((GameObject *)obj)->anim.localPosX - *(f32 *)(arwing + 0xc),
+                                   ((GameObject *)obj)->anim.localPosY - *(f32 *)(arwing + 0x10));
             f32 ang = lbl_803E7030 * (f32)a / lbl_803E7034;
 
             v.x = lbl_803E702C * fn_80293E80(ang);
@@ -90,17 +91,17 @@ void arwingandrossstuff_hitDetect(int obj)
             fn_8022D4AC(arwing, (int)&w);
             doRumble(lbl_803E703C);
         }
-        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == arwing) {
+        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == arwing) {
             if (fn_8022D738(arwing) != 0) {
                 PSVECNormalize((void *)(obj + 0x24), (void *)(obj + 0x24));
-                d.x = *(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc);
-                d.y = *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10);
-                d.z = *(f32 *)(obj + 0x14) - *(f32 *)(arwing + 0x14);
+                d.x = ((GameObject *)obj)->anim.localPosX - *(f32 *)(arwing + 0xc);
+                d.y = ((GameObject *)obj)->anim.localPosY - *(f32 *)(arwing + 0x10);
+                d.z = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(arwing + 0x14);
                 PSVECNormalize(&d, &d);
                 C_VECHalfAngle((void *)(obj + 0x24), &d, (void *)(obj + 0x24));
-                *(f32 *)(obj + 0x24) *= *(f32 *)(state + 8);
-                *(f32 *)(obj + 0x28) *= *(f32 *)(state + 8);
-                *(f32 *)(obj + 0x2c) *= *(f32 *)(state + 8);
+                ((GameObject *)obj)->anim.velocityX *= *(f32 *)(state + 8);
+                ((GameObject *)obj)->anim.velocityY *= *(f32 *)(state + 8);
+                ((GameObject *)obj)->anim.velocityZ *= *(f32 *)(state + 8);
                 *(u8 *)(state + 1) = 1;
             }
         }
@@ -120,7 +121,7 @@ void arwingandrossstuff_hitDetect(int obj)
 #pragma scheduling off
 void arwprojectile_setLifetime(int obj, int lifetime)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     *(f32 *)(state + 4) = (f32)lifetime;
 }
@@ -131,7 +132,7 @@ void arwprojectile_setLifetime(int obj, int lifetime)
 #pragma scheduling off
 void arwprojectile_placeForward(int obj, f32 dist)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     f32 mtx[16];
     ArwProjPosSrc src;
 
@@ -140,14 +141,14 @@ void arwprojectile_placeForward(int obj, f32 dist)
     src.pos[1] = lbl_803E7008;
     src.pos[2] = lbl_803E7008;
     src.rot[0] = *(s16 *)obj;
-    src.rot[1] = *(s16 *)(obj + 2);
+    src.rot[1] = ((GameObject *)obj)->anim.rotY;
     src.rot[2] = 0;
     src.scale = lbl_803E701C;
     setMatrixFromObjectPos(mtx, &src);
     Matrix_TransformPoint(mtx, lbl_803E7008, *(f32 *)&lbl_803E7008, *(f32 *)(state + 8),
                           (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
     *(s16 *)obj += 0x8000;
-    *(s16 *)(obj + 2) = -*(s16 *)(obj + 2);
+    ((GameObject *)obj)->anim.rotY = -((GameObject *)obj)->anim.rotY;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -155,13 +156,13 @@ void arwprojectile_placeForward(int obj, f32 dist)
 #pragma scheduling off
 void arwingandrossstuff_init(int obj, u8 *setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int linked;
 
     *(s16 *)obj = (s16)(setup[0x1a] << 8);
-    *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)(setup[0x19] << 8);
     *(u8 *)(obj + 0x36) = 1;
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x80d:
         *(s16 *)(state + 0x1a) = randomGetRange(-0x1f4, 0x1f4);
         *(s16 *)(state + 0x1c) = randomGetRange(-0x1f4, 0x1f4);
@@ -192,7 +193,7 @@ void arwingandrossstuff_init(int obj, u8 *setup)
         *(u8 *)state = 2;
         break;
     }
-    linked = *(int *)(obj + 0x54);
+    linked = *(int *)&((GameObject *)obj)->anim.hitReactState;
     if (linked != 0) {
         *(s16 *)(linked + 0xb2) = 1;
     }
@@ -204,7 +205,7 @@ void arwingandrossstuff_init(int obj, u8 *setup)
 #pragma scheduling off
 void arwingandrossstuff_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int arwing = getArwing();
 
     if (arwing != 0 && (*(u16 *)(arwing + 0xb0) & 0x1000) != 0) {
@@ -227,8 +228,8 @@ void arwingandrossstuff_update(int obj)
             Obj_FreeObject(obj);
             return;
         }
-        if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0) {
-            if (*(s16 *)(obj + 0x46) != 0x6ae) {
+        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0) {
+            if (((GameObject *)obj)->anim.seqId != 0x6ae) {
                 Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
             }
             *(f32 *)(state + 0x10) = lbl_803E7028;
@@ -239,16 +240,16 @@ void arwingandrossstuff_update(int obj)
                 *(int *)(state + 0x14) = 0;
             }
         }
-        objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
-                *(f32 *)(obj + 0x2c) * timeDelta);
-        if (*(s16 *)(obj + 0x46) == 0x80d) {
-            *(s16 *)(obj + 4) += *(s16 *)(state + 0x1a);
-            *(s16 *)(obj + 2) += *(s16 *)(state + 0x1c);
+        objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
+                ((GameObject *)obj)->anim.velocityZ * timeDelta);
+        if (((GameObject *)obj)->anim.seqId == 0x80d) {
+            ((GameObject *)obj)->anim.rotZ += *(s16 *)(state + 0x1a);
+            ((GameObject *)obj)->anim.rotY += *(s16 *)(state + 0x1c);
         }
-        if (*(s16 *)(obj + 0x46) == 0x7e4) {
-            *(f32 *)(obj + 8) += lbl_803DC3D0;
-            ObjHitbox_SetSphereRadius(obj, (int)(*(f32 *)(obj + 8) * lbl_803DC3D8));
-            *(s16 *)(obj + 4) = (int)((f32)*(s16 *)(obj + 4) + lbl_803DC3D4);
+        if (((GameObject *)obj)->anim.seqId == 0x7e4) {
+            ((GameObject *)obj)->anim.rootMotionScale += lbl_803DC3D0;
+            ObjHitbox_SetSphereRadius(obj, (int)(((GameObject *)obj)->anim.rootMotionScale * lbl_803DC3D8));
+            ((GameObject *)obj)->anim.rotZ = (int)((f32)((GameObject *)obj)->anim.rotZ + lbl_803DC3D4);
         }
     }
 }
@@ -258,7 +259,7 @@ void arwingandrossstuff_update(int obj)
 #pragma peephole off
 #pragma scheduling off
 void arwprojectile_createLinkedEffect(int obj, u8 enable) {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (enable == 0)
         return;
     if (*(void **)(state + 0x14) != NULL)
@@ -269,14 +270,14 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable) {
     modelLightStruct_setLightKind(*(void **)(state + 0x14), 2);
     modelLightStruct_setPosition(*(void **)(state + 0x14), lbl_803E7008, lbl_803E7008, lbl_803E7008);
     lightSetFieldBC_8001db14(*(void **)(state + 0x14), 1);
-    if (*(s16 *)(obj + 0x46) == 0x6ae) {
+    if (((GameObject *)obj)->anim.seqId == 0x6ae) {
         modelLightStruct_setDiffuseColor(*(void **)(state + 0x14), 0xff, 0x14, 0x50, 0);
     } else if (((ObjAnimComponent *)obj)->bankIndex == 0) {
         modelLightStruct_setDiffuseColor(*(void **)(state + 0x14), 0x3c, 0xff, 0x5a, 0);
     } else {
         modelLightStruct_setDiffuseColor(*(void **)(state + 0x14), 0x3c, 0x5a, 0xff, 0);
     }
-    if (*(s16 *)(obj + 0x46) == 0x655) {
+    if (((GameObject *)obj)->anim.seqId == 0x655) {
         modelLightStruct_setDistanceAttenuation(*(void **)(state + 0x14), lbl_803E700C, lbl_803E7010);
     } else {
         modelLightStruct_setDistanceAttenuation(*(void **)(state + 0x14), lbl_803E7014, lbl_803E7018);
@@ -288,14 +289,14 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable) {
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022ED74(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
+void fn_8022ED74(int obj, int v) { *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x0) = (f32)v; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling on
 void fn_8022ECE0(int obj, f32 param)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     f32 mtx[12];
     ArwProjPosSrc src;
 
@@ -304,7 +305,7 @@ void fn_8022ECE0(int obj, f32 param)
     src.pos[1] = lbl_803E7044;
     src.pos[2] = lbl_803E7044;
     src.rot[0] = *(s16 *)obj;
-    src.rot[1] = *(s16 *)(obj + 2);
+    src.rot[1] = ((GameObject *)obj)->anim.rotY;
     src.rot[2] = 0;
     src.scale = lbl_803E704C;
     setMatrixFromObjectPos(mtx, &src);

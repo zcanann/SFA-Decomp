@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/screenOverlay.h"
 #include "main/objanim_internal.h"
@@ -43,7 +44,7 @@ extern f64 lbl_803E3748;
  */
 void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
 {
-  int state = *(int *)(obj + 0x4c);
+  int state = *(int *)&((GameObject *)obj)->anim.placementData;
   if ((int)(signed char)flag != 0) {
     if ((*(u8 *)(state + 0x23) & 1) != 0) {
       fn_8003B608(*(u8 *)(state + 0x20), *(u8 *)(state + 0x21), *(u8 *)(state + 0x22));
@@ -69,8 +70,8 @@ void ProjectileSwitch_hitDetect(int obj)
   void *tex;
   int isSpecial;
 
-  state2 = *(int *)(obj + 0x4c);
-  state = *(int *)(obj + 0xb8);
+  state2 = *(int *)&((GameObject *)obj)->anim.placementData;
+  state = *(int *)&((GameObject *)obj)->extra;
   hitId = ObjHits_GetPriorityHit(obj, &hitObj, (int *)0x0, (uint *)0x0);
   if (hitId != 0xe && hitId != 0xf) return;
 
@@ -85,7 +86,7 @@ void ProjectileSwitch_hitDetect(int obj)
   if (*(u8 *)state != 0) {
     /* deactivate */
     if ((*(u8 *)(state2 + 0x1e) & 3) != 1) return;
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     if ((int)(signed char)*(u8 *)(obj + 0xac) == 0x2c) {
       Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
     } else {
@@ -99,7 +100,7 @@ void ProjectileSwitch_hitDetect(int obj)
     GameBit_Set((int)*(short *)(state + 2), 0);
   } else {
     /* activate */
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     if ((int)(signed char)*(u8 *)(obj + 0xac) == 0x2c) {
       Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
     } else {
@@ -132,17 +133,17 @@ void ProjectileSwitch_update(int obj)
   int state2;
   void *tex;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   if (*(u8 *)state != 0) {
     if (GameBit_Get((int)*(short *)(state + 2)) == 0) {
-      state2 = *(int *)(obj + 0xb8);
+      state2 = *(int *)&((GameObject *)obj)->extra;
       tex = objFindTexture(obj, 0, 0);
       if (tex != 0) *(int *)tex = 0;
       *(u8 *)state2 = 0;
     }
   } else {
     if (GameBit_Get((int)*(short *)(state + 2)) != 0) {
-      state2 = *(int *)(obj + 0xb8);
+      state2 = *(int *)&((GameObject *)obj)->extra;
       tex = objFindTexture(obj, 0, 0);
       if (tex != 0) *(int *)tex = 0x100;
       *(u8 *)state2 = 1;
@@ -174,24 +175,24 @@ void ProjectileSwitch_init(int obj, u8 *initData)
   void *tex;
 
   objAnim = (ObjAnimComponent *)obj;
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   *(short *)obj = (short)(initData[0x1f] << 8);
-  *(short *)(obj + 2) = (short)(initData[0x1c] << 8);
+  ((GameObject *)obj)->anim.rotY = (short)(initData[0x1c] << 8);
   if (initData[0x1d] == 0) {
-    *(float *)(obj + 8) = *(float *)(*(int *)(obj + 0x50) + 4);
+    ((GameObject *)obj)->anim.rootMotionScale = *(float *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
   } else {
     f32 scaledRadius =
-        (f32)(u32)initData[0x1d] * *(float *)(*(int *)(obj + 0x50) + 4);
-    *(float *)(obj + 8) = scaledRadius * lbl_803E3728;
+        (f32)(u32)initData[0x1d] * *(float *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
+    ((GameObject *)obj)->anim.rootMotionScale = scaledRadius * lbl_803E3728;
   }
   ObjHitbox_SetSphereRadius(
-      obj, (short)(((int)initData[0x1d] * (int)*(u8 *)(*(int *)(obj + 0x50) + 0x62)) / 64));
+      obj, (short)(((int)initData[0x1d] * (int)*(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x62)) / 64));
   objAnim->bankIndex = initData[0x1e] >> 2;
   if ((int)objAnim->bankIndex >= (int)objAnim->modelInstance->modelCount) {
     objAnim->bankIndex = 0;
   }
 
-  linkObj = *(u8 **)(obj + 0x30);
+  linkObj = ((GameObject *)obj)->anim.parent;
   if (linkObj != 0) {
     linkSub = *(u8 **)(linkObj + 0x4c);
     if (linkSub != 0) {
@@ -205,18 +206,18 @@ void ProjectileSwitch_init(int obj, u8 *initData)
   }
   *(u8 *)state = (u8)GameBit_Get((int)*(short *)(state + 2));
   if (*(u8 *)state != 0) {
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     tex = objFindTexture(obj, 0, 0);
     if (tex != 0) *(int *)tex = 0x100;
     *(u8 *)state = 1;
   } else {
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     tex = objFindTexture(obj, 0, 0);
     if (tex != 0) *(int *)tex = 0;
     *(u8 *)state = 0;
   }
   if ((initData[0x23] & 1) == 0) {
-    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x4000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
   }
 }
 
@@ -242,8 +243,8 @@ void InvisibleHitSwitch_update(int obj)
   int state;
   int hitId;
 
-  state2 = *(int *)(obj + 0x4c);
-  state = *(int *)(obj + 0xb8);
+  state2 = *(int *)&((GameObject *)obj)->anim.placementData;
+  state = *(int *)&((GameObject *)obj)->extra;
   if (*(u8 *)state != 0) {
     if (GameBit_Get((int)*(short *)(state2 + 0x18)) == 0) {
       *(u8 *)state = 0;

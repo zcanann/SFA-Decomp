@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/SC/SCanimobj.h"
 #include "main/dll/SC/SClantern.h"
 #include "main/objanim.h"
@@ -75,7 +76,7 @@ void warpstone_update(int obj)
     s16 yawDelta;
     int moveId;
 
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     child = *(int *)state;
     if (child != 0) {
         ObjLink_DetachChild(obj, child);
@@ -84,7 +85,7 @@ void warpstone_update(int obj)
     }
 
     advanceResult = SClantern_advanceAnimEvents(lbl_803E54A4, obj);
-    if (*(s16 *)(obj + 0xa0) == 0) {
+    if (((GameObject *)obj)->anim.currentMove == 0) {
         if (randFn_80080100(100) != 0) {
             objAudioFn_800393f8(obj, (void *)(state + 0x14), 0xab, -0x100, -1, 0);
         }
@@ -110,10 +111,10 @@ void warpstone_update(int obj)
         target = ObjGroup_FindNearestObject(8, obj, 0);
     }
 
-    *(f32 *)(obj + 0x10) += (f32)lbl_803DC040;
+    ((GameObject *)obj)->anim.localPosY += (f32)lbl_803DC040;
     fn_8003ADC4(obj, target, (void *)(state + 0x74), 0x23, 1, lbl_803DC03C);
     modelVec = objModelGetVecFn_800395d8(obj, 0);
-    *(f32 *)(obj + 0x10) -= (f32)lbl_803DC040;
+    ((GameObject *)obj)->anim.localPosY -= (f32)lbl_803DC040;
 
     if (modelVec != NULL) {
         modelVec[1] += lbl_803DDBF2;
@@ -137,11 +138,11 @@ void warpstone_update(int obj)
             } else {
                 moveId = 0x18;
             }
-            if (*(s16 *)(obj + 0xa0) != moveId) {
+            if (((GameObject *)obj)->anim.currentMove != moveId) {
                 ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                     (obj, moveId, lbl_803E5460, 0);
             }
-        } else if (*(s16 *)(obj + 0xa0) != 0) {
+        } else if (((GameObject *)obj)->anim.currentMove != 0) {
             ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                 (obj, 0, lbl_803E5460, 0);
             Sfx_StopFromObject(obj, 0x2f1);
@@ -165,29 +166,29 @@ void warpstone_update(int obj)
         return;
     }
 
-    switch (*(s16 *)(obj + 0xa0)) {
+    switch (((GameObject *)obj)->anim.currentMove) {
     case 0x17:
     case 0x19:
-        if (*(f32 *)(obj + 0x98) > lbl_803E546C) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E546C) {
             Sfx_PlayFromObject(obj, 0x2f1);
             *(u8 *)(state + 0xd5) |= 0x10;
         }
         break;
     case 0x16:
     case 0x18:
-        if (*(f32 *)(obj + 0x98) > lbl_803E546C) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E546C) {
             Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
             *(u8 *)(state + 0xd5) |= 0x10;
         }
         break;
     case 0x1a:
-        if (*(f32 *)(obj + 0x98) > lbl_803E54A8) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E54A8) {
             Sfx_PlayFromObject(obj, 0x417);
             *(u8 *)(state + 0xd5) |= 0x10;
         }
         break;
     case 0x1b:
-        if (*(f32 *)(obj + 0x98) > lbl_803E54AC) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E54AC) {
             Sfx_PlayFromObject(obj, 0x2f4);
             *(u8 *)(state + 0xd5) |= 0x10;
         }
@@ -238,10 +239,10 @@ void warpstone_init(int obj, u8 *setup)
   int state;
   s16 setupYaw;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   setupYaw = (s16)(setup[0x1a] << 8);
   *(s16 *)obj = setupYaw;
-  *(void **)(obj + 0xbc) = warpstone_updateMenuAnimObj;
+  ((GameObject *)obj)->unkBC = warpstone_updateMenuAnimObj;
   *(s16 *)(state + 0xe) = 0x15a;
   *(s16 *)(state + 0x10) = 0x886;
   ObjHits_EnableObject(obj);

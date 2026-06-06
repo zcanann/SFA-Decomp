@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -49,7 +50,7 @@ void dll_2A4_render(int obj, int p2, int p3, int p4, int p5)
 #pragma scheduling off
 void dll_2A4_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     if (*(f32 *)state > lbl_803E713C) {
         *(f32 *)state -= timeDelta;
@@ -60,12 +61,12 @@ void dll_2A4_update(int obj)
         }
     }
 
-    *(s16 *)(obj + 0) = (s16)((f32) * (s16 *)(state + 4) * timeDelta + (f32) * (s16 *)(obj + 0));
-    *(s16 *)(obj + 2) = (s16)((f32) * (s16 *)(state + 6) * timeDelta + (f32) * (s16 *)(obj + 2));
-    *(s16 *)(obj + 4) = (s16)((f32) * (s16 *)(state + 8) * timeDelta + (f32) * (s16 *)(obj + 4));
+    ((GameObject *)obj)->anim.rotX = (s16)((f32) * (s16 *)(state + 4) * timeDelta + (f32) * (s16 *)(obj + 0));
+    ((GameObject *)obj)->anim.rotY = (s16)((f32) * (s16 *)(state + 6) * timeDelta + (f32) * (s16 *)(obj + 2));
+    ((GameObject *)obj)->anim.rotZ = (s16)((f32) * (s16 *)(state + 8) * timeDelta + (f32) * (s16 *)(obj + 4));
 
-    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
-            *(f32 *)(obj + 0x2c) * timeDelta);
+    objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
+            ((GameObject *)obj)->anim.velocityZ * timeDelta);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -74,11 +75,11 @@ void dll_2A4_update(int obj)
 #pragma scheduling off
 void dll_2A4_init(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
-    *(s16 *)(obj + 0) = randomGetRange(0, 0xffff);
-    *(s16 *)(obj + 2) = randomGetRange(0, 0xffff);
-    *(s16 *)(obj + 4) = randomGetRange(0, 0xffff);
+    ((GameObject *)obj)->anim.rotX = randomGetRange(0, 0xffff);
+    ((GameObject *)obj)->anim.rotY = randomGetRange(0, 0xffff);
+    ((GameObject *)obj)->anim.rotZ = randomGetRange(0, 0xffff);
     *(s16 *)(state + 4) = randomGetRange(-0x14, 0x14);
     *(s16 *)(state + 6) = randomGetRange(-0x14, 0x14);
     *(s16 *)(state + 8) = randomGetRange(-0x14, 0x14);
@@ -94,9 +95,9 @@ void fn_802315EC(int obj, int state, int setup)
 
     if (Obj_IsLoadingLocked()) {
         newObj = Obj_AllocObjectSetup(0x20, 0x616);
-        *(f32 *)(newObj + 8) = *(f32 *)(obj + 0xc) + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x22), (s8)*(u8 *)(setup + 0x22));
-        *(f32 *)(newObj + 0xc) = *(f32 *)(obj + 0x10) + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x23), (s8)*(u8 *)(setup + 0x23));
-        *(f32 *)(newObj + 0x10) = *(f32 *)(obj + 0x14) + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x24), (s8)*(u8 *)(setup + 0x24));
+        *(f32 *)(newObj + 8) = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x22), (s8)*(u8 *)(setup + 0x22));
+        *(f32 *)(newObj + 0xc) = ((GameObject *)obj)->anim.localPosY + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x23), (s8)*(u8 *)(setup + 0x23));
+        *(f32 *)(newObj + 0x10) = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x24), (s8)*(u8 *)(setup + 0x24));
         *(u8 *)(newObj + 0x1a) = 0;
         *(u8 *)(newObj + 0x19) = 0;
         *(u8 *)(newObj + 0x18) = 0;
@@ -120,9 +121,9 @@ void fn_802317A8(int obj, int state, int setup)
 
     if (Obj_IsLoadingLocked()) {
         newObj = Obj_AllocObjectSetup(0x20, 0x617);
-        *(f32 *)(newObj + 8) = *(f32 *)(obj + 0xc) + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x22), (s8)*(u8 *)(setup + 0x22));
-        *(f32 *)(newObj + 0xc) = *(f32 *)(obj + 0x10) + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x23), (s8)*(u8 *)(setup + 0x23));
-        *(f32 *)(newObj + 0x10) = *(f32 *)(obj + 0x14) + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x24), (s8)*(u8 *)(setup + 0x24));
+        *(f32 *)(newObj + 8) = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x22), (s8)*(u8 *)(setup + 0x22));
+        *(f32 *)(newObj + 0xc) = ((GameObject *)obj)->anim.localPosY + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x23), (s8)*(u8 *)(setup + 0x23));
+        *(f32 *)(newObj + 0x10) = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x24), (s8)*(u8 *)(setup + 0x24));
         *(u8 *)(newObj + 0x1a) = 0;
         *(u8 *)(newObj + 0x19) = 0;
         *(u8 *)(newObj + 0x18) = 0;

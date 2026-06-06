@@ -1,4 +1,5 @@
 #include "main/dll/CF/CFguardian.h"
+#include "main/game_object.h"
 
 extern undefined4 FUN_80006b14();
 extern int FUN_80017730();
@@ -62,7 +63,7 @@ void fn_801845FC(u8 *obj, f32 *p2, u8 mode, f32 *p3)
   extern f32 lbl_803E39F8;
   extern f32 lbl_803E39FC;
   extern f32 lbl_803E3A00;
-  f32 *sub = *(f32 **)(obj + 0xb8);
+  f32 *sub = ((GameObject *)obj)->extra;
   GuardianAngleParams st;
   f32 buf[3];
 
@@ -76,18 +77,18 @@ void fn_801845FC(u8 *obj, f32 *p2, u8 mode, f32 *p3)
     buf[2] = p3[2];
   } else if (mode == 2) {
     f32 sq, d;
-    *(f32 *)(obj + 0x24) = p3[0];
-    *(f32 *)(obj + 0x2c) = p3[2];
-    sq = *(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24)
-       + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c);
+    ((GameObject *)obj)->anim.velocityX = p3[0];
+    ((GameObject *)obj)->anim.velocityZ = p3[2];
+    sq = ((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX
+       + ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ;
     if (sq != lbl_803E39F8) {
       sq = sqrtf(sq);
     }
-    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) / (d = lbl_803E39FC * sq);
-    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) / d;
-    sub[0] = *(f32 *)(obj + 0x24);
-    sub[1] = *(f32 *)(obj + 0x2c);
-    *(s16 *)(obj + 0) = (u16)getAngle(-p3[0], -p3[2]);
+    ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX / (d = lbl_803E39FC * sq);
+    ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ / d;
+    sub[0] = ((GameObject *)obj)->anim.velocityX;
+    sub[1] = ((GameObject *)obj)->anim.velocityZ;
+    ((GameObject *)obj)->anim.rotX = (u16)getAngle(-p3[0], -p3[2]);
     return;
   }
 
@@ -97,21 +98,21 @@ void fn_801845FC(u8 *obj, f32 *p2, u8 mode, f32 *p3)
   st.w = lbl_803E3A00;
   st.c = 0;
   st.b = 0;
-  st.a = *(s16 *)(obj + 0);
+  st.a = ((GameObject *)obj)->anim.rotX;
 
   vecRotateZXY(&st, buf);
 
   if (p2) {
     u16 a = getAngle(buf[0], buf[1]);
-    *(s16 *)(obj + 2) = (u16)getAngle(buf[2], buf[1]);
-    *(s16 *)(obj + 4) = a;
+    ((GameObject *)obj)->anim.rotY = (u16)getAngle(buf[2], buf[1]);
+    ((GameObject *)obj)->anim.rotZ = a;
   } else {
-    *(s16 *)(obj + 4) = 0;
-    *(s16 *)(obj + 2) = (s16)getAngle(p3[0] + p3[2], p3[1]);
-    if (*(s16 *)(obj + 2) < 0) {
-      *(s16 *)(obj + 2) *= -1;
+    ((GameObject *)obj)->anim.rotZ = 0;
+    ((GameObject *)obj)->anim.rotY = (s16)getAngle(p3[0] + p3[2], p3[1]);
+    if (((GameObject *)obj)->anim.rotY < 0) {
+      ((GameObject *)obj)->anim.rotY *= -1;
     }
-    *(s16 *)(obj + 0) = (s16)getAngle(p3[0], p3[2]);
+    ((GameObject *)obj)->anim.rotX = (s16)getAngle(p3[0], p3[2]);
   }
 }
 #pragma peephole reset
@@ -161,9 +162,9 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   u8 *shellColors;
   int i;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   model = Obj_GetActiveModel(obj);
-  if (*(s16 *)(obj + 0x46) == 0x3d6) {
+  if (((GameObject *)obj)->anim.seqId == 0x3d6) {
     i = 0;
     shellColors = &lbl_803DBDBC;
     for (; i < 7; i++) {
@@ -181,7 +182,7 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   }
 
   if (*(s16 *)(state + 0x10) == 0) {
-    if (*(int *)(obj + 0xf8) != 0) {
+    if (((GameObject *)obj)->unkF8 != 0) {
       if (visible != -1) {
         return;
       }

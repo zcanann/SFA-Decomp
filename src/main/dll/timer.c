@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
 
@@ -12,7 +13,7 @@ int timer_getExtraSize(void) { return 0x20; }
 #pragma scheduling off
 void timer_free(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 0x4c);
     if (*(void **)(state + 4) != NULL) {
         modelLightStruct_freeSlot(state + 4);
@@ -26,7 +27,7 @@ void timer_free(int obj)
 #pragma scheduling on
 int timer_hasExpired(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     return ((TimerFlags *)(state + 0xd))->expired;
 }
 #pragma scheduling reset
@@ -36,7 +37,7 @@ int timer_hasExpired(int obj)
 #pragma scheduling on
 int timer_isEffectMode(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     return *(u8 *)(state + 0xc) == 2;
 }
 #pragma scheduling reset
@@ -46,7 +47,7 @@ int timer_isEffectMode(int obj)
 #pragma scheduling on
 void timer_clearManualFlags(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     ((TimerFlags *)(state + 0xd))->manual = 0;
     ((TimerFlags *)(state + 0xd))->expired = 0;
 }
@@ -57,7 +58,7 @@ void timer_clearManualFlags(int obj)
 #pragma scheduling off
 void timer_forceStart(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     ((TimerFlags *)(state + 0xd))->manual = 1;
 }
 #pragma scheduling reset
@@ -67,7 +68,7 @@ void timer_forceStart(int obj)
 #pragma scheduling off
 void timer_addDuration(int obj, int duration)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (fn_80080150(state) != 0) {
         *(f32 *)(state + 0) = *(f32 *)(state + 0) + (f32)duration;
         if (*(u8 *)(state + 0xc) == 1) {
@@ -82,12 +83,12 @@ void timer_addDuration(int obj, int duration)
 #pragma scheduling on
 void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    void *light = *(void **)(*(int *)(obj + 0xb8) + 4);
+    void *light = *(void **)(*(int *)&((GameObject *)obj)->extra + 4);
     if (light != NULL && *(u8 *)((char *)light + 0x2f8) != 0 &&
         *(u8 *)((char *)light + 0x4c) != 0) {
         queueGlowRender(light);
     }
-    if (*(void **)(obj + 0xc4) == NULL) {
+    if (((GameObject *)obj)->unkC4 == NULL) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7418);
     }
 }
@@ -97,7 +98,7 @@ void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling off
 void timer_init(int obj, int setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     storeZeroToFloatParam((void *)state);
     *(u8 *)(state + 0xc) = *(u8 *)(setup + 0x19);
@@ -115,8 +116,8 @@ void timer_init(int obj, int setup)
 #pragma scheduling off
 void timer_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     TimerFlags *f = (TimerFlags *)(state + 0xd);
     int flag;
 
@@ -125,7 +126,7 @@ void timer_update(int obj)
         if (f->manual == 0 && (u32)GameBit_Get(*(s16 *)(setup + 0x20)) == 0) {
             storeZeroToFloatParam((void *)state);
             if (*(u8 *)(state + 0xc) == 1) {
-                if (*(int *)(*(int *)(obj + 0x4c) + 0x14) != 0x466ED) {
+                if (*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) != 0x466ED) {
                     Sfx_PlayFromObject(obj, SFXmn_sml_trex_fstep);
                 }
             }

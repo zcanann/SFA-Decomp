@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/gfxemit_state.h"
 #include "main/dll/gfxEmit.h"
 #include "main/objanim_internal.h"
@@ -577,7 +578,7 @@ extern f32 lbl_803E348C;
 #pragma peephole off
 int collectible_SeqFn(int obj, int unused, u8* data)
 {
-    int* state = *(int**)(obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     f32 buf[6];
     int i;
     int j;
@@ -588,7 +589,7 @@ int collectible_SeqFn(int obj, int unused, u8* data)
         *(u8*)((char*)state + 0x1e) = (u8)(GameBit_Get((s32)*(s16*)((char*)state + 0x14)) == 0);
     }
     if (*(u8*)((char*)state + 0x1e) == 0) {
-        if (*(s16*)(obj + 0x46) == 0x6a6) {
+        if (((GameObject *)obj)->anim.seqId == 0x6a6) {
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
         }
     }
@@ -599,14 +600,14 @@ int collectible_SeqFn(int obj, int unused, u8* data)
         if (cmd == 1) {
             s_val = lbl_803E3484 * sin(lbl_803E3488);
             c_val = lbl_803E3484 * fn_80293E80(lbl_803E3488);
-            *(u8*)((char*)*(int**)(obj + 0xb8) + 0x1d) = 8;
-            *(f32*)(obj + 0x24) = c_val;
-            *(f32*)(obj + 0x28) = lbl_803E3460;
-            *(f32*)(obj + 0x2c) = s_val;
-            *(u8*)((char*)*(int**)(obj + 0xb8) + 0x1d) = 8;
-            *(f32*)(obj + 0x24) = lbl_803E348C;
-            *(f32*)(obj + 0x28) = lbl_803E3460;
-            *(f32*)(obj + 0x2c) = lbl_803E345C;
+            *(u8*)((char*)((GameObject *)obj)->extra + 0x1d) = 8;
+            ((GameObject *)obj)->anim.velocityX = c_val;
+            ((GameObject *)obj)->anim.velocityY = lbl_803E3460;
+            ((GameObject *)obj)->anim.velocityZ = s_val;
+            *(u8*)((char*)((GameObject *)obj)->extra + 0x1d) = 8;
+            ((GameObject *)obj)->anim.velocityX = lbl_803E348C;
+            ((GameObject *)obj)->anim.velocityY = lbl_803E3460;
+            ((GameObject *)obj)->anim.velocityZ = lbl_803E345C;
         } else if (cmd == 2) {
             *(u8*)((char*)state + 0x3e) = 1;
         } else if (cmd == 3) {
@@ -643,7 +644,7 @@ void fn_80172824(int obj, u8 *state)
     f32 dist;
     f32 dy;
 
-    attach = *(s16 **)(obj + 0x4c);
+    attach = ((GameObject *)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
     if (player == NULL) {
         return;
@@ -656,13 +657,13 @@ void fn_80172824(int obj, u8 *state)
         focus = player;
     }
     dist = Vec_xzDistance((f32 *)(obj + 0x18), (f32 *)(focus + 0x18));
-    dy = *(f32 *)(focus + 0x1c) - *(f32 *)(obj + 0x1c);
+    dy = *(f32 *)(focus + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
     if (dy < lbl_803E345C) {
         dy = -dy;
     }
     if (dy < lbl_803E3490 && dist < *(f32 *)(state + 4) && fn_8029622C(player) != 0) {
         *(s16 *)(state + 0x48) = -1;
-        switch (*(s16 *)(obj + 0x46)) {
+        switch (((GameObject *)obj)->anim.seqId) {
         case 0xb:
             if (GameBit_Get(0x90e) == 0) {
                 ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x48);
@@ -735,14 +736,14 @@ extern f32 lbl_803E3450;
 #pragma peephole off
 void collectible_update(int obj)
 {
-    u8 *state = *(u8 **)(obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     int msgParam;
     int msg;
     int t;
     f32 timer;
     f32 zero;
 
-    *(u8 *)(obj + 0xaf) |= 8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     timer = ((GfxEmitState *)state)->unk8;
     zero = lbl_803E345C;
     if (timer != zero) {
@@ -750,7 +751,7 @@ void collectible_update(int obj)
         if (((GfxEmitState *)state)->unk8 <= zero) {
             ((GfxEmitState *)state)->unk8 = zero;
             ObjHits_DisableObject(obj);
-            if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
+            if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
                 Obj_FreeObject(obj);
             }
         }
@@ -762,7 +763,7 @@ void collectible_update(int obj)
     if (state[0x1e] != 0 || state[0xf] != 0) {
         return;
     }
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x6a6:
         objfx_spawnDirectionalBurst(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
         break;
@@ -772,7 +773,7 @@ void collectible_update(int obj)
     if (timer != zero) {
         ((GfxEmitState *)state)->unk44 = timer - timeDelta;
         if (((GfxEmitState *)state)->unk44 <= zero) {
-            if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
+            if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
                 ((GfxEmitState *)state)->unk8 = lbl_803E3450;
                 if (*(void **)(obj + 0x64) != NULL) {
                     *(int *)(*(int *)(obj + 0x64) + 0x30) = 0x1000;
@@ -790,7 +791,7 @@ void collectible_update(int obj)
             break;
         }
     }
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x319:
         t = ((GfxEmitState *)state)->unk3C;
         if (t != 0) {
@@ -799,21 +800,21 @@ void collectible_update(int obj)
                 ((GfxEmitState *)state)->unk3C = 0;
                 state[0x37] &= ~1;
                 *(u8 *)(obj + 0x36) = 255;
-                *(int *)(obj + 0xf4) = 0;
+                ((GameObject *)obj)->unkF4 = 0;
             }
         }
         break;
     }
-    if (*(int *)(obj + 0xf4) != 0) {
-        if (*(void **)(obj + 0x54) != NULL) {
-            (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 0x100;
+    if (((GameObject *)obj)->unkF4 != 0) {
+        if (((GameObject *)obj)->anim.hitReactState != NULL) {
+            (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 0x100;
         }
         ObjHits_DisableObject(obj);
         if (((GfxEmitState *)state)->unk10 != -1 && GameBit_Get((s32)((GfxEmitState *)state)->unk10) == 0) {
-            *(int *)(obj + 0xf4) = 0;
+            ((GameObject *)obj)->unkF4 = 0;
         }
     } else {
-        *(u8 *)(obj + 0xaf) &= ~8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
         fn_801723DC(obj);
         if (state[0x1d] != 0) {
             fn_80172144(obj);
@@ -836,14 +837,14 @@ void collectible_update(int obj)
 #pragma peephole off
 void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
 {
-    int state = *(int*)(obj + 0xb8);
-    if (visible != 0 && ((GfxEmitState *)state)->unk8 == lbl_803E345C && *(int*)(obj + 0xf4) == 0
-        && (*(s16*)(obj + 0x46) == 0x156 || ((GfxEmitState *)state)->unk1E == 0)) {
+    int state = *(int *)&((GameObject *)obj)->extra;
+    if (visible != 0 && ((GfxEmitState *)state)->unk8 == lbl_803E345C && ((GameObject *)obj)->unkF4 == 0
+        && (((GameObject *)obj)->anim.seqId == 0x156 || ((GfxEmitState *)state)->unk1E == 0)) {
         if ((((ObjAnimComponent *)obj)->modelInstance->flags & 0x10000) != 0 && ((GfxEmitState *)state)->unk36 != 0) {
             fn_8003B608(((GfxEmitState *)state)->unk38, ((GfxEmitState *)state)->unk39, ((GfxEmitState *)state)->unk3A);
         }
         objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3454);
-        if (*(s16*)(obj + 0x46) == 0xa8) {
+        if (((GameObject *)obj)->anim.seqId == 0xa8) {
             objfx_spawnDirectionalBurst(obj, 7, lbl_803E3454, 5, 1, 10, lbl_803E348C, 0, 0x20000000);
         }
     }
@@ -855,12 +856,12 @@ void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
 #pragma peephole off
 void fn_801723DC(int obj)
 {
-    u8 *state = *(u8 **)(obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     u16 fs;
     s16 t;
     u16 nv;
 
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0xb:
         fs = framesThisStep;
         t = ((GfxEmitState *)state)->unk34;
@@ -871,10 +872,10 @@ void fn_801723DC(int obj)
             ((GfxEmitState *)state)->unk34 = (s16)randomGetRange(180, 240);
             Sfx_PlayFromObject(obj, SFXwp_whiz3_c);
         }
-        *(s16 *)(obj + 2) = ((GfxEmitState *)state)->unk30;
+        ((GameObject *)obj)->anim.rotY = ((GfxEmitState *)state)->unk30;
         ((GfxEmitState *)state)->unk30 *= lbl_803E3478;
-        if (*(s16 *)(obj + 2) < 10 && *(s16 *)(obj + 2) > -10) {
-            *(s16 *)(obj + 2) = 0;
+        if (((GameObject *)obj)->anim.rotY < 10 && ((GameObject *)obj)->anim.rotY > -10) {
+            ((GameObject *)obj)->anim.rotY = 0;
         }
         break;
     case 0x12d:

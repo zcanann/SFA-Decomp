@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
 
@@ -46,11 +47,11 @@ void suntemple_hitDetect(int obj)
 #pragma scheduling off
 int suntemple_interactCallback(int obj, int p2, int p3)
 {
-    int setup = *(int *)(obj + 0x4c);
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     int i;
     SunVec3 vec = *(SunVec3 *)lbl_802C25D8;
 
-    *(u8 *)(obj + 0xaf) |= 0x8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
     for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
         switch (*(u8 *)(p3 + 0x81 + i)) {
         default:
@@ -86,15 +87,15 @@ void suntemple_init(u8 *obj, u8 *setup)
     u8 *state;
 
     objAnim = (ObjAnimComponent *)obj;
-    *(s16 *)(obj + 0) = (s16)(setup[0x18] << 8);
-    *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
-    *(s16 *)(obj + 4) = (s16)(setup[0x1a] << 8);
-    *(void **)(obj + 0xbc) = (void *)suntemple_interactCallback;
+    ((GameObject *)obj)->anim.rotX = (s16)(setup[0x18] << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)(setup[0x19] << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)(setup[0x1a] << 8);
+    ((GameObject *)obj)->unkBC = (void *)suntemple_interactCallback;
     objAnim->bankIndex = setup[0x21];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
-    state = *(u8 **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     state[0] = (u8)GameBit_Get(*(s16 *)(setup + 0x1c));
     state[1] = ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     if ((setup[0x1b] & 1) != 0 && state[0] != 0) {
@@ -119,41 +120,41 @@ void suntemple_update(int obj)
     int *texture;
     int flags;
 
-    state = *(int *)(obj + 0xb8);
-    cfg = *(int *)(obj + 0x4c);
+    state = *(int *)&((GameObject *)obj)->extra;
+    cfg = *(int *)&((GameObject *)obj)->anim.placementData;
     *(u8 *)(state + 0) = (u8)GameBit_Get(*(s16 *)(cfg + 0x1c));
     if (*(u8 *)(state + 0) == 0) {
         texture = objFindTexture(obj, 0, 0);
         if (texture != NULL) {
             *texture = 0;
         }
-        *(f32 *)(obj + 0xc) = *(f32 *)(cfg + 0x8);
-        *(f32 *)(obj + 0x10) = *(f32 *)(cfg + 0xc);
-        *(f32 *)(obj + 0x14) = *(f32 *)(cfg + 0x10);
-        *(u8 *)(obj + 0xaf) &= ~0x08;
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(cfg + 0x8);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(cfg + 0xc);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(cfg + 0x10);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x08;
 
         if (*(s16 *)(cfg + 0x22) != -1) {
             if ((u32)GameBit_Get(*(s16 *)(cfg + 0x22)) != 0) {
-                *(u8 *)(obj + 0xaf) &= ~0x10;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
             } else {
-                *(u8 *)(obj + 0xaf) |= 0x10;
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
                 if ((*(u8 *)(cfg + 0x1b) & 0x10) != 0) {
-                    *(u8 *)(obj + 0xaf) |= 0x08;
+                    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
                 }
             }
         } else {
-            *(u8 *)(obj + 0xaf) &= ~0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
         }
 
-        if (*(s16 *)(obj + 0x46) == 0x830 && gameTimerIsRunning() != 0) {
-            *(u8 *)(obj + 0xaf) |= 0x10;
+        if (((GameObject *)obj)->anim.seqId == 0x830 && gameTimerIsRunning() != 0) {
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
         }
 
-        if ((*(u8 *)(obj + 0xaf) & 0x1) != 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x1) != 0) {
             if (*(s16 *)(cfg + 0x1e) == -1 ||
                 (*(int (**)(int))(*gGameUIInterface + 0x20))(*(s16 *)(cfg + 0x1e)) != 0) {
                 if (*(s8 *)(cfg + 0x20) != -1) {
-                    if (*(s16 *)(obj + 0x46) == 0x526) {
+                    if (((GameObject *)obj)->anim.seqId == 0x526) {
                         if (*(u8 *)(state + 1) == 1 &&
                             ((u32)GameBit_Get(0x25a) != 0 || (u32)GameBit_Get(0x25b) != 0)) {
                             (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
@@ -182,13 +183,13 @@ void suntemple_update(int obj)
                     GameBit_Set(*(s16 *)(cfg + 0x22), 0);
                 } else {
                     *(u8 *)(state + 0) = 1;
-                    *(int *)(obj + 0xf4) = 1;
+                    ((GameObject *)obj)->unkF4 = 1;
                 }
                 buttonDisable(0, 0x100);
             }
         }
     } else {
-        if (*(int *)(obj + 0xf4) == 0 && *(s8 *)(cfg + 0x20) != -1 &&
+        if (((GameObject *)obj)->unkF4 == 0 && *(s8 *)(cfg + 0x20) != -1 &&
             *(s16 *)(cfg + 0x24) != 0) {
             (*(void (**)(int))(*gObjectTriggerInterface + 0x54))(obj);
             flags = 1;
@@ -204,9 +205,9 @@ void suntemple_update(int obj)
             (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
                 *(s8 *)(cfg + 0x20), obj, flags);
         }
-        *(u8 *)(obj + 0xaf) |= 0x08;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
     }
-    *(int *)(obj + 0xf4) = 1;
+    ((GameObject *)obj)->unkF4 = 1;
 }
 #pragma scheduling reset
 #pragma peephole reset

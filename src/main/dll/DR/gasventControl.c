@@ -1,4 +1,5 @@
 #include "main/dll/DR/gasventControl.h"
+#include "main/game_object.h"
 
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
@@ -574,7 +575,7 @@ void explodable_free(int obj, int flag) {
     int p;
     void *o;
 
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 0x21);
     if (flag == 0) {
         p = state - 4;
@@ -636,8 +637,8 @@ void explodable_update(int obj)
     int r;
     int o;
 
-    state = *(int *)(obj + 0xb8);
-    def = *(int *)(obj + 0x4c);
+    state = *(int *)&((GameObject *)obj)->extra;
+    def = *(int *)&((GameObject *)obj)->anim.placementData;
     if (*(u8 *)(state + 0x6e4) != 2) {
         if (*(u8 *)(state + 0x6e4) == 0) {
             if ((u32)GameBit_Get(*(s16 *)(def + 0x40)) != 0) {
@@ -696,14 +697,14 @@ extern f32 lbl_803E435C;
 #pragma peephole off
 void explodable_init(int obj, int setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     GasVentTableEntry *tbl;
     int base;
     GasVentTableEntry *e;
     u32 c1;
 
     ObjGroup_AddObject(obj, 0x21);
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     c1 = *(u8 *)(setup + 0x18);
     if (c1 == 0) {
         c1 = 1;
@@ -725,15 +726,15 @@ void explodable_init(int obj, int setup)
     ((ExplodableState *)state)->children[12] = 0;
     ((ExplodableState *)state)->children[13] = 0;
     ((ExplodableState *)state)->children[14] = 0;
-    *(s16 *)(obj + 0) = *(s16 *)(setup + 0x1a);
-    *(s16 *)(obj + 2) = *(s16 *)(setup + 0x1c);
-    *(s16 *)(obj + 4) = *(s16 *)(setup + 0x1e);
+    ((GameObject *)obj)->anim.rotX = *(s16 *)(setup + 0x1a);
+    ((GameObject *)obj)->anim.rotY = *(s16 *)(setup + 0x1c);
+    ((GameObject *)obj)->anim.rotZ = *(s16 *)(setup + 0x1e);
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x3e)) != 0) {
         ((ExplodableState *)state)->phase6E4 = 2;
     }
     base = 0;
     for (tbl = lbl_80322DA0; base < 16; base++) {
-        if (*(s16 *)(obj + 0x46) == tbl->key) {
+        if (((GameObject *)obj)->anim.seqId == tbl->key) {
             ((ExplodableState *)state)->unk6E5 = base;
             break;
         }
@@ -742,11 +743,11 @@ void explodable_init(int obj, int setup)
     if (*(s8 *)(setup + 0x3d) == 0) {
         *(u8 *)(setup + 0x3d) = 0x14;
     }
-    *(f32 *)(obj + 8) =
-        *(f32 *)(*(int *)(obj + 0x50) + 4) * (f32)(int)*(s8 *)(setup + 0x3d) / lbl_803E435C;
+    ((GameObject *)obj)->anim.rootMotionScale =
+        *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(int)*(s8 *)(setup + 0x3d) / lbl_803E435C;
     e = lbl_80322DA0;
     if ((e[((ExplodableState *)state)->unk6E5].flags & 1) != 0) {
-        *(u16 *)(obj + 0xb0) |= 0x4000;
+        ((GameObject *)obj)->unkB0 |= 0x4000;
     }
 }
 #pragma peephole reset
@@ -845,7 +846,7 @@ void fn_801A2E80(int obj, int def, int p3, int state)
                 *(f32 *)(i15 + 4) = z;
                 *(f32 *)(i15 + 8) = z;
                 *(f32 *)(i15 + 0xc) = z;
-                model = *(int *)(*(int *)(*(int *)(obj + 0x7c) + i14));
+                model = *(int *)(*(int *)(*(int *)&((GameObject *)obj)->anim.banks + i14));
                 s.acc[0] = z;
                 s.acc[1] = z;
                 s.acc[2] = z;
@@ -898,9 +899,9 @@ void fn_801A30C0(int obj, int slot, int def)
     int max;
 
     vecRotateZXY((s16 *)(def + 0x1a), (f32 *)(slot + 0x10));
-    *(f32 *)(slot + 0x4c) = *(f32 *)(slot + 0x10) * *(f32 *)(obj + 8) + *(f32 *)(def + 8);
-    *(f32 *)(slot + 0x50) = *(f32 *)(slot + 0x14) * *(f32 *)(obj + 8) + *(f32 *)(def + 0xc);
-    *(f32 *)(slot + 0x54) = *(f32 *)(slot + 0x18) * *(f32 *)(obj + 8) + *(f32 *)(def + 0x10);
+    *(f32 *)(slot + 0x4c) = *(f32 *)(slot + 0x10) * ((GameObject *)obj)->anim.rootMotionScale + *(f32 *)(def + 8);
+    *(f32 *)(slot + 0x50) = *(f32 *)(slot + 0x14) * ((GameObject *)obj)->anim.rootMotionScale + *(f32 *)(def + 0xc);
+    *(f32 *)(slot + 0x54) = *(f32 *)(slot + 0x18) * ((GameObject *)obj)->anim.rootMotionScale + *(f32 *)(def + 0x10);
     *(s16 *)(slot + 0x68) = *(s16 *)(def + 0x1a);
     *(s16 *)(slot + 0x66) = *(s16 *)(def + 0x1c);
     *(s16 *)(slot + 0x64) = *(s16 *)(def + 0x1e);
@@ -921,10 +922,10 @@ void fn_801A30C0(int obj, int slot, int def)
         *(f32 *)(slot + 0x20) = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
         *(f32 *)(slot + 0x24) = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
         scale = (f32)*(s16 *)(def + 0x30) / lbl_803E4358;
-        if (*(f32 *)(obj + 0x24) > lbl_803E4368) {
+        if (((GameObject *)obj)->anim.velocityX > lbl_803E4368) {
             *(u8 *)(slot + 0x6c) |= 1;
         }
-        if (*(f32 *)(obj + 0x2c) > lbl_803E4368) {
+        if (((GameObject *)obj)->anim.velocityZ > lbl_803E4368) {
             *(u8 *)(slot + 0x6c) |= 2;
         }
         if (*(f32 *)(slot + 0x1c) > lbl_803E4368) {

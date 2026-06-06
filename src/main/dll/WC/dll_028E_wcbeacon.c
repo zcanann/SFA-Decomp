@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 
@@ -43,8 +44,8 @@
 #pragma scheduling off
 int wcbeacon_aButtonCallback(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
 
     if (isGameTimerDisabled() == 0) {
         WCBEACON_STATE_ACCEPTED_INTERACTION_VALUE(state) = 1;
@@ -66,7 +67,7 @@ int wcbeacon_getExtraSize(void) { return WCBEACON_EXTRA_SIZE; }
 int wcbeacon_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCBEACON_SETUP_MODEL_INDEX_OFFSET);
+    int modelIndex = *(s8 *)(*(int *)&((GameObject *)obj)->anim.placementData + WCBEACON_SETUP_MODEL_INDEX_OFFSET);
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
@@ -92,11 +93,11 @@ void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling off
 void wcbeacon_update(int obj)
 {
-    int setup = *(int *)(obj + 0x4c);
-    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    int state = *(int *)&((GameObject *)obj)->extra;
     u32 phase;
 
-    *(u8 *)(obj + 0xaf) |= WCBEACON_BLOCK_PLAYER_FLAG;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= WCBEACON_BLOCK_PLAYER_FLAG;
     phase = WCBEACON_STATE_PHASE_VALUE(state);
     if (phase == WCBEACON_PHASE_WAITING_FOR_TRICKY) {
         int tricky = getTrickyObject();
@@ -107,8 +108,8 @@ void wcbeacon_update(int obj)
                 WCBEACON_STATE_PHASE_VALUE(state) = WCBEACON_PHASE_IDLE;
             }
         } else {
-            *(u8 *)(obj + 0xaf) &= ~WCBEACON_BLOCK_PLAYER_FLAG;
-            if ((u32)tricky != 0 && (*(u8 *)(obj + 0xaf) & WCBEACON_TRICKY_PROMPT_FLAG)) {
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~WCBEACON_BLOCK_PLAYER_FLAG;
+            if ((u32)tricky != 0 && (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & WCBEACON_TRICKY_PROMPT_FLAG)) {
                 (*(void (**)(int, int, int, int, int))(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(
                     tricky, obj, WCBEACON_TRIGGER_ACCEPT_ARG, WCBEACON_TRICKY_PROMPT_FLAG,
                     *(int *)(*(int *)(tricky + 0x68)));
@@ -133,18 +134,18 @@ void wcbeacon_update(int obj)
             WCBEACON_STATE_PHASE_VALUE(state) = WCBEACON_PHASE_ACTIVE;
         }
     } else if (phase == WCBEACON_PHASE_ACTIVE) {
-        if (*(u16 *)(obj + 0xb0) & WCBEACON_VISIBLE_PARTFX_FLAG) {
+        if (((GameObject *)obj)->unkB0 & WCBEACON_VISIBLE_PARTFX_FLAG) {
             (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, WCBEACON_PARTFX_ACTIVE, 0,
                                                                                 WCBEACON_PARTFX_KIND,
                                                                                 WCBEACON_TRIGGER_NO_ARG, 0);
         }
-        if (*(int *)(obj + 0xf4) == 0) {
+        if (((GameObject *)obj)->unkF4 == 0) {
             (*(void (**)(int, int))(*gObjectTriggerInterface + 0x54))(obj, WCBEACON_FINAL_TRIGGER_ID);
             (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(WCBEACON_TRIGGER_ARM_SLOT, obj,
                                                                             WCBEACON_TRIGGER_ACCEPT_ARG);
         }
     }
-    *(int *)(obj + 0xf4) = 1;
+    ((GameObject *)obj)->unkF4 = 1;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -154,7 +155,7 @@ void wcbeacon_update(int obj)
 void wcbeacon_init(u8 *obj, u8 *setup)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    u8 *state = *(u8 **)(obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     s16 objType;
 
     ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));

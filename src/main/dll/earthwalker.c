@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/dll/earthwalker_state.h"
 #include "main/mapEventTypes.h"
 
@@ -288,7 +289,7 @@ int fn_80223D10(void) { return 0x2; }
 #pragma scheduling off
 int fn_802239A4(int obj, int ai)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int result;
 
     if (*(s8 *)(ai + 0x27b) != 0) {
@@ -309,7 +310,7 @@ int fn_802239A4(int obj, int ai)
 #pragma scheduling off
 int fn_80223A1C(int obj, int ai)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     f32 dist;
 
     if (*(s8 *)(ai + 0x27b) != 0) {
@@ -337,7 +338,7 @@ int fn_80223A1C(int obj, int ai)
 #pragma scheduling off
 int fn_80223AFC(int obj, int ai)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int curve = state + 0x9b0;
 
     if (*(s8 *)(ai + 0x27b) != 0) {
@@ -363,8 +364,8 @@ int fn_80223BC4(int obj, int ai)
 
     if (*(s8 *)(ai + 0x27a) != 0) {
         *(f32 *)(ai + 0x2a0) = lbl_803E6D10;
-        getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc),
-                 *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14));
+        getAngle(((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc),
+                 ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14));
     }
     return 0;
 }
@@ -376,16 +377,16 @@ int fn_80223BC4(int obj, int ai)
 int fn_80223C34(int obj, int ai)
 {
     EarthWalkerObject *ewObj = (EarthWalkerObject *)obj;
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
-    *(f32 *)(obj + 0x24) = oneOverTimeDelta * (((EarthwalkerState *)state)->unkA18 - *(f32 *)(obj + 0xc));
-    *(f32 *)(obj + 0x2c) = oneOverTimeDelta * (((EarthwalkerState *)state)->unkA20 - *(f32 *)(obj + 0x14));
-    *(f32 *)(obj + 0xc) = ((EarthwalkerState *)state)->unkA18;
-    *(f32 *)(obj + 0x14) = ((EarthwalkerState *)state)->unkA20;
+    ((GameObject *)obj)->anim.velocityX = oneOverTimeDelta * (((EarthwalkerState *)state)->unkA18 - ((GameObject *)obj)->anim.localPosX);
+    ((GameObject *)obj)->anim.velocityZ = oneOverTimeDelta * (((EarthwalkerState *)state)->unkA20 - ((GameObject *)obj)->anim.localPosZ);
+    ((GameObject *)obj)->anim.localPosX = ((EarthwalkerState *)state)->unkA18;
+    ((GameObject *)obj)->anim.localPosZ = ((EarthwalkerState *)state)->unkA20;
     ewObj->facingAngle = getAngle(-((EarthwalkerState *)state)->unkA24, -((EarthwalkerState *)state)->unkA2C);
     ObjAnim_SampleRootCurvePhase(
-        sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) +
-              *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c)),
+        sqrtf(((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX +
+              ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ),
         (ObjAnimComponent *)obj, (f32 *)(ai + 0x2a0));
     return 0;
 }

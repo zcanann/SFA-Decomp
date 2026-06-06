@@ -1,4 +1,5 @@
 #include "main/dll/DR/DRhalolight.h"
+#include "main/game_object.h"
 #include "main/objhits_types.h"
 
 /*
@@ -64,24 +65,24 @@ void SnowBike_hitDetect(int obj)
     f32 lim;
     f32 dummy;
 
-    state = *(u8 **)(obj + 0xb8);
-    other = *(u8 **)(*(int *)(obj + 0x54));
-    if (*(void **)(obj + 0xc0) != NULL) {
+    state = ((GameObject *)obj)->extra;
+    other = *(u8 **)(*(int *)&((GameObject *)obj)->anim.hitReactState);
+    if (((GameObject *)obj)->unkC0 != NULL) {
         return;
     }
     if (*(s8 *)(state + 0x421) == 2) {
         fn_801EB940(obj, state);
-        *(s16 *)(state + 0x41c) = *(s16 *)(obj + 2);
-        *(s16 *)(state + 0x41e) = *(s16 *)(obj + 4);
-        *(s16 *)(obj + 2) = (f32)*(s16 *)(obj + 2) + *(f32 *)(state + 0x594);
-        *(s16 *)(obj + 4) = (f32)*(s16 *)(obj + 4) + ((f32)*(int *)(state + 0x410) + *(f32 *)(state + 0x598));
+        *(s16 *)(state + 0x41c) = ((GameObject *)obj)->anim.rotY;
+        *(s16 *)(state + 0x41e) = ((GameObject *)obj)->anim.rotZ;
+        ((GameObject *)obj)->anim.rotY = (f32)((GameObject *)obj)->anim.rotY + *(f32 *)(state + 0x594);
+        ((GameObject *)obj)->anim.rotZ = (f32)((GameObject *)obj)->anim.rotZ + ((f32)*(int *)(state + 0x410) + *(f32 *)(state + 0x598));
     }
     if (*(s8 *)(state + 0x3d9) == 4 || state[0x3d6] != 0) {
-        *(f32 *)(obj + 0x28) = oneOverTimeDelta * (*(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84));
-        *(f32 *)(state + 0x498) = *(f32 *)(obj + 0x28);
+        ((GameObject *)obj)->anim.velocityY = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY);
+        *(f32 *)(state + 0x498) = ((GameObject *)obj)->anim.velocityY;
     }
     if (state[0x3d6] == 0) {
-        if (((*(ObjHitsPriorityState **)(obj + 0x54))->flags & 8) != 0
+        if (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) != 0
             && arrayIndexOf(lbl_8032855C, 10, *(s16 *)(other + 0x46)) == -1) {
         } else {
             if (*(void **)(state + 0x42c) == NULL) {
@@ -98,7 +99,7 @@ void SnowBike_hitDetect(int obj)
             doRumble(lbl_803E5BC4 * mag);
         }
         *(f32 *)(state + 0x430) = *(f32 *)(state + 0x430) * lbl_803E5BBC;
-        if (*(s16 *)(obj + 0x46) == 114 || *(s16 *)(obj + 0x46) == 908) {
+        if (((GameObject *)obj)->anim.seqId == 114 || ((GameObject *)obj)->anim.seqId == 908) {
             vol = (int)(lbl_803E5C4C * mag);
             if (vol > 80) {
                 vol = 80;
@@ -123,14 +124,14 @@ void SnowBike_hitDetect(int obj)
             || *(s16 *)(*(int *)(state + 0x42c) + 0x46) == 1236) {
             k = lbl_803E5B88;
         }
-        *(f32 *)(obj + 0x24) = k * (oneOverTimeDelta * (*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80)));
-        *(f32 *)(obj + 0x2c) = k * (oneOverTimeDelta * (*(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88)));
+        ((GameObject *)obj)->anim.velocityX = k * (oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX));
+        ((GameObject *)obj)->anim.velocityZ = k * (oneOverTimeDelta * (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ));
     } else {
         k2 = lbl_803E5B88;
-        *(f32 *)(obj + 0x24) = k2 * (oneOverTimeDelta * (*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80)));
-        *(f32 *)(obj + 0x2c) = k2 * (oneOverTimeDelta * (*(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88)));
+        ((GameObject *)obj)->anim.velocityX = k2 * (oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX));
+        ((GameObject *)obj)->anim.velocityZ = k2 * (oneOverTimeDelta * (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ));
     }
-    Matrix_TransformPoint((f32 *)(state + 0x12c), *(f32 *)(obj + 0x24), lbl_803E5AE8, *(f32 *)(obj + 0x2c),
+    Matrix_TransformPoint((f32 *)(state + 0x12c), ((GameObject *)obj)->anim.velocityX, lbl_803E5AE8, ((GameObject *)obj)->anim.velocityZ,
                           (f32 *)(state + 0x494), &dummy, (f32 *)(state + 0x49c));
 clamp:
     v = *(f32 *)(state + 0x494);
@@ -172,9 +173,9 @@ clamp:
     if (*(f32 *)(state + 0x49c) < lbl_803E5B8C && *(f32 *)(state + 0x49c) > lbl_803E5BA4) {
         *(f32 *)(state + 0x49c) = lbl_803E5AE8;
     }
-    *(f32 *)(state + 0x16c) = *(f32 *)(obj + 0xc);
-    *(f32 *)(state + 0x170) = *(f32 *)(obj + 0x10);
-    *(f32 *)(state + 0x174) = *(f32 *)(obj + 0x14);
+    *(f32 *)(state + 0x16c) = ((GameObject *)obj)->anim.localPosX;
+    *(f32 *)(state + 0x170) = ((GameObject *)obj)->anim.localPosY;
+    *(f32 *)(state + 0x174) = ((GameObject *)obj)->anim.localPosZ;
     *(int *)(state + 0x42c) = 0;
 }
 #pragma peephole reset

@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
@@ -27,7 +28,7 @@ int arwarwing_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void arwarwing_free(int obj)
 {
-    ArwingState *state = *(ArwingState **)(obj + 0xb8);
+    ArwingState *state = ((GameObject *)obj)->extra;
 
     ObjGroup_RemoveObject(obj, 0x26);
     lbl_803DDD88 = 0;
@@ -54,7 +55,7 @@ void arwarwing_initialise(void) {}
 #pragma scheduling off
 void arwarwing_render(int obj, int p2, int p3, int p4, int p5)
 {
-    ArwingState *state = *(ArwingState **)(obj + 0xb8);
+    ArwingState *state = ((GameObject *)obj)->extra;
     int dx, dy;
 
     if (state->hitShake != 0) {
@@ -62,13 +63,13 @@ void arwarwing_render(int obj, int p2, int p3, int p4, int p5)
                    fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)&state->shakePitch / lbl_803E6F00));
         dy = (int)(lbl_803E6F5C *
                    fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)&state->shakeYaw / lbl_803E6F00));
-        *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) + dx);
-        *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) + dy);
+        ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + dx);
+        ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + dy);
     }
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6ED0);
     if (state->hitShake != 0) {
-        *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) - dx);
-        *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) - dy);
+        ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY - dx);
+        ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ - dy);
     }
 }
 #pragma scheduling reset
@@ -78,18 +79,18 @@ void arwarwing_render(int obj, int p2, int p3, int p4, int p5)
 #pragma scheduling off
 void arwarwing_hitDetect(int obj)
 {
-    ArwingState *state = *(ArwingState **)(obj + 0xb8);
+    ArwingState *state = ((GameObject *)obj)->extra;
     f32 pos[3];
     f32 mtx[12];
 
-    if ((*(u16 *)(obj + 0xb0) & 0x1000) != 0 && state->aimSnapshotValid != 0) {
+    if ((((GameObject *)obj)->unkB0 & 0x1000) != 0 && state->aimSnapshotValid != 0) {
         Obj_BuildWorldTransformMatrix(obj, mtx, 0);
         PSMTXMultVec(mtx, &state->aimOffsetX, pos);
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;
         fn_8008020C((s16)(0x8000 - *(s16 *)obj + state->aimYaw),
-                    (s16)(*(s16 *)(obj + 2) + state->aimPitch),
-                    (s16)(*(s16 *)(obj + 4) + state->aimRoll),
+                    (s16)(((GameObject *)obj)->anim.rotY + state->aimPitch),
+                    (s16)(((GameObject *)obj)->anim.rotZ + state->aimRoll),
                     pos[0], pos[1], pos[2], lbl_803E6FF8);
     }
 }
@@ -391,7 +392,7 @@ void arwarwing_updateWeaponFire(int obj, int state) {
 #pragma scheduling off
 void arwarwing_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     f32 camPos[2];
     s16 camRot[3];
     u8 mode;
@@ -435,12 +436,12 @@ void arwarwing_update(int obj)
         if (t <= lbl_803E6ECC) {
             ((ArwingState *)state)->mode = 5;
             ((ArwingState *)state)->modeTimer = lbl_803E6F24;
-            *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+            ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
         ((ArwingState *)state)->pitchAccum =
             (int)(lbl_803E6F6C * timeDelta + (f32) ((ArwingState *)state)->pitchAccum);
-        *(s16 *)(obj + 4) = (s16) ((ArwingState *)state)->pitchAccum;
+        ((GameObject *)obj)->anim.rotZ = (s16) ((ArwingState *)state)->pitchAccum;
         ((ArwingState *)state)->velY = ((ArwingState *)state)->velY - lbl_803E6EF8 * timeDelta;
         objMove(obj, ((ArwingState *)state)->velX * timeDelta, ((ArwingState *)state)->velY * timeDelta,
                 ((ArwingState *)state)->velZ * timeDelta);
@@ -451,7 +452,7 @@ void arwarwing_update(int obj)
         *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
     } else {
         fn_8022A670(obj, state);
-        if ((*(s16 *)(obj + 6) & 0x4000) != 0) {
+        if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) {
             *(s16 *)&((ArwingState *)state)->inputFlags2 = 0;
             *(s16 *)&((ArwingState *)state)->inputFlags = 0;
             p = ((ArwingState *)state)->thrusterL;
@@ -526,8 +527,8 @@ void arwarwing_update(int obj)
 
     fn_8022C30C(obj, state);
     (*(void (**)(void *, int))(*gCameraInterface + 0x60))((void *)(state + 0x2c), 0xc);
-    camRot[0] = *(s16 *)(obj + 0);
-    camRot[1] = *(s16 *)(obj + 2);
+    camRot[0] = ((GameObject *)obj)->anim.rotX;
+    camRot[1] = ((GameObject *)obj)->anim.rotY;
     camRot[2] = (s16) ((ArwingState *)state)->pitchAccum;
     (*(void (**)(void *, int))(*gCameraInterface + 0x60))(camRot, 6);
     camPos[0] = ((ArwingState *)state)->unk5C;
@@ -559,7 +560,7 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
         *(f32 *)(setup + 0xc) = py;
         *(f32 *)(setup + 0x10) = pz;
         *(u8 *)(setup + 0x1a) = *(s16 *)obj >> 8;
-        *(u8 *)(setup + 0x19) = *(s16 *)(obj + 2) >> 8;
+        *(u8 *)(setup + 0x19) = ((GameObject *)obj)->anim.rotY >> 8;
         *(u8 *)(setup + 0x18) = 0;
         *(u8 *)(setup + 4) = 1;
         *(u8 *)(setup + 5) = 1;
@@ -734,7 +735,7 @@ void fn_8022C30C(int obj, int state)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022C7A4(int obj) { (*(ArwingState **)(obj + 0xb8))->aimSnapshotValid = 0; }
+void fn_8022C7A4(int obj) { (*(ArwingState **)&((GameObject *)obj)->extra)->aimSnapshotValid = 0; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -839,7 +840,7 @@ void fn_8022CDEC(int obj, int state)
         ((ArwingState *)state)->unk3FA = 0x19;
         ((ArwingState *)state)->unk3A4 = lbl_803E6FAC;
         ((ArwingState *)state)->unk38 = lbl_803E6FB0;
-        *(f32 *)(obj + 0x8) = lbl_803E6FB0;
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E6FB0;
         ((ArwingState *)state)->unk3AC = lbl_803E6FB4;
         ((ArwingState *)state)->unk3B0 = lbl_803E6FB8;
         ((ArwingState *)state)->unk88 = lbl_803E6FBC;
@@ -882,9 +883,9 @@ void fn_8022CDEC(int obj, int state)
         ((ArwingState *)state)->unk3D0 = lbl_803E6FE8;
         ((ArwingState *)state)->unk3D4 = lbl_803E6F80;
         ((ArwingState *)state)->unk3E0 = lbl_803E6FA4;
-        ((ArwingState *)state)->homeX = *(f32 *)(obj + 0xc);
-        ((ArwingState *)state)->homeY = *(f32 *)(obj + 0x10);
-        ((ArwingState *)state)->homeZ = *(f32 *)(obj + 0x14);
+        ((ArwingState *)state)->homeX = ((GameObject *)obj)->anim.localPosX;
+        ((ArwingState *)state)->homeY = ((GameObject *)obj)->anim.localPosY;
+        ((ArwingState *)state)->homeZ = ((GameObject *)obj)->anim.localPosZ;
         ((ArwingState *)state)->unk20 = lbl_803E6FEC;
         ((ArwingState *)state)->unk28 = lbl_803E6FF0;
         ((ArwingState *)state)->unk24 = lbl_803E6EF0;
@@ -897,7 +898,7 @@ void fn_8022CDEC(int obj, int state)
 #pragma scheduling off
 void fn_8022D308(int obj)
 {
-    ArwingState *state = *(ArwingState **)(obj + 0xb8);
+    ArwingState *state = ((GameObject *)obj)->extra;
     f32 v7c = lbl_803E6F7C;
     f32 v74 = lbl_803E6F74;
 
@@ -936,14 +937,14 @@ void fn_8022D308(int obj)
     state->velY = lbl_803E6ECC;
     state->velZ = lbl_803E6ECC;
     state->laserLevel = 0;
-    *(f32 *)(obj + 0xc) = state->homeX;
-    *(f32 *)(obj + 0x10) = state->homeY;
-    *(f32 *)(obj + 0x14) = state->homeZ;
+    ((GameObject *)obj)->anim.localPosX = state->homeX;
+    ((GameObject *)obj)->anim.localPosY = state->homeY;
+    ((GameObject *)obj)->anim.localPosZ = state->homeZ;
     state->rollInput = 0;
     state->pitchAccum = 0;
-    *(s16 *)(obj + 0) = 0;
-    *(s16 *)(obj + 2) = 0;
-    *(s16 *)(obj + 4) = 0;
+    ((GameObject *)obj)->anim.rotX = 0;
+    ((GameObject *)obj)->anim.rotY = 0;
+    ((GameObject *)obj)->anim.rotZ = 0;
     arwarwingbo_setActiveVisible(state->bombObj, 0, 0);
 }
 #pragma scheduling reset
@@ -967,7 +968,7 @@ void fn_8022BE14(int obj, int state)
         if (((ArwingState *)state)->mode == 4) {
             ((ArwingState *)state)->mode = 5;
             ((ArwingState *)state)->modeTimer = lbl_803E6F24;
-            *(s16 *)(obj + 6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
             return;
         }
@@ -985,7 +986,7 @@ void fn_8022BE14(int obj, int state)
             ((ArwingState *)state)->modeTimer = lbl_803E6F30;
             Sfx_PlayFromObject(obj, 0x380);
             Music_Trigger(0xd6, 1);
-        } else if ((s8)*(u8 *)(*(int *)(obj + 0xb8) + 0x468) <= 3) {
+        } else if ((s8)*(u8 *)(*(int *)&((GameObject *)obj)->extra + 0x468) <= 3) {
             Sfx_KeepAliveLoopedObjectSound(obj, 0x37f);
         }
         Sfx_PlayFromObject(obj, SFXbaddie_rach_bite);
@@ -1020,7 +1021,7 @@ void fn_8022C0D0(int obj, int state)
         if (((ArwingState *)state)->mode == 4) {
             ((ArwingState *)state)->mode = 5;
             ((ArwingState *)state)->modeTimer = lbl_803E6F24;
-            *(s16 *)(obj + 6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         } else {
             if (*(s16 *)(hitObj + 0x46) == 0x6ae && ((ArwingState *)state)->mode == 1) {
@@ -1054,7 +1055,7 @@ void fn_8022C0D0(int obj, int state)
         unlockLevel(0, 0, 1);
         loadMapAndParent(0x29);
         lockLevel(mapGetDirIdx(0x29), 0);
-    } else if ((s8)*(u8 *)(*(int *)(obj + 0xb8) + 0x468) <= 3) {
+    } else if ((s8)*(u8 *)(*(int *)&((GameObject *)obj)->extra + 0x468) <= 3) {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x37f);
     }
 }
@@ -1065,7 +1066,7 @@ void fn_8022C0D0(int obj, int state)
 #pragma scheduling off
 int arwarwing_SeqFn(int obj, int p2, int script)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int i;
 
     Camera_GetCurrentViewSlot();
@@ -1082,26 +1083,26 @@ int arwarwing_SeqFn(int obj, int p2, int script)
     *(u8 *)(((ArwingState *)state)->thrusterL + 0x36) = 0;
     *(s16 *)(((ArwingState *)state)->thrusterR + 6) |= 0x4000;
     *(u8 *)(((ArwingState *)state)->thrusterR + 0x36) = 0;
-    *(s16 *)(obj + 6) &= ~0x4000;
+    ((GameObject *)obj)->anim.flags &= ~0x4000;
 
     for (i = 0; i < *(u8 *)(script + 0x8b); i++) {
         switch (*(u8 *)(script + i + 0x81)) {
         case 8: {
             int cam = Camera_GetCurrentViewSlot();
-            ((ArwingState *)state)->aimOffsetX = *(f32 *)(cam + 0xc) - *(f32 *)(obj + 0xc);
-            ((ArwingState *)state)->aimOffsetY = *(f32 *)(cam + 0x10) - *(f32 *)(obj + 0x10);
-            ((ArwingState *)state)->aimOffsetZ = *(f32 *)(cam + 0x14) - *(f32 *)(obj + 0x14);
-            ((ArwingState *)state)->aimYaw = *(s16 *)(obj + 0) - (u16)*(s16 *)(cam + 0);
+            ((ArwingState *)state)->aimOffsetX = *(f32 *)(cam + 0xc) - ((GameObject *)obj)->anim.localPosX;
+            ((ArwingState *)state)->aimOffsetY = *(f32 *)(cam + 0x10) - ((GameObject *)obj)->anim.localPosY;
+            ((ArwingState *)state)->aimOffsetZ = *(f32 *)(cam + 0x14) - ((GameObject *)obj)->anim.localPosZ;
+            ((ArwingState *)state)->aimYaw = ((GameObject *)obj)->anim.rotX - (u16)*(s16 *)(cam + 0);
             if (((ArwingState *)state)->aimYaw > 32768)
                 ((ArwingState *)state)->aimYaw -= 65535;
             if (((ArwingState *)state)->aimYaw < -32768)
                 ((ArwingState *)state)->aimYaw += 65535;
-            ((ArwingState *)state)->aimPitch = *(s16 *)(obj + 2) - (u16)*(s16 *)(cam + 2);
+            ((ArwingState *)state)->aimPitch = ((GameObject *)obj)->anim.rotY - (u16)*(s16 *)(cam + 2);
             if (((ArwingState *)state)->aimPitch > 32768)
                 ((ArwingState *)state)->aimPitch -= 65535;
             if (((ArwingState *)state)->aimPitch < -32768)
                 ((ArwingState *)state)->aimPitch += 65535;
-            ((ArwingState *)state)->aimRoll = *(s16 *)(cam + 4) - *(s16 *)(obj + 4);
+            ((ArwingState *)state)->aimRoll = *(s16 *)(cam + 4) - ((GameObject *)obj)->anim.rotZ;
             ((ArwingState *)state)->aimSnapshotValid = 1;
             break;
         }
@@ -1120,9 +1121,9 @@ int arwarwing_SeqFn(int obj, int p2, int script)
             if (Obj_IsLoadingLocked()) {
                 int setup = Obj_AllocObjectSetup(0x24, 0x608);
                 int o;
-                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
-                *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
+                *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+                *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
                 *(u8 *)(setup + 4) = 1;
                 *(u8 *)(setup + 5) = 1;
                 o = loadObjectAtObject(obj);
@@ -1189,7 +1190,7 @@ int arwarwing_SeqFn(int obj, int p2, int script)
             break;
         case 7:
             if (!((Arw339Flags *)(state + 0x339))->scoreFlag) {
-                int s2 = *(int *)(obj + 0xb8);
+                int s2 = *(int *)&((GameObject *)obj)->extra;
                 *(u16 *)(s2 + 0x47c) = *(u16 *)(s2 + 0x47c) + 0xc8;
                 if (*(u16 *)(s2 + 0x47c) > 0x270f)
                     *(u16 *)(s2 + 0x47c) = 0x270f;
@@ -1221,9 +1222,9 @@ void arwarwing_init(int obj)
     cfg.a = lbl_802C25E8.a;
     cfg.b = lbl_802C25E8.b;
     cfg.c = lbl_802C25E8.c;
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     sub = state + 0xc0;
-    *(int *)(obj + 0xbc) = (int)arwarwing_SeqFn;
+    *(int *)&((GameObject *)obj)->unkBC = (int)arwarwing_SeqFn;
     (*(void (**)(int, int, int, int))(*gPathControlInterface + 4))(sub, 4, 0x1040006, 1);
     (*(void (**)(int, int, void *, void *, void *))(*gPathControlInterface + 0xc))(sub, 3, lbl_8032B408, lbl_8032B480, &cfg);
     (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, sub);

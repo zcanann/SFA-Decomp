@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 #pragma peephole on
@@ -17,7 +18,7 @@ int drlightbea_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void drlightbea_free(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     void *buffer = *(void **)state;
 
     if (buffer != NULL) {
@@ -38,7 +39,7 @@ void drlightbea_hitDetect(void) {}
 #pragma scheduling on
 void drlightbea_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (((DrLightBeaFlags *)(state + 4))->bit40) {
         Obj_FreeObject(obj);
     }
@@ -50,7 +51,7 @@ void drlightbea_update(int obj)
 #pragma scheduling on
 void drlightbea_init(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     ((DrLightBeaFlags *)(state + 4))->bit80 = 0;
     *(void **)state = NULL;
     ((DrLightBeaFlags *)(state + 4))->bit40 = 0;
@@ -74,17 +75,17 @@ void drlightbea_initialise(void) {}
 #pragma scheduling off
 void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     int player;
     f32 buf[6];
     f32 vecA[3];
     f32 vecB[3];
 
     if (((DrLightBeaFlags *)(state + 4))->bit80) {
-        *(f32 *)(*(int *)state + 0) = *(f32 *)(obj + 0xc);
-        *(f32 *)(*(int *)state + 4) = *(f32 *)(obj + 0x10);
-        *(f32 *)(*(int *)state + 8) = *(f32 *)(obj + 0x14);
+        *(f32 *)(*(int *)state + 0) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(*(int *)state + 4) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(*(int *)state + 8) = ((GameObject *)obj)->anim.localPosZ;
         if (*(s8 *)(setup + 0x19) == 0) {
             player = Obj_GetPlayerObject();
             *(f32 *)(*(int *)state + 0xc) = *(f32 *)(player + 0xc);
@@ -109,9 +110,9 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
         ((DrLightBeaFlags *)(state + 4))->bit80 = (u8)GameBit_Get(*(s16 *)(setup + 0x20));
         if (((DrLightBeaFlags *)(state + 4))->bit80) {
             Sfx_PlayFromObject(obj, SFXfend_pep_snoreout);
-            vecA[0] = *(f32 *)(obj + 0xc);
-            vecA[1] = *(f32 *)(obj + 0x10);
-            vecA[2] = *(f32 *)(obj + 0x14);
+            vecA[0] = ((GameObject *)obj)->anim.localPosX;
+            vecA[1] = ((GameObject *)obj)->anim.localPosY;
+            vecA[2] = ((GameObject *)obj)->anim.localPosZ;
             if (*(s8 *)(setup + 0x19) != 0 && dll_2E_func0A(*(s8 *)(setup + 0x19), buf) != 0) {
                 vecB[0] = buf[3];
                 vecB[1] = buf[4];

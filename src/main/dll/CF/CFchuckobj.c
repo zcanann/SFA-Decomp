@@ -1,4 +1,5 @@
 #include "main/dll/CF/CFchuckobj.h"
+#include "main/game_object.h"
 #include "main/dll/CF/CFTreasSharpy.h"
 
 extern undefined4 FUN_80006824();
@@ -1426,8 +1427,8 @@ void warpPadPlayerStandingOn(int obj)
     int player;
     s16 gameBit;
 
-    def = *(int*)(obj + 0x4c);
-    state = *(WarpPadState **)(obj + 0xb8);
+    def = *(int *)&((GameObject *)obj)->anim.placementData;
+    state = ((GameObject *)obj)->extra;
     gameBit = *(s16*)(def + 0x20);
     if (gameBit != -1) {
         if (GameBit_Get(gameBit) != 0) {
@@ -1437,7 +1438,7 @@ void warpPadPlayerStandingOn(int obj)
         }
     }
 
-    if ((*(u8*)(obj + 0xaf) & 4) != 0) {
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
         setAButtonIcon(0x1b);
         if (GameBit_Get(0x912) == 0) {
             (*(void (**)(int, int, int))(*(int*)(*gObjectTriggerInterface) + 0x48))(2, obj, -1);
@@ -1452,12 +1453,12 @@ void warpPadPlayerStandingOn(int obj)
     }
 
     if ((state->triggerMode == 0) && (state->countdownActive == 0) &&
-        ((*(u16*)(obj + 0xb0) & 0x1000) == 0)) {
+        ((((GameObject *)obj)->unkB0 & 0x1000) == 0)) {
         if (lbl_803DCEB8 > -1) {
             player = Obj_GetPlayerObject();
             if (Vec_xzDistance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < lbl_803E3EE0) {
                 (*(void (**)(int, int, int))(*(int*)(*gObjectTriggerInterface) + 0x48))(1, obj, -1);
-                *(s32*)(obj + 0xf4) = state->activateDelay;
+                ((GameObject *)obj)->unkF4 = state->activateDelay;
                 state->triggerMode = 0;
                 state->countdownActive = 1;
                 lbl_803DCDE0 = 2;
@@ -1466,10 +1467,10 @@ void warpPadPlayerStandingOn(int obj)
         }
         gameBit = *(s16*)(def + 0x20);
         if (((gameBit == -1) ||
-             ((GameBit_Get(gameBit) != 0) && ((*(u8*)(obj + 0xaf) & 4) != 0))) &&
+             ((GameBit_Get(gameBit) != 0) && ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0))) &&
             (ObjTrigger_IsSet(obj) != 0)) {
             (*(void (**)(int, int, int))(*(int*)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
-            *(s32*)(obj + 0xf4) = state->activateDelay;
+            ((GameObject *)obj)->unkF4 = state->activateDelay;
             state->triggerMode = 1;
             state->countdownActive = 1;
         }
@@ -1477,10 +1478,10 @@ void warpPadPlayerStandingOn(int obj)
 
 updateTimer:
     if (state->countdownActive != 0) {
-        if (*(s32*)(obj + 0xf4) > 0) {
-            *(s32*)(obj + 0xf4) = *(s32*)(obj + 0xf4) - framesThisStep;
+        if (((GameObject *)obj)->unkF4 > 0) {
+            ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - framesThisStep;
         } else {
-            *(s32*)(obj + 0xf4) = 0;
+            ((GameObject *)obj)->unkF4 = 0;
             state->countdownActive = 0;
         }
     }

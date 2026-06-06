@@ -1,4 +1,5 @@
 #include "main/dll/texframeanimator.h"
+#include "main/game_object.h"
 #include "main/dll/texframeanimator_state.h"
 #include "main/objanim_internal.h"
 
@@ -74,23 +75,23 @@ void collectible_init(int obj,int setup)
   u8 pathByte;
 
   objAnim = (ObjAnimComponent *)obj;
-  state = *(u8 **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   pathWord = lbl_803E3440;
   pathByte = lbl_803E3444;
   ObjGroup_AddObject(obj,4);
   ObjMsg_AllocQueue(obj,2);
-  *(s16 *)(obj + 0) = (s16)((u8)*(u8 *)(setup + 0x1b) << 8);
-  *(s16 *)(obj + 2) = (s16)((u8)*(u8 *)(setup + 0x22) << 8);
-  *(s16 *)(obj + 4) = (s16)((u8)*(u8 *)(setup + 0x23) << 8);
+  ((GameObject *)obj)->anim.rotX = (s16)((u8)*(u8 *)(setup + 0x1b) << 8);
+  ((GameObject *)obj)->anim.rotY = (s16)((u8)*(u8 *)(setup + 0x22) << 8);
+  ((GameObject *)obj)->anim.rotZ = (s16)((u8)*(u8 *)(setup + 0x23) << 8);
   setupObj = (int)objAnim->modelInstance;
-  *(f32 *)(obj + 8) = *(f32 *)(setupObj + 4);
+  ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(setupObj + 4);
   *(void (**)(void))(obj + 0xbc) = collectible_SeqFn;
   setupModelIndex = *(s8 *)(setup + 0x26);
   objAnim->bankIndex = (s8)setupModelIndex;
   if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
     objAnim->bankIndex = 0;
   }
-  *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
+  ((GameObject *)obj)->unkB0 = ((GameObject *)obj)->unkB0 | 0x2000;
   ((TexFrameAnimatorState *)state)->unkC = *(u8 *)(setup + 0x19);
   ((TexFrameAnimatorState *)state)->unkD = *(u8 *)(setup + 0x1a);
   ((TexFrameAnimatorState *)state)->unkF = 0;
@@ -98,9 +99,9 @@ void collectible_init(int obj,int setup)
   ((TexFrameAnimatorState *)state)->unk1D = 0;
   ((TexFrameAnimatorState *)state)->unk14 = *(s16 *)(setup + 0x24);
   *(s32 *)(state + 0x20) = *(s32 *)(setup + 0x14);
-  ((TexFrameAnimatorState *)state)->unk24 = *(f32 *)(obj + 0xc);
-  ((TexFrameAnimatorState *)state)->unk28 = *(f32 *)(obj + 0x10);
-  ((TexFrameAnimatorState *)state)->unk2C = *(f32 *)(obj + 0x14);
+  ((TexFrameAnimatorState *)state)->unk24 = ((GameObject *)obj)->anim.localPosX;
+  ((TexFrameAnimatorState *)state)->unk28 = ((GameObject *)obj)->anim.localPosY;
+  ((TexFrameAnimatorState *)state)->unk2C = ((GameObject *)obj)->anim.localPosZ;
   ((TexFrameAnimatorState *)state)->unk36 = *(u8 *)(setup + 0x27);
   ((TexFrameAnimatorState *)state)->unk3E = 0;
   if (((TexFrameAnimatorState *)state)->unk14 != -1) {
@@ -108,18 +109,18 @@ void collectible_init(int obj,int setup)
   }
   ((TexFrameAnimatorState *)state)->unk10 = *(s16 *)(setup + 0x1c);
   if (((TexFrameAnimatorState *)state)->unk10 != -1) {
-    *(u32 *)(obj + 0xf4) = GameBit_Get(((TexFrameAnimatorState *)state)->unk10);
+    *(u32 *)&((GameObject *)obj)->unkF4 = GameBit_Get(((TexFrameAnimatorState *)state)->unk10);
   } else {
-    *(u32 *)(obj + 0xf4) = 0;
+    *(u32 *)&((GameObject *)obj)->unkF4 = 0;
   }
-  if (*(s32 *)(obj + 0xf4) == 0) {
-    data = *(u8 **)(*(int *)(obj + 0x50) + 0x18);
+  if (((GameObject *)obj)->unkF4 == 0) {
+    data = *(u8 **)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
     if (data != 0) {
       ((TexFrameAnimatorState *)state)->unk4 = (f32)*(s8 *)(data + 8);
     } else {
       ((TexFrameAnimatorState *)state)->unk4 = lbl_803E3494;
     }
-    data = *(u8 **)(*(int *)(obj + 0x50) + 0x40);
+    data = *(u8 **)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x40);
     if (data != 0) {
       ((TexFrameAnimatorState *)state)->unk4 = (f32)(s32)(*(u8 *)(data + 0xc) << 2);
     }
@@ -129,7 +130,7 @@ void collectible_init(int obj,int setup)
       ((TexFrameAnimatorState *)state)->unk39 = *(u8 *)(setup + 0x29);
       ((TexFrameAnimatorState *)state)->unk3A = *(u8 *)(setup + 0x2a);
     }
-    switch (*(s16 *)(obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
       case 0xb:
         ((TexFrameAnimatorState *)state)->unk40 = lbl_803E345C;
         ((TexFrameAnimatorState *)state)->unk44 = lbl_803E3498;

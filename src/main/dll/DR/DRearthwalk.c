@@ -1,4 +1,5 @@
 #include "main/dll/DR/DRearthwalk.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 
 
@@ -123,7 +124,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   f32 y1;
   f32 x1;
 
-  state = *(u8 **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   player = (int)Obj_GetPlayerObject();
   if (visible != 0) {
     if (state[0] == 3) {
@@ -875,7 +876,7 @@ void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, u
   local[0] = lbl_803E551C;
   local[1] = lbl_803E5520;
   local[2] = lbl_803E551C;
-  fn_80098B18(obj, *(float*)(obj + 8), 4, 0, 0, (int)&local[0]);
+  fn_80098B18(obj, ((GameObject *)obj)->anim.rootMotionScale, 4, 0, 0, (int)&local[0]);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -884,7 +885,7 @@ void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, u
 #pragma peephole off
 void sh_staffhaze_update(int obj)
 {
-  if ((*(short*)(obj + 6) & 0x4000) != 0) {
+  if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) {
     Obj_FreeObject(obj);
   }
 }
@@ -895,12 +896,12 @@ void sh_staffhaze_update(int obj)
 #pragma peephole off
 int sh_beacon_SeqFn(int obj)
 {
-  int extra = *(int*)(obj + 0xb8);
+  int extra = *(int *)&((GameObject *)obj)->extra;
   *(float*)(extra + 4) = *(float*)(extra + 4) + timeDelta;
   if (*(float*)(extra + 4) >= lbl_803E5528) {
     *(float*)(extra + 4) = *(float*)(extra + 4) - lbl_803E5528;
     if ((*(unsigned short*)(obj + 0xb0) & 0x800) != 0) {
-      fn_80098B18(obj, *(float*)(obj + 8), 0, 2, 0, 0);
+      fn_80098B18(obj, ((GameObject *)obj)->anim.rootMotionScale, 0, 2, 0, 0);
     }
   }
   return 0;
@@ -911,7 +912,7 @@ int sh_beacon_SeqFn(int obj)
 /* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
 int fn_801DA9CC(int obj)
 {
-  *(float*)(*(int*)(obj + 0xb8) + 8) = lbl_803E552C;
+  *(float*)(*(int *)&((GameObject *)obj)->extra + 8) = lbl_803E552C;
   return 1;
 }
 
@@ -920,7 +921,7 @@ int fn_801DA9CC(int obj)
 #pragma peephole off
 void sh_beacon_free(int obj, int param_2)
 {
-  int extra = *(int*)(obj + 0xb8);
+  int extra = *(int *)&((GameObject *)obj)->extra;
   (*(code*)(*(int*)gExpgfxInterface + 0x18))(obj);
   if (param_2 == 0) {
     void *p = *(void**)extra;
@@ -954,7 +955,7 @@ extern f32 lbl_803E5508;
 #pragma peephole off
 int sh_staff_SeqFn(int obj, int unused, u8 *buf)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int *p;
     int i;
 
@@ -1023,7 +1024,7 @@ int sh_staff_SeqFn(int obj, int unused, u8 *buf)
 
     if (*(u8 *)(state + 1) != 0) {
         ((void (*)(s16, int, int))((int *)*gGameUIInterface)[0x34 / 4])
-            (*(s16 *)(*(int *)(obj + 0x50) + 0x7e), 0xa0, 0x8c);
+            (*(s16 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x7e), 0xa0, 0x8c);
     }
     *(f32 *)(state + 0x6c) = lbl_803E54D8 * timeDelta + *(f32 *)(state + 0x6c);
     if (*(f32 *)(state + 0x6c) > lbl_803E54D0) {
@@ -1059,8 +1060,8 @@ void fn_801DA4A8(int obj, int state, int clearChildren)
 
     player = (int)Obj_GetPlayerObject();
     ObjHits_DisableObject(obj);
-    *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
-    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
 
     if (clearChildren != 0) {
         fn_80295CF4(player, 1);
@@ -1106,8 +1107,8 @@ void fn_801DA4A8(int obj, int state, int clearChildren)
 #pragma peephole off
 void sh_staff_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     void *player = Obj_GetPlayerObject();
     f32 dist = getXZDistance((f32 *)(obj + 0x18), (f32 *)((int)player + 0x18));
     u8 mode = *(u8 *)state;
@@ -1116,13 +1117,13 @@ void sh_staff_update(int obj)
         if (player == NULL) goto end;
         if (fn_802966CC((int)player) == 0) goto end;
         if (GameBit_Get(0x18b) != 0) {
-            fn_801DA4A8(obj, *(int *)(obj + 0xb8), 0);
+            fn_801DA4A8(obj, *(int *)&((GameObject *)obj)->extra, 0);
         } else {
             int loadResult;
             fn_80295CF4((int)player, 0);
             ObjAnim_SetMoveProgress(lbl_803E54D0, (ObjAnimComponent *)obj);
-            *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
-            *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
+            ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(setup + 0x19) << 8);
+            ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(setup + 0x18) << 8);
             *(int (**)(int, int, u8 *))(obj + 0xbc) = sh_staff_SeqFn;
             *(u8 *)state = 1;
             if (Obj_IsLoadingLocked() == 0) {
@@ -1184,9 +1185,9 @@ void sh_beacon_init(int obj, int defData)
     int state;
     int *setup;
 
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)*(s8 *)(defData + 0x18) << 8);
-    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x4000);
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x4000);
 
     *(u8 *)(state + 0x14) = (u8)GameBit_Get(*(s16 *)(defData + 0x1e));
     if (*(u8 *)(state + 0x14) == 0) {
@@ -1197,16 +1198,16 @@ void sh_beacon_init(int obj, int defData)
 
     if (*(u8 *)(state + 0x14) != 0 && Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x20, 0x55);
-        *(f32 *)((char *)setup + 8) = *(f32 *)(obj + 0xc);
-        *(f32 *)((char *)setup + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)((char *)setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)((char *)setup + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)((char *)setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)((char *)setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(u8 *)((char *)setup + 4) = 2;
-        *(u8 *)((char *)setup + 5) = *(u8 *)(*(int *)(obj + 0x4c) + 5);
-        *(u8 *)((char *)setup + 7) = *(u8 *)(*(int *)(obj + 0x4c) + 7);
+        *(u8 *)((char *)setup + 5) = *(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 5);
+        *(u8 *)((char *)setup + 7) = *(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 7);
         *(int *)state = loadObjectAtObject(obj, setup);
     }
 
-    *(void **)(obj + 0xbc) = sh_beacon_SeqFn;
+    ((GameObject *)obj)->unkBC = sh_beacon_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1242,34 +1243,34 @@ void sh_beacon_update(int obj)
   int mode;
   int state2;
 
-  state = *(u8 **)(obj + 0xb8);
-  def = *(int *)(obj + 0x4c);
+  state = ((GameObject *)obj)->extra;
+  def = *(int *)&((GameObject *)obj)->anim.placementData;
   switch (state[0x14]) {
   case 0:
-    if (((*(u8 *)(obj + 0xaf) & 1) != 0) &&
+    if (((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) &&
         ((**(int (**)(int))(*gGameUIInterface + 0x20))(0x194) != 0)) {
       gameBitDecrement(0x194);
       GameBit_Set(*(s16 *)(def + 0x20), 1);
       if (Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x20, 0x55);
-        *(f32 *)((char *)setup + 8) = *(f32 *)(obj + 0xc);
-        *(f32 *)((char *)setup + 0xc) = *(f32 *)(obj + 0x10);
-        *(f32 *)((char *)setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(f32 *)((char *)setup + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)((char *)setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)((char *)setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
         *(u8 *)((char *)setup + 4) = 2;
-        *(u8 *)((char *)setup + 5) = *(u8 *)(*(int *)(obj + 0x4c) + 5);
-        *(u8 *)((char *)setup + 7) = *(u8 *)(*(int *)(obj + 0x4c) + 7);
+        *(u8 *)((char *)setup + 5) = *(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 5);
+        *(u8 *)((char *)setup + 7) = *(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 7);
         *(int *)state = loadObjectAtObject(obj, setup);
       }
       (*(code *)(*gObjectTriggerInterface + 0x48))(0, obj, -1);
       state[0x14] = 2;
     }
   case 2:
-    state2 = *(int *)(obj + 0xb8);
+    state2 = *(int *)&((GameObject *)obj)->extra;
     *(f32 *)(state2 + 4) = *(f32 *)(state2 + 4) + timeDelta;
     if (*(f32 *)(state2 + 4) >= lbl_803E5528) {
       *(f32 *)(state2 + 4) = *(f32 *)(state2 + 4) - lbl_803E5528;
-      if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
-        fn_80098B18(obj, *(f32 *)(obj + 8), 0, 2, 0, 0);
+      if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+        fn_80098B18(obj, ((GameObject *)obj)->anim.rootMotionScale, 0, 2, 0, 0);
       }
     }
     break;
@@ -1278,7 +1279,7 @@ void sh_beacon_update(int obj)
       Sfx_AddLoopedObjectSound(obj, 0x9e);
       ((BeaconFlags *)(state + 0x15))->looping = 1;
     }
-    if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
+    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
       *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) + timeDelta;
       if (*(f32 *)(state + 0x10) > lbl_803E5530) {
         mode = 2;
@@ -1289,35 +1290,35 @@ void sh_beacon_update(int obj)
       *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) + timeDelta;
       if (*(f32 *)(state + 0xc) > lbl_803E5534) {
         *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - lbl_803E5534;
-        fn_80098B18(obj, *(f32 *)(obj + 8), 2, mode, 0, 0);
+        fn_80098B18(obj, ((GameObject *)obj)->anim.rootMotionScale, 2, mode, 0, 0);
       }
     }
     break;
   }
   if (state[0x14] != 1) {
-    *(u8 *)(obj + 0xaf) &= ~8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     if (state[0x14] == 2) {
       fn_8002B6D8(obj, 0, 0, 0, 0, 8);
     } else if ((state[0x14] == 0) && (GameBit_Get(0x194) == 0)) {
-      *(u8 *)(obj + 0xaf) |= 0x10;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
     } else {
-      *(u8 *)(obj + 0xaf) &= ~0x10;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
     }
     tmp = (int)getTrickyObject();
-    if (((void *)tmp != NULL) && ((*(u8 *)(obj + 0xaf) & 4) != 0)) {
+    if (((void *)tmp != NULL) && ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0)) {
       (*(code *)(*(int *)(*(int *)(tmp + 0x68)) + 0x28))(tmp, obj, 1, 4);
     }
   } else {
     if ((GameBit_Get(0x193) != 0) || (*(s16 *)(def + 0x1e) != 0x95)) {
-      *(u8 *)(obj + 0xaf) |= 8;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else {
-      *(u8 *)(obj + 0xaf) |= 0x10;
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
     }
   }
   if (*(f32 *)(state + 8) > lbl_803E5538) {
     *(f32 *)(state + 8) = *(f32 *)(state + 8) - timeDelta;
-    if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
-      fn_80098B18(obj, lbl_803E553C * *(f32 *)(obj + 8), 3, 0, 0, 0);
+    if ((((GameObject *)obj)->unkB0 & 0x800) != 0) {
+      fn_80098B18(obj, lbl_803E553C * ((GameObject *)obj)->anim.rootMotionScale, 3, 0, 0, 0);
     }
     if ((*(f32 *)(state + 8) <= lbl_803E5538) && (state[0x14] == 2)) {
       state[0x14] = 1;

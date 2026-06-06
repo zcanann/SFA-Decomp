@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 typedef struct WCTileIface WCTileIface;
 struct WCTileIface {
@@ -89,7 +90,7 @@ int wctile_getExtraSize(void) { return WCTILE_EXTRA_SIZE; }
 int wctile_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCTILE_MODEL_INDEX_OFFSET);
+    int modelIndex = *(s8 *)(*(int *)&((GameObject *)obj)->anim.placementData + WCTILE_MODEL_INDEX_OFFSET);
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
@@ -128,10 +129,10 @@ void wctile_hitDetect(void) {}
 void wctile_init(u8 *obj, u8 *setupBytes)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    WCTileState *state = *(WCTileState **)(obj + 0xb8);
+    WCTileState *state = ((GameObject *)obj)->extra;
     WCTileSetup *setup = (WCTileSetup *)setupBytes;
 
-    *(f32 *)(obj + 0x10) = lbl_803E6DFC + setup->yOffset;
+    ((GameObject *)obj)->anim.localPosY = lbl_803E6DFC + setup->yOffset;
     objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
@@ -161,14 +162,14 @@ void wctile_update(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     f32 nearest = lbl_803E6DF4;
-    WCTileState *state = *(WCTileState **)(obj + 0xb8);
+    WCTileState *state = ((GameObject *)obj)->extra;
 
     if ((void *)state->controller == NULL) {
         state->controller = ObjGroup_FindNearestObject(WCTILE_CONTROLLER_GROUP, obj, &nearest);
         *(u8 *)(obj + 0x36) = 0;
         return;
     }
-    *(s16 *)(obj + 0) += (s16)(lbl_803E6DF8 * timeDelta);
+    ((GameObject *)obj)->anim.rotX += (s16)(lbl_803E6DF8 * timeDelta);
     if (state->mode != WCTILE_MODE_HIDDEN) {
         if (objAnim->bankIndex == WCTILE_VARIANT_A) {
             if ((u32)GameBit_Get(WCTILE_GAMEBIT_A_HIDE) != 0)

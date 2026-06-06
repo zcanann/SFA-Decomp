@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/objhits_types.h"
@@ -39,7 +40,7 @@ void arwbombcoll_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling off
 void arwbombcoll_init(int obj, int setup)
 {
-    *(s16 *)(obj + 0) = (s16)(*(s8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)(*(s8 *)(setup + 0x18) << 8);
     *(u8 *)(obj + 0x36) = 0;
 }
 #pragma scheduling reset
@@ -63,33 +64,33 @@ void arwbombcoll_updateMovingAxis(int obj, int state) {
     u16 raw = *(u16 *)(state + 2);
     if (mode == 1 || mode == 3) {
         f32 cur, lim, edge;
-        *(f32 *)(obj + 0xc) = *(f32 *)(state + 4) * timeDelta + *(f32 *)(obj + 0xc);
-        cur = *(f32 *)(obj + 0xc);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 4) * timeDelta + ((GameObject *)obj)->anim.localPosX;
+        cur = ((GameObject *)obj)->anim.localPosX;
         lim = *(f32 *)(state + 8);
         edge = lim + (f32)(u32)raw;
         if (cur > edge) {
-            *(f32 *)(obj + 0xc) = edge - (cur - edge);
+            ((GameObject *)obj)->anim.localPosX = edge - (cur - edge);
             *(f32 *)(state + 4) = -*(f32 *)(state + 4);
         } else {
             edge = lim - (f32)(u32)raw;
             if (cur < edge) {
-                *(f32 *)(obj + 0xc) = edge - (cur - edge);
+                ((GameObject *)obj)->anim.localPosX = edge - (cur - edge);
                 *(f32 *)(state + 4) = -*(f32 *)(state + 4);
             }
         }
     } else if (mode == 4 || mode == 5) {
         f32 cur, lim, edge;
-        *(f32 *)(obj + 0x10) = *(f32 *)(state + 4) * timeDelta + *(f32 *)(obj + 0x10);
-        cur = *(f32 *)(obj + 0x10);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 4) * timeDelta + ((GameObject *)obj)->anim.localPosY;
+        cur = ((GameObject *)obj)->anim.localPosY;
         lim = *(f32 *)(state + 0xc);
         edge = lim + (f32)(u32)raw;
         if (cur > edge) {
-            *(f32 *)(obj + 0x10) = edge - (cur - edge);
+            ((GameObject *)obj)->anim.localPosY = edge - (cur - edge);
             *(f32 *)(state + 4) = -*(f32 *)(state + 4);
         } else {
             edge = lim - (f32)(u32)raw;
             if (cur < edge) {
-                *(f32 *)(obj + 0x10) = edge - (cur - edge);
+                ((GameObject *)obj)->anim.localPosY = edge - (cur - edge);
                 *(f32 *)(state + 4) = -*(f32 *)(state + 4);
             }
         }
@@ -99,7 +100,7 @@ void arwbombcoll_updateMovingAxis(int obj, int state) {
 
 #pragma scheduling off
 void arwbombcoll_handleArwingHit(int obj, int state, int arwing) {
-    int setup = *(int *)(obj + 0x4c);
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     u8 mode = *(u8 *)(state + 0);
     if (mode == 0) {
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
@@ -142,23 +143,23 @@ void arwbombcoll_handleArwingHit(int obj, int state, int arwing) {
 int arwbombcoll_checkArwingCollision(int obj, int state, int arwing) {
     RingFlags *f = (RingFlags *)(state + 0x14);
     if (f->bit10) {
-        f32 dx = *(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc);
-        f32 dy = *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10);
+        f32 dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)(arwing + 0xc);
+        f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)(arwing + 0x10);
         f32 dz;
         if (dy < lbl_803E70A0)
             dy = -dy;
-        dz = *(f32 *)(obj + 0x14) - *(f32 *)(arwing + 0x14);
+        dz = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(arwing + 0x14);
         if (dy <= lbl_803E70A4) {
             if (dx * dx + dz * dz < lbl_803E70A8)
                 return 1;
         }
     } else {
-        f32 objZ = *(f32 *)(obj + 0x14);
+        f32 objZ = ((GameObject *)obj)->anim.localPosZ;
         f32 currentZDelta = objZ - *(f32 *)(arwing + 0x14);
         f32 previousZDelta = objZ - *(f32 *)(arwing + 0x88);
         if (currentZDelta <= lbl_803E70A0 && previousZDelta >= lbl_803E70A0) {
-            f32 dx = *(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc);
-            f32 dy = *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10);
+            f32 dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)(arwing + 0xc);
+            f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)(arwing + 0x10);
             if (sqrtf(dx * dx + dy * dy) < lbl_803E70AC)
                 return 1;
             if (*(u8 *)(state + 0) == 2 && f->bit20)
@@ -181,7 +182,7 @@ void arwbombcoll_update(int obj)
     f32 thr;
 
     arw = getArwing();
-    s = *(int *)(obj + 0xb8);
+    s = *(int *)&((GameObject *)obj)->extra;
     flags = (ArwBombFlags *)(s + 0x4);
 
     if (*(f32 *)(s + 0x0) > (thr = lbl_803E707C)) {
@@ -194,18 +195,18 @@ void arwbombcoll_update(int obj)
 
     if ((u32)arw != 0 && fn_8022D710(arw) != 0) {
         flags->b80 = 0;
-        *(s16 *)(obj + 0x6) &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~0x4000;
         ObjHits_EnableObject(obj);
         return;
     }
 
     if (flags->b80 == 0) {
         a2 = getArwing();
-        if ((((u32)a2 != 0) ? (*(f32 *)(obj + 0x14) - *(f32 *)(a2 + 0x14) < lbl_803E7080) : 0) != 0) {
+        if ((((u32)a2 != 0) ? (((GameObject *)obj)->anim.localPosZ - *(f32 *)(a2 + 0x14) < lbl_803E7080) : 0) != 0) {
             goto active;
         }
     }
-    *(s16 *)(obj + 0x6) |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= 0x4000;
     *(u8 *)(obj + 0x36) = 0;
     return;
 active : {
@@ -215,15 +216,15 @@ active : {
             v = 0xff;
         }
         *(u8 *)(obj + 0x36) = v;
-        *(s16 *)(obj + 0x6) &= ~0x4000;
-        *(s16 *)(obj + 0x0) = lbl_803E7088 * timeDelta + (f32) * (s16 *)(obj + 0x0);
+        ((GameObject *)obj)->anim.flags &= ~0x4000;
+        ((GameObject *)obj)->anim.rotX = lbl_803E7088 * timeDelta + (f32) * (s16 *)(obj + 0x0);
         ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);
         if (flags->b40 != 0) {
-            if ((u32)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
-                (u32)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (u32)getArwing()) {
+            if ((u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 &&
+                (u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (u32)getArwing()) {
                 arwarwing_addScore(arw, 0x19);
                 flags->b80 = 1;
-                *(s16 *)(obj + 0x6) |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= 0x4000;
                 ObjHits_DisableObject(obj);
             }
         } else {
@@ -235,15 +236,15 @@ active : {
                 Obj_SetActiveModelIndex(obj, 1);
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
             }
-            if ((u32)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
-                (u32)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (u32)getArwing()) {
-                *(s16 *)(obj + 0x6) |= 0x4000;
+            if ((u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 &&
+                (u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (u32)getArwing()) {
+                ((GameObject *)obj)->anim.flags |= 0x4000;
                 ObjHits_DisableObject(obj);
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
             }
         }
         if ((u32)arw != 0 && flags->b80 != 0) {
-            switch (*(s16 *)(obj + 0x46)) {
+            switch (((GameObject *)obj)->anim.seqId) {
             case 0x609:
                 Sfx_PlayFromObject(obj, SFXbaddie_eba_hit);
                 arwarwing_upgradeLaserLevel(arw);

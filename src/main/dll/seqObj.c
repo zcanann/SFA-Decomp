@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/seqObj.h"
 #include "main/objanim.h"
 
@@ -125,7 +126,7 @@ void wispbaddie_update(int obj)
   u8 f;
   void *dAlias = (void *)d;
 
-  state = *(WispBaddieState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   curve = state->curve;
   hit = ObjHits_GetPriorityHitWithPosition(obj,&dx,&hitX,&hitY,&hitZ,&dy,&dz);
   if (hit != 0) {
@@ -165,15 +166,15 @@ void wispbaddie_update(int obj)
       (obj,state->particleId,0,2,-1,&particleParam);
   state->playerObj = Obj_GetPlayerObject();
   if (state->playerObj != 0) {
-    d[0] = *(f32 *)(state->playerObj + 0x18) - *(f32 *)(obj + 0x18);
-    d[1] = *(f32 *)(state->playerObj + 0x1c) - *(f32 *)(obj + 0x1c);
-    d[2] = *(f32 *)(state->playerObj + 0x20) - *(f32 *)(obj + 0x20);
+    d[0] = *(f32 *)(state->playerObj + 0x18) - ((GameObject *)obj)->anim.worldPosX;
+    d[1] = *(f32 *)(state->playerObj + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
+    d[2] = *(f32 *)(state->playerObj + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
     state->playerDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
   }
   if (curve != 0) {
-    d[0] = *(f32 *)(curve + 0x68) - *(f32 *)(obj + 0x18);
-    d[1] = *(f32 *)(curve + 0x6c) - *(f32 *)(obj + 0x1c);
-    d[2] = *(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x20);
+    d[0] = *(f32 *)(curve + 0x68) - ((GameObject *)obj)->anim.worldPosX;
+    d[1] = *(f32 *)(curve + 0x6c) - ((GameObject *)obj)->anim.worldPosY;
+    d[2] = *(f32 *)(curve + 0x70) - ((GameObject *)obj)->anim.worldPosZ;
     state->curveDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
   }
 
@@ -216,7 +217,7 @@ void wispbaddie_init(int obj,int setup,int initialised)
   WispBaddieState *state;
   f32 value;
 
-  state = *(WispBaddieState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   value = (f32)*(s16 *)(setup + 0x1a) / lbl_803E271C;
   state->maxHitRadius = value;
   state->hitRadius = value;
@@ -234,7 +235,7 @@ void wispbaddie_init(int obj,int setup,int initialised)
     }
     Sfx_PlayFromObject(obj,0x23b);
   }
-  *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
+  ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x2000);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -797,8 +798,8 @@ void fn_8015039C(int obj, int animState) {
                 rumbleFalloff = lbl_803E2744 * rumbleFalloff;
                 doRumble(rumbleFalloff);
             }
-            CameraShake_ApplyRadial(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
-                                    *(f32 *)(obj + 0x14), lbl_803E2760,
+            CameraShake_ApplyRadial(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                                    ((GameObject *)obj)->anim.localPosZ, lbl_803E2760,
                                     lbl_803E2764);
         }
     }
@@ -820,7 +821,7 @@ void fn_8015039C(int obj, int animState) {
 
 #pragma peephole off
 void fn_801504BC(int obj, int delta) {
-    u8 *inner = *(u8 **)(obj + 0xb8);
+    u8 *inner = ((GameObject *)obj)->extra;
     u8 *ptr = *(u8 **)(lbl_8031F16C + inner[0x33b] * 0x28 + 4);
     inner[0x33d] = (u8)(delta + (u32)ptr[8] + 1);
     inner[0x33e] = 1;

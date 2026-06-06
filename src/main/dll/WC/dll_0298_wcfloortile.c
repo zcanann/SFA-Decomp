@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/dll/ARW/arwing_state.h"
 
 #include "main/audio/sfx_ids.h"
@@ -50,10 +51,10 @@ void wcfloortile_hitDetect(void) {}
 #pragma scheduling off
 void wcfloortile_init(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     *(s16 *)obj = -0x4000;
-    (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 0x1800;
+    (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 0x1800;
     ((WcFloorTileState *)state)->flags |= 2;
 }
 #pragma scheduling reset
@@ -75,11 +76,11 @@ void wcfloortile_initialise(void) {}
 #pragma scheduling off
 void wcfloortile_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)&((GameObject *)obj)->extra;
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
 
     if ((u32)GameBit_Get(824) != 0) {
-        *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
         *(u8 *)(state + 6) = 3;
     }
     switch (*(u8 *)(state + 6)) {
@@ -94,7 +95,7 @@ void wcfloortile_update(int obj)
                     Sfx_PlayFromObject(obj, SFXsc_strafe_active);
                     *(u8 *)(state + 6) = 1;
                     *(f32 *)(state + 0) = z;
-                    *(f32 *)(obj + 0x28) = z;
+                    ((GameObject *)obj)->anim.velocityY = z;
                 }
             }
         } else if ((u32)GameBit_Get(613) != 0) {
@@ -106,14 +107,14 @@ void wcfloortile_update(int obj)
         if (*(f32 *)(state + 0) > lbl_803E6EA0) {
             *(u8 *)(state + 7) |= 3;
             *(f32 *)(state + 0) = lbl_803E6EA0;
-            *(f32 *)(obj + 0x28) = lbl_803E6EA4 * timeDelta + *(f32 *)(obj + 0x28);
+            ((GameObject *)obj)->anim.velocityY = lbl_803E6EA4 * timeDelta + ((GameObject *)obj)->anim.velocityY;
         }
         *(s16 *)(state + 4) = lbl_803E6EA8 * (*(f32 *)(state + 0) / lbl_803E6EA0);
-        *(s16 *)(obj + 2) = (s16)randomGetRange(-*(s16 *)(state + 4), *(s16 *)(state + 4));
-        *(s16 *)(obj + 4) = (s16)randomGetRange(-*(s16 *)(state + 4), *(s16 *)(state + 4));
-        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+        ((GameObject *)obj)->anim.rotY = (s16)randomGetRange(-*(s16 *)(state + 4), *(s16 *)(state + 4));
+        ((GameObject *)obj)->anim.rotZ = (s16)randomGetRange(-*(s16 *)(state + 4), *(s16 *)(state + 4));
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
         {
-            f32 d = *(f32 *)(setup + 0xc) - *(f32 *)(obj + 0x10);
+            f32 d = *(f32 *)(setup + 0xc) - ((GameObject *)obj)->anim.localPosY;
             f32 t;
             if (d < lbl_803E6EAC) {
                 t = lbl_803E6EB0;
@@ -151,13 +152,13 @@ void wcfloortile_update(int obj)
         break;
     }
     {
-        int setup2 = *(int *)(obj + 0x4c);
+        int setup2 = *(int *)&((GameObject *)obj)->anim.placementData;
         if (fn_80065640() != 0) {
             *(u8 *)(state + 7) |= 2;
         }
         if (*(u8 *)(state + 7) & 2) {
             if (fn_80065640() == 0) {
-                fn_80065574(*(s16 *)(setup2 + 0x1a), *(int *)(obj + 0x30), *(u8 *)(state + 7) & 1);
+                fn_80065574(*(s16 *)(setup2 + 0x1a), *(int *)&((GameObject *)obj)->anim.parent, *(u8 *)(state + 7) & 1);
                 *(u8 *)(state + 7) &= ~2;
             }
         }
@@ -174,22 +175,22 @@ void fn_8022AE1C(int obj, int bounds) {
     f32 cy = *(f32 *)(bounds + 0x18);
     f32 hy = cy + *(f32 *)(bounds + 0x28);
     f32 ly = cy - *(f32 *)(bounds + 0x24);
-    if (*(f32 *)(obj + 0xc) > hx) {
-        *(f32 *)(obj + 0xc) = hx;
+    if (((GameObject *)obj)->anim.localPosX > hx) {
+        ((GameObject *)obj)->anim.localPosX = hx;
         *(f32 *)(bounds + 0x48) = lbl_803E6ECC;
-    } else if (*(f32 *)(obj + 0xc) < lx) {
-        *(f32 *)(obj + 0xc) = lx;
+    } else if (((GameObject *)obj)->anim.localPosX < lx) {
+        ((GameObject *)obj)->anim.localPosX = lx;
         *(f32 *)(bounds + 0x48) = lbl_803E6ECC;
     }
-    if (*(f32 *)(obj + 0x10) > hy) {
-        *(f32 *)(obj + 0x10) = hy;
+    if (((GameObject *)obj)->anim.localPosY > hy) {
+        ((GameObject *)obj)->anim.localPosY = hy;
         *(f32 *)(bounds + 0x4c) = lbl_803E6ECC;
-    } else if (*(f32 *)(obj + 0x10) < ly) {
-        *(f32 *)(obj + 0x10) = ly;
+    } else if (((GameObject *)obj)->anim.localPosY < ly) {
+        ((GameObject *)obj)->anim.localPosY = ly;
         *(f32 *)(bounds + 0x4c) = lbl_803E6ECC;
     }
-    *(f32 *)(bounds + 0x2c) = *(f32 *)(obj + 0xc) - *(f32 *)(bounds + 0x14);
-    *(f32 *)(bounds + 0x30) = *(f32 *)(obj + 0x10) - *(f32 *)(bounds + 0x18);
+    *(f32 *)(bounds + 0x2c) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(bounds + 0x14);
+    *(f32 *)(bounds + 0x30) = ((GameObject *)obj)->anim.localPosY - *(f32 *)(bounds + 0x18);
     *(f32 *)(bounds + 0x34) = lbl_803E6ECC;
 }
 #pragma scheduling reset
@@ -265,17 +266,17 @@ void fn_8022AECC(int obj, int p)
         *(f32 *)(p + 0x38c) = lbl_803E6ED0;
     }
 
-    *(s16 *)(obj + 0) = (s16) * (int *)(p + 0x344);
-    *(s16 *)(obj + 2) = (s16) * (int *)(p + 0x358);
+    ((GameObject *)obj)->anim.rotX = (s16) * (int *)(p + 0x344);
+    ((GameObject *)obj)->anim.rotY = (s16) * (int *)(p + 0x358);
     if (*(u8 *)(p + 0x478) == 1) {
         fn_8022AB68(obj, p);
     } else {
-        *(s16 *)(obj + 4) = ((f32) * (int *)(p + 0x36c) * *(f32 *)(p + 0x38c) +
+        ((GameObject *)obj)->anim.rotZ = ((f32) * (int *)(p + 0x36c) * *(f32 *)(p + 0x38c) +
                                         (f32) * (int *)(p + 0x380));
-        if (*(s16 *)(obj + 4) < -0x4000) {
-            *(s16 *)(obj + 4) = -0x4000;
-        } else if (*(s16 *)(obj + 4) > 0x4000) {
-            *(s16 *)(obj + 4) = 0x4000;
+        if (((GameObject *)obj)->anim.rotZ < -0x4000) {
+            ((GameObject *)obj)->anim.rotZ = -0x4000;
+        } else if (((GameObject *)obj)->anim.rotZ > 0x4000) {
+            ((GameObject *)obj)->anim.rotZ = 0x4000;
         }
     }
 
@@ -292,21 +293,21 @@ void fn_8022AECC(int obj, int p)
         *(f32 *)(p + 0x3dc) = lbl_803E6ED0;
     }
 
-    *(s16 *)(obj + 4) = (*(f32 *)(p + 0x3dc) *
+    ((GameObject *)obj)->anim.rotZ = (*(f32 *)(p + 0x3dc) *
                                        (*(f32 *)(p + 0x3bc) *
                                         fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3c0) /
                                                     lbl_803E6F00)) +
                                    (f32) * (s16 *)(obj + 4));
-    *(f32 *)(obj + 0xc) =
+    ((GameObject *)obj)->anim.localPosX =
         *(f32 *)(p + 0x3dc) *
             (*(f32 *)(p + 0x3c8) *
              fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3cc) / lbl_803E6F00)) +
-        *(f32 *)(obj + 0xc);
-    *(f32 *)(obj + 0x10) =
+        ((GameObject *)obj)->anim.localPosX;
+    ((GameObject *)obj)->anim.localPosY =
         *(f32 *)(p + 0x3dc) *
             (*(f32 *)(p + 0x3d4) *
              fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3d8) / lbl_803E6F00)) +
-        *(f32 *)(obj + 0x10);
+        ((GameObject *)obj)->anim.localPosY;
     *(u16 *)(p + 0x3c0) =
         (*(f32 *)(p + 0x3b8) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3c0));
     *(u16 *)(p + 0x3cc) =
@@ -387,11 +388,11 @@ void fn_8022A9C8(int obj, int state)
     ArwProjPosSrc src;
 
     slot = Camera_GetCurrentViewSlot();
-    src.pos[0] = *(f32 *)(obj + 0xc);
-    src.pos[1] = *(f32 *)(obj + 0x10);
-    src.pos[2] = *(f32 *)(obj + 0x14);
+    src.pos[0] = ((GameObject *)obj)->anim.localPosX;
+    src.pos[1] = ((GameObject *)obj)->anim.localPosY;
+    src.pos[2] = ((GameObject *)obj)->anim.localPosZ;
     src.rot[0] = *(s16 *)obj;
-    src.rot[1] = *(s16 *)(obj + 2);
+    src.rot[1] = ((GameObject *)obj)->anim.rotY;
     src.rot[2] = 0;
     src.scale = lbl_803E6ED0;
     setMatrixFromObjectPos(mtx, &src);
@@ -464,7 +465,7 @@ void fn_8022A670(int obj, int state)
         if ((btn & 0x20) != 0) {
             Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
             ((ArwingState *)state)->mode = 1;
-            ((ArwingState *)state)->unk398 = *(s16 *)(obj + 4);
+            ((ArwingState *)state)->unk398 = ((GameObject *)obj)->anim.rotZ;
             ((ArwingState *)state)->unk3A0 = ((ArwingState *)state)->unk39C;
             ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
             ((ArwingState *)state)->unk54 = ((ArwingState *)state)->unk54 * ((ArwingState *)state)->unk3AC;
@@ -473,7 +474,7 @@ void fn_8022A670(int obj, int state)
         } else if ((btn & 0x40) != 0) {
             Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
             ((ArwingState *)state)->mode = 1;
-            ((ArwingState *)state)->unk398 = *(s16 *)(obj + 4);
+            ((ArwingState *)state)->unk398 = ((GameObject *)obj)->anim.rotZ;
             ((ArwingState *)state)->unk3A0 = -((ArwingState *)state)->unk39C;
             ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
             ((ArwingState *)state)->unk54 = ((ArwingState *)state)->unk54 * ((ArwingState *)state)->unk3AC;
@@ -494,7 +495,7 @@ void fn_8022AB68(int obj, int state)
     ((ArwingState *)state)->unk398 =
         (int)(timeDelta * (((ArwingState *)state)->unk3A0 * ((ArwingState *)state)->unk3A8) +
               (f32) ((ArwingState *)state)->unk398);
-    *(s16 *)(obj + 4) =
+    ((GameObject *)obj)->anim.rotZ =
         (s16)(int)(timeDelta * (((ArwingState *)state)->unk3A0 * ((ArwingState *)state)->unk3A8) +
                    (f32) * (s16 *)(obj + 4));
     if (((ArwingState *)state)->unk3A0 > lbl_803E6ECC) {

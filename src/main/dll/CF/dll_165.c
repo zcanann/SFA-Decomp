@@ -1,4 +1,5 @@
 #include "main/dll/CF/dll_165.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 
 extern uint GameBit_Get(int eventId);
@@ -51,7 +52,7 @@ void staffactivated_init(int obj, int setup)
   f32 scale;
   StaffFlags *flags;
 
-  state = *(u8 **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   ObjGroup_AddObject(obj, 0x41);
   *(s16 *)obj = (s16)((s32)*(u8 *)(setup + 0x18) << 8);
 
@@ -79,44 +80,44 @@ void staffactivated_init(int obj, int setup)
     scale = lbl_803E3BBC;
   }
 
-  if (*(void **)(obj + 0x54) != NULL) {
-    ObjHitbox_SetSphereRadius(obj, (int)((f32)*(s16 *)(*(int *)(obj + 0x54) + 0x5a) * scale));
+  if (((GameObject *)obj)->anim.hitReactState != NULL) {
+    ObjHitbox_SetSphereRadius(obj, (int)((f32)*(s16 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x5a) * scale));
   }
 
-  *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4) * scale;
-  if (*(f32 *)(obj + 8) < lbl_803E3C10) {
-    *(f32 *)(obj + 8) = lbl_803E3C10;
+  ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * scale;
+  if (((GameObject *)obj)->anim.rootMotionScale < lbl_803E3C10) {
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3C10;
   }
 
   switch (*(u8 *)(setup + 0x1c)) {
   case 2:
-    *(u8 *)(obj + 0xe4) = modelVariant;
+    ((GameObject *)obj)->unkE4 = modelVariant;
     *(f32 *)state = -(lbl_803E3C14 *
-                      (*(f32 *)(obj + 8) *
+                      (((GameObject *)obj)->anim.rootMotionScale *
                        (lbl_803E3C18 *
                         fn_80293E80((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) -
-                     *(f32 *)(obj + 0xc));
+                     ((GameObject *)obj)->anim.localPosX);
     *(f32 *)(state + 4) = -(lbl_803E3C14 *
-                            (*(f32 *)(obj + 8) *
+                            (((GameObject *)obj)->anim.rootMotionScale *
                              (lbl_803E3C18 *
                               sin((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) -
-                           *(f32 *)(obj + 0x14));
+                           ((GameObject *)obj)->anim.localPosZ);
     break;
   case 3:
     *(f32 *)state = lbl_803E3C14 *
-                    (*(f32 *)(obj + 8) *
+                    (((GameObject *)obj)->anim.rootMotionScale *
                      (lbl_803E3C18 *
                       fn_80293E80((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) +
-                    *(f32 *)(obj + 0xc);
+                    ((GameObject *)obj)->anim.localPosX;
     *(f32 *)(state + 4) = lbl_803E3C14 *
-                          (*(f32 *)(obj + 8) *
+                          (((GameObject *)obj)->anim.rootMotionScale *
                            (lbl_803E3C18 *
                             sin((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) +
-                          *(f32 *)(obj + 0x14);
+                          ((GameObject *)obj)->anim.localPosZ;
     break;
   default:
-    *(f32 *)state = *(f32 *)(obj + 0xc);
-    *(f32 *)(state + 4) = *(f32 *)(obj + 0x14);
+    *(f32 *)state = ((GameObject *)obj)->anim.localPosX;
+    *(f32 *)(state + 4) = ((GameObject *)obj)->anim.localPosZ;
     break;
   }
 
@@ -164,8 +165,8 @@ int treasurechest_SeqFn(int obj, int unused, u8 *events)
   u8 *state;
   u8 eventId;
 
-  setup = *(int *)(obj + 0x4c);
-  state = *(u8 **)(obj + 0xb8);
+  setup = *(int *)&((GameObject *)obj)->anim.placementData;
+  state = ((GameObject *)obj)->extra;
   i = 0;
   while (i < events[0x8b]) {
     eventId = events[i + 0x81];
@@ -183,7 +184,7 @@ int treasurechest_SeqFn(int obj, int unused, u8 *events)
       ((StaffFlags *)state)->b5 = 0;
       break;
     case 4:
-      *(s16 *)(obj + 6) = *(s16 *)(obj + 6) | 0x4000;
+      ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
       ObjHits_DisableObject(obj);
       break;
     }
@@ -256,8 +257,8 @@ void treasurechest_hitDetect(int obj)
   u8 *state;
   int setup;
 
-  setup = *(int *)(obj + 0x4c);
-  state = *(u8 **)(obj + 0xb8);
+  setup = *(int *)&((GameObject *)obj)->anim.placementData;
+  state = ((GameObject *)obj)->extra;
   if (((u32)state[0] >> 5 & 1) != 0) {
     hitDetectFn_80097070(lbl_803E3C24, obj, 2, (u8)(*(u8 *)(setup + 0x19) + 6), 4, 0);
   }

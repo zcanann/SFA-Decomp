@@ -1,11 +1,12 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
 #pragma peephole on
 #pragma scheduling on
 int barrelgener_getLinkId(int obj)
 {
-    obj = *(int *)(obj + 0x4c);
+    obj = *(int *)&((GameObject *)obj)->anim.placementData;
     return *(s8 *)(obj + 0x19);
 }
 #pragma scheduling reset
@@ -15,7 +16,7 @@ int barrelgener_getLinkId(int obj)
 #pragma scheduling off
 void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     *(int *)state = queuedObj;
     *(u8 *)(state + 4) = 0;
@@ -64,7 +65,7 @@ void barrelgener_hitDetect(void) {}
 #pragma scheduling off
 void barrelgener_init(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     ObjGroup_AddObject(obj, 0x3a);
     *(u8 *)(state + 4) = 0;
@@ -90,7 +91,7 @@ void barrelgener_initialise(void) {}
 #pragma scheduling off
 void barrelgener_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
 
     if ((u32)GameBit_Get(0xadb) == 0) {
@@ -110,9 +111,9 @@ void barrelgener_update(int obj)
             if (Obj_IsObjectAlive(*(int *)(state + 0)) != 0) {
                 int o = *(int *)(state + 0);
                 f32 c2c;
-                *(f32 *)(o + 12) = *(f32 *)(obj + 12);
-                *(f32 *)(o + 16) = *(f32 *)(obj + 16);
-                *(f32 *)(o + 20) = *(f32 *)(obj + 20);
+                *(f32 *)(o + 12) = ((GameObject *)obj)->anim.localPosX;
+                *(f32 *)(o + 16) = ((GameObject *)obj)->anim.localPosY;
+                *(f32 *)(o + 20) = ((GameObject *)obj)->anim.localPosZ;
                 *(f32 *)(o + 128) = *(f32 *)(o + 12);
                 *(f32 *)(o + 132) = *(f32 *)(o + 16);
                 *(f32 *)(o + 136) = *(f32 *)(o + 20);
@@ -129,7 +130,7 @@ void barrelgener_update(int obj)
         }
     }
     if (*(u8 *)(state + 4) != 0) {
-        if (*(f32 *)(obj + 0x98) > lbl_803E6C30) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E6C30) {
             if (*(u8 *)(state + 0xc) == 0) {
                 Sfx_PlayFromObject(obj, SFXpda_compassbeep);
                 *(u8 *)(state + 0xc) = 1;
@@ -327,9 +328,9 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
                 *p = 0;
             }
         } else if (spawned == 0) {
-            pos[0] = *(f32 *)(obj + 0xc);
-            pos[1] = *(f32 *)(obj + 0x10);
-            pos[2] = *(f32 *)(obj + 0x14);
+            pos[0] = ((GameObject *)obj)->anim.localPosX;
+            pos[1] = ((GameObject *)obj)->anim.localPosY;
+            pos[2] = ((GameObject *)obj)->anim.localPosZ;
             pos[0] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[1] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[2] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
@@ -421,14 +422,14 @@ int fn_80221C18(int obj, f32 dt, int p3, int p4)
     if ((u32)obj != (u32)Obj_GetPlayerObject()) {
         PSVECSubtract((void *)(obj + 0xc), (void *)(obj + 0x80), vel);
     } else {
-        vel[0] = *(f32 *)(obj + 0x24);
-        vel[1] = *(f32 *)(obj + 0x28);
-        vel[2] = *(f32 *)(obj + 0x2c);
+        vel[0] = ((GameObject *)obj)->anim.velocityX;
+        vel[1] = ((GameObject *)obj)->anim.velocityY;
+        vel[2] = ((GameObject *)obj)->anim.velocityZ;
     }
     PSVECScale(vel, vel, oneOverTimeDelta);
-    pos[0] = *(f32 *)(obj + 0xc);
-    pos[1] = lbl_803E6C58 + *(f32 *)(obj + 0x10);
-    pos[2] = *(f32 *)(obj + 0x14);
+    pos[0] = ((GameObject *)obj)->anim.localPosX;
+    pos[1] = lbl_803E6C58 + ((GameObject *)obj)->anim.localPosY;
+    pos[2] = ((GameObject *)obj)->anim.localPosZ;
     for (i = 0; i < 5; i++) {
         PSVECScale(vel, step, PSVECDistance(pos, (void *)p3) / dt);
         PSVECAdd(obj + 0xc, (int)step, (int)pos);

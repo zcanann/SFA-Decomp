@@ -1,4 +1,5 @@
 #include "main/dll/DIM/DIM2icicle.h"
+#include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
@@ -553,7 +554,7 @@ void fn_801BC2D8(int obj, int param_2)
   int hitId;
   IcicleHitDesc desc;
 
-  state = *(int **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   Obj_GetPlayerObject();
   hit = 0;
   desc = *(IcicleHitDesc *)lbl_802C2348;
@@ -569,7 +570,7 @@ void fn_801BC2D8(int obj, int param_2)
       }
     }
     else if (*(s16 *)((int)state + 0x402) == 2) {
-      if (hitType != 4 || *(f32 *)(obj + 0x98) < lbl_803E4C10 || *(s16 *)(obj + 0xa0) != 0x12) {
+      if (hitType != 4 || ((GameObject *)obj)->anim.currentMoveProgress < lbl_803E4C10 || ((GameObject *)obj)->anim.currentMove != 0x12) {
         hit = 1;
       }
     }
@@ -581,9 +582,9 @@ void fn_801BC2D8(int obj, int param_2)
         ((IcicleHitFx *)lbl_803AC994)->y = base[hitType].py;
         ((IcicleHitFx *)lbl_803AC994)->z = playerMapOffsetZ + base[hitType].pz;
         ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x328, lbl_803AC994, 0x200001, -1, 0);
-        ((IcicleHitFx *)lbl_803AC994)->x = ((IcicleHitFx *)lbl_803AC994)->x - *(f32 *)(obj + 0x18);
-        ((IcicleHitFx *)lbl_803AC994)->y = ((IcicleHitFx *)lbl_803AC994)->y - *(f32 *)(obj + 0x1c);
-        ((IcicleHitFx *)lbl_803AC994)->z = ((IcicleHitFx *)lbl_803AC994)->z - *(f32 *)(obj + 0x20);
+        ((IcicleHitFx *)lbl_803AC994)->x = ((IcicleHitFx *)lbl_803AC994)->x - ((GameObject *)obj)->anim.worldPosX;
+        ((IcicleHitFx *)lbl_803AC994)->y = ((IcicleHitFx *)lbl_803AC994)->y - ((GameObject *)obj)->anim.worldPosY;
+        ((IcicleHitFx *)lbl_803AC994)->z = ((IcicleHitFx *)lbl_803AC994)->z - ((GameObject *)obj)->anim.worldPosZ;
         ((IcicleHitFx *)lbl_803AC994)->scale = lbl_803E4C44;
         ((IcicleHitFx *)lbl_803AC994)->a = 0;
         ((IcicleHitFx *)lbl_803AC994)->b = 0;
@@ -628,9 +629,9 @@ void fn_801BC2D8(int obj, int param_2)
         *(u8 *)(param_2 + 0x354) = 0;
         *(u8 *)(param_2 + 0x349) = 0;
         ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 0);
-        (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
-        *(u8 *)(obj + 0xaf) |= 8;
-        *(u8 *)(obj + 0xaf) &= ~0x80;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x80;
         GameBit_Set(0x20e, 1);
         if (*(s16 *)((int)state + 0x402) == 1) {
           GameBit_Set(0x20b, 1);
@@ -678,7 +679,7 @@ void fn_801BC7E4(int obj, int param_2, int param_3, int param_4)
             (obj, param_4, param_3 + 0x35c, (int)*(s16 *)(param_3 + 0x3f4), param_3 + 0x405, 0, 0, 0);
   if (*(s16 *)(param_4 + 0x274) == 6) {
     state->meltTimer =
-         -(timeDelta * (lbl_803E4BC8 * *(f32 *)(obj + 0x98) + lbl_803E4C44) - state->meltTimer);
+         -(timeDelta * (lbl_803E4BC8 * ((GameObject *)obj)->anim.currentMoveProgress + lbl_803E4C44) - state->meltTimer);
   }
   else {
     state->meltTimer = state->meltTimer - timeDelta;
@@ -732,14 +733,14 @@ void fn_801BC7E4(int obj, int param_2, int param_3, int param_4)
   }
   if (*(s16 *)(param_3 + 0x402) == 1) {
     ((void (*)(u8 *, int, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
-    *(u8 *)(obj + 0xe4) = 1;
+    ((GameObject *)obj)->unkE4 = 1;
   }
   else {
-    *(u8 *)(obj + 0xe4) = 2;
+    ((GameObject *)obj)->unkE4 = 2;
   }
-  *(int *)(param_3 + 0x3e0) = *(int *)(obj + 0xc0);
-  *(int *)(obj + 0xc0) = 0;
+  *(int *)(param_3 + 0x3e0) = *(int *)&((GameObject *)obj)->unkC0;
+  *(int *)&((GameObject *)obj)->unkC0 = 0;
   ((void (*)(f32, int, int, f32, void *, void *))*(code **)(*(int *)gPlayerInterface + 8))
             (timeDelta, obj, param_4, timeDelta, gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
-  *(int *)(obj + 0xc0) = *(int *)(param_3 + 0x3e0);
+  *(int *)&((GameObject *)obj)->unkC0 = *(int *)(param_3 + 0x3e0);
 }

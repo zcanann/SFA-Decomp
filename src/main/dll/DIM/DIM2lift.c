@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/dll/DIM/DIM2lift.h"
 
@@ -601,7 +602,7 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
   extern f32 lbl_803E4C28;
   extern f32 lbl_803E4C2C;
   extern f32 lbl_803E4C30;
-  int *lightSlot = (int *)(*(int *)(*(int *)(obj + 0xb8) + 0x40c));
+  int *lightSlot = (int *)(*(int *)(*(int *)&((GameObject *)obj)->extra + 0x40c));
 
   if (*(void **)lightSlot != NULL) return;
 
@@ -1084,19 +1085,19 @@ int fn_801BA4B8(int obj, int p2)
   int sub;
 
   Obj_GetPlayerObject();
-  sub = *(int *)(obj + 0xb8);
+  sub = *(int *)&((GameObject *)obj)->extra;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
     *(int *)(p2 + 0x2d0) = 0;
     *(u8 *)(p2 + 0x25f) = 0;
     *(u8 *)(p2 + 0x349) = 0;
     ObjHits_DisableObject(obj);
-    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
-    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x80);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x80);
     ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xE0000, obj, 0);
     GameBit_Set(*(s16 *)(sub + 0x3f4), 0);
     GameBit_Set(*(s16 *)(sub + 0x3f2), 1);
-    if (*(void **)(obj + 0x4c) == NULL) {
+    if (((GameObject *)obj)->anim.placementData == NULL) {
       Obj_FreeObject(obj);
       return 0;
     }
@@ -1169,7 +1170,7 @@ int fn_801BA958(int obj, int param2)
 {
     if (*(s8 *)(param2 + 0x27a) != 0) {
         f32 v;
-        *(s16 *)(obj + 0xa2) = -1;
+        ((GameObject *)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
         *(f32 *)(param2 + 0x280) = v;
         *(f32 *)(param2 + 0x284) = v;
@@ -1205,7 +1206,7 @@ int fn_801BB0D8(int obj, int param2, f32 fParam)
     s16 local_a;
     s16 local_8;
     *(f32 *)(param2 + 0x280) = lbl_803E4BD8;
-    if (*(s8 *)(param2 + 0x346) != 0 || *(s8 *)(param2 + 0x27a) != 0 || *(s16 *)(obj + 0xa0) == 1) {
+    if (*(s8 *)(param2 + 0x346) != 0 || *(s8 *)(param2 + 0x27a) != 0 || ((GameObject *)obj)->anim.currentMove == 1) {
         (*(int (**)(int, int, int, u16 *, s16 *, s16 *))(*(int *)gBaddieControlInterface + 0x14))(obj, *(int *)(param2 + 0x2d0), 0x10, &local_c, &local_a, &local_8);
         ObjAnim_SetCurrentMove(obj, lbl_80325960[local_c], lbl_803E4BD8, 0);
         *(f32 *)(param2 + 0x2a0) = lbl_803259A0[local_c];
@@ -1231,7 +1232,7 @@ int fn_801BAA84(int obj, int param2, f32 fParam)
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E4BD8, 0);
             *(u8 *)(param2 + 0x346) = 0;
         }
-        *(s16 *)(obj + 0xa2) = -1;
+        ((GameObject *)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
         *(f32 *)(param2 + 0x280) = v;
         *(f32 *)(param2 + 0x284) = v;
@@ -1256,14 +1257,14 @@ extern f32 lbl_803E4BEC;
 #pragma scheduling off
 int fn_801BA780(int obj, int param2)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     if (*(s8 *)(param2 + 0x27a) != 0) {
         f32 v;
         gDIMbossSequenceFlags |= 0x2000;
         Camera_EnableViewYOffset();
         CameraShake_Start(lbl_803E4BC4, lbl_803E4BC8, lbl_803E4BCC);
         doRumble(lbl_803E4BD0);
-        *(s16 *)(obj + 0xa2) = -1;
+        ((GameObject *)obj)->anim.activeMove = -1;
         *(f32 *)(param2 + 0x2a0) = lbl_803E4BE8;
         v = lbl_803E4BD8;
         *(f32 *)(param2 + 0x280) = v;
@@ -1290,7 +1291,7 @@ extern f32 lbl_803E4BD4;
 int fn_801BA654(int obj, int param2)
 {
     f32 v;
-    if (*(f32 *)(obj + 0x98) > lbl_803E4BC0) {
+    if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E4BC0) {
         gDIMbossSequenceFlags &= ~0x20;
     }
     if (*(s8 *)(param2 + 0x27a) != 0) {
@@ -1298,7 +1299,7 @@ int fn_801BA654(int obj, int param2)
         Camera_EnableViewYOffset();
         CameraShake_Start(lbl_803E4BC4, lbl_803E4BC8, lbl_803E4BCC);
         doRumble(lbl_803E4BD0);
-        *(s16 *)(obj + 0xa2) = -1;
+        ((GameObject *)obj)->anim.activeMove = -1;
         *(f32 *)(param2 + 0x2a0) = lbl_803E4BD4 * (f32)(*(s8 *)(param2 + 0x354) + 1);
         v = lbl_803E4BD8;
         *(f32 *)(param2 + 0x280) = v;
@@ -1330,12 +1331,12 @@ int fn_801BAB88(int obj, int param2, f32 arg)
             ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E4BD8, 0);
             *(u8 *)(param2 + 0x346) = 0;
         }
-        *(s16 *)(obj + 0xa2) = -1;
+        ((GameObject *)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
         *(f32 *)(param2 + 0x280) = v;
         *(f32 *)(param2 + 0x284) = v;
     }
-    h = *(f32 *)(obj + 0x98);
+    h = ((GameObject *)obj)->anim.currentMoveProgress;
     if (h > lbl_803E4C0C || *(s8 *)(param2 + 0x346) != 0) {
         return 8;
     }
@@ -1365,12 +1366,12 @@ int fn_801BACB8(int obj, int param2, f32 arg)
             ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E4BD8, 0);
             *(u8 *)(param2 + 0x346) = 0;
         }
-        *(s16 *)(obj + 0xa2) = -1;
+        ((GameObject *)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
         *(f32 *)(param2 + 0x280) = v;
         *(f32 *)(param2 + 0x284) = v;
     }
-    h = *(f32 *)(obj + 0x98);
+    h = ((GameObject *)obj)->anim.currentMoveProgress;
     if (h > lbl_803E4C18) {
         gDIMbossSequenceFlags &= 0xffffffbf;
     } else if (h > lbl_803E4C1C) {
@@ -1400,12 +1401,12 @@ int fn_801BAE00(int obj, int param2, f32 arg)
             ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E4BD8, 0);
             *(u8 *)(param2 + 0x346) = 0;
         }
-        *(s16 *)(obj + 0xa2) = -1;
+        ((GameObject *)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
         *(f32 *)(param2 + 0x280) = v;
         *(f32 *)(param2 + 0x284) = v;
     }
-    h = *(f32 *)(obj + 0x98);
+    h = ((GameObject *)obj)->anim.currentMoveProgress;
     if (h > lbl_803E4C18) {
         gDIMbossSequenceFlags &= ~0x40;
     } else if (h > lbl_803E4C20) {
@@ -1430,7 +1431,7 @@ int fn_801BAF58(int obj, int param2, f32 arg)
     f32 v;
     ObjHits_SetHitVolumeSlot(obj, 9, 1, -1);
     if (*(s8 *)(param2 + 0x27a) != 0) {
-        *(s16 *)(obj + 0xa2) = -1;
+        ((GameObject *)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
         *(f32 *)(param2 + 0x280) = v;
         *(f32 *)(param2 + 0x284) = v;
@@ -1474,7 +1475,7 @@ int fn_801BA224(int obj, int param2)
     u16 local_8;
     int state;
     s16 mode;
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     if (*(s8 *)(param2 + 0x346) != 0 || *(s8 *)(param2 + 0x27b) != 0) {
         (*(int (**)(int, int, int, u16 *, s16 *, u16 *))(*(int *)gBaddieControlInterface + 0x14))(obj, *(int *)(param2 + 0x2d0), 0x10, &local_c, &local_a, &local_8);
         *(u8 *)(param2 + 0x346) = 0;

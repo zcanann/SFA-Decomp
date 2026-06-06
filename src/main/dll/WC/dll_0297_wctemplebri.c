@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #define WCTEMPLEBRI_EXTRA_SIZE 0x68
 #define WCTEMPLEBRI_RENDER_TYPE_BASE 0x400
@@ -71,8 +72,8 @@ void wctemplebri_updateModelWarp(int obj, int p2)
 #pragma scheduling off
 int wctemplebri_interactCallback(int obj, int p2, int p3)
 {
-    int r4c = *(int *)(obj + 0x4c);
-    int state = *(int *)(obj + 0xb8);
+    int r4c = *(int *)&((GameObject *)obj)->anim.placementData;
+    int state = *(int *)&((GameObject *)obj)->extra;
     int model;
     int modelBase;
     int i;
@@ -130,7 +131,7 @@ int wctemplebri_getExtraSize(void) { return WCTEMPLEBRI_EXTRA_SIZE; }
 int wctemplebri_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
+    int modelIndex = *(s8 *)(*(int *)&((GameObject *)obj)->anim.placementData + WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
@@ -151,7 +152,7 @@ void wctemplebri_free(void) {}
 #pragma scheduling off
 void wctemplebri_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int state = *(int *)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
 
     if (visible != 0) {
         if (WCTEMPLEBRI_ACTIVE(state) != 0) {
@@ -184,14 +185,14 @@ void wctemplebri_initialise(void) {}
 #pragma scheduling off
 void wctemplebri_update(int obj)
 {
-    int r4c = *(int *)(obj + 0x4c);
+    int r4c = *(int *)&((GameObject *)obj)->anim.placementData;
     int state;
     int model;
     int modelBase;
     int i;
 
     Obj_GetPlayerObject();
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     wctemplebri_updateModelWarp(obj, state);
     model = Obj_GetActiveModel(obj);
     modelBase = *(int *)model;
@@ -251,12 +252,12 @@ void wctemplebri_init(int obj, int initData)
     int p, k;
     int done;
 
-    *(s16 *)(obj + 0) = (s16)((s8)*(u8 *)(initData + WCTEMPLEBRI_SETUP_TYPE_OFFSET) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(initData + WCTEMPLEBRI_SETUP_TYPE_OFFSET) << 8);
     objAnim->bankIndex = *(u8 *)(initData + WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;
-    *(void **)(obj + 0xbc) = (void *)wctemplebri_interactCallback;
-    state = *(int *)(obj + 0xb8);
+    ((GameObject *)obj)->unkBC = (void *)wctemplebri_interactCallback;
+    state = *(int *)&((GameObject *)obj)->extra;
     maxY = 0;
     model = Obj_GetActiveModel(obj);
     modelData = *(int *)(model + 0);
@@ -295,7 +296,7 @@ void wctemplebri_init(int obj, int initData)
         ObjHits_DisableObject(obj);
         *(u8 *)(obj + 0x36) = 0;
     }
-    *(u16 *)(obj + 0xb0) |= 0x6000;
+    ((GameObject *)obj)->unkB0 |= 0x6000;
     ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
 }
 #pragma scheduling reset

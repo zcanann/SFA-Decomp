@@ -1,4 +1,5 @@
 #include "main/mapEvent.h"
+#include "main/game_object.h"
 #include "main/dll/DF/DFlantern.h"
 #include "main/objanim.h"
 
@@ -141,8 +142,8 @@ void dfsh_door2speci_init(int obj,int def)
   int state;
   int *texture;
 
-  state = *(int *)(obj + 0xb8);
-  *(int *)(obj + 0xbc) = (int)&DFSH_Door2Speci_SeqFn;
+  state = *(int *)&((GameObject *)obj)->extra;
+  *(int *)&((GameObject *)obj)->unkBC = (int)&DFSH_Door2Speci_SeqFn;
   if (GameBit_Get((int)*(short *)(def + 0x22)) != 0) {
     *(unsigned char *)(state + 3) = 2;
   }
@@ -224,12 +225,12 @@ void fn_801C2914(int obj)
   int turnStep;
   undefined animEvents[32];
 
-  def = *(int *)(obj + 0x4c);
-  state = *(DFlanternShrineState **)(obj + 0xb8);
+  def = *(int *)&((GameObject *)obj)->anim.placementData;
+  state = ((GameObject *)obj)->extra;
   player = Obj_GetPlayerObject();
-  if ((*(s16 *)(obj + 6) & 0x4000) != 0) {
+  if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) {
     *(s16 *)obj = 0;
-    *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
+    ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
     return;
   }
 
@@ -237,7 +238,7 @@ void fn_801C2914(int obj)
   state->orbitB += (s32)(lbl_803E4E54 * timeDelta);
   state->orbitC += (s32)(lbl_803E4E58 * timeDelta);
 
-  *(f32 *)(obj + 0x10) =
+  ((GameObject *)obj)->anim.localPosY =
       lbl_803E4E5C +
       (*(f32 *)(def + 0xc) +
        fn_80293E80((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64));
@@ -245,18 +246,18 @@ void fn_801C2914(int obj)
   trigA = fn_80293E80((lbl_803E4E60 * (f32)state->orbitB) / lbl_803E4E64);
   trigB = fn_80293E80((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
   trigB = trigB + trigA;
-  *(s16 *)(obj + 4) = lbl_803E4E68 * trigB;
+  ((GameObject *)obj)->anim.rotZ = lbl_803E4E68 * trigB;
 
   trigA = fn_80293E80((lbl_803E4E60 * (f32)state->orbitC) / lbl_803E4E64);
   trigB = fn_80293E80((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
   trigB = trigB + trigA;
-  *(s16 *)(obj + 2) = lbl_803E4E68 * trigB;
+  ((GameObject *)obj)->anim.rotY = lbl_803E4E68 * trigB;
 
   ObjAnim_AdvanceCurrentMove(lbl_803E4E6C,timeDelta,obj,(ObjAnimEventList *)animEvents);
   if (player != NULL) {
     angleDelta =
-        ((u16)getAngle(*(f32 *)(obj + 0x18) - *(f32 *)(player + 0x18),
-                       *(f32 *)(obj + 0x20) - *(f32 *)(player + 0x20)) -
+        ((u16)getAngle(((GameObject *)obj)->anim.worldPosX - *(f32 *)(player + 0x18),
+                       ((GameObject *)obj)->anim.worldPosZ - *(f32 *)(player + 0x20)) -
          ((u16)*(s16 *)obj));
     if (angleDelta > 0x8000) {
       angleDelta -= 0xffff;
@@ -404,7 +405,7 @@ void dfsh_shrine_free(int obj)
 {
   void **state;
 
-  state = *(void ***)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   if (*state != NULL) {
     ModelLightStruct_free(*state);
     *state = NULL;
