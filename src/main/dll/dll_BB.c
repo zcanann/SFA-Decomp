@@ -98,10 +98,7 @@ void camcontrol_applyState(short *param_1)
     else {
       fVar5 = lbl_803E162C - *(float *)(param_1 + 0x7a);
     }
-    fVar6 = lbl_803E1630;
-    if ((fVar6 <= fVar5) && (fVar6 = fVar5, lbl_803E162C < fVar5)) {
-      fVar6 = lbl_803E162C;
-    }
+    fVar6 = (fVar5 < lbl_803E1630) ? lbl_803E1630 : ((fVar5 > lbl_803E162C) ? lbl_803E162C : fVar5);
     if ((*(byte *)((int)param_1 + 0x13f) & 8) != 0) {
       *(float *)(psVar3 + 6) =
            fVar6 * (*(float *)(psVar3 + 6) - *(float *)(param_1 + 0x86)) +
