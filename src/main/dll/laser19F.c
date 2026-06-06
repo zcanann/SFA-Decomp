@@ -299,10 +299,6 @@ extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 extern int mapGetDirIdx(int mapDir);
 extern void unlockLevel(int mapDir, int mode, int flags);
 extern void fn_801C4664(int obj);
-extern void SCGameBitLatch_Update(SCGameBitLatchState *state, int mask, s16 clearIfSetBit,
-                                  s16 clearIfClearBit, s16 latchBit, int musicId);
-extern void SCGameBitLatch_UpdateInverted(SCGameBitLatchState *state, int mask, s16 clearIfSetBit,
-                                          s16 clearIfClearBit, s16 latchBit, int musicId);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int randomGetRange(int min, int max);
 extern int objGetAnimStateFlags(int obj, u32 mask);

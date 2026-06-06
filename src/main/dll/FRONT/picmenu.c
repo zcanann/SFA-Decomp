@@ -8,7 +8,6 @@ extern s32 DVDRead(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset);
 extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
 
 /* External functions */
-extern BOOL THPInit(void);
 extern void AttractMovieAudio_DmaCallback(void);
 
 /* BSS objects (lis+addi addressing) */

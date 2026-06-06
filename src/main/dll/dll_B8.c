@@ -4,7 +4,6 @@
 extern CameraViewSlot *Camera_GetCurrentViewSlot(void);
 extern float Camera_GetFovY(void);
 extern f32 lbl_803E162C;
-extern u8 *pCamera;
 
 #pragma scheduling off
 #pragma peephole off

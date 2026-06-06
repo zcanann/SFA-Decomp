@@ -794,7 +794,6 @@ void MoonSeedPlantingSpot_hitDetect(void) {}
 void MoonSeedPlantingSpot_release(void) {}
 void MoonSeedPlantingSpot_initialise(void) {}
 
-extern int MoonSeedPlantingSpot_SeqFn(int p1);
 
 #pragma scheduling off
 #pragma peephole off

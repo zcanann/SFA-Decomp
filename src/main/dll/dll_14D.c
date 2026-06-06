@@ -231,7 +231,6 @@ void FUN_8017f290(int param_1)
 void dll_14D_release_nop(void) {}
 void dll_14D_initialise_nop(void) {}
 
-extern void dll_14D_init(int *obj);
 extern void dll_14D_update();
 extern void dll_14D_hitDetect();
 extern void dll_14D_render();

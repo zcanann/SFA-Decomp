@@ -5184,7 +5184,6 @@ extern void curvesSetupMoveNetworkCurve(float *state);
 extern f32 gFloatZero;
 extern f32 gFloatNegOne;
 extern void *memcpy(void *dst, const void *src, u32 n);
-extern u8 RomCurve_goNextPoint(float *state);
 
 #pragma peephole off
 #pragma scheduling off

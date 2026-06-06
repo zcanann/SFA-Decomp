@@ -23,7 +23,6 @@ extern int *gPathControlInterface;
 extern f32 lbl_803DC130;
 extern u8 lbl_803DDCB8;
 extern f32 lbl_803E5FB0;
-extern f32 lbl_803E5FB4;
 extern f32 lbl_803E5FBC;
 extern f32 lbl_803E5FC0;
 extern f32 lbl_803E5FC4;

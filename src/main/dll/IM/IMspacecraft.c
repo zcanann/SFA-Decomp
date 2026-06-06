@@ -40,7 +40,6 @@ extern void Music_Trigger(int id, int p2);
 extern int getSaveGameLoadStatus(void);
 extern int getEnvfxAct(int obj, int player, int id, int p);
 extern void MMP_levelcontrol_update(int obj);
-extern void fn_801A5D88(int obj, int unused);
 
 extern int *gCameraInterface;
 extern int *gObjectTriggerInterface;

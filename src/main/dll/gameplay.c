@@ -1133,9 +1133,7 @@ void saveGame_unsaveObjectPos(u8 *obj)
 extern void *memset(void *dst, int val, u32 n);
 extern void *memcpy(void *dst, const void *src, u32 n);
 extern int loadSaveGame(int slot, void *save);
-extern int gplayNewGame(char *name, int slot);
 extern int _saveGame(int slot, int save, int data);
-extern void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value);
 extern void GameBit_Set(int eventId, int value);
 extern u32 GameBit_Get(int eventId);
 extern void *gameTextGetPhrase(int textId, int variant);

@@ -725,7 +725,6 @@ void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v =
 #pragma peephole off
 int fn_801793A4(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x274) == 0; }
 
-extern void sidekickball_free(int obj);
 void sidekickball_free(int obj) { GameBit_Set(0x3F8, 1); }
 
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);

@@ -67,7 +67,6 @@ extern void storeZeroToFloatParam(int p);
 extern void s16toFloat(int p, int v);
 extern void fn_802BC788(void);
 extern s16 *objModelGetVecFn_800395d8(int obj, int idx);
-extern void characterDoEyeAnims(int obj, int p);
 
 void fn_802BCA10(int obj, int q, int p2);
 

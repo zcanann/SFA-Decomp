@@ -284,7 +284,6 @@ extern s16 lbl_803DDDC8;
 extern s16 lbl_803DDDCA;
 extern f32 lbl_803DC4CC;
 extern void turnOnDistortionFilter(f32 *pos, f32 a, f32 *b, f32 c);
-extern void fn_8022D460(int obj, f32 x);
 
 typedef struct {
     u8 f80 : 1;

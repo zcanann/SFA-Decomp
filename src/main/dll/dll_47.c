@@ -546,7 +546,6 @@ extern void gplayNewGame(char *name, int slot);
 extern char *loadFileByPath(char *path, int a, int b);
 extern void *memcpy(void *dst, void *src, int n);
 extern void fn_80296B70(int arg);
-extern void saveFileSelect_checkCheatCodes(void);
 extern void titleScreenFn_801368d4(void);
 extern TitleMenuControl *gMapEventInterface;
 extern void *lbl_803DD498;

@@ -4,9 +4,6 @@
 #include "main/objhits_types.h"
 
 
-extern void tumbleweed_updateStateMachine(int obj);
-extern void tumbleweed_updateTargetedStateMachine(int obj);
-extern void tumbleweed_updateEffects(int obj);
 extern int GameBit_Set(int eventId, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);

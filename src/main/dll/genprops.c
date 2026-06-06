@@ -4539,22 +4539,7 @@ int checkpoint4_getExtraSize(void) { return 0x40; }
 int checkpoint4_getObjectTypeId(void) { return 0x10; }
 int siderepel_getExtraSize(void) { return 0x1; }
 
-extern void mikabomb_free();
-extern void mikabomb_render();
-extern void mikabomb_hitDetect();
-extern void mikabomb_update(int *obj);
-extern void mikabomb_init();
-extern int mikabomb_getObjectTypeId();
-extern int mikabomb_getExtraSize();
-void mikabombshadow_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void mikabombshadow_init();
-extern void StaticCamera_init();
-extern void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-extern void StaticCamera_free(int x);
 extern void gcbaddieshield_update(int *obj);
-void gcbaddieshield_init(int *obj, void *initData);
-extern void baddieinterestp_update();
-extern void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void animatedobj_free();
 extern void animatedobj_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void animatedobj_update();

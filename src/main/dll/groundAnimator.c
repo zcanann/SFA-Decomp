@@ -505,7 +505,6 @@ extern void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visib
 extern void appleontree_free(int *obj);
 extern int appleontree_getExtraSize(void);
 extern void appleontree_setScale(void);
-extern void appleontree_func0B(int obj, float *pos);
 extern u8 appleontree_modelMtxFn(int *obj);
 
 ObjectDescriptor13 gAppleOnTreeObjDescriptor = {

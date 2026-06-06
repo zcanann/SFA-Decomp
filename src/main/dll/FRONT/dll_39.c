@@ -83,8 +83,6 @@ extern void mm_free(void *ptr);
 extern void printHeapStats(int param_1);
 extern void defragMemory(int param_1);
 extern void OSReport(const char *fmt,...);
-extern void OSPanic(const char *file,int line,const char *msg,...);
-extern void DCInvalidateRange(void *addr,uint nBytes);
 extern void VIWaitForRetrace(void);
 
 extern u8 framesThisStep;

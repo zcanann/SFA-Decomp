@@ -1391,7 +1391,6 @@ void cflevelcontrol_release(void) {}
 void cflevelcontrol_initialise(void) {}
 
 extern void storeZeroToFloatParam(void* p);
-extern int CFLevelControl_SeqFn(int p1, int p2, void *p3);
 extern void objSetSlot(void *obj, int resourceId);
 extern s16 lbl_80323008[];
 extern int *gMapEventInterface;
@@ -1698,7 +1697,6 @@ void attractor_init(s16 *obj, void *data) {
 #pragma scheduling reset
 
 extern u8 framesThisStep;
-extern int exploded_stepDebrisPhysics(ExplodedObject *obj, ExplodedObjectState *state);
 #pragma scheduling off
 #pragma peephole off
 void exploded_update(int *obj) {
@@ -1742,7 +1740,6 @@ void exploded_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int slidingdoor_SeqFn(u8* obj, int unused, u8* data);
 extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
 extern f32 lbl_803E4428;
@@ -2000,7 +1997,6 @@ extern f32 lbl_803E441C;
 extern f32 lbl_803E4420;
 extern f32 lbl_803E4424;
 
-void exploded_seedDebrisMotion(ExplodedObject *obj, ExplodedObjectState *state, ExplodedObjectMapData *data);
 
 #pragma scheduling off
 #pragma peephole off

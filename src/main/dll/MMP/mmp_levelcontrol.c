@@ -39,7 +39,6 @@ extern undefined8 FUN_80286830();
 extern undefined8 FUN_80286838();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286884();
-extern void fn_80194C40(undefined4 def, int state, int block);
 
 extern undefined4* DAT_803dd708;
 extern undefined4* gPartfxInterface;

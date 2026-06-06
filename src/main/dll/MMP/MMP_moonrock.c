@@ -345,7 +345,6 @@ void WaterFallSpray_update(int *objParam)
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
  * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then
  * pick one of two SFX-id pairs based on the range of obj->_4c->_14. */
-extern int WaterFallSpray_SeqFn(int *obj);
 #pragma scheduling off
 #pragma peephole off
 void WaterFallSpray_init(u8* obj, u8* data) {
@@ -1697,7 +1696,6 @@ void WaterFallSpray_render(void) {}
 int WaterFallSpray_getExtraSize(void) { return 0x8; }
 int sfxplayerObj_getExtraSize(void) { return 0x8; }
 
-extern void WaterFallSpray_update(int *obj);
 #pragma scheduling off
 #pragma peephole off
 int WaterFallSpray_SeqFn(int *obj) { WaterFallSpray_update(obj); return 0; }

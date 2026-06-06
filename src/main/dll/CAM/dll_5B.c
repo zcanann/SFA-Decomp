@@ -97,7 +97,6 @@ extern f32 lbl_803E1878;
 extern f32 lbl_803E1888;
 extern f32 lbl_803E188C;
 
-int fn_8010A47C(int curve, int *count, int tag);
 
 typedef struct ViewfinderFlags {
     u8 b7 : 1;

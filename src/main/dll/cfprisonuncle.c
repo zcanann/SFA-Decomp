@@ -2356,7 +2356,6 @@ void MagicPlant_init(int obj, MagicPlantSetup *setup) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern void trickyguard_update();
 extern f32 lbl_803E3928;
 
 typedef struct CurveFishSetup {

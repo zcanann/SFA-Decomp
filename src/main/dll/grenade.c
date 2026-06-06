@@ -631,7 +631,6 @@ void trickyFn_80142524(u8 *obj, u8 *state)
  * PAL Size: TODO
  */
 extern void objPosFn_80039510(int obj, int flags, float *out);
-extern void tricky_startRandomIdleMove(int obj, int state);
 extern f32 lbl_803E24C8;
 
 #pragma scheduling off
