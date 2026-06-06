@@ -310,7 +310,7 @@ void cf_doorlight_init(int *obj, s8 *def) {
     state->maxFrame = (int)*(s16 *)((char *)def + 0x1a) << 8;
     state->frameStep = (u8)*(s16 *)((char *)def + 0x1c);
     state->resetFrame = (int)def[0x18] << 8;
-    b = (u32)(u8)GameBit_Get(*(s16 *)((char *)def + 0x1e));
+    b = (u32)(u8)GameBit_Get(((CfDoorLightDef *)def)->doneEvent);
     state->flags = (u8)((state->flags & ~0x40) | ((b & 1) << 6));
     if (((u32)state->flags >> 6) & 1) {
         state->currentFrame = state->maxFrame;
