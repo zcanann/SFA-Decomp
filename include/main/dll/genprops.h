@@ -2,6 +2,7 @@
 #define MAIN_DLL_GENPROPS_H_
 
 #include "ghidra_import.h"
+#include "main/dll/checkpoint4.h"
 #include "main/dll/curves.h"
 #include "main/object_descriptor.h"
 #include "main/objanim.h"
@@ -134,8 +135,6 @@ void FUN_80170f60(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9);
 void FUN_80170f64(undefined2 *param_1,int param_2);
-void checkpoint4_render(int param_1);
-void checkpoint4_init(ushort *param_1,int param_2);
 void sideload_update(int param_1);
 void FUN_8017121c(int param_1);
 void FUN_80171240(int param_1,int param_2);
@@ -173,6 +172,5 @@ extern ObjectDescriptor13 gFlameThrowerSpeObjDescriptor;
 extern ObjectDescriptor12 gCurveObjDescriptor;
 extern ObjectDescriptor gReStartMarkerObjDescriptor;
 extern ObjectDescriptor dll_F7;
-extern ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor;
 
 #endif /* MAIN_DLL_GENPROPS_H_ */

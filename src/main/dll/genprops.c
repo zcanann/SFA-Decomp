@@ -41,7 +41,6 @@ extern double FUN_80017714();
 extern undefined4 FUN_80017730();
 extern undefined4 FUN_80017748();
 extern undefined4 FUN_80017754();
-extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_8001778c();
 extern undefined4 FUN_80017814();
@@ -3987,60 +3986,45 @@ void checkpoint4_render(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void checkpoint4_init(ushort *param_1,int param_2)
+void checkpoint4_init(Checkpoint4Object *checkpoint, Checkpoint4Placement *placement)
 {
-  float fVar1;
-  uint uVar2;
-  int iVar3;
-  int iVar4;
-  ushort local_78;
-  ushort local_76;
-  ushort local_74;
-  float local_70;
-  float local_6c;
-  float local_68;
-  float local_64;
-  float afStack_60 [16];
-  undefined4 local_20;
-  uint uStack_1c;
-  undefined4 local_18;
-  uint uStack_14;
-  
-  iVar4 = *(int *)(param_1 + 0x5c);
-  uStack_1c = *(byte *)(param_2 + 0x2a) ^ 0x80000000;
-  local_20 = 0x43300000;
-  local_18 = 0x43300000;
-  fVar1 = (f32)(s32)uStack_1c;
-  if ((f32)(s32)uStack_1c < lbl_803E40BC) {
-    fVar1 = lbl_803E40BC;
+  f32 radius;
+  u32 heading;
+  int i;
+  Checkpoint4State *state;
+  Checkpoint4MatrixBuildTransform transform;
+  f32 matrix[16];
+
+  state = checkpoint->state;
+  radius = (f32)placement->radius;
+  if (radius < lbl_803E40BC) {
+    radius = lbl_803E40BC;
   }
-  *(float *)(param_1 + 4) = fVar1 * lbl_803E40C0;
-  *param_1 = (ushort)((int)(short)(ushort)*(byte *)(param_2 + 0x29) << 8);
-  local_78 = *param_1;
-  local_76 = param_1[1];
-  local_74 = param_1[2];
-  local_70 = lbl_803E40B8;
-  local_6c = lbl_803E40C4;
-  local_68 = lbl_803E40C4;
-  local_64 = lbl_803E40C4;
-  uStack_14 = uStack_1c;
-  FUN_80017754(afStack_60,&local_78);
-  FUN_80017778((double)lbl_803E40C4,(double)lbl_803E40C4,(double)lbl_803E40B8,afStack_60,
-               (float *)(iVar4 + 0x10),(float *)(iVar4 + 0x14),(float *)(iVar4 + 0x18));
-  *(float *)(iVar4 + 0x1c) =
-       -(*(float *)(param_1 + 10) * *(float *)(iVar4 + 0x18) +
-        *(float *)(param_1 + 6) * *(float *)(iVar4 + 0x10) +
-        *(float *)(param_1 + 8) * *(float *)(iVar4 + 0x14));
-  *(float *)(iVar4 + 0x20) = lbl_803E40C8 * *(float *)(param_1 + 4);
-  iVar3 = 0;
+  checkpoint->objAnim.rootMotionScale = radius * lbl_803E40C0;
+  checkpoint->objAnim.rotX = (s16)(placement->rotX << 8);
+  transform.rotX = checkpoint->objAnim.rotX;
+  transform.rotY = checkpoint->objAnim.rotY;
+  transform.rotZ = checkpoint->objAnim.rotZ;
+  transform.scale = lbl_803E40B8;
+  transform.x = lbl_803E40C4;
+  transform.y = lbl_803E40C4;
+  transform.z = lbl_803E40C4;
+  setMatrixFromObjectPos(matrix, &transform);
+  Matrix_TransformPoint(matrix, (double)lbl_803E40C4, (double)lbl_803E40C4, (double)lbl_803E40B8,
+               &state->planeNormalX, &state->planeNormalY, &state->planeNormalZ);
+  state->planeDistance =
+       -(checkpoint->objAnim.localPosZ * state->planeNormalZ +
+        checkpoint->objAnim.localPosX * state->planeNormalX +
+        checkpoint->objAnim.localPosY * state->planeNormalY);
+  state->triggerRadius = lbl_803E40C8 * checkpoint->objAnim.rootMotionScale;
+  i = 0;
   do {
-    uVar2 = randomGetRange(0,0xf0);
-    *(short *)(iVar4 + 0x34) = (short)uVar2;
-    iVar4 = iVar4 + 2;
-    iVar3 = iVar3 + 1;
-  } while (iVar3 < 4);
-  *(int *)(param_1 + 0x7a) = (int)*(char *)(param_2 + 0x28);
-  param_1[0x58] = param_1[0x58] | 0xa000;
+    heading = randomGetRange(0,CHECKPOINT4_RANDOM_HEADING_MAX);
+    state->randomHeadings[i] = (s16)heading;
+    i = i + 1;
+  } while (i < CHECKPOINT4_RANDOM_HEADING_COUNT);
+  checkpoint->checkpointIndex = placement->checkpointIndex;
+  checkpoint->objectFlags |= CHECKPOINT4_OBJECT_FLAGS_ENABLED;
   return;
 }
 
