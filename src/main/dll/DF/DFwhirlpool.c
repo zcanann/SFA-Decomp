@@ -1,4 +1,5 @@
 #include "main/dll/DF/DFcradle.h"
+#include "main/game_object.h"
 #include "main/dll/DF/DFwhirlpool.h"
 #include "main/dll/DF/dfropenode.h"
 
@@ -90,10 +91,10 @@ void dfropenode_render(int obj, int param_2, int param_3)
 
   if (((*(u8 *)(objDef + 0x18) & 1) != 0) && (*(void **)&extra->linkedObj != NULL) &&
       (extra->rope != NULL)) {
-    originalScale = *(f32 *)(obj + 8);
-    *(f32 *)(obj + 8) = lbl_803E4DF8;
+    originalScale = ((GameObject *)obj)->anim.rootMotionScale;
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E4DF8;
     Camera_LoadModelViewMatrix(0, param_3, obj, lbl_803E4E18, lbl_803E4DFC, 0);
-    *(f32 *)(obj + 8) = originalScale;
+    ((GameObject *)obj)->anim.rootMotionScale = originalScale;
     textureSetupFn_800799c0();
     textRenderSetupFn_800795e8();
     textRenderSetupFn_80079804();
