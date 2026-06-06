@@ -484,10 +484,12 @@ void FUN_801b9728(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  */
 void FUN_801b972c(undefined2 *param_1,int param_2)
 {
+  ObjAnimComponent *objAnim;
   short sVar1;
   uint uVar2;
   int iVar3;
   
+  objAnim = (ObjAnimComponent *)param_1;
   iVar3 = *(int *)(param_1 + 0x5c);
   *(undefined4 *)(iVar3 + 0xa0) = *(undefined4 *)(param_2 + 0x14);
   *(float *)(iVar3 + 0xa4) =
@@ -497,9 +499,8 @@ void FUN_801b972c(undefined2 *param_1,int param_2)
   *(float *)(iVar3 + 0xa8) =
        (f32)(s32)(uVar2);
   *(undefined4 *)(param_2 + 0x14) = 0xffffffff;
-  uVar2 = randomGetRange(0,(int)*(char *)(*(int *)((int)param_1 + offsetof(ObjAnimComponent, modelInstance)) +
-                                           offsetof(ObjModelInstance, modelCount)) - 1);
-  *(char *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) = (char)uVar2;
+  uVar2 = randomGetRange(0,objAnim->modelInstance->modelCount - 1);
+  objAnim->bankIndex = (char)uVar2;
   *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
   uVar2 = randomGetRange(0,0xffff);
   *param_1 = (short)uVar2;
@@ -1112,14 +1113,13 @@ extern f32 lbl_803E4B58;
 #pragma scheduling off
 void dim2icefloe_init(int obj, int p)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int sub = *(int *)(obj + 0xb8);
     *(int *)(sub + 0xa0) = *(int *)(p + 0x14);
     *(f32 *)(sub + 0xa4) = (f32)*(s16 *)(p + 0x1c) / lbl_803E4B48;
     *(f32 *)(sub + 0xa8) = (f32)(s32)randomGetRange(-0x1e, 0x1e);
     *(int *)(p + 0x14) = -1;
-    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) =
-        (s8)randomGetRange(0, *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) +
-                                      offsetof(ObjModelInstance, modelCount)) - 1);
+    objAnim->bankIndex = (s8)randomGetRange(0, objAnim->modelInstance->modelCount - 1);
     *(s16 *)(obj + 0x0) = (s16)((s32)*(s8 *)(p + 0x18) << 8);
     *(s16 *)(obj + 0x0) = (s16)randomGetRange(0, 0xffff);
     *(u8 *)(obj + 0x36) = 0;

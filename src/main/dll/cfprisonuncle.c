@@ -2316,11 +2316,13 @@ void duster_update(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void MagicPlant_init(int obj, MagicPlantSetup *setup) {
+    ObjAnimComponent *objAnim;
     MagicPlantState *state;
     s32 r;
     f32 t;
     int divisor;
 
+    objAnim = (ObjAnimComponent *)obj;
     state = *(MagicPlantState **)(obj + 0xb8);
     ObjGroup_AddObject(obj, 52);
     ObjGroup_AddObject(obj, 62);
@@ -2344,10 +2346,9 @@ void MagicPlant_init(int obj, MagicPlantSetup *setup) {
     ObjAnim_SetMoveProgress((double)state->animProgress, (ObjAnimComponent *)obj);
     *(s16 *)obj = (s16)((u32)setup->yawByte << 8);
     *(u16 *)(obj + 0xb0) |= 0x2000;
-    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)setup->modelIndex;
-    if ((s8)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
-        (s8)*(u8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
-        *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
+    objAnim->bankIndex = (s8)setup->modelIndex;
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+        objAnim->bankIndex = 0;
     }
     if (*(void **)(obj + 0x64) != NULL) {
         *(u32 *)(*(int *)(obj + 0x64) + 48) |= 0x810;

@@ -190,10 +190,12 @@ void FUN_8018cf58(int param_1, int param_2, int param_3, int param_4, int param_
 #pragma scheduling off
 void dll_127_init(short *param_1,int param_2)
 {
+  ObjAnimComponent *objAnim;
   float fVar1;
   uint uVar2;
   u8 b;
 
+  objAnim = (ObjAnimComponent *)param_1;
   param_1[3] = param_1[3] | 2;
   b = *(u8 *)(param_2 + 0x19);
   fVar1 = (f32)(int)b;
@@ -205,13 +207,11 @@ void dll_127_init(short *param_1,int param_2)
   if (*(float **)(param_1 + 0x32) != (float *)0x0) {
     **(float **)(param_1 + 0x32) = **(float **)(param_1 + 0x28) * fVar1;
   }
-  *(s8 *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) = (s8)*(u8 *)(param_2 + 0x18);
+  objAnim->bankIndex = (s8)*(u8 *)(param_2 + 0x18);
   uVar2 = *(byte *)(param_2 + 0x1a) & 0x3f;
   *param_1 = (short)(uVar2 << 10);
-  if (*(char *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) >=
-      *(char *)(*(int *)((int)param_1 + offsetof(ObjAnimComponent, modelInstance)) +
-                offsetof(ObjModelInstance, modelCount))) {
-    *(undefined *)((int)param_1 + offsetof(ObjAnimComponent, bankIndex)) = 0;
+  if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+    objAnim->bankIndex = 0;
   }
   *(undefined4 *)(param_1 + 0x7a) = 0;
   *(undefined4 *)(param_1 + 0x7c) = 0;
@@ -556,6 +556,7 @@ extern f32 lbl_803E3DC8;
  */
 void kt_torch_init(int obj, int p2)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     f32 scale;
     u8 b;
 
@@ -571,10 +572,9 @@ void kt_torch_init(int obj, int p2)
     if (*(void **)(obj + 0x64) != NULL) {
         **(f32 **)(obj + 0x64) = **(f32 **)(obj + 0x50) * scale;
     }
-    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)*(u8 *)(p2 + 0x18);
-    if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
-        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
-        *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
+    objAnim->bankIndex = (s8)*(u8 *)(p2 + 0x18);
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+        objAnim->bankIndex = 0;
     }
     ObjAnim_SetCurrentMove(obj, *(u8 *)(p2 + 0x19), (f32)*(u8 *)(p2 + 0x1a) * lbl_803E3DC8, 0);
     {

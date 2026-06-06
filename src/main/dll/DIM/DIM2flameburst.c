@@ -1841,9 +1841,9 @@ void explosion_free(int obj)
 #pragma scheduling off
 int explosion_getObjectTypeId(int obj)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int idx = (int)*(short *)(*(int *)(obj + 0x4c) + 0x1c) & 3;
-    if (idx >= (int)*(char *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) +
-                               offsetof(ObjModelInstance, modelCount))) {
+    if (idx >= objAnim->modelInstance->modelCount) {
         idx = 0;
     }
     return (idx << 11) | 0x400;
