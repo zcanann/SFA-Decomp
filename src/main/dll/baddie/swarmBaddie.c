@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/objanim.h"
 #include "main/dll/baddie/swarmBaddie.h"
 
 
@@ -143,7 +144,6 @@ extern void Camera_UpdateViewMatrices(void);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
 extern void GXSetViewport(f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
-extern void ObjAnim_AdvanceCurrentMove(int obj, f32 a, f32 b, u8 *buf);
 extern void objRender(int a, int b, int c, int d, int obj, int e);
 extern int Obj_GetActiveModel(int obj);
 extern f32 fsin16Approx(u16 angle);
@@ -264,7 +264,7 @@ void drawFn_80125424(void)
                       (f32)(u32)*(u16 *)(lbl_803DCCF0 + 4), (f32)(u32)*(u16 *)(lbl_803DCCF0 + 8),
                       lbl_803E1E3C, lbl_803E1E68);
         if (*(u8 **)&lbl_803A93F8[type] != NULL) {
-            ObjAnim_AdvanceCurrentMove(lbl_803A93F8[type], lbl_8031BFA8[type], timeDelta, 0);
+            ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[type], timeDelta, lbl_803A93F8[type], NULL);
             if (*(u32 *)(lbl_803A93F8[type] + 0x4c) > 0x90000000u) {
                 *(u32 *)(lbl_803A93F8[type] + 0x4c) = 0;
             }
@@ -714,7 +714,6 @@ void gameTextFn_80125ba4(int idx) {
 extern int lbl_8031BF90[];
 extern u8 *Obj_AllocObjectSetup(int size, int def);
 extern int Obj_SetupObject(u8 *def, int a, int b, int c, int d);
-extern void ObjAnim_SetCurrentMove(int obj, int idx, f32 v, int p);
 extern f32 lbl_803E1E3C;
 extern f32 lbl_803E1E5C;
 extern f32 lbl_803E205C;

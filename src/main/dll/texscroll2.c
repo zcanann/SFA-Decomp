@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/dll/texscroll2.h"
 
 
@@ -325,7 +326,6 @@ FUN_80168368(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 #pragma peephole off
 int fn_80167E3C(int obj, int p2)
 {
-  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3090;
 
@@ -348,7 +348,6 @@ int fn_80167E3C(int obj, int p2)
 #pragma peephole off
 int fn_80167D10(int obj, int p2)
 {
-  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3090;
 
@@ -373,7 +372,6 @@ int fn_80167D10(int obj, int p2)
 int fn_80167EC4(int obj, int p2)
 {
   extern void ObjHits_EnableObject(int);
-  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3094;
 
@@ -395,7 +393,6 @@ int fn_80167EC4(int obj, int p2)
 #pragma peephole off
 int fn_80167DA4(int obj, int p2)
 {
-  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern char lbl_803203F8[];
   extern f32 lbl_80320404[];
   extern f32 lbl_803E3060;
@@ -419,7 +416,6 @@ int fn_80167DA4(int obj, int p2)
 #pragma peephole off
 int fn_80167F58(int obj, int p2)
 {
-  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern void ObjHits_EnableObject(int);
   extern s16 lbl_803203F8[];
   extern f32 lbl_80320404[];
@@ -445,7 +441,6 @@ int fn_80167F58(int obj, int p2)
 #pragma peephole off
 int fn_80168018(int obj, int p2)
 {
-  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern void ObjHits_DisableObject(int);
   extern void fn_80169360(int obj, int mode);
   extern f32 lbl_803E3060;
@@ -482,7 +477,6 @@ int fn_80168018(int obj, int p2)
 #pragma peephole off
 int fn_80168118(int obj, int p2)
 {
-  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern void ObjHits_EnableObject(int);
   extern void fn_80169360(int obj, int mode);
   extern f32 lbl_803E3060;

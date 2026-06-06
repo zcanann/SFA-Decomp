@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/dll/DIM/DIM2lift.h"
 
 extern undefined4 FUN_80006824();
@@ -1000,7 +1001,6 @@ int fn_801BA590(int unused, int *p) { return *(s8*)((char*)p + 0x346) != 0; }
 
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C24;
-extern void ObjAnim_SetCurrentMove(int *obj, int n, f32 v, int m);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
@@ -1010,7 +1010,7 @@ extern void** gPlayerInterface;
 #pragma peephole off
 int fn_801BB1EC(int* obj, u8* state, f32 weight) {
     if ((s8)state[634] != 0) {
-        ObjAnim_SetCurrentMove(obj, 2, lbl_803E4BD8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E4BD8, 0);
         state[838] = 0;
     }
     *(f32*)((char*)state + 0x2a0) = lbl_803E4C24;
@@ -1050,7 +1050,7 @@ int fn_801BB2B0(int* obj, u8* state) {
     if ((s8)state[634] != 0) {
         f32 fz;
         if ((s8)state[634] != 0) {
-            ObjAnim_SetCurrentMove(obj, 1, lbl_803E4BD8, 0);
+            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E4BD8, 0);
             state[838] = 0;
         }
         fz = lbl_803E4BD8;
@@ -1113,7 +1113,6 @@ int fn_801BA880(int obj, int p2)
 {
   f32 zeroProgress;
   extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
-  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern void Camera_EnableViewYOffset(void);
   extern void CameraShake_Start(f32, f32, f32);
   extern void doRumble(f32);
@@ -1178,12 +1177,12 @@ int fn_801BA958(int obj, int param2)
         *(f32 *)(param2 + 0x2a0) = lbl_803E4C00;
         if ((int)randomGetRange(0, 1) != 0) {
             if (*(s8 *)(param2 + 0x27a) != 0) {
-                ObjAnim_SetCurrentMove((int *)obj, 0xd, lbl_803E4BD8, 0);
+                ObjAnim_SetCurrentMove(obj, 0xd, lbl_803E4BD8, 0);
                 *(u8 *)(param2 + 0x346) = 0;
             }
         } else {
             if (*(s8 *)(param2 + 0x27a) != 0) {
-                ObjAnim_SetCurrentMove((int *)obj, 0xc, lbl_803E4BD8, 0);
+                ObjAnim_SetCurrentMove(obj, 0xc, lbl_803E4BD8, 0);
                 *(u8 *)(param2 + 0x346) = 0;
             }
         }
@@ -1209,7 +1208,7 @@ int fn_801BB0D8(int obj, int param2, f32 fParam)
     *(f32 *)(param2 + 0x280) = lbl_803E4BD8;
     if (*(s8 *)(param2 + 0x346) != 0 || *(s8 *)(param2 + 0x27a) != 0 || *(s16 *)(obj + 0xa0) == 1) {
         (*(int (**)(int, int, int, u16 *, s16 *, s16 *))(*(int *)gBaddieControlInterface + 0x14))(obj, *(int *)(param2 + 0x2d0), 0x10, &local_c, &local_a, &local_8);
-        ObjAnim_SetCurrentMove((int *)obj, lbl_80325960[local_c], lbl_803E4BD8, 0);
+        ObjAnim_SetCurrentMove(obj, lbl_80325960[local_c], lbl_803E4BD8, 0);
         *(f32 *)(param2 + 0x2a0) = lbl_803259A0[local_c];
         *(u8 *)(param2 + 0x346) = 0;
     }
@@ -1230,7 +1229,7 @@ int fn_801BAA84(int obj, int param2, f32 fParam)
         f32 v;
         *(f32 *)(param2 + 0x2a0) = lbl_803E4C04;
         if (*(s8 *)(param2 + 0x27a) != 0) {
-            ObjAnim_SetCurrentMove((int *)obj, 0x13, lbl_803E4BD8, 0);
+            ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E4BD8, 0);
             *(u8 *)(param2 + 0x346) = 0;
         }
         *(s16 *)(obj + 0xa2) = -1;
@@ -1271,7 +1270,7 @@ int fn_801BA780(int obj, int param2)
         *(f32 *)(param2 + 0x280) = v;
         *(f32 *)(param2 + 0x284) = v;
         if (*(s8 *)(param2 + 0x27a) != 0) {
-            ObjAnim_SetCurrentMove((int *)obj, 0xe, v, 0);
+            ObjAnim_SetCurrentMove(obj, 0xe, v, 0);
             *(u8 *)(param2 + 0x346) = 0;
         }
         if (*(s16 *)(state + 0x402) == 1) {
@@ -1306,7 +1305,7 @@ int fn_801BA654(int obj, int param2)
         *(f32 *)(param2 + 0x280) = v;
         *(f32 *)(param2 + 0x284) = v;
         if (*(s8 *)(param2 + 0x27a) != 0) {
-            ObjAnim_SetCurrentMove((int *)obj, 0x15, v, 0);
+            ObjAnim_SetCurrentMove(obj, 0x15, v, 0);
             *(u8 *)(param2 + 0x346) = 0;
         }
     }
@@ -1329,7 +1328,7 @@ int fn_801BAB88(int obj, int param2, f32 arg)
     if (*(s8 *)(param2 + 0x27a) != 0) {
         *(f32 *)(param2 + 0x2a0) = lbl_803E4C08;
         if (*(s8 *)(param2 + 0x27a) != 0) {
-            ObjAnim_SetCurrentMove((int *)obj, 0x12, lbl_803E4BD8, 0);
+            ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E4BD8, 0);
             *(u8 *)(param2 + 0x346) = 0;
         }
         *(s16 *)(obj + 0xa2) = -1;
@@ -1364,7 +1363,7 @@ int fn_801BACB8(int obj, int param2, f32 arg)
     if (*(s8 *)(param2 + 0x27a) != 0) {
         *(f32 *)(param2 + 0x2a0) = lbl_803E4C14;
         if (*(s8 *)(param2 + 0x27a) != 0) {
-            ObjAnim_SetCurrentMove((int *)obj, 0x11, lbl_803E4BD8, 0);
+            ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E4BD8, 0);
             *(u8 *)(param2 + 0x346) = 0;
         }
         *(s16 *)(obj + 0xa2) = -1;
@@ -1399,7 +1398,7 @@ int fn_801BAE00(int obj, int param2, f32 arg)
     if (*(s8 *)(param2 + 0x27a) != 0) {
         *(f32 *)(param2 + 0x2a0) = lbl_803E4C00;
         if (*(s8 *)(param2 + 0x27a) != 0) {
-            ObjAnim_SetCurrentMove((int *)obj, 0x11, lbl_803E4BD8, 0);
+            ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E4BD8, 0);
             *(u8 *)(param2 + 0x346) = 0;
         }
         *(s16 *)(obj + 0xa2) = -1;
@@ -1438,13 +1437,13 @@ int fn_801BAF58(int obj, int param2, f32 arg)
         *(f32 *)(param2 + 0x284) = v;
         if ((int)randomGetRange(0, 1) != 0) {
             if (*(s8 *)(param2 + 0x27a) != 0) {
-                ObjAnim_SetCurrentMove((int *)obj, 0xb, lbl_803E4BD8, 0);
+                ObjAnim_SetCurrentMove(obj, 0xb, lbl_803E4BD8, 0);
                 *(u8 *)(param2 + 0x346) = 0;
             }
             *(f32 *)(param2 + 0x2a0) = lbl_803E4C00;
         } else {
             if (*(s8 *)(param2 + 0x27a) != 0) {
-                ObjAnim_SetCurrentMove((int *)obj, 0x10, lbl_803E4BD8, 0);
+                ObjAnim_SetCurrentMove(obj, 0x10, lbl_803E4BD8, 0);
                 *(u8 *)(param2 + 0x346) = 0;
             }
             *(f32 *)(param2 + 0x2a0) = lbl_803E4C04;
