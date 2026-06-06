@@ -818,11 +818,13 @@ extern void *lbl_803DCAFC;
 
 void mmInit(void) {
     int size;
+    int t;
     void *p;
     u8 *lo;
     lbl_803DCB42 = 0;
     lo = OSGetArenaLo();
-    size = (u8 *)OSGetArenaHi() - lo - 0x6c0000 - 0x720;
+    t = (u8 *)OSGetArenaHi() - lo - 0x6c0000;
+    size = t - 0x720;
     lbl_803DCB18 = size;
     p = OSAllocFromHeap(__OSCurrHeap, size);
     DCFlushRange(p, size);
