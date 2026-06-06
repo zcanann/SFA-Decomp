@@ -8256,7 +8256,7 @@ void fn_800510F0(void *p1, u8 flag2, u8 flag3) {
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88 - 1, lbl_803DCD8C, 0xff);
     } else {
         PSMTXScale(mtxA, Breaking_803DEB40, Breaking_803DEB40, lbl_803DEACC);
-        PSMTXTrans(mtxB, lbl_803DEADC, lbl_803DEADC, lbl_803DEAC8);
+        PSMTXTrans(mtxB, lbl_803DEADC, *(f32 *)&lbl_803DEADC, lbl_803DEAC8);
         PSMTXConcat(mtxB, mtxA, mtxA);
         GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
         GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, lbl_803DCD80);
@@ -8299,7 +8299,7 @@ void textureFn_80051348(void *p1, u8 p2) {
     int out_c;
     int out_8;
     PSMTXScale(mtxA, Breaking_803DEB40, Breaking_803DEB40, lbl_803DEACC);
-    PSMTXTrans(mtxB, lbl_803DEADC, lbl_803DEADC, lbl_803DEAC8);
+    PSMTXTrans(mtxB, lbl_803DEADC, *(f32 *)&lbl_803DEADC, lbl_803DEAC8);
     PSMTXConcat(mtxB, mtxA, mtxA);
     GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
     buf[0] = p2;
@@ -8692,7 +8692,7 @@ void fn_8004DA54(char *p1) {
     GXSetIndTexMtx(1, m1.v, -2);
     GXSetIndTexMtx(2, m2.v, -2);
     GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 0);
-    PSMTXScale(mtxc4, lbl_803DEB0C, lbl_803DEB0C, lbl_803DEAC8);
+    PSMTXScale(mtxc4, lbl_803DEB0C, *(f32 *)&lbl_803DEB0C, lbl_803DEAC8);
     PSMTXRotRad(mtx94, 0x7a, lbl_803DEB10);
     PSMTXConcat(mtx94, mtxc4, mtxc4);
     t = lbl_803DEB14 * rx;
