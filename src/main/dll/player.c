@@ -10021,9 +10021,8 @@ int fn_802A98FC(int obj, int p2)
             ((af = *(u8 *)((char *)slot + 0xaf)) & 4) == 0 || (af & 0x18) != 0) {
             return 0;
         }
-        c = *(u8 *)((char *)inner + 0x8c8);
         if (*(void **)((char *)p2 + 0x2d0) != NULL ||
-            c == 0x48 || c == 0x47 || c == 0x44 ||
+            (c = *(u8 *)((char *)inner + 0x8c8)) == 0x48 || c == 0x47 || c == 0x44 ||
             *(void **)((char *)inner + 0x7f8) != NULL ||
             ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
             ((ByteFlags *)((char *)inner + 0x3f0))->b04 ||

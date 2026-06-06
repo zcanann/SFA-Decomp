@@ -3658,11 +3658,11 @@ void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
 {
     int cache;
     int count;
-    int dstA;
+    int i;
     int mid;
     int dstB;
+    int dstA;
     f32 fill;
-    int i;
 
     cache = (int)getCache();
     count = (s32)(u32)*(u8*)((char*)p1 + 0xf3) + (s32)(u32)*(u8*)((char*)p1 + 0xf4);
@@ -3670,8 +3670,9 @@ void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
     mid = cache;
     dstB = cache + 0x12c0;
     cacheQueueWait(0);
+    i = 0;
     fill = lbl_803DEA04;
-    for (i = 0; i < count; i++) {
+    for (; i < count; i++) {
         PSMTXConcat((void*)p3, (void*)dstA, (void*)mid);
         PSMTXConcat((void*)mid, (void*)p4, (void*)dstB);
         *(f32*)((char*)dstB + 0xc) = fill;

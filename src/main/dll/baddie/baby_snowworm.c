@@ -2048,11 +2048,11 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
     if (flag != 0) {
         drawScaledTexture(*(void **)(hudTextures + 0x30), (f32)x, (f32)y, alpha, 0x100, w, h, 0);
     }
-    drawScaledTexture(*(void **)(hudTextures + 0x34), (f32)x, (f32)(y + h), alpha, 0x100, w, 5, 2);
-    drawScaledTexture(*(void **)(hudTextures + 0x2c), (f32)(x + w), (f32)y, alpha, 0x100, 5, h, 1);
-    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
-    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
-    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
+    drawScaledTexture(*(void **)(hudTextures + 0x34), (f32)x, (f32)(y + (s16)h), alpha, 0x100, w, 5, 2);
+    drawScaledTexture(*(void **)(hudTextures + 0x2c), (f32)(x + (s16)w), (f32)y, alpha, 0x100, 5, h, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + (s16)w), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 3);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + (s16)w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 2);
 }
 #pragma peephole reset
 #pragma scheduling reset

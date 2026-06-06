@@ -1541,6 +1541,42 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       #55 block-scope local all tested inert). Import-written `int buf[N]`
       + `&buf[K]` call args inside loops are the tell.
 
+81. **fcmpo-on-RELOADED-value cap CRACKED — `*(f32 *)&lbl` launder on ONE of
+    the clamp constant's two references flips the reload/limit register pair.**
+    (task #150; fn_801CEA14, dim2icicle_update, wctemple_update,
+    cclevcontrol_update, dll_1DB_update, fogcontrol_update — 5 to 100%.)
+    The "compare on a RELOADED value" half of the FP fcmpo family (the part
+    recipe-table's temp_t sub-recipe explicitly didn't reach) is NOT
+    allocator-internal. Signature: clamp-to-same-constant after a compound
+    update —
+    `x op= k; if (x > lim) x = lim;` — target emits `lfs f1,off(rN)` (reload)
+    + `lfs f0,lim` + `fcmpo cr0,f1,f0` + `stfs f0`, while the natural C gives
+    the SWAPPED pair (`lfs f0`/`lfs f1`/`fcmpo f0,f1`/`stfs f1`). Mechanism:
+    when BOTH references to the limit are spelled identically, MWCC's
+    symbol-CSE web for `lim` (2 uses: compare + store) gets f1 and the field
+    reload gets f0. Spelling ONE reference as `*(f32 *)&lbl_X` — store side
+    (`x = *(f32 *)&lbl_X;`) or compare side (`if (x > *(f32 *)&lbl_X)`),
+    either works — keeps the single-load CSE but flips the coloring to
+    target's reload=f1/limit=f0. Byte-exact, zero instruction change.
+    - DISCRIMINATOR vs the temp_t sub-recipe (95-98 triage table): if target
+      reloads the field fresh (`lfs` from the same offset right after the
+      `stfs`), use THIS recipe; if the compare consumes the arithmetic result
+      with no reload, use temp_t.
+    - The 3-constant variant (`if (x < lim) x = OTHER;`) matches naturally —
+      only the store-the-compared-constant form diverges.
+    - Probe notes (don't retry): ternary `x = (x > lim) ? lim : x;` gives the
+      right registers but the wrong branch shape (+fmr +b — 2 instrs bigger);
+      `(f32)lim` cast, `+lim`, parens, block-scope extern redecl, v/L locals
+      in every order, goto/inverted-else/do-while forms, volatile reload,
+      and `(int)`-cast of the store base are all inert (13+11 /tmp probes).
+    - When the compared constant is MULTI-USE across the fn (e.g. 0.0 used
+      10×), A/B compare-side vs store-side laundering and measure — webs
+      interact (exploded_stepDebrisPhysics: compare-side +1.03, store-side
+      +0.76, BOTH stacked worse than either).
+    - Residual NOT this class: reload lands in f1 but target wants f2 with a
+      precolored f1 call-arg web nearby (cfprisonguard_render 99.79) — that's
+      the FP volatile-permutation cap; launders tested inert there.
+
 **dtk `block_relocations` ranges currently in config/GSAE01/config.yml**
 (recipe #73 instances — flag constants that coincide with code addresses):
 `0x80180100–0x80180218` (fn_8017FFD0 interior), `0x80080108–0x80080120`
