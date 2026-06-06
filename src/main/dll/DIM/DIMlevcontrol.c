@@ -597,8 +597,8 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
         got = mapBlockFn_80060678();
         if (arg3 == got) {
             if (arg2 != 0) {
-                block[0x10/4] = block[0x10/4] & ~2;
-                block[0x10/4] = block[0x10/4] & ~1;
+                *(u32 *)(block + 0x10/4) &= ~2LL;
+                *(u32 *)(block + 0x10/4) &= ~1LL;
             } else {
                 block[0x10/4] = block[0x10/4] | 2;
                 block[0x10/4] = block[0x10/4] | 1;
@@ -609,7 +609,7 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
         layer = (int *)fn_8006070C(arg1, i);
         if (arg3 == (int)*(u8 *)((char *)Shader_getLayer((int)layer, 0) + 5)) {
             if (arg2 != 0) {
-                layer[0x3c/4] = layer[0x3c/4] & ~2;
+                *(u32 *)(layer + 0x3c/4) &= ~2LL;
             } else {
                 layer[0x3c/4] = layer[0x3c/4] | 2;
             }
