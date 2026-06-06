@@ -289,9 +289,14 @@ typedef struct {
     u16 track;
     u8 pad[0xc];
 } MusicTrigger;
+/* Partial view of the synth sequence-player record; the FULL layout is
+ * src/main/audio/synth_internal.h's SynthVoice (sizeof 0x1868 and state
+ * @0x08 probe-verified against it; the two headers are never co-included,
+ * recipe-#57 per-TU view). NOT the 0x404 per-voice record - that is
+ * McmdVoiceState (mcmd.h). */
 typedef struct SynthVoice {
-    u8 pad0[8];
-    u8 field_8;
+    u8 pad0[8]; /* next/prev */
+    u8 state;   /* 0x08 */
     u8 pad9[0x1868 - 9];
 } SynthVoice;
 typedef struct {

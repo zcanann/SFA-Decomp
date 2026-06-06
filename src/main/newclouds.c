@@ -8,12 +8,6 @@ typedef struct ObjSeqBgCmd {
     s8 pad;
 } ObjSeqBgCmd;
 
-typedef struct SkyBlendStateFlags {
-    u8 unused80 : 1;
-    u8 active : 1;
-    u8 rest : 6;
-} SkyBlendStateFlags;
-
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mm_free(void *ptr);
 extern void *Resource_Acquire(int id, int mode);

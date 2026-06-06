@@ -2340,7 +2340,7 @@ void Music_Update(void)
     do {
         int status = ch->status;
         if (status != 0 && status != 4) {
-            if (gSynthVoices[ch->voiceId].field_8 == 0) {
+            if (gSynthVoices[ch->voiceId].state == 0) {
                 if (status == 4 || status == 5) {
                     ch->status = 5;
                 } else {
