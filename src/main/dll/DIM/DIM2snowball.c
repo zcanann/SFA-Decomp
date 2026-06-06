@@ -1321,14 +1321,16 @@ extern u8 lbl_803DBF20;
 extern int* getTrickyObject(void);
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
- * return 1 if result == 0 else 0. */
+ * return 1 if the signed result dropped to or below 0. */
+#pragma peephole off
 #pragma scheduling off
 int fn_801B6D40(int* obj, int v)
 {
     u8* state = ((GameObject *)obj)->extra;
-    state[2] = (s8)(state[2] - v);
-    return *(s8 *)(state + 2) == 0;
+    *(s8 *)(state + 2) = (s8)(state[2] - v);
+    return *(s8 *)(state + 2) <= 0;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -1683,8 +1685,8 @@ void dim2pathgenerator_update(int *obj)
     int *extra = ((GameObject *)obj)->extra;
     int toggle;
     int **objs;
-    int count;
     int i;
+    int count;
 
     def = *(int **)&((GameObject *)obj)->anim.placementData;
     if (GameBit_Get(*(s16 *)((char *)def + 0x22)) == 0) {
@@ -1693,11 +1695,12 @@ void dim2pathgenerator_update(int *obj)
     if ((((Dim2PathGeneratorState *)extra)->flags & 4) != 0) {
         if ((((Dim2PathGeneratorState *)extra)->flags & 2) == 0) {
             int n = 21;
-            if (((int (*)(int *, int, int, f32, f32, f32))((int *)*gRomCurveInterface)[0x14 / 4])(
-                    &n, 1, 10, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
-                    ((GameObject *)obj)->anim.localPosZ) != -1) {
-                int *cv = (int *)((int (*)(void))((int *)*gRomCurveInterface)[0x1c / 4])();
-                ((void (*)(void))((int *)*gRomCurveInterface)[0x74 / 4])();
+            int found = ((int (*)(f32, f32, f32, int *, int, int))((int *)*gRomCurveInterface)[0x14 / 4])(
+                ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                ((GameObject *)obj)->anim.localPosZ, &n, 1, 10);
+            if (found != -1) {
+                int *cv = (int *)((int (*)(int))((int *)*gRomCurveInterface)[0x1c / 4])(found);
+                ((void (*)(int))((int *)*gRomCurveInterface)[0x74 / 4])((int)cv);
                 ((Dim2PathGeneratorState *)extra)->curveValid =
                     ((int (*)(int *, void *, void *, void *, void *))((int *)*gRomCurveInterface)[0x78 / 4])(
                         cv, (char *)extra + 0xc, (char *)extra + 0x32c, (char *)extra + 0x64c,
@@ -1739,7 +1742,7 @@ void dim2pathgenerator_update(int *obj)
             o2 = ObjGroup_GetObjects(47, &c2);
             for (j = 0; j < c2; j++) {
             }
-            ((Dim2PathGeneratorState *)extra)->flags |= (toggle ^ 1);
+            ((Dim2PathGeneratorState *)extra)->flags |= (toggle ^ 1) & 1;
             return;
         }
     }
@@ -1754,12 +1757,12 @@ void dim2pathgenerator_update(int *obj)
         *(u8 *)((char *)np + 7) = *(u8 *)((char *)def + 7);
         *(u8 *)((char *)np + 7) = 255;
         *(u8 *)((char *)np + 3) = *(u8 *)((char *)def + 3);
-        *(s8 *)((char *)np + 0x18) = *(s8 *)((char *)def + 0x1c);
+        *(s8 *)((char *)np + 0x18) = (s8)*(u8 *)((char *)def + 0x1c);
         *(s16 *)((char *)np + 0x1a) = *(u8 *)((char *)def + 0x1a);
         *(s16 *)((char *)np + 0x1c) = *(u8 *)((char *)def + 0x1b);
         *(int *)((char *)np + 0x14) = *(int *)((char *)def + 0x14);
         Obj_SetupObject((int)np, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
-        ((Dim2PathGeneratorState *)extra)->flags |= (toggle ^ 1);
+        ((Dim2PathGeneratorState *)extra)->flags |= (toggle ^ 1) & 1;
     }
 }
 #pragma peephole reset

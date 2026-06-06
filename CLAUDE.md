@@ -416,6 +416,14 @@ Heuristic:
     MWCC then emits the explicit `li r3,0; b` form rather than synthesizing the
     `cntlzw` non-zero idiom. (zulu13, 80220608 *_free family.)
 
+**#23 addendum — the `li rD,1; cntlzw r0,x; rlwnm rD,rD,r0,31,31` idiom is
+MWCC's materialization of `x <= 0` (signed).** Mechanism: cntlzw(x) is 32 for
+x==0 and 0 for x<0; rotating 1 by either lands bit31 set, any other count
+clears it. When a tiny predicate fn shows this tail and the import wrote
+`== 0`, the original was `<= 0` — a real behavioral difference, not a codegen
+cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
+(s8)-cast extsb before the stb).
+
 24. **Declare single-precision math/helper callees as `f32 fn(f32)`, NOT
     `double fn(double)`.** A `double` signature makes MWCC promote args and
     round results through `fmul`+`frsp` (double-precision multiply then
