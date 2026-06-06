@@ -1,4 +1,5 @@
 #include "main/audio/hw_init.h"
+#include "main/audio/dsp_voice.h"
 
 extern undefined4 DAT_803be6f6;
 extern undefined4 DAT_803be71a;
@@ -129,15 +130,15 @@ void snd_handle_irq(void)
     voiceIndex = 0;
     while ((u8)voiceIndex < salNumVoices) {
         entry = dspVoice;
-        *(u32 *)(entry + offset + 0x24) = clearValue;
+        ((DspVoice *)(entry + offset))->changed[0] = clearValue;
         entry = dspVoice;
-        *(u32 *)(entry + offset + 0x28) = clearValue;
+        ((DspVoice *)(entry + offset))->changed[1] = clearValue;
         entry = dspVoice;
-        *(u32 *)(entry + offset + 0x2c) = clearValue;
+        ((DspVoice *)(entry + offset))->changed[2] = clearValue;
         entry = dspVoice;
-        *(u32 *)(entry + offset + 0x30) = clearValue;
+        ((DspVoice *)(entry + offset))->changed[3] = clearValue;
         entry = dspVoice;
-        *(u32 *)(entry + offset + 0x34) = clearValue;
+        ((DspVoice *)(entry + offset))->changed[4] = clearValue;
         offset += 0xf4;
         voiceIndex++;
     }
@@ -243,7 +244,7 @@ void hwSetPriority(int slot, u32 value)
     slot *= 0xf4;
     entry = dspVoice;
     entry += slot;
-    *(u32 *)(entry + 0x1c) = value;
+    ((DspVoice *)entry)->prio = value;
 }
 
 void hwInitSamplePlayback(int slot, u16 value70, u32 *values, u32 resetAdsr, u32 priority, u32 value18, u32 resetSrc, u32 itdMode)
@@ -268,6 +269,7 @@ void hwInitSamplePlayback(int slot, u16 value70, u32 *values, u32 resetAdsr, u32
         entry = dspVoice;
         entry += inputOffset;
         entry += offset;
+        /* raw pair: member form CSEs the field address (addi+stw 0) */
         flags |= *(u32 *)(entry + 0x24) & 0x20;
         *(u32 *)(entry + 0x24) = zero;
         inputOffset += 4;
@@ -276,23 +278,23 @@ void hwInitSamplePlayback(int slot, u16 value70, u32 *values, u32 resetAdsr, u32
 
     entry = dspVoice;
     entry += offset;
-    *(u32 *)(entry + 0x24) = flags;
+    ((DspVoice *)entry)->changed[0] = flags;
     entry = dspVoice;
     entry += offset;
-    *(u32 *)(entry + 0x1c) = priority;
+    ((DspVoice *)entry)->prio = priority;
     entry = dspVoice;
     entry += offset;
-    *(u32 *)(entry + 0x18) = value18;
+    ((DspVoice *)entry)->mesgCallBackUserValue = value18;
     entry = dspVoice;
     entry += offset;
-    *(u32 *)(entry + 0xf0) = zero;
+    ((DspVoice *)entry)->flags = zero;
     entry = dspVoice;
     entry += offset;
-    *(u16 *)(entry + 0x70) = value70;
+    ((DspVoice *)entry)->smp_id = value70;
 
     entry = dspVoice;
     entry += offset;
-    dst = (u32 *)(entry + 0x74);
+    dst = ((DspVoice *)entry)->smpInfo;
     valueA = values[0];
     valueB = values[1];
     dst[0] = valueA;
@@ -313,33 +315,33 @@ void hwInitSamplePlayback(int slot, u16 value70, u32 *values, u32 resetAdsr, u32
     if (resetAdsr != 0) {
         entry = dspVoice;
         entry += offset;
-        *(u8 *)(entry + 0xa4) = zero;
+        ((DspVoice *)entry)->adsr.mode = zero;
         entry = dspVoice;
         entry += offset;
-        *(u32 *)(entry + 0xb8) = zero;
+        ((DspVoice *)entry)->adsr.aTime = zero;
         entry = dspVoice;
         entry += offset;
-        *(u32 *)(entry + 0xbc) = zero;
+        ((DspVoice *)entry)->adsr.dTime = zero;
         entry = dspVoice;
         entry += offset;
-        *(u16 *)(entry + 0xc0) = 0x7fff;
+        ((DspVoice *)entry)->adsr.sLevel = 0x7fff;
         entry = dspVoice;
         entry += offset;
-        *(u32 *)(entry + 0xc4) = zero;
+        ((DspVoice *)entry)->adsr.rTime = zero;
     }
 
     entry = dspVoice;
     entry += offset;
-    *(u8 *)(entry + 0xe4) = 0xff;
+    ((DspVoice *)entry)->lastUpdate.pitch = 0xff;
     entry = dspVoice;
     entry += offset;
-    *(u8 *)(entry + 0xe5) = 0xff;
+    ((DspVoice *)entry)->lastUpdate.vol = 0xff;
     entry = dspVoice;
     entry += offset;
-    *(u8 *)(entry + 0xe6) = 0xff;
+    ((DspVoice *)entry)->lastUpdate.volA = 0xff;
     entry = dspVoice;
     entry += offset;
-    *(u8 *)(entry + 0xe7) = 0xff;
+    ((DspVoice *)entry)->lastUpdate.volB = 0xff;
 
     if (resetSrc != 0) {
         hwSetSRCType(slot, 0);

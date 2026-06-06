@@ -8,7 +8,10 @@
  * upstream musyx (MP4 musyx/dspvoice.h), verified against hw_* codegen.
  * Unverified middle regions left padded. */
 typedef struct DspVoice {
-    u8 pad0[0x24];   /* 0x00: pb..currentAddr */
+    u8 pad0[0x18];   /* 0x00: pb..mesgCallBackUserValue */
+    u32 mesgCallBackUserValue; /* 0x18 */
+    u32 prio;        /* 0x1c */
+    u32 currentAddr; /* 0x20 */
     u32 changed[5];  /* 0x24 */
     u8 pad38[0x14];  /* 0x38: pitch[5] */
     u16 volL;        /* 0x4c */
@@ -20,7 +23,11 @@ typedef struct DspVoice {
     u16 volLb;       /* 0x58 */
     u16 volRb;       /* 0x5a */
     u16 volSb;       /* 0x5c */
-    u8 pad5E[0xa4 - 0x5e];
+    u8 pad5E[0x70 - 0x5e];
+    u16 smp_id;      /* 0x70 */
+    u8 pad72[2];
+    u32 smpInfo[8];  /* 0x74: SAMPLE_INFO */
+    u8 pad94[0xa4 - 0x94];
     ADSR_VARS adsr;  /* 0xa4 */
     u16 srcTypeSelect; /* 0xcc */
     u16 srcCoefSelect; /* 0xce */
@@ -39,6 +46,8 @@ typedef struct DspVoice {
 } DspVoice; /* size 0xf4 */
 
 STATIC_ASSERT(offsetof(DspVoice, volL) == 0x4c);
+STATIC_ASSERT(offsetof(DspVoice, prio) == 0x1c);
+STATIC_ASSERT(offsetof(DspVoice, smp_id) == 0x70);
 STATIC_ASSERT(offsetof(DspVoice, adsr) == 0xa4);
 STATIC_ASSERT(offsetof(DspVoice, itdShiftL) == 0xd0);
 STATIC_ASSERT(offsetof(DspVoice, studio) == 0xef);
