@@ -2027,6 +2027,37 @@ compare's immediate and subtract 1 for the real case value.
     instead of folding). Net-NEGATIVE on every foodbag fn tested — but the
     pragma's existence is a real tool for fns whose target shows
     creation-order coloring. A/B per fn and read the prologue.
+    **Correction (task #175): `#pragma opt_strength_reduction off/reset` is
+    NOT in the ignored set — it is FUNCTIONAL in GC/2.0** (A/B-verified: same
+    source, walker vs folded displacements). See recipe #96.
+
+96. **Counter-chain cap CRACKED — repeated `lha; addi rX,rX,1; sth; lha
+    (FRESH reload); cmpwi` blocks with ONE hoisted `li r0,K` shared across
+    the resets = an UNROLLED `for` loop; write the loop + `#pragma
+    opt_strength_reduction off`.** (task #175; ecsh_shrine_update
+    96.34→100, +3104.) The three signatures all fall out of the loop form
+    at once: the hoisted `li r0,0` is loop-invariant hoisting of the reset
+    constant; the compound-home `addi rX,rX,1` (increment into the LOAD's
+    reg, no temp) and the fresh reload before the compare (no extsh) are
+    how MWCC compiles the rolled body. Written-out copies instead give
+    `addi r0,rX,1; sth; extsh; cmpwi` + per-arm `li` — the store-forwarding
+    extsh that no launder defeats on a global-derived base (the task-#175
+    tested-inert list: lifted local, &-launder, member-base launder,
+    (int)sum launder). C: `for (n = 0; n < 6; n++) { ps->cur[n] += 1;
+    if (ps->cur[n] > 5) ps->cur[n] = 0; }`. The bare loop leaves one
+    residual: MWCC strength-reduces the subscript to a bumped walker
+    (`addi rP,rP,2; ... 48(rP)`) where target has folded ascending
+    displacements (48,50,52..(rBASE)) — wrap the fn in
+    `#pragma opt_strength_reduction off` ... `reset` (functional in GC/2.0,
+    correcting #95's blanket "opt_* ignored" claim) and the unroller folds
+    the constants byte-exact. DIAGNOSTIC: descending loops fold WITHOUT the
+    pragma (SR rejects negative stride); u8/masked subscripts go lhax (worse).
+    Sibling tells from the same fn: a constant compared at a jump-table
+    DISPATCH and re-stored with no reload in later CASES = an embedded
+    assignment at the compare (`if (x > (fv = lbl)) {...}` + `= fv;` in the
+    case arms — the f0 web crosses the bctr); volatile-launder on a compare
+    read (`*(volatile s16 *)&x > 5`) reproduces a fresh reload WITHOUT the
+    loop shape (use only when the hoisted-li/compound-home tells are absent).
 
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
