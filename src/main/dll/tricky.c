@@ -275,9 +275,8 @@ extern f32 lbl_803DE490;
 extern f32 lbl_803DE494;
 extern f32 lbl_803DE498;
 extern f32 lbl_803DE4BC;
-extern f32 lbl_803DD7F0; /* viewfinder fade level - the drift import wrongly
- * referenced lbl_803DD7F0 (803DE4C4); target asm shows
- * lbl_803DD7F0 (drawViewFinderHud v1.0 recovery agrees) */
+extern f32 gViewFinderFadeLevel; /* ramped/clamped fade for the viewfinder HUD; the drift
+ * import wrongly referenced 803DE4C4 here - target asm shows 803DD7F0 */
 extern f32 lbl_803DE4D0;
 extern f32 lbl_803E2ABC;
 extern f32 lbl_803E2AC0;
@@ -1712,18 +1711,18 @@ void FUN_8011f438(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       (dVar10 <= (double)DAT_803a9f60)) || (DAT_803de418 != 0)) {
     dVar10 = (double)lbl_803E2B40;
   }
-  dVar12 = (double)lbl_803DD7F0;
+  dVar12 = (double)gViewFinderFadeLevel;
   if (dVar10 <= dVar12) {
     if ((dVar10 < dVar12) &&
-       (lbl_803DD7F0 = -(float)((double)lbl_803E2C20 * (double)lbl_803DC074 - dVar12),
-       lbl_803DD7F0 < lbl_803E2ABC)) {
-      lbl_803DD7F0 = lbl_803E2ABC;
+       (gViewFinderFadeLevel = -(float)((double)lbl_803E2C20 * (double)lbl_803DC074 - dVar12),
+       gViewFinderFadeLevel < lbl_803E2ABC)) {
+      gViewFinderFadeLevel = lbl_803E2ABC;
     }
   }
   else {
-    lbl_803DD7F0 = (float)((double)lbl_803E2C20 * (double)lbl_803DC074 + dVar12);
-    if (lbl_803E2B40 < lbl_803DD7F0) {
-      lbl_803DD7F0 = lbl_803E2B40;
+    gViewFinderFadeLevel = (float)((double)lbl_803E2C20 * (double)lbl_803DC074 + dVar12);
+    if (lbl_803E2B40 < gViewFinderFadeLevel) {
+      gViewFinderFadeLevel = lbl_803E2B40;
     }
   }
   uVar7 = (uint)lbl_803DE4BC;
@@ -3084,7 +3083,7 @@ extern const f64 lbl_803E1EA0, lbl_803E1EA8, lbl_803E1EB0, lbl_803E1EB8;
 extern f64 lbl_803E1E78;
 extern const f64 lbl_803E1EF0, lbl_803E1EF8, lbl_803E1F00, lbl_803E1F20, lbl_803E1F28;
 extern const f32 lbl_803E1EC4, lbl_803E1EC8, lbl_803E1ECC, lbl_803E1ED0;
-extern f32 lbl_803DD7F0, lbl_803DD7F4;
+extern f32 gViewFinderFadeLevel, lbl_803DD7F4;
 extern const f32 lbl_803E1ED4, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE0, lbl_803E1EE4, lbl_803E1EE8, lbl_803E1E94;
 extern const f32 lbl_803E1F08, lbl_803E1F0C, lbl_803E1F10, lbl_803E1F14, lbl_803E1F18;
 extern const f32 lbl_803E1F30, lbl_803E1F34, lbl_803E1F48, lbl_803E1F4C;
@@ -3112,7 +3111,7 @@ extern int sprintf(char *, ...);
     s16 _a; \
     f32 _r, _cs, _sn, _cx, _sx; \
     *(int *)&_c = lbl_803E1E2C; \
-    _c.a = hudElementOpacity * lbl_803DD7F0; \
+    _c.a = hudElementOpacity * gViewFinderFadeLevel; \
     _a = (s16)getAngle(gA1, gA2); \
     _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94; \
     _cs = mathSinf(_r); \
@@ -3129,7 +3128,7 @@ extern int sprintf(char *, ...);
     s16 _a; \
     f32 _r, _cs, _sn, _cx, _sx; \
     *(int *)&_c = lbl_803E1E2C; \
-    _c.a = hudElementOpacity * lbl_803DD7F0; \
+    _c.a = hudElementOpacity * gViewFinderFadeLevel; \
     _a = (s16)getAngle(gA1, gA2); \
     _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94; \
     _cs = mathSinf(_r); \
@@ -3149,13 +3148,13 @@ void drawViewFinderHud(void) {
     fovY = Camera_GetFovY();
     slot = Camera_GetCurrentViewSlot();
     if (Rcp_GetViewFinderHudEnabled() && pauseMenuState == 0) {
-        lbl_803DD7F0 = (f32)(lbl_803E1EA0 * timeDelta + lbl_803DD7F0);
+        gViewFinderFadeLevel = (f32)(lbl_803E1EA0 * timeDelta + gViewFinderFadeLevel);
     } else {
-        lbl_803DD7F0 = (f32)(lbl_803DD7F0 - lbl_803E1EA8 * timeDelta);
+        gViewFinderFadeLevel = (f32)(gViewFinderFadeLevel - lbl_803E1EA8 * timeDelta);
     }
-    v = (lbl_803DD7F0 < lbl_803E1E3C) ? lbl_803E1E3C
-                                      : ((lbl_803DD7F0 > lbl_803E1E68) ? lbl_803E1E68 : lbl_803DD7F0);
-    lbl_803DD7F0 = v;
+    v = (gViewFinderFadeLevel < lbl_803E1E3C) ? lbl_803E1E3C
+                                      : ((gViewFinderFadeLevel > lbl_803E1E68) ? lbl_803E1E68 : gViewFinderFadeLevel);
+    gViewFinderFadeLevel = v;
     if (v == lbl_803E1E3C) return;
     lbl_803DD7F4 = (f32)(lbl_803E1EB0 - lbl_803E1EB8 * v);
     lbl_803DD7EC = -*(s16 *)slot;
@@ -3172,13 +3171,13 @@ void drawViewFinderHud(void) {
     {
         char buf[56];
         f32 f15v = (f32)(lbl_803E1EF0 * ((fovY - lbl_803E1EF8) / lbl_803E1F00) + lbl_803E1EB0);
-        f32 f18v = -(lbl_803E1F0C * lbl_803DD7F0) + lbl_803E1F08;
+        f32 f18v = -(lbl_803E1F0C * gViewFinderFadeLevel) + lbl_803E1F08;
         f32 f19v;
         f32 xc;
         {
             GXColor _c2; GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
             *(int *)&_c = lbl_803E1E2C;
-            _c.a = hudElementOpacity * lbl_803DD7F0;
+            _c.a = hudElementOpacity * gViewFinderFadeLevel;
             _a = (s16)getAngle(lbl_803E1E3C, lbl_803E1F08 - f18v);
             _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
             _cs = mathSinf(_r); _sn = mathCosf(_r);
@@ -3190,7 +3189,7 @@ void drawViewFinderHud(void) {
         {
             GXColor _c2; GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
             *(int *)&_c = lbl_803E1E2C;
-            _c.a = hudElementOpacity * lbl_803DD7F0;
+            _c.a = hudElementOpacity * gViewFinderFadeLevel;
             _a = (s16)getAngle(lbl_803E1E3C, (f19v = lbl_803E1F14 + f15v) - f15v);
             _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
             _cs = mathSinf(_r); _sn = mathCosf(_r);
@@ -3202,7 +3201,7 @@ void drawViewFinderHud(void) {
         xc = lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
         xc = (f32)xc;
         sprintf(buf, sTrickyDebugXCoordFormat, xc);
-        gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * lbl_803DD7F0));
+        gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);
 
         {
@@ -3230,7 +3229,7 @@ void drawViewFinderHud(void) {
                 {
                     GXColor _c2; GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
                     f32 f15, f16;
-                    u8 alpha = kF30 * lbl_803DD7F0;
+                    u8 alpha = kF30 * gViewFinderFadeLevel;
                     f31 = kEC4 + f27;
                     f30 = kF34 - f31;
                     _sn = lbl_803DBAE4 * mathCosf(kEC8 * (f30 * lbl_803DBAE0) / kE94);
@@ -3252,7 +3251,7 @@ void drawViewFinderHud(void) {
                 }
                 {
                     GXColor _c2; GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
-                    u8 alpha = kF30 * lbl_803DD7F0;
+                    u8 alpha = kF30 * gViewFinderFadeLevel;
                     f32 f16, f15;
                     _sn = lbl_803DBAE4 * mathCosf(kEC8 * (f30 * lbl_803DBAE0) / kE94);
                     f16 = (f32)(lbl_803DD7F4 + (kF40 + _sn));
@@ -3271,7 +3270,7 @@ void drawViewFinderHud(void) {
                 }
                 {
                     GXColor _c2; GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
-                    u8 alpha = kOpac * lbl_803DD7F0;
+                    u8 alpha = kOpac * gViewFinderFadeLevel;
                     f32 f16, f15;
                     _sn = lbl_803DBAE4 * mathCosf(kEC8 * (f30 * lbl_803DBAE0) / kE94);
                     f16 = lbl_803DD7F4 + (kF48 + _sn);
@@ -3342,7 +3341,7 @@ void drawViewFinderHud(void) {
                 r28v++;
                 if ((u8)r27v != 0) {
                     f32 sn;
-                    gameTextSetColor(0, 0xff, 0, (int)((f32)(u8)r27v * lbl_803DD7F0));
+                    gameTextSetColor(0, 0xff, 0, (int)((f32)(u8)r27v * gViewFinderFadeLevel));
                     sn = lbl_803DBAE4 * mathCosf(lbl_803E1EC8 * ((lbl_803E1F34 - f18) * lbl_803DBAE0) / lbl_803E1E94);
                     gameTextShowStr(buf, 0x93,
                         (int)(lbl_803E1F88 * (f18 - lbl_803E1F78) + lbl_803E1F78),
@@ -3350,7 +3349,7 @@ void drawViewFinderHud(void) {
                 }
                 {
                     GXColor _c2; GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
-                    u8 alpha = (f32)(u8)r26v * lbl_803DD7F0;
+                    u8 alpha = (f32)(u8)r26v * gViewFinderFadeLevel;
                     f32 f15 = lbl_803E1F34 - f18;
                     f32 f16;
                     f64 fx;
@@ -3379,7 +3378,7 @@ void drawViewFinderHud(void) {
             f32 dist = (-farP * nearP) / (((f32)(u32)depth / lbl_803E1F94 - lbl_803E1E68) * (farP - nearP) - nearP);
             if (dist > lbl_803E1E3C && dist < lbl_803E1F98) {
                 sprintf(buf, &lbl_803DBB40, dist / lbl_803E1EC4);
-                gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * lbl_803DD7F0));
+                gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
                 gameTextShowStr(buf, 0x93, 0x32, 0x46);
             }
         }
