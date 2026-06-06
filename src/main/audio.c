@@ -1205,7 +1205,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel *objectChannel)
 {
     void *slot;
     f32 volf;
-    int baseVol;
+    int level;
     f32 near;
     f32 far;
     f32 dist;
@@ -1222,7 +1222,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel *objectChannel)
         return;
     }
     volf = (f32)(u32)objectChannel->volume;
-    baseVol = (int)volf;
+    level = (int)volf;
     near = *(f32 *)((u8 *)objectChannel + 0x20);
     far = *(f32 *)((u8 *)objectChannel + 0x24);
     dist = Sfx_GetListenerRelativeDistance(&objectChannel->x, delta);
@@ -1235,7 +1235,6 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel *objectChannel)
     Sfx_RotateVectorByAngles(*(s16 *)slot, 0, 0, delta);
     Sfx_RotateVectorByAngles(0, -*(s16 *)((u8 *)slot + 0x52), 0, delta);
     if (dist > lbl_803DE59C) {
-        int level;
         f32 scale;
         int pan;
         int fx;
@@ -1262,7 +1261,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel *objectChannel)
         } else if (pan < 0) {
             pan = 0;
         }
-        fx = (int)(lbl_803DE5A8 * delta[2] + lbl_803DE5A4);
+        fx = (int)(*(f32 *)&lbl_803DE5A8 * delta[2] + *(f32 *)&lbl_803DE5A4);
         if (fx > 0x7f) {
             fx = 0x7f;
         } else if (fx < 0) {
@@ -1279,7 +1278,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel *objectChannel)
         if (objectChannel->paused) {
             v = 0;
         } else {
-            v = baseVol;
+            v = level;
         }
         sndFXCtrl(objectChannel->handle, 7, (u8)v);
     }
