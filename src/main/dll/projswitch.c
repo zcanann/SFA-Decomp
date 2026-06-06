@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/projswitch.h"
 #include "main/mapEventTypes.h"
+#include "main/objhits_types.h"
 
 
 extern undefined4 FUN_800033a8();
@@ -409,13 +410,13 @@ void FUN_8014d924(int param_1)
     FUN_80017620(*(uint *)(iVar2 + 0x368));
     *(undefined4 *)(iVar2 + 0x368) = 0;
   }
-  *(undefined4 *)(iVar2 + 0x340) = *(undefined4 *)(*(int *)(param_1 + 0x54) + 0x50);
-  if (*(int *)(*(int *)(param_1 + 0x54) + 0x50) != 0) {
+  *(int *)(iVar2 + 0x340) = (*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject;
+  if ((*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject != 0) {
     *(undefined *)(*(int *)(param_1 + 0x54) + 0x70) = 1;
   }
   if (((*(int *)(param_1 + 200) != 0) &&
       (iVar1 = *(int *)(*(int *)(param_1 + 200) + 0x54), iVar1 != 0)) &&
-     (*(int *)(iVar1 + 0x50) != 0)) {
+     (((ObjHitsPriorityState *)iVar1)->lastHitObject != 0)) {
     *(undefined *)(*(int *)(param_1 + 0x54) + 0x70) = 1;
   }
   if (*(int *)(iVar2 + 0x36c) != 0) {
@@ -535,12 +536,12 @@ void enemy_hitDetect(int obj)
         ModelLightStruct_free(*(int *)(state + 0x368));
         *(int *)(state + 0x368) = 0;
     }
-    *(int *)(state + 0x340) = *(int *)(*(int *)(obj + 0x54) + 0x50);
-    if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL) {
+    *(int *)(state + 0x340) = (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject;
+    if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
         *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 1;
     }
     if (*(void **)(obj + 0xc8) != NULL && *(void **)(*(int *)(obj + 0xc8) + 0x54) != NULL
-        && *(void **)(*(int *)(*(int *)(obj + 0xc8) + 0x54) + 0x50) != NULL) {
+        && (*(ObjHitsPriorityState **)(*(int *)(obj + 0xc8) + 0x54))->lastHitObject != 0) {
         *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 1;
     }
     if (*(void **)(state + 0x36c) != NULL) {

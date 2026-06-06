@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
+#include "main/objhits_types.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -470,8 +471,8 @@ void FUN_8016b3c4(uint param_1)
   if ((*(char *)(param_1 + 0x36) == -1) || (*(char *)(iVar3 + 0xc) != '\0')) {
     ObjHits_SetHitVolumeSlot(param_1,5,1,0);
     ObjHits_EnableObject(param_1);
-    if ((*(int *)(*(int *)(param_1 + 0x54) + 0x50) == 0) ||
-       (iVar1 = FUN_80017a98(), *(int *)(*(int *)(param_1 + 0x54) + 0x50) != iVar1)) {
+    if (((*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject == 0) ||
+       (iVar1 = FUN_80017a98(), (*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject != iVar1)) {
       if ((*(float *)(param_1 + 0x10) <= *(float *)(iVar3 + 4)) && (*(char *)(param_1 + 0x36) == -1)
          ) {
         piVar4 = *(int **)(param_1 + 0xb8);
@@ -2930,7 +2931,7 @@ void FUN_8016f29c(int param_1)
   
   puVar2 = *(uint **)(param_1 + 0xb8);
   if (((*(short *)(param_1 + 0x46) != 0x83e) && ((*(byte *)(puVar2 + 0x1c) & 8) == 0)) &&
-     (iVar1 = *(int *)(*(int *)(param_1 + 0x54) + 0x50), iVar1 != 0)) {
+     (iVar1 = (*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject, iVar1 != 0)) {
     if (*(short *)(iVar1 + 0x46) == 0x6e8) {
       iVar1 = FUN_8020a8c8(iVar1);
       if ((char)iVar1 != -1) {
@@ -5610,7 +5611,7 @@ void fireball_hitDetect(int *obj)
     int *target;
     if (*(s16 *)((char *)obj + 0x46) == 0x83e) return;
     if (*(u8 *)((char *)state + 0x70) & 8) return;
-    target = *(int **)((char *)*(int **)((char *)obj + 0x54) + 0x50);
+    target = (int *)(*(ObjHitsPriorityState **)((char *)obj + 0x54))->lastHitObject;
     if (target == NULL) return;
     if (*(s16 *)((char *)target + 0x46) == 0x6e8) {
         int idx = cmbsrc_getColorIndex(target);
@@ -5817,8 +5818,8 @@ void mikabomb_update(int *obj)
         u32 localA;
         ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
         ObjHits_EnableObject(obj);
-        if (*(void **)((char *)*(int **)((char *)obj + 0x54) + 0x50) != NULL &&
-            *(void **)((char *)*(int **)((char *)obj + 0x54) + 0x50) == Obj_GetPlayerObject()) {
+        if ((*(ObjHitsPriorityState **)((char *)obj + 0x54))->lastHitObject != 0 &&
+            (*(ObjHitsPriorityState **)((char *)obj + 0x54))->lastHitObject == (int)Obj_GetPlayerObject()) {
             if (*(u8 *)((char *)obj + 0x36) == 0xff) {
                 int *st = *(int **)((char *)obj + 0xb8);
                 u32 rnd;
@@ -6833,7 +6834,7 @@ void dll_F7_update(int *obj)
             *(u8 *)(state + 9) = 0;
             *(u8 *)(state + 8) = 1;
             *(u8 *)(state + 0xa) = 2;
-            *(s16 *)((char *)*(int **)((char *)obj + 0x54) + 0x60) |= 1;
+            (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags |= 1;
             *(u8 *)((char *)obj + 0xaf) &= ~0x8;
         } else {
             *(u8 *)((char *)obj + 0xaf) |= 8;
@@ -6866,7 +6867,7 @@ void dll_F7_update(int *obj)
         *(u8 *)(state + 9) = 1;
         *(u8 *)(state + 8) = 0;
         Sfx_PlayFromObject(obj, 74);
-        *(s16 *)((char *)*(int **)((char *)obj + 0x54) + 0x60) &= ~1;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~1;
         if ((int)*(s16 *)((char *)params + 0x1e) != -1) {
             GameBit_Set((int)*(s16 *)((char *)params + 0x1e), 1);
         }
