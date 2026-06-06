@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/audio_decode_thread.h"
-#include "dolphin/os.h"
 
 extern void *AudioDecoderForOnMemory(void *);
 extern void *AudioDecoder(void *);

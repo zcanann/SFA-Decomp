@@ -1,6 +1,5 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
-#include "main/audio/voice_id.h"
 
 extern void hwSetPriority(u8 voiceId, u32 priority);
 

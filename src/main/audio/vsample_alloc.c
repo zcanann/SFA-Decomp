@@ -1,5 +1,3 @@
-#include "ghidra_import.h"
-#include "main/audio/hw_sample.h"
 #include "main/audio/synth_virtual_sample.h"
 
 typedef struct VsInfo {

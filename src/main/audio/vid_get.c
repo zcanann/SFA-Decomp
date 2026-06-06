@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/vid_get.h"
 
 extern undefined4 FUN_80271a90();
