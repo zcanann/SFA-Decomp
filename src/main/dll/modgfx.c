@@ -14742,7 +14742,10 @@ int dll_0B_func04(void *base, int z, int c, void *b, int e, void *d, int f, void
     }
 
     *(s16 *)(((u8 *)lbl_8039C1F8[slot]) + 0xfc) = -1;
-    *(s16 *)(((u8 *)lbl_8039C1F8[slot]) + 0xfe) = *(s16 *)(((u8 *)lbl_8039C1F8[slot]) + *(s16 *)(((u8 *)lbl_8039C1F8[slot]) + 0xfc) * 2 + 0xee);
+    {
+        struct { u8 pad[0xee]; s16 vals[9]; } *ov = (void *)lbl_8039C1F8[slot];
+        *(s16 *)(((u8 *)lbl_8039C1F8[slot]) + 0xfe) = ov->vals[*(s16 *)(((u8 *)lbl_8039C1F8[slot]) + 0xfc)];
+    }
     *(int *)(((u8 *)lbl_8039C1F8[slot]) + 0xa4) = *(int *)(st + 0x54);
     *(f32 *)(((u8 *)lbl_8039C1F8[slot]) + 0x60) = *(f32 *)(st + 0x2c);
     *(f32 *)(((u8 *)lbl_8039C1F8[slot]) + 0x64) = *(f32 *)(st + 0x30);
