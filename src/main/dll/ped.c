@@ -1,6 +1,7 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/dll/ped.h"
+#include "main/dll/dimtruthhornice.h"
 
 extern uint GameBit_Get(int eventId);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
@@ -16,7 +17,6 @@ extern int *gObjectTriggerInterface;
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5210;
 
-extern int TreeBird_SeqFn(int obj, int param_2, int data);
 void fn_801CDF94(int obj, int state, int flag);
 
 typedef struct TreeBirdState {
@@ -48,7 +48,7 @@ void treebird_init(int obj,int setup)
   TreeBirdState *state;
 
   state = ((GameObject *)obj)->extra;
-  ((GameObject *)obj)->animEventCallback = TreeBird_SeqFn;
+  ((GameObject *)obj)->animEventCallback = (void *)TreeBird_SeqFn;
   *(s16 *)obj = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
   ((GameObject *)obj)->anim.rotY = *(s16 *)(setup + 0x1a);
   ((GameObject *)obj)->anim.rotZ = *(s16 *)(setup + 0x1c);
@@ -61,8 +61,6 @@ void treebird_init(int obj,int setup)
 }
 #pragma peephole reset
 #pragma scheduling reset
-
-extern int NW_geyser_SeqFn(int *obj, int p2, void *p3);
 
 /*
  * --INFO--
@@ -82,7 +80,7 @@ extern int NW_geyser_SeqFn(int *obj, int p2, void *p3);
 void nw_geyser_init(int obj)
 {
   ((GameObject *)obj)->objectFlags = (ushort)(((GameObject *)obj)->objectFlags | 0x6000);
-  ((GameObject *)obj)->animEventCallback = NW_geyser_SeqFn;
+  ((GameObject *)obj)->animEventCallback = (void *)NW_geyser_SeqFn;
 }
 
 char *fn_801CDE70(int *obj) { return *(char **)&((GameObject *)obj)->extra + 0xc; }

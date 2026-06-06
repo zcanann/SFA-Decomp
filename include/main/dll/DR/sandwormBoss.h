@@ -92,6 +92,7 @@ void FUN_8019e964(undefined8 param_1,double param_2,undefined8 param_3,undefined
                  ushort *param_9);
 int babycloudrunner_getObjectTypeId(void);
 void babycloudrunner_init(int *obj, u8 *def);
+int babycloudrunner_SeqFn(int *obj, int unused, u8 *events);
 void babycloudrunner_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8019ec44(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -113,5 +114,8 @@ undefined4 FUN_8019f0fc(int param_1);
 void FUN_8019f16c(int param_1);
 void FUN_8019f1ac(int param_1);
 void FUN_8019f1dc(void);
+int cfguardian_SeqFn(int *obj, int unused, int *events);
+int cfpowerbase_SeqFn(int obj, int unused, int events);
+int cfprisonguard_SeqFn(int *obj, int unused, u8 *events);
 
 #endif /* MAIN_DLL_DR_SANDWORMBOSS_H_ */

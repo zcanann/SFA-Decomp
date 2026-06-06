@@ -1199,7 +1199,6 @@ void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
 extern void envFxActFn_800887f8(int a);
 extern void Music_Trigger(int a, int b);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern int ccqueen_SeqFn(int obj, int unused, u8* data);
 extern f32 lbl_803E46C8;
 
 #pragma scheduling off

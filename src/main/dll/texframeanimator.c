@@ -24,7 +24,6 @@ extern undefined8 FUN_801726ac();
 extern undefined4 FUN_80172974();
 extern undefined4 FUN_80172b40();
 extern uint countLeadingZeros();
-extern void collectible_SeqFn(void);
 
 extern undefined4 DAT_803218a8;
 extern undefined4 DAT_803dc070;
@@ -88,7 +87,7 @@ void collectible_init(int obj,int setup)
   ((GameObject *)obj)->anim.rotZ = (s16)((u8)*(u8 *)(setup + 0x23) << 8);
   setupObj = (int)objAnim->modelInstance;
   ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(setupObj + 4);
-  *(void (**)(void))(obj + 0xbc) = collectible_SeqFn;
+  ((GameObject *)obj)->animEventCallback = (void *)collectible_SeqFn;
   setupModelIndex = *(s8 *)(setup + 0x26);
   objAnim->bankIndex = (s8)setupModelIndex;
   if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {

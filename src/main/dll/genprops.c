@@ -5278,7 +5278,6 @@ typedef struct DofState {
     u8 field2;
 } DofState;
 
-extern int depthoffieldpoint_SeqFn();
 extern void Rcp_DisableBlurFilter(void);
 extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
 extern int textureFree(int tex);

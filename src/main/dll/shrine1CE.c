@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/shrine1CE.h"
+#include "main/dll/torch1CD.h"
 
 
 
@@ -341,8 +342,6 @@ void dll_19C_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void dll_19B_SeqFn(int p1, int p2, void *p3);
-
 #pragma scheduling off
 #pragma peephole off
 void dll_19B_init(u8 *obj, u8 *params) {
@@ -359,7 +358,7 @@ void dll_19B_init(u8 *obj, u8 *params) {
     sub[0x14] = 0;
     *(s16*)(sub + 2) = 0;
     sub[0x12] = 0;
-    ((GameObject *)obj)->animEventCallback = (void*)&dll_19B_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dll_19B_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     GameBit_Set(0x1d2, 0);

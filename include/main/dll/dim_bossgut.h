@@ -10,5 +10,6 @@ int bombplant_getExtraSize(void);
 int bombplant_getObjectTypeId(void);
 void bombplant_free(void);
 void bombplant_hitDetect(void);
+int bombplant_SeqFn(int *obj);
 
 #endif /* MAIN_DLL_DIM_BOSSGUT_H_ */

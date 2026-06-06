@@ -10,6 +10,7 @@ extern ObjectDescriptor gMagicDustObjDescriptor;
 int collectible_getExtraSize(void);
 int collectible_getObjectTypeId(void);
 void collectible_init(int obj,int setup);
+int collectible_SeqFn(int obj, int unused, u8 *data);
 u8 collectible_func0F(int *obj);
 int collectible_setScale(int *obj);
 void FUN_80173364(short *param_1,int param_2);

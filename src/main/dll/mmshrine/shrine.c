@@ -1,4 +1,5 @@
 #include "main/dll/mmshrine/shrine.h"
+#include "main/dll/laser19F.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 
@@ -23,7 +24,6 @@ extern int FUN_80044404();
 extern undefined8 FUN_80080f28();
 extern undefined4 FUN_8008111c();
 extern undefined4 FUN_8011eb10();
-extern void MMSH_Shrine_SeqFn(void);
 extern void fn_801C4664(void *obj);
 extern undefined4 FUN_801c4f4c();
 extern undefined4 SH_LevelControl_runBloopEvent();
@@ -65,9 +65,9 @@ void mmsh_shrine_init(undefined2 *param_1,int param_2)
   int iVar1;
   int *piVar2;
   
-  piVar2 = *(int **)(param_1 + 0x5c);
+  piVar2 = ((GameObject *)param_1)->extra;
   *param_1 = 0;
-  *(void (**)(void))(param_1 + 0x5e) = MMSH_Shrine_SeqFn;
+  ((GameObject *)param_1)->animEventCallback = (void *)MMSH_Shrine_SeqFn;
   *(undefined2 *)(piVar2 + 7) = 10;
   *(undefined *)(piVar2 + 9) = 0;
   if (0 < *(short *)(param_2 + 0x1a)) {

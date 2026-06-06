@@ -49,7 +49,6 @@ extern f32 FLOAT_803e5f8c;
 extern void *Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int bit);
 extern f32 Vec_distance(int a, int b);
-extern void EdibleMushroom_SeqFn(void);
 
 extern void *gRomCurveInterface;
 
@@ -90,7 +89,7 @@ void ediblemushroom_init(int obj, int aux)
     local_x = 0x19;
     player = (int)Obj_GetPlayerObject();
 
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)&EdibleMushroom_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)EdibleMushroom_SeqFn;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
 
     if (GameBit_Get(*(short *)(aux + 0x1a)) != 0) {

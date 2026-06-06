@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/IM/IMsnowbike.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
 
 extern u32 GameBit_Get(u32 id);
 extern void GameBit_Set(u32 id, u32 value);
@@ -16,7 +17,6 @@ extern void envFxActFn_800887f8(int a);
 extern void skyFn_80088e54(int a, f32 b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
-extern void mapUnloadFn_801d7c94(int param_1, uint *param_2);
 extern void SH_LevelControl_setMusic(uint *param_1);
 extern void SH_LevelControl_runBloopEvent(int param_1, uint *param_2);
 extern void SH_LevelControl_doThornTailEvents(int param_1, uint *param_2);
@@ -295,7 +295,7 @@ void sh_levelcontrol_update(int param_1)
       }
     }
   }
-  mapUnloadFn_801d7c94(param_1, puVar5);
+  mapUnloadFn_801d7c94((void *)param_1, puVar5);
   return;
 }
 #pragma peephole reset
@@ -318,7 +318,6 @@ extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
 extern void Music_Trigger(int track, int param);
 extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
-extern void SH_LevelControl_SeqFn(void);
 extern f32 lbl_803E54C0;
 extern s16 lbl_80327618_ids[];
 
@@ -330,7 +329,7 @@ void sh_levelcontrol_init(int obj) {
     s16 *bitIds;
     u32 v;
 
-    *(void (**)(void))((char *)obj + 0xBC) = SH_LevelControl_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)SH_LevelControl_SeqFn;
     v = (u32)((GameObject *)obj)->objectFlags | 0x4000;
     ((GameObject *)obj)->objectFlags = (u16)v;
     ((GameObject *)obj)->unkF8 = 3;

@@ -1,4 +1,5 @@
 #include "main/dll/WC/WClaser.h"
+#include "main/dll/WC/WCpressureSwitch.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objlib.h"
@@ -10,7 +11,6 @@ extern void objSetSlot(int *obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void fn_80065574(int a, int *obj, int b);
-extern int WM_Galleon_SeqFn(int p1, int p2, void *p3);
 extern void fn_80296BBC(int player);
 extern void buttonDisable(int controller, int mask);
 extern void textureFree(void *resource);
@@ -172,7 +172,7 @@ void WM_Galleon_init(int *obj, WMGalleonSetup *setup)
         return;
     }
     objSetSlot(obj, 0x5a);
-    OBJ_PTR(obj, 0xbc) = (void *)&WM_Galleon_SeqFn;
+    OBJ_PTR(obj, 0xbc) = (void *)WM_Galleon_SeqFn;
     OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
     OBJ_S32(obj, 0xf4) = 9;
     state->savedX = OBJ_F32(obj, 0xc);

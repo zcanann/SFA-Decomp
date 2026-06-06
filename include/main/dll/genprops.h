@@ -171,4 +171,6 @@ extern ObjectDescriptor12 gCurveObjDescriptor;
 extern ObjectDescriptor gReStartMarkerObjDescriptor;
 extern ObjectDescriptor dll_F7;
 
+int depthoffieldpoint_SeqFn(int *obj, int msg, u8 *cmds);
+
 #endif /* MAIN_DLL_GENPROPS_H_ */

@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
+#include "main/dll/dim_bossgut.h"
 #include "main/dll/SH/SHkillermushroom.h"
 #include "main/objanim.h"
 
@@ -31,7 +32,6 @@ extern undefined4 FUN_80081120();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_8013651c();
 extern u32 GameBit_Get(int eventId);
-extern void bombplant_SeqFn(void);
 extern void fn_801D2B70(void *obj, void *stateEntry, void *state);
 extern void *Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32 *p1, f32 *p2);

@@ -2587,7 +2587,6 @@ void babycloudrunner_init_OLD_v1_1(int param_1)
   return;
 }
 
-extern int babycloudrunner_SeqFn(int *obj, int p2, u8 *p3);
 extern f32 lbl_803E422C;
 extern f32 lbl_803E4244;
 extern f32 lbl_803E4258;
@@ -2643,7 +2642,7 @@ void babycloudrunner_init(int *obj, u8 *def) {
 
     ObjHits_EnableObject(obj);
     ObjMsg_AllocQueue(obj, 4);
-    *(void**)((char*)obj + 0xbc) = (void*)&babycloudrunner_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)babycloudrunner_SeqFn;
     *(s16*)obj = (s16)(def[0x1d] << 8);
     ObjGroup_AddObject(obj, 3);
     sub = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
@@ -3223,7 +3222,6 @@ extern GuardianVec lbl_802C22C0;
 extern GuardianVec lbl_802C22CC;
 extern u8 lbl_8032284C[];
 extern f32 lbl_803E4110;
-extern int cfguardian_SeqFn(int *obj, int p2, int *p3);
 extern void dll_2E_func0A(int a, int *obj);
 extern void dll_2E_func05(int *obj, u8 *sub, int c, int d, int e);
 extern void dll_2E_func08(u8 *sub, int b, int c);
@@ -3275,7 +3273,7 @@ void cfguardian_init(int *obj, u8 *params) {
     ObjMsg_AllocQueue(obj, 4);
     sub->questState = (u8)GameBit_Get(0x4b);
     *(int*)((char*)obj + 0xf4) = 1;
-    *(void**)((char*)obj + 0xbc) = (void*)&cfguardian_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)cfguardian_SeqFn;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     sub->landingPhase = 0;
     sub->moveSpeed = lbl_803E4110;
@@ -3573,8 +3571,6 @@ typedef struct SpiritDoorSpiritState {
 
 #include "main/dll/DR/gunpowderbarrel_state.h"
 
-extern int cfpowerbase_SeqFn(int p1, int unused, int p3);
-
 /* EN v1.0 0x8019D8B4  size: 308b  cfpowerbase_init: seed header and the
  * sub's type from spawn params, map the type id (0x54..0x56) to a model
  * and gamebit, then gate the active/lit state bits on those gamebits. */
@@ -3602,7 +3598,7 @@ void cfpowerbase_init(int* obj, u8* params) {
         Obj_SetActiveModelIndex(obj, 1);
         break;
     }
-    *(void**)((char*)obj + 0xbc) = (void*)&cfpowerbase_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)cfpowerbase_SeqFn;
     ObjMsg_AllocQueue(obj, 2);
     if (GameBit_Get(sub->litBit) != 0) {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
@@ -3656,8 +3652,6 @@ void cfprisonguard_free(void) {}
 void cfprisonguard_release(void) {}
 void cfprisonguard_initialise(void) {}
 
-extern int cfprisonguard_SeqFn(int* obj, int p2, u8* p3);
-
 typedef struct { u8 top : 1; u8 rest : 7; } Bit80;
 
 /* EN v1.0 0x8019FBD0  size: 172b  cfprisonguard_init: set up the guard's
@@ -3669,7 +3663,7 @@ void cfprisonguard_init(int* obj, u8* params) {
     CfPrisonGuardState* sub = *(CfPrisonGuardState**)((char*)obj + 0xb8);
     sub->flags = 1;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)&cfprisonguard_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)cfprisonguard_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     sub->capturedLatch = 1;
     if (GameBit_Get(0x4d) != 0) {

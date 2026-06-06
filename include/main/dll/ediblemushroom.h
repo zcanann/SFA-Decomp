@@ -91,6 +91,7 @@ STATIC_ASSERT(offsetof(EnemyMushroomObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(EnemyMushroomObject, state) == 0xB8);
 
 void ediblemushroom_init(int obj, int aux);
+int EdibleMushroom_SeqFn(int *obj);
 void enemymushroom_resetToSpawn(EnemyMushroomObject *obj,EnemyMushroomState *state,
                                 int enableTimer);
 int enemymushroom_getExtraSize(void);

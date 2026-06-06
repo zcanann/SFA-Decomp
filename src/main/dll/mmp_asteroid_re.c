@@ -1,4 +1,5 @@
 #include "main/dll/mmp_asteroid_re.h"
+#include "main/dll/CF/CFwalltorch.h"
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
@@ -6,7 +7,6 @@ extern void GameBit_Set(int eventId,int value);
 extern undefined4 FUN_800400b0();
 extern void warpPadFn_8019042c(int obj);
 extern void warpPadPlayerStandingOn(int obj);
-extern void Transporter_SeqFn(void);
 extern void objfx_spawnArcedBurst(int obj,int enabled,f32 radius,int particleKind,
                                    int particleId,int lifetime,f32 scaleX,f32 scaleY,
                                    f32 scaleZ,void *args,int arg9);
