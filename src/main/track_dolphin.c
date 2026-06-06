@@ -5116,10 +5116,13 @@ void fn_80069EB8(int param)
 
   cache = getCache();
   for (blk = 0; blk < 0x40; blk++) {
-    int hi = (blk >> 2) << 8;
-    int mid = (blk & 3) << 3;
-    u32 scaled = (blk + param) * 0xff;
-    for (j = 0; j < 0x40; j++) {
+    int hi, mid;
+    u32 scaled;
+    j = 0;
+    hi = ((u32)blk >> 2) << 8;
+    mid = (blk & 3) << 3;
+    scaled = (blk + param) * 0xff;
+    for (; j < 0x40; j++) {
       int idx = (j & 7) + ((j >> 3) << 5) + mid + hi;
       u32 s = scaled;
       if (s > 0x3fc0) {
