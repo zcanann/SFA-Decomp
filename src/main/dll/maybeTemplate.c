@@ -198,7 +198,7 @@ extern f32 lbl_803DC6E8;
 extern f32 lbl_803DC6EC;
 extern f32 lbl_803DE468;
 extern f32 lbl_803DE4BC;
-extern f32 lbl_803DE4C4;
+extern f32 gDIMSnowHorn1DefaultStateHandler;
 extern f32 lbl_803DE4F8;
 extern f32 lbl_803E2ABC;
 extern f32 lbl_803E2AE8;

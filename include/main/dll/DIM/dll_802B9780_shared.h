@@ -29,8 +29,8 @@ extern undefined lbl_803DB0F0[];
  */
 extern f32 lbl_803E82A4;
 extern f32 lbl_803E82A8;
-extern f32 lbl_803DE4C4;
-extern int lbl_803DB130[];
+extern f32 gDIMSnowHorn1DefaultStateHandler;
+extern int gDIMSnowHorn1StateHandlers[];
 
 extern void fn_802BB998(int obj, int state, int state2);
 /* DLL 0x76 (DIMSnowHorn1 / dim2prisonmammoth) fragment: head/vtable live in placeholder_802BACC0 + placeholder_802BB4B0; consolidate when those adjacent units are graduated. */
@@ -314,8 +314,8 @@ extern f32 lbl_803E83A4;
 
 extern void *lbl_803DE4D0;
 
-extern int lbl_803DB1C0[];
-extern void *lbl_803DE4E0;
+extern int gDRCloudRunnerStateHandlers[];
+extern void *gDRCloudRunnerDefaultStateHandler;
 extern int fn_802C0B84(int obj);
 extern int fn_802C0A5C(int obj, int p2);
 extern int fn_802C0978(int obj, int p2);
@@ -325,10 +325,10 @@ extern void fn_802BF934();
 extern void fn_802BF75C();
 
 extern int Resource_Acquire(int id, int kind);
-extern int lbl_803DB160[];
-extern int lbl_803DB1B0[];
-extern void *lbl_803DE4C8;
-extern void *lbl_803DE4D4;
+extern int gDim2PrisonMammothStateHandlers[];
+extern int gDREarthWarriorStateHandlers[];
+extern void *gDim2PrisonMammothDefaultStateHandler;
+extern void *gDREarthWarriorDefaultStateHandler;
 extern int fn_802BC27C(int obj, int p2);
 extern int fn_802BC19C(int obj, int p2);
 extern int fn_802BC0D8(int obj, int p2);
@@ -367,7 +367,7 @@ extern int objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, in
 extern void textureFree(int handle);
 extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
-extern void *lbl_803DE4C0;
+extern void *gDIMSnowHorn1Texture;
 
 extern f32 lbl_803E8410;
 
@@ -378,7 +378,7 @@ extern f32 lbl_803DC790;
 
 extern f32 lbl_803DB170[];
 
-extern s16 lbl_803DC730;
+extern s16 gDIMSnowHorn1TextureId;
 extern int textureLoad(int id, int p2);
 
 extern int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup);

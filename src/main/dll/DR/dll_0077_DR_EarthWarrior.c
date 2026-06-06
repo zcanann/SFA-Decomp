@@ -331,11 +331,11 @@ int fn_802BCD04(int obj, int p2)
 #pragma peephole off
 void DR_EarthWarrior_initialise(void)
 {
-    ((void **)lbl_803DB1B0)[0] = (void *)fn_802BDBCC;
-    ((void **)lbl_803DB1B0)[1] = (void *)fn_802BD7AC;
-    ((void **)lbl_803DB1B0)[2] = (void *)fn_802BCE14;
-    ((void **)lbl_803DB1B0)[3] = (void *)fn_802BCD04;
-    lbl_803DE4D4 = (void *)fn_802BCCFC;
+    ((void **)gDREarthWarriorStateHandlers)[0] = (void *)fn_802BDBCC;
+    ((void **)gDREarthWarriorStateHandlers)[1] = (void *)fn_802BD7AC;
+    ((void **)gDREarthWarriorStateHandlers)[2] = (void *)fn_802BCE14;
+    ((void **)gDREarthWarriorStateHandlers)[3] = (void *)fn_802BCD04;
+    gDREarthWarriorDefaultStateHandler = (void *)fn_802BCCFC;
     if (lbl_803DE4D0 == NULL) {
         lbl_803DE4D0 = (void *)Resource_Acquire(0x5a, 1);
     }
@@ -534,7 +534,7 @@ void fn_802BE6E8(int obj, int t, int p3)
     }
     *(int *)((char *)inner + 0) |= 0x1000000;
     fn_802B0EA4(obj, q, inner);
-    (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)lbl_803DB1B0, &lbl_803DE4D4);
+    (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)gDREarthWarriorStateHandlers, &gDREarthWarriorDefaultStateHandler);
     ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + (*(s16 *)((char *)inner + 0x19c) >> 2));
     ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (*(s16 *)((char *)inner + 0x19e) >> 2));
     if (((ByteFlags *)((char *)inner + 0x14ec))->b02) {

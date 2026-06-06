@@ -411,8 +411,8 @@ extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
 extern void Resource_Release(int handle);
 extern void *lbl_803DE4D0;
 
-extern int lbl_803DB1C0[];
-extern void *lbl_803DE4E0;
+extern int gDRCloudRunnerStateHandlers[];
+extern void *gDRCloudRunnerDefaultStateHandler;
 extern int fn_802C0B84(int obj);
 extern int fn_802C0A5C(int obj, int p2);
 extern int fn_802C0978(int obj, int p2);
@@ -422,10 +422,10 @@ extern void fn_802BF934();
 extern void fn_802BF75C();
 
 extern int Resource_Acquire(int id, int kind);
-extern int lbl_803DB160[];
-extern int lbl_803DB1B0[];
-extern void *lbl_803DE4C8;
-extern void *lbl_803DE4D4;
+extern int gDim2PrisonMammothStateHandlers[];
+extern int gDREarthWarriorStateHandlers[];
+extern void *gDim2PrisonMammothDefaultStateHandler;
+extern void *gDREarthWarriorDefaultStateHandler;
 extern int fn_802BC27C(int obj, int p2);
 extern int fn_802BC19C(int obj, int p2);
 extern int fn_802BC0D8(int obj, int p2);
@@ -472,7 +472,7 @@ extern int objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, in
 extern void textureFree(int handle);
 extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
-extern void *lbl_803DE4C0;
+extern void *gDIMSnowHorn1Texture;
 
 
 extern int *gRomCurveInterface;
@@ -501,9 +501,9 @@ extern void fn_802B9CC4();
 extern void fn_802B98F0();
 extern void fn_802B978C();
 extern void fn_802B9784();
-extern int lbl_803DB130[];
-extern void *lbl_803DE4C4;
-extern s16 lbl_803DC730;
+extern int gDIMSnowHorn1StateHandlers[];
+extern void *gDIMSnowHorn1DefaultStateHandler;
+extern s16 gDIMSnowHorn1TextureId;
 extern int textureLoad(int id, int p2);
 
 extern void DIMSnowHorn1_animEventCallback();
@@ -634,11 +634,11 @@ void fn_802BC788(int a, int b)
 #pragma peephole off
 void dim2prisonmammoth_initialise(void)
 {
-    ((void **)lbl_803DB160)[0] = (void *)fn_802BC36C;
-    ((void **)lbl_803DB160)[1] = (void *)fn_802BC27C;
-    ((void **)lbl_803DB160)[2] = (void *)fn_802BC19C;
-    ((void **)lbl_803DB160)[3] = (void *)fn_802BC0D8;
-    lbl_803DE4C8 = (void *)fn_802BC0D0;
+    ((void **)gDim2PrisonMammothStateHandlers)[0] = (void *)fn_802BC36C;
+    ((void **)gDim2PrisonMammothStateHandlers)[1] = (void *)fn_802BC27C;
+    ((void **)gDim2PrisonMammothStateHandlers)[2] = (void *)fn_802BC19C;
+    ((void **)gDim2PrisonMammothStateHandlers)[3] = (void *)fn_802BC0D8;
+    gDim2PrisonMammothDefaultStateHandler = (void *)fn_802BC0D0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -821,7 +821,7 @@ void dim2prisonmammoth_update(int obj)
     *(int *)((char *)inner + 0x318) = 0;
     *(s16 *)((char *)inner + 0x330) = 0;
     *(int *)((char *)inner + 0) |= 0x400000;
-    (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)lbl_803DB160, &lbl_803DE4C8);
+    (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)gDim2PrisonMammothStateHandlers, &gDim2PrisonMammothDefaultStateHandler);
     saveGame_saveObjectPos(obj);
 }
 #pragma peephole reset

@@ -166,15 +166,15 @@ void DR_CloudRunner_free(int obj)
 #pragma peephole off
 void DR_CloudRunner_initialise(void)
 {
-    ((void **)lbl_803DB1C0)[0] = (void *)fn_802C0B84;
-    ((void **)lbl_803DB1C0)[1] = (void *)fn_802C0A5C;
-    ((void **)lbl_803DB1C0)[2] = (void *)fn_802C0978;
-    ((void **)lbl_803DB1C0)[3] = (void *)fn_802C0830;
-    ((void **)lbl_803DB1C0)[4] = (void *)fn_802C0550;
-    ((void **)lbl_803DB1C0)[5] = (void *)fn_802BF934;
-    ((void **)lbl_803DB1C0)[6] = (void *)fn_802BF75C;
-    ((void **)lbl_803DB1C0)[7] = (void *)fn_802BF730;
-    lbl_803DE4E0 = (void *)fn_802BF728;
+    ((void **)gDRCloudRunnerStateHandlers)[0] = (void *)fn_802C0B84;
+    ((void **)gDRCloudRunnerStateHandlers)[1] = (void *)fn_802C0A5C;
+    ((void **)gDRCloudRunnerStateHandlers)[2] = (void *)fn_802C0978;
+    ((void **)gDRCloudRunnerStateHandlers)[3] = (void *)fn_802C0830;
+    ((void **)gDRCloudRunnerStateHandlers)[4] = (void *)fn_802C0550;
+    ((void **)gDRCloudRunnerStateHandlers)[5] = (void *)fn_802BF934;
+    ((void **)gDRCloudRunnerStateHandlers)[6] = (void *)fn_802BF75C;
+    ((void **)gDRCloudRunnerStateHandlers)[7] = (void *)fn_802BF730;
+    gDRCloudRunnerDefaultStateHandler = (void *)fn_802BF728;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1008,7 +1008,7 @@ void fn_802C11BC(int obj, int p2, f32 f)
     if (flag != 0) {
         *(int *)&inner->baddie &= ~0x400000;
     }
-    (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, (int)inner, f, timeDelta, (int)lbl_803DB1C0, &lbl_803DE4E0);
+    (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, (int)inner, f, timeDelta, (int)gDRCloudRunnerStateHandlers, &gDRCloudRunnerDefaultStateHandler);
     if ((*(int *)&inner->baddie.eventFlags & 1) != 0) {
         fn_802BF4D8(obj);
     }
