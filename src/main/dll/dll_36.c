@@ -70,7 +70,7 @@ void EnterSaveNameScreen_render(void)
     gameTextShowStr(buf, i + 0x2a, 0, 0);
   }
 
-  lbl_803DD6D8 = (int)((f32)lbl_803DD6D8 + timeDelta);
+  lbl_803DD6D8 = (f32)lbl_803DD6D8 + timeDelta;
 
   gameTextSetColor(
       (int)(fn_80293E80(lbl_803E1D94 * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
