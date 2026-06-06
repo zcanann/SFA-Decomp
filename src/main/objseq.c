@@ -2,6 +2,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 extern int getTabEntry(void *p, int sz, int off, int unk);
 extern int getTableFileEntry(int fileId, int index, int *out);
@@ -323,8 +324,8 @@ void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, int action)
     obj[0xaf] = flags;
     Obj_GetWorldPosition(obj, (f32 *)(obj + 0x18), (f32 *)(obj + 0x1c), (f32 *)(obj + 0x20));
     if (*(void **)(obj + 0x54) != NULL) {
-        *(void **)(*(u8 **)(obj + 0x54) + 0x50) = NULL;
-        *(u8 *)(*(u8 **)(obj + 0x54) + 0x71) = 0;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject = 0;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->priorityHitCount = 0;
     }
     if (*(void **)(obj + 0x58) != NULL) {
         *(u8 *)(*(u8 **)(obj + 0x58) + 0x10f) = 0;

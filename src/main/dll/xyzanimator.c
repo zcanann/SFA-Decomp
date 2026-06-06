@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
+#include "main/objhits_types.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -646,10 +647,10 @@ void FUN_8016ab40(int param_1)
 {
   float fVar1;
   
-  if (*(char *)(*(int *)(param_1 + 0x54) + 0xad) != '\0') {
-    *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(*(int *)(param_1 + 0x54) + 0x3c);
-    *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(*(int *)(param_1 + 0x54) + 0x40);
-    *(undefined4 *)(param_1 + 0x14) = *(undefined4 *)(*(int *)(param_1 + 0x54) + 0x44);
+  if ((*(ObjHitsPriorityState **)(param_1 + 0x54))->contactFlags != 0) {
+    *(f32 *)(param_1 + 0xc) = (*(ObjHitsPriorityState **)(param_1 + 0x54))->contactPosX;
+    *(f32 *)(param_1 + 0x10) = (*(ObjHitsPriorityState **)(param_1 + 0x54))->contactPosY;
+    *(f32 *)(param_1 + 0x14) = (*(ObjHitsPriorityState **)(param_1 + 0x54))->contactPosZ;
     fVar1 = lbl_803E3DD4;
     *(float *)(param_1 + 0x24) = lbl_803E3DD4;
     *(float *)(param_1 + 0x28) = fVar1;
@@ -699,9 +700,9 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     ObjHits_SetHitVolumeSlot(param_9,0x16,1,0);
     ObjHitbox_SetSphereRadius(param_9,7);
     param_1 = ObjHits_EnableObject(param_9);
-    if ((*(int *)(*(int *)(param_9 + 0x54) + 0x50) != 0) &&
-       ((iVar2 = FUN_80017a98(), *(int *)(*(int *)(param_9 + 0x54) + 0x50) == iVar2 ||
-        (iVar2 = FUN_80017a90(), *(int *)(*(int *)(param_9 + 0x54) + 0x50) == iVar2)))) {
+    if (((*(ObjHitsPriorityState **)(param_9 + 0x54))->lastHitObject != 0) &&
+       ((iVar2 = FUN_80017a98(), (*(ObjHitsPriorityState **)(param_9 + 0x54))->lastHitObject == iVar2 ||
+        (iVar2 = FUN_80017a90(), (*(ObjHitsPriorityState **)(param_9 + 0x54))->lastHitObject == iVar2)))) {
       FUN_800069bc();
       FUN_80006920((double)lbl_803E3DD0);
       FUN_80006824(param_9,SFXsc_objselectyeah22);
@@ -944,7 +945,7 @@ void FUN_8016b228(undefined8 param_1,double param_2,double param_3,undefined8 pa
       ObjHits_DisableObject(param_9);
       FUN_8007f718((float *)(iVar3 + 0x20),0x78);
     }
-    if (*(char *)(*(int *)(param_9 + 0x54) + 0xad) != '\0') {
+    if ((*(ObjHitsPriorityState **)(param_9 + 0x54))->contactFlags != 0) {
       ObjHits_DisableObject(param_9);
       *(float *)(iVar3 + 8) = lbl_803E3DF8;
       if (*(short *)(*(int *)(iVar3 + 0x1c) + 4) != -1) {
@@ -1184,12 +1185,12 @@ void pinponspike_init(int obj) {
     *(u16 *)(obj + 0xb0) |= 0x6000;
 }
 void pollen_hitDetect(int obj) {
-    int p = *(int *)(obj + 0x54);
-    if ((s8)*(s8 *)(p + 0xad) != 0) {
+    ObjHitsPriorityState *hitState = *(ObjHitsPriorityState **)(obj + 0x54);
+    if (hitState->contactFlags != 0) {
         f32 fz;
-        *(f32 *)(obj + 0xc) = *(f32 *)(*(int *)(obj + 0x54) + 0x3c);
-        *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)(obj + 0x54) + 0x40);
-        *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)(obj + 0x54) + 0x44);
+        *(f32 *)(obj + 0xc) = hitState->contactPosX;
+        *(f32 *)(obj + 0x10) = hitState->contactPosY;
+        *(f32 *)(obj + 0x14) = hitState->contactPosZ;
         fz = lbl_803E313C;
         *(f32 *)(obj + 0x24) = fz;
         *(f32 *)(obj + 0x28) = fz;
@@ -1537,22 +1538,22 @@ void pinponspike_update(int obj) {
         *(s16 *)(obj + 2) = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
         ObjHits_EnableObject(obj);
-        if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL &&
-            (*(void **)(*(int *)(obj + 0x54) + 0x50) == Obj_GetPlayerObject() ||
-             *(void **)(*(int *)(obj + 0x54) + 0x50) == getTrickyObject())) {
+        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
+            ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (int)Obj_GetPlayerObject() ||
+             (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (int)getTrickyObject())) {
             int i;
             *(u8 *)(obj + 0x36) = 0;
             *(int *)(obj + 0xf4) = 0x78;
-            *(s16 *)(*(int *)(obj + 0x54) + 0x60) = *(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+            (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
                 (*(void (*)(int, int, int, int, int, int *))*(int *)(*gPartfxInterface + 8))(obj, 0x715, 0, 1, -1, &i);
             }
             Sfx_PlayFromObject(obj, 0x279);
-        } else if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0) {
+        } else if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0) {
             int i;
             *(u8 *)(obj + 0x36) = 0;
             *(int *)(obj + 0xf4) = 0x78;
-            *(s16 *)(*(int *)(obj + 0x54) + 0x60) = *(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+            (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
                 (*(void (*)(int, int, int, int, int, int *))*(int *)(*gPartfxInterface + 8))(obj, 0x715, 0, 1, -1, &i);
             }
@@ -1586,9 +1587,9 @@ void pollen_update(int obj) {
         ObjHits_SetHitVolumeSlot(obj, 0x16, 1, 0);
         ObjHitbox_SetSphereRadius(obj, 7);
         ObjHits_EnableObject(obj);
-        if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL &&
-            (*(void **)(*(int *)(obj + 0x54) + 0x50) == Obj_GetPlayerObject() ||
-             *(void **)(*(int *)(obj + 0x54) + 0x50) == getTrickyObject())) {
+        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
+            ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (int)Obj_GetPlayerObject() ||
+             (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == (int)getTrickyObject())) {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E3138);
             Sfx_PlayFromObject(obj, 0xb6);
@@ -1628,7 +1629,7 @@ void pollenfragment_hitDetect(int obj) {
             ObjHits_DisableObject(obj);
             s16toFloat(extra + 0x20, 0x78);
         }
-        if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0) {
+        if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0) {
             ObjHits_DisableObject(obj);
             *(f32 *)(extra + 8) = lbl_803E3160;
             if ((*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx != -1) {
@@ -1743,7 +1744,7 @@ void pollenfragment_update(int obj) {
     objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
     ObjHits_SetHitVolumeSlot(obj, 0x16, 1, 0);
     ObjHits_EnableObject(obj);
-    hit = *(void **)(*(int *)(obj + 0x54) + 0x50);
+    hit = (void *)(*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject;
     if (hit != NULL && *(s16 *)((u8 *)hit + 0x46) != *(s16 *)(obj + 0x46) && hit != *(void **)extra) {
         *(f32 *)(extra + 8) = lbl_803E3160;
         ObjHits_DisableObject(obj);

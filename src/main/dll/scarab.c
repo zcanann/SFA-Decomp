@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/scarab.h"
+#include "main/objhits_types.h"
 
 extern undefined8 FUN_80003494();
 extern undefined8 FUN_80006824();
@@ -2530,19 +2531,19 @@ void iceball_update(undefined2 *param_1,int param_2)
   ObjHits_SetHitVolumeSlot(p, 10, 1, 0);
   ObjHitbox_SetSphereRadius(p, 5);
   ObjHits_EnableObject(p);
-  if (*(void **)(*(int *)(p + 0x54) + 0x50) != NULL &&
-      (*(void **)(*(int *)(p + 0x54) + 0x50) == (void *)Obj_GetPlayerObject() ||
-       *(void **)(*(int *)(p + 0x54) + 0x50) == (void *)getTrickyObject())) {
+  if ((*(ObjHitsPriorityState **)(p + 0x54))->lastHitObject != 0 &&
+      ((*(ObjHitsPriorityState **)(p + 0x54))->lastHitObject == Obj_GetPlayerObject() ||
+       (*(ObjHitsPriorityState **)(p + 0x54))->lastHitObject == getTrickyObject())) {
     fn_8015FCCC(p);
     *(u8 *)(p + 0x36) = 0;
     *(int *)(p + 0xf4) = 120;
-    *(short *)(*(int *)(p + 0x54) + 0x60) = (short)(*(short *)(*(int *)(p + 0x54) + 0x60) & ~1);
+    (*(ObjHitsPriorityState **)(p + 0x54))->flags &= ~1;
   }
-  else if ((s8)*(u8 *)(*(int *)(p + 0x54) + 0xad) != 0) {
+  else if ((*(ObjHitsPriorityState **)(p + 0x54))->contactFlags != 0) {
     fn_8015FBEC(p);
     *(u8 *)(p + 0x36) = 0;
     *(int *)(p + 0xf4) = 120;
-    *(short *)(*(int *)(p + 0x54) + 0x60) = (short)(*(short *)(*(int *)(p + 0x54) + 0x60) & ~1);
+    (*(ObjHitsPriorityState **)(p + 0x54))->flags &= ~1;
   }
 }
 
@@ -2601,7 +2602,7 @@ int fn_8016043C(int obj, u8 *p)
     *(int *)(p + 0x2d0) = 0;
     *(s8 *)(p + 0x25f) = 0;
     *(s8 *)(p + 0x349) = 0;
-    *(s16 *)(*(int *)(obj + 0x54) + 0x60) &= ~1;
+    (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
     *(u8 *)(obj + 0xaf) |= 8;
   } else {
     ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xe0000, obj, 0);
@@ -3214,8 +3215,7 @@ FUN_80160aa4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
     *(undefined4 *)(param_10 + 0x2d0) = 0;
     *(undefined *)(param_10 + 0x25f) = 0;
     *(undefined *)(param_10 + 0x349) = 0;
-    *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
+    (*(ObjHitsPriorityState **)(param_9 + 0x54))->flags &= ~1;
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
     uVar2 = 0;
   }

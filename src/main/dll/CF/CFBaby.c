@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
+#include "main/objhits_types.h"
 #include "main/dll/CF/CFBaby.h"
 
 extern undefined4 FUN_80006824();
@@ -1079,8 +1080,8 @@ void FUN_80188890(short *param_1)
             fVar4 = fVar4 * fVar4;
           }
           if (FLOAT_803e4814 + fVar2 + fVar3 + fVar4 < (float)(dVar8 * dVar8)) {
-            *(short **)(*(int *)(*piVar5 + 0x54) + 0x50) = param_1;
-            *(undefined *)(*(int *)(*piVar5 + 0x54) + 0xad) = 1;
+            (*(ObjHitsPriorityState **)(*piVar5 + 0x54))->lastHitObject = (int)param_1;
+            (*(ObjHitsPriorityState **)(*piVar5 + 0x54))->contactFlags = 1;
           }
         }
       }
@@ -2896,8 +2897,8 @@ check_decor_objects:
                 }
 
                 if (lbl_803E3B7C + xSq + ySq + zSq < radius * radius) {
-                    *(int *)(*(int *)(*objects + 0x54) + 0x50) = obj;
-                    *(u8 *)(*(int *)(*objects + 0x54) + 0xad) = 1;
+                    (*(ObjHitsPriorityState **)(*objects + 0x54))->lastHitObject = obj;
+                    (*(ObjHitsPriorityState **)(*objects + 0x54))->contactFlags = 1;
                 }
             }
         }

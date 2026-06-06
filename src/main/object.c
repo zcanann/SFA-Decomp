@@ -2,6 +2,7 @@
 #include "main/model_light.h"
 #include "main/engine_8001746C_phantoms.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 #include "main/objlib.h"
 
 extern void mm_free(void *ptr);
@@ -2004,15 +2005,15 @@ void Obj_UpdateObject(u8 *obj)
         if (*(int *)(obj + 0xc8) != 0) {
             t = *(u8 **)(*(u8 **)(obj + 0xc8) + 0x54);
             if (t != 0) {
-                *(int *)(t + 0x50) = 0;
-                *(u8 *)(*(u8 **)(*(u8 **)(obj + 0xc8) + 0x54) + 0x71) = 0;
+                ((ObjHitsPriorityState *)t)->lastHitObject = 0;
+                (*(ObjHitsPriorityState **)(*(u8 **)(obj + 0xc8) + 0x54))->priorityHitCount = 0;
             }
         }
         if (*(int *)(obj + 0x54) == 0) {
             return;
         }
-        *(int *)(*(u8 **)(obj + 0x54) + 0x50) = 0;
-        *(u8 *)(*(u8 **)(obj + 0x54) + 0x71) = 0;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject = 0;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->priorityHitCount = 0;
         return;
     }
     if ((*(s16 *)(obj + 6) & 8) == 0) {
@@ -2064,12 +2065,12 @@ skip:
         if (*(int *)(obj + 0xc8) != 0) {
             t = *(u8 **)(*(u8 **)(obj + 0xc8) + 0x54);
             if (t != 0) {
-                *(int *)(t + 0x50) = 0;
-                *(u8 *)(*(u8 **)(*(u8 **)(obj + 0xc8) + 0x54) + 0x71) = 0;
+                ((ObjHitsPriorityState *)t)->lastHitObject = 0;
+                (*(ObjHitsPriorityState **)(*(u8 **)(obj + 0xc8) + 0x54))->priorityHitCount = 0;
             }
         }
-        *(int *)(*(u8 **)(obj + 0x54) + 0x50) = 0;
-        *(u8 *)(*(u8 **)(obj + 0x54) + 0x71) = 0;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject = 0;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->priorityHitCount = 0;
     }
     if (*(int *)(obj + 0x58) != 0) {
         *(u8 *)(*(u8 **)(obj + 0x58) + 0x10f) = 0;

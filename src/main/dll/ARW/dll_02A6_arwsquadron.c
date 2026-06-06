@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objhits_types.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -363,7 +364,7 @@ void arwsquadron_handleDamage(int obj, int state)
         }
     }
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, &hitVol) != 0 ||
-        *(void **)(*(int *)(obj + 0x54) + 0x50) != NULL) {
+        (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
         if (flags->f10) {
             if (*(u8 *)(state + 0x154) == 0)
                 Sfx_PlayFromObjectLimited(obj, SFXbaddie_mika_death, 4);
