@@ -1,5 +1,6 @@
 #include "main/dll/WM/wm_shared.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
 
 int fn_801F6E8C(int p1, int p2, int actor)
 {
@@ -92,8 +93,8 @@ void wmsun_init(int obj, int params)
         } else {
             *(f32 *)(obj + 8) = lbl_803E5F24;
         }
-        *(u8 *)(obj + 0xad) = *(u8 *)(params + 0x19);
-        c2 = *(s8 *)(obj + 0xad);
+        *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = *(u8 *)(params + 0x19);
+        c2 = *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex));
         if (c2 == 0) {
             *(s16 *)(state + 2) = randomGetRange(300, 600);
             *(s16 *)(state + 4) = randomGetRange(300, 600);
@@ -222,7 +223,7 @@ void wmsun_update(int obj)
         return;
     }
     if (GameBit_Get(0x38f) != 0) {
-        c = *(s8 *)(obj + 0xad);
+        c = *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex));
         if (c == 0 && (b = *(u8 *)(obj + 0x36)) != 0xff) {
             if (b < 0xff) {
                 v = (s16)(b + framesThisStep);
@@ -248,7 +249,7 @@ void wmsun_update(int obj)
             }
             *(u8 *)(obj + 0x36) = v;
         }
-        if (*(s8 *)(obj + 0xad) == 0) {
+        if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 0) {
             if ((int)randomGetRange(0, 0x96) == 0) {
                 randomGetRange(0, 0xffff);
                 randomGetRange(0, 0xffff);
@@ -260,7 +261,7 @@ void wmsun_update(int obj)
     } else {
         *(s16 *)(obj + 4) += *(s16 *)(state + 4);
         *(s16 *)obj += *(s16 *)(state + 2);
-        if (GameBit_Get(0x38d) != 0 && *(s8 *)(obj + 0xad) == 0) {
+        if (GameBit_Get(0x38d) != 0 && *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 0) {
             if (lbl_803DDCAA == 0) {
                 if (lbl_803DDCA8 > 600 && (int)randomGetRange(0, 10) == 0) {
                     CameraShake_SetAllMagnitudes(lbl_803E5F88);

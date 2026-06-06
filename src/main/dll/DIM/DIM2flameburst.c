@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2flameburst.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800067e8();
@@ -1842,7 +1843,8 @@ void explosion_free(int obj)
 int explosion_getObjectTypeId(int obj)
 {
     int idx = (int)*(short *)(*(int *)(obj + 0x4c) + 0x1c) & 3;
-    if (idx >= (int)*(char *)(*(int *)(obj + 0x50) + 0x55)) {
+    if (idx >= (int)*(char *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) +
+                               offsetof(ObjModelInstance, modelCount))) {
         idx = 0;
     }
     return (idx << 11) | 0x400;

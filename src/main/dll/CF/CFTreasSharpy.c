@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/CFTreasSharpy.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 extern undefined4 FUN_80017a78();
 extern undefined4 FUN_800305f8();
@@ -111,12 +112,12 @@ void cfccrate_init(int obj, int aux)
         *(short *)(state + 0x3a) = *(short *)(aux + 0x20);
         break;
     case 0x708:
-        *(s8 *)(obj + 0xad) = (s8)*(short *)(aux + 0x1a);
+        *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)*(short *)(aux + 0x1a);
         *(short *)(state + 0x38) = *(short *)(aux + 0x20);
-        if ((s8)*(u8 *)(obj + 0xad) >= 3) {
-            *(s8 *)(obj + 0xad) = 0;
+        if ((s8)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >= 3) {
+            *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
         }
-        Obj_SetActiveModelIndex(obj, *(s8 *)(obj + 0xad));
+        Obj_SetActiveModelIndex(obj, *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)));
         break;
     case 0x6fc:
         *(short *)(state + 0x38) = *(short *)(aux + 0x20);
@@ -140,7 +141,7 @@ void cfccrate_init(int obj, int aux)
         break;
     case 0x4bf:
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(u8 *)(obj + 0xad) = *(u8 *)(aux + 0x19);
+        *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = *(u8 *)(aux + 0x19);
         *(short *)(state + 0x38) = *(short *)(aux + 0x20);
         if (GameBit_Get(*(short *)(state + 0x38)) != 0) {
             *(f32 *)(obj + 0x10) = lbl_803E3DFC + *(f32 *)(aux + 0xc);
