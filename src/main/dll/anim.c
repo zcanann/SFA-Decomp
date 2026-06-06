@@ -824,7 +824,7 @@ undefined4 FUN_8020040c(int param_1,int param_2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802002C4(int obj, int p)
+int dbstealerworm_stateHandlerB04(int obj, int p)
 {
   extern int *gPlayerInterface;
   extern f32 lbl_803E62A8;
@@ -847,7 +847,7 @@ int fn_802002C4(int obj, int p)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80200380(int obj, int p)
+int dbstealerworm_stateHandlerB02(int obj, int p)
 {
   extern int *gPlayerInterface;
   extern f32 lbl_803E62A8;
@@ -1591,7 +1591,7 @@ FUN_802014c8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802015EC(int obj, int p)
+int dbstealerworm_stateHandlerA09(int obj, int p)
 {
   extern int Stack_IsFull(int sp);
   extern void Stack_Push(int sp, int *args);
@@ -2045,7 +2045,7 @@ FUN_80202004(double param_1,double param_2,undefined8 param_3,double param_4,ush
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802020B0(int obj, int p2)
+int dbstealerworm_stateHandlerA06(int obj, int p2)
 {
   extern void ObjHits_DisableObject(int);
   extern void ObjGroup_RemoveObject(int, int);
@@ -2218,7 +2218,7 @@ void FUN_80202268(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80202294(int obj, int p)
+int dbstealerworm_stateHandlerA05(int obj, int p)
 {
   extern void *Obj_GetPlayerObject(void);
   extern int lbl_80329650[];
@@ -2321,7 +2321,7 @@ void FUN_80202414(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80202524(int obj, int p)
+int dbstealerworm_stateHandlerA03(int obj, int p)
 {
   extern void ObjHits_EnableObject(int obj);
   extern void ObjHits_SetHitVolumeSlot(int obj, int slot, int a, int b);
@@ -2427,7 +2427,7 @@ void FUN_802026cc(undefined4 param_1,undefined4 param_2,int param_3)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80202720(int obj, int p)
+int dbstealerworm_stateHandlerA01(int obj, int p)
 {
   extern int *gPlayerInterface;
   extern int lbl_80329640[];
@@ -4433,7 +4433,7 @@ int DrakorEnergy_setScale(int *obj) { return ((DrakorEnergyState *)((int**)obj)[
 /* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
 #pragma peephole off
 #pragma scheduling off
-int fn_80200460(int p1, int p2)
+int dbstealerworm_stateHandlerB00(int p1, int p2)
 {
   BaddieState *p = (BaddieState *)p2;
   f32 fz;
@@ -4454,7 +4454,7 @@ int fn_80200460(int p1, int p2)
 /* baddie anim update: fires vtable[0x13] when flag set */
 #pragma peephole off
 #pragma scheduling off
-int fn_8020032C(int p1, int p2)
+int dbstealerworm_stateHandlerB03(int p1, int p2)
 {
   GroundBaddieState *state = *(GroundBaddieState **)(p1 + 0xb8);
   if ((s8)((BaddieState *)p2)->moveJustStartedB != 0) {
@@ -4470,7 +4470,7 @@ int fn_8020032C(int p1, int p2)
 extern f32 lbl_803E62BC;
 #pragma peephole off
 #pragma scheduling off
-int fn_80200410(int p1, int p2)
+int dbstealerworm_stateHandlerB01(int p1, int p2)
 {
   GroundBaddieState *state = *(GroundBaddieState **)(p1 + 0xb8);
   if ((s8)((BaddieState *)p2)->hitPoints < 1) return 3;
@@ -4583,7 +4583,7 @@ void dfplevelcontrol_setScale(int unused, u8 *out) {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802028C0(int obj, int p2)
+int dbstealerworm_stateHandlerA00(int obj, int p2)
 {
   extern void ObjHits_EnableObject(int);
   extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
@@ -4721,46 +4721,46 @@ int dbstealerworm_func0B(int obj, u8 msg, int *out)
 #pragma scheduling reset
 
 extern int gDBStealerWormStateHandlersB[];
-extern int fn_802025C0();
-extern int fn_80202428();
-extern int fn_80201BD8(int obj, int p2, f32 t);
-extern int fn_802017A4(int obj, int p2, f32 t);
-extern int fn_80201358();
-extern int fn_80200E44(int obj, int p2, f32 t);
-extern int fn_80200A70(int obj, int p2, f32 t);
-extern int fn_80200850();
-extern int fn_80200750();
-extern int fn_802004B0(int obj, int p2, f32 t);
-extern int fn_80200088();
-extern int fn_801FFE18();
+extern int dbstealerworm_stateHandlerA02();
+extern int dbstealerworm_stateHandlerA04();
+extern int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA0A();
+extern int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA0D();
+extern int dbstealerworm_stateHandlerA0E();
+extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerB05();
+extern int dbstealerworm_stateHandlerB06();
 
 #pragma peephole off
 #pragma scheduling off
 void DBstealerwo_setFuncPtrs_80203c78(void)
 {
-    gDBStealerWormStateHandlersA[0] = (int)fn_802028C0;
-    gDBStealerWormStateHandlersA[1] = (int)fn_80202720;
-    gDBStealerWormStateHandlersA[2] = (int)fn_802025C0;
-    gDBStealerWormStateHandlersA[3] = (int)fn_80202524;
-    gDBStealerWormStateHandlersA[4] = (int)fn_80202428;
-    gDBStealerWormStateHandlersA[5] = (int)fn_80202294;
-    gDBStealerWormStateHandlersA[6] = (int)fn_802020B0;
-    gDBStealerWormStateHandlersA[7] = (int)fn_80201BD8;
-    gDBStealerWormStateHandlersA[8] = (int)fn_802017A4;
-    gDBStealerWormStateHandlersA[9] = (int)fn_802015EC;
-    gDBStealerWormStateHandlersA[10] = (int)fn_80201358;
-    gDBStealerWormStateHandlersA[11] = (int)fn_80200E44;
-    gDBStealerWormStateHandlersA[12] = (int)fn_80200A70;
-    gDBStealerWormStateHandlersA[13] = (int)fn_80200850;
-    gDBStealerWormStateHandlersA[14] = (int)fn_80200750;
-    gDBStealerWormStateHandlersA[15] = (int)fn_802004B0;
-    gDBStealerWormStateHandlersB[0] = (int)fn_80200460;
-    gDBStealerWormStateHandlersB[1] = (int)fn_80200410;
-    gDBStealerWormStateHandlersB[2] = (int)fn_80200380;
-    gDBStealerWormStateHandlersB[3] = (int)fn_8020032C;
-    gDBStealerWormStateHandlersB[4] = (int)fn_802002C4;
-    gDBStealerWormStateHandlersB[5] = (int)fn_80200088;
-    gDBStealerWormStateHandlersB[6] = (int)fn_801FFE18;
+    gDBStealerWormStateHandlersA[0] = (int)dbstealerworm_stateHandlerA00;
+    gDBStealerWormStateHandlersA[1] = (int)dbstealerworm_stateHandlerA01;
+    gDBStealerWormStateHandlersA[2] = (int)dbstealerworm_stateHandlerA02;
+    gDBStealerWormStateHandlersA[3] = (int)dbstealerworm_stateHandlerA03;
+    gDBStealerWormStateHandlersA[4] = (int)dbstealerworm_stateHandlerA04;
+    gDBStealerWormStateHandlersA[5] = (int)dbstealerworm_stateHandlerA05;
+    gDBStealerWormStateHandlersA[6] = (int)dbstealerworm_stateHandlerA06;
+    gDBStealerWormStateHandlersA[7] = (int)dbstealerworm_stateHandlerA07;
+    gDBStealerWormStateHandlersA[8] = (int)dbstealerworm_stateHandlerA08;
+    gDBStealerWormStateHandlersA[9] = (int)dbstealerworm_stateHandlerA09;
+    gDBStealerWormStateHandlersA[10] = (int)dbstealerworm_stateHandlerA0A;
+    gDBStealerWormStateHandlersA[11] = (int)dbstealerworm_stateHandlerA0B;
+    gDBStealerWormStateHandlersA[12] = (int)dbstealerworm_stateHandlerA0C;
+    gDBStealerWormStateHandlersA[13] = (int)dbstealerworm_stateHandlerA0D;
+    gDBStealerWormStateHandlersA[14] = (int)dbstealerworm_stateHandlerA0E;
+    gDBStealerWormStateHandlersA[15] = (int)dbstealerworm_stateHandlerA0F;
+    gDBStealerWormStateHandlersB[0] = (int)dbstealerworm_stateHandlerB00;
+    gDBStealerWormStateHandlersB[1] = (int)dbstealerworm_stateHandlerB01;
+    gDBStealerWormStateHandlersB[2] = (int)dbstealerworm_stateHandlerB02;
+    gDBStealerWormStateHandlersB[3] = (int)dbstealerworm_stateHandlerB03;
+    gDBStealerWormStateHandlersB[4] = (int)dbstealerworm_stateHandlerB04;
+    gDBStealerWormStateHandlersB[5] = (int)dbstealerworm_stateHandlerB05;
+    gDBStealerWormStateHandlersB[6] = (int)dbstealerworm_stateHandlerB06;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4839,7 +4839,7 @@ extern f32 lbl_803E62F4;
 
 #pragma peephole off
 #pragma scheduling off
-int fn_80202428(int obj, int param2)
+int dbstealerworm_stateHandlerA04(int obj, int param2)
 {
     GroundBaddieState *state = *(GroundBaddieState **)(obj + 0xb8);
     BaddieState *bs = (BaddieState *)param2;
@@ -4875,7 +4875,7 @@ extern f32 lbl_803E62EC;
 
 #pragma peephole off
 #pragma scheduling off
-int fn_80200750(int obj, int param2)
+int dbstealerworm_stateHandlerA0E(int obj, int param2)
 {
     DbStealerwormControl *sub = (DbStealerwormControl *)(*(GroundBaddieState **)(obj + 0xb8))->control;
     BaddieState *bs = (BaddieState *)param2;
@@ -5118,7 +5118,7 @@ void dfpobjcreator_update(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802025C0(int obj, int p2)
+int dbstealerworm_stateHandlerA02(int obj, int p2)
 {
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
@@ -5202,7 +5202,7 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80200850(int obj, int p2)
+int dbstealerworm_stateHandlerA0D(int obj, int p2)
 {
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int *args);
@@ -5292,7 +5292,7 @@ typedef struct {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80200088(int obj, int p2)
+int dbstealerworm_stateHandlerB05(int obj, int p2)
 {
     extern int Stack_IsEmpty(int);
     extern void Stack_Pop(int, int *);
@@ -5726,7 +5726,7 @@ void fn_80204098(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801FFE18(int obj, int p2)
+int dbstealerworm_stateHandlerB06(int obj, int p2)
 {
     extern int Stack_IsEmpty(int);
     extern void Stack_Pop(int, int *);
@@ -5819,7 +5819,7 @@ int fn_801FFE18(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80201358(int obj, int p2)
+int dbstealerworm_stateHandlerA0A(int obj, int p2)
 {
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int *args);
@@ -5917,7 +5917,7 @@ int fn_80201358(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80200E44(int obj, int p2, f32 t)
+int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int *args);
@@ -6125,7 +6125,7 @@ int fn_80200E44(int obj, int p2, f32 t)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80201BD8(int obj, int p2, f32 t)
+int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int *args);
@@ -6448,7 +6448,7 @@ void dbstealerworm_update(u8 *objp)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802017A4(int obj, int p2, f32 t)
+int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int *args);
@@ -6768,7 +6768,7 @@ void fn_80204BF8(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80200A70(int obj, int p2, f32 t)
+int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int *args);
@@ -7395,7 +7395,7 @@ void dfpseqpoint_update(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802004B0(int obj, int p2, f32 t)
+int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int *args);
