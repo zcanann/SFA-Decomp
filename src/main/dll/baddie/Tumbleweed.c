@@ -5238,8 +5238,13 @@ void fn_80134870(int obj, u8 *arr);
 void titlescreen_update(u8 *obj)
 {
     extern int  randomGetRange(int min, int max);
-    extern void characterDoEyeAnims(int obj, void *state);
-    extern void fn_8003B228(int obj, void *p);
+    extern void characterDoEyeAnims(u8 *obj, void *state);
+    extern void fn_8003B228(u8 *obj, void *p);
+    extern int  ObjAnim_SetCurrentMove(u8 *objAnimArg, int moveId, f32 moveProgress, int moveControlFlags);
+    extern void Sfx_StopFromObject(u8 *obj, u32 sfxId);
+    extern void Sfx_PlayFromObject(u8 *obj, u32 sfxId);
+    extern int  ObjAnim_AdvanceCurrentMove(f32 moveStepScale, u8 *objAnimArg, f32 deltaTime, ObjAnimEventList *events);
+    extern void fn_80134870(u8 *obj, u8 *arr);
     extern int  ObjModel_HasActiveBlendChannels(int *model);
     extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
     extern void getEnvfxAct(int a, int b, int c, int d);
@@ -5268,23 +5273,23 @@ void titlescreen_update(u8 *obj)
             (c = state[0x30]) != 0 && c != 4 && c != 3) {
             if (*(s16 *)(obj + 0x46) == 0x77d || *(s16 *)(obj + 0x46) == 0x780) {
                 state[0x30] = 3;
-                ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E2318, 0);
+                ObjAnim_SetCurrentMove(obj, 1, lbl_803E2318, 0);
                 *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[3];
             } else {
                 state[0x30] = 0;
-                ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
+                ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
                 *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
             }
         }
         if ((s8)state[0x31] == (s8)lbl_803DD990 && (s8)lbl_803DD991 != 0 &&
             (c = state[0x30]) != 1 && c != 2 && c != 5) {
             state[0x30] = 1;
-            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);
+            ObjAnim_SetCurrentMove(obj, 1, lbl_803E22F8, 0);
             *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1];
             if (*(s16 *)(obj + 0x46) == 0x77e) {
-                Sfx_StopFromObject((int)obj, 0x370);
-                Sfx_StopFromObject((int)obj, 0x36c);
-                Sfx_PlayFromObject((int)obj, 0x36d);
+                Sfx_StopFromObject(obj, 0x370);
+                Sfx_StopFromObject(obj, 0x36c);
+                Sfx_PlayFromObject(obj, 0x36d);
             }
         }
         t = *(s16 *)(obj + 0x46);
@@ -5301,26 +5306,26 @@ void titlescreen_update(u8 *obj)
             } else {
                 f = *(f32 *)(state + 0x34);
             }
-            evt = ObjAnim_AdvanceCurrentMove(f, timeDelta, (int)obj, (ObjAnimEventList *)buf);
+            evt = ObjAnim_AdvanceCurrentMove(f, obj, timeDelta, (ObjAnimEventList *)buf);
             if (evt != 0) {
                 if ((s8)state[0x31] == (s8)lbl_803DD990 && state[0x30] == 1) {
                     state[0x30] = 2;
-                    ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E22F8, 0);
+                    ObjAnim_SetCurrentMove(obj, 2, lbl_803E22F8, 0);
                     *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[2];
                 } else if (state[0x30] == 3) {
                     state[0x30] = 0;
-                    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
+                    ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
                     *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
                 } else if (*(s16 *)(obj + 0x46) >= 0x77d && *(s16 *)(obj + 0x46) < 0x781) {
                     if (randomGetRange(0, 4) == 0) {
                         if ((c = state[0x30]) == 0 || c == 4) {
                             state[0x30] = 4;
-                            ObjAnim_SetCurrentMove((int)obj, randomGetRange(3, 4), lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove(obj, randomGetRange(3, 4), lbl_803E22F8, 0);
                             *(f32 *)(state + 0x34) =
                                 lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1 + *(s16 *)(obj + 0xa0)];
                         } else {
                             state[0x30] = 5;
-                            ObjAnim_SetCurrentMove((int)obj, randomGetRange(5, 6), lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove(obj, randomGetRange(5, 6), lbl_803E22F8, 0);
                             *(f32 *)(state + 0x34) =
                                 lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1 + *(s16 *)(obj + 0xa0)];
                         }
@@ -5328,23 +5333,23 @@ void titlescreen_update(u8 *obj)
                         c = state[0x30];
                         if (c == 4) {
                             state[0x30] = 0;
-                            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
                             *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
                         } else if (c == 5) {
                             state[0x30] = 2;
-                            ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove(obj, 2, lbl_803E22F8, 0);
                             *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[2];
                         }
                     }
                 }
             }
-            fn_80134870((int)obj, buf);
+            fn_80134870(obj, buf);
         }
         t = *(s16 *)(obj + 0x46);
         if (t == 0x77e && ((c = state[0x30]) == 0 || c == 4)) {
-            fn_8003B228((int)obj, state);
+            fn_8003B228(obj, state);
         } else if (t >= 0x77d && t < 0x781) {
-            characterDoEyeAnims((int)obj, state);
+            characterDoEyeAnims(obj, state);
         }
         model = Obj_GetActiveModel(obj);
         if (*(u8 *)(*model + 0xf9) != 0 && ObjModel_HasActiveBlendChannels(model) == 0 &&
@@ -5368,7 +5373,7 @@ void titlescreen_update(u8 *obj)
                 if (row[col] != 0) {
                     if (*(f32 *)(obj + 0x98) < lbl_803E2364) row[col] = 0;
                 } else if (*(f32 *)(obj + 0x98) > lbl_803E2364) {
-                    Sfx_PlayFromObject((int)obj, 0x41d);
+                    Sfx_PlayFromObject(obj, 0x41d);
                     row[col] = 1;
                 }
                 break;
@@ -5384,14 +5389,14 @@ void titlescreen_update(u8 *obj)
                     if (row[col] != 0) {
                         if (*(f32 *)(obj + 0x98) < lbl_803E2368) row[col] = 0;
                     } else if (*(f32 *)(obj + 0x98) > lbl_803E2368) {
-                        Sfx_PlayFromObject((int)obj, 0x421);
+                        Sfx_PlayFromObject(obj, 0x421);
                         row[col] = 1;
                     }
-                    p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + col + 1;
+                    p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + s * 3 + 1;
                     if (*p != 0) {
                         if (*(f32 *)(obj + 0x98) < lbl_803E236C) *p = 0;
                     } else if (*(f32 *)(obj + 0x98) > lbl_803E236C) {
-                        Sfx_PlayFromObject((int)obj, 0x421);
+                        Sfx_PlayFromObject(obj, 0x421);
                         *p = 1;
                     }
                 }
@@ -5406,7 +5411,7 @@ void titlescreen_update(u8 *obj)
                 if (row[col] != 0) {
                     if (*(f32 *)(obj + 0x98) < lbl_803E2370) row[col] = 0;
                 } else if (*(f32 *)(obj + 0x98) > lbl_803E2370) {
-                    Sfx_PlayFromObject((int)obj, 0x414);
+                    Sfx_PlayFromObject(obj, 0x414);
                     row[col] = 1;
                 }
                 break;
@@ -5416,21 +5421,21 @@ void titlescreen_update(u8 *obj)
                 if (row[col] != 0) {
                     if (*(f32 *)(obj + 0x98) < lbl_803E2374) row[col] = 0;
                 } else if (*(f32 *)(obj + 0x98) > lbl_803E2374) {
-                    Sfx_PlayFromObject((int)obj, 0x412);
+                    Sfx_PlayFromObject(obj, 0x412);
                     row[col] = 1;
                 }
-                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + col + 1;
+                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + s * 3 + 1;
                 if (*p != 0) {
                     if (*(f32 *)(obj + 0x98) < lbl_803E2378) *p = 0;
                 } else if (*(f32 *)(obj + 0x98) > lbl_803E2378) {
-                    Sfx_PlayFromObject((int)obj, 0x426);
+                    Sfx_PlayFromObject(obj, 0x426);
                     *p = 1;
                 }
-                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + col + 2;
+                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + s * 3 + 2;
                 if (*p != 0) {
                     if (*(f32 *)(obj + 0x98) < lbl_803E237C) *p = 0;
                 } else if (*(f32 *)(obj + 0x98) > lbl_803E237C) {
-                    Sfx_PlayFromObject((int)obj, 0x413);
+                    Sfx_PlayFromObject(obj, 0x413);
                     *p = 1;
                 }
                 break;
@@ -5440,21 +5445,21 @@ void titlescreen_update(u8 *obj)
                 if (row[col] != 0) {
                     if (*(f32 *)(obj + 0x98) < lbl_803E2368) row[col] = 0;
                 } else if (*(f32 *)(obj + 0x98) > lbl_803E2368) {
-                    Sfx_PlayFromObject((int)obj, 0x426);
+                    Sfx_PlayFromObject(obj, 0x426);
                     row[col] = 1;
                 }
-                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + col + 1;
+                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + s * 3 + 1;
                 if (*p != 0) {
                     if (*(f32 *)(obj + 0x98) < lbl_803E2380) *p = 0;
                 } else if (*(f32 *)(obj + 0x98) > lbl_803E2380) {
-                    Sfx_PlayFromObject((int)obj, 0x426);
+                    Sfx_PlayFromObject(obj, 0x426);
                     *p = 1;
                 }
-                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + col + 2;
+                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + s * 3 + 2;
                 if (*p != 0) {
                     if (*(f32 *)(obj + 0x98) < lbl_803E2384) *p = 0;
                 } else if (*(f32 *)(obj + 0x98) > lbl_803E2384) {
-                    Sfx_PlayFromObject((int)obj, 0x426);
+                    Sfx_PlayFromObject(obj, 0x426);
                     *p = 1;
                 }
                 break;
