@@ -55,6 +55,9 @@ void arwingandrossstuff_initialise(void) {}
 #pragma scheduling off
 void arwingandrossstuff_hitDetect(int obj)
 {
+    struct {
+        f32 x, y, z;
+    } d, v, w;
     int state = *(int *)(obj + 0xb8);
     int arwing = getArwing();
 
@@ -74,13 +77,9 @@ void arwingandrossstuff_hitDetect(int obj)
             Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
         }
         if (*(s16 *)(obj + 0x46) == 0x7e4) {
-            struct {
-                f32 x, y, z;
-            } v, w;
-            f32 ang = lbl_803E7030 *
-                      (f32)(s16)(-getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc),
-                                           *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10))) /
-                      lbl_803E7034;
+            s16 a = (s16)-getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc),
+                                   *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10));
+            f32 ang = lbl_803E7030 * (f32)a / lbl_803E7034;
 
             v.x = lbl_803E702C * fn_80293E80(ang);
             v.y = lbl_803E7038 * sin(ang);
@@ -91,10 +90,6 @@ void arwingandrossstuff_hitDetect(int obj)
         }
         if (*(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)arwing) {
             if (fn_8022D738(arwing) != 0) {
-                struct {
-                    f32 x, y, z;
-                } d;
-
                 PSVECNormalize((void *)(obj + 0x24), (void *)(obj + 0x24));
                 d.x = *(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc);
                 d.y = *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10);
@@ -110,7 +105,7 @@ void arwingandrossstuff_hitDetect(int obj)
         *(f32 *)(state + 0x10) = lbl_803E7028;
         *(u8 *)(obj + 0x36) = 0;
         projectileParticleFxFn_80099660(obj, lbl_803E701C, *(u8 *)state);
-        if (*(int *)(state + 0x14) != 0) {
+        if (*(void **)(state + 0x14) != NULL) {
             ModelLightStruct_free(*(void **)(state + 0x14));
             *(int *)(state + 0x14) = 0;
         }

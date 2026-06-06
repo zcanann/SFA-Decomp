@@ -1761,7 +1761,7 @@ void dll_CE_update(int obj, int p2, int p3)
   int setup;
   u8 *hit;
   int n;
-  int buf[5];
+  int buf[4];
 
   sub = *(int *)(obj + 0xb8);
   setup = *(int *)(obj + 0x4c);
@@ -2290,8 +2290,8 @@ void fn_8015FBEC(int obj)
 static inline u8 scarab_isObjectInList(void *o)
 {
   extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
-  int count;
   int i;
+  int count;
   int *objs = ObjList_GetObjects(&i, &count);
   while (i < count) {
     if (o == (void *)objs[i++]) {
@@ -4810,7 +4810,10 @@ int fn_80161880(short *obj, u8 *p, f32 spd)
   r = sqrtf(a.x * a.x + a.z * a.z);
   d = r;
   a.x = r;
-  obj[1] = ((*(s8 *)(hit + 0x45) << 1) - 1) * (s16)getAngle(a.y, (f32)d);
+  {
+    int ang = (s16)getAngle(a.y, (f32)d);
+    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+  }
   if (*(char *)(p + 0x346) != '\0') {
     return 5;
   }
@@ -4893,7 +4896,10 @@ int fn_80161AF8(short *obj, u8 *p)
   r = sqrtf(a.x * a.x + a.z * a.z);
   d = r;
   a.x = r;
-  obj[1] = ((*(s8 *)(hit + 0x45) << 1) - 1) * (s16)getAngle(a.y, (f32)d);
+  {
+    int ang = (s16)getAngle(a.y, (f32)d);
+    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+  }
   return 0;
 }
 
@@ -4933,7 +4939,10 @@ int fn_80161C44(short *obj, u8 *p)
   r = sqrtf(a.x * a.x + a.z * a.z);
   d = r;
   a.x = r;
-  obj[1] = ((*(s8 *)(hit + 0x45) << 1) - 1) * (s16)getAngle(a.y, (f32)d);
+  {
+    int ang = (s16)getAngle(a.y, (f32)d);
+    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+  }
   if (*(char *)(p + 0x346) != '\0') {
     return 6;
   }
@@ -4976,7 +4985,10 @@ int fn_80161DA8(short *obj, u8 *p)
   r = sqrtf(a.x * a.x + a.z * a.z);
   d = r;
   a.x = r;
-  obj[1] = ((*(s8 *)(hit + 0x45) << 1) - 1) * (s16)getAngle(a.y, (f32)d);
+  {
+    int ang = (s16)getAngle(a.y, (f32)d);
+    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+  }
   if (*(char *)(p + 0x346) != '\0') {
     return 1;
   }
