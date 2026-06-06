@@ -1,4 +1,5 @@
 #include "main/dll/tricky.h"
+#include "main/texture.h"
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006954();
@@ -2671,10 +2672,10 @@ void fearTestMeterDraw(void) {
     int sc0, sc1, sc2, sc3;
     GXColor col;
     void *texB = *(void **)(hudTextures + 0x180);
-    u16 hgt = *(u16 *)((char *)texB + 0xc);
+    u16 hgt = ((Texture *)texB)->height;
     int gap = (u8)fearTestMeterOuterHalfWidth - (u8)fearTestMeterInnerHalfWidth;
     void *texA = *(void **)(hudTextures + 0x17c);
-    int wid = (u8)*(u16 *)((char *)texA + 0xa);
+    int wid = (u8)((Texture *)texA)->width;
     if (lbl_803DD76E != 0) {
         lbl_803DD76C = lbl_803DD76C + lbl_803DBAF0 * framesThisStep;
     } else {
