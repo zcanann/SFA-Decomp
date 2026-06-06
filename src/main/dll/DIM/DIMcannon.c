@@ -2025,7 +2025,6 @@ void imanimspacecraft_free(int *obj) {
     (*(void (***)(int*))gExpgfxInterface)[6](obj);
 }
 
-extern int imanimspacecraft_SeqFn(int *obj, int unused, u8 *p3);
 extern f32 lbl_803E4784;
 extern char lbl_803AC948[];
 #pragma scheduling off
@@ -2129,8 +2128,6 @@ extern void Music_Trigger(int id, int p2);
 extern int getSaveGameLoadStatus(void);
 extern void *Obj_GetPlayerObject(void);
 extern int coordsToMapCell(f32 x, f32 z);
-extern void link_levcontrol_updateAreaMusic(int *obj);
-extern void link_levcontrol_applyEnterAreaEffects(int *obj);
 #pragma scheduling off
 #pragma peephole off
 void link_levcontrol_free(int obj) {
