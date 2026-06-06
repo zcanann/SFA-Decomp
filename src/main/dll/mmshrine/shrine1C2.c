@@ -165,6 +165,7 @@ typedef struct EcshIntPair {
     int b;
 } EcshIntPair;
 
+#pragma opt_strength_reduction off
 void ecsh_shrine_update(s16 *obj)
 {
     f32 t[2];
@@ -176,6 +177,7 @@ void ecsh_shrine_update(s16 *obj)
     int *player;
     u8 gv;
     int pick;
+    int n;
     s16 sc;
     f32 z;
     f32 fv;
@@ -183,8 +185,7 @@ void ecsh_shrine_update(s16 *obj)
     ps = (EcshPuzzleState *)lbl_80326208;
     sub = *(u8 **)((char *)obj + 0xb8);
     player = Obj_GetPlayerObject();
-    *(int *)&t[0] = lbl_803E8470;
-    *(int *)&t[1] = lbl_803E8474;
+    *(EcshIntPair *)&t[0] = *(EcshIntPair *)&lbl_803E8470;
     if (sub[0x32] == 0) {
         gv = GameBit_Get(0x58b);
         sub[0x32] = gv;
@@ -211,7 +212,7 @@ void ecsh_shrine_update(s16 *obj)
     SCGameBitLatch_Update(sub + 0x34, 2, -1, -1, 0xb9d, 0xd);
     SCGameBitLatch_UpdateInverted(sub + 0x34, 1, -1, -1, 0xcbb, 8);
     SCGameBitLatch_Update(sub + 0x34, 0x10, -1, -1, 0xcbb, 0xc4);
-    if (*(f32 *)(sub + 8) > (z = lbl_803E4FCC)) {
+    if (*(f32 *)(sub + 8) > (z = *(f32 *)&lbl_803E4FCC)) {
         *(f32 *)(sub + 8) = *(f32 *)(sub + 8) - timeDelta;
         if (*(f32 *)(sub + 8) <= z) {
             *(f32 *)(sub + 8) = z;
@@ -280,7 +281,7 @@ void ecsh_shrine_update(s16 *obj)
         case 3:
         case 4:
         case 5:
-            if (*(f32 *)(sub + 4) > lbl_803E4FCC) {
+            if (*(f32 *)(sub + 4) > (fv = lbl_803E4FCC)) {
                 if (*(s16 *)(sub + 0x24) == 1 && sub[0x31] == 0
                     && *(f32 *)(sub + 4) < *(f32 *)(sub + 0x14)) {
                     if ((int)randomGetRange(0, 10) > 7) {
@@ -290,7 +291,7 @@ void ecsh_shrine_update(s16 *obj)
                 }
                 *(f32 *)(sub + 4) = *(f32 *)(sub + 4) - timeDelta;
                 if (*(f32 *)(sub + 4) < lbl_803E4FCC) {
-                    *(f32 *)(sub + 4) = lbl_803E4FCC;
+                    *(f32 *)(sub + 4) = *(f32 *)&lbl_803E4FCC;
                 }
             } else {
                 switch (*(s16 *)(sub + 0x24)) {
@@ -311,7 +312,7 @@ void ecsh_shrine_update(s16 *obj)
                     break;
                 case 2:
                     *(s16 *)(sub + 0x22) -= 1;
-                    if (*(s16 *)(sub + 0x22) < 1) {
+                    if (*(s16 *)(sub + 0x22) <= 0) {
                         Sfx_PlayFromObject(0, 0x3a8);
                         *(s16 *)(sub + 0x24) = 5;
                         if (sub[0x2f] == 3) {
@@ -335,54 +336,18 @@ void ecsh_shrine_update(s16 *obj)
                             pick = randomGetRange(0, 7);
                         }
                         if (pick == 0) {
-                            ps->cur[0] += 1;
-                            if (ps->cur[0] > 5) {
-                                ps->cur[0] = 0;
-                            }
-                            ps->cur[1] += 1;
-                            if (ps->cur[1] > 5) {
-                                ps->cur[1] = 0;
-                            }
-                            ps->cur[2] += 1;
-                            if (ps->cur[2] > 5) {
-                                ps->cur[2] = 0;
-                            }
-                            ps->cur[3] += 1;
-                            if (ps->cur[3] > 5) {
-                                ps->cur[3] = 0;
-                            }
-                            ps->cur[4] += 1;
-                            if (ps->cur[4] > 5) {
-                                ps->cur[4] = 0;
-                            }
-                            ps->cur[5] += 1;
-                            if (ps->cur[5] > 5) {
-                                ps->cur[5] = 0;
+                            for (n = 0; n < 6; n++) {
+                                ps->cur[n] += 1;
+                                if (ps->cur[n] > 5) {
+                                    ps->cur[n] = 0;
+                                }
                             }
                         } else if (pick == 1) {
-                            ps->cur[0] -= 1;
-                            if (ps->cur[0] < 0) {
-                                ps->cur[0] = 5;
-                            }
-                            ps->cur[1] -= 1;
-                            if (ps->cur[1] < 0) {
-                                ps->cur[1] = 5;
-                            }
-                            ps->cur[2] -= 1;
-                            if (ps->cur[2] < 0) {
-                                ps->cur[2] = 5;
-                            }
-                            ps->cur[3] -= 1;
-                            if (ps->cur[3] < 0) {
-                                ps->cur[3] = 5;
-                            }
-                            ps->cur[4] -= 1;
-                            if (ps->cur[4] < 0) {
-                                ps->cur[4] = 5;
-                            }
-                            ps->cur[5] -= 1;
-                            if (ps->cur[5] < 0) {
-                                ps->cur[5] = 5;
+                            for (n = 0; n < 6; n++) {
+                                ps->cur[n] -= 1;
+                                if (ps->cur[n] < 0) {
+                                    ps->cur[n] = 5;
+                                }
                             }
                         } else if (pick == 2) {
                             sc = ps->cur[0];
@@ -435,11 +400,11 @@ void ecsh_shrine_update(s16 *obj)
                     break;
                 case 1:
                     *(s16 *)(sub + 0x24) = 4;
-                    *(f32 *)(sub + 4) = lbl_803E4FCC;
+                    *(f32 *)(sub + 4) = fv;
                     break;
                 case 4:
                     *(s16 *)(sub + 0x24) = 2;
-                    *(f32 *)(sub + 4) = lbl_803E4FCC;
+                    *(f32 *)(sub + 4) = fv;
                     break;
                 case 5:
                     Sfx_KeepAliveLoopedObjectSound(0, 0x3a8);
@@ -537,6 +502,7 @@ void ecsh_shrine_update(s16 *obj)
         }
     }
 }
+#pragma opt_strength_reduction reset
 
 /*
  * --INFO--
