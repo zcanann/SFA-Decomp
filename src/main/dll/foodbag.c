@@ -1931,10 +1931,10 @@ void dll_87_func03(int param_1,int param_2,int param_3,uint param_4)
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
     u8 v58, v59, v5a, v5b, v5c;
     s8 count; u8 pad1[2];
-    FbCmd entries[33];
+    FbCmd entries[32];
   } FbBuf87;
   FbBuf87 buf;
-  u8 *base = lbl_80316050;
+  u8 *base = (u8 *)(int)lbl_80316050;
   FbCmd *e = buf.entries;
 
   e[0].layer = 0; e[0].flags = 10; e[0].tex = base + 0x1ac; e[0].mode = 2;
@@ -1987,7 +1987,7 @@ void dll_87_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E0FF0 + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf,0,10,base,8,base + 0x168,0x1fd,0);
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,10,(u8 *)(int)lbl_80316050,8,base + 0x168,0x1fd,0);
 }
 
 /*
