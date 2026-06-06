@@ -565,7 +565,7 @@ void dll_19D_update(int obj)
         *(s16 *)(self + 0x4) = (s16)(*(s16 *)(self + 0x4) + *(s16 *)(state + 0x2c) * (u16)framesThisStep);
         (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29d, vec, 4, -1, 0);
 
-        if ((*(s16 *)(state + 0x30) -= (u16)framesThisStep) <= 0) {
+        if ((s16)(*(u16 *)(state + 0x30) -= (u16)framesThisStep) <= 0) {
             (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29e, vec, 4, -1, 0);
             (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29f, vec, 4, -1, 0);
             (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a1, vec, 4, -1, 0);
