@@ -1,4 +1,5 @@
 #include "main/dll/df_partfx.h"
+#include "main/dll/baddie_state.h"
 #include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
@@ -1338,15 +1339,15 @@ void FUN_800d8240(ushort *param_1,int param_2)
   double dVar4;
   
   *(undefined4 *)(param_2 + 0x29c) = *(undefined4 *)(param_2 + 0x298);
-  dVar4 = FUN_80293900((double)(*(float *)(param_2 + 0x290) * *(float *)(param_2 + 0x290) +
-                               *(float *)(param_2 + 0x28c) * *(float *)(param_2 + 0x28c)));
+  dVar4 = FUN_80293900((double)(((BaddieState *)param_2)->unk290 * ((BaddieState *)param_2)->unk290 +
+                               ((BaddieState *)param_2)->unk28C * ((BaddieState *)param_2)->unk28C));
   *(float *)(param_2 + 0x298) = (float)dVar4;
   if (lbl_803E11F8 < *(float *)(param_2 + 0x298)) {
     *(float *)(param_2 + 0x298) = lbl_803E11F8;
   }
   *(float *)(param_2 + 0x298) = *(float *)(param_2 + 0x298) / lbl_803E11F8;
   iVar1 = FUN_80017730();
-  DAT_803de0cc = (short)iVar1 - *(short *)(param_2 + 0x330);
+  DAT_803de0cc = (short)iVar1 - ((BaddieState *)param_2)->unk330;
   uVar2 = (int)DAT_803de0cc - (uint)*param_1;
   if (0x8000 < (int)uVar2) {
     uVar2 = uVar2 - 0xffff;
@@ -1354,11 +1355,11 @@ void FUN_800d8240(ushort *param_1,int param_2)
   if ((int)uVar2 < -0x8000) {
     uVar2 = uVar2 + 0xffff;
   }
-  *(short *)(param_2 + 0x336) =
+  ((BaddieState *)param_2)->unk336 =
        (short)(int)((f32)(s32)(uVar2) /
                    lbl_803E1210);
   if ((int)uVar2 < 0) {
-    *(short *)(param_2 + 0x334) = -*(short *)(param_2 + 0x336);
+    *(short *)(param_2 + 0x334) = -((BaddieState *)param_2)->unk336;
   }
   else {
     *(undefined2 *)(param_2 + 0x334) = *(undefined2 *)(param_2 + 0x336);
@@ -1563,19 +1564,19 @@ void FUN_800d88f8(double param_1,double param_2,int param_3,int param_4)
   }
   dVar2 = FUN_80293900((double)(*(float *)(param_3 + 0x24) * *(float *)(param_3 + 0x24) +
                                *(float *)(param_3 + 0x2c) * *(float *)(param_3 + 0x2c)));
-  *(float *)(param_4 + 0x294) = (float)dVar2;
+  ((BaddieState *)param_4)->unk294 = (float)dVar2;
   fVar1 = lbl_803E11F0;
-  if (*(float *)(param_4 + 0x294) < lbl_803E1230) {
-    *(float *)(param_4 + 0x294) = lbl_803E11F0;
+  if (((BaddieState *)param_4)->unk294 < lbl_803E1230) {
+    ((BaddieState *)param_4)->unk294 = lbl_803E11F0;
     *(float *)(param_3 + 0x24) = fVar1;
     *(float *)(param_3 + 0x2c) = fVar1;
   }
   dVar2 = (double)FUN_80293f90();
   dVar3 = (double)FUN_80294964();
-  *(float *)(param_4 + 0x284) =
+  ((BaddieState *)param_4)->animSpeedB =
        (float)((double)*(float *)(param_3 + 0x24) * dVar3 -
               (double)(float)((double)*(float *)(param_3 + 0x2c) * dVar2));
-  *(float *)(param_4 + 0x280) =
+  ((BaddieState *)param_4)->animSpeedA =
        (float)(-(double)*(float *)(param_3 + 0x2c) * dVar3 -
               (double)(float)((double)*(float *)(param_3 + 0x24) * dVar2));
   return;
@@ -2196,7 +2197,7 @@ void player_applyVelocityStep(int *p, int *ctx, f32 t) {
     if ((flags & 0x200000) == 0) {
         *(f32 *)((char *)p + 0x28) = *(f32 *)((char *)p + 0x28) * lbl_803E058C;
         *(f32 *)((char *)p + 0x28) =
-            -(*(f32 *)((char *)ctx + 0x2a4) * t) + *(f32 *)((char *)p + 0x28);
+            -(((BaddieState *)ctx)->unk2A4 * t) + *(f32 *)((char *)p + 0x28);
     }
     b = *(s8 *)((char *)ctx + 0x34c);
     if ((b & 1) == 0 || (b & 4) != 0) {
@@ -2209,12 +2210,12 @@ void player_applyVelocityStep(int *p, int *ctx, f32 t) {
         desc.sc[3] = lbl_803E0570;
         setMatrixFromObjectPos(mtx, &desc);
         if ((ctx[0] & 0x10000) != 0) {
-            Matrix_TransformPoint(mtx, *(f32 *)((char *)ctx + 0x284), *(f32 *)((char *)ctx + 0x288),
-                                  -*(f32 *)((char *)ctx + 0x280), &outX, (f32 *)((char *)p + 0x28),
+            Matrix_TransformPoint(mtx, ((BaddieState *)ctx)->animSpeedB, *(f32 *)((char *)ctx + 0x288),
+                                  -((BaddieState *)ctx)->animSpeedA, &outX, (f32 *)((char *)p + 0x28),
                                   &outZ);
         } else {
-            Matrix_TransformPoint(mtx, *(f32 *)((char *)ctx + 0x284), lbl_803E0570,
-                                  -*(f32 *)((char *)ctx + 0x280), &outX, &outY, &outZ);
+            Matrix_TransformPoint(mtx, ((BaddieState *)ctx)->animSpeedB, lbl_803E0570,
+                                  -((BaddieState *)ctx)->animSpeedA, &outX, &outY, &outZ);
         }
         *(f32 *)((char *)p + 0x24) = outX;
         *(f32 *)((char *)p + 0x2c) = outZ;
@@ -2231,14 +2232,14 @@ void fn_800D8414(int *obj, int *ctx) {
     int diff;
     *(f32 *)((char *)ctx + 0x29c) = *(f32 *)((char *)ctx + 0x298);
     *(f32 *)((char *)ctx + 0x298) =
-        sqrtf(*(f32 *)((char *)ctx + 0x290) * *(f32 *)((char *)ctx + 0x290) +
-              *(f32 *)((char *)ctx + 0x28c) * *(f32 *)((char *)ctx + 0x28c));
+        sqrtf(((BaddieState *)ctx)->unk290 * ((BaddieState *)ctx)->unk290 +
+              ((BaddieState *)ctx)->unk28C * ((BaddieState *)ctx)->unk28C);
     if (*(f32 *)((char *)ctx + 0x298) > lbl_803E0578) {
         *(f32 *)((char *)ctx + 0x298) = lbl_803E0578;
     }
     *(f32 *)((char *)ctx + 0x298) = *(f32 *)((char *)ctx + 0x298) / lbl_803E0578;
-    lbl_803DD44C = (s16)getAngle(*(f32 *)((char *)ctx + 0x290), -*(f32 *)((char *)ctx + 0x28c));
-    lbl_803DD44C = (s16)(lbl_803DD44C - *(s16 *)((char *)ctx + 0x330));
+    lbl_803DD44C = (s16)getAngle(((BaddieState *)ctx)->unk290, -((BaddieState *)ctx)->unk28C);
+    lbl_803DD44C = (s16)(lbl_803DD44C - ((BaddieState *)ctx)->unk330);
     diff = lbl_803DD44C - (u16)*(s16 *)((char *)obj + 0);
     if (diff > 0x8000) {
         diff -= 0xffff;
@@ -2246,11 +2247,11 @@ void fn_800D8414(int *obj, int *ctx) {
     if (diff < -0x8000) {
         diff += 0xffff;
     }
-    *(s16 *)((char *)ctx + 0x336) = (s16)(int)((f32)diff / lbl_803E0590);
+    ((BaddieState *)ctx)->unk336 = (s16)(int)((f32)diff / lbl_803E0590);
     if (diff < 0) {
-        *(s16 *)((char *)ctx + 0x334) = -*(s16 *)((char *)ctx + 0x336);
+        *(s16 *)((char *)ctx + 0x334) = -((BaddieState *)ctx)->unk336;
     } else {
-        *(s16 *)((char *)ctx + 0x334) = *(s16 *)((char *)ctx + 0x336);
+        *(s16 *)((char *)ctx + 0x334) = ((BaddieState *)ctx)->unk336;
     }
     diff += 0x10000;
     if (*(f32 *)((char *)ctx + 0x298) < lbl_803E0594) {
@@ -2282,24 +2283,24 @@ void player_getExtraSize(int *a, int *ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 s
         dz = dz / mag;
     }
     if (*(f32 *)((char *)ctx + 0x2bc) > lo + hi) {
-        *(f32 *)((char *)ctx + 0x290) = dx * spd;
-        *(f32 *)((char *)ctx + 0x28c) = -dz * spd;
+        ((BaddieState *)ctx)->unk290 = dx * spd;
+        ((BaddieState *)ctx)->unk28C = -dz * spd;
     } else {
-        *(f32 *)((char *)ctx + 0x294) = *(f32 *)((char *)ctx + 0x294) * lbl_803E0574;
-        *(f32 *)((char *)ctx + 0x290) = lbl_803E0570;
-        *(f32 *)((char *)ctx + 0x28c) = lbl_803E0570;
+        ((BaddieState *)ctx)->unk294 = ((BaddieState *)ctx)->unk294 * lbl_803E0574;
+        ((BaddieState *)ctx)->unk290 = lbl_803E0570;
+        ((BaddieState *)ctx)->unk28C = lbl_803E0570;
     }
-    if (*(f32 *)((char *)ctx + 0x290) > lbl_803E0578) {
-        *(f32 *)((char *)ctx + 0x290) = lbl_803E0578;
+    if (((BaddieState *)ctx)->unk290 > lbl_803E0578) {
+        ((BaddieState *)ctx)->unk290 = lbl_803E0578;
     }
-    if (*(f32 *)((char *)ctx + 0x290) < lbl_803E057C) {
-        *(f32 *)((char *)ctx + 0x290) = lbl_803E057C;
+    if (((BaddieState *)ctx)->unk290 < lbl_803E057C) {
+        ((BaddieState *)ctx)->unk290 = lbl_803E057C;
     }
-    if (*(f32 *)((char *)ctx + 0x28c) > lbl_803E0578) {
-        *(f32 *)((char *)ctx + 0x28c) = lbl_803E0578;
+    if (((BaddieState *)ctx)->unk28C > lbl_803E0578) {
+        ((BaddieState *)ctx)->unk28C = lbl_803E0578;
     }
-    if (*(f32 *)((char *)ctx + 0x28c) < lbl_803E057C) {
-        *(f32 *)((char *)ctx + 0x28c) = lbl_803E057C;
+    if (((BaddieState *)ctx)->unk28C < lbl_803E057C) {
+        ((BaddieState *)ctx)->unk28C = lbl_803E057C;
     }
 }
 #pragma opt_common_subs reset
@@ -2314,22 +2315,22 @@ void player_animFn16(int *obj, int *ctx, int moveA, int moveB) {
     f64 ratio;
     int idx;
     if ((s8)lbl_803DD434 != 0) {
-        if (*(f32 *)((char *)ctx + 0x280) > lbl_803E0570 && *(s16 *)((char *)obj + 0xa0) != (int)lbl_803DD43C) {
+        if (((BaddieState *)ctx)->animSpeedA > lbl_803E0570 && *(s16 *)((char *)obj + 0xa0) != (int)lbl_803DD43C) {
             ObjAnim_SetCurrentMove((int)obj, lbl_803DD43C, *(f32 *)((char *)obj + 0x98), 0);
-            *(u8 *)((char *)ctx + 0x346) = 0;
-        } else if (*(f32 *)((char *)ctx + 0x280) < lbl_803E0570 && *(s16 *)((char *)obj + 0xa0) != (int)lbl_803DD438) {
+            ((BaddieState *)ctx)->moveDone = 0;
+        } else if (((BaddieState *)ctx)->animSpeedA < lbl_803E0570 && *(s16 *)((char *)obj + 0xa0) != (int)lbl_803DD438) {
             ObjAnim_SetCurrentMove((int)obj, lbl_803DD438, *(f32 *)((char *)obj + 0x98), 0);
-            *(u8 *)((char *)ctx + 0x346) = 0;
+            ((BaddieState *)ctx)->moveDone = 0;
         }
-        q1 = *(f32 *)((char *)ctx + 0x280) * *(f32 *)((char *)ctx + 0x280);
-        q2 = *(f32 *)((char *)ctx + 0x284) * *(f32 *)((char *)ctx + 0x284);
+        q1 = ((BaddieState *)ctx)->animSpeedA * ((BaddieState *)ctx)->animSpeedA;
+        q2 = ((BaddieState *)ctx)->animSpeedB * ((BaddieState *)ctx)->animSpeedB;
         mag = sqrtf(q1 + q2);
         if (ObjAnim_SampleRootCurvePhase(mag, (ObjAnimComponent *)obj, &tmp) != 0) {
-            *(f32 *)((char *)ctx + 0x2a0) = tmp;
+            ((BaddieState *)ctx)->moveSpeed = tmp;
         }
         ratio = lbl_803E0570;
         if (ratio != mag) {
-            ratio = *(f32 *)((char *)ctx + 0x284) / mag;
+            ratio = ((BaddieState *)ctx)->animSpeedB / mag;
         }
         tmp = ratio;
         idx = (int)(lbl_803E05A0 * (f32)ratio);
@@ -2339,7 +2340,7 @@ void player_animFn16(int *obj, int *ctx, int moveA, int moveB) {
         if ((f32)idx > lbl_803E05A0) {
             idx = 0x4000;
         }
-        if (*(f32 *)((char *)ctx + 0x284) > lbl_803E0570) {
+        if (((BaddieState *)ctx)->animSpeedB > lbl_803E0570) {
             Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, moveB, idx);
         } else {
             Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, moveA, idx);
