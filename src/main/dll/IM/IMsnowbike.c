@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/IM/IMsnowbike.h"
 
@@ -330,14 +331,14 @@ void sh_levelcontrol_init(int obj) {
     u32 v;
 
     *(void (**)(void))((char *)obj + 0xBC) = SH_LevelControl_SeqFn;
-    v = (u32)*(u16 *)((char *)obj + 0xB0) | 0x4000;
-    *(u16 *)((char *)obj + 0xB0) = (u16)v;
-    *(int *)((char *)obj + 0xF8) = 3;
+    v = (u32)((GameObject *)obj)->unkB0 | 0x4000;
+    ((GameObject *)obj)->unkB0 = (u16)v;
+    ((GameObject *)obj)->unkF8 = 3;
 
     if (getSaveGameLoadStatus() != 0) {
-        *(int *)((char *)obj + 0xF4) = 2;
+        ((GameObject *)obj)->unkF4 = 2;
     } else {
-        *(int *)((char *)obj + 0xF4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
 
     *(s16 *)((char *)state + 0x10) = -1;
@@ -376,7 +377,7 @@ void warpstonelift_init(int obj, s8 *def) {
     int *state = *(int **)((char *)obj + 0xB8);
     int i;
     *(s16 *)obj = (s16)((s32)def[0x18] << 8);
-    *(int *)((char *)obj + 0xF4) = 0;
+    ((GameObject *)obj)->unkF4 = 0;
     for (i = 0; i < 2; i++) {
         if (GameBit_Get(lbl_803DC058[i]) != 0) {
             *(u8 *)state = (u8)(i + 1);
