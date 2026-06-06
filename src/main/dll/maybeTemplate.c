@@ -1014,7 +1014,7 @@ void hudDrawButtons(int param1, int param2, int param3)
         sprintf((char *)&label, &lbl_803DBB58, *iconPtr);
         gameTextSetColor(0, 0, 0, a16 & 0xFF);
         gameTextShowStr((char *)&label, 0x93, 0x247, 0x2B + yOff + lbl_803DD796);
-        gameTextSetColor(0xFF, 0xFF, 0xFF, a16 & 0xFF);
+        gameTextSetColor(0xFF, 0xFF, 0xFF, (u8)a16);
         gameTextShowStr((char *)&label, 0x93, 0x246, 0x2A + yOff + lbl_803DD796);
       }
       iconPtr = iconPtr + 1;
@@ -1046,7 +1046,7 @@ void hudDrawButtons(int param1, int param2, int param3)
     lbl_803DD876 = -1;
     hudYButtonItemIconTexture = 0;
   }
-  if ((hudYButtonItemIconTexture == 0) && (yButtonItemTextureId > 0)) {
+  if (((u32)hudYButtonItemIconTexture == 0) && (yButtonItemTextureId > 0)) {
     lbl_803DD876 = yButtonItemTextureId;
     hudYButtonItemIconTexture = textureLoadAsset(yButtonItemTextureId);
   }
@@ -1159,7 +1159,7 @@ void hudDrawButtons(int param1, int param2, int param3)
       drawTexture(((int *)(base + 0x1C0))[4], lbl_803E1FCC, lbl_803E200C, (int)lbl_803DD83C, 0x100);
       lbl_803DD7B0 = 0;
     }
-    if (hudYButtonItemIconTexture != 0) {
+    if ((u32)hudYButtonItemIconTexture != 0) {
       if (lbl_803DD87C != 0) {
         scaleT = lbl_803E2010;
       }
@@ -1185,7 +1185,7 @@ void hudDrawButtons(int param1, int param2, int param3)
       if (lbl_803DD878 > lbl_803E1E3C) {
         lbl_803DD7E8 = lbl_803E1E68;
       }
-      if (!(lbl_803DD878 > lbl_803E1E3C)) {
+      if (!(*(f32 *)&lbl_803DD878 > *(f32 *)&lbl_803E1E3C)) {
         lbl_803DD878 = lbl_803E1E3C;
       }
       drawTexture(hudYButtonItemIconTexture, lbl_803DBA78 * lbl_803DD878 + lbl_803E2014, lbl_803DBA7C * lbl_803DD878 + lbl_803E1F9C, (int)(lbl_803DD7E8 * lbl_803DD83C), (int)(lbl_803DBA80 * lbl_803DD878 + lbl_803E2018));
