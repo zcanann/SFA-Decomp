@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camTalk.h"
+#include "main/camera_object.h"
 
 extern void *memset(void *dst, int val, u32 n);
 extern void *mmAlloc(int size, int heap, int flags);
@@ -109,9 +110,9 @@ void CameraModeBike_update(short *param_1)
   longlong local_48;
   
   (*(code *)(*gCameraInterface + 0x18))();
-  puVar5 = *(ushort **)(param_1 + 0x52);
+  puVar5 = ((CameraObject *)param_1)->anim.targetObj;
   if (puVar5 != (ushort *)0x0) {
-    *(float *)(param_1 + 0x5a) = lbl_803E1784;
+    ((CameraObject *)param_1)->fov = lbl_803E1784;
     local_fc.x = *(float *)(puVar5 + 0xc);
     local_fc.y = *(float *)(puVar5 + 0xe);
     local_fc.z = *(float *)(puVar5 + 0x10);
@@ -151,9 +152,9 @@ void CameraModeBike_update(short *param_1)
          *(float *)(lbl_803DD540 + 0x28);
     fVar2 = *(float *)(lbl_803DD540 + 0x28);
     dVar8 = fVar2 * dVar8;
-    *(float *)(param_1 + 0xc) = local_100 + dVar8 * dVar7;
-    *(float *)(param_1 + 0xe) = local_104 + fVar2 * dVar9;
-    *(float *)(param_1 + 0x10) = local_108 + dVar8 * dVar6;
+    ((CameraObject *)param_1)->anim.worldPosX = local_100 + dVar8 * dVar7;
+    ((CameraObject *)param_1)->anim.worldPosY = local_104 + fVar2 * dVar9;
+    ((CameraObject *)param_1)->anim.worldPosZ = local_108 + dVar8 * dVar6;
     iVar1 = (int)(lbl_803E17A8 * *(float *)(lbl_803DD540 + 0x2c));
     local_60 = (longlong)iVar1;
     sVar4 = (short)iVar1 - param_1[2];
@@ -165,8 +166,8 @@ void CameraModeBike_update(short *param_1)
     }
     iVar1 = (int)((f32)(s32)sVar4 * timeDelta * lbl_803E17B4 + (f32)(s32)param_1[2]);
     param_1[2] = (short)iVar1;
-    Obj_TransformWorldPointToLocal(*(float *)(param_1 + 0xc),*(float *)(param_1 + 0xe),
-                 *(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
+    Obj_TransformWorldPointToLocal(((CameraObject *)param_1)->anim.worldPosX,((CameraObject *)param_1)->anim.worldPosY,
+                 ((CameraObject *)param_1)->anim.worldPosZ,(float *)(param_1 + 6),(float *)(param_1 + 8),
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   }
   return;
@@ -192,7 +193,7 @@ void CameraModeBike_init(int param_1)
     lbl_803DD540 = (u8 *)mmAlloc(0x38,0xf,0);
   }
   memset(lbl_803DD540,0,0x38);
-  *(float *)(lbl_803DD540 + 0x18) = *(float *)(param_1 + 0xb4);
+  *(float *)(lbl_803DD540 + 0x18) = ((CameraObject *)param_1)->fov;
   *(float *)(lbl_803DD540 + 0) = lbl_803E1784;
   *(float *)(lbl_803DD540 + 0x14) = lbl_803E1788;
   *(float *)(lbl_803DD540 + 0x28) = lbl_803E17AC;
