@@ -99,17 +99,17 @@ void collectible_init(int obj,int setup)
   ((TexFrameAnimatorState *)state)->unk1D = 0;
   ((TexFrameAnimatorState *)state)->unk14 = *(s16 *)(setup + 0x24);
   *(s32 *)(state + 0x20) = *(s32 *)(setup + 0x14);
-  ((TexFrameAnimatorState *)state)->unk24 = ((GameObject *)obj)->anim.localPosX;
-  ((TexFrameAnimatorState *)state)->unk28 = ((GameObject *)obj)->anim.localPosY;
-  ((TexFrameAnimatorState *)state)->unk2C = ((GameObject *)obj)->anim.localPosZ;
+  ((TexFrameAnimatorState *)state)->basePosX = ((GameObject *)obj)->anim.localPosX;
+  ((TexFrameAnimatorState *)state)->basePosY = ((GameObject *)obj)->anim.localPosY;
+  ((TexFrameAnimatorState *)state)->basePosZ = ((GameObject *)obj)->anim.localPosZ;
   ((TexFrameAnimatorState *)state)->unk36 = *(u8 *)(setup + 0x27);
   ((TexFrameAnimatorState *)state)->unk3E = 0;
   if (((TexFrameAnimatorState *)state)->unk14 != -1) {
     ((TexFrameAnimatorState *)state)->unk1E = (u8)((u32)__cntlzw(GameBit_Get(((TexFrameAnimatorState *)state)->unk14)) >> 5);
   }
-  ((TexFrameAnimatorState *)state)->unk10 = *(s16 *)(setup + 0x1c);
-  if (((TexFrameAnimatorState *)state)->unk10 != -1) {
-    *(u32 *)&((GameObject *)obj)->unkF4 = GameBit_Get(((TexFrameAnimatorState *)state)->unk10);
+  ((TexFrameAnimatorState *)state)->hideGameBit = *(s16 *)(setup + 0x1c);
+  if (((TexFrameAnimatorState *)state)->hideGameBit != -1) {
+    *(u32 *)&((GameObject *)obj)->unkF4 = GameBit_Get(((TexFrameAnimatorState *)state)->hideGameBit);
   } else {
     *(u32 *)&((GameObject *)obj)->unkF4 = 0;
   }

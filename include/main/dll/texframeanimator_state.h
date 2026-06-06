@@ -17,7 +17,7 @@ typedef struct TexFrameAnimatorState {
     u8 unkD;
     u8 unkE[0xF - 0xE];
     u8 unkF;
-    s16 unk10;
+    s16 hideGameBit;
     u8 unk12[0x14 - 0x12];
     s16 unk14;
     u8 unk16[0x18 - 0x16];
@@ -27,9 +27,9 @@ typedef struct TexFrameAnimatorState {
     u8 unk1E;
     u8 unk1F[0x20 - 0x1F];
     s32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
+    f32 basePosX;
+    f32 basePosY;
+    f32 basePosZ;
     u8 unk30[0x36 - 0x30];
     u8 unk36;
     u8 unk37[0x38 - 0x37];
