@@ -355,6 +355,7 @@ f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta)
 {
     f32 v[3];
     f32 t;
+    double t2;
     f32 *listener;
     void *player = Obj_GetPlayerObject();
     void *slot = Camera_GetCurrentViewSlot();
@@ -364,16 +365,17 @@ f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta)
         listener = (f32 *)((u8 *)player + 0x18);
     } else {
         if (slot == NULL) {
-            return lbl_803DE570;
+            goto retDefault;
         }
         if (player != NULL) {
             PSVECSubtract((f32 *)((u8 *)slot + 0x44), (f32 *)((u8 *)player + 0x18), v);
             t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
-            t = (t > lbl_803DE5C8 ? t : lbl_803DE5C8) > lbl_803DE5C0
-                    ? lbl_803DE5C0
-                    : (t > lbl_803DE5C8 ? t : lbl_803DE5C8);
-            PSVECScale(v, v, t);
-            PSVECAdd((f32 *)((u8 *)player + 0x18), v, v);
+            if ((t > lbl_803DE5C8 ? t : lbl_803DE5C8) > (t2 = lbl_803DE5C0)) {
+            } else {
+                t2 = (t > lbl_803DE5C8 ? t : lbl_803DE5C8);
+            }
+            PSVECScale(v, v, t2);
+            PSVECAdd((f32 *)((int)player + 0x18), v, v);
             listener = v;
         } else {
             listener = (f32 *)((u8 *)slot + 0x44);
@@ -381,6 +383,8 @@ f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta)
     }
     PSVECSubtract(listener, soundPos, outDelta);
     return PSVECMag(outDelta);
+retDefault:
+    return lbl_803DE570;
 }
 #pragma dont_inline reset
 #pragma peephole reset
