@@ -184,7 +184,7 @@ void DR_CloudRunner_initialise(void)
 #pragma peephole off
 int DR_CloudRunner_stateHandler02(int obj, int p2)
 {
-    int inner = *(int *)&((GameObject *)obj)->extra;
+    CloudRunnerState *inner = ((GameObject *)obj)->extra;
     *(int *)((char *)p2 + 0) |= 0x200000;
     if (*(s8 *)((char *)p2 + 0x27a) != 0) {
         f32 fz = lbl_803E83A4;
@@ -200,8 +200,8 @@ int DR_CloudRunner_stateHandler02(int obj, int p2)
         if (((GameObject *)obj)->anim.currentMove != 0) {
             ObjAnim_SetCurrentMove(obj, 0, fz, 0);
         }
-        if (((ByteFlags *)((char *)inner + 0xbc0))->b20) {
-            ((ByteFlags *)((char *)inner + 0xbc0))->b20 = 0;
+        if (((ByteFlags *)&inner->flagsBC0)->b20) {
+            ((ByteFlags *)&inner->flagsBC0)->b20 = 0;
             *(u8 *)((char *)p2 + 0x25f) = 0;
         }
     }
@@ -258,13 +258,13 @@ int DR_CloudRunner_stateHandler01(int obj, int p2)
 #pragma peephole off
 int DR_CloudRunner_stateHandler03(int obj, int p2)
 {
-    int inner = *(int *)&((GameObject *)obj)->extra;
+    CloudRunnerState *inner = ((GameObject *)obj)->extra;
     if (*(s8 *)((char *)p2 + 0x27a) != 0) {
-        ((ByteFlags *)((char *)inner + 0xbc0))->b10 = 0;
+        ((ByteFlags *)&inner->flagsBC0)->b10 = 0;
         ((GameObject *)obj)->anim.velocityY = lbl_803E83A4;
-        if (((ByteFlags *)((char *)inner + 0xbc0))->b20) {
-            ((ByteFlags *)((char *)inner + 0xbc0))->b20 = 0;
-            fn_802BF0C8(obj, p2, ((ByteFlags *)((char *)inner + 0xbc0))->b20);
+        if (((ByteFlags *)&inner->flagsBC0)->b20) {
+            ((ByteFlags *)&inner->flagsBC0)->b20 = 0;
+            fn_802BF0C8(obj, p2, ((ByteFlags *)&inner->flagsBC0)->b20);
         }
     }
     switch (((GameObject *)obj)->anim.currentMove) {
@@ -364,17 +364,18 @@ void DR_CloudRunner_func17(int obj, int param)
 #pragma peephole off
 int DR_CloudRunner_SeqFn(int obj, int p2, int p3)
 {
-    int inner = *(int *)&((GameObject *)obj)->extra;
+    CloudRunnerState *inner = ((GameObject *)obj)->extra;
     int local = 1;
     int i;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     for (i = 0; i < *(u8 *)((char *)p3 + 0x8b); i++) {
         int idx = i + 0x81;
         if ((int)*(u8 *)((char *)p3 + idx) == 1) {
-            (*(void (*)(int, int, f32, int *, int))(*(int *)(*gRomCurveInterface + 0x8c)))(inner + 0x35c, obj, lbl_803E8410, &local, 0xf);
+            (*(void (*)(int, int, f32, int *, int))(*(int *)(*gRomCurveInterface + 0x8c)))(
+                (int)((char *)inner + 0x35c), obj, lbl_803E8410, &local, 0xf);
         }
     }
-    ((ByteFlags *)((char *)inner + 0xbc1))->b80 = 1;
+    ((ByteFlags *)&inner->flagsBC1)->b80 = 1;
     return 0;
 }
 #pragma peephole reset
@@ -1024,41 +1025,41 @@ void fn_802C11BC(int obj, int p2, f32 f)
 #pragma peephole off
 void DR_CloudRunner_update(int obj)
 {
-    int inner;
+    CloudRunnerState *inner;
     Obj_GetPlayerObject();
-    inner = *(int *)&((GameObject *)obj)->extra;
-    *(s16 *)((char *)inner + 0xbae) = 5;
+    inner = ((GameObject *)obj)->extra;
+    inner->unkBAE = 5;
     fn_80137948(sOnCloudFormat, GameBit_Get(0xed7));
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-    if (*(u8 *)((char *)inner + 0xbb2) == 2) {
+    if (inner->unkBB2 == 2) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         fn_802C11BC(obj, -1, timeDelta);
         ((ObjAnimComponent *)obj)->modelInstance->flags |= 0x200000;
     } else {
-        *(u8 *)((char *)inner + 0x25f) = 0;
+        inner->baddie.unk25F = 0;
         fn_802C11BC(obj, -1, timeDelta);
         ((ObjAnimComponent *)obj)->modelInstance->flags &= ~0x200000;
     }
-    if (*(s8 *)((char *)inner + 0xbc3) != 0) {
-        s8 v = *(s8 *)((char *)inner + 0xbc3) - framesThisStep;
-        *(s8 *)((char *)inner + 0xbc3) = v;
+    if (inner->unkBC3 != 0) {
+        s8 v = inner->unkBC3 - framesThisStep;
+        inner->unkBC3 = v;
         if (v < 0) {
-            *(s8 *)((char *)inner + 0xbc3) = 0;
+            inner->unkBC3 = 0;
         }
     }
-    if (*(u8 *)((char *)inner + 0xbb2) == 2) {
+    if (inner->unkBB2 == 2) {
         ObjHits_MarkObjectPositionDirty(obj);
-        *(u8 *)((char *)inner + 0xad5) |= 1;
+        inner->unkAD5 |= 1;
     } else {
-        *(u8 *)((char *)inner + 0xad5) &= ~1;
+        inner->unkAD5 &= ~1;
     }
-    dll_2E_func03(obj, inner + 0x4c4);
-    objAnimFn_80038f38(obj, inner + 0x494);
-    fn_8003B500(obj, inner + 0x464, lbl_803E83A4);
-    characterDoEyeAnims(obj, inner + 0x464);
+    dll_2E_func03(obj, (int)((char *)inner + 0x4c4));
+    objAnimFn_80038f38(obj, (int)((char *)inner + 0x494));
+    fn_8003B500(obj, (int)((char *)inner + 0x464), lbl_803E83A4);
+    characterDoEyeAnims(obj, (int)((char *)inner + 0x464));
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
-        if (*(u8 *)((char *)inner + 0xbb2) == 0) {
-            if (((ByteFlags *)((char *)inner + 0xbc0))->b10) {
+        if (inner->unkBB2 == 0) {
+            if (((ByteFlags *)&inner->flagsBC0)->b10) {
                 f32 vec[3];
                 buttonDisable(0, 0x100);
                 if ((*(int (*)(void))(*(int *)(*gMapEventInterface + 0x30)))() == 0) {
@@ -1068,14 +1069,14 @@ void DR_CloudRunner_update(int obj)
                     (*(void (*)(f32 *, int, int, int))(*(int *)(*gMapEventInterface + 0x24)))(vec, 0, 0, 0);
                 }
                 (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(4, obj, -1);
-                *(int *)((char *)inner + 0xb04) = 0;
-                *(u8 *)((char *)inner + 0xbb6) |= 4;
-                *(u8 *)((char *)inner + 0xad5) |= 1;
-                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 4);
+                inner->unkB04 = 0;
+                inner->unkBB6 |= 4;
+                inner->unkAD5 |= 1;
+                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, (int)inner, 4);
             } else {
                 buttonDisable(0, 0x100);
                 {
-                    s8 t = *(s8 *)((char *)inner + 0xbc4);
+                    s8 t = inner->unkBC4;
                     if (t != -1) {
                         (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(t, obj, -1);
                     }
