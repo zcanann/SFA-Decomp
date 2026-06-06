@@ -127,30 +127,30 @@ void dfpfloorbar_update(int param_1)
     if (playerObj == NULL) return;
 
     yDelta = *(f32 *)(param_1 + 0x10) - *(f32 *)(playerObj + 0x10);
-    if (yDelta < lbl_803E6418) yDelta = yDelta * lbl_803E6414;
-    if (yDelta >= lbl_803E641C) return;
+    if (yDelta < 0.0f) yDelta = yDelta * lbl_803E6414;
+    if (yDelta < 100.0f) {
+        xMid = *(f32 *)(playerObj + 0xc) - (*(f32 *)(param_1 + 0xc) - 100.0f);
+        zDelta = *(f32 *)(param_1 + 0x14) - *(f32 *)(playerObj + 0x14);
+        if (zDelta < 0.0f) zDelta = zDelta * lbl_803E6414;
+        if (zDelta < 18.0f) {
+            if (xMid >= 150.0f) {
+                score = 4;
+            } else if (xMid >= 100.0f) {
+                score = 3;
+            } else if (xMid >= 50.0f) {
+                score = 2;
+            } else if (xMid >= 0.0f) {
+                score = 1;
+            }
 
-    xMid = *(f32 *)(playerObj + 0xc) - (*(f32 *)(param_1 + 0xc) - lbl_803E641C);
-    zDelta = *(f32 *)(param_1 + 0x14) - *(f32 *)(playerObj + 0x14);
-    if (zDelta < lbl_803E6418) zDelta = zDelta * lbl_803E6414;
-    if (zDelta >= lbl_803E6420) return;
+            if ((s16)score == (s16)state->requiredScore) {
+                state->active = 1;
+                return;
+            }
 
-    if (xMid >= lbl_803E6424) {
-        score = 4;
-    } else if (xMid >= lbl_803E641C) {
-        score = 3;
-    } else if (xMid >= lbl_803E6428) {
-        score = 2;
-    } else if (xMid >= lbl_803E6418) {
-        score = 1;
+            GameBit_Set(0x5e5, 1);
+        }
     }
-
-    if ((s16)score == (s16)state->requiredScore) {
-        state->active = 1;
-        return;
-    }
-
-    GameBit_Set(0x5e5, 1);
 }
 #pragma peephole reset
 #pragma scheduling reset
