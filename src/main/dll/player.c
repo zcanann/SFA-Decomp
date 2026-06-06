@@ -3423,7 +3423,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                     fn_802B0EA4(obj, (int)inner, (int)inner);
                     (**(void (**)(f32, int, int, f32, void *, void *))((char *)(*gPlayerInterface) +
                                                                        8))(
-                        timeDelta, obj, (int)inner, timeDelta, lbl_803DAFC8, &lbl_803DE4B8);
+                        timeDelta, obj, (int)inner, timeDelta, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
                 }
             } else {
                 dx2 = dx2 / d2;
@@ -3446,8 +3446,8 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 fn_802B0EA4(obj, (int)inner, (int)inner);
                 (**(void (**)(f32, int, int, f32, void *, void *))((char *)(*gPlayerInterface) +
                                                                    8))(timeDelta, obj, (int)inner,
-                                                                       timeDelta, lbl_803DAFC8,
-                                                                       &lbl_803DE4B8);
+                                                                       timeDelta, gPlayerStateHandlers,
+                                                                       &gPlayerDefaultStateHandler);
             }
             lbl_803DE468 = dist;
         }
@@ -7520,7 +7520,7 @@ void playerDoHitDetection(int obj)
     fn_80026C54(lbl_803DE420);
     if (!(((PlayerState *)inner)->unk820 >= lbl_803E7EF0)) {
         (*(void (*)(int, int, void *))(*(int *)(*gPlayerInterface + 0xc)))(obj, inner,
-                                                                           lbl_803DAFC8);
+                                                                           gPlayerStateHandlers);
         if (*(s8 *)((char *)inner + 0x34d) == 1) {
             if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0 &&
                 (*(void **)((sub = *(int *)((char *)lbl_803DE44C + 0x54)) + 0x50) != NULL ||
@@ -11420,7 +11420,7 @@ void fn_802B4C18(int obj, int state, f32 fv)
         *(int *)((char *)state + 0x304) = 0;
     }
     (*(void (*)(int, int, f32, f32, int *, int *))(*(int *)(*gPlayerInterface + 0x8)))(
-        obj, state, fv, fv, lbl_803DAFC8, &lbl_803DE4B8);
+        obj, state, fv, fv, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
     *(int *)state &= ~0x1000000;
 }
 #pragma peephole reset
@@ -16150,7 +16150,7 @@ int fn_8029E568(int obj, int state, f32 fv)
 #pragma peephole off
 void playerInitFuncPtrs(int obj)
 {
-    int *p = lbl_803DAFC8;
+    int *p = gPlayerStateHandlers;
     p[0] = (int)fn_802A7160;
     p[1] = (int)fn_802A6694;
     p[2] = (int)fn_802A5384;
@@ -16217,7 +16217,7 @@ void playerInitFuncPtrs(int obj)
     p[63] = (int)fn_802977A8;
     p[64] = (int)fn_80297748;
     p[65] = (int)fn_802974A0;
-    lbl_803DE4B8 = (int)fn_80297498;
+    gPlayerDefaultStateHandler = (int)fn_80297498;
 }
 #pragma peephole reset
 #pragma scheduling reset
