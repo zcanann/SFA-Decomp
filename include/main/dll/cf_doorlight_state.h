@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/dll/kaldachom_state.h"
 
 /* cf_doorlight_state_GENERATED
  * CfDoorlightState - the obj+0xB8 extra record observed in cf_doorlight.c. Field widths
@@ -20,8 +21,11 @@ typedef struct CfDoorlightState {
     u16 aggroRange;
     u16 flags400;
     u8 unk402[0x40C - 0x402];
-    int control;
-    u8 unk410[0x414 - 0x410];
+    KaldaChomControl *control;
+    KaldaChomControl controlData;
 } CfDoorlightState;
+
+STATIC_ASSERT(offsetof(CfDoorlightState, controlData) == 0x410);
+STATIC_ASSERT(sizeof(CfDoorlightState) == 0x45C);
 
 #endif /* MAIN_DLL_CF_DOORLIGHT_STATE_H_ */

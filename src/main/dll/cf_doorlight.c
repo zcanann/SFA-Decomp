@@ -22,14 +22,14 @@ extern int *gBaddieControlInterface;
 int kaldachom_stateHandlerB05(int obj, int p)
 {
   int state;
-  int timer;
+  KaldaChomControl *control;
   int def;
 
   state = *(int *)&((GameObject *)obj)->extra;
-  timer = ((CfDoorlightState *)state)->control;
+  control = ((CfDoorlightState *)state)->control;
   if (((GroundBaddieState *)p)->baddie.controlMode == 2) {
-    *(f32 *)(timer + 0x34) = *(f32 *)(timer + 0x34) - timeDelta;
-    if (*(f32 *)(timer + 0x34) <= lbl_803E3060) {
+    control->pullupSfxTimer = control->pullupSfxTimer - timeDelta;
+    if (control->pullupSfxTimer <= lbl_803E3060) {
       ((GroundBaddieState *)p)->baddie.moveDone = 1;
     }
   }
@@ -42,7 +42,7 @@ int kaldachom_stateHandlerB05(int obj, int p)
     if ((int)randomGetRange(0, 0x63) < (int)*(u8 *)(def + 0x2f)) {
       ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, p, 3);
     } else {
-      *(f32 *)(timer + 0x34) = (f32)(int)randomGetRange(0x12c, 0x258);
+      control->pullupSfxTimer = (f32)(int)randomGetRange(0x12c, 0x258);
       ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, p, 2);
     }
   }
@@ -89,7 +89,7 @@ int kaldachom_stateHandlerA07(int obj, int p)
   extern f32 lbl_803E3088;
   extern f32 lbl_803E308C;
   int b8;
-  int b8_40c;
+  KaldaChomControl *control;
 
   b8 = *(int *)&((GameObject *)obj)->extra;
   *(s8 *)(p + 0x34d) = 3;
@@ -110,12 +110,12 @@ int kaldachom_stateHandlerA07(int obj, int p)
       kaldachompme_setLinkedMouthMode((u8 *)obj, 2);
     }
   }
-  b8_40c = ((CfDoorlightState *)b8)->control;
-  if ((*(u8 *)(b8_40c + 0x4b) & 0x1) == 0) {
+  control = ((CfDoorlightState *)b8)->control;
+  if ((control->soundFlags & 0x1) == 0) {
     Sfx_PlayFromObject(obj, SFXkr_climb2);
     Sfx_PlayFromObject(obj, SFXsc_attack01);
     Sfx_PlayFromObject(obj, SFXdoor_unlocked);
-    *(u8 *)(b8_40c + 0x4b) |= 0x1;
+    control->soundFlags |= 0x1;
     {
       char *r;
       if (((CfDoorlightState *)b8)->unk3F0 != 0) {
@@ -129,10 +129,10 @@ int kaldachom_stateHandlerA07(int obj, int p)
       }
     }
   }
-  if ((*(u8 *)(b8_40c + 0x4b) & 0x2) == 0) {
+  if ((control->soundFlags & 0x2) == 0) {
     if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E3088) {
       Sfx_PlayFromObject(obj, SFXdoor_creak);
-      *(u8 *)(b8_40c + 0x4b) |= 0x2;
+      control->soundFlags |= 0x2;
     }
   }
   *(u8 *)(obj + 0x36) = (s32)((lbl_803E3078 - ((GameObject *)obj)->anim.currentMoveProgress) * lbl_803E308C);
@@ -146,19 +146,19 @@ extern f32 lbl_803E3080;
 #pragma scheduling off
 #pragma peephole off
 int kaldachom_stateHandlerB01(int* obj, u8* state) {
-    f32* t = *(f32**)((char*)(*(int**)&((GameObject *)obj)->extra) + 0x40c);
+    KaldaChomControl *control = ((CfDoorlightState *)((GameObject *)obj)->extra)->control;
     if (*(s16*)((char*)state + 628) == 6) {
         f32 zero;
         f32 timer;
         if ((s8)state[635] != 0) {
-            *(f32*)((char*)t + 0x44) = lbl_803E3080;
+            control->returnStateTimer = lbl_803E3080;
         }
-        timer = *(f32*)((char*)t + 0x44);
+        timer = control->returnStateTimer;
         zero = lbl_803E3060;
         if (timer != zero) {
-            *(f32*)((char*)t + 0x44) = timer - timeDelta;
-            if (*(f32*)((char*)t + 0x44) < zero) {
-                *(f32*)((char*)t + 0x44) = zero;
+            control->returnStateTimer = timer - timeDelta;
+            if (control->returnStateTimer < zero) {
+                control->returnStateTimer = zero;
             }
         } else {
             return 6;
@@ -196,7 +196,7 @@ int kaldachom_stateHandlerB02(int obj, int p2)
   int sub = *(int *)&((GameObject *)obj)->extra;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
-    *(u8 *)(((CfDoorlightState *)sub)->control + 0x4b) = 0;
+    ((CfDoorlightState *)sub)->control->soundFlags = 0;
     (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 7);
     ObjHits_DisableObject(obj);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
