@@ -679,23 +679,23 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     s16 startGrid[4];
     s16 endGrid[4];
     u8 traceOut[8];
-    u8 *state = *(u8 **)(obj + 0xb8);
+    Cup197State *state = *(Cup197State **)(obj + 0xb8);
     u8 *camera;
     f32 dist;
     f32 scale;
     void *dirAlias = (void *)dir;
 
     if (visible == 0) {
-        *(s16 *)(state + 4) = 0;
-        state[0xa] = 0;
+        state->sparkTimer = 0;
+        state->visibleToCamera = 0;
         return;
     }
 
-    if (state[0xc] == 0) {
+    if (state->active == 0) {
         return;
     }
 
-    state[0xa] = 1;
+    state->visibleToCamera = 1;
     camera = Camera_GetCurrentViewSlot();
     dir[0] = *(f32 *)(camera + 0xc) - *(f32 *)(obj + 0xc);
     dir[1] = *(f32 *)(camera + 0x10) - *(f32 *)(obj + 0x10);
@@ -724,24 +724,24 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         voxmaps_worldToGrid((void *)objTrace, startGrid);
         voxmaps_worldToGrid((void *)cameraTrace, endGrid);
         if (voxmaps_traceLine(startGrid, endGrid, traceOut, 0, 0) == 0) {
-            state[0xa] = 0;
+            state->visibleToCamera = 0;
             (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
         }
     }
 
-    if (*(s16 *)(state + 4) > 0) {
-        *(s16 *)(state + 4) -= framesThisStep;
+    if (state->sparkTimer > 0) {
+        state->sparkTimer -= framesThisStep;
         return;
     }
 
-    if (state[0xa] != 0) {
+    if (state->visibleToCamera != 0) {
         particleParams.pos[0] = lbl_803E5130;
         particleParams.pos[1] = lbl_803E5134;
         particleParams.pos[2] = lbl_803E5130;
         (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x1f7, &particleParams, 0x12, -1, 0);
     }
 
-    *(s16 *)(state + 4) = randomGetRange(-10, 10) + 0x3c;
+    state->sparkTimer = randomGetRange(-10, 10) + 0x3c;
 }
 #pragma fp_contract reset
 #pragma peephole reset
