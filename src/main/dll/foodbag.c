@@ -935,7 +935,7 @@ void dll_7C_func03(int param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)(base + 0x1fc); buf.hw[3] = *(s16 *)(base + 0x1fe);
   buf.hw[4] = *(s16 *)(base + 0x200); buf.hw[5] = *(s16 *)(base + 0x202);
   buf.hw[6] = *(s16 *)(base + 0x204);
-  buf.cmds = buf.entries;
+  buf.cmds = (FbCmd *)((u8 *)&buf + 0x60);
   buf.flags = 0xc010080;
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
@@ -1099,7 +1099,7 @@ void dll_7E_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
   buf.hw[2] = *(s16 *)(base + 0xa0); buf.hw[3] = *(s16 *)(base + 0xa2);
   buf.hw[4] = *(s16 *)(base + 0xa4); buf.hw[5] = *(s16 *)(base + 0xa6);
   buf.hw[6] = *(s16 *)(base + 0xa8);
-  buf.cmds = buf.entries;
+  buf.cmds = (FbCmd *)((u8 *)&buf + 0x60);
   buf.flags = 0x4010080;
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
@@ -1204,7 +1204,7 @@ void dll_7F_func03(int param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)(base + 0x110); buf.hw[3] = *(s16 *)(base + 0x112);
   buf.hw[4] = *(s16 *)(base + 0x114); buf.hw[5] = *(s16 *)(base + 0x116);
   buf.hw[6] = *(s16 *)(base + 0x118);
-  buf.cmds = buf.entries;
+  buf.cmds = (FbCmd *)((u8 *)&buf + 0x60);
   buf.flags = 0x4000000;
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
@@ -1277,7 +1277,7 @@ void dll_80_func03(int param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)(base + 0xb4); buf.hw[3] = *(s16 *)(base + 0xb6);
   buf.hw[4] = *(s16 *)(base + 0xb8); buf.hw[5] = *(s16 *)(base + 0xba);
   buf.hw[6] = *(s16 *)(base + 0xbc);
-  buf.cmds = e;
+  buf.cmds = (FbCmd *)((u8 *)&buf + 0x60);
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if ((uint)param_1 != 0) {
@@ -1404,7 +1404,7 @@ void dll_81_func03(int param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)(base + 0x1fc); buf.hw[3] = *(s16 *)(base + 0x1fe);
   buf.hw[4] = *(s16 *)(base + 0x200); buf.hw[5] = *(s16 *)(base + 0x202);
   buf.hw[6] = *(s16 *)(base + 0x204);
-  buf.cmds = buf.entries;
+  buf.cmds = (FbCmd *)((u8 *)&buf + 0x60);
   buf.flags = 0xc0104c0;
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
@@ -1798,7 +1798,7 @@ void dll_85_func03(int param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)(base + 0x38); buf.hw[3] = *(s16 *)(base + 0x3a);
   buf.hw[4] = *(s16 *)(base + 0x3c); buf.hw[5] = *(s16 *)(base + 0x3e);
   buf.hw[6] = *(s16 *)(base + 0x40);
-  buf.cmds = buf.entries;
+  buf.cmds = (FbCmd *)((u8 *)&buf + 0x60);
   if (param_2 == 4) {
     buf.flags = 0x4004400;
   } else {
@@ -2423,7 +2423,7 @@ void dll_8C_func03(int param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)(base + 0x1e0); buf.hw[3] = *(s16 *)(base + 0x1e2);
   buf.hw[4] = *(s16 *)(base + 0x1e4); buf.hw[5] = *(s16 *)(base + 0x1e6);
   buf.hw[6] = *(s16 *)(base + 0x1e8);
-  buf.cmds = buf.entries;
+  buf.cmds = (FbCmd *)((u8 *)&buf + 0x60);
   buf.flags = 0xc0400c0;
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
@@ -2606,7 +2606,7 @@ void dll_8D_func03(int param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)(base + 0xb4); buf.hw[3] = *(s16 *)(base + 0xb6);
   buf.hw[4] = *(s16 *)(base + 0xb8); buf.hw[5] = *(s16 *)(base + 0xba);
   buf.hw[6] = *(s16 *)(base + 0xbc);
-  buf.cmds = buf.entries;
+  buf.cmds = (FbCmd *)((u8 *)&buf + 0x60);
   buf.flags = 0x4000000;
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
