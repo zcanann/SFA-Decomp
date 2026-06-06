@@ -5,6 +5,55 @@
 
 #pragma peephole on
 #pragma scheduling on
+#include "global.h"
+
+/* arwsquadron_getExtraSize == 0x164 (enemy squadron fighter). */
+typedef struct ArwSquadronState {
+    u8 pad000[0x68];
+    f32 unk68;
+    f32 unk6C;
+    f32 unk70;
+    u8 pad74[0x28];
+    int unk9C;
+    u8 padA0[0x68];
+    f32 pathX;       /* 0x108 */
+    f32 pathY;
+    f32 pathZ;       /* 0x110 */
+    f32 emitX;       /* 0x114 */
+    f32 emitY;
+    f32 emitZ;       /* 0x11c */
+    f32 unk120;
+    u8 pad124[0xc];
+    f32 unk130;
+    f32 unk134;
+    f32 unk138;
+    int leaderObj;   /* 0x13c */
+    s16 unk140;
+    s16 unk142;
+    s16 unk144;
+    u16 unk146;
+    u16 unk148;
+    u16 unk14A;
+    u16 unk14C;
+    s16 volleyTimer; /* 0x14e */
+    s16 unk150;
+    s16 unk152;
+    u8 unk154;
+    u8 unk155;
+    u8 unk156;
+    u8 unk157;
+    u8 health158;    /* 0x158 */
+    u8 unk159;
+    u8 unk15A;
+    u8 unk15B;
+    u8 unk15C;
+    u8 unk15D;
+    u8 unk15E;
+    u8 unk15F;
+    u8 pad160[4];
+} ArwSquadronState;
+STATIC_ASSERT(sizeof(ArwSquadronState) == 0x164);
+
 int arwsquadron_getExtraSize(void) { return 0x164; }
 #pragma scheduling reset
 #pragma peephole reset
@@ -190,7 +239,7 @@ void arwsquadron_init(int obj, int setup)
 void arwsquadron_applyCommandParams(int p1, int p2)
 {
     SquadCmdFlags *flags = (SquadCmdFlags *)(p2 + 0x160);
-    int cmds = *(int *)(p2 + 0x9c);
+    int cmds = ((ArwSquadronState *)p2)->unk9C;
     int i;
 
     if ((s8)*(u8 *)(cmds + 0x19) == 0x28) {
@@ -206,13 +255,13 @@ void arwsquadron_applyCommandParams(int p1, int p2)
             }
             switch ((u8)cmd) {
             case 3:
-                *(f32 *)(p2 + 0x10c) = val * lbl_803E716C;
+                ((ArwSquadronState *)p2)->pathY = val * lbl_803E716C;
                 break;
             case 1:
                 if (!flags->f80) {
                     int s = *(int *)(p1 + 0x4c);
                     flags->f80 = 1;
-                    if (*(u8 *)(p2 + 0x15c) == 1) {
+                    if (((ArwSquadronState *)p2)->unk15C == 1) {
                         flags->f20 = 0;
                         storeZeroToFloatParam((void *)(p2 + 0x124));
                         s16toFloat((void *)(p2 + 0x124), *(u8 *)(s + 0x2c));
@@ -225,7 +274,7 @@ void arwsquadron_applyCommandParams(int p1, int p2)
             case 4:
                 if (!flags->f08) {
                     flags->f08 = 1;
-                    *(s16 *)(p2 + 0x144) = lbl_803E7170 * val;
+                    ((ArwSquadronState *)p2)->unk144 = lbl_803E7170 * val;
                 }
                 break;
             case 5:
@@ -245,23 +294,23 @@ void arwsquadron_followPath(int p1, int p2)
     int state = *(int *)(p1 + 0x4c);
     int r;
 
-    r = Obj_UpdateRomCurveFollowVelocity(p1, p2, *(f32 *)(p2 + 0x108), lbl_803E719C, *(f32 *)(p2 + 0x108), 1);
+    r = Obj_UpdateRomCurveFollowVelocity(p1, p2, ((ArwSquadronState *)p2)->pathX, lbl_803E719C, ((ArwSquadronState *)p2)->pathX, 1);
     if (r == -1) {
         *(s16 *)(p1 + 6) |= 0x4000;
         ObjHits_DisableObject(p1);
-        *(u8 *)(p2 + 0x159) = 4;
+        ((ArwSquadronState *)p2)->unk159 = 4;
     } else {
         if (r != 0)
             arwsquadron_applyCommandParams(p1, p2);
         if (*(u8 *)(state + 0x2f) == 2) {
-            if (*(u8 *)(p2 + 0x15c) == 2)
+            if (((ArwSquadronState *)p2)->unk15C == 2)
                 Obj_SmoothTurnAnglesTowardVelocity(p1, p1 + 0x24, 0xf, lbl_803E71A0, lbl_803E7188);
             else
                 Obj_SmoothTurnAnglesTowardVelocity(p1, p1 + 0x24, 0xf,
                             ((SquadCmdFlags *)(p2 + 0x160))->f08 ? lbl_803E7168 : lbl_803E71A0,
                             lbl_803E7188);
         }
-        *(f32 *)(p2 + 0x108) += interpolate(*(f32 *)(p2 + 0x10c) - *(f32 *)(p2 + 0x108),
+        ((ArwSquadronState *)p2)->pathX += interpolate(((ArwSquadronState *)p2)->pathY - ((ArwSquadronState *)p2)->pathX,
                                             lbl_803E71A4, timeDelta);
         objMove(p1, *(f32 *)(p1 + 0x24) * timeDelta, *(f32 *)(p1 + 0x28) * timeDelta,
                 *(f32 *)(p1 + 0x2c) * timeDelta);
@@ -310,35 +359,35 @@ void arwsquadron_emitEffects(int p1, int p2)
     u8 flag = 1;
     SquadPfx pfx;
 
-    if ((s8)*(u8 *)(p2 + 0x15e) <= 2) {
-        int cnt = *(u8 *)(p2 + 0x15f);
-        *(u8 *)(p2 + 0x15f) = cnt + 1;
+    if ((s8)((ArwSquadronState *)p2)->unk15E <= 2) {
+        int cnt = ((ArwSquadronState *)p2)->unk15F;
+        ((ArwSquadronState *)p2)->unk15F = cnt + 1;
         if (cnt % 2 != 0) {
             ObjPath_GetPointLocalPosition(p2, 4, &pfx.fx, &pfx.fy, &pfx.fz);
-            pfx.f8 = *(f32 *)(p2 + 0x11c);
-            pfx.s6 = ((s8)*(u8 *)(p2 + 0x15e) <= 1) ? 0x61a8 : -0x63c0;
+            pfx.f8 = ((ArwSquadronState *)p2)->emitZ;
+            pfx.s6 = ((s8)((ArwSquadronState *)p2)->unk15E <= 1) ? 0x61a8 : -0x63c0;
             (*(void (**)(int, int, void *, int, int, void *))(*gPartfxInterface + 8))(
                 p1, 0x7d0, &pfx, 4, -1, &flag);
         }
     }
-    if ((s8)*(u8 *)(p2 + 0x15e) <= 1) {
+    if ((s8)((ArwSquadronState *)p2)->unk15E <= 1) {
         pfx.s6 = 0xc0a;
         ObjPath_GetPointLocalPosition(p2, 5, &pfx.fx, &pfx.fy, &pfx.fz);
-        pfx.f8 = *(f32 *)(p2 + 0x120);
+        pfx.f8 = ((ArwSquadronState *)p2)->unk120;
         (*(void (**)(int, int, void *, int, int, void *))(*gPartfxInterface + 8))(
             p1, 0x7d1, &pfx, 4, -1, &flag);
     }
-    if (*(u8 *)(p2 + 0x15a) != 0 && (s8)*(u8 *)(p2 + 0x15e) > 1) {
+    if (((ArwSquadronState *)p2)->unk15A != 0 && (s8)((ArwSquadronState *)p2)->unk15E > 1) {
         pfx.s0 = 0;
         pfx.s2 = 0;
         pfx.s4 = 0;
         pfx.f8 = lbl_803E7168;
         ObjPath_GetPointLocalPosition(p2, 2, &pfx.fx, &pfx.fy, &pfx.fz);
-        objfx_spawnLightPulse(p1, *(f32 *)(p2 + 0x114), 2, 0, 0, *(f32 *)(p2 + 0x118), (int)&pfx);
+        objfx_spawnLightPulse(p1, ((ArwSquadronState *)p2)->emitX, 2, 0, 0, ((ArwSquadronState *)p2)->emitY, (int)&pfx);
     }
-    if (*(u8 *)(p2 + 0x15a) > 1 && (s8)*(u8 *)(p2 + 0x15e) > 1) {
+    if (((ArwSquadronState *)p2)->unk15A > 1 && (s8)((ArwSquadronState *)p2)->unk15E > 1) {
         ObjPath_GetPointLocalPosition(p2, 3, &pfx.fx, &pfx.fy, &pfx.fz);
-        objfx_spawnLightPulse(p1, *(f32 *)(p2 + 0x114), 2, 0, 0, *(f32 *)(p2 + 0x118), (int)&pfx);
+        objfx_spawnLightPulse(p1, ((ArwSquadronState *)p2)->emitX, 2, 0, 0, ((ArwSquadronState *)p2)->emitY, (int)&pfx);
     }
 }
 #pragma scheduling reset
@@ -355,52 +404,52 @@ void arwsquadron_handleDamage(int obj, int state)
 
     if (*(void **)(obj + 0x54) == NULL)
         return;
-    if (*(u8 *)(state + 0x154) != 0) {
-        *(f32 *)(state + 0x110) -= timeDelta;
-        if (*(f32 *)(state + 0x110) <= lbl_803E7168)
-            *(u8 *)(state + 0x154) = 0;
+    if (((ArwSquadronState *)state)->unk154 != 0) {
+        ((ArwSquadronState *)state)->pathZ -= timeDelta;
+        if (((ArwSquadronState *)state)->pathZ <= lbl_803E7168)
+            ((ArwSquadronState *)state)->unk154 = 0;
         if (flags->f10) {
-            *(s16 *)(state + 0x150) = lbl_803E71AC * timeDelta + (f32)*(u16 *)(state + 0x150);
-            *(s16 *)(state + 0x152) = lbl_803E71B0 * timeDelta + (f32)*(u16 *)(state + 0x152);
+            ((ArwSquadronState *)state)->unk150 = lbl_803E71AC * timeDelta + (f32)*(u16 *)&((ArwSquadronState *)state)->unk150;
+            ((ArwSquadronState *)state)->unk152 = lbl_803E71B0 * timeDelta + (f32)*(u16 *)&((ArwSquadronState *)state)->unk152;
         }
     }
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, &hitVol) != 0 ||
         (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
         if (flags->f10) {
-            if (*(u8 *)(state + 0x154) == 0)
+            if (((ArwSquadronState *)state)->unk154 == 0)
                 Sfx_PlayFromObjectLimited(obj, SFXbaddie_mika_death, 4);
             Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
-            *(f32 *)(state + 0x110) = lbl_803E71B4;
-            *(u8 *)(state + 0x154) = 1;
-            *(s16 *)(state + 0x150) = 0;
-            *(s16 *)(state + 0x152) = 0;
-            *(u8 *)(state + 0x15e) = *(u8 *)(state + 0x15e) - hitVol;
-            if ((s8)*(u8 *)(state + 0x15e) <= 0) {
+            ((ArwSquadronState *)state)->pathZ = lbl_803E71B4;
+            ((ArwSquadronState *)state)->unk154 = 1;
+            ((ArwSquadronState *)state)->unk150 = 0;
+            ((ArwSquadronState *)state)->unk152 = 0;
+            ((ArwSquadronState *)state)->unk15E = ((ArwSquadronState *)state)->unk15E - hitVol;
+            if ((s8)((ArwSquadronState *)state)->unk15E <= 0) {
                 storeZeroToFloatParam((void *)(state + 0x12c));
                 s16toFloat((void *)(state + 0x12c), 0x78);
-                if (*(u8 *)(state + 0x15c) == 1) {
+                if (((ArwSquadronState *)state)->unk15C == 1) {
                     spawnExplosion(obj, lbl_803E719C, 1, 0, 1, 1, 0, 0, 0);
                     *(s16 *)(obj + 6) |= 0x4000;
                     ObjHits_DisableObject(obj);
-                    *(u8 *)(state + 0x159) = 4;
-                    *(u8 *)(state + 0x159) = 3;
-                    if (*(u8 *)(state + 0x15d) == 3)
+                    ((ArwSquadronState *)state)->unk159 = 4;
+                    ((ArwSquadronState *)state)->unk159 = 3;
+                    if (((ArwSquadronState *)state)->unk15D == 3)
                         gameTextFn_80125ba4(0xe);
                 } else {
                     spawnExplosion(obj, lbl_803E719C, 1, 0, 0, 1, 0, 0, 3);
                     *(s16 *)(obj + 6) |= 0x4000;
                     ObjHits_DisableObject(obj);
-                    *(u8 *)(state + 0x159) = 3;
+                    ((ArwSquadronState *)state)->unk159 = 3;
                 }
                 arwing = getArwing();
                 if (arwing != 0)
-                    arwarwing_addScore(arwing, *(u8 *)(state + 0x157));
+                    arwarwing_addScore(arwing, ((ArwSquadronState *)state)->unk157);
             } else {
                 arwing = getArwing();
                 if (arwing != 0)
-                    arwarwing_addScore(arwing, *(u8 *)(state + 0x158));
+                    arwarwing_addScore(arwing, ((ArwSquadronState *)state)->health158);
             }
-        } else if (*(u8 *)(state + 0x154) == 0) {
+        } else if (((ArwSquadronState *)state)->unk154 == 0) {
             Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
         }
     }
@@ -412,15 +461,15 @@ void arwsquadron_handleDamage(int obj, int state)
 #pragma scheduling off
 void arwsquadron_followLeader(int p1, int p2)
 {
-    int leader = *(int *)(p2 + 0x13c);
+    int leader = ((ArwSquadronState *)p2)->leaderObj;
     int leaderState = *(int *)(leader + 0xb8);
     int wstate = *(int *)(p1 + 0x4c);
     ArwProjPosSrc src;
     f32 mtx[12];
     f32 out[3];
 
-    *(s16 *)(p2 + 0x146) = (f32)*(u16 *)(p2 + 0x14a) * timeDelta + (f32)*(u16 *)(p2 + 0x146);
-    *(s16 *)(p2 + 0x148) = (f32)*(u16 *)(p2 + 0x14c) * timeDelta + (f32)*(u16 *)(p2 + 0x148);
+    *(s16 *)&((ArwSquadronState *)p2)->unk146 = (f32)((ArwSquadronState *)p2)->unk14A * timeDelta + (f32)((ArwSquadronState *)p2)->unk146;
+    *(s16 *)&((ArwSquadronState *)p2)->unk148 = (f32)((ArwSquadronState *)p2)->unk14C * timeDelta + (f32)((ArwSquadronState *)p2)->unk148;
     src.pos[0] = *(f32 *)(leader + 0xc);
     src.pos[1] = *(f32 *)(leader + 0x10);
     src.pos[2] = *(f32 *)(leader + 0x14);
@@ -428,9 +477,9 @@ void arwsquadron_followLeader(int p1, int p2)
     src.rot[0] = *(s16 *)(leader + 0);
     src.rot[1] = *(s16 *)(leader + 2);
     src.rot[2] = *(s16 *)(leader + 4);
-    out[0] = lbl_803E7190 * fn_80293E80(lbl_803E7194 * (f32)*(u16 *)(p2 + 0x146) / lbl_803E7198) +
+    out[0] = lbl_803E7190 * fn_80293E80(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk146 / lbl_803E7198) +
              lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x26);
-    out[1] = lbl_803E7190 * fn_80293E80(lbl_803E7194 * (f32)*(u16 *)(p2 + 0x148) / lbl_803E7198) +
+    out[1] = lbl_803E7190 * fn_80293E80(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk148 / lbl_803E7198) +
              lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x27);
     out[2] = lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x1e);
     setMatrixFromObjectTransposed(&src, mtx);
@@ -442,18 +491,18 @@ void arwsquadron_followLeader(int p1, int p2)
     *(s16 *)(p1 + 2) = *(s16 *)(leader + 2);
     if (!((SquadCmdFlags *)(p2 + 0x160))->f08) {
         *(s16 *)(p1 + 4) =
-            *(f32 *)(leaderState + 0x138) *
-                fn_80293E80(lbl_803E7194 * (f32)*(u16 *)(p2 + 0x146) / lbl_803E7198) +
+            ((ArwSquadronState *)leaderState)->unk138 *
+                fn_80293E80(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk146 / lbl_803E7198) +
             (f32)*(s16 *)(leader + 4);
     }
     ((SquadCmdFlags *)(p2 + 0x160))->f80 = ((SquadCmdFlags *)(leaderState + 0x160))->f80;
-    if (*(s16 *)(p2 + 0x144) > 0)
+    if (((ArwSquadronState *)p2)->unk144 > 0)
         ((SquadCmdFlags *)(p2 + 0x160))->f08 = ((SquadCmdFlags *)(leaderState + 0x160))->f08;
-    if (*(u8 *)(leaderState + 0x159) == 4) {
+    if (((ArwSquadronState *)leaderState)->unk159 == 4) {
         *(s16 *)(p1 + 6) |= 0x4000;
         ObjHits_DisableObject(p1);
-        *(u8 *)(p2 + 0x159) = 4;
-        *(u8 *)(p2 + 0x159) = 4;
+        ((ArwSquadronState *)p2)->unk159 = 4;
+        ((ArwSquadronState *)p2)->unk159 = 4;
     }
 }
 #pragma scheduling reset
@@ -466,12 +515,12 @@ void arwsquadron_update(int obj)
     int state = *(int *)(obj + 0xb8);
     int setup = *(int *)(obj + 0x4c);
     SquadCmdFlags *flags = (SquadCmdFlags *)(state + 0x160);
-    u8 s = *(u8 *)(state + 0x159);
+    u8 s = ((ArwSquadronState *)state)->unk159;
 
     if (s == 4 || s == 3)
         return;
 
-    if (*(u8 *)(state + 0x15d) == 1) {
+    if (((ArwSquadronState *)state)->unk15D == 1) {
         int aim = getArwing();
         f32 d;
         int inRange;
@@ -484,25 +533,25 @@ void arwsquadron_update(int obj)
                 gameTextFn_80125ba4(0x10);
             else
                 gameTextFn_80125ba4(0xd);
-            *(u8 *)(state + 0x15d) = 0;
+            ((ArwSquadronState *)state)->unk15D = 0;
         }
     }
 
-    switch (*(u8 *)(state + 0x159)) {
+    switch (((ArwSquadronState *)state)->unk159) {
     case 0: {
         int setupL = *(int *)(obj + 0x4c);
         int leader = obj;
         int enable;
         getArwing();
         if (*(int *)(setupL + 0x20) > 0) {
-            if (*(int *)(state + 0x13c) == 0)
-                *(int *)(state + 0x13c) = ObjList_FindObjectById(*(int *)(setupL + 0x20));
-            leader = *(int *)(state + 0x13c);
+            if (((ArwSquadronState *)state)->leaderObj == 0)
+                ((ArwSquadronState *)state)->leaderObj = ObjList_FindObjectById(*(int *)(setupL + 0x20));
+            leader = ((ArwSquadronState *)state)->leaderObj;
         }
         if (leader == 0) {
             enable = 0;
         } else {
-            f32 thr = *(f32 *)(state + 0x130);
+            f32 thr = ((ArwSquadronState *)state)->unk130;
             int aim = getArwing();
             f32 d;
             int inRange;
@@ -515,7 +564,7 @@ void arwsquadron_update(int obj)
             } else if (*(s16 *)(setupL + 0x32) > 0) {
                 enable = GameBit_Get(*(s16 *)(setupL + 0x32)) != 0;
             } else {
-                f32 thr2 = *(f32 *)(state + 0x134);
+                f32 thr2 = ((ArwSquadronState *)state)->unk134;
                 int aim2 = getArwing();
                 f32 d2;
                 int inRange2;
@@ -532,9 +581,9 @@ void arwsquadron_update(int obj)
         if (enable) {
             *(s16 *)(obj + 6) &= ~0x4000;
             ObjHits_EnableObject(obj);
-            *(u8 *)(state + 0x159) = 1;
+            ((ArwSquadronState *)state)->unk159 = 1;
             setupL = *(int *)(obj + 0x4c);
-            if (*(u8 *)(state + 0x15c) == 1) {
+            if (((ArwSquadronState *)state)->unk15C == 1) {
                 flags->f20 = 0;
                 storeZeroToFloatParam((void *)(state + 0x124));
                 s16toFloat((void *)(state + 0x124), *(u8 *)(setupL + 0x2c));
@@ -548,12 +597,12 @@ void arwsquadron_update(int obj)
         int disable;
         *(u8 *)(obj + 0x36) = 0xff;
         getArwing();
-        if (*(int *)(state + 0x13c) != 0)
-            leader = *(int *)(state + 0x13c);
+        if (((ArwSquadronState *)state)->leaderObj != 0)
+            leader = ((ArwSquadronState *)state)->leaderObj;
         if (leader == 0) {
             disable = 0;
         } else {
-            f32 thr = *(f32 *)(state + 0x130);
+            f32 thr = ((ArwSquadronState *)state)->unk130;
             int aim = getArwing();
             f32 d;
             int inRange;
@@ -566,7 +615,7 @@ void arwsquadron_update(int obj)
             } else if (*(s16 *)(setupL + 0x32) > 0) {
                 disable = GameBit_Get(*(s16 *)(setupL + 0x32)) != 0;
             } else {
-                f32 thr2 = *(f32 *)(state + 0x134);
+                f32 thr2 = ((ArwSquadronState *)state)->unk134;
                 int aim2 = getArwing();
                 f32 d2;
                 int inRange2;
@@ -583,30 +632,30 @@ void arwsquadron_update(int obj)
         if (disable) {
             *(s16 *)(obj + 6) |= 0x4000;
             ObjHits_DisableObject(obj);
-            *(u8 *)(state + 0x159) = 4;
+            ((ArwSquadronState *)state)->unk159 = 4;
             return;
         }
-        if (*(u8 *)(state + 0x15c) != 2) {
+        if (((ArwSquadronState *)state)->unk15C != 2) {
             if (*(u8 *)(setup + 0x2f) != 2) {
                 *(s16 *)(obj + 0) =
-                    (f32)*(s16 *)(state + 0x140) * timeDelta + (f32)*(s16 *)(obj + 0);
+                    (f32)((ArwSquadronState *)state)->unk140 * timeDelta + (f32)*(s16 *)(obj + 0);
                 *(s16 *)(obj + 2) =
-                    (f32)*(s16 *)(state + 0x142) * timeDelta + (f32)*(s16 *)(obj + 2);
+                    (f32)((ArwSquadronState *)state)->unk142 * timeDelta + (f32)*(s16 *)(obj + 2);
             }
             if (flags->f08 || *(u8 *)(setup + 0x2f) != 2) {
                 *(s16 *)(obj + 4) =
-                    (f32)*(s16 *)(state + 0x144) * timeDelta + (f32)*(s16 *)(obj + 4);
+                    (f32)((ArwSquadronState *)state)->unk144 * timeDelta + (f32)*(s16 *)(obj + 4);
             }
         }
-        if (*(int *)(state + 0x13c) != 0) {
+        if (((ArwSquadronState *)state)->leaderObj != 0) {
             arwsquadron_followLeader(obj, state);
         } else if (flags->f40) {
             arwsquadron_followPath(obj, state);
         }
         if (flags->f80) {
             setupL = *(int *)(obj + 0x4c);
-            ObjHits_SetHitVolumeSlot(obj, 0x13, *(u8 *)(state + 0x156), 0);
-            if (*(u8 *)(state + 0x15c) == 1)
+            ObjHits_SetHitVolumeSlot(obj, 0x13, ((ArwSquadronState *)state)->unk156, 0);
+            if (((ArwSquadronState *)state)->unk15C == 1)
                 arwsquadron_updateVolley(obj, state, setupL);
         }
         break;
@@ -619,7 +668,7 @@ void arwsquadron_update(int obj)
     }
 
     arwsquadron_handleDamage(obj, state);
-    if (*(u8 *)(state + 0x15c) == 1)
+    if (((ArwSquadronState *)state)->unk15C == 1)
         arwsquadron_emitEffects(obj, state);
     if (((ObjAnimComponent *)obj)->modelInstance->flags == 0)
         ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E71BC, timeDelta, 0);
