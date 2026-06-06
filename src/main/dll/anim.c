@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
+#include "main/objhits_types.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -7411,11 +7412,11 @@ void dbegg_update(int obj)
     buf2[0] = n;
     if (objPosToMapBlockIdx(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14)) != -1) {
         dbegg_processMessages(obj);
-        *(s16 *)(*(int *)(obj + 0x54) + 0x60) &= ~0x400;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~0x400;
         switch (*(u8 *)(blob + 0x118)) {
         case 5:
             if (*(int *)(obj + 0xf8) == 0) {
-                *(s16 *)(*(int *)(obj + 0x54) + 0x60) |= 1;
+                (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
             }
             if (fn_801FE560(obj, &h, lbl_803E61C8, lbl_803E61C8, 1) == 0) {
                 *(u8 *)(blob + 0x118) = 2;
@@ -7452,7 +7453,7 @@ void dbegg_update(int obj)
             break;
         case 1:
             if (*(int *)(obj + 0xf8) == 0) {
-                *(s16 *)(*(int *)(obj + 0x54) + 0x60) |= 1;
+                (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
             }
             *(u8 *)(obj + 0xaf) &= ~8;
             break;
@@ -7466,7 +7467,7 @@ void dbegg_update(int obj)
                     *(u8 *)(blob + 0x118) = 0xa;
                 }
             }
-            *(s16 *)(*(int *)(obj + 0x54) + 0x60) |= 0x400;
+            (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 0x400;
             fz = lbl_803E61C8;
             b3[0] = lbl_803E61C8;
             b3[1] = fz;
@@ -7531,7 +7532,7 @@ void dbegg_update(int obj)
                 *(u8 *)(blob + 0x118) = 5;
                 *(u8 *)(obj + 0xaf) &= ~8;
             } else {
-                *(s16 *)(*(int *)(obj + 0x54) + 0x60) &= ~1;
+                (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
                 ObjMsg_SendToObject(player, 0x100008, obj, 0x38000);
                 *(u8 *)(obj + 0xaf) |= 8;
             }
@@ -7662,7 +7663,7 @@ void dbegg_update(int obj)
                         if (v < lbl_803E6268) {
                             *(u8 *)(obj + 0xaf) |= 8;
                             *(u8 *)(blob + 0x118) = 6;
-                            *(s16 *)(*(int *)(obj + 0x54) + 0x60) &= ~1;
+                            (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
                         }
                     }
                 }

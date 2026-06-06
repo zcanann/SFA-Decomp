@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
+#include "main/objhits_types.h"
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -602,8 +603,7 @@ int dimlavasmash_SeqFn(int obj, int p2, int *r5_arg)
     def = *(int **)((char *)obj + 0x4c);
     if (*(u8 *)((char *)state + 2) == 0) {
         if (GameBit_Get(*(s16 *)((char *)def + 0x20)) != 0) {
-            *(s16 *)((char *)*(int *)((char *)obj + 0x54) + 0x60) =
-                (s16)(*(s16 *)((char *)*(int *)((char *)obj + 0x54) + 0x60) | 1);
+            (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags |= 1;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0) {
                 if (*(s16 *)((char *)hit + 0x46) == 397) {
                     *(u8 *)((char *)state + 2) = 2;

@@ -5,6 +5,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 extern bool FUN_800067f0();
 extern bool FUN_800067f8();
@@ -570,8 +571,7 @@ void MagicPlant_update(int obj)
         }
         *(u8 *)(obj + 0x36) = (u8)alpha;
       }
-      *(s16 *)(*(int *)(obj + 0x54) + 0x60) =
-          (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~1);
+      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
       break;
 
     case MAGICPLANT_MODE_FADE_IN:
@@ -583,8 +583,7 @@ void MagicPlant_update(int obj)
         ((MapEventInterface *)*(int *)gMapEventInterface)->startTimedEvent(setup->eventId, (f32)setup->eventDuration);
       }
       *(u8 *)(obj + 0x36) = (u8)alpha;
-      *(s16 *)(*(int *)(obj + 0x54) + 0x60) =
-          (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) | 1);
+      (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
       break;
 
     case MAGICPLANT_MODE_HIT_REACT:
