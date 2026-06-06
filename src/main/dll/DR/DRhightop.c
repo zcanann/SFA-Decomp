@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/DR/DRhightop.h"
 
@@ -331,7 +332,7 @@ typedef struct HightopFlags {
 #pragma scheduling off
 #pragma peephole off
 void fn_801EB334(int *obj) {
-    int *state = *(int **)((char *)obj + 0xb8);
+    int *state = ((GameObject *)obj)->extra;
     if ((u32)((*(u8 *)((char *)state + 0x428) >> 1) & 1) == 0) {
         s16 sv;
         f32 fz = lbl_803E5AE8;
@@ -347,12 +348,12 @@ void fn_801EB334(int *obj) {
     }
     ObjHits_EnableObject(obj);
     (*(void (**)(int *, char *))((char *)*gPathControlInterface + 32))(obj, (char *)state + 0x178);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x10) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x14) = *(f32 *)((char *)obj + 0x10);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x18) = *(f32 *)((char *)obj + 0x14);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x1c) = *(f32 *)((char *)obj + 0x18);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x20) = *(f32 *)((char *)obj + 0x1c);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x24) = *(f32 *)((char *)obj + 0x20);
+    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x10) = ((GameObject *)obj)->anim.localPosX;
+    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x14) = ((GameObject *)obj)->anim.localPosY;
+    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x18) = ((GameObject *)obj)->anim.localPosZ;
+    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x1c) = ((GameObject *)obj)->anim.worldPosX;
+    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x20) = ((GameObject *)obj)->anim.worldPosY;
+    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x24) = ((GameObject *)obj)->anim.worldPosZ;
 }
 #pragma peephole reset
 #pragma scheduling reset

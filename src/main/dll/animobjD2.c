@@ -1,4 +1,5 @@
 #include "main/dll/animobjD2.h"
+#include "main/game_object.h"
 #include "main/objlib.h"
 
 #pragma peephole off
@@ -315,7 +316,7 @@ void fn_8013E0D0(int *obj, register u8 *st) {
                                 free_ = -1;
                             }
                             ((TrickyPack *)(st + 0x7bc))->c = free_;
-                            *(int *)(st + 0x7b8) = Obj_SetupObject(o, 4, -1, -1, *(int *)((char *)obj + 0x30));
+                            *(int *)(st + 0x7b8) = Obj_SetupObject(o, 4, -1, -1, *(int *)&((GameObject *)obj)->anim.parent);
                             ObjLink_AttachChild((int)obj, *(int *)(st + 0x7b8), ((TrickyPack *)(st + 0x7bc))->c);
                             *(f32 *)(st + 0x7c0) = lbl_803E23DC;
                             *(f32 *)(st + 0x7c4) = lbl_803E23DC;
@@ -364,10 +365,10 @@ void fn_8013E0D0(int *obj, register u8 *st) {
         break;
     }
     case 3:
-        if (*(s16 *)((char *)obj + 0xa0) != 0x34) {
+        if (((GameObject *)obj)->anim.currentMove != 0x34) {
             break;
         }
-        if (*(f32 *)((char *)obj + 0x98) > lbl_803E24E8) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E24E8) {
             if (Obj_IsLoadingLocked() != 0) {
                 *(u32 *)(st + 0x54) |= 0x800;
                 {
@@ -378,7 +379,7 @@ void fn_8013E0D0(int *obj, register u8 *st) {
                         *(u8 *)(o + 4) = 2;
                         *(u8 *)(o + 5) = 1;
                         *(s16 *)(o + 0x1a) = i;
-                        *(int *)(p + 0x700) = Obj_SetupObject(o, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30));
+                        *(int *)(p + 0x700) = Obj_SetupObject(o, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
                         p += 4;
                     }
                 }

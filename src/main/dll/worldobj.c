@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/worldobj.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -536,7 +537,7 @@ int fn_801CE078(int *obj, u8 *st) {
             f32 t = *(f32 *)(st + 0x1c) - timeDelta;
             *(f32 *)(st + 0x1c) = t;
             if (t <= lbl_803E520C) {
-                if (*(u16 *)((char *)obj + 0xb0) & 0x800) {
+                if (((GameObject *)obj)->unkB0 & 0x800) {
                     blk.pos[0] = *(f32 *)(st + 0xc);
                     blk.pos[1] = *(f32 *)(st + 0x10);
                     blk.pos[2] = *(f32 *)(st + 0x14);
@@ -616,14 +617,14 @@ void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
             ((void (*)(u8 *))((void **)*(void **)gRomCurveInterface)[0x90 / 4])(cv);
         }
         {
-            f32 dx = *(f32 *)(cv + 0x68) - *(f32 *)((char *)obj + 0xc);
-            f32 dz = *(f32 *)(cv + 0x70) - *(f32 *)((char *)obj + 0x14);
+            f32 dx = *(f32 *)(cv + 0x68) - ((GameObject *)obj)->anim.localPosX;
+            f32 dz = *(f32 *)(cv + 0x70) - ((GameObject *)obj)->anim.localPosZ;
             ObjAnim_SampleRootCurvePhase(oneOverTimeDelta * sqrtf(dx * dx + dz * dz),
                                          (ObjAnimComponent *)obj, (float *)(st + 0x4c));
         }
         obj[0] = (s16)(getAngle(*(f32 *)(cv + 0x74), *(f32 *)(cv + 0x7c)) + 0x8000);
-        *(f32 *)((char *)obj + 0xc) = *(f32 *)(cv + 0x68);
-        *(f32 *)((char *)obj + 0x14) = *(f32 *)(cv + 0x70);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)(cv + 0x68);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(cv + 0x70);
         if (*(f32 *)(st + 0x54) <= lbl_803E520C) {
             st[0x408] = 7;
         }
@@ -773,7 +774,7 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
             }
             *(int *)(st + 0x48) = (int)&lbl_803DBFA8;
             if (*(void **)(st + 0x24) == NULL) {
-                short *cfg = *(short **)((char *)obj + 0x4c);
+                short *cfg = *(short **)&((GameObject *)obj)->anim.placementData;
                 if (tw2 != NULL && *(s16 *)((char *)tw2 + 0x46) == 0x3fb) {
                     if (getXZDistance((char *)obj + 0x18, (char *)tw2 + 0x18) < (f32)(s32)(cfg[0xc] * cfg[0xc])) {
                         if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {

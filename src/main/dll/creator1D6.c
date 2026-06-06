@@ -1,4 +1,5 @@
 #include "main/dll/creator1D6.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
 extern undefined4 FUN_8000680c();
@@ -83,7 +84,7 @@ void nw_tricky_update(int *obj)
     f32 dPlayer;
     f32 t;
 
-    state = *(char **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     tricky = getTrickyObject();
     player = (int *)Obj_GetPlayerObject();
     ids = *(NwTrickyIds *)lbl_802C23E8;
@@ -200,11 +201,11 @@ void nw_ice_update(int *obj) {
     f32 nearestDist;
 
     nearestDist = lbl_803E5270;
-    state = *(NwIceState **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if (state->linkedObj != NULL) {
-        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)state->linkedObj + 0xc);
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)state->linkedObj + 0x10);
-        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)state->linkedObj + 0x14);
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)state->linkedObj + 0xc);
+        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)state->linkedObj + 0x10);
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)state->linkedObj + 0x14);
         *(s16 *)obj = *(s16 *)state->linkedObj;
         ObjGroup_FindNearestObjectForObject(0x3c, obj, &nearestDist);
 
@@ -216,13 +217,13 @@ void nw_ice_update(int *obj) {
         }
 
         if ((*(u8 *)((char *)state->linkedObj + 0x36) < 0xc0) || (nearestDist < lbl_803E5274)) {
-            *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x100);
+            ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x100);
         } else {
-            *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) & ~0x100);
+            ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 & ~0x100);
         }
     } else {
         objects = ObjGroup_GetObjects(0x3d, &count);
-        setup = *(int **)((char *)obj + 0x4c);
+        setup = *(int **)&((GameObject *)obj)->anim.placementData;
         scan = objects;
         for (i = 0; i < count; scan++, i++) {
             candidate = *scan;
@@ -249,12 +250,12 @@ extern void nw_tricky_SeqFn(void);
 #pragma scheduling off
 #pragma peephole off
 void nw_tricky_init(int *obj) {
-    *(void **)((char *)obj + 0xbc) = (void *)nw_tricky_SeqFn;
-    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
+    ((GameObject *)obj)->unkBC = (void *)nw_tricky_SeqFn;
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
 }
 void nw_animice_init(int *obj) {
-    *(void **)((char *)obj + 0xbc) = (void *)nw_animice_SeqFn;
-    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
+    ((GameObject *)obj)->unkBC = (void *)nw_animice_SeqFn;
+    ((GameObject *)obj)->unkB0 = (u16)(((GameObject *)obj)->unkB0 | 0x6000);
     ObjGroup_AddObject(obj, 0x3d);
 }
 #pragma peephole reset

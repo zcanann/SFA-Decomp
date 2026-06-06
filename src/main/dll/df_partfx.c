@@ -1,4 +1,5 @@
 #include "main/dll/df_partfx.h"
+#include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/objanim.h"
 
@@ -137,7 +138,7 @@ int Checkpoint_func07(int* obj, int* state)
     cosv = fn_80293E80((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
     sinv = sin((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
     offs = -(*(f32*)(cp + 8) * cosv + *(f32*)(cp + 0x10) * sinv);
-    dist = offs + (cosv * *(f32*)((char*)obj + 0xc) + sinv * *(f32*)((char*)obj + 0x14));
+    dist = offs + (cosv * ((GameObject *)obj)->anim.localPosX + sinv * ((GameObject *)obj)->anim.localPosZ);
     if (*(int*)(cp + 0x18) > -1 && dist >= lbl_803E04E8) {
         *(int*)((char*)state + 0x18) = *(int*)(cp + 0x18);
         *(f32*)((char*)state + 0xc) = lbl_803E050C;
@@ -152,7 +153,7 @@ int Checkpoint_func07(int* obj, int* state)
     cos2 = fn_80293E80((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
     sin2 = sin((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
     offs2 = -(*(f32*)(cp2 + 8) * cos2 + *(f32*)(cp2 + 0x10) * sin2);
-    dist2 = offs2 + (cos2 * *(f32*)((char*)obj + 0xc) + sin2 * *(f32*)((char*)obj + 0x14));
+    dist2 = offs2 + (cos2 * ((GameObject *)obj)->anim.localPosX + sin2 * ((GameObject *)obj)->anim.localPosZ);
     zero = lbl_803E04E8;
     if (dist2 < zero) {
         *(int*)((char*)state + 0x18) = *(int*)(cp + 0x20);
@@ -1765,8 +1766,8 @@ u32 isScreenTransitionActive(void) { return lbl_803E0558 == lbl_803DD420; }
 extern f32 lbl_803E0570;
 void player_clearXZvel(int *obj, int *state) {
     f32 z = lbl_803E0570;
-    *(f32*)((char*)obj + 0x24) = z;
-    *(f32*)((char*)obj + 0x2c) = z;
+    ((GameObject *)obj)->anim.velocityX = z;
+    ((GameObject *)obj)->anim.velocityZ = z;
     *(f32*)((char*)state + 0x294) = z;
     *(f32*)((char*)state + 0x280) = z;
     *(f32*)((char*)state + 0x284) = z;
@@ -1858,9 +1859,9 @@ void player_findCurve(int* obj, int* state, int p3)
 {
     *(int*)((char*)state + 0x33c) = ((int(*)(f32, f32, f32, int*, int, int))
         ((void**)*gRomCurveInterface)[5])(
-            *(f32*)((char*)obj + 0xc),
-            *(f32*)((char*)obj + 0x10),
-            *(f32*)((char*)obj + 0x14),
+            ((GameObject *)obj)->anim.localPosX,
+            ((GameObject *)obj)->anim.localPosY,
+            ((GameObject *)obj)->anim.localPosZ,
             &p3, 1,
             *(s8*)((char*)state + 0x344));
 }
@@ -1948,8 +1949,8 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
     f32 dx, dz, dist, max;
 
     *(u32*)state &= ~0x100000;
-    dx = *(f32*)((char*)obj + 0xc) - cx;
-    dz = *(f32*)((char*)obj + 0x14) - cz;
+    dx = ((GameObject *)obj)->anim.localPosX - cx;
+    dz = ((GameObject *)obj)->anim.localPosZ - cz;
     dist = sqrtf(dx * dx + dz * dz);
     *(f32*)((char*)state + 0x2bc) = dist;
     max = lbl_803E0578;
@@ -2005,27 +2006,27 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
             vx = lbl_803E0570;
             vz = vx;
         }
-        *(f32*)((char*)obj + 0x24) = *(f32*)((char*)obj + 0x24)
-            + (t * (vx - *(f32*)((char*)obj + 0x24))) / *(f32*)((char*)state + 0x2b8);
-        *(f32*)((char*)obj + 0x2c) = *(f32*)((char*)obj + 0x2c)
-            + (t * (vz - *(f32*)((char*)obj + 0x2c))) / *(f32*)((char*)state + 0x2b8);
+        ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX
+            + (t * (vx - ((GameObject *)obj)->anim.velocityX)) / *(f32*)((char*)state + 0x2b8);
+        ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ
+            + (t * (vz - ((GameObject *)obj)->anim.velocityZ)) / *(f32*)((char*)state + 0x2b8);
     } else {
         *(s8*)((char*)state + 0x34c) &= ~1;
     }
-    q = *(f32*)((char*)obj + 0x24) * *(f32*)((char*)obj + 0x24);
-    w = *(f32*)((char*)obj + 0x2c) * *(f32*)((char*)obj + 0x2c);
+    q = ((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX;
+    w = ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ;
     dist = sqrtf(q + w);
     *(f32*)((char*)state + 0x294) = dist;
     if (*(f32*)((char*)state + 0x294) < lbl_803E05B0) {
         f32 z = lbl_803E0570;
         *(f32*)((char*)state + 0x294) = z;
-        *(f32*)((char*)obj + 0x24) = z;
-        *(f32*)((char*)obj + 0x2c) = z;
+        ((GameObject *)obj)->anim.velocityX = z;
+        ((GameObject *)obj)->anim.velocityZ = z;
     }
     c = fn_80293E80((lbl_803E05A4 * (f32)*obj) / lbl_803E05A8);
     s = sin((lbl_803E05A4 * (f32)*obj) / lbl_803E05A8);
-    *(f32*)((char*)state + 0x284) = *(f32*)((char*)obj + 0x24) * s - *(f32*)((char*)obj + 0x2c) * c;
-    *(f32*)((char*)state + 0x280) = -*(f32*)((char*)obj + 0x2c) * s - *(f32*)((char*)obj + 0x24) * c;
+    *(f32*)((char*)state + 0x284) = ((GameObject *)obj)->anim.velocityX * s - ((GameObject *)obj)->anim.velocityZ * c;
+    *(f32*)((char*)state + 0x280) = -((GameObject *)obj)->anim.velocityZ * s - ((GameObject *)obj)->anim.velocityX * c;
 }
 #pragma opt_common_subs reset
 #pragma peephole reset
@@ -2153,21 +2154,21 @@ void player_rotateTowardEnemy(int *obj, int *ctx, int spd) {
     enemy = (int *)ctx[0x2d0 / 4];
     if (enemy != 0) {
         if (enemy[0x30 / 4] == obj[0x30 / 4]) {
-            dx = *(f32 *)((char *)enemy + 0xc) - *(f32 *)((char *)obj + 0xc);
-            dz = *(f32 *)((char *)enemy + 0x14) - *(f32 *)((char *)obj + 0x14);
+            dx = *(f32 *)((char *)enemy + 0xc) - ((GameObject *)obj)->anim.localPosX;
+            dz = *(f32 *)((char *)enemy + 0x14) - ((GameObject *)obj)->anim.localPosZ;
         } else {
-            dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)enemy + 0x18);
-            dz = *(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)enemy + 0x20);
+            dx = ((GameObject *)obj)->anim.worldPosX - *(f32 *)((char *)enemy + 0x18);
+            dz = ((GameObject *)obj)->anim.worldPosZ - *(f32 *)((char *)enemy + 0x20);
         }
-        diff = (u16)getAngle(-dx, -dz) - (u16)*(s16 *)((char *)obj + 0);
+        diff = (u16)getAngle(-dx, -dz) - (u16)((GameObject *)obj)->anim.rotX;
         if (diff > 0x8000) {
             diff -= 0xffff;
         }
         if (diff < -0x8000) {
             diff += 0xffff;
         }
-        *(s16 *)((char *)obj + 0) =
-            (s16)(*(s16 *)((char *)obj + 0) +
+        ((GameObject *)obj)->anim.rotX =
+            (s16)(((GameObject *)obj)->anim.rotX +
                   (int)((f32)diff * timeDelta / (lbl_803E0584 * (f32)spd)));
     }
 }
@@ -2240,7 +2241,7 @@ void fn_800D8414(int *obj, int *ctx) {
     *(f32 *)((char *)ctx + 0x298) = *(f32 *)((char *)ctx + 0x298) / lbl_803E0578;
     lbl_803DD44C = (s16)getAngle(((BaddieState *)ctx)->unk290, -((BaddieState *)ctx)->unk28C);
     lbl_803DD44C = (s16)(lbl_803DD44C - ((BaddieState *)ctx)->unk330);
-    diff = lbl_803DD44C - (u16)*(s16 *)((char *)obj + 0);
+    diff = lbl_803DD44C - (u16)((GameObject *)obj)->anim.rotX;
     if (diff > 0x8000) {
         diff -= 0xffff;
     }
@@ -2315,11 +2316,11 @@ void player_animFn16(int *obj, int *ctx, int moveA, int moveB) {
     f64 ratio;
     int idx;
     if ((s8)lbl_803DD434 != 0) {
-        if (((BaddieState *)ctx)->animSpeedA > lbl_803E0570 && *(s16 *)((char *)obj + 0xa0) != (int)lbl_803DD43C) {
-            ObjAnim_SetCurrentMove((int)obj, lbl_803DD43C, *(f32 *)((char *)obj + 0x98), 0);
+        if (((BaddieState *)ctx)->animSpeedA > lbl_803E0570 && ((GameObject *)obj)->anim.currentMove != (int)lbl_803DD43C) {
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DD43C, ((GameObject *)obj)->anim.currentMoveProgress, 0);
             ((BaddieState *)ctx)->moveDone = 0;
-        } else if (((BaddieState *)ctx)->animSpeedA < lbl_803E0570 && *(s16 *)((char *)obj + 0xa0) != (int)lbl_803DD438) {
-            ObjAnim_SetCurrentMove((int)obj, lbl_803DD438, *(f32 *)((char *)obj + 0x98), 0);
+        } else if (((BaddieState *)ctx)->animSpeedA < lbl_803E0570 && ((GameObject *)obj)->anim.currentMove != (int)lbl_803DD438) {
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DD438, ((GameObject *)obj)->anim.currentMoveProgress, 0);
             ((BaddieState *)ctx)->moveDone = 0;
         }
         q1 = ((BaddieState *)ctx)->animSpeedA * ((BaddieState *)ctx)->animSpeedA;
@@ -2605,9 +2606,9 @@ void Checkpoint_func06(int* obj, int* state, int filter)
         for (i = 0; i < (int)lbl_803DD410; i++) {
             e = (char*)lbl_8039C458[i].entry;
             if (visited[i] == 0 && (filter == -1 || *(s8*)(e + 0x28) == filter)) {
-                ddx = *(f32*)(e + 8) - *(f32*)((char*)obj + 0xc);
-                ddy = *(f32*)(e + 0xc) - *(f32*)((char*)obj + 0x10);
-                ddz = *(f32*)(e + 0x10) - *(f32*)((char*)obj + 0x14);
+                ddx = *(f32*)(e + 8) - ((GameObject *)obj)->anim.localPosX;
+                ddy = *(f32*)(e + 0xc) - ((GameObject *)obj)->anim.localPosY;
+                ddz = *(f32*)(e + 0x10) - ((GameObject *)obj)->anim.localPosZ;
                 if (ddz * ddz + (ddx * ddx + ddy * ddy) < lbl_803E051C) {
                     stack[count++] = i;
                     for (j = i; j < (int)lbl_803DD410; j++) {
@@ -2644,8 +2645,8 @@ void Checkpoint_func06(int* obj, int* state, int filter)
                 cos2 = fn_80293E80((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
                 sin2 = sin((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
                 offs2 = -(*(f32*)(n + 8) * cos2 + *(f32*)(n + 0x10) * sin2);
-                dist1 = offs1 + (cos1 * *(f32*)((char*)obj + 0xc) + sin1 * *(f32*)((char*)obj + 0x14));
-                dist2 = offs2 + (cos2 * *(f32*)((char*)obj + 0xc) + sin2 * *(f32*)((char*)obj + 0x14));
+                dist1 = offs1 + (cos1 * ((GameObject *)obj)->anim.localPosX + sin1 * ((GameObject *)obj)->anim.localPosZ);
+                dist2 = offs2 + (cos2 * ((GameObject *)obj)->anim.localPosX + sin2 * ((GameObject *)obj)->anim.localPosZ);
                 distA = offs1 + (cos1 * *(f32*)(n + 8) + sin1 * *(f32*)(n + 0x10));
                 distB = offs2 + (cos2 * *(f32*)(cp + 8) + sin2 * *(f32*)(cp + 0x10));
                 if (((distA <= lbl_803E04E8 && dist1 <= lbl_803E04E8) || (distA > lbl_803E04E8 && dist1 > lbl_803E04E8)) &&
@@ -2678,8 +2679,8 @@ void Checkpoint_func06(int* obj, int* state, int filter)
                     px = -(dx * frac - *(f32*)(cp + 8));
                     py = -(dy * frac - *(f32*)(cp + 0xc));
                     pz = -(dz * frac - *(f32*)(cp + 0x10));
-                    outY = (*(f32*)((char*)obj + 0x10) - py) / width;
-                    outX = (-(px * nz - pz * nx) + (*(f32*)((char*)obj + 0xc) * nz - *(f32*)((char*)obj + 0x14) * nx)) / width;
+                    outY = (((GameObject *)obj)->anim.localPosY - py) / width;
+                    outX = (-(px * nz - pz * nx) + (((GameObject *)obj)->anim.localPosX * nz - ((GameObject *)obj)->anim.localPosZ * nx)) / width;
                     if (outX < lbl_803E0530 || outX > lbl_803E0534 || outY < lbl_803E0538 || outY > lbl_803E0534) {
                     } else {
                         *(int*)((char*)state + 0x10) = *(int*)(cp + 0x14);

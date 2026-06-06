@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/objanim_internal.h"
 
@@ -4507,12 +4508,12 @@ void playerShadow_renderObject(void *obj)
         height = radius;
     }
 
-    minX = *(f32 *)((char *)obj + 0xc) - radius;
-    maxX = *(f32 *)((char *)obj + 0xc) + radius;
-    topY = *(f32 *)((char *)obj + 0x10) + height;
-    bottomY = *(f32 *)((char *)obj + 0x10) - height;
-    minZ = *(f32 *)((char *)obj + 0x14) - radius;
-    maxZ = *(f32 *)((char *)obj + 0x14) + radius;
+    minX = ((GameObject *)obj)->anim.localPosX - radius;
+    maxX = ((GameObject *)obj)->anim.localPosX + radius;
+    topY = ((GameObject *)obj)->anim.localPosY + height;
+    bottomY = ((GameObject *)obj)->anim.localPosY - height;
+    minZ = ((GameObject *)obj)->anim.localPosZ - radius;
+    maxZ = ((GameObject *)obj)->anim.localPosZ + radius;
 
     verts[0][0] = minX;
     verts[0][1] = topY;
@@ -4545,8 +4546,8 @@ void playerShadow_renderObject(void *obj)
     hitTableValue = hitTable;
     fn_80069958(&tileInfo);
     fn_800A3AF0((void *)hitTableValue, hitCount, obj,
-        *(f32 *)((char *)obj + 0xc) - (f32)tileInfo[0],
-        *(f32 *)((char *)obj + 0x14) - (f32)tileInfo[2]);
+        ((GameObject *)obj)->anim.localPosX - (f32)tileInfo[0],
+        ((GameObject *)obj)->anim.localPosZ - (f32)tileInfo[2]);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -14396,9 +14397,9 @@ void boneParticleEffect_spawnAtBones(void *obj, void *arg1, void *arg2, u8 prob,
       data.unk0 = 0;
       mtx = ObjModel_GetJointMatrix(model, i);
       PSMTXMultVec(mtx, &data.x, &data.x);
-      data.x = data.x - *(f32 *)((char *)obj + 0x18);
-      data.y = data.y - *(f32 *)((char *)obj + 0x1c);
-      data.z = data.z - *(f32 *)((char *)obj + 0x20);
+      data.x = data.x - ((GameObject *)obj)->anim.worldPosX;
+      data.y = data.y - ((GameObject *)obj)->anim.worldPosY;
+      data.z = data.z - ((GameObject *)obj)->anim.worldPosZ;
       data.x = data.x + playerMapOffsetX;
       data.z = data.z + playerMapOffsetZ;
       if (src != NULL) {

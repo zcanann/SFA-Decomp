@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/newSeqObj.h"
 #include "main/objanim.h"
 
@@ -60,7 +61,7 @@ int fn_801504F8(int *obj, u8 *state, int *p3, int msgId, int arrIdx, int p6)
     if (msgId == 0xe) {
         p6 = p6 * 0xa;
     }
-    if (*(s16 *)((char *)obj + 0xa0) == animRows[0x128]) {
+    if (((GameObject *)obj)->anim.currentMove == animRows[0x128]) {
         return 0;
     }
     if (msgId == 0x10) {
@@ -311,9 +312,9 @@ void fn_80150910(int *obj, u8 *state)
     if (state[0x33d] != 0) {
         if (*(u32 *)(state + 0x2dc) & 0x40000000) {
             f32 z = lbl_803E2740;
-            *(f32 *)((char *)obj + 0x2c) = z;
-            *(f32 *)((char *)obj + 0x28) = z;
-            *(f32 *)((char *)obj + 0x24) = z;
+            ((GameObject *)obj)->anim.velocityZ = z;
+            ((GameObject *)obj)->anim.velocityY = z;
+            ((GameObject *)obj)->anim.velocityX = z;
             fn_8014D08C(obj, state, tbl4[state[0x33d] * 12 + 8],
                         *(f32 *)(tbl4 + state[0x33d] * 12), 0,
                         (u8)*(u32 *)(tbl4 + state[0x33d] * 12 + 4));
@@ -335,8 +336,8 @@ void fn_80150910(int *obj, u8 *state)
         f32 delta;
 
         {
-            f32 dx = *(f32 *)(path + 0x68) - *(f32 *)((char *)obj + 0xc);
-            f32 dz = *(f32 *)(path + 0x70) - *(f32 *)((char *)obj + 0x14);
+            f32 dx = *(f32 *)(path + 0x68) - ((GameObject *)obj)->anim.localPosX;
+            f32 dz = *(f32 *)(path + 0x70) - ((GameObject *)obj)->anim.localPosZ;
             d = sqrtf(dx * dx + dz * dz);
         }
         if (d > lbl_803E2778) {
@@ -413,7 +414,7 @@ void fn_80150910(int *obj, u8 *state)
                 *(u16 *)(state + 0x338) = tbl1c[*(u16 *)(state + 0x338) * 16 + 9];
             } else {
                 int off = r * 12;
-                if (*(s16 *)((char *)obj + 0xa0) != tbl4[off + 8] || tbl4[off + 8] != 0) {
+                if (((GameObject *)obj)->anim.currentMove != tbl4[off + 8] || tbl4[off + 8] != 0) {
                     state[0x2f2] = 0;
                     state[0x2f3] = 0;
                     state[0x2f4] = 0;
