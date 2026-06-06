@@ -1,4 +1,6 @@
 #include "main/objanim.h"
+#include "main/dll/tricky_state.h"
+#include "main/game_object.h"
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/mapEventTypes.h"
@@ -3987,7 +3989,7 @@ void titlescreen_hitDetect(void) {}
  * obj->_46 (s16) is in [1917, 1920], else returns 0. */
 int titlescreen_getObjectTypeId(u8* obj)
 {
-    s16 v = *(s16*)(obj + 0x46);
+    s16 v = ((GameObject *)obj)->anim.seqId;
     if (v >= 1917 && v < 1921) return 74;
     return 0;
 }
@@ -4247,21 +4249,21 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
     }
 
     if (bestPriorityTarget != NULL) {
-        *(u8**)(state + 0x24) = bestPriorityTarget;
+        ((TrickyState *)state)->unk24 = bestPriorityTarget;
     } else {
         if (bestFallbackTarget == NULL) {
             return 0;
         }
-        *(u8**)(state + 0x24) = bestFallbackTarget;
+        ((TrickyState *)state)->unk24 = bestFallbackTarget;
     }
 
     {
-        u8* targetPos = *(u8**)(state + 0x24) + 0x18;
+        u8* targetPos = ((TrickyState *)state)->unk24 + 0x18;
         u32 pathMask = 0xfffffbff;
-        if (*(u8**)(state + 0x28) != targetPos) {
-            *(u8**)(state + 0x28) = targetPos;
-            *(u32*)(state + 0x54) = *(u32*)(state + 0x54) & pathMask;
-            *(u16*)(state + 0xd2) = 0;
+        if (((TrickyState *)state)->unk28 != targetPos) {
+            ((TrickyState *)state)->unk28 = targetPos;
+            ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 & pathMask;
+            ((TrickyState *)state)->unkD2 = 0;
         }
     }
 
@@ -4291,7 +4293,7 @@ void Credits_initialise(void)
 #pragma peephole off
 int trickyFn_80138f14(u8* obj)
 {
-    u8* b = *(u8**)(obj + 0xb8);
+    u8* b = ((GameObject *)obj)->extra;
     if ((u32)GameBit_Get(0x4E4) != 0u) {
         *(u32*)(b + 0x54) |= 0x10000;
         if ((*(u32*)(b + 0x54) & 0x10) != 0u) {
@@ -4379,10 +4381,10 @@ extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
 #pragma peephole off
 int fn_80138920(u8* obj, int arg1, int arg2)
 {
-    u8* b = *(u8**)(obj + 0xb8);
+    u8* b = ((GameObject *)obj)->extra;
     s16 v;
     if ((u32)((b[0x58] >> 6) & 1) != 0u) return 0;
-    v = *(s16*)(obj + 0xa0);
+    v = ((GameObject *)obj)->anim.currentMove;
     if (v < 48) {
         if (v >= 41) {
             return 0;
@@ -4636,7 +4638,7 @@ void titleScreenFn_801368c4(u8 arg)
  * and store lbl_803E2408 into obj->_b8->_808. */
 void trickyImpress(u8* obj)
 {
-    u8* b = *(u8**)(obj + 0xb8);
+    u8* b = ((GameObject *)obj)->extra;
     *(u32*)(b + 0x54) |= 0x80000000;
     *(f32*)(b + 0x808) = lbl_803E2408;
 }
@@ -4771,7 +4773,7 @@ void fn_80138908(int *obj, u8 v) {
 extern void Music_Trigger(s32 triggerId, s32 mode);
 #pragma peephole off
 void titlescreen_free(u8* obj) {
-    if (*(s16*)(obj + 0x46) == 0x77d) {
+    if (((GameObject *)obj)->anim.seqId == 0x77d) {
         Music_Trigger(0x3a, 0);
         lbl_803DD993 = 0;
     }
@@ -5490,7 +5492,7 @@ void fn_80134870(int obj, u8* arr)
     int i;
     for (i = 0; i < (s8)arr[0x1b]; i++) {
         s8 t;
-        switch (*(s16*)(obj + 0x46)) {
+        switch (((GameObject *)obj)->anim.seqId) {
         case 0x77d:
             t = (s8)arr[i + 0x13];
             if (t == 0) {
