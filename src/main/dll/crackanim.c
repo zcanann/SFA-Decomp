@@ -337,12 +337,12 @@ void appleontree_init(int obj, int def)
     state = *(int *)(obj + 0xb8);
 
     ((CrackAnimState *)state)->unk0 = *(u32 *)(def + 0x18);
-    ((CrackAnimState *)state)->unk4 = (f32)*(u16 *)(def + 0x1c);
-    ((CrackAnimState *)state)->unk8 = (f32)*(u16 *)(def + 0x1e);
-    ((CrackAnimState *)state)->unk10 = (f32)*(u8 *)(def + 0x20) / lbl_803E3828;
-    ((CrackAnimState *)state)->unk14 = ((CrackAnimState *)state)->unk10 + (f32)*(u8 *)(def + 0x21) / lbl_803E3828;
-    ((CrackAnimState *)state)->unk18 = ((CrackAnimState *)state)->unk14 + (f32)*(u8 *)(def + 0x22) / lbl_803E3828;
-    ((CrackAnimState *)state)->unk1C = ((CrackAnimState *)state)->unk18 + (f32)*(u8 *)(def + 0x23) / lbl_803E3828;
+    ((CrackAnimState *)state)->duration = (f32)*(u16 *)(def + 0x1c);
+    ((CrackAnimState *)state)->elapsed = (f32)*(u16 *)(def + 0x1e);
+    ((CrackAnimState *)state)->stageEnd0 = (f32)*(u8 *)(def + 0x20) / lbl_803E3828;
+    ((CrackAnimState *)state)->stageEnd1 = ((CrackAnimState *)state)->stageEnd0 + (f32)*(u8 *)(def + 0x21) / lbl_803E3828;
+    ((CrackAnimState *)state)->stageEnd2 = ((CrackAnimState *)state)->stageEnd1 + (f32)*(u8 *)(def + 0x22) / lbl_803E3828;
+    ((CrackAnimState *)state)->stageEnd3 = ((CrackAnimState *)state)->stageEnd2 + (f32)*(u8 *)(def + 0x23) / lbl_803E3828;
     ((CrackAnimState *)state)->unk20 = (f32)*(u8 *)(def + 0x24) / lbl_803E3828;
     ((CrackAnimState *)state)->unk28 = (f32)*(s8 *)(def + 0x25) / lbl_803E3828;
     ((CrackAnimState *)state)->unk28 = ((CrackAnimState *)state)->unk28 * lbl_803E37DC;
@@ -353,7 +353,7 @@ void appleontree_init(int obj, int def)
     ((CrackAnimState *)state)->unk40 = lbl_803E382C;
     ((CrackAnimState *)state)->unk44 = zeroScale;
 
-    timeScale = ((CrackAnimState *)state)->unk4 * ((CrackAnimState *)state)->unk18;
+    timeScale = ((CrackAnimState *)state)->duration * ((CrackAnimState *)state)->stageEnd2;
     timeScale *= timeScale;
     timeScale *= timeScale;
     ((CrackAnimState *)state)->unk54 = (timeScale * timeScale) * lbl_803E3830;
@@ -364,17 +364,17 @@ void appleontree_init(int obj, int def)
 
     eventBit = *(s16 *)(def + 0x26);
     if ((eventBit != -1) && (GameBit_Get(eventBit) != 0)) {
-        ((CrackAnimState *)state)->unk8 = lbl_803E3838;
-        ((CrackAnimState *)state)->unk3A = 6;
+        ((CrackAnimState *)state)->elapsed = lbl_803E3838;
+        ((CrackAnimState *)state)->stage = 6;
     } else {
-        progress = ((CrackAnimState *)state)->unk8 / ((CrackAnimState *)state)->unk4;
-        if (progress < ((CrackAnimState *)state)->unk10) {
-            ((CrackAnimState *)state)->unk3A = 0;
-        } else if (progress < ((CrackAnimState *)state)->unk14) {
+        progress = ((CrackAnimState *)state)->elapsed / ((CrackAnimState *)state)->duration;
+        if (progress < ((CrackAnimState *)state)->stageEnd0) {
+            ((CrackAnimState *)state)->stage = 0;
+        } else if (progress < ((CrackAnimState *)state)->stageEnd1) {
             ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)(obj + 0x50) + 4);
-            ((CrackAnimState *)state)->unk3A = 1;
-        } else if (progress < ((CrackAnimState *)state)->unk18) {
-            ((CrackAnimState *)state)->unk3A = 2;
+            ((CrackAnimState *)state)->stage = 1;
+        } else if (progress < ((CrackAnimState *)state)->stageEnd2) {
+            ((CrackAnimState *)state)->stage = 2;
         } else {
             state = *(int *)(obj + 0xb8);
             texture = objFindTexture(obj, 0, 0);
@@ -382,7 +382,7 @@ void appleontree_init(int obj, int def)
             ((CrackAnimState *)state)->unk24 = lbl_803E37C8;
             ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)(obj + 0x50) + 4);
             Obj_SetActiveModelIndex(obj, 1);
-            ((CrackAnimState *)state)->unk3A = 3;
+            ((CrackAnimState *)state)->stage = 3;
         }
     }
 
