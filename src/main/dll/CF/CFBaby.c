@@ -2574,9 +2574,9 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState *state) {
                         range = lbl_803E3BC0;
                         other = ObjGroup_FindNearestObject(0x41, obj, &range);
                         if (other != 0) {
-                            otherState = *(LandedArwingState **)(other + 0xb8);
-                            if (*(s16 *)(*(int *)(other + 0x4c) + 0x22) > 0) {
-                                GameBit_Set(*(s16 *)(*(int *)(other + 0x4c) + 0x22), 1);
+                            otherState = ((GameObject *)other)->extra;
+                            if (*(s16 *)(*(int *)&((GameObject *)other)->anim.placementData + 0x22) > 0) {
+                                GameBit_Set(*(s16 *)(*(int *)&((GameObject *)other)->anim.placementData + 0x22), 1);
                             }
                             otherState->hitFlags = otherState->hitFlags & 0x7f | 0x80;
                         }
