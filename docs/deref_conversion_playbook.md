@@ -132,6 +132,13 @@ complete report tree (`ninja -k 0 build/GSAE01/report.json`), error-grepped.
 That forced rebuild is also what surfaces other people's latent breakage -
 budget for triaging it.
 
+**Gold-gate baselines must be taken AFTER a forced report build.** A
+default-ninja tree holds stale report-only objects (NonMatching TUs dirtied
+by earlier upstream commits but never rebuilt), so a full-tree .o md5
+baseline taken from it attributes other people's pending recompiles to YOUR
+header change (~30 phantom diffs from one upstream rename sweep). Force
+`ninja build/GSAE01/report.json` first, then baseline, then edit.
+
 **Verification evidence must be fresh.** Trusting a NINJA=0 full build
 without confirming the specific TU recompiled produced a false
 "byte-identical, no regression" stand-down on mmp_moonrock. rm the .o (or
