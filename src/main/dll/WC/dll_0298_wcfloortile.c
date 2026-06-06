@@ -378,8 +378,9 @@ void fn_8022B764(int p, int q, int idx) {
 #pragma scheduling off
 void fn_8022A9C8(int obj, int state)
 {
+    extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
     int slot;
-    f32 mtx[12];
+    f32 mtx[16];
     ArwProjPosSrc src;
 
     slot = Camera_GetCurrentViewSlot();
