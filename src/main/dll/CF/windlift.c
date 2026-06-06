@@ -5,6 +5,7 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/dll/CF/windlift.h"
+#include "main/dll/CF/lanternfirefly_state.h"
 #include "global.h"
 
 /* scarab_getExtraSize == 0x34 (collectible money beetle). */
@@ -71,36 +72,6 @@ typedef struct PortalSpellDoorState {
 } PortalSpellDoorState;
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-/* LanternFireFly_getExtraSize == 0x74. */
-typedef struct LanternFireFlyState {
-    void *light;     /* 0x00 */
-    f32 histX[4];    /* 0x04: position-history ring (oldest first) */
-    f32 histY[4];    /* 0x14 */
-    f32 histZ[4];    /* 0x24 */
-    f32 offX;        /* 0x34: current offset from the lantern base */
-    f32 offY;        /* 0x38 */
-    f32 offZ;        /* 0x3c */
-    u8 pad40[4];
-    f32 stepBlend;   /* 0x44 */
-    u8 pad48[4];
-    f32 hoverHeight; /* 0x4c */
-    f32 ceilingY;    /* 0x50 */
-    f32 baseX;       /* 0x54 */
-    f32 baseY;       /* 0x58 */
-    f32 baseZ;       /* 0x5c */
-    int idleTimer;   /* 0x60 */
-    s16 wanderYaw;   /* 0x64 */
-    u8 pad66[2];
-    s16 yawRange;    /* 0x68 */
-    u8 unk6A;        /* 0x6a */
-    u8 pad6B;
-    u8 stepsLeft;    /* 0x6c */
-    u8 pad6D[2];
-    u8 unk6F;        /* 0x6f */
-    u8 flags70;      /* 0x70: bits 6..7 = lantern slot kind */
-    u8 pad71[3];
-} LanternFireFlyState;
-STATIC_ASSERT(sizeof(LanternFireFlyState) == 0x74);
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
@@ -1648,9 +1619,9 @@ int LanternFireFly_getObjectTypeId(void) { return 0x0; }
  * three floats into obj->_b8 at +0x54/+0x58/+0x5c. */
 void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c) {
     LanternFireFlyState* sub = ((GameObject *)obj)->extra;
-    sub->baseX = a;
-    sub->baseY = b;
-    sub->baseZ = c;
+    sub->anchorX = a;
+    sub->anchorY = b;
+    sub->anchorZ = c;
 }
 
 typedef struct LanternFireFlyVectorParams {
@@ -1679,11 +1650,11 @@ void LanternFireFly_func0B(int obj)
 
     state = ((GameObject *)obj)->extra;
     setup = *(int *)&((GameObject *)obj)->anim.placementData;
-    state->yawRange = *(s8 *)(setup + 0x18);
-    state->unk6A = *(u8 *)(setup + 0x19);
-    state->hoverHeight = lbl_803E3AA0;
-    state->ceilingY = (f32)(int)*(s16 *)(setup + 0x1c);
-    state->unk6F = 0;
+    state->field68 = *(s8 *)(setup + 0x18);
+    state->stateId = *(u8 *)(setup + 0x19);
+    state->field4C = lbl_803E3AA0;
+    state->field50 = (f32)(int)*(s16 *)(setup + 0x1c);
+    state->field6F = 0;
     objHitDetectFn_80062e84(obj, 0, 1);
     p = Obj_GetPlayerObject();
     vec[0] = *(f32 *)(p + 0x18);
@@ -1694,17 +1665,17 @@ void LanternFireFly_func0B(int obj)
     y2 = lbl_803E3AA8 + py;
     {
         LanternFireFlyState *st = ((GameObject *)obj)->extra;
-        st->baseX = vec[0];
-        st->baseY = y2;
-        st->baseZ = vec[2];
+        st->anchorX = vec[0];
+        st->anchorY = y2;
+        st->anchorZ = vec[2];
         st = ((GameObject *)obj)->extra;
-        vec[0] = vec[0] - st->baseX;
-        vec[1] = vec[1] - st->baseY;
-        vec[2] = vec[2] - st->baseZ;
+        vec[0] = vec[0] - st->anchorX;
+        vec[1] = vec[1] - st->anchorY;
+        vec[2] = vec[2] - st->anchorZ;
         st->offX = vec[0];
         st->offY = vec[1];
         st->offZ = vec[2];
-        st->stepsLeft = 4;
+        st->animFrame = 4;
     }
     fn_801869DC(obj);
     fn_801869DC(obj);
@@ -1712,8 +1683,8 @@ void LanternFireFly_func0B(int obj)
     fn_801869DC(obj);
     fn_801869DC(obj);
     fn_801869DC(obj);
-    ((LFFlags *)&state->flags70)->mode = 1;
-    state->idleTimer = *(s16 *)(setup + 0x1a);
+    ((LFFlags *)&state->modeFlags)->mode = 1;
+    state->timer = *(s16 *)(setup + 0x1a);
     gameBitIncrement(0x698);
 }
 
@@ -1728,15 +1699,15 @@ void fn_801868D0(int obj)
 
     state = ((GameObject *)obj)->extra;
     state->offX = lbl_803E3AB8;
-    state->offY = (f32)(int)randomGetRange(-state->yawRange, state->yawRange);
-    if (state->ceilingY < lbl_803E3ABC) {
+    state->offY = (f32)(int)randomGetRange(-state->field68, state->field68);
+    if (state->field50 < lbl_803E3ABC) {
         state->offZ = lbl_803E3AB8;
     } else {
-        state->offZ = state->ceilingY -
-                      (f32)(int)randomGetRange(0x14, (s16)(int)state->ceilingY);
+        state->offZ = state->field50 -
+                      (f32)(int)randomGetRange(0x14, (s16)(int)state->field50);
     }
     r = (s16)randomGetRange(3000, 5000);
-    state->wanderYaw += r;
+    state->randAngle += r;
     fz = lbl_803E3AB8;
     rot.x = fz;
     rot.y = fz;
@@ -1744,7 +1715,7 @@ void fn_801868D0(int obj)
     rot.scale = lbl_803E3AA0;
     rot.c = 0;
     rot.b = 0;
-    rot.ang = state->wanderYaw;
+    rot.ang = state->randAngle;
     vecRotateZXY(&rot, &state->offX);
 }
 
@@ -1754,25 +1725,25 @@ void fn_801869DC(int obj)
     LanternFireFlyState *state;
 
     state = ((GameObject *)obj)->extra;
-    state->histX[0] = state->histX[1];
-    state->histY[0] = state->histY[1];
-    state->histZ[0] = state->histZ[1];
-    state->histX[1] = state->histX[2];
-    state->histY[1] = state->histY[2];
-    state->histZ[1] = state->histZ[2];
-    state->histX[2] = state->histX[3];
-    state->histY[2] = state->histY[3];
-    state->histZ[2] = state->histZ[3];
-    if (((LFF2 *)&state->flags70)->mode == 1) {
+    state->controlX[0] = state->controlX[1];
+    state->controlY[0] = state->controlY[1];
+    state->controlZ[0] = state->controlZ[1];
+    state->controlX[1] = state->controlX[2];
+    state->controlY[1] = state->controlY[2];
+    state->controlZ[1] = state->controlZ[2];
+    state->controlX[2] = state->controlX[3];
+    state->controlY[2] = state->controlY[3];
+    state->controlZ[2] = state->controlZ[3];
+    if (((LFF2 *)&state->modeFlags)->mode == 1) {
         int player = Obj_GetPlayerObject();
-        state->stepBlend =
+        state->speed =
             lbl_803E3AC4 * Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) + lbl_803E3AC0;
     } else {
-        state->stepBlend = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
+        state->speed = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
     }
-    state->histX[3] = state->offX;
-    state->histY[3] = state->offY;
-    state->histZ[3] = state->offZ;
+    state->controlX[3] = state->offX;
+    state->controlY[3] = state->offY;
+    state->controlZ[3] = state->offZ;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1808,13 +1779,13 @@ void portalspelldoor_init(u8* obj, u8* data) {
 #pragma scheduling off
 void LanternFireFly_setScale(u8* obj, f32* vec) {
     LanternFireFlyState* sub = ((GameObject *)obj)->extra;
-    vec[0] = vec[0] - sub->baseX;
-    vec[1] = vec[1] - sub->baseY;
-    vec[2] = vec[2] - sub->baseZ;
+    vec[0] = vec[0] - sub->anchorX;
+    vec[1] = vec[1] - sub->anchorY;
+    vec[2] = vec[2] - sub->anchorZ;
     sub->offX = vec[0];
     sub->offY = vec[1];
     sub->offZ = vec[2];
-    sub->stepsLeft = 4;
+    sub->animFrame = 4;
 }
 #pragma scheduling reset
 
@@ -1829,11 +1800,11 @@ extern void *gExpgfxInterface;
 #pragma peephole off
 void LanternFireFly_free(u8* obj, int p2) {
     LanternFireFlyState* sub = ((GameObject *)obj)->extra;
-    if (sub->light != NULL) {
-        ModelLightStruct_free(sub->light);
-        sub->light = NULL;
+    if (*(void **)&sub->light != NULL) {
+        ModelLightStruct_free(*(void **)&sub->light);
+        *(void **)&sub->light = NULL;
     }
-    if (p2 == 0 && sub->light != NULL && ((sub->flags70 >> 6) & 3) != 1u) {
+    if (p2 == 0 && *(void **)&sub->light != NULL && ((sub->modeFlags >> 6) & 3) != 1u) {
         lbl_803DDAD8 = 0;
     }
     ObjGroup_RemoveObject(obj, 0x30);

@@ -51,53 +51,7 @@ STATIC_ASSERT(offsetof(FireFlyLanternState, remainingCount) == 0x1D);
 STATIC_ASSERT(offsetof(FireFlyLanternState, flags) == 0x1E);
 STATIC_ASSERT(offsetof(FireFlyLanternState, gameBit) == 0x20);
 
-typedef struct LanternFireFlyState {
-  int light;
-  f32 controlX[4];
-  f32 controlY[4];
-  f32 controlZ[4];
-  u8 pad34[0x40 - 0x34];
-  f32 splineT;
-  f32 speed;
-  f32 field48;
-  f32 field4C;
-  f32 field50;
-  f32 anchorX;
-  f32 anchorY;
-  f32 anchorZ;
-  s32 timer;
-  s16 randAngle;
-  s16 randPeriod;
-  s16 field68;
-  u8 stateId;
-  u8 field6B;
-  u8 animFrame;
-  u8 pad6D;
-  u8 lightSpawned;
-  u8 field6F;
-  u8 modeFlags;
-  u8 pad71[0x74 - 0x71];
-} LanternFireFlyState;
-
-typedef struct LanternFireFlySpawnDef {
-  u8 pad00[0x08];
-  f32 x;
-  f32 y;
-  f32 z;
-} LanternFireFlySpawnDef;
-
-STATIC_ASSERT(sizeof(LanternFireFlyState) == 0x74);
-STATIC_ASSERT(offsetof(LanternFireFlyState, controlX) == 0x04);
-STATIC_ASSERT(offsetof(LanternFireFlyState, controlY) == 0x14);
-STATIC_ASSERT(offsetof(LanternFireFlyState, controlZ) == 0x24);
-STATIC_ASSERT(offsetof(LanternFireFlyState, splineT) == 0x40);
-STATIC_ASSERT(offsetof(LanternFireFlyState, anchorX) == 0x54);
-STATIC_ASSERT(offsetof(LanternFireFlyState, timer) == 0x60);
-STATIC_ASSERT(offsetof(LanternFireFlyState, randAngle) == 0x64);
-STATIC_ASSERT(offsetof(LanternFireFlyState, randPeriod) == 0x66);
-STATIC_ASSERT(offsetof(LanternFireFlyState, stateId) == 0x6A);
-STATIC_ASSERT(offsetof(LanternFireFlyState, lightSpawned) == 0x6E);
-STATIC_ASSERT(offsetof(LanternFireFlyState, modeFlags) == 0x70);
+#include "main/dll/CF/lanternfirefly_state.h"
 
 extern ObjectDescriptor gLanternFireFlyObjDescriptor;
 extern ObjectDescriptor gFireFlyLanternObjDescriptor;
