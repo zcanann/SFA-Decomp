@@ -4010,23 +4010,45 @@ void chukchuk_initialise(void) {}
 
 extern uint GameBit_Get(int eventId);
 
+/*
+ * Per-object extra state for the ChukChuk ice-spitter
+ * (chukchuk_getExtraSize == 0x18).
+ */
+typedef struct ChukChukState {
+    f32 glowPhase; /* texture glow ramp index; 10 primes an attack, resets to rand(16,245) */
+    f32 steamTimer; /* counts down after destruction, scales the steam particle */
+    s16 unk08; /* from params+0x22 */
+    s16 gameBit; /* set on destruction; already-set disables on load */
+    u16 triggerDistance; /* params[0x29] << 3 */
+    u16 arcHalfAngle; /* (s8)params[0x28] * 182 — facing wedge for the spit attack */
+    u16 prevDistance; /* player planar distance last frame */
+    u8 flags; /* 1 primed, 2 dead/disabled, 4 forced attack */
+    u8 hitsLeft;
+    u8 attackChance; /* percent, vs rand(0,99) */
+    u8 aimHeightY; /* added to player Y when aiming the iceball */
+    u8 pad16[2];
+} ChukChukState;
+
+STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
+STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
+
 #pragma peephole off
 #pragma scheduling off
 void chukchuk_init(u8* obj, u8* params) {
-    u8* sub = *(u8**)(obj + 0xb8);
+    ChukChukState* sub = *(ChukChukState**)(obj + 0xb8);
     obj[0xaf] = (u8)(obj[0xaf] | 0x8);
-    *(s16*)(sub + 0xa) = *(s16*)(params + 0x18);
-    if (*(s16*)(sub + 0xa) != -1 && GameBit_Get(*(s16*)(sub + 0xa)) != 0) {
+    sub->gameBit = *(s16*)(params + 0x18);
+    if (sub->gameBit != -1 && GameBit_Get(sub->gameBit) != 0) {
         ObjHits_DisableObject(obj);
         *(s16*)(obj + 6) = (s16)(*(s16*)(obj + 6) | 0x4000);
-        sub[0x12] = (u8)(sub[0x12] | 0x2);
+        sub->flags = (u8)(sub->flags | 0x2);
     } else {
-        *(u16*)(sub + 0xc) = (u16)(params[0x29] << 3);
-        *(s16*)(sub + 8) = *(s16*)(params + 0x22);
-        sub[0x13] = params[0x32];
-        *(u16*)(sub + 0xe) = (u16)((s8)params[0x28] * 0xb6);
-        sub[0x14] = params[0x2f];
-        sub[0x15] = params[0x27];
+        sub->triggerDistance = (u16)(params[0x29] << 3);
+        sub->unk08 = *(s16*)(params + 0x22);
+        sub->hitsLeft = params[0x32];
+        sub->arcHalfAngle = (u16)((s8)params[0x28] * 0xb6);
+        sub->attackChance = params[0x2f];
+        sub->aimHeightY = params[0x27];
         *(s16*)obj = (s16)((s8)params[0x2a] << 8);
     }
 }
@@ -4156,13 +4178,13 @@ void fn_8015F5B0(short *obj)
   extern f64 lbl_803E2E28;
   extern f32 lbl_803E2E20;
   extern f32 lbl_803E2E24;
-  int sub;
+  ChukChukState *sub;
   int setup;
   u8 *o;
   int pl;
   f32 sc;
 
-  sub = *(int *)((char *)obj + 0xb8);
+  sub = *(ChukChukState **)((char *)obj + 0xb8);
   if (Obj_IsLoadingLocked() != 0) {
     setup = Obj_AllocObjectSetup(36, 1307);
     *(f32 *)(setup + 8) = *(f32 *)((char *)obj + 0xc);
@@ -4176,7 +4198,7 @@ void fn_8015F5B0(short *obj)
       pl = Obj_GetPlayerObject();
       *(f32 *)(o + 0x24) = (*(f32 *)(pl + 0xc) - *(f32 *)((char *)obj + 0xc)) / (sc = lbl_803E2E24);
       *(f32 *)(o + 0x28) =
-          ((*(f32 *)(pl + 0x10) + (f32)(u32)*(u8 *)(sub + 0x15)) - *(f32 *)((char *)obj + 0x10)) /
+          ((*(f32 *)(pl + 0x10) + (f32)(u32)sub->aimHeightY) - *(f32 *)((char *)obj + 0x10)) /
           sc;
       *(f32 *)(o + 0x2c) = (*(f32 *)(pl + 0x14) - *(f32 *)((char *)obj + 0x14)) / sc;
     }
@@ -4200,7 +4222,7 @@ void chukchuk_update(short *obj)
   extern f32 lbl_803E2E38;
   extern f32 lbl_803E2E3C;
   extern f32 lbl_803E2E40;
-  f32 *v;
+  ChukChukState *v;
   int di;
   int pl;
   int *tex;
@@ -4218,33 +4240,33 @@ void chukchuk_update(short *obj)
     f32 d[3];
   } stk;
 
-  v = *(f32 **)((char *)obj + 0xb8);
-  if (v[1] != lbl_803E2E34) {
-    v[1] -= timeDelta;
-    objParticleFn_80099d84(lbl_803E2E30, obj, 1, v[1] / lbl_803E2E38, 0);
-    if (v[1] <= lbl_803E2E34) {
-      v[1] = lbl_803E2E34;
+  v = *(ChukChukState **)((char *)obj + 0xb8);
+  if (v->steamTimer != lbl_803E2E34) {
+    v->steamTimer -= timeDelta;
+    objParticleFn_80099d84(lbl_803E2E30, obj, 1, v->steamTimer / lbl_803E2E38, 0);
+    if (v->steamTimer <= lbl_803E2E34) {
+      v->steamTimer = lbl_803E2E34;
     }
   }
-  if ((*(u8 *)((char *)v + 0x12) & 2) == 0) {
+  if ((v->flags & 2) == 0) {
     tex = objFindTexture(obj, 0, 0);
-    ph = v[0];
+    ph = v->glowPhase;
     if (ph < lbl_803E2E3C) {
       if ((int)ph == 10) {
-        *(u8 *)((char *)v + 0x12) |= 1;
+        v->flags |= 1;
       }
-      *tex = lbl_8031FF80[(int)v[0]] << 8;
+      *tex = lbl_8031FF80[(int)v->glowPhase] << 8;
       lim = lbl_803E2E3C;
-      nv = v[0] + lbl_803E2E30;
-      v[0] = nv;
+      nv = v->glowPhase + lbl_803E2E30;
+      v->glowPhase = nv;
       if (lim == nv) {
-        v[0] = (f32)(int)randomGetRange(16, 245);
+        v->glowPhase = (f32)(int)randomGetRange(16, 245);
       }
     } else {
       if (lbl_803E2E40 - ph >= timeDelta) {
-        v[0] = ph + timeDelta;
+        v->glowPhase = ph + timeDelta;
       } else {
-        v[0] = lbl_803E2E34;
+        v->glowPhase = lbl_803E2E34;
       }
       *tex = 0;
     }
@@ -4252,12 +4274,12 @@ void chukchuk_update(short *obj)
     dx = *(f32 *)(pl + 0xc) - *(f32 *)((char *)obj + 0xc);
     dz = *(f32 *)(pl + 0x14) - *(f32 *)((char *)obj + 0x14);
     di = (int)sqrtf(dx * dx + dz * dz);
-    if (((u32)di & 0xffff) < *(u16 *)((char *)v + 0xc)) {
-      if (*(u16 *)((char *)v + 0x10) >= *(u16 *)((char *)v + 0xc)) {
-        *(u8 *)((char *)v + 0x12) = 5;
-        v[0] = lbl_803E2E34;
+    if (((u32)di & 0xffff) < v->triggerDistance) {
+      if (v->prevDistance >= v->triggerDistance) {
+        v->flags = 5;
+        v->glowPhase = lbl_803E2E34;
       }
-      if ((*(u8 *)((char *)v + 0x12) & 5) != 0) {
+      if ((v->flags & 5) != 0) {
         stk.d[0] = *(f32 *)(pl + 0x18) - *(f32 *)((char *)obj + 0x18);
         stk.d[1] = *(f32 *)(pl + 0x1c) - *(f32 *)((char *)obj + 0x1c);
         stk.d[2] = *(f32 *)(pl + 0x20) - *(f32 *)((char *)obj + 0x20);
@@ -4268,10 +4290,10 @@ void chukchuk_update(short *obj)
         if (ang < -0x8000) {
           ang += 0xffff;
         }
-        if (((u32)ang & 0xffff) < *(u16 *)((char *)v + 0xe) ||
-            ((u32)ang & 0xffff) > ((0xffff - *(u16 *)((char *)v + 0xe)) & 0xffff)) {
+        if (((u32)ang & 0xffff) < v->arcHalfAngle ||
+            ((u32)ang & 0xffff) > ((0xffff - v->arcHalfAngle) & 0xffff)) {
           r = randomGetRange(0, 99);
-          if (r < *(u8 *)((char *)v + 0x14) || (*(u8 *)((char *)v + 0x12) & 4) != 0) {
+          if (r < v->attackChance || (v->flags & 4) != 0) {
             Sfx_PlayFromObject(obj, SFXkr_impact1);
             fn_8015F5B0(obj);
           } else {
@@ -4281,23 +4303,23 @@ void chukchuk_update(short *obj)
           Sfx_PlayFromObject(obj, SFXkr_impact2);
         }
       }
-    } else if ((*(u8 *)((char *)v + 0x12) & 1) != 0) {
+    } else if ((v->flags & 1) != 0) {
       Sfx_PlayFromObject(obj, SFXkr_impact2);
     }
-    *(s16 *)((char *)v + 0x10) = di;
+    *(s16 *)&v->prevDistance = di;
     if (ObjHits_GetPriorityHit(obj, &stk.a, &stk.b, &stk.c) == 14) {
-      *(u8 *)((char *)v + 0x13) -= 1;
-      if (*(u8 *)((char *)v + 0x13) < 1) {
+      v->hitsLeft -= 1;
+      if (v->hitsLeft < 1) {
         ObjHits_DisableObject(obj);
         obj[3] |= 0x4000;
-        *(u8 *)((char *)v + 0x12) |= 2;
+        v->flags |= 2;
         Sfx_PlayFromObject(obj, SFXkr_impact3);
-        GameBit_Set(*(s16 *)((char *)v + 0xa), 1);
-        v[1] = lbl_803E2E38;
+        GameBit_Set(v->gameBit, 1);
+        v->steamTimer = lbl_803E2E38;
         Sfx_PlayFromObject(obj, SFXfoot_ice_run_4);
       }
     }
-    *(u8 *)((char *)v + 0x12) &= ~5;
+    v->flags &= ~5;
   }
 }
 #pragma peephole reset
