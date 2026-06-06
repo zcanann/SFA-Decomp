@@ -190,8 +190,7 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextLoadDir(0xb);
         gameTextFn_80016810(0x3dd, 0xc8, 0x12c);
-        pauseMenuDoSave();
-        break;
+        /* fall through */
     case 2:
         pauseMenuDoSave();
         break;
