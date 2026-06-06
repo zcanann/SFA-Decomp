@@ -2126,7 +2126,7 @@ typedef struct LandedArwingFxScratch {
     f32 z;
 } LandedArwingFxScratch;
 
-typedef struct LandedArwingState {
+typedef struct CFLandedArwingState {
     f32 unk0;
     f32 path7Fx;
     f32 path8Fx;
@@ -2144,7 +2144,7 @@ typedef struct LandedArwingState {
     u8 unk1E;
     u8 spawnCount;
     u8 hitCooldown[4];
-} LandedArwingState;
+} CFLandedArwingState;
 
 typedef struct LandedArwingHitFlagBits {
     u8 damaged:1;
@@ -2163,7 +2163,7 @@ extern void objfx_spawnLightPulse(int obj, int arg4, int arg5, int arg6, void *p
 #pragma scheduling off
 #pragma peephole off
 void landed_arwing_renderPathEffects(int obj) {
-    LandedArwingState *state;
+    CFLandedArwingState *state;
     u8 i;
     LandedArwingFxPoint *entry;
     LandedArwingFxScratch scratch;
@@ -2238,7 +2238,7 @@ extern f32 lbl_803E3BB0;
 int Landed_Arwing_SeqFn(int obj, int unused, u8 *events) {
     int i;
     int def;
-    LandedArwingState *state;
+    CFLandedArwingState *state;
     int mapId;
     int child;
 
@@ -2424,7 +2424,7 @@ extern f32 lbl_803E3BA0;
 #pragma scheduling off
 #pragma peephole off
 void landed_arwing_update(int obj) {
-    LandedArwingState *state;
+    CFLandedArwingState *state;
     int player;
     int child;
     int nearest;
@@ -2532,12 +2532,12 @@ extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
 #pragma scheduling off
 #pragma peephole off
-void landed_arwing_updateHitReaction(int obj, LandedArwingState *state) {
+void landed_arwing_updateHitReaction(int obj, CFLandedArwingState *state) {
     int def;
     int i;
     int setup;
     int other;
-    LandedArwingState *otherState;
+    CFLandedArwingState *otherState;
     f32 range;
     f32 yOffset;
     u8 animScratch[0x34];
@@ -2605,7 +2605,7 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState *state) {
 /* landed arwing material flags: mirrors game bits into the damaged texture state. */
 #pragma scheduling off
 #pragma peephole off
-void landed_arwing_updateDamageTexture(int obj, LandedArwingState *state) {
+void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState *state) {
     int def;
     int *texture;
     u32 bit;
