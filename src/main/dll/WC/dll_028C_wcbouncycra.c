@@ -152,7 +152,7 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
     f32 max;
     WCBlockGridInterface *iface;
 
-    if ((s8)*(u8 *)(obj + 0xad) == WCBLOCK_VARIANT_A) {
+    if ((s8)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == WCBLOCK_VARIANT_A) {
         iface = (WCBlockGridInterface *)WCBLOCK_GRID_IFACE(state);
         iface->getCellXYA(
             *(u8 *)(state + WCBLOCK_TILE_INDEX_OFFSET), (s16 *)(state + WCBLOCK_CELL_X_OFFSET),

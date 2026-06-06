@@ -75,7 +75,7 @@ void ProjectileSwitch_hitDetect(int obj)
 
   isSpecial = 0;
   if (*(short *)(hitObj + 0x46) == 0x14b) {
-    if (((s8)*(u8 *)(*(int *)(hitObj + 0x54) + 0xad) & 2) != 0) {
+    if (((s8)*(u8 *)(*(int *)(hitObj + 0x54) + offsetof(ObjAnimComponent, bankIndex)) & 2) != 0) {
       isSpecial = 1;
     }
   }
