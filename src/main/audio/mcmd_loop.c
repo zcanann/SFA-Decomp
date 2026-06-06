@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/mcmd_loop.h"
 
 extern u32 sndRand(void);
