@@ -1,4 +1,78 @@
 #include "main/dll/MMP/mmp_barrel.h"
+#include "global.h"
+
+/* waveanimator_getExtraSize == 0x3c (sine-grid water surface). */
+typedef struct WaveAnimatorState {
+    int originX;
+    int originY;
+    int spanX;
+    int spanY;
+    f32 ampX;       /* 0x10 */
+    f32 ampY;
+    int unk18;
+    int gridSize;   /* 0x1c: wave table side length */
+    int heightGrid; /* 0x20: height table side length */
+    f32 minHeight;  /* 0x24 */
+    f32 maxHeight;  /* 0x28 */
+    f32 unk2C;
+    f32 scale;      /* 0x30 */
+    u8 flags34;     /* 1 scaled, 2 func0B latch */
+    u8 pad35[7];
+} WaveAnimatorState;
+STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3c);
+
+/* groundanimator_getExtraSize == 0x30 (sinking ground patch). */
+typedef struct GroundAnimatorState {
+    int falloffBuf;   /* mmAlloc f32 falloff per vertex */
+    int heightBuf;    /* s16 rest heights, after falloffBuf */
+    int linkedObj;    /* nearest group-4 object */
+    f32 progress;     /* 0x0c */
+    f32 dispProgress; /* 0x10 */
+    f32 radius;       /* 0x14 */
+    f32 sinkDepth;    /* 0x18 */
+    s16 entryIdx[6];  /* 0x1c: matched map-block entry indices */
+    s16 vertCount;    /* 0x28 */
+    u8 entryCount;    /* 0x2a */
+    u8 unk2B;
+    u8 dirty;         /* 0x2c: frames left to rewrite vertices */
+    u8 flags;         /* 0x2d: 1 on-map, 2 done, 4 sinking */
+    u8 pad2E[2];
+} GroundAnimatorState;
+STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
+
+/* hitanimator_getExtraSize == 0x4. */
+typedef struct HitAnimatorState {
+    s8 toggled;
+    u8 flags; /* 1 sfx pending, 2 shader pending, 4 geometry pending */
+    u8 cur;
+    u8 prev;
+} HitAnimatorState;
+
+/* visanimator_getExtraSize == 0x5. */
+typedef struct VisAnimatorState {
+    u8 flags;  /* 1 = refresh */
+    s8 toggle;
+    u8 cur;
+    u8 prev;
+    u8 mask;
+} VisAnimatorState;
+
+/* alphaanimator_getExtraSize == 0x1c. */
+typedef struct AlphaAnimatorState {
+    int count;
+    f32 cur;     /* 0x04 */
+    f32 unk08;
+    f32 limit;   /* 0x0c */
+    int alloc;   /* 0x10 */
+    s16 level;   /* 0x14 */
+    u8 active;
+    u8 gateVal;  /* 0x17 */
+    u8 doneCount;
+    u8 prevGate; /* 0x19 */
+    u8 pad1A[2];
+} AlphaAnimatorState;
+STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1c);
+
 
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
@@ -96,8 +170,8 @@ extern f32 lbl_803E4C5C;
 #pragma scheduling off
 void waveanimator_func0B(int *obj)
 {
-    int *p = ((int **)obj)[0xb8 / 4];
-    *((u8 *)p + 0x34) |= 2;
+    WaveAnimatorState *p = ((WaveAnimatorState **)obj)[0xb8 / 4];
+    p->flags34 |= 2;
 }
 
 u8 wallanimator_func0B(int *obj)
@@ -111,8 +185,8 @@ u8 wallanimator_func0B(int *obj)
 extern void mm_free(void *p);
 void alphaanimator_free(int *obj)
 {
-    int *o = ((int **)obj)[0xb8 / 4];
-    void *p = *(void **)((char *)o + 0x10);
+    AlphaAnimatorState *o = ((AlphaAnimatorState **)obj)[0xb8 / 4];
+    void *p = *(void **)&o->alloc;
     if (p != NULL) mm_free(p);
 }
 
@@ -1309,9 +1383,9 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
 u8 wallanimator_modelMtxFn(int *obj) { return (u8)*(s16 *)((char *)((int **)obj)[0x4c/4] + 0x1c); }
 void waveanimator_setScale(int *obj, f32 fval)
 {
-  int *p = ((int **)obj)[0xb8 / 4];
-  *((u8 *)p + 0x34) |= 1;
-  *(f32 *)((char *)p + 0x30) = fval;
+  WaveAnimatorState *p = ((WaveAnimatorState **)obj)[0xb8 / 4];
+  p->flags34 |= 1;
+  p->scale = fval;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1321,8 +1395,8 @@ extern f32 lbl_803E3F98;
 #pragma scheduling off
 u8 groundanimator_func0B(int *obj)
 {
-    int *p1 = ((int **)obj)[0xB8 / 4];
-    f32 v = *(f32 *)((char *)p1 + 0xC);
+    GroundAnimatorState *p1 = ((GroundAnimatorState **)obj)[0xB8 / 4];
+    f32 v = p1->progress;
     int *p2 = ((int **)obj)[0x4C / 4];
     u8 byte = *(u8 *)((char *)p2 + 0x20);
     return v > lbl_803E3F98 * (f32)byte;
@@ -1332,7 +1406,7 @@ u8 groundanimator_func0B(int *obj)
 
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void *mapGetBlock(int idx);
-extern void fn_801923F8(int *cfg);
+extern void fn_801923F8(WaveAnimatorState *cfg);
 extern void hitAnimatorFn_80193dbc(void *block, int *obj, u8 *vstate, u8 *desc);
 extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
@@ -1341,20 +1415,20 @@ extern u8 lbl_803DDAE8;
 #pragma scheduling off
 void waveanimator_init(int *obj, int *desc)
 {
-    int *vstate = ((int**)obj)[0xB8/4];
+    WaveAnimatorState *vstate = ((WaveAnimatorState**)obj)[0xB8/4];
     f32 fz;
-    vstate[6]  = *(s8 *)((char*)desc + 0x20);
-    vstate[0]  = *(s16*)((char*)desc + 0x18);
-    vstate[1]  = *(s16*)((char*)desc + 0x1A);
-    vstate[2]  = *(s8 *)((char*)desc + 0x1C);
-    vstate[3]  = *(s8 *)((char*)desc + 0x1D);
-    *(f32*)((char*)vstate + 0x10) = (f32)*(s8*)((char*)desc + 0x1E);
-    *(f32*)((char*)vstate + 0x14) = (f32)*(s8*)((char*)desc + 0x1F);
-    vstate[7]  = *(s8 *)((char*)desc + 0x21);
-    vstate[8]  = *(s8 *)((char*)desc + 0x22);
+    vstate->unk18  = *(s8 *)((char*)desc + 0x20);
+    vstate->originX  = *(s16*)((char*)desc + 0x18);
+    vstate->originY  = *(s16*)((char*)desc + 0x1A);
+    vstate->spanX  = *(s8 *)((char*)desc + 0x1C);
+    vstate->spanY  = *(s8 *)((char*)desc + 0x1D);
+    vstate->ampX = (f32)*(s8*)((char*)desc + 0x1E);
+    vstate->ampY = (f32)*(s8*)((char*)desc + 0x1F);
+    vstate->gridSize  = *(s8 *)((char*)desc + 0x21);
+    vstate->heightGrid  = *(s8 *)((char*)desc + 0x22);
     fz = lbl_803E3F70;
-    *(f32*)((char*)vstate + 0x2C) = fz;
-    *(f32*)((char*)vstate + 0x30) = fz;
+    vstate->unk2C = fz;
+    vstate->scale = fz;
     if (lbl_803DDAE8 == 0) {
         fn_801923F8(vstate);
     }
@@ -1369,47 +1443,47 @@ void waveanimator_init(int *obj, int *desc)
 void hitanimator_update(int *obj)
 {
     int *state = ((int**)obj)[0x4C/4];
-    u8 *vstate = (u8*)((int**)obj)[0xB8/4];
+    HitAnimatorState *vstate = (HitAnimatorState*)((int**)obj)[0xB8/4];
     void *block;
     block = mapGetBlock(objPosToMapBlockIdx(
         (double)*(f32*)((char*)obj + 0xC),
         (double)*(f32*)((char*)obj + 0x10),
         (double)*(f32*)((char*)obj + 0x14)));
     if (block == NULL) {
-        vstate[1] &= ~1;
-        vstate[1] |= 4;
+        vstate->flags &= ~1;
+        vstate->flags |= 4;
         return;
     }
-    vstate[2] = (u8)GameBit_Get(*(s16*)((char*)state + 0x18));
-    if (vstate[3] != vstate[2]) {
-        ((s8*)vstate)[0] = ((s8*)vstate)[0] ^ 1;
+    vstate->cur = (u8)GameBit_Get(*(s16*)((char*)state + 0x18));
+    if (vstate->prev != vstate->cur) {
+        vstate->toggled = vstate->toggled ^ 1;
         if (*(u8*)((char*)state + 0x1A) == 1) {
-            vstate[1] |= 1;
+            vstate->flags |= 1;
         }
         if ((*(u8*)((char*)state + 0x1C) & 8) != 0) {
-            vstate[1] |= 2;
+            vstate->flags |= 2;
         }
         if ((*(u8*)((char*)state + 0x1C) & 4) != 0) {
-            vstate[1] |= 4;
+            vstate->flags |= 4;
         }
     }
-    vstate[3] = vstate[2];
+    vstate->prev = vstate->cur;
     if ((*(u8*)((char*)state + 0x1C) & 8) != 0) {
         if (fn_80065640() != 0) {
-            vstate[1] |= 2;
+            vstate->flags |= 2;
         }
-        if ((vstate[1] & 2) != 0) {
+        if ((vstate->flags & 2) != 0) {
             if (fn_80065640() == 0) {
-                fn_80065574(*(u8*)((char*)state + 0x1D), *(int*)((char*)obj + 0x30), ((s8*)vstate)[0]);
-                vstate[1] &= ~2;
+                fn_80065574(*(u8*)((char*)state + 0x1D), *(int*)((char*)obj + 0x30), vstate->toggled);
+                vstate->flags &= ~2;
             }
         }
     }
     if ((*(u8*)((char*)state + 0x1C) & 4) != 0) {
         if (*(u8*)((char*)state + 0x1B) != 0) {
-            if ((vstate[1] & 4) != 0) {
-                hitAnimatorFn_80193dbc(block, obj, vstate, (u8 *)state);
-                vstate[1] &= ~4;
+            if ((vstate->flags & 4) != 0) {
+                hitAnimatorFn_80193dbc(block, obj, (u8 *)vstate, (u8 *)state);
+                vstate->flags &= ~4;
             }
         }
     }
@@ -1422,15 +1496,15 @@ extern f32 lbl_803E3FB8;
 #pragma scheduling off
 void groundanimator_init(int *obj, int *desc)
 {
-    u8 *vstate = (u8*)((int**)obj)[0xB8/4];
-    vstate[0x2B] = (u8)*(s16*)((char*)desc + 0x1E);
-    *(f32*)(vstate + 0x18) = (f32)*(u8*)((char*)desc + 0x27);
-    *(f32*)(vstate + 0x10) = lbl_803E3FB8;
-    *(f32*)(vstate + 0x14) = (f32)*(u8*)((char*)desc + 0x26);
+    GroundAnimatorState *vstate = (GroundAnimatorState*)((int**)obj)[0xB8/4];
+    vstate->unk2B = (u8)*(s16*)((char*)desc + 0x1E);
+    vstate->sinkDepth = (f32)*(u8*)((char*)desc + 0x27);
+    vstate->dispProgress = lbl_803E3FB8;
+    vstate->radius = (f32)*(u8*)((char*)desc + 0x26);
     if (*(u8*)((char*)desc + 0x25) != 0) {
         if (GameBit_Get(*(s16*)((char*)desc + 0x18)) != 0) {
-            *(f32*)(vstate + 0xC) = lbl_803E3F98 * (f32)*(u8*)((char*)desc + 0x20);
-            vstate[0x2D] |= 2;
+            vstate->progress = lbl_803E3F98 * (f32)*(u8*)((char*)desc + 0x20);
+            vstate->flags |= 2;
         }
         ObjGroup_AddObject(obj, 49);
         if (*(u8*)((char*)desc + 0x21) > 1) {
@@ -1445,17 +1519,17 @@ void groundanimator_init(int *obj, int *desc)
 #pragma scheduling off
 void hitanimator_init(int *obj, int *desc)
 {
-    u8 *vstate = (u8*)((int**)obj)[0xB8/4];
+    HitAnimatorState *vstate = (HitAnimatorState*)((int**)obj)[0xB8/4];
     void *block;
     u8 g;
     s8 init_bit;
     init_bit = (s8)(*(u8*)((char*)desc + 0x1C) & 1);
-    ((s8*)vstate)[0] = init_bit;
-    vstate[1] = 0;
+    vstate->toggled = init_bit;
+    vstate->flags = 0;
     if (GameBit_Get(*(s16*)((char*)desc + 0x18)) != 0) {
-        ((s8*)vstate)[0] = ((s8*)vstate)[0] ^ 1;
+        vstate->toggled = vstate->toggled ^ 1;
         if (*(u8*)((char*)desc + 0x1A) == 1) {
-            vstate[1] |= 1;
+            vstate->flags |= 1;
         }
     }
     block = mapGetBlock(objPosToMapBlockIdx(
@@ -1464,16 +1538,16 @@ void hitanimator_init(int *obj, int *desc)
         (double)*(f32*)((char*)obj + 0x14)));
     if (block != NULL) {
         if ((*(u8*)((char*)desc + 0x1C) & 4) != 0 && *(u8*)((char*)desc + 0x1B) != 0) {
-            hitAnimatorFn_80193dbc(block, obj, vstate, (u8 *)desc);
+            hitAnimatorFn_80193dbc(block, obj, (u8 *)vstate, (u8 *)desc);
         }
     }
-    vstate[1] |= 2;
+    vstate->flags |= 2;
     if ((*(u8*)((char*)desc + 0x1C) & 4) != 0) {
-        vstate[1] |= 4;
+        vstate->flags |= 4;
     }
     g = (u8)GameBit_Get(*(s16*)((char*)desc + 0x18));
-    vstate[2] = g;
-    vstate[3] = g;
+    vstate->cur = g;
+    vstate->prev = g;
     *(u16*)((char*)obj + 0xB0) |= 0x6000;
 }
 #pragma scheduling reset
@@ -1483,50 +1557,50 @@ void hitanimator_init(int *obj, int *desc)
 #pragma scheduling off
 void visanimator_init(int *obj, int *desc)
 {
-    u8 *vstate;
+    VisAnimatorState *vstate;
     u32 gate;
     u8 tmp;
     int sv;
     *(u16*)((char*)obj + 0xB0) |= 0x6000;
-    vstate = (u8*)((int**)obj)[0xB8/4];
+    vstate = (VisAnimatorState*)((int**)obj)[0xB8/4];
     sv = *(s8*)((char*)desc + 0x1B);
-    ((s8*)vstate)[1] = (s8)sv;
-    vstate[4] = (u8)(1 << *(u8*)((char*)desc + 0x1C));
+    vstate->toggle = (s8)sv;
+    vstate->mask = (u8)(1 << *(u8*)((char*)desc + 0x1C));
     gate = (u32)GameBit_Get(*(s16*)((char*)desc + 0x18));
-    if ((vstate[4] & gate) != 0) {
-        ((s8*)vstate)[1] = ((s8*)vstate)[1] ^ 1;
+    if ((vstate->mask & gate) != 0) {
+        vstate->toggle = vstate->toggle ^ 1;
     }
     mapGetBlock(objPosToMapBlockIdx((double)*(f32*)((char*)obj + 0xC),
                                      (double)*(f32*)((char*)obj + 0x10),
                                      (double)*(f32*)((char*)obj + 0x14)));
     gate = (u32)GameBit_Get(*(s16*)((char*)desc + 0x18));
-    tmp = (u8)(vstate[4] & gate);
-    vstate[2] = tmp;
-    vstate[3] = tmp;
-    vstate[0] |= 1;
+    tmp = (u8)(vstate->mask & gate);
+    vstate->cur = tmp;
+    vstate->prev = tmp;
+    vstate->flags |= 1;
 }
 
 void visanimator_update(int *obj)
 {
     int *state = ((int**)obj)[0x4C / 4];
-    u8 *vstate = (u8*)((int**)obj)[0xB8 / 4];
+    VisAnimatorState *vstate = (VisAnimatorState*)((int**)obj)[0xB8 / 4];
     int idx = objPosToMapBlockIdx((double)*(f32*)((char*)obj + 0xC),
                                   (double)*(f32*)((char*)obj + 0x10),
                                   (double)*(f32*)((char*)obj + 0x14));
     if (mapGetBlock(idx) == NULL) {
-        vstate[0] |= 1;
+        vstate->flags |= 1;
         return;
     }
     {
         int gate = GameBit_Get(*(s16*)((char*)state + 0x18));
-        vstate[2] = (u8)(vstate[4] & gate);
-        if (vstate[3] != vstate[2]) {
-            ((s8*)vstate)[1] = (s8)(((s8*)vstate)[1] ^ 1);
-            vstate[0] |= 1;
+        vstate->cur = (u8)(vstate->mask & gate);
+        if (vstate->prev != vstate->cur) {
+            vstate->toggle = (s8)(vstate->toggle ^ 1);
+            vstate->flags |= 1;
         }
-        vstate[3] = vstate[2];
-        if (vstate[0] & 1) {
-            vstate[0] &= ~1;
+        vstate->prev = vstate->cur;
+        if (vstate->flags & 1) {
+            vstate->flags &= ~1;
         }
     }
 }
@@ -1557,21 +1631,21 @@ void waveanimator_hitDetect(int *obj) {
     int i;
     int j;
     int off;
-    int *w;
+    WaveAnimatorState *w;
     if (lbl_803DDAF8 != 0) {
         return;
     }
-    w = (int *)obj[46];
+    w = (WaveAnimatorState *)obj[46];
     off = 0;
-    for (i = 0; i < w[8]; i++) {
-        for (j = 0; j < w[8]; j++) {
+    for (i = 0; i < w->heightGrid; i++) {
+        for (j = 0; j < w->heightGrid; j++) {
             ((s16 *)lbl_803DDAF0)[off] += framesThisStep >> 1;
-            while (((s16 *)lbl_803DDAF0)[off] >= w[7]) {
-                ((s16 *)lbl_803DDAF0)[off] -= w[7];
+            while (((s16 *)lbl_803DDAF0)[off] >= w->gridSize) {
+                ((s16 *)lbl_803DDAF0)[off] -= w->gridSize;
             }
             ((s16 *)lbl_803DDAF0)[off + 1] += framesThisStep >> 1;
-            while (((s16 *)lbl_803DDAF0)[off + 1] >= w[7]) {
-                ((s16 *)lbl_803DDAF0)[off + 1] -= w[7];
+            while (((s16 *)lbl_803DDAF0)[off + 1] >= w->gridSize) {
+                ((s16 *)lbl_803DDAF0)[off + 1] -= w->gridSize;
             }
             off += 2;
         }
@@ -1586,7 +1660,7 @@ extern void fn_8006058C(void *cell, void *in);
 #pragma scheduling off
 #pragma peephole off
 void groundanimator_free(int *obj, int flag) {
-    int *w;
+    GroundAnimatorState *w;
     int *r21;
     void *block;
     void *entry;
@@ -1599,7 +1673,7 @@ void groundanimator_free(int *obj, int flag) {
     int innoff;
     int *cell;
     f32 local[2];
-    w = (int *)obj[46];
+    w = (GroundAnimatorState *)obj[46];
     r21 = (int *)obj[19];
     if (flag == 0) {
         block = mapGetBlock(objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
@@ -1618,8 +1692,8 @@ void groundanimator_free(int *obj, int flag) {
                             cell = (int *)((char *)*(int *)((char *)block + 0x58) +
                                            *(u16 *)vtx * 6);
                             fn_800605F0(cell, local);
-                            if (w[1] != 0) {
-                                local[1] = (f32)*(s16 *)((char *)w[1] + innoff);
+                            if (w->heightBuf != 0) {
+                                local[1] = (f32)*(s16 *)((char *)w->heightBuf + innoff);
                                 fn_8006058C(cell, local);
                             }
                             innoff += 2;
@@ -1632,8 +1706,8 @@ void groundanimator_free(int *obj, int flag) {
             }
         }
     }
-    if (w[0] != 0) {
-        mm_free((void *)w[0]);
+    if (w->falloffBuf != 0) {
+        mm_free((void *)w->falloffBuf);
     }
     ObjGroup_RemoveObject(obj, 0x31);
 }
@@ -1647,13 +1721,13 @@ extern void fn_801A80F0(int *e, int arg);
 #pragma scheduling off
 #pragma peephole off
 f32 groundanimator_setScale(int *obj, int *target) {
-    int *g;
+    GroundAnimatorState *g;
     int *r31;
     f32 dy;
     f32 dx;
     f32 dz;
     f32 r;
-    g = (int *)obj[46];
+    g = (GroundAnimatorState *)obj[46];
     r31 = (int *)obj[19];
     dy = *(f32 *)((char *)target + 0x10) - *(f32 *)((char *)obj + 0x10);
     if (dy < lbl_803E3FA8 || dy > lbl_803E3FAC) {
@@ -1661,14 +1735,14 @@ f32 groundanimator_setScale(int *obj, int *target) {
     }
     dx = *(f32 *)((char *)target + 0xc) - *(f32 *)((char *)obj + 0xc);
     dz = *(f32 *)((char *)target + 0x14) - *(f32 *)((char *)obj + 0x14);
-    r = lbl_803E3FB4 + *(f32 *)((char *)g + 0x14);
+    r = lbl_803E3FB4 + g->radius;
     if (dx * dx + dz * dz > r * r) {
         return lbl_803E3FB8;
     }
-    if (*(f32 *)((char *)g + 0xc) >= lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r31 + 0x20)) {
-        if (g[2] != 0) {
-            int *e = (int *)g[2];
-            *(f32 *)((char *)g + 0xc) = lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r31 + 0x20);
+    if (g->progress >= lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r31 + 0x20)) {
+        if (g->linkedObj != 0) {
+            int *e = (int *)g->linkedObj;
+            g->progress = lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r31 + 0x20);
             if (*(s16 *)((char *)e + 0x46) == 0x519) {
                 fn_801A80F0(e, 0);
             } else {
@@ -1676,10 +1750,10 @@ f32 groundanimator_setScale(int *obj, int *target) {
             }
         }
     }
-    *(f32 *)((char *)g + 0xc) = lbl_803E3FBC * timeDelta + *(f32 *)((char *)g + 0xc);
-    *(u8 *)((char *)g + 0x2d) = *(u8 *)((char *)g + 0x2d) | 4;
-    return *(f32 *)((char *)g + 0x14) *
-           (*(f32 *)((char *)g + 0xc) / (lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r31 + 0x20)));
+    g->progress = lbl_803E3FBC * timeDelta + g->progress;
+    g->flags = g->flags | 4;
+    return g->radius *
+           (g->progress / (lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r31 + 0x20)));
 }
 extern float fastFloorf(float x);
 extern f32 playerMapOffsetX;
@@ -1687,7 +1761,7 @@ extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3FC0;
 #pragma scheduling off
 #pragma peephole off
-void fn_801932C8(int *obj, int *p2, int *p3) {
+void fn_801932C8(int *obj, GroundAnimatorState *p2, int *p3) {
     void *block;
     void *entry;
     void *vtx;
@@ -1715,8 +1789,8 @@ void fn_801932C8(int *obj, int *p2, int *p3) {
     iz = (int)fastFloorf((*(f32 *)((char *)obj + 0x14) - playerMapOffsetZ) / lbl_803E3FC0);
     fracX = *(f32 *)((char *)obj + 0xc) - (lbl_803E3FC0 * (f32)ix + playerMapOffsetX);
     fracZ = *(f32 *)((char *)obj + 0x14) - (lbl_803E3FC0 * (f32)iz + playerMapOffsetZ);
-    *(u8 *)((char *)p2 + 0x2a) = 0;
-    radsq = *(f32 *)((char *)p2 + 0x14) * *(f32 *)((char *)p2 + 0x14);
+    p2->entryCount = 0;
+    radsq = p2->radius * p2->radius;
     foff = 0;
     for (blkIdx = 0; blkIdx < *(u16 *)((char *)block + 0x9a); blkIdx++) {
         entry = mapBlockFn_800606ec(block, blkIdx);
@@ -1738,13 +1812,13 @@ void fn_801932C8(int *obj, int *p2, int *p3) {
                         d = clampMax;
                     }
                     d = d * d;
-                    ((f32 *)*(int *)p2)[foff] = clampMax - d;
-                    *(s16 *)((char *)*(int *)((char *)p2 + 4) + foff * 2) = (int)vpos[1];
+                    ((f32 *)p2->falloffBuf)[foff] = clampMax - d;
+                    *(s16 *)((char *)p2->heightBuf + foff * 2) = (int)vpos[1];
                     foff++;
                     vtx = (char *)vtx + 2;
                 }
             }
-            *(s16 *)((char *)p2 + ((*(u8 *)((char *)p2 + 0x2a))++) * 2 + 0x1c) = (s16)blkIdx;
+            p2->entryIdx[(p2->entryCount)++] = (s16)blkIdx;
         }
     }
 }
@@ -1760,7 +1834,7 @@ extern u16 lbl_803DBDF0[];
 #pragma scheduling off
 #pragma peephole off
 void groundanimator_update(int *obj) {
-    int *g;
+    GroundAnimatorState *g;
     int *r20;
     s8 bi;
     void *block;
@@ -1778,7 +1852,7 @@ void groundanimator_update(int *obj) {
     f32 nd;
     f32 vbuf[2];
     Obj_GetPlayerObject();
-    g = (int *)obj[46];
+    g = (GroundAnimatorState *)obj[46];
     r20 = (int *)obj[19];
     if (*(u8 *)((char *)r20 + 0x25) == 0) {
         return;
@@ -1786,57 +1860,57 @@ void groundanimator_update(int *obj) {
     bi = objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
                              (double)*(f32 *)((char *)obj + 0x10),
                              (double)*(f32 *)((char *)obj + 0x14));
-    oldbit = *(u8 *)((char *)g + 0x2d) & 1;
+    oldbit = g->flags & 1;
     if (bi > -1) {
-        *(u8 *)((char *)g + 0x2d) = *(u8 *)((char *)g + 0x2d) | 1;
+        g->flags = g->flags | 1;
     } else {
-        *(u8 *)((char *)g + 0x2d) = *(u8 *)((char *)g + 0x2d) & ~1;
+        g->flags = g->flags & ~1;
     }
-    if ((*(u8 *)((char *)g + 0x2d) & 1) != oldbit) {
-        *(u8 *)((char *)g + 0x2c) = 2;
+    if ((g->flags & 1) != oldbit) {
+        g->dirty = 2;
     }
-    if ((*(u8 *)((char *)g + 0x2d) & 1) == 0) {
+    if ((g->flags & 1) == 0) {
         return;
     }
-    if ((*(u8 *)((char *)g + 0x2d) & 1) != 0 && *(void **)g == NULL) {
+    if ((g->flags & 1) != 0 && *(void **)&g->falloffBuf == NULL) {
         int p;
         block = mapGetBlock(bi);
-        *(s16 *)((char *)g + 0x28) = (s16)(fn_80060688(block, *(u8 *)((char *)r20 + 0x25)) * 3);
-        if (*(s16 *)((char *)g + 0x28) > 0) {
-            p = (int)mmAlloc(*(s16 *)((char *)g + 0x28) * 6, 5, 0);
-            g[0] = p;
-            g[1] = p + *(s16 *)((char *)g + 0x28) * 4;
+        g->vertCount = (s16)(fn_80060688(block, *(u8 *)((char *)r20 + 0x25)) * 3);
+        if (g->vertCount > 0) {
+            p = (int)mmAlloc(g->vertCount * 6, 5, 0);
+            g->falloffBuf = p;
+            g->heightBuf = p + g->vertCount * 4;
             fn_801932C8(obj, g, r20);
         }
     }
-    if (*(s16 *)((char *)g + 0x28) == 0) {
+    if (g->vertCount == 0) {
         return;
     }
     if (*(u8 *)((char *)r20 + 0x22) == 0) {
-        if (*(void **)(g + 2) == NULL) {
+        if (*(void **)&g->linkedObj == NULL) {
             nd = lbl_803E3F98;
-            g[2] = (int)ObjGroup_FindNearestObject(4, obj, &nd);
-            near = (void *)g[2];
-            if (g[2] != 0) {
+            g->linkedObj = (int)ObjGroup_FindNearestObject(4, obj, &nd);
+            near = (void *)g->linkedObj;
+            if (g->linkedObj != 0) {
                 if (*(s16 *)((char *)near + 0x46) == 0x519) {
-                    if ((*(u8 *)((char *)g + 0x2d) & 2) == 0) {
+                    if ((g->flags & 2) == 0) {
                         fn_801A80F0(near, 1);
                     }
                     fn_801A80C4(near, *(f32 *)((char *)obj + 0xc),
-                                *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)g + 0x18),
+                                *(f32 *)((char *)obj + 0x10) - g->sinkDepth,
                                 *(f32 *)((char *)obj + 0x14));
                 } else {
-                    if ((*(u8 *)((char *)g + 0x2d) & 2) == 0) {
+                    if ((g->flags & 2) == 0) {
                         (*(code *)(*(int *)(*(int *)((char *)near + 0x68)) + 0x24))(near, 1);
                     }
                     (*(code *)(*(int *)(*(int *)((char *)near + 0x68)) + 0x38))(
                         near, *(f32 *)((char *)obj + 0xc),
-                        *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)g + 0x18),
+                        *(f32 *)((char *)obj + 0x10) - g->sinkDepth,
                         *(f32 *)((char *)obj + 0x14));
                 }
             }
-        } else if ((*(u16 *)((char *)g[2] + 0xb0) & 0x40) != 0) {
-            g[2] = 0;
+        } else if ((*(u16 *)((char *)g->linkedObj + 0xb0) & 0x40) != 0) {
+            g->linkedObj = 0;
         }
     }
     block = mapGetBlock(bi);
@@ -1846,50 +1920,50 @@ void groundanimator_update(int *obj) {
     if ((*(u16 *)((char *)block + 4) & 8) == 0) {
         return;
     }
-    if (*(f32 *)((char *)g + 0xc) > lbl_803E3FB0) {
-        if ((*(u8 *)((char *)g + 0x2d) & 4) != 0) {
-            *(u8 *)((char *)g + 0x2d) = *(u8 *)((char *)g + 0x2d) & ~4;
-        } else if (*(f32 *)((char *)g + 0xc) <
+    if (g->progress > lbl_803E3FB0) {
+        if ((g->flags & 4) != 0) {
+            g->flags = g->flags & ~4;
+        } else if (g->progress <
                    lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r20 + 0x20)) {
-            *(f32 *)((char *)g + 0xc) = *(f32 *)((char *)g + 0xc) - timeDelta;
-            if (*(f32 *)((char *)g + 0xc) < lbl_803E3FB0) {
-                *(f32 *)((char *)g + 0xc) = lbl_803E3FB0;
+            g->progress = g->progress - timeDelta;
+            if (g->progress < lbl_803E3FB0) {
+                g->progress = lbl_803E3FB0;
             }
         }
-        if (*(f32 *)((char *)g + 0xc) != *(f32 *)((char *)g + 0x10)) {
-            *(u8 *)((char *)g + 0x2c) = 2;
-            *(f32 *)((char *)g + 0x10) = *(f32 *)((char *)g + 0xc);
+        if (g->progress != g->dispProgress) {
+            g->dirty = 2;
+            g->dispProgress = g->progress;
         }
-        if (*(u8 *)((char *)g + 0x2c) != 0) {
+        if (g->dirty != 0) {
             f32 lim = lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r20 + 0x20);
-            *(u8 *)((char *)g + 0x2c) = *(u8 *)((char *)g + 0x2c) - 1;
-            if (*(f32 *)((char *)g + 0x10) > lim) {
-                *(f32 *)((char *)g + 0x10) = lim;
-                *(f32 *)((char *)g + 0xc) = lim;
-                if (g[2] != 0 && *(int *)((char *)g[2] + 0xb8) != 0) {
-                    if (*(s16 *)((char *)g[2] + 0x46) == 0x519) {
-                        fn_801A80F0((void *)g[2], 0);
+            g->dirty = g->dirty - 1;
+            if (g->dispProgress > lim) {
+                g->dispProgress = lim;
+                g->progress = lim;
+                if (g->linkedObj != 0 && *(int *)((char *)g->linkedObj + 0xb8) != 0) {
+                    if (*(s16 *)((char *)g->linkedObj + 0x46) == 0x519) {
+                        fn_801A80F0((void *)g->linkedObj, 0);
                     } else {
-                        (*(code *)(*(int *)(*(int *)((char *)g[2] + 0x68)) + 0x24))((void *)g[2], 0);
+                        (*(code *)(*(int *)(*(int *)((char *)g->linkedObj + 0x68)) + 0x24))((void *)g->linkedObj, 0);
                     }
                 }
                 GameBit_Set(*(s16 *)((char *)r20 + 0x18), 1);
-                *(u8 *)((char *)g + 0x2d) = *(u8 *)((char *)g + 0x2d) | 2;
+                g->flags = g->flags | 2;
                 Sfx_PlayFromObject(obj, lbl_803DBDF0[*(u8 *)((char *)r20 + 0x21)]);
             }
             foff = 0;
             hoff = 0;
-            for (blkIdx = 0; blkIdx < *(u8 *)((char *)g + 0x2a); blkIdx++) {
-                entry = mapBlockFn_800606ec(block, *(s16 *)((char *)g + 0x1c + blkIdx * 2));
+            for (blkIdx = 0; blkIdx < g->entryCount; blkIdx++) {
+                entry = mapBlockFn_800606ec(block, g->entryIdx[blkIdx]);
                 for (mid = *(u16 *)entry; mid < *(u16 *)((char *)entry + 0x14); mid++) {
                     vtx = fn_800606DC(block, mid);
                     for (inner = 0; inner < 3; inner++) {
-                        if (*(f32 *)((char *)*(int *)g + foff) > lbl_803E3FB0) {
+                        if (*(f32 *)((char *)g->falloffBuf + foff) > lbl_803E3FB0) {
                             void *cell = (char *)*(int *)((char *)block + 0x58) + *(u16 *)vtx * 6;
-                            f32 fv = (f32)*(s16 *)((char *)g[1] + hoff);
+                            f32 fv = (f32)*(s16 *)((char *)g->heightBuf + hoff);
                             fn_800605F0(cell, &vbuf[1]);
-                            vbuf[0] = fv - (*(f32 *)((char *)g + 0x10) / lbl_803E3F98) *
-                                               *(f32 *)((char *)*(int *)g + foff);
+                            vbuf[0] = fv - (g->dispProgress / lbl_803E3F98) *
+                                               *(f32 *)((char *)g->falloffBuf + foff);
                             fn_8006058C(cell, &vbuf[1]);
                         }
                         foff += 4;
@@ -1907,7 +1981,7 @@ void groundanimator_update(int *obj) {
     } else {
         allow = GameBit_Get(*(s16 *)((char *)r20 + 0x1a)) != 0;
     }
-    if ((*(u8 *)((char *)g + 0x2d) & 2) == 0 && allow != 0) {
+    if ((g->flags & 2) == 0 && allow != 0) {
         tricky = getTrickyObject();
         if (tricky != NULL && GameBit_Get(0x4e4) != 0) {
             *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) & ~0x10;
@@ -1930,74 +2004,74 @@ extern f32 lbl_803E3F84;
 #pragma peephole off
 void alphaanimator_update(int *obj) {
     int *d;
-    int *s;
+    AlphaAnimatorState *s;
     int mode;
     void *block;
     f32 sp;
     d = (int *)obj[19];
-    s = (int *)obj[46];
+    s = (AlphaAnimatorState *)obj[46];
     mode = *(u8 *)((char *)d + 0x20) & 3;
     block = mapGetBlock(objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
                                             (double)*(f32 *)((char *)obj + 0x10),
                                             (double)*(f32 *)((char *)obj + 0x14)));
     if (block == NULL) {
-        *(u8 *)((char *)s + 0x18) = 0;
+        s->doneCount = 0;
         return;
     }
     if ((*(u16 *)((char *)block + 4) & 8) == 0) {
         return;
     }
-    if (s[0] == 0) {
-        *(u8 *)((char *)s + 0x16) = *(u8 *)((char *)d + 0x1e);
-        if (s[0] == 0) {
-            *(u8 *)((char *)s + 0x16) = 0;
+    if (s->count == 0) {
+        s->active = *(u8 *)((char *)d + 0x1e);
+        if (s->count == 0) {
+            s->active = 0;
         }
-        if ((s8)*(u8 *)((char *)s + 0x16) == 0) {
+        if ((s8)s->active == 0) {
             return;
         }
-        *(f32 *)((char *)s + 0x4) = lbl_803E3F7C;
-        *(f32 *)((char *)s + 0x8) = lbl_803E3F7C;
-        *(f32 *)((char *)s + 0xc) = (f32)(u32)*(u16 *)((char *)d + 0x22);
+        s->cur = lbl_803E3F7C;
+        s->unk08 = lbl_803E3F7C;
+        s->limit = (f32)(u32)*(u16 *)((char *)d + 0x22);
         if (*(s16 *)((char *)d + 0x18) == -1) {
-            *(u8 *)((char *)s + 0x17) = 1;
+            s->gateVal = 1;
         } else {
-            *(u8 *)((char *)s + 0x17) = (s8)GameBit_Get(*(s16 *)((char *)d + 0x18));
+            s->gateVal = (s8)GameBit_Get(*(s16 *)((char *)d + 0x18));
         }
-        *(s16 *)((char *)s + 0x14) = *(u8 *)((char *)d + 0x1c);
+        s->level = *(u8 *)((char *)d + 0x1c);
         if (*(s16 *)((char *)d + 0x1a) != -1 && GameBit_Get(*(s16 *)((char *)d + 0x1a)) != 0) {
-            *(s16 *)((char *)s + 0x14) = *(u8 *)((char *)d + 0x1d);
-            *(f32 *)((char *)s + 0x4) = lbl_803E3F78 + *(f32 *)((char *)s + 0xc);
-            *(u8 *)((char *)s + 0x17) = 1;
+            s->level = *(u8 *)((char *)d + 0x1d);
+            s->cur = lbl_803E3F78 + s->limit;
+            s->gateVal = 1;
         }
         if (mode == 3) {
-            s[4] = (int)mmAlloc(s[0] << 2, 5, 0);
+            s->alloc = (int)mmAlloc(s->count << 2, 5, 0);
         }
         *(u16 *)((char *)block + 4) = *(u16 *)((char *)block + 4) ^ 1;
         *(u16 *)((char *)block + 4) = *(u16 *)((char *)block + 4) ^ 1;
     }
-    if ((s8)*(u8 *)((char *)s + 0x16) == 0) {
+    if ((s8)s->active == 0) {
         return;
     }
     if (mode == 2) {
-        *(u8 *)((char *)s + 0x17) = (s8)GameBit_Get(*(s16 *)((char *)d + 0x18));
-        if ((s8)*(u8 *)((char *)s + 0x18) > 2 &&
-            (s8)*(u8 *)((char *)s + 0x17) != (s8)*(u8 *)((char *)s + 0x19)) {
+        s->gateVal = (s8)GameBit_Get(*(s16 *)((char *)d + 0x18));
+        if ((s8)s->doneCount > 2 &&
+            (s8)s->gateVal != (s8)s->prevGate) {
             if ((*(u8 *)((char *)d + 0x20) >> 2) != 0) {
                 Sfx_PlayFromObject(obj, *(u16 *)((char *)d + 0x24));
             }
-            *(u8 *)((char *)s + 0x18) = 0;
-            *(u8 *)((char *)s + 0x19) = *(u8 *)((char *)s + 0x17);
+            s->doneCount = 0;
+            s->prevGate = s->gateVal;
         }
-        if ((s8)*(u8 *)((char *)s + 0x18) > 2) {
+        if ((s8)s->doneCount > 2) {
             return;
         }
     } else {
-        if ((s8)*(u8 *)((char *)s + 0x18) > 2) {
+        if ((s8)s->doneCount > 2) {
             return;
         }
-        if ((s8)*(u8 *)((char *)s + 0x17) == 0) {
-            *(u8 *)((char *)s + 0x17) = (s8)GameBit_Get(*(s16 *)((char *)d + 0x18));
-            if ((s8)*(u8 *)((char *)s + 0x17) == 0) {
+        if ((s8)s->gateVal == 0) {
+            s->gateVal = (s8)GameBit_Get(*(s16 *)((char *)d + 0x18));
+            if ((s8)s->gateVal == 0) {
                 return;
             }
             if ((*(u8 *)((char *)d + 0x20) >> 2) != 0) {
@@ -2007,97 +2081,97 @@ void alphaanimator_update(int *obj) {
     }
     if (mode == 0) {
         if (*(u8 *)((char *)d + 0x1c) > *(u8 *)((char *)d + 0x1d)) {
-            *(s16 *)((char *)s + 0x14) =
-                (s16)(*(s16 *)((char *)s + 0x14) - (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
-            if (*(s16 *)((char *)s + 0x14) <= *(u8 *)((char *)d + 0x1d)) {
-                *(s16 *)((char *)s + 0x14) = *(u8 *)((char *)d + 0x1d);
+            s->level =
+                (s16)(s->level - (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
+            if (s->level <= *(u8 *)((char *)d + 0x1d)) {
+                s->level = *(u8 *)((char *)d + 0x1d);
                 if (*(s16 *)((char *)d + 0x1a) != -1) {
                     GameBit_Set(*(s16 *)((char *)d + 0x1a), 1);
                 }
-                *(u8 *)((char *)s + 0x18) = *(u8 *)((char *)s + 0x18) + 1;
+                s->doneCount = s->doneCount + 1;
             }
         } else {
-            *(s16 *)((char *)s + 0x14) =
-                (s16)(*(s16 *)((char *)s + 0x14) + (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
-            if (*(s16 *)((char *)s + 0x14) >= *(u8 *)((char *)d + 0x1d)) {
-                *(s16 *)((char *)s + 0x14) = *(u8 *)((char *)d + 0x1d);
+            s->level =
+                (s16)(s->level + (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
+            if (s->level >= *(u8 *)((char *)d + 0x1d)) {
+                s->level = *(u8 *)((char *)d + 0x1d);
                 if (*(s16 *)((char *)d + 0x1a) != -1) {
                     GameBit_Set(*(s16 *)((char *)d + 0x1a), 1);
                 }
-                *(u8 *)((char *)s + 0x18) = *(u8 *)((char *)s + 0x18) + 1;
+                s->doneCount = s->doneCount + 1;
             }
         }
     } else if (mode == 1) {
         if (*(u8 *)((char *)d + 0x1c) > *(u8 *)((char *)d + 0x1d)) {
-            *(s16 *)((char *)s + 0x14) =
-                (s16)(*(s16 *)((char *)s + 0x14) - (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
-            if (*(s16 *)((char *)s + 0x14) < *(u8 *)((char *)d + 0x1d)) {
-                *(s16 *)((char *)s + 0x14) =
+            s->level =
+                (s16)(s->level - (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
+            if (s->level < *(u8 *)((char *)d + 0x1d)) {
+                s->level =
                     (s16)(*(u8 *)((char *)d + 0x1c) -
-                          (*(u8 *)((char *)d + 0x1d) - *(s16 *)((char *)s + 0x14)));
+                          (*(u8 *)((char *)d + 0x1d) - s->level));
             }
         } else {
-            *(s16 *)((char *)s + 0x14) =
-                (s16)(*(s16 *)((char *)s + 0x14) + (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
-            if (*(s16 *)((char *)s + 0x14) > *(u8 *)((char *)d + 0x1c)) {
-                *(s16 *)((char *)s + 0x14) =
+            s->level =
+                (s16)(s->level + (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
+            if (s->level > *(u8 *)((char *)d + 0x1c)) {
+                s->level =
                     (s16)(*(u8 *)((char *)d + 0x1d) +
-                          (*(s16 *)((char *)s + 0x14) - *(u8 *)((char *)d + 0x1d)));
+                          (s->level - *(u8 *)((char *)d + 0x1d)));
             }
         }
     } else if (mode == 2) {
-        if ((s8)*(u8 *)((char *)s + 0x17) != 0) {
+        if ((s8)s->gateVal != 0) {
             if (*(u8 *)((char *)d + 0x1c) > *(u8 *)((char *)d + 0x1d)) {
-                *(s16 *)((char *)s + 0x14) =
-                    (s16)(*(s16 *)((char *)s + 0x14) - (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
-                if (*(s16 *)((char *)s + 0x14) > *(u8 *)((char *)d + 0x1d)) {
+                s->level =
+                    (s16)(s->level - (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
+                if (s->level > *(u8 *)((char *)d + 0x1d)) {
                     return;
                 }
             } else {
-                *(s16 *)((char *)s + 0x14) =
-                    (s16)(*(s16 *)((char *)s + 0x14) + (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
-                if (*(s16 *)((char *)s + 0x14) < *(u8 *)((char *)d + 0x1d)) {
+                s->level =
+                    (s16)(s->level + (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
+                if (s->level < *(u8 *)((char *)d + 0x1d)) {
                     return;
                 }
             }
-            *(s16 *)((char *)s + 0x14) = *(u8 *)((char *)d + 0x1d);
+            s->level = *(u8 *)((char *)d + 0x1d);
             if (*(s16 *)((char *)d + 0x1a) != -1) {
                 GameBit_Set(*(s16 *)((char *)d + 0x1a), 1);
             }
-            *(u8 *)((char *)s + 0x18) = *(u8 *)((char *)s + 0x18) + 1;
+            s->doneCount = s->doneCount + 1;
         } else {
             if (*(u8 *)((char *)d + 0x1c) > *(u8 *)((char *)d + 0x1d)) {
-                *(s16 *)((char *)s + 0x14) =
-                    (s16)(*(s16 *)((char *)s + 0x14) + (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
-                if (*(s16 *)((char *)s + 0x14) < *(u8 *)((char *)d + 0x1c)) {
+                s->level =
+                    (s16)(s->level + (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
+                if (s->level < *(u8 *)((char *)d + 0x1c)) {
                     return;
                 }
             } else {
-                *(s16 *)((char *)s + 0x14) =
-                    (s16)(*(s16 *)((char *)s + 0x14) - (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
-                if (*(s16 *)((char *)s + 0x14) > *(u8 *)((char *)d + 0x1c)) {
+                s->level =
+                    (s16)(s->level - (s8)*(u8 *)((char *)d + 0x1f) * framesThisStep);
+                if (s->level > *(u8 *)((char *)d + 0x1c)) {
                     return;
                 }
             }
-            *(s16 *)((char *)s + 0x14) = *(u8 *)((char *)d + 0x1c);
+            s->level = *(u8 *)((char *)d + 0x1c);
             if (*(s16 *)((char *)d + 0x1a) != -1) {
                 GameBit_Set(*(s16 *)((char *)d + 0x1a), 0);
             }
-            *(u8 *)((char *)s + 0x18) = *(u8 *)((char *)s + 0x18) + 1;
+            s->doneCount = s->doneCount + 1;
         }
     } else {
         sp = (f32)(s8)*(u8 *)((char *)d + 0x1f);
         if ((s8)*(u8 *)((char *)d + 0x1f) < 0) {
             sp = (f32)(-(s8)*(u8 *)((char *)d + 0x1f));
         }
-        *(f32 *)((char *)s + 0x4) =
-            sp / lbl_803E3F80 * timeDelta + *(f32 *)((char *)s + 0x4);
-        if (*(f32 *)((char *)s + 0x4) > *(f32 *)((char *)s + 0xc)) {
-            *(f32 *)((char *)s + 0x4) = *(f32 *)((char *)s + 0xc);
+        s->cur =
+            sp / lbl_803E3F80 * timeDelta + s->cur;
+        if (s->cur > s->limit) {
+            s->cur = s->limit;
             GameBit_Set(*(s16 *)((char *)d + 0x1a), 1);
-            *(u8 *)((char *)s + 0x18) = *(u8 *)((char *)s + 0x18) + 1;
+            s->doneCount = s->doneCount + 1;
         }
-        *(f32 *)((char *)s + 0x8) = *(f32 *)((char *)s + 0x4) - lbl_803E3F84;
+        s->unk08 = s->cur - lbl_803E3F84;
     }
 }
 #pragma peephole reset
@@ -2117,7 +2191,7 @@ extern f32 fn_80293E80(f32);
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801923F8(int *cfg)
+void fn_801923F8(WaveAnimatorState *cfg)
 {
     int i;
     int j;
@@ -2133,33 +2207,33 @@ void fn_801923F8(int *cfg)
     f32 c4C;
     f32 z;
 
-    lbl_803DDAF4 = mmAlloc(4 * cfg[7] * cfg[7], 0xFFFFFF, 0);
-    lbl_803DDAEC = mmAlloc(3 * cfg[7] * cfg[7], 0xFFFFFF, 0);
+    lbl_803DDAF4 = mmAlloc(4 * cfg->gridSize * cfg->gridSize, 0xFFFFFF, 0);
+    lbl_803DDAEC = mmAlloc(3 * cfg->gridSize * cfg->gridSize, 0xFFFFFF, 0);
 
-    x = cfg[0];
-    stepX = (s32)((lbl_803E3F40 * (f32)cfg[2]) / (f32)cfg[7]);
-    y = cfg[1];
-    stepY = (s32)((lbl_803E3F40 * (f32)cfg[3]) / (f32)cfg[7]);
+    x = cfg->originX;
+    stepX = (s32)((lbl_803E3F40 * (f32)cfg->spanX) / (f32)cfg->gridSize);
+    y = cfg->originY;
+    stepY = (s32)((lbl_803E3F40 * (f32)cfg->spanY) / (f32)cfg->gridSize);
 
     z = lbl_803E3F44;
-    *(f32 *)(cfg + 10) = z;
-    *(f32 *)(cfg + 9) = z;
+    cfg->maxHeight = z;
+    cfg->minHeight = z;
 
     flat = 0;
     c48 = lbl_803E3F48;
     c4C = lbl_803E3F4C;
-    for (i = 0; i < cfg[7]; i++) {
+    for (i = 0; i < cfg->gridSize; i++) {
         f32 xv = c48 * (f32)x;
-        for (j = 0; j < cfg[7]; j++) {
+        for (j = 0; j < cfg->gridSize; j++) {
             f32 s1 = fn_80293E80((c48 * (f32)y) / c4C);
-            f32 a = *(f32 *)(cfg + 5) * s1;
+            f32 a = cfg->ampY * s1;
             f32 s2 = fn_80293E80(xv / c4C);
-            ((f32 *)lbl_803DDAF4)[flat] = *(f32 *)(cfg + 4) * s2 + a;
-            if (((f32 *)lbl_803DDAF4)[flat] < *(f32 *)(cfg + 9)) {
-                *(f32 *)(cfg + 9) = ((f32 *)lbl_803DDAF4)[flat];
+            ((f32 *)lbl_803DDAF4)[flat] = cfg->ampX * s2 + a;
+            if (((f32 *)lbl_803DDAF4)[flat] < cfg->minHeight) {
+                cfg->minHeight = ((f32 *)lbl_803DDAF4)[flat];
             }
-            if (((f32 *)lbl_803DDAF4)[flat] > *(f32 *)(cfg + 10)) {
-                *(f32 *)(cfg + 10) = ((f32 *)lbl_803DDAF4)[flat];
+            if (((f32 *)lbl_803DDAF4)[flat] > cfg->maxHeight) {
+                cfg->maxHeight = ((f32 *)lbl_803DDAF4)[flat];
             }
             y += stepY;
             flat++;
@@ -2168,16 +2242,16 @@ void fn_801923F8(int *cfg)
     }
 
     {
-        f32 negMin = -*(f32 *)(cfg + 9);
+        f32 negMin = -cfg->minHeight;
         f32 zero2;
         fi = 0;
         bi = 0;
         zero2 = lbl_803E3F44;
-        for (i = 0; i < cfg[7]; i++) {
-            for (j = 0; j < cfg[7]; j++) {
+        for (i = 0; i < cfg->gridSize; i++) {
+            for (j = 0; j < cfg->gridSize; j++) {
                 f32 v = ((f32 *)lbl_803DDAF4)[fi];
                 if (v < zero2) {
-                    f32 t = (v - *(f32 *)(cfg + 9)) / negMin;
+                    f32 t = (v - cfg->minHeight) / negMin;
                     ((s8 *)lbl_803DDAEC)[bi] = (s32)(lbl_803E3F54 * t + lbl_803E3F50);
                     ((s8 *)lbl_803DDAEC)[bi + 1] = (s32)(lbl_803E3F5C * t + lbl_803E3F58);
                     ((s8 *)lbl_803DDAEC)[bi + 2] = (s32)(lbl_803E3F64 * t + lbl_803E3F60);
@@ -2192,10 +2266,10 @@ void fn_801923F8(int *cfg)
         }
     }
 
-    lbl_803DDAF0 = mmAlloc(4 * cfg[8] * cfg[8], 0xFFFFFF, 0);
+    lbl_803DDAF0 = mmAlloc(4 * cfg->heightGrid * cfg->heightGrid, 0xFFFFFF, 0);
     hi = 0;
-    for (i = 0; i < cfg[8]; i++) {
-        for (j = 0; j < cfg[8]; j++) {
+    for (i = 0; i < cfg->heightGrid; i++) {
+        for (j = 0; j < cfg->heightGrid; j++) {
             ((s16 *)lbl_803DDAF0)[hi] = (s16)(i * 10);
             ((s16 *)lbl_803DDAF0)[hi + 1] = (s16)(j * 10);
             hi += 2;
