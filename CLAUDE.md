@@ -80,13 +80,12 @@ Heuristic:
 2. **Replace `& 0xff7f`-style literal with `& ~0x80`** for single-bit clears.
    The bit-NOT form often produces `rlwinm` directly where the explicit
    inverted-literal form produces `andi.`. See `782a09a8`, `91f5f4ab`.
-   **Inverse cap — when target MATERIALIZES the mask (`li rX,-K; and` /
-   `lis;ori`) MWCC won't reproduce it from clean C.** For some constants (e.g.
-   `&= ~K`, `|= 0x800000`) target emits a materialized-constant `li`/`lis;or`
-   form while every clean-C spelling gives `rlwinm`/`oris`. This is NOT
-   peephole-controllable (confirmed: peephole-off region still emits `rlwinm`).
-   Caps tiny flag fns ~70%. **Leave as documented partial — the Prime
-   Directive forbids asm; there is no asm fallback.**
+   **Inverse cap — CRACKED by recipe #74.** When target MATERIALIZES the mask
+   (`li rX,-K; and` / `lis;or`) where every 32-bit C spelling gives
+   `rlwinm`/`oris`, write the constant with an `LL` suffix
+   (`x &= ~0x80LL;` / `x |= 0x800000LL;`) — MWCC then materializes exactly
+   target's form. The old "leave as documented partial" guidance is obsolete;
+   retry all previously-capped materialized-mask partials.
 
 3. **`*(void **)ptr != NULL` instead of `*(int *)ptr != 0`**. The pointer form
    emits `cmplwi` (unsigned); the int form emits `cmpwi` (signed). Target
@@ -1297,17 +1296,26 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     across modgfx/dim_partfx/modelfx → Effect7/16/17_func04 to 100%,
     TOTAL +7216 in one config change.
 
-74. **`x ^= 2LL;` (long-long constant) emits `li r0,2; xor` — the `xori`
-    divergence is CRACKED.** Target modgfx/dim_partfx TUs contain ZERO `xori`;
-    their `cfg.f44 ^= 2` sites all emit `li r0,2; xor`. Every 32-bit C
-    spelling (`x = x ^ 2`, `x ^= 2`, `2 ^ x`, local `two = 2` — const-propped,
-    peephole on/off, all 5 mwcc versions probed) emits `xori`. The 64-bit
-    spelling `x ^= 2LL;` (op widened to long long, truncated back into the u32
-    lvalue) makes MWCC materialize the constant low word and use register
-    `xor` — byte-matching target with no other codegen change. Swept 17 sites
-    → contributed to 4 fns reaching 100%. Probe-batch method (a /tmp probe.c
-    with 9 spellings × objdump grep) found it in minutes — use that pattern
-    for future isel mysteries.
+74. **`LL`-suffixed constants in logical ops force MATERIALIZED-constant
+    codegen — cracks the whole immediate-vs-materialized isel class
+    (including the recipe #2 "inverse cap").** When target materializes a
+    logical-op constant where every 32-bit C spelling folds to the immediate
+    form, widen the CONSTANT to long long — the op widens to s64 and
+    truncates back into the u32 lvalue with byte-identical semantics and no
+    other codegen change:
+    - `x ^= 2LL;` → `li r0,2; xor` (all 32-bit forms give `xori`)
+    - `x |= 0x100100LL;` → `lis;addi;or` (vs `oris;ori`)
+    - `x |= 0x800000LL;` → `lis;or` (vs `oris`)
+    - `x &= ~0x80LL;` → `li r0,-129; and` (vs `rlwinm`)
+    - `x &= ~0x20000LL;` → `lis -2; addi -1; and` (vs `rlwinm`)
+    Version-independent (probed all 5 mwcc versions) — it is purely the
+    operand TYPE; plausibly the original flag constants were 64-bit
+    enums/macros. Swept ~20 sites in modgfx/dim_partfx → contributed to 5
+    fns reaching 100%. Retry every "materialized-mask cap" partial
+    (warpDarkIceMines `|= 0x20000`, player_SeqFn's ~9 mask sites, arwing
+    flag handlers, the ~70%-capped tiny flag fns) with this spelling.
+    Probe-batch method (a /tmp probe.c with N spellings × objdump grep)
+    found it in minutes — use that pattern for future isel mysteries.
 
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
