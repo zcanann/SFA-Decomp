@@ -5005,11 +5005,13 @@ void fn_800A0FD0(ModgfxState *state)
 
 void fn_800A0478(ModgfxState *state)
 {
-    ModgfxVertexData *src = state->vertexBuffers[1 - (u32)state->activeVertexBufferIndex];
-    ModgfxVertexData *dst = state->baseVertexData;
-    f32 f1;
-    f32 f0;
     int i;
+    ModgfxVertexData *dst;
+    ModgfxVertexData *src;
+    f32 f0;
+    f32 f1;
+    src = state->vertexBuffers[1 - (u32)state->activeVertexBufferIndex];
+    dst = state->baseVertexData;
     for (i = 0; i < state->vertexCount; i++) {
         dst->posX = src->posX;
         dst->posY = src->posY;
