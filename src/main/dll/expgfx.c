@@ -428,7 +428,7 @@ void expgfxRemoveAll(void)
 int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
                        int preferredPoolIndex,uint sourceId)
 {
-  u8 *expgfxBase;
+  ExpgfxRuntimeDataLayout *runtime;
   s8 *poolActiveCounts;
   u32 *poolSourceIds;
   u32 *poolActiveMasks;
@@ -439,9 +439,9 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
   int poolIndex;
   int slotIndex;
 
-  expgfxBase = gExpgfxRuntimeData;
-  poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-  poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
+  runtime = EXPGFX_RUNTIME_DATA;
+  poolActiveCounts = runtime->poolActiveCounts;
+  poolSourceIds = runtime->poolSourceIds;
   poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
   foundPool = 0;
   foundPoolIndex = EXPGFX_INVALID_POOL_INDEX;
@@ -458,7 +458,7 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
 
   if (foundPool) {
     poolIndex = (s16)foundPoolIndex;
-    poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
+    poolActiveMasks = runtime->poolActiveMasks;
     for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
       activeBit = 1 << slotIndex;
       if ((activeBit & poolActiveMasks[poolIndex]) == 0) {
@@ -491,7 +491,7 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
   }
 
   poolIndex = (s16)foundPoolIndex;
-  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
+  poolActiveMasks = runtime->poolActiveMasks;
   for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
     activeBit = 1 << slotIndex;
     if ((activeBit & poolActiveMasks[poolIndex]) == 0) {
@@ -1834,7 +1834,7 @@ int expgfx_func09(void)
 #pragma peephole off
 void expgfx_renderSourcePools(int sourceId,int sourceMode)
 {
-  u8 *expgfxBase;
+  ExpgfxRuntimeDataLayout *runtime;
   ExpgfxBounds *boundsTemplate;
   s8 *poolActiveCounts;
   u32 *poolSourceIds;
@@ -1844,20 +1844,19 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
   u32 *slotPoolBases;
   int poolIndex;
 
-  expgfxBase = gExpgfxRuntimeData;
+  runtime = EXPGFX_RUNTIME_DATA;
   poolIndex = 0;
-  poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-  poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
-  poolBoundsTemplateIds = expgfxBase + EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET;
-  poolBounds = (ExpgfxBounds *)(expgfxBase + EXPGFX_POOL_BOUNDS_OFFSET);
-  slotPoolBases = (u32 *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
+  poolActiveCounts = runtime->poolActiveCounts;
+  poolSourceIds = runtime->poolSourceIds;
+  poolSourceModes = runtime->poolSourceModes;
+  poolBoundsTemplateIds = runtime->poolBoundsTemplateIds;
+  poolBounds = runtime->poolBounds;
+  slotPoolBases = runtime->slotPoolBases;
 
   while (poolIndex < EXPGFX_POOL_COUNT) {
     if ((*poolActiveCounts != 0) && (*poolSourceIds == (u32)sourceId) &&
         (*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET)) {
-      boundsTemplate =
-          (ExpgfxBounds *)(gExpgfxStaticData + *poolBoundsTemplateIds * EXPGFX_BOUNDS_TEMPLATE_SIZE);
+      boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
       if (fn_8005E97C(poolBounds->minX - playerMapOffsetX,poolBounds->maxX - playerMapOffsetX,
                       poolBounds->minY,poolBounds->maxY,poolBounds->minZ - playerMapOffsetZ,
                       poolBounds->maxZ - playerMapOffsetZ,boundsTemplate) != 0) {
@@ -3029,17 +3028,17 @@ void expgfx_release(void)
 #pragma peephole off
 void expgfx_initialise(void)
 {
-  u8 *expgfxBase;
+  ExpgfxRuntimeDataLayout *runtime;
   u32 *poolActiveMasks;
-  u8 *poolActiveCounts;
+  s8 *poolActiveCounts;
   s16 *poolSlotTypeIds;
   u32 *slotPoolBases;
   int poolIndex;
   int groupCount;
 
-  expgfxBase = gExpgfxRuntimeData;
-  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
-  poolActiveCounts = expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET;
+  runtime = EXPGFX_RUNTIME_DATA;
+  poolActiveMasks = runtime->poolActiveMasks;
+  poolActiveCounts = runtime->poolActiveCounts;
   poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
   groupCount = EXPGFX_POOL_GROUP_COUNT;
   do {
@@ -3074,7 +3073,7 @@ void expgfx_initialise(void)
     groupCount--;
   } while (groupCount != 0);
 
-  slotPoolBases = (u32 *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
+  slotPoolBases = runtime->slotPoolBases;
   poolIndex = 0;
   do {
     *slotPoolBases = (u32)mmAlloc(EXPGFX_POOL_BYTES, EXPGFX_POOL_ALLOC_HEAP, 0);
@@ -3083,7 +3082,7 @@ void expgfx_initialise(void)
     slotPoolBases++;
     poolIndex++;
   } while (poolIndex < EXPGFX_POOL_COUNT);
-  memset(expgfxBase + EXPGFX_EXPTAB_OFFSET, 0, EXPGFX_EXPTAB_BYTES);
+  memset(runtime->expTab, 0, EXPGFX_EXPTAB_BYTES);
   return;
 }
 #pragma peephole reset
