@@ -1,4 +1,5 @@
 #include "main/dll/CAM/cutCam.h"
+#include "main/game_object.h"
 
 
 #pragma peephole off
@@ -376,20 +377,20 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
       (cam, &spinB, &spinC, &spinD, &spinA, *(f32 *)((char *)cameraMtxVar57 + 0x8c), 0);
   tgt0 = *(int *)((char *)cam + 0xa4);
   *(int *)&probe[35] = tgt0;
-  probe[1] = *(f32 *)((char *)cam + 0x1c);
-  pathA[0] = *(f32 *)((char *)cam + 0x18);
-  pathA[1] = *(f32 *)((char *)cam + 0x1c);
-  pathA[2] = *(f32 *)((char *)cam + 0x20);
+  probe[1] = ((GameObject *)cam)->anim.worldPosY;
+  pathA[0] = ((GameObject *)cam)->anim.worldPosX;
+  pathA[1] = ((GameObject *)cam)->anim.worldPosY;
+  pathA[2] = ((GameObject *)cam)->anim.worldPosZ;
   pathB[0] = pathA[0];
   pathB[1] = pathA[1];
   pathB[2] = pathA[2];
-  if (*(short *)(tgt0 + 0x44) == 1) {
+  if (((GameObject *)tgt0)->anim.classId == 1) {
     cameraGetPrevPos2(tgt0, &prev[0], &prev[1], &prev[2]);
   }
   else {
-    prev[0] = *(f32 *)(tgt0 + 0x18);
-    prev[1] = *(f32 *)(tgt0 + 0x1c) + *(f32 *)((char *)cameraMtxVar57 + 0x8c);
-    prev[2] = *(f32 *)(tgt0 + 0x20);
+    prev[0] = ((GameObject *)tgt0)->anim.worldPosX;
+    prev[1] = ((GameObject *)tgt0)->anim.worldPosY + *(f32 *)((char *)cameraMtxVar57 + 0x8c);
+    prev[2] = ((GameObject *)tgt0)->anim.worldPosZ;
   }
   s = 0xf;
   i = 0;
@@ -411,9 +412,9 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
       sinv = sin(rad);
       t = dz * sinv - dx * cosv;
       v = t * cosv + dx * sinv;
-      t = t + *(f32 *)(tgt + 0x18);
+      t = t + ((GameObject *)tgt)->anim.worldPosX;
       probe[0] = t;
-      v = v + *(f32 *)(tgt + 0x20);
+      v = v + ((GameObject *)tgt)->anim.worldPosZ;
       probe[2] = v;
       pA[3] = probe[0];
       pA[4] = probe[1];
@@ -431,9 +432,9 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
       sinv = sin(rad);
       t = dz * sinv - dx * cosv;
       v = t * cosv + dx * sinv;
-      t = t + *(f32 *)(tgt + 0x18);
+      t = t + ((GameObject *)tgt)->anim.worldPosX;
       probe[0] = t;
-      v = v + *(f32 *)(tgt + 0x20);
+      v = v + ((GameObject *)tgt)->anim.worldPosZ;
       probe[2] = v;
       pB[3] = probe[0];
       pB[4] = probe[1];
@@ -574,13 +575,13 @@ void camMoveFn_80104040(int cam, short *tgt)
                                  (f32 *)(cam + 0x18), (f32 *)(cam + 0x1c), (f32 *)(cam + 0x20),
                                  *(int *)(cam + 0x30));
   lbl_803DD528 = 0;
-  if (*(short *)((char *)tgt + 0x44) == 1) {
+  if (((GameObject *)tgt)->anim.classId == 1) {
     cameraGetPrevPos2((int)tgt, &prev[0], &prev[1], &prev[2]);
   }
   else {
-    prev[0] = *(f32 *)((char *)tgt + 0x18);
-    prev[1] = *(f32 *)((char *)tgt + 0x1c) + *(f32 *)((char *)cameraMtxVar57 + 0x8c);
-    prev[2] = *(f32 *)((char *)tgt + 0x20);
+    prev[0] = ((GameObject *)tgt)->anim.worldPosX;
+    prev[1] = ((GameObject *)tgt)->anim.worldPosY + *(f32 *)((char *)cameraMtxVar57 + 0x8c);
+    prev[2] = ((GameObject *)tgt)->anim.worldPosZ;
   }
   path[0] = *(f32 *)(cam + 0x18);
   path[1] = *(f32 *)(cam + 0x1c);
@@ -598,8 +599,8 @@ void camMoveFn_80104040(int cam, short *tgt)
     sinv = sin(rad);
     t = dx * sinv - dz * cosv;
     z = t * cosv + dz * sinv;
-    z = z + *(f32 *)((char *)tgt + 0x20);
-    p[0] = t + *(f32 *)((char *)tgt + 0x18);
+    z = z + ((GameObject *)tgt)->anim.worldPosZ;
+    p[0] = t + ((GameObject *)tgt)->anim.worldPosX;
     p[1] = *(f32 *)(cam + 0x1c);
     p[2] = z;
     rad = (kA * (f32)(s16)(-i * 0xaaa)) / kB;
@@ -607,8 +608,8 @@ void camMoveFn_80104040(int cam, short *tgt)
     sinv = sin(rad);
     t = dx * sinv - dz * cosv;
     z = t * cosv + dz * sinv;
-    z = z + *(f32 *)((char *)tgt + 0x20);
-    p[3] = t + *(f32 *)((char *)tgt + 0x18);
+    z = z + ((GameObject *)tgt)->anim.worldPosZ;
+    p[3] = t + ((GameObject *)tgt)->anim.worldPosX;
     p[4] = *(f32 *)(cam + 0x1c);
     p[5] = z;
     ang = ang + 0x1554;
@@ -643,9 +644,9 @@ void camMoveFn_80104040(int cam, short *tgt)
       cosv = fn_80293E80(rad);
       sinv = sin(rad);
       t = dx * sinv - dz * cosv;
-      *(f32 *)(cam + 0x18) = t + *(f32 *)((char *)tgt + 0x18);
+      *(f32 *)(cam + 0x18) = t + ((GameObject *)tgt)->anim.worldPosX;
       z = t * cosv + dz * sinv;
-      *(f32 *)(cam + 0x20) = z + *(f32 *)((char *)tgt + 0x20);
+      *(f32 *)(cam + 0x20) = z + ((GameObject *)tgt)->anim.worldPosZ;
     }
     *(f32 *)((char *)cameraMtxVar57 + 0x28) = *(f32 *)((char *)cameraMtxVar57 + 0x28) * lbl_803E16C4;
     if ((*(f32 *)((char *)cameraMtxVar57 + 0x28) < lbl_803E16C8) &&
