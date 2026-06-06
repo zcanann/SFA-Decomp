@@ -1257,11 +1257,18 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   stands — verified still-capped on fn_801CEA14, dim2icicle_update,
   cclevcontrol_update, wctemple_update. Read the target asm between the stfs
   and the fcmpo to pick.
-- **CAP — `addi r0,rH,lo; mr rX,r0` vs direct `addi rX,rH,lo` global-address
-  materialization** (foodbag dll_82_func03, mapSetupPlayer,
-  camcontrol_loadTriggeredCamAction). Initializer-decl form, statement
-  position, array-decay all invariant — yet other fns (player fn_8029DB70)
-  get the direct form from identical-looking C; discriminator unknown.
+- **`addi r0,rH,lo; mr rX,r0` vs direct `addi rX,rH,lo` — MOSTLY recipe #80
+  in disguise, NOT a cap** (task #155). When the recipient is a SAVED reg and
+  the fn mixes body offset-uses (`base + K`) with a plain `base` call-arg,
+  it's the #80 use-binding split — launder the init (`(T *)(int)&lbl`) AND
+  the plain arg: mapSetupPlayer → 100, dll_82_func03 → 100 (via #80 sweep).
+  The TRUE cap remnant: a VOLATILE loop-pointer init where the SAME fn has a
+  textually-identical second loop that matches while the first emits the mr
+  (camcontrol_loadTriggeredCamAction, 1 instr) — same-fn divergence proves
+  it's internal vreg-numbering state; 8 forms inert (init/indexed-use
+  launders, register-keyword drop, separate local, comma-init, peephole-on).
+  Classify by recipient reg: saved → apply #80; volatile with a matching
+  twin → cap.
 - **CAP — player_SeqFn (98.10) top-pair allocation order: DO NOT retry the
   cache-inline fix.** Eliminating the (int)inner cast-copy web (savegpr
   19→20, mid-webs align) makes the merged inner web (179 uses) outweigh obj
