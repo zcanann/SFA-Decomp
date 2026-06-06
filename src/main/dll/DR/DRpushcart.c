@@ -1467,10 +1467,10 @@ extern f32 lbl_803E5A24;
 #pragma peephole off
 f32 shopKeeperRotateFn_801e7c4c(s16 *obj, void *player, int mode)
 {
+    f32 dist;
     f32 dx;
     f32 dz;
-    f32 dist;
-    u32 angle;
+    u16 angle;
     int diff;
 
     dx = *(f32 *)((char *)player + 0xC) - *(f32 *)((char *)obj + 0xC);
