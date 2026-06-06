@@ -6489,44 +6489,48 @@ int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighb
 #pragma scheduling off
 #pragma peephole off
 int RomCurve_func16(double x, double y, double z) {
-    u32 candidateIds[20];
+    u32 candidateIds[24];
     int candidateCount;
     int i;
     int curve;
     int *curveList;
     int out;
     int category;
-    int currentId;
     int currentCurve;
+    u32 *top;
+    int *p;
+    u32 *end;
 
     candidateCount = 0;
     curveList = (int *)romCurves;
     for (i = 0; i < nRomCurves && candidateCount < 20; i++) {
         curve = *curveList;
         if (*(s8 *)(curve + 0x19) == 0x17) {
-            candidateIds[candidateCount] = *(u32 *)(curve + 0x14);
-            candidateCount++;
+            candidateIds[candidateCount++] = *(u32 *)(curve + 0x14);
         }
         curveList++;
     }
 
     while (candidateCount != 0) {
-        currentId = candidateIds[0];
-        if (curves_distFn15(x, y, z, currentId, &out) != 0) {
-            return currentId;
+        top = &candidateIds[candidateCount];
+        if (curves_distFn15(x, y, z, candidateIds[0], &out) != 0) {
+            return candidateIds[0];
         }
 
-        currentCurve = Objfsa_FindRomCurveById(currentId);
+        currentCurve = Objfsa_FindRomCurveById(candidateIds[0]);
         category = *(s8 *)(currentCurve + 0x18);
         i = 0;
+        p = (int *)candidateIds;
+        end = top;
         while (i < candidateCount) {
-            currentId = candidateIds[i];
-            currentCurve = Objfsa_FindRomCurveById(currentId);
+            currentCurve = Objfsa_FindRomCurveById(*p);
             if (*(s8 *)(currentCurve + 0x18) == category) {
                 candidateCount--;
-                candidateIds[i] = candidateIds[candidateCount];
+                end--;
+                *p = *end;
             } else {
                 i++;
+                p++;
             }
         }
     }
