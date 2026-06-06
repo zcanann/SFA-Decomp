@@ -1,3 +1,4 @@
+#include "main/audio/adsr.h"
 #include "ghidra_import.h"
 
 extern int fn_8027A660(int state);
@@ -12,86 +13,87 @@ extern u16 lbl_8032F618[];
 #pragma dont_inline on
 int fn_8027A660(int state)
 {
+    ADSR_VARS *adsr = (ADSR_VARS *)state;
     int ret = 0;
 
-    switch (*(u8 *)state) {
+    switch (adsr->mode) {
     case 0:
-        switch (*(u8 *)(state + 1)) {
+        switch (adsr->state) {
         case 0:
-            if ((*(u32 *)(state + 4) = *(u32 *)(state + 0x14)) != 0) {
-                *(u8 *)(state + 1) = 1;
-                *(u32 *)(state + 8) = 0;
-                *(u32 *)(state + 0x10) = 0x7fff0000 / *(u32 *)(state + 0x14);
+            if ((adsr->cnt = adsr->aTime) != 0) {
+                adsr->state = 1;
+                adsr->currentVolume = 0;
+                adsr->currentDelta = 0x7fff0000 / adsr->aTime;
                 break;
             }
             /* fall through */
         case 1:
-            if ((*(u32 *)(state + 4) = *(u32 *)(state + 0x18)) != 0) {
-                *(u8 *)(state + 1) = 2;
-                *(u32 *)(state + 8) = 0x7fff0000;
-                *(u32 *)(state + 0x10) =
-                    -((0x7fff0000 - (*(u16 *)(state + 0x1c) << 16)) / *(u32 *)(state + 0x18));
+            if ((adsr->cnt = adsr->dTime) != 0) {
+                adsr->state = 2;
+                adsr->currentVolume = 0x7fff0000;
+                adsr->currentDelta =
+                    -((0x7fff0000 - (adsr->sLevel << 16)) / adsr->dTime);
                 break;
             }
             /* fall through */
         case 2:
-            if (*(u16 *)(state + 0x1c) != 0) {
-                *(u8 *)(state + 1) = 3;
-                *(u32 *)(state + 8) = *(u16 *)(state + 0x1c) << 16;
-                *(u32 *)(state + 0x10) = 0;
+            if (adsr->sLevel != 0) {
+                adsr->state = 3;
+                adsr->currentVolume = adsr->sLevel << 16;
+                adsr->currentDelta = 0;
                 break;
             }
             /* fall through */
         case 4:
-            *(u32 *)(state + 8) = 0;
+            adsr->currentVolume = 0;
             ret = 1;
             break;
         }
         break;
     case 1:
-        switch (*(u8 *)(state + 1)) {
+        switch (adsr->state) {
         case 0:
-            if ((*(u32 *)(state + 4) = *(u32 *)(state + 0x14)) != 0) {
-                *(u8 *)(state + 1) = 1;
-                if (*(u8 *)(state + 0x26) == 0) {
-                    *(u32 *)(state + 8) = 0;
-                    *(u32 *)(state + 0x10) = 0x7fff0000 / *(u32 *)(state + 4);
+            if ((adsr->cnt = adsr->aTime) != 0) {
+                adsr->state = 1;
+                if (adsr->aMode == 0) {
+                    adsr->currentVolume = 0;
+                    adsr->currentDelta = 0x7fff0000 / adsr->cnt;
                 } else {
-                    *(u32 *)(state + 0xc) = 0;
-                    *(u32 *)(state + 8) = 0;
-                    *(u32 *)(state + 0x10) = 0xc10000 / *(u32 *)(state + 4);
+                    adsr->currentIndex = 0;
+                    adsr->currentVolume = 0;
+                    adsr->currentDelta = 0xc10000 / adsr->cnt;
                 }
                 break;
             }
             /* fall through */
         case 1:
-            *(u32 *)(state + 4) =
-                *(u32 *)(state + 0x18) * (((0xc1 - (u32)*(u16 *)(state + 0x1c)) << 16) / 0xc1) >> 16;
-            if (*(u32 *)(state + 4) != 0) {
-                *(u8 *)(state + 1) = 2;
-                *(u32 *)(state + 8) = 0x7fff0000;
-                *(u32 *)(state + 0xc) = 0xc10000;
-                *(u32 *)(state + 0x10) =
-                    -(((0xc1 - (u32)*(u16 *)(state + 0x1c)) << 16) / *(u32 *)(state + 4));
+            adsr->cnt =
+                adsr->dTime * (((0xc1 - (u32)adsr->sLevel) << 16) / 0xc1) >> 16;
+            if (adsr->cnt != 0) {
+                adsr->state = 2;
+                adsr->currentVolume = 0x7fff0000;
+                adsr->currentIndex = 0xc10000;
+                adsr->currentDelta =
+                    -(((0xc1 - (u32)adsr->sLevel) << 16) / adsr->cnt);
                 break;
             }
             /* fall through */
         case 2:
-            if (*(u16 *)(state + 0x1c) != 0) {
+            if (adsr->sLevel != 0) {
                 int idx;
 
-                *(u8 *)(state + 1) = 3;
-                *(u32 *)(state + 0xc) = *(u16 *)(state + 0x1c) << 16;
+                adsr->state = 3;
+                adsr->currentIndex = adsr->sLevel << 16;
                 if ((idx = 0xc1 - ((*(s32 *)(state + 0xc) + 0x8000) >> 16)) < 0) {
                     idx = 0;
                 }
-                *(u32 *)(state + 8) = lbl_8032F618[idx] << 16;
-                *(u32 *)(state + 0x10) = 0;
+                adsr->currentVolume = lbl_8032F618[idx] << 16;
+                adsr->currentDelta = 0;
                 break;
             }
             /* fall through */
         case 4:
-            *(u32 *)(state + 8) = 0;
+            adsr->currentVolume = 0;
             ret = 1;
             break;
         }
@@ -108,6 +110,7 @@ int fn_8027A660(int state)
  */
 int adsrSetup(int state)
 {
-    *(u8 *)(state + 1) = 0;
+    ADSR_VARS *adsr = (ADSR_VARS *)state;
+    adsr->state = 0;
     return fn_8027A660(state);
 }
