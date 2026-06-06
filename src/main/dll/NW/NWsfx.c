@@ -1,4 +1,5 @@
 #include "main/dll/NW/NWsfx.h"
+#include "main/game_object.h"
 #include "main/dll/SH/SHthorntail_internal.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
@@ -53,6 +54,36 @@ extern f32 lbl_803E52DC;
 extern s16 lbl_80326BD0[];
 extern f32 lbl_80326BE8[];
 
+/* ediblemushroom extra block (size 0x144 = ediblemushroom_getExtraSize).
+ * Head embeds the rom-curve walker record - those offsets stay raw pending
+ * the shared RomCurveWalker/curves.h lift. */
+typedef struct EdibleMushroomState {
+    u8 curve00[0x108];
+    f32 unk108;
+    f32 unk10C;
+    f32 unk110;
+    u8 pad114[4];
+    f32 unk118;
+    f32 unk11C;
+    f32 unk120;
+    f32 unk124;
+    f32 unk128;
+    f32 unk12C;
+    s16 unk130;
+    u8 pad132[4];
+    u8 unk136;
+    u8 unk137;
+    u8 pad138[4];
+    s16 unk13C;
+    s16 unk13E;
+    f32 unk140;
+} EdibleMushroomState;
+
+STATIC_ASSERT(offsetof(EdibleMushroomState, unk108) == 0x108);
+STATIC_ASSERT(offsetof(EdibleMushroomState, unk136) == 0x136);
+STATIC_ASSERT(offsetof(EdibleMushroomState, unk140) == 0x140);
+STATIC_ASSERT(sizeof(EdibleMushroomState) == 0x144);
+
 s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist);
 
 /*
@@ -88,26 +119,26 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
 
     player = Obj_GetPlayerObject();
 
-    if (state[0x137] & 4) {
-        state[0x136] = 6;
+    if (((EdibleMushroomState *)state)->unk137 & 4) {
+        ((EdibleMushroomState *)state)->unk136 = 6;
     }
 
-    speed = oneOverTimeDelta * (*(f32 *)(state + 0x10c) - *(f32 *)(state + 0x108));
+    speed = oneOverTimeDelta * (((EdibleMushroomState *)state)->unk10C - ((EdibleMushroomState *)state)->unk108);
 
-    sval = state[0x136];
+    sval = ((EdibleMushroomState *)state)->unk136;
     switch (sval) {
     case 0:
-        if (state[0x137] & 0x10) {
-            state[0x136] = 9;
+        if (((EdibleMushroomState *)state)->unk137 & 0x10) {
+            ((EdibleMushroomState *)state)->unk136 = 9;
         } else if ((*gSHthorntailAnimationInterface)->isTailSwingQueued(&thorntailOut) == 0) {
-            if (*(f32 *)(state + 0x108) < (f32)other[0x19]) {
-                if (state[0x137] & 2) {
-                    rangeSq = *(f32 *)(state + 0x118) * *(f32 *)(state + 0x118);
+            if (((EdibleMushroomState *)state)->unk108 < (f32)other[0x19]) {
+                if (((EdibleMushroomState *)state)->unk137 & 2) {
+                    rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
                     while (1) {
                         dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
-                        dz = *(f32 *)(state + 0x70) - *(f32 *)(obj + 0x14);
+                        dz = *(f32 *)(state + 0x70) - ((GameObject *)obj)->anim.localPosZ;
                         if (dx * dx + dz * dz < rangeSq) {
-                            if (Curve_AdvanceAlongPath(state, *(f32 *)(state + 0x120)) != 0 ||
+                            if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
                                 *(int *)(state + 0x10) != 0) {
                                 (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
                             }
@@ -116,70 +147,70 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                         }
                     }
                     ang = getAngle(-dx, -dz);
-                    *(s16 *)(state + 0x130) = ang;
+                    ((EdibleMushroomState *)state)->unk130 = ang;
                 } else {
-                    *(s16 *)(state + 0x130) =
-                        fn_801D129C(obj, player, state, *(f32 *)(state + 0x118));
+                    ((EdibleMushroomState *)state)->unk130 =
+                        fn_801D129C(obj, player, state, ((EdibleMushroomState *)state)->unk118);
                 }
-                state[0x136] = 1;
+                ((EdibleMushroomState *)state)->unk136 = 1;
                 Sfx_PlayFromObject(obj, 0xa0);
-                *(s16 *)obj = (s16)(*(s16 *)(state + 0x130) - 0x4000);
-            } else if (*(f32 *)(state + 0x108) < (f32)other[0x1f]) {
-                state[0x136] = 3;
+                *(s16 *)obj = (s16)(((EdibleMushroomState *)state)->unk130 - 0x4000);
+            } else if (((EdibleMushroomState *)state)->unk108 < (f32)other[0x1f]) {
+                ((EdibleMushroomState *)state)->unk136 = 3;
             }
         } else {
-            t = *(f32 *)(state + 0x12c) - timeDelta;
-            *(f32 *)(state + 0x12c) = t;
+            t = ((EdibleMushroomState *)state)->unk12C - timeDelta;
+            ((EdibleMushroomState *)state)->unk12C = t;
             if (t <= lbl_803E5288) {
-                if (*(u16 *)(obj + 0xb0) & 0x800) {
-                    fx.x = *(f32 *)(obj + 0x18);
-                    fx.y = lbl_803E528C + *(f32 *)(obj + 0x1c);
-                    fx.z = *(f32 *)(obj + 0x20);
+                if (((GameObject *)obj)->unkB0 & 0x800) {
+                    fx.x = ((GameObject *)obj)->anim.worldPosX;
+                    fx.y = lbl_803E528C + ((GameObject *)obj)->anim.worldPosY;
+                    fx.z = ((GameObject *)obj)->anim.worldPosZ;
                     (*(code *)(*(int *)gPartfxInterface + 0x8))(obj, 0x7f0, &fx, 0x200001, -1,
                                                                 0);
                 }
-                *(f32 *)(state + 0x12c) = lbl_803E5290;
+                ((EdibleMushroomState *)state)->unk12C = lbl_803E5290;
             }
         }
         break;
     case 1:
-        if (state[0x137] & 0x10) {
-            state[0x136] = 9;
-        } else if (state[0x137] & 1) {
-            state[0x136] = 0;
+        if (((EdibleMushroomState *)state)->unk137 & 0x10) {
+            ((EdibleMushroomState *)state)->unk136 = 9;
+        } else if (((EdibleMushroomState *)state)->unk137 & 1) {
+            ((EdibleMushroomState *)state)->unk136 = 0;
         }
         break;
     case 3:
     case 7:
-        if (state[0x137] & 0x10) {
-            state[0x136] = 9;
-        } else if (state[0x137] & 1) {
+        if (((EdibleMushroomState *)state)->unk137 & 0x10) {
+            ((EdibleMushroomState *)state)->unk136 = 9;
+        } else if (((EdibleMushroomState *)state)->unk137 & 1) {
             if (sval == 3) {
-                state[0x136] = 4;
+                ((EdibleMushroomState *)state)->unk136 = 4;
             } else {
-                state[0x136] = 0;
+                ((EdibleMushroomState *)state)->unk136 = 0;
             }
         }
         break;
     case 4:
-        if (state[0x137] & 0x10) {
-            state[0x136] = 9;
+        if (((EdibleMushroomState *)state)->unk137 & 0x10) {
+            ((EdibleMushroomState *)state)->unk136 = 9;
         } else {
-            ang = getAngle(-(*(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc)),
-                           -(*(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14)));
+            ang = getAngle(-(*(f32 *)(obj + 0xc) - ((GameObject *)player)->anim.localPosX),
+                           -(((GameObject *)obj)->anim.localPosZ - ((GameObject *)player)->anim.localPosZ));
             *(s16 *)obj = ang;
-            if (*(f32 *)(state + 0x108) > lbl_803E5294 + (f32)other[0x1f]) {
-                state[0x136] = 7;
-            } else if (*(f32 *)(state + 0x108) < (f32)other[0x19]) {
+            if (((EdibleMushroomState *)state)->unk108 > lbl_803E5294 + (f32)other[0x1f]) {
+                ((EdibleMushroomState *)state)->unk136 = 7;
+            } else if (((EdibleMushroomState *)state)->unk108 < (f32)other[0x19]) {
                 Sfx_PlayFromObject(obj, 0xa0);
                 if (speed >= lbl_803E5298) {
-                    if (state[0x137] & 2) {
-                        rangeSq = *(f32 *)(state + 0x118) * *(f32 *)(state + 0x118);
+                    if (((EdibleMushroomState *)state)->unk137 & 2) {
+                        rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
                         while (1) {
                             dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
-                            dz = *(f32 *)(state + 0x70) - *(f32 *)(obj + 0x14);
+                            dz = *(f32 *)(state + 0x70) - ((GameObject *)obj)->anim.localPosZ;
                             if (dx * dx + dz * dz < rangeSq) {
-                                if (Curve_AdvanceAlongPath(state, *(f32 *)(state + 0x120)) != 0 ||
+                                if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
                                     *(int *)(state + 0x10) != 0) {
                                     (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
                                 }
@@ -188,21 +219,21 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                             }
                         }
                         ang = getAngle(-dx, -dz);
-                        *(s16 *)(state + 0x130) = ang;
+                        ((EdibleMushroomState *)state)->unk130 = ang;
                     } else {
-                        *(s16 *)(state + 0x130) =
-                            fn_801D129C(obj, player, state, *(f32 *)(state + 0x118));
+                        ((EdibleMushroomState *)state)->unk130 =
+                            fn_801D129C(obj, player, state, ((EdibleMushroomState *)state)->unk118);
                     }
-                    state[0x136] = 1;
-                    *(s16 *)obj = (s16)(*(s16 *)(state + 0x130) - 0x4000);
+                    ((EdibleMushroomState *)state)->unk136 = 1;
+                    *(s16 *)obj = (s16)(((EdibleMushroomState *)state)->unk130 - 0x4000);
                 } else {
-                    if (state[0x137] & 2) {
-                        rangeSq = *(f32 *)(state + 0x11c) * *(f32 *)(state + 0x11c);
+                    if (((EdibleMushroomState *)state)->unk137 & 2) {
+                        rangeSq = ((EdibleMushroomState *)state)->unk11C * ((EdibleMushroomState *)state)->unk11C;
                         while (1) {
                             dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
-                            dz = *(f32 *)(state + 0x70) - *(f32 *)(obj + 0x14);
+                            dz = *(f32 *)(state + 0x70) - ((GameObject *)obj)->anim.localPosZ;
                             if (dx * dx + dz * dz < rangeSq) {
-                                if (Curve_AdvanceAlongPath(state, *(f32 *)(state + 0x120)) != 0 ||
+                                if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
                                     *(int *)(state + 0x10) != 0) {
                                     (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
                                 }
@@ -211,31 +242,31 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                             }
                         }
                         ang = getAngle(-dx, -dz);
-                        *(s16 *)(state + 0x130) = ang;
+                        ((EdibleMushroomState *)state)->unk130 = ang;
                     } else {
-                        *(s16 *)(state + 0x130) =
-                            fn_801D129C(obj, player, state, *(f32 *)(state + 0x11c));
+                        ((EdibleMushroomState *)state)->unk130 =
+                            fn_801D129C(obj, player, state, ((EdibleMushroomState *)state)->unk11C);
                     }
-                    state[0x136] = 5;
-                    *(s16 *)obj = *(s16 *)(state + 0x130);
+                    ((EdibleMushroomState *)state)->unk136 = 5;
+                    *(s16 *)obj = ((EdibleMushroomState *)state)->unk130;
                 }
             }
         }
         break;
     case 5:
-        if ((state[0x137] & 0x11) == 0x11) {
-            state[0x136] = 9;
+        if ((((EdibleMushroomState *)state)->unk137 & 0x11) == 0x11) {
+            ((EdibleMushroomState *)state)->unk136 = 9;
         }
-        if (*(f32 *)(state + 0x108) > lbl_803E5294 + (f32)other[0x19] && (state[0x137] & 1)) {
-            state[0x136] = 4;
+        if (((EdibleMushroomState *)state)->unk108 > lbl_803E5294 + (f32)other[0x19] && (((EdibleMushroomState *)state)->unk137 & 1)) {
+            ((EdibleMushroomState *)state)->unk136 = 4;
         } else if (speed >= lbl_803E5298) {
-            if (state[0x137] & 2) {
-                rangeSq = *(f32 *)(state + 0x118) * *(f32 *)(state + 0x118);
+            if (((EdibleMushroomState *)state)->unk137 & 2) {
+                rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
                 while (1) {
                     dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
-                    dz = *(f32 *)(state + 0x70) - *(f32 *)(obj + 0x14);
+                    dz = *(f32 *)(state + 0x70) - ((GameObject *)obj)->anim.localPosZ;
                     if (dx * dx + dz * dz < rangeSq) {
-                        if (Curve_AdvanceAlongPath(state, *(f32 *)(state + 0x120)) != 0 ||
+                        if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
                             *(int *)(state + 0x10) != 0) {
                             (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
                         }
@@ -244,59 +275,59 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                     }
                 }
                 ang = getAngle(-dx, -dz);
-                *(s16 *)(state + 0x130) = ang;
+                ((EdibleMushroomState *)state)->unk130 = ang;
             } else {
-                *(s16 *)(state + 0x130) = fn_801D129C(obj, player, state, *(f32 *)(state + 0x118));
+                ((EdibleMushroomState *)state)->unk130 = fn_801D129C(obj, player, state, ((EdibleMushroomState *)state)->unk118);
             }
-            state[0x136] = 1;
+            ((EdibleMushroomState *)state)->unk136 = 1;
             Sfx_PlayFromObject(obj, 0xa0);
-            *(s16 *)obj = (s16)(*(s16 *)(state + 0x130) - 0x4000);
+            *(s16 *)obj = (s16)(((EdibleMushroomState *)state)->unk130 - 0x4000);
         }
         break;
     case 9:
         ObjHits_ClearSourceMask(obj, 1);
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9b);
-        if (*(f32 *)(state + 0x124) <= lbl_803E5288) {
-            *(f32 *)(state + 0x124) = (f32)(int)randomGetRange(0xf0, 0x12c);
+        if (((EdibleMushroomState *)state)->unk124 <= lbl_803E5288) {
+            ((EdibleMushroomState *)state)->unk124 = (f32)(int)randomGetRange(0xf0, 0x12c);
         }
-        t = *(f32 *)(state + 0x124) - timeDelta;
-        *(f32 *)(state + 0x124) = t;
+        t = ((EdibleMushroomState *)state)->unk124 - timeDelta;
+        ((EdibleMushroomState *)state)->unk124 = t;
         if (t <= lbl_803E5288) {
             ObjHits_SetSourceMask(obj, 1);
             (*(code *)(*(int *)gExpgfxInterface + 0x14))(obj);
-            state[0x136] = 0;
-            state[0x137] &= ~0x10;
+            ((EdibleMushroomState *)state)->unk136 = 0;
+            ((EdibleMushroomState *)state)->unk137 &= ~0x10;
         } else {
-            t = *(f32 *)(state + 0x128) - timeDelta;
-            *(f32 *)(state + 0x128) = t;
+            t = ((EdibleMushroomState *)state)->unk128 - timeDelta;
+            ((EdibleMushroomState *)state)->unk128 = t;
             if (t <= lbl_803E5288) {
                 fx.x = lbl_803E5294;
                 fx.y = lbl_803E529C;
-                if (*(u16 *)(obj + 0xb0) & 0x800) {
+                if (((GameObject *)obj)->unkB0 & 0x800) {
                     (*(code *)(*(int *)gPartfxInterface + 0x8))(obj, 0x51d, &fx, 2, -1, 0);
                 }
-                *(f32 *)(state + 0x128) = lbl_803E52A0;
+                ((EdibleMushroomState *)state)->unk128 = lbl_803E52A0;
             }
             if (GameBit_Get(0x12e) == 0) {
-                if (!(*(u16 *)(player + 0xb0) & 0x1000)) {
+                if (!(((GameObject *)player)->unkB0 & 0x1000)) {
                     if (Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(obj + 0x18)) <
                         lbl_803E52A4) {
                         (*(code *)(*(int *)gExpgfxInterface + 0x14))(obj);
-                        if (*(s16 *)(obj + 0x46) == 0x658) {
+                        if (((GameObject *)obj)->anim.seqId == 0x658) {
                             *(s16 *)(state + 0x13c) = 0x18a;
                             itemPickupDoParticleFx(obj, lbl_803E52A8, 0xff, 0x28);
                         } else {
                             *(s16 *)(state + 0x13c) = 0x119;
                             itemPickupDoParticleFx(obj, lbl_803E52A8, 6, 0x28);
                         }
-                        *(s16 *)(state + 0x13e) = 0;
-                        *(f32 *)(state + 0x140) = lbl_803E52AC;
+                        ((EdibleMushroomState *)state)->unk13E = 0;
+                        ((EdibleMushroomState *)state)->unk140 = lbl_803E52AC;
                         ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x13c);
                         bit = *(s16 *)(other + 0x1a);
                         if (bit != -1) {
                             GameBit_Set(bit, 1);
                         }
-                        state[0x136] = 8;
+                        ((EdibleMushroomState *)state)->unk136 = 8;
                         GameBit_Set(0x12e, 1);
                     }
                 }
@@ -304,8 +335,8 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         }
         break;
     case 6:
-        if (state[0x137] & 0x10) {
-            state[0x136] = 9;
+        if (((EdibleMushroomState *)state)->unk137 & 0x10) {
+            ((EdibleMushroomState *)state)->unk136 = 9;
         }
         break;
     case 2:
@@ -314,40 +345,40 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         break;
     }
 
-    curMove = *(s16 *)(obj + 0xa0);
-    moveId = lbl_80326BD0[state[0x136]];
+    curMove = ((GameObject *)obj)->anim.currentMove;
+    moveId = lbl_80326BD0[((EdibleMushroomState *)state)->unk136];
     if (curMove != moveId && moveId != -1) {
         ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E52B0, 0);
     }
 
     if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-            (int)obj, lbl_80326BE8[state[0x136]], timeDelta, (ObjAnimEventList *)animOut) != 0) {
-        state[0x137] |= 1;
+            (int)obj, lbl_80326BE8[((EdibleMushroomState *)state)->unk136], timeDelta, (ObjAnimEventList *)animOut) != 0) {
+        ((EdibleMushroomState *)state)->unk137 |= 1;
     } else {
-        state[0x137] &= ~1;
+        ((EdibleMushroomState *)state)->unk137 &= ~1;
     }
 
-    if (state[0x136] == 1) {
-        speed = *(f32 *)(state + 0x110) * (animOut[0] * oneOverTimeDelta);
-    } else if (state[0x136] == 5) {
+    if (((EdibleMushroomState *)state)->unk136 == 1) {
+        speed = ((EdibleMushroomState *)state)->unk110 * (animOut[0] * oneOverTimeDelta);
+    } else if (((EdibleMushroomState *)state)->unk136 == 5) {
         speed = animOut[2] * oneOverTimeDelta;
     } else {
         speed = lbl_803E5288;
     }
 
     if (lbl_803E5288 != speed) {
-        state[0x137] |= 8;
+        ((EdibleMushroomState *)state)->unk137 |= 8;
     } else {
-        state[0x137] &= ~8;
+        ((EdibleMushroomState *)state)->unk137 &= ~8;
     }
 
-    *(f32 *)(obj + 0x24) =
-        speed * fn_80293E80((lbl_803E52B4 * (f32)*(s16 *)(state + 0x130)) / lbl_803E52B8);
-    *(f32 *)(obj + 0x2c) =
-        speed * sin((lbl_803E52B4 * (f32)*(s16 *)(state + 0x130)) / lbl_803E52B8);
+    ((GameObject *)obj)->anim.velocityX =
+        speed * fn_80293E80((lbl_803E52B4 * (f32)((EdibleMushroomState *)state)->unk130) / lbl_803E52B8);
+    ((GameObject *)obj)->anim.velocityZ =
+        speed * sin((lbl_803E52B4 * (f32)((EdibleMushroomState *)state)->unk130) / lbl_803E52B8);
 
-    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, lbl_803E5288,
-            *(f32 *)(obj + 0x2c) * timeDelta);
+    objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, lbl_803E5288,
+            ((GameObject *)obj)->anim.velocityZ * timeDelta);
 }
 #pragma pop
 
@@ -378,14 +409,14 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
     f32 sinStepM;
     f32 vec[3];
 
-    angle = getAngle(-(*(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc)),
-                     -(*(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14)));
+    angle = getAngle(-(*(f32 *)(obj + 0xc) - ((GameObject *)player)->anim.localPosX),
+                     -(((GameObject *)obj)->anim.localPosZ - ((GameObject *)player)->anim.localPosZ));
     rad = (lbl_803E52B4 * (f32)angle) / lbl_803E52B8;
     c = fn_80293E80(rad);
     s = sin(rad);
     vec[0] = *(f32 *)(obj + 0xc) - dist * c;
-    vec[1] = *(f32 *)(obj + 0x10);
-    vec[2] = *(f32 *)(obj + 0x14) - dist * s;
+    vec[1] = ((GameObject *)obj)->anim.localPosY;
+    vec[2] = ((GameObject *)obj)->anim.localPosZ - dist * s;
     if (objBboxFn_800640cc(obj + 0xc, vec, lbl_803E52D0, 3, 0, obj, 8, -1, 0xff, 0) != 0) {
         anglePlus = angle;
         angleMinus = angle;
@@ -404,7 +435,7 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
             s = s * sinStepP - cosP * cosStepP;
             cosP = t;
             vec[0] = *(f32 *)(obj + 0xc) - dist * t;
-            vec[2] = *(f32 *)(obj + 0x14) - dist * s;
+            vec[2] = ((GameObject *)obj)->anim.localPosZ - dist * s;
             if (objBboxFn_800640cc(obj + 0xc, vec, lbl_803E52D0, 1, 0, obj, 8, -1, 0xff, 0) == 0) {
                 return anglePlus;
             }
@@ -413,7 +444,7 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
             sinM = sinM * sinStepM - cosM * cosStepM;
             cosM = t;
             vec[0] = *(f32 *)(obj + 0xc) - dist * t;
-            vec[2] = *(f32 *)(obj + 0x14) - dist * sinM;
+            vec[2] = ((GameObject *)obj)->anim.localPosZ - dist * sinM;
             if (objBboxFn_800640cc(obj + 0xc, vec, lbl_803E52D0, 1, 0, obj, 8, -1, 0xff, 0) == 0) {
                 return angleMinus;
             }
@@ -469,18 +500,18 @@ void ediblemushroom_hitDetect(u8 *obj) {
     int i;
     u8 bboxHit[0x54];
 
-    state = *(u8 **)(obj + 0xb8);
-    mapObj = *(u8 **)(obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    mapObj = *(u8 **)&((GameObject *)obj)->anim.placementData;
 
-    if (((*(u16 *)(obj + 0xb0) & 0x1000) == 0) &&
-        (((state[0x137] & 8) != 0) || (((*(ObjHitsPriorityState **)(obj + 0x54))->flags & 8) != 0))) {
-        hitCount = hitDetectFn_80065e50(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
-                                        *(f32 *)(obj + 0x14), &hits, 0, 0);
+    if (((((GameObject *)obj)->unkB0 & 0x1000) == 0) &&
+        (((((EdibleMushroomState *)state)->unk137 & 8) != 0) || (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) != 0))) {
+        hitCount = hitDetectFn_80065e50(obj, *(f32 *)(obj + 0xc), ((GameObject *)obj)->anim.localPosY,
+                                        ((GameObject *)obj)->anim.localPosZ, &hits, 0, 0);
         i = 0;
         hitIter = hits;
         for (; i < hitCount; i++) {
-            if (**hitIter < lbl_803E5294 + *(f32 *)(obj + 0x10)) {
-                *(f32 *)(obj + 0x10) = *hits[i];
+            if (**hitIter < lbl_803E5294 + ((GameObject *)obj)->anim.localPosY) {
+                ((GameObject *)obj)->anim.localPosY = *hits[i];
                 break;
             }
             hitIter++;
@@ -489,7 +520,7 @@ void ediblemushroom_hitDetect(u8 *obj) {
         hitCount = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E52DC, 2, bboxHit, obj, 8,
                                       -1, 0xff, 0x14);
         if ((mapObj[0x18] == 4) && (hitCount != 0) && ((s8)bboxHit[0x50] == 13)) {
-            state[0x137] |= 4;
+            ((EdibleMushroomState *)state)->unk137 |= 4;
         }
     }
 }
