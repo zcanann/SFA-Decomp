@@ -767,7 +767,6 @@ void Sfx_UpdateLoopedObjectSounds(void)
 #pragma peephole off
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 {
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     SfxLoopedObjectSoundTable *table = &gSfxLoopedObjectSoundFlags;
     u8 *flags = table->flags;
     u16 count = gSfxLoopedObjectSoundCount;
@@ -1407,7 +1406,7 @@ void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u32 sfxId)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void Sfx_PlayFromObject(u32 obj, u32 sfxId)
+void Sfx_PlayFromObject(u32 obj, u16 sfxId)
 {
     Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
 }
