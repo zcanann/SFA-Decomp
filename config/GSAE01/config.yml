@@ -102,3 +102,5 @@ clean_extab: false
 block_relocations:
 - target: 0x80180100
   end: 0x80180218
+- target: 0x80080108
+  end: 0x80080120
