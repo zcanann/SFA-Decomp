@@ -167,11 +167,13 @@ void ProjectileSwitch_update(int obj)
  */
 void ProjectileSwitch_init(int obj, u8 *initData)
 {
+  ObjAnimComponent *objAnim;
   int state;
   u8 *linkObj;
   u8 *linkSub;
   void *tex;
 
+  objAnim = (ObjAnimComponent *)obj;
   state = *(int *)(obj + 0xb8);
   *(short *)obj = (short)(initData[0x1f] << 8);
   *(short *)(obj + 2) = (short)(initData[0x1c] << 8);
@@ -184,11 +186,9 @@ void ProjectileSwitch_init(int obj, u8 *initData)
   }
   ObjHitbox_SetSphereRadius(
       obj, (short)(((int)initData[0x1d] * (int)*(u8 *)(*(int *)(obj + 0x50) + 0x62)) / 64));
-  *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = initData[0x1e] >> 2;
-  if ((int)(signed char)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
-      (int)(signed char)*(u8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) +
-                                offsetof(ObjModelInstance, modelCount))) {
-    *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
+  objAnim->bankIndex = initData[0x1e] >> 2;
+  if ((int)objAnim->bankIndex >= (int)objAnim->modelInstance->modelCount) {
+    objAnim->bankIndex = 0;
   }
 
   linkObj = *(u8 **)(obj + 0x30);

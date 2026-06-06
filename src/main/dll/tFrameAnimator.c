@@ -173,9 +173,9 @@ int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 #pragma scheduling off
 #pragma peephole off
 int ProjectileSwitch_getObjectTypeId(int *obj) {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int v = (int)*(u8 *)((char *)*(int **)((char *)obj + 0x4c) + 0x1e) >> 2;
-    int max = *(s8 *)((char *)*(int **)((char *)obj + offsetof(ObjAnimComponent, modelInstance)) +
-                      offsetof(ObjModelInstance, modelCount));
+    int max = objAnim->modelInstance->modelCount;
     if (v >= max) {
         v = 0;
     }

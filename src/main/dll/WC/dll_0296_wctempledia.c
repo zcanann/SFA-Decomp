@@ -182,17 +182,16 @@ void wctempledia_update(int obj)
 #pragma scheduling off
 void wctempledia_init(int obj, int setup)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int state = *(int *)(obj + 0xb8);
     int i;
 
     *(s16 *)obj = (s16)((s8)*(u8 *)(setup + WCTEMPLE_DIA_SETUP_TYPE_OFFSET) << 8);
-    *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) =
-        *(u8 *)(setup + WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET);
-    if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
-        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
-        *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
+    objAnim->bankIndex = *(u8 *)(setup + WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET);
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+        objAnim->bankIndex = 0;
     }
-    if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 0) {
+    if (objAnim->bankIndex == 0) {
         WCTEMPLE_DIA_GAMEBITS(state) = &lbl_803DC3B8;
         WCTEMPLE_DIA_TARGET_TABLE(state) = lbl_8032B348;
     } else {

@@ -64,6 +64,7 @@ extern f32 lbl_803E34A0;
 #pragma peephole off
 void collectible_init(int obj,int setup)
 {
+  ObjAnimComponent *objAnim;
   u8 *state;
   int setupObj;
   int setupModelIndex;
@@ -71,6 +72,7 @@ void collectible_init(int obj,int setup)
   u32 pathWord;
   u8 pathByte;
 
+  objAnim = (ObjAnimComponent *)obj;
   state = *(u8 **)(obj + 0xb8);
   pathWord = lbl_803E3440;
   pathByte = lbl_803E3444;
@@ -79,14 +81,13 @@ void collectible_init(int obj,int setup)
   *(s16 *)(obj + 0) = (s16)((u8)*(u8 *)(setup + 0x1b) << 8);
   *(s16 *)(obj + 2) = (s16)((u8)*(u8 *)(setup + 0x22) << 8);
   *(s16 *)(obj + 4) = (s16)((u8)*(u8 *)(setup + 0x23) << 8);
-  setupObj = *(int *)(obj + 0x50);
+  setupObj = (int)objAnim->modelInstance;
   *(f32 *)(obj + 8) = *(f32 *)(setupObj + 4);
   *(void (**)(void))(obj + 0xbc) = collectible_SeqFn;
   setupModelIndex = *(s8 *)(setup + 0x26);
-  *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)setupModelIndex;
-  if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
-      *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
-    *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
+  objAnim->bankIndex = (s8)setupModelIndex;
+  if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+    objAnim->bankIndex = 0;
   }
   *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
   *(u8 *)(state + 0xc) = *(u8 *)(setup + 0x19);

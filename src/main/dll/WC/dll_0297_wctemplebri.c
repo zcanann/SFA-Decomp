@@ -242,6 +242,7 @@ void wctemplebri_update(int obj)
 #pragma scheduling off
 void wctemplebri_init(int obj, int initData)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int state;
     int model;
     int i;
@@ -251,11 +252,9 @@ void wctemplebri_init(int obj, int initData)
     int done;
 
     *(s16 *)(obj + 0) = (s16)((s8)*(u8 *)(initData + WCTEMPLEBRI_SETUP_TYPE_OFFSET) << 8);
-    *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) =
-        *(u8 *)(initData + WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
-    if ((s8)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
-        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount)))
-        *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
+    objAnim->bankIndex = *(u8 *)(initData + WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+        objAnim->bankIndex = 0;
     *(void **)(obj + 0xbc) = (void *)wctemplebri_interactCallback;
     state = *(int *)(obj + 0xb8);
     maxY = 0;

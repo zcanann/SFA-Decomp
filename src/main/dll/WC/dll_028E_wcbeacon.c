@@ -153,16 +153,16 @@ void wcbeacon_update(int obj)
 #pragma scheduling off
 void wcbeacon_init(u8 *obj, u8 *setup)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     u8 *state = *(u8 **)(obj + 0xb8);
     s16 objType;
 
     ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     objType = (s16)((s8)setup[WCBEACON_SETUP_TYPE_OFFSET] << 8);
     *(s16 *)obj = objType;
-    obj[offsetof(ObjAnimComponent, bankIndex)] = setup[WCBEACON_SETUP_MODEL_INDEX_OFFSET];
-    if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
-        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
-        obj[offsetof(ObjAnimComponent, bankIndex)] = 0;
+    objAnim->bankIndex = setup[WCBEACON_SETUP_MODEL_INDEX_OFFSET];
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+        objAnim->bankIndex = 0;
     }
     if ((u32)GameBit_Get(*(s16 *)(setup + WCBEACON_SETUP_ARM_BIT_OFFSET)) != 0) {
         if ((u32)GameBit_Get(*(s16 *)(setup + WCBEACON_SETUP_SOLVED_BIT_OFFSET)) != 0) {

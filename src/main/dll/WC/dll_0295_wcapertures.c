@@ -162,15 +162,14 @@ int wcapertures_interactCallback(int obj, int p2, int p3)
 #pragma scheduling off
 void wcapertures_init(int obj, int initData)
 {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int state = *(int *)(obj + 0xb8);
 
     *(s16 *)(obj + 0) = (s16)((s8)*(u8 *)(initData + WCAPERTURES_SETUP_TYPE_OFFSET) << 8);
     *(void **)(obj + 0xbc) = (void *)wcapertures_interactCallback;
-    *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) =
-        *(u8 *)(initData + WCAPERTURES_SETUP_MODEL_INDEX_OFFSET);
-    if ((s8)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
-        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount)))
-        *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
+    objAnim->bankIndex = *(u8 *)(initData + WCAPERTURES_SETUP_MODEL_INDEX_OFFSET);
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+        objAnim->bankIndex = 0;
     if ((u32)GameBit_Get(*(s16 *)(initData + WCAPERTURES_SETUP_ARM_BIT_OFFSET)) != 0) {
         if ((u32)GameBit_Get(*(s16 *)(initData + WCAPERTURES_SETUP_OPEN_BIT_OFFSET)) != 0)
             WCAPERTURES_MODE(state) = WCAPERTURES_MODE_OPEN;
@@ -183,7 +182,7 @@ void wcapertures_init(int obj, int initData)
     WCAPERTURES_LIGHT(state) = objCreateLight(obj, 1);
     if (WCAPERTURES_LIGHT(state) != NULL) {
         modelLightStruct_setLightKind(WCAPERTURES_LIGHT(state), WCAPERTURES_LIGHT_KIND);
-        if ((s8)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) == 0)
+        if (objAnim->bankIndex == 0)
             modelLightStruct_setupGlow(WCAPERTURES_LIGHT(state), 0, 0xff, 0xff, WCAPERTURES_LIGHT_BLUE_LO,
                                        WCAPERTURES_LIGHT_BLUE_HI, lbl_803E6E3C);
         else

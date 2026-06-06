@@ -435,15 +435,14 @@ void wm_column_update(int obj)
 #pragma peephole off
 void wm_column_init(short *obj, int mapData)
 {
+  ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
   undefined4 state = *(undefined4 *)((int)obj + 0xb8);
   *obj = (s16)(*(u8 *)(mapData + 0x18) << 8);
   *(u16 *)((int)obj + 0xb0) |= 0x2000;
   *(undefined4 *)((int)obj + 0xf4) = 0;
-  *(s8 *)((int)obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)(int)*(s8 *)(mapData + 0x19);
-  if (*(s8 *)((int)obj + offsetof(ObjAnimComponent, bankIndex)) >=
-      *(s8 *)(*(int *)((int)obj + offsetof(ObjAnimComponent, modelInstance)) +
-              offsetof(ObjModelInstance, modelCount))) {
-    *(u8 *)((int)obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
+  objAnim->bankIndex = (s8)(int)*(s8 *)(mapData + 0x19);
+  if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+    objAnim->bankIndex = 0;
   }
   (*(GroundAnimatorInitAnimFn *)(*gCarryableInterface + 4))(obj, state, 0x32);
   ObjGroup_AddObject((int)obj, 4);

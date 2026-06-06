@@ -81,16 +81,17 @@ int suntemple_interactCallback(int obj, int p2, int p3)
 #pragma scheduling off
 void suntemple_init(u8 *obj, u8 *setup)
 {
+    ObjAnimComponent *objAnim;
     u8 *state;
 
+    objAnim = (ObjAnimComponent *)obj;
     *(s16 *)(obj + 0) = (s16)(setup[0x18] << 8);
     *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
     *(s16 *)(obj + 4) = (s16)(setup[0x1a] << 8);
     *(void **)(obj + 0xbc) = (void *)suntemple_interactCallback;
-    obj[offsetof(ObjAnimComponent, bankIndex)] = setup[0x21];
-    if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
-        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
-        obj[offsetof(ObjAnimComponent, bankIndex)] = 0;
+    objAnim->bankIndex = setup[0x21];
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+        objAnim->bankIndex = 0;
     }
     state = *(u8 **)(obj + 0xb8);
     state[0] = (u8)GameBit_Get(*(s16 *)(setup + 0x1c));
