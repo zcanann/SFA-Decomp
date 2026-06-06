@@ -58,7 +58,8 @@ typedef struct BaddieState {
     f32 unk28C;
     f32 unk290;
     f32 unk294; /* scaled together with animSpeedA and obj+0x28 */
-    u8 unk298[0x2A0 - 0x298];
+    u8 pad298[4];
+    void *unk29C; /* current target/player object (5-family census: lwz 668) */
     /* 0x2A0-0x2A7 is a PER-FAMILY UNION (lead-arbitrated): scarab and
      * mediumbasket targets store f32 here (stfs f0,672(rN) at 4+ sites
      * each -- the published types below), but the smallbasket family's
@@ -71,13 +72,18 @@ typedef struct BaddieState {
     f32 unk2A4;
     f32 unk2A8; /* mediumbasket whirlpool block 0x2A8..0x33B */
     f32 unk2AC;
-    u8 unk2B0[0x2C0 - 0x2B0];
+    u16 unk2B0; /* hit/impact counter (lhz-only reads in all families; sth stores) */
+    u8 pad2B2[0x2C0 - 0x2B2];
     f32 targetDistance; /* sqrtf dist to targetObj (scarab/campfire/anim/mediumbasket); also (s32)-compared */
     u8 unk2C4[0x2D0 - 0x2C4];
     void *targetObj; /* current attack/aggro target */
-    u8 unk2D4[0x2E4 - 0x2D4];
+    u8 pad2D4[0x2DC - 0x2D4];
+    u32 unk2DC; /* control flag word: 0x2000 path-follow, 0x2000_0000/0x4000_0000/0x8000_0000 move gates */
+    u8 pad2E0[4];
     int unk2E4; /* whirlpool: 0x42001 flag word */
-    u8 unk2E8[0x300 - 0x2E8];
+    u32 unk2E8; /* event/reaction flag word: bits 8/0x10/0x20/0x28/0x80 */
+    u8 pad2EC[0x2FC - 0x2EC];
+    f32 unk2FC; /* path-advance step (lfs/stfs 764; fed to Curve_AdvanceAlongPath) */
     f32 unk300;
     f32 unk304;
     f32 unk308;
@@ -88,6 +94,10 @@ typedef struct BaddieState {
     u8 unk320;
     u8 unk321;
     u8 unk322;
+    /* 0x323-0x345 is largely PER-FAMILY scratch: magicPlant/duster/seqObj11E
+     * targets use f32 timers at 0x324/0x328/0x32C/0x330/0x334 and a u16 angle
+     * at 0x338 where the published s16 fields below (mediumbasket whirlpool
+     * evidence) overlap them; those families keep RAW spellings here. */
     u8 unk323[0x32E - 0x323];
     s16 unk32E; /* compared > 0x78 */
     s16 unk330;
@@ -96,7 +106,7 @@ typedef struct BaddieState {
     u8 unk338[2];
     u8 unk33A;
     u8 inWhirlpoolGroup; /* ObjGroup 80 membership latch */
-    u8 unk33C[0x346 - 0x33C];
+    u8 unk33C[0x346 - 0x33C]; /* incl. 0x340: ptr in smallbasket, u32-tested in magicPlant - thin/conflicting, left raw */
     u8 moveDone; /* set when the current move completes; SeqFns chain the next mode off it */
     u8 unk347[2];
     u8 unk349; /* cleared with death/reset */
@@ -111,7 +121,10 @@ typedef struct BaddieState {
 
 STATIC_ASSERT(sizeof(BaddieState) == 0x35C);
 STATIC_ASSERT(offsetof(BaddieState, controlMode) == 0x274);
+STATIC_ASSERT(offsetof(BaddieState, unk29C) == 0x29C);
 STATIC_ASSERT(offsetof(BaddieState, moveSpeed) == 0x2A0);
+STATIC_ASSERT(offsetof(BaddieState, unk2DC) == 0x2DC);
+STATIC_ASSERT(offsetof(BaddieState, unk2FC) == 0x2FC);
 STATIC_ASSERT(offsetof(BaddieState, eventFlags) == 0x314);
 STATIC_ASSERT(offsetof(BaddieState, moveDone) == 0x346);
 
