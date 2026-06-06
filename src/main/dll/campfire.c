@@ -3,6 +3,8 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/campfire_state.h"
 #include "main/dll/campfire.h"
+#include "main/dll/cf_doorlight.h"
+#include "main/dll/texscroll2.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 
@@ -111,21 +113,6 @@ extern f32 lbl_803E30CC;
 
 #pragma peephole off
 #pragma scheduling off
-
-extern void kaldachom_stateHandlerB05(void);
-extern void kaldachom_stateHandlerB04(void);
-extern void kaldachom_stateHandlerB03(void);
-extern void kaldachom_stateHandlerB02(void);
-extern void kaldachom_stateHandlerB01(void);
-extern void kaldachom_stateHandlerB00(void);
-extern void kaldachom_stateHandlerA07(void);
-extern void kaldachom_stateHandlerA06(void);
-extern void kaldachom_stateHandlerA05(void);
-extern void kaldachom_stateHandlerA04(void);
-extern void kaldachom_stateHandlerA03(void);
-extern void kaldachom_stateHandlerA02(void);
-extern void kaldachom_stateHandlerA01(void);
-extern void kaldachom_stateHandlerA00(void);
 
 /*
  * --INFO--
