@@ -598,10 +598,10 @@ void FUN_801455e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     fVar1 = lbl_803E306C;
     *(float *)(param_10 + 0x71c) = lbl_803E306C;
     *(float *)(param_10 + 0x720) = fVar1;
-    *(uint *)(param_10 + 0x54) = *(uint *)(param_10 + 0x54) & 0xffffffef;
-    *(uint *)(param_10 + 0x54) = *(uint *)(param_10 + 0x54) & 0xfffeffff;
-    *(uint *)(param_10 + 0x54) = *(uint *)(param_10 + 0x54) & 0xfffdffff;
-    *(uint *)(param_10 + 0x54) = *(uint *)(param_10 + 0x54) & 0xfffbffff;
+    *(uint *)(param_10 + 0x54) = *(uint *)(param_10 + 0x54) & ~0x10LL;
+    *(uint *)(param_10 + 0x54) = *(uint *)(param_10 + 0x54) & ~0x10000LL;
+    *(uint *)(param_10 + 0x54) = *(uint *)(param_10 + 0x54) & ~0x20000LL;
+    *(uint *)(param_10 + 0x54) = *(uint *)(param_10 + 0x54) & ~0x40000LL;
     *(undefined *)(param_10 + 0xd) = 0xff;
   }
   if (DAT_803de6c8 == 0) {
@@ -1253,10 +1253,10 @@ extern void fn_8003A230(int obj, void *p, f32 f);
   z = lbl_803E23DC; \
   *(f32 *)((state) + 0x71c) = z; \
   *(f32 *)((state) + 0x720) = z; \
-  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & 0xffffffef; \
-  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & 0xfffeffff; \
-  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & 0xfffdffff; \
-  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & 0xfffbffff; \
+  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & ~0x10LL; \
+  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & ~0x10000LL; \
+  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & ~0x20000LL; \
+  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & ~0x40000LL; \
   *(s8 *)((state) + 0xd) = -1
 
 #define TRICKY_VOICE(obj, st, sfx, vol) \
@@ -1382,7 +1382,7 @@ void Tricky_update(int obj)
   }
   if (*(void **)(state + 0x24) != NULL && (*(u16 *)(*(int *)(state + 0x24) + 0xb0) & 0x40) != 0) {
     if ((*(uint *)(state + 0x54) & 0x10) != 0) {
-      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xffffffef;
+      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & ~0x10LL;
       *(u8 *)(state + 0x374) = 2;
       (*(void (**)(int,int))(*(int *)gPathControlInterface + 0x20))(obj,state + 0xf8);
       *(f32 *)(obj + 0xc) = *(f32 *)(state + 0xe0);
@@ -1546,7 +1546,7 @@ void Tricky_update(int obj)
               break;
             }
           } else {
-            *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x40000;
+            *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x40000LL;
           }
         }
         break;
@@ -1635,7 +1635,7 @@ void Tricky_update(int obj)
         break;
       }
     } else if (cmd == 3) {
-      *(uint *)(state + 0x54) = f | 0x40000;
+      *(uint *)(state + 0x54) = f | 0x40000LL;
     }
   }
   f = *(uint *)(state + 0x54);
@@ -1652,7 +1652,7 @@ void Tricky_update(int obj)
       *(int *)(state + 0x24) = obj;
       *(u8 *)(state + 8) = 0xf;
       *(f32 *)(state + 0x740) = (f32)(int)randomGetRange(0x1f4,0x2ee);
-      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffdffff;
+      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & ~0x20000LL;
       *(s8 *)(state + 0xd) = 3;
       if (*(u32 *)(state + 0x28) != (u32)(state + 0x72c)) {
         *(u32 *)(state + 0x28) = (u32)(state + 0x72c);
