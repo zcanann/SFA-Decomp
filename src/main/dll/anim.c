@@ -4208,7 +4208,6 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 
 extern int *gExpgfxInterface;
 extern int lbl_803AD0F4[];
-extern int GCRobotBlast_SeqFn(int, int, int);
 #pragma scheduling off
 #pragma peephole off
 void chuka_free(int obj) {

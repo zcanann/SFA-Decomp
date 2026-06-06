@@ -1598,7 +1598,6 @@ void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 #pragma peephole reset
 
 /* dll_1DA_init: stash obj->f10 into *(obj->p_B8), then bump obj->f10 by a constant step. */
-extern f32 lbl_803E4AD8;
 void dll_1DA_init(void* obj)
 {
     *(*(f32**)((char*)obj + 0xB8)) = *(f32*)((char*)obj + 0x10);
@@ -1664,7 +1663,6 @@ void dim2lavacontrol_setScale(void* obj)
 extern void fn_8004C1E4(int sfxId, f32 vol);
 extern void Music_Trigger(int trackId, int restart);
 extern void timeOfDayFn_80055000(void);
-extern f32 lbl_803E4B90;
 #pragma scheduling off
 void dim2lavacontrol_free(void)
 {
@@ -1685,7 +1683,6 @@ extern void* objFindTexture(void* obj, int a, int b);
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
-extern f32 timeDelta;
 extern int* gPartfxInterface;
 typedef void (*PartfxSpawnFn)(void *obj, int id, int a, int b, int c, int d);
 #pragma peephole off

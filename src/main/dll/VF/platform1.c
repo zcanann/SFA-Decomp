@@ -365,7 +365,6 @@ int paymentkiosk_getExtraSize(void) { return 0x3; }
 int paymentkiosk_getObjectTypeId(void) { return 0x1; }
 
 /* render-with-fn(lbl) (no visibility check). */
-extern f32 lbl_803E567C;
 extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off
 #pragma peephole off

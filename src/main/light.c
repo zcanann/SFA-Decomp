@@ -1051,7 +1051,6 @@ void vfpplatform_init(int obj, int data) {
 
 extern f32 lbl_803E6144;
 extern f32 lbl_803E6148;
-extern int return0_801FD13C(void);
 extern u32 GameBit_Get(int);
 
 #pragma scheduling off

@@ -5507,7 +5507,6 @@ void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
     desc->firstTriangle = lbl_803DCF6E;
 }
 
-extern void *fn_80069944(u32 *outVal);
 extern void PSMTXMultVecArray(void *m, void *src, void *dst, u32 count);
 
 int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8, int p9)

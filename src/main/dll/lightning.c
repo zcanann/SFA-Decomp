@@ -846,8 +846,6 @@ void fn_80174588(int obj, int p2)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 sin(f32 x);
-extern f32 fn_80293E80(f32 x);
 extern void *getTrickyObject(void);
 extern void fn_80295918(f32 amount, int obj, int p3);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -857,7 +855,6 @@ extern int *objFindTexture(int obj, int a, int b);
 extern void *Resource_Acquire(int id, int mode);
 extern void Resource_Release(void *handle);
 extern void fn_80175428(int obj, int p2);
-extern f32 timeDelta;
 extern f32 lbl_803E350C;
 extern f32 lbl_803E3510;
 extern f32 lbl_803E3514;

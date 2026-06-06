@@ -68,7 +68,6 @@ extern void *Obj_GetPlayerObject(void);
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(int obj, int channel);
-extern u32 randomGetRange(int min, int max);
 extern void Camera_GetCurrentViewSlot(void);
 extern f32 lbl_803DC0B0;
 extern f32 lbl_803DC0B4;
@@ -412,17 +411,12 @@ void spitembeam_update(int *obj) {
 int spitembeam_getExtraSize(void) { return 0x0; }
 int spitembeam_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E5AA0;
-extern f32 lbl_803E5ABC;
 extern f32 lbl_803E5AC0;
 extern f32 lbl_803E5AC4;
 extern f32 lbl_803E5AC8;
 extern f32 lbl_803E5ACC;
-extern f32 lbl_803DC0B0;
-extern f32 lbl_803DC0B4;
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
-extern void *Obj_GetPlayerObject(void);
 extern unsigned long randomGetRange(int a, int b);
 
 #pragma scheduling off

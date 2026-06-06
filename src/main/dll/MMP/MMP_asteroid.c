@@ -1830,7 +1830,6 @@ void dimbossicesmash_init(u8 *obj, u8 *params)
 
 extern f32 lbl_803E4068;
 extern f32 lbl_803E406C;
-extern f32 lbl_803E4078;
 
 /* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
  * toward the gamebit-selected target and feed the heavy fog params. */

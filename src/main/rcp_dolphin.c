@@ -3871,7 +3871,6 @@ extern u8 lbl_803DCDA4;
 extern f32 lbl_803DEB80;
 extern f32 lbl_803DEB84;
 extern f32 lbl_803DEB88;
-int textureFn_80052bb4(int model, f32 *params);
 
 void gxTextureFn_80052efc(void)
 {

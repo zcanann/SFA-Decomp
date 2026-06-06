@@ -581,8 +581,6 @@ extern void fn_8015039C(int obj, u8 *state);
 extern u8 fn_8014FFB4(int obj, u8 *state, int a);
 extern uint fn_80296118(u8 *player);
 extern void fn_8014CF7C(int obj, u8 *state, f32 x, f32 z, int a, int b);
-extern void fn_801513AC(int obj, u8 *state);
-extern void fn_801511E8(int obj, u8 *state);
 extern f32 lbl_803E2740;
 extern f32 timeDelta;
 

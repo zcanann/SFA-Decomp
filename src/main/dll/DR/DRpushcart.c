@@ -1125,7 +1125,6 @@ extern void *Obj_GetActiveModel(int);
 extern void ObjModel_SetPostRenderCallback(void *, void *);
 extern void ObjGroup_AddObject(int, int);
 extern void fn_801F4C28(int, int);
-extern int fn_801E86F4(int, int, int);
 extern int *gPartfxInterface;
 
 #pragma scheduling off

@@ -266,7 +266,6 @@ extern undefined4 DAT_8039cb52;
 extern undefined4 DAT_8039cb53;
 extern undefined4 DAT_8039cb55;
 extern undefined4 DAT_8039cb58;
-extern uint DAT_8039ce58;
 extern undefined4 DAT_8039ce5c;
 extern undefined4 DAT_8039ce60;
 extern undefined4 DAT_8039ce64;
@@ -4298,7 +4297,6 @@ void projgfx_release_doUnsupported(void) { OSReport(sProjgfxReleaseDoNoLongerSup
 #pragma scheduling reset
 
 /* OSReport-stub returns. */
-extern void OSReport(const char *fmt, ...);
 
 #define PROJGFX_UNSUPPORTED_FALSE_RETURN 0
 
@@ -4518,7 +4516,6 @@ void dll_0B_initialise(void)
     }
 }
 
-extern u8 lbl_8039BE98[];
 void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
 {
     u8 *p = lbl_8039BE98;
@@ -4645,10 +4642,7 @@ void boneParticleEffect_release(void)
     if (lbl_803DD2A8 != NULL) textureFree(lbl_803DD2A8);
 }
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern void Sfx_PlayFromObject(void *obj, int id);
-extern u32 randomGetRange(int min, int max);
 extern f32 lbl_8030FE38[];
 extern s16 lbl_803DD2BC;
 extern s16 lbl_803DD2B4;
@@ -5189,8 +5183,6 @@ extern f32 lbl_803DD320;
 extern f32 lbl_803DD324;
 extern f32 lbl_803DF718;
 extern f32 lbl_803DF71C;
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 fn_80293E80(f32);
 
 /* EN v1.0 0x800AEC50  size: 1992b  tick global effect phases and expire
@@ -5412,10 +5404,7 @@ extern int lbl_803DD328;
 extern int lbl_803DD32C;
 extern f32 lbl_803DD330;
 extern f32 lbl_803DD334;
-extern f32 timeDelta;
 extern f32 lbl_803DD284;
-extern u8 framesThisStep;
-extern f32 fn_80293E80(f32);
 
 #pragma scheduling off
 #pragma peephole off
@@ -6324,9 +6313,7 @@ extern FxNode9 lbl_8039C380;
 extern void randFn_80080100();
 extern f32 lbl_803DB810;
 extern f32 lbl_803DB814;
-extern f32 lbl_803DFDA0;
 extern f32 lbl_803DFDA4;
-extern f32 lbl_803DFDA8;
 extern f32 lbl_803DFDAC;
 extern f32 lbl_803DFDB0;
 extern f32 lbl_803DFDB4;
@@ -6749,11 +6736,7 @@ extern int lbl_803DD2C4;
 extern int lbl_803DD348;
 extern f32 lbl_803DB7C0;
 extern f32 lbl_803DB7C4;
-extern f32 lbl_803DF870;
-extern f32 lbl_803DF874;
-extern f32 lbl_803DF878;
 extern f32 lbl_803DF87C;
-extern f32 lbl_803DF880;
 extern f32 lbl_803DF884;
 extern f32 lbl_803DF888;
 extern f32 lbl_803DF88C;
@@ -6850,12 +6833,7 @@ extern s32 lbl_80310660[];
 /* ---- partfx_update (FUN_800a4df4, v1.0) ---- */
 extern f32 lbl_803DB7A0;
 extern f32 lbl_803DB7A4;
-extern f32 lbl_803DB7A8;
-extern f32 lbl_803DF4C8;
-extern f32 lbl_803DF4CC;
-extern f32 lbl_803DF4D0;
 extern f32 lbl_803DF4D4;
-extern f32 lbl_803DF4D8;
 extern f32 lbl_803DF4DC;
 extern f32 lbl_803DF4E0;
 extern f32 lbl_803DF4E4;
@@ -6995,7 +6973,6 @@ extern f32 lbl_803DF6FC;
 extern f32 lbl_803DF700;
 extern f32 lbl_803DF704;
 extern f32 lbl_803DF708;
-extern u8 lbl_803DD2C0;
 extern u16 lbl_8039C2E0[20];
 extern s16 lbl_8039C308[12];
 extern void srand(int seed);
@@ -11117,11 +11094,7 @@ extern void *Obj_GetPlayerObject();
 extern FxNode9 lbl_8039C368;
 extern f32 lbl_803DB800;
 extern f32 lbl_803DB804;
-extern f32 lbl_803DFCD8;
-extern f32 lbl_803DFCDC;
-extern f32 lbl_803DFCE0;
 extern f32 lbl_803DFCE4;
-extern f32 lbl_803DFCE8;
 extern f32 lbl_803DFCEC;
 extern f32 lbl_803DFCF0;
 extern f32 lbl_803DFCF4;
@@ -11539,14 +11512,9 @@ typedef struct MtxBuildArg {
     f32 c;
 } MtxBuildArg;
 
-extern void vecRotateZXY(void *obj, f32 *vec);
 extern f32 lbl_803DB7E0;
 extern f32 lbl_803DB7E4;
-extern f32 lbl_803DFBE0;
-extern f32 lbl_803DFBE4;
-extern f32 lbl_803DFBE8;
 extern f32 lbl_803DFBEC;
-extern f32 lbl_803DFBF0;
 extern f32 lbl_803DFBF4;
 extern f32 lbl_803DFBF8;
 extern f32 lbl_803DFBFC;
@@ -11842,7 +11810,6 @@ int Effect5_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
 }
 
 extern f32 sin(f32);
-extern void Sfx_PlayFromObject(void *obj, int id);
 extern FxNode9 lbl_8039C350;
 extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
@@ -13278,14 +13245,10 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
 extern f32 lbl_803DB7B0;
 extern f32 lbl_803DB7B4;
 // VERIFY lbl_803DF720 may already exist in modgfx.c
-extern f32 lbl_803DF720;
 // VERIFY lbl_803DF724 may already exist in modgfx.c
-extern f32 lbl_803DF724;
 // VERIFY lbl_803DF728 may already exist in modgfx.c
-extern f32 lbl_803DF728;
 extern f32 lbl_803DF72C;
 // VERIFY lbl_803DF730 may already exist in modgfx.c
-extern f32 lbl_803DF730;
 extern f32 lbl_803DF734;
 extern f32 lbl_803DF738;
 extern f32 lbl_803DF73C;
@@ -14387,11 +14350,6 @@ void dll_0B_onMapSetup(void)
 extern void *Obj_GetActiveModel(void);
 extern void *ObjModel_GetJointMatrix(void *model, int joint);
 extern void PSMTXMultVec(void *m, void *src, void *dst);
-extern int *gPartfxInterface;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803DF4A8;
-extern f32 lbl_803DF4B8;
 
 typedef struct BoneSpawnData {
   s16 unk0;
@@ -14458,7 +14416,6 @@ extern f32 lbl_8030FDE8[];
 extern s16 lbl_803DD29A;
 extern s16 lbl_803DD29C;
 extern f32 lbl_803DF468;
-extern f32 lbl_803DF46C;
 extern f32 lbl_803DF470;
 extern f32 lbl_803DF474;
 extern f32 lbl_803DF478;
@@ -14913,29 +14870,17 @@ int dll_0B_func04(void *base, int z, int c, void *b, int e, void *d, int f, void
 #pragma scheduling reset
 
 extern s16 renderModeSetOrGet(int mode);
-extern void *Camera_GetCurrentViewSlot(void);
 extern void *Camera_GetViewMatrix(void);
 extern void GXLoadPosMtxImm(void *mtx, int id);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
-extern void GXSetCullMode(int mode);
-extern void setTextColor(void *ctx, int r, int g, int b, int a);
-extern void _textSetColor(void *ctx, int r, int g, int b, int a);
 extern void selectTexture(void *tex, int slot);
-extern void drawFn_8005cf8c(void *a, void *b, int count);
-extern f32 sqrtf(f32 x);
 extern int getAngle(f32 dx, f32 dz);
-extern void vecRotateZXY(void *obj, f32 *vec);
 extern void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex);
 extern void setMatrixFromObjectPos(f32 *mtx, s16 *src);
 extern void mtx44Transpose(f32 *src, f32 *dst);
-extern void textureSetupFn_800799c0(void);
-extern void textRenderSetupFn_80079804(void);
 extern void gxTevAddTextureFrameBlendStages(void);
 extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);
-extern void geomDrawFn_800796f0(void);
-extern void gxTexColorFn_80079254(void);
-extern void gxBlendFn_80078b4c(void);
 extern void textBlendSetupFn_80078a7c(void);
 extern void fn_800542F4(void);
 extern f32 lbl_803DF450;
@@ -15366,12 +15311,8 @@ extern int Obj_IsLoadingLocked(void);
 extern int *Obj_AllocObjectSetup(int size, int type);
 extern int *Obj_SetupObject(int *obj, int a, int b, int c, int d);
 extern void ObjList_GetObjects(int *idx, int *count);
-extern void *Resource_Acquire(int id, int a);
 extern void Sfx_StopObjectChannel(void *obj, int ch);
-extern void Sfx_PlayFromObject(void *obj, int id);
 extern f32 lbl_803DF43C;
-extern f32 timeDelta;
-extern u8 framesThisStep;
 
 typedef void (*ExpFn2)(void *, int);
 typedef void (*ExpFn3)(void *, void *, int);

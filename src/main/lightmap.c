@@ -3036,9 +3036,7 @@ void setTextColor(int unused, int a, int b, int c, int d) {
 #pragma scheduling reset
 
 /* Map-block accessors backed by a per-layer table + indirect block list. */
-extern void *gMapBlockLayerTables[];     /* layer -> block-index-table */
 extern u8 lbl_803DCE98;          /* count of allocated blocks */
-extern void **lbl_803DCE9C;      /* block array */
 #pragma scheduling off
 #pragma peephole off
 void *mapGetBlockIdx(int layer) {
@@ -3347,7 +3345,6 @@ extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 void renderSceneGeometry(int *p1, s8 *order);
 extern void renderResetFn_8003fc60(void);
-void renderObjects(s8 *arg0);
 extern u8 CameraShake_IsActive(void);
 extern u8 bEnableMotionBlur;
 extern f32 lbl_803DB62C;

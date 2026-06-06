@@ -1251,7 +1251,6 @@ extern u8 lbl_803DC9F6;
 extern u8 lbl_803DC9F5;
 extern u8 lbl_803DC9F4;
 extern int gameTextGetTaskText(int taskId, int *textId, int *dirId);
-extern void *getCurGameText(void);
 extern void loadGameTextSequence();
 
 #pragma push
@@ -2445,9 +2444,6 @@ void gameTextDrawBox(u16 *strPtr, int boxId, u8 *box) {
 #pragma pop
 
 extern int mmSetFreeDelay(int delay);
-extern void gameTextRun(void);
-extern void gameTextInit(void);
-extern void gameTextInitFn_8001bd14(void);
 
 #pragma push
 #pragma scheduling off
@@ -3560,7 +3556,6 @@ SubtitleCmd *subtitleParseControlCmds(int str, int *count) {
 #pragma peephole off
 #pragma pop
 
-extern void *gameTextGetStr(int textId);
 
 #pragma push
 #pragma scheduling off

@@ -854,8 +854,6 @@ void FUN_801da868(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 int sh_beacon_getExtraSize(void) { return 0x18; }
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4,
-                                  undefined4 p5, double scale);
 extern void Obj_FreeObject(int obj);
 extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d,
                                                        int e, void* f);

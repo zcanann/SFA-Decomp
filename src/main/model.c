@@ -1305,7 +1305,6 @@ void ObjModel_AdvanceBlendChannels(u8 *model, f32 dt) {
 
 extern void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c);
 extern void modelAnimResetState(void *m, void *data);
-extern void ObjModel_RelocateAnimData(u8 *p, u8 *m);
 extern void DCStoreRange(void *p, int size);
 
 #pragma push
@@ -1324,9 +1323,6 @@ void *ObjModel_LoadAnimData(u8 *p, int b, int c) {
 }
 #pragma pop
 
-extern void *ObjModel_LoadModelData(int id);
-extern void ObjModel_RelocateModelData(u8 *model);
-extern void ObjModel_ResolveRenderOpTextures(u8 *model);
 extern int modelLoadAnimations(void *model, int id, void *animBase);
 extern int modelLoad_calcSizes(void *model, int arg, int *out, int flag);
 extern int ModelList_getHeader(void *list, int index, void *out);
@@ -1434,7 +1430,6 @@ void ObjModel_Release(u8 *model) {
 }
 #pragma pop
 
-extern void setGQR6(u32 v);
 
 #pragma push
 #pragma scheduling off
@@ -1500,8 +1495,6 @@ extern void debugPrintf(char *fmt, ...);
 #pragma dont_inline reset
 #pragma pop
 
-extern void ObjModel_InitResourceCaches(void);
-extern void ObjModel_InitRenderBuffers(void);
 
 #pragma push
 #pragma scheduling off

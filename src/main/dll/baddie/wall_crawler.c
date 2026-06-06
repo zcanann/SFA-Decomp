@@ -1253,7 +1253,6 @@ extern int *gCameraInterface;
 
 extern u8  cMenuOpen;
 extern u8  cMenuState;
-extern u8  cMenuEnabled;
 extern u8  shouldOpenCMenu;
 extern int lbl_803A9320[];
 extern u8  lbl_803DB424;

@@ -700,7 +700,6 @@ void SB_ShipHead_render(int param_1,int param_2,int param_3,int param_4,int para
  * PAL Size: TODO
  */
 extern u32 getSbGalleon(void);
-extern u8 framesThisStep;
 extern f32 Vec_distance(void *a, void *b);
 extern void Sfx_StopObjectChannel(int obj, int ch);
 extern u8 Obj_IsLoadingLocked(void);
@@ -932,7 +931,6 @@ u8 SB_Galleon_render2(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x
 s32 SB_Galleon_func0B(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x2b); }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E5810;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5868;
 #pragma peephole off
@@ -961,7 +959,6 @@ void SB_ShipGun_free(int param_1) {
 }
 
 /* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 #pragma peephole off
 int SB_Galleon_setScale(int obj) {
     s8 *p = (s8*)((int**)obj)[0xb8/4];
@@ -985,15 +982,11 @@ int SB_Galleon_setScale(int obj) {
 #pragma peephole reset
 
 /* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
-extern undefined4 *gPartfxInterface;
-extern u8 framesThisStep;
-extern f32 lbl_803E57A4;
 extern f32 lbl_803E57FC;
 extern f32 lbl_803E5800;
 extern f32 lbl_803E5804;
 extern f32 lbl_803E5808;
 extern f32 lbl_803E5738;
-extern f32 lbl_803E56CC;
 extern f32 lbl_803E56F0;
 extern f32 lbl_803E56C8;
 #pragma peephole off
@@ -1113,8 +1106,6 @@ void SB_Galleon_update(int obj) {
  */
 extern void objSetSlot(void *obj, int slot);
 extern void *textureLoadAsset(int id);
-extern void setDrawLights(int mode);
-extern void Music_Trigger(s32 snd, s32 mode);
 extern int lbl_803DDC18;
 extern int lbl_803DDC1C;
 extern f32 lbl_803E580C;
@@ -1159,9 +1150,6 @@ void SB_Galleon_init(int obj) {
 
 /* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
 extern void textureFree(void *tex);
-extern void Music_Trigger(s32 snd, s32 mode);
-extern int lbl_803DDC18;
-extern int lbl_803DDC1C;
 void SB_Galleon_free(int obj, int p2) {
     u8 *p = (u8*)((int**)obj)[0xb8/4];
     if ((void*)lbl_803DDC18 != NULL) {

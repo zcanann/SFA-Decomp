@@ -2130,7 +2130,6 @@ extern int Obj_GetPlayerObject(void);
 extern s16 getAngle(f32 x, f32 z);
 extern f32 sqrtf(f32 x);
 extern u8 framesThisStep;
-void objModelResetVecFn_80080548(int obj);
 
 /* EN v1.0 0x800805A4  size: 1564b  Object-sequence turn-to-face-player step:
  * starts (mode 4) or advances (mode 5) a smooth turn of the object toward the

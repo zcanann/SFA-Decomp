@@ -1342,8 +1342,6 @@ void memcpyToCache(void *dst, void *src, u32 count) {
 #pragma dont_inline reset
 #pragma pop
 
-extern void mmInit(void);
-extern int mmSetFreeDelay(int delay);
 
 #pragma push
 #pragma scheduling off

@@ -6015,7 +6015,6 @@ extern u8 lbl_803DCC3E;
 extern u8 lbl_802CAEDC[];
 extern void modelInitBoneMtxs(int *am, f32 *out);
 extern void model_multMtxs(int *am, f32 *wm);
-extern void objRenderFuzzFn_8003d6f8(int obj);
 u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs);
 extern u32 *ObjModel_GetRenderOpTextureRefs(int *am, int idx);
 extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);

@@ -2216,7 +2216,6 @@ void timeListDraw(void)
 extern char *fn_800E888C(int track, int row);
 extern void gameTextShowStr(char *str, int box, int x, int y);
 extern u8   lbl_8031AF00[];
-extern u8   lbl_803DBA91;
 extern s16  lbl_803DBAA8;
 extern f32  lbl_803DBAAC;
 extern f32  lbl_803DBAB0;
@@ -3153,11 +3152,9 @@ void mapScreenDrawHud(int p1, int p2, int p3)
 extern f32  gameTextFn_80019c00(void);
 extern int  getCurSeqNo(void);
 extern u8   AudioStream_IsPreparing(void);
-extern void pauseMenuInit(void);
 extern int  getCurGameText(void);
 extern int  hintTextMapFn_800ea264(void);
 extern void gameTextLoadDir(int dir);
-extern int  pauseMenuIsFox(void);
 extern u8   getCurTaskHintTextMap(void);
 extern int *gScreenTransitionInterface;
 extern void hintTextFn_800ea174(u8 *buf);
@@ -3188,7 +3185,6 @@ extern f32  lbl_803DD820;
 extern u8   lbl_803DBAA2;
 extern f32  lbl_803E1E60;
 extern f32  lbl_803E1F9C_;
-extern f64  lbl_803E1F60;
 
 typedef struct {
     u8  _pad0[0x210];

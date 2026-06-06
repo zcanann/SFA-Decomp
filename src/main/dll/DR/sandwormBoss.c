@@ -3373,7 +3373,6 @@ extern f32  s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 extern void gameBitIncrement(int bit);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32  lbl_803E4244;
 
 /* EN v1.0 0x8019E6C8  size: 316b  babycloudrunner_func0B: when the player
  * gets within the trigger radius and the runner is in state 3, fire its
@@ -3749,7 +3748,6 @@ extern f32   lbl_803E4280;
 extern f32   lbl_803E4260;
 extern f32   lbl_803E4264;
 extern f32   lbl_803E4284;
-extern u8    framesThisStep;
 extern void  objParticleFn_80099d84(int obj, f32 f, int a, int b);
 
 /* EN v1.0 0x8019F93C  size: 188b  cfprisonguard_render: render the guard
@@ -3882,7 +3880,6 @@ void cfguardian_update(void) { waterSpellStone1Fn_8019b4c8(); }
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern int* gExpgfxInterface;
-extern int fn_801A04F4(int p1, int p2, void* p3);
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E4130;
 extern f32 lbl_803E416C;
@@ -3892,7 +3889,6 @@ extern void dll_2E_func06(int* a, int* b, int c);
 extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
 extern f32 fn_80296214(void* p);
 /* ObjMsg_AllocQueue already declared as undefined */
-extern int fn_8019FC84(int* obj, int p2, void* p3);
 extern void Music_Trigger(int a, int b);
 extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
@@ -4075,7 +4071,6 @@ void cfprisoncage_hitDetect(int* obj)
     }
 }
 
-extern int cfprisoncage_SeqFn(int* obj, int p2, u8* p3);
 extern f32 lbl_803E42B4;
 #pragma scheduling off
 #pragma peephole off
@@ -4208,7 +4203,6 @@ int *findRomCurvePointNearObject(int *obj, int p2, int *outVec, int p4) {
 
 extern void fn_8019D9F0(int *obj);
 extern int *lbl_803DDB10;
-extern u8 framesThisStep;
 #pragma peephole off
 #pragma scheduling off
 void cfmaincrystal_update(int *obj) {
@@ -4495,7 +4489,6 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 extern f32  sqrtf(f32 x);
 extern void normalize(f32* x, f32* y, f32* z);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern f32  lbl_803E4110;
 extern f32  lbl_803E4124;
 extern f32  lbl_803E4128;
 
@@ -5717,7 +5710,6 @@ extern f32  lbl_803E4154;
 extern f32  lbl_803E4158;
 extern f32  lbl_803E415C;
 extern f32  lbl_803E412C;
-extern f32  lbl_803E4130;
 
 /* EN v1.0 0x8019B4C8  size: 3800b  waterSpellStone1Fn_8019b4c8: cfguardian
  * brain - sixteen-state quest progression for the CloudRunner guardian, with

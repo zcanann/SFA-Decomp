@@ -2507,7 +2507,6 @@ void infopoint_update(int obj) {
 #pragma scheduling reset
 
 /* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
-extern int Landed_Arwing_SeqFn(int obj, int unused, u8 *events);
 #pragma scheduling off
 #pragma peephole off
 void landed_arwing_init(int obj, int param) {
@@ -2822,7 +2821,6 @@ extern f64 lbl_803E3B90;
 extern f32 Vec_distance(f32 *a, f32 *b);
 extern void objWorldToLocalPos(f32 *out, int obj, f32 *pos);
 extern void Model_GetVertexPosition(int *model, int idx, f32 *out);
-extern void decoration11a_expandBoundsWithVertex(f32 *vertex, f32 *maxOut, f32 *minOut);
 extern void PSVECScale(f32 *dst, f32 *src, f32 s);
 extern f32 PSVECMag(f32 *v);
 

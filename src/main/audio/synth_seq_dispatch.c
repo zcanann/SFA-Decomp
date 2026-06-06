@@ -403,7 +403,6 @@ void fn_8026E90C(u8 voice)
 
 extern int fn_8026CF78(u8 voice);
 
-extern void fn_8026E90C(u8 voice);
 extern f32 floorf(f32 x);
 extern f32 lbl_803E7780;
 extern f32 lbl_803E7784;

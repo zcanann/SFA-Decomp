@@ -162,7 +162,6 @@ void waveanimator_modelMtxFn(int obj, int a, int b, int c) {
     *(u8 *)((char *)state + 0x38) = (u8)c;
 }
 
-extern void fn_80191F54(int obj, int *state);
 void texscroll2_init(int obj, u8 *def, int flag) {
     int *state = *(int **)((char *)obj + 0xB8);
     *(u8 *)((char *)state + 0x11) = def[0x1E];

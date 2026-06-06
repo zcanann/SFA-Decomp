@@ -98,7 +98,6 @@ extern f32 lbl_803E4914;
 extern f32 lbl_803E4918;
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
-extern uint GameBit_Get(int eventId);
 extern unsigned long GameBit_Set(int eventId, int value);
 
 #pragma peephole off
@@ -158,7 +157,6 @@ void dimbridgecogmai_init(int *obj, int *def) {
 #pragma scheduling reset
 
 extern f32 lbl_803E490C;
-extern void objRenderFn_80041018(int obj);
 #pragma scheduling off
 #pragma peephole off
 void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
@@ -249,7 +247,6 @@ void dimdismountpoint_func11(int obj, int flag) {
 }
 
 extern int Obj_GetPlayerObject(void);
-extern f32 lbl_803E4908;
 int dimdismountpoint_setScale(int obj) {
     int *player = (int *)Obj_GetPlayerObject();
     int *state = *(int **)((char *)obj + 0xB8);

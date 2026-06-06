@@ -568,7 +568,6 @@ extern int lbl_803DCBAC;
 extern int *lbl_803DCBB0;
 extern u8 *lbl_803DCBB4;
 extern int lbl_803DCB7C;
-extern f32 timeDelta;
 
 #pragma push
 #pragma scheduling off
@@ -718,8 +717,6 @@ void *getTabEntry(int id, int arg, int e, int d);
 #pragma pop
 
 typedef f32 Mtx[3][4];
-extern void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags);
-extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
 
 #pragma push
 #pragma scheduling off
@@ -739,10 +736,7 @@ void Obj_TransformLocalVectorByWorldMatrix(void *obj, f32 *src, f32 *dst) {
 }
 #pragma dont_inline reset
 
-extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
 extern f32 lbl_803DE890;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 #pragma dont_inline on
 void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag) {
@@ -798,7 +792,6 @@ void objWorldToLocalPos(f32 *out, u8 *transform, f32 *in) {
 #undef rotMtx
 }
 
-extern void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
 #pragma push
@@ -806,15 +799,12 @@ extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 #pragma peephole off
 #pragma pop
 
-extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
 
 #pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
 #pragma peephole reset
 
-extern void *mmAlloc(int size, int type, int flag);
-extern void *memset(void *dst, int val, int n);
 
 void *Obj_AllocObjectSetup(int size, int b) {
     u8 *p = mmAlloc(size, 0xe, 0);
@@ -867,7 +857,6 @@ int objMove(u8 *obj, f32 dx, f32 dy, f32 dz) {
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void *memset(void *dst, int val, int n);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -892,7 +881,6 @@ extern void *memset(void *dst, int val, int n);
 void mtx44Transpose(f32 *src, f32 *dst);
 #pragma dont_inline reset
 
-extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
 #pragma dont_inline on
 void setMatrixFromObjectTransposed(void *obj, f32 *out);
@@ -926,7 +914,6 @@ void objFn_8002b67c(u8 *obj) {
 
 #pragma pop
 
-extern void textureFree(void *tex);
 extern f32 lbl_803DE8B8;
 
 #pragma push
@@ -974,7 +961,6 @@ extern void **lbl_803DCB98;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void OSReport(char *fmt, ...);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -1060,8 +1046,6 @@ void *ObjModel_LoadAnimData(u8 *p, int b, int c);
 
 void *ObjModel_Load(int id, int arg2, int *outSize);
 
-extern void OSReport(char *fmt, ...);
-extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
 extern void Obj_RegisterObject(u8 *obj, int b);
 extern char sObjSetupObjectLoadingLockedWarning[];
 extern char lbl_802CAC54[];
@@ -1115,14 +1099,12 @@ void *loadObjectAtObject(u8 *src, int arg1) {
 void ObjModel_Release(u8 *model);
 #pragma pop
 
-extern void *memset(void *dst, int val, int n);
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 
 extern void objLoadPlayerFromSave(u8 *obj);
-extern f32 lbl_803DE88C;
 
 void Obj_RunInitCallback(u8 *obj, int cb, int unused) {
     s16 mode = *(s16 *)(obj + 0x46);
@@ -1236,7 +1218,6 @@ typedef struct ObjPathTransform {
     f32 z;
 } ObjPathTransform;
 
-extern void mtxRotateByVec3s(f32 *mtx, void *transform);
 
 #pragma push
 #pragma scheduling off
@@ -3236,8 +3217,6 @@ int loadModLines(int idx, s16 *outCount) {
 
 extern f32 lbl_803DCED0;
 extern f32 lbl_803DCECC;
-extern f32 playerMapOffsetZ;
-extern f32 playerMapOffsetX;
 
 #pragma dont_inline off
 
