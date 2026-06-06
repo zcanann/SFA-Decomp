@@ -464,7 +464,7 @@ int wmgeneralscales_SeqFn(int obj, int p2, u8 *seq)
 {
     f32 *state;
     int i;
-    u8 buf[20];
+    u8 buf[16];
 
     state = *(f32 **)(obj + 0xb8);
     if (*((u8 *)state + 5) != 0) {
