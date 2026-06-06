@@ -73,7 +73,6 @@ extern u8 salFrame;
 extern u32 salMessageCallback;
 extern u8 *dspVoice;
 
-void hwSetTimeOffset(u8 value);
 extern void salExitDspCtrl(void);
 extern int salStartDsp(void);
 extern void sndBegin(void);

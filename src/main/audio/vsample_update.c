@@ -1,6 +1,5 @@
 #include "main/audio/vsample_update.h"
 
-extern void synthAdvanceVirtualSampleEntry(void *entry, u32 tick);
 extern u32 hwChangeStudio(int slot);
 extern u32 hwGetVirtualSampleState(int slot);
 extern u32 hwGetVirtualSampleID(int slot);

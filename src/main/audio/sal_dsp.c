@@ -9,7 +9,6 @@ extern u16 dspCmdFirstSize;
 extern u32 dspCmdList;
 extern u32 salDspCallbackEnabled;
 extern volatile u32 salDspInitIsDone;
-extern u32 salGetStartDelay(void);
 extern DSPTaskInfo lbl_803D4880;
 extern u16 lbl_80330840[];
 extern u16 lbl_803DC628[4];
