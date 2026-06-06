@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
+#include "main/objhits_types.h"
 
 extern undefined4 getLActions();
 extern bool FUN_800067f0();
@@ -134,10 +135,10 @@ extern int *gPartfxInterface;
 #pragma peephole off
 void SB_FireBall_hitDetect(int *obj)
 {
-    int *params = *(int **)((char *)obj + 0x54);
+    ObjHitsPriorityState *params = *(ObjHitsPriorityState **)((char *)obj + 0x54);
     int i;
-    if (*(void **)((char *)params + 0x50) == NULL) return;
-    *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
+    if (params->lastHitObject == 0) return;
+    params->flags &= ~1;
     for (i = 50; i != 0; i--) {
         ((void (*)(int *, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 167, 0, 1, -1, 0);
     }
@@ -196,12 +197,11 @@ void FUN_801e4378(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   dVar5 = (double)*(float *)(iVar3 + 0x1c);
   dVar4 = (double)lbl_803E654C;
   if (dVar5 <= dVar4) {
-    iVar2 = *(int *)(*(int *)(param_9 + 0x54) + 0x50);
+    iVar2 = (*(ObjHitsPriorityState **)(param_9 + 0x54))->lastHitObject;
     if ((((iVar2 != 0) && (sVar1 = *(short *)(iVar2 + 0x46), sVar1 != 0x119)) && (sVar1 != 0x113))
        && (dVar4 == dVar5)) {
       FUN_80006824(param_9,SFXspirit_voice4);
-      *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-           *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
+      (*(ObjHitsPriorityState **)(param_9 + 0x54))->flags &= ~1;
       *(float *)(iVar3 + 0x1c) = lbl_803E6550;
       *(undefined *)(param_9 + 0x36) = 0x19;
       iVar3 = 0x32;
@@ -281,15 +281,14 @@ void FUN_801e451c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_80017ac8((double)fVar1,dVar2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
   }
   if (*(short *)(pfVar3 + 6) < 0x10) {
-    *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
+    (*(ObjHitsPriorityState **)(param_9 + 0x54))->flags &= ~1;
   }
   else {
-    *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 5;
-    *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
-    *(undefined4 *)(*(int *)(param_9 + 0x54) + 0x48) = 0x10;
-    *(undefined4 *)(*(int *)(param_9 + 0x54) + 0x4c) = 0x10;
-    *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) = *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) | 1;
+    (*(ObjHitsPriorityState **)(param_9 + 0x54))->hitVolumePriority = 5;
+    (*(ObjHitsPriorityState **)(param_9 + 0x54))->hitVolumeId = 1;
+    (*(ObjHitsPriorityState **)(param_9 + 0x54))->objectHitMask = 0x10;
+    (*(ObjHitsPriorityState **)(param_9 + 0x54))->skeletonHitMask = 0x10;
+    (*(ObjHitsPriorityState **)(param_9 + 0x54))->flags |= 1;
   }
   *(ushort *)(pfVar3 + 6) = *(short *)(pfVar3 + 6) + (ushort)DAT_803dc070;
   return;
@@ -324,8 +323,7 @@ void FUN_801e481c(uint param_1)
       FUN_800175d0((double)lbl_803E6560,(double)lbl_803E6564,*(int *)(iVar2 + 0x20));
     }
   }
-  *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-       *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
+  (*(ObjHitsPriorityState **)(param_1 + 0x54))->flags &= ~1;
   *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * lbl_803E6568;
   *(byte *)(iVar2 + 0x1a) = *(byte *)(iVar2 + 0x1a) | 2;
   FUN_80006824(param_1,SFXen_ripefruit11);
@@ -538,13 +536,12 @@ void FUN_801e4cd8(uint param_1)
   int iVar2;
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  iVar1 = *(int *)(*(int *)(param_1 + 0x54) + 0x50);
+  iVar1 = (*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject;
   if ((iVar1 != 0) && (*(float *)(iVar2 + 0x20) == lbl_803E6584)) {
     if (*(short *)(iVar1 + 0x46) == 0x8e) {
       FUN_80006824(param_1,SFXen_rockshat16);
     }
-    *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
+    (*(ObjHitsPriorityState **)(param_1 + 0x54))->flags &= ~1;
     *(float *)(iVar2 + 0x20) = lbl_803E6588;
     *(undefined *)(param_1 + 0x36) = 0;
     FUN_80081114(param_1,2);
@@ -665,8 +662,7 @@ void FUN_801e50a4(int param_1)
   int iVar2;
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-       *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
+  (*(ObjHitsPriorityState **)(param_1 + 0x54))->flags &= ~1;
   *(ushort *)(*(int *)(param_1 + 0x54) + 0xb2) = *(ushort *)(*(int *)(param_1 + 0x54) + 0xb2) | 1;
   if (*(int *)(iVar2 + 0x18) == 0) {
     piVar1 = FUN_80017624(param_1,'\x01');
@@ -2172,12 +2168,12 @@ void SB_CloudBall_update(int obj)
         }
         *(s16 *)obj = (s16)getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
                                      *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
-        *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 5;
-        *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
-        *(int *)(*(int *)(obj + 0x54) + 0x48) = 0x10;
-        *(int *)(*(int *)(obj + 0x54) + 0x4c) = 0x10;
-        *(s16 *)(*(int *)(obj + 0x54) + 0x60) = (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) | 1);
-        if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0 && *(f32 *)(state + 0x20) == lbl_803E58EC) {
+        (*(ObjHitsPriorityState **)(obj + 0x54))->hitVolumePriority = 5;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->hitVolumeId = 1;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->objectHitMask = 0x10;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->skeletonHitMask = 0x10;
+        (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
+        if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0 && *(f32 *)(state + 0x20) == lbl_803E58EC) {
             projectileParticleFxFn_80099660((int *)obj, lbl_803E58E8, 2);
             *(f32 *)(state + 0x20) = lbl_803E58F0;
             *(u8 *)(obj + 0x36) = 0;
@@ -2242,15 +2238,13 @@ void SB_FireBall_update(int obj)
             obj, SB_FIREBALL_TRAIL_PARTICLE_ID, particleArgs, 1, -1, 0);
 
         if (*(s16 *)(state + 4) > SB_FIREBALL_HITBOX_ENABLE_DELAY) {
-            *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = SB_FIREBALL_HITBOX_TYPE;
-            *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = SB_FIREBALL_HITBOX_PRIORITY;
-            *(int *)(*(int *)(obj + 0x54) + 0x48) = SB_FIREBALL_HITBOX_SIZE;
-            *(int *)(*(int *)(obj + 0x54) + 0x4c) = SB_FIREBALL_HITBOX_SIZE;
-            *(s16 *)(*(int *)(obj + 0x54) + 0x60) =
-                (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) | SB_FIREBALL_SOLID_HITBOX_FLAG);
+            (*(ObjHitsPriorityState **)(obj + 0x54))->hitVolumePriority = SB_FIREBALL_HITBOX_TYPE;
+            (*(ObjHitsPriorityState **)(obj + 0x54))->hitVolumeId = SB_FIREBALL_HITBOX_PRIORITY;
+            (*(ObjHitsPriorityState **)(obj + 0x54))->objectHitMask = SB_FIREBALL_HITBOX_SIZE;
+            (*(ObjHitsPriorityState **)(obj + 0x54))->skeletonHitMask = SB_FIREBALL_HITBOX_SIZE;
+            (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= SB_FIREBALL_SOLID_HITBOX_FLAG;
         } else {
-            *(s16 *)(*(int *)(obj + 0x54) + 0x60) =
-                (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~SB_FIREBALL_SOLID_HITBOX_FLAG);
+            (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~SB_FIREBALL_SOLID_HITBOX_FLAG;
         }
 
         *(s16 *)(state + 4) += framesThisStep;

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
+#include "main/objhits_types.h"
 
 
 #pragma peephole off
@@ -118,7 +119,7 @@ void SB_ShipGun_update(int obj)
   piVar10 = *(int **)(obj + 0xb8);
   iVar11 = *(int *)(obj + 0x4c);
   if (*(short *)(*(int *)(obj + 0x30) + 0x46) == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE) {
-    *(short *)(*(int *)(obj + 0x54) + 0x60) = *(short *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+    (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
     *(undefined *)((int)piVar10 + 0xd) = 0;
   }
   else {
@@ -156,11 +157,11 @@ void SB_ShipGun_update(int obj)
           *(undefined2 *)(piVar10 + 2) = 0;
         }
       }
-      *(short *)(*(int *)(obj + 0x54) + 0x60) = *(short *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
       break;
     case 2:
       {
-          *(short *)(*(int *)(obj + 0x54) + 0x60) = *(short *)(*(int *)(obj + 0x54) + 0x60) | 1;
+          (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
           iVar11 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5);
           if ((iVar11 == 0) &&
              (iVar7 = ObjHits_GetPriorityHit(obj,0,0,0), iVar7 != 0)) {
@@ -264,7 +265,7 @@ void SB_ShipGun_update(int obj)
       }
       break;
     case 3:
-      *(short *)(*(int *)(obj + 0x54) + 0x60) = *(short *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
       if (*(char *)(piVar10 + 3) == '\0') {
         spawnExplosion((double)lbl_803E5890,obj,1,1,1,0,1,1,0);
         *(undefined *)((int)piVar10 + 10) = 4;
@@ -288,7 +289,7 @@ void SB_ShipGun_update(int obj)
       }
       break;
     case 5:
-      *(short *)(*(int *)(obj + 0x54) + 0x60) = *(short *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+      (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
       if (((void *)iVar5 != NULL) &&
          (iVar5 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5), iVar5 == 0)) {
         if (*(char *)(iVar11 + 0x19) == '\0') {
@@ -426,15 +427,13 @@ void SB_CannonBall_update(int *obj) {
         Obj_FreeObject(obj);
     }
     if (*(s16 *)((char *)state + 0x18) > SB_CANNONBALL_HITBOX_ENABLE_DELAY) {
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6e) = SB_CANNONBALL_HITBOX_TYPE;
-        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6f) = SB_CANNONBALL_HITBOX_PRIORITY;
-        *(int *)(*(int *)((char *)obj + 0x54) + 0x48) = SB_CANNONBALL_HITBOX_SIZE;
-        *(int *)(*(int *)((char *)obj + 0x54) + 0x4c) = SB_CANNONBALL_HITBOX_SIZE;
-        *(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) =
-            *(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) | SB_CANNONBALL_SOLID_HITBOX_FLAG;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->hitVolumePriority = SB_CANNONBALL_HITBOX_TYPE;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->hitVolumeId = SB_CANNONBALL_HITBOX_PRIORITY;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->objectHitMask = SB_CANNONBALL_HITBOX_SIZE;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->skeletonHitMask = SB_CANNONBALL_HITBOX_SIZE;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags |= SB_CANNONBALL_SOLID_HITBOX_FLAG;
     } else {
-        *(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) =
-            *(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) & ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
+        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
     }
     *(s16 *)((char *)state + 0x18) += framesThisStep;
 }
