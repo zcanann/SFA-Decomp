@@ -542,10 +542,10 @@ void macHandleActive(McmdVoiceState *sv)
             off = 0;
             for (; i < lbl_803BD150[0x210]; off += SYNTH_VOICE_STRIDE, i++) {
                 u32 id = voiceid | i;
-                if (*(u32 *)(synthVoice + off + 0xf4) == id) {
+                if (((McmdVoiceState *)(synthVoice + off))->voiceHandle == id) {
                     if (id != 0xffffffff) {
                         u32 slot = id & 0xff;
-                        if (*(u32 *)(synthVoice + slot * SYNTH_VOICE_STRIDE + 0xf4) == id) {
+                        if (((McmdVoiceState *)(synthVoice + slot * SYNTH_VOICE_STRIDE))->voiceHandle == id) {
                             macSetExternalKeyoff((McmdVoiceState *)(synthVoice + slot * SYNTH_VOICE_STRIDE));
                         }
                     }
@@ -1401,8 +1401,8 @@ void macInit(void)
     macTimeQueueRoot = 0;
     macRealTimeHi = 0;
     for (i = 0; i < lbl_803BD150[0x210]; off += SYNTH_VOICE_STRIDE, i++) {
-        *(u32 *)(synthVoice + off + 0x34) = 0;
-        *(s32 *)(synthVoice + off + 0x4c) = 2;
-        *(u16 *)(synthVoice + off + 0xaa) = 0;
+        *(u32 *)&((McmdVoiceState *)(synthVoice + off))->macroBase = 0;
+        ((McmdVoiceState *)(synthVoice + off))->queueMode = 2;
+        ((McmdVoiceState *)(synthVoice + off))->loopCounter = 0;
     }
 }
