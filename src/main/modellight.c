@@ -347,19 +347,16 @@ void *objCreateLight(int arg, u8 addToList) {
 #pragma scheduling off
 #pragma peephole off
 void modelLightStruct_freeSlot(void **lightSlot) {
-    ModelLightStruct *light;
-    int i;
     int count;
+    int i;
+    ModelLightStruct *light;
 
     light = *lightSlot;
     if (light != NULL) {
-        i = 0;
-        count = gModelLightCount;
-        while (i < count) {
+        for (i = 0; i < (count = gModelLightCount); i++) {
             if (gModelLightList[i] == light) {
                 break;
             }
-            i++;
         }
 
         if (i < count) {
@@ -382,13 +379,10 @@ void ModelLightStruct_free(ModelLightStruct *light) {
     int count;
     int i;
 
-    i = 0;
-    count = gModelLightCount;
-    while (i < count) {
+    for (i = 0; i < (count = gModelLightCount); i++) {
         if (gModelLightList[i] == light) {
             break;
         }
-        i++;
     }
 
     if (i < count) {
