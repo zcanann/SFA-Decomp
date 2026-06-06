@@ -108,7 +108,7 @@ void wmsun_init(int obj, int params)
             *(s16 *)(state + 2) = randomGetRange(700, 1000);
             *(s16 *)(state + 4) = randomGetRange(700, 1000);
         }
-        *(u8 *)(obj + 0x36) = 0;
+        objAnim->alpha = 0;
     } else if (mode == 0x2c2) {
         *(int *)(state + 8) = mmAlloc(0xa0, 0xe, 0);
         i = 0x14;
@@ -120,7 +120,7 @@ void wmsun_init(int obj, int params)
             *(s16 *)(*(int *)(state + 8) + j + 0x50) = randomGetRange(10, 0x14);
             *(s16 *)(*(int *)(state + 8) + j + 0x78) = randomGetRange(0x50, 0xff);
         }
-        *(u8 *)(obj + 0x36) = 0;
+        objAnim->alpha = 0;
         if (*(s16 *)(params + 0x1c) != 0) {
             ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5F24 / ((f32)*(s16 *)(params + 0x1c) / lbl_803E5F8C);
         }
@@ -209,14 +209,14 @@ void wmsun_update(int obj)
     }
     if (((GameObject *)obj)->anim.seqId == 0x2c2) {
         if (GameBit_Get(0x38f) != 0) {
-            b = *(u8 *)(obj + 0x36);
+            b = objAnim->alpha;
             if (b < 0xfa) {
                 v = (s16)(b + framesThisStep);
             }
             if (v > 0xfa) {
                 v = 0xfa;
             }
-            *(u8 *)(obj + 0x36) = v;
+            objAnim->alpha = v;
             t = objFindTexture(obj, 0, 0);
             if ((u32)t != 0) {
                 *(s16 *)(t + 8) = *(s16 *)(t + 8) - framesThisStep * 8;
@@ -229,30 +229,30 @@ void wmsun_update(int obj)
     }
     if (GameBit_Get(0x38f) != 0) {
         c = objAnim->bankIndex;
-        if (c == 0 && (b = *(u8 *)(obj + 0x36)) != 0xff) {
+        if (c == 0 && (b = objAnim->alpha) != 0xff) {
             if (b < 0xff) {
                 v = (s16)(b + framesThisStep);
             }
             if (v > 0xff) {
                 v = 0xff;
             }
-            *(u8 *)(obj + 0x36) = v;
-        } else if (c == 1 && (b = *(u8 *)(obj + 0x36)) != 0x55) {
+            objAnim->alpha = v;
+        } else if (c == 1 && (b = objAnim->alpha) != 0x55) {
             if (b < 0x55) {
                 v = (s16)(b + framesThisStep);
             }
             if (v > 0x55) {
                 v = 0x55;
             }
-            *(u8 *)(obj + 0x36) = v;
-        } else if (c == 2 && (b = *(u8 *)(obj + 0x36)) != 0x19) {
+            objAnim->alpha = v;
+        } else if (c == 2 && (b = objAnim->alpha) != 0x19) {
             if (b < 0x19) {
                 v = (s16)(b + framesThisStep);
             }
             if (v > 0x19) {
                 v = 0x19;
             }
-            *(u8 *)(obj + 0x36) = v;
+            objAnim->alpha = v;
         }
         if (objAnim->bankIndex == 0) {
             if ((int)randomGetRange(0, 0x96) == 0) {

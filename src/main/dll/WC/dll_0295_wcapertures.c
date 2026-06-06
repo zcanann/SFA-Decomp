@@ -177,7 +177,7 @@ void wcapertures_init(int obj, int initData)
         else
             WCAPERTURES_MODE(state) = WCAPERTURES_MODE_ARMED;
     }
-    *(u8 *)(obj + 0x36) = WCAPERTURES_INITIAL_ALPHA;
+    objAnim->alpha = WCAPERTURES_INITIAL_ALPHA;
     WCAPERTURES_TARGET_ALPHA(state) = WCAPERTURES_ALPHA_OPAQUE;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
     WCAPERTURES_LIGHT(state) = objCreateLight(obj, 1);
@@ -199,6 +199,7 @@ void wcapertures_init(int obj, int initData)
 #pragma scheduling off
 void wcapertures_update(int obj)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     int state = *(int *)&((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
@@ -226,24 +227,24 @@ void wcapertures_update(int obj)
         WCAPERTURES_TARGET_ALPHA(state) = 0;
         break;
     }
-    alpha = *(u8 *)(obj + 0x36);
+    alpha = objAnim->alpha;
     target = WCAPERTURES_TARGET_ALPHA(state);
     if (alpha < target) {
         int v = alpha + (framesThisStep << WCAPERTURES_ALPHA_STEP_SHIFT);
         if (v > target) {
             v = target;
         }
-        *(u8 *)(obj + 0x36) = v;
+        objAnim->alpha = v;
     } else if (alpha > target) {
         int v = alpha - (framesThisStep << WCAPERTURES_ALPHA_STEP_SHIFT);
         if (v < target) {
             v = target;
         }
-        *(u8 *)(obj + 0x36) = v;
+        objAnim->alpha = v;
     }
     light = WCAPERTURES_LIGHT(state);
     if (light != NULL) {
-        if (*(u8 *)(obj + 0x36) > WCAPERTURES_LIGHT_ENABLE_THRESHOLD) {
+        if (objAnim->alpha > WCAPERTURES_LIGHT_ENABLE_THRESHOLD) {
             modelLightStruct_setEnabled(light, 1, lbl_803E6E2C);
         } else {
             modelLightStruct_setEnabled(light, 0, lbl_803E6E2C);

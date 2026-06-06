@@ -139,7 +139,7 @@ void wctile_init(u8 *obj, u8 *setupBytes)
     }
     state->targetTile = setup->initialTile;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
-    obj[0x36] = 0;
+    objAnim->alpha = 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -166,7 +166,7 @@ void wctile_update(int obj)
 
     if ((void *)state->controller == NULL) {
         state->controller = ObjGroup_FindNearestObject(WCTILE_CONTROLLER_GROUP, obj, &nearest);
-        *(u8 *)(obj + 0x36) = 0;
+        objAnim->alpha = 0;
         return;
     }
     ((GameObject *)obj)->anim.rotX += (s16)(lbl_803E6DF8 * timeDelta);
@@ -196,23 +196,23 @@ void wctile_update(int obj)
             WCTILE_STATE_IFACE(state)->moveToTileB(obj, state->tileX, state->tileY, obj + 0xc,
                                                    obj + 0x14, WCTILE_STATE_IFACE(state));
         }
-        *(u8 *)(obj + 0x36) = WCTILE_ALPHA_OPAQUE;
+        objAnim->alpha = WCTILE_ALPHA_OPAQUE;
         state->mode = WCTILE_MODE_SOLID;
         break;
     case WCTILE_MODE_INACTIVE:
-        *(u8 *)(obj + 0x36) = 0;
+        objAnim->alpha = 0;
         break;
     case WCTILE_MODE_HIDDEN:
-        *(u8 *)(obj + 0x36) = 0;
+        objAnim->alpha = 0;
         break;
     case WCTILE_MODE_FADE_OUT:
         {
-            int v = *(u8 *)(obj + 0x36) - (framesThisStep << WCTILE_ALPHA_STEP_SHIFT);
+            int v = objAnim->alpha - (framesThisStep << WCTILE_ALPHA_STEP_SHIFT);
             if (v < 0)
                 v = 0;
-            *(u8 *)(obj + 0x36) = v;
+            objAnim->alpha = v;
         }
-        if (*(u8 *)(obj + 0x36) == 0) {
+        if (objAnim->alpha == 0) {
             if (objAnim->bankIndex == WCTILE_VARIANT_A) {
                 WCTILE_STATE_IFACE(state)->getTileXYA(state->targetTile, &state->tileX,
                                                       &state->tileY, WCTILE_STATE_IFACE(state));
@@ -230,21 +230,21 @@ void wctile_update(int obj)
         break;
     case WCTILE_MODE_FADE_IN:
         {
-            int v = *(u8 *)(obj + 0x36) + (framesThisStep << WCTILE_ALPHA_STEP_SHIFT);
+            int v = objAnim->alpha + (framesThisStep << WCTILE_ALPHA_STEP_SHIFT);
             if (v > WCTILE_ALPHA_OPAQUE)
                 v = WCTILE_ALPHA_OPAQUE;
-            *(u8 *)(obj + 0x36) = v;
+            objAnim->alpha = v;
         }
-        if (*(u8 *)(obj + 0x36) >= WCTILE_ALPHA_OPAQUE)
+        if (objAnim->alpha >= WCTILE_ALPHA_OPAQUE)
             state->mode = WCTILE_MODE_SOLID;
         break;
     case WCTILE_MODE_SOLID:
     default:
         {
-            int v = *(u8 *)(obj + 0x36) + (framesThisStep << WCTILE_ALPHA_STEP_SHIFT);
+            int v = objAnim->alpha + (framesThisStep << WCTILE_ALPHA_STEP_SHIFT);
             if (v > WCTILE_ALPHA_OPAQUE)
                 v = WCTILE_ALPHA_OPAQUE;
-            *(u8 *)(obj + 0x36) = v;
+            objAnim->alpha = v;
         }
         if (objAnim->bankIndex == WCTILE_VARIANT_A) {
             if (state->targetTile !=

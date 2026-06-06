@@ -423,13 +423,14 @@ void wmwallcrawler_free(int obj) {
 #pragma peephole off
 #pragma scheduling off
 void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
+    ObjAnimComponent *objAnim = &((GameObject *)p1)->anim;
     int *inner = *(int **)(p1 + 0xb8);
-    if ((*(u16 *)((char *)inner + 0x294) & 0x40) != 0 && (u8)*(u8 *)(p1 + 0x36) < 0xff) {
-        if (*(u8 *)(p1 + 0x36) > 0xff - framesThisStep) {
-            *(u8 *)(p1 + 0x36) = 0xff;
+    if ((*(u16 *)((char *)inner + 0x294) & 0x40) != 0 && (u8)objAnim->alpha < 0xff) {
+        if (objAnim->alpha > 0xff - framesThisStep) {
+            objAnim->alpha = 0xff;
             *(u16 *)((char *)inner + 0x294) &= ~0x40;
         } else {
-            *(u8 *)(p1 + 0x36) += framesThisStep;
+            objAnim->alpha += framesThisStep;
         }
     }
     if (vis != 0 && *(s16 *)((char *)inner + 0x28c) == 0) {
@@ -514,6 +515,7 @@ extern f32 lbl_803E6034;
 #pragma scheduling off
 void wmwallcrawler_init(int obj, int spawn)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     int inner = *(int *)&((GameObject *)obj)->extra;
     u16 flags;
     ObjGroup_AddObject(obj, 3);
@@ -543,7 +545,7 @@ void wmwallcrawler_init(int obj, int spawn)
         *(u8*)(inner + 0x296) = 0;
     }
     if ((*(u16*)(inner + 0x294) & 0x40) != 0) {
-        *(u8*)(obj + 0x36) = 0;
+        objAnim->alpha = 0;
     }
     *(f32*)(inner + 0x284) = lbl_803E5FB0;
     *(s16*)(inner + 0x28e) = *(s16*)(spawn + 0x1c);

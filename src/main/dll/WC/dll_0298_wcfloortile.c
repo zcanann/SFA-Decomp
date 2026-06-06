@@ -76,6 +76,7 @@ void wcfloortile_initialise(void) {}
 #pragma scheduling off
 void wcfloortile_update(int obj)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     int state = *(int *)&((GameObject *)obj)->extra;
     int setup = *(int *)&((GameObject *)obj)->anim.placementData;
 
@@ -129,24 +130,24 @@ void wcfloortile_update(int obj)
                 }
                 t = t * lbl_803E6EB0;
             }
-            *(u8 *)(obj + 0x36) = (int)t;
+            objAnim->alpha = (int)t;
         }
-        if (*(u8 *)(obj + 0x36) == 0) {
+        if (objAnim->alpha == 0) {
             *(u8 *)(state + 6) = 2;
         }
         break;
     case 2:
-        *(u8 *)(obj + 0x36) = 0;
+        objAnim->alpha = 0;
         ObjHits_DisableObject(obj);
         *(u8 *)(state + 7) |= 3;
         break;
     case 3:
         {
-            f32 a = lbl_803E6EBC * timeDelta + (f32)(u32) * (u8 *)(obj + 0x36);
+            f32 a = lbl_803E6EBC * timeDelta + (f32)(u32)objAnim->alpha;
             if (a > lbl_803E6EB0) {
                 a = lbl_803E6EB0;
             }
-            *(u8 *)(obj + 0x36) = (int)a;
+            objAnim->alpha = (int)a;
         }
         ObjHits_EnableObject(obj);
         break;

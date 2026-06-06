@@ -72,6 +72,7 @@ void wctemplebri_updateModelWarp(int obj, int p2)
 #pragma scheduling off
 int wctemplebri_interactCallback(int obj, int p2, int p3)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     int r4c = *(int *)&((GameObject *)obj)->anim.placementData;
     int state = *(int *)&((GameObject *)obj)->extra;
     int model;
@@ -91,12 +92,12 @@ int wctemplebri_interactCallback(int obj, int p2, int p3)
             GameBit_Set(*(s16 *)(r4c + WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET), 1);
         }
         {
-            int a = (int)((f32)(u32) * (u8 *)(obj + 0x36) + timeDelta);
+            int a = (int)((f32)(u32)objAnim->alpha + timeDelta);
             if (a < 0)
                 a = 0;
             else if (a > WCTEMPLEBRI_ALPHA_OPAQUE)
                 a = WCTEMPLEBRI_ALPHA_OPAQUE;
-            *(u8 *)(obj + 0x36) = a;
+            objAnim->alpha = a;
         }
     }
     model = Obj_GetActiveModel(obj);
@@ -185,6 +186,7 @@ void wctemplebri_initialise(void) {}
 #pragma scheduling off
 void wctemplebri_update(int obj)
 {
+    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     int r4c = *(int *)&((GameObject *)obj)->anim.placementData;
     int state;
     int model;
@@ -217,12 +219,12 @@ void wctemplebri_update(int obj)
             GameBit_Set(*(s16 *)(r4c + WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET), 1);
         }
         {
-            int a = (int)((f32)(u32) * (u8 *)(obj + 0x36) + timeDelta);
+            int a = (int)((f32)(u32)objAnim->alpha + timeDelta);
             if (a < 0)
                 a = 0;
             else if (a > WCTEMPLEBRI_ALPHA_OPAQUE)
                 a = WCTEMPLEBRI_ALPHA_OPAQUE;
-            *(u8 *)(obj + 0x36) = a;
+            objAnim->alpha = a;
         }
         ObjHits_EnableObject(obj);
     } else {
@@ -291,10 +293,10 @@ void wctemplebri_init(int obj, int initData)
             *(u8 *)(state + k + WCTEMPLEBRI_STATE_PART_ALPHA) = WCTEMPLEBRI_ALPHA_OPAQUE;
             *(u8 *)(state + k + WCTEMPLEBRI_STATE_PART_FLAGS) = 1;
         }
-        *(u8 *)(obj + 0x36) = WCTEMPLEBRI_ALPHA_OPAQUE;
+        objAnim->alpha = WCTEMPLEBRI_ALPHA_OPAQUE;
     } else {
         ObjHits_DisableObject(obj);
-        *(u8 *)(obj + 0x36) = 0;
+        objAnim->alpha = 0;
     }
     ((GameObject *)obj)->objectFlags |= 0x6000;
     ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
