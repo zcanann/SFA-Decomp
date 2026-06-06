@@ -20,12 +20,12 @@ typedef struct CfperchState {
     u8 unk9;
     s16 unkA;
     s16 unkC;
-    s16 unkE;
+    s16 randomTimer;
     s16 unk10;
     s16 unk12;
     int unk14;
     int unk18;
-    s16 unk1C;
+    s16 enableGameBit;
     u8 unk1E;
     u8 unk1F;
     u8 unk20;

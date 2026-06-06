@@ -107,10 +107,10 @@ void smallbasket_init(int obj, int def)
     }
 
     lbl_803DDAC0 = Resource_Acquire(0x5b, 1);
-    ((CfperchState *)state)->unkE = (s16)(randomGetRange(0, 0x64) + 0x12c);
+    ((CfperchState *)state)->randomTimer = (s16)(randomGetRange(0, 0x64) + 0x12c);
     ((CfperchState *)state)->unk1F = (u8)*(s16*)(def + 0x1a);
     *(s16*)obj = (s16)(*(s8*)(def + 0x18) << 8);
-    ((CfperchState *)state)->unk1C = *(s16*)(def + 0x1e);
+    ((CfperchState *)state)->enableGameBit = *(s16*)(def + 0x1e);
     ((CfperchState *)state)->unkC = *(s16*)(def + 0x20);
     if (((CfperchState *)state)->unkC == 0) {
         ((CfperchState *)state)->unkC = 0x14;
@@ -122,7 +122,7 @@ void smallbasket_init(int obj, int def)
     ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
     ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosZ;
 
-    if ((u32)GameBit_Get(((CfperchState *)state)->unk1C) != 0) {
+    if ((u32)GameBit_Get(((CfperchState *)state)->enableGameBit) != 0) {
         ((CfperchState *)state)->unk14 = 1;
         ObjHits_DisableObject(obj);
     }
@@ -291,7 +291,7 @@ void smallbasket_update(int obj)
         ((CfperchState *)state)->unk14 -= (s16)(int)(timeDelta * animSpeed);
         if (((CfperchState *)state)->unk14 <= 0) {
             if ((Vec_distance((f32 *)(obj + 0x18), (f32 *)((int)Obj_GetPlayerObject() + 0x18)) > lbl_803E3930) &&
-                (((CfperchState *)state)->unk1C == -1)) {
+                (((CfperchState *)state)->enableGameBit == -1)) {
                 flag = 1;
             }
             if (flag == 0) {
@@ -478,7 +478,7 @@ void smallbasket_update(int obj)
                 ObjHits_ClearHitVolumes(obj);
             }
         }
-        ((CfperchState *)state)->unkE -= framesThisStep;
+        ((CfperchState *)state)->randomTimer -= framesThisStep;
         if (((CfperchState *)state)->unk5 != 0) {
             if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(def + 0x8)) >=
                 (f32)(((CfperchState *)state)->unkC * ((CfperchState *)state)->unkC)) {
@@ -495,14 +495,14 @@ void smallbasket_update(int obj)
         } else {
             fn_801814D0(obj, player, state);
         }
-        if ((((CfperchState *)state)->unkE <= 0) && (((CfperchState *)state)->unk5 != 0)) {
+        if ((((CfperchState *)state)->randomTimer <= 0) && (((CfperchState *)state)->unk5 != 0)) {
             k = ((CfperchState *)state)->unk1E;
             if ((k == 5) || (k == 6)) {
                 Sfx_PlayFromObject(obj, 0x6c);
-                ((CfperchState *)state)->unkE = (s16)(randomGetRange(0, 100) + 0x12c);
+                ((CfperchState *)state)->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
             } else if (((u8)(k - 1) <= 1) || (k == 3)) {
                 Sfx_PlayFromObject(obj, 0x6d);
-                ((CfperchState *)state)->unkE = (s16)(randomGetRange(0, 100) + 0x12c);
+                ((CfperchState *)state)->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
             }
         }
         if (((GameObject *)obj)->unkF8 == 0) {
