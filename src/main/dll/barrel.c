@@ -4,6 +4,7 @@
 #include "main/dll/grimble_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/barrel.h"
+#include "main/dll/scarab.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
@@ -1031,20 +1032,6 @@ int grimble_getObjectTypeId(void) { return 0x59; }
 int cannonclaw_getExtraSize(void) { return 0x0; }
 int cannonclaw_getObjectTypeId(void) { return 0x0; }
 
-/* plain forwarder. */
-extern void grimble_stateHandlerA03(void);
-extern void grimble_stateHandlerA04(void);
-extern void grimble_stateHandlerA05(void);
-extern void grimble_stateHandlerA06(void);
-extern void grimble_stateHandlerA07(void);
-extern void grimble_stateHandlerA08(void);
-extern void grimble_stateHandlerA09(void);
-extern void grimble_stateHandlerB00(void);
-extern void grimble_stateHandlerB01(void);
-extern void scarab_updateProximityGate(void);
-extern void grimble_stateHandlerB03(void);
-extern void grimble_stateHandlerB04(void);
-extern void grimble_stateHandlerB05(void);
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on

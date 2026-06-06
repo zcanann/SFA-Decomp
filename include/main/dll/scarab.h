@@ -2,6 +2,7 @@
 #define MAIN_DLL_SCARAB_H_
 
 #include "ghidra_import.h"
+#include "main/dll/baddie_state.h"
 #include "main/object_descriptor.h"
 
 void dll_CA_update(int param_1,int param_2,int param_3);
@@ -113,6 +114,7 @@ uint FUN_80161128(short *param_1,undefined4 param_2,int param_3);
 void FUN_80161130(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
+int grimble_stateHandlerB05(int *obj, u8 *state);
 void FUN_80161220(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80161254(int param_1);
 void FUN_80161290(short *param_1);
@@ -143,6 +145,18 @@ FUN_80161ea0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16);
+int grimble_stateHandlerB04(int *obj, GroundBaddieState *state);
+int grimble_stateHandlerB03(int obj, u8 *state);
+int grimble_stateHandlerB01(int *obj, GroundBaddieState *state);
+int grimble_stateHandlerB00(int obj, GroundBaddieState *state);
+int grimble_stateHandlerA09(int obj, GroundBaddieState *state);
+int grimble_stateHandlerA08(int *obj, GroundBaddieState *state);
+int grimble_stateHandlerA07(short *obj, GroundBaddieState *state);
+int grimble_stateHandlerA06(short *obj, GroundBaddieState *state, f32 speed);
+int grimble_stateHandlerA05(short *obj, GroundBaddieState *state);
+int grimble_stateHandlerA04(short *obj, GroundBaddieState *state);
+int grimble_stateHandlerA03(short *obj, GroundBaddieState *state);
+int scarab_updateProximityGate(int *obj, GroundBaddieState *state);
 
 extern ObjectDescriptor11WithPadding gChukChukObjDescriptor;
 extern ObjectDescriptor gIceBallObjDescriptor;

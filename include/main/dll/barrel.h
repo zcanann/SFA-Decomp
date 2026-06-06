@@ -4,6 +4,8 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+int grimble_stateHandlerA00(int obj, char *state, f32 arg);
+int grimble_stateHandlerA01(int obj, char *state, f32 arg);
 int grimble_stateHandlerA02(int obj, char *state, f32 arg);
 undefined4
 FUN_801620c0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
