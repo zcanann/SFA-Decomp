@@ -1114,6 +1114,59 @@ Heuristic:
     NOTE the gotcha: the inversion is PER-COMPARE — flipping a different
     equivalent compare in the same fn regressed the already-matching one.
 
+70. **FbBuf/cmd-list stack-builder family (foodbag/pickup `dll_XX_func03`) —
+    the four-part recipe set.** These fns build a cmd buffer on the stack
+    via `FbCmd *e = buf.entries; FbCmd *p = e;` + `p->field = …; p++` walks.
+    Four distinct divergence classes, each with a proven fix:
+    (a) **`buf.cmds = buf.entries;` → re-derive as
+    `(FbCmd *)((u8 *)&buf + 0x60);`** when target shows `addi r0,r1,K;
+    stw r0` (fresh re-derive, no reg reuse). Batch-scan the unit's target for
+    that 2-instr signature and fix every site at once — 9 foodbag fns had it;
+    one batch took dll_8C 96.86→100 and lifted 6 siblings (+0.35 unit pts).
+    (b) **Per-branch `p = e + K;` in BOTH if/else arms** (the dll_A0 phi
+    pattern): identical assignments at a join defeat const-folding, so
+    post-merge `p[i]` stores stay reg-relative (scratch r12 materialization
+    per branch-end). dll_80 93.90→100.
+    (c) **v1.0-vs-v1.1 import bug: v1.1 ADDED missing trailing `p++` in
+    conditional arms.** When target's if-arm shows `stores; addi rX,rX,24;
+    stores; b merge` (bump BETWEEN entries, NONE at arm end) while the
+    else-arm ends with a bump, v1.0's source omitted the trailing `p++` (a
+    real overwrite bug fixed in v1.1, which the Ghidra import reflects).
+    Drop the trailing `p++` and rebase the count expr. dll_7F 95.73→100.
+    (d) **Volatile-reg e/p coloring follows decl order + init placement**:
+    declare the walker `FbCmd *p;` BEFORE `FbCmd *e = buf.entries;` and
+    assign `p = &e[1];` AFTER the e[0] direct stores — flips r7/r9 to match
+    target and places the addi where target has it. Part of the dll_7F 100%.
+
+71. **MWCC value-tracks stack addresses through EVERYTHING except CSE-temp
+    copies and phis — and the tracking dies at the first CALL for those.**
+    Mechanism notes from the foodbag dig (explains the int/float store
+    asymmetry: int header stores BEFORE the first `bl` fold to `K(r1)` and
+    match target; value stores AFTER calls stay `4/8/12(rX)` reg-relative in
+    target). Tested NEGATIVE fold-defeats (don't retry): lvalue cast chains
+    (`*(f32 *)((u8 *)p + 4)`), volatile deref, `(u32)`-domain address
+    laundering, `(FbCmd *)(u8 *)p` self-reassign (elided), declare-then-assign
+    vs initializer, inline-setter param laundering, `do { } while (0)` (loop
+    pruned before const-prop), e-invalidation after `p = e`. The only WORKING
+    source-level unfold triggers at -O4: (a) a JOIN feeding p (recipe #70b),
+    (b) making the walker the SOLE holder so the address expression's 2nd
+    occurrence (e.g. in the count expr `- buf.entries`) forces a CSE temp and
+    p becomes an untracked temp-copy — BUT form (b) costs an addi/mr
+    owner-swap (the temp wins r31) that can net-regress a high partial
+    (dll_8E: 99.63 tracked form beats 98.81 unfolded form). Read which
+    stores target folds before picking a form.
+
+72. **`#pragma optimization_level 0-4` IS accepted per-function by GC/2.0
+    mwcc** (silently — no warning; `#pragma opt_propagation` /
+    `global_optimizer` etc. are silently IGNORED). Levels ≤3 disable the
+    sp-displacement store folding of #71 but ALSO switch the register
+    allocator to creation-order priority (materialization owner gets r31,
+    copies get r30; use-count weighting lost) and weaken address-mode
+    selection (offset-0 member stores reuse a value-equal reg as `0(rX)`
+    instead of folding). Net-NEGATIVE on every foodbag fn tested — but the
+    pragma's existence is a real tool for fns whose target shows
+    creation-order coloring. A/B per fn and read the prologue.
+
 **Recipe #60 addendum — two more single-instruction real-bug signatures:**
 - **Missing vtable deref**: target `lwz r12,K(rX); mtctr; bctrl` vs current
   `addi r12,rX,K; mtctr; bctrl` = the C calls the SLOT ADDRESS instead of
