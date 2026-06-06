@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -68,23 +69,23 @@ void directionallight_debugEdit(int obj, int state)
     switch ((s8)*(u8 *)(state + 0xd)) {
     case 0:
         if ((buttons & 1) != 0) {
-            *(s16 *)(obj + 0) -= 0x3e8;
+            ((GameObject *)obj)->anim.rotX -= 0x3e8;
         }
         if ((buttons & 2) != 0) {
-            *(s16 *)(obj + 0) += 0x3e8;
+            ((GameObject *)obj)->anim.rotX += 0x3e8;
         }
         fn_80137948(desc + 0x38);
-        fn_80137948(desc + 0x44, *(s16 *)(obj + 0));
+        fn_80137948(desc + 0x44, ((GameObject *)obj)->anim.rotX);
         break;
     case 1:
         if ((buttons & 1) != 0) {
-            *(s16 *)(obj + 2) -= 0x3e8;
+            ((GameObject *)obj)->anim.rotY -= 0x3e8;
         }
         if ((buttons & 2) != 0) {
-            *(s16 *)(obj + 2) += 0x3e8;
+            ((GameObject *)obj)->anim.rotY += 0x3e8;
         }
         fn_80137948(desc + 0x50);
-        fn_80137948(desc + 0x44, *(s16 *)(obj + 2));
+        fn_80137948(desc + 0x44, ((GameObject *)obj)->anim.rotY);
         break;
     case 2:
         if ((buttons & 1) != 0) {
@@ -161,8 +162,8 @@ void directionallight_init(int obj, int setup)
 
     vec = *(PointLightVec *)lbl_802C2608;
 
-    *(s16 *)(obj + 0) = (s16)(*(u8 *)(setup + 0x18) << 8);
-    *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)(*(u8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(setup + 0x19) << 8);
 
     if (*(void **)(state + 8) == NULL) {
         *(void **)(state + 8) = objCreateLight(obj, 1);
@@ -208,10 +209,10 @@ void directionallight_update(int obj)
         return;
     }
 
-    *(s16 *)(obj + 0) =
-        (s16)((f32)*(s16 *)(setup + 0x32) * timeDelta + (f32)*(s16 *)(obj + 0));
-    *(s16 *)(obj + 2) =
-        (s16)((f32)*(s16 *)(setup + 0x34) * timeDelta + (f32)*(s16 *)(obj + 2));
+    ((GameObject *)obj)->anim.rotX =
+        (s16)((f32)*(s16 *)(setup + 0x32) * timeDelta + (f32)((GameObject *)obj)->anim.rotX);
+    ((GameObject *)obj)->anim.rotY =
+        (s16)((f32)*(s16 *)(setup + 0x34) * timeDelta + (f32)((GameObject *)obj)->anim.rotY);
 
     if (*(u8 *)(state + 0xe) != 0) {
         if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) == 0) {
