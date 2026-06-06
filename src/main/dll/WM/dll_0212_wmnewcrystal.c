@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
 #define WMNEWCRYSTAL_GAMEBIT_ACTIVE 0xd27
@@ -79,12 +80,12 @@ int wmnewcrystal_SeqFn(int *obj, int unused, WmNewCrystalEventData *eventData) {
             PSVECNormalize(cameraDelta, cameraDelta);
             PSVECScale(cameraDelta, cameraDelta, lbl_803E6038);
             PSVECAdd((f32 *)((char *)obj + 0xc), cameraDelta, (f32 *)((char *)obj + 0xc));
-            *(f32 *)((char *)obj + 0x18) = *(f32 *)((char *)obj + 0xc);
-            *(f32 *)((char *)obj + 0x1c) = *(f32 *)((char *)obj + 0x10);
-            *(f32 *)((char *)obj + 0x20) = *(f32 *)((char *)obj + 0x14);
+            ((GameObject *)obj)->anim.worldPosX = *(f32 *)((char *)obj + 0xc);
+            ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
+            ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
             spawnExplosion(obj, lbl_803E6038, 1, 1, 0, 0, 0, 0, 0);
-            *(s16 *)((char *)obj + 6) = *(s16 *)((char *)obj + 6) | 0x4000;
-            if (*(s16 *)((char *)obj + 0x46) == WMNEWCRYSTAL_OBJECT_BLUE) {
+            ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
+            if (((GameObject *)obj)->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE) {
                 GameBit_Set(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 0);
             }
             break;
@@ -98,7 +99,7 @@ int wmnewcrystal_SeqFn(int *obj, int unused, WmNewCrystalEventData *eventData) {
         return 0;
     }
 
-    if (*(s16 *)((char *)obj + 0x46) == WMNEWCRYSTAL_OBJECT_BLUE) {
+    if (((GameObject *)obj)->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE) {
         if (GameBit_Get(WMNEWCRYSTAL_GAMEBIT_AMBIENT_FX) == 0) {
             (*(void (*)(int *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(
                 obj, WMNEWCRYSTAL_PARTICLE_ID, NULL, 2, -1, 0);
@@ -112,18 +113,18 @@ int wmnewcrystal_SeqFn(int *obj, int unused, WmNewCrystalEventData *eventData) {
         return 0;
     }
 
-    if (*(s16 *)((char *)obj + 0x46) == WMNEWCRYSTAL_OBJECT_GREEN && state->active != 0) {
+    if (((GameObject *)obj)->anim.seqId == WMNEWCRYSTAL_OBJECT_GREEN && state->active != 0) {
         ObjPath_GetPointLocalPosition((int)obj, 0, &params.x, &params.y, &params.z);
-        params.x *= *(f32 *)((char *)obj + 8);
-        params.y *= *(f32 *)((char *)obj + 8);
-        params.z *= *(f32 *)((char *)obj + 8);
+        params.x *= ((GameObject *)obj)->anim.rootMotionScale;
+        params.y *= ((GameObject *)obj)->anim.rootMotionScale;
+        params.z *= ((GameObject *)obj)->anim.rootMotionScale;
         params.pathPoint = 1;
         objfx_spawnDirectionalBurst(obj, 5, 1, 1, 10, &params, 0, lbl_803E6054, lbl_803E6058);
 
         ObjPath_GetPointLocalPosition((int)obj, 1, &params.x, &params.y, &params.z);
-        params.x *= *(f32 *)((char *)obj + 8);
-        params.y *= *(f32 *)((char *)obj + 8);
-        params.z *= *(f32 *)((char *)obj + 8);
+        params.x *= ((GameObject *)obj)->anim.rootMotionScale;
+        params.y *= ((GameObject *)obj)->anim.rootMotionScale;
+        params.z *= ((GameObject *)obj)->anim.rootMotionScale;
         params.pathPoint = 0;
         objfx_spawnDirectionalBurst(obj, 5, 1, 1, 10, &params, 0, lbl_803E6054, lbl_803E6058);
     }
@@ -144,7 +145,7 @@ void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
 #pragma scheduling off
 void wmnewcrystal_init(int *obj, u8 *init) {
     WmNewCrystalState *inner = *(WmNewCrystalState **)((char *)obj + 0xb8);
-    *(void **)((char *)obj + 0xbc) = (void *)wmnewcrystal_SeqFn;
+    ((GameObject *)obj)->unkBC = (void *)wmnewcrystal_SeqFn;
     if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)((char *)obj + 0xac)) > 1) {
         GameBit_Set(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 1);
         inner->active = 1;
