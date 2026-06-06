@@ -4,6 +4,12 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+static inline f32 *KTRex_GetActiveContactPointTable(int obj) {
+    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+    u8 *model = (u8 *)objAnim->banks[objAnim->bankIndex];
+    return *(f32 **)(model + 0x50);
+}
+
 int ktrex_stateHandlerA00(void) { return 0x0; }
 
 void ktrex_func0B(void) {}
@@ -934,7 +940,7 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
     int hitType;
     int msg[4];
     int hit;
-    int row;
+    f32 *contactPoints;
     f32 *pt;
     msg[0] = lbl_802C2550[0];
     msg[1] = lbl_802C2550[1];
@@ -958,10 +964,10 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
     if (hit == 0) {
         return;
     }
-    row = *(int *)(*(int *)(*(int *)((char *)obj + 0x7c) + (s8)*(s8 *)((char *)obj + 0xad) * 4) + 0x50);
+    contactPoints = KTRex_GetActiveContactPointTable(obj);
     if ((s8)*(u8 *)((char *)runtime + 0x354) != 0 && (hitType == 3 || hitType == 2) &&
         (*(u16 *)((char *)gKTRexState + 0xfa) & 0x10) != 0 && hit == 5) {
-        pt = (f32 *)((char *)row + hitType * 16);
+        pt = contactPoints + hitType * 4;
         *(f32 *)((char *)lbl_803AD158 + 0xc) = playerMapOffsetX + pt[1];
         *(f32 *)((char *)lbl_803AD158 + 0x10) = pt[2];
         *(f32 *)((char *)lbl_803AD158 + 0x14) = playerMapOffsetZ + pt[3];
@@ -984,8 +990,8 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
         *(u8 *)((char *)runtime + 0x34f) = (s8)hit;
     } else if (lbl_803DDD4C == 0) {
         Sfx_PlayFromObject(obj, SFXmv_ropecreak22);
-        row = *(int *)(*(int *)(*(int *)((char *)obj + 0x7c) + (s8)*(s8 *)((char *)obj + 0xad) * 4) + 0x50);
-        pt = (f32 *)((char *)row + hitType * 16);
+        contactPoints = KTRex_GetActiveContactPointTable(obj);
+        pt = contactPoints + hitType * 4;
         *(f32 *)((char *)lbl_803AD158 + 0xc) = playerMapOffsetX + pt[1];
         *(f32 *)((char *)lbl_803AD158 + 0x10) = pt[2];
         *(f32 *)((char *)lbl_803AD158 + 0x14) = playerMapOffsetZ + pt[3];
