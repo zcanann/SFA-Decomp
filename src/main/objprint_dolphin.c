@@ -1,6 +1,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/objanim_internal.h"
 
+#define OBJPRINT_MODEL_DEF(obj) (((ObjAnimComponent *)(obj))->modelInstance)
 
 #pragma peephole off
 #pragma scheduling off
@@ -622,7 +623,7 @@ void FUN_8003db90(void)
     }
     if (*(byte *)(iVar12 + 0xfa) != 0) {
       FUN_80017610(iVar4,&DAT_803dd8e4,(uint)*(byte *)(iVar12 + 0xfa),&DAT_803dd8dc,8);
-      if (((*(byte *)(*(int *)(iVar4 + 0x50) + 0x5f) & 4) != 0) || (DAT_803dd8cc != '\0')) {
+      if (((OBJPRINT_MODEL_DEF(iVar4)->renderFlags & 4) != 0) || (DAT_803dd8cc != '\0')) {
         DAT_803dd8dc = 0;
       }
       bVar3 = false;
@@ -653,7 +654,7 @@ void FUN_8003db90(void)
       }
     }
     FUN_80017604();
-    bVar1 = *(byte *)(*(int *)(iVar4 + 0x50) + 0x5f);
+    bVar1 = OBJPRINT_MODEL_DEF(iVar4)->renderFlags;
     if (((bVar1 & 4) == 0) && (DAT_803dd8cc == '\0')) {
       if ((bVar1 & 0x11) != 0) {
         DAT_803dd8dc = 1;
@@ -2694,7 +2695,7 @@ void FUN_80040a88(int param_1)
       }
       iVar3 = iVar3 + 4;
     }
-    if (((((*(short *)(*(int *)(param_1 + 0x50) + 0x48) == 4) && (DAT_803dd8a9 == '\0')) &&
+    if (((((OBJPRINT_MODEL_DEF(param_1)->shadowType == 4) && (DAT_803dd8a9 == '\0')) &&
          ((sVar1 = *(short *)(param_1 + 0x46), sVar1 != 0x6a8 && (sVar1 != 0x6a9)))) &&
         ((sVar1 != 0x6aa && (sVar1 != 0x6ab)))) &&
        ((sVar1 != 0x6ac && (sVar1 != 0x752)))) {
@@ -4812,7 +4813,7 @@ void objRenderModel(int *obj) {
             iter += 4;
         }
     }
-    if (*(s16 *)(*(int *)((char *)obj + 0x50) + 0x48) != 4) {
+    if (OBJPRINT_MODEL_DEF(obj)->shadowType != 4) {
         return;
     }
     if (lbl_803DCC29 != 0) {
@@ -4898,7 +4899,7 @@ void objRenderChild(int *child, int *parent, u8 p3) {
             mtx = (f32 *)ObjModel_GetJointMatrix(pmodel, j);
         }
     }
-    if (*(u8 *)(*(int *)((char *)child + 0x50) + 0x5f) & 8) {
+    if (OBJPRINT_MODEL_DEF(child)->renderFlags & 8) {
         int *cam = Camera_GetCurrentViewSlot();
         blk.scale = *(f32 *)((char *)child + 8);
         dx = *(f32 *)((char *)child + 0xc) - *(f32 *)((char *)cam + 0xc);
@@ -5467,7 +5468,7 @@ void objFn_8003dc50(u8 *obj, u8 *model) {
             u32 nf = obj[0xfa];
             if (nf != 0) {
                 modelLightStruct_selectObjectLights(model, &lbl_803DCC64, nf, &lbl_803DCC5C, 8);
-                if (((*(u8 **)(model + 0x50))[0x5f] & 4) || lbl_803DCC4C) {
+                if ((OBJPRINT_MODEL_DEF(model)->renderFlags & 4) || lbl_803DCC4C) {
                     lbl_803DCC5C = 0;
                 }
                 {
@@ -5501,7 +5502,7 @@ void objFn_8003dc50(u8 *obj, u8 *model) {
         }
         modelLightChannels_applyGXControls();
         {
-            u8 b5f = (*(u8 **)(model + 0x50))[0x5f];
+            u8 b5f = OBJPRINT_MODEL_DEF(model)->renderFlags;
             if ((b5f & 4) || lbl_803DCC4C) {
                 lbl_803DCC5C = 2;
             } else if (b5f & 0x11) {
@@ -5920,7 +5921,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
     GXSetNumChans(1);
-    if ((*(u8 **)((char *)obj + 0x50))[0x5f] & 4) {
+    if (OBJPRINT_MODEL_DEF(obj)->renderFlags & 4) {
         gxSetZMode_(1, 3, 1);
         GXSetCullMode(1);
     } else {
@@ -6259,7 +6260,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
         GXSetAlphaCompare(7, 0, 0, 7, 0);
         GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
         GXSetNumChans(1);
-        if ((*(u8 **)((char *)obj + 0x50))[0x5f] & 4) {
+        if (OBJPRINT_MODEL_DEF(obj)->renderFlags & 4) {
             gxSetZMode_(1, 3, 1);
             GXSetCullMode(1);
         } else {
@@ -6604,7 +6605,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
     } else {
         int b4;
         f32 *mx;
-        u8 b5f = (*(u8 **)(obj + 0x50))[0x5f];
+        u8 b5f = OBJPRINT_MODEL_DEF(obj)->renderFlags;
         b4 = b5f & 4;
         if (b4 && (mx = *(f32 **)(*(u8 **)(obj + 0x64) + 0xc)) != NULL) {
             fn_8005011C(mx);
@@ -6687,7 +6688,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
         GXLoadTexMtxImm(t2, 0x24, 0);
         fn_8004D928();
     }
-    if ((*(u8 **)(obj + 0x50))[0x5f] & 0x10) {
+    if (OBJPRINT_MODEL_DEF(obj)->renderFlags & 0x10) {
         gxTextureFn_8004d5b4(op);
     }
     {
