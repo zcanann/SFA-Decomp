@@ -1,4 +1,5 @@
 #include "dolphin/card.h"
+#include "main/game_object.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
@@ -428,7 +429,7 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
             sfx = 5;
         }
         if (obj == Obj_GetPlayerObject()) {
-            if (*(s16 *)(*(u32 *)(obj + 0xb8) + 0x81a) == 1) {
+            if (*(s16 *)(*(u32 *)&((GameObject *)obj)->extra + 0x81a) == 1) {
                 Sfx_PlayFromObject(0, 0x3c2);
             }
             Sfx_PlayFromObject(0, sfxTab[sfx]);
@@ -447,7 +448,7 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
         v.y = vec[1];
         v.z = vec[2];
         if (flags & 1) {
-            if (*(s16 *)(obj + 0x44) == 1 || *(s16 *)(obj + 0x46) == 0x416) {
+            if (((GameObject *)obj)->anim.classId == 1 || ((GameObject *)obj)->anim.seqId == 0x416) {
                 playerEarthWalkerAudioFn_8006f950(obj, (f32 *)&v, j & 1, sfx);
             }
             ps.pos.x = vec[0];
@@ -457,9 +458,9 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
             ps.id = sfx;
             ps.unk4 = 0;
             ps.unk2 = 0;
-            v.x = __THPHuffmanSizeTab_803DEE28 * *(f32 *)(obj + 0x24);
-            v.y = __THPHuffmanSizeTab_803DEE28 * *(f32 *)(obj + 0x28);
-            v.z = __THPHuffmanSizeTab_803DEE28 * *(f32 *)(obj + 0x2c);
+            v.x = __THPHuffmanSizeTab_803DEE28 * ((GameObject *)obj)->anim.velocityX;
+            v.y = __THPHuffmanSizeTab_803DEE28 * ((GameObject *)obj)->anim.velocityY;
+            v.z = __THPHuffmanSizeTab_803DEE28 * ((GameObject *)obj)->anim.velocityZ;
             if (sfx == 6 || sfx == 3) {
                 cnt = randomGetRange(2, 4);
                 while (cnt != 0) {
@@ -718,12 +719,12 @@ void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type)
     f32 fscale;
 
     base = (WaterFxState *)lbl_80391DC0;
-    if (*(s16 *)(obj + 0x44) == 1) {
-        lbl_803DCFF0 = *(u8 *)(obj + 0xad);
-    } else if (*(s16 *)(obj + 0x46) == 0x416) {
+    if (((GameObject *)obj)->anim.classId == 1) {
+        lbl_803DCFF0 = *(u8 *)&((GameObject *)obj)->anim.bankIndex;
+    } else if (((GameObject *)obj)->anim.seqId == 0x416) {
         lbl_803DCFF0 = 3;
     }
-    if (fn_80065768(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), &groundY, &norm, 0) == 0) {
+    if (fn_80065768(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, &groundY, &norm, 0) == 0) {
         if (type == 1) {
             base->ripples[lbl_803DCFF8].x = pos[0];
             base->ripples[lbl_803DCFF8].y = lbl_803DEE3C + pos[1];
@@ -4666,7 +4667,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
     GXLoadTexMtxImm(mtx_110, 0x1e, 1);
     GXSetTexCoordGen2(0, 1, 0, 0x1e, 0, 0x7d);
 
-    selectTexture(*(int*)((u8*)obj + 0x60), 0);
+    selectTexture(*(int *)&((GameObject *)obj)->anim.eventTable, 0);
 
     if (((u8*)obj)[0x65] < 8) {
         GXSetTevSwapModeTable(1, 0, 0, 0, 0);
