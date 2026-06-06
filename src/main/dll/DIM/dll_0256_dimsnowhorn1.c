@@ -44,11 +44,11 @@ STATIC_ASSERT(offsetof(DIMSnowHorn1State, unkA84) == 0xA84);
 
 void DIMSnowHorn1_func23(void) {}
 
-int fn_802B9784(void) { return 0x0; }
+int DIMSnowHorn1_defaultStateHandler(void) { return 0x0; }
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BA6E0(int obj, int state)
+int DIMSnowHorn1_stateHandler04(int obj, int state)
 {
     f32 k = lbl_803E8234;
     int idx;
@@ -81,7 +81,7 @@ int fn_802BA6E0(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BABB4(int obj)
+int DIMSnowHorn1_stateHandler00(int obj)
 {
     DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
 
@@ -112,7 +112,7 @@ int fn_802BABB4(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BA938(int obj, int state, f32 fv)
+int DIMSnowHorn1_stateHandler02(int obj, int state, f32 fv)
 {
     DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     f32 k = lbl_803E8234;
@@ -149,7 +149,7 @@ int fn_802BA938(int obj, int state, f32 fv)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BA7EC(int obj, int state)
+int DIMSnowHorn1_stateHandler03(int obj, int state)
 {
     DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     f32 k = lbl_803E8234;
@@ -188,7 +188,7 @@ int fn_802BA7EC(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BAA54(int obj, int state, f32 fv)
+int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
 {
     DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     f32 k = lbl_803E8234;
@@ -232,7 +232,7 @@ int fn_802BAA54(int obj, int state, f32 fv)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B978C(int obj, int state)
+int DIMSnowHorn1_stateHandler0B(int obj, int state)
 {
     DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     int sub = *(int *)((char *)obj + 0x54);
@@ -275,7 +275,7 @@ int fn_802B978C(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B9CC4(int obj, int state, f32 fv)
+int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
 {
     DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
     int near;
@@ -318,7 +318,7 @@ int fn_802B9CC4(int obj, int state, f32 fv)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B9E38(int obj, int state)
+int DIMSnowHorn1_stateHandler08(int obj, int state)
 {
     DIMSnowHorn1State *inner = *(DIMSnowHorn1State **)((char *)obj + 0xb8);
 
@@ -371,7 +371,7 @@ int fn_802B9E38(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B9FC0(int obj, int state)
+int DIMSnowHorn1_stateHandler07(int obj, int state)
 {
     void *near;
     DIMSnowHorn1State *inner;
@@ -439,7 +439,7 @@ int fn_802B9FC0(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BA1D4(int obj, int state)
+int DIMSnowHorn1_stateHandler06(int obj, int state)
 {
     DIMSnowHorn1State *inner;
     f32 fz;
@@ -503,7 +503,7 @@ int fn_802BA1D4(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BA3EC(int obj, int state)
+int DIMSnowHorn1_stateHandler05(int obj, int state)
 {
     DIMSnowHorn1State *inner;
     int id_a, id_b, id_c, id_d;
@@ -607,7 +607,7 @@ int fn_802BA3EC(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B98F0(int obj, int state, f32 t)
+int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
 {
     int near;
     DIMSnowHorn1State *inner;
@@ -1440,19 +1440,19 @@ void DIMSnowHorn1_initialise(void)
 {
     s16 *src = &gDIMSnowHorn1TextureId;
     void **dst = &gDIMSnowHorn1Texture;
-    ((void **)gDIMSnowHorn1StateHandlers)[0] = (void *)fn_802BABB4;
-    ((void **)gDIMSnowHorn1StateHandlers)[1] = (void *)fn_802BAA54;
-    ((void **)gDIMSnowHorn1StateHandlers)[2] = (void *)fn_802BA938;
-    ((void **)gDIMSnowHorn1StateHandlers)[3] = (void *)fn_802BA7EC;
-    ((void **)gDIMSnowHorn1StateHandlers)[4] = (void *)fn_802BA6E0;
-    ((void **)gDIMSnowHorn1StateHandlers)[5] = (void *)fn_802BA3EC;
-    ((void **)gDIMSnowHorn1StateHandlers)[6] = (void *)fn_802BA1D4;
-    ((void **)gDIMSnowHorn1StateHandlers)[7] = (void *)fn_802B9FC0;
-    ((void **)gDIMSnowHorn1StateHandlers)[8] = (void *)fn_802B9E38;
-    ((void **)gDIMSnowHorn1StateHandlers)[9] = (void *)fn_802B9CC4;
-    ((void **)gDIMSnowHorn1StateHandlers)[10] = (void *)fn_802B98F0;
-    ((void **)gDIMSnowHorn1StateHandlers)[11] = (void *)fn_802B978C;
-    *(void * *)&gDIMSnowHorn1DefaultStateHandler = (void *)fn_802B9784;
+    ((void **)gDIMSnowHorn1StateHandlers)[0] = (void *)DIMSnowHorn1_stateHandler00;
+    ((void **)gDIMSnowHorn1StateHandlers)[1] = (void *)DIMSnowHorn1_stateHandler01;
+    ((void **)gDIMSnowHorn1StateHandlers)[2] = (void *)DIMSnowHorn1_stateHandler02;
+    ((void **)gDIMSnowHorn1StateHandlers)[3] = (void *)DIMSnowHorn1_stateHandler03;
+    ((void **)gDIMSnowHorn1StateHandlers)[4] = (void *)DIMSnowHorn1_stateHandler04;
+    ((void **)gDIMSnowHorn1StateHandlers)[5] = (void *)DIMSnowHorn1_stateHandler05;
+    ((void **)gDIMSnowHorn1StateHandlers)[6] = (void *)DIMSnowHorn1_stateHandler06;
+    ((void **)gDIMSnowHorn1StateHandlers)[7] = (void *)DIMSnowHorn1_stateHandler07;
+    ((void **)gDIMSnowHorn1StateHandlers)[8] = (void *)DIMSnowHorn1_stateHandler08;
+    ((void **)gDIMSnowHorn1StateHandlers)[9] = (void *)DIMSnowHorn1_stateHandler09;
+    ((void **)gDIMSnowHorn1StateHandlers)[10] = (void *)DIMSnowHorn1_stateHandler0A;
+    ((void **)gDIMSnowHorn1StateHandlers)[11] = (void *)DIMSnowHorn1_stateHandler0B;
+    *(void * *)&gDIMSnowHorn1DefaultStateHandler = (void *)DIMSnowHorn1_defaultStateHandler;
     *dst = (void *)textureLoad(*src, 0);
 }
 #pragma peephole reset
