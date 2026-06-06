@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/backpack_state.h"
 #include "main/dll/backpack.h"
 #include "main/dll/landedArwing.h"
 #include "main/objanim.h"
@@ -125,20 +126,20 @@ void tumbleweed_updateStateMachine(int obj) {
 
     aux = *(int*)(obj + 0xb8);
     {
-        u32 state = *(u8*)(aux + 0x278);
+        u32 state = ((BackpackState *)aux)->unk278;
     if (state == 0) {
-        if (*(f32*)(obj + 0x8) < *(f32*)(aux + 0x26c)) {
-            *(f32*)(obj + 0x8) = *(f32*)(aux + 0x270) * timeDelta + *(f32*)(obj + 0x8);
+        if (*(f32*)(obj + 0x8) < ((BackpackState *)aux)->unk26C) {
+            *(f32*)(obj + 0x8) = ((BackpackState *)aux)->unk270 * timeDelta + *(f32*)(obj + 0x8);
         } else {
-            *(u8*)(aux + 0x278) = 1;
+            ((BackpackState *)aux)->unk278 = 1;
         }
     } else if (state == 1) {
         if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0) {
             ObjHits_EnableObject(obj);
-            *(u8*)(aux + 0x278) = 2;
-            *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 3);
+            ((BackpackState *)aux)->unk278 = 2;
+            ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 3);
             if (*(s16*)(obj + 0x46) == TUMBLEWEED_TYPE_4) {
-                *(f32*)(aux + 0x2a0) = lbl_803E2F9C;
+                ((BackpackState *)aux)->unk2A0 = lbl_803E2F9C;
             }
         }
     } else if (state == 2) {
@@ -166,20 +167,20 @@ void tumbleweed_updateStateMachine(int obj) {
         d = sqrtf(dist2);
         *(s16*)(aux + 0x268) = d;
         {
-            f32 dpx = *(f32*)(obj + 0xc) - *(f32*)(aux + 0x288);
-            f32 dpz = *(f32*)(obj + 0x14) - *(f32*)(aux + 0x28c);
+            f32 dpx = *(f32*)(obj + 0xc) - ((BackpackState *)aux)->unk288;
+            f32 dpz = *(f32*)(obj + 0x14) - ((BackpackState *)aux)->unk28C;
             int dpdist = sqrtf(dpx*dpx + dpz*dpz);
             u32 dist;
-            *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) & ~8);
-            dist = *(u16*)(aux + 0x268);
+            ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A & ~8);
+            dist = ((BackpackState *)aux)->unk268;
             if ((f32)dist < lbl_803E2FA4 && dist != 0) {
                 f32 k;
                 *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) - dx / (lbl_803E2FA8 * ((f32)dist - lbl_803E2FA4));
-                *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) - dz / (lbl_803E2FA8 * ((f32)(u32)*(u16*)(aux + 0x268) - lbl_803E2FA4));
+                *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) - dz / (lbl_803E2FA8 * ((f32)(u32)((BackpackState *)aux)->unk268 - lbl_803E2FA4));
                 k = lbl_803E2FAC;
-                *(s16*)(aux + 0x27c) = k * *(f32*)(obj + 0x24);
-                *(s16*)(aux + 0x27e) = k * *(f32*)(obj + 0x2c);
-                *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 8);
+                ((BackpackState *)aux)->unk27C = k * *(f32*)(obj + 0x24);
+                ((BackpackState *)aux)->unk27E = k * *(f32*)(obj + 0x2c);
+                ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 8);
             } else {
                 u32 dpdi = (u16)dpdist;
                 if ((f32)dpdi > lbl_803E2F5C && dpdi != 0) {
@@ -191,21 +192,21 @@ void tumbleweed_updateStateMachine(int obj) {
         }
         tumbleweed_updateRollingMotion(obj, aux);
         (*(int(**)(int, int, f32))(*(int*)gPathControlInterface + 0x18))(obj, aux, timeDelta);
-        *(f32*)(aux + 0x2a0) = *(f32*)(aux + 0x2a0) - timeDelta;
-        if (*(f32*)(aux + 0x2a0) < lbl_803E2F68) {
-            *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
+        ((BackpackState *)aux)->unk2A0 = ((BackpackState *)aux)->unk2A0 - timeDelta;
+        if (((BackpackState *)aux)->unk2A0 < lbl_803E2F68) {
+            ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
         } else {
             if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
                 *(s16*)(hitObject + 0x46) != *(s16*)(obj + 0x46)) {
                 if (*(s16*)(obj + 0x46) == TUMBLEWEED_TYPE_3) {
-                    *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 3);
-                    *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) & ~0x10);
-                    *(u8*)(aux + 0x278) = 3;
-                    *(f32*)(aux + 0x270) = lbl_803E2FB0;
-                    *(f32*)(aux + 0x2a0) = lbl_803E2FB4;
+                    ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 3);
+                    ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A & ~0x10);
+                    ((BackpackState *)aux)->unk278 = 3;
+                    ((BackpackState *)aux)->unk270 = lbl_803E2FB0;
+                    ((BackpackState *)aux)->unk2A0 = lbl_803E2FB4;
                     Obj_SetActiveModelIndex(obj, 1);
                 } else {
-                    *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
+                    ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
                 }
             }
         }
@@ -215,21 +216,21 @@ void tumbleweed_updateStateMachine(int obj) {
         d = getXZDistance((f32*)((char*)player + 0x18), (f32*)(obj + 0x18));
         if (d < lbl_803E2FB8) {
             *(s16*)(aux + 0x298) = 0x195;
-            *(s16*)(aux + 0x29a) = 0;
-            *(f32*)(aux + 0x29c) = lbl_803E2F98;
+            ((BackpackState *)aux)->unk29A = 0;
+            ((BackpackState *)aux)->unk29C = lbl_803E2F98;
             ObjMsg_SendToObject((int)player, 0x7000a, obj, (int*)(aux + 0x298));
-            *(u8*)(aux + 0x278) = 4;
+            ((BackpackState *)aux)->unk278 = 4;
         } else {
-            *(f32*)(aux + 0x270) = *(f32*)(aux + 0x270) - timeDelta;
-            *(f32*)(aux + 0x2a0) = *(f32*)(aux + 0x2a0) - timeDelta;
-            if (*(f32*)(aux + 0x2a0) < lbl_803E2F68) {
-                *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
-            } else if (*(f32*)(aux + 0x270) <= lbl_803E2F68) {
-                *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
+            ((BackpackState *)aux)->unk270 = ((BackpackState *)aux)->unk270 - timeDelta;
+            ((BackpackState *)aux)->unk2A0 = ((BackpackState *)aux)->unk2A0 - timeDelta;
+            if (((BackpackState *)aux)->unk2A0 < lbl_803E2F68) {
+                ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
+            } else if (((BackpackState *)aux)->unk270 <= lbl_803E2F68) {
+                ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
             } else {
                 if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
                     *(s16*)(hitObject + 0x46) != *(s16*)(obj + 0x46)) {
-                    *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
+                    ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
                 }
             }
             fn_80163990(obj, aux);
@@ -240,30 +241,30 @@ void tumbleweed_updateStateMachine(int obj) {
             if (popMsg == 0x7000b) {
                 gameBitIncrement(0x194);
     Sfx_PlayFromObject(obj, SFXen_treadlpc);
-                *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
+                ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
             }
         }
     } else if (state == 6) {
-        f32 *target = *(f32**)(aux + 0x290);
+        f32 *target = ((BackpackState *)aux)->unk290;
         f32 vx, vy, vz, d;
         vx = target[0] - *(f32*)(obj + 0xc);
         vy = target[1] - *(f32*)(obj + 0x10);
         vz = target[2] - *(f32*)(obj + 0x14);
         d = sqrtf(vx*vx + vy*vy + vz*vz);
         vx /= d; vy /= d; vz /= d;
-        *(f32*)(aux + 0x294) = timeDelta * lbl_803E2F98 + *(f32*)(aux + 0x294);
+        ((BackpackState *)aux)->unk294 = timeDelta * lbl_803E2F98 + ((BackpackState *)aux)->unk294;
         {
             f32 k = lbl_803E2FBC;
-            *(f32*)(obj + 0x24) = (k * vx) * *(f32*)(aux + 0x294);
-            *(f32*)(obj + 0x28) = (k * vy) * *(f32*)(aux + 0x294);
-            *(f32*)(obj + 0x2c) = (k * vz) * *(f32*)(aux + 0x294);
+            *(f32*)(obj + 0x24) = (k * vx) * ((BackpackState *)aux)->unk294;
+            *(f32*)(obj + 0x28) = (k * vy) * ((BackpackState *)aux)->unk294;
+            *(f32*)(obj + 0x2c) = (k * vz) * ((BackpackState *)aux)->unk294;
         }
-        d = getXZDistance((f32*)(obj + 0xc), *(f32**)(aux + 0x290));
+        d = getXZDistance((f32*)(obj + 0xc), ((BackpackState *)aux)->unk290);
         objMove(obj, *(f32*)(obj + 0x24) * timeDelta, *(f32*)(obj + 0x28) * timeDelta, *(f32*)(obj + 0x2c) * timeDelta);
-        if (getXZDistance((f32*)(obj + 0xc), *(f32**)(aux + 0x290)) > d) {
-            *(f32*)(obj + 0xc) += ((*(f32**)(aux + 0x290))[0] - *(f32*)(obj + 0xc)) * lbl_803E2F98;
-            *(f32*)(obj + 0x10) += ((*(f32**)(aux + 0x290))[1] - *(f32*)(obj + 0x10)) * lbl_803E2F98;
-            *(f32*)(obj + 0x14) += ((*(f32**)(aux + 0x290))[2] - *(f32*)(obj + 0x14)) * lbl_803E2F98;
+        if (getXZDistance((f32*)(obj + 0xc), ((BackpackState *)aux)->unk290) > d) {
+            *(f32*)(obj + 0xc) += ((((BackpackState *)aux)->unk290)[0] - *(f32*)(obj + 0xc)) * lbl_803E2F98;
+            *(f32*)(obj + 0x10) += ((((BackpackState *)aux)->unk290)[1] - *(f32*)(obj + 0x10)) * lbl_803E2F98;
+            *(f32*)(obj + 0x14) += ((((BackpackState *)aux)->unk290)[2] - *(f32*)(obj + 0x14)) * lbl_803E2F98;
         }
     } else if (state == 7) {
         u32 j = 0;
@@ -271,14 +272,14 @@ void tumbleweed_updateStateMachine(int obj) {
         for (; (s32)(j & 0xffff) < (s32)timeDelta; j = j + 1) {
             *(f32*)(obj + 0x8) = *(f32*)(obj + 0x8) * k;
         }
-        *(f32*)(obj + 0xc) = (*(f32**)(aux + 0x290))[0];
-        *(f32*)(obj + 0x10) = (*(f32**)(aux + 0x290))[1];
-        *(f32*)(obj + 0x14) = (*(f32**)(aux + 0x290))[2];
+        *(f32*)(obj + 0xc) = (((BackpackState *)aux)->unk290)[0];
+        *(f32*)(obj + 0x10) = (((BackpackState *)aux)->unk290)[1];
+        *(f32*)(obj + 0x14) = (((BackpackState *)aux)->unk290)[2];
     } else {
-        if (*(f32*)(aux + 0x270) <= lbl_803E2F68) {
+        if (((BackpackState *)aux)->unk270 <= lbl_803E2F68) {
             Obj_FreeObject(obj);
         } else {
-            *(f32*)(aux + 0x270) = *(f32*)(aux + 0x270) - timeDelta;
+            ((BackpackState *)aux)->unk270 = ((BackpackState *)aux)->unk270 - timeDelta;
         }
     }
     }
@@ -298,25 +299,25 @@ void tumbleweed_updateStateMachine(int obj) {
 void tumbleweed_init(int obj, int defData) {
     int aux = *(int*)(obj + 0xb8);
 
-    *(f32*)(aux + 0x288) = *(f32*)(obj + 0xc);
-    *(f32*)(aux + 0x28c) = *(f32*)(obj + 0x14);
-    *(s16*)(aux + 0x26a) = (short)(lbl_803E2FCC * *(f32*)(defData + 0x1c));
-    *(u8*)(aux + 0x279) = *(u8*)(defData + 0x1b);
-    *(f32*)(aux + 0x26c) = *(f32*)(obj + 0x8);
-    *(f32*)(aux + 0x270) = *(f32*)(aux + 0x26c) / (f32)(s32)randomGetRange(0xc8, 0x1f4);
+    ((BackpackState *)aux)->unk288 = *(f32*)(obj + 0xc);
+    ((BackpackState *)aux)->unk28C = *(f32*)(obj + 0x14);
+    ((BackpackState *)aux)->unk26A = (short)(lbl_803E2FCC * *(f32*)(defData + 0x1c));
+    ((BackpackState *)aux)->unk279 = *(u8*)(defData + 0x1b);
+    ((BackpackState *)aux)->unk26C = *(f32*)(obj + 0x8);
+    ((BackpackState *)aux)->unk270 = ((BackpackState *)aux)->unk26C / (f32)(s32)randomGetRange(0xc8, 0x1f4);
     *(u32*)(aux + 0x284) = 0;
     *(f32*)(obj + 0x8) = lbl_803E2FD0;
     (*(int(**)(int, int, int, int))(*(int*)gPathControlInterface + 0x4))(aux, 0, 0x40000, 1);
     (*(int(**)(int, int, void*, void*, int))(*(int*)gPathControlInterface + 0x8))(aux, 1, lbl_80320288, lbl_803DBD40, 8);
     (*(int(**)(int, int))(*(int*)gPathControlInterface + 0x20))(obj, aux);
-    *(u8*)(aux + 0x278) = 0;
-    *(f32*)(aux + 0x2a0) = lbl_803E2FB4 + (f32)(s32)randomGetRange(-0x12c, 0x12c);
+    ((BackpackState *)aux)->unk278 = 0;
+    ((BackpackState *)aux)->unk2A0 = lbl_803E2FB4 + (f32)(s32)randomGetRange(-0x12c, 0x12c);
     ObjGroup_AddObject(obj, 3);
     ObjGroup_AddObject(obj, 0x31);
     ObjHits_DisableObject(obj);
     ObjMsg_AllocQueue(obj, 1);
     if (*(s16*)(obj + 0x46) == TUMBLEWEED_TYPE_3) {
-        *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 0x10);
+        ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 0x10);
     }
 }
 #pragma pop
@@ -596,26 +597,26 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     u32 state;
 
     aux = *(int*)(obj + 0xb8);
-    state = *(u8*)(aux + 0x278);
+    state = ((BackpackState *)aux)->unk278;
     if (state == 0) {
         if ((*(int(**)(int*))(*(int*)gSHthorntailAnimationInterface + 0x24))(&animPhase) != 0) {
-            if (*(f32*)(obj + 0x8) < *(f32*)(aux + 0x26c)) {
-                *(f32*)(obj + 0x8) = *(f32*)(aux + 0x270) * timeDelta + *(f32*)(obj + 0x8);
+            if (*(f32*)(obj + 0x8) < ((BackpackState *)aux)->unk26C) {
+                *(f32*)(obj + 0x8) = ((BackpackState *)aux)->unk270 * timeDelta + *(f32*)(obj + 0x8);
             } else {
-                *(u8*)(aux + 0x278) = 1;
+                ((BackpackState *)aux)->unk278 = 1;
             }
         }
     } else if (state == 1) {
         if ((*(int(**)(int*))(*(int*)gSHthorntailAnimationInterface + 0x24))(&animPhase) != 0) {
             f32 dx, dz, d;
-            player = *(int**)(aux + 0x284);
+            player = ((BackpackState *)aux)->unk284;
             player = player ? player : (int*)Obj_GetPlayerObject();
             dx = *(f32*)(obj + 0xc) - *(f32*)((char*)player + 0xc);
             dz = *(f32*)(obj + 0x14) - *(f32*)((char*)player + 0x14);
             d = sqrtf(dx*dx + dz*dz);
             *(s16*)(aux + 0x268) = d;
-            if (*(u16*)(aux + 0x268) < *(u16*)(aux + 0x26a)) {
-                *(u8*)(aux + 0x278) = 2;
+            if (((BackpackState *)aux)->unk268 < *(u16*)(aux + 0x26a)) {
+                ((BackpackState *)aux)->unk278 = 2;
                 *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) & ~8);
                 ObjHits_EnableObject(obj);
             }
@@ -623,20 +624,20 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     } else if (state == 2) {
         f32 dz, dx, d;
         u32 dist;
-        player = *(int**)(aux + 0x284);
+        player = ((BackpackState *)aux)->unk284;
         player = player ? player : (int*)Obj_GetPlayerObject();
         dx = *(f32*)(obj + 0xc) - *(f32*)((char*)player + 0xc);
         dz = *(f32*)(obj + 0x14) - *(f32*)((char*)player + 0x14);
         d = sqrtf(dx*dx + dz*dz);
         *(s16*)(aux + 0x268) = d;
-        dist = *(u16*)(aux + 0x268);
+        dist = ((BackpackState *)aux)->unk268;
         if ((f32)dist > lbl_803E2FC4) {
             f32 k;
             *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) - dx / (lbl_803E2FC4 * (f32)dist);
-            *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) - dz / (lbl_803E2FC4 * (f32)(u32)*(u16*)(aux + 0x268));
+            *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) - dz / (lbl_803E2FC4 * (f32)(u32)((BackpackState *)aux)->unk268);
             k = lbl_803E2FAC;
-            *(s16*)(aux + 0x27c) = k * *(f32*)(obj + 0x24);
-            *(s16*)(aux + 0x27e) = k * *(f32*)(obj + 0x2c);
+            ((BackpackState *)aux)->unk27C = k * *(f32*)(obj + 0x24);
+            ((BackpackState *)aux)->unk27E = k * *(f32*)(obj + 0x2c);
         } else {
             f32 k = lbl_803E2F84;
             *(f32*)(obj + 0x24) = -(k * *(f32*)(obj + 0x24));
@@ -646,13 +647,13 @@ void tumbleweed_updateTargetedStateMachine(int obj)
         (*(int(**)(int, int, f32))(*(int*)gPathControlInterface + 0x18))(obj, aux, timeDelta);
         if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0) {
             GameBit_Set(0x642, 1);
-            *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
+            ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
         }
     } else {
-        if (*(f32*)(aux + 0x270) <= lbl_803E2F68) {
+        if (((BackpackState *)aux)->unk270 <= lbl_803E2F68) {
             Obj_FreeObject(obj);
         } else {
-            *(f32*)(aux + 0x270) = *(f32*)(aux + 0x270) - timeDelta;
+            ((BackpackState *)aux)->unk270 = ((BackpackState *)aux)->unk270 - timeDelta;
         }
     }
 }

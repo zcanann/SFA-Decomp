@@ -1,4 +1,6 @@
 #include "ghidra_import.h"
+#include "main/dll/baddie_state.h"
+#include "main/dll/grimble_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/barrel.h"
 #include "main/mapEventTypes.h"
@@ -102,22 +104,22 @@ int fn_80161F0C(int obj, char *state, f32 arg)
   sub = *(char **)(*(int *)(obj + 0xb8) + 0x40c);
   if (*(s8 *)(state + 0x27a) != 0) {
     ObjAnim_SetCurrentMove(obj, 3, lbl_803E2EB8, 0);
-    *(u8 *)(state + 0x346) = 0;
+    ((GroundBaddieState *)state)->baddie.moveDone = 0;
   }
-  *(f32 *)(state + 0x2a0) = lbl_803E2EF0;
+  ((GroundBaddieState *)state)->baddie.moveSpeed = lbl_803E2EF0;
   (*(void (**)(int, char *, f32, int))(*(int *)gPlayerInterface + 0x20))(obj, state, arg, 9);
-  (*(void (**)(int, char *, f32))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x28))(
-      *(int *)(sub + 0x38), sub + 0x48,
-      *(f32 *)(state + 0x280) * (f32)(1 - (*(s8 *)(sub + 0x45) << 1)));
+  (*(void (**)(int, char *, f32))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x28))(
+      ((GrimbleControl *)sub)->unk38, sub + 0x48,
+      ((GroundBaddieState *)state)->baddie.animSpeedA * (f32)(1 - (((GrimbleControl *)sub)->unk45 << 1)));
   if (*(f32 *)(sub + 0x48) < lbl_803E2EF4) {
     *(f32 *)(sub + 0x48) = lbl_803E2EF4;
   } else if (*(f32 *)(sub + 0x48) > lbl_803E2EF8) {
     *(f32 *)(sub + 0x48) = lbl_803E2EF8;
   }
-  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x24))(
-      *(int *)(sub + 0x38), *(f32 *)(sub + 0x48) - lbl_803E2EFC, &x, &y, &z);
-  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x24))(
-      *(int *)(sub + 0x38), lbl_803E2EFC + *(f32 *)(sub + 0x48), &x2, &y2, &z2);
+  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x24))(
+      ((GrimbleControl *)sub)->unk38, *(f32 *)(sub + 0x48) - lbl_803E2EFC, &x, &y, &z);
+  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x24))(
+      ((GrimbleControl *)sub)->unk38, lbl_803E2EFC + *(f32 *)(sub + 0x48), &x2, &y2, &z2);
   x = x - x2;
   y = y - y2;
   z = z - z2;
@@ -125,14 +127,14 @@ int fn_80161F0C(int obj, char *state, f32 arg)
   x = d;
   angle = getAngle(y, (f32)d);
   *(s16 *)(obj + 2) = (lbl_803E2EBC - lbl_803E2F00 * *(f32 *)(obj + 0x98)) *
-                      (f32)(s16)(angle * ((*(s8 *)(sub + 0x45) << 1) - 1));
+                      (f32)(s16)(angle * ((((GrimbleControl *)sub)->unk45 << 1) - 1));
   if (*(s8 *)(state + 0x346) != 0) {
     (*(void (**)(int, int, int, u16 *, u16 *, u16 *))(*(int *)gBaddieControlInterface + 0x14))(
         obj, *(int *)(state + 0x2d0), 0x10, &zone, &pad, &dist);
-    *(s8 *)(sub + 0x45) = 1 - *(u8 *)(sub + 0x45);
-    *(s16 *)(obj + 0) = *(s16 *)(sub + 0x58) + (!*(s8 *)(sub + 0x45) << 15);
+    ((GrimbleControl *)sub)->unk45 = 1 - *(u8 *)(sub + 0x45);
+    *(s16 *)(obj + 0) = ((GrimbleControl *)sub)->unk58 + (!((GrimbleControl *)sub)->unk45 << 15);
     spd = (f32)(int)randomGetRange(0x32, 0x64) / lbl_803E2F04;
-    vel = (f32)((*(s8 *)(sub + 0x45) << 1) - 1) * spd;
+    vel = (f32)((((GrimbleControl *)sub)->unk45 << 1) - 1) * spd;
     if (zone < 4 || zone > 0xb) {
       if (dist > 0x1f4) {
         vel *= lbl_803E2EBC + (f32)dist / lbl_803E2F04;
@@ -140,19 +142,19 @@ int fn_80161F0C(int obj, char *state, f32 arg)
         vel *= lbl_803E2EBC + (f32)dist / lbl_803E2F08;
       }
     }
-    *(f32 *)(sub + 0x54) = *(f32 *)(sub + 0x48) - vel;
-    f = *(f32 *)(sub + 0x54);
+    ((GrimbleControl *)sub)->unk54 = *(f32 *)(sub + 0x48) - vel;
+    f = ((GrimbleControl *)sub)->unk54;
     if (f > lbl_803E2EBC) {
     } else {
       f = lbl_803E2EBC;
     }
-    *(f32 *)(sub + 0x54) = f;
-    f = *(f32 *)(sub + 0x54);
+    ((GrimbleControl *)sub)->unk54 = f;
+    f = ((GrimbleControl *)sub)->unk54;
     if (f < lbl_803E2F0C) {
     } else {
       f = lbl_803E2F0C;
     }
-    *(f32 *)(sub + 0x54) = f;
+    ((GrimbleControl *)sub)->unk54 = f;
     return 4;
   }
   return 0;
@@ -176,9 +178,9 @@ int fn_801622D4(int obj, char *state, f32 arg)
     *(int *)(state + 0x314) = *(int *)(state + 0x314) & ~1;
     Sfx_PlayFromObject(obj, SFXsc_death01);
   }
-  (*(void (**)(int, char *, f32))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x28))(
-      *(int *)(sub + 0x38), sub + 0x48,
-      lbl_803E2F18 * (*(f32 *)(state + 0x2a0) * (f32)(1 - (*(s8 *)(sub + 0x45) << 1))));
+  (*(void (**)(int, char *, f32))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x28))(
+      ((GrimbleControl *)sub)->unk38, sub + 0x48,
+      lbl_803E2F18 * (*(f32 *)(state + 0x2a0) * (f32)(1 - (((GrimbleControl *)sub)->unk45 << 1))));
   if (*(f32 *)(sub + 0x48) < lbl_803E2EF4) {
     *(f32 *)(sub + 0x48) = lbl_803E2EF4;
     hitEdge = 1;
@@ -191,17 +193,17 @@ int fn_801622D4(int obj, char *state, f32 arg)
   if (hitEdge != 0) {
     return 7;
   }
-  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x24))(
-      *(int *)(sub + 0x38), *(f32 *)(sub + 0x48) - lbl_803E2EFC, &x, &y, &z);
-  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x24))(
-      *(int *)(sub + 0x38), lbl_803E2EFC + *(f32 *)(sub + 0x48), &x2, &y2, &z2);
+  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x24))(
+      ((GrimbleControl *)sub)->unk38, *(f32 *)(sub + 0x48) - lbl_803E2EFC, &x, &y, &z);
+  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x24))(
+      ((GrimbleControl *)sub)->unk38, lbl_803E2EFC + *(f32 *)(sub + 0x48), &x2, &y2, &z2);
   x = x - x2;
   y = y - y2;
   z = z - z2;
   d = sqrtf(x * x + z * z);
   x = d;
   angle = getAngle(y, (f32)d);
-  *(s16 *)(obj + 2) = angle * ((*(s8 *)(sub + 0x45) << 1) - 1);
+  *(s16 *)(obj + 2) = angle * ((((GrimbleControl *)sub)->unk45 << 1) - 1);
   return 0;
 }
 
@@ -218,13 +220,13 @@ int fn_80162518(int obj, char *state, f32 arg)
   sub = *(char **)(*(int *)(obj + 0xb8) + 0x40c);
   if (*(s8 *)(state + 0x27a) != 0) {
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E2EB8, 0);
-    *(u8 *)(state + 0x346) = 0;
+    ((GroundBaddieState *)state)->baddie.moveDone = 0;
   }
-  *(f32 *)(state + 0x2a0) = lbl_803E2EF0;
+  ((GroundBaddieState *)state)->baddie.moveSpeed = lbl_803E2EF0;
   (*(void (**)(int, char *, f32, int))(*(int *)gPlayerInterface + 0x20))(obj, state, arg, 1);
-  (*(void (**)(int, char *, f32))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x28))(
-      *(int *)(sub + 0x38), sub + 0x48,
-      *(f32 *)(state + 0x280) * (f32)(1 - (*(s8 *)(sub + 0x45) << 1)));
+  (*(void (**)(int, char *, f32))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x28))(
+      ((GrimbleControl *)sub)->unk38, sub + 0x48,
+      ((GroundBaddieState *)state)->baddie.animSpeedA * (f32)(1 - (((GrimbleControl *)sub)->unk45 << 1)));
   if (*(f32 *)(sub + 0x48) < lbl_803E2EF4) {
     *(f32 *)(sub + 0x48) = lbl_803E2EF4;
   } else if (*(f32 *)(sub + 0x48) > lbl_803E2EF8) {
@@ -236,7 +238,7 @@ int fn_80162518(int obj, char *state, f32 arg)
       *(f32 *)(sub + 0x48) < lbl_803E2F1C) {
     return 3;
   }
-  if ((*(s8 *)(sub + 0x45) ^ (*(f32 *)(sub + 0x48) >= *(f32 *)(sub + 0x54))) != 0 &&
+  if ((((GrimbleControl *)sub)->unk45 ^ (*(f32 *)(sub + 0x48) >= ((GrimbleControl *)sub)->unk54)) != 0 &&
       *(s8 *)(state + 0x346) != 0) {
     return 3;
   }
@@ -244,17 +246,17 @@ int fn_80162518(int obj, char *state, f32 arg)
     *(int *)(state + 0x314) = *(int *)(state + 0x314) & ~1;
     Sfx_PlayFromObject(obj, SFXsc_death01);
   }
-  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x24))(
-      *(int *)(sub + 0x38), *(f32 *)(sub + 0x48) - lbl_803E2EFC, &x, &y, &z);
-  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x24))(
-      *(int *)(sub + 0x38), lbl_803E2EFC + *(f32 *)(sub + 0x48), &x2, &y2, &z2);
+  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x24))(
+      ((GrimbleControl *)sub)->unk38, *(f32 *)(sub + 0x48) - lbl_803E2EFC, &x, &y, &z);
+  (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x24))(
+      ((GrimbleControl *)sub)->unk38, lbl_803E2EFC + *(f32 *)(sub + 0x48), &x2, &y2, &z2);
   x = x - x2;
   y = y - y2;
   z = z - z2;
   d = sqrtf(x * x + z * z);
   x = d;
   angle = getAngle(y, (f32)d);
-  *(s16 *)(obj + 2) = angle * ((*(s8 *)(sub + 0x45) << 1) - 1);
+  *(s16 *)(obj + 2) = angle * ((((GrimbleControl *)sub)->unk45 << 1) - 1);
   return 0;
 }
 
@@ -276,36 +278,36 @@ void fn_801627F4(int obj)
   ptr = (int *)ObjGroup_GetObjects(0x17, &count);
   if (count != 0) {
     sub = *(char **)(state + 0x40c);
-    *(int *)(sub + 0x34) = 0;
-    *(f32 *)(sub + 0x3c) = lbl_803E2F20;
+    ((GrimbleControl *)sub)->unk34 = 0;
+    ((GrimbleControl *)sub)->unk3C = lbl_803E2F20;
     for (i = 0; i < count; i++) {
       if ((*(int (**)(int, f32, f32, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(*ptr + 0x68)) + 0x30))(
               *ptr, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), &dist,
               &hitY, &unk) != 0 &&
-          dist < *(f32 *)(sub + 0x3c)) {
-        *(int *)(sub + 0x34) = *ptr;
-        *(f32 *)(sub + 0x3c) = dist;
-        *(f32 *)(sub + 0x40) = hitY;
+          dist < ((GrimbleControl *)sub)->unk3C) {
+        ((GrimbleControl *)sub)->unk34 = *ptr;
+        ((GrimbleControl *)sub)->unk3C = dist;
+        ((GrimbleControl *)sub)->unk40 = hitY;
       }
       ptr++;
     }
     if (*(void **)(sub + 0x34) != NULL) {
-      *(int *)(sub + 0x38) = *(int *)(sub + 0x34);
-      *(f32 *)(sub + 0x48) = *(f32 *)(sub + 0x40);
-      (*(void (**)(int, char *))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x20))(
-          *(int *)(sub + 0x38), sub + 0xc);
-      (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x24))(
-          *(int *)(sub + 0x38), *(f32 *)(sub + 0x48), (f32 *)(sub + 0x1c), (f32 *)(sub + 0x20),
+      ((GrimbleControl *)sub)->unk38 = ((GrimbleControl *)sub)->unk34;
+      ((GrimbleControl *)sub)->unk48 = ((GrimbleControl *)sub)->unk40;
+      (*(void (**)(int, char *))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x20))(
+          ((GrimbleControl *)sub)->unk38, sub + 0xc);
+      (*(void (**)(int, f32, f32 *, f32 *, f32 *))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x24))(
+          ((GrimbleControl *)sub)->unk38, ((GrimbleControl *)sub)->unk48, (f32 *)(sub + 0x1c), (f32 *)(sub + 0x20),
           (f32 *)(sub + 0x24));
-      *(s16 *)(sub + 0x58) =
-          (*(int (**)(int))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) + 0x34))(
-              *(int *)(sub + 0x38));
-      *(f32 *)(sub + 0x4c) = *(f32 *)(sub + 0x48);
-      *(u8 *)(sub + 0x46) = 0;
-      *(f32 *)(sub + 0x4) = *(f32 *)(sub + 0x20);
-      *(f32 *)(sub + 0x8) = *(f32 *)(obj + 0x10);
-      *(f32 *)(sub + 0x0) = *(f32 *)(sub + 0x4) - *(f32 *)(sub + 0x8);
-      diff = *(s16 *)(obj + 0) - (u16)*(s16 *)(sub + 0x58);
+      ((GrimbleControl *)sub)->unk58 =
+          (*(int (**)(int))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) + 0x34))(
+              ((GrimbleControl *)sub)->unk38);
+      ((GrimbleControl *)sub)->unk4C = ((GrimbleControl *)sub)->unk48;
+      ((GrimbleControl *)sub)->unk46 = 0;
+      ((GrimbleControl *)sub)->unk4 = *(f32 *)(sub + 0x20);
+      ((GrimbleControl *)sub)->unk8 = *(f32 *)(obj + 0x10);
+      ((GrimbleControl *)sub)->unk0 = ((GrimbleControl *)sub)->unk4 - ((GrimbleControl *)sub)->unk8;
+      diff = *(s16 *)(obj + 0) - (u16)((GrimbleControl *)sub)->unk58;
       if (diff > 0x8000) {
         diff -= 0xffff;
       }
@@ -316,24 +318,24 @@ void fn_801627F4(int obj)
       if (diff < 0x3ffd && diff > -0x3ffd) {
         facing = 1;
       }
-      *(s8 *)(sub + 0x45) = facing;
-      *(s16 *)(obj + 0) = *(s16 *)(sub + 0x58) + (!*(s8 *)(sub + 0x45) << 15);
-      f = *(f32 *)(sub + 0x48) -
-          (f32)((*(s8 *)(sub + 0x45) << 1) - 1) *
+      ((GrimbleControl *)sub)->unk45 = facing;
+      *(s16 *)(obj + 0) = ((GrimbleControl *)sub)->unk58 + (!((GrimbleControl *)sub)->unk45 << 15);
+      f = ((GrimbleControl *)sub)->unk48 -
+          (f32)((((GrimbleControl *)sub)->unk45 << 1) - 1) *
               ((f32)(int)randomGetRange(0xa, 0x3c) / lbl_803E2F24);
-      *(f32 *)(sub + 0x54) = f;
-      f = *(f32 *)(sub + 0x54);
+      ((GrimbleControl *)sub)->unk54 = f;
+      f = ((GrimbleControl *)sub)->unk54;
       if (f > lbl_803E2EBC) {
       } else {
         f = lbl_803E2EBC;
       }
-      *(f32 *)(sub + 0x54) = f;
-      f = *(f32 *)(sub + 0x54);
+      ((GrimbleControl *)sub)->unk54 = f;
+      f = ((GrimbleControl *)sub)->unk54;
       if (f < lbl_803E2F0C) {
       } else {
         f = lbl_803E2F0C;
       }
-      *(f32 *)(sub + 0x54) = f;
+      ((GrimbleControl *)sub)->unk54 = f;
     }
   }
 }
@@ -348,7 +350,7 @@ void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   }
   ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5,
                                                                  lbl_803E2EBC);
-  if (*(f32 *)(sub + 0x50) > lbl_803E2EB8) {
+  if (((GrimbleControl *)sub)->unk50 > lbl_803E2EB8) {
     (*(void (**)(int, int, int, int, int))(*(int *)lbl_803DCAB4 + 0xc))(obj, 0x52a, 0, 0x64,
                                                                         0);
   }
@@ -375,8 +377,8 @@ void grimble_update(int obj)
       (*(void (**)(int, int, char *, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                                0x58))(obj, def, state, 0xa, 6,
                                                                       0x10e, 0x36, lbl_803E2F28);
-      *(s16 *)(state + 0x270) = 1;
-      *(u8 *)(state + 0x27b) = 1;
+      ((GroundBaddieState *)state)->baddie.unk270 = 1;
+      ((GroundBaddieState *)state)->baddie.moveJustStartedB = 1;
       *(u8 *)(obj + 0x36) = 0;
     }
   } else {
@@ -386,32 +388,32 @@ void grimble_update(int obj)
 
       (*(void (**)(int, char *, void *, void *, f32, f32))(*(int *)gPlayerInterface + 0x8))(
           obj, state, lbl_803AC610, lbl_803AC5F8, lbl_803E2EBC, lbl_803E2EBC);
-      (*(void (**)(int, f32, int, int, int))(*(int *)(*(int *)(*(int *)(sub + 0x38) + 0x68)) +
-                                             0x24))(*(int *)(sub + 0x38), *(f32 *)(sub + 0x48),
+      (*(void (**)(int, f32, int, int, int))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) +
+                                             0x24))(((GrimbleControl *)sub)->unk38, ((GrimbleControl *)sub)->unk48,
                                                     obj + 0xc, obj + 0x10, obj + 0x14);
       (*(void (**)(int, char *, char *, int, char *, int, int, int))(*(int *)gBaddieControlInterface +
                                                                      0x54))(
-          obj, state, state + 0x35c, *(s16 *)(state + 0x3f4), state + 0x405, 0, 0, 0);
+          obj, state, state + 0x35c, ((GroundBaddieState *)state)->gameBitB, state + 0x405, 0, 0, 0);
       r = (*(int (**)(int, char *, char *, int, int *, int *, int, int))(*(int *)gBaddieControlInterface +
                                                                          0x50))(
-          obj, state, state + 0x35c, *(s16 *)(state + 0x3f4), lbl_803200E0, lbl_80320158, 3, 0);
+          obj, state, state + 0x35c, ((GroundBaddieState *)state)->gameBitB, lbl_803200E0, lbl_80320158, 3, 0);
       if (r == 0xe) {
         *(u8 *)(state + 0x405) = 2;
-        *(void **)(state + 0x2d0) = Obj_GetPlayerObject();
+        ((GroundBaddieState *)state)->baddie.targetObj = Obj_GetPlayerObject();
       }
-      if (*(void **)(state + 0x2d0) != NULL || *(s8 *)(state + 0x354) == 0) {
+      if (((GroundBaddieState *)state)->baddie.targetObj != NULL || *(s8 *)(state + 0x354) == 0) {
         (*(ObjHitsPriorityState **)(obj + 0x54))->flags |= 1;
         if ((*(int (**)(int, char *, f32, int))(*(int *)gBaddieControlInterface + 0x44))(
-                obj, state, (f32)*(u16 *)(state + 0x3fe), 1) != 0) {
+                obj, state, (f32)((GroundBaddieState *)state)->unk3FE, 1) != 0) {
           *(int *)(state + 0x2d0) = 0;
         }
       } else {
         (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
         target = (*(void *(**)(int, char *, f32, int))(*(int *)gBaddieControlInterface + 0x48))(
-            obj, state, (f32)*(u16 *)(state + 0x3fe), 0x8000);
+            obj, state, (f32)((GroundBaddieState *)state)->unk3FE, 0x8000);
         if (target != NULL) {
-          *(void **)(state + 0x2d0) = target;
-          *(u8 *)(state + 0x349) = 0;
+          ((GroundBaddieState *)state)->baddie.targetObj = target;
+          ((GroundBaddieState *)state)->baddie.unk349 = 0;
         }
       }
     } else {

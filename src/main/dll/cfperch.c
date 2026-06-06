@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/cfperch_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfperch.h"
 #include "main/mapEventTypes.h"
@@ -99,40 +100,40 @@ void smallbasket_init(int obj, int def)
 
     v1c = *(s16*)(def + 0x1c);
     if (v1c == 0) {
-        *(int*)(state + 0x18) = 0;
+        ((CfperchState *)state)->unk18 = 0;
     } else {
-        *(int*)(state + 0x18) = v1c * 0x3c;
+        ((CfperchState *)state)->unk18 = v1c * 0x3c;
     }
 
     lbl_803DDAC0 = Resource_Acquire(0x5b, 1);
-    *(s16*)(state + 0xe) = (s16)(randomGetRange(0, 0x64) + 0x12c);
-    *(u8*)(state + 0x1f) = (u8)*(s16*)(def + 0x1a);
+    ((CfperchState *)state)->unkE = (s16)(randomGetRange(0, 0x64) + 0x12c);
+    ((CfperchState *)state)->unk1F = (u8)*(s16*)(def + 0x1a);
     *(s16*)obj = (s16)(*(s8*)(def + 0x18) << 8);
-    *(s16*)(state + 0x1c) = *(s16*)(def + 0x1e);
-    *(s16*)(state + 0xc) = *(s16*)(def + 0x20);
-    if (*(s16*)(state + 0xc) == 0) {
-        *(s16*)(state + 0xc) = 0x14;
+    ((CfperchState *)state)->unk1C = *(s16*)(def + 0x1e);
+    ((CfperchState *)state)->unkC = *(s16*)(def + 0x20);
+    if (((CfperchState *)state)->unkC == 0) {
+        ((CfperchState *)state)->unkC = 0x14;
     }
-    *(s16*)(state + 0x12) = 0x320;
+    ((CfperchState *)state)->unk12 = 0x320;
     *(u16*)(obj + 0xb0) |= 0x2000;
-    *(u8*)(state + 0x1e) = *(u8*)(def + 0x19);
+    ((CfperchState *)state)->unk1E = *(u8*)(def + 0x19);
     *(f32*)(obj + 0x80) = *(f32*)(obj + 0xc);
     *(f32*)(obj + 0x84) = *(f32*)(obj + 0x10);
     *(f32*)(obj + 0x80) = *(f32*)(obj + 0x14);
 
-    if ((u32)GameBit_Get(*(s16*)(state + 0x1c)) != 0) {
-        *(int*)(state + 0x14) = 1;
+    if ((u32)GameBit_Get(((CfperchState *)state)->unk1C) != 0) {
+        ((CfperchState *)state)->unk14 = 1;
         ObjHits_DisableObject(obj);
     }
 
     mode = *(s16*)(obj + 0x46);
     if (mode == 0x3cf) {
-        *(s16*)(state + 0x10) = 0x60;
+        ((CfperchState *)state)->unk10 = 0x60;
     } else if (mode == 0x662) {
-        *(u8*)(state + 0x20) = 1;
-        *(s16*)(state + 0x10) = 0x37d;
+        ((CfperchState *)state)->unk20 = 1;
+        ((CfperchState *)state)->unk10 = 0x37d;
     } else {
-        *(s16*)(state + 0x10) = 0x4a;
+        ((CfperchState *)state)->unk10 = 0x4a;
     }
 }
 #pragma peephole reset
@@ -273,30 +274,30 @@ void smallbasket_update(int obj)
         return;
     }
     playerState = *(int *)(player + 0xb8);
-    if (*(s16 *)(state + 0x12) <= 0) {
-        *(s16 *)(state + 0x12) = 800;
-        *(s16 *)(state + 0xa) = 1;
-        *(u8 *)(state + 0x9) = 0;
+    if (((CfperchState *)state)->unk12 <= 0) {
+        ((CfperchState *)state)->unk12 = 800;
+        ((CfperchState *)state)->unkA = 1;
+        ((CfperchState *)state)->unk9 = 0;
         *(u8 *)(obj + 0xaf) |= 8;
         fn_801816F8(obj, player, state);
         zf = lbl_803E3938;
         *(f32 *)(obj + 0x24) = zf;
         *(f32 *)(obj + 0x2c) = zf;
     }
-    if (*(int *)(state + 0x14) != 0) {
+    if (((CfperchState *)state)->unk14 != 0) {
         flag = 0;
         *(u8 *)(obj + 0x36) = flag;
-        *(int *)(state + 0x14) -= (s16)(int)(timeDelta * animSpeed);
-        if (*(int *)(state + 0x14) <= 0) {
+        ((CfperchState *)state)->unk14 -= (s16)(int)(timeDelta * animSpeed);
+        if (((CfperchState *)state)->unk14 <= 0) {
             if ((Vec_distance((f32 *)(obj + 0x18), (f32 *)((int)Obj_GetPlayerObject() + 0x18)) > lbl_803E3930) &&
-                (*(s16 *)(state + 0x1c) == -1)) {
+                (((CfperchState *)state)->unk1C == -1)) {
                 flag = 1;
             }
             if (flag == 0) {
-                *(int *)(state + 0x14) = 1;
+                ((CfperchState *)state)->unk14 = 1;
             } else {
-                *(int *)(state + 0x14) = 0;
-                *(s16 *)(state + 0xa) = 0;
+                ((CfperchState *)state)->unk14 = 0;
+                ((CfperchState *)state)->unkA = 0;
                 ObjHits_EnableObject(obj);
                 ObjHits_SyncObjectPositionIfDirty(obj);
                 *(u8 *)(obj + 0xaf) &= ~0x8;
@@ -304,23 +305,23 @@ void smallbasket_update(int obj)
             }
         }
     } else {
-        if (*(s8 *)(state + 0x5) != 2) {
+        if (((CfperchState *)state)->unk5 != 2) {
             level = (int)(lbl_803E3978 * timeDelta + (f32)(u32)*(u8 *)(obj + 0x36));
             if (level > 0xff) {
                 level = 0xff;
             }
             *(u8 *)(obj + 0x36) = level;
         }
-        if (*(s16 *)(state + 0xa) != 0) {
+        if (((CfperchState *)state)->unkA != 0) {
             ObjHits_DisableObject(obj);
-            *(s16 *)(state + 0xa) -= framesThisStep;
-            if (*(s16 *)(state + 0xa) <= 0) {
-                if (*(int *)(state + 0x18) != 0) {
-                    *(int *)(state + 0x14) = *(int *)(state + 0x18);
+            ((CfperchState *)state)->unkA -= framesThisStep;
+            if (((CfperchState *)state)->unkA <= 0) {
+                if (((CfperchState *)state)->unk18 != 0) {
+                    ((CfperchState *)state)->unk14 = ((CfperchState *)state)->unk18;
                 } else {
-                    *(int *)(state + 0x14) = 1;
+                    ((CfperchState *)state)->unk14 = 1;
                 }
-                (*gMapEventInterface)->startTimedEvent(*(int *)(def + 0x14), (f32)*(int *)(state + 0x18));
+                (*gMapEventInterface)->startTimedEvent(*(int *)(def + 0x14), (f32)((CfperchState *)state)->unk18);
                 *(f32 *)(obj + 0xc) = *(f32 *)(def + 0x8);
                 *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
                 *(f32 *)(obj + 0x14) = *(f32 *)(def + 0x10);
@@ -332,27 +333,27 @@ void smallbasket_update(int obj)
                 *(f32 *)(obj + 0x28) = zf;
                 *(f32 *)(obj + 0x2c) = zf;
             }
-            if (*(s16 *)(state + 0xa) <= 0x32) {
+            if (((CfperchState *)state)->unkA <= 0x32) {
                 return;
             }
         }
         if (*(s8 *)(state + 0x9) != 1) {
-            if (*(s8 *)(state + 0x5) == 0) {
+            if (((CfperchState *)state)->unk5 == 0) {
                 flag = 0;
                 if (((buttonGetDisabled(0) & 0x100) == 0) && (*(int *)(obj + 0xf8) == 0) &&
                     (ObjTrigger_IsSet(obj) != 0)) {
-                    *(s16 *)(state + 0x0) = -0x8000;
-                    *(s16 *)(state + 0x2) = 0;
+                    ((CfperchState *)state)->unk0 = -0x8000;
+                    ((CfperchState *)state)->unk2 = 0;
                     ObjHits_DisableObject(obj);
                     flag = 1;
                 }
-                *(s8 *)(state + 0x5) = flag;
-                if (*(s8 *)(state + 0x5) != 0) {
-                    *(u8 *)(state + 0x6) = 1;
+                ((CfperchState *)state)->unk5 = flag;
+                if (((CfperchState *)state)->unk5 != 0) {
+                    ((CfperchState *)state)->unk6 = 1;
                 }
                 if (*(int *)(obj + 0xf8) == 0) {
                     ObjHits_EnableObject(obj);
-                    if ((*(u8 *)(state + 0x20) != 0) && (playerIsDisguised(player) == 0)) {
+                    if ((((CfperchState *)state)->unk20 != 0) && (playerIsDisguised(player) == 0)) {
                         *(u8 *)(obj + 0xaf) |= 0x10;
                     } else {
                         *(u8 *)(obj + 0xaf) &= ~0x10;
@@ -371,7 +372,7 @@ void smallbasket_update(int obj)
                 }
                 if ((getButtonsJustPressed(0) & 0x100) != 0) {
                     if (fn_80295BF0(player) != 0) {
-                        *(u8 *)(state + 0x6) = 0;
+                        ((CfperchState *)state)->unk6 = 0;
                         buttonDisable(0, 0x100);
                     } else {
                         Sfx_PlayFromObject(0, 0x10a);
@@ -380,11 +381,11 @@ void smallbasket_update(int obj)
                 if (*(int *)(obj + 0xf8) == 1) {
                     *(u8 *)(state + 0x5) = 2;
                 }
-                if (((*(s8 *)(state + 0x5) == 2) && (*(int *)(obj + 0xf8) == 0)) ||
-                    ((*(u8 *)(state + 0x20) != 0) && (playerIsDisguised(player) == 0))) {
+                if (((((CfperchState *)state)->unk5 == 2) && (*(int *)(obj + 0xf8) == 0)) ||
+                    ((((CfperchState *)state)->unk20 != 0) && (playerIsDisguised(player) == 0))) {
                     if (fn_8029669C(player) != 0) {
                         *(u8 *)(state + 0x5) = 0;
-                        *(u8 *)(state + 0x9) = 1;
+                        ((CfperchState *)state)->unk9 = 1;
                         *(f32 *)(obj + 0x28) = lbl_803E397C * *(f32 *)(playerState + 0x298) + lbl_803E3958;
                         *(f32 *)(obj + 0x2c) = lbl_803E3980 * *(f32 *)(playerState + 0x298) + lbl_803E3974;
                         blk.fy = lbl_803E3938;
@@ -401,7 +402,7 @@ void smallbasket_update(int obj)
                         Sfx_PlayFromObject(obj, 0x6b);
                     } else if (fn_802966B4(player) != 0) {
                         *(u8 *)(state + 0x5) = 0;
-                        *(u8 *)(state + 0x9) = 2;
+                        ((CfperchState *)state)->unk9 = 2;
                         zf = lbl_803E3938;
                         *(f32 *)(obj + 0x24) = zf;
                         *(f32 *)(obj + 0x28) = zf;
@@ -411,7 +412,7 @@ void smallbasket_update(int obj)
                         ObjHits_ClearHitVolumes(obj);
                     } else {
                         *(u8 *)(state + 0x5) = 0;
-                        *(u8 *)(state + 0x9) = 1;
+                        ((CfperchState *)state)->unk9 = 1;
                         *(f32 *)(obj + 0x28) = lbl_803E3988 * *(f32 *)(playerState + 0x298) + lbl_803E3984;
                         *(f32 *)(obj + 0x2c) = lbl_803E3990 * *(f32 *)(playerState + 0x298) + lbl_803E398C;
                         blk.fy = lbl_803E3938;
@@ -423,19 +424,19 @@ void smallbasket_update(int obj)
                         blk.h0 = *(s16 *)player;
                         vecRotateZXY(&blk, (void *)(obj + 0x24));
                         Sfx_PlayFromObject(obj, 0x6b);
-                        *(u8 *)(state + 0x6) = 0;
+                        ((CfperchState *)state)->unk6 = 0;
                         *(u8 *)(obj + 0xaf) |= 8;
                     }
                 }
                 if (*(s8 *)(state + 0x6) != 0) {
-                    *(s16 *)(state + 0xa) = 0;
-                    *(int *)(state + 0x14) = 0;
+                    ((CfperchState *)state)->unkA = 0;
+                    ((CfperchState *)state)->unk14 = 0;
                     ObjMsg_SendToObject(player, 0x100010, obj,
-                                        (*(s16 *)(state + 0x2) << 16) | ((u16)*(s16 *)(state + 0x0)));
+                                        (((CfperchState *)state)->unk2 << 16) | ((u16)((CfperchState *)state)->unk0));
                 }
             }
         } else if (*(s8 *)(state + 0x9) != 0) {
-            *(s16 *)(state + 0x12) -= framesThisStep;
+            ((CfperchState *)state)->unk12 -= framesThisStep;
             if (*(s8 *)(state + 0x9) == 1) {
                 ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
                 if (*(f32 *)(obj + 0x28) > lbl_803E3994) {
@@ -455,9 +456,9 @@ void smallbasket_update(int obj)
                 objLightFn_8009a1dc(obj, lbl_803E3934, &blk, 1, 0);
                 (**(void (**)(int, int, int, int, int, int))(*(int *)lbl_803DDAC0 + 0x4))(
                     obj, 1, 0, 2, -1, 0);
-                Sfx_PlayFromObject(obj, (u16)*(s16 *)(state + 0x10));
-                *(s16 *)(state + 0xa) = 0x32;
-                *(u8 *)(state + 0x9) = 0;
+                Sfx_PlayFromObject(obj, (u16)((CfperchState *)state)->unk10);
+                ((CfperchState *)state)->unkA = 0x32;
+                ((CfperchState *)state)->unk9 = 0;
                 *(u8 *)(obj + 0xaf) |= 8;
                 fn_801816F8(obj, player, state);
                 zf = lbl_803E3938;
@@ -468,23 +469,23 @@ void smallbasket_update(int obj)
                 zf = lbl_803E3938;
                 *(f32 *)(obj + 0x24) = zf;
                 *(f32 *)(obj + 0x2c) = zf;
-                *(s16 *)(state + 0xa) = 500;
-                *(u8 *)(state + 0x9) = 0;
+                ((CfperchState *)state)->unkA = 500;
+                ((CfperchState *)state)->unk9 = 0;
                 *(int *)(obj + 0xf8) = 0;
                 ObjHits_EnableObject(obj);
                 *(u8 *)(obj + 0xaf) &= ~0x8;
                 ObjHits_ClearHitVolumes(obj);
             }
         }
-        *(s16 *)(state + 0xe) -= framesThisStep;
-        if (*(s8 *)(state + 0x5) != 0) {
+        ((CfperchState *)state)->unkE -= framesThisStep;
+        if (((CfperchState *)state)->unk5 != 0) {
             if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(def + 0x8)) >=
-                (f32)(*(s16 *)(state + 0xc) * *(s16 *)(state + 0xc))) {
+                (f32)(((CfperchState *)state)->unkC * ((CfperchState *)state)->unkC)) {
                 zf = lbl_803E3938;
                 *(f32 *)(obj + 0x24) = zf;
                 *(f32 *)(obj + 0x2c) = zf;
-                *(s16 *)(state + 0xa) = 500;
-                *(u8 *)(state + 0x9) = 0;
+                ((CfperchState *)state)->unkA = 500;
+                ((CfperchState *)state)->unk9 = 0;
                 *(int *)(obj + 0xf8) = 0;
                 ObjHits_EnableObject(obj);
                 *(u8 *)(obj + 0xaf) &= ~0x8;
@@ -493,14 +494,14 @@ void smallbasket_update(int obj)
         } else {
             fn_801814D0(obj, player, state);
         }
-        if ((*(s16 *)(state + 0xe) <= 0) && (*(s8 *)(state + 0x5) != 0)) {
-            k = *(u8 *)(state + 0x1e);
+        if ((((CfperchState *)state)->unkE <= 0) && (((CfperchState *)state)->unk5 != 0)) {
+            k = ((CfperchState *)state)->unk1E;
             if ((k == 5) || (k == 6)) {
                 Sfx_PlayFromObject(obj, 0x6c);
-                *(s16 *)(state + 0xe) = (s16)(randomGetRange(0, 100) + 0x12c);
+                ((CfperchState *)state)->unkE = (s16)(randomGetRange(0, 100) + 0x12c);
             } else if (((u8)(k - 1) <= 1) || (k == 3)) {
                 Sfx_PlayFromObject(obj, 0x6d);
-                *(s16 *)(state + 0xe) = (s16)(randomGetRange(0, 100) + 0x12c);
+                ((CfperchState *)state)->unkE = (s16)(randomGetRange(0, 100) + 0x12c);
             }
         }
         if (*(int *)(obj + 0xf8) == 0) {
