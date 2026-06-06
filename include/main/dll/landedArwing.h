@@ -6,7 +6,7 @@
 
 /*
  * Per-object extra block for the landed-arwing baddie (dll_D3) -- the 0x94-byte
- * region at *(baddieState + 0x40C), memset in dll_D3_init. Shared by
+ * GroundBaddieState::control region, memset in dll_D3_init. Shared by
  * treasurechest.c (dll_D3_*), landedArwing.c, staffAction.c (fn_80165xxx
  * movement helpers) and backpack.c (LandedArwing_Update* action callbacks).
  * flags92 is bit-accessed through per-TU overlay structs (LandedArwingFlags,
