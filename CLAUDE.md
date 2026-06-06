@@ -1403,6 +1403,13 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     flag handlers, the ~70%-capped tiny flag fns) with this spelling.
     Probe-batch method (a /tmp probe.c with N spellings × objdump grep)
     found it in minutes — use that pattern for future isel mysteries.
+    BURST SEQUENCING: when a macro/burst has several ADJACENT materialized
+    masks, convert them ALL before measuring — a partial conversion
+    misaligns the burst and the A/B lies (Tricky_update: 1-of-4 masks
+    scored 92.05→91.89, all-4 scored →96.13). Same alignment-cascade
+    phenomenon as fake giant diff regions, applied to the measurement
+    side: objdiff penalizes partial fixes of repeated adjacent patterns
+    below baseline even when each fix is individually correct.
     REFINEMENT (foxtrot): the LVALUE must be u32 — an `int` lvalue widens
     SIGNED and emits an extra `srawi rX,rY,31` for the high word
     (fn_80296BBC needed `*(u32 *)(...) &= ~2LL`, recovering the historic
@@ -2246,6 +2253,26 @@ the file also avoids forward-decl churn.
 ≥1.5KB band the deficits are structural (inline victims, frame/spill bugs,
 import simplifications) — the call-set diff is the cheapest possible win
 and goes FIRST (newClouds 94.25→98.94 from one dont_inline).
+**The band playbook (one-day evidence: 6 large fns, +0.126pp project-wide —
+fn_802A0680, Minimap_update, textRenderStr, worldplanet_update,
+andross_update, Tricky_update; every one followed this pattern):**
+1. **#74 LL masks + #91 ternary clamps come in BURSTS** (macros, repeated
+   case bodies — andross had 40 clamp sites, Tricky's reset macro 4 adjacent
+   masks). Convert WHOLE bursts before measuring or the A/B lies (see the
+   #74 burst addendum).
+2. **Ghidra width damage derails difflib into fake giant regions** —
+   u32-vs-int char vars (cmplwi immediates vs lis/addi materializations),
+   u16-vs-s16 timers (clrlwi/extsh at joins), int-copied float fields
+   (lwz/stw vs lfs/stfs). Fix the small REPEATED class first; 1000+-instr
+   "block reorder" regions snap back into alignment (andross's 1727-instr
+   region was an extsh cascade, NOT a reorder — the jump table already
+   matched).
+3. **Signature reconstruction is cheap and reliable** — read the prologue
+   save order (#87: mr/fmr interleave = param order) and arbitrate across
+   callers (#84: majority decl wins); flips are ABI-neutral per-class.
+4. **Reload-vs-CSE of constants/conversions is the most common FP residual**
+   — #71 literals for per-use const reloads, #97 int-local + per-use (f32)
+   cast for per-statement re-conversion, #83a launders for field reloads.
 
 **Call-set diff = a systematic detector for inline victims.** Instead of
 guessing which leaf inlined, diff the partial's CALL SET against target
