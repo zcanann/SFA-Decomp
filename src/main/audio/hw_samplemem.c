@@ -118,13 +118,7 @@ void hwFrameDone(void) {}
 
 void sndSetHooks(const SalHooks *hooks)
 {
-  void *(*mallocHook)(u32 size);
-  void (*freeHook)(void *ptr);
-
-  mallocHook = hooks->mallocHook;
-  freeHook = hooks->freeHook;
-  gSalMallocHook = mallocHook;
-  gSalFreeHook = freeHook;
+  *(SalHooks *)&gSalMallocHook = *hooks;
 }
 
 void hwDisableHRTF(void)
