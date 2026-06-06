@@ -202,11 +202,11 @@ void areafxemit_emitBurst(AreaFxEmitObject *obj, int count)
           args.vec[0] += obj->objAnim.localPosX;
           args.vec[1] += obj->objAnim.localPosY;
           args.vec[2] += obj->objAnim.localPosZ;
-          (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
-              (int)obj, state->effectId, &args, 0x200001, -1, 0);
+          (*(void (**)(AreaFxEmitObject *, int, void *, int, int, int))(*gPartfxInterface + 8))(
+              obj, state->effectId, &args, 0x200001, -1, 0);
         } else {
-          (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
-              (int)obj, state->effectId, &args, 2, -1, 0);
+          (*(void (**)(AreaFxEmitObject *, int, void *, int, int, int))(*gPartfxInterface + 8))(
+              obj, state->effectId, &args, 2, -1, 0);
         }
       }
     }
