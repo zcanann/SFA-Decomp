@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/objhits_types.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -154,8 +155,8 @@ void arwproximit_update(int obj)
             modelLightStruct_setGlowColor(*(void **)(state + 4), b0, b1, b2, 0x64);
         }
         if (timerCountDown((void *)(state + 0xc)) != 0 ||
-            ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance != NULL &&
-             (*(ObjAnimComponent **)(obj + 0x54))->modelInstance == (void *)getArwing())) {
+            ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
+             (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == getArwing())) {
             storeZeroToFloatParam((void *)(state + 0xc));
             s16toFloat((void *)(state + 0x10), 0x14);
             if (*(void **)(state + 4) != NULL)

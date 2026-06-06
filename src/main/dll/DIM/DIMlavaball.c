@@ -2,6 +2,7 @@
 #include "main/dll/DIM/DIMlavaball.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
@@ -1753,7 +1754,7 @@ void fn_801A79E0(int obj) {
         ret = objBboxFn_800640cc((int *)(obj + 0x80), (int *)(obj + 0xc), lbl_803E454C, 1, auStack_14, obj, 1, -1, 0xff, 0);
     }
     if ((ret != 0) ||
-        (((*(ObjAnimComponent **)(obj + 0x54))->bankIndex != 0 && (*(u16 *)((char *)state + 0x24) & 0x40) != 0) ||
+        (((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0 && (*(u16 *)((char *)state + 0x24) & 0x40) != 0) ||
          (*(u16 *)((char *)state + 0x24) & 0x100) != 0)) {
         *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + lbl_803E4550;
         spawnExplosion(obj, lbl_803E4554, 1, 1, 0, 0, 0, 1, 0);

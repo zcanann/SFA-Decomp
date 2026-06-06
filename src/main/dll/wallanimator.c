@@ -3,6 +3,7 @@
 #include "main/dll/wallanimator.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 
 extern undefined4 FUN_80006824();
@@ -607,18 +608,18 @@ void kaldachompspit_update(int obj)
             *(s16 *)(obj + 0x2) = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         }
         ObjHits_EnableObject(obj);
-        if ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance != NULL) {
+        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
             if (*(int *)(obj + 0xf4) < 0x17c) {
                 kaldachompspit_burst(obj);
                 return;
             }
-            if (((*(ObjAnimComponent **)(obj + 0x54))->modelInstance == (void *)Obj_GetPlayerObject()) ||
-                ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance == (void *)getTrickyObject())) {
+            if (((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == Obj_GetPlayerObject()) ||
+                ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == getTrickyObject())) {
                 kaldachompspit_burst(obj);
                 return;
             }
         }
-        if ((*(ObjAnimComponent **)(obj + 0x54))->bankIndex != 0) {
+        if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0) {
             kaldachompspit_burst(obj);
         } else {
             if (*(s16 *)(obj + 0x46) == 0x869) {

@@ -4,6 +4,7 @@
 #include "main/mapEvent.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_8000680c();
@@ -225,7 +226,7 @@ void FUN_8014e2a8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  */
 void FUN_8014e374(uint param_1)
 {
-  if ((*(ObjAnimComponent **)(param_1 + 0x54))->modelInstance != NULL) {
+  if ((*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject != 0) {
     FUN_80006824(param_1,SFXand_swipe2);
   }
   return;
@@ -838,7 +839,7 @@ void fn_8014E1DC(int obj, int *state) {
 }
 
 void hagabon_hitDetect(int obj) {
-    if ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance != NULL) {
+    if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
         Sfx_PlayFromObject(obj, SFXand_swipe2);
     }
 }

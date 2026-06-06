@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/objhits_types.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -116,7 +117,7 @@ void androsshand_update(int obj)
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E75AC, 0);
             *(f32 *)(*(int *)(obj + 0xb8) + 0x14) = lbl_8032C270[1];
         }
-        if ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance != NULL) {
+        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
             struct {
                 f32 x, y, z;
             } v, w;
@@ -157,7 +158,7 @@ void androsshand_update(int obj)
         } else {
             *(f32 *)(state + 0x14) = lbl_803E75DC;
         }
-        if ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance != NULL) {
+        if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0) {
             struct {
                 f32 x, y, z;
             } v, w;

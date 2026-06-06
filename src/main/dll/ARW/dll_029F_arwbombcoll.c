@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
 #include "main/audio/sfx_ids.h"
+#include "main/objhits_types.h"
 #pragma peephole on
 #pragma scheduling on
 int arwbombcoll_getExtraSize(void) { return 8; }
@@ -221,8 +222,8 @@ active : {
         *(s16 *)(obj + 0x0) = (int)(lbl_803E7088 * timeDelta + (f32) * (s16 *)(obj + 0x0));
         ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);
         if (flags->b40 != 0) {
-            if ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance != 0 &&
-                (*(ObjAnimComponent **)(obj + 0x54))->modelInstance == (void *)getArwing()) {
+            if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
+                (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == getArwing()) {
                 arwarwing_addScore(arw, 0x19);
                 flags->b80 = 1;
                 *(s16 *)(obj + 0x6) |= 0x4000;
@@ -237,8 +238,8 @@ active : {
                 Obj_SetActiveModelIndex(obj, 1);
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
             }
-            if ((*(ObjAnimComponent **)(obj + 0x54))->modelInstance != 0 &&
-                (*(ObjAnimComponent **)(obj + 0x54))->modelInstance == (void *)getArwing()) {
+            if ((*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject != 0 &&
+                (*(ObjHitsPriorityState **)(obj + 0x54))->lastHitObject == getArwing()) {
                 *(s16 *)(obj + 0x6) |= 0x4000;
                 ObjHits_DisableObject(obj);
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);

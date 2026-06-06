@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 #include "main/dll/DF/rope.h"
 #include "main/dll/mmsh_waterspike.h"
 
@@ -650,7 +651,7 @@ void DIMbossspit_update(int obj)
       (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x4ba, 0, 1, -1, 0);
       i = i + 1;
     } while (i < 3);
-    if ((*(ObjAnimComponent **)(obj + 0x54))->bankIndex != 0) {
+    if ((*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags != 0) {
       *(f32 *)(obj + 0xc) = *(f32 *)(*(int *)(obj + 0x54) + 0x3c);
       *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)(obj + 0x54) + 0x40) - lbl_803E4D50;
       *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)(obj + 0x54) + 0x44);

@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gasvent.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 
 #pragma peephole off
@@ -518,7 +519,7 @@ void gunpowderbarrel_triggerExplosion(int *obj)
 
     sub = *(u8 **)((char *)obj + 0xb8);
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, 0) != 0 ||
-        ((*(ObjAnimComponent **)((char *)obj + 0x54))->bankIndex != 0 && (sub[0x49] & 2) != 0)) {
+        ((*(ObjHitsPriorityState **)((char *)obj + 0x54))->contactFlags != 0 && (sub[0x49] & 2) != 0)) {
         sub[0x16] += 1;
         sub[0x49] = (u8)(sub[0x49] | 1);
     }

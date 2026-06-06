@@ -1,5 +1,6 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 typedef struct {
     s16 v[5];
@@ -898,7 +899,7 @@ void DR_EarthWarrior_hitDetect(int obj)
     int p54 = *(int *)((char *)obj + 0x54);
     rows = lbl_802C2CC0;
     if (!(*(u16 *)((char *)obj + 0xb0) & 0x1000)) {
-        if (((ObjAnimComponent *)p54)->bankIndex != 0) {
+        if (((ObjHitsPriorityState *)p54)->contactFlags != 0) {
             int i = *(s8 *)((char *)p54 + 0xac);
             if (i < 0) {
                 i = 0;
@@ -916,7 +917,7 @@ void DR_EarthWarrior_hitDetect(int obj)
             *(u8 *)(*(int *)((char *)obj + 0x54) + 0x70) = 1;
             doRumble(lbl_803E8330);
         }
-        if (((ObjAnimComponent *)p54)->modelInstance != NULL) {
+        if (((ObjHitsPriorityState *)p54)->lastHitObject != 0) {
             doRumble(lbl_803E8330);
         }
         *(s16 *)obj = *(s16 *)((char *)inner + 0xfd0);

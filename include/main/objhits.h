@@ -3,12 +3,12 @@
 
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/objhits_types.h"
 
 #define OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT 5
 #define OBJHITS_CONTACT_SCRATCH_COUNT 0x40
 #define OBJHITS_CONTACT_SCRATCH_WORDS 7
 #define OBJHITS_SWEEP_ENTRY_CAPACITY 400
-#define OBJHITS_PRIORITY_HIT_COUNT 3
 #define OBJHITS_PRIORITY_INVALID 0x7f
 #define OBJHITS_PRIORITY_STATE_ENABLED 0x0001
 #define OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE 0x0002
@@ -139,64 +139,6 @@ typedef struct ObjHitsPriorityWorkSlot {
   u8 pad0C[OBJHITS_PRIORITY_WORK_SLOT_SIZE - 0x0C];
 } ObjHitsPriorityWorkSlot;
 
-typedef struct ObjHitsPriorityState {
-  u8 pad00[0x0C];
-  f32 primaryRadiusSquared;
-  f32 localPosX;
-  f32 localPosY;
-  f32 localPosZ;
-  f32 worldPosX;
-  f32 worldPosY;
-  f32 worldPosZ;
-  f32 primaryRadiusY;
-  f32 primaryRadiusXZ;
-  f32 secondaryRadiusY;
-  f32 secondaryRadiusXZ;
-  f32 sweepRadiusX;
-  f32 contactPosX;
-  f32 contactPosY;
-  f32 contactPosZ;
-  u32 objectHitMask;
-  u32 skeletonHitMask;
-  int lastHitObject;
-  u8 pad54[0x58 - 0x54];
-  s16 capsuleScale;
-  s16 primaryRadius;
-  s16 primaryCapsuleOffsetA;
-  s16 primaryCapsuleOffsetB;
-  s16 flags;
-  u8 shapeFlags;
-  u8 pad63;
-  s16 secondaryRadius;
-  s16 secondaryCapsuleOffsetA;
-  s16 secondaryCapsuleOffsetB;
-  u8 lateralResponseWeight;
-  u8 axialResponseWeight;
-  s8 objectPairPriority;
-  u8 objectPairHitVolume;
-  s8 hitVolumePriority;
-  s8 hitVolumeId;
-  u8 pad70;
-  s8 priorityHitCount;
-  s8 sphereIndices[OBJHITS_PRIORITY_HIT_COUNT];
-  s8 priorities[OBJHITS_PRIORITY_HIT_COUNT];
-  u8 hitVolumes[OBJHITS_PRIORITY_HIT_COUNT];
-  u8 pad7B;
-  int hitObjects[OBJHITS_PRIORITY_HIT_COUNT];
-  f32 hitPosX[OBJHITS_PRIORITY_HIT_COUNT];
-  f32 hitPosY[OBJHITS_PRIORITY_HIT_COUNT];
-  f32 hitPosZ[OBJHITS_PRIORITY_HIT_COUNT];
-  u8 contactHitVolume;
-  u8 contactFlags;
-  u8 activeHitboxMode;
-  u8 resetHitboxMode;
-  u8 stateIndex;
-  u8 padB1[0xB4 - 0xB1];
-  u8 sourceMask;
-  u8 targetMask;
-  u8 secondaryShapeFlags;
-} ObjHitsPriorityState;
-
 typedef struct ObjHitsModelJointInfo {
   s8 parentJoint;
   u8 pad01[0x1C - 0x01];
@@ -238,32 +180,6 @@ typedef struct ObjHitsSkeletonHit {
   s32 pointIndexA;
   s32 pointIndexB;
 } ObjHitsSkeletonHit;
-
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, activeHitboxMode) == 0xAE);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, resetHitboxMode) == 0xAF);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, stateIndex) == 0xB0);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryRadiusSquared) == 0x0C);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, localPosX) == 0x10);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, worldPosX) == 0x1C);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryRadiusY) == 0x28);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryRadiusXZ) == 0x2C);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadiusY) == 0x30);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadiusXZ) == 0x34);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, sweepRadiusX) == 0x38);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, objectHitMask) == 0x48);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, skeletonHitMask) == 0x4C);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, capsuleScale) == 0x58);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryRadius) == 0x5A);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryCapsuleOffsetA) == 0x5C);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryCapsuleOffsetB) == 0x5E);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, flags) == 0x60);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, shapeFlags) == 0x62);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadius) == 0x64);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryCapsuleOffsetA) == 0x66);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryCapsuleOffsetB) == 0x68);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, lateralResponseWeight) == 0x6A);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, axialResponseWeight) == 0x6B);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryShapeFlags) == 0xB6);
 
 STATIC_ASSERT(sizeof(ObjHitsModelJointInfo) == 0x1C);
 STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, joints) == 0x3C);

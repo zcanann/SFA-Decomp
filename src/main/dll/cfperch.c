@@ -3,6 +3,7 @@
 #include "main/dll/cfperch.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 #define SMALLBASKET_LINKED_ID_BASE 0x40000
 #define SMALLBASKET_ROB_WAVE_DIRECT_ID 0x66
@@ -446,7 +447,7 @@ void smallbasket_update(int obj)
             *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
             *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
             fn_801821FC(obj);
-            c = *(s8 *)(*(int *)(obj + 0x54) + offsetof(ObjAnimComponent, bankIndex));
+            c = (*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags;
             if ((c != 0) && (*(s8 *)(state + 0x9) == 1)) {
                 blk.fy = *(f32 *)(obj + 0xc);
                 blk.fz = *(f32 *)(obj + 0x10);

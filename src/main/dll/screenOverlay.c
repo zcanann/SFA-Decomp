@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/screenOverlay.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
@@ -75,7 +76,7 @@ void ProjectileSwitch_hitDetect(int obj)
 
   isSpecial = 0;
   if (*(short *)(hitObj + 0x46) == 0x14b) {
-    if (((s8)*(u8 *)(*(int *)(hitObj + 0x54) + offsetof(ObjAnimComponent, bankIndex)) & 2) != 0) {
+    if (((*(ObjHitsPriorityState **)(hitObj + 0x54))->contactFlags & 2) != 0) {
       isSpecial = 1;
     }
   }

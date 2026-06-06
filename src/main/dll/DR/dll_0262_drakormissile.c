@@ -2,6 +2,7 @@
 
 #include "main/audio/sfx_ids.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 #define DRAKORMISSILE_EXTRA_SIZE 0x38
 #define DRAKORMISSILE_OBJECT_TYPE_ID 0x2
@@ -236,7 +237,7 @@ void drakormissile_update(int obj) {
         break;
     }
     if (moving) {
-        near = (int *)(*(ObjAnimComponent **)((char *)obj + 0x54))->modelInstance;
+        near = (int *)(*(ObjHitsPriorityState **)((char *)obj + 0x54))->lastHitObject;
         hitObj = NULL;
         hit = ObjHits_GetPriorityHit(obj, &hitObj, 0, 0);
         f5 = 0;
@@ -250,7 +251,7 @@ void drakormissile_update(int obj) {
             f3 = 1;
         }
         result = f5 | f3;
-        result |= (*(ObjAnimComponent **)((char *)obj + 0x54))->bankIndex;
+        result |= (*(ObjHitsPriorityState **)((char *)obj + 0x54))->contactFlags;
         if (*(u8 *)(p + DRAKORMISSILE_FIELD_STATE) == DRAKORMISSILE_STATE_HOMING) {
             player = (int)Obj_GetPlayerObject();
             if (Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18)) <

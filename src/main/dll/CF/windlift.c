@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 #include "main/dll/CF/windlift.h"
 
 extern undefined4 FUN_8000680c();
@@ -1351,7 +1352,7 @@ void fn_80185B74(int obj)
             }
             ObjHits_EnableObject(obj);
         }
-        held = *(u8 *)(*(int *)(obj + 0x54) + offsetof(ObjAnimComponent, bankIndex));
+        held = (*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags;
         if ((s8)held != 0 && *(s8 *)(state + 0x23) == 1) {
             *(f32 *)(obj + 0x28) = lbl_803E3A58;
             *(u8 *)(state + 0x23) = 0;
