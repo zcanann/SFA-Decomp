@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camshipbattle5C.h"
+#include "main/camera_object.h"
 #include "main/game_object.h"
 #include "main/dll/CAM/viewfinder_state.h"
 #include "main/dll/CAM/dll_5B.h"
@@ -243,15 +244,15 @@ int firstPersonEnter(u8 *cam, s16 *p2)
   int flag;
   int other;
 
-  ((GameObject *)cam)->anim.worldPosX = ((ViewfinderState *)lbl_803DD548)->unk120;
-  ((GameObject *)cam)->anim.worldPosY = ((ViewfinderState *)lbl_803DD548)->unk124;
-  ((GameObject *)cam)->anim.worldPosZ = ((ViewfinderState *)lbl_803DD548)->unk128;
-  ((GameObject *)cam)->anim.rotY = 0;
+  ((CameraObject *)cam)->anim.worldPosX = ((ViewfinderState *)lbl_803DD548)->unk120;
+  ((CameraObject *)cam)->anim.worldPosY = ((ViewfinderState *)lbl_803DD548)->unk124;
+  ((CameraObject *)cam)->anim.worldPosZ = ((ViewfinderState *)lbl_803DD548)->unk128;
+  ((CameraObject *)cam)->anim.rotY = 0;
   flag = 0;
-  if (*(f32 *)(cam + 244) <= lbl_803E17C4) {
+  if (((CameraObject *)cam)->unkF4 <= lbl_803E17C4) {
     flag = 1;
   }
-  conv = (int)(lbl_803E1814 * *(f32 *)(cam + 244));
+  conv = (int)(lbl_803E1814 * ((CameraObject *)cam)->unkF4);
   state = *(u8 **)(cam + 164);
   if (conv < 1) {
     conv = 1;
@@ -992,15 +993,15 @@ void CameraModeStatic_init(u8 *cam, int p2, int *p3)
   }
   {
     f32 fov = (f32)(u32)setup[26];
-    ((GameObject *)cam)->anim.worldPosX = *(f32 *)(best + 24);
-    ((GameObject *)cam)->anim.worldPosY = *(f32 *)(best + 28);
-    ((GameObject *)cam)->anim.worldPosZ = *(f32 *)(best + 32);
-    ((GameObject *)cam)->anim.rotX = yaw;
-    ((GameObject *)cam)->anim.rotY = pitch;
-    ((GameObject *)cam)->anim.rotZ = roll;
-    *(f32 *)(cam + 180) = fov;
+    ((CameraObject *)cam)->anim.worldPosX = *(f32 *)(best + 24);
+    ((CameraObject *)cam)->anim.worldPosY = *(f32 *)(best + 28);
+    ((CameraObject *)cam)->anim.worldPosZ = *(f32 *)(best + 32);
+    ((CameraObject *)cam)->anim.rotX = yaw;
+    ((CameraObject *)cam)->anim.rotY = pitch;
+    ((CameraObject *)cam)->anim.rotZ = roll;
+    ((CameraObject *)cam)->fov = fov;
   }
-  Obj_TransformWorldPointToLocal(((GameObject *)cam)->anim.worldPosX, ((GameObject *)cam)->anim.worldPosY, ((GameObject *)cam)->anim.worldPosZ,
+  Obj_TransformWorldPointToLocal(((CameraObject *)cam)->anim.worldPosX, ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                  (f32 *)(cam + 12), (f32 *)(cam + 16), (f32 *)(cam + 20),
                                  *(int *)(cam + 48));
 }
