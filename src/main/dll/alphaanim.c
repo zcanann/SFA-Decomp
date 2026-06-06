@@ -973,14 +973,16 @@ void immultiseq_update(int *obj)
         state[0]++;
     }
 
-    if (state[0] != 4) {
-        stepDef = def + state[0] * 2;
+    if ((int)state[0] != 4) {
+        u8 st = state[0];
+        stepDef = def + st * 2;
         bitId = *(s16 *)(stepDef + 0x20);
         if (bitId == -1) {
             state[0] = 4;
         }
         else if ((u32)!((def[0x30] >> state[0]) & 1) == GameBit_Get(bitId)) {
-            s8 triggerId = *(s8 *)(def + 0x2c + state[0]);
+            s8 *q = (s8 *)(def + state[0]);
+            s8 triggerId = q[0x2c];
             if (triggerId != -1) {
                 ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])
                     (triggerId, obj, -1);
