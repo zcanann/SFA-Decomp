@@ -1369,29 +1369,32 @@ void ObjHits_ResetWorkBuffers(void)
   int slotOffset;
   int remainingSlots;
   int zeroWord;
+  ObjHitsPriorityWorkSlot *workSlots;
 
   clearedSlots = 0;
   slotOffset = 0;
   zeroWord = 0;
   for (remainingSlots = 0; remainingSlots < OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_COUNT;
        remainingSlots++) {
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x3c) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x78) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xb4) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xf0) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x12c) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x168) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1a4) = zeroWord;
+    workSlots = (ObjHitsPriorityWorkSlot *)(gObjHitsPriorityHitStates + slotOffset);
+    workSlots[0].active = zeroWord;
+    workSlots[1].active = zeroWord;
+    workSlots[2].active = zeroWord;
+    workSlots[3].active = zeroWord;
+    workSlots[4].active = zeroWord;
+    workSlots[5].active = zeroWord;
+    workSlots[6].active = zeroWord;
+    workSlots[7].active = zeroWord;
     slotOffset += OBJHITS_PRIORITY_WORK_CLEAR_HALF_BLOCK_SIZE;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x3c) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x78) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xb4) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xf0) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x12c) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x168) = zeroWord;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1a4) = zeroWord;
+    workSlots = (ObjHitsPriorityWorkSlot *)(gObjHitsPriorityHitStates + slotOffset);
+    workSlots[0].active = zeroWord;
+    workSlots[1].active = zeroWord;
+    workSlots[2].active = zeroWord;
+    workSlots[3].active = zeroWord;
+    workSlots[4].active = zeroWord;
+    workSlots[5].active = zeroWord;
+    workSlots[6].active = zeroWord;
+    workSlots[7].active = zeroWord;
     slotOffset += OBJHITS_PRIORITY_WORK_CLEAR_HALF_BLOCK_SIZE;
     clearedSlots += OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_SLOTS;
   }
@@ -1399,7 +1402,7 @@ void ObjHits_ResetWorkBuffers(void)
   slotOffset = clearedSlots * OBJHITS_PRIORITY_WORK_SLOT_SIZE;
   if (clearedSlots < OBJHITS_PRIORITY_WORK_SLOT_COUNT) {
     do {
-      *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = zeroWord;
+      ((ObjHitsPriorityWorkSlot *)(gObjHitsPriorityHitStates + slotOffset))->active = zeroWord;
       slotOffset += OBJHITS_PRIORITY_WORK_SLOT_SIZE;
       remainingSlots--;
     } while (remainingSlots != 0);
