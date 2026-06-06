@@ -1529,7 +1529,7 @@ void vfpflamepoint_init(int *obj, s8 *def) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int objBboxFn_800640cc(f32 radius, void *from, void *to, int mode, void *hit, int obj, int p7, int p8, int p9, int p10);
+extern int objBboxFn_800640cc(void *from, void *to, f32 radius, int mode, void *hit, int obj, int p7, int p8, int p9, int p10);
 extern f32 lbl_803E6218;
 extern f32 lbl_803E621C;
 
@@ -1549,7 +1549,7 @@ void dbegg_hitDetect(int obj) {
         void *hitFrom = (void *)(obj + 0x80);
         void *hitTo = (void *)(obj + 0xc);
         f32 hitRadius = lbl_803E6218;
-        if (objBboxFn_800640cc(hitRadius, hitFrom, hitTo, 1, NULL, obj, 8, -1, 0xff, 0) != 0) {
+        if (objBboxFn_800640cc(hitFrom, hitTo, hitRadius, 1, NULL, obj, 8, -1, 0xff, 0) != 0) {
             f32 damping = lbl_803E621C;
             f32 velocityX = *(f32 *)(obj + 0x24);
             *(f32 *)(obj + 0x24) = velocityX - damping * velocityX;

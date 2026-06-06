@@ -9934,27 +9934,26 @@ void fn_802A96D8(void)
 #pragma peephole off
 void fn_802B4DE0(int obj)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
     int off;
     int i;
+    int inner = *(int *)((char *)obj + 0xb8);
 
     if ((u32)lbl_803DE448 != 0) {
         Obj_FreeObject(lbl_803DE448);
         ObjLink_DetachChild(obj, lbl_803DE448);
         lbl_803DE448 = 0;
     }
-    if ((int)lbl_803DE44C != 0) {
+    if (lbl_803DE44C != NULL) {
         Obj_FreeObject((int)lbl_803DE44C);
         ObjLink_DetachChild(obj, lbl_803DE44C);
         lbl_803DE44C = NULL;
     }
-    if (lbl_803DE450 != 0) {
+    if ((u32)lbl_803DE450 != 0) {
         lbl_803DE450 = 0;
     }
-    off = 0;
-    for (i = 0; i < *(u8 *)((char *)inner + 0x8a8); i++) {
+    for (i = 0, off = 0; i < *(u8 *)((char *)inner + 0x8a8); i++) {
         int e = *(int *)(*(int *)((char *)inner + 0x3dc) + off + 0x64);
-        if (e != 0) mm_free((void *)e);
+        if ((u32)e != 0) mm_free((void *)e);
         off += 0xb0;
     }
     ObjGroup_RemoveObject(obj, 0);
@@ -10469,7 +10468,7 @@ void fn_802B07D8(int obj, int state)
         lbl_803DE44C = (void *)setup;
         ObjLink_AttachChild(obj, setup, 2);
     }
-    if ((int)lbl_803DE44C != 0) {
+    if (lbl_803DE44C != NULL) {
         *(int *)((char *)lbl_803DE44C + 0x30) = *(int *)((char *)obj + 0x30);
     }
 
@@ -11765,8 +11764,7 @@ void objLoadPlayerFromSave(int obj)
     *(int *)((char *)inner + 0x460) = (int)((char *)lbl_80332EC0 + 0x6f4);
     *(u8 *)((char *)inner + 0x8d4) = 0x2e;
     *(f32 *)((char *)inner + 0x7e0) = lbl_803E7ED8;
-    off = 0;
-    for (i = 0; i < *(u8 *)((char *)inner + 0x8a8); i++) {
+    for (i = 0, off = 0; i < *(u8 *)((char *)inner + 0x8a8); i++) {
         int da;
         *(int *)(*(int *)((char *)inner + 0x3dc) + off + 0x64) = (int)mmAlloc(0x800, 0x1a, 0);
         da = *(int *)((char *)inner + 0x3dc) + off;
