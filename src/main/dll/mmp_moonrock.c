@@ -1,4 +1,24 @@
 #include "main/dll/mmp_moonrock.h"
+#include "global.h"
+
+/*
+ * Per-object extra state for the texscroll2 map-texture scroller
+ * (texscroll2_getExtraSize == 0x18).
+ */
+typedef struct TexScroll2State {
+    u8 unk00[8];
+    int gameBit; /* scroll-direction toggle bit */
+    int prevBitVal;
+    u8 dirty; /* re-apply the scroll params */
+    s8 scrollX;
+    s8 scrollY; /* doubles as the setScale target */
+    s8 scrollX2;
+    s8 scrollY2;
+    u8 pad15[3];
+} TexScroll2State;
+
+STATIC_ASSERT(sizeof(TexScroll2State) == 0x18);
+
 
 extern uint GameBit_Get(int eventId);
 
@@ -6,14 +26,14 @@ extern uint GameBit_Get(int eventId);
 #pragma peephole off
 void texscroll2_setScale(int obj, s8 scale)
 {
-  s8 *state;
+  TexScroll2State *state;
 
-  state = *(s8 **)(obj + 0xb8);
-  if (state[0x12] == scale) {
+  state = *(TexScroll2State **)(obj + 0xb8);
+  if (state->scrollY == scale) {
     return;
   }
-  state[0x12] = scale;
-  state[0x10] = 1;
+  state->scrollY = scale;
+  *(s8 *)&state->dirty = 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -28,7 +48,7 @@ extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int 
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80191F54(int obj, int* state)
+void fn_80191F54(int obj, TexScroll2State* state)
 {
     int* def;
     void* block;
@@ -45,7 +65,7 @@ void fn_80191F54(int obj, int* state)
         *(f32*)((char*)obj + 0x10),
         *(f32*)((char*)obj + 0x14)));
     if (block == NULL) {
-        *(u8*)((char*)state + 0x10) = 1;
+        state->dirty = 1;
         return;
     }
     tables = (int*)getTablesBinEntry(0xe);
@@ -63,33 +83,33 @@ void fn_80191F54(int obj, int* state)
                 if (*(u8*)((char*)entry + 0x2a) != 0xff) {
                     int v = *(int*)((char*)*(int**)((char*)obj + 0x4c) + 0x14);
                     if (v == 0x49b2f || v == 0x49b67) {
-                        if (GameBit_Get(*(int*)((char*)state + 0x8)) != 0) {
+                        if (GameBit_Get(state->gameBit) != 0) {
                             mapTextureScrollSetStep(
                                 (s32)*(u8*)((char*)entry + 0x2a),
-                                (s32)*(s8*)((char*)state + 0x11),
-                                (s32)*(s8*)((char*)state + 0x12),
+                                (s32)state->scrollX,
+                                (s32)state->scrollY,
                                 t1, t2,
-                                (s32)*(s8*)((char*)state + 0x13),
-                                (s32)*(s8*)((char*)state + 0x14),
+                                (s32)state->scrollX2,
+                                (s32)state->scrollY2,
                                 t1, t2);
                         }
                     } else {
                         mapTextureScrollSetStep(
                             (s32)*(u8*)((char*)entry + 0x2a),
-                            (s32)*(s8*)((char*)state + 0x11),
-                            (s32)*(s8*)((char*)state + 0x12),
+                            (s32)state->scrollX,
+                            (s32)state->scrollY,
                             t1, t2,
-                            (s32)*(s8*)((char*)state + 0x13),
-                            (s32)*(s8*)((char*)state + 0x14),
+                            (s32)state->scrollX2,
+                            (s32)state->scrollY2,
                             t1, t2);
                     }
                 } else {
                     *(u8*)((char*)entry + 0x2a) = (u8)mapTextureScrollAcquire(
-                        (s32)*(s8*)((char*)state + 0x11),
-                        (s32)*(s8*)((char*)state + 0x12),
+                        (s32)state->scrollX,
+                        (s32)state->scrollY,
                         t1, t2,
-                        (s32)*(s8*)((char*)state + 0x13),
-                        (s32)*(s8*)((char*)state + 0x14),
+                        (s32)state->scrollX2,
+                        (s32)state->scrollY2,
                         t1, t2);
                 }
             }
@@ -110,29 +130,29 @@ void texscroll2_initialise(void) {}
 #pragma scheduling off
 #pragma peephole off
 void texscroll2_update(int *obj) {
-    u8 *sub;
+    TexScroll2State *sub;
     int *block;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    sub = *(TexScroll2State**)((char*)obj + 0xb8);
     block = (int*)mapGetBlock(objPosToMapBlockIdx(*(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14)));
     {
         int mapId = *(int*)(*(int*)((char*)obj + 0x4c) + 0x14);
         if (mapId == 0x49b2f || mapId == 0x49b67) {
             if (block != NULL) {
-                if (GameBit_Get(*(int*)(sub + 8)) != *(uint*)(sub + 0xc) && sub[0x10] == 0) {
-                    fn_80191F54((int)obj, (int*)sub);
-                    sub[0x10] = 0;
+                if (GameBit_Get(sub->gameBit) != *(uint*)&sub->prevBitVal && sub->dirty == 0) {
+                    fn_80191F54((int)obj, sub);
+                    sub->dirty = 0;
                 }
             }
         }
     }
-    *(int*)(sub + 0xc) = GameBit_Get(*(int*)(sub + 8));
+    sub->prevBitVal = GameBit_Get(sub->gameBit);
     if (block == NULL) {
-        sub[0x10] = 1;
+        sub->dirty = 1;
     } else {
-        if (sub[0x10] != 0) {
-            fn_80191F54((int)obj, (int*)sub);
-            sub[0x10] = 0;
+        if (sub->dirty != 0) {
+            fn_80191F54((int)obj, sub);
+            sub->dirty = 0;
         }
     }
 }
@@ -163,16 +183,16 @@ void waveanimator_modelMtxFn(int obj, int a, int b, int c) {
 }
 
 void texscroll2_init(int obj, u8 *def, int flag) {
-    int *state = *(int **)((char *)obj + 0xB8);
-    *(u8 *)((char *)state + 0x11) = def[0x1E];
-    *(u8 *)((char *)state + 0x12) = def[0x1F];
-    *(u8 *)((char *)state + 0x13) = def[0x1C];
-    *(u8 *)((char *)state + 0x14) = def[0x1D];
+    TexScroll2State *state = *(TexScroll2State **)((char *)obj + 0xB8);
+    *(u8 *)&state->scrollX = def[0x1E];
+    *(u8 *)&state->scrollY = def[0x1F];
+    *(u8 *)&state->scrollX2 = def[0x1C];
+    *(u8 *)&state->scrollY2 = def[0x1D];
     if (flag == 0) {
         fn_80191F54(obj, state);
     }
-    *(int *)((char *)state + 8) = (int)*(s16 *)((char *)def + 0x1A);
-    *(int *)((char *)state + 0xC) = -1;
+    state->gameBit = (int)*(s16 *)((char *)def + 0x1A);
+    state->prevBitVal = -1;
 }
 
 void texscroll_init(int obj, s8 *def, int flag) {
