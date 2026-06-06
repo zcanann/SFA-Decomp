@@ -624,8 +624,8 @@ int bossdrakor_animEventCallback(int obj, int a2, int events)
             break;
         case 8:
             GameBit_Set(0x5db, 0);
-            (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(2, 0xf, 1);
-            (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(2, 0x10, 1);
+            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(2, 0xf, 1);
+            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(2, 0x10, 1);
             GameBit_Set(0xe7b, 0);
             warpToMap(0x79, 0);
             timeOfDayFn_80055000();

@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DB/DBprotection.h"
+#include "main/mapEventTypes.h"
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING 0xa3d
@@ -229,7 +230,7 @@ extern f32 lbl_803E57B8;
 #define DBPROT_CAMERA_SHAKE(amount, arg) \
   ((void (*)(f32 *, int))(*(u32 *)((u8 *)*gCameraInterface + 0x60)))((amount), (arg))
 #define DBPROT_MAP_EVENT(layer, a, b) \
-  ((void (*)(int, int, int))(*(u32 *)((u8 *)*gMapEventInterface + 0x50)))((layer), (a), (b))
+  ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((layer), (a), (b))
 #define DBPROT_SCREEN_FADE(kind, value) \
   ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x8)))((kind), (value))
 #define DBPROT_CLOUD_SET_A(flag) \
