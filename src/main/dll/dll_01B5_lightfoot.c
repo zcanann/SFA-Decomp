@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/player_80295318_shared.h"
@@ -110,7 +111,7 @@ void lightfoot_update(int obj)
     }
 
     if (((GameObject *)obj)->anim.seqId == 0x27c && ((GroundBaddieState *)inner)->gameBitA != -1) {
-        switch (*(int *)((char *)p30 + 0x14)) {
+        switch (((ObjPlacement *)p30)->mapId) {
         case 0x4993F:
         case 0x49940:
         case 0x49941:
@@ -185,9 +186,9 @@ void lightfoot_update(int obj)
     }
 
     if (((GameObject *)obj)->unkF4 != 0) {
-        if ((*(int *)((char *)p30 + 0x14) == 0x499B5 && GameBit_Get(0xc42) &&
+        if ((((ObjPlacement *)p30)->mapId == 0x499B5 && GameBit_Get(0xc42) &&
              (GameBit_Get(0xc3b) == 0 || GameBit_Get(0xc3c) == 0 || GameBit_Get(0xc3d) == 0)) ||
-            (*(int *)((char *)p30 + 0x14) == 0x499B6 && GameBit_Get(0xc46) &&
+            (((ObjPlacement *)p30)->mapId == 0x499B6 && GameBit_Get(0xc46) &&
              (GameBit_Get(0xc3e) == 0 || GameBit_Get(0xc3f) == 0 || GameBit_Get(0xc40) == 0))) {
             buf[3] = lbl_803E8180;
             buf[4] = lbl_803E821C;
