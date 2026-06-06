@@ -1013,7 +1013,7 @@ void FUN_801f1a64(int param_1,int param_2)
   
   puVar2 = *(undefined2 **)(param_1 + 0xb8);
   uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x1e));
-  *(char *)(param_1 + 0xad) = (char)uVar1;
+  ((ObjAnimComponent *)param_1)->bankIndex = (s8)uVar1;
   *puVar2 = *(undefined2 *)(param_2 + 0x1a);
   *(undefined *)(puVar2 + 1) = 0;
   return;
@@ -2078,7 +2078,7 @@ extern int GameBit_Get(int id);
 #pragma peephole off
 void wmlasertarget_init(char *obj, s8 *p) {
     char *inner = *(char **)(obj + 0xb8);
-    obj[0xad] = (s8)GameBit_Get(*(s16 *)(p + 0x1e));
+    ((ObjAnimComponent *)obj)->bankIndex = (s8)GameBit_Get(*(s16 *)(p + 0x1e));
     *(s16 *)inner = *(s16 *)(p + 0x1a);
     inner[2] = 0;
 }
