@@ -65,8 +65,8 @@ extern int *lbl_803DCAB4;
 extern int lbl_803200E0[];
 extern int lbl_80320158[];
 extern void objRenderFn_8003b8f4(f32);
-extern void *lbl_803AC610[11];
-extern void *lbl_803AC5F8[6];
+extern void *gGrimbleStateHandlersA[11];
+extern void *gGrimbleStateHandlersB[6];
 int fn_801627EC(void);
 void fn_801627F4(int obj);
 
@@ -387,7 +387,7 @@ void grimble_update(int obj)
       int r;
 
       (*(void (**)(int, char *, void *, void *, f32, f32))(*(int *)gPlayerInterface + 0x8))(
-          obj, state, lbl_803AC610, lbl_803AC5F8, lbl_803E2EBC, lbl_803E2EBC);
+          obj, state, gGrimbleStateHandlersA, gGrimbleStateHandlersB, lbl_803E2EBC, lbl_803E2EBC);
       (*(void (**)(int, f32, int, int, int))(*(int *)(*(int *)(((GrimbleControl *)sub)->unk38 + 0x68)) +
                                              0x24))(((GrimbleControl *)sub)->unk38, ((GrimbleControl *)sub)->unk48,
                                                     obj + 0xc, obj + 0x10, obj + 0x14);
@@ -1047,28 +1047,28 @@ extern void fn_80161130(void);
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void fn_80162FC0(void) {
-    lbl_803AC610[0] = (void *)fn_80162518;
-    lbl_803AC610[1] = (void *)fn_801622D4;
-    lbl_803AC610[2] = (void *)fn_80161F0C;
-    lbl_803AC610[3] = (void *)fn_80161DA8;
-    lbl_803AC610[4] = (void *)fn_80161C44;
-    lbl_803AC610[5] = (void *)fn_80161AF8;
-    lbl_803AC610[6] = (void *)fn_80161880;
-    lbl_803AC610[7] = (void *)fn_8016176C;
-    lbl_803AC610[8] = (void *)fn_801616AC;
-    lbl_803AC610[9] = (void *)fn_801615C8;
-    lbl_803AC5F8[0] = (void *)fn_801614D4;
-    lbl_803AC5F8[1] = (void *)fn_80161468;
-    lbl_803AC5F8[2] = (void *)scarab_updateProximityGate;
-    lbl_803AC5F8[3] = (void *)fn_80161244;
-    lbl_803AC5F8[4] = (void *)fn_8016118C;
-    lbl_803AC5F8[5] = (void *)fn_80161130;
+void grimble_initialiseStateHandlerTables(void) {
+    gGrimbleStateHandlersA[0] = (void *)fn_80162518;
+    gGrimbleStateHandlersA[1] = (void *)fn_801622D4;
+    gGrimbleStateHandlersA[2] = (void *)fn_80161F0C;
+    gGrimbleStateHandlersA[3] = (void *)fn_80161DA8;
+    gGrimbleStateHandlersA[4] = (void *)fn_80161C44;
+    gGrimbleStateHandlersA[5] = (void *)fn_80161AF8;
+    gGrimbleStateHandlersA[6] = (void *)fn_80161880;
+    gGrimbleStateHandlersA[7] = (void *)fn_8016176C;
+    gGrimbleStateHandlersA[8] = (void *)fn_801616AC;
+    gGrimbleStateHandlersA[9] = (void *)fn_801615C8;
+    gGrimbleStateHandlersB[0] = (void *)fn_801614D4;
+    gGrimbleStateHandlersB[1] = (void *)fn_80161468;
+    gGrimbleStateHandlersB[2] = (void *)scarab_updateProximityGate;
+    gGrimbleStateHandlersB[3] = (void *)fn_80161244;
+    gGrimbleStateHandlersB[4] = (void *)fn_8016118C;
+    gGrimbleStateHandlersB[5] = (void *)fn_80161130;
 }
 #pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
-void grimble_initialise(void) { fn_80162FC0(); }
+void grimble_initialise(void) { grimble_initialiseStateHandlerTables(); }
 
 extern f32 lbl_803E2F30;
 
@@ -1082,7 +1082,7 @@ void grimble_free(int obj) {
 
 void grimble_hitDetect(int obj) {
     (*(void (**)(int, int *, void *))(*(int *)gPlayerInterface + 0xC))(
-        obj, *(int **)((char *)obj + 0xB8), lbl_803AC610);
+        obj, *(int **)((char *)obj + 0xB8), gGrimbleStateHandlersA);
 }
 
 void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {

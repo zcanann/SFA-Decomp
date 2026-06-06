@@ -4372,7 +4372,7 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma scheduling reset
 
 extern int *gExpgfxInterface;
-extern int lbl_803AD0F4[];
+extern int gDBStealerWormStateHandlersA[];
 #pragma scheduling off
 #pragma peephole off
 void chuka_free(int obj) {
@@ -4388,7 +4388,7 @@ void chuka_hitDetect(int obj) {
 }
 void dbstealerworm_hitDetect(int obj) {
     int *inner = *(int **)(obj + 0xb8);
-    (*(void (*)(int, int *, int *))(*(int *)(*gPlayerInterface + 0xc)))(obj, inner, lbl_803AD0F4);
+    (*(void (*)(int, int *, int *))(*(int *)(*gPlayerInterface + 0xc)))(obj, inner, gDBStealerWormStateHandlersA);
 }
 void GCRobotBlast_init(int obj, s8 *p) {
     typedef struct {
@@ -4720,7 +4720,7 @@ int dbstealerworm_func0B(int obj, u8 msg, int *out)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int lbl_803AD0D8[];
+extern int gDBStealerWormStateHandlersB[];
 extern int fn_802025C0();
 extern int fn_80202428();
 extern int fn_80201BD8(int obj, int p2, f32 t);
@@ -4738,29 +4738,29 @@ extern int fn_801FFE18();
 #pragma scheduling off
 void DBstealerwo_setFuncPtrs_80203c78(void)
 {
-    lbl_803AD0F4[0] = (int)fn_802028C0;
-    lbl_803AD0F4[1] = (int)fn_80202720;
-    lbl_803AD0F4[2] = (int)fn_802025C0;
-    lbl_803AD0F4[3] = (int)fn_80202524;
-    lbl_803AD0F4[4] = (int)fn_80202428;
-    lbl_803AD0F4[5] = (int)fn_80202294;
-    lbl_803AD0F4[6] = (int)fn_802020B0;
-    lbl_803AD0F4[7] = (int)fn_80201BD8;
-    lbl_803AD0F4[8] = (int)fn_802017A4;
-    lbl_803AD0F4[9] = (int)fn_802015EC;
-    lbl_803AD0F4[10] = (int)fn_80201358;
-    lbl_803AD0F4[11] = (int)fn_80200E44;
-    lbl_803AD0F4[12] = (int)fn_80200A70;
-    lbl_803AD0F4[13] = (int)fn_80200850;
-    lbl_803AD0F4[14] = (int)fn_80200750;
-    lbl_803AD0F4[15] = (int)fn_802004B0;
-    lbl_803AD0D8[0] = (int)fn_80200460;
-    lbl_803AD0D8[1] = (int)fn_80200410;
-    lbl_803AD0D8[2] = (int)fn_80200380;
-    lbl_803AD0D8[3] = (int)fn_8020032C;
-    lbl_803AD0D8[4] = (int)fn_802002C4;
-    lbl_803AD0D8[5] = (int)fn_80200088;
-    lbl_803AD0D8[6] = (int)fn_801FFE18;
+    gDBStealerWormStateHandlersA[0] = (int)fn_802028C0;
+    gDBStealerWormStateHandlersA[1] = (int)fn_80202720;
+    gDBStealerWormStateHandlersA[2] = (int)fn_802025C0;
+    gDBStealerWormStateHandlersA[3] = (int)fn_80202524;
+    gDBStealerWormStateHandlersA[4] = (int)fn_80202428;
+    gDBStealerWormStateHandlersA[5] = (int)fn_80202294;
+    gDBStealerWormStateHandlersA[6] = (int)fn_802020B0;
+    gDBStealerWormStateHandlersA[7] = (int)fn_80201BD8;
+    gDBStealerWormStateHandlersA[8] = (int)fn_802017A4;
+    gDBStealerWormStateHandlersA[9] = (int)fn_802015EC;
+    gDBStealerWormStateHandlersA[10] = (int)fn_80201358;
+    gDBStealerWormStateHandlersA[11] = (int)fn_80200E44;
+    gDBStealerWormStateHandlersA[12] = (int)fn_80200A70;
+    gDBStealerWormStateHandlersA[13] = (int)fn_80200850;
+    gDBStealerWormStateHandlersA[14] = (int)fn_80200750;
+    gDBStealerWormStateHandlersA[15] = (int)fn_802004B0;
+    gDBStealerWormStateHandlersB[0] = (int)fn_80200460;
+    gDBStealerWormStateHandlersB[1] = (int)fn_80200410;
+    gDBStealerWormStateHandlersB[2] = (int)fn_80200380;
+    gDBStealerWormStateHandlersB[3] = (int)fn_8020032C;
+    gDBStealerWormStateHandlersB[4] = (int)fn_802002C4;
+    gDBStealerWormStateHandlersB[5] = (int)fn_80200088;
+    gDBStealerWormStateHandlersB[6] = (int)fn_801FFE18;
 }
 #pragma peephole reset
 #pragma scheduling reset

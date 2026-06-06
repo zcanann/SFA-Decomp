@@ -1975,8 +1975,8 @@ extern void Obj_FreeObject(int obj);
 extern void fn_8003B5E0(int arg0, int arg1, int arg2, int arg3);
 extern void objRenderFn_8003b8f4(int obj, int arg1, int arg2, int arg3, int arg4, f32 scale);
 extern void fn_8015CE68(int obj, int state);
-extern u8 lbl_803AC548[];
-extern u8 lbl_803AC528[];
+extern u8 gMediumBasketStateHandlersA[];
+extern u8 gMediumBasketStateHandlersB[];
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 sqrtf(f32 value);
@@ -2721,7 +2721,7 @@ void mediumbasket_updateTargetMotion(int obj, int sub, int state)
     *(int *)(sub + 0x3e0) = *(int *)(obj + 0xc0);
     *(int *)(obj + 0xc0) = 0;
     ((void (*)(int, int, f32, f32, u8 *, u8 *))((void **)*gPlayerInterface)[2])(
-        obj, state, timeDelta, timeDelta, lbl_803AC548, lbl_803AC528);
+        obj, state, timeDelta, timeDelta, gMediumBasketStateHandlersA, gMediumBasketStateHandlersB);
     *(int *)(obj + 0xc0) = *(int *)(sub + 0x3e0);
 }
 #pragma peephole reset
@@ -2835,7 +2835,7 @@ done:;
 void dll_CA_hitDetect(int obj)
 {
     ((void (*)(int, int, u8 *))((void **)*gPlayerInterface)[3])(obj, *(int *)(obj + 0xb8),
-                                                               lbl_803AC548);
+                                                               gMediumBasketStateHandlersA);
 }
 #pragma peephole reset
 #pragma scheduling reset

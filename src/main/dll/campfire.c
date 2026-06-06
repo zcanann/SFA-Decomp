@@ -60,8 +60,8 @@ extern undefined4 DAT_803ad2e0;
 extern undefined4 DAT_803ad2f8;
 extern f32 lbl_803DDA94;
 extern f32 lbl_803DDA98;
-extern void* lbl_803AC680[];
-extern void* lbl_803AC698[];
+extern void* gKaldaChomStateHandlersB[];
+extern void* gKaldaChomStateHandlersA[];
 extern undefined4* gPartfxInterface;
 extern undefined4* gPlayerInterface;
 extern undefined4* gMapEventInterface;
@@ -573,8 +573,8 @@ void kaldachom_update(int param_1)
         *(undefined4 *)(iVar9 + 0x3e0) = *(undefined4 *)(param_1 + 0xc0);
         *(undefined4 *)(param_1 + 0xc0) = 0;
         (**(code **)(*gPlayerInterface + 8))
-                  ((double)timeDelta,(double)timeDelta,param_1,iVar9,&lbl_803AC698,
-                   &lbl_803AC680);
+                  ((double)timeDelta,(double)timeDelta,param_1,iVar9,&gKaldaChomStateHandlersA,
+                   &gKaldaChomStateHandlersB);
         *(undefined4 *)(param_1 + 0xc0) = *(undefined4 *)(iVar9 + 0x3e0);
       }
     }
@@ -638,20 +638,20 @@ void kaldachom_release(void) {}
 
 void kaldachom_initialise(void)
 {
-  lbl_803AC698[0] = fn_80168118;
-  lbl_803AC698[1] = fn_80168018;
-  lbl_803AC698[2] = fn_80167F58;
-  lbl_803AC698[3] = fn_80167EC4;
-  lbl_803AC698[4] = fn_80167E3C;
-  lbl_803AC698[5] = fn_80167DA4;
-  lbl_803AC698[6] = fn_80167D10;
-  lbl_803AC698[7] = fn_80167B60;
-  lbl_803AC680[0] = fn_80167AE4;
-  lbl_803AC680[1] = fn_80167A60;
-  lbl_803AC680[2] = fn_80167988;
-  lbl_803AC680[3] = fn_8016792C;
-  lbl_803AC680[4] = fn_801678E4;
-  lbl_803AC680[5] = fn_80167764;
+  gKaldaChomStateHandlersA[0] = fn_80168118;
+  gKaldaChomStateHandlersA[1] = fn_80168018;
+  gKaldaChomStateHandlersA[2] = fn_80167F58;
+  gKaldaChomStateHandlersA[3] = fn_80167EC4;
+  gKaldaChomStateHandlersA[4] = fn_80167E3C;
+  gKaldaChomStateHandlersA[5] = fn_80167DA4;
+  gKaldaChomStateHandlersA[6] = fn_80167D10;
+  gKaldaChomStateHandlersA[7] = fn_80167B60;
+  gKaldaChomStateHandlersB[0] = fn_80167AE4;
+  gKaldaChomStateHandlersB[1] = fn_80167A60;
+  gKaldaChomStateHandlersB[2] = fn_80167988;
+  gKaldaChomStateHandlersB[3] = fn_8016792C;
+  gKaldaChomStateHandlersB[4] = fn_801678E4;
+  gKaldaChomStateHandlersB[5] = fn_80167764;
 }
 
 ObjectDescriptor12 gKaldaChomObjDescriptor = {

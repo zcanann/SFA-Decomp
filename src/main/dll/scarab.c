@@ -1001,8 +1001,8 @@ int fn_8015DC04(int obj, GroundBaddieState *p)
 #pragma dont_inline on
 void fn_8015DAE8(void)
 {
-  extern void *lbl_803AC528[];
-  extern void *lbl_803AC548[];
+  extern void *gMediumBasketStateHandlersB[];
+  extern void *gMediumBasketStateHandlersA[];
   extern int mediumbasket_updateOpenHitState();
   extern int mediumbasket_updateOpenState();
   extern int mediumbasket_updateHideResetState();
@@ -1026,28 +1026,28 @@ void fn_8015DAE8(void)
   extern int fn_8015B2A0();
   extern int fn_8015AF10();
 
-  lbl_803AC548[0] = (void *)mediumbasket_updateOpenHitState;
-  lbl_803AC548[1] = (void *)mediumbasket_updateOpenState;
-  lbl_803AC548[2] = (void *)mediumbasket_updateHideResetState;
-  lbl_803AC548[3] = (void *)mediumbasket_updateImpactHitState;
-  lbl_803AC548[4] = (void *)mediumbasket_updateSpinState;
-  lbl_803AC548[5] = (void *)fn_8015C2AC;
-  lbl_803AC548[6] = (void *)fn_8015C0B4;
-  lbl_803AC548[7] = (void *)mediumbasket_updateHeightBlendState;
-  lbl_803AC548[8] = (void *)mediumbasket_updateControlMove5State;
-  lbl_803AC548[9] = (void *)mediumbasket_updateCommDownState;
-  lbl_803AC548[10] = (void *)mediumbasket_updateDropState;
-  lbl_803AC548[11] = (void *)fn_8015BC18;
-  lbl_803AC548[12] = (void *)mediumbasket_updateContactHitState;
-  lbl_803AC548[13] = (void *)mediumbasket_updateLandingState;
-  lbl_803AC528[0] = (void *)mediumbasket_checkTargetState;
-  lbl_803AC528[1] = (void *)fn_8015B748;
-  lbl_803AC528[2] = (void *)fn_8015B670;
-  lbl_803AC528[3] = (void *)fn_8015B614;
-  lbl_803AC528[4] = (void *)fn_8015B5CC;
-  lbl_803AC528[5] = (void *)fn_8015B524;
-  lbl_803AC528[6] = (void *)fn_8015B2A0;
-  lbl_803AC528[7] = (void *)fn_8015AF10;
+  gMediumBasketStateHandlersA[0] = (void *)mediumbasket_updateOpenHitState;
+  gMediumBasketStateHandlersA[1] = (void *)mediumbasket_updateOpenState;
+  gMediumBasketStateHandlersA[2] = (void *)mediumbasket_updateHideResetState;
+  gMediumBasketStateHandlersA[3] = (void *)mediumbasket_updateImpactHitState;
+  gMediumBasketStateHandlersA[4] = (void *)mediumbasket_updateSpinState;
+  gMediumBasketStateHandlersA[5] = (void *)fn_8015C2AC;
+  gMediumBasketStateHandlersA[6] = (void *)fn_8015C0B4;
+  gMediumBasketStateHandlersA[7] = (void *)mediumbasket_updateHeightBlendState;
+  gMediumBasketStateHandlersA[8] = (void *)mediumbasket_updateControlMove5State;
+  gMediumBasketStateHandlersA[9] = (void *)mediumbasket_updateCommDownState;
+  gMediumBasketStateHandlersA[10] = (void *)mediumbasket_updateDropState;
+  gMediumBasketStateHandlersA[11] = (void *)fn_8015BC18;
+  gMediumBasketStateHandlersA[12] = (void *)mediumbasket_updateContactHitState;
+  gMediumBasketStateHandlersA[13] = (void *)mediumbasket_updateLandingState;
+  gMediumBasketStateHandlersB[0] = (void *)mediumbasket_checkTargetState;
+  gMediumBasketStateHandlersB[1] = (void *)fn_8015B748;
+  gMediumBasketStateHandlersB[2] = (void *)fn_8015B670;
+  gMediumBasketStateHandlersB[3] = (void *)fn_8015B614;
+  gMediumBasketStateHandlersB[4] = (void *)fn_8015B5CC;
+  gMediumBasketStateHandlersB[5] = (void *)fn_8015B524;
+  gMediumBasketStateHandlersB[6] = (void *)fn_8015B2A0;
+  gMediumBasketStateHandlersB[7] = (void *)fn_8015AF10;
 }
 #pragma dont_inline reset
 
