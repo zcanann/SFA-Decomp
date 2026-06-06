@@ -512,6 +512,19 @@ Heuristic:
     and constant-lift don't flip it, and there's no per-loop unroll pragma. When
     the only residual is "target unrolls x4, mine x8" on an init/clear loop, it's a
     codegen-heuristic cap — leave the partial.
+    **PARTIAL CRACK — the COUNT-DOWN loop form `for (i = N; i != 0; i--)` flips
+    both the unroll FACTOR and the unroll STYLE.** When target shows the x4
+    walker-bump unroll (store constants hoisted above mtctr, `addi ptr,ptr,stride`
+    after EACH body copy) and your count-up `for (i = 0; i < N; i++) { ...; p++; }`
+    over-unrolls x8 with FOLDED displacements (one `addi ptr,+8*stride` at block
+    end), rewrite the header as `for (i = N; i != 0; i--)` (body unchanged, i
+    unused) — MWCC then emits ctr=N/4, x4 copies, per-copy bumps, byte-exact
+    (audio musicInitMidiWad 16-trip channel-init -> 100%-matched loop, fn
+    69.0->93.7). The same form fixes RUNTIME-count clear loops: target's
+    `srwi ctr,count,3` + `andi. rem,count,7` two-phase unroll comes from the
+    count-down form, while count-up emits the newer compare-8-first shape
+    (streamsLoadedCallback 78.1->97.1). Try the count-down spelling BEFORE
+    declaring an unroll-factor cap.
 
 29. **Callee parameter POSITION controls caller's L2R arg-emission order.** MWCC
     evaluates call args left-to-right; the *positions* of the float vs. int
