@@ -86,8 +86,7 @@ def fn_vars(cfg, name, body):
             out[m.group(1)] = (es, True)
     for var, es in cfg.get('global_vars', {}).items():
         if var not in out and re.search(r'\b'+var+r'\b', body):
-            # only if it's a record here: init match or listed per-fn
-            pass
+            out[var] = (es, False)
     for var, es in cfg.get('vars', {}).get(name, {}).items():
         out[var] = (es, False)
     af = cfg.get('auto_fingerprint')
@@ -235,7 +234,10 @@ def convert(cfg, src):
                     else:
                         t, off = norm(m.group(1)), int(m.group(2),0)*mul
                         t = {'short':'s16','s32':'int','float':'f32','uint':'u32','ushort':'u16','byte':'u8','undefined4':'u32','undefined2':'u16','undefined1':'u8','undefined':'u8'}.get(t, t)
-                    if off in excl or off not in mapping or mapping[off][1] != t:
+                    if off in excl or off not in mapping:
+                        return m.group(0)
+                    ft = mapping[off][1]
+                    if ft != t and not (ft == 'void *' and t.endswith('*')):
                         return m.group(0)
                     cnt[0] += 1
                     return spell + mapping[off][0]
