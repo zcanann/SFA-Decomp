@@ -4492,7 +4492,12 @@ void playerShadow_renderObject(void *obj)
 
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
-extern void *lbl_8039C2C0[];
+#define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
+#define BONE_PARTICLE_EFFECT_BUFFER_BYTES 0x140
+#define BONE_PARTICLE_EFFECT_SLOT_COUNT 20
+#define gBoneParticleEffectBuffers lbl_8039C2C0
+
+extern void *gBoneParticleEffectBuffers[];
 extern void *lbl_803DD2A4;
 extern void *lbl_803DD2A8;
 extern void mm_free(void *p);
@@ -4624,14 +4629,14 @@ void boneParticleEffect_release(void)
     void **p;
     void *zero;
     i = 0;
-    p = lbl_8039C2C0;
+    p = gBoneParticleEffectBuffers;
     zero = NULL;
     do {
         if (*p != NULL) mm_free(*p);
         *p = zero;
         p++;
         i++;
-    } while (i < 7);
+    } while (i < BONE_PARTICLE_EFFECT_BUFFER_COUNT);
     if (lbl_803DD2A4 != NULL) textureFree(lbl_803DD2A4);
     if (lbl_803DD2A8 != NULL) textureFree(lbl_803DD2A8);
 }
@@ -4741,8 +4746,8 @@ void boneParticleEffect_update(void *ctx, int p2, u8 *o)
         Sfx_PlayFromObject(o, 0x282);
     }
     slot = 0;
-    grp2 = (void **)lbl_8039C2C0;
-    grp = (void **)lbl_8039C2C0;
+    grp2 = gBoneParticleEffectBuffers;
+    grp = gBoneParticleEffectBuffers;
     do {
         if (slot != 5) {
             lbl_803DD2B4 = slot;
@@ -4825,7 +4830,7 @@ void boneParticleEffect_update(void *ctx, int p2, u8 *o)
         }
         grp += 1;
         slot += 1;
-    } while (slot < 7);
+    } while (slot < BONE_PARTICLE_EFFECT_BUFFER_COUNT);
     s.vx = *(f32 *)(o + 0xc);
     s.vy = *(f32 *)(o + 0x10);
     s.vz = *(f32 *)(o + 0x14);
@@ -4862,7 +4867,7 @@ void boneParticleEffect_update(void *ctx, int p2, u8 *o)
             drawFn_8005cf8c(*grp2, base + 0x2f0, 0x20);
             grp2 += 1;
             i += 1;
-        } while (i < 7);
+        } while (i < BONE_PARTICLE_EFFECT_BUFFER_COUNT);
     }
     lbl_803DD2A0 = 1 - lbl_803DD2A0;
 }
@@ -4885,24 +4890,24 @@ void boneParticleEffect_initialise(void) {
 
     lbl_803DD2A4 = textureLoadAsset(0x16b);
     lbl_803DD2A8 = textureLoadAsset(0x201);
-    lbl_8039C2C0[0] = mmAlloc(0x140, 0x15, 0);
-    lbl_8039C2C0[1] = mmAlloc(0x140, 0x15, 0);
-    lbl_8039C2C0[2] = mmAlloc(0x140, 0x15, 0);
-    lbl_8039C2C0[3] = mmAlloc(0x140, 0x15, 0);
-    lbl_8039C2C0[4] = mmAlloc(0x140, 0x15, 0);
-    lbl_8039C2C0[5] = mmAlloc(0x140, 0x15, 0);
-    lbl_8039C2C0[6] = mmAlloc(0x140, 0x15, 0);
-    for (i = 0; i < 7; i++) {
-        for (j = 0; j < 20; j++) {
-            ((ParticleSlot*)lbl_8039C2C0[i])[j].a = lbl_8030FFE8[j].a;
-            ((ParticleSlot*)lbl_8039C2C0[i])[j].b = lbl_8030FFE8[j].b;
-            ((ParticleSlot*)lbl_8039C2C0[i])[j].c = lbl_8030FFE8[j].c;
-            ((ParticleSlot*)lbl_8039C2C0[i])[j].d = lbl_8030FFE8[j].d;
-            ((ParticleSlot*)lbl_8039C2C0[i])[j].e = lbl_8030FFE8[j].e;
-            ((ParticleSlot*)lbl_8039C2C0[i])[j].f = lbl_8030FFE8[j].f;
-            ((ParticleSlot*)lbl_8039C2C0[i])[j].g = lbl_8030FFE8[j].g;
-            ((ParticleSlot*)lbl_8039C2C0[i])[j].h = lbl_8030FFE8[j].h;
-            ((ParticleSlot*)lbl_8039C2C0[i])[j].alpha = 0xff;
+    gBoneParticleEffectBuffers[0] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[1] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[2] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[3] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[4] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[5] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[6] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    for (i = 0; i < BONE_PARTICLE_EFFECT_BUFFER_COUNT; i++) {
+        for (j = 0; j < BONE_PARTICLE_EFFECT_SLOT_COUNT; j++) {
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].a = lbl_8030FFE8[j].a;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].b = lbl_8030FFE8[j].b;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].c = lbl_8030FFE8[j].c;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].d = lbl_8030FFE8[j].d;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].e = lbl_8030FFE8[j].e;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].f = lbl_8030FFE8[j].f;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].g = lbl_8030FFE8[j].g;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].h = lbl_8030FFE8[j].h;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].alpha = 0xff;
         }
     }
 }
