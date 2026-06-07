@@ -3128,47 +3128,19 @@ curves_getCurves(int obj,f32 x,f32 z,u32 *outCount,int queryAll)
     if (ROMCURVE_GETCURVES_MAX_POINTS < (int)sCurvesCachedHitCount) {
       sCurvesCachedHitCount = ROMCURVE_GETCURVES_MAX_POINTS;
     }
-    remaining = sCurvesCachedHitCount;
-    outPoint = sCurvesHitPoints;
     hitPointCursor = hitPoints;
-    if (0 < (int)sCurvesCachedHitCount) {
-      pairCount = sCurvesCachedHitCount >> 1;
-      if (pairCount != 0) {
-        do {
-          outPoint->x = (*hitPointCursor)->x;
-          outPoint->y = (*hitPointCursor)->y;
-          outPoint->z = (*hitPointCursor)->z;
-          outPoint->w = (*hitPointCursor)->w;
-          outPoint->flags = (*hitPointCursor)->flags;
-          outPoint->type = (*hitPointCursor)->type;
-          outPoint = outPoint + 1;
-          outPoint->x = hitPointCursor[1]->x;
-          outPoint->y = hitPointCursor[1]->y;
-          outPoint->z = hitPointCursor[1]->z;
-          outPoint->w = hitPointCursor[1]->w;
-          outPoint->flags = hitPointCursor[1]->flags;
-          outPoint->type = hitPointCursor[1]->type;
-          hitPointCursor = hitPointCursor + 2;
-          outPoint = outPoint + 1;
-          pairCount = pairCount - 1;
-        } while (pairCount != 0);
-        remaining = remaining & 1;
-        if (remaining == 0) goto LAB_800e6f44;
-      }
-      do {
-        outPoint->x = (*hitPointCursor)->x;
-        outPoint->y = (*hitPointCursor)->y;
-        outPoint->z = (*hitPointCursor)->z;
-        outPoint->w = (*hitPointCursor)->w;
-        outPoint->flags = (*hitPointCursor)->flags;
-        outPoint->type = (*hitPointCursor)->type;
-        hitPointCursor = hitPointCursor + 1;
-        outPoint = outPoint + 1;
-        remaining = remaining - 1;
-      } while (remaining != 0);
+    outPoint = sCurvesHitPoints;
+    remaining = sCurvesCachedHitCount;
+    for (pairCount = 0; (int)pairCount < (int)remaining; pairCount++) {
+      outPoint[pairCount].x = (*hitPointCursor)->x;
+      outPoint[pairCount].y = (*hitPointCursor)->y;
+      outPoint[pairCount].z = (*hitPointCursor)->z;
+      outPoint[pairCount].w = (*hitPointCursor)->w;
+      outPoint[pairCount].flags = (*hitPointCursor)->flags;
+      outPoint[pairCount].type = (*hitPointCursor)->type;
+      hitPointCursor = hitPointCursor + 1;
     }
   }
-LAB_800e6f44:
   *outCount = sCurvesCachedHitCount;
   return sCurvesHitPoints;
 }
