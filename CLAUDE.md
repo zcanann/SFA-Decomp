@@ -965,7 +965,11 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     source-flippable by UN-naming the value target keeps in the lower reg
     (index-form for walked pointers, member-expression respelling for
     chained loads); getLoadedTexture/saveFileStruct_isCheatActive/
-    playerAddHealth/curUiDllDraw all → 100.
+    playerAddHealth/curUiDllDraw all → 100. **Same-init COPY pairs
+    (`p = base; ...` both alive, lwz+mr) flip via the CHAINED init
+    `p = base = lbl;`** (#51's pointer cousin; insertPoint → 100, recipe
+    #108 session) — try the chain spelling when #107's un-naming read
+    doesn't apply.
 
 61d. **The @NNN-vs-named conversion-bias cap: MECHANISM + tested negative.**
     The "named" symbols (lbl_803DFD88, lbl_803E6E80, ... — mistyped `string
@@ -1956,9 +1960,10 @@ addend lands mid-function (not at a symbol boundary) before adding a range.
     it on the access (`add base,idx; lbz K(base)`) — struct-field,
     per-statement locals and pointer-arith spellings all fold back
     (hwSetVirtualSampleLoopBuffer, immultiseq, wctrexstatu, bossdrakor's
-    2-instr tail). The ONLY working escape found so far is the
-    strength-reduced LOOP form (saveSelectFn struct-array, recipe #18) —
-    no non-loop escape known yet.
+    2-instr tail). ⚠️ **SUPERSEDED by recipe #108** — the K-on-base grouping
+    (`p = base + K; *(p + idx)`) is the non-loop escape; 4 of those
+    instances are now byte-exact. The strength-reduced LOOP form (recipe
+    #18) remains the other working escape.
 
 87. **DEFINITION param order controls the prologue param-save emission order
     — declare the f32 param LAST to get `mr;mr;mr;fmr`.** When target's
@@ -2512,6 +2517,43 @@ extension; mtx44_multSafe copy loop), and that an explicit `f32 *tp = tmp;`
 pointer local positions a stack array's base web in decl order where the
 bare array's base web is created first regardless of decl position
 (mtx44_multSafe 52.43->100).
+
+108. **#86's displacement-fold-onto-index cap CRACKED for the non-loop case —
+    the GROUPING POSITION of the constant K in `base + idx + K` picks the
+    isel, and the side K is peeled FROM becomes the FIRST add operand.**
+    (task #14; 5 instances, 4 byte-exact: hwSetVirtualSampleLoopBuffer →100
+    [hw_sample unit →100.0], immultiseq_update →100, synthHWMessageHandler
+    →100, insertPoint →100, bossdrakor_animEventCallback →100.) Forms:
+    - **K-on-BASE** — `p = base + K;` then `*(p + idx)` / `p[idx]`, or the
+      unnamed `*((base + K) + idx)` — emits target's usual
+      `add rT,base,idx; lbz/lha/sth K(rT)` with BASE first in the add. A
+      multi-def named `p` whose +K gets peeled also DEMOTES the base load
+      to scratch r0 (`lwz r0; add r3,r0,idx`, hw_sample byte-exact).
+    - **K-on-INDEX grouped** — `base + (idx + K)` or a hoisted
+      `off = idx + K;` local — same add+disp shape but IDX first in the add.
+    - **FLAT left-assoc `base + idx + K`** → `addi idx,K; lbzx/sthx`
+      (fold-onto-index). Write this when TARGET has the lbzx form
+      (bossdrakor; wcpushblock's recipe generalized).
+    - **Sum-local `p = base + idx; *(p + K)` ALWAYS folds onto the index**
+      — this is what every previously-capped instance used. Same for
+      struct member arrays through a struct-typed local when the index is
+      a chained in-loop load (voiceAllocate shape).
+    Caveats: (a) a WIDE deref cast over the whole sum (`*(u32 *)(sum)`)
+    re-folds to lwzx — put a `(u8 *)` launder around the grouped base:
+    `*(u32 *)((u8 *)(base + K) + idx)` (synthHWMessageHandler). (b) a named
+    pointer local costs an 8B frame slot (#67a) — for single-use loads use
+    the UNNAMED parens form (synth_volume frame stayed 32); the named
+    multi-def form was right for hw_sample's store pair (8-instr leaf, no
+    frame concern). (c) SYMBOL-array bases (`extern u8 tbl[]`): every named
+    local alias folds back (var-web binding) — DIRECT symbol indexing
+    `tbl[idx * 4 + K]` keeps K-on-access (probe y7) — BUT converting moves
+    the materialization web and can rotate whole-fn coloring; A/B mandatory
+    (voiceAllocate: all 9 fold sites fixed yet nets −3.9, reverted/parked —
+    isel correct, blocked on its #82-family web cascade).
+    Same session, #61c addendum: the lwz+mr base/walker pair swap that
+    decl-order/launder/role-swap can't flip RESPONDS to the CHAINED init
+    `p = base = lbl;` (#51's pointer cousin) — insertPoint's base/p pair
+    →0 diffs (pointer decls before ints also required).
 
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
