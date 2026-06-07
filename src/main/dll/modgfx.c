@@ -93,6 +93,8 @@ static inline int *Modgfx_GetActiveModel(void *obj) {
 }
 
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
+#define MODGFX_EFFECT_RENDER_BUFFER_COUNT 7
+#define MODGFX_EFFECT_RENDER_BUFFER_BYTES 0x140
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
 typedef struct ModgfxActiveEffect {
   int instanceHandle;
@@ -119,7 +121,11 @@ typedef struct ModgfxPendingSpawn {
   u8 pad17;
 } ModgfxPendingSpawn;
 
-extern uint DAT_8039ce58;
+#define gModgfxActiveEffectRegistry DAT_8039ce58
+#define gModgfxEffectRenderBuffers DAT_8039cf20
+
+extern ModgfxActiveEffect *gModgfxActiveEffectRegistry[];
+extern int gModgfxEffectRenderBuffers[];
 
 static ModgfxVertexData *modgfx_getActiveVertexBuffer(ModgfxState *state)
 {
@@ -133,7 +139,7 @@ static ModgfxVertexData *modgfx_getInactiveVertexBuffer(ModgfxState *state)
 
 static ModgfxActiveEffect **modgfx_getActiveEffectRegistry(void)
 {
-  return (ModgfxActiveEffect **)&DAT_8039ce58;
+  return gModgfxActiveEffectRegistry;
 }
 
 extern undefined4 FUN_800033a8();
@@ -300,61 +306,6 @@ extern undefined4 DAT_8039c7d0;
 extern undefined4 DAT_8039c7d4;
 extern uint gExpgfxSlotPoolBases[];
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
-extern undefined4 DAT_8039ce5c;
-extern undefined4 DAT_8039ce60;
-extern undefined4 DAT_8039ce64;
-extern undefined4 DAT_8039ce68;
-extern undefined4 DAT_8039ce6c;
-extern undefined4 DAT_8039ce70;
-extern undefined4 DAT_8039ce74;
-extern undefined4 DAT_8039ce78;
-extern undefined4 DAT_8039ce7c;
-extern undefined4 DAT_8039ce80;
-extern undefined4 DAT_8039ce84;
-extern undefined4 DAT_8039ce88;
-extern undefined4 DAT_8039ce8c;
-extern undefined4 DAT_8039ce90;
-extern undefined4 DAT_8039ce94;
-extern undefined4 DAT_8039ce98;
-extern undefined4 DAT_8039ce9c;
-extern undefined4 DAT_8039cea0;
-extern undefined4 DAT_8039cea4;
-extern undefined4 DAT_8039cea8;
-extern undefined4 DAT_8039ceac;
-extern undefined4 DAT_8039ceb0;
-extern undefined4 DAT_8039ceb4;
-extern undefined4 DAT_8039ceb8;
-extern undefined4 DAT_8039cebc;
-extern undefined4 DAT_8039cec0;
-extern undefined4 DAT_8039cec4;
-extern undefined4 DAT_8039cec8;
-extern undefined4 DAT_8039cecc;
-extern undefined4 DAT_8039ced0;
-extern undefined4 DAT_8039ced4;
-extern undefined4 DAT_8039ced8;
-extern undefined4 DAT_8039cedc;
-extern undefined4 DAT_8039cee0;
-extern undefined4 DAT_8039cee4;
-extern undefined4 DAT_8039cee8;
-extern undefined4 DAT_8039ceec;
-extern undefined4 DAT_8039cef0;
-extern undefined4 DAT_8039cef4;
-extern undefined4 DAT_8039cef8;
-extern undefined4 DAT_8039cefc;
-extern undefined4 DAT_8039cf00;
-extern undefined4 DAT_8039cf04;
-extern undefined4 DAT_8039cf08;
-extern undefined4 DAT_8039cf0c;
-extern undefined4 DAT_8039cf10;
-extern undefined4 DAT_8039cf14;
-extern undefined4 DAT_8039cf18;
-extern int DAT_8039cf20;
-extern undefined4 DAT_8039cf24;
-extern undefined4 DAT_8039cf28;
-extern undefined4 DAT_8039cf2c;
-extern undefined4 DAT_8039cf30;
-extern undefined4 DAT_8039cf34;
-extern undefined4 DAT_8039cf38;
 extern undefined4 DAT_8039cf40;
 extern undefined4 DAT_8039cf42;
 extern undefined4 DAT_8039cf44;
@@ -2156,12 +2107,12 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1,undefined8 param_2,unde
   }
   iVar1 = 2;
   {
-    undefined4 *puVar2;
+    ModgfxActiveEffect **tailEffects;
 
-    puVar2 = &DAT_8039cf18;
+    tailEffects = &activeEffects[MODGFX_ACTIVE_EFFECT_COUNT - 2];
     do {
-      *puVar2 = 0;
-      puVar2 = puVar2 + 1;
+      *tailEffects = (ModgfxActiveEffect *)0x0;
+      tailEffects = tailEffects + 1;
       iVar1 = iVar1 + -1;
     } while (iVar1 != 0);
   }
@@ -2768,8 +2719,8 @@ void FUN_800a1f80(undefined4 param_1,undefined4 param_2,uint param_3)
     FUN_80006824(param_3,SFXsc_mumble02);
   }
   local_b0 = 0;
-  piVar5 = &DAT_8039cf20;
-  local_ac = &DAT_8039cf20;
+  piVar5 = gModgfxEffectRenderBuffers;
+  local_ac = gModgfxEffectRenderBuffers;
   do {
     if (local_b0 != 5) {
       DAT_803ddf34 = (short)local_b0;
@@ -2850,7 +2801,7 @@ void FUN_800a1f80(undefined4 param_1,undefined4 param_2,uint param_3)
     }
     piVar5 = piVar5 + 1;
     local_b0 = local_b0 + 1;
-  } while (local_b0 < 7);
+  } while (local_b0 < MODGFX_EFFECT_RENDER_BUFFER_COUNT);
   local_d4 = *(float *)(param_3 + 0xc);
   local_d0 = *(float *)(param_3 + 0x10);
   local_cc = *(float *)(param_3 + 0x14);
@@ -2888,7 +2839,7 @@ void FUN_800a1f80(undefined4 param_1,undefined4 param_2,uint param_3)
     fn_8005D108(*local_ac,-0x7fcef318,0x20);
     local_ac = local_ac + 1;
     iVar13 = iVar13 + 1;
-  } while (iVar13 < 7);
+  } while (iVar13 < MODGFX_EFFECT_RENDER_BUFFER_COUNT);
   DAT_803ddf20 = 1 - DAT_803ddf20;
   FUN_80286864();
   return;
@@ -3009,14 +2960,21 @@ void FUN_800a2734(undefined8 param_1,double param_2,double param_3,undefined8 pa
                               param_10,param_11,param_12,param_13,param_14,param_15,param_16);
   DAT_803ddf28 = FUN_8005398c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x201,
                               param_10,param_11,param_12,param_13,param_14,param_15,param_16);
-  DAT_8039cf20 = FUN_80017830(0x140,0x15);
-  DAT_8039cf24 = FUN_80017830(0x140,0x15);
-  DAT_8039cf28 = FUN_80017830(0x140,0x15);
-  DAT_8039cf2c = FUN_80017830(0x140,0x15);
-  DAT_8039cf30 = FUN_80017830(0x140,0x15);
-  DAT_8039cf34 = FUN_80017830(0x140,0x15);
-  DAT_8039cf38 = FUN_80017830(0x140,0x15);
-  piVar3 = &DAT_8039cf20;
+  gModgfxEffectRenderBuffers[0] =
+      FUN_80017830(MODGFX_EFFECT_RENDER_BUFFER_BYTES,0x15);
+  gModgfxEffectRenderBuffers[1] =
+      FUN_80017830(MODGFX_EFFECT_RENDER_BUFFER_BYTES,0x15);
+  gModgfxEffectRenderBuffers[2] =
+      FUN_80017830(MODGFX_EFFECT_RENDER_BUFFER_BYTES,0x15);
+  gModgfxEffectRenderBuffers[3] =
+      FUN_80017830(MODGFX_EFFECT_RENDER_BUFFER_BYTES,0x15);
+  gModgfxEffectRenderBuffers[4] =
+      FUN_80017830(MODGFX_EFFECT_RENDER_BUFFER_BYTES,0x15);
+  gModgfxEffectRenderBuffers[5] =
+      FUN_80017830(MODGFX_EFFECT_RENDER_BUFFER_BYTES,0x15);
+  gModgfxEffectRenderBuffers[6] =
+      FUN_80017830(MODGFX_EFFECT_RENDER_BUFFER_BYTES,0x15);
+  piVar3 = gModgfxEffectRenderBuffers;
   iVar4 = 0;
   do {
     iVar2 = 0;
@@ -3038,7 +2996,7 @@ void FUN_800a2734(undefined8 param_1,double param_2,double param_3,undefined8 pa
     } while (iVar5 != 0);
     piVar3 = piVar3 + 1;
     iVar4 = iVar4 + 1;
-  } while (iVar4 < 7);
+  } while (iVar4 < MODGFX_EFFECT_RENDER_BUFFER_COUNT);
   return;
 }
 
