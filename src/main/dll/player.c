@@ -1537,11 +1537,11 @@ int fn_8029A76C(int obj, int state, f32 fv)
         ObjPath_GetPointWorldPosition(lbl_803DE44C, 5, &pfx.x, &pfx.y, &pfx.z, 0);
         pfx.scale = lbl_803E7F9C;
         pfx.mode = 0;
-        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-            (int)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject(
+            (void *)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, NULL);
         pfx.mode = 1;
-        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-            (int)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject(
+            (void *)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, NULL);
         if (((u16)*(s16 *)((char *)inner + 0x6e0) & lbl_803DE4B4) == 0 ||
             *(s16 *)((char *)*(int *)((char *)*(int *)&((GameObject *)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0) {
@@ -1595,8 +1595,8 @@ int fn_8029A76C(int obj, int state, f32 fv)
         int v;
         ObjPath_GetPointWorldPosition(lbl_803DE44C, 0, &pfx2.x, &pfx2.y, &pfx2.z, 0);
         for (i = 0; i < 0x28; i++) {
-            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-                (int)lbl_803DE44C, 0x3ed, &pfx2, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject(
+                (void *)lbl_803DE44C, 0x3ed, &pfx2, 0x200001, -1, NULL);
         }
         sub = *(int *)((char *)*(int *)&((GameObject *)obj)->extra + 0x35c);
         v = *(s16 *)((char *)sub + 0x4) - 2;
@@ -4234,9 +4234,8 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
                                          lbl_803E7F5C;
                         pfx.scale = lbl_803E7EE0;
                         pfx.mode = 0x3c;
-                        (**(void (**)(int, int, void *, int, int, int))(
-                            (char *)(*gPartfxInterface) + 0x8))(obj, 0x804, &pfx, 0x200001, -1,
-                                                                0);
+                        (*gPartfxInterface)->spawnObject((void *)obj, 0x804, &pfx, 0x200001,
+                                                         -1, NULL);
                     }
                     *(f32 *)(p2 + 0x878) = lbl_803E7F30;
                 }
@@ -4552,11 +4551,11 @@ int fn_8029ABD8(int obj, int state, f32 fv)
         ObjPath_GetPointWorldPosition(lbl_803DE44C, 5, &pfx.x, &pfx.y, &pfx.z, 0);
         pfx.scale = lbl_803E7F9C;
         pfx.mode = 0;
-        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-            (int)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject(
+            (void *)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, NULL);
         pfx.mode = 1;
-        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-            (int)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject(
+            (void *)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, NULL);
         if ((inner->unk6E0 & lbl_803DE4B4) == 0 ||
             *(s16 *)((char *)*(int *)((char *)*(int *)&((GameObject *)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0) {
@@ -4765,11 +4764,11 @@ int fn_8029AF9C(int obj, int state)
             pfx.scale = lbl_803E7F9C;
             hi = 0x200000;
             pfx.mode = 0;
-            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-                (int)lbl_803DE44C, 0x7f5, &pfx, hi + 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(
+                (void *)lbl_803DE44C, 0x7f5, &pfx, hi + 1, -1, NULL);
             pfx.mode = 1;
-            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-                (int)lbl_803DE44C, 0x7f5, &pfx, hi + 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(
+                (void *)lbl_803DE44C, 0x7f5, &pfx, hi + 1, -1, NULL);
             if ((inner->unk6E0 & lbl_803DE4B4) == 0 ||
                 *(s16 *)((char *)*(int *)((char *)*(int *)&((GameObject *)obj)->extra + 0x35c) + 0x4) == 0 ||
                 getCurSeqNo() != 0) {
@@ -7763,8 +7762,8 @@ void fn_802AFB0C(int obj, int inner, int state)
                 desc.x = playerMapOffsetX + *(f32 *)(pt + surfIdx * 0x10 + 4);
                 desc.y = *(f32 *)(pt + surfIdx * 0x10 + 8);
                 desc.z = playerMapOffsetZ + *(f32 *)(pt + surfIdx * 0x10 + 0xc);
-                (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-                    obj, 0x328, &desc, 0x200001, -1, 0);
+                (*gPartfxInterface)->spawnObject(
+                    (void *)obj, 0x328, &desc, 0x200001, -1, NULL);
                 desc.x -= ((GameObject *)obj)->anim.worldPosX;
                 desc.y -= ((GameObject *)obj)->anim.worldPosY;
                 desc.z -= ((GameObject *)obj)->anim.worldPosZ;
@@ -8821,11 +8820,11 @@ int fn_80299E44(int obj, int state, f32 fv)
         ObjPath_GetPointWorldPosition(lbl_803DE44C, 5, &pfx.x, &pfx.y, &pfx.z, 0);
         pfx.scale = lbl_803E7F9C;
         pfx.mode = 0;
-        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-            (int)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject(
+            (void *)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, NULL);
         pfx.mode = 1;
-        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-            (int)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject(
+            (void *)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, NULL);
         if ((inner->unk6E0 & lbl_803DE4B4) == 0 ||
             *(s16 *)((char *)*(int *)((char *)*(int *)&((GameObject *)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0) {
@@ -12374,10 +12373,10 @@ void fn_802AA8D0(int obj)
     for (i = 0; i < 10; i++) {
         buf.x = ((GameObject *)obj)->anim.localPosX + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
         buf.z = ((GameObject *)obj)->anim.localPosZ + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
-        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-            obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, 0);
-        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-            obj, randomGetRange(0, 2) + 0x3f7, &buf, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject(
+            (void *)obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(
+            (void *)obj, randomGetRange(0, 2) + 0x3f7, &buf, 1, -1, NULL);
     }
 }
 #pragma dont_inline reset
@@ -12937,8 +12936,8 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                     pfx.scale = lbl_803E7F18;
                     pfx.mode = lbl_8033322C[((PlayerState *)inner)->unk86C];
                     for (n = 5; n != 0; n--) {
-                        (*(void (*)(int, int, void *, int, int, f32 *))(*(int *)(*gPartfxInterface + 0x8)))(
-                            obj, 0x7e6, &pfx, 0x200001, -1, vel);
+                        (*gPartfxInterface)->spawnObject(
+                            (void *)obj, 0x7e6, &pfx, 0x200001, -1, vel);
                     }
                     pfx.x = lbl_803E8018 * ((GameObject *)obj)->anim.velocityX + ((PlayerState *)inner)->unk3D0;
                     pfx.y = lbl_803E8018 * ((GameObject *)obj)->anim.velocityY + ((PlayerState *)inner)->unk3D4;
@@ -12946,8 +12945,8 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                     pfx.scale = lbl_803E7F18;
                     pfx.mode = lbl_8033322C[((PlayerState *)inner)->unk86C];
                     for (n = 5; n != 0; n--) {
-                        (*(void (*)(int, int, void *, int, int, f32 *))(*(int *)(*gPartfxInterface + 0x8)))(
-                            obj, 0x7e6, &pfx, 0x200001, -1, vel);
+                        (*gPartfxInterface)->spawnObject(
+                            (void *)obj, 0x7e6, &pfx, 0x200001, -1, vel);
                     }
                     ((PlayerState *)inner)->unk8D8 = ((PlayerState *)inner)->unk8D8 & ~0x8;
                 }
@@ -12962,8 +12961,8 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                     pfx.scale = lbl_803E7EE0;
                     pfx.mode = lbl_8033322C[((PlayerState *)inner)->unk86C];
                     for (n2 = 0; n2 < 10; n2++) {
-                        (*(void (*)(int, int, void *, int, int, f32 *))(*(int *)(*gPartfxInterface + 0x8)))(
-                            obj, 0x7e6, &pfx, 0x200001, -1, vel);
+                        (*gPartfxInterface)->spawnObject(
+                            (void *)obj, 0x7e6, &pfx, 0x200001, -1, vel);
                     }
                     ((PlayerState *)inner)->unk8D8 = ((PlayerState *)inner)->unk8D8 & ~0x4;
                 }
@@ -14215,8 +14214,8 @@ void playerUpdatePathEffectCountdown(int obj, int inner)
             buf.y = lbl_803E7ECC;
             buf.z = lbl_803E7ED0;
             ObjPath_GetPointWorldPosition(obj, 0xa, &buf.x, &buf.y, &buf.z, 1);
-            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-                obj, 0x7e5, &buf, 0x200001, -1, (int)outvec);
+            (*gPartfxInterface)->spawnObject(
+                (void *)obj, 0x7e5, &buf, 0x200001, -1, outvec);
         }
         ((PlayerState *)inner)->unk8B1 -= 1;
     }
@@ -14251,12 +14250,12 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
         *(f32 *)((char *)lbl_803DAEF0 + 0x10) = ((GameObject *)obj)->anim.localPosY;
         *(f32 *)((char *)lbl_803DAEF0 + 0x14) = ((GameObject *)obj)->anim.localPosZ;
         if ((v & 0x40000) != 0) {
-            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-                obj, 0x427, lbl_803DAEF0, 0x200001, -1, 0);
-            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-                obj, 0x427, lbl_803DAEF0, 0x200001, -1, 0);
-            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-                obj, 0x427, lbl_803DAEF0, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject(
+                (void *)obj, 0x427, lbl_803DAEF0, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(
+                (void *)obj, 0x427, lbl_803DAEF0, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(
+                (void *)obj, 0x427, lbl_803DAEF0, 0x200001, -1, NULL);
         }
         if ((((PlayerState *)inner)->flags360 & 0x20000) != 0) {
             (*(void (*)(int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x10)))(
@@ -15224,8 +15223,8 @@ void fn_802ADE80(int obj, int inner, int state)
         pfx.z = v.mat[3] + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7FA4;
         pfx.scale = *(f32 *)((char *)inner + 0x83c) - pfx.y;
         if (pfx.scale > lbl_803E7EA4) {
-            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-                obj, 0x202, &pfx, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject(
+                (void *)obj, 0x202, &pfx, 0x200001, -1, NULL);
         }
     }
 }

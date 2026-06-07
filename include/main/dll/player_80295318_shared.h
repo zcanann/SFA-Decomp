@@ -2,6 +2,7 @@
 #define SFA_DLL_PLAYER_80295318_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/objanim.h"
 #include "main/resource.h"
 
@@ -975,7 +976,7 @@ extern f32 lbl_803E7F58;
 extern f32 lbl_803E7F9C;
 extern f32 lbl_803DE464;
 extern f32 lbl_803DE460;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern f32 lbl_803E7E9C;
 extern f32 lbl_803E7EB4;
@@ -1012,7 +1013,7 @@ extern void objRenderFn_800413d4(int obj);
 extern void fuzzRenderFn_800412dc(int obj);
 extern void objSetMtxFn_800412d4(int a);
 extern s16 lbl_803DC6C4;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int Camera_GetCurrentViewSlot(void);
 extern void arwprojectile_placeForward(int obj, f32 dist);
 extern void arwprojectile_setLifetime(int obj, int frames);
