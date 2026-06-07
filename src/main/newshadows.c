@@ -3322,6 +3322,7 @@ extern f32 __PADFixBits;
 extern f32 lbl_80391978[];
 extern f32 lbl_803DCFA8, lbl_803DCFAC;
 #pragma scheduling off
+#pragma peephole off
 void initFn_8006d020(void) {
     u8 saved;
     int placed, attempts, tex, row, col, collide, j;
@@ -3414,6 +3415,7 @@ void initFn_8006d020(void) {
     lbl_803DCFA8 = 0.0f;
     testAndSet_onlyUseHeap3(saved);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 extern int textureLoadAsset(int);
@@ -3687,6 +3689,7 @@ void allocLotsOfTextures(void) {
 }
 #pragma scheduling reset
 #pragma scheduling off
+#pragma peephole off
 void shadowCreate(int *obj) {
     ObjAnimComponent *objAnim;
     ObjModelInstance *modelDef;
@@ -3715,6 +3718,7 @@ void shadowCreate(int *obj) {
         lbl_803DCF78 = lbl_803DCF78 + 1;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -3787,6 +3791,7 @@ extern void objRender(int a, int b, int c, int d, int *obj, int e);
 extern int *Obj_GetActiveModel(int *obj);
 extern void Camera_ApplyFullViewport(void);
 #pragma scheduling off
+#pragma peephole off
 void shadowRenderFn_8006b558(int *obj) {
     f32 mtx[12];
     f32 vF, vE, vD, vC, vB, vA;
@@ -3836,6 +3841,7 @@ void shadowRenderFn_8006b558(int *obj) {
     o64[5] = o64[5] - Dev_803DED1C * o64[0];
     o64[6] = o64[6] - Dev_803DED1C * o64[0];
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;

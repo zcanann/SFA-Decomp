@@ -271,6 +271,7 @@ void SpiritDoorLock_init(int obj, int *params, int mode)
 #pragma scheduling reset
 
 #pragma scheduling off
+#pragma peephole off
 void SpiritDoorLock_update(int obj)
 {
     int *state;
@@ -382,6 +383,7 @@ void SpiritDoorLock_update(int obj)
         }
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
