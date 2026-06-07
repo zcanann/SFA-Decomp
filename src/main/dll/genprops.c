@@ -7532,6 +7532,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
     u8 *slot;
     u8 *obj;
     u8 *swipe;
+    ObjWeaponDaTable *weaponDaTable;
     s16 *tbl;
     int count;
     int count2;
@@ -7559,7 +7560,8 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
         cosv = mathSinf(angle);
         sinv = mathCosf(angle);
         model2 = *(u8 **)((char *)Obj_GetActiveModel((int)obj) + 0x2c);
-        if (*(int **)(obj + 0x5c) != NULL && **(int **)(obj + 0x5c) > 0) {
+        weaponDaTable = ((GameObject *)obj)->anim.weaponDaTable;
+        if (weaponDaTable != NULL && weaponDaTable->byteCount > 0) {
             f32 sw;
             slot = *(u8 **)(swipe + 0x48);
             count = (int)(lbl_803E330C * *(f32 *)(model2 + 0x14));
@@ -7580,7 +7582,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
             if (tmax > prog) {
                 tmax = prog;
             }
-            tbl = *(s16 **)(*(int *)(obj + 0x5c) + 4);
+            tbl = weaponDaTable->entries;
             if (sw >= lbl_803E32B4) {
                 fla = fastFloorf(sw * lbl_803E32A4) / lbl_803E32A4;
                 fla = fla * lbl_803E330C;
