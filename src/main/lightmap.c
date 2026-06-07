@@ -2817,6 +2817,9 @@ extern void objRender(int a, int b, int c, int d, void *obj, int f);
 
 #pragma scheduling off
 #pragma peephole off
+typedef struct { u32 a, b, c, d; } LightmapQEnt;
+typedef struct { u8 pad[0x4114]; u32 deferred[20]; } LightmapDrawQueue;
+
 void renderObjects(s8 *arg0) {
     int i;
     int idx;
@@ -2826,32 +2829,35 @@ void renderObjects(s8 *arg0) {
     int *p;
     int slot;
     int *objects;
+    u32 *keys;
+    LightmapDrawQueue *qbase;
 
+    qbase = (LightmapDrawQueue *)lbl_8037E0C0;
     objects = (int *)ObjList_GetObjects((int *)0, (int *)0);
+    keys = (u32 *)((u8 *)qbase + 0x8818);
     for (i = 1; i < (int)gVisibleObjectSortKeyCount; i++) {
-        idx = gVisibleObjectSortKeys[i] & 0x3ff;
+        idx = keys[i] & 0x3ff;
         obj = (u8 *)objects[idx];
-        state = (void *)((GameObject *)obj)->anim.modelInstance;
-        flags = *(u32 *)(state + 0x44);
-        if ((flags & 0x800) != 0 || (state[0x5f] & 0x10) != 0) {
+        flags = *(u32 *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x44);
+        if ((flags & 0x800) != 0 || ((*(u8 **)((u8 *)obj + 0x50))[0x5f] & 0x10) != 0) {
             if (arg0[idx] != 0 && lbl_803DCDF0 < 0x14) {
                 slot = lbl_803DCDF0;
                 lbl_803DCDF0 = slot + 1;
-                lbl_8037E0C0[slot + 0x1045] = (u32)obj;
+                qbase->deferred[slot] = (u32)obj;
             }
         } else {
-            if ((flags & 0x100) == 0) {
+            if ((flags & 0x800000) == 0) {
                 (*(void (**)(int, int, int, int, void *))(*gModgfxInterface + 0x1c))(0, 0, 0, 1, obj);
             }
             objRender(0, 0, 0, 0, obj, 1);
             p = *(int **)(obj + 0x64);
-            if (p != NULL && p[3] != 0) {
+            if (p != NULL && *(void **)(p + 3) != NULL) {
                 renderShadowType3(obj, 0x13, 0);
-                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 2;
+                ((LightmapQEnt *)qbase)[lbl_803DCE30].d = 2;
                 lbl_803DCE30++;
-            } else if (*(s16 *)(state + 0x48) == 3 && (((GameObject *)obj)->anim.flags & 0x4000) == 0 && (p[12] & 0x4)) {
+            } else if (*(s16 *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x48) == 3 && (((GameObject *)obj)->anim.flags & 0x4000) == 0 && (p[12] & 0x4)) {
                 renderShadowType3(obj, 0x13, 0);
-                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 3;
+                ((LightmapQEnt *)qbase)[lbl_803DCE30].d = 3;
                 lbl_803DCE30++;
             }
         }
