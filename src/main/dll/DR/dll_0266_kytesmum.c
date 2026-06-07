@@ -169,7 +169,7 @@ int kytesmum_spawnInteractionCallback(int obj) {
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         buttonDisable(0, 0x100);
         if ((*(int (**)(void *))((char *)*gGameUIInterface + 0x1c))(*gGameUIInterface) == 0) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         }
         return 0;
     }
@@ -337,7 +337,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg) {
     }
     if (ObjTrigger_IsSet(obj) != 0) {
         ((GameObject *)obj)->animEventCallback = (void *)kytesmum_idleCallback;
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(next, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(next, (void *)obj, -1);
     }
     return 0;
 }

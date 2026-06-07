@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 /* typedefs (verbatim from placeholder_80295318) */
@@ -1040,7 +1041,7 @@ extern f32 lbl_803DAF88[];
 extern s16 lbl_80332F2C[];
 extern s16 lbl_80332F48[];
 extern int *gPlayerInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gGameUIInterface;
 extern f32 lbl_803E7F08;
 extern f32 lbl_803E7FD8;

@@ -32,7 +32,7 @@ void mcupgrade_update(int obj)
         *(u8 *)(obj + 0xaf) |= 8;
     } else if (ObjTrigger_IsSet(obj) != 0) {
         GameBit_Set(*(s16 *)(setup + 0x1e), 1);
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
     } else {
         objRenderFn_80041018(obj);
     }

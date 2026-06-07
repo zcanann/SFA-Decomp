@@ -3485,7 +3485,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             case 4:
                 obj2 = *(int *)((char *)inner + 0x7f0);
                 (**(void (**)(int, int))((char *)(*gCameraInterface) + 0x28))(obj2, 0);
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setCamVars(0x45, 0, 0, 0);
+                (*gObjectTriggerInterface)->setCamVars(0x45, 0, 0, 0);
                 *(int *)((char *)inner + 0x6e8) = 0;
                 if ((u32)obj2 != 0 && *(s16 *)(obj2 + 0x46) == 0x22) {
                     (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, (int)inner,
@@ -3515,7 +3515,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 break;
             }
             case 6:
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setCamVars(0x44, 0, 0, 0);
+                (*gObjectTriggerInterface)->setCamVars(0x44, 0, 0, 0);
                 (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, (int)inner,
                                                                                    0x17);
                 *(int *)((char *)inner + 0x304) = 0;
@@ -3556,7 +3556,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 f32 spd;
                 f32 dy2;
                 f32 sp3;
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setObjects(
+                (*gObjectTriggerInterface)->setObjects(
                     *(s16 *)(*(int *)&((GameObject *)obj)->unkC4 + 0x46), *(int *)&((GameObject *)obj)->unkC4,
                     0);
                 {
@@ -3572,7 +3572,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 }
                 sp3 = spd *
                       -mathCosf(lbl_803E7F94 * (f32)*(s16 *)(obj2 + 0x478) / lbl_803E7F98);
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setOverridePos(
+                (*gObjectTriggerInterface)->setOverridePos(
                     spd * -mathSinf(lbl_803E7F94 * (f32)*(s16 *)(obj2 + 0x478) /
                                        lbl_803E7F98),
                     dy2, sp3);
@@ -5594,7 +5594,7 @@ int fn_802A7160(int obj, int state)
 {
     if (GameBit_Get(0x970)) {
         GameBit_Set(0x970, 0);
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0x10, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0x10, (void *)obj, -1);
     }
     *(int *)((char *)state + 0x308) = (int)fn_802A514C;
     return 2;
@@ -8097,9 +8097,9 @@ void fn_802B249C(int obj, int inner, int state)
                         r = *(f32 *)(p + 8) / *(f32 *)(*(int *)(p + 0x50) + 4);
                     }
                     GameBit_Set(**(s16 **)((char *)inner + 0x8dc), 1);
-                    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setObjects(
+                    (*gObjectTriggerInterface)->setObjects(
                         *(s16 *)(p + 0x46), 0, 0);
-                    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj,
+                    (*gObjectTriggerInterface)->runSequence(0, (void *)obj,
                                                                                       -1);
                 }
             } else {
@@ -8110,9 +8110,9 @@ void fn_802B249C(int obj, int inner, int state)
                     *(f32 *)(p + 8) = *(f32 *)(p + 8) * k;
                     r = *(f32 *)(p + 8) / *(f32 *)(*(int *)(p + 0x50) + 4);
                 }
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setObjects(
+                (*gObjectTriggerInterface)->setObjects(
                     *(s16 *)(p + 0x46), 0, 0);
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj,
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj,
                                                                                   -1);
             }
             ((PlayerState *)inner)->unk684 = p;
@@ -10258,7 +10258,7 @@ int fn_802957B4(int obj)
         return 0;
     }
     (*(void (*)(int, int, int))(*(int *)(*gCameraInterface + 0x24)))(0, 1, 0);
-    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setCamVars(0x42, 4, 0, 0);
+    (*gObjectTriggerInterface)->setCamVars(0x42, 4, 0, 0);
 
     sub = inner->unk7F0;
     if (sub == 0) {
@@ -11148,10 +11148,10 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
     *(f32 *)((char *)state + 0x2c0) = (f32)(u32)*(u16 *)((char *)p + 0x22);
     mode = ((GameObject *)obj)->unkF8;
     if (mode == 2) {
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         ((GameObject *)obj)->unkF8 = 1;
     } else if (mode == 3) {
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
         ((GameObject *)obj)->unkF8 = 1;
     } else {
         characterDoEyeAnims(obj, inner + 0x3ac);

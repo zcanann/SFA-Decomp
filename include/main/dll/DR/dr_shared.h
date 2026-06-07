@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 typedef struct {
@@ -106,7 +107,7 @@ extern void modelLightStruct_setPosition(void *light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setAffectsAabbLightSelection(void *handle, int v);
 extern int *objFindTexture(int obj, int idx, int p3);
 extern void buttonDisable(int index, u32 flags);
-extern void **gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gHighTopStateHandlers[];
 extern void *gHighTopDefaultStateHandler;
 extern int hightop_stateHandler01();

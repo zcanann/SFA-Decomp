@@ -148,7 +148,7 @@ void drgenerator_update(int obj) {
         goto enable;
     }
     if (((GameObject *)obj)->anim.seqId != 0x72e) {
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(4, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(4, (void *)obj, -1);
     }
     ((BitFlags8 *)(p + 0x19b))->b3 = 1;
     ((BitFlags8 *)(p + 0x19b))->b0 = 0;
@@ -162,7 +162,7 @@ enable:
         goto loop;
     }
     if (((GameObject *)obj)->anim.seqId != 0x72e) {
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(3, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(3, (void *)obj, -1);
     }
     ((BitFlags8 *)(p + 0x19b))->b3 = 0;
     ObjHits_EnableObject(obj);

@@ -1774,7 +1774,7 @@ extern f32 lbl_803E5920;
 extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
-extern int* gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern EffectInterface **gExpgfxInterface;
@@ -2385,19 +2385,19 @@ void SB_KyteCage_update(int obj)
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
         if (GameBit_Get(0x92a) == 0) {
             buttonDisable(0, 0x100);
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(3, (void *)obj, -1);
+            (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
+            (*gObjectTriggerInterface)->runSequence(3, (void *)obj, -1);
             GameBit_Set(0x92a, 1);
             return;
         }
     }
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         buttonDisable(0, 0x100);
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
+        (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
         if (state->doorChoice != 0) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
         } else {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
             state->doorChoice = 1;
         }
     }
@@ -2546,8 +2546,7 @@ void SB_SeqDoor_update(int *obj)
     if (((GameObject *)obj)->anim.seqId == 371) {
         if (((GameObject *)obj)->unkF4 == 0) {
             if ((u32)GameBit_Get(2635) != 0u) {
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)
-                    ->runSequence(0, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 ((GameObject *)obj)->unkF4 = 1;
             }
         }
@@ -2586,7 +2585,7 @@ void SB_ShipGunBroke_update(int* obj)
 void ShipBattle_free(int* obj)
 {
     int* state = ((GameObject *)obj)->extra;
-    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->freeState((u8 *)state);
+    (*gObjectTriggerInterface)->freeState((u8 *)state);
     ((void(*)(int*, int, int, int, int))((void**)*gTitleMenuControlInterface)[2])(obj, 0xffff, 0, 0, 0);
     {
         int light = ((GameObject *)obj)->unkF8;
@@ -2615,8 +2614,7 @@ void ShipBattle_init(int obj, int def)
     chainIndex = ((GameObject *)obj)->unkF4;
     if (chainIndex == 0) {
         if (*(s16 *)(def + 0x18) != 1) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
-                ->loadAnimData((u8 *)state, (u8 *)def);
+            (*gObjectTriggerInterface)->loadAnimData((u8 *)state, (u8 *)def);
             ((GameObject *)obj)->unkF4 = *(s16 *)(def + 0x18) + 1;
             goto light_setup;
         }
@@ -2624,10 +2622,9 @@ void ShipBattle_init(int obj, int def)
 
     if (chainIndex != 0) {
         if (*(s16 *)(def + 0x18) != chainIndex - 1) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->freeState((u8 *)state);
+            (*gObjectTriggerInterface)->freeState((u8 *)state);
             if (*(s16 *)(def + 0x18) != -1) {
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)
-                    ->loadAnimData((u8 *)state, (u8 *)def);
+                (*gObjectTriggerInterface)->loadAnimData((u8 *)state, (u8 *)def);
             }
             ((GameObject *)obj)->unkF4 = *(s16 *)(def + 0x18) + 1;
         }
@@ -2676,8 +2673,7 @@ void ShipBattle_update(int obj)
         return;
     }
 
-    triggerResult = (*(int (**)(int, f32))(*(int *)gObjectTriggerInterface + 0x14))(
-        obj, (f32)lbl_803DB411);
+    triggerResult = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)lbl_803DB411);
     if (triggerResult == 0 || ((GameObject *)obj)->unkB4 != -2) {
         return;
     }
@@ -2701,7 +2697,7 @@ void ShipBattle_update(int obj)
 
     if (sameGroupCount <= 1 && linkedObject != 0 && *(s16 *)(linkedObject + 0xb4) != -1) {
         *(s16 *)(linkedObject + 0xb4) = -1;
-        (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x4c))(groupId);
+        (*gObjectTriggerInterface)->endSequence(groupId);
     }
     ((GameObject *)obj)->unkB4 = -1;
     Obj_FreeObject(obj);
@@ -2784,7 +2780,7 @@ void shop_func0B(int* obj, int v, int p3)
     s8* state = ((GameObject *)obj)->extra;
     state[0] = (s8)v;
     if (v != 0) {
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(p3, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(p3, obj, -1);
     }
 }
 #pragma peephole reset

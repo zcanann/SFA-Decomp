@@ -6,6 +6,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objHitReact.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 /* Pattern wrappers. */
@@ -46,7 +47,7 @@ extern f32 lbl_803E6E24;
 extern f32 timeDelta;
 extern int *gMapEventInterface;
 extern EffectInterface **gPartfxInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int isGameTimerDisabled(void);
 extern void GameBit_Set(int id, int value);
 extern int randomGetRange(int min, int max);

@@ -73,7 +73,7 @@ int DIMSnowHorn1_stateHandler04(int obj, int state)
         return -2;
     }
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+        (*gObjectTriggerInterface)->runSequence(
             randomGetRange(0, 2) + 6, (void *)obj, -1);
         buttonDisable(0, 0x100);
     }
@@ -141,7 +141,7 @@ int DIMSnowHorn1_stateHandler02(int obj, int state, f32 fv)
         return -4;
     }
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+        (*gObjectTriggerInterface)->runSequence(
             randomGetRange(0, 2) + 6, (void *)obj, -1);
         buttonDisable(0, 0x100);
     }
@@ -176,10 +176,10 @@ int DIMSnowHorn1_stateHandler03(int obj, int state)
     }
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
         if (inner->unkA8E & 0x20) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+            (*gObjectTriggerInterface)->runSequence(
                 randomGetRange(0, 2) + 6, (void *)obj, -1);
         } else {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+            (*gObjectTriggerInterface)->runSequence(
                 5, (void *)obj, -1);
         }
         buttonDisable(0, 0x100);
@@ -220,10 +220,10 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
     }
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
         if (inner->unkA8E & 0x20) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+            (*gObjectTriggerInterface)->runSequence(
                 randomGetRange(0, 2) + 6, (void *)obj, -1);
         } else {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+            (*gObjectTriggerInterface)->runSequence(
                 5, (void *)obj, -1);
         }
         buttonDisable(0, 0x100);
@@ -482,7 +482,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
                 inner->unkA8D = 4;
                 GameBit_Set(0x16f, 1);
             }
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+            (*gObjectTriggerInterface)->runSequence(
                 inner->unkA8D, (void *)obj, -1);
             GameBit_Set(0x170, GameBit_Get(0x170) - bit170);
             buttonDisable(0, 0x100);
@@ -493,7 +493,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
                 } else {
                     inner->unkA8D = 1;
                 }
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+                (*gObjectTriggerInterface)->runSequence(
                     inner->unkA8D, (void *)obj, -1);
                 buttonDisable(0, 0x100);
             }
@@ -567,7 +567,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
             GameBit_Set(0x1db, 1);
             break;
         }
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+        (*gObjectTriggerInterface)->runSequence(
             inner->unkA8D, (void *)obj, -1);
         buttonDisable(0, 0x100);
     } else {

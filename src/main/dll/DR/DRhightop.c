@@ -87,7 +87,7 @@ extern f32 lbl_803E5B8C;
 extern f32 lbl_803DC0D8;
 extern f32 lbl_803E5BA0;
 extern void **gGameUIInterface;
-extern void **gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void PSVECScale(f32 *dst, f32 *src, f32 s);
 extern void Sfx_KeepAliveLoopedObjectSound(uint obj, int sfxId);
 extern void Sfx_StopObjectChannel(uint obj, int channel);
@@ -313,7 +313,7 @@ void fn_801EB0D4(uint param_1,int param_2)
       }
       else {
         (*(void (**)(void))((char *)*gGameUIInterface + 0x60))();
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
         fVar2 = lbl_803E5B8C;
         st->unk464 = lbl_803E5B8C;
         st->unk468 = fVar2;

@@ -102,7 +102,7 @@ int drcloudper_setScale(int obj)
     }
     GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
     ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
-    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
+    (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
     return 1;
 }
 #pragma scheduling reset
@@ -116,7 +116,7 @@ int drcloudper_selectActiveCloud(int obj)
     DrCloudPerSetup *setup = (DrCloudPerSetup *)cloud->setup;
 
     GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
-    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
+    (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
     return 0;
 }
 #pragma scheduling reset

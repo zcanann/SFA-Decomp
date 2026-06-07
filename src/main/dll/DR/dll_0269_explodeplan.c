@@ -54,14 +54,14 @@ void explodeplan_update(int obj) {
     }
     if (((BitFlags8 *)(p + 0x4))->b2 != 0) {
         ((BitFlags8 *)(p + 0x4))->b1 = 1;
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->preempt(obj, 0x76c);
+        (*gObjectTriggerInterface)->preempt(obj, 0x76c);
         if (GameBit_Get(0x9f3) != 0) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(*(int *)p, (void *)obj, 0x60);
+            (*gObjectTriggerInterface)->runSequence(*(int *)p, (void *)obj, 0x60);
         } else {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(*(int *)p, (void *)obj, 0x70);
+            (*gObjectTriggerInterface)->runSequence(*(int *)p, (void *)obj, 0x70);
         }
     } else {
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(*(int *)p, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(*(int *)p, (void *)obj, -1);
     }
 }
 #pragma peephole reset

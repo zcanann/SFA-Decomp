@@ -32,7 +32,7 @@ extern void sc_musictree_handleHitObject(int obj, int inner, int effectType);
 
 extern void objRenderFn_8003b8f4(f32);
 
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gTitleMenuControlInterface;
 
 extern f32 timeDelta;
@@ -395,7 +395,7 @@ int sc_cloudrunnera_getObjectTypeId(void) { return 0xb; }
 void sc_cloudrunnera_free(int *obj)
 {
     void *inner = ((GameObject *)obj)->extra;
-    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->freeState(inner);
+    (*gObjectTriggerInterface)->freeState(inner);
     ((void (*)(int *, int, int, int, int))(*(int *)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
 }
 #pragma peephole reset
@@ -450,7 +450,7 @@ void sc_cloudrunnera_update(int obj)
         }
         if (matchCount <= 1 && (u32)found != 0 && *(s16 *)(found + 0xb4) != -1) {
             *(s16 *)(found + 0xb4) = -1;
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->endSequence(markCopy);
+            (*gObjectTriggerInterface)->endSequence(markCopy);
         }
         ((GameObject *)obj)->unkB4 = -1;
     }
@@ -535,7 +535,7 @@ void sc_cloudrunnera_init(int obj, int p2)
             ->loadAnimData((u8 *)inner, (u8 *)p2);
         *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
     } else if (*(int *)(obj + 0xf4) != 0 && *(s16 *)(p2 + 0x18) != *(int *)(obj + 0xf4) - 1) {
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->freeState((u8 *)inner);
+        (*gObjectTriggerInterface)->freeState((u8 *)inner);
         if (*(s16 *)(p2 + 0x18) != -1) {
             ((ObjectTriggerInterface *)*gObjectTriggerInterface)
                 ->loadAnimData((u8 *)inner, (u8 *)p2);

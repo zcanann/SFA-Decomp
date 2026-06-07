@@ -2378,7 +2378,7 @@ int fn_8014C11C(short *obj, f32 radius, u8 flags, int max, TrickyTargetRec *out)
 #pragma scheduling reset
 
 extern int *getTrickyObject(void);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void fn_80026C30(int *obj, int flag);
 extern void baddieInstantiateWeapon(int *node, int *sub);
 extern void fn_8014BC98(int *node, int *sub);
@@ -2422,7 +2422,7 @@ int enemy_animEventCallback(int *node, int p2, u8 *cmds)
                 *(u16 *)(sub + 0x2b6) = 0x33;
             break;
         case 3:
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setCamVars(0x49, 4, (int)node, 0x3c);
+            (*gObjectTriggerInterface)->setCamVars(0x49, 4, (int)node, 0x3c);
             break;
         case 6:
             if (*(int **)&((TrickyState *)sub)->unk36C != NULL)

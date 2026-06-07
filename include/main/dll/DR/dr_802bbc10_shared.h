@@ -5,6 +5,7 @@
 #include "main/effect_interfaces.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 
@@ -396,7 +397,7 @@ extern f32 lbl_803DC758;
 extern s16 lbl_803DC754;
 extern int randomGetRange(int lo, int hi);
 extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void buttonDisable(int a, int b);
 extern void Sfx_PlayFromObject(int obj, int id);
 extern f32 lbl_803E83F4;
@@ -433,7 +434,7 @@ extern void textureFree(int handle);
 extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
 extern void *gDIMSnowHorn1Texture;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gRomCurveInterface;
 extern f32 lbl_803E8410;
 extern int *gPlayerInterface;

@@ -141,7 +141,7 @@ void wcbeacon_update(int obj)
                                              WCBEACON_PARTFX_KIND, WCBEACON_TRIGGER_NO_ARG, NULL);
         }
         if (((GameObject *)obj)->unkF4 == 0) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->preempt(obj, WCBEACON_FINAL_TRIGGER_ID);
+            (*gObjectTriggerInterface)->preempt(obj, WCBEACON_FINAL_TRIGGER_ID);
             ((ObjectTriggerInterface *)*gObjectTriggerInterface)
                 ->runSequence(WCBEACON_TRIGGER_ARM_SLOT, (void *)obj, WCBEACON_TRIGGER_ACCEPT_ARG);
         }

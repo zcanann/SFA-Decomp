@@ -1499,7 +1499,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 #pragma scheduling reset
 
 extern int *gCameraInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern CloudActionInterface **gCloudActionInterface;
 extern int *gGameUIInterface;
 extern int *gPlayerShadowInterface;
@@ -1723,10 +1723,10 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         }
                         break;
                     case 1:
-                        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setFlag(p[3], 1);
+                        (*gObjectTriggerInterface)->setFlag(p[3], 1);
                         break;
                     case 2:
-                        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setFlag(p[3], 0);
+                        (*gObjectTriggerInterface)->setFlag(p[3], 0);
                         break;
                     }
                     break;

@@ -688,10 +688,10 @@ void wcpushblock_updateLevelControlState(int obj, int state)
             GameBit_Set(0xba6, 0);
             GameBit_Set(0xedd, 0);
             if ((u32)GameBit_Get(0x7fa) != 0) {
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 *(u8 *)(state + 0xc) = 3;
             } else {
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 *(u8 *)(state + 0xc) = 0;
             }
             *(u16 *)(state + 0x1a) |= 0x2;
@@ -719,10 +719,10 @@ void wcpushblock_updateLevelControlState(int obj, int state)
             GameBit_Set(0xba6, 0);
             GameBit_Set(0xedc, 0);
             if ((u32)GameBit_Get(0x7f9) != 0) {
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 *(u8 *)(state + 0xc) = 3;
             } else {
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 *(u8 *)(state + 0xc) = 0;
             }
             *(u16 *)(state + 0x1a) |= 0x2;

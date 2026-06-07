@@ -62,7 +62,7 @@ void drearthcal_update(int obj)
             setAButtonIcon(0x15);
         }
         if (ObjTrigger_IsSet(obj) != 0) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
         }
     } else {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
@@ -80,7 +80,7 @@ void drearthcal_update(int obj)
             setAButtonIcon(0x14);
         }
         if (ObjTrigger_IsSet(obj) != 0) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
         }
     }
     if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {

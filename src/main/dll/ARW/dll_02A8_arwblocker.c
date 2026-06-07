@@ -100,11 +100,11 @@ void arwblocker_update(int obj) {
         if (((GameObject *)obj)->unkF4 == 0) {
             switch (*(u8 *)(state + 0)) {
             case 1:
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 break;
             case 0:
             default:
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 break;
             }
             ((GameObject *)obj)->unkF4 = 1;

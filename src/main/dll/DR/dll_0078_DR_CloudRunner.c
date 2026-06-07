@@ -348,7 +348,7 @@ void DR_CloudRunner_func17(int obj, int param)
         inner->unk464 = 0;
         t = ((GameObject *)obj)->unkB4;
         if (t != -1) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->endSequence(t);
+            (*gObjectTriggerInterface)->endSequence(t);
         }
     } else {
         inner->unk464 = 1;
@@ -946,7 +946,7 @@ void DR_CloudRunner_hitDetect(int obj)
         inner->unkBB0 -= 1;
         if (inner->unkBB0 <= 0) {
             (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(5, (void *)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(5, (void *)obj, -1);
             inner->unkBB0 = 1;
             (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, (int)inner, 7);
         }
@@ -1052,7 +1052,7 @@ void DR_CloudRunner_update(int obj)
                     vec[2] = lbl_803E8420;
                     (*(void (*)(f32 *, int, int, int))(*(int *)(*gMapEventInterface + 0x24)))(vec, 0, 0, 0);
                 }
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(4, (void *)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(4, (void *)obj, -1);
                 inner->unkB04 = 0;
                 inner->unkBB6 |= 4;
                 inner->unkAD5 |= 1;
@@ -1062,7 +1062,7 @@ void DR_CloudRunner_update(int obj)
                 {
                     s8 t = inner->unkBC4;
                     if (t != -1) {
-                        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(t, (void *)obj, -1);
+                        (*gObjectTriggerInterface)->runSequence(t, (void *)obj, -1);
                     }
                 }
             }

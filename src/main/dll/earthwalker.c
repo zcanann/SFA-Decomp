@@ -262,7 +262,7 @@ void earthwalker_update(int obj)
             }
             if (newState != -1) {
                 buttonDisable(0, 0x100);
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+                (*gObjectTriggerInterface)->runSequence(
                     newState, (void *)obj, -1);
                 ewState->lastTriggeredState = newState;
             }

@@ -48,7 +48,7 @@ extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern u8 lbl_803DBF68;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gModgfxInterface;
 extern ExpgfxInterface **gExpgfxInterface;
 extern EffectInterface **gPartfxInterface;
@@ -200,7 +200,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
             Sfx_PlayFromObject((int)obj, 0x1d4);
             state->flags.finished = 0;
             state->flags.active = 1;
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->yield(seq, 0xbd);
+            (*gObjectTriggerInterface)->yield(seq, 0xbd);
         }
         if ((getButtonsJustPressedIfNotBusy(0) & 0x100) != 0) {
             state->spinSpeed = state->spinSpeed + lbl_803E50E4;
@@ -216,7 +216,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
             state->flags.finished = 1;
             state->flags.active = 1;
             state->spinProgress = 0x7ef4;
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->yield(seq, 0xbd);
+            (*gObjectTriggerInterface)->yield(seq, 0xbd);
             return 0;
         }
         (*(void (**)(int))(*gObjectTriggerInterface + 0x74))(state->triggerHandle);
@@ -359,7 +359,7 @@ void dbsh_symbol_update(int obj)
     else if (phase == 2) {
       state->phase = 3;
       state->triggerHandle =
-          ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+          (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
     }
     else if (phase == 1) {
       if (lbl_803DBF68 != '\0') {

@@ -97,7 +97,7 @@ void barrelgener_update(int obj)
 
     if ((u32)GameBit_Get(0xadb) == 0) {
         if (Vec_distance(obj + 24, player + 24) < lbl_803E6C24) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
             GameBit_Set(0xadb, 1);
         }
     }

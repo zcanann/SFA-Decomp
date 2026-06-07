@@ -128,7 +128,7 @@ checkValue:
         found = 0;
     checkFound:
         if (found != 0) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
             buttonDisable(0, 256);
         }
     }

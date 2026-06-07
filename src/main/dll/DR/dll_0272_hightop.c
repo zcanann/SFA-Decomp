@@ -493,7 +493,7 @@ int hightop_handleMotionEvent(int obj, u8 event) {
         break;
     case 6:
         GameBit_Set(0x634, 1);
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(4, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(4, (void *)obj, -1);
         break;
     case 7:
         GameBit_Set(0x634, 0);
@@ -504,7 +504,7 @@ int hightop_handleMotionEvent(int obj, u8 event) {
         (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)runtime, 7);
         break;
     case 8:
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(7, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(7, (void *)obj, -1);
         break;
     case 9:
         (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)runtime, 7);

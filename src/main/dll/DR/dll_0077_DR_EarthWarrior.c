@@ -1155,14 +1155,14 @@ void DR_EarthWarrior_update(int obj)
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
         ((ByteFlags *)&inner->sub.flags994)->b10 = 1;
         if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0xc1) != 0) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
             buttonDisable(0, 0x100);
             inner->sub.health += 4;
             GameBit_Set(0xc1, GameBit_Get(0xc1) - 1);
         } else if (inner->sub.unk99C != -1) {
             if ((*(int (*)(void))(*(int *)(*gGameUIInterface + 0x1c)))() == 0) {
                 if (((ByteFlags *)&inner->sub.flags994)->b08 == 0) {
-                    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+                    (*gObjectTriggerInterface)->runSequence(
                         inner->sub.unk99C, (void *)obj, -1);
                     buttonDisable(0, 0x100);
                 } else {
