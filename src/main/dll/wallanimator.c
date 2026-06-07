@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/wallanimator.h"
@@ -635,12 +636,12 @@ void kaldachompspit_update(int obj)
             if (((GameObject *)obj)->anim.seqId == 0x869) {
                 fn_80098B18(obj, lbl_803E30E0, 1, 0, 0, 0);
             } else {
-                (**(void (**)(int, int, int, int, int, void *))(*gPartfxInterface + 0x8))(
-                    obj, 0x714, 0, 2, -1, &objAnim->alpha);
-                (**(void (**)(int, int, int, int, int, void *))(*gPartfxInterface + 0x8))(
-                    obj, 0x715, 0, 1, -1, 0);
-                (**(void (**)(int, int, int, int, int, void *))(*gPartfxInterface + 0x8))(
-                    obj, 0x715, 0, 1, -1, 0);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x714, NULL,
+                                                                    2, -1, &objAnim->alpha);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL,
+                                                                    1, -1, NULL);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL,
+                                                                    1, -1, NULL);
             }
             ptr = *state;
             if ((ptr != 0) && (*(u8 *)(ptr + 0x2f8) != 0) && (*(u8 *)(ptr + 0x4c) != 0)) {
@@ -691,8 +692,8 @@ void kaldachompspit_burst(int obj)
         spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
     } else {
         for (i = 0; i < 0x19; i++) {
-            (**(void (**)(int, int, int, int, int, int *))(*gPartfxInterface + 0x8))(
-                obj, 0x715, 0, 1, -1, &i);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1,
+                                                                -1, &i);
         }
         Sfx_PlayFromObject(obj, 0x279);
     }

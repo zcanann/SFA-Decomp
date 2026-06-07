@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/dll/dim_bossgut.h"
@@ -331,8 +332,7 @@ int bombplant_SeqFn(int *obj)
             *(f32 *)((char *)state + 0x0) = (f32)v;
         }
         if (((GameObject *)obj)->objectFlags & 0x800) {
-            (*(void (**)(int *, int, int, int, int, int))(*(int *)gPartfxInterface + 0x8))(
-                obj, 0x7f1, 0, 2, -1, 0);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);
         }
     }
     return 0;
@@ -436,8 +436,8 @@ void enemymushroom_update(int *obj)
             u8 k = 1;
             int base = 0x200000;
             while (k != 0) {
-                (*(void (**)(int *, int, MushHitInfo *, int, int, int))(*(int *)gPartfxInterface + 0x8))(
-                    obj, 0x3eb, &hv, base + 1, -1, 0);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x3eb, &hv, base + 1,
+                                                                    -1, NULL);
                 k--;
             }
         }
@@ -491,8 +491,8 @@ void enemymushroom_update(int *obj)
             u8 k = 1;
             int base = 0x200000;
             while (k != 0) {
-                (*(void (**)(int *, int, MushHitInfo *, int, int, int))(*(int *)gPartfxInterface + 0x8))(
-                    obj, 0x3eb, &hv, base + 1, -1, 0);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x3eb, &hv, base + 1,
+                                                                    -1, NULL);
                 k--;
             }
         }
@@ -543,8 +543,8 @@ void enemymushroom_update(int *obj)
                 if (nw <= lbl_803E52FC) {
                     hv.x = lbl_803E532C;
                     hv.y = lbl_803E5330;
-                    (*(void (**)(int *, int, MushHitInfo *, int, int, int))(*(int *)gPartfxInterface + 0x8))(
-                        obj, 0x51d, &hv, 2, -1, 0);
+                    ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x51d, &hv, 2, -1,
+                                                                        NULL);
                     *(f32 *)(state + 0x30) = lbl_803E5334;
                 }
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);

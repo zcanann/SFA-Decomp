@@ -1,5 +1,6 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/baddie_state.h"
@@ -68,9 +69,6 @@ extern f32 lbl_803E2FFC;
 extern f32 lbl_803E3000;
 
 extern f32 sqrtf(f32 x);
-
-typedef void (*ExpgfxSpawnObjectFn)(int obj, int objectId, void *params, int mode,
-                                    int preferredPoolIdx, void *outObj);
 
 /*
  * --INFO--
@@ -334,18 +332,18 @@ void tumbleweed_updateEffects(int obj) {
         case TUMBLEWEED_TYPE_4:
             i = TUMBLEWEED_EFFECT_SPAWN_COUNT;
             do {
-                ((ExpgfxSpawnObjectFn)(*(u32 *)(*(int *)gPartfxInterface + 0x8)))
-                    (obj, TUMBLEWEED_EFFECT_BURST_SPECIAL, 0,
-                     TUMBLEWEED_EXPGFX_MODE_ACTIVE, -1, 0);
+                (*(EffectInterface **)gPartfxInterface)->spawnObject(
+                    (void *)obj, TUMBLEWEED_EFFECT_BURST_SPECIAL, NULL,
+                    TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
                 i = i - 1;
             } while (i != 0);
             break;
         default:
             i = TUMBLEWEED_EFFECT_SPAWN_COUNT;
             do {
-                ((ExpgfxSpawnObjectFn)(*(u32 *)(*(int *)gPartfxInterface + 0x8)))
-                    (obj, TUMBLEWEED_EFFECT_BURST_DEFAULT, 0,
-                     TUMBLEWEED_EXPGFX_MODE_ACTIVE, -1, 0);
+                (*(EffectInterface **)gPartfxInterface)->spawnObject(
+                    (void *)obj, TUMBLEWEED_EFFECT_BURST_DEFAULT, NULL,
+                    TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
                 i = i - 1;
             } while (i != 0);
             break;
@@ -359,12 +357,14 @@ void tumbleweed_updateEffects(int obj) {
         case TUMBLEWEED_TYPE_3:
         case TUMBLEWEED_TYPE_1:
         case TUMBLEWEED_TYPE_4:
-            ((ExpgfxSpawnObjectFn)(*(u32 *)(*(int *)gPartfxInterface + 0x8)))
-                (obj, TUMBLEWEED_EFFECT_PUFF_SPECIAL, 0, TUMBLEWEED_EXPGFX_MODE_ACTIVE, -1, 0);
+            (*(EffectInterface **)gPartfxInterface)->spawnObject(
+                (void *)obj, TUMBLEWEED_EFFECT_PUFF_SPECIAL, NULL,
+                TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
             break;
         default:
-            ((ExpgfxSpawnObjectFn)(*(u32 *)(*(int *)gPartfxInterface + 0x8)))
-                (obj, TUMBLEWEED_EFFECT_PUFF_DEFAULT, 0, TUMBLEWEED_EXPGFX_MODE_ACTIVE, -1, 0);
+            (*(EffectInterface **)gPartfxInterface)->spawnObject(
+                (void *)obj, TUMBLEWEED_EFFECT_PUFF_DEFAULT, NULL,
+                TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
             break;
         }
         state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_PUFF);
