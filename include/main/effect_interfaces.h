@@ -34,6 +34,15 @@ typedef struct ExpgfxInterface {
 STATIC_ASSERT(offsetof(ExpgfxInterface, spawnEffect) == 0x08);
 STATIC_ASSERT(offsetof(ExpgfxInterface, freeSource) == 0x14);
 
+typedef void (*ModgfxDetachSourceFn)(void *sourceObject);
+
+typedef struct ModgfxInterface {
+  u8 pad00[0x18];
+  ModgfxDetachSourceFn detachSource;
+} ModgfxInterface;
+
+STATIC_ASSERT(offsetof(ModgfxInterface, detachSource) == 0x18);
+
 typedef void (*WaterfxSpawnRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags);
 typedef void (*WaterfxSpawnSurfaceRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags,
                                             int count);

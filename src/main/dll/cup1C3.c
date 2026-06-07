@@ -653,7 +653,7 @@ void dll_197_update(int obj)
         state->sparkTimer = 1;
     } else {
         Sfx_StopObjectChannel(obj, 0x7f);
-        (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x18)))(obj);
+        ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)obj);
         (*gExpgfxInterface)->freeSource(obj);
         if (state->gameBit != -1 && GameBit_Get(state->gameBit) != 0) {
             GameBit_Set(state->gameBit, 0);
@@ -772,7 +772,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_197_free(int obj)
 {
-    (*(void (**)(int))(*(int *)gModgfxInterface + 0x18))(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)obj);
     ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 

@@ -34,7 +34,7 @@ extern f32 lbl_803E51DC;
 #pragma scheduling off
 void dll_19E_free(int param_1)
 {
-  (*(code *)(*(int *)gModgfxInterface + 0x18))(param_1);
+  ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)param_1);
   ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)param_1);
 }
 #pragma scheduling reset

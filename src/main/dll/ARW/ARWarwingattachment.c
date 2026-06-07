@@ -426,7 +426,7 @@ void LaserBeam_update(int param_1)
                 }
                 b->unk28 = (s16)(int)((lbl_803E5D30 - a) * lbl_803E5D34);
                 if (!(lat < lbl_803E5D38 && lat > lbl_803E5D3C) && b->unk4C == 1) {
-                    (*(void (**)(int))(*gModgfxInterface + 0x18))(param_1);
+                    ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)param_1);
                     b->unk4C = 0;
                 }
                 if (lat < range && lat > -range) {
@@ -471,7 +471,7 @@ void LaserBeam_update(int param_1)
             (*(void (**)(void *))(*gModgfxInterface + 0x20))(&b->emitterSlot);
         }
         if (b->unk4C == 1) {
-            (*(void (**)(int))(*gModgfxInterface + 0x18))(param_1);
+            ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)param_1);
             b->unk4C = 0;
         }
     }
@@ -2227,7 +2227,7 @@ void wmtorch_free(int obj, int mode) {
     if (mode == 0 && ((WmTorchState *)state)->linkedObj != 0) {
         Obj_FreeObject(((WmTorchState *)state)->linkedObj);
     }
-    (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x18)))(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)obj);
     (*gExpgfxInterface)->freeSource(obj);
 }
 #pragma peephole reset

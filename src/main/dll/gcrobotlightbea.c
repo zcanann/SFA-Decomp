@@ -1,4 +1,5 @@
 #include "main/dll/gcrobotlightbea.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/resource.h"
 
@@ -499,7 +500,7 @@ extern void ObjGroup_RemoveObject(int obj, int flag);
 #pragma scheduling off
 void smallbasket_free(int param_1)
 {
-  (*(code *)(*(int *)gModgfxInterface + 0x18))(param_1);
+  ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)param_1);
   Resource_Release(lbl_803DDAC0);
   ObjGroup_RemoveObject(param_1, 0x10);
 }

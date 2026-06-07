@@ -2423,7 +2423,7 @@ void SB_KyteCage_update(int obj)
 void SB_MiniFire_free(int* obj)
 {
     (*gExpgfxInterface)->freeObject(obj);
-    ((void(*)(int*))((void**)*gModgfxInterface)[6])(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset

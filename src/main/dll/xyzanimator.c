@@ -1226,7 +1226,7 @@ void mikabomb_free(int obj, int mode) {
         Obj_FreeObject(inner[0]);
         inner[0] = NULL;
     }
-    (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x18)))(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)obj);
 }
 #pragma peephole reset
 #pragma scheduling reset

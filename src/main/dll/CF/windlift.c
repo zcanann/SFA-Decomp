@@ -1843,7 +1843,7 @@ extern void *lbl_803DDAD4;
 #pragma scheduling off
 #pragma peephole off
 void fn_801859D4(int *obj) {
-    ((void (*)(int *))((void **)*gModgfxInterface)[6])(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj);
     Resource_Release(lbl_803DDAD0);
     lbl_803DDAD0 = NULL;
     Resource_Release(lbl_803DDAD4);

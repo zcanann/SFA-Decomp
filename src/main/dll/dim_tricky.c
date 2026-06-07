@@ -142,7 +142,7 @@ void dll_19E_update(void *obj)
         state->delayTimer = 1;
       } else {
         Sfx_StopObjectChannel(obj, 0x40);
-        (*(void (*)(void *))(*(int *)(*gModgfxInterface + 0x18)))(obj);
+        ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj);
         (*gExpgfxInterface)->freeSource((u32)obj);
         if ((state->gameBitId != -1) && (GameBit_Get(state->gameBitId) != 0)) {
           GameBit_Set(state->gameBitId, 0);

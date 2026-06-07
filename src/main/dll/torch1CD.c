@@ -1,5 +1,6 @@
 #include "main/dll/torch1CD.h"
 #include "main/dll/torch1cd_state.h"
+#include "main/effect_interfaces.h"
 
 extern void getEnvfxAct(int obj, int target, int id, int p);
 extern void GameBit_Set(int eventId, int value);
@@ -118,7 +119,7 @@ extern undefined4 *gModgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void dll_19B_free(int *obj) {
-    ((void (*)(int *))((void **)*gModgfxInterface)[6])(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -167,7 +167,7 @@ typedef struct DFSHLaserBeamObject {
 #define DFSH_LASER_RANGE_VALUE(runtime) (*(f32 *)((u8 *)(runtime) + 0x18))
 #define DFSH_LASER_FLAGS(runtime) (*(s32 *)((u8 *)(runtime) + 0x18))
 
-#define MODGFX_DETACH(obj) ((void (*)(void *))(*(int *)((u8 *)*gModgfxInterface + 0x18)))(obj)
+#define MODGFX_DETACH(obj) ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj)
 #define PARTFX_SPAWN(obj,id,a,b,c,d) \
   (*gPartfxInterface)->spawnObject((obj),(id),(void *)(a),(b),(c),(void *)(d))
 #define RESOURCE_SPAWN(obj,id,a,flags,owner,unk) \

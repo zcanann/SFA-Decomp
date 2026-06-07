@@ -4548,7 +4548,7 @@ void dbegg_init(int obj) {
 
 extern int *gModgfxInterface;
 void DFP_Torch_free(int obj) {
-    (*(void (**)(int))(*(int *)gModgfxInterface + 0x18))(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)obj);
     (*gExpgfxInterface)->freeObject((void *)obj);
 }
 
@@ -7112,7 +7112,7 @@ void DFP_Torch_update(int obj)
                 blob->flickerTimer = 1;
             } else {
                 Sfx_StopObjectChannel(obj, 0x40);
-                (**(void (**)(int))((char *)*gModgfxInterface + 0x18))(obj);
+                ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)obj);
                 ((ExpgfxInterface *)*gExpgfxInterface)->freeSource(obj);
                 if (blob->gameBit != -1) {
                     if (GameBit_Get(blob->gameBit) != 0) {

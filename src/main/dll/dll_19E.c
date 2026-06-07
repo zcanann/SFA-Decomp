@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/dll_19E.h"
 #include "main/resource.h"
@@ -142,7 +143,7 @@ extern void textureFree(void *tex);
 #pragma peephole off
 void DFSH_LaserBeam_init(int *obj) {
     int *state = ((GameObject *)obj)->extra;
-    ((void (*)(int *))((void **)*gModgfxInterface)[6])(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj);
     Resource_Release(lbl_803DDBB8);
     lbl_803DDBB8 = NULL;
     if (*(void **)state != NULL) {

@@ -1,5 +1,6 @@
 #include "main/dll/WC/WClaser.h"
 #include "main/dll/WC/WCpressureSwitch.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -394,7 +395,7 @@ void LaserBeam_init(int *obj)
     void **state;
 
     state = (void **)OBJ_PTR(obj, 0xb8);
-    ((void (*)(int *))(*(u32 *)((u8 *)*gModgfxInterface + 0x18)))(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj);
     if (state[0] != 0) {
         textureFree(state[0]);
         state[0] = 0;

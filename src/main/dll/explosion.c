@@ -1,4 +1,5 @@
 #include "main/dll/explosion.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
@@ -487,7 +488,7 @@ extern void *gTitleMenuControlInterface;
 #pragma scheduling off
 #pragma peephole off
 void dll_199_free(int *obj) {
-    ((void(*)(int*))((void**)*(void**)gModgfxInterface)[6])(obj);
+    ((ModgfxInterface *)*(void **)gModgfxInterface)->detachSource(obj);
     ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
     ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
 }

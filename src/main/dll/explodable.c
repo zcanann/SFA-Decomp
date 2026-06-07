@@ -1,4 +1,5 @@
 #include "main/dll/explodable.h"
+#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/explodable_state.h"
@@ -474,7 +475,7 @@ void largecrate_update(int obj)
 
 extern int *gModgfxInterface;
 void largecrate_free(int obj) {
-    ((void (*)(int))((void**)*gModgfxInterface)[6])(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)obj);
     Resource_Release(lbl_803DDAC8);
 }
 

@@ -4477,7 +4477,7 @@ extern void *lbl_803DDAB4;
 #pragma scheduling off
 void dll_F7_free(int obj)
 {
-    (*(void (***)(int))gModgfxInterface)[6](obj);
+    ((ModgfxInterface *)*(void **)gModgfxInterface)->detachSource((void *)obj);
     Resource_Release(lbl_803DDAB0);
     Resource_Release(lbl_803DDAB4);
     lbl_803DDAB0 = NULL;
