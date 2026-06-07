@@ -3220,14 +3220,9 @@ void ObjSeq_seqState_init(u8 *seq)
     animIndex = 0;
     while (animIndex < ((ObjSeqState *)seq)->animCount) {
         runLength = 0;
-        animCount = ((ObjSeqState *)seq)->animCount;
-        while (animIndex + runLength < animCount) {
-            animEntry = ((ObjSeqState *)seq)->animEntries + (animIndex + runLength) * 8;
-            if (track == ((s8)animEntry[5] & 0x1f)) {
-                runLength++;
-            } else {
-                break;
-            }
+        while (animIndex + runLength < ((ObjSeqState *)seq)->animCount &&
+               track == ((s8)(((ObjSeqState *)seq)->animEntries + (animIndex + runLength) * 8)[5] & 0x1f)) {
+            runLength++;
         }
         ((ObjSeqState *)seq)->trackRunLength[track] = runLength;
         ((ObjSeqState *)seq)->trackAnimStart[track] = animIndex;
