@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
@@ -1201,7 +1202,7 @@ void DR_EarthWarrior_update(int obj)
             w.mat[0] = c8338;
             w.angles[0] = 2;
             for (j = 2; j != 0; j--) {
-                (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x7e6, &w, 0x200001, -1, vecA);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x7e6, &w, 0x200001, -1, vecA);
             }
             p += 0xc;
         }

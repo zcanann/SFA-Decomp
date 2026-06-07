@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "global.h"
@@ -910,7 +911,7 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
             *(s16 *)((char *)newObj + 0x4) = 0;
             *(s16 *)((char *)newObj + 0x2) = 0;
             *(s16 *)((char *)newObj + 0) = 0;
-            (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))((int)newObj, 0x66, 0, 2, -1, 0);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject(newObj, 0x66, NULL, 2, -1, NULL);
         }
     }
     return 0;
@@ -1140,7 +1141,7 @@ void fn_802BF4D8(int obj)
     *(s16 *)((char *)newObj + 0x4) = 0;
     *(s16 *)((char *)newObj + 0x2) = 0;
     *(s16 *)((char *)newObj + 0) = 0;
-    (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))((int)newObj, 0x66, 0, 2, -1, 0);
+    ((EffectInterface *)*gPartfxInterface)->spawnObject(newObj, 0x66, NULL, 2, -1, NULL);
 }
 #pragma peephole reset
 #pragma scheduling reset
