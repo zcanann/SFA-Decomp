@@ -1,3 +1,4 @@
+#include "main/asset_load.h"
 #include "main/texture.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -2436,7 +2437,6 @@ extern s16 lbl_803DCEBA;
 extern u8 lbl_803DCEBC;
 extern u8 lbl_803DCEBD;
 extern void *gScreenTransitionInterface;
-extern int getTabEntry(void *p, int sz, int off, int unk);
 extern void Pause_SetDisabled(int);
 
 #pragma scheduling off

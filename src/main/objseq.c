@@ -1,3 +1,4 @@
+#include "main/asset_load.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
 #include "main/sky_80080E58_shared.h"
@@ -6,7 +7,6 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
-extern int getTabEntry(void *p, int sz, int off, int unk);
 extern int getTableFileEntry(int fileId, int index, int *out);
 extern int loadAndDecompressDataFile(int id, void *buf, int blockOff, int len, int a, int b, int c);
 extern int strncmp(const char *a, const char *b, u32 n);

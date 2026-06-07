@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/asset_load.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
@@ -17,8 +18,8 @@ STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
 /* dll_1D6_getExtraSize == 0x20 (crusher platform). */
 typedef struct Dll1D6State {
-    int bufA;       /* 0x00: mmAlloc'd 40B getTabEntry rows */
-    int bufB;       /* 0x04 */
+    void *bufA;     /* 0x00: mmAlloc'd 40B getTabEntry rows */
+    void *bufB;     /* 0x04 */
     f32 hitRangeSqA;/* 0x08 */
     f32 hitRangeSqB;/* 0x0c */
     f32 bobPhase;   /* 0x10 */
@@ -1354,8 +1355,8 @@ void dll_1D6_free(int* obj)
     if ((state->flags1D & 4) != 0) {
         state->flags1D = (u8)(state->flags1D & ~4);
     }
-    mm_free(*(void**)&state->bufA);
-    mm_free(*(void**)&state->bufB);
+    mm_free(state->bufA);
+    mm_free(state->bufB);
     (&lbl_803DBF20)[state->slot] = 0;
 }
 
@@ -1552,8 +1553,7 @@ void dim2conveyor_update(int *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int mmAlloc(int size, int a, int b);
-extern void getTabEntry(int dst, int a, int off, int size);
+extern void *mmAlloc(int size, int a, int b);
 extern void ObjModel_SetBlendChannelTargets(int *model, int a, int b, int c, f32 w, int d);
 extern void ObjModel_SetBlendChannelWeight(int *model, int a, f32 w);
 extern s16 lbl_803DBF18;

@@ -1,3 +1,4 @@
+#include "main/asset_load.h"
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
@@ -13786,7 +13787,6 @@ void screens_remove2(void) {
     }
 }
 extern void loadAssetFileById(void **out, int id);
-extern void getTabEntry(void *dst, int fileId, int offset, int size);
 void screens_show(int id) {
     int *asset = NULL;
     int *p;

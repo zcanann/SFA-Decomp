@@ -1,7 +1,9 @@
+#include "main/asset_load.h"
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/game_object.h"
 #include "main/dll/CF/CFTreasSharpy.h"
 #include "main/dll/CF/warp_pad.h"
+#include "main/resource.h"
 
 extern undefined4 FUN_80006824();
 extern int FUN_80006a10();
@@ -15,8 +17,6 @@ extern double FUN_80017714();
 extern undefined4 FUN_80017748();
 extern void vecRotateZXY(s16* in, f32* out);
 extern u32 randomGetRange(int min, int max);
-extern void* Resource_Acquire(int id, int flags);
-extern void Resource_Release(void* handle);
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern int FUN_80017a98();
@@ -34,7 +34,6 @@ extern undefined4 FUN_800810f8();
 extern undefined4 FUN_8011e868();
 extern int Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(int curve, f32 progress);
-extern void getTabEntry(void* dst, int fileId, int offset, int size);
 extern void* mmAlloc(int size, int heap, int flags);
 extern undefined4 FUN_80286838();
 extern undefined8 FUN_8028683c();

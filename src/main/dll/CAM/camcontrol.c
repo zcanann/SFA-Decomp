@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "dolphin/os.h"
+#include "main/asset_load.h"
 #include "main/dll/CAM/camcontrol.h"
 #include "main/objanim_internal.h"
 #include "string.h"
@@ -23,7 +24,6 @@ extern int gameTextFn_80134be8(void);
 extern f32 fn_8014C5D0(int obj);
 extern f32 fn_80183204(int obj);
 extern f32 sqrtf(f32 x);
-extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(int size,int heap,int flags);
 extern void SaveGame_setCamActionNo(s16 actionNo);
