@@ -71,6 +71,81 @@ typedef struct {
 
 typedef void (*FirePipeEffectInitFn)(int obj, void *spawnDef, int param_3);
 
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *spawnDef)
+{
+    int i;
+    int effectObj;
+    int freeDelay;
+
+    if (Obj_IsLoadingLocked() == 0) {
+        return 0;
+    }
+    for (i = 0; i < extra->effectCount; i++) {
+        effectObj = extra->effectObjs[i];
+        if ((*(u16 *)(effectObj + 0xb0) & 0x200) == 0) {
+            *(u16 *)(effectObj + 0xb0) |= 0x200;
+            memcpy(*(void **)(effectObj + 0x4c), spawnDef, *(u8 *)((int)spawnDef + 2));
+            *(s16 *)(effectObj + 6) &= ~0x4000;
+            *(float *)(effectObj + 0xc) = *(float *)((int)spawnDef + 8);
+            *(float *)(effectObj + 0x10) = *(float *)((int)spawnDef + 0xc);
+            *(float *)(effectObj + 0x14) = *(float *)((int)spawnDef + 0x10);
+            (*(FirePipeEffectInitFn *)(**(int **)(effectObj + 0x68) + 4))(effectObj, spawnDef, 0);
+            freeDelay = mmSetFreeDelay(0);
+            mm_free(spawnDef);
+            mmSetFreeDelay(freeDelay);
+            Obj_InsertIntoUpdateList(effectObj);
+            *(u16 *)(effectObj + 0xb0) &= ~0x8000;
+            return effectObj;
+        }
+    }
+    effectObj = loadObjectAtObject(obj, spawnDef);
+    if (extra->effectCount != 8) {
+        *(u16 *)(effectObj + 0xb0) |= 0x200;
+        i = extra->effectCount++;
+        extra->effectObjs[i] = effectObj;
+    }
+    return effectObj;
+}
+#pragma dont_inline reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void firepipe_releaseEffectObject(FirePipeObject *obj)
+{
+    if ((*(u16 *)((int)obj + 0xb0) & 0x200) != 0) {
+        ObjHits_DisableObject(obj);
+        *(u16 *)((int)obj + 0xb0) &= ~0x200;
+        Obj_RemoveFromUpdateList(obj);
+        *(u16 *)((int)obj + 0xb0) |= 0x8000;
+        *(s16 *)((int)obj + 6) |= 0x4000;
+    } else {
+        Obj_FreeObject((int)obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int firepipe_clearLinkedUpdateFlag(FirePipeObject *obj)
+{
+    ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 0;
+    return 1;
+}
+
+int firepipe_setLinkedUpdateFlag(FirePipeObject *obj)
+{
+    ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 1;
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma peephole off
 #pragma scheduling off
 void firepipe_updateState(FirePipeObject *obj)
@@ -260,78 +335,6 @@ sound_update:
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
-int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *spawnDef)
-{
-    int i;
-    int effectObj;
-    int freeDelay;
-
-    if (Obj_IsLoadingLocked() == 0) {
-        return 0;
-    }
-    for (i = 0; i < extra->effectCount; i++) {
-        effectObj = extra->effectObjs[i];
-        if ((*(u16 *)(effectObj + 0xb0) & 0x200) == 0) {
-            *(u16 *)(effectObj + 0xb0) |= 0x200;
-            memcpy(*(void **)(effectObj + 0x4c), spawnDef, *(u8 *)((int)spawnDef + 2));
-            *(s16 *)(effectObj + 6) &= ~0x4000;
-            *(float *)(effectObj + 0xc) = *(float *)((int)spawnDef + 8);
-            *(float *)(effectObj + 0x10) = *(float *)((int)spawnDef + 0xc);
-            *(float *)(effectObj + 0x14) = *(float *)((int)spawnDef + 0x10);
-            (*(FirePipeEffectInitFn *)(**(int **)(effectObj + 0x68) + 4))(effectObj, spawnDef, 0);
-            freeDelay = mmSetFreeDelay(0);
-            mm_free(spawnDef);
-            mmSetFreeDelay(freeDelay);
-            Obj_InsertIntoUpdateList(effectObj);
-            *(u16 *)(effectObj + 0xb0) &= ~0x8000;
-            return effectObj;
-        }
-    }
-    effectObj = loadObjectAtObject(obj, spawnDef);
-    if (extra->effectCount != 8) {
-        *(u16 *)(effectObj + 0xb0) |= 0x200;
-        i = extra->effectCount++;
-        extra->effectObjs[i] = effectObj;
-    }
-    return effectObj;
-}
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma peephole off
-#pragma scheduling off
-void firepipe_releaseEffectObject(FirePipeObject *obj)
-{
-    if ((*(u16 *)((int)obj + 0xb0) & 0x200) != 0) {
-        ObjHits_DisableObject(obj);
-        *(u16 *)((int)obj + 0xb0) &= ~0x200;
-        Obj_RemoveFromUpdateList(obj);
-        *(u16 *)((int)obj + 0xb0) |= 0x8000;
-        *(s16 *)((int)obj + 6) |= 0x4000;
-    } else {
-        Obj_FreeObject((int)obj);
-    }
-}
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma peephole off
-#pragma scheduling off
-int firepipe_clearLinkedUpdateFlag(FirePipeObject *obj)
-{
-    ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 0;
-    return 1;
-}
-
-int firepipe_setLinkedUpdateFlag(FirePipeObject *obj)
-{
-    ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 1;
-    return 1;
-}
-#pragma peephole reset
-#pragma scheduling reset
 
 int firepipe_getExtraSize(void)
 {
