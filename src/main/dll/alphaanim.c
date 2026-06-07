@@ -169,7 +169,8 @@ void FUN_8017c29c(int param_1)
           (iVar3 = ObjTrigger_IsSetById(param_1,*(short *)(iVar4 + 0x1e)), iVar3 != 0)) ||
          ((*(short *)(iVar4 + 0x1e) == -1 && (iVar3 = ObjTrigger_IsSet(param_1), iVar3 != 0)))) {
         if (*(char *)(iVar4 + 0x20) != -1) {
-          (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(char *)(iVar4 + 0x20),param_1,0xffffffff);
+          ((ObjectTriggerInterface *)*DAT_803dd6d4)
+              ->runSequence((int)*(char *)(iVar4 + 0x20), (void *)param_1, -1);
         }
         if ((*(byte *)(iVar4 + 0x1b) & 4) == 0) {
           FUN_80017698((int)*(short *)(iVar4 + 0x1c),1);
@@ -199,7 +200,8 @@ void FUN_8017c29c(int param_1)
           if ((bVar1 & 0x80) != 0) {
             uVar2 = uVar2 | 8;
           }
-          (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(char *)(iVar4 + 0x20),param_1,uVar2);
+          ((ObjectTriggerInterface *)*DAT_803dd6d4)
+              ->runSequence((int)*(char *)(iVar4 + 0x20), (void *)param_1, uVar2);
         }
         *(undefined4 *)(param_1 + 0xf4) = 1;
       }
@@ -213,7 +215,7 @@ void FUN_8017c29c(int param_1)
   else {
     FUN_80006ba8(0,0x100);
     (**(code **)(*DAT_803dd6d4 + 0x84))(param_1,0);
-    (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_1, -1);
     FUN_80017698(0x930,1);
   }
   return;
@@ -399,7 +401,8 @@ void seqObject_update(int param_1)
     if ((bVar2 != pbVar4[1]) && (pbVar4[1] = bVar2, bVar2 != 0)) {
       if (*(char *)(iVar3 + 0x1e) != -1) {
         (**(code **)(*DAT_803dd6d4 + 0x84))(param_1,0);
-        (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(char *)(iVar3 + 0x1e),param_1,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)
+            ->runSequence((int)*(char *)(iVar3 + 0x1e), (void *)param_1, -1);
       }
       if (((*(byte *)(iVar3 + 0x1d) & 1) == 0) && ((*(byte *)(iVar3 + 0x1d) & 10) == 0)) {
         FUN_80017698((int)*(short *)(iVar3 + 0x18),1);
@@ -413,13 +416,15 @@ void seqObject_update(int param_1)
     }
   }
   else {
-    (**(code **)(*DAT_803dd6d4 + 0x54))(param_1,(int)*(short *)(iVar3 + 0x20));
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt(param_1, (int)*(short *)(iVar3 + 0x20));
     if ((*(byte *)(iVar3 + 0x1d) & 0x10) == 0) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(char *)(iVar3 + 0x1e),param_1,1);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)
+          ->runSequence((int)*(char *)(iVar3 + 0x1e), (void *)param_1, 1);
     }
     else {
-      (**(code **)(*DAT_803dd6d4 + 0x48))
-                ((int)*(char *)(iVar3 + 0x1e),param_1,*(undefined2 *)(iVar3 + 0x22));
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)
+          ->runSequence((int)*(char *)(iVar3 + 0x1e), (void *)param_1,
+                        *(u16 *)(iVar3 + 0x22));
     }
     *pbVar4 = *pbVar4 & 0xfd;
   }
@@ -535,7 +540,8 @@ void seqObj2_update(int param_1)
           FUN_800723a0();
         }
         FUN_800723a0();
-        (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(char *)(iVar2 + 0x1e),param_1,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)
+            ->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, -1);
       }
     }
     else {
@@ -560,9 +566,9 @@ void seqObj2_update(int param_1)
       FUN_800723a0();
     }
     FUN_800723a0();
-    (**(code **)(*DAT_803dd6d4 + 0x54))(param_1,(int)*(short *)(iVar2 + 0x20));
-    (**(code **)(*DAT_803dd6d4 + 0x48))
-              ((int)*(char *)(iVar2 + 0x1e),param_1,*(undefined2 *)(iVar2 + 0x22));
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt(param_1, (int)*(short *)(iVar2 + 0x20));
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)
+        ->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, *(u16 *)(iVar2 + 0x22));
     *pbVar3 = *pbVar3 & 0xfe;
   }
   return;
