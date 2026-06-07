@@ -1,14 +1,17 @@
 #include "dolphin/mtx.h"
 #include "dolphin/os/OSCache.h"
+#include "math.h"
+#include "main/camera.h"
 #include "main/audio/sfx.h"
 #include "main/expgfx.h"
 #include "main/expgfx_internal.h"
 #include "main/game_object.h"
+#include "main/lightmap.h"
 #include "main/mm.h"
 #include "main/texture.h"
+#include "track/intersect.h"
 
 extern undefined4 ABS();
-extern int Camera_GetViewMatrix(void);
 extern int renderModeSetOrGet(int mode);
 extern int FUN_80006714();
 extern undefined4 FUN_80006824();
@@ -23,16 +26,9 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_8004812c();
 extern undefined8 FUN_80053754();
-extern int FUN_8005b024();
-extern undefined4 FUN_8005d340();
-extern undefined4 FUN_8005e1d8();
-extern void lightmap_queueExternalRenderEntry(uint slotPoolBase,int poolIndex,float *position);
 extern uint FUN_8005e558();
 extern u8 fn_8005E97C(float minX,float maxX,float minY,float maxY,float minZ,float maxZ,
                       ExpgfxBounds *boundsTemplate);
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
-extern void trackIntersect_drawColorBand(void);
 extern int FUN_80080f40();
 extern undefined4 FUN_80080f84();
 extern undefined4 FUN_80080f8c();
@@ -628,20 +624,11 @@ extern void *Obj_GetPlayerObject(void);
 extern void *getTrickyObject(void);
 extern int getSkyStructField24C(void);
 extern void fn_800897D4(int skyStruct, f32 *x, f32 *y, f32 *z);
-extern f32 *Camera_GetViewRotationMatrix(void);
 extern void getAmbientColor(int skyStruct, u8 *r, u8 *g, u8 *b);
 extern f32 fn_80138F78(void *tricky);
 extern f32 fn_8029610C(void *player);
-extern void *getCache(void);
-extern void copyToCache(void *dst, void *src, int blockCount);
-extern void memcpyToCache(void *dst, void *src, int blockCount);
-extern void cacheQueueWait(int wait);
-extern void *Camera_GetCurrentViewSlot(void);
 extern u32 randomGetRange(int min, int max);
 extern void vecRotateZXY(void *params, void *vec);
-extern int coordsToMapCell(f32 x, f32 z);
-extern void Obj_RotateLocalOffsetByYaw(void *offset, f32 *out, u8 yaw);
-extern f32 sqrtf(f32 x);
 extern u8 framesThisStep;
 extern ExpgfxWaterfxInterface **gWaterfxInterface;
 extern u16 gExpgfxPhaseAngleA;
@@ -1894,8 +1881,6 @@ extern void geomDrawFn_800796f0(void);
 extern void fn_8007C3D0(u32 flag);
 extern void fn_8007D670(void);
 extern void _gxSetFogParams(void);
-extern void gxSetZMode_(u32 a, int b, u32 c);
-extern void gxSetPeControl_ZCompLoc_(u32 a);
 
 extern f32 lbl_803967C0[3][4];
 extern f32 lbl_803DF414;
@@ -2245,7 +2230,7 @@ void renderParticles(void)
   register s16 *poolSlotTypeIds;
   u32 *slotPoolBases;
   int poolIndex;
-  int currentMatrix;
+  f32 *currentMatrix;
   float queuePosition[3];
 
   runtime = EXPGFX_RUNTIME_DATA;

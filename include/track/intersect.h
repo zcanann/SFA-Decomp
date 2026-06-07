@@ -1,6 +1,7 @@
 #ifndef TRACK_INTERSECT_H_
 #define TRACK_INTERSECT_H_
 
+#include "dolphin/gx.h"
 #include "ghidra_import.h"
 
 void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unused, f32 scale);
@@ -50,6 +51,7 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag);
 void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale);
 void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
 void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
+void trackIntersect_drawColorBand(void);
 void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth);
 void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale);
 void FUN_80070ec8(void);
