@@ -55,73 +55,71 @@ void synthAdvanceVirtualSampleEntry(void *entry, u32 elapsed)
     SynthVirtualSampleState *state;
     SynthVirtualSampleEntry *sample;
     u32 *loopSizePtr;
-    u32 position;
-    u32 loopSize;
-    u32 advanced;
+    struct { u32 len, off; } d; /* struct-typed pair claims target frame slot */
 
     state = (SynthVirtualSampleState *)synthVirtualSampleState;
     sample = entry;
-    position = sample->position;
-    if (position == elapsed) {
+    if (sample->position == elapsed) {
         return;
     }
-
-    if (position < elapsed) {
-        if ((int)sample->type == SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE) {
+    if ((s32)sample->position < elapsed) {
+        switch (sample->type) {
+        case SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE:
             sample->callbackData.start =
-                (position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
+                (sample->position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
                 SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
             sample->callbackData.size = elapsed - sample->position;
             sample->callbackData.wrapA = 0;
             sample->callbackData.wrapB = 0;
-            advanced = ((int (*)(int, void *))state->callback)(
-                SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
-                &sample->callbackData);
-            if (advanced != 0U) {
-                position = sample->position + advanced;
-                loopSize = state->loopSize;
-                sample->position = position - (position / loopSize) * loopSize;
+            if ((d.len = ((int (*)(int, void *))state->callback)(
+                     SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
+                     &sample->callbackData)) != 0) {
+                d.off = sample->position + d.len;
+                sample->position = d.off % state->loopSize;
             }
-        } else {
-            return;
+            break;
+        default:
+            break;
         }
     } else if (elapsed == 0) {
-        if ((int)sample->type == SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE) {
+        switch (sample->type) {
+        case SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE:
             sample->callbackData.start =
-                (position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
+                (sample->position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
                 SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
             loopSizePtr = &state->loopSize;
             sample->callbackData.size = *loopSizePtr - sample->position;
             sample->callbackData.wrapA = 0;
             sample->callbackData.wrapB = 0;
-            advanced = ((int (*)(int, void *))state->callback)(
-                SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
-                &sample->callbackData);
-            if (advanced != 0U) {
-                position = sample->position + advanced;
-                loopSize = *loopSizePtr;
-                sample->position = position - (position / loopSize) * loopSize;
+            if ((d.len = ((int (*)(int, void *))state->callback)(
+                     SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
+                     &sample->callbackData)) != 0) {
+                d.off = sample->position + d.len;
+                sample->position = d.off % *loopSizePtr;
             }
-        } else {
-            return;
-        }
-    } else if ((int)sample->type == SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE) {
-        sample->callbackData.start =
-            (position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
-            SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
-        loopSizePtr = &state->loopSize;
-        sample->callbackData.size = *loopSizePtr - sample->position;
-        sample->callbackData.wrapA = 0;
-        sample->callbackData.wrapB = elapsed;
-        advanced = ((int (*)(int, void *))state->callback)(
-            SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
-            &sample->callbackData);
-        if (advanced != 0U) {
-            position = sample->position + advanced;
-            loopSize = *loopSizePtr;
-            sample->position = position - (position / loopSize) * loopSize;
+            break;
+        default:
+            break;
         }
     } else {
-        return;
+        switch (sample->type) {
+        case SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE:
+            sample->callbackData.start =
+                (sample->position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
+                SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
+            loopSizePtr = &state->loopSize;
+            sample->callbackData.size = *loopSizePtr - sample->position;
+            sample->callbackData.wrapA = 0;
+            sample->callbackData.wrapB = elapsed;
+            if ((d.len = ((int (*)(int, void *))state->callback)(
+                     SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
+                     &sample->callbackData)) != 0) {
+                d.off = sample->position + d.len;
+                sample->position = d.off % *loopSizePtr;
+            }
+            break;
+        default:
+            break;
+        }
     }
 }
