@@ -739,7 +739,6 @@ void gameTextFn_8001658c(int a, int b, int c)
     u8 save5 = lbl_803DC9A5;
     u8 save4 = lbl_803DC9A4;
     int i;
-    int slotIndex;
 
     lbl_803DC9C0 = 1;
     if (lbl_803DC9CC != NULL) {
@@ -800,9 +799,9 @@ void gameTextFn_8001658c(int a, int b, int c)
         }
     }
 
-    slotIndex = slot - (TextSlot *)lbl_802C7400;
-    for (i = 0; i < def->count; i++) {
-        gameTextRenderStrs(def->strings[i], slotIndex);
+    i = 0;
+    for (; i < def->count; i++) {
+        gameTextRenderStrs(def->strings[i], slot - (TextSlot *)lbl_802C7400);
     }
 
     lbl_803DC9C0 = 0;
