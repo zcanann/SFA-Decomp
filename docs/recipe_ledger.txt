@@ -125,3 +125,4 @@
 115	dcfea98ab	CALLEE-DECL PARAM WIDTHS shift the caller's WEB CREATION ORDER at
 116	ed7529a60	Embedded-assign in the STORE ADDRESS (`*(p = &arr[K]) = value;`)
 117	baae38a60	Embedded-def ternary lands clamp bounds in the saved home
+118	ed61f07a5	Pointer-valued nested ternary for unrolled free-slot scans (bne-next/b-found per copy)
