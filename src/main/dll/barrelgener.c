@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 #include "main/audio/sfx_ids.h"
 #pragma peephole on
@@ -96,7 +97,7 @@ void barrelgener_update(int obj)
 
     if ((u32)GameBit_Get(0xadb) == 0) {
         if (Vec_distance(obj + 24, player + 24) < lbl_803E6C24) {
-            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
             GameBit_Set(0xadb, 1);
         }
     }

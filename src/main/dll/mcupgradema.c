@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 #pragma scheduling off
 int mcstaffeffe_SeqFn(int p1, int p2, int setup)
@@ -39,7 +40,7 @@ void mcupgradema_update(int obj)
         *(u8 *)(obj + 0xaf) |= 8;
     } else if (ObjTrigger_IsSet(obj) != 0) {
         GameBit_Set(*(s16 *)(setup + 0x1a), 1);
-        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
     } else {
         objRenderFn_80041018(obj);
     }

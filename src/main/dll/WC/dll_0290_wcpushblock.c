@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 
 #define WCPUSHBLOCK_EXTRA_SIZE 0x288
 #define WCPUSHBLOCK_RENDER_TYPE_BASE 0x400
@@ -687,10 +688,10 @@ void wcpushblock_updateLevelControlState(int obj, int state)
             GameBit_Set(0xba6, 0);
             GameBit_Set(0xedd, 0);
             if ((u32)GameBit_Get(0x7fa) != 0) {
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 *(u8 *)(state + 0xc) = 3;
             } else {
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 *(u8 *)(state + 0xc) = 0;
             }
             *(u16 *)(state + 0x1a) |= 0x2;
@@ -718,10 +719,10 @@ void wcpushblock_updateLevelControlState(int obj, int state)
             GameBit_Set(0xba6, 0);
             GameBit_Set(0xedc, 0);
             if ((u32)GameBit_Get(0x7f9) != 0) {
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 *(u8 *)(state + 0xc) = 3;
             } else {
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 *(u8 *)(state + 0xc) = 0;
             }
             *(u16 *)(state + 0x1a) |= 0x2;

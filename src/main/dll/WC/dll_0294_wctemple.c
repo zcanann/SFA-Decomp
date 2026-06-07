@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 #define WCTEMPLE_EXTRA_SIZE 8
 #define WCTEMPLE_SETUP_TYPE_OFFSET 0x18
@@ -61,14 +62,14 @@ void wctemple_update(int obj)
 
     if (WCTEMPLE_TRIGGER_SLOT(state) == WCTEMPLE_SEQUENCE_SLOT_CLOSED) {
         if ((*(u8 *)(obj + 0xaf) & WCTEMPLE_ACTIVATION_FLAG) != 0) {
-            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
-                WCTEMPLE_SEQUENCE_SLOT_CLOSED, obj, WCTEMPLE_SEQUENCE_INVALID_ARG);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                ->runSequence(WCTEMPLE_SEQUENCE_SLOT_CLOSED, (void *)obj, WCTEMPLE_SEQUENCE_INVALID_ARG);
             WCTEMPLE_TRIGGER_SLOT(state) = WCTEMPLE_SEQUENCE_SLOT_OPEN;
         }
     } else {
         if ((*(u8 *)(obj + 0xaf) & WCTEMPLE_ACTIVATION_FLAG) != 0) {
-            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
-                WCTEMPLE_SEQUENCE_SLOT_OPEN, obj, WCTEMPLE_SEQUENCE_INVALID_ARG);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                ->runSequence(WCTEMPLE_SEQUENCE_SLOT_OPEN, (void *)obj, WCTEMPLE_SEQUENCE_INVALID_ARG);
             WCTEMPLE_TRIGGER_SLOT(state) = WCTEMPLE_SEQUENCE_SLOT_CLOSED;
         }
     }
