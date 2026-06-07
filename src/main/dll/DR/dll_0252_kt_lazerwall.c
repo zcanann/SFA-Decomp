@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -63,27 +64,27 @@ void ktlazerwall_update(int obj) {
         GameBit_Set(*(s16 *)(q + 0x1e), 1);
         runtime[0] |= 9;
         ktrexfloorswitch_spawnEnergyArc(obj, lbl_803E68B8, 120);
-        (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1150, 0, 2, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 1150, NULL, 2, -1, NULL);
         for (i = 10; i != 0; i--) {
             mode = 2;
-            (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 1164, NULL, 2, -1, &mode);
         }
         *(f32 *)(runtime + 4) = (f32)(int)randomGetRange(1, 60);
     }
     if (runtime[0] & 4) {
         mode = 0;
-        (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 1164, NULL, 2, -1, &mode);
         mode = 1;
-        (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 1164, NULL, 2, -1, &mode);
         if ((runtime[1] & 4) == 0) {
             Sfx_PlayFromObject(obj, SFXmn_sml_trex_snap3);
         }
     }
     if (runtime[0] & 8) {
         mode = 0;
-        (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 1164, NULL, 2, -1, &mode);
         mode = 2;
-        (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 1164, NULL, 2, -1, &mode);
     }
     if ((runtime[0] & 8) == 0 && (runtime[1] & 8) != 0) {
         Sfx_PlayFromObject(obj, SFXmv_blkhit_c);
