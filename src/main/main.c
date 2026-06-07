@@ -1,6 +1,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/anim_internal.h"
+#include "main/effect_interfaces.h"
 #include "main/main.h"
 #include "main/objlib.h"
 #include "main/resource.h"
@@ -1603,7 +1604,7 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int ***listOut, int p6, int p7);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern LaserTriggerInterface **gGameUIInterface;
 
 #pragma scheduling off
@@ -1675,7 +1676,7 @@ void fn_801FD6B4(int obj) {
     if (c > lbl_803E6184 && c < lbl_803E6188) {
         parm.value = *(f32 *)(extra + 8);
         if (((GameObject *)obj)->objectFlags & 0x800) {
-            (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x3a2, &parm, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x3a2, &parm, 2, -1, NULL);
         }
     }
     c = *(f32 *)(extra + 0xc);
@@ -1743,7 +1744,7 @@ void vfplavastar_update(int obj) {
         *(s16 *)((u8 *)extra + 0xe) = 0;
     }
     if (*(u8 *)(extra + 4) == 0) {
-        (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x3a4, 0, 2, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x3a4, NULL, 2, -1, NULL);
     }
     *(u8 *)(extra + 4) ^= 1;
 }

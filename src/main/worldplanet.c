@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
 #include "main/worldplanet.h"
 
@@ -209,7 +210,7 @@ extern void getEnvfxAct(int a, int b, int c, int d);
 extern void setIsOvercast(int mode);
 extern u32 getButtonsJustPressed(int controller);
 extern int *gCameraInterface;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E65F8_pad;
@@ -320,7 +321,7 @@ void worldplanet_update(int obj) {
         pfx.x = lbl_803E661C;
         pfx.y = lbl_803E6620;
         pfx.z = lbl_803E6624;
-        (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x6f2, &pfx, 2, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x6f2, &pfx, 2, -1, NULL);
         worldplanet_readMapInput(obj, (u8 *)inX, &inY);
         ((GameObject *)obj)->anim.rotZ -= 10;
         ((GameObject *)obj)->anim.rotY = 0x3448;

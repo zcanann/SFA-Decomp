@@ -1,6 +1,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
+#include "main/effect_interfaces.h"
 #include "main/light.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
@@ -1384,7 +1385,7 @@ void seqpoint_update(int *obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern void Obj_FreeObject(int *obj);
 extern u32 randomGetRange(int min, int max);
 extern s16 lbl_803DDCC4;
@@ -1404,7 +1405,7 @@ void vfpdraghead_update(int *obj)
         if (lbl_803DDCC4 > 0xc8) return;
         if (self2->headIndex != lbl_803DDCC6) return;
         if (randomGetRange(0, 2) != 0) return;
-        (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x391, 0, 4, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
     } else if (*(s16 *)((char *)obj + 0x46) == 0x3c5) {
         self2 = *(VfpDragHeadState **)((char *)obj + 0xb8);
         self2->despawnTimer -= (int)timeDelta;
@@ -1420,14 +1421,14 @@ void vfpdraghead_update(int *obj)
         if (lbl_803DDCC4 > 0xc8) return;
         if (self2->headIndex != lbl_803DDCC6) return;
         if (randomGetRange(0, 2) != 0) return;
-        (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x391, 0, 4, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
     } else if (state == 1) {
         self2 = *(VfpDragHeadState **)((char *)obj + 0xb8);
         if (GameBit_Get(self2->gameBitA) != 0) {
-            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x390, 0, 4, -1, 0);
-            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x390, 0, 4, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x390, NULL, 4, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x390, NULL, 4, -1, NULL);
             if (randomGetRange(0, 1) != 0) {
-                (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x391, 0, 4, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
             }
         }
         if ((s16)ObjHits_GetPriorityHit((int)obj, (int *)0, (int *)0, (uint *)0) != 0) {
