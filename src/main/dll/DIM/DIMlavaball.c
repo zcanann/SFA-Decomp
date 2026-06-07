@@ -727,7 +727,7 @@ FUN_801a7874(undefined8 param_1,double param_2,double param_3,undefined8 param_4
         *pbVar4 = 0xd;
         pbVar4[1] = 1;
         param_1 = GameBit_Set(0x87b,(uint)pbVar4[1]);
-        *(undefined *)(param_9 + 0x36) = 0xff;
+        ((GameObject *)param_9)->anim.alpha = 0xff;
       }
     }
     else if (bVar1 == 4) {
@@ -1005,7 +1005,7 @@ void FUN_801a8284(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  param_9,1,1,0,0,0,1,0);
     *(ushort *)(iVar2 + 0x24) = *(ushort *)(iVar2 + 0x24) | 0x200;
     *(float *)(iVar2 + 0x14) = lbl_803E51F0;
-    *(undefined *)((int)param_9 + 0x36) = 0;
+    ((GameObject *)param_9)->anim.alpha = 0;
     param_9[3] = *(int *)(iVar2 + 0x18);
     param_9[4] = *(int *)(iVar2 + 0x1c);
     param_9[5] = *(int *)(iVar2 + 0x20);
@@ -1711,7 +1711,7 @@ int fn_801A6F4C(int obj, int p2, int data) {
             state->eventFlags = 13;
             state->phase = 1;
             GameBit_Set(0x87b, state->phase);
-            *(u8 *)(obj + 0x36) = 0xff;
+            ((GameObject *)obj)->anim.alpha = 0xff;
             break;
         case 2:
             state->eventFlags = state->eventFlags & ~9;
@@ -1752,22 +1752,22 @@ void mmp_asteroid_re_init(int obj) {
     state->phase = (u8)GameBit_Get(0x87B);
     switch ((s32)state->phase) {
     case 0:
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         *(u8 *)&((GameObject *)obj)->anim.bankIndex = 0;
         break;
     case 1:
-        *(u8 *)(obj + 0x36) = 0xFF;
+        ((GameObject *)obj)->anim.alpha = 0xFF;
         state->eventFlags = 4;
         *(u8 *)&((GameObject *)obj)->anim.bankIndex = 1;
         state->eventFlags |= 0x40;
         break;
     case 2:
-        *(u8 *)(obj + 0x36) = 0xFF;
+        ((GameObject *)obj)->anim.alpha = 0xFF;
         state->eventFlags = 4;
         *(u8 *)&((GameObject *)obj)->anim.bankIndex = 1;
         break;
     case 3:
-        *(u8 *)(obj + 0x36) = 0xFF;
+        ((GameObject *)obj)->anim.alpha = 0xFF;
         state->eventFlags = 4;
         *(u8 *)&((GameObject *)obj)->anim.bankIndex = 1;
         break;
@@ -1831,7 +1831,7 @@ void fn_801A79E0(int obj) {
         spawnExplosion(obj, lbl_803E4554, 1, 1, 0, 0, 0, 1, 0);
         state->flags |= 0x200;
         state->respawnTimer = lbl_803E4558;
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         ((GameObject *)obj)->anim.localPosX = state->homeX;
         ((GameObject *)obj)->anim.localPosY = state->homeY;
         ((GameObject *)obj)->anim.localPosZ = state->homeZ;
@@ -1964,7 +1964,7 @@ void fn_801A80F0(int obj, u8 flag) {
 void mmp_gyservent_init(int obj) {
     ((GameObject *)obj)->objectFlags |= 0x6000;
     *(u32 *)&((GameObject *)obj)->unkF4 = randomGetRange(0xa, 0xc8);
-    *(u8 *)(obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
 }
 
@@ -2350,11 +2350,12 @@ void mmp_moonrock_update(int obj) {
             state->respawnTimer = v - timeDelta;
             if (state->respawnTimer <= k) {
                 *(s16 *)&state->flags = 0;
-                *(u8 *)(obj + 0x36) = 0xFF;
+                ((GameObject *)obj)->anim.alpha = 0xFF;
                 ObjHits_DisableObject(obj);
                 fn_801A7D74(obj, 1, 1);
             } else {
-                *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E4584 * (lbl_803E457C - state->respawnTimer / lbl_803E4558));
+                ((GameObject *)obj)->anim.alpha =
+                    (u8)(int)(lbl_803E4584 * (lbl_803E457C - state->respawnTimer / lbl_803E4558));
                 objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - state->respawnTimer / lbl_803E4558, 0);
                 objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - state->respawnTimer / lbl_803E4558, 0);
             }

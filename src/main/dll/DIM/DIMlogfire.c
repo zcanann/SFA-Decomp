@@ -186,7 +186,7 @@ void FUN_801a93b0(int param_1)
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x6000;
   uVar1 = randomGetRange(10,200);
   *(uint *)(param_1 + 0xf4) = uVar1;
-  *(undefined *)(param_1 + 0x36) = 0;
+  ((GameObject *)param_1)->anim.alpha = 0;
   *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
   return;
 }
@@ -550,7 +550,7 @@ void FUN_801a9e5c(uint param_1)
     *pbVar6 = 2;
     GameBit_Set((int)*(short *)(pbVar6 + 8),1);
     pbVar6[1] = pbVar6[1] & 0xfe;
-    *(undefined *)(param_1 + 0x36) = 0xff;
+    ((GameObject *)param_1)->anim.alpha = 0xff;
   }
   if (((*(byte *)(param_1 + 0xaf) & 4) != 0) && ((*(byte *)(param_1 + 0xaf) & 8) == 0)) {
     uVar2 = GameBit_Get(0x86a);
@@ -616,7 +616,7 @@ void FUN_801a9e5c(uint param_1)
       if (uVar2 != 0) {
         *pbVar6 = 2;
         *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar4 + 0xc);
-        *(undefined *)(param_1 + 0x36) = 0xff;
+        ((GameObject *)param_1)->anim.alpha = 0xff;
       }
       uVar2 = GameBit_Get((int)*(short *)(pbVar6 + 10));
       if (uVar2 != 0) {
@@ -635,7 +635,7 @@ void FUN_801a9e5c(uint param_1)
              (iVar3 = (**(code **)(*DAT_803dd6e8 + 0x20))(0x86a), iVar3 != 0)) &&
             (uVar2 = GameBit_Get(0x86a), uVar2 != 0)) {
       *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar4 + 0xc);
-      *(undefined *)(param_1 + 0x36) = 0;
+      ((GameObject *)param_1)->anim.alpha = 0;
       (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
       GameBit_Set(0x86a,uVar2 - 1);
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
@@ -1132,7 +1132,7 @@ void MoonSeedPlantingSpot_update(int obj)
         *(u8 *)ex = 2;
         GameBit_Set(*(s16 *)((char *)ex + 8), 1);
         *(u8 *)((char *)ex + 1) = *(u8 *)((char *)ex + 1) & ~1;
-        *(u8 *)((char *)obj + 0x36) = 0xff;
+        ((GameObject *)obj)->anim.alpha = 0xff;
     }
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) && !(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 8)) {
         if (GameBit_Get(0x86a) != 0) {
@@ -1149,7 +1149,7 @@ void MoonSeedPlantingSpot_update(int obj)
         if (GameBit_Get(*(s16 *)((char *)ex + 8)) != 0) {
             *(u8 *)ex = 2;
             ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc);
-            *(u8 *)((char *)obj + 0x36) = 0xff;
+            ((GameObject *)obj)->anim.alpha = 0xff;
         }
         if (GameBit_Get(*(s16 *)((char *)ex + 0xa)) != 0) {
             int setup2;
@@ -1170,7 +1170,7 @@ void MoonSeedPlantingSpot_update(int obj)
             int cnt = GameBit_Get(0x86a);
             if (cnt != 0) {
                 ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc);
-                *(u8 *)((char *)obj + 0x36) = 0;
+                ((GameObject *)obj)->anim.alpha = 0;
                 (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
                 GameBit_Set(0x86a, cnt - 1);
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
