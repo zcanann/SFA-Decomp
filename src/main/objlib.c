@@ -3050,6 +3050,7 @@ typedef struct PlayerBlinkState {
 
 void playerEyeAnimFn_80038988(int obj,int blinkState,uint flags)
 {
+  extern int randomGetRange(int min, int max);
   PlayerBlinkState *bs = (PlayerBlinkState *)blinkState;
   ObjAnimComponent *objAnim;
   u8 step;
@@ -3059,154 +3060,144 @@ void playerEyeAnimFn_80038988(int obj,int blinkState,uint flags)
   f32 wave;
   int joint;
   ObjModelInstance *model;
-  s8 *jointData;
+  u8 *jointData;
   int jointDataOffset;
   int poseOffset;
-  uint jointCount;
+  int jointCount;
   s16 rotation;
-  u8 state;
 
   objAnim = (ObjAnimComponent *)obj;
-  step = (u8)(s32)(lbl_803DE998 * timeDelta);
-  leftScale = lbl_803DE99C;
-  rightScale = leftScale;
-  state = bs->mode;
-  if (state == 3) {
+  step = lbl_803DE998 * timeDelta;
+  rightScale = (leftScale = lbl_803DE99C);
+  switch (bs->mode) {
+  case 0:
+    bs->timer = (u8)((f32)bs->timer + timeDelta);
+    bs->amount = 0;
+    if (((u16)flags & 1) != 0) {
+      if (randomGetRange(0, 100) == 1) {
+        switch (bs->mode) {
+        case 0:
+          bs->mode = 1;
+          bs->timer = 0;
+          bs->amount = 0;
+          break;
+        case 3:
+          bs->mode = 1;
+          break;
+        }
+      }
+      else if (randomGetRange(0, 75) == 1) {
+        if (randomGetRange(0, 1) == 0) {
+          bs->mode = 4;
+        }
+        else {
+          bs->mode = 5;
+        }
+      }
+    }
+    break;
+  case 1:
+    bs->timer = (u8)((f32)bs->timer + timeDelta);
+    if ((s16)bs->amount + (s16)step > 255) {
+      step = (u8)(255 - bs->amount);
+      bs->mode = 2;
+    }
+    bs->amount += step;
+    break;
+  case 2:
+    bs->timer = (u8)((f32)bs->timer + timeDelta);
+    if (randomGetRange(0, 100) == 1) {
+      switch (bs->mode) {
+      case 1:
+      case 2:
+        bs->mode = 3;
+        break;
+      case 4:
+      case 5:
+        bs->mode = 0;
+        break;
+      }
+    }
+    break;
+  case 3:
     bs->timer = (u8)((f32)bs->timer + timeDelta);
     if ((s16)bs->amount - (s16)step < 0) {
-      bs->mode = 0;
       step = bs->amount;
+      bs->mode = 0;
     }
     bs->amount -= step;
-  }
-  else if (state < 3) {
-    if (state == 1) {
-      bs->timer = (u8)((f32)bs->timer + timeDelta);
-      if (0xff < (uint)((s16)bs->amount + (s16)step)) {
-        step = 0xff - bs->amount;
-        bs->mode = 2;
-      }
-      bs->amount += step;
-    }
-    else if (state == 0) {
-      bs->timer = (u8)((f32)bs->timer + timeDelta);
-      bs->amount = 0;
-      if ((flags & 1) != 0) {
-        if (randomGetRange(0,100) == 1) {
-          state = bs->mode;
-          if (state == 3) {
-            bs->mode = 1;
-          }
-          else if ((state < 3) && (state == 0)) {
-            bs->mode = 1;
-            bs->timer = 0;
-            bs->amount = 0;
-          }
-        }
-        else if (randomGetRange(0,0x4b) == 1) {
-          if (randomGetRange(0,1) == 0) {
-            bs->mode = 4;
-          }
-          else {
-            bs->mode = 5;
-          }
-        }
-      }
-    }
-    else {
-      bs->timer = (u8)((f32)bs->timer + timeDelta);
-      if (randomGetRange(0,100) == 1) {
-        state = bs->mode;
-        if (state != 3) {
-          if (state < 3) {
-            if (state != 0) {
-              bs->mode = 3;
-            }
-          }
-          else if (state < 6) {
-            bs->mode = 0;
-          }
-        }
-      }
-    }
-  }
-  else if (state == 5) {
-    bs->timer =
-        (u8)(lbl_803DE9A0 * timeDelta + (f32)bs->timer);
-    bs->amount = 0xff;
-    leftScale = lbl_803DE9A4;
-    if (randomGetRange(0,0x19) == 1) {
-      state = bs->mode;
-      if (state != 3) {
-        if (state < 3) {
-          if (state != 0) {
-            bs->mode = 3;
-          }
-        }
-        else if (state < 6) {
-          bs->mode = 0;
-        }
-      }
-    }
-  }
-  else if (state < 5) {
-    bs->timer =
-        (u8)(lbl_803DE9A0 * timeDelta + (f32)bs->timer);
+    break;
+  case 4:
+    bs->timer = (u8)(lbl_803DE9A0 * timeDelta + (f32)bs->timer);
     bs->amount = 0xff;
     rightScale = lbl_803DE9A4;
-    if (randomGetRange(0,0x19) == 1) {
-      state = bs->mode;
-      if (state != 3) {
-        if (state < 3) {
-          if (state != 0) {
-            bs->mode = 3;
-          }
-        }
-        else if (state < 6) {
-          bs->mode = 0;
-        }
+    if (randomGetRange(0, 25) == 1) {
+      switch (bs->mode) {
+      case 1:
+      case 2:
+        bs->mode = 3;
+        break;
+      case 4:
+      case 5:
+        bs->mode = 0;
+        break;
       }
     }
+    break;
+  case 5:
+    bs->timer = (u8)(lbl_803DE9A0 * timeDelta + (f32)bs->timer);
+    bs->amount = 0xff;
+    leftScale = lbl_803DE9A4;
+    if (randomGetRange(0, 25) == 1) {
+      switch (bs->mode) {
+      case 1:
+      case 2:
+        bs->mode = 3;
+        break;
+      case 4:
+      case 5:
+        bs->mode = 0;
+        break;
+      }
+    }
+    break;
   }
 
   phase = lbl_803DE9AC * (f32)bs->timer;
-  wave = (lbl_803DE9A8 * fn_802943F4(phase) * (f32)bs->amount) / lbl_803DE9B0;
-  rotation = (s16)(s32)((lbl_803DE9B4 * (leftScale * wave)) / lbl_803DE9B8);
+  wave = lbl_803DE9A8 * fn_802943F4(phase);
+  wave = wave * (f32)bs->amount / lbl_803DE9B0;
+  rotation = (lbl_803DE9B4 * (leftScale * wave)) / lbl_803DE9B8;
   joint = 0;
   model = objAnim->modelInstance;
   if (model != 0) {
     jointDataOffset = 0;
     poseOffset = 0;
-    jointCount = (uint)model->jointCount;
-    while (jointCount != 0) {
-      jointData = model->jointData;
-      if ((jointData[objAnim->bankIndex + jointDataOffset + 1] != -1) &&
-          (jointData[jointDataOffset] == OBJLIB_BLINK_LEFT_JOINT_TAG)) {
+    for (jointCount = model->jointCount; jointCount > 0; jointCount--) {
+      jointData = (u8 *)model->jointData;
+      if (((int)jointData[objAnim->bankIndex + jointDataOffset + 1] != 0xff) &&
+          ((int)jointData[jointDataOffset] == OBJLIB_BLINK_LEFT_JOINT_TAG)) {
         joint = (int)objAnim->jointPoseData + poseOffset;
       }
       jointDataOffset += model->modelCount + 1;
       poseOffset += 0x12;
-      jointCount--;
     }
   }
   *(s16 *)(joint + 2) = rotation;
 
-  rotation = (s16)(s32)((lbl_803DE9B4 * (rightScale * wave)) / lbl_803DE9B8);
+  rotation = (lbl_803DE9B4 * (rightScale * wave)) / lbl_803DE9B8;
   joint = 0;
   model = objAnim->modelInstance;
   if (model != 0) {
     jointDataOffset = 0;
     poseOffset = 0;
-    jointCount = (uint)model->jointCount;
-    while (jointCount != 0) {
-      jointData = model->jointData;
-      if ((jointData[objAnim->bankIndex + jointDataOffset + 1] != -1) &&
-          (jointData[jointDataOffset] == OBJLIB_BLINK_RIGHT_JOINT_TAG)) {
+    for (jointCount = model->jointCount; jointCount > 0; jointCount--) {
+      jointData = (u8 *)model->jointData;
+      if (((int)jointData[objAnim->bankIndex + jointDataOffset + 1] != 0xff) &&
+          ((int)jointData[jointDataOffset] == OBJLIB_BLINK_RIGHT_JOINT_TAG)) {
         joint = (int)objAnim->jointPoseData + poseOffset;
       }
       jointDataOffset += model->modelCount + 1;
       poseOffset += 0x12;
-      jointCount--;
     }
   }
   *(s16 *)(joint + 2) = -rotation;
