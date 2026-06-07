@@ -3317,9 +3317,24 @@ off` flips to per-ACCESS re-derivation (addis+slwi+add each — over-shoots);
 versions 1.0-2.5 identical; phi'd slot inert; (int)-launder only per-site;
 member vs pad0-subscript origin only moves WHICH operand takes the addis.
 No spelling found that keeps the shared partial AND per-access lo at 3+
-uses. Caps mapLoadDataFile at ~93. Research target for the next cap
-campaign — the fix likely needs whatever defeats the full-sum VN web while
-leaving the partial-sum isel-CSE alive.
+uses. Caps mapLoadDataFile at ~93.
+**Round-2 findings (task #12 — RECLASSIFIED as fn-context-bound, the
+#108-dose family):** (a) minimal /tmp probes CANNOT reproduce the fold —
+exact site replicas (3 same-address uses, call-crossing, same
+struct/offsets, scheduling+peephole off, GC/2.0 flags) all compile to
+target's disp-form in isolation; the fold only fires inside the real
+8.4KB fn, i.e. a fn-global trigger like the #108 interleave dose. ALL
+future probing for this class must be in-tree (the #113 probe-trap,
+isel edition). (b) The #112 K-on-base laundered spelling
+(`*(u32 *)((u8 *)((u8 *)t + 0x195D8) + (slot << 2))`) fixes the addis
+OPERAND side (addis binds the base = target's shape) but NOT the fold,
+and NET-REGRESSES in-context (93.33->92.00; emission order shifts
+addis-before-slwi; the swapped-operand spelling canonicalizes
+identically — both reverted). (c) The trigger involves same-ADDRESS
+multi-use (lwz+stw read-write pairs), not constant site count: in the
+SAME fn, MLDF_OWNER's 14 read-only big-offset sites stay disp-form
+while MLDF_PTR's lwz+stw clusters fold. Park the class; revisit only
+if the #108 fn-global state mechanism ever cracks.
 
 ## Foreign-compiler objects (GCC/SN ProDG): a PERMANENT MWCC cap class
 
