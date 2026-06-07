@@ -64,7 +64,8 @@ void androssligh_init(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma scheduling on
+#pragma scheduling off
+#pragma peephole off
 void androssligh_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -90,6 +91,7 @@ void androssligh_update(int obj)
         break;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off

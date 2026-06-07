@@ -144,7 +144,8 @@ void fn_8022F270(int obj, int p2) { *(int *)(*(int *)&((GameObject *)obj)->extra
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma scheduling on
+#pragma scheduling off
+#pragma peephole off
 void fn_8022F27C(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -154,4 +155,5 @@ void fn_8022F27C(int obj)
     fn_800541A4(anim, (u16)*(int *)(state + 4));
     textureAnimFn_80053f2c(anim, state, (int)texture);
 }
+#pragma peephole reset
 #pragma scheduling reset

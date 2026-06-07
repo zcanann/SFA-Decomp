@@ -293,7 +293,8 @@ void fn_8022ED74(int obj, int v) { *(f32 *)(*(int *)&((GameObject *)obj)->extra 
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma scheduling on
+#pragma scheduling off
+#pragma peephole off
 void fn_8022ECE0(int obj, f32 param)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -312,4 +313,5 @@ void fn_8022ECE0(int obj, f32 param)
     Matrix_TransformPoint(mtx, lbl_803E7044, lbl_803E7044, *(f32 *)(state + 4),
                           (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
 }
+#pragma peephole reset
 #pragma scheduling reset

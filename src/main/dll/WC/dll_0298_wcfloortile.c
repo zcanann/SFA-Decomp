@@ -348,6 +348,7 @@ void fn_8022B8A0(int p, int q) {
 
 #pragma peephole off
 #pragma scheduling on
+#pragma scheduling off
 void fn_8022B764(int p, int q, int idx) {
     f32 pz, py, px;
     int setup;
@@ -376,6 +377,7 @@ void fn_8022B764(int p, int q, int idx) {
     fn_8022ECE0(((ArwingState *)q)->unk438, ((ArwingState *)q)->unk448);
     Sfx_PlayFromObject(p, SFXbaddie_rach_call3);
 }
+#pragma scheduling reset
 #pragma scheduling reset
 #pragma peephole reset
 

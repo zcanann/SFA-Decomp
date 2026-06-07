@@ -4291,6 +4291,7 @@ void Credits_initialise(void)
  * obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
  * checks bit 0x10. Returns 1 only when the post-OR check passes. */
 #pragma peephole off
+#pragma scheduling off
 int trickyFn_80138f14(u8* obj)
 {
     u8* b = ((GameObject *)obj)->extra;
@@ -4302,6 +4303,7 @@ int trickyFn_80138f14(u8* obj)
     }
     return 0;
 }
+#pragma scheduling reset
 #pragma peephole reset
 
 extern f32   lbl_803E2344;
