@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/frustum.h"
 #include "main/lightmap.h"
@@ -2847,7 +2848,7 @@ void renderObjects(s8 *arg0) {
             }
         } else {
             if ((flags & 0x800000) == 0) {
-                (*(void (**)(int, int, int, int, void *))(*gModgfxInterface + 0x1c))(0, 0, 0, 1, obj);
+                ((ModgfxInterface *)*gModgfxInterface)->renderEffects((void *)0, 0, 0, 1, obj);
             }
             objRender(0, 0, 0, 0, obj, 1);
             p = (int *)((GameObject *)obj)->anim.modelState;
@@ -3492,7 +3493,7 @@ void sceneDraw(void)
     i = 0;
     cursor = (u8 *)(q + 0x4114);
     for (; i < lbl_803DCDF0; i++) {
-        (*(void (***)(int, int, int, int, u32))gModgfxInterface)[7](0, 0, 0, 1, *(u32 *)cursor);
+        ((ModgfxInterface *)*gModgfxInterface)->renderEffects((void *)0, 0, 0, 1, (void *)*(u32 *)cursor);
         objRender(0, 0, 0, 0, (void *)*(u32 *)cursor, 1);
         cursor += 4;
     }
@@ -3514,8 +3515,8 @@ void sceneDraw(void)
     ((u32 *)(q + 12))[lbl_803DCE30 * 4] = 9;
     lbl_803DCE30++;
     sceneDrawTransparentPolys();
-    (*(void (***)(s8 *))gModgfxInterface)[12](buf);
-    (*(void (***)(int, int, int, int, int))gModgfxInterface)[7](0, 0, 0, 0, 0);
+    ((ModgfxInterface *)*gModgfxInterface)->markSourceFrameUpdated(buf);
+    ((ModgfxInterface *)*gModgfxInterface)->renderEffects((void *)0, 0, 0, 0, (void *)0);
     player = Obj_GetPlayerObject();
     if (player != NULL) {
         i = 0;
@@ -4019,7 +4020,7 @@ void objDrawFn_8005da48(int *obj)
         objRenderFn_8003d980(obj, model);
     } else {
         void *shadow;
-        (*(void (*)(int, int, int, int, int *))(*(int *)(*gModgfxInterface + 0x1c)))(0, 0, 0, 1, obj);
+        ((ModgfxInterface *)*gModgfxInterface)->renderEffects((void *)0, 0, 0, 1, obj);
         renderResetFn_8003fc60();
         objRender(0, 0, 0, 0, obj, 1);
         fn_8000F9B4();

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/asset_load.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/engine_8001746C_phantoms.h"
@@ -2195,7 +2196,7 @@ void Obj_UpdateAllObjects(u8 flags)
         (*(void (**)(u8))(*(int *)gWaterfxInterface + 4))(framesThisStep);
     }
     if ((f & 2) == 0) {
-        (*(void (**)(int, int, int))(*(int *)gModgfxInterface + 0xc))(0, 0, 0);
+        ((ModgfxInterface *)*(void **)gModgfxInterface)->updateActiveEffects(0, 0, 0);
         (*(void (**)(int, u8, int, int))(*(int *)gExpgfxInterface + 0xc))(0, framesThisStep, 0, 0);
     }
     if (timeStop == 0) {

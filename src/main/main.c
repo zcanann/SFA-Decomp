@@ -1467,7 +1467,7 @@ extern int *gModgfxInterface;
 #pragma peephole off
 void vfplavastar_free(int obj) {
     (*gExpgfxInterface)->freeObject((void *)obj);
-    (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x14)))(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->freeSourceEffects((void *)obj);
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
@@ -14230,8 +14231,7 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
 {
     int v;
     if (lbl_803DE44C != NULL && ((((PlayerState *)inner)->unk3F4 >> 6) & 1) != 0) {
-        (*(void (*)(int, int, int, int, void *))(*(int *)(*gModgfxInterface + 0x1c)))(
-            a, b, c, 1, lbl_803DE44C);
+        ((ModgfxInterface *)*gModgfxInterface)->renderEffects((void *)a, b, c, 1, lbl_803DE44C);
     }
     if (((PlayerState *)inner)->unk81C != 0) {
         (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(

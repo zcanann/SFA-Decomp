@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/shader.h"
 
@@ -4230,7 +4231,7 @@ void beginLoadingMap(void)
     lbl_803DCEBD = 0;
     (*(void (*)(void))(*(int*)(*gWaterfxInterface + 0x1c)))();
     (*(void (*)(void))(*(int*)(*gProjgfxInterface + 4)))();
-    (*(void (*)(void))(*(int*)(*gModgfxInterface + 4)))();
+    ((ModgfxInterface *)*gModgfxInterface)->onMapSetup();
     (*(void (*)(void))(*(int*)(*gExpgfxInterface + 4)))();
     (*(void (*)(void))(*(int*)(*gPartfxInterface + 4)))();
     (*(void (*)(void))(*(int*)(*gCloudActionInterface + 0x14)))();

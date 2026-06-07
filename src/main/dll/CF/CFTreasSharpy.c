@@ -481,7 +481,7 @@ int fxemit_getObjectTypeId(void)
 void fxemit_free(FxEmitObject *obj)
 {
     (*gExpgfxInterface)->freeObject(obj);
-    ((void (*)(int))((void **)*(int *)gModgfxInterface)[5])((int)obj);
+    ((ModgfxInterface *)*(void **)gModgfxInterface)->freeSourceEffects(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset

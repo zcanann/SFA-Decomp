@@ -1114,7 +1114,7 @@ extern void *lbl_803DDCC0;
 #pragma peephole off
 void vfpdraghead_free(int obj) {
     (*gExpgfxInterface)->freeObject((void *)obj);
-    (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x14)))(obj);
+    ((ModgfxInterface *)*gModgfxInterface)->freeSourceEffects((void *)obj);
     if (lbl_803DDCC0 != NULL) {
         Resource_Release(lbl_803DDCC0);
     }
