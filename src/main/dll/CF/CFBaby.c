@@ -84,7 +84,7 @@ extern undefined4 DAT_80322678;
 extern undefined4 DAT_8032267c;
 extern undefined4 DAT_8032267d;
 extern undefined4 DAT_8032267e;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern MapEventInterface **DAT_803dd72c;
@@ -809,11 +809,11 @@ void FUN_80188470(uint param_1)
   if (*(short *)(param_1 + 0x46) == 0x548) {
     uVar2 = GameBit_Get((int)*(short *)(iVar4 + 6));
     if ((uVar2 != 0) && (uVar2 = GameBit_Get((int)*(short *)(iVar4 + 4)), uVar2 == 0)) {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
     }
     uVar2 = GameBit_Get((int)*(short *)(iVar4 + 6));
     if ((uVar2 == 0) && (uVar2 = GameBit_Get((int)*(short *)(iVar4 + 4)), uVar2 != 0)) {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence(1, (void *)param_1, -1);
     }
   }
   else if (*(short *)(iVar4 + 10) == 0) {
@@ -915,7 +915,7 @@ void FUN_8018866c(int param_1)
     }
   }
   else {
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
+    (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
     GameBit_Set(0x1bd,1);
   }
   return;
@@ -959,7 +959,7 @@ void FUN_80188800(int param_1)
 {
   if ((*(byte *)(param_1 + 0xaf) & 1) != 0) {
     FUN_80006ba8(0,0x100);
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
+    (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
   }
   return;
 }
@@ -1642,10 +1642,10 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar2 = ObjGroup_FindNearestObject(0xf,param_9,(float *)0x0);
       if ((*(char *)(param_9 + 0xac) == '\r') && (uVar3 = GameBit_Get(0xc92), uVar3 != 0)) {
         *(float *)(iVar2 + 0x10) = *(float *)(iVar2 + 0x10) + FLOAT_803e4838;
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(2, (void *)iVar2, -1);
+        (*gObjectTriggerInterface)->runSequence(2, (void *)iVar2, -1);
       }
       else {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)iVar2, -1);
+        (*gObjectTriggerInterface)->runSequence(1, (void *)iVar2, -1);
       }
       GameBit_Set((int)*(short *)(iVar8 + 0x1c),0);
     }
@@ -1660,10 +1660,10 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar2 = ObjGroup_FindNearestObject(0xf,param_9,(float *)0x0);
       if ((*(char *)(param_9 + 0xac) == '\r') && (uVar3 = GameBit_Get(0xc92), uVar3 != 0)) {
         *(float *)(iVar2 + 0x10) = *(float *)(iVar2 + 0x10) + FLOAT_803e4838;
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(2, (void *)iVar2, -1);
+        (*gObjectTriggerInterface)->runSequence(2, (void *)iVar2, -1);
       }
       else {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)iVar2, -1);
+        (*gObjectTriggerInterface)->runSequence(1, (void *)iVar2, -1);
       }
       GameBit_Set((int)*(short *)(iVar8 + 0x1c),0);
     }
@@ -1737,7 +1737,6 @@ typedef struct CarryableBreakRespawnState {
 
 extern int *lbl_803DCAC0;
 extern EffectInterface **gPartfxInterface;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E3B44;
 extern f32 lbl_803E3B48;
