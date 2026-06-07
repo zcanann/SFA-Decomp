@@ -7013,15 +7013,9 @@ void fn_802B0EA4(int obj, int inner, int state)
     if (((ByteFlags *)((char *)inner + 0x3f1))->b20 != 0) {
         spd = sqrtf(((PlayerState *)state)->baddie.animSpeedA * ((PlayerState *)state)->baddie.animSpeedA +
                     ((PlayerState *)state)->baddie.animSpeedB * ((PlayerState *)state)->baddie.animSpeedB);
-        t = lbl_803E7EA4;
-        if (spd < t) {
-        } else {
-            t = ((PlayerState *)inner)->unk404;
-            if (spd > t) {
-            } else {
-                t = spd;
-            }
-        }
+        t = (spd < lbl_803E7EA4)
+                ? lbl_803E7EA4
+                : ((spd > ((PlayerState *)inner)->unk404) ? ((PlayerState *)inner)->unk404 : spd);
         if (lbl_803E7EE0 == ((PlayerState *)inner)->unk82C) {
             ((PlayerState *)inner)->unk438 = lbl_803E7F44;
         } else {
@@ -7032,15 +7026,9 @@ void fn_802B0EA4(int obj, int inner, int state)
         }
     } else {
         spd = ((PlayerState *)state)->baddie.animSpeedA;
-        t = lbl_803E7EA4;
-        if (spd < t) {
-        } else {
-            t = ((PlayerState *)inner)->unk404;
-            if (spd > t) {
-            } else {
-                t = spd;
-            }
-        }
+        t = (spd < lbl_803E7EA4)
+                ? lbl_803E7EA4
+                : ((spd > ((PlayerState *)inner)->unk404) ? ((PlayerState *)inner)->unk404 : spd);
         u = t * ((PlayerState *)inner)->unk7E0;
         idx = (int)u;
         ((PlayerState *)inner)->unk438 =
@@ -7067,15 +7055,9 @@ void fn_802B0EA4(int obj, int inner, int state)
             f32 base = *(f32 *)(((PlayerState *)inner)->unk400 + 0x10);
             f32 frac = (((PlayerState *)state)->baddie.animSpeedA - base) /
                        (((PlayerState *)inner)->unk404 - base);
-            f32 c = lbl_803E7EA4;
-            if (frac < c) {
-            } else {
-                if (frac > lbl_803E7EE0) {
-                    c = lbl_803E7EE0;
-                } else {
-                    c = frac;
-                }
-            }
+            f32 c = (frac < lbl_803E7EA4)
+                        ? lbl_803E7EA4
+                        : ((frac > lbl_803E7EE0) ? lbl_803E7EE0 : frac);
             ((PlayerState *)inner)->unk430 =
                 ((PlayerState *)inner)->unk430 *
                 ((((PlayerState *)inner)->unk834 - lbl_803E7EE0) * c + lbl_803E7EE0);
@@ -7095,15 +7077,7 @@ void fn_802B0EA4(int obj, int inner, int state)
         ((PlayerState *)inner)->unk840 =
             (((PlayerState *)inner)->unk838 - lbl_803E7FFC) / lbl_803E8098;
         v = ((PlayerState *)inner)->unk840;
-        t = lbl_803E7EA4;
-        if (v < t) {
-        } else {
-            if (v > one) {
-                t = one;
-            } else {
-                t = v;
-            }
-        }
+        t = (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > one) ? one : v);
         ((PlayerState *)inner)->unk840 = t;
         ((PlayerState *)inner)->unk840 =
             -(lbl_803E7E98 * ((PlayerState *)inner)->unk840 - lbl_803E7EE0);
@@ -7114,15 +7088,7 @@ void fn_802B0EA4(int obj, int inner, int state)
             ((PlayerState *)inner)->unk840 =
                 (f32)*(s16 *)((char *)state + 0x19c) / lbl_803E7EE8;
             v = ((PlayerState *)inner)->unk840;
-            t = lbl_803E7EA4;
-            if (v < t) {
-            } else {
-                t = lbl_803E7EE0;
-                if (v > t) {
-                } else {
-                    t = v;
-                }
-            }
+            t = (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);
             ((PlayerState *)inner)->unk840 = t;
             ((PlayerState *)inner)->unk840 =
                 -(lbl_803E7EAC * ((PlayerState *)inner)->unk840 - lbl_803E7EE0);
@@ -7132,15 +7098,7 @@ void fn_802B0EA4(int obj, int inner, int state)
         ((PlayerState *)inner)->unk840 = ((PlayerState *)inner)->unk840 - lbl_803E7EFC;
     }
     v = ((PlayerState *)inner)->unk840;
-    t = lbl_803E7E98;
-    if (v < t) {
-    } else {
-        t = lbl_803E7EE0;
-        if (v > t) {
-        } else {
-            t = v;
-        }
-    }
+    t = (v < lbl_803E7E98) ? lbl_803E7E98 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);
     ((PlayerState *)inner)->unk840 = t;
     *(u32 *)((char *)inner + 0x360) = *(u32 *)((char *)inner + 0x360) & 0xfe7fffff;
 }

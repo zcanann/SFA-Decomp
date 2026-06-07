@@ -1196,10 +1196,8 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
     dist = getXZDistance(targetPos, (f32 *)(obj + 0x18));
     if (dist < distSq) {
         candidate = lbl_803E241C * timeDelta + ((TrickyState *)state)->unk14;
-        if (candidate < lbl_803E23DC) {
-            candidate = lbl_803E23DC;
-        }
-        ((TrickyState *)state)->unk14 = candidate;
+        ((TrickyState *)state)->unk14 =
+            (candidate < lbl_803E23DC) ? lbl_803E23DC : candidate;
         return;
     }
     if (flag != 0) {
@@ -1212,10 +1210,8 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
         vecRotateZXY(&params, delta);
         if (delta[2] > lbl_803E23DC) {
             candidate = lbl_803E241C * timeDelta + ((TrickyState *)state)->unk14;
-            if (candidate < lbl_803E23DC) {
-                candidate = lbl_803E23DC;
-            }
-            ((TrickyState *)state)->unk14 = candidate;
+            ((TrickyState *)state)->unk14 =
+                (candidate < lbl_803E23DC) ? lbl_803E23DC : candidate;
             return;
         }
     }
@@ -1249,26 +1245,18 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
             if (candidate > lbl_803E23DC) {
                 if (candidate < ((TrickyState *)state)->unk14) {
                     f32 step = lbl_803E241C * timeDelta + ((TrickyState *)state)->unk14;
-                    if (step < candidate) {
-                        step = candidate;
-                    }
-                    ((TrickyState *)state)->unk14 = step;
+                    ((TrickyState *)state)->unk14 = (step < candidate) ? candidate : step;
                     return;
                 } else {
                     f32 step;
                     if (candidate > lbl_803E248C) {
                         step = lbl_803E2420 * timeDelta + ((TrickyState *)state)->unk14;
-                        if (step > lbl_803E248C) {
-                            step = lbl_803E248C;
-                        }
-                        ((TrickyState *)state)->unk14 = step;
+                        ((TrickyState *)state)->unk14 =
+                            (step > lbl_803E248C) ? lbl_803E248C : step;
                         return;
                     }
                     step = lbl_803E2420 * timeDelta + ((TrickyState *)state)->unk14;
-                    if (step > candidate) {
-                        step = candidate;
-                    }
-                    ((TrickyState *)state)->unk14 = step;
+                    ((TrickyState *)state)->unk14 = (step > candidate) ? candidate : step;
                     return;
                 }
             }
@@ -1284,9 +1272,6 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
     }
     {
         f32 step = lbl_803E2420 * timeDelta + ((TrickyState *)state)->unk14;
-        if (step > lbl_803E248C) {
-            step = lbl_803E248C;
-        }
-        ((TrickyState *)state)->unk14 = step;
+        ((TrickyState *)state)->unk14 = (step > lbl_803E248C) ? lbl_803E248C : step;
     }
 }
