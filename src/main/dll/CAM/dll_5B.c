@@ -347,14 +347,14 @@ void CameraModeViewfinder_free(int param_1)
   FUN_80053bf0(0);
   iVar2 = *(int *)(param_1 + 0xa4);
   if (iVar2 != 0) {
-    *(undefined *)(iVar2 + 0x36) = 0xff;
+    ((GameObject *)iVar2)->anim.alpha = 0xff;
     iVar1 = FUN_80017a98();
     if (iVar1 == iVar2) {
       FUN_80294d00(iVar2,local_18);
       if (local_18[0] != 0) {
-        *(undefined *)(local_18[0] + 0x36) = 0xff;
-        if (*(char *)(local_18[0] + 0x36) == '\x01') {
-          *(undefined *)(local_18[0] + 0x36) = 0;
+        ((GameObject *)local_18[0])->anim.alpha = 0xff;
+        if (((GameObject *)local_18[0])->anim.alpha == 1) {
+          ((GameObject *)local_18[0])->anim.alpha = 0;
         }
       }
     }
@@ -473,13 +473,13 @@ void CameraModeViewfinder_update(s16 *param_1)
       brightness = 1;
     }
     if (targetObj != NULL) {
-      targetObj[0x36] = brightness;
+      ((GameObject *)targetObj)->anim.alpha = brightness;
       if ((u8 *)Obj_GetPlayerObject() == targetObj) {
         fn_802966D4((int)targetObj, (int *)&shadow2);
         if (shadow2 != NULL) {
-          shadow2[0x36] = brightness;
-          if (shadow2[0x36] == 1) {
-            shadow2[0x36] = 0;
+          ((GameObject *)shadow2)->anim.alpha = brightness;
+          if (((GameObject *)shadow2)->anim.alpha == 1) {
+            ((GameObject *)shadow2)->anim.alpha = 0;
           }
         }
       }
@@ -508,13 +508,13 @@ void CameraModeViewfinder_update(s16 *param_1)
       ((void (*)(int, int, int, int, int, int, int))*(code **)(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0, 0xff);
       targetObj = *(u8 **)(param_1 + 0x52);
       if (targetObj != NULL) {
-        targetObj[0x36] = 0xff;
+        ((GameObject *)targetObj)->anim.alpha = 0xff;
         if ((u8 *)Obj_GetPlayerObject() == targetObj) {
           fn_802966D4((int)targetObj, (int *)&shadow);
           if (shadow != NULL) {
-            shadow[0x36] = 0xff;
-            if (shadow[0x36] == 1) {
-              shadow[0x36] = 0;
+            ((GameObject *)shadow)->anim.alpha = 0xff;
+            if (((GameObject *)shadow)->anim.alpha == 1) {
+              ((GameObject *)shadow)->anim.alpha = 0;
             }
           }
         }
