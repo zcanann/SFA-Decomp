@@ -2223,10 +2223,11 @@ ret0:
 #pragma peephole off
 void Music_Trigger(int id, int arg)
 {
+    extern void sndSeqVolume(u8 volume, u16 time, u32 handle, u8 mode);
     MusicTrigger *trigger;
     MusicChannel *channel;
     int i;
-    int found;
+    int track;
 
     if (arg != 1 && arg != 0) {
         return;
@@ -2246,36 +2247,53 @@ foundTrigger:
         return;
     }
     if (id == 0xeb && arg == 1) {
-        channel = gMusicChannels;
+        MusicChannel *ch = (MusicChannel *)(int)gMusicChannels;
         for (i = 15; i >= 0; i--) {
-            if ((int)channel->field_0 == 0x5e && channel->status != 0 && channel->status != 2 &&
-                channel->status != 5) {
-                goto foundActive;
+            if ((int)ch->field_0 == 0x5e) {
+                if (ch->status == 0) {
+                } else if (ch->status == 2) {
+                } else {
+                    switch (ch->status) {
+                    case 5:
+                        break;
+                    default:
+                        goto foundActive;
+                    }
+                }
             }
-            channel++;
+            ch++;
         }
-        channel = NULL;
+        ch = NULL;
 foundActive:
-        if (channel != NULL) {
+        if (ch != NULL) {
             return;
         }
-        if (GameBit_Get(0xa7f)) {
+        switch (GameBit_Get(0xa7f)) {
+        case 0:
+            break;
+        default:
             return;
         }
     }
-    channel = gMusicChannels;
-    found = 0;
+    track = trigger->track;
+    channel = (MusicChannel *)(int)gMusicChannels;
     for (i = 15; i >= 0; i--) {
-        if (channel->field_0 == (int)trigger->track && channel->status != 0 &&
-            channel->status != 2 && channel->status != 5) {
-            found = 1;
-            break;
+        if ((int)channel->field_0 == track) {
+            if (channel->status == 0) {
+            } else if (channel->status == 2) {
+            } else {
+                switch (channel->status) {
+                case 5:
+                    break;
+                default:
+                    goto foundChannel;
+                }
+            }
         }
         channel++;
     }
-    if (!found) {
-        channel = NULL;
-    }
+    channel = NULL;
+foundChannel:
     if (arg == 1) {
         if (channel == NULL) {
             Music_LoadChannelForTrigger(trigger);
@@ -2284,17 +2302,19 @@ foundActive:
         if (channel->status != 1) {
             return;
         }
-        sndSeqVolume(channel->pad14[0], *(u16 *)trigger->pad, channel->seqHandle, 0);
+        sndSeqVolume((u8)*(u16 *)&channel->pad14[0], *(u16 *)trigger->pad, channel->seqHandle, 0);
     } else if (channel != NULL) {
-        if (channel->status == 2) {
+        int st;
+        i = *(u16 *)trigger->pad;
+        st = channel->status;
+        if (st == 2) {
             return;
         }
-        if (channel->status == 4 || channel->status == 5) {
+        if (st == 4 || st == 5) {
             channel->status = 5;
             return;
         }
-        i = *(u16 *)trigger->pad;
-        sndSeqVolume(0, i < 0x1f4 ? 0x1f4 : i, channel->seqHandle, 1);
+        sndSeqVolume(0, (u16)(i < 0x1f4 ? 0x1f4 : i), channel->seqHandle, 1);
         channel->status = 2;
     }
 }
@@ -2322,7 +2342,7 @@ static void Music_FreeChannel(MusicChannel *ch)
 #pragma peephole off
 void streamFn_8000a380(int mask, int mode, int time)
 {
-    MusicChannel *ch = gMusicChannels;
+    MusicChannel *ch = (MusicChannel *)(int)gMusicChannels;
     int i = 15;
     do {
         if (ch->status != 0 && ((ch->pad11 + 1) & mask) != 0) {
