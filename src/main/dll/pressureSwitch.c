@@ -200,12 +200,12 @@ void FUN_8014e2a8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
     FUN_8003b818(param_1);
     if ((*(byte *)(iVar1 + 0x26) & 0x10) != 0) {
       FUN_8008111c((double)lbl_803E32E8,
-                   (double)((float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0x36)) -
+                   (double)((float)((double)CONCAT44(0x43300000,(uint)((GameObject *)param_1)->anim.alpha) -
                                    DOUBLE_803e32d8) / lbl_803E32EC),param_1,3,(int *)0x0);
     }
     if ((*(byte *)(iVar1 + 0x26) & 8) != 0) {
       FUN_8008111c((double)lbl_803E32E8,
-                   (double)((float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0x36)) -
+                   (double)((float)((double)CONCAT44(0x43300000,(uint)((GameObject *)param_1)->anim.alpha) -
                                    DOUBLE_803e32d8) / lbl_803E32EC),param_1,4,(int *)0x0);
     }
   }
@@ -938,11 +938,11 @@ void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
                 (obj, p2, p3, p4, p5, lbl_803E2650);
             if ((state->flags & 0x10) != 0) {
                 objParticleFn_80099d84(obj, 3, 0, lbl_803E2650,
-                    (f32)(u32)*(u8 *)(obj + 0x36) / lbl_803E2654);
+                    (f32)(u32)((GameObject *)obj)->anim.alpha / lbl_803E2654);
             }
             if ((state->flags & 0x08) != 0) {
                 objParticleFn_80099d84(obj, 4, 0, lbl_803E2650,
-                    (f32)(u32)*(u8 *)(obj + 0x36) / lbl_803E2654);
+                    (f32)(u32)((GameObject *)obj)->anim.alpha / lbl_803E2654);
             }
         }
     }
@@ -1228,7 +1228,7 @@ void hagabon_update(int obj)
             return;
         }
         ((GameObject *)obj)->unkF4 = 0;
-        *(u8 *)(obj + 0x36) = 1;
+        ((GameObject *)obj)->anim.alpha = 1;
         state->flags |= 8;
         Sfx_PlayFromObject(obj, SFXfox_treadwater122);
         return;
@@ -1242,25 +1242,25 @@ void hagabon_update(int obj)
         Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
     }
 
-    if ((*(u8 *)(obj + 0x36) != 0) && ((state->flags & 0x18) != 0)) {
+    if ((((GameObject *)obj)->anim.alpha != 0) && ((state->flags & 0x18) != 0)) {
         if ((state->flags & 0x10) != 0) {
-            fadeAsDouble.bits = CONCAT44(0x43300000, (u32)*(u8 *)(obj + 0x36));
+            fadeAsDouble.bits = CONCAT44(0x43300000, (u32)((GameObject *)obj)->anim.alpha);
             fade = (int)((f32)(fadeAsDouble.value - lbl_803E2640) - timeDelta);
-            *(u8 *)(obj + 0x36) = (u8)fade;
-            if (*(u8 *)(obj + 0x36) < 7) {
+            ((GameObject *)obj)->anim.alpha = (u8)fade;
+            if (((GameObject *)obj)->anim.alpha < 7) {
                 ((GameObject *)obj)->unkF4 = 1;
-                *(u8 *)(obj + 0x36) = 0;
+                ((GameObject *)obj)->anim.alpha = 0;
                 state->flags &= 0xef;
                 Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
             }
             ObjHits_DisableObject(obj);
         }
         if ((state->flags & 8) != 0) {
-            fadeAsDouble.bits = CONCAT44(0x43300000, (u32)*(u8 *)(obj + 0x36));
+            fadeAsDouble.bits = CONCAT44(0x43300000, (u32)((GameObject *)obj)->anim.alpha);
             fade = (int)((f32)(fadeAsDouble.value - lbl_803E2640) + timeDelta);
-            *(u8 *)(obj + 0x36) = (u8)fade;
-            if (*(u8 *)(obj + 0x36) > 0xf8) {
-                *(u8 *)(obj + 0x36) = 0xff;
+            ((GameObject *)obj)->anim.alpha = (u8)fade;
+            if (((GameObject *)obj)->anim.alpha > 0xf8) {
+                ((GameObject *)obj)->anim.alpha = 0xff;
                 state->flags &= 0xf7;
             }
         }
