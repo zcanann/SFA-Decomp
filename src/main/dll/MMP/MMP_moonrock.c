@@ -63,7 +63,7 @@ extern f32 lbl_803E4D38;
 extern f32 lbl_803E4D50;
 extern f32 lbl_803E4D54;
 
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int *gCameraInterface;
 extern int *gRomCurveInterface;
 extern u8 *Obj_GetPlayerObject(void);
@@ -254,10 +254,10 @@ void lightning_init(u8 *obj, u8 *data)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void *gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 void WaterFallSpray_free(u8* obj)
 {
-    (*(EffectInterface **)gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeObject(obj);
 }
 
 typedef struct WaterFallSprayPartfxArgs {
@@ -270,7 +270,7 @@ typedef struct WaterFallSprayPartfxArgs {
 } WaterFallSprayPartfxArgs;
 
 #define WATERFALLSPRAY_SPAWN_PARTICLE(obj, id, args) \
-    ((EffectInterface *)*gPartfxInterface)->spawnObject( \
+    (*gPartfxInterface)->spawnObject( \
         (obj), (id), (args), 4, -1, 0)
 
 #pragma scheduling off

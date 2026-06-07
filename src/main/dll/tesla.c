@@ -49,14 +49,14 @@ extern void ObjMsg_SendToObject(int obj, int message, int sender, int param);
 extern int objGetAnimState80A(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern u8 gTrickyCurveBurstCounter;
 extern f32 timeDelta;
 extern f64 lbl_803E6440;
 extern f32 lbl_803E6448;
 
 #define PARTFX_SPAWN(obj, effectId, args, mode, arg5, arg6) \
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)(obj), (effectId), (args), (mode), (arg5), (arg6))
+    (*gPartfxInterface)->spawnObject((void *)(obj), (effectId), (args), (mode), (arg5), (arg6))
 
 /*
  * --INFO--

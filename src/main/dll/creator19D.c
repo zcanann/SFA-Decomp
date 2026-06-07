@@ -35,7 +35,7 @@ extern undefined4 DAT_803dc070;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern int *gModgfxInterface;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern void *lbl_803DDBB8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
@@ -169,7 +169,7 @@ typedef struct DFSHLaserBeamObject {
 
 #define MODGFX_DETACH(obj) ((void (*)(void *))(*(int *)((u8 *)*gModgfxInterface + 0x18)))(obj)
 #define PARTFX_SPAWN(obj,id,a,b,c,d) \
-  ((EffectInterface *)*gPartfxInterface)->spawnObject((obj),(id),(void *)(a),(b),(c),(void *)(d))
+  (*gPartfxInterface)->spawnObject((obj),(id),(void *)(a),(b),(c),(void *)(d))
 #define RESOURCE_SPAWN(obj,id,a,flags,owner,unk) \
   ((void (*)(void *,int,int,int,int,int))(*(int *)((u8 *)*(int *)lbl_803DDBB8 + 0x4)))(obj,id,a,flags,owner,unk)
 

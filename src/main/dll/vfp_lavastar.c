@@ -16,7 +16,7 @@ extern void *gObjectTriggerInterface;
 extern void *gBaddieControlInterface;
 extern int lbl_803DDBB0;
 extern f32 lbl_803DDBA4;
-extern void *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E4CB8;
 extern f32 lbl_803E4CC8;
 
@@ -50,10 +50,10 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
             outYPtr = &pathPoint.y;
             outZPtr = &pathPoint.z;
             ObjPath_GetPointWorldPosition(obj, 1, outXPtr, outYPtr, outZPtr, 0);
-            (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
 
             ObjPath_GetPointWorldPosition(obj, 0, outXPtr, outYPtr, outZPtr, 0);
-            (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
 
             if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0) {
                 modelLightStruct_setPosition(*outXPtr, *outYPtr, *outZPtr);

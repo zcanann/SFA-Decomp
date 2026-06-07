@@ -53,7 +53,7 @@ extern f32 lbl_803E537C;
 extern f32 lbl_803E5380;
 
 extern u8 lbl_80326D20[];
-extern void *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern void *gObjectTriggerInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -430,7 +430,7 @@ void bombplant_update(void *obj)
           (f32)(int)(*(s16 *)((u8 *)param + 0x1a) + randomGetRange(-0x32, 0x32));
     }
     if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
-      (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);
+      (*gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);
     }
     break;
   }

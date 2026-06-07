@@ -48,8 +48,8 @@ extern void gameTimerStop(void);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void vecRotateZXY(s16 *rotation, f32 *outVec);
-extern int *gPartfxInterface;
-extern int *gExpgfxInterface;
+extern EffectInterface **gPartfxInterface;
+extern EffectInterface **gExpgfxInterface;
 
 extern MapEventInterface **gMapEventInterface;
 extern u32 lbl_803E6450;
@@ -189,17 +189,17 @@ void TrickyCurve_updateBurstTrigger(int obj)
     if (GameBit_Get(0x1d9) != 0) {
       GameBit_Set(0x468, 1);
       ObjMsg_SendToObject(player, 0x60004, obj, 0);
-      ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x5ed, &fxParams, 2, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x5ed, &fxParams, 2, -1, NULL);
       burstParticles = 9;
       do {
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x5fd, &fxParams, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x5fd, &fxParams, 2, -1, NULL);
       } while (burstParticles-- != 0);
     } else {
       ObjMsg_SendToObject(player, 0x60004, obj, 1);
-      ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x5ed, &fxParams, 2, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x5ed, &fxParams, 2, -1, NULL);
       burstParticles = 9;
       do {
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x5fd, &fxParams, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x5fd, &fxParams, 2, -1, NULL);
       } while (burstParticles-- != 0);
     }
     GameBit_Set(((TrickyCurveObjState *)state)->unkA, 1);
@@ -830,7 +830,7 @@ void TrickyCurve_update(int *obj) {
 }
 
 void TrickyCurve_free(int obj) {
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
 
 void TrickyCurve_init(int *obj, u8 *def) {

@@ -169,7 +169,7 @@ int wmworm_getObjectTypeId(void) { return 0x0; }
 void wmworm_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 #pragma peephole reset
 
-extern int *gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 void wmworm_free(int obj) {
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
