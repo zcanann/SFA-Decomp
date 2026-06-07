@@ -2881,7 +2881,7 @@ extern void screenFn_8000e944(int v);
 void sceneRender(void) {
     renderFlags |= 0x21;
     if (lbl_803DCEA4 == 1 || lbl_803DCEA4 == 3) {
-        renderFlags &= 0xfffffffe;
+        renderFlags &= ~1LL;
     }
     Camera_UpdateProjection(0, 0);
     updateVisibleGeometry();
@@ -2893,7 +2893,7 @@ void sceneRender(void) {
     lbl_803DCEA8 = Camera_GetCurrentViewSlot();
     sceneDraw();
     screenFn_8000e944(0);
-    renderFlags &= 0xfffffffd;
+    renderFlags &= ~2LL;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -3070,7 +3070,7 @@ void *mapGetBlockAtPos(int x, int y, int layer) {
 #pragma scheduling reset
 
 /* Set widescreen flag and switch camera to 16:9 (1.7777) or 4:3 (1.3333). */
-extern f32 shdwChanged_803DEC18;
+extern F32Pair shdwChanged_803DEC18;
 extern f32 lbl_803DB670;
 extern void Camera_SetAspectRatio(f32 ratio);
 #pragma scheduling off
@@ -3078,9 +3078,9 @@ extern void Camera_SetAspectRatio(f32 ratio);
 int setWidescreen(u8 v) {
     if (v != 0) {
         renderFlags |= 0x8;
-        Camera_SetAspectRatio(*(f32 *)((char *)&shdwChanged_803DEC18 + 4));
+        Camera_SetAspectRatio(shdwChanged_803DEC18.hi);
     } else {
-        renderFlags &= 0xfffffff7;
+        renderFlags &= ~8LL;
         Camera_SetAspectRatio(lbl_803DB670);
     }
     return 0;
@@ -3098,7 +3098,7 @@ void setDrawLights(int v) {
         renderFlags |= 0x40;
         *(u8 *)((char *)env + 0x40) |= 0x8;
     } else {
-        renderFlags &= ~0x40;
+        renderFlags &= ~0x40LL;
         *(u8 *)((char *)env + 0x40) &= ~0x8;
     }
 }
@@ -3542,7 +3542,7 @@ void sceneDraw(void)
         doSpiritVisionFilter();
     }
     if (bEnableViewFinderHud != 0) {
-        drawViewFinderAperture(lbl_803DEC14, shdwChanged_803DEC18, 0x40, 0);
+        drawViewFinderAperture(lbl_803DEC14, shdwChanged_803DEC18.lo, 0x40, 0);
     }
     if (bEnableColorFilter == 1) {
         doColorFilter(&colorFilterColor);
