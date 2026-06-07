@@ -3467,8 +3467,8 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                     (*(void (*)(int, int))*(int *)((char *)*(int *)(*(int *)(va + 0x68)) + 0x3c))(
                         va, 2);
                     ((GameObject *)obj)->anim.flags |= 8;
-                    *(u32 *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x1000;
-                    *(s16 *)(*(int *)((char *)obj + 0x64) + 0x36) = 0;
+                    ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
+                    ((GameObject *)obj)->anim.modelState->unk36 = 0;
                     *(s16 *)((char *)seq + 0x6e) &= ~4;
                     switch (*(s16 *)(va + 0x46)) {
                     case 0x72:
@@ -3810,11 +3810,11 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 break;
             case 0x2b: {
                 register u32 m;
-                *(u32 *)(*(int *)((char *)obj + 0x64) + 0x30) &= ~0x4;
+                ((GameObject *)obj)->anim.modelState->flags &= ~0x4;
                 break;
             }
             case 0x2c:
-                *(u32 *)(*(int *)((char *)obj + 0x64) + 0x30) |= 4;
+                ((GameObject *)obj)->anim.modelState->flags |= 4;
                 break;
             case 0x31:
                 viewFinderSetZoomTo50();
@@ -5590,7 +5590,7 @@ int fn_8029F108(int obj, int state)
             *(s16 *)vec = 0;
             *(s16 *)((char *)vec + 0x4) = 0;
         }
-        *(int *)(*(int *)((char *)obj + 0x64) + 0x30) &= ~0x1000;
+        ((GameObject *)obj)->anim.modelState->flags &= ~0x1000;
         *(f32 *)((char *)obj + 0x18) = inner->unk768;
         *(f32 *)((char *)obj + 0x20) = inner->unk770;
         if (*(void **)((char *)obj + 0x30) != NULL) {
@@ -5668,9 +5668,9 @@ void fn_8029BC08(int obj)
 #pragma peephole off
 void fn_8029F67C(int obj)
 {
-    int m = *(int *)((char *)obj + 0x64);
+    ObjModelState *modelState = ((GameObject *)obj)->anim.modelState;
     s16 *v;
-    *(int *)((char *)m + 0x30) &= ~0x1000;
+    modelState->flags &= ~0x1000;
     ((GameObject *)obj)->anim.flags &= ~0x8;
     ((GameObject *)obj)->anim.activeMove = -1;
     v = objModelGetVecFn_800395d8(obj, 9);
@@ -7566,20 +7566,20 @@ void playerDoHitDetection(int obj)
         {
             int g = getSbGalleon();
             if (g != 0 && DBprotection_getCameraState() == 2) {
-                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x20) =
+                ((GameObject *)obj)->anim.modelState->overrideWorldPosX =
                     ((GameObject *)obj)->anim.localPosX - *(f32 *)((char *)g + 0xc);
-                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x24) =
+                ((GameObject *)obj)->anim.modelState->overrideWorldPosY =
                     ((GameObject *)obj)->anim.localPosY - *(f32 *)((char *)g + 0x10);
-                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x28) =
+                ((GameObject *)obj)->anim.modelState->overrideWorldPosZ =
                     ((GameObject *)obj)->anim.localPosZ - *(f32 *)((char *)g + 0x14);
-                vecRotateZXY((void *)g, (void *)(*(int *)((char *)obj + 0x64) + 0x20));
-                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x20) =
-                    *(f32 *)(*(int *)((char *)obj + 0x64) + 0x20) + *(f32 *)((char *)g + 0xc);
-                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x24) =
-                    *(f32 *)(*(int *)((char *)obj + 0x64) + 0x24) + *(f32 *)((char *)g + 0x10);
-                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x28) =
-                    *(f32 *)(*(int *)((char *)obj + 0x64) + 0x28) + *(f32 *)((char *)g + 0x14);
-                *(u32 *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x2020;
+                vecRotateZXY((void *)g, &((GameObject *)obj)->anim.modelState->overrideWorldPosX);
+                ((GameObject *)obj)->anim.modelState->overrideWorldPosX =
+                    ((GameObject *)obj)->anim.modelState->overrideWorldPosX + *(f32 *)((char *)g + 0xc);
+                ((GameObject *)obj)->anim.modelState->overrideWorldPosY =
+                    ((GameObject *)obj)->anim.modelState->overrideWorldPosY + *(f32 *)((char *)g + 0x10);
+                ((GameObject *)obj)->anim.modelState->overrideWorldPosZ =
+                    ((GameObject *)obj)->anim.modelState->overrideWorldPosZ + *(f32 *)((char *)g + 0x14);
+                ((GameObject *)obj)->anim.modelState->flags |= 0x2020;
                 ((GameObject *)obj)->anim.rotZ = *(s16 *)((char *)g + 4);
                 *(u32 *)((char *)inner + 0x360) |= 0x8000000;
             }
@@ -10316,7 +10316,7 @@ int fn_802957B4(int obj)
     (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68) + 0x3c)))(sub, 0);
     (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x28)))(obj, 0);
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags & ~8;
-    *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) &= ~0x1000;
+    ((GameObject *)obj)->anim.modelState->flags &= ~0x1000;
     inner->unk7F0 = 0;
     ((GameObject *)obj)->anim.activeMove = -1;
     (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
@@ -11508,8 +11508,8 @@ void objLoadPlayerFromSave(int obj)
     fn_802AB5A4(obj, inner, 0xff);
     *(s16 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0xb2) = 0x29;
     ((GameObject *)obj)->anim.alpha = 0xff;
-    if (*(int *)((char *)obj + 0x64) != 0) {
-        *(int *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x4008;
+    if (((GameObject *)obj)->anim.modelState != NULL) {
+        ((GameObject *)obj)->anim.modelState->flags |= 0x4008;
     }
     (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x14)))(*gGameUIInterface);
     lbl_803DE444 = NULL;
@@ -12360,12 +12360,12 @@ void fn_802B4ED8(int obj, int p2, int mode)
         sx = ((GameObject *)obj)->anim.localPosX;
         sy = ((GameObject *)obj)->anim.localPosY;
         sz = ((GameObject *)obj)->anim.localPosZ;
-        ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x20);
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x24);
-        ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x28);
-        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x20) = sx;
-        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x24) = sy;
-        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x28) = sz;
+        ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.modelState->overrideWorldPosX;
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.modelState->overrideWorldPosY;
+        ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.modelState->overrideWorldPosZ;
+        ((GameObject *)obj)->anim.modelState->overrideWorldPosX = sx;
+        ((GameObject *)obj)->anim.modelState->overrideWorldPosY = sy;
+        ((GameObject *)obj)->anim.modelState->overrideWorldPosZ = sz;
     }
     ((GameObject *)obj)->anim.localPosY =
         ((GameObject *)obj)->anim.localPosY + inner->unk7C8;
@@ -12381,9 +12381,9 @@ void fn_802B4ED8(int obj, int p2, int mode)
     ((GameObject *)obj)->anim.localPosY =
         ((GameObject *)obj)->anim.localPosY - inner->unk7C8;
     if ((*(u32 *)((char *)inner + 0x360) & 0x8000000) != 0) {
-        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x20) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x24) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x28) = ((GameObject *)obj)->anim.localPosZ;
+        ((GameObject *)obj)->anim.modelState->overrideWorldPosX = ((GameObject *)obj)->anim.localPosX;
+        ((GameObject *)obj)->anim.modelState->overrideWorldPosY = ((GameObject *)obj)->anim.localPosY;
+        ((GameObject *)obj)->anim.modelState->overrideWorldPosZ = ((GameObject *)obj)->anim.localPosZ;
         ((GameObject *)obj)->anim.localPosX = sx;
         ((GameObject *)obj)->anim.localPosY = sy;
         ((GameObject *)obj)->anim.localPosZ = sz;
@@ -12893,9 +12893,9 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             sx = ((GameObject *)obj)->anim.localPosX;
             sy = ((GameObject *)obj)->anim.localPosY;
             sz = ((GameObject *)obj)->anim.localPosZ;
-            ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x20);
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x24);
-            ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x28);
+            ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.modelState->overrideWorldPosX;
+            ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.modelState->overrideWorldPosY;
+            ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.modelState->overrideWorldPosZ;
         }
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + ((PlayerState *)inner)->unk7C8;
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, a, b, c, d, lbl_803E7EE0);
@@ -13944,8 +13944,8 @@ int fn_8029FA24(int obj, int state, f32 fv)
         inner->unk6C4 = wpos[1] - j1[1];
         inner->unk6C8 = wpos[2];
         ((GameObject *)obj)->anim.flags |= 8;
-        *(int *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x1000;
-        *(s16 *)(*(int *)((char *)obj + 0x64) + 0x36) = 0;
+        ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
+        ((GameObject *)obj)->anim.modelState->unk36 = 0;
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7FD8;
     }
     {

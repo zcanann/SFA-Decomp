@@ -629,12 +629,12 @@ void FUN_8016b9a8(int param_1)
   fVar1 = lbl_803E3E70 -
           (*(float *)(*(int *)(param_1 + 0xc4) + 0x10) - *(float *)(param_1 + 0x10)) /
           **(float **)(param_1 + 0xb8);
-  **(float **)(param_1 + 100) = lbl_803E3E74 * fVar1 + lbl_803E3E70;
+  ((GameObject *)param_1)->anim.modelState->shadowScale = lbl_803E3E74 * fVar1 + lbl_803E3E70;
   fVar1 = fVar1 * lbl_803E3E78;
   if (fVar2 < fVar1) {
     fVar1 = fVar2;
   }
-  *(short *)(*(int *)(param_1 + 100) + 0x36) = (short)(int)(lbl_803E3E7C * fVar1);
+  ((GameObject *)param_1)->anim.modelState->unk36 = (short)(int)(lbl_803E3E7C * fVar1);
   return;
 }
 
@@ -660,15 +660,15 @@ void FUN_8016ba18(undefined2 *param_1)
   FUN_800632d8((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
                (double)*(float *)(param_1 + 10),param_1,local_18,0);
   ObjHits_DisableObject((int)param_1);
-  *(undefined *)(param_1 + 0x1b) = 0xff;
+  ((GameObject *)param_1)->anim.alpha = 0xff;
   param_1[1] = 0x4000;
   *param_1 = 0;
   param_1[2] = 0;
-  *(uint *)(*(int *)(param_1 + 0x32) + 0x30) = *(uint *)(*(int *)(param_1 + 0x32) + 0x30) | 0x10000;
+  ((GameObject *)param_1)->anim.modelState->flags |= 0x10000;
   *pfVar1 = local_18[0];
   *(float *)(param_1 + 8) = *(float *)(param_1 + 8) - local_18[0];
-  *(undefined2 *)(*(int *)(param_1 + 0x32) + 0x36) = 0;
-  **(float **)(param_1 + 0x32) = lbl_803E3E70;
+  ((GameObject *)param_1)->anim.modelState->unk36 = 0;
+  ((GameObject *)param_1)->anim.modelState->shadowScale = lbl_803E3E70;
   return;
 }
 
@@ -1204,9 +1204,9 @@ void FUN_8016c710(int param_1,int param_2)
     }
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
-  if (*(int *)(param_1 + 100) != 0) {
-    *(undefined *)(*(int *)(param_1 + 100) + 0x3a) = 100;
-    *(undefined *)(*(int *)(param_1 + 100) + 0x3b) = 0x96;
+  if (((GameObject *)param_1)->anim.modelState != NULL) {
+    ((GameObject *)param_1)->anim.modelState->shadowTintA = 100;
+    ((GameObject *)param_1)->anim.modelState->shadowTintB = 0x96;
   }
   FUN_80017a0c(param_1,0xff);
   return;
@@ -1496,9 +1496,9 @@ void FUN_8016ceb4(int param_1,int param_2)
     }
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
-  if (*(int *)(param_1 + 100) != 0) {
-    *(undefined *)(*(int *)(param_1 + 100) + 0x3a) = 100;
-    *(undefined *)(*(int *)(param_1 + 100) + 0x3b) = 0x96;
+  if (((GameObject *)param_1)->anim.modelState != NULL) {
+    ((GameObject *)param_1)->anim.modelState->shadowTintA = 100;
+    ((GameObject *)param_1)->anim.modelState->shadowTintB = 0x96;
   }
   return;
 }
@@ -4127,10 +4127,10 @@ void mikabombshadow_update(int *obj) {
 
     r4 = ((GameObject *)obj)->unkC4;
     t = fz - (*(f32*)((char*)r4 + 0x10) - ((GameObject *)obj)->anim.localPosY) / *(f32*)((GameObject *)obj)->extra;
-    *(f32*)*(int**)((char*)obj + 0x64) = lbl_803E31DC * t + fz;
+    ((GameObject *)obj)->anim.modelState->shadowScale = lbl_803E31DC * t + fz;
     f = t * lbl_803E31E0;
     if (f > fz) f = fz;
-    *(s16*)((char*)*(int**)((char*)obj + 0x64) + 0x36) = (s32)(lbl_803E31E4 * f);
+    ((GameObject *)obj)->anim.modelState->unk36 = (s32)(lbl_803E31E4 * f);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4291,8 +4291,8 @@ void FUN_801713ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar7 = ObjHits_DisableObject(param_9);
   if ((*(ushort *)(param_9 + 6) & 0x2000) != 0) {
     *(float *)(iVar6 + 8) = lbl_803E40E8;
-    if (*(int *)(param_9 + 100) != 0) {
-      *(undefined4 *)(*(int *)(param_9 + 100) + 0x30) = 0x1000;
+    if (((GameObject *)param_9)->anim.modelState != NULL) {
+      ((GameObject *)param_9)->anim.modelState->flags = 0x1000;
     }
   }
   if ((int)*(short *)(iVar6 + 0x10) != 0xffffffff) {
@@ -5333,11 +5333,11 @@ void mikabombshadow_init(int *obj)
     ((GameObject *)obj)->anim.rotY = 0x4000;
     *(s16 *)obj = 0;
     ((GameObject *)obj)->anim.rotZ = 0;
-    *(int *)((char *)*(int **)((char *)obj + 0x64) + 0x30) |= 0x10000;
+    ((GameObject *)obj)->anim.modelState->flags |= 0x10000;
     *(f32 *)state = out;
     ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - out;
-    *(s16 *)((char *)*(int **)((char *)obj + 0x64) + 0x36) = 0;
-    *(f32 *)*(int **)((char *)obj + 0x64) = lbl_803E31D8;
+    ((GameObject *)obj)->anim.modelState->unk36 = 0;
+    ((GameObject *)obj)->anim.modelState->shadowScale = lbl_803E31D8;
 }
 
 void StaticCamera_init(int *obj, int *params, int flag)
@@ -5470,9 +5470,9 @@ void dll_F7_init(int *obj, int *params)
     lbl_803DDAB0 = Resource_Acquire(0x5b, 1);
     lbl_803DDAB4 = Resource_Acquire(0x5a, 1);
     {
-        int *r64 = *(int **)((char *)obj + 0x64);
-        if (r64 != NULL) {
-            *(int *)((char *)r64 + 0x30) |= 0x810;
+        ObjModelState *modelState = ((GameObject *)obj)->anim.modelState;
+        if (modelState != NULL) {
+            modelState->flags |= 0x810;
         }
     }
     *(u8 *)((char *)state + 0xa) = 2;
@@ -5623,10 +5623,10 @@ void dim2roofrub_init(int *obj, int *params)
         ((GameObject *)obj)->unkF4 = *(s16 *)((char *)params + 0x18) + 1;
     }
     {
-        int *r64 = *(int **)((char *)obj + 0x64);
-        if (r64 != NULL) {
-            *(u8 *)((char *)r64 + 0x3a) = 0x64;
-            *(u8 *)((char *)*(int **)((char *)obj + 0x64) + 0x3b) = 0x96;
+        ObjModelState *modelState = ((GameObject *)obj)->anim.modelState;
+        if (modelState != NULL) {
+            modelState->shadowTintA = 0x64;
+            ((GameObject *)obj)->anim.modelState->shadowTintB = 0x96;
         }
     }
 }
@@ -5663,10 +5663,10 @@ void animatedobj_init(int *obj, int *params)
         ((GameObject *)obj)->unkF4 = *(s16 *)((char *)params + 0x18) + 1;
     }
     {
-        int *r64 = *(int **)((char *)obj + 0x64);
-        if (r64 != NULL) {
-            *(u8 *)((char *)r64 + 0x3a) = 0x64;
-            *(u8 *)((char *)*(int **)((char *)obj + 0x64) + 0x3b) = 0x96;
+        ObjModelState *modelState = ((GameObject *)obj)->anim.modelState;
+        if (modelState != NULL) {
+            modelState->shadowTintA = 0x64;
+            ((GameObject *)obj)->anim.modelState->shadowTintB = 0x96;
         }
     }
     Obj_SetModelRenderOpAlpha(obj, 0xff);
@@ -7374,8 +7374,8 @@ void fn_80171E5C(int *obj)
     ObjHits_DisableObject(obj);
     if (((GameObject *)obj)->anim.flags & 0x2000) {
         *(f32 *)(state + 8) = lbl_803E3450;
-        if (*(int **)((char *)obj + 0x64) != NULL) {
-            *(int *)(*(int *)((char *)obj + 0x64) + 0x30) = 0x1000;
+        if (((GameObject *)obj)->anim.modelState != NULL) {
+            ((GameObject *)obj)->anim.modelState->flags = 0x1000;
         }
     }
     if (*(s16 *)(state + 0x10) != -1) {

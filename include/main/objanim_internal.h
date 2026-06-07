@@ -193,6 +193,23 @@ typedef struct ObjAnimBank {
   ObjAnimState *activeState;
 } ObjAnimBank;
 
+typedef struct ObjModelState {
+  f32 shadowScale;
+  u8 pad04[0x14 - 0x04];
+  f32 shadowOffsetX;
+  f32 shadowOffsetY;
+  u8 pad1C[0x20 - 0x1C];
+  f32 overrideWorldPosX;
+  f32 overrideWorldPosY;
+  f32 overrideWorldPosZ;
+  u32 flags;
+  u8 pad34[0x36 - 0x34];
+  s16 unk36;
+  u8 pad38[0x3A - 0x38];
+  u8 shadowTintA;
+  u8 shadowTintB;
+} ObjModelState;
+
 typedef struct ObjAnimComponent {
   s16 rotX;
   s16 rotY;
@@ -221,7 +238,7 @@ typedef struct ObjAnimComponent {
   ObjHitReactState *hitReactState;
   u8 pad58[0x60 - 0x58];
   struct ObjAnimEventTable *eventTable;
-  u8 pad64[0x68 - 0x64];
+  ObjModelState *modelState;
   int **dll;
   u8 *jointPoseData;
   u8 pad70[0x7C - 0x70];
@@ -366,6 +383,7 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, placementData) == 0x4C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, modelInstance) == 0x50);
 STATIC_ASSERT(offsetof(ObjAnimComponent, hitReactState) == 0x54);
 STATIC_ASSERT(offsetof(ObjAnimComponent, eventTable) == 0x60);
+STATIC_ASSERT(offsetof(ObjAnimComponent, modelState) == 0x64);
 STATIC_ASSERT(offsetof(ObjAnimComponent, dll) == 0x68);
 STATIC_ASSERT(offsetof(ObjAnimComponent, jointPoseData) == 0x6C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, banks) == 0x7C);
