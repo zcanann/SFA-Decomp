@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 
@@ -101,8 +102,7 @@ void bombplantspore_update(void *obj) {
                 (*(void (***)(void *))gExpgfxInterface)[5](obj);
                 for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++) {
                     objfx_spawnDirectionalBurst(obj, 5, 7, 1, 0x3c, NULL, 0, lbl_803E53B0, lbl_803E53B8);
-                    (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
-                        obj, 0x3f3, 0, 4, -1, 0);
+                    (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);
                 }
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
@@ -218,8 +218,7 @@ void bombplantspore_update(void *obj) {
                 (*(void (***)(void *))gExpgfxInterface)[5](obj);
                 for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++) {
                     objfx_spawnDirectionalBurst(obj, 5, 7, 1, 0x3c, NULL, 0, lbl_803E53B0, lbl_803E53B8);
-                    (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
-                        obj, 0x3f3, 0, 4, -1, 0);
+                    (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);
                 }
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
@@ -254,8 +253,7 @@ void bombplantspore_init(void *obj, void *param2) {
     (*(void (***)(void *, int, u8 *, u8 *, u8 *))gPathControlInterface)[3](
         state->pathState, 1, lbl_80326D98, &lbl_803DBFC0, events);
     (*(void (***)(void *, void *))gPathControlInterface)[8](obj, state->pathState);
-    (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
-        obj, 0x3f1, 0, 4, -1, 0);
+    (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, 0x3f1, NULL, 4, -1, NULL);
 
     light = objCreateLight(obj, 1);
     if (light != NULL) {

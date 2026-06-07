@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/dim_bossgut.h"
 #include "main/dll/SH/SHkillermushroom.h"
@@ -429,8 +430,7 @@ void bombplant_update(void *obj)
           (f32)(int)(*(s16 *)((u8 *)param + 0x1a) + randomGetRange(-0x32, 0x32));
     }
     if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
-      (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
-          obj, 0x7f1, 0, 2, -1, 0);
+      (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);
     }
     break;
   }

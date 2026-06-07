@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
@@ -33,8 +34,7 @@ typedef struct VfpMinifirePartfxArgs {
 } VfpMinifirePartfxArgs;
 
 #define VFPMINIFIRE_SPAWN(obj, id, args, flags) \
-    (*(void (**)(int, int, VfpMinifirePartfxArgs *, int, int, int))(*gPartfxInterface + 8))( \
-        (obj), (id), (args), (flags), -1, 0)
+    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)(obj), (id), (args), (flags), -1, NULL)
 
 int vfpminifire_getExtraSize(void) { return 0xc; }
 
@@ -61,7 +61,7 @@ void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
 #pragma peephole off
 #pragma scheduling off
 void vfpminifire_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -154,7 +154,7 @@ void vfpminifire_init(int *obj, u8 *init) {
     ((GameObject *)obj)->anim.velocityY = lbl_803E6090;
     ((GameObject *)obj)->anim.localPosY = lbl_803E60A4 + *(f32 *)((char *)init + 0xc);
     ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E609C;
-    (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x38c, 0, 2, -1, 0);
+    ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x38c, NULL, 2, -1, NULL);
     Sfx_PlayFromObject((int)obj, SFXqu_longsob2);
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }
