@@ -961,8 +961,11 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     playerAddHealth, fn_8002CE14, ObjModel_CopyJointTranslation — also the
     `lwz+mr` copy-pair direction in dimlogfire_init/curUiDllDraw). #61b works
     when there are ≥3 independent locals to reorder; the 2-var chain coloring
-    is allocator-internal. Classify on sight and skip — the residual is
-    ~5-10 bytes.
+    is allocator-internal. ⚠️ **SUPERSEDED by recipe #107** — the pair is
+    source-flippable by UN-naming the value target keeps in the lower reg
+    (index-form for walked pointers, member-expression respelling for
+    chained loads); getLoadedTexture/saveFileStruct_isCheatActive/
+    playerAddHealth/curUiDllDraw all → 100.
 
 61d. **The @NNN-vs-named conversion-bias cap: MECHANISM + tested negative.**
     The "named" symbols (lbl_803DFD88, lbl_803E6E80, ... — mistyped `string
@@ -2433,6 +2436,50 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     over-produces (reloads per store). renderMapBlock 74.15->98.07
     (track_dolphin). Sibling of #96's volatile-launder note, for the
     store-side direction.
+
+107. **#61c 2-var pair CRACKED — MWCC colors COMPILER-CREATED temp webs
+    (SR temps, expression-CSE temps) BEFORE named-local webs; the swapped
+    pair tells you which variable the original source did NOT name.**
+    (task #12; getLoadedTexture, saveFileStruct_isCheatActive,
+    playerAddHealth — all 3 → 100, byte-exact.) When the only residual is a
+    2-reg volatile permutation across a load pair/chain (target q=rLOW
+    p=rHIGH, yours p=rLOW q=rHIGH) and decl-order is inert (the #61c
+    cap), read which value target puts in the LOWER reg — that one was an
+    UNNAMED compiler-created web in the original source:
+    - **Walked-pointer loop** (`lwz rH,glob; mr rL,rH`; loop derefs+bumps
+      rL; rH indexed at the hit/exit): write the INDEX form
+      (`if (key == base[i].key) return base[i].texture;`) — strength
+      reduction recreates the walker as an SR temp, which colors LOWER
+      than the named base. Instructions identical INCLUDING the mr; only
+      the coloring flips (getLoadedTexture). The mr's PLACEMENT also
+      tracks source: count in a named local places the SR-init mr after
+      the count lwz; count read inline in the for-condition places it
+      right after the base lwz — match target's prologue order.
+    - **Chained load** (`base = &glob / p->inner; value = base->field`):
+      DROP the named value local and spell the value as the member
+      expression at each use — CSE still emits ONE load, but the value
+      web becomes an expression temp and colors LOWER than the named
+      base. Works for multi-use values (CSE'd across uses) and composes:
+      saveFileStruct_isCheatActive needed the mask inline too
+      (`if ((save->registeredDebugOptions & (1 << idx)) != 0)` — the
+      `1 << idx` CSEs across both ifs); playerAddHealth dropped
+      `int deref = inner->unk35C;` and respelled all 4 uses (the
+      post-store use stays a fresh reload, as target has).
+    - GUARD: dropping the named local can let MWCC SINK the load to its
+      use / route single-use values through r0 and reorder the prologue
+      (probe w1) — keep a named local for whichever value target keeps
+      in the HIGHER reg (usually the base/pointer) to anchor placement.
+    - Negative set (probed inert, don't retry): decl-order both ways,
+      init-order/iter-first assignment chains, #80 (int)-launders on the
+      init, volatile read anchors, two-symbol-ref `p = glob; q = glob;`
+      CSE forms — the copy-pair canonicalizes identically through all of
+      them.
+    Sibling find, same session (recipe #65/#9 family, NOT #107): a vcall
+    chain that SKIPS r3..rN with no visible arg setup = the fn's OWN
+    params pass through untouched — the import dropped the fn's real
+    parameter list, not the call's args (curUiDllDraw: callers already
+    passed (0,0,0,0); def widened to 4 int params + 3-arg fn-ptr cast at
+    the dispatch → 100).
 
 **Recipe #95/#96 correction extension (probe-verified on vecmath
 mtx44_multSafe): `#pragma opt_loop_invariants`, `#pragma opt_propagation`

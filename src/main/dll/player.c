@@ -775,15 +775,14 @@ void fn_8029697C(int obj, s16 *out1, s16 *out2)
 void playerAddHealth(int obj, int amount)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
-    int deref = inner->unk35C;
-    int h = *(s8 *)((char *)deref);
+    int h = *(s8 *)((char *)inner->unk35C);
     h += amount;
     if (h < 0) {
         h = 0;
-    } else if (h > *(s8 *)((char *)deref + 1)) {
-        h = *(s8 *)((char *)deref + 1);
+    } else if (h > *(s8 *)((char *)inner->unk35C + 1)) {
+        h = *(s8 *)((char *)inner->unk35C + 1);
     }
-    *(s8 *)((char *)deref) = (s8)h;
+    *(s8 *)((char *)inner->unk35C) = (s8)h;
     if (*(s8 *)((char *)inner->unk35C) <= 0) {
         playerDie(obj);
     }

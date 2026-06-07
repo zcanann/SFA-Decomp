@@ -412,13 +412,13 @@ void gameTimerInit(s8 flags, int minutes)
 
 #pragma scheduling off
 #pragma peephole off
-void curUiDllDraw(void)
+void curUiDllDraw(int a, int b, int c, int d)
 {
     UiDllVTable* callbacks;
 
     if (lbl_803DC8E8 != NULL) {
         callbacks = *lbl_803DC8E8;
-        callbacks->draw();
+        ((void (*)(int, int, int))callbacks->draw)(a, b, c);
     }
 }
 #pragma peephole reset

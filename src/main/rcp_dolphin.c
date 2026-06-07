@@ -2516,19 +2516,14 @@ void* textureIdxToPtr(int idx) {
 
 void* getLoadedTexture(int key) {
     LoadedTextureEntry *base;
-    LoadedTextureEntry *iter;
-    int count;
     int i;
 
     i = 0;
     base = gLoadedTextures;
-    iter = base;
-    count = gLoadedTextureCount;
-    for (; i < count; i++) {
-        if (key == iter->key) {
+    for (; i < gLoadedTextureCount; i++) {
+        if (key == base[i].key) {
             return base[i].texture;
         }
-        iter++;
     }
     return NULL;
 }

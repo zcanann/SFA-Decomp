@@ -4074,16 +4074,10 @@ void saveFileStruct_unlockCheat(u8 idx) {
 int saveFileStruct_isCheatActive(u8 idx)
 {
   volatile SaveData *save;
-  u32 registeredDebugOptions;
-  u32 mask;
-  u32 enabledDebugOptions;
 
   save = &saveData;
-  registeredDebugOptions = save->registeredDebugOptions;
-  mask = 1 << idx;
-  if ((registeredDebugOptions & mask) != 0) {
-    enabledDebugOptions = save->enabledDebugOptions;
-    if ((enabledDebugOptions & mask) != 0) {
+  if ((save->registeredDebugOptions & (1 << idx)) != 0) {
+    if ((save->enabledDebugOptions & (1 << idx)) != 0) {
       return 1;
     }
   }

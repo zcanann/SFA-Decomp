@@ -1654,7 +1654,7 @@ f32 fn_8001461C(void);
 f32 fn_80014668(void);
 void timerSetToCountUp(void);
 void gameTimerInit(s8 flags, int minutes);
-void curUiDllDraw(void);
+void curUiDllDraw(int a, int b, int c, int d);
 void uiDll_runFrameEndAndLoadNext(void);
 int uiDll_runFrameStartAndLoadNext(void);
 void set_uiDllIdx_803dc8f0(int idx);
