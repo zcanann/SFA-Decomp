@@ -7811,10 +7811,11 @@ void fn_8004AFA0(int *q, int *elem, int idx) {
 }
 void fn_8004AB5C(int *q, int *elem, int idx, u32 d, char *obj) {
     int pos;
+    u16 *hh;
+    u16 v;
     int cnt2;
     int *node;
     u32 *heap;
-    int s;
     u32 pri;
     u16 idx16;
     int parent;
@@ -7835,20 +7836,21 @@ void fn_8004AB5C(int *q, int *elem, int idx, u32 d, char *obj) {
             node[1] = (u32)vec3f_distanceSquared((f32 *)(*node + 8), (f32 *)q[3]);
         }
         heap = (u32 *)q[1];
-        s = (*(s16 *)((char *)q + 0x22) += 1);
-        *(u16 *)(heap + s * 2 + 1) = cnt;
-        heap[*(s16 *)((char *)q + 0x22) * 2] = 0xfffffffe;
+        hh = (u16 *)heap;
+        v = cnt;
+        hh[++(*(s16 *)((char *)q + 0x22)) * 4 + 2] = v;
+        *(u32 *)((int)heap + *(s16 *)((char *)q + 0x22) * 8) = 0xfffffffe;
         i = *(s16 *)((char *)q + 0x22);
-        pri = heap[i * 2];
-        idx16 = *(u16 *)(heap + i * 2 + 1);
-        *heap = 0xffffffff;
-        while (parent = i >> 1, heap[parent * 2] < pri) {
-            *(u16 *)(heap + i * 2 + 1) = *(u16 *)(heap + parent * 2 + 1);
-            heap[i * 2] = heap[parent * 2];
+        pri = *(u32 *)((int)heap + i * 8);
+        idx16 = hh[i * 4 + 2];
+        *heap = -1;
+        while (parent = i >> 1, *(u32 *)(hh + parent * 4) < pri) {
+            *(u16 *)((int)heap + i * 8 + 4) = *(u16 *)((int)heap + (int)((long)parent * 8) + 4);
+            *(u32 *)((int)heap + i * 8) = *(u32 *)((int)heap + (int)((long)parent * 8));
             i = parent;
         }
-        heap[i * 2] = pri;
-        *(u16 *)(heap + i * 2 + 1) = idx16;
+        *(u32 *)((int)heap + i * 8) = pri;
+        hh[i * 4 + 2] = idx16;
     }
     idx2 = 0;
     off = idx2;
@@ -7878,6 +7880,7 @@ found:
             newpri = node3[1] + node3[2];
             s2 = *(s16 *)((char *)q + 0x22);
             heap = (u32 *)q[1];
+            hh = (u16 *)heap;
             j = 0;
             target = idx2;
             for (; j <= s2; j++) {
@@ -7892,16 +7895,16 @@ found:
             if (newpri < old) {
                 fn_8004AAD4((u8 *)heap, s2, pos);
             } else if (newpri > old) {
-                pri = heap[pos * 2];
-                idx16 = *(u16 *)(heap + pos * 2 + 1);
-                *heap = 0xffffffff;
-                while (parent = pos >> 1, heap[parent * 2] < pri) {
-                    *(u16 *)(heap + pos * 2 + 1) = *(u16 *)(heap + parent * 2 + 1);
-                    heap[pos * 2] = heap[parent * 2];
+                pri = *entry;
+                idx16 = ((u16 *)entry)[2];
+                *heap = -1;
+                while (parent = pos >> 1, *(u32 *)(hh + parent * 4) < pri) {
+                    *(u16 *)((int)heap + pos * 8 + 4) = *(u16 *)((int)heap + (int)((long)parent * 8) + 4);
+                    *(u32 *)((int)heap + pos * 8) = *(u32 *)((int)heap + (int)((long)parent * 8));
                     pos = parent;
                 }
-                heap[pos * 2] = pri;
-                *(u16 *)(heap + pos * 2 + 1) = idx16;
+                *(u32 *)((int)heap + pos * 8) = pri;
+                hh[pos * 4 + 2] = idx16;
             }
         }
     } else if (idx2 < 0) {
@@ -7918,20 +7921,21 @@ found:
             if ((u32)node4[1] > (u32)q[9]) {
                 u32 newpri = node4[1] + node4[2];
                 heap = (u32 *)q[1];
-                s = (*(s16 *)((char *)q + 0x22) += 1);
-                *(u16 *)(heap + s * 2 + 1) = cnt2;
-                heap[*(s16 *)((char *)q + 0x22) * 2] = -1 - newpri;
+                hh = (u16 *)heap;
+                v = cnt2;
+                hh[++(*(s16 *)((char *)q + 0x22)) * 4 + 2] = v;
+                *(u32 *)((int)heap + *(s16 *)((char *)q + 0x22) * 8) = -1 - newpri;
                 i = *(s16 *)((char *)q + 0x22);
-                pri = heap[i * 2];
-                idx16 = *(u16 *)(heap + i * 2 + 1);
-                *heap = 0xffffffff;
-                while (parent = i >> 1, heap[parent * 2] < pri) {
-                    *(u16 *)(heap + i * 2 + 1) = *(u16 *)(heap + parent * 2 + 1);
-                    heap[i * 2] = heap[parent * 2];
+                pri = *(u32 *)((int)heap + i * 8);
+                idx16 = hh[i * 4 + 2];
+                *heap = -1;
+                while (parent = i >> 1, *(u32 *)(hh + parent * 4) < pri) {
+                    *(u16 *)((int)heap + i * 8 + 4) = *(u16 *)((int)heap + (int)((long)parent * 8) + 4);
+                    *(u32 *)((int)heap + i * 8) = *(u32 *)((int)heap + (int)((long)parent * 8));
                     i = parent;
                 }
-                heap[i * 2] = pri;
-                *(u16 *)(heap + i * 2 + 1) = idx16;
+                *(u32 *)((int)heap + i * 8) = pri;
+                hh[i * 4 + 2] = idx16;
             } else {
                 u32 newpri;
                 if ((u32)node4[1] < (u32)q[9]) {
@@ -7939,20 +7943,21 @@ found:
                 }
                 newpri = node4[1] + node4[2];
                 heap = (u32 *)q[1];
-                s = (*(s16 *)((char *)q + 0x22) += 1);
-                *(u16 *)(heap + s * 2 + 1) = cnt2;
-                heap[*(s16 *)((char *)q + 0x22) * 2] = -1 - newpri;
+                hh = (u16 *)heap;
+                v = cnt2;
+                hh[++(*(s16 *)((char *)q + 0x22)) * 4 + 2] = v;
+                *(u32 *)((int)heap + *(s16 *)((char *)q + 0x22) * 8) = -1 - newpri;
                 i = *(s16 *)((char *)q + 0x22);
-                pri = heap[i * 2];
-                idx16 = *(u16 *)(heap + i * 2 + 1);
-                *heap = 0xffffffff;
-                while (parent = i >> 1, heap[parent * 2] < pri) {
-                    *(u16 *)(heap + i * 2 + 1) = *(u16 *)(heap + parent * 2 + 1);
-                    heap[i * 2] = heap[parent * 2];
+                pri = *(u32 *)((int)heap + i * 8);
+                idx16 = hh[i * 4 + 2];
+                *heap = -1;
+                while (parent = i >> 1, *(u32 *)(hh + parent * 4) < pri) {
+                    *(u16 *)((int)heap + i * 8 + 4) = *(u16 *)((int)heap + (int)((long)parent * 8) + 4);
+                    *(u32 *)((int)heap + i * 8) = *(u32 *)((int)heap + (int)((long)parent * 8));
                     i = parent;
                 }
-                heap[i * 2] = pri;
-                *(u16 *)(heap + i * 2 + 1) = idx16;
+                *(u32 *)((int)heap + i * 8) = pri;
+                hh[i * 4 + 2] = idx16;
             }
         }
     }
