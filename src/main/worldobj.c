@@ -24,7 +24,7 @@ extern int fn_8012DDAC(void);
 extern int lbl_803DDD34;
 extern int modelLightStruct_getActiveState(int model);
 extern void queueGlowRender(int model);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern void vecRotateZXY(void *in, void *out);
 extern int ObjList_FindObjectById(int id);
 extern f32 Vec_distance(void *a, void *b);
@@ -617,7 +617,7 @@ void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax
         params.f10 = vec[1];
         params.f14 = vec[2];
         params.f6 = 0x64;
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, dispatchId, &params, 2,
+        (*gPartfxInterface)->spawnObject((void *)obj, dispatchId, &params, 2,
                                                             -1, NULL);
     }
 }

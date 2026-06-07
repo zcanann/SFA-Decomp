@@ -22,7 +22,7 @@ extern void Obj_FreeObject(void *obj);
 extern void storeZeroToFloatParam(void *timer);
 extern void s16toFloat(void *timer, int duration);
 extern int objPosToMapBlockIdx(double x, double y, double z);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -196,7 +196,7 @@ void proximitymine_update(ProximityMineObject *obj)
       obj->prevY = obj->posY;
       obj->prevZ = obj->posZ;
     case 2:
-      ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x51c, NULL, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject(obj, 0x51c, NULL, 1, -1, NULL);
       if (timerCountDown(state->bounceTimer) != 0) {
         ObjHits_EnableObject((u32)obj);
       }

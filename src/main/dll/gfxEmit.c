@@ -34,7 +34,7 @@ extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
-extern int *gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 extern f64 DOUBLE_803e40e0;
 extern f64 DOUBLE_803e4108;
 extern f32 lbl_803DC074;
@@ -467,7 +467,7 @@ LAB_80172f50:
  */
 void collectible_free(int obj)
 {
-  ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+  (*gExpgfxInterface)->freeObject((void *)obj);
   ObjGroup_RemoveObject(obj,4);
   return;
 }
@@ -566,7 +566,7 @@ extern uint GameBit_Get(int);
 extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
-extern int* gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E3454;
 extern f32 lbl_803E3458;
 extern f32 lbl_803E345C;
@@ -616,7 +616,7 @@ int collectible_SeqFn(int obj, int unused, u8* data)
                 buf[3] = lbl_803E345C;
                 buf[4] = lbl_803E345C;
                 buf[5] = lbl_803E345C;
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x7ef, buf, 1,
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x7ef, buf, 1,
                                                                     -1, NULL);
             }
         }
@@ -894,7 +894,7 @@ void fn_801723DC(int obj)
     case 0x27f:
         if (*(f32 *)state < lbl_803E347C) {
             if ((int)randomGetRange(0, 10) == 0) {
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x423, NULL, 2,
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x423, NULL, 2,
                                                                     -1, NULL);
             }
             *(s16 *)obj += (s16)(lbl_803E3480 * timeDelta);

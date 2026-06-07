@@ -1229,7 +1229,7 @@ void iceblast_render(int *obj, int a, int b, int c, int d) { objRenderFn_8003b8f
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void WarpPoint_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
@@ -1241,7 +1241,7 @@ void invhit_free(int obj) {
     char *inner = ((GameObject *)obj)->extra;
     switch (*(u8 *)(inner + 8)) {
         case 4:
-            ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+            (*gExpgfxInterface)->freeObject((void *)obj);
             break;
     }
 }
@@ -1637,7 +1637,7 @@ extern f32 sqrtf(f32 x);
 extern u32 fn_80296118(void);
 extern f32 lbl_803AC780[];
 extern u8 framesThisStep;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern s8 hitDetectFn_80065e50(int *obj, f32 x, f32 y, f32 z, f32 ***list, int a, int b);
 extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;
@@ -1753,9 +1753,9 @@ void invhit_update(int *obj) {
                 ((GameObject *)obj)->anim.localPosX = state->anchorX + dx2;
                 ((GameObject *)obj)->anim.localPosZ = state->anchorZ + dz2;
             }
-            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x25, NULL, 0, -1,
+            (*gPartfxInterface)->spawnObject(obj, 0x25, NULL, 0, -1,
                                                                 NULL);
-            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x56, NULL, 0, -1,
+            (*gPartfxInterface)->spawnObject(obj, 0x56, NULL, 0, -1,
                                                                 NULL);
         }
         cnt = hitDetectFn_80065e50(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
