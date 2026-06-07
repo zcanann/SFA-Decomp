@@ -224,16 +224,16 @@ void magicdust_update(int obj)
       }
     }
     if (*(uint *)&((GameObject *)obj)->unkC4 != 0) {
-      iVar5 = *(int *)(obj + 0x64);
+      iVar5 = (int)((GameObject *)obj)->anim.modelState;
       if ((uint)iVar5 != 0) {
-        *(uint *)(iVar5 + 0x30) = *(uint *)(iVar5 + 0x30) | 0x1000;
+        ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
       }
       (*(code *)(*gPathControlInterface + 0x20))(obj,iVar8);
       goto LAB_80173f80;
     }
-    iVar6 = *(int *)(obj + 0x64);
+    iVar6 = (int)((GameObject *)obj)->anim.modelState;
     if ((uint)iVar6 != 0) {
-      *(uint *)(iVar6 + 0x30) = *(uint *)(iVar6 + 0x30) & 0xffffefff;
+      ((GameObject *)obj)->anim.modelState->flags &= ~0x1000;
     }
     *(undefined *)&((MagicDustState *)iVar8)->unk25B = 1;
     fVar1 = lbl_803E34BC;
@@ -426,9 +426,9 @@ void magicdust_init(int param_1,int param_2)
       ((ObjAnimComponent *)param_1)->modelInstance->modelCount) {
     ((ObjAnimComponent *)param_1)->bankIndex = 0;
   }
-  if (*(uint *)(param_1 + 100) != 0) {
-    *(undefined *)(*(int *)(param_1 + 100) + 0x3a) = 100;
-    *(undefined *)(*(int *)(param_1 + 100) + 0x3b) = 0x96;
+  if (((GameObject *)param_1)->anim.modelState != NULL) {
+    ((GameObject *)param_1)->anim.modelState->shadowTintA = 100;
+    ((GameObject *)param_1)->anim.modelState->shadowTintB = 0x96;
   }
   iVar4 = Obj_GetActiveModel(param_1);
   sVar1 = ((GameObject *)param_1)->anim.seqId;

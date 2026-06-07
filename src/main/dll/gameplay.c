@@ -13379,9 +13379,9 @@ int Carryable_updateRenderState(int *obj, int flag) {
     int *p50 = *(int **)&((GameObject *)obj)->anim.modelInstance;
     if (*(s16 *)((char *)p50 + 0x48) == 2) {
         if (((GameObject *)obj)->unkB4 == -1) {
-            *(u32 *)((char *)*(int **)((char *)obj + 0x64) + 0x30) &= ~0x1000;
+            ((GameObject *)obj)->anim.modelState->flags &= ~0x1000;
         } else {
-            *(u32 *)((char *)*(int **)((char *)obj + 0x64) + 0x30) |= 0x1000;
+            ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
         }
     }
     if (((GameObject *)obj)->unkF8 != 0) {

@@ -115,15 +115,15 @@ void snowclaw_free(int obj) {
 void snowclaw_init(int *obj, u8 *init) {
     u8 *table;
     int *inner;
-    int *sub;
+    ObjModelState *sub;
 
     table = lbl_8032A310;
     *(void **)((char *)obj + 0xbc) = (void *)snowclaw_animEventCallback;
-    sub = *(int **)((char *)obj + 0x64);
+    sub = ((GameObject *)obj)->anim.modelState;
     if (sub != NULL) {
-        *(int *)((char *)sub + 0x30) |= 0x4000;
-        *(u8 *)((char *)*(int **)((char *)obj + 0x64) + 0x3a) = 0x64;
-        *(u8 *)((char *)*(int **)((char *)obj + 0x64) + 0x3b) = 0x96;
+        sub->flags |= 0x4000;
+        sub->shadowTintA = 0x64;
+        sub->shadowTintB = 0x96;
     }
     inner = *(int **)((char *)obj + 0xb8);
     *(int *)inner = 0;
@@ -639,9 +639,9 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
                 ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                     (obj, *(u16 *)((char *)inner + 0xa8), lbl_803E66F0, 1);
                 {
-                    int *gx = *(int **)((char *)obj + 0x64);
+                    ObjModelState *gx = ((GameObject *)obj)->anim.modelState;
                     if (gx != 0) {
-                        *(int *)((char *)gx + 0x30) |= 0x1000;
+                        gx->flags |= 0x1000;
                     }
                 }
                 *(s16 *)((char *)evt + 0x6e) &= ~4;

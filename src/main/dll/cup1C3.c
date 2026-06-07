@@ -172,7 +172,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
             gameTimerInit(0x1d, 0x3c);
             timerSetToCountUp();
             state->flags.active = 0;
-            *(u32 *)(*(int *)((char *)obj + 0x64) + 0x30) |= 4;
+            ((GameObject *)obj)->anim.modelState->flags |= 4;
         }
     }
     if (state->flags.active == 0) {
@@ -353,7 +353,7 @@ void dbsh_symbol_update(uint param_1)
   else {
     sVar1 = puVar4->phase;
     if (sVar1 == 0) {
-      *(u32 *)(*(int *)(param_1 + 100) + 0x30) &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+      ((GameObject *)param_1)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
       puVar4->phase = 1;
     }
     else if (sVar1 == 2) {
@@ -370,7 +370,7 @@ void dbsh_symbol_update(uint param_1)
       lbl_803DBF68 = '\x01';
     }
     else if (sVar1 == 3) {
-      *(u32 *)(*(int *)(param_1 + 100) + 0x30) &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+      ((GameObject *)param_1)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
       if (puVar4->flags.finished != 0) {
         GameBit_Set(0x16b,1);
       }
@@ -781,7 +781,6 @@ extern f32 lbl_803E5118;
 void dbsh_symbol_init(int* obj)
 {
     DbshSymbolState* state = ((GameObject *)obj)->extra;
-    int* otherPtr;
 
     state->spinSpeed = lbl_803E50EC;
     state->spinProgress = 0;
@@ -794,8 +793,7 @@ void dbsh_symbol_init(int* obj)
     ((GameObject *)obj)->anim.localPosY -= lbl_803E5118;
     ((GameObject *)obj)->animEventCallback = (void *)DBSH_Symbol_SeqFn;
 
-    otherPtr = *(int**)((char*)obj + 0x64);
-    *(u32 *)((char *)otherPtr + 0x30) &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+    ((GameObject *)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
 }
 #pragma peephole reset
 #pragma scheduling reset

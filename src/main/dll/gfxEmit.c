@@ -421,8 +421,8 @@ LAB_80172eec:
           ObjMsg_SendToObject(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x7000a,
                        uVar2,(uint)(pfVar6 + 0x12),in_r7,in_r8,in_r9,in_r10);
           *(byte *)((int)pfVar6 + 0x37) = *(byte *)((int)pfVar6 + 0x37) | 1;
-          if (*(int *)(uVar2 + 100) != 0) {
-            *(undefined4 *)(*(int *)(uVar2 + 100) + 0x30) = 0x1000;
+          if (((GameObject *)uVar2)->anim.modelState != NULL) {
+            ((GameObject *)uVar2)->anim.modelState->flags = 0x1000;
           }
         }
       }
@@ -703,8 +703,8 @@ void fn_80172824(int obj, u8 *state)
                 *(s16 *)(state + 0x48) = attach[0xf];
                 ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x48);
                 state[0x37] |= 1;
-                if (*(void **)(obj + 0x64) != NULL) {
-                    *(int *)(*(int *)(obj + 0x64) + 0x30) = 0x1000;
+                if (((GameObject *)obj)->anim.modelState != NULL) {
+                    ((GameObject *)obj)->anim.modelState->flags = 0x1000;
                 }
             }
             break;
@@ -775,8 +775,8 @@ void collectible_update(int obj)
         if (((GfxEmitState *)state)->intervalTimer <= zero) {
             if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
                 ((GfxEmitState *)state)->delayTimer = lbl_803E3450;
-                if (*(void **)(obj + 0x64) != NULL) {
-                    *(int *)(*(int *)(obj + 0x64) + 0x30) = 0x1000;
+                if (((GameObject *)obj)->anim.modelState != NULL) {
+                    ((GameObject *)obj)->anim.modelState->flags = 0x1000;
                 }
                 itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
             }

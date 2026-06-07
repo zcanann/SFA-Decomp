@@ -734,10 +734,10 @@ int tricky_SeqFn(int obj,int unused,int seq)
       **(u8 **)&((TrickyState *)state)->progressPtr = ((TrickyState *)state)->unk82D;
       break;
     case 0x2b:
-      *(uint *)(*(int *)(obj + 0x64) + 0x30) = *(uint *)(*(int *)(obj + 0x64) + 0x30) & 0xfffffffb;
+      ((GameObject *)obj)->anim.modelState->flags &= ~0x4;
       break;
     case 0x2c:
-      *(uint *)(*(int *)(obj + 0x64) + 0x30) = *(uint *)(*(int *)(obj + 0x64) + 0x30) | 4;
+      ((GameObject *)obj)->anim.modelState->flags |= 4;
       break;
     }
   }

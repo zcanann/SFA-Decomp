@@ -401,9 +401,9 @@ void FUN_801a9ab4(int param_1,int param_2)
     }
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
-  if (*(int *)(param_1 + 100) != 0) {
-    *(undefined *)(*(int *)(param_1 + 100) + 0x3a) = 100;
-    *(undefined *)(*(int *)(param_1 + 100) + 0x3b) = 0x96;
+  if (((GameObject *)param_1)->anim.modelState != NULL) {
+    ((GameObject *)param_1)->anim.modelState->shadowTintA = 100;
+    ((GameObject *)param_1)->anim.modelState->shadowTintB = 0x96;
   }
   return;
 }
@@ -1415,9 +1415,9 @@ void animsharpclaw_init(int *obj, u8 *init) {
         }
         ((GameObject *)obj)->unkF4 = *(s16 *)((char *)init + 0x18) + 1;
     }
-    if (*(int **)((char *)obj + 0x64) != NULL) {
-        *(u8 *)(*(int *)((char *)obj + 0x64) + 0x3a) = 0x64;
-        *(u8 *)(*(int *)((char *)obj + 0x64) + 0x3b) = 0x96;
+    if (((GameObject *)obj)->anim.modelState != NULL) {
+        ((GameObject *)obj)->anim.modelState->shadowTintA = 0x64;
+        ((GameObject *)obj)->anim.modelState->shadowTintB = 0x96;
     }
 }
 #pragma peephole reset
