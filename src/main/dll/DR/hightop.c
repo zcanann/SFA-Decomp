@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 
 extern undefined4 getLActions();
 extern undefined8 FUN_80006728();
@@ -1717,14 +1718,15 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     case 3:
                         t = ObjGroup_FindNearestObject(0xf, obj, 0);
                         if (t != 0) {
-                            (*(code *)(*gObjectTriggerInterface + 0x48))(p[3], t, -1);
+                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                                ->runSequence(p[3], (void *)t, -1);
                         }
                         break;
                     case 1:
-                        (*(code *)(*gObjectTriggerInterface + 0xc))(p[3], 1);
+                        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setFlag(p[3], 1);
                         break;
                     case 2:
-                        (*(code *)(*gObjectTriggerInterface + 0xc))(p[3], 0);
+                        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setFlag(p[3], 0);
                         break;
                     }
                     break;

@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/objseq.h"
 
 typedef struct HighTopRuntime {
     BaddieState baddie;
@@ -492,7 +493,7 @@ int hightop_handleMotionEvent(int obj, u8 event) {
         break;
     case 6:
         GameBit_Set(0x634, 1);
-        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(4, obj, -1);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(4, (void *)obj, -1);
         break;
     case 7:
         GameBit_Set(0x634, 0);
@@ -503,7 +504,7 @@ int hightop_handleMotionEvent(int obj, u8 event) {
         (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)runtime, 7);
         break;
     case 8:
-        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(7, obj, -1);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(7, (void *)obj, -1);
         break;
     case 9:
         (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)runtime, 7);
@@ -617,7 +618,8 @@ void hightop_update(int obj) {
         v = (s8)*(u8 *)(p + 0xc4b);
         if (v != -1) {
             if (v < 0xa) {
-                (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(v, obj, -1);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                    ->runSequence(v, (void *)obj, -1);
             } else {
                 GameBit_Set(*(s16 *)((char *)&lbl_803DC314 + v * 2 - 0x14), 1);
             }
@@ -1058,7 +1060,8 @@ int hightop_stateHandler10(int obj, int p) {
                 r -= weights[i];
                 i++;
             }
-            (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(lbl_8032AB30[i], obj, -1);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                ->runSequence(lbl_8032AB30[i], (void *)obj, -1);
         }
     }
     return 0;

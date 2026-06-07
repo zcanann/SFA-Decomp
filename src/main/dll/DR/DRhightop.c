@@ -5,6 +5,7 @@
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/DR/DRhightop.h"
+#include "main/objseq.h"
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006818();
@@ -313,8 +314,7 @@ void fn_801EB0D4(uint param_1,int param_2)
       }
       else {
         (*(void (**)(void))((char *)*gGameUIInterface + 0x60))();
-        (*(void (**)(int, uint, int))((char *)*gObjectTriggerInterface + 0x48))
-            (0,param_1,0xffffffff);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
         fVar2 = lbl_803E5B8C;
         st->unk464 = lbl_803E5B8C;
         st->unk468 = fVar2;
