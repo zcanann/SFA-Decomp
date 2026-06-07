@@ -4471,10 +4471,11 @@ static u8 sProjgfxStringPad2[] = { 0, 0, 0, 0, 0, 0 };
 /* Small stub recoveries (drifted unit, add-as-new). */
 extern u8 lbl_803DD282;
 extern u8 gPlayerShadowMode;
-extern u8 lbl_803DD2C0;
+#define gPartfxCachedResourceCount lbl_803DD2C0
+extern u8 gPartfxCachedResourceCount;
 extern void fn_800A1040(s16 a, int b);
 #define gPartfxResourceTimeouts lbl_8039C2E0
-extern u16 gPartfxResourceTimeouts[];
+extern s16 gPartfxResourceTimeouts[];
 extern u32 lbl_802C2160[];
 extern f64 lbl_803DF480;
 extern f32 lbl_803DF46C;
@@ -5171,7 +5172,7 @@ void fn_800A0478(ModgfxState *state)
 #pragma peephole off
 #pragma scheduling off
 void partfx_initialise(void) {
-    u16 *p;
+    s16 *p;
     int i;
     i = 0x14;
     p = gPartfxResourceTimeouts + 0x14;
@@ -5180,7 +5181,7 @@ void partfx_initialise(void) {
         i = i - 1;
         *p = 0;
     }
-    lbl_803DD2C0 = 0;
+    gPartfxCachedResourceCount = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -5286,26 +5287,46 @@ void dll_0B_func0E(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void *lbl_803DD2C8;
-extern void *lbl_803DD2CC;
-extern void *lbl_803DD2D0;
-extern void *lbl_803DD2D4;
-extern void *lbl_803DD2D8;
-extern void *lbl_803DD2DC;
-extern void *lbl_803DD2E0;
-extern void *lbl_803DD2E4;
-extern void *lbl_803DD2E8;
-extern void *lbl_803DD2EC;
-extern void *lbl_803DD2F0;
-extern void *lbl_803DD2F4;
-extern void *lbl_803DD2F8;
-extern void *lbl_803DD2FC;
-extern void *lbl_803DD300;
-extern void *lbl_803DD304;
-extern void *lbl_803DD308;
-extern void *lbl_803DD30C;
-extern void *lbl_803DD310;
-extern void *lbl_803DD314;
+#define gPartfxResourceModule00 lbl_803DD2C8
+#define gPartfxResourceModule01 lbl_803DD2CC
+#define gPartfxResourceModule02 lbl_803DD2D0
+#define gPartfxResourceModule03 lbl_803DD2D4
+#define gPartfxResourceModule04 lbl_803DD2D8
+#define gPartfxResourceModule05 lbl_803DD2DC
+#define gPartfxResourceModule16 lbl_803DD2E0
+#define gPartfxResourceModule06 lbl_803DD2E4
+#define gPartfxResourceModule07 lbl_803DD2E8
+#define gPartfxResourceModule08 lbl_803DD2EC
+#define gPartfxResourceModule09 lbl_803DD2F0
+#define gPartfxResourceModule10 lbl_803DD2F4
+#define gPartfxResourceModule11 lbl_803DD2F8
+#define gPartfxResourceModule12 lbl_803DD2FC
+#define gPartfxResourceModule13 lbl_803DD300
+#define gPartfxResourceModule14 lbl_803DD304
+#define gPartfxResourceModule15 lbl_803DD308
+#define gPartfxResourceModule17 lbl_803DD30C
+#define gPartfxResourceModule18 lbl_803DD310
+#define gPartfxResourceModule19 lbl_803DD314
+extern void *gPartfxResourceModule00;
+extern void *gPartfxResourceModule01;
+extern void *gPartfxResourceModule02;
+extern void *gPartfxResourceModule03;
+extern void *gPartfxResourceModule04;
+extern void *gPartfxResourceModule05;
+extern void *gPartfxResourceModule16;
+extern void *gPartfxResourceModule06;
+extern void *gPartfxResourceModule07;
+extern void *gPartfxResourceModule08;
+extern void *gPartfxResourceModule09;
+extern void *gPartfxResourceModule10;
+extern void *gPartfxResourceModule11;
+extern void *gPartfxResourceModule12;
+extern void *gPartfxResourceModule13;
+extern void *gPartfxResourceModule14;
+extern void *gPartfxResourceModule15;
+extern void *gPartfxResourceModule17;
+extern void *gPartfxResourceModule18;
+extern void *gPartfxResourceModule19;
 
 extern f32 lbl_803DB7A8;
 extern f32 lbl_803DB7AC;
@@ -5345,125 +5366,125 @@ void ParticleEffectController_func05(void)
         lbl_803DD31C = 0;
     }
     lbl_803DD320 = mathSinf(lbl_803DF718 * (f32)(s16)lbl_803DD31C / lbl_803DF71C);
-    if (((s16 *)gPartfxResourceTimeouts)[0] != 0 && (((s16 *)gPartfxResourceTimeouts)[0] -= framesThisStep) <= 0) {
-        if (lbl_803DD2C8 != NULL) Resource_Release(lbl_803DD2C8);
-        lbl_803DD2C8 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[0] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[0] != 0 && (gPartfxResourceTimeouts[0] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule00 != NULL) Resource_Release(gPartfxResourceModule00);
+        gPartfxResourceModule00 = NULL;
+        gPartfxResourceTimeouts[0] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[1] != 0 && (((s16 *)gPartfxResourceTimeouts)[1] -= framesThisStep) <= 0) {
-        if (lbl_803DD2CC != NULL) Resource_Release(lbl_803DD2CC);
-        lbl_803DD2CC = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[1] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[1] != 0 && (gPartfxResourceTimeouts[1] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule01 != NULL) Resource_Release(gPartfxResourceModule01);
+        gPartfxResourceModule01 = NULL;
+        gPartfxResourceTimeouts[1] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[2] != 0 && (((s16 *)gPartfxResourceTimeouts)[2] -= framesThisStep) <= 0) {
-        if (lbl_803DD2D0 != NULL) Resource_Release(lbl_803DD2D0);
-        lbl_803DD2D0 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[2] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[2] != 0 && (gPartfxResourceTimeouts[2] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule02 != NULL) Resource_Release(gPartfxResourceModule02);
+        gPartfxResourceModule02 = NULL;
+        gPartfxResourceTimeouts[2] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[3] != 0 && (((s16 *)gPartfxResourceTimeouts)[3] -= framesThisStep) <= 0) {
-        if (lbl_803DD2D4 != NULL) Resource_Release(lbl_803DD2D4);
-        lbl_803DD2D4 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[3] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[3] != 0 && (gPartfxResourceTimeouts[3] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule03 != NULL) Resource_Release(gPartfxResourceModule03);
+        gPartfxResourceModule03 = NULL;
+        gPartfxResourceTimeouts[3] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[4] != 0 && (((s16 *)gPartfxResourceTimeouts)[4] -= framesThisStep) <= 0) {
-        if (lbl_803DD2D8 != NULL) Resource_Release(lbl_803DD2D8);
-        lbl_803DD2D8 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[4] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[4] != 0 && (gPartfxResourceTimeouts[4] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule04 != NULL) Resource_Release(gPartfxResourceModule04);
+        gPartfxResourceModule04 = NULL;
+        gPartfxResourceTimeouts[4] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[5] != 0 && (((s16 *)gPartfxResourceTimeouts)[5] -= framesThisStep) <= 0) {
-        if (lbl_803DD2DC != NULL) Resource_Release(lbl_803DD2DC);
-        lbl_803DD2DC = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[5] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[5] != 0 && (gPartfxResourceTimeouts[5] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule05 != NULL) Resource_Release(gPartfxResourceModule05);
+        gPartfxResourceModule05 = NULL;
+        gPartfxResourceTimeouts[5] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[16] != 0 && (((s16 *)gPartfxResourceTimeouts)[16] -= framesThisStep) <= 0) {
-        if (lbl_803DD2E0 != NULL) Resource_Release(lbl_803DD2E0);
-        lbl_803DD2E0 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[16] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[16] != 0 && (gPartfxResourceTimeouts[16] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule16 != NULL) Resource_Release(gPartfxResourceModule16);
+        gPartfxResourceModule16 = NULL;
+        gPartfxResourceTimeouts[16] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[6] != 0 && (((s16 *)gPartfxResourceTimeouts)[6] -= framesThisStep) <= 0) {
-        if (lbl_803DD2E4 != NULL) Resource_Release(lbl_803DD2E4);
-        lbl_803DD2E4 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[6] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[6] != 0 && (gPartfxResourceTimeouts[6] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule06 != NULL) Resource_Release(gPartfxResourceModule06);
+        gPartfxResourceModule06 = NULL;
+        gPartfxResourceTimeouts[6] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[7] != 0 && (((s16 *)gPartfxResourceTimeouts)[7] -= framesThisStep) <= 0) {
-        if (lbl_803DD2E8 != NULL) Resource_Release(lbl_803DD2E8);
-        lbl_803DD2E8 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[7] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[7] != 0 && (gPartfxResourceTimeouts[7] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule07 != NULL) Resource_Release(gPartfxResourceModule07);
+        gPartfxResourceModule07 = NULL;
+        gPartfxResourceTimeouts[7] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[8] != 0 && (((s16 *)gPartfxResourceTimeouts)[8] -= framesThisStep) <= 0) {
-        if (lbl_803DD2EC != NULL) Resource_Release(lbl_803DD2EC);
-        lbl_803DD2EC = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[8] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[8] != 0 && (gPartfxResourceTimeouts[8] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule08 != NULL) Resource_Release(gPartfxResourceModule08);
+        gPartfxResourceModule08 = NULL;
+        gPartfxResourceTimeouts[8] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[9] != 0 && (((s16 *)gPartfxResourceTimeouts)[9] -= framesThisStep) <= 0) {
-        if (lbl_803DD2F0 != NULL) Resource_Release(lbl_803DD2F0);
-        lbl_803DD2F0 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[9] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[9] != 0 && (gPartfxResourceTimeouts[9] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule09 != NULL) Resource_Release(gPartfxResourceModule09);
+        gPartfxResourceModule09 = NULL;
+        gPartfxResourceTimeouts[9] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[10] != 0 && (((s16 *)gPartfxResourceTimeouts)[10] -= framesThisStep) <= 0) {
-        if (lbl_803DD2F4 != NULL) Resource_Release(lbl_803DD2F4);
-        lbl_803DD2F4 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[10] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[10] != 0 && (gPartfxResourceTimeouts[10] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule10 != NULL) Resource_Release(gPartfxResourceModule10);
+        gPartfxResourceModule10 = NULL;
+        gPartfxResourceTimeouts[10] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[11] != 0 && (((s16 *)gPartfxResourceTimeouts)[11] -= framesThisStep) <= 0) {
-        if (lbl_803DD2F8 != NULL) Resource_Release(lbl_803DD2F8);
-        lbl_803DD2F8 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[11] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[11] != 0 && (gPartfxResourceTimeouts[11] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule11 != NULL) Resource_Release(gPartfxResourceModule11);
+        gPartfxResourceModule11 = NULL;
+        gPartfxResourceTimeouts[11] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[12] != 0 && (((s16 *)gPartfxResourceTimeouts)[12] -= framesThisStep) <= 0) {
-        if (lbl_803DD2FC != NULL) Resource_Release(lbl_803DD2FC);
-        lbl_803DD2FC = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[12] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[12] != 0 && (gPartfxResourceTimeouts[12] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule12 != NULL) Resource_Release(gPartfxResourceModule12);
+        gPartfxResourceModule12 = NULL;
+        gPartfxResourceTimeouts[12] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[13] != 0 && (((s16 *)gPartfxResourceTimeouts)[13] -= framesThisStep) <= 0) {
-        if (lbl_803DD300 != NULL) Resource_Release(lbl_803DD300);
-        lbl_803DD300 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[13] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[13] != 0 && (gPartfxResourceTimeouts[13] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule13 != NULL) Resource_Release(gPartfxResourceModule13);
+        gPartfxResourceModule13 = NULL;
+        gPartfxResourceTimeouts[13] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[14] != 0 && (((s16 *)gPartfxResourceTimeouts)[14] -= framesThisStep) <= 0) {
-        if (lbl_803DD304 != NULL) Resource_Release(lbl_803DD304);
-        lbl_803DD304 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[14] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[14] != 0 && (gPartfxResourceTimeouts[14] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule14 != NULL) Resource_Release(gPartfxResourceModule14);
+        gPartfxResourceModule14 = NULL;
+        gPartfxResourceTimeouts[14] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[15] != 0 && (((s16 *)gPartfxResourceTimeouts)[15] -= framesThisStep) <= 0) {
-        if (lbl_803DD308 != NULL) Resource_Release(lbl_803DD308);
-        lbl_803DD308 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[15] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[15] != 0 && (gPartfxResourceTimeouts[15] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule15 != NULL) Resource_Release(gPartfxResourceModule15);
+        gPartfxResourceModule15 = NULL;
+        gPartfxResourceTimeouts[15] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[17] != 0 && (((s16 *)gPartfxResourceTimeouts)[17] -= framesThisStep) <= 0) {
-        if (lbl_803DD30C != NULL) Resource_Release(lbl_803DD30C);
-        lbl_803DD30C = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[17] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[17] != 0 && (gPartfxResourceTimeouts[17] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule17 != NULL) Resource_Release(gPartfxResourceModule17);
+        gPartfxResourceModule17 = NULL;
+        gPartfxResourceTimeouts[17] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[18] != 0 && (((s16 *)gPartfxResourceTimeouts)[18] -= framesThisStep) <= 0) {
-        if (lbl_803DD310 != NULL) Resource_Release(lbl_803DD310);
-        lbl_803DD310 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[18] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[18] != 0 && (gPartfxResourceTimeouts[18] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule18 != NULL) Resource_Release(gPartfxResourceModule18);
+        gPartfxResourceModule18 = NULL;
+        gPartfxResourceTimeouts[18] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
-    if (((s16 *)gPartfxResourceTimeouts)[19] != 0 && (((s16 *)gPartfxResourceTimeouts)[19] -= framesThisStep) <= 0) {
-        if (lbl_803DD314 != NULL) Resource_Release(lbl_803DD314);
-        lbl_803DD314 = NULL;
-        ((s16 *)gPartfxResourceTimeouts)[19] = 0;
-        lbl_803DD2C0 -= 1;
+    if (gPartfxResourceTimeouts[19] != 0 && (gPartfxResourceTimeouts[19] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule19 != NULL) Resource_Release(gPartfxResourceModule19);
+        gPartfxResourceModule19 = NULL;
+        gPartfxResourceTimeouts[19] = 0;
+        gPartfxCachedResourceCount -= 1;
     }
 }
 #pragma peephole reset
@@ -5474,7 +5495,7 @@ void ParticleEffectController_func05(void)
 #pragma scheduling off
 #pragma peephole off
 void partfx_release(void) {
-    u16 *p;
+    s16 *p;
     int i;
     i = 0x14;
     p = gPartfxResourceTimeouts + 0x14;
@@ -5483,47 +5504,47 @@ void partfx_release(void) {
         i = i - 1;
         *p = 0;
     }
-    if (lbl_803DD2C8 != NULL) Resource_Release(lbl_803DD2C8);
-    lbl_803DD2C8 = NULL;
-    if (lbl_803DD2CC != NULL) Resource_Release(lbl_803DD2CC);
-    lbl_803DD2CC = NULL;
-    if (lbl_803DD2D0 != NULL) Resource_Release(lbl_803DD2D0);
-    lbl_803DD2D0 = NULL;
-    if (lbl_803DD2D4 != NULL) Resource_Release(lbl_803DD2D4);
-    lbl_803DD2D4 = NULL;
-    if (lbl_803DD2D8 != NULL) Resource_Release(lbl_803DD2D8);
-    lbl_803DD2D8 = NULL;
-    if (lbl_803DD2DC != NULL) Resource_Release(lbl_803DD2DC);
-    lbl_803DD2DC = NULL;
-    if (lbl_803DD2E0 != NULL) Resource_Release(lbl_803DD2E0);
-    lbl_803DD2E0 = NULL;
-    if (lbl_803DD2E4 != NULL) Resource_Release(lbl_803DD2E4);
-    lbl_803DD2E4 = NULL;
-    if (lbl_803DD2E8 != NULL) Resource_Release(lbl_803DD2E8);
-    lbl_803DD2E8 = NULL;
-    if (lbl_803DD2EC != NULL) Resource_Release(lbl_803DD2EC);
-    lbl_803DD2EC = NULL;
-    if (lbl_803DD2F0 != NULL) Resource_Release(lbl_803DD2F0);
-    lbl_803DD2F0 = NULL;
-    if (lbl_803DD2F4 != NULL) Resource_Release(lbl_803DD2F4);
-    lbl_803DD2F4 = NULL;
-    if (lbl_803DD2F8 != NULL) Resource_Release(lbl_803DD2F8);
-    lbl_803DD2F8 = NULL;
-    if (lbl_803DD2FC != NULL) Resource_Release(lbl_803DD2FC);
-    lbl_803DD2FC = NULL;
-    if (lbl_803DD300 != NULL) Resource_Release(lbl_803DD300);
-    lbl_803DD300 = NULL;
-    if (lbl_803DD304 != NULL) Resource_Release(lbl_803DD304);
-    lbl_803DD304 = NULL;
-    if (lbl_803DD308 != NULL) Resource_Release(lbl_803DD308);
-    lbl_803DD308 = NULL;
-    if (lbl_803DD30C != NULL) Resource_Release(lbl_803DD30C);
-    lbl_803DD30C = NULL;
-    if (lbl_803DD310 != NULL) Resource_Release(lbl_803DD310);
-    lbl_803DD310 = NULL;
-    if (lbl_803DD314 != NULL) Resource_Release(lbl_803DD314);
-    lbl_803DD314 = NULL;
-    lbl_803DD2C0 = 0;
+    if (gPartfxResourceModule00 != NULL) Resource_Release(gPartfxResourceModule00);
+    gPartfxResourceModule00 = NULL;
+    if (gPartfxResourceModule01 != NULL) Resource_Release(gPartfxResourceModule01);
+    gPartfxResourceModule01 = NULL;
+    if (gPartfxResourceModule02 != NULL) Resource_Release(gPartfxResourceModule02);
+    gPartfxResourceModule02 = NULL;
+    if (gPartfxResourceModule03 != NULL) Resource_Release(gPartfxResourceModule03);
+    gPartfxResourceModule03 = NULL;
+    if (gPartfxResourceModule04 != NULL) Resource_Release(gPartfxResourceModule04);
+    gPartfxResourceModule04 = NULL;
+    if (gPartfxResourceModule05 != NULL) Resource_Release(gPartfxResourceModule05);
+    gPartfxResourceModule05 = NULL;
+    if (gPartfxResourceModule16 != NULL) Resource_Release(gPartfxResourceModule16);
+    gPartfxResourceModule16 = NULL;
+    if (gPartfxResourceModule06 != NULL) Resource_Release(gPartfxResourceModule06);
+    gPartfxResourceModule06 = NULL;
+    if (gPartfxResourceModule07 != NULL) Resource_Release(gPartfxResourceModule07);
+    gPartfxResourceModule07 = NULL;
+    if (gPartfxResourceModule08 != NULL) Resource_Release(gPartfxResourceModule08);
+    gPartfxResourceModule08 = NULL;
+    if (gPartfxResourceModule09 != NULL) Resource_Release(gPartfxResourceModule09);
+    gPartfxResourceModule09 = NULL;
+    if (gPartfxResourceModule10 != NULL) Resource_Release(gPartfxResourceModule10);
+    gPartfxResourceModule10 = NULL;
+    if (gPartfxResourceModule11 != NULL) Resource_Release(gPartfxResourceModule11);
+    gPartfxResourceModule11 = NULL;
+    if (gPartfxResourceModule12 != NULL) Resource_Release(gPartfxResourceModule12);
+    gPartfxResourceModule12 = NULL;
+    if (gPartfxResourceModule13 != NULL) Resource_Release(gPartfxResourceModule13);
+    gPartfxResourceModule13 = NULL;
+    if (gPartfxResourceModule14 != NULL) Resource_Release(gPartfxResourceModule14);
+    gPartfxResourceModule14 = NULL;
+    if (gPartfxResourceModule15 != NULL) Resource_Release(gPartfxResourceModule15);
+    gPartfxResourceModule15 = NULL;
+    if (gPartfxResourceModule17 != NULL) Resource_Release(gPartfxResourceModule17);
+    gPartfxResourceModule17 = NULL;
+    if (gPartfxResourceModule18 != NULL) Resource_Release(gPartfxResourceModule18);
+    gPartfxResourceModule18 = NULL;
+    if (gPartfxResourceModule19 != NULL) Resource_Release(gPartfxResourceModule19);
+    gPartfxResourceModule19 = NULL;
+    gPartfxCachedResourceCount = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -7109,7 +7130,7 @@ extern f32 lbl_803DF6FC;
 extern f32 lbl_803DF700;
 extern f32 lbl_803DF704;
 extern f32 lbl_803DF708;
-extern u16 gPartfxResourceTimeouts[20];
+extern s16 gPartfxResourceTimeouts[20];
 extern s16 lbl_8039C308[12];
 extern void srand(int seed);
 extern void vecRotateZXY(void *obj, f32 *vec);
@@ -7138,163 +7159,163 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
 
   if (((899 < param_2) && (param_2 < 0x3b5)) || ((0x5dc < param_2 && (param_2 < 0x641)))) {
     gPartfxResourceTimeouts[0] = 2000;
-    if (lbl_803DD2C8 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2C8 = Resource_Acquire(0x1a,2);
+    if (gPartfxResourceModule00 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule00 = Resource_Acquire(0x1a,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2C8 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule00 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x257 < param_2) && (param_2 < 0x2bc)) {
     gPartfxResourceTimeouts[1] = 2000;
-    if (lbl_803DD2CC == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2CC = Resource_Acquire(0x1b,2);
+    if (gPartfxResourceModule01 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule01 = Resource_Acquire(0x1b,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2CC + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule01 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x1f3 < param_2) && (param_2 < 0x258)) {
     gPartfxResourceTimeouts[2] = 2000;
-    if (lbl_803DD2D0 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2D0 = Resource_Acquire(0x1c,2);
+    if (gPartfxResourceModule02 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule02 = Resource_Acquire(0x1c,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2D0 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule02 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x18f < param_2) && (param_2 < 0x1f4)) {
     gPartfxResourceTimeouts[3] = 2000;
-    if (lbl_803DD2D4 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2D4 = Resource_Acquire(0x1d,2);
+    if (gPartfxResourceModule03 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule03 = Resource_Acquire(0x1d,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2D4 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule03 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0xc7 < param_2) && (param_2 < 0x12c)) {
     gPartfxResourceTimeouts[4] = 2000;
-    if (lbl_803DD2D8 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2D8 = Resource_Acquire(0x1e,2);
+    if (gPartfxResourceModule04 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule04 = Resource_Acquire(0x1e,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2D8 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule04 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x419 < param_2) && (param_2 < 0x44c)) {
     gPartfxResourceTimeouts[5] = 2000;
-    if (lbl_803DD2DC == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2DC = Resource_Acquire(0x1f,2);
+    if (gPartfxResourceModule05 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule05 = Resource_Acquire(0x1f,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2DC + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule05 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x739 < param_2) && (param_2 < 0x76c)) {
     gPartfxResourceTimeouts[16] = 2000;
-    if (lbl_803DD2E0 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2E0 = Resource_Acquire(0x2a,2);
+    if (gPartfxResourceModule16 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule16 = Resource_Acquire(0x2a,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2E0 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule16 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 - 0x84U < 2) || ((0x89 < param_2 && (param_2 < 200)))) {
     gPartfxResourceTimeouts[6] = 2000;
-    if (lbl_803DD2E4 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2E4 = Resource_Acquire(0x20,2);
+    if (gPartfxResourceModule06 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule06 = Resource_Acquire(0x20,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2E4 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule06 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x3b5 < param_2) && (param_2 < 0x3de)) {
     gPartfxResourceTimeouts[8] = 2000;
-    if (lbl_803DD2EC == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2EC = Resource_Acquire(0x22,2);
+    if (gPartfxResourceModule08 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule08 = Resource_Acquire(0x22,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2EC + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule08 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x351 < param_2) && (param_2 < 0x384)) {
     gPartfxResourceTimeouts[7] = 2000;
-    if (lbl_803DD2E8 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2E8 = Resource_Acquire(0x21,2);
+    if (gPartfxResourceModule07 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule07 = Resource_Acquire(0x21,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2E8 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule07 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x329 < param_2) && (param_2 < 0x351)) {
     gPartfxResourceTimeouts[9] = 2000;
-    if (lbl_803DD2F0 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2F0 = Resource_Acquire(0x23,2);
+    if (gPartfxResourceModule09 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule09 = Resource_Acquire(0x23,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2F0 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule09 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x12b < param_2) && (param_2 < 0x190)) {
     gPartfxResourceTimeouts[10] = 2000;
-    if (lbl_803DD2F4 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2F4 = Resource_Acquire(0x24,2);
+    if (gPartfxResourceModule10 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule10 = Resource_Acquire(0x24,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2F4 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule10 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x47d < param_2) && (param_2 < 0x4b0)) {
     gPartfxResourceTimeouts[11] = 2000;
-    if (lbl_803DD2F8 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2F8 = Resource_Acquire(0x25,2);
+    if (gPartfxResourceModule11 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule11 = Resource_Acquire(0x25,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2F8 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule11 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x4af < param_2) && (param_2 < 0x4e2)) {
     gPartfxResourceTimeouts[12] = 2000;
-    if (lbl_803DD2FC == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD2FC = Resource_Acquire(0x27,2);
+    if (gPartfxResourceModule12 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule12 = Resource_Acquire(0x27,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD2FC + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule12 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 >= 0x3e8) && (param_2 <= 0x419)) {
     gPartfxResourceTimeouts[13] = 2000;
-    if (lbl_803DD300 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD300 = Resource_Acquire(0x28,2);
+    if (gPartfxResourceModule13 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule13 = Resource_Acquire(0x28,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD300 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule13 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x44b < param_2) && (param_2 < 0x47e)) {
     gPartfxResourceTimeouts[14] = 2000;
-    if (lbl_803DD304 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD304 = Resource_Acquire(0x26,2);
+    if (gPartfxResourceModule14 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule14 = Resource_Acquire(0x26,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD304 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule14 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 >= 0x6d7) && (param_2 <= 0x707)) {
     gPartfxResourceTimeouts[15] = 2000;
-    if (lbl_803DD308 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD308 = Resource_Acquire(0x29,2);
+    if (gPartfxResourceModule15 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule15 = Resource_Acquire(0x29,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD308 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule15 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 >= 0x708) && (param_2 <= 0x739)) {
     gPartfxResourceTimeouts[17] = 2000;
-    if (lbl_803DD30C == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD30C = Resource_Acquire(0x2b,2);
+    if (gPartfxResourceModule17 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule17 = Resource_Acquire(0x2b,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD30C + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule17 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 >= 0x76c) && (param_2 <= 0x79d)) {
     gPartfxResourceTimeouts[18] = 2000;
-    if (lbl_803DD310 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD310 = Resource_Acquire(0x2c,2);
+    if (gPartfxResourceModule18 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule18 = Resource_Acquire(0x2c,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD310 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule18 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 >= 0x79e) && (param_2 <= 0x833)) {
     gPartfxResourceTimeouts[19] = 2000;
-    if (lbl_803DD314 == NULL) {
-      lbl_803DD2C0 += 1;
-      lbl_803DD314 = Resource_Acquire(0x2d,2);
+    if (gPartfxResourceModule19 == NULL) {
+      gPartfxCachedResourceCount += 1;
+      gPartfxResourceModule19 = Resource_Acquire(0x2d,2);
     }
-    return (*(int (**)())(*(int *)lbl_803DD314 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule19 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   lbl_803DB7A0 = lbl_803DB7A0 + lbl_803DF4C8;
   if (lbl_803DB7A0 > 1.0f) {
