@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/cup1C3.h"
 #include "main/objanim.h"
@@ -631,8 +632,8 @@ void dll_197_update(int obj)
         Resource_Release(resource);
 
         for (effect = 0; effect < 200; effect++) {
-            (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x1a3, 0, 0, -1, 0);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x1a3, NULL, 0,
+                                                                -1, NULL);
         }
 
         if (state->gameBit != -1 && GameBit_Get(state->gameBit) == 0) {
@@ -759,7 +760,8 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         particleParams.pos[0] = lbl_803E5130;
         particleParams.pos[1] = lbl_803E5134;
         particleParams.pos[2] = lbl_803E5130;
-        (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x1f7, &particleParams, 0x12, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x1f7, &particleParams,
+                                                            0x12, -1, NULL);
     }
 
     state->sparkTimer = randomGetRange(-10, 10) + 0x3c;
@@ -771,7 +773,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void dll_197_free(int obj)
 {
     (*(void (**)(int))(*(int *)gModgfxInterface + 0x18))(obj);
-    (*(void (**)(int))(*(int *)gExpgfxInterface + 0x18))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 
 extern f32 lbl_803E5118;

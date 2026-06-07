@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/gfxemit_state.h"
 #include "main/dll/gfxEmit.h"
@@ -466,7 +467,7 @@ LAB_80172f50:
  */
 void collectible_free(int obj)
 {
-  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+  ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
   ObjGroup_RemoveObject(obj,4);
   return;
 }
@@ -615,7 +616,8 @@ int collectible_SeqFn(int obj, int unused, u8* data)
                 buf[3] = lbl_803E345C;
                 buf[4] = lbl_803E345C;
                 buf[5] = lbl_803E345C;
-                (*(void(**)(int, int, f32*, int, int, int))(*gPartfxInterface + 0x8))(obj, 0x7ef, buf, 1, -1, 0);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x7ef, buf, 1,
+                                                                    -1, NULL);
             }
         }
     }
@@ -892,7 +894,8 @@ void fn_801723DC(int obj)
     case 0x27f:
         if (*(f32 *)state < lbl_803E347C) {
             if ((int)randomGetRange(0, 10) == 0) {
-                (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 0x423, 0, 2, -1, 0);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x423, NULL, 2,
+                                                                    -1, NULL);
             }
             *(s16 *)obj += (s16)(lbl_803E3480 * timeDelta);
         }

@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/dll/lightning.h"
 #include "main/dll/pushable.h"
@@ -179,7 +180,7 @@ void magicdust_update(int obj)
   while (iVar6 = ObjMsg_Pop(obj,(uint *)local_24,(uint *)0x0,(uint *)0x0), iVar6 != 0) {
     if (local_24[0] == msgId) {
       iVar6 = *(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
-      (*(code *)(*gExpgfxInterface + 0x18))(obj);
+      ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
       itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)iVar8)->unk27C,0x28);
       ObjHits_DisableObject(obj);
       Sfx_PlayFromObject(obj,(u16)((MagicDustState *)iVar8)->unk274);
@@ -198,20 +199,20 @@ void magicdust_update(int obj)
        (getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18)) < lbl_803E34B8)) {
       ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 0x10;
       local_28 = '\0';
-      (*(code *)(*gPartfxInterface + 8))
-                (obj,((MagicDustState *)iVar8)->unk272,0,0x10002,0xffffffff,&local_28);
+      ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj,
+                ((MagicDustState *)iVar8)->unk272,NULL,0x10002,-1,&local_28);
       local_28 = '\x01';
-      (*(code *)(*gPartfxInterface + 8))
-                (obj,((MagicDustState *)iVar8)->unk272,0,0x10002,0xffffffff,&local_28);
+      ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj,
+                ((MagicDustState *)iVar8)->unk272,NULL,0x10002,-1,&local_28);
       local_28 = '\x02';
-      (*(code *)(*gPartfxInterface + 8))
-                (obj,((MagicDustState *)iVar8)->unk272,0,0x10002,0xffffffff,&local_28);
+      ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj,
+                ((MagicDustState *)iVar8)->unk272,NULL,0x10002,-1,&local_28);
     }
   }
   else {
     if (getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18)) >= lbl_803E34B8) {
       ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A & 0xef;
-      (*(code *)(*gExpgfxInterface + 0x18))(obj);
+      ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
     }
   }
   if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
@@ -256,10 +257,11 @@ void magicdust_update(int obj)
         ((MagicDustState *)iVar8)->flags27A = bVar3 & 0xfb;
         ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 8;
         ((MagicDustState *)iVar8)->unk26C = lbl_803E34B4;
-        (*(code *)(*gExpgfxInterface + 0x18))(obj);
+        ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
         if (*(int *)&((GameObject *)obj)->anim.parent == 0) {
           for (local_27[0] = '\x1e'; local_27[0] != '\0'; local_27[0] = local_27[0] + -1) {
-            (*(code *)(*gPartfxInterface + 8))(obj,((MagicDustState *)iVar8)->unk270,0,1,0xffffffff,local_27);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj,
+                ((MagicDustState *)iVar8)->unk270,NULL,1,-1,local_27);
           }
         }
         ((GameObject *)obj)->anim.alpha = 1;
@@ -276,8 +278,10 @@ void magicdust_update(int obj)
         ((GameObject *)obj)->anim.alpha = 0xff;
       }
       if (*(int *)&((GameObject *)obj)->anim.parent == 0) {
-        (*(code *)(*gPartfxInterface + 8))(obj,((MagicDustState *)iVar8)->unk270,0,1,0xffffffff,0);
-        (*(code *)(*gPartfxInterface + 8))(obj,((MagicDustState *)iVar8)->unk270,0,1,0xffffffff,0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj,
+            ((MagicDustState *)iVar8)->unk270,NULL,1,-1,NULL);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj,
+            ((MagicDustState *)iVar8)->unk270,NULL,1,-1,NULL);
       }
     }
     if ((((MagicDustState *)iVar8)->flags27A & 3) == 0) {
@@ -334,7 +338,7 @@ void magicdust_update(int obj)
         }
         else {
           iVar6 = *(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
-          (*(code *)(*gExpgfxInterface + 0x18))(obj);
+          ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
           itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)iVar8)->unk27C,0x28);
           ObjHits_DisableObject(obj);
           Sfx_PlayFromObject(obj,(u16)((MagicDustState *)iVar8)->unk274);

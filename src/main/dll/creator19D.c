@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/creator19D.h"
 #include "main/objanim.h"
@@ -168,7 +169,7 @@ typedef struct DFSHLaserBeamObject {
 
 #define MODGFX_DETACH(obj) ((void (*)(void *))(*(int *)((u8 *)*gModgfxInterface + 0x18)))(obj)
 #define PARTFX_SPAWN(obj,id,a,b,c,d) \
-  ((void (*)(void *,int,int,int,int,int))(*(int *)((u8 *)*gPartfxInterface + 0x8)))(obj,id,a,b,c,d)
+  ((EffectInterface *)*gPartfxInterface)->spawnObject((obj),(id),(void *)(a),(b),(c),(void *)(d))
 #define RESOURCE_SPAWN(obj,id,a,flags,owner,unk) \
   ((void (*)(void *,int,int,int,int,int))(*(int *)((u8 *)*(int *)lbl_803DDBB8 + 0x4)))(obj,id,a,flags,owner,unk)
 
