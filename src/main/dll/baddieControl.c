@@ -2247,7 +2247,7 @@ void FUN_801115e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   local_14 = DAT_802c2914;
   local_10 = DAT_802c2918;
   if ((*(char *)(param_10 + 0x407) != *(char *)(param_10 + 0x409)) &&
-     (*(char *)(param_9 + 0x36) != '\0')) {
+     (((GameObject *)param_9)->anim.alpha != 0)) {
     if (*(int *)(param_9 + 200) != 0) {
       param_1 = FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                              *(int *)(param_9 + 200));
@@ -2514,7 +2514,7 @@ void FUN_80111aec(void)
         *(float *)(iVar12 + 1000) = fVar2;
         *(ushort *)(iVar12 + 0x400) = *(ushort *)(iVar12 + 0x400) & ~0x40;
         *(undefined *)(iVar7 + 0x354) = 0;
-        *(undefined *)(uVar4 + 0x36) = 0;
+        ((GameObject *)uVar4)->anim.alpha = 0;
         *(undefined4 *)(uVar4 + 0xf4) = 1;
         *(ushort *)(uVar4 + 6) = *(ushort *)(uVar4 + 6) | 0x4000;
         uStack_2c = *(short *)(iVar6 + 0x2c) * 0x3c ^ 0x80000000;
@@ -3014,7 +3014,7 @@ undefined4 FUN_801127c4(int param_1,int param_2,char param_3)
   int iVar2;
   
   if (((param_3 == '\0') || ('\0' < *(char *)(param_2 + 0x354))) ||
-     (*(char *)(param_1 + 0x36) != '\0')) {
+     (((GameObject *)param_1)->anim.alpha != 0)) {
     if ((*(int *)(param_1 + 0x30) == 0) &&
        (iVar2 = FUN_8005b398((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10)),
        iVar2 < 0)) {
@@ -3491,7 +3491,7 @@ extern int objPosToMapBlockIdx(double x, double y, double z);
 #pragma scheduling off
 int dll_19_func0E(int p1, int p2, u8 b)
 {
-  if (b != 0 && (s8)*(u8 *)(p2 + 0x354) <= 0 && *(u8 *)(p1 + 0x36) == 0) {
+  if (b != 0 && (s8)*(u8 *)(p2 + 0x354) <= 0 && ((GameObject *)p1)->anim.alpha == 0) {
     return 0;
   }
   if (*(void **)&((GameObject *)p1)->anim.parent == NULL) {
@@ -3570,7 +3570,7 @@ void dll_19_func19(u8 *cam, u8 *ctx) {
     if ((s8)ctx[1031] == (s8)ctx[1033]) {
         return;
     }
-    if (cam[0x36] == 0) {
+    if (((GameObject *)cam)->anim.alpha == 0) {
         return;
     }
     if (*(void **)&((GameObject *)cam)->unkC8 != NULL) {
@@ -5394,9 +5394,9 @@ void CameraModeWorldMap_update(u8 *obj) {
                   (mathCosf(lbl_803E1A48 * (f32)((*(s16 *)objB - 0x2198) * 2) / lbl_803E1A4C) *
                    mathCosf(lbl_803E1A48 * (f32)((((GameObject *)objB)->anim.rotY - 0x4000) * 2) / lbl_803E1A4C));
         }
-        *(s8 *)(objB + 0x36) = (s32)lim;
+        ((GameObject *)objB)->anim.alpha = (s32)lim;
     } else {
-        *(u8 *)(objB + 0x36) = 0;
+        ((GameObject *)objB)->anim.alpha = 0;
     }
 
     Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ,
