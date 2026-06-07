@@ -3,10 +3,6 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 
-extern void ObjAnim_LoadCachedMove(int animId,int moveIndex,u8 *cache,ObjAnimDef *animDef);
-extern void ObjAnim_LoadMoveEvents(int objAnim,int objType,ObjAnimEventTable *eventTable,u32 moveId,
-                                   int async);
-
 extern f32 gObjAnimProgressOne;
 extern f32 gObjAnimProgressZero;
 extern f32 gObjAnimEventStepScale;
@@ -1154,7 +1150,8 @@ int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int moveCo
                                 hitState,requestedMoveId,0);
   }
   if (objAnim->eventTable != (ObjAnimEventTable *)0x0) {
-    ObjAnim_LoadMoveEvents(objAnimArg,(int)objAnim->seqId,objAnim->eventTable,requestedMoveId,0);
+    ObjAnim_LoadMoveEvents((u8 *)objAnimArg,(int)objAnim->seqId,objAnim->eventTable,
+                           requestedMoveId,0);
   }
   previousMove = objAnim->currentMove;
   moveChanged = previousMove != requestedMoveId;

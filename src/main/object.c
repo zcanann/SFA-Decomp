@@ -1155,7 +1155,7 @@ void objGetWeaponDa(u8 *obj, int dummy, int *out, int key, u8 load) {
     s16 *tbl;
     s16 da2;
 
-    tbl = (s16 *)*(int *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x28);
+    tbl = ((GameObject *)obj)->anim.modelInstance->weaponDaTable;
     *out = 0;
     if (tbl == NULL) {
         return;
@@ -1183,28 +1183,28 @@ void objGetWeaponDa(u8 *obj, int dummy, int *out, int key, u8 load) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void ObjAnim_LoadMoveEvents(u8 *obj, int dummy, int *out, int key, u8 load) {
+void ObjAnim_LoadMoveEvents(u8 *obj, int dummy, ObjAnimEventTable *eventTable, u32 moveId, u8 load) {
     int i;
     s16 *tbl;
     s16 da2;
 
-    tbl = (s16 *)*(int *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x20);
-    *out = 0;
+    tbl = ((GameObject *)obj)->anim.modelInstance->eventMoveTable;
+    eventTable->byteCount = 0;
     if (tbl == NULL) {
         return;
     }
     i = 0;
     while (tbl[i] != -1) {
-        if (tbl[i] == key) {
+        if (tbl[i] == moveId) {
             da2 = tbl[i + 1];
-            *out = tbl[i + 2];
-            if (*out > 0x50) {
-                *out = 0x50;
+            eventTable->byteCount = tbl[i + 2];
+            if (eventTable->byteCount > 0x50) {
+                eventTable->byteCount = 0x50;
             }
             if (load == 0) {
-                getTabEntry(out[1], 0x40, da2, *out);
+                getTabEntry((int)eventTable->entries, 0x40, da2, eventTable->byteCount);
             } else {
-                fileLoadToBufferOffset(0x40, (void *)out[1], da2, *out);
+                fileLoadToBufferOffset(0x40, eventTable->entries, da2, eventTable->byteCount);
             }
             return;
         }
@@ -1388,7 +1388,7 @@ typedef struct LoadedObj {
     ObjHitReactState *hitReactState;
     u8 pad58[0x4];
     int f5c;
-    int objAnimEventTable;
+    ObjAnimEventTable *objAnimEventTable;
     u8 pad64[0x4];
     int **dll;
     int f6c;
@@ -1629,10 +1629,10 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     if ((flags29 & 0x40) || (((ObjModelInstance *)obj->def)->flags & 0x400000)) {
         seq2 = obj->seqId;
         tmp = roundUpTo4(cursor);
-        obj->objAnimEventTable = tmp;
+        obj->objAnimEventTable = (ObjAnimEventTable *)tmp;
         cursor = roundUpTo8(tmp + 8);
-        *(int *)(obj->objAnimEventTable + 4) = cursor;
-        ObjAnim_LoadMoveEvents((u8 *)obj, seq2, (int *)obj->objAnimEventTable, 0, 1);
+        obj->objAnimEventTable->entries = (s16 *)cursor;
+        ObjAnim_LoadMoveEvents((u8 *)obj, seq2, obj->objAnimEventTable, 0, 1);
         cursor += 0x50;
     }
     if ((flags29 & 0x100) && *(void **)obj->models != NULL) {

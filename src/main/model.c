@@ -1036,9 +1036,9 @@ int randomGetRange(int lo, int hi);
 void memcpyToCache(void *dst, void *src, u32 count);
 #pragma dont_inline reset
 
-void *ObjAnim_LoadCachedMove(int a, int b, int c, int d) {
+void *ObjAnim_LoadCachedMove(int animId, int moveIndex, u8 *cache, ObjAnimDef *animDef) {
     void *out = NULL;
-    animationLoad((int)&out, a, b, c, d);
+    animationLoad((int)&out, animId, moveIndex, (int)cache, (int)animDef);
     return out;
 }
 #pragma pop

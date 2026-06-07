@@ -6,6 +6,7 @@
 typedef struct ObjAnimDef ObjAnimDef;
 typedef struct ObjAnimState ObjAnimState;
 typedef struct ObjAnimComponent ObjAnimComponent;
+typedef struct ObjAnimEventTable ObjAnimEventTable;
 typedef struct ObjAnimEventList ObjAnimEventList;
 
 typedef int (*ObjAnimSetProgressObjectFirstFn)(int objAnimArg,f32 progress);
@@ -42,5 +43,8 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
                                ObjAnimEventList *events);
 int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
 int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int moveControlFlags);
+void *ObjAnim_LoadCachedMove(int animId,int moveIndex,u8 *cache,ObjAnimDef *animDef);
+void ObjAnim_LoadMoveEvents(u8 *objAnim,int objType,ObjAnimEventTable *eventTable,u32 moveId,
+                            u8 load);
 
 #endif /* MAIN_OBJANIM_H_ */
