@@ -2380,7 +2380,10 @@ corpus are ALL switch-lowering compare-chains (multi-case), ZERO from
 if-in-loop. Cost model: ~1 instr x unroll factor on every unrolled scan
 loop -- this names the score FLOOR of the audio 85-93 band
 (Sfx_AllocObjectChannel x8, Music_LoadChannelForTrigger x17 copies).
-Skip on sight.
+Skip on sight — BUT first check the PLAIN-STATEMENT case: a single compare
++ `beq next; b far` outside loop-break position IS reproducible as a
+single-case `switch` with `default: break;` (recipe #109(d),
+synthAdvanceVirtualSampleEntry x3 -> 100).
 
 ## Flipping a unit to MatchingFor (team-lead-adopted standard)
 
@@ -2599,15 +2602,61 @@ bare array's base web is created first regardless of decl position
     `p = base = lbl;` (#51's pointer cousin) — insertPoint's base/p pair
     →0 diffs (pointer decls before ints also required).
 
+109. **s64/fixed-point cap class: three more cracks beyond #98 (task #15;
+    fn_80007F78 89.0->94.0, synthAdvanceVirtualSampleEntry 95.4->100,
+    _GetInputValue 95.7->100 [inp_value unit -> 100.0]).**
+    (a) **Shift-count mask spelling**: target masking EVERY u64-shift-by-
+    variable count (`li r0,-1; and rX,count,r0` before each `__shl2i`/
+    `__shr2u` pair, masked web SHARED across the pair) = the C is
+    `x <<= (n & 0xFFFFFFFF);`. Probe-verified: `(u32)n`, `(int)n`, and a
+    u64 count all pass the lo word raw; ONLY the explicit `& 0xFFFFFFFF`
+    spelling materializes the mask. 8 sites in fn_80007F78 (+2.7pp).
+    (b) **Countdown s64-RMW unroll** (supersedes #98's `opt_unroll_loops
+    off` + manual 5-statement body for this shape): the 10x5/7x2 halving
+    blocks are MWCC's OWN unroll of `for (i = 50; i != 0; i--) *q /= 2;`
+    (count-down form -> x5 unroll, ctr=10; 14 -> x2, ctr=7). Unroller-cloned
+    RMW bodies keep ONE loop-carried web -> FIXED regs per copy (lo=r4,
+    hi=r3) with store-to-load forwarding emitted as a literal `mr r0,r4`
+    per copy. Count-up (`i < 50`) unrolls x8 with PING-PONG registers and
+    no mr; manual 5-statement bodies ping-pong too (probed: opt pragma
+    matrix, nested loops, tmp-var spellings all inert). Read the tell:
+    fixed reg roles + per-copy `mr` = countdown source; ping-pong = manual/
+    count-up.
+    (c) **Two-web u32 address temp**: `addc rT,...; mr rVAR,rT` with later
+    uses reading rT = a u32 temp assigned then copied into the persistent
+    int var (`addrB = posA + curB; curB = addrB;` + calls take addrB).
+    (d) **#92-shape RECOGNITION (not a probe)**: `cmp; beq next; b far` in
+    plain statement position = a single-case SWITCH with `default: break;`
+    in the source (switch compare-chain lowering emits branch-over-branch;
+    if/else folds it). MP4 vsUpdateBuffer proved it verbatim for
+    synthAdvanceVirtualSampleEntry (3 sites + `%` modulo for the wrap +
+    embedded-assign callback + real loopSizePtr local). The #92 cap text
+    stands for LOOP-BREAK position and statement-block arms; the switch
+    reading recovers the plain-statement instances.
+    (e) **#67(a)-struct corollary holds for GPR pairs on 1.2.5n**: a
+    `struct { u32 len, off; } d;` local claims its 8B frame slot even when
+    fully enregistered, where two plain u32 locals claim none (closed the
+    last -48-vs-40 frame delta to 100).
+    (f) **Audio clamp residuals: A/B the MP4 musyx MACRO spellings** —
+    sal.h's `CLAMP`/`CLAMP_INV`/`MIN` are nested TERNARIES assigned to the
+    variable (`value = (v > max) ? max : (v < min) ? min : v;`); the
+    if/else+temp expansion emits a temp join + `mr` writeback instead of
+    in-place arms. `value = MIN(value, K)` right after an assignment
+    reproduces the r0-temp + `mr` writeback shape. _GetInputValue's
+    whole-fn register rotation vanished once the web structure matched —
+    treat big rotations as SYMPTOMS until web shapes align.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
 `subfe` long-long arithmetic, and unrolled rounding-division/reciprocal loops
 (often 10×-then-7× `rlwimi` rotate sequences) is **compiler-emitted s64/fixed-
-point math**. The exact unrolled sequence is near-impossible to reproduce from
-clean C with current playbook recipes. When you recognize the pattern,
+point math**. ⚠️ **LARGELY CRACKED — see recipes #98 and #109** (countdown
+RMW loops, shift-count masks, pointer-deref halving, two-web temps). Apply
+those first; only the residual saved-reg/spill balance after them is a cap.
+When the remaining divergence is allocator-internal,
 commit your best clean-C partial and document the residual — don't grind.
-If a future recipe lands that cracks this class, it will become tractable
+If a future recipe lands that cracks the remainder, it will become tractable
 across every such function at once.
 
 ## No `asm { }` blocks — ever
