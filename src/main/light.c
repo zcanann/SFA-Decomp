@@ -1022,15 +1022,15 @@ int dll_224_getExtraSize_ret_6(void) { return 0x6; }
 int dll_224_getObjectTypeId(void) { return 0x0; }
 
 /* "tail-call into (**gExpgfxInterface)[6]" free stub. */
-extern int *gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 void vfpplatform_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
 void vfpdoorswitch_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
 void vfpcoreplat_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
 
 #pragma scheduling off
@@ -1113,7 +1113,7 @@ extern void *lbl_803DDCC0;
 #pragma scheduling off
 #pragma peephole off
 void vfpdraghead_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
     (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x14)))(obj);
     if (lbl_803DDCC0 != NULL) {
         Resource_Release(lbl_803DDCC0);
