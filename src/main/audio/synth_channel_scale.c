@@ -5,9 +5,9 @@ extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD150[];
 extern u8 *synthVoice;
 
-extern u32 vidMakeNew(int state, int returnNewId);
-extern void vidRemoveVoice(int state);
-extern void voiceRegister(int state);
+extern u32 vidMakeNew(McmdVoiceState *svoice, u32 isMaster);
+extern void vidRemoveVoice(McmdVoiceState *svoice);
+extern void voiceRegister(McmdVoiceState *svoice);
 extern u32 hwIsActive(u32 slot);
 
 typedef struct {
@@ -354,7 +354,7 @@ void fn_8026F5B8(int state)
 /*
  * Reuse an active voice matching the requested MIDI slot/channel.
  */
-int audioFn_8026f630(u8 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlags)
+int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32 *outFlags)
 {
     u32 i;
     u32 result;
@@ -362,30 +362,25 @@ int audioFn_8026f630(u8 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlag
     McmdVoiceState *voice;
     McmdVoiceState *selectedVoice;
     u32 sawHeldVoice;
-    u64 flags;
-    s32 bend;
 
     sawHeldVoice = 0;
     result = -1;
-    i = 0;
-    voice = (McmdVoiceState *)synthVoice;
-    while (i < lbl_803BD150[0x210]) {
+    for (i = 0, voice = (McmdVoiceState *)synthVoice; i < lbl_803BD150[0x210]; ++i, ++voice) {
         if (voice->macroAllocating == 0 && voice->voiceHandle != 0xffffffff &&
-            voice->midiSlot == (u8)slot && voice->midiEvent == (u8)channel) {
-            flags = *(u64 *)&voice->inputFlags;
-            if ((flags & 2) != 0) {
+            voice->midiSlot == slot && voice->midiEvent == channel) {
+            if ((*(u64 *)&voice->inputFlags & 2) != 0) {
                 sawHeldVoice = 1;
             }
-            if ((flags & 0x10) != 0 && (flags & 0x10000000008ULL) != 8 &&
-                hwIsActive(i) != 0) {
+            if ((*(u64 *)&voice->inputFlags & 0x10) != 0 &&
+                (*(u64 *)&voice->inputFlags & 0x10000000008) != 8 && hwIsActive(i) != 0) {
                 if (result == 0xffffffff && (*(u64 *)&voice->inputFlags & 0x20002) == 0x20002) {
                     *outFlags = 1;
                     return -1;
                 }
 
                 selectedVoice = voice;
-                bend = ((s32)voice->fineTune << 16) / 100;
-                voice->portamentoCurPitch = ((u32)voice->key << 16) + bend;
+                voice->portamentoCurPitch =
+                    ((u32)voice->key << 16) + ((s32)voice->fineTune << 16) / 100;
                 voice->registeredKey = voice->key;
                 voice->key =
                     (u16)key + ((voice->key & 0xff) - voice->keyBase);
@@ -393,28 +388,26 @@ int audioFn_8026f630(u8 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlag
                 voice->fineTune = 0;
                 voice->portamentoTime = 0;
                 voice->outputFlags |= 0x20000;
-                vidRemoveVoice((int)(synthVoice + i * 0x404));
+                vidRemoveVoice((McmdVoiceState *)(synthVoice + i * 0x404));
                 if (result == 0xffffffff) {
                     voice->voiceNextHandle = 0xffffffff;
                     voice->voicePrevHandle = 0xffffffff;
-                    result = vidMakeNew((int)(synthVoice + i * 0x404), voiceGroup);
+                    result = vidMakeNew((McmdVoiceState *)(synthVoice + i * 0x404), voiceGroup);
                     previousId = voice->voiceHandle;
                 } else {
                     ((McmdVoiceState *)synthVoice)[previousId & 0xff].voiceNextHandle = voice->voiceHandle;
                     voice->voicePrevHandle = previousId;
                     previousId = voice->voiceHandle;
-                    vidMakeNew((int)(synthVoice + i * 0x404), 0);
+                    vidMakeNew((McmdVoiceState *)(synthVoice + i * 0x404), 0);
                 }
             }
         }
-        i++;
-        voice++;
     }
 
     if (result == 0xffffffff) {
         *outFlags = sawHeldVoice;
     } else {
-        voiceRegister((int)selectedVoice);
+        voiceRegister(selectedVoice);
         inpSetMidiLastNote(selectedVoice->midiSlot, selectedVoice->midiEvent,
                            selectedVoice->key & 0xff);
         *outFlags = 0;

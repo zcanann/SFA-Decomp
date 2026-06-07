@@ -116,8 +116,8 @@ void lightning_render(u8* obj)
     }
 }
 
-extern int lightningCreate(float *start,float *end,double radiusX,double radiusY,int delay,
-                       int param_6,u8 param_7);
+extern int lightningCreate(float *start,float *end,f32 radiusX,f32 radiusY,int delay,
+                       int param_6,int param_7);
 extern void hitDetectFn_80097070(u8 *obj,double radius,int param_3,int param_4,int param_5,
                                  int param_6);
 extern void objfx_spawnDirectionalBurst(u8 *obj,int param_2,double radius,int param_4,int param_5,
@@ -176,8 +176,8 @@ void lightning_update(u8 *obj)
             objects = (u32 *)ObjGroup_GetObjects(MMP_LIGHTNING_OBJGROUP,&objectCount);
             objectIndex = 0;
             while (objectIndex < objectCount) {
-                if (*(u32 *)(*(u32 *)(objects[objectIndex] + 0x4c) + 0x14) ==
-                    *(u32 *)(state + 0x20)) {
+                u32 linkedHandle = *(u32 *)(*(u32 *)(objects[objectIndex] + 0x4c) + 0x14);
+                if (linkedHandle == *(u32 *)(state + 0x20)) {
                     break;
                 }
                 objectIndex++;
