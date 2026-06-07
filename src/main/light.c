@@ -4,6 +4,7 @@
 #include "main/effect_interfaces.h"
 #include "main/light.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 
@@ -1318,7 +1319,7 @@ void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (vi
 #pragma scheduling reset
 
 
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -1344,41 +1345,41 @@ void seqpoint_update(int *obj)
     switch (self->mode) {
     case 0:
         if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= self->triggerRadius) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case 1:
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) == 0) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case 2:
         if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= self->triggerRadius) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) == 0) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case 3:
         if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= self->triggerRadius) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) != 0) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         GameBit_Set(self->conditionBit, 1);
         self->done = 1;
         break;
     case 4:
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) != 0) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         GameBit_Set(self->conditionBit, 1);
         self->done = 1;
         break;
     case 5:
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) == 0) return;
-        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(self->sequenceId, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         break;
     }
 }
@@ -1588,7 +1589,7 @@ void vfpplatform_update(int obj)
     u8 s3 = *(u8 *)(state + 3);
     if (s3 == 10) {
         if (GameBit_Get(*(s16 *)state) != 0) {
-            (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         }
     } else {
         int xi = (int)((GameObject *)obj)->anim.localPosX;

@@ -1,6 +1,7 @@
 #include "main/asset_load.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 #include "main/shader.h"
 
 
@@ -4107,7 +4108,7 @@ void mapLoadUnloadObjects(int flag)
 
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
-extern int* gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern WaterfxInterface **gWaterfxInterface;
 extern ProjgfxInterface **gProjgfxInterface;
 extern int* gModgfxInterface;
@@ -4169,7 +4170,7 @@ void beginLoadingMap(void)
         lbl_803DCEB8 = -2;
         lbl_803DCDE0 = 8;
     }
-    (*(void (*)(void))(*(int*)(*gObjectTriggerInterface + 4)))();
+    (*gObjectTriggerInterface)->onMapSetup();
     mapInitFn_80069990();
     for (i = 0; i < 5; i++) {
         a = *(u8**)(base + 0x41F4 + i * 4);

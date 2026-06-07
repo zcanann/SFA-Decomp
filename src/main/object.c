@@ -6,6 +6,7 @@
 #include "main/engine_8001746C_phantoms.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/objseq.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 
@@ -1714,7 +1715,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
 extern void Obj_InitObjectSystem(void);
 extern int getDataFileSize(int id);
 extern void *gCameraInterface;
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gTitleMenuControlInterface;
 extern ExpgfxInterface **gExpgfxInterface;
 extern void *gModgfxInterface;
@@ -1753,7 +1754,6 @@ void objFreeObjDef(void *objp, int flag) {
     void (*fp)(u8 *, int);
     void (*cb)(u8 *);
     void (*cb2)(u8 *, int, int, int, int);
-    void (*cb3)(void);
     int i;
     int count;
     int n;
@@ -1896,8 +1896,7 @@ void objFreeObjDef(void *objp, int flag) {
     }
     if (((GameObject *)obj)->unkB4 >= 0) {
         if (flag == 0) {
-            cb3 = (void (*)(void))*(int *)(*(int *)gObjectTriggerInterface + 0x4c);
-            cb3();
+            (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->unkB4);
         }
         ((GameObject *)obj)->unkB4 = 0xffff;
     }
@@ -2201,8 +2200,8 @@ void Obj_UpdateAllObjects(u8 flags)
     }
     if (timeStop == 0) {
         ObjHits_TickPriorityHitCooldowns();
-        (*(void (**)(void))(*(int *)gObjectTriggerInterface + 0x28))();
-        (*(void (**)(void))(*(int *)gObjectTriggerInterface + 0x18))();
+        (*gObjectTriggerInterface)->run();
+        (*gObjectTriggerInterface)->updateCamera();
         (*(void (**)(u8))(*(int *)gCameraInterface + 8))(framesThisStep);
     }
 }

@@ -2,6 +2,7 @@
 #include "dolphin/os/OSFastCast.h"
 #include "main/asset_load.h"
 #include "main/effect_interfaces.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 extern undefined8 camcontrol_playTargetTypeSfx();
@@ -1086,7 +1087,7 @@ extern void *gGameUIInterface;
 extern void *gCameraInterface;
 extern void *lbl_803DCA94;
 extern void *gPlayerInterface;
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gScreenTransitionInterface;
 extern void *gSHthorntailAnimationInterface;
 extern Sky2Interface **gSky2Interface;

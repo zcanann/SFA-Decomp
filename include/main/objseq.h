@@ -11,6 +11,78 @@
  */
 typedef void (*ObjSeqFreeCallback)(void *ctx, u8 *obj);
 
+typedef struct ObjectTriggerInterface {
+    void *unusedSlot02;
+    void (*onMapSetup)(void);
+    void (*addBgCommand)(int index, int xrot, int yrot);
+    void (*setFlag)(int index, int value);
+    int (*getBool)(int index);
+    int (*update)(u8 *obj, f32 timeStep);
+    void (*updateCamera)(void);
+    void (*loadAnimData)(u8 *seq, u8 *obj);
+    void (*initState)(u8 *seq);
+    void (*freeState)(u8 *seq);
+    void (*run)(void);
+    int (*resolveAndAssignTargetObject)(u8 *obj);
+    int (*func14Ret0)(void);
+    int (*func15Ret1)(void);
+    int (*getGlobal4)(void);
+    void (*setGlobal4)(int value);
+    int (*func18Ret0)(void);
+    void (*func19Nop)(void);
+    int (*runSequence)(int seqIndex, void *obj, int flags);
+    void (*endSequence)(int seqIndex);
+    void (*setCamVars)(int camA, int camB, int camC, int camD);
+    void (*preempt)(int seqIndex, int value);
+    void (*yield)(int obj, int value);
+    u8 (*getGlobal3)(void);
+    void (*setGlobal3)(u8 value);
+    s16 (*getGlobal1)(void);
+    void (*setGlobal1)(s16 value);
+    s16 (*getGlobal2)(void);
+    void (*setGlobal2)(s16 value);
+    void (*setXrot)(int index, int xrot);
+    int (*func20)(void *obj, u8 *seq, int cmd, int maxCount, int paramOffset, int arg5,
+                  int arg6);
+    int (*setObjects)(int a, int b, int c);
+    int (*setOverridePos)(f32 x, f32 y, f32 z);
+    int (*func23)(int unused, int x);
+} ObjectTriggerInterface;
+
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, onMapSetup) == 0x04);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, addBgCommand) == 0x08);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, setFlag) == 0x0C);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, getBool) == 0x10);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, update) == 0x14);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, updateCamera) == 0x18);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, loadAnimData) == 0x1C);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, initState) == 0x20);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, freeState) == 0x24);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, run) == 0x28);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, resolveAndAssignTargetObject) == 0x2C);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, func14Ret0) == 0x30);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, func15Ret1) == 0x34);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, getGlobal4) == 0x38);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, setGlobal4) == 0x3C);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, func18Ret0) == 0x40);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, func19Nop) == 0x44);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, runSequence) == 0x48);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, endSequence) == 0x4C);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, setCamVars) == 0x50);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, preempt) == 0x54);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, yield) == 0x58);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, getGlobal3) == 0x5C);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, setGlobal3) == 0x60);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, getGlobal1) == 0x64);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, setGlobal1) == 0x68);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, getGlobal2) == 0x6C);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, setGlobal2) == 0x70);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, setXrot) == 0x74);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, func20) == 0x78);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, setObjects) == 0x7C);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, setOverridePos) == 0x80);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, func23) == 0x84);
+
 typedef struct ObjSeqState {
     void *targetObj;
     u8 unk04[8];
