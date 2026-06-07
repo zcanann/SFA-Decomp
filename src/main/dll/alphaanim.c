@@ -214,7 +214,7 @@ void FUN_8017c29c(int param_1)
   }
   else {
     FUN_80006ba8(0,0x100);
-    (**(code **)(*DAT_803dd6d4 + 0x84))(param_1,0);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->setRunSequenceWorldSpace(param_1, 0);
     ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_1, -1);
     FUN_80017698(0x930,1);
   }
@@ -400,7 +400,7 @@ void seqObject_update(int param_1)
     bVar2 = (byte)uVar1;
     if ((bVar2 != pbVar4[1]) && (pbVar4[1] = bVar2, bVar2 != 0)) {
       if (*(char *)(iVar3 + 0x1e) != -1) {
-        (**(code **)(*DAT_803dd6d4 + 0x84))(param_1,0);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->setRunSequenceWorldSpace(param_1, 0);
         ((ObjectTriggerInterface *)*DAT_803dd6d4)
             ->runSequence((int)*(char *)(iVar3 + 0x1e), (void *)param_1, -1);
       }
@@ -870,7 +870,7 @@ void seqobject_update(int *obj)
             state[1] = bitValue;
             if (bitValue != 0) {
                 if (*(s8 *)(def + 0x1e) != -1) {
-                    (*gObjectTriggerInterface)->func23((int)obj, 0);
+                    (*gObjectTriggerInterface)->setRunSequenceWorldSpace((int)obj, 0);
                     (*gObjectTriggerInterface)->runSequence(*(s8 *)(def + 0x1e), obj, -1);
                 }
                 if ((def[0x1d] & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) == 0 &&

@@ -46,7 +46,7 @@ typedef struct ObjectTriggerInterface {
                   int arg6);
     int (*setObjects)(int a, int b, int c);
     int (*setOverridePos)(f32 x, f32 y, f32 z);
-    int (*func23)(int unused, int x);
+    int (*setRunSequenceWorldSpace)(int unused, int mode);
 } ObjectTriggerInterface;
 
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, onMapSetup) == 0x04);
@@ -81,7 +81,7 @@ STATIC_ASSERT(offsetof(ObjectTriggerInterface, setXrot) == 0x74);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, func20) == 0x78);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, setObjects) == 0x7C);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, setOverridePos) == 0x80);
-STATIC_ASSERT(offsetof(ObjectTriggerInterface, func23) == 0x84);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, setRunSequenceWorldSpace) == 0x84);
 
 typedef struct ObjSeqState {
     void *targetObj;

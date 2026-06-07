@@ -159,7 +159,7 @@ typedef struct SeqByte136 {
 int ObjSeq_update(u8 *obj, f32 t);
 
 typedef struct SeqRunFlags {
-    u8 active : 1;
+    u8 useWorldSpace : 1;
 } SeqRunFlags;
 extern SeqRunFlags lbl_803DD0B4;
 extern u8 *lbl_803DD07C;
@@ -3421,7 +3421,7 @@ checked:
     x = ((GameObject *)obj)->anim.localPosX;
     y = ((GameObject *)obj)->anim.localPosY;
     z = ((GameObject *)obj)->anim.localPosZ;
-    if (lbl_803DD0B4.active) {
+    if (lbl_803DD0B4.useWorldSpace) {
         parent = NULL;
         x = ((GameObject *)obj)->anim.worldPosX;
         y = ((GameObject *)obj)->anim.worldPosY;
@@ -3658,7 +3658,7 @@ gotFlags:
     }
     mm_free(buf);
     lbl_803DD078 = 0;
-    lbl_803DD0B4.active = 0;
+    lbl_803DD0B4.useWorldSpace = 0;
     return slot;
 }
 #pragma scheduling reset

@@ -980,7 +980,7 @@ void doorlock_update(int obj)
   def = *(int *)&((GameObject *)obj)->anim.placementData;
   if (((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) && (GameBit_Get(0x930) == 0)) {
     buttonDisable(0, 0x100);
-    (*(code *)(*gObjectTriggerInterface + 0x84))(obj, 0);
+    (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
     (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
     GameBit_Set(0x930, 1);
   } else {

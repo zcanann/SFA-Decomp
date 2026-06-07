@@ -854,7 +854,7 @@ void FUN_801e524c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if (((*(byte *)(param_9 + 0xaf) & 4) == 0) || (uVar2 = FUN_80017690(0x92a), uVar2 != 0)) {
     if ((*(byte *)(param_9 + 0xaf) & 1) != 0) {
       FUN_80006ba8(0,0x100);
-      (**(code **)(*DAT_803dd6d4 + 0x84))(param_9,0);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->setRunSequenceWorldSpace(param_9, 0);
       if (*(char *)((int)piVar4 + 5) == '\0') {
         param_12 = *DAT_803dd6d4;
         (**(code **)(param_12 + 0x48))(1,param_9,0xffffffff);
@@ -888,7 +888,7 @@ void FUN_801e524c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   else {
     FUN_80006ba8(0,0x100);
-    (**(code **)(*DAT_803dd6d4 + 0x84))(param_9,0);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->setRunSequenceWorldSpace(param_9, 0);
     ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(3, (void *)param_9, -1);
     FUN_80017698(0x92a,1);
   }
@@ -2385,19 +2385,19 @@ void SB_KyteCage_update(int obj)
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
         if (GameBit_Get(0x92a) == 0) {
             buttonDisable(0, 0x100);
-            ((void (*)(int, int))((void **)*gObjectTriggerInterface)[0x84/4])(obj, 0);
-            ((void (*)(int, int, int))((void **)*gObjectTriggerInterface)[0x48/4])(3, obj, -1);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(3, (void *)obj, -1);
             GameBit_Set(0x92a, 1);
             return;
         }
     }
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         buttonDisable(0, 0x100);
-        ((void (*)(int, int))((void **)*gObjectTriggerInterface)[0x84/4])(obj, 0);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
         if (state->doorChoice != 0) {
-            ((void (*)(int, int, int))((void **)*gObjectTriggerInterface)[0x48/4])(2, obj, -1);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
         } else {
-            ((void (*)(int, int, int))((void **)*gObjectTriggerInterface)[0x48/4])(1, obj, -1);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
             state->doorChoice = 1;
         }
     }

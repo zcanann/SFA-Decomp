@@ -1387,17 +1387,17 @@ void s16toFloat(f32 *p, s16 val)
 }
 
 typedef struct {
-    u8 active : 1;
+    u8 useWorldSpace : 1;
 } SeqB4Flags;
 extern SeqB4Flags lbl_803DD0B4;
 int ObjSeq_func23(int unused, int x)
 {
     switch (x) {
     case 0:
-        lbl_803DD0B4.active = 1;
+        lbl_803DD0B4.useWorldSpace = 1;
         break;
     case 1:
-        lbl_803DD0B4.active = 0;
+        lbl_803DD0B4.useWorldSpace = 0;
         break;
     }
     return 0;
