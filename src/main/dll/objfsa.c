@@ -4511,13 +4511,16 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float *point)
   int n;
   ObjfsaPatch *patch = lbl_8039CAE8;
 
-  for (n = lbl_803DD468; n > 0; n--, patch++) {
+  for (n = lbl_803DD468; n > 0; n--) {
     f32 y = point[1];
     if (y < (f32)patch->maxY && y > (f32)patch->minY) {
-      f32 z = point[2];
-      f32 x = point[0];
-      u8 i = 0;
-      u8 j = i;
+      f32 x;
+      f32 z;
+      u8 i;
+      u8 j;
+      z = point[2];
+      x = point[0];
+      j = i = 0;
       for (; i < 4; i++, j += 2) {
         if (patch->planeOffsets[i] +
                 (x * (f32)((s16 *)patch)[j] + z * (f32)((s16 *)patch)[j + 1]) >
@@ -4529,6 +4532,7 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float *point)
         return patch->groupId;
       }
     }
+    patch++;
   }
   return 0;
 }
