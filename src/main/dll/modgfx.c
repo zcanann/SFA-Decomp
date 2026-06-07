@@ -4856,11 +4856,8 @@ void boneParticleEffect_update(void *ctx, int p2, u8 *o)
     f32 dx;
     f32 dy;
     f32 dz;
-    f32 kA8;
-    f32 kB8;
-    f32 kBC;
 
-    base = (u8 *)lbl_8030FE38;
+    base = (u8 *)(int)lbl_8030FE38;
     if (GameBit_Get(0x468) != 0) {
         GameBit_Set(0x468, 0);
         lbl_803DD2BC = 0xf;
@@ -4896,19 +4893,16 @@ void boneParticleEffect_update(void *ctx, int p2, u8 *o)
             row = 0;
             j = 0;
             idp = base + 0x5b4;
-            kA8 = lbl_803DF4A8;
-            kB8 = lbl_803DF4B8;
-            kBC = lbl_803DF4BC;
             while (j < 5) {
-                s.vx = kA8;
-                s.vy = kA8;
-                s.vz = kA8;
-                s.w = kB8;
+                s.vx = 0.0f;
+                s.vy = 0.0f;
+                s.vz = 0.0f;
+                s.w = 1.0f;
                 s.dc = 0;
                 s.de = 0;
                 s.e0 = 0;
-                jb = (u8 *)((int *)m)[(*(u16 *)((u8 *)m + 0x18) & 1) + 3];
                 id = *(u8 *)(base + lbl_803DD2B4 * 5 + j + 0x5b4);
+                jb = (u8 *)((int *)m)[(*(u16 *)((u8 *)m + 0x18) & 1) + 3];
                 mtx = (u8 *)((BoneFxJRow *)jb + (id << 4));
                 dx = *(f32 *)(mtx + 0x30) + playerMapOffsetX;
                 dy = *(f32 *)(mtx + 0x34);
@@ -4916,17 +4910,17 @@ void boneParticleEffect_update(void *ctx, int p2, u8 *o)
                 dx = dx - *(f32 *)(o + 0xc);
                 dy = dy - *(f32 *)(o + 0x10);
                 dz = dz - *(f32 *)(o + 0x14);
-                dx = dx * kBC;
+                dx = dx * 20.02f;
                 if (id == 0x1d || id == 0x1d) {
-                    dy = lbl_803DF4BC * (lbl_803DF4C0 + dy);
+                    dy = 20.02f * (lbl_803DF4C0 + dy);
                 } else {
-                    dy = dy * kBC;
+                    dy = dy * 20.02f;
                 }
-                dz = dz * kBC;
+                dz = dz * 20.02f;
                 Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
                 k = 0;
                 pa = (f32 *)(base + 0x90);
-                pb = (f32 *)base;
+                pb = (f32 *)(int)lbl_8030FE38;
                 pc = (f32 *)(base + 0x120);
                 while (k < 4) {
                     u8 *t;
