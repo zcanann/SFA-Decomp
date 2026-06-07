@@ -1208,479 +1208,436 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix)
 u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,uint mask,
                            uint volMask)
 {
-  bool bVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  bool bVar6;
-  bool bVar7;
-  bool bVar8;
-  bool bVar9;
-  uint uVar10;
+  extern int ObjHits_RecordPositionHit(f32 hitPosX,int obj,int hitObj,u8 priority,
+                                       u8 hitVolume,char sphereIndex,f32 hitPosY,f32 hitPosZ);
+  extern int ObjHits_RecordObjectHit(int obj,int hitObj,u8 priority,u8 hitVolume,
+                                     char sphereIndex);
+  int result;
+  int stateA;
+  int stateB;
+  int stateSrc;
+  char modeA;
+  char modeB;
+  char miss;
+  int countA;
+  int countB;
+  float *spheresA;
+  float *spheresB;
+  float *defA;
+  u8 *volA;
+  u8 *volB;
+  float *curSphA;
+  float *curDefA;
+  float *contactBase;
+  float *contact;
+  float *cw;
+  float *sphB;
+  float *cr;
+  u8 *p;
+  float *pb2;
   int *piVar11;
-  undefined *puVar12;
-  uint uVar13;
-  int iVar16;
-  uint uVar17;
-  uint uVar20;
-  uint uVar21;
-  uint uVar22;
-  uint uVar23;
-  int iVar24;
-  int iVar25;
-  float *pfVar26;
-  int iVar27;
-  uint unaff_r26;
-  uint unaff_r27;
-  int iVar28;
-  float *pfVar29;
-  float *pfVar30;
-  uint uVar31;
-  float dVar32;
-  float dVar33;
-  float dVar34;
-  float in_f14;
-  float dVar35;
-  float in_f15;
-  float dVar36;
-  float in_f16;
-  float dVar37;
-  float in_f17;
-  float dVar38;
-  float in_f18;
-  float in_f19;
-  float in_f20;
-  float in_f21;
-  float in_f22;
-  float in_f23;
-  float in_f24;
-  float in_f25;
-  float in_f26;
-  float in_f27;
-  float dVar39;
-  float in_f28;
-  float dVar40;
-  float in_f29;
-  float dVar41;
-  float in_f30;
-  float dVar42;
-  float dVar43;
-  float in_f31;
-  float dVar44;
-  float dVar45;
-  undefined auStack_248 [20];
-  undefined2 local_234;
-  undefined local_232;
-  undefined local_231;
-  undefined auStack_230 [20];
-  undefined2 local_21c;
-  undefined local_21a;
-  undefined local_219;
-  float local_218;
-  float local_214;
-  undefined4 local_210;
-  float local_20c;
-  float local_208;
-  float local_204;
-  undefined4 local_200;
-  float local_1fc;
-  float local_1f8;
-  float local_1f4;
-  undefined4 local_1f0;
-  float local_1ec;
-  float local_1e8;
-  float local_1e4;
-  undefined4 local_1e0;
-  float local_1dc;
-  float local_1c8;
-  float local_1c4;
-  float local_1c0;
-  float local_1bc;
-  float local_1b8;
-  float local_1b4;
-  float local_1b0;
-  float local_1ac;
-  int local_1a8;
-  float *local_1a4;
-  uint local_1a0;
-  uint local_19c;
-  int local_198;
-  undefined *local_194;
-  undefined *local_190;
-  float *local_18c;
-  float *local_188;
-  float *local_184;
-  float *local_180;
-  float *local_17c;
-  uint local_178;
-  uint local_174;
-  
-  local_1a8 = 0;
-  iVar25 = *(int *)&((GameObject *)objA)->anim.hitReactState;
-  iVar24 = *(int *)&((GameObject *)objB)->anim.hitReactState;
-  local_198 = *(int *)(srcObj + 0x54);
-  if ((((*(byte *)(local_198 + 0xb6) & 0x10) == 0) ||
-      ((*(char *)(local_198 + 0xaf) == '\0' && (*(char *)(local_198 + 0xae) == '\0')))) &&
-     (((*(byte *)(iVar24 + 0xb6) & 0x10) == 0 ||
-      ((*(char *)(iVar24 + 0xaf) == '\0' && (*(char *)(iVar24 + 0xae) == '\0')))))) {
-    bVar6 = false;
-    bVar7 = false;
-        if (((checkA == '\0') || ((*(byte *)(iVar25 + 0xb6) & 0x10) == 0)) &&
-       ((checkB == '\0' || (*(char *)(iVar25 + 0x62) != '\x10')))) {
-      local_174 = 1;
-      local_184 = &local_218;
-      local_18c = &local_1f8;
-      local_190 = auStack_248;
-      bVar6 = (*(byte *)(iVar25 + 0xb6) & 2) != 0;
-      fVar2 = (f32)*(s16 *)(iVar25 + 100);
-      local_214 = (float)(((GameObject *)objA)->anim.worldPosX - playerMapOffsetX);
-      local_210 = *(undefined4 *)(objA + 0x1c);
-      local_20c = (float)(((GameObject *)objA)->anim.worldPosZ - playerMapOffsetZ);
-      local_1f4 = (float)(*(float *)(iVar25 + 0x1c) - playerMapOffsetX);
-      local_1f0 = *(undefined4 *)(iVar25 + 0x20);
-      local_1ec = (float)(*(float *)(iVar25 + 0x24) - playerMapOffsetZ);
-      local_232 = 0;
-      local_231 = 0;
-      local_234 = 0;
-      iVar16 = objB;
-      local_218 = fVar2;
-      local_1f8 = fVar2;
+  int modelFile;
+  s64 maskA;
+  s64 maskB;
+  s64 volBits;
+  s64 bitA;
+  s64 bitB;
+  int i;
+  int j;
+  int k;
+  int count;
+  int hit;
+  int idxA;
+  int react;
+  uint linkA;
+  uint linkB;
+  u16 link;
+  float radiusA;
+  float radiusB;
+  float dxs;
+  float dys;
+  float dzs;
+  float dsq;
+  float radA2;
+  float xA;
+  float yA;
+  float zA;
+  float dax;
+  float day;
+  float daz;
+  float sumSq;
+  float ax;
+  float ay;
+  float az;
+  float lenSq;
+  float cx;
+  float cy;
+  float cz;
+  float bb;
+  float invLenSq;
+  float minA;
+  float maxA;
+  float lo;
+  float hi;
+  float blo;
+  float bhi;
+  float cc;
+  float disc;
+  float q;
+  float sc;
+  float bestDepth;
+  float bestX;
+  float bestZ;
+  float defs[8];
+  float sphs[8];
+  u8 volB0[24];
+  u8 volA0[24];
+
+  result = 0;
+  stateA = *(int *)(objA + 0x54);
+  stateB = *(int *)(objB + 0x54);
+  stateSrc = *(int *)(srcObj + 0x54);
+  if ((*(u8 *)(stateSrc + 0xb6) & 0x10) &&
+      (*(s8 *)(stateSrc + 0xaf) != 0 || *(u8 *)(stateSrc + 0xae) != 0)) {
+    return 0;
+  }
+  if ((*(u8 *)(stateB + 0xb6) & 0x10) &&
+      (*(s8 *)(stateB + 0xaf) != 0 || *(u8 *)(stateB + 0xae) != 0)) {
+    return 0;
+  }
+  modeA = 0;
+  modeB = 0;
+  if ((checkA != 0 && (*(u8 *)(stateA + 0xb6) & 0x10) != 0) ||
+      (checkB != 0 && *(u8 *)(stateA + 0x62) == 0x10)) {
+    piVar11 = ObjHits_GetActiveModel(objA);
+    modelFile = *piVar11;
+    countA = *(u8 *)(modelFile + 0xf7);
+    spheresA = (float *)piVar11[0x14];
+    defA = (float *)piVar11[(*(u16 *)(piVar11 + 6) >> 2 & 1 ^ 1) + 0x12];
+    volA = *(u8 **)(modelFile + 0x58);
+    if ((uint)srcObj != (uint)objA) {
+      radiusA = *(f32 *)(stateSrc + 0x34);
     }
     else {
-      piVar11 = ObjHits_GetActiveModel(objA);
-      iVar16 = *piVar11;
-      local_174 = (uint)*(byte *)(iVar16 + 0xf7);
-      local_184 = (float *)piVar11[0x14];
-      local_18c = (float *)piVar11[(*(ushort *)(piVar11 + 6) >> 2 & 1 ^ 1) + 0x12];
-      local_190 = *(undefined **)(iVar16 + 0x58);
-      if ((uint)srcObj != (uint)objA) {
-        fVar2 = *(float *)(local_198 + 0x34);
-      } else {
-        fVar2 = *(float *)(iVar25 + 0x34);
+      radiusA = *(f32 *)(stateA + 0x34);
+    }
+    if ((*(s16 *)(objA + 6) & 0x4000) != 0) {
+      return 0;
+    }
+  }
+  else {
+    countA = 1;
+    spheresA = sphs;
+    defA = defs;
+    volA = volA0;
+    if (*(u8 *)(stateA + 0xb6) & 2) {
+      modeA = 1;
+    }
+    radiusA = (f32)*(s16 *)(stateA + 0x64);
+    sphs[0] = radiusA;
+    sphs[1] = *(f32 *)(objA + 0x18) - playerMapOffsetX;
+    sphs[2] = *(f32 *)(objA + 0x1c);
+    sphs[3] = *(f32 *)(objA + 0x20) - playerMapOffsetZ;
+    defs[0] = radiusA;
+    defs[1] = *(f32 *)(stateA + 0x1c) - playerMapOffsetX;
+    defs[2] = *(f32 *)(stateA + 0x20);
+    defs[3] = *(f32 *)(stateA + 0x24) - playerMapOffsetZ;
+    volA0[22] = 0;
+    volA0[23] = 0;
+    *(u16 *)(volA0 + 20) = 0;
+  }
+  if ((checkA != 0 && (*(u8 *)(stateB + 0xb6) & 0x10) != 0) ||
+      (checkB != 0 && *(u8 *)(stateB + 0x62) == 0x10)) {
+    piVar11 = ObjHits_GetActiveModel(objB);
+    modelFile = *piVar11;
+    countB = *(u8 *)(modelFile + 0xf7);
+    spheresB = (float *)piVar11[0x14];
+    volB = *(u8 **)(modelFile + 0x58);
+    radiusB = *(f32 *)(stateB + 0x34);
+    if ((*(s16 *)(objB + 6) & 0x4000) != 0) {
+      return 0;
+    }
+  }
+  else {
+    countB = 1;
+    spheresB = &sphs[4];
+    volB = volB0;
+    if (*(u8 *)(stateB + 0xb6) & 2) {
+      modeB = 1;
+    }
+    radiusB = (f32)*(s16 *)(stateB + 0x64);
+    sphs[4] = radiusB;
+    sphs[5] = *(f32 *)(objB + 0x18) - playerMapOffsetX;
+    sphs[6] = *(f32 *)(objB + 0x1c);
+    sphs[7] = *(f32 *)(objB + 0x20) - playerMapOffsetZ;
+    defs[4] = sphs[0];
+    defs[5] = *(f32 *)(stateA + 0x1c) - playerMapOffsetX;
+    defs[6] = *(f32 *)(stateA + 0x20);
+    defs[7] = *(f32 *)(stateA + 0x24) - playerMapOffsetZ;
+    volB0[22] = 0;
+    volB0[23] = 0;
+    *(u16 *)(volB0 + 20) = 0;
+  }
+  if (countA > 64 || countB > 64) {
+    debugPrintf(sObjHitsTooManyHitSpheresWarning);
+  }
+  dxs = *(f32 *)(objA + 0x18) - *(f32 *)(objB + 0x18);
+  dys = *(f32 *)(objA + 0x1c) - *(f32 *)(objB + 0x1c);
+  dzs = *(f32 *)(objA + 0x20) - *(f32 *)(objB + 0x20);
+  dsq = sqrtf(dzs * dzs + (dxs * dxs + (dys * dys)));
+  if (dsq > lbl_803DE934 + (radiusA + radiusB)) {
+    return 0;
+  }
+  maskA = 0;
+  maskB = 0;
+  volBits = 0;
+  i = 0;
+  p = volA;
+  for (; i < countA; i++) {
+    if (i == *(s8 *)(p + 0x16)) {
+      if ((mask & 1 << *(s8 *)(p + 0x17)) != 0) {
+        maskA |= 1 << i;
       }
-      if ((*(ushort *)&((GameObject *)objA)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) goto LAB_80033418;
+      if ((volMask & 1 << *(s8 *)(p + 0x17)) != 0) {
+        volBits |= 1 << i;
+      }
     }
-    dVar44 = fVar2;
-    if (((checkA == '\0') || ((*(byte *)(iVar24 + 0xb6) & 0x10) == 0)) &&
-       ((checkB == '\0' || (*(char *)(iVar24 + 0x62) != '\x10')))) {
-      local_178 = 1;
-      local_188 = &local_208;
-      local_194 = auStack_230;
-      bVar7 = (*(byte *)(iVar24 + 0xb6) & 2) != 0;
-      fVar2 = (f32)*(s16 *)(iVar24 + 100);
-      local_204 = (float)(((GameObject *)objB)->anim.worldPosX - playerMapOffsetX);
-      local_200 = *(undefined4 *)(objB + 0x1c);
-      local_1fc = (float)(((GameObject *)objB)->anim.worldPosZ - playerMapOffsetZ);
-      local_1e8 = local_218;
-      local_1e4 = (float)(*(float *)(iVar25 + 0x1c) - playerMapOffsetX);
-      local_1e0 = *(undefined4 *)(iVar25 + 0x20);
-      local_1dc = (float)(*(float *)(iVar25 + 0x24) - playerMapOffsetZ);
-      local_21a = 0;
-      local_219 = 0;
-      local_21c = 0;
-      local_208 = fVar2;
+    p += 24;
+  }
+  j = 0;
+  p = volB;
+  for (; j < countB; j++) {
+    if (j == *(s8 *)(p + 0x16)) {
+      maskB |= 1 << j;
     }
-    else {
-      piVar11 = ObjHits_GetActiveModel(objB);
-      iVar16 = *piVar11;
-      local_178 = (uint)*(byte *)(iVar16 + 0xf7);
-      local_188 = (float *)piVar11[0x14];
-      local_194 = *(undefined **)(iVar16 + 0x58);
-      fVar2 = *(float *)(iVar24 + 0x34);
-      if ((*(ushort *)&((GameObject *)objB)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) goto LAB_80033418;
-    }
-    dVar42 = fVar2;
-    if ((0x40 < local_174) || (0x40 < local_178)) {
-      debugPrintf(sObjHitsTooManyHitSpheresWarning);
-    }
-    dVar41 = (((GameObject *)objA)->anim.worldPosX - ((GameObject *)objB)->anim.worldPosX);
-    dVar40 = (((GameObject *)objA)->anim.worldPosY - ((GameObject *)objB)->anim.worldPosY);
-    dVar39 = (((GameObject *)objA)->anim.worldPosZ - ((GameObject *)objB)->anim.worldPosZ);
-    dVar32 = sqrtf((float)(dVar39 * dVar39 +
-                                         (float)(dVar41 * dVar41 +
-                                                        (float)(dVar40 * dVar40))));
-    if (dVar32 <= (lbl_803DE934 + (float)(dVar44 + dVar42))) {
-      uVar22 = 0;
-      uVar23 = 0;
-      uVar20 = 0;
-      uVar21 = 0;
-      local_19c = 0;
-      local_1a0 = 0;
-      iVar16 = 0;
-      puVar12 = local_190;
-      uVar31 = local_174;
-      if (0 < (int)local_174) {
-        do {
-          if (iVar16 == (char)puVar12[0x16]) {
-            if ((mask & 1 << (int)(char)puVar12[0x17]) != 0) {
-              uVar22 = uVar22 | 1 << iVar16;
-              uVar23 = uVar23 | (1 << iVar16) >> 0x1f;
-            }
-            if ((volMask & 1 << (int)(char)puVar12[0x17]) != 0) {
-              local_19c = local_19c | 1 << iVar16;
-              local_1a0 = local_1a0 | (1 << iVar16) >> 0x1f;
-            }
+    p += 24;
+  }
+  contactBase = gObjHitsContactScratch;
+  bestDepth = lbl_803DE938;
+  count = 1;
+  while (count != 0) {
+    count = 0;
+    i = 0;
+    curSphA = spheresA;
+    curDefA = defA;
+    contact = contactBase;
+    for (; i < countA; i++) {
+      bitA = 1 << i;
+      if ((maskA & bitA) != 0) {
+        radA2 = curSphA[0];
+        xA = curSphA[1];
+        yA = curSphA[2];
+        zA = curSphA[3];
+        miss = 1;
+        if ((volBits & bitA) != 0) {
+          miss = 0;
+        }
+        if (miss == 0) {
+          dax = curDefA[1];
+          day = curDefA[2];
+          daz = curDefA[3];
+          ax = xA - dax;
+          ay = yA - day;
+          az = zA - daz;
+          lenSq = az * az + (ax * ax + (ay * ay));
+          if (lenSq > gObjHitsScalarZero) {
+            invLenSq = gObjHitsScalarOne / lenSq;
           }
-          puVar12 = puVar12 + 0x18;
-          iVar16 = iVar16 + 1;
-          uVar31 = uVar31 - 1;
-        } while (uVar31 != 0);
-      }
-      iVar16 = 0;
-      puVar12 = local_194;
-      uVar31 = local_178;
-      if (0 < (int)local_178) {
-        do {
-          if (iVar16 == (char)puVar12[0x16]) {
-            uVar20 = uVar20 | 1 << iVar16;
-            uVar21 = uVar21 | (1 << iVar16) >> 0x1f;
+          else {
+            miss = 1;
           }
-          puVar12 = puVar12 + 0x18;
-          iVar16 = iVar16 + 1;
-          uVar31 = uVar31 - 1;
-        } while (uVar31 != 0);
-      }
-      local_1a4 = gObjHitsContactScratch;
-      local_1c4 = lbl_803DE938;
-      iVar16 = 1;
-      while (iVar16 != 0) {
-        iVar16 = 0;
-        local_17c = local_184;
-        local_180 = local_18c;
-        pfVar26 = local_1a4;
-        for (iVar28 = 0; iVar28 < (int)local_174; iVar28 = iVar28 + 1) {
-          uVar31 = 1 << iVar28;
-          if ((uVar22 & uVar31) != 0 || (uVar23 & (int)uVar31 >> 0x1f) != 0) {
-            dVar43 = *local_17c;
-            dVar45 = local_17c[1];
-            dVar42 = local_17c[2];
-            dVar44 = local_17c[3];
-            bVar8 = (local_19c & uVar31) == 0;
-            bVar9 = (local_1a0 & (int)uVar31 >> 0x1f) == 0;
-            bVar1 = bVar8 && bVar9;
-            if (!bVar8 || !bVar9) {
-              local_1b4 = local_180[1];
-              local_1b8 = local_180[2];
-              in_f23 = local_180[3];
-              in_f21 = (float)(dVar45 - local_1b4);
-              in_f20 = (float)(dVar42 - local_1b8);
-              in_f19 = (float)(dVar44 - in_f23);
-              in_f18 = (float)(in_f19 * in_f19 +
-                                      (float)(in_f21 * in_f21 +
-                                                     (float)(in_f20 * in_f20)));
-              if (in_f18 <= gObjHitsScalarZero) {
-                bVar1 = true;
+        }
+        j = 0;
+        sphB = spheresB;
+        cw = contact;
+        minA = yA - radA2;
+        maxA = yA + radA2;
+        for (; j < countB; j++) {
+          bitB = 1 << j;
+          if ((maskB & bitB) != 0) {
+            hit = 0;
+            if ((i == 0 && modeA != 0) || (j == 0 && modeB != 0)) {
+              if (modeA != 0) {
+                lo = yA + (f32)*(s16 *)(stateA + 0x66);
+                hi = yA + (f32)*(s16 *)(stateA + 0x68);
+                blo = sphB[2] - sphB[0];
+                bhi = sphB[2] + sphB[0];
               }
               else {
-                local_1c8 = (float)(gObjHitsScalarOne / in_f18);
+                lo = minA;
+                hi = maxA;
+                blo = (f32)*(s16 *)(stateB + 0x66) + sphB[2];
+                bhi = (f32)*(s16 *)(stateB + 0x68) + sphB[2];
               }
-            }
-            local_1ac = (float)(dVar42 - dVar43);
-            local_1b0 = (float)(dVar42 + dVar43);
-            pfVar29 = pfVar26;
-            pfVar30 = local_188;
-            for (iVar27 = 0; iVar27 < (int)local_178; iVar27 = iVar27 + 1) {
-              if ((uVar20 & 1 << iVar27) != 0 || (uVar21 & (1 << iVar27) >> 0x1f) != 0) {
-                unaff_r26 = 0;
-                if (((iVar28 == 0) && (bVar6)) || ((iVar27 == 0 && (bVar7)))) {
-                  if (bVar6) {
-                                                            fVar5 = pfVar30[2] - *pfVar30;
-                    fVar3 = pfVar30[2] + *pfVar30;
-                    fVar2 = (float)(dVar42 + (f32)*(s16 *)(iVar25 + 0x66));
-                    fVar4 = (float)(dVar42 + (f32)*(s16 *)(iVar25 + 0x68));
-                  }
-                  else {
-                    fVar5 = (f32)*(s16 *)(iVar24 + 0x66) + pfVar30[2];
-                    fVar3 = (f32)*(s16 *)(iVar24 + 0x68) + pfVar30[2];
-                    fVar2 = local_1ac;
-                    fVar4 = local_1b0;
-                  }
-                  if (((fVar2 <= fVar5) || (fVar2 <= fVar3)) &&
-                     ((fVar5 <= fVar4 || (fVar3 <= fVar4)))) {
-                    in_f22 = ((float)(dVar43 + *pfVar30) *
-                                     (float)(dVar43 + *pfVar30));
-                    dVar41 = (float)(dVar45 - pfVar30[1]);
-                    dVar32 = (float)(dVar41 * dVar41);
-                    if (dVar32 < in_f22) {
-                      dVar39 = (float)(dVar44 - pfVar30[3]);
-                      dVar32 = (float)(dVar39 * dVar39 + dVar32);
-                      if (dVar32 < in_f22) {
-                        dVar40 = gObjHitsScalarZero;
-                        unaff_r26 = 1;
-                      }
-                    }
+              if ((!(blo < lo) || !(bhi < lo)) && (!(blo > hi) || !(bhi > hi))) {
+                sumSq = radA2 + sphB[0];
+                sumSq = sumSq * sumSq;
+                dxs = xA - sphB[1];
+                dsq = dxs * dxs;
+                if (dsq < sumSq) {
+                  dzs = zA - sphB[3];
+                  dsq = dzs * dzs + dsq;
+                  if (dsq < sumSq) {
+                    dys = gObjHitsScalarZero;
+                    hit = 1;
                   }
                 }
-                else {
-                  in_f22 = ((float)(dVar43 + *pfVar30) *
-                                   (float)(dVar43 + *pfVar30));
-                  if (bVar1) {
-                    dVar41 = (float)(dVar45 - pfVar30[1]);
-                    dVar32 = (float)(dVar41 * dVar41);
-                    if (dVar32 < in_f22) {
-                      dVar40 = (float)(dVar42 - pfVar30[2]);
-                      dVar32 = (float)(dVar40 * dVar40 + dVar32);
-                      if (dVar32 < in_f22) {
-                        dVar39 = (float)(dVar44 - pfVar30[3]);
-                        dVar32 = (float)(dVar39 * dVar39 + dVar32);
-                        if (dVar32 < in_f22) {
-                          unaff_r26 = 1;
-                        }
-                      }
-                    }
-                  }
-                  else {
-                    dVar38 = (local_1b4 - pfVar30[1]);
-                    dVar37 = (local_1b8 - pfVar30[2]);
-                    dVar36 = (float)(in_f23 - pfVar30[3]);
-                    dVar33 = (float)((float)(dVar36 * dVar36 +
-                                                            (float)(dVar38 * dVar38 +
-                                                                           (float)(dVar37 * 
-                                                  dVar37))) - in_f22);
-                    dVar35 = (float)(dVar36 * in_f19 +
-                                            (float)(dVar38 * in_f21 +
-                                                           (float)(dVar37 * in_f20)));
-                    if ((dVar35 <= gObjHitsScalarZero) || (dVar33 <= gObjHitsScalarZero)) {
-                      dVar33 = (float)(dVar35 * dVar35 - (float)(in_f18 * dVar33));
-                      if ((gObjHitsScalarZero <= dVar33) &&
-                         ((dVar34 = (float)(in_f18 + dVar35),
-                          gObjHitsScalarZero <= dVar34 ||
-                          ((float)(dVar34 * dVar34) <= dVar33)))) {
-                        unaff_r26 = 1;
-                        dVar32 = sqrtf(dVar33);
-                        dVar32 = (local_1c8 * -(float)(dVar35 + dVar32));
-                        dVar41 = (float)(in_f21 * dVar32 + dVar38);
-                        dVar40 = (float)(in_f20 * dVar32 + dVar37);
-                        dVar39 = (float)(in_f19 * dVar32 + dVar36);
-                        dVar32 = (float)(dVar39 * dVar39 +
-                                                (float)(dVar41 * dVar41 +
-                                                               (float)(dVar40 * dVar40)));
-                      }
-                    }
-                  }
-                }
-                if ((unaff_r26 != 0) && (iVar16 < 0x40)) {
-                  if (checkB == '\0') {
-                    in_f22 = sqrtf((float)(dVar39 * dVar39 +
-                                                         (float)(dVar41 * dVar41 +
-                                                                        (float)(dVar40 * 
-                                                  dVar40))));
-                    if (gObjHitsScalarZero < in_f22) {
-                      dVar41 = (float)(dVar41 / in_f22);
-                      dVar40 = (float)(dVar40 / in_f22);
-                      dVar39 = (float)(dVar39 / in_f22);
-                    }
-                    dVar33 = *pfVar30;
-                    pfVar29[2] = (float)(dVar41 * dVar33);
-                    pfVar29[3] = (float)(dVar40 * dVar33);
-                    pfVar29[4] = (float)(dVar39 * dVar33);
-                  }
-                  else if (gObjHitsScalarZero < dVar32) {
-                    dVar33 = sqrtf(in_f22);
-                    dVar32 = sqrtf(dVar32);
-                    in_f22 = gObjHitsScalarZero;
-                    if (in_f22 < dVar33) {
-                      in_f22 = (float)((float)(dVar33 - dVar32) / dVar33);
-                    }
-                    pfVar29[5] = (float)in_f22;
-                    *pfVar29 = (float)(dVar41 * in_f22);
-                    pfVar29[1] = (float)(dVar39 * in_f22);
-                  }
-                  *(char *)(pfVar29 + 6) = (char)iVar28;
-                  *(char *)((int)pfVar29 + 0x19) = (char)iVar27;
-                  pfVar29 = pfVar29 + 7;
-                  pfVar26 = pfVar26 + 7;
-                  iVar16 = iVar16 + 1;
-                }
-              }
-              pfVar30 = pfVar30 + 4;
-            }
-          }
-          local_17c = local_17c + 4;
-          local_180 = local_180 + 4;
-        }
-        uVar22 = 0;
-        uVar23 = 0;
-        uVar20 = 0;
-        uVar21 = 0;
-        pfVar26 = local_1a4;
-        for (iVar28 = 0; iVar28 < iVar16; iVar28 = iVar28 + 1) {
-          unaff_r27 = (uint)*(byte *)(pfVar26 + 6);
-          unaff_r26 = (uint)*(byte *)((int)pfVar26 + 0x19);
-          uVar13 = (uint)*(ushort *)(local_194 + unaff_r26 * 0x18 + 0x14);
-          uVar10 = (uint)*(ushort *)(local_190 + unaff_r27 * 0x18 + 0x14);
-          for (uVar31 = uVar10; uVar17 = uVar13, uVar31 != 0; uVar31 = (uVar31 & 0xfff) << 4) {
-            uVar17 = 1 << unaff_r27 + ((int)(uVar31 & 0xf000) >> 0xc);
-            uVar22 = uVar22 | uVar17;
-            uVar23 = uVar23 | (int)uVar17 >> 0x1f;
-          }
-          for (; uVar17 != 0; uVar17 = (uVar17 & 0xfff) << 4) {
-            uVar31 = 1 << unaff_r26 + ((int)(uVar17 & 0xf000) >> 0xc);
-            uVar20 = uVar20 | uVar31;
-            uVar21 = uVar21 | (int)uVar31 >> 0x1f;
-          }
-          if ((uVar10 == 0) && (uVar13 == 0)) {
-            if (checkA == '\0') {
-              if ((checkB != '\0') && (local_1c4 < pfVar26[5])) {
-                local_1bc = *pfVar26;
-                local_1c0 = pfVar26[1];
-                local_1c4 = pfVar26[5];
               }
             }
             else {
-              if (bVar7) {
-                fVar2 = local_184[unaff_r27 * 4 + 2];
+              sumSq = (radA2 + sphB[0]) * (radA2 + sphB[0]);
+              if (miss != 0) {
+                dxs = xA - sphB[1];
+                dsq = dxs * dxs;
+                if (dsq < sumSq) {
+                  dys = yA - sphB[2];
+                  dsq = dys * dys + dsq;
+                  if (dsq < sumSq) {
+                    dzs = zA - sphB[3];
+                    dsq = dzs * dzs + dsq;
+                    if (dsq < sumSq) {
+                      hit = 1;
+                    }
+                  }
+                }
               }
               else {
-                fVar2 = local_188[unaff_r26 * 4 + 2] + pfVar26[3];
+                cx = dax - sphB[1];
+                cy = day - sphB[2];
+                cz = daz - sphB[3];
+                cc = (cz * cz + (cx * cx + (cy * cy))) - sumSq;
+                bb = cz * az + (cx * ax + (cy * ay));
+                if (!(bb > gObjHitsScalarZero) || !(cc > gObjHitsScalarZero)) {
+                  disc = bb * bb - lenSq * cc;
+                  if (disc >= gObjHitsScalarZero) {
+                    q = lenSq + bb;
+                    if (q >= gObjHitsScalarZero || q * q <= disc) {
+                      hit = 1;
+                      sc = sqrtf(disc);
+                      sc = invLenSq * -(bb + sc);
+                      dxs = ax * sc + cx;
+                      dys = ay * sc + cy;
+                      dzs = az * sc + cz;
+                      dsq = dzs * dzs + (dxs * dxs + (dys * dys));
+                    }
+                  }
+                }
               }
-              ObjHits_RecordPositionHit((local_188[unaff_r26 * 4 + 1] + pfVar26[2]),fVar2,
-                           (local_188[unaff_r26 * 4 + 3] + pfVar26[4]),objB,objA,
-                           ((ObjHitsPriorityState *)local_198)->hitVolumePriority,
-                           ((ObjHitsPriorityState *)local_198)->hitVolumeId,
-                           *(byte *)((int)pfVar26 + 0x19));
-              local_1a8 = 1;
+            }
+            if (hit != 0 && count < 64) {
+              if (checkB != 0) {
+                if (dsq > gObjHitsScalarZero) {
+                  bb = sqrtf(sumSq);
+                  dsq = sqrtf(dsq);
+                  if (bb > gObjHitsScalarZero) {
+                    sumSq = (bb - dsq) / bb;
+                  }
+                  else {
+                    sumSq = gObjHitsScalarZero;
+                  }
+                  cw[5] = sumSq;
+                  cw[0] = dxs * sumSq;
+                  cw[1] = dzs * sumSq;
+                }
+              }
+              else {
+                sumSq = sqrtf(dzs * dzs + (dxs * dxs + (dys * dys)));
+                if (sumSq > gObjHitsScalarZero) {
+                  dxs = dxs / sumSq;
+                  dys = dys / sumSq;
+                  dzs = dzs / sumSq;
+                }
+                cw[2] = dxs * sphB[0];
+                cw[3] = dys * sphB[0];
+                cw[4] = dzs * sphB[0];
+              }
+              *((u8 *)cw + 24) = (u8)i;
+              *((u8 *)cw + 25) = (u8)j;
+              cw += 7;
+              contact += 7;
+              count += 1;
             }
           }
-          else if (uVar10 == 0) {
-            uVar22 = uVar22 | 1 << unaff_r27;
-            uVar23 = uVar23 | (1 << unaff_r27) >> 0x1f;
-          }
-          else if (uVar13 == 0) {
-            uVar20 = uVar20 | 1 << unaff_r26;
-            uVar21 = uVar21 | (1 << unaff_r26) >> 0x1f;
-          }
-          pfVar26 = pfVar26 + 7;
+          sphB += 4;
         }
       }
-      if ((checkA == '\0') || (local_1a8 == 0)) {
-        if ((checkB != '\0') && ((gObjHitsScalarZero < local_1c4 && (objA == srcObj)))) {
-          ObjHits_RecordObjectHit(objB,objA,((ObjHitsPriorityState *)local_198)->objectPairPriority,
-                       ((ObjHitsPriorityState *)local_198)->objectPairHitVolume,
-                       (char)unaff_r26);
-          ObjHits_RecordObjectHit(objA,objB,((ObjHitsPriorityState *)iVar24)->objectPairPriority,
-                       ((ObjHitsPriorityState *)iVar24)->objectPairHitVolume,
-                       (char)unaff_r27);
-          ObjHits_ApplyPairResponse(-local_1bc,gObjHitsScalarZero,-local_1c0,
-                                    objA,objB,0);
+      curSphA += 4;
+      curDefA += 4;
+    }
+    maskA = 0;
+    maskB = 0;
+    k = 0;
+    cr = contactBase;
+    for (; k < count; k++) {
+      idxA = *((u8 *)cr + 24);
+      hit = *((u8 *)cr + 25);
+      linkA = *(u16 *)(volA + idxA * 24 + 20);
+      linkB = *(u16 *)(volB + hit * 24 + 20);
+      link = linkA;
+      while (link != 0) {
+        maskA |= 1 << (idxA + (u16)((link & 0xf000) >> 12));
+        link = link << 4;
+      }
+      link = linkB;
+      while (link != 0) {
+        maskB |= 1 << (hit + (u16)((link & 0xf000) >> 12));
+        link = link << 4;
+      }
+      if (linkA == 0 && linkB == 0) {
+        if (checkA != 0) {
+          pb2 = &spheresB[hit * 4];
+          ObjHits_RecordPositionHit(pb2[1] + cr[2],objB,objA,
+                                    *(u8 *)(stateSrc + 0x6e),*(u8 *)(stateSrc + 0x6f),hit,
+                                    (modeB != 0) ? spheresA[idxA * 4 + 2]
+                                                 : pb2[2] + cr[3],
+                                    pb2[3] + cr[4]);
+          result = 1;
+        }
+        else if (checkB != 0) {
+          if (cr[5] > bestDepth) {
+            bestDepth = cr[5];
+            bestX = cr[0];
+            bestZ = cr[1];
+          }
         }
       }
-      else {
-        if (((*(ushort *)(iVar25 + 0x60) & 0x80) != 0) &&
-           (objA = *(int *)&((GameObject *)objA)->anim.hitReactState, objA != 0)) {
-          *(ushort *)(objA + 0x60) = *(ushort *)(objA + 0x60) & ~1;
-        }
-        if (((*(ushort *)(iVar24 + 0x60) & 0x80) != 0) &&
-           (objA = *(int *)&((GameObject *)objB)->anim.hitReactState, objA != 0)) {
-          *(ushort *)(objA + 0x60) = *(ushort *)(objA + 0x60) & ~1;
-        }
+      else if (linkA == 0) {
+        maskA |= 1 << idxA;
+      }
+      else if (linkB == 0) {
+        maskB |= 1 << hit;
+      }
+      cr += 7;
+    }
+  }
+  if (checkA != 0 && result != 0) {
+    if ((*(s16 *)(stateA + 0x60) & 0x80) != 0) {
+      react = *(int *)(objA + 0x54);
+      if (react != 0) {
+        *(s16 *)(react + 0x60) = *(s16 *)(react + 0x60) & ~1;
+      }
+    }
+    if ((*(s16 *)(stateB + 0x60) & 0x80) != 0) {
+      react = *(int *)(objB + 0x54);
+      if (react != 0) {
+        *(s16 *)(react + 0x60) = *(s16 *)(react + 0x60) & ~1;
+      }
+    }
+    return 1;
+  }
+  if (checkB != 0) {
+    if (gObjHitsScalarZero < bestDepth) {
+      if ((uint)objA == (uint)srcObj) {
+        ObjHits_RecordObjectHit(objB,objA,*(u8 *)(stateSrc + 0x6c),*(u8 *)(stateSrc + 0x6d),
+                                hit);
+        ObjHits_RecordObjectHit(objA,objB,*(u8 *)(stateB + 0x6c),*(u8 *)(stateB + 0x6d),
+                                idxA);
+        ObjHits_ApplyPairResponse(objA,objB,-bestX,gObjHitsScalarZero,-bestZ,0);
+        return 1;
       }
     }
   }
-LAB_80033418:
-  __restore_gpr();
-  return (u8)local_1a8;
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
