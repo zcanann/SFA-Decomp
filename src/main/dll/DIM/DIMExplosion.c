@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMExplosion.h"
@@ -352,7 +353,7 @@ void DIMwooddoor_updateFallingDebris(int *obj)
 
 extern int *getTrickyObject(void);
 extern void objRenderFn_80041018(int *obj);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E4880;
 extern f32 lbl_803E4884;
 extern f32 lbl_803E4888;
@@ -375,14 +376,12 @@ void dimicewall_update(int *obj)
             for (i = 45; i != 0; i--) {
                 desc[3] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(-250, 250));
                 desc[4] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(0, 450));
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
-                    obj, 2041, desc, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 2041, desc, 2, -1, 0);
             }
             for (i = 25; i != 0; i--) {
                 desc[3] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(-250, 250));
                 desc[4] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(0, 450));
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
-                    obj, 2042, desc, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 2042, desc, 2, -1, 0);
             }
             if (*(int *)((char *)def + 0x14) != 7433) {
                 Sfx_PlayFromObject((int)obj, 1147);
