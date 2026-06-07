@@ -5,6 +5,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 #pragma peephole off
@@ -200,7 +201,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
             Sfx_PlayFromObject((int)obj, 0x1d4);
             state->flags.finished = 0;
             state->flags.active = 1;
-            (*(void (**)(u8 *, int))(*gObjectTriggerInterface + 0x58))(seq, 0xbd);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->yield((int)seq, 0xbd);
         }
         if ((getButtonsJustPressedIfNotBusy(0) & 0x100) != 0) {
             state->spinSpeed = state->spinSpeed + lbl_803E50E4;
@@ -216,7 +217,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
             state->flags.finished = 1;
             state->flags.active = 1;
             state->spinProgress = 0x7ef4;
-            (*(void (**)(u8 *, int))(*gObjectTriggerInterface + 0x58))(seq, 0xbd);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->yield((int)seq, 0xbd);
             return 0;
         }
         (*(void (**)(int))(*gObjectTriggerInterface + 0x74))(state->triggerHandle);
@@ -337,49 +338,48 @@ void FUN_801c9f64(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dbsh_symbol_update(uint param_1)
+void dbsh_symbol_update(int obj)
 {
-  short sVar1;
-  uint uVar2;
-  undefined4 uVar3;
-  DbshSymbolState *puVar4;
+  s16 phase;
+  uint puzzleStarted;
+  DbshSymbolState *state;
   
-  puVar4 = *(DbshSymbolState **)(param_1 + 0xb8);
-  uVar2 = GameBit_Get(0x16a);
-  if (uVar2 == 0) {
-    puVar4->phase = 0;
-    *(int *)&puVar4->partnerObj = 0;
+  state = ((GameObject *)obj)->extra;
+  puzzleStarted = GameBit_Get(0x16a);
+  if (puzzleStarted == 0) {
+    state->phase = 0;
+    state->partnerObj = NULL;
     GameBit_Set(0x16c,0);
   }
   else {
-    sVar1 = puVar4->phase;
-    if (sVar1 == 0) {
-      ((GameObject *)param_1)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
-      puVar4->phase = 1;
+    phase = state->phase;
+    if (phase == 0) {
+      ((GameObject *)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+      state->phase = 1;
     }
-    else if (sVar1 == 2) {
-      puVar4->phase = 3;
-      uVar3 = ((int (*)(int, uint, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0,param_1,0xffffffff);
-      puVar4->triggerHandle = uVar3;
+    else if (phase == 2) {
+      state->phase = 3;
+      state->triggerHandle =
+          ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
     }
-    else if (sVar1 == 1) {
+    else if (phase == 1) {
       if (lbl_803DBF68 != '\0') {
         lbl_803DBF68 = 0;
-        Sfx_PlayFromObject(param_1,SFXfoot_stone_scuff);
+        Sfx_PlayFromObject(obj, SFXfoot_stone_scuff);
       }
-      puVar4->phase = 2;
+      state->phase = 2;
       lbl_803DBF68 = '\x01';
     }
-    else if (sVar1 == 3) {
-      ((GameObject *)param_1)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
-      if (puVar4->flags.finished != 0) {
+    else if (phase == 3) {
+      ((GameObject *)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+      if (state->flags.finished != 0) {
         GameBit_Set(0x16b,1);
       }
       else {
         GameBit_Set(0x16c,1);
       }
-      Sfx_StopObjectChannel(param_1,0x7f);
-      puVar4->flags.active = 1;
+      Sfx_StopObjectChannel(obj, 0x7f);
+      state->flags.active = 1;
     }
   }
   return;

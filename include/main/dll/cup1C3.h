@@ -10,7 +10,7 @@ void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FUN_801ca13c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 int dbsh_symbol_getExtraSize(void);
 void dbsh_symbol_free(void);
-void dbsh_symbol_update(uint param_1);
+void dbsh_symbol_update(int obj);
 void dbsh_symbol_init(int* obj);
 int dll_197_getExtraSize(void);
 int dll_197_getObjectTypeId(void);

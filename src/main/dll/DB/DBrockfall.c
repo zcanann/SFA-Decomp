@@ -227,7 +227,7 @@ void FUN_801df45c(undefined2 *param_1)
         else if (sVar3 == 1) {
           GameBit_Set(0xf1d,1);
           FUN_8011e800(1);
-          uVar6 = (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+          uVar6 = ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
           state->loopSfxHandle = uVar6;
         }
         else if (sVar3 == 2) {
