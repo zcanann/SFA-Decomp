@@ -39,6 +39,20 @@ typedef int (*ModgfxSpawnEffectFn)(void *spawnContext, int flags, int vertexCoun
                                    void *vertices, int colorCount, void *colors,
                                    int textureAssetId, void *textureResource);
 typedef void (*ModgfxReleaseHandleFn)(s16 *handle);
+typedef void (*ModgfxBeginSequenceFn)(void *sourceObject, int sourceMode,
+                                      int effectType, int word40, int word3C);
+typedef void (*ModgfxResetSequenceSpawnsFn)(void);
+typedef void (*ModgfxAddSequenceSpawnFn)(int modelOrResource, f32 posX, f32 posY,
+                                         f32 posZ, s16 param14, void *param10);
+typedef void (*ModgfxNextSequenceParamFn)(void);
+typedef void (*ModgfxSetSequenceParamIndexFn)(s16 index);
+typedef void (*ModgfxSetSequenceParamValueFn)(s16 value);
+typedef void (*ModgfxSetSequenceParamsFn)(void *params);
+typedef void (*ModgfxSpawnSequenceFn)(void *sourceObject, void *vertices,
+                                      int vertexCount, void *colors, int colorCount,
+                                      int textureAssetId, void *textureResource);
+typedef void (*ModgfxAddSequenceFlagsFn)(u32 flags);
+typedef s16 (*ModgfxGetLastSpawnHandleFn)(void);
 
 typedef struct ModgfxInterface {
   u8 pad00[0x08];
@@ -47,11 +61,32 @@ typedef struct ModgfxInterface {
   ModgfxDetachSourceFn detachSource;
   u8 pad1C[0x20 - 0x1C];
   ModgfxReleaseHandleFn releaseHandle;
+  u8 pad24[0x34 - 0x24];
+  ModgfxBeginSequenceFn beginSequence;
+  ModgfxResetSequenceSpawnsFn resetSequenceSpawns;
+  ModgfxAddSequenceSpawnFn addSequenceSpawn;
+  ModgfxNextSequenceParamFn nextSequenceParam;
+  ModgfxSetSequenceParamIndexFn setSequenceParamIndex;
+  ModgfxSetSequenceParamValueFn setSequenceParamValue;
+  ModgfxSetSequenceParamsFn setSequenceParams;
+  ModgfxSpawnSequenceFn spawnSequence;
+  ModgfxAddSequenceFlagsFn addSequenceFlags;
+  ModgfxGetLastSpawnHandleFn getLastSpawnHandle;
 } ModgfxInterface;
 
 STATIC_ASSERT(offsetof(ModgfxInterface, spawnEffect) == 0x08);
 STATIC_ASSERT(offsetof(ModgfxInterface, detachSource) == 0x18);
 STATIC_ASSERT(offsetof(ModgfxInterface, releaseHandle) == 0x20);
+STATIC_ASSERT(offsetof(ModgfxInterface, beginSequence) == 0x34);
+STATIC_ASSERT(offsetof(ModgfxInterface, resetSequenceSpawns) == 0x38);
+STATIC_ASSERT(offsetof(ModgfxInterface, addSequenceSpawn) == 0x3C);
+STATIC_ASSERT(offsetof(ModgfxInterface, nextSequenceParam) == 0x40);
+STATIC_ASSERT(offsetof(ModgfxInterface, setSequenceParamIndex) == 0x44);
+STATIC_ASSERT(offsetof(ModgfxInterface, setSequenceParamValue) == 0x48);
+STATIC_ASSERT(offsetof(ModgfxInterface, setSequenceParams) == 0x4C);
+STATIC_ASSERT(offsetof(ModgfxInterface, spawnSequence) == 0x50);
+STATIC_ASSERT(offsetof(ModgfxInterface, addSequenceFlags) == 0x54);
+STATIC_ASSERT(offsetof(ModgfxInterface, getLastSpawnHandle) == 0x58);
 
 typedef void (*WaterfxSpawnRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags);
 typedef void (*WaterfxSpawnSurfaceRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags,

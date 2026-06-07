@@ -1504,30 +1504,30 @@ void dll_AA_func03(int param_1,int param_2,u8 *param_3,u8 *param_4)
   if (param_3 != 0) {
     scale = *(f32 *)(param_3 + 8) / lbl_803E1604;
   }
-  (*(code *)(*gModgfxInterface + 0x34))(param_1,(u8)param_2,0x15,1,0);
-  (*(code *)(*gModgfxInterface + 0x4c))(&tab[0x1dc]);
-  (*(code *)(*gModgfxInterface + 0x54))(param_4);
-  (*(code *)(*gModgfxInterface + 0x38))();
-  (*(code *)(*gModgfxInterface + 0x3c))
+  ((ModgfxInterface *)*gModgfxInterface)->beginSequence((void *)param_1,(u8)param_2,0x15,1,0);
+  ((ModgfxInterface *)*gModgfxInterface)->setSequenceParams(&tab[0x1dc]);
+  ((ModgfxInterface *)*gModgfxInterface)->addSequenceFlags((u32)param_4);
+  ((ModgfxInterface *)*gModgfxInterface)->resetSequenceSpawns();
+  ((ModgfxInterface *)*gModgfxInterface)->addSequenceSpawn
             (4,lbl_803E1608,lbl_803E160C,lbl_803E160C,0x15,&tab[0x1b0]);
-  (*(code *)(*gModgfxInterface + 0x3c))
+  ((ModgfxInterface *)*gModgfxInterface)->addSequenceSpawn
             (2,lbl_803E1610,lbl_803E1614,lbl_803E1610,0x15,&tab[0x1b0]);
-  (*(code *)(*gModgfxInterface + 0x3c))
+  ((ModgfxInterface *)*gModgfxInterface)->addSequenceSpawn
             (0x400000,lbl_803E160C,lbl_803E1618,lbl_803E160C,0,(void *)0);
-  (*(code *)(*gModgfxInterface + 0x40))();
-  (*(code *)(*gModgfxInterface + 0x3c))
+  ((ModgfxInterface *)*gModgfxInterface)->nextSequenceParam();
+  ((ModgfxInterface *)*gModgfxInterface)->addSequenceSpawn
             (4,lbl_803E161C,lbl_803E160C,lbl_803E160C,7,&tab[0x174]);
-  (*(code *)(*gModgfxInterface + 0x40))();
-  (*(code *)(*gModgfxInterface + 0x3c))
+  ((ModgfxInterface *)*gModgfxInterface)->nextSequenceParam();
+  ((ModgfxInterface *)*gModgfxInterface)->addSequenceSpawn
             (4,lbl_803E1620,lbl_803E160C,lbl_803E160C,7,&tab[0x174]);
-  (*(code *)(*gModgfxInterface + 0x3c))
+  ((ModgfxInterface *)*gModgfxInterface)->addSequenceSpawn
             (2,scale,lbl_803E1624,scale,0x15,&tab[0x1b0]);
-  (*(code *)(*gModgfxInterface + 0x40))();
-  (*(code *)(*gModgfxInterface + 0x3c))
+  ((ModgfxInterface *)*gModgfxInterface)->nextSequenceParam();
+  ((ModgfxInterface *)*gModgfxInterface)->addSequenceSpawn
             (4,lbl_803E160C,lbl_803E160C,lbl_803E160C,7,&tab[0x174]);
-  (*(code *)(*gModgfxInterface + 0x50))
+  ((ModgfxInterface *)*gModgfxInterface)->spawnSequence
             (param_3,(u8 *)(int)lbl_80319168,0x15,&tab[0xd4],0x18,0x3e9,0);
-  (*(code *)(*gModgfxInterface + 0x58))();
+  ((ModgfxInterface *)*gModgfxInterface)->getLastSpawnHandle();
 }
 
 /* Trivial 4b 0-arg blr leaves. */
