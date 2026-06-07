@@ -1,4 +1,5 @@
 #include "main/dll/DIM/dll_223.h"
+#include "main/effect_interfaces.h"
 #include "main/objanim.h"
 
 extern undefined4 FUN_800067c0();
@@ -77,7 +78,7 @@ extern void *gBaddieControlInterface;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
-extern void *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E4C90;
 extern f32 lbl_803E4C94;
@@ -260,10 +261,8 @@ void DIMbosstonsil_checkHit(void *obj,DIMbosstonsilState *state)
       pos[1] = modelPos[2];
       pos[2] = playerMapOffsetZ + modelPos[3];
     }
-    (*(void (***)(void *,int,undefined4 *,int,int,int))gPartfxInterface)[2]
-        (obj,DIMBOSSTONSIL_HIT_EFFECT_ID,effect,0x200001,-1,0);
-    (*(void (***)(void *,int,undefined4 *,int,int,int))gPartfxInterface)[2]
-        (obj,DIMBOSSTONSIL_HIT_EFFECT_ALT_ID,effect,0x200001,-1,0);
+    (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_HIT_EFFECT_ID, effect, 0x200001, -1, NULL);
+    (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_HIT_EFFECT_ALT_ID, effect, 0x200001, -1, NULL);
     objLightFn_8009a1dc(obj,lbl_803E4CA4,effect,3,0);
     Sfx_PlayFromObject(obj,DIMBOSSTONSIL_PRIMARY_HIT_SFX);
     doRumble(lbl_803E4CA8);

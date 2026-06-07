@@ -29,7 +29,7 @@ extern f32 FLOAT_803e4ae0;
 extern void *lbl_803DBDE8;
 extern EffectInterface **gExpgfxInterface;
 extern void *gModgfxInterface;
-extern void *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803E3E48;
 extern char sCFTreasSharpyDebugFormat[];
@@ -228,7 +228,7 @@ typedef struct CFTreasSharpyFxSpawnArgs {
 } CFTreasSharpyFxSpawnArgs;
 
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg) \
-    ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))((int)(obj), id, data, flags, model, arg)
+    (*gPartfxInterface)->spawnObject((void *)(obj), id, data, flags, model, (void *)(arg))
 
 #pragma scheduling off
 #pragma peephole off

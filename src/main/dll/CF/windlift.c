@@ -1233,7 +1233,7 @@ void fn_80185B74(int obj)
 {
     extern void *lbl_803DDAD4;
     extern void *gSHthorntailAnimationInterface;
-    extern void *gPartfxInterface;
+    extern EffectInterface **gPartfxInterface;
     extern void *gCameraInterface;
     extern f32 lbl_803E3A58;
     extern f32 lbl_803E3A5C;
@@ -1289,7 +1289,7 @@ void fn_80185B74(int obj)
         Sfx_PlayFromObject(obj, SFXmn_dimspit6);
         state->spitTimer -= framesThisStep;
         if ((int)randomGetRange(0, 2) == 2) {
-            (*(code *)(*(int *)gPartfxInterface + 8))(obj, 0x51c, 0, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x51c, NULL, 1, -1, NULL);
         }
         if (state->spitTimer <= 0) {
             fn_80185868(obj, dist);
