@@ -2,6 +2,7 @@
 #define MAIN_DLL_DB_DBROCKFALL_H_
 
 #include "ghidra_import.h"
+#include "main/dll/paymentkiosk.h"
 #include "main/object_descriptor.h"
 
 typedef struct FEseqobjectState {
@@ -10,7 +11,7 @@ typedef struct FEseqobjectState {
   u8 promptState;
 } FEseqobjectState;
 
-void paymentkiosk_init(int obj, u8 *initData);
+void paymentkiosk_init(int obj, PaymentKioskMapData *initData);
 int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup);
 void FEseqobject_init(int obj);
 void FEseqobject_update(int obj);

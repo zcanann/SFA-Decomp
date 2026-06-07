@@ -46,10 +46,10 @@ extern f32 lbl_803E56B4;
  */
 #pragma scheduling off
 #pragma peephole off
-void paymentkiosk_init(int obj, u8 *initData)
+void paymentkiosk_init(int obj, PaymentKioskMapData *initData)
 {
     register int self = obj;
-    register PaymentKioskMapData *setup = (PaymentKioskMapData *)initData;
+    register PaymentKioskMapData *setup = initData;
     register PaymentKioskState *state = ((GameObject *)self)->extra;
     u32 secondaryFlag;
 
