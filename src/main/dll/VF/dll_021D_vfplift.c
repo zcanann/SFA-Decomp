@@ -88,6 +88,7 @@ static inline f32 vfplift23_getRaisedOffset(int objType)
 }
 
 #pragma peephole off
+#pragma scheduling off
 void vfplift23_updateState(int obj)
 {
     int setup;
@@ -133,9 +134,11 @@ void vfplift23_updateState(int obj)
         }
     }
 }
+#pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off
+#pragma scheduling off
 void vfplift1_updateState(int obj)
 {
     VFPLiftState *state;
@@ -209,6 +212,7 @@ void vfplift1_updateState(int obj)
         }
     }
 }
+#pragma scheduling reset
 #pragma peephole reset
 
 int vfplift_getExtraSize(void) { return 0x20; }

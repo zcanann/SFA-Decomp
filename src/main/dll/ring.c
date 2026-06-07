@@ -170,6 +170,7 @@ void ring_init(int obj, int setup) {
 #pragma peephole reset
 
 #pragma scheduling off
+#pragma peephole off
 void ring_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -349,4 +350,5 @@ void ring_update(int obj)
         modelLightStruct_updateGlowAlpha(RING_LIGHT(state));
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
