@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objhits_types.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -20,7 +21,9 @@ void brokenpipe_init(int obj, int setup)
             ((GameObject *)obj)->anim.rootMotionScale = lbl_803E7340;
         }
         ObjHitbox_SetSphereRadius(obj,
-            (int)((f32)*(s16 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x5a) * ((GameObject *)obj)->anim.rootMotionScale));
+            (int)((f32)((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)
+                      ->primaryRadius *
+                  ((GameObject *)obj)->anim.rootMotionScale));
         ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     }
     ((GameObject *)obj)->objectFlags |= 0x4000;

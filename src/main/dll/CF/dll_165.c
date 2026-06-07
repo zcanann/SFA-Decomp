@@ -1,6 +1,7 @@
 #include "main/dll/CF/dll_165.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
+#include "main/objhits_types.h"
 #include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);
@@ -82,7 +83,10 @@ void staffactivated_init(int obj, int setup)
   }
 
   if (((GameObject *)obj)->anim.hitReactState != NULL) {
-    ObjHitbox_SetSphereRadius(obj, (int)((f32)*(s16 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x5a) * scale));
+    ObjHitbox_SetSphereRadius(
+        obj, (int)((f32)((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)
+                       ->primaryRadius *
+                   scale));
   }
 
   ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * scale;

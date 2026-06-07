@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objhits_types.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -59,7 +60,9 @@ void softbody_init(int obj, int setup)
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E7298, 0);
     if (((GameObject *)obj)->anim.hitReactState != NULL) {
         ObjHitbox_SetSphereRadius(obj,
-            (s16)((f32)*(s16 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x5a) * ((GameObject *)obj)->anim.rootMotionScale));
+            (s16)((f32)((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)
+                      ->primaryRadius *
+                  ((GameObject *)obj)->anim.rootMotionScale));
     }
 }
 #pragma scheduling reset
