@@ -2392,9 +2392,9 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
     if (p == NULL) {
         return 0;
     }
-    q = (u8 *)Checkpoint_find(((CheckpointPair *)p)->keys[idx], &local_idx);
+    q = (u8 *)Checkpoint_find(((s32 *)(p + 0x20))[idx], &local_idx);
     if (q == NULL) {
-        q = (u8 *)Checkpoint_find(((CheckpointPair *)p)->keys[1 - idx], &local_idx);
+        q = (u8 *)Checkpoint_find(((s32 *)(p + 0x20))[1 - idx], &local_idx);
         ret = 2;
     }
     if (q == NULL) {
@@ -2413,10 +2413,6 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
         f32 prodB;
         f32 prodC;
         f32 prodD;
-        f32 kD8;
-        f32 kDC;
-        f32 kE4;
-        f32 kE8;
         j = 0;
         i = 0;
         v3 = out3;
@@ -2424,10 +2420,6 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
         prodB = sclB * sinB;
         prodC = sclA * -cosA;
         prodD = sclB * -cosB;
-        kD8 = lbl_803E04D8;
-        kDC = lbl_803E04DC;
-        kE4 = lbl_803E04E4;
-        kE8 = lbl_803E04E8;
         do {
             u8 *pp;
             u8 *qq;
@@ -2435,20 +2427,20 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
             out1[0] = (f32)*(s8 *)(pp + 0x2d) * prodA + *(f32 *)(p + 8);
             qq = q + i;
             out1[1] = (f32)*(s8 *)(qq + 0x2d) * prodB + *(f32 *)(q + 8);
-            out1[2] = kE4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
-                             mathSinf(kD8 * (f32)(*(u8 *)(p + 0x3e) << 8) / kDC));
-            out1[3] = kE4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
-                             mathSinf(kD8 * (f32)(*(u8 *)(q + 0x3e) << 8) / kDC));
+            out1[2] = 2.0f * ((f32)(u32)*(u8 *)(p + 0x3d) *
+                              mathSinf(3.1415927f * (f32)(*(u8 *)(p + 0x3e) << 8) / 32768.0f));
+            out1[3] = 2.0f * ((f32)(u32)*(u8 *)(q + 0x3d) *
+                              mathSinf(3.1415927f * (f32)(*(u8 *)(q + 0x3e) << 8) / 32768.0f));
             out2[0] = sclA * (f32)*(s8 *)(pp + 0x31) + *(f32 *)(p + 0xc);
             out2[1] = sclB * (f32)*(s8 *)(qq + 0x31) + *(f32 *)(q + 0xc);
-            out2[2] = kE8;
-            out2[3] = kE8;
+            out2[2] = 0.0f;
+            out2[3] = 0.0f;
             v3[0] = (f32)*(s8 *)(pp + 0x2d) * prodC + *(f32 *)(p + 0x10);
             v3[1] = (f32)*(s8 *)(qq + 0x2d) * prodD + *(f32 *)(q + 0x10);
-            v3[2] = kE4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
-                           mathCosf(kD8 * (f32)(*(u8 *)(p + 0x3e) << 8) / kDC));
-            v3[3] = kE4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
-                           mathCosf(kD8 * (f32)(*(u8 *)(q + 0x3e) << 8) / kDC));
+            v3[2] = 2.0f * ((f32)(u32)*(u8 *)(p + 0x3d) *
+                            mathCosf(3.1415927f * (f32)(*(u8 *)(p + 0x3e) << 8) / 32768.0f));
+            v3[3] = 2.0f * ((f32)(u32)*(u8 *)(q + 0x3d) *
+                            mathCosf(3.1415927f * (f32)(*(u8 *)(q + 0x3e) << 8) / 32768.0f));
             i += 1;
             out1 += 4;
             out2 += 4;
