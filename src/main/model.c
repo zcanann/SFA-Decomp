@@ -3151,9 +3151,9 @@ void ObjModel_BlendPrimaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, int *offs, u
     if (*(u16 *)(hdr + 2) != 0) {
         u8 *q;
         int words;
+        int w2;
         u32 i;
         u32 nb;
-        int bi;
         u8 *dst;
         u8 **cp;
 
@@ -3161,20 +3161,19 @@ void ObjModel_BlendPrimaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, int *offs, u
         words = (u32)((q[0x73] << 5) + 0x1f) >> 5;
         copyToCache(lbl_80340898[0], data + *(int *)(q + 0x60), words);
         sizes[0] = words;
-        q = *(u8 **)(hdr + 0xc);
-        copyToCache(lbl_80340898[1], *(u8 **)(q + 0x64), (u32)((q[0x6f] << 5) + 0x1f) >> 5);
+        w2 = (u32)(((q = *(u8 **)(hdr + 0xc))[0x6f] << 5) + 0x1f) >> 5;
+        copyToCache(*(u8 **)((int)lbl_80340898 + 4), *(u8 **)(q + 0x64), w2);
         cp = lbl_80340898;
         for (i = 0; i < (u32)(*(u16 *)(hdr + 2) - 1); i++) {
             q = *(u8 **)(hdr + 0xc) + i * 0x74;
             words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
             nb = (i + 1) & 1;
-            bi = nb * 2;
-            copyToCache(cp[(u8)bi], data + *(int *)(q + 0xd4), words);
+            copyToCache(cp[(u8)(nb * 2)], data + *(int *)(q + 0xd4), words);
             sizes[nb] = words;
             {
-                u8 *q2 = *(u8 **)(hdr + 0xc) + i * 0x74;
-                copyToCache(cp[(u8)((u8)bi + 1)], *(u8 **)(q2 + 0xd8),
-                            (u32)((q2[0xe3] << 5) + 0x1f) >> 5);
+                u8 *q2;
+                int w3 = (u32)(((q2 = *(u8 **)(hdr + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
+                copyToCache(cp[(u8)((u8)(nb * 2) + 1)], *(u8 **)(q2 + 0xd8), w3);
             }
             cacheQueueWait(2);
             dst = out + offs[i];
@@ -3213,28 +3212,27 @@ void ObjModel_BlendSecondaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, u8 **outs,
     if (*(u16 *)(hdr + 2) != 0) {
         u8 *q;
         int words;
+        int w2;
         u32 i;
         u32 nb;
-        int bi;
         u8 *dst;
 
         q = *(u8 **)(hdr + 0xc);
         words = (u32)((q[0x73] << 5) + 0x1f) >> 5;
         copyToCache(lbl_80340898[0], data + *(int *)(q + 0x60), words);
         sizes[0] = words;
-        q = *(u8 **)(hdr + 0xc);
-        copyToCache(lbl_80340898[1], *(u8 **)(q + 0x64), (u32)((q[0x6f] << 5) + 0x1f) >> 5);
+        w2 = (u32)(((q = *(u8 **)(hdr + 0xc))[0x6f] << 5) + 0x1f) >> 5;
+        copyToCache(*(u8 **)((int)lbl_80340898 + 4), *(u8 **)(q + 0x64), w2);
         for (i = 0; i < (u32)(*(u16 *)(hdr + 2) - 1); i++) {
             q = *(u8 **)(hdr + 0xc) + i * 0x74;
             words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
             nb = (i + 1) & 1;
-            bi = nb * 2;
-            copyToCache(lbl_80340898[(u8)bi], data + *(int *)(q + 0xd4), words);
+            copyToCache(lbl_80340898[(u8)(nb * 2)], data + *(int *)(q + 0xd4), words);
             sizes[nb] = words;
             {
-                u8 *q2 = *(u8 **)(hdr + 0xc) + i * 0x74;
-                copyToCache(lbl_80340898[(u8)((u8)bi + 1)], *(u8 **)(q2 + 0xd8),
-                            (u32)((q2[0xe3] << 5) + 0x1f) >> 5);
+                u8 *q2;
+                int w3 = (u32)(((q2 = *(u8 **)(hdr + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
+                copyToCache(lbl_80340898[(u8)((u8)(nb * 2) + 1)], *(u8 **)(q2 + 0xd8), w3);
             }
             cacheQueueWait(2);
             if ((u8)quad) {
