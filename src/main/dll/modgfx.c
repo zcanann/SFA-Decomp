@@ -4473,7 +4473,8 @@ extern u8 lbl_803DD282;
 extern u8 gPlayerShadowMode;
 extern u8 lbl_803DD2C0;
 extern void fn_800A1040(s16 a, int b);
-extern u16 lbl_8039C2E0[];
+#define gPartfxResourceTimeouts lbl_8039C2E0
+extern u16 gPartfxResourceTimeouts[];
 extern u32 lbl_802C2160[];
 extern f64 lbl_803DF480;
 extern f32 lbl_803DF46C;
@@ -5179,7 +5180,7 @@ void partfx_initialise(void) {
     u16 *p;
     int i;
     i = 0x14;
-    p = lbl_8039C2E0 + 0x14;
+    p = gPartfxResourceTimeouts + 0x14;
     while ((s8)i != 0) {
         p = p - 1;
         i = i - 1;
@@ -5350,124 +5351,124 @@ void ParticleEffectController_func05(void)
         lbl_803DD31C = 0;
     }
     lbl_803DD320 = mathSinf(lbl_803DF718 * (f32)(s16)lbl_803DD31C / lbl_803DF71C);
-    if (((s16 *)lbl_8039C2E0)[0] != 0 && (((s16 *)lbl_8039C2E0)[0] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[0] != 0 && (((s16 *)gPartfxResourceTimeouts)[0] -= framesThisStep) <= 0) {
         if (lbl_803DD2C8 != NULL) Resource_Release(lbl_803DD2C8);
         lbl_803DD2C8 = NULL;
-        ((s16 *)lbl_8039C2E0)[0] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[0] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[1] != 0 && (((s16 *)lbl_8039C2E0)[1] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[1] != 0 && (((s16 *)gPartfxResourceTimeouts)[1] -= framesThisStep) <= 0) {
         if (lbl_803DD2CC != NULL) Resource_Release(lbl_803DD2CC);
         lbl_803DD2CC = NULL;
-        ((s16 *)lbl_8039C2E0)[1] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[1] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[2] != 0 && (((s16 *)lbl_8039C2E0)[2] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[2] != 0 && (((s16 *)gPartfxResourceTimeouts)[2] -= framesThisStep) <= 0) {
         if (lbl_803DD2D0 != NULL) Resource_Release(lbl_803DD2D0);
         lbl_803DD2D0 = NULL;
-        ((s16 *)lbl_8039C2E0)[2] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[2] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[3] != 0 && (((s16 *)lbl_8039C2E0)[3] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[3] != 0 && (((s16 *)gPartfxResourceTimeouts)[3] -= framesThisStep) <= 0) {
         if (lbl_803DD2D4 != NULL) Resource_Release(lbl_803DD2D4);
         lbl_803DD2D4 = NULL;
-        ((s16 *)lbl_8039C2E0)[3] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[3] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[4] != 0 && (((s16 *)lbl_8039C2E0)[4] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[4] != 0 && (((s16 *)gPartfxResourceTimeouts)[4] -= framesThisStep) <= 0) {
         if (lbl_803DD2D8 != NULL) Resource_Release(lbl_803DD2D8);
         lbl_803DD2D8 = NULL;
-        ((s16 *)lbl_8039C2E0)[4] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[4] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[5] != 0 && (((s16 *)lbl_8039C2E0)[5] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[5] != 0 && (((s16 *)gPartfxResourceTimeouts)[5] -= framesThisStep) <= 0) {
         if (lbl_803DD2DC != NULL) Resource_Release(lbl_803DD2DC);
         lbl_803DD2DC = NULL;
-        ((s16 *)lbl_8039C2E0)[5] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[5] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[16] != 0 && (((s16 *)lbl_8039C2E0)[16] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[16] != 0 && (((s16 *)gPartfxResourceTimeouts)[16] -= framesThisStep) <= 0) {
         if (lbl_803DD2E0 != NULL) Resource_Release(lbl_803DD2E0);
         lbl_803DD2E0 = NULL;
-        ((s16 *)lbl_8039C2E0)[16] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[16] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[6] != 0 && (((s16 *)lbl_8039C2E0)[6] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[6] != 0 && (((s16 *)gPartfxResourceTimeouts)[6] -= framesThisStep) <= 0) {
         if (lbl_803DD2E4 != NULL) Resource_Release(lbl_803DD2E4);
         lbl_803DD2E4 = NULL;
-        ((s16 *)lbl_8039C2E0)[6] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[6] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[7] != 0 && (((s16 *)lbl_8039C2E0)[7] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[7] != 0 && (((s16 *)gPartfxResourceTimeouts)[7] -= framesThisStep) <= 0) {
         if (lbl_803DD2E8 != NULL) Resource_Release(lbl_803DD2E8);
         lbl_803DD2E8 = NULL;
-        ((s16 *)lbl_8039C2E0)[7] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[7] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[8] != 0 && (((s16 *)lbl_8039C2E0)[8] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[8] != 0 && (((s16 *)gPartfxResourceTimeouts)[8] -= framesThisStep) <= 0) {
         if (lbl_803DD2EC != NULL) Resource_Release(lbl_803DD2EC);
         lbl_803DD2EC = NULL;
-        ((s16 *)lbl_8039C2E0)[8] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[8] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[9] != 0 && (((s16 *)lbl_8039C2E0)[9] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[9] != 0 && (((s16 *)gPartfxResourceTimeouts)[9] -= framesThisStep) <= 0) {
         if (lbl_803DD2F0 != NULL) Resource_Release(lbl_803DD2F0);
         lbl_803DD2F0 = NULL;
-        ((s16 *)lbl_8039C2E0)[9] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[9] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[10] != 0 && (((s16 *)lbl_8039C2E0)[10] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[10] != 0 && (((s16 *)gPartfxResourceTimeouts)[10] -= framesThisStep) <= 0) {
         if (lbl_803DD2F4 != NULL) Resource_Release(lbl_803DD2F4);
         lbl_803DD2F4 = NULL;
-        ((s16 *)lbl_8039C2E0)[10] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[10] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[11] != 0 && (((s16 *)lbl_8039C2E0)[11] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[11] != 0 && (((s16 *)gPartfxResourceTimeouts)[11] -= framesThisStep) <= 0) {
         if (lbl_803DD2F8 != NULL) Resource_Release(lbl_803DD2F8);
         lbl_803DD2F8 = NULL;
-        ((s16 *)lbl_8039C2E0)[11] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[11] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[12] != 0 && (((s16 *)lbl_8039C2E0)[12] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[12] != 0 && (((s16 *)gPartfxResourceTimeouts)[12] -= framesThisStep) <= 0) {
         if (lbl_803DD2FC != NULL) Resource_Release(lbl_803DD2FC);
         lbl_803DD2FC = NULL;
-        ((s16 *)lbl_8039C2E0)[12] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[12] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[13] != 0 && (((s16 *)lbl_8039C2E0)[13] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[13] != 0 && (((s16 *)gPartfxResourceTimeouts)[13] -= framesThisStep) <= 0) {
         if (lbl_803DD300 != NULL) Resource_Release(lbl_803DD300);
         lbl_803DD300 = NULL;
-        ((s16 *)lbl_8039C2E0)[13] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[13] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[14] != 0 && (((s16 *)lbl_8039C2E0)[14] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[14] != 0 && (((s16 *)gPartfxResourceTimeouts)[14] -= framesThisStep) <= 0) {
         if (lbl_803DD304 != NULL) Resource_Release(lbl_803DD304);
         lbl_803DD304 = NULL;
-        ((s16 *)lbl_8039C2E0)[14] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[14] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[15] != 0 && (((s16 *)lbl_8039C2E0)[15] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[15] != 0 && (((s16 *)gPartfxResourceTimeouts)[15] -= framesThisStep) <= 0) {
         if (lbl_803DD308 != NULL) Resource_Release(lbl_803DD308);
         lbl_803DD308 = NULL;
-        ((s16 *)lbl_8039C2E0)[15] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[15] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[17] != 0 && (((s16 *)lbl_8039C2E0)[17] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[17] != 0 && (((s16 *)gPartfxResourceTimeouts)[17] -= framesThisStep) <= 0) {
         if (lbl_803DD30C != NULL) Resource_Release(lbl_803DD30C);
         lbl_803DD30C = NULL;
-        ((s16 *)lbl_8039C2E0)[17] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[17] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[18] != 0 && (((s16 *)lbl_8039C2E0)[18] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[18] != 0 && (((s16 *)gPartfxResourceTimeouts)[18] -= framesThisStep) <= 0) {
         if (lbl_803DD310 != NULL) Resource_Release(lbl_803DD310);
         lbl_803DD310 = NULL;
-        ((s16 *)lbl_8039C2E0)[18] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[18] = 0;
         lbl_803DD2C0 -= 1;
     }
-    if (((s16 *)lbl_8039C2E0)[19] != 0 && (((s16 *)lbl_8039C2E0)[19] -= framesThisStep) <= 0) {
+    if (((s16 *)gPartfxResourceTimeouts)[19] != 0 && (((s16 *)gPartfxResourceTimeouts)[19] -= framesThisStep) <= 0) {
         if (lbl_803DD314 != NULL) Resource_Release(lbl_803DD314);
         lbl_803DD314 = NULL;
-        ((s16 *)lbl_8039C2E0)[19] = 0;
+        ((s16 *)gPartfxResourceTimeouts)[19] = 0;
         lbl_803DD2C0 -= 1;
     }
 }
@@ -5482,7 +5483,7 @@ void partfx_release(void) {
     u16 *p;
     int i;
     i = 0x14;
-    p = lbl_8039C2E0 + 0x14;
+    p = gPartfxResourceTimeouts + 0x14;
     while ((s8)i != 0) {
         p = p - 1;
         i = i - 1;
@@ -7114,7 +7115,7 @@ extern f32 lbl_803DF6FC;
 extern f32 lbl_803DF700;
 extern f32 lbl_803DF704;
 extern f32 lbl_803DF708;
-extern u16 lbl_8039C2E0[20];
+extern u16 gPartfxResourceTimeouts[20];
 extern s16 lbl_8039C308[12];
 extern void srand(int seed);
 extern void vecRotateZXY(void *obj, f32 *vec);
@@ -7142,7 +7143,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     PartFxSpawn cfg;
 
   if (((899 < param_2) && (param_2 < 0x3b5)) || ((0x5dc < param_2 && (param_2 < 0x641)))) {
-    lbl_8039C2E0[0] = 2000;
+    gPartfxResourceTimeouts[0] = 2000;
     if (lbl_803DD2C8 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2C8 = Resource_Acquire(0x1a,2);
@@ -7150,7 +7151,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2C8 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x257 < param_2) && (param_2 < 0x2bc)) {
-    lbl_8039C2E0[1] = 2000;
+    gPartfxResourceTimeouts[1] = 2000;
     if (lbl_803DD2CC == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2CC = Resource_Acquire(0x1b,2);
@@ -7158,7 +7159,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2CC + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x1f3 < param_2) && (param_2 < 0x258)) {
-    lbl_8039C2E0[2] = 2000;
+    gPartfxResourceTimeouts[2] = 2000;
     if (lbl_803DD2D0 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2D0 = Resource_Acquire(0x1c,2);
@@ -7166,7 +7167,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2D0 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x18f < param_2) && (param_2 < 0x1f4)) {
-    lbl_8039C2E0[3] = 2000;
+    gPartfxResourceTimeouts[3] = 2000;
     if (lbl_803DD2D4 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2D4 = Resource_Acquire(0x1d,2);
@@ -7174,7 +7175,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2D4 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0xc7 < param_2) && (param_2 < 0x12c)) {
-    lbl_8039C2E0[4] = 2000;
+    gPartfxResourceTimeouts[4] = 2000;
     if (lbl_803DD2D8 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2D8 = Resource_Acquire(0x1e,2);
@@ -7182,7 +7183,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2D8 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x419 < param_2) && (param_2 < 0x44c)) {
-    lbl_8039C2E0[5] = 2000;
+    gPartfxResourceTimeouts[5] = 2000;
     if (lbl_803DD2DC == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2DC = Resource_Acquire(0x1f,2);
@@ -7190,7 +7191,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2DC + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x739 < param_2) && (param_2 < 0x76c)) {
-    lbl_8039C2E0[16] = 2000;
+    gPartfxResourceTimeouts[16] = 2000;
     if (lbl_803DD2E0 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2E0 = Resource_Acquire(0x2a,2);
@@ -7198,7 +7199,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2E0 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 - 0x84U < 2) || ((0x89 < param_2 && (param_2 < 200)))) {
-    lbl_8039C2E0[6] = 2000;
+    gPartfxResourceTimeouts[6] = 2000;
     if (lbl_803DD2E4 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2E4 = Resource_Acquire(0x20,2);
@@ -7206,7 +7207,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2E4 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x3b5 < param_2) && (param_2 < 0x3de)) {
-    lbl_8039C2E0[8] = 2000;
+    gPartfxResourceTimeouts[8] = 2000;
     if (lbl_803DD2EC == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2EC = Resource_Acquire(0x22,2);
@@ -7214,7 +7215,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2EC + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x351 < param_2) && (param_2 < 0x384)) {
-    lbl_8039C2E0[7] = 2000;
+    gPartfxResourceTimeouts[7] = 2000;
     if (lbl_803DD2E8 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2E8 = Resource_Acquire(0x21,2);
@@ -7222,7 +7223,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2E8 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x329 < param_2) && (param_2 < 0x351)) {
-    lbl_8039C2E0[9] = 2000;
+    gPartfxResourceTimeouts[9] = 2000;
     if (lbl_803DD2F0 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2F0 = Resource_Acquire(0x23,2);
@@ -7230,7 +7231,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2F0 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x12b < param_2) && (param_2 < 0x190)) {
-    lbl_8039C2E0[10] = 2000;
+    gPartfxResourceTimeouts[10] = 2000;
     if (lbl_803DD2F4 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2F4 = Resource_Acquire(0x24,2);
@@ -7238,7 +7239,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2F4 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x47d < param_2) && (param_2 < 0x4b0)) {
-    lbl_8039C2E0[11] = 2000;
+    gPartfxResourceTimeouts[11] = 2000;
     if (lbl_803DD2F8 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2F8 = Resource_Acquire(0x25,2);
@@ -7246,7 +7247,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2F8 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x4af < param_2) && (param_2 < 0x4e2)) {
-    lbl_8039C2E0[12] = 2000;
+    gPartfxResourceTimeouts[12] = 2000;
     if (lbl_803DD2FC == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD2FC = Resource_Acquire(0x27,2);
@@ -7254,7 +7255,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD2FC + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 >= 0x3e8) && (param_2 <= 0x419)) {
-    lbl_8039C2E0[13] = 2000;
+    gPartfxResourceTimeouts[13] = 2000;
     if (lbl_803DD300 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD300 = Resource_Acquire(0x28,2);
@@ -7262,7 +7263,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD300 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((0x44b < param_2) && (param_2 < 0x47e)) {
-    lbl_8039C2E0[14] = 2000;
+    gPartfxResourceTimeouts[14] = 2000;
     if (lbl_803DD304 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD304 = Resource_Acquire(0x26,2);
@@ -7270,7 +7271,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD304 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 >= 0x6d7) && (param_2 <= 0x707)) {
-    lbl_8039C2E0[15] = 2000;
+    gPartfxResourceTimeouts[15] = 2000;
     if (lbl_803DD308 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD308 = Resource_Acquire(0x29,2);
@@ -7278,7 +7279,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD308 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 >= 0x708) && (param_2 <= 0x739)) {
-    lbl_8039C2E0[17] = 2000;
+    gPartfxResourceTimeouts[17] = 2000;
     if (lbl_803DD30C == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD30C = Resource_Acquire(0x2b,2);
@@ -7286,7 +7287,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD30C + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 >= 0x76c) && (param_2 <= 0x79d)) {
-    lbl_8039C2E0[18] = 2000;
+    gPartfxResourceTimeouts[18] = 2000;
     if (lbl_803DD310 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD310 = Resource_Acquire(0x2c,2);
@@ -7294,7 +7295,7 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     return (*(int (**)())(*(int *)lbl_803DD310 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
   }
   if ((param_2 >= 0x79e) && (param_2 <= 0x833)) {
-    lbl_8039C2E0[19] = 2000;
+    gPartfxResourceTimeouts[19] = 2000;
     if (lbl_803DD314 == NULL) {
       lbl_803DD2C0 += 1;
       lbl_803DD314 = Resource_Acquire(0x2d,2);
