@@ -9699,28 +9699,16 @@ void fn_802B1B28(int obj, f32 fv)
     f32 v;
 
     v = ((GameObject *)obj)->anim.velocityX;
-    if (v < lbl_803E801C) {
-        v = lbl_803E801C;
-    } else if (v > lbl_803E7F10) {
-        v = lbl_803E7F10;
-    }
-    ((GameObject *)obj)->anim.velocityX = v;
+    ((GameObject *)obj)->anim.velocityX =
+        (v < lbl_803E801C) ? lbl_803E801C : ((v > lbl_803E7F10) ? lbl_803E7F10 : v);
 
     v = ((GameObject *)obj)->anim.velocityY;
-    if (v < lbl_803E811C) {
-        v = lbl_803E811C;
-    } else if (v > lbl_803E80E4) {
-        v = lbl_803E80E4;
-    }
-    ((GameObject *)obj)->anim.velocityY = v;
+    ((GameObject *)obj)->anim.velocityY =
+        (v < lbl_803E811C) ? lbl_803E811C : ((v > lbl_803E80E4) ? lbl_803E80E4 : v);
 
     v = ((GameObject *)obj)->anim.velocityZ;
-    if (v < lbl_803E801C) {
-        v = lbl_803E801C;
-    } else if (v > lbl_803E7F10) {
-        v = lbl_803E7F10;
-    }
-    ((GameObject *)obj)->anim.velocityZ = v;
+    ((GameObject *)obj)->anim.velocityZ =
+        (v < lbl_803E801C) ? lbl_803E801C : ((v > lbl_803E7F10) ? lbl_803E7F10 : v);
 
     y = ((GameObject *)obj)->anim.velocityY * fv;
     if (y > lbl_803E7ED8) {
