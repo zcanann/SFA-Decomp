@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 #define VFPLIFT1_OBJTYPE 0x3b7
@@ -309,7 +310,7 @@ void vfplift_init(int *obj, u8 *init) {
 #pragma peephole off
 #pragma scheduling off
 void vfplift_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 #pragma scheduling reset
 #pragma peephole reset

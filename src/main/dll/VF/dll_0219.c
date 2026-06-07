@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 extern f32 lbl_803E60A8;
@@ -39,7 +40,7 @@ void dll_219_initialise_nop(void) {}
 #pragma peephole off
 #pragma scheduling off
 void dll_219_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 #pragma scheduling reset
 #pragma peephole reset
