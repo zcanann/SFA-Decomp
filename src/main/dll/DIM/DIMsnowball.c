@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
@@ -1417,7 +1418,7 @@ void ccpedstal_updateAltVariant(int obj, u8* state2) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int* gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern f32 lbl_803E4670;
 
 extern void dll_2E_func05(int *obj, u8 *sub, int a, int b, int c);
@@ -1481,7 +1482,7 @@ void ccqueen_update(int *obj) {
 
 /* ccqueen_SeqFn: ccqueen seqFn dispatcher. Walks the (u8)data[0x8b] command
  * bytes at data[0x81..]: cmd=1 detaches obj's child via ObjLink_DetachChild
- * (only when obj->_c8 != 0); cmd=2 dispatches gWaterfxInterface vtable[4]
+ * (only when obj->_c8 != 0); cmd=2 spawns a water splash burst
  * with the obj's xyz position and lbl_803E4670 as a 5-arg call. Returns 0. */
 #pragma scheduling off
 #pragma peephole off
@@ -1498,12 +1499,10 @@ int ccqueen_SeqFn(int obj, int unused, u8* data) {
                 }
                 break;
             case 2:
-                ((void(*)(int, f32, f32, f32, f32))((void**)*gWaterfxInterface)[4])(
-                    obj,
-                    ((GameObject *)obj)->anim.worldPosX,
+                (*gWaterfxInterface)->spawnSplashBurst(
+                    (void *)obj, ((GameObject *)obj)->anim.worldPosX,
                     ((GameObject *)obj)->anim.worldPosY,
-                    ((GameObject *)obj)->anim.worldPosZ,
-                    lbl_803E4670);
+                    ((GameObject *)obj)->anim.worldPosZ, lbl_803E4670);
                 break;
             }
         }

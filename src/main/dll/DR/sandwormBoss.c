@@ -144,7 +144,7 @@ extern undefined4 DAT_8032388c;
 extern undefined4 DAT_80323890;
 extern undefined4 DAT_803dc070;
 extern undefined4 gScreensInterface;
-extern undefined4 gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;

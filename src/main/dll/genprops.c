@@ -6389,7 +6389,7 @@ void fireball_init(int *obj)
 
 extern f32 Vec3_Length(f32 *v);
 extern int hitDetectFn_800658a4(int *obj, f32 x, f32 y, f32 z, f32 *out, int flag);
-extern int *gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern f32 mathSinf(f32 v);
 extern f32 mathCosf(f32 x);
 extern void fn_8016F260(int *obj, int *state, int *other);
@@ -6444,12 +6444,14 @@ void fireball_update(int *obj)
                 Sfx_PlayFromObject(obj, 179);
             } else {
                 Sfx_PlayFromObject(obj, 186);
-                ((void (*)(int *, f32, f32, f32, f32))((int *)*gWaterfxInterface)[4])(obj,
-                    ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
-                    ((GameObject *)obj)->anim.localPosZ, lbl_803E3360);
-                ((void (*)(f32, f32, f32, int, f32, int))((int *)*gWaterfxInterface)[5])(
-                    ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
-                    ((GameObject *)obj)->anim.localPosZ, *(s16 *)obj, lbl_803E3330, 2);
+                (*gWaterfxInterface)->spawnSplashBurst(
+                    obj, ((GameObject *)obj)->anim.localPosX,
+                    ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
+                    lbl_803E3360);
+                (*gWaterfxInterface)->spawnRipple(
+                    *(s16 *)obj, 2, ((GameObject *)obj)->anim.localPosX,
+                    ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
+                    lbl_803E3330);
             }
             {
                 u8 v = *(u8 *)((char *)state + 0x71);
@@ -7138,10 +7140,12 @@ void staff_hitDetectGeometry(int *obj)
         }
         if (idx == 14) {
             Sfx_PlayAtPositionFromObject(obj, *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40), *(f32 *)(state + 0x44), 186);
-            ((void (*)(int *, f32, f32, f32, f32))((int *)*gWaterfxInterface)[4])(obj,
-                *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40), *(f32 *)(state + 0x44), lbl_803E32B4);
-            ((void (*)(f32, f32, f32, int, f32, int))((int *)*gWaterfxInterface)[5])(
-                *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40), *(f32 *)(state + 0x44), 0, lbl_803E32B4, 2);
+            (*gWaterfxInterface)->spawnSplashBurst(
+                obj, *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40),
+                *(f32 *)(state + 0x44), lbl_803E32B4);
+            (*gWaterfxInterface)->spawnRipple(
+                0, 2, *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40),
+                *(f32 *)(state + 0x44), lbl_803E32B4);
         } else {
             QuakePartVec v;
             v.scale = lbl_803E3288;

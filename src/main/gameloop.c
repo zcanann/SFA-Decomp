@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "dolphin/os/OSFastCast.h"
 #include "main/asset_load.h"
+#include "main/effect_interfaces.h"
 #include "main/resource.h"
 
 extern undefined8 camcontrol_playTargetTypeSfx();
@@ -1100,7 +1101,7 @@ extern void *gProjgfxInterface;
 extern void *gPlayerShadowInterface;
 extern void *gPartfxInterface;
 extern void *gScreensInterface;
-extern void *gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern void *gRomCurveInterface;
 extern void *gTitleMenuLinkInterface;
 extern void *gPathControlInterface;

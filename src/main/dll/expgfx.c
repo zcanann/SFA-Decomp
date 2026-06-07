@@ -1071,8 +1071,9 @@ foundFirst:
                 rot.z = slot->posZ.value;
               }
               gExpgfxFrameParityBit = 1;
-              (*gWaterfxInterface)->spawnSurfaceRipple(rot.x, rot.y, rot.z, lbl_803DF35C, 0, 4);
-              (*gWaterfxInterface)->spawnRipple(rot.x, rot.y, rot.z, gExpgfxSlotMotionStep, 0);
+              (*gWaterfxInterface)->spawnRipple(0, 4, rot.x, rot.y, rot.z, lbl_803DF35C);
+              (*gWaterfxInterface)->spawnSplashBurst(NULL, rot.x, rot.y, rot.z,
+                                                     gExpgfxSlotMotionStep);
               if (srcObj != NULL &&
                   coordsToMapCell(srcObj->localPosX, srcObj->localPosZ) == 0x10) {
                 Sfx_PlayFromObject((u32)srcObj, 0x285);

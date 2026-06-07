@@ -7514,7 +7514,7 @@ void dbegg_update(int obj)
     extern void fn_80137948(char *, ...);
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_DisableObject(int);
-    extern int *gWaterfxInterface;
+    extern WaterfxInterface **gWaterfxInterface;
     extern int *gRomCurveInterface;
     extern EffectInterface **gPartfxInterface;
     extern f32 timeDelta;
@@ -7652,7 +7652,10 @@ void dbegg_update(int obj)
                 int nb = h < lbl_803E6200;
                 nb = (nb < 0) ? -nb : nb;
                 if (nb != 0) {
-                (**(void (**)(int, int, f32, f32, f32, f32))((char *)*gWaterfxInterface + 0x14))(*(s16 *)obj, 1, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY - ((DbEggState *)blob)->waterOffset, ((GameObject *)obj)->anim.localPosZ, (f32)randomGetRange(1, 10));
+                (*gWaterfxInterface)->spawnRipple(
+                    *(s16 *)obj, 1, ((GameObject *)obj)->anim.localPosX,
+                    ((GameObject *)obj)->anim.localPosY - ((DbEggState *)blob)->waterOffset,
+                    ((GameObject *)obj)->anim.localPosZ, (f32)randomGetRange(1, 10));
                 }
             }
             if (GameBit_Get(0x426) != 0) {

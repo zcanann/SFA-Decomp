@@ -2320,8 +2320,9 @@ int fn_802A1CA8(int obj, int state)
         if ((*(int *)((char *)state + 0x314) & 0x200) != 0) {
             doRumble(lbl_803E7F10);
             if (*(f32 *)((char *)inner + 0x838) > lbl_803E7EA4) {
-                (**(void (**)(int, f32, f32, f32, f32))((char *)(*gWaterfxInterface) + 0x10))(
-                    obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                (*gWaterfxInterface)->spawnSplashBurst(
+                    (void *)obj, ((GameObject *)obj)->anim.localPosX,
+                    ((GameObject *)obj)->anim.localPosY,
                     ((GameObject *)obj)->anim.localPosZ, lbl_803E8018);
             }
         }
@@ -10599,9 +10600,10 @@ void fn_802AE83C(int obj, int inner)
     }
     if (((GameObject *)obj)->anim.velocityY < lbl_803E812C) {
         Sfx_PlayFromObject(obj, SFXthorntail_snort2);
-        (*(void (*)(int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x10)))(
-            obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
-            ((GameObject *)obj)->anim.localPosZ, lbl_803E7ED8);
+        (*gWaterfxInterface)->spawnSplashBurst(
+            (void *)obj, ((GameObject *)obj)->anim.localPosX,
+            ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
+            lbl_803E7ED8);
     }
 }
 #pragma peephole reset
@@ -14258,11 +14260,12 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
                 (void *)obj, 0x427, lbl_803DAEF0, 0x200001, -1, NULL);
         }
         if ((((PlayerState *)inner)->flags360 & 0x20000) != 0) {
-            (*(void (*)(int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x10)))(
-                obj, ((GameObject *)obj)->anim.localPosX,
-                (((GameObject *)obj)->anim.localPosY + ((PlayerState *)inner)->unk838) - lbl_803E7F10,
+            (*gWaterfxInterface)->spawnSplashBurst(
+                (void *)obj, ((GameObject *)obj)->anim.localPosX,
+                (((GameObject *)obj)->anim.localPosY + ((PlayerState *)inner)->unk838) -
+                    lbl_803E7F10,
                 ((GameObject *)obj)->anim.localPosZ, lbl_803E7FFC);
-            (*(void (*)(int, int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x14)))(
+            (*gWaterfxInterface)->spawnRipple(
                 0, 2, ((GameObject *)obj)->anim.localPosX,
                 ((GameObject *)obj)->anim.localPosY + ((PlayerState *)inner)->unk838,
                 ((GameObject *)obj)->anim.localPosZ, lbl_803E80E4);
@@ -15205,13 +15208,13 @@ void fn_802ADE80(int obj, int inner, int state)
         v.mat[0] = lbl_803E7EE0;
         setMatrixFromObjectPos(mtx, v.angles);
         Matrix_TransformPoint(mtx, tx, lbl_803E7EA4, tz, &tx, &ty, &tz);
-        (*(void (*)(int, int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x14)))(
-            0, 5, tx, *(f32 *)((char *)inner + 0x83c), tz, lbl_803E7EA4);
+        (*gWaterfxInterface)->spawnRipple(0, 5, tx, *(f32 *)((char *)inner + 0x83c),
+                                          tz, lbl_803E7EA4);
         if (*(f32 *)((char *)inner + 0x838) > lbl_803E8128 &&
             ((PlayerState *)state)->baddie.unk294 > lbl_803E7E9C) {
             s16 ang = (s16)(*(s16 *)((char *)inner + 0x478) -
                             getAngle(((PlayerState *)state)->baddie.animSpeedB, ((PlayerState *)state)->baddie.animSpeedA));
-            (*(void (*)(int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x18)))(
+            (*gWaterfxInterface)->spawnSimpleRipple(
                 ang, tx, *(f32 *)((char *)inner + 0x83c), tz, lbl_803E7EA4);
         }
     }
@@ -15349,8 +15352,9 @@ int fn_802A16CC(int obj, int state, f32 fv)
             Sfx_PlayFromObject(obj, snd);
             doRumble(lbl_803E7F10);
             if (inner->unk838 > lbl_803E7EA4) {
-                (*(void (*)(int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x10)))(
-                    obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
+                (*gWaterfxInterface)->spawnSplashBurst(
+                    (void *)obj, ((GameObject *)obj)->anim.localPosX,
+                    ((GameObject *)obj)->anim.localPosY,
                     ((GameObject *)obj)->anim.localPosZ, lbl_803E8018);
             }
         }

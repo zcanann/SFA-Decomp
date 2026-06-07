@@ -2237,7 +2237,7 @@ extern f32 lbl_803E0190; extern f32 lbl_803E0194;
 extern f32 lbl_803E0198; extern f32 lbl_803E019C;
 extern f32 lbl_803E01A0; extern f32 lbl_803E01A4;
 extern f32 lbl_803E01A8; extern f32 lbl_803E01AC;
-extern int *gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 typedef struct WaterfxCfg {
@@ -2930,9 +2930,9 @@ int Effect13_func04(void *param_1, int param_2, s16 *param_3, u32 param_4, u8 pa
             lbl_8039C440.z = 0;
             param_3 = (s16 *)&lbl_8039C440;
         }
-        (*(void (*)(int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x10)))(
-            0, *(f32 *)(param_3 + 6), *(f32 *)(param_3 + 8), *(f32 *)(param_3 + 10),
-            lbl_803E01A0);
+        (*gWaterfxInterface)->spawnSplashBurst(NULL, *(f32 *)(param_3 + 6),
+                                               *(f32 *)(param_3 + 8),
+                                               *(f32 *)(param_3 + 10), lbl_803E01A0);
         Sfx_PlayFromObject((int)param_1, SFXsc_snort02);
         cfg.f08 = 1;
         cfg.f3c = lbl_803E01A4;

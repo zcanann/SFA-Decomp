@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/fall_ladders.h"
 #include "main/objhits_types.h"
@@ -387,7 +388,7 @@ void fn_80154328(int obj, int p)
     extern void Matrix_TransformPoint(void *mtx, f32 x, f32 y, f32 z, f32 *px, f32 *py, f32 *pz);
     extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
     extern f32 sqrtf(f32 x);
-    extern int *gWaterfxInterface;
+    extern WaterfxInterface **gWaterfxInterface;
     f32 mtx[17];
     struct {
         s16 in[6];
@@ -411,8 +412,8 @@ void fn_80154328(int obj, int p)
         tx = lbl_803E2998 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         tz = lbl_803E29A0 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         Matrix_TransformPoint(mtx, tx, lbl_803E2990, tz, &tx, &ox, &tz);
-        (**(void (**)(f32, f32, f32, f32, int, int))(*gWaterfxInterface + 0x14))(
-            tx, *(f32 *)(p + 0x32c), tz, lbl_803E2990, 0, 3);
+        (*gWaterfxInterface)->spawnRipple(0, 3, tx, *(f32 *)(p + 0x32c), tz,
+                                          lbl_803E2990);
         if (sqrtf(((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX + ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ) > lbl_803E29A4) {
             Sfx_PlayAtPositionFromObject(obj, stk.pos[0], stk.pos[1], stk.pos[2], SFXstaff_proj_putaway);
         }

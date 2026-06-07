@@ -4108,7 +4108,7 @@ void mapLoadUnloadObjects(int flag)
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 extern int* gObjectTriggerInterface;
-extern int* gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern int* gProjgfxInterface;
 extern int* gModgfxInterface;
 extern int* gExpgfxInterface;
@@ -4229,7 +4229,7 @@ void beginLoadingMap(void)
     *(f32*)((char*)cam + 0x14) = p[2];
     mapSetupPlayer();
     lbl_803DCEBD = 0;
-    (*(void (*)(void))(*(int*)(*gWaterfxInterface + 0x1c)))();
+    (*gWaterfxInterface)->onMapSetup();
     (*(void (*)(void))(*(int*)(*gProjgfxInterface + 4)))();
     ((ModgfxInterface *)*gModgfxInterface)->onMapSetup();
     (*(void (*)(void))(*(int*)(*gExpgfxInterface + 4)))();

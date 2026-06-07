@@ -104,17 +104,40 @@ STATIC_ASSERT(offsetof(ModgfxInterface, spawnSequence) == 0x50);
 STATIC_ASSERT(offsetof(ModgfxInterface, addSequenceFlags) == 0x54);
 STATIC_ASSERT(offsetof(ModgfxInterface, getLastSpawnHandle) == 0x58);
 
-typedef void (*WaterfxSpawnRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags);
-typedef void (*WaterfxSpawnSurfaceRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags,
-                                            int count);
+typedef void (*WaterfxRunFrameFn)(u8 framesThisStep);
+typedef void (*WaterfxImpactSurfaceFn)(u8 *surfaceFlags, u16 mask, f32 *positions,
+                                       u8 *impactData, f32 height);
+typedef void (*WaterfxRenderFn)(int renderPass, int flags);
+typedef void (*WaterfxSpawnSplashBurstFn)(void *sourceObject, f32 x, f32 y, f32 z,
+                                          f32 radius);
+typedef void (*WaterfxSpawnSplashBurstAtPointFn)(void *sourceObject, f32 x, f32 y,
+                                                 f32 z);
+typedef void (*WaterfxSpawnRippleFn)(s16 sourceId, int intensity, f32 x, f32 y,
+                                     f32 z, f32 radius);
+typedef void (*WaterfxSpawnSimpleRippleFn)(s16 sourceId, f32 x, f32 y, f32 z,
+                                           f32 radius);
+typedef void (*WaterfxOnMapSetupFn)(void);
+typedef void (*WaterfxSetRippleScaleFn)(int flag, f32 value);
 
 typedef struct WaterfxInterface {
-  u8 pad00[0x10];
+  u8 pad00[0x04];
+  WaterfxRunFrameFn runFrame;
+  WaterfxImpactSurfaceFn spawnImpactSurface;
+  WaterfxRenderFn render;
+  WaterfxSpawnSplashBurstFn spawnSplashBurst;
   WaterfxSpawnRippleFn spawnRipple;
-  WaterfxSpawnSurfaceRippleFn spawnSurfaceRipple;
+  WaterfxSpawnSimpleRippleFn spawnSimpleRipple;
+  WaterfxOnMapSetupFn onMapSetup;
+  WaterfxSetRippleScaleFn setRippleScale;
 } WaterfxInterface;
 
-STATIC_ASSERT(offsetof(WaterfxInterface, spawnRipple) == 0x10);
-STATIC_ASSERT(offsetof(WaterfxInterface, spawnSurfaceRipple) == 0x14);
+STATIC_ASSERT(offsetof(WaterfxInterface, runFrame) == 0x04);
+STATIC_ASSERT(offsetof(WaterfxInterface, spawnImpactSurface) == 0x08);
+STATIC_ASSERT(offsetof(WaterfxInterface, render) == 0x0C);
+STATIC_ASSERT(offsetof(WaterfxInterface, spawnSplashBurst) == 0x10);
+STATIC_ASSERT(offsetof(WaterfxInterface, spawnRipple) == 0x14);
+STATIC_ASSERT(offsetof(WaterfxInterface, spawnSimpleRipple) == 0x18);
+STATIC_ASSERT(offsetof(WaterfxInterface, onMapSetup) == 0x1C);
+STATIC_ASSERT(offsetof(WaterfxInterface, setRippleScale) == 0x20);
 
 #endif /* MAIN_EFFECT_INTERFACES_H_ */

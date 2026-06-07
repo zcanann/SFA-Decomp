@@ -1718,7 +1718,7 @@ extern void *gObjectTriggerInterface;
 extern void *gTitleMenuControlInterface;
 extern void *gExpgfxInterface;
 extern void *gModgfxInterface;
-extern void *gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern int *gMapEventInterface;
 
 #pragma push
@@ -2193,7 +2193,7 @@ void Obj_UpdateAllObjects(u8 flags)
             }
         }
     done:
-        (*(void (**)(u8))(*(int *)gWaterfxInterface + 4))(framesThisStep);
+        (*gWaterfxInterface)->runFrame(framesThisStep);
     }
     if ((f & 2) == 0) {
         ((ModgfxInterface *)*(void **)gModgfxInterface)->updateActiveEffects(0, 0, 0);

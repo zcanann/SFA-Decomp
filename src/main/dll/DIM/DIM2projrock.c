@@ -1148,15 +1148,12 @@ void dim2icefloe_init(int obj, int p)
 /* dim2icicle_update: state machine -- wait for hit, shake, drop into water, melt. */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int *out, int a, int b);
-extern int *gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern f32 lbl_803E4B6C;
 extern f32 lbl_803E4B70;
 extern f32 lbl_803E4B74;
 extern f32 lbl_803E4B78;
 extern f32 lbl_803E4B7C;
-
-typedef void (*WaterfxRippleFn)(int obj, f32 x, f32 y, f32 z, f32 r);
-typedef void (*WaterfxSplashFn)(f32 x, f32 y, f32 z, int a, f32 r, int b);
 
 #pragma peephole off
 #pragma scheduling off
@@ -1219,10 +1216,13 @@ void dim2icicle_update(int obj)
         if (((GameObject *)obj)->anim.localPosY < ((Dim2IcicleState *)sub)->dropY) {
             GameBit_Set(*(s16 *)(state + 0x1e), 1);
             ((Dim2IcicleState *)sub)->mode = 2;
-            (*(WaterfxRippleFn)*(int *)(*gWaterfxInterface + 0x10))(
-                obj, ((GameObject *)obj)->anim.localPosX, ((Dim2IcicleState *)sub)->dropY, ((GameObject *)obj)->anim.localPosZ, lbl_803E4B7C);
-            (*(WaterfxSplashFn)*(int *)(*gWaterfxInterface + 0x14))(
-                ((GameObject *)obj)->anim.localPosX, ((Dim2IcicleState *)sub)->dropY, ((GameObject *)obj)->anim.localPosZ, 0, lbl_803E4B80, 2);
+            (*gWaterfxInterface)->spawnSplashBurst(
+                (void *)obj, ((GameObject *)obj)->anim.localPosX,
+                ((Dim2IcicleState *)sub)->dropY, ((GameObject *)obj)->anim.localPosZ,
+                lbl_803E4B7C);
+            (*gWaterfxInterface)->spawnRipple(
+                0, 2, ((GameObject *)obj)->anim.localPosX, ((Dim2IcicleState *)sub)->dropY,
+                ((GameObject *)obj)->anim.localPosZ, lbl_803E4B80);
             Sfx_PlayFromObject(obj, SFXmv_missingcog_lp);
             ((Dim2IcicleState *)sub)->timer = 0x96;
         }

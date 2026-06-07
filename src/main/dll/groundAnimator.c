@@ -1107,7 +1107,7 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 extern f32 timeDelta;
 extern f32 sqrtf(f32);
 extern int fn_80065684(int obj, f32 x, f32 y, f32 z, f32 *out, int flag);
-extern void ***gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern f32 lbl_803E37D4;
 extern f32 lbl_803E37D8;
 extern f32 lbl_803E37DC;
@@ -1332,7 +1332,9 @@ int fn_8017DF34(int p, int state, f32 y)
                 ((AppleOnTreeState *)state)->unk44 = g2 * r + ((AppleOnTreeState *)state)->unk44;
             }
             ((AppleOnTreeState *)state)->unk3C = ((AppleOnTreeState *)state)->unk28;
-            ((void (*)(int, f32, f32, f32))(*gWaterfxInterface)[4])(p, ((GameObject *)p)->anim.localPosX, ((AppleOnTreeState *)state)->unk34, ((GameObject *)p)->anim.localPosZ);
+            ((WaterfxSpawnSplashBurstAtPointFn)(*gWaterfxInterface)->spawnSplashBurst)(
+                (void *)p, ((GameObject *)p)->anim.localPosX, ((AppleOnTreeState *)state)->unk34,
+                ((GameObject *)p)->anim.localPosZ);
             return 0;
         } else {
             ((GameObject *)p)->anim.localPosY = y;

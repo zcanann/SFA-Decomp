@@ -3323,7 +3323,7 @@ extern void objRenderFuzz(int *obj);
 extern void drawFn_8006f500(void);
 void objDrawFn_8005da48(int *obj);
 void lightmap_sortTransparentDrawQueue(void);
-extern void *gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern void objGetColor(int slot, u8 *red, u8 *green, u8 *blue);
 extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
 extern void GXSetChanAmbColor(int chan, GXColor8 *c);
@@ -3641,7 +3641,7 @@ void sceneDrawTransparentPolys(void)
             drawFn_8006f500();
             break;
         case 9:
-            (*(void (***)(int, int))gWaterfxInterface)[3](0, 0);
+            (*gWaterfxInterface)->render(0, 0);
         }
         e = e + 4;
     }

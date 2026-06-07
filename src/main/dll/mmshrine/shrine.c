@@ -1,5 +1,6 @@
 #include "main/dll/mmshrine/shrine.h"
 #include "main/dll/laser19F.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 
@@ -438,7 +439,7 @@ extern void fn_80137948(char *fmt, ...);
 extern char sWaterSpikeInvalidXyzAnimIdWarning[];
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int **out, int a, int b);
 extern u8 framesThisStep;
-extern int *gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern f32 lbl_803E4F80;
 extern f32 lbl_803E4F84;
 extern f32 lbl_803E4F88;
@@ -493,9 +494,9 @@ void mmsh_waterspike_update(int param_1)
     if (*(int *)(param_1 + 0xf4) <= 0) {
       *(int *)(param_1 + 0xf4) = randomGetRange(0x3c, 0xf0);
       if (lbl_803E4F84 == dist) {
-        (*(void (**)(f32, f32, f32, int, f32, int))(*gWaterfxInterface + 0x14))
-            (*(f32 *)(param_1 + 0xc), *(f32 *)(param_1 + 0x10),
-             *(f32 *)(param_1 + 0x14), 0, lbl_803E4F88, 3);
+        (*gWaterfxInterface)->spawnRipple(0, 3, *(f32 *)(param_1 + 0xc),
+                                          *(f32 *)(param_1 + 0x10),
+                                          *(f32 *)(param_1 + 0x14), lbl_803E4F88);
       }
     }
   }
