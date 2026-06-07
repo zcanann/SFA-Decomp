@@ -6881,7 +6881,7 @@ void fn_802B0EA4(int obj, int inner, int state)
         sqrtf(((PlayerState *)state)->baddie.unk290 * ((PlayerState *)state)->baddie.unk290 +
               ((PlayerState *)state)->baddie.unk28C * ((PlayerState *)state)->baddie.unk28C);
     if (*(f32 *)((char *)state + 0x298) > lbl_803E7FA8) {
-        *(f32 *)((char *)state + 0x298) = lbl_803E7FA8;
+        *(f32 *)((char *)state + 0x298) = *(f32 *)&lbl_803E7FA8;
     }
     *(f32 *)((char *)state + 0x298) = *(f32 *)((char *)state + 0x298) / lbl_803E7FA8;
     ((PlayerState *)inner)->unk470 =
@@ -6990,9 +6990,9 @@ void fn_802B0EA4(int obj, int inner, int state)
     if (((ByteFlags *)((char *)inner + 0x3f1))->b20 != 0) {
         spd = sqrtf(((PlayerState *)state)->baddie.animSpeedA * ((PlayerState *)state)->baddie.animSpeedA +
                     ((PlayerState *)state)->baddie.animSpeedB * ((PlayerState *)state)->baddie.animSpeedB);
-        t = (spd < lbl_803E7EA4)
-                ? lbl_803E7EA4
-                : ((spd > ((PlayerState *)inner)->unk404) ? ((PlayerState *)inner)->unk404 : spd);
+        t = (spd < (t = lbl_803E7EA4))
+                ? t
+                : ((spd > (t = ((PlayerState *)inner)->unk404)) ? t : spd);
         if (lbl_803E7EE0 == ((PlayerState *)inner)->unk82C) {
             ((PlayerState *)inner)->unk438 = lbl_803E7F44;
         } else {
@@ -7003,9 +7003,9 @@ void fn_802B0EA4(int obj, int inner, int state)
         }
     } else {
         spd = ((PlayerState *)state)->baddie.animSpeedA;
-        t = (spd < lbl_803E7EA4)
-                ? lbl_803E7EA4
-                : ((spd > ((PlayerState *)inner)->unk404) ? ((PlayerState *)inner)->unk404 : spd);
+        t = (spd < (t = lbl_803E7EA4))
+                ? t
+                : ((spd > (t = ((PlayerState *)inner)->unk404)) ? t : spd);
         u = t * ((PlayerState *)inner)->unk7E0;
         idx = (int)u;
         ((PlayerState *)inner)->unk438 =
@@ -7024,20 +7024,22 @@ void fn_802B0EA4(int obj, int inner, int state)
     idx = (int)u;
     ((PlayerState *)inner)->unk434 = Curve_EvalCatmullRom(((PlayerState *)inner)->unk460 + (idx + 1) * 4, u - (f32)idx, 0);
     if (((ByteFlags *)((char *)inner + 0x3f0))->b20 != 0) {
-        ((PlayerState *)inner)->unk428 = ((PlayerState *)inner)->unk428 * lbl_803E80E4;
-        ((PlayerState *)inner)->unk430 = ((PlayerState *)inner)->unk430 * lbl_803E80E4;
+        f32 k;
+        ((PlayerState *)inner)->unk428 = ((PlayerState *)inner)->unk428 * (k = lbl_803E80E4);
+        ((PlayerState *)inner)->unk430 = ((PlayerState *)inner)->unk430 * k;
         ((PlayerState *)inner)->unk438 = ((PlayerState *)inner)->unk438 * lbl_803E7F44;
     } else {
         if (lbl_803E7EE0 != ((PlayerState *)inner)->unk834) {
             f32 base = *(f32 *)(((PlayerState *)inner)->unk400 + 0x10);
             f32 frac = (((PlayerState *)state)->baddie.animSpeedA - base) /
                        (((PlayerState *)inner)->unk404 - base);
-            f32 c = (frac < lbl_803E7EA4)
-                        ? lbl_803E7EA4
-                        : ((frac > lbl_803E7EE0) ? lbl_803E7EE0 : frac);
+            f32 v430 = ((PlayerState *)inner)->unk430;
+            f32 diff = ((PlayerState *)inner)->unk834 - lbl_803E7EE0;
             ((PlayerState *)inner)->unk430 =
-                ((PlayerState *)inner)->unk430 *
-                ((((PlayerState *)inner)->unk834 - lbl_803E7EE0) * c + lbl_803E7EE0);
+                v430 * (diff * ((frac < lbl_803E7EA4)
+                                    ? lbl_803E7EA4
+                                    : ((frac > lbl_803E7EE0) ? lbl_803E7EE0 : frac)) +
+                        lbl_803E7EE0);
         }
     }
     if (*(void **)((char *)inner + 0x464) != NULL) {
@@ -7054,21 +7056,20 @@ void fn_802B0EA4(int obj, int inner, int state)
         ((PlayerState *)inner)->unk840 =
             (((PlayerState *)inner)->unk838 - lbl_803E7FFC) / lbl_803E8098;
         v = ((PlayerState *)inner)->unk840;
-        t = (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > one) ? one : v);
-        ((PlayerState *)inner)->unk840 = t;
+        ((PlayerState *)inner)->unk840 = (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > one) ? one : v);
         ((PlayerState *)inner)->unk840 =
             -(lbl_803E7E98 * ((PlayerState *)inner)->unk840 - lbl_803E7EE0);
     } else {
-        if (*(s16 *)((char *)state + 0x19c) < 1) {
-            ((PlayerState *)inner)->unk840 = lbl_803E7EE0;
-        } else {
+        if (*(s16 *)((char *)state + 0x19c) > 0) {
             ((PlayerState *)inner)->unk840 =
                 (f32)*(s16 *)((char *)state + 0x19c) / lbl_803E7EE8;
             v = ((PlayerState *)inner)->unk840;
-            t = (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);
-            ((PlayerState *)inner)->unk840 = t;
+            ((PlayerState *)inner)->unk840 =
+                (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);
             ((PlayerState *)inner)->unk840 =
                 -(lbl_803E7EAC * ((PlayerState *)inner)->unk840 - lbl_803E7EE0);
+        } else {
+            ((PlayerState *)inner)->unk840 = lbl_803E7EE0;
         }
     }
     if (*(void **)((char *)inner + 0x7f8) != NULL) {
@@ -7077,7 +7078,7 @@ void fn_802B0EA4(int obj, int inner, int state)
     v = ((PlayerState *)inner)->unk840;
     t = (v < lbl_803E7E98) ? lbl_803E7E98 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);
     ((PlayerState *)inner)->unk840 = t;
-    *(u32 *)((char *)inner + 0x360) = *(u32 *)((char *)inner + 0x360) & 0xfe7fffff;
+    *(u32 *)((char *)inner + 0x360) &= ~0x1800000LL;
 }
 #pragma peephole reset
 #pragma scheduling reset
