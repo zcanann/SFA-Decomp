@@ -176,7 +176,7 @@ void dll_19B_update(int obj)
                 (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 0, 0, 1, -1, 0);
                 Resource_Release(handle);
                 GameBit_Set(0x126, 0);
-                (*(void (**)(s16 *))(*(int *)gModgfxInterface + 0x20))(st + 6);
+                ((ModgfxInterface *)*gModgfxInterface)->releaseHandle(st + 6);
             }
             break;
         case 1:

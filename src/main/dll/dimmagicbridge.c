@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/dimmagicbridge.h"
 #include "main/mapEventTypes.h"
@@ -146,7 +147,7 @@ void dll_199_update(int obj)
                 (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
                 Resource_Release(res);
                 GameBit_Set(0x126, 0);
-                (**(void (**)(short *))(*gModgfxInterface + 0x20))(state + 6);
+                ((ModgfxInterface *)*gModgfxInterface)->releaseHandle(state + 6);
             }
             break;
         case 1:

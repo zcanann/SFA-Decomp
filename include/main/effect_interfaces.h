@@ -35,13 +35,17 @@ STATIC_ASSERT(offsetof(ExpgfxInterface, spawnEffect) == 0x08);
 STATIC_ASSERT(offsetof(ExpgfxInterface, freeSource) == 0x14);
 
 typedef void (*ModgfxDetachSourceFn)(void *sourceObject);
+typedef void (*ModgfxReleaseHandleFn)(s16 *handle);
 
 typedef struct ModgfxInterface {
   u8 pad00[0x18];
   ModgfxDetachSourceFn detachSource;
+  u8 pad1C[0x20 - 0x1C];
+  ModgfxReleaseHandleFn releaseHandle;
 } ModgfxInterface;
 
 STATIC_ASSERT(offsetof(ModgfxInterface, detachSource) == 0x18);
+STATIC_ASSERT(offsetof(ModgfxInterface, releaseHandle) == 0x20);
 
 typedef void (*WaterfxSpawnRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags);
 typedef void (*WaterfxSpawnSurfaceRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags,

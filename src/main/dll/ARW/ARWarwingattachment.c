@@ -304,7 +304,7 @@ void LaserBeam_update(int param_1)
                     b->fireTimer = b->firePeriod;
                 } else {
                     if (c == 0 && b->emitterSlot != -1) {
-                        (*(void (**)(void *))(*gModgfxInterface + 0x20))(&b->emitterSlot);
+                        ((ModgfxInterface *)*gModgfxInterface)->releaseHandle(&b->emitterSlot);
                     }
                     b->fireTimer = b->firePeriod;
                 }
@@ -354,7 +354,7 @@ void LaserBeam_update(int param_1)
                     } else {
                         if (lbl_803DDC80 != NULL && b->emitterSlot == -1) {
                             if (b->emitterSlot != -1) {
-                                (*(void (**)(void *))(*gModgfxInterface + 0x20))(&b->emitterSlot);
+                                ((ModgfxInterface *)*gModgfxInterface)->releaseHandle(&b->emitterSlot);
                             }
                             if (lbl_803DDC80 != NULL) {
                                 b->emitterSlot =
@@ -369,7 +369,7 @@ void LaserBeam_update(int param_1)
             }
         }
     } else if (b->beamKind == 0 && b->emitterSlot != -1) {
-        (*(void (**)(void *))(*gModgfxInterface + 0x20))(&b->emitterSlot);
+        ((ModgfxInterface *)*gModgfxInterface)->releaseHandle(&b->emitterSlot);
     }
     dz = (f32)(int)*(s16 *)(t + 0x1a);
     dz2 = dz * dz;
@@ -381,7 +381,7 @@ void LaserBeam_update(int param_1)
     if (b->unk27 <= 0) {
         b->unk27 = 0;
     } else if (b->beamKind == 0 && b->emitterSlot != -1) {
-        (*(void (**)(void *))(*gModgfxInterface + 0x20))(&b->emitterSlot);
+        ((ModgfxInterface *)*gModgfxInterface)->releaseHandle(&b->emitterSlot);
     }
     if ((dot + (sinv * *(f32 *)(player + 0xc) + cosv * *(f32 *)(player + 0x14)) > lbl_803E5D10 &&
          b->beamKind != 2) ||
@@ -468,7 +468,7 @@ void LaserBeam_update(int param_1)
     }
     if (b->unk24 == 0) {
         if (b->beamKind == 30 && b->emitterSlot != -1) {
-            (*(void (**)(void *))(*gModgfxInterface + 0x20))(&b->emitterSlot);
+            ((ModgfxInterface *)*gModgfxInterface)->releaseHandle(&b->emitterSlot);
         }
         if (b->unk4C == 1) {
             ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)param_1);
