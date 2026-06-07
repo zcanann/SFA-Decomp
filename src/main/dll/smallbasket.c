@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/objanim.h"
 #include "main/dll/smallbasket.h"
 #include "main/objhits_types.h"
@@ -2161,7 +2162,7 @@ extern int *allocModelStruct2(int p1, int p2);
 extern void tailFn_80026c38(int *p, f32 a, f32 b, f32 c);
 extern int baddieAfterUpdateBonesCb(void);
 extern f32 lbl_803E2CBC;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 lbl_8031FD48[];
 
@@ -2295,9 +2296,9 @@ void smallbasket_playReactionEffects(int *obj, int *st) {
     }
     if (flag != 0) {
         if (*(u16*)((char*)st + 0x338) != 0) {
-            (*(void (**)(int*, int, int, int, int, int))(*gPartfxInterface + 0x8))(obj, 0x802, 0, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x802, NULL, 2, -1, NULL);
         } else {
-            (*(void (**)(int*, int, int, int, int, int))(*gPartfxInterface + 0x8))(obj, 0x809, 0, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x809, NULL, 2, -1, NULL);
         }
     }
 }
@@ -3059,7 +3060,7 @@ void fn_80159FCC(s16* obj, u8* state)
     sp.vol = lbl_803E2C24;
     sp.sfxId = 0x605;
     if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
-        ((void(*)(s16*,int,void*,int,int,int))((void**)*gPartfxInterface)[2])(obj, 1999, &sp, 2, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 1999, &sp, 2, -1, NULL);
         if (*(void**)(state + 0x368) == NULL) {
             if (*(void**)(state + 0x368) == NULL) {
                 *(int*)(state + 0x368) = objCreateLight(0, 1);
@@ -3892,7 +3893,7 @@ void fn_80159958(s16* obj, u8* state)
     sp.vol = lbl_803E2C24;
     sp.sfxId = 0x605;
     if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
-        ((void(*)(s16*,int,void*,int,int,int))((void**)*gPartfxInterface)[2])(obj, 1999, &sp, 2, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 1999, &sp, 2, -1, NULL);
         if (*(void**)(state + 0x368) == NULL) {
             if (*(void**)(state + 0x368) == NULL) {
                 *(int*)(state + 0x368) = objCreateLight(0, 1);
