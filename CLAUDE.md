@@ -2659,6 +2659,32 @@ bare array's base web is created first regardless of decl position
     whole-fn register rotation vanished once the web structure matched —
     treat big rotations as SYMPTOMS until web shapes align.
 
+**NAMED CAP — n-ary sum canonicalization (>=3 variable terms): the
+invariant-statement-reorder class.** (task #14; promotes match-3's
+candidate cap with a full probe set.) Recipe #108's K-grouping levers work
+for `base + idx + K` (TWO variable terms); with THREE OR MORE variable
+terms (`a + i6 + i4 + i5 + i12 + 0x60`) MWCC -O4 COLLECTS the n-ary sum
+and re-canonicalizes it — base joined LAST, source grouping/order erased.
+Two co-occurring symptoms, both from the same collection pass:
+(a) **multi-base shared-subsum**: when 2+ bases share an identical
+multi-term index, ours builds ONE base-free subsum (+K folded:
+`addi rX,sum,K; lhzx` per base) where target re-adds the components per
+base with K as the displacement (`add base,i6; add +i4; add +i5; add
++i12; lhz K()`) keeping the components (not the sum) in registers — 13
+fewer instrs ours, savegpr shifts (fn_80069B1C 70.5, the fmt==4 RGB565
+blend); (b) **loop-head invariant statement reorder**: the outer-loop
+component computations (hi/mid/scaled) emit in a different order than
+source, and the inner sum joins base last (fn_80069EB8, 96/96 instrs,
+order-only). Probed inert: flat-with-locals, full-inline (LICM then
+hoists the contiguous invariant subtree — WORSE, 90 instrs),
+K-on-base per-site grouping, (int)-domain sums with base leading, and
+the pragma matrix (opt_propagation/opt_loop_invariants/
+opt_dead_assignments/opt_strength_reduction off, optimization_level 3/2
+— all >= baseline; sched-off tested earlier by match-3). The #108
+grouping survives only 2-term sums; classify >=3-term multi-base shapes
+on sight and bank the partial. (fn_80069B1C also carries one #92
+branch-over-branch site in its guard chain — independent residual.)
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
