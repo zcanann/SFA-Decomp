@@ -5,6 +5,7 @@
 #include "main/effect_interfaces.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 #pragma peephole off
@@ -991,7 +992,7 @@ void FUN_8016c0a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 {
   undefined8 uVar1;
   
-  (**(code **)(*DAT_803dd6d4 + 0x24))(*(undefined4 *)(param_9 + 0xb8));
+  ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState(*(u8 **)(param_9 + 0xb8));
   (**(code **)(*DAT_803dd6f4 + 8))(param_9,0xffff,0,0,0);
   FUN_800068c8(param_9);
   uVar1 = FUN_8000680c(param_9,0x7f);
@@ -1196,13 +1197,13 @@ void FUN_8016c710(int param_1,int param_2)
   *(undefined4 *)(iVar2 + 0xe8) = 0;
   iVar1 = *(int *)(param_1 + 0xf4);
   if ((iVar1 == 0) && (*(short *)(param_2 + 0x18) != 1)) {
-    (**(code **)(*DAT_803dd6d4 + 0x1c))(iVar2,param_2);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
   else if ((iVar1 != 0) && ((int)*(short *)(param_2 + 0x18) != iVar1 + -1)) {
-    (**(code **)(*DAT_803dd6d4 + 0x24))(iVar2);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState((u8 *)iVar2);
     if (*(short *)(param_2 + 0x18) != -1) {
-      (**(code **)(*DAT_803dd6d4 + 0x1c))(iVar2,param_2);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     }
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
@@ -1299,7 +1300,7 @@ void FUN_8016c8a4(int param_1)
  */
 void FUN_8016ca4c(int param_1)
 {
-  (**(code **)(*DAT_803dd6d4 + 0x24))(*(undefined4 *)(param_1 + 0xb8));
+  ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState(*(u8 **)(param_1 + 0xb8));
   (**(code **)(*DAT_803dd6f4 + 8))(param_1,0xffff,0,0,0);
   FUN_8000680c(param_1,0x7f);
   return;
@@ -1446,7 +1447,7 @@ void FUN_8016cc88(int param_1)
       }
       if (((iVar4 < 2) && (iVar6 != 0)) && (*(short *)(iVar6 + 0xb4) != -1)) {
         *(undefined2 *)(iVar6 + 0xb4) = 0xffff;
-        (**(code **)(*DAT_803dd6d4 + 0x4c))(iVar5);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->endSequence(iVar5);
       }
       *(undefined2 *)(param_1 + 0xb4) = 0xffff;
     }
@@ -1488,13 +1489,13 @@ void FUN_8016ceb4(int param_1,int param_2)
   *(undefined4 *)(param_1 + 0xf8) = 0;
   iVar1 = *(int *)(param_1 + 0xf4);
   if ((iVar1 == 0) && (*(short *)(param_2 + 0x18) != 1)) {
-    (**(code **)(*DAT_803dd6d4 + 0x1c))(iVar2,param_2);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
   else if ((iVar1 != 0) && ((int)*(short *)(param_2 + 0x18) != iVar1 + -1)) {
-    (**(code **)(*DAT_803dd6d4 + 0x24))(iVar2);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState((u8 *)iVar2);
     if (*(short *)(param_2 + 0x18) != -1) {
-      (**(code **)(*DAT_803dd6d4 + 0x1c))(iVar2,param_2);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     }
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
