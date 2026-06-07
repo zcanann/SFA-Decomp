@@ -249,7 +249,8 @@ typedef struct ObjAnimComponent {
   s16 *placementData;
   ObjDef *modelInstance;
   ObjHitReactState *hitReactState;
-  u8 pad58[0x60 - 0x58];
+  u8 pad58[0x5C - 0x58];
+  struct ObjWeaponDaTable *weaponDaTable;
   struct ObjAnimEventTable *eventTable;
   ObjModelState *modelState;
   int **dll;
@@ -280,6 +281,11 @@ typedef struct ObjAnimEventTable {
   s32 byteCount;
   s16 *entries;
 } ObjAnimEventTable;
+
+typedef struct ObjWeaponDaTable {
+  s32 byteCount;
+  s16 *entries;
+} ObjWeaponDaTable;
 
 typedef struct ObjAnimEventList {
   f32 rootDeltaX;
@@ -397,6 +403,7 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, defId) == 0x48);
 STATIC_ASSERT(offsetof(ObjAnimComponent, placementData) == 0x4C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, modelInstance) == 0x50);
 STATIC_ASSERT(offsetof(ObjAnimComponent, hitReactState) == 0x54);
+STATIC_ASSERT(offsetof(ObjAnimComponent, weaponDaTable) == 0x5C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, eventTable) == 0x60);
 STATIC_ASSERT(offsetof(ObjAnimComponent, modelState) == 0x64);
 STATIC_ASSERT(offsetof(ObjAnimComponent, dll) == 0x68);
@@ -416,6 +423,10 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, resetHitboxMode) == 0xAF);
 STATIC_ASSERT(sizeof(ObjAnimEventTable) == 0x08);
 STATIC_ASSERT(offsetof(ObjAnimEventTable, byteCount) == 0x00);
 STATIC_ASSERT(offsetof(ObjAnimEventTable, entries) == 0x04);
+
+STATIC_ASSERT(sizeof(ObjWeaponDaTable) == 0x08);
+STATIC_ASSERT(offsetof(ObjWeaponDaTable, byteCount) == 0x00);
+STATIC_ASSERT(offsetof(ObjWeaponDaTable, entries) == 0x04);
 
 STATIC_ASSERT(sizeof(ObjAnimEventList) == 0x1C);
 STATIC_ASSERT(offsetof(ObjAnimEventList, rootDeltaX) == 0x00);

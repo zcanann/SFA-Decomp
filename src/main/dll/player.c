@@ -11499,7 +11499,7 @@ void objLoadPlayerFromSave(int obj)
         int da;
         *(int *)(((PlayerState *)inner)->unk3DC + off + 0x64) = (int)mmAlloc(0x800, 0x1a, 0);
         da = ((PlayerState *)inner)->unk3DC + off;
-        objGetWeaponDa(obj, ((GameObject *)obj)->anim.seqId, da + 0x60,
+        objGetWeaponDa((u8 *)obj, ((GameObject *)obj)->anim.seqId, (ObjWeaponDaTable *)(da + 0x60),
                        *(s16 *)((char *)lbl_80332EC0 + 0x7fc +
                                 *(s16 *)((char *)da + 0x2) * 2),
                        0);

@@ -1251,7 +1251,6 @@ extern int *gPathControlInterface;
 extern int allocModelStruct2(int p1, int p2);
 extern void *mmAlloc(int size, int heap, int flags);
 extern void objSetSlot(int obj, int slot);
-extern void objGetWeaponDa(int a, int b, int c, int d, int e);
 extern int lbl_803DC668;
 extern int lbl_803DC6A4;
 extern f32 lbl_803DC6C0;

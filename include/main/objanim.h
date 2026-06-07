@@ -8,6 +8,7 @@ typedef struct ObjAnimState ObjAnimState;
 typedef struct ObjAnimComponent ObjAnimComponent;
 typedef struct ObjAnimEventTable ObjAnimEventTable;
 typedef struct ObjAnimEventList ObjAnimEventList;
+typedef struct ObjWeaponDaTable ObjWeaponDaTable;
 
 typedef int (*ObjAnimSetProgressObjectFirstFn)(int objAnimArg,f32 progress);
 typedef int (*ObjAnimSampleRootCurveObjectFirstFn)(int objAnimArg,f32 distance,
@@ -44,6 +45,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
 int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
 int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int moveControlFlags);
 void *ObjAnim_LoadCachedMove(int animId,int moveIndex,u8 *cache,ObjAnimDef *animDef);
+void objGetWeaponDa(u8 *objAnim,int objType,ObjWeaponDaTable *weaponDaTable,int key,u8 load);
 void ObjAnim_LoadMoveEvents(u8 *objAnim,int objType,ObjAnimEventTable *eventTable,u32 moveId,
                             u8 load);
 

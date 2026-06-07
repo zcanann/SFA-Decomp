@@ -1150,13 +1150,13 @@ void Obj_RunInitCallback(u8 *obj, int cb, int unused) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void objGetWeaponDa(u8 *obj, int dummy, int *out, int key, u8 load) {
+void objGetWeaponDa(u8 *obj, int objType, ObjWeaponDaTable *weaponDaTable, int key, u8 load) {
     int i;
     s16 *tbl;
     s16 da2;
 
     tbl = ((GameObject *)obj)->anim.modelInstance->weaponDaTable;
-    *out = 0;
+    weaponDaTable->byteCount = 0;
     if (tbl == NULL) {
         return;
     }
@@ -1164,14 +1164,16 @@ void objGetWeaponDa(u8 *obj, int dummy, int *out, int key, u8 load) {
     while (tbl[i] != -1) {
         if (tbl[i] == key) {
             da2 = tbl[i + 1];
-            *out = tbl[i + 2];
-            if (*out > 0x800) {
-                *out = 0x800;
+            weaponDaTable->byteCount = tbl[i + 2];
+            if (weaponDaTable->byteCount > 0x800) {
+                weaponDaTable->byteCount = 0x800;
             }
             if (load) {
-                getTabEntry(out[1], 0x34, da2, *out);
+                getTabEntry((int)weaponDaTable->entries, 0x34, da2,
+                            weaponDaTable->byteCount);
             } else {
-                fileLoadToBufferOffset(0x34, (void *)out[1], da2, *out);
+                fileLoadToBufferOffset(0x34, weaponDaTable->entries, da2,
+                                       weaponDaTable->byteCount);
             }
             return;
         }
@@ -1387,7 +1389,7 @@ typedef struct LoadedObj {
     u8 *def;
     ObjHitReactState *hitReactState;
     u8 pad58[0x4];
-    int f5c;
+    ObjWeaponDaTable *weaponDaTable;
     ObjAnimEventTable *objAnimEventTable;
     u8 pad64[0x4];
     int **dll;
@@ -1637,9 +1639,9 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     }
     if ((flags29 & 0x100) && *(void **)obj->models != NULL) {
         tmp = roundUpTo4(cursor);
-        obj->f5c = tmp;
+        obj->weaponDaTable = (ObjWeaponDaTable *)tmp;
         cursor = roundUpTo8(tmp + 8);
-        *(int *)(obj->f5c + 4) = cursor;
+        obj->weaponDaTable->entries = (s16 *)cursor;
         cursor += 0x800;
     }
     if ((flags29 & 2) && modelDef->shadowType != 0) {
