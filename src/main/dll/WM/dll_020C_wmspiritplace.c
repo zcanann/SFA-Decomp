@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 
@@ -33,8 +34,8 @@ int wmspiritplace_SeqFn(int obj, int unused, int actor)
 
     state = ((GameObject *)obj)->extra;
     if ((state->flags12 & 1) != 0) {
-        (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(obj, 0x7d8, NULL, 2, -1, 0);
-        (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(obj, 0x7d8, fxPos, 2, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x7d8, NULL, 2, -1, NULL);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x7d8, fxPos, 2, -1, NULL);
     }
 
     *(u8 *)(actor + 0x56) = 0;

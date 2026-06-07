@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
@@ -101,10 +102,8 @@ int wmnewcrystal_SeqFn(int *obj, int unused, WmNewCrystalEventData *eventData) {
 
     if (((GameObject *)obj)->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE) {
         if (GameBit_Get(WMNEWCRYSTAL_GAMEBIT_AMBIENT_FX) == 0) {
-            (*(void (*)(int *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(
-                obj, WMNEWCRYSTAL_PARTICLE_ID, NULL, 2, -1, 0);
-            (*(void (*)(int *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(
-                obj, WMNEWCRYSTAL_PARTICLE_ID, &params, 2, -1, 0);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, NULL, 2, -1, NULL);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, &params, 2, -1, NULL);
         }
         WM_newcrystalFn_800969b0(obj, state, 1, lbl_803E603C, lbl_803E6040, lbl_803E6044,
                                  lbl_803E6048, lbl_803E6038);

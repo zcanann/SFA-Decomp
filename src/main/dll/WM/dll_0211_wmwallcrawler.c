@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
@@ -113,7 +114,7 @@ void wmwallcrawler_update(s16 *obj)
             if ((*(u16 *)(st + 0x294) & 8) != 0) {
                 if (timerCountDown(st + 0x28a) != 0) {
                     for (k = 0; k < 0x1e; k++) {
-                        (**(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))((int)obj, 0x1a3, 0, 0, -1, 0);
+                        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x1a3, NULL, 0, -1, NULL);
                     }
                     s16toFloat(st + 0x28c, 100);
                     return;
