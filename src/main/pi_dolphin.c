@@ -9902,8 +9902,6 @@ extern int lbl_8035EF48[];
 extern s16 lbl_803DCC78;
 extern void loadTableFiles(void);
 void loadDataFiles(void) {
-    int *ids;
-    char **names;
     int i;
     if (getButtonsJustPressed(2) & 0x100) {
         for (i = 0x50; i < 0x57; i++) {
@@ -9920,22 +9918,18 @@ void loadDataFiles(void) {
         lbl_803DCC78--;
     }
     i = 0;
-    ids = lbl_8035EF48;
-    names = sResourceFileNameTable;
     do {
-        if (*ids != -1) {
+        if (lbl_8035EF48[i] != -1) {
             debugPrintSetColor(0, 0xff, 0, 0xff);
-            fn_80137948(sAssetHaltFormat, *names);
+            fn_80137948(sAssetHaltFormat, sResourceFileNameTable[i]);
             debugPrintSetColor(0xff, 0xff, 0xff, 0xff);
             lbl_803DCC70 = 1;
-            if (mapLoadDataFile(*ids, i) != 0) {
-                *ids = -1;
+            if (mapLoadDataFile(lbl_8035EF48[i], i) != 0) {
+                lbl_8035EF48[i] = -1;
                 printHeapStats(1);
             }
             lbl_803DCC70 = 0;
         }
-        ids++;
-        names++;
         i++;
     } while (i <= 0x57);
     loadTableFiles();
