@@ -1258,7 +1258,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel *objectChannel)
         int fx;
 
         if (dist < near) {
-            level = (int)volf;
+            level = (int)(f64)volf;
         } else if (dist > far) {
             level = 1;
         } else {
@@ -1266,7 +1266,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel *objectChannel)
             if (level < 1) {
                 level = 1;
             } else if ((f32)level > volf) {
-                level = (int)volf;
+                level = (int)(f64)volf;
             }
         }
         scale = lbl_803DE5A0 / dist;

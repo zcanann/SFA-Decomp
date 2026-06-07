@@ -2197,10 +2197,16 @@ compare's immediate and subtract 1 for the real case value.
     (`mr`), while target RE-EXECUTES the fctiwz per site.** The #97
     int->f32 "load CSEs, cast doesn't" behavior does NOT hold for
     fctiwz when a named int already holds the converted value — GVN is
-    value-keyed across blocks. No working spelling found: `*(f32 *)&volf`
-    launder forces volf to MEMORY (demotes its saved-FPR home, net worse);
-    no-op cast chains fold (#94 negative list). ~3 instrs per re-eval site;
-    classify and bank (Sfx_UpdateObjectChannel3D 93.3 residual, audio).
+    value-keyed across blocks. `*(f32 *)&volf` launder forces volf to
+    MEMORY (demotes its saved-FPR home, net worse); no-op cast chains fold
+    (#94 negative list). ⚠️ **CRACKED (task #13): spell the re-executed
+    site `(int)(f64)volf` — the f64 PROMOTION node changes the conversion's
+    VN key while emitting ZERO extra instructions** (f32→f64 widening of a
+    register value is free; fctiwz-on-double is the same opcode), so MWCC
+    re-executes the bare `fctiwz; stfd; lwz` exactly like target.
+    `(int)(f32)(f64)x` does NOT work (emits a real frsp). Probe-proven +
+    Sfx_UpdateObjectChannel3D 93.26→95.94 (both mr sites → fresh fctiwz;
+    remaining residual is a #82 saved-pair rotation + a #92 param-test).
 
 **Recipe #94 addendum (task #181) — the fold-back IS defeatable: a SAME-VALUE
 CONDITIONAL second def (phi) unfolds every `*p` deref to reg-form.** Probe-
