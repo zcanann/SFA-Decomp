@@ -2,6 +2,7 @@
 #define SFA_DLL_FX_800944A0_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/resource.h"
 
 /* typedefs (verbatim from placeholder_800944A0) */
@@ -268,7 +269,7 @@ extern void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32
 extern int lbl_802C2114[];
 extern int lbl_803DF340;
 extern u16 lbl_803DF344;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803DF380;
 extern void vecRotateZXY(void *obj, f32 *vec);
 extern void Camera_ProjectWorldPointWithOffset(f32 *ox, f32 *oy, f32 *oz, f32 x, f32 y, f32 z, f32 w);

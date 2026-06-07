@@ -40,8 +40,7 @@ void WM_newcrystalFn_800969b0(void *obj, s16 *state, u8 flags, f32 period, f32 x
             if (flags != 0) {
                 spawnFlags |= 0x20000000;
             }
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7ec, &params, spawnFlags, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7ec, &params, spawnFlags, -1, NULL);
         }
     }
 }
@@ -87,16 +86,13 @@ void objfx_spawnRandomBurst(void *obj, u8 type, u8 count, void *origin, u8 flagB
         switch (type) {
         case 0xa:
         case 0xb:
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7e3, &params, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7e3, &params, 2, -1, NULL);
             break;
         case 9:
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7e4, &params, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7e4, &params, 2, -1, NULL);
             break;
         default:
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7e2, &params, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7e2, &params, 2, -1, NULL);
             break;
         }
     }
@@ -151,8 +147,7 @@ void hitDetectFn_80097070(void *obj, u8 a, u8 b, u8 count, void *p7, f32 fval) {
         params.vec[2] = lbl_803DF35C;
     }
     for (i = 0; i < count; i++) {
-        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-            obj, ps[a], &params, 2, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, ps[a], &params, 2, -1, NULL);
     }
 }
 #pragma peephole reset
@@ -181,8 +176,7 @@ void objfx_spawnMaskedHitEffect(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fv
         params.vec[1] = lbl_803DF35C;
         params.vec[2] = lbl_803DF35C;
     }
-    (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-        obj, table2.v[a], &params, 2, -1, 0);
+    (*gPartfxInterface)->spawnObject(obj, table2.v[a], &params, 2, -1, NULL);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -262,8 +256,7 @@ void objfx_spawnDirectionalBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
         }
         params.pad[2] = (s16)tC.v[idx];
         params.pad[0] = (s16)tD.v[idx];
-        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-            obj, tB.v[idx], &params, flags | 2, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, tB.v[idx], &params, flags | 2, -1, NULL);
     }
 }
 #pragma peephole reset
@@ -343,8 +336,7 @@ void objfx_spawnArcedBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
         }
         params.pad[2] = (s16)tC.v[idx];
         params.pad[0] = (s16)tD.v[idx];
-        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-            obj, tB.v[idx], &params, flags | 2, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, tB.v[idx], &params, flags | 2, -1, NULL);
     }
 }
 #pragma peephole reset
@@ -425,8 +417,7 @@ void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *o
         }
         params.pad[2] = (s16)tC.v[idx];
         params.pad[0] = (s16)tD.v[idx];
-        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-            obj, tB.v[idx], &params, flags | 2, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, tB.v[idx], &params, flags | 2, -1, NULL);
     }
 }
 #pragma peephole reset
@@ -446,46 +437,35 @@ void objShowButtonGlow(void *obj, u8 mode, f32 intensity) {
     case 1:
         params.f6 = 0xc8c;
         for (i = 0; i < 0x28; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7c8, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
         }
         params.f6 = 1;
-        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-            obj, 0x7f3, &params, 1, -1, 0);
-        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-            obj, 0x7f3, &params, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
         break;
     case 2:
         params.f6 = 0xc8d;
         for (i = 0; i < 0x28; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7c8, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
         }
         params.f6 = 0;
-        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-            obj, 0x7f3, &params, 1, -1, 0);
-        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-            obj, 0x7f3, &params, 1, -1, 0);
-        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-            obj, 0x7f3, &params, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
         break;
     case 3:
         params.f6 = 0xc8e;
         for (i = 0; i < 0x28; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7c8, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
         }
         params.f6 = 2;
-        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-            obj, 0x7f3, &params, 1, -1, 0);
-        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-            obj, 0x7f3, &params, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
         break;
     case 4:
         params.f6 = 0;
         for (i = 0; i < 0x14; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7f2, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7f2, &params, 1, -1, NULL);
         }
         break;
     }
@@ -545,23 +525,20 @@ void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32
         params.f6 = 0x159;
         params.pad[2] = 1;
         for (i = 0; i < (u8)n; i++) {
-            (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7be, &params, 2, -1, light);
+            (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
         }
         break;
     case 2:
         params.f6 = 0x159;
         params.pad[2] = 0;
         for (i = 0; i < (u8)n; i++) {
-            (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7be, &params, 2, -1, light);
+            (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
         }
         break;
     case 3:
         params.f6 = 0x8e;
         for (i = 0; i < (u8)n; i++) {
-            (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7c0, &params, 2, -1, light);
+            (*gPartfxInterface)->spawnObject(obj, 0x7c0, &params, 2, -1, light);
         }
         break;
     case 4: {
@@ -572,8 +549,7 @@ void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32
         params.f6 = 0xc0e;
         params.pad[2] = 0;
         for (i = 0; i < (u8)n; i++) {
-            (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7eb, &params, flags, -1, light);
+            (*gPartfxInterface)->spawnObject(obj, 0x7eb, &params, flags, -1, light);
         }
         break;
     }
@@ -616,43 +592,37 @@ void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32
         case 1:
             params.f6 = type == 1 ? 0xc75 : 0xc74;
             for (i = 0; i < (u8)n; i++) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                    obj, 0x7bf, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnObject(obj, 0x7bf, &params, 2, -1, light);
             }
             break;
         case 2:
             params.f6 = 0x605;
             for (i = 0; i < (u8)n; i++) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                    obj, 0x7bf, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnObject(obj, 0x7bf, &params, 2, -1, light);
             }
             break;
         case 3:
             params.f6 = type == 1 ? 0xc75 : 0xc74;
             for (i = 0; i < (u8)n; i++) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                    obj, 0x7c1, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnObject(obj, 0x7c1, &params, 2, -1, light);
             }
             break;
         case 4:
             params.f6 = type == 1 ? 0xc75 : 0xc74;
             for (i = 0; i < (u8)n; i++) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                    obj, 0x7c4, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnObject(obj, 0x7c4, &params, 2, -1, light);
             }
             break;
         case 5:
             params.f6 = 0x605;
             for (i = 0; i < (u8)n; i++) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                    obj, 0x7c4, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnObject(obj, 0x7c4, &params, 2, -1, light);
             }
             break;
         case 6:
             params.f6 = type == 1 ? 0xc75 : 0xc74;
             for (i = 0; i < (u8)n; i++) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                    obj, 0x7c5, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnObject(obj, 0x7c5, &params, 2, -1, light);
             }
             break;
         }
@@ -684,32 +654,28 @@ void objfx_spawnFlaggedTrailBurst(void *obj, u8 mode, int p5, int p6, int p7, f3
         params.a = 0;
         params.b = 0;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b7, &params, 1, -1, p7);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void *)p7);
         }
         break;
     case 2:
         params.a = 1;
         params.b = 0;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b7, &params, 1, -1, p7);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void *)p7);
         }
         break;
     case 3:
         params.a = 0;
         params.b = 1;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b7, &params, 1, -1, p7);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void *)p7);
         }
         break;
     case 4:
         params.a = 1;
         params.b = 1;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b7, &params, 1, -1, p7);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void *)p7);
         }
         break;
     }
@@ -731,8 +697,7 @@ void projectileParticleFxFn_80099660(void *obj, int mode) {
         for (i = 10; i < 20; i += 2) {
             ps.f6 = (s16)i;
             ps.f8 = scale;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7a0, &ps, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7a0, &ps, 1, -1, NULL);
         }
         tailScale = lbl_803DF390;
         break;
@@ -741,12 +706,10 @@ void projectileParticleFxFn_80099660(void *obj, int mode) {
         for (i = 10; i < 20; i += 2) {
             ps.f6 = (s16)i;
             ps.f8 = scale;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7a0, &ps, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7a0, &ps, 1, -1, NULL);
         }
         for (i = 0; i < 20; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7a0, 0, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7a0, NULL, 1, -1, NULL);
         }
         tailScale = lbl_803DF354;
         break;
@@ -755,12 +718,10 @@ void projectileParticleFxFn_80099660(void *obj, int mode) {
         for (i = 10; i < 20; i += 2) {
             ps.f6 = (s16)i;
             ps.f8 = scale;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7a1, &ps, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7a1, &ps, 1, -1, NULL);
         }
         for (i = 0; i < 20; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7a1, 0, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7a1, NULL, 1, -1, NULL);
         }
         tailScale = lbl_803DF354;
         break;
@@ -769,8 +730,7 @@ void projectileParticleFxFn_80099660(void *obj, int mode) {
         for (i = 10; i < 20; i += 2) {
             ps.f6 = (s16)i;
             ps.f8 = scale;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7a6, &ps, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7a6, &ps, 1, -1, NULL);
         }
         tailScale = lbl_803DF390;
         break;
@@ -779,12 +739,10 @@ void projectileParticleFxFn_80099660(void *obj, int mode) {
         for (i = 10; i < 20; i += 2) {
             ps.f6 = (s16)i;
             ps.f8 = scale;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7a6, &ps, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7a6, &ps, 1, -1, NULL);
         }
         for (i = 0; i < 20; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7a6, 0, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7a6, NULL, 1, -1, NULL);
         }
         tailScale = lbl_803DF354;
         break;
@@ -793,16 +751,14 @@ void projectileParticleFxFn_80099660(void *obj, int mode) {
         for (i = 10; i < 20; i += 2) {
             ps.f6 = (s16)i;
             ps.f8 = scale;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7a1, &ps, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7a1, &ps, 1, -1, NULL);
         }
         tailScale = lbl_803DF390;
         break;
     default:
         return;
     }
-    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-        obj, 0x79f, 0, 1, -1, &tailScale);
+    (*gPartfxInterface)->spawnObject(obj, 0x79f, NULL, 1, -1, &tailScale);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -821,78 +777,67 @@ void itemPickupDoParticleFx(void *obj, int mode, u8 count, f32 fval) {
     case 1:
         params.f6 = 0x79;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b1, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 2:
         params.f6 = 0xc13;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b1, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 3:
         params.f6 = 0x71;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b1, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 4:
         params.f6 = 0xdb;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b1, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 5:
         params.f6 = 0x77;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b1, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 6:
         params.f6 = 0x7b;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b1, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 7:
         params.f6 = 0xda;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b1, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 8:
         params.f6 = 0xdd;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7cc, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
         }
         break;
     case 10:
         params.f6 = 0xde;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7cc, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
         }
         break;
     case 9:
         params.f6 = 0xdf;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7cc, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
         }
         break;
     default:
         params.f6 = 0x5c;
         for (i = 0; i < count; i++) {
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x7b1, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     }
@@ -919,15 +864,13 @@ void objParticleFn_80099d84(void *obj, f32 scale, u8 type, f32 fextra, void *lig
         params.vec[0] = scale * (f32)randomGetRange(-10, 10);
         params.vec[1] = scale * (f32)randomGetRange(-10, 10);
         params.vec[2] = scale * (f32)randomGetRange(-10, 10);
-        (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-            obj, 0x32f, &params, 2, -1, &p8);
+        (*gPartfxInterface)->spawnObject(obj, 0x32f, &params, 2, -1, &p8);
         break;
     case 2:
         params.vec[0] = scale * (f32)randomGetRange(-10, 10);
         params.vec[1] = scale * (f32)randomGetRange(-10, 10);
         params.vec[2] = scale * (f32)randomGetRange(-10, 10);
-        (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-            obj, 0x330, &params, 2, -1, &p8);
+        (*gPartfxInterface)->spawnObject(obj, 0x330, &params, 2, -1, &p8);
         break;
     case 3:
         (*(void (*)(void *, int, void *, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(
@@ -998,101 +941,81 @@ void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *ligh
         case 1:
             args[0] = 1;
             for (i = 10; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x325, origin, 0x200001, -1, args);
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x323, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
             }
             for (i = 4; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x326, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
             }
             break;
         case 2:
             args[0] = 2;
             for (i = 13; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x325, origin, 0x200001, -1, args);
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x323, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
             }
             for (i = 6; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x326, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
             }
             break;
         case 3:
             args[0] = 3;
             for (i = 30; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x325, origin, 0x200001, -1, args);
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x323, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
             }
             for (i = 8; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x326, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
             }
             break;
         case 4:
             for (i = 7; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x328, origin, 0x200001, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, 0x328, origin, 0x200001, -1, NULL);
             }
             break;
         case 5:
             args[0] = 4;
             for (i = 10; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x323, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
             }
             for (i = 4; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x326, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
             }
             break;
         case 6:
             args[0] = 5;
             for (i = 10; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x323, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
             }
             for (i = 4; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x326, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
             }
             break;
         case 7:
             args[0] = 6;
             for (i = 10; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x323, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
             }
             for (i = 4; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x326, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
             }
             break;
         case 8:
             args[0] = 7;
             for (i = 10; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x323, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
             }
             for (i = 4; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x326, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
             }
             break;
         case 9:
             args[0] = 8;
             for (i = 10; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x323, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
             }
             for (i = 4; (u8)i != 0; i--) {
-                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                obj, 0x326, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
             }
             break;
     }
@@ -1289,37 +1212,37 @@ void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) 
         switch ((u8)count) {
         case 1:
             params.f6 = -20536;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
             break;
         case 2:
             params.f6 = 10000;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
             break;
         case 3:
             params.f6 = 500;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
             break;
         case 4:
             params.f6 = -1;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
             break;
         case 5:
             params.f6 = 32767;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
             break;
         case 6:
             params.f6 = 10000;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
             break;
         case 7:
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
             break;
         case 8:
             if (params.f8 < lbl_803DF358) {
@@ -1327,7 +1250,7 @@ void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) 
             }
             params.pad[2] = 90;
             for (i = 0; i < (u8)n * 2; i++) {
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1981, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1981, &params, 1, -1, NULL);
             }
             break;
         }
@@ -1337,15 +1260,15 @@ void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) 
         switch ((u8)mode) {
         case 1:
             params.f6 = 127;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, effB, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, effB, &params, 1, -1, NULL);
             break;
         case 2:
             params.f6 = 192;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, effB, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, effB, &params, 1, -1, NULL);
             break;
         case 3:
             params.f6 = 255;
-            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, effB, &params, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, effB, &params, 1, -1, NULL);
             break;
         }
     }
@@ -1356,49 +1279,49 @@ void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) 
         case 1:
             params.f6 = 3085;
             for (j = 0; j < (u8)n; j++) {
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1960, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1960, &params, 1, -1, NULL);
             }
             break;
         case 2:
             params.f6 = 3082;
             for (j = 0; j < (u8)n; j++) {
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1961, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1961, &params, 1, -1, NULL);
             }
             break;
         case 3:
             params.f6 = 3082;
             for (j = 0; j < (u8)n; j++) {
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1962, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1962, &params, 1, -1, NULL);
             }
             break;
         case 4:
             params.f6 = 3086;
             for (j = 0; j < (u8)n; j++) {
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1963, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
             }
             break;
         case 5:
             params.f6 = 132;
             for (j = 0; j < (u8)n; j++) {
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1963, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
             }
             break;
         case 6:
             params.f6 = 3087;
             for (j = 0; j < (u8)n; j++) {
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1963, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
             }
             break;
         case 7:
             params.f6 = 100;
             for (j = 0; j < (u8)n; j++) {
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1964, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
             }
             break;
         case 8:
             params.f6 = 3198;
             for (j = 0; j < (u8)n; j++) {
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1964, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
             }
             break;
         case 9:
@@ -1407,9 +1330,9 @@ void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) 
             }
             for (j = 0; j < (u8)n * 2; j++) {
                 params.f6 = 0;
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1973, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1973, &params, 1, -1, NULL);
                 params.f6 = 1;
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1973, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1973, &params, 1, -1, NULL);
             }
             break;
         case 10:
@@ -1418,15 +1341,15 @@ void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) 
             }
             for (j = 0; j < (u8)n * 2; j++) {
                 params.f6 = 0;
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1974, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1974, &params, 1, -1, NULL);
                 params.f6 = 1;
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1974, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1974, &params, 1, -1, NULL);
             }
             break;
         case 11:
             params.f6 = 100;
             for (j = 0; j < (u8)n; j++) {
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1964, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
             }
             break;
         case 12:
@@ -1436,9 +1359,9 @@ void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) 
             params.pad[2] = 50;
             for (j = 0; j < (u8)n * 2; j++) {
                 params.f6 = 0;
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1979, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1979, &params, 1, -1, NULL);
                 params.f6 = 1;
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1979, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1979, &params, 1, -1, NULL);
             }
             break;
         case 13:
@@ -1448,9 +1371,9 @@ void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) 
             params.pad[2] = 90;
             for (j = 0; j < (u8)n * 2; j++) {
                 params.f6 = 0;
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1980, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
                 params.f6 = 1;
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1980, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
             }
             break;
         case 14:
@@ -1460,9 +1383,9 @@ void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) 
             params.pad[2] = 240;
             for (j = 0; j < (u8)n * 2; j++) {
                 params.f6 = 0;
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1980, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
                 params.f6 = 1;
-                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1980, &params, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
             }
             break;
         }
