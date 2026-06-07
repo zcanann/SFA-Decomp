@@ -2474,12 +2474,31 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
       init, volatile read anchors, two-symbol-ref `p = glob; q = glob;`
       CSE forms — the copy-pair canonicalizes identically through all of
       them.
+    Round-2 extensions (all 7 known #61c instances now → 100):
+    - **Phi/merged values count as nameable too**: a branchy if/else
+      reassigning one named var (`if (n) n += x; else n = 1;`) keeps the
+      merged value in the var's reg; target holding the merge in r0 = the
+      original computed it as a TERNARY EXPRESSION inside the consumer
+      (`if (idx >= (int)(n != 0 ? n + extra : 1))`) — per-arm li/b join
+      into a temp, #42 family (ObjModel_CopyJointTranslation → 100,
+      combined with un-naming the pointer: `model->file->jointCount`
+      spelled inline at both reads).
+    - **NARROW-TYPED locals jump the coloring queue like temps do**: an
+      `s16 linkOff = *(s16 *)(p + 2);` local colors BEFORE a plain `int`
+      local created earlier, swapping the pair. Retype the local to `int`
+      (keep the `*(s16 *)` cast on the load — lha unchanged) to restore
+      creation-order coloring (Obj_InsertIntoUpdateList → 100; probe
+      p9.c: s16-vs-int local was the ONLY differing lever, decl/init
+      order inert). Extends #76 (int local for cmpw) to the pure-coloring
+      direction.
     Sibling find, same session (recipe #65/#9 family, NOT #107): a vcall
     chain that SKIPS r3..rN with no visible arg setup = the fn's OWN
     params pass through untouched — the import dropped the fn's real
     parameter list, not the call's args (curUiDllDraw: callers already
     passed (0,0,0,0); def widened to 4 int params + 3-arg fn-ptr cast at
-    the dispatch → 100).
+    the dispatch → 100). And dimlogfire_init's listed "#61c copy-pair"
+    was actually a #90 doubled-float-arg hoist — launder the repeated
+    const arg (`*(f32 *)&lbl`) → 100.
 
 **Recipe #95/#96 correction extension (probe-verified on vecmath
 mtx44_multSafe): `#pragma opt_loop_invariants`, `#pragma opt_propagation`

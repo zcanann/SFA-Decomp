@@ -227,20 +227,12 @@ void *modelFileGetDisplayList(u8 *modelFile, int displayListIndex) {
 
 void ObjModel_CopyJointTranslation(u8 *modelBytes, int jointIndex, f32 *out) {
     ObjModelInstanceLite *model;
-    ObjModelFileHeaderLite *modelFile;
     uint jointCount;
     u8 *jointMtx;
 
     model = (ObjModelInstanceLite *)modelBytes;
-    modelFile = model->file;
-    jointCount = modelFile->jointCount;
-    if (jointCount != 0) {
-        jointCount += modelFile->extraJointCount;
-    } else {
-        jointCount = 1;
-    }
-
-    if (jointIndex >= (int)jointCount) {
+    jointCount = model->file->jointCount;
+    if (jointIndex >= (int)(jointCount != 0 ? jointCount + model->file->extraJointCount : 1)) {
         jointIndex = 0;
     }
 

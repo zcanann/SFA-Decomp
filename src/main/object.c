@@ -597,7 +597,7 @@ void Obj_InsertIntoUpdateList(u8 *obj) {
         int *list = &lbl_803DCB7C;
         int prev = 0;
         int cur = list[1];
-        s16 linkOff = *(s16 *)((u8 *)list + 2);
+        int linkOff = *(s16 *)((u8 *)list + 2);
         while (cur != 0 && (s8)obj[0xae] < (s8)((u8 *)cur)[0xae]) {
             prev = cur;
             cur = *(int *)((u8 *)cur + linkOff);
