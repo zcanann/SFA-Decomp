@@ -141,7 +141,7 @@ extern undefined4 DAT_80324230;
 extern undefined4 DAT_803242f8;
 extern undefined4 DAT_80324304;
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e4;
 extern undefined4* DAT_803dd6e8;
@@ -949,7 +949,7 @@ void FUN_801adc20(undefined2 *param_1)
     *param_1 = 0;
     param_1[1] = 0;
     param_1[2] = 0;
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, param_1, -1);
+    (*gObjectTriggerInterface)->runSequence(0, param_1, -1);
     *(undefined4 *)(param_1 + 0x7a) = 1;
   }
   return;

@@ -35,7 +35,7 @@ extern undefined4 DAT_802c2b50;
 extern undefined4 DAT_802c2b54;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dc270;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f0;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
@@ -401,13 +401,13 @@ void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if ((uVar2 & 0x100) == 0) {
       uVar2 = FUN_80006c10(0);
       if ((uVar2 & 0x200) != 0) {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->endSequence((s8)*(u8 *)(param_11 + 0x57));
+        (*gObjectTriggerInterface)->endSequence((s8)*(u8 *)(param_11 + 0x57));
         *(undefined *)(iVar4 + 0xf) = 7;
         *(undefined2 *)(iVar4 + 2) = 0;
       }
     }
     else {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->endSequence((s8)*(u8 *)(param_11 + 0x57));
+      (*gObjectTriggerInterface)->endSequence((s8)*(u8 *)(param_11 + 0x57));
       *(undefined *)(iVar4 + 0xf) = 8;
       *(undefined2 *)(iVar4 + 2) = 0;
     }

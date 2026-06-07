@@ -45,7 +45,7 @@ extern ushort DAT_80326bf0;
 extern int DAT_80326c04;
 extern undefined4 DAT_803dcbc8;
 extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern f64 DOUBLE_803e5b18;
 extern f64 DOUBLE_803e5b28;
@@ -521,7 +521,7 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
         FUN_80017698(0x589,0);
         *(undefined *)(iVar11 + 0x1a) = 5;
         FUN_800067c0((int *)0xd8,1);
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_9, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)param_9, -1);
         FUN_80017698(0x129,0);
       }
       break;
@@ -584,7 +584,7 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
         else {
           *(undefined *)(iVar11 + 0x1a) = 4;
           FUN_80006770(3);
-          ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_9, -1);
+          (*gObjectTriggerInterface)->runSequence(1, (void *)param_9, -1);
         }
       }
       else {
@@ -679,7 +679,7 @@ void FUN_801c3aa0(int param_1)
     *(undefined4 *)(iVar1 + 0x140) = 0;
     *(undefined *)(iVar1 + 0x144) = 0;
   }
-  ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState((u8 *)iVar1);
+  (*gObjectTriggerInterface)->freeState((u8 *)iVar1);
   return;
 }
 

@@ -195,7 +195,7 @@ extern undefined4 DAT_8032616c;
 extern undefined4 DAT_80326170;
 extern int DAT_803ad5c0;
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd708;
 extern undefined4 DAT_803de7d8;
 extern undefined4 DAT_803de7f8;
@@ -271,7 +271,7 @@ extern f32 lbl_803E569C;
  */
 void FUN_801b3de4(undefined4 param_1,uint param_2)
 {
-  ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence((param_2 ^ 1) + 2, (void *)param_1, -1);
+  (*gObjectTriggerInterface)->runSequence((param_2 ^ 1) + 2, (void *)param_1, -1);
   return;
 }
 
@@ -299,7 +299,7 @@ bool FUN_801b3e28(int param_1)
   bVar1 = pfVar3[3] +
           pfVar3[2] * *(float *)(iVar2 + 0x14) +
           *pfVar3 * *(float *)(iVar2 + 0xc) + pfVar3[1] * *(float *)(iVar2 + 0x10) < lbl_803E55A0;
-  ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(bVar1, (void *)param_1, -1);
+  (*gObjectTriggerInterface)->runSequence(bVar1, (void *)param_1, -1);
   return bVar1;
 }
 

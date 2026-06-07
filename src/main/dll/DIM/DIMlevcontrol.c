@@ -45,7 +45,7 @@ extern undefined4 DAT_803dcb6c;
 extern undefined4 DAT_803dcb74;
 extern undefined4 DAT_803dcb78;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern void* DAT_803de7d0;
 extern f64 DOUBLE_803e5558;
@@ -451,7 +451,7 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
           (**(code **)(*DAT_803dd6d0 + 0x1c))(0x51,1,0,4,local_28,0x32,0xff);
           FUN_80006ba8(0,0x100);
           *(undefined *)(piVar6 + 0x2b) = 3;
-          ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_9, -1);
+          (*gObjectTriggerInterface)->runSequence(0, (void *)param_9, -1);
           *(undefined *)(piVar6 + 0x2c) = 0x3c;
           *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) | 8;
         }

@@ -61,7 +61,7 @@ extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern uint countLeadingZeros();
 
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f64 DOUBLE_803e42d8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E42B0;
@@ -414,7 +414,7 @@ void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined
       if ((*(byte *)(uVar4 + 0xaf) & 1) != 0) {
         *(byte *)(uVar4 + 0xaf) = *(byte *)(uVar4 + 0xaf) | 8;
         FUN_80017698((uint)pfVar13[4],1);
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)uVar4, -1);
+        (*gObjectTriggerInterface)->runSequence(1, (void *)uVar4, -1);
         uVar7 = 1;
       }
     }
@@ -678,21 +678,21 @@ void FUN_80179848(undefined2 *param_1)
     if (param_1[0x23] == 0x151) {
       uVar2 = FUN_80017690(*(uint *)(iVar3 + 0x10));
       if (uVar2 != 0) {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt((int)param_1, 0x75);
+        (*gObjectTriggerInterface)->preempt((int)param_1, 0x75);
         *(undefined *)(iVar3 + 0x21) = 1;
       }
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
     }
     else if (param_1[0x23] == 0x37a) {
       uVar2 = FUN_80017690(*(uint *)(iVar3 + 0x10));
       if (uVar2 != 0) {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt((int)param_1, 0x8a);
+        (*gObjectTriggerInterface)->preempt((int)param_1, 0x8a);
         *(undefined *)(iVar3 + 0x21) = 1;
       }
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
     }
     else {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
     }
     *(undefined4 *)(param_1 + 0x7a) = 1;
   }

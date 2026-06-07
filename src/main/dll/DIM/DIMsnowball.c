@@ -75,7 +75,7 @@ extern undefined4 DAT_80324048;
 extern undefined4 DAT_80324058;
 extern undefined4 DAT_80324068;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd718;
@@ -990,7 +990,7 @@ void FUN_801abcac(int param_1,int param_2)
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xef;
     iVar3 = ObjTrigger_IsSetById(param_1,0xa9);
     if (iVar3 != 0) {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
       FUN_80017680(0xa9);
       bVar1 = true;
       goto LAB_801abd84;
@@ -1034,7 +1034,7 @@ void FUN_801abda4(int param_1,int param_2)
     FUN_80017a78(param_1,1);
     iVar2 = ObjTrigger_IsSet(param_1);
     if (iVar2 != 0) {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence(1, (void *)param_1, -1);
       FUN_80017688(0xa9);
       *(byte *)(param_2 + 6) = *(byte *)(param_2 + 6) | 1;
     }

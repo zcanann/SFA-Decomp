@@ -93,7 +93,7 @@ extern undefined4 DAT_803ad3e0;
 extern undefined4 DAT_803ad3e4;
 extern undefined4 DAT_803ad3e8;
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd72c;
@@ -585,7 +585,7 @@ LAB_80176c2c:
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xef;
   }
   if (((*(byte *)(param_9 + 0xaf) & 4) != 0) && (uVar3 = FUN_80017690(0x913), uVar3 == 0)) {
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_9, -1);
+    (*gObjectTriggerInterface)->runSequence(0, (void *)param_9, -1);
     FUN_80017698(0x913,1);
     return;
   }
@@ -774,7 +774,7 @@ void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
       }
       else {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence((int)psVar9[2], (void *)param_9, -1);
+        (*gObjectTriggerInterface)->runSequence((int)psVar9[2], (void *)param_9, -1);
         *(undefined *)(psVar9 + 6) = 1;
       }
     }
@@ -797,8 +797,8 @@ void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
               (**(code **)(param_13 + 0x1c))(psVar6 + 6,(int)*psVar6,0,iVar8);
             }
             param_11 = 0xffffffff;
-            param_12 = *DAT_803dd6d4;
-            (**(code **)(param_12 + 0x48))((int)psVar9[2],param_9);
+            param_12 = (int)*gObjectTriggerInterface;
+            (*gObjectTriggerInterface)->runSequence((int)psVar9[2], (void *)param_9, -1);
             FUN_80017698(0xd53,0);
             DAT_803dda60 = 2;
             *(undefined *)(psVar9 + 6) = 1;
@@ -820,7 +820,7 @@ void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
         if (((-1 < DAT_803ddb38) && (*(char *)(iVar10 + 0x1c) != '\0')) &&
            ((dVar11 < (double)lbl_803E4270 &&
             (*(int *)(psVar6 + 0x18) == *(int *)(param_9 + 0x30))))) {
-          ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_9, -1);
+          (*gObjectTriggerInterface)->runSequence(1, (void *)param_9, -1);
           DAT_803dda60 = 2;
         }
         if ((((*psVar9 == 0) &&
@@ -828,7 +828,7 @@ void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
                                                         (int)*(char *)(iVar10 + 0x1e) ^ 0x80000000)
                                       - DOUBLE_803e4278))) &&
             (bVar1 = -1 < *(char *)(iVar10 + 0x1a), bVar1)) && (bVar1)) {
-          ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_9, -1);
+          (*gObjectTriggerInterface)->runSequence(0, (void *)param_9, -1);
         }
       }
     }
@@ -847,8 +847,8 @@ void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
           ((dVar11 < (double)*(float *)(psVar9 + 4) &&
            (*(int *)(psVar6 + 0x18) == *(int *)(param_9 + 0x30))))))) {
         param_11 = 0xffffffff;
-        param_12 = *DAT_803dd6d4;
-        (**(code **)(param_12 + 0x48))((int)psVar9[2],param_9);
+        param_12 = (int)*gObjectTriggerInterface;
+        (*gObjectTriggerInterface)->runSequence((int)psVar9[2], (void *)param_9, -1);
         DAT_803dda60 = 2;
         *(undefined *)(psVar9 + 6) = 1;
       }
@@ -872,7 +872,7 @@ void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
           ((dVar11 < (double)*(float *)(psVar9 + 4) &&
            (*(int *)(psVar6 + 0x18) == *(int *)(param_9 + 0x30))))))) {
         FUN_80017698((int)psVar9[1],0);
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence((int)psVar9[2], (void *)param_9, -1);
+        (*gObjectTriggerInterface)->runSequence((int)psVar9[2], (void *)param_9, -1);
         *(undefined *)(psVar9 + 6) = 1;
       }
     }

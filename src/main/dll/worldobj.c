@@ -44,7 +44,7 @@ extern undefined4 DAT_803dcc10;
 extern undefined4 DAT_803dcc14;
 extern undefined4 DAT_803dcc18;
 extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd708;
@@ -152,7 +152,7 @@ void FUN_801ce188(uint param_1)
   if (uVar1 == 0) {
     FUN_800068d0(param_1,0x372);
     FUN_800068d0(param_1,0x373);
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
+    (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
     ObjHits_EnableObject(param_1);
   }
   else {

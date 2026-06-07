@@ -19,7 +19,7 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294ccc();
 
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f64 DOUBLE_803e5c58;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5C28;
@@ -170,7 +170,7 @@ void FUN_801c61f4(undefined4 param_1,undefined4 param_2,int param_3)
         GameBit_Set(0xba8,1);
         break;
       case '\r':
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->setCamVars(0x48, 100, 0, 0x50);
+        (*gObjectTriggerInterface)->setCamVars(0x48, 100, 0, 0x50);
         break;
       case '\x0e':
         *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;

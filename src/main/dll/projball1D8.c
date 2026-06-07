@@ -24,7 +24,7 @@ extern undefined4 FUN_8028688c();
 extern u8 *Obj_GetPlayerObject(void);
 extern void gameTextShow(int p);
 
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern MapEventInterface **DAT_803dd72c;
 extern f32 lbl_803DC074;
@@ -115,14 +115,14 @@ void nw_levcontrol_update(int param_1)
     case 0:
       uVar4 = GameBit_Get(0x19d);
       if (uVar4 != 0) {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)iVar1, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)iVar1, -1);
         *(undefined *)(pfVar10 + 1) = 2;
         GameBit_Set(0xecd,1);
       }
       break;
     case 1:
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt(iVar1, 0x64a);
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)iVar1, 0x20);
+      (*gObjectTriggerInterface)->preempt(iVar1, 0x64a);
+      (*gObjectTriggerInterface)->runSequence(0, (void *)iVar1, 0x20);
       *(undefined *)(pfVar10 + 1) = 2;
       GameBit_Set(0xecd,1);
       break;
@@ -174,7 +174,7 @@ void nw_levcontrol_update(int param_1)
           FUN_80006b54(0x15,(uint)*(byte *)((int)pfVar10 + 5) + iVar3);
           FUN_80006b50();
         }
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(*(u8 *)(pfVar10 + 3), (void *)iVar1,
+        (*gObjectTriggerInterface)->runSequence(*(u8 *)(pfVar10 + 3), (void *)iVar1,
                                                                -1);
         *(undefined *)(pfVar10 + 1) = *(undefined *)((int)pfVar10 + 0xd);
       }
@@ -186,8 +186,8 @@ void nw_levcontrol_update(int param_1)
       }
       break;
     case 0xc:
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt(iVar1, 0x5a);
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)iVar1, 8);
+      (*gObjectTriggerInterface)->preempt(iVar1, 0x5a);
+      (*gObjectTriggerInterface)->runSequence(1, (void *)iVar1, 8);
       *(undefined *)(pfVar10 + 1) = 0xb;
     }
   }
