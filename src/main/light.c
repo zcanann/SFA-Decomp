@@ -1261,7 +1261,7 @@ void vfpdoorswitch_init(int obj, int data) {
         ((ObjAnimSetProgressObjectFirstFn)ObjAnim_SetMoveProgress)(obj, lbl_803E611C);
         state->activated = 1;
         state->exploded = 1;
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     if (((GameObject *)obj)->anim.seqId == 0x3e7 && state->activated != 0) {
         *(u8 *)&((GameObject *)obj)->anim.bankIndex = 1;
@@ -1307,7 +1307,7 @@ void vfpdoorswitch_updateExplodingVariant(int obj)
                 ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
                 spawnExplosion(obj, lbl_803E6124, 1, 1, 0, 0, 0, 0, 0);
                 state->exploded = 1;
-                ((GameObject *)obj)->anim.flags |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
     }

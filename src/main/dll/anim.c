@@ -4183,7 +4183,7 @@ void dbholecontrol1_update(int *obj) {
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (GameBit_Get(*(s16*)(def + 0x1e)) != 0) {
         Obj_RemoveFromUpdateList(obj);
-        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     } else if (GameBit_Get(*(s16*)(def + 0x20)) != 0) {
         ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])(*(s8*)(def + 0x19), obj, -1);
     }

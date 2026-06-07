@@ -52,7 +52,7 @@ void arwarwinggu_init(int obj)
     if (((GameObject *)obj)->anim.seqId == 0x606) {
         return;
     }
-    ((GameObject *)obj)->anim.flags |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;
 }
 #pragma scheduling reset
@@ -66,11 +66,11 @@ void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
 
     if (active != 0) {
         Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
-        ((GameObject *)obj)->anim.flags &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0xff;
         *(f32 *)state = lbl_803E7058;
     } else {
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0;
     }
 }

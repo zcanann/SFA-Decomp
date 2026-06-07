@@ -222,7 +222,7 @@ void ecsh_shrine_update(s16 *obj)
     } else {
         switch (sub[0x2f]) {
         case 0:
-            ((GameObject *)obj)->anim.flags &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             fv = *(f32 *)(sub + 0x10) - timeDelta;
             *(f32 *)(sub + 0x10) = fv;
             if (fv <= z) {
@@ -268,7 +268,7 @@ void ecsh_shrine_update(s16 *obj)
                 GameBit_Set(0xb9d, 1);
                 (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 0xc))(0x78, 1);
             }
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             break;
         case 2:
             sub[0x2f] = 3;
@@ -961,14 +961,14 @@ int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
                 (*gMapEventInterface)->setMode(0xb, 5);
                 break;
             case 14:
-                ((GameObject *)obj)->anim.flags |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 light = *(void **)sub;
                 if (light != NULL) {
                     modelLightStruct_setEnabled(light, 0, lbl_803E5038);
                 }
                 break;
             case 15:
-                ((GameObject *)obj)->anim.flags &= ~0x4000;
+                ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                 light = *(void **)sub;
                 if (light != NULL) {
                     modelLightStruct_setEnabled(light, 0, lbl_803E5038);
@@ -1108,7 +1108,7 @@ void fn_801C70F0(s16 *obj) {
     def = *(u8 **)&((GameObject *)obj)->anim.placementData;
     sub = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
-    if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) {
+    if ((((GameObject *)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
         *obj = 0;
         ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
     } else {

@@ -82,7 +82,7 @@ void arwproximit_update(int obj)
             }
             ObjHits_EnableObject(obj);
             ObjHits_MarkObjectPositionDirty(obj);
-            ((GameObject *)obj)->anim.flags &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             *(u8 *)(state + 0x14) = 1;
         }
         return;
@@ -131,7 +131,7 @@ void arwproximit_update(int obj)
             spawnExplosion(obj, lbl_803E71E0, 1, 0, 1, 1, 0, 0, 1);
             ObjHitbox_SetSphereRadius(obj, 0x12c);
             ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_MarkObjectPositionDirty(obj);
             *(u8 *)(state + 0x14) = 3;
         }
@@ -160,7 +160,7 @@ void arwproximit_update(int obj)
                 modelLightStruct_setEnabled(*(void **)(state + 4), 0, lbl_803E71D8);
             spawnExplosion(obj, lbl_803E71DC, 1, 0, 0, 0, 0, 0, 1);
             ObjHits_DisableObject(obj);
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_MarkObjectPositionDirty(obj);
             *(u8 *)(state + 0x14) = 4;
         }
@@ -189,7 +189,7 @@ void arwproximit_init(int obj, int setup, int p3)
         ((GameObject *)obj)->anim.rotY = (s16)randomGetRange(0, 0xffff);
         ((GameObject *)obj)->anim.rotZ = (s16)randomGetRange(0, 0xffff);
         ((GameObject *)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0;
     }
     storeZeroToFloatParam((void *)(state + 0xc));

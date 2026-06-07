@@ -1467,7 +1467,7 @@ void ccqueen_update(int *obj) {
         }
     }
     if (GameBit_Get(0x1c3) != 0) {
-        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
         ObjHits_DisableObject(obj);
     } else {
@@ -2070,7 +2070,7 @@ void cclightfoot_update(int obj)
             Obj_FreeObject(state[0]);
             state[0] = 0;
         }
-        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
         ObjHits_DisableObject(obj);
         return;

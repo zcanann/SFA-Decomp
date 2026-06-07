@@ -178,10 +178,10 @@ void lightfoot_update(int obj)
 
         if (((GameObject *)obj)->unkF4 != 0) {
             ObjHits_DisableObject(obj);
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         } else {
             ObjHits_EnableObject(obj);
-            ((GameObject *)obj)->anim.flags &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
     }
 

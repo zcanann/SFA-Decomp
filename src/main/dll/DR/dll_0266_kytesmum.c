@@ -209,7 +209,7 @@ int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
         if (arg[i + 0x81] == 1 && setup->mode != 0) {
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
     }
     return !!dll_2E_func07(obj, arg, (char *)runtime, runtime->moveSet->moves[2], runtime->moveSet->moves[2]);
@@ -243,7 +243,7 @@ void kytesmum_init(int obj, char *arg) {
         ObjGroup_AddObject(obj, 0x3);
         if (runtime->questComplete != 0) {
             Obj_RemoveFromUpdateList(obj);
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         ObjHits_RegisterActiveHitVolumeObject(obj);
         kytesMum->interactionCallback = (void *)kytesmum_animEventCallback;

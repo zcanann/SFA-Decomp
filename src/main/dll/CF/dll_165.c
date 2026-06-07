@@ -184,7 +184,7 @@ int treasurechest_SeqFn(int obj, int unused, u8 *events)
       ((StaffFlags *)state)->b5 = 0;
       break;
     case 4:
-      ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
+      ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
       ObjHits_DisableObject(obj);
       break;
     }

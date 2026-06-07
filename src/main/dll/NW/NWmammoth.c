@@ -95,7 +95,7 @@ void ediblemushroom_init(int obj, int aux)
     if (GameBit_Get(*(short *)(aux + 0x1a)) != 0) {
         *(u8 *)(state + 0x136) = 8;
         ObjHits_DisableObject(obj);
-        ((GameObject *)obj)->anim.flags = (short)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->anim.flags = (short)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     }
 
     ((GameObject *)obj)->anim.modelState->flags |= 0x810;

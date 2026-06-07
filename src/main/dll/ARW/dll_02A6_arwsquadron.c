@@ -206,7 +206,7 @@ void arwsquadron_init(int obj, int setup)
         *(f32 *)(s + 0x134) = *(f32 *)(s + 0x130);
     }
     ((GameObject *)obj)->anim.alpha = 0;
-    ((GameObject *)obj)->anim.flags |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     storeZeroToFloatParam((void *)(s + 0x12c));
 
     if (*(u8 *)(setup + 0x2f) != 0) {
@@ -430,7 +430,7 @@ void arwsquadron_handleDamage(int obj, int state)
                 s16toFloat((void *)(state + 0x12c), 0x78);
                 if (((ArwSquadronState *)state)->unk15C == 1) {
                     spawnExplosion(obj, lbl_803E719C, 1, 0, 1, 1, 0, 0, 0);
-                    ((GameObject *)obj)->anim.flags |= 0x4000;
+                    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     ObjHits_DisableObject(obj);
                     ((ArwSquadronState *)state)->unk159 = 4;
                     ((ArwSquadronState *)state)->unk159 = 3;
@@ -438,7 +438,7 @@ void arwsquadron_handleDamage(int obj, int state)
                         gameTextFn_80125ba4(0xe);
                 } else {
                     spawnExplosion(obj, lbl_803E719C, 1, 0, 0, 1, 0, 0, 3);
-                    ((GameObject *)obj)->anim.flags |= 0x4000;
+                    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     ObjHits_DisableObject(obj);
                     ((ArwSquadronState *)state)->unk159 = 3;
                 }
@@ -580,7 +580,7 @@ void arwsquadron_update(int obj)
             }
         }
         if (enable) {
-            ((GameObject *)obj)->anim.flags &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ObjHits_EnableObject(obj);
             ((ArwSquadronState *)state)->unk159 = 1;
             setupL = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -631,7 +631,7 @@ void arwsquadron_update(int obj)
             }
         }
         if (disable) {
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject(obj);
             ((ArwSquadronState *)state)->unk159 = 4;
             return;

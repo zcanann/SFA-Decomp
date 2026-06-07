@@ -200,7 +200,7 @@ void treasurechest_init(int *obj) {
         state->open = 0;
     }
     if (state->open != 0) {
-        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ObjHits_DisableObject((int)obj);
     }
     lbl_803DDAE0 = Resource_Acquire(90, 1);

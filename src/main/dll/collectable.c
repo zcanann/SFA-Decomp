@@ -1934,7 +1934,7 @@ void Tricky_resumeAfterCommand(int obj,int state)
   ((TrickyState *)state)->unk2EF = 1;
   if (((((TrickyState *)state)->flags2DC & 0x1000) != 0) &&
       ((((TrickyState *)state)->unk2E0 & 0x1000) == 0)) {
-    ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags & ~0x4000;
+    ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
     moveId = ((TrickyState *)state)->unk320;
     ((TrickyState *)state)->unk308 = lbl_803E256C / (lbl_803E2570 * ((TrickyState *)state)->unk314);
     ((TrickyState *)state)->unk323 = 1;
@@ -2044,7 +2044,7 @@ void trickyFn_80148d8c(int obj,int state)
     }
     ((TrickyState *)state)->unk30C = lbl_803E2574;
     ((TrickyState *)state)->flags2DC = 0;
-    ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
+    ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
     ((GameObject *)obj)->anim.alpha = 0;
     *(u32 *)&((GameObject *)obj)->unkF4 = 1;
     if (*(int *)(setup + 0x14) == -1) {

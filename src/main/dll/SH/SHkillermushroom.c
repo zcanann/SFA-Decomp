@@ -287,7 +287,7 @@ void bombplant_init(void *obj, void *param, int flag)
   if (bitId != -1 && GameBit_Get(bitId) == 0) {
     p4c = ((GameObject *)obj)->anim.placementData;
     ((GameObject *)obj)->anim.alpha = 0xff;
-    ((GameObject *)obj)->anim.flags &= ~0x4000;
+    ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
     ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
     ((GameObject *)obj)->anim.localPosZ = *(f32 *)((u8 *)p4c + 0x10);
@@ -302,7 +302,7 @@ void bombplant_init(void *obj, void *param, int flag)
   } else {
     p4c = ((GameObject *)obj)->anim.placementData;
     ((GameObject *)obj)->anim.alpha = 0xff;
-    ((GameObject *)obj)->anim.flags &= ~0x4000;
+    ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
     ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
     ((GameObject *)obj)->anim.localPosZ = *(f32 *)((u8 *)p4c + 0x10);
@@ -384,7 +384,7 @@ void bombplant_update(void *obj)
       *(u8 *)((u8 *)state + 0x15) &= ~0x2;
       p4c = ((GameObject *)obj)->anim.placementData;
       ((GameObject *)obj)->anim.alpha = 0xff;
-      ((GameObject *)obj)->anim.flags &= ~0x4000;
+      ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
       ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
       ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
       ((GameObject *)obj)->anim.localPosZ = *(f32 *)((u8 *)p4c + 0x10);
@@ -481,9 +481,9 @@ void bombplant_update(void *obj)
   }
 
   if ((entry[8] & 0x4) != 0) {
-    ((GameObject *)obj)->anim.flags |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
   } else {
-    ((GameObject *)obj)->anim.flags &= ~0x4000;
+    ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
   }
 
   if (((GameObject *)obj)->anim.currentMove != *(s16 *)entry) {

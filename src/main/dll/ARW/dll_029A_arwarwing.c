@@ -436,7 +436,7 @@ void arwarwing_update(int obj)
         if (t <= lbl_803E6ECC) {
             ((ArwingState *)state)->mode = 5;
             ((ArwingState *)state)->modeTimer = lbl_803E6F24;
-            ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+            ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
         ((ArwingState *)state)->rotZCur =
@@ -446,22 +446,22 @@ void arwarwing_update(int obj)
         objMove(obj, ((ArwingState *)state)->velX * timeDelta, ((ArwingState *)state)->velY * timeDelta,
                 ((ArwingState *)state)->velZ * timeDelta);
         fn_8022AE1C(obj, state);
-        ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags |= 0x4000;
-        ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags |= 0x4000;
+        ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     } else {
         fn_8022A670(obj, state);
-        if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) {
+        if ((((GameObject *)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
             *(s16 *)&((ArwingState *)state)->inputFlags2 = 0;
             *(s16 *)&((ArwingState *)state)->inputFlags = 0;
-            ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags |= 0x4000;
-            ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags |= 0x4000;
+            ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         } else {
-            ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags &= ~0x4000;
+            ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             throttle = lbl_803E6FFC * timeDelta +
                        (f32)(u32)((GameObject *)((ArwingState *)state)->thrusterL)->anim.alpha;
             if (throttle > lbl_803E7000) throttle = lbl_803E7000;
             ((GameObject *)((ArwingState *)state)->thrusterL)->anim.alpha = (u8)(int)throttle;
-            ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags &= ~0x4000;
+            ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ((GameObject *)((ArwingState *)state)->thrusterR)->anim.alpha = (u8)(int)throttle;
         }
         ((ArwingState *)state)->velTargetX = -((ArwingState *)state)->stickX * ((ArwingState *)state)->maxSpeedX;
@@ -962,7 +962,7 @@ void fn_8022BE14(int obj, int state)
         if (((ArwingState *)state)->mode == 4) {
             ((ArwingState *)state)->mode = 5;
             ((ArwingState *)state)->modeTimer = lbl_803E6F24;
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
             return;
         }
@@ -1015,7 +1015,7 @@ void fn_8022C0D0(int obj, int state)
         if (((ArwingState *)state)->mode == 4) {
             ((ArwingState *)state)->mode = 5;
             ((ArwingState *)state)->modeTimer = lbl_803E6F24;
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         } else {
             if (*(s16 *)(hitObj + 0x46) == 0x6ae && ((ArwingState *)state)->mode == 1) {
@@ -1073,11 +1073,11 @@ int arwarwing_SeqFn(int obj, int p2, int script)
     fn_8022A9C8(obj, state);
     if (((ArwingState *)state)->bombObj != 0)
         arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
-    ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags |= 0x4000;
+    ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     ((GameObject *)((ArwingState *)state)->thrusterL)->anim.alpha = 0;
-    ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags |= 0x4000;
+    ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     ((GameObject *)((ArwingState *)state)->thrusterR)->anim.alpha = 0;
-    ((GameObject *)obj)->anim.flags &= ~0x4000;
+    ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
 
     for (i = 0; i < *(u8 *)(script + 0x8b); i++) {
         switch (*(u8 *)(script + i + 0x81)) {

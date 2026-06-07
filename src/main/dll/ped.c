@@ -94,7 +94,7 @@ void nw_geyser_free(int *obj) {
 void nw_geyser_update(int obj)
 {
     if (GameBit_Get(0xa) != 0) {
-        ((GameObject *)obj)->anim.flags = 0x4000;
+        ((GameObject *)obj)->anim.flags = OBJANIM_FLAG_HIDDEN;
         ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
         Sfx_RemoveLoopedObjectSound(obj, 0x372);
         Sfx_RemoveLoopedObjectSound(obj, 0x373);

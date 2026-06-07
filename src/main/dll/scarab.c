@@ -4039,7 +4039,7 @@ void chukchuk_init(u8* obj, u8* params) {
     sub->gameBit = *(s16*)(params + 0x18);
     if (sub->gameBit != -1 && GameBit_Get(sub->gameBit) != 0) {
         ObjHits_DisableObject(obj);
-        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         sub->flags = (u8)(sub->flags | 0x2);
     } else {
         sub->triggerDistance = (u16)(params[0x29] << 3);
@@ -5055,7 +5055,7 @@ extern f32 lbl_803E2ECC;
 /* scarab_updateProximityGate: scarab AI proximity gate. If no current target, dispatches
  * vtable[5](obj, state, 0) and returns 1. Else (unless state mode 6 means
  * already engaged) reads the angle from the obj to the target; when within
- * a +/-90° wedge the planar distance term is the constant lbl_803E2EB0,
+ * a +/-90? wedge the planar distance term is the constant lbl_803E2EB0,
  * otherwise it's sqrtf(dx*dx + dz*dz) - lbl_803E2EB4. The signed magnitude
  * drives three threshold checks against lbl_803E2EBC/EC0/EC4 that issue
  * vtable[5] calls with mode 6 (close), 1 (medium-out), or 1 (close-in)

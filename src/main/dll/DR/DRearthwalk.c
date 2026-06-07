@@ -901,7 +901,7 @@ void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, u
 #pragma peephole off
 void sh_staffhaze_update(int obj)
 {
-  if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) {
+  if ((((GameObject *)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
     Obj_FreeObject(obj);
   }
 }
@@ -1076,7 +1076,7 @@ void fn_801DA4A8(int obj, int state, int clearChildren)
 
     player = (int)Obj_GetPlayerObject();
     ObjHits_DisableObject(obj);
-    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
 
     if (clearChildren != 0) {

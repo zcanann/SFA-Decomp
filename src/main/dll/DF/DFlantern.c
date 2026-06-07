@@ -228,7 +228,7 @@ void fn_801C2914(int obj)
   def = *(int *)&((GameObject *)obj)->anim.placementData;
   state = ((GameObject *)obj)->extra;
   player = Obj_GetPlayerObject();
-  if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) {
+  if ((((GameObject *)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
     *(s16 *)obj = 0;
     ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
     return;

@@ -62,10 +62,10 @@ void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
     if (active != 0) {
         Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
         *(u8 *)(state + 0) = 1;
-        ((GameObject *)obj)->anim.flags &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     } else {
         *(u8 *)(state + 0) = 0;
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
 }
 #pragma scheduling reset

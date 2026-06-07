@@ -220,7 +220,7 @@ void RollingBarrel_init(int obj, int *params)
     tmp[0] = lbl_803E4460;
     tmp[1] = lbl_803E4464;
     params[5] = -1;
-    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
+    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
     ((GameObject *)obj)->anim.rotZ = 0x4000;
 
     ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)params + 8);
@@ -572,7 +572,7 @@ void fn_801A5D88(int obj, int unused) {
     }
     ROLLINGBARREL_STATE(state) = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     ROLLINGBARREL_TIMER(state) = lbl_803E4468;
-    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     ObjHitbox_SetSphereRadius(obj,
         (s32)(lbl_803E446C * (f32)(u32) * (u8*)(*(int*)(obj + 0x50) + 0x62)));
     player = (int)Obj_GetPlayerObject();

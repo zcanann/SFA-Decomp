@@ -106,7 +106,7 @@ void bombplantspore_update(void *obj) {
                 }
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
-                ((GameObject *)obj)->anim.flags |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
                 state->stateFlags &= ~BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK;
             }
@@ -223,7 +223,7 @@ void bombplantspore_update(void *obj) {
                 }
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
-                ((GameObject *)obj)->anim.flags |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
             }
     }

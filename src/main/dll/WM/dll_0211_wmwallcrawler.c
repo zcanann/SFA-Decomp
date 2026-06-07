@@ -488,7 +488,7 @@ void wmwallcrawler_hitDetect(int obj)
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             ObjGroup_RemoveObject(obj, 3);
-            ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
+            ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
     } else if (((WcHitBits*)(inner + 0x299))->hit != 0) {
         int target;

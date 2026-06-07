@@ -14623,7 +14623,7 @@ int Lightfoot_UpdateCompletionInteraction(int obj, int state)
                     GameBit_Set(*(s16 *)((char *)data + 0x1a), 1);
                     GameBit_Set(*(s16 *)((char *)data + 0x30), 0);
                     ((GameObject *)obj)->anim.alpha = 0;
-                    ((GameObject *)obj)->anim.flags |= 0x4000;
+                    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     *(f32 *)((char *)a4 + 0x8) = lbl_803E8178;
                     *(f32 *)((char *)a4 + 0x10) = lbl_803E817C;
                 }

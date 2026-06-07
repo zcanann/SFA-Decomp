@@ -303,7 +303,7 @@ void smallbasket_update(int obj)
                 ObjHits_EnableObject(obj);
                 ObjHits_SyncObjectPositionIfDirty(obj);
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
-                ((GameObject *)obj)->anim.flags &= ~0x4000;
+                ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             }
         }
     } else {
@@ -507,7 +507,7 @@ void smallbasket_update(int obj)
             }
         }
         if (((GameObject *)obj)->unkF8 == 0) {
-            ((GameObject *)obj)->anim.flags &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
     }
 }

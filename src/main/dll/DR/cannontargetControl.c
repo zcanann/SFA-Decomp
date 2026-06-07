@@ -1025,7 +1025,7 @@ void gunpowderbarrel_update(int obj)
             ((GunpowderBarrelState *)st)->unk17 = 0;
             ((GunpowderBarrelState *)st)->unk16 = 0;
             ((GunpowderBarrelState *)st)->flags49 |= 1;
-            ((GameObject *)obj)->anim.flags &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ObjHits_ClearHitVolumes(obj);
             ObjHitbox_SetCapsuleBounds(obj, 8, -2, 0x19);
             ObjHits_EnableObject(obj);
@@ -1122,7 +1122,7 @@ void gunpowderbarrel_update(int obj)
             if (gen == 0) {
                 Obj_RemoveFromUpdateList(obj);
                 ObjHits_DisableObject(obj);
-                ((GameObject *)obj)->anim.flags |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 s16toFloat((void *)(st + 0x18), 0x3c);
                 return;
             }
@@ -1137,12 +1137,12 @@ void gunpowderbarrel_update(int obj)
                 barrelgener_queueObjectRelease(gen, obj, 0x46);
                 ObjHits_ClearHitVolumes(obj);
                 ObjHits_DisableObject(obj);
-                ((GameObject *)obj)->anim.flags |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 return;
             }
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             return;
         }
         return;

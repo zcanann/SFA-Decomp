@@ -607,7 +607,7 @@ void SB_Propeller_update(int obj) {
                 *(u8 *)&((SBPropellerState *)pf)->health = 0;
                 (**(void (**)(int))(**(int **)(*(int *)&((GameObject *)obj)->anim.parent + 0x68) + 0x20))(*(int *)&((GameObject *)obj)->anim.parent);
                 ObjHits_DisableObject(obj);
-                *(u16 *)&((GameObject *)obj)->anim.flags = *(u16 *)&((GameObject *)obj)->anim.flags | 0x4000;
+                *(u16 *)&((GameObject *)obj)->anim.flags = *(u16 *)&((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
                 spawnExplosion(lbl_803E5824, obj, 1, 1, 1, 0, 1, 1, 0);
                 Sfx_PlayFromObject(obj, 0x2c8);
             }

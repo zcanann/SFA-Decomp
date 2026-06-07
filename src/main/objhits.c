@@ -1398,7 +1398,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
       } else {
         fVar2 = *(float *)(iVar25 + 0x34);
       }
-      if ((*(ushort *)&((GameObject *)objA)->anim.flags & 0x4000) != 0) goto LAB_80033418;
+      if ((*(ushort *)&((GameObject *)objA)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) goto LAB_80033418;
     }
     dVar44 = fVar2;
     if (((checkA == '\0') || ((*(byte *)(iVar24 + 0xb6) & 0x10) == 0)) &&
@@ -1427,7 +1427,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
       local_188 = (float *)piVar11[0x14];
       local_194 = *(undefined **)(iVar16 + 0x58);
       fVar2 = *(float *)(iVar24 + 0x34);
-      if ((*(ushort *)&((GameObject *)objB)->anim.flags & 0x4000) != 0) goto LAB_80033418;
+      if ((*(ushort *)&((GameObject *)objB)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) goto LAB_80033418;
     }
     dVar42 = fVar2;
     if ((0x40 < local_174) || (0x40 < local_178)) {

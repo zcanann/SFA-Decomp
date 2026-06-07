@@ -155,7 +155,7 @@ void gpsh_shrine_update(int obj)
         } else {
             switch (*(u8 *)((char *)data + 0x14)) {
             case 0:
-                ((GameObject *)obj)->anim.flags &= ~0x4000;
+                ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                 t = *(f32 *)((char *)data + 8) - timeDelta;
                 *(f32 *)((char *)data + 8) = t;
                 if (t <= k) {
@@ -175,7 +175,7 @@ void gpsh_shrine_update(int obj)
                 *(f32 *)((char *)data + 4) = lbl_803E5040;
                 (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(0x1e, 1);
                 *(u8 *)((char *)data + 0x14) = 1;
-                ((GameObject *)obj)->anim.flags |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 break;
             case 1:
                 if (((GpshShrineFlags *)((char *)data + 0x15))->b80 == 1) {

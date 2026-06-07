@@ -1282,7 +1282,7 @@ void shopitem_update(int obj)
     int price;
 
     if (b->flag_40) {
-        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else if (b->flag_80) {
@@ -1299,7 +1299,7 @@ void shopitem_update(int obj)
                 if ((*(int (**)(int, int))((char *)**(int ***)(item + 0x68) + 0x28))(item, *(u8 *)(def + 0x19)) == 0
                     || (*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x2C))(((ShopItemState *)state)->vendorObj, *(u8 *)(def + 0x19)) != 0) {
                     b->flag_40 = 1;
-                    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+                    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
                     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
                     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 }

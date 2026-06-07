@@ -804,7 +804,7 @@ void dimcannon_update(int *obj)
         *(void **)(state + 0x0) = player;
     }
 
-    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
+    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
 
     switch (((DimCannonState *)state)->fireState) {
     case 0:
@@ -1072,7 +1072,7 @@ int fn_801B2550(int *obj, int p2, char *p3)
         }
     } else {
         s16 *vec2;
-        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
         vec2 = objModelGetVecFn_800395d8(obj, 0);
         *(s16 *)((char *)vec2 + 0x2) =
             (s16)(((GameObject *)obj)->anim.rotX - ((s8)*(s8 *)((char *)src + 0x28) << 8));

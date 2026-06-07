@@ -60,7 +60,7 @@ void drgenerator_init(int obj, char *arg) {
     *(u8 *)(p + 0x19a) = 2;
     ObjHits_EnableObject(obj);
     if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
     }

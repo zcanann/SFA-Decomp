@@ -305,15 +305,15 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
   if (((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14)) == 0) ||
       (((timer = ((ExplodableState *)state)->explodeTimer) != 0) && (timer <= 0x32)) ||
       (((ExplodableState *)state)->animTimer > lbl_803E39B8)) {
-    ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
+    ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
   } else {
     if (((GameObject *)obj)->unkF8 != 0) {
       if (renderState != -1) {
-        ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
+        ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         return;
       }
     } else if (renderState == 0) {
-      ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
+      ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
       return;
     }
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E39AC);
@@ -387,7 +387,7 @@ void largecrate_update(int obj)
                     ((ExplodableState *)state)->explodeTimer = 0;
                     ObjHits_EnableObject(obj);
                     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
-                    ((GameObject *)obj)->anim.flags &= ~0x4000;
+                    ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                 }
             }
         }

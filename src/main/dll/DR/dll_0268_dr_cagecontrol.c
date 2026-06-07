@@ -28,7 +28,7 @@ void cagecontrol_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, 
 void cagecontrol_init(int obj, char *arg) {
     ObjHits_EnableObject(obj);
     if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         ObjHits_DisableObject(obj);
     }
     *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
@@ -41,10 +41,10 @@ void cagecontrol_init(int obj, char *arg) {
 void cagecontrol_update(int obj) {
     int p = *(int *)&((GameObject *)obj)->anim.placementData;
     if (GameBit_Get(*(s16 *)(p + 0x1e)) != 0) {
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         ObjHits_DisableObject(obj);
     } else {
-        ((GameObject *)obj)->anim.flags &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject(obj);
     }
 }

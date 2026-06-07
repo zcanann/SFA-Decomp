@@ -2127,7 +2127,7 @@ void smallbasket_spawnLinkedFirepipe(int *obj) {
         if (child != 0) {
             ObjLink_AttachChild(obj, child, 0);
             firepipe_setLinkedUpdateFlag(child);
-            ((GameObject *)child)->anim.flags = (s16)(((GameObject *)child)->anim.flags | 0x4000);
+            ((GameObject *)child)->anim.flags = (s16)(((GameObject *)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
         }
     }
 }

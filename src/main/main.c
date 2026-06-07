@@ -705,7 +705,7 @@ void dbegg_processMessages(int obj)
             gameBitIncrement(*(s16 *)(data + 0x2c));
           }
           Obj_RemoveFromUpdateList(obj);
-          ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+          ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
           ObjGroup_RemoveObject(obj, 36);
           break;
       }

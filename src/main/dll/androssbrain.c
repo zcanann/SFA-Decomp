@@ -129,7 +129,7 @@ void androssbrain_update(int obj)
             (*(void (**)(void))(*gGameUIInterface + 0x64))();
         }
         ((GameObject *)obj)->anim.rotX = state->andross->anim.rotX;
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
     case 1:
         if (flag != 0) {
@@ -157,14 +157,14 @@ void androssbrain_update(int obj)
                 }
             }
         }
-        ((GameObject *)obj)->anim.flags &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         break;
     case 2:
         if (flag != 0) {
             androssligh_setState((int)state->lightning, 2, 0);
             (*(void (**)(void))(*gGameUIInterface + 0x64))();
         }
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         andross_setPartSignal((int)state->andross, 8);
         break;
     }

@@ -319,7 +319,7 @@ void DIMwooddoor_updateFallingDebris(int *obj)
                 spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
                 ((GameObject *)obj)->unkF4 = 1180;
                 *(s8 *)((char *)extra + 8) = 1;
-                ((GameObject *)obj)->anim.flags |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
         if ((GameBit_Get(2142) != 0 && GameBit_Get(3117) == 0) ||
@@ -331,7 +331,7 @@ void DIMwooddoor_updateFallingDebris(int *obj)
             spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
             ((GameObject *)obj)->unkF4 = 1180;
             *(s8 *)((char *)extra + 8) = 1;
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         break;
     }

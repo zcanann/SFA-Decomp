@@ -303,10 +303,10 @@ int bombplant_SeqFn(int *obj)
 
     if (*(u8 *)((char *)state + 0x14) != 0) {
         int *src;
-        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
         src = *(int **)&((GameObject *)obj)->anim.placementData;
         ((GameObject *)obj)->anim.alpha = 0xff;
-        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
         ((GameObject *)obj)->anim.localPosX  = *(f32 *)((char *)src + 0x8);
         ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)src + 0xc);
         ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)src + 0x10);

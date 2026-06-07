@@ -5366,7 +5366,7 @@ void flamethrowerspe_init(int *obj, int *params)
     *(f32 *)((char *)state + 8) =
         ((f32) * (s16 *)((char *)params + 0x1a) / lbl_803E33A0) * lbl_803DBD60;
     ((GameObject *)obj)->anim.velocityY = lbl_803E338C;
-    ((GameObject *)obj)->anim.flags |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     *(int *)((char *)state + 0x10) = 1;
     ObjHits_DisableObject(obj);
 }
@@ -5536,12 +5536,12 @@ int Fireball_SeqFn(int *obj, int msg, u8 *cmds)
             if (*(void **)state != NULL) {
                 modelLightStruct_setEnabled(*(int *)state, 1, lbl_803E3330);
             }
-            ((GameObject *)obj)->anim.flags &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         } else if (cmd == 2) {
             if (*(void **)state != NULL) {
                 modelLightStruct_setEnabled(*(int *)state, 0, lbl_803E3330);
             }
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
     }
     return 0;
@@ -6006,7 +6006,7 @@ void animatedobj_update(int *obj)
             }
             ((GameObject *)obj)->unkB4 = -1;
             ((GameObject *)obj)->objectFlags |= 0x8000;
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         if (((GameObject *)obj)->anim.seqId == 0x774) {
             int i;
@@ -6421,7 +6421,7 @@ void fireball_update(int *obj)
         if (*(void **)state != NULL) {
             modelLightStruct_setEnabled(*(int *)state, 0, lbl_803E3330);
         }
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         return;
     }
     if (lbl_803E3330 == *(f32 *)((char *)state + 0x34)) {
@@ -6715,9 +6715,9 @@ void shield_update(int *obj)
     }
     Sfx_SetObjectSfxVolume(lbl_803E33A8, (s16 *)obj, 1069, (s32)(lbl_803E33E8 * (state[1] / state[4])));
     if (((GameObject *)obj)->anim.alpha != 0) {
-        ((GameObject *)obj)->anim.flags &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     } else {
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     {
         s16 *ps = (s16 *)state;

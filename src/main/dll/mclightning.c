@@ -29,7 +29,7 @@ int mclightning_handleScriptEvents(int obj, int eventId, u8 *script) {
         case 4:
             f->hi = 5;
             ((McLightningState *)state)->unk1A = script[0x81 + i];
-            ((GameObject *)obj)->anim.flags &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             break;
         default:
             f->hi = 0xa;
@@ -72,7 +72,7 @@ void mclightning_update(int obj)
         *(int *)state = 0;
     }
     ((McLightningFlags *)(state + 0x1b))->hi = 0;
-    ((GameObject *)obj)->anim.flags |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -84,7 +84,7 @@ void mclightning_init(int obj, u8 *setup)
     int state = *(int *)&((GameObject *)obj)->extra;
     f32 v;
 
-    ((GameObject *)obj)->anim.flags |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     ((GameObject *)obj)->animEventCallback = (void *)mclightning_handleScriptEvents;
     ObjGroup_AddObject(obj, 0x48);
     ((McLightningFlags *)(state + 0x1b))->lo = setup[0x1a];
@@ -148,7 +148,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
                 mm_free(((McLightningState *)state)->unk0);
                 ((McLightningState *)state)->unk0 = NULL;
                 f->hi = 0;
-                ((GameObject *)obj)->anim.flags |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
     }

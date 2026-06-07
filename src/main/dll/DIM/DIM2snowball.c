@@ -1390,7 +1390,7 @@ void dimtruthhornice_init(int* obj, int* def)
         if (slot != -1 && (u32)GameBit_Get(slot) != 0u) {
             ObjHits_DisableObject(obj);
             state->phase = 2;
-            ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+            ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         }
     }
 }
@@ -1664,7 +1664,7 @@ void dimtruthhornice_update(int *obj)
         break;
     }
     case 2:
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
     }
 }

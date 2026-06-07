@@ -1017,7 +1017,7 @@ int SB_CloudRunner_SeqFn(int obj, int unused, u8 *setupData) {
         }
     }
     setupData[0x56] = 0;
-    ((GameObject *)obj)->anim.flags &= ~0x4000;
+    ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     return 0;
 }
 #pragma peephole reset
@@ -1080,7 +1080,7 @@ void SB_CloudRunner_update(int obj)
     int prevKey;
 
     if (*(s8 *)(state + 0x6e) != 0 || *(s8 *)(obj + 0xac) == 0xb) {
-        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         return;
     }
     setAButtonIcon(6);

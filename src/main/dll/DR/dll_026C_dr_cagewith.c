@@ -36,7 +36,7 @@ void drcagewith_hitDetect(int obj) {
 
     if (((GameObject *)obj)->anim.seqId == 2154 || ((GameObject *)obj)->anim.seqId == 2155) {
         if (GameBit_Get(1545) != 0) {
-            ((GameObject *)obj)->anim.flags &= ~0x4000;
+            ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
         return;
     }
@@ -60,7 +60,7 @@ void drcagewith_hitDetect(int obj) {
     if (bf31->b0 == 0) {
         if (GameBit_Get(1545) != 0) {
             ObjHits_DisableObject(obj);
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             bf31->b0 = 1;
             nearest = (int *)ObjGroup_FindNearestObject(10, obj, &maxDist);
             if (nearest != NULL && *(s16 *)((char *)nearest + 0x46) == 1049) {
@@ -191,13 +191,13 @@ void drcagewith_init(int obj, char *arg) {
     type = ((GameObject *)obj)->anim.seqId;
     if (type == 0x86a || type == 0x86b) {
         if (GameBit_Get(0x609) == 0) {
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
     } else {
         ObjHits_EnableObject(obj);
         if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
             ObjHits_DisableObject(obj);
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ((BitFlags8 *)(p + 0x31))->b0 = 1;
         } else {
             GameBit_Set(0x7aa, 5);

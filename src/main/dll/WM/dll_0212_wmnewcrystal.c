@@ -84,7 +84,7 @@ int wmnewcrystal_SeqFn(int *obj, int unused, WmNewCrystalEventData *eventData) {
             ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
             ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
             spawnExplosion(obj, lbl_803E6038, 1, 1, 0, 0, 0, 0, 0);
-            ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
+            ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
             if (((GameObject *)obj)->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE) {
                 GameBit_Set(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 0);
             }

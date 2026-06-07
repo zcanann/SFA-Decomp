@@ -199,7 +199,7 @@ void arwbombcoll_update(int obj)
 
     if ((u32)arw != 0 && fn_8022D710(arw) != 0) {
         flags->b80 = 0;
-        ((GameObject *)obj)->anim.flags &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject(obj);
         return;
     }
@@ -210,7 +210,7 @@ void arwbombcoll_update(int obj)
             goto active;
         }
     }
-    ((GameObject *)obj)->anim.flags |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;
     return;
 active : {
@@ -220,7 +220,7 @@ active : {
             v = 0xff;
         }
         objAnim->alpha = v;
-        ((GameObject *)obj)->anim.flags &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ((GameObject *)obj)->anim.rotX = lbl_803E7088 * timeDelta + (f32) * (s16 *)(obj + 0x0);
         ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);
         if (flags->b40 != 0) {
@@ -228,7 +228,7 @@ active : {
                 (u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (u32)getArwing()) {
                 arwarwing_addScore(arw, 0x19);
                 flags->b80 = 1;
-                ((GameObject *)obj)->anim.flags |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
             }
         } else {
@@ -242,7 +242,7 @@ active : {
             }
             if ((u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 &&
                 (u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (u32)getArwing()) {
-                ((GameObject *)obj)->anim.flags |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
             }

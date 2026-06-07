@@ -62,7 +62,7 @@ void arwblocker_init(int obj, int setup)
     ((GameObject *)obj)->anim.rotZ = (s16)(*(s8 *)(setup + 0x18) << 8);
     ((GameObject *)obj)->animEventCallback = (void *)arwblocker_getBlockState;
     *(u8 *)(state + 0) = *(u8 *)(setup + 0x19);
-    ((GameObject *)obj)->anim.flags |= 0x4000;
+    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;
     ObjHits_DisableObject(obj);
 }
@@ -94,7 +94,7 @@ void arwblocker_update(int obj) {
         if (a > 0xff)
             a = 0xff;
         objAnim->alpha = a;
-        ((GameObject *)obj)->anim.flags &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject(obj);
         if (((GameObject *)obj)->unkF4 == 0) {
             switch (*(u8 *)(state + 0)) {

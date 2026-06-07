@@ -173,7 +173,7 @@ void FireFlyLantern_init(int obj, int def)
       *(u8 *)(state + 0x1c) = 1;
       *(int *)state = FireFlyLantern_spawnFireFly((int *)obj);
     }
-    ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
+    ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
   }
   else {
     childCount = *(u8 *)(state + 0x1d);

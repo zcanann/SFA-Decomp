@@ -1559,7 +1559,7 @@ void portalspelldoor_update(int obj)
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
     }
     if (((PortalFlags *)&state->flags0C)->open) {
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         if (objGetAnimState80A(player) == 0x5bd) {
             fn_80296B78(player, -1);
         }
@@ -1766,7 +1766,7 @@ void portalspelldoor_init(u8* obj, u8* data) {
         sub->openAmount = _ab * lbl_803E3A90;
     }
     if (GameBit_Get(*(s16*)(data + 0x1e)) != 0) {
-        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0xe000);
     }
     sub->openTimer = -1;

@@ -489,7 +489,7 @@ void worldobj_update(int obj) {
             *(f32 *)(lbl_803DDD30 + 0x10) = lbl_803E66B8 + ((GameObject *)obj)->anim.localPosY;
             *(f32 *)(lbl_803DDD30 + 0x14) = ((GameObject *)obj)->anim.localPosZ;
             objA = ObjList_FindObjectById(0x4300c);
-            if ((void *)objA != NULL && (((GameObject *)objA)->anim.flags & 0x4000)) {
+            if ((void *)objA != NULL && (((GameObject *)objA)->anim.flags & OBJANIM_FLAG_HIDDEN)) {
                 Obj_SetActiveModelIndex(lbl_803DDD30, 1);
             } else {
                 Obj_SetActiveModelIndex(lbl_803DDD30, 0);

@@ -70,7 +70,7 @@ void arwingandrossstuff_hitDetect(int obj)
 
         if (ObjHits_GetPriorityHit(obj, &hit, 0, &vol) != 0) {
             spawnExplosion(obj, lbl_803E7014, 1, 0, 0, 1, 0, 0, 3);
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject(obj);
             *(f32 *)(state + 0x10) = lbl_803E7028;
         }

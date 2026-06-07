@@ -130,7 +130,7 @@ void cnthitobjec_init(int obj, int setup)
     if (*(u8 *)(setup + 0x19) == 2) {
         *(s16 *)obj = *(s16 *)(setup + 0x1c);
     } else {
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
         ((CntHitFlags *)(state + 9))->disabled = 1;

@@ -475,7 +475,7 @@ void snowclaw_update(int obj) {
     healthState = *(s8 *)(inner + 0xa4);
     if (healthState < 0) {
         if (healthState < -10) {
-            ((GameObject *)obj)->anim.flags |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             *(s16 *)(*(int *)inner + 6) |= 0x4000;
             ObjHits_DisableObject(obj);
             ObjHits_DisableObject(*(int *)inner);

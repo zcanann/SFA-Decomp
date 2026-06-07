@@ -292,13 +292,13 @@ void dfsh_shrine_update(int obj)
             GameBit_Set(DFSH_REQUIRED_BIT(i), 0);
             GameBit_Set(DFSH_REWARD_BIT(i), 0);
         }
-        ((GameObject *)obj)->anim.flags &= ~0x4000;
+        ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         break;
     case 5:
         state->transitionTimer = 0x1f;
         ((void (*)(int, int))((void **)*(int *)gScreenTransitionInterface)[3])(0x1e, 1);
         state->mode = 1;
-        ((GameObject *)obj)->anim.flags |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
     case 6:
         state->mode = 3;
