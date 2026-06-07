@@ -5386,8 +5386,8 @@ int fn_8029EBCC(int obj, int state)
             }
         }
     }
-    if (*(u8 *)((char *)obj + 0x36) > 1) {
-        *(u8 *)((char *)obj + 0x36) = 1;
+    if (((GameObject *)obj)->anim.alpha > 1) {
+        ((GameObject *)obj)->anim.alpha = 1;
     }
     inner->unk418 = inner->unk418 - timeDelta;
     if (inner->unk418 < lbl_803E7EA4) {
@@ -8687,7 +8687,7 @@ void fn_802A93F4(int obj, int p2, int p3)
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E7EE0;
     viewFinderSetZoom(Camera_GetFovY());
     ((GameObject *)obj)->objectFlags &= ~0x1000;
-    *(u8 *)((char *)obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     ((ByteFlags *)((char *)inner + 0x3f2))->b80 = 0;
     if (((ByteFlags *)((char *)inner + 0x3f2))->b40) {
         inner->unk87C = lbl_803E7FBC;
@@ -9582,7 +9582,7 @@ void Lightfoot_UpdateAttachedChild(int obj, int inner)
     int setup;
 
     if (*(s16 *)((char *)animState + 0x26) == *(s16 *)((char *)animState + 0x28)) return;
-    if (*(u8 *)((char *)obj + 0x36) == 0) return;
+    if (((GameObject *)obj)->anim.alpha == 0) return;
 
     child = *(int *)&((GameObject *)obj)->unkC8;
     if (child != 0) {
@@ -11507,7 +11507,7 @@ void objLoadPlayerFromSave(int obj)
     *(u8 *)((char *)pc + 0x258) = 0x64;
     fn_802AB5A4(obj, inner, 0xff);
     *(s16 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0xb2) = 0x29;
-    *(u8 *)((char *)obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     if (*(int *)((char *)obj + 0x64) != 0) {
         *(int *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x4008;
     }
@@ -11612,7 +11612,7 @@ int fn_802AB1D0(int obj)
     for (i = 0; i < count; i++) {
         cur = ((int *)objs)[i];
         if ((*(s16 *)((char *)cur + 0x44) == 0x1c || *(s16 *)((char *)cur + 0x44) == 0x2a) &&
-            *(u8 *)((char *)cur + 0x36) == 0xff) {
+            ((GameObject *)cur)->anim.alpha == 0xff) {
             f32 dx = *(f32 *)((char *)cur + 0x18) - ((GameObject *)obj)->anim.worldPosX;
             f32 dy = *(f32 *)((char *)cur + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
             f32 dz = *(f32 *)((char *)cur + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
@@ -12345,7 +12345,7 @@ void fn_802B4ED8(int obj, int p2, int mode)
     if (v != 0) {
         return;
     }
-    if ((u32)*(u8 *)((char *)obj + 0x36) < 2) {
+    if ((u32)((GameObject *)obj)->anim.alpha < 2) {
         return;
     }
     if (*(void **)((char *)inner + 0x7f0) != NULL) {
@@ -14655,7 +14655,7 @@ int Lightfoot_UpdateCompletionInteraction(int obj, int state)
                 if (*(u8 *)((char *)a4 + 0x2c) == 0) {
                     GameBit_Set(*(s16 *)((char *)data + 0x1a), 1);
                     GameBit_Set(*(s16 *)((char *)data + 0x30), 0);
-                    *(u8 *)((char *)obj + 0x36) = 0;
+                    ((GameObject *)obj)->anim.alpha = 0;
                     ((GameObject *)obj)->anim.flags |= 0x4000;
                     *(f32 *)((char *)a4 + 0x8) = lbl_803E8178;
                     *(f32 *)((char *)a4 + 0x10) = lbl_803E817C;
@@ -16745,11 +16745,11 @@ void fn_802AAD44(int obj)
     drawFn_8005cf8c(lbl_803DAF08, lbl_802C2B30, 0xc);
 
     if (*(f32 *)((char *)state + 0x7d0) >= lbl_803E80E0) {
-        int t = *(u8 *)((char *)obj + 0x36) - (framesThisStep << 2);
+        int t = ((GameObject *)obj)->anim.alpha - (framesThisStep << 2);
         if (t < 0) {
             t = 0;
         }
-        *(u8 *)((char *)obj + 0x36) = t;
+        ((GameObject *)obj)->anim.alpha = t;
     }
     GXSetColorUpdate(1);
 }
