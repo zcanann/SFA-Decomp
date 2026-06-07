@@ -859,7 +859,7 @@ int dbstealerworm_stateHandlerB02(int obj, int p)
   } else {
     flag2 = *(char *)&((BaddieState *)p)->moveDone;
     if (flag2 != 0) {
-      if (*(u8 *)(obj + 0x36) == 0) {
+      if (((GameObject *)obj)->anim.alpha == 0) {
         if (flag2 != 0) {
           return 7;
         }
@@ -913,7 +913,7 @@ undefined4 FUN_802004c8(int param_1,int param_2)
   
   fVar1 = lbl_803E6F40;
   if (*(char *)(param_2 + 0x27b) == '\0') {
-    if (((*(char *)(param_2 + 0x346) != '\0') && (*(char *)(param_1 + 0x36) == '\0')) &&
+    if (((*(char *)(param_2 + 0x346) != '\0') && (((GameObject *)param_1)->anim.alpha == 0)) &&
        (*(char *)(param_2 + 0x346) != '\0')) {
       return 7;
     }
@@ -1841,7 +1841,7 @@ undefined4 FUN_80201c9c(int param_1,int param_2)
   else {
     *(undefined *)(param_2 + 0x25f) = 1;
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
-    *(undefined *)(param_1 + 0x36) = 0xff;
+    ((GameObject *)param_1)->anim.alpha = 0xff;
     *(undefined *)(param_2 + 0x34d) = 1;
     *(float *)(param_2 + 0x2a0) =
          lbl_803E6FE8 +
@@ -2724,7 +2724,7 @@ void FUN_80202b70(undefined8 param_1,double param_2,double param_3,double param_
       FUN_800305f8((double)lbl_803E6F40,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    uVar2,8,0x10,uVar3,uVar5,uVar6,uVar7,iVar10);
       *(undefined *)(iVar12 + 0x346) = 0;
-      *(undefined *)(uVar2 + 0x36) = 0xff;
+      ((GameObject *)uVar2)->anim.alpha = 0xff;
       *(byte *)(uVar2 + 0xaf) = *(byte *)(uVar2 + 0xaf) | 8;
     }
   }
@@ -4588,7 +4588,7 @@ int dbstealerworm_stateHandlerA00(int obj, int p2)
   if ((s32)(s8)bs->moveJustStartedA != 0) {
     bs->unk25F = 1;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
-    *(u8 *)(obj + 0x36) = 255;
+    ((GameObject *)obj)->anim.alpha = 255;
     bs->unk34D = 1;
     bs->moveSpeed = lbl_803E6350 + (f32)(u32)sub->aggression / lbl_803E6354;
     ObjHits_EnableObject(obj);
@@ -6376,7 +6376,7 @@ void dbstealerworm_update(u8 *objp)
                 ((GroundBaddieState *)blob)->targetState = 0;
                 ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0x10);
                 ((GroundBaddieState *)blob)->baddie.moveDone = 0;
-                *(u8 *)(obj + 0x36) = 0xff;
+                ((GameObject *)obj)->anim.alpha = 0xff;
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             }
         } else if (((GameObject *)obj)->unkF8 == 0) {
