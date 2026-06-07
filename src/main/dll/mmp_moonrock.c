@@ -53,7 +53,7 @@ void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
     void* material;
     int t1, t2;
 
-    placement = *(int**)((char*)obj + 0x4c);
+    placement = *(int**)(obj + 0x4c);
     block = mapGetBlock(objPosToMapBlockIdx(
         *(f32*)((char*)obj + 0xc),
         *(f32*)((char*)obj + 0x10),
