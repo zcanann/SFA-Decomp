@@ -5,6 +5,7 @@
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 #include "main/objhits_types.h"
 
 /*
@@ -1496,7 +1497,7 @@ void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;
 
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 #pragma scheduling off
 #pragma peephole off
 void MoonSeedBush_update(int obj) {
@@ -1506,14 +1507,14 @@ void MoonSeedBush_update(int obj) {
     if ((state->flags & 1) == 0) return;
     if (*(s16 *)(def + 0x1C) != 0 && state->seedState != 0) {
         v = *(u8 *)(def + 0x20);
-        (*(int (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x54)))(obj, *(s16 *)(def + 0x1C));
+        (*gObjectTriggerInterface)->preempt(obj, *(s16 *)(def + 0x1C));
     } else {
         v = -1;
     }
     {
         s32 idx = (s32)(s8)*(u8 *)(def + 0x1E);
         if (idx != -1) {
-            (*(int (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(idx, obj, v);
+            (*gObjectTriggerInterface)->runSequence(idx, (void *)obj, v);
         }
     }
     state->flags &= ~1;

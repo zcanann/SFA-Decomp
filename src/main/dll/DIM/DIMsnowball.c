@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
 
 extern undefined4 FUN_800067c0();
@@ -1340,7 +1341,7 @@ void fn_801AA878(u8* p1, int* p2, f32 v) {
 
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void gameBitDecrement(int id);
-extern int** gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 /* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
  * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
@@ -1360,7 +1361,7 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2) {
         if (GameBit_Get(0xa9) != 0) {
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10);
             if (ObjTrigger_IsSetById(obj, 0xa9) != 0) {
-                (*(void(**)(int, int, int))(*(int*)gObjectTriggerInterface + 0x48))(0, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 gameBitDecrement(0xa9);
                 doMark = 1;
                 goto check;
@@ -1403,7 +1404,7 @@ void ccpedstal_updateAltVariant(int obj, u8* state2) {
         int doMark;
         Obj_SetActiveModelIndex(obj, 1);
         if (ObjTrigger_IsSet(obj) != 0) {
-            (*(void(**)(int, int, int))(*(int*)gObjectTriggerInterface + 0x48))(1, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
             gameBitIncrement(0xa9);
             doMark = 1;
             goto check;

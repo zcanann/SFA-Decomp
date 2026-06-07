@@ -4,6 +4,7 @@
 #include "main/dll/DB/DBprotection.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/DB/sbgalleon_state.h"
+#include "main/objseq.h"
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING 0xa3d
@@ -113,7 +114,7 @@ extern f32 lbl_803E644C;
 extern f32 lbl_803E6450;
 extern s8 lbl_803DDC2C;
 extern CloudActionInterface **gCloudActionInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
 extern f32 lbl_803E56CC;
 extern f32 lbl_803E56E4;
@@ -133,7 +134,7 @@ extern f32 lbl_803E57E0;
 #define SCREEN_TRANSITION_READY() \
   ((int (*)(void))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x14)))()
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
-  ((void (*)(int, int *, int))(*(u32 *)((u8 *)*gObjectTriggerInterface + 0x48)))((eventId), (obj), (arg))
+  (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 #define CLOUD_ACTION_SET(a, b) \
   (*gCloudActionInterface)->func12Nop((a), (b))
 #define CLOUD_ACTION_ENABLE(flag) \
