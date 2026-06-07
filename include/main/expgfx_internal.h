@@ -211,6 +211,19 @@ typedef struct ExpgfxAttachedSourceState {
   int attachedTableKey;
 } ExpgfxAttachedSourceState;
 
+typedef union ExpgfxSpawnTextureWord {
+  u32 word;
+  struct {
+    u16 setupFlags;
+    s16 textureId;
+  } parts;
+} ExpgfxSpawnTextureWord;
+
+typedef struct ExpgfxSpawnColorPair {
+  u8 value;
+  u8 lowByte;
+} ExpgfxSpawnColorPair;
+
 /*
  * Spawn requests are sourced from the current expgfx context. Not every word
  * is understood yet, but the stable fields are worth naming directly.
@@ -234,16 +247,15 @@ typedef struct ExpgfxSpawnConfig {
   int startPosYBits;
   int startPosZBits;
   float scale;
-  u8 pad40[0x42 - 0x40];
-  s16 textureId;
+  ExpgfxSpawnTextureWord texture;
   u32 behaviorFlags;
   u32 renderFlags;
   u32 overrideColor0;
   u32 overrideColor1;
   u32 overrideColor2;
-  u16 colorByte0Hi;
-  u16 colorByte1Hi;
-  u16 colorByte2Hi;
+  ExpgfxSpawnColorPair colorByte0;
+  ExpgfxSpawnColorPair colorByte1;
+  ExpgfxSpawnColorPair colorByte2;
   u8 pad5E[0x60 - 0x5E];
   u8 initialStateByte;
   u8 linkGroup;
@@ -255,8 +267,10 @@ STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, sourcePosWBits) == 0x20);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, velocityX) == 0x24);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, startPosXBits) == 0x30);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, scale) == 0x3C);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, texture) == 0x40);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, texture.parts.textureId) == 0x42);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, behaviorFlags) == 0x44);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, colorByte0Hi) == 0x58);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, colorByte0) == 0x58);
 STATIC_ASSERT(sizeof(ExpgfxSpawnConfig) == 0x64);
 
 typedef struct ExpgfxResourceEntry {

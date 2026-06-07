@@ -300,14 +300,6 @@ extern undefined4 DAT_8039c7d0;
 extern undefined4 DAT_8039c7d4;
 extern uint gExpgfxSlotPoolBases[];
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
-extern undefined4 DAT_8039cb38;
-extern undefined4 DAT_8039cb4c;
-extern undefined4 DAT_8039cb50;
-extern undefined4 DAT_8039cb51;
-extern undefined4 DAT_8039cb52;
-extern undefined4 DAT_8039cb53;
-extern undefined4 DAT_8039cb55;
-extern undefined4 DAT_8039cb58;
 extern undefined4 DAT_8039ce5c;
 extern undefined4 DAT_8039ce60;
 extern undefined4 DAT_8039ce64;
@@ -1347,7 +1339,7 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefine
   
   uVar1 = FUN_80286840();
   FUN_800033a8((int)&gExpgfxSpawnConfig,0,EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
-  DAT_8039cb50 = (undefined)setupValue;
+  gExpgfxSpawnConfig.colorByte0.value = (u8)setupValue;
   gExpgfxSpawnConfig.behaviorFlags = setupValue & 0xff;
   gExpgfxSpawnConfig.velocityZ = lbl_803E00B0;
   *(f32 *)&gExpgfxSpawnConfig.startPosXBits = lbl_803E00B0;
@@ -1356,12 +1348,12 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefine
   gExpgfxSpawnConfig.velocityX = lbl_803E00B0;
   gExpgfxSpawnConfig.velocityY = lbl_803E00B0;
   *(f32 *)&gExpgfxSpawnConfig.startPosZBits = lbl_803E00B4;
-  DAT_8039cb52 = 0;
-  DAT_8039cb53 = 0;
+  gExpgfxSpawnConfig.colorByte1.value = 0;
+  gExpgfxSpawnConfig.colorByte1.lowByte = 0;
   gExpgfxSpawnConfig.quadVertex3Pad06 = (s32)uVar1;
   *(undefined4 *)&gExpgfxSpawnConfig.scale = param_5;
-  DAT_8039cb38 = param_4;
-  DAT_8039cb51 = param_3;
+  gExpgfxSpawnConfig.texture.word = param_4;
+  gExpgfxSpawnConfig.colorByte0.lowByte = param_3;
   FUN_8028688c();
   return;
 }

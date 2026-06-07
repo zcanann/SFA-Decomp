@@ -2656,7 +2656,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   slot->renderFlags = config->renderFlags;
   slot->stateBits.value = slot->stateBits.value & ~EXPGFX_SLOT_STATE_INIT_PHASE_MASK;
 
-  resourceTableIndex = (int)(short)expgfx_acquireResourceEntry(config->textureId);
+  resourceTableIndex = (int)(short)expgfx_acquireResourceEntry(config->texture.parts.textureId);
   if (resourceTableIndex < 0) {
     expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
@@ -2712,7 +2712,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   }
 
   expTabIndex = expgfx_addToTable((uint)resourceHandle, (uint)attachedSource, attachedTableKey,
-                                     config->textureId);
+                                     config->texture.parts.textureId);
   if ((short)expTabIndex == EXPGFX_INVALID_TABLE_INDEX) {
     debugPrintf(sExpgfxInvalidTabIndex);
     expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
@@ -2826,9 +2826,9 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
     lbl_803DD278 = lbl_803DD274 / lbl_803DD270;
   }
 
-  slot->colorByte0 = (u8)((int)config->colorByte0Hi >> 8);
-  slot->colorByte1 = (u8)((int)config->colorByte1Hi >> 8);
-  slot->colorByte2 = (u8)((int)config->colorByte2Hi >> 8);
+  slot->colorByte0 = (u8)((int)*(u16 *)&config->colorByte0 >> 8);
+  slot->colorByte1 = (u8)((int)*(u16 *)&config->colorByte1 >> 8);
+  slot->colorByte2 = (u8)((int)*(u16 *)&config->colorByte2 >> 8);
 
   if ((config->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
     quadVertices[1].alpha = (u8)((int)config->overrideColor0 >> 8);
