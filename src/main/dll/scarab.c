@@ -111,7 +111,7 @@ extern undefined4 DAT_803ad210;
 extern undefined4 DAT_803ad230;
 extern undefined4 DAT_803ad248;
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd70c;
@@ -2604,7 +2604,7 @@ int fn_8016043C(int obj, GroundBaddieState *p)
 void fn_801606F0(int obj, void *p2, int sub, GroundBaddieState *p)
 {
   extern int *gBaddieControlInterface;
-  extern int *gObjectTriggerInterface;
+  extern ObjectTriggerInterface **gObjectTriggerInterface;
   extern int *gPlayerInterface;
   extern void *lbl_803AC5D0[];
   extern void *lbl_803AC5E8[];
@@ -2621,8 +2621,7 @@ void fn_801606F0(int obj, void *p2, int sub, GroundBaddieState *p)
     *(s8 *)&p->baddie.unk349 = 0;
     if (*(char *)(setup + 0x2e) != -1) {
       if (p2 != NULL) {
-        (*(void (**)(void *, int))(*(int *)gObjectTriggerInterface + 0x58))(
-            p2, *(s16 *)(setup + 0x24));
+        (*gObjectTriggerInterface)->yield((u8 *)p2, *(s16 *)(setup + 0x24));
       }
       *(s8 *)(sub + 0x405) = 1;
     } else {
@@ -2691,7 +2690,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
   extern int Curve_AdvanceAlongPath(int *p, f32 t);
   extern int getAngle(f32 a, f32 b);
   extern int *gBaddieControlInterface;
-  extern int *gObjectTriggerInterface;
+  extern ObjectTriggerInterface **gObjectTriggerInterface;
   extern int *gPlayerInterface;
   extern int *gRomCurveInterface;
   extern void *lbl_803AC5D0[];
@@ -2715,8 +2714,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
     }
     fn_8016083C((int *)obj, (GroundBaddieState *)sub, (GroundBaddieState *)sub);
     if (*(s16 *)(sub + 0x3f6) != -1 && GameBit_Get(*(s16 *)(sub + 0x3f6)) != 0) {
-      (*(void (**)(u8 *, int))(*(int *)gObjectTriggerInterface + 0x58))(e,
-                                                                        *(s16 *)(setup + 0x2c));
+      (*gObjectTriggerInterface)->yield(e, *(s16 *)(setup + 0x2c));
       *(s16 *)(sub + 0x3f6) = -1;
     }
     switch (*(u8 *)(sub + 0x405)) {
@@ -3336,7 +3334,7 @@ void FUN_80160e58(undefined4 param_1,undefined4 param_2,int param_3,int param_4)
     }
     else {
       if ((int)uVar4 != 0) {
-        (**(code **)(*DAT_803dd6d4 + 0x58))((int)uVar4,(int)*(short *)(iVar3 + 0x24));
+        (*gObjectTriggerInterface)->yield((u8 *)uVar4, (int)*(short *)(iVar3 + 0x24));
       }
       *(undefined *)(param_3 + 0x405) = 1;
     }
