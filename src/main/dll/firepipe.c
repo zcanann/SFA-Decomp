@@ -93,7 +93,7 @@ void firepipe_updateState(FirePipeObject *obj)
     if (obj->callback != NULL) {
         ObjHits_DisableObject(obj);
         if (flags->bit2 == 0) {
-            goto update_light;
+            return;
         }
         flags->bit3 = 1;
     } else {
@@ -187,14 +187,17 @@ void firepipe_updateState(FirePipeObject *obj)
                         modelLightStruct_setupGlow(extra->subObj,0,0xff,0x80,0,0x64,
                                     lbl_803DC34C * obj->scale);
                     }
-                    modelLightStruct_setPosition(extra->subObj,lbl_803E6B74,lbl_803E6B74,lbl_803E6B7C);
+                    modelLightStruct_setPosition(extra->subObj,lbl_803E6B74,*(f32 *)&lbl_803E6B74,lbl_803E6B7C);
                     radius = lbl_803E6B80 * obj->scale;
                     nearAtten = (radius < lbl_803E6B84) ? lbl_803E6B84
                               : ((radius > lbl_803E6B88) ? lbl_803E6B88 : radius);
                     farAtten = lbl_803E6B8C + radius;
-                    modelLightStruct_setDistanceAttenuation(extra->subObj, nearAtten,
-                        (farAtten < lbl_803E6B90) ? lbl_803E6B90
-                      : ((farAtten > lbl_803E6B94) ? lbl_803E6B94 : farAtten));
+                    {
+                        int light = extra->subObj;
+                        modelLightStruct_setDistanceAttenuation(light, nearAtten,
+                            (farAtten < lbl_803E6B90) ? lbl_803E6B90
+                          : ((farAtten > lbl_803E6B94) ? lbl_803E6B94 : farAtten));
+                    }
                 }
             }
         } else if (extra->subObj != 0) {
@@ -250,7 +253,6 @@ sound_update:
     }
     flags->bit5 = flags->bit6;
 
-update_light:
     if (extra->subObj != 0) {
         modelLightStruct_updateGlowAlpha(extra->subObj);
     }
