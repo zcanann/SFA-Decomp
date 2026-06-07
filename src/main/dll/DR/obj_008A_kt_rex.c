@@ -303,7 +303,7 @@ void ktrex_free(int obj) {
     ObjGroup_RemoveObject(obj, 0x3);
     (*(void (**)(int, void *, int))((char *)*gBaddieControlInterface + 0x40))(obj, gKTRexRuntime, 0);
     Stack_Free(*(void **)gKTRexState);
-    if (lbl_803DDD48 != 0) {
+    if (lbl_803DDD48 != NULL) {
         Resource_Release(lbl_803DDD48);
     }
     if (((KTRexArenaState *)gKTRexState)->light != 0) {
@@ -315,7 +315,7 @@ void ktrex_free(int obj) {
             mm_free(m);
         }
     }
-    lbl_803DDD48 = 0;
+    lbl_803DDD48 = NULL;
     Music_Trigger(0x28, 0);
     Music_Trigger(0x93, 0);
     Music_Trigger(0x94, 0);
@@ -863,7 +863,7 @@ void ktrex_init(int obj, char *arg) {
     ((KTRexArenaState *)gKTRexState)->rowBZ = (char *)gKTRexState + 0x60;
     ((KTRexArenaState *)gKTRexState)->unk102 = 4;
     ((KTRexRuntime *)gKTRexRuntime)->unk354 = 3;
-    lbl_803DDD48 = (void *)Resource_Acquire(0x5a, 1);
+    lbl_803DDD48 = Resource_Acquire(0x5a, 1);
     ((GameObject *)obj)->unkF8 = 0;
     lbl_803DDD50 = (void *)mapBlockFn_800592e4();
     ((KTRexArenaState *)gKTRexState)->light = objCreateLight(0, 1);
