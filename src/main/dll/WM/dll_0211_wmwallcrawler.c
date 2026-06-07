@@ -114,7 +114,7 @@ void wmwallcrawler_update(s16 *obj)
             if ((*(u16 *)(st + 0x294) & 8) != 0) {
                 if (timerCountDown(st + 0x28a) != 0) {
                     for (k = 0; k < 0x1e; k++) {
-                        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x1a3, NULL, 0, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void *)obj, 0x1a3, NULL, 0, -1, NULL);
                     }
                     s16toFloat(st + 0x28c, 100);
                     return;

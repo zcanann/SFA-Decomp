@@ -162,23 +162,23 @@ void FireFlyFn_801f4f88(int obj)
     *(s16 *)obj = (s16)getAngle(((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
                                  ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
     if (FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_MAIN || FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_NEAR) {
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_BLUE_TRAIL, NULL,
+        (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_BLUE_TRAIL, NULL,
                                                             FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
     } else {
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_ORANGE_TRAIL, NULL,
+        (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_ORANGE_TRAIL, NULL,
                                                             FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
     }
     if (Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x8)) <
         FIREFLY_PLAYER_RADIUS(state)) {
         f32 lim;
         if (FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_NEAR) {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_BLUE_NEAR, NULL,
+            (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_BLUE_NEAR, NULL,
                                                                 FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
         } else if (FIREFLY_KIND(state) == FIREFLY_KIND_ORANGE_NEAR) {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL,
+            (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL,
                                                                 FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
         } else if (FIREFLY_KIND(state) == FIREFLY_KIND_ORANGE_ALT_NEAR) {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL,
+            (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL,
                                                                 FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
         }
         if (FIREFLY_PROXIMITY_ALPHA(state) < (lim = lbl_803E5EE0)) {
@@ -230,7 +230,7 @@ void firefly_free(int obj)
     FireFlyState *state = ((GameObject *)obj)->extra;
 
     modelLightStruct_freeSlot(state);
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
 #pragma scheduling reset
 #pragma peephole reset

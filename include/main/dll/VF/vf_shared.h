@@ -2,6 +2,7 @@
 #define MAIN_DLL_VF_VF_SHARED_H_
 
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
@@ -263,7 +264,7 @@ extern int GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int val);
 extern u32 randomGetRange(int min, int max);
 extern void fn_801F4D54(int obj, int state);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int *gMapEventInterface;
 extern int *gObjectTriggerInterface;
 extern f32 timeDelta;

@@ -34,7 +34,7 @@ typedef struct VfpMinifirePartfxArgs {
 } VfpMinifirePartfxArgs;
 
 #define VFPMINIFIRE_SPAWN(obj, id, args, flags) \
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)(obj), (id), (args), (flags), -1, NULL)
+    (*gPartfxInterface)->spawnObject((void *)(obj), (id), (args), (flags), -1, NULL)
 
 int vfpminifire_getExtraSize(void) { return 0xc; }
 
@@ -154,7 +154,7 @@ void vfpminifire_init(int *obj, u8 *init) {
     ((GameObject *)obj)->anim.velocityY = lbl_803E6090;
     ((GameObject *)obj)->anim.localPosY = lbl_803E60A4 + *(f32 *)((char *)init + 0xc);
     ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E609C;
-    ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x38c, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject(obj, 0x38c, NULL, 2, -1, NULL);
     Sfx_PlayFromObject((int)obj, SFXqu_longsob2);
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }

@@ -170,9 +170,9 @@ void vfpobjcreator_update(int *obj)
             m.ang[0] = *(s16 *)obj;
             vecRotateZXY(m.ang, (f32 *)(n + 0x24));
             Sfx_PlayFromObject((int)n, 0x10c);
-            ((EffectInterface *)*gPartfxInterface)->spawnObject(n, 0x39a, NULL, 0x10002, -1, NULL);
-            ((EffectInterface *)*gPartfxInterface)->spawnObject(n, 0x39b, NULL, 0x10002, -1, NULL);
-            ((EffectInterface *)*gPartfxInterface)->spawnObject(n, 0x39c, NULL, 0x10002, -1, NULL);
+            (*gPartfxInterface)->spawnObject(n, 0x39a, NULL, 0x10002, -1, NULL);
+            (*gPartfxInterface)->spawnObject(n, 0x39b, NULL, 0x10002, -1, NULL);
+            (*gPartfxInterface)->spawnObject(n, 0x39c, NULL, 0x10002, -1, NULL);
         }
         break;
     }
