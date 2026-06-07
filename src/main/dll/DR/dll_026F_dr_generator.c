@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 int drgenerator_getExtraSize(void) { return 0x19c; }
 
@@ -147,7 +148,7 @@ void drgenerator_update(int obj) {
         goto enable;
     }
     if (((GameObject *)obj)->anim.seqId != 0x72e) {
-        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(4, obj, -1);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(4, (void *)obj, -1);
     }
     ((BitFlags8 *)(p + 0x19b))->b3 = 1;
     ((BitFlags8 *)(p + 0x19b))->b0 = 0;
@@ -161,7 +162,7 @@ enable:
         goto loop;
     }
     if (((GameObject *)obj)->anim.seqId != 0x72e) {
-        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(3, obj, -1);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(3, (void *)obj, -1);
     }
     ((BitFlags8 *)(p + 0x19b))->b3 = 0;
     ObjHits_EnableObject(obj);

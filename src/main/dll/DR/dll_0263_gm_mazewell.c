@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 
 int gmmazewell_getExtraSize(void) { return 0x8; }
 
@@ -127,7 +128,7 @@ checkValue:
         found = 0;
     checkFound:
         if (found != 0) {
-            (*(void (**)(int, void *, int))((char *)*gObjectTriggerInterface + 0x48))(0, obj, -1);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, obj, -1);
             buttonDisable(0, 256);
         }
     }

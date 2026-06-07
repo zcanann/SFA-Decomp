@@ -4,6 +4,7 @@
 #include "main/dll/enemy_state.h"
 #include "main/dll/projswitch.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 #include "main/objhits_types.h"
 #include "main/resource.h"
 
@@ -621,7 +622,7 @@ extern void hudFn_8011f38c(int a);
 extern void fn_8014BC98(int obj, u8 *state);
 extern void fn_8014B878(int obj, u8 *state);
 extern void objAnimFn_8014a9f0(int obj, u8 *state);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gMapEventInterface;
 extern int *gPathControlInterface;
 extern f32 lbl_803E2574;
@@ -676,7 +677,7 @@ void enemy_update(int obj)
             ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
             ((GameObject *)obj)->anim.localPosZ = *(f32 *)(setup + 0x10);
         }
-        (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(*(s8 *)(setup + 0x2e), obj, -1);
+        (*gObjectTriggerInterface)->runSequence(*(s8 *)(setup + 0x2e), (void *)obj, -1);
         ((EnemyState *)state)->controlFlags |= 2;
         *(int *)(state + 0x2dc) = *(int *)(state + 0x2dc) & -2;
         return;
