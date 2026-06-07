@@ -9628,6 +9628,7 @@ void fn_8005011C(int param_1) {
 extern u8 lbl_803DCD6B;
 void fn_80050558(u8 *param_1, void *param_2, int param_3, int param_4, int param_5) {
     int uVar2;
+    int texmap;
     GXSetTevDirect(lbl_803DCD90);
     GXLoadTexMtxImm(param_2, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
@@ -9636,7 +9637,7 @@ void fn_80050558(u8 *param_1, void *param_2, int param_3, int param_4, int param
     } else {
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 5);
     }
-    if (lbl_803DCD90 == 0) {
+    if (*(volatile int *)&lbl_803DCD90 == 0) {
         uVar2 = 0xc;
     } else {
         uVar2 = 4;
@@ -9698,11 +9699,13 @@ void fn_80050558(u8 *param_1, void *param_2, int param_3, int param_4, int param
         }
         GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     }
+    texmap = lbl_803DCD8C;
     if (param_1 != NULL) {
+        u8 *tex = param_1 + 0x20;
         if (param_1[0x48] != 0) {
-            GXLoadTexObjPreLoaded(param_1 + 0x20, *(void **)(param_1 + 0x40), lbl_803DCD8C);
+            GXLoadTexObjPreLoaded(tex, *(void **)(param_1 + 0x40), texmap);
         } else {
-            GXLoadTexObj(param_1 + 0x20, lbl_803DCD8C);
+            GXLoadTexObj(tex, texmap);
         }
     }
     lbl_803DCD80 = lbl_803DCD80 + 3;
