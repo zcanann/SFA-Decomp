@@ -25,7 +25,7 @@ extern void setDrawCloudsAndLights(int mode);
 extern void fn_8008C9F4(u8 *cfg, u8 flags);
 extern u8 lbl_8030F4A0[];
 extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
-extern int *gCloudActionInterface;
+extern CloudActionInterface **gCloudActionInterface;
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mm_free(void *ptr);
@@ -4500,7 +4500,7 @@ extern f64 lbl_803DF070;
 extern int coordsToMapCell(f32 x, f32 z);
 extern f32 Camera_GetFovY(void);
 extern u32 getScreenResolution(void);
-extern int *gSky2Interface;
+extern Sky2Interface **gSky2Interface;
 extern const f32 lbl_803DF0C8;
 extern const f32 lbl_803DF0CC;
 extern const f32 lbl_803DF0D0;

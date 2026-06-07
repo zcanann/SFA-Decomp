@@ -1,4 +1,5 @@
 #include "main/dll/DR/hightop.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -1498,7 +1499,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 
 extern int *gCameraInterface;
 extern int *gObjectTriggerInterface;
-extern int *gCloudActionInterface;
+extern CloudActionInterface **gCloudActionInterface;
 extern int *gGameUIInterface;
 extern int *gPlayerShadowInterface;
 extern int *gMapEventInterface;
@@ -1658,7 +1659,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         if (p[3] > 1) {
                             p[3] = 1;
                         }
-                        (*(code *)(*gCloudActionInterface + 0x1c))(p[3]);
+                        (*gCloudActionInterface)->func09Nop(p[3]);
                         break;
                     case 4:
                         (*(code *)(*gPlayerShadowInterface + 0xc))(p[3]);

@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/effect_interfaces.h"
 #include "main/texture.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -3672,8 +3673,8 @@ void loadTextureFiles(void)
     textureLoad(0, 0);
 }
 
-extern void *gCloudActionInterface;
-extern void *gSky2Interface;
+extern CloudActionInterface **gCloudActionInterface;
+extern Sky2Interface **gSky2Interface;
 extern void *gSHthorntailAnimationInterface;
 extern void *gNewCloudsInterface;
 extern s16 lbl_803DCEB8;
@@ -3699,9 +3700,9 @@ void loadNextMap(void)
     }
     if ((s8)lbl_803DCEBD != 0) {
         if ((*(int (***)(void))gScreenTransitionInterface)[5]() != 0 || (s8)lbl_803DCEBC == 0) {
-            (*(void (***)(void))gCloudActionInterface)[5]();
-            (*(void (***)(void))gCloudActionInterface)[2]();
-            (*(void (***)(void))gSky2Interface)[2]();
+            (*gCloudActionInterface)->freeCloudObjects();
+            (*gCloudActionInterface)->onMapSetup();
+            (*gSky2Interface)->onMapSetup();
             (*(void (***)(void))gSHthorntailAnimationInterface)[2]();
             (*(void (***)(void))gNewCloudsInterface)[2]();
             gameUiResetMenuState();

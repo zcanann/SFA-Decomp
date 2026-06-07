@@ -3346,8 +3346,8 @@ extern void gxTextureFn_80052efc(void);
 extern void perspectiveFn_80129db4(void);
 extern void GXPixModeSync(void);
 extern void *gSHthorntailAnimationInterface;
-extern void *gCloudActionInterface;
-extern void *gSky2Interface;
+extern CloudActionInterface **gCloudActionInterface;
+extern Sky2Interface **gSky2Interface;
 extern void *gNewCloudsInterface;
 extern s32 heatEffectIntensity;
 extern void drawSkyStars(void);
@@ -3454,18 +3454,18 @@ void sceneDraw(void)
         }
         (*(void (***)(int, int, int, int, int))gSHthorntailAnimationInterface)[4](0, 0, 0, 0, flag);
         if ((renderFlags & 0x10) != 0) {
-            (*(void (***)(int, int, int, int))gCloudActionInterface)[4](0, 0, 0, 0);
+            (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
         }
     } else {
         (*(void (***)(int, int, int, int, int))gSHthorntailAnimationInterface)[4](0, 0, 0, 0, flag);
-        (*(void (***)(int, int, int, int))gCloudActionInterface)[4](0, 0, 0, 0);
+        (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
         drawSkyStars();
     }
     if (lbl_803DCE05 != 0) {
         screenImageDraw();
     }
     lightningRenderActive();
-    (*(void (***)(int))gSky2Interface)[4](0);
+    (*gSky2Interface)->applyFogColor(0);
     lbl_803DCDF0 = 0;
     getAmbientColor(0, (u8 *)&c, (u8 *)&c + 1, (u8 *)&c + 2);
     GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
@@ -4195,8 +4195,8 @@ void updateEnvironment(int mode) {
         f32 dy;
 
         envFxFn_80088884();
-        (*(void (***)(void))gCloudActionInterface)[3]();
-        (*(void (***)(void))gSky2Interface)[3]();
+        (*gCloudActionInterface)->scrollTexture();
+        (*gSky2Interface)->run();
         (*(void (***)(void))gSHthorntailAnimationInterface)[3]();
         (*(void (***)(void))gNewCloudsInterface)[4]();
 

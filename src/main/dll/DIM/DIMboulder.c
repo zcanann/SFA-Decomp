@@ -1509,7 +1509,7 @@ int magiclight_SeqFn(int *obj) {
 
 extern void getEnvfxAct(int *obj, int *target, int id, int p);
 extern void fn_801AC108(int *obj, int *extra);
-extern int *gCloudActionInterface;
+extern CloudActionInterface **gCloudActionInterface;
 extern void warpToMap(int mapId, int flags);
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
@@ -1575,7 +1575,7 @@ void imicemountain_updateEventState(int *obj)
             getLActions(obj, obj, 0x15c, 0, 0, 0);
             getLActions(obj, obj, 0x17c, 0, 0, 0);
             getLActions(obj, obj, 0x17b, 0, 0, 0);
-            ((void (*)(int))((int *)*gCloudActionInterface)[0x1c / 4])(1);
+            (*gCloudActionInterface)->func09Nop(1);
             ((GameObject *)obj)->unkF4 = 1;
         }
         break;
@@ -1744,7 +1744,7 @@ void imicemountain_update(int *obj)
         getEnvfxAct(obj, obj, 0xa3, 0);
         getEnvfxAct(obj, obj, 0x9e, 0);
         getEnvfxAct(obj, obj, 0x104, 0);
-        ((void (*)(int))((int *)*gCloudActionInterface)[0x1c / 4])(1);
+        (*gCloudActionInterface)->func09Nop(1);
         ((GameObject *)obj)->unkF4 = 1;
     }
     switch (extra->mapEventState) {

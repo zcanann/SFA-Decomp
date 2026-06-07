@@ -3152,7 +3152,7 @@ int mapTextureOverrideAcquire(int key, int value, int type)
 extern int* gCheckpointInterface;
 extern int* gRomCurveInterface;
 extern int* gNewCloudsInterface;
-extern int* gCloudActionInterface;
+extern CloudActionInterface **gCloudActionInterface;
 extern void audioStopByMask(int mask);
 extern void Sfx_ClearLoopedObjectSounds(void);
 extern void doNothing_8001F678(int a, int b);
@@ -3233,7 +3233,7 @@ void unloadMap(void)
     textureFreeFn_8012fcec();
     fn_80133934();
     (*(void (*)(int, int))(*(int *)(*gNewCloudsInterface + 0xc)))(-1, 0);
-    (*(void (*)(void))(*(int *)(*gCloudActionInterface + 0x14)))();
+    (*gCloudActionInterface)->freeCloudObjects();
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4113,7 +4113,7 @@ extern int* gProjgfxInterface;
 extern int* gModgfxInterface;
 extern int* gExpgfxInterface;
 extern int* gPartfxInterface;
-extern int* gSky2Interface;
+extern Sky2Interface **gSky2Interface;
 extern int* gSHthorntailAnimationInterface;
 extern int* gCameraInterface;
 extern int lbl_803DCDD0;
@@ -4234,9 +4234,9 @@ void beginLoadingMap(void)
     ((ModgfxInterface *)*gModgfxInterface)->onMapSetup();
     (*(void (*)(void))(*(int*)(*gExpgfxInterface + 4)))();
     (*(void (*)(void))(*(int*)(*gPartfxInterface + 4)))();
-    (*(void (*)(void))(*(int*)(*gCloudActionInterface + 0x14)))();
-    (*(void (*)(void))(*(int*)(*gCloudActionInterface + 8)))();
-    (*(void (*)(void))(*(int*)(*gSky2Interface + 8)))();
+    (*gCloudActionInterface)->freeCloudObjects();
+    (*gCloudActionInterface)->onMapSetup();
+    (*gSky2Interface)->onMapSetup();
     (*(void (*)(void))(*(int*)(*gSHthorntailAnimationInterface + 8)))();
     (*(void (*)(void))(*(int*)(*gNewCloudsInterface + 8)))();
     mapInitFn_8006fccc();
@@ -4329,7 +4329,7 @@ void beginLoadingMap(void)
         (*(void (*)(f32))(*(int*)(*gSHthorntailAnimationInterface + 0x28)))(*(f32*)env);
     } else {
         (*(void (*)(f32))(*(int*)(*gSHthorntailAnimationInterface + 0x28)))(lbl_803DEBD0);
-        (*(void (*)(int))(*(int*)(*gCloudActionInterface + 0x1c)))(1);
+        (*gCloudActionInterface)->func09Nop(1);
     }
     clearSaveGameLoadingFlag();
     Pause_SetDisabled(0);

@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/DB/DBprotection.h"
 #include "main/mapEventTypes.h"
@@ -111,7 +112,7 @@ extern f32 lbl_803E6448;
 extern f32 lbl_803E644C;
 extern f32 lbl_803E6450;
 extern s8 lbl_803DDC2C;
-extern int *gCloudActionInterface;
+extern CloudActionInterface **gCloudActionInterface;
 extern int *gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
 extern f32 lbl_803E56CC;
@@ -134,9 +135,9 @@ extern f32 lbl_803E57E0;
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
   ((void (*)(int, int *, int))(*(u32 *)((u8 *)*gObjectTriggerInterface + 0x48)))((eventId), (obj), (arg))
 #define CLOUD_ACTION_SET(a, b) \
-  ((void (*)(f32, f32))(*(u32 *)((u8 *)*gCloudActionInterface + 0x28)))((a), (b))
+  (*gCloudActionInterface)->func12Nop((a), (b))
 #define CLOUD_ACTION_ENABLE(flag) \
-  ((void (*)(int))(*(u32 *)((u8 *)*gCloudActionInterface + 0x20)))((flag))
+  (*gCloudActionInterface)->func10Nop((flag))
 
 /*
  * --INFO--
@@ -232,11 +233,11 @@ extern f32 lbl_803E57B8;
 #define DBPROT_SCREEN_FADE(kind, value) \
   ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x8)))((kind), (value))
 #define DBPROT_CLOUD_SET_A(flag) \
-  ((void (*)(int))(*(u32 *)((u8 *)*gCloudActionInterface + 0x20)))((flag))
+  (*gCloudActionInterface)->func10Nop((flag))
 #define DBPROT_CLOUD_SET_B(flag) \
-  ((void (*)(int))(*(u32 *)((u8 *)*gCloudActionInterface + 0x24)))((flag))
+  (*gCloudActionInterface)->func11Nop((flag))
 #define DBPROT_CLOUD_SET_RANGE(a, b) \
-  ((void (*)(f32, f32))(*(u32 *)((u8 *)*gCloudActionInterface + 0x28)))((a), (b))
+  (*gCloudActionInterface)->func12Nop((a), (b))
 
 #pragma scheduling off
 #pragma peephole off

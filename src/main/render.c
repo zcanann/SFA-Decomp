@@ -73,12 +73,12 @@ int getEnvfxActImmediately(int a, int b, u16 idx, int d)
             (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gNewCloudsInterface + 0x4)))(a, b, e, d);
         } else if (e->kind == 3) {
             e->field_2a = 0;
-            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gSky2Interface + 0x4)))(a, b, e, d, idx);
+            (*gSky2Interface)->updateEnvfxAct(a, b, e, d, idx);
         } else if (e->kind == 5) {
             e->field_2a = 0;
             (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gSHthorntailAnimationInterface + 0x4)))(a, b, e, d);
         } else if (e->kind == 6) {
-            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gCloudActionInterface + 0x4)))(a, b, e, d, idx);
+            (*gCloudActionInterface)->updateEnvfxAct(a, b, e, d, idx);
         }
     }
     return 0;
@@ -98,11 +98,11 @@ int getEnvfxAct(int a, int b, u16 idx, int d)
         if (e->kind <= 2 || e->kind == 4) {
             (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gNewCloudsInterface + 0x4)))(a, b, e, d);
         } else if (e->kind == 3) {
-            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gSky2Interface + 0x4)))(a, b, e, d, idx);
+            (*gSky2Interface)->updateEnvfxAct(a, b, e, d, idx);
         } else if (e->kind == 5) {
             (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gSHthorntailAnimationInterface + 0x4)))(a, b, e, d);
         } else if (e->kind == 6) {
-            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gCloudActionInterface + 0x4)))(a, b, e, d, idx);
+            (*gCloudActionInterface)->updateEnvfxAct(a, b, e, d, idx);
         }
     }
     return 0;

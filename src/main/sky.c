@@ -1858,8 +1858,8 @@ void skyFn_8008a500(void)
             } else {
                 skyFn_80062a54(*lbl_8030F2C8, lbl_8030F2C8[1], lbl_8030F2C8[2], 100);
             }
-            (*(void (**)(f32, f32, f32, int))(*gCloudActionInterface + 0x18))(
-                *lbl_8030F2C8, lbl_8030F2C8[1], lbl_8030F2C8[2], 1);
+            (*gCloudActionInterface)->func08Nop(*lbl_8030F2C8, lbl_8030F2C8[1],
+                                                lbl_8030F2C8[2], 1);
         } else {
             if (gSkyOverrideLightDirectionEnabled != 0) {
                 skyFn_80062a54(gSkyOverrideLightDirection[0], gSkyOverrideLightDirection[1],
@@ -1867,8 +1867,8 @@ void skyFn_8008a500(void)
             } else {
                 skyFn_80062a54(-(*lbl_8030F2D4), lbl_8030F2D4[1], -lbl_8030F2D4[2], 100);
             }
-            (*(void (**)(f32, f32, f32, int))(*gCloudActionInterface + 0x18))(
-                -(*lbl_8030F2D4), lbl_8030F2D4[1], -lbl_8030F2D4[2], 0);
+            (*gCloudActionInterface)->func08Nop(-(*lbl_8030F2D4), lbl_8030F2D4[1],
+                                                -lbl_8030F2D4[2], 0);
         }
     }
 }
@@ -2800,7 +2800,7 @@ void skyFn_8008aee8(void)
         angle = widthF * lbl_803DF068 - lbl_803DF0E8 -
                 lbl_803DF0DC * (widthF * (f32)cam[0x29]) / lbl_803DF0E4 + sinProd;
         angle *= lbl_803DF0EC;
-        (*(void (**)(int))((char *)*gSky2Interface + 0x18))(0);
+        (*gSky2Interface)->applyTextColor(0);
         GXSetFog(0, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, fogColor);
         selectTexture(texC, 0);
         fn_8007880C();
