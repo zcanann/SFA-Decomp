@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
@@ -365,8 +366,8 @@ void dimbossgut2_update(int obj)
         stk.f48 = ((GameObject *)obj)->anim.localPosZ -
                   fscale * mathCosf(lbl_803E4CE4 * (f32)*(s16 *)obj / lbl_803E4CE8);
         stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - fdiff / lbl_803E4CDC);
-        (*((int (***)(int, int, void *, int, int, int))gPartfxInterface))[2](
-            obj, 0x32b, &stk, 1, -1, 0);
+        (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 0x32b, &stk, 1, -1,
+                                                            NULL);
         *(u16 *)((int)pfVar4 + 0x16) = 0;
       }
     }
@@ -505,10 +506,12 @@ void DIMbossspit_updateBurst(int obj)
   if (*(s16 *)state == 1) {
     i = 0;
     do {
-      (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x340, 0, 1, -1, 0);
+      (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 0x340, NULL, 1, -1,
+                                                          NULL);
       i = i + 1;
     } while (i < 0x12);
-    (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x4bb, 0, 1, -1, 0);
+    (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 0x4bb, NULL, 1, -1,
+                                                        NULL);
     Sfx_PlayFromObject(obj, SFXwmap_name);
     Sfx_PlayFromObject(obj, SFXar_bblast16);
     CameraShake_SetAllMagnitudes(lbl_803E4D3C);
@@ -544,7 +547,8 @@ void DIMbossspit_updateBurst(int obj)
       ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
     }
   }
-  (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x4bc, 0, 1, -1, (int)&radius);
+  (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 0x4bc, NULL, 1, -1,
+                                                      &radius);
 }
 
 /*
@@ -571,7 +575,7 @@ void DIMbossspit_free(int param_1)
   if (uVar1 != 0) {
     ModelLightStruct_free((void *)uVar1);
   }
-  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+  ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
   return;
 }
 #pragma peephole reset
@@ -647,7 +651,8 @@ void DIMbossspit_update(int obj)
             ((GameObject *)obj)->anim.velocityZ * timeDelta);
     i = 0;
     do {
-      (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x4ba, 0, 1, -1, 0);
+      (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 0x4ba, NULL, 1, -1,
+                                                          NULL);
       i = i + 1;
     } while (i < 3);
     if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0) {
@@ -835,23 +840,21 @@ int dimbosscrackpar_SeqFn(int *obj) {
     if ((u32)GameBit_Get(*(s16 *)((char *)side + 0x1e)) == 0u) {
         return 0;
     }
-    (*((int (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
-        obj, *(s16 *)((char *)side + 0x1a) + 1222, 0, 2, -1, 0);
-    (*((int (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
-        obj, 1224, 0, 2, -1, 0);
+    (*(EffectInterface **)gPartfxInterface)->spawnObject(
+        obj, *(s16 *)((char *)side + 0x1a) + 1222, NULL, 2, -1, NULL);
+    (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, 1224, NULL, 2, -1, NULL);
     return 0;
 }
 void dimbosscrackpar_update(int *obj) {
     int *side = *(int **)&((GameObject *)obj)->anim.placementData;
     if ((u32)GameBit_Get(*(s16 *)((char *)side + 0x1e)) != 0u) {
-        (*((int (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
-            obj, *(s16 *)((char *)side + 0x1a) + 1222, 0, 2, -1, 0);
-        (*((int (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
-            obj, 1224, 0, 2, -1, 0);
+        (*(EffectInterface **)gPartfxInterface)->spawnObject(
+            obj, *(s16 *)((char *)side + 0x1a) + 1222, NULL, 2, -1, NULL);
+        (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, 1224, NULL, 2, -1, NULL);
     }
 }
 void dimbosscrackpar_free(int *obj) {
-    (*(void (*)(int *))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject(obj);
 }
 void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void dimbosscrackpar_init(s16 *obj, s8 *def) {
@@ -893,7 +896,7 @@ void dimbossfire_free(int obj)
     ModelLightStruct_free(light);
     *(undefined4 *)(state + 0x10) = 0;
   }
-  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(o);
+  ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)o);
 }
 #pragma peephole reset
 #pragma scheduling reset
