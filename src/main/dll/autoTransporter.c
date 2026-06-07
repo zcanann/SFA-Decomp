@@ -1,6 +1,7 @@
 #include "main/dll/autoTransporter.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 #include "global.h"
 
 /*
@@ -923,7 +924,7 @@ end:
 }
 
 extern u32 GameBit_Get(int eventId);
-extern int **gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 void doorf4_update(int *obj)
 {
     DoorF4State *state = *(DoorF4State **)((char *)obj + 0xb8);
@@ -938,18 +939,18 @@ void doorf4_update(int *obj)
         type = ((GameObject *)obj)->anim.seqId;
         if (type == 0x151) {
             if (GameBit_Get(state->gameBitA) != 0) {
-                ((void (*)(int *, int))((int *)(*gObjectTriggerInterface))[0x54 / 4])(obj, 0x75);
+                (*gObjectTriggerInterface)->preempt((int)obj, 0x75);
                 state->triggerLatch = 1;
             }
-            ((void (*)(int, int *, int))((int *)(*gObjectTriggerInterface))[0x48 / 4])(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         } else if (type == 0x37a) {
             if (GameBit_Get(state->gameBitA) != 0) {
-                ((void (*)(int *, int))((int *)(*gObjectTriggerInterface))[0x54 / 4])(obj, 0x8a);
+                (*gObjectTriggerInterface)->preempt((int)obj, 0x8a);
                 state->triggerLatch = 1;
             }
-            ((void (*)(int, int *, int))((int *)(*gObjectTriggerInterface))[0x48 / 4])(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         } else {
-            ((void (*)(int, int *, int))((int *)(*gObjectTriggerInterface))[0x48 / 4])(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
         ((GameObject *)obj)->unkF4 = 1;
     }
@@ -1191,7 +1192,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
                 *(u8 *)((char *)obj + 0xaf) |= 8;
                 GameBit_Set(sub->gameBitA, 1);
-                ((void (*)(int, int *, int))((int *)(*gObjectTriggerInterface))[0x48 / 4])(1, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                 gb = 1;
             }
         }

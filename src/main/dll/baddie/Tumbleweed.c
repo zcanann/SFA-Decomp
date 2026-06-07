@@ -5,6 +5,7 @@
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 #include "stdarg.h"
 
 extern undefined4 FUN_80003494();
@@ -4112,7 +4113,7 @@ void titlescreen_initialise(void)
 
 extern u8    lbl_803DD9AA;
 extern int   lbl_803DD9A4;
-extern int  *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void  objRenderFn_8003b8f4(f32);
 
 /* EN v1.0 0x80135C2C  size: 152b  titlescreen_render: when visible and
@@ -4130,7 +4131,7 @@ void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (lbl_803DD9AA != 0) return;
     GameBit_Set(0xDF6, 1);
     lbl_803DD9AA = 1;
-    ((void (*)(int, int, int, int))((void **)*gObjectTriggerInterface)[0x50 / 4])(0x57, 0, 0, 0);
+    (*gObjectTriggerInterface)->setCamVars(0x57, 0, 0, 0);
     n_attractmode_releaseMovieBuffers();
     lbl_803DD9A4 = 0;
 }
@@ -4925,7 +4926,6 @@ int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
 #pragma peephole off
 int fn_80138D7C(int obj, int p2)
 {
-  extern int *gObjectTriggerInterface;
   extern void *Obj_GetActiveModel(int);
   extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
   extern f32 timeDelta;
@@ -4940,7 +4940,7 @@ int fn_80138D7C(int obj, int p2)
     f32 t;
     if (GameBit_Get(1005) == 0) {
       GameBit_Set(1005, 1);
-      (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(5, obj, -1);
+      (*gObjectTriggerInterface)->runSequence(5, (void *)obj, -1);
       *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x4000;
       *(f32 *)(p2 + 0x828) = *(f32 *)(p2 + 0x828) + lbl_803E2408;
     }
