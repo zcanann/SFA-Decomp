@@ -420,6 +420,15 @@ citations map to which renumbered entry).
     jump table/compare-chain switch.) Pair with the base-pointer hoist (#16). Took
     vortex_init 86→97.8% (zulu20, 80220608). Read the target's branch shape and
     pick the C form that produces it.
+    **CLONED-CALL-PER-ARM addendum: when target shows `li rA,K1; <full call
+    setup + bctrl>; b end; li rA,K2; <full call setup + bctrl>` — the SAME
+    call duplicated in both arms with only one constant arg differing — the
+    C is the literal if/else with the call WRITTEN IN BOTH ARMS.** The
+    shared-call spellings (`f(x, cond ? 1 : 0)` ternary arg, or an int-temp
+    `v = cond ? 1 : 0; f(x, v);`) emit a per-arm li JOIN feeding ONE call
+    instead — different shape, ~5 instrs off per site. Read target's bctrl
+    count inside the diamond to pick. (OptionsScreen_run 73.5→99.4 leg,
+    commit fea39e9e3.)
 
 22. **Wrap the whole body in `if (cond) { ... } return 0;` instead of
     `if (!cond) return 0; <body>`.** An early mid-function `return` of a constant
@@ -3869,6 +3878,19 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   swap), grep ALL printed lines, not just per-fn heads — fns whose signature
   sits behind earlier unrelated diffs are otherwise missed (task #162 found
   4 hidden #81 sites this way, all -> 100%).
+- `python3 tools/pragma_audit.py [--max-pct N] [--unit-filter S] [--all]` —
+  flag <100% fns whose effective pragma state (stack model, recipe #1) is an
+  OUTLIER vs their unit's majority state. THE highest-yield triage signal on
+  the 60-90 band: run it BEFORE any shape work on a partial (per-fn #1 wraps
+  alone ran +12 to +27pp; intersect.c's 7-fn cluster banked ~+103pp in one
+  commit). A/B MANDATORY both ways — ~50% of peep=ON-only flags are correct-
+  ON (jump tables, #68 peephole-ON-target units; allocLotsOfTextures
+  REGRESSED with the wrap) and inert wraps must be removed (#173). The
+  sched=ON flag class hits near-100%. Sub-class: peephole-off-only regions
+  MISSING scheduling off (vfplift pair +21pp). SJIS carriers (intersect.c,
+  Tumbleweed.c) take byte-wise edits. The wrap UNMASKS recipe-class
+  residuals rather than finishing the fn — expect #74/#112/#20-style work
+  after.
 - `python3 tools/width_audit.py [--all] [--arrays]` — enumerate extern decls
   whose C type width contradicts symbols.txt's `data:N` annotation, ranked by
   consuming-fn fuzzy% (full triage taxonomy in the script header).
