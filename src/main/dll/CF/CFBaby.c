@@ -1735,7 +1735,7 @@ typedef struct CarryableBreakRespawnState {
 } CarryableBreakRespawnState;
 
 extern int *lbl_803DCAC0;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E3B44;
@@ -1746,7 +1746,6 @@ extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int ViewFrustum_IsSphereVisible(f32 *pos, f32 radius);
 typedef void (*ObjectTriggerUpdateFn)(int, int, int);
-typedef void (*PartfxSpawnFn)(int, int, int, int, int, int);
 
 /* Carryable impact state machine that spawns break particles, hides, then respawns. */
 #pragma scheduling off
@@ -1774,8 +1773,8 @@ void carryable_break_respawn_update(int obj) {
                     *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
                     Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
                 }
-                ((PartfxSpawnFn)(*(u32 *)(*gPartfxInterface + 8)))(obj, 0x355, 0, 0, -1, 0);
-                ((PartfxSpawnFn)(*(u32 *)(*gPartfxInterface + 8)))(obj, 0x352, 0, 0, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x355, NULL, 0, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x352, NULL, 0, -1, NULL);
                 state->state = 1;
             }
             break;
