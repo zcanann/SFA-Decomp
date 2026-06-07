@@ -221,17 +221,13 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
         distSq = dx * dx + dz * dz;
         dist = sqrtf(distSq);
         heightDelta = (lbl_803E48C8 + state->posY) - state->targetY;
-        if (distSq <= lbl_803E48C8) {
-            distSq = lbl_803E48C8;
-        }
+        distSq = (distSq > lbl_803E48C8) ? distSq : lbl_803E48C8;
         radiusSq = (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2));
         if ((distSq < radiusSq) || (heightDelta < lbl_803DBF14) ||
             ((*(u16 *)(player + 0xb0) & 0x1000) != 0)) {
             state->shouldSpawnShard = 0;
         }
-        if (distSq <= radiusSq) {
-            distSq = radiusSq;
-        }
+        distSq = (distSq > radiusSq) ? distSq : radiusSq;
 
         accel = (lbl_803E48A4 * -lbl_803DBEF0) * distSq;
         accelDenom = lbl_803E48CC * heightDelta - lbl_803E48D0 * dist;
@@ -239,9 +235,7 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
             accelDenom = lbl_803E48D4;
         }
         accel = accel / accelDenom;
-        if (accel <= lbl_803E48B8) {
-            accel = lbl_803E48B8;
-        }
+        accel = (accel > lbl_803E48B8) ? accel : lbl_803E48B8;
         accel = sqrtf(accel);
         state->launchSpeed += (accel - state->launchSpeed) / lbl_803E48D8;
     }

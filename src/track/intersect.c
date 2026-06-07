@@ -1335,20 +1335,8 @@ void fogFn_80070404(f32 a, f32 b)
     x = lbl_803DEED8 * a;
     y = lbl_803DEED8 * b;
 
-    xc = lbl_803DEEDC;
-    if (x >= lbl_803DEEDC) {
-        xc = x;
-        if (x > gSynthFadeMask) {
-            xc = gSynthFadeMask;
-        }
-    }
-    yc = lbl_803DEEDC;
-    if (y >= lbl_803DEEDC) {
-        yc = y;
-        if (y > gSynthFadeMask) {
-            yc = gSynthFadeMask;
-        }
-    }
+    xc = (x < lbl_803DEEDC) ? lbl_803DEEDC : ((x > gSynthFadeMask) ? gSynthFadeMask : x);
+    yc = (y < lbl_803DEEDC) ? lbl_803DEEDC : ((y > gSynthFadeMask) ? gSynthFadeMask : y);
 
     range = lbl_803DD034 - lbl_803DD038;
     lbl_803DD024 = xc * range + lbl_803DD038;
