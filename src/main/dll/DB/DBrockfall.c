@@ -49,16 +49,17 @@ extern f32 lbl_803E56B4;
 void paymentkiosk_init(int obj, u8 *initData)
 {
     register int self = obj;
+    register PaymentKioskMapData *setup = (PaymentKioskMapData *)initData;
     register PaymentKioskState *state = ((GameObject *)self)->extra;
     u32 secondaryFlag;
 
     ((GameObject *)self)->animEventCallback = (void *)PaymentKiosk_SeqFn;
-    *(short *)self = (short)((int)(signed char)initData[0x18] << 8);
+    *(short *)self = (short)((int)setup->facingByte << 8);
     state->payState = 0;
     ((GameObject *)self)->objectFlags = (u16)(((GameObject *)self)->objectFlags | 0x6000);
     *(u8 *)&((GameObject *)self)->anim.resetHitboxMode =
         (u8)(*(u8 *)&((GameObject *)self)->anim.resetHitboxMode | 0x8);
-    secondaryFlag = (*(short *)(self + 0x46) == 0x476) ? 1 : 0;
+    secondaryFlag = (((GameObject *)self)->anim.seqId == PAYMENT_KIOSK_WELL_TEXT_SEQ_ID) ? 1 : 0;
     state->textVariant = (u8)secondaryFlag;
 }
 #pragma peephole reset

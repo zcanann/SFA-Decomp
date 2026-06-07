@@ -14,6 +14,20 @@ typedef struct PaymentKioskState {
   u8 promptState; /* 0 = none, 1 = show approach text, 2 = cannot afford */
 } PaymentKioskState;
 
+typedef struct PaymentKioskMapData {
+  u8 pad00[0x18];
+  s8 facingByte;
+  u8 pad19;
+  s16 price;
+  u8 pad1C[0x1E - 0x1C];
+  s16 gameBit;
+} PaymentKioskMapData;
+
 STATIC_ASSERT(sizeof(PaymentKioskState) == 0x3);
+STATIC_ASSERT(offsetof(PaymentKioskMapData, facingByte) == 0x18);
+STATIC_ASSERT(offsetof(PaymentKioskMapData, price) == 0x1A);
+STATIC_ASSERT(offsetof(PaymentKioskMapData, gameBit) == 0x1E);
+
+#define PAYMENT_KIOSK_WELL_TEXT_SEQ_ID 0x0476
 
 #endif /* MAIN_DLL_PAYMENTKIOSK_H_ */

@@ -471,7 +471,7 @@ void sc_totemstrength_update(u8 *obj)
 /* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
 u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
 {
-    u8 *setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    PaymentKioskMapData *setup = (PaymentKioskMapData *)((GameObject *)obj)->anim.placementData;
     PaymentKioskState *st = ((GameObject *)obj)->extra;
     int player;
     u32 r;
@@ -482,7 +482,7 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
         r = 0;
     } else {
         st->promptState = 0;
-        if (playerGetMoney(player) >= *(s16 *)(setup + 0x1a)) {
+        if (playerGetMoney(player) >= setup->price) {
             r = 1;
             st->promptState = 0;
         } else {
@@ -508,7 +508,7 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
 int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
 {
     PaymentKioskState *st = ((GameObject *)obj)->extra;
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    PaymentKioskMapData *setup = (PaymentKioskMapData *)((GameObject *)obj)->anim.placementData;
     int player;
     int i;
     u8 ev;
@@ -519,8 +519,8 @@ int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
         ev = data[i + 0x81];
         switch (ev) {
         case 2:
-            GameBit_Set(*(s16 *)(setup + 0x1e), 1);
-            playerAddMoney(player, -*(s16 *)(setup + 0x1a));
+            GameBit_Set(setup->gameBit, 1);
+            playerAddMoney(player, -setup->price);
             st->payState = 2;
             break;
         case 1:
@@ -541,12 +541,12 @@ int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
 void paymentkiosk_update(int obj)
 {
     PaymentKioskState *st = ((GameObject *)obj)->extra;
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    PaymentKioskMapData *setup = (PaymentKioskMapData *)((GameObject *)obj)->anim.placementData;
     u8 b = st->payState;
 
     switch (b) {
     case 0:
-        if (*(s16 *)(setup + 0x1e) != -1 && GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+        if (setup->gameBit != -1 && GameBit_Get(setup->gameBit) != 0) {
             st->payState = 2;
         } else {
             st->payState = 1;
