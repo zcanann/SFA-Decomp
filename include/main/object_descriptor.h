@@ -19,7 +19,7 @@ typedef struct ObjectDescriptor {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorExtraSizeCallback getExtraSize;
 } ObjectDescriptor;
 
@@ -36,7 +36,7 @@ typedef struct ObjectDescriptor11 {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorCallback slot09;
   ObjectDescriptorCallback slot0A;
 } ObjectDescriptor11;
@@ -59,7 +59,7 @@ typedef struct ObjectDescriptor11ExtraSize {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorExtraSizeCallback getExtraSize;
   ObjectDescriptorCallback slot0A;
 } ObjectDescriptor11ExtraSize;
@@ -82,7 +82,7 @@ typedef struct ObjectDescriptor12 {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorExtraSizeCallback getExtraSize;
   ObjectDescriptorCallback slot0A;
   ObjectDescriptorCallback slot0B;
@@ -101,7 +101,7 @@ typedef struct ObjectDescriptor13 {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorExtraSizeCallback getExtraSize;
   ObjectDescriptorCallback slot0A;
   ObjectDescriptorCallback slot0B;
@@ -121,7 +121,7 @@ typedef struct ObjectDescriptor14 {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorCallback slot09;
   ObjectDescriptorCallback slot0A;
   ObjectDescriptorCallback slot0B;
@@ -142,7 +142,7 @@ typedef struct ObjectDescriptor15 {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorExtraSizeCallback getExtraSize;
   ObjectDescriptorCallback slot0A;
   ObjectDescriptorCallback slot0B;
@@ -164,7 +164,7 @@ typedef struct ObjectDescriptor16 {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorExtraSizeCallback getExtraSize;
   ObjectDescriptorCallback slot0A;
   ObjectDescriptorCallback slot0B;
@@ -192,7 +192,7 @@ typedef struct ObjectDescriptor17 {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorExtraSizeCallback getExtraSize;
   ObjectDescriptorCallback slot0A;
   ObjectDescriptorCallback slot0B;
@@ -216,7 +216,7 @@ typedef struct ObjectDescriptor20 {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorExtraSizeCallback getExtraSize;
   ObjectDescriptorCallback slot0A;
   ObjectDescriptorCallback slot0B;
@@ -248,7 +248,7 @@ typedef struct ObjectDescriptor23 {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorExtraSizeCallback getExtraSize;
   ObjectDescriptorCallback slot0A;
   ObjectDescriptorCallback slot0B;
@@ -278,7 +278,7 @@ typedef struct ObjectDescriptor24 {
   ObjectDescriptorCallback hitDetect;
   ObjectDescriptorCallback render;
   ObjectDescriptorCallback free;
-  ObjectDescriptorCallback slot08;
+  ObjectDescriptorCallback getObjectTypeId;
   ObjectDescriptorExtraSizeCallback getExtraSize;
   ObjectDescriptorCallback slot0A;
   ObjectDescriptorCallback slot0B;
