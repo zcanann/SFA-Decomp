@@ -1955,7 +1955,13 @@ addend lands mid-function (not at a symbol boundary) before adding a range.
     load-then-copy (`lwz rX,disp(rY); mr rZ,r3`) and yours shows the copy
     first, statement reorder, comma-for-init, and locals are all inert
     (enemy_free, nw_ice_update, fn_80063368's mr-vs-li). 2-5 instr residual;
-    don't grind. Related fold cap: a displaced byte/half access folds the
+    don't grind. **PARTIAL CRACK (task #14): check the loaded byte's LOCAL
+    TYPE first — `int n` instead of `u8 n` for a u8-field loop bound
+    (`n = obj->byteField; for (i = 0; i < n;)`) flips the lbz/li emission
+    to target's load-first order AND fixes the n/i/child web coloring in
+    one move (enemy_free 18->14 diff lines; the #64-family int-local lever
+    applied to emission order). Decl-order and #80 launders stay inert on
+    the residual state/i chained-deref pair (#61c true-cap subclass).** Related fold cap: a displaced byte/half access folds the
     constant onto the INDEX (`addi r0,idx,K; lbzx/stwx`) where target keeps
     it on the access (`add base,idx; lbz K(base)`) — struct-field,
     per-statement locals and pointer-arith spellings all fold back

@@ -565,7 +565,7 @@ void enemy_free(int obj, int flag)
     u8 *child;
     int i;
     u8 *state;
-    u8 n;
+    int n;
 
     state = ((GameObject *)obj)->extra;
 
