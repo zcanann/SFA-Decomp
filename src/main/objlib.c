@@ -1719,25 +1719,18 @@ void ObjGroup_RemoveObject(uint obj,int group)
 int ObjGroup_GetObjectGroup(uint obj)
 {
   int group;
-  uint *entry;
-  u8 *offset;
   int objectIndex;
-  int objectCount;
-  
-  objectIndex = 0;
-  entry = gObjGroupObjects;
-  objectCount = (int)gObjGroupObjectCount;
-  for (; objectIndex < objectCount; objectIndex++) {
-    if (*entry == obj) {
+
+  for (objectIndex = 0; objectIndex < (int)(uint)gObjGroupObjectCount; objectIndex++) {
+    uint entryObj = gObjGroupObjects[objectIndex];
+    if (entryObj == obj) {
       group = 0;
-      offset = gObjGroupOffsets;
-      while (((int)(uint)*offset <= objectIndex) && (group < OBJGROUP_OFFSET_CLEAR_COUNT)) {
-        offset++;
+      while (((int)(uint)gObjGroupOffsets[group] <= objectIndex) &&
+             (group < OBJGROUP_OFFSET_CLEAR_COUNT)) {
         group++;
       }
       return group;
     }
-    entry++;
   }
   return 0;
 }
@@ -1789,7 +1782,7 @@ void ObjGroup_AddObject(uint obj,int group)
   if (limit != insertIndex) {
     insertIndex = limit - 1;
   }
-  gObjGroupObjectCount = gObjGroupObjectCount + 1;
+  gObjGroupObjectCount++;
   count = (int)(uint)gObjGroupObjectCount - 1;
   entries = gObjGroupObjects + count;
   for (index = count; insertIndex < index; index--) {
@@ -1800,7 +1793,7 @@ void ObjGroup_AddObject(uint obj,int group)
   group++;
   offset = gObjGroupOffsets + group;
   while (group <= OBJGROUP_COUNT) {
-    *offset = *offset + 1;
+    (*offset)++;
     offset++;
     group++;
   }
@@ -2394,18 +2387,16 @@ void ObjLink_AttachChild(int parent,int child,ushort linkMode)
 #pragma peephole off
 void ObjContact_DispatchCallbacks(int objA,int objB)
 {
-  bool bVar1;
   int objARefCount;
   int objBRefCount;
+  int count;
   ObjContactCallbackEntry *entry;
-  int iVar5;
 
   objARefCount = *(u8 *)(objA + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
   objBRefCount = *(u8 *)(objB + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
   entry = gObjContactCallbacks;
-  iVar5 = gObjContactCallbackCount;
-  while (((objARefCount != 0 && (objBRefCount != 0)) &&
-          (bVar1 = iVar5 != 0, iVar5 = iVar5 - 1, bVar1))) {
+  count = gObjContactCallbackCount;
+  while ((objARefCount != 0) && (objBRefCount != 0) && (count-- != 0)) {
     if (((u32)entry->objA == (u32)objA) && ((u32)entry->objB == (u32)objB)) {
       objARefCount = objARefCount - 1;
       entry->callback(objA,objB);
