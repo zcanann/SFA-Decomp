@@ -2467,6 +2467,18 @@ MatchingFor flip (status edits remain the team-lead's):
    retail's at that range (arwproximit: claiming
    `.sdata2 0x803E7208-0x803E7218` made the 2 f64 biases link at retail's
    addresses; the unreferenced float slice stayed in the auto unit).
+   **(b)-extended -- a local @NNN conversion-bias pool in .sdata2 with NO
+   corresponding retail TU pool = flip BLOCKED pending a link-level dedup;
+   the unit's 100%% still banks fully.** When our .o carries an 8-byte
+   .sdata2 (the signed int->f32 bias `43300000 80000000`) but RETAIL's TU
+   references the SHARED auto_11 copy (lbl_803E3578-class) and owns no pool
+   of its own, there is nothing to claim in splits.txt -- flipping would
+   inject fresh .sdata2 bytes into the link and shift every downstream
+   address (the arwproximit failure mode). Known-negative: the manual
+   conversion idiom that references the named bias emits fsub+frsp (#61d)
+   and would break the 100%%. This class recurs on EVERY flip candidate
+   whose fns do signed int->f32 -- run this check as part of any unit-100
+   report (cases: dll_138, firepipe -- both 100.0, both held NonMatching).
 3. **Post-flip gate**: DEFAULT-target build (report-only builds do NOT
    relink main.dol -- stale-dol trap), byte-compare the unit's dol region
    against orig/GSAE01/sys/main.dol, and confirm the dol md5. "dol changed
@@ -3356,6 +3368,19 @@ as runtime+0x980 per recipe #16 — confirmed correct for SOME target fns by
 `add rX,r31; lwz 2440(rX)`) can be per-fn MIXED — expgfx family nets NEGATIVE
 globally (+1.4 free, −3.9 expgfxRemove); apply per-fn, never per-inline,
 when the family's target uses both forms.
+**SR init/bump GROUP-ORDER tell (the multi-walker extension of the #160
+shape):** when target's loop preheader emits the SR'd INT-OFFSET webs
+(`li rX,K` byte-offset counters) BEFORE the pointer-walker inits, with the
+SAME grouping repeated at the latch bumps, the original source had NO named
+walkers at all — every access was index form (`base[i*stride+k]`,
+`&arr[i*stride]`, `(u8 *)p + i*stride + K`) and strength reduction created
+ALL the walkers in one creation-order group. Named walker statements
+(`p = base; ... p += 3;` at body end) emit their inits/bumps at statement
+position with the SR webs APPENDED after — no statement reorder can
+interleave them. Converting the named walkers + body-end bumps to full
+index form let SR regenerate target's exact group order byte-exact
+(fn_80174BFC 98.22->100, dll_138 unit -> 100.0). Same A/B caveat as #160:
+the conversion moves web classes; verify coloring survives.
 
 **Loop induction-update ORDER is sometimes a hard cap (~1-3 instr).** Target
 emits `addi ptr; addi counter; cmpwi counter; b`; clean-C array-index form emits
