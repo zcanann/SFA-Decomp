@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
+#include "main/effect_interfaces.h"
 #include "main/objhits_types.h"
 #include "main/game_object.h"
 
@@ -852,7 +853,8 @@ void pollenfragment_init(int obj,int config)
   }
   spawnCount = 4;
   do {
-    (*(code *)(*gPartfxInterface + 8))(obj,(int)*(short *)(state[7] + 6),0,1,0xffffffff,0);
+    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj,
+        (int)*(short *)(state[7] + 6), NULL, 1, -1, NULL);
   } while (spawnCount-- != 0);
   if (!((PollenFragmentDef *)state[7])->timed) {
     *(float *)(state + 2) = lbl_803E319C;
@@ -1183,10 +1185,10 @@ extern f32 lbl_803E313C;
 #pragma scheduling off
 #pragma peephole off
 void pinponspike_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 void pollen_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 void pinponspike_init(int obj) {
     ((GameObject *)obj)->unkF4 = 0;
@@ -1216,7 +1218,7 @@ void pollenfragment_free(int obj) {
         ModelLightStruct_free((void *)inner[6]);
         inner[6] = 0;
     }
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 void mikabomb_free(int obj, int mode) {
     void **inner = ((GameObject *)obj)->extra;
@@ -1546,7 +1548,8 @@ void pinponspike_update(int obj) {
             ((GameObject *)obj)->unkF4 = 0x78;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
-                (*(void (*)(int, int, int, int, int, int *))*(int *)(*gPartfxInterface + 8))(obj, 0x715, 0, 1, -1, &i);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x715,
+                                                                    NULL, 1, -1, &i);
             }
             Sfx_PlayFromObject(obj, 0x279);
         } else if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0) {
@@ -1555,7 +1558,8 @@ void pinponspike_update(int obj) {
             ((GameObject *)obj)->unkF4 = 0x78;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
-                (*(void (*)(int, int, int, int, int, int *))*(int *)(*gPartfxInterface + 8))(obj, 0x715, 0, 1, -1, &i);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x715,
+                                                                    NULL, 1, -1, &i);
             }
             Sfx_PlayFromObject(obj, 0x279);
         } else if (((GameObject *)obj)->anim.localPosY < lbl_803E312C) {
@@ -1600,7 +1604,8 @@ void pollen_update(int obj) {
         if (((GameObject *)obj)->anim.alpha == 0xff) {
             i = 2;
             do {
-                (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x4ba, 0, 1, -1, 0);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x4ba,
+                                                                    NULL, 1, -1, NULL);
             } while (i-- != 0);
         }
     }
@@ -1680,7 +1685,9 @@ void pollenfragment_update(int obj) {
             if (((GameObject *)obj)->anim.alpha == 0xff) {
                 i = 2;
                 do {
-                    (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, (int)(((PollenFragmentExtra *)extra)->def)->burstFx, 0, 1, -1, 0);
+                    ((EffectInterface *)*gPartfxInterface)->spawnObject(
+                        (void *)obj, (int)(((PollenFragmentExtra *)extra)->def)->burstFx,
+                        NULL, 1, -1, NULL);
                 } while (i-- != 0);
             }
             *(f32 *)(extra + 8) = lbl_803E3160;
@@ -1694,7 +1701,9 @@ void pollenfragment_update(int obj) {
         }
     }
     if ((((PollenFragmentExtra *)extra)->def)->auraFx != -1) {
-        (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, (int)(((PollenFragmentExtra *)extra)->def)->auraFx, 0, 1, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject(
+            (void *)obj, (int)(((PollenFragmentExtra *)extra)->def)->auraFx, NULL, 1, -1,
+            NULL);
     }
     nearObj = (u8 *)ObjGroup_FindNearestObject((int)(((PollenFragmentExtra *)extra)->def)->targetGroup, obj, 0);
     if (nearObj != NULL &&
