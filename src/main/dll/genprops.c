@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
+#include "main/effect_interfaces.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/resource.h"
@@ -5219,7 +5220,7 @@ int* fn_801702D4(int* obj, f32 fv) {
 #pragma scheduling reset
 
 extern void mm_free(int *p);
-extern int *gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 extern f32 lbl_803E31FC;
 extern f32 lbl_803E3200;
 extern f32 lbl_803E3204;
@@ -5256,7 +5257,7 @@ void staff_free(int *obj) {
         mm_free(*(int **)p);
         p += 0x18;
     }
-    ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
+    (*gExpgfxInterface)->freeObject(obj);
 }
 
 void fireball_free(int *obj) {
@@ -5265,7 +5266,7 @@ void fireball_free(int *obj) {
     if (ptr != NULL) {
         ModelLightStruct_free(ptr);
     }
-    ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
+    (*gExpgfxInterface)->freeObject(obj);
     ObjGroup_RemoveObject((int)obj, 2);
 }
 #pragma peephole reset
@@ -6246,7 +6247,7 @@ typedef struct Dim2PartVec {
     f32 z;
 } Dim2PartVec;
 
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -6277,7 +6278,7 @@ void dim2roofrub_update(int *obj)
                 v.y = ((GameObject *)obj)->anim.localPosY;
                 v.z = ((GameObject *)obj)->anim.localPosZ;
                 for (k = 3; k != 0; k--) {
-                    ((void (*)(int *, int, void *, u32, int, int))((int *)*gPartfxInterface)[2])(obj, 2046, &v, 0x200001, -1, 0);
+                    (*gPartfxInterface)->spawnObject(obj, 2046, &v, 0x200001, -1, NULL);
                 }
                 break;
             }
@@ -6981,7 +6982,8 @@ void shield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
                             pv[1] += ((GameObject *)obj)->anim.localPosY;
                             pv[2] += ((GameObject *)obj)->anim.localPosZ;
                             s.a = cD;
-                            ((void (*)(int *, int, void *, u32, int, int))((int *)*gPartfxInterface)[2])(obj, 2028, &s, 0x200001, -1, 0);
+                            (*gPartfxInterface)->spawnObject(obj, 2028, &s, 0x200001, -1,
+                                                             NULL);
                         }
                     }
                 }
@@ -7086,7 +7088,7 @@ void superQuakeFn_8016d9fc(f32 *pos)
         v.h0 = 0;
         v.h2 = 0;
         v.h1 = 0;
-        ((void (*)(int *, int, void *, u32, int, int))((int *)*gPartfxInterface)[2])(player, 0x565, &v, 0x200000, -1, 0);
+        (*gPartfxInterface)->spawnObject(player, 0x565, &v, 0x200000, -1, NULL);
         setup = Obj_AllocObjectSetup(36, 0x63c);
         *((u8 *)setup + 4) = 1;
         *((u8 *)setup + 6) = 0xff;
@@ -8077,28 +8079,28 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
             fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E3298));
             fxB.f1 = lbl_803E32A4 * (power / lbl_803E32A8 - lbl_803E3294);
             fxB.id = 0xc94;
-            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
-            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
-            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
-            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
             fxB.count = 9;
             fxB.f0 = lbl_803E32B0 * (power / lbl_803E32A8) + lbl_803E32AC;
             fxB.f2 = lbl_803E32B4;
             fxB.id = 0xc0e;
-            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
             break;
         case 67:
             if (power > lbl_803E32B4) {
                 fxB.count = (int)(lbl_803E32A0 * (power / lbl_803E3298)) + 6;
                 fxB.f1 = lbl_803E32A4 * (power / lbl_803E32A8 - lbl_803E3294);
                 fxB.id = 0xc94;
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b4, &fxB, 2, -1, 0);
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b4, &fxB, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b4, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b4, &fxB, 2, -1, NULL);
                 fxB.count = 9;
                 fxB.f0 = lbl_803E32B0 * (power / lbl_803E32A8) + lbl_803E32AC;
                 fxB.f2 = lbl_803E32B4;
                 fxB.id = 0xc0e;
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
             }
             break;
         case 136:
@@ -8107,10 +8109,10 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
             fxB.f2 = lbl_803E32B4;
             fxB.f1 = lbl_803E32B8;
             fxB.id = 0xc0e;
-            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
             fxB.count = 18;
             fxB.f2 = lbl_803E32BC;
-            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
             break;
         case 127:
             fxB.f0 = lbl_803E32C0;
@@ -8118,7 +8120,7 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
             fxB.f2 = lbl_803E32BC;
             fxB.f1 = lbl_803E32B8;
             fxB.id = 0xc0e;
-            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
             break;
         case 133:
             if (power > lbl_803E32B4) {
@@ -8131,10 +8133,10 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
                     fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - power / lbl_803E32A8);
                     fxB.id = 0xc94;
                 }
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
                 fxB.count = 9;
                 if (GameBit_Get(0xc55) != 0) {
                     fxB.f0 = lbl_803E32B0 * (power / lbl_803E32B8) + lbl_803E32AC;
@@ -8144,7 +8146,7 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
                     fxB.id = 0xc0e;
                 }
                 fxB.f2 = lbl_803E32B4;
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
             }
             break;
         case 1135:
@@ -8152,15 +8154,15 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
                 fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32C8));
                 fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - power / lbl_803E32C8);
                 fxB.id = 0xc94;
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b2, &fxB, 2, -1, NULL);
                 fxB.count = 9;
                 fxB.f0 = lbl_803E32B0 * (power / lbl_803E32C8) + lbl_803E32AC;
                 fxB.f2 = lbl_803E32B4;
                 fxB.id = 0xc0e;
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
             }
             break;
         case 1128:
@@ -8171,17 +8173,22 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
                 fxB.f1 = *(f32 *)(pos2 + 0xc);
                 fxB.f2 = *(f32 *)(pos2 + 0x10);
                 fxB.f3 = *(f32 *)(pos2 + 0x14);
-                ((void (*)(int, int, void *, int, int, void *))((int *)*gPartfxInterface)[2])(*(int *)&((GameObject *)obj)->unkC4, 0x7b9, &fxB, 0x200001, -1, &fxA);
-                ((void (*)(int, int, void *, int, int, void *))((int *)*gPartfxInterface)[2])(*(int *)&((GameObject *)obj)->unkC4, 0x7b9, &fxB, 0x200001, -1, &fxA);
-                ((void (*)(int, int, void *, int, int, void *))((int *)*gPartfxInterface)[2])(*(int *)&((GameObject *)obj)->unkC4, 0x7b9, &fxB, 0x200001, -1, &fxA);
-                ((void (*)(int, int, void *, int, int, void *))((int *)*gPartfxInterface)[2])(*(int *)&((GameObject *)obj)->unkC4, 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->unkC4,
+                                                 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->unkC4,
+                                                 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->unkC4,
+                                                 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->unkC4,
+                                                 0x7b9, &fxB, 0x200001, -1, &fxA);
                 fxA.count = 9;
                 fxA.id = 0xc95;
                 fxA.f0 = lbl_803E32CC * (power / lbl_803E32C8) + lbl_803E32AC;
                 fxB.f1 = *(f32 *)(pos2 + 0xc);
                 fxB.f2 = *(f32 *)(pos2 + 0x10);
                 fxB.f3 = *(f32 *)(pos2 + 0x14);
-                ((void (*)(int, int, void *, int, int, void *))((int *)*gPartfxInterface)[2])(*(int *)&((GameObject *)obj)->unkC4, 0x7ba, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->unkC4,
+                                                 0x7ba, &fxB, 0x200001, -1, &fxA);
             }
             break;
         case 134:
@@ -8200,13 +8207,13 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
                 fxB.count = 9;
                 fxB.f0 = lbl_803E3288;
                 fxB.f2 = lbl_803E32B4;
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
             } else if (h < lbl_803E32D8) {
                 fxB.f1 = lbl_803E32C4 * (lbl_803E32DC * (h - lbl_803E32D0) - lbl_803E3294);
                 fxB.count = 9;
                 fxB.f0 = lbl_803E3288;
                 fxB.f2 = lbl_803E32B4;
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x7b3, &fxB, 2, -1, NULL);
             }
             break;
         }
