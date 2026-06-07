@@ -46,7 +46,7 @@ extern undefined4 DAT_802c2a34;
 extern undefined4 DAT_802c2a38;
 extern undefined4 DAT_802c2a3c;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4* DAT_803de760;
@@ -186,12 +186,12 @@ void FUN_8018af74(undefined8 param_1,double param_2,double param_3,undefined8 pa
       FUN_80294d1c(iVar1,1);
       iVar1 = ObjGroup_FindNearestObject(4,param_9,&local_3c);
       if (iVar1 == 0) {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->setObjects((int)*(short *)(iVar2 + 0x1a), 0, 0);
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_9, -1);
+        (*gObjectTriggerInterface)->setObjects((int)*(short *)(iVar2 + 0x1a), 0, 0);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)param_9, -1);
       }
       else {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->setObjects((int)*(short *)(iVar1 + 0x46), 0, 0);
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_9, -1);
+        (*gObjectTriggerInterface)->setObjects((int)*(short *)(iVar1 + 0x46), 0, 0);
+        (*gObjectTriggerInterface)->runSequence(1, (void *)param_9, -1);
       }
       GameBit_Set((int)*(short *)(iVar2 + 0x1e),1);
       *pbVar3 = *pbVar3 & 0x7f | 0x80;
@@ -300,10 +300,10 @@ void FUN_8018b258(undefined8 param_1,double param_2,double param_3,undefined8 pa
     else {
       *pbVar4 = 3;
       if (*(char *)(iVar5 + 0x1b) == '\0') {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(3, (void *)param_9, -1);
+        (*gObjectTriggerInterface)->runSequence(3, (void *)param_9, -1);
       }
       else {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_9, -1);
+        (*gObjectTriggerInterface)->runSequence(1, (void *)param_9, -1);
       }
     }
   }
@@ -317,10 +317,10 @@ void FUN_8018b258(undefined8 param_1,double param_2,double param_3,undefined8 pa
                    0x2d,0,param_13,param_14,param_15,param_16);
       *pbVar4 = 1;
       if (*(char *)(iVar5 + 0x1b) == '\0') {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(2, (void *)param_9, -1);
+        (*gObjectTriggerInterface)->runSequence(2, (void *)param_9, -1);
       }
       else {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_9, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)param_9, -1);
       }
     }
     else {
@@ -428,7 +428,7 @@ void FUN_8018b6ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (uVar8 != 0) {
       GameBit_Set(0x91e,0);
       (*DAT_803dd72c)->setAnimEvent(*(undefined *)(iVar9 + 0x1f),*(undefined *)(iVar9 + 0x1a),0);
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)uVar3, -1);
+      (*gObjectTriggerInterface)->runSequence(1, (void *)uVar3, -1);
       FUN_80042b9c(0,0,1);
       *pbVar10 = 3;
       goto LAB_8018bc44;
@@ -478,7 +478,7 @@ void FUN_8018b6ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
             *pbVar10 = 2;
             (*DAT_803dd72c)->setAnimEvent(*(undefined *)(iVar9 + 0x1f),*(undefined *)(iVar9 + 0x1a),1);
             (*DAT_803dd72c)->setMode(*(undefined *)(iVar9 + 0x1f),*(undefined *)(iVar9 + 0x1b));
-            ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)uVar3, -1);
+            (*gObjectTriggerInterface)->runSequence(0, (void *)uVar3, -1);
             (**(code **)(*DAT_803dd6d0 + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
           }
         }
@@ -808,8 +808,6 @@ extern void getEnvfxAct(int *obj, int *target, int id, int p);
 extern void Music_Trigger(int a, int b);
 extern void setAButtonIcon(int idx);
 extern void warpToMap(int mapId, int b);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
-
 #pragma scheduling off
 #pragma peephole off
 void magiccavebottom_update(int *obj) {
