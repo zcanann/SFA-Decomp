@@ -966,8 +966,8 @@ void immultiseq_update(int *obj)
 
     if ((state[1] & IMMULTISEQ_LATCH_ADVANCE_BIT) != 0) {
         step = state[0];
-        stepDef = def + step * 2;
-        bitId = *(s16 *)(stepDef + 0x18);
+        stepDef = def + 0x18;
+        bitId = *(s16 *)(stepDef + step * 2);
         GameBit_Set(bitId, (u32)!((def[0x30] >> (step + 4)) & 1));
         state[1] = (u8)(state[1] & ~IMMULTISEQ_LATCH_ADVANCE_BIT);
         state[0]++;
@@ -975,14 +975,14 @@ void immultiseq_update(int *obj)
 
     if ((int)state[0] != 4) {
         u8 st = state[0];
-        stepDef = def + st * 2;
-        bitId = *(s16 *)(stepDef + 0x20);
+        stepDef = def + 0x20;
+        bitId = *(s16 *)(stepDef + st * 2);
         if (bitId == -1) {
             state[0] = 4;
         }
         else if ((u32)!((def[0x30] >> state[0]) & 1) == GameBit_Get(bitId)) {
-            s8 *q = (s8 *)(def + state[0]);
-            s8 triggerId = q[0x2c];
+            s8 *q = (s8 *)(def + 0x2c);
+            s8 triggerId = q[state[0]];
             if (triggerId != -1) {
                 ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])
                     (triggerId, obj, -1);
