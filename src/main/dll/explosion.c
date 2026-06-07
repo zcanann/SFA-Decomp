@@ -401,13 +401,13 @@ void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if ((uVar2 & 0x100) == 0) {
       uVar2 = FUN_80006c10(0);
       if ((uVar2 & 0x200) != 0) {
-        (**(code **)(*DAT_803dd6d4 + 0x4c))((int)*(char *)(param_11 + 0x57));
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->endSequence((s8)*(u8 *)(param_11 + 0x57));
         *(undefined *)(iVar4 + 0xf) = 7;
         *(undefined2 *)(iVar4 + 2) = 0;
       }
     }
     else {
-      (**(code **)(*DAT_803dd6d4 + 0x4c))((int)*(char *)(param_11 + 0x57));
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->endSequence((s8)*(u8 *)(param_11 + 0x57));
       *(undefined *)(iVar4 + 0xf) = 8;
       *(undefined2 *)(iVar4 + 2) = 0;
     }

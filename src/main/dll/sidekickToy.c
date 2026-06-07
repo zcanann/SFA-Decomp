@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 #include "main/dll/sidekickToy.h"
 #include "main/dll/mediumbasket.h"
 #include "main/dll/tricky_state.h"
@@ -2422,7 +2423,7 @@ int enemy_animEventCallback(int *node, int p2, u8 *cmds)
                 *(u16 *)(sub + 0x2b6) = 0x33;
             break;
         case 3:
-            (*(void (*)(int, int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x50)))(0x49, 4, node, 0x3c);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setCamVars(0x49, 4, (int)node, 0x3c);
             break;
         case 6:
             if (*(int **)&((TrickyState *)sub)->unk36C != NULL)

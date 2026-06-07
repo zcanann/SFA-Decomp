@@ -1,5 +1,6 @@
 #include "main/dll/mmshrine/torch1C1.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_800175cc();
@@ -169,7 +170,7 @@ void FUN_801c61f4(undefined4 param_1,undefined4 param_2,int param_3)
         GameBit_Set(0xba8,1);
         break;
       case '\r':
-        (**(code **)(*DAT_803dd6d4 + 0x50))(0x48,100,0,0x50);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->setCamVars(0x48, 100, 0, 0x50);
         break;
       case '\x0e':
         *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;
