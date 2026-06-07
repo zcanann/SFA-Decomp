@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 int drgenerator_getExtraSize(void) { return 0x19c; }
@@ -171,7 +172,7 @@ loop:
     }
     n = 1;
     do {
-        (*(void (**)(int, int, int, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x690, 0, 1, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x690, NULL, 1, -1, NULL);
     } while (n-- != 0);
 }
 #pragma peephole reset

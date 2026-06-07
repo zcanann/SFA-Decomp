@@ -1,4 +1,5 @@
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
@@ -319,7 +320,8 @@ void bossdrakor_updateHeadTracking(int obj, int state)
                     }
                     if (((BossDrakorState *)state)->unk18 > lbl_803E6520) {
                         prm.mode = 45000;
-                        (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 0x8))(obj, 0x7ad, &prm, 1, -1, 0);
+                        ((EffectInterface *)*gPartfxInterface)->spawnObject(
+                            (void *)obj, 0x7ad, &prm, 1, -1, NULL);
                     }
                 }
             }

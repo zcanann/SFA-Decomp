@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2flameburst.h"
@@ -2233,7 +2234,7 @@ extern f32 lbl_803DCDD8;
 extern f32 lbl_803DCDDC;
 extern f32 lbl_80325528[];
 extern FbTexTbl lbl_802C2328;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E4A00;
 extern f32 lbl_803E4A04;
 extern f32 lbl_803E4A08;
@@ -2646,7 +2647,7 @@ void explosion_update(int obj)
                             ang[3] = 0;
                         }
                     }
-                    (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x5e, &fake, 0x200001, -1, ang);
+                    (*gPartfxInterface)->spawnObject((void *)obj, 0x5e, &fake, 0x200001, -1, ang);
                 }
             }
         }
