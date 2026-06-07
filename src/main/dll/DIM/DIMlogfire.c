@@ -638,7 +638,7 @@ void FUN_801a9e5c(uint param_1)
             (uVar2 = GameBit_Get(0x86a), uVar2 != 0)) {
       *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar4 + 0xc);
       ((GameObject *)param_1)->anim.alpha = 0;
-      (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
       GameBit_Set(0x86a,uVar2 - 1);
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
     }

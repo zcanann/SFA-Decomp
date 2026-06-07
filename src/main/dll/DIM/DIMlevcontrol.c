@@ -451,7 +451,7 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
           (**(code **)(*DAT_803dd6d0 + 0x1c))(0x51,1,0,4,local_28,0x32,0xff);
           FUN_80006ba8(0,0x100);
           *(undefined *)(piVar6 + 0x2b) = 3;
-          (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_9,0xffffffff);
+          ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_9, -1);
           *(undefined *)(piVar6 + 0x2c) = 0x3c;
           *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) | 8;
         }
