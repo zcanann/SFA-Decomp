@@ -813,12 +813,13 @@ int hightop_stateHandler04(int obj, int p) {
 #pragma peephole off
 int hightop_stateHandler02(int obj, int p, f32 t) {
     HighTopRuntime *state = ((GameObject *)obj)->extra;
+    int cont = 1;
     s16 d336;
     int absd;
     int conv;
-    int band;
+    u32 band;
+    int idx;
     int changed;
-    int cont;
     f32 v;
     f32 f31;
     f32 ang;
@@ -828,42 +829,38 @@ int hightop_stateHandler02(int obj, int p, f32 t) {
     if (*(f32 *)((char *)p + 0x298) < lbl_803E6B04) {
         *(s16 *)((char *)p + 0x334) = 0;
         *(s16 *)((char *)p + 0x336) = 0;
-        *(f32 *)((char *)p + 0x298) = lbl_803E6AA8;
+        *(f32 *)((char *)p + 0x298) = 0.0f;
     }
     d336 = *(s16 *)((char *)p + 0x336);
-    absd = d336 < 0 ? -d336 : d336;
+    if (d336 >= 0) {
+        absd = d336;
+    } else {
+        absd = -d336;
+    }
     if (state->unkC16 < absd) {
         conv = (int)(lbl_803E6B08 * ((f32)d336 * t));
         *(s16 *)obj = (s16)(*(s16 *)obj + ((s16)conv >> 5));
     } else {
-        *(s16 *)obj = (s16)(int)(lbl_803E6B0C * (((f32)d336 * t) / lbl_803E6B10) + (f32)*(s16 *)obj);
+        *(s16 *)obj = (lbl_803E6B0C * (((f32)d336 * t) / lbl_803E6B10) + (f32)*(s16 *)obj);
     }
     conv = (int)(lbl_803E6B08 * ((f32)*(s16 *)((char *)p + 0x336) * t));
     vec = (s16 *)objModelGetVecFn_800395d8(obj, 9);
     if (vec != 0) {
         vec[1] = (s16)(vec[1] + (((s16)conv - vec[1]) >> 3));
         vec[0] = (s16)(vec[0] + ((-vec[0]) >> 3));
-        if (vec[1] < -0x1555) {
-            vec[1] = -0x1555;
-        } else if (vec[1] > 0x1555) {
-            vec[1] = 0x1555;
-        }
-        if (vec[1] < -0x1555) {
-            vec[1] = -0x1555;
-        } else if (vec[1] > 0x1555) {
-            vec[1] = 0x1555;
-        }
+        vec[1] = (vec[1] < -0x1555) ? -0x1555 : ((vec[1] > 0x1555) ? 0x1555 : vec[1]);
+        vec[1] = (vec[1] < -0x1555) ? -0x1555 : ((vec[1] > 0x1555) ? 0x1555 : vec[1]);
     }
     v = *(f32 *)((char *)p + 0x298);
-    if (v < lbl_803E6AA8) {
-        v = lbl_803E6AA8;
+    if (v < 0.0f) {
+        v = 0.0f;
     }
     if (v > lbl_803E6AB8) {
         v = lbl_803E6AB8;
     }
     f31 = lbl_803E6ADC * v;
-    if (f31 < lbl_803E6AA8) {
-        f31 = lbl_803E6AA8;
+    if (f31 < 0.0f) {
+        f31 = 0.0f;
     }
     *(f32 *)((char *)p + 0x294) =
         t * ((f31 - *(f32 *)((char *)p + 0x294)) / *(f32 *)((char *)p + 0x2b8)) + *(f32 *)((char *)p + 0x294);
@@ -874,6 +871,7 @@ int hightop_stateHandler02(int obj, int p, f32 t) {
     }
     *(f32 *)((char *)p + 0x280) =
         t * ((ang - *(f32 *)((char *)p + 0x280)) / *(f32 *)((char *)p + 0x2b8)) + *(f32 *)((char *)p + 0x280);
+    changed = 0;
     moveSpeed = ((GameObject *)obj)->anim.currentMoveProgress;
     band = 0;
     while ((&lbl_803DC32C)[band] != ((GameObject *)obj)->anim.currentMove && band < 2) {
@@ -882,21 +880,22 @@ int hightop_stateHandler02(int obj, int p, f32 t) {
     if (band >= 2) {
         band = 0;
     }
-    changed = 0;
-    cont = 1;
+    idx = band * 2;
     while (cont != 0) {
         f32 spd = *(f32 *)((char *)p + 0x294);
-        if (spd < lbl_8032ABB0[band * 2]) {
-            if (band == 1) {
+        if (spd < lbl_8032ABB0[idx]) {
+            if ((int)band == 1) {
                 return 2;
             }
             band -= 1;
+            idx -= 2;
             changed = 1;
-        } else if (spd >= lbl_8032ABB0[band * 2 + 1]) {
-            if (band == 0) {
-                moveSpeed = lbl_803E6AA8;
+        } else if (spd >= lbl_8032ABB0[idx + 1]) {
+            if ((int)band == 0) {
+                moveSpeed = 0.0f;
             }
             band += 1;
+            idx += 2;
             changed = 1;
         } else {
             cont = 0;
