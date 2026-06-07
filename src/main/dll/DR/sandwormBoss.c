@@ -6,6 +6,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/objseq.h"
 
 extern undefined4 getLActions();
 extern undefined4 FUN_80006728();
@@ -1137,8 +1138,9 @@ void FUN_8019c690(int param_1)
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xef;
   }
   if (*(int *)(param_1 + 0xf4) != 0) {
-    (**(code **)(*DAT_803dd6d4 + 0x54))(param_1,0xfa);
-    (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(char *)(iVar3 + 4),param_1,3);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt(param_1, 0xfa);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)
+        ->runSequence((int)*(char *)(iVar3 + 4), (void *)param_1, 3);
     *(undefined4 *)(param_1 + 0xf4) = 0;
   }
   if (((*(byte *)(param_1 + 0xaf) & 1) != 0) &&
@@ -1146,7 +1148,8 @@ void FUN_8019c690(int param_1)
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
     FUN_80017698((int)*(short *)(iVar3 + 2),0);
     FUN_80017698(0x973,0);
-    (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(char *)(iVar3 + 4),param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)
+        ->runSequence((int)*(char *)(iVar3 + 4), (void *)param_1, -1);
   }
   return;
 }
@@ -1689,7 +1692,7 @@ void FUN_8019d710(void)
     FUN_8007f718(pfVar5,0x3c);
     *(undefined4 *)(puVar2 + 0x7a) = 1;
     *puVar2 = *(undefined2 *)(pfVar5 + 0x34);
-    (**(code **)(*DAT_803dd6d4 + 0x48))(4,puVar2,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(4, puVar2, -1);
     *pfVar5 = lbl_803E4EDC;
     FUN_80017688(0x901);
     pfVar5[0x31] = 1.68156e-44;
@@ -1997,7 +2000,7 @@ void FUN_8019dcb8(undefined8 param_1,double param_2,double param_3,undefined8 pa
           *(byte *)(uVar4 + 0xaf) = *(byte *)(uVar4 + 0xaf) | 8;
           *(undefined *)(iVar10 + 0x37) = 5;
           *(undefined2 *)(iVar10 + 0x34) = 0x14;
-          (**(code **)(*DAT_803dd6d4 + 0x48))(2,uVar4,0xffffffff);
+          ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(2, (void *)uVar4, -1);
           goto LAB_8019fe8c;
         }
         bVar1 = true;
@@ -2163,7 +2166,7 @@ void FUN_8019e218(void)
     dVar6 = (double)FUN_8001771c((float *)(iVar1 + 0x18),(float *)(iVar2 + 0x18));
     if (*(char *)(iVar5 + 0x38) == '\x01') {
       FUN_800810ac((double)lbl_803E4F00,(float *)(iVar1 + 0xc));
-      (**(code **)(*DAT_803dd6d4 + 0x48))(0,iVar1,0xffffffff);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)iVar1, -1);
       *(undefined *)(iVar5 + 0x38) = 2;
     }
     if (((uVar3 == 0) &&
@@ -2173,7 +2176,7 @@ void FUN_8019e218(void)
                                   DOUBLE_803e4f10))) ||
          (iVar4 = FUN_800810ac((double)lbl_803E4F00,(float *)(iVar1 + 0xc)), iVar4 != 0)))) &&
        (iVar2 = FUN_80294d6c(iVar2), iVar2 != 0x40)) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))(1,iVar1,0xffffffff);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)iVar1, -1);
     }
   }
   else {
@@ -2359,13 +2362,13 @@ void FUN_8019e54c(uint param_1)
         FUN_8003add8(param_1,uVar3,*(int *)(param_1 + 0xb8) + 4,0x41,0,3);
         puVar4 = (undefined2 *)FUN_8003964c(param_1,1);
         *puVar4 = 0xf556;
-        (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_1,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_1, -1);
       }
     }
     else {
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
       if (*(short *)(param_1 + 0xb4) == -1) {
-        (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
       }
     }
   }
@@ -2756,7 +2759,7 @@ void FUN_8019ecf0(int param_1)
   uint uVar1;
   
   if ((*(int *)(param_1 + 0xf4) != 0) && (uVar1 = FUN_80017690(0x50), uVar1 == 0)) {
-    (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
   }
   *(undefined4 *)(param_1 + 0xf4) = 0;
   return;
@@ -2804,7 +2807,7 @@ undefined4 FUN_8019ed60(int param_1,undefined4 param_2,int param_3)
       if (((*(byte *)(param_1 + 0xaf) & 1) != 0) &&
          (iVar3 = (**(code **)(*DAT_803dd6e8 + 0x20))(0x44), iVar3 != 0)) {
         *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
-        (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
       }
     }
   }
@@ -2890,7 +2893,7 @@ void FUN_8019ef2c(int param_1)
     else {
       uVar2 = 0;
     }
-    (**(code **)(*DAT_803dd6d4 + 0x48))(uVar2,param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(uVar2, (void *)param_1, -1);
     *(undefined4 *)(param_1 + 0xf4) = 0;
   }
   return;
