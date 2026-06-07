@@ -41,7 +41,6 @@ extern void dll_115_seqFn(void);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* lbl_803DCAC0;
 #define gCarryableInterface lbl_803DCAC0
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd740;
@@ -763,7 +762,7 @@ void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 pa
      dVar4 < (double)lbl_803E4488)) {
     uVar2 = GameBit_Get(0x90f);
     if (uVar2 == 0) {
-      uVar5 = (**(code **)(*DAT_803dd6d4 + 0x7c))(0x444,0,0);
+      uVar5 = (*gObjectTriggerInterface)->setObjects(0x444,0,0);
       *(undefined2 *)(iVar3 + 0x5c) = 0xffff;
       *(undefined2 *)(iVar3 + 0x5e) = 0;
       *(float *)(iVar3 + 0x60) = lbl_803E4460;
