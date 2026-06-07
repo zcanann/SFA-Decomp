@@ -4,6 +4,7 @@
 #include "main/mapEvent.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/resource.h"
 
@@ -1296,7 +1297,7 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern unsigned int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern EffectInterface **gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
@@ -1348,7 +1349,7 @@ void magiclight_update(int obj) {
         *(s16 *)obj = 0;
         ((GameObject *)obj)->anim.rotY = 0;
         ((GameObject *)obj)->anim.rotZ = 0;
-        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         ((GameObject *)obj)->unkF4 = 1;
     }
 }

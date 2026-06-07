@@ -2,6 +2,7 @@
 #include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -188,7 +189,7 @@ int dimbridgecogmai_SeqFn(int obj, int p2, char *r5) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 #pragma scheduling off
 #pragma peephole off
 
@@ -237,7 +238,7 @@ void dimbridgecogmai_update(int *obj) {
                 callArg = 0;
                 break;
             }
-            ((void(*)(int, int*, int))((void**)*gObjectTriggerInterface)[18])(callArg, obj, code);
+            (*gObjectTriggerInterface)->runSequence(callArg, obj, code);
         }
         if ((def[0x1d] & 2) == 0) {
             GameBit_Set(*(s16*)(def + 0x18), 1);
@@ -246,7 +247,7 @@ void dimbridgecogmai_update(int *obj) {
 }
 
 void dimdismountpoint_func11(int obj, int flag) {
-    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))((flag ^ 1) + 2, obj, -1);
+    (*gObjectTriggerInterface)->runSequence((flag ^ 1) + 2, (void *)obj, -1);
 }
 
 extern int Obj_GetPlayerObject(void);
@@ -266,7 +267,7 @@ int dimdismountpoint_setScale(int obj) {
     } else {
         side = 1;
     }
-    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(side, obj, -1);
+    (*gObjectTriggerInterface)->runSequence(side, (void *)obj, -1);
     return side;
 }
 #pragma peephole reset

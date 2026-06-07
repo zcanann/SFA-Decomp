@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -807,7 +808,7 @@ extern void getEnvfxAct(int *obj, int *target, int id, int p);
 extern void Music_Trigger(int a, int b);
 extern void setAButtonIcon(int idx);
 extern void warpToMap(int mapId, int b);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -824,9 +825,9 @@ void magiccavebottom_update(int *obj) {
         getEnvfxAct(obj, obj, 0x2d, 0);
         *sub = 1;
         if (def[0x1b] != 0) {
-            (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         } else {
-            (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(2, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(2, obj, -1);
         }
         break;
     case 1:
@@ -840,9 +841,9 @@ void magiccavebottom_update(int *obj) {
         if (ObjTrigger_IsSet((int)obj) != 0) {
             *sub = 3;
             if (def[0x1b] != 0) {
-                (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(1, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             } else {
-                (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(3, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(3, obj, -1);
             }
         } else {
             objRenderFn_80041018((int)obj);
@@ -939,7 +940,7 @@ void magiccavetop_update(int *obj) {
         if (GameBit_Get(0x91e) != 0) {
             GameBit_Set(0x91e, 0);
             (*gMapEventInterface)->setAnimEvent(def[0x1f], def[0x1a], 0);
-            (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(1, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             unlockLevel(0, 0, 1);
             *sub = 3;
             return;
@@ -968,7 +969,7 @@ void magiccavetop_update(int *obj) {
                 *sub = 2;
                 (*gMapEventInterface)->setAnimEvent(def[0x1f], def[0x1a], 1);
                 (*gMapEventInterface)->setMode(def[0x1f], def[0x1b]);
-                (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
             }
             break;

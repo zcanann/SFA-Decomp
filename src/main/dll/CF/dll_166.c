@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);
@@ -11,7 +12,7 @@ extern void *Obj_GetPlayerObject(void);
 extern void ObjHits_DisableObject(int obj);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32 *maxDistance);
 extern void fn_802967E0(void *obj, int enabled);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void Music_Trigger(s32 triggerId, s32 mode);
 
 typedef struct ChestHitParams {
@@ -86,12 +87,12 @@ void treasurechest_update(int obj)
       fn_802967E0(Obj_GetPlayerObject(),1);
       iVar2 = ObjGroup_FindNearestObject(4,obj,&local_3c);
       if (iVar2 != 0) {
-        (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x7c))((int)*(short *)(iVar2 + 0x46),0,0);
-        (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x48))(1,obj,0xffffffff);
+        (*gObjectTriggerInterface)->setObjects((int)*(short *)(iVar2 + 0x46), 0, 0);
+        (*gObjectTriggerInterface)->runSequence(1, (void *)obj, 0xffffffff);
       }
       else {
-        (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x7c))((int)*(short *)(setup + 0x1a),0,0);
-        (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x48))(0,obj,0xffffffff);
+        (*gObjectTriggerInterface)->setObjects((int)*(short *)(setup + 0x1a), 0, 0);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, 0xffffffff);
       }
       GameBit_Set((int)*(short *)(setup + 0x1e),1);
       flags->open = 1;
