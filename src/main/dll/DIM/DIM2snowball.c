@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/asset_load.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
@@ -1605,7 +1606,7 @@ void dll_1D6_init(int *obj, u8 *params)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E4A40;
 extern f32 lbl_803E4A44;
 extern f32 lbl_803E4A48;
@@ -1652,15 +1653,15 @@ void dimtruthhornice_update(int *obj)
                 desc[4] = scale * (f32)(int)randomGetRange(0, 350);
                 desc[5] = scale * (f32)(int)randomGetRange(-100, 100);
                 desc[2] = zinit;
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(obj, 2043, desc, 2, -1, 0);
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(obj, 2044, desc, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 2043, desc, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, 2044, desc, 2, -1, NULL);
             }
         }
         desc2[3] = lbl_803E4A48 * (f32)(int)randomGetRange(-100, 100);
         desc2[4] = lbl_803E4A48 * (f32)(int)randomGetRange(0, 350);
         desc2[5] = lbl_803E4A48 * (f32)(int)randomGetRange(-100, 100);
         desc2[2] = lbl_803E4A4C;
-        ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(obj, 2044, desc2, 2, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 2044, desc2, 2, -1, NULL);
         break;
     }
     case 2:
@@ -1992,8 +1993,7 @@ checkHit:
             evt[3] = ((GameObject *)obj)->anim.localPosX;
             evt[4] = ((GameObject *)obj)->anim.localPosY;
             evt[5] = ((GameObject *)obj)->anim.localPosZ;
-            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
-                obj, 518, evt, 4, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 518, evt, 4, -1, NULL);
             if (((GameObject *)obj)->anim.alpha == 0) {
                 Obj_FreeObject(obj);
                 return;
