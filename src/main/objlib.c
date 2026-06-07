@@ -1406,10 +1406,12 @@ void ObjHits_InitWorkBuffers(void)
   gObjHitsSecondaryHitboxBufferScratch0 = mmAlloc(0x400,0xe,0);
   gObjHitsSecondaryHitboxBufferScratch1 = mmAlloc(0x400,0xe,0);
   gObjHitsPriorityHitTickDelta = lbl_803DE914;
-  for (hitVolumeIndex = 0; hitVolumeIndex < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT;
-       hitVolumeIndex++) {
-    gObjHitsActiveHitVolumeObjects[hitVolumeIndex] = 0;
-  }
+  hitVolumeIndex = 0;
+  ((int *)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex++] = 0;
+  ((int *)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex++] = 0;
+  ((int *)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex++] = 0;
+  ((int *)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex++] = 0;
+  ((int *)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex++] = 0;
   return;
 }
 #pragma peephole reset
@@ -2750,10 +2752,10 @@ void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float 
 {
   *param_3 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) +
                                param_2 * sizeof(ObjPathPoint)))->x;
-  *param_4 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) +
-                               param_2 * sizeof(ObjPathPoint)))->y;
-  *param_5 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) +
-                               param_2 * sizeof(ObjPathPoint)))->z;
+  *param_4 = *(f32 *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) + 4 +
+                      param_2 * sizeof(ObjPathPoint));
+  *param_5 = *(f32 *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) + 8 +
+                      param_2 * sizeof(ObjPathPoint));
   return;
 }
 #pragma peephole reset
@@ -3233,7 +3235,7 @@ typedef struct ObjLibFlagByte {
 extern ObjLibFlagByte lbl_803DCC00;
 #pragma scheduling off
 #pragma peephole off
-void fn_80038F1C(int a, int b) {
+void fn_80038F1C(int a, u8 b) {
     if ((int)(u8)a != 0) return;
     lbl_803DCC00.highBit = b;
 }
