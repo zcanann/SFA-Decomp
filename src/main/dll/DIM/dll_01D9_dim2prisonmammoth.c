@@ -1,5 +1,6 @@
 #include "main/objHitReact.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 /* DLL 0x76 (DIMSnowHorn1 / dim2prisonmammoth) fragment: head/vtable live in placeholder_802BACC0 + placeholder_802BB4B0; consolidate when those adjacent units are graduated. */
@@ -440,7 +441,7 @@ extern f32 lbl_803DC758;
 extern s16 lbl_803DC754;
 extern int randomGetRange(int lo, int hi);
 extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void Sfx_PlayFromObject(int obj, int id);
 
 extern f32 lbl_803E83F4;
@@ -687,7 +688,7 @@ int dim2prisonmammoth_stateHandler02(int obj, int p2)
     *(s16 *)((char *)inner + 0x38c) = randomGetRange(0x4b0, 0x960);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
-        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         buttonDisable(0, 0x100);
     }
     return 0;

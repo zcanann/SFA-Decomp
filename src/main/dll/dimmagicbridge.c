@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/dll/dimmagicbridge.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 
@@ -15,7 +16,7 @@ extern void Obj_FreeObject(char *obj);
 extern f32 Vec_distance(f32 *a, f32 *b);
 
 extern int *gTitleMenuControlInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gModgfxInterface;
 extern MapEventInterface **gMapEventInterface;
 
@@ -139,7 +140,7 @@ void dll_199_update(int obj)
             if (Vec_distance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < (f32)state[0]) {
                 *(u8 *)((char *)state + 0xf) = 1;
                 GameBit_Set(0x129, 0);
-                (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, 0xffffffff);
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, 0xffffffff);
                 res = Resource_Acquire(0x83, 1);
                 (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
                 Resource_Release(res);
@@ -164,18 +165,18 @@ void dll_199_update(int obj)
                 *(u8 *)((char *)state + 0xe) += 1;
                 state[1] = 100;
                 if (*(u8 *)((char *)state + 0xe) == 1) {
-                    (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(3, obj, 0xffffffff);
+                    (*gObjectTriggerInterface)->runSequence(3, (void *)obj, 0xffffffff);
                 }
             }
             break;
         case 7:
-            (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(5, obj, 0xffffffff);
+            (*gObjectTriggerInterface)->runSequence(5, (void *)obj, 0xffffffff);
             *(u8 *)((char *)state + 0xf) = 3;
             state[1] = 0;
             state[5] = -3;
             break;
         case 8:
-            (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(4, obj, 0xffffffff);
+            (*gObjectTriggerInterface)->runSequence(4, (void *)obj, 0xffffffff);
             *(u8 *)((char *)state + 0xf) = 6;
             state[1] = 0;
             state[5] = -3;
@@ -183,7 +184,7 @@ void dll_199_update(int obj)
         case 6:
             (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x35, 0x50, state[4] & 0xff, 0);
             state[5] = 1;
-            (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(2, obj, 0xffffffff);
+            (*gObjectTriggerInterface)->runSequence(2, (void *)obj, 0xffffffff);
             dist = lbl_803E5174;
             found = ObjGroup_FindNearestObject(3, (char *)obj, &dist);
             if (found != 0) {
@@ -220,7 +221,7 @@ void dll_199_update(int obj)
                 GameBit_Set(0x126, 0);
                 (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2a, 0x50, state[4] & 0xff, 0);
                 state[5] = 1;
-                (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, 0xffffffff);
+                (*gObjectTriggerInterface)->runSequence(1, (void *)obj, 0xffffffff);
             }
             break;
         case 4:

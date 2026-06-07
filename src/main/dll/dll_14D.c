@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 
 
 #pragma peephole off
@@ -20,7 +21,7 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gGameUIInterface;
 extern f32 lbl_803E3854;
 extern undefined4* DAT_803dd6d4;
@@ -100,10 +101,9 @@ void dll_14D_update(undefined2 *param_1)
   case 1:
     *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) &= ~0x20;
     *(byte *)((int)param_1 + 0xaf) |= 8;
-    (*(void (*)(void *, int))(*(int *)(*gObjectTriggerInterface + 0x54)))
-              (param_1, *(s16 *)(iVar5 + 0x1e));
-    (*(void (*)(int, void *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))
-              (*(byte *)(iVar5 + 0x22), param_1, *(byte *)(iVar5 + 0x20));
+    (*gObjectTriggerInterface)->preempt((int)param_1, *(s16 *)(iVar5 + 0x1e));
+    (*gObjectTriggerInterface)->runSequence(*(byte *)(iVar5 + 0x22), param_1,
+                                            *(byte *)(iVar5 + 0x20));
     *pbVar4 = 4;
     break;
   case 2:
@@ -130,8 +130,8 @@ void dll_14D_update(undefined2 *param_1)
       }
       *(byte *)((int)param_1 + 0xaf) |= 8;
       pbVar4[1] = 1;
-      (*(void (*)(int, void *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))
-                (*(byte *)(iVar5 + 0x22), param_1, 0xffffffff);
+      (*gObjectTriggerInterface)->runSequence(*(byte *)(iVar5 + 0x22), param_1,
+                                              0xffffffff);
     }
     else {
       *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) |= 0x20;
