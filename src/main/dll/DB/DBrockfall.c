@@ -25,7 +25,7 @@ extern uint countLeadingZeros();
 
 extern undefined4 DAT_80328730;
 extern undefined4 DAT_80328734;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de890;
 extern f32 lbl_803E6310;
@@ -227,7 +227,7 @@ void FUN_801df45c(undefined2 *param_1)
         else if (sVar3 == 1) {
           GameBit_Set(0xf1d,1);
           FUN_8011e800(1);
-          uVar6 = ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
+          uVar6 = (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
           state->loopSfxHandle = uVar6;
         }
         else if (sVar3 == 2) {
@@ -240,7 +240,7 @@ void FUN_801df45c(undefined2 *param_1)
     }
     else {
       if (0 < state->loopSfxHandle) {
-        (**(code **)(*DAT_803dd6d4 + 0x4c))();
+        (*gObjectTriggerInterface)->endSequence(state->loopSfxHandle);
         FUN_80080eec(state->loopSfxHandle);
       }
       iVar5 = DAT_803de890 + -1;
@@ -370,7 +370,7 @@ void FUN_801df788(int param_1)
   bVar1 = state->state;
   if (bVar1 == 1) {
     if ((*(byte *)(param_1 + 0xaf) & 1) != 0) {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
     }
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
   }
@@ -436,8 +436,6 @@ void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
 #pragma peephole reset
 #pragma scheduling reset
-
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 /*
  * Function: FEseqobject_init
