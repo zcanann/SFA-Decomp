@@ -227,12 +227,12 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float pointRadius,float axial,floa
 float *ObjHits_CalcTaperedCapsuleNormal(float axial,float baseRadius,float tipRadius,
                                         float length,float *point,float *base,float *tip,
                                         float *out);
-uint ObjHits_TestTaperedCapsuleXZ(float pointRadius,float baseRadius,float tipRadius,float length,
-                                  float *point,float *base,float *axis,float *tip,
-                                  float *axial,float *dist2,float *sumR);
-uint ObjHits_TestTaperedCapsule3D(float pointRadius,float baseRadius,float tipRadius,float length,
-                                  float *point,float *base,float *axis,float *tip,
-                                  float *axial,float *dist2,float *sumR);
+int ObjHits_TestTaperedCapsuleXZ(float *point,float pointRadius,float baseRadius,float tipRadius,
+                                 float *base,float *axis,float *tip,float length,
+                                 float *axial,float *dist2,float *sumR);
+int ObjHits_TestTaperedCapsule3D(float *point,float pointRadius,float baseRadius,float tipRadius,
+                                 float *base,float *axis,float *tip,float length,
+                                 float *axial,float *dist2,float *sumR);
 void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount);
 void ObjHits_TickPriorityHitCooldowns(void);
 void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix);
