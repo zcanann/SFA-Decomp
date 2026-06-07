@@ -1,8 +1,10 @@
 #include "dolphin/mtx.h"
 #include "dolphin/os/OSCache.h"
+#include "main/audio/sfx.h"
 #include "main/expgfx.h"
 #include "main/expgfx_internal.h"
 #include "main/game_object.h"
+#include "main/mm.h"
 
 extern undefined4 ABS();
 extern int Camera_GetViewMatrix(void);
@@ -18,8 +20,6 @@ extern void* FUN_800069a8();
 extern undefined4 FUN_800069cc();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
-extern void *mmAlloc(int size,int heap,int flags);
-extern void mm_free(void *ptr);
 extern undefined4 FUN_8004812c();
 extern undefined8 FUN_80053754();
 extern void textureFree(void *resource);
@@ -668,7 +668,6 @@ extern u32 randomGetRange(int min, int max);
 extern void vecRotateZXY(void *params, void *vec);
 extern int coordsToMapCell(f32 x, f32 z);
 extern void Obj_RotateLocalOffsetByYaw(void *offset, f32 *out, u8 yaw);
-extern void Sfx_PlayFromObject(void *obj, int sfxId);
 extern f32 sqrtf(f32 x);
 extern u8 framesThisStep;
 extern ExpgfxWaterfxInterface **gWaterfxInterface;
@@ -1145,7 +1144,7 @@ foundFirst:
               (*gWaterfxInterface)->spawnRipple(rot.x, rot.y, rot.z, gExpgfxSlotMotionStep, 0);
               if (srcObj != NULL &&
                   coordsToMapCell(srcObj->localPosX, srcObj->localPosZ) == 0x10) {
-                Sfx_PlayFromObject(srcObj, 0x285);
+                Sfx_PlayFromObject((u32)srcObj, 0x285);
               }
               slot->soundHandle = -1;
               slot->behaviorFlags |= 0x10000000;
