@@ -263,7 +263,7 @@ void SpiritDoorLock_init(int obj, int *params, int mode)
     SPIRITDOORLOCK_FLAGS(state) &= ~0x80;
 
     if (mode == 0) {
-        *(u8 *)((char *)obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         SPIRITDOORLOCK_LIGHT(state) = modelLightStruct_createPointLight(obj, 255, 0, 77, 0);
     }
 }
@@ -312,17 +312,17 @@ void SpiritDoorLock_update(int obj)
                 }
             }
         } else {
-            if (*(s8 *)((char *)obj + 0x36) == -1) {
+            if ((s8)((GameObject *)obj)->anim.alpha == -1) {
                 Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             }
-            if (*(u8 *)((char *)obj + 0x36) == 0) {
+            if (((GameObject *)obj)->anim.alpha == 0) {
                 if (SPIRITDOORLOCK_LIGHT(state) != 0) {
                     modelLightStruct_freeSlot(state);
                 }
             } else {
-                *(u8 *)((char *)obj + 0x36) -= 1;
+                ((GameObject *)obj)->anim.alpha -= 1;
                 if (SPIRITDOORLOCK_LIGHT(state) != 0) {
-                    u32 b = *(u8 *)((char *)obj + 0x36) >> 2;
+                    u32 b = ((GameObject *)obj)->anim.alpha >> 2;
                     modelLightStruct_setDistanceAttenuation((void *)SPIRITDOORLOCK_LIGHT(state), (f32)(int)b,
                         (f32)(int)(b + 10));
                 }
@@ -377,8 +377,8 @@ void SpiritDoorLock_update(int obj)
                 *(s16 *)((char *)piTex + 0x8) = (s16)(*(s16 *)((char *)piTex + 0x8) - (lbl_803DBED8 << 8));
             }
         }
-        if (*(u8 *)((char *)obj + 0x36) < 0xff) {
-            *(u8 *)((char *)obj + 0x36) += 1;
+        if (((GameObject *)obj)->anim.alpha < 0xff) {
+            ((GameObject *)obj)->anim.alpha += 1;
         }
     }
 }
