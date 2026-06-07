@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 #define WCAPERTURES_EXTRA_SIZE 8
@@ -122,8 +123,9 @@ void wcapertures_hitDetect(int obj)
         col[0] = lbl_803E6E30;
         col[1] = lbl_803E6E34;
         col[2] = lbl_803E6E28;
-        (*(void (**)(int, int, void *, int, int, void *))(*gPartfxInterface + 8))(
-            obj, WCAPERTURES_PARTFX_OPEN, ev, WCAPERTURES_PARTFX_KIND, WCAPERTURES_PARTFX_INVALID_HANDLE, col);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, WCAPERTURES_PARTFX_OPEN, ev,
+                                                            WCAPERTURES_PARTFX_KIND,
+                                                            WCAPERTURES_PARTFX_INVALID_HANDLE, col);
     }
     if (WCAPERTURES_LIGHT(state) != NULL)
         modelLightStruct_updateGlowAlpha(WCAPERTURES_LIGHT(state));

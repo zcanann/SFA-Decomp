@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
@@ -90,13 +91,13 @@ void wctrexstatu_hitDetect(u8 *obj)
 
     if (*(int *)(obj + WCTREXSTATU_TRIGGERED_FLAG_OFFSET) != 0 && randomGetRange(0, WCTREXSTATU_PARTFX_CHANCE) == 0) {
         if (objAnim->bankIndex == 0) {
-            (*(void (**)(u8 *, int, int, int, int, u8 *))(*gPartfxInterface + 8))(
-                obj, WCTREXSTATU_PARTFX_VARIANT_0, 0, WCTREXSTATU_PARTFX_KIND, WCTREXSTATU_PARTFX_INVALID_HANDLE,
-                obj);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_0, NULL,
+                                                                WCTREXSTATU_PARTFX_KIND,
+                                                                WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
         } else {
-            (*(void (**)(u8 *, int, int, int, int, u8 *))(*gPartfxInterface + 8))(
-                obj, WCTREXSTATU_PARTFX_VARIANT_1, 0, WCTREXSTATU_PARTFX_KIND, WCTREXSTATU_PARTFX_INVALID_HANDLE,
-                obj);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_1, NULL,
+                                                                WCTREXSTATU_PARTFX_KIND,
+                                                                WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
         }
     }
 }

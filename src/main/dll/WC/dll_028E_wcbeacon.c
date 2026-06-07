@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
@@ -135,9 +136,8 @@ void wcbeacon_update(int obj)
         }
     } else if (phase == WCBEACON_PHASE_ACTIVE) {
         if (((GameObject *)obj)->objectFlags & WCBEACON_VISIBLE_PARTFX_FLAG) {
-            (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, WCBEACON_PARTFX_ACTIVE, 0,
-                                                                                WCBEACON_PARTFX_KIND,
-                                                                                WCBEACON_TRIGGER_NO_ARG, 0);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, WCBEACON_PARTFX_ACTIVE, NULL,
+                                                                WCBEACON_PARTFX_KIND, WCBEACON_TRIGGER_NO_ARG, NULL);
         }
         if (((GameObject *)obj)->unkF4 == 0) {
             (*(void (**)(int, int))(*gObjectTriggerInterface + 0x54))(obj, WCBEACON_FINAL_TRIGGER_ID);
