@@ -57,6 +57,10 @@ typedef struct ObjAnimHitReactRow {
 #define OBJANIM_DOUBLE_CONVERSION_HIGH_WORD 0x43300000
 #define OBJANIM_S32_DOUBLE_BIAS_XOR 0x80000000
 #define OBJANIM_U32_DOUBLE(value) ((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD, (value)))
+#define OBJ_MODEL_STATE_SHADOW_VISIBLE 0x04
+#define OBJ_MODEL_STATE_SHADOW_INIT_CALLBACK_RAN 0x08
+#define OBJ_MODEL_STATE_SHADOW_FADE_OUT 0x1000
+#define OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD 0x10000
 
 /*
  * Shared state used by the object-animation helpers around main/objanim.c.
@@ -195,15 +199,17 @@ typedef struct ObjAnimBank {
 
 typedef struct ObjModelState {
   f32 shadowScale;
-  u8 pad04[0x0C - 0x04];
+  void *shadowTexture;
+  void *shadowWorkBuffer;
   void *shadowCastSlot;
-  u8 pad10[0x14 - 0x10];
+  void *shadowRenderResource;
   f32 shadowOffsetX;
   f32 shadowOffsetY;
   f32 shadowOffsetZ;
   f32 overrideWorldPosX;
   f32 overrideWorldPosY;
   f32 overrideWorldPosZ;
+  f32 shadowModelScale;
   u32 flags;
   u8 pad34[0x36 - 0x34];
   s16 shadowAlphaStep;
@@ -212,6 +218,7 @@ typedef struct ObjModelState {
   u8 shadowTintB;
   u8 pad3C[0x40 - 0x3C];
   u8 shadowAlpha;
+  u8 pad41[0x44 - 0x41];
 } ObjModelState;
 
 typedef struct ObjAnimComponent {

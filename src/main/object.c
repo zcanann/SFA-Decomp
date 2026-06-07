@@ -1126,9 +1126,9 @@ void Obj_RunInitCallback(u8 *obj, int cb, int unused) {
         }
     }
     {
-        int *q = *(int **)(obj + 0x64);
-        if (q != NULL) {
-            q[0xc] |= 8;
+        ObjModelState *modelState = ((GameObject *)obj)->anim.modelState;
+        if (modelState != NULL) {
+            modelState->flags |= OBJ_MODEL_STATE_SHADOW_INIT_CALLBACK_RAN;
         }
     }
     {
@@ -1763,8 +1763,9 @@ void objFreeObjDef(void *objp, int flag) {
     u8 *o;
     int *bp;
     void *curTex;
-    u8 *tex;
-    int t2;
+    void *tex;
+    void *shadowRenderResource;
+    ObjModelState *modelState;
     s8 modelCount;
     int group;
     int type;
@@ -1829,13 +1830,14 @@ void objFreeObjDef(void *objp, int flag) {
     if (((ObjAnimComponent *)obj)->modelInstance->group8RegistrationCount > 0) {
         ObjGroup_RemoveObject((uint)obj, 8);
     }
-    if (*(int *)(obj + 0x64) != 0) {
+    modelState = objAnim->modelState;
+    if (modelState != NULL) {
         if (objAnim->modelInstance->shadowType == 1) {
             setShadowFlag_803db658(1);
         }
-        if (*(int *)(*(u8 **)(obj + 0x64) + 4) != 0) {
+        if (modelState->shadowTexture != NULL) {
             curTex = textureFn_8006c5c4();
-            tex = *(u8 **)(*(u8 **)(obj + 0x64) + 4);
+            tex = modelState->shadowTexture;
             if (tex != curTex) {
                 if ((objAnim->modelInstance->renderFlags & 4) == 0) {
                     textureFree(tex);
@@ -1844,12 +1846,12 @@ void objFreeObjDef(void *objp, int flag) {
                 }
             }
         }
-        if (*(int *)(*(u8 **)(obj + 0x64) + 8) != 0) {
-            mm_free(*(void **)(*(u8 **)(obj + 0x64) + 8));
+        if (modelState->shadowWorkBuffer != NULL) {
+            mm_free(modelState->shadowWorkBuffer);
         }
-        t2 = *(int *)(*(u8 **)(obj + 0x64) + 0x10);
-        if (t2 != 0 && t2 != -1) {
-            mm_free((void *)t2);
+        shadowRenderResource = modelState->shadowRenderResource;
+        if (shadowRenderResource != NULL && shadowRenderResource != (void *)-1) {
+            mm_free(shadowRenderResource);
         }
     }
     if (*(int *)&((GameObject *)obj)->unkDC != 0) {
@@ -2407,6 +2409,7 @@ void Obj_UpdateModelBlendStates(void)
     u8 *m;
     u8 *c0;
     u8 *bp;
+    ObjModelState *modelState;
 
     i = 0;
     ioff = 0;
@@ -2414,9 +2417,9 @@ void Obj_UpdateModelBlendStates(void)
         obj = *(u8 **)((int)lbl_803DCB88 + ioff);
         objAnim = (ObjAnimComponent *)obj;
         if (obj != 0 && objAnim->modelInstance != NULL) {
-            m = *(u8 **)(obj + 0x64);
-            if (m != 0) {
-                *(int *)(m + 0xc) = 0;
+            modelState = objAnim->modelState;
+            if (modelState != NULL) {
+                modelState->shadowCastSlot = NULL;
             }
             j = 0;
             for (; j < objAnim->modelInstance->modelCount; j++) {

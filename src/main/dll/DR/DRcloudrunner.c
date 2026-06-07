@@ -1,5 +1,6 @@
 #include "main/objanim.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 
 extern u32 GameBit_Get(int id);
 extern void GameBit_Set(int id, int value);
@@ -538,9 +539,9 @@ void sc_cloudrunnera_init(int obj, int p2)
         }
         *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
     }
-    if (*(void **)(obj + 0x64) != NULL) {
-        *(u8 *)(*(int *)(obj + 0x64) + 0x3a) = 0x64;
-        *(u8 *)(*(int *)(obj + 0x64) + 0x3b) = 0x96;
+    if (((GameObject *)obj)->anim.modelState != NULL) {
+        ((GameObject *)obj)->anim.modelState->shadowTintA = 0x64;
+        ((GameObject *)obj)->anim.modelState->shadowTintB = 0x96;
     }
 }
 #pragma scheduling reset

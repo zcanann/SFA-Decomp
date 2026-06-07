@@ -5040,71 +5040,71 @@ int fn_80062D60(int a, f32 b, f32 lo, f32 d, f32 hi, f32 *out1, int *out2)
 void *shadowInit(int *obj, int size)
 {
   int rounded;
-  void *base;
+  ObjModelState *modelState;
   ObjModelInstance *modelDef;
   s16 texId;
 
   rounded = roundUpTo4(size);
   *(int *)((char *)obj + 0x64) = rounded;
-  base = *(void **)((char *)obj + 0x64);
+  modelState = ((ObjAnimComponent *)obj)->modelState;
   modelDef = ((ObjAnimComponent *)obj)->modelInstance;
   texId = modelDef->shadowTextureId;
   if (texId != -1 && modelDef->shadowType != 2) {
-    *(int *)((char *)base + 0x4) = textureLoad(-texId, 0);
+    modelState->shadowTexture = (void *)textureLoad(-texId, 0);
   } else if (modelDef->renderFlags & 0x4) {
-    *(int *)((char *)base + 0x4) = textureAlloc512();
+    modelState->shadowTexture = (void *)textureAlloc512();
   } else if (modelDef->renderFlags & 0x2) {
-    *(int *)((char *)base + 0x4) = 0;
-    *(int *)((char *)base + 0x8) = 0;
+    modelState->shadowTexture = NULL;
+    modelState->shadowWorkBuffer = NULL;
   } else {
-    *(int *)((char *)base + 0x4) = textureFn_8006c5c4();
+    modelState->shadowTexture = (void *)textureFn_8006c5c4();
   }
   if (modelDef->shadowType == 1) {
-    *(int *)((char *)base + 0x10) = 0;
+    modelState->shadowRenderResource = NULL;
   } else {
-    *(int *)((char *)base + 0x10) = -1;
+    modelState->shadowRenderResource = (void *)-1;
   }
-  *(f32 *)base = *(f32 *)modelDef;
-  *(f32 *)((char *)base + 0x2c) = *(f32 *)((char *)modelDef + 0x88);
-  *(f32 *)((char *)base + 0x14) = lbl_803DCED8;
-  *(f32 *)((char *)base + 0x18) = lbl_803DB650;
-  *(f32 *)((char *)base + 0x1c) = lbl_803DCEDC;
-  *(s16 *)((char *)base + 0x36) = 0x4000;
-  *(int *)((char *)base + 0x30) = 4;
-  *(u8 *)((char *)base + 0x38) = 0x19;
-  *(u8 *)((char *)base + 0x39) = 0x4b;
-  *(u8 *)((char *)base + 0x3a) = 0x96;
-  *(u8 *)((char *)base + 0x3b) = 0x64;
+  modelState->shadowScale = *(f32 *)modelDef;
+  modelState->shadowModelScale = *(f32 *)((char *)modelDef + 0x88);
+  modelState->shadowOffsetX = lbl_803DCED8;
+  modelState->shadowOffsetY = lbl_803DB650;
+  modelState->shadowOffsetZ = lbl_803DCEDC;
+  modelState->shadowAlphaStep = 0x4000;
+  modelState->flags = OBJ_MODEL_STATE_SHADOW_VISIBLE;
+  modelState->pad38[0] = 0x19;
+  modelState->pad38[1] = 0x4b;
+  modelState->shadowTintA = 0x96;
+  modelState->shadowTintB = 0x64;
   lbl_803DB658 = 1;
   return (char *)rounded + 0x44;
 }
 
 int fn_800626C8(int *obj, int delta)
 {
-  void *state;
-  s16 *flag;
+  ObjModelState *modelState;
+  s16 *alphaStep;
   f32 f31;
   int v;
 
-  state = *(void **)((char *)obj + 0x64);
-  flag = (s16 *)((char *)state + 0x36);
-  if (*(u32 *)((char *)state + 0x30) & 0x1000) {
-    *flag = *flag - (delta << 9);
-    if (*flag <= 0) {
-      *flag = 0;
+  modelState = ((ObjAnimComponent *)obj)->modelState;
+  alphaStep = &modelState->shadowAlphaStep;
+  if (modelState->flags & OBJ_MODEL_STATE_SHADOW_FADE_OUT) {
+    *alphaStep = *alphaStep - (delta << 9);
+    if (*alphaStep <= 0) {
+      *alphaStep = 0;
     }
-    if (*flag == 0) {
-      *(int *)((char *)state + 0xc) = 0;
+    if (*alphaStep == 0) {
+      modelState->shadowCastSlot = NULL;
       return 0;
     }
-  } else if (!(*(u32 *)((char *)state + 0x30) & 0x10000)) {
-    *flag = *flag + (delta << 9);
-    if (*flag >= 0x4000) {
-      *flag = 0x4000;
+  } else if (!(modelState->flags & OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD)) {
+    *alphaStep = *alphaStep + (delta << 9);
+    if (*alphaStep >= 0x4000) {
+      *alphaStep = 0x4000;
     }
   }
-  f31 = lbl_803DB654 * (lbl_803DEC90 * (f32)*flag);
-  v = (int)((f32)objShadowFn_80062378(obj, *(u8 *)((char *)state + 0x3a)) * f31);
+  f31 = lbl_803DB654 * (lbl_803DEC90 * (f32)*alphaStep);
+  v = (int)((f32)objShadowFn_80062378(obj, modelState->shadowTintA) * f31);
   if (v > 0xff) {
     v = 0xff;
   } else if (v < 0) {
@@ -5235,7 +5235,7 @@ void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
 #pragma dont_inline on
 int fn_80061DD8(void *obj, void *u1, void *u2, int count, f32 *outBase, f32 *outPtr, f32 *input, int limit)
 {
-  void *state = *(void **)((char *)obj + 0x64);
+  ObjModelState *modelState = ((ObjAnimComponent *)obj)->modelState;
   int i = 0;
   int outCount = 0;
   int n;
@@ -5243,9 +5243,9 @@ int fn_80061DD8(void *obj, void *u1, void *u2, int count, f32 *outBase, f32 *out
   lbl_803DCEF2 = 0;
   for (n = 0; n < count; n++) {
     int vis = 1;
-    f32 dot = *(f32 *)((char *)state + 0x18) * input[1] +
-              *(f32 *)((char *)state + 0x14) * input[0] +
-              *(f32 *)((char *)state + 0x1c) * input[2];
+    f32 dot = modelState->shadowOffsetY * input[1] +
+              modelState->shadowOffsetX * input[0] +
+              modelState->shadowOffsetZ * input[2];
     if (dot < 0.0f) {
       vis = -1;
     }
@@ -5307,7 +5307,7 @@ void fn_8006135C(s16 *out, void *obj)
   PSVECCrossProduct(c, a, b);
   PSVECNormalize(b, b);
   PSVECNormalize(c, c);
-  scale = lbl_803DEC70 * *(f32 *)*(void **)((char *)obj + 0x64);
+  scale = lbl_803DEC70 * ((ObjAnimComponent *)obj)->modelState->shadowScale;
   PSVECScale(b, b, scale);
   PSVECScale(c, c, scale);
   nd = -dist;
@@ -5373,7 +5373,7 @@ extern s16 lbl_803DCEF0;
 
 int objShadowFn_80062498(int *obj, int param2)
 {
-    int *blockData;
+    ObjModelState *modelState;
     u8 *cache;
     f32 yOff;
     int idxOut = 0;
@@ -5389,18 +5389,18 @@ int objShadowFn_80062498(int *obj, int param2)
     u8 bufA8[304];
 
     cache = getCache();
-    blockData = *(int **)((char *)obj + 0x64);
+    modelState = ((ObjAnimComponent *)obj)->modelState;
     if (shouldDrawShadows() == 0) {
-        *(int *)(*(int *)((char *)obj + 0x64) + 0xc) = 0;
+        modelState->shadowCastSlot = NULL;
         return 0;
     }
 
-    handle = *(u32 *)((char *)blockData + 0x10);
+    handle = (u32)modelState->shadowRenderResource;
     if (handle == 0 || handle == 0xFFFFFFFF) {
-        vec[0] = *(f32 *)((char *)blockData + 0x14);
-        vec[1] = *(f32 *)((char *)blockData + 0x18);
-        vec[2] = *(f32 *)((char *)blockData + 0x1c);
-        fn_80061094(vec, (f32 *)buf48, *(f32 *)((char *)blockData + 0x2c));
+        vec[0] = modelState->shadowOffsetX;
+        vec[1] = modelState->shadowOffsetY;
+        vec[2] = modelState->shadowOffsetZ;
+        fn_80061094(vec, (f32 *)buf48, modelState->shadowModelScale);
 
         {
             void *p54 = ((GameObject *)obj)->anim.hitReactState;
@@ -5414,7 +5414,7 @@ int objShadowFn_80062498(int *obj, int param2)
         base[0] = ((GameObject *)obj)->anim.worldPosX;
         base[1] = ((GameObject *)obj)->anim.worldPosY + yOff;
         base[2] = ((GameObject *)obj)->anim.worldPosZ;
-        vecGetRanges((f32 *)buf48, base, ranges, *(f32 *)blockData);
+        vecGetRanges((f32 *)buf48, base, ranges, modelState->shadowScale);
 
         hitDetectFn_800691c0(obj, ranges, 0x81, 0);
         fn_80069958((void **)&vtx);
@@ -5423,7 +5423,7 @@ int objShadowFn_80062498(int *obj, int param2)
         alpha = alphaOut;
         idxOut = fn_80060C14((f32)(int)vtx[0], (f32)(int)vtx[2], obj, alpha,
                              lbl_803879BC, lbl_803DCF2C, idxOut, param2,
-                             *(int *)((char *)blockData + 0x30) & 0x40000);
+                             modelState->flags & 0x40000);
         lbl_803DCEE0 = alpha;
         lbl_803DCEF0 = (s16)idxOut;
         lbl_803DCEE4 = (int)vtx;
@@ -5431,7 +5431,7 @@ int objShadowFn_80062498(int *obj, int param2)
         fn_80061DD8(obj, buf48, bufA8, idxOut, (f32 *)lbl_803DCF2C, (f32 *)cache,
                     (f32 *)lbl_803879BC, 0x555);
     }
-    objDrawFn_80061f0c(cache, blockData, obj, (int)lbl_803DCEF2, &drawScratch, buf48, yOff);
+    objDrawFn_80061f0c(cache, modelState, obj, (int)lbl_803DCEF2, &drawScratch, buf48, yOff);
     return 0;
 }
 
@@ -6342,7 +6342,7 @@ void objDrawFn_80061654(int param_1, int param_2)
             GXSetCullMode(0);
             GXSetCurrentMtx(0x1b);
             GXSetBlendMode(1, 4, 5, 5);
-            selectTexture(*(int *)(*(int *)(param_1 + 0x64) + 4), 0);
+            selectTexture((int)((ObjAnimComponent *)param_1)->modelState->shadowTexture, 0);
             GXBegin(0x80, 6, 4);
             GXWGFifo.s16 = p[0];
             GXWGFifo.s16 = p[1];
