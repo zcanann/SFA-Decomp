@@ -4,6 +4,7 @@
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 
 extern void Sfx_PlayFromObject(SHthorntailObject *obj,u16 volumeId);
 extern f32 getXZDistance(f32 *posA,f32 *posB);
@@ -266,8 +267,8 @@ void SHthorntail_update(SHthorntailObject *obj)
     if (((runtime->behaviorFlags & 4) == 0) && (iVar6 = ObjTrigger_IsSet((int)obj), iVar6 != 0)) {
       uVar7 = randomGetRange(1,(uint)*runtime->impactSfxTable);
       runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_IMPACT_PENDING;
-      (*(code *)(*DAT_803dd6d4 + 0x48))
-                (*(undefined *)(runtime->impactSfxTable + uVar7),obj,0xffffffff);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)
+          ->runSequence(*(u8 *)(runtime->impactSfxTable + uVar7), obj, -1);
     }
     if (config->leashRadiusByte != '\0') {
       leashDistance = getXZDistance(&obj->pos.x,(float *)&config->homePos);

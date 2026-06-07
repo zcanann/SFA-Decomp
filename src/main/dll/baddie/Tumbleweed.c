@@ -2420,7 +2420,7 @@ void FUN_80134900(int param_1,int param_2,int param_3,int param_4,int param_5,s8
     if ((DAT_803de613 != '\0') && (DAT_803de62a == '\0')) {
       FUN_80017698(0xdf6,1);
       DAT_803de62a = '\x01';
-      (**(code **)(*DAT_803dd6d4 + 0x50))(0x57,0,0,0);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->setCamVars(0x57, 0, 0, 0);
       n_attractmode_releaseMovieBuffers();
       DAT_803de624 = 0;
     }
@@ -3591,7 +3591,7 @@ void FUN_80136310(int param_1,int *param_2)
     uVar3 = FUN_80017690(0x3ed);
     if (uVar3 == 0) {
       FUN_80017698(0x3ed,1);
-      (**(code **)(*DAT_803dd6d4 + 0x48))(5,param_1,0xffffffff);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(5, (void *)param_1, -1);
       param_2[0x15] = param_2[0x15] | 0x4000;
       param_2[0x20a] = (int)((float)param_2[0x20a] + FLOAT_803e3098);
     }

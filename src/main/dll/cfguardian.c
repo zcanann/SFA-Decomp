@@ -473,7 +473,8 @@ void FUN_8017b6dc(int param_1)
       (**(code **)(*DAT_803dd6d4 + 0x54))();
     }
     if (*(char *)(iVar2 + 0x1e) != -1) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(char *)(iVar2 + 0x1e),param_1,uVar1);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)
+          ->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, uVar1);
     }
     *(undefined *)(iVar3 + 5) = 0;
   }

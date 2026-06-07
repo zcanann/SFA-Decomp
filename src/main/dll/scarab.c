@@ -6,6 +6,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
+#include "main/objseq.h"
 
 extern undefined8 FUN_80003494();
 extern undefined8 FUN_80006824();
@@ -216,7 +217,7 @@ void dll_CA_update(int obj, int p2, int p3)
   extern void mediumbasket_updateTargetMotion(int obj, int sub, int sub2);
   extern int *gBaddieControlInterface;
   extern int *gMapEventInterface;
-  extern int *gObjectTriggerInterface;
+  extern ObjectTriggerInterface **gObjectTriggerInterface;
   extern f32 lbl_803E2D14;
   extern f32 lbl_803E2D90;
   extern f32 lbl_803E2DB8;
@@ -242,8 +243,7 @@ void dll_CA_update(int obj, int p2, int p3)
     ((GameObject *)obj)->anim.localPosX = *(f32 *)(setup + 8);
     ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
     ((GameObject *)obj)->anim.localPosZ = *(f32 *)(setup + 0x10);
-    (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(
-        *(s8 *)(setup + 0x2e), obj, -1);
+    (*gObjectTriggerInterface)->runSequence(*(s8 *)(setup + 0x2e), (void *)obj, -1);
     ((GameObject *)obj)->unkF8 = 1;
   } else {
     if ((*(int (**)(int, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, (int)sub, 0) == 0) {
@@ -1742,7 +1742,7 @@ void dll_CE_update(int obj, int p2, int p3)
   extern void fn_8015EA48(int obj, u8 *p);
   extern int *gBaddieControlInterface;
   extern int *gMapEventInterface;
-  extern int *gObjectTriggerInterface;
+  extern ObjectTriggerInterface **gObjectTriggerInterface;
   extern int *gSHthorntailAnimationInterface;
   extern EffectInterface **gPartfxInterface;
   extern int *gPlayerInterface;
@@ -1777,8 +1777,7 @@ void dll_CE_update(int obj, int p2, int p3)
     ((GameObject *)obj)->anim.localPosX = *(f32 *)(setup + 8);
     ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
     ((GameObject *)obj)->anim.localPosZ = *(f32 *)(setup + 0x10);
-    (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(
-        *(s8 *)(setup + 0x2e), obj, -1);
+    (*gObjectTriggerInterface)->runSequence(*(s8 *)(setup + 0x2e), (void *)obj, -1);
     ((GameObject *)obj)->unkF8 = 1;
   } else {
     if ((*(int (**)(int, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, (int)sub, 0) == 0) {
