@@ -3,6 +3,7 @@
 #include "main/dll/IM/IMicicle.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -753,7 +754,7 @@ void FUN_801a4520(int param_1)
     }
     iVar1 = (int)*(char *)(iVar1 + 0x1e);
     if (iVar1 != -1) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))(iVar1,param_1,0xffffffff);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(iVar1, (void *)param_1, -1);
     }
     *(undefined4 *)(param_1 + 0xf4) = 1;
   }

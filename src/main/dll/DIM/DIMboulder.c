@@ -949,7 +949,7 @@ void FUN_801adc20(undefined2 *param_1)
     *param_1 = 0;
     param_1[1] = 0;
     param_1[2] = 0;
-    (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, param_1, -1);
     *(undefined4 *)(param_1 + 0x7a) = 1;
   }
   return;
