@@ -1,4 +1,5 @@
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
@@ -1290,7 +1291,7 @@ void explodeanimator_hitDetect(void) {}
 void explodeanimator_release(void) {}
 void explodeanimator_initialise(void) {}
 
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E4020;
 
 #pragma scheduling off
@@ -1314,7 +1315,7 @@ void explodeanimator_update(int *obj) {
         buf[3] = (f32)(s32)randomGetRange(*(s16*)(def + 0x18), *(s16*)(def + 0x1e));
         buf[4] = (f32)(s32)randomGetRange(*(s16*)(def + 0x1a), *(s16*)(def + 0x20));
         buf[5] = (f32)(s32)randomGetRange(*(s16*)(def + 0x1c), *(s16*)(def + 0x22));
-        ((void(*)(int*, int, f32*, int, int, f32*))((void**)*(int*)gPartfxInterface)[2])(obj, *(s16*)(def + 0x24), buf, 2, -1, vel);
+        (*gPartfxInterface)->spawnObject(obj, *(s16*)(def + 0x24), buf, 2, -1, vel);
     }
 }
 #pragma peephole reset
@@ -1719,7 +1720,7 @@ void dimbossicesmash_update(u8 *obj)
                     stk[0] = dx * k + ((GameObject *)obj)->anim.previousLocalPosX;
                     stk[1] = dy * k + ((GameObject *)obj)->anim.previousLocalPosY;
                     stk[2] = dz * k + ((GameObject *)obj)->anim.previousLocalPosZ;
-                    (*(void (**)(u8 *, int, f32 *, int, int, int))((char *)(*gPartfxInterface) + 8))(obj, 1000, stk, 0x200001, -1, 0);
+                    (*gPartfxInterface)->spawnObject(obj, 1000, stk, 0x200001, -1, NULL);
                     i++;
                 } while (i < 2);
             }
