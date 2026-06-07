@@ -26,12 +26,12 @@ void vfpladders_update(int obj) {
     if (((GameObject *)obj)->anim.seqId == 0x548) {
         if ((u32)GameBit_Get(*(s16 *)(state + 2)) != 0) {
             if ((u32)GameBit_Get(*(s16 *)state) == 0) {
-                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
             }
         }
         if ((u32)GameBit_Get(*(s16 *)(state + 2)) == 0) {
             if ((u32)GameBit_Get(*(s16 *)state) != 0) {
-                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
             }
         }
     } else {

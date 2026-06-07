@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/WM/WMcrystal.h"
+#include "main/objseq.h"
 
 
 #pragma peephole off
@@ -71,7 +72,7 @@ extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gGameUIInterface;
 extern int *gScreenTransitionInterface;
 extern int *gCameraInterface;
@@ -310,7 +311,7 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject *obj,undefined4 pa
     switch (eventId) {
     case 1:
       state->eventFlags |= 1;
-      (*(code *)(*gObjectTriggerInterface + 0x50))(0x44,1,0,0);
+      (*gObjectTriggerInterface)->setCamVars(0x44, 1, 0, 0);
       break;
     case 2:
       objects = ObjList_GetObjects(&startForEvent2,&countForEvent2);

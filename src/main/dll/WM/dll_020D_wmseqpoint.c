@@ -177,7 +177,7 @@ void wmseqpoint_update(int obj)
     switch (state->mode) {
         case 0:
             if (Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) < state->radius) {
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(state->triggerId, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(state->triggerId, (void *)obj, -1);
                 state->done = 1;
             }
             break;
@@ -189,13 +189,13 @@ void wmseqpoint_update(int obj)
                         target = ObjList_FindObjectById(lbl_80328CC8[i * 2 + 1]);
                         *(u8 *)(*(int *)(target + 0xb8) + 0xd) = 0;
                         if (*(s16 *)(target + 0xb4) != -1) {
-                            (*(void (**)(int))(*gObjectTriggerInterface + 0x4c))(*(s16 *)(target + 0xb4));
+                            (*gObjectTriggerInterface)->endSequence(*(s16 *)(target + 0xb4));
                         }
                     }
                 } else if (state->triggerId == 1) {
                     state->skyWasOn = (u8)getSkyColorFn_80088e08(0);
                 }
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(state->triggerId, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(state->triggerId, (void *)obj, -1);
                 state->done = 1;
             }
             break;
@@ -207,31 +207,31 @@ void wmseqpoint_update(int obj)
                     target = ObjList_FindObjectById(0x4aeb1);
                     *(u8 *)(*(int *)(target + 0xb8) + 0xd) = 0;
                     if (*(s16 *)(target + 0xb4) != -1) {
-                        (*(void (**)(int))(*gObjectTriggerInterface + 0x4c))(*(s16 *)(target + 0xb4));
+                        (*gObjectTriggerInterface)->endSequence(*(s16 *)(target + 0xb4));
                     }
                 }
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(state->triggerId, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(state->triggerId, (void *)obj, -1);
                 state->done = 1;
             }
             break;
         case 3:
             if (Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) < state->radius &&
                 state->requiredGameBit != -1 && GameBit_Get(state->requiredGameBit) == 0) {
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(state->triggerId, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(state->triggerId, (void *)obj, -1);
                 GameBit_Set(state->requiredGameBit, 1);
                 state->done = 1;
             }
             break;
         case 4:
             if (state->requiredGameBit != -1 && GameBit_Get(state->requiredGameBit) == 0) {
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(state->triggerId, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(state->triggerId, (void *)obj, -1);
                 GameBit_Set(state->requiredGameBit, 1);
                 state->done = 1;
             }
             break;
         case 5:
             if (state->requiredGameBit != -1 && GameBit_Get(state->requiredGameBit) != 0) {
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(state->triggerId, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(state->triggerId, (void *)obj, -1);
             }
             break;
         default:

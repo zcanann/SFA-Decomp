@@ -187,12 +187,12 @@ void wmspiritplace_update(int obj)
                     setAButtonIcon(0x18);
                 }
                 if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
-                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                         GameBit_Set(state->primaryGameBit, 0);
                         state->f80 = 1;
                 }
             } else if (GameBit_Get(state->secondaryGameBit) != 0 && GameBit_Get(0x29b) != 0) {
-                    (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                     GameBit_Set(state->primaryGameBit, 0);
                     GameBit_Set(state->secondaryGameBit, 0);
                     GameBit_Set(0xbfd, 0);
@@ -239,12 +239,12 @@ void wmspiritplace_update(int obj)
                     setAButtonIcon(0x18);
                 }
                 if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
-                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                         GameBit_Set(state->primaryGameBit, 0);
                         state->f80 = 1;
                 }
             } else if (GameBit_Get(state->secondaryGameBit) != 0 && GameBit_Get(0x8a2) != 0) {
-                    (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                     GameBit_Set(state->primaryGameBit, 0);
                     GameBit_Set(state->secondaryGameBit, 0);
                 } else {
@@ -267,12 +267,12 @@ void wmspiritplace_update(int obj)
                     setAButtonIcon(0x18);
                 }
                 if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
-                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                         GameBit_Set(state->primaryGameBit, 0);
                         state->f80 = 1;
                 }
             } else if (GameBit_Get(state->secondaryGameBit) != 0 && GameBit_Get(0xc71) != 0) {
-                    (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                     GameBit_Set(state->primaryGameBit, 0);
                     GameBit_Set(state->secondaryGameBit, 0);
                 } else {
@@ -295,7 +295,7 @@ void wmspiritplace_update(int obj)
                     setAButtonIcon(0x18);
                 }
                 if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
-                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                         GameBit_Set(state->primaryGameBit, 0);
                         state->f80 = 1;
                         state->f40 = 1;
@@ -334,7 +334,7 @@ void wmspiritplace_update(int obj)
                 }
                 if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
                         state->f80 = 1;
-                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                         GameBit_Set(state->primaryGameBit, 0);
                 }
             } else if (GameBit_Get(state->secondaryGameBit) != 0 && GameBit_Get(0xcb8) != 0) {

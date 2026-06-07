@@ -4,6 +4,7 @@
 #include "main/dll/worldobj.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -390,7 +391,7 @@ void fn_801CEE0C(int p1, int p2)
   extern int fn_801CE078(int);
   extern int ObjTrigger_IsSetById(int, int);
   extern int gameBitDecrement(int);
-  extern int *gObjectTriggerInterface;
+  extern ObjectTriggerInterface **gObjectTriggerInterface;
   extern int lbl_803DBF70;
   extern int lbl_803DBF74;
   extern int lbl_803DBF78;
@@ -417,7 +418,7 @@ void fn_801CEE0C(int p1, int p2)
           if (ObjTrigger_IsSetById(p1, 1398) != 0) {
             GameBit_Set(1400, 1);
             gameBitDecrement(1398);
-            (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(2, p1, -1);
+            (*gObjectTriggerInterface)->runSequence(2, (void *)p1, -1);
             *(u8 *)(p2 + 0x43c) = (u8)(*(u8 *)(p2 + 0x43c) | 0x10);
             *(u8 *)(p2 + 0x408) = 2;
           }
@@ -431,7 +432,7 @@ void fn_801CEE0C(int p1, int p2)
       if (ObjTrigger_IsSetById(p1, 1398) != 0) {
         GameBit_Set(1400, 2);
         gameBitDecrement(1398);
-        (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(4, p1, -1);
+        (*gObjectTriggerInterface)->runSequence(4, (void *)p1, -1);
         *(u8 *)(p2 + 0x408) = 3;
         *(u8 *)(p2 + 0x43c) = (u8)(*(u8 *)(p2 + 0x43c) | 0x10);
       }
@@ -685,7 +686,7 @@ extern f32 getXZDistance(void *a, void *b);
 extern int Sfx_IsPlayingFromObjectChannel(int *obj, int ch);
 extern void fn_80163980(int o);
 extern void Obj_FreeObject(int o);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gGameUIInterface;
 extern int *gScreenTransitionInterface;
 
@@ -716,7 +717,7 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
             *(f32 *)(st + 0) -= lbl_803E5228;
         }
         if (ObjTrigger_IsSet(obj) != 0) {
-            (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(3, near_, -1);
+            (*gObjectTriggerInterface)->runSequence(3, (void *)near_, -1);
             st[0x43c] = (u8)(st[0x43c] | 0x10);
             st[0x408] = 0xd;
             GameBit_Set(0xce1, 1);
@@ -724,8 +725,8 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
         }
         break;
     case 0xc:
-        (**(void (**)(int, int))((char *)(*gObjectTriggerInterface) + 0x54))(near_, 0x5aa);
-        (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(3, near_, 0x30);
+        (*gObjectTriggerInterface)->preempt(near_, 0x5aa);
+        (*gObjectTriggerInterface)->runSequence(3, (void *)near_, 0x30);
         st[0x408] = 0xd;
         break;
     case 0xd:
@@ -822,8 +823,8 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
         }
         break;
     case 0x10:
-        (**(void (**)(int, int))((char *)(*gObjectTriggerInterface) + 0x54))(near_, 0x157c);
-        (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(1, near_, 2);
+        (*gObjectTriggerInterface)->preempt(near_, 0x157c);
+        (*gObjectTriggerInterface)->runSequence(1, (void *)near_, 2);
         st[0x408] = 0x13;
         break;
     case 0x11:
@@ -840,7 +841,7 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
         if (!(*(u16 *)(*(char **)(st + 0x28) + 0xb0) & 0x1000)) {
             if ((**(int (**)(void))((char *)(*gScreenTransitionInterface) + 0x14))() != 0) {
                 GameBit_Set(0x102, 1);
-                (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(1, near_, -1);
+                (*gObjectTriggerInterface)->runSequence(1, (void *)near_, -1);
                 st[0x408] = 0x13;
             }
         }

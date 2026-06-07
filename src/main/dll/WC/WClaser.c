@@ -5,6 +5,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objlib.h"
+#include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -18,7 +19,7 @@ extern void buttonDisable(int controller, int mask);
 extern void textureFree(void *resource);
 
 extern MapEventInterface **gMapEventInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
 extern int *gModgfxInterface;
 
@@ -44,7 +45,7 @@ extern f32 lbl_803E5D08;
 #define MAP_EVENT_SET(mapId, eventId, value) \
     (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
-    ((void (*)(int, int *, int))(*(u32 *)((u8 *)*gObjectTriggerInterface + 0x48)))((eventId), (obj), (arg))
+    (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 #define SCREEN_TRANSITION_START(kind, value) \
     ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0xc)))((kind), (value))
 

@@ -43,11 +43,6 @@ typedef struct VFPLiftMapEventInterface {
     u8 (*getMode)(int mapEventNo);
 } VFPLiftMapEventInterface;
 
-typedef struct VFPLiftObjectTriggerInterface {
-    u8 pad00[0x48];
-    void (*trigger)(int triggerId,int obj,int arg);
-} VFPLiftObjectTriggerInterface;
-
 extern void buttonDisable(int index,u32 flags);
 extern void Sfx_StopObjectChannel(int obj,int channel);
 extern f32 lbl_803E60E0;
@@ -67,7 +62,7 @@ static inline f32 vfplift_getModelY(int obj)
 
 static inline void vfplift_trigger(int triggerId,int obj)
 {
-    ((VFPLiftObjectTriggerInterface *)*gObjectTriggerInterface)->trigger(triggerId,obj,-1);
+    (*gObjectTriggerInterface)->runSequence(triggerId, (void *)obj, -1);
 }
 
 static inline void vfplift_setObjectHitDisabled(int obj)

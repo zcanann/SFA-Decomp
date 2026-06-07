@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/objseq.h"
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
@@ -266,7 +267,7 @@ extern u32 randomGetRange(int min, int max);
 extern void fn_801F4D54(int obj, int state);
 extern EffectInterface **gPartfxInterface;
 extern int *gMapEventInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E5EA8;
 extern f32 lbl_803E5EB4;
