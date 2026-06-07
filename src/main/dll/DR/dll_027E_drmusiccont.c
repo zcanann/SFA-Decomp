@@ -51,6 +51,7 @@ void drmusiccont_initialise(void) {}
 #pragma peephole reset
 
 #pragma scheduling off
+#pragma peephole off
 void drmusiccont_init(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -71,6 +72,7 @@ void drmusiccont_init(int obj)
     f->b_9e2 = (u8)GameBit_Get(0x9e2);
     f->b_9e7 = (u8)GameBit_Get(0x9e7);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off

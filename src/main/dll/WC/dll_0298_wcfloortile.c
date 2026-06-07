@@ -489,6 +489,7 @@ void fn_8022A670(int obj, int state)
 #pragma scheduling reset
 
 #pragma scheduling off
+#pragma peephole off
 void fn_8022AB68(int obj, int state)
 {
     int tgt;
@@ -545,4 +546,5 @@ void fn_8022AB68(int obj, int state)
         }
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
