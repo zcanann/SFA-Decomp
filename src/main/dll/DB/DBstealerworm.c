@@ -5,6 +5,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
 
@@ -1080,7 +1081,7 @@ extern void fn_801DFA28(int obj);
 extern void DBprotection_updateShield(int obj);
 extern void SCGameBitLatch_Update(u8 *latch, int mask, int a, int b, int bit, int c);
 extern MapEventInterface **gMapEventInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 void SB_Galleon_update(int obj) {
     s8 *p = (s8 *)((int **)obj)[0xb8/4];
     *(s8 *)(obj + 0xac) = ((SBGalleonState *)p)->mapLayer;
@@ -1105,7 +1106,7 @@ void SB_Galleon_update(int obj) {
             fn_801DFA28(obj);
             break;
         case 1:
-            (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(3, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(3, (void *)obj, -1);
             *(s8 *)&((SBGalleonState *)p)->cameraState = 2;
             break;
         case 2:
@@ -1114,7 +1115,7 @@ void SB_Galleon_update(int obj) {
         case 3:
             (*gMapEventInterface)->setMode(0xb, 1);
             *(s8 *)(obj + 0xac) = -1;
-            (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(2, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
             *(s8 *)&((SBGalleonState *)p)->cameraState = 4;
             break;
         }

@@ -5,6 +5,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 
 extern uint FUN_80006c00();
 extern undefined4 FUN_80006c88();
@@ -436,7 +437,7 @@ void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern undefined4 *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 /*
  * Function: FEseqobject_init
@@ -466,7 +467,7 @@ void FEseqobject_update(int obj)
     register int self = obj;
     *(short *)self = 0x2000;
     if (GameBit_Get(0x75) == 0) {
-        (*(void (**)(int, int, int))((char *)*(int *)gObjectTriggerInterface + 0x48))(0, self, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)self, -1);
     }
 }
 #pragma peephole reset

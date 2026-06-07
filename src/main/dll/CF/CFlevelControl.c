@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/CF/CFTreasSharpy.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 
 extern void *Obj_GetPlayerObject(void);
 extern void *Camera_GetCurrentViewSlot(void);
@@ -18,7 +19,7 @@ extern float sqrtf(float x);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 extern f64 lbl_803E3DE0;
 extern f32 lbl_803E3DE8;
@@ -133,12 +134,12 @@ void cfccrate_update(int obj)
         }
         break;
     case 0x409:
-        (**(void(***)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         break;
     case 0x6be:
         if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0)) {
             state->latch3E = 1;
-            (**(void(***)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         }
         break;
     case 0x4bf:
