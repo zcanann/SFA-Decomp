@@ -1453,7 +1453,7 @@ LAB_8023d7cc:
         iVar5 = loadObjectAtObject(obj);
         piVar14[5] = iVar5;
         if (piVar14[5] != 0) {
-          *(undefined *)(piVar14[5] + 0x36) = 0xff;
+          ((GameObject *)piVar14[5])->anim.alpha = 0xff;
           *(undefined *)(piVar14[5] + 0x37) = 0xff;
           piVar14[0x25] = lbl_803DC4EC;
         }
