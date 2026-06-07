@@ -1,3 +1,4 @@
+#include "main/effect_interfaces.h"
 #include "main/dll/savegame.h"
 
 typedef struct {
@@ -225,7 +226,7 @@ void dll_91_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E11D8 + *(f32 *)(param_3 + 0x14);
     }
   }
-  (**(code **)(*gModgfxInterface + 8))(&buf,0,0x12,base,0x10,base + 0xb4,0x45,0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x12,base,0x10,base + 0xb4,0x45,0);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -305,7 +306,7 @@ void dll_92_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf,0,6,base,4,base + 0x3c,0x3c,0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,6,base,4,base + 0x3c,0x3c,0);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -371,7 +372,7 @@ void dll_93_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E1240 + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf,0,0x15,(u8 *)(int)lbl_80317260,0x18,base + 0xd4,0x89,0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80317260,0x18,base + 0xd4,0x89,0);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -476,7 +477,7 @@ void dll_94_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf,0,6,base,4,base + 0x3c,0x3c,0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,6,base,4,base + 0x3c,0x3c,0);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -536,7 +537,7 @@ void dll_95_func03(int param_1,int param_2,int param_3)
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  (**(code **)(*gModgfxInterface + 8))(&buf,0,8,base,8,base + 0x50,0x46,0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,8,base,8,base + 0x50,0x46,0);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -602,7 +603,7 @@ int dll_96_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E12C0 + *(f32 *)(param_3 + 0x14);
     }
   }
-  return (**(int (**)(GfxBuf *, int, int, u8 *, int, u8 *, int, int))(*gModgfxInterface + 8))(&buf,0,0x15,base,0x18,base + 0xd4,0x89,0);
+  return ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,base,0x18,base + 0xd4,0x89,0);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -680,7 +681,7 @@ void dll_97_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf,0,6,base,4,base + 0x3c,0x3c,0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,6,base,4,base + 0x3c,0x3c,0);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -782,7 +783,7 @@ void dll_98_func03(int param_1,int param_2,int param_3,uint param_4,int param_5,
     } else {
       v = 0x3f3;
     }
-    (**(code **)(*gModgfxInterface + 8))(&buf,0,0x12,(uint)param_6 != 0 ? base + 0xb4 : base,0x10,base + 0x168,v,0);
+    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x12,(uint)param_6 != 0 ? base + 0xb4 : base,0x10,base + 0x168,v,0);
   }
 }
 #pragma scheduling reset
@@ -861,7 +862,7 @@ void dll_99_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf,0,6,base,4,base + 0x3c,0x3c,0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,6,base,4,base + 0x3c,0x3c,0);
 }
 #pragma scheduling reset
 #pragma peephole reset

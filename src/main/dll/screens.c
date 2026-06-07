@@ -1,3 +1,4 @@
+#include "main/effect_interfaces.h"
 #include "main/dll/screens.h"
 
 
@@ -121,8 +122,6 @@ typedef struct {
     s8 count;            /* 0x5d */
     u8 pad2[2];          /* 0x5e */
 } ScreenFxHdr; /* 0x60 */
-
-typedef void (*ModgfxLaunchFn)(ScreenFxHdr *hdr, int a, int b, u8 *c, int d, u8 *e, int f, int g);
 
 typedef struct {
     u8 pad[0x1f8];
@@ -344,7 +343,7 @@ void dll_9A_func03(int a, int b, int p, uint flags)
             hdr.bz = hdr.bz + *(f32 *)(p + 0x14);
         }
     }
-    (*(ModgfxLaunchFn)*(int *)(*gModgfxInterface + 8))(&hdr, 0, 3, lbl_80317B98, 1, &lbl_803DB958,
+    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&hdr, 0, 3, lbl_80317B98, 1, &lbl_803DB958,
                                                        0x31, 0);
 }
 
@@ -492,7 +491,7 @@ void dll_9B_func03(int a, int b, int p, uint flags)
             hdr.bz = lbl_803E13A0 + *(f32 *)(p + 0x14);
         }
     }
-    (*(ModgfxLaunchFn)*(int *)(*gModgfxInterface + 8))(&hdr, 0, 0x15, base, 0x18, base + 0xd4,
+    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4,
                                                        0x156, 0);
 }
 
@@ -667,7 +666,7 @@ void dll_9C_func03(int a, int b, int p, uint flags)
             hdr.bz = lbl_803E13C8 + *(f32 *)(p + 0x14);
         }
     }
-    (*(ModgfxLaunchFn)*(int *)(*gModgfxInterface + 8))(&hdr, 0, 0x15, base, 0x18, base + 0xd4,
+    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4,
                                                        0x154, 0);
 }
 

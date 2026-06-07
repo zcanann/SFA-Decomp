@@ -13873,7 +13873,7 @@ void dll_6B_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0A6C + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 5, &lbl_80313A40[0], 4, &lbl_80313A40[52], 0x5e, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 5, &lbl_80313A40[0], 4, &lbl_80313A40[52], 0x5e, 0);
 }
 
 extern u8 lbl_80311C58[];
@@ -14176,7 +14176,7 @@ void dll_59_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0708 + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x11, &lbl_80311C58[0], 8, &lbl_80311C58[172], 0xc0d, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x11, &lbl_80311C58[0], 8, &lbl_80311C58[172], 0xc0d, 0);
 }
 
 void dll_5C_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -14237,7 +14237,7 @@ void dll_5C_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E078C + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, &lbl_80311F20[0], 0x18, &lbl_80311F20[212], 0x20b, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_80311F20[0], 0x18, &lbl_80311F20[212], 0x20b, 0);
 }
 
 void dll_5D_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -14298,7 +14298,7 @@ void dll_5D_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E07BC + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, &lbl_80312130[0], 0x18, &lbl_80312130[212], 0x20b, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_80312130[0], 0x18, &lbl_80312130[212], 0x20b, 0);
 }
 
 void dll_5F_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -14363,7 +14363,7 @@ void dll_5F_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0828 + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0xe, &lbl_80312650[0], 0xc, &lbl_80312650[140], 0x48, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &lbl_80312650[0], 0xc, &lbl_80312650[140], 0x48, 0);
 }
 
 extern f32 lbl_803E086C;
@@ -14435,7 +14435,7 @@ void dll_61_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[2] = lbl_803E0888 + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, &base[0x0], 8, &base[0x5c], 0x90, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 9, &base[0x0], 8, &base[0x5c], 0x90, 0);
 }
 
 void dll_62_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -14502,7 +14502,7 @@ void dll_62_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0898 + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, &lbl_803129C8[0], 0x18, &lbl_803129C8[212], 0x5e0, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_803129C8[0], 0x18, &lbl_803129C8[212], 0x5e0, 0);
 }
 
 void dll_64_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
@@ -14568,7 +14568,7 @@ void dll_64_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x5e0, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x5e0, 0);
 }
 
 void dll_65_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -14633,7 +14633,7 @@ void dll_65_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0958 + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0xe, &lbl_80312E58[0], 0xc, &lbl_80312E58[140], 0x40, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &lbl_80312E58[0], 0xc, &lbl_80312E58[140], 0x40, 0);
 }
 
 void dll_66_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -14710,7 +14710,7 @@ void dll_66_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E09C0 + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, &lbl_803131A8[0], 0x18, &lbl_803131A8[212], 0x155, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_803131A8[0], 0x18, &lbl_803131A8[212], 0x155, 0);
 }
 
 void dll_67_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -14763,7 +14763,7 @@ void dll_67_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E09DC + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, &lbl_803133B8[0], 0x18, &lbl_803133B8[212], 0xe3, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_803133B8[0], 0x18, &lbl_803133B8[212], 0xe3, 0);
 }
 
 void dll_68_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -14824,7 +14824,7 @@ void dll_68_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E09F8 + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, &lbl_803135C8[0], 0x18, &lbl_803135C8[212], 0x41, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_803135C8[0], 0x18, &lbl_803135C8[212], 0x41, 0);
 }
 
 extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
@@ -14920,7 +14920,7 @@ void dll_69_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int para
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 8, base, 4, &base[0x50], param_2 == 2 ? 0xc11 : 0x5e0, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 8, base, 4, &base[0x50], param_2 == 2 ? 0xc11 : 0x5e0, 0);
 }
 
 void dll_6A_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
@@ -14977,7 +14977,7 @@ void dll_6A_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[2] = lbl_803E0A28 + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x12, &lbl_803138A0[0], 0x10, &lbl_803138A0[180], 0x3e, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, &lbl_803138A0[0], 0x10, &lbl_803138A0[180], 0x3e, 0);
 }
 
 void dll_6D_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -15028,7 +15028,7 @@ void dll_6D_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0A90 + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0xe, &lbl_80313AF0[0], 0xc, &lbl_80313AF0[140], 0x34, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &lbl_80313AF0[0], 0xc, &lbl_80313AF0[140], 0x34, 0);
 }
 
 void dll_6E_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -15079,7 +15079,7 @@ void dll_6E_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0AAC + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 5, &lbl_80313C30[0], 4, &lbl_80313C30[52], 0x5e, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 5, &lbl_80313C30[0], 4, &lbl_80313C30[52], 0x5e, 0);
 }
 
 void dll_6F_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -15178,7 +15178,7 @@ void dll_6F_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0AF0 + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x18, &lbl_80313CC0[0], 0x10, &lbl_80313CC0[240], 0x48, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x18, &lbl_80313CC0[0], 0x10, &lbl_80313CC0[240], 0x48, 0);
 }
 
 void dll_70_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -15271,7 +15271,7 @@ void dll_70_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0B30 + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x12, &lbl_80313E98[0], 0x10, &lbl_80313E98[180], 0x45, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, &lbl_80313E98[0], 0x10, &lbl_80313E98[180], 0x45, 0);
 }
 
 void dll_71_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -15338,7 +15338,7 @@ void dll_71_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0B58 + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, &lbl_80314060[0], 0x18, &lbl_80314060[212], 0x154, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_80314060[0], 0x18, &lbl_80314060[212], 0x154, 0);
 }
 
 void dll_72_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -15397,7 +15397,7 @@ void dll_72_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0B7C + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, &lbl_80314288[0], 0x18, &lbl_80314288[212], 0x154, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_80314288[0], 0x18, &lbl_80314288[212], 0x154, 0);
 }
 
 void dll_73_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
@@ -15468,7 +15468,7 @@ void dll_73_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[2] = lbl_803E0B80 + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, &lbl_803144B0[0], 0x18, &lbl_803144B0[212], 0xd9, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_803144B0[0], 0x18, &lbl_803144B0[212], 0xd9, 0);
 }
 
 void dll_76_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -15519,7 +15519,7 @@ void dll_76_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0C54 + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0, 0, 0, 0, 0, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
 }
 
 void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -15570,7 +15570,7 @@ void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0C6C + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0, 0, 0, 0, 0, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
 }
 
 extern f32 lbl_803E0C84;
@@ -15653,7 +15653,7 @@ void dll_78_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0xe, &lbl_803149B0[0], 0xc, &lbl_803149B0[140], 0x34, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &lbl_803149B0[0], 0xc, &lbl_803149B0[140], 0x34, 0);
 }
 
 extern u8 lbl_80312F98[];
@@ -15739,10 +15739,10 @@ int dll_7A_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
   }
   if (param_2 == 0) {
     buf.v58 = 0;
-    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, (u8 *)(int)lbl_80314BD0, 8, &base[0x5c], 0x156, 0);
+    ret = ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8 *)(int)lbl_80314BD0, 8, &base[0x5c], 0x156, 0);
   } else if (param_2 == 1) {
     buf.v58 = 0;
-    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, (u8 *)(int)lbl_80314BD0, 8, &base[0x5c], 0xc0d, 0);
+    ret = ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8 *)(int)lbl_80314BD0, 8, &base[0x5c], 0xc0d, 0);
   }
   return ret;
 }
@@ -15809,7 +15809,7 @@ void dll_60_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[2] = lbl_803E0830 + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0xe, &lbl_80312790[0], 0xc, &lbl_80312790[140], 0x46, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &lbl_80312790[0], 0xc, &lbl_80312790[140], 0x46, 0);
 }
 
 void dll_A3_func03(int param_1, int param_2, int param_3, uint param_4)
@@ -15876,7 +15876,7 @@ void dll_A3_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E0984 + *(f32 *)(ctx + 0x20);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, &lbl_80312F98[0], 0x18, &lbl_80312F98[212], 0x5e0, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_80312F98[0], 0x18, &lbl_80312F98[212], 0x5e0, 0);
 }
 
 extern u8 lbl_803146D8[];
@@ -15968,9 +15968,9 @@ void dll_74_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
     }
   }
   if (param_2 == 0) {
-    (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, base, 0x18, &base[0xd4], 0x2e, 0);
+    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, &base[0xd4], 0x2e, 0);
   } else {
-    (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, base, 0x18, &base[0xd4], 0xd9, 0);
+    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, &base[0xd4], 0xd9, 0);
   }
 }
 
@@ -16103,7 +16103,7 @@ void dll_63_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x40, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x40, 0);
 }
 
 extern u8 lbl_80314AF0[];
@@ -16246,15 +16246,15 @@ int dll_79_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
   }
   if (param_2 == 0) {
     buf.v58 = 0;
-    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, (u8 *)(int)lbl_80314AF0, 8, &base[0x5c], 0x156, 0);
+    ret = ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8 *)(int)lbl_80314AF0, 8, &base[0x5c], 0x156, 0);
   } else if (param_2 == 1) {
     buf.v58 = 0;
     buf.flags |= 4;
-    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, (u8 *)(int)lbl_80314AF0, 8, &base[0x5c], 0x89, 0);
+    ret = ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8 *)(int)lbl_80314AF0, 8, &base[0x5c], 0x89, 0);
   } else if (param_2 == 2) {
     buf.v58 = 0;
     buf.flags |= 4;
-    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, (u8 *)(int)lbl_80314AF0, 8, &base[0x5c], 0x23b, 0);
+    ret = ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8 *)(int)lbl_80314AF0, 8, &base[0x5c], 0x23b, 0);
   }
   return ret;
 }
@@ -16354,7 +16354,7 @@ void dll_7B_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x8e, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x8e, 0);
 }
 
 extern void vecRotateZXY(void *p, f32 *v);
@@ -16463,7 +16463,7 @@ void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, 
         buf.pos[2] += *(f32 *)(param_3 + 0x14);
       }
     }
-    (*(code *)(*gModgfxInterface + 8))(&buf, 0, param_2 != 0 ? 4 : 3,
+    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, param_2 != 0 ? 4 : 3,
         param_2 != 0 ? &base[0x20] : base, param_2 != 0 ? 2 : 1,
         param_2 != 0 ? (u8 *)&base[0x48] : &lbl_803DB898, 0, 0);
   }
@@ -16619,7 +16619,7 @@ void dll_75_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[2] = lbl_803E0C34 + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0, 0, 0, 0, 0, 0);
+  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
 }
 
 extern void *textureIdxToPtr(int idx);
@@ -16768,7 +16768,7 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
     buf.count = (e + 1) - entries;
     buf.flags = 0x4000000;
     buf.flags |= param_4;
-    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 4, base, 4, &base[0x28], 0, tex);
+    ret = ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf, 0, 4, base, 4, &base[0x28], 0, tex);
   }
   cnt = randomGetRange(2, 6);
   if (param_2 == 7) {

@@ -35,15 +35,21 @@ STATIC_ASSERT(offsetof(ExpgfxInterface, spawnEffect) == 0x08);
 STATIC_ASSERT(offsetof(ExpgfxInterface, freeSource) == 0x14);
 
 typedef void (*ModgfxDetachSourceFn)(void *sourceObject);
+typedef int (*ModgfxSpawnEffectFn)(void *spawnContext, int flags, int vertexCount,
+                                   void *vertices, int colorCount, void *colors,
+                                   int textureAssetId, void *textureResource);
 typedef void (*ModgfxReleaseHandleFn)(s16 *handle);
 
 typedef struct ModgfxInterface {
-  u8 pad00[0x18];
+  u8 pad00[0x08];
+  ModgfxSpawnEffectFn spawnEffect;
+  u8 pad0C[0x18 - 0x0C];
   ModgfxDetachSourceFn detachSource;
   u8 pad1C[0x20 - 0x1C];
   ModgfxReleaseHandleFn releaseHandle;
 } ModgfxInterface;
 
+STATIC_ASSERT(offsetof(ModgfxInterface, spawnEffect) == 0x08);
 STATIC_ASSERT(offsetof(ModgfxInterface, detachSource) == 0x18);
 STATIC_ASSERT(offsetof(ModgfxInterface, releaseHandle) == 0x20);
 
