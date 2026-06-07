@@ -78,12 +78,14 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   s16 threshold;
   f32 pathRadius;
   f32 pathScale;
+  f32 baseX;
+  f32 baseZ;
   f32 dx;
   f32 dz;
   f32 localPos[3];
   int pointCount;
-  int i;
   int pointOffset;
+  int i;
 
   settings[3] = 1;
   target = ((GameObject *)obj)->anim.targetObj;
@@ -196,19 +198,21 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
       pathScale = lbl_803E1740;
     }
 
+    baseX = localPos[0] - (relCos * pathScale);
+    baseZ = localPos[2] - (relSin * pathScale);
     *(f32 **)(gCamcontrolPathState + 0x1a4) = (f32 *)(gCamcontrolPathState + 0x1c);
     *(f32 **)(gCamcontrolPathState + 0x1a8) = (f32 *)(gCamcontrolPathState + 0x6c);
     *(f32 **)(gCamcontrolPathState + 0x1ac) = (f32 *)(gCamcontrolPathState + 0xbc);
     *(void **)(gCamcontrolPathState + 0x1b4) = Curve_EvalBSpline;
     *(void **)(gCamcontrolPathState + 0x1b8) = Curve_BuildBSplineCoeffs;
 
-    camcontrol_buildPathPoints(localPos[0] - (relCos * pathScale),
-                               localPos[2] - (relSin * pathScale),
+    camcontrol_buildPathPoints(baseX, baseZ,
                                ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
                                localPos[1], pathAngle, 0x1555, &pointCount);
 
+    i = pointCount;
     pointOffset = pointCount * 4;
-    for (i = pointCount; i < pointCount + 3; i++) {
+    for (; i < pointCount + 3; i++) {
       *(f32 *)(gCamcontrolPathState + pointOffset + 0x1c) = localPos[0];
       *(f32 *)(gCamcontrolPathState + pointOffset + 0x6c) = localPos[1];
       *(f32 *)(gCamcontrolPathState + pointOffset + 0xbc) = localPos[2];
