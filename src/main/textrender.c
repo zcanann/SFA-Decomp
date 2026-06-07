@@ -1952,13 +1952,7 @@ void gameTextRun(void) {
     }
 
     textWindow = lbl_802C7400;
-    for (i = 0x25; i > 0; i--) {
-        *(u16 *)(textWindow + 0x1c) &= 0xfffe;
-        textWindow += 0x20;
-        *(u16 *)(textWindow + 0x1c) &= 0xfffe;
-        textWindow += 0x20;
-        *(u16 *)(textWindow + 0x1c) &= 0xfffe;
-        textWindow += 0x20;
+    for (i = 148; i != 0; i--) {
         *(u16 *)(textWindow + 0x1c) &= 0xfffe;
         textWindow += 0x20;
     }
@@ -1971,17 +1965,25 @@ void gameTextRun(void) {
     i = lbl_803DC9C8;
     while (i-- != 0) {
         switch (cmd->v) {
-        case 3:
-            lbl_803DC9A7 = (u8)cmd->f4;
-            lbl_803DC9A6 = (u8)cmd->f8;
-            lbl_803DC9A5 = (u8)cmd->fc;
-            lbl_803DC9A4 = (u8)cmd->f10;
+        case 3: {
+            u8 c3 = cmd->f10;
+            u8 c2 = cmd->fc;
+            u8 c1 = cmd->f8;
+            u8 c0 = cmd->f4;
+            lbl_803DC9A7 = c0;
+            lbl_803DC9A6 = c1;
+            lbl_803DC9A5 = c2;
+            lbl_803DC9A4 = c3;
             break;
-        case 4:
+        }
+        case 4: {
+            int t1 = cmd->fc;
+            int t2 = (s16)cmd->f8;
             textWindow = lbl_802C7400 + cmd->f4 * 0x20;
-            *(s16 *)(textWindow + 0x18) = (s16)cmd->f8;
-            *(s16 *)(textWindow + 0x1a) = (s16)cmd->fc;
+            *(s16 *)(textWindow + 0x18) = t2;
+            *(s16 *)(textWindow + 0x1a) = (s16)t1;
             break;
+        }
         case 1:
             textDisplayFn_800168dc(cmd->f4, cmd->f8);
             break;
@@ -1996,12 +1998,16 @@ void gameTextRun(void) {
         case 6:
             gameTextRenderStrs(cmd->f4, cmd->f8);
             break;
-        case 7:
-            textWindow = lbl_802C7400 + cmd->f8 * 0x20;
+        case 7: {
+            int t3 = cmd->f10;
+            int t2 = cmd->f8;
+            int t1 = cmd->f4;
+            textWindow = lbl_802C7400 + t2 * 0x20;
             *(s16 *)(textWindow + 0x18) = (s16)cmd->fc;
-            *(s16 *)(textWindow + 0x1a) = (s16)cmd->f10;
-            gameTextRenderStrs(cmd->f4, cmd->f8);
+            *(s16 *)(textWindow + 0x1a) = (s16)t3;
+            gameTextRenderStrs(t1, t2);
             break;
+        }
         case 8:
             if (cmd->f4 == 0xff) {
                 lbl_803DC9CC = NULL;
