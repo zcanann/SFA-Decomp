@@ -125,6 +125,16 @@ citations map to which renumbered entry).
    (e.g. `ObjList_GetObjects(&objectIndex, &objectCount)`), MWCC assigns stack
    offsets in declaration order. If target has `&first` at sp+8 and `&second`
    at sp+0xc but yours is the opposite, swap the declarations. See `91f5f4ab`.
+   **DECL position vs INIT position are INDEPENDENT levers -- a local's
+   register HOME follows its DECLARATION position (#16 coloring) while its
+   init INSTRUCTION is emitted at the INIT statement's position.** When the
+   coloring is right but a `li`/`srawi`/`mr` init sits at the wrong slot in
+   the stream (or vice versa), split `int half = size >> 1;` into `int half;`
+   (at the coloring-correct decl slot) + `half = size >> 1;` (at the
+   emission-correct statement slot) and place each independently. Two
+   confirmed: fn_8004AAD4 (srawi placement, byte-exact) and fn_8004B218
+   (param cast-copy `mr` emission order: n's DECL first for the r31 home,
+   q's INIT first for the mr order; byte-exact 65/65).
    **Note — address-taken locals can color in REVERSE declaration order.** In
    some functions MWCC assigns address-taken stack locals offsets in *reverse*
    declaration order (declare the lowest-offset local LAST). If the plain
@@ -1640,7 +1650,17 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
        constants + values shifted up one field slot; (l) in-place
        WRITE-BACK clamps gutted (`if (*(f32*)(param_3+4) <= lbl) *(f32*)
        (param_3+4) = lbl;` then use — the import dropped the caller-visible
-       store, a game-visible data-corruption bug).
+       store, a game-visible data-corruption bug). (m) embedded
+       ++/-- SPLIT into statements -- 'lha;addi;sth' interleaved INSIDE an
+       address computation (load, inc, store, then the OLD or NEW value
+       consumed by the surrounding subscript) = an embedded post/pre-inc on a
+       narrow lvalue the import decompiled into separate statements; the
+       split costs spurious extsh + reload divergence at EVERY such site.
+       Write '(*(s16 *)(q+0x22))-- * 8 + 4' / 'hh[++(*(s16 *)(q+0x22)) * 4
+       + 2]' back as embedded ops (post-inc: slwi of the PRE value; pre-inc:
+       store-forwarded extsh-at-use of the NEW value). Demonstrated 4x on
+       the pi_dolphin heap module (fn_8004AAD4/B218/B31C/AB5C -- two
+       byte-exact 100s; the module's author used the idiom pervasively).
     Audit signature counts for the remaining modgfx fns are in task #147.
 
 80. **Saved-reg HOIST-COUNT cap CRACKED — the "one extra saved reg +
@@ -2935,6 +2955,12 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
       in INDEX form per the #160 direct-addi tell; keep the import's named
       count local — the count web colored as a named local (r6), the bare
       guard expression makes it a compiler temp (r3)).
+    PROBE TRAP: a /tmp probe compiles at whatever pragma state the probe file
+    declares; the in-tree fn inherits the FILE's effective stack state -- a
+    probe that scores 0.98 can land at 58% in-tree because the in-tree region
+    lacks the probe's `ppc_unroll_speculative off` (fn_8004B31C). Carry the
+    full pragma set into the probe AND re-A/B in the real TU before trusting
+    a probe score.
     Project sweep (srwi-,1+mtctr signature diffed target-vs-current): only
     2 fns had current-only unrolls, 1 had target-only — all 3 fixed. The
     sweep script pattern is in commit b3fd48c41/f99dce7d2 messages.
@@ -2975,6 +3001,14 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
       (`((e * 3) << 4)`) when target keeps mulli-3 + slwi-4 unfused.
       (dll_0B_func04 92.27→92.87, site byte-exact — closes the
       "distributive factoring VN-internal" negative.)
+    - **Put the MULTIPLY INSIDE the sandwich to split a shift's VN key at
+      zero cost: `(int)((long)x * 8)`** emits ONE slwi under a fresh VN key
+      (the (long) node launders the operand, the fold still combines to a
+      single shift); the whole-expression form `(int)(long)(x * 8)` blocks
+      the shift-combine and emits TWO shifts. Use when a scaled index is
+      VN-shared between a loop condition and its body (or any two sites)
+      and target re-derives per site (pi_dolphin heap sift-up loops,
+      fn_8004B31C/fn_8004AB5C).
     Scope notes: works on RUNTIME values only (constants fold through
     conversions in the front end — the li-fresh-vs-merged small-constant
     store class is NOT crackable this way); GLOBAL re-reads in call-free
