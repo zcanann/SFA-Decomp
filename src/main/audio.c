@@ -842,23 +842,27 @@ void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
 {
     SfxLoopedObjectSoundTable *table = &gSfxLoopedObjectSoundFlags;
     s16 i;
-    u16 oldCount;
-    u16 index;
+    u32 *op;
+    int index;
+    int index2;
+    u16 sz;
 
-    for (i = (s16)(gSfxLoopedObjectSoundCount - 1); i >= 0; i--) {
-        if (table->objects[i] == obj) {
+    i = (s16)(gSfxLoopedObjectSoundCount - 1);
+    op = (u32 *)&(&table->flags[i << 2])[384];
+    for (; i >= 0; i--) {
+        if (*op == obj) {
             Sfx_StopFromObject(obj, table->ids[i]);
-            oldCount = gSfxLoopedObjectSoundCount;
-            gSfxLoopedObjectSoundCount = (u16)(oldCount - 1);
-            index = (u16)i;
-            memmove(&table->objects[index], &table->objects[index + 1],
-                    (((oldCount - 1) - index) * sizeof(u32)) & 0xFFFC);
-            memmove(&table->ids[index], &table->ids[index + 1],
-                    ((gSfxLoopedObjectSoundCount - index) * sizeof(u16)) & 0xFFFE);
-            memmove(&table->flags[index], &table->flags[index + 1],
-                    (gSfxLoopedObjectSoundCount - index) & 0xFFFF);
+            gSfxLoopedObjectSoundCount--;
+            sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
+            memmove(&table->flags[(index << 2) + 384],
+                    &table->flags[((index2 = index + 1) << 2) + 384], sz);
+            memmove(&table->flags[(index << 1) + 128], &table->flags[(index2 << 1) + 128],
+                    (u16)((gSfxLoopedObjectSoundCount - index) << 1));
+            memmove(&table->flags[index], &table->flags[index2],
+                    (u16)(gSfxLoopedObjectSoundCount - index));
             return;
         }
+        op--;
     }
 }
 #pragma peephole reset
@@ -869,24 +873,26 @@ void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
 void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
 {
     SfxLoopedObjectSoundTable *table = &gSfxLoopedObjectSoundFlags;
+    u16 sfx16;
+    u32 *op;
+    u16 *ip;
     s16 i;
     int index;
     int index2;
-    u32 *op;
-    u16 *ip;
+    u16 sz;
 
     i = (s16)(gSfxLoopedObjectSoundCount - 1);
-    op = &table->objects[i];
-    ip = &table->ids[i];
+    op = (u32 *)&(&table->flags[i << 2])[384];
+    ip = (u16 *)&(&table->flags[i << 1])[128];
+    sfx16 = (u16)sfxId;
     for (; i >= 0; i--) {
-        if (*op == obj && (u16)sfxId == *ip) {
+        if (*op == obj && sfx16 == *ip) {
             gSfxLoopedObjectSoundCount--;
-            index = (u16)i;
-            index2 = index + 1;
-            memmove(&table->objects[index], &table->objects[index2],
-                    (u16)((gSfxLoopedObjectSoundCount - index) * sizeof(u32)));
-            memmove(&table->ids[index], &table->ids[index2],
-                    (u16)((gSfxLoopedObjectSoundCount - index) * sizeof(u16)));
+            sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
+            memmove(&table->flags[(index << 2) + 384],
+                    &table->flags[((index2 = index + 1) << 2) + 384], sz);
+            memmove(&table->flags[(index << 1) + 128], &table->flags[(index2 << 1) + 128],
+                    (u16)((gSfxLoopedObjectSoundCount - index) << 1));
             memmove(&table->flags[index], &table->flags[index2],
                     (u16)(gSfxLoopedObjectSoundCount - index));
             Sfx_StopFromObject(obj, sfxId);
