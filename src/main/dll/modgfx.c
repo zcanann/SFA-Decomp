@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
@@ -4805,8 +4806,7 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern int *gPartfxInterface;
-typedef void (*BoneFxSpawnFn)(void *, void *, void *, int, int, void *);
+extern EffectInterface **gPartfxInterface;
 typedef u8 BoneFxJRow[16];
 typedef struct BoneFxVtx {
     u16 e0;
@@ -4974,9 +4974,9 @@ void boneParticleEffect_update(void *ctx, int p2, u8 *o)
     s.w = lbl_803DF4C4;
     setTextColor(ctx, 0xff, 0xff, 0xff, 0xff);
     if (lbl_803DD2BC != 0) {
-        (*(BoneFxSpawnFn *)(*(int *)gPartfxInterface + 8))(o, (void *)0x28c, NULL, 1, -1, NULL);
-        (*(BoneFxSpawnFn *)(*(int *)gPartfxInterface + 8))(o, (void *)0x28c, NULL, 1, -1, NULL);
-        (*(BoneFxSpawnFn *)(*(int *)gPartfxInterface + 8))(o, (void *)0x28c, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(o, 0x28c, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(o, 0x28c, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(o, 0x28c, NULL, 1, -1, NULL);
         if ((int)randomGetRange(0, 1) != 0) {
             textureFn_800541ac(ctx, lbl_803DD2A4, 0, 0, 0, 0, 0);
         } else {
@@ -14477,11 +14477,9 @@ typedef struct BoneSpawnData {
   f32 z;
 } BoneSpawnData;
 
-typedef void (*BoneSpawnFn)(void *, void *, void *, int, int, void *);
-
 #pragma scheduling off
 #pragma peephole off
-void boneParticleEffect_spawnAtBones(void *obj, void *arg1, void *arg2, u8 prob, short *src)
+void boneParticleEffect_spawnAtBones(void *obj, int effectId, void *extraArg, u8 prob, short *src)
 {
   void *model;
   int i;
@@ -14518,7 +14516,7 @@ void boneParticleEffect_spawnAtBones(void *obj, void *arg1, void *arg2, u8 prob,
         data.unk2 = 0;
         data.unk6 = 0;
       }
-      (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(obj, arg1, &data, 2, -1, arg2);
+      (*gPartfxInterface)->spawnObject(obj, effectId, &data, 2, -1, extraArg);
     }
   }
 }
@@ -14627,24 +14625,24 @@ void fn_800A3AF0(void *table, int count, void *ctx, f32 a, f32 b)
                 rt = *(s8 *)(e + 0x48);
                 if (rt == 0x12 || rt == 0x10) {
                     if (randomGetRange(0, 0x1e) == 1) {
-                        (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x72, &data, 0x200001, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(ctx, 0x72, &data, 0x200001, -1, NULL);
                     }
                 } else if (rt == 0x11) {
                     if (randomGetRange(0, 8) == 2) {
-                        (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x73, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(ctx, 0x73, &data, 0x111, -1, NULL);
                     }
                 } else if (rt == 0x14) {
                     if (randomGetRange(0, 8) == 2) {
-                        (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x73, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(ctx, 0x73, &data, 0x111, -1, NULL);
                     }
                 } else if (rt == 0x15) {
                     if (randomGetRange(0, 8) == 2) {
-                        (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x73, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(ctx, 0x73, &data, 0x111, -1, NULL);
                     }
                 } else if (rt == 0x17) {
-                    (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x190, &data, 0x111, -1, NULL);
-                    (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x190, &data, 0x111, -1, NULL);
-                    (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x190, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(ctx, 0x190, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(ctx, 0x190, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(ctx, 0x190, &data, 0x111, -1, NULL);
                 }
             }
             e += 0x4c;
@@ -15440,7 +15438,6 @@ extern f32 lbl_803DF43C;
 typedef void (*ExpFn2)(void *, int);
 typedef void (*ExpFn3)(void *, void *, int);
 typedef void (*ExpFn4)(void *, void *, int, int);
-typedef void (*ExpSpawn6)(void *, int, void *, int, int, void *);
 typedef void (*ExpResFn6)(void *, int, void *, int, int, void *);
 
 #define E9 ((char *)*(int **)((char *)eff + 0x9c))
@@ -15595,8 +15592,9 @@ void dll_0B_func05(void)
                                 *(int *)eff = 0;
                                 *(int *)(E9 + emIdx * 0x18) ^= 0x10000000;
                                 if (*(f32 *)(E9 + emIdx * 0x18 + 0xc) >= lbl_803DF430 && *(int **)((char *)eff + 4) != NULL) {
-                                    (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(
-                                        *(int **)((char *)eff + 4), (int)*(f32 *)(E9 + emIdx * 0x18 + 0xc),
+                                    (*gPartfxInterface)->spawnObject(
+                                        *(int **)((char *)eff + 4),
+                                        (int)*(f32 *)(E9 + emIdx * 0x18 + 0xc),
                                         &tmpl, 0x200001, -1, NULL);
                                 }
                                 *(u8 *)((char *)eff + 0x13c) = (int)*(f32 *)(E9 + emIdx * 0x18 + 0x8);
@@ -15674,18 +15672,18 @@ void dll_0B_func05(void)
                         for (k = 0; k < (int)*(f32 *)(E9 + emOff + 0x4); k++) {
                             if (randomGetRange(0, (int)*(f32 *)(E9 + emOff + 0xc)) == 0) {
                                 if (*(int *)((char *)eff + 0xa4) & 1) {
-                                    (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10001, -1, NULL);
+                                    (*gPartfxInterface)->spawnObject(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10001, -1, NULL);
                                 } else {
-                                    (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10001, -1, NULL);
+                                    (*gPartfxInterface)->spawnObject(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10001, -1, NULL);
                                 }
                             }
                         }
                     } else if (lbl_803DF430 == *(f32 *)(E9 + emOff + 0x8)) {
                         for (k = 0; k < (int)*(f32 *)(E9 + emOff + 0x4); k++) {
                             if (*(int *)((char *)eff + 0xa4) & 1) {
-                                (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), (char *)eff + 0xc, 0x10002, -1, NULL);
+                                (*gPartfxInterface)->spawnObject(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), (char *)eff + 0xc, 0x10002, -1, NULL);
                             } else {
-                                (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10002, -1, NULL);
+                                (*gPartfxInterface)->spawnObject(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10002, -1, NULL);
                             }
                         }
                     } else if (lbl_803DF434 == *(f32 *)(E9 + emOff + 0x8)) {
@@ -15694,14 +15692,14 @@ void dll_0B_func05(void)
                             tmpl.y = *(f32 *)((char *)eff + 0x64);
                             tmpl.z = *(f32 *)((char *)eff + 0x68);
                             if (*(int **)((char *)eff + 4) != NULL) {
-                                (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), &tmpl, 0x10001, -1, NULL);
+                                (*gPartfxInterface)->spawnObject(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), &tmpl, 0x10001, -1, NULL);
                             }
                         } else {
                             tmpl.x = *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x18) + *(f32 *)((char *)eff + 0x60);
                             tmpl.y = *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x1c) + *(f32 *)((char *)eff + 0x64);
                             tmpl.z = *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x20) + *(f32 *)((char *)eff + 0x68);
                             if (*(int **)((char *)eff + 4) != NULL) {
-                                (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), &tmpl, 0x10001, -1, NULL);
+                                (*gPartfxInterface)->spawnObject(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), &tmpl, 0x10001, -1, NULL);
                             }
                         }
                     }
