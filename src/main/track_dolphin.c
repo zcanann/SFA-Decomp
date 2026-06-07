@@ -6475,6 +6475,7 @@ extern void fn_80077EF8(int hdr, void *col, void *mtx, f32 f);
 extern struct { f32 lo; f32 hi; } lbl_803DEC78;
 extern f32 lbl_803DEC80;
 
+#pragma ppc_unroll_speculative off
 void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *p7, void *buf48, f32 f)
 {
     u8 col[4];
@@ -6626,6 +6627,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
         memcpy((char *)((int)obj + 0x18), save_18, 0xc);
     }
 }
+#pragma ppc_unroll_speculative on
 
 typedef struct { u8 r, g, b, a; } GlowGXColor;
 extern void Camera_RebuildProjectionMatrix(void);
