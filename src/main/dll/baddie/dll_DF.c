@@ -153,7 +153,7 @@ extern void objHitDetectFn_80062e84(u8 *obj, int a, int b);
  * EN v1.1 Address: 0x8013B6F0
  * EN v1.1 Size: 8764b
  */
-int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
+int trickyFn_8013b368(u8 *obj, f32 vel, u8 *state)
 {
     u8 moved;
     int wg;
@@ -214,7 +214,7 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
     wg = Objfsa_GetWalkGroupIndexAtPoint((f32 *)(obj + 0x18), 0);
     if ((wg != 0) && (((TrickyState *)state)->unkD0 != wg)) {
         ((TrickyState *)state)->unkD0 = wg;
-        ((TrickyState *)state)->unk54 &= ~0x400;
+        ((TrickyState *)state)->unk54 &= ~0x400LL;
         *(u16 *)(state + 0x98) = 0;
         *(u16 *)(state + 0x9a) = 0;
         *(u16 *)(state + 0x9c) = 0;
@@ -298,7 +298,7 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
             ((TrickyState *)state)->unk09 = 1;
             if (ulink != ((TrickyState *)state)->unkD0) {
                 *(s16 *)(state + 0xd0) = ulink;
-                ((TrickyState *)state)->unk54 &= ~0x400;
+                ((TrickyState *)state)->unk54 &= ~0x400LL;
                 *(u16 *)(state + 0x98) = 0;
                 *(u16 *)(state + 0x9a) = 0;
                 *(u16 *)(state + 0x9c) = 0;
@@ -443,17 +443,14 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
     }
 state_selected:
     if (((TrickyState *)state)->unk09 < 5) {
-        ((TrickyState *)state)->unk54 &= ~0x2000;
+        ((TrickyState *)state)->unk54 &= ~0x2000LL;
     }
     trickyDebugPrint(strs + 0x404, ((TrickyState *)state)->unk09);
     switch (((TrickyState *)state)->unk09) {
     case 0:
         trickyDebugPrint(strs + 0x41c);
         v = lbl_803E241C * timeDelta + velBefore;
-        if (v < lbl_803E23DC) {
-            v = lbl_803E23DC;
-        }
-        ((TrickyState *)state)->unk14 = v;
+        ((TrickyState *)state)->unk14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         if (lbl_803E23DC == ((TrickyState *)state)->unk14) {
             moved = 0;
         } else {
@@ -509,17 +506,12 @@ state_selected:
                     if (diff < -0x8000) {
                         diff = diff + 0xffff;
                     }
-                    if (diff < 0x4001) {
-                        if (diff < -0x4000) {
-                            diff = diff + 0x8000;
-                        }
-                    } else {
-                        diff = diff - 0x8000;
+                    if (diff > 0x4000) {
+                        diff -= 0x8000;
+                    } else if (diff < -0x4000) {
+                        diff += 0x8000;
                     }
-                    d = diff;
-                    if (d < 0) {
-                        d = -d;
-                    }
+                    d = (diff >= 0) ? diff : -diff;
                     if (0x1000 < d) {
                         ((TrickyState *)state)->unk14 = velBefore;
                         trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
@@ -647,10 +639,7 @@ state_selected:
         trickyDebugPrint(strs + 0x490);
         if ((*(u16 *)(state + 0x534) != 0) && (wg == *(u16 *)(state + 0x534))) {
             v = lbl_803E241C * timeDelta + velBefore;
-            if (v < lbl_803E23DC) {
-                v = lbl_803E23DC;
-            }
-            ((TrickyState *)state)->unk14 = v;
+            ((TrickyState *)state)->unk14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         }
         node = *(u8 **)(state + 0x4c0);
         if ((*(s8 *)(*(int *)(state + 0x4bc) + 0x1a) != 9) && (*(s8 *)(node + 0x1a) != 9)) {
@@ -707,13 +696,16 @@ state_selected:
             if (node != 0) {
                 curveFn_800da23c(state + 0x420);
                 type = *(s8 *)(*(int *)(state + 0x4bc) + 0x1a);
-                if ((type == 7) || ((type < 7 && (type == 2)))) {
+                switch (type) {
+                case 2:
+                case 7:
                     prod = ((TrickyState *)state)->unk54;
                     if ((prod & 0x2000) != 0) {
-                        ((TrickyState *)state)->unk54 = prod & ~0x2000;
+                        ((TrickyState *)state)->unk54 = prod & ~0x2000LL;
                     } else {
                         ((TrickyState *)state)->unk54 = prod | 0x2000;
                     }
+                    break;
                 }
                 goto walk_nodes_common;
             }
@@ -739,17 +731,12 @@ state_selected:
                     if (diff < -0x8000) {
                         diff = diff + 0xffff;
                     }
-                    if (diff < 0x4001) {
-                        if (diff < -0x4000) {
-                            diff = diff + 0x8000;
-                        }
-                    } else {
-                        diff = diff - 0x8000;
+                    if (diff > 0x4000) {
+                        diff -= 0x8000;
+                    } else if (diff < -0x4000) {
+                        diff += 0x8000;
                     }
-                    d = diff;
-                    if (d < 0) {
-                        d = -d;
-                    }
+                    d = (diff >= 0) ? diff : -diff;
                     if (0x1000 < d) {
                         ((TrickyState *)state)->unk14 = velBefore;
                         trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
@@ -773,16 +760,10 @@ state_selected:
     case 8:
         trickyDebugPrint(strs + 0x49c);
         v = lbl_803E2420 * timeDelta + velBefore;
-        if (lbl_803E248C < v) {
-            v = lbl_803E248C;
-        }
-        ((TrickyState *)state)->unk14 = v;
+        ((TrickyState *)state)->unk14 = (v > lbl_803E248C) ? lbl_803E248C : v;
         if ((*(u16 *)(state + 0x534) != 0) && (wg == *(u16 *)(state + 0x534))) {
             v = lbl_803E241C * timeDelta + velBefore;
-            if (v < lbl_803E23DC) {
-                v = lbl_803E23DC;
-            }
-            ((TrickyState *)state)->unk14 = v;
+            ((TrickyState *)state)->unk14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         }
         yawA = getAngle(((TrickyState *)state)->unk8C - ((GameObject *)obj)->anim.localPosX,
                         ((TrickyState *)state)->unk94 - ((GameObject *)obj)->anim.localPosZ);
@@ -795,17 +776,12 @@ state_selected:
         if (diff < -0x8000) {
             diff = diff + 0xffff;
         }
-        if (diff < 0x4001) {
-            if (diff < -0x4000) {
-                diff = diff + 0x8000;
-            }
-        } else {
-            diff = diff - 0x8000;
+        if (diff > 0x4000) {
+            diff -= 0x8000;
+        } else if (diff < -0x4000) {
+            diff += 0x8000;
         }
-        d = diff;
-        if (d < 0) {
-            d = -d;
-        }
+        d = (diff >= 0) ? diff : -diff;
         if (0x1000 < d) {
             ((TrickyState *)state)->unk14 = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
@@ -844,16 +820,12 @@ state_selected:
             if (v < lbl_803E23DC) {
                 v = lbl_803E23DC;
             }
-        } else if (velBefore > lbl_803E24A4) {
-            v = lbl_803E241C * timeDelta + velBefore;
-            if (v < lbl_803E24A4) {
-                v = lbl_803E24A4;
-            }
+        } else if (velBefore > (v = lbl_803E24A4)) {
+            k = lbl_803E241C * timeDelta + velBefore;
+            v = (k < v) ? v : k;
         } else {
-            v = lbl_803E2420 * timeDelta + velBefore;
-            if (lbl_803E24A4 < v) {
-                v = lbl_803E24A4;
-            }
+            k = lbl_803E2420 * timeDelta + velBefore;
+            v = (k > v) ? v : k;
         }
         ((TrickyState *)state)->unk14 = v;
         {
@@ -957,16 +929,10 @@ state_selected:
     case 0xb:
         trickyDebugPrint(strs + 0x4c4);
         v = lbl_803E2420 * timeDelta + velBefore;
-        if (lbl_803E248C < v) {
-            v = lbl_803E248C;
-        }
-        ((TrickyState *)state)->unk14 = v;
+        ((TrickyState *)state)->unk14 = (v > lbl_803E248C) ? lbl_803E248C : v;
         if ((*(u16 *)(state + 0x534) != 0) && (wg == *(u16 *)(state + 0x534))) {
             v = lbl_803E241C * timeDelta + velBefore;
-            if (v < lbl_803E23DC) {
-                v = lbl_803E23DC;
-            }
-            ((TrickyState *)state)->unk14 = v;
+            ((TrickyState *)state)->unk14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         }
         yawA = getAngle(((TrickyState *)state)->unk8C - ((GameObject *)obj)->anim.localPosX,
                         ((TrickyState *)state)->unk94 - ((GameObject *)obj)->anim.localPosZ);
@@ -979,17 +945,12 @@ state_selected:
         if (diff < -0x8000) {
             diff = diff + 0xffff;
         }
-        if (diff < 0x4001) {
-            if (diff < -0x4000) {
-                diff = diff + 0x8000;
-            }
-        } else {
-            diff = diff - 0x8000;
+        if (diff > 0x4000) {
+            diff -= 0x8000;
+        } else if (diff < -0x4000) {
+            diff += 0x8000;
         }
-        d = diff;
-        if (d < 0) {
-            d = -d;
-        }
+        d = (diff >= 0) ? diff : -diff;
         if (0x1000 < d) {
             ((TrickyState *)state)->unk14 = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
@@ -1058,16 +1019,10 @@ state_selected:
     case 0xd:
         trickyDebugPrint(strs + 0x4e8);
         v = lbl_803E2420 * timeDelta + velBefore;
-        if (lbl_803E248C < v) {
-            v = lbl_803E248C;
-        }
-        ((TrickyState *)state)->unk14 = v;
+        ((TrickyState *)state)->unk14 = (v > lbl_803E248C) ? lbl_803E248C : v;
         if ((*(u16 *)(state + 0x534) != 0) && (wg == *(u16 *)(state + 0x534))) {
             v = lbl_803E241C * timeDelta + velBefore;
-            if (v < lbl_803E23DC) {
-                v = lbl_803E23DC;
-            }
-            ((TrickyState *)state)->unk14 = v;
+            ((TrickyState *)state)->unk14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         }
         yawA = getAngle(((TrickyState *)state)->unk8C - ((GameObject *)obj)->anim.localPosX,
                         ((TrickyState *)state)->unk94 - ((GameObject *)obj)->anim.localPosZ);
@@ -1080,17 +1035,12 @@ state_selected:
         if (diff < -0x8000) {
             diff = diff + 0xffff;
         }
-        if (diff < 0x4001) {
-            if (diff < -0x4000) {
-                diff = diff + 0x8000;
-            }
-        } else {
-            diff = diff - 0x8000;
+        if (diff > 0x4000) {
+            diff -= 0x8000;
+        } else if (diff < -0x4000) {
+            diff += 0x8000;
         }
-        d = diff;
-        if (d < 0) {
-            d = -d;
-        }
+        d = (diff >= 0) ? diff : -diff;
         if (0x1000 < d) {
             ((TrickyState *)state)->unk14 = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);

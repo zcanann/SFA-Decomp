@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel);
+int trickyFn_8013b368(u8 *obj, f32 vel, u8 *state);
 
 #endif /* MAIN_DLL_BADDIE_DLL_DF_H_ */
