@@ -225,7 +225,7 @@ void objAnimFn_80038f38(int obj, char *p2)
         for (j = 0; j < n; j++) {
             u8 *entries = *(u8 **)((char *)m + 0x10);
             int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-            if ((int)entries[idx] != 0xff && entries[entryIdx] == 1) {
+            if ((int)entries[idx] != 0xff && (int)entries[entryIdx] == 1) {
                 found = (s16 *)((char *)((GameObject *)obj)->anim.jointPoseData + vecOffset);
             }
             entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
@@ -250,11 +250,11 @@ void objAnimFn_80038f38(int obj, char *p2)
         *(s16 *)(p2 + 0x14) = 0;
         if (*(f32 *)(p2 + 4) > lbl_803DE9A4) {
             int *pi;
-            *(f32 *)(p2 + 4) = lbl_803DE9A4;
+            *(f32 *)(p2 + 4) = *(f32 *)&lbl_803DE9A4;
             pi = OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8 *)(*pi + 0xf9) != 0) {
                 ObjModel_SetBlendChannelTargets((int)pi, 2,
-                    (s8)*(s8 *)(*(int *)((char *)pi + 0x28) + 0x2d), -1,
+                    *(s8 *)(*(int *)((char *)pi + 0x28) + 0x2d), -1,
                     lbl_803DE99C / lbl_803DB464, 0);
             }
         }
