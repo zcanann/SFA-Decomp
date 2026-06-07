@@ -1,18 +1,16 @@
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/backpack_state.h"
 #include "main/dll/backpack.h"
 #include "main/dll/landedArwing.h"
 #include "main/objanim.h"
+#include "main/objlib.h"
 #include "main/objhits_types.h"
 
 
-extern int GameBit_Set(int eventId, int value);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern void ObjHits_DisableObject(int obj);
-extern void ObjHits_SetHitVolumeSlot(int obj, int a, int b, int c);
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
 extern void* gBaddieControlInterface;
@@ -26,22 +24,12 @@ extern f32 lbl_803E2FB4;
 extern u8 lbl_803DBD40[8];
 extern u8 lbl_80320288[0xc];
 
-extern u32 randomGetRange(int min, int max);
-extern void ObjGroup_AddObject(int obj, int group);
-extern void ObjMsg_AllocQueue(int obj, int capacity);
-
-extern void ObjHits_EnableObject(int obj);
-extern int ObjHits_GetPriorityHit(int obj, int *outHitObject, int *outSphereIndex, u32 *outHitVolume);
-extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 extern void Obj_FreeObject(int obj);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 getXZDistance(f32 *p1, f32 *p2);
 extern void gameBitIncrement(int eventId);
-extern int ObjMsg_Pop(int obj, u32 *outMessage, u32 *outSender, u32 *outParam);
-extern void ObjMsg_SendToObject(int obj, int message, int sender, int *param);
-extern void ObjMsg_SendToObjects(int targetId, u32 flags, void *sender, u32 message, u32 param);
 extern void tumbleweed_updateRollingMotion(int obj, int aux);
 extern void fn_80163990(int obj, int aux);
 extern void fn_80165B3C(int obj, int state);
@@ -220,7 +208,7 @@ void tumbleweed_updateStateMachine(int obj) {
             *(s16*)(aux + 0x298) = 0x195;
             ((BackpackState *)aux)->unk29A = 0;
             ((BackpackState *)aux)->unk29C = lbl_803E2F98;
-            ObjMsg_SendToObject((int)player, 0x7000a, obj, (int*)(aux + 0x298));
+            ObjMsg_SendToObject(player, 0x7000a, (void *)obj, (uint)(aux + 0x298));
             ((BackpackState *)aux)->phase = 4;
         } else {
             ((BackpackState *)aux)->growRate = ((BackpackState *)aux)->growRate - timeDelta;
@@ -239,7 +227,7 @@ void tumbleweed_updateStateMachine(int obj) {
             (*(int(**)(int, int, f32))(*(int*)gPathControlInterface + 0x18))(obj, aux, timeDelta);
         }
     } else if (state == 4) {
-        while (ObjMsg_Pop(obj, &popMsg, (u32*)0, (u32*)0) != 0) {
+        while (ObjMsg_Pop((void *)obj, &popMsg, (u32*)0, (u32*)0) != 0) {
             if (popMsg == 0x7000b) {
                 gameBitIncrement(0x194);
     Sfx_PlayFromObject(obj, SFXen_treadlpc);
@@ -317,7 +305,7 @@ void tumbleweed_init(int obj, int defData) {
     ObjGroup_AddObject(obj, 3);
     ObjGroup_AddObject(obj, 0x31);
     ObjHits_DisableObject(obj);
-    ObjMsg_AllocQueue(obj, 1);
+    ObjMsg_AllocQueue((void *)obj, 1);
     if (((GameObject *)obj)->anim.seqId == TUMBLEWEED_TYPE_3) {
         ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 0x10);
     }
@@ -443,6 +431,7 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target) {
 int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
     f32 horizontalDamping;
     LandedArwingState *state;
+    ObjHitsPriorityState *hitState;
 
     state = (LandedArwingState *)((GroundBaddieState *)*(int *)&((GameObject *)obj)->extra)->control;
     *(u8 *)((int)stateWord + 0x34d) = 3;
@@ -454,7 +443,8 @@ int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
         ObjAnim_SetCurrentMove(obj, 3, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FE0;
     }
-    (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->objectPairHitVolume = 0;
+    hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+    hitState->objectPairHitVolume = 0;
     *stateWord = *stateWord | 0x4000;
     ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (horizontalDamping = lbl_803E2FE4);
     ((GameObject *)obj)->anim.velocityY = lbl_803E2FE8 * (((GameObject *)obj)->anim.velocityY - lbl_803E2FEC);
