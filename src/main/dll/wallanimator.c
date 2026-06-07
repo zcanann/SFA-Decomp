@@ -556,7 +556,7 @@ extern f32 sqrtf(f32 x);
 extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);
 extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f64 lbl_803E30E8;
 extern f32 lbl_803E30F0;
 extern f32 lbl_803E30F4;
@@ -636,12 +636,10 @@ void kaldachompspit_update(int obj)
             if (((GameObject *)obj)->anim.seqId == 0x869) {
                 fn_80098B18(obj, lbl_803E30E0, 1, 0, 0, 0);
             } else {
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x714, NULL,
-                                                                    2, -1, &objAnim->alpha);
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL,
-                                                                    1, -1, NULL);
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL,
-                                                                    1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x714, NULL, 2, -1,
+                                                 &objAnim->alpha);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1, -1, NULL);
             }
             ptr = *state;
             if ((ptr != 0) && (*(u8 *)(ptr + 0x2f8) != 0) && (*(u8 *)(ptr + 0x4c) != 0)) {
@@ -692,8 +690,7 @@ void kaldachompspit_burst(int obj)
         spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
     } else {
         for (i = 0; i < 0x19; i++) {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1,
-                                                                -1, &i);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1, -1, &i);
         }
         Sfx_PlayFromObject(obj, 0x279);
     }

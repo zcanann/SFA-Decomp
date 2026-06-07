@@ -1,4 +1,5 @@
 #include "main/dll/LGT/LGTprojectedlight.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
@@ -440,15 +441,13 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern void ObjLink_AttachChild(int obj, int child, int p3);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern byte framesThisStep;
 extern f32 lbl_803E5E98;
 extern f32 lbl_803E5E9C;
 extern f32 lbl_803E5EA0;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjLink_DetachChild(int *parent, int *child);
-
-typedef void (*PartfxSpawnFn)(int, int, int, int, int, u8 *);
 
 /*
  * --INFO--
@@ -485,14 +484,14 @@ int wmgeneralscales_SeqFn(int obj, int p2, u8 *seq)
             break;
         case 2:
             *((u8 *)state + 4) = 2;
-            (*(PartfxSpawnFn *)(*gPartfxInterface + 8))(obj, 0x556, 0, 2, -1, buf);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x556, NULL, 2, -1, buf);
             Sfx_PlayFromObject(obj, 0x7b);
             Sfx_PlayFromObject(obj, 0x7c);
             *state = lbl_803E5E98;
             break;
         case 3:
             *((u8 *)state + 4) = 3;
-            (*(PartfxSpawnFn *)(*gPartfxInterface + 8))(obj, 0x556, 0, 2, -1, (u8 *)0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x556, NULL, 2, -1, NULL);
             Sfx_PlayFromObject(obj, 0x7b);
             Sfx_PlayFromObject(obj, 0x7c);
             *state = lbl_803E5E9C;

@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/seqObj.h"
 #include "main/objanim.h"
@@ -94,7 +95,7 @@ extern f32 lbl_803E2754;
 extern f32 lbl_803E2760;
 extern f32 lbl_803E2764;
 extern f32 timeDelta;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int *gRomCurveInterface;
 extern int lbl_803DBC80;
 extern void* PTR_DAT_8031fdc4;
@@ -140,11 +141,11 @@ void wispbaddie_update(int obj)
   }
 
   particleParam = 4;
-  (*(void (**)(int,int,int,int,int,int *))(*gPartfxInterface + 8))
-      (obj,state->particleId,0,1,-1,&particleParam);
+  (*gPartfxInterface)->spawnObject((void *)obj, state->particleId, NULL, 1, -1,
+                                   &particleParam);
   particleParam = 3;
-  (*(void (**)(int,int,int,int,int,int *))(*gPartfxInterface + 8))
-      (obj,state->particleId,0,2,-1,&particleParam);
+  (*gPartfxInterface)->spawnObject((void *)obj, state->particleId, NULL, 2, -1,
+                                   &particleParam);
 
   if (state->hitRadius < state->maxHitRadius) {
     state->hitRadius += lbl_803E270C;
@@ -152,18 +153,18 @@ void wispbaddie_update(int obj)
   } else {
     state->hitRadius = state->maxHitRadius;
     particleParam = 2;
-    (*(void (**)(int,int,int,int,int,int *))(*gPartfxInterface + 8))
-        (obj,state->particleId,0,2,-1,&particleParam);
+    (*gPartfxInterface)->spawnObject((void *)obj, state->particleId, NULL, 2, -1,
+                                     &particleParam);
     particleParam = 0;
-    (*(void (**)(int,int,int,int,int,int *))(*gPartfxInterface + 8))
-        (obj,state->particleId,0,2,-1,&particleParam);
+    (*gPartfxInterface)->spawnObject((void *)obj, state->particleId, NULL, 2, -1,
+                                     &particleParam);
     ObjHits_SetHitVolumeSlot(obj,10,1,0);
     ObjHits_EnableObject(obj);
   }
 
   particleParam = 1;
-  (*(void (**)(int,int,int,int,int,int *))(*gPartfxInterface + 8))
-      (obj,state->particleId,0,2,-1,&particleParam);
+  (*gPartfxInterface)->spawnObject((void *)obj, state->particleId, NULL, 2, -1,
+                                   &particleParam);
   state->playerObj = Obj_GetPlayerObject();
   if (state->playerObj != 0) {
     d[0] = *(f32 *)(state->playerObj + 0x18) - ((GameObject *)obj)->anim.worldPosX;

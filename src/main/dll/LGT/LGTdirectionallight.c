@@ -1,4 +1,5 @@
 #include "main/mapEvent.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/LGT/LGTdirectionallight.h"
 
@@ -48,7 +49,7 @@ extern f64 lbl_803E5E88;
 
 extern void *Obj_GetPlayerObject(void);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern byte framesThisStep;
 extern f32 lbl_803E5E58;
 extern f32 lbl_803E5E5C;
@@ -162,13 +163,13 @@ void wmworm_update(short *param_1)
         *param_1 = *param_1 + 300;
         if (0 < *(short *)(iVar5 + 8)) {
           for (sVar6 = 0; sVar6 < *(short *)(iVar5 + 8); sVar6 = sVar6 + 1) {
-            (**(code **)(*gPartfxInterface + 8))(param_1,(int)*(short *)(iVar5 + 4),0,4,
-                                                 0xffffffff,0);
+            (*gPartfxInterface)->spawnObject(param_1, (int)*(short *)(iVar5 + 4), NULL, 4,
+                                             -1, NULL);
           }
         }
         else {
-          (**(code **)(*gPartfxInterface + 8))(param_1,(int)*(short *)(iVar5 + 4),0,4,
-                                               0xffffffff,0);
+          (*gPartfxInterface)->spawnObject(param_1, (int)*(short *)(iVar5 + 4), NULL, 4,
+                                           -1, NULL);
         }
         *(int *)(param_1 + 0x7a) = -(int)*(short *)(iVar5 + 8);
       }
