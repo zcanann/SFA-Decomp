@@ -183,15 +183,15 @@ void camcontrol_updateTargetFeedback(void)
     }
   }
   if (gCamcontrolTargetState == '\0') {
-    if (reticle->currentMoveProgress <= lbl_803E1630) {
-      if (target == NULL) {
-        CAMCONTROL_CAMERA->targetReticleFocus = 0;
-      }
-      else {
+    if (lbl_803E1630 >= reticle->currentMoveProgress) {
+      if (target != NULL) {
         CAMCONTROL_CAMERA->targetReticleFocus = (int)target;
         CAMCONTROL_CAMERA->targetKind = camcontrol_GetTargetKind(target);
         gCamcontrolTargetState = '\x03';
         gCamcontrolTargetChanged = '\x01';
+      }
+      else {
+        CAMCONTROL_CAMERA->targetReticleFocus = 0;
       }
     }
     else {
@@ -239,94 +239,64 @@ void camcontrol_updateTargetFeedback(void)
         CAMCONTROL_CAMERA->targetFlags & ~CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT;
   }
   objType = target->objType;
-  if (objType == 0x49f) {
-LAB_80102994:
-    targetDistance = fn_80183204((int)target);
-  }
-  else {
-    if (objType < 0x49f) {
-      if (objType != 0x281) {
-        if (objType < 0x281) {
-          if (objType != 0x13a) {
-            if (objType < 0x13a) {
-              if (objType == 0x31) {
-                targetDistance = lbl_803E162C;
-                goto LAB_801029e0;
-              }
-              if (objType < 0x31) {
-                if (objType != 0x11) goto LAB_801029ac;
-              }
-              else if (objType != 0xd8) goto LAB_801029ac;
-            }
-            else if ((objType != 0x25d) && ((0x25c < objType || (objType != 0x251)))) goto LAB_801029ac;
-          }
-        }
-        else if (objType != 0x3fe) {
-          if (objType < 0x3fe) {
-            if (objType == 0x3de) goto LAB_80102994;
-            if ((0x3dd < objType) || (objType != 0x369)) goto LAB_801029ac;
-          }
-          else if (objType < 0x457) {
-            if (objType != 0x427) goto LAB_801029ac;
-          }
-          else if (0x458 < objType) goto LAB_801029ac;
-        }
-      }
-    }
-    else if (objType != 0x613) {
-      if (objType < 0x613) {
-        if (objType != 0x58b) {
-          if (objType < 0x58b) {
-            if ((objType != 0x4d7) && ((0x4d6 < objType || (objType != 0x4ac)))) {
-LAB_801029ac:
-              result = dll_19_func1B((int)target);
-              if (result == 0) {
-                targetDistance = lbl_803E162C;
-              }
-              else {
-                targetDistance =
-                    camcontrol_GetBaddieControlInterface()->getTargetReticleDistance((int)target);
-              }
-              goto LAB_801029e0;
-            }
-          }
-          else if ((objType != 0x5e1) && (((0x5e0 < objType || (0x5b9 < objType)) || (objType < 0x5b7))))
-          goto LAB_801029ac;
-        }
-      }
-      else if (objType != 0x842) {
-        if (objType < 0x842) {
-          if (objType < 0x6a2) {
-            if (objType != 0x642) goto LAB_801029ac;
-          }
-          else if (0x6a5 < objType) goto LAB_801029ac;
-        }
-        else if ((objType != 0x851) && ((0x850 < objType || (objType != 0x84b)))) goto LAB_801029ac;
-      }
-    }
+  switch (objType) {
+  case 0x11:
+  case 0xd8:
+  case 0x13a:
+  case 0x251:
+  case 0x25d:
+  case 0x281:
+  case 0x369:
+  case 0x3fe:
+  case 0x427:
+  case 0x457:
+  case 0x458:
+  case 0x4ac:
+  case 0x4d7:
+  case 0x58b:
+  case 0x5b7:
+  case 0x5b8:
+  case 0x5b9:
+  case 0x5e1:
+  case 0x613:
+  case 0x642:
+  case 0x6a2:
+  case 0x6a3:
+  case 0x6a4:
+  case 0x6a5:
+  case 0x842:
+  case 0x84b:
+  case 0x851:
     targetDistance = fn_8014C5D0((int)target);
-  }
-LAB_801029e0:
-  if ((lbl_803E1630 < targetDistance) ||
-     (CAMCONTROL_CAMERA->targetDistance <= lbl_803E1630)) {
-    if ((lbl_803E1634 < targetDistance) ||
-       (CAMCONTROL_CAMERA->targetDistance <= lbl_803E1634)) {
-      if ((lbl_803E1638 < targetDistance) ||
-         (CAMCONTROL_CAMERA->targetDistance <= lbl_803E1638)) {
-        if ((targetDistance <= lbl_803E163C) &&
-           (lbl_803E163C < CAMCONTROL_CAMERA->targetDistance)) {
-          objShowButtonGlow(reticle,lbl_803E162C,4);
-        }
-      }
-      else {
-        objShowButtonGlow(reticle,lbl_803E162C,4);
-      }
+    break;
+  case 0x3de:
+  case 0x49f:
+    targetDistance = fn_80183204((int)target);
+    break;
+  case 0x31:
+    targetDistance = lbl_803E162C;
+    break;
+  default:
+    result = dll_19_func1B((int)target);
+    if (result == 0) {
+      targetDistance = lbl_803E162C;
     }
     else {
-      objShowButtonGlow(reticle,lbl_803E162C,4);
+      targetDistance =
+          camcontrol_GetBaddieControlInterface()->getTargetReticleDistance((int)target);
     }
+    break;
   }
-  else {
+  if (targetDistance <= lbl_803E1630 && CAMCONTROL_CAMERA->targetDistance > lbl_803E1630) {
+    objShowButtonGlow(reticle,lbl_803E162C,4);
+  }
+  else if (targetDistance <= lbl_803E1634 && CAMCONTROL_CAMERA->targetDistance > lbl_803E1634) {
+    objShowButtonGlow(reticle,lbl_803E162C,4);
+  }
+  else if (targetDistance <= lbl_803E1638 && CAMCONTROL_CAMERA->targetDistance > lbl_803E1638) {
+    objShowButtonGlow(reticle,lbl_803E162C,4);
+  }
+  else if (targetDistance <= lbl_803E163C && CAMCONTROL_CAMERA->targetDistance > lbl_803E163C) {
     objShowButtonGlow(reticle,lbl_803E162C,4);
   }
   CAMCONTROL_CAMERA->targetDistance = targetDistance;
