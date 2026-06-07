@@ -73,7 +73,7 @@ extern u32  getButtonsJustPressedIfNotBusy(int pad);
 extern int  isGameTimerDisabled(void);
 extern f64  fn_8001461C(void);
 extern void fn_801DE320(void *dst, int val);
-extern int fn_800882C8(int index);
+extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(int n);
 extern int *gCameraInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
@@ -265,7 +265,7 @@ int platform1_control(int obj, int p2, u8 *data)
                 fn_801DE320(&lbl_803DC070, (int)(fn_8001461C() / lbl_803E5694));
                 hudFn_8011f38c(0);
                 if (st->loopSfxHandle > 0) {
-                    fn_800882C8(st->loopSfxHandle);
+                    ObjSeq_takeXrotChanged(st->loopSfxHandle);
                 }
                 (*(void (**)(int, int))((char *)(*gScreenTransitionInterface) + 0xc))(0x14, 1);
                 lbl_803DDC10 = 2;
@@ -288,7 +288,7 @@ int platform1_control(int obj, int p2, u8 *data)
                 }
                 hudFn_8011f38c(0);
                 if (st->loopSfxHandle > 0) {
-                    fn_800882C8(st->loopSfxHandle);
+                    ObjSeq_takeXrotChanged(st->loopSfxHandle);
                 }
                 (*(void (**)(int, int))((char *)(*gScreenTransitionInterface) + 0xc))(0x14, 1);
                 lbl_803DDC10 = 2;
@@ -422,7 +422,7 @@ void sc_totemstrength_update(u8 *obj)
         if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0) {
             if (st->loopSfxHandle > 0) {
                 (*gObjectTriggerInterface)->endSequence(st->loopSfxHandle);
-                fn_800882C8(st->loopSfxHandle);
+                ObjSeq_takeXrotChanged(st->loopSfxHandle);
             }
             if (lbl_803DDC10-- == 0) {
                 st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_ACTIVE);

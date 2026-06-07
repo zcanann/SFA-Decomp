@@ -56,8 +56,8 @@ extern s16 *objModelGetVecFn_800395d8(void *obj, int index);
 extern long long OSGetTime(void);
 
 extern s16 lbl_80399398[];
-extern u8 lbl_80399EA8[];
-extern s16 lbl_80399F00[];
+extern u8 objSeqXrotChanged[];
+extern s16 objSeqXrotValues[];
 extern s8 lbl_8039A45C[];
 extern s8 lbl_8039A4B4[];
 extern s8 lbl_8039A50C[];

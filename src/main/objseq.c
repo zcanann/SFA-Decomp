@@ -3035,9 +3035,9 @@ void ObjSeq_setXrot(int index, int xrot)
 {
     s16 xrot16;
 
-    lbl_80399EA8[index] = 1;
+    objSeqXrotChanged[index] = 1;
     xrot16 = xrot;
-    lbl_80399F00[index] = xrot16;
+    objSeqXrotValues[index] = xrot16;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -4058,12 +4058,12 @@ void ObjSeq_initialise(void)
 
 #pragma peephole off
 #pragma scheduling off
-int fn_800882C8(int index)
+int ObjSeq_takeXrotChanged(int index)
 {
     int changed;
 
-    changed = lbl_80399EA8[index];
-    lbl_80399EA8[index] = 0;
+    changed = objSeqXrotChanged[index];
+    objSeqXrotChanged[index] = 0;
     return changed;
 }
 #pragma scheduling reset
