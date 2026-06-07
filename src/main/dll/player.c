@@ -16716,6 +16716,8 @@ void fn_8029560C(int obj, int *state)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void fn_80295918(int obj, int sel, f32 fval)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -16724,8 +16726,9 @@ void fn_80295918(int obj, int sel, f32 fval)
     case 1: {
         u8 n = *(u8 *)((char *)state + 0x8b8);
         if (n < 4) {
-            *(u8 *)((char *)state + 0x8b8) = n + 1;
-            *(u8 *)((char *)state + n + 0x8b9) = (u8)iv;
+            u8 v = (u8)iv;
+            *(u8 *)((char *)state + 0x8b8) += 1;
+            *((u8 *)((char *)state + 0x8b9) + n) = v;
         }
         break;
     }
@@ -16737,13 +16740,15 @@ void fn_80295918(int obj, int sel, f32 fval)
         *(int *)((char *)state + 0x304) = (int)fn_802A514C;
         break;
     case 10:
-        *(u32 *)((char *)state + 0x360) |= 0x80000;
+        *(u32 *)((char *)state + 0x360) |= 0x80000LL;
         break;
     case 11:
-        *(u32 *)((char *)state + 0x360) &= ~0x80000;
+        *(u32 *)((char *)state + 0x360) &= ~0x80000LL;
         break;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
