@@ -13,38 +13,29 @@ void WM_newcrystalFn_800969b0(void *obj, s16 *state, u8 flags, f32 period, f32 x
     PartfxParams params;
     int i;
     int j;
-    f32 cHalf;
-    f32 invPeriod;
-    f32 cOne;
-    f32 cZero;
     int spawnFlags;
     f32 phase;
 
-    cZero = lbl_803DF35C;
-    cOne = lbl_803DF354;
-    invPeriod = lbl_803DF350 / period;
-    cHalf = lbl_803DF358;
-
     for (i = 0; i < 4; i++) {
-        state[0x12 + i] = (s32)(invPeriod + (f32)(i * randomGetRange(120, 127)));
-        state[0xe + i] = (s32)((f32)state[0x12 + i] * timeDelta + (f32)state[0xe + i]);
+        state[0x12 + i] = (65535.0f / period + (f32)(i * randomGetRange(120, 127)));
+        state[0xe + i] = ((f32)state[0x12 + i] * timeDelta + (f32)state[0xe + i]);
         phase = fcos16(state[0xe + i]);
-        *(f32 *)((char *)state + 0xc + i * 4) = lbl_8030F9D8[i] * ((cOne + phase) * cHalf);
+        *(f32 *)((char *)state + 0xc + i * 4) = lbl_8030F9D8[i] * ((1.0f + phase) * 0.5f);
 
-        state[0x16 + i] = (s32)(timeDelta * (f32)lbl_803DB788[i] + (f32)state[0x16 + i]);
+        state[0x16 + i] = (timeDelta * (f32)lbl_803DB788[i] + (f32)state[0x16 + i]);
         *(u16 *)state = state[0x16 + i];
         *(f32 *)((char *)state + 8) = *(f32 *)((char *)state + 0xc + i * 4);
 
         for (j = 0; j < 0xffff; j += 0x7fff) {
             params.vec[0] = *(f32 *)((char *)state + 8) * xMul + xOff;
             params.vec[1] = *(f32 *)((char *)state + 8) * yMul + yOff;
-            params.vec[2] = cZero;
+            params.vec[2] = 0.0f;
             *(u16 *)state += 0x7fff;
             vecRotateZXY(state, params.vec);
             params.vec[0] += ((GameObject *)obj)->anim.localPosX;
             params.vec[1] += ((GameObject *)obj)->anim.localPosY;
             params.vec[2] += ((GameObject *)obj)->anim.localPosZ;
-            params.f8 = cOne;
+            params.f8 = 1.0f;
             spawnFlags = 0x200001;
             if (flags != 0) {
                 spawnFlags |= 0x20000000;
