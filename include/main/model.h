@@ -80,6 +80,21 @@ STATIC_ASSERT(offsetof(ModelFileHeader, unkC8) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);
 STATIC_ASSERT(offsetof(ModelFileHeader, unkF9) == 0xF9);
 
+typedef struct ObjModelJointMatrix {
+    f32 row0[3];
+    f32 translationX;
+    f32 row1[3];
+    f32 translationY;
+    f32 row2[3];
+    f32 translationZ;
+    f32 row3[4];
+} ObjModelJointMatrix;
+
+STATIC_ASSERT(sizeof(ObjModelJointMatrix) == 0x40);
+STATIC_ASSERT(offsetof(ObjModelJointMatrix, translationX) == 0x0C);
+STATIC_ASSERT(offsetof(ObjModelJointMatrix, translationY) == 0x1C);
+STATIC_ASSERT(offsetof(ObjModelJointMatrix, translationZ) == 0x2C);
+
 typedef struct ObjModelBlendChannel {
     f32 weight;
     f32 targetWeight;
@@ -128,5 +143,7 @@ typedef struct ObjModel {
 STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);
 STATIC_ASSERT(offsetof(ObjModel, unk60) == 0x60);
+
+ObjModelJointMatrix *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex);
 
 #endif

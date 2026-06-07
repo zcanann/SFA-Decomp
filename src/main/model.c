@@ -316,7 +316,7 @@ void ObjModel_ToggleMatrixBuffer(u8 *model) {
     ((ObjModel *)model)->bufferFlags ^= 1;
 }
 
-void *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex) {
+ObjModelJointMatrix *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex) {
     ObjModelInstanceLite *model;
     ObjModelFileHeaderLite *modelFile;
     uint jointCount;
@@ -334,7 +334,7 @@ void *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex) {
         jointIndex = 0;
     }
 
-    return model->jointMatrices[model->bufferFlags & 1] + jointIndex * 0x40;
+    return (ObjModelJointMatrix *)(model->jointMatrices[model->bufferFlags & 1] + jointIndex * 0x40);
 }
 
 void *ObjModel_GetRenderOpTextureRefs(u8 *model, int renderOpIndex) {

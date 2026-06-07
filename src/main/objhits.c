@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/objhits.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
@@ -13,7 +14,6 @@ extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *
 extern uint getAngle(f32 a, f32 b);
 extern undefined4 mtxRotateByVec3s();
 extern undefined4 setMatrixFromObjectPos();
-extern int ObjModel_GetJointMatrix(int *model,int jointIndex);
 extern byte hitDetectFn_80067958(int obj,float *startPoints,float *endPoints,int pointCount,
                                  void *outHits,int flags);
 extern void hitDetectFn_800691c0(int obj,void *bounds,uint mask,int flags);
@@ -125,7 +125,7 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,ObjHitsSkeletonJointData
   int count;
   ObjHitsModelFileHeader *modelFile;
   ObjHitsSkeletonHit *cur;
-  int m;
+  ObjModelJointMatrix *jointMatrix;
   float dx;
   float dz;
   float radJ;
@@ -154,10 +154,10 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,ObjHitsSkeletonJointData
   cur = hits;
   *outBest = hits;
   *outAccum = gObjHitsScalarZero;
-  m = ObjModel_GetJointMatrix(model,0);
-  jointPos.x = *(float *)(m + 0xc);
-  jointPos.y = *(float *)(m + 0x1c);
-  jointPos.z = *(float *)(m + 0x2c);
+  jointMatrix = ObjModel_GetJointMatrix((u8 *)model,0);
+  jointPos.x = jointMatrix->translationX;
+  jointPos.y = jointMatrix->translationY;
+  jointPos.z = jointMatrix->translationZ;
   dx = jointPos.x - point[0];
   dz = jointPos.z - point[2];
   cullDist = sqrtf(dx * dx + gObjHitsScalarZero + dz * dz) - radius;
@@ -170,14 +170,14 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,ObjHitsSkeletonJointData
   while (idx4 -= 4, idx28 -= 28, pRad -= 1, --joint != 0) {
     if (*(float *)((u8 *)jointData->jointCullDistances + idx4) > cullDist) {
       parent = *(s8 *)((u8 *)modelFile->joints + idx28);
-      m = ObjModel_GetJointMatrix(model,joint);
-      jointPos.x = *(float *)(m + 0xc);
-      jointPos.y = *(float *)(m + 0x1c);
-      jointPos.z = *(float *)(m + 0x2c);
-      m = ObjModel_GetJointMatrix(model,parent);
-      parentPos.x = *(float *)(m + 0xc);
-      parentPos.y = *(float *)(m + 0x1c);
-      parentPos.z = *(float *)(m + 0x2c);
+      jointMatrix = ObjModel_GetJointMatrix((u8 *)model,joint);
+      jointPos.x = jointMatrix->translationX;
+      jointPos.y = jointMatrix->translationY;
+      jointPos.z = jointMatrix->translationZ;
+      jointMatrix = ObjModel_GetJointMatrix((u8 *)model,parent);
+      parentPos.x = jointMatrix->translationX;
+      parentPos.y = jointMatrix->translationY;
+      parentPos.z = jointMatrix->translationZ;
       jointData->touchedJoints[joint] = 1;
       jointData->touchedJoints[parent] = 1;
       radJ = *pRad;
@@ -289,7 +289,7 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,ObjHitsSkeletonJointData
   int count;
   ObjHitsSkeletonHit *cur;
   ObjHitsModelFileHeader *modelFile;
-  int m;
+  ObjModelJointMatrix *jointMatrix;
   float dx;
   float dz;
   float radJ;
@@ -317,10 +317,10 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,ObjHitsSkeletonJointData
   cur = hits;
   *outBest = hits;
   *outAccum = gObjHitsScalarZero;
-  m = ObjModel_GetJointMatrix(model,0);
-  jointPos.x = *(float *)(m + 0xc);
-  jointPos.y = *(float *)(m + 0x1c);
-  jointPos.z = *(float *)(m + 0x2c);
+  jointMatrix = ObjModel_GetJointMatrix((u8 *)model,0);
+  jointPos.x = jointMatrix->translationX;
+  jointPos.y = jointMatrix->translationY;
+  jointPos.z = jointMatrix->translationZ;
   dx = jointPos.x - point[0];
   dz = jointPos.z - point[2];
   cullDist = sqrtf(dx * dx + gObjHitsScalarZero + dz * dz) - radius;
@@ -333,14 +333,14 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,ObjHitsSkeletonJointData
   while (idx4 -= 4, idx28 -= 28, pRad -= 1, --joint != 0) {
     if (*(float *)((u8 *)jointData->jointCullDistances + idx4) > cullDist) {
       parent = *(s8 *)((u8 *)modelFile->joints + idx28);
-      m = ObjModel_GetJointMatrix(model,joint);
-      jointPos.x = *(float *)(m + 0xc);
-      jointPos.y = *(float *)(m + 0x1c);
-      jointPos.z = *(float *)(m + 0x2c);
-      m = ObjModel_GetJointMatrix(model,parent);
-      parentPos.x = *(float *)(m + 0xc);
-      parentPos.y = *(float *)(m + 0x1c);
-      parentPos.z = *(float *)(m + 0x2c);
+      jointMatrix = ObjModel_GetJointMatrix((u8 *)model,joint);
+      jointPos.x = jointMatrix->translationX;
+      jointPos.y = jointMatrix->translationY;
+      jointPos.z = jointMatrix->translationZ;
+      jointMatrix = ObjModel_GetJointMatrix((u8 *)model,parent);
+      parentPos.x = jointMatrix->translationX;
+      parentPos.y = jointMatrix->translationY;
+      parentPos.z = jointMatrix->translationZ;
       radJ = *pRad;
       radP = radii[parent];
       jointData->touchedJoints[joint] = 1;

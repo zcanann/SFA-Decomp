@@ -4582,7 +4582,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern u8 lbl_803DB488[4];
 extern void ObjModel_SetRenderCallback(int *model, void *cb);
-extern int *ObjModel_GetJointMatrix(int *model, int joint);
 extern void modelRenderCb_8003c268();
 extern void shaderFuzzFn_8003cc1c();
 extern void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *model, int p4);
@@ -4716,9 +4715,9 @@ void objRenderFn_80041018(int *obj) {
         p = base;
         for (; i < *(u8 *)(*(int *)((char *)obj + 0x50) + 0x72); i++) {
             int j = *(s8 *)(p + OBJPRINT_ACTIVE_BANK_INDEX(obj) + 0x12);
-            int *mtx;
+            ObjModelJointMatrix *mtx;
             if (j >= 0) {
-                mtx = ObjModel_GetJointMatrix(model, j);
+                mtx = ObjModel_GetJointMatrix((u8 *)model, j);
             } else {
                 mtx = NULL;
             }
@@ -4899,7 +4898,7 @@ void objRenderChild(int *child, int *parent, u8 p3) {
             Obj_BuildWorldTransformMatrix(parent, wm, 0);
             mtx = wm;
         } else {
-            mtx = (f32 *)ObjModel_GetJointMatrix(pmodel, j);
+            mtx = (f32 *)ObjModel_GetJointMatrix((u8 *)pmodel, j);
         }
     }
     if (OBJPRINT_MODEL_DEF(child)->renderFlags & 8) {
@@ -5022,7 +5021,7 @@ void modelLoadMtxsToGx(int obj, int *model, MtxBitStream *bs, f32 *mtx) {
             if (lbl_803DCC48 == 2) {
                 GXLoadPosMtxImm((f32 *)(cache + idx * 0x30), *tbl);
             } else {
-                PSMTXConcat(mtx, (f32 *)ObjModel_GetJointMatrix(model, idx), tmp);
+                PSMTXConcat(mtx, (f32 *)ObjModel_GetJointMatrix((u8 *)model, idx), tmp);
                 GXLoadPosMtxImm(tmp, *tbl);
             }
             tbl++;
@@ -5241,7 +5240,7 @@ void renderOpMatrix(u8 *hdr, int *model, MtxBitStream *bs, f32 *m1, f32 *mtx, u8
                     GXLoadNrmMtxImm((f32 *)hdr, *tbl);
                 }
             } else {
-                PSMTXConcat(mtx, (f32 *)ObjModel_GetJointMatrix(model, idx), tmp);
+                PSMTXConcat(mtx, (f32 *)ObjModel_GetJointMatrix((u8 *)model, idx), tmp);
                 GXLoadPosMtxImm(tmp, *tbl);
                 if (skip == 0 && (nrm != 0 || tex != 0)) {
                     tmp[3] = lbl_803DEA04;
@@ -5688,7 +5687,7 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
             }
         } else {
             ObjModel_ToggleMatrixBuffer(am);
-            PSMTXCopy(lbl_802CAEE8, (f32 *)ObjModel_GetJointMatrix(am, 0));
+            PSMTXCopy(lbl_802CAEE8, (f32 *)ObjModel_GetJointMatrix((u8 *)am, 0));
             lbl_803DCC48 = 3;
         }
         {
@@ -5847,7 +5846,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
             }
         } else {
             ObjModel_ToggleMatrixBuffer(am);
-            PSMTXCopy(wm, (f32 *)ObjModel_GetJointMatrix(am, 0));
+            PSMTXCopy(wm, (f32 *)ObjModel_GetJointMatrix((u8 *)am, 0));
         }
         if (((ModelFileHeader *)m)->unkF9 != 0) {
             ObjModel_ApplyBlendChannels(am);
@@ -6125,7 +6124,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
             }
         } else {
             ObjModel_ToggleMatrixBuffer(am);
-            PSMTXCopy(wm, (f32 *)ObjModel_GetJointMatrix(am, 0));
+            PSMTXCopy(wm, (f32 *)ObjModel_GetJointMatrix((u8 *)am, 0));
         }
         if ((m4 == 0 && (mode8 & 8) == 0) || lbl_803DCC44 == 0) {
             if (((ModelFileHeader *)m)->unkF9 != 0) {
@@ -6164,7 +6163,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
         joff = 0;
         for (; j < ((ModelFileHeader *)m)->jointCount; j++) {
             f32 sc = (f32)lbl_803DCC40 * (fade / *(f32 *)(((ModelFileHeader *)m)->unk40 + joff + 0xc)) + a1c;
-            f32 *jm = (f32 *)ObjModel_GetJointMatrix(am, j);
+            f32 *jm = (f32 *)ObjModel_GetJointMatrix((u8 *)am, j);
             PSMTXScale(sm, sc, sc, sc);
             if (lbl_803DCC35 == 0) {
                 {
