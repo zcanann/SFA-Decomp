@@ -136,8 +136,8 @@ void wcbeacon_update(int obj)
         }
     } else if (phase == WCBEACON_PHASE_ACTIVE) {
         if (((GameObject *)obj)->objectFlags & WCBEACON_VISIBLE_PARTFX_FLAG) {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, WCBEACON_PARTFX_ACTIVE, NULL,
-                                                                WCBEACON_PARTFX_KIND, WCBEACON_TRIGGER_NO_ARG, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, WCBEACON_PARTFX_ACTIVE, NULL,
+                                             WCBEACON_PARTFX_KIND, WCBEACON_TRIGGER_NO_ARG, NULL);
         }
         if (((GameObject *)obj)->unkF4 == 0) {
             (*(void (**)(int, int))(*gObjectTriggerInterface + 0x54))(obj, WCBEACON_FINAL_TRIGGER_ID);

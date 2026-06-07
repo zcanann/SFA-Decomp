@@ -119,10 +119,10 @@ void arwarwingbo_update(int obj)
             ((GameObject *)obj)->anim.velocityY = lbl_803E7044;
             ((GameObject *)obj)->anim.velocityZ = lbl_803E7044;
         }
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x79e, NULL, 1, -1,
-                                                            (void *)(obj + 0x24));
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x79e, NULL, 1, -1,
-                                                            (void *)(obj + 0x24));
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x79e, NULL, 1, -1,
+                                         (void *)(obj + 0x24));
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x79e, NULL, 1, -1,
+                                         (void *)(obj + 0x24));
         ObjHits_SetHitVolumeSlot(obj, 0xf, 0, 0);
         if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 ||
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0 ||

@@ -368,16 +368,14 @@ void arwsquadron_emitEffects(int p1, int p2)
             ObjPath_GetPointLocalPosition(p2, 4, &pfx.fx, &pfx.fy, &pfx.fz);
             pfx.f8 = ((ArwSquadronState *)p2)->emitZ;
             pfx.s6 = ((s8)((ArwSquadronState *)p2)->unk15E <= 1) ? 0x61a8 : -0x63c0;
-            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)p1, 0x7d0, &pfx, 4,
-                                                                -1, &flag);
+            (*gPartfxInterface)->spawnObject((void *)p1, 0x7d0, &pfx, 4, -1, &flag);
         }
     }
     if ((s8)((ArwSquadronState *)p2)->unk15E <= 1) {
         pfx.s6 = 0xc0a;
         ObjPath_GetPointLocalPosition(p2, 5, &pfx.fx, &pfx.fy, &pfx.fz);
         pfx.f8 = ((ArwSquadronState *)p2)->unk120;
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)p1, 0x7d1, &pfx, 4, -1,
-                                                            &flag);
+        (*gPartfxInterface)->spawnObject((void *)p1, 0x7d1, &pfx, 4, -1, &flag);
     }
     if (((ArwSquadronState *)p2)->unk15A != 0 && (s8)((ArwSquadronState *)p2)->unk15E > 1) {
         pfx.s0 = 0;

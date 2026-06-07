@@ -306,20 +306,20 @@ void ring_update(int obj)
                         spawnBuf[3] = dir[0] + ((GameObject *)obj)->anim.localPosX;
                         spawnBuf[4] = dir[1] + ((GameObject *)obj)->anim.localPosY;
                         spawnBuf[5] = dir[2] + ((GameObject *)obj)->anim.localPosZ;
-                        (*(void (**)(int, int, f32 *, int, int, int))(*gPartfxInterface + 8))(
-                            obj, lbl_8032B720[RING_MODE(state)].f0, spawnBuf, RING_PARTFX_FLAGS, -1,
-                            obj + 0x24);
-                        (*(void (**)(int, int, f32 *, int, int, int))(*gPartfxInterface + 8))(
-                            obj, lbl_8032B720[RING_MODE(state)].f0, spawnBuf, RING_PARTFX_FLAGS, -1,
-                            obj + 0x24);
+                        (*gPartfxInterface)->spawnObject((void *)obj, lbl_8032B720[RING_MODE(state)].f0,
+                                                         spawnBuf, RING_PARTFX_FLAGS, -1,
+                                                         (void *)(obj + 0x24));
+                        (*gPartfxInterface)->spawnObject((void *)obj, lbl_8032B720[RING_MODE(state)].f0,
+                                                         spawnBuf, RING_PARTFX_FLAGS, -1,
+                                                         (void *)(obj + 0x24));
                     }
                 }
                 RING_FLAGS_BYTE(state) |= 0x40;
             } else {
                 if ((RING_FLAGS_BYTE(state) & 0x40) != 0) {
                     for (ang = 0; ang < lbl_8032B720[RING_MODE(state)].fc; ang++) {
-                        (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(
-                            obj, lbl_8032B720[RING_MODE(state)].f4, 0, 2, -1, 0);
+                        (*gPartfxInterface)->spawnObject((void *)obj, lbl_8032B720[RING_MODE(state)].f4,
+                                                         NULL, 2, -1, NULL);
                     }
                 }
                 RING_FLAGS_BYTE(state) &= ~0x40;

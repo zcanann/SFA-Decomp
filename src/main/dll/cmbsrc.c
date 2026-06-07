@@ -350,8 +350,8 @@ void cmbsrc_updateVisuals(int obj, int state)
         if (sourceState->particleTimer <= lbl_803E7360) {
             if (cmbsrc->objectFlags & 0x800) {
                 param[2] = sourceState->radius;
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, CMBSRC_PARTICLE_EFFECT_ID,
-                                                                    param, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void *)obj, CMBSRC_PARTICLE_EFFECT_ID, param,
+                                                 2, -1, NULL);
             }
             sourceState->particleTimer += lbl_803E7398;
         }

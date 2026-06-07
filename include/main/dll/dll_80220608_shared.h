@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_80220608_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objHitReact.h"
@@ -44,7 +45,7 @@ extern f32 lbl_803E6E20;
 extern f32 lbl_803E6E24;
 extern f32 timeDelta;
 extern int *gMapEventInterface;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int *gObjectTriggerInterface;
 extern int isGameTimerDisabled(void);
 extern void GameBit_Set(int id, int value);

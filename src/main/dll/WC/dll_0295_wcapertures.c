@@ -123,9 +123,9 @@ void wcapertures_hitDetect(int obj)
         col[0] = lbl_803E6E30;
         col[1] = lbl_803E6E34;
         col[2] = lbl_803E6E28;
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, WCAPERTURES_PARTFX_OPEN, ev,
-                                                            WCAPERTURES_PARTFX_KIND,
-                                                            WCAPERTURES_PARTFX_INVALID_HANDLE, col);
+        (*gPartfxInterface)->spawnObject((void *)obj, WCAPERTURES_PARTFX_OPEN, ev,
+                                         WCAPERTURES_PARTFX_KIND,
+                                         WCAPERTURES_PARTFX_INVALID_HANDLE, col);
     }
     if (WCAPERTURES_LIGHT(state) != NULL)
         modelLightStruct_updateGlowAlpha(WCAPERTURES_LIGHT(state));

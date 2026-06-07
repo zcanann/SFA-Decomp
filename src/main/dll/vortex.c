@@ -79,7 +79,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             particleArgs[2] =
                 ((f32)*(s16 *)(setup + 0x1a) / lbl_803E73DC) * ((GameObject *)obj)->anim.rootMotionScale * state->alpha;
             particleArgs[4] = lbl_803E73D0;
-            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x7f7, particleArgs, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x7f7, particleArgs, 2, -1, NULL);
         }
 
         model = Obj_GetActiveModel(obj);
@@ -143,7 +143,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
         particleArgs[2] = ((GameObject *)obj)->anim.rootMotionScale * state->alpha;
         if ((u8)getHudHiddenFrameCount() == 0) {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x7c2, particleArgs, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x7c2, particleArgs, 2, -1, NULL);
         }
 
         model = Obj_GetActiveModel(obj);

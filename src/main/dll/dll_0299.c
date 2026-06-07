@@ -56,9 +56,9 @@ void dll_299_update(int obj)
     if (randomGetRange(0, 2) == 0) {
         (*(void (**)(int, int, int, int, int, int))(*(int *)lbl_803DDD80 + 0x4))(obj, 1, 0, 4, -1, 0);
     }
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x547, 0, 4, -1, 0);
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x547, 0, 4, -1, 0);
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x547, 0, 4, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x547, NULL, 4, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x547, NULL, 4, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x547, NULL, 4, -1, NULL);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -70,10 +70,10 @@ void dll_299_init(int obj, int setup)
     *(s16 *)*(int *)(obj + 0xb8) = *(s16 *)(setup + 0x1e);
     *(u16 *)(obj + 0xb0) |= 0x2000;
     lbl_803DDD80 = Resource_Acquire(0xa6, 1);
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x545, 0, 0x802, -1, 0);
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x545, 0, 0x802, -1, 0);
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x545, 0, 0x802, -1, 0);
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x546, 0, 0x802, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x545, NULL, 0x802, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x545, NULL, 0x802, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x545, NULL, 0x802, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x546, NULL, 0x802, -1, NULL);
 }
 #pragma scheduling reset
 #pragma peephole reset

@@ -91,13 +91,13 @@ void wctrexstatu_hitDetect(u8 *obj)
 
     if (*(int *)(obj + WCTREXSTATU_TRIGGERED_FLAG_OFFSET) != 0 && randomGetRange(0, WCTREXSTATU_PARTFX_CHANCE) == 0) {
         if (objAnim->bankIndex == 0) {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_0, NULL,
-                                                                WCTREXSTATU_PARTFX_KIND,
-                                                                WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
+            (*gPartfxInterface)->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_0, NULL,
+                                             WCTREXSTATU_PARTFX_KIND,
+                                             WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
         } else {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_1, NULL,
-                                                                WCTREXSTATU_PARTFX_KIND,
-                                                                WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
+            (*gPartfxInterface)->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_1, NULL,
+                                             WCTREXSTATU_PARTFX_KIND,
+                                             WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
         }
     }
 }
