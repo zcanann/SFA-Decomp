@@ -1591,7 +1591,7 @@ void dimbossicesmash_update(u8 *obj)
         if ((((GameObject *)obj)->anim.flags & 0x2000U) != 0) {
             Obj_FreeObject(obj);
         }
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
     } else {
         setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
         if ((flags & 1) == 0) {
@@ -1605,9 +1605,9 @@ void dimbossicesmash_update(u8 *obj)
             } else if (lbl_803DDB00 != 0) {
                 state[0x29e] = flags | 1;
             }
-            *(u8 *)(obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
         } else {
-            *(u8 *)(obj + 0x36) = 0xff;
+            ((GameObject *)obj)->anim.alpha = 0xff;
             ((DimBossIceSmashState *)state)->unk29C += framesThisStep;
             cnt = ((DimBossIceSmashState *)state)->unk29C;
             if (*(u16 *)(setup + 0x38) <= cnt) {
@@ -1623,7 +1623,7 @@ void dimbossicesmash_update(u8 *obj)
                 } else if (a < 0) {
                     a = 0;
                 }
-                *(u8 *)(obj + 0x36) = (u8)a;
+                ((GameObject *)obj)->anim.alpha = (u8)a;
             }
             ((GameObject *)obj)->anim.velocityX = timeDelta * ((DimBossIceSmashState *)state)->unk290 + ((GameObject *)obj)->anim.velocityX;
             ((GameObject *)obj)->anim.velocityY = timeDelta * ((DimBossIceSmashState *)state)->unk294 + ((GameObject *)obj)->anim.velocityY;
@@ -1709,7 +1709,7 @@ void dimbossicesmash_update(u8 *obj)
                     ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * ff;
                 }
             }
-            if ((*(u8 *)(setup + 0x3c) & 4) != 0 && *(s8 *)(obj + 0x36) == -1) {
+            if ((*(u8 *)(setup + 0x3c) & 4) != 0 && ((GameObject *)obj)->anim.alpha == 0xff) {
                 dx = ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX;
                 dy = ((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY;
                 dz = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ;
