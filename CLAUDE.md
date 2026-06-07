@@ -2483,6 +2483,20 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
       CSE forms — the copy-pair canonicalizes identically through all of
       them.
     Round-2 extensions (all 7 known #61c instances now → 100):
+    - **Chained embedded assignment `dst[i] = name = expr;` FOLDS the
+      named var into the temp class** — split it (`name = expr;
+      dst[i] = name;`) to restore named-class coloring; one split landed
+      a whole saved-reg trio (voiceConfigureParamRamp 97.75→99.13,
+      audio/scheduling-ON unit — the residual volatile-pair swap there
+      did NOT respond to naming; volatile pairs under scheduling-ON stay
+      a cap).
+    - **Retro-sweep detector**: cosmetic_audit hits whose first diffs are
+      same-shape loads/mr with only r-numbers swapped = #107 candidates
+      (batch 1: camcontrol_release → 100 — actually the curUiDllDraw
+      #65-class dropped-2-param pass-through, sibling call sites prove
+      the arg form; Obj_ApplyPendingParentLinks → 100 — #107 un-named
+      parent PLUS a #60-class wrongly-guarded store the import nested:
+      `unkC0 = NULL` runs whenever parent != NULL in target).
     - **Phi/merged values count as nameable too**: a branchy if/else
       reassigning one named var (`if (n) n += x; else n = 1;`) keeps the
       merged value in the var's reg; target holding the merge in r0 = the
