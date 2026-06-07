@@ -1936,19 +1936,19 @@ void dim2snowball_update(int *obj)
     f32 k;
 
     if ((((Dim2SnowballState *)extra)->flagsAC & 4) != 0) {
-        int v = *(u8 *)((char *)obj + 0x36) + framesThisStep * 2;
+        int v = ((GameObject *)obj)->anim.alpha + framesThisStep * 2;
         if (v > 255) {
             v = 255;
             ((Dim2SnowballState *)extra)->flagsAC &= ~4;
         }
-        *(u8 *)((char *)obj + 0x36) = v;
+        ((GameObject *)obj)->anim.alpha = v;
     } else if ((((Dim2SnowballState *)extra)->flagsAC & 8) != 0) {
-        int v = *(u8 *)((char *)obj + 0x36) - framesThisStep * 2;
+        int v = ((GameObject *)obj)->anim.alpha - framesThisStep * 2;
         if (v < 0) {
             v = 0;
             ((Dim2SnowballState *)extra)->flagsAC &= ~8;
         }
-        *(u8 *)((char *)obj + 0x36) = v;
+        ((GameObject *)obj)->anim.alpha = v;
     }
 
     if ((((Dim2SnowballState *)extra)->flagsAC & 1) == 0) {
@@ -1994,7 +1994,7 @@ checkHit:
             evt[5] = ((GameObject *)obj)->anim.localPosZ;
             ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
                 obj, 518, evt, 4, -1, 0);
-            if (*(u8 *)((char *)obj + 0x36) == 0) {
+            if (((GameObject *)obj)->anim.alpha == 0) {
                 Obj_FreeObject(obj);
                 return;
             }
@@ -2061,7 +2061,7 @@ checkHit:
         }
     }
 
-    if (*(u8 *)((char *)obj + 0x36) == 255) {
+    if (((GameObject *)obj)->anim.alpha == 255) {
         int *m = *(int **)&((GameObject *)obj)->anim.hitReactState;
         if (m != NULL) {
             *(s16 *)((char *)m + 0x60) |= 1;

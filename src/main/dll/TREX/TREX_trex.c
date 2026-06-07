@@ -274,7 +274,7 @@ void FUN_801e4378(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       FUN_80006824(param_9,SFXspirit_voice4);
       (*(ObjHitsPriorityState **)(param_9 + 0x54))->flags &= ~1;
       *(float *)(iVar3 + 0x1c) = lbl_803E6550;
-      *(undefined *)(param_9 + 0x36) = 0x19;
+      ((GameObject *)param_9)->anim.alpha = 0x19;
       iVar3 = 0x32;
       do {
         (**(code **)(*DAT_803dd708 + 8))(param_9,0xa7,0,1,0xffffffff,0);
@@ -614,7 +614,7 @@ void FUN_801e4cd8(uint param_1)
     }
     (*(ObjHitsPriorityState **)(param_1 + 0x54))->flags &= ~1;
     *(float *)(iVar2 + 0x20) = lbl_803E6588;
-    *(undefined *)(param_1 + 0x36) = 0;
+    ((GameObject *)param_1)->anim.alpha = 0;
     FUN_80081114(param_1,2);
   }
   return;
@@ -2152,7 +2152,7 @@ void SB_CloudBall_hitDetect(int *obj)
     params = *(int **)&((GameObject *)obj)->anim.hitReactState;
     *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
     state->fadeTimer = lbl_803E58F0;
-    *(u8 *)((char *)obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
     projectileParticleFxFn_80099660(obj, lbl_803E58E8, 2);
 }
 #pragma peephole reset
@@ -2237,7 +2237,7 @@ void SB_CloudBall_update(int obj)
         ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - framesThisStep;
         if (((GameObject *)obj)->unkF4 < 0 || (player != NULL && (*(u16 *)((char *)player + 0xb0) & 0x1000) != 0)) {
             if (state->fadeTimer == lbl_803E58EC) {
-                *(u8 *)(obj + 0x36) = 0;
+                ((GameObject *)obj)->anim.alpha = 0;
                 state->fadeTimer = lbl_803E58F0;
             }
         }
@@ -2251,7 +2251,7 @@ void SB_CloudBall_update(int obj)
         if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0 && state->fadeTimer == lbl_803E58EC) {
             projectileParticleFxFn_80099660((int *)obj, lbl_803E58E8, 2);
             state->fadeTimer = lbl_803E58F0;
-            *(u8 *)(obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
         }
         particleVelocity[0] = lbl_803E5900 * -state->velX;
         particleVelocity[1] = lbl_803E5900 * -state->velY;
@@ -2501,7 +2501,8 @@ void SB_MiniFire_update(int obj)
     buf[2] = lbl_803E5928;
     if (((GameObject *)obj)->unkF4 <= 0x3c) {
         buf[2] = (f32)((GameObject *)obj)->unkF4 / lbl_803E5930;
-        *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E5934 * ((f32)((GameObject *)obj)->unkF4 / *(f32 *)&lbl_803E5930));
+        ((GameObject *)obj)->anim.alpha =
+            (u8)(int)(lbl_803E5934 * ((f32)((GameObject *)obj)->unkF4 / *(f32 *)&lbl_803E5930));
     }
     *(s16 *)((char *)buf + 4) = 0;
     *(s16 *)((char *)buf + 2) = 0;

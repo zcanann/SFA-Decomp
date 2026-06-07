@@ -81,7 +81,7 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         obj = *ptr;
         data = *(u8 **)(obj + 0x78);
         if (data == NULL
-           || *(u8 *)(obj + 0x36) != 0xff
+           || ((GameObject *)obj)->anim.alpha != 0xff
            || (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x28)
            || (!(((GameObject *)obj)->objectFlags & 0x800) && !(((ObjAnimComponent *)obj)->modelInstance->flags & 1))
            || (((GameObject *)obj)->anim.flags & 0x4000)
