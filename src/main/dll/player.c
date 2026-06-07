@@ -10219,10 +10219,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 }
             } else {
                 r = lbl_803E7F6C + ((PlayerState *)state)->unk7C8;
-                if (r < clamp) {
-                    clamp = r;
-                }
-                ((PlayerState *)state)->unk7C8 = clamp;
+                ((PlayerState *)state)->unk7C8 = (r < clamp) ? r : clamp;
             }
             iv = hitDetectFn_80065e50(obj, &nearList, 0, 0x20, ((GameObject *)obj)->anim.localPosX,
                                       ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
@@ -10251,11 +10248,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             if (((PlayerState *)state)->unk7C8 < lbl_803E7EA4) {
                 fv2 = lbl_803E7EFC * ((PlayerState *)cfg)->baddie.animSpeedA +
                       ((PlayerState *)state)->unk7C8;
-                r = lbl_803E7EA4;
-                if (fv2 < lbl_803E7EA4) {
-                    r = fv2;
-                }
-                ((PlayerState *)state)->unk7C8 = r;
+                ((PlayerState *)state)->unk7C8 = (fv2 < lbl_803E7EA4) ? fv2 : lbl_803E7EA4;
                 velMag = -((PlayerState *)state)->unk7C8;
             }
             break;
@@ -10263,9 +10256,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
         if (velMag != lbl_803E7EA4) {
             damp = lbl_803E7F14;
             r = -(lbl_803E7F6C * velMag - lbl_803E7EE0);
-            if (damp < r) {
-                damp = r;
-            }
+            damp = (damp > r) ? damp : r;
             ((GameObject *)obj)->anim.velocityX =
                 ((GameObject *)obj)->anim.velocityX * powfBitEstimate(damp, dt);
             ((GameObject *)obj)->anim.velocityZ =
