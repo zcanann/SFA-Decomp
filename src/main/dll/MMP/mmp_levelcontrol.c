@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/MMP/mmp_levelcontrol.h"
 
@@ -42,7 +43,7 @@ extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286884();
 
 extern undefined4* DAT_803dd708;
-extern undefined4* gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f64 DOUBLE_803e4c88;
 extern f32 lbl_803E4C68;
 extern f32 lbl_803E4C6C;
@@ -123,10 +124,8 @@ f32 wallanimator_setScale(int obj,int target)
     effect.pos[0] = ((GameObject *)obj)->anim.worldPosX + out[0];
     effect.pos[1] = kDC + (((GameObject *)obj)->anim.worldPosY + out[1]);
     effect.pos[2] = ((GameObject *)obj)->anim.worldPosZ + out[2];
-    ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(
-        obj, 0xca, effect.rot, 0x200001, -1, 0);
-    ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(
-        obj, 0xcb, effect.rot, 0x200001, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0xca, effect.rot, 0x200001, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0xcb, effect.rot, 0x200001, -1, NULL);
     count--;
   } while (count != 0);
 

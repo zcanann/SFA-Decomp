@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/worldobj.h"
 #include "main/mapEventTypes.h"
@@ -483,12 +484,11 @@ extern f32 lbl_803E520C;
 extern f32 lbl_803E5218;
 extern void Sfx_PlayFromObject(int *obj, int sfx);
 extern void *gSHthorntailAnimationInterface;
-extern void *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 typedef struct {
     u8 pad[0xc];
     f32 pos[3];
 } WoPartfxBlock;
-typedef void (*WoPartfxFn)(int *obj, int id, void *blk, int flags, int p5, int p6);
 
 #pragma scheduling off
 #pragma peephole off
@@ -541,7 +541,7 @@ int fn_801CE078(int *obj, u8 *st) {
                     blk.pos[0] = *(f32 *)(st + 0xc);
                     blk.pos[1] = *(f32 *)(st + 0x10);
                     blk.pos[2] = *(f32 *)(st + 0x14);
-                    (*(WoPartfxFn *)(*(char **)gPartfxInterface + 8))(obj, 0x7f0, &blk, 0x200001, -1, 0);
+                    (*gPartfxInterface)->spawnObject(obj, 0x7f0, &blk, 0x200001, -1, NULL);
                 }
                 *(f32 *)(st + 0x1c) = lbl_803E5218;
             }

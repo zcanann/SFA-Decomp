@@ -1,4 +1,5 @@
 #include "main/objanim.h"
+#include "main/effect_interfaces.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/Tumbleweed.h"
@@ -4176,7 +4177,7 @@ void titlescreen_init(u8* obj, u8* p)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int  *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32   lbl_803E23E8;
 
 /* EN v1.0 0x80139164  size: 252b  Tricky_emitQueuedPathParticles: when b->_54 carries the
@@ -4205,8 +4206,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
     if ((flags & 0x800) != 0) return;
     i = 0x14;
     while (i-- != 0) {
-        ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(
-            (int)a, 0x533, &stk, 2, -1, 0);
+        (*gPartfxInterface)->spawnObject(a, 0x533, &stk, 2, -1, NULL);
     }
     *(u32*)(b + 0x54) = *(u32*)(b + 0x54) & ~0x1000;
 }
