@@ -3,7 +3,9 @@
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/model_light.h"
+#include "main/objHitReact.h"
 #include "main/objanim_internal.h"
+#include "main/objhits.h"
 #include "main/track_dolphin.h"
 #include "dolphin/os/OSFastCast.h"
 
@@ -43,7 +45,6 @@ extern undefined4 FUN_80017a40();
 extern undefined4 FUN_80017a50();
 extern undefined4 FUN_80017a98();
 extern undefined4 ObjHits_AddContactObject();
-extern undefined4 ObjHitReact_GetResetObjects();
 extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80044400();
 extern undefined4 FUN_80044fc4();
@@ -5471,55 +5472,47 @@ void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
         int count;
         s16 i;
         int flag80 = masked & 0x80;
-        void **p = (void **)ObjHitReact_GetResetObjects(&count);
-        for (i = 0; i < count; i++, p++) {
-            int *o = (int *)*p;
-            int *p54;
-            int *p58;
-            int sub;
+        ObjAnimComponent **resetObjects = ObjHitReact_GetResetObjects(&count);
+        for (i = 0; i < count; i++, resetObjects++) {
+            ObjAnimComponent *resetObj = *resetObjects;
+            ObjHitsPriorityState *hitState;
+            ObjHitboxTransformState *transformState;
             int n;
             int *model;
             int hdr;
             f32 r, c;
 
-            if (flag80 && (((ObjAnimComponent *)o)->modelInstance->flags & 0x01000000)) continue;
-            p54 = *(int **)((char *)o + 0x54);
-            if (p54 == NULL) continue;
-            p58 = *(int **)((char *)o + 0x58);
-            if (p58 == NULL) continue;
-            if (*(u8 *)((char *)p58 + 0x10d) != 0) continue;
-            if (*(u8 *)((char *)p58 + 0x10e) != 0) continue;
-            model = *(int **)((char *)*(int **)((char *)o + 0x7c)
-                              + (s8)*(u8 *)((char *)p54 + 0xb0) * 4);
+            if (flag80 && (resetObj->modelInstance->flags & 0x01000000)) continue;
+            hitState = (ObjHitsPriorityState *)resetObj->hitReactState;
+            if (hitState == NULL) continue;
+            transformState = ((ObjHitbox *)resetObj)->transformState;
+            if (transformState == NULL) continue;
+            if (transformState->resetFrames != 0) continue;
+            if (transformState->pad10E != 0) continue;
+            model = (int *)resetObj->banks[hitState->stateIndex];
             if (model == NULL) continue;
             hdr = *(int *)model;
             if (*(u16 *)(hdr + 0xf0) == 0) continue;
             r = (f32)(u32)(u16)modelFileHeaderGetCullDistance((void *)hdr);
-            c = *(f32 *)((char *)o + 0x18);
+            c = resetObj->worldPosX;
             if (f30 < c - r) continue;
             if (f31 > c + r) continue;
-            c = *(f32 *)((char *)o + 0x1c);
+            c = resetObj->worldPosY;
             if (f28 < c - r) continue;
             if (f29 > c + r) continue;
-            c = *(f32 *)((char *)o + 0x20);
+            c = resetObj->worldPosZ;
             if (f26 < c - r) continue;
             if (f27 > c + r) continue;
 
-            sub = *(int *)((char *)o + 0x58);
-            n = *(u8 *)(sub + 0x10c);
-            desc->currentCollisionMatrix = (void *)(sub + (n + 2) * 0x40);
-            sub = *(int *)((char *)o + 0x58);
-            n = *(u8 *)(sub + 0x10c);
-            desc->currentMatrix = (void *)(sub + n * 0x40);
-            sub = *(int *)((char *)o + 0x58);
-            n = *(u8 *)(sub + 0x10c) ^ 1;
-            desc->alternateCollisionMatrix = (void *)(sub + (n + 2) * 0x40);
-            sub = *(int *)((char *)o + 0x58);
-            n = *(u8 *)(sub + 0x10c) ^ 1;
-            desc->alternateMatrix = (void *)(sub + n * 0x40);
+            n = transformState->activeMatrixIndex;
+            desc->currentCollisionMatrix = transformState->matrices[n + 2];
+            desc->currentMatrix = transformState->matrices[n];
+            n = transformState->activeMatrixIndex ^ 1;
+            desc->alternateCollisionMatrix = transformState->matrices[n + 2];
+            desc->alternateMatrix = transformState->matrices[n];
 
             desc->firstTriangle = (s16)((cur - (int)lbl_803DCF30) / 0x4c);
-            desc->object = o;
+            desc->object = resetObj;
             cur = fn_80067B84(cur, desc, (int)model, a & 0xff, lbl_803DECC4,
                               f31, f29, f27, f30, f28, f26);
             desc++;
