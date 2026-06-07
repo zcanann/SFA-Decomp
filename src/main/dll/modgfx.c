@@ -14660,7 +14660,7 @@ int dll_0B_func04(void *base, int z, int c, void *b, int e, void *d, int f, void
 
     base0 = 0;
     if ((*(u32 *)(st + 0x54) & 0x800) == 0) {
-        base0 = e * 3 * 16 + c * 3 * 16;
+        base0 = ((e * 3) << 4) + (int)(long)((c * 3) << 4);
     }
 
     lbl_8039C1F8[slot] = (int *)mmAlloc(base0 + n * 0x18 + total * 2 + 0x240, 0x15, 0);

@@ -2832,6 +2832,35 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     2 fns had current-only unrolls, 1 had target-only — all 3 fixed. The
     sweep script pattern is in commit b3fd48c41/f99dce7d2 messages.
 
+112. **No-op CONVERSION NODES split VN webs at zero codegen cost — the
+    general GVN-key splitter (cracks fctiwz-remat AND distributive
+    factoring).** (task #13.) MWCC's GVN is value-keyed, but the key is the
+    expression tree INCLUDING no-op arithmetic-type conversions: a
+    conversion through a DIFFERENT-RANK type creates a persistent node that
+    blocks merging while emitting nothing. #94's "no-op cast chains fold"
+    holds for POINTER casts only.
+    - **`(int)(f64)volf`** re-executes a bare `fctiwz; stfd; lwz` where a
+      plain `(int)volf` VN-reuses the earlier conversion via `mr` (f32→f64
+      register widening is free; fctiwz-on-double is the same opcode).
+      `(int)(f32)(f64)x` does NOT work — emits a real frsp.
+      (Sfx_UpdateObjectChannel3D 93.26→95.94, supersedes #97's f32→int
+      "no spelling found" caveat.)
+    - **`e * 48 + (int)(long)(c * 48)`** keeps SEPARATE mulli products
+      where the plain distributed spelling gets re-FACTORED to
+      `(e+c)*48` (add; mulli) — the (int)(long) sandwich blocks the
+      distributive re-association. Pair with explicit shift spelling
+      (`((e * 3) << 4)`) when target keeps mulli-3 + slwi-4 unfused.
+      (dll_0B_func04 92.27→92.87, site byte-exact — closes the
+      "distributive factoring VN-internal" negative.)
+    Scope notes: works on RUNTIME values only (constants fold through
+    conversions in the front end — the li-fresh-vs-merged small-constant
+    store class is NOT crackable this way); GLOBAL re-reads in call-free
+    ranges still need `volatile` (type/address launders on loads fold —
+    probed (u32)-lvalue, (int)(long)-value, (int)&-address; only the
+    load-INSTRUCTION-changing u16-vs-s16 cast differs, and that changes
+    lha/lhz). Sibling of #83a (launders) and #59/#78 (FP reassociation);
+    same mechanism family as #110/#111.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
