@@ -327,7 +327,13 @@ citations map to which renumbered entry).
     everywhere, instead of re-deriving the address per access. MWCC then parks it
     in a callee-saved reg matching target's coloring. Took fn_8029FA24 90.7% →
     96.8% in one move (placeholder_80295318).
-    **Single-base struct-overlay for a CLUSTER of globals.** When target addresses
+    **Single-base struct-overlay for a CLUSTER of globals.**
+    DETECTION TELL: target computing a "different" global's address with
+    NO-RELOC arithmetic off an already-resolved base — e.g.
+    `addis r3,r30,1; addi r29,r3,-30692` with no R_PPC lines — means that
+    address is base_symbol + constant in the source (renderObjects:
+    gVisibleObjectSortKeys = lbl_8037E0C0 + 0x8818; one hoisted qbase +
+    derived keys pointer fixed savegpr and the lis/addi count). When target addresses
     several "separate" globals off ONE base reg at fixed offsets (e.g.
     `gMmDeferredFreeStack` = base+0x80, `gMmRegionTable` = base+0x3F00, all off
     r31=`gMmStoreArray`), declare ONE struct that overlays the whole block and cast
@@ -2683,6 +2689,18 @@ resolved in the reconciliation pass: GVN keeps #110, unroller -> #113.)*
     decl-order/launder/role-swap can't flip RESPONDS to the CHAINED init
     `p = base = lbl;` (#51's pointer cousin) — insertPoint's base/p pair
     →0 diffs (pointer decls before ints also required).
+    **NEGATIVE-SCOPE addendum (model/lightmap harvest): the K-on-base named
+    `p` works only when p's def has MULTIPLE USES — a single-USE p def
+    gets forward-substituted and the flat sum RE-FOLDS onto the index
+    (modelAnimFn_800246a0's bufs[sel]/vals[i2] sites: the matching 3-use
+    `p = c + i1*4` block holds add+disp while the 1-use spellings of the
+    same shape fold back; same fn proves it within one compile). And the
+    caveat-(c) named-alias-of-SYMBOL resist class is broader than first
+    measured: u8*-alias casts-at-use, a struct-TYPED local, AND #18
+    member-array overlays through the alias ALL fold back
+    (renderObjects' 3 stw sites, ObjModel_SampleJointTransform's 4 load
+    sites — grouped/unnamed/named forms each probed). When the base is a
+    named alias of a symbol and the use is single-site, classify on sight.
 
 109. **s64/fixed-point cap class: three more cracks beyond #98 (task #15;
     fn_80007F78 89.0->94.0, synthAdvanceVirtualSampleEntry 95.4->100,
@@ -2823,6 +2841,17 @@ branch-over-branch site in its guard chain — independent residual.)
     reassociation (90-92%), voiceAllocate's addi+lbzx (94.6, its "-O2
     reproduces target form" note = this association, fix at O4 with the
     subscript-origin spelling).
+    **ORDERING-DEPENDENCY note (#111 embedded defs x #62 launders): when a
+    fn needs BOTH an embedded-def size arg AND an address-CSE-breaking
+    (int)-base launder, the launder is only safe AFTER the embedded defs
+    are in — applied alone it ROTATES the param saved-reg coloring
+    (#36-style cast priority inflation: ObjModel_BlendPrimaryVertexStream
+    A/B'd both orders — launder-first 83.5 with params scrambled
+    r18-r21, defs-then-launder 94.1 with params at target r26-r30). Apply
+    embedded defs first, measure, THEN launder. Same fn: the (int)-on-SUM
+    spelling `(lbl + 1)` is VN'd through (no CSE break); only
+    `(int)lbl + 4` on the BASE breaks it — the #83a sum-vs-base polarity
+    INVERTS for symbol bases.
 
 *(Numbering note: the speculative-unroller entry below landed as a second
 #110 (f6cb57505), colliding with the GVN chained-constant entry that landed
@@ -2855,6 +2884,19 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     Project sweep (srwi-,1+mtctr signature diffed target-vs-current): only
     2 fns had current-only unrolls, 1 had target-only — all 3 fixed. The
     sweep script pattern is in commit b3fd48c41/f99dce7d2 messages.
+    **FACTOR-mismatch addendum (modelWalkAnimFn_800248b8 80.0->88.0): when
+    the speculative pass picks a SMALLER factor than target (ours x4
+    srwi-,2/andi.-3 vs target x8), raise `ppc_unroll_factor_limit 8` AND
+    `ppc_unroll_instructions_limit 256` TOGETHER — either alone is INERT
+    (factor-limit alone, instructions-limit alone, and `opt_unroll_count 8`
+    all probed no-op), and `ppc_unroll_speculative off` KILLS the unroll
+    entirely rather than handing the loop to opt_unroll_loops (68.6%,
+    runtime counts are speculative-only). Restore with explicit values
+    after the fn (no `reset` per the syntax-error caveat above). Residual
+    shape note: the speculative srwi/andi prologue+remainder differs from
+    the older compare-8-first/subf-remainder shape some targets show
+    (MP4 has no instance of the latter; #28's count-down header lever does
+    not flip it) — that 1-2% stays.
 
 114. **No-op CONVERSION NODES split VN webs at zero codegen cost — the
     general GVN-key splitter (cracks fctiwz-remat AND distributive
