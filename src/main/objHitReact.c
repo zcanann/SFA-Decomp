@@ -131,15 +131,15 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
     obj = *objectListCursor;
     hitState = ((ObjAnimComponent *)obj)->hitReactState;
     if (hitState != (ObjHitReactState *)0x0) {
-      stateActive = hitState->flags & OBJHITREACT_STATE_ACTIVE;
+      stateActive = hitState->flags & OBJHITREACT_FLAG_ACTIVE;
       if (stateActive != 0) {
-        resetPending = hitState->resetFlags & OBJHITREACT_STATE_RESET_PENDING;
+        resetPending = hitState->resetFlags & OBJHITREACT_RESET_FLAG_PENDING;
         if (resetPending != 0) {
           if (gObjHitReactResetObjectCount < OBJHITREACT_MAX_RESET_OBJECTS) {
             gObjHitReactResetObjects[gObjHitReactResetObjectCount++] = (ObjAnimComponent *)obj;
           }
           hitState->activeHit = 0;
-          hitState->flags = (s16)(hitState->flags & ~OBJHITREACT_STATE_RESET_PENDING);
+          hitState->flags = (s16)(hitState->flags & ~OBJHITREACT_FLAG_RESET_PENDING);
           hitState->resetFrameCount = OBJHITREACT_RESET_FRAME_COUNT;
         }
       }
