@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/objanim_internal.h"
@@ -303,7 +304,6 @@ extern undefined4 FUN_8007f3c8();
 extern undefined4 FUN_8007f718();
 extern undefined4 FUN_8007f960();
 extern undefined4 FUN_80080f8c();
-extern void expgfxRemoveAll();
 extern undefined4 FUN_80135814();
 extern undefined4 FUN_802420e0();
 extern void DCFlushRange(void *addr, u32 nBytes);
@@ -1242,14 +1242,12 @@ extern void* PTR_LAB_803108a0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_releaseExpgfxPools(undefined8 param_1,undefined8 param_2,undefined8 param_3,
-                               undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                               undefined8 param_7,undefined8 param_8)
+void modgfx_releaseExpgfxPools(void)
 {
   int iVar1;
   uint *puVar2;
   
-  expgfxRemoveAll(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+  expgfxRemoveAll();
   iVar1 = 0;
   puVar2 = gExpgfxSlotPoolBases;
   do {

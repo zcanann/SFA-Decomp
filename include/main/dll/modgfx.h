@@ -10,9 +10,7 @@ extern char sProjgfxReleaseDoNoLongerSupported[];
 extern char sProjgfxRayhitDoNoLongerSupported[];
 extern char sProjgfxSetzscaleDoNoLongerSupported[];
 
-void modgfx_releaseExpgfxPools(undefined8 param_1,undefined8 param_2,undefined8 param_3,
-                               undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                               undefined8 param_7,undefined8 param_8);
+void modgfx_releaseExpgfxPools(void);
 void modgfx_allocExpgfxPools(void);
 void FUN_800a024c(double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
