@@ -2,6 +2,7 @@
 #include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
 #include "main/dll/projball1D8.h"
+#include "main/objseq.h"
 
 
 extern undefined4 Music_Trigger();
@@ -114,14 +115,14 @@ void nw_levcontrol_update(int param_1)
     case 0:
       uVar4 = GameBit_Get(0x19d);
       if (uVar4 != 0) {
-        (**(code **)(*DAT_803dd6d4 + 0x48))(0,iVar1,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)iVar1, -1);
         *(undefined *)(pfVar10 + 1) = 2;
         GameBit_Set(0xecd,1);
       }
       break;
     case 1:
-      (**(code **)(*DAT_803dd6d4 + 0x54))(iVar1,0x64a);
-      (**(code **)(*DAT_803dd6d4 + 0x48))(0,iVar1,0x20);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt(iVar1, 0x64a);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)iVar1, 0x20);
       *(undefined *)(pfVar10 + 1) = 2;
       GameBit_Set(0xecd,1);
       break;
@@ -173,7 +174,8 @@ void nw_levcontrol_update(int param_1)
           FUN_80006b54(0x15,(uint)*(byte *)((int)pfVar10 + 5) + iVar3);
           FUN_80006b50();
         }
-        (**(code **)(*DAT_803dd6d4 + 0x48))(*(undefined *)(pfVar10 + 3),iVar1,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(*(u8 *)(pfVar10 + 3), (void *)iVar1,
+                                                               -1);
         *(undefined *)(pfVar10 + 1) = *(undefined *)((int)pfVar10 + 0xd);
       }
       break;
@@ -184,8 +186,8 @@ void nw_levcontrol_update(int param_1)
       }
       break;
     case 0xc:
-      (**(code **)(*DAT_803dd6d4 + 0x54))(iVar1,0x5a);
-      (**(code **)(*DAT_803dd6d4 + 0x48))(1,iVar1,8);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt(iVar1, 0x5a);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)iVar1, 8);
       *(undefined *)(pfVar10 + 1) = 0xb;
     }
   }

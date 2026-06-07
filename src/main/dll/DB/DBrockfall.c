@@ -370,7 +370,7 @@ void FUN_801df788(int param_1)
   bVar1 = state->state;
   if (bVar1 == 1) {
     if ((*(byte *)(param_1 + 0xaf) & 1) != 0) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
     }
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
   }

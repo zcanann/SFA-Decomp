@@ -6,6 +6,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 /*
@@ -270,7 +271,7 @@ extern f32 lbl_803E569C;
  */
 void FUN_801b3de4(undefined4 param_1,uint param_2)
 {
-  (**(code **)(*DAT_803dd6d4 + 0x48))((param_2 ^ 1) + 2,param_1,0xffffffff);
+  ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence((param_2 ^ 1) + 2, (void *)param_1, -1);
   return;
 }
 
@@ -298,7 +299,7 @@ bool FUN_801b3e28(int param_1)
   bVar1 = pfVar3[3] +
           pfVar3[2] * *(float *)(iVar2 + 0x14) +
           *pfVar3 * *(float *)(iVar2 + 0xc) + pfVar3[1] * *(float *)(iVar2 + 0x10) < lbl_803E55A0;
-  (**(code **)(*DAT_803dd6d4 + 0x48))(bVar1,param_1,0xffffffff);
+  ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(bVar1, (void *)param_1, -1);
   return bVar1;
 }
 
