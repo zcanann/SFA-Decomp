@@ -16,7 +16,7 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern int FUN_80017af8();
-extern undefined4 ObjHitbox_SetStateIndex();
+extern void ObjHitbox_SetStateIndex(int obj, ObjHitsPriorityState *hitState, int stateIndex);
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern uint FUN_80286840();
@@ -120,10 +120,10 @@ void dimbarrier_init(int obj, s8 *p) {
     inner[3] = 1;
     inner[2] = 0;
     if (GameBit_Get(*(s16 *)(p + 0x1e)) != 0) {
-        char *o54;
+        ObjHitsPriorityState *hitState;
         inner[3] = 0;
-        o54 = *(char **)&((GameObject *)obj)->anim.hitReactState;
-        *(s16 *)(o54 + 0x60) = (s16)(*(s16 *)(o54 + 0x60) & ~1);
+        hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+        hitState->flags &= ~1;
         ((GameObject *)obj)->anim.alpha = 0;
         inner[2] = 2;
     }
@@ -147,12 +147,12 @@ void dimgate_update(int *obj)
     int *def = *(int **)&((GameObject *)obj)->anim.placementData;
     switch (*(s8 *)extra) {
     case 0: {
-        int *hb = *(int **)&((GameObject *)obj)->anim.hitReactState;
+        ObjHitsPriorityState *hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
         int *list;
         int found;
         int i;
-        if (*(s8 *)((char *)hb + 0xb0) != 1) {
-            ObjHitbox_SetStateIndex((int)obj, (int)hb, 1);
+        if (hitState->stateIndex != 1) {
+            ObjHitbox_SetStateIndex((int)obj, hitState, 1);
         }
         found = 0;
         list = *(int **)((char *)obj + 0x58);
@@ -164,8 +164,8 @@ void dimgate_update(int *obj)
         }
         if (found) {
             GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
-            if (*(s8 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0xb0) != 2) {
-                ObjHitbox_SetStateIndex((int)obj, *(int *)&((GameObject *)obj)->anim.hitReactState, 2);
+            if (hitState->stateIndex != 2) {
+                ObjHitbox_SetStateIndex((int)obj, hitState, 2);
             }
             *(s8 *)extra = 2;
         }
@@ -173,11 +173,13 @@ void dimgate_update(int *obj)
     }
     case 1:
         break;
-    case 2:
-        if (*(s8 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0xb0) != 2) {
-            ObjHitbox_SetStateIndex((int)obj, *(int *)&((GameObject *)obj)->anim.hitReactState, 2);
+    case 2: {
+        ObjHitsPriorityState *hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+        if (hitState->stateIndex != 2) {
+            ObjHitbox_SetStateIndex((int)obj, hitState, 2);
         }
         break;
+    }
     }
 }
 #pragma peephole reset
@@ -301,7 +303,7 @@ void DIMwooddoor_updateFallingDebris(int *obj)
     switch (*(u8 *)((char *)extra + 8)) {
     case 0: {
         f32 oldvy = ((GameObject *)obj)->anim.velocityY;
-        int *hb;
+        ObjHitsPriorityState *hitState;
         ((GameObject *)obj)->anim.velocityY = lbl_803E48A4 * -lbl_803DBEF0 * timeDelta + oldvy;
         objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta,
                 lbl_803E48A8 * (oldvy + ((GameObject *)obj)->anim.velocityY) * timeDelta,
@@ -309,11 +311,11 @@ void DIMwooddoor_updateFallingDebris(int *obj)
         ((GameObject *)obj)->anim.rotZ = ((GameObject *)obj)->anim.rotZ + *(s8 *)((char *)extra + 9) * 10;
         ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + *(s8 *)((char *)extra + 0xa) * 10;
         *(s16 *)obj = *(s16 *)obj + *(s8 *)((char *)extra + 0xb) * 10;
-        hb = *(int **)&((GameObject *)obj)->anim.hitReactState;
-        if (hb != NULL) {
+        hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+        if (hitState != NULL) {
             int *vol;
             ObjHits_SetHitVolumeSlot(obj, 5, *(s8 *)((char *)extra + 6), 0);
-            vol = *(int **)((char *)hb + 0x50);
+            vol = (int *)hitState->lastHitObject;
             if (vol != NULL && vol != *(int **)extra) {
                 ObjHitbox_SetSphereRadius(obj, *(s8 *)((char *)extra + 5));
                 spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
@@ -326,7 +328,7 @@ void DIMwooddoor_updateFallingDebris(int *obj)
             (GameBit_Get(2164) != 0 && GameBit_Get(3118) == 0)) {
             ((GameObject *)obj)->unkF4 = 1200;
         }
-        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0) {
+        if (hitState->contactFlags != 0) {
             ObjHitbox_SetSphereRadius(obj, *(s8 *)((char *)extra + 5));
             spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
             ((GameObject *)obj)->unkF4 = 1180;
