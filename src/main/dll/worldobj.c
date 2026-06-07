@@ -152,7 +152,7 @@ void FUN_801ce188(uint param_1)
   if (uVar1 == 0) {
     FUN_800068d0(param_1,0x372);
     FUN_800068d0(param_1,0x373);
-    (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
     ObjHits_EnableObject(param_1);
   }
   else {

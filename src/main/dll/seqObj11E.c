@@ -3,6 +3,7 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/seqObj11E.h"
 #include "main/dll/baddie_state.h"
+#include "main/objseq.h"
 
 extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();
@@ -103,12 +104,12 @@ void FUN_80152040(int param_1,int param_2)
   if (iVar2 == 0) {
     FUN_8011e800(2);
     *(undefined2 *)(param_2 + 0x338) = DAT_803dc908;
-    (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
   }
   else if ((iVar1 == 0) || (iVar2 = FUN_80294d20(iVar1), iVar2 < 0x19)) {
     FUN_8011e800(2);
     *(undefined2 *)(param_2 + 0x338) = uRam803dc90a;
-    (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_1, -1);
   }
   else {
     FUN_80294d28(iVar1,-0x19);
@@ -116,7 +117,7 @@ void FUN_80152040(int param_1,int param_2)
     *(undefined2 *)(param_2 + 0x338) = uRam803dc90c;
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
     FUN_8011e800(2);
-    (**(code **)(*DAT_803dd6d4 + 0x48))(2,param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(2, (void *)param_1, -1);
   }
   return;
 }
@@ -1141,5 +1142,4 @@ void fn_80152040(int *obj, u8 *state)
 }
 #pragma peephole reset
 #pragma scheduling reset
-
 
