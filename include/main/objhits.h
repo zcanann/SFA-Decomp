@@ -212,20 +212,20 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,ObjHitsSkeletonJointData
 int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,ObjHitsSkeletonJointData *jointData,
                                   int *model,ObjHitsSkeletonHit *hits,
                                   ObjHitsSkeletonHit **outBest,f32 *outAccum);
-void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
-                                    ObjHitsSkeletonJointData *jointPoints,int jointModel,
-                                    ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out);
-void ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
-                                    ObjHitsSkeletonJointData *jointPoints,int jointModel,
-                                    ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out);
-float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius,float axial,float baseRadius,
-                                              float tipRadius,float length,float *point,
-                                              float *base,float *tip,float *out);
-float *ObjHits_ProjectPointToTaperedCapsule3D(float pointRadius,float axial,float baseRadius,
-                                              float tipRadius,float length,float *point,
-                                              float *base,float *tip,float *out);
-float *ObjHits_CalcTaperedCapsuleNormal(float axial,float baseRadius,float tipRadius,
-                                        float length,float *point,float *base,float *tip,
+int ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
+                                   ObjHitsSkeletonJointData *jointPoints,int jointModel,
+                                   ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out);
+int ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
+                                   ObjHitsSkeletonJointData *jointPoints,int jointModel,
+                                   ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out);
+float *ObjHits_ProjectPointToTaperedCapsuleXZ(float *point,float pointRadius,float axial,
+                                              float *base,float *tip,float baseRadius,
+                                              float tipRadius,float length,float *out);
+float *ObjHits_ProjectPointToTaperedCapsule3D(float *point,float pointRadius,float axial,
+                                              float *base,float *tip,float baseRadius,
+                                              float tipRadius,float length,float *out);
+float *ObjHits_CalcTaperedCapsuleNormal(float *point,float axial,float *base,float *tip,
+                                        float baseRadius,float tipRadius,float length,
                                         float *out);
 int ObjHits_TestTaperedCapsuleXZ(float *point,float pointRadius,float baseRadius,float tipRadius,
                                  float *base,float *axis,float *tip,float length,

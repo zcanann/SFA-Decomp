@@ -42,6 +42,7 @@ extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern undefined4 DAT_80341b9c;
 extern u8 *gObjHitsPriorityHitStates;
 extern f64 DOUBLE_803df5a8;
+extern f64 lbl_803DE928;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df5d0;
 extern f32 timeDelta;
@@ -426,137 +427,128 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,ObjHitsSkeletonJointData
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
-                                    ObjHitsSkeletonJointData *jointPoints,int jointModel,
-                                    ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out)
+int ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
+                                   ObjHitsSkeletonJointData *jointPoints,int jointModel,
+                                   ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out)
 {
-  ObjHitsSkeletonHit *hit;
-  float fVar2;
-  float *pfVar4;
-  float dVar6;
-  float in_f27;
-  float dVar7;
-  float in_f28;
-  float in_f29;
-  float in_f30;
-  float in_f31;
-  float dVar8;
-  float local_e8;
-  float local_e4;
-  float local_e0;
-  float local_dc;
-  float local_d8;
-  float local_d4;
-  float local_d0;
-  float local_cc;
-  float local_c8;
-  float local_c4;
-  float local_c0;
-  float local_bc;
-  float afStack_b8 [3];
-  float local_ac;
-  float local_a8;
-  float local_a4;
-  float afStack_a0 [9];
-  float local_7c;
-  float local_78;
-  float local_74;
-  
-  local_dc = ((GameObject *)obj)->anim.worldPosX - ((GameObject *)obj)->anim.previousWorldPosX;
-  local_d8 = ((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousWorldPosY;
-  local_d4 = ((GameObject *)obj)->anim.worldPosZ - ((GameObject *)obj)->anim.previousWorldPosZ;
-  dVar7 = radius;
-  dVar6 = Vec3_Length(&local_dc);
-  local_dc = (float)(local_dc * t);
-  local_d8 = (float)(local_d8 * t);
-  local_d4 = (float)(local_d4 * t);
-  local_e8 = *pos - local_dc;
-  local_e4 = pos[1] - local_d8;
-  local_e0 = pos[2] - local_d4;
-  local_7c = gObjHitsScalarZero;
-  local_78 = gObjHitsScalarZero;
-  local_74 = gObjHitsScalarZero;
-  local_c4 = gObjHitsScalarZero;
-  local_c0 = gObjHitsScalarZero;
-  local_bc = gObjHitsScalarZero;
-  pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-      bestHit->capsuleAxial,jointPoints->jointRadii[bestHit->pointIndexA],
+  float moveLen;
+  float zf;
+  int idxA;
+  float *pPtr;
+  float *aPtr;
+  ObjHitsSkeletonHit *saved;
+  float *rPtr;
+  float *norm;
+  float *pb;
+  struct {
+    float out[9];
+    ObjHitsVec3 accum;
+  } pj;
+  float reflect[3];
+  float normalOut[3];
+  ObjHitsVec3 normAccum;
+  ObjHitsVec3 diff;
+  ObjHitsVec3 move;
+  ObjHitsVec3 projPos;
+
+  aPtr = (float *)(int)&pj.accum;
+  saved = hits;
+  move.x = ((GameObject *)obj)->anim.worldPosX - ((GameObject *)obj)->anim.previousWorldPosX;
+  move.y = ((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousWorldPosY;
+  move.z = ((GameObject *)obj)->anim.worldPosZ - ((GameObject *)obj)->anim.previousWorldPosZ;
+  moveLen = Vec3_Length(&move.x);
+  projPos.x = pos[0];
+  projPos.y = pos[1];
+  projPos.z = pos[2];
+  move.x = move.x * t;
+  move.y = move.y * t;
+  move.z = move.z * t;
+  projPos.x = projPos.x - move.x;
+  projPos.y = projPos.y - move.y;
+  projPos.z = projPos.z - move.z;
+  pj.accum.x = gObjHitsScalarZero;
+  pj.accum.y = gObjHitsScalarZero;
+  pj.accum.z = gObjHitsScalarZero;
+  normAccum.x = gObjHitsScalarZero;
+  normAccum.y = gObjHitsScalarZero;
+  normAccum.z = gObjHitsScalarZero;
+  Vec3_Normalize(ObjHits_CalcTaperedCapsuleNormal(&projPos.x,bestHit->capsuleAxial,
+      bestHit->pointA,bestHit->pointB,jointPoints->jointRadii[bestHit->pointIndexA],
       jointPoints->jointRadii[bestHit->pointIndexB],
-      jointPoints->jointLengths[bestHit->pointIndexA],&local_e8,bestHit->pointA,
-      bestHit->pointB,afStack_b8);
-  Vec3_Normalize(pfVar4);
-  dVar8 = gObjHitsScalarZero;
-  for (hit = hits; hit->pointIndexA != OBJHITS_SKELETON_HIT_SENTINEL; hit = hit + 1) {
-    pfVar4 = ObjHits_ProjectPointToTaperedCapsuleXZ(
-        dVar7,hit->capsuleAxial,jointPoints->jointRadii[hit->pointIndexA],
-        jointPoints->jointRadii[hit->pointIndexB],jointPoints->jointLengths[hit->pointIndexA],
-        &local_e8,hit->pointA,hit->pointB,afStack_a0);
-    if (axial <= dVar8) {
-      hit->inverseDistance = (float)dVar8;
+      jointPoints->jointLengths[bestHit->pointIndexA],normalOut));
+  pPtr = pj.out;
+  zf = gObjHitsScalarZero;
+  for (; (idxA = hits->pointIndexA) != OBJHITS_SKELETON_HIT_SENTINEL; hits = hits + 1) {
+    pb = ObjHits_ProjectPointToTaperedCapsuleXZ(&projPos.x,radius,hits->capsuleAxial,
+        hits->pointA,hits->pointB,jointPoints->jointRadii[idxA],
+        jointPoints->jointRadii[hits->pointIndexB],
+        jointPoints->jointLengths[idxA],pPtr);
+    if (axial > zf) {
+      hits->inverseDistance = hits->inverseDistance / axial;
     }
     else {
-      hit->inverseDistance = (float)(hit->inverseDistance / axial);
+      hits->inverseDistance = zf;
     }
-    *pfVar4 = *pfVar4 * hit->inverseDistance;
-    pfVar4[1] = pfVar4[1] * hit->inverseDistance;
-    pfVar4[2] = pfVar4[2] * hit->inverseDistance;
-    local_7c = local_7c + *pfVar4;
-    local_78 = local_78 + pfVar4[1];
-    local_74 = local_74 + pfVar4[2];
-    pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-        hit->capsuleAxial,jointPoints->jointRadii[hit->pointIndexA],
-        jointPoints->jointRadii[hit->pointIndexB],jointPoints->jointLengths[hit->pointIndexA],
-        pos,hit->pointA,hit->pointB,afStack_b8);
-    Vec3_Normalize(pfVar4);
-    local_c4 = local_c4 + *pfVar4;
-    local_c0 = local_c0 + pfVar4[1];
-    local_bc = local_bc + pfVar4[2];
+    pb[0] = pb[0] * hits->inverseDistance;
+    pb[1] = pb[1] * hits->inverseDistance;
+    pb[2] = pb[2] * hits->inverseDistance;
+    pj.accum.x = pj.accum.x + pb[0];
+    pj.accum.y = pj.accum.y + pb[1];
+    pj.accum.z = pj.accum.z + pb[2];
+    norm = ObjHits_CalcTaperedCapsuleNormal(pos,hits->capsuleAxial,hits->pointA,
+        hits->pointB,jointPoints->jointRadii[hits->pointIndexA],
+        jointPoints->jointRadii[hits->pointIndexB],
+        jointPoints->jointLengths[hits->pointIndexA],normalOut);
+    Vec3_Normalize(norm);
+    normAccum.x = normAccum.x + norm[0];
+    normAccum.y = normAccum.y + norm[1];
+    normAccum.z = normAccum.z + norm[2];
   }
-  Vec3_Normalize(&local_c4);
-  local_d0 = local_7c - local_e8;
-  local_cc = gObjHitsScalarZero;
-  local_c8 = local_74 - local_e0;
-  dVar8 = Vec3_Length(&local_d0);
-  local_d0 = local_7c - *pos;
-  local_cc = gObjHitsScalarZero;
-  local_c8 = local_74 - pos[2];
-  Vec3_Normalize(&local_dc);
-  if (dVar6 <= dVar8) {
-    local_ac = gObjHitsScalarZero;
-    local_a8 = gObjHitsScalarZero;
-    local_a4 = gObjHitsScalarZero;
+  Vec3_Normalize(&normAccum.x);
+  diff.x = pj.accum.x - projPos.x;
+  diff.y = gObjHitsScalarZero;
+  diff.z = pj.accum.z - projPos.z;
+  axial = Vec3_Length(&diff.x);
+  diff.x = pj.accum.x - pos[0];
+  diff.y = gObjHitsScalarZero;
+  diff.z = pj.accum.z - pos[2];
+  Vec3_Normalize(&move.x);
+  if (moveLen > axial) {
+    t = lbl_803DE928 + (gObjHitsScalarOne - t) * lbl_803DE930;
+    move.x = move.x * (t * (moveLen - axial));
+    move.y = move.y * (t * (moveLen - axial));
+    move.z = move.z * (t * (moveLen - axial));
+    Vec3_ReflectAgainstNormal(&normAccum.x,&move.x,rPtr = reflect);
   }
   else {
-    fVar2 = (float)(DOUBLE_803df5a8 +
-                   ((float)(gObjHitsScalarOne - t) * lbl_803DE930)) *
-            (float)(dVar6 - dVar8);
-    local_dc = local_dc * fVar2;
-    local_d8 = local_d8 * fVar2;
-    local_d4 = local_d4 * fVar2;
-    Vec3_ReflectAgainstNormal(&local_c4,&local_dc,&local_ac);
+    rPtr = reflect;
+    rPtr[0] = gObjHitsScalarZero;
+    rPtr[1] = gObjHitsScalarZero;
+    rPtr[2] = gObjHitsScalarZero;
   }
-  local_7c = local_7c + local_ac;
-  local_78 = local_78 + local_a8;
-  local_74 = local_74 + local_a4;
-  local_ac = gObjHitsScalarZero;
-  local_a8 = gObjHitsScalarZero;
-  local_a4 = gObjHitsScalarZero;
-  for (; hits->pointIndexA != OBJHITS_SKELETON_HIT_SENTINEL; hits = hits + 1) {
-    pfVar4 = ObjHits_ProjectPointToTaperedCapsuleXZ(
-        dVar7,hits->capsuleAxial,jointPoints->jointRadii[hits->pointIndexA],
-        jointPoints->jointRadii[hits->pointIndexB],jointPoints->jointLengths[hits->pointIndexA],
-        &local_7c,hits->pointA,hits->pointB,afStack_a0);
-    *pfVar4 = *pfVar4 * hits->inverseDistance;
-    pfVar4[1] = pfVar4[1] * hits->inverseDistance;
-    pfVar4[2] = pfVar4[2] * hits->inverseDistance;
-    local_ac = local_ac + *pfVar4;
-    local_a8 = local_a8 + pfVar4[1];
-    local_a4 = local_a4 + pfVar4[2];
+  pj.accum.x = pj.accum.x + rPtr[0];
+  pj.accum.y = pj.accum.y + rPtr[1];
+  pj.accum.z = pj.accum.z + rPtr[2];
+  rPtr[0] = gObjHitsScalarZero;
+  rPtr[1] = gObjHitsScalarZero;
+  rPtr[2] = gObjHitsScalarZero;
+  hits = saved;
+  for (; (idxA = hits->pointIndexA) != OBJHITS_SKELETON_HIT_SENTINEL; hits = hits + 1) {
+    pb = ObjHits_ProjectPointToTaperedCapsuleXZ(aPtr,radius,hits->capsuleAxial,
+        hits->pointA,hits->pointB,jointPoints->jointRadii[idxA],
+        jointPoints->jointRadii[hits->pointIndexB],
+        jointPoints->jointLengths[idxA],pPtr);
+    pb[0] = pb[0] * hits->inverseDistance;
+    pb[1] = pb[1] * hits->inverseDistance;
+    pb[2] = pb[2] * hits->inverseDistance;
+    rPtr[0] = rPtr[0] + pb[0];
+    rPtr[1] = rPtr[1] + pb[1];
+    rPtr[2] = rPtr[2] + pb[2];
   }
-  *out = local_ac - *pos;
+  *out = rPtr[0] - pos[0];
   out[1] = gObjHitsScalarZero;
-  out[2] = local_a4 - pos[2];
-  return;
+  out[2] = rPtr[2] - pos[2];
+  return 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -576,132 +568,124 @@ void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,ObjHitsSkeletonH
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
-                                    ObjHitsSkeletonJointData *jointPoints,int jointModel,
-                                    ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out)
+int ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
+                                   ObjHitsSkeletonJointData *jointPoints,int jointModel,
+                                   ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out)
 {
-  float local_68;
-  ObjHitsSkeletonHit *hit;
-  float fVar1;
-  int iVar5;
-  float *pfVar4;
-  float dVar6;
-  float in_f28;
-  float dVar7;
-  float in_f29;
-  float in_f30;
-  float in_f31;
-  float dVar8;
-  float local_d8;
-  float local_d4;
-  float local_d0;
-  float local_cc;
-  float local_c8;
-  float local_c4;
-  float local_c0;
-  float local_bc;
-  float local_b8;
-  float local_b4;
-  float local_b0;
-  float local_ac;
-  float afStack_a8 [3];
-  float local_9c;
-  float local_98;
-  float local_94;
-  float afStack_90 [9];
-  float local_6c;
-  float local_64;
-  
-  local_cc = *(float *)(iVar5 + 0xc) - *(float *)(iVar5 + 0x80);
-  local_c8 = *(float *)(iVar5 + 0x10) - *(float *)(iVar5 + 0x84);
-  local_c4 = *(float *)(iVar5 + 0x14) - *(float *)(iVar5 + 0x88);
-  dVar7 = radius;
-  dVar6 = Vec3_Length(&local_cc);
-  local_d8 = *pos - local_cc;
-  local_d4 = pos[1] - local_c8;
-  local_d0 = pos[2] - local_c4;
-  local_6c = gObjHitsScalarZero;
-  local_68 = gObjHitsScalarZero;
-  local_64 = gObjHitsScalarZero;
-  local_b4 = gObjHitsScalarZero;
-  local_b0 = gObjHitsScalarZero;
-  local_ac = gObjHitsScalarZero;
-  pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-      bestHit->capsuleAxial,jointPoints->jointRadii[bestHit->pointIndexA],
+  float moveLen;
+  float zf;
+  int idxA;
+  float *pPtr;
+  float *aPtr;
+  ObjHitsSkeletonHit *saved;
+  float *rPtr;
+  float *norm;
+  float *pb;
+  struct {
+    float out[9];
+    ObjHitsVec3 accum;
+  } pj;
+  float reflect[3];
+  float normalOut[3];
+  ObjHitsVec3 normAccum;
+  ObjHitsVec3 diff;
+  ObjHitsVec3 move;
+  ObjHitsVec3 projPos;
+
+  aPtr = (float *)(int)&pj.accum;
+  saved = hits;
+  move.x = *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80);
+  move.y = *(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84);
+  move.z = *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88);
+  moveLen = Vec3_Length(&move.x);
+  projPos.x = pos[0];
+  projPos.y = pos[1];
+  projPos.z = pos[2];
+  projPos.x = projPos.x - move.x;
+  projPos.y = projPos.y - move.y;
+  projPos.z = projPos.z - move.z;
+  pj.accum.x = gObjHitsScalarZero;
+  pj.accum.y = gObjHitsScalarZero;
+  pj.accum.z = gObjHitsScalarZero;
+  normAccum.x = gObjHitsScalarZero;
+  normAccum.y = gObjHitsScalarZero;
+  normAccum.z = gObjHitsScalarZero;
+  Vec3_Normalize(ObjHits_CalcTaperedCapsuleNormal(&projPos.x,bestHit->capsuleAxial,
+      bestHit->pointA,bestHit->pointB,jointPoints->jointRadii[bestHit->pointIndexA],
       jointPoints->jointRadii[bestHit->pointIndexB],
-      jointPoints->jointLengths[bestHit->pointIndexA],&local_d8,bestHit->pointA,
-      bestHit->pointB,afStack_a8);
-  Vec3_Normalize(pfVar4);
-  dVar8 = gObjHitsScalarZero;
-  for (hit = hits; hit->pointIndexA != OBJHITS_SKELETON_HIT_SENTINEL; hit = hit + 1) {
-    pfVar4 = ObjHits_ProjectPointToTaperedCapsule3D(
-        dVar7,hit->capsuleAxial,jointPoints->jointRadii[hit->pointIndexA],
-        jointPoints->jointRadii[hit->pointIndexB],jointPoints->jointLengths[hit->pointIndexA],
-        &local_d8,hit->pointA,hit->pointB,afStack_90);
-    if (axial <= dVar8) {
-      hit->inverseDistance = (float)dVar8;
+      jointPoints->jointLengths[bestHit->pointIndexA],normalOut));
+  pPtr = pj.out;
+  zf = gObjHitsScalarZero;
+  for (; (idxA = hits->pointIndexA) != OBJHITS_SKELETON_HIT_SENTINEL; hits = hits + 1) {
+    pb = ObjHits_ProjectPointToTaperedCapsule3D(&projPos.x,radius,hits->capsuleAxial,
+        hits->pointA,hits->pointB,jointPoints->jointRadii[idxA],
+        jointPoints->jointRadii[hits->pointIndexB],
+        jointPoints->jointLengths[idxA],pPtr);
+    if (axial > zf) {
+      hits->inverseDistance = hits->inverseDistance / axial;
     }
     else {
-      hit->inverseDistance = (float)(hit->inverseDistance / axial);
+      hits->inverseDistance = zf;
     }
-    *pfVar4 = *pfVar4 * hit->inverseDistance;
-    pfVar4[1] = pfVar4[1] * hit->inverseDistance;
-    pfVar4[2] = pfVar4[2] * hit->inverseDistance;
-    local_6c = local_6c + *pfVar4;
-    local_68 = local_68 + pfVar4[1];
-    local_64 = local_64 + pfVar4[2];
-    pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-        hit->capsuleAxial,jointPoints->jointRadii[hit->pointIndexA],
-        jointPoints->jointRadii[hit->pointIndexB],jointPoints->jointLengths[hit->pointIndexA],
-        pos,hit->pointA,hit->pointB,afStack_a8);
-    Vec3_Normalize(pfVar4);
-    local_b4 = local_b4 + *pfVar4;
-    local_b0 = local_b0 + pfVar4[1];
-    local_ac = local_ac + pfVar4[2];
+    pb[0] = pb[0] * hits->inverseDistance;
+    pb[1] = pb[1] * hits->inverseDistance;
+    pb[2] = pb[2] * hits->inverseDistance;
+    pj.accum.x = pj.accum.x + pb[0];
+    pj.accum.y = pj.accum.y + pb[1];
+    pj.accum.z = pj.accum.z + pb[2];
+    norm = ObjHits_CalcTaperedCapsuleNormal(pos,hits->capsuleAxial,hits->pointA,
+        hits->pointB,jointPoints->jointRadii[hits->pointIndexA],
+        jointPoints->jointRadii[hits->pointIndexB],
+        jointPoints->jointLengths[hits->pointIndexA],normalOut);
+    Vec3_Normalize(norm);
+    normAccum.x = normAccum.x + norm[0];
+    normAccum.y = normAccum.y + norm[1];
+    normAccum.z = normAccum.z + norm[2];
   }
-  Vec3_Normalize(&local_b4);
-  local_c0 = local_6c - local_d8;
-  local_bc = local_68 - local_d4;
-  local_b8 = local_64 - local_d0;
-  dVar8 = Vec3_Length(&local_c0);
-  local_c0 = local_6c - *pos;
-  local_bc = local_68 - pos[1];
-  local_b8 = local_64 - pos[2];
-  Vec3_Normalize(&local_cc);
-  if (dVar6 <= dVar8) {
-    local_9c = gObjHitsScalarZero;
-    local_98 = gObjHitsScalarZero;
-    local_94 = gObjHitsScalarZero;
+  Vec3_Normalize(&normAccum.x);
+  diff.x = pj.accum.x - projPos.x;
+  diff.y = pj.accum.y - projPos.y;
+  diff.z = pj.accum.z - projPos.z;
+  axial = Vec3_Length(&diff.x);
+  diff.x = pj.accum.x - pos[0];
+  diff.y = pj.accum.y - pos[1];
+  diff.z = pj.accum.z - pos[2];
+  Vec3_Normalize(&move.x);
+  if (moveLen > axial) {
+    move.x = move.x * (moveLen - axial);
+    move.y = move.y * (moveLen - axial);
+    move.z = move.z * (moveLen - axial);
+    Vec3_ReflectAgainstNormal(&normAccum.x,&move.x,rPtr = reflect);
   }
   else {
-    fVar1 = (float)(dVar6 - dVar8);
-    local_cc = local_cc * fVar1;
-    local_c8 = local_c8 * fVar1;
-    local_c4 = local_c4 * fVar1;
-    Vec3_ReflectAgainstNormal(&local_b4,&local_cc,&local_9c);
+    rPtr = reflect;
+    rPtr[0] = gObjHitsScalarZero;
+    rPtr[1] = gObjHitsScalarZero;
+    rPtr[2] = gObjHitsScalarZero;
   }
-  local_6c = local_6c + local_9c;
-  local_68 = local_68 + local_98;
-  local_64 = local_64 + local_94;
-  local_9c = gObjHitsScalarZero;
-  local_98 = gObjHitsScalarZero;
-  local_94 = gObjHitsScalarZero;
-  for (; hits->pointIndexA != OBJHITS_SKELETON_HIT_SENTINEL; hits = hits + 1) {
-    pfVar4 = ObjHits_ProjectPointToTaperedCapsule3D(
-        dVar7,hits->capsuleAxial,jointPoints->jointRadii[hits->pointIndexA],
-        jointPoints->jointRadii[hits->pointIndexB],jointPoints->jointLengths[hits->pointIndexA],
-        &local_6c,hits->pointA,hits->pointB,afStack_90);
-    *pfVar4 = *pfVar4 * hits->inverseDistance;
-    pfVar4[1] = pfVar4[1] * hits->inverseDistance;
-    pfVar4[2] = pfVar4[2] * hits->inverseDistance;
-    local_9c = local_9c + *pfVar4;
-    local_98 = local_98 + pfVar4[1];
-    local_94 = local_94 + pfVar4[2];
+  pj.accum.x = pj.accum.x + rPtr[0];
+  pj.accum.y = pj.accum.y + rPtr[1];
+  pj.accum.z = pj.accum.z + rPtr[2];
+  rPtr[0] = gObjHitsScalarZero;
+  rPtr[1] = gObjHitsScalarZero;
+  rPtr[2] = gObjHitsScalarZero;
+  hits = saved;
+  for (; (idxA = hits->pointIndexA) != OBJHITS_SKELETON_HIT_SENTINEL; hits = hits + 1) {
+    pb = ObjHits_ProjectPointToTaperedCapsule3D(aPtr,radius,hits->capsuleAxial,
+        hits->pointA,hits->pointB,jointPoints->jointRadii[idxA],
+        jointPoints->jointRadii[hits->pointIndexB],
+        jointPoints->jointLengths[idxA],pPtr);
+    pb[0] = pb[0] * hits->inverseDistance;
+    pb[1] = pb[1] * hits->inverseDistance;
+    pb[2] = pb[2] * hits->inverseDistance;
+    rPtr[0] = rPtr[0] + pb[0];
+    rPtr[1] = rPtr[1] + pb[1];
+    rPtr[2] = rPtr[2] + pb[2];
   }
-  *out = local_9c - *pos;
-  out[1] = local_98 - pos[1];
-  out[2] = local_94 - pos[2];
-  return;
+  *out = rPtr[0] - pos[0];
+  out[1] = rPtr[1] - pos[1];
+  out[2] = rPtr[2] - pos[2];
+  return 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -720,9 +704,9 @@ void ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,ObjHitsSkeletonH
  * PAL Size: TODO
  */
 #pragma scheduling off
-float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius, float axial, float baseRadius,
-                                              float tipRadius, float length, float *point,
-                                              float *base, float *tip, float *out)
+float *ObjHits_ProjectPointToTaperedCapsuleXZ(float *point, float pointRadius, float axial,
+                                              float *base, float *tip, float baseRadius,
+                                              float tipRadius, float length, float *out)
 {
     float invLength;
     float axisDir[3];
@@ -794,9 +778,9 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius, float axial, fl
  * PAL Size: TODO
  */
 #pragma scheduling off
-float *ObjHits_ProjectPointToTaperedCapsule3D(float pointRadius, float axial, float baseRadius,
-                                              float tipRadius, float length, float *point,
-                                              float *base, float *tip, float *out)
+float *ObjHits_ProjectPointToTaperedCapsule3D(float *point, float pointRadius, float axial,
+                                              float *base, float *tip, float baseRadius,
+                                              float tipRadius, float length, float *out)
 {
     float invLength;
     float axisDir[3];
@@ -869,8 +853,8 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float pointRadius, float axial, fl
  */
 #pragma scheduling off
 #pragma peephole off
-float *ObjHits_CalcTaperedCapsuleNormal(float axial,float baseRadius,float tipRadius,
-                                        float length,float *point,float *base,float *tip,
+float *ObjHits_CalcTaperedCapsuleNormal(float *point,float axial,float *base,float *tip,
+                                        float baseRadius,float tipRadius,float length,
                                         float *out)
 {
   float invAxial;
