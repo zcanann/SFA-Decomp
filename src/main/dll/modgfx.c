@@ -1426,12 +1426,12 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefine
   gExpgfxSpawnConfig.colorByte0.value = (u8)setupValue;
   gExpgfxSpawnConfig.behaviorFlags = setupValue & 0xff;
   gExpgfxSpawnConfig.velocityZ = lbl_803E00B0;
-  *(f32 *)&gExpgfxSpawnConfig.startPosXBits = lbl_803E00B0;
-  *(f32 *)&gExpgfxSpawnConfig.startPosYBits = lbl_803E00B0;
-  *(f32 *)&gExpgfxSpawnConfig.sourcePosWBits = lbl_803E00B0;
+  gExpgfxSpawnConfig.startPosX.value = lbl_803E00B0;
+  gExpgfxSpawnConfig.startPosY.value = lbl_803E00B0;
+  gExpgfxSpawnConfig.sourcePosW.value = lbl_803E00B0;
   gExpgfxSpawnConfig.velocityX = lbl_803E00B0;
   gExpgfxSpawnConfig.velocityY = lbl_803E00B0;
-  *(f32 *)&gExpgfxSpawnConfig.startPosZBits = lbl_803E00B4;
+  gExpgfxSpawnConfig.startPosZ.value = lbl_803E00B4;
   gExpgfxSpawnConfig.colorByte1.value = 0;
   gExpgfxSpawnConfig.colorByte1.lowByte = 0;
   gExpgfxSpawnConfig.quadVertex3Pad06 = (s32)uVar1;
@@ -3462,7 +3462,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       local_a8 = param_3->velocityX;
       local_a4 = param_3->velocityY;
       local_a0 = param_3->velocityZ;
-      local_ac = param_3->sourcePosXBits;
+      local_ac = param_3->sourcePosX.bits;
       local_b0 = param_3->sourceVecZ;
       local_b2 = param_3->sourceVecY;
       local_b4 = param_3->sourceVecX;
@@ -3893,10 +3893,10 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
       if (param_3 == (ExpgfxAttachedSourceState *)0x0) {
         return 0xffffffff;
       }
-      local_a0 = *(float *)&param_3->sourcePosYBits;
-      local_9c = *(float *)&param_3->sourcePosZBits;
-      local_98 = *(float *)&param_3->sourcePosWBits;
-      local_a4 = param_3->sourcePosXBits;
+      local_a0 = param_3->sourcePosY.value;
+      local_9c = param_3->sourcePosZ.value;
+      local_98 = param_3->sourcePosW.value;
+      local_a4 = param_3->sourcePosX.bits;
       local_a8 = param_3->sourceVecZ;
       local_aa = param_3->sourceVecY;
       local_ac = param_3->sourceVecX;

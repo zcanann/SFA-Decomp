@@ -168,6 +168,13 @@ typedef struct ExpgfxTrackedSourceFrameMask {
   u32 lowWord;
 } ExpgfxTrackedSourceFrameMask;
 
+typedef union ExpgfxFloatWord {
+  int bits;
+  f32 value;
+} ExpgfxFloatWord;
+
+STATIC_ASSERT(sizeof(ExpgfxFloatWord) == 4);
+
 /*
  * Retail warning strings call this structure "exptab". The key fields are
  * still only partially understood, but the table's role and lifetime rules
@@ -201,10 +208,10 @@ typedef struct ExpgfxAttachedSourceState {
   s16 sourceVecY;
   s16 sourceVecZ;
   u8 pad06[0x08 - 0x06];
-  int sourcePosXBits;
-  int sourcePosYBits;
-  int sourcePosZBits;
-  int sourcePosWBits;
+  ExpgfxFloatWord sourcePosX;
+  ExpgfxFloatWord sourcePosY;
+  ExpgfxFloatWord sourcePosZ;
+  ExpgfxFloatWord sourcePosW;
   float velocityX;
   float velocityY;
   float velocityZ;
@@ -236,16 +243,16 @@ typedef struct ExpgfxSpawnConfig {
   s16 sourceVecY;
   s16 sourceVecZ;
   u8 pad12[0x14 - 0x12];
-  int sourcePosXBits;
-  int sourcePosYBits;
-  int sourcePosZBits;
-  int sourcePosWBits;
+  ExpgfxFloatWord sourcePosX;
+  ExpgfxFloatWord sourcePosY;
+  ExpgfxFloatWord sourcePosZ;
+  ExpgfxFloatWord sourcePosW;
   float velocityX;
   float velocityY;
   float velocityZ;
-  int startPosXBits;
-  int startPosYBits;
-  int startPosZBits;
+  ExpgfxFloatWord startPosX;
+  ExpgfxFloatWord startPosY;
+  ExpgfxFloatWord startPosZ;
   float scale;
   ExpgfxSpawnTextureWord texture;
   u32 behaviorFlags;
@@ -263,9 +270,9 @@ typedef struct ExpgfxSpawnConfig {
 
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, attachedSource) == 0x00);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, quadVertex3Pad06) == 0x04);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, sourcePosWBits) == 0x20);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, sourcePosW) == 0x20);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, velocityX) == 0x24);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, startPosXBits) == 0x30);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, startPosX) == 0x30);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, scale) == 0x3C);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, texture) == 0x40);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, texture.parts.textureId) == 0x42);
@@ -404,16 +411,16 @@ typedef struct ExpgfxSlot {
   s16 sourceVecY;
   s16 sourceVecZ;
   u8 pad46[0x48 - 0x46];
-  int sourcePosX;
-  int sourcePosY;
-  int sourcePosZ;
-  int sourcePosW;
-  int posX;
-  int posY;
-  int posZ;
-  int startPosX;
-  int startPosY;
-  int startPosZ;
+  ExpgfxFloatWord sourcePosX;
+  ExpgfxFloatWord sourcePosY;
+  ExpgfxFloatWord sourcePosZ;
+  ExpgfxFloatWord sourcePosW;
+  ExpgfxFloatWord posX;
+  ExpgfxFloatWord posY;
+  ExpgfxFloatWord posZ;
+  ExpgfxFloatWord startPosX;
+  ExpgfxFloatWord startPosY;
+  ExpgfxFloatWord startPosZ;
   float velocityX;
   float velocityY;
   float velocityZ;

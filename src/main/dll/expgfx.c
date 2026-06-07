@@ -569,9 +569,9 @@ void expgfx_initSlotQuad(void *slotPtr)
   }
 
   step = gExpgfxSlotMotionStep;
-  *(f32 *)&slot->posX += slot->velocityX * step;
-  *(f32 *)&slot->posY += slot->velocityY * step;
-  *(f32 *)&slot->posZ += slot->velocityZ * step;
+  slot->posX.value += slot->velocityX * step;
+  slot->posY.value += slot->velocityY * step;
+  slot->posZ.value += slot->velocityZ * step;
 
   if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
     slot->scaleCounter =
@@ -916,7 +916,7 @@ foundFirst:
           rot.angleZ = (s16)(int)((f32)slot->sourceVecZ * timeDelta);
           rot.angleY = (s16)(int)((f32)slot->sourceVecY * timeDelta);
           rot.angleX = (s16)(int)((f32)slot->sourceVecX * timeDelta);
-          vecRotateZXY(&rot, (f32 *)&slot->posX);
+          vecRotateZXY(&rot, &slot->posX.value);
         }
         if ((slot->renderFlags & 0x30000000) != 0) {
           workB = lbl_803DF3DC;
@@ -924,18 +924,18 @@ foundFirst:
           if ((slot->renderFlags & 0x10000000) != 0 && player != NULL && srcObj != NULL &&
               playerRange > lbl_803DF3E0) {
             vecBuf[0] = player->anim.worldPosX -
-                        (*(f32 *)&slot->startPosX + srcObj->localPosX);
+                        (slot->startPosX.value + srcObj->localPosX);
             vecBuf[2] = player->anim.worldPosZ -
-                        (*(f32 *)&slot->startPosZ + srcObj->localPosZ);
+                        (slot->startPosZ.value + srcObj->localPosZ);
             workB = vecBuf[0] * vecBuf[0] + vecBuf[2] * vecBuf[2];
             attractRatio = playerRange / workB;
           }
           if (workB > lbl_803DF3B0 && (slot->renderFlags & 0x20000000) != 0 &&
               tricky != NULL && srcObj != NULL && trickyRange > lbl_803DF3E0) {
             vecBuf[0] = tricky->anim.worldPosX -
-                        (*(f32 *)&slot->startPosX + srcObj->localPosX);
+                        (slot->startPosX.value + srcObj->localPosX);
             vecBuf[2] = tricky->anim.worldPosZ -
-                        (*(f32 *)&slot->startPosZ + srcObj->localPosZ);
+                        (slot->startPosZ.value + srcObj->localPosZ);
             workA = vecBuf[0] * vecBuf[0] + vecBuf[2] * vecBuf[2];
             attractRatio = trickyRange / workB;
           }
@@ -994,7 +994,7 @@ foundFirst:
           }
           if ((slot->renderFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0) {
             f32 zero = lbl_803DF35C;
-            if (slot->velocityY * timeDelta + *(f32 *)&slot->posY < zero) {
+            if (slot->velocityY * timeDelta + slot->posY.value < zero) {
               slot->velocityX = zero;
               slot->velocityY = zero;
               slot->velocityZ = zero;
@@ -1021,7 +1021,7 @@ foundFirst:
             }
           }
           if ((slot->behaviorFlags & 0xf020) != 0 &&
-              slot->velocityY * timeDelta + *(f32 *)&slot->posY < lbl_803DF35C) {
+              slot->velocityY * timeDelta + slot->posY.value < lbl_803DF35C) {
             u32 rnd;
             f32 fade;
 
@@ -1035,13 +1035,13 @@ foundFirst:
             rot.angleY = 0;
             rot.angleX = 0;
             if (srcObj != NULL) {
-              rot.x = *(f32 *)&slot->posX + srcObj->localPosX;
-              rot.y = *(f32 *)&slot->posY + srcObj->localPosY;
-              rot.z = *(f32 *)&slot->posZ + srcObj->localPosZ;
+              rot.x = slot->posX.value + srcObj->localPosX;
+              rot.y = slot->posY.value + srcObj->localPosY;
+              rot.z = slot->posZ.value + srcObj->localPosZ;
             } else {
-              rot.x = *(f32 *)&slot->posX + *(f32 *)&slot->sourcePosY;
-              rot.y = *(f32 *)&slot->posY + *(f32 *)&slot->sourcePosZ;
-              rot.z = *(f32 *)&slot->posZ + *(f32 *)&slot->sourcePosW;
+              rot.x = slot->posX.value + slot->sourcePosY.value;
+              rot.y = slot->posY.value + slot->sourcePosZ.value;
+              rot.z = slot->posZ.value + slot->sourcePosW.value;
             }
             gExpgfxFrameParityBit = 1;
             if ((slot->behaviorFlags & 0x20) != 0 &&
@@ -1093,24 +1093,24 @@ foundFirst:
             }
             gExpgfxFrameParityBit = 0;
           } else if ((slot->behaviorFlags & 0x10000000) != 0 &&
-                     slot->velocityY * timeDelta + *(f32 *)&slot->posY < lbl_803DF35C) {
+                     slot->velocityY * timeDelta + slot->posY.value < lbl_803DF35C) {
             if (slot->soundHandle != -1) {
               rot.scale = lbl_803DF354;
               rot.angleZ = 0;
               rot.angleY = 0;
               rot.angleX = 0;
               if ((slot->behaviorFlags & 1) != 0) {
-                rot.x = *(f32 *)&slot->posX;
+                rot.x = slot->posX.value;
                 rot.y = lbl_803DF35C;
-                rot.z = *(f32 *)&slot->posZ;
+                rot.z = slot->posZ.value;
               } else if (srcObj != NULL) {
-                rot.x = *(f32 *)&slot->posX + srcObj->worldPosX;
+                rot.x = slot->posX.value + srcObj->worldPosX;
                 rot.y = srcObj->worldPosY;
-                rot.z = *(f32 *)&slot->posZ + srcObj->worldPosZ;
+                rot.z = slot->posZ.value + srcObj->worldPosZ;
               } else {
-                rot.x = *(f32 *)&slot->posX;
+                rot.x = slot->posX.value;
                 rot.y = lbl_803DF35C;
-                rot.z = *(f32 *)&slot->posZ;
+                rot.z = slot->posZ.value;
               }
               gExpgfxFrameParityBit = 1;
               (*gWaterfxInterface)->spawnSurfaceRipple(rot.x, rot.y, rot.z, lbl_803DF35C, 0, 4);
@@ -1131,17 +1131,17 @@ foundFirst:
             rot.angleY = 0;
             rot.angleX = 0;
             if ((slot->behaviorFlags & 1) != 0) {
-              rot.x = *(f32 *)&slot->posX;
-              rot.y = *(f32 *)&slot->posY;
-              rot.z = *(f32 *)&slot->posZ;
+              rot.x = slot->posX.value;
+              rot.y = slot->posY.value;
+              rot.z = slot->posZ.value;
             } else if (srcObj != NULL) {
-              rot.x = *(f32 *)&slot->posX + srcObj->localPosX;
-              rot.y = *(f32 *)&slot->posY + srcObj->localPosY;
-              rot.z = *(f32 *)&slot->posZ + srcObj->localPosZ;
+              rot.x = slot->posX.value + srcObj->localPosX;
+              rot.y = slot->posY.value + srcObj->localPosY;
+              rot.z = slot->posZ.value + srcObj->localPosZ;
             } else {
-              rot.x = *(f32 *)&slot->posX;
-              rot.y = *(f32 *)&slot->posY;
-              rot.z = *(f32 *)&slot->posZ;
+              rot.x = slot->posX.value;
+              rot.y = slot->posY.value;
+              rot.z = slot->posZ.value;
             }
             gExpgfxFrameParityBit = 1;
             (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001, -1, 0);
@@ -1173,13 +1173,13 @@ foundFirst:
             }
           }
           if ((slot->renderFlags & 0x200000) != 0) {
-            prevX = *(f32 *)&slot->posX;
-            prevY = *(f32 *)&slot->posY;
-            prevZ = *(f32 *)&slot->posZ;
+            prevX = slot->posX.value;
+            prevY = slot->posY.value;
+            prevZ = slot->posZ.value;
           }
-          *(f32 *)&slot->posX += slot->velocityX * timeDelta;
-          *(f32 *)&slot->posY += slot->velocityY * timeDelta;
-          *(f32 *)&slot->posZ += slot->velocityZ * timeDelta;
+          slot->posX.value += slot->velocityX * timeDelta;
+          slot->posY.value += slot->velocityY * timeDelta;
+          slot->posZ.value += slot->velocityZ * timeDelta;
           if ((slot->behaviorFlags & 0x100000) != 0) {
             slot->scaleCounter = (int)((f32)(u16)slot->scaleFrames * timeDelta +
                                        (f32)(u16)slot->scaleCounter);
@@ -1273,17 +1273,17 @@ foundFirst:
                 sy = srcObj->worldPosY;
                 sz = srcObj->worldPosZ;
               } else {
-                sx = *(f32 *)&slot->sourcePosY;
-                sy = *(f32 *)&slot->sourcePosZ;
-                sz = *(f32 *)&slot->sourcePosW;
+                sx = slot->sourcePosY.value;
+                sy = slot->sourcePosZ.value;
+                sz = slot->sourcePosW.value;
               }
             }
-            dirX = sx - *(f32 *)&slot->posX;
-            dirY = sy - *(f32 *)&slot->posY;
-            dirZ = sz - *(f32 *)&slot->posZ;
-            prevDX = prevX - *(f32 *)&slot->posX;
-            prevDY = prevY - *(f32 *)&slot->posY;
-            prevDZ = prevZ - *(f32 *)&slot->posZ;
+            dirX = sx - slot->posX.value;
+            dirY = sy - slot->posY.value;
+            dirZ = sz - slot->posZ.value;
+            prevDX = prevX - slot->posX.value;
+            prevDY = prevY - slot->posY.value;
+            prevDZ = prevZ - slot->posZ.value;
             workA = prevDY * dirZ - prevDZ * dirY;
             workB = -(prevDX * dirZ - prevDZ * dirX);
             attractRatio = prevDX * dirY - prevDY * dirX;
@@ -1305,14 +1305,14 @@ foundFirst:
             quad[0].z = baseZ;
             quad[0].texS = texS0;
             quad[0].texT = texT0;
-            quad[1].x = (int)(attractRatio * (*(f32 *)&slot->posX - prevX) + axisX);
-            quad[1].y = (int)(attractRatio * (*(f32 *)&slot->posY - prevY) + axisY);
-            quad[1].z = (int)(attractRatio * (*(f32 *)&slot->posZ - prevZ) + axisZ);
+            quad[1].x = (int)(attractRatio * (slot->posX.value - prevX) + axisX);
+            quad[1].y = (int)(attractRatio * (slot->posY.value - prevY) + axisY);
+            quad[1].z = (int)(attractRatio * (slot->posZ.value - prevZ) + axisZ);
             quad[1].texS = texS1;
             quad[1].texT = texT0;
-            quad[2].x = (int)(attractRatio * (*(f32 *)&slot->posX - prevX) - axisX);
-            quad[2].y = (int)(attractRatio * (*(f32 *)&slot->posY - prevY) - axisY);
-            quad[2].z = (int)(attractRatio * (*(f32 *)&slot->posZ - prevZ) - axisZ);
+            quad[2].x = (int)(attractRatio * (slot->posX.value - prevX) - axisX);
+            quad[2].y = (int)(attractRatio * (slot->posY.value - prevY) - axisY);
+            quad[2].z = (int)(attractRatio * (slot->posZ.value - prevZ) - axisZ);
             quad[2].texS = texS1;
             quad[2].texT = texT1;
             quad[3].x = -baseX;
@@ -1325,9 +1325,9 @@ foundFirst:
             rot.x = lbl_803DF35C;
             rot.y = lbl_803DF35C;
             rot.z = lbl_803DF35C;
-            slot->sourceVecX = slot->sourceVecX + framesThisStep * (int)*(f32 *)&slot->sourcePosY;
-            slot->sourceVecY = slot->sourceVecY + framesThisStep * (int)*(f32 *)&slot->sourcePosZ;
-            slot->sourceVecZ = slot->sourceVecZ + framesThisStep * (int)*(f32 *)&slot->sourcePosW;
+            slot->sourceVecX = slot->sourceVecX + framesThisStep * (int)slot->sourcePosY.value;
+            slot->sourceVecY = slot->sourceVecY + framesThisStep * (int)slot->sourcePosZ.value;
+            slot->sourceVecZ = slot->sourceVecZ + framesThisStep * (int)slot->sourcePosW.value;
             rot.scale = lbl_803DF354;
             vecBuf[0] = (f32)template[0].x;
             vecBuf[1] = (f32)template[0].y;
@@ -1520,9 +1520,9 @@ foundFirst:
           rot.scale = lbl_803DF354;
           if ((slot->behaviorFlags & 0x20000) != 0 &&
               (slot->renderFlags & 0x30000000) == 0) {
-            rot.x = *(f32 *)&slot->posX;
-            rot.y = *(f32 *)&slot->posY;
-            rot.z = *(f32 *)&slot->posZ;
+            rot.x = slot->posX.value;
+            rot.y = slot->posY.value;
+            rot.z = slot->posZ.value;
           }
           rot.angleZ = 0;
           rot.angleY = 0;
@@ -1538,9 +1538,9 @@ foundFirst:
               rot.angleZ = slot->sourceVecZ;
             }
           }
-          rotPos[0] = *(f32 *)&slot->posX;
-          rotPos[1] = *(f32 *)&slot->posY;
-          rotPos[2] = *(f32 *)&slot->posZ;
+          rotPos[0] = slot->posX.value;
+          rotPos[1] = slot->posY.value;
+          rotPos[2] = slot->posZ.value;
           if ((rot.angleZ | rot.angleX | rot.angleY) != 0) {
             vecRotateZXY(&rot, rotPos);
           }
@@ -1550,11 +1550,11 @@ foundFirst:
               srcVel[1] = srcObj->worldPosY;
               srcVel[2] = srcObj->worldPosZ;
             } else {
-              srcVel[0] = *(f32 *)&slot->sourcePosY;
-              srcVel[1] = *(f32 *)&slot->sourcePosZ;
-              srcVel[2] = *(f32 *)&slot->sourcePosW;
+              srcVel[0] = slot->sourcePosY.value;
+              srcVel[1] = slot->sourcePosZ.value;
+              srcVel[2] = slot->sourcePosW.value;
               if (attached != NULL) {
-                Obj_RotateLocalOffsetByYaw(&slot->sourcePosY, srcVel, *(attached + 0x35));
+                Obj_RotateLocalOffsetByYaw(&slot->sourcePosY.value, srcVel, *(attached + 0x35));
               }
             }
           } else {
@@ -1571,9 +1571,9 @@ foundFirst:
           if ((slot->behaviorFlags & 0x20000) != 0 &&
               (slot->behaviorFlags & 0x4000000) == 0 &&
               (slot->renderFlags & 0x30000000) == 0) {
-            rot.x = rot.x + *(f32 *)&slot->sourcePosY;
-            rot.y = rot.y + *(f32 *)&slot->sourcePosZ;
-            rot.z = rot.z + *(f32 *)&slot->sourcePosW;
+            rot.x = rot.x + slot->sourcePosY.value;
+            rot.y = rot.y + slot->sourcePosZ.value;
+            rot.z = rot.z + slot->sourcePosW.value;
           }
           slot->renderX = rot.x;
           slot->renderY = rot.y;
@@ -2686,18 +2686,18 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   attachedSource = (ExpgfxAttachedSourceState *)config->attachedSource;
   attachedTableKey = 0;
   if (attachedSource == NULL) {
-    *(f32 *)&slot->sourcePosY = *(f32 *)&config->sourcePosYBits;
-    *(f32 *)&slot->sourcePosZ = *(f32 *)&config->sourcePosZBits;
-    *(f32 *)&slot->sourcePosW = *(f32 *)&config->sourcePosWBits;
-    *(f32 *)&slot->sourcePosX = *(f32 *)&config->sourcePosXBits;
+    slot->sourcePosY.value = config->sourcePosY.value;
+    slot->sourcePosZ.value = config->sourcePosZ.value;
+    slot->sourcePosW.value = config->sourcePosW.value;
+    slot->sourcePosX.value = config->sourcePosX.value;
     slot->sourceVecZ = config->sourceVecZ;
     slot->sourceVecY = config->sourceVecY;
     slot->sourceVecX = config->sourceVecX;
   } else if ((behaviorFlags & EXPGFX_BEHAVIOR_COPY_ATTACHED_SOURCE) != 0) {
-    *(f32 *)&slot->sourcePosY = *(f32 *)&attachedSource->sourcePosYBits;
-    *(f32 *)&slot->sourcePosZ = *(f32 *)&attachedSource->sourcePosZBits;
-    *(f32 *)&slot->sourcePosW = *(f32 *)&attachedSource->sourcePosWBits;
-    *(f32 *)&slot->sourcePosX = *(f32 *)&attachedSource->sourcePosXBits;
+    slot->sourcePosY.value = attachedSource->sourcePosY.value;
+    slot->sourcePosZ.value = attachedSource->sourcePosZ.value;
+    slot->sourcePosW.value = attachedSource->sourcePosW.value;
+    slot->sourcePosX.value = attachedSource->sourcePosX.value;
     slot->sourceVecZ = attachedSource->sourceVecZ;
     slot->sourceVecY = attachedSource->sourceVecY;
     slot->sourceVecX = attachedSource->sourceVecX;
@@ -2720,12 +2720,12 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   }
   Expgfx_SetSlotTableIndex(slot, (u8)expTabIndex);
 
-  *(f32 *)&slot->posX = *(f32 *)&config->startPosXBits;
-  *(f32 *)&slot->startPosX = *(f32 *)&config->startPosXBits;
-  *(f32 *)&slot->posY = *(f32 *)&config->startPosYBits;
-  *(f32 *)&slot->startPosY = *(f32 *)&config->startPosYBits;
-  *(f32 *)&slot->posZ = *(f32 *)&config->startPosZBits;
-  *(f32 *)&slot->startPosZ = *(f32 *)&config->startPosZBits;
+  slot->posX.value = config->startPosX.value;
+  slot->startPosX.value = config->startPosX.value;
+  slot->posY.value = config->startPosY.value;
+  slot->startPosY.value = config->startPosY.value;
+  slot->posZ.value = config->startPosZ.value;
+  slot->startPosZ.value = config->startPosZ.value;
   slot->velocityX = config->velocityX;
   slot->velocityY = config->velocityY;
   slot->velocityZ = config->velocityZ;
@@ -2755,10 +2755,10 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
 
   if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 ||
       (slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_B) != 0) {
-    *(f32 *)&slot->sourcePosY = *(f32 *)&config->sourcePosYBits;
-    *(f32 *)&slot->sourcePosZ = *(f32 *)&config->sourcePosZBits;
-    *(f32 *)&slot->sourcePosW = *(f32 *)&config->sourcePosWBits;
-    *(f32 *)&slot->sourcePosX = *(f32 *)&config->sourcePosXBits;
+    slot->sourcePosY.value = config->sourcePosY.value;
+    slot->sourcePosZ.value = config->sourcePosZ.value;
+    slot->sourcePosW.value = config->sourcePosW.value;
+    slot->sourcePosX.value = config->sourcePosX.value;
     slot->sourceVecZ = config->sourceVecZ;
     slot->sourceVecY = config->sourceVecY;
     slot->sourceVecX = config->sourceVecX;
@@ -2769,9 +2769,9 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
     f32 step;
     slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_BACKDATE_MOTION;
     step = lbl_803DF41C * (f32)(s32)slot->lifetimeFrame;
-    *(f32 *)&slot->posX = slot->velocityX * step + *(f32 *)&slot->posX;
-    *(f32 *)&slot->posY = slot->velocityY * step + *(f32 *)&slot->posY;
-    *(f32 *)&slot->posZ = slot->velocityZ * step + *(f32 *)&slot->posZ;
+    slot->posX.value = slot->velocityX * step + slot->posX.value;
+    slot->posY.value = slot->velocityY * step + slot->posY.value;
+    slot->posZ.value = slot->velocityZ * step + slot->posZ.value;
     slot->velocityX = slot->velocityX * lbl_803DF420;
     slot->velocityY = slot->velocityY * lbl_803DF420;
     slot->velocityZ = slot->velocityZ * lbl_803DF420;
@@ -2785,25 +2785,25 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
     playerObj = (GameObject *)Obj_GetPlayerObject();
     slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_AIM_AT_ACTOR;
     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
-      dx = playerObj->anim.worldPosX - *(f32 *)&slot->startPosX;
-      dz = playerObj->anim.worldPosZ - *(f32 *)&slot->startPosZ;
+      dx = playerObj->anim.worldPosX - slot->startPosX.value;
+      dz = playerObj->anim.worldPosZ - slot->startPosZ.value;
       distSq = dx * dx + dz * dz;
       if (distSq < lbl_803DF424
           && lbl_803DF35C != playerObj->anim.velocityX
           && lbl_803DF35C != playerObj->anim.velocityZ) {
         slot->velocityX = slot->velocityX + dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
         slot->velocityY = slot->velocityY +
-            ((lbl_803DF428 + playerObj->anim.worldPosY) - *(f32 *)&slot->startPosY) /
+            ((lbl_803DF428 + playerObj->anim.worldPosY) - slot->startPosY.value) /
                 (f32)(s32)((int)slot->lifetimeFrame << 1);
         slot->velocityZ = slot->velocityZ +
-            (playerObj->anim.worldPosZ - *(f32 *)&slot->startPosZ) /
+            (playerObj->anim.worldPosZ - slot->startPosZ.value) /
                 (f32)(s32)((int)slot->lifetimeFrame << 1);
       }
     } else {
       dx = playerObj->anim.worldPosX -
-           (*(f32 *)&slot->startPosX + *(f32 *)((char *)config + 0xc));
+           (slot->startPosX.value + *(f32 *)((char *)config + 0xc));
       dz = playerObj->anim.worldPosZ -
-           (*(f32 *)&slot->startPosZ + *(f32 *)((char *)config + 0x14));
+           (slot->startPosZ.value + *(f32 *)((char *)config + 0x14));
       distSq = dx * dx + dz * dz;
       if (distSq < lbl_803DF424
           && lbl_803DF35C != playerObj->anim.velocityX
@@ -2811,11 +2811,11 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
         slot->velocityX = slot->velocityX - dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
         slot->velocityY = slot->velocityY -
             ((lbl_803DF428 + playerObj->anim.worldPosY) -
-             (*(f32 *)&slot->startPosY + *(f32 *)((char *)config + 0x10))) /
+             (slot->startPosY.value + *(f32 *)((char *)config + 0x10))) /
                 (f32)(s32)((int)slot->lifetimeFrame << 1);
         slot->velocityZ = slot->velocityZ -
             (playerObj->anim.worldPosZ -
-             (*(f32 *)&slot->startPosZ + *(f32 *)((char *)config + 0x14))) /
+             (slot->startPosZ.value + *(f32 *)((char *)config + 0x14))) /
                 (f32)(s32)((int)slot->lifetimeFrame << 1);
       }
     }
