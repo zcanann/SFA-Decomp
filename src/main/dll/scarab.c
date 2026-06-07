@@ -234,7 +234,7 @@ void dll_CA_update(int obj, int p2, int p3)
       Sfx_PlayFromObject(obj, SFXfoxcom_find);
       ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0x10);
       *(s8 *)&sub->baddie.moveDone = 0;
-      *(u8 *)(obj + 0x36) = 0xff;
+      ((GameObject *)obj)->anim.alpha = 0xff;
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
   } else if (((GameObject *)obj)->unkF8 == 0) {
@@ -1261,7 +1261,7 @@ int fn_8015E8BC(int obj, GroundBaddieState *p)
     *(s8 *)&p->baddie.unk25F = 1;
     GameBit_Set(sub->gameBitB, 1);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-    *(u8 *)(obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     *(s8 *)&p->baddie.unk34D = 1;
     p->baddie.moveSpeed =
         lbl_803E2DE8 + (f32)(u32)sub->aggression / lbl_803E2DEC;
@@ -1769,7 +1769,7 @@ void dll_CE_update(int obj, int p2, int p3)
       Sfx_PlayFromObject(obj, SFXfoxcom_find);
       ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0x10);
       *(s8 *)&sub->baddie.moveDone = 0;
-      *(u8 *)(obj + 0x36) = 0xff;
+      ((GameObject *)obj)->anim.alpha = 0xff;
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
   } else if (((GameObject *)obj)->unkF8 == 0) {
@@ -2508,7 +2508,7 @@ void iceball_update(undefined2 *param_1,int param_2)
     Obj_FreeObject((int *)p);
     return;
   }
-  if (*(u8 *)(p + 0x36) == 0) {
+  if (((GameObject *)p)->anim.alpha == 0) {
     return;
   }
   *(float *)(p + 0x28) = *(float *)(p + 0x28) - lbl_803E2E54 * timeDelta;
@@ -2525,13 +2525,13 @@ void iceball_update(undefined2 *param_1,int param_2)
       ((*(ObjHitsPriorityState **)(p + 0x54))->lastHitObject == Obj_GetPlayerObject() ||
        (*(ObjHitsPriorityState **)(p + 0x54))->lastHitObject == getTrickyObject())) {
     fn_8015FCCC(p);
-    *(u8 *)(p + 0x36) = 0;
+    ((GameObject *)p)->anim.alpha = 0;
     *(int *)(p + 0xf4) = 120;
     (*(ObjHitsPriorityState **)(p + 0x54))->flags &= ~1;
   }
   else if ((*(ObjHitsPriorityState **)(p + 0x54))->contactFlags != 0) {
     fn_8015FBEC(p);
-    *(u8 *)(p + 0x36) = 0;
+    ((GameObject *)p)->anim.alpha = 0;
     *(int *)(p + 0xf4) = 120;
     (*(ObjHitsPriorityState **)(p + 0x54))->flags &= ~1;
   }
@@ -3043,7 +3043,7 @@ void FUN_8016075c(int param_1)
 {
   *(undefined4 *)(param_1 + 0xf4) = 0xb4;
   ObjHits_DisableObject(param_1);
-  *(undefined *)(param_1 + 0x36) = 0xff;
+  ((GameObject *)param_1)->anim.alpha = 0xff;
   return;
 }
 
@@ -3229,13 +3229,13 @@ undefined4 FUN_80160c5c(int param_1)
   int iVar1;
   
   iVar1 = *(int *)(param_1 + 0xb8);
-  if (*(byte *)(param_1 + 0x36) < DAT_803dc070) {
-    *(undefined *)(param_1 + 0x36) = 0;
+  if (((GameObject *)param_1)->anim.alpha < DAT_803dc070) {
+    ((GameObject *)param_1)->anim.alpha = 0;
   }
   else {
-    *(byte *)(param_1 + 0x36) = *(byte *)(param_1 + 0x36) - DAT_803dc070;
+    ((GameObject *)param_1)->anim.alpha -= DAT_803dc070;
   }
-  if (*(char *)(param_1 + 0x36) == '\0') {
+  if (((GameObject *)param_1)->anim.alpha == 0) {
     FUN_80017698((int)*(short *)(iVar1 + 0x3f4),0);
     FUN_80017698((int)*(short *)(iVar1 + 0x3f2),1);
   }
@@ -3634,7 +3634,7 @@ FUN_801615d4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
     param_1 = ObjHits_DisableObject(param_9);
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
   }
-  if (*(char *)(param_9 + 0x36) == '\0') {
+  if (((GameObject *)param_9)->anim.alpha == 0) {
     if (*(int *)(param_9 + 0x4c) == 0) {
       FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
       uVar1 = 0;
@@ -3818,7 +3818,7 @@ bool FUN_80161a8c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     *(float *)(param_10 + 0x2a0) = lbl_803E3B7C;
     *(undefined *)(param_10 + 0x346) = 0;
-    *(undefined *)(param_9 + 0x36) = 0xff;
+    ((GameObject *)param_9)->anim.alpha = 0xff;
     *(ushort *)(iVar2 + 0x400) = *(ushort *)(iVar2 + 0x400) | 0x100;
   }
   return *(char *)(param_10 + 0x346) != '\0';
@@ -4342,7 +4342,7 @@ void iceball_init(void *obj) {
     char *p = (char*)obj;
     *(int*)(p + 0xf4) = 0xb4;
     ObjHits_DisableObject((int)p);
-    *(u8*)(p + 0x36) = 0xff;
+    ((GameObject *)p)->anim.alpha = 0xff;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4583,7 +4583,7 @@ int grimble_stateHandlerB04(int* obj, GroundBaddieState *state)
         ObjHits_DisableObject((int)obj);
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
-    if (*(u8*)((char*)obj + 0x36) == 0) {
+    if (((GameObject *)obj)->anim.alpha == 0) {
         if (*(void**)&((GameObject *)obj)->anim.placementData == NULL) {
             Obj_FreeObject(obj);
             return 0;
@@ -4728,7 +4728,7 @@ int grimble_stateHandlerA09(int obj, GroundBaddieState *p)
     }
     p->baddie.moveSpeed = lbl_803E2EE4;
     *(s8 *)&p->baddie.moveDone = 0;
-    *(u8 *)(obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     sub->flags400 |= 0x100;
   }
   if (*(char *)&p->baddie.moveDone != '\0') {
