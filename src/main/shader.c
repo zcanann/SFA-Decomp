@@ -1,3 +1,4 @@
+#include "main/asset_load.h"
 #include "main/game_object.h"
 #include "main/shader.h"
 
@@ -2524,17 +2525,16 @@ void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, i
 #pragma scheduling reset
 
 extern s8 lbl_803DB624;
-extern int lbl_803DCE78;
+extern u8 *lbl_803DCE78;
 extern int mapCoordsToId(int x, int z, int layer);
 extern int getDataFileSize(int kind);
-extern void getTabEntry(int base, int kind, int offset, int size);
 
 #pragma scheduling off
 #pragma peephole off
 void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
 {
     int layer;
-    int tabEntry;
+    u8 *tabEntry;
     int mapId;
     int mapY;
     s8* arr;
@@ -2972,7 +2972,6 @@ int mapProcessRomList(int slot)
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mapsBinGetRomlistSize(int offset, int *a, int *b, int *c);
-extern void fileLoadToBufferOffset(int id, void *buf, int offset, int len);
 extern int lbl_803DCE7C;
 
 #pragma scheduling off
@@ -3020,13 +3019,13 @@ int mapGetRomListAndOffsets(int p1, int flag)
 #pragma peephole off
 void mapInitSetRects(s16 *rect, u8 *bitmap, int p3, int p4, int idx)
 {
-    int self = lbl_803DCE78;
+    u8 *self = lbl_803DCE78;
     int tabOff = idx * 7 << 2;
     int x, y;
 
     getTabEntry(self, 0x1d, *(int *)(lbl_803DCE7C + tabOff),
                 *(int *)(lbl_803DCE7C + tabOff + 8) - *(int *)(lbl_803DCE7C + tabOff));
-    *(int *)(self + 0xc) = self + *(int *)(lbl_803DCE7C + tabOff + 4) - *(int *)(lbl_803DCE7C + tabOff);
+    *(int *)(self + 0xc) = (int)self + *(int *)(lbl_803DCE7C + tabOff + 4) - *(int *)(lbl_803DCE7C + tabOff);
     rect[0] = p3 - *(s16 *)(self + 4);
     rect[2] = p4 - *(s16 *)(self + 6);
     rect[1] = rect[0] + *(s16 *)(self + 0) - 1;
@@ -4549,7 +4548,7 @@ void doPendingMapLoads(void)
                             if (m2 < 0 || m2 >= (int)(sz >> 5)) {
                                 lbl_803DCEA4 = 0;
                             } else {
-                                int e = lbl_803DCE78;
+                                u8 *e = lbl_803DCE78;
                                 getTabEntry(e, 0x1f, m2 << 5, 0x20);
                                 lbl_803DCEA4 = *(u8*)(e + 0x1c);
                             }
