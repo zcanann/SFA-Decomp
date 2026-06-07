@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/dll/dim_partfx.h"
 
 
@@ -2228,7 +2229,7 @@ extern f32 lbl_803DB870; extern f32 lbl_803DB874;
 extern f32 lbl_803E02E4; extern f32 lbl_803E02EC;
 extern f32 lbl_803E02F0; extern f32 lbl_803E02F4;
 extern f32 lbl_803E02F8; extern f32 lbl_803E02FC;
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 
 extern f32 lbl_803E0180; extern f32 lbl_803E0184;
 extern f32 lbl_803E0188; extern f32 lbl_803E018C;
@@ -2833,7 +2834,7 @@ int Effect19_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
                 cfg.f38 = cfg.f38 + *(f32 *)((char *)cfg.f00 + 0x20);
             }
         }
-        uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+        uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     }
     return uVar1;
 }
@@ -2971,7 +2972,7 @@ int Effect13_func04(void *param_1, int param_2, s16 *param_3, u32 param_4, u8 pa
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 
@@ -3176,7 +3177,7 @@ int Effect17_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 
@@ -3535,7 +3536,7 @@ int Effect16_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 
@@ -3915,7 +3916,7 @@ int Effect15_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 
@@ -4272,7 +4273,7 @@ int Effect18_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 
@@ -6526,7 +6527,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    ret = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, ret);
+    ret = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, ret);
     return ret;
 }
 
