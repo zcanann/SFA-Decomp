@@ -1,5 +1,7 @@
 #include "main/frustum.h"
+#include "main/asset_load.h"
 #include "main/game_object.h"
+#include "main/mm.h"
 #include "main/model_light.h"
 #include "main/objanim_internal.h"
 #include "main/track_dolphin.h"
@@ -32,7 +34,6 @@ extern undefined4 FUN_80017788();
 extern undefined4 FUN_80017790();
 extern undefined4 FUN_80017794();
 extern uint FUN_8001779c();
-extern uint roundUpTo4();
 extern int FUN_80017830();
 extern undefined4 FUN_80017904();
 extern undefined4 FUN_8001790c();
@@ -4699,7 +4700,6 @@ void MapBlock_init(int obj)
     }
 }
 
-extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
 extern int lbl_803DCE80;
 
 void MapBlock_initHits(int obj, int index)

@@ -1,5 +1,7 @@
 #include "ghidra_import.h"
 #include "dolphin/os/OSFastCast.h"
+#include "main/asset_load.h"
+#include "main/resource.h"
 
 extern undefined8 camcontrol_playTargetTypeSfx();
 extern undefined8 runLoadingScreens();
@@ -425,8 +427,6 @@ typedef struct {
 extern AssetReq lbl_8033BF88;
 extern void *fileLoad(int id, int heap);
 extern void fileLoadToBuffer(int id, void *buf);
-extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
-extern void *Resource_Acquire(u32 id, u32 arg);
 extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
 extern int textureLoad(int id, int flag);
 extern void *loadAnimation(int hdr, s16 id, int b, u8 *bufout);

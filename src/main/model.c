@@ -1,3 +1,4 @@
+#include "main/asset_load.h"
 #include "main/model.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
@@ -493,7 +494,6 @@ void mm_free(void *p);
 
 extern void setGQR7(u32 v);
 
-extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
 extern int textureLoad(int id, int flag);
 extern void *loadAnimation(int hdr, s16 id, int b, u8 *bufout);
 

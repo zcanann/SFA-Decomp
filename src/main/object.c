@@ -1,10 +1,12 @@
-#include "main/game_object.h"
 #include "ghidra_import.h"
+#include "main/asset_load.h"
+#include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/engine_8001746C_phantoms.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/objlib.h"
+#include "main/resource.h"
 
 extern void mm_free(void *ptr);
 
@@ -629,8 +631,6 @@ extern f32 sqrtf(f32 x);
 extern int lbl_803DCB84;
 extern void *lbl_803DCB88;
 
-extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
-extern void *Resource_Acquire(u32 id, u32 arg);
 extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
 
 #pragma push
@@ -715,10 +715,6 @@ ObjListObject *ObjList_FindObjectById(u32 objectId) {
 
 #pragma dont_inline on
 
-#pragma dont_inline reset
-
-#pragma dont_inline on
-void *getTabEntry(int id, int arg, int e, int d);
 #pragma dont_inline reset
 
 #pragma pop
@@ -1169,8 +1165,7 @@ void objGetWeaponDa(u8 *obj, int objType, ObjWeaponDaTable *weaponDaTable, int k
                 weaponDaTable->byteCount = 0x800;
             }
             if (load) {
-                getTabEntry((int)weaponDaTable->entries, 0x34, da2,
-                            weaponDaTable->byteCount);
+                getTabEntry(weaponDaTable->entries, 0x34, da2, weaponDaTable->byteCount);
             } else {
                 fileLoadToBufferOffset(0x34, weaponDaTable->entries, da2,
                                        weaponDaTable->byteCount);
@@ -1204,7 +1199,7 @@ void ObjAnim_LoadMoveEvents(u8 *obj, int dummy, ObjAnimEventTable *eventTable, u
                 eventTable->byteCount = 0x50;
             }
             if (load == 0) {
-                getTabEntry((int)eventTable->entries, 0x40, da2, eventTable->byteCount);
+                getTabEntry(eventTable->entries, 0x40, da2, eventTable->byteCount);
             } else {
                 fileLoadToBufferOffset(0x40, eventTable->entries, da2, eventTable->byteCount);
             }
@@ -1738,7 +1733,6 @@ extern int *gMapEventInterface;
 #pragma pop
 
 extern void fn_802B4DE0(u8 *obj, int flag);
-extern void Resource_Release(void *res);
 extern void Obj_FreeObject(u8 *obj);
 extern void fn_80059A50(int arg);
 extern void setShadowFlag_803db658(int v);
