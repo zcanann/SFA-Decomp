@@ -1,4 +1,5 @@
 #include "main/dll/df_partfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/objanim.h"
@@ -2074,7 +2075,7 @@ void Checkpoint_Add(int *entry) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -2082,11 +2083,11 @@ void player_updateParticles(int *p1, int p2, int p3, int count, int mode)
 {
     while (count != 0 && p1 != NULL) {
         if (mode == 0) {
-            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(p1, p3, 0, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(p1, p3, NULL, 2, -1, NULL);
         } else if (mode == 1) {
-            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(p1, p3, 0, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(p1, p3, NULL, 2, -1, NULL);
         } else if (mode == 2) {
-            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(p1, p3, 0, 4, -1, 0);
+            (*gPartfxInterface)->spawnObject(p1, p3, NULL, 4, -1, NULL);
         }
         count--;
     }
