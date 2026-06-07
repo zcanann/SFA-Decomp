@@ -630,7 +630,6 @@ int bossdrakor_animEventCallback(int obj, int a2, int events)
     int inner = *(int *)&((GameObject *)obj)->extra;
     int i;
     int target;
-    int eventOffset;
     int eventId;
     ((DrakorFlags *)((char *)inner + 0x198))->b10 = 1;
     if (((BossDrakorState *)inner)->unk18C > lbl_803E6510) {
@@ -641,8 +640,7 @@ int bossdrakor_animEventCallback(int obj, int a2, int events)
         }
     }
     for (i = 0; i < *(u8 *)((char *)events + 0x8b); i++) {
-        eventOffset = i + 0x81;
-        eventId = *(u8 *)(events + eventOffset);
+        eventId = *(u8 *)(events + i + 0x81);
         switch (eventId) {
         case 6:
             target = ObjGroup_FindNearestObject(0x1e, obj, 0);
