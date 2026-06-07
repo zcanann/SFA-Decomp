@@ -4320,9 +4320,10 @@ void objFn_80065604(void) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
+#pragma peephole on
+#pragma optimization_level 1
 void fn_80063368(int target) {
-    int idx, zero;
+    int zero, idx;
     s16 i;
     i = 0;
     idx = 0;
@@ -4335,6 +4336,7 @@ void fn_80063368(int target) {
         idx += sizeof(MapDynamicSlot);
     }
 }
+#pragma optimization_level reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -4381,16 +4383,17 @@ check:
 extern u8 lbl_803DCE98;
 
 #pragma scheduling off
-#pragma peephole off
+#pragma peephole on
+#pragma optimization_level 1
 void fn_80060BB0(void)
 {
+    char *arr;
+    int zero;
+    int innerOff;
+    int byteOff;
     int i;
     int j;
-    int byteOff;
-    int innerOff;
-    int zero;
     int *blk;
-    char *arr;
 
     i = 0;
     byteOff = 0;
@@ -4401,14 +4404,17 @@ void fn_80060BB0(void)
             j = 0;
             innerOff = 0;
             for (; j < (int)*(u8 *)((char *)blk + 0xa1); j++) {
+                int o;
                 arr = *(char **)((char *)blk + 0x68);
-                arr[innerOff + 0x12] = zero;
+                o = innerOff + 0x12;
+                arr[o] = zero;
                 innerOff += 0x1c;
             }
         }
         byteOff += 4;
     }
 }
+#pragma optimization_level reset
 #pragma peephole reset
 #pragma scheduling reset
 
