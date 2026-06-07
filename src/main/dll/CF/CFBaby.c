@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -2020,12 +2021,11 @@ checked_vine_use:
 #pragma peephole reset
 #pragma scheduling reset
 
-/* Fall_Ladders_free: vtable method @ 0x18 on global manager. */
-extern undefined4* gExpgfxInterface;
-typedef void (*FallLaddersFreeFn)(int);
+/* Fall_Ladders_free: expgfx interface freeObject callback. */
+extern EffectInterface **gExpgfxInterface;
 #pragma scheduling off
 void Fall_Ladders_free(int obj) {
-    ((FallLaddersFreeFn)(*(u32*)(*gExpgfxInterface + 0x18)))(obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
 #pragma scheduling reset
 

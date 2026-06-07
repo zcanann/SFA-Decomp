@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
@@ -1296,7 +1297,7 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma scheduling reset
 
 extern unsigned int *gObjectTriggerInterface;
-extern int *gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 extern int hitDetectFn_80065e50(int obj, int **listOut, int p3, int p4, f32 x, f32 y, f32 z);
@@ -1339,7 +1340,7 @@ void magiclight_free(int obj) {
         if ((s8)inner->inRange != 0) {
             getLActions(obj, obj, (u16)inner->leaveAction, 0, 0, 0);
         }
-        (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+        (*gExpgfxInterface)->freeObject((void *)obj);
     }
 }
 void magiclight_update(int obj) {

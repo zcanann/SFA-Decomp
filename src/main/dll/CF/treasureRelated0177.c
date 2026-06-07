@@ -1,4 +1,5 @@
 #include "main/dll/CF/treasureRelated0177.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
@@ -47,7 +48,7 @@ extern void* SUB42();
 extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 extern u8 framesThisStep;
 extern f64 DOUBLE_803e4a08;
 extern f32 FLOAT_803dc074;
@@ -597,7 +598,7 @@ void campfire_free(int obj)
   void *effect;
 
   state = ((GameObject *)obj)->extra;
-  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+  (*gExpgfxInterface)->freeObject((void *)obj);
   effect = *state;
   if (effect != 0) {
     ModelLightStruct_free(effect);
@@ -664,7 +665,7 @@ int cfccrate_getObjectTypeId(void) { return 0x1; }
 #pragma scheduling off
 void cfccrate_free(int obj)
 {
-  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+  (*gExpgfxInterface)->freeObject((void *)obj);
 }
 #pragma scheduling reset
 
