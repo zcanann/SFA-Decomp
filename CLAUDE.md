@@ -3071,6 +3071,10 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     target t's home directly and the arms coalesce in place — the #103
     embedded-bound trick aimed at a saved-reg-homed result. Safe scope per
     #84: expression operands, NOT call args; single-use embedded values.
+    SCOPE CAVEAT: REGRESSES on VOLATILE-homed clamps — strictly a saved-home
+    tool (2 probes: DR_CloudRunner_stateHandler05 spd 97.63->97.54,
+    firstPersonDoControls zoom/fovTarget 97.64->96.78, both reverted; when
+    the plain #91 form already colors right, leave it).
     (task #16: fn_802B0EA4 t-clamps -> f31 byte-exact; fn_802A5384 same
     shape.) RELATED caveat from the same session: a branchy ternary inside a
     larger EXPRESSION always hoists to statement front — compound `*=` does
