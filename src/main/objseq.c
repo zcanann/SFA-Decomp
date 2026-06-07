@@ -573,8 +573,7 @@ void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
         switch (cmd->opcode) {
         case 3:
             if ((u8)skipSpawns == 0) {
-                (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(
-                    cmdObj, cmdParam, 0, 0x10000, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)cmdObj, cmdParam, NULL, 0x10000, -1, NULL);
             }
             break;
         case 4:

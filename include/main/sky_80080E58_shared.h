@@ -2,6 +2,7 @@
 #define MAIN_SKY_80080E58_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/newclouds.h"
 #include "main/resource.h"
 
@@ -86,7 +87,7 @@ extern u8 lbl_803DB748;
 extern int lbl_803DB720;
 extern int *gGameUIInterface;
 extern int *gMapEventInterface;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int *gScreenTransitionInterface;
 extern s16 seqGlobal1;
 extern s16 seqGlobal2;

@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/effect_interfaces.h"
 #include "main/model.h"
 #include "main/objprint_dolphin.h"
 #include "main/objanim_internal.h"
@@ -5267,8 +5268,7 @@ extern f32 *Camera_GetViewMatrix(void);
 extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
 extern void gxTextureFn_80072dfc(u8 *obj, int *p2, int p3);
 extern void GXBegin(int prim, int fmt, u16 count);
-extern int *gPartfxInterface;
-typedef void (*ObjPartfxFn)(u8 *obj, int id, void *blk, int flags, int p5, int p6);
+extern EffectInterface **gPartfxInterface;
 
 void objRenderFn_8003d980(u8 *obj, int *p2) {
     f32 wm[16];
@@ -5351,7 +5351,7 @@ void objRenderFn_8003d980(u8 *obj, int *p2) {
         blk.rot[0] = 0;
         blk.rot[2] = 0;
         blk.rot[1] = 0;
-        (*(ObjPartfxFn *)(*(char **)gPartfxInterface + 8))(obj, 0x7fd, &blk, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 0x7fd, &blk, 0x200001, -1, NULL);
     }
 }
 

@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dim_tricky.h"
+#include "main/effect_interfaces.h"
 #include "main/resource.h"
 
 
@@ -14,7 +15,7 @@ extern void GameBit_Set(int eventId, int value);
 extern u8 framesThisStep;
 extern int *gExpgfxInterface;
 extern int *gModgfxInterface;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern s8 lbl_803DDBE8;
 extern undefined4 lbl_802C23D8[4];
 extern f32 lbl_803E51E0;
@@ -117,8 +118,7 @@ void dll_19E_update(void *obj)
 
         i = 0;
         do {
-          (*(void (*)(void *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-              obj, 0x1a3, 0, 0, -1, 0);
+          (*gPartfxInterface)->spawnObject(obj, 0x1a3, NULL, 0, -1, NULL);
           i++;
         } while (i < 100);
 
