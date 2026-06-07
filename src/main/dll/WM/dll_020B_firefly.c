@@ -249,13 +249,15 @@ void firefly_update(int obj)
     despawnTimer = lbl_803E5EA8;
     while (ObjMsg_Pop(obj, msg, 0, 0) != 0) {
         switch (msg[0]) {
-        case FIREFLY_MESSAGE_DESPAWN:
+        case FIREFLY_MESSAGE_DESPAWN: {
+            FireFlyState *st = ((GameObject *)obj)->extra;
             ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
-            ((FireFlyState *)((GameObject *)obj)->extra)->despawnTimer = despawnTimer;
+            st->despawnTimer = despawnTimer;
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
             Sfx_PlayFromObject(obj, SFXen_treadlpc);
             break;
+        }
         }
     }
 
