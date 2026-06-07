@@ -1,5 +1,6 @@
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SC/SCchieflightfoot.h"
+#include "main/effect_interfaces.h"
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
 #include "main/mapEventTypes.h"
@@ -29,7 +30,7 @@ extern u8 gSHthorntailDataTables[];
 extern u8 gSHthorntailPathHeaders[0x30];
 extern u8 gSHthorntailPathData[0x4AC];
 extern undefined4 lbl_803E5410;
-extern undefined4* gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd728;
 extern MapEventInterface **DAT_803dd72c;
@@ -139,8 +140,8 @@ void SHthorntail_update(SHthorntailObject *obj)
       if ((obj->objectFlags & 0x800U) != 0) {
         ObjPath_GetPointWorldPosition(obj,4,&effectScratch.position.x,&effectScratch.position.y,
                                       &effectScratch.position.z,0);
-        (*(code *)(*gPartfxInterface + 8))(obj,0x7f0,effectScratch.particleParams,0x200001,
-                                           0xffffffff,0);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f0, effectScratch.particleParams,
+                                         0x200001, -1, NULL);
       }
       runtime->effectTimer = lbl_803E5450;
     }
@@ -413,31 +414,31 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
     if (runtime->dustEffectTimer < lbl_803E5468) {
       if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
-        (*(code *)(*gPartfxInterface + 8))(playerObj,0x7ca,&effectParams,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)playerObj, 0x7ca, &effectParams, 2, -1, NULL);
       }
     }
     else if (runtime->dustEffectTimer < lbl_803E5470) {
       if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer / lbl_803E5474) {
-        (*(code *)(*gPartfxInterface + 8))(playerObj,0x7ca,&effectParams,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)playerObj, 0x7ca, &effectParams, 2, -1, NULL);
       }
       effectParams.radius = 0x28;
       effectParams.flags = 0;
       effectParams.scale = lbl_803E5478 * ((runtime->dustEffectTimer - lbl_803E5468) / lbl_803E547C);
-      (*(code *)(*gPartfxInterface + 8))(playerObj,0x7d2,&effectParams,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)playerObj, 0x7d2, &effectParams, 2, -1, NULL);
       runtime->dustEffectFlags = runtime->dustEffectFlags | SHTHORNTAIL_DUST_FLAG_BURST_READY;
     }
     else if (runtime->dustEffectTimer < lbl_803E5480) {
       if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
-        (*(code *)(*gPartfxInterface + 8))(playerObj,0x7ca,&effectParams,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)playerObj, 0x7ca, &effectParams, 2, -1, NULL);
       }
       if ((runtime->dustEffectFlags & SHTHORNTAIL_DUST_FLAG_BURST_READY) != 0) {
         runtime->dustEffectFlags = runtime->dustEffectFlags & ~SHTHORNTAIL_DUST_FLAG_BURST_READY;
         effectParams.radius = 0x46;
         effectParams.scale = lbl_803E5484;
         for (burstCount = 0xf; (u8)burstCount != 0; burstCount = burstCount + -1) {
-          (*(code *)(*gPartfxInterface + 8))(playerObj,0x7d2,&effectParams,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)playerObj, 0x7d2, &effectParams, 2, -1, NULL);
         }
       }
     }
