@@ -1319,6 +1319,9 @@ extern int ModelList_getHeader(void *list, int index, void *out);
 extern void modelInitModelList(void *list, s16 index, void *out);
 extern s16 *lbl_803DCB64;
 
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 void *ObjModel_Load(int id, int arg2, int *outSize) {
     int sizes[7];
     u8 *header;
@@ -1327,10 +1330,12 @@ void *ObjModel_Load(int id, int arg2, int *outSize) {
     int i;
     int realId;
     int tex;
-    if (id < 0) {
-        realId = -id;
+    int idc;
+    idc = id;
+    if (idc < 0) {
+        realId = -idc;
     } else {
-        fileLoadToBufferOffset(0x2c, lbl_803DCB64, id * 2, 8);
+        fileLoadToBufferOffset(0x2c, lbl_803DCB64, idc * 2, 8);
         realId = lbl_803DCB64[0];
     }
     if (ModelList_getHeader(lbl_803DCB54, realId, &header) == 0) {
@@ -1353,6 +1358,7 @@ void *ObjModel_Load(int id, int arg2, int *outSize) {
     *outSize = modelLoad_calcSizes(header, arg2, sizes, 0);
     return header;
 }
+#pragma pop
 
 #pragma peephole off
 #pragma scheduling off
