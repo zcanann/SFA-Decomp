@@ -1,5 +1,6 @@
 #include "main/dll/CF/CFTreasSharpy.h"
 #include "main/dll/CF/dll_179.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/resource.h"
@@ -26,7 +27,7 @@ extern f32 FLOAT_803e4ad8;
 extern f32 FLOAT_803e4ae0;
 
 extern void *lbl_803DBDE8;
-extern void *gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 extern void *gModgfxInterface;
 extern void *gPartfxInterface;
 extern u8 framesThisStep;
@@ -479,7 +480,7 @@ int fxemit_getObjectTypeId(void)
 #pragma peephole off
 void fxemit_free(FxEmitObject *obj)
 {
-    ((void (*)(int))((void **)*(int *)gExpgfxInterface)[6])((int)obj);
+    (*gExpgfxInterface)->freeObject(obj);
     ((void (*)(int))((void **)*(int *)gModgfxInterface)[5])((int)obj);
 }
 #pragma peephole reset
