@@ -4,6 +4,7 @@
 #include "main/dll/cfguardian.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 
 extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();
@@ -573,7 +574,7 @@ void mmp_bridge_initialise(void) {}
 
 extern f32 lbl_803E3778;
 extern void pressureswitchfb_updateStateMode(int obj, int p2, int stateParam);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 extern void fn_80137948(char *fmt, ...);
 
@@ -774,13 +775,13 @@ void Door_update(int obj)
     triggerId = *(s16 *)(def + 0x1c);
     if ((triggerId != 0) && (*(u8 *)(state + 4) != 0)) {
       triggerArg = *(u8 *)(def + 0x20) & 0x7f;
-      (*(code *)(*gObjectTriggerInterface + 0x54))(obj,triggerId);
+      (*gObjectTriggerInterface)->preempt(obj, triggerId);
     }
     else {
       triggerArg = -1;
     }
     if (*(s8 *)(def + 0x1e) != -1) {
-      (*(code *)(*gObjectTriggerInterface + 0x48))((int)*(s8 *)(def + 0x1e),obj,triggerArg);
+      (*gObjectTriggerInterface)->runSequence((int)*(s8 *)(def + 0x1e), (void *)obj, triggerArg);
     }
     *(u8 *)(state + 5) = 0;
   }
@@ -979,7 +980,7 @@ void doorlock_update(int obj)
   if (((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) && (GameBit_Get(0x930) == 0)) {
     buttonDisable(0, 0x100);
     (*(code *)(*gObjectTriggerInterface + 0x84))(obj, 0);
-    (*(code *)(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+    (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
     GameBit_Set(0x930, 1);
   } else {
     *(u8 *)state = GameBit_Get(*(s16 *)(def + 0x1c));
@@ -1009,7 +1010,7 @@ void doorlock_update(int obj)
       if (((*(s16 *)(def + 0x1e) != -1) && (ObjTrigger_IsSetById(obj, *(s16 *)(def + 0x1e)) != 0)) ||
           ((*(s16 *)(def + 0x1e) == -1) && (ObjTrigger_IsSet(obj) != 0))) {
         if (*(s8 *)(def + 0x20) != -1) {
-          (*(code *)(*gObjectTriggerInterface + 0x48))((int)*(s8 *)(def + 0x20), obj, -1);
+          (*gObjectTriggerInterface)->runSequence((int)*(s8 *)(def + 0x20), (void *)obj, -1);
         }
         if ((*(u8 *)(def + 0x1b) & 4) == 0) {
           GameBit_Set(*(s16 *)(def + 0x1c), 1);
@@ -1025,7 +1026,7 @@ void doorlock_update(int obj)
     } else {
       if (((GameObject *)obj)->unkF4 == 0) {
         if ((*(s8 *)(def + 0x20) != -1) && (*(s16 *)(def + 0x24) != 0)) {
-          (*(code *)(*gObjectTriggerInterface + 0x54))(obj, *(s16 *)(def + 0x24));
+          (*gObjectTriggerInterface)->preempt(obj, *(s16 *)(def + 0x24));
           flags = 1;
           b = *(u8 *)(def + 0x1b);
           if ((b & 0x20) != 0) {
@@ -1037,7 +1038,7 @@ void doorlock_update(int obj)
           if ((b & 0x80) != 0) {
             flags |= 8;
           }
-          (*(code *)(*gObjectTriggerInterface + 0x48))((int)*(s8 *)(def + 0x20), obj, flags);
+          (*gObjectTriggerInterface)->runSequence((int)*(s8 *)(def + 0x20), (void *)obj, flags);
         }
         ((GameObject *)obj)->unkF4 = 1;
       }

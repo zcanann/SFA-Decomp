@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/dll/CF/CFTreasSharpy.h"
 #include "main/dll/CF/warp_pad.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 extern undefined4 FUN_80006824();
@@ -52,7 +53,7 @@ extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
 extern EffectInterface **gPartfxInterface;
-extern int* gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int* gRomCurveInterface;
 extern undefined4 DAT_803dda60;
 extern undefined4 DAT_803ddb38;
@@ -1423,7 +1424,7 @@ void warpPadPlayerStandingOn(int obj)
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
         setAButtonIcon(0x1b);
         if (GameBit_Get(0x912) == 0) {
-            (*(void (**)(int, int, int))(*(int*)(*gObjectTriggerInterface) + 0x48))(2, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
             GameBit_Set(0x912, 1);
             return;
         }
@@ -1439,7 +1440,7 @@ void warpPadPlayerStandingOn(int obj)
         if (lbl_803DCEB8 > -1) {
             player = Obj_GetPlayerObject();
             if (Vec_xzDistance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < lbl_803E3EE0) {
-                (*(void (**)(int, int, int))(*(int*)(*gObjectTriggerInterface) + 0x48))(1, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 ((GameObject *)obj)->unkF4 = state->activateDelay;
                 state->triggerMode = 0;
                 state->countdownActive = 1;
@@ -1451,7 +1452,7 @@ void warpPadPlayerStandingOn(int obj)
         if (((gameBit == -1) ||
              ((GameBit_Get(gameBit) != 0) && ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0))) &&
             (ObjTrigger_IsSet(obj) != 0)) {
-            (*(void (**)(int, int, int))(*(int*)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
             ((GameObject *)obj)->unkF4 = state->activateDelay;
             state->triggerMode = 1;
             state->countdownActive = 1;
