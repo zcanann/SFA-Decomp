@@ -188,7 +188,7 @@ void FUN_8017c29c(int param_1)
     else {
       if (*(int *)(param_1 + 0xf4) == 0) {
         if ((*(char *)(iVar4 + 0x20) != -1) && (*(short *)(iVar4 + 0x24) != 0)) {
-          (**(code **)(*DAT_803dd6d4 + 0x54))(param_1);
+          ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt(param_1, *(s16 *)(iVar4 + 0x24));
           uVar2 = 1;
           bVar1 = *(byte *)(iVar4 + 0x1b);
           if ((bVar1 & 0x20) != 0) {

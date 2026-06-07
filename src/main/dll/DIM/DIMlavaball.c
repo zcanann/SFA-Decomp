@@ -149,7 +149,7 @@ extern undefined4 DAT_803ad580;
 extern undefined4 DAT_803ad584;
 extern undefined4 DAT_803ad588;
 extern undefined4 DAT_803ad58c;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **DAT_803dd6d4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
@@ -662,11 +662,10 @@ void FUN_801a77a4(int param_1)
     }
     else {
       uVar1 = (uint)*(byte *)(iVar2 + 0x20);
-      (**(code **)(*DAT_803dd6d4 + 0x54))();
+      (*DAT_803dd6d4)->preempt(param_1, *(s16 *)(iVar2 + 0x1c));
     }
     if (*(char *)(iVar2 + 0x1e) != -1) {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)
-          ->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, uVar1);
+      (*DAT_803dd6d4)->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, uVar1);
     }
     pcVar3[1] = pcVar3[1] & 0xfe;
   }
