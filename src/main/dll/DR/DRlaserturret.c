@@ -1,5 +1,6 @@
 #include "main/dll/DR/DRlaserturret.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -28,7 +29,7 @@ extern float mathSinf(double);
 extern int playerGetMoney(void *playerObj);
 
 extern void *gScreenTransitionInterface;
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern u8 framesThisStep;
@@ -102,7 +103,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject *obj, DRLaserTurretAnimState *a
             buttonDisable(0, DR_LASERTURRET_BUTTON_ACCEPT);
         } else {
             rng = randomGetRange(0, 2);
-            (*(code **)gObjectTriggerInterface)[0x48 / 4](rng, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(rng, obj, -1);
             buttonDisable(0, DR_LASERTURRET_BUTTON_ACCEPT);
         }
     }
@@ -226,7 +227,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimStat
     state->bobPhase = (u16)sum;
     if (ObjTrigger_IsSet(obj) != 0) {
         rng = randomGetRange(0, 2);
-        (*(code **)gObjectTriggerInterface)[0x48 / 4](rng, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(rng, obj, -1);
     }
     return 0;
 }

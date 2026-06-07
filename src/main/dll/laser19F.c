@@ -1,5 +1,6 @@
 #include "main/dll/laser19F.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
+#include "main/objseq.h"
 
 
 #pragma peephole off
@@ -29,7 +30,7 @@ extern void fn_80296518(int obj, int arg, int enable);
 extern undefined4* DAT_803dd72c;
 extern void* DAT_803de838;
 extern int *gMapEventInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f64 DOUBLE_803e5bd0;
 extern f64 lbl_803E4F38;
 extern f32 lbl_803DC074;
@@ -130,12 +131,8 @@ typedef struct MMSHShrineSequenceState {
   u8 commandCount;
 } MMSHShrineSequenceState;
 
-typedef void (*ObjectTriggerRefreshFn)(int mode, int obj, int arg);
-typedef void (*ObjectTriggerReleaseFn)(s16 triggerHandle);
-typedef void (*ObjectTriggerSpawnFn)(int type, int a, int b, int c);
 typedef void (*MapEventTriggerFn)(int mapDir, int eventId);
 
-#define OBJECT_TRIGGER_FN(offset, type) ((type)(*(u32 *)((u8 *)*gObjectTriggerInterface + (offset))))
 #define MAP_EVENT_FN(offset, type) ((type)(*(u32 *)((u8 *)*gMapEventInterface + (offset))))
 
 /*
@@ -422,8 +419,8 @@ void mmsh_shrine_update(int objArg)
       break;
     }
     runtime->phase = 1;
-    OBJECT_TRIGGER_FN(0x50,ObjectTriggerSpawnFn)(0x4c,0,0,0);
-    OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(0,(int)obj,-1);
+    (*gObjectTriggerInterface)->setCamVars(0x4c,0,0,0);
+    (*gObjectTriggerInterface)->runSequence(0,obj,-1);
     Music_Trigger(MMSH_SHRINE_MUSIC_RUMBLE,1);
     break;
   case 1:
@@ -435,11 +432,11 @@ void mmsh_shrine_update(int objArg)
     runtime->phase = 2;
     runtime->latch.activeMask &= ~MMSH_SHRINE_LATCH_FLAG_OPEN_READY;
     GameBit_Set(MMSH_SHRINE_GB_OPEN,1);
-    OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(2,(int)obj,-1);
+    (*gObjectTriggerInterface)->runSequence(2,obj,-1);
     break;
   case 3:
-    OBJECT_TRIGGER_FN(0x4c,ObjectTriggerReleaseFn)(obj->triggerHandle);
-    OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(3,(int)obj,-1);
+    (*gObjectTriggerInterface)->endSequence(obj->triggerHandle);
+    (*gObjectTriggerInterface)->runSequence(3,obj,-1);
     runtime->phase = 4;
     GameBit_Set(MMSH_SHRINE_GB_OPEN,0);
     break;
@@ -451,7 +448,7 @@ void mmsh_shrine_update(int objArg)
   case 2:
     if (objGetAnimStateFlags(playerObj,4) == 0) {
       audioStopByMask(3);
-      OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(1,(int)obj,-1);
+      (*gObjectTriggerInterface)->runSequence(1,obj,-1);
     }
     runtime->phase = 5;
     GameBit_Set(MMSH_SHRINE_GB_OPEN,0);

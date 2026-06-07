@@ -1,5 +1,6 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 
 
@@ -24,7 +25,7 @@ extern void ObjGroup_RemoveObject(void *obj,int group);
 extern void ModelLightStruct_free(void *light);
 
 extern MapEventInterface **gMapEventInterface;
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gBaddieControlInterface;
 extern void *gPlayerInterface;
 extern f32 timeDelta;
@@ -135,8 +136,7 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
     }
     if ((state->eventGameBit != -1) &&
         (GameBit_Get(state->eventGameBit) != 0)) {
-      (*(void (**)(ObjAnimUpdateState *,int))(*(int *)gObjectTriggerInterface + 0x58))
-          (animUpdate,(int)config->eventId);
+      (*gObjectTriggerInterface)->yield((u8 *)animUpdate,(int)config->eventId);
       state->eventGameBit = -1;
     }
 

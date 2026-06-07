@@ -6,6 +6,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 #include "main/objhits_types.h"
 
 
@@ -637,7 +638,7 @@ extern int ObjModel_ClearBlendChannels(int model);
 extern void characterDoEyeAnims(int obj,void *p);
 extern int fn_80138D7C(int obj,int state);
 extern void Tricky_updateBlendChannelWeight(int obj,int state);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 int tricky_SeqFn(int obj,int unused,int seq)
 {
@@ -751,7 +752,7 @@ int tricky_SeqFn(int obj,int unused,int seq)
   if ((((TrickyState *)state)->unk54 & 1) != 0) {
     *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) & ~0x40;
     characterDoEyeAnims(obj,(void *)(state + 0x378));
-    return ((int (**)(int,int,int,int,int,int,int))*(int *)gObjectTriggerInterface)[30](obj,seq,1,0xf,0x1e,0,0);
+    return (*gObjectTriggerInterface)->func20((void *)obj,(u8 *)seq,1,0xf,0x1e,0,0);
   }
   return 0;
 }
