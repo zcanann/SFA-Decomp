@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/earthwalker_state.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -261,7 +262,8 @@ void earthwalker_update(int obj)
             }
             if (newState != -1) {
                 buttonDisable(0, 0x100);
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(newState, obj, -1);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(
+                    newState, (void *)obj, -1);
                 ewState->lastTriggeredState = newState;
             }
         }

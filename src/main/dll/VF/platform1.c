@@ -4,6 +4,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 
 extern undefined4 Sfx_SetObjectSfxVolume();
 extern undefined4 Sfx_PlayFromObject();
@@ -75,7 +76,7 @@ extern void fn_801DE320(void *dst, int val);
 extern int fn_800882C8(int index);
 extern void hudFn_8011f38c(int n);
 extern int *gCameraInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
 extern int  lbl_803DDC10;
 extern int  lbl_803DC070;
@@ -154,7 +155,7 @@ int platform1_control(int obj, int p2, u8 *data)
         case 2:
             st->flags = (u8)(st->flags | PLATFORM1_TRIGGER_FLAG_02);
             st->transitionStep = 0;
-            ((void (*)(int, int, int, int))*(void **)((char *)(*gObjectTriggerInterface) + 0x50))(0x48, 3, 0, 0);
+            (*gObjectTriggerInterface)->setCamVars(0x48, 3, 0, 0);
             break;
         case 3:
             list = (int *)ObjList_GetObjects(&idx2, &cnt2);
@@ -420,7 +421,7 @@ void sc_totemstrength_update(u8 *obj)
     if (t == 6) {
         if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0) {
             if (st->loopSfxHandle > 0) {
-                (*(void (**)(int))((char *)(*gObjectTriggerInterface) + 0x4c))(st->loopSfxHandle);
+                (*gObjectTriggerInterface)->endSequence(st->loopSfxHandle);
                 fn_800882C8(st->loopSfxHandle);
             }
             if (lbl_803DDC10-- == 0) {
@@ -458,7 +459,7 @@ void sc_totemstrength_update(u8 *obj)
                 GameBit_Set(0xf1d, 1);
                 hudFn_8011f38c(1);
                 st->loopSfxHandle =
-                    (*(int (**)(int, u8 *, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(0, obj, -1);
             } else if (step == 2) {
                 st->transitionStep = 0;
             } else if (step == 3) {
@@ -554,7 +555,7 @@ void paymentkiosk_update(int obj)
         break;
     case 1:
         if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
-            (*(int (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         }
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
         break;

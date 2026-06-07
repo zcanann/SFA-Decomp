@@ -6,6 +6,7 @@
 #include "main/mapEvent.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
+#include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
 extern undefined4 FUN_80006824();
@@ -808,11 +809,11 @@ void FUN_80188470(uint param_1)
   if (*(short *)(param_1 + 0x46) == 0x548) {
     uVar2 = GameBit_Get((int)*(short *)(iVar4 + 6));
     if ((uVar2 != 0) && (uVar2 = GameBit_Get((int)*(short *)(iVar4 + 4)), uVar2 == 0)) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
     }
     uVar2 = GameBit_Get((int)*(short *)(iVar4 + 6));
     if ((uVar2 == 0) && (uVar2 = GameBit_Get((int)*(short *)(iVar4 + 4)), uVar2 != 0)) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_1,0xffffffff);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_1, -1);
     }
   }
   else if (*(short *)(iVar4 + 10) == 0) {
@@ -914,7 +915,7 @@ void FUN_8018866c(int param_1)
     }
   }
   else {
-    (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
     GameBit_Set(0x1bd,1);
   }
   return;
@@ -958,7 +959,7 @@ void FUN_80188800(int param_1)
 {
   if ((*(byte *)(param_1 + 0xaf) & 1) != 0) {
     FUN_80006ba8(0,0x100);
-    (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
   }
   return;
 }
@@ -1641,10 +1642,10 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar2 = ObjGroup_FindNearestObject(0xf,param_9,(float *)0x0);
       if ((*(char *)(param_9 + 0xac) == '\r') && (uVar3 = GameBit_Get(0xc92), uVar3 != 0)) {
         *(float *)(iVar2 + 0x10) = *(float *)(iVar2 + 0x10) + FLOAT_803e4838;
-        (**(code **)(*DAT_803dd6d4 + 0x48))(2,iVar2,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(2, (void *)iVar2, -1);
       }
       else {
-        (**(code **)(*DAT_803dd6d4 + 0x48))(1,iVar2,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)iVar2, -1);
       }
       GameBit_Set((int)*(short *)(iVar8 + 0x1c),0);
     }
@@ -1659,10 +1660,10 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar2 = ObjGroup_FindNearestObject(0xf,param_9,(float *)0x0);
       if ((*(char *)(param_9 + 0xac) == '\r') && (uVar3 = GameBit_Get(0xc92), uVar3 != 0)) {
         *(float *)(iVar2 + 0x10) = *(float *)(iVar2 + 0x10) + FLOAT_803e4838;
-        (**(code **)(*DAT_803dd6d4 + 0x48))(2,iVar2,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(2, (void *)iVar2, -1);
       }
       else {
-        (**(code **)(*DAT_803dd6d4 + 0x48))(1,iVar2,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)iVar2, -1);
       }
       GameBit_Set((int)*(short *)(iVar8 + 0x1c),0);
     }
@@ -1736,7 +1737,7 @@ typedef struct CarryableBreakRespawnState {
 
 extern int *lbl_803DCAC0;
 extern EffectInterface **gPartfxInterface;
-extern undefined4* gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E3B44;
 extern f32 lbl_803E3B48;
@@ -1745,7 +1746,6 @@ extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int ViewFrustum_IsSphereVisible(f32 *pos, f32 radius);
-typedef void (*ObjectTriggerUpdateFn)(int, int, int);
 
 /* Carryable impact state machine that spawns break particles, hides, then respawns. */
 #pragma scheduling off
@@ -2032,7 +2032,6 @@ void Fall_Ladders_free(int obj) {
 extern f32 lbl_803E3B68;
 extern f32 lbl_803E3B6C;
 extern int fn_80295C40(int obj);
-typedef void (*InfoPtUpdateFn)(int, int, int);
 #pragma scheduling off
 #pragma peephole off
 void coldwatercontrol_update(int obj) {
@@ -2040,7 +2039,7 @@ void coldwatercontrol_update(int obj) {
 
     state = ((GameObject *)obj)->extra;
     if (GameBit_Get(0x1bf) != 0 && GameBit_Get(0x1bd) == 0) {
-        ((InfoPtUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         GameBit_Set(0x1bd, 1);
         return;
     }
@@ -2458,9 +2457,9 @@ void landed_arwing_update(int obj) {
                 nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
                 if (*(s8 *)(obj + 0xac) == 0xd && GameBit_Get(0xc92) != 0) {
                     *(f32 *)(nearest + 0x10) += lbl_803E3BA0;
-                    ((InfoPtUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(2, nearest, -1);
+                    (*gObjectTriggerInterface)->runSequence(2, (void *)nearest, -1);
                 } else {
-                    ((InfoPtUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(1, nearest, -1);
+                    (*gObjectTriggerInterface)->runSequence(1, (void *)nearest, -1);
                 }
                 GameBit_Set(*(s16 *)(def + 0x1c), 0);
             }
@@ -2478,9 +2477,9 @@ void landed_arwing_update(int obj) {
                 nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
                 if (*(s8 *)(obj + 0xac) == 0xd && GameBit_Get(0xc92) != 0) {
                     *(f32 *)(nearest + 0x10) += lbl_803E3BA0;
-                    ((InfoPtUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(2, nearest, -1);
+                    (*gObjectTriggerInterface)->runSequence(2, (void *)nearest, -1);
                 } else {
-                    ((InfoPtUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(1, nearest, -1);
+                    (*gObjectTriggerInterface)->runSequence(1, (void *)nearest, -1);
                 }
                 GameBit_Set(*(s16 *)(def + 0x1c), 0);
             } else {
@@ -2499,7 +2498,7 @@ extern void buttonDisable(int p1, int mask);
 void infopoint_update(int obj) {
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         buttonDisable(0, 0x100);
-        ((InfoPtUpdateFn)(*(u32*)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
     }
 }
 #pragma peephole reset
@@ -2727,10 +2726,10 @@ void Fall_Ladders_update(int obj) {
     state = ((GameObject *)obj)->extra;
     if (((GameObject *)obj)->anim.seqId == 0x548) {
         if (GameBit_Get(state->upperGameBit) != 0 && GameBit_Get(state->lowerGameBit) == 0) {
-            ((ObjectTriggerUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         }
         if (GameBit_Get(state->upperGameBit) == 0 && GameBit_Get(state->lowerGameBit) != 0) {
-            ((ObjectTriggerUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
         }
     } else if (state->delay != 0) {
         state->delay -= (s32)timeDelta;
