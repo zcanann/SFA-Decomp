@@ -918,12 +918,10 @@ void FUN_801f15b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   if (((ObjAnimComponent *)param_1)->modelInstance->shadowType == 2) {
     if (*(short *)(param_1 + 0xb4) == -1) {
-      *(uint *)(*(int *)(param_1 + 100) + 0x30) =
-           *(uint *)(*(int *)(param_1 + 100) + 0x30) & 0xffffefff;
+      ((ObjAnimComponent *)param_1)->modelState->flags &= ~0x1000;
     }
     else {
-      *(uint *)(*(int *)(param_1 + 100) + 0x30) = *(uint *)(*(int *)(param_1 + 100) + 0x30) | 0x1000
-      ;
+      ((ObjAnimComponent *)param_1)->modelState->flags |= 0x1000;
     }
   }
   FUN_8003b818(param_1);
@@ -2268,9 +2266,9 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
     }
     if (((ObjAnimComponent *)obj)->modelInstance->shadowType == 2) {
         if (((GameObject *)obj)->unkB4 == -1) {
-            *(u32*)(*(char**)((char*)obj + 0x64) + 0x30) &= ~0x1000;
+            ((GameObject *)obj)->anim.modelState->flags &= ~0x1000;
         } else {
-            *(u32*)(*(char**)((char*)obj + 0x64) + 0x30) |= 0x1000;
+            ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
         }
     }
     objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5D80);

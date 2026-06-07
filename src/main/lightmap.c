@@ -3916,8 +3916,9 @@ void getVisibleObjects(s8 *opacity)
                     }
                     depthInt = (int)(changed_803DEC08.hi * (lbl_803DEBDC + depth));
                 }
-                if ((((GameObject *)o)->anim.flags & 0x4000) == 0 && *(void **)(o + 0x64) != NULL &&
-                    (*(u32 *)(*(u8 **)(o + 0x64) + 0x30) & 4) != 0) {
+                if ((((GameObject *)o)->anim.flags & 0x4000) == 0 &&
+                    ((GameObject *)o)->anim.modelState != NULL &&
+                    (((GameObject *)o)->anim.modelState->flags & 4) != 0) {
                     t = modelDef->shadowType;
                     if (t == 2 || t == 1) {
                         shadowCreate(o);

@@ -1216,7 +1216,7 @@ void shopkeeper_init(int obj) {
     int state = *(int *)&((GameObject *)obj)->extra;
     ((GameObject *)obj)->objectFlags |= 0x2000;
     ((GameObject *)obj)->animEventCallback = (void *)fn_801E76A0;
-    *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
+    ((GameObject *)obj)->anim.modelState->flags |= 0x810;
     ((ShopkeeperState *)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
     ((ShopkeeperState *)state)->msgStack = allocModelStruct_800139e8(4, 4);
     ((ShopkeeperState *)state)->opacity = 0xFF;

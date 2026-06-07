@@ -98,7 +98,7 @@ void ediblemushroom_init(int obj, int aux)
         ((GameObject *)obj)->anim.flags = (short)(((GameObject *)obj)->anim.flags | 0x4000);
     }
 
-    *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
+    ((GameObject *)obj)->anim.modelState->flags |= 0x810;
 
     *(f32 *)(state + 0x110) = lbl_803E52E0;
     *(f32 *)(state + 0x114) = lbl_803E52E4 *

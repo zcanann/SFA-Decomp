@@ -828,8 +828,8 @@ void ktrex_init(int obj, char *arg) {
     ((KTRexRuntime *)gKTRexRuntime)->unk349 = 0;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x88;
     ObjHits_EnableObject(obj);
-    if (*(int *)((char *)obj + 0x64) != 0) {
-        *(int *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x810;
+    if (((GameObject *)obj)->anim.modelState != NULL) {
+        ((GameObject *)obj)->anim.modelState->flags |= 0x810;
     }
     gKTRexState = ((KTRexRuntime *)gKTRexRuntime)->arena;
     ((KTRexArenaState *)gKTRexState)->stack = allocModelStruct_800139e8(4, 4);

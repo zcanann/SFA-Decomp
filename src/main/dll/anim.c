@@ -4231,8 +4231,8 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
     ((GroundBaddieState *)sub)->baddie.unk25F = 1;
     ObjHits_EnableObject(obj);
     ObjMsg_AllocQueue(obj, 4);
-    if (*(int*)((char*)obj + 0x64) != 0) {
-        *(int*)(*(int*)((char*)obj + 0x64) + 0x30) = *(int*)(*(int*)((char*)obj + 0x64) + 0x30) | 0x4008;
+    if (((GameObject *)obj)->anim.modelState != NULL) {
+        ((GameObject *)obj)->anim.modelState->flags |= 0x4008;
     }
 }
 #pragma peephole reset
@@ -4531,12 +4531,12 @@ void dfpobjcreator_free(int obj, int flag) {
 
 extern void dbegg_setupFromDef(int obj, int *state);
 void dbegg_init(int obj) {
-    int *q;
+    ObjModelState *modelState;
     dbegg_setupFromDef(obj, ((GameObject *)obj)->extra);
     ObjMsg_AllocQueue(obj, 8);
-    q = *(int **)((char *)obj + 0x64);
-    if (q != NULL) {
-        *(u32 *)((char *)q + 0x30) |= 0x4008;
+    modelState = ((GameObject *)obj)->anim.modelState;
+    if (modelState != NULL) {
+        modelState->flags |= 0x4008;
     }
 }
 

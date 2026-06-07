@@ -1,5 +1,6 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 #include "main/dll/ped.h"
 #include "main/dll/dimtruthhornice.h"
 
@@ -162,8 +163,7 @@ int fn_801CDE7C(int obj, int param_2, u8 *seqData)
                         audioScale, audioScale);
     if (seqData[0x8b] != 0) {
         ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags & ~0x400);
-        *(u32 *)(*(int *)(obj + 0x64) + 0x30) =
-            *(u32 *)(*(int *)(obj + 0x64) + 0x30) | 4;
+        ((GameObject *)obj)->anim.modelState->flags |= 4;
     }
     return 0;
 }
