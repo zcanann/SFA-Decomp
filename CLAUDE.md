@@ -3057,6 +3057,28 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     (`v430 = lhs; diff = a - b;` then the assignment) is what pins the
     fsubs/loads BEFORE the ternary (fn_802B0EA4 unk834 block, +0.4).
 
+118. **POINTER-VALUED nested ternary for fully-unrolled free-slot scans —
+    `cmplwi 0; bne next; b found` per copy with the result in the walked
+    reg.** When target shows N unrolled copies of `lbz r0,off(rW); cmplwi
+    r0,0; bne next; b found; next: addi rW,stride` ending `li rW,0; found:`,
+    the source is an N-level pointer-valued ternary, NOT nested ifs (the
+    import's N-deep nested-if manual unroll folds every level to a single
+    `beq found`):
+    `freeSlot = (slot->f == 0) ? slot : ((++slot)->f == 0) ? slot : ... : NULL;`
+    The #91 value-join machinery emits the branch-over-branch per level with
+    EMPTY in-range arms because the join value already lives in the walked
+    reg. CRITICAL: the walked operand must be a SEPARATE dead variable
+    (`slot`) from the ternary RESULT (`freeSlot`) — self-walking the result
+    (`(++freeSlot)->f`) routes the walk through a temp web and emits a
+    `mr` per arm (+N instrs); with the split the result coalesces onto the
+    walker reg byte-exact. For other statement-position int b-over-b sites,
+    re-read #109(d) first (single-case switch — but switch compares degrade
+    cmplwi->cmpwi; A/B which residual is smaller) and #92 (variable-compare
+    loop-break stays capped). Pairs with #107 un-naming for adjacent
+    re-derived address args (the `path` buffer re-derive). (task #16:
+    loadGameTextSequence 90.85->98.06, gameTextLoadForCurMap 88.18->95.13,
+    gameTextRun chain byte-exact; 3x 8-level chains, commit 546beb98b.)
+
 **NAMED CAP — branchy-arg pre-eval hoist (the in-place L2R ternary arg).**
 When target evaluates a branchy ternary CALL ARG at its L2R slot (args 1-7
 set up first, the clamp 8th, then 9-10 — ObjHits_CheckSkeletonPair's two
