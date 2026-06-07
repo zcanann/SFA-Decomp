@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 #pragma peephole on
@@ -17,7 +18,7 @@ int vortex_getObjectTypeId(void) { return 0; }
 #pragma scheduling on
 void vortex_free(int obj)
 {
-    (*(void (**)(int))(*gExpgfxInterface + 0x18))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -78,8 +79,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             particleArgs[2] =
                 ((f32)*(s16 *)(setup + 0x1a) / lbl_803E73DC) * ((GameObject *)obj)->anim.rootMotionScale * state->alpha;
             particleArgs[4] = lbl_803E73D0;
-            (*(void (**)(int, int, f32 *, int, int, int))(*gPartfxInterface + 0x8))(
-                obj, 0x7f7, particleArgs, 2, -1, 0);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x7f7, particleArgs, 2, -1, NULL);
         }
 
         model = Obj_GetActiveModel(obj);
@@ -143,8 +143,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
         particleArgs[2] = ((GameObject *)obj)->anim.rootMotionScale * state->alpha;
         if ((u8)getHudHiddenFrameCount() == 0) {
-            (*(void (**)(int, int, f32 *, int, int, int))(*gPartfxInterface + 0x8))(
-                obj, 0x7c2, particleArgs, 2, -1, 0);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x7c2, particleArgs, 2, -1, NULL);
         }
 
         model = Obj_GetActiveModel(obj);

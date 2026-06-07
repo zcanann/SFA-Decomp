@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/dll/cmbsrc.h"
 
 #pragma peephole on
@@ -349,8 +350,8 @@ void cmbsrc_updateVisuals(int obj, int state)
         if (sourceState->particleTimer <= lbl_803E7360) {
             if (cmbsrc->objectFlags & 0x800) {
                 param[2] = sourceState->radius;
-                (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 0x8))(
-                    obj, CMBSRC_PARTICLE_EFFECT_ID, param, 2, -1, 0);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, CMBSRC_PARTICLE_EFFECT_ID,
+                                                                    param, 2, -1, NULL);
             }
             sourceState->particleTimer += lbl_803E7398;
         }
