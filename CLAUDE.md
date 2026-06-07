@@ -2067,6 +2067,19 @@ compare's immediate and subtract 1 for the real case value.
     a volatile f0 hop), and the `B - A*C` spelling to get `fnmsubs` where
     `-(A*C - B)` splits into fmsubs+fneg.
 
+**#91 addendum — int->f32 CONVERSION operands re-execute PER ARM; inline the
+conversion expression at every ternary position.** When target's clamp shows
+a FULL conversion blob (xoris/0x43300000/lfd/fsubs) before EACH arm's fcmpo
+(2-3 blobs for one clamp), a named `fd = (f32)x;` local CSEs it to ONE blob
+and never matches. Spell the conversion INLINE at all three positions —
+`g = (int)(((f32)x < lo) ? lo : (((f32)x > hi) ? hi : (f32)x));` —
+conversions do NOT CSE across the arm basic blocks (the #83 slot model),
+while the BOUND subexpressions still tree-share onto the compare reg (#103),
+so only the conversions replicate. The mirror of #97's per-statement
+re-conversion, at ternary-arm granularity. (task #16, fn_802ABAE8
+86.2->98.3 — the bound exprs `lbl * -f5`/`lbl * f5` stayed single-eval
+while `(f32)gd` emitted 3 blobs, matching target byte shape.)
+
 92. **CAP — the INT-compare `bge +8; b far` two-branch guard with
     STATEMENT-BLOCK arms (branch-to-NEXT over an unconditional b) is NOT
     source-reproducible.** ⚠️ **SCOPE: applies to INTEGER compares whose arms
@@ -2951,6 +2964,50 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     A/B-verify the order win outweighs the renumber (here +1.65pp).
     Sibling probe that FAILED on the same fn (don't retry blindly):
     #77 void*-param cast-copy to re-rank the obj param (98.89->98.12).
+
+117. **Embedded-def ternary `t = (x < (t = lo)) ? t : ((x > (t = hi)) ? t : x)`
+    lands the clamp bounds DIRECTLY in t's callee-saved home.** When target's
+    #91 clamp loads each bound INTO a saved FP reg (`lfs f31,lo; fcmpo f1,f31;
+    ... lfs f31,hi; fcmpo; fmr f31,f1`) because the result variable lives
+    across later calls, the plain ternary computes the whole clamp in a
+    VOLATILE temp and copies once (`fmr f31,f2`, +1-2 instrs, bounds in wrong
+    regs). Embedding the bound assignments (`(t = lo)`) makes each bound load
+    target t's home directly and the arms coalesce in place — the #103
+    embedded-bound trick aimed at a saved-reg-homed result. Safe scope per
+    #84: expression operands, NOT call args; single-use embedded values.
+    (task #16: fn_802B0EA4 t-clamps -> f31 byte-exact; fn_802A5384 same
+    shape.) RELATED caveat from the same session: a branchy ternary inside a
+    larger EXPRESSION always hoists to statement front — compound `*=` does
+    NOT un-hoist it; NAMING the leading operands as pre-statements
+    (`v430 = lhs; diff = a - b;` then the assignment) is what pins the
+    fsubs/loads BEFORE the ternary (fn_802B0EA4 unk834 block, +0.4).
+
+**NAMED CAP — branchy-arg pre-eval hoist (the in-place L2R ternary arg).**
+When target evaluates a branchy ternary CALL ARG at its L2R slot (args 1-7
+set up first, the clamp 8th, then 9-10 — ObjHits_CheckSkeletonPair's two
+CalcSkeletonResponse sites), no C spelling reproduces it: MWCC pre-evaluates
+branchy args at the call statement's FRONT. Probed exhaustively (task #16):
+all 9 GC compiler versions x peephole/scheduling states, inline ternary,
+named arg-locals for the leading args (gets the conv+loads above the clamp
+but the simple mr/addi args still sink below it). Naming args 2/5/6 as
+locals recovers MOST of the order (+7pp there) — do that, then bank the
+~6-instr residual. Classify on sight: branchy arg + strict-L2R target.
+
+**OPEN CLASS — the addi-fold (3-use threshold) on big-offset slot-indexed
+fields.** At 3+ uses of `t->bigTable[slot]` (member offset > 16 bits), MWCC
+folds the @lo into the saved base (`addi rB,rB,lo` + `0(rB)` accesses under
+peephole-off; `lwzu` first-access under peephole-on) where target keeps the
+@lo as a PER-ACCESS displacement off the shared `(base+ha+idx)` partial
+(`add rB,(addis base,2),idx4; lwz lo(rB)` repeated). 2-use webs stay
+disp-form (recipe #18/#112 shapes hold); at 3+ the full-address VN web wins.
+Probed (task #16, /tmp/probe*.c battery, mapLoadDataFile): `opt_common_subs
+off` flips to per-ACCESS re-derivation (addis+slwi+add each — over-shoots);
+versions 1.0-2.5 identical; phi'd slot inert; (int)-launder only per-site;
+member vs pad0-subscript origin only moves WHICH operand takes the addis.
+No spelling found that keeps the shared partial AND per-access lo at 3+
+uses. Caps mapLoadDataFile at ~93. Research target for the next cap
+campaign — the fix likely needs whatever defeats the full-sum VN web while
+leaving the partial-sum isel-CSE alive.
 
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
