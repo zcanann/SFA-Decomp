@@ -891,97 +891,80 @@ int ObjHits_AllocObjectState(int objPtr,uint arena)
 void ObjHits_RefreshObjectState(int objPtr)
 {
   ObjAnimComponent *obj;
-  ObjModelInstance *model;
   ObjHitsPriorityState *hitState;
   ObjAnimBank *activeBank;
-  f32 radius;
   short capsuleOffsetA;
   short capsuleOffsetB;
-  f32 baseRadius;
 
   obj = (ObjAnimComponent *)objPtr;
   hitState = (ObjHitsPriorityState *)obj->hitReactState;
   if (hitState != 0) {
-    model = obj->modelInstance;
-    hitState->flags = model->hitboxFlags;
-    hitState->shapeFlags = model->primaryHitboxShapeFlags;
+    hitState->flags = obj->modelInstance->hitboxFlags;
+    hitState->shapeFlags = obj->modelInstance->primaryHitboxShapeFlags;
     if ((hitState->shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) {
       activeBank = ObjAnim_GetActiveBank(obj);
       if (((activeBank->animDef->flags & OBJANIM_DEF_FLAG_SKELETON_HITBOXES) == 0) ||
-          (((int *)activeBank)[5] == 0)) {
-        hitState->shapeFlags = hitState->shapeFlags & (u8)~OBJHITS_SHAPE_SKELETON;
+          (*(void **)(((int *)activeBank) + 5) == 0)) {
+        hitState->shapeFlags = *(u8 *)((int)hitState + 0x62) & ~OBJHITS_SHAPE_SKELETON;
       }
     }
-    hitState->lateralResponseWeight = model->lateralResponseWeight;
-    hitState->axialResponseWeight = model->axialResponseWeight;
-    hitState->primaryRadius = model->primaryHitboxRadius;
-    hitState->primaryCapsuleOffsetA = model->primaryCapsuleOffsetA;
-    hitState->primaryCapsuleOffsetB = model->primaryCapsuleOffsetB;
-    hitState->stateIndex = model->hitboxStateIndex;
+    hitState->lateralResponseWeight = obj->modelInstance->lateralResponseWeight;
+    hitState->axialResponseWeight = obj->modelInstance->axialResponseWeight;
+    hitState->primaryRadius = obj->modelInstance->primaryHitboxRadius;
+    hitState->primaryCapsuleOffsetA = obj->modelInstance->primaryCapsuleOffsetA;
+    hitState->primaryCapsuleOffsetB = obj->modelInstance->primaryCapsuleOffsetB;
+    *(s8 *)&hitState->stateIndex = (s8)(int)obj->modelInstance->hitboxStateIndex;
     hitState->capsuleScale = OBJHITBOX_DEFAULT_CAPSULE_SCALE;
-    radius = (float)(s32)hitState->primaryRadius;
-    hitState->primaryRadiusSquared = radius * radius;
-    hitState->secondaryShapeFlags = model->secondaryHitboxShapeFlags;
-    hitState->secondaryRadius = model->secondaryHitboxRadius;
-    hitState->secondaryCapsuleOffsetA = model->secondaryCapsuleOffsetA;
-    hitState->secondaryCapsuleOffsetB = model->secondaryCapsuleOffsetB;
-    baseRadius = obj->hitboxScale * obj->rootMotionScale;
-    hitState->primaryRadiusY = baseRadius;
-    if ((hitState->shapeFlags & OBJHITS_SHAPE_CAPSULE) == 0) {
-      if ((hitState->shapeFlags & OBJHITS_SHAPE_SPHERE) != 0) {
-        if ((float)(s32)hitState->primaryRadius > hitState->primaryRadiusY) {
-          hitState->primaryRadiusY = (float)(s32)hitState->primaryRadius;
-        }
-      }
-    }
-    else {
-      capsuleOffsetA = hitState->primaryCapsuleOffsetA;
-      if (capsuleOffsetA < 0) {
-        capsuleOffsetA = -capsuleOffsetA;
-      }
-      capsuleOffsetB = hitState->primaryCapsuleOffsetB;
-      if (capsuleOffsetB < 0) {
-        capsuleOffsetB = -capsuleOffsetB;
-      }
-      if (capsuleOffsetB < capsuleOffsetA) {
+    hitState->primaryRadiusSquared =
+        (float)(s32)hitState->primaryRadius * (float)(s32)hitState->primaryRadius;
+    hitState->secondaryShapeFlags = obj->modelInstance->secondaryHitboxShapeFlags;
+    hitState->secondaryRadius = obj->modelInstance->secondaryHitboxRadius;
+    hitState->secondaryCapsuleOffsetA = obj->modelInstance->secondaryCapsuleOffsetA;
+    hitState->secondaryCapsuleOffsetB = obj->modelInstance->secondaryCapsuleOffsetB;
+    hitState->primaryRadiusY = obj->hitboxScale * obj->rootMotionScale;
+    if ((hitState->shapeFlags & OBJHITS_SHAPE_CAPSULE) != 0) {
+      capsuleOffsetA = (hitState->primaryCapsuleOffsetA < 0) ? -hitState->primaryCapsuleOffsetA
+                                                             : hitState->primaryCapsuleOffsetA;
+      capsuleOffsetB = (hitState->primaryCapsuleOffsetB < 0) ? -hitState->primaryCapsuleOffsetB
+                                                             : hitState->primaryCapsuleOffsetB;
+      if (capsuleOffsetA > capsuleOffsetB) {
         capsuleOffsetB = capsuleOffsetA;
       }
       if ((float)(s32)capsuleOffsetB > hitState->primaryRadiusY) {
         hitState->primaryRadiusY = (float)(s32)capsuleOffsetB;
       }
     }
-    hitState->primaryRadiusXZ = baseRadius;
+    else if ((hitState->shapeFlags & OBJHITS_SHAPE_SPHERE) != 0) {
+      if ((float)(s32)hitState->primaryRadius > hitState->primaryRadiusY) {
+        hitState->primaryRadiusY = (float)(s32)hitState->primaryRadius;
+      }
+    }
+    hitState->primaryRadiusXZ = obj->hitboxScale * obj->rootMotionScale;
     if (((hitState->shapeFlags & OBJHITS_SHAPE_CAPSULE) != 0) ||
         ((hitState->shapeFlags & OBJHITS_SHAPE_SPHERE) != 0)) {
       if ((float)(s32)hitState->primaryRadius > hitState->primaryRadiusXZ) {
         hitState->primaryRadiusXZ = (float)(s32)hitState->primaryRadius;
       }
     }
-    hitState->secondaryRadiusY = baseRadius;
-    if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) == 0) {
-      if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_SPHERE) != 0) {
-        if ((float)(s32)hitState->secondaryRadius > hitState->secondaryRadiusY) {
-          hitState->secondaryRadiusY = (float)(s32)hitState->secondaryRadius;
-        }
-      }
-    }
-    else {
-      capsuleOffsetA = hitState->secondaryCapsuleOffsetA;
-      if (capsuleOffsetA < 0) {
-        capsuleOffsetA = -capsuleOffsetA;
-      }
-      capsuleOffsetB = hitState->secondaryCapsuleOffsetB;
-      if (capsuleOffsetB < 0) {
-        capsuleOffsetB = -capsuleOffsetB;
-      }
-      if (capsuleOffsetB < capsuleOffsetA) {
+    hitState->secondaryRadiusY = obj->hitboxScale * obj->rootMotionScale;
+    if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) != 0) {
+      capsuleOffsetA = (hitState->secondaryCapsuleOffsetA < 0) ? -hitState->secondaryCapsuleOffsetA
+                                                             : hitState->secondaryCapsuleOffsetA;
+      capsuleOffsetB = (hitState->secondaryCapsuleOffsetB < 0) ? -hitState->secondaryCapsuleOffsetB
+                                                             : hitState->secondaryCapsuleOffsetB;
+      if (capsuleOffsetA > capsuleOffsetB) {
         capsuleOffsetB = capsuleOffsetA;
       }
       if ((float)(s32)capsuleOffsetB > hitState->secondaryRadiusY) {
         hitState->secondaryRadiusY = (float)(s32)capsuleOffsetB;
       }
     }
-    hitState->secondaryRadiusXZ = baseRadius;
+    else if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_SPHERE) != 0) {
+      if ((float)(s32)hitState->secondaryRadius > hitState->secondaryRadiusY) {
+        hitState->secondaryRadiusY = (float)(s32)hitState->secondaryRadius;
+      }
+    }
+    hitState->secondaryRadiusXZ = obj->hitboxScale * obj->rootMotionScale;
     if (((hitState->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) != 0) ||
         ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_SPHERE) != 0)) {
       if ((float)(s32)hitState->secondaryRadius > hitState->secondaryRadiusXZ) {
@@ -989,11 +972,11 @@ void ObjHits_RefreshObjectState(int objPtr)
       }
     }
     hitState->sweepRadiusX = hitState->primaryRadiusXZ;
-    if (hitState->sweepRadiusX < hitState->secondaryRadiusXZ) {
+    if (hitState->secondaryRadiusXZ > hitState->sweepRadiusX) {
       hitState->sweepRadiusX = hitState->secondaryRadiusXZ;
     }
-    hitState->sourceMask = model->sourceHitMask;
-    hitState->targetMask = model->targetHitMask;
+    hitState->sourceMask = obj->modelInstance->sourceHitMask;
+    hitState->targetMask = obj->modelInstance->targetHitMask;
   }
   return;
 }
@@ -1365,50 +1348,12 @@ void ObjHitReact_UpdateResetObjects(void)
 #pragma peephole off
 void ObjHits_ResetWorkBuffers(void)
 {
-  int clearedSlots;
-  int slotOffset;
-  int remainingSlots;
-  int zeroWord;
-  ObjHitsPriorityWorkSlot *workSlots;
+  int slotIndex;
 
-  clearedSlots = 0;
-  slotOffset = 0;
-  zeroWord = 0;
-  for (remainingSlots = 0; remainingSlots < OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_COUNT;
-       remainingSlots++) {
-    workSlots = (ObjHitsPriorityWorkSlot *)(gObjHitsPriorityHitStates + slotOffset);
-    workSlots[0].active = zeroWord;
-    workSlots[1].active = zeroWord;
-    workSlots[2].active = zeroWord;
-    workSlots[3].active = zeroWord;
-    workSlots[4].active = zeroWord;
-    workSlots[5].active = zeroWord;
-    workSlots[6].active = zeroWord;
-    workSlots[7].active = zeroWord;
-    slotOffset += OBJHITS_PRIORITY_WORK_CLEAR_HALF_BLOCK_SIZE;
-    workSlots = (ObjHitsPriorityWorkSlot *)(gObjHitsPriorityHitStates + slotOffset);
-    workSlots[0].active = zeroWord;
-    workSlots[1].active = zeroWord;
-    workSlots[2].active = zeroWord;
-    workSlots[3].active = zeroWord;
-    workSlots[4].active = zeroWord;
-    workSlots[5].active = zeroWord;
-    workSlots[6].active = zeroWord;
-    workSlots[7].active = zeroWord;
-    slotOffset += OBJHITS_PRIORITY_WORK_CLEAR_HALF_BLOCK_SIZE;
-    clearedSlots += OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_SLOTS;
-  }
-  remainingSlots = OBJHITS_PRIORITY_WORK_SLOT_COUNT - clearedSlots;
-  slotOffset = clearedSlots * OBJHITS_PRIORITY_WORK_SLOT_SIZE;
-  if (clearedSlots < OBJHITS_PRIORITY_WORK_SLOT_COUNT) {
-    do {
-      ((ObjHitsPriorityWorkSlot *)(gObjHitsPriorityHitStates + slotOffset))->active = zeroWord;
-      slotOffset += OBJHITS_PRIORITY_WORK_SLOT_SIZE;
-      remainingSlots--;
-    } while (remainingSlots != 0);
+  for (slotIndex = 0; slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex++) {
+    ((ObjHitsPriorityWorkSlot *)gObjHitsPriorityHitStates)[slotIndex].active = 0;
   }
   gObjHitReactResetObjectCount = 0;
-  return;
 }
 #pragma peephole reset
 #pragma scheduling reset
