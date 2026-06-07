@@ -2648,7 +2648,8 @@ void FUN_80202b70(undefined8 param_1,double param_2,double param_3,double param_
         *(undefined4 *)(uVar2 + 0xc) = *(undefined4 *)(iVar11 + 8);
         *(undefined4 *)(uVar2 + 0x10) = *(undefined4 *)(iVar11 + 0xc);
         *(undefined4 *)(uVar2 + 0x14) = *(undefined4 *)(iVar11 + 0x10);
-        (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(char *)(iVar11 + 0x2e),uVar2,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)
+            ->runSequence((int)*(char *)(iVar11 + 0x2e), (void *)uVar2, -1);
         *(undefined4 *)(uVar2 + 0xf8) = 1;
       }
       else {
@@ -2919,7 +2920,8 @@ void FUN_802035f4(int param_1)
   if (uVar1 == 0) {
     uVar1 = FUN_80017690((int)*(short *)(iVar2 + 0x20));
     if (uVar1 != 0) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(char *)(iVar2 + 0x19),param_1,0xffffffff);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)
+          ->runSequence((int)*(char *)(iVar2 + 0x19), (void *)param_1, -1);
     }
   }
   else {
@@ -3819,7 +3821,8 @@ void FUN_80204bdc(int param_1)
       dVar5 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
       if (((dVar5 < (double)*pfVar4) && ((int)*(short *)(pfVar4 + 1) != 0xffffffff)) &&
          (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 == 0)) {
-        (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)
+            ->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
         FUN_80017698((int)*(short *)(pfVar4 + 1),1);
         *(undefined *)((int)pfVar4 + 0xd) = 1;
       }
@@ -3828,14 +3831,16 @@ void FUN_80204bdc(int param_1)
       if (bVar1 == 1) {
         if (((int)*(short *)(pfVar4 + 1) != 0xffffffff) &&
            (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 != 0)) {
-          (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
+          ((ObjectTriggerInterface *)*DAT_803dd6d4)
+              ->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
           *(undefined *)((int)pfVar4 + 0xd) = 1;
         }
       }
       else if (bVar1 == 0) {
         dVar5 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
         if (dVar5 < (double)*pfVar4) {
-          (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
+          ((ObjectTriggerInterface *)*DAT_803dd6d4)
+              ->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
           *(undefined *)((int)pfVar4 + 0xd) = 1;
         }
       }
@@ -3843,7 +3848,8 @@ void FUN_80204bdc(int param_1)
         dVar5 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
         if (((dVar5 < (double)*pfVar4) && ((int)*(short *)(pfVar4 + 1) != 0xffffffff)) &&
            (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 != 0)) {
-          (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
+          ((ObjectTriggerInterface *)*DAT_803dd6d4)
+              ->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
           *(undefined *)((int)pfVar4 + 0xd) = 1;
         }
       }
@@ -3851,12 +3857,14 @@ void FUN_80204bdc(int param_1)
     else if (bVar1 == 5) {
       if (((int)*(short *)(pfVar4 + 1) != 0xffffffff) &&
          (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 != 0)) {
-        (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)
+            ->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
       }
     }
     else if (((bVar1 < 5) && ((int)*(short *)(pfVar4 + 1) != 0xffffffff)) &&
             (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 == 0)) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)
+          ->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
       FUN_80017698((int)*(short *)(pfVar4 + 1),1);
       *(undefined *)((int)pfVar4 + 0xd) = 1;
     }
