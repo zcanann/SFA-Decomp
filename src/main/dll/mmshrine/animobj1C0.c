@@ -1,5 +1,6 @@
 #include "main/dll/mmshrine/animobj1C0.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 
 extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
@@ -21,7 +22,7 @@ extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd718;
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f64 DOUBLE_803e5c08;
 extern f32 lbl_803E4F90;
@@ -312,7 +313,7 @@ int fn_801C5CE4(void *objArg, int unused, void *eventListArg)
                 GameBit_Set(0xBA8, 1);
                 break;
             case 13:
-                (*(void (***)(int, int, int, int))gObjectTriggerInterface)[0x14](0x48, 100, 0, 0x50);
+                (*gObjectTriggerInterface)->setCamVars(0x48, 100, 0, 0x50);
                 break;
             case 14:
                 obj->flags |= 0x4000;

@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 #include "main/dll/IM/IMspacecraft.h"
 
 /* SDK / engine externs */
@@ -43,7 +44,7 @@ extern int getEnvfxAct(int obj, int player, int id, int p);
 extern void MMP_levelcontrol_update(int obj);
 
 extern int *gCameraInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gRomCurveInterface;
 
 extern f32 timeDelta;
@@ -293,7 +294,7 @@ void SpiritDoorLock_update(int obj)
     if (GameBit_Get(SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED) == 0) {
         if (Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18)) < lbl_803E4444) {
             if (SPIRITDOORLOCK_ACTIVE(state) != 0) {
-                ((void (*)(int, int, int))((void **)*gObjectTriggerInterface)[18])(0, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
             }
             GameBit_Set(SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED, 1);
         }

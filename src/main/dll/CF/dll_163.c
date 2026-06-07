@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/CF/dll_163.h"
+#include "main/objseq.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 extern f32 lbl_803E3BBC;
@@ -151,7 +152,7 @@ extern void Obj_GetPlayerObject(void);
 extern int fn_80295CE4(void);
 extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E3BDC;
 extern f32 lbl_803E3C00;
@@ -209,7 +210,7 @@ after_bit4:
     } else if (mode == STAFFACTIVATED_MODE_ACTION) {
         if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER) {
             if (GameBit_Get(STAFFACTIVATED_TRIGGER_GAMEBIT) == 0) {
-                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 GameBit_Set(STAFFACTIVATED_TRIGGER_GAMEBIT, 1);
             }
         }

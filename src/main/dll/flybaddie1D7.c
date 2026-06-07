@@ -1,10 +1,11 @@
 #include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
+#include "main/objseq.h"
 
 extern int ObjList_FindObjectById(int objectId);
 extern int ObjTrigger_IsSetById();
 
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern s32 lbl_803269F8[];
 
 /*
@@ -24,7 +25,7 @@ int fn_801CFD68(u8 *state)
   table = lbl_803269F8;
   obj = ObjList_FindObjectById(table[state[0xe]]);
   if (ObjTrigger_IsSetById(obj,0x1ee) != 0) {
-    (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0,obj,-1);
+    (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
     state[4] = 9;
     state[0xc] = table[state[0xe] + 7];
     state[0xd] = table[state[0xe] + 0xe];
@@ -36,7 +37,7 @@ int fn_801CFD68(u8 *state)
   if (state[0xe] != 0) {
     obj = ObjList_FindObjectById(table[state[0xe] - 1]);
     if (ObjTrigger_IsSetById(obj,0x1ee) != 0) {
-      (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0,obj,-1);
+      (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
       state[4] = 9;
       state[0xc] = table[state[0xe] + 6];
       state[5] = 0;

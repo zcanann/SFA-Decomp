@@ -1,9 +1,10 @@
 #include "main/dll/dimtruthhornice.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 extern EffectInterface **gPartfxInterface;
-extern undefined4 *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(int obj, float arg);
 extern int ObjGroup_FindNearestObject(int group, int obj, float *outDist);
@@ -26,8 +27,6 @@ typedef struct TreeBirdSeqData {
   u8 commands[10];
   u8 commandCount;
 } TreeBirdSeqData;
-
-typedef undefined4 (*TreeBirdTriggerImmediateFn)(int obj, int triggerId);
 
 #define TREEBIRD_SPAWN_PARTICLE(obj,id) \
   (*gPartfxInterface)->spawnObject((void *)(obj),(id),0,1,-1,0)
@@ -184,12 +183,12 @@ void treebird_update(int obj)
   else if (state->triggerLatched == 0) {
     immediateTrigger = state->immediateTrigger;
     if (immediateTrigger != 0) {
-      ((TreeBirdTriggerImmediateFn)*(code *)(*gObjectTriggerInterface + 0x54))(obj, immediateTrigger);
-      (*(code *)(*gObjectTriggerInterface + 0x48))((int)state->triggerId, obj, 1);
+      (*gObjectTriggerInterface)->preempt(obj, immediateTrigger);
+      (*gObjectTriggerInterface)->runSequence((int)state->triggerId, (void *)obj, 1);
       state->triggerLatched = 1;
     }
     else if (GameBit_Get((int)state->gameBit) != 0) {
-      (*(code *)(*gObjectTriggerInterface + 0x48))((int)state->triggerId, obj, -1);
+      (*gObjectTriggerInterface)->runSequence((int)state->triggerId, (void *)obj, -1);
       state->triggerLatched = 1;
     }
   }

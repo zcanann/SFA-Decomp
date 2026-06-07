@@ -4,6 +4,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 #include "main/objhits_types.h"
 #include "main/dll/CF/windlift.h"
 #include "main/dll/CF/lanternfirefly_state.h"
@@ -1544,7 +1545,7 @@ void portalspelldoor_update(int obj)
     extern void fn_80296B78(int player, int v);
     extern int getTrickyObject(void);
     extern void trickyImpress(int tricky);
-    extern void *gObjectTriggerInterface;
+    extern ObjectTriggerInterface **gObjectTriggerInterface;
     typedef struct {
         u8 open : 1;
     } PortalFlags;
@@ -1578,7 +1579,7 @@ void portalspelldoor_update(int obj)
         if (t < 0) {
             int tricky;
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-            (*(code *)(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
             tricky = getTrickyObject();
             if ((void *)tricky != NULL) {
                 trickyImpress(tricky);
