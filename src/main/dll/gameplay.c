@@ -1,5 +1,6 @@
 #include "main/asset_load.h"
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
@@ -16623,7 +16624,7 @@ void dll_75_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
 
 extern void *textureIdxToPtr(int idx);
 extern void debugPrintf(char *fmt, ...);
-extern undefined4 *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern u8 lbl_80311E30[];
 extern u8 lbl_803DB8B0, lbl_803DB8B4;
 extern u32 lbl_803E0730;
@@ -16784,123 +16785,123 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
   case 0x14:
     m.h2 = 0x2a;
     for (; cnt != 0; cnt--) {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     }
     break;
   case 1:
     m.h2 = 0x2b;
-    (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
-    (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     break;
   case 2:
     m.h2 = 0x184;
     for (; cnt != 0; cnt--) {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     }
     break;
   case 3:
     m.h2 = 0x1a1;
     for (; cnt != 0; cnt--) {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     }
     break;
   case 4:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     }
     m.h2 = 0x159;
-    (*(code *)(*gPartfxInterface + 8))(param_1, 3, &m, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
     break;
   case 5:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     }
     m.h2 = 0x91;
-    (*(code *)(*gPartfxInterface + 8))(param_1, 3, &m, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
     break;
   case 6:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     }
     m.h2 = 0x74;
-    (*(code *)(*gPartfxInterface + 8))(param_1, 3, &m, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
     break;
   case 8:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     }
     n = 0x14;
     m.h2 = 0xdf;
     do {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 7, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 7, &m, 1, -1, NULL);
       n--;
     } while (n != 0);
     m.h2 = 0x159;
-    (*(code *)(*gPartfxInterface + 8))(param_1, 3, &m, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
     break;
   case 9:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     }
     n = 0x14;
     m.h2 = 0xde;
     do {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 7, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 7, &m, 1, -1, NULL);
       n--;
     } while (n != 0);
     m.h2 = 0x91;
-    (*(code *)(*gPartfxInterface + 8))(param_1, 3, &m, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
     break;
   case 10:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     }
     n = 0x14;
     m.h2 = 0x160;
     do {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 7, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 7, &m, 1, -1, NULL);
       n--;
     } while (n != 0);
     m.h2 = 0x74;
-    (*(code *)(*gPartfxInterface + 8))(param_1, 3, &m, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
     break;
   case 0xc:
     m.h2 = 0x2a;
     break;
   case 0xd:
     m.h2 = 0x4c;
-    (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
-    (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     break;
   case 0xe:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 0x135, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x135, &m, 1, -1, NULL);
     }
     break;
   case 0xf:
-    (*(code *)(*gPartfxInterface + 8))(param_1, 0x51b, 0, 2, -1, 0);
-    (*(code *)(*gPartfxInterface + 8))(param_1, 0x51b, 0, 2, -1, 0);
-    (*(code *)(*gPartfxInterface + 8))(param_1, 0x51b, 0, 2, -1, 0);
-    (*(code *)(*gPartfxInterface + 8))(param_1, 0x51b, 0, 2, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 0x51b, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 0x51b, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 0x51b, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 0x51b, NULL, 2, -1, NULL);
     break;
   case 0x10:
   case 0x11:
     m.h2 = 0x4c;
-    (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
-    (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
     break;
   default:
     m.h2 = 0x2a;
     n = 5;
     do {
-      (*(code *)(*gPartfxInterface + 8))(param_1, 5, &m, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
       n--;
     } while (n != 0);
     break;
