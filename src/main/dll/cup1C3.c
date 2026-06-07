@@ -51,7 +51,7 @@ extern u8 lbl_803DBF68;
 extern int *gObjectTriggerInterface;
 extern int *gModgfxInterface;
 extern int *gExpgfxInterface;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern u8 framesThisStep;
 extern int lbl_802C23C8[];
 extern s8 lbl_803DDBD0;
@@ -632,7 +632,7 @@ void dll_197_update(int obj)
         Resource_Release(resource);
 
         for (effect = 0; effect < 200; effect++) {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x1a3, NULL, 0,
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x1a3, NULL, 0,
                                                                 -1, NULL);
         }
 
@@ -760,7 +760,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         particleParams.pos[0] = lbl_803E5130;
         particleParams.pos[1] = lbl_803E5134;
         particleParams.pos[2] = lbl_803E5130;
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x1f7, &particleParams,
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x1f7, &particleParams,
                                                             0x12, -1, NULL);
     }
 

@@ -31,7 +31,7 @@ extern undefined4 FUN_80286888();
 extern double FUN_80293900();
 
 extern undefined4 DAT_803dc070;
-extern undefined4* gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 extern undefined4* DAT_803dd708;
 extern f32 lbl_803E6520;
 extern f32 lbl_803E6524;
@@ -74,7 +74,7 @@ extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern f32 Vec_distance(float *a,float *b);
 extern u8 framesThisStep;
-extern undefined4 *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E5888;
 extern f32 lbl_803E588C;
 extern f32 lbl_803E5890;
@@ -285,7 +285,7 @@ void SB_ShipGun_update(int obj)
       local_58 = local_58 - ((GameObject *)obj)->anim.worldPosY;
       local_54[0] = local_54[0] - ((GameObject *)obj)->anim.worldPosZ;
       for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1) {
-        ((EffectInterface *)*gPartfxInterface)->spawnObject(
+        (*gPartfxInterface)->spawnObject(
             (void *)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
             SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
       }
@@ -313,7 +313,7 @@ void SB_ShipGun_update(int obj)
       local_58 = local_58 - ((GameObject *)obj)->anim.worldPosY;
       local_54[0] = local_54[0] - ((GameObject *)obj)->anim.worldPosZ;
       for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1) {
-        ((EffectInterface *)*gPartfxInterface)->spawnObject(
+        (*gPartfxInterface)->spawnObject(
             (void *)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
             SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
       }
@@ -362,7 +362,7 @@ void SB_CannonBall_free(int obj)
   int state;
 
   state = *(int *)&((GameObject *)obj)->extra;
-  ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+  (*gExpgfxInterface)->freeObject((void *)obj);
   if (*(void **)(state + 0x20) != 0) {
     ModelLightStruct_free(*(void **)(state + 0x20));
     *(undefined4 *)(state + 0x20) = 0;
@@ -376,7 +376,7 @@ int SB_FireBall_getObjectTypeId(void) { return 0x0; }
 
 void SB_FireBall_free(int obj)
 {
-  ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+  (*gExpgfxInterface)->freeObject((void *)obj);
 }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -398,18 +398,18 @@ extern void objfx_spawnFlaggedTrailBurst(int *obj, f32 f, int a, int b, int c, i
 void SB_CannonBall_update(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     if ((*(s8 *)((char *)state + 0x1a) & SB_CANNONBALL_INITIAL_BURST_FLAG) != 0) {
-        (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
+        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
                                                             NULL, 1, -1, NULL);
-        (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
+        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
                                                             NULL, 1, -1, NULL);
-        (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
+        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
                                                             NULL, 1, -1, NULL);
         *(s8 *)((char *)state + 0x1a) = (s8)(*(s8 *)((char *)state + 0x1a) & ~SB_CANNONBALL_INITIAL_BURST_FLAG);
     } else {
         objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
         objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
     }
-    (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_TRAIL_PARTICLE_ID,
+    (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_TRAIL_PARTICLE_ID,
                                                         NULL, 1, -1, NULL);
     ((GameObject *)obj)->anim.rotY += SB_CANNONBALL_ROTATION_STEP;
     if ((*(s8 *)((char *)state + 0x1a) & SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG) == 0) {
@@ -487,14 +487,14 @@ void SB_CannonBall_hitDetect(int *obj) {
     {
         int i;
         for (i = SB_CANNONBALL_SMOKE_PARTICLE_COUNT; i != 0; i--) {
-            (*(EffectInterface **)gPartfxInterface)->spawnObject(
+            (*gPartfxInterface)->spawnObject(
                 obj, SB_CANNONBALL_IMPACT_SMOKE_PARTICLE_ID, NULL, 1, -1, NULL);
         }
     }
     {
         int i;
         for (i = SB_CANNONBALL_SPARK_PARTICLE_COUNT; i != 0; i--) {
-            (*(EffectInterface **)gPartfxInterface)->spawnObject(
+            (*gPartfxInterface)->spawnObject(
                 obj, SB_CANNONBALL_IMPACT_SPARK_PARTICLE_ID, NULL, 1, -1, NULL);
         }
     }

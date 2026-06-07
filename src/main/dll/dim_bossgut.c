@@ -289,7 +289,7 @@ void fn_801D29E4(int *obj, int *p2)
 
 extern void Sfx_KeepAliveLoopedObjectSound(int *obj, int id);
 extern void ObjHits_RefreshObjectState(int *obj);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E5358;
 extern f32 lbl_803E535C;
 
@@ -332,7 +332,7 @@ int bombplant_SeqFn(int *obj)
             *(f32 *)((char *)state + 0x0) = (f32)v;
         }
         if (((GameObject *)obj)->objectFlags & 0x800) {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);
         }
     }
     return 0;
@@ -436,7 +436,7 @@ void enemymushroom_update(int *obj)
             u8 k = 1;
             int base = 0x200000;
             while (k != 0) {
-                ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x3eb, &hv, base + 1,
+                (*gPartfxInterface)->spawnObject(obj, 0x3eb, &hv, base + 1,
                                                                     -1, NULL);
                 k--;
             }
@@ -491,7 +491,7 @@ void enemymushroom_update(int *obj)
             u8 k = 1;
             int base = 0x200000;
             while (k != 0) {
-                ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x3eb, &hv, base + 1,
+                (*gPartfxInterface)->spawnObject(obj, 0x3eb, &hv, base + 1,
                                                                     -1, NULL);
                 k--;
             }
@@ -543,7 +543,7 @@ void enemymushroom_update(int *obj)
                 if (nw <= lbl_803E52FC) {
                     hv.x = lbl_803E532C;
                     hv.y = lbl_803E5330;
-                    ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x51d, &hv, 2, -1,
+                    (*gPartfxInterface)->spawnObject(obj, 0x51d, &hv, 2, -1,
                                                                         NULL);
                     *(f32 *)(state + 0x30) = lbl_803E5334;
                 }
