@@ -1354,7 +1354,7 @@ config.libs = [
             Object(NonMatching, "main/audio/inp_voice.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/inp_ctrl.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/hw_break.c"),
-            Object(NonMatching, "main/audio/hw_sample.c"),
+            Object(MatchingFor("GSAE01"), "main/audio/hw_sample.c"),
             Object(NonMatching, "main/audio/hw_keyoff.c"),
             Object(NonMatching, "main/audio/hw_volume.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/hw_stream.c", mw_version="GC/1.2.5n"),
