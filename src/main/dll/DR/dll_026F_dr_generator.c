@@ -172,7 +172,7 @@ loop:
     }
     n = 1;
     do {
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x690, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x690, NULL, 1, -1, NULL);
     } while (n-- != 0);
 }
 #pragma peephole reset

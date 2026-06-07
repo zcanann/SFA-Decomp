@@ -911,7 +911,7 @@ extern int objGetFlagsE5_2(int obj);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void doRumble(f32 val);
 extern void GameBit_Set(int id, int v);
-extern void *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E5CB8;
 extern f32 lbl_803E5C74;
 
@@ -945,14 +945,14 @@ void SB_CloudRunner_HandlePriorityHit(int obj, u8 *state) {
                 args.v[1] = 0;
                 args.v[2] = 0;
                 if (*(s16 *)(hitObj + 0x46) == 154) {
-                    (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 168, &args,
+                    (*gPartfxInterface)->spawnObject((void *)obj, 168, &args,
                                                                          0x200001, -1, NULL);
-                    (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 168, &args,
+                    (*gPartfxInterface)->spawnObject((void *)obj, 168, &args,
                                                                          0x200001, -1, NULL);
-                    (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 168, &args,
+                    (*gPartfxInterface)->spawnObject((void *)obj, 168, &args,
                                                                          0x200001, -1, NULL);
                     for (i = 0; i < 10; i++) {
-                        (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 169,
+                        (*gPartfxInterface)->spawnObject((void *)obj, 169,
                                                                              &args, 0x200001, -1,
                                                                              NULL);
                     }
@@ -1029,13 +1029,13 @@ int SB_CloudRunner_SeqFn(int obj, int unused, u8 *setupData) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern int *gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 extern void textureFree(void *tex);
 #pragma scheduling off
 #pragma peephole off
 void SB_CloudRunner_free(int *obj) {
     int *state = ((GameObject *)obj)->extra;
-    ((EffectInterface *)*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeObject(obj);
     if (*(void **)((char *)state + 0x18) != NULL) {
         textureFree(*(void **)((char *)state + 0x18));
         *(void **)((char *)state + 0x18) = NULL;

@@ -94,7 +94,7 @@ extern MapEventInterface **gMapEventInterface;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int lbl_803DDC68;
 extern f32 lbl_803E5CC8;
 extern f32 lbl_803E5CCC;
@@ -209,7 +209,7 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x22) = 1;
                 spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
                 if ((u32)spawned != 0) {
-                    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x1c3, NULL, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void *)obj, 0x1c3, NULL, 2, -1, NULL);
                 }
                 state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
@@ -270,7 +270,7 @@ void WM_ObjCreator_update(int obj) {
                         vec.dir[2] = 0;
                         vec.pos[1] = *(f32 *)(spawned + 0x24);
                         vec.pos[3] = *(f32 *)(spawned + 0x2c);
-                        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)spawned, 0x1a7, &vec,
+                        (*gPartfxInterface)->spawnObject((void *)spawned, 0x1a7, &vec,
                                                                             0x10000, -1, NULL);
                     }
                 } while (n != 0);
@@ -319,7 +319,7 @@ void WM_ObjCreator_update(int obj) {
                         vec.pos[1] = (f32)(int)randomGetRange(-200, 200);
                         vec.pos[3] = (f32)(int)randomGetRange(-0x14, 0x14);
                         vec.pos[2] = yoff;
-                        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x1a6, &vec, 0x10002, -1,
+                        (*gPartfxInterface)->spawnObject((void *)obj, 0x1a6, &vec, 0x10002, -1,
                                                                             NULL);
                     }
                 }

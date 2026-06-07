@@ -193,7 +193,7 @@ void ktrexfloorswitch_update(int obj) {
                 *(u8 *)((char *)state + 0x10) &= ~0x4;
             } else {
                 anim = 1;
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x488, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x488, NULL, 2, -1, NULL);
             }
         }
     } else if ((*(u8 *)((char *)state + 0x10) & 0x2) != 0) {
@@ -204,7 +204,7 @@ void ktrexfloorswitch_update(int obj) {
                 *(u8 *)((char *)state + 0x10) &= ~0x2;
             } else {
                 anim = 1;
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x488, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x488, NULL, 2, -1, NULL);
             }
         }
     } else if ((s8)*(u8 *)((char *)state + 0x4) != 0 && (*(u8 *)((char *)state + 0x10) & 1) == 0) {
@@ -299,7 +299,7 @@ void ktrexfloorswitch_update(int obj) {
             *tex = scroll;
         }
         if ((*(u8 *)((char *)state + 0x10) & 0x6) == 0) {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x486, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x486, NULL, 2, -1, NULL);
         }
     } else {
         if (*tex != 0) {

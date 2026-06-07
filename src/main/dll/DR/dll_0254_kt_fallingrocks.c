@@ -59,7 +59,7 @@ void ktfallingrocks_update(int obj) {
         params.x = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-200, 200);
         params.y = ((GameObject *)obj)->anim.localPosY;
         params.z = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-200, 200);
-        ((EffectInterface *)*gPartfxInterface)->spawnObject(
+        (*gPartfxInterface)->spawnObject(
             (void *)obj, *(u16 *)(q + 0x20), &params, 0x200001, -1, NULL);
     }
     Sfx_PlayFromObject(obj, SFXbaddie_haga_spin);
