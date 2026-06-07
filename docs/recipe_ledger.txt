@@ -123,3 +123,4 @@
 113	f6cb57505	The SPECULATIVE unroller is a separate pass from opt_unroll_loops —
 114	d9e799e23	No-op CONVERSION NODES split VN webs at zero codegen cost — the
 115	dcfea98ab	CALLEE-DECL PARAM WIDTHS shift the caller's WEB CREATION ORDER at
+116	PENDING	Embedded-assign in the STORE ADDRESS (`*(p = &arr[K]) = value;`)

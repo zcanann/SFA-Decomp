@@ -2932,6 +2932,26 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
       per #94) -- #110-family, possibly per-fn O1 in the original;
       parked.
 
+116. **Embedded-assign in the STORE ADDRESS (`*(p = &arr[K]) = value;`)
+    reproduces T's value-BEFORE-address emission under scheduling-off.**
+    (task #17; fn_801821FC 97.24->98.89, gcrobotlightbea.) When target
+    shows `lfs f0,src; addi rX,r1,K; stfs f0,0(rX)` (the value load
+    BETWEEN the address materialization and the store) but the natural
+    two-statement form (`endY = &endPoints[1]; endPoints[1] = obj->y;`)
+    emits `addi rX; lfs; stfs` (address first, statement order under
+    scheduling-off), fold the pointer init INTO the store's address
+    position: `*(endY = &endPoints[1]) = obj->y;` — MWCC evaluates the
+    RHS first, then the embedded address def, then stores through it.
+    Works for constant stores too: `*(axes = hitResults.axes) = -1;`
+    gives `li r0,-1; addi r29,r1,216; stb`. #40-family (embedded assign)
+    aimed at EMISSION ORDER rather than reload elimination. CAVEAT: the
+    embedded def reclassifies the pointer's web into the temp class
+    (#107 round-2) — the saved-reg NUMBERS of the pointer trio may
+    permute against neighbors (cross-class interleave, #108 park);
+    A/B-verify the order win outweighs the renumber (here +1.65pp).
+    Sibling probe that FAILED on the same fn (don't retry blindly):
+    #77 void*-param cast-copy to re-rank the obj param (98.89->98.12).
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
