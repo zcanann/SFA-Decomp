@@ -2042,16 +2042,12 @@ int fn_802A5384(int obj, int state)
                 }
                 {
                     f32 v = ((PlayerState *)state)->baddie.unk294;
-                    f32 m = lbl_803E8080;
-                    if (v < m) {
-                    } else {
-                        m = lbl_803E7EFC + *(f32 *)((char *)inner + 0x404);
-                        if (v > m) {
-                        } else {
-                            m = v;
-                        }
-                    }
-                    ((PlayerState *)state)->baddie.unk294 = m;
+                    ((PlayerState *)state)->baddie.unk294 =
+                        (v < lbl_803E8080)
+                            ? lbl_803E8080
+                            : ((v > lbl_803E7EFC + *(f32 *)((char *)inner + 0x404))
+                                   ? lbl_803E7EFC + *(f32 *)((char *)inner + 0x404)
+                                   : v);
                 }
                 t = t * lbl_803E7F74;
                 ((PlayerState *)state)->baddie.animSpeedB =
@@ -2061,16 +2057,8 @@ int fn_802A5384(int obj, int state)
             } else {
                 f32 v = ((PlayerState *)state)->baddie.unk294;
                 f32 lim = *(f32 *)((char *)inner + 0x404);
-                f32 m = -lim;
-                if (v < m) {
-                } else {
-                    if (v > lim) {
-                        m = lim;
-                    } else {
-                        m = v;
-                    }
-                }
-                ((PlayerState *)state)->baddie.unk294 = m;
+                ((PlayerState *)state)->baddie.unk294 =
+                    (v < -lim) ? -lim : ((v > lim) ? lim : v);
             }
             {
                 if (((u32)*(u8 *)((char *)inner + 0x3f0) >> 4 & 1) == 0 &&
@@ -2159,15 +2147,7 @@ int fn_802A5384(int obj, int state)
     }
     {
         f32 v = (f32)*(s16 *)((char *)state + 0x19c) / lbl_803E7EE8;
-        t = lbl_803E7ECC;
-        if (v < t) {
-        } else {
-            t = lbl_803E7EE0;
-            if (v > t) {
-            } else {
-                t = v;
-            }
-        }
+        t = (v < (t = lbl_803E7ECC)) ? t : ((v > (t = lbl_803E7EE0)) ? t : v);
     }
     {
         f32 ad = t;
