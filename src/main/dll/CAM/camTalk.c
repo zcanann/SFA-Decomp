@@ -1,9 +1,9 @@
 #include "main/dll/CAM/camTalk.h"
 #include "main/camera_object.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
 
 extern void *memset(void *dst, int val, u32 n);
-extern void *mmAlloc(int size, int heap, int flags);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int obj);
 extern undefined4 FUN_80006a1c();
 extern undefined4 FUN_80006a30();
 extern int FUN_80017730();

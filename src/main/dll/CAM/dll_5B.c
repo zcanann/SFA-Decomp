@@ -1,8 +1,12 @@
 #include "main/dll/CAM/camshipbattle5C.h"
+#include "main/audio/sfx.h"
 #include "main/camera_object.h"
 #include "main/game_object.h"
 #include "main/dll/CAM/viewfinder_state.h"
 #include "main/dll/CAM/dll_5B.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
+#include "main/pad.h"
 
 
 #pragma peephole off
@@ -10,8 +14,6 @@
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006824();
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
-                                           int obj);
 extern double FUN_800069f8();
 extern int FUN_80006a10();
 extern undefined4 FUN_80006a1c();
@@ -24,7 +26,6 @@ extern char FUN_80006bd0();
 extern uint FUN_80006c00();
 extern uint FUN_80006c10();
 extern u32 getButtonsHeld(int port);
-extern u32 getButtonsJustPressed(int port);
 extern char padGetCX(int port);
 extern char padGetCY(int port);
 extern double FUN_800176f4();
@@ -32,7 +33,6 @@ extern uint getAngle();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern int FUN_80017a98();
-extern void *mmAlloc(int size,int heap,int flags);
 extern int ObjHits_GetPriorityHit();
 extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80053bf0();
@@ -108,7 +108,6 @@ typedef struct ViewfinderFlags {
     u8 rest : 5;
 } ViewfinderFlags;
 
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern char padGetStickX(int port);
 extern char padGetStickY(int port);
 extern f32 interpolate(f32 v, f32 a, f32 b);
@@ -1148,7 +1147,6 @@ void CameraModeStatic_release(void) {}
 void CameraModeStatic_initialise(void) {}
 
 /* fn_X(lbl); lbl = 0; */
-extern void mm_free(void *);
 #pragma scheduling off
 #pragma peephole off
 void CameraModeDebug_free(void) { mm_free(lbl_803DD550); lbl_803DD550 = 0; }

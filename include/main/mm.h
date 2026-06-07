@@ -5,5 +5,7 @@
 
 int roundUpTo4(int value);
 int roundUpTo8(int value);
+void mm_free(void *ptr);
+void *mmAlloc(int size, int type, int flag);
 
 #endif /* MAIN_MM_H_ */

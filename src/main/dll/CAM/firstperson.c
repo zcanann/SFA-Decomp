@@ -1,5 +1,6 @@
 #include "main/dll/CAM/firstperson.h"
 #include "main/game_object.h"
+#include "main/object_transform.h"
 
 
 #pragma peephole off
@@ -70,7 +71,6 @@ typedef struct CamFlagByte2 {
 extern f32 sqrtf();
 extern f32 interpolate(f32 delta, f32 rate, f32 dt);
 extern f32 PSVECMag(f32 *vec);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int mapId);
 extern f32 timeDelta;
 extern f32 lbl_803E16AC;
 extern f32 lbl_803E1694;

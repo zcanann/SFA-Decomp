@@ -1,16 +1,16 @@
 #include "main/dll/CAM/dll_5F.h"
 #include "main/camera_object.h"
 #include "main/game_object.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
+#include "main/pad.h"
 
 
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_800033a8();
-extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,float *outX,float *outY,float *outZ,int obj);
 extern f32 Curve_EvalCatmullRom(f32 *samples, f32 t, f32 *out);
 extern f32 Curve_EvalBSpline(f32 *samples, f32 t, f32 *out);
-extern void *mmAlloc(int size, int heap, int flags);
-extern undefined4 getButtonsJustPressed();
 extern int FUN_80017730();
 extern undefined4 FUN_80017830();
 extern undefined4 fn_8010A104();
@@ -318,7 +318,6 @@ extern f32 lbl_803E18C0;
 extern f32 lbl_803E18C4;
 extern f32 lbl_803E18C8;
 extern f32 timeDelta;
-extern void mm_free(void *p);
 extern void Rcp_DisableBlurFilter(void);
 
 /*

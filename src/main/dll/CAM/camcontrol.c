@@ -1,22 +1,24 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "dolphin/os.h"
 #include "main/asset_load.h"
 #include "main/dll/CAM/camcontrol.h"
+#include "main/dll/savegame.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
 #include "main/objanim_internal.h"
+#include "main/objlib.h"
+#include "main/pad.h"
+#include "main/voxmaps.h"
 #include "string.h"
 
-extern void Sfx_PlayFromObject(int obj,int sfxId);
-extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
-extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
-extern uint getButtonsJustPressed();
 extern undefined4 FUN_80017640();
-extern int Obj_IsObjectAlive();
 extern undefined8 FUN_800723a0();
 extern void objShowButtonGlow(void *obj,f32 intensity,int mode);
 extern undefined4 FUN_800e8794();
-extern int camcontrol_findBestTarget(int cameraState, short *target);
-extern void camcontrol_updateMoveAverage(int cameraState, int target);
-extern void camcontrol_applyState(short *cameraState);
+extern int camcontrol_findBestTarget(CamcontrolCameraState *cameraState, ObjAnimComponent *target);
+extern void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *target);
+extern void camcontrol_applyState(CamcontrolCameraState *cameraState);
 extern void camcontrol_applyQueuedAction(void);
 extern int dll_19_func1B();
 extern int isTalkingToNpc();
@@ -24,11 +26,6 @@ extern int gameTextFn_80134be8(void);
 extern f32 fn_8014C5D0(int obj);
 extern f32 fn_80183204(int obj);
 extern f32 sqrtf(f32 x);
-extern void mm_free(void *ptr);
-extern void *mmAlloc(int size,int heap,int flags);
-extern void SaveGame_setCamActionNo(s16 actionNo);
-extern void voxmaps_initialise(void);
-extern void voxmaps_resetLoadedMaps(void);
 
 extern void *gCamcontrolHandlers[20];
 extern u8 gCamcontrolStateStorage[];
@@ -772,9 +769,10 @@ void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *
 #pragma peephole off
 void Camera_update(void)
 {
-  short *psVar3;
+  CamcontrolCameraState *camera;
+  ObjAnimComponent *focus;
   u8 textActive;
-  undefined4 uVar2;
+  int target;
 
   if (gameTextFn_80134be8() != 0) {
     textActive = 1;
@@ -782,99 +780,80 @@ void Camera_update(void)
   else {
     textActive = 0;
   }
-  psVar3 = *(short **)((char *)pCamera + 0xa4);
-  if (psVar3 == (short *)0x0) {
-    *(undefined4 *)((char *)pCamera + 0x124) = 0;
-    *(undefined4 *)((char *)pCamera + 0x11c) = 0;
+  camera = CAMCONTROL_CAMERA;
+  focus = camera->focusObj;
+  if (focus == (ObjAnimComponent *)0x0) {
+    camera->currentTarget = 0;
+    camera->overrideTarget = 0;
   }
   else {
-    gCamcontrolSavedFocusLocalX = *(float *)(psVar3 + 6);
-    gCamcontrolSavedFocusLocalY = *(float *)(psVar3 + 8);
-    gCamcontrolSavedFocusLocalZ = *(float *)(psVar3 + 10);
-    gCamcontrolSavedFocusWorldX = *(float *)(psVar3 + 0xc);
-    gCamcontrolSavedFocusWorldY = *(float *)(psVar3 + 0xe);
-    gCamcontrolSavedFocusWorldZ = *(float *)(psVar3 + 0x10);
-    camcontrol_updateMoveAverage((int)pCamera,(int)psVar3);
-    if (*(u8 *)((char *)pCamera + 0x13d) != 0) {
-      *(float *)(psVar3 + 0xc) = *(float *)((char *)pCamera + 0xdc);
-      *(float *)(psVar3 + 0xe) = *(float *)((char *)pCamera + 0xe0);
-      *(float *)(psVar3 + 0x10) = *(float *)((char *)pCamera + 0xe4);
-      Obj_TransformWorldPointToLocal(*(float *)(psVar3 + 0xc),*(float *)(psVar3 + 0xe),
-                                     *(float *)(psVar3 + 0x10),(float *)(psVar3 + 6),
-                                     (float *)(psVar3 + 8),(float *)(psVar3 + 10),
-                                     *(int *)(psVar3 + 0x18));
-      *(undefined *)((char *)pCamera + 0x13d) = 0;
+    gCamcontrolSavedFocusLocalX = focus->localPosX;
+    gCamcontrolSavedFocusLocalY = focus->localPosY;
+    gCamcontrolSavedFocusLocalZ = focus->localPosZ;
+    gCamcontrolSavedFocusWorldX = focus->worldPosX;
+    gCamcontrolSavedFocusWorldY = focus->worldPosY;
+    gCamcontrolSavedFocusWorldZ = focus->worldPosZ;
+    camcontrol_updateMoveAverage(camera,focus);
+    if (camera->overrideWorldPosPending != 0) {
+      focus->worldPosX = camera->overrideWorldX;
+      focus->worldPosY = camera->overrideWorldY;
+      focus->worldPosZ = camera->overrideWorldZ;
+      Obj_TransformWorldPointToLocal(focus->worldPosX,focus->worldPosY,focus->worldPosZ,
+                                     &focus->localPosX,&focus->localPosY,&focus->localPosZ,
+                                     (u32)focus->parent);
+      camera->overrideWorldPosPending = 0;
     }
-    if (*(u32 *)((char *)pCamera + 0x30) != *(u32 *)(psVar3 + 0x18)) {
-      Obj_TransformLocalPointToWorld(*(float *)((char *)pCamera + 0xc),
-                                     *(float *)((char *)pCamera + 0x10),
-                                     *(float *)((char *)pCamera + 0x14),
-                                     (float *)((char *)pCamera + 0x18),
-                                     (float *)((char *)pCamera + 0x1c),
-                                     (float *)((char *)pCamera + 0x20),
-                                     *(int *)((char *)pCamera + 0x30));
-      Obj_TransformLocalPointToWorld(*(float *)((char *)pCamera + 0xa8),
-                                     *(float *)((char *)pCamera + 0xac),
-                                     *(float *)((char *)pCamera + 0xb0),
-                                     (float *)((char *)pCamera + 0xb8),
-                                     (float *)((char *)pCamera + 0xbc),
-                                     (float *)((char *)pCamera + 0xc0),
-                                     *(int *)((char *)pCamera + 0x30));
-      Obj_TransformWorldPointToLocal(*(float *)((char *)pCamera + 0x18),
-                                     *(float *)((char *)pCamera + 0x1c),
-                                     *(float *)((char *)pCamera + 0x20),
-                                     (float *)((char *)pCamera + 0xc),
-                                     (float *)((char *)pCamera + 0x10),
-                                     (float *)((char *)pCamera + 0x14),*(int *)(psVar3 + 0x18))
-      ;
-      Obj_TransformWorldPointToLocal(*(float *)((char *)pCamera + 0xb8),
-                                     *(float *)((char *)pCamera + 0xbc),
-                                     *(float *)((char *)pCamera + 0xc0),
-                                     (float *)((char *)pCamera + 0xa8),
-                                     (float *)((char *)pCamera + 0xac),
-                                     (float *)((char *)pCamera + 0xb0),*(int *)(psVar3 + 0x18));
-      *(undefined4 *)((char *)pCamera + 0x30) = *(undefined4 *)(psVar3 + 0x18);
+    if (camera->localFrameObj != focus->parent) {
+      Obj_TransformLocalPointToWorld(camera->localX,camera->localY,camera->localZ,
+                                     &camera->worldX,&camera->worldY,&camera->worldZ,
+                                     (u32)camera->localFrameObj);
+      Obj_TransformLocalPointToWorld(camera->prevLocalX,camera->prevLocalY,camera->prevLocalZ,
+                                     &camera->prevWorldX,&camera->prevWorldY,&camera->prevWorldZ,
+                                     (u32)camera->localFrameObj);
+      Obj_TransformWorldPointToLocal(camera->worldX,camera->worldY,camera->worldZ,
+                                     &camera->localX,&camera->localY,&camera->localZ,
+                                     (u32)focus->parent);
+      Obj_TransformWorldPointToLocal(camera->prevWorldX,camera->prevWorldY,camera->prevWorldZ,
+                                     &camera->prevLocalX,&camera->prevLocalY,&camera->prevLocalZ,
+                                     (u32)focus->parent);
+      camera->localFrameObj = focus->parent;
     }
-    if (*(short **)(psVar3 + 0x18) != (short *)0x0) {
-      *psVar3 += **(short **)(psVar3 + 0x18);
+    if (focus->parent != (void *)0x0) {
+      focus->rotX += *(s16 *)focus->parent;
     }
     camcontrol_applyQueuedAction();
     if (gCamcontrolCurrentHandler != 0) {
       gCamcontrolCurrentHandler->handler->vtable->update((void *)pCamera);
-      Obj_TransformLocalPointToWorld(*(float *)((char *)pCamera + 0xc),
-                                     *(float *)((char *)pCamera + 0x10),
-                                     *(float *)((char *)pCamera + 0x14),
-                                     (float *)((char *)pCamera + 0x18),
-                                     (float *)((char *)pCamera + 0x1c),
-                                     (float *)((char *)pCamera + 0x20),
-                                     *(int *)((char *)pCamera + 0x30));
-      camcontrol_applyState((short *)pCamera);
+      Obj_TransformLocalPointToWorld(camera->localX,camera->localY,camera->localZ,
+                                     &camera->worldX,&camera->worldY,&camera->worldZ,
+                                     (u32)camera->localFrameObj);
+      camcontrol_applyState(camera);
     }
     camcontrol_applyQueuedAction();
     if (textActive == 0) {
-      if (*(u32 *)((char *)pCamera + 0x11c) == 0) {
-        uVar2 = camcontrol_findBestTarget((int)pCamera,psVar3);
-        *(undefined4 *)((char *)pCamera + 0x124) = uVar2;
+      if (camera->overrideTarget == 0) {
+        target = camcontrol_findBestTarget(camera,focus);
+        camera->currentTarget = target;
       }
       else {
-        *(int *)((char *)pCamera + 0x124) = *(int *)((char *)pCamera + 0x11c);
+        camera->currentTarget = camera->overrideTarget;
       }
     }
-    *(float *)((char *)pCamera + 0xa8) = *(float *)((char *)pCamera + 0xc);
-    *(float *)((char *)pCamera + 0xac) = *(float *)((char *)pCamera + 0x10);
-    *(float *)((char *)pCamera + 0xb0) = *(float *)((char *)pCamera + 0x14);
-    *(float *)((char *)pCamera + 0xb8) = *(float *)((char *)pCamera + 0x18);
-    *(float *)((char *)pCamera + 0xbc) = *(float *)((char *)pCamera + 0x1c);
-    *(float *)((char *)pCamera + 0xc0) = *(float *)((char *)pCamera + 0x20);
-    *(undefined *)((char *)pCamera + 0x140) = 0;
-    *(float *)(psVar3 + 6) = gCamcontrolSavedFocusLocalX;
-    *(float *)(psVar3 + 8) = gCamcontrolSavedFocusLocalY;
-    *(float *)(psVar3 + 10) = gCamcontrolSavedFocusLocalZ;
-    *(float *)(psVar3 + 0xc) = gCamcontrolSavedFocusWorldX;
-    *(float *)(psVar3 + 0xe) = gCamcontrolSavedFocusWorldY;
-    *(float *)(psVar3 + 0x10) = gCamcontrolSavedFocusWorldZ;
-    if (*(short **)(psVar3 + 0x18) != (short *)0x0) {
-      *psVar3 -= **(short **)(psVar3 + 0x18);
+    camera->prevLocalX = camera->localX;
+    camera->prevLocalY = camera->localY;
+    camera->prevLocalZ = camera->localZ;
+    camera->prevWorldX = camera->worldX;
+    camera->prevWorldY = camera->worldY;
+    camera->prevWorldZ = camera->worldZ;
+    camera->frameFlags = 0;
+    focus->localPosX = gCamcontrolSavedFocusLocalX;
+    focus->localPosY = gCamcontrolSavedFocusLocalY;
+    focus->localPosZ = gCamcontrolSavedFocusLocalZ;
+    focus->worldPosX = gCamcontrolSavedFocusWorldX;
+    focus->worldPosY = gCamcontrolSavedFocusWorldY;
+    focus->worldPosZ = gCamcontrolSavedFocusWorldZ;
+    if (focus->parent != (void *)0x0) {
+      focus->rotX -= *(s16 *)focus->parent;
     }
   }
   return;

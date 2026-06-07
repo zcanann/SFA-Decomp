@@ -1,11 +1,11 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/CAM/dll_59.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
 
-extern void *mmAlloc(int size, int heap, int flags);
 extern void memset(void *ptr, int value, int size);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY,
-                                           f32 *outZ, int model);
 extern void curvesMove(void *curve);
 extern int getAngle(f32 dx, f32 dz);
 extern undefined camcontrol_getTargetPosition(int obj, s16 *target, f32 *outPos, s16 *outAngle);
@@ -17,7 +17,6 @@ extern undefined4 FUN_8028688c();
 extern f32 sqrtf(f32 value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Curve_EvalBSpline(void);
 extern void Curve_BuildBSplineCoeffs(void);
 
@@ -255,7 +254,6 @@ void CameraModeStaffAnim_release(void) {}
 void CameraModeStaffAnim_initialise(void) {}
 
 /* fn_X(lbl); lbl = 0; */
-extern void mm_free(void *);
 #pragma scheduling off
 #pragma peephole off
 void CameraModeBike_free(void) { mm_free(lbl_803DD540); lbl_803DD540 = 0; }

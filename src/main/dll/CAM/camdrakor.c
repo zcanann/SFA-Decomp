@@ -1,18 +1,17 @@
 #include "main/dll/CAM/camdrakor.h"
 #include "main/camera_object.h"
 #include "main/game_object.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
+#include "main/pad.h"
 
 
 #pragma peephole off
 #pragma scheduling off
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
-                                           int obj);
 extern void* FUN_800069a8();
-extern uint getButtonsJustPressed();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 FUN_80053bb0();
-extern void *mmAlloc(int size,int heap,int flags);
 extern void camcontrol_traceMove(f32 radius, f32 *from, void *to, f32 *out, void *work, int a,
                                  int b, int c);
 extern uint FUN_801ef1a4();
@@ -612,7 +611,6 @@ void CameraModeShipBattle_initialise(void) {}
 void CameraModeClimb_copyToCurrent_nop(void) {}
 
 /* fn_X(lbl); lbl = 0; */
-extern void mm_free(void *);
 #pragma scheduling off
 #pragma peephole off
 void CameraModeShipBattle_free(void) { mm_free(lbl_803DD570); lbl_803DD570 = 0; }

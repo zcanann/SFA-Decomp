@@ -1,7 +1,6 @@
 #include "main/dll/CAM/attention.h"
+#include "main/object_transform.h"
 
-extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,
-                                           int obj);
 extern int objBboxFn_800640cc(int startPoints,int endPoints,int radii,int hitOut,int objOut,
                               int pointCount,int mask,int flags,int mode);
 extern int hitDetectFn_80065e50(int obj,f32 x,f32 y,f32 z,int *hitsOut,int pointCount,

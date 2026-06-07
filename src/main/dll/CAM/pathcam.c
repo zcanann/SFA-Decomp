@@ -1,21 +1,17 @@
 #include "main/dll/CAM/pathcam.h"
 #include "main/camera_object.h"
 #include "main/game_object.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
 #include "string.h"
 
 
 #pragma peephole off
 #pragma scheduling off
-extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,
-                                           int model);
-extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,
-                                           int model);
 extern int getAngle(f32 dx,f32 dz);
-extern void *mmAlloc(int size,int heap,int flags);
 extern undefined4 camcontrol_getTargetPosition();
 extern f32 Curve_EvalHermite(f32 param_1, f32 *param_2, f32 *param_3);
 extern undefined4 Curve_AdvanceAlongPath(f32 param_1, f32 *param_2);
-extern void mm_free(void *ptr);
 
 extern int *gCameraInterface;
 extern f32 *cameraMtxVar57;

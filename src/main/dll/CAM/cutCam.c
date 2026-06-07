@@ -1,6 +1,8 @@
 #include "main/dll/CAM/cutCam.h"
 #include "main/camera_object.h"
 #include "main/game_object.h"
+#include "main/object_transform.h"
+#include "main/pad.h"
 
 
 #pragma peephole off
@@ -14,7 +16,6 @@ extern ushort FUN_80006be8();
 extern uint FUN_80006c00();
 extern f32 Curve_EvalHermite(f32 param_1,float *param_2,float *param_3);
 extern ushort getPadFn_80014d9c(int controller);
-extern ushort getButtonsJustPressed(int controller);
 extern uint FUN_80017730();
 extern int objBboxFn_800640cc(float *p1, float *p2, float *p3, int *p4, int *p5, int p6, int p7, int p8, int p9);
 extern void hitDetectFn_80067958(int a, float *b, float *c, int d, int e, int f);
@@ -539,11 +540,6 @@ typedef struct {
     u8 bit80 : 1;
     u8 rest : 7;
 } CamcontrolByteC6;
-
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
-                                           int xform);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
-                                           int xform);
 
 void camMoveFn_80104040(int cam, short *tgt)
 {

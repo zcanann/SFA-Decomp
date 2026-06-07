@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
 
-extern void *mmAlloc(int size, int heap, int flags);
-extern void mm_free(void *ptr);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, s32 param);
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);

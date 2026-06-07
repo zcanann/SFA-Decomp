@@ -1,10 +1,7 @@
 #include "ghidra_import.h"
 #include "main/camera_object.h"
+#include "main/object_transform.h"
 
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
-                                           int obj);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
-                                           int obj);
 extern void camcontrol_traceMove(f32 radius, f32 *from, void *to, f32 *out, void *work, int a,
                                  int b, int c);
 extern void camcontrol_updateTargetAction(int camera, int obj);
