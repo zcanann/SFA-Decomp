@@ -1365,7 +1365,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
     ((ObjSeqState *)seq)->unk79 = 0;
     ((ObjSeqState *)seq)->targetObj = NULL;
     ((ObjSeqState *)seq)->unk7B = 0;
-    ((ObjSeqState *)seq)->fade = lbl_803DEFB0;
+    ((ObjSeqState *)seq)->fade = 0.0f;
     ((ObjSeqState *)seq)->curFrame = -1;
 
     found = -1;
@@ -1404,9 +1404,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
     action = ObjSeq_GetActiveModel(activeObj);
     if (action != NULL) {
         if (((ObjSeqState *)seq)->animEntries == NULL) {
-            val = lbl_803DEFB0;
+            val = 0.0f;
         } else {
-            val = lbl_803DEFB0;
+            val = 0.0f;
             if (((ObjSeqState *)seq)->trackRunLength[13] != 0) {
                 val = objCurveInterpolate(
                     (ObjCurveKey *)(((ObjSeqState *)seq)->animEntries + ((ObjSeqState *)seq)->trackAnimStart[13] * 8),
@@ -1415,9 +1415,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
         }
         prevX = *(f32 *)(model + 0x8) + val;
         if (((ObjSeqState *)seq)->animEntries == NULL) {
-            val = lbl_803DEFB0;
+            val = 0.0f;
         } else {
-            val = lbl_803DEFB0;
+            val = 0.0f;
             if (((ObjSeqState *)seq)->trackRunLength[11] != 0) {
                 val = objCurveInterpolate(
                     (ObjCurveKey *)(((ObjSeqState *)seq)->animEntries + ((ObjSeqState *)seq)->trackAnimStart[11] * 8),
@@ -1432,9 +1432,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
         ((ObjSeqState *)seq)->curFrame += 1;
         frame = ((ObjSeqState *)seq)->curFrame;
         if (((ObjSeqState *)seq)->animEntries == NULL) {
-            val = lbl_803DEFB0;
+            val = 0.0f;
         } else {
-            val = lbl_803DEFB0;
+            val = 0.0f;
             if (((ObjSeqState *)seq)->trackRunLength[13] != 0) {
                 val = objCurveInterpolate(
                     (ObjCurveKey *)(((ObjSeqState *)seq)->animEntries + ((ObjSeqState *)seq)->trackAnimStart[13] * 8),
@@ -1444,9 +1444,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
         pos.x = *(f32 *)(model + 0x8) + val;
         frame = ((ObjSeqState *)seq)->curFrame;
         if (((ObjSeqState *)seq)->animEntries == NULL) {
-            val = lbl_803DEFB0;
+            val = 0.0f;
         } else {
-            val = lbl_803DEFB0;
+            val = 0.0f;
             if (((ObjSeqState *)seq)->trackRunLength[12] != 0) {
                 val = objCurveInterpolate(
                     (ObjCurveKey *)(((ObjSeqState *)seq)->animEntries + ((ObjSeqState *)seq)->trackAnimStart[12] * 8),
@@ -1456,9 +1456,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
         pos.y = *(f32 *)(model + 0xc) + val;
         frame = ((ObjSeqState *)seq)->curFrame;
         if (((ObjSeqState *)seq)->animEntries == NULL) {
-            val = lbl_803DEFB0;
+            val = 0.0f;
         } else {
-            val = lbl_803DEFB0;
+            val = 0.0f;
             if (((ObjSeqState *)seq)->trackRunLength[11] != 0) {
                 val = objCurveInterpolate(
                     (ObjCurveKey *)(((ObjSeqState *)seq)->animEntries + ((ObjSeqState *)seq)->trackAnimStart[11] * 8),
@@ -1475,9 +1475,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
                         (ObjAnimComponent *)activeObj, &speed) == 0) {
                     frame = ((ObjSeqState *)seq)->curFrame - 1;
                     if (((ObjSeqState *)seq)->animEntries == NULL) {
-                        val = lbl_803DEFB0;
+                        val = 0.0f;
                     } else {
-                        val = lbl_803DEFB0;
+                        val = 0.0f;
                         if (((ObjSeqState *)seq)->trackRunLength[9] != 0) {
                             val = objCurveInterpolate(
                                 (ObjCurveKey *)(((ObjSeqState *)seq)->animEntries + ((ObjSeqState *)seq)->trackAnimStart[9] * 8),
@@ -1489,9 +1489,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
             } else {
                 frame = ((ObjSeqState *)seq)->curFrame - 1;
                 if (((ObjSeqState *)seq)->animEntries == NULL) {
-                    val = lbl_803DEFB0;
+                    val = 0.0f;
                 } else {
-                    val = lbl_803DEFB0;
+                    val = 0.0f;
                     if (((ObjSeqState *)seq)->trackRunLength[9] != 0) {
                         val = objCurveInterpolate(
                             (ObjCurveKey *)(((ObjSeqState *)seq)->animEntries + ((ObjSeqState *)seq)->trackAnimStart[9] * 8),
@@ -1505,7 +1505,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
                 ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)activeObj, speed, lbl_803DEFC8,
                                            (ObjAnimEventList *)(seq + 0xf0));
                 if (mode != 0) {
-                    if (((ObjSeqState *)seq)->fade > lbl_803DEFB0) {
+                    if (((ObjSeqState *)seq)->fade > 0.0f) {
                         if (((ObjSeqState *)seq)->trackRunLength[10] != 0) {
                             frame = ((ObjSeqState *)seq)->curFrame - 1;
                             if (((ObjSeqState *)seq)->animEntries != NULL && ((ObjSeqState *)seq)->trackRunLength[10] != 0) {
@@ -1521,8 +1521,8 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
                             rate = lbl_803DEFC8;
                         }
                         ((ObjSeqState *)seq)->fade = ((ObjSeqState *)seq)->fade - lbl_803DEFC8 / rate;
-                        if (((ObjSeqState *)seq)->fade < lbl_803DEFB0) {
-                            ((ObjSeqState *)seq)->fade = lbl_803DEFB0;
+                        if (((ObjSeqState *)seq)->fade < 0.0f) {
+                            ((ObjSeqState *)seq)->fade = 0.0f;
                         }
                     }
                 }
@@ -1531,7 +1531,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
                 while (*(f32 *)(activeObj + 0x98) > lbl_803DEFC8) {
                     *(f32 *)(activeObj + 0x98) = *(f32 *)(activeObj + 0x98) - lbl_803DEFC8;
                 }
-                while (*(f32 *)(activeObj + 0x98) < lbl_803DEFB0) {
+                while (*(f32 *)(activeObj + 0x98) < 0.0f) {
                     *(f32 *)(activeObj + 0x98) = *(f32 *)(activeObj + 0x98) + lbl_803DEFC8;
                 }
             }
