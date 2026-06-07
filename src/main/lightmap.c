@@ -3070,7 +3070,8 @@ void *mapGetBlockAtPos(int x, int y, int layer) {
 #pragma scheduling reset
 
 /* Set widescreen flag and switch camera to 16:9 (1.7777) or 4:3 (1.3333). */
-extern F32Pair shdwChanged_803DEC18;
+extern f32 shdwChanged_803DEC18;
+extern f32 widescreenAspect_803DEC1C;
 extern f32 lbl_803DB670;
 extern void Camera_SetAspectRatio(f32 ratio);
 #pragma scheduling off
@@ -3078,7 +3079,7 @@ extern void Camera_SetAspectRatio(f32 ratio);
 int setWidescreen(u8 v) {
     if (v != 0) {
         renderFlags |= 0x8;
-        Camera_SetAspectRatio(shdwChanged_803DEC18.hi);
+        Camera_SetAspectRatio(widescreenAspect_803DEC1C);
     } else {
         renderFlags &= ~8LL;
         Camera_SetAspectRatio(lbl_803DB670);
@@ -3542,7 +3543,7 @@ void sceneDraw(void)
         doSpiritVisionFilter();
     }
     if (bEnableViewFinderHud != 0) {
-        drawViewFinderAperture(lbl_803DEC14, shdwChanged_803DEC18.lo, 0x40, 0);
+        drawViewFinderAperture(lbl_803DEC14, shdwChanged_803DEC18, 0x40, 0);
     }
     if (bEnableColorFilter == 1) {
         doColorFilter(&colorFilterColor);
