@@ -2538,6 +2538,19 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     - Const-init'd SINGLE-def locals take no saved reg across calls
       (rematerialized at use, E5/E7) — only multi-def or address-anchored
       const webs survive.
+    APPLIED — partfx_update 97.54→97.68 (+2.5K matched_code): the 40KB
+    param-rotation blocker responded to the #77 conversion framed by
+    this model — signature retyped (u32 p2_, u32 p5_, void *p6_) +
+    cast-copy locals (`int param_2 = (int)p2_;` etc.) so the body is
+    untouched; the copies enter the TOP block alongside the two
+    stack-addr webs, and p1/p3/p4 stay param-pool at r25/r26/r27 =
+    target. Residual: top-block internal order — ours assigns p2's copy
+    early (r28/r29) where target has it LAST (r31, above the addr68
+    web); 3 decl permutations mapped, kept the one with p6c=r28 correct.
+    Decl order within the copy block is only a PARTIAL lever (the
+    last-declared copy lands r28; the rest order by something internal).
+    If the top-block order ever cracks, retry the #94-addendum 90-site
+    unfold that was reverted as score-neutral under the old rotation.
     OPEN: cross-class interleaving is context-dependent (E14 puts copies
     ABOVE multi-defs; Music_Update target puts its 2 call-result copies
     BELOW all 7 multi-defs at r23/r24). Music_Update itself (97.78,

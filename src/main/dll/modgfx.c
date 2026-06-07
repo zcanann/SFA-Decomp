@@ -7037,9 +7037,12 @@ extern void vecRotateZXY(void *obj, f32 *vec);
 extern char sModgfxAlphaDebugFormat[];
 extern void fn_80137948(char *fmt, ...);
 
-int partfx_update(s16 *param_1, int param_2, s16 *param_3, u32 param_4,
-                  int param_5, f32 *param_6)
+int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
+                  u32 p5_, void *p6_)
 {
+    int param_5 = (int)p5_;
+    int param_2 = (int)p2_;
+    f32 *param_6 = (f32 *)p6_;
     int iVar8;
     s16 sVar10;
     u8 cVar4;
