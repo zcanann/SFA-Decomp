@@ -406,7 +406,7 @@ void dll_19C_init(int obj, u8 *initData)
     *(short *)(state + 6) = 0;
     *(int *)state = 0;
     *(u8 *)(self + 0x37) = 0xff;
-    *(u8 *)(self + 0x36) = 0xff;
+    ((GameObject *)self)->anim.alpha = 0xff;
 }
 #pragma peephole reset
 #pragma scheduling reset
