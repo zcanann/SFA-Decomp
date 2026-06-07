@@ -1,4 +1,5 @@
 #include "dolphin/card.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
@@ -238,7 +239,7 @@ extern f32 lbl_803DD024;
 extern f32 lbl_803DD034;
 extern f32 lbl_803DD038;
 extern void* gSHthorntailAnimationInterface;
-extern undefined4* gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* gWaterfxInterface;
 extern u8 lbl_803DCFF0;
 extern u8 lbl_803DCFF8;
@@ -487,13 +488,13 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
             if (sfx == 6 || sfx == 3) {
                 cnt = randomGetRange(2, 4);
                 while (cnt != 0) {
-                    (*(void (**)(u8 *, int, void *, int, int, Vec *))((int)*gPartfxInterface + 8))(obj, 0x7e6, &ps, 0x200001, -1, &v);
+                    (*gPartfxInterface)->spawnObject(obj, 0x7e6, &ps, 0x200001, -1, &v);
                     cnt--;
                 }
             } else if (sfx == 2) {
                 cnt = randomGetRange(4, 8);
                 while (cnt != 0) {
-                    (*(void (**)(u8 *, int, void *, int, int, Vec *))((int)*gPartfxInterface + 8))(obj, 0x7e6, &ps, 0x200001, -1, &v);
+                    (*gPartfxInterface)->spawnObject(obj, 0x7e6, &ps, 0x200001, -1, &v);
                     cnt--;
                 }
             }
