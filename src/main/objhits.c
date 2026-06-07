@@ -1213,9 +1213,9 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   extern int ObjHits_RecordObjectHit(int obj,int hitObj,u8 priority,u8 hitVolume,
                                      char sphereIndex);
   int result;
-  int stateA;
-  int stateB;
-  int stateSrc;
+  ObjHitsPriorityState *stateA;
+  ObjHitsPriorityState *stateB;
+  ObjHitsPriorityState *stateSrc;
   char modeA;
   char modeB;
   char miss;
@@ -1248,7 +1248,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   int count;
   int hit;
   int idxA;
-  int react;
+  ObjHitsPriorityState *react;
   uint linkA;
   uint linkB;
   u16 link;
@@ -1294,21 +1294,21 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   u8 volA0[24];
 
   result = 0;
-  stateA = *(int *)(objA + 0x54);
-  stateB = *(int *)(objB + 0x54);
-  stateSrc = *(int *)(srcObj + 0x54);
-  if ((*(u8 *)(stateSrc + 0xb6) & 0x10) &&
-      (*(s8 *)(stateSrc + 0xaf) != 0 || *(u8 *)(stateSrc + 0xae) != 0)) {
+  stateA = *(ObjHitsPriorityState **)(objA + 0x54);
+  stateB = *(ObjHitsPriorityState **)(objB + 0x54);
+  stateSrc = *(ObjHitsPriorityState **)(srcObj + 0x54);
+  if ((stateSrc->secondaryShapeFlags & 0x10) &&
+      (stateSrc->resetHitboxMode != 0 || stateSrc->activeHitboxMode != 0)) {
     return 0;
   }
-  if ((*(u8 *)(stateB + 0xb6) & 0x10) &&
-      (*(s8 *)(stateB + 0xaf) != 0 || *(u8 *)(stateB + 0xae) != 0)) {
+  if ((stateB->secondaryShapeFlags & 0x10) &&
+      (stateB->resetHitboxMode != 0 || stateB->activeHitboxMode != 0)) {
     return 0;
   }
   modeA = 0;
   modeB = 0;
-  if ((checkA != 0 && (*(u8 *)(stateA + 0xb6) & 0x10) != 0) ||
-      (checkB != 0 && *(u8 *)(stateA + 0x62) == 0x10)) {
+  if ((checkA != 0 && (stateA->secondaryShapeFlags & 0x10) != 0) ||
+      (checkB != 0 && stateA->shapeFlags == 0x10)) {
     piVar11 = ObjHits_GetActiveModel(objA);
     modelFile = *piVar11;
     countA = *(u8 *)(modelFile + 0xf7);
@@ -1316,10 +1316,10 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     defA = (float *)piVar11[(*(u16 *)(piVar11 + 6) >> 2 & 1 ^ 1) + 0x12];
     volA = *(u8 **)(modelFile + 0x58);
     if ((uint)srcObj != (uint)objA) {
-      radiusA = *(f32 *)(stateSrc + 0x34);
+      radiusA = stateSrc->secondaryRadiusXZ;
     }
     else {
-      radiusA = *(f32 *)(stateA + 0x34);
+      radiusA = stateA->secondaryRadiusXZ;
     }
     if ((*(s16 *)(objA + 6) & 0x4000) != 0) {
       return 0;
@@ -1330,30 +1330,30 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     spheresA = sphs;
     defA = defs;
     volA = volA0;
-    if (*(u8 *)(stateA + 0xb6) & 2) {
+    if (stateA->secondaryShapeFlags & 2) {
       modeA = 1;
     }
-    radiusA = (f32)*(s16 *)(stateA + 0x64);
+    radiusA = (f32)stateA->secondaryRadius;
     sphs[0] = radiusA;
     sphs[1] = *(f32 *)(objA + 0x18) - playerMapOffsetX;
     sphs[2] = *(f32 *)(objA + 0x1c);
     sphs[3] = *(f32 *)(objA + 0x20) - playerMapOffsetZ;
     defs[0] = radiusA;
-    defs[1] = *(f32 *)(stateA + 0x1c) - playerMapOffsetX;
-    defs[2] = *(f32 *)(stateA + 0x20);
-    defs[3] = *(f32 *)(stateA + 0x24) - playerMapOffsetZ;
+    defs[1] = stateA->worldPosX - playerMapOffsetX;
+    defs[2] = stateA->worldPosY;
+    defs[3] = stateA->worldPosZ - playerMapOffsetZ;
     volA0[22] = 0;
     volA0[23] = 0;
     *(u16 *)(volA0 + 20) = 0;
   }
-  if ((checkA != 0 && (*(u8 *)(stateB + 0xb6) & 0x10) != 0) ||
-      (checkB != 0 && *(u8 *)(stateB + 0x62) == 0x10)) {
+  if ((checkA != 0 && (stateB->secondaryShapeFlags & 0x10) != 0) ||
+      (checkB != 0 && stateB->shapeFlags == 0x10)) {
     piVar11 = ObjHits_GetActiveModel(objB);
     modelFile = *piVar11;
     countB = *(u8 *)(modelFile + 0xf7);
     spheresB = (float *)piVar11[0x14];
     volB = *(u8 **)(modelFile + 0x58);
-    radiusB = *(f32 *)(stateB + 0x34);
+    radiusB = stateB->secondaryRadiusXZ;
     if ((*(s16 *)(objB + 6) & 0x4000) != 0) {
       return 0;
     }
@@ -1362,18 +1362,18 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     countB = 1;
     spheresB = &sphs[4];
     volB = volB0;
-    if (*(u8 *)(stateB + 0xb6) & 2) {
+    if (stateB->secondaryShapeFlags & 2) {
       modeB = 1;
     }
-    radiusB = (f32)*(s16 *)(stateB + 0x64);
+    radiusB = (f32)stateB->secondaryRadius;
     sphs[4] = radiusB;
     sphs[5] = *(f32 *)(objB + 0x18) - playerMapOffsetX;
     sphs[6] = *(f32 *)(objB + 0x1c);
     sphs[7] = *(f32 *)(objB + 0x20) - playerMapOffsetZ;
     defs[4] = sphs[0];
-    defs[5] = *(f32 *)(stateA + 0x1c) - playerMapOffsetX;
-    defs[6] = *(f32 *)(stateA + 0x20);
-    defs[7] = *(f32 *)(stateA + 0x24) - playerMapOffsetZ;
+    defs[5] = stateA->worldPosX - playerMapOffsetX;
+    defs[6] = stateA->worldPosY;
+    defs[7] = stateA->worldPosZ - playerMapOffsetZ;
     volB0[22] = 0;
     volB0[23] = 0;
     *(u16 *)(volB0 + 20) = 0;
@@ -1458,16 +1458,16 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
             hit = 0;
             if ((i == 0 && modeA != 0) || (j == 0 && modeB != 0)) {
               if (modeA != 0) {
-                lo = yA + (f32)*(s16 *)(stateA + 0x66);
-                hi = yA + (f32)*(s16 *)(stateA + 0x68);
+                lo = yA + (f32)stateA->secondaryCapsuleOffsetA;
+                hi = yA + (f32)stateA->secondaryCapsuleOffsetB;
                 blo = sphB[2] - sphB[0];
                 bhi = sphB[2] + sphB[0];
               }
               else {
                 lo = minA;
                 hi = maxA;
-                blo = (f32)*(s16 *)(stateB + 0x66) + sphB[2];
-                bhi = (f32)*(s16 *)(stateB + 0x68) + sphB[2];
+                blo = (f32)stateB->secondaryCapsuleOffsetA + sphB[2];
+                bhi = (f32)stateB->secondaryCapsuleOffsetB + sphB[2];
               }
               if ((!(blo < lo) || !(bhi < lo)) && (!(blo > hi) || !(bhi > hi))) {
                 sumSq = radA2 + sphB[0];
@@ -1587,7 +1587,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
         if (checkA != 0) {
           pb2 = &spheresB[hit * 4];
           ObjHits_RecordPositionHit(pb2[1] + cr[2],objB,objA,
-                                    *(u8 *)(stateSrc + 0x6e),*(u8 *)(stateSrc + 0x6f),hit,
+                                    stateSrc->hitVolumePriority,stateSrc->hitVolumeId,hit,
                                     (modeB != 0) ? spheresA[idxA * 4 + 2]
                                                  : pb2[2] + cr[3],
                                     pb2[3] + cr[4]);
@@ -1611,16 +1611,16 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     }
   }
   if (checkA != 0 && result != 0) {
-    if ((*(s16 *)(stateA + 0x60) & 0x80) != 0) {
-      react = *(int *)(objA + 0x54);
+    if ((stateA->flags & 0x80) != 0) {
+      react = *(ObjHitsPriorityState **)(objA + 0x54);
       if (react != 0) {
-        *(s16 *)(react + 0x60) = *(s16 *)(react + 0x60) & ~1;
+        react->flags = react->flags & ~OBJHITS_PRIORITY_STATE_ENABLED;
       }
     }
-    if ((*(s16 *)(stateB + 0x60) & 0x80) != 0) {
-      react = *(int *)(objB + 0x54);
+    if ((stateB->flags & 0x80) != 0) {
+      react = *(ObjHitsPriorityState **)(objB + 0x54);
       if (react != 0) {
-        *(s16 *)(react + 0x60) = *(s16 *)(react + 0x60) & ~1;
+        react->flags = react->flags & ~OBJHITS_PRIORITY_STATE_ENABLED;
       }
     }
     return 1;
@@ -1628,9 +1628,9 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   if (checkB != 0) {
     if (gObjHitsScalarZero < bestDepth) {
       if ((uint)objA == (uint)srcObj) {
-        ObjHits_RecordObjectHit(objB,objA,*(u8 *)(stateSrc + 0x6c),*(u8 *)(stateSrc + 0x6d),
+        ObjHits_RecordObjectHit(objB,objA,stateSrc->objectPairPriority,stateSrc->objectPairHitVolume,
                                 hit);
-        ObjHits_RecordObjectHit(objA,objB,*(u8 *)(stateB + 0x6c),*(u8 *)(stateB + 0x6d),
+        ObjHits_RecordObjectHit(objA,objB,stateB->objectPairPriority,stateB->objectPairHitVolume,
                                 idxA);
         ObjHits_ApplyPairResponse(objA,objB,-bestX,gObjHitsScalarZero,-bestZ,0);
         return 1;
