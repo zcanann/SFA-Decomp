@@ -782,7 +782,7 @@ void FUN_8015801c(int param_1,int param_2)
   *(undefined2 *)(param_2 + 0x338) = 0;
   *(float *)(param_2 + 0x324) = lbl_803E380C;
   *(float *)(param_2 + 0x328) = fVar2;
-  *(undefined *)(param_1 + 0x36) = 0;
+  ((GameObject *)param_1)->anim.alpha = 0;
   *(float *)(param_2 + 0x2fc) = lbl_803E3810 * fVar1;
   *(undefined4 *)(param_2 + 0x2e8) = 0;
   ObjHits_EnableObject(param_1);
@@ -2374,7 +2374,7 @@ void smallbasket_initScaledVariantState(int *obj, int *st) {
     *(u16*)((char*)st + 0x338) = 0;
     *(f32*)((char*)st + 0x324) = lbl_803E2B74;
     *(f32*)((char*)st + 0x328) = base_v;
-    *((u8*)obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
     ((BaddieState *)st)->pathStep = lbl_803E2B78 * ratio;
     ((BaddieState *)st)->reactionFlags = 0;
     ObjHits_EnableObject((int)obj);
@@ -2798,7 +2798,7 @@ void fn_80157558(s16* obj, u8* state)
             ObjHits_EnableObject(obj);
             *(f32*)(state + 0x328) = lbl_803E2B18;
         }
-        *(u8*)((char*)obj + 0x36) = 0xff;
+        ((GameObject *)obj)->anim.alpha = 0xff;
         moved = 1;
     } else {
         moved = 0;
@@ -3184,7 +3184,7 @@ void fn_80157004(s16* obj, u8* state)
             ObjHits_EnableObject(obj);
             *(f32*)(state + 0x328) = lbl_803E2B18;
         }
-        *(u8*)((char*)obj + 0x36) = 0xff;
+        ((GameObject *)obj)->anim.alpha = 0xff;
         moved = 1;
     } else {
         moved = 0;

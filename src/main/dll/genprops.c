@@ -443,7 +443,7 @@ void FUN_8016b3c4(uint param_1)
   undefined8 local_18;
   
   iVar3 = *(int *)(param_1 + 0xb8);
-  uVar2 = (uint)*(byte *)(param_1 + 0x36);
+  uVar2 = (uint)((GameObject *)param_1)->anim.alpha;
   if (uVar2 < 0xff) {
     local_20 = (double)CONCAT44(0x43300000,uVar2);
     dVar6 = (double)(float)(local_20 - DOUBLE_803e3e50);
@@ -451,14 +451,14 @@ void FUN_8016b3c4(uint param_1)
     if ((float)(dVar6 - in_f4) <= lbl_803E3E60) {
       dVar7 = DOUBLE_803e3e50;
       uVar5 = FUN_8000680c(param_1,0x7f);
-      *(undefined *)(param_1 + 0x36) = 0;
+      ((GameObject *)param_1)->anim.alpha = 0;
       FUN_80017ac8(uVar5,dVar6,dVar7,in_f4,in_f5,in_f6,in_f7,in_f8,param_1);
       return;
     }
     local_20 = (double)CONCAT44(0x43300000,uVar2);
     iVar1 = (int)((double)(float)(local_20 - DOUBLE_803e3e50) - in_f4);
     local_18 = (double)(longlong)iVar1;
-    *(char *)(param_1 + 0x36) = (char)iVar1;
+    ((GameObject *)param_1)->anim.alpha = (char)iVar1;
   }
   else {
     *(float *)(param_1 + 0x28) = -(lbl_803E3E64 * lbl_803DC074 - *(float *)(param_1 + 0x28));
@@ -469,12 +469,12 @@ void FUN_8016b3c4(uint param_1)
                  (double)(*(float *)(param_1 + 0x28) * lbl_803DC074),
                  (double)(*(float *)(param_1 + 0x2c) * lbl_803DC074),param_1);
   }
-  if ((*(char *)(param_1 + 0x36) == -1) || (*(char *)(iVar3 + 0xc) != '\0')) {
+  if (((s8)((GameObject *)param_1)->anim.alpha == -1) || (*(char *)(iVar3 + 0xc) != '\0')) {
     ObjHits_SetHitVolumeSlot(param_1,5,1,0);
     ObjHits_EnableObject(param_1);
     if (((*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject == 0) ||
        (iVar1 = FUN_80017a98(), (*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject != iVar1)) {
-      if ((*(float *)(param_1 + 0x10) <= *(float *)(iVar3 + 4)) && (*(char *)(param_1 + 0x36) == -1)
+      if ((*(float *)(param_1 + 0x10) <= *(float *)(iVar3 + 4)) && ((s8)((GameObject *)param_1)->anim.alpha == -1)
          ) {
         piVar4 = *(int **)(param_1 + 0xb8);
         local_28 = DAT_803e3e38;
@@ -488,14 +488,14 @@ void FUN_8016b3c4(uint param_1)
         dVar6 = (double)lbl_803E3E44;
         dVar7 = (double)lbl_803E3E48;
         uVar5 = FUN_8000691c((double)lbl_803E3E40,dVar6,dVar7);
-        *(undefined *)(param_1 + 0x36) = 0xfe;
+        ((GameObject *)param_1)->anim.alpha = 0xfe;
         FUN_80017ac8(uVar5,dVar6,dVar7,in_f4,in_f5,in_f6,in_f7,in_f8,*piVar4);
         *piVar4 = 0;
         *(undefined *)(iVar3 + 0xc) = 1;
       }
     }
     else {
-      if (*(char *)(param_1 + 0x36) == -1) {
+      if ((s8)((GameObject *)param_1)->anim.alpha == -1) {
         piVar4 = *(int **)(param_1 + 0xb8);
         local_24 = DAT_803e3e38;
         FUN_80006824(param_1,SFXen_weetinklp22);
@@ -508,7 +508,7 @@ void FUN_8016b3c4(uint param_1)
         dVar6 = (double)lbl_803E3E44;
         dVar7 = (double)lbl_803E3E48;
         uVar5 = FUN_8000691c((double)lbl_803E3E40,dVar6,dVar7);
-        *(undefined *)(param_1 + 0x36) = 0xfe;
+        ((GameObject *)param_1)->anim.alpha = 0xfe;
         FUN_80017ac8(uVar5,dVar6,dVar7,in_f4,in_f5,in_f6,in_f7,in_f8,*piVar4);
         *piVar4 = 0;
       }
@@ -550,7 +550,7 @@ void FUN_8016b7d4(undefined2 *param_1)
   
   piVar5 = *(int **)(param_1 + 0x5c);
   ObjHits_DisableObject((int)param_1);
-  *(undefined *)(param_1 + 0x1b) = 0xff;
+  ((GameObject *)param_1)->anim.alpha = 0xff;
   fVar1 = lbl_803E3E60;
   *(float *)(param_1 + 0x12) = lbl_803E3E60;
   *(float *)(param_1 + 0x14) = lbl_803E3E6C;
@@ -1913,7 +1913,7 @@ void FUN_8016d9a4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     ObjHitbox_SetSphereRadius(DAT_803ad334,1);
     ObjHits_SetHitVolumeSlot(DAT_803ad334,0x11,5,0);
     *(float *)(DAT_803ad334 + 8) = lbl_803E3F68;
-    *(undefined *)(DAT_803ad334 + 0x36) = 0xff;
+    ((GameObject *)DAT_803ad334)->anim.alpha = 0xff;
   }
   return;
 }
@@ -2608,7 +2608,7 @@ void FUN_8016e8cc(undefined8 param_1,undefined8 param_2,double param_3,undefined
     dVar8 = (double)DAT_803ad330;
     DAT_803ad328 = DAT_803ad328 * lbl_803E3F80;
     DAT_803ad32c = DAT_803ad32c * lbl_803E3F84;
-    *(char *)(DAT_803ad334 + 0x36) = (char)(int)DAT_803ad330;
+    ((GameObject *)DAT_803ad334)->anim.alpha = (char)(int)DAT_803ad330;
     *(float *)(DAT_803ad334 + 8) = *(float *)(DAT_803ad334 + 8) + lbl_803E3F88;
     if ((double)DAT_803ad330 < (double)lbl_803E3F20) {
       DAT_803ad338 = '\0';
@@ -2950,7 +2950,7 @@ void FUN_8016f29c(int param_1)
       else {
         FUN_80081114(param_1,6);
       }
-      *(undefined *)(param_1 + 0x36) = 0;
+      ((GameObject *)param_1)->anim.alpha = 0;
       if (*puVar2 != 0) {
         FUN_80017620(*puVar2);
         *puVar2 = 0;
@@ -5241,9 +5241,9 @@ void gcbaddieshield_update(int *obj) {
     *(s16 *)obj = (s16)(*(s16 *)obj + (s32)(lbl_803E3200 * timeDelta));
     ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (s32)(lbl_803E3204 * timeDelta));
     if (state[0] <= lbl_803E3208) {
-        *(u8 *)((char *)obj + 0x36) = (u8)(s32)(lbl_803E320C * (state[0] * lbl_803E3210));
+        ((GameObject *)obj)->anim.alpha = (u8)(s32)(lbl_803E320C * (state[0] * lbl_803E3210));
     } else {
-        *(u8 *)((char *)obj + 0x36) = 0xff;
+        ((GameObject *)obj)->anim.alpha = 0xff;
     }
 }
 
@@ -5329,7 +5329,7 @@ void mikabombshadow_init(int *obj)
     fn_80065684((int)obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
                 ((GameObject *)obj)->anim.localPosZ, &out, 0);
     ObjHits_DisableObject(obj);
-    *(u8 *)((char *)obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     ((GameObject *)obj)->anim.rotY = 0x4000;
     *(s16 *)obj = 0;
     ((GameObject *)obj)->anim.rotZ = 0;
@@ -5582,7 +5582,7 @@ void fireball_hitDetect(int *obj)
         } else {
             projectileParticleFxFn_80099660(obj, lbl_803E3354, 6);
         }
-        *(u8 *)((char *)obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         if (*(void **)state != NULL) {
             ModelLightStruct_free(*(void **)state);
             *(void **)state = NULL;
@@ -5736,17 +5736,17 @@ extern int loadObjectAtObject(int *obj, void *params);
 void mikabomb_update(int *obj)
 {
     int *state = ((GameObject *)obj)->extra;
-    uint timer = *(u8 *)((char *)obj + 0x36);
+    uint timer = ((GameObject *)obj)->anim.alpha;
 
     if (timer < 0xff) {
         f32 t = (f32)timer;
         f32 dec;
         dec = lbl_803E31C4 * timeDelta;
         if (t - dec > lbl_803E31C8) {
-            *(u8 *)((char *)obj + 0x36) = (f32)timer - dec;
+            ((GameObject *)obj)->anim.alpha = (f32)timer - dec;
         } else {
             Sfx_StopObjectChannel(obj, 0x7f);
-            *(u8 *)((char *)obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
             Obj_FreeObject(obj);
             return;
         }
@@ -5760,14 +5760,14 @@ void mikabomb_update(int *obj)
                 ((GameObject *)obj)->anim.velocityZ * timeDelta);
     }
 
-    if (*(u8 *)((char *)obj + 0x36) == 0xff || *(u8 *)((char *)state + 0xc) != 0) {
+    if (((GameObject *)obj)->anim.alpha == 0xff || *(u8 *)((char *)state + 0xc) != 0) {
         u32 localB;
         u32 localA;
         ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
         ObjHits_EnableObject(obj);
         if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 &&
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject()) {
-            if (*(u8 *)((char *)obj + 0x36) == 0xff) {
+            if (((GameObject *)obj)->anim.alpha == 0xff) {
                 int *st = ((GameObject *)obj)->extra;
                 u32 rnd;
                 localB = lbl_803E31A0;
@@ -5777,14 +5777,14 @@ void mikabomb_update(int *obj)
                 ObjHitbox_SetSphereRadius(obj,
                     (s32)(lbl_803E31A4 * (f32)(u32)*(u8 *)((char *)*(int **)&((GameObject *)obj)->anim.modelInstance + 0x62)));
                 CameraShake_Start(lbl_803E31A8, lbl_803E31AC, lbl_803E31B0);
-                *(u8 *)((char *)obj + 0x36) = 0xfe;
+                ((GameObject *)obj)->anim.alpha = 0xfe;
                 Obj_FreeObject((int *)*st);
                 *st = 0;
             }
             ObjHits_DisableObject(obj);
         } else {
             if (((GameObject *)obj)->anim.localPosY <= *(f32 *)((char *)state + 4) &&
-                *(u8 *)((char *)obj + 0x36) == 0xff) {
+                ((GameObject *)obj)->anim.alpha == 0xff) {
                 int *st = ((GameObject *)obj)->extra;
                 u32 rnd;
                 localA = lbl_803E31A0;
@@ -5794,7 +5794,7 @@ void mikabomb_update(int *obj)
                 ObjHitbox_SetSphereRadius(obj,
                     (s32)(lbl_803E31A4 * (f32)(u32)*(u8 *)((char *)*(int **)&((GameObject *)obj)->anim.modelInstance + 0x62)));
                 CameraShake_Start(lbl_803E31A8, lbl_803E31AC, lbl_803E31B0);
-                *(u8 *)((char *)obj + 0x36) = 0xfe;
+                ((GameObject *)obj)->anim.alpha = 0xfe;
                 Obj_FreeObject((int *)*st);
                 *st = 0;
                 *(u8 *)((char *)state + 0xc) = 1;
@@ -5811,7 +5811,7 @@ void mikabomb_init(int *obj)
     f32 fz;
 
     ObjHits_DisableObject(obj);
-    *(u8 *)((char *)obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     fz = lbl_803E31C8;
     ((GameObject *)obj)->anim.velocityX = fz;
     ((GameObject *)obj)->anim.velocityY = lbl_803E31D4;
@@ -6368,7 +6368,7 @@ void fireball_init(int *obj)
                 modelLightStruct_setGlowProjectionRadius(*(int *)state, lbl_803E337C);
             }
         }
-        *(u8 *)((char *)obj + 0x36) = 200;
+        ((GameObject *)obj)->anim.alpha = 200;
         p = (u8 *)state;
         for (i = 0; i < 5; i++) {
             *(u16 *)(p + 0x48) = randomGetRange(-32767, 32767);
@@ -6462,7 +6462,7 @@ void fireball_update(int *obj)
                 }
             }
             *(f32 *)((char *)state + 0x38) = lbl_803E3358;
-            *(u8 *)((char *)obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
             if (*(void **)state != NULL) {
                 ModelLightStruct_free(*(void **)state);
                 *(int *)state = 0;
@@ -6709,12 +6709,12 @@ void shield_update(int *obj)
         }
     }
     if (((GameObject *)obj)->anim.seqId == 2102) {
-        *(u8 *)((char *)obj + 0x36) = (s32)(state[1] / state[4] * (f32)(s32)randomGetRange(96, 127));
+        ((GameObject *)obj)->anim.alpha = (s32)(state[1] / state[4] * (f32)(s32)randomGetRange(96, 127));
     } else {
-        *(u8 *)((char *)obj + 0x36) = (s32)(state[1] / state[4] * (f32)(s32)randomGetRange(192, 255));
+        ((GameObject *)obj)->anim.alpha = (s32)(state[1] / state[4] * (f32)(s32)randomGetRange(192, 255));
     }
     Sfx_SetObjectSfxVolume(lbl_803E33A8, (s16 *)obj, 1069, (s32)(lbl_803E33E8 * (state[1] / state[4])));
-    if (*(u8 *)((char *)obj + 0x36) != 0) {
+    if (((GameObject *)obj)->anim.alpha != 0) {
         ((GameObject *)obj)->anim.flags &= ~0x4000;
     } else {
         ((GameObject *)obj)->anim.flags |= 0x4000;
@@ -6921,7 +6921,7 @@ void shield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
         u8 i;
         model = Obj_GetActiveModel((int)obj);
         savedF8 = ((GameObject *)obj)->anim.rootMotionScale;
-        savedB36 = *(u8 *)((char *)obj + 0x36);
+        savedB36 = ((GameObject *)obj)->anim.alpha;
         saved0 = *(s16 *)obj;
         saved2 = ((GameObject *)obj)->anim.rotY;
         saved4 = ((GameObject *)obj)->anim.rotZ;
@@ -6989,7 +6989,7 @@ void shield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
             }
         }
         ((GameObject *)obj)->anim.rootMotionScale = savedF8;
-        *(u8 *)((char *)obj + 0x36) = savedB36;
+        ((GameObject *)obj)->anim.alpha = savedB36;
         *(s16 *)obj = saved0;
         ((GameObject *)obj)->anim.rotY = saved2;
         ((GameObject *)obj)->anim.rotZ = saved4;
@@ -7103,7 +7103,7 @@ void superQuakeFn_8016d9fc(f32 *pos)
         ObjHitbox_SetSphereRadius(*(int *)(lbl_803AC6B8 + 0x1c), 1);
         ObjHits_SetHitVolumeSlot(*(int *)(lbl_803AC6B8 + 0x1c), 17, 5, 0);
         *(f32 *)(*(int *)(lbl_803AC6B8 + 0x1c) + 8) = lbl_803E32D0;
-        *(u8 *)(*(int *)(lbl_803AC6B8 + 0x1c) + 0x36) = 0xff;
+        ((GameObject *)*(int *)(lbl_803AC6B8 + 0x1c))->anim.alpha = 0xff;
     }
 }
 #pragma peephole reset
@@ -7339,7 +7339,7 @@ void staff_update(int *obj)
             *(f32 *)(lbl_803AC6B8 + 0x18) = w;
             *(f32 *)(lbl_803AC6B8 + 0x10) = *(f32 *)(lbl_803AC6B8 + 0x10) * lbl_803E32E8;
             *(f32 *)(lbl_803AC6B8 + 0x14) = *(f32 *)(lbl_803AC6B8 + 0x14) * lbl_803E32EC;
-            *(u8 *)(*(int *)(q + 0x1c) + 0x36) = w;
+            ((GameObject *)*(int *)(q + 0x1c))->anim.alpha = w;
             *(f32 *)(*(int *)(q + 0x1c) + 8) += lbl_803E32F0;
             if (*(f32 *)(lbl_803AC6B8 + 0x18) < lbl_803E3288) {
                 q[0x20] = 0;

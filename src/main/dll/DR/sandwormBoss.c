@@ -960,7 +960,7 @@ void FUN_8019c038(int param_1,int param_2)
     uVar4 = FUN_80017690(piVar5[3]);
     if (uVar4 == 0) {
       *(byte *)(piVar5 + 0x5d) = *(byte *)(piVar5 + 0x5d) & 0xbf;
-      *(undefined *)(param_1 + 0x36) = 0;
+      ((GameObject *)param_1)->anim.alpha = 0;
     }
     else {
       piVar5[5] = 0x3c;
@@ -2052,7 +2052,7 @@ void FUN_8019dcb8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uVar12 = FUN_8000680c(uVar4,0x10);
   }
   if (!bVar1) {
-    *(undefined *)(iVar10 + 0x36) = 0;
+    ((GameObject *)iVar10)->anim.alpha = 0;
     *(undefined *)(param_11 + 0x56) = 0;
     do {
       iVar9 = ObjMsg_Pop(uVar4,&uStack_34,auStack_30,&local_38);
@@ -2583,7 +2583,7 @@ void babycloudrunner_init_OLD_v1_1(int param_1)
   *puVar1 = 0;
   puVar1[1] = 0;
   ObjHits_EnableObject(param_1);
-  *(undefined *)(param_1 + 0x36) = 0x80;
+  ((GameObject *)param_1)->anim.alpha = 0x80;
   return;
 }
 
@@ -2983,8 +2983,8 @@ void FUN_8019f00c(int param_1)
     if ((uVar1 >> 5 & 0xff) != 0) {
       ObjGroup_AddObject(param_1,0x4e);
     }
-    if (*(char *)(param_1 + 0x36) != '\0') {
-      *(char *)(param_1 + 0x36) = *(char *)(param_1 + 0x36) + -1;
+    if ((s8)((GameObject *)param_1)->anim.alpha != '\0') {
+      ((GameObject *)param_1)->anim.alpha = (s8)((GameObject *)param_1)->anim.alpha + -1;
     }
   }
   else {
@@ -2995,8 +2995,8 @@ void FUN_8019f00c(int param_1)
     if ((uVar1 >> 5 & 0xff) == 0) {
       ObjGroup_RemoveObject(param_1,0x4e);
     }
-    if (*(char *)(param_1 + 0x36) != -1) {
-      *(char *)(param_1 + 0x36) = *(char *)(param_1 + 0x36) + '\x01';
+    if ((s8)((GameObject *)param_1)->anim.alpha != -1) {
+      ((GameObject *)param_1)->anim.alpha = (s8)((GameObject *)param_1)->anim.alpha + '\x01';
     }
   }
   return;
@@ -4060,8 +4060,8 @@ void spiritdoorspirit_update(int *obj) {
         if (sub->active != 0) {
             ObjGroup_AddObject(obj, 0x4e);
         }
-        if (*(u8*)((char*)obj + 0x36) != 0) {
-            *(u8*)((char*)obj + 0x36) = (u8)(*(u8*)((char*)obj + 0x36) - 1);
+        if (((GameObject *)obj)->anim.alpha != 0) {
+            ((GameObject *)obj)->anim.alpha = (u8)(((GameObject *)obj)->anim.alpha - 1);
         }
     } else {
         fn_80098B18((int)obj, lbl_803DBE78, 5, 0, 0, 0);
@@ -4069,8 +4069,8 @@ void spiritdoorspirit_update(int *obj) {
         if (sub->active == 0) {
             ObjGroup_RemoveObject(obj, 0x4e);
         }
-        if (*(u8*)((char*)obj + 0x36) < 0xff) {
-            *(u8*)((char*)obj + 0x36) = (u8)(*(u8*)((char*)obj + 0x36) + 1);
+        if (((GameObject *)obj)->anim.alpha < 0xff) {
+            ((GameObject *)obj)->anim.alpha = (u8)(((GameObject *)obj)->anim.alpha + 1);
         }
     }
 }
@@ -4748,7 +4748,7 @@ void windlift_init(int* obj, u8* def)
             sub->timer = 0x3c;
         } else {
             sub->active = 0;
-            *(u8*)((char*)obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
         }
     }
     {
@@ -5285,17 +5285,17 @@ void windlift_update(int* obj)
     int** objs;
     def = *(u8**)((char*)obj + 0x4c);
     if (sub->active) {
-        level = (int)(lbl_803E41BC * timeDelta + (f32)(int)*(u8*)((char*)obj + 0x36));
+        level = (int)(lbl_803E41BC * timeDelta + (f32)(int)((GameObject *)obj)->anim.alpha);
         if (sub->gamebit != -1 && GameBit_Get(sub->gamebit) == 0) {
             sub->active = 0;
         }
     } else {
-        level = (int)-(lbl_803E41BC * timeDelta - (f32)(int)*(u8*)((char*)obj + 0x36));
+        level = (int)-(lbl_803E41BC * timeDelta - (f32)(int)((GameObject *)obj)->anim.alpha);
         if (sub->gamebit != -1 && GameBit_Get(sub->gamebit) != 0) {
             sub->active = 1;
         }
     }
-    *(u8*)((char*)obj + 0x36) = (level < 0) ? 0 : ((level > 0xff) ? 0xff : level);
+    ((GameObject *)obj)->anim.alpha = (level < 0) ? 0 : ((level > 0xff) ? 0xff : level);
     if ((GameBit_Get(0x57) != 0 || sub->duration > 0xa) && sub->active) {
         int t = sub->timer;
         sub->timer = t + 1;
@@ -6095,7 +6095,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         if (sub->chatterState == 2) {
             sub->chatterState = 1;
         }
-        *(u8*)((char*)obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~1;
         Obj_RemoveFromUpdateList(obj);
         *(s16*)((char*)obj + 6) |= 0x4000;
