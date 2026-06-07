@@ -14,6 +14,7 @@ typedef struct AnimBehaviorConfig {
   u8 facingAngleByte;
   s16 primaryConditionId;
   s16 secondaryConditionId;
+  u8 pad20[0x24 - 0x20];
   s16 readyConditionId;
   u8 behaviorMode;
   u8 pad27[0x2C - 0x27];
@@ -48,5 +49,27 @@ typedef struct AnimBehaviorObject {
   u8 padB2[0xB8 - 0xB2];
   AnimBehaviorState *runtimeState;
 } AnimBehaviorObject;
+
+STATIC_ASSERT(offsetof(AnimBehaviorConfig, forceRadiusByte) == 0x19);
+STATIC_ASSERT(offsetof(AnimBehaviorConfig, speedScaleByte) == 0x1A);
+STATIC_ASSERT(offsetof(AnimBehaviorConfig, facingAngleByte) == 0x1B);
+STATIC_ASSERT(offsetof(AnimBehaviorConfig, primaryConditionId) == 0x1C);
+STATIC_ASSERT(offsetof(AnimBehaviorConfig, secondaryConditionId) == 0x1E);
+STATIC_ASSERT(offsetof(AnimBehaviorConfig, readyConditionId) == 0x24);
+STATIC_ASSERT(offsetof(AnimBehaviorConfig, behaviorMode) == 0x26);
+STATIC_ASSERT(offsetof(AnimBehaviorConfig, activationEventId) == 0x2C);
+
+STATIC_ASSERT(offsetof(AnimBehaviorState, reboundVelocityX) == 0x10C);
+STATIC_ASSERT(offsetof(AnimBehaviorState, reboundVelocityY) == 0x110);
+STATIC_ASSERT(offsetof(AnimBehaviorState, reboundVelocityZ) == 0x114);
+STATIC_ASSERT(offsetof(AnimBehaviorState, state) == 0x118);
+STATIC_ASSERT(offsetof(AnimBehaviorState, behaviorFlags) == 0x119);
+STATIC_ASSERT(offsetof(AnimBehaviorState, queuedEvent) == 0x11C);
+
+STATIC_ASSERT(offsetof(AnimBehaviorObject, config) == 0x4C);
+STATIC_ASSERT(offsetof(AnimBehaviorObject, modeIndex) == 0xAC);
+STATIC_ASSERT(offsetof(AnimBehaviorObject, statusFlags) == 0xAF);
+STATIC_ASSERT(offsetof(AnimBehaviorObject, objectFlags) == 0xB0);
+STATIC_ASSERT(offsetof(AnimBehaviorObject, runtimeState) == 0xB8);
 
 #endif /* MAIN_DLL_ANIM_INTERNAL_H_ */

@@ -30,11 +30,11 @@ extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
-extern undefined4* DAT_803dd6e8;
+extern LaserTriggerInterface **DAT_803dd6e8;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de940;
 extern undefined4 DAT_803de944;
 extern undefined4 DAT_803de946;
@@ -283,7 +283,7 @@ void FUN_801fd828(int param_1)
     uVar2 = GameBit_Get((int)*psVar5);
     if ((((short)uVar2 == 0) && (*(char *)(psVar5 + 2) == '\0')) && (sVar4 != 0)) {
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
-      iVar3 = (**(code **)(*DAT_803dd6e8 + 0x20))(DAT_803de948);
+      iVar3 = (*DAT_803dd6e8)->isEventReady((int)DAT_803de948);
       if ((iVar3 != 0) &&
          (dVar6 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar1 + 0x18)),
          dVar6 < (double)lbl_803E6DE8)) {
@@ -334,7 +334,7 @@ void FUN_801fd964(int param_1)
 {
   byte bVar1;
   
-  bVar1 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_1 + 0xac));
+  bVar1 = (*DAT_803dd72c)->getMode((int)*(char *)(param_1 + 0xac));
   if (bVar1 == 2) {
     DAT_803de948 = 0x83b;
   }
@@ -654,14 +654,14 @@ void dbegg_processMessages(int obj)
   extern f32 lbl_803E61C8;
   extern f32 lbl_803E61CC;
 
+  AnimBehaviorConfig *config;
   int sub;
-  int data;
   u32 msgType = 0;
   int msgFlag = 0;
   int msgArg;
 
   sub = *(int *)&((GameObject *)obj)->extra;
-  data = *(int *)&((GameObject *)obj)->anim.placementData;
+  config = (AnimBehaviorConfig *)((GameObject *)obj)->anim.placementData;
 
   while (ObjMsg_Pop((void *)obj, &msgType, (uint *)&msgArg, (uint *)&msgFlag) != 0) {
     if (msgType == 17) {
@@ -701,9 +701,9 @@ void dbegg_processMessages(int obj)
           ObjHits_EnableObject(obj);
           break;
         case 19:
-          GameBit_Set(*(s16 *)(data + 0x1e), 1);
-          if (*(s16 *)(data + 0x2c) > 0) {
-            gameBitIncrement(*(s16 *)(data + 0x2c));
+          GameBit_Set(config->secondaryConditionId, 1);
+          if (config->activationEventId > 0) {
+            gameBitIncrement(config->activationEventId);
           }
           Obj_RemoveFromUpdateList(obj);
           ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
@@ -783,9 +783,9 @@ void FUN_801fe1c4(LaserObject *obj)
   }
   FUN_800400b0();
   if ((obj->statusFlags & LASER_OBJECT_STATUS_ACTIVE) != 0) {
-    bVar3 = (**(code **)(*DAT_803dd72c + 0x40))((int)obj->modeIndex);
+    bVar3 = (*DAT_803dd72c)->getMode((int)obj->modeIndex);
     if (bVar3 == LASEROBJ_MODE_SEQUENCE_B) {
-      iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(LASEROBJ_MAIN_SEQUENCE_B_EVENT);
+      iVar2 = (*DAT_803dd6e8)->isEventReady(LASEROBJ_MAIN_SEQUENCE_B_EVENT);
       if (iVar2 != 0) {
         GameBit_Set((int)state->primaryGameBit,1);
         GameBit_Set((int)state->secondaryGameBit,0);
@@ -794,7 +794,7 @@ void FUN_801fe1c4(LaserObject *obj)
       }
     }
     else if ((bVar3 < 2) && (bVar3 != 0)) {
-      iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(LASEROBJ_MAIN_SEQUENCE_A_EVENT);
+      iVar2 = (*DAT_803dd6e8)->isEventReady(LASEROBJ_MAIN_SEQUENCE_A_EVENT);
       if (iVar2 != 0) {
         GameBit_Set((int)state->primaryGameBit,1);
         GameBit_Set((int)state->secondaryGameBit,0);
@@ -1385,42 +1385,42 @@ extern int Obj_SetActiveModelIndex(int obj, int idx);
 #pragma scheduling off
 #pragma peephole off
 void dbegg_setupFromDef(int obj, u8 *state) {
-    u8 *def;
+    AnimBehaviorConfig *config;
     f32 local_unused;
 
-    def = (void *)((GameObject *)obj)->anim.placementData;
+    config = (AnimBehaviorConfig *)((GameObject *)obj)->anim.placementData;
     state[0x119] = 0;
-    *(s16 *)obj = (s16)(def[0x1b] << 8);
+    *(s16 *)obj = (s16)(config->facingAngleByte << 8);
     ((GameObject *)obj)->anim.rotY = 0;
     ((GameObject *)obj)->anim.rotZ = 0;
-    ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)(u8)def[0x1a] * lbl_803E61D0;
+    ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)config->speedScaleByte * lbl_803E61D0;
     ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
-    state[0x118] = (u8)(GameBit_Get(*(s16 *)(def + 0x1c)) != 0 ? 3 : 1);
+    state[0x118] = (u8)(GameBit_Get(config->primaryConditionId) != 0 ? 3 : 1);
     if (state[0x118] == 1) {
         if (fn_801FE560(obj, &local_unused, lbl_803E61C8, *(f32 *)&lbl_803E61C8, 1) == 0) {
             state[0x118] = 2;
         }
     }
-    if (def[0x26] != 0) {
+    if (config->behaviorMode != 0) {
         state[0x119] |= 1;
-        if ((u8)def[0x26] == 2) state[0x119] |= 2;
-        if ((u8)def[0x26] == 3) state[0x118] = 10;
-        if ((u8)def[0x26] == 4) {
+        if (config->behaviorMode == 2) state[0x119] |= 2;
+        if (config->behaviorMode == 3) state[0x118] = 10;
+        if (config->behaviorMode == 4) {
             state[0x119] |= 4;
             state[0x119] = (u8)(state[0x119] & ~1);
         }
-        if ((u8)def[0x26] == 5) {
+        if (config->behaviorMode == 5) {
             state[0x119] |= 8;
             state[0x119] |= 16;
         }
-        if ((u8)def[0x26] == 6) {
+        if (config->behaviorMode == 6) {
             Obj_SetActiveModelIndex(obj, 1);
             state[0x119] |= 8;
             state[0x119] |= 16;
         }
-        if ((u8)def[0x26] == 7) state[0x119] |= 32;
+        if (config->behaviorMode == 7) state[0x119] |= 32;
     }
-    state[0x118] = (u8)(GameBit_Get(*(s16 *)(def + 0x24)) != 0 ? 5 : 12);
+    state[0x118] = (u8)(GameBit_Get(config->readyConditionId) != 0 ? 5 : 12);
     if (state[0x118] == 5) {
         ObjGroup_AddObject(obj, 36);
     }
@@ -1604,7 +1604,7 @@ extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int ***listOut, int p6, int p7);
 extern int *gPartfxInterface;
-extern int *gGameUIInterface;
+extern LaserTriggerInterface **gGameUIInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -1770,34 +1770,35 @@ void vfplavastar_init(int obj, int def) {
 #pragma scheduling off
 #pragma peephole off
 void vfpspellplace_update(int obj) {
-    s16 *st;
+    LaserObject *spellPlace;
+    LaserState *state;
     u8 mode;
 
-    if (*(u8 *)(*(int *)&((GameObject *)obj)->extra + 4) == 0 && GameBit_Get(*(s16 *)(*(int *)&((GameObject *)obj)->extra + 2)) != 0) {
-        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
+    spellPlace = (LaserObject *)obj;
+    state = spellPlace->state;
+    if (state->gameBitLatched == 0 && GameBit_Get((int)state->secondaryGameBit) != 0) {
+        spellPlace->statusFlags &= ~LASER_OBJECT_STATUS_DISABLED;
     } else {
-        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
+        spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;
     }
     objRenderFn_80041018((void *)obj);
-    if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
-        mode = (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
+    if (spellPlace->statusFlags & LASER_OBJECT_STATUS_ACTIVE) {
+        mode = (*gMapEventInterface)->getMode((int)spellPlace->modeIndex);
         switch (mode) {
-            case 1:
-                st = ((GameObject *)obj)->extra;
-                if ((*(int (*)(int))*(int *)(*gGameUIInterface + 0x20))(0x123) != 0) {
-                    GameBit_Set(st[0], 1);
-                    GameBit_Set(st[1], 0);
-                    *(u8 *)(st + 2) = 1;
-                    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
+            case LASEROBJ_MODE_SEQUENCE_A:
+                if ((*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_A_EVENT) != 0) {
+                    GameBit_Set(state->primaryGameBit, 1);
+                    GameBit_Set(state->secondaryGameBit, 0);
+                    state->gameBitLatched = 1;
+                    spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;
                 }
                 break;
-            case 2:
-                st = ((GameObject *)obj)->extra;
-                if ((*(int (*)(int))*(int *)(*gGameUIInterface + 0x20))(0x83b) != 0) {
-                    GameBit_Set(st[0], 1);
-                    GameBit_Set(st[1], 0);
-                    *(u8 *)(st + 2) = 1;
-                    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
+            case LASEROBJ_MODE_SEQUENCE_B:
+                if ((*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_B_EVENT) != 0) {
+                    GameBit_Set(state->primaryGameBit, 1);
+                    GameBit_Set(state->secondaryGameBit, 0);
+                    state->gameBitLatched = 1;
+                    spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;
                 }
                 break;
         }
@@ -1809,18 +1810,22 @@ void vfpspellplace_update(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void vfpspellplace_init(int obj, s8 *def) {
-    s16 *st;
+    LaserObject *spellPlace;
+    LaserObjectMapData *mapData;
+    LaserState *state;
 
-    st = ((GameObject *)obj)->extra;
-    st[0] = *(s16 *)(def + 0x1e);
-    st[1] = *(s16 *)(def + 0x20);
-    *(u8 *)(st + 2) = 0;
-    *(s16 *)obj = (s16)((s8)def[0x18] << 8);
-    if (GameBit_Get(st[0]) != 0) {
-        *(u8 *)(st + 2) = 1;
-        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
+    spellPlace = (LaserObject *)obj;
+    mapData = (LaserObjectMapData *)def;
+    state = spellPlace->state;
+    state->primaryGameBit = mapData->primaryGameBit;
+    state->secondaryGameBit = mapData->secondaryGameBit;
+    state->gameBitLatched = 0;
+    spellPlace->modeWord = (s16)(mapData->modeIndex << LASEROBJ_MODE_WORD_SHIFT);
+    if (GameBit_Get(state->primaryGameBit) != 0) {
+        state->gameBitLatched = 1;
+        spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;
     }
-    ((GameObject *)obj)->objectFlags |= 0x6000;
+    spellPlace->objectFlags |= LASER_OBJECT_FLAGS_SEQUENCE_CONTROL;
 }
 #pragma peephole reset
 #pragma scheduling reset
