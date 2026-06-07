@@ -2809,6 +2809,11 @@ resolved in the reconciliation pass: GVN keeps #110, unroller -> #113.)*
     reproduces the r0-temp + `mr` writeback shape. _GetInputValue's
     whole-fn register rotation vanished once the web structure matched —
     treat big rotations as SYMPTOMS until web shapes align.
+    (g) **Paired hi/lo uint masks in an import = ONE s64 variable.** The
+    tell: `slw; srawi ,31; or; or` set-pairs plus `and; and; xor 0; xor 0;
+    or; cmpwi` tests over two "separate" uint locals -- write `s64 mask;
+    mask |= 1 << i; if ((mask & bit) != 0)` and the whole pair machinery
+    falls out (CheckHitVolumes maskA/maskB/volBits, task #18).
 
 **NAMED CAP — n-ary sum canonicalization (>=3 variable terms): the
 invariant-statement-reorder class.** (task #14; promotes match-3's
@@ -3138,6 +3143,56 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     loadGameTextSequence 90.85->98.06, gameTextLoadForCurMap 88.18->95.13,
     gameTextRun chain byte-exact; 3x 8-level chains, commit 546beb98b.)
 
+119. **VARIABLE RECYCLING is a recoverable signature: target reusing a DEAD
+    variable's home register for a "new" value = the original source
+    REASSIGNED that variable; write the reassignment, not a fresh local.**
+    (task #18, objhits reconstructions -- 6 instances, each fixing placement
+    AND coloring at once.) Read the target reg: when a mid-fn value lands in
+    a register that previously held a now-dead param/local (f28=t becomes
+    the reflection factor, f29=axial becomes the new length, f22=sumSq
+    becomes len/depth, f14=bb becomes rs, r26=hit becomes idxB), a fresh
+    named local CANNOT reproduce it -- the fresh single-def web gets
+    forward-substituted into its consumer (statement placement collapses)
+    and/or colored elsewhere. Reassigning the dead variable makes the web
+    MULTI-DEF, which (a) blocks forward-substitution (#94 -- the def stays
+    a separate statement at its source position) and (b) pins the home reg.
+    PARAM reassignment is the strongest form (t/axial in
+    CalcSkeletonResponseXZ: `t = lbl + (one - t) * lbl2;` reproduced the
+    separate factor statement where every fresh-local spelling folded into
+    the next expression). Diagnostic order: when a single-use local's
+    statement keeps folding into its consumer against target, FIRST check
+    whether target's result reg was home to a dead earlier variable --
+    cheaper than #94's phi tricks and plausibly the original source (tight
+    hand-reused locals). Sibling of #107 (un-naming) and #108 (class
+    pools): this is the NAMING side -- merge webs the original merged.
+
+120. **Import-SPLIT aggregates: Ghidra routinely splits ONE stack array into
+    "array + adjacent scalars" (or two arrays) -- diagnose via whole-object
+    vs interior addi shapes, DSE'd store blocks, and un-reachable layout
+    orders; rejoin to fix frame layout AND store liveness.** (task #18;
+    extends #67(b)/#79.) Three tells, each independently sufficient:
+    (a) **whole-object vs interior address**: `aPtr = arr;` emits a DIRECT
+    `addi rS,r1,K`; `aPtr = &arr[k]` (interior) emits `addi r0,r1,K; mr
+    rS,r0` when register-homed -- so a target DIRECT addi into the middle
+    of your buffer = the buffer boundary is wrong, that address is a
+    whole-object base (CalcSkeletonResponse*: projBuf[9] + 3 accum scalars
+    were ONE float[12]; the import's separate decls placed the pair in an
+    unreachable layout order through every decl permutation). CAVEAT: when
+    the pointer is STACK-homed the interior form is `addi r0; stw r0` --
+    indistinguishable from whole-object; use tells (b)/(c).
+    (b) **DSE'd store block**: a target store-run your compile silently
+    drops (build green, stores absent) = the import split a written-only
+    tail off an aggregate whose base escapes -- rejoining under the
+    escaping base keeps the stores live (CheckHitVolumes defs[8]: the
+    def-B block defs[4..7] only lives because defA=defs escapes; as a
+    separate defB0[4] MWCC dead-store-eliminated it).
+    (c) **layout order unreachable by decl permutation**: when two
+    same-kind locals refuse every decl-order/type permutation (the
+    accumA-vs-projBuf 80/116 pair), suspect they are one object.
+    Frame-size deltas (#67) localize WHICH buffers; sibling-fn layouts
+    disambiguate sizes. After rejoining, spell tail accesses as
+    `arr[k+i]` or via a pointer local per target's addressing.
+
 **NAMED CAP — branchy-arg pre-eval hoist (the in-place L2R ternary arg).**
 When target evaluates a branchy ternary CALL ARG at its L2R slot (args 1-7
 set up first, the clamp 8th, then 9-10 — ObjHits_CheckSkeletonPair's two
@@ -3148,6 +3203,13 @@ named arg-locals for the leading args (gets the conv+loads above the clamp
 but the simple mr/addi args still sink below it). Naming args 2/5/6 as
 locals recovers MOST of the order (+7pp there) — do that, then bank the
 ~6-instr residual. Classify on sight: branchy arg + strict-L2R target.
+**BOUNDARY (task #18): the hoist does NOT fire when the args preceding the
+branchy slot are LOADS (stack-homed params/locals, lbz/lwz chains) rather
+than simple mr/addi setups -- and a shared base-pointer local (#112
+K-on-base, `pb2 = &spheresB[idxB * 4];` before the call) keeps the arms
+cheap enough that the ternary evaluates IN-SLOT (CheckHitVolumes
+RecordPositionHit y-arg, +3pp in one edit). Try the base-local + load-y
+args shape BEFORE banking a #117-cap residual.
 
 **OPEN CLASS — the addi-fold (3-use threshold) on big-offset slot-indexed
 fields.** At 3+ uses of `t->bigTable[slot]` (member offset > 16 bits), MWCC
