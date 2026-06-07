@@ -6,6 +6,7 @@
 #include "main/effect_interfaces.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 /*
@@ -888,7 +889,7 @@ void FUN_801e524c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   else {
     FUN_80006ba8(0,0x100);
     (**(code **)(*DAT_803dd6d4 + 0x84))(param_9,0);
-    (**(code **)(*DAT_803dd6d4 + 0x48))(3,param_9,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(3, (void *)param_9, -1);
     FUN_80017698(0x92a,1);
   }
   return;
@@ -992,7 +993,7 @@ void FUN_801e56ac(int param_1)
   
   if (((*(short *)(param_1 + 0x46) == 0x173) && (*(int *)(param_1 + 0xf4) == 0)) &&
      (uVar1 = FUN_80017690(0xa4b), uVar1 != 0)) {
-    (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
     *(undefined4 *)(param_1 + 0xf4) = 1;
   }
   *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
@@ -1182,7 +1183,7 @@ void FUN_801e59ec(uint param_1)
  */
 void FUN_801e5afc(int param_1)
 {
-  (**(code **)(*DAT_803dd6d4 + 0x24))(*(undefined4 *)(param_1 + 0xb8));
+  ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState(*(u8 **)(param_1 + 0xb8));
   (**(code **)(*DAT_803dd6f4 + 8))(param_1,0xffff,0,0,0);
   if (*(uint *)(param_1 + 0xf8) != 0) {
     FUN_80017620(*(uint *)(param_1 + 0xf8));
@@ -1306,9 +1307,9 @@ void FUN_801e5dd0(int param_1,int param_2)
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
   else if ((iVar2 != 0) && ((int)*(short *)(param_2 + 0x18) != iVar2 + -1)) {
-    (**(code **)(*DAT_803dd6d4 + 0x24))(iVar3);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState((u8 *)iVar3);
     if (*(short *)(param_2 + 0x18) != -1) {
-      (**(code **)(*DAT_803dd6d4 + 0x1c))(iVar3,param_2);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar3, (u8 *)param_2);
     }
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
@@ -2545,7 +2546,8 @@ void SB_SeqDoor_update(int *obj)
     if (((GameObject *)obj)->anim.seqId == 371) {
         if (((GameObject *)obj)->unkF4 == 0) {
             if ((u32)GameBit_Get(2635) != 0u) {
-                ((void (*)(int, int *, int))((void **)*gObjectTriggerInterface)[18])(0, obj, -1);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                    ->runSequence(0, obj, -1);
                 ((GameObject *)obj)->unkF4 = 1;
             }
         }
@@ -2584,7 +2586,7 @@ void SB_ShipGunBroke_update(int* obj)
 void ShipBattle_free(int* obj)
 {
     int* state = ((GameObject *)obj)->extra;
-    ((void(*)(int*))((void**)*gObjectTriggerInterface)[9])(state);
+    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->freeState((u8 *)state);
     ((void(*)(int*, int, int, int, int))((void**)*gTitleMenuControlInterface)[2])(obj, 0xffff, 0, 0, 0);
     {
         int light = ((GameObject *)obj)->unkF8;
@@ -2613,7 +2615,8 @@ void ShipBattle_init(int obj, int def)
     chainIndex = ((GameObject *)obj)->unkF4;
     if (chainIndex == 0) {
         if (*(s16 *)(def + 0x18) != 1) {
-            (*(void (**)(int, int))(*(int *)gObjectTriggerInterface + 0x1c))((int)state, def);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                ->loadAnimData((u8 *)state, (u8 *)def);
             ((GameObject *)obj)->unkF4 = *(s16 *)(def + 0x18) + 1;
             goto light_setup;
         }
@@ -2621,9 +2624,10 @@ void ShipBattle_init(int obj, int def)
 
     if (chainIndex != 0) {
         if (*(s16 *)(def + 0x18) != chainIndex - 1) {
-            (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x24))((int)state);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->freeState((u8 *)state);
             if (*(s16 *)(def + 0x18) != -1) {
-                (*(void (**)(int, int))(*(int *)gObjectTriggerInterface + 0x1c))((int)state, def);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                    ->loadAnimData((u8 *)state, (u8 *)def);
             }
             ((GameObject *)obj)->unkF4 = *(s16 *)(def + 0x18) + 1;
         }
@@ -2780,7 +2784,7 @@ void shop_func0B(int* obj, int v, int p3)
     s8* state = ((GameObject *)obj)->extra;
     state[0] = (s8)v;
     if (v != 0) {
-        ((void(*)(int, int*, int))((void**)*gObjectTriggerInterface)[18])(p3, obj, -1);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(p3, obj, -1);
     }
 }
 #pragma peephole reset
