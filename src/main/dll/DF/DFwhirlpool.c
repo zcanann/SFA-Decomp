@@ -52,6 +52,7 @@ extern f32 lbl_803E4E18;
 #pragma peephole off
 void dfropenode_render(int obj, int param_2, int param_3)
 {
+  ObjAnimComponent *objAnim;
   DFropenodeExtra *extra;
   int objDef;
   int eventId;
@@ -64,28 +65,29 @@ void dfropenode_render(int obj, int param_2, int param_3)
   f32 originalScale;
 
   renderState.objAndParam = (undefined4)param_2;
+  objAnim = &((GameObject *)obj)->anim;
   extra = ((GameObject *)obj)->extra;
-  objDef = *(int *)&((GameObject *)obj)->anim.placementData;
+  objDef = *(int *)&objAnim->placementData;
   eventId = *(s16 *)(objDef + 0x1c);
   if ((eventId != 0) && (GameBit_Get(eventId) != 0)) {
-    oldAlpha = *(u8 *)(obj + 0x36);
+    oldAlpha = objAnim->alpha;
     if (oldAlpha == 0x46) {
       Sfx_PlayFromObject(obj, 0x476);
     }
     fadeAlpha = oldAlpha - framesThisStep;
     if (fadeAlpha <= 0) {
-      *(u8 *)(obj + 0x36) = 0;
+      objAnim->alpha = 0;
       return;
     }
-    *(u8 *)(obj + 0x36) = (u8)fadeAlpha;
+    objAnim->alpha = (u8)fadeAlpha;
   } else {
-    if (*(u8 *)(obj + 0x36) == 0) {
+    if (objAnim->alpha == 0) {
       Sfx_PlayFromObject(obj, 0x475);
     }
-    if (*(u8 *)(obj + 0x36) < 0x46) {
-      *(u8 *)(obj + 0x36) += framesThisStep;
+    if (objAnim->alpha < 0x46) {
+      objAnim->alpha += framesThisStep;
     } else {
-      *(u8 *)(obj + 0x36) = 0x46;
+      objAnim->alpha = 0x46;
     }
   }
 
@@ -103,7 +105,7 @@ void dfropenode_render(int obj, int param_2, int param_3)
       renderState.green = 0xff;
       renderState.blue = 0xff;
     } else {
-      *(u8 *)(obj + 0x36) = 0xff;
+      objAnim->alpha = 0xff;
       getAmbientColor(0, &renderState.blue, &renderState.green, &renderState.red);
       renderState.green = (u8)(renderState.green * 200 >> 8);
       renderState.red = (u8)(renderState.red * 0xaa >> 8);
@@ -111,12 +113,12 @@ void dfropenode_render(int obj, int param_2, int param_3)
     {
       int alpha;
 
-      if (*(u8 *)(obj + 0x36) > 0x46) {
+      if (objAnim->alpha > 0x46) {
         fn_80078740();
         alpha = 0xff;
       } else {
         gxBlendFn_80078b4c();
-        alpha = (*(u8 *)(obj + 0x36) + *(u8 *)(obj + 0x36)) >> 1;
+        alpha = (objAnim->alpha + objAnim->alpha) >> 1;
       }
       selectTexture((&lbl_803DBF48)[*(u8 *)(objDef + 0x1b)], 0);
       setTextColor(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
@@ -134,7 +136,7 @@ void dfropenode_render(int obj, int param_2, int param_3)
       {
         int alpha;
 
-        alpha = (u8)(*(u8 *)(obj + 0x36) + randomGetRange(0, *(u8 *)(obj + 0x36)));
+        alpha = (u8)(objAnim->alpha + randomGetRange(0, objAnim->alpha));
         setTextColor(&renderState.objAndParam, renderState.blue, renderState.green,
                     renderState.red, alpha);
       }

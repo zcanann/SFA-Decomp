@@ -163,7 +163,7 @@ void ring_init(int obj, int setup) {
         RING_ARWING_Y_OFFSET(state) = lbl_803E70D8;
     } else {
         ((GameObject *)obj)->anim.flags |= RING_OBJFLAG_HIDDEN;
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
     }
 }
 #pragma scheduling reset
@@ -191,12 +191,12 @@ void ring_update(int obj)
 
     switch (RING_PHASE(state)) {
     case RING_PHASE_HIDDEN:
-        r = (int)((f32)(u32) * (u8 *)(obj + 0x36) - lbl_803E70B4 * timeDelta);
+        r = (int)((f32)(u32)((GameObject *)obj)->anim.alpha - lbl_803E70B4 * timeDelta);
         if (r < 0) {
             r = 0;
             ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | RING_OBJFLAG_HIDDEN);
         }
-        *(u8 *)(obj + 0x36) = (u8)r;
+        ((GameObject *)obj)->anim.alpha = (u8)r;
         bit = *(s16 *)(setup + RING_SETUP_ACTIVATE_BIT_OFFSET);
         if (bit > -1) {
             if (GameBit_Get(bit) != 0) {
@@ -211,9 +211,9 @@ void ring_update(int obj)
         }
         return;
     case RING_PHASE_ACTIVE:
-        r = (int)((f32)(u32) * (u8 *)(obj + 0x36) + lbl_803E70B4 * timeDelta);
+        r = (int)((f32)(u32)((GameObject *)obj)->anim.alpha + lbl_803E70B4 * timeDelta);
         if (r > RING_ALPHA_OPAQUE) r = RING_ALPHA_OPAQUE;
-        *(u8 *)(obj + 0x36) = (u8)r;
+        ((GameObject *)obj)->anim.alpha = (u8)r;
         bit = *(s16 *)(setup + RING_SETUP_ACTIVATE_BIT_OFFSET);
         if (bit > -1) {
             if (GameBit_Get(bit) == 0)
@@ -322,7 +322,7 @@ void ring_update(int obj)
                     }
                 }
                 RING_FLAGS_BYTE(state) &= ~0x40;
-                *(u8 *)(obj + 0x36) = 0;
+                ((GameObject *)obj)->anim.alpha = 0;
             }
             RING_PULL_TIMER(state) -= timeDelta;
             if (RING_PULL_TIMER(state) <= lbl_803E70A0) {
@@ -331,7 +331,7 @@ void ring_update(int obj)
                 ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
                 ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)setup)->posZ;
                 ((GameObject *)obj)->anim.rotX = 0;
-                *(u8 *)(obj + 0x36) = RING_ALPHA_OPAQUE;
+                ((GameObject *)obj)->anim.alpha = RING_ALPHA_OPAQUE;
                 ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
                 ((GameObject *)obj)->anim.velocityX = lbl_803E70A0;
                 ((GameObject *)obj)->anim.velocityY = lbl_803E70A0;
