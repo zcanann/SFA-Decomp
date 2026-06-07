@@ -376,12 +376,12 @@ void dimicewall_update(int *obj)
             for (i = 45; i != 0; i--) {
                 desc[3] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(-250, 250));
                 desc[4] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(0, 450));
-                (*gPartfxInterface)->spawnObject(obj, 2041, desc, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 2041, desc, 2, -1, NULL);
             }
             for (i = 25; i != 0; i--) {
                 desc[3] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(-250, 250));
                 desc[4] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(0, 450));
-                (*gPartfxInterface)->spawnObject(obj, 2042, desc, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 2042, desc, 2, -1, NULL);
             }
             if (*(int *)((char *)def + 0x14) != 7433) {
                 Sfx_PlayFromObject((int)obj, 1147);

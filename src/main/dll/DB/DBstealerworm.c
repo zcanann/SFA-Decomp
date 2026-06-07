@@ -562,7 +562,7 @@ void SB_Propeller_update(int obj) {
                 stk.c = ((GameObject *)obj)->anim.worldPosY;
                 stk.d = ((GameObject *)obj)->anim.worldPosZ;
                 stk.a = spd;
-                (*gPartfxInterface)->spawnObject((void *)obj, 0x9f, stk.pad, 0x200001, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x9f, stk.pad, 0x200001, -1, NULL);
             }
             ((SBPropellerState *)pf)->smokeTimer = (f32)(int)randomGetRange(0x5a, 0xf0);
         }
@@ -574,7 +574,7 @@ void SB_Propeller_update(int obj) {
             stk.c = stk.c - ((GameObject *)obj)->anim.worldPosY;
             stk.d = stk.d - ((GameObject *)obj)->anim.worldPosZ;
             for (i = 0; i < framesThisStep; i++) {
-                (*gPartfxInterface)->spawnObject((void *)obj, 0x7aa, stk.pad, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x7aa, stk.pad, 2, -1, NULL);
             }
         }
     }
@@ -1031,10 +1031,10 @@ void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
             stk.a = lbl_803E5804;
             stk.b = lbl_803E5800;
             stk.c = lbl_803E57FC;
-            (*gPartfxInterface)->spawnObject((void *)obj, 0xa3, stk.pad, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0xa3, stk.pad, 2, -1, NULL);
             stk.mode = (u16)(s32)((SBGalleonState *)p)->wanderB;
             stk.a = lbl_803E5808;
-            (*gPartfxInterface)->spawnObject((void *)obj, 0xa3, stk.pad, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0xa3, stk.pad, 2, -1, NULL);
         }
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E57A4);
     }

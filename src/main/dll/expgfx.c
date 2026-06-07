@@ -1102,7 +1102,7 @@ foundFirst:
               rot.z = slot->posZ.value;
             }
             gExpgfxFrameParityBit = 1;
-            (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001, -1, NULL);
             gExpgfxFrameParityBit = 0;
           }
           if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && (int)randomGetRange(0, 4) == 1) {

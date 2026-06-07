@@ -274,7 +274,7 @@ skip_insert: ;
         fx.type = 10;
         tmp = 0;
         do {
-          (*gPartfxInterface)->spawnObject((void *)obj, 0x7c3, &fx, 2, -1, 0);
+          (*gPartfxInterface)->spawnObject((void *)obj, 0x7c3, &fx, 2, -1, NULL);
           tmp++;
         } while (tmp < 3);
       }

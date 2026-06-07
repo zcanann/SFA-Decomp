@@ -93,7 +93,7 @@ void ecsh_cup_update(short *obj)
             if (*(f32 *)(state + 0x1c) <= lbl_803E5068) {
                 *(f32 *)(state + 0x1c) = lbl_803E506C;
                 if (mode != 3 && mode != 6 && mode != 7) {
-                    (*gPartfxInterface)->spawnObject(obj, 0x270, 0, 0, -1, 0);
+                    (*gPartfxInterface)->spawnObject(obj, 0x270, NULL, 0, -1, NULL);
                 }
             }
         }
@@ -129,7 +129,7 @@ void ecsh_cup_update(short *obj)
             *(f32 *)(state + 0x1c) -= timeDelta;
             if (*(f32 *)(state + 0x1c) <= lbl_803E5068) {
                 *(f32 *)(state + 0x1c) = lbl_803E506C;
-                (*gPartfxInterface)->spawnObject(obj, 0x271, 0, 0, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
             }
         } else if (mode == 7) {
             if (((GameObject *)obj)->anim.localPosY > *(f32 *)(state + 0x18) - lbl_803E5084) {
@@ -138,7 +138,7 @@ void ecsh_cup_update(short *obj)
                 if (*(f32 *)(state + 0x1c) <= lbl_803E5068) {
                     *(f32 *)(state + 0x1c) = lbl_803E506C;
                     if (mode != 3) {
-                        (*gPartfxInterface)->spawnObject(obj, 0x271, 0, 0, -1, 0);
+                        (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
                     }
                 }
             }

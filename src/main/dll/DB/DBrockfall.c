@@ -79,7 +79,7 @@ typedef struct FEseqobjectEffectParams {
 
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams *params)
 {
-  (*gPartfxInterface)->spawnObject((void *)obj, 0x85, params, 1, -1, 0);
+  (*gPartfxInterface)->spawnObject((void *)obj, 0x85, params, 1, -1, NULL);
 }
 
 static int FEseqobject_findControlObject(void)

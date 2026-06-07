@@ -5749,7 +5749,7 @@ void fn_8019D9F0(int* obj)
         } while (i < 3);
         if (sub->pylonTimer[0] + (sub->pylonTimer[1] + sub->pylonTimer[2]) < 0x12c
             && (int)randomGetRange(0, 3) == 0) {
-            (*gPartfxInterface)->spawnObject(obj, 0x81, 0, 0, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x81, NULL, 0, -1, NULL);
         }
         if (sub->pylonTimer[0] != 0 || sub->pylonTimer[1] != 0 || sub->pylonTimer[2] != 0) {
             if (sub->chime[0] > 0x64) {
