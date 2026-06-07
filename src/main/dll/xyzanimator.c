@@ -328,7 +328,7 @@ void kaldachompspit_init(int obj)
     extra = *(int **)&((GameObject *)obj)->extra;
     ((GameObject *)obj)->unkF4 = 400;
     ObjHits_DisableObject(obj);
-    *(u8 *)(obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject(obj, 0x278);
     ((GameObject *)obj)->objectFlags |= 0x2000;
     if (*(void **)extra == NULL) {
@@ -595,7 +595,7 @@ void FUN_8016aa90(uint param_1)
 {
   *(undefined4 *)(param_1 + 0xf4) = 0;
   ObjHits_DisableObject(param_1);
-  *(undefined *)(param_1 + 0x36) = 0xff;
+  ((GameObject *)param_1)->anim.alpha = 0xff;
   FUN_80006824(param_1,SFXsc_attack02);
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x6000;
   return;
@@ -666,7 +666,7 @@ void FUN_8016ab40(int param_1)
     *(float *)(param_1 + 0x24) = lbl_803E3DD4;
     *(float *)(param_1 + 0x28) = fVar1;
     *(float *)(param_1 + 0x2c) = fVar1;
-    *(undefined *)(param_1 + 0x36) = 0;
+    ((GameObject *)param_1)->anim.alpha = 0;
     ObjHits_DisableObject(param_1);
   }
   return;
@@ -703,7 +703,7 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if ((dVar4 <= dVar5) && ((double)*(float *)(param_9 + 0x28) <= dVar4)) {
       FUN_8016ae64(dVar4,dVar5,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
       FUN_80006824(param_9,SFXsc_projhitneg22);
-      *(undefined *)(param_9 + 0x36) = 0;
+      ((GameObject *)param_9)->anim.alpha = 0;
     }
     param_2 = (double)(*(float *)(param_9 + 0x28) * lbl_803DC074);
     param_3 = (double)(*(float *)(param_9 + 0x2c) * lbl_803DC074);
@@ -717,11 +717,11 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
       FUN_800069bc();
       FUN_80006920((double)lbl_803E3DD0);
       FUN_80006824(param_9,SFXsc_objselectyeah22);
-      *(undefined *)(param_9 + 0x36) = 0;
+      ((GameObject *)param_9)->anim.alpha = 0;
       *(undefined2 *)(iVar3 + 0x12) = 0x3c;
       param_1 = ObjHits_DisableObject(param_9);
     }
-    if (*(char *)(param_9 + 0x36) == -1) {
+    if ((s8)((GameObject *)param_9)->anim.alpha == -1) {
       iVar2 = 2;
       do {
         param_1 = (**(code **)(*DAT_803dd708 + 8))(param_9,0x4ba,0,1,0xffffffff,0);
@@ -732,7 +732,7 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   else {
     *(short *)(iVar3 + 0x12) = *(short *)(iVar3 + 0x12) + -1;
   }
-  if ((*(char *)(param_9 + 0x36) == '\0') && (*(short *)(iVar3 + 0x12) == 0)) {
+  if ((((GameObject *)param_9)->anim.alpha == 0) && (*(short *)(iVar3 + 0x12) == 0)) {
     FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
   }
   return;
@@ -1191,7 +1191,7 @@ void pollen_free(int obj) {
 void pinponspike_init(int obj) {
     ((GameObject *)obj)->unkF4 = 0;
     ObjHits_DisableObject(obj);
-    *(u8 *)(obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject(obj, SFXsc_attack02);
     ((GameObject *)obj)->objectFlags |= 0x6000;
 }
@@ -1206,7 +1206,7 @@ void pollen_hitDetect(int obj) {
         ((GameObject *)obj)->anim.velocityX = fz;
         ((GameObject *)obj)->anim.velocityY = fz;
         ((GameObject *)obj)->anim.velocityZ = fz;
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         ObjHits_DisableObject(obj);
     }
 }
@@ -1415,7 +1415,7 @@ void pollen_init(int *obj) {
     *(s16 *)((char *)state + 6) = (s16)randomGetRange(0xe6, 0x1f4);
     *(s16 *)((char *)state + 0x10) = 0;
     *(s16 *)((char *)state + 0x12) = 0;
-    *(u8 *)((char *)obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     ObjHits_DisableObject(obj);
     {
         int *p = *(int **)((char *)obj + 0x64);
@@ -1525,7 +1525,7 @@ void pinponspike_update(int obj) {
             return;
         }
     }
-    if (*(u8 *)(obj + 0x36) != 0) {
+    if (((GameObject *)obj)->anim.alpha != 0) {
         vx = ((GameObject *)obj)->anim.velocityX * timeDelta;
         vy = ((GameObject *)obj)->anim.velocityY * timeDelta;
         vz = ((GameObject *)obj)->anim.velocityZ * timeDelta;
@@ -1542,7 +1542,7 @@ void pinponspike_update(int obj) {
             ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject() ||
              (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (int)getTrickyObject())) {
             int i;
-            *(u8 *)(obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
             ((GameObject *)obj)->unkF4 = 0x78;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
@@ -1551,7 +1551,7 @@ void pinponspike_update(int obj) {
             Sfx_PlayFromObject(obj, 0x279);
         } else if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0) {
             int i;
-            *(u8 *)(obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
             ((GameObject *)obj)->unkF4 = 0x78;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
@@ -1581,7 +1581,7 @@ void pollen_update(int obj) {
         if (prev >= lbl_803E313C && ((GameObject *)obj)->anim.velocityY <= lbl_803E313C) {
             fn_8016A660(obj);
             Sfx_PlayFromObject(obj, 0xb7);
-            *(u8 *)(obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
         }
         objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta, ((GameObject *)obj)->anim.velocityZ * timeDelta);
         ObjHits_SetHitVolumeSlot(obj, 0x16, 1, 0);
@@ -1593,18 +1593,18 @@ void pollen_update(int obj) {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E3138);
             Sfx_PlayFromObject(obj, 0xb6);
-            *(u8 *)(obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
             extra->fragmentSpawnTimer = 0x3c;
             ObjHits_DisableObject(obj);
         }
-        if (*(u8 *)(obj + 0x36) == 0xff) {
+        if (((GameObject *)obj)->anim.alpha == 0xff) {
             i = 2;
             do {
                 (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x4ba, 0, 1, -1, 0);
             } while (i-- != 0);
         }
     }
-    if (*(u8 *)(obj + 0x36) == 0 && extra->fragmentSpawnTimer == 0) {
+    if (((GameObject *)obj)->anim.alpha == 0 && extra->fragmentSpawnTimer == 0) {
         Obj_FreeObject(obj);
     }
 }
@@ -1677,17 +1677,17 @@ void pollenfragment_update(int obj) {
     if ((((PollenFragmentExtra *)extra)->def)->timed) {
         *(f32 *)(extra + 8) -= timeDelta;
         if (*(f32 *)(extra + 8) <= lbl_803E3160) {
-            if (*(u8 *)(obj + 0x36) == 0xff) {
+            if (((GameObject *)obj)->anim.alpha == 0xff) {
                 i = 2;
                 do {
                     (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, (int)(((PollenFragmentExtra *)extra)->def)->burstFx, 0, 1, -1, 0);
                 } while (i-- != 0);
             }
             *(f32 *)(extra + 8) = lbl_803E3160;
-            if (*(u8 *)(obj + 0x36) >= framesThisStep << 3) {
-                *(u8 *)(obj + 0x36) = *(u8 *)(obj + 0x36) - (framesThisStep << 3);
+            if (((GameObject *)obj)->anim.alpha >= framesThisStep << 3) {
+                ((GameObject *)obj)->anim.alpha -= framesThisStep << 3;
             } else {
-                *(u8 *)(obj + 0x36) = 0;
+                ((GameObject *)obj)->anim.alpha = 0;
                 Obj_FreeObject(obj);
                 return;
             }
