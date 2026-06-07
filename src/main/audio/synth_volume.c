@@ -242,12 +242,11 @@ int synthHWMessageHandler(int mode, u32 arg)
 
     switch (mode) {
     case 0: {
-        typedef struct { u8 pad0[0xf4]; u32 id; u8 pad1[0x11c - 0xf8]; u8 block; u8 pad2[0x404 - 0x11d]; } SynthVoiceRec;
-        if (((SynthVoiceRec *)synthVoice)[arg & 0xff].block != 0) {
+        if (*((synthVoice + 0x11c) + (arg & 0xff) * 0x404) != 0) {
             break;
         }
         synthHandleVirtualSampleDone(hwGetVirtualSampleID(arg & 0xff));
-        if (arg != ((SynthVoiceRec *)synthVoice)[arg & 0xff].id) {
+        if (arg != *(u32 *)((u8 *)(synthVoice + 0xf4) + (arg & 0xff) * 0x404)) {
             break;
         }
         macSampleEndNotify();
