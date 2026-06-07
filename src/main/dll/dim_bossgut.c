@@ -305,7 +305,7 @@ int bombplant_SeqFn(int *obj)
         int *src;
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
         src = *(int **)&((GameObject *)obj)->anim.placementData;
-        *(u8 *)((char *)obj + 0x36) = 0xff;
+        ((GameObject *)obj)->anim.alpha = 0xff;
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
         ((GameObject *)obj)->anim.localPosX  = *(f32 *)((char *)src + 0x8);
         ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)src + 0xc);
@@ -445,11 +445,11 @@ void enemymushroom_update(int *obj)
     case 2:
         *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x6);
         if (*(u8 *)(state + 0x37) & 0x2) {
-            int t = *(u8 *)((char *)obj + 0x36) - framesThisStep * 4;
+            int t = ((GameObject *)obj)->anim.alpha - framesThisStep * 4;
             if (t < 0) {
                 t = 0;
             }
-            *(u8 *)((char *)obj + 0x36) = (u8)t;
+            ((GameObject *)obj)->anim.alpha = (u8)t;
             *(f32 *)(state + 0x0) = *(f32 *)(state + 0x0) + timeDelta;
             if (*(f32 *)(state + 0x0) > (f32)*(s16 *)(state + 0x34)) {
                 enemymushroom_resetToSpawn((EnemyMushroomObject *)obj, (EnemyMushroomState *)state, 1);
