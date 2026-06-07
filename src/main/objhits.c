@@ -2331,28 +2331,24 @@ void ObjHits_CheckTrackContact(int objA,int objB)
   int iVar16;
   float *puVar17;
   int iVar18;
-  undefined *puVar19;
-  undefined *puVar20;
-  float *pfVar21;
-  float *pfVar22;
   int iVar23;
   uint auStack_148 [6];
-  float local_130 [18];
+  struct {
+    u8 out[64];
+    f32 radii[4];
+    u8 ids[4];
+    u8 sevens[4];
+    u8 pad58[4];
+    int kinds[5];
+  } hb;
   float local_e8 [18];
-  undefined auStack_a0 [64];
-  float local_60 [4];
-  undefined local_50 [12];
-  int local_44 [5];
+  float local_130 [18];
   f32 fConv;
 
   stateA = (ObjHitsPriorityState *)((GameObject *)objA)->anim.hitReactState;
-  if ((uint)objB == (uint)objA) {
-    mask2 = stateA->objectHitMask >> 4;
-  }
-  else {
-    mask2 = stateA->objectHitMask & 0xf;
-  }
-  if ((mask2 != 0) && (stateA->suppressOutgoingHits == 0)) {
+  mask2 = (uint)objB == (uint)objA ? stateA->objectHitMask >> 4
+                                   : stateA->objectHitMask & 0xf;
+  if ((mask2 != 0) && (*(s8 *)&stateA->suppressOutgoingHits == 0)) {
     stateB = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
     if ((stateB->secondaryShapeFlags & 0x10) != 0) {
       piVar9 = ObjHits_GetActiveModel(objB);
@@ -2372,12 +2368,12 @@ void ObjHits_CheckTrackContact(int objA,int objB)
            ((mask2 & 1 << (int)*(char *)(iVar18 + 0x17)) != 0)) {
           uVar7 = (uint)*(ushort *)(iVar18 + 0x14);
           if (uVar7 != 0) {
-            pfVar22 = (float *)((int)local_e8 + iVar16);
-            pfVar21 = (float *)((int)local_130 + iVar16);
-            puVar20 = auStack_a0 + iVar15;
-            puVar19 = auStack_a0 + iVar23;
-            for (; uVar7 != 0; uVar7 = (uVar7 & 0xfff) << 4) {
-              uVar1 = ((int)(uVar7 & 0xf000) >> 0xc) + iVar11 & 0xffff;
+            float *pfVar22 = (float *)((int)local_e8 + iVar16);
+            float *pfVar21 = (float *)((int)local_130 + iVar16);
+            u8 *puVar20 = (u8 *)&hb + iVar15;
+            u8 *puVar19 = (u8 *)&hb + iVar23;
+            for (; (u16)uVar7 != 0; uVar7 = (u16)((u16)uVar7 << 4)) {
+              uVar1 = (((u16)uVar7 & 0xf000) >> 0xc) + iVar11 & 0xffff;
               if (iVar23 < 4) {
                 puVar17 = puVar13 + uVar1 * 4;
                 *pfVar22 = playerMapOffsetX + puVar17[1];
@@ -2388,8 +2384,8 @@ void ObjHits_CheckTrackContact(int objA,int objB)
                 pfVar21[1] = *(float *)(iVar18 + 8);
                 pfVar21[2] = playerMapOffsetZ + *(float *)(iVar18 + 0xc);
                 *(float *)(puVar20 + 0x40) = *puVar17;
-                *(s8 *)&puVar19[0x50] = -1;
-                puVar19[0x54] = 7;
+                *(s8 *)(puVar19 + 0x50) = -1;
+                *(puVar19 + 0x54) = 7;
                 pfVar22 = pfVar22 + 3;
                 pfVar21 = pfVar21 + 3;
                 puVar20 = puVar20 + 4;
@@ -2408,9 +2404,9 @@ void ObjHits_CheckTrackContact(int objA,int objB)
               *(float *)((int)local_130 + iVar16) = playerMapOffsetX + *(float *)(iVar10 + 4);
               *(undefined4 *)((int)local_130 + iVar16 + 4) = *(undefined4 *)(iVar10 + 8);
               *(float *)((int)local_130 + iVar16 + 8) = playerMapOffsetZ + *(float *)(iVar10 + 0xc);
-              *(float *)(auStack_a0 + iVar15 + 0x40) = *puVar8;
-              *(s8 *)&local_50[iVar23] = -1;
-              local_50[iVar23 + 4] = 7;
+              *(float *)(((u8 *)&hb + iVar15) + 0x40) = *puVar8;
+              *(s8 *)(((u8 *)&hb + 0x50) + iVar23) = -1;
+              *(((u8 *)&hb + 0x54) + iVar23) = 7;
               iVar23 = iVar23 + 1;
               iVar15 = iVar15 + 4;
               iVar16 = iVar16 + 0xc;
@@ -2433,47 +2429,41 @@ void ObjHits_CheckTrackContact(int objA,int objB)
       if (fConv < lbl_803DE91C) {
         fConv = lbl_803DE91C;
       }
-      local_60[0] = fConv;
-      *(s8 *)&local_50[0] = -1;
-      local_50[4] = 7;
+      hb.radii[0] = fConv;
+      *(s8 *)&hb.ids[0] = -1;
+      hb.sevens[0] = 7;
       iVar23 = 1;
     }
     if (iVar23 != 0) {
-      hitDetect_calcSweptSphereBounds(auStack_148,local_130,local_e8,local_60,iVar23);
+      hitDetect_calcSweptSphereBounds(auStack_148,local_130,local_e8,hb.radii,iVar23);
       hitDetectFn_800691c0(objB,auStack_148,(uint)stateB->trackContactMask,1);
-      bVar4 = hitDetectFn_80067958(objB,local_130,local_e8,iVar23,auStack_a0,0);
+      bVar4 = hitDetectFn_80067958(objB,local_130,local_e8,iVar23,hb.out,0);
       if (bVar4 != 0) {
-        if ((bVar4 & 1) == 0) {
-          if ((bVar4 & 2) == 0) {
-            if ((bVar4 & 4) == 0) {
-              iVar23 = 3;
-            }
-            else {
-              iVar23 = 2;
-            }
-          }
-          else {
-            iVar23 = 1;
-          }
-        }
-        else {
+        if ((bVar4 & 1) != 0) {
           iVar23 = 0;
         }
-        stateB->contactHitVolume = local_50[iVar23];
+        else if ((bVar4 & 2) != 0) {
+          iVar23 = 1;
+        }
+        else if ((bVar4 & 4) != 0) {
+          iVar23 = 2;
+        }
+        else {
+          iVar23 = 3;
+        }
+        stateB->contactHitVolume = hb.ids[iVar23];
         stateB->contactPosX = local_e8[iVar23 * 3];
         stateB->contactPosY = local_e8[iVar23 * 3 + 1];
         stateB->contactPosZ = local_e8[iVar23 * 3 + 2];
-        if (local_44[iVar23] == 0) {
-          stateB->contactFlags = stateB->contactFlags | 1;
+        if (hb.kinds[iVar23] != 0) {
+          stateB->contactFlags = stateB->contactFlags | 2;
         }
         else {
-          stateB->contactFlags = stateB->contactFlags | 2;
+          stateB->contactFlags = stateB->contactFlags | 1;
         }
       }
     }
   }
-  _restgpr_23();
-  return;
 }
 #pragma peephole reset
 #pragma scheduling reset
