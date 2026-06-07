@@ -5792,7 +5792,7 @@ typedef struct PartFxSpawn {
     u8  f62;
 } PartFxSpawn;
 
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 
 extern f32 lbl_803DB7F0;
 extern f32 lbl_803DB7F4;
@@ -5995,7 +5995,7 @@ int Effect6_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 
@@ -6461,7 +6461,7 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 #undef FILL9
@@ -6869,7 +6869,7 @@ int Effect8_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 #undef FILL8
@@ -7549,7 +7549,7 @@ cfg.f34 = lbl_803DF4FC;
             cfg.f44 = 0x500010;
             cfg.f48 = 0x400200;
             cfg.f42 = 0xe4;
-            (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+            (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
 LAB_800a69a8:
               cfg.f34 = lbl_803DF4FC;
               cfg.f3c = lbl_803DF4E8;
@@ -7558,7 +7558,7 @@ LAB_800a69a8:
               cfg.f44 = 0x500010;
               cfg.f48 = 0x400100;
               cfg.f42 = 0xe4;
-              (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+              (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
 LAB_800a6a18:
             cfg.f34 = lbl_803DF4FC;
             cfg.f3c = lbl_803DF504;
@@ -7567,7 +7567,7 @@ LAB_800a6a18:
             cfg.f44 = 0x100210;
             cfg.f48 = 0x200;
             cfg.f42 = 0xe4;
-            (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+            (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
             goto LAB_800a6a6c;
   case 0x55d:
             goto LAB_800aeb28;
@@ -7586,7 +7586,7 @@ LAB_800a6a6c:
           cfg.f44 = 0x500010;
           cfg.f48 = 0x400200;
           cfg.f42 = 0xe4;
-          (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+          (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
           goto LAB_800a6aec;
   case 0x558:
 
@@ -7604,7 +7604,7 @@ LAB_800a6aec:
         cfg.f44 = 0x500010;
         cfg.f48 = 0x400200;
         cfg.f42 = 0xe4;
-        (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+        (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
 LAB_800a6b6c:
         cfg.f34 = lbl_803DF4FC;
         if (param_6 != NULL) {
@@ -7619,7 +7619,7 @@ LAB_800a6b6c:
         cfg.f44 = 0x500010;
         cfg.f48 = 0x400100;
         cfg.f42 = 0xe4;
-        (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+        (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
     break;
   case 0x55b:
 cfg.f34 = lbl_803DF4FC;
@@ -8063,7 +8063,7 @@ cfg.f60 = 0x69;
             cfg.f4c = 0xb1df;
             cfg.f50 = 0xb1df;
             cfg.f54 = 0xffff;
-            (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+            (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
             cfg.f38 = lbl_803DF554;
             cfg.f60 = 0x69;
             cfg.f3c = lbl_803DF558;
@@ -8077,7 +8077,7 @@ cfg.f60 = 0x69;
             cfg.f54 = 0xffff;
             cfg.f08 = 0;
             cfg.f42 = 0x4ff;
-            (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+            (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
             cfg.f38 = lbl_803DF55C;
             cfg.f60 = 0x69;
             cfg.f3c = lbl_803DF560;
@@ -8941,7 +8941,7 @@ dVar13 = lbl_803DF5B4;
                 cfg.f38 = cfg.f38 + cfg.f20;
               }
             }
-            (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+            (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
           }
     break;
   case 0x55c:
@@ -9060,7 +9060,7 @@ dVar16 = lbl_803DF660;
               cfg.f38 = cfg.f38 + fVar3;
               cfg.f34 = cfg.f34 + fVar2;
               cfg.f30 = cfg.f30 + fVar1;
-              (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0,param_2,0);
+              (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
             }
     break;
   case 0x35:
@@ -10344,7 +10344,7 @@ LAB_800aeb30:
       }
     }
   }
-  return (*(int (**)())(*gExpgfxInterface + 8))(&cfg,0xffffffff,param_2,0);
+  return (*gExpgfxInterface)->spawnEffect(&cfg,0xffffffff,param_2,0);
 }
 
 
@@ -11196,7 +11196,7 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     lbl_803DD348 = lbl_803DD2C4;
     return uVar1;
 }
@@ -11608,7 +11608,7 @@ int Effect7_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 #undef FILL368
@@ -11917,7 +11917,7 @@ int Effect5_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 
@@ -12429,7 +12429,7 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 #undef FILL350
@@ -13350,7 +13350,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 
@@ -13802,21 +13802,21 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f44 = 0x480000;
         cfg.f48 = 0x202;
         cfg.f42 = 0x26c;
-        uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, 0, param_2, 0);
+        uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, 0, param_2, 0);
         cfg.f60 = 0xff;
         cfg.f3c = lbl_803DF7DC;
         cfg.f08 = 0xa;
         cfg.f44 = 0x480000;
         cfg.f48 = 0x2;
         cfg.f42 = 0x528;
-        uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, 0, param_2, 0);
+        uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, 0, param_2, 0);
         cfg.f60 = 0x37;
         cfg.f3c = lbl_803DF7B0;
         cfg.f08 = 0xa;
         cfg.f44 = 0x480000;
         cfg.f48 = 0x2;
         cfg.f42 = 0x528;
-        uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, 0, param_2, 0);
+        uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, 0, param_2, 0);
         cfg.f60 = 0x87;
         cfg.f3c = lbl_803DF7DC;
         cfg.f08 = 0xa;
@@ -14415,7 +14415,7 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
             }
         }
     }
-    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(&cfg, -1, param_2, 0);
     return uVar1;
 }
 #undef FILL320
