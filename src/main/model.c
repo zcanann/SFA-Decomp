@@ -982,22 +982,19 @@ extern f32 lbl_803DE864;
 void *allocModelStruct2(int **models, int count) {
     int i;
     int offset;
-    int *model;
-    u8 *entryBase;
+    int **p;
     u8 *state;
 
     state = mmAlloc(0x1c, 0x1a, 0);
     *(int *)(state + 4) = count;
     state[0x19] = 0;
     state[0x18] = 0;
-    entryBase = mmAlloc(count * 0xc, 0x1a, 0);
-    *(u8 **)state = entryBase;
-    offset = 0;
-    for (i = 0; i < count; i++) {
-        model = models[i];
-        *(int **)(entryBase + offset + 4) = model;
-        *(int *)(entryBase + offset + 8) = model[1];
-        *(void **)(entryBase + offset) = mmAlloc((*(int *)(entryBase + offset + 8) + 1) * 0x54, 0x1a, 0);
+    *(u8 **)state = mmAlloc(count * 0xc, 0x1a, 0);
+    for (i = 0, p = models, offset = 0; i < count; i++) {
+        *(int **)(*(u8 **)state + offset + 4) = *p;
+        *(int *)(*(u8 **)state + offset + 8) = (*p)[1];
+        *(void **)(*(u8 **)state + offset) = mmAlloc((*(int *)(*(u8 **)state + offset + 8) + 1) * 0x54, 0x1a, 0);
+        p++;
         offset += 0xc;
     }
     *(f32 *)(state + 8) = lbl_803DE858;
@@ -1018,8 +1015,7 @@ void Model_GetVertexPosition(u8 *model, int vertexIndex, f32 *out) {
         out[1] = (f32)vertex[1];
         out[2] = (f32)vertex[2];
     } else {
-        scale = lbl_803DE864;
-        out[0] = (f32)vertex[0] * scale;
+        out[0] = (f32)vertex[0] * (scale = lbl_803DE864);
         out[1] = (f32)vertex[1] * scale;
         out[2] = (f32)vertex[2] * scale;
     }
