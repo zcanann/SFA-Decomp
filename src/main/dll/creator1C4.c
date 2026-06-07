@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/creator1C4.h"
 #include "main/mapEventTypes.h"
@@ -402,7 +403,7 @@ extern undefined4 *gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void ecsh_cup_free(int *obj) {
-    ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject(obj);
 }
 void gpsh_scene_init(int *obj, int *def) {
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);

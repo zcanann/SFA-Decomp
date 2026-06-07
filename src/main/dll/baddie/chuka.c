@@ -1,4 +1,5 @@
 #include "main/dll/baddie/chuka.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/chukachuck.h"
 
@@ -71,8 +72,6 @@ void chuka_init(int obj, int params)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef void (*DfpFloorbarFreeFn)(void *obj);
-
 #pragma scheduling off
 #pragma peephole off
 void dfpfloorbar_free(int *obj)
@@ -80,7 +79,7 @@ void dfpfloorbar_free(int *obj)
   DfpFloorbarState *state;
 
   state = (DfpFloorbarState *)obj[0x2e];
-  ((DfpFloorbarFreeFn)(*(u32 *)(*gExpgfxInterface + 0x18)))(obj);
+  ((EffectInterface *)*gExpgfxInterface)->freeObject(obj);
   state->linkedObject = NULL;
   return;
 }

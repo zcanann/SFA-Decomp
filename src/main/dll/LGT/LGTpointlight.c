@@ -1,4 +1,5 @@
 #include "main/dll/LGT/LGTpointlight.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 
@@ -170,5 +171,5 @@ void wmworm_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (vis
 
 extern int *gExpgfxInterface;
 void wmworm_free(int obj) {
-    ((void (*)(int))((void**)*gExpgfxInterface)[6])(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }

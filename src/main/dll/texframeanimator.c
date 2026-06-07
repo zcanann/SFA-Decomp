@@ -1,4 +1,5 @@
 #include "main/dll/texframeanimator.h"
+#include "main/effect_interfaces.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
@@ -180,7 +181,7 @@ void magicdust_free(int param_1)
   if (*(uint *)(param_1 + 0xc4) != 0) {
     ObjLink_DetachChild(*(int *)(param_1 + 0xc4), param_1);
   }
-  (*(void (***)(int))gExpgfxInterface)[6](param_1);
+  (*(EffectInterface **)gExpgfxInterface)->freeObject((void *)param_1);
   return;
 }
 #pragma peephole reset
