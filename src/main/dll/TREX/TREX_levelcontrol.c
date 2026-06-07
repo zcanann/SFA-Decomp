@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/objhits_types.h"
@@ -284,8 +285,9 @@ void SB_ShipGun_update(int obj)
       local_58 = local_58 - ((GameObject *)obj)->anim.worldPosY;
       local_54[0] = local_54[0] - ((GameObject *)obj)->anim.worldPosZ;
       for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1) {
-        (*(code *)(*gPartfxInterface + 8))(obj,SB_SHIPGUN_SMOKE_PARTICLE_ID,local_68,
-                                           SB_SHIPGUN_SMOKE_PARTICLE_PARAM,0xffffffff,0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject(
+            (void *)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
+            SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
       }
       }
       break;
@@ -311,8 +313,9 @@ void SB_ShipGun_update(int obj)
       local_58 = local_58 - ((GameObject *)obj)->anim.worldPosY;
       local_54[0] = local_54[0] - ((GameObject *)obj)->anim.worldPosZ;
       for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1) {
-        (*(code *)(*gPartfxInterface + 8))(obj,SB_SHIPGUN_SMOKE_PARTICLE_ID,local_68,
-                                           SB_SHIPGUN_SMOKE_PARTICLE_PARAM,0xffffffff,0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject(
+            (void *)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
+            SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
       }
       break;
     }
@@ -359,7 +362,7 @@ void SB_CannonBall_free(int obj)
   int state;
 
   state = *(int *)&((GameObject *)obj)->extra;
-  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+  ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
   if (*(void **)(state + 0x20) != 0) {
     ModelLightStruct_free(*(void **)(state + 0x20));
     *(undefined4 *)(state + 0x20) = 0;
@@ -373,7 +376,7 @@ int SB_FireBall_getObjectTypeId(void) { return 0x0; }
 
 void SB_FireBall_free(int obj)
 {
-  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+  ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -395,15 +398,19 @@ extern void objfx_spawnFlaggedTrailBurst(int *obj, f32 f, int a, int b, int c, i
 void SB_CannonBall_update(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     if ((*(s8 *)((char *)state + 0x1a) & SB_CANNONBALL_INITIAL_BURST_FLAG) != 0) {
-        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, SB_CANNONBALL_BURST_PARTICLE_ID, 0, 1, -1, 0);
-        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, SB_CANNONBALL_BURST_PARTICLE_ID, 0, 1, -1, 0);
-        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, SB_CANNONBALL_BURST_PARTICLE_ID, 0, 1, -1, 0);
+        (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
+                                                            NULL, 1, -1, NULL);
+        (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
+                                                            NULL, 1, -1, NULL);
+        (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
+                                                            NULL, 1, -1, NULL);
         *(s8 *)((char *)state + 0x1a) = (s8)(*(s8 *)((char *)state + 0x1a) & ~SB_CANNONBALL_INITIAL_BURST_FLAG);
     } else {
         objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
         objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
     }
-    (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, SB_CANNONBALL_TRAIL_PARTICLE_ID, 0, 1, -1, 0);
+    (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_TRAIL_PARTICLE_ID,
+                                                        NULL, 1, -1, NULL);
     ((GameObject *)obj)->anim.rotY += SB_CANNONBALL_ROTATION_STEP;
     if ((*(s8 *)((char *)state + 0x1a) & SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG) == 0) {
         *(f32 *)state = ((GameObject *)obj)->anim.velocityX;
@@ -480,15 +487,15 @@ void SB_CannonBall_hitDetect(int *obj) {
     {
         int i;
         for (i = SB_CANNONBALL_SMOKE_PARTICLE_COUNT; i != 0; i--) {
-            (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
-                obj, SB_CANNONBALL_IMPACT_SMOKE_PARTICLE_ID, 0, 1, -1, 0);
+            (*(EffectInterface **)gPartfxInterface)->spawnObject(
+                obj, SB_CANNONBALL_IMPACT_SMOKE_PARTICLE_ID, NULL, 1, -1, NULL);
         }
     }
     {
         int i;
         for (i = SB_CANNONBALL_SPARK_PARTICLE_COUNT; i != 0; i--) {
-            (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
-                obj, SB_CANNONBALL_IMPACT_SPARK_PARTICLE_ID, 0, 1, -1, 0);
+            (*(EffectInterface **)gPartfxInterface)->spawnObject(
+                obj, SB_CANNONBALL_IMPACT_SPARK_PARTICLE_ID, NULL, 1, -1, NULL);
         }
     }
 }
