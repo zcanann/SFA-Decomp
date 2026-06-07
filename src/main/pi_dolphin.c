@@ -7632,7 +7632,7 @@ extern f32 lbl_803DEA90;
 extern f32 hudMatrix[];
 extern void C_MTXOrtho(f32 *mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 void initViewport(void) {
-    C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
+    C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, *(f32 *)&lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
 }
 #pragma scheduling reset
 
@@ -7668,29 +7668,34 @@ void fn_80050F2C(void) {
 #pragma peephole off
 #pragma dont_inline on
 int fn_8004AA24(int *ctx, int *ref) {
-    int target = ctx[4];
-    int *node = (int *)ref[0];
-    if (((s8 *)node)[0x19] == 0x24) {
+    int *node;
+    int target;
+    target = ctx[4];
+    node = (int *)ref[0];
+    switch (((s8 *)node)[0x19]) {
+    case 0x24: {
         u8 idx = ((u8 *)ref)[0xc];
         if ((idx & 0x80) == 0) {
             if (((u8 *)node)[3] != 0) {
-                return ((u8 *)node)[3] == target;
+                return target == ((u8 *)node)[3];
             } else {
-                int *arr = (int *)*(int *)((char *)ctx[0] + (idx << 4));
-                int *p = arr;
+                int *p;
+                int *arr;
                 int i;
-                for (i = 0; i < 4; i++) {
+                arr = (int *)*(int *)((char *)ctx[0] + (idx << 4));
+                for (i = 0, p = arr; i < 4; i++) {
                     if ((u32)node[5] == *(u32 *)((char *)p + 0x1c)) {
-                        return ((u8 *)arr)[i + 4] == target;
+                        return target == ((u8 *)arr)[i + 4];
                     }
                     p++;
                 }
-                return 0;
             }
         }
         return 0;
     }
-    return (int)node == target;
+    default:
+        return target == (int)node;
+    }
 }
 void fn_8004AAD4(u8* arr, int size, int idx) {
     u32 key = *(u32*)(arr + idx * 8);
