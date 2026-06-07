@@ -37,18 +37,19 @@ void expgfx_updateResourceEntries(int unused) {
 int expgfx_acquireResourceEntry(int resourceId) {
     ExpgfxResourceEntry *entry;
     ExpgfxResourceEntry *resourceTable;
+    ExpgfxResourceHandle *resourceHandle;
     int minEvictionScore;
     int minIndex;
     int i;
-    void *texture;
 
     i = 0;
     resourceTable = EXPGFX_RUNTIME_DATA->resourceTable;
     for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
         entry = &resourceTable[i];
         if (entry->resource != NULL && resourceId == entry->resourceId) {
-            texture = entry->resource;
-            if (texture != NULL && *(u16 *)((char *)texture + EXPGFX_RESOURCE_HANDLE_REFCOUNT_OFFSET) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
+            resourceHandle = (ExpgfxResourceHandle *)entry->resource;
+            if (resourceHandle != NULL &&
+                resourceHandle->refCount >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
                 return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
             }
             entry->evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
@@ -59,17 +60,18 @@ int expgfx_acquireResourceEntry(int resourceId) {
         entry = &resourceTable[i];
         if (entry->resource == NULL) {
             entry->resource = textureLoadAsset(resourceId);
-            texture = entry->resource;
-            if (texture != NULL && *(u16 *)((char *)texture + EXPGFX_RESOURCE_HANDLE_REFCOUNT_OFFSET) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
+            resourceHandle = (ExpgfxResourceHandle *)entry->resource;
+            if (resourceHandle != NULL &&
+                resourceHandle->refCount >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
                 gExpgfxTextureFreeInProgress = 1;
-                if (texture != NULL) {
-                    textureFree((u8 *)texture);
+                if (resourceHandle != NULL) {
+                    textureFree((u8 *)resourceHandle);
                 }
                 gExpgfxTextureFreeInProgress = 0;
                 entry->resource = NULL;
                 return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
             }
-            if (texture != NULL) {
+            if (resourceHandle != NULL) {
                 entry->evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
                 entry->resourceId = resourceId;
                 return (s16)i;
@@ -91,9 +93,9 @@ int expgfx_acquireResourceEntry(int resourceId) {
     }
     entry = &resourceTable[minIndex];
     gExpgfxTextureFreeInProgress = 1;
-    texture = entry->resource;
-    if (texture != NULL) {
-        textureFree((u8 *)texture);
+    resourceHandle = (ExpgfxResourceHandle *)entry->resource;
+    if (resourceHandle != NULL) {
+        textureFree((u8 *)resourceHandle);
     }
     gExpgfxTextureFreeInProgress = 0;
     entry->resource = NULL;

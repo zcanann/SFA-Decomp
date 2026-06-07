@@ -99,21 +99,11 @@ extern ExpgfxBounds gExpgfxBoundsTemplates[];
 extern s16 gExpgfxPoolSlotTypeIds[];
 extern u8 gExpgfxPoolFrameFlags[];
 extern undefined2 DAT_803105a8;
-extern undefined4 DAT_80397420;
-extern int DAT_8039b7b8;
 extern ExpgfxBounds gExpgfxPoolBounds[];
-extern int DAT_8039c138;
-extern undefined4 DAT_8039c13c;
-extern undefined4 DAT_8039c140;
-extern short DAT_8039c144;
-extern undefined4 DAT_8039c146;
 extern u8 gExpgfxPoolSourceModes[];
 extern u32 gExpgfxPoolSourceIds[];
-extern undefined4 DAT_8039c7c8;
-extern undefined4 DAT_8039c7cc;
 extern u8 gExpgfxPoolBoundsTemplateIds[];
 extern s8 gExpgfxPoolActiveCounts[];
-extern char DAT_8039c829;
 extern u32 gExpgfxPoolActiveMasks[];
 extern u32 gExpgfxSlotPoolBases[];
 extern undefined4 DAT_803dc070;
@@ -221,8 +211,6 @@ ObjectDescriptor14 expgfx_funcs = {
 };
 
 #define EXPGFX_SLOT_TABLE_INDEX_OFFSET 0x8A
-#define gExpgfxTrackedPoolMaskHighWords DAT_8039c7c8
-#define gExpgfxTrackedPoolMaskLowWords DAT_8039c7cc
 
 static inline ExpgfxTableEntry *Expgfx_GetTableEntry(int tableIndex) {
   return &gExpgfxTableEntries[tableIndex];
