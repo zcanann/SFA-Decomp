@@ -3090,8 +3090,8 @@ void modelAnimFn_800246a0(u8 *a, u8 *b, u8 *c, f32 t, int d, int e, int f, int g
     u8 stk[0x64];
     int px;
     u8 *hdr;
-    u32 i2;
     u32 i1;
+    u32 i2;
     int fl;
     u8 *p;
 
@@ -3144,17 +3144,17 @@ void modelAnimFn_800246a0(u8 *a, u8 *b, u8 *c, f32 t, int d, int e, int f, int g
     }
     *(u16 *)(stk + 0x58) = w;
     modelAnimUpdateChannels(hdr, stk, 2);
-    fl = h & 0xF;
-    if ((fl & 0xC) == 0) {
+    h = h & 0xF;
+    if ((h & 0xC) == 0) {
         int sv = *(s8 *)(c + 0x63);
         if (sv & 1) {
-            fl = (u8)(fl | 0x10);
+            h = (u8)(h | 0x10);
         }
         if (sv & 4) {
-            fl = (u8)(fl | 0x20);
+            h = (u8)(h | 0x20);
         }
     }
-    lbl_80006C6C(&px, a, stk, *(int *)(hdr + 0x3c), *(u8 *)(hdr + 0xf3), lbl_80340740, d, (u8)fl);
+    lbl_80006C6C(&px, a, stk, *(int *)(hdr + 0x3c), *(u8 *)(hdr + 0xf3), lbl_80340740, d, (u8)h);
 }
 #pragma pop
 
