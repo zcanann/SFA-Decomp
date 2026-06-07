@@ -4681,10 +4681,7 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
         }
         if (found == NULL) {
             int t = (s16)ret;
-            if (t >= 0) {
-            } else {
-                t = -t;
-            }
+            t = (t >= 0) ? t : -t;
             return (s16)(t < 0x100);
         }
 
@@ -4730,23 +4727,17 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
             int div2;
             int lim3;
 
-            lim = framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)-*sp1) / lbl_803DB460);
-            if (d1 >= lim) {
-                lim = framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)*sp1) / lbl_803DB460);
-                if (d1 <= lim) {
-                    lim = d1;
-                }
-            }
+            lim = (d1 < framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)-*sp1) / lbl_803DB460))
+                      ? framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)-*sp1) / lbl_803DB460)
+                      : ((d1 > framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)*sp1) / lbl_803DB460))
+                             ? framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)*sp1) / lbl_803DB460)
+                             : d1);
             d2 = (s16)((s16)((found[0] + ang[1]) >> 1) - found[0]);
             t2 = (s16)(s32)(lbl_803DE9EC * (f32)*sp2);
             div2 = lbl_803DB460 << 1;
-            lim3 = framesThisStep * (-t2 / div2);
-            if (d2 >= lim3) {
-                lim3 = framesThisStep * (t2 / div2);
-                if (d2 <= lim3) {
-                    lim3 = d2;
-                }
-            }
+            lim3 = (d2 < framesThisStep * (-t2 / div2))
+                       ? framesThisStep * (-t2 / div2)
+                       : ((d2 > framesThisStep * (t2 / div2)) ? framesThisStep * (t2 / div2) : d2);
             found[0] += (s16)lim3;
             found[1] += (s16)lim;
         }
