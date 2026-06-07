@@ -131,6 +131,8 @@ extern void setAButtonIcon(int iconId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fxemit_init(FxEmitObject *obj, FxEmitPlacement *setup)
 {
   FxEmitState *state;
@@ -168,6 +170,8 @@ void fxemit_init(FxEmitObject *obj, FxEmitPlacement *setup)
   state->startDelay = (s16)randomGetRange(0, 10);
   state->altEffectId = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -909,13 +913,14 @@ void FUN_80190008(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void warpPadFn_8019042c(int param_1)
 {
     WarpPadState *state;
     int player;
     u8 flags;
     u8 i;
-    f32 timer;
     struct {
         s16 unk0;
         s16 mode;
@@ -982,25 +987,24 @@ void warpPadFn_8019042c(int param_1)
     }
 
     if ((state->flags & 4) != 0) {
-        timer = state->pulseTimer;
-        if (timer < lbl_803E3EB4) {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < timer * lbl_803E3EB0) {
+        if (state->pulseTimer < lbl_803E3EB4) {
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0) {
                 (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
                     param_1, 0x7ca, &fx, 2, -1, 0);
             }
-        } else if (timer < lbl_803E3EB8) {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < timer / lbl_803E3EBC) {
+        } else if (state->pulseTimer < lbl_803E3EB8) {
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / lbl_803E3EBC) {
                 (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
                     param_1, 0x7ca, &fx, 2, -1, 0);
             }
             fx.count = 0x28;
             fx.unk0 = 0;
-            fx.scale = lbl_803E3EC0 * ((timer - lbl_803E3EB4) / lbl_803E3EC4);
+            fx.scale = lbl_803E3EC0 * ((state->pulseTimer - lbl_803E3EB4) / lbl_803E3EC4);
             (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
                 param_1, 0x7d2, &fx, 2, -1, 0);
             state->flags = state->flags | 2;
-        } else if (timer < lbl_803E3EC8) {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < timer * lbl_803E3EB0) {
+        } else if (state->pulseTimer < lbl_803E3EC8) {
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0) {
                 (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
                     param_1, 0x7ca, &fx, 2, -1, 0);
             }
@@ -1013,13 +1017,15 @@ void warpPadFn_8019042c(int param_1)
                         param_1, 0x7d2, &fx, 2, -1, 0);
                 }
             }
-        } else if (timer >= lbl_803E3ED0) {
+        } else if (state->pulseTimer >= lbl_803E3ED0) {
             state->pulseTimer = lbl_803E3E98;
             state->flags = state->flags & ~4;
         }
         state->pulseTimer = state->pulseTimer + timeDelta;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern u8 lbl_803AC7B0[];
