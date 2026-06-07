@@ -968,7 +968,7 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     playerAddHealth/curUiDllDraw all → 100. **Same-init COPY pairs
     (`p = base; ...` both alive, lwz+mr) flip via the CHAINED init
     `p = base = lbl;`** (#51's pointer cousin; insertPoint → 100, recipe
-    #108 session) — try the chain spelling when #107's un-naming read
+    #112 session) — try the chain spelling when #107's un-naming read
     doesn't apply.
 
 61d. **The @NNN-vs-named conversion-bias cap: MECHANISM + tested negative.**
@@ -1966,7 +1966,7 @@ addend lands mid-function (not at a symbol boundary) before adding a range.
     it on the access (`add base,idx; lbz K(base)`) — struct-field,
     per-statement locals and pointer-arith spellings all fold back
     (hwSetVirtualSampleLoopBuffer, immultiseq, wctrexstatu, bossdrakor's
-    2-instr tail). ⚠️ **SUPERSEDED by recipe #108** — the K-on-base grouping
+    2-instr tail). ⚠️ **SUPERSEDED by recipe #112** — the K-on-base grouping
     (`p = base + K; *(p + idx)`) is the non-loop escape; 4 of those
     instances are now byte-exact. The strength-reduced LOOP form (recipe
     #18) remains the other working escape.
@@ -2604,7 +2604,14 @@ pointer local positions a stack array's base web in decl order where the
 bare array's base web is created first regardless of decl position
 (mtx44_multSafe 52.43->100).
 
-108. **#86's displacement-fold-onto-index cap CRACKED for the non-loop case —
+*(Numbering note: the entry below landed twice into collisions — first as
+#107 (vs the #61c un-naming crack), then as #108 (vs the class-pooled
+allocator model at 121e28185) — and is now #112. Commit messages citing
+"recipe #108 K-grouping" / the #86-fold crack mean THIS entry. A separate
+double-#110 (GVN chained-constant vs speculative-unroller pragmas) is not
+resolved here.)*
+
+112. **#86's displacement-fold-onto-index cap CRACKED for the non-loop case —
     the GROUPING POSITION of the constant K in `base + idx + K` picks the
     isel, and the side K is peeled FROM becomes the FIRST add operand.**
     (task #14; 5 instances, 4 byte-exact: hwSetVirtualSampleLoopBuffer →100
@@ -2687,7 +2694,7 @@ bare array's base web is created first regardless of decl position
 
 **NAMED CAP — n-ary sum canonicalization (>=3 variable terms): the
 invariant-statement-reorder class.** (task #14; promotes match-3's
-candidate cap with a full probe set.) Recipe #108's K-grouping levers work
+candidate cap with a full probe set.) Recipe #112's K-grouping levers work
 for `base + idx + K` (TWO variable terms); with THREE OR MORE variable
 terms (`a + i6 + i4 + i5 + i12 + 0x60`) MWCC -O4 COLLECTS the n-ary sum
 and re-canonicalizes it — base joined LAST, source grouping/order erased.
@@ -2706,7 +2713,7 @@ hoists the contiguous invariant subtree — WORSE, 90 instrs),
 K-on-base per-site grouping, (int)-domain sums with base leading, and
 the pragma matrix (opt_propagation/opt_loop_invariants/
 opt_dead_assignments/opt_strength_reduction off, optimization_level 3/2
-— all >= baseline; sched-off tested earlier by match-3). The #108
+— all >= baseline; sched-off tested earlier by match-3). The #112
 grouping survives only 2-term sums; classify >=3-term multi-base shapes
 on sight and bank the partial. (fn_80069B1C also carries one #92
 branch-over-branch site in its guard chain — independent residual.)
