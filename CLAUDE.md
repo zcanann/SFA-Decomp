@@ -2775,6 +2775,33 @@ branch-over-branch site in its guard chain — independent residual.)
     reproduces target form" note = this association, fix at O4 with the
     subscript-origin spelling).
 
+110. **The SPECULATIVE unroller is a separate pass from opt_unroll_loops —
+    and it is pragma-controllable. NEW FUNCTIONAL PRAGMAS (GC/2.0 strings +
+    probe-verified): `#pragma ppc_unroll_speculative on|off`,
+    `#pragma ppc_unroll_factor_limit N`, `#pragma ppc_unroll_instructions_limit
+    N`, `#pragma opt_unroll_count N`.** (task #15; objDrawFn_80061f0c
+    77.6->93.8, objSeq_onMapSetup 76.6->81.2, curves_getCurves 84.9->97.5.)
+    Signature of the pass: `srwi rC,count,1; cmplwi; mtctr; beq remainder`
+    + x2-duplicated body + `andi. rC,rC,1; beq end` + 1-wide remainder loop
+    — a RUNTIME-count x2 unroll. `opt_unroll_loops off` (#98) does NOT
+    touch it. Both directions:
+    - CURRENT unrolls / TARGET doesn't -> wrap the fn in
+      `#pragma ppc_unroll_speculative off` ... `#pragma ppc_unroll_speculative
+      on`. ⚠️ `reset` is a SYNTAX ERROR for these pragmas (reported at a
+      misleading later line, masquerading as an ICE at a closing brace) —
+      restore with `on` / an explicit N. `opt_unroll_count reset` IS valid.
+    - TARGET unrolls / CURRENT doesn't -> the import hand-wrote the
+      pair+remainder loops (Ghidra decompiled the unrolled binary
+      literally). ROLL IT BACK to one count-up loop and let the pass
+      regenerate the exact shape (curves_getCurves: pair-do-while +
+      `remaining &= 1` + tail-do-while collapsed to one for-loop; outPoint
+      in INDEX form per the #160 direct-addi tell; keep the import's named
+      count local — the count web colored as a named local (r6), the bare
+      guard expression makes it a compiler temp (r3)).
+    Project sweep (srwi-,1+mtctr signature diffed target-vs-current): only
+    2 fns had current-only unrolls, 1 had target-only — all 3 fixed. The
+    sweep script pattern is in commit b3fd48c41/f99dce7d2 messages.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
