@@ -2699,6 +2699,76 @@ grouping survives only 2-term sums; classify >=3-term multi-base shapes
 on sight and bank the partial. (fn_80069B1C also carries one #92
 branch-over-branch site in its guard chain — independent residual.)
 
+110. **GVN chained-constant cap CRACKED — `li rY,K; mr rX,rY` (target
+    chains a constant-equal copy) is per-fn `#pragma optimization_level 1`,
+    NOT a VN spelling.** (task #13; fn_80063368 96.25→100, fn_80060BB0
+    94.4→100, track_dolphin, both byte-exact after "4 spellings inert"
+    park.) At O4 EVERY spelling of a constant-equal copy (`zero = idx;`
+    after `idx = 0;`, #51 chains `zero = idx = 0;`, casts,
+    opt_propagation/opt_common_subs/global_optimizer off, all 9 compiler
+    versions) const-props to separate `li`s — the mr is UNPRODUCIBLE at
+    O4. At O1 copy-prop doesn't fold the copy (emits the mr) and for
+    SMALL call-free loop fns the rest of the codegen is identical to O4.
+    O1 sub-levers: allocation goes creation/decl-order (declare locals in
+    target's ascending reg order); O1-isel reassociates const offsets into
+    displacements (`add; stb K(r)`) — recover the O4-style index-fold
+    (`addi r0,idx,K; stbx`) with a BLOCK-SCOPE temp (`int o; o = innerOff
+    + 0x12; arr[o] = zero;` — block temps land in r0 scratch);
+    `scheduling off` keeps source statement order; peephole ON (local
+    re-enable inside an off region, #1) keeps the stb/clrlwi fusion.
+    SCALE GUARD: whole-fn O1 BALLOONS big fns 2-3x (dll_0B_func04 probe:
+    629→1511 instrs — reverted); the recipe applies to small fns where
+    O1≈O4 codegen. MP4 cross-check: all 150 li;mr pairs in the matched
+    corpus come from chained inits in -O0 game code — same no-const-prop
+    mechanism. Diagnostic: target li;mr where all C gives li;li + fn is
+    small/loop-shaped → A/B the O1 wrap. Per-fn O1/O2 tested NEGATIVE on
+    the audio memmove family (54.8/65.4 — allocation wrecks fns with
+    calls); see #111 for that class instead.
+
+111. **Member-address reassociation cap CRACKED (the audio memmove NAMED
+    cap) — MWCC's address-sum association is keyed on the constant's
+    SYNTACTIC ORIGIN; plus #40 embedded assignments as arg-eval-order
+    FOLD-BLOCKERS.** (task #13; Sfx_RemoveLoopedObjectSoundForObject
+    76.55→98.91, Sfx_RemoveLoopedObjectSound 76.39→99.2,
+    Sfx_UpdateLoopedObjectSounds 79.11→97.64.) Association rules, probed:
+    - struct-MEMBER offset (`&table->objects[index]`, member at 384) →
+      `(idx*4 + 384) + base` = `slwi; addi 384; add` (the old parked form);
+    - constant inside a U8-ARRAY subscript
+      (`&table->flags[(index << 2) + 384]`, flags at offset 0) →
+      `(base + idx*4) + 384` = `slwi; add base; addi 384` — TARGET's form.
+      MP4 oracle: ReverbHICreate's `lens[k+5]` (optimized musyx).
+    - raw pointer arith `(u8 *)table + (i << 2) + 384` re-canonicalizes
+      BACK to addi-first — the array-subscript NODE is load-bearing;
+    - CONTEXT-dependent: in ASSIGNMENT context (walker-pointer inits) use
+      the NESTED subscript `op = (u32 *)&(&table->flags[i << 2])[384];`
+      (gives in-place `add rW,base,r0; addi rW,rW,384`); in CALL-ARG
+      position nested re-canonicalizes to addi-first — use the FLAT form
+      there. Named single-use dst/src locals get copy-propped into the
+      args and re-canonicalize (don't bother).
+    THE ARG-EVAL ANCHOR (the +12pp move): when target evaluates the SIZE
+    arg BEFORE dst/src (subf/clrlwi r5 ahead of the r3/r4 setups), the
+    original embedded a DEF inside the size statement:
+    `sz = (u16)((count - (index = (u16)i)) << 2);` — the side effect makes
+    the single-use sz statement NON-foldable into arg-3 position (a plain
+    `sz = ...;` folds to arg position regardless of statement order; sz
+    multi-use isn't needed, the embedded def suffices). Same trick
+    `&table->flags[((index2 = index + 1) << 2) + 384]` in the src arg
+    places the addi at target's position with index2's web surviving
+    across the later calls (saved reg). Companion levers from the same
+    family: compound `gCount--` drops the store-side clrlwi under
+    peephole-off (#20) and the store-forwarded re-read of the global
+    yields target's mask-at-use `clrlwi r0,r0,16`; #83a `(int)`-launder
+    on an else-arm `*fp` re-read reproduces target's fresh lbz (local
+    bases launder fine); #43 comma-init for li-then-addi loop prologues.
+    Residual class (~1-2%/fn, parked): arg-position sum nodes build
+    scaled-first (`add rD,r0,rBASE` vs target `add rD,rBASE,r0` — encoding
+    only; ~12 spellings inert) and whole-fn saved rotations (#16-class;
+    the #80 table-init launder tested NEGATIVE on UpdateLoopedObjectSounds).
+    Retry candidates: dataInsertMacro/dataRemoveMacro/dataGetFX loop
+    reassociation (90-92%), voiceAllocate's addi+lbzx (94.6, its "-O2
+    reproduces target form" note = this association, fix at O4 with the
+    subscript-origin spelling).
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
