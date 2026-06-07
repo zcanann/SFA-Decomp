@@ -1022,7 +1022,7 @@ void fn_80152EC0(int obj, int state)
 extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int prio);
 extern void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c);
 extern void fn_8015355C(int obj, int p2);
-extern int* gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -1051,8 +1051,7 @@ void fn_8015355C(int obj, int p2)
     if (count != 0 && (((BaddieState *)p2)->controlFlags & 0x40000000) == 0) {
         u8 spawn = count;
         while (spawn != 0) {
-            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x802, NULL, 2,
-                                                                -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x802, NULL, 2, -1, NULL);
             spawn--;
         }
     }

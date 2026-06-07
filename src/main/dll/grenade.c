@@ -1,5 +1,6 @@
 #include "main/dll/grenade.h"
 #include "main/dll/collectable.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/tricky_state.h"
 
@@ -820,7 +821,7 @@ skip:
  */
 extern f32 lbl_803E23F0;
 extern f32 lbl_803E249C;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -849,7 +850,7 @@ int trickyFn_80142eb0(int obj, int state)
     local_18 = *(int *)&((GameObject *)obj)->anim.worldPosY;
     local_14 = *(int *)&((GameObject *)obj)->anim.worldPosZ;
     local_20 = lbl_803E23F0;
-    (**(code **)(*gPartfxInterface + 8))(obj, 2022, auStack_28, 0x200001, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)obj, 2022, auStack_28, 0x200001, -1, NULL);
   } else if (sVar < 46) {
     if (43 < sVar && (*(int *)(state + 0x54) & 0x8000000) != 0) {
       objAnimFn_8013a3f0(obj, 46, lbl_803E249C, 0);
@@ -1120,7 +1121,8 @@ int trickyFn_801434b0(int param_1, int *param_2)
         local_1c = param_2[0x102];
         local_18 = lbl_803E23F8 + *(float *)(param_2 + 0x103);
         local_14 = param_2[0x104];
-        (**(code **)(*gPartfxInterface + 8))(param_1, 0x7f0, auStack_28, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x7f0, auStack_28, 0x200001, -1,
+                                         NULL);
       }
       *(float *)(param_2 + 0x1d1) = lbl_803E24C8;
     }
