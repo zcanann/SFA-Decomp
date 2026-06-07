@@ -754,12 +754,16 @@ void viewportEffectFn_8000e380(void)
 #pragma dont_inline on
 void Camera_ApplyCurrentViewport(void* viewportArg)
 {
-    u32 resolution;
-    int width = (int)((resolution = getScreenResolution()) >> 16);
-    int height = resolution & 0xffff;
-    int viewportY = lbl_803DC884 + 6;
-    int clipped = width - viewportY;
+    int resolution;
+    u16 height;
+    int viewportY;
+    int clipped;
 
+    resolution = getScreenResolution();
+    clipped = (u32)resolution >> 16;
+    height = resolution;
+    viewportY = lbl_803DC884 + 6;
+    clipped = clipped - viewportY;
     gxSetScissorRect(0, 0, 0, viewportY, height, clipped);
 }
 #pragma dont_inline reset
