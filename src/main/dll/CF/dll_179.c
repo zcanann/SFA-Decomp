@@ -1,14 +1,15 @@
 #include "main/dll/CF/dll_179.h"
 #include "main/dll/CF/CFTreasSharpy.h"
+#include "main/effect_interfaces.h"
 
 extern uint GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E3DD8;
 
 #define PARTFX_SPAWN(obj, fxId, a, b, c, d) \
-  ((void (*)(int, int, int, int, int, int))(*(u32 *)((u8 *)*gPartfxInterface + 0x8)))((obj), (fxId), (a), (b), (c), (d))
+  (*gPartfxInterface)->spawnObject((void *)(obj), (fxId), (void *)(a), (b), (c), (void *)(d))
 
 #pragma scheduling off
 #pragma peephole off

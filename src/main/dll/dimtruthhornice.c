@@ -1,7 +1,8 @@
 #include "main/dll/dimtruthhornice.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-extern undefined4 *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern undefined4 *gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(int obj, float arg);
@@ -29,7 +30,7 @@ typedef struct TreeBirdSeqData {
 typedef undefined4 (*TreeBirdTriggerImmediateFn)(int obj, int triggerId);
 
 #define TREEBIRD_SPAWN_PARTICLE(obj,id) \
-  (*(code *)(*gPartfxInterface + 8))(obj,id,0,1,-1,0)
+  (*gPartfxInterface)->spawnObject((void *)(obj),(id),0,1,-1,0)
 
 #pragma peephole off
 #pragma scheduling off
