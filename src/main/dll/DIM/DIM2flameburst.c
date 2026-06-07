@@ -54,6 +54,33 @@ typedef struct DimMagicBridgeState {
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
+typedef struct ExplosionPartfxSource {
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 flags;
+    f32 rootMotionScale;
+    f32 localPosX;
+    f32 localPosY;
+    f32 localPosZ;
+    f32 worldPosX;
+    f32 worldPosY;
+    f32 worldPosZ;
+    f32 velocityX;
+    f32 velocityY;
+    f32 velocityZ;
+    void *parent;
+    u8 pad34[2];
+    u8 alpha;
+    u8 pad37;
+} ExplosionPartfxSource;
+
+STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
+STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
+STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
+STATIC_ASSERT(offsetof(ExplosionPartfxSource, worldPosX) == 0x18);
+STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
+
 /*
  * Per-object extra state for the explosion effect
  * (explosion_getExtraSize == 0xA60). The flame pool (50 x 0x30 records)
@@ -2490,7 +2517,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole off
 void explosion_update(int obj)
 {
-    u8 fake[0x38];
+    ExplosionPartfxSource fake;
     s16 ang[6];
     f32 vpos[3];
     f32 m[12];
@@ -2544,11 +2571,11 @@ void explosion_update(int obj)
         }
         p += 0x30;
     }
-    memcpy(fake, (void *)obj, 0x38);
-    *(f32 *)(fake + 0x8) = lbl_803E492C;
-    *(f32 *)(fake + 0x24) = lbl_803E4960;
-    *(f32 *)(fake + 0x28) = lbl_803E4960;
-    *(f32 *)(fake + 0x2c) = lbl_803E4960;
+    memcpy(&fake, (void *)obj, sizeof(fake));
+    fake.rootMotionScale = lbl_803E492C;
+    fake.velocityX = lbl_803E4960;
+    fake.velocityY = lbl_803E4960;
+    fake.velocityZ = lbl_803E4960;
     for (i = 0, p = state; i < *(u8 *)((char *)state + 0xa5a); i++) {
         if (*(u8 *)((char *)p + 0x984) != 0) {
             *(int *)((char *)p + 0x97c) += framesThisStep;
@@ -2566,12 +2593,12 @@ void explosion_update(int obj)
                     *(f32 *)((char *)p + 0x974) < lbl_803E4960) {
                     *(f32 *)((char *)p + 0x974) = lbl_803E49A0 * -*(f32 *)((char *)p + 0x974);
                 }
-                *(f32 *)(fake + 0xc) = *(f32 *)((char *)p + 0x964);
-                *(f32 *)(fake + 0x10) = *(f32 *)((char *)p + 0x968);
-                *(f32 *)(fake + 0x14) = *(f32 *)((char *)p + 0x96c);
-                *(f32 *)(fake + 0x18) = *(f32 *)(fake + 0xc);
-                *(f32 *)(fake + 0x1c) = *(f32 *)(fake + 0x10);
-                *(f32 *)(fake + 0x20) = *(f32 *)(fake + 0x14);
+                fake.localPosX = *(f32 *)((char *)p + 0x964);
+                fake.localPosY = *(f32 *)((char *)p + 0x968);
+                fake.localPosZ = *(f32 *)((char *)p + 0x96c);
+                fake.worldPosX = fake.localPosX;
+                fake.worldPosY = fake.localPosY;
+                fake.worldPosZ = fake.localPosZ;
                 if (lbl_803DDB58 & 1) {
                     int t = *(int *)((char *)p + 0x97c);
                     if (t < 0x40) {
@@ -2619,7 +2646,7 @@ void explosion_update(int obj)
                             ang[3] = 0;
                         }
                     }
-                    (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x5e, fake, 0x200001, -1, ang);
+                    (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x5e, &fake, 0x200001, -1, ang);
                 }
             }
         }
