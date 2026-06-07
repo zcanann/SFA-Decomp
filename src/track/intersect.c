@@ -1326,7 +1326,7 @@ void fogFn_80070404(f32 a, f32 b)
     extern f32 gSynthFadeMask;
     extern f32 lbl_803DD020, lbl_803DD024, lbl_803DD034, lbl_803DD038;
     extern GXColor lbl_803DD01C;
-    f32 xc, yc, x, y, range;
+    f32 xc, yc, x, y;
     GXColor c;
 
     lbl_803DD038 = Camera_GetNearPlane();
@@ -1336,11 +1336,10 @@ void fogFn_80070404(f32 a, f32 b)
     y = lbl_803DEED8 * b;
 
     xc = (x < lbl_803DEEDC) ? lbl_803DEEDC : ((x > gSynthFadeMask) ? gSynthFadeMask : x);
-    yc = (y < lbl_803DEEDC) ? lbl_803DEEDC : ((y > gSynthFadeMask) ? gSynthFadeMask : y);
+    yc = (y < *(f32 *)&lbl_803DEEDC) ? *(f32 *)&lbl_803DEEDC : ((y > gSynthFadeMask) ? gSynthFadeMask : y);
 
-    range = lbl_803DD034 - lbl_803DD038;
-    lbl_803DD024 = xc * range + lbl_803DD038;
-    lbl_803DD020 = yc * range + lbl_803DD038;
+    lbl_803DD024 = xc * (lbl_803DD034 - lbl_803DD038) + lbl_803DD038;
+    lbl_803DD020 = yc * (lbl_803DD034 - lbl_803DD038) + lbl_803DD038;
     c = lbl_803DD01C;
     GXSetFog(GX_FOG_PERSP_EXP, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, c);
 }
