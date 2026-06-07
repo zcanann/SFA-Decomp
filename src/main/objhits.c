@@ -1296,11 +1296,11 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   stateB = *(ObjHitsPriorityState **)(objB + 0x54);
   stateSrc = *(ObjHitsPriorityState **)(srcObj + 0x54);
   if ((stateSrc->secondaryShapeFlags & 0x10) &&
-      (stateSrc->resetHitboxMode != 0 || stateSrc->activeHitboxMode != 0)) {
+      (*(s8 *)&stateSrc->resetHitboxMode != 0 || stateSrc->activeHitboxMode != 0)) {
     return 0;
   }
   if ((stateB->secondaryShapeFlags & 0x10) &&
-      (stateB->resetHitboxMode != 0 || stateB->activeHitboxMode != 0)) {
+      (*(s8 *)&stateB->resetHitboxMode != 0 || stateB->activeHitboxMode != 0)) {
     return 0;
   }
   modeA = 0;
@@ -2019,42 +2019,38 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
  */
 void ObjHits_DetectObjectPair(int objA,int objB)
 {
+  extern int ObjHits_RecordObjectHit(int obj,int hitObj,u8 priority,u8 hitVolume,
+                                     char sphereIndex);
   ObjHitsPriorityState *stateA;
   ObjHitsPriorityState *stateB;
-  u8 shapeB;
-  int vertical;
+  char vertical;
   int distInt;
   int distClamped;
+  f32 dist;
+  f32 sumRadius;
+  f32 radiusA;
   f32 dx;
   f32 dy;
   f32 dz;
+  f32 radiusB;
+  f32 nx;
+  f32 ny;
+  f32 nz;
   f32 yA;
   f32 yB;
-  f32 radiusA;
-  f32 radiusB;
-  f32 span;
-  f32 dist;
-  f32 sumRadius;
-  f32 bx;
-  f32 by;
-  f32 bz;
+  f32 tmp;
   f32 sx;
   f32 sy;
   f32 sz;
   f32 segSq;
-  f32 t;
   f32 cx;
   f32 cy;
   f32 cz;
-  f32 nx;
-  f32 ny;
-  f32 nz;
-  f32 len;
-  f32 diff;
 
   stateA = (ObjHitsPriorityState *)((GameObject *)objA)->anim.hitReactState;
   stateB = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
-  if ((stateA->activeHitboxMode != 0) || (stateB->activeHitboxMode != 0)) goto end;
+  if (stateA->activeHitboxMode != 0) goto end;
+  if (stateB->activeHitboxMode != 0) goto end;
   dx = ((GameObject *)objB)->anim.worldPosX - ((GameObject *)objA)->anim.worldPosX;
   yB = ((GameObject *)objB)->anim.worldPosY;
   yA = ((GameObject *)objA)->anim.worldPosY;
@@ -2063,40 +2059,41 @@ void ObjHits_DetectObjectPair(int objA,int objB)
   radiusA = (f32)stateA->primaryRadius;
   radiusB = (f32)stateB->primaryRadius;
   vertical = 0;
-  shapeB = stateB->shapeFlags;
-  if (((shapeB & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) ||
+  if (((stateB->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) ||
       ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0)) {
-    if (dy <= gObjHitsScalarZero) {
-      span = radiusB;
-      if ((shapeB & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
-        span = (f32)stateB->primaryCapsuleOffsetB;
-      }
-      if ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
-        yA = yA - radiusA;
-      } else {
-        yA = yA + (f32)stateA->primaryCapsuleOffsetA;
-      }
-      if (yB + span < yA) goto end;
-    } else {
-      span = radiusA;
+    if (dy > gObjHitsScalarZero) {
       if ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
-        span = (f32)stateA->primaryCapsuleOffsetB;
-      }
-      if ((shapeB & OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
-        yB = yB - radiusB;
+        yA = yA + (f32)stateA->primaryCapsuleOffsetB;
       } else {
-        yB = yB + (f32)stateB->primaryCapsuleOffsetA;
+        yA = yA + radiusA;
       }
-      if (yA + span < yB) goto end;
+      if ((stateB->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
+        tmp = yB + (f32)stateB->primaryCapsuleOffsetA;
+      } else {
+        tmp = yB - radiusB;
+      }
+      if (tmp > yA) goto end;
+    } else {
+      if ((stateB->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
+        yB = yB + (f32)stateB->primaryCapsuleOffsetB;
+      } else {
+        yB = yB + radiusB;
+      }
+      if ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
+        tmp = yA + (f32)stateA->primaryCapsuleOffsetA;
+      } else {
+        tmp = yA - radiusA;
+      }
+      if (tmp > yB) goto end;
     }
     dy = gObjHitsScalarZero;
     vertical = 1;
   }
-  dist = dz * dz + (dx * dx + dy * dy);
+  dist = dy * dy + dx * dx + dz * dz;
   if (dist != gObjHitsScalarZero) {
     dist = sqrtf(dist);
   }
-  distInt = (int)dist;
+  distInt = (int)(f32)(int)dist;
   distClamped = distInt;
   if (distInt > 0x400) {
     distClamped = 0x400;
@@ -2112,54 +2109,52 @@ void ObjHits_DetectObjectPair(int objA,int objB)
   }
   if ((stateB->flags & OBJHITS_PRIORITY_STATE_ENABLED) != 0) {
     sumRadius = radiusB + radiusA;
-    bx = stateA->worldPosX;
-    sx = ((GameObject *)objA)->anim.worldPosX - bx;
-    by = stateA->worldPosY;
-    bz = stateA->worldPosZ;
-    sz = ((GameObject *)objA)->anim.worldPosZ - bz;
-    sy = ((GameObject *)objA)->anim.worldPosY - by;
-    if (vertical) {
+    sx = ((GameObject *)objA)->anim.worldPosX - stateA->worldPosX;
+    sy = ((GameObject *)objA)->anim.worldPosY - stateA->worldPosY;
+    sz = ((GameObject *)objA)->anim.worldPosZ - stateA->worldPosZ;
+    if (vertical != 0) {
       sy = gObjHitsScalarZero;
     }
-    segSq = sz * sz + sx * sx + sy * sy;
+    segSq = sy * sy + sx * sx + sz * sz;
     if (segSq > gObjHitsScalarOne) {
-      t = (sz * (((GameObject *)objB)->anim.worldPosZ - bz) + sx * (((GameObject *)objB)->anim.worldPosX - bx) +
-           sy * (((GameObject *)objB)->anim.worldPosY - by)) / segSq;
-      if ((t >= gObjHitsScalarZero) && (t <= gObjHitsScalarOne)) {
-        cz = (t * sz + bz) - ((GameObject *)objB)->anim.worldPosZ;
-        cx = (t * sx + bx) - ((GameObject *)objB)->anim.worldPosX;
-        cy = (t * sy + by) - ((GameObject *)objB)->anim.worldPosY;
-        dist = sqrtf(cz * cz + cx * cx + cy * cy);
+      cz = ((GameObject *)objB)->anim.worldPosZ - stateA->worldPosZ;
+      cx = ((GameObject *)objB)->anim.worldPosX - stateA->worldPosX;
+      cy = ((GameObject *)objB)->anim.worldPosY - stateA->worldPosY;
+      segSq = (sy * cy + sx * cx + sz * cz) / segSq;
+      if ((segSq >= gObjHitsScalarZero) && (segSq <= gObjHitsScalarOne)) {
+        cz = (segSq * sz + stateA->worldPosZ) - ((GameObject *)objB)->anim.worldPosZ;
+        cx = (segSq * sx + stateA->worldPosX) - ((GameObject *)objB)->anim.worldPosX;
+        cy = (segSq * sy + stateA->worldPosY) - ((GameObject *)objB)->anim.worldPosY;
+        dist = sqrtf(cz * cz + (cx * cx + cy * cy));
       }
     }
     if ((dist < sumRadius) && (dist > gObjHitsScalarZero)) {
-      ObjHits_RecordObjectHit(objB, objA, stateA->objectPairPriority,
-                              stateA->objectPairHitVolume, 0);
-      ObjHits_RecordObjectHit(objA, objB, stateB->objectPairPriority,
-                              stateB->objectPairHitVolume, 0);
+      ObjHits_RecordObjectHit(objB,objA,*(u8 *)&stateA->objectPairPriority,
+                              stateA->objectPairHitVolume,0);
+      ObjHits_RecordObjectHit(objA,objB,*(u8 *)&stateB->objectPairPriority,
+                              stateB->objectPairHitVolume,0);
       if (((stateB->flags & OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE) == 0) &&
           ((stateA->flags & OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE) == 0)) {
         nx = stateB->worldPosX - stateA->worldPosX;
-        nz = stateB->worldPosZ - stateA->worldPosZ;
         ny = stateB->worldPosY - stateA->worldPosY;
-        if (vertical) {
+        nz = stateB->worldPosZ - stateA->worldPosZ;
+        if (vertical != 0) {
           ny = gObjHitsScalarZero;
         }
-        len = sqrtf(nz * nz + (nx * nx + ny * ny));
-        if (len > gObjHitsScalarZero) {
-          nx = nx / len;
-          ny = ny / len;
-          nz = nz / len;
+        tmp = sqrtf(ny * ny + nx * nx + nz * nz);
+        if (tmp > gObjHitsScalarZero) {
+          dx = nx / tmp;
+          dy = ny / tmp;
+          dz = nz / tmp;
         } else {
-          nx = dx / dist;
-          ny = dy / dist;
-          nz = dz / dist;
+          dx = dx / dist;
+          dy = dy / dist;
+          dz = dz / dist;
         }
-        diff = sumRadius - dist;
-        nx = nx * diff;
-        ny = ny * diff;
-        nz = nz * diff;
-        ObjHits_ApplyPairResponse(objA, objB, nx, ny, nz, 0);
+        dx = dx * (sumRadius - dist);
+        dy = dy * (sumRadius - dist);
+        dz = dz * (sumRadius - dist);
+        ObjHits_ApplyPairResponse(objA,objB,dx,dy,dz,0);
       }
     }
   }
