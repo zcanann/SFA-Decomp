@@ -2958,7 +2958,7 @@ void *RomList_GetLoadedPages(void) {
 
 #pragma scheduling off
 #pragma peephole off
-void mapGetBlockOriginForPos(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z) {
+void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32 *outX, f32 *outZ) {
     s32 ix, iz;
     f32 s;
     ix = (s32)fastFloorf(x / gMapBlockWorldSize);
