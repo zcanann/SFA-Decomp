@@ -2918,6 +2918,19 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
       branch-over-branch sites target-side (task #16's family) and the
       loop-3 ch/i cross-pairing (induction-affinity, #108 -- callee-sig
       A/Bs inert on it).
+    - SCOPE (sweep results): #115 requires CALL-ARG conversion sites --
+      CALL-FREE leaf rotations are out of reach (hwChangeStudio,
+      s3dInsertActiveEmitter: the audio band's small rotations are
+      mostly leaves; decl-order/un-naming/launders A/B'd inert on both,
+      and un-naming hwChangeStudio's voice alias broke isel per #30 --
+      the named alias is load-bearing there). partfx_update's top-block
+      order also resists (#114-style (long) node on the p2 copy inert;
+      prefix-stub + include bisection clean = fn-text class).
+      s3dInsertActiveEmitter's real divergence is a target-side
+      materialized entry copy (`mr. r8,r4` = `scan = next` kept where
+      ours copy-props it away; assign-split and (int)-launder both fold
+      per #94) -- #110-family, possibly per-fn O1 in the original;
+      parked.
 
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
