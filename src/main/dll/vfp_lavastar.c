@@ -1,4 +1,5 @@
 #include "main/dll/DIM/DIMbossspit.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
@@ -49,10 +50,10 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
             outYPtr = &pathPoint.y;
             outZPtr = &pathPoint.z;
             ObjPath_GetPointWorldPosition(obj, 1, outXPtr, outYPtr, outZPtr, 0);
-            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, partfxArgs, 0x200001, -1, 0);
+            (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
 
             ObjPath_GetPointWorldPosition(obj, 0, outXPtr, outYPtr, outZPtr, 0);
-            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, partfxArgs, 0x200001, -1, 0);
+            (*(EffectInterface **)gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
 
             if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0) {
                 modelLightStruct_setPosition(*outXPtr, *outYPtr, *outZPtr);
