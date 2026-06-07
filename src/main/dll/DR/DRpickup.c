@@ -63,14 +63,9 @@ void fn_801EC1AC(int param_1, int param_2)
         fVar2 = *(f32 *)(param_2 + 0x538);
     }
     fVar3 = (fVar2 - *(f32 *)(param_2 + 0x430)) * lbl_803E5C28;
-    fVar4 = lbl_803E5C2C;
-    if (!(fVar3 < fVar4)) {
-        fVar4 = lbl_803E5B8C;
-        if (!(fVar3 > fVar4)) {
-            fVar4 = fVar3;
-        }
-    }
-    *(f32 *)(param_2 + 0x430) = fVar4 * timeDelta + *(f32 *)(param_2 + 0x430);
+    fVar4 = (fVar3 < lbl_803E5C2C) ? lbl_803E5C2C
+                                   : ((fVar3 > lbl_803E5B8C) ? lbl_803E5B8C : fVar3);
+    *(f32 *)(param_2 + 0x430) = fVar4 * timeDelta + *(f32 *)((int)param_2 + 0x430);
 
     /* Velocity calc on 0x4a8 */
     fVar2 = lbl_803E5AE8;
@@ -81,21 +76,14 @@ void fn_801EC1AC(int param_1, int param_2)
             f32 nv = -vy53c;
             f32 lim = -v49c * oneOverTimeDelta;
             if (!(nv < lim)) {
-                if (nv > fVar2) {
-                    fVar2 = fVar2;
-                } else {
-                    fVar2 = nv;
-                }
-            } else {
-                fVar2 = lim;
+                lim = (nv > fVar2) ? fVar2 : nv;
             }
+            fVar2 = lim;
         } else {
             if (!(vy53c < fVar2)) {
-                f32 lim = -v49c * oneOverTimeDelta;
-                if (!(vy53c > lim)) {
+                fVar2 = -v49c * oneOverTimeDelta;
+                if (!(vy53c > fVar2)) {
                     fVar2 = vy53c;
-                } else {
-                    fVar2 = lim;
                 }
             }
         }
@@ -127,23 +115,16 @@ void fn_801EC1AC(int param_1, int param_2)
     fVar2 = *(f32 *)(param_2 + 0x414);
     fVar3 = *(f32 *)(param_2 + 0x534);
     fLim = -fVar3;
-    if (!(fVar2 < fLim)) {
-        if (fVar2 > fVar3) {
-            fLim = fVar3;
-        } else {
-            fLim = fVar2;
-        }
-    }
-    *(f32 *)(param_2 + 0x414) = fLim;
+    *(f32 *)(param_2 + 0x414) = (fVar2 < fLim) ? fLim
+                                               : ((fVar2 > fVar3) ? fVar3 : fVar2);
 
     /* Apply 0x414 * timeDelta to short at 0x40e, then chase the scaled
        angular velocity through 0x410 with overflow normalization. */
     {
         f32 newF = (f32)(s32)*(s16 *)(param_2 + 0x40e) +
                    *(f32 *)(param_2 + 0x414) * timeDelta;
-        s32 newI = (s32)newF;
         s32 delta;
-        *(s16 *)(param_2 + 0x40e) = newI;
+        *(s16 *)(param_2 + 0x40e) = newF;
         delta = (s32)(*(f32 *)(param_2 + 0x414) * *(f32 *)(param_2 + 0x550)) -
                 (s32)(u16)*(u32 *)(param_2 + 0x410);
         if (delta > 0x8000) {
@@ -154,10 +135,10 @@ void fn_801EC1AC(int param_1, int param_2)
         }
         *(u32 *)(param_2 + 0x410) =
             (u32)(s32)((f32)delta * *(f32 *)(param_2 + 0x554) +
-                       (f32)(s32)*(u32 *)(param_2 + 0x410));
+                       (f32)(s32)*(u32 *)((int)param_2 + 0x410));
     }
     {
-        s32 delta = (s32)*(s16 *)(param_2 + 0x40e) - (s32)(u16)*(u32 *)(param_2 + 0x40c);
+        s32 delta = (s32)*(s16 *)(param_2 + 0x40e) - (s32)(u16)*(s16 *)(param_2 + 0x40c);
         if (delta > 0x8000) {
             delta = delta - 0xFFFF;
         }
@@ -174,20 +155,11 @@ void fn_801EC1AC(int param_1, int param_2)
             (-*(f32 *)(param_2 + 0x570)) * timeDelta + *(f32 *)(param_2 + 0x584);
         {
             f32 v = *(f32 *)(param_2 + 0x584);
-            f32 result = lbl_803E5C30;
-            if (!(v < result)) {
-                result = lbl_803E5B48;
-                if (!(v > result)) {
-                    result = v;
-                }
-            }
-            *(f32 *)(param_2 + 0x584) = result;
+            *(f32 *)(param_2 + 0x584) = (v < lbl_803E5C30) ? lbl_803E5C30
+                                        : ((v > lbl_803E5B48) ? lbl_803E5B48 : v);
         }
-        {
-            s32 newI = (s32)((f32)(s32)*(s16 *)(param_1 + 0x2) +
-                             *(f32 *)(param_2 + 0x584) * timeDelta);
-            *(s16 *)(param_1 + 0x2) = newI;
-        }
+        *(s16 *)(param_1 + 0x2) = (f32)(s32)*(s16 *)(param_1 + 0x2) +
+                                  *(f32 *)(param_2 + 0x584) * timeDelta;
     }
 
     /* Bit 1 (>>1 & 1) check on 0x428 = mask 0x02 = flags->b1 (7th bitfield) */
@@ -205,14 +177,7 @@ void fn_801EC1AC(int param_1, int param_2)
         f32 lim = *(f32 *)(param_2 + 0x47c);
         f32 v = *(f32 *)(param_2 + 0x494);
         f32 result = -lim;
-        if (!(v < -lim)) {
-            if (v > lim) {
-                result = lim;
-            } else {
-                result = v;
-            }
-        }
-        *(f32 *)(param_2 + 0x494) = result;
+        *(f32 *)(param_2 + 0x494) = (v < result) ? result : ((v > lim) ? lim : v);
         v = *(f32 *)(param_2 + 0x494);
         if (v < lbl_803E5B8C) {
             if (v > lbl_803E5BA4) {
@@ -225,14 +190,8 @@ void fn_801EC1AC(int param_1, int param_2)
     {
         f32 v = *(f32 *)(param_2 + 0x498);
         f32 lim = -*(f32 *)(param_2 + 0x480);
-        f32 result = lim;
-        if (!(v < lim)) {
-            result = lbl_803E5AEC;
-            if (!(v > result)) {
-                result = v;
-            }
-        }
-        *(f32 *)(param_2 + 0x498) = result;
+        *(f32 *)(param_2 + 0x498) = (v < lim) ? lim
+                                    : ((v > lbl_803E5AEC) ? lbl_803E5AEC : v);
         v = *(f32 *)(param_2 + 0x498);
         if (v < lbl_803E5B8C) {
             if (v > lbl_803E5BA4) {
@@ -246,14 +205,7 @@ void fn_801EC1AC(int param_1, int param_2)
         f32 lim = *(f32 *)(param_2 + 0x484);
         f32 v = *(f32 *)(param_2 + 0x49c);
         f32 result = -lim;
-        if (!(v < -lim)) {
-            if (v > lim) {
-                result = lim;
-            } else {
-                result = v;
-            }
-        }
-        *(f32 *)(param_2 + 0x49c) = result;
+        *(f32 *)(param_2 + 0x49c) = (v < result) ? result : ((v > lim) ? lim : v);
         v = *(f32 *)(param_2 + 0x49c);
         if (v < lbl_803E5B8C) {
             if (v > lbl_803E5BA4) {
