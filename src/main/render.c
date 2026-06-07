@@ -197,17 +197,17 @@ extern f32 lbl_803DE544;
     bitpos -= (nb);                                  \
     bufA = bitpos >> 3;                              \
     posA += bufA;                                    \
-    curB = bufA + curB;                              \
+    addrB = bufA + curB;                             \
+    curB = addrB;                                    \
     bitpos &= 7;                                     \
     render_copyPackedU64Head(&bufA, posA);           \
     render_copyPackedU64Tail(&bufA, posA + 7);       \
-    render_copyPackedU64Head(&bufB, curB);           \
-    render_copyPackedU64Tail(&bufB, curB + 7);       \
-    bufA <<= bitpos;                                 \
-    bufB <<= bitpos;                                 \
+    render_copyPackedU64Head(&bufB, addrB);          \
+    render_copyPackedU64Tail(&bufB, addrB + 7);      \
+    bufA <<= (bitpos & 0xFFFFFFFF);                  \
+    bufB <<= (bitpos & 0xFFFFFFFF);                  \
     bitpos += (nb);
 
-#pragma opt_unroll_loops off
 #pragma scheduling off
 #pragma peephole off
 void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
@@ -225,10 +225,12 @@ void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
     s64 *q = &tmp;
     u64 bitpos;
     u64 vA;
+    u32 addrB;
     u64 maskConst = 0xFFF0;
     int i;
 
-    curB = posA + curB;
+    addrB = posA + curB;
+    curB = addrB;
     end = (u32)(dst + 3);
     t = t - floorf(t);
     t = t * lbl_803DE544;
@@ -236,8 +238,8 @@ void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
 
     render_copyPackedU64Head(&bufA, posA);
     render_copyPackedU64Tail(&bufA, posA + 7);
-    render_copyPackedU64Head(&bufB, curB);
-    render_copyPackedU64Tail(&bufB, curB + 7);
+    render_copyPackedU64Head(&bufB, addrB);
+    render_copyPackedU64Tail(&bufB, addrB + 7);
     bitpos = 0;
 
     do {
@@ -253,25 +255,20 @@ void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
                 RENDER_BITS_REFILL(nib)
             }
             tmp = 64 - nib;
-            vA = bufA >> tmp;
-            tmp = bufB >> tmp;
+            vA = bufA >> (tmp & 0xFFFFFFFF);
+            tmp = bufB >> (tmp & 0xFFFFFFFF);
             tmp = tmp - vA;
             tmp = tmp << 50;
-            for (i = 0; i < 10; i++) {
-                *q /= 2;
-                *q /= 2;
-                *q /= 2;
-                *q /= 2;
+            for (i = 50; i != 0; i--) {
                 *q /= 2;
             }
             tmp = tmp * frac;
-            for (i = 0; i < 7; i++) {
-                *q /= 2;
+            for (i = 14; i != 0; i--) {
                 *q /= 2;
             }
             sample = masked + ((vA + tmp) << 2);
-            bufA <<= nib;
-            bufB <<= nib;
+            bufA <<= (nib & 0xFFFFFFFF);
+            bufB <<= (nib & 0xFFFFFFFF);
         }
         tp += 2;
         *(u16 *)(u32)outPos = sample;
@@ -289,8 +286,8 @@ void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
                     if ((s64)bitpos > 64) {
                         RENDER_BITS_REFILL(nib2)
                     }
-                    bufA <<= nib2;
-                    bufB <<= nib2;
+                    bufA <<= (nib2 & 0xFFFFFFFF);
+                    bufB <<= (nib2 & 0xFFFFFFFF);
                 }
                 tp += 2;
                 if (!((u32)h2 & 0x20)) {
@@ -306,17 +303,16 @@ void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
                     RENDER_BITS_REFILL(nib3)
                 }
                 tmp = 64 - nib3;
-                vA = bufA >> tmp;
-                tmp = bufB >> tmp;
+                vA = bufA >> (tmp & 0xFFFFFFFF);
+                tmp = bufB >> (tmp & 0xFFFFFFFF);
                 tmp = tmp - vA;
                 tmp = tmp * frac;
-                for (i = 0; i < 7; i++) {
-                    *q /= 2;
+                for (i = 14; i != 0; i--) {
                     *q /= 2;
                 }
                 sample = masked2 + (vA + tmp);
-                bufA <<= nib3;
-                bufB <<= nib3;
+                bufA <<= (nib3 & 0xFFFFFFFF);
+                bufB <<= (nib3 & 0xFFFFFFFF);
             }
             tp += 2;
         }
@@ -327,7 +323,6 @@ void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
 }
 #pragma peephole reset
 #pragma scheduling reset
-#pragma opt_unroll_loops reset
 
 #pragma peephole reset
 #pragma scheduling reset
