@@ -2,6 +2,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 
 
 #pragma peephole off
@@ -696,7 +697,7 @@ extern const char sSeqObjNeedBitClearDuringSequenceFormat[];
 extern const char lbl_80321208[];
 extern int GameBit_Set(int eventId, int value);
 extern int warpToMap(int id, int flags);
-extern int **gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 #define SEQOBJECT_STATE_OPEN 0x01
 #define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02
@@ -714,8 +715,8 @@ extern int **gObjectTriggerInterface;
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
  * its GameBit, compare against the def[0x30] mask bit for that slot, and
- * if the polarity flips (GameBit != mask bit) dispatch vtable[0x13] to
- * advance. Always latches state[1] bit 0 before returning 0. */
+ * if the polarity flips (GameBit != mask bit) end the current sequence.
+ * Always latches state[1] bit 0 before returning 0. */
 int immultiseq_SeqFn(int* obj, int* anim, u8* buf) {
     u8* state = ((GameObject *)obj)->extra;
     u8* def = *(u8**)&((GameObject *)obj)->anim.placementData;
@@ -734,7 +735,7 @@ int immultiseq_SeqFn(int* obj, int* anim, u8* buf) {
                 if (gbit != -1) {
                     int bv = GameBit_Get(gbit);
                     if ((u32)!((def[0x30] >> next) & 1) == (u32)bv) {
-                        ((void (*)(int))((int **)*gObjectTriggerInterface)[0x13])(((GameObject *)obj)->unkB4);
+                        (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->unkB4);
                     }
                 }
             }
@@ -818,7 +819,7 @@ int seqobject_SeqFn(int* obj, int* anim, u8* buf)
             break;
         }
         case 3:
-            ((void(*)(int, int, int, int))((int*)(*gObjectTriggerInterface))[0x50/4])(86, 1, 0, 0);
+            (*gObjectTriggerInterface)->setCamVars(86, 1, 0, 0);
             break;
         }
     }
@@ -863,9 +864,8 @@ void seqobject_update(int *obj)
             state[1] = bitValue;
             if (bitValue != 0) {
                 if (*(s8 *)(def + 0x1e) != -1) {
-                    ((void (*)(int *, int))((int **)*gObjectTriggerInterface)[0x21])(obj, 0);
-                    ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])
-                        (*(s8 *)(def + 0x1e), obj, -1);
+                    (*gObjectTriggerInterface)->func23((int)obj, 0);
+                    (*gObjectTriggerInterface)->runSequence(*(s8 *)(def + 0x1e), obj, -1);
                 }
                 if ((def[0x1d] & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) == 0 &&
                     (def[0x1d] & (SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE |
@@ -876,15 +876,13 @@ void seqobject_update(int *obj)
         }
     }
     else if ((state[0] & SEQOBJECT_STATE_TRIGGER_SEQUENCE) != 0) {
-        ((void (*)(int *, int))((int **)*gObjectTriggerInterface)[0x15])
-            (obj, *(s16 *)(def + 0x20));
+        (*gObjectTriggerInterface)->preempt((int)obj, *(s16 *)(def + 0x20));
         if ((def[0x1d] & SEQOBJECT_FLAG_USE_TRIGGER_PARAM) != 0) {
-            ((void (*)(int, int *, u16))((int **)*gObjectTriggerInterface)[0x12])
-                (*(s8 *)(def + 0x1e), obj, *(u16 *)(def + 0x22));
+            (*gObjectTriggerInterface)->runSequence(*(s8 *)(def + 0x1e), obj,
+                                                    *(u16 *)(def + 0x22));
         }
         else {
-            ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])
-                (*(s8 *)(def + 0x1e), obj, 1);
+            (*gObjectTriggerInterface)->runSequence(*(s8 *)(def + 0x1e), obj, 1);
         }
         state[0] = (u8)(state[0] & ~SEQOBJECT_STATE_TRIGGER_SEQUENCE);
     }
@@ -916,11 +914,9 @@ void seqobj2_update(int *obj)
         }
         OSReport(descriptor + 0x108, ((ObjPlacement *)def)->mapId,
                  *(u16 *)(def + 0x22));
-        ((void (*)(int *, int))((int **)*gObjectTriggerInterface)[0x15])
-            (obj, *(s16 *)(def + 0x20));
+        (*gObjectTriggerInterface)->preempt((int)obj, *(s16 *)(def + 0x20));
         bitValue = *(u16 *)(def + 0x22);
-        ((void (*)(int, int *, u32))((int **)*gObjectTriggerInterface)[0x12])
-            (*(s8 *)(def + 0x1e), obj, bitValue);
+        (*gObjectTriggerInterface)->runSequence(*(s8 *)(def + 0x1e), obj, bitValue);
         state[0] = (u8)(state[0] & ~SEQOBJECT_STATE_OPEN);
     }
     else if ((state[0] & SEQOBJECT_STATE_TRIGGER_SEQUENCE) != 0) {
@@ -946,8 +942,7 @@ void seqobj2_update(int *obj)
                 OSReport(descriptor + 0x1cc, ((ObjPlacement *)def)->mapId);
             }
             OSReport(descriptor + 0x1f8, ((ObjPlacement *)def)->mapId);
-            ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])
-                (*(s8 *)(def + 0x1e), obj, -1);
+            (*gObjectTriggerInterface)->runSequence(*(s8 *)(def + 0x1e), obj, -1);
         }
     }
 }
@@ -984,8 +979,7 @@ void immultiseq_update(int *obj)
             s8 *q = (s8 *)(def + 0x2c);
             s8 triggerId = q[state[0]];
             if (triggerId != -1) {
-                ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])
-                    (triggerId, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(triggerId, obj, -1);
             }
         }
     }
@@ -1021,7 +1015,7 @@ int dll_115_seqFn(int *obj, int p2, void *p3) {
                 s16 newId = nextDef[0x14];
                 if (newId != -1 && newId != curDef[0x14]) {
                     if (GameBit_Get(newId) != 0) {
-                        ((void (*)(int))((int **)*gObjectTriggerInterface)[0x13])(((GameObject *)obj)->unkB4);
+                        (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->unkB4);
                     }
                 }
             }
