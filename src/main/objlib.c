@@ -2837,7 +2837,7 @@ void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *out
   int jointIndex;
   int pointOffset;
   ObjPathTransform transform;
-  float rootMtx[12];
+  float rootMtx[16];
   float transposedMtx[12];
   float concatMtx[12];
   float rotMtx[16];
@@ -2851,9 +2851,9 @@ void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *out
   }
   else {
     model = Obj_GetActiveModel(obj);
-    pointOffset = pointIndex * sizeof(ObjPathPoint);
     pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(obj + OBJ_MODEL_INSTANCE_OFFSET) +
                                           OBJPATH_POINTS_OFFSET));
+    pointOffset = pointIndex * sizeof(ObjPathPoint);
     pathPoint = (ObjPathPoint *)((int)pathPoint + pointOffset);
     jointIndex = pathPoint->modelIndex[(int)*(char *)(obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
     if ((jointIndex < OBJPATH_ROOT_JOINT_INDEX) ||
@@ -2879,10 +2879,12 @@ void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *out
         transform.rotZ = 0;
       }
       else {
+        transform.x = *(f32 *)(*(int *)(*(int *)(obj + OBJ_MODEL_INSTANCE_OFFSET) +
+                                        OBJPATH_POINTS_OFFSET) +
+                               pointOffset);
         pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(obj + OBJ_MODEL_INSTANCE_OFFSET) +
-                                              OBJPATH_POINTS_OFFSET));
-        transform.x = *(f32 *)((int)pathPoint + pointOffset);
-        pathPoint = (ObjPathPoint *)((int)pathPoint + pointOffset);
+                                              OBJPATH_POINTS_OFFSET) +
+                                     pointOffset);
         transform.y = pathPoint->y;
         transform.z = pathPoint->z;
         transform.rotX = pathPoint->rotX;
