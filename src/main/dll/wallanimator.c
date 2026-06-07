@@ -464,7 +464,7 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uint uStack_c;
   
   piVar2 = *(int **)(param_9 + 0xb8);
-  *(undefined *)(param_9 + 0x36) = 0;
+  ((GameObject *)param_9)->anim.alpha = 0;
   *(undefined4 *)(param_9 + 0xf4) = 0xdc;
   (*(ObjHitsPriorityState **)(param_9 + 0x54))->flags &= ~1;
   if (*piVar2 != 0) {
@@ -575,6 +575,7 @@ void kaldachompspit_burst(int obj);
 #pragma peephole off
 void kaldachompspit_update(int obj)
 {
+    ObjAnimComponent *objAnim;
     u32 *state;
     f32 vx;
     f32 vy;
@@ -586,21 +587,22 @@ void kaldachompspit_update(int obj)
     u8 glow;
     s8 drift;
 
+    objAnim = &((GameObject *)obj)->anim;
     state = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->unkF4 = (int)((f32)((GameObject *)obj)->unkF4 - timeDelta);
     if (((GameObject *)obj)->unkF4 < 0) {
         Sfx_StopObjectChannel(obj, 0x7f);
         Obj_FreeObject(obj);
-    } else if (*(u8 *)(obj + 0x36) != 0) {
+    } else if (objAnim->alpha != 0) {
         if (((GameObject *)obj)->unkF4 < 0x11b) {
             ((GameObject *)obj)->anim.velocityY = -(lbl_803E30F0 * timeDelta - ((GameObject *)obj)->anim.velocityY);
-            if ((f32)(u32)*(u8 *)(obj + 0x36) - (t = lbl_803E30F4 * timeDelta) > lbl_803E30F8) {
-                *(u8 *)(obj + 0x36) = (f32)(u32)*(u8 *)(obj + 0x36) - t;
+            if ((f32)(u32)objAnim->alpha - (t = lbl_803E30F4 * timeDelta) > lbl_803E30F8) {
+                objAnim->alpha = (f32)(u32)objAnim->alpha - t;
             } else {
                 Sfx_StopObjectChannel(obj, 0x7f);
-                *(u8 *)(obj + 0x36) = 0;
+                objAnim->alpha = 0;
             }
-            Sfx_SetObjectChannelVolume(obj, 0x40, (u8)(*(u8 *)(obj + 0x36) >> 1), lbl_803E30FC);
+            Sfx_SetObjectChannelVolume(obj, 0x40, (u8)(objAnim->alpha >> 1), lbl_803E30FC);
         }
         vx = ((GameObject *)obj)->anim.velocityX * timeDelta;
         vy = ((GameObject *)obj)->anim.velocityY * timeDelta;
@@ -634,7 +636,7 @@ void kaldachompspit_update(int obj)
                 fn_80098B18(obj, lbl_803E30E0, 1, 0, 0, 0);
             } else {
                 (**(void (**)(int, int, int, int, int, void *))(*gPartfxInterface + 0x8))(
-                    obj, 0x714, 0, 2, -1, (u8 *)(obj + 0x36));
+                    obj, 0x714, 0, 2, -1, &objAnim->alpha);
                 (**(void (**)(int, int, int, int, int, void *))(*gPartfxInterface + 0x8))(
                     obj, 0x715, 0, 1, -1, 0);
                 (**(void (**)(int, int, int, int, int, void *))(*gPartfxInterface + 0x8))(
@@ -678,7 +680,7 @@ void kaldachompspit_burst(int obj)
     u8 rnd;
 
     state = ((GameObject *)obj)->extra;
-    *(u8 *)(obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
     ((GameObject *)obj)->unkF4 = 0xdc;
     (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
     if (*state != 0) {
