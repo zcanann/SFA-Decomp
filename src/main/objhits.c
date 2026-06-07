@@ -1687,12 +1687,12 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
 
   stateA = (ObjHitsPriorityState *)((GameObject *)objA)->anim.hitReactState;
   stateB = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
-  if (attA != 0) {
+  if ((uint)attA != 0) {
     attStateA = *(ObjHitsPriorityState **)(attA + 0x54);
   } else {
     attStateA = NULL;
   }
-  if (attB != 0) {
+  if ((uint)attB != 0) {
     attStateB = *(ObjHitsPriorityState **)(attB + 0x54);
   } else {
     attStateB = NULL;
