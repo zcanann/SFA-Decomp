@@ -1857,7 +1857,6 @@ void gameTextRun(void) {
     GameTextLoadSlot *slot;
     GameTextLoadSlot *freeSlot;
     u8 *pending;
-    char *path;
     int sourceId;
     int dirId;
     int languageId;
@@ -1884,31 +1883,16 @@ void gameTextRun(void) {
     do {
         dirId = pending[0x24];
         if ((u8)dirId != GAMETEXT_INVALID_DIR) {
-            freeSlot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
-            if (freeSlot->active != 0) {
-                freeSlot++;
-                if (freeSlot->active != 0) {
-                    freeSlot++;
-                    if (freeSlot->active != 0) {
-                        freeSlot++;
-                        if (freeSlot->active != 0) {
-                            freeSlot++;
-                            if (freeSlot->active != 0) {
-                                freeSlot++;
-                                if (freeSlot->active != 0) {
-                                    freeSlot++;
-                                    if (freeSlot->active != 0) {
-                                        freeSlot++;
-                                        if (freeSlot->active != 0) {
-                                            freeSlot = NULL;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            slot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+            freeSlot = (slot->active == 0)        ? slot
+                       : ((++slot)->active == 0) ? slot
+                       : ((++slot)->active == 0) ? slot
+                       : ((++slot)->active == 0) ? slot
+                       : ((++slot)->active == 0) ? slot
+                       : ((++slot)->active == 0) ? slot
+                       : ((++slot)->active == 0) ? slot
+                       : ((++slot)->active == 0) ? slot
+                                                 : NULL;
 
             if (freeSlot != NULL) {
                 languageId = pending[0x25];
@@ -1917,12 +1901,12 @@ void gameTextRun(void) {
                 freeSlot->languageId = (u8)languageId;
                 freeSlot->active = 1;
                 freeSlot->sourceId = (u8)sourceId;
-                path = (char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET);
-                sprintf(path, sGameTextMapPathFormat, sMapDirectoryNameTable[dirId],
-                        sLanguageNameTable[languageId][0]);
+                sprintf((char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextMapPathFormat,
+                        sMapDirectoryNameTable[dirId], sLanguageNameTable[languageId][0]);
                 setFileInfo(freeSlot);
                 freeSlot->loadHandle =
-                    loadFileByPathAsync(path, &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
+                    loadFileByPathAsync((char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
+                                        &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
                 setFileInfo(NULL);
                 pending[0x24] = GAMETEXT_INVALID_DIR;
                 pending[0x25] = GAMETEXT_INVALID_LANGUAGE;
@@ -2082,7 +2066,6 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
     int languageTableOffset;
     GameTextLoadSlot *slot;
     GameTextLoadSlot *freeSlot;
-    char *path;
     u8 *gameTextBase;
     u8 *languageTable;
     int i;
@@ -2124,43 +2107,27 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
     } while (i-- != 0);
 
     *(int *)(gameTextBase + GAMETEXT_SEQUENCE_LOAD_STATE_OFFSET) = 1;
-    freeSlot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
-    if (freeSlot->active != 0) {
-        freeSlot++;
-        if (freeSlot->active != 0) {
-            freeSlot++;
-            if (freeSlot->active != 0) {
-                freeSlot++;
-                if (freeSlot->active != 0) {
-                    freeSlot++;
-                    if (freeSlot->active != 0) {
-                        freeSlot++;
-                        if (freeSlot->active != 0) {
-                            freeSlot++;
-                            if (freeSlot->active != 0) {
-                                freeSlot++;
-                                if (freeSlot->active != 0) {
-                                    freeSlot = NULL;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    slot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    freeSlot = (slot->active == 0)        ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+                                         : NULL;
 
     freeSlot->state = 1;
     freeSlot->dirId = (u8)sequenceSlotDir;
     freeSlot->languageId = (u8)curLanguage;
     freeSlot->active = 1;
     freeSlot->sourceId = GAMETEXT_SEQUENCE_SOURCE_ID;
-    path = (char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET);
-    sprintf(path, sGameTextSequencePathFormat, sequenceId,
-            *(char **)(languageTable + languageTableOffset));
+    sprintf((char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextSequencePathFormat,
+            sequenceId, *(char **)(languageTable + languageTableOffset));
     setFileInfo(freeSlot);
-    freeSlot->loadHandle =
-        loadFileByPathAsync(path, &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
+    freeSlot->loadHandle = loadFileByPathAsync((char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
+                                               &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
     setFileInfo(NULL);
     testAndSet_onlyUseHeap3(oldHeap);
 }
@@ -2172,7 +2139,6 @@ void gameTextLoadForCurMap(int sourceId) {
     GameTextLoadSlot *slot;
     GameTextLoadSlot *freeSlot;
     GameTextLoadRequest *request;
-    char *path;
     u8 *gameTextBase;
     int i;
 
@@ -2221,31 +2187,16 @@ void gameTextLoadForCurMap(int sourceId) {
     request->dirId = (u8)curGameTextDir;
     request->languageId = (u8)curLanguage;
 
-    freeSlot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
-    if (freeSlot->active != 0) {
-        freeSlot++;
-        if (freeSlot->active != 0) {
-            freeSlot++;
-            if (freeSlot->active != 0) {
-                freeSlot++;
-                if (freeSlot->active != 0) {
-                    freeSlot++;
-                    if (freeSlot->active != 0) {
-                        freeSlot++;
-                        if (freeSlot->active != 0) {
-                            freeSlot++;
-                            if (freeSlot->active != 0) {
-                                freeSlot++;
-                                if (freeSlot->active != 0) {
-                                    freeSlot = NULL;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    slot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    freeSlot = (slot->active == 0)        ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+               : ((++slot)->active == 0) ? slot
+                                         : NULL;
 
     if (freeSlot != NULL) {
         dirId = request->dirId;
@@ -2255,12 +2206,12 @@ void gameTextLoadForCurMap(int sourceId) {
         freeSlot->languageId = (u8)languageId;
         freeSlot->active = 1;
         freeSlot->sourceId = (u8)sourceId;
-        path = (char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET);
-        sprintf(path, sGameTextMapPathFormat, sMapDirectoryNameTable[dirId],
-                sLanguageNameTable[languageId][0]);
+        sprintf((char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextMapPathFormat,
+                sMapDirectoryNameTable[dirId], sLanguageNameTable[languageId][0]);
         setFileInfo(freeSlot);
         freeSlot->loadHandle =
-            loadFileByPathAsync(path, &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
+            loadFileByPathAsync((char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
+                                &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
         setFileInfo(NULL);
         request->dirId = GAMETEXT_INVALID_DIR;
         request->languageId = GAMETEXT_INVALID_LANGUAGE;
