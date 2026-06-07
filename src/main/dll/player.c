@@ -7098,27 +7098,23 @@ int fn_802A6694(int obj, int state, f32 fv)
             return r;
         }
     }
-    if (*(f32 *)((char *)state + 0x29c) >= lbl_803E7FC8 ||
-        *(f32 *)((char *)state + 0x298) >= lbl_803E7FC8 ||
+    if (*(f32 *)((char *)state + 0x29c) >= lbl_803E7FC8 &&
+        *(f32 *)((char *)state + 0x298) >= lbl_803E7FC8 &&
         ((PlayerState *)state)->baddie.unk294 >= *(f32 *)(*(int *)((char *)inner + 0x400) + 4)) {
-        goto active;
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return 3;
     }
-    *(int *)((char *)state + 0x308) = (int)fn_802A514C;
-    return 3;
-active:
     fn_802AD204(obj, inner);
     if (*(s16 **)((char *)inner + 0x3f8) == (s16 *)(tbl + 0x190)) {
-        if (*(f32 *)((char *)inner + 0x814) >= lbl_803E7FBC ||
-            **(s8 **)((char *)inner + 0x35c) > 4) {
-            goto pick;
+        if (*(f32 *)((char *)inner + 0x814) >= lbl_803E7FBC &&
+            **(s8 **)((char *)inner + 0x35c) <= 4) {
+            move = 0x5d;
+            fv = lbl_803E7F78;
+            if (RandomTimer_UpdateRangeTrigger(inner + 0x3ec, lbl_803E7ED4, lbl_803E7F10) != 0) {
+                Sfx_PlayFromObject(obj, 0x452);
+            }
+            goto picked;
         }
-        move = 0x5d;
-        fv = lbl_803E7F78;
-        if (RandomTimer_UpdateRangeTrigger(inner + 0x3ec, lbl_803E7ED4, lbl_803E7F10) != 0) {
-            Sfx_PlayFromObject(obj, 0x452);
-        }
-        goto picked;
-    pick:
         {
             move = **(s16 **)((char *)inner + 0x3f8);
             fv = lbl_803E7F78;
@@ -7126,13 +7122,10 @@ active:
                 if (*(u8 *)((char *)inner + 0x8c8) != 0x44) {
                     u32 i = *(u8 *)((char *)inner + 0x86f);
                     move = lbl_803DC6CC[i];
-                    {
-                        IdleEntry *e = (IdleEntry *)(tbl + i * 4);
-                        if (*(s16 *)((char *)inner + 0x81a) == 0) {
-                            fv = e->off;
-                        } else {
-                            fv = e->def;
-                        }
+                    if (*(s16 *)((char *)inner + 0x81a) == 0) {
+                        fv = *(f32 *)((tbl + 0x170) + i * 4);
+                    } else {
+                        fv = *(f32 *)((tbl + 0x180) + i * 4);
                     }
                     *(u8 *)((char *)inner + 0x86f) += 1;
                     *(u8 *)((char *)inner + 0x86f) =
@@ -7146,18 +7139,10 @@ active:
             *(f32 *)((char *)inner + 0x814) =
                 *(f32 *)((char *)inner + 0x814) + timeDelta;
             v = *(f32 *)((char *)inner + 0x814);
-            t = lbl_803E7EA4;
-            if (v < t) {
-            } else {
-                t = lbl_803E7FBC;
-                if (v > t) {
-                } else {
-                    t = v;
-                }
-            }
-            *(f32 *)((char *)inner + 0x814) = t;
+            *(f32 *)((char *)inner + 0x814) =
+                (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E7FBC) ? lbl_803E7FBC : v);
             *(u16 *)((char *)inner + 0x812) =
-                (int)((f32)*(s16 *)((char *)inner + 0x812) - timeDelta);
+                (f32)*(s16 *)((char *)inner + 0x812) - timeDelta;
             {
                 int cd = *(s16 *)((char *)inner + 0x812);
                 if (cd < 0) {
@@ -7179,7 +7164,7 @@ active:
     }
     if (((ByteFlags *)((char *)inner + 0x3f0))->b20 != 0) {
         *(u32 *)state |= 0x200000;
-        *(u32 *)((char *)inner + 0x360) &= 0xfdffffff;
+        *(u32 *)((char *)inner + 0x360) &= ~0x2000000LL;
         *(s16 *)((char *)state + 0x278) = 1;
         *(int *)((char *)inner + 0x898) = (int)fn_802A514C;
         if (((ByteFlags *)((char *)inner + 0x3f1))->b20 != 0) {
@@ -7189,26 +7174,18 @@ active:
         }
     } else {
         if (((ByteFlags *)((char *)inner + 0x3f1))->b20 != 0) {
-            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000LL;
             *(s16 *)((char *)state + 0x278) = 0;
             *(f32 *)((char *)inner + 0x404) = lbl_803E7ED4;
         } else {
-            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000LL;
             *(s16 *)((char *)state + 0x278) = 0;
             *(f32 *)((char *)inner + 0x404) = lbl_803E806C;
         }
     }
     {
         f32 frac = (*(f32 *)((char *)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C;
-        t = lbl_803E7EA4;
-        if (frac < t) {
-        } else {
-            t = lbl_803E7EE0;
-            if (frac > t) {
-            } else {
-                t = frac;
-            }
-        }
+        t = (frac < lbl_803E7EA4) ? lbl_803E7EA4 : ((frac > lbl_803E7EE0) ? lbl_803E7EE0 : frac);
     }
     *(f32 *)((char *)inner + 0x408) =
         (*(f32 *)((char *)inner + 0x404) - lbl_803E7F6C) *
@@ -7312,36 +7289,32 @@ active:
         step = interpolate((f32)*(int *)((char *)inner + 0x47c),
                            lbl_803E7EE0 / *(f32 *)((char *)inner + 0x428), timeDelta);
         lim = timeDelta * (*(f32 *)((char *)inner + 0x42c) * *(f32 *)((char *)inner + 0x420));
-        if (step < lim) {
-        } else {
-            step = lim;
-        }
+        step = (step < lim) ? step : lim;
         if (*(int *)((char *)inner + 0x480) < 0) {
             step = -step;
         }
         *(u16 *)((char *)inner + 0x478) =
-            (int)(lbl_803E7F00 * step + (f32)*(s16 *)((char *)inner + 0x478));
+            lbl_803E7F00 * step + (f32)*(s16 *)((char *)inner + 0x478);
         step = interpolate((f32)*(int *)((char *)inner + 0x488),
                            lbl_803E7EE0 / *(f32 *)((char *)inner + 0x430), timeDelta);
         lim = *(f32 *)((char *)inner + 0x434) * timeDelta;
-        if (step < lim) {
-        } else {
-            step = lim;
-        }
+        step = (step < lim) ? step : lim;
         if (*(int *)((char *)inner + 0x48c) < 0) {
             step = -step;
         }
         *(u16 *)((char *)inner + 0x484) =
-            (int)(lbl_803E7F00 * step + (f32)*(s16 *)((char *)inner + 0x484));
+            lbl_803E7F00 * step + (f32)*(s16 *)((char *)inner + 0x484);
     } else {
         f32 vx;
         f32 vz;
         f32 c;
         c = mathSinf((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) /
                         lbl_803E7F98);
-        vx = *(f32 *)((char *)inner + 0x404) * (t * -c);
+        vx = t * -c;
+        vx = *(f32 *)((char *)inner + 0x404) * vx;
         c = mathCosf((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) / lbl_803E7F98);
-        vz = *(f32 *)((char *)inner + 0x404) * (t * -c);
+        vz = t * -c;
+        vz = *(f32 *)((char *)inner + 0x404) * vz;
         vx = interpolate(vx - *(f32 *)((char *)inner + 0x4c8),
                          *(f32 *)((char *)inner + 0x438), timeDelta);
         vz = interpolate(vz - *(f32 *)((char *)inner + 0x4cc),
@@ -7351,17 +7324,12 @@ active:
         ((PlayerState *)state)->baddie.unk294 =
             sqrtf(*(f32 *)((char *)inner + 0x4c8) * *(f32 *)((char *)inner + 0x4c8) +
                   *(f32 *)((char *)inner + 0x4cc) * *(f32 *)((char *)inner + 0x4cc));
-        v = ((PlayerState *)state)->baddie.unk294;
-        t = lbl_803E7EA4;
-        if (v < t) {
-        } else {
-            t = *(f32 *)((char *)inner + 0x404);
-            if (v > t) {
-            } else {
-                t = v;
-            }
-        }
-        ((PlayerState *)state)->baddie.unk294 = t;
+        ((PlayerState *)state)->baddie.unk294 =
+            (((PlayerState *)state)->baddie.unk294 < lbl_803E7EA4)
+                ? lbl_803E7EA4
+                : ((((PlayerState *)state)->baddie.unk294 > *(f32 *)((char *)inner + 0x404))
+                       ? *(f32 *)((char *)inner + 0x404)
+                       : ((PlayerState *)state)->baddie.unk294);
     }
     if (((ByteFlags *)((char *)inner + 0x3f0))->b20 == 0) {
         fn_802AC32C(obj, state, inner);
