@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/dll/WC/WClevcontrol.h"
+#include "main/resource.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();
@@ -1024,7 +1025,6 @@ int SB_CloudRunner_SeqFn(int obj, int unused, u8 *setupData) {
 #pragma scheduling reset
 extern int *gExpgfxInterface;
 extern void textureFree(void *tex);
-extern void Resource_Release(void *handle);
 #pragma scheduling off
 #pragma peephole off
 void SB_CloudRunner_free(int *obj) {
@@ -1045,7 +1045,6 @@ void SB_CloudRunner_free(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 extern void *textureLoadAsset(int id);
-extern void *Resource_Acquire(int id, int mode);
 #pragma scheduling off
 #pragma peephole off
 void SB_CloudRunner_init(int *obj) {

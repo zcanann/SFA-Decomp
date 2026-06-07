@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objlib.h"
+#include "main/resource.h"
 #include "global.h"
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
@@ -32,7 +33,6 @@ extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern void Resource_Release(void *resource);
 extern void objRenderFn_8003b8f4(void *obj, int p2, int p3, int p4, int p5, f32 scale);
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();

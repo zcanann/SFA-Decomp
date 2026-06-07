@@ -4,6 +4,7 @@
 #include "main/objanim.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/objhits_types.h"
+#include "main/resource.h"
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -661,7 +662,6 @@ int dimlavasmash_SeqFn(int obj, int p2, int *r5_arg)
 
 extern int *gGameUIInterface;
 extern void *lbl_803DDB50;
-extern void Resource_Release(void *p);
 
 #pragma scheduling off
 #pragma peephole off
@@ -677,7 +677,6 @@ void dimcannon_free(int *obj) {
 #pragma scheduling reset
 
 extern void ObjMsg_AllocQueue(int *obj, int n);
-extern int *Resource_Acquire(int a, int b);
 extern int fn_801B2550(int *obj, int p2, char *p3);
 extern f32 lbl_803E48B8;
 

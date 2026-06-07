@@ -1,10 +1,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dim_tricky.h"
+#include "main/resource.h"
 
 
-extern void *Resource_Acquire(int id, int mode);
-extern void Resource_Release(void *handle);
 extern void Sfx_PlayFromObject(void *obj, int sfxId);
 extern void Sfx_StopObjectChannel(void *obj, int channel);
 extern void objUpdateOpacity(void *obj);

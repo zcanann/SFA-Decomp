@@ -1,8 +1,7 @@
 #include "main/dll/CAM/camcontrol.h"
 #include "main/dll/dll_B7.h"
+#include "main/resource.h"
 
-extern void Resource_Release(void *handle);
-extern void *Resource_Acquire(int id, int mode);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(int size, int heap, int flags);
 

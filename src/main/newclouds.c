@@ -1,5 +1,6 @@
 #include "main/newclouds_state.h"
 #include "main/newclouds.h"
+#include "main/resource.h"
 
 typedef struct ObjSeqBgCmd {
     int object;
@@ -10,8 +11,6 @@ typedef struct ObjSeqBgCmd {
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mm_free(void *ptr);
-extern void *Resource_Acquire(int id, int mode);
-extern void Resource_Release(void *handle);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void *Obj_GetPlayerObject(void);

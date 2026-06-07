@@ -4,6 +4,7 @@
 #include "main/dll/pushable.h"
 #include "main/objanim_internal.h"
 #include "main/game_object.h"
+#include "main/resource.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -880,8 +881,6 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int fn_80295A04(void *player, int p2);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32 *dist);
 extern int *objFindTexture(int obj, int a, int b);
-extern void *Resource_Acquire(int id, int mode);
-extern void Resource_Release(void *handle);
 extern void fn_80175428(int obj, int p2);
 extern f32 lbl_803E350C;
 extern f32 lbl_803E3510;

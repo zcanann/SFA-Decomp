@@ -1,4 +1,5 @@
 #include "main/dll/DIM/DIMboss.h"
+#include "main/resource.h"
 
 
 #pragma peephole off
@@ -77,12 +78,10 @@ extern void fn_801BB2B0(void);
 extern undefined4 warpDarkIceMines_801bbb44();
 extern undefined8 fn_801BC7E4();
 extern undefined4 dll_2E_func04();
-extern void *Resource_Acquire(int id, int mode);
 extern void OSReport(const char *msg, ...);
 
 extern undefined4 Camera_DisableViewYOffset();
 extern undefined4 getEnvfxAct();
-extern void Resource_Release(void *resource);
 extern undefined4 ModelLightStruct_free();
 extern undefined4 Obj_FreeObject();
 extern undefined4 Obj_GetPlayerObject();

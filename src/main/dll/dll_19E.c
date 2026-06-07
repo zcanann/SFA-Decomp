@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dll_19E.h"
+#include "main/resource.h"
 
 
 extern undefined4 FUN_80006824();
@@ -21,8 +22,6 @@ extern undefined4 FUN_80017b00();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053754();
 extern int FUN_8005b024();
-extern void *Resource_Acquire(int id, int mode);
-extern void Resource_Release(void *handle);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 Obj_IsLoadingLocked(void);
 extern void *Obj_AllocObjectSetup(int size, int objectId);

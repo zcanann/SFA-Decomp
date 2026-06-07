@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/objanim_internal.h"
+#include "main/resource.h"
 
 typedef struct ModgfxVertexData {
   s16 posX;
@@ -5205,7 +5206,6 @@ void dll_0B_func0E(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void Resource_Release(void* res);
 extern void *lbl_803DD2C8;
 extern void *lbl_803DD2CC;
 extern void *lbl_803DD2D0;
@@ -7032,7 +7032,6 @@ extern f32 lbl_803DF708;
 extern u16 lbl_8039C2E0[20];
 extern s16 lbl_8039C308[12];
 extern void srand(int seed);
-extern void *Resource_Acquire(int id, int a);
 extern void vecRotateZXY(void *obj, f32 *vec);
 extern char sModgfxAlphaDebugFormat[];
 extern void fn_80137948(char *fmt, ...);
