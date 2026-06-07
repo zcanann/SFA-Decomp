@@ -532,7 +532,7 @@ void FUN_80187bf4(uint param_1)
   if (FLOAT_803e4798 < *(float *)(pbVar6 + 4)) {
     *(float *)(pbVar6 + 4) = *(float *)(pbVar6 + 4) - FLOAT_803dc074;
     if (*(float *)(pbVar6 + 4) <= fVar1) {
-      *(undefined *)(param_1 + 0x36) = 0;
+      ((GameObject *)param_1)->anim.alpha = 0;
       *(float *)(pbVar6 + 4) = fVar1;
       *pbVar6 = *pbVar6 & 0xfe;
       *pbVar6 = *pbVar6 | 2;
@@ -555,11 +555,11 @@ void FUN_80187bf4(uint param_1)
     fVar1 = *(float *)(pbVar6 + 4);
     if (fVar1 < FLOAT_803e47a8) {
       if (FLOAT_803e479c <= fVar1) {
-        *(char *)(param_1 + 0x36) =
+        ((GameObject *)param_1)->anim.alpha =
              (char)(int)(FLOAT_803e47ac * ((fVar1 - FLOAT_803e479c) / FLOAT_803e47b0));
       }
       else {
-        *(undefined *)(param_1 + 0x36) = 0;
+        ((GameObject *)param_1)->anim.alpha = 0;
       }
     }
     *(float *)(pbVar6 + 0xc) = *(float *)(pbVar6 + 0xc) - FLOAT_803dc074;
@@ -1894,7 +1894,7 @@ void flammablevine_init(int obj, int def)
     if (*(s16 *)(def + 0x1e) != -1 && GameBit_Get(*(s16 *)(def + 0x1e)) != 0) {
         Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         state[0] = state[0] | 2;
     }
 
@@ -1972,7 +1972,7 @@ checked_vine_use:
     if (burnTimer > zero) {
         *(f32 *)(state + 4) = burnTimer - timeDelta;
         if (*(f32 *)(state + 4) <= zero) {
-            *(u8 *)(obj + 0x36) = 0;
+            ((GameObject *)obj)->anim.alpha = 0;
             *(f32 *)(state + 4) = zero;
             state[0] = state[0] & ~1;
             state[0] = state[0] | 2;
@@ -1997,11 +1997,11 @@ checked_vine_use:
 
         if (*(f32 *)(state + 4) < lbl_803E3B10) {
             if (*(f32 *)(state + 4) < lbl_803E3B04) {
-                *(u8 *)(obj + 0x36) = 0;
+                ((GameObject *)obj)->anim.alpha = 0;
             }
             else {
                 fadeAlpha = (u8)(lbl_803E3B14 * ((*(f32 *)(state + 4) - lbl_803E3B04) / lbl_803E3B18));
-                *(u8 *)(obj + 0x36) = fadeAlpha;
+                ((GameObject *)obj)->anim.alpha = fadeAlpha;
             }
         }
 
