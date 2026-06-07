@@ -8040,6 +8040,7 @@ extern void GXLoadTexObjPreLoaded(void *obj, void *region, int id);
 extern void fn_80053C40(u8 *tex, void *out);
 extern u8 lbl_803779A0[];
 #pragma scheduling off
+#pragma peephole off
 void textureFn_8004c264(u8 *tex, int mapId) {
     void *base;
     if (tex == NULL) return;
@@ -8054,9 +8055,11 @@ void textureFn_8004c264(u8 *tex, int mapId) {
         GXLoadTexObj(lbl_803779A0, 1);
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
+#pragma peephole off
 void selectTexture(u8 *tex, int mapId) {
     void *base;
     if (tex == NULL) return;
@@ -8067,6 +8070,7 @@ void selectTexture(u8 *tex, int mapId) {
         GXLoadTexObj(base, mapId);
     }
 }
+#pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
 void loadModelsBin(int a, int *p1c, int *p20, int *p18, int *p4) {
@@ -9987,6 +9991,7 @@ int fileLoadToBuffer(int id, void *buffer) {
     DVDClose(fileInfo);
     return *(s32 *)(fileInfo + 0x34);
 }
+#pragma peephole off
 int fileLoadToBufferOffset(int id, void *buffer, int offset, int size) {
     u8 fileInfo[0x3c];
     void *tmp;
@@ -10013,6 +10018,7 @@ int fileLoadToBufferOffset(int id, void *buffer, int offset, int size) {
     DCStoreRange(buffer, size);
     return size;
 }
+#pragma peephole reset
 void fn_8004EECC(void) {
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
