@@ -2307,7 +2307,10 @@ int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
         } else {
             k = 3;
         }
-        cur = n * k + cur;
+        {
+            int prod = n * k;
+            cur = prod + cur;
+        }
         sizes[0] = cur + 0x40;
     }
     {
@@ -2318,7 +2321,7 @@ int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
     if ((((ModelFileHeader *)hdr)->flags & 0x40) != 0) {
         sizes[5] = ((ModelFileHeader *)hdr)->unk84;
         while ((sizes[5] & 7) != 0) {
-            sizes[5] = sizes[5] + 1;
+            *(int *)((int)sizes + 0x14) = *(int *)((int)sizes + 0x14) + 1;
         }
         sizes[3] = sizes[5] << 2;
     }
@@ -2329,13 +2332,17 @@ int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
     }
     if (((ModelFileHeader *)hdr)->unkF9 != 0 || a4 != 0) {
         sizes[4] = sizes[4] + 0x30;
-        total = sizes[6] + sizes[1] + sizes[3] + sizes[4] + 0x6c;
+        total = sizes[3] + (sizes[4] + 100);
+        total = (sizes[1] + 8) + total;
+        total = sizes[6] + total;
     } else {
-        total = sizes[3] + sizes[6] + sizes[1] + sizes[4] + 0x6c;
+        total = sizes[4] + 100;
+        total = ((sizes[6] + sizes[1]) + 8) + total;
+        total = sizes[3] + total;
     }
     total = total + sizes[0];
     if (((ModelFileHeader *)hdr)->unk3C != 0 && ((ModelFileHeader *)hdr)->jointCount != 0 && ((ModelFileHeader *)hdr)->unk18 != 0) {
-        total = (u32)((ModelFileHeader *)hdr)->jointCount * 0x1e + 0x1c + total;
+        total = ((u32)((ModelFileHeader *)hdr)->jointCount << 1) + ((((u32)((ModelFileHeader *)hdr)->jointCount * 7) << 2) + 0x1c + total);
     }
     if (((ModelFileHeader *)hdr)->unkA4 != 0) {
         total = (u32)((ModelFileHeader *)hdr)->unk8A * 4 + total;
