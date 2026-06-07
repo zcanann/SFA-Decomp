@@ -3106,6 +3106,39 @@ uses. Caps mapLoadDataFile at ~93. Research target for the next cap
 campaign — the fix likely needs whatever defeats the full-sum VN web while
 leaving the partial-sum isel-CSE alive.
 
+## Foreign-compiler objects (GCC/SN ProDG): a PERMANENT MWCC cap class
+
+The retail dol links a small number of objects that were NEVER compiled by
+MWCC -- they are GCC (SN ProDG family, older vintage than our bundled ProDG
+3.5-3.9.3 / GCC 2.95.x; the idioms point at 2.7/2.8-era SN or Cygnus). NO
+MWCC recipe will ever move these; their fuzzy% is a hard floor, not a skill
+issue. Do not recipe-grind them; classify on sight and move on.
+
+Detection signature (any one is suspicious; three+ together is conclusive --
+probe-verified against all 14 MWCC GC versions, task #19):
+1. **`mflr r0` BEFORE `stwu`** in the prologue (MWCC always emits stwu first,
+   every version/opt-level/pragma combination probed).
+2. **`andi.` for CONTIGUOUS masks** (`&3/&7/&0x1f`) with cr0 unused -- MWCC
+   always picks `rlwinm`/`clrlwi` for contiguous masks.
+3. **`mcrxr cr0; addme.` decrement loops** -- MWCC never (MP4 corpus: mcrxr
+   appears only in carry-flag tests after addc).
+4. **`stmw r14`/`lmw r14` bulk saves** in a unit whose MWCC fns use
+   `_savegpr_NN` helpers or inline stw saves.
+5. **Creation-order register allocation** with params kept/modified in their
+   ARRIVAL registers (r3/r5 reassigned in place), sequential r7,r8..r12,r14+
+   homes, plus retained DEAD compares (identical-arm conditional residue --
+   old-GCC weak flow opt).
+
+Confirmed instances: **zlbDecompress** (main/pi_dolphin, capped 42.5% -- the
+Rare zlb INFLATE; GCC-buildable source reconstruction in
+docs/foreign/zlb_decompress_gcc.c) and **gap_03_80006C6C_text** (main/render,
+~5KB unclaimed -- same signature, likely the DEFLATE/compress side of the
+same Rare zlb library; N64 ancestor: dinosaur-planet decomp src/rarezip.c).
+Path to 100% for these is an own-unit split + exact-vintage GCC + custom
+build rule -- an owner-level decision, NOT hunter work. When a new fn
+resists every recipe AND shows the signature above, check its prologue
+order against its unit siblings before burning hours.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
