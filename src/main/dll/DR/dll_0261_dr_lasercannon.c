@@ -65,87 +65,90 @@ void drlasercannon_initialise(void) {}
 void drlasercannon_release(void) {}
 
 #pragma scheduling off
+#pragma peephole off
 int drlasercannon_aimAtTarget(int self, int target, int *out, int maxRate, f32 *eyePos) {
+    extern int getAngle(f32 x, f32 z);
     s16 *vec;
     f32 d[3];
+    f32 *dp;
     f32 horiz;
     s16 yaw;
     s16 pitch;
     int clamp;
+    int negClamp;
+    s16 negClampS;
     int delta;
+    s16 wrapDelta;
 
     vec = (s16 *)objModelGetVecFn_800395d8(self, 0xb);
     if (vec == NULL) {
         return 0;
     }
-    if (target == 0) {
+    if ((void *)target == NULL) {
         *(s16 *)self = (s16)(*(s16 *)self >> 1);
         *vec = (s16)(*vec >> 1);
         return 0;
     }
-    d[0] = ((GameObject *)target)->anim.localPosX - eyePos[0];
-    d[1] = ((GameObject *)target)->anim.localPosY - eyePos[1];
-    d[2] = ((GameObject *)target)->anim.localPosZ - eyePos[2];
-    horiz = sqrtf(d[0] * d[0] + d[2] * d[2]);
-    yaw = getAngle(d[0], d[2]);
-    pitch = getAngle(d[1], horiz);
+    dp = d;
+    dp[0] = ((GameObject *)target)->anim.localPosX - eyePos[0];
+    dp[1] = ((GameObject *)target)->anim.localPosY - eyePos[1];
+    dp[2] = ((GameObject *)target)->anim.localPosZ - eyePos[2];
+    horiz = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
+    yaw = (s16)(int)getAngle(dp[0], *(f32 *)((int)d + 8));
+    pitch = (s16)(int)getAngle(dp[1], horiz);
     if (*(s16 *)((char *)self + 0x46) == DR_LASERCANNON_PITCH_FLIP_TYPE) {
-        pitch = -pitch;
+        pitch = (s16)-pitch;
     }
     if (maxRate < 0x168) {
         clamp = (s16)(lbl_803E68E0 * (f32)maxRate);
-        *(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) = yaw;
+        negClamp = -clamp;
+        negClampS = (s16)negClamp;
+        *(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) = (s16)yaw;
         if (*(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) > clamp) {
             *(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) = clamp;
         }
-        if (*(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) < -clamp) {
-            *(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) = -clamp;
+        if (*(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) < negClamp) {
+            *(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) = negClampS;
         }
-        *(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) = pitch;
+        *(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) = (s16)pitch;
         if (*(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) > clamp) {
             *(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) = clamp;
         }
-        if (*(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) < -clamp) {
-            *(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) = -clamp;
+        if (*(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) < negClamp) {
+            *(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) = negClampS;
         }
     } else {
-        *(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) = yaw;
-        *(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) = pitch;
+        *(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) = (s16)yaw;
+        *(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) = (s16)pitch;
     }
-    delta = (s16)(*(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) - (u16)*(s16 *)self);
-    if (delta > 0x8000) {
-        delta -= 0xFFFF;
+    wrapDelta = *(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW) - (u16)*(s16 *)self;
+    if (wrapDelta > 0x8000) {
+        wrapDelta = wrapDelta - 0xFFFF;
     }
-    if (delta < -0x8000) {
-        delta += 0xFFFF;
+    if (wrapDelta < -0x8000) {
+        wrapDelta = wrapDelta + 0xFFFF;
     }
-    if (delta < -lbl_803DC2AE) {
-        delta = -lbl_803DC2AE;
-    } else if (delta > lbl_803DC2AE) {
-        delta = lbl_803DC2AE;
-    }
-    *(s16 *)self = (s16)((f32)*(s16 *)self + interpolate((f32)delta, lbl_803E68E4, timeDelta));
+    wrapDelta = (wrapDelta < -lbl_803DC2AE)
+                    ? -lbl_803DC2AE
+                    : (s16)((wrapDelta > lbl_803DC2AE) ? lbl_803DC2AE : wrapDelta);
+    *(s16 *)self = (s16)((f32)*(s16 *)self + interpolate((f32)wrapDelta, lbl_803E68E4, timeDelta));
     if (vec != NULL) {
-        delta = (s16)(*(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) - (u16)*vec);
-        if (delta > 0x8000) {
-            delta -= 0xFFFF;
+        wrapDelta = *(s16 *)((char *)out + DR_LASERCANNON_AIM_PITCH) - (u16)*vec;
+        if (wrapDelta > 0x8000) {
+            wrapDelta = wrapDelta - 0xFFFF;
         }
-        if (delta < -0x8000) {
-            delta += 0xFFFF;
+        if (wrapDelta < -0x8000) {
+            wrapDelta = wrapDelta + 0xFFFF;
         }
-        if (delta < -lbl_803DC2AE) {
-            delta = -lbl_803DC2AE;
-        } else if (delta > lbl_803DC2AE) {
-            delta = lbl_803DC2AE;
-        }
-        *vec = (s16)((f32)*vec + interpolate((f32)delta, lbl_803E68E4, timeDelta));
+        wrapDelta = (wrapDelta < -lbl_803DC2AE)
+                        ? -lbl_803DC2AE
+                        : (s16)((wrapDelta > lbl_803DC2AE) ? lbl_803DC2AE : wrapDelta);
+        *vec = (s16)((f32)*vec + interpolate((f32)wrapDelta, lbl_803E68E4, timeDelta));
     }
     delta = *(s16 *)self - *(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW);
-    if (delta < 0) {
-        delta = -delta;
-    }
-    return delta > 0x100;
+    return ((delta >= 0) ? delta : -delta) > 0x100;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
