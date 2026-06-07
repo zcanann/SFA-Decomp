@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -23,7 +24,7 @@ void ktfallingrocks_init(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void ktfallingrocks_free(u8 *obj) {
-    ((void (*)(u8 *))(*(u32 *)(*gExpgfxInterface + 0x18)))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -58,8 +59,8 @@ void ktfallingrocks_update(int obj) {
         params.x = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-200, 200);
         params.y = ((GameObject *)obj)->anim.localPosY;
         params.z = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-200, 200);
-        (*(void (**)(int, int, ObjPosParams *, int, int, int))((char *)*gPartfxInterface + 0x8))(
-            obj, *(u16 *)(q + 0x20), &params, 0x200001, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject(
+            (void *)obj, *(u16 *)(q + 0x20), &params, 0x200001, -1, NULL);
     }
     Sfx_PlayFromObject(obj, SFXbaddie_haga_spin);
     GameBit_Set(*(s16 *)(q + 0x24), 0);

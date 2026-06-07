@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 #include "main/dll/BW/BWalphaanim.h"
@@ -63,7 +64,7 @@ extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd6ec;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
-extern undefined4 *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f64 DOUBLE_803e6798;
 extern f64 lbl_803E5B00;
 extern f32 timeDelta;
@@ -532,12 +533,12 @@ void fn_801EB634(int param_1,int param_2)
         (local_38 = hit, *(u32 *)&st->unk42C = hit, st->unk3E4 == lbl_803E5AE8)) &&
        (iVar2 = arrayIndexOf(lbl_8032852C,0xc,(int)*(short *)(local_38 + 0x46)), iVar2 != -1)) {
       fn_8009A8C8((double)lbl_803E5BB0,param_1);
-      (*(code *)(*gPartfxInterface + 8))(param_1,0x551,0,4,0xffffffff,0);
-      (*(code *)(*gPartfxInterface + 8))(param_1,0x552,0,4,0xffffffff,0);
-      (*(code *)(*gPartfxInterface + 8))(param_1,0x554,0,4,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x551, NULL, 4, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x552, NULL, 4, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x554, NULL, 4, -1, NULL);
       uVar4 = 0x32 / framesThisStep;
       while (uVar4-- != 0) {
-        (*(code *)(*gPartfxInterface + 8))(param_1,0x553,0,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x553, NULL, 2, -1, NULL);
       }
       st->unk3E4 = lbl_803E5AF4;
       st->unk3E0 = lbl_803E5AEC;
@@ -744,7 +745,7 @@ void fn_801EBD60(int param_1,int param_2)
         }
       }
       if (speed > lbl_803E5BEC) {
-        (*(code *)(*gPartfxInterface + 8))(param_1,0x80b,0,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x80b, NULL, 2, -1, NULL);
       }
       break;
     case 3:
@@ -773,7 +774,7 @@ void fn_801EBD60(int param_1,int param_2)
         effect.x = *(f32 *)(param_1 + 0xc);
         effect.y = lbl_803E5C10 + *(f32 *)(param_1 + 0x10);
         effect.z = *(f32 *)(param_1 + 0x14);
-        (*(code *)(*gPartfxInterface + 8))(param_1,0x80a,&effect,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x80a, &effect, 1, -1, NULL);
       }
       break;
     }

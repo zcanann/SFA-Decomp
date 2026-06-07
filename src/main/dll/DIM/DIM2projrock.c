@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
@@ -1684,8 +1685,7 @@ extern void* objFindTexture(void* obj, int a, int b);
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
-extern int* gPartfxInterface;
-typedef void (*PartfxSpawnFn)(void *obj, int id, int a, int b, int c, int d);
+extern EffectInterface **gPartfxInterface;
 #pragma peephole off
 #pragma scheduling off
 void dll_1DF_update(void* obj)
@@ -1714,7 +1714,7 @@ void dll_1DF_update(void* obj)
         t = *(f32*)((char*)sub + 0x24) - timeDelta;
         *(f32*)((char*)sub + 0x24) = t;
         if (t < lbl_803E4B9C) {
-            (*(PartfxSpawnFn)*(int*)(*gPartfxInterface + 8))(obj, 525, 0, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 525, NULL, 2, -1, NULL);
             *(f32*)((char*)sub + 0x24) = lbl_803E4BA4;
         }
     }
