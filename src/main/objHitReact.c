@@ -1,16 +1,13 @@
 #include "dolphin/os.h"
+#include "main/asset_load.h"
+#include "main/audio/sfx.h"
+#include "main/mm.h"
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
+#include "main/resource.h"
 
-extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
-extern void Sfx_PlayFromObject(int obj,u16 sfxId);
-extern void Resource_Release(void *handle);
 extern void objLightFn_8009a1dc(int obj,double scale,undefined2 *pos,u32 count,int *param_5);
-extern uint roundUpTo4(uint value);
-extern uint roundUpTo8(uint value);
-extern void getTabEntry(void *dst,int fileId,int offset,int size);
-extern void fileLoadToBufferOffset(int fileId,void *dst,int offset,int size);
 
 extern ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs;
 extern char sObjHitReactHitstateFrameString[];
@@ -24,8 +21,6 @@ extern f32 gObjHitsScalarOne;
 extern f32 gObjHitReactAltEffectScale;
 extern int gObjHitReactResetObjectCount;
 extern ObjAnimComponent **gObjHitReactResetObjects;
-
-extern ObjHitReactEffectHandle *Resource_Acquire(u32 effectId,u32 count);
 
 /*
  * --INFO--
@@ -88,7 +83,7 @@ int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
         Sfx_PlayFromObject(obj,(u16)reactionEntries->secondaryHitSfxId);
       }
       if (reactionEntries->hitEffectMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
-        effectHandle =
+        effectHandle = (ObjHitReactEffectHandle *)
             Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
         effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE,OBJHITREACT_HIT_EFFECT_MODE,
                                     &effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,

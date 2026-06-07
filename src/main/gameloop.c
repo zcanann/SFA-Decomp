@@ -512,13 +512,13 @@ void *loadTextureFile(int id, int arg) {
 void gameTextLoadDir(int dirId);
 
 #pragma dont_inline on
-void *getTabEntry(int id, int arg, int e, int d) {
+void *getTabEntry(void *dst, int fileId, int offset, int size) {
     lbl_8033BF88.f0 = 1;
     lbl_8033BF88.f1 = 2;
-    lbl_8033BF88.f4 = arg;
-    lbl_8033BF88.f8 = id;
-    lbl_8033BF88.f10 = e;
-    lbl_8033BF88.fc = d;
+    lbl_8033BF88.f4 = fileId;
+    lbl_8033BF88.f8 = (int)dst;
+    lbl_8033BF88.f10 = offset;
+    lbl_8033BF88.fc = size;
     return loadAsset(&lbl_8033BF88);
 }
 #pragma dont_inline reset

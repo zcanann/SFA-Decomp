@@ -1,6 +1,10 @@
-#include "main/objanim_internal.h"
+#include "main/asset_load.h"
+#include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/mm.h"
+#include "main/objanim_internal.h"
 #include "main/objlib.h"
+#include "main/resource.h"
 
 
 #pragma peephole off
@@ -12,8 +16,6 @@ extern float sqrtf(float x);
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();
-extern ObjHitReactEffectHandle *Resource_Acquire(int resourceId,int mode);
-extern int Sfx_PlayFromObject(int obj,int sfxId);
 extern uint buttonGetDisabled(int index);
 extern void buttonDisable(int index,uint flags);
 extern u32 randomGetRange(int min,int max);
@@ -26,8 +28,6 @@ extern float Vec_distance(float *param_1,float *param_2);
 extern void OSReport(const char *fmt, ...);
 extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
-extern uint roundUpTo4();
-extern uint roundUpTo8(uint param_1);
 extern uint FUN_800177dc();
 extern void *mmAlloc(int size,int heap,int flags);
 extern float *ObjModel_GetJointMatrix(int *model,int jointIndex);
@@ -39,8 +39,6 @@ extern int *Obj_GetActiveModel(int obj);
 extern void *Obj_GetPlayerObject(void);
 extern void Obj_UpdateObject(ObjAnimComponent *obj,ObjModelInstance *modelInstance);
 extern undefined4 FUN_80045328();
-extern void getTabEntry(void *dst,int fileId,int offset,int size);
-extern void fileLoadToBufferOffset(int fileId,void *dst,int offset,int size);
 extern void fn_80054F74(int obj,float *pos);
 extern ObjLibRegionList **RomList_GetLoadedPages(void);
 extern int * fn_8005B11C();
@@ -2269,8 +2267,8 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
       effectPos.z = 0;
       effectPos.y = 0;
       effectPos.x = 0;
-      effectHandle = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,
-                                      OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
+      effectHandle = (ObjHitReactEffectHandle *)
+          Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
       effectArgs.hitFxMode = hitFxMode & 0xff;
       effectArgs.colorR = colorR & 0xff;
       effectArgs.colorG = colorG & 0xff;
