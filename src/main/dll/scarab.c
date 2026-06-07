@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
 #include "main/dll/baddie_state.h"
 #include "main/objanim.h"
@@ -1743,7 +1744,7 @@ void dll_CE_update(int obj, int p2, int p3)
   extern int *gMapEventInterface;
   extern int *gObjectTriggerInterface;
   extern int *gSHthorntailAnimationInterface;
-  extern int *gPartfxInterface;
+  extern EffectInterface **gPartfxInterface;
   extern int *gPlayerInterface;
   extern void *lbl_803AC5B0[];
   extern void *lbl_803AC598[];
@@ -1795,14 +1796,12 @@ void dll_CE_update(int obj, int p2, int p3)
           fn_8015EA48(obj, (u8 *)sub);
         }
         if ((hit[8] & 2) != 0) {
-          (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
-              obj, 0x345, 0, 1, -1, 0);
+          (*gPartfxInterface)->spawnObject((void *)obj, 0x345, NULL, 1, -1, NULL);
         }
         if ((hit[8] & 4) != 0) {
           n = 0;
           do {
-            (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
-                obj, 0x343, 0, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x343, NULL, 1, -1, NULL);
             n++;
           } while (n < 10);
         }
@@ -2256,7 +2255,7 @@ void FUN_8015fae4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 #pragma dont_inline on
 void fn_8015FBEC(int obj)
 {
-  extern int *gPartfxInterface;
+  extern EffectInterface **gPartfxInterface;
   extern void Camera_EnableViewYOffset(void);
   extern void CameraShake_SetAllMagnitudes(f32);
   extern f32 lbl_803E2E50;
@@ -2265,11 +2264,11 @@ void fn_8015FBEC(int obj)
 
   if (mode == 715) {
     for (i = 0; i < 25; i++) {
-      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 834, 0, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)obj, 834, NULL, 1, -1, NULL);
     }
   } else if (mode == 100 || mode == 778) {
     for (i = 0; i < 25; i++) {
-      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 836, 0, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)obj, 836, NULL, 1, -1, NULL);
     }
   }
 
@@ -2297,7 +2296,7 @@ void fn_8015FCCC(int obj)
 {
   extern void Camera_EnableViewYOffset(void);
   extern void CameraShake_SetAllMagnitudes(f32);
-  extern int *gPartfxInterface;
+  extern EffectInterface **gPartfxInterface;
   extern f32 lbl_803E2E50;
   s16 type;
   int n;
@@ -2314,8 +2313,7 @@ void fn_8015FCCC(int obj)
       }
     }
     for (n = 0; n < 25; n++) {
-      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 832, 0,
-                                                                                       1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)obj, 832, NULL, 1, -1, NULL);
     }
   } else if (type == 100) {
     if (((GameObject *)obj)->unkC4 != NULL) {
@@ -2325,8 +2323,7 @@ void fn_8015FCCC(int obj)
       }
     }
     for (n = 0; n < 25; n++) {
-      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 835, 0,
-                                                                                       1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)obj, 835, NULL, 1, -1, NULL);
     }
   } else if (type == 0x30a) {
     if (((GameObject *)obj)->unkC4 != NULL) {
@@ -2336,8 +2333,7 @@ void fn_8015FCCC(int obj)
       }
     }
     for (n = 0; n < 25; n++) {
-      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 835, 0,
-                                                                                       1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)obj, 835, NULL, 1, -1, NULL);
     }
   }
 }
