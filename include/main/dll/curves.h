@@ -77,6 +77,13 @@ typedef struct RomCurvePoint {
   u8 type;
 } RomCurvePoint;
 
+extern RomCurveDef *romCurves[ROMCURVE_MAX_CURVES];
+extern int nRomCurves;
+extern RomCurveDef *gRomCurveLastFindStart;
+extern RomCurveDef *gRomCurveLastFindEnd;
+extern RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
+extern char sCurvesMaxRomCurvesExceeded[];
+
 typedef struct RomCurveSegmentProjection {
   f32 startX;
   f32 startY;

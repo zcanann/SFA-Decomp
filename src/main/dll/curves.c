@@ -65,12 +65,7 @@ extern undefined4 FUN_80294964();
 extern uint countLeadingZeros();
 
 /* Hcurves keeps the ROM curve definitions sorted by id for binary searches. */
-extern RomCurveDef *romCurves[];
-extern RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 extern undefined4 DAT_803dc070;
-extern RomCurveDef *gRomCurveLastFindEnd;
-extern RomCurveDef *gRomCurveLastFindStart;
-extern int nRomCurves;
 extern u32 sCurvesCachedHitCount;
 extern u32 sCurvesCachedHitObj;
 extern f64 DOUBLE_803e12a8;
@@ -123,7 +118,6 @@ extern f32 lbl_803E1334;
 extern f32 lbl_803E1338;
 extern f32 lbl_803E133C;
 extern f32 lbl_803E1340;
-extern char sCurvesMaxRomCurvesExceeded[];
 
 typedef struct CurvesHitScratch {
   u8 unk0[0x40];
