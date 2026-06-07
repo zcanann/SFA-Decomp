@@ -1,4 +1,5 @@
 #include "main/dll/DIM/DIM2icicle.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
@@ -154,7 +155,7 @@ extern void modelLightStruct_getSpecularColor(int light, u8 *a, u8 *b, u8 *c, u8
 extern void modelLightStruct_setGlowColor(int light, u8 a, u8 b, u8 c, int d);
 extern void PSMTXMultVec(f32 *mtx, f32 *src, f32 *dst);
 extern void memcpy(void *dst, void *src, int n);
-extern void *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern const f32 lbl_803E4BCC;
 extern const f32 lbl_803E4C34;
 extern const f32 lbl_803E4C38;
@@ -231,7 +232,7 @@ void fn_801BB598(int objIndex, int param_2)
     ObjPath_GetPointWorldPosition(objIndex, 7, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 0);
     i = 0;
     do {
-      ((void (*)(int, int, void *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, NULL);
       i = i + 1;
     } while (i < 0xf);
   }
@@ -239,7 +240,7 @@ void fn_801BB598(int objIndex, int param_2)
     ObjPath_GetPointWorldPosition(objIndex, 8, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 0);
     i = 0;
     do {
-      ((void (*)(int, int, void *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, NULL);
       i = i + 1;
     } while (i < 0xf);
   }
@@ -247,7 +248,7 @@ void fn_801BB598(int objIndex, int param_2)
     ObjPath_GetPointWorldPosition(objIndex, 9, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 0);
     i = 0;
     do {
-      ((void (*)(int, int, void *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, NULL);
       i = i + 1;
     } while (i < 0xf);
   }
@@ -255,7 +256,7 @@ void fn_801BB598(int objIndex, int param_2)
     ObjPath_GetPointWorldPosition(objIndex, 10, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 0);
     i = 0;
     do {
-      ((void (*)(int, int, void *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, NULL);
       i = i + 1;
     } while (i < 0xf);
   }
@@ -275,7 +276,8 @@ void fn_801BB598(int objIndex, int param_2)
       lbl_803AC970[2] = lbl_803E4BCC;
       PSMTXMultVec(m, lbl_803AC970, lbl_803AC970);
       ObjPath_GetPointWorldPosition(objIndex, 0xb, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 1);
-      ((void (*)(int, int, void *, int, int, f32 *))*(code **)(*(int *)gPartfxInterface + 8))(objIndex, 0x4b8, &lbl_803AC97C, 0x200001, -1, lbl_803AC970);
+      (*gPartfxInterface)->spawnObject(
+          (void *)objIndex, 0x4b8, &lbl_803AC97C, 0x200001, -1, lbl_803AC970);
       i = i + 1;
     } while (i < 5);
   }
@@ -402,11 +404,11 @@ void warpDarkIceMines_801bbb44(int obj, int param_2)
   if (gDIMbossSequenceFlags & 0x2000) {
     i = 0;
     do {
-      ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b1, state + 0x4c, 0x200001, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b1, state + 0x4c, 0x200001, -1, NULL);
       i = i + 1;
     } while (i < 0x32);
-    ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b2, state + 0x4c, 0x200001, -1, 0);
-    ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b3, state + 0x4c, 0x200001, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, state + 0x4c, 0x200001, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x4b3, state + 0x4c, 0x200001, -1, NULL);
   }
   if (gDIMbossSequenceFlags & 0x80000) {
     ((void (*)(int, int, int, int, int))*(code **)(*(int *)lbl_803DCAB4 + 0xc))(obj, 0x800, 0, 1, 0);
@@ -415,18 +417,18 @@ void warpDarkIceMines_801bbb44(int obj, int param_2)
     if (gDIMbossSequenceFlags & 0x20) {
       i = 0;
       do {
-        ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b4, state + 0x34, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, state + 0x34, 0x200001, -1, NULL);
         i = i + 1;
       } while (i < 7);
     }
     else {
       if (randomGetRange(0, *(s8 *)(param_2 + 0x354)) == 0 && *(s16 *)(param_2 + 0x402) == 2) {
-        ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b4, state + 0x34, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, state + 0x34, 0x200001, -1, NULL);
       }
     }
     if (gDIMbossSequenceFlags & 0x8000) {
-      ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b2, state + 0x34, 0x200001, -1, 0);
-      ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b3, state + 0x34, 0x200001, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, state + 0x34, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b3, state + 0x34, 0x200001, -1, NULL);
     }
   }
   if (gDIMbossSequenceFlags & 0x101c0) {
@@ -437,19 +439,19 @@ void warpDarkIceMines_801bbb44(int obj, int param_2)
         vec[1] = lbl_803E4C58 * (f32)(int)randomGetRange(-5, 5);
         vec[2] = lbl_803E4C5C * (f32)(int)randomGetRange(2, 8);
         PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
-        ((void (*)(int, int, u8 *, int, int, f32 *))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b5, state + 0x1c, 0x200001, -1, vec);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b5, state + 0x1c, 0x200001, -1, vec);
         i = i + 1;
       } while (i < 5);
     }
     if (gDIMbossSequenceFlags & 0x80) {
-      ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b5, state + 4, 0x200001, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b5, state + 4, 0x200001, -1, NULL);
     }
     if (gDIMbossSequenceFlags & 0x100) {
       vec[0] = lbl_803E4C58;
       vec[1] = lbl_803E4C60;
       vec[2] = lbl_803E4C64 * (f32)(int)randomGetRange(4, 8);
       PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
-      ((void (*)(int, int, u8 *, int, int, f32 *))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b6, state + 4, 0x200001, -1, vec);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b6, state + 4, 0x200001, -1, vec);
     }
     if (gDIMbossSequenceFlags & 0x10000) {
       vec[0] = lbl_803E4BD8;
@@ -463,7 +465,7 @@ void warpDarkIceMines_801bbb44(int obj, int param_2)
   if (gDIMbossSequenceFlags & 0x4000) {
     i = 0;
     do {
-      ((void (*)(int, int, int, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b7, 0, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b7, NULL, 1, -1, NULL);
       i = i + 1;
     } while (i < 0x32);
   }
@@ -581,7 +583,7 @@ void fn_801BC2D8(int obj, int param_2)
         ((IcicleHitFx *)lbl_803AC994)->x = playerMapOffsetX + base[hitType].px;
         ((IcicleHitFx *)lbl_803AC994)->y = base[hitType].py;
         ((IcicleHitFx *)lbl_803AC994)->z = playerMapOffsetZ + base[hitType].pz;
-        ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x328, lbl_803AC994, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x328, lbl_803AC994, 0x200001, -1, NULL);
         ((IcicleHitFx *)lbl_803AC994)->x = ((IcicleHitFx *)lbl_803AC994)->x - ((GameObject *)obj)->anim.worldPosX;
         ((IcicleHitFx *)lbl_803AC994)->y = ((IcicleHitFx *)lbl_803AC994)->y - ((GameObject *)obj)->anim.worldPosY;
         ((IcicleHitFx *)lbl_803AC994)->z = ((IcicleHitFx *)lbl_803AC994)->z - ((GameObject *)obj)->anim.worldPosZ;
