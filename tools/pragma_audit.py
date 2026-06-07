@@ -48,7 +48,8 @@ def map_fn_states(path: Path):
         return {}
     state = {k: [] for k in KINDS}
     out = {}
-    for ln, line in enumerate(text.split("\n"), 1):
+    all_lines = text.split("\n")
+    for ln, line in enumerate(all_lines, 1):
         m = PRAGMA_RE.match(line)
         if m:
             kind, act = m.groups()
@@ -72,7 +73,25 @@ def map_fn_states(path: Path):
                 eff = tuple(
                     state[k][-1] if state[k] else "def-on" for k in KINDS
                 )
-                out[m2.group(1)] = (ln,) + eff
+                # definition-only filter (h6 bugfix): a true DEFINITION opens
+                # a brace before any ';' -- multi-line prototypes otherwise
+                # record PHANTOM pragma states at the prototype's position
+                # (ObjSeq_update class: flagged-while-already-wrapped).
+                # Scan this+next lines until '{' (definition) or ';' (proto).
+                probe_ln = ln - 1
+                is_def = False
+                budget = 8
+                while budget and probe_ln < len(all_lines):
+                    seg = all_lines[probe_ln]
+                    if "{" in seg.split("//")[0]:
+                        is_def = True
+                        break
+                    if ";" in seg.split("//")[0]:
+                        break
+                    probe_ln += 1
+                    budget -= 1
+                if is_def:
+                    out[m2.group(1)] = (ln,) + eff
     return out
 
 
@@ -129,15 +148,18 @@ def main():
                 continue
             size = int(f.get("size", 0))
             potential = (100.0 - pct) * size / 100.0
+            # confidence (h6 field calibration): sched-state outliers hit
+            # near-100% in A/B; peephole-only outliers ~50/50.
+            conf = "HIGH" if sch != maj[0] else "MED"
             rows.append(
-                (potential, pct, size, uname, f["name"], ln, sch, pe, maj)
+                (potential, pct, size, uname, f["name"], ln, sch, pe, maj, conf)
             )
 
     rows.sort(reverse=True)
-    print(f"{'pot.B':>7} {'pct':>7} {'size':>6}  unit / fn  (line, state vs majority)")
-    for potential, pct, size, uname, fname, ln, sch, pe, maj in rows:
+    print(f"{'pot.B':>7} {'pct':>7} {'size':>6} conf  unit / fn  (line, state vs majority)")
+    for potential, pct, size, uname, fname, ln, sch, pe, maj, conf in rows:
         print(
-            f"{potential:7.0f} {pct:7.2f} {size:6d}  {uname} / {fname}"
+            f"{potential:7.0f} {pct:7.2f} {size:6d} {conf:>4}  {uname} / {fname}"
             f"  (L{ln}, sched={sch}/peep={pe} vs maj={maj[0]}/{maj[1]})"
         )
     print(f"-- {len(rows)} listed")
