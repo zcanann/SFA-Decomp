@@ -189,7 +189,7 @@ void magicdust_update(int obj)
       ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 0x40;
       ((MagicDustState *)iVar8)->unk26C = lbl_803E34B4;
       OSReport(sMagicDustCollectedMessage);
-      *(u8 *)(obj + 0x36) = 1;
+      ((GameObject *)obj)->anim.alpha = 1;
     }
   }
   if ((((MagicDustState *)iVar8)->flags27A & 0x10) == 0) {
@@ -261,7 +261,7 @@ void magicdust_update(int obj)
             (*(code *)(*gPartfxInterface + 8))(obj,((MagicDustState *)iVar8)->unk270,0,1,0xffffffff,local_27);
           }
         }
-        *(u8 *)(obj + 0x36) = 1;
+        ((GameObject *)obj)->anim.alpha = 1;
         Sfx_PlayFromObject(obj,SFXen_waterblock_wave);
       }
       objMove(((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
@@ -272,7 +272,7 @@ void magicdust_update(int obj)
         ((MagicDustState *)iVar8)->flags27A = bVar3 & 0xfe;
         ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 4;
         ((MagicDustState *)iVar8)->unk26C = lbl_803E34C8;
-        *(u8 *)(obj + 0x36) = 0xff;
+        ((GameObject *)obj)->anim.alpha = 0xff;
       }
       if (*(int *)&((GameObject *)obj)->anim.parent == 0) {
         (*(code *)(*gPartfxInterface + 8))(obj,((MagicDustState *)iVar8)->unk270,0,1,0xffffffff,0);
@@ -344,7 +344,7 @@ void magicdust_update(int obj)
           ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 0x40;
           ((MagicDustState *)iVar8)->unk26C = lbl_803E34B4;
           OSReport(sMagicDustCollectedMessage);
-          *(u8 *)(obj + 0x36) = 1;
+          ((GameObject *)obj)->anim.alpha = 1;
         }
       }
     }
@@ -400,11 +400,11 @@ void magicdust_init(int param_1,int param_2)
   sVar1 = *(short *)(param_2 + 0x2e);
   if (sVar1 == 1) {
     ((MagicDustState *)iVar5)->flags27A = ((MagicDustState *)iVar5)->flags27A | 1;
-    *(undefined *)(param_1 + 0x36) = 1;
+    ((GameObject *)param_1)->anim.alpha = 1;
   }
   else if (sVar1 == 2) {
     ((MagicDustState *)iVar5)->flags27A = ((MagicDustState *)iVar5)->flags27A | 1;
-    *(undefined *)(param_1 + 0x36) = 1;
+    ((GameObject *)param_1)->anim.alpha = 1;
     if (*(uint *)&((GameObject *)param_1)->anim.hitReactState != 0) {
       ObjHits_DisableObject(param_1);
     }
@@ -417,7 +417,7 @@ void magicdust_init(int param_1,int param_2)
   }
   else if (sVar1 == 3) {
     ((MagicDustState *)iVar5)->flags27A = ((MagicDustState *)iVar5)->flags27A | 1;
-    *(undefined *)(param_1 + 0x36) = 1;
+    ((GameObject *)param_1)->anim.alpha = 1;
     ((GameObject *)param_1)->anim.velocityY =
          -((f32)(int)randomGetRange(0x8c,0x96) / lbl_803E34F0);
   }
