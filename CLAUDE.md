@@ -2696,8 +2696,53 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     web is in the wrong CLASS (fixable: name/un-name per #107, #77
     cast-local, second-def add/remove) vs wrong POSITION within its
     class (park it).
-
-**Recipe #95/#96 correction extension (probe-verified on vecmath
+    **CROSS-CLASS INTERLEAVE — CLOSED as an IR-internal cap (task #12
+    round 3, ~75-probe battery; minimal repro harness in the commit).**
+    The "target ranks a multi-def/counter web ABOVE param webs where ours
+    inverts" residual (drshackle_updateSwingBlend, texscroll2_
+    applyMapTextureScroll, skyFn_8008a04c vec, partfx top-block,
+    Music_Update loop-3, CheckHitVolumes) is now characterized:
+    - GROUND STATE = the canonical pool order (copies/multi-defs above
+      params, E14) — reproduced in a 30-line minimal harness (params +
+      call-crossing copy web coalesced with a multi-def web).
+    - EXPANSION-CLASS CONSTRUCTS perturb it: ONE signed/unsigned
+      magic-constant division ANYWHERE in the fn fully INVERTS the trio
+      (multi-def sinks below params, one rank per "dose"); int<->f32
+      conversions and big-constant materializations carry smaller doses.
+      The effect is fn-GLOBAL and position-independent (a div before the
+      webs even exist, or on an unrelated operand, inverts the same),
+      FREQUENCY-WEIGHTED (div on a branch arm = half dose = one rank),
+      and NON-MONOTONE (two different-constant divs CANCEL back to
+      canonical; 1-2 conversions = one rank, 3-4 = two; no counting
+      model fits — temp-web count, def count, parity, mod-k, big-const
+      census, peak pressure, span length, use weight all falsified).
+      Version-invariant across all 8 GC compilers (1.1-3.0a3).
+    - ARMING CONDITION: a call-crossing COPY web competing with the
+      multi-def web. Without it (result tested before the next call)
+      divisions never perturb — fns lacking that shape are immune.
+    - ZERO-COST LEVERS ALL INERT (don't re-probe): decl order (both
+      ways), identifier names, register kw, extra defs, dead code (DCE
+      pre-empts the tick), (int)(long)/#114 sandwiches, named-temp
+      statement splits, chained single-def ternary respellings of the
+      multi-def web, unused vcall returns, #115 callee decl widths,
+      u8/int fnptr param widths, static inlined helpers wrapping the
+      div, full #77 typed-struct param conversion (S1, cast-free member
+      access), FP web restructure (single-def dx/dz), sched/peephole
+      pragma matrix, preceding-fn content (no cross-fn leakage),
+      compiler version. The instruction stream pins the construct
+      census, the census pins the interleave — so when ours diverges
+      from target at IDENTICAL instructions, no source spelling
+      reachable from the same instructions flips it.
+    CLASSIFY ON SIGHT: residual = pure saved-reg permutation where a
+    multi-def/copy web and param webs swap ranks, AND the fn contains a
+    magic-const division / int<->f32 conversions / big-const
+    materializations, AND target's order is closer to canonical pools
+    than ours → bank the partial, skip the probe budget. The 1-2 instr
+    "half" states (one rank off) are the same cap, not a separate bug.
+    (Why target differs at byte-identical streams remains unexplained —
+    plausibly fixed-point rounding in a fn-globally-normalized priority
+    function reacting to invisible upstream-IR differences; MWCC source
+    confirmed lost, black-box exhausted.) (probe-verified on vecmath
 mtx44_multSafe): `#pragma opt_loop_invariants`, `#pragma opt_propagation`
 and `#pragma opt_dead_assignments` are ALL FUNCTIONAL in GC/2.0** (removing
 each changed codegen; each was load-bearing for the matched form). The
