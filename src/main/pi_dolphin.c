@@ -10296,6 +10296,7 @@ int initLoadFiles(void) {
 
 #pragma scheduling off
 #pragma peephole off
+extern char sThreadStateAttrSuspendFormat[];
 void waitNextFrame(void)
 {
     int lvl;
@@ -10310,27 +10311,28 @@ void waitNextFrame(void)
     if (gDvdErrorPauseActive != 0) {
         timeDelta = lbl_803DEA70;
     }
-    if (lbl_803DEA74 < timeDelta) {
-        timeDelta = lbl_803DEA74;
+    if (timeDelta > lbl_803DEA74) {
+        timeDelta = *(f32 *)&lbl_803DEA74;
     }
-    oneOverTimeDelta = lbl_803DEA78;
-    if (lbl_803DEA7C < timeDelta) {
+    if (timeDelta > lbl_803DEA7C) {
         oneOverTimeDelta = lbl_803DEA78 / timeDelta;
+    } else {
+        oneOverTimeDelta = lbl_803DEA78;
     }
     frames = (int)(timeDelta + lbl_803DCCB4) & 0xff;
     lbl_803DB411 = frames;
-    lbl_803DCCB4 = (timeDelta + lbl_803DCCB4) - (f32)(u32)frames;
-    framesThisStep = lbl_803DB411;
-    if (frames == 0) {
+    lbl_803DCCB4 = (timeDelta + lbl_803DCCB4) - (f32)(u32)lbl_803DB411;
+    framesThisStep = frames;
+    if (lbl_803DB411 < 1) {
         framesThisStep = 1;
     }
     lvl = OSDisableInterrupts();
     lbl_803DCCDC = OSGetCurrentThread();
-    if (*(s16 *)(lbl_803DCCDC + 0x2c8) != 2) {
-        OSReport((char *)lbl_802CC6A0 + 0x401b8, *(s16 *)(lbl_803DCCDC + 0x2c8),
+    if (*(u16 *)(lbl_803DCCDC + 0x2c8) != 2) {
+        OSReport(sThreadStateAttrSuspendFormat, *(u16 *)(lbl_803DCCDC + 0x2c8),
                  *(u16 *)(lbl_803DCCDC + 0x2ca), *(int *)(lbl_803DCCDC + 0x2cc));
     }
-    if (Queue_GetCount(lbl_8035F730) > 1) {
+    if ((u32)Queue_GetCount(lbl_8035F730) > 1) {
         lbl_803DCCAC = 0;
         OSSleepThread(&lbl_803DCCC4);
     }
