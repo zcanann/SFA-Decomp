@@ -2597,7 +2597,18 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     induction r21/r22, flags r20/r19] but our compile scrambles the
     multi-def order (lowP,lV,sB,aV,sA,bL vs init order) — the IR-level
     web-creation order diverges from source order and no spelling lever
-    is known. When attacking a rotation: FIRST classify every web (init
+    is known. Music_Update negatives (A/B'd, don't retry): if↔ternary
+    flips of the post-loop clamps (rank-inert), fadeB/fadeA u32→int
+    retype with (int)-cast drops (rank-inert), and the s2Vol ternaries
+    are already target-shaped (the mr-pair join is the ternary
+    signature — converting to ifs would break instructions). The
+    inp_value precedent (rotation DISSOLVED when source matched
+    upstream MP4 ternary-macro forms — web STRUCTURE, not allocator
+    preference) does NOT transfer here: Music_Update's forms already
+    lower identically to target; its scramble is genuinely
+    creation-order-internal. When attacking a rotation: FIRST check
+    upstream-form structure (MP4 oracle the fn's family — cheap, and
+    some "rotations" dissolve entirely), THEN classify every web (init
     kind + def count from source), THEN check whether the mis-colored
     web is in the wrong CLASS (fixable: name/un-name per #107, #77
     cast-local, second-def add/remove) vs wrong POSITION within its

@@ -2489,20 +2489,18 @@ void fn_800E5E38(int obj,f32 *state)
   hitIndex = hitCount - 1;
   currentY = ((GameObject *)obj)->anim.worldPosY;
   window = lbl_803E06A0;
-  point = point + hitIndex;
   while (hitIndex >= 0) {
-    if ((s8)point->type != 0xe) {
-      if ((currentY <= point->x) && (currentY >= (point->x - window))) {
-        ((GameObject *)obj)->anim.worldPosY = point->x;
-        collision->surfaceNormalX = point->y;
-        collision->surfaceNormalY = point->z;
-        collision->surfaceNormalZ = point->w;
-        collision->surfaceFlags |= 0x11;
+    if ((s8)point[hitIndex].type != 0xe) {
+      if ((currentY <= point[hitIndex].x) && (currentY >= (point[hitIndex].x - window))) {
+        ((GameObject *)obj)->anim.worldPosY = point[hitIndex].x;
+        collision->surfaceNormalX = point[hitIndex].y;
+        collision->surfaceNormalY = point[hitIndex].z;
+        collision->surfaceNormalZ = point[hitIndex].w;
+        *(s8 *)&collision->surfaceFlags |= 0x11;
         collision->surfaceCounter++;
       }
       window = lbl_803E0688;
     }
-    point--;
     hitIndex--;
   }
 }
