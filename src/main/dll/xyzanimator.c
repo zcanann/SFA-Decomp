@@ -95,7 +95,7 @@ typedef struct PollenFragmentExtra {
 extern void storeZeroToFloatParam(void *timer);
 
 extern undefined4 DAT_803dc070;
-extern undefined4 *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e3d80;
@@ -853,8 +853,8 @@ void pollenfragment_init(int obj,int config)
   }
   spawnCount = 4;
   do {
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj,
-        (int)*(short *)(state[7] + 6), NULL, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, (int)*(short *)(state[7] + 6),
+                                     NULL, 1, -1, NULL);
   } while (spawnCount-- != 0);
   if (!((PollenFragmentDef *)state[7])->timed) {
     *(float *)(state + 2) = lbl_803E319C;
@@ -1179,16 +1179,16 @@ void pollenfragment_release(void) {}
 void pollenfragment_initialise(void) {}
 void mikabomb_hitDetect(void) {}
 
-extern int *gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 extern int *gModgfxInterface;
 extern f32 lbl_803E313C;
 #pragma scheduling off
 #pragma peephole off
 void pinponspike_free(int obj) {
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
 void pollen_free(int obj) {
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
 void pinponspike_init(int obj) {
     ((GameObject *)obj)->unkF4 = 0;
@@ -1218,7 +1218,7 @@ void pollenfragment_free(int obj) {
         ModelLightStruct_free((void *)inner[6]);
         inner[6] = 0;
     }
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
 void mikabomb_free(int obj, int mode) {
     void **inner = ((GameObject *)obj)->extra;
@@ -1548,8 +1548,7 @@ void pinponspike_update(int obj) {
             ((GameObject *)obj)->unkF4 = 0x78;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x715,
-                                                                    NULL, 1, -1, &i);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1, -1, &i);
             }
             Sfx_PlayFromObject(obj, 0x279);
         } else if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0) {
@@ -1558,8 +1557,7 @@ void pinponspike_update(int obj) {
             ((GameObject *)obj)->unkF4 = 0x78;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x715,
-                                                                    NULL, 1, -1, &i);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1, -1, &i);
             }
             Sfx_PlayFromObject(obj, 0x279);
         } else if (((GameObject *)obj)->anim.localPosY < lbl_803E312C) {
@@ -1604,8 +1602,7 @@ void pollen_update(int obj) {
         if (((GameObject *)obj)->anim.alpha == 0xff) {
             i = 2;
             do {
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x4ba,
-                                                                    NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x4ba, NULL, 1, -1, NULL);
             } while (i-- != 0);
         }
     }
@@ -1685,9 +1682,9 @@ void pollenfragment_update(int obj) {
             if (((GameObject *)obj)->anim.alpha == 0xff) {
                 i = 2;
                 do {
-                    ((EffectInterface *)*gPartfxInterface)->spawnObject(
-                        (void *)obj, (int)(((PollenFragmentExtra *)extra)->def)->burstFx,
-                        NULL, 1, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(
+                        (void *)obj, (int)(((PollenFragmentExtra *)extra)->def)->burstFx, NULL,
+                        1, -1, NULL);
                 } while (i-- != 0);
             }
             *(f32 *)(extra + 8) = lbl_803E3160;
@@ -1701,9 +1698,9 @@ void pollenfragment_update(int obj) {
         }
     }
     if ((((PollenFragmentExtra *)extra)->def)->auraFx != -1) {
-        ((EffectInterface *)*gPartfxInterface)->spawnObject(
-            (void *)obj, (int)(((PollenFragmentExtra *)extra)->def)->auraFx, NULL, 1, -1,
-            NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj,
+                                         (int)(((PollenFragmentExtra *)extra)->def)->auraFx,
+                                         NULL, 1, -1, NULL);
     }
     nearObj = (u8 *)ObjGroup_FindNearestObject((int)(((PollenFragmentExtra *)extra)->def)->targetGroup, obj, 0);
     if (nearObj != NULL &&
