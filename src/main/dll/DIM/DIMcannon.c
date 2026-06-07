@@ -666,7 +666,7 @@ void FUN_801aeab4(int param_1)
                     );
         pbVar5[2] = 0;
         pbVar5[3] = 0xb4;
-        *(undefined *)(param_1 + 0x36) = 0xa4;
+        ((GameObject *)param_1)->anim.alpha = 0xa4;
         pbVar5[1] = 2;
       }
     }
@@ -675,15 +675,15 @@ void FUN_801aeab4(int param_1)
         FUN_800178e8((double)lbl_803E5424,
                      DIMcannon_GetActiveModel((void *)param_1),0,-1,0,0x10
                     );
-        *(undefined *)(param_1 + 0x36) = 0xff;
+        ((GameObject *)param_1)->anim.alpha = 0xff;
         pbVar5[1] = 1;
       }
       else {
-        iVar3 = (uint)*(byte *)(param_1 + 0x36) + (uint)DAT_803dc070 * -8;
+        iVar3 = (uint)((GameObject *)param_1)->anim.alpha + (uint)DAT_803dc070 * -8;
         if (iVar3 < 0) {
           iVar3 = 0;
         }
-        *(char *)(param_1 + 0x36) = (char)iVar3;
+        ((GameObject *)param_1)->anim.alpha = iVar3;
       }
     }
     else if (bVar1 < 3) {
@@ -700,7 +700,7 @@ void FUN_801aeab4(int param_1)
       }
     }
     if (*pbVar5 < 5) {
-      dVar7 = (double)((float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0x36)) -
+      dVar7 = (double)((float)((double)CONCAT44(0x43300000,(uint)((GameObject *)param_1)->anim.alpha) -
                               DOUBLE_803e5438) / lbl_803E542C);
       dVar6 = (double)lbl_803E5420;
       if ((dVar7 <= dVar6) && (dVar6 = dVar7, dVar7 < (double)lbl_803E5430)) {
@@ -841,7 +841,7 @@ void FUN_801aef94(short *param_1)
   }
   param_1[2] = param_1[2] + *(short *)(iVar1 + 0x1c) * (ushort)DAT_803dc070;
   if (DAT_803de7c8 != 0) {
-    *(undefined *)(param_1 + 0x1b) = *(undefined *)(DAT_803de7c8 + 0x36);
+    ((GameObject *)param_1)->anim.alpha = ((GameObject *)DAT_803de7c8)->anim.alpha;
     FUN_80017a88((double)(*(float *)(DAT_803de7c8 + 0xc) - *(float *)(param_1 + 6)),
                  (double)(*(float *)(DAT_803de7c8 + 0x10) - *(float *)(param_1 + 8)),
                  (double)(*(float *)(DAT_803de7c8 + 0x14) - *(float *)(param_1 + 10)),(int)param_1);
@@ -888,7 +888,7 @@ void FUN_801af058(undefined2 *param_1,int param_2)
 void FUN_801af0a0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if ((visible != 0) &&
-     ((*(char *)(*(int *)(param_1 + 0xb8) + 8) != '\0' || (*(char *)(param_1 + 0x36) != '\0')))) {
+     ((*(char *)(*(int *)(param_1 + 0xb8) + 8) != '\0' || (((GameObject *)param_1)->anim.alpha != 0)))) {
     FUN_8003b818(param_1);
   }
   return;
@@ -2277,7 +2277,7 @@ void imspacethruster_init(int *obj, u8 *param2) {
             getTabEntry(sub->bufB, 0xc, lbl_80323824[v] * 0x28, 0x28);
         }
     }
-    *(u8 *)((char *)obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
 }
 void link_levcontrol_init(int *obj) {
     LinkLevControlState *inner = ((GameObject *)obj)->extra;
@@ -2498,7 +2498,7 @@ void imspacering_update(s16 *obj) {
     }
     obj[2] = (s16)(obj[2] + inner[0xe] * framesThisStep);
     if (lbl_803DDB48 != 0) {
-        *((u8 *)obj + 0x36) = *((u8 *)lbl_803DDB48 + 0x36);
+        ((GameObject *)obj)->anim.alpha = ((GameObject *)lbl_803DDB48)->anim.alpha;
         objMove((int)obj,
             *(f32 *)((char *)lbl_803DDB48 + 0xc) - ((GameObject *)obj)->anim.localPosX,
             *(f32 *)((char *)lbl_803DDB48 + 0x10) - ((GameObject *)obj)->anim.localPosY,
@@ -2507,7 +2507,7 @@ void imspacering_update(s16 *obj) {
 }
 void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     u8 *inner = ((GameObject *)obj)->extra;
-    if (visible != 0 && (inner[8] != 0 || *(u8 *)(obj + 0x36) != 0)) {
+    if (visible != 0 && (inner[8] != 0 || ((GameObject *)obj)->anim.alpha != 0)) {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E47C0);
     }
 }
@@ -2536,17 +2536,17 @@ void imspaceringgen_update(s16 *obj) {
         int v;
         state->visible = ((int (*)(int *))((void **)*(void **)*(int *)((char *)state->ringB + 0x68))[9])(state->ringB);
         if (state->visible != 0) {
-            v = *(u8 *)((char *)obj + 0x36) + framesThisStep * 8;
+            v = ((GameObject *)obj)->anim.alpha + framesThisStep * 8;
             if (v > 0xff) {
                 v = 0xff;
             }
         } else {
-            v = *(u8 *)((char *)obj + 0x36) - framesThisStep * 8;
+            v = ((GameObject *)obj)->anim.alpha - framesThisStep * 8;
             if (v < 0) {
                 v = 0;
             }
         }
-        *(u8 *)((char *)obj + 0x36) = v;
+        ((GameObject *)obj)->anim.alpha = v;
         if (((GameObject *)obj)->unkF4 == 0 && Obj_IsLoadingLocked() != 0) {
             for (i = 0; i < 10; i++) {
                 ring = Obj_AllocObjectSetup(0x24, 0x301);
@@ -2957,21 +2957,21 @@ void imspacethruster_update(int *obj) {
         case 0:
             if (mode == 1) {
                 ObjModel_SetBlendChannelTargets(DIMcannon_GetActiveModel(obj), 0, -1, 0, lbl_803E478C, 0x10);
-                *(u8 *)((char *)obj + 0x36) = 0xff;
+                ((GameObject *)obj)->anim.alpha = 0xff;
                 state->phase = 1;
             } else {
-                int d = *(u8 *)((char *)obj + 0x36) - framesThisStep * 8;
+                int d = ((GameObject *)obj)->anim.alpha - framesThisStep * 8;
                 if (d < 0) {
                     d = 0;
                 }
-                *(u8 *)((char *)obj + 0x36) = d;
+                ((GameObject *)obj)->anim.alpha = d;
             }
             break;
         case 1:
             if (mode == 0) {
                 ObjModel_SetBlendChannelTargets(DIMcannon_GetActiveModel(obj), 0, -1, 0, lbl_803E4790, 0x10);
                 state->blendTimer = 0xb4;
-                *(u8 *)((char *)obj + 0x36) = 0xa4;
+                ((GameObject *)obj)->anim.alpha = 0xa4;
                 state->phase = 2;
             }
             break;
@@ -2986,7 +2986,7 @@ void imspacethruster_update(int *obj) {
             break;
         }
         if (state->kind < 5) {
-            f32 a = (f32)*(u8 *)((char *)obj + 0x36) / lbl_803E4794;
+            f32 a = (f32)((GameObject *)obj)->anim.alpha / lbl_803E4794;
             if (a > lbl_803E4788) {
                 a = lbl_803E4788;
             } else if (a < lbl_803E4798) {
