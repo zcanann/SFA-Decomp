@@ -2891,6 +2891,20 @@ emits `addi ptr; addi counter; cmpwi counter; b`; clean-C array-index form emits
 `addi counter; cmpwi; addi ptr` (counter bumped/tested before the pointer). This
 does NOT respond to index-vs-pointer-walk OR scheduling toggle — it's allocator/
 loop-form internal. Caps some array-walk loops at ~93-95%; leave partial.
+**MECHANISM SHARPENED (task #14 probe battery, q1-q5 both compilers +
+wmseqpoint_update in-place A/B): the cap is a SCHEDULING-OFF artifact.**
+Under scheduling-ON, the bump order at the tail FOLLOWS SOURCE ORDER —
+comma-increment order (`p++, i++` vs `i++, p++`), body-end `p++` placement,
+and the SR'd index form (ptr-first) all reproduce their respective orders;
+the cap shape never appears. Under scheduling-OFF, walker bumps (named OR
+SR-created) pin to the latch AFTER the compare (`addi i; cmpwi; addi ptr`)
+and NO source form flips it (body-end bump, comma-order, explicit walker
+all tested; walker forms also add an init `mr` + swap the i/q coloring —
+net WORSE than the plain index form). When target shows ptr-bump-first in
+a fn that needs scheduling-off for its other divergences, the 1-instr
+transposition is the price of the pragma — bank it (wmseqpoint_update
+99.0, musicInitMidiWad). If the fn does NOT otherwise need sched-off, try
+sched-on + source-ordered increments before declaring the cap.
 
 **Passing a small by-value struct (e.g. `GXColor`, 4 bytes) goes BY ADDRESS in
 this ABI — load the global STRAIGHT into the outgoing-arg slot.** Write
