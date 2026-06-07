@@ -4,6 +4,7 @@
 #include "main/mapEvent.h"
 #include "main/objanim_internal.h"
 #include "main/dll/DR/DRpushcart.h"
+#include "main/objseq.h"
 
 /* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
 typedef struct ShopItemState {
@@ -1269,7 +1270,7 @@ extern void ObjMsg_SendToObject(void *to, int msg, int obj, void *data);
 extern void forceAButtonIcon(int icon);
 extern void showHelpText(int textId);
 extern void buttonDisable(int a, int b);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void objRenderFn_80041018(int obj);
 extern f32 Curve_EvalBSpline(int p, f32 t, int m);
 
@@ -1325,9 +1326,9 @@ void shopitem_update(int obj)
                 }
                 if (money >= price) {
                     hudFn_8011f38c(3);
-                    (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 } else {
-                    (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(1, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 }
                 buttonDisable(0, 0x100);
             }
@@ -1405,7 +1406,7 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
     if (((ShopkeeperState *)state)->flags9D4 & 0x10) {
         if ((*(int (**)(void))(*(int *)gScreenTransitionInterface + 0x14))() != 0) {
             (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 0xC))(0x1E, 1);
-            (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x4C))(*(s8 *)(data + 0x57));
+            (*gObjectTriggerInterface)->endSequence(*(s8 *)(data + 0x57));
         }
         return 0;
     }

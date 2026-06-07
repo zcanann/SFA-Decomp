@@ -3,6 +3,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
+#include "main/objseq.h"
 
 
 #pragma peephole off
@@ -39,7 +40,7 @@ extern void Obj_FreeObject(void *obj);
 extern undefined4 DAT_803dc071;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f4;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern f64 DOUBLE_803e5bd0;
@@ -102,7 +103,7 @@ void mmsh_shrine_init(undefined2 *param_1,int param_2)
 void mmsh_scales_free(int param_1,int param_2)
 {
   void *child;
-  (*(code *)(*gObjectTriggerInterface + 0x24))(*(undefined4 *)(param_1 + 0xb8));
+  (*gObjectTriggerInterface)->freeState(*(u8 **)(param_1 + 0xb8));
   (*(code *)(*gTitleMenuControlInterface + 8))(param_1,0xffff,0,0,0);
   child = *(void **)(param_1 + 200);
   if ((child != NULL) && (param_2 == 0)) {
@@ -151,7 +152,7 @@ void mmsh_scales_update(int param_1)
       }
       if (((n <= 1) && ((u32)found != 0)) && (*(short *)(found + 0xb4) != -1)) {
         *(s16 *)(found + 0xb4) = -1;
-        (*(void (**)(int))(*gObjectTriggerInterface + 0x4c))(id);
+        (*gObjectTriggerInterface)->endSequence(id);
       }
       *(s16 *)(param_1 + 0xb4) = -1;
       Obj_FreeObject((void *)param_1);
@@ -212,8 +213,8 @@ void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 pa
   SH_LevelControl_runBloopEvent(iVar6 + 0x18,0x10,-1,-1,0xcbb,(int *)0xc4);
   bVar1 = *(byte *)(iVar6 + 0x24);
   if (bVar1 == 3) {
-    (**(code **)(*DAT_803dd6d4 + 0x4c))((int)(short)param_9[0x5a]);
-    (**(code **)(*DAT_803dd6d4 + 0x48))(3,param_9,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->endSequence((int)(short)param_9[0x5a]);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(3, param_9, -1);
     *(undefined *)(iVar6 + 0x24) = 4;
     FUN_80017698(0xae6,0);
   }
@@ -225,7 +226,7 @@ void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 pa
         *(undefined *)(iVar6 + 0x24) = 2;
         *(uint *)(iVar6 + 0x18) = *(uint *)(iVar6 + 0x18) & ~1;
         FUN_80017698(0xae6,1);
-        (**(code **)(*DAT_803dd6d4 + 0x48))(2,param_9,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(2, param_9, -1);
       }
     }
     else if (bVar1 == 0) {
@@ -239,8 +240,8 @@ void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       if ((*(byte *)((int)param_9 + 0xaf) & 1) != 0) {
         *(undefined *)(iVar6 + 0x24) = 1;
-        (**(code **)(*DAT_803dd6d4 + 0x50))(0x4c,0,0,0);
-        (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_9,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->setCamVars(0x4c, 0, 0, 0);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, param_9, -1);
         FUN_800067c0((int *)0xd8,1);
       }
     }
@@ -248,7 +249,7 @@ void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 pa
       uVar5 = FUN_80294cd0(iVar3,4);
       if (uVar5 == 0) {
         FUN_80006770(3);
-        (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_9,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, param_9, -1);
       }
       *(undefined *)(iVar6 + 0x24) = 5;
       FUN_80017698(0xae6,0);
@@ -307,7 +308,7 @@ void FUN_801c5920(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 {
   undefined8 uVar1;
   
-  (**(code **)(*DAT_803dd6d4 + 0x24))(*(undefined4 *)(param_9 + 0xb8));
+  ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState(*(u8 **)(param_9 + 0xb8));
   uVar1 = (**(code **)(*DAT_803dd6f4 + 8))(param_9,0xffff,0,0,0);
   if ((*(int *)(param_9 + 200) != 0) && (param_10 == 0)) {
     FUN_80017ac8(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -534,12 +535,12 @@ void mmsh_scales_init(int *obj, s16 *def) {
     *(int *)(state + 40) = -1;
     active = ((GameObject *)obj)->unkF4;
     if (active == 0 && def[12] != 1) {
-        ((void(*)(u8 *, s16 *))((void **)*gObjectTriggerInterface)[7])(state, def);
+        (*gObjectTriggerInterface)->loadAnimData(state, (u8 *)def);
         ((GameObject *)obj)->unkF4 = (int)def[12] + 1;
     } else if (active != 0 && def[12] != active - 1) {
-        ((void(*)(u8 *))((void **)*gObjectTriggerInterface)[9])(state);
+        (*gObjectTriggerInterface)->freeState(state);
         if (def[12] != -1) {
-            ((void(*)(u8 *, s16 *))((void **)*gObjectTriggerInterface)[7])(state, def);
+            (*gObjectTriggerInterface)->loadAnimData(state, (u8 *)def);
         }
         ((GameObject *)obj)->unkF4 = (int)def[12] + 1;
     }

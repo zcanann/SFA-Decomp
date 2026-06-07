@@ -4,6 +4,7 @@
 #include "main/objanim.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/mmshrine/shrine1C2.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 #pragma peephole off
@@ -138,7 +139,7 @@ extern void GameBit_Set(int bit, int value);
 extern int GameBit_Get(int bit);
 extern int *Obj_GetPlayerObject(void);
 extern int *gGameUIInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
 extern u8 lbl_80326208[];
 extern int lbl_803E8470;
@@ -233,7 +234,7 @@ void ecsh_shrine_update(s16 *obj)
             if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
                 sub[0x2f] = 1;
                 GameBit_Set(0x129, 0);
-                (*(void (**)(int, s16 *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 Music_Trigger(0xd8, 1);
                 {
                     f32 fz = lbl_803E4FCC;
@@ -279,7 +280,7 @@ void ecsh_shrine_update(s16 *obj)
             *(s16 *)(sub + 0x22) = 5;
             gv = randomGetRange(0, 5);
             sub[0x2e] = gv;
-            (*(void (**)(int, s16 *, int))(*(int *)gObjectTriggerInterface + 0x48))(2, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(2, obj, -1);
             break;
         case 3:
         case 4:
@@ -428,7 +429,7 @@ void ecsh_shrine_update(s16 *obj)
                             *(s16 *)(sub + 0x22) = 7;
                             *(s16 *)(sub + 0x26) = -1;
                             Sfx_PlayFromObject(obj, 0x170);
-                            (*(void (**)(int, s16 *, int))(*(int *)gObjectTriggerInterface + 0x48))(2, obj, -1);
+                            (*gObjectTriggerInterface)->runSequence(2, obj, -1);
                         } else if (sub[0x2f] == 4) {
                             gv = randomGetRange(0, 5);
                             sub[0x2e] = gv;
@@ -439,7 +440,7 @@ void ecsh_shrine_update(s16 *obj)
                             *(s16 *)(sub + 0x22) = 9;
                             *(s16 *)(sub + 0x26) = -1;
                             Sfx_PlayFromObject(obj, 0x170);
-                            (*(void (**)(int, s16 *, int))(*(int *)gObjectTriggerInterface + 0x48))(2, obj, -1);
+                            (*gObjectTriggerInterface)->runSequence(2, obj, -1);
                         } else {
                             *(f32 *)(sub + 8) = lbl_803E4FE8;
                             (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 8))(0x1e, 1);
@@ -476,7 +477,7 @@ void ecsh_shrine_update(s16 *obj)
                 sub[0x2f] = 7;
             } else {
                 sub[0x2f] = 7;
-                (*(void (**)(int, s16 *, int))(*(int *)gObjectTriggerInterface + 0x48))(1, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             }
             break;
         case 7:

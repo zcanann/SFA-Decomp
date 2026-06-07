@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 #include "global.h"
 
 #include "main/dll/DR/shstaff_state.h"
@@ -1060,7 +1061,7 @@ extern int ObjTrigger_IsSet(int obj);
 extern void mapUnload(int idx, int flags);
 extern void loadMapAndParent(int mapId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 lbl_803E550C;
 extern f32 lbl_803E5510;
 extern f32 lbl_803E5514;
@@ -1157,7 +1158,7 @@ void sh_staff_update(int obj)
     } else if (mode == 1) {
         if (ObjTrigger_IsSet(obj) != 0) {
             int target = ObjGroup_FindNearestObject(0xf, (u32)obj, 0);
-            ((void (*)(int, int, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(0, target, -1);
+            (*gObjectTriggerInterface)->runSequence(0, (void *)target, -1);
             ((ShStaffState *)state)->phase = 2;
             ((ShStaffState *)state)->fadeTimer = lbl_803E54E0;
             GameBit_Set(0x18b, 1);
@@ -1278,7 +1279,7 @@ void sh_beacon_update(int obj)
         *(u8 *)((char *)setup + 7) = *(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 7);
         ((ShBeaconState *)state)->childObj = loadObjectAtObject(obj, setup);
       }
-      (*(code *)(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+      (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
       ((ShBeaconState *)state)->mode = 2;
     }
   case 2:
