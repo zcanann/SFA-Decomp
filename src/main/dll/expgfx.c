@@ -886,7 +886,7 @@ foundFirst:
         resource = entry->resource;
         slot->stateBits.bits.frameParity = 0;
         slot->stateBits.bits.quadReady = 1;
-        if ((slot->behaviorFlags & 0x800) == 0) {
+        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_HOLD_LIFETIME_TIMER) == 0) {
           slot->lifetimeFrame -= framesThisStep;
         }
         phase = slot->stateBits.bits.initPhase;
@@ -907,8 +907,8 @@ foundFirst:
         } else {
           template = staticData->quadTemplateB;
         }
-        if ((slot->behaviorFlags & 0x20000) != 0 &&
-            (slot->renderFlags & 0x30000000) == 0) {
+        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
+            (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
           rot.x = lbl_803DF35C;
           rot.y = lbl_803DF35C;
           rot.z = lbl_803DF35C;
@@ -918,10 +918,10 @@ foundFirst:
           rot.angleX = (s16)(int)((f32)slot->sourceVecX * timeDelta);
           vecRotateZXY(&rot, &slot->posX.value);
         }
-        if ((slot->renderFlags & 0x30000000) != 0) {
+        if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) != 0) {
           workB = lbl_803DF3DC;
           workA = workB;
-          if ((slot->renderFlags & 0x10000000) != 0 && player != NULL && srcObj != NULL &&
+          if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0 && player != NULL && srcObj != NULL &&
               playerRange > lbl_803DF3E0) {
             vecBuf[0] = player->anim.worldPosX -
                         (slot->startPosX.value + srcObj->localPosX);
@@ -930,7 +930,7 @@ foundFirst:
             workB = vecBuf[0] * vecBuf[0] + vecBuf[2] * vecBuf[2];
             attractRatio = playerRange / workB;
           }
-          if (workB > lbl_803DF3B0 && (slot->renderFlags & 0x20000000) != 0 &&
+          if (workB > lbl_803DF3B0 && (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0 &&
               tricky != NULL && srcObj != NULL && trickyRange > lbl_803DF3E0) {
             vecBuf[0] = tricky->anim.worldPosX -
                         (slot->startPosX.value + srcObj->localPosX);
@@ -943,36 +943,36 @@ foundFirst:
             workB = workA;
           }
           if (workB < lbl_803DF3B0) {
-            if ((slot->renderFlags & 0x10000000) != 0) {
-              slot->renderFlags ^= 0x10000000;
+            if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0) {
+              slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_PLAYER;
             }
-            if ((slot->renderFlags & 0x20000000) != 0) {
-              slot->renderFlags ^= 0x20000000;
+            if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0) {
+              slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_TRICKY;
             }
-            if ((slot->behaviorFlags & 0x8000000) != 0) {
-              slot->behaviorFlags ^= 0x8000000;
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED) != 0) {
+              slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED;
             }
             slot->lifetimeFrame = randomGetRange(0, 0x28) + 0xdc;
             slot->lifetimeFrameLimit = randomGetRange(0, 0x28) + 0xdc;
-            slot->behaviorFlags |= 0x1000;
-            slot->renderFlags |= 0x40000000;
+            slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
+            slot->renderFlags |= EXPGFX_RENDER_IMPACT_POSITION_LOCKED;
             slot->velocityX = -(vecBuf[0] * attractRatio);
             slot->velocityZ = -(vecBuf[2] * attractRatio);
           }
         } else {
-          if ((slot->renderFlags & 0x10000) != 0) {
+          if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_A) != 0) {
             slot->velocityX = lbl_803DF3E4 * slot->velocityX + slot->velocityX;
             slot->velocityY = lbl_803DF3E4 * slot->velocityY + slot->velocityY;
             slot->velocityZ = lbl_803DF3E4 * slot->velocityZ + slot->velocityZ;
-          } else if ((slot->renderFlags & 0x20000) != 0) {
+          } else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_B) != 0) {
             slot->velocityX = lbl_803DF3E8 * slot->velocityX + slot->velocityX;
             slot->velocityY = lbl_803DF3E8 * slot->velocityY + slot->velocityY;
             slot->velocityZ = lbl_803DF3E8 * slot->velocityZ + slot->velocityZ;
-          } else if ((slot->renderFlags & 0x40000) != 0) {
+          } else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_C) != 0) {
             slot->velocityX = lbl_803DF3EC * slot->velocityX + slot->velocityX;
             slot->velocityY = lbl_803DF3EC * slot->velocityY + slot->velocityY;
             slot->velocityZ = lbl_803DF3EC * slot->velocityZ + slot->velocityZ;
-          } else if ((slot->renderFlags & 0x80000) != 0) {
+          } else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_DAMP) != 0) {
             slot->velocityX = lbl_803DF3F0 * slot->velocityX;
             slot->velocityY = lbl_803DF3F0 * slot->velocityY;
             slot->velocityZ = lbl_803DF3F0 * slot->velocityZ;
@@ -992,7 +992,7 @@ foundFirst:
                      slot->velocityY > gExpgfxYVelocityNegativeLimit) {
             slot->velocityY += gExpgfxYVelocitySlowStep * timeDelta;
           }
-          if ((slot->renderFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0) {
+          if ((slot->renderFlags & EXPGFX_RENDER_IMPACT_POSITION_LOCKED) != 0) {
             f32 zero = lbl_803DF35C;
             if (slot->velocityY * timeDelta + slot->posY.value < zero) {
               slot->velocityX = zero;
@@ -1001,26 +1001,26 @@ foundFirst:
               slot->sourceVecX = 0;
               slot->sourceVecY = 0;
               slot->sourceVecZ = 0;
-              if ((slot->behaviorFlags & 0x4000000) != 0) {
-                slot->behaviorFlags ^= 0x4000000;
+              if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) != 0) {
+                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B;
               }
-              if ((slot->behaviorFlags & 0x20000) != 0) {
-                slot->behaviorFlags ^= 0x20000;
+              if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0) {
+                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A;
               }
-              slot->behaviorFlags |= 0x8000000;
-              if ((slot->behaviorFlags & 0x1000000) != 0) {
-                slot->behaviorFlags ^= 0x1000000;
+              slot->behaviorFlags |= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED;
+              if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0) {
+                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_FAST_Y_RESPONSE;
               }
-              if ((slot->behaviorFlags & 8) != 0) {
-                slot->behaviorFlags ^= 8;
+              if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0) {
+                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY;
               }
-              if ((slot->behaviorFlags & 0x80000000) != 0) {
-                slot->behaviorFlags ^= 0x80000000;
+              if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0) {
+                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER;
               }
-              slot->renderFlags ^= 0x40000000;
+              slot->renderFlags ^= EXPGFX_RENDER_IMPACT_POSITION_LOCKED;
             }
           }
-          if ((slot->behaviorFlags & 0xf020) != 0 &&
+          if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_MASK) != 0 &&
               slot->velocityY * timeDelta + slot->posY.value < lbl_803DF35C) {
             u32 rnd;
             f32 fade;
@@ -1044,62 +1044,62 @@ foundFirst:
               rot.z = slot->posZ.value + slot->sourcePosW.value;
             }
             gExpgfxFrameParityBit = 1;
-            if ((slot->behaviorFlags & 0x20) != 0 &&
-                (slot->renderFlags & 0x40000000) == 0) {
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT) != 0 &&
+                (slot->renderFlags & EXPGFX_RENDER_IMPACT_POSITION_LOCKED) == 0) {
               slot->velocityX *= gExpgfxSlotMotionStep;
               slot->velocityZ *= gExpgfxSlotMotionStep;
-              slot->behaviorFlags ^= 0x20;
+              slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT;
               if (slot->soundHandle != -1) {
                 (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001,
                                                  -1, 0);
                 slot->soundHandle = -1;
               }
-            } else if ((slot->behaviorFlags & 0x1000) != 0) {
+            } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1) != 0) {
               slot->velocityX *= lbl_803DF358;
               slot->velocityZ *= lbl_803DF358;
               slot->scaleCounter =
                   (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
-              slot->behaviorFlags ^= 0x1000;
-            } else if ((slot->behaviorFlags & 0x2000) != 0) {
+              slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
+            } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2) != 0) {
               slot->velocityX *= lbl_803DF358;
               slot->velocityZ *= lbl_803DF358;
               slot->scaleCounter =
                   (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
-              slot->behaviorFlags ^= 0x2000;
-              slot->behaviorFlags |= 0x1000;
-            } else if ((slot->behaviorFlags & 0x4000) != 0) {
+              slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
+              slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
+            } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3) != 0) {
               slot->velocityX *= lbl_803DF358;
               slot->velocityZ *= lbl_803DF358;
               slot->scaleCounter =
                   (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
-              slot->behaviorFlags ^= 0x4000;
-              slot->behaviorFlags |= 0x2000;
+              slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
+              slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
               if (slot->soundHandle != -1) {
                 (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001,
                                                  -1, 0);
               }
               slot->soundHandle = -1;
-            } else if ((slot->behaviorFlags & 0x8000) != 0) {
+            } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4) != 0) {
               slot->velocityX = slot->velocityX * (gExpgfxSlotMotionStep - slot->velocityX);
               slot->velocityZ = slot->velocityZ * (gExpgfxSlotMotionStep - slot->velocityZ);
               slot->scaleCounter =
                   (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
-              slot->behaviorFlags ^= 0x8000;
-              slot->behaviorFlags |= 0x4000;
+              slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4;
+              slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
               if (slot->soundHandle != -1) {
                 (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001,
                                                  -1, 0);
               }
             }
             gExpgfxFrameParityBit = 0;
-          } else if ((slot->behaviorFlags & 0x10000000) != 0 &&
+          } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT) != 0 &&
                      slot->velocityY * timeDelta + slot->posY.value < lbl_803DF35C) {
             if (slot->soundHandle != -1) {
               rot.scale = lbl_803DF354;
               rot.angleZ = 0;
               rot.angleY = 0;
               rot.angleX = 0;
-              if ((slot->behaviorFlags & 1) != 0) {
+              if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
                 rot.x = slot->posX.value;
                 rot.y = lbl_803DF35C;
                 rot.z = slot->posZ.value;
@@ -1120,17 +1120,17 @@ foundFirst:
                 Sfx_PlayFromObject((u32)srcObj, 0x285);
               }
               slot->soundHandle = -1;
-              slot->behaviorFlags |= 0x10000000;
+              slot->behaviorFlags |= EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT;
               slot->lifetimeFrame = 0;
               gExpgfxFrameParityBit = 0;
             }
-          } else if ((slot->behaviorFlags & 0xf020) == 0 &&
-                     (slot->behaviorFlags & 0x10000000) == 0 && slot->soundHandle != -1) {
+          } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_MASK) == 0 &&
+                     (slot->behaviorFlags & EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT) == 0 && slot->soundHandle != -1) {
             rot.scale = lbl_803DF354;
             rot.angleZ = 0;
             rot.angleY = 0;
             rot.angleX = 0;
-            if ((slot->behaviorFlags & 1) != 0) {
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
               rot.x = slot->posX.value;
               rot.y = slot->posY.value;
               rot.z = slot->posZ.value;
@@ -1147,13 +1147,13 @@ foundFirst:
             (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001, -1, 0);
             gExpgfxFrameParityBit = 0;
           }
-          if ((slot->behaviorFlags & 0x80000000) != 0 && (int)randomGetRange(0, 4) == 1) {
+          if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && (int)randomGetRange(0, 4) == 1) {
             slot->velocityX +=
                 lbl_803DF3F8 - (f32)(int)randomGetRange(0, 9) / lbl_803DF3FC;
             slot->velocityZ +=
                 lbl_803DF3F8 - (f32)(int)randomGetRange(0, 9) / lbl_803DF3FC;
           }
-          if ((slot->renderFlags & 0x100000) != 0 && (int)randomGetRange(0, 10) == 1) {
+          if ((slot->renderFlags & EXPGFX_RENDER_RANDOM_VELOCITY_BURST) != 0 && (int)randomGetRange(0, 10) == 1) {
             if ((f32)slot->lifetimeFrame < (f32)slot->lifetimeFrameLimit) {
               slot->velocityX +=
                   lbl_803DF400 * (f32)(int)randomGetRange(-800, 800) + lbl_803DF3E8;
@@ -1163,16 +1163,16 @@ foundFirst:
                   lbl_803DF400 * (f32)(int)randomGetRange(-800, 800) + lbl_803DF3E8;
             }
           }
-          if ((slot->behaviorFlags & 0x400) != 0) {
+          if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH) != 0) {
             if ((f32)slot->lifetimeFrame < lbl_803DF38C * (f32)slot->lifetimeFrameLimit) {
               f32 boost = lbl_803DF404;
-              slot->behaviorFlags ^= 0x400;
+              slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH;
               slot->velocityX *= boost;
               slot->velocityY *= boost;
               slot->velocityZ *= boost;
             }
           }
-          if ((slot->renderFlags & 0x200000) != 0) {
+          if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0) {
             prevX = slot->posX.value;
             prevY = slot->posY.value;
             prevZ = slot->posZ.value;
@@ -1180,10 +1180,10 @@ foundFirst:
           slot->posX.value += slot->velocityX * timeDelta;
           slot->posY.value += slot->velocityY * timeDelta;
           slot->posZ.value += slot->velocityZ * timeDelta;
-          if ((slot->behaviorFlags & 0x100000) != 0) {
+          if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
             slot->scaleCounter = (int)((f32)(u16)slot->scaleFrames * timeDelta +
                                        (f32)(u16)slot->scaleCounter);
-          } else if ((slot->renderFlags & 0x2000) != 0) {
+          } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
             slot->scaleCounter = slot->scaleCounter - slot->scaleFrames * framesThisStep;
           }
         }
@@ -1210,7 +1210,7 @@ foundFirst:
               texT0 = 0;
             }
           }
-          if ((slot->renderFlags & 0x20) != 0) {
+          if ((slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
             int colR;
             int colG;
             int colB;
@@ -1223,11 +1223,11 @@ foundFirst:
                          (f32)slot->colorByte1);
             colB = (int)(ratio * (f32)(quad[3].alpha - slot->colorByte2) +
                          (f32)slot->colorByte2);
-            if ((slot->renderFlags & 0x1000000) != 0) {
+            if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_DIRECT) != 0) {
               quad[0].colorR = (s16)colR * (ambR8 + 1) >> 8;
               quad[0].colorG = (s16)colG * (ambG8 + 1) >> 8;
               quad[0].colorB = (s16)colB * (ambB8 + 1) >> 8;
-            } else if ((slot->renderFlags & 0x800000) != 0) {
+            } else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_SCALED) != 0) {
               quad[0].colorR = (s16)colR * ambRPlus1 >> 8;
               quad[0].colorG = (s16)colG * ambGPlus1 >> 8;
               quad[0].colorB = (s16)colB * ambBPlus1 >> 8;
@@ -1236,16 +1236,16 @@ foundFirst:
               quad[0].colorG = colG;
               quad[0].colorB = colB;
             }
-          } else if ((slot->renderFlags & 0x1000000) != 0) {
+          } else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_DIRECT) != 0) {
             quad[0].colorR = ambR8;
             quad[0].colorG = ambG8;
             quad[0].colorB = ambB8;
-          } else if ((slot->renderFlags & 0x800000) != 0) {
+          } else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_SCALED) != 0) {
             quad[0].colorR = ambScaled[2];
             quad[0].colorG = ambScaled[1];
             quad[0].colorB = ambScaled[0];
           }
-          if ((slot->renderFlags & 0x200000) != 0) {
+          if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0) {
             f32 sx;
             f32 sy;
             f32 sz;
@@ -1267,7 +1267,7 @@ foundFirst:
             sx = lbl_803DF35C;
             sy = sx;
             sz = sx;
-            if ((slot->behaviorFlags & 1) == 0) {
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) == 0) {
               if (srcObj != NULL) {
                 sx = srcObj->worldPosX;
                 sy = srcObj->worldPosY;
@@ -1320,8 +1320,8 @@ foundFirst:
             quad[3].z = -baseZ;
             quad[3].texS = texS0;
             quad[3].texT = texT1;
-          } else if ((slot->behaviorFlags & 0x4000000) != 0 &&
-                     (slot->renderFlags & 0x30000000) == 0) {
+          } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) != 0 &&
+                     (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
             rot.x = lbl_803DF35C;
             rot.y = lbl_803DF35C;
             rot.z = lbl_803DF35C;
@@ -1393,7 +1393,7 @@ foundFirst:
             quad[3].z = (int)vecBuf[2];
             quad[3].texS = texS0;
             quad[3].texT = texT1;
-          } else if ((slot->renderFlags & 0x20) != 0) {
+          } else if ((slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
             quad[0].x = template[0].x;
             quad[0].y = template[0].y;
             quad[0].z = template[0].z;
@@ -1414,7 +1414,7 @@ foundFirst:
             quad[3].z = template[3].z;
             quad[3].texS = texS0;
             quad[3].texT = texT1;
-          } else if ((slot->renderFlags & 0x100) != 0) {
+          } else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SCALE_Y8) != 0) {
             quad[0].x = template[0].x;
             quad[0].y = template[0].y;
             quad[0].y <<= 3;
@@ -1439,7 +1439,7 @@ foundFirst:
             quad[3].z = template[3].z;
             quad[3].texS = texS0;
             quad[3].texT = texT1;
-          } else if ((slot->renderFlags & 0x400) != 0) {
+          } else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SWAP_XZ_SCALE_Z32) != 0) {
             quad[0].z = template[0].x;
             quad[0].z <<= 5;
             quad[0].y = template[0].y;
@@ -1464,7 +1464,7 @@ foundFirst:
             quad[3].x = template[3].z;
             quad[3].texS = texS0;
             quad[3].texT = texT1;
-          } else if ((slot->renderFlags & 0x200) != 0) {
+          } else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SCALE_X32) != 0) {
             quad[0].x = template[0].x;
             quad[0].x <<= 5;
             quad[0].y = template[0].y;
@@ -1518,8 +1518,8 @@ foundFirst:
           rot.y = lbl_803DF35C;
           rot.z = lbl_803DF35C;
           rot.scale = lbl_803DF354;
-          if ((slot->behaviorFlags & 0x20000) != 0 &&
-              (slot->renderFlags & 0x30000000) == 0) {
+          if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
+              (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
             rot.x = slot->posX.value;
             rot.y = slot->posY.value;
             rot.z = slot->posZ.value;
@@ -1527,7 +1527,7 @@ foundFirst:
           rot.angleZ = 0;
           rot.angleY = 0;
           rot.angleX = 0;
-          if ((slot->behaviorFlags & 0x4000000) == 0 && (slot->behaviorFlags & 4) != 0) {
+          if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0 && (slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0) {
             if (srcObj != NULL) {
               rot.angleX = srcObj->rotX;
               rot.angleY = srcObj->rotY;
@@ -1544,7 +1544,7 @@ foundFirst:
           if ((rot.angleZ | rot.angleX | rot.angleY) != 0) {
             vecRotateZXY(&rot, rotPos);
           }
-          if ((slot->behaviorFlags & 1) == 0) {
+          if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) == 0) {
             if (srcObj != NULL) {
               srcVel[0] = srcObj->worldPosX;
               srcVel[1] = srcObj->worldPosY;
@@ -1568,9 +1568,9 @@ foundFirst:
           rot.x = srcVel[0] + rotPos[0];
           rot.y = srcVel[1] + rotPos[1];
           rot.z = srcVel[2] + rotPos[2];
-          if ((slot->behaviorFlags & 0x20000) != 0 &&
-              (slot->behaviorFlags & 0x4000000) == 0 &&
-              (slot->renderFlags & 0x30000000) == 0) {
+          if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
+              (slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0 &&
+              (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
             rot.x = rot.x + slot->sourcePosY.value;
             rot.y = rot.y + slot->sourcePosZ.value;
             rot.z = rot.z + slot->sourcePosW.value;
