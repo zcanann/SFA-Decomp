@@ -1,4 +1,5 @@
 #include "main/dll/DIM/dll_802B9780_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 #include "main/dll/baddie_state.h"
@@ -1091,8 +1092,9 @@ void fn_802BB998(int obj, int pointState, int inputState)
 
             count = (u8)randomGetRange(2, 6);
             while (count != 0) {
-                (*(void (**)(int, int, void *, int, int, int))(*(int *)gPartfxInterface + 8))(
-                    obj, randomGetRange(0, 1) + 0x1f9, &args, 0x10001, -1, 0);
+                ((EffectInterface *)*gPartfxInterface)
+                    ->spawnObject((void *)obj, randomGetRange(0, 1) + 0x1f9, &args,
+                                  0x10001, -1, NULL);
                 count--;
             }
 

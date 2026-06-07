@@ -1,4 +1,5 @@
 #include "main/dll/creator1CF.h"
+#include "main/effect_interfaces.h"
 
 extern void *Camera_GetCurrentViewSlot(void);
 extern float sqrtf(float x);
@@ -8,7 +9,7 @@ extern int voxmaps_traceLine(void *from, void *to, void *out, int param4, int pa
 
 extern undefined4 *gExpgfxInterface;
 extern undefined4 *gModgfxInterface;
-extern undefined4 *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803E51C8;
 extern f32 lbl_803E51CC;
@@ -34,7 +35,7 @@ extern f32 lbl_803E51DC;
 void dll_19E_free(int param_1)
 {
   (*(code *)(*(int *)gModgfxInterface + 0x18))(param_1);
-  (*(code *)(*(int *)gExpgfxInterface + 0x18))(param_1);
+  ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)param_1);
 }
 #pragma scheduling reset
 
@@ -130,8 +131,7 @@ void dll_19E_render(int param_1, int param_2, int param_3, int param_4,
         stk.args.x = lbl_803E51D8;
         stk.args.y = lbl_803E51DC;
         stk.args.z = lbl_803E51D8;
-        (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface) + 0x8))(
-            param_1, 0x1f7, &stk.args, 0x12, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x1f7, &stk.args, 0x12, -1, NULL);
       }
       *(s16 *)(state + 4) = (s16)(randomGetRange(-10, 10) + 0x3c);
     }
