@@ -2166,6 +2166,15 @@ while `(f32)gd` emitted 3 blobs, matching target byte shape.)
     not preserve it. Likely an original-compiler-version artifact. ~3 instrs
     per site; skip on sight (fn_801DFA28 ×2 sites). Recognize it by the
     conditional branch targeting the immediately-following instruction.
+    The cap also covers POINTER-null compares with statement-block arms
+    (`cmplwi; bne +8; b far`): the objseq family's 15-copy
+    `val = (animEntries == NULL) ? 0 : (runLength ? interp(...) : 0)`
+    if/else blocks are this class — BOTH nested-ternary directions
+    regress hard (88.2 -> 83.9 / 78.0 on ObjSeq_RebuildCurveStateToFrame;
+    #118's pointer-ternary needs the result IN the walked reg, absent
+    here). Classify the ObjSeq_update / RebuildCurveStateToFrame b-over-b
+    sites on sight; the recoverable component there is #71 literal 0.0f
+    for the 19 lbl_803DEFB0 refs. (task #16, miner-1.)
     Related wins from the same fn: a bare `(s16)` cast (NO `(int)`
     intermediate) on a float→int conversion result assigned to an `int`
     local emits `extsh rDST,r0` directly into the variable's home —
@@ -3286,6 +3295,24 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     Residual fmuls operand order from the self-accum compound form
     (`fmuls fD,fD,fK` vs target `fmuls fD,f0,fK`) is canonicalization-
     internal (operand swap, fresh temps probed inert) — bank it.
+    **EXPRESSION-VARIANT addendum (task #16, miner-1): in-loop literal
+    EXPRESSIONS hoist like bare constants — including an invariant
+    literal-op-PARAM division.** The import-named head local
+    `invPeriod = lbl_803DF350 / period;` was really `65535.0f / period`
+    written INLINE in the loop: LICM hoists the whole fdivs into the
+    preheader hoist group (after the int hoists, ascending FP coloring
+    with the other literals). WM_newcrystalFn_800969b0 81.4->98.8 from
+    converting a 4-local head group (0.0f/1.0f/65535.0f/period/0.5f) to
+    inline literals+expression. FALSE-POSITIVE GUIDE (census noise ~4/7
+    in the heuristic list — verify the asm tell first): (a) fns inside
+    `#pragma opt_common_subs off` regions — the pragma BLOCKS literal
+    hoisting entirely (no fN webs at all, hard regress) AND is
+    load-bearing; the named locals are correct there (fn_801E991C);
+    (b) mutable-global expression inits (`frac = lbl - (f32)fi`);
+    (c) min/max ACCUMULATOR inits (`nearest = lbl;` reassigned in-loop);
+    (d) address-taken outparam inits (`f32 radius = lbl; f(&radius)`).
+    All four read as `f32 x = lbl_X;` to the regex but are real named
+    locals.
 
 **NAMED CAP — branchy-arg pre-eval hoist (the in-place L2R ternary arg).**
 When target evaluates a branchy ternary CALL ARG at its L2R slot (args 1-7
