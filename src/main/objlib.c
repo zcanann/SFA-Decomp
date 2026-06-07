@@ -258,15 +258,17 @@ typedef struct ObjPathTransform {
  */
 #pragma scheduling off
 #pragma peephole off
+#pragma optimization_level 1
+#pragma peephole on
 void ObjHitbox_SetStateIndex(int objPtr,int hitStatePtr,int stateIndex)
 {
   ObjAnimComponent *obj;
   ObjHitsPriorityState *hitState;
+  int clearedState;
   ObjHitsPriorityWorkSlot *workSlot;
-  int modelCount;
   int slotIndex;
   int slotOffset;
-  int clearedState;
+  int modelCount;
 
   obj = (ObjAnimComponent *)objPtr;
   modelCount = obj->modelInstance->modelCount;
@@ -277,12 +279,12 @@ void ObjHitbox_SetStateIndex(int objPtr,int hitStatePtr,int stateIndex)
     stateIndex = 0;
   }
   hitState = (ObjHitsPriorityState *)hitStatePtr;
-  if (hitState->stateIndex == stateIndex) {
+  if (*(s8 *)&hitState->stateIndex == stateIndex) {
     return;
   }
   slotIndex = 0;
-  slotOffset = (s16)slotIndex;
-  clearedState = slotOffset;
+  slotOffset = slotIndex;
+  clearedState = slotIndex;
   for (; (s16)slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1) {
     workSlot = (ObjHitsPriorityWorkSlot *)(gObjHitsPriorityHitStates + slotOffset);
     if ((workSlot->active != 0) && ((u32)workSlot->obj == (u32)obj)) {
@@ -290,9 +292,11 @@ void ObjHitbox_SetStateIndex(int objPtr,int hitStatePtr,int stateIndex)
     }
     slotOffset = slotOffset + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
   }
-  hitState->stateIndex = (char)stateIndex;
+  hitState->stateIndex = (s8)stateIndex;
   return;
 }
+#pragma peephole reset
+#pragma optimization_level reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1150,18 +1154,17 @@ void ObjHits_AddContactObject(int obj,int contactObj)
   }
   contactOffset = 0;
   for (i = 0; i < contactObjectCount; i++) {
-    if ((u32)*(int *)(transformState + contactOffset + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET) ==
-        (u32)contactObj) {
+    u32 entryObj =
+        *(u32 *)(transformState + contactOffset + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET);
+    if (entryObj == (u32)contactObj) {
       return;
     }
     contactOffset = contactOffset + 4;
   }
   storeState = *(volatile int *)(obj + OBJHITBOX_TRANSFORM_STATE_OFFSET);
-  contactObjectIndex = *(u8 *)(transformState + OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET);
-  *(undefined *)(transformState + OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET) =
-      contactObjectIndex + 1;
-  contactStore = storeState + (s8)contactObjectIndex * 4;
-  *(int *)(contactStore + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET) = contactObj;
+  contactObjectIndex = (*(u8 *)(transformState + OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET))++;
+  *(int *)(storeState + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET +
+           (s8)contactObjectIndex * 4) = contactObj;
   return;
 }
 #pragma peephole reset
