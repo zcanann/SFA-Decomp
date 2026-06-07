@@ -7698,12 +7698,14 @@ int fn_8004AA24(int *ctx, int *ref) {
     }
 }
 void fn_8004AAD4(u8* arr, int size, int idx) {
-    u32 key = *(u32*)(arr + idx * 8);
-    u16 val = *(u16*)(arr + idx * 8 + 4);
-    int half = size >> 1;
+    u16 *h = (u16 *)arr;
+    int half;
+    u8* childptr;
+    u32 key = *(u32*)((int)arr + idx * 8);
+    u16 val = h[idx * 4 + 2];
     int child;
     u8* cp;
-    u8* childptr;
+    half = size >> 1;
     while (idx <= half) {
         child = idx + idx;
         if (child < size) {
@@ -7718,8 +7720,8 @@ void fn_8004AAD4(u8* arr, int size, int idx) {
         *(u16*)(arr + idx * 8 + 4) = *(u16*)(childptr + 4);
         idx = child;
     }
-    *(u32*)(arr + idx * 8) = key;
-    *(u16*)(arr + idx * 8 + 4) = val;
+    *(u32*)((int)arr + idx * 8) = key;
+    h[idx * 4 + 2] = val;
 }
 #pragma dont_inline reset
 extern void fn_8004AFA0(int *q, int *elem, int idx);
