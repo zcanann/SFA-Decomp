@@ -2505,6 +2505,50 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     was actually a #90 doubled-float-arg hoist — launder the repeated
     const arg (`*(f32 *)&lbl`) → 100.
 
+108. **Saved-reg assignment is CLASS-POOLED, not weight-ranked — partial
+    allocator model from controlled probes (task #12; /tmp battery
+    E1-E15, GC/2.0 -O4 unit flags).** Use this taxonomy to DIAGNOSE
+    whole-fn rotations (#16 cap) before grinding spellings:
+    - **Single-def value-copy locals** (call results `x = f();`, #77
+      cast-assigned locals from void* params) occupy the TOP block,
+      last-created → r31 (E1: a,b,c,d call results → r28..r31 ascending;
+      E15: a cast local took r31 over a multi-def web).
+    - **Multi-def (φ-carrying) locals** DESCEND from the top remaining
+      reg in CREATION order (E9: four `x = 500; if (..) x = g();` webs →
+      r31,r30,r29,r28 in init order — opposite direction from copies).
+    - **Params** rank at the BOTTOM under competition (E14: params at
+      r25/r26 below multi-defs r28/r29 and copies r30/r31). Reassigning
+      a param does NOT move it between pools (E12/E13 inert) — the only
+      confirmed param pool-jump is the #77 typed-local copy.
+    - **Induction webs** (walkers/counters) sit between params and
+      multi-defs; the ORIGINAL compiler shows same-VARIABLE reg affinity
+      across disjoint loops (Music_Update target: ch's loop-1 and loop-3
+      webs share r21; ours cross-pairs them with i's) — not yet
+      source-controllable.
+    - **All-const multi-def flag webs** (`int found = 0; ... found = 1;`)
+      sink to the very bottom, descending creation (Music_Update r20/r19
+      — both compiles agree on these).
+    - Use-count, first-use position, and loop-depth are ALL INERT within
+      a class (E2/E3/E4 byte-identical to E1) — "web weight" is the
+      wrong mental model for saved-reg ORDER; class membership + creation
+      order decide.
+    - Const-init'd SINGLE-def locals take no saved reg across calls
+      (rematerialized at use, E5/E7) — only multi-def or address-anchored
+      const webs survive.
+    OPEN: cross-class interleaving is context-dependent (E14 puts copies
+    ABOVE multi-defs; Music_Update target puts its 2 call-result copies
+    BELOW all 7 multi-defs at r23/r24). Music_Update itself (97.78,
+    instruction-perfect 13-web rotation) stays PARKED: target is fully
+    consistent with [multi-defs r31..r25 in init order, copies r23/r24,
+    induction r21/r22, flags r20/r19] but our compile scrambles the
+    multi-def order (lowP,lV,sB,aV,sA,bL vs init order) — the IR-level
+    web-creation order diverges from source order and no spelling lever
+    is known. When attacking a rotation: FIRST classify every web (init
+    kind + def count from source), THEN check whether the mis-colored
+    web is in the wrong CLASS (fixable: name/un-name per #107, #77
+    cast-local, second-def add/remove) vs wrong POSITION within its
+    class (park it).
+
 **Recipe #95/#96 correction extension (probe-verified on vecmath
 mtx44_multSafe): `#pragma opt_loop_invariants`, `#pragma opt_propagation`
 and `#pragma opt_dead_assignments` are ALL FUNCTIONAL in GC/2.0** (removing
