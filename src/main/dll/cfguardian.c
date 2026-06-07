@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/cfguardian.h"
 #include "main/game_object.h"
@@ -81,7 +82,7 @@ extern int fn_80295C5C(void *player);
 extern void *getTrickyObject(void);
 extern f32 Vec_distance(f32 *a, f32 *b);
 extern void Sfx_StopObjectChannel(int obj, int channel);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int *objFindTexture(int *obj, int a, int b);
 extern u32 GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
@@ -273,7 +274,7 @@ skip_insert: ;
         fx.type = 10;
         tmp = 0;
         do {
-          (*(code *)(*gPartfxInterface + 8))(obj, 0x7c3, &fx, 2, -1, 0);
+          (*gPartfxInterface)->spawnObject((void *)obj, 0x7c3, &fx, 2, -1, 0);
           tmp++;
         } while (tmp < 3);
       }

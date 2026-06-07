@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/campfire_state.h"
@@ -65,7 +66,7 @@ extern f32 lbl_803DDA94;
 extern f32 lbl_803DDA98;
 extern void* gKaldaChomStateHandlersB[];
 extern void* gKaldaChomStateHandlersA[];
-extern undefined4* gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* gPlayerInterface;
 extern undefined4* gMapEventInterface;
 extern undefined4* gBaddieControlInterface;
@@ -143,7 +144,7 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl *control)
   Sfx_PlayFromObject(obj,SFXkr_land2);
   iVar2 = 0x28;
   do {
-    (**(code **)(*gPartfxInterface + 8))(obj,0x717,0,4,0xffffffff,&lbl_803DDA94);
+    (*gPartfxInterface)->spawnObject((void *)obj,0x717,0,4,0xffffffff,&lbl_803DDA94);
     iVar2 = iVar2 + -1;
   } while (iVar2 != 0);
   if ((control->spawnedDustObj == NULL) && (cVar1 = Obj_IsLoadingLocked(), cVar1 != '\0')) {
@@ -252,8 +253,7 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     eventState->baddie.eventFlags &= ~0x80;
     Sfx_PlayFromObject(obj, SFXkr_climb2);
     for (n = (2 - (s32)control->climbFxIndex) * 10; n != 0; n--) {
-      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-          obj, 1809, 0, 4, -1, (int)&lbl_803DDA98);
+      (*gPartfxInterface)->spawnObject((void *)obj, 1809, 0, 4, -1, &lbl_803DDA98);
     }
   }
   if ((eventState->baddie.eventFlags &0x40) != 0) {
@@ -273,8 +273,7 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     control->climbFxIndex = 3;
     n = 10;
     do {
-      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
-          obj, 1808, 0, 4, -1, (int)&lbl_803DDA98);
+      (*gPartfxInterface)->spawnObject((void *)obj, 1808, 0, 4, -1, &lbl_803DDA98);
       n--;
     } while (n != 0);
     eventState->baddie.eventFlags &= ~0x400;

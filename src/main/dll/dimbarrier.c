@@ -1,4 +1,5 @@
 #include "main/dll/dimbarrier.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 
@@ -61,7 +62,7 @@ typedef struct {
 
 extern void *Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 *a, f32 *b);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int *gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_802C23B8[];
@@ -92,7 +93,7 @@ void ecsh_cup_update(short *obj)
             if (*(f32 *)(state + 0x1c) <= lbl_803E5068) {
                 *(f32 *)(state + 0x1c) = lbl_803E506C;
                 if (mode != 3 && mode != 6 && mode != 7) {
-                    (*(void (*)(short *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x270, 0, 0, -1, 0);
+                    (*gPartfxInterface)->spawnObject(obj, 0x270, 0, 0, -1, 0);
                 }
             }
         }
@@ -128,7 +129,7 @@ void ecsh_cup_update(short *obj)
             *(f32 *)(state + 0x1c) -= timeDelta;
             if (*(f32 *)(state + 0x1c) <= lbl_803E5068) {
                 *(f32 *)(state + 0x1c) = lbl_803E506C;
-                (*(void (*)(short *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x271, 0, 0, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x271, 0, 0, -1, 0);
             }
         } else if (mode == 7) {
             if (((GameObject *)obj)->anim.localPosY > *(f32 *)(state + 0x18) - lbl_803E5084) {
@@ -137,7 +138,7 @@ void ecsh_cup_update(short *obj)
                 if (*(f32 *)(state + 0x1c) <= lbl_803E5068) {
                     *(f32 *)(state + 0x1c) = lbl_803E506C;
                     if (mode != 3) {
-                        (*(void (*)(short *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x271, 0, 0, -1, 0);
+                        (*gPartfxInterface)->spawnObject(obj, 0x271, 0, 0, -1, 0);
                     }
                 }
             }
