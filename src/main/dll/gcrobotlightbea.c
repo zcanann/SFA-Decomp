@@ -398,17 +398,14 @@ int fn_801821FC(u8 *obj) {
 
     if ((int)(*(u32 *)(st + 0x48) >> 4) != 0 && (s8)st[0x70] == 0) {
         endPoints[0] = ((GameObject *)obj)->anim.localPosX;
-        endY = &endPoints[1];
-        endPoints[1] = ((GameObject *)obj)->anim.localPosY;
-        endZ = &endPoints[2];
-        endPoints[2] = ((GameObject *)obj)->anim.localPosZ;
+        *(endY = &endPoints[1]) = ((GameObject *)obj)->anim.localPosY;
+        *(endZ = &endPoints[2]) = ((GameObject *)obj)->anim.localPosZ;
         startPoints[0] = ((GameObject *)obj)->anim.previousLocalPosX;
         startPoints[1] = ((GameObject *)obj)->anim.previousLocalPosY;
         startPoints[2] = ((GameObject *)obj)->anim.previousLocalPosZ;
         hitResults.radii[0] = (f32)*(s16 *)(st + 0x5a);
-        axes = hitResults.axes;
-        hitResults.axes[0] = -1;
-        hitResults.axes[4] = 3;
+        *(axes = hitResults.axes) = -1;
+        axes[4] = 3;
     } else {
         return 0;
     }
