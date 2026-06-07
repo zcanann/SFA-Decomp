@@ -1405,6 +1405,8 @@ void fn_800704FC(u8 param_1, u8 param_2, u8 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
 {
     extern f32 lbl_803DEEE4;
@@ -1611,6 +1613,8 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
         }
     }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -1977,6 +1981,8 @@ void doSpiritVisionFilter(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void doColorFilter(u8* mod)
 {
     extern u32 lbl_803DEEC8, lbl_803DEECC, lbl_803DEED0, lbl_803DEED4;
@@ -2108,6 +2114,8 @@ void doColorFilter(u8* mod)
     Camera_RebuildProjectionMatrix();
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -2411,6 +2419,8 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -2579,6 +2589,8 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
         }
     }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -2989,6 +3001,8 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -3142,6 +3156,8 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
         }
     }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -3156,6 +3172,8 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 u32 objCallback_80074d04(int handle, void* model)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0;
@@ -3330,6 +3348,8 @@ u32 objCallback_80074d04(int handle, void* model)
     GXSetBlendMode(1, 4, 5, 5);
     return 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -6521,6 +6541,8 @@ void doBlurFilter(double wx, double wy, double wz, char param4, char param5)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void fn_8007BD8C(int handle1, int handle2)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -6655,6 +6677,8 @@ void fn_8007BD8C(int handle1, int handle2)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -6950,6 +6974,8 @@ void fn_8007CAF4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void gxTextureSetupFn_8007cf7c(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0, lbl_803DEEF4;
@@ -7105,6 +7131,8 @@ void gxTextureSetupFn_8007cf7c(void)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
