@@ -175,9 +175,9 @@ void OptionsScreen_render(int arg)
 #pragma scheduling reset
 
 extern void gameTextLoadDir(int);
-extern u8 lbl_803DD70C;
+extern s8 lbl_803DD70C;
 extern u32 lbl_803DD708;
-extern u8 lbl_803DD705;
+extern s8 lbl_803DD705;
 extern u8 lbl_803DD6F9;
 extern u8 lbl_803DD6F8;
 extern void fn_8011CA74(void);
@@ -227,6 +227,8 @@ void OptionsScreen_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int OptionsScreen_run(void)
 {
     int step = framesThisStep;
@@ -234,7 +236,6 @@ int OptionsScreen_run(void)
     int selection;
     int item;
     int i;
-    int *slot;
 
     if (shouldShowCredits()) {
         return 0;
@@ -256,18 +257,17 @@ int OptionsScreen_run(void)
                 (*(void (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0x8)))();
                 lbl_803DBA28 = -1;
             }
-            slot = lbl_803A87D0;
-            for (i = 0; i < 8; i++, slot++) {
-                if (*slot != 0) {
-                    (*(void (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x10)))(*slot);
-                    *slot = 0;
+            for (i = 0; i < 8; i++) {
+                if ((u32)lbl_803A87D0[i] != 0) {
+                    (*(void (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x10)))(lbl_803A87D0[i]);
+                    lbl_803A87D0[i] = 0;
                 }
             }
             titleScreenFn_8005cdd4(1);
             setDrawCloudsAndLights(1);
             loadUiDll(4);
         }
-        return (uint)((uint)(int)lbl_803DD704 < 0xd) - ((int)lbl_803DD704 >> 0x1f);
+        return lbl_803DD704 <= 12;
     }
 
     selection = (*(int (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0xc)))();
@@ -315,31 +315,39 @@ int OptionsScreen_run(void)
                 lbl_803DD704 = 0x23;
                 lbl_803DD705 = 1;
             }
-            if (lbl_803A87D0[item] != 0 &&
+            if ((u32)lbl_803A87D0[item] != 0 &&
                 (*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x2c)))(lbl_803A87D0[item]) != 0) {
-                if (item == 0) {
+                switch (item) {
+                case 0:
                     ((u8 *)lbl_803DD708)[2] =
                         !(*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
                     setSubtitlesEnabled(((u8 *)lbl_803DD708)[2]);
-                } else {
+                    break;
+                default:
                     saveFileStruct_setCheatActive(3,
                         !(*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[item]));
+                    break;
                 }
             }
             break;
     }
 
     if ((s8)lbl_803DBA28 != 0) {
-        slot = lbl_803A87D0;
-        for (i = 0; i < 8; i++, slot++) {
-            if (*slot != 0) {
-                (*(void (*)(int, int))(*(int *)(*gTitleMenuItemInterface + 0x20)))(*slot, i == item);
-                (*(void (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x14)))(*slot);
+        for (i = 0; i < 8; i++) {
+            if ((u32)lbl_803A87D0[i] != 0) {
+                if (i == item) {
+                    (*(void (*)(int, int))(*(int *)(*gTitleMenuItemInterface + 0x20)))(lbl_803A87D0[i], 1);
+                } else {
+                    (*(void (*)(int, int))(*(int *)(*gTitleMenuItemInterface + 0x20)))(lbl_803A87D0[i], 0);
+                }
+                (*(void (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x14)))(lbl_803A87D0[i]);
             }
         }
     }
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
