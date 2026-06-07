@@ -462,4 +462,26 @@ STATIC_ASSERT(offsetof(ExpgfxSlot, renderX) == 0x90);
 #define EXPGFX_STATIC_DATA ((ExpgfxStaticDataLayout *)gExpgfxStaticData)
 #define EXPGFX_RUNTIME_DATA ((ExpgfxRuntimeDataLayout *)gExpgfxRuntimeData)
 
+extern u8 gExpgfxStaticData[];
+extern u8 gExpgfxRuntimeData[];
+extern ExpgfxTableEntry gExpgfxTableEntries[];
+extern u32 gExpgfxTrackedPoolSourceIds[];
+extern ExpgfxTrackedSourceFrameMask gExpgfxTrackedSourceFrameMasks[];
+extern s16 gExpgfxStaticPoolSlotTypeIds[];
+extern u8 gExpgfxStaticPoolFrameFlags[];
+extern u32 gExpgfxSlotActiveMasks[];
+extern u32 gExpgfxSlotPoolBases[];
+extern int gExpgfxTextureFreeInProgress;
+extern volatile s16 gExpgfxSequenceCounter;
+extern volatile u8 gExpgfxFrameParityBit;
+extern u8 gExpgfxUpdatingActivePools;
+extern u8 gExpgfxRenderResetPending;
+extern int gExpgfxLastAddedSlot;
+extern char sExpgfxAddToTableUsageOverflow[];
+extern char sExpgfxExpTabIsFull[];
+extern char sExpgfxInvalidTabIndex[];
+extern char sExpgfxMismatchInAddRemove[];
+extern char sExpgfxScaleOverflow[];
+extern char sExpgfxNoTexture[];
+
 #endif /* MAIN_EXPGFX_INTERNAL_H_ */

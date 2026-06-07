@@ -5,6 +5,7 @@
 #include "main/expgfx_internal.h"
 #include "main/game_object.h"
 #include "main/mm.h"
+#include "main/texture.h"
 
 extern undefined4 ABS();
 extern int Camera_GetViewMatrix(void);
@@ -22,7 +23,6 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_8004812c();
 extern undefined8 FUN_80053754();
-extern void textureFree(void *resource);
 extern int FUN_8005b024();
 extern undefined4 FUN_8005d340();
 extern undefined4 FUN_8005e1d8();
@@ -198,20 +198,6 @@ extern f32 lbl_803E009C;
 extern f32 lbl_803E00A0;
 extern f32 lbl_803E00A4;
 extern f32 lbl_803E00A8;
-extern u8 gExpgfxStaticData[];
-extern u8 gExpgfxRuntimeData[];
-extern u32 gExpgfxTrackedPoolSourceIds[];
-extern ExpgfxTrackedSourceFrameMask gExpgfxTrackedSourceFrameMasks[];
-extern s16 gExpgfxStaticPoolSlotTypeIds[];
-extern int gExpgfxTextureFreeInProgress;
-extern volatile s16 gExpgfxSequenceCounter;
-extern volatile u8 gExpgfxFrameParityBit;
-extern char sExpgfxAddToTableUsageOverflow[];
-extern char sExpgfxExpTabIsFull[];
-extern char sExpgfxInvalidTabIndex[];
-extern char sExpgfxMismatchInAddRemove[];
-extern char sExpgfxScaleOverflow[];
-extern char sExpgfxNoTexture[];
 
 ObjectDescriptor14 expgfx_funcs = {
     0,
@@ -237,7 +223,6 @@ ObjectDescriptor14 expgfx_funcs = {
 #define EXPGFX_SLOT_TABLE_INDEX_OFFSET 0x8A
 #define gExpgfxTrackedPoolMaskHighWords DAT_8039c7c8
 #define gExpgfxTrackedPoolMaskLowWords DAT_8039c7cc
-extern ExpgfxTableEntry gExpgfxTableEntries[];
 
 static inline ExpgfxTableEntry *Expgfx_GetTableEntry(int tableIndex) {
   return &gExpgfxTableEntries[tableIndex];
@@ -1911,7 +1896,6 @@ extern int Camera_GetProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
 extern void _textSetColor(int reg, u8 r, u8 g, u8 b, u8 a);
 extern void fn_8000F83C(void);
-extern void expgfx_updateResourceEntries(int unused);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern void angleToVec2(int angle, f32 *cosOut, f32 *sinOut);
 extern void selectTexture(int handle, int slot);
@@ -1925,7 +1909,6 @@ extern void _gxSetFogParams(void);
 extern void gxSetZMode_(u32 a, int b, u32 c);
 extern void gxSetPeControl_ZCompLoc_(u32 a);
 
-extern u32 gExpgfxSlotActiveMasks[];
 extern f32 lbl_803967C0[3][4];
 extern f32 lbl_803DF414;
 extern f32 lbl_803DB790;
@@ -2598,13 +2581,11 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int expgfx_acquireResourceEntry(int resourceId);
 extern f32 lbl_803DF350;
 extern f32 lbl_803DF41C;
 extern f32 lbl_803DF420;
 extern f32 lbl_803DF424;
 extern f32 lbl_803DF428;
-extern int gExpgfxLastAddedSlot;
 extern int lbl_803DD270;
 extern int lbl_803DD274;
 extern int lbl_803DD278;

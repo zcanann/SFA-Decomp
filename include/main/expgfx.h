@@ -21,6 +21,8 @@ int expgfx_func09(void);
 void expgfx_renderSourcePools(int sourceId,int sourceMode);
 void drawGlow(uint slotPoolBase,int poolIndex);
 void renderParticles(void);
+void expgfx_updateResourceEntries(int unused);
+int expgfx_acquireResourceEntry(int resourceId);
 void expgfx_free2(u32 sourceId);
 void expgfx_free(u32 sourceId);
 void expgfx_resetAllPools(void);

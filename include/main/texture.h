@@ -53,4 +53,7 @@ STATIC_ASSERT(offsetof(Texture, preloaded) == 0x48);
 STATIC_ASSERT(offsetof(Texture, imageOffset) == 0x50);
 STATIC_ASSERT(sizeof(Texture) == 0x60);
 
+void *textureLoadAsset(int asset);
+void textureFree(u8 *tex);
+
 #endif

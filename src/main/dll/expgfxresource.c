@@ -1,5 +1,9 @@
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/engine_shared.h"
+#include "main/expgfx.h"
 #include "main/expgfx_internal.h"
+#include "main/texture.h"
+
+extern int Obj_IsLoadingLocked(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -17,7 +21,7 @@ void expgfx_updateResourceEntries(int unused) {
                 entry->evictionScore = 0;
                 entry->wordC = 0;
                 gExpgfxTextureFreeInProgress = 1;
-                textureFree((int)entry->resource);
+                textureFree((u8 *)entry->resource);
                 gExpgfxTextureFreeInProgress = 0;
                 entry->resource = NULL;
             }
@@ -54,12 +58,12 @@ int expgfx_acquireResourceEntry(int resourceId) {
     for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
         entry = &resourceTable[i];
         if (entry->resource == NULL) {
-            entry->resource = (void *)textureLoadAsset(resourceId);
+            entry->resource = textureLoadAsset(resourceId);
             texture = entry->resource;
             if (texture != NULL && *(u16 *)((char *)texture + EXPGFX_RESOURCE_HANDLE_REFCOUNT_OFFSET) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
                 gExpgfxTextureFreeInProgress = 1;
                 if (texture != NULL) {
-                    textureFree((int)texture);
+                    textureFree((u8 *)texture);
                 }
                 gExpgfxTextureFreeInProgress = 0;
                 entry->resource = NULL;
@@ -89,11 +93,11 @@ int expgfx_acquireResourceEntry(int resourceId) {
     gExpgfxTextureFreeInProgress = 1;
     texture = entry->resource;
     if (texture != NULL) {
-        textureFree((int)texture);
+        textureFree((u8 *)texture);
     }
     gExpgfxTextureFreeInProgress = 0;
     entry->resource = NULL;
-    entry->resource = (void *)textureLoadAsset(resourceId);
+    entry->resource = textureLoadAsset(resourceId);
     if (entry->resource != NULL) {
         entry->evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
         entry->resourceId = resourceId;

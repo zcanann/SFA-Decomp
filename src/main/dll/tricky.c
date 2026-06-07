@@ -2063,10 +2063,7 @@ void GameUI_airMeterSetShutdown(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void *textureLoadAsset(int id);
 extern int lbl_803A9398[];
-
-extern void textureFree(int handle);
 extern void mm_free(void *p);
 #pragma dont_inline on
 #pragma scheduling off
@@ -2077,14 +2074,14 @@ void GameUI_airMeterShutdown(void) {
     *(u8 *)((char *)m + 0x18) = 0;
     switch (m[0x10]) {
         case 0:
-            textureFree(m[0xb]);
-            textureFree(m[0xc]);
+            textureFree((u8 *)m[0xb]);
+            textureFree((u8 *)m[0xc]);
             break;
         case 1:
-            textureFree(m[0xc]);
-            textureFree(m[0xd]);
-            textureFree(m[0xe]);
-            textureFree(m[0xf]);
+            textureFree((u8 *)m[0xc]);
+            textureFree((u8 *)m[0xd]);
+            textureFree((u8 *)m[0xe]);
+            textureFree((u8 *)m[0xf]);
             break;
     }
     mm_free(airMeter);
@@ -2286,7 +2283,7 @@ void hudDrawTimedElement(int unused, int *e) {
     if (e[1] < 0) return;
     e[1] = e[1] - framesThisStep;
     if (e[1] < 0) {
-        textureFree(e[0]);
+        textureFree((u8 *)e[0]);
         e[0] = 0;
         return;
     }
