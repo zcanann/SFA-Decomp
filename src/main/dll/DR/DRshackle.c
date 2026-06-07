@@ -70,12 +70,13 @@ int drshackle_updateSwingBlend(int obj, int state)
     }
 
     if (*(f32 *)(state + DRSHACKLE_DISTANCE_FADE_OFFSET) != lbl_803E5AE8) {
-        f32 d = fade - lbl_803E5B10;
-        fade = fade + ((d < lbl_803E5AE8) ? lbl_803E5AE8
-                                          : ((d > lbl_803E5B08) ? lbl_803E5B08 : d));
+        fade = fade + (((fade - lbl_803E5B10) < lbl_803E5AE8)
+                           ? lbl_803E5AE8
+                           : (((fade - lbl_803E5B10) > lbl_803E5B08) ? lbl_803E5B08
+                                                                     : (fade - lbl_803E5B10)));
     }
-    if (fade < lbl_803E5AE8) {
-        fade = lbl_803E5AE8;
+    if (fade < *(f32 *)&lbl_803E5AE8) {
+        fade = *(f32 *)&lbl_803E5AE8;
     }
 
     iVar4 = (*(int (**)(int, int, u8, int, int, f32))(*gCheckpointInterface + 0x18))(
