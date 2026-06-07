@@ -2291,11 +2291,10 @@ void hudDrawTimedElement(int unused, int *e) {
         return;
     }
     if ((f32)e[1] < lbl_803E1F9C) {
-        *(f32 *)((char *)e + 0x8) = hudElementOpacity * (f32)e[1] / lbl_803E1F9C;
+        *(f32 *)((char *)e + 0x8) = hudElementOpacity * (f32)e[1] / *(f32 *)&lbl_803E1F9C;
     } else {
-        f32 cur = *(f32 *)((char *)e + 0x8);
-        if (hudElementOpacity != cur) {
-            *(f32 *)((char *)e + 0x8) = lbl_803E1FA0 * (f32)(u32)framesThisStep + cur;
+        if (hudElementOpacity != *(f32 *)((char *)e + 0x8)) {
+            *(f32 *)((char *)e + 0x8) = lbl_803E1FA0 * (f32)(u32)framesThisStep + *(f32 *)((char *)e + 0x8);
             if (*(f32 *)((char *)e + 0x8) > hudElementOpacity) {
                 *(f32 *)((char *)e + 0x8) = hudElementOpacity;
             }
