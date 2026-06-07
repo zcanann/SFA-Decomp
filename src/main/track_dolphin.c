@@ -6472,10 +6472,11 @@ extern void objectShadow_setupSwappedProjectedTexture(int hdr, void *col, void *
 extern void objectShadow_setupProjectedTexture(int hdr, void *col, void *mtx);
 extern void fn_80077AD8(int hdr, void *col, void *mtx, f32 f);
 extern void fn_80077EF8(int hdr, void *col, void *mtx, f32 f);
-extern struct { f32 lo; f32 hi; } lbl_803DEC78;
+extern f32 lbl_803DEC78;
 extern f32 lbl_803DEC80;
 
 #pragma ppc_unroll_speculative off
+#pragma opt_strength_reduction off
 void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *p7, void *buf48, f32 f)
 {
     u8 col[4];
@@ -6502,7 +6503,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     s29 = ((GameObject *)obj)->anim.rotY;
     handle = *(u32 *)((char *)blockData + 0x10);
     if (handle == 0 || handle != 0xFFFFFFFF)
-        ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC78.lo;
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC78;
     else
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC68;
     ((GameObject *)obj)->anim.rotX = 0;
@@ -6524,7 +6525,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
         objectShadow_setupSwappedProjectedTexture(*(int *)((char *)blockData + 0xc), &c, mtx);
     } else {
         if (obj == Obj_GetPlayerObject())
-            f30 = lbl_803DEC78.hi;
+            f30 = 10.0f;
         else
             f30 = ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale;
         handle = *(u32 *)((char *)blockData + 0x10);
@@ -6603,20 +6604,29 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
         off = vi;
         for (i = 0; i < slot; i++) {
             f32 *v0 = (f32 *)((char *)cache + off);
-            GXWGFifo.f32 = v0[0];
-            GXWGFifo.f32 = v0[1];
-            GXWGFifo.f32 = v0[2];
+            f32 a2 = v0[2];
+            f32 a1 = v0[1];
+            f32 a0 = v0[0];
+            GXWGFifo.f32 = a0;
+            GXWGFifo.f32 = a1;
+            GXWGFifo.f32 = a2;
             {
                 f32 *v1 = (f32 *)((char *)cache + (vi + 1) * 0xc);
-                GXWGFifo.f32 = v1[0];
-                GXWGFifo.f32 = v1[1];
-                GXWGFifo.f32 = v1[2];
+                f32 b2 = v1[2];
+                f32 b1 = v1[1];
+                f32 b0 = v1[0];
+                GXWGFifo.f32 = b0;
+                GXWGFifo.f32 = b1;
+                GXWGFifo.f32 = b2;
             }
             {
                 f32 *v2 = (f32 *)((char *)cache + (vi + 2) * 0xc);
-                GXWGFifo.f32 = v2[0];
-                GXWGFifo.f32 = v2[1];
-                GXWGFifo.f32 = v2[2];
+                f32 c2 = v2[2];
+                f32 c1 = v2[1];
+                f32 c0 = v2[0];
+                GXWGFifo.f32 = c0;
+                GXWGFifo.f32 = c1;
+                GXWGFifo.f32 = c2;
             }
             vi += 3;
             off += 0x24;
@@ -6627,6 +6637,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
         memcpy((char *)((int)obj + 0x18), save_18, 0xc);
     }
 }
+#pragma opt_strength_reduction reset
 #pragma ppc_unroll_speculative on
 
 typedef struct { u8 r, g, b, a; } GlowGXColor;
