@@ -795,7 +795,7 @@ config.libs = [
             Object(NonMatching, "main/dll/DR/dll_024E_drakord_thornbush.c"),
             Object(NonMatching, "main/audio/snd3d.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/inp_midi_set.c", mw_version="GC/1.2.5n"),
-            Object(NonMatching, "main/audio/inp_value.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
+            Object(MatchingFor("GSAE01"), "main/audio/inp_value.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(NonMatching, "main/audio/inp_voice_aux.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/hw_init.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/hw_adsr.c", mw_version="GC/1.2.5n"),
