@@ -126,6 +126,38 @@ typedef struct ModgfxPendingSpawn {
   u8 pad17;
 } ModgfxPendingSpawn;
 
+typedef struct ModgfxSpawnContext {
+  ModgfxPendingSpawn *pendingSpawns;
+  void *attachedSource;
+  u8 pad08[0x20 - 0x08];
+  f32 vecX;
+  f32 vecY;
+  f32 vecZ;
+  f32 posX;
+  f32 posY;
+  f32 posZ;
+  f32 scale;
+  int word3C;
+  int word40;
+  s16 sourceModeCopy;
+  s16 sequenceParams[7];
+  u32 flags;
+  u8 modeByte;
+  u8 byte59;
+  u8 byte5A;
+  u8 byte5B;
+  u8 pad5C;
+  s8 pendingSpawnCount;
+  u8 pad5E[0x60 - 0x5E];
+} ModgfxSpawnContext;
+
+STATIC_ASSERT(sizeof(ModgfxSpawnContext) == 0x60);
+STATIC_ASSERT(offsetof(ModgfxSpawnContext, vecX) == 0x20);
+STATIC_ASSERT(offsetof(ModgfxSpawnContext, posX) == 0x2C);
+STATIC_ASSERT(offsetof(ModgfxSpawnContext, sequenceParams) == 0x46);
+STATIC_ASSERT(offsetof(ModgfxSpawnContext, flags) == 0x54);
+STATIC_ASSERT(offsetof(ModgfxSpawnContext, pendingSpawnCount) == 0x5D);
+
 typedef struct PartfxEffectState {
   void *instanceObject;
   void *sourceObject;
@@ -4348,37 +4380,43 @@ extern s16 lbl_803DD288;
 extern s16 lbl_803DD28A;
 extern ModgfxPendingSpawn *lbl_803DD28C;
 extern ModgfxPendingSpawn *lbl_803DD290;
+#define gModgfxSpawnContext (*(ModgfxSpawnContext *)lbl_8039BE98)
+#define gModgfxPendingSpawnQueue lbl_8039BEF8
+#define gModgfxLastSpawnHandle lbl_803DD288
+#define gModgfxSequenceParamIndex lbl_803DD28A
+#define gModgfxPendingSpawnWriteCursor lbl_803DD28C
+#define gModgfxPendingSpawnStartCursor lbl_803DD290
 #pragma scheduling off
 #pragma peephole off
-s16 dll_0B_func18(void) { return lbl_803DD288; }
-void dll_0B_func17(u32 flags) { *(u32 *)(lbl_8039BE98 + 0x54) |= flags; }
-void dll_0B_func15(void *params) { memcpy(lbl_8039BE98 + 0x46, params, 0xe); }
+s16 dll_0B_func18(void) { return gModgfxLastSpawnHandle; }
+void dll_0B_func17(u32 flags) { gModgfxSpawnContext.flags |= flags; }
+void dll_0B_func15(void *params) { memcpy(gModgfxSpawnContext.sequenceParams, params, 0xe); }
 void dll_0B_func14(s16 value)
 {
   u8 *state = lbl_8039BE98;
   state = state + lbl_803DD28A * 2;
   *(s16 *)(state + 0x46) = value;
 }
-void dll_0B_func13(s16 x) { lbl_803DD28A = x; }
-void dll_0B_func12(void) { lbl_803DD28A++; }
+void dll_0B_func13(s16 x) { gModgfxSequenceParamIndex = x; }
+void dll_0B_func12(void) { gModgfxSequenceParamIndex++; }
 void dll_0B_func11(int modelOrResource, float posX, float posY, float posZ, s16 param14, int param10)
 {
-  u32 sequenceIndex = (u8)lbl_803DD28A;
-  lbl_803DD28C->sequenceIndex = sequenceIndex;
-  lbl_803DD28C->param14 = param14;
-  lbl_803DD28C->param10 = param10;
-  lbl_803DD28C->modelOrResource = modelOrResource;
-  lbl_803DD28C->posX = posX;
-  lbl_803DD28C->posY = posY;
-  lbl_803DD28C->posZ = posZ;
-  lbl_803DD28C++;
+  u32 sequenceIndex = (u8)gModgfxSequenceParamIndex;
+  gModgfxPendingSpawnWriteCursor->sequenceIndex = sequenceIndex;
+  gModgfxPendingSpawnWriteCursor->param14 = param14;
+  gModgfxPendingSpawnWriteCursor->param10 = param10;
+  gModgfxPendingSpawnWriteCursor->modelOrResource = modelOrResource;
+  gModgfxPendingSpawnWriteCursor->posX = posX;
+  gModgfxPendingSpawnWriteCursor->posY = posY;
+  gModgfxPendingSpawnWriteCursor->posZ = posZ;
+  gModgfxPendingSpawnWriteCursor++;
 }
 void dll_0B_func10(void)
 {
-  ModgfxPendingSpawn *cursor = lbl_8039BEF8;
-  lbl_803DD290 = cursor;
-  lbl_803DD28C = cursor;
-  lbl_803DD28A = 0;
+  ModgfxPendingSpawn *cursor = gModgfxPendingSpawnQueue;
+  gModgfxPendingSpawnStartCursor = cursor;
+  gModgfxPendingSpawnWriteCursor = cursor;
+  gModgfxSequenceParamIndex = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4620,27 +4658,27 @@ void dll_0B_initialise(void)
 
 void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
 {
-    u8 *p = lbl_8039BE98;
+    ModgfxSpawnContext *context = &gModgfxSpawnContext;
     f32 fz;
     f32 fz2;
-    memset(p, 0, 96);
-    p[88] = p2;
-    *(int*)(p + 4) = p1;
-    *(s16*)(p + 68) = (u8)p2;
+    memset(context, 0, sizeof(*context));
+    context->modeByte = p2;
+    context->attachedSource = (void *)p1;
+    context->sourceModeCopy = (u8)p2;
     fz = lbl_803DF430;
-    *(f32*)(p + 44) = fz;
-    *(f32*)(p + 48) = fz;
-    *(f32*)(p + 52) = fz;
-    *(f32*)(p + 32) = fz;
-    *(f32*)(p + 36) = fz;
-    *(f32*)(p + 40) = fz;
+    context->posX = fz;
+    context->posY = fz;
+    context->posZ = fz;
+    context->vecX = fz;
+    context->vecY = fz;
+    context->vecZ = fz;
     fz2 = lbl_803DF434;
-    *(f32*)(p + 56) = fz2;
-    *(int*)(p + 64) = p4;
-    *(int*)(p + 60) = p5;
-    p[89] = p3;
-    p[90] = 0;
-    p[91] = 0;
+    context->scale = fz2;
+    context->word40 = p4;
+    context->word3C = p5;
+    context->byte59 = p3;
+    context->byte5A = 0;
+    context->byte5B = 0;
 }
 
 void dll_0B_func0A(s16 *p)
@@ -14641,25 +14679,27 @@ extern int dll_0B_func04(void *base, int z, int c, void *b, int e, void *d, int 
 #pragma peephole off
 void dll_0B_func16(void *a, void *b, void *c, void *d, void *e, int f, void *g)
 {
-  *(ModgfxPendingSpawn **)lbl_8039BE98 = lbl_8039BEF8;
-  *(s8 *)(lbl_8039BE98 + 0x5d) = lbl_803DD28C - lbl_803DD290;
+  ModgfxSpawnContext *context = &gModgfxSpawnContext;
+
+  context->pendingSpawns = gModgfxPendingSpawnQueue;
+  context->pendingSpawnCount = gModgfxPendingSpawnWriteCursor - gModgfxPendingSpawnStartCursor;
   if (g == NULL && f == 0) {
-    *(u32 *)(lbl_8039BE98 + 0x54) |= 0x2000000;
+    context->flags |= 0x2000000;
   } else {
-    *(u32 *)(lbl_8039BE98 + 0x54) |= 0x4000000;
+    context->flags |= 0x4000000;
   }
-  if (*(u32 *)(lbl_8039BE98 + 0x54) & 1) {
-    if (*(void **)(lbl_8039BE98 + 0x4) != NULL) {
-      *(f32 *)(lbl_8039BE98 + 0x2c) += *(f32 *)((char *)*(void **)(lbl_8039BE98 + 0x4) + 0x18);
-      *(f32 *)(lbl_8039BE98 + 0x30) += *(f32 *)((char *)*(void **)(lbl_8039BE98 + 0x4) + 0x1c);
-      *(f32 *)(lbl_8039BE98 + 0x34) += *(f32 *)((char *)*(void **)(lbl_8039BE98 + 0x4) + 0x20);
+  if (context->flags & 1) {
+    if (context->attachedSource != NULL) {
+      context->posX += ((ExpgfxSourceObject *)context->attachedSource)->worldPosX;
+      context->posY += ((ExpgfxSourceObject *)context->attachedSource)->worldPosY;
+      context->posZ += ((ExpgfxSourceObject *)context->attachedSource)->worldPosZ;
     } else {
-      *(f32 *)(lbl_8039BE98 + 0x2c) += *(f32 *)((char *)a + 0xc);
-      *(f32 *)(lbl_8039BE98 + 0x30) += *(f32 *)((char *)a + 0x10);
-      *(f32 *)(lbl_8039BE98 + 0x34) += *(f32 *)((char *)a + 0x14);
+      context->posX += ((ExpgfxSourceObject *)a)->localPosX;
+      context->posY += ((ExpgfxSourceObject *)a)->localPosY;
+      context->posZ += ((ExpgfxSourceObject *)a)->localPosZ;
     }
   }
-  lbl_803DD288 = dll_0B_func04(lbl_8039BE98, 0, (int)c, b, (int)e, d, f, g);
+  gModgfxLastSpawnHandle = dll_0B_func04(context, 0, (int)c, b, (int)e, d, f, g);
 }
 #pragma peephole reset
 #pragma scheduling reset
