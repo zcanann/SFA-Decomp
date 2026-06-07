@@ -5,6 +5,7 @@
 #include "ghidra_import.h"
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 
 #define NW_MAMMOTH_OBJECT_DEF_ID_WHITE 0x0280
 #define NW_MAMMOTH_OBJECT_DEF_ID_HEAVY 0x027D
@@ -109,7 +110,6 @@ typedef struct NwMammothTables {
   u8 stateFlags[1];
 } NwMammothTables;
 
-typedef void (*NwMammothTriggerActivateFn)(int triggerId,NwMammothObject *obj,int arg);
 typedef void (*NwMammothPathInitFn)(void *pathState,int param1,int param2,int param3);
 typedef void (*NwMammothPathSetupFn)(void *pathState,int pointCount,u8 *pathDataA,u8 *pathDataB,
                                      u32 *pathParam);
@@ -118,11 +118,6 @@ typedef void (*NwMammothPathApplyFn)(NwMammothObject *obj,void *pathState);
 typedef void (*NwMammothUiMessageFn)(int messageId,int textId);
 typedef int (*NwMammothCurveInitFn)(void *curveState,NwMammothObject *obj,f32 scale,
                                     int *curveParam,int arg);
-
-typedef struct NwMammothObjectTriggerInterface {
-  u8 pad00[0x48];
-  NwMammothTriggerActivateFn activateObject;
-} NwMammothObjectTriggerInterface;
 
 typedef struct NwMammothPathControlInterface {
   u8 pad00[0x04];
@@ -181,7 +176,6 @@ STATIC_ASSERT(offsetof(NwMammothObject, seqCallback) == 0xBC);
 STATIC_ASSERT(offsetof(NwMammothTables, stateMoveIds) == 0x68);
 STATIC_ASSERT(offsetof(NwMammothTables, stateMoveStepScales) == 0x98);
 STATIC_ASSERT(offsetof(NwMammothTables, stateFlags) == 0xF4);
-STATIC_ASSERT(offsetof(NwMammothObjectTriggerInterface, activateObject) == 0x48);
 STATIC_ASSERT(offsetof(NwMammothPathControlInterface, init) == 0x04);
 STATIC_ASSERT(offsetof(NwMammothPathControlInterface, setup) == 0x0C);
 STATIC_ASSERT(offsetof(NwMammothPathControlInterface, update) == 0x10);

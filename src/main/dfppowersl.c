@@ -3,7 +3,7 @@
 
 extern void ObjHits_SetHitVolumeSlot(DfpPowerSlObject *obj,int slot,int enabled,int param_4);
 
-extern DfpPowerSlObjectTriggerInterface **gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern EffectInterface **gExpgfxInterface;
 extern EffectInterface **gPartfxInterface;
 
@@ -59,11 +59,11 @@ void dfppowersl_update(DfpPowerSlObject *obj)
   DfpPowerSlObject *powerSl;
   DfpPowerSlState *state;
 
-  powerSl = obj;
+    powerSl = obj;
   if ((u32)powerSl != 0) {
     state = dfppowersl_getState(powerSl);
-    (*gObjectTriggerInterface)->activateObject(powerSl,state->activateObjectId);
-    (*gObjectTriggerInterface)->refresh(0,powerSl,0xffffffff);
+    (*gObjectTriggerInterface)->preempt((int)powerSl,state->activateObjectId);
+    (*gObjectTriggerInterface)->runSequence(0,powerSl,0xffffffff);
   }
   return;
 }

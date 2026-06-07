@@ -56,7 +56,7 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd728;
 extern NwMammothGameUiInterface **gGameUIInterface;
-extern NwMammothObjectTriggerInterface **gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern NwMammothPathControlInterface **gPathControlInterface;
 extern NwMammothRomCurveInterface **gRomCurveInterface;
 extern f32 timeDelta;
@@ -218,7 +218,7 @@ void nw_mammoth_update(NwMammothObject *obj,int param_2)
   if (((state->runtimeFlags & NW_MAMMOTH_RUNTIME_MENU_LOCK) == 0) && (ObjTrigger_IsSet((int)obj) != 0)) {
     triggerIndex = randomGetRange(NW_MAMMOTH_TRIGGER_RANDOM_MIN, *state->triggerList);
     state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
-    (*gObjectTriggerInterface)->activateObject(state->triggerList[triggerIndex], obj, -1);
+    (*gObjectTriggerInterface)->runSequence(state->triggerList[triggerIndex], obj, -1);
   }
   if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_PATH_CONTROL) != 0) {
     (*gPathControlInterface)->update(obj, state->pathState, timeDelta);

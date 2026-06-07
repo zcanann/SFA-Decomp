@@ -17,7 +17,7 @@ extern undefined4 FUN_8028688c();
 extern undefined4* DAT_803dd72c;
 extern f32 timeDelta;
 
-extern DfpObjectInterface **gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 /*
  * --INFO--
@@ -44,12 +44,12 @@ void dfpstatue1_updateState(DfpStatue1Object *obj)
   loopBit = (s16)GameBit_Get(state->loopSfxId);
   if ((state->loopActive == 0) && (loopBit != 0) &&
       (GameBit_Get(0xedf) != 0)) {
-    (*gObjectTriggerInterface)->refresh(0,(int)obj,0xffffffff);
+    (*gObjectTriggerInterface)->runSequence(0,obj,0xffffffff);
     state->loopActive = 1;
   }
   if ((state->stateFlags != 0) && (state->loopActive != 0) && (GameBit_Get(0xedf) != 0)) {
     GameBit_Set(state->loopSfxId,0);
-    (*gObjectTriggerInterface)->refresh(1,(int)obj,0xffffffff);
+    (*gObjectTriggerInterface)->runSequence(1,obj,0xffffffff);
     state->loopActive = 0;
     state->stateFlags = 0;
   }
