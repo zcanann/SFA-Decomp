@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/IM/IMicicle.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 #pragma peephole off
@@ -102,7 +103,7 @@ extern int fn_80080150(void *timer);
 extern void s16toFloat(void *p, int duration);
 extern int timerCountDown(void *timer);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DBE90;
 extern int lbl_803DBE94;
@@ -208,12 +209,9 @@ void cfforcefield_update(u8 *obj)
           world[3] = local[0] + ((GameObject *)obj)->anim.localPosX;
           world[4] = local[1] + ((GameObject *)obj)->anim.localPosY;
           world[5] = local[2] + ((GameObject *)obj)->anim.localPosZ;
-          ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
-              obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
-          ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
-              obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
-          ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
-              obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
+          (*gPartfxInterface)->spawnObject(obj, emitter->effectId, world, 0x200001, -1, obj + 0x24);
+          (*gPartfxInterface)->spawnObject(obj, emitter->effectId, world, 0x200001, -1, obj + 0x24);
+          (*gPartfxInterface)->spawnObject(obj, emitter->effectId, world, 0x200001, -1, obj + 0x24);
         }
       }
 

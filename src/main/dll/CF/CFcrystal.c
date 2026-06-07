@@ -1,4 +1,5 @@
 #include "main/dll/CF/CFcrystal.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 extern undefined4 FUN_800068c4();
@@ -67,7 +68,7 @@ extern f32 lbl_803E3AEC;
 extern f32 lbl_803DBDD8;
 extern u8 framesThisStep;
 extern u8 lbl_803DDAD8;
-extern void *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 Curve_EvalBSpline(f32 t, void *control, int mode);
 extern f32 Vec_distance(void *a, void *b);
 extern int objCreateLight(int obj, int type);
@@ -89,10 +90,10 @@ void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
 void LanternFireFly_hitDetect(void) {}
 
 #define LANTERN_SPAWN_FX(obj, id, a, b, c, d) \
-    ((void (*)(int, int, int, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(obj, id, a, b, c, d)
+    (*gPartfxInterface)->spawnObject((void *)obj, id, (void *)a, b, c, (void *)d)
 
 #define LANTERN_SPAWN_FX_VEC(obj, id, a, b, c, d, vx, vy, vz) \
-    ((void (*)(int, int, int, int, int, int, f32, f32, f32))(*(int *)(*(int *)gPartfxInterface + 8)))(obj, id, a, b, c, d, vx, vy, vz)
+    ((void (*)(void *, int, void *, int, int, void *, f32, f32, f32))(*gPartfxInterface)->spawnObject)((void *)obj, id, (void *)a, b, c, (void *)d, vx, vy, vz)
 
 #define LANTERN_FIREFLY_MODE(state) (((u32)(state)->modeFlags >> 6) & 3)
 #define LANTERN_FIREFLY_IS_ACTIVE(state) (LANTERN_FIREFLY_MODE(state) == 1u)

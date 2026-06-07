@@ -3,6 +3,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
+#include "main/effect_interfaces.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/resource.h"
@@ -201,7 +202,7 @@ extern undefined4 uRam803de8d4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -212,10 +213,10 @@ void SB_FireBall_hitDetect(int *obj)
     if (params->lastHitObject == 0) return;
     params->flags &= ~1;
     for (i = 50; i != 0; i--) {
-        ((void (*)(int *, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 167, 0, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 167, NULL, 1, -1, NULL);
     }
     for (i = 10; i != 0; i--) {
-        ((void (*)(int *, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 171, 0, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 171, NULL, 1, -1, NULL);
     }
 }
 #pragma peephole reset
@@ -1775,7 +1776,7 @@ extern f32 lbl_803E59C8;
 extern int* gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern int* gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 extern int* gModgfxInterface;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
@@ -1958,8 +1959,7 @@ int Lamp_SeqFn(int obj, int unused, int state)
         *(f32 *)(effectArgs + 0x10) = *(f32 *)(effectArgs + 0x10) - ((GameObject *)obj)->anim.worldPosY;
         *(f32 *)(effectArgs + 0x14) = *(f32 *)(effectArgs + 0x14) - ((GameObject *)obj)->anim.worldPosZ;
         for (i = 0; i < framesThisStep; i++) {
-            ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(
-                obj, 0x7a8, effectArgs, 6, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x7a8, effectArgs, 6, -1, NULL);
         }
     }
     return 0;
@@ -2004,7 +2004,7 @@ int fn_801E66EC(int arg1, int arg2)
 void Lamp_free(int* obj)
 {
     Sfx_StopObjectChannel(obj, 64);
-    ((void(*)(int*))((void**)*gExpgfxInterface)[6])(obj);
+    (*gExpgfxInterface)->freeObject(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2071,8 +2071,7 @@ void Lamp_update(int obj)
             *(f32 *)(effectArgs + 0x14) = *(f32 *)(effectArgs + 0x14) - ((GameObject *)obj)->anim.localPosZ;
         }
         for (i = 0; i < framesThisStep; i++) {
-            ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(
-                obj, 0x7c7, effectArgs, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x7c7, effectArgs, 2, -1, NULL);
         }
     }
 }
@@ -2122,7 +2121,7 @@ void SB_CageKyte_update(int obj)
 void SB_CloudBall_free(int* obj)
 {
     SBCloudBallState* state = ((GameObject *)obj)->extra;
-    ((void(*)(int*))((void**)*gExpgfxInterface)[6])(obj);
+    (*gExpgfxInterface)->freeObject(obj);
     {
         int* child = (int*)state->light;
         if (child != NULL) {
@@ -2260,7 +2259,7 @@ void SB_CloudBall_update(int obj)
         objfx_spawnFlaggedTrailBurst((int *)obj, lbl_803E5904, 2, 0x156, 0xf, particleVelocity);
         objfx_spawnFlaggedTrailBurst((int *)obj, lbl_803E5904, 2, 0x156, 0xf, particleVelocity);
         objfx_spawnFlaggedTrailBurst((int *)obj, lbl_803E5904, 2, 0x156, 0xf, particleVelocity);
-        ((void (*)(int, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 0xa8, 0, 2, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0xa8, NULL, 2, -1, NULL);
     }
 }
 #pragma peephole reset
@@ -2310,8 +2309,7 @@ void SB_FireBall_update(int obj)
         particleArgs[2] = lbl_803E58DC;
         objfx_spawnFlaggedTrailBurst((int *)obj, lbl_803E58E0, SB_FIREBALL_SETUP_SIZE,
                                      SB_FIREBALL_SETUP_MODEL_ID, SB_FIREBALL_SETUP_PARAM, NULL);
-        ((void (*)(int, int, f32 *, int, int, int))((void **)*gPartfxInterface)[2])(
-            obj, SB_FIREBALL_TRAIL_PARTICLE_ID, particleArgs, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, SB_FIREBALL_TRAIL_PARTICLE_ID, particleArgs, 1, -1, NULL);
 
         if (state->age > SB_FIREBALL_HITBOX_ENABLE_DELAY) {
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = SB_FIREBALL_HITBOX_TYPE;
@@ -2424,7 +2422,7 @@ void SB_KyteCage_update(int obj)
 #pragma peephole off
 void SB_MiniFire_free(int* obj)
 {
-    ((void(*)(int*))((void**)*gExpgfxInterface)[6])(obj);
+    (*gExpgfxInterface)->freeObject(obj);
     ((void(*)(int*))((void**)*gModgfxInterface)[6])(obj);
 }
 #pragma peephole reset
@@ -2506,18 +2504,18 @@ void SB_MiniFire_update(int obj)
     *(s16 *)((char *)buf + 4) = 0;
     *(s16 *)((char *)buf + 2) = 0;
     *(s16 *)((char *)buf + 0) = 0;
-    ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(obj, 0xa0, buf, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0xa0, buf, 1, -1, NULL);
     dy = ((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY;
     dz = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ;
     dx = ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX;
     buf[3] = dx / lbl_803E5938;
     buf[4] = dy / lbl_803E5938;
     buf[5] = dz / lbl_803E5938;
-    ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(obj, 0xa0, buf, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0xa0, buf, 1, -1, NULL);
     buf[3] = buf[3] * lbl_803E593C;
     buf[4] = buf[4] * lbl_803E593C;
     buf[5] = buf[5] * lbl_803E593C;
-    ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(obj, 0xa0, buf, 1, -1, 0);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0xa0, buf, 1, -1, NULL);
     *(s16 *)obj = *(s16 *)obj + framesThisStep * 0x374;
     ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + framesThisStep * 0x12c;
     ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - framesThisStep;

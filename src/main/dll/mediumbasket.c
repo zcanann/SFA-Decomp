@@ -3,6 +3,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/mediumbasket.h"
+#include "main/effect_interfaces.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 
@@ -1961,7 +1962,7 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern int* gPlayerInterface;
 extern int *gBaddieControlInterface;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E2CE8;
 extern f32 lbl_803E2CEC;
 extern f32 lbl_803E2CF0;
@@ -2666,32 +2667,27 @@ void mediumbasket_updateControlEffects(int obj, int state)
     }
     if ((*(u8 *)(control + 0x44) & 4) != 0 && (((GroundBaddieState *)state)->configFlags & 0x40) == 0) {
         for (i = 0; i < 4; i++) {
-            ((void (*)(int, int, void *, int, int, u8 *))((void **)*gPartfxInterface)[2])(
-                obj, 0x56, (void *)(control + 0x20), 0x200001, -1, particleArgs);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x56, (void *)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
     if ((*(u8 *)(control + 0x44) & 8) != 0 && (((GroundBaddieState *)state)->configFlags & 0x40) == 0) {
-        ((void (*)(int, int, void *, int, int, u8 *))((void **)*gPartfxInterface)[2])(
-            obj, 0x57, (void *)(control + 0x20), 0x200001, -1, particleArgs);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x57, (void *)(control + 0x20), 0x200001, -1, particleArgs);
     }
     if ((*(u8 *)(control + 0x44) & 0x10) != 0) {
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(lbl_803E2D88 * shakeScale);
         for (i = 0; i < 0x28; i++) {
-            ((void (*)(int, int, void *, int, int, u8 *))((void **)*gPartfxInterface)[2])(
-                obj, 0x57, (void *)(control + 0x20), 0x200001, -1, particleArgs);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x57, (void *)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
     if ((*(u8 *)(control + 0x44) & 0x20) != 0) {
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(lbl_803E2D8C * shakeScale);
         for (i = 0; i < 0x28; i++) {
-            ((void (*)(int, int, void *, int, int, u8 *))((void **)*gPartfxInterface)[2])(
-                obj, 0x57, (void *)(control + 0x20), 0x200001, -1, particleArgs);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x57, (void *)(control + 0x20), 0x200001, -1, particleArgs);
         }
         for (i = 0; i < 10; i++) {
-            ((void (*)(int, int, void *, int, int, u8 *))((void **)*gPartfxInterface)[2])(
-                obj, 0x58, (void *)(control + 0x20), 0x200001, -1, particleArgs);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x58, (void *)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
     *(u8 *)(control + 0x44) = 0;
