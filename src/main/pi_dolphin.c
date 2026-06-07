@@ -2067,7 +2067,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       }
     }
     param_3 = param_3 & 0xfffffff;
-    if ((param_7 & 1) != 0) {
+    if (((u8)param_7 & 1) != 0) {
       r = MLDF_PTR(param_1);
       tmp = return0_8002A5B8(r + param_3);
       if (tmp != 0) {
@@ -2083,7 +2083,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       }
     }
     param_3 = param_3 & 0xfffffff;
-    if ((param_7 & 1) != 0) {
+    if (((u8)param_7 & 1) != 0) {
       r = MLDF_PTR(param_1);
       tmp = return0_8002A5B8(r + param_3);
       if (tmp != 0) {
@@ -2403,7 +2403,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
     param_3 = param_3 & 0xfffffff;
     break;
   }
-  if ((param_7 & 1) != 0) {
+  if (((u8)param_7 & 1) != 0) {
     return;
   }
   r = MLDF_PTR(param_1);
@@ -10773,6 +10773,9 @@ extern u8 lbl_8036F880[];
 #define ZGB16() (ZROT8(src[0]) | (u32)src[1] << (8 - pos) | (u32)src[2] << (0x10 - pos))
 #define ZADV(n) (pos += (n), src += (int)pos >> 3, pos &= 7, sh = 0x20 - pos)
 
+/* NOT MWCC: retail zlbDecompress is a foreign GCC (SN ProDG family) object
+   (mflr-first prologue, stmw, andi. masks, mcrxr/addme. loops). 42.5% is the
+   MWCC cap; do not recipe-grind. Evidence: task #19 metadata. */
 int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
     u8 *src;
     u8 *dst;
