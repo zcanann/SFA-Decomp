@@ -3,6 +3,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/tricky_state.h"
+#include "main/objseq.h"
 
 
 #pragma peephole off
@@ -1725,7 +1726,7 @@ int trickyFoodFn_8014460c(int param_1,int *param_2)
                         objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                         trickyDebugPrint(lbl_8031D478);
                     }
-                    ((void (**)(int, u8 *, int))*gObjectTriggerInterface)[18](3, obj, -1);
+                    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(3, obj, -1);
                     ((TrickyState *)b)->unk82E = (((TrickyState *)b)->unk82E & 0xdf) | 0x20;
                 } else {
                     d = c - a;
@@ -1763,7 +1764,7 @@ int trickyFoodFn_8014460c(int param_1,int *param_2)
                         objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                         trickyDebugPrint(lbl_8031D478);
                     }
-                    ((void (**)(int, u8 *, int))*gObjectTriggerInterface)[18](2, obj, -1);
+                    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(2, obj, -1);
                     ((TrickyState *)b)->unk82E = (((TrickyState *)b)->unk82E & 0xdf) | 0x20;
                     ((TrickyState *)state)->unk54 |= 0x40000000;
                 }
@@ -1802,7 +1803,7 @@ int trickyFoodFn_8014460c(int param_1,int *param_2)
                     objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                     trickyDebugPrint(lbl_8031D478);
                 }
-                ((void (**)(int, u8 *, int))*gObjectTriggerInterface)[18](g, obj, -1);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(g, obj, -1);
                 ((TrickyState *)b)->unk82E = (((TrickyState *)b)->unk82E & 0xdf) | 0x20;
                 buttonDisable(0, 0x100);
                 return 1;

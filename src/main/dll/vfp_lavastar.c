@@ -1,6 +1,7 @@
 #include "main/dll/DIM/DIMbossspit.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
@@ -12,7 +13,7 @@ extern void modelLightStruct_setGlowColor(void *p1, u8 a, u8 b, u8 c, int d);
 extern int randomGetRange(int min, int max);
 
 extern void *gPlayerInterface;
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gBaddieControlInterface;
 extern int lbl_803DDBB0;
 extern f32 lbl_803DDBA4;
@@ -106,7 +107,7 @@ void DIMbosstonsil_update(void *obj)
         ((GameObject *)obj)->anim.localPosX = config->spawnX;
         ((GameObject *)obj)->anim.localPosY = config->spawnY;
         ((GameObject *)obj)->anim.localPosZ = config->spawnZ;
-        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12]((int)config->animObjId, obj, -1);
+        (*gObjectTriggerInterface)->runSequence((int)config->animObjId, obj, -1);
         ((GameObject *)obj)->unkF8 = 1;
         return;
     }

@@ -2,6 +2,7 @@
 #include "main/dll/DF/DFlantern.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
@@ -71,7 +72,7 @@ extern f64 lbl_803E4E80;
 extern f64 lbl_803E4E90;
 extern u16 lbl_80325F88[];
 extern void *gScreenTransitionInterface;
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int Obj_GetPlayerObject(void);
 extern void skyFn_80088c94(int skyId, int enable);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
@@ -212,7 +213,7 @@ void dfsh_shrine_update(int obj)
             GameBit_Set(0x589, 0);
             state->mode = 5;
             Music_Trigger(0xd8, 1);
-            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[0x12])(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
             GameBit_Set(0x129, 0);
         }
         break;
@@ -270,7 +271,7 @@ void dfsh_shrine_update(int obj)
             } else {
                 state->mode = 4;
                 audioStopByMask(3);
-                ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[0x12])(1, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
             }
         } else {
             state->mode = 4;
