@@ -855,10 +855,10 @@ void enemy_init(int obj, u8 *setup, int flag)
     }
     if (((GameObject *)obj)->unkF4 != 0) {
         ((GameObject *)obj)->anim.flags |= 0x4000;
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
     } else {
         ((GameObject *)obj)->anim.flags &= ~0x4000;
-        *(u8 *)(obj + 0x36) = 255;
+        ((GameObject *)obj)->anim.alpha = 255;
     }
     ((EnemyState *)state)->unk2FC = (f32)setup[0x2f] / lbl_803E257C;
     ((EnemyState *)state)->unk2A8 = (f32)(u32)(setup[0x29] << 3);
