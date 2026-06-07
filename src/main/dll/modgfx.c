@@ -59,12 +59,12 @@ typedef struct ModgfxState {
   s16 channelFrames[7]; /* 0xEE: per-channel remaining blend frames */
   s16 activeChannel; /* 0xFC */
   s16 blendFrameCount;
-  s16 colorStepR;
-  s16 colorStepG;
-  s16 colorStepB;
-  s16 colorValueR;
-  s16 colorValueG;
-  s16 colorValueB;
+  s16 rotStepZ;
+  s16 rotStepY;
+  s16 rotStepX;
+  s16 rotOffsetZ;
+  s16 rotOffsetY;
+  s16 rotOffsetX;
   s16 effectId;
   u8 pad10E[0x130 - 0x10E];
   u8 activeVertexBufferIndex;
@@ -76,6 +76,8 @@ STATIC_ASSERT(offsetof(ModgfxState, blendColorR) == 0xBC);
 STATIC_ASSERT(offsetof(ModgfxState, vertexCount) == 0xEA);
 STATIC_ASSERT(offsetof(ModgfxState, posCurX) == 0x60);
 STATIC_ASSERT(offsetof(ModgfxState, activeChannel) == 0xFC);
+STATIC_ASSERT(offsetof(ModgfxState, rotStepZ) == 0x100);
+STATIC_ASSERT(offsetof(ModgfxState, rotOffsetZ) == 0x106);
 
 /* vertex-group command payload handed to the updateVertex* handlers */
 typedef struct ModgfxVertexGroupCmd {
@@ -5200,7 +5202,7 @@ void fn_800A081C(int p1, int p2, int mode)
 #pragma scheduling reset
 
 /* EN v1.0 0x800A09C4  size: 240b  modgfx_stepS16VectorLerp: integer-vector lerp setup.
- * On mode 1, snap or step-interpolate the s16 triple at obj->_106/_108/_10a
+ * On mode 1, snap or step-interpolate the rotation offset triple
  * toward the rounded params, then advance it by the per-step delta. */
 #pragma scheduling off
 #pragma peephole off
@@ -5211,21 +5213,21 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
         int ty = (int)params[2];
         int tz = (int)params[3];
         if (((ModgfxState *)obj)->blendFrameCount != 0) {
-            ((ModgfxState *)obj)->colorStepR = (s16)(((s16)tx - ((ModgfxState *)obj)->colorValueR) / ((ModgfxState *)obj)->blendFrameCount);
-            ((ModgfxState *)obj)->colorStepG = (s16)(((s16)ty - ((ModgfxState *)obj)->colorValueG) / ((ModgfxState *)obj)->blendFrameCount);
-            ((ModgfxState *)obj)->colorStepB = (s16)(((s16)tz - ((ModgfxState *)obj)->colorValueB) / ((ModgfxState *)obj)->blendFrameCount);
+            ((ModgfxState *)obj)->rotStepZ = (s16)(((s16)tx - ((ModgfxState *)obj)->rotOffsetZ) / ((ModgfxState *)obj)->blendFrameCount);
+            ((ModgfxState *)obj)->rotStepY = (s16)(((s16)ty - ((ModgfxState *)obj)->rotOffsetY) / ((ModgfxState *)obj)->blendFrameCount);
+            ((ModgfxState *)obj)->rotStepX = (s16)(((s16)tz - ((ModgfxState *)obj)->rotOffsetX) / ((ModgfxState *)obj)->blendFrameCount);
         } else {
-            ((ModgfxState *)obj)->colorValueR = tx;
-            ((ModgfxState *)obj)->colorStepR = 0;
-            ((ModgfxState *)obj)->colorValueG = ty;
-            ((ModgfxState *)obj)->colorStepG = 0;
-            ((ModgfxState *)obj)->colorValueB = tz;
-            ((ModgfxState *)obj)->colorStepB = 0;
+            ((ModgfxState *)obj)->rotOffsetZ = tx;
+            ((ModgfxState *)obj)->rotStepZ = 0;
+            ((ModgfxState *)obj)->rotOffsetY = ty;
+            ((ModgfxState *)obj)->rotStepY = 0;
+            ((ModgfxState *)obj)->rotOffsetX = tz;
+            ((ModgfxState *)obj)->rotStepX = 0;
         }
     }
-    ((ModgfxState *)obj)->colorValueR = ((ModgfxState *)obj)->colorValueR + ((ModgfxState *)obj)->colorStepR;
-    ((ModgfxState *)obj)->colorValueG = ((ModgfxState *)obj)->colorValueG + ((ModgfxState *)obj)->colorStepG;
-    ((ModgfxState *)obj)->colorValueB = ((ModgfxState *)obj)->colorValueB + ((ModgfxState *)obj)->colorStepB;
+    ((ModgfxState *)obj)->rotOffsetZ = ((ModgfxState *)obj)->rotOffsetZ + ((ModgfxState *)obj)->rotStepZ;
+    ((ModgfxState *)obj)->rotOffsetY = ((ModgfxState *)obj)->rotOffsetY + ((ModgfxState *)obj)->rotStepY;
+    ((ModgfxState *)obj)->rotOffsetX = ((ModgfxState *)obj)->rotOffsetX + ((ModgfxState *)obj)->rotStepX;
 }
 #pragma peephole reset
 #pragma scheduling reset
