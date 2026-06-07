@@ -3435,7 +3435,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                         va, 2);
                     ((GameObject *)obj)->anim.flags |= 8;
                     ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
-                    ((GameObject *)obj)->anim.modelState->unk36 = 0;
+                    ((GameObject *)obj)->anim.modelState->shadowAlphaStep = 0;
                     *(s16 *)((char *)seq + 0x6e) &= ~4;
                     switch (*(s16 *)(va + 0x46)) {
                     case 0x72:
@@ -13912,7 +13912,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
         inner->unk6C8 = wpos[2];
         ((GameObject *)obj)->anim.flags |= 8;
         ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
-        ((GameObject *)obj)->anim.modelState->unk36 = 0;
+        ((GameObject *)obj)->anim.modelState->shadowAlphaStep = 0;
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7FD8;
     }
     {

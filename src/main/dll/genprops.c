@@ -601,7 +601,7 @@ void FUN_8016b7d4(undefined2 *param_1)
  */
 void FUN_8016b970(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  if ((visible != 0) && (*(int *)(*(int *)(param_1 + 100) + 0xc) != 0)) {
+  if ((visible != 0) && (((ObjAnimComponent *)param_1)->modelState->shadowCastSlot != NULL)) {
     FUN_80061194();
   }
   return;
@@ -634,7 +634,7 @@ void FUN_8016b9a8(int param_1)
   if (fVar2 < fVar1) {
     fVar1 = fVar2;
   }
-  ((GameObject *)param_1)->anim.modelState->unk36 = (short)(int)(lbl_803E3E7C * fVar1);
+  ((GameObject *)param_1)->anim.modelState->shadowAlphaStep = (short)(int)(lbl_803E3E7C * fVar1);
   return;
 }
 
@@ -667,7 +667,7 @@ void FUN_8016ba18(undefined2 *param_1)
   ((GameObject *)param_1)->anim.modelState->flags |= 0x10000;
   *pfVar1 = local_18[0];
   *(float *)(param_1 + 8) = *(float *)(param_1 + 8) - local_18[0];
-  ((GameObject *)param_1)->anim.modelState->unk36 = 0;
+  ((GameObject *)param_1)->anim.modelState->shadowAlphaStep = 0;
   ((GameObject *)param_1)->anim.modelState->shadowScale = lbl_803E3E70;
   return;
 }
@@ -4130,7 +4130,7 @@ void mikabombshadow_update(int *obj) {
     ((GameObject *)obj)->anim.modelState->shadowScale = lbl_803E31DC * t + fz;
     f = t * lbl_803E31E0;
     if (f > fz) f = fz;
-    ((GameObject *)obj)->anim.modelState->unk36 = (s32)(lbl_803E31E4 * f);
+    ((GameObject *)obj)->anim.modelState->shadowAlphaStep = (s32)(lbl_803E31E4 * f);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -5166,7 +5166,7 @@ extern u8 framesThisStep;
 void mikabombshadow_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     s32 v = visible;
     if (v != 0) {
-        if (*(void**)((char*)(*(int**)((char*)obj + 0x64)) + 0xc) != NULL) {
+        if (((GameObject *)obj)->anim.modelState->shadowCastSlot != NULL) {
             objShadowFn_80062498(obj, 0, 0, framesThisStep);
         }
     }
@@ -5336,7 +5336,7 @@ void mikabombshadow_init(int *obj)
     ((GameObject *)obj)->anim.modelState->flags |= 0x10000;
     *(f32 *)state = out;
     ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - out;
-    ((GameObject *)obj)->anim.modelState->unk36 = 0;
+    ((GameObject *)obj)->anim.modelState->shadowAlphaStep = 0;
     ((GameObject *)obj)->anim.modelState->shadowScale = lbl_803E31D8;
 }
 

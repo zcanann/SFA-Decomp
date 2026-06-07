@@ -2711,25 +2711,25 @@ void FUN_80040a88(int param_1)
                    &local_44);
       iVar3 = FUN_8006f690(local_3c, local_40, param_1);
       if (iVar3 < local_44) {
-        *(undefined2 *)(*(int *)(param_1 + 100) + 0x36) = 0xffe0;
+        ((ObjAnimComponent *)param_1)->modelState->shadowAlphaStep = -0x20;
       }
       else {
-        *(undefined2 *)(*(int *)(param_1 + 100) + 0x36) = 0x20;
+        ((ObjAnimComponent *)param_1)->modelState->shadowAlphaStep = 0x20;
       }
-      iVar4 = *(int *)(param_1 + 100);
-      iVar3 = (uint)*(byte *)(iVar4 + 0x40) + (int)*(short *)(iVar4 + 0x36);
+      iVar4 = (int)((ObjAnimComponent *)param_1)->modelState;
+      iVar3 = ((ObjModelState *)iVar4)->shadowAlpha + ((ObjModelState *)iVar4)->shadowAlphaStep;
       if (iVar3 < 0x100) {
         if (iVar3 < 0) {
-          *(undefined *)(iVar4 + 0x40) = 0;
+          ((ObjModelState *)iVar4)->shadowAlpha = 0;
         }
         else {
-          *(char *)(iVar4 + 0x40) = (char)iVar3;
+          ((ObjModelState *)iVar4)->shadowAlpha = iVar3;
         }
       }
       else {
-        *(undefined *)(iVar4 + 0x40) = 0xff;
+        ((ObjModelState *)iVar4)->shadowAlpha = 0xff;
       }
-      *(undefined *)((int)&DAT_803dc0e8 + 3) = *(undefined *)(*(int *)(param_1 + 100) + 0x40);
+      *(undefined *)((int)&DAT_803dc0e8 + 3) = ((ObjAnimComponent *)param_1)->modelState->shadowAlpha;
       FUN_8006b03c(param_1, local_20, &local_24, &local_28, &local_2c);
       local_48 = DAT_803dc0e8;
       local_18 = (longlong)(int)(lbl_803DF6EC * local_24);
@@ -4839,23 +4839,23 @@ void objRenderModel(int *obj) {
         &px, &py, &pz);
     Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
     if (sz <= depthReadRequestPoll(sx, sy, obj)) {
-        *(s16 *)(*(int *)((char *)obj + 0x64) + 0x36) = 0x20;
+        ((GameObject *)obj)->anim.modelState->shadowAlphaStep = 0x20;
     } else {
-        *(s16 *)(*(int *)((char *)obj + 0x64) + 0x36) = -0x20;
+        ((GameObject *)obj)->anim.modelState->shadowAlphaStep = -0x20;
     }
     {
         int a;
-        char *hud = *(char **)((char *)obj + 0x64);
-        a = *(u8 *)(hud + 0x40) + *(s16 *)(hud + 0x36);
+        ObjModelState *hud = ((GameObject *)obj)->anim.modelState;
+        a = hud->shadowAlpha + hud->shadowAlphaStep;
         if (a > 0xff) {
-            *(u8 *)(hud + 0x40) = 0xff;
+            hud->shadowAlpha = 0xff;
         } else if (a < 0) {
-            *(u8 *)(hud + 0x40) = 0;
+            hud->shadowAlpha = 0;
         } else {
-            *(u8 *)(hud + 0x40) = a;
+            hud->shadowAlpha = a;
         }
     }
-    lbl_803DB488[3] = *(u8 *)(*(int *)((char *)obj + 0x64) + 0x40);
+    lbl_803DB488[3] = ((GameObject *)obj)->anim.modelState->shadowAlpha;
     objShadowFn_8006c5f0(obj, &d1, &d2, &d3, &d4);
     col = *(u32 *)lbl_803DB488;
     hudDrawColored(d1, d3, d4, &col, (s32)(lbl_803DEA6C * d2), 1);
@@ -5888,7 +5888,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         while ((nxt = *(u8 **)(o + 0xc4)) != NULL) {
             o = nxt;
         }
-        sh = (*(u8 **)(*(u8 **)(o + 0x64) + 0xc))[0x65];
+        sh = ((u8 *)((GameObject *)o)->anim.modelState->shadowCastSlot)[0x65];
         if (sh == 0xff) {
             tev1 = lbl_803DB468;
             GXSetTevColor(3, &tev1);
@@ -6231,7 +6231,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
             while ((nxt = *(u8 **)(o + 0xc4)) != NULL) {
                 o = nxt;
             }
-            sh = (*(u8 **)(*(u8 **)(o + 0x64) + 0xc))[0x65];
+            sh = ((u8 *)((GameObject *)o)->anim.modelState->shadowCastSlot)[0x65];
             if (sh == 0xff) {
                 tev1 = lbl_803DB468;
                 GXSetTevColor(3, &tev1);
@@ -6610,7 +6610,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
         f32 *mx;
         u8 b5f = OBJPRINT_MODEL_DEF(obj)->renderFlags;
         b4 = b5f & 4;
-        if (b4 && (mx = *(f32 **)(*(u8 **)(obj + 0x64) + 0xc)) != NULL) {
+        if (b4 && (mx = (f32 *)((GameObject *)obj)->anim.modelState->shadowCastSlot) != NULL) {
             fn_8005011C(mx);
             nlay = 0;
         } else if (b5f & 0x10) {

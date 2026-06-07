@@ -771,12 +771,12 @@ void newshadows_renderQueuedShadowCasters(void)
     for (cVar16 = '\0'; ((int)cVar16 < (int)(uint)DAT_803ddbf8 && (cVar16 < 100));
         cVar16 = cVar16 + '\x01') {
       iVar13 = *piVar19;
-      pfVar12 = *(float **)(iVar13 + 100);
+      pfVar12 = (float *)((GameObject *)iVar13)->anim.modelState;
       FUN_80006954(0);
       uVar10 = FUN_80061198(iVar13,(uint)DAT_803dc070);
       FUN_80006954(1);
       if (4 < (uVar10 & 0xff)) {
-        if (((uint)pfVar12[0xc] & 0x20) != 0) {
+        if ((((ObjModelState *)pfVar12)->flags & 0x20) != 0) {
           FUN_80003494((uint)auStack_228,iVar13 + 0xc,0xc);
           FUN_80003494((uint)auStack_21c,iVar13 + 0x18,0xc);
           FUN_80003494(iVar13 + 0xc,(uint)(pfVar12 + 8),0xc);
@@ -888,7 +888,7 @@ void newshadows_renderQueuedShadowCasters(void)
           pfVar9 = (float *)FUN_80006974();
           FUN_802475e4(pfVar9,(float *)(&DAT_8038fd48 + iVar4));
           FUN_80247618(pfVar11,pfVar9,pfVar11);
-          *(float **)(*(int *)(iVar13 + 100) + 0xc) = pfVar11;
+          ((ObjModelState *)pfVar12)->shadowCastSlot = pfVar11;
           piVar7 = &DAT_803925b8 + bVar17;
           (&DAT_8038fd78)[uVar3 * 0x1a] = *piVar7;
           (&DAT_8038fd7d)[iVar4] = (&DAT_803dc2c8)[bVar17];
@@ -944,10 +944,10 @@ void newshadows_renderQueuedShadowCasters(void)
           pfVar12[5] = local_240;
           pfVar12[6] = local_23c;
           pfVar12[7] = local_238;
-          *(float **)(*(int *)(iVar13 + 100) + 0xc) = pfVar11;
+          ((ObjModelState *)pfVar12)->shadowCastSlot = pfVar11;
         }
         uVar18 = uVar18 + 1;
-        if (((uint)pfVar12[0xc] & 0x20) != 0) {
+        if ((((ObjModelState *)pfVar12)->flags & 0x20) != 0) {
           FUN_80003494(iVar13 + 0xc,(uint)auStack_228,0xc);
           FUN_80003494(iVar13 + 0x18,(uint)auStack_21c,0xc);
         }
@@ -1047,7 +1047,7 @@ void newshadows_queueShadowCaster(int object)
                                       -(dVar6 * dVar5 * dVar5 - DOUBLE_803df9e0));
     }
     iVar4 = (uint)DAT_803ddbf8 * 0xc;
-    *(float *)(&DAT_8038ef0c + iVar4) = (float)((double)**(float **)(object + 100) / dVar6);
+    *(float *)(&DAT_8038ef0c + iVar4) = (float)((double)((GameObject *)object)->anim.modelState->shadowScale / dVar6);
     if (modelDef->shadowType == 2) {
       (&DAT_8038ef10)[iVar4] = 1;
       if ((modelDef->renderFlags & 4) != 0) {
@@ -1369,10 +1369,11 @@ void newshadows_getShadowNoiseTexture(int *textureOut)
  */
 void FUN_8006b03c(int param_1,undefined4 *param_2,undefined4 *param_3,int *param_4,int *param_5)
 {
+  ObjModelState *modelState = ((GameObject *)param_1)->anim.modelState;
   *param_2 = (&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3];
-  *param_3 = **(undefined4 **)(param_1 + 100);
-  *param_4 = (int)*(float *)(*(int *)(param_1 + 100) + 0x14);
-  *param_5 = (int)*(float *)(*(int *)(param_1 + 100) + 0x18);
+  *param_3 = *(undefined4 *)&modelState->shadowScale;
+  *param_4 = (int)modelState->shadowOffsetX;
+  *param_5 = (int)modelState->shadowOffsetY;
   return;
 }
 
@@ -3105,12 +3106,12 @@ extern u32 lbl_8038E1DC[3];
 void objShadowFn_8006c5f0(int obj, u32 *outTable, f32 *outF, int *outX, int *outY)
 {
     int idx = (lbl_803DCF8C + 1) % 3;
-    int *p;
+    ObjModelState *modelState;
     *outTable = lbl_8038E1DC[idx];
-    p = (int *)*(int *)(obj + 0x64);
-    *outF = *(f32 *)p;
-    *outX = (int)*(f32 *)(*(int *)(obj + 0x64) + 0x14);
-    *outY = (int)*(f32 *)(*(int *)(obj + 0x64) + 0x18);
+    modelState = ((GameObject *)obj)->anim.modelState;
+    *outF = modelState->shadowScale;
+    *outX = (int)modelState->shadowOffsetX;
+    *outY = (int)modelState->shadowOffsetY;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -3701,7 +3702,7 @@ void shadowCreate(int *obj) {
         dz = ((GameObject *)obj)->anim.worldPosZ - *(f32 *)((char *)cam + 0x14);
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
         *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) =
-            *(f32 *)(*(int *)((char *)obj + 0x64)) / dist;
+            ((GameObject *)obj)->anim.modelState->shadowScale / dist;
         if (modelDef->shadowType == 2) {
             *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 1;
             if (modelDef->renderFlags & 4) {
@@ -3986,9 +3987,9 @@ void renderShadows(void) {
                 screenW = *(u16 *)((char *)((int *)obj[0x64 / 4])[1] + 0xa);
             }
             fn_8008923C(obj, vA, vAp1, vAp2);
-            dot24[0] = -*(f32 *)((char *)of64 + 0x14);
-            dot24[1] = -*(f32 *)((char *)of64 + 0x18);
-            dot24[2] = -*(f32 *)((char *)of64 + 0x1c);
+            dot24[0] = -((ObjModelState *)of64)->shadowOffsetX;
+            dot24[1] = -((ObjModelState *)of64)->shadowOffsetY;
+            dot24[2] = -((ObjModelState *)of64)->shadowOffsetZ;
             {
                 f32 dot = PSVECDotProduct(dot24, vA);
                 if (dot < lbl_803DED2C && dot > CPGPLinked_803DED44) {
@@ -4026,9 +4027,9 @@ void renderShadows(void) {
                 }
             }
             *(int *)((char *)slot + 0x40) = 0;
-            *(f32 *)((char *)of64 + 0x14) = -vA[0];
-            *(f32 *)((char *)of64 + 0x18) = -vA[1];
-            *(f32 *)((char *)of64 + 0x1c) = -vA[2];
+            ((ObjModelState *)of64)->shadowOffsetX = -vA[0];
+            ((ObjModelState *)of64)->shadowOffsetY = -vA[1];
+            ((ObjModelState *)of64)->shadowOffsetZ = -vA[2];
             setScreenWidth(screenW);
             {
                 f32 *m = ObjModel_GetJointMatrix(Obj_GetActiveModel(obj), 0);
@@ -4056,7 +4057,7 @@ void renderShadows(void) {
                 f32 *vm = Camera_GetViewMatrix();
                 PSMTXCopy(vm, (f32 *)(castSlot + 0x30));
                 PSMTXConcat((f32 *)castSlot, vm, (f32 *)castSlot);
-                *(int *)((char *)obj[0x64 / 4] + 0xc) = (int)castSlot;
+                ((ObjModelState *)of64)->shadowCastSlot = castSlot;
                 {
                     char *texSlot = B + (u8)r23 * 4 + 0x3a10;
                     *(int *)(castSlot + 0x60) = *(int *)texSlot;
@@ -4113,10 +4114,10 @@ void renderShadows(void) {
                 mScale[11] = 1.0f;
             }
             PSMTXConcat(mScale, mTrans, (f32 *)castSlot);
-            *(f32 *)((char *)of64 + 0x14) = v30[0];
-            *(f32 *)((char *)of64 + 0x18) = v30[1];
-            *(f32 *)((char *)of64 + 0x1c) = v30[2];
-            *(int *)((char *)obj[0x64 / 4] + 0xc) = (int)castSlot;
+            ((ObjModelState *)of64)->shadowOffsetX = v30[0];
+            ((ObjModelState *)of64)->shadowOffsetY = v30[1];
+            ((ObjModelState *)of64)->shadowOffsetZ = v30[2];
+            ((ObjModelState *)of64)->shadowCastSlot = castSlot;
         }
         r24++;
         if ((*(int *)((char *)of64 + 0x30) & 0x20) != 0) {

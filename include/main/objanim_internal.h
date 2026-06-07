@@ -195,16 +195,18 @@ typedef struct ObjAnimBank {
 
 typedef struct ObjModelState {
   f32 shadowScale;
-  u8 pad04[0x14 - 0x04];
+  u8 pad04[0x0C - 0x04];
+  void *shadowCastSlot;
+  u8 pad10[0x14 - 0x10];
   f32 shadowOffsetX;
   f32 shadowOffsetY;
-  u8 pad1C[0x20 - 0x1C];
+  f32 shadowOffsetZ;
   f32 overrideWorldPosX;
   f32 overrideWorldPosY;
   f32 overrideWorldPosZ;
   u32 flags;
   u8 pad34[0x36 - 0x34];
-  s16 unk36;
+  s16 shadowAlphaStep;
   u8 pad38[0x3A - 0x38];
   u8 shadowTintA;
   u8 shadowTintB;

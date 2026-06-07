@@ -2850,12 +2850,12 @@ void renderObjects(s8 *arg0) {
                 (*(void (**)(int, int, int, int, void *))(*gModgfxInterface + 0x1c))(0, 0, 0, 1, obj);
             }
             objRender(0, 0, 0, 0, obj, 1);
-            p = *(int **)(obj + 0x64);
-            if (p != NULL && *(void **)(p + 3) != NULL) {
+            p = (int *)((GameObject *)obj)->anim.modelState;
+            if (p != NULL && ((GameObject *)obj)->anim.modelState->shadowCastSlot != NULL) {
                 renderShadowType3(obj, 0x13, 0);
                 ((LightmapQEnt *)qbase)[lbl_803DCE30].d = 2;
                 lbl_803DCE30++;
-            } else if (*(s16 *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x48) == 3 && (((GameObject *)obj)->anim.flags & 0x4000) == 0 && (p[12] & 0x4)) {
+            } else if (*(s16 *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x48) == 3 && (((GameObject *)obj)->anim.flags & 0x4000) == 0 && (((GameObject *)obj)->anim.modelState->flags & 0x4)) {
                 renderShadowType3(obj, 0x13, 0);
                 ((LightmapQEnt *)qbase)[lbl_803DCE30].d = 3;
                 lbl_803DCE30++;
@@ -4023,8 +4023,8 @@ void objDrawFn_8005da48(int *obj)
         renderResetFn_8003fc60();
         objRender(0, 0, 0, 0, obj, 1);
         fn_8000F9B4();
-        shadow = *(void **)((char *)obj + 0x64);
-        if (shadow != NULL && *(void **)((char *)shadow + 0xc) != NULL) {
+        shadow = ((GameObject *)obj)->anim.modelState;
+        if (shadow != NULL && ((ObjModelState *)shadow)->shadowCastSlot != NULL) {
             objShadowFn_80062498(obj, 0, 0, framesThisStep);
         } else if (((ObjAnimComponent *)obj)->modelInstance->shadowType == 3) {
             objDrawFn_80061654(obj, model);
