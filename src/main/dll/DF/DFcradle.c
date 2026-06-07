@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DF/DFcradle.h"
+#include "main/effect_interfaces.h"
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);
@@ -125,10 +126,10 @@ void dimbossfire_update(int param_1)
         iVar3 = 0;
         do {
           if (*(short *)(iVar4 + 0x1a) == 0) {
-            (*(void (***)(int, int, int, int, int, int))gPartfxInterface)[2](param_1,0x4cc,0,2,0xffffffff,0);
+            (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)param_1,0x4cc,NULL,2,-1,NULL);
           }
           else {
-            (*(void (***)(int, int, int, int, int, int))gPartfxInterface)[2](param_1,0x4c9,0,2,0xffffffff,0);
+            (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)param_1,0x4c9,NULL,2,-1,NULL);
           }
           iVar3 = iVar3 + 1;
         } while (iVar3 < 0x32);
@@ -163,12 +164,12 @@ void dimbossfire_update(int param_1)
     }
     *(float *)(pbVar5 + 4) = *(float *)(pbVar5 + 4) - timeDelta;
     if (*(float *)(pbVar5 + 4) > lbl_803E4DA0) {
-      (*(void (***)(int, int, int, int, int, int))gPartfxInterface)[2](param_1,0x4ca,0,2,0xffffffff,0);
+      (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)param_1,0x4ca,NULL,2,-1,NULL);
       if (*(short *)(iVar4 + 0x1a) == 0) {
-        (*(void (***)(int, int, int, int, int, int))gPartfxInterface)[2](param_1,0x4cd,0,2,0xffffffff,0);
+        (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)param_1,0x4cd,NULL,2,-1,NULL);
       }
       else {
-        (*(void (***)(int, int, int, int, int, int))gPartfxInterface)[2](param_1,0x4cb,0,2,0xffffffff,0);
+        (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)param_1,0x4cb,NULL,2,-1,NULL);
       }
     }
     else {

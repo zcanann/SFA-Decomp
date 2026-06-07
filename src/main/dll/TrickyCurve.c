@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/trickycurve_state.h"
 #include "main/mapEvent.h"
@@ -188,17 +189,17 @@ void TrickyCurve_updateBurstTrigger(int obj)
     if (GameBit_Get(0x1d9) != 0) {
       GameBit_Set(0x468, 1);
       ObjMsg_SendToObject(player, 0x60004, obj, 0);
-      (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(obj, 0x5ed, &fxParams, 2, -1, 0);
+      ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x5ed, &fxParams, 2, -1, NULL);
       burstParticles = 9;
       do {
-        (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(obj, 0x5fd, &fxParams, 2, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x5fd, &fxParams, 2, -1, NULL);
       } while (burstParticles-- != 0);
     } else {
       ObjMsg_SendToObject(player, 0x60004, obj, 1);
-      (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(obj, 0x5ed, &fxParams, 2, -1, 0);
+      ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x5ed, &fxParams, 2, -1, NULL);
       burstParticles = 9;
       do {
-        (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(obj, 0x5fd, &fxParams, 2, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x5fd, &fxParams, 2, -1, NULL);
       } while (burstParticles-- != 0);
     }
     GameBit_Set(((TrickyCurveObjState *)state)->unkA, 1);
@@ -829,7 +830,7 @@ void TrickyCurve_update(int *obj) {
 }
 
 void TrickyCurve_free(int obj) {
-    ((void (*)(int))((void**)*gExpgfxInterface)[6])(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 
 void TrickyCurve_init(int *obj, u8 *def) {

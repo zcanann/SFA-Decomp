@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "global.h"
 #include "main/audio/sfx_ids.h"
@@ -298,8 +299,8 @@ void fn_8022BCD0(int p, int q) {
                 emit.type = 0x61a8;
             else
                 emit.type = -0x63c0;
-            (*(void (**)(int, int, void *, int, int, u8 *))(*gPartfxInterface + 0x8))(
-                p, 0x7d0, &emit.pad, 4, -1, &flag);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)p, 0x7d0, &emit.pad, 4,
+                                                                -1, &flag);
         }
     }
     if ((s8) * (u8 *)(q + 0x468) <= 2) {
@@ -308,8 +309,8 @@ void fn_8022BCD0(int p, int q) {
         emit.b = lbl_803E6ECC;
         emit.c = lbl_803E6F1C;
         emit.d = lbl_803E6F20;
-        (*(void (**)(int, int, void *, int, int, u8 *))(*gPartfxInterface + 0x8))(
-            p, 0x7d1, &emit.pad, 4, -1, &flag);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)p, 0x7d1, &emit.pad, 4, -1,
+                                                            &flag);
     }
 }
 #pragma scheduling reset

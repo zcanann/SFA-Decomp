@@ -1,3 +1,4 @@
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
@@ -616,7 +617,8 @@ void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax
         params.f10 = vec[1];
         params.f14 = vec[2];
         params.f6 = 0x64;
-        (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, dispatchId, &params, 2, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, dispatchId, &params, 2,
+                                                            -1, NULL);
     }
 }
 #pragma peephole reset

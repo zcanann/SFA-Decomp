@@ -1,4 +1,5 @@
 #include "main/dll/MMP/MMP_moonrock.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 extern undefined4 FUN_80006810();
@@ -253,11 +254,10 @@ void lightning_init(u8 *obj, u8 *data)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* WaterFallSpray_free: forward to vtable[6] of *gExpgfxInterface with obj. */
 extern void *gExpgfxInterface;
 void WaterFallSpray_free(u8* obj)
 {
-    (*(void (***)(u8*))gExpgfxInterface)[6](obj);
+    (*(EffectInterface **)gExpgfxInterface)->freeObject(obj);
 }
 
 typedef struct WaterFallSprayPartfxArgs {
@@ -270,7 +270,7 @@ typedef struct WaterFallSprayPartfxArgs {
 } WaterFallSprayPartfxArgs;
 
 #define WATERFALLSPRAY_SPAWN_PARTICLE(obj, id, args) \
-    (*(void (**)(u8 *, int, WaterFallSprayPartfxArgs *, int, int, int))(*gPartfxInterface + 8))( \
+    ((EffectInterface *)*gPartfxInterface)->spawnObject( \
         (obj), (id), (args), 4, -1, 0)
 
 #pragma scheduling off

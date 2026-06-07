@@ -1,4 +1,5 @@
 #include "main/dll/NW/NWsfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/SH/SHthorntail_internal.h"
@@ -167,8 +168,8 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                     fx.x = ((GameObject *)obj)->anim.worldPosX;
                     fx.y = lbl_803E528C + ((GameObject *)obj)->anim.worldPosY;
                     fx.z = ((GameObject *)obj)->anim.worldPosZ;
-                    (*(code *)(*(int *)gPartfxInterface + 0x8))(obj, 0x7f0, &fx, 0x200001, -1,
-                                                                0);
+                    ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x7f0, &fx,
+                                                                        0x200001, -1, NULL);
                 }
                 ((EdibleMushroomState *)state)->unk12C = lbl_803E5290;
             }
@@ -305,7 +306,8 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                 fx.x = lbl_803E5294;
                 fx.y = lbl_803E529C;
                 if (((GameObject *)obj)->objectFlags & 0x800) {
-                    (*(code *)(*(int *)gPartfxInterface + 0x8))(obj, 0x51d, &fx, 2, -1, 0);
+                    ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x51d, &fx, 2, -1,
+                                                                        NULL);
                 }
                 ((EdibleMushroomState *)state)->unk128 = lbl_803E52A0;
             }
