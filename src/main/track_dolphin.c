@@ -4424,19 +4424,18 @@ extern s16 lbl_803DCF5C;
 #pragma dont_inline on
 int insertPoint(int val, s16 *arr, f32 x, f32 y, f32 z)
 {
-    int i;
-    int n;
     f32 *p;
     f32 *base;
+    int i;
+    int n;
 
     i = 0;
-    base = lbl_803DCF38;
-    p = base;
+    p = base = lbl_803DCF38;
     n = lbl_803DCF5C;
     for (; i < n; i++) {
         if (x == p[0] && y == p[1] && z == p[2]) {
-            s16 *q = arr + (i << 1);
-            q[1] = val;
+            s16 *q = arr + 1;
+            q[i << 1] = val;
             return i;
         }
         p += 3;
