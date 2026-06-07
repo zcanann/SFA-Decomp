@@ -5,6 +5,7 @@
 #include "main/dll/TREX/TREX_trex.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/resource.h"
 
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
@@ -2428,8 +2429,6 @@ void SB_MiniFire_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern int Resource_Acquire(int id, int mode);
-extern void Resource_Release(int resource);
 extern int lbl_803DC098;
 extern f32 lbl_803E592C;
 extern f32 lbl_803E5948;
@@ -2440,7 +2439,7 @@ extern f32 lbl_803E5950;
 #pragma peephole off
 void SB_MiniFire_init(int obj)
 {
-    int resource;
+    void *resource;
 
     ((GameObject *)obj)->unkF4 = 180;
     ((GameObject *)obj)->anim.velocityX = -(lbl_803E594C * (f32)(s32)randomGetRange(20, 40)) + lbl_803E5948;

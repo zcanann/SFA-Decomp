@@ -4,6 +4,7 @@
 #include "main/dll/genprops.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/resource.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -4469,9 +4470,8 @@ int dll_F7_getExtraSize(void) { return 0xc; }
 int dll_F7_getObjectTypeId(void) { return 0x2; }
 
 extern void *gModgfxInterface;
-extern void Resource_Release(int handle);
-extern int lbl_803DDAB0;
-extern int lbl_803DDAB4;
+extern void *lbl_803DDAB0;
+extern void *lbl_803DDAB4;
 
 #pragma scheduling off
 void dll_F7_free(int obj)
@@ -4479,8 +4479,8 @@ void dll_F7_free(int obj)
     (*(void (***)(int))gModgfxInterface)[6](obj);
     Resource_Release(lbl_803DDAB0);
     Resource_Release(lbl_803DDAB4);
-    lbl_803DDAB0 = 0;
-    lbl_803DDAB4 = 0;
+    lbl_803DDAB0 = NULL;
+    lbl_803DDAB4 = NULL;
     ObjGroup_RemoveObject(obj, 0x3E);
 }
 #pragma scheduling reset
@@ -5316,7 +5316,7 @@ void staff_release(void)
         }
     }
     if (lbl_803DDAA0 != NULL) {
-        Resource_Release((int)lbl_803DDAA0);
+        Resource_Release(lbl_803DDAA0);
         lbl_803DDAA0 = NULL;
     }
 }
@@ -5459,7 +5459,6 @@ void staffDoGrowShrinkAnim(int *obj, u8 grow, u8 flag2)
     }
 }
 
-extern int Resource_Acquire(int id, int flag);
 extern void *gMapEventInterface;
 void dll_F7_init(int *obj, int *params)
 {
@@ -5836,7 +5835,7 @@ void mikabomb_init(int *obj)
     } else {
         *state = 0;
     }
-    *(int *)((char *)state + 8) = Resource_Acquire(0x5b, 1);
+    *(void **)((char *)state + 8) = Resource_Acquire(0x5b, 1);
     *(u8 *)((char *)state + 0xc) = 0;
 }
 #pragma peephole reset
@@ -6883,7 +6882,7 @@ void staff_initialise(void)
         }
     }
     if (lbl_803DDAA0 == NULL) {
-        lbl_803DDAA0 = (void *)Resource_Acquire(90, 1);
+        lbl_803DDAA0 = Resource_Acquire(90, 1);
     }
 }
 #pragma peephole reset

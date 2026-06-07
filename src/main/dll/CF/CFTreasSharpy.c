@@ -2,6 +2,7 @@
 #include "main/dll/CF/dll_179.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/resource.h"
 
 extern undefined4 FUN_80017a78();
 extern undefined4 FUN_800305f8();
@@ -32,8 +33,6 @@ extern u8 framesThisStep;
 extern f32 lbl_803E3E48;
 extern char sCFTreasSharpyDebugFormat[];
 extern void fn_80137948(char *fmt, ...);
-extern void *Resource_Acquire(int id, int flags);
-extern void Resource_Release(void *resource);
 
 extern f32 lbl_803E3DD8;
 extern f32 lbl_803E3DEC;

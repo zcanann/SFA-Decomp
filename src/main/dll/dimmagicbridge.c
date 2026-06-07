@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/dimmagicbridge.h"
 #include "main/mapEventTypes.h"
+#include "main/resource.h"
 
 
 extern u32 GameBit_Get(int eventId);
@@ -11,8 +12,6 @@ extern int ObjMsg_Pop(int obj, int *msgOut, int *paramOut, int *flagsOut);
 extern char *ObjGroup_FindNearestObject(int group, char *from, f32 *distInOut);
 extern void Obj_FreeObject(char *obj);
 extern f32 Vec_distance(f32 *a, f32 *b);
-extern int *Resource_Acquire(int id, int kind);
-extern void Resource_Release(int *res);
 
 extern int *gTitleMenuControlInterface;
 extern int *gObjectTriggerInterface;

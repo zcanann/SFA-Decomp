@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/objanim.h"
+#include "main/resource.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006950();
@@ -1792,8 +1793,6 @@ extern u8 lbl_803DD42E;
 extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
 extern f32 lbl_803E05B4;
 extern f32 lbl_803E05B8;
-extern int* Resource_Acquire(int id, int kind);
-extern void Resource_Release(int* res);
 
 #pragma scheduling off
 #pragma peephole off

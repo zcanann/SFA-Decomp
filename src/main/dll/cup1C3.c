@@ -4,6 +4,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
+#include "main/resource.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -39,8 +40,6 @@ extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void *a, void *b);
 extern void objUpdateOpacity(int obj);
-extern int Resource_Acquire(int id, int mode);
-extern void Resource_Release(int handle);
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6d4;
@@ -553,7 +552,7 @@ void dll_197_update(int obj)
     u8 callbackData[0x14];
     int player;
     f32 distance;
-    int resource;
+    void *resource;
     int effect;
     int stageEffectBase;
     int *resourceDefaults;

@@ -2,6 +2,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/explodable_state.h"
+#include "main/resource.h"
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int GameBit_Set(int bit, int value);
@@ -472,10 +473,9 @@ void largecrate_update(int obj)
 #pragma scheduling reset
 
 extern int *gModgfxInterface;
-extern void Resource_Release(int res);
 void largecrate_free(int obj) {
     ((void (*)(int))((void**)*gModgfxInterface)[6])(obj);
-    Resource_Release((int)lbl_803DDAC8);
+    Resource_Release(lbl_803DDAC8);
 }
 
 extern int *gCameraInterface;

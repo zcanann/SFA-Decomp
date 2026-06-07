@@ -3,6 +3,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/shrine1CE.h"
 #include "main/dll/torch1CD.h"
+#include "main/resource.h"
 
 
 
@@ -59,8 +60,6 @@ extern int ObjGroup_FindNearestObject(int group, int obj, f32 *outDist);
 extern int ObjMsg_Pop(int obj, int *msg, int *a, int *b);
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
-extern int Resource_Acquire(int id, int mode);
-extern void Resource_Release(int handle);
 extern f32 Vec_distance(f32 *a, f32 *b);
 extern void fn_80296B78(int obj, int a);
 extern void fn_80137948(char *fmt, ...);
@@ -90,7 +89,7 @@ void dll_19B_update(int obj)
     int unk16;
     int msg;
     int unk8;
-    int handle;
+    void *handle;
 
     st = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
@@ -299,7 +298,7 @@ void dll_19C_update(int *obj) {
     extern uint GameBit_Get(int);
     u8 *def;
     u8 *sub;
-    int res;
+    void *res;
     void *setup;
 
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
@@ -346,7 +345,7 @@ void dll_19C_update(int *obj) {
 #pragma peephole off
 void dll_19B_init(u8 *obj, u8 *params) {
     register u8 *sub;
-    int res;
+    void *res;
 
     sub = ((GameObject *)obj)->extra;
     *(s16*)obj = 0;

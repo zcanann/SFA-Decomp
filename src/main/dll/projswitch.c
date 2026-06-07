@@ -4,6 +4,7 @@
 #include "main/dll/projswitch.h"
 #include "main/mapEventTypes.h"
 #include "main/objhits_types.h"
+#include "main/resource.h"
 
 
 extern undefined4 FUN_800033a8();
@@ -461,12 +462,11 @@ void FUN_8014d9e8(undefined8 param_1,undefined8 param_2,double param_3,undefined
 }
 
 /* conditional init/free pair. */
-extern u32 lbl_803DDA50;
-extern void Resource_Release(u32);
+extern void *lbl_803DDA50;
 #pragma scheduling off
 #pragma peephole off
-void enemy_release(void) { if (lbl_803DDA50 != 0) { Resource_Release(lbl_803DDA50); lbl_803DDA50 = 0; } }
-void enemy_initialise(void) { if (lbl_803DDA50 == 0) lbl_803DDA50 = Resource_Acquire(0x5a, 1); }
+void enemy_release(void) { if (lbl_803DDA50 != NULL) { Resource_Release(lbl_803DDA50); lbl_803DDA50 = NULL; } }
+void enemy_initialise(void) { if (lbl_803DDA50 == NULL) lbl_803DDA50 = Resource_Acquire(0x5a, 1); }
 #pragma peephole reset
 #pragma scheduling reset
 

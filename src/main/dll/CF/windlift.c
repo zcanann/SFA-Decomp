@@ -6,6 +6,7 @@
 #include "main/objhits_types.h"
 #include "main/dll/CF/windlift.h"
 #include "main/dll/CF/lanternfirefly_state.h"
+#include "main/resource.h"
 #include "global.h"
 
 /* scarab_getExtraSize == 0x34 (collectible money beetle). */
@@ -1837,7 +1838,6 @@ void portalspelldoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 extern undefined4 *gModgfxInterface;
 extern void *lbl_803DDAD0;
 extern void *lbl_803DDAD4;
-extern void Resource_Release(void *handle);
 #pragma scheduling off
 #pragma peephole off
 void fn_801859D4(int *obj) {
