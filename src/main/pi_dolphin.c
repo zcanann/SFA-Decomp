@@ -9208,9 +9208,13 @@ int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
     struct piIndMtx indmtx;
     f32 mtx[3][4];
     f32 v;
-    int result = 0;
+    int result;
+    int texmap;
+    int t;
     indmtx = lbl_802C1D50;
-    if ((lbl_803DB5E8 & 1) == 0) {
+    t = lbl_803DB5E8 & 1;
+    result = 0;
+    if (t == 0) {
         return 0;
     }
     GXSetIndTexMtx(1, indmtx.m, 0);
@@ -9229,11 +9233,7 @@ int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
     } else {
         result = 1;
     }
-    v = (f32)(s32)((p3 & 0xf0) >> 4);
-    v = v / lbl_803DEB3C;
-    v = v - lbl_803DEAC8;
-    v = lbl_803DEB38 * v;
-    v = lbl_803DEADC * v;
+    v = lbl_803DEADC * (lbl_803DEB38 * ((f32)(s32)((p3 & 0xf0) >> 4) / lbl_803DEB3C - lbl_803DEAC8));
     PSMTXScale(mtx, v, v, lbl_803DEACC);
     mtx[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
@@ -9246,11 +9246,13 @@ int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
     GXSetTevOp(lbl_803DCD90, 4);
     GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, (lbl_803DCD8C + 1) | 0x100, 0xff);
     GXSetTevOp(lbl_803DCD90 + 1, 4);
+    texmap = lbl_803DCD8C;
     if (p1 != 0) {
+        char *tex = (char *)p1 + 0x20;
         if (*(u8 *)((char *)p1 + 0x48) != 0) {
-            GXLoadTexObjPreLoaded((char *)p1 + 0x20, *(void **)((char *)p1 + 0x40), lbl_803DCD8C);
+            GXLoadTexObjPreLoaded(tex, *(void **)((char *)p1 + 0x40), texmap);
         } else {
-            GXLoadTexObj((char *)p1 + 0x20, lbl_803DCD8C);
+            GXLoadTexObj(tex, texmap);
         }
     }
     lbl_803DCD80 = lbl_803DCD80 + 3;
@@ -9258,9 +9260,9 @@ int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
     lbl_803DCD88 = lbl_803DCD88 + 2;
     lbl_803DCD90 = lbl_803DCD90 + 2;
     lbl_803DCD8C = lbl_803DCD8C + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 2;
-    lbl_803DCD68 = lbl_803DCD68 + 1;
-    lbl_803DCD69 = lbl_803DCD69 + 2;
+    lbl_803DCD6A += 2;
+    lbl_803DCD68 += 1;
+    lbl_803DCD69 += 2;
     return result;
 }
 extern f32 fn_8006C670(void);
