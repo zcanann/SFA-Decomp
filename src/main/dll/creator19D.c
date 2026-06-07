@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/creator19D.h"
 #include "main/objanim.h"
+#include "main/resource.h"
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006814();
@@ -21,7 +22,6 @@ extern void fn_8011F6D4(int enable);
 extern void fearTestMeterSetRange(u8 channel,u8 param,s16 value);
 extern int padGetStickX(int controller);
 extern u32 randomGetRange(int min,int max);
-extern void *Resource_Acquire(int id,int count);
 extern void *textureLoadAsset(int id);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);

@@ -5,6 +5,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/resource.h"
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
 #include "main/dll/player_state.h"
@@ -7577,7 +7578,6 @@ typedef struct {
 } VecXYZ;
 
 extern int objGetFlagsE5_2(int obj);
-extern void *Resource_Acquire(int id, int n);
 extern void objLightFn_8009a1dc(int obj, f32 fv, void *buf, int n, int m);
 extern void fn_8009A8C8(int obj, f32 fv);
 extern int lbl_803DE470;

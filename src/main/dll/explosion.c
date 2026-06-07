@@ -1,6 +1,7 @@
 #include "main/dll/explosion.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/resource.h"
 
 
 extern undefined8 FUN_80006728();
@@ -59,7 +60,6 @@ extern f32 lbl_803E5DDC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void *Resource_Acquire(int idx, int p);
 extern f32 lbl_803E513C;
 extern f32 lbl_803E5140;
 extern f32 lbl_803E5144;
@@ -70,7 +70,7 @@ extern f64 lbl_803E5148;
 void dll_197_init(int obj, int data)
 {
     u8 *st;
-    int *res;
+    void *res;
     struct {
         u8 buf[16];
         f32 f;
@@ -91,9 +91,9 @@ void dll_197_init(int obj, int data)
     switch (*(u8 *)(st + 0xb)) {
     case 0:
         *(u8 *)(st + 0xc) = 1;
-        res = (int *)Resource_Acquire(0x69, 1);
+        res = Resource_Acquire(0x69, 1);
         if (*(s16 *)(data + 0x1c) == 0) {
-            (**(void (**)(int, int, void *, int, int, int))(*res + 4))(obj, 0, stk.buf, 0x10004, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))(*(int *)res + 4))(obj, 0, stk.buf, 0x10004, -1, 0);
         }
         break;
     case 1:

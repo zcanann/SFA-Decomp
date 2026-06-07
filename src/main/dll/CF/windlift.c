@@ -1462,7 +1462,6 @@ void fn_80185B74(int obj)
 #pragma peephole off
 void fn_801862CC(int obj, int p)
 {
-  extern void *Resource_Acquire(int id, int a);
   extern void *lbl_803DDAD0;
   extern void *lbl_803DDAD4;
   extern f32 lbl_803E3A78;

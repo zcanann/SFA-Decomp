@@ -324,7 +324,6 @@ extern int DR_CloudRunner_stateHandler04(int obj, int p2);
 extern void DR_CloudRunner_stateHandler05();
 extern void DR_CloudRunner_stateHandler06();
 
-extern int Resource_Acquire(int id, int kind);
 extern int gDim2PrisonMammothStateHandlers[];
 extern int gDREarthWarriorStateHandlers[];
 extern void *gDim2PrisonMammothDefaultStateHandler;

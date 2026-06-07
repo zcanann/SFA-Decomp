@@ -7,6 +7,7 @@
 #include "main/dll/texscroll2.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/resource.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 Sfx_PlayFromObject();
@@ -15,7 +16,6 @@ extern undefined4 FUN_80017a98();
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 Resource_Acquire();
 extern u32 randomGetRange(int min, int max);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
@@ -69,7 +69,7 @@ extern undefined4* gPartfxInterface;
 extern undefined4* gPlayerInterface;
 extern undefined4* gMapEventInterface;
 extern undefined4* gBaddieControlInterface;
-extern undefined4* lbl_803DDA90;
+extern void *lbl_803DDA90;
 extern f64 DOUBLE_803e3d00;
 extern f64 DOUBLE_803e3d08;
 extern f32 lbl_803DC074;
@@ -619,7 +619,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
   ((GameObject *)obj)->anim.rootMotionScale = lbl_803E30A0 + (f32)(s32)*(s8 *)(data + 0x28) / lbl_803E30A4;
   ObjHitbox_SetSphereRadius(obj,(int)(lbl_803E30CC * ((GameObject *)obj)->anim.rootMotionScale));
   if (skip_alloc == 0) {
-    lbl_803DDA90 = (undefined4 *)Resource_Acquire(0x5a,1);
+    lbl_803DDA90 = Resource_Acquire(0x5a,1);
   }
   return;
 }

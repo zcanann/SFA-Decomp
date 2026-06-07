@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/objanim.h"
+#include "main/resource.h"
 
 /* typedefs (verbatim from placeholder_80295318) */
 typedef struct {
@@ -867,7 +868,6 @@ extern void *lbl_803DE454;
 extern f32 lbl_803E7F6C;
 extern f32 lbl_803E7FD4;
 extern f32 lbl_803E7FCC;
-extern void Resource_Release(void *handle);
 extern void showDeathMenu(void);
 extern int lbl_803DE424;
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
