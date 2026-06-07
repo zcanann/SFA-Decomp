@@ -23,12 +23,14 @@ extern void objLightFn_8009a1dc(int obj,double scale,ObjHitReactEffectPos *pos,u
  */
 #pragma scheduling off
 #pragma peephole off
-int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEntryCount,
+int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntryTable,u32 reactionEntryCount,
                        u32 reactionState,float *reactionStepScale)
 {
   ObjAnimDef *animDef;
+  ObjAnimComponent *objAnim;
   int moveEnded;
-  int priorityHitType;
+  int hitType;
+  ObjHitReactEntry *reactionEntry;
   ObjHitReactEffectHandle *effectHandle;
   bool sfxActive;
   f32 hitPos[3];
@@ -36,9 +38,10 @@ int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
   ObjHitReactEffectColorArgs effectColorArgs;
   int hitSphereIndex;
 
+  objAnim = (ObjAnimComponent *)obj;
   effectColorArgs = gObjHitReactEffectColorArgs;
   if ((reactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
-    OSReport(sObjHitReactHitstateFrameString,((ObjAnimComponent *)obj)->currentMoveProgress);
+    OSReport(sObjHitReactHitstateFrameString,objAnim->currentMoveProgress);
     moveEnded = ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)
         (obj,(double)*reactionStepScale,(double)timeDelta,(ObjAnimEventList *)0x0);
     if (moveEnded != 0) {
@@ -46,10 +49,10 @@ int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
       reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
     }
   }
-  priorityHitType = ObjHits_GetPriorityHitWithPosition(obj,0,&hitSphereIndex,0,&hitPos[0],
-                                                       &hitPos[1],&hitPos[2]);
-  if (priorityHitType != 0) {
-    ObjAnimBank *bank = ObjAnim_GetActiveBank((ObjAnimComponent *)obj);
+  hitType = ObjHits_GetPriorityHitWithPosition(obj,0,&hitSphereIndex,0,&hitPos[0],&hitPos[1],
+                                               &hitPos[2]);
+  if (hitType != 0) {
+    ObjAnimBank *bank = ObjAnim_GetActiveBank(objAnim);
     hitPos[0] = hitPos[0] + playerMapOffsetX;
     hitPos[2] = hitPos[2] + playerMapOffsetZ;
     effectPos.scale = gObjHitsScalarOne;
@@ -62,19 +65,19 @@ int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
       OSReport(sObjHitReactSphereOverflowString,hitSphereIndex);
       hitSphereIndex = 0;
     }
-    reactionEntries = &reactionEntries[hitSphereIndex];
-    if (priorityHitType != OBJHITREACT_COLLISION_SKIP_REACTION) {
-      if ((reactionEntries->primaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
-          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactionEntries->primaryHitSfxId),
+    reactionEntry = &reactionEntryTable[hitSphereIndex];
+    if (hitType != OBJHITREACT_COLLISION_SKIP_REACTION) {
+      if ((reactionEntry->primaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
+          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactionEntry->primaryHitSfxId),
           !sfxActive)) {
-        Sfx_PlayFromObject(obj,(u16)reactionEntries->primaryHitSfxId);
+        Sfx_PlayFromObject(obj,(u16)reactionEntry->primaryHitSfxId);
       }
-      if ((reactionEntries->secondaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
-          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactionEntries->secondaryHitSfxId),
+      if ((reactionEntry->secondaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
+          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactionEntry->secondaryHitSfxId),
           !sfxActive)) {
-        Sfx_PlayFromObject(obj,(u16)reactionEntries->secondaryHitSfxId);
+        Sfx_PlayFromObject(obj,(u16)reactionEntry->secondaryHitSfxId);
       }
-      if (reactionEntries->hitEffectMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
+      if (reactionEntry->hitEffectMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
         effectHandle = (ObjHitReactEffectHandle *)
             Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
         effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE,OBJHITREACT_HIT_EFFECT_MODE,
@@ -91,10 +94,10 @@ int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
       }
     }
     if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
-        (reactionEntries->reactionMoveId > OBJHITREACT_NO_REACTION_ANIM)) {
+        (reactionEntry->reactionMoveId > OBJHITREACT_NO_REACTION_ANIM)) {
       ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
-          (obj,(int)reactionEntries->reactionMoveId,gObjHitsScalarZero,0);
-      *reactionStepScale = reactionEntries->reactionStepScale;
+          (obj,(int)reactionEntry->reactionMoveId,gObjHitsScalarZero,0);
+      *reactionStepScale = reactionEntry->reactionStepScale;
       reactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
     }
   }
@@ -116,16 +119,16 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
 {
   ObjHitReactState *hitState;
   int obj;
-  int *objectList;
+  int *objectListCursor;
   int stateActive;
   int resetPending;
   int objectListCount;
   int startIndex;
 
-  objectList = (int *)ObjList_GetObjects(&startIndex,&objectListCount);
+  objectListCursor = (int *)ObjList_GetObjects(&startIndex,&objectListCount);
   gObjHitReactResetObjectCount = 0;
   while (objectCount > 0) {
-    obj = *objectList;
+    obj = *objectListCursor;
     hitState = ((ObjAnimComponent *)obj)->hitReactState;
     if (hitState != (ObjHitReactState *)0x0) {
       stateActive = hitState->flags & OBJHITREACT_STATE_ACTIVE;
@@ -141,7 +144,7 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
         }
       }
     }
-    objectList = objectList + 1;
+    objectListCursor = objectListCursor + 1;
     objectCount = objectCount + -1;
   }
 }
@@ -202,7 +205,7 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int
 {
   ObjHitReactMoveEntry *moveEntry;
   int moveEntryShortOffset;
-  s16 firstEntryByteOffset;
+  s16 entryByteOffset;
   ObjHitReactMoveEntry *moveEntryTable;
 
   moveEntryTable = objAnim->modelInstance->hitReactMoveTable;
@@ -212,18 +215,18 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int
     for (moveEntry = moveEntryTable; moveEntry->moveId != -1;) {
       if (moveId == moveEntry->moveId) {
         moveEntry = (ObjHitReactMoveEntry *)((s16 *)moveEntryTable + moveEntryShortOffset);
-        firstEntryByteOffset = moveEntry->firstEntryByteOffset;
+        entryByteOffset = moveEntry->firstEntryByteOffset;
         hitState->activeEntryBytes = moveEntry->entryByteCount;
         if (hitState->activeEntryBytes > hitState->entryByteCapacity) {
           hitState->activeEntryBytes = hitState->entryByteCapacity;
         }
         if (async == 0) {
-          getTabEntry(hitState->entries,OBJHITREACT_ENTRY_TAB_FILE_ID,(int)firstEntryByteOffset,
+          getTabEntry(hitState->entries,OBJHITREACT_ENTRY_TAB_FILE_ID,(int)entryByteOffset,
                       (int)hitState->activeEntryBytes);
           return;
         }
         fileLoadToBufferOffset(OBJHITREACT_ENTRY_TAB_FILE_ID,hitState->entries,
-                               (int)firstEntryByteOffset,(int)hitState->activeEntryBytes);
+                               (int)entryByteOffset,(int)hitState->activeEntryBytes);
         return;
       }
       moveEntry++;
