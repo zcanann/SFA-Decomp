@@ -209,7 +209,7 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,i
  */
 #pragma scheduling off
 #pragma peephole off
-int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
+int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
                               ObjAnimEventList *events)
 {
   ObjAnimComponent *objAnim;
@@ -231,7 +231,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   int eventFrame;
   int eventId;
 
-  objAnim = (ObjAnimComponent *)objAnimArg;
+  objAnim = (ObjAnimComponent *)objAnimHandle;
   wrapped = 0;
   bank = ObjAnim_GetActiveBank(objAnim);
   if (bank->animDef->moveCount == 0) {
@@ -413,7 +413,7 @@ int Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
 #pragma scheduling off
 #pragma peephole off
 int
-Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int moveControlFlags)
+Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveControlFlags)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
@@ -424,7 +424,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int moveControl
   int frameStep;
   ObjAnimMoveData *moveData;
   float eventStepFrames;
-  objAnim = (ObjAnimComponent *)objAnimArg;
+  objAnim = (ObjAnimComponent *)objAnimHandle;
   if (moveProgress > gObjAnimProgressOne) {
     moveProgress = gObjAnimProgressOne;
   }
@@ -761,7 +761,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
  */
 #pragma scheduling off
 #pragma peephole off
-int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
+int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
                                ObjAnimEventList *events)
 {
   ObjAnimComponent *objAnim;
@@ -807,7 +807,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   int eventFrame;
   int eventId;
 
-  objAnim = (ObjAnimComponent *)objAnimArg;
+  objAnim = (ObjAnimComponent *)objAnimHandle;
   wrapped = 0;
   clampedStepScale = gObjAnimMoveStepScaleMin;
   if (!(moveStepScale < gObjAnimMoveStepScaleMin)) {
@@ -1100,7 +1100,7 @@ int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
  */
 #pragma scheduling off
 #pragma peephole off
-int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int moveControlFlags)
+int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int moveControlFlags)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
@@ -1114,7 +1114,7 @@ int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int moveCo
   float eventStepFrames;
   ObjHitReactState *hitState;
 
-  objAnim = (ObjAnimComponent *)objAnimArg;
+  objAnim = (ObjAnimComponent *)objAnimHandle;
   requestedMoveId = moveId;
   if (moveProgress > gObjAnimProgressOne) {
     moveProgress = gObjAnimProgressOne;
@@ -1146,11 +1146,11 @@ int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int moveCo
   state->lastBlendMoveIndex = OBJANIM_BLEND_MOVE_INDEX_INVALID;
   hitState = objAnim->hitReactState;
   if ((hitState != (ObjHitReactState *)0x0) && (hitState->entries != (ObjHitReactEntry *)0x0)) {
-    ObjHitReact_LoadMoveEntries((ObjAnimComponent *)objAnimArg,bank,(int)objAnim->seqId,
+    ObjHitReact_LoadMoveEntries((ObjAnimComponent *)objAnimHandle,bank,(int)objAnim->seqId,
                                 hitState,requestedMoveId,0);
   }
   if (objAnim->eventTable != (ObjAnimEventTable *)0x0) {
-    ObjAnim_LoadMoveEvents((u8 *)objAnimArg,(int)objAnim->seqId,objAnim->eventTable,
+    ObjAnim_LoadMoveEvents((u8 *)objAnimHandle,(int)objAnim->seqId,objAnim->eventTable,
                            requestedMoveId,0);
   }
   previousMove = objAnim->currentMove;
