@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DLL_80209FE0_SHARED_H_
 
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 
@@ -242,7 +243,7 @@ extern int *seqFn_800394a0(void);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int *gRomCurveInterface;
 extern int *gGameUIInterface;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int lbl_80329FA4[];
 extern int lbl_80329FB8[];
 extern s16 lbl_803DC198;

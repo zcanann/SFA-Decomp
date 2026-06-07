@@ -320,7 +320,7 @@ void bossdrakor_updateHeadTracking(int obj, int state)
                     }
                     if (((BossDrakorState *)state)->unk18 > lbl_803E6520) {
                         prm.mode = 45000;
-                        ((EffectInterface *)*gPartfxInterface)->spawnObject(
+                        (*gPartfxInterface)->spawnObject(
                             (void *)obj, 0x7ad, &prm, 1, -1, NULL);
                     }
                 }

@@ -957,7 +957,7 @@ int fn_801E86F4(int obj, int p2, int p3)
   extern void fn_801F4ECC(int obj, int sub);
   extern f32 Curve_EvalBSpline(int p, f32 t, int m);
   extern int getAngle(f32 a, f32 b);
-  extern int *gPartfxInterface;
+  extern EffectInterface **gPartfxInterface;
   extern f32 lbl_803E5A30;
   extern f32 lbl_803E5A60;
   extern f32 timeDelta;
@@ -995,9 +995,9 @@ int fn_801E86F4(int obj, int p2, int p3)
     ((GameObject *)obj)->anim.rotX = (s16)getAngle(
         ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
         ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 415, NULL, 1, -1,
+    (*gPartfxInterface)->spawnObject((void *)obj, 415, NULL, 1, -1,
                                                         NULL);
-    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 416, NULL, 1, -1,
+    (*gPartfxInterface)->spawnObject((void *)obj, 416, NULL, 1, -1,
                                                         NULL);
   }
   break;
@@ -1180,7 +1180,7 @@ extern void *Obj_GetActiveModel(int);
 extern void ObjModel_SetPostRenderCallback(void *, void *);
 extern void ObjGroup_AddObject(int, int);
 extern void fn_801F4C28(int, int);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -1202,7 +1202,7 @@ void shopitem_init(int obj, int data) {
         fn_801F4C28(obj, state);
         break;
     case 0x462:
-        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x3F1, NULL, 4,
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x3F1, NULL, 4,
                                                             -1, NULL);
         break;
     case 0x468:
@@ -1352,9 +1352,9 @@ void shopitem_update(int obj)
                 ((GameObject *)obj)->anim.rotX = (s16)getAngle(
                     ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
                     ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x19F,
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x19F,
                                                                     NULL, 1, -1, NULL);
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x1A0,
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x1A0,
                                                                     NULL, 1, -1, NULL);
                 break;
             }

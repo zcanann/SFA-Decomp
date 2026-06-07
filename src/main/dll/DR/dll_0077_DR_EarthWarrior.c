@@ -1202,7 +1202,7 @@ void DR_EarthWarrior_update(int obj)
             w.mat[0] = c8338;
             w.angles[0] = 2;
             for (j = 2; j != 0; j--) {
-                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x7e6, &w, 0x200001, -1, vecA);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x7e6, &w, 0x200001, -1, vecA);
             }
             p += 0xc;
         }

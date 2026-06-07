@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "global.h"
 #include "main/audio/sfx_ids.h"
@@ -5589,7 +5590,7 @@ extern void getEnvfxAct(int a, int b, int c, int d);
 extern int  Sfx_IsPlayingFromObjectChannel(int obj, int ch);
 extern void Sfx_SetObjectChannelVolume(int obj, int ch, int max, f32 vol);
 extern void PSVECNormalize(f32* out, f32* in);
-extern void** gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E41D8;
 extern f32 lbl_803E41DC;
 extern f32 lbl_803E41E0;
@@ -5716,7 +5717,7 @@ void fn_8019D9F0(int* obj)
                 dir[1] = -dir[1];
                 dir[2] = -dir[2];
                 pay.d = i;
-                ((void (*)(void*, int, void*, int, int, void*))((int*)*gPartfxInterface)[8 / 4])(obj, 0x7f4, &pay, 2, -1, dir);
+                (*gPartfxInterface)->spawnObject(obj, 0x7f4, &pay, 2, -1, dir);
                 dir[0] = *(f32*)p32 - *(f32*)((char*)lbl_803DDB10 + 0xc);
                 dir[1] = lbl_803E41E4;
                 dir[2] = *(f32*)(p32 + 0x20) - *(f32*)((char*)lbl_803DDB10 + 0x14);
@@ -5725,7 +5726,7 @@ void fn_8019D9F0(int* obj)
                 pay.y = lbl_803E41DC;
                 pay.z = lbl_803E41E8;
                 pay.d = i + 3;
-                ((void (*)(void*, int, void*, int, int, void*))((int*)*gPartfxInterface)[8 / 4])(lbl_803DDB10, 0x7f4, &pay, 2, -1, dir);
+                (*gPartfxInterface)->spawnObject(lbl_803DDB10, 0x7f4, &pay, 2, -1, dir);
                 pay.x = *(f32*)p32;
                 pay.y = *(f32*)(p32 + 0x10);
                 pay.z = *(f32*)(p32 + 0x20);
@@ -5748,7 +5749,7 @@ void fn_8019D9F0(int* obj)
         } while (i < 3);
         if (sub->pylonTimer[0] + (sub->pylonTimer[1] + sub->pylonTimer[2]) < 0x12c
             && (int)randomGetRange(0, 3) == 0) {
-            ((void (*)(void*, int, void*, int, int, void*))((int*)*gPartfxInterface)[8 / 4])(obj, 0x81, 0, 0, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, 0x81, 0, 0, -1, 0);
         }
         if (sub->pylonTimer[0] != 0 || sub->pylonTimer[1] != 0 || sub->pylonTimer[2] != 0) {
             if (sub->chime[0] > 0x64) {

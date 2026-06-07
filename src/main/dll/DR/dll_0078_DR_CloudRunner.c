@@ -911,7 +911,7 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
             *(s16 *)((char *)newObj + 0x4) = 0;
             *(s16 *)((char *)newObj + 0x2) = 0;
             *(s16 *)((char *)newObj + 0) = 0;
-            ((EffectInterface *)*gPartfxInterface)->spawnObject(newObj, 0x66, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(newObj, 0x66, NULL, 2, -1, NULL);
         }
     }
     return 0;
@@ -1141,7 +1141,7 @@ void fn_802BF4D8(int obj)
     *(s16 *)((char *)newObj + 0x4) = 0;
     *(s16 *)((char *)newObj + 0x2) = 0;
     *(s16 *)((char *)newObj + 0) = 0;
-    ((EffectInterface *)*gPartfxInterface)->spawnObject(newObj, 0x66, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject(newObj, 0x66, NULL, 2, -1, NULL);
 }
 #pragma peephole reset
 #pragma scheduling reset
