@@ -10450,35 +10450,35 @@ void videoFn_800499e8(void)
 void logGpuHang(void)
 {
     char *strs = (char *)lbl_802CC6A0;
-    int topPerf0, topPerf1, topClks, topClks2;
-    int botPerf0, botPerf1, botClks, botClks2;
+    int topClks, topPerf0, topClks2, topPerf1;
+    int botClks, botPerf0, botClks2, botPerf1;
     u32 xfStuck;
     u32 cmdStuck;
-    int rdIdle;
-    int cmdIdle;
+    u32 rdIdle;
+    u32 cmdIdle;
+    u8 cmdRdy;
+    u8 readIdle;
     u8 fifoErr;
-    char readIdle;
-    char cmdRdy[2];
 
-    GXReadXfRasMetric(&botPerf0, &botClks, &botPerf1, &botClks2);
     GXReadXfRasMetric(&topPerf0, &topClks, &topPerf1, &topClks2);
-    xfStuck = (topClks - botClks) == 0;
-    cmdStuck = (topPerf0 - botPerf0) == 0;
-    rdIdle = (topClks2 - botClks2) != 0;
-    cmdIdle = (topPerf1 - botPerf1) != 0;
-    GXGetGPStatus(&fifoErr, &fifoErr, (u8 *)cmdRdy, (u8 *)&readIdle, &fifoErr);
-    OSReport(strs + 0x4002c, cmdRdy[0], readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
+    GXReadXfRasMetric(&botPerf0, &botClks, &botPerf1, &botClks2);
+    xfStuck = (botClks - topClks) == 0;
+    cmdStuck = (botPerf0 - topPerf0) == 0;
+    rdIdle = (botClks2 - topClks2) != 0;
+    cmdIdle = (botPerf1 - topPerf1) != 0;
+    GXGetGPStatus(&fifoErr, &fifoErr, &cmdRdy, &readIdle, &fifoErr);
+    OSReport(strs + 0x4002c, cmdRdy, readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
     if (cmdStuck == 0 && rdIdle != 0) {
         OSReport(strs + 0x400fc);
     } else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0) {
         OSReport(strs + 0x4011c);
     } else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0) {
         OSReport(strs + 0x40144);
-    } else if (cmdRdy[0] == 0 || readIdle == 0 || xfStuck == 0 || cmdStuck == 0 || rdIdle == 0 ||
-               cmdIdle == 0) {
-        OSReport(strs + 0x4019c);
-    } else {
+    } else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 &&
+               cmdIdle != 0) {
         OSReport(strs + 0x4016c);
+    } else {
+        OSReport(strs + 0x4019c);
     }
 }
 #pragma peephole reset
