@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
+#include "main/objseq.h"
 #include "main/dll/SP/SPshop.h"
 
 
@@ -15,7 +16,7 @@ extern uint countLeadingZeros();
 extern undefined4* DAT_803dd6d8;
 extern int *gGameUIInterface;
 extern int *gScreenTransitionInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern s16 lbl_80327618[];
 extern char sSPShopNumBloopsFormat[];
 extern f32 lbl_803E54B0;
@@ -111,7 +112,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
              *gScreenTransitionInterface) != 0) &&
         ((*(u16 *)((int)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0)) {
       GameBit_Set(0x13f, 1);
-      (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(3, obj, -1);
+      (*gObjectTriggerInterface)->runSequence(3, (void *)obj, -1);
       *(u8 *)(state + 6) = 4;
     }
     break;
@@ -122,7 +123,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     if (((*(int (*)(int))(*(int *)(*gScreenTransitionInterface + 0x14)))(
              *gScreenTransitionInterface) != 0) &&
         ((*(u16 *)((int)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0)) {
-      (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(2, obj, -1);
+      (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
       *(u8 *)(state + 6) = 6;
     }
     break;

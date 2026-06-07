@@ -1,5 +1,6 @@
 #include "main/dll/babycloudrunner.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 extern void objRenderFn_80041018(void);
 extern int  ObjGroup_FindNearestObject(byte type, int obj, float *dist_out);
@@ -8,7 +9,7 @@ extern void GameBit_Set(int eventId, int value);
 extern u32  randomGetRange(int min, int max);
 
 extern f32 lbl_803E384C;
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 typedef struct BabyCloudRunnerPlacement {
   u8 pad00[0x18];
@@ -100,7 +101,7 @@ void dll_FC_update(int obj)
       }
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
       state->rememberedGameBitValue = 1;
-      (*(void (***)(byte, int, int))gObjectTriggerInterface)[0x12](state->triggerId, obj, -1);
+      (*gObjectTriggerInterface)->runSequence(state->triggerId, (void *)obj, -1);
     } else {
       *(u8 *)&state->target->anim.resetHitboxMode |= 0x20;
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x08;

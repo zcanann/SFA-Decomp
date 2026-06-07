@@ -1,5 +1,6 @@
 #include "main/dll/scene1C7.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
+#include "main/objseq.h"
 
 #define DBSH_SHRINE_STATE_WAITING 0
 #define DBSH_SHRINE_STATE_RISING 1
@@ -26,8 +27,6 @@
 #define DBSH_SHRINE_ENVFX_C 0x222
 #define DBSH_SHRINE_IDLE_SFX 0x343
 
-typedef void (*ObjectTriggerRefreshFn)(int triggerId, DbshShrineObject *obj, int arg);
-
 typedef union SceneIntToDouble {
     u64 bits;
     f64 value;
@@ -44,14 +43,14 @@ extern void Sfx_PlayFromObject(DbshShrineObject *obj, int sfxId);
 extern void Music_Trigger(int musicId, int value);
 extern void audioStopByMask(int mask);
 
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern MapEventInterface **gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E50DC;
 extern f64 lbl_803E50D0;
 
 #define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
-    ((ObjectTriggerRefreshFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))((triggerId), (obj), (arg))
+    (*gObjectTriggerInterface)->runSequence((triggerId), (obj), (arg))
 #define MAP_EVENT_GET_ANIM(mapId, eventId) \
     (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \

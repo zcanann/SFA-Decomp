@@ -1,6 +1,7 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 #include "main/dll/ped.h"
 #include "main/dll/dimtruthhornice.h"
 
@@ -14,7 +15,7 @@ extern void GameBit_Set(int eventId, int value);
 extern void objAudioFn_8006ef38(int obj, void *events, int pointCount, void *points,
                                 void *scratch, f32 scaleX, f32 scaleZ);
 
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5210;
 
@@ -103,7 +104,7 @@ void nw_geyser_update(int obj)
     } else {
         Sfx_AddLoopedObjectSound(obj, 0x372);
         Sfx_AddLoopedObjectSound(obj, 0x373);
-        (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         ObjHits_EnableObject(obj);
     }
 }

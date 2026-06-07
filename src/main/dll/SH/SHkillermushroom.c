@@ -4,6 +4,7 @@
 #include "main/dll/dim_bossgut.h"
 #include "main/dll/SH/SHkillermushroom.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -54,7 +55,7 @@ extern f32 lbl_803E5380;
 
 extern u8 lbl_80326D20[];
 extern EffectInterface **gPartfxInterface;
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
@@ -473,7 +474,7 @@ void bombplant_update(void *obj)
   if ((entry[8] & 0x2) != 0) {
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x4) != 0 && GameBit_Get(0x189) == 0) {
-      (*(void (***)(int, void *, int))gObjectTriggerInterface)[18](0, obj, -1);
+      (*gObjectTriggerInterface)->runSequence(0, obj, -1);
       GameBit_Set(0x189, 1);
     }
   } else {

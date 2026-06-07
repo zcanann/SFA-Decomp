@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 
 #pragma peephole off
@@ -39,7 +40,7 @@ extern int randomGetRange(int min, int max);
 extern void bombplantspore_startDriftBurst(void *obj, void *state);
 extern void bombplantspore_updateDrift(void *obj, void *state);
 
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern ExpgfxInterface **gExpgfxInterface;
 extern void *gPathControlInterface;
 extern EffectInterface **gPartfxInterface;
@@ -288,10 +289,10 @@ void bombplantingspot_update(void *obj) {
     if (ObjTrigger_IsSetById(obj, BOMBPLANT_GAME_BIT_AVAILABLE_SPORES) != 0) {
         gameBitDecrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
         GameBit_Set(mapData->plantedGameBit, 1);
-        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](1, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(1, obj, -1);
     } else if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x4) != 0 &&
                GameBit_Get(BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER) == 0) {
-        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](0, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         GameBit_Set(BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER, 1);
     }
 

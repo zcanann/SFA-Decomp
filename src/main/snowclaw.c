@@ -2,6 +2,7 @@
 
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 typedef struct {
     u8 b0 : 1;
     u8 flag6 : 1;
@@ -44,7 +45,7 @@ extern int ObjHits_GetPriorityHit(int *sub, int *hit, int c, int d);
 extern void ObjHits_RecordObjectHit(int *sub, int hit, int c, int d, int e);
 extern void ObjLink_DetachChild(int obj, int *child);
 extern void spawnExplosion(int obj, f32 f, int a, int b, int c, int d, int e, int g, int h);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 mathSinf(f32 a);
 extern f32 mathCosf(f32 a);
 extern u32 lbl_8032A350[8];
@@ -410,9 +411,9 @@ void snowclaw_hitDetect(int obj) {
                     }
                 }
                 if (*(s16 *)((char *)obj + 0x46) == 0x16d || *(s16 *)((char *)obj + 0x46) == 0x170) {
-                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, 1);
+                    (*gObjectTriggerInterface)->runSequence(0, (void *)obj, 1);
                 } else {
-                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, 3);
+                    (*gObjectTriggerInterface)->runSequence(0, (void *)obj, 3);
                 }
                 ((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 = 1;
                 *(f32 *)((char *)inner + 0xac) = lbl_803E670C;
@@ -595,7 +596,7 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
     if (*(s16 *)((char *)obj + 0xb4) != -1 &&
         (*(s16 *)((char *)obj + 0x46) == 0x16d || *(s16 *)((char *)obj + 0x46) == 0x170) &&
         GameBit_Get(0x3a3) != 0) {
-        (*(void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(*(s16 *)((char *)obj + 0xb4));
+        (*gObjectTriggerInterface)->endSequence(*(s16 *)((char *)obj + 0xb4));
         *(f32 *)((char *)inner + 0xac) = lbl_803E66F0;
         return 4;
     }

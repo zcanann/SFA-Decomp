@@ -1,5 +1,6 @@
 #include "main/mapEvent.h"
 #include "main/dll/SP/SPshopkeeper.h"
+#include "main/objseq.h"
 
 #define SHOPKEEPER_THORNTAIL_OBJECT_ID 0x442ff
 #define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2
@@ -14,7 +15,6 @@ typedef struct ShopkeeperObject {
     u16 flagsB0;
 } ShopkeeperObject;
 
-typedef void (*ObjectTriggerRefreshFn)(int triggerId, int obj, int arg);
 typedef void (*ScreenTransitionStartFn)(int transitionId, int value);
 typedef int (*ScreenTransitionFinishedFn)(void);
 
@@ -28,12 +28,12 @@ extern void padClearAnalogInputY(int controller);
 extern void buttonDisable(int controller, int flags);
 extern int playerHasSpell(int obj, int spell);
 
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
 extern MapEventInterface **gMapEventInterface;
 
 #define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
-    ((ObjectTriggerRefreshFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))((triggerId), (obj), (arg))
+    (*gObjectTriggerInterface)->runSequence((triggerId), (void *)(obj), (arg))
 #define SCREEN_TRANSITION_START(transitionId, value) \
     ((ScreenTransitionStartFn)(*(u32 *)(*gScreenTransitionInterface + 0x8)))((transitionId), (value))
 #define SCREEN_TRANSITION_FINISHED() \

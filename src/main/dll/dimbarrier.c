@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 
 extern undefined4 FUN_800067e8();
 extern void* FUN_80017624();
@@ -63,7 +64,7 @@ typedef struct {
 extern void *Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 *a, f32 *b);
 extern EffectInterface **gPartfxInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_802C23B8[];
 
@@ -152,7 +153,7 @@ void ecsh_cup_update(short *obj)
             }
         } else if (mode == 8 && mode != *(int *)(state + 0x24)) {
             if (*(int *)(state + 0x28) == buf[0]) {
-                (*(void (*)(int, short *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
             }
             *(int *)(state + 0x24) = mode;
         } else if (mode == 1 && mode != *(int *)(state + 0x24)) {
@@ -183,7 +184,7 @@ void ecsh_cup_update(short *obj)
                 if (Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)(player + 0x18)) < lbl_803E5088) {
                     (*(void (*)(int))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x30))((u8)*(int *)(state + 0x28));
                     if (*(int *)(state + 0x28) == buf[0]) {
-                        (*(void (*)(int, short *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
+                        (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                     }
                 }
             }

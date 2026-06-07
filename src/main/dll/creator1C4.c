@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/dll/creator1C4.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
@@ -80,7 +81,7 @@ extern int Obj_FreeObject(int obj);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
 extern int Music_Trigger(int id, int value);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
 extern int *gMapEventInterface;
 extern f32 timeDelta;
@@ -168,7 +169,7 @@ void gpsh_shrine_update(int obj)
                     GameBit_Set(0x129, 0);
                     GameBit_Set(0x5af, 0);
                     GameBit_Set(0xdd2, 1);
-                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                     Music_Trigger(0xd8, 1);
                 }
                 break;
@@ -239,7 +240,7 @@ void gpsh_shrine_update(int obj)
                     *(u8 *)((char *)data + 0x14) = 4;
                 } else {
                     audioStopByMask(3);
-                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                     *(u8 *)((char *)data + 0x14) = 4;
                     GameBit_Set(0x36a, 0);
                     ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 0, 1);
