@@ -9075,18 +9075,19 @@ void textureFn_8004ff20(void *p1) {
         {
             int id = lbl_803DCD8C;
             if (p1 != 0) {
+                char *tex = (char *)p1 + 0x20;
                 if (*(u8 *)((char *)p1 + 0x48) != 0) {
-                    GXLoadTexObjPreLoaded((char *)p1 + 0x20, *(void **)((char *)p1 + 0x40), id);
+                    GXLoadTexObjPreLoaded(tex, *(void **)((char *)p1 + 0x40), id);
                 } else {
-                    GXLoadTexObj((char *)p1 + 0x20, id);
+                    GXLoadTexObj(tex, id);
                 }
             }
         }
         lbl_803DCD88 = lbl_803DCD88 + 1;
         lbl_803DCD90 = lbl_803DCD90 + 1;
         lbl_803DCD8C = lbl_803DCD8C + 1;
-        lbl_803DCD69 = lbl_803DCD69 + 1;
-        lbl_803DCD6A = lbl_803DCD6A + 1;
+        lbl_803DCD69 += 1;
+        lbl_803DCD6A += 1;
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 5);
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0xa, 0xb, 0);
@@ -9095,7 +9096,7 @@ void textureFn_8004ff20(void *p1) {
         GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
         GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
         lbl_803DCD90 = lbl_803DCD90 + 1;
-        lbl_803DCD6A = lbl_803DCD6A + 1;
+        lbl_803DCD6A += 1;
     }
 }
 void gxTextureFn_8004bf88(void *bufp, u8 flag1, u8 flag2, int *out1, int *out2) {
