@@ -673,13 +673,13 @@ CamcontrolTriggeredAction *Camera_getCamActionsBinEntry(int actionNo)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_release(void)
+void camcontrol_release(int camAction, int recordSize)
 {
   CamcontrolHandlerEntry *currentHandler;
 
   currentHandler = gCamcontrolCurrentHandler;
   if (currentHandler != NULL) {
-    currentHandler->handler->vtable->actionCallback();
+    currentHandler->handler->vtable->actionCallback(camAction, recordSize);
   }
 }
 

@@ -402,7 +402,8 @@ void voiceConfigureParamRamp(McmdVoiceState *svoice, McmdCommandArgs *cstep, u8 
     s32 mstime;
     s32 width;
 
-    svoice->paramDuration[pi] = width = cstep->flags >> 16;
+    width = cstep->flags >> 16;
+    svoice->paramDuration[pi] = width;
     sndConvertMs(&svoice->paramDuration[pi]);
     mstime = (s8)cstep->value;
     svoice->paramCurrent[pi] = ((u8)(cstep->flags >> 8)) << 16;

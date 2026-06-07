@@ -945,13 +945,12 @@ void Obj_ApplyPendingParentLinks(void) {
     for (i = 0; i < lbl_803DCB84; i++) {
         u8 *obj = ((u8 **)lbl_803DCB88)[i];
         obj[0xaf] &= ~7;
-        {
-            u8 *parent = ((GameObject *)obj)->unkC0;
-            if (parent != NULL && ((GameObject *)obj)->anim.parent == NULL &&
-                *(void **)(parent + 0x30) != NULL) {
-                ((GameObject *)obj)->anim.parent = *(void **)(parent + 0x30);
-                ((GameObject *)obj)->unkC0 = NULL;
+        if (((GameObject *)obj)->unkC0 != NULL) {
+            if (((GameObject *)obj)->anim.parent == NULL &&
+                *(void **)((u8 *)((GameObject *)obj)->unkC0 + 0x30) != NULL) {
+                ((GameObject *)obj)->anim.parent = *(void **)((u8 *)((GameObject *)obj)->unkC0 + 0x30);
             }
+            ((GameObject *)obj)->unkC0 = NULL;
         }
     }
 }
