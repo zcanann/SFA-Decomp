@@ -47,7 +47,6 @@ extern f32 sqrtf(f32 value);
 extern undefined4 DAT_803ad410;
 extern undefined4 DAT_803ad41e;
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;

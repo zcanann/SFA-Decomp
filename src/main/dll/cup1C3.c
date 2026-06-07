@@ -44,7 +44,6 @@ extern f32 Vec_distance(void *a, void *b);
 extern void objUpdateOpacity(int obj);
 
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;

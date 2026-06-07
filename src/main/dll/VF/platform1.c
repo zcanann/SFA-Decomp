@@ -26,7 +26,6 @@ extern u8 *Obj_GetPlayerObject(void);
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6d4;
 extern undefined4 DAT_803de890;
 extern f64 DOUBLE_803e6340;
 extern f32 lbl_803DC074;

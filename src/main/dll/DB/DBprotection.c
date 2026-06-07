@@ -47,7 +47,6 @@ extern f32 mathSinf(f32 x);
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6e4;
 extern undefined4* DAT_803dd72c;
 extern f64 DOUBLE_803e6458;

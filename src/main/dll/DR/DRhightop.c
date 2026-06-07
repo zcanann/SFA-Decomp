@@ -60,7 +60,6 @@ extern undefined4 DAT_803dcd34;
 extern undefined4 DAT_803dcd38;
 extern undefined4 DAT_803dcd3c;
 extern undefined4 DAT_803dcd44;
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd6ec;
 extern undefined4* DAT_803dd708;

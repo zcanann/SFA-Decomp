@@ -30,7 +30,6 @@ extern undefined4 DAT_803dcc48;
 extern undefined4 DAT_803dcc4c;
 extern undefined4 DAT_803dcc50;
 extern undefined4 DAT_803dcc54;
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd72c;
 extern f32 timeDelta;
 extern f32 lbl_803E5418;

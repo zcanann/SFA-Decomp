@@ -62,7 +62,6 @@ extern undefined4 FUN_801da7f8();
 
 extern undefined4 DAT_803dccc8;
 extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e8;
 extern MapEventInterface **DAT_803dd72c;

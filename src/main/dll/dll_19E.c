@@ -30,7 +30,6 @@ extern void *Obj_SetupObject(void *setup, int mode, int mapLayer, int objIndex, 
 extern f32 timeDelta;
 
 extern undefined4 DAT_803dc071;
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6fc;
 extern void* DAT_803de838;
 extern f64 DOUBLE_803e5b38;

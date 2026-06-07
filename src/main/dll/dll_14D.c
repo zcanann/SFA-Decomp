@@ -24,7 +24,6 @@ extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gGameUIInterface;
 extern f32 lbl_803E3854;
-extern undefined4* DAT_803dd6d4;
 extern f32 lbl_803E44E4;
 extern f32 lbl_803E3858;
 extern f32 lbl_803E385C;
