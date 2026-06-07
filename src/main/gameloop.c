@@ -199,7 +199,7 @@ int return0_8002969C(void);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int *lbl_803DCAB4;
+extern void *lbl_803DCAB4;
 extern u8 framesThisStep;
 
 #pragma dont_inline on
@@ -1244,7 +1244,7 @@ void init(void) {
     gTitleMenuLinkInterface = Resource_Acquire(0x3c, 7);
     gPathControlInterface = Resource_Acquire(0x15, 9);
     gMapEventInterface = Resource_Acquire(0x17, 0x24);
-    lbl_803DCAB4 = (int *)Resource_Acquire(0x18, 6);
+    lbl_803DCAB4 = Resource_Acquire(0x18, 6);
     gBaddieControlInterface = Resource_Acquire(0x19, 0x16);
     gMinimapInterface = Resource_Acquire(0x31, 2);
     lbl_803DCAC0 = Resource_Acquire(0x2f, 0xc);
