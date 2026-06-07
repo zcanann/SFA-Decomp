@@ -4382,15 +4382,13 @@ int fn_802ABAE8(int obj, int state, int inner, f32 fv)
             d = 0xccc;
         }
     }
-    {
-        int e = d - (u16)((PlayerState *)inner)->unk4D0;
-        if (e > 0x8000) e -= 0xffff;
-        if (e < -0x8000) e += 0xffff;
-        ((PlayerState *)inner)->unk4D0 = (int)((f32)(int)((PlayerState *)inner)->unk4D0 +
-            interpolate((f32)(int)e, lbl_803E7EB4, timeDelta));
-    }
+    d -= (u16)((PlayerState *)inner)->unk4D0;
+    if (d > 0x8000) d -= 0xffff;
+    if (d < -0x8000) d += 0xffff;
+    ((PlayerState *)inner)->unk4D0 = (f32)(int)((PlayerState *)inner)->unk4D0 +
+        interpolate((f32)(int)d, lbl_803E7EB4, timeDelta);
     near = fn_802AB1D0(obj);
-    if (near != 0 && (((u32)((PlayerState *)inner)->unk3F0 >> 7) & 1) == 0 &&
+    if ((u32)near != 0 && (((u32)((PlayerState *)inner)->unk3F0 >> 7) & 1) == 0 &&
         (((u32)((PlayerState *)inner)->unk3F0 >> 6) & 1) == 0 &&
         (((u32)((PlayerState *)inner)->unk3F0 >> 4) & 1) == 0 &&
         (((u32)((PlayerState *)inner)->unk3F0 >> 5) & 1) == 0) {
@@ -4398,49 +4396,27 @@ int fn_802ABAE8(int obj, int state, int inner, f32 fv)
                                -(*(f32 *)((char *)near + 0x14) - ((GameObject *)obj)->anim.localPosZ)) -
                  (u16)((PlayerState *)inner)->targetYaw;
         f32 t;
-        f32 c;
         f32 f5;
-        f32 lo;
-        f32 hi;
-        f32 fd;
         if (gd > 0x8000) gd -= 0xffff;
         if (gd < -0x8000) gd += 0xffff;
         t = lbl_803E7EE0 - (((PlayerState *)state)->baddie.unk294 - lbl_803E7E9C) /
                               (((PlayerState *)inner)->unk404 - lbl_803E7E9C);
-        if (t >= lbl_803E7EA4) {
-            if (t > lbl_803E7EE0) {
-                c = lbl_803E7EE0;
-            } else {
-                c = t;
-            }
-        } else {
-            c = lbl_803E7EA4;
-        }
-        f5 = lbl_803E80C4 * c + lbl_803E80F4;
-        lo = lbl_803E80F8 * -f5;
-        hi = lbl_803E80F8 * f5;
-        fd = (f32)(int)gd;
-        if (fd >= lo) {
-            if (fd <= hi) {
-                fd = (f32)(int)gd;
-            } else {
-                fd = hi;
-            }
-        } else {
-            fd = lo;
-        }
-        g = (int)fd;
+        f5 = lbl_803E80C4 * ((t < *(f32 *)&lbl_803E7EA4) ? lbl_803E7EA4 : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t)) +
+             lbl_803E80F4;
+        g = (int)(((f32)(int)gd < lbl_803E80F8 * -f5)
+                      ? lbl_803E80F8 * -f5
+                      : (((f32)(int)gd > lbl_803E80F8 * f5) ? lbl_803E80F8 * f5 : (f32)(int)gd));
     } else {
         g = 0;
     }
     {
         int r0;
         int h;
-        if ((((u32)((PlayerState *)inner)->unk3F1 >> 5) & 1) ||
-            (((u32)((PlayerState *)inner)->unk3F0 >> 4) & 1)) {
-            r0 = 0;
-        } else {
+        if (!((((u32)((PlayerState *)inner)->unk3F1 >> 5) & 1) ||
+              (((u32)((PlayerState *)inner)->unk3F0 >> 4) & 1))) {
             r0 = ((PlayerState *)inner)->unk480;
+        } else {
+            r0 = 0;
         }
         if (r0 < -0x28) {
             r0 = -0x28;
@@ -4462,15 +4438,16 @@ int fn_802ABAE8(int obj, int state, int inner, f32 fv)
         } else if (h > 0x16c) {
             h = 0x16c;
         }
-        ((PlayerState *)inner)->unk4D4 = (int)((f32)(int)h * timeDelta +
-            (f32)(int)((PlayerState *)inner)->unk4D4);
+        ((PlayerState *)inner)->unk4D4 = (f32)(int)h * timeDelta +
+            (f32)(int)*(s16 *)((int)inner + 0x4D4);
         ((PlayerState *)inner)->unk4D2 = ((PlayerState *)inner)->unk4D4 / 2;
     }
     {
-        int k = (int)(lbl_803E80F8 * (lbl_803E7ED8 * -fv)) - (u16)((PlayerState *)inner)->unk4D6;
+        int k = (int)(lbl_803E80F8 * (lbl_803E7ED8 * -fv));
+        k -= (u16)((PlayerState *)inner)->unk4D6;
         if (k > 0x8000) k -= 0xffff;
         if (k < -0x8000) k += 0xffff;
-        ((PlayerState *)inner)->unk4D6 = ((PlayerState *)inner)->unk4D6 + k;
+        ((PlayerState *)inner)->unk4D6 = *(s16 *)((int)inner + 0x4D6) + k;
     }
 }
 #pragma peephole reset
