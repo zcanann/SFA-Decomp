@@ -52,7 +52,7 @@ extern undefined4 DAT_803dcbe4;
 extern undefined4 DAT_803dcc1c;
 extern undefined4 DAT_803dcc20;
 extern undefined4 DAT_803dcc24;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd728;
 extern NwMammothGameUiInterface **gGameUIInterface;

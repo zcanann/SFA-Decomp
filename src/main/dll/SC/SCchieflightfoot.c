@@ -32,7 +32,7 @@ extern u8 gSHthorntailPathHeaders[0x30];
 extern u8 gSHthorntailPathData[0x4AC];
 extern undefined4 lbl_803E5410;
 extern EffectInterface **gPartfxInterface;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **DAT_803dd6d4;
 extern undefined4* DAT_803dd728;
 extern MapEventInterface **DAT_803dd72c;
 extern SHthorntailPathControlInterface **gPathControlInterface;

@@ -149,7 +149,7 @@ extern undefined4 DAT_803ad5b4;
 extern undefined4 DAT_803ad5b8;
 extern undefined4 DAT_803ad5bc;
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **DAT_803dd6d4;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
