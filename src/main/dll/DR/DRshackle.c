@@ -71,13 +71,8 @@ int drshackle_updateSwingBlend(int obj, int state)
 
     if (*(f32 *)(state + DRSHACKLE_DISTANCE_FADE_OFFSET) != lbl_803E5AE8) {
         f32 d = fade - lbl_803E5B10;
-        if (d < lbl_803E5AE8) {
-            d = lbl_803E5AE8;
-        }
-        if (d > lbl_803E5B08) {
-            d = lbl_803E5B08;
-        }
-        fade = fade + d;
+        fade = fade + ((d < lbl_803E5AE8) ? lbl_803E5AE8
+                                          : ((d > lbl_803E5B08) ? lbl_803E5B08 : d));
     }
     if (fade < lbl_803E5AE8) {
         fade = lbl_803E5AE8;
@@ -120,14 +115,9 @@ int drshackle_updateSwingBlend(int obj, int state)
 
     {
         f32 fVar1 = *(f32 *)(state + DRSHACKLE_SWING_BLEND_OFFSET);
-        f32 fVar2 = lbl_803E5B70;
-        if (fVar1 < lbl_803E5B70) {
-        } else if (fVar1 > lbl_803E5AEC) {
-            fVar2 = lbl_803E5AEC;
-        } else {
-            fVar2 = fVar1;
-        }
-        *(f32 *)(state + DRSHACKLE_SWING_BLEND_OFFSET) = fVar2;
+        *(f32 *)(state + DRSHACKLE_SWING_BLEND_OFFSET) =
+            (fVar1 < lbl_803E5B70) ? lbl_803E5B70
+                                   : ((fVar1 > lbl_803E5AEC) ? lbl_803E5AEC : fVar1);
     }
 
     {

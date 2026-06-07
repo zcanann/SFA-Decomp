@@ -3313,25 +3313,17 @@ int snowPrintSnowCloud(int arg, int cloudId) {
     GXSetVtxDesc(0xd, 1);
     hudHidden = getHudHiddenFrameCount();
     driftX = lbl_803DF1E4 * (((NewCloud *)p)->unk13E4 - ((NewCloud *)p)->unk13D8);
-    stepX = lbl_803DF214 * ((NewCloud *)p)->unk1378;
-    if (driftX < stepX) {
-    } else {
-        stepX = lbl_803DF214 * ((NewCloud *)p)->unk1390;
-        if (driftX > stepX) {
-        } else {
-            stepX = driftX;
-        }
-    }
+    stepX = (driftX < lbl_803DF214 * ((NewCloud *)p)->unk1378)
+                ? lbl_803DF214 * ((NewCloud *)p)->unk1378
+                : ((driftX > lbl_803DF214 * ((NewCloud *)p)->unk1390)
+                       ? lbl_803DF214 * ((NewCloud *)p)->unk1390
+                       : driftX);
     driftZ = lbl_803DF1E4 * (((NewCloud *)p)->unk13EC - ((NewCloud *)p)->unk13E0);
-    stepZ = lbl_803DF214 * ((NewCloud *)p)->unk1380;
-    if (driftZ < stepZ) {
-    } else {
-        stepZ = lbl_803DF214 * ((NewCloud *)p)->unk13B0;
-        if (driftZ > stepZ) {
-        } else {
-            stepZ = driftZ;
-        }
-    }
+    stepZ = (driftZ < lbl_803DF214 * ((NewCloud *)p)->unk1380)
+                ? lbl_803DF214 * ((NewCloud *)p)->unk1380
+                : ((driftZ > lbl_803DF214 * ((NewCloud *)p)->unk13B0)
+                       ? lbl_803DF214 * ((NewCloud *)p)->unk13B0
+                       : driftZ);
     if (((NewCloud *)p)->unk13F4 == 4) {
         GXBegin(0x90, 4, (u16)(((NewCloud *)p)->unk13FC * 3));
     } else {
