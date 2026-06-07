@@ -7310,22 +7310,24 @@ int fn_8004B148(int *p) {
 }
 
 extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
+#pragma ppc_unroll_speculative off
 int fn_8004B31C(int *param_1, int param_2, int param_3, int param_4, u8 param_5) {
     int i = 0;
     int o4;
     int o8;
-    int n;
     int *node;
     u32 *heap;
-    short s;
+    int s;
     u32 pri;
-    u16 idx;
     int parent;
+    u16 idx;
+    u16 *hh;
+    u16 v;
 
-    *(s16 *)((char *)param_1 + 0x22) = 0;
-    *(s16 *)((char *)param_1 + 0x20) = 0;
-    o4 = 0;
-    o8 = 0;
+    *(s16 *)((char *)param_1 + 0x22) = i;
+    *(s16 *)((char *)param_1 + 0x20) = i;
+    o4 = i;
+    o8 = i;
     for (i = 0; i < 0xf8; i += 8) {
         *(int *)(param_1[1] + o4) = 0;
         *(u8 *)(*param_1 + o8 + 0xe) = 0;
@@ -7346,17 +7348,9 @@ int fn_8004B31C(int *param_1, int param_2, int param_3, int param_4, u8 param_5)
         o4 += 0x40;
         o8 += 0x80;
     }
-    o4 = i * 8;
-    o8 = i * 0x10;
-    n = 0xfe - i;
-    if (i < 0xfe) {
-        do {
-            *(int *)(param_1[1] + o4) = 0;
-            *(u8 *)(*param_1 + o8 + 0xe) = 0;
-            o4 += 8;
-            o8 += 0x10;
-            n += -1;
-        } while (n != 0);
+    for (; i < 0xfe; i++) {
+        *(int *)(param_1[1] + i * 8) = 0;
+        *(u8 *)(*param_1 + i * 16 + 0xe) = 0;
     }
     param_1[6] = param_2;
     param_1[3] = param_3;
@@ -7367,8 +7361,7 @@ int fn_8004B31C(int *param_1, int param_2, int param_3, int param_4, u8 param_5)
     if (s == 0xfe) {
         node = NULL;
     } else {
-        *(s16 *)((char *)param_1 + 0x20) = s + 1;
-        node = (int *)(*param_1 + s * 0x10);
+        node = (int *)(*param_1 + (*(s16 *)((char *)param_1 + 0x20))++ * 0x10);
         *node = param_2;
         node[2] = 0;
         *(u8 *)(node + 3) = 0xff;
@@ -7376,23 +7369,24 @@ int fn_8004B31C(int *param_1, int param_2, int param_3, int param_4, u8 param_5)
     }
     i = node[1] + node[2];
     heap = (u32 *)param_1[1];
-    s = *(s16 *)((char *)param_1 + 0x22) + 1;
-    *(s16 *)((char *)param_1 + 0x22) = s;
-    *(u16 *)(heap + s * 2 + 1) = *(s16 *)((char *)param_1 + 0x20) - 1;
-    heap[*(s16 *)((char *)param_1 + 0x22) * 2] = -1 - i;
+    hh = (u16 *)heap;
+    v = *(s16 *)((char *)param_1 + 0x20) - 1;
+    hh[++(*(s16 *)((char *)param_1 + 0x22)) * 4 + 2] = v;
+    *(u32 *)((int)heap + *(s16 *)((char *)param_1 + 0x22) * 8) = -1 - i;
     i = *(s16 *)((char *)param_1 + 0x22);
-    pri = heap[i * 2];
-    idx = *(u16 *)(heap + i * 2 + 1);
-    *heap = 0xffffffff;
-    while (parent = i >> 1, heap[parent * 2] < pri) {
-        *(u16 *)(heap + i * 2 + 1) = *(u16 *)(heap + parent * 2 + 1);
-        heap[i * 2] = heap[parent * 2];
+    pri = *(u32 *)((int)heap + i * 8);
+    idx = hh[i * 4 + 2];
+    *heap = -1;
+    while (parent = i >> 1, *(u32 *)(hh + parent * 4) < pri) {
+        *(u16 *)((int)heap + i * 8 + 4) = *(u16 *)((int)heap + (int)((long)parent * 8) + 4);
+        *(u32 *)((int)heap + i * 8) = *(u32 *)((int)heap + (int)((long)parent * 8));
         i = parent;
     }
-    heap[i * 2] = pri;
-    *(u16 *)(heap + i * 2 + 1) = idx;
+    *(u32 *)((int)heap + i * 8) = pri;
+    hh[i * 4 + 2] = idx;
     return 0;
 }
+#pragma ppc_unroll_speculative on
 
 void texPreGetMipmap(u32 param_1, int param_2, int *param_3, int *param_4, int param_5, u8 *param_6, int param_7) {
     u32 base = lbl_8035F3E8[0x4f];
