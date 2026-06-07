@@ -160,15 +160,16 @@ int ktrex_animEventCallback(int obj, int p2, u8 *arg) {
 #pragma scheduling reset
 
 #pragma scheduling off
-void ktrex_spawnRandomEnergyArc(int obj, u16 angle, int slot) {
+#pragma dont_inline on
+void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot) {
     int *model;
     f32 point1[3];
     f32 point2[3];
     f32 localPoint[3];
 
-    if (*(void **)((char *)gKTRexState + slot * 4 + 0x17c) != NULL) {
-        mm_free(*(void **)((char *)gKTRexState + slot * 4 + 0x17c));
-        *(void **)((char *)gKTRexState + slot * 4 + 0x17c) = NULL;
+    if (((void **)((char *)gKTRexState + 0x17c))[slot] != NULL) {
+        mm_free(((void **)((char *)gKTRexState + 0x17c))[slot]);
+        ((void **)((char *)gKTRexState + 0x17c))[slot] = NULL;
     }
     model = Obj_GetActiveModel(obj);
     localPoint[0] = lbl_803E67B8;
@@ -186,9 +187,10 @@ void ktrex_spawnRandomEnergyArc(int obj, u16 angle, int slot) {
     point2[0] = point2[0] + playerMapOffsetX;
     point2[2] = point2[2] + playerMapOffsetZ;
 
-    *(void **)((char *)gKTRexState + slot * 4 + 0x17c) =
-        lightningCreate(point1, point2, lbl_803E67B4, lbl_803E67C0, angle, 96, 0);
+    ((void **)((char *)gKTRexState + 0x17c))[slot] =
+        lightningCreate(point1, point2, lbl_803E67B4, lbl_803E67C0, (u16)angle, 96, 0);
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -917,7 +919,7 @@ void ktrex_updateAttackEffects(int obj) {
         Sfx_PlayFromObject(obj, SFXmv_deaththud16);
     }
     if ((((KTRexArenaState *)gKTRexState)->phaseFlags & 0x1000) != 0) {
-        ((KTRexArenaState *)gKTRexState)->phaseFlags &= ~0x1800;
+        ((KTRexArenaState *)gKTRexState)->phaseFlags &= ~0x1800LL;
     }
     if ((((KTRexArenaState *)gKTRexState)->phaseFlags & 0x20000) != 0) {
         Sfx_PlayFromObject(obj, SFXmv_cogstr_c);
@@ -926,8 +928,8 @@ void ktrex_updateAttackEffects(int obj) {
     }
     if ((((KTRexArenaState *)gKTRexState)->timerFA & 0x10) != 0) {
         for (i = 0; i < 5; i++) {
-            if (randomGetRange(0, 5) == 0 && *(int *)((char *)gKTRexState + i * 4 + 0x17c) == 0) {
-                ktrex_spawnRandomEnergyArc(obj, randomGetRange(8, 0xc), i);
+            if ((int)randomGetRange(0, 5) == 0 && *(void **)((char *)gKTRexState + i * 4 + 0x17c) == NULL) {
+                ktrex_spawnRandomEnergyArc(obj, randomGetRange(8, 0xc), lbl_803E6828, i);
             }
         }
     }
@@ -967,7 +969,7 @@ void ktrex_updateAttackEffects(int obj) {
         }
     }
     if ((((KTRexArenaState *)gKTRexState)->phaseFlags & 0x100000) == 0) {
-        ((KTRexArenaState *)gKTRexState)->phaseFlags &= 0x1800;
+        ((KTRexArenaState *)gKTRexState)->phaseFlags &= 0x1800LL;
         return;
     }
     if ((((KTRexArenaState *)gKTRexState)->phaseFlags & 0x1) != 0) {
@@ -1022,7 +1024,7 @@ void ktrex_updateAttackEffects(int obj) {
         (*(void (**)(int, int, void *, int, int, void *))((char *)*gPartfxInterface + 0x8))(
             obj, 0x487, (char *)gKTRexState + 0x10c, 0x200001, -1, (char *)gKTRexState + 0x16c);
     }
-    ((KTRexArenaState *)gKTRexState)->phaseFlags &= 0x1800;
+    ((KTRexArenaState *)gKTRexState)->phaseFlags &= 0x1800LL;
     if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject()) {
         Sfx_PlayFromObject((int)Obj_GetPlayerObject(), SFXbaddie_haga_talk1);
     }
