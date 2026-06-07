@@ -870,7 +870,7 @@ extern f32 lbl_803E7FCC;
 extern void Resource_Release(void *handle);
 extern void showDeathMenu(void);
 extern int lbl_803DE424;
-extern void objRenderFn_8003b8f4(f32 scale);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E8188;
 extern int lbl_80333250[];
 extern int lbl_80333050[];

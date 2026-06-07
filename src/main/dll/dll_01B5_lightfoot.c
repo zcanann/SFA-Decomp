@@ -43,6 +43,7 @@ void lightfoot_release(void)
 #pragma peephole off
 void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
+    extern void objRenderFn_8003b8f4(f32 scale);
     s32 v = visible;
     if (v != 0) {
         if (*(int *)(p1 + 0xf4) == 0) {
