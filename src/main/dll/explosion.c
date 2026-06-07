@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 
@@ -498,7 +499,7 @@ void dll_199_free(int *obj) {
 extern void *Obj_GetPlayerObject(void);
 extern void fn_80296518(void *player, int a, int b);
 extern MapEventInterface **gMapEventInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int getButtonsHeld(int pad);
 extern int return0_8005669C(int p);
 extern int lbl_803DB610;
@@ -611,11 +612,11 @@ int dll_199_SeqFn(int obj, int p2, u8 *p3)
     if (*(u8 *)(st + 0xf) != 7) {
     } else {
         if ((getButtonsHeld(0) & 0x100) != 0) {
-            (**(void (**)(int))(*gObjectTriggerInterface + 0x4c))((s8)*(u8 *)(p3 + 0x57));
+            (*gObjectTriggerInterface)->endSequence((s8)*(u8 *)(p3 + 0x57));
             *(u8 *)(st + 0xf) = 8;
             *(s16 *)(st + 2) = 0;
         } else if ((getButtonsHeld(0) & 0x200) != 0) {
-            (**(void (**)(int))(*gObjectTriggerInterface + 0x4c))((s8)*(u8 *)(p3 + 0x57));
+            (*gObjectTriggerInterface)->endSequence((s8)*(u8 *)(p3 + 0x57));
             *(u8 *)(st + 0xf) = 7;
             *(s16 *)(st + 2) = 0;
         }

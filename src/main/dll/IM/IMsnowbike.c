@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
+#include "main/objseq.h"
 #include "main/dll/IM/IMsnowbike.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
@@ -24,7 +25,7 @@ extern void SH_LevelControl_doEarlyScenes(int param_1, uint *param_2);
 extern void objRenderFn_8003b8f4(f32);
 
 extern MapEventInterface **gMapEventInterface;
-extern undefined4 *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 lbl_803E54B4;
 extern f32 lbl_803E54C8;
 extern f32 timeDelta;
@@ -157,7 +158,7 @@ void sh_levelcontrol_update(int param_1)
         buttonDisable(0, 0x1000);
         iVar1 = Obj_GetPlayerObject();
         if ((*(ushort *)(iVar1 + 0xb0) & 0x1000) == 0) {
-          (*(code *)(*gObjectTriggerInterface + 0x48))(7, param_1, 0xffffffff);
+          (*gObjectTriggerInterface)->runSequence(7, (void *)param_1, 0xffffffff);
           GameBit_Set(0xdff, 1);
         }
       }
@@ -216,7 +217,7 @@ void sh_levelcontrol_update(int param_1)
         buttonDisable(0, 0x1000);
         iVar1 = Obj_GetPlayerObject();
         if ((*(ushort *)(iVar1 + 0xb0) & 0x1000) == 0) {
-          (*(code *)(*gObjectTriggerInterface + 0x48))(4, param_1, 0xffffffff);
+          (*gObjectTriggerInterface)->runSequence(4, (void *)param_1, 0xffffffff);
           GameBit_Set(0x177, 1);
         }
       }

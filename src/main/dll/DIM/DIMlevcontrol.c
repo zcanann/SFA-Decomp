@@ -3,6 +3,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
+#include "main/objseq.h"
 #include "main/objhits_types.h"
 #include "main/resource.h"
 
@@ -517,7 +518,7 @@ void dimlavasmash_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling off
 #pragma peephole off
 void dimlavasmash_update(int *obj) {
-    extern int *gObjectTriggerInterface;
+    extern ObjectTriggerInterface **gObjectTriggerInterface;
     u8 *sub;
     int *p;
     sub = ((GameObject *)obj)->extra;
@@ -526,7 +527,7 @@ void dimlavasmash_update(int *obj) {
         *(s16*)((char*)p + 0x60) = (s16)(*(s16*)((char*)p + 0x60) & ~1);
     } else if (((GameObject *)obj)->unkF4 == 0) {
         if ((s8)sub[0] != -1) {
-            ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])((s8)sub[0], obj, -1);
+            (*gObjectTriggerInterface)->runSequence((s8)sub[0], obj, -1);
         }
         ((GameObject *)obj)->unkF4 = 1;
     }
@@ -769,7 +770,7 @@ extern void buttonDisable(int chan, int mask);
 extern u8  framesThisStep;
 extern f32 timeDelta;
 extern int *gCameraInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int lbl_803DBF10;
 extern int lbl_803DBF0C;
 extern f32 lbl_803E48EC;
@@ -824,7 +825,7 @@ void dimcannon_update(int *obj)
                 0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
             buttonDisable(0, 0x100);
             ((DimCannonState *)state)->fireState = 3;
-            (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
             *(u8 *)&((DimCannonState *)state)->unkB0 = 0x3c;
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
         }
