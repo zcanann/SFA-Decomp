@@ -1,16 +1,6 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/expgfx_internal.h"
 
-/*
- * expgfx_acquireResourceEntry is still written through word indexing because
- * that shape is much closer to the target codegen. These indices mirror
- * ExpgfxResourceEntry and keep the resource-table roles explicit.
- */
-#define EXPGFX_RESOURCE_ENTRY_WORD_COUNT (sizeof(ExpgfxResourceEntry) / sizeof(int))
-#define EXPGFX_RESOURCE_ENTRY_RESOURCE_WORD 0
-#define EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD 1
-#define EXPGFX_RESOURCE_ENTRY_RESOURCE_ID_WORD 2
-
 #pragma scheduling off
 #pragma peephole off
 void expgfx_updateResourceEntries(int unused) {
@@ -41,83 +31,72 @@ void expgfx_updateResourceEntries(int unused) {
 #pragma scheduling off
 #pragma peephole off
 int expgfx_acquireResourceEntry(int resourceId) {
+    ExpgfxResourceEntry *entry;
+    ExpgfxResourceEntry *resourceTable;
     int minEvictionScore;
     int minIndex;
     int i;
-    int *entryWords;
-    int *resourceTableWords;
     void *texture;
 
     i = 0;
-    resourceTableWords = gExpgfxRuntimeData;
-    entryWords = resourceTableWords;
+    resourceTable = EXPGFX_RUNTIME_DATA->resourceTable;
     for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        if (*(void **)entryWords != NULL &&
-            resourceId == entryWords[EXPGFX_RESOURCE_ENTRY_RESOURCE_ID_WORD]) {
-            texture = *(void **)&gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT];
+        entry = &resourceTable[i];
+        if (entry->resource != NULL && resourceId == entry->resourceId) {
+            texture = entry->resource;
             if (texture != NULL && *(u16 *)((char *)texture + EXPGFX_RESOURCE_HANDLE_REFCOUNT_OFFSET) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
                 return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
             }
-            gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT +
-                               EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD] =
-                EXPGFX_RESOURCE_EVICTION_RESET;
+            entry->evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
             return (s16)i;
         }
-        entryWords += EXPGFX_RESOURCE_ENTRY_WORD_COUNT;
     }
-    entryWords = resourceTableWords;
     for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        if (*(void **)entryWords == NULL) {
-            gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT] = textureLoadAsset(resourceId);
-            texture = *(void **)&gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT];
+        entry = &resourceTable[i];
+        if (entry->resource == NULL) {
+            entry->resource = (void *)textureLoadAsset(resourceId);
+            texture = entry->resource;
             if (texture != NULL && *(u16 *)((char *)texture + EXPGFX_RESOURCE_HANDLE_REFCOUNT_OFFSET) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
                 gExpgfxTextureFreeInProgress = 1;
                 if (texture != NULL) {
                     textureFree((int)texture);
                 }
                 gExpgfxTextureFreeInProgress = 0;
-                gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT] = 0;
+                entry->resource = NULL;
                 return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
             }
             if (texture != NULL) {
-                gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT +
-                                   EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD] =
-                    EXPGFX_RESOURCE_EVICTION_RESET;
-                gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT +
-                                   EXPGFX_RESOURCE_ENTRY_RESOURCE_ID_WORD] = resourceId;
+                entry->evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
+                entry->resourceId = resourceId;
                 return (s16)i;
             }
             return EXPGFX_RESOURCE_ACQUIRE_LOAD_FAILED;
         }
-        entryWords += EXPGFX_RESOURCE_ENTRY_WORD_COUNT;
     }
     if (Obj_IsLoadingLocked() == 0) {
         return EXPGFX_RESOURCE_ACQUIRE_LOADING_UNLOCKED;
     }
     minEvictionScore = EXPGFX_RESOURCE_EVICTION_SCAN_INITIAL;
     minIndex = 0;
-    entryWords = resourceTableWords;
     for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        if (entryWords[EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD] < minEvictionScore) {
-            minEvictionScore = entryWords[EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD];
+        entry = &resourceTable[i];
+        if (entry->evictionScore < minEvictionScore) {
+            minEvictionScore = entry->evictionScore;
             minIndex = i;
         }
-        entryWords += EXPGFX_RESOURCE_ENTRY_WORD_COUNT;
     }
+    entry = &resourceTable[minIndex];
     gExpgfxTextureFreeInProgress = 1;
-    texture = *(void **)&gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT];
+    texture = entry->resource;
     if (texture != NULL) {
         textureFree((int)texture);
     }
     gExpgfxTextureFreeInProgress = 0;
-    gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT] = 0;
-    gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT] = textureLoadAsset(resourceId);
-    if (*(void **)&gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT] != NULL) {
-        gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT +
-                           EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD] =
-            EXPGFX_RESOURCE_EVICTION_RESET;
-        gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT +
-                           EXPGFX_RESOURCE_ENTRY_RESOURCE_ID_WORD] = resourceId;
+    entry->resource = NULL;
+    entry->resource = (void *)textureLoadAsset(resourceId);
+    if (entry->resource != NULL) {
+        entry->evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
+        entry->resourceId = resourceId;
         return (s16)minIndex;
     }
     return EXPGFX_RESOURCE_ACQUIRE_RELOAD_FAILED;
