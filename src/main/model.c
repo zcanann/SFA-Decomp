@@ -1567,6 +1567,8 @@ void modelAnimUpdateChannels(u8 *hdr, u8 *stk, int n)
 }
 
 #pragma peephole off
+#pragma ppc_unroll_factor_limit 8
+#pragma ppc_unroll_instructions_limit 256
 void modelWalkAnimFn_800248b8(u8 *a, u8 *b, u8 *c, int d, f32 e)
 {
     u8 stk[0x64];
@@ -1693,6 +1695,8 @@ void modelWalkAnimFn_800248b8(u8 *a, u8 *b, u8 *c, int d, f32 e)
         }
     }
 }
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 96
 #pragma dont_inline reset
 #pragma pop
 
