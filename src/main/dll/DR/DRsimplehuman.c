@@ -533,13 +533,13 @@ void fn_801E991C(int p1, char *table)
     p = table;
     for (i = 0; i < 9; i++) {
         if (((*(u8 *)(p + 0x4ce) & 1) != 0) && (*(s16 *)(p + 0x4cc) >= 4)) {
-            int j;
+            int j = 0;
             f32 *verts;
             f32 u1, u0;
             verts = *(f32 **)(p + 0x4c8);
             u0 = lbl_803E5AE8;
             u1 = lbl_803E5AEC;
-            for (j = 0; j < *(s16 *)(p + 0x4cc) - 2; j += 2) {
+            for (; j < *(s16 *)(p + 0x4cc) - 2; j += 2) {
                 GXBegin(0x80, 2, 4);
                 shPos3f32(verts[0] - playerMapOffsetX, verts[0+1], verts[0+2] - playerMapOffsetZ);
                 shColor4u8(r, g, b, (u8)*(s16 *)((char *)verts + 0xc));
