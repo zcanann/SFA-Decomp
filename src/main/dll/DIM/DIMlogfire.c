@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
@@ -900,7 +901,7 @@ void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
 extern int *gGameUIInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 #pragma scheduling off
@@ -914,7 +915,7 @@ void animsharpclaw_free(int obj) {
         ObjLink_DetachChild(obj, (int)child);
         Obj_FreeObject((int)child);
     }
-    (*(void (*)(char *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
+    (*gObjectTriggerInterface)->freeState((u8 *)inner);
     (*(void (*)(int, int, int, int, int))(*(int *)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
 }
@@ -996,7 +997,7 @@ void ccgasventcontrol_update(int obj)
     }
     case 1:
         if (GameBit_Get(0x3ec) != 0) {
-            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
             *(u8 *)ex = 2;
         }
         break;
@@ -1031,7 +1032,7 @@ void ccgasventcontrol_update(int obj)
                 ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)player + 0xc);
                 ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)player + 0x10);
                 ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)player + 0x14);
-                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
                 *(u8 *)ex = 4;
             }
@@ -1172,7 +1173,7 @@ void MoonSeedPlantingSpot_update(int obj)
             if (cnt != 0) {
                 ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc);
                 ((GameObject *)obj)->anim.alpha = 0;
-                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 GameBit_Set(0x86a, cnt - 1);
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             }
@@ -1407,12 +1408,12 @@ void animsharpclaw_init(int *obj, u8 *init) {
     ((GameObject *)obj)->unkF8 = -1;
     f4 = ((GameObject *)obj)->unkF4;
     if (f4 == 0 && *(s16 *)((char *)init + 0x18) != 1) {
-        (*(void (*)(int *, u8 *))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, init);
+        (*gObjectTriggerInterface)->loadAnimData((u8 *)inner, init);
         ((GameObject *)obj)->unkF4 = *(s16 *)((char *)init + 0x18) + 1;
     } else if (f4 != 0 && *(s16 *)((char *)init + 0x18) != f4 - 1) {
-        (*(void (*)(int *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
+        (*gObjectTriggerInterface)->freeState((u8 *)inner);
         if (*(s16 *)((char *)init + 0x18) != -1) {
-            (*(void (*)(int *, u8 *))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, init);
+            (*gObjectTriggerInterface)->loadAnimData((u8 *)inner, init);
         }
         ((GameObject *)obj)->unkF4 = *(s16 *)((char *)init + 0x18) + 1;
     }
@@ -1447,7 +1448,7 @@ void animsharpclaw_update(int *obj) {
     if (*(s16 *)((char *)child + 0x18) == -1) {
         return;
     }
-    result = (*(int (*)(int *, f32))(*(int *)(*gObjectTriggerInterface + 0x14)))(obj, (f32)(u32)framesThisStep);
+    result = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)framesThisStep);
     fn_801A8F88((int)obj, (int)inner);
     if (result == 0) {
         return;
@@ -1471,7 +1472,7 @@ void animsharpclaw_update(int *obj) {
     }
     if (matchCount <= 1 && found != NULL && *(s16 *)((char *)found + 0xb4) != -1) {
         *(s16 *)((char *)found + 0xb4) = -1;
-        (*(void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(kind);
+        (*gObjectTriggerInterface)->endSequence(kind);
     }
     ((GameObject *)obj)->unkB4 = -1;
 }

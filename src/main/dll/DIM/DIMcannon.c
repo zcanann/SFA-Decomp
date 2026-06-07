@@ -5,6 +5,7 @@
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 #include "global.h"
 
 /* imanimspacecraft_getExtraSize == 0x4. */
@@ -2298,7 +2299,7 @@ extern MapEventInterface **gMapEventInterface;
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern int *getTrickyObject(void);
 extern void fn_80138908(int *tricky, int mode);
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E47C8;
 
@@ -2391,7 +2392,7 @@ void linkb_levcontrol_update(int *obj) {
         case 0:
             if (GameBit_Get(0x384) != 0) {
                 fn_80138908(tricky, 1);
-                ((void (*)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[18])(state->stage, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                 state->stage++;
                 state->low = 0;
                 return;
@@ -2402,7 +2403,7 @@ void linkb_levcontrol_update(int *obj) {
                 if (!(*(u16 *)((char *)player + 0xb0) & 0x1000)) {
                     GameBit_Set(0x385, 1);
                     fn_80138908(tricky, 1);
-                    ((void (*)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[18])(state->stage, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                     state->stage++;
                     state->low = 0;
                     return;
@@ -2414,7 +2415,7 @@ void linkb_levcontrol_update(int *obj) {
                 fn_80138908(tricky, 1);
                 if (state->cnt-- == -1 && !(*(u16 *)((char *)tricky + 0xb0) & 0x1000)) {
                     GameBit_Set(0x386, 1);
-                    ((void (*)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[18])(state->stage, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                     state->stage++;
                     state->low = 0;
                     return;
@@ -2434,7 +2435,7 @@ void linkb_levcontrol_update(int *obj) {
             if (state->flag5 != 0) {
                 GameBit_Set(0x387, 1);
                 fn_80138908(tricky, 1);
-                ((void (*)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[18])(state->stage, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                 state->stage++;
                 state->low = 0;
                 return;
@@ -2443,7 +2444,7 @@ void linkb_levcontrol_update(int *obj) {
         case 4:
             if (GameBit_Get(0x543) != 0) {
                 fn_80138908(tricky, 1);
-                ((void (*)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[18])(state->stage, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                 state->stage++;
                 state->low = 0;
                 return;
