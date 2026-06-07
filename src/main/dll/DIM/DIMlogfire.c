@@ -273,7 +273,7 @@ void FUN_801a9614(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     uVar3 = ObjLink_DetachChild(param_9,iVar1);
     FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1);
   }
-  (**(code **)(*DAT_803dd6d4 + 0x24))(uVar2);
+  ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState((u8 *)uVar2);
   (**(code **)(*DAT_803dd6f4 + 8))(param_9,0xffff,0,0,0);
   FUN_8000680c(param_9,0x7f);
   return;
@@ -352,7 +352,7 @@ void FUN_801a9758(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       if (((iVar3 < 2) && (iVar4 != 0)) && (*(short *)(iVar4 + 0xb4) != -1)) {
         *(undefined2 *)(iVar4 + 0xb4) = 0xffff;
-        (**(code **)(*DAT_803dd6d4 + 0x4c))(iVar5);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->endSequence(iVar5);
       }
       *(undefined2 *)(param_9 + 0xb4) = 0xffff;
     }
@@ -393,13 +393,13 @@ void FUN_801a9ab4(int param_1,int param_2)
   *(undefined4 *)(param_1 + 0xf8) = 0xffffffff;
   iVar1 = *(int *)(param_1 + 0xf4);
   if ((iVar1 == 0) && (*(short *)(param_2 + 0x18) != 1)) {
-    (**(code **)(*DAT_803dd6d4 + 0x1c))(iVar2,param_2);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
   else if ((iVar1 != 0) && ((int)*(short *)(param_2 + 0x18) != iVar1 + -1)) {
-    (**(code **)(*DAT_803dd6d4 + 0x24))(iVar2);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState((u8 *)iVar2);
     if (*(short *)(param_2 + 0x18) != -1) {
-      (**(code **)(*DAT_803dd6d4 + 0x1c))(iVar2,param_2);
+      ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     }
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }

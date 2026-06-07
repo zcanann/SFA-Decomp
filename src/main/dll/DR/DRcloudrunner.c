@@ -1,6 +1,7 @@
 #include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 
 extern u32 GameBit_Get(int id);
 extern void GameBit_Set(int id, int value);
@@ -394,7 +395,7 @@ int sc_cloudrunnera_getObjectTypeId(void) { return 0xb; }
 void sc_cloudrunnera_free(int *obj)
 {
     void *inner = ((GameObject *)obj)->extra;
-    ((void (*)(void *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
+    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->freeState(inner);
     ((void (*)(int *, int, int, int, int))(*(int *)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
 }
 #pragma peephole reset
@@ -449,7 +450,7 @@ void sc_cloudrunnera_update(int obj)
         }
         if (matchCount <= 1 && (u32)found != 0 && *(s16 *)(found + 0xb4) != -1) {
             *(s16 *)(found + 0xb4) = -1;
-            ((void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(markCopy);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->endSequence(markCopy);
         }
         ((GameObject *)obj)->unkB4 = -1;
     }
@@ -530,12 +531,14 @@ void sc_cloudrunnera_init(int obj, int p2)
     *(int *)(obj + 0xf8) = 0;
 
     if (*(int *)(obj + 0xf4) == 0 && *(s16 *)(p2 + 0x18) != 1) {
-        ((void (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, p2);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+            ->loadAnimData((u8 *)inner, (u8 *)p2);
         *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
     } else if (*(int *)(obj + 0xf4) != 0 && *(s16 *)(p2 + 0x18) != *(int *)(obj + 0xf4) - 1) {
-        ((void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->freeState((u8 *)inner);
         if (*(s16 *)(p2 + 0x18) != -1) {
-            ((void (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, p2);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                ->loadAnimData((u8 *)inner, (u8 *)p2);
         }
         *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
     }
