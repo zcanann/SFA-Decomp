@@ -1119,7 +1119,7 @@ extern int ObjModel_GetRenderOp(int model, int idx);
 extern void lightningRender(void* particle);
 extern int getHudHiddenFrameCount(void);
 extern f32 vec3f_distanceSquared(void* a, void* b);
-extern int lightningCreate(double radiusX, double radiusY, float* start, float* end, int param_5, int param_6, int param_7);
+extern int lightningCreate(float *start, float *end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
 extern f32 lbl_803E3CC8;
 extern f32 lbl_803E3CCC;
 extern f32 lbl_803E3CD0;
@@ -1227,7 +1227,7 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
                     pos[1] = scale * (f32)((int)randomGetRange(0, 2000) - 1000) + pos[1];
                     pos[2] = scale * (f32)((int)randomGetRange(0, 2000) - 1000) + pos[2];
                 }
-                *(int*)(slot + 8) = lightningCreate(angle, lbl_803E3CF4, ((GameObjPos*)obj)->pos, pos, 0x14, mode, 0);
+                *(int*)(slot + 8) = lightningCreate(((GameObjPos*)obj)->pos, pos, angle, lbl_803E3CF4, 0x14, mode, 0);
                 *(f32*)(slot + 0x34) = lbl_803E3CF8;
                 spawned = 1;
             }

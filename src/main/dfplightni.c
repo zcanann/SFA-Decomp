@@ -3,7 +3,7 @@
 
 extern int ObjHits_GetPriorityHit(u8 *obj,int *out,int param_3,int param_4);
 extern void lightningRender(u32 handle);
-extern int lightningCreate(double radiusX,double radiusY,float *start,float *end,int param_5,int param_6,int param_7);
+extern void *lightningCreate(f32 *start, f32 *end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
 
 extern DfpPowerSlEffectInterface **gPartfxInterface;
 extern f32 timeDelta;
@@ -90,8 +90,8 @@ void dfplightni_update(DfpLightniObject *obj)
   int eventActive;
   u32 eventBlocked;
   DfpLightniState *state;
-  double radiusX;
-  double radiusY;
+  f32 radiusX;
+  f32 radiusY;
   float *effectStart;
   float *effectEnd;
   float start[3];
@@ -133,35 +133,35 @@ void dfplightni_update(DfpLightniObject *obj)
           mm_free(state->effectHandle);
           state->effectHandle = 0;
         }
-        radiusX = (double)state->radiusX;
-        radiusY = (double)state->radiusY;
+        radiusX = state->radiusX;
+        radiusY = state->radiusY;
         eventBlocked = GameBit_Get(DFPLIGHTNI_BLOCKED_GAMEBIT);
         if (eventBlocked == 0) {
-          double clampX;
-          double clampY;
+          f32 clampX;
+          f32 clampY;
           Sfx_PlayFromObjectLimited(obj,DFPLIGHTNI_SFX_ID,DFPLIGHTNI_SFX_MAX_COUNT);
           if (eventActive != 0) {
-            clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : (radiusY > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusY;
+            clampY = (radiusY < lbl_803E6500) ? lbl_803E6500
+                       : (radiusY > lbl_803E6504) ? lbl_803E6504 : radiusY;
             effectStart = start;
             effectEnd = end;
-            clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
+            clampX = (radiusX < *(f32 *)&lbl_803E6500) ? *(f32 *)&lbl_803E6500
+                       : (radiusX > *(f32 *)&lbl_803E6504) ? *(f32 *)&lbl_803E6504 : radiusX;
             state->effectHandle =
-                lightningCreate(clampX,clampY,effectStart,effectEnd,
+                (int)lightningCreate(effectStart,effectEnd,clampX,clampY,
                             DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
                                 DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
           }
           else {
-            clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : (radiusY > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusY;
+            clampY = (radiusY < lbl_803E6500) ? lbl_803E6500
+                       : (radiusY > lbl_803E6504) ? lbl_803E6504 : radiusY;
             effectStart = start;
             effectEnd = end;
-            clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
+            clampX = (radiusX < *(f32 *)&lbl_803E6500) ? *(f32 *)&lbl_803E6500
+                       : (radiusX > *(f32 *)&lbl_803E6504) ? *(f32 *)&lbl_803E6504 : radiusX;
             state->effectHandle =
-                lightningCreate(clampX,clampY,effectStart,effectEnd,(u16)state->delayFrames,
+                (int)lightningCreate(effectStart,effectEnd,clampX,clampY,(u16)state->delayFrames,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
                                 DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
           }
