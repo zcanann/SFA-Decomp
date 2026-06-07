@@ -4487,14 +4487,14 @@ void dll_F7_free(int obj)
 }
 #pragma scheduling reset
 
-extern void *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gTitleMenuControlInterfaceCopy;
 extern void Sfx_StopObjectChannel(int *obj, int channel);
 
 #pragma scheduling off
 #pragma peephole off
 void dim2roofrub_free(int *obj) {
-    ((ObjectTriggerInterface *)*(void **)gObjectTriggerInterface)
+    (*gObjectTriggerInterface)
         ->freeState(((GameObject *)obj)->extra);
     ((void(*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
@@ -5378,7 +5378,7 @@ extern void Sfx_RemoveLoopedObjectSoundForObject(int *obj);
 extern void clearCurSeqNo(void);
 void animatedobj_free(int *obj, int seqFlag)
 {
-    ((ObjectTriggerInterface *)*(void **)gObjectTriggerInterface)
+    (*gObjectTriggerInterface)
         ->freeState(((GameObject *)obj)->extra);
     ((void (*)(int *, int, int, int, int))((void **)*(void **)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
     Sfx_RemoveLoopedObjectSoundForObject(obj);
@@ -5616,13 +5616,13 @@ void dim2roofrub_init(int *obj, int *params)
     ((GameObject *)obj)->unkF8 = 0;
     f4 = ((GameObject *)obj)->unkF4;
     if (f4 == 0 && *(s16 *)((char *)params + 0x18) != 1) {
-        ((ObjectTriggerInterface *)*(void **)gObjectTriggerInterface)
+        (*gObjectTriggerInterface)
             ->loadAnimData((u8 *)state, (u8 *)params);
         ((GameObject *)obj)->unkF4 = *(s16 *)((char *)params + 0x18) + 1;
     } else if (f4 != 0 && *(s16 *)((char *)params + 0x18) != f4 - 1) {
-        ((ObjectTriggerInterface *)*(void **)gObjectTriggerInterface)->freeState((u8 *)state);
+        (*gObjectTriggerInterface)->freeState((u8 *)state);
         if (*(s16 *)((char *)params + 0x18) != -1) {
-            ((ObjectTriggerInterface *)*(void **)gObjectTriggerInterface)
+            (*gObjectTriggerInterface)
                 ->loadAnimData((u8 *)state, (u8 *)params);
         }
         ((GameObject *)obj)->unkF4 = *(s16 *)((char *)params + 0x18) + 1;
@@ -5658,13 +5658,13 @@ void animatedobj_init(int *obj, int *params)
     *(int *)((char *)state + 0xe8) = 0;
     f4 = ((GameObject *)obj)->unkF4;
     if (f4 == 0 && *(s16 *)((char *)params + 0x18) != 1) {
-        ((ObjectTriggerInterface *)*(void **)gObjectTriggerInterface)
+        (*gObjectTriggerInterface)
             ->loadAnimData((u8 *)state, (u8 *)params);
         ((GameObject *)obj)->unkF4 = *(s16 *)((char *)params + 0x18) + 1;
     } else if (f4 != 0 && *(s16 *)((char *)params + 0x18) != f4 - 1) {
-        ((ObjectTriggerInterface *)*(void **)gObjectTriggerInterface)->freeState((u8 *)state);
+        (*gObjectTriggerInterface)->freeState((u8 *)state);
         if (*(s16 *)((char *)params + 0x18) != -1) {
-            ((ObjectTriggerInterface *)*(void **)gObjectTriggerInterface)
+            (*gObjectTriggerInterface)
                 ->loadAnimData((u8 *)state, (u8 *)params);
         }
         ((GameObject *)obj)->unkF4 = *(s16 *)((char *)params + 0x18) + 1;
@@ -5984,7 +5984,7 @@ void animatedobj_update(int *obj)
     if (params != NULL && *(s16 *)((char *)params + 0x18) != -1) {
         int res;
         int count;
-        res = ((int (*)(f32))((int *)*(int **)gObjectTriggerInterface)[0x14 / 4])(timeDelta);
+        res = (*gObjectTriggerInterface)->update((u8 *)obj, timeDelta);
         if (res != 0 && ((GameObject *)obj)->unkB4 == -2) {
             int slot8 = *(s8 *)(state + 0x57);
             int *match = NULL;
@@ -6009,7 +6009,7 @@ void animatedobj_update(int *obj)
             }
             if (cnt <= 1 && match != NULL && *(s16 *)((char *)match + 0xb4) != -1) {
                 *(s16 *)((char *)match + 0xb4) = -1;
-                ((ObjectTriggerInterface *)*(void **)gObjectTriggerInterface)->endSequence(slot);
+                (*gObjectTriggerInterface)->endSequence(slot);
             }
             ((GameObject *)obj)->unkB4 = -1;
             ((GameObject *)obj)->objectFlags |= 0x8000;
@@ -6291,7 +6291,7 @@ void dim2roofrub_update(int *obj)
             }
             }
         }
-        res = ((int (*)(int *, f32))((int *)*(int **)gObjectTriggerInterface)[0x14 / 4])(obj, timeDelta);
+        res = (*gObjectTriggerInterface)->update((u8 *)obj, timeDelta);
         if (res != 0 && ((GameObject *)obj)->unkB4 == -2) {
             int slot8 = *(s8 *)(state + 0x57);
             int *match = NULL;
@@ -6315,7 +6315,7 @@ void dim2roofrub_update(int *obj)
             }
             if (cnt <= 1 && match != NULL && *(s16 *)((char *)match + 0xb4) != -1) {
                 *(s16 *)((char *)match + 0xb4) = -1;
-                ((ObjectTriggerInterface *)*(void **)gObjectTriggerInterface)->endSequence(slot);
+                (*gObjectTriggerInterface)->endSequence(slot);
             }
             ((GameObject *)obj)->unkB4 = -1;
         }
