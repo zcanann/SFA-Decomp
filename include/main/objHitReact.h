@@ -42,6 +42,14 @@ typedef struct ObjHitReactMoveEntry {
   s16 entryByteCount;
 } ObjHitReactMoveEntry;
 
+extern ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs;
+extern char sObjHitReactHitstateFrameString[];
+extern char sObjHitReactSphereOverflowString[];
+extern char sObjHitReactResetString[7];
+extern f32 gObjHitReactAltEffectScale;
+extern int gObjHitReactResetObjectCount;
+extern ObjAnimComponent **gObjHitReactResetObjects;
+
 #define OBJHITREACT_MAX_RESET_OBJECTS 0x32
 #define OBJHITREACT_STATE_ACTIVE 0x01
 #define OBJHITREACT_STATE_RESET_PENDING 0x08

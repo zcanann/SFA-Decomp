@@ -2,6 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/mm.h"
+#include "main/objHitReact.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
 #include "main/resource.h"
@@ -111,8 +112,6 @@ typedef struct ObjTriggerInterface {
 extern ObjTriggerInterface **gGameUIInterface;
 extern void *lbl_803DCBD8;
 extern u8 *gObjHitsPriorityHitStates;
-extern int gObjHitReactResetObjectCount;
-extern ObjAnimComponent **gObjHitReactResetObjects;
 extern u8 gObjGroupObjectCount;
 extern int lbl_803DCBF8;
 extern undefined4 DAT_803dd880;

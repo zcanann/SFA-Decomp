@@ -4,23 +4,15 @@
 #include "main/mm.h"
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
+#include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 
-extern void objLightFn_8009a1dc(int obj,double scale,undefined2 *pos,u32 count,int *param_5);
-
-extern ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs;
-extern char sObjHitReactHitstateFrameString[];
-extern char sObjHitReactSphereOverflowString[];
-extern char sObjHitReactResetString[7];
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 gObjHitsScalarZero;
-extern f32 gObjHitsScalarOne;
-extern f32 gObjHitReactAltEffectScale;
-extern int gObjHitReactResetObjectCount;
-extern ObjAnimComponent **gObjHitReactResetObjects;
+extern void objLightFn_8009a1dc(int obj,double scale,ObjHitReactEffectPos *pos,u32 count,
+                                int *params);
 
 /*
  * --INFO--
@@ -94,7 +86,7 @@ int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
         }
       }
       else {
-        objLightFn_8009a1dc(obj,(double)gObjHitReactAltEffectScale,(undefined2 *)&effectPos.x,
+        objLightFn_8009a1dc(obj,(double)gObjHitReactAltEffectScale,&effectPos,
                             OBJHITREACT_ALT_EFFECT_COUNT,0);
       }
     }

@@ -68,8 +68,6 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DC0B0;
 extern f32 gObjHitsPriorityHitTickDelta;
-extern f32 gObjHitsScalarZero;
-extern f32 gObjHitsScalarOne;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803DF590;

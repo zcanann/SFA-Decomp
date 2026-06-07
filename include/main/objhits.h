@@ -83,6 +83,8 @@ extern int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT
 extern f32 gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT * OBJHITS_CONTACT_SCRATCH_WORDS];
 extern void *gObjHitsPrimaryHitboxBufferScratch0;
 extern void *gObjHitsSecondaryHitboxBufferScratch0;
+extern f32 gObjHitsScalarZero;
+extern f32 gObjHitsScalarOne;
 extern char sObjHitsTooManyHitSpheresWarning[];
 
 #define gObjHitsPrimaryHitboxBufferScratch1 (&gObjHitsPrimaryHitboxBufferScratch0)[1]
