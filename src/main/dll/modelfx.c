@@ -1,4 +1,5 @@
 #include "main/dll/modelfx.h"
+#include "main/effect_interfaces.h"
 
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
@@ -221,7 +222,7 @@ typedef struct EffectSpawnParams {
   u8 srcFlag;
 } EffectSpawnParams;
 
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern EffectSrcParams lbl_8039C3F8;
 extern void vecRotateZXY(void *params, f32 *vec);
 
@@ -730,7 +731,7 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
     }
   }
-  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 8))(&p, -1, id, 0);
+  return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1103,7 +1104,7 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
     }
   }
-  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 8))(&p, -1, id, 0);
+  return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1417,7 +1418,7 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
     }
   }
-  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 8))(&p, -1, id, 0);
+  return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1983,7 +1984,7 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
     }
   }
-  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 8))(&p, -1, id, 0);
+  return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
