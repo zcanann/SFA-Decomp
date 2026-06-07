@@ -48,7 +48,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   int moveIndex;
   ObjAnimMoveData *moveData;
   int frameType;
-  float frameValue;
+  float blendFrameLength;
 
   eventStateValue = eventState;
   moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
@@ -78,11 +78,11 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
     state->eventState = 0;
   }
   else {
-    frameValue = (float)state->blendFrameData[1];
+    blendFrameLength = (float)state->blendFrameData[1];
     if (frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-      frameValue = frameValue - gObjAnimProgressOne;
+      blendFrameLength = blendFrameLength - gObjAnimProgressOne;
     }
-    if (frameValue != state->segmentLength) {
+    if (blendFrameLength != state->frameLength) {
       state->eventState = 0;
     }
     else {
@@ -171,7 +171,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
   ObjAnimEventTable *eventTable;
   f32 previousProgress;
   f32 progressDelta;
-  f32 prevSegmentLength;
+  f32 prevFrameLength;
   f32 value;
   int wrapped;
   int countdown;
@@ -192,29 +192,29 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
   }
 
   state = bank->activeState;
-  state->step = moveStepScale * state->segmentLength;
+  state->frameStep = moveStepScale * state->frameLength;
   if (state->eventCountdown != 0) {
     if ((state->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP) != 0) {
-      state->savedStep = state->step;
+      state->savedFrameStep = state->frameStep;
     }
-    state->progress += state->savedStep * deltaTime;
-    prevSegmentLength = state->prevSegmentLength;
+    state->prevFramePhase += state->savedFrameStep * deltaTime;
+    prevFrameLength = state->prevFrameLength;
     if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED) {
-      while (state->progress < gObjAnimProgressZero) {
-        state->progress += prevSegmentLength;
+      while (state->prevFramePhase < gObjAnimProgressZero) {
+        state->prevFramePhase += prevFrameLength;
       }
-      while (state->progress >= prevSegmentLength) {
-        state->progress -= prevSegmentLength;
+      while (state->prevFramePhase >= prevFrameLength) {
+        state->prevFramePhase -= prevFrameLength;
       }
     }
     else {
-      value = state->progress;
+      value = state->prevFramePhase;
       if (value < gObjAnimProgressZero) {
         value = gObjAnimProgressZero;
-      } else if (value > prevSegmentLength) {
-        value = prevSegmentLength;
+      } else if (value > prevFrameLength) {
+        value = prevFrameLength;
       }
-      state->progress = value;
+      state->prevFramePhase = value;
     }
 
     if ((state->moveControlFlags & OBJANIM_MOVE_CONTROL_HOLD_EVENT_COUNTDOWN) == 0) {
@@ -376,7 +376,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveCont
   u8 moveChanged;
   int frameStep;
   ObjAnimMoveData *moveData;
-  float eventStepFrames;
+  float eventCountdownStep;
   objAnim = (ObjAnimComponent *)objAnimHandle;
   if (moveProgress > gObjAnimProgressOne) {
     moveProgress = gObjAnimProgressOne;
@@ -393,9 +393,9 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveCont
   state = bank->activeState;
   state->moveControlFlags = (s8)moveControlFlags;
   state->prevMoveCacheSlot = state->moveCacheSlot;
-  state->progress = state->speed;
-  state->prevSegmentLength = state->segmentLength;
-  state->savedStep = state->step;
+  state->prevFramePhase = state->framePhase;
+  state->prevFrameLength = state->frameLength;
+  state->savedFrameStep = state->frameStep;
   state->prevMoveFrameData = state->moveFrameData;
   state->prevFrameType = state->frameType;
   state->prevBlendCacheSlot = state->blendCacheSlot;
@@ -428,19 +428,19 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveCont
   }
   state->moveFrameData = moveData->frameCmd;
   state->frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
-  state->segmentLength = (float)state->moveFrameData[1];
+  state->frameLength = (float)state->moveFrameData[1];
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-    state->segmentLength = state->segmentLength - gObjAnimProgressOne;
+    state->frameLength = state->frameLength - gObjAnimProgressOne;
   }
   frameStep = moveData->frameInfo & OBJANIM_FRAME_STEP_MASK;
   if (frameStep != 0) {
-    state->savedStep = state->step;
-    eventStepFrames = gObjAnimEventStepScale / (float)frameStep;
-    state->eventStep = eventStepFrames;
+    state->savedFrameStep = state->frameStep;
+    eventCountdownStep = gObjAnimEventStepScale / (float)frameStep;
+    state->eventStep = eventCountdownStep;
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
-  state->step = gObjAnimProgressZero;
-  state->speed = moveProgress * state->segmentLength;
+  state->frameStep = gObjAnimProgressZero;
+  state->framePhase = moveProgress * state->frameLength;
   return 0;
 }
 #pragma peephole reset
@@ -517,12 +517,12 @@ void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordI
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount)
 {
   ObjAnimBank *bank;
-  float eventStepFrames;
+  float eventCountdownStep;
 
   bank = ObjAnim_GetActiveBank(objAnim);
   if (bank != (ObjAnimBank *)0x0) {
-    eventStepFrames = gObjAnimEventStepScale / (float)(s32)frameCount;
-    bank->currentState->eventStep = eventStepFrames;
+    eventCountdownStep = gObjAnimEventStepScale / (float)(s32)frameCount;
+    bank->currentState->eventStep = eventCountdownStep;
   }
 }
 #pragma peephole reset
@@ -729,7 +729,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle
   f32 previousProgress;
   f32 progressDelta;
   f32 clampedStepScale;
-  f32 prevSegmentLength;
+  f32 prevFrameLength;
   f32 value;
   f32 previousAxisValue;
   f32 previousAxisNextValue;
@@ -781,28 +781,28 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle
     return 0;
   }
 
-  state->step = clampedStepScale * state->segmentLength;
+  state->frameStep = clampedStepScale * state->frameLength;
   if (state->eventCountdown != 0) {
     if ((state->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP) != 0) {
-      state->savedStep = state->step;
+      state->savedFrameStep = state->frameStep;
     }
-    state->progress += state->savedStep * deltaTime;
-    prevSegmentLength = state->prevSegmentLength;
+    state->prevFramePhase += state->savedFrameStep * deltaTime;
+    prevFrameLength = state->prevFrameLength;
     if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED) {
-      while (state->progress < gObjAnimProgressZero) {
-        state->progress += prevSegmentLength;
+      while (state->prevFramePhase < gObjAnimProgressZero) {
+        state->prevFramePhase += prevFrameLength;
       }
-      while (state->progress >= prevSegmentLength) {
-        state->progress -= prevSegmentLength;
+      while (state->prevFramePhase >= prevFrameLength) {
+        state->prevFramePhase -= prevFrameLength;
       }
     } else {
-      value = state->progress;
+      value = state->prevFramePhase;
       if (value < gObjAnimProgressZero) {
         value = gObjAnimProgressZero;
-      } else if (value > prevSegmentLength) {
-        value = prevSegmentLength;
+      } else if (value > prevFrameLength) {
+        value = prevFrameLength;
       }
-      state->progress = value;
+      state->prevFramePhase = value;
     }
 
     if ((state->moveControlFlags & OBJANIM_MOVE_CONTROL_HOLD_EVENT_COUNTDOWN) == 0) {
@@ -1064,7 +1064,7 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
   int requestedMoveId;
   int frameStep;
   ObjAnimMoveData *moveData;
-  float eventStepFrames;
+  float eventCountdownStep;
   ObjHitReactState *hitState;
 
   objAnim = (ObjAnimComponent *)objAnimHandle;
@@ -1087,9 +1087,9 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
   state = bank->currentState;
   state->moveControlFlags = (s8)moveControlFlags;
   state->prevMoveCacheSlot = state->moveCacheSlot;
-  state->progress = state->speed;
-  state->prevSegmentLength = state->segmentLength;
-  state->savedStep = state->step;
+  state->prevFramePhase = state->framePhase;
+  state->prevFrameLength = state->frameLength;
+  state->savedFrameStep = state->frameStep;
   state->prevMoveFrameData = state->moveFrameData;
   state->prevFrameType = state->frameType;
   state->prevBlendCacheSlot = state->blendCacheSlot;
@@ -1131,23 +1131,23 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
   }
   state->moveFrameData = moveData->frameCmd;
   state->frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
-  state->segmentLength = (float)state->moveFrameData[1];
+  state->frameLength = (float)state->moveFrameData[1];
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-    state->segmentLength = state->segmentLength - gObjAnimProgressOne;
+    state->frameLength = state->frameLength - gObjAnimProgressOne;
   }
   frameStep = moveData->frameInfo & OBJANIM_FRAME_STEP_MASK;
   if ((frameStep != 0) &&
       (((u8)moveControlFlags & OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN) == 0)) {
-    state->savedStep = state->step;
-    eventStepFrames = gObjAnimEventStepScale / (float)frameStep;
-    state->eventStep = eventStepFrames;
+    state->savedFrameStep = state->frameStep;
+    eventCountdownStep = gObjAnimEventStepScale / (float)frameStep;
+    state->eventStep = eventCountdownStep;
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   else {
     state->eventCountdown = 0;
   }
-  state->step = gObjAnimProgressZero;
-  state->speed = moveProgress * state->segmentLength;
+  state->frameStep = gObjAnimProgressZero;
+  state->framePhase = moveProgress * state->frameLength;
   return 0;
 }
 #pragma peephole reset

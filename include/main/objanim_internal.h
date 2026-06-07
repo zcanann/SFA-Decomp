@@ -94,12 +94,12 @@ typedef struct ObjAnimDef {
 
 typedef struct ObjAnimState {
   u8 pad00[4];
-  f32 speed;
-  f32 progress;
-  f32 step;
-  f32 savedStep;
-  f32 segmentLength;
-  f32 prevSegmentLength;
+  f32 framePhase;
+  f32 prevFramePhase;
+  f32 frameStep;
+  f32 savedFrameStep;
+  f32 frameLength;
+  f32 prevFrameLength;
   u8 *moveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
   u8 *blendMoveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
   u8 pad2c[8];
@@ -322,12 +322,12 @@ STATIC_ASSERT(offsetof(ObjAnimDef, moveGroupBaseIndices) == 0x70);
 STATIC_ASSERT(offsetof(ObjAnimDef, moveCount) == 0xEC);
 
 STATIC_ASSERT(sizeof(ObjAnimState) == 0x68);
-STATIC_ASSERT(offsetof(ObjAnimState, speed) == 0x04);
-STATIC_ASSERT(offsetof(ObjAnimState, progress) == 0x08);
-STATIC_ASSERT(offsetof(ObjAnimState, step) == 0x0C);
-STATIC_ASSERT(offsetof(ObjAnimState, savedStep) == 0x10);
-STATIC_ASSERT(offsetof(ObjAnimState, segmentLength) == 0x14);
-STATIC_ASSERT(offsetof(ObjAnimState, prevSegmentLength) == 0x18);
+STATIC_ASSERT(offsetof(ObjAnimState, framePhase) == 0x04);
+STATIC_ASSERT(offsetof(ObjAnimState, prevFramePhase) == 0x08);
+STATIC_ASSERT(offsetof(ObjAnimState, frameStep) == 0x0C);
+STATIC_ASSERT(offsetof(ObjAnimState, savedFrameStep) == 0x10);
+STATIC_ASSERT(offsetof(ObjAnimState, frameLength) == 0x14);
+STATIC_ASSERT(offsetof(ObjAnimState, prevFrameLength) == 0x18);
 STATIC_ASSERT(offsetof(ObjAnimState, moveCache) == 0x1C);
 STATIC_ASSERT(offsetof(ObjAnimState, blendMoveCache) == 0x24);
 STATIC_ASSERT(offsetof(ObjAnimState, moveFrameData) == 0x34);
