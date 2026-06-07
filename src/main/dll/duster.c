@@ -1200,7 +1200,7 @@ void fn_80156DA0(int param_9,int param_10)
       ObjHits_EnableObject(param_9);
       *(float *)(param_10 + 0x328) = lbl_803E2A60;
     }
-    *(byte *)(param_9 + 0x36) = 0xff;
+    ((GameObject *)param_9)->anim.alpha = 0xff;
     bVar1 = true;
   }
   else {
