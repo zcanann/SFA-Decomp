@@ -1650,7 +1650,7 @@ int fn_802A5384(int obj, int state)
     ((ByteFlags *)((char *)inner + 0x3f1))->b08 = 0;
     ((ByteFlags *)((char *)inner + 0x3f2))->b10 = 0;
     if (*(s8 *)((char *)state + 0x27a) != 0) {
-        *(u32 *)((char *)inner + 0x360) |= 0x2000000;
+        *(u32 *)((char *)inner + 0x360) |= 0x2000000LL;
         ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
         ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
         ((ByteFlags *)((char *)inner + 0x3f3))->b40 = 0;
@@ -1670,7 +1670,7 @@ int fn_802A5384(int obj, int state)
         if ((fl >> 5 & 1) != 0) {
             *(u32 *)state |= 0x200000;
             *(u32 *)((char *)inner + 0x360) |= 0x2000;
-            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000LL;
             *(s16 *)((char *)state + 0x278) = 2;
             *(int *)((char *)inner + 0x898) = (int)fn_802A514C;
             if (((u32)*(u8 *)((char *)inner + 0x3f1) >> 5 & 1) != 0) {
@@ -1679,16 +1679,16 @@ int fn_802A5384(int obj, int state)
                 *(f32 *)((char *)inner + 0x404) = lbl_803E8064;
             }
         } else if (((u32)*(u8 *)((char *)inner + 0x3f1) >> 5 & 1) != 0) {
-            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000LL;
             *(u32 *)state |= 0x800000;
             *(s16 *)((char *)state + 0x278) = 0;
             *(f32 *)((char *)inner + 0x404) = lbl_803E7ED4;
         } else if ((fl >> 3 & 1) != 0 || (fl >> 2 & 1) != 0) {
             *(u32 *)state |= 0x200000;
-            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000LL;
             *(f32 *)((char *)inner + 0x404) = lbl_803E8068;
         } else {
-            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000LL;
             *(u32 *)state |= 0x800000;
             *(s16 *)((char *)state + 0x278) = 0;
             *(f32 *)((char *)inner + 0x404) = lbl_803E806C;
@@ -1704,16 +1704,12 @@ int fn_802A5384(int obj, int state)
         *(int *)((char *)inner + 0x48c) = 0;
     }
     {
-        f32 v = (*(f32 *)((char *)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C;
-        t = lbl_803E7EA4;
-        if (v < t) {
-        } else {
-            t = lbl_803E7EE0;
-            if (v > t) {
-            } else {
-                t = v;
-            }
-        }
+        t = ((*(f32 *)((char *)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C < (t = lbl_803E7EA4))
+                ? t
+                : (((*(f32 *)((char *)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C >
+                    (t = lbl_803E7EE0))
+                       ? t
+                       : (*(f32 *)((char *)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C);
     }
     *(f32 *)((char *)inner + 0x408) =
         (*(f32 *)((char *)inner + 0x404) - lbl_803E7F6C) *
@@ -1721,7 +1717,7 @@ int fn_802A5384(int obj, int state)
     {
         u32 fl = *(u8 *)((char *)inner + 0x3f0);
         if ((fl >> 6 & 1) != 0) {
-            *(u32 *)((char *)inner + 0x360) |= 0x1000000;
+            *(u32 *)((char *)inner + 0x360) |= 0x1000000LL;
             *(f32 *)((char *)state + 0x2a0) = lbl_803E8070;
             {
                 int cd = (int)(lbl_803E7F98 * ((GameObject *)obj)->anim.currentMoveProgress +
@@ -1805,7 +1801,7 @@ int fn_802A5384(int obj, int state)
                     }
                     staffFn_80170380(lbl_803DE450, 2);
                     ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 0;
-                    *(u32 *)((char *)inner + 0x360) |= 0x800000;
+                    *(u32 *)((char *)inner + 0x360) |= 0x800000LL;
                     ObjHits_SyncObjectPositionIfDirty(obj);
                     leave = 1;
                 } else {
@@ -1865,7 +1861,7 @@ int fn_802A5384(int obj, int state)
             *(u16 *)((char *)inner + 0x8d8) |= 8;
             ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 1;
             *(u8 *)((char *)inner + 0x8a6) = *(u8 *)((char *)inner + 0x8a7);
-            *(u32 *)((char *)inner + 0x360) |= 0x1000000;
+            *(u32 *)((char *)inner + 0x360) |= 0x1000000LL;
             *(f32 *)((char *)inner + 0x844) = ((PlayerState *)state)->baddie.animSpeedA;
             ObjAnim_SetCurrentMove(obj,
                                    *(s16 *)(*(int *)((char *)inner + 0x3f8) + 0x3c),
@@ -1883,9 +1879,7 @@ int fn_802A5384(int obj, int state)
                 {
                     f32 m = timeDelta *
                             (*(f32 *)((char *)inner + 0x42c) * *(f32 *)((char *)inner + 0x420));
-                    if (d > m) {
-                        d = m;
-                    }
+                    d = (d > m) ? m : d;
                 }
                 if (*(int *)((char *)inner + 0x480) < 0) {
                     d = -d;
@@ -1899,9 +1893,7 @@ int fn_802A5384(int obj, int state)
                                     timeDelta);
                 {
                     f32 m = *(f32 *)((char *)inner + 0x434) * timeDelta;
-                    if (d > m) {
-                        d = m;
-                    }
+                    d = (d > m) ? m : d;
                 }
                 if (*(int *)((char *)inner + 0x48c) < 0) {
                     d = -d;
@@ -1944,25 +1936,21 @@ int fn_802A5384(int obj, int state)
                 sqrtf(*(f32 *)((char *)inner + 0x4c8) * *(f32 *)((char *)inner + 0x4c8) +
                       *(f32 *)((char *)inner + 0x4cc) * *(f32 *)((char *)inner + 0x4cc));
             {
-                f32 v = ((PlayerState *)state)->baddie.unk294;
-                f32 m = **(f32 **)((char *)inner + 0x400);
-                if (v < m) {
-                } else {
-                    m = *(f32 *)((char *)inner + 0x404);
-                    if (v > m) {
-                    } else {
-                        m = v;
-                    }
-                }
-                ((PlayerState *)state)->baddie.unk294 = m;
+                ((PlayerState *)state)->baddie.unk294 =
+                    (((PlayerState *)state)->baddie.unk294 < **(f32 **)((char *)inner + 0x400))
+                        ? **(f32 **)((char *)inner + 0x400)
+                        : ((((PlayerState *)state)->baddie.unk294 >
+                            *(f32 *)((char *)inner + 0x404))
+                               ? *(f32 *)((char *)inner + 0x404)
+                               : ((PlayerState *)state)->baddie.unk294);
             }
             t = mathSinf((lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478)) /
                             lbl_803E7F98);
             {
                 f32 sn = mathCosf((lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478)) /
                              lbl_803E7F98);
-                f32 nx = -*(f32 *)((char *)inner + 0x4cc) * sn -
-                         *(f32 *)((char *)inner + 0x4c8) * t;
+                f32 negA = -*(f32 *)((char *)inner + 0x4cc);
+                f32 nx = negA * sn - *(f32 *)((char *)inner + 0x4c8) * t;
                 ya = *(f32 *)((char *)inner + 0x4c8) * sn -
                      *(f32 *)((char *)inner + 0x4cc) * t;
                 ((PlayerState *)state)->baddie.animSpeedA =
@@ -1975,13 +1963,9 @@ int fn_802A5384(int obj, int state)
                                 *(f32 *)((char *)inner + 0x82c), timeDelta);
             }
             spd = ((PlayerState *)state)->baddie.animSpeedB;
-            if (spd < lbl_803E7EA4) {
-                spd = -spd;
-            }
+            spd = (spd < lbl_803E7EA4) ? -spd : spd;
             t = ((PlayerState *)state)->baddie.animSpeedA;
-            if (t < lbl_803E7EA4) {
-                t = -t;
-            }
+            t = (t < lbl_803E7EA4) ? -t : t;
             {
                 int r = ObjAnim_SampleRootCurvePhase(((PlayerState *)state)->baddie.unk294,
                                                      (ObjAnimComponent *)obj,
@@ -2013,31 +1997,21 @@ int fn_802A5384(int obj, int state)
                 f32 d = interpolate(*(f32 *)((char *)inner + 0x408) -
                                         ((PlayerState *)state)->baddie.unk294,
                                     *(f32 *)((char *)inner + 0x438), timeDelta);
-                f32 m = lbl_803E7EA8 * timeDelta;
-                if (d < m) {
-                } else {
-                    m = lbl_803E7EFC * timeDelta;
-                    if (d > m) {
-                    } else {
-                        m = d;
-                    }
-                }
+                f32 m = (d < lbl_803E7EA8 * timeDelta)
+                            ? lbl_803E7EA8 * timeDelta
+                            : ((d > lbl_803E7EFC * timeDelta) ? lbl_803E7EFC * timeDelta : d);
                 if (*(int *)((char *)inner + 0x488) >= 0x96 && m > lbl_803E7EA4) {
                     m = lbl_803E7ED4 * -m;
                 }
                 ((PlayerState *)state)->baddie.unk294 = ((PlayerState *)state)->baddie.unk294 + m;
                 {
-                    f32 v = ((PlayerState *)state)->baddie.unk294;
-                    f32 c = **(f32 **)((char *)inner + 0x400);
-                    if (v < c) {
-                    } else {
-                        c = *(f32 *)((char *)inner + 0x404);
-                        if (v > c) {
-                        } else {
-                            c = v;
-                        }
-                    }
-                    ((PlayerState *)state)->baddie.unk294 = c;
+                    ((PlayerState *)state)->baddie.unk294 =
+                        (((PlayerState *)state)->baddie.unk294 < **(f32 **)((char *)inner + 0x400))
+                            ? **(f32 **)((char *)inner + 0x400)
+                            : ((((PlayerState *)state)->baddie.unk294 >
+                                *(f32 *)((char *)inner + 0x404))
+                                   ? *(f32 *)((char *)inner + 0x404)
+                                   : ((PlayerState *)state)->baddie.unk294);
                 }
                 ((PlayerState *)state)->baddie.animSpeedB = lbl_803E7EA4;
             } else if (((u32)*(u8 *)((char *)inner + 0x3f0) >> 3 & 1) != 0 ||
@@ -2060,15 +2034,8 @@ int fn_802A5384(int obj, int state)
                 }
                 {
                     f32 v2 = lbl_803E7E8C * ya;
-                    f32 m = lbl_803E8078;
-                    if (v2 < m) {
-                    } else {
-                        m = lbl_803E807C;
-                        if (v2 > m) {
-                        } else {
-                            m = v2;
-                        }
-                    }
+                    f32 m = (v2 < lbl_803E8078) ? lbl_803E8078
+                                                : ((v2 > lbl_803E807C) ? lbl_803E807C : v2);
                     ((PlayerState *)state)->baddie.unk294 =
                         m * timeDelta + ((PlayerState *)state)->baddie.unk294;
                 }
