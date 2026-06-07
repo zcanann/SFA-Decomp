@@ -1,4 +1,5 @@
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
@@ -1111,7 +1112,7 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
 
 extern int getTrickyObject(void);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E45DC;
 extern f64 lbl_803E45E8;
 extern f32 lbl_803E45F0;
@@ -1185,7 +1186,7 @@ void MoonSeedPlantingSpot_update(int obj)
             if (*(u8 *)((char *)ex + 1) & 4) {
                 ((GameObject *)obj)->anim.localPosY =
                     *(f32 *)((char *)setup + 0xc) + (f32)(int)randomGetRange(-1, 1);
-                (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x70f, 0, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x70f, NULL, 2, -1, NULL);
             }
             *(f32 *)((char *)ex + 0x14) = *(f32 *)((char *)ex + 0x14) - timeDelta;
             if (*(f32 *)((char *)ex + 0x14) <= lbl_803E45F4) {
@@ -1307,7 +1308,7 @@ void ccgasvent_update(int *obj) {
             if (dist < lbl_803E4614) {
                 state[0] = 0;
             } else {
-                ((void (*)(int *, int, int, int, int, int))((int **)*gPartfxInterface)[2])(obj, 0x3df, 0, 0, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x3df, NULL, 0, -1, NULL);
             }
             break;
         }

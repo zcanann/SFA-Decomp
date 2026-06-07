@@ -1,4 +1,5 @@
 #include "global.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/CF/dll_163.h"
 
@@ -151,7 +152,7 @@ extern int fn_80295CE4(void);
 extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int *gObjectTriggerInterface;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E3BDC;
 extern f32 lbl_803E3C00;
 extern f32 lbl_803E3C04;
@@ -229,14 +230,14 @@ after_bit4:
             stk.ow = lbl_803E3BDC;
             stk.life = 0x64;
             stk.extra = 0;
-            (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, NULL);
             stk.ox = lbl_803E3BBC;
             stk.oy = lbl_803E3C00;
             stk.oz = lbl_803E3C04;
             stk.ow = lbl_803E3BDC;
             stk.life = 0xa;
             stk.extra = 5;
-            (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, NULL);
         }
         return;
     } else {
