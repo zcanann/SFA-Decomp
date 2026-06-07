@@ -121,3 +121,4 @@
 111	da10a6db7	Member-address reassociation cap CRACKED (the audio memmove NAMED
 112	a9319a3b3	#86's displacement-fold-onto-index cap CRACKED for the non-loop case —
 113	f6cb57505	The SPECULATIVE unroller is a separate pass from opt_unroll_loops —
+114	d9e799e23	No-op CONVERSION NODES split VN webs at zero codegen cost — the

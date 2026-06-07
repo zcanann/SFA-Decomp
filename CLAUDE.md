@@ -2832,9 +2832,12 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     2 fns had current-only unrolls, 1 had target-only — all 3 fixed. The
     sweep script pattern is in commit b3fd48c41/f99dce7d2 messages.
 
-112. **No-op CONVERSION NODES split VN webs at zero codegen cost — the
+114. **No-op CONVERSION NODES split VN webs at zero codegen cost — the
     general GVN-key splitter (cracks fctiwz-remat AND distributive
-    factoring).** (task #13.) MWCC's GVN is value-keyed, but the key is the
+    factoring).** *(Numbering note: landed as "#112" in commit d9e799e23's
+    message, racing the reconciliation 2b25af170; renumbered to #114 per
+    the ledger — #112 is the displacement-fold K-grouping crack.)*
+    (task #13.) MWCC's GVN is value-keyed, but the key is the
     expression tree INCLUDING no-op arithmetic-type conversions: a
     conversion through a DIFFERENT-RANK type creates a persistent node that
     blocks merging while emitting nothing. #94's "no-op cast chains fold"
