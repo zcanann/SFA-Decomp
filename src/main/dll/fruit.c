@@ -1,4 +1,5 @@
 #include "main/mapEvent.h"
+#include "main/effect_interfaces.h"
 #include "main/dll/door.h"
 #include "main/dll/fruit.h"
 
@@ -15,9 +16,6 @@ typedef struct DfpTargetBlockPartfxArgs {
   f32 y;
   f32 z;
 } DfpTargetBlockPartfxArgs;
-
-typedef void (*PartfxSpawnObjectFn)(DfpTargetBlockObject *obj, int id, DfpTargetBlockPartfxArgs *args,
-                                    int mode, int arg5, int arg6);
 
 extern int ObjHits_GetPriorityHit(DfpTargetBlockObject *obj, DfpTargetBlockObject **hitObj,
                                   int *priority, int flags);
@@ -198,9 +196,8 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
       effect.rotX = 0;
 
       for (i = 0; i < DFPTARGETBLOCK_RESET_PARTICLE_COUNT; i++) {
-        ((PartfxSpawnObjectFn)(*(u32 *)(*gPartfxInterface + 0x8)))(
-            obj, DFPTARGETBLOCK_RESET_PARTICLE_ID, &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE, -1,
-            0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, DFPTARGETBLOCK_RESET_PARTICLE_ID,
+                                                            &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE, -1, NULL);
       }
     }
     dfptargetblock_checkSettled(obj, state, lbl_803E64C0);

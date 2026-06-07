@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/dll/dustmotesou.h"
 
 #pragma peephole on
@@ -17,7 +18,7 @@ int dustmotesou_getObjectTypeId(void) { return 0; }
 #pragma scheduling on
 void dustmotesou_free(int obj)
 {
-    (*(void (**)(int))(*gExpgfxInterface + 0x18))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
 }
 #pragma scheduling reset
 #pragma peephole reset

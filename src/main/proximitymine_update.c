@@ -1,4 +1,5 @@
 #include "main/proximitymine.h"
+#include "main/effect_interfaces.h"
 #include "main/objlib.h"
 
 extern void modelLightStruct_updateGlowAlpha(void *light);
@@ -195,8 +196,7 @@ void proximitymine_update(ProximityMineObject *obj)
       obj->prevY = obj->posY;
       obj->prevZ = obj->posZ;
     case 2:
-      (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(
-          (int *)obj, 0x51c, 0, 1, -1, 0);
+      ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x51c, NULL, 1, -1, NULL);
       if (timerCountDown(state->bounceTimer) != 0) {
         ObjHits_EnableObject((u32)obj);
       }

@@ -1,4 +1,5 @@
 #include "main/dll/tesla.h"
+#include "main/effect_interfaces.h"
 
 #define TRICKY_CURVE_GAMEBIT_HIT 0x468
 #define TRICKY_CURVE_PLAYER_ANIM_SLIDE 0x1d7
@@ -41,8 +42,6 @@ typedef struct TrickyCurveBurstPartfxArgs {
     f32 zDelta;
 } TrickyCurveBurstPartfxArgs;
 
-typedef void (*PartfxSpawnFn)(int obj, int effectId, void *args, int mode, int arg5, int arg6);
-
 extern u32 GameBit_Set(u32 id, u32 value);
 extern int Obj_GetPlayerObject(void);
 extern void ObjHits_RecordObjectHit(int obj, int hitObj, int priority, int hitVolume, int sphereIndex);
@@ -57,7 +56,7 @@ extern f64 lbl_803E6440;
 extern f32 lbl_803E6448;
 
 #define PARTFX_SPAWN(obj, effectId, args, mode, arg5, arg6) \
-    ((PartfxSpawnFn)(*(u32 *)(*gPartfxInterface + 0x8)))((obj), (effectId), (args), (mode), (arg5), (arg6))
+    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)(obj), (effectId), (args), (mode), (arg5), (arg6))
 
 /*
  * --INFO--
