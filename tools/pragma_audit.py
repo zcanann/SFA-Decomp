@@ -149,7 +149,7 @@ def main():
             size = int(f.get("size", 0))
             potential = (100.0 - pct) * size / 100.0
             # confidence (h6 field calibration): sched-state outliers hit
-            # near-100% in A/B; peephole-only outliers ~50/50.
+            # near-100% in A/B; peephole-only ~30/30/40 keep/inert/regress.
             conf = "HIGH" if sch != maj[0] else "MED"
             rows.append(
                 (potential, pct, size, uname, f["name"], ln, sch, pe, maj, conf)
