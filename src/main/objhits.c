@@ -2275,7 +2275,6 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
   u8 shapeFlags;
   int hitCount;
   f32 ratio;
-  f32 clamped;
   f32 fVar2;
   f32 fVar3;
   f32 fVar4;
@@ -2288,8 +2287,10 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
 
   objBState = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
   objAState = (ObjHitsPriorityState *)((GameObject *)objA)->anim.hitReactState;
-  if (((objAState->resetHitboxMode == 0) && (objBState->resetHitboxMode == 0)) &&
-      (objBState->activeHitboxMode == 0) && (objAState->activeHitboxMode == 0)) {
+  if (((*(s8 *)&objAState->resetHitboxMode == 0) && (*(s8 *)&objBState->resetHitboxMode == 0)) &&
+      (objBState->activeHitboxMode == 0)) {
+   switch ((u32)objAState->activeHitboxMode) {
+   case 0:
     hitboxBuf = ObjHits_GetActiveModel(objA);
     shapeFlags = objBState->shapeFlags;
     if ((shapeFlags & OBJHITBOX_SHAPE_SKELETON_3D) != 0) {
@@ -2304,50 +2305,30 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
         ratio = (((GameObject *)objB)->anim.hitboxScale * ((GameObject *)objB)->anim.rootMotionScale) /
                 (((GameObject *)objA)->anim.hitboxScale * ((GameObject *)objA)->anim.rootMotionScale);
 
-        clamped = gObjHitsScalarZero;
-        if (ratio < clamped) {
-        } else {
-          clamped = gObjHitsScalarOne;
-          if (ratio > clamped) {
-          } else {
-            clamped = ratio;
-          }
+        {
+          f32 rad = (f32)objBState->primaryRadius;
+          ObjHitsSkeletonJointData *jd = (ObjHitsSkeletonJointData *)hitboxBuf[5];
+          int mf = *hitboxBuf;
+          ObjHits_CalcSkeletonResponse3D(&point.x, rad, objB, (ObjHitsSkeletonHit *)hits, jd, mf,
+                                         bestHit,
+                                         (ratio < gObjHitsScalarZero)
+                                             ? gObjHitsScalarZero
+                                             : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
+                                         outAxial, response);
         }
-        ObjHits_CalcSkeletonResponse3D(&point.x, (f32)objBState->primaryRadius, objB,
-                                       (ObjHitsSkeletonHit *)hits,
-                                       (ObjHitsSkeletonJointData *)hitboxBuf[5], *hitboxBuf,
-                                       bestHit, clamped, outAxial, response);
-        fVar2 = lbl_803DE958;
-        if (response[0] < fVar2) {
-        } else {
-          fVar2 = lbl_803DE95C;
-          if (response[0] > fVar2) {
-          } else {
-            fVar2 = response[0];
-          }
-        }
+        fVar2 = (response[0] < lbl_803DE958)
+                    ? lbl_803DE958
+                    : ((response[0] > lbl_803DE95C) ? lbl_803DE95C : response[0]);
         response[0] = fVar2;
-        fVar3 = lbl_803DE958;
-        if (response[1] < fVar3) {
-        } else {
-          fVar3 = lbl_803DE95C;
-          if (response[1] > fVar3) {
-          } else {
-            fVar3 = response[1];
-          }
-        }
+        fVar3 = (response[1] < lbl_803DE958)
+                    ? lbl_803DE958
+                    : ((response[1] > lbl_803DE95C) ? lbl_803DE95C : response[1]);
         response[1] = fVar3;
-        fVar4 = lbl_803DE958;
-        if (response[2] < fVar4) {
-        } else {
-          fVar4 = lbl_803DE95C;
-          if (response[2] > fVar4) {
-          } else {
-            fVar4 = response[2];
-          }
-        }
+        fVar4 = (response[2] < lbl_803DE958)
+                    ? lbl_803DE958
+                    : ((response[2] > lbl_803DE95C) ? lbl_803DE95C : response[2]);
         response[2] = fVar4;
-        ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], fVar4, 0);
+        ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)fVar4, 0);
       }
     } else if ((shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
       point.x = ((GameObject *)objB)->anim.worldPosX - playerMapOffsetX;
@@ -2364,55 +2345,37 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
         ratio = (((GameObject *)objB)->anim.hitboxScale * ((GameObject *)objB)->anim.rootMotionScale) /
                 (((GameObject *)objA)->anim.hitboxScale * ((GameObject *)objB)->anim.rootMotionScale);
 
-        clamped = gObjHitsScalarZero;
-        if (ratio < clamped) {
-        } else {
-          clamped = gObjHitsScalarOne;
-          if (ratio > clamped) {
-          } else {
-            clamped = ratio;
-          }
+        {
+          f32 rad = (f32)objBState->primaryRadius;
+          ObjHitsSkeletonJointData *jd = (ObjHitsSkeletonJointData *)hitboxBuf[5];
+          int mf = *hitboxBuf;
+          ObjHits_CalcSkeletonResponseXZ(&point.x, rad, objB, (ObjHitsSkeletonHit *)hits, jd, mf,
+                                         bestHit,
+                                         (ratio < gObjHitsScalarZero)
+                                             ? gObjHitsScalarZero
+                                             : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
+                                         outAxial, response);
         }
-        ObjHits_CalcSkeletonResponseXZ(&point.x, (f32)objBState->primaryRadius, objB,
-                                       (ObjHitsSkeletonHit *)hits,
-                                       (ObjHitsSkeletonJointData *)hitboxBuf[5], *hitboxBuf,
-                                       bestHit, clamped, outAxial, response);
-        fVar2 = lbl_803DE958;
-        if (response[0] < fVar2) {
-        } else {
-          fVar2 = lbl_803DE95C;
-          if (response[0] > fVar2) {
-          } else {
-            fVar2 = response[0];
-          }
-        }
+        fVar2 = (response[0] < lbl_803DE958)
+                    ? lbl_803DE958
+                    : ((response[0] > lbl_803DE95C) ? lbl_803DE95C : response[0]);
         response[0] = fVar2;
-        fVar3 = lbl_803DE958;
-        if (response[1] < fVar3) {
-        } else {
-          fVar3 = lbl_803DE95C;
-          if (response[1] > fVar3) {
-          } else {
-            fVar3 = response[1];
-          }
-        }
+        fVar3 = (response[1] < lbl_803DE958)
+                    ? lbl_803DE958
+                    : ((response[1] > lbl_803DE95C) ? lbl_803DE95C : response[1]);
         response[1] = fVar3;
-        fVar4 = lbl_803DE958;
-        if (response[2] < fVar4) {
-        } else {
-          fVar4 = lbl_803DE95C;
-          if (response[2] > fVar4) {
-          } else {
-            fVar4 = response[2];
-          }
-        }
+        fVar4 = (response[2] < lbl_803DE958)
+                    ? lbl_803DE958
+                    : ((response[2] > lbl_803DE95C) ? lbl_803DE95C : response[2]);
         response[2] = fVar4;
-        ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], fVar4, 0);
+        ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)fVar4, 0);
       }
     } else if (((shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) && (depth < 1)) {
       ObjHits_CheckSkeletonPair(objB, objA, hits, scratchB, scratchC, scratchD, scratchE,
                                 depth + 1);
     }
+    break;
+   }
   }
 }
 
