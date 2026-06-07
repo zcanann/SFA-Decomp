@@ -1123,6 +1123,15 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
         insensitive to 6 yawd-form variants — net LOWER fuzzy; reverted).
         If the slot-stream fix regresses elsewhere, keep the higher-scoring
         form and file the frame as cosmetic.
+        ⚠️ PARK-CLEAR METHOD (ObjSeq_func20 97.33->100): the "extra mr
+        upstream" blocking the ternary is often a NAMED narrow local's web
+        — UN-NAME it first (int local + per-use (s16)/(u8) casts, #107/#97:
+        the extension temp re-executes per statement and the abs/select
+        joins in r0 with no mr), THEN apply the ternary clamp; the slot
+        stream + frame land with no upstream cost. Sequence matters: the
+        yawd-form variants failed BEFORE the un-naming because the named
+        web pinned the coloring. Pair with #85 self-reassign chains to pin
+        any conversion the single-use temp form lets MWCC sink.
     (d) **`_savegpr_NN` differs (extra saved reg)** → NOT a frame mystery:
         one extra live range, usually MWCC CSE-ing a repeated address expr
         (`(char*)o2 + 0x18` ×3) into a saved reg where target recomputes.
