@@ -2875,6 +2875,50 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     lha/lhz). Sibling of #83a (launders) and #59/#78 (FP reassociation);
     same mechanism family as #110/#111.
 
+115. **CALLEE-DECL PARAM WIDTHS shift the caller's WEB CREATION ORDER at
+    zero instruction cost -- the first source-side lever on the #108
+    within-class scramble (the "IR creation-order" residual).** (task
+    #12; Music_Update 97.78->98.70 from ONE block-scope decl line.)
+    Mechanism, probe-bisected: when a value flows into a call argument
+    with an explicit narrowing cast (`sndSeqVolume(0, (u16)(v < 500 ?
+    500 : v), h, 1)`), the EXTERN's param type decides whether the cast
+    creates a persistent conversion node (int param -- cast node feeds a
+    widening: extra IR web) or is ABSORBED (matching u16 param: no
+    node). The nodes emit NOTHING (instruction streams byte-identical)
+    but shift the multi-def webs' creation order -- scrambling/restoring
+    the #108 within-class saved-reg ranks for exactly the values that
+    flow into the call. #114's conversion-node insight applied to the
+    ALLOCATOR side instead of VN.
+    - Music_Update: engine_shared.h's Ghidra-flattened `sndSeqVolume(int,
+      int,int,int)` scrambled 8 webs; the true MusyX-shaped narrow form
+      `(u8 volume, u16 time, u32 handle, u8 mode)` (matching
+      synth_handle.c's pre-existing #57 block extern) restores TARGET's
+      clean init-order ranks. Applied as a #57 block-scope extern inside
+      Music_Update only -- sibling callers/the all-int definition
+      untouched. Probe trail: v6 (only sndSeqVolume narrow) = target
+      coloring; v7 (only Stop/Mute/Continue narrow) = scrambled; sized
+      vs incomplete array decls, pragma stack depth, TU dummy padding,
+      and prefix fn bodies ALL inert (82 bodies stubbed -- scramble
+      persisted; header decl bisection found it).
+    - DIAGNOSTIC METHOD (general, reusable for any parked rotation):
+      extract the fn + its statics into a standalone /tmp TU with
+      MINIMAL hand-written decls and exact unit flags. If the probe's
+      coloring matches TARGET, the fn text is right and a DECL in the
+      TU's header set is the perturber -- bisect decls, not spellings.
+      If the probe matches OURS, the perturbation is in the fn/statics
+      text itself.
+    - Where to suspect it: any rotation where the mis-ranked webs feed
+      call args through casts, especially against Ghidra-flattened
+      all-int prototypes (grep the fn's callees' decls vs their defs/
+      upstream MusyX/SDK signatures; #84 cross-caller arbitration picks
+      the real one). Candidate retries: partfx_update's top-block order,
+      the audio 85-93 band, Curve_BuildSegmentLengthTable
+      (Curve_SampleSegmentPoints' 8-param decl).
+    - Residuals NOT this class (Music_Update's remaining 1.3%): two #92
+      branch-over-branch sites target-side (task #16's family) and the
+      loop-3 ch/i cross-pairing (induction-affinity, #108 -- callee-sig
+      A/Bs inert on it).
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/

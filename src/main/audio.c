@@ -2380,6 +2380,7 @@ static int Music_IsTriggerExcluded(int id)
 #pragma peephole off
 void Music_Update(void)
 {
+    extern void sndSeqVolume(u8 volume, u16 time, u32 handle, u8 mode);
     MusicChannel *ch;
     int i;
     int lowPriority = 0x7fff;
