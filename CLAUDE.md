@@ -1252,6 +1252,9 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     to a peephole-ON-target fn REGRESSES hard (golf-1's audio-cap A/B:
     synthAssignHandle 98.6→81.4, hwChangeStudio 98.2→82.1,
     synthGetNextChannelEvent 98.0→91.8, DoSetPitch unchanged — all reverted).
+    The audio ON-target rule holds at the SCHEDULING level too: a sched-off
+    wrap on salInitDsp (sal_dsp) regressed 85.7→60.3 — audio TUs compile
+    both passes ON; never wrap them (pragma-field batch 5).
 
 69. **`cmpwi` immediate is ASYMMETRIC for mathematically-equivalent int
     compares — match the immediate, not just the predicate.** `if (x <= 0)`
@@ -3830,6 +3833,15 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   src/track/intersect.c, src/main/dll/baddie/Tumbleweed.c -- check for the
   sjiswrap warning after the first edit to any unfamiliar file, and if it
   appears, revert and redo the edit byte-wise.
+- **Blind first-occurrence replaces corrupt pragma-dense files; anchor edits
+  to the function definition.** A `data.replace(b'#pragma scheduling off\n',
+  ..., 1)`-style edit in a file with many pragma lines (arwingandrossstuff.c
+  carries 40+) lands on the WRONG region and silently re-states sibling
+  functions -- the file still compiles green. Always anchor pragma
+  inserts/flips to the unique fn-definition text (or its immediately
+  adjacent pragma line read FIRST), and re-grep the file's pragma sequence
+  after the edit. (Pragma-field batch 5: one self-inflicted mangle caught
+  pre-commit this way and redone anchored.)
 - **NEVER `git stash` / `git stash pop` in a hunter worktree.** The stash store
   lives in the COMMON git dir and is SHARED across all worktrees, so a `git stash
   pop` can pop a DIFFERENT agent's (or an old) WIP stash and splatter it as
@@ -3887,10 +3899,14 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   ON (jump tables, #68 peephole-ON-target units; allocLotsOfTextures
   REGRESSED with the wrap) and inert wraps must be removed (#173). The
   sched=ON flag class hits near-100%. Sub-class: peephole-off-only regions
-  MISSING scheduling off (vfplift pair +21pp). SJIS carriers (intersect.c,
-  Tumbleweed.c) take byte-wise edits. The wrap UNMASKS recipe-class
-  residuals rather than finishing the fn — expect #74/#112/#20-style work
-  after.
+  MISSING scheduling off (vfplift pair +21pp). Sub-class 2: EXPLICIT
+  import-era WRONG wraps — fns deliberately wrapped `#pragma scheduling on`
+  whose targets are off/off (fn_8022ECE0 64→94, fn_8022F27C, androssligh_
+  update); `grep -rn "#pragma scheduling on" src/` is a standalone
+  residual-damage census for this shape (flip to off/off in place, A/B).
+  SJIS carriers (intersect.c, Tumbleweed.c) take byte-wise edits. The wrap
+  UNMASKS recipe-class residuals rather than finishing the fn — expect
+  #74/#112/#20-style work after.
 - `python3 tools/width_audit.py [--all] [--arrays]` — enumerate extern decls
   whose C type width contradicts symbols.txt's `data:N` annotation, ranked by
   consuming-fn fuzzy% (full triage taxonomy in the script header).
