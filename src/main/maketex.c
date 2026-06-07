@@ -2141,7 +2141,7 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
 {
     int player;
     s16 *v;
-    s16 yawd;
+    int yawd;
     s16 turn;
     int mode;
     f32 out;
@@ -2166,10 +2166,10 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         *(f32 *)(state + 0x44) = 0.0f;
         *(f32 *)(state + 0x48) = 0.0f;
         yawd = Obj_GetYawDeltaToObject((ushort *)obj, player, (float *)0);
-        if ((yawd >= 0 ? yawd : -yawd) < p4) {
+        if (((s16)yawd >= 0 ? (s16)yawd : -(s16)yawd) < p4) {
             turn = 0;
         } else {
-            turn = (s16)(yawd > 0 ? yawd - p4 : yawd + p4);
+            turn = (s16)((s16)yawd > 0 ? (s16)yawd - p4 : (s16)yawd + p4);
         }
         *(s16 *)(state + 0x50) = turn;
         {
@@ -2229,25 +2229,21 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         if (v != NULL) {
             *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~8;
             yawd = Obj_GetYawDeltaToObject((ushort *)obj, player, (float *)0);
+            g = (f32)(s16)yawd;
             {
-                f32 yf = (f32)yawd;
-                f32 blend = *(f32 *)(state + 0x4c);
                 f32 cur = (f32)v[1];
-                g = cur * (1.0f - blend) + yf * blend;
+                g = cur * (1.0f - *(f32 *)(state + 0x4c)) + g * *(f32 *)(state + 0x4c);
             }
-            if (g < (f32)-p5) {
-                g = (f32)-p5;
-            } else if (g > (f32)p5) {
-                g = (f32)p5;
-            }
+            g = (g < (f32)-p5) ? (f32)-p5 : ((g > (f32)p5) ? (f32)p5 : g);
             v[1] = g;
             v[0] = (f32)*(s16 *)(state + 0x52) * *(f32 *)(state + 0x4c);
         }
         if (p6 != -1) {
             if (p7 != -1) {
                 s16 t50 = *(s16 *)(state + 0x50);
-                ObjAnim_SampleRootCurvePhase((f32)(t50 >= 0 ? t50 : -t50) * 3.142f / 325767.0f,
-                                             (ObjAnimComponent *)obj, &out);
+                f32 fa = (f32)(t50 >= 0 ? t50 : -t50);
+                fa = fa * 3.142f / 325767.0f;
+                ObjAnim_SampleRootCurvePhase(fa, (ObjAnimComponent *)obj, &out);
                 ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
                     (obj, out, (f32)framesThisStep, NULL);
             }
