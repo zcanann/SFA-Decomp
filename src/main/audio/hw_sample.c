@@ -21,12 +21,10 @@ void hwSetVirtualSampleLoopBuffer(int slot, u32 valueA, u32 valueB)
     u32 offset;
 
     offset = slot * 0xf4;
-    entry = dspVoice;
-    entry += offset;
-    *(u32 *)(entry + 0x94) = valueA;
-    entry = dspVoice;
-    entry += offset;
-    *(u32 *)(entry + 0x98) = valueB;
+    entry = dspVoice + 0x94;
+    *(u32 *)(entry + offset) = valueA;
+    entry = dspVoice + 0x98;
+    *(u32 *)(entry + offset) = valueB;
 }
 
 u8 hwGetVirtualSampleState(int slot)
