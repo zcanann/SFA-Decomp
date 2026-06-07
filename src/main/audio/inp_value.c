@@ -65,12 +65,7 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
                     value = vtmp + 0x2000;
                 } else {
                     vtmp = value + tmp;
-                    if (vtmp > 0x3FFF) {
-                        vtmp = 0x3FFF;
-                    } else if (vtmp < 0) {
-                        vtmp = 0;
-                    }
-                    value = vtmp;
+                    value = (vtmp > 0x3FFF) ? 0x3FFF : (vtmp < 0) ? 0 : vtmp;
                 }
                 break;
             case MCMD_INPUT_COMBINE_MUL:
@@ -98,12 +93,7 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
                     value = vtmp + 0x2000;
                 } else {
                     vtmp = value - tmp;
-                    if (vtmp > 0x3FFF) {
-                        vtmp = 0x3FFF;
-                    } else if (vtmp < 0) {
-                        vtmp = 0;
-                    }
-                    value = vtmp;
+                    value = (vtmp > 0x3FFF) ? 0x3FFF : (vtmp < 0) ? 0 : vtmp;
                 }
                 break;
             }
@@ -155,9 +145,7 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
                     value = vtmp + 0x2000;
                 } else {
                     value += tmp;
-                    if (value > 0x3FFF) {
-                        value = 0x3FFF;
-                    }
+                    value = (value > 0x3FFF) ? 0x3FFF : value;
                 }
                 break;
             case MCMD_INPUT_COMBINE_MUL:
@@ -171,9 +159,7 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
                     value = vtmp + 0x2000;
                 } else {
                     value = ((value * tmp) >> 0xE);
-                    if (value > 0x3FFF) {
-                        value = 0x3FFF;
-                    }
+                    value = (value > 0x3FFF) ? 0x3FFF : value;
                 }
                 break;
             case MCMD_INPUT_COMBINE_SUB:
@@ -187,19 +173,14 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
                     value = vtmp + 0x2000;
                 } else {
                     vtmp = value - tmp;
-                    if (vtmp > 0x3FFF) {
-                        vtmp = 0x3FFF;
-                    } else if (vtmp < 0) {
-                        vtmp = 0;
-                    }
-                    value = vtmp;
+                    value = (vtmp > 0x3FFF) ? 0x3FFF : (vtmp < 0) ? 0 : vtmp;
                 }
                 break;
             }
         }
     }
 
-    slotPtr->cachedValue = value;
+    *(u16 *)&slotPtr->cachedValue = value;
     return value;
 }
 
