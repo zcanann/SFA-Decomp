@@ -4,6 +4,7 @@
 #include "main/objanim.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/mmshrine/shrine1C2.h"
+#include "main/resource.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -1017,8 +1018,6 @@ void ecsh_shrine_init(s16 *obj, s8 *def) {
     GameBit_Set(0xefa, 1);
 }
 
-extern int *Resource_Acquire(int id, int b);
-extern void Resource_Release(int *res);
 extern u8 *mmAlloc(int size, int tag, int p);
 extern int Obj_SetupObject(u8 *def, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
@@ -1027,7 +1026,7 @@ extern u8 framesThisStep;
 void ecsh_creator_update(s16 *obj) {
     u8 *def;
     s16 *sub;
-    int *res;
+    void *res;
     u8 *p;
     int ret;
 

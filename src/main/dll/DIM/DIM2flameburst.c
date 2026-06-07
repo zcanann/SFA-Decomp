@@ -5,6 +5,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/resource.h"
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
@@ -1820,15 +1821,14 @@ void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole reset
 
 /* conditional init/free pair. */
-extern u32 lbl_803DDB78;
-extern void Resource_Release(u32);
+extern void *lbl_803DDB78;
 #pragma scheduling off
 #pragma peephole off
 void dll_1CE_free(void) {
-    if (lbl_803DDB78 != 0) {
+    if (lbl_803DDB78 != NULL) {
         Resource_Release(lbl_803DDB78);
     }
-    lbl_803DDB78 = 0;
+    lbl_803DDB78 = NULL;
 }
 #pragma peephole reset
 #pragma scheduling reset

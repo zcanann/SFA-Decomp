@@ -4,6 +4,7 @@
 #include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
+#include "main/resource.h"
 #include "global.h"
 
 /* Per-object extra state for the WM laser beam emitter. */
@@ -2039,14 +2040,11 @@ extern f32 lbl_803E5DEC;
 extern f32 lbl_803E5DF0;
 extern f32 lbl_803E5DF4;
 extern f32 lbl_803E5DF8;
-extern u32 Resource_Acquire(int id, int mode);
-extern void Resource_Release(u32);
-
 #pragma peephole off
 #pragma scheduling off
 void wmtorch_init(u8* obj, u8* params) {
     WmTorchState* sub;
-    u32 res;
+    void *res;
     f32 v[5];
 
     sub = ((GameObject *)obj)->extra;
@@ -2087,7 +2085,7 @@ void wmtorch_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
 }
 #pragma peephole reset
 
-extern u32 lbl_803DDC80;
+extern void *lbl_803DDC80;
 #pragma scheduling off
 #pragma peephole off
 void LaserBeam_initialise(void) {
@@ -2161,7 +2159,7 @@ int WM_colrise_SeqFn(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1;
 /* fn_X(lbl); lbl = 0; */
 #pragma scheduling off
 #pragma peephole off
-void LaserBeam_release(void) { Resource_Release(lbl_803DDC80); lbl_803DDC80 = 0; }
+void LaserBeam_release(void) { Resource_Release(lbl_803DDC80); lbl_803DDC80 = NULL; }
 #pragma peephole reset
 #pragma scheduling reset
 

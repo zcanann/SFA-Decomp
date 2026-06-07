@@ -7,6 +7,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/resource.h"
 
 #define SMALLBASKET_LINKED_ID_BASE 0x40000
 #define SMALLBASKET_ROB_WAVE_DIRECT_ID 0x66
@@ -85,7 +86,6 @@ f32 fn_80183204(int obj)
 #pragma scheduling reset
 
 extern void ObjGroup_AddObject(int obj, int group);
-extern void* Resource_Acquire(int id, int mode);
 extern void* lbl_803DDAC0;
 
 #pragma scheduling off

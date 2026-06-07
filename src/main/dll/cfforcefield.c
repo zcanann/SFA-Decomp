@@ -2,12 +2,12 @@
 #include "main/dll/explodable.h"
 #include "main/game_object.h"
 #include "main/dll/cfforcefield_state.h"
+#include "main/resource.h"
 
 
 #pragma peephole off
 #pragma scheduling off
 extern uint GameBit_Get(int eventId);
-extern void *Resource_Acquire(int resourceId, int mode);
 extern void ObjHits_DisableObject(u32 obj);
 extern u32 randomGetRange(int min, int max);
 extern void hitDetect_calcSweptSphereBounds(u32 *boundsOut, f32 *startPoints, f32 *endPoints, f32 *radii,
@@ -17,7 +17,7 @@ extern u8 hitDetectFn_80067958(int obj, f32 *startPoints, f32 *endPoints, int po
                                void *outHits, int flags);
 
 extern f32 lbl_803AC7A0[4];
-extern undefined4 lbl_803DDAC8;
+extern void *lbl_803DDAC8;
 extern f32 lbl_803E39AC;
 extern f32 lbl_803E39E8;
 extern f32 lbl_803E39F4;
@@ -74,7 +74,7 @@ void largecrate_init(int obj, u8 *initData)
   }
 
   ((CfForcefieldState *)state)->unk11 = initData[0x19];
-  lbl_803DDAC8 = (undefined4)Resource_Acquire(LARGECRATE_RESOURCE_ID, LARGECRATE_RESOURCE_MODE);
+  lbl_803DDAC8 = Resource_Acquire(LARGECRATE_RESOURCE_ID, LARGECRATE_RESOURCE_MODE);
   r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_DELAY_MAX);
   ((CfForcefieldState *)state)->randomTimer = (short)(r3rand + LARGECRATE_RANDOM_DELAY_BASE);
   ((CfForcefieldState *)state)->countdown = LARGECRATE_DEFAULT_COUNTDOWN;

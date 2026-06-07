@@ -4,6 +4,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/dll/DIM/DIMboulder.h"
+#include "main/resource.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -1266,8 +1267,8 @@ int imicepillar_getExtraSize(void) { return 0x4; }
 int imicepillar_getObjectTypeId(void) { return 0x0; }
 
 /* Pattern wrappers. */
-extern u32 lbl_803DDB40;
-void crrockfall_initialise(void) { lbl_803DDB40 = 0x0; }
+extern void *lbl_803DDB40;
+void crrockfall_initialise(void) { lbl_803DDB40 = NULL; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E46D8;
@@ -1370,14 +1371,13 @@ void dll_16C_free(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) Obj_Fre
 #pragma scheduling reset
 
 /* conditional init/free pair. */
-extern void Resource_Release(u32);
 #pragma scheduling off
 #pragma peephole off
 void crrockfall_release(void) {
-    if (lbl_803DDB40 != 0) {
+    if (lbl_803DDB40 != NULL) {
         Resource_Release(lbl_803DDB40);
     }
-    lbl_803DDB40 = 0;
+    lbl_803DDB40 = NULL;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1934,7 +1934,6 @@ void crrockfall_init(int *obj, u8 *params)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u32 Resource_Acquire(int id, int flag);
 extern void fn_800628CC(int *obj);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern void Sfx_PlayFromObject(int *obj, int sfx);
@@ -1962,7 +1961,7 @@ void crrockfall_update(int *obj)
     ObjModelState *modelState = ((GameObject *)obj)->anim.modelState;
     int *p4c = *(int **)((char *)obj + 0x4c);
 
-    if (lbl_803DDB40 == 0) {
+    if (lbl_803DDB40 == NULL) {
         lbl_803DDB40 = Resource_Acquire(91, 1);
     }
 

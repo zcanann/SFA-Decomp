@@ -1,5 +1,6 @@
 #include "main/objHitReact.h"
 #include "main/game_object.h"
+#include "main/resource.h"
 
 /* DLL 0x76 (DIMSnowHorn1 / dim2prisonmammoth) fragment: head/vtable live in placeholder_802BACC0 + placeholder_802BB4B0; consolidate when those adjacent units are graduated. */
 
@@ -408,7 +409,6 @@ extern f32 lbl_803E83A4;
 extern void fn_8003B950(int mtx);
 
 extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
-extern void Resource_Release(int handle);
 extern void *lbl_803DE4D0;
 
 extern int gDRCloudRunnerStateHandlers[];
@@ -421,7 +421,6 @@ extern int DR_CloudRunner_stateHandler04(int obj, int p2);
 extern void DR_CloudRunner_stateHandler05();
 extern void DR_CloudRunner_stateHandler06();
 
-extern int Resource_Acquire(int id, int kind);
 extern int gDim2PrisonMammothStateHandlers[];
 extern int gDREarthWarriorStateHandlers[];
 extern void *gDim2PrisonMammothDefaultStateHandler;

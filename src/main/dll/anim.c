@@ -6,6 +6,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/resource.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -4895,7 +4896,6 @@ int dbstealerworm_stateHandlerA0E(int obj, int param2)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int Resource_Acquire(int id, int flag);
 extern f64 lbl_803E63F0;
 extern f32 lbl_803E63E4;
 extern f32 lbl_803E63E8;
@@ -4906,7 +4906,7 @@ extern f32 lbl_803E63E0;
 void DFP_Torch_init(int obj, int param2)
 {
     DfpTorchState *state = ((GameObject *)obj)->extra;
-    int res;
+    void *res;
     f32 local_18;
     int v;
     *(s16 *)obj = (s16)((*(s8 *)(param2 + 0x18) & 0x3f) << 10);
@@ -7032,8 +7032,6 @@ void DFP_Torch_update(int obj)
     extern void Sfx_StopObjectChannel(int, int);
     extern void objUpdateOpacity(int);
     extern int ObjHits_GetPriorityHit(int, int, int, int);
-    extern int Resource_Acquire(int id, int flag);
-    extern void Resource_Release(int);
     extern uint GameBit_Get(int);
     extern void GameBit_Set(int, int);
     extern int *gPartfxInterface;
@@ -7050,7 +7048,7 @@ void DFP_Torch_update(int obj)
         int m3;
     } TorchPrm;
     DfpTorchState *blob = ((GameObject *)obj)->extra;
-    int res;
+    void *res;
     int h;
     int i;
     f32 buf[5];
