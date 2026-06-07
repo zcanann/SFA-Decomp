@@ -1955,10 +1955,10 @@ void Tricky_resumeAfterCommand(int obj,int state)
     ((TrickyState *)state)->flags2DC = ((TrickyState *)state)->flags2DC & 0xffffef7f;
     ((TrickyState *)state)->unk2E8 = ((TrickyState *)state)->unk2E8 & 0xfffffffb;
     ((TrickyState *)state)->unk30C = lbl_803E2574;
-    *(u8 *)(obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
   }
   else {
-    *(u8 *)(obj + 0x36) = (int)(lbl_803E257C * ((GameObject *)obj)->anim.currentMoveProgress);
+    ((GameObject *)obj)->anim.alpha = (int)(lbl_803E257C * ((GameObject *)obj)->anim.currentMoveProgress);
     ((TrickyState *)state)->unk30C = ((GameObject *)obj)->anim.currentMoveProgress;
   }
 }
@@ -2029,10 +2029,10 @@ void trickyFn_80148d8c(int obj,int state)
   else if (alpha > 0xff) {
     alpha = 0xff;
   }
-  *(u8 *)(obj + 0x36) = alpha;
+  ((GameObject *)obj)->anim.alpha = alpha;
   ((TrickyState *)state)->unk30C =
-      lbl_803E256C + (f32)(0xff - *(u8 *)(obj + 0x36)) / lbl_803E257C;
-  if (*(u8 *)(obj + 0x36) < 5) {
+      lbl_803E256C + (f32)(0xff - ((GameObject *)obj)->anim.alpha) / lbl_803E257C;
+  if (((GameObject *)obj)->anim.alpha < 5) {
     if ((((TrickyState *)state)->unk2E4 & 0x40000000) != 0) {
       if (*(s16 *)(setup + 0x18) != -1) {
         gameBitIncrement(*(s16 *)(setup + 0x18));
@@ -2044,7 +2044,7 @@ void trickyFn_80148d8c(int obj,int state)
     ((TrickyState *)state)->unk30C = lbl_803E2574;
     ((TrickyState *)state)->flags2DC = 0;
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
-    *(u8 *)(obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
     *(u32 *)&((GameObject *)obj)->unkF4 = 1;
     if (*(int *)(setup + 0x14) == -1) {
       Obj_FreeObject(obj);
@@ -2485,7 +2485,7 @@ void baddieInstantiateWeapon(int obj,int state)
 
   parentSetup = *(int *)&((GameObject *)obj)->anim.placementData;
   if ((*(s16 *)&((TrickyState *)state)->unk2B4 != *(s16 *)(state + 0x2b6)) &&
-      (*(u8 *)(obj + 0x36) != 0)) {
+      (((GameObject *)obj)->anim.alpha != 0)) {
     if (((GameObject *)obj)->unkC8 != NULL) {
       child = ((GameObject *)obj)->unkC8;
       ObjLink_DetachChild(obj, (int)child);
@@ -3033,7 +3033,7 @@ void FUN_80146fa4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     ObjHits_EnableObject(param_9);
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) == 0) {
-    *(char *)(param_9 + 0x36) = (char)(int)(lbl_803E3210 * *(float *)(param_9 + 0x98));
+    ((GameObject *)param_9)->anim.alpha = (char)(int)(lbl_803E3210 * *(float *)(param_9 + 0x98));
     *(undefined4 *)(param_10 + 0x30c) = *(undefined4 *)(param_9 + 0x98);
   }
   else {
@@ -3047,7 +3047,7 @@ void FUN_80146fa4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xffffef7f;
     *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) & 0xfffffffb;
     *(float *)(param_10 + 0x30c) = lbl_803E31FC;
-    *(undefined *)(param_9 + 0x36) = 0xff;
+    ((GameObject *)param_9)->anim.alpha = 0xff;
   }
   return;
 }
@@ -3330,7 +3330,7 @@ void FUN_801476cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
   
   iVar3 = *(int *)(param_9 + 0x4c);
   if ((*(short *)(param_10 + 0x2b4) != *(short *)(param_10 + 0x2b6)) &&
-     (*(char *)(param_9 + 0x36) != '\0')) {
+     (((GameObject *)param_9)->anim.alpha != 0)) {
     iVar4 = *(int *)(param_9 + 200);
     if (iVar4 != 0) {
       uVar5 = ObjLink_DetachChild(param_9,iVar4);
