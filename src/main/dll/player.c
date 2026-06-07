@@ -1026,24 +1026,12 @@ int fn_802A3F24(int obj, int state)
             ((PlayerState *)inner)->unk5AC - ((PlayerState *)inner)->unk874;
         ((GameObject *)obj)->anim.worldPosZ =
             k * ((PlayerState *)inner)->unk5CC + *(f32 *)((char *)inner + 0x5dc);
-        Obj_TransformWorldPointToLocal(
-            (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14),
-            *(int *)&((GameObject *)obj)->anim.parent,
-            ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ);
+        Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14), *(int *)&((GameObject *)obj)->anim.parent);
         objHitDetectFn_80062e84(obj, ((PlayerState *)inner)->unk4C4, 1);
         if (*(void **)((char *)inner + 0x4c4) != NULL) {
-            Obj_TransformWorldPointToLocal(
-                (f32 *)((char *)inner + 0x5d4), (f32 *)((char *)inner + 0x5d8), (f32 *)((char *)inner + 0x5dc),
-                ((PlayerState *)inner)->unk4C4,
-                *(f32 *)((char *)inner + 0x5d4), *(f32 *)((char *)inner + 0x5d8), *(f32 *)((char *)inner + 0x5dc));
-            Obj_TransformWorldPointToLocal(
-                (f32 *)((char *)inner + 0x5ec), (f32 *)((char *)inner + 0x5f0), (f32 *)((char *)inner + 0x5f4),
-                ((PlayerState *)inner)->unk4C4,
-                *(f32 *)((char *)inner + 0x5ec), *(f32 *)((char *)inner + 0x5f0), *(f32 *)((char *)inner + 0x5f4));
-            Obj_TransformWorldPointToLocal(
-                (f32 *)((char *)inner + 0x5f8), (f32 *)((char *)inner + 0x5fc), (f32 *)((char *)inner + 0x600),
-                ((PlayerState *)inner)->unk4C4,
-                *(f32 *)((char *)inner + 0x5f8), *(f32 *)((char *)inner + 0x5fc), *(f32 *)((char *)inner + 0x600));
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)inner + 0x5d4), *(f32 *)((char *)inner + 0x5d8), *(f32 *)((char *)inner + 0x5dc), (f32 *)((char *)inner + 0x5d4), (f32 *)((char *)inner + 0x5d8), (f32 *)((char *)inner + 0x5dc), ((PlayerState *)inner)->unk4C4);
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)inner + 0x5ec), *(f32 *)((char *)inner + 0x5f0), *(f32 *)((char *)inner + 0x5f4), (f32 *)((char *)inner + 0x5ec), (f32 *)((char *)inner + 0x5f0), (f32 *)((char *)inner + 0x5f4), ((PlayerState *)inner)->unk4C4);
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)inner + 0x5f8), *(f32 *)((char *)inner + 0x5fc), *(f32 *)((char *)inner + 0x600), (f32 *)((char *)inner + 0x5f8), (f32 *)((char *)inner + 0x5fc), (f32 *)((char *)inner + 0x600), ((PlayerState *)inner)->unk4C4);
             ((PlayerState *)inner)->unk5AC =
                 ((PlayerState *)inner)->unk5AC - *(f32 *)((char *)((PlayerState *)inner)->unk4C4 + 0x10);
             ((PlayerState *)inner)->unk5B0 =
@@ -1138,27 +1126,15 @@ int fn_802A36EC(int obj, int state)
         inner->yaw =
             (s16)getAngle(inner->unk5C4, inner->unk5CC);
         inner->targetYaw = inner->yaw;
-        Obj_TransformWorldPointToLocal(
-            (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14),
-            *(int *)((char *)obj + 0x30),
-            *(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c), *(f32 *)((char *)obj + 0x20));
+        Obj_TransformWorldPointToLocal(*(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c), *(f32 *)((char *)obj + 0x20), (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14), *(int *)((char *)obj + 0x30));
         objHitDetectFn_80062e84(obj, inner->unk4C4, 1);
         inner->unk5B4 = *(f32 *)((char *)obj + 0xc);
         inner->unk5B8 = *(f32 *)((char *)obj + 0x10);
         inner->unk5BC = *(f32 *)((char *)obj + 0x14);
         if (*(void **)((char *)inner + 0x4c4) != NULL) {
-            Obj_TransformWorldPointToLocal(
-                (f32 *)((char *)inner + 0x5d4), (f32 *)((char *)inner + 0x5d8), (f32 *)((char *)inner + 0x5dc),
-                inner->unk4C4,
-                *(f32 *)((char *)inner + 0x5d4), *(f32 *)((char *)inner + 0x5d8), *(f32 *)((char *)inner + 0x5dc));
-            Obj_TransformWorldPointToLocal(
-                (f32 *)((char *)inner + 0x5ec), (f32 *)((char *)inner + 0x5f0), (f32 *)((char *)inner + 0x5f4),
-                inner->unk4C4,
-                *(f32 *)((char *)inner + 0x5ec), *(f32 *)((char *)inner + 0x5f0), *(f32 *)((char *)inner + 0x5f4));
-            Obj_TransformWorldPointToLocal(
-                (f32 *)((char *)inner + 0x5f8), (f32 *)((char *)inner + 0x5fc), (f32 *)((char *)inner + 0x600),
-                inner->unk4C4,
-                *(f32 *)((char *)inner + 0x5f8), *(f32 *)((char *)inner + 0x5fc), *(f32 *)((char *)inner + 0x600));
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)inner + 0x5d4), *(f32 *)((char *)inner + 0x5d8), *(f32 *)((char *)inner + 0x5dc), (f32 *)((char *)inner + 0x5d4), (f32 *)((char *)inner + 0x5d8), (f32 *)((char *)inner + 0x5dc), inner->unk4C4);
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)inner + 0x5ec), *(f32 *)((char *)inner + 0x5f0), *(f32 *)((char *)inner + 0x5f4), (f32 *)((char *)inner + 0x5ec), (f32 *)((char *)inner + 0x5f0), (f32 *)((char *)inner + 0x5f4), inner->unk4C4);
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)inner + 0x5f8), *(f32 *)((char *)inner + 0x5fc), *(f32 *)((char *)inner + 0x600), (f32 *)((char *)inner + 0x5f8), (f32 *)((char *)inner + 0x5fc), (f32 *)((char *)inner + 0x600), inner->unk4C4);
             inner->unk5AC =
                 inner->unk5AC - *(f32 *)((char *)inner->unk4C4 + 0x10);
             inner->unk5B0 =
@@ -1265,10 +1241,7 @@ int fn_802A3B04(int obj, int state)
         m = ((PlayerState *)inner)->unk607 == 1 ? 0xb : 0xa;
         ((PlayerState *)inner)->targetYaw = ((PlayerState *)inner)->targetYaw + d;
         ((PlayerState *)inner)->yaw = ((PlayerState *)inner)->targetYaw;
-        Obj_TransformWorldPointToLocal(
-            (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14),
-            *(int *)((char *)obj + 0x30),
-            *(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c), *(f32 *)((char *)obj + 0x20));
+        Obj_TransformWorldPointToLocal(*(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c), *(f32 *)((char *)obj + 0x20), (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14), *(int *)((char *)obj + 0x30));
         objHitDetectFn_80062e84(obj, ((PlayerState *)inner)->unk4C4, 1);
         ((PlayerState *)inner)->unk5B4 = *(f32 *)((char *)obj + 0xc);
         ((PlayerState *)inner)->unk5B8 = *(f32 *)((char *)obj + 0x10);
@@ -1288,18 +1261,9 @@ int fn_802A3B04(int obj, int state)
                 0x43, 1, 0, 4, &shk, 0, 0xff);
         }
         if (*(void **)((char *)inner + 0x4c4) != NULL) {
-            Obj_TransformWorldPointToLocal(
-                (f32 *)((char *)inner + 0x5d4), (f32 *)((char *)inner + 0x5d8), (f32 *)((char *)inner + 0x5dc),
-                ((PlayerState *)inner)->unk4C4,
-                *(f32 *)((char *)inner + 0x5d4), *(f32 *)((char *)inner + 0x5d8), *(f32 *)((char *)inner + 0x5dc));
-            Obj_TransformWorldPointToLocal(
-                (f32 *)((char *)inner + 0x5ec), (f32 *)((char *)inner + 0x5f0), (f32 *)((char *)inner + 0x5f4),
-                ((PlayerState *)inner)->unk4C4,
-                *(f32 *)((char *)inner + 0x5ec), *(f32 *)((char *)inner + 0x5f0), *(f32 *)((char *)inner + 0x5f4));
-            Obj_TransformWorldPointToLocal(
-                (f32 *)((char *)inner + 0x5f8), (f32 *)((char *)inner + 0x5fc), (f32 *)((char *)inner + 0x600),
-                ((PlayerState *)inner)->unk4C4,
-                *(f32 *)((char *)inner + 0x5f8), *(f32 *)((char *)inner + 0x5fc), *(f32 *)((char *)inner + 0x600));
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)inner + 0x5d4), *(f32 *)((char *)inner + 0x5d8), *(f32 *)((char *)inner + 0x5dc), (f32 *)((char *)inner + 0x5d4), (f32 *)((char *)inner + 0x5d8), (f32 *)((char *)inner + 0x5dc), ((PlayerState *)inner)->unk4C4);
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)inner + 0x5ec), *(f32 *)((char *)inner + 0x5f0), *(f32 *)((char *)inner + 0x5f4), (f32 *)((char *)inner + 0x5ec), (f32 *)((char *)inner + 0x5f0), (f32 *)((char *)inner + 0x5f4), ((PlayerState *)inner)->unk4C4);
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)inner + 0x5f8), *(f32 *)((char *)inner + 0x5fc), *(f32 *)((char *)inner + 0x600), (f32 *)((char *)inner + 0x5f8), (f32 *)((char *)inner + 0x5fc), (f32 *)((char *)inner + 0x600), ((PlayerState *)inner)->unk4C4);
             ((PlayerState *)inner)->unk5AC =
                 ((PlayerState *)inner)->unk5AC - *(f32 *)((char *)((PlayerState *)inner)->unk4C4 + 0x10);
             ((PlayerState *)inner)->unk5B0 =
@@ -4197,9 +4161,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
             *(f32 *)(p2 + 0x660) = buf.g38;
             *(u8 *)(p2 + 0x681) = 0;
             if ((u32)buf.hitObj != 0) {
-                Obj_TransformWorldPointToLocal((f32 *)(p2 + 0x664), (f32 *)(p2 + 0x668),
-                                               (f32 *)(p2 + 0x66c), buf.hitObj, end[0], end[1],
-                                               end[2]);
+                Obj_TransformWorldPointToLocal(end[0], end[1], end[2], (f32 *)(p2 + 0x664), (f32 *)(p2 + 0x668), (f32 *)(p2 + 0x66c), buf.hitObj);
                 *(int *)(p2 + 0x67c) = buf.hitObj;
             } else {
                 *(f32 *)(p2 + 0x664) = end[0];
@@ -4222,9 +4184,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
             *(f32 *)(p2 + 0x660) = buf.g38;
             *(u8 *)(p2 + 0x681) = 0;
             if ((u32)buf.hitObj != 0) {
-                Obj_TransformWorldPointToLocal((f32 *)(p2 + 0x664), (f32 *)(p2 + 0x668),
-                                               (f32 *)(p2 + 0x66c), buf.hitObj, end[0], end[1],
-                                               end[2]);
+                Obj_TransformWorldPointToLocal(end[0], end[1], end[2], (f32 *)(p2 + 0x664), (f32 *)(p2 + 0x668), (f32 *)(p2 + 0x66c), buf.hitObj);
                 *(int *)(p2 + 0x67c) = buf.hitObj;
             } else {
                 *(f32 *)(p2 + 0x664) = end[0];
@@ -4514,20 +4474,16 @@ void fn_80296EB4(int obj, int newParent)
         s.wp0[2] = *(f32 *)((char *)inner + 0x120);
     }
     if ((void *)newParent != NULL) {
-        Obj_TransformWorldPointToLocal((f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10),
-                                       (f32 *)((char *)obj + 0x14), newParent, s.wp[0], s.wp[1], s.wp[2]);
-        Obj_TransformWorldPointToLocal((f32 *)((char *)obj + 0x80), (f32 *)((char *)obj + 0x84),
-                                       (f32 *)((char *)obj + 0x88), newParent, s.wp2[0], s.wp2[1], s.wp2[2]);
-        Obj_TransformWorldVectorToLocal((f32 *)((char *)obj + 0x24), &s.wv[1],
-                                        (f32 *)((char *)obj + 0x2c), newParent, s.wv[0], lbl_803E7EA4, s.wv[2]);
+        Obj_TransformWorldPointToLocal(s.wp[0], s.wp[1], s.wp[2], (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14), newParent);
+        Obj_TransformWorldPointToLocal(s.wp2[0], s.wp2[1], s.wp2[2], (f32 *)((char *)obj + 0x80), (f32 *)((char *)obj + 0x84), (f32 *)((char *)obj + 0x88), newParent);
+        Obj_TransformWorldVectorToLocal(s.wv[0], lbl_803E7EA4, s.wv[2], (f32 *)((char *)obj + 0x24), &s.wv[1], (f32 *)((char *)obj + 0x2c), newParent);
         ((GameObject *)obj)->anim.rotX = Angle_SubWrappedS16(a0, newParent);
         inner->targetYaw = Angle_SubWrappedS16(a1, newParent);
         inner->yaw = Angle_SubWrappedS16(a2, newParent);
         inner->unk492 = Angle_SubWrappedS16(a3, newParent);
         inner->unk490 = Angle_SubWrappedS16(a4, newParent);
         inner->unk494 = Angle_SubWrappedS16(a5, newParent);
-        Obj_TransformWorldPointToLocal((f32 *)((char *)inner + 0x118), (f32 *)((char *)inner + 0x11c),
-                                       (f32 *)((char *)inner + 0x120), newParent, s.wp0[0], s.wp0[1], s.wp0[2]);
+        Obj_TransformWorldPointToLocal(s.wp0[0], s.wp0[1], s.wp0[2], (f32 *)((char *)inner + 0x118), (f32 *)((char *)inner + 0x11c), (f32 *)((char *)inner + 0x120), newParent);
     } else {
         ((GameObject *)obj)->anim.localPosX = s.wp[0];
         ((GameObject *)obj)->anim.localPosY = s.wp[1];
@@ -5641,9 +5597,7 @@ int fn_8029F108(int obj, int state)
             *(f32 *)((char *)obj + 0x18) += playerMapOffsetX;
             *(f32 *)((char *)obj + 0x20) += playerMapOffsetZ;
         }
-        Obj_TransformWorldPointToLocal((f32 *)((char *)obj + 0xc), &localPt, (f32 *)((char *)obj + 0x14),
-            *(int *)((char *)obj + 0x30), *(f32 *)((char *)obj + 0x18), lbl_803E7EA4,
-            *(f32 *)((char *)obj + 0x20));
+        Obj_TransformWorldPointToLocal(*(f32 *)((char *)obj + 0x18), lbl_803E7EA4, *(f32 *)((char *)obj + 0x20), (f32 *)((char *)obj + 0xc), &localPt, (f32 *)((char *)obj + 0x14), *(int *)((char *)obj + 0x30));
         if (inner->unk6CC == 1) {
             inner->targetYaw += 0x4000;
             inner->yaw = inner->targetYaw;
@@ -9257,10 +9211,7 @@ int fn_802A00E0(int obj, int state)
             ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.worldPosX + playerMapOffsetX;
             ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.worldPosZ + playerMapOffsetZ;
         }
-        Obj_TransformWorldPointToLocal(
-            (f32 *)((char *)obj + 0xc), &outY, (f32 *)((char *)obj + 0x14),
-            *(int *)&((GameObject *)obj)->anim.parent,
-            ((GameObject *)obj)->anim.worldPosX, lbl_803E7EA4, ((GameObject *)obj)->anim.worldPosZ);
+        Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, lbl_803E7EA4, ((GameObject *)obj)->anim.worldPosZ, (f32 *)((char *)obj + 0xc), &outY, (f32 *)((char *)obj + 0x14), *(int *)&((GameObject *)obj)->anim.parent);
         fn_802AB5A4(obj, (int)inner, 5);
         ObjAnim_SetCurrentMove(obj,
                                *(s16 *)inner->unk3F8,
@@ -9334,10 +9285,7 @@ int fn_802A03BC(int obj, int state)
             ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.worldPosX + playerMapOffsetX;
             ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.worldPosZ + playerMapOffsetZ;
         }
-        Obj_TransformWorldPointToLocal(
-            (f32 *)((char *)obj + 0xc), &outY, (f32 *)((char *)obj + 0x14),
-            *(int *)&((GameObject *)obj)->anim.parent,
-            ((GameObject *)obj)->anim.worldPosX, lbl_803E7EA4, ((GameObject *)obj)->anim.worldPosZ);
+        Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, lbl_803E7EA4, ((GameObject *)obj)->anim.worldPosZ, (f32 *)((char *)obj + 0xc), &outY, (f32 *)((char *)obj + 0x14), *(int *)&((GameObject *)obj)->anim.parent);
         fn_802AB5A4(obj, (int)inner, 5);
         ObjAnim_SetCurrentMove(obj,
                                *(s16 *)inner->unk3F8,
@@ -15496,9 +15444,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
                 ((GameObject *)obj)->anim.worldPosX += playerMapOffsetX;
                 ((GameObject *)obj)->anim.worldPosZ += playerMapOffsetZ;
             }
-            Obj_TransformWorldPointToLocal((f32 *)((char *)obj + 0xc), &local,
-                (f32 *)((char *)obj + 0x14), *(int *)&((GameObject *)obj)->anim.parent,
-                ((GameObject *)obj)->anim.worldPosX, lbl_803E7EA4, ((GameObject *)obj)->anim.worldPosZ);
+            Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, lbl_803E7EA4, ((GameObject *)obj)->anim.worldPosZ, (f32 *)((char *)obj + 0xc), &local, (f32 *)((char *)obj + 0x14), *(int *)&((GameObject *)obj)->anim.parent);
             fn_802AB5A4(obj, (int)inner, 5);
             ObjAnim_SetCurrentMove(obj, *(s16 *)(inner->unk3F8), lbl_803E7EA4, 1);
             inner->flags360 |= 0x800000;
