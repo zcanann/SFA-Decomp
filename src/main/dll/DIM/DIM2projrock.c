@@ -654,13 +654,13 @@ void FUN_801b9914(uint param_1)
      *(short *)(pfVar7 + 2) < 1)) {
     FUN_80006824(param_1,SFXwp_sexpl2_c);
   }
-  iVar2 = (uint)*(byte *)(param_1 + 0x36) + (uint)DAT_803dc070 * -8;
+  iVar2 = (uint)((GameObject *)param_1)->anim.alpha + (uint)DAT_803dc070 * -8;
   if (iVar2 < 0) {
     iVar2 = 0;
     *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar6 + 0xc);
     *(float *)(param_1 + 0x28) = lbl_803E5818;
   }
-  *(char *)(param_1 + 0x36) = (char)iVar2;
+  ((GameObject *)param_1)->anim.alpha = (char)iVar2;
   *(float *)(param_1 + 0x10) =
        *(float *)(param_1 + 0x28) * lbl_803DC074 + *(float *)(param_1 + 0x10);
   return;
@@ -1016,10 +1016,10 @@ void dim2icicle_init(int obj, s8 *p) {
     char *inner = ((GameObject *)obj)->extra;
     if (GameBit_Get(*(s16 *)(p + 0x1e)) != 0) {
         inner[6] = 2;
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
     } else {
         inner[6] = 0;
-        *(u8 *)(obj + 0x36) = 0xff;
+        ((GameObject *)obj)->anim.alpha = 0xff;
     }
     *(s16 *)obj = (s16)((s32)p[0x18] << 8);
     ((GameObject *)obj)->anim.velocityY = lbl_803E4B80;
@@ -1062,11 +1062,11 @@ void dim2icefloe_update(int obj)
         if ((int)((Dim2IceFloeState *)sub)->unkB8 != 0) {
             return;
         }
-        v = *(u8 *)(obj + 0x36) + framesThisStep * 4;
+        v = ((GameObject *)obj)->anim.alpha + framesThisStep * 4;
         if (v > 0xff) {
             v = 0xff;
         }
-        *(u8 *)(obj + 0x36) = v;
+        ((GameObject *)obj)->anim.alpha = v;
         if ((((Dim2IceFloeState *)sub)->unkB6 & 1) == 0) {
             ((Dim2IceFloeState *)sub)->unk9C = ObjList_FindObjectById(((Dim2IceFloeState *)sub)->unkA0);
             ((Dim2IceFloeState *)sub)->unk90 = (*(code *)(**(int **)(((Dim2IceFloeState *)sub)->unk9C + 0x68) + 0x20))(
@@ -1123,7 +1123,7 @@ void dim2icefloe_init(int obj, int p)
     objAnim->bankIndex = (s8)randomGetRange(0, objAnim->modelInstance->modelCount - 1);
     ((GameObject *)obj)->anim.rotX = (s16)((s32)*(s8 *)(p + 0x18) << 8);
     ((GameObject *)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
-    *(u8 *)(obj + 0x36) = 0;
+    ((GameObject *)obj)->anim.alpha = 0;
     switch (((GameObject *)obj)->anim.seqId) {
     case 0x109:
         ((Dim2IceFloeState *)sub)->unkAC = lbl_803E4B4C + (f32)(s32)randomGetRange(0, 0x28);
@@ -1235,13 +1235,13 @@ void dim2icicle_update(int obj)
             }
         }
         {
-            int v = *(u8 *)(obj + 0x36) - framesThisStep * 8;
+            int v = ((GameObject *)obj)->anim.alpha - framesThisStep * 8;
             if (v < 0) {
                 v = 0;
                 ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0xc);
                 ((GameObject *)obj)->anim.velocityY = lbl_803E4B80;
             }
-            *(u8 *)(obj + 0x36) = v;
+            ((GameObject *)obj)->anim.alpha = v;
         }
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
         break;
