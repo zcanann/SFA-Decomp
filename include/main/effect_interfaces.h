@@ -5,34 +5,88 @@
 
 typedef void (*EffectSpawnObjectFn)(void *obj, int effectId, void *params, int mode,
                                     int modelId, void *extraArg);
+typedef void (*EffectOnMapSetupFn)(void);
 typedef void (*EffectUpdateFrameStateFn)(int reset);
 typedef void (*EffectFreeObjectFn)(void *obj);
 
 typedef struct EffectInterface {
-  u8 pad00[0x08];
+  u8 pad00[0x04];
+  EffectOnMapSetupFn onMapSetup;
   EffectSpawnObjectFn spawnObject;
   EffectUpdateFrameStateFn updateFrameState;
   u8 pad10[0x18 - 0x10];
   EffectFreeObjectFn freeObject;
 } EffectInterface;
 
+STATIC_ASSERT(offsetof(EffectInterface, onMapSetup) == 0x04);
 STATIC_ASSERT(offsetof(EffectInterface, spawnObject) == 0x08);
 STATIC_ASSERT(offsetof(EffectInterface, updateFrameState) == 0x0C);
 STATIC_ASSERT(offsetof(EffectInterface, freeObject) == 0x18);
 
 typedef int (*ExpgfxSpawnEffectFn)(void *config, int preferredPoolIndex, int sourceId,
                                    int flags);
+typedef void (*ExpgfxUpdateFrameStateFn)(int sourceMode, int sourceId, int unused0,
+                                         int unused1);
+typedef void (*ExpgfxResetAllPoolsFn)(void);
 typedef void (*ExpgfxFreeSourceFn)(u32 sourceId);
+typedef int (*ExpgfxFunc09Fn)(void);
+typedef void (*ExpgfxNopFn)(void);
+typedef void (*ExpgfxUpdateSourceFrameFlagsFn)(void *sourceObject);
 
 typedef struct ExpgfxInterface {
-  u8 pad00[0x08];
+  u8 pad00[0x04];
+  EffectOnMapSetupFn onMapSetup;
   ExpgfxSpawnEffectFn spawnEffect;
-  u8 pad0C[0x14 - 0x0C];
+  ExpgfxUpdateFrameStateFn updateFrameState;
+  ExpgfxResetAllPoolsFn resetAllPools;
   ExpgfxFreeSourceFn freeSource;
+  ExpgfxFreeSourceFn freeSource2;
+  ExpgfxFunc09Fn func09;
+  ExpgfxNopFn func0ANop;
+  ExpgfxNopFn func0BNop;
+  ExpgfxFreeSourceFn freeOwner3;
+  ExpgfxUpdateSourceFrameFlagsFn updateSourceFrameFlags;
 } ExpgfxInterface;
 
+STATIC_ASSERT(offsetof(ExpgfxInterface, onMapSetup) == 0x04);
 STATIC_ASSERT(offsetof(ExpgfxInterface, spawnEffect) == 0x08);
+STATIC_ASSERT(offsetof(ExpgfxInterface, updateFrameState) == 0x0C);
+STATIC_ASSERT(offsetof(ExpgfxInterface, resetAllPools) == 0x10);
 STATIC_ASSERT(offsetof(ExpgfxInterface, freeSource) == 0x14);
+STATIC_ASSERT(offsetof(ExpgfxInterface, freeSource2) == 0x18);
+STATIC_ASSERT(offsetof(ExpgfxInterface, func09) == 0x1C);
+STATIC_ASSERT(offsetof(ExpgfxInterface, func0ANop) == 0x20);
+STATIC_ASSERT(offsetof(ExpgfxInterface, func0BNop) == 0x24);
+STATIC_ASSERT(offsetof(ExpgfxInterface, freeOwner3) == 0x28);
+STATIC_ASSERT(offsetof(ExpgfxInterface, updateSourceFrameFlags) == 0x2C);
+
+typedef void (*ProjgfxOnMapSetupFn)(void);
+typedef int (*ProjgfxRetMinusOneFn)(void);
+typedef void (*ProjgfxNopFn)(void);
+typedef int (*ProjgfxGetObjectTypeIdFn)(void);
+typedef void (*ProjgfxSetZScaleUnsupportedFn)(void);
+typedef void (*ProjgfxRayHitUnsupportedFn)(void);
+
+typedef struct ProjgfxInterface {
+  u8 pad00[0x04];
+  ProjgfxOnMapSetupFn onMapSetup;
+  ProjgfxRetMinusOneFn func04RetMinusOne;
+  ProjgfxNopFn func05Nop;
+  ProjgfxNopFn func06Nop;
+  ProjgfxNopFn func07Nop;
+  ProjgfxGetObjectTypeIdFn getObjectTypeId;
+  ProjgfxSetZScaleUnsupportedFn setZScaleUnsupported;
+  ProjgfxRayHitUnsupportedFn rayHitUnsupported;
+} ProjgfxInterface;
+
+STATIC_ASSERT(offsetof(ProjgfxInterface, onMapSetup) == 0x04);
+STATIC_ASSERT(offsetof(ProjgfxInterface, func04RetMinusOne) == 0x08);
+STATIC_ASSERT(offsetof(ProjgfxInterface, func05Nop) == 0x0C);
+STATIC_ASSERT(offsetof(ProjgfxInterface, func06Nop) == 0x10);
+STATIC_ASSERT(offsetof(ProjgfxInterface, func07Nop) == 0x14);
+STATIC_ASSERT(offsetof(ProjgfxInterface, getObjectTypeId) == 0x18);
+STATIC_ASSERT(offsetof(ProjgfxInterface, setZScaleUnsupported) == 0x1C);
+STATIC_ASSERT(offsetof(ProjgfxInterface, rayHitUnsupported) == 0x20);
 
 typedef void (*ModgfxDetachSourceFn)(void *sourceObject);
 typedef void (*ModgfxOnMapSetupFn)(void);

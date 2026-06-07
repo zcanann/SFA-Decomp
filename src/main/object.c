@@ -1716,7 +1716,7 @@ extern int getDataFileSize(int id);
 extern void *gCameraInterface;
 extern void *gObjectTriggerInterface;
 extern void *gTitleMenuControlInterface;
-extern void *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern void *gModgfxInterface;
 extern WaterfxInterface **gWaterfxInterface;
 extern int *gMapEventInterface;
@@ -1787,7 +1787,7 @@ void objFreeObjDef(void *objp, int flag) {
         break;
     }
     (*(void (**)(u8 *))(*(int *)gTitleMenuControlInterface + 0x48))(obj);
-    (*(void (**)(u8 *))(*(int *)gExpgfxInterface + 0x28))(obj);
+    (*gExpgfxInterface)->freeOwner3((u32)obj);
     if (((ObjAnimComponent *)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) {
         ObjGroup_RemoveObject((uint)obj, 6);
         if (flag == 0) {
@@ -2197,7 +2197,7 @@ void Obj_UpdateAllObjects(u8 flags)
     }
     if ((f & 2) == 0) {
         ((ModgfxInterface *)*(void **)gModgfxInterface)->updateActiveEffects(0, 0, 0);
-        (*(void (**)(int, u8, int, int))(*(int *)gExpgfxInterface + 0xc))(0, framesThisStep, 0, 0);
+        (*gExpgfxInterface)->updateFrameState(0, framesThisStep, 0, 0);
     }
     if (timeStop == 0) {
         ObjHits_TickPriorityHitCooldowns();
