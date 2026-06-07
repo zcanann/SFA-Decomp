@@ -3995,10 +3995,10 @@ void fn_80128A7C(u8 i, s16 p2, int p3)
         if (lbl_803DD824 == lbl_8031BD90) {
             int idv = lbl_803DD824[i].id;
             u32 tex;
-            if (((CMenuHudIdx2 *)((u8 *)hud + idv * 2))->texId == 0xbf0) {
+            if (hud->texIds358[idv] == 0xbf0) {
                 ofs -= 0x14;
             }
-            tex = ((CMenuHudIdx4 *)((u8 *)hud + idv * 4))->texPrimary;
+            tex = hud->textures3A8[idv];
             if (tex == 0) {
                 continue;
             }
@@ -4011,7 +4011,7 @@ void fn_80128A7C(u8 i, s16 p2, int p3)
             if (idv == 0x25) {
                 ofs -= 0x14;
             }
-            pauseMenuDrawElement(((CMenuHudIdx4 *)((u8 *)hud + idv * 4))->texSecondary, x, y, ofs,
+            pauseMenuDrawElement(hud->textures1C0[idv], x, y, ofs,
                                  (u8)v, (s32)spd, p3);
         }
     }
