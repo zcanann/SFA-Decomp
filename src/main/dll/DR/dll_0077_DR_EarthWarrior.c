@@ -1240,7 +1240,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     *(u8 *)((char *)q + 0x264) = 0x28;
     (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, q);
     ObjHits_EnableObject(obj);
-    *(s16 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0xb2) = 9;
+    ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->trackContactMask = 9;
     dll_2E_func05(obj, inner + 0x3ec, -0x2000, 0x31c7, 2);
     dll_2E_func09(inner + 0x3ec, &r1, &r2, 2);
     fn_80113F94(inner + 0x3ec, lbl_803E8388);

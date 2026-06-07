@@ -1,5 +1,6 @@
 #include "main/dll/DIM/dll_802B9780_shared.h"
 #include "main/game_object.h"
+#include "main/objhits_types.h"
 #include "main/dll/baddie_state.h"
 
 /*
@@ -1263,7 +1264,7 @@ void DIMSnowHorn1_update(int obj)
     data = *(int *)&((GameObject *)obj)->extra;
     *(s16 *)((char *)data + 0xa86) = 5;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-    *(s16 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0xb2) = 9;
+    ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->trackContactMask = 9;
     flags = ((SnowHornFlags *)(base + *(s16 *)((char *)data + 0x274)))->flag;
     if (!(flags & 8)) {
         ObjHitReactEntry *arm;
@@ -1479,7 +1480,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
         ((GameObject *)obj)->anim.modelState->flags |= 0xa10;
     }
     if (((GameObject *)obj)->anim.hitReactState != NULL) {
-        *(s16 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0xb2) = 9;
+        ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->trackContactMask = 9;
     }
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, (int)inner, 0xc, 1);
     inner->baddie.unk2A4 = lbl_803E82B8;

@@ -4457,12 +4457,15 @@ void fn_80296EB4(int obj, int newParent)
     ((GameObject *)obj)->anim.previousWorldPosX = s.wp2[0];
     ((GameObject *)obj)->anim.previousWorldPosY = s.wp2[1];
     ((GameObject *)obj)->anim.previousWorldPosZ = s.wp2[2];
-    *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x10) = ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x14) = ((GameObject *)obj)->anim.localPosY;
-    *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x18) = ((GameObject *)obj)->anim.localPosZ;
-    *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x1c) = ((GameObject *)obj)->anim.worldPosX;
-    *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x20) = ((GameObject *)obj)->anim.worldPosY;
-    *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x24) = ((GameObject *)obj)->anim.worldPosZ;
+    {
+        ObjHitsPriorityState *hitState = Player_GetObjHitsState(obj);
+        hitState->localPosX = ((GameObject *)obj)->anim.localPosX;
+        hitState->localPosY = ((GameObject *)obj)->anim.localPosY;
+        hitState->localPosZ = ((GameObject *)obj)->anim.localPosZ;
+        hitState->worldPosX = ((GameObject *)obj)->anim.worldPosX;
+        hitState->worldPosY = ((GameObject *)obj)->anim.worldPosY;
+        hitState->worldPosZ = ((GameObject *)obj)->anim.worldPosZ;
+    }
     *(int *)&((GameObject *)obj)->anim.parent = newParent;
 }
 #pragma peephole reset
@@ -9310,12 +9313,13 @@ void fn_802AB5A4(int obj, int p2, int flags)
         *(f32 *)(q + 0x28) = ((GameObject *)obj)->anim.worldPosZ;
     }
     if (f & 4) {
-        *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x10) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x14) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x18) = ((GameObject *)obj)->anim.localPosZ;
-        *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x1c) = ((GameObject *)obj)->anim.worldPosX;
-        *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x20) = ((GameObject *)obj)->anim.worldPosY;
-        *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0x24) = ((GameObject *)obj)->anim.worldPosZ;
+        ObjHitsPriorityState *hitState = Player_GetObjHitsState(obj);
+        hitState->localPosX = ((GameObject *)obj)->anim.localPosX;
+        hitState->localPosY = ((GameObject *)obj)->anim.localPosY;
+        hitState->localPosZ = ((GameObject *)obj)->anim.localPosZ;
+        hitState->worldPosX = ((GameObject *)obj)->anim.worldPosX;
+        hitState->worldPosY = ((GameObject *)obj)->anim.worldPosY;
+        hitState->worldPosZ = ((GameObject *)obj)->anim.worldPosZ;
     }
 }
 #pragma dont_inline reset
@@ -11453,7 +11457,7 @@ void objLoadPlayerFromSave(int obj)
         pc, 2, (int)((char *)lbl_80332EC0 + 0x118), (int)lbl_803DC6B8, (int)&lbl_803DC6A4);
     *(u8 *)((char *)pc + 0x258) = 0x64;
     fn_802AB5A4(obj, inner, 0xff);
-    *(s16 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0xb2) = 0x29;
+    Player_GetObjHitsState(obj)->trackContactMask = 0x29;
     ((GameObject *)obj)->anim.alpha = 0xff;
     if (((GameObject *)obj)->anim.modelState != NULL) {
         ((GameObject *)obj)->anim.modelState->flags |= 0x4008;

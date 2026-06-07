@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
+#include "main/objhits_types.h"
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/DR/DRhightop.h"
@@ -351,12 +352,15 @@ void fn_801EB334(int *obj) {
     }
     ObjHits_EnableObject(obj);
     (*(void (**)(int *, char *))((char *)*gPathControlInterface + 32))(obj, (char *)state + 0x178);
-    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x10) = ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x14) = ((GameObject *)obj)->anim.localPosY;
-    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x18) = ((GameObject *)obj)->anim.localPosZ;
-    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x1c) = ((GameObject *)obj)->anim.worldPosX;
-    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x20) = ((GameObject *)obj)->anim.worldPosY;
-    *(f32 *)((char *)*(int **)&((GameObject *)obj)->anim.hitReactState + 0x24) = ((GameObject *)obj)->anim.worldPosZ;
+    {
+        ObjHitsPriorityState *hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+        hitState->localPosX = ((GameObject *)obj)->anim.localPosX;
+        hitState->localPosY = ((GameObject *)obj)->anim.localPosY;
+        hitState->localPosZ = ((GameObject *)obj)->anim.localPosZ;
+        hitState->worldPosX = ((GameObject *)obj)->anim.worldPosX;
+        hitState->worldPosY = ((GameObject *)obj)->anim.worldPosY;
+        hitState->worldPosZ = ((GameObject *)obj)->anim.worldPosZ;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

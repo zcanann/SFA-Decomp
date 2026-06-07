@@ -1346,10 +1346,12 @@ void fn_80185B74(int obj)
             ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
         } else {
             u8 st21;
+            ObjHitsPriorityState *hitState;
             ObjHits_DisableObject(obj);
-            *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x10) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x14) = ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x18) = ((GameObject *)obj)->anim.localPosZ;
+            hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+            hitState->localPosX = ((GameObject *)obj)->anim.localPosX;
+            hitState->localPosY = ((GameObject *)obj)->anim.localPosY;
+            hitState->localPosZ = ((GameObject *)obj)->anim.localPosZ;
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             if ((getButtonsJustPressed(0) & 0x100) != 0) {
                 state->riding = 0;

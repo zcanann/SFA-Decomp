@@ -123,12 +123,15 @@ void SnowBike_func15(int obj)
         *(f32 *)(t + 0x498) = zero;
         *(f32 *)(t + 0x49c) = zero;
         (*(void (**)(int, int))((char *)*(int *)gPathControlInterface + 0x20))(obj, t + 0x178);
-        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x10) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x14) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x18) = ((GameObject *)obj)->anim.localPosZ;
-        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x1c) = ((GameObject *)obj)->anim.worldPosX;
-        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x20) = ((GameObject *)obj)->anim.worldPosY;
-        *(f32 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x24) = ((GameObject *)obj)->anim.worldPosZ;
+        {
+            ObjHitsPriorityState *hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+            hitState->localPosX = ((GameObject *)obj)->anim.localPosX;
+            hitState->localPosY = ((GameObject *)obj)->anim.localPosY;
+            hitState->localPosZ = ((GameObject *)obj)->anim.localPosZ;
+            hitState->worldPosX = ((GameObject *)obj)->anim.worldPosX;
+            hitState->worldPosY = ((GameObject *)obj)->anim.worldPosY;
+            hitState->worldPosZ = ((GameObject *)obj)->anim.worldPosZ;
+        }
         *(s8 *)(t + 0x3d3) = 1;
     }
 }

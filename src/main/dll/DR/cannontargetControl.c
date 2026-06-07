@@ -826,14 +826,17 @@ void gunpowderbarrel_init(int obj, u8 *def)
         ((BarrelBits *)(st + 0x48))->b6 = v;
     }
     ObjHits_EnableObject(obj);
-    ((GunpowderBarrelState *)st)->unk2C = (f32)*(s16 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x5a);
+    {
+        ObjHitsPriorityState *hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+        ((GunpowderBarrelState *)st)->unk2C = (f32)hitState->primaryRadius;
+        if (hitState != NULL) {
+            hitState->trackContactMask = 1;
+        }
+    }
     ((BarrelBits *)(st + 0x4a))->b5 = 0;
     ((GunpowderBarrelState *)st)->unk38 = lbl_803E42C0;
     ((GunpowderBarrelState *)st)->linkedObj = 0;
     (*(void (**)(int, int))((char *)*lbl_803DCAC0 + 0x2c))(st, 1);
-    if (((GameObject *)obj)->anim.hitReactState != NULL) {
-        *(s16 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0xb2) = 1;
-    }
     if (((GameObject *)obj)->anim.seqId == 0x754) {
         ((BarrelBits *)(st + 0x4a))->b1 = 1;
     }
