@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
@@ -254,7 +255,7 @@ void LaserBeam_update(int param_1)
     extern f32 mathSinf(f32 x);
     extern int *lbl_803DDC80;
     extern int *gModgfxInterface;
-    extern int *gPartfxInterface;
+    extern EffectInterface **gPartfxInterface;
     extern u8 framesThisStep;
     extern f32 timeDelta;
     extern f32 lbl_803E5D10;
@@ -448,8 +449,8 @@ void LaserBeam_update(int param_1)
                         }
                         Sfx_PlayFromObject((int)player, sfx);
                         for (i = 0; i < 4; i++) {
-                            (*(void (**)(void *, int, int, int, int, int))(*gPartfxInterface + 8))(
-                                Obj_GetPlayerObject(), 0x198, 0, 4, -1, 0);
+                            (*gPartfxInterface)->spawnObject(Obj_GetPlayerObject(), 0x198,
+                                                             NULL, 4, -1, NULL);
                         }
                         b->targetX = sinv * spread + *(f32 *)(player + 0xc);
                         b->targetZ = cosv * spread + *(f32 *)(player + 0x14);
@@ -2237,7 +2238,7 @@ extern void ModelLightStruct_free(void *light);
 #pragma peephole off
 void lightsource_free(int obj) {
     int state = *(int *)&((GameObject *)obj)->extra;
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
     if (((LightSourceState *)state)->light != 0) {
         ModelLightStruct_free(((LightSourceState *)state)->light);
     }
@@ -2526,7 +2527,7 @@ void lightsource_update(int obj)
     extern void Sfx_RemoveLoopedObjectSound(int obj, int sfx);
     extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32 *vec);
     extern int *gExpgfxInterface;
-    extern int *gPartfxInterface;
+    extern EffectInterface **gPartfxInterface;
     extern f32 timeDelta;
     extern f32 lbl_803E5E08;
     extern f32 lbl_803E5E0C;
@@ -2591,8 +2592,7 @@ void lightsource_update(int obj)
             b->sparkTimer = b->sparkTimer - timeDelta;
             if (b->sparkTimer <= lbl_803E5E0C) {
                 fx.scale = lbl_803E5E08;
-                (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
-                    obj, 0x7cb, &fx, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x7cb, &fx, 2, -1, NULL);
                 b->sparkTimer = b->sparkTimer + lbl_803E5E1C;
             }
         }

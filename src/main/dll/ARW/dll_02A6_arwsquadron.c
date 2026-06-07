@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim_internal.h"
@@ -367,16 +368,16 @@ void arwsquadron_emitEffects(int p1, int p2)
             ObjPath_GetPointLocalPosition(p2, 4, &pfx.fx, &pfx.fy, &pfx.fz);
             pfx.f8 = ((ArwSquadronState *)p2)->emitZ;
             pfx.s6 = ((s8)((ArwSquadronState *)p2)->unk15E <= 1) ? 0x61a8 : -0x63c0;
-            (*(void (**)(int, int, void *, int, int, void *))(*gPartfxInterface + 8))(
-                p1, 0x7d0, &pfx, 4, -1, &flag);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)p1, 0x7d0, &pfx, 4,
+                                                                -1, &flag);
         }
     }
     if ((s8)((ArwSquadronState *)p2)->unk15E <= 1) {
         pfx.s6 = 0xc0a;
         ObjPath_GetPointLocalPosition(p2, 5, &pfx.fx, &pfx.fy, &pfx.fz);
         pfx.f8 = ((ArwSquadronState *)p2)->unk120;
-        (*(void (**)(int, int, void *, int, int, void *))(*gPartfxInterface + 8))(
-            p1, 0x7d1, &pfx, 4, -1, &flag);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)p1, 0x7d1, &pfx, 4, -1,
+                                                            &flag);
     }
     if (((ArwSquadronState *)p2)->unk15A != 0 && (s8)((ArwSquadronState *)p2)->unk15E > 1) {
         pfx.s0 = 0;
