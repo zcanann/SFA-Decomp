@@ -72,13 +72,13 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
     state->blendCacheSlot = (u16)moveIndex;
     moveData = (ObjAnimMoveData *)animDef->moveData[state->blendCacheSlot];
   }
-  state->frameCmd = moveData->frameCmd;
+  state->blendFrameData = moveData->frameCmd;
   frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
   if (frameType != state->frameType) {
     state->eventState = 0;
   }
   else {
-    frameValue = (float)state->frameCmd[1];
+    frameValue = (float)state->blendFrameData[1];
     if (frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
       frameValue = frameValue - gObjAnimProgressOne;
     }
@@ -396,10 +396,10 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveCont
   state->progress = state->speed;
   state->prevSegmentLength = state->segmentLength;
   state->savedStep = state->step;
-  state->prevFrameData = state->frameData;
+  state->prevMoveFrameData = state->moveFrameData;
   state->prevFrameType = state->frameType;
   state->prevBlendCacheSlot = state->blendCacheSlot;
-  state->prevFrameCmd = state->frameCmd;
+  state->prevBlendFrameData = state->blendFrameData;
   state->prevEventState = state->eventState;
   state->eventState = 0;
   state->lastBlendMoveIndex = OBJANIM_BLEND_MOVE_INDEX_INVALID;
@@ -426,9 +426,9 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveCont
     state->moveCacheSlot = (u16)moveId;
     moveData = (ObjAnimMoveData *)animDef->moveData[state->moveCacheSlot];
   }
-  state->frameData = moveData->frameCmd;
+  state->moveFrameData = moveData->frameCmd;
   state->frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
-  state->segmentLength = (float)state->frameData[1];
+  state->segmentLength = (float)state->moveFrameData[1];
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->segmentLength = state->segmentLength - gObjAnimProgressOne;
   }
@@ -1090,10 +1090,10 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
   state->progress = state->speed;
   state->prevSegmentLength = state->segmentLength;
   state->savedStep = state->step;
-  state->prevFrameData = state->frameData;
+  state->prevMoveFrameData = state->moveFrameData;
   state->prevFrameType = state->frameType;
   state->prevBlendCacheSlot = state->blendCacheSlot;
-  state->prevFrameCmd = state->frameCmd;
+  state->prevBlendFrameData = state->blendFrameData;
   state->prevEventState = state->eventState;
   state->eventState = 0;
   state->lastBlendMoveIndex = OBJANIM_BLEND_MOVE_INDEX_INVALID;
@@ -1129,9 +1129,9 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
     state->moveCacheSlot = (u16)moveId;
     moveData = (ObjAnimMoveData *)animDef->moveData[state->moveCacheSlot];
   }
-  state->frameData = moveData->frameCmd;
+  state->moveFrameData = moveData->frameCmd;
   state->frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
-  state->segmentLength = (float)state->frameData[1];
+  state->segmentLength = (float)state->moveFrameData[1];
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->segmentLength = state->segmentLength - gObjAnimProgressOne;
   }
