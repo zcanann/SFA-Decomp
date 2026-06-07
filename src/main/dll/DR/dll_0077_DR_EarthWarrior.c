@@ -700,7 +700,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         !((ByteFlags *)((char *)inner + 0x14ec))->b01 && (*(int *)((char *)p2 + 0x31c) & 0x100)) {
         buttonDisable(0, 0x100);
         ((ByteFlags *)((char *)inner + 0x14ec))->b01 = 1;
-        *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+        ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
         ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E8304, 0);
         *(u8 *)((char *)p2 + 0x346) = 0;
         Sfx_PlayFromObject(obj, 0x121);
@@ -750,7 +750,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         if (*(s8 *)((char *)p2 + 0x346) != 0) {
             ((ByteFlags *)((char *)inner + 0x14ec))->b01 = 0;
             ((ByteFlags *)((char *)q + 0x3f1))->b08 = 1;
-            *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+            ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
         }
         {
             f32 m1 = lbl_803E8314;
@@ -919,7 +919,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         !((ByteFlags *)&inner->sub.flags994)->b01 && (*(int *)&((BaddieState *)p2)->unk31C & 0x100)) {
         buttonDisable(0, 0x100);
         ((ByteFlags *)&inner->sub.flags994)->b01 = 1;
-        *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+        ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
         ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E8304, 0);
         ((BaddieState *)p2)->moveDone = 0;
         return 3;
@@ -1019,7 +1019,7 @@ void DR_EarthWarrior_hitDetect(int obj)
             v.mat[2] = *(f32 *)((char *)p54 + 0x40);
             v.mat[3] = *(f32 *)((char *)p54 + 0x44);
             (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*(int *)lbl_803DE4D0 + 0x4)))(0, 1, &v, 0x401, -1, rows.m[lbl_803352AC[i]]);
-            *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 1;
+            ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
             doRumble(lbl_803E8330);
         }
         if (((ObjHitsPriorityState *)p54)->lastHitObject != 0) {

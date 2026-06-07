@@ -2962,7 +2962,7 @@ void mediumbasket_enterWhirlpoolGroup(int* obj, GroundBaddieState *state) {
         state->baddie.inWhirlpoolGroup = 1;
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
-    *(u8*)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+    ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
     ((GameObject *)obj)->anim.rotX -= 256;
 }
 #pragma peephole reset

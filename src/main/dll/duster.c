@@ -760,7 +760,7 @@ void fn_8015625C(uint param_9,int param_10)
   if (*(float *)(param_10 + 0x328) > lbl_803E2AA8) {
     *(float *)(param_10 + 0x328) = lbl_803E2AAC;
   }
-  *(u8 *)(*(int *)&((GameObject *)param_9)->anim.hitReactState + 0x70) = 0;
+  ((ObjHitsPriorityState *)((GameObject *)param_9)->anim.hitReactState)->suppressOutgoingHits = 0;
   ObjHits_SetHitVolumeSlot(param_9,10,1,0);
   if ((((BaddieState *)param_10)->controlFlags & 0x40000000) != 0) {
     Sfx_PlayFromObject(param_9,SFXfox_cough4);
@@ -848,7 +848,7 @@ void fn_8015652C(uint param_9,int param_10)
 
   pfVar6 = *(float **)param_10;
   iVar5 = *(int *)&((GameObject *)param_9)->anim.placementData;
-  *(u8 *)(*(int *)&((GameObject *)param_9)->anim.hitReactState + 0x70) = 0;
+  ((ObjHitsPriorityState *)((GameObject *)param_9)->anim.hitReactState)->suppressOutgoingHits = 0;
   ObjHits_SetHitVolumeSlot(param_9,10,1,0);
   if ((((BaddieState *)param_10)->controlFlags & 0x40000000) != 0) {
     Sfx_PlayFromObject(param_9,SFXfox_cough4);

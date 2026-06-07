@@ -6,6 +6,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 
 
 #pragma peephole off
@@ -1940,7 +1941,7 @@ void Tricky_resumeAfterCommand(int obj,int state)
     ((TrickyState *)state)->unk323 = 1;
     ObjAnim_SetCurrentMove(obj,moveId,lbl_803E2574,0x10);
     if (((GameObject *)obj)->anim.hitReactState != NULL) {
-      *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+      ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
     }
     ((TrickyState *)state)->unk2E8 = ((TrickyState *)state)->unk2E8 | 4;
     Sfx_PlayFromObjectLimited(obj,1099,2);
@@ -1951,7 +1952,7 @@ void Tricky_resumeAfterCommand(int obj,int state)
     ((TrickyState *)state)->unk323 = 0;
     ObjAnim_SetCurrentMove(obj,0,lbl_803E2574,0);
     if (((GameObject *)obj)->anim.hitReactState != NULL) {
-      *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+      ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
     }
     ((TrickyState *)state)->flags2DC = ((TrickyState *)state)->flags2DC & 0xffffef7f;
     ((TrickyState *)state)->unk2E8 = ((TrickyState *)state)->unk2E8 & 0xfffffffb;
@@ -1999,7 +2000,7 @@ void trickyFn_80148d8c(int obj,int state)
     ((TrickyState *)state)->unk323 = 1;
     ObjAnim_SetCurrentMove(obj,moveId,lbl_803E2574,0);
     if (*(int *)&((GameObject *)obj)->anim.hitReactState != 0) {
-      *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+      ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
     }
     ((TrickyState *)state)->unk2E8 = ((TrickyState *)state)->unk2E8 | 1;
     Sfx_PlayFromObject(obj,SFXdoor_creak);

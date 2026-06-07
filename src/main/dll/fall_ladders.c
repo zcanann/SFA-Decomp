@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/fall_ladders.h"
+#include "main/objhits_types.h"
 
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
@@ -329,7 +330,7 @@ void fn_80154584(int obj, int p)
 
     curve = *(int *)p;
     *(u8 *)(p + 0x33b) = 0;
-    *(u8 *)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+    ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
     if ((*(u32 *)(p + 0x2dc) & 0x2000) != 0) {
         if ((Curve_AdvanceAlongPath(curve, *(f32 *)(p + 0x2fc)) != 0 || *(int *)(curve + 0x10) != 0) &&
             (**(u8 (**)(int))(*gRomCurveInterface + 0x90))(curve) != 0 &&

@@ -3,6 +3,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
+#include "main/objhits_types.h"
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
@@ -926,7 +927,7 @@ void fn_80153040(int obj, int state)
 
     curve = *(int**)state;
     if (((GameObject *)obj)->anim.hitReactState != NULL) {
-        *(u8*)(*(int *)&((GameObject *)obj)->anim.hitReactState + 0x70) = 0;
+        ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
     }
     if (((BaddieState *)state)->inWhirlpoolGroup != 0) {
         ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x80;
