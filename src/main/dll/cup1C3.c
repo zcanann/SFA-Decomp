@@ -2,12 +2,13 @@
 #include "main/game_object.h"
 #include "main/dll/cup1C3.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/objlib.h"
 
 #pragma peephole off
 #pragma scheduling off
 
-#define DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG 0x4
+#define DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG OBJ_MODEL_STATE_SHADOW_VISIBLE
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006818();
@@ -172,7 +173,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
             gameTimerInit(0x1d, 0x3c);
             timerSetToCountUp();
             state->flags.active = 0;
-            ((GameObject *)obj)->anim.modelState->flags |= 4;
+            ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
         }
     }
     if (state->flags.active == 0) {

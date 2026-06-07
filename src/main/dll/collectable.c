@@ -5,6 +5,7 @@
 #include "main/dll/baddie/skeetla.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 
 #pragma peephole off
@@ -734,10 +735,10 @@ int tricky_SeqFn(int obj,int unused,int seq)
       **(u8 **)&((TrickyState *)state)->progressPtr = ((TrickyState *)state)->unk82D;
       break;
     case 0x2b:
-      ((GameObject *)obj)->anim.modelState->flags &= ~0x4;
+      ((GameObject *)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_VISIBLE;
       break;
     case 0x2c:
-      ((GameObject *)obj)->anim.modelState->flags |= 4;
+      ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
       break;
     }
   }

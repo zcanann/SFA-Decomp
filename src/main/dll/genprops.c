@@ -664,7 +664,7 @@ void FUN_8016ba18(undefined2 *param_1)
   param_1[1] = 0x4000;
   *param_1 = 0;
   param_1[2] = 0;
-  ((GameObject *)param_1)->anim.modelState->flags |= 0x10000;
+  ((GameObject *)param_1)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD;
   *pfVar1 = local_18[0];
   *(float *)(param_1 + 8) = *(float *)(param_1 + 8) - local_18[0];
   ((GameObject *)param_1)->anim.modelState->shadowAlphaStep = 0;
@@ -4292,7 +4292,7 @@ void FUN_801713ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if ((*(ushort *)(param_9 + 6) & 0x2000) != 0) {
     *(float *)(iVar6 + 8) = lbl_803E40E8;
     if (((GameObject *)param_9)->anim.modelState != NULL) {
-      ((GameObject *)param_9)->anim.modelState->flags = 0x1000;
+      ((GameObject *)param_9)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
     }
   }
   if ((int)*(short *)(iVar6 + 0x10) != 0xffffffff) {
@@ -5333,7 +5333,7 @@ void mikabombshadow_init(int *obj)
     ((GameObject *)obj)->anim.rotY = 0x4000;
     *(s16 *)obj = 0;
     ((GameObject *)obj)->anim.rotZ = 0;
-    ((GameObject *)obj)->anim.modelState->flags |= 0x10000;
+    ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD;
     *(f32 *)state = out;
     ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - out;
     ((GameObject *)obj)->anim.modelState->shadowAlphaStep = 0;
@@ -7375,7 +7375,7 @@ void fn_80171E5C(int *obj)
     if (((GameObject *)obj)->anim.flags & 0x2000) {
         *(f32 *)(state + 8) = lbl_803E3450;
         if (((GameObject *)obj)->anim.modelState != NULL) {
-            ((GameObject *)obj)->anim.modelState->flags = 0x1000;
+            ((GameObject *)obj)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
     }
     if (*(s16 *)(state + 0x10) != -1) {

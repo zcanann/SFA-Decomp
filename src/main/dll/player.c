@@ -3434,7 +3434,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                     (*(void (*)(int, int))*(int *)((char *)*(int *)(*(int *)(va + 0x68)) + 0x3c))(
                         va, 2);
                     ((GameObject *)obj)->anim.flags |= 8;
-                    ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
+                    ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
                     ((GameObject *)obj)->anim.modelState->shadowAlphaStep = 0;
                     *(s16 *)((char *)seq + 0x6e) &= ~4;
                     switch (*(s16 *)(va + 0x46)) {
@@ -3777,11 +3777,11 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 break;
             case 0x2b: {
                 register u32 m;
-                ((GameObject *)obj)->anim.modelState->flags &= ~0x4;
+                ((GameObject *)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_VISIBLE;
                 break;
             }
             case 0x2c:
-                ((GameObject *)obj)->anim.modelState->flags |= 4;
+                ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
                 break;
             case 0x31:
                 viewFinderSetZoomTo50();
@@ -5557,7 +5557,7 @@ int fn_8029F108(int obj, int state)
             *(s16 *)vec = 0;
             *(s16 *)((char *)vec + 0x4) = 0;
         }
-        ((GameObject *)obj)->anim.modelState->flags &= ~0x1000;
+        ((GameObject *)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         *(f32 *)((char *)obj + 0x18) = inner->unk768;
         *(f32 *)((char *)obj + 0x20) = inner->unk770;
         if (*(void **)((char *)obj + 0x30) != NULL) {
@@ -5637,7 +5637,7 @@ void fn_8029F67C(int obj)
 {
     ObjModelState *modelState = ((GameObject *)obj)->anim.modelState;
     s16 *v;
-    modelState->flags &= ~0x1000;
+    modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
     ((GameObject *)obj)->anim.flags &= ~0x8;
     ((GameObject *)obj)->anim.activeMove = -1;
     v = objModelGetVecFn_800395d8(obj, 9);
@@ -10283,7 +10283,7 @@ int fn_802957B4(int obj)
     (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68) + 0x3c)))(sub, 0);
     (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x28)))(obj, 0);
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags & ~8;
-    ((GameObject *)obj)->anim.modelState->flags &= ~0x1000;
+    ((GameObject *)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
     inner->unk7F0 = 0;
     ((GameObject *)obj)->anim.activeMove = -1;
     (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
@@ -13911,7 +13911,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
         inner->unk6C4 = wpos[1] - j1[1];
         inner->unk6C8 = wpos[2];
         ((GameObject *)obj)->anim.flags |= 8;
-        ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
+        ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         ((GameObject *)obj)->anim.modelState->shadowAlphaStep = 0;
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7FD8;
     }

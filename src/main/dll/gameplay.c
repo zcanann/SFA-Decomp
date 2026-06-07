@@ -13379,9 +13379,9 @@ int Carryable_updateRenderState(int *obj, int flag) {
     int *p50 = *(int **)&((GameObject *)obj)->anim.modelInstance;
     if (*(s16 *)((char *)p50 + 0x48) == 2) {
         if (((GameObject *)obj)->unkB4 == -1) {
-            ((GameObject *)obj)->anim.modelState->flags &= ~0x1000;
+            ((GameObject *)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         } else {
-            ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
+            ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
     }
     if (((GameObject *)obj)->unkF8 != 0) {

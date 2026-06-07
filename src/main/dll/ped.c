@@ -163,7 +163,7 @@ int fn_801CDE7C(int obj, int param_2, u8 *seqData)
                         audioScale, audioScale);
     if (seqData[0x8b] != 0) {
         ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags & ~0x400);
-        ((GameObject *)obj)->anim.modelState->flags |= 4;
+        ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
     }
     return 0;
 }

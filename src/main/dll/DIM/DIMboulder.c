@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/dll/DIM/DIMboulder.h"
 
 /*
@@ -1099,7 +1100,7 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
                  param_9,0x100,1,param_12,param_13,param_14,param_15,param_16);
     iVar4 = (int)((GameObject *)param_9)->anim.modelState;
     if (iVar4 != 0) {
-      ((GameObject *)param_9)->anim.modelState->flags |= 0x1000;
+      ((GameObject *)param_9)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
     }
     *(ushort *)(param_11 + 0x6e) = *(ushort *)(param_11 + 0x6e) & ~0x4;
     *(undefined *)(param_11 + 0x80) = 0;
@@ -1666,7 +1667,7 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
         (*(void (**)(int *, int))(**(int **)((char *)p + 0x68) + 0x3c))(p, 2);
         ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 1);
         if (((GameObject *)obj)->anim.modelState != NULL) {
-            ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
+            ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
         *(s16 *)((char *)arg3 + 0x6e) &= ~4;
         arg3[0x80] = 0;
@@ -1873,12 +1874,12 @@ void dll_16C_update(int *obj)
             }
             extra->opacity = (int)(lbl_803E4764 * (lbl_803E4758 - t));
             if (((GameObject *)obj)->anim.modelState != NULL) {
-                ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
+                ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
             }
         } else {
             extra->opacity = 0xff;
             if (((GameObject *)obj)->anim.modelState != NULL) {
-                ((GameObject *)obj)->anim.modelState->flags &= ~0x1000;
+                ((GameObject *)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
             }
         }
     }

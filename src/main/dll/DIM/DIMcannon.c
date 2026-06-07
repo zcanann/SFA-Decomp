@@ -406,7 +406,7 @@ void FUN_801ae378(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(undefined *)(piVar8 + 8) = 0xff;
       iVar7 = (int)((GameObject *)param_9)->anim.modelState;
       if (iVar7 != 0) {
-        ((GameObject *)param_9)->anim.modelState->flags &= ~0x1000;
+        ((GameObject *)param_9)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
       }
     }
     else {
@@ -417,7 +417,7 @@ void FUN_801ae378(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(char *)(piVar8 + 8) = (char)(int)(lbl_803E53FC * (lbl_803E53F0 - fVar2));
       iVar7 = (int)((GameObject *)param_9)->anim.modelState;
       if (iVar7 != 0) {
-        ((GameObject *)param_9)->anim.modelState->flags |= 0x1000;
+        ((GameObject *)param_9)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
       }
     }
   }

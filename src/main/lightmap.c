@@ -2855,7 +2855,7 @@ void renderObjects(s8 *arg0) {
                 renderShadowType3(obj, 0x13, 0);
                 ((LightmapQEnt *)qbase)[lbl_803DCE30].d = 2;
                 lbl_803DCE30++;
-            } else if (*(s16 *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x48) == 3 && (((GameObject *)obj)->anim.flags & 0x4000) == 0 && (((GameObject *)obj)->anim.modelState->flags & 0x4)) {
+            } else if (*(s16 *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x48) == 3 && (((GameObject *)obj)->anim.flags & 0x4000) == 0 && (((GameObject *)obj)->anim.modelState->flags & OBJ_MODEL_STATE_SHADOW_VISIBLE)) {
                 renderShadowType3(obj, 0x13, 0);
                 ((LightmapQEnt *)qbase)[lbl_803DCE30].d = 3;
                 lbl_803DCE30++;
@@ -3918,7 +3918,7 @@ void getVisibleObjects(s8 *opacity)
                 }
                 if ((((GameObject *)o)->anim.flags & 0x4000) == 0 &&
                     ((GameObject *)o)->anim.modelState != NULL &&
-                    (((GameObject *)o)->anim.modelState->flags & 4) != 0) {
+                    (((GameObject *)o)->anim.modelState->flags & OBJ_MODEL_STATE_SHADOW_VISIBLE) != 0) {
                     t = modelDef->shadowType;
                     if (t == 2 || t == 1) {
                         shadowCreate(o);

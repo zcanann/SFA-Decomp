@@ -226,14 +226,14 @@ void magicdust_update(int obj)
     if (*(uint *)&((GameObject *)obj)->unkC4 != 0) {
       iVar5 = (int)((GameObject *)obj)->anim.modelState;
       if ((uint)iVar5 != 0) {
-        ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
+        ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
       }
       (*(code *)(*gPathControlInterface + 0x20))(obj,iVar8);
       goto LAB_80173f80;
     }
     iVar6 = (int)((GameObject *)obj)->anim.modelState;
     if ((uint)iVar6 != 0) {
-      ((GameObject *)obj)->anim.modelState->flags &= ~0x1000;
+      ((GameObject *)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
     }
     *(undefined *)&((MagicDustState *)iVar8)->unk25B = 1;
     fVar1 = lbl_803E34BC;
