@@ -900,7 +900,7 @@ void modelFn_800292e0(void) {
 }
 
 #pragma dont_inline on
-void *animationLoad(int id, s16 a, s16 b, int e, int f);
+void *animationLoad(int id, int a, int b, int e, int f);
 #pragma dont_inline reset
 
 #pragma dont_inline on
@@ -925,12 +925,12 @@ void *animationLoad(int id, s16 a, s16 b, int e, int f);
 
 void model_multMtxs(u8 *model, f32 *out) {
     u8 *hdr = *(u8 **)model;
-    int i;
+    u32 i;
     for (i = 0; i < hdr[0xf3]; i++) {
+        int j = i;
         u8 *h = *(u8 **)model;
         u32 cnt = h[0xf3];
         int lim;
-        int j = i;
         f32 *base;
         if (cnt != 0) {
             lim = cnt + h[0xf4];
@@ -2536,8 +2536,7 @@ void *loadAnimation(int hdr, s16 id, int b, u8 *bufout)
         return 0;
     }
     if (bufout == 0) {
-        i = id;
-        if (ModelList_getHeader(lbl_803DCB50, i, &ptr) == 0) {
+        if (ModelList_getHeader(lbl_803DCB50, (i = id), &ptr) == 0) {
             v = ((u32 *)lbl_803DCB4C)[i];
             loadAndDecompressDataFile(0x30, 0, v, 0, (int)&size, i, 1);
             ptr = mmAlloc(size, 10, 0);
