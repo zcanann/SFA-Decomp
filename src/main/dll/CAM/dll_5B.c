@@ -147,13 +147,7 @@ void firstPersonDoControls(short *param_1)
   cVar3 = padGetStickX(0);
   cVar4 = padGetStickY(0);
   t = (lbl_803E17E0 - *(f32 *)(param_1 + 0x5a)) / lbl_803E17E4;
-  zoom = lbl_803E17C4;
-  if (t >= zoom) {
-    zoom = lbl_803E17E8;
-    if (t <= zoom) {
-      zoom = t;
-    }
-  }
+  zoom = (t < lbl_803E17C4) ? lbl_803E17C4 : ((t > lbl_803E17E8) ? lbl_803E17E8 : t);
   spin = (f32)cVar3 * -(lbl_803E17F0 * zoom - lbl_803E17EC);
   spin = interpolate(spin - ((ViewfinderState *)lbl_803DD548)->yawSpeed, lbl_803E17F4, timeDelta);
   ((ViewfinderState *)lbl_803DD548)->yawSpeed = ((ViewfinderState *)lbl_803DD548)->yawSpeed + spin;
@@ -194,13 +188,8 @@ void firstPersonDoControls(short *param_1)
     t = (f32)-(int)cVar3;
     zoom2 = lbl_803E1810 * t * timeDelta + zoom2;
     viewFinderSetZoom(Camera_GetFovY());
-    fovTarget = lbl_803E17FC;
-    if (zoom2 >= fovTarget) {
-      fovTarget = lbl_803E17E0;
-      if (zoom2 <= fovTarget) {
-        fovTarget = zoom2;
-      }
-    }
+    fovTarget = (zoom2 < lbl_803E17FC) ? lbl_803E17FC
+                                        : ((zoom2 > lbl_803E17E0) ? lbl_803E17E0 : zoom2);
     if ((*(u8 *)((int)lbl_803DD548 + 0x12d) >> 6 & 1) != 0) {
       if ((fovTarget == *(f32 *)(param_1 + 0x5a)) &&
          ((*(u8 *)((int)lbl_803DD548 + 0x12d) >> 5 & 1) != 0)) {

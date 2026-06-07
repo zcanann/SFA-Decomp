@@ -449,15 +449,17 @@ void fn_8022A670(int obj, int state)
             ((ArwingState *)state)->stickY * (lbl_803E6ED0 - tv) + ny * tv;
     }
     ((ArwingState *)state)->unk3EC = (f32)(u32)(u8)padGetRTrigger(0) / lbl_803E6ED4;
-    if (((ArwingState *)state)->unk3EC < lbl_803E6ECC)
-        ((ArwingState *)state)->unk3EC = lbl_803E6ECC;
-    else if (((ArwingState *)state)->unk3EC > lbl_803E6ED0)
-        ((ArwingState *)state)->unk3EC = lbl_803E6ED0;
+    {
+        f32 rt = ((ArwingState *)state)->unk3EC;
+        ((ArwingState *)state)->unk3EC =
+            (rt < lbl_803E6ECC) ? lbl_803E6ECC : ((rt > lbl_803E6ED0) ? lbl_803E6ED0 : rt);
+    }
     ((ArwingState *)state)->unk3F0 = -(f32)(u32)(u8)padGetLTrigger(0) / lbl_803E6ED4;
-    if (((ArwingState *)state)->unk3F0 < lbl_803E6ED8)
-        ((ArwingState *)state)->unk3F0 = lbl_803E6ED8;
-    else if (((ArwingState *)state)->unk3F0 > lbl_803E6ECC)
-        ((ArwingState *)state)->unk3F0 = lbl_803E6ECC;
+    {
+        f32 lt = ((ArwingState *)state)->unk3F0;
+        ((ArwingState *)state)->unk3F0 =
+            (lt < lbl_803E6ED8) ? lbl_803E6ED8 : ((lt > lbl_803E6ECC) ? lbl_803E6ECC : lt);
+    }
     ((ArwingState *)state)->inputFlags = (u16)getButtonsJustPressed(0);
     ((ArwingState *)state)->inputFlagsPrev = (u16)getButtonsJustPressedIfNotBusy(0);
     ((ArwingState *)state)->inputFlags2 = (u16)getButtonsHeld(0);
