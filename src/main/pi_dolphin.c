@@ -8283,7 +8283,8 @@ void textureFn_80051348(void *p1, u8 p2) {
     u8 buf[3];
     int out_c;
     int out_8;
-    PSMTXScale(mtxA, Breaking_803DEB40, Breaking_803DEB40, lbl_803DEACC);
+    int texmap;
+    PSMTXScale(mtxA, Breaking_803DEB40, *(f32 *)&Breaking_803DEB40, lbl_803DEACC);
     PSMTXTrans(mtxB, lbl_803DEADC, *(f32 *)&lbl_803DEADC, lbl_803DEAC8);
     PSMTXConcat(mtxB, mtxA, mtxA);
     GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
@@ -8302,19 +8303,21 @@ void textureFn_80051348(void *p1, u8 p2) {
     GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
     GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 2);
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    texmap = lbl_803DCD8C;
     if (p1 != 0) {
+        char *tex = (char *)p1 + 0x20;
         if (*(u8 *)((char *)p1 + 0x48) != 0) {
-            GXLoadTexObjPreLoaded((char *)p1 + 0x20, *(void **)((char *)p1 + 0x40), lbl_803DCD8C);
+            GXLoadTexObjPreLoaded(tex, *(void **)((char *)p1 + 0x40), texmap);
         } else {
-            GXLoadTexObj((char *)p1 + 0x20, lbl_803DCD8C);
+            GXLoadTexObj(tex, texmap);
         }
     }
     lbl_803DCD80 = lbl_803DCD80 + 3;
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD88 = lbl_803DCD88 + 1;
     lbl_803DCD8C = lbl_803DCD8C + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 1;
-    lbl_803DCD69 = lbl_803DCD69 + 1;
+    lbl_803DCD6A += 1;
+    lbl_803DCD69 += 1;
 }
 extern void objGetColor(int slot, u8 *red, u8 *green, u8 *blue);
 extern int lbl_803DCD78;
