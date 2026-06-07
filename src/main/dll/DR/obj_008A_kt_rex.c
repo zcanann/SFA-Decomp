@@ -975,54 +975,72 @@ void ktrex_updateAttackEffects(int obj) {
     if ((((KTRexArenaState *)gKTRexState)->phaseFlags & 0x1) != 0) {
         ((KTRexArenaState *)gKTRexState)->unk12C = lbl_803E6818;
         for (i = 0; i < 10; i++) {
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x124,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x124,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x484, (char *)gKTRexState + 0x124,
+                                             0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState *)gKTRexState)->phaseFlags & 0x2) != 0) {
         ((KTRexArenaState *)gKTRexState)->unk144 = lbl_803E6818;
         for (i = 0; i < 10; i++) {
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x13c,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x13c,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x484, (char *)gKTRexState + 0x13c,
+                                             0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState *)gKTRexState)->phaseFlags & 0x4) != 0) {
         ((KTRexArenaState *)gKTRexState)->unk12C = lbl_803E6838;
         for (i = 0; i < 13; i++) {
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x124,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x124,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x484, (char *)gKTRexState + 0x124,
+                                             0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState *)gKTRexState)->phaseFlags & 0x8) != 0) {
         ((KTRexArenaState *)gKTRexState)->unk144 = lbl_803E6838;
         for (i = 0; i < 13; i++) {
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x13c,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x13c,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x484, (char *)gKTRexState + 0x13c,
+                                             0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState *)gKTRexState)->phaseFlags & 0x10) != 0) {
         ((KTRexArenaState *)gKTRexState)->unk12C = lbl_803E67C8;
         for (i = 0; i < 16; i++) {
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x124,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x124,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x484, (char *)gKTRexState + 0x124,
+                                             0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState *)gKTRexState)->phaseFlags & 0x20) != 0) {
         ((KTRexArenaState *)gKTRexState)->unk144 = lbl_803E67C8;
         for (i = 0; i < 16; i++) {
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
-            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x13c,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x483, (char *)gKTRexState + 0x13c,
+                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x484, (char *)gKTRexState + 0x13c,
+                                             0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState *)gKTRexState)->phaseFlags & 0x800) != 0) {
-        (*(void (**)(int, int, void *, int, int, void *))((char *)*gPartfxInterface + 0x8))(
-            obj, 0x487, (char *)gKTRexState + 0x10c, 0x200001, -1, (char *)gKTRexState + 0x16c);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x487, (char *)gKTRexState + 0x10c,
+                                         0x200001, -1, (char *)gKTRexState + 0x16c);
     }
     ((KTRexArenaState *)gKTRexState)->phaseFlags &= 0x1800LL;
     if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject()) {
@@ -1073,10 +1091,10 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
         *(f32 *)((char *)lbl_803AD158 + 0x14) = playerMapOffsetZ + pt[3];
         Sfx_PlayFromObject(obj, SFXmv_deaththud16);
         Sfx_PlayFromObject(obj, SFXmv_roothack16);
-        (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(
-            obj, 0x4b2, lbl_803AD158, 0x200001, -1, 0);
-        (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(
-            obj, 0x4b3, lbl_803AD158, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, lbl_803AD158, 0x200001, -1,
+                                         NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b3, lbl_803AD158, 0x200001, -1,
+                                         NULL);
         if (hit == 0xe) {
             ((KTRexRuntime *)runtime)->unk354 -= 1;
         } else {
@@ -1095,8 +1113,8 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
         *(f32 *)((char *)lbl_803AD158 + 0xc) = playerMapOffsetX + pt[1];
         *(f32 *)((char *)lbl_803AD158 + 0x10) = pt[2];
         *(f32 *)((char *)lbl_803AD158 + 0x14) = playerMapOffsetZ + pt[3];
-        (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(
-            obj, 0x328, lbl_803AD158, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x328, lbl_803AD158, 0x200001, -1,
+                                         NULL);
         *(f32 *)((char *)lbl_803AD158 + 0xc) -= ((GameObject *)obj)->anim.worldPosX;
         *(f32 *)((char *)lbl_803AD158 + 0x10) -= ((GameObject *)obj)->anim.worldPosY;
         *(f32 *)((char *)lbl_803AD158 + 0x14) -= ((GameObject *)obj)->anim.worldPosZ;
