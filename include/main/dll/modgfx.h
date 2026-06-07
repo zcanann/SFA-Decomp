@@ -24,8 +24,8 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefine
 void modgfx_scrollVertexTexcoords(int param_1,int param_2);
 void modgfx_resetBaseVertexState(int param_1);
 void modgfx_updateVertexRgb(int param_1,int param_2,int param_3);
-void FUN_800a08fc(int param_1,int param_2,int param_3);
-void FUN_800a0a88(int param_1,int param_2,int param_3);
+void modgfx_updateEffectPosition(int state,int command,int mode);
+void modgfx_updateEffectRotation(int state,int command,int mode);
 void modgfx_updateVertexAlpha(int param_1,int param_2,int param_3,uint param_4);
 void modgfx_updateVertexScale(int param_1,int param_2,int param_3,uint param_4);
 void modgfx_restoreActiveVertexState(int param_1);

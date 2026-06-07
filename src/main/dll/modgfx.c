@@ -1657,7 +1657,7 @@ void modgfx_updateVertexRgb(int param_1,int param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_800a08fc
+ * Function: modgfx_updateEffectPosition
  * EN v1.0 Address: 0x800A08FC
  * EN v1.0 Size: 396b
  * EN v1.1 Address: 0x800A0AA8
@@ -1667,7 +1667,7 @@ void modgfx_updateVertexRgb(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a08fc(int param_1,int param_2,int param_3)
+void modgfx_updateEffectPosition(int state,int command,int mode)
 {
   double dVar1;
   ushort local_38;
@@ -1679,47 +1679,47 @@ void FUN_800a08fc(int param_1,int param_2,int param_3)
   float local_24;
   
   dVar1 = DOUBLE_803e00c8;
-  if (param_3 == 1) {
-    if (*(short *)(param_1 + *(short *)(param_1 + 0xfc) * 2 + 0xee) == 0) {
-      if (((*(uint *)(param_1 + 0xa4) & 4) != 0) || ((*(uint *)(param_1 + 0xa4) & 0x80000) != 0)) {
+  if (mode == 1) {
+    if (*(short *)(state + *(short *)(state + 0xfc) * 2 + 0xee) == 0) {
+      if (((*(uint *)(state + 0xa4) & 4) != 0) || ((*(uint *)(state + 0xa4) & 0x80000) != 0)) {
         local_2c = lbl_803E00B0;
         local_28 = lbl_803E00B0;
         local_24 = lbl_803E00B0;
         local_30 = lbl_803E00B4;
-        local_38 = **(ushort **)(param_1 + 4);
+        local_38 = **(ushort **)(state + 4);
         local_36 = local_38;
         local_34 = local_38;
-        FUN_80017748(&local_38,(float *)(param_2 + 4));
+        FUN_80017748(&local_38,(float *)(command + 4));
       }
-      *(undefined4 *)(param_1 + 0x24) = *(undefined4 *)(param_2 + 4);
-      *(undefined4 *)(param_1 + 0x28) = *(undefined4 *)(param_2 + 8);
-      *(undefined4 *)(param_1 + 0x2c) = *(undefined4 *)(param_2 + 0xc);
+      *(undefined4 *)(state + 0x24) = *(undefined4 *)(command + 4);
+      *(undefined4 *)(state + 0x28) = *(undefined4 *)(command + 8);
+      *(undefined4 *)(state + 0x2c) = *(undefined4 *)(command + 0xc);
     }
     else {
-      *(float *)(param_1 + 0x24) =
-           *(float *)(param_2 + 4) /
-           (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xfe) ^ 0x80000000) -
+      *(float *)(state + 0x24) =
+           *(float *)(command + 4) /
+           (float)((double)CONCAT44(0x43300000,(int)*(short *)(state + 0xfe) ^ 0x80000000) -
                   DOUBLE_803e00c8);
-      *(float *)(param_1 + 0x28) =
-           *(float *)(param_2 + 8) /
-           (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xfe) ^ 0x80000000) - dVar1
+      *(float *)(state + 0x28) =
+           *(float *)(command + 8) /
+           (float)((double)CONCAT44(0x43300000,(int)*(short *)(state + 0xfe) ^ 0x80000000) - dVar1
                   );
-      *(float *)(param_1 + 0x2c) =
-           *(float *)(param_2 + 0xc) /
-           (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xfe) ^ 0x80000000) - dVar1
+      *(float *)(state + 0x2c) =
+           *(float *)(command + 0xc) /
+           (float)((double)CONCAT44(0x43300000,(int)*(short *)(state + 0xfe) ^ 0x80000000) - dVar1
                   );
     }
-    *(float *)(param_1 + 0x60) = *(float *)(param_1 + 0x60) + *(float *)(param_1 + 0x24);
-    *(float *)(param_1 + 100) = *(float *)(param_1 + 100) + *(float *)(param_1 + 0x28);
-    *(float *)(param_1 + 0x68) = *(float *)(param_1 + 0x68) + *(float *)(param_1 + 0x2c);
+    *(float *)(state + 0x60) = *(float *)(state + 0x60) + *(float *)(state + 0x24);
+    *(float *)(state + 100) = *(float *)(state + 100) + *(float *)(state + 0x28);
+    *(float *)(state + 0x68) = *(float *)(state + 0x68) + *(float *)(state + 0x2c);
   }
   else {
-    *(float *)(param_1 + 0x60) =
-         *(float *)(param_1 + 0x24) * lbl_803DDF04 + *(float *)(param_1 + 0x60);
-    *(float *)(param_1 + 100) =
-         *(float *)(param_1 + 0x28) * lbl_803DDF04 + *(float *)(param_1 + 100);
-    *(float *)(param_1 + 0x68) =
-         *(float *)(param_1 + 0x2c) * lbl_803DDF04 + *(float *)(param_1 + 0x68);
+    *(float *)(state + 0x60) =
+         *(float *)(state + 0x24) * lbl_803DDF04 + *(float *)(state + 0x60);
+    *(float *)(state + 100) =
+         *(float *)(state + 0x28) * lbl_803DDF04 + *(float *)(state + 100);
+    *(float *)(state + 0x68) =
+         *(float *)(state + 0x2c) * lbl_803DDF04 + *(float *)(state + 0x68);
   }
   return;
 }
@@ -1727,7 +1727,7 @@ void FUN_800a08fc(int param_1,int param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_800a0a88
+ * Function: modgfx_updateEffectRotation
  * EN v1.0 Address: 0x800A0A88
  * EN v1.0 Size: 228b
  * EN v1.1 Address: 0x800A0C50
@@ -1737,39 +1737,39 @@ void FUN_800a08fc(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a0a88(int param_1,int param_2,int param_3)
+void modgfx_updateEffectRotation(int state,int command,int mode)
 {
   short sVar1;
   short sVar2;
   short sVar3;
   
-  if (param_3 == 1) {
-    sVar1 = (short)(int)*(float *)(param_2 + 4);
-    sVar2 = (short)(int)*(float *)(param_2 + 8);
-    sVar3 = (short)(int)*(float *)(param_2 + 0xc);
-    if (*(short *)(param_1 + 0xfe) == 0) {
-      *(short *)(param_1 + 0x106) = sVar1;
-      *(undefined2 *)(param_1 + 0x100) = 0;
-      *(short *)(param_1 + 0x108) = sVar2;
-      *(undefined2 *)(param_1 + 0x102) = 0;
-      *(short *)(param_1 + 0x10a) = sVar3;
-      *(undefined2 *)(param_1 + 0x104) = 0;
+  if (mode == 1) {
+    sVar1 = (short)(int)*(float *)(command + 4);
+    sVar2 = (short)(int)*(float *)(command + 8);
+    sVar3 = (short)(int)*(float *)(command + 0xc);
+    if (*(short *)(state + 0xfe) == 0) {
+      *(short *)(state + 0x106) = sVar1;
+      *(undefined2 *)(state + 0x100) = 0;
+      *(short *)(state + 0x108) = sVar2;
+      *(undefined2 *)(state + 0x102) = 0;
+      *(short *)(state + 0x10a) = sVar3;
+      *(undefined2 *)(state + 0x104) = 0;
     }
     else {
-      *(short *)(param_1 + 0x100) =
-           (short)(((int)sVar1 - (int)*(short *)(param_1 + 0x106)) / (int)*(short *)(param_1 + 0xfe)
+      *(short *)(state + 0x100) =
+           (short)(((int)sVar1 - (int)*(short *)(state + 0x106)) / (int)*(short *)(state + 0xfe)
                   );
-      *(short *)(param_1 + 0x102) =
-           (short)(((int)sVar2 - (int)*(short *)(param_1 + 0x108)) / (int)*(short *)(param_1 + 0xfe)
+      *(short *)(state + 0x102) =
+           (short)(((int)sVar2 - (int)*(short *)(state + 0x108)) / (int)*(short *)(state + 0xfe)
                   );
-      *(short *)(param_1 + 0x104) =
-           (short)(((int)sVar3 - (int)*(short *)(param_1 + 0x10a)) / (int)*(short *)(param_1 + 0xfe)
+      *(short *)(state + 0x104) =
+           (short)(((int)sVar3 - (int)*(short *)(state + 0x10a)) / (int)*(short *)(state + 0xfe)
                   );
     }
   }
-  *(short *)(param_1 + 0x106) = *(short *)(param_1 + 0x106) + *(short *)(param_1 + 0x100);
-  *(short *)(param_1 + 0x108) = *(short *)(param_1 + 0x108) + *(short *)(param_1 + 0x102);
-  *(short *)(param_1 + 0x10a) = *(short *)(param_1 + 0x10a) + *(short *)(param_1 + 0x104);
+  *(short *)(state + 0x106) = *(short *)(state + 0x106) + *(short *)(state + 0x100);
+  *(short *)(state + 0x108) = *(short *)(state + 0x108) + *(short *)(state + 0x102);
+  *(short *)(state + 0x10a) = *(short *)(state + 0x10a) + *(short *)(state + 0x104);
   return;
 }
 
