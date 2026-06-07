@@ -3881,6 +3881,7 @@ void ObjSeq_RefreshActionCursor(void *obj, void *seqFile, u8 *seq)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma ppc_unroll_speculative off
 void objSeq_onMapSetup(void)
 {
     u8 *base = lbl_80396918;
@@ -4034,6 +4035,7 @@ void objSeq_onMapSetup(void)
     lbl_803DD0F8 = 0;
     lbl_803DD0BC = 0;
 }
+#pragma ppc_unroll_speculative on
 #pragma scheduling reset
 #pragma peephole reset
 
