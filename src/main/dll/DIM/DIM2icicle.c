@@ -629,7 +629,7 @@ void fn_801BC2D8(int obj, int param_2)
         *(u8 *)(param_2 + 0x354) = 0;
         *(u8 *)(param_2 + 0x349) = 0;
         ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 0);
-        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
+        ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x80;
         GameBit_Set(0x20e, 1);

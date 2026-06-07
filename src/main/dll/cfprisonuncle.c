@@ -535,7 +535,7 @@ void MagicPlant_update(int obj)
         }
         plant->objAnim.alpha = (u8)alpha;
       }
-      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
+      ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
       break;
 
     case MAGICPLANT_MODE_FADE_IN:
@@ -547,7 +547,7 @@ void MagicPlant_update(int obj)
         ((MapEventInterface *)*(int *)gMapEventInterface)->startTimedEvent(setup->eventId, (f32)setup->eventDuration);
       }
       plant->objAnim.alpha = (u8)alpha;
-      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
+      ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->flags |= 1;
       break;
 
     case MAGICPLANT_MODE_HIT_REACT:

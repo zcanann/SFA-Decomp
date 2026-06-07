@@ -403,19 +403,22 @@ void grimble_update(int obj)
         *(u8 *)(state + 0x405) = 2;
         ((GroundBaddieState *)state)->baddie.targetObj = Obj_GetPlayerObject();
       }
-      if (((GroundBaddieState *)state)->baddie.targetObj != NULL || *(s8 *)(state + 0x354) == 0) {
-        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
-        if ((*(int (**)(int, char *, f32, int))(*(int *)gBaddieControlInterface + 0x44))(
-                obj, state, (f32)((GroundBaddieState *)state)->aggroRange, 1) != 0) {
-          *(int *)(state + 0x2d0) = 0;
-        }
-      } else {
-        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
-        target = (*(void *(**)(int, char *, f32, int))(*(int *)gBaddieControlInterface + 0x48))(
-            obj, state, (f32)((GroundBaddieState *)state)->aggroRange, 0x8000);
-        if (target != NULL) {
-          ((GroundBaddieState *)state)->baddie.targetObj = target;
-          ((GroundBaddieState *)state)->baddie.unk349 = 0;
+      {
+        ObjHitsPriorityState *hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+        if (((GroundBaddieState *)state)->baddie.targetObj != NULL || *(s8 *)(state + 0x354) == 0) {
+          hitState->flags |= 1;
+          if ((*(int (**)(int, char *, f32, int))(*(int *)gBaddieControlInterface + 0x44))(
+                  obj, state, (f32)((GroundBaddieState *)state)->aggroRange, 1) != 0) {
+            *(int *)(state + 0x2d0) = 0;
+          }
+        } else {
+          hitState->flags &= ~1;
+          target = (*(void *(**)(int, char *, f32, int))(*(int *)gBaddieControlInterface + 0x48))(
+              obj, state, (f32)((GroundBaddieState *)state)->aggroRange, 0x8000);
+          if (target != NULL) {
+            ((GroundBaddieState *)state)->baddie.targetObj = target;
+            ((GroundBaddieState *)state)->baddie.unk349 = 0;
+          }
         }
       }
     } else {

@@ -1911,7 +1911,7 @@ void dimwooddoor2_init(u8* obj, u8* params)
     sub->riseSpeed = fz;
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
         sub->burnState = 0;
-        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
+        ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
         ((GameObject *)obj)->anim.alpha = 0;
     }
 }
@@ -1929,7 +1929,7 @@ void dll_1CE_init(u8* obj, u8* params)
     sub->igniteCountdown = 1;
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
         sub->igniteCountdown = 0;
-        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
+        ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
         ((GameObject *)obj)->anim.alpha = 0;
     }
     sub->openVelocity = lbl_803E49F0;

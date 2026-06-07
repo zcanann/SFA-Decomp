@@ -1414,7 +1414,7 @@ void fn_80185B74(int obj)
             }
             ObjHits_EnableObject(obj);
         }
-        held = (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags;
+        held = ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->contactFlags;
         if ((s8)held != 0 && *(s8 *)&state->launchPhase == 1) {
             ((GameObject *)obj)->anim.velocityY = lbl_803E3A58;
             state->launchPhase = 0;
