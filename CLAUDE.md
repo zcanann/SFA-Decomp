@@ -551,6 +551,18 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     count-down form, while count-up emits the newer compare-8-first shape
     (streamsLoadedCallback 78.1->97.1). Try the count-down spelling BEFORE
     declaring an unroll-factor cap.
+    **LOOK-ALIKE that is NOT an unrolled loop: `li K; slwi K2; stwx` per
+    copy over constant indices 0,1,2..N = a MULTI-DEF POST-INCREMENT
+    INDEX (`arr[idx++] = 0;` written N times).** Per-def const-prop emits
+    a fresh `li K` into the index home while the per-use subscript shift
+    stays runtime (reaching-defs are not folded through a multi-def web);
+    a real loop -- any spelling, incl. (i << 2), conversion sandwiches,
+    SR/loop-invariant pragmas -- FOLDS to displacement stores instead.
+    Tells: `arr[idx] = 0; idx = K;` SEPARATE statements fold (single
+    reaching def per use); only the embedded `idx++` keeps the li-per-def
+    shape; a per-statement #80-laundered base `((int *)(int)sym)[idx++]`
+    additionally anchors target's zero-then-base materialization order.
+    (objlib ObjHits_InitWorkBuffers 79.61->96.80; probe battery pH/pO.)
 
 29. **Callee parameter POSITION controls caller's L2R arg-emission order.** MWCC
     evaluates call args left-to-right; the *positions* of the float vs. int
@@ -1849,6 +1861,17 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
           a spurious `extsh` (clrlwi for u16) after the fctiwz lwz;
           `*(s16 *)p = (fexpr);` (no int intermediate) emits none,
           matching target (fn_8022AECC x5 sites, 98.87->99.78).
+          GENERALIZES to f32->u8 VARIABLES and to s16 locals: `u8 step =
+          lbl * timeDelta;` / `s16 rot = f_expr;` (direct float
+          assignment, NO (s32)/(u8)/(s16) casts) gives the raw fctiwz-lwz
+          home with NO narrowing node -- per-use masks at compares
+          (clrlwi+extsh for (s16)step), CLEAN compound `+=` (no mask
+          before stb), `(u8)`-cast redefs land clrlwi direct in the home,
+          and for s16: raw sth at plain stores with neg+extsh+sth only on
+          a negated store. ANY explicit cast at the def executes the
+          mask/extension there and breaks the whole shape (probe-verified
+          battery; objlib playerEyeAnimFn_80038988 67.84->98.94 -- both
+          instances in one fn).
     - Sibling discovery (drawHudBox): a no-op `(s16)` cast on ONE
       use-class of an s16 param (`(f32)(x + (s16)w)`) blocks extsh-CSE
       with the implicit promotions at the other uses — target re-extends
@@ -2797,6 +2820,16 @@ branch-over-branch site in its guard chain — independent residual.)
     small/loop-shaped → A/B the O1 wrap. Per-fn O1/O2 tested NEGATIVE on
     the audio memmove family (54.8/65.4 — allocation wrecks fns with
     calls); see #111 for that class instead.
+    FIELD CONFIRMATION (objlib, ObjHitbox_SetStateIndex 90.86->100
+    byte-exact): the scope holds outside the discovery unit. The target
+    mr,mr zero-chain (two locals copied from a third's `li r8,0`) was
+    unproducible at O4 under every spelling (plain copies, #51 chains,
+    (s16)-cast chains all const-prop to separate li's); per-fn
+    `#pragma optimization_level 1` + `#pragma peephole on` (the peephole
+    re-enable supplies the beqlr early-return fusion AND drops the
+    redundant clrlwi-before-stb) + decl order in target's creation-order
+    coloring landed it exactly. Same tells: small call-free loop fn,
+    li;mr in target where all C gives li;li.
 
 111. **Member-address reassociation cap CRACKED (the audio memmove NAMED
     cap) — MWCC's address-sum association is keyed on the constant's
@@ -3104,6 +3137,16 @@ materialization); `*(s16*)p = 0xFFFF` emits `li -1` (one instr short).** When
 target materializes 0xFFFF via `lis;addi`, use the `u16` cast; when it uses
 `li -1`, use `s16`. (november12.)
 
+**HARD NEGATIVE -- the u16->s16 store-conversion `extsh` is NOT launderable.**
+When target stores a halfword param raw (`sth r4`) and yours emits
+`extsh r0,r4; sth r0`, no lvalue respelling helps: `*(s16 *)&dst = u16val`
+STILL normalizes the u16 value (extsh kept). The only fix is the VALUE being
+genuinely s16-typed -- flip the param/decl to s16 (ABI-neutral, promoted) and
+gate it with a full-project .o-hash A/B (`find build -name '*.o' | md5sum`
+before/after): objlib ObjHitbox_SetSphereRadius 94.39->100 with only
+objlib.o changing project-wide. The import's `undefined2` (u16) param guesses
+are a recurring source of this class.
+
 ## FP compare operand order picks the load registers
 
 `fcmpo cr0, f1, f0` puts the LHS of the C compare in f1 and the RHS in f0,
@@ -3201,6 +3244,13 @@ andross_update, Tricky_update; every one followed this pattern):**
 4. **Reload-vs-CSE of constants/conversions is the most common FP residual**
    — #71 literals for per-use const reloads, #97 int-local + per-use (f32)
    cast for per-statement re-conversion, #83a launders for field reloads.
+5. **UN-NAMED locals (alias-forced per-statement reloads) are the #1 import
+   damage class at unit scale** — the Ghidra import names every repeated
+   chain (`model = obj->modelInstance;`, lifted products, cached flag
+   bytes) that the original derefed inline per statement; int stores
+   through computed pointers force MWCC to reload, so the named/cached
+   form diverges at EVERY copy site. Drop the local and inline the chain
+   (#107/#83a) — objlib's twelve 100s were dominated by this single move.
 
 **Call-set diff = a systematic detector for inline victims.** Instead of
 guessing which leaf inlined, diff the partial's CALL SET against target
