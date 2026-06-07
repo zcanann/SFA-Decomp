@@ -2312,29 +2312,27 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
 #pragma peephole off
 void ObjLink_DetachChild(int param_1,int param_2)
 {
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int childCount;
+  int q;
+  int p;
+  int i;
 
-  iVar4 = 0;
-  childCount = (int)*(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET);
-  for (iVar3 = param_1; iVar4 < childCount; iVar4++) {
-    if ((u32)*(int *)(iVar3 + OBJLINK_CHILD_LIST_OFFSET) == (u32)param_2) {
+  i = 0;
+  for (p = param_1; i < (int)*(u8 *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET); i++) {
+    if ((u32)*(int *)(p + OBJLINK_CHILD_LIST_OFFSET) == (u32)param_2) {
       break;
     }
-    iVar3 = iVar3 + 4;
+    p += 4;
   }
-  iVar3 = param_1 + iVar4 * 4;
-  for (; iVar2 = *(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) - 1, iVar4 < iVar2; iVar4 = iVar4 + 1) {
-    *(undefined4 *)(iVar3 + OBJLINK_CHILD_LIST_OFFSET) =
-        *(undefined4 *)(iVar3 + OBJLINK_CHILD_LIST_OFFSET + sizeof(int));
-    iVar3 = iVar3 + 4;
+  q = param_1 + i * 4;
+  while (i < (int)*(u8 *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) - 1) {
+    *(int *)(q + OBJLINK_CHILD_LIST_OFFSET) = *(int *)(q + OBJLINK_CHILD_LIST_OFFSET + sizeof(int));
+    q += 4;
+    i++;
   }
-  *(undefined *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) = iVar2;
-  iVar3 = param_1 + (uint)*(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) * 4;
-  *(undefined4 *)(iVar3 + OBJLINK_CHILD_LIST_OFFSET) = 0;
-  *(undefined4 *)(param_2 + OBJLINK_PARENT_OFFSET) = 0;
+  (*(u8 *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET))--;
+  *(int *)(param_1 + OBJLINK_CHILD_LIST_OFFSET +
+           (uint)*(u8 *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) * 4) = 0;
+  *(int *)(param_2 + OBJLINK_PARENT_OFFSET) = 0;
   return;
 }
 #pragma peephole reset
@@ -2437,36 +2435,23 @@ void ObjContact_DispatchCallbacks(int objA,int objB)
 #pragma peephole off
 void ObjContact_RemoveObjectCallbacks(int param_1)
 {
+  int count;
   ObjContactCallbackEntry *entry;
-  ObjContactCallbackEntry *lastEntry;
-  int obj;
-  int refCount;
-  int iVar3;
-  int iVar4;
 
   entry = gObjContactCallbacks;
-  iVar3 = gObjContactCallbackCount;
-  while (iVar4 = iVar3 + -1, 0 < iVar3) {
+  count = gObjContactCallbackCount;
+  while (count-- > 0) {
     if (((u32)entry->objA == (u32)param_1) || ((u32)entry->objB == (u32)param_1)) {
-      gObjContactCallbackCount = gObjContactCallbackCount + -1;
-      iVar4 = iVar3 + -2;
-      obj = entry->objA;
-      refCount = *(u8 *)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
-      *(u8 *)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) = refCount - 1;
-      obj = entry->objB;
-      refCount = *(u8 *)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
-      *(u8 *)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) = refCount - 1;
-      iVar3 = gObjContactCallbackCount;
+      gObjContactCallbackCount--;
+      count--;
+      (*(u8 *)(entry->objA + OBJCONTACT_OBJECT_REFCOUNT_OFFSET))--;
+      (*(u8 *)(entry->objB + OBJCONTACT_OBJECT_REFCOUNT_OFFSET))--;
       if ((gObjContactCallbackCount != OBJCONTACT_CALLBACK_LAST_INDEX) &&
           (gObjContactCallbackCount != 0)) {
-        lastEntry = &gObjContactCallbacks[iVar3];
-        entry->objA = lastEntry->objA;
-        entry->objB = lastEntry->objB;
-        entry->callback = lastEntry->callback;
+        *entry = gObjContactCallbacks[gObjContactCallbackCount];
       }
     }
     entry++;
-    iVar3 = iVar4;
   }
   return;
 }
