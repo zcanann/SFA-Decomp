@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim_internal.h"
@@ -994,8 +995,10 @@ int fn_801E86F4(int obj, int p2, int p3)
     ((GameObject *)obj)->anim.rotX = (s16)getAngle(
         ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
         ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
-    (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 415, 0, 1, -1, 0);
-    (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 416, 0, 1, -1, 0);
+    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 415, NULL, 1, -1,
+                                                        NULL);
+    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 416, NULL, 1, -1,
+                                                        NULL);
   }
   break;
   }
@@ -1199,7 +1202,8 @@ void shopitem_init(int obj, int data) {
         fn_801F4C28(obj, state);
         break;
     case 0x462:
-        (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x3F1, 0, 4, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x3F1, NULL, 4,
+                                                            -1, NULL);
         break;
     case 0x468:
         ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), (void *)fn_801E832C);
@@ -1348,8 +1352,10 @@ void shopitem_update(int obj)
                 ((GameObject *)obj)->anim.rotX = (s16)getAngle(
                     ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
                     ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
-                (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 0x19F, 0, 1, -1, 0);
-                (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 0x1A0, 0, 1, -1, 0);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x19F,
+                                                                    NULL, 1, -1, NULL);
+                ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x1A0,
+                                                                    NULL, 1, -1, NULL);
                 break;
             }
             }

@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
@@ -1240,7 +1241,7 @@ void invhit_free(int obj) {
     char *inner = ((GameObject *)obj)->extra;
     switch (*(u8 *)(inner + 8)) {
         case 4:
-            (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+            ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
             break;
     }
 }
@@ -1752,8 +1753,10 @@ void invhit_update(int *obj) {
                 ((GameObject *)obj)->anim.localPosX = state->anchorX + dx2;
                 ((GameObject *)obj)->anim.localPosZ = state->anchorZ + dz2;
             }
-            (*(void (*)(int *, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x25, 0, 0, -1, 0);
-            (*(void (*)(int *, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x56, 0, 0, -1, 0);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x25, NULL, 0, -1,
+                                                                NULL);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject(obj, 0x56, NULL, 0, -1,
+                                                                NULL);
         }
         cnt = hitDetectFn_80065e50(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
                                    ((GameObject *)obj)->anim.localPosZ, hits, 0, 0);
