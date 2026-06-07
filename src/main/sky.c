@@ -2266,9 +2266,9 @@ void skyFn_8008a04c(void)
     f32 blend;
     f32 time2;
     u8 *p;
-    f32 dayStart;
-    f32 frac;
     f32 zero;
+    f32 frac;
+    f32 dayStart;
 
     vec = lbl_8030F2C8;
     if (lbl_803DD12C == NULL) {
@@ -2291,12 +2291,11 @@ void skyFn_8008a04c(void)
             frac = (tc - init_803DF080) / lbl_803DF07C;
             part = 3;
         }
-        i = 0;
-        iofs = 0;
+        iofs = i = 0;
         part4 = part * 4;
-        pA = (f32 *)((u8 *)lbl_8030F2C8 + part4 + 0x40);
-        pB = (f32 *)((u8 *)lbl_8030F2C8 + part4 + 0x18);
-        pC = (f32 *)((u8 *)lbl_8030F2C8 + part4 + 0x2c);
+        pA = (f32 *)((u8 *)vec + part4 + 0x40);
+        pB = (f32 *)((u8 *)vec + part4 + 0x18);
+        pC = (f32 *)((u8 *)vec + part4 + 0x2c);
         idx7 = (part + 7) * 4;
         idx14 = (part + 0xe) * 4;
         color = &gSkyCurrentTextureColor;
