@@ -43,7 +43,7 @@ typedef struct DfpLightniMapData {
 } DfpLightniMapData;
 
 typedef struct DfpLightniState {
-  u32 effectHandle;
+  void *effectHandle;
   f32 timer;
   f32 triggerTime;
   f32 radiusX;

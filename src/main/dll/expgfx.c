@@ -3,11 +3,14 @@
 #include "math.h"
 #include "main/camera.h"
 #include "main/audio/sfx.h"
+#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/expgfx_internal.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
 #include "main/lightmap.h"
 #include "main/mm.h"
+#include "main/sky_state.h"
 #include "main/texture.h"
 #include "track/intersect.h"
 
@@ -65,32 +68,6 @@ extern void _restgpr_23(void);
 extern void _savegpr_25(void);
 extern void _restgpr_25(void);
 
-typedef void (*ExpgfxPartfxSpawnFn)(void *obj, int effectId, void *params, int flags,
-                                    int modelId, int extraArg);
-typedef void (*ExpgfxPartfxFrameFn)(int reset);
-
-typedef struct ExpgfxPartfxInterface {
-  u8 pad00[0x08];
-  ExpgfxPartfxSpawnFn spawnObject;
-  ExpgfxPartfxFrameFn updateFrameState;
-} ExpgfxPartfxInterface;
-
-STATIC_ASSERT(offsetof(ExpgfxPartfxInterface, spawnObject) == 0x08);
-STATIC_ASSERT(offsetof(ExpgfxPartfxInterface, updateFrameState) == 0x0C);
-
-typedef void (*ExpgfxWaterfxSpawnRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags);
-typedef void (*ExpgfxWaterfxSpawnSurfaceRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags,
-                                                  int count);
-
-typedef struct ExpgfxWaterfxInterface {
-  u8 pad00[0x10];
-  ExpgfxWaterfxSpawnRippleFn spawnRipple;
-  ExpgfxWaterfxSpawnSurfaceRippleFn spawnSurfaceRipple;
-} ExpgfxWaterfxInterface;
-
-STATIC_ASSERT(offsetof(ExpgfxWaterfxInterface, spawnRipple) == 0x10);
-STATIC_ASSERT(offsetof(ExpgfxWaterfxInterface, spawnSurfaceRipple) == 0x14);
-
 extern ExpgfxBounds gExpgfxBoundsTemplates[];
 extern s16 gExpgfxPoolSlotTypeIds[];
 extern u8 gExpgfxPoolFrameFlags[];
@@ -116,7 +93,7 @@ extern undefined4 DAT_803ddef4;
 extern undefined4 DAT_803ddef8;
 extern undefined4 DAT_cc008000;
 extern u8 gExpgfxStaticPoolFrameFlags[];
-extern ExpgfxPartfxInterface **gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern u8 gExpgfxUpdatingActivePools;
 extern u8 lbl_803DD253;
 extern u8 gExpgfxRenderResetPending;
@@ -620,17 +597,11 @@ void expgfx_initSlotQuad(void *slotPtr)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void *Obj_GetPlayerObject(void);
-extern void *getTrickyObject(void);
-extern int getSkyStructField24C(void);
-extern void fn_800897D4(int skyStruct, f32 *x, f32 *y, f32 *z);
-extern void getAmbientColor(int skyStruct, u8 *r, u8 *g, u8 *b);
 extern f32 fn_80138F78(void *tricky);
 extern f32 fn_8029610C(void *player);
-extern u32 randomGetRange(int min, int max);
 extern void vecRotateZXY(void *params, void *vec);
 extern u8 framesThisStep;
-extern ExpgfxWaterfxInterface **gWaterfxInterface;
+extern WaterfxInterface **gWaterfxInterface;
 extern u16 gExpgfxPhaseAngleA;
 extern u16 gExpgfxPhaseAngleB;
 extern f32 lbl_803DF38C;

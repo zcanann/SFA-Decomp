@@ -35,8 +35,7 @@ extern void fn_801CEE0C(int obj, void *state, void *objDef);
 extern void fn_801CED2C(int obj, void *state, void *objDef);
 extern void fn_801CEA14(int obj, void *state, void *objDef);
 extern void fn_801CE2BC(int obj, void *state, void *objDef);
-extern int* getTrickyObject(void);
-extern void Sfx_StopObjectChannel(int *p1, int channel);
+extern void Sfx_StopObjectChannel(void *obj, int channel);
 
 extern u8 lbl_803267C0[];
 extern u8 lbl_803267E8[];

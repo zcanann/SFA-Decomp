@@ -19,7 +19,8 @@ void unlockLevel(int mapId, int flags, int unlocked);
 void envFxActFn_800887f8(u8 value);
 void streamFn_8000a380(int mask, int mode, int time);
 int randomGetRange(int min, int max);
-void mm_free(u32 handle);
+void mm_free(void *ptr);
 void *Obj_GetPlayerObject(void);
+void *getTrickyObject(void);
 
 #endif /* MAIN_GAMEPLAY_RUNTIME_H_ */

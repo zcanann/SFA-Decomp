@@ -119,4 +119,8 @@ typedef struct Sky2Config {
 STATIC_ASSERT(offsetof(Sky2Config, unk2A) == 0x2A);
 STATIC_ASSERT(offsetof(Sky2Config, unk58) == 0x58);
 
+int getSkyStructField24C(void);
+void getAmbientColor(int slot, u8 *red, u8 *green, u8 *blue);
+void fn_800897D4(int slot, f32 *x, f32 *y, f32 *z);
+
 #endif

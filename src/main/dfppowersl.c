@@ -4,8 +4,8 @@
 extern void ObjHits_SetHitVolumeSlot(DfpPowerSlObject *obj,int slot,int enabled,int param_4);
 
 extern DfpPowerSlObjectTriggerInterface **gObjectTriggerInterface;
-extern DfpPowerSlEffectInterface **gExpgfxInterface;
-extern DfpPowerSlEffectInterface **gPartfxInterface;
+extern EffectInterface **gExpgfxInterface;
+extern EffectInterface **gPartfxInterface;
 
 static inline DfpPowerSlState *dfppowersl_getState(DfpPowerSlObject *obj)
 {

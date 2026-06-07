@@ -2,10 +2,10 @@
 #include "main/gameplay_runtime.h"
 
 extern int ObjHits_GetPriorityHit(u8 *obj,int *out,int param_3,int param_4);
-extern void lightningRender(u32 handle);
+extern void lightningRender(void *handle);
 extern void *lightningCreate(f32 *start, f32 *end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
 
-extern DfpPowerSlEffectInterface **gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E64E0;
 extern f32 lbl_803E64E4;
@@ -148,10 +148,10 @@ void dfplightni_update(DfpLightniObject *obj)
             clampX = (radiusX < *(f32 *)&lbl_803E6500) ? *(f32 *)&lbl_803E6500
                        : (radiusX > *(f32 *)&lbl_803E6504) ? *(f32 *)&lbl_803E6504 : radiusX;
             state->effectHandle =
-                (int)lightningCreate(effectStart,effectEnd,clampX,clampY,
-                            DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
-                            state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
-                                DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
+                lightningCreate(effectStart,effectEnd,clampX,clampY,
+                                DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
+                                state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
+                                    DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
           }
           else {
             clampY = (radiusY < lbl_803E6500) ? lbl_803E6500
@@ -161,9 +161,9 @@ void dfplightni_update(DfpLightniObject *obj)
             clampX = (radiusX < *(f32 *)&lbl_803E6500) ? *(f32 *)&lbl_803E6500
                        : (radiusX > *(f32 *)&lbl_803E6504) ? *(f32 *)&lbl_803E6504 : radiusX;
             state->effectHandle =
-                (int)lightningCreate(effectStart,effectEnd,clampX,clampY,(u16)state->delayFrames,
-                            state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
-                                DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
+                lightningCreate(effectStart,effectEnd,clampX,clampY,(u16)state->delayFrames,
+                                state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
+                                    DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
           }
         }
         state->timer = lbl_803E64E0;

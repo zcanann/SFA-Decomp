@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/object_descriptor.h"
 
 #define DFPPOWERSL_OBJECT_DEF_ID 0x0344
@@ -25,10 +26,8 @@ typedef struct DfpPowerSlState {
 typedef struct DfpPowerSlObject DfpPowerSlObject;
 
 typedef int (*DfpPowerSlHitCallback)(DfpPowerSlObject *obj);
-typedef void (*DfpPowerSlFreeFn)(void *obj);
 typedef void (*DfpPowerSlActivateFn)(void *obj,int objectId);
 typedef void (*DfpPowerSlRefreshFn)(int mode,void *obj,int mask);
-typedef void (*DfpPowerSlSpawnFn)(void *obj,int objectId,void *params,int mode,int flags,void *outObj);
 
 typedef struct DfpPowerSlMapData {
   u8 pad00[0x18];
@@ -54,13 +53,6 @@ typedef struct DfpPowerSlObjectTriggerInterface {
   DfpPowerSlActivateFn activateObject;
 } DfpPowerSlObjectTriggerInterface;
 
-typedef struct DfpPowerSlEffectInterface {
-  u8 pad00[0x08];
-  DfpPowerSlSpawnFn spawnObject;
-  u8 pad0C[0x18 - 0x0C];
-  DfpPowerSlFreeFn freeObject;
-} DfpPowerSlEffectInterface;
-
 STATIC_ASSERT(sizeof(DfpPowerSlState) == 0x0C);
 STATIC_ASSERT(offsetof(DfpPowerSlState, activateObjectId) == 0x00);
 STATIC_ASSERT(offsetof(DfpPowerSlState, spawnObjectId) == 0x04);
@@ -77,8 +69,6 @@ STATIC_ASSERT(offsetof(DfpPowerSlObject, hitCallback) == 0xBC);
 
 STATIC_ASSERT(offsetof(DfpPowerSlObjectTriggerInterface, refresh) == 0x48);
 STATIC_ASSERT(offsetof(DfpPowerSlObjectTriggerInterface, activateObject) == 0x54);
-STATIC_ASSERT(offsetof(DfpPowerSlEffectInterface, spawnObject) == 0x08);
-STATIC_ASSERT(offsetof(DfpPowerSlEffectInterface, freeObject) == 0x18);
 
 extern ObjectDescriptor gDfppowerslObjDescriptor;
 
