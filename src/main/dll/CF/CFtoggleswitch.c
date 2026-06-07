@@ -555,7 +555,7 @@ void FUN_8018b6ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
   }
   if (uVar8 == 0) {
-    *(undefined *)(uVar3 + 0x36) = 0;
+    ((GameObject *)uVar3)->anim.alpha = 0;
   }
   else {
     if (FLOAT_803e48d0 == *(float *)(pbVar10 + 4)) {
@@ -565,14 +565,14 @@ void FUN_8018b6ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (*(float *)(pbVar10 + 4) <= FLOAT_803e48e4) {
       iVar4 = (int)(FLOAT_803e48e8 * (*(float *)(pbVar10 + 4) / FLOAT_803e48e4));
       local_30 = (double)(longlong)iVar4;
-      *(char *)(uVar3 + 0x36) = (char)iVar4;
+      ((GameObject *)uVar3)->anim.alpha = iVar4;
     }
     else {
       *(float *)(pbVar10 + 4) = FLOAT_803e48e4;
-      *(undefined *)(uVar3 + 0x36) = 0xff;
+      ((GameObject *)uVar3)->anim.alpha = 0xff;
     }
   }
-  if (*(char *)(uVar3 + 0x36) != '\0') {
+  if (((GameObject *)uVar3)->anim.alpha != 0) {
     local_3c = FLOAT_803e48d0;
     local_38 = FLOAT_803e48ec;
     local_34 = FLOAT_803e48d0;
@@ -1065,14 +1065,15 @@ void magiccavetop_update(int *obj) {
         *(f32 *)(sub + 4) += timeDelta;
         if (*(f32 *)(sub + 4) > lbl_803E3C4C) {
             *(f32 *)(sub + 4) = lbl_803E3C4C;
-            *(u8 *)((char *)obj + 0x36) = 0xff;
+            ((GameObject *)obj)->anim.alpha = 0xff;
         } else {
-            *(u8 *)((char *)obj + 0x36) = (u8)(int)(lbl_803E3C50 * (*(f32 *)(sub + 4) / lbl_803E3C4C));
+            ((GameObject *)obj)->anim.alpha =
+                (u8)(int)(lbl_803E3C50 * (*(f32 *)(sub + 4) / lbl_803E3C4C));
         }
     } else {
-        *(u8 *)((char *)obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
     }
-    if (*(u8 *)((char *)obj + 0x36) != 0) {
+    if (((GameObject *)obj)->anim.alpha != 0) {
         t = lbl_803E3C38;
         fx.x = t;
         fx.y = lbl_803E3C54;
