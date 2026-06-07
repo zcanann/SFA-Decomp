@@ -4,6 +4,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/shrine1CE.h"
 #include "main/dll/torch1CD.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 
@@ -66,7 +67,7 @@ extern void fn_80296B78(int obj, int a);
 extern void fn_80137948(char *fmt, ...);
 extern char sShrineTimeFormat[];
 extern void *gTitleMenuControlInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gModgfxInterface;
 extern f32 lbl_803E518C;
 extern f32 lbl_803E5190;
@@ -168,7 +169,7 @@ void dll_19B_update(int obj)
             if (Vec_distance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < (f32)st[0]) {
                 *(u8 *)((char *)st + 0x13) = 1;
                 GameBit_Set(0x129, 0);
-                (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 handle = Resource_Acquire(0x83, 1);
                 (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 1, 0, 1, -1, 0);
                 Resource_Release(handle);
@@ -197,7 +198,7 @@ void dll_19B_update(int obj)
             fn_80137948(sShrineTimeFormat, st[7]);
             if (st[7] <= 0) {
                 GameBit_Set(0x1d4, 1);
-                (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(2, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
                 st[1] = 10;
                 *(u8 *)((char *)st + 0x13) = 6;
                 (*(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(
@@ -224,7 +225,7 @@ void dll_19B_update(int obj)
                 (*(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(
                     3, 0x2a, 0x50, st[4] & 0xff, 0);
                 st[5] = 1;
-                (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(1, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 *(u8 *)((char *)st + 0x13) = 4;
             }
             break;

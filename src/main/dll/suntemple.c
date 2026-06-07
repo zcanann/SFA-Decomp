@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 #include "main/objanim_internal.h"
 
 #pragma peephole on
@@ -157,19 +158,19 @@ void suntemple_update(int obj)
                     if (((GameObject *)obj)->anim.seqId == 0x526) {
                         if (*(u8 *)(state + 1) == 1 &&
                             ((u32)GameBit_Get(0x25a) != 0 || (u32)GameBit_Get(0x25b) != 0)) {
-                            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
-                                *(s8 *)(cfg + 0x20) + 2, obj, -1);
+                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                                ->runSequence(*(s8 *)(cfg + 0x20) + 2, (void *)obj, -1);
                         } else if (*(u8 *)(state + 1) == 2 &&
                                    ((u32)GameBit_Get(0x202) != 0 || (u32)GameBit_Get(0x243) != 0)) {
-                            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
-                                *(s8 *)(cfg + 0x20) + 2, obj, -1);
+                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                                ->runSequence(*(s8 *)(cfg + 0x20) + 2, (void *)obj, -1);
                         } else {
-                            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
-                                *(s8 *)(cfg + 0x20), obj, -1);
+                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                                ->runSequence(*(s8 *)(cfg + 0x20), (void *)obj, -1);
                         }
                     } else {
-                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
-                            *(s8 *)(cfg + 0x20), obj, -1);
+                        ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                            ->runSequence(*(s8 *)(cfg + 0x20), (void *)obj, -1);
                     }
                 }
                 if ((*(u8 *)(cfg + 0x1b) & 0x04) == 0) {
@@ -202,8 +203,8 @@ void suntemple_update(int obj)
             if ((*(u8 *)(cfg + 0x1b) & 0x80) != 0) {
                 flags |= 0x4;
             }
-            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
-                *(s8 *)(cfg + 0x20), obj, flags);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                ->runSequence(*(s8 *)(cfg + 0x20), (void *)obj, flags);
         }
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
     }

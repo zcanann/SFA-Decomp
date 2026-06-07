@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/treasurechest_state.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 #include "main/object_descriptor.h"
 
 extern u32 randomGetRange(int min, int max);
@@ -15,7 +16,7 @@ extern void ObjHits_DisableObject(int obj);
 extern f32 sqrtf(f32);
 extern void *memset(void *dst, int val, u32 size);
 
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gBaddieControlInterface;
 extern int *gPlayerInterface;
 
@@ -98,8 +99,7 @@ void dll_D3_update(int *obj)
         ((GameObject *)obj)->anim.localPosX  = *(f32 *)((char *)trans + 0x8);
         ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)trans + 0xc);
         ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)trans + 0x10);
-        (*(void (**)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[0x48 / 4])(
-            (int)*(s8 *)((char *)trans + 0x2e), obj, -1);
+        (*gObjectTriggerInterface)->runSequence((s8)*(u8 *)((char *)trans + 0x2e), obj, -1);
         ((GameObject *)obj)->unkF8 = 1;
         return;
     }

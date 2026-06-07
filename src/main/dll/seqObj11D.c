@@ -3,6 +3,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/seqObj11D.h"
 #include "main/objanim.h"
+#include "main/objseq.h"
 #include "main/objhits_types.h"
 
 
@@ -782,7 +783,7 @@ extern int playerGetMoney(u8 *player);
 extern void playerAddMoney(u8 *player, int amount);
 extern void hudFn_8011f38c(int a);
 extern int *gGameUIInterface;
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern u16 lbl_803DBCA0[4];
 
 #pragma scheduling off
@@ -801,16 +802,16 @@ void fn_80151C68(int obj, u8 *state)
             *(u16 *)(state + 0x338) = lbl_803DBCA0[2];
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             hudFn_8011f38c(2);
-            (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(2, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
         } else {
             hudFn_8011f38c(2);
             *(u16 *)(state + 0x338) = lbl_803DBCA0[1];
-            (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
         }
     } else {
         hudFn_8011f38c(2);
         *(u16 *)(state + 0x338) = lbl_803DBCA0[0];
-        (**(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
     }
 }
 #pragma peephole reset

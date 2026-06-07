@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 #pragma scheduling off
 int arwblocker_getBlockState(int obj)
@@ -99,11 +100,11 @@ void arwblocker_update(int obj) {
         if (((GameObject *)obj)->unkF4 == 0) {
             switch (*(u8 *)(state + 0)) {
             case 1:
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 break;
             case 0:
             default:
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 break;
             }
             ((GameObject *)obj)->unkF4 = 1;

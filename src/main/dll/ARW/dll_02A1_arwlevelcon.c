@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -28,7 +29,7 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
     for (i = 0; i < *(u8 *)(data + 0x8b); i++) {
         u8 v = *(u8 *)(data + i + 0x81);
         if (v == 1) {
-            (*(void (**)(int, int, int, int))(*gObjectTriggerInterface + 0x50))(0x56, 0, 0, 0);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setCamVars(0x56, 0, 0, 0);
         } else if (v == 4) {
             switch (*(s8 *)(obj + 0xac)) {
             case 0x3a:
@@ -125,7 +126,7 @@ void arwlevelcon_update(int obj)
             }
             mode = 0;
         }
-        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(mode, obj, -1);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(mode, (void *)obj, -1);
         *(u8 *)(state + 0x19) = 1;
         GameBit_Set(0x9d6, 0);
         GameBit_Set(0x9d8, 0);
@@ -137,7 +138,7 @@ void arwlevelcon_update(int obj)
             fn_8022D750(arwing) == 0 && fn_8022D710(arwing) == 0) {
             int a, b;
             arwingHudSetVisible(2);
-            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x7c))(*(u16 *)(state + 0x20), 0, 0);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->setObjects(*(u16 *)(state + 0x20), 0, 0);
             a = arwarwing_getRequiredRingCount(arwing);
             b = arwarwing_getCollectedRingCount(arwing);
             if (b >= a) {
