@@ -2696,8 +2696,8 @@ void explosion_update(int obj)
 void explosion_init(int obj, int p2)
 {
     f32 vsp[3];
-    f32 mA[12];
     f32 mB[12];
+    f32 mA[12];
     int state = *(int *)&((GameObject *)obj)->extra;
     f32 scale;
     int p;
@@ -2732,10 +2732,11 @@ void explosion_init(int obj, int p2)
     }
     if (*(s16 *)((char *)p2 + 0x1c) & 0x10) {
         n = (int)((f32)(lbl_803E49B8 * scale) / lbl_803E49A8);
-        p = state;
-        for (i = 0; i < n; i++) {
+        for (i = 0, p = state; i < n; i++) {
             if (*(u8 *)((char *)state + 0xa5c) != 0) {
-                vsp[0] = lbl_803E49BC * ((f32)(int)randomGetRange(0x14, 0x28) * lbl_803E49C0) + lbl_803E49BC;
+                f32 mag = (f32)(int)randomGetRange(0x14, 0x28) * lbl_803E49C0;
+                mag = lbl_803E49BC * mag + lbl_803E49BC;
+                vsp[0] = mag;
                 vsp[1] = lbl_803E4960;
                 vsp[2] = lbl_803E4960;
                 PSMTXRotRad(mB, 0x7a, (f32)(lbl_803E4968 * (f64)((f32)(int)randomGetRange(0x2000, 0x6000) / lbl_803E49C4)));
@@ -2743,8 +2744,9 @@ void explosion_init(int obj, int p2)
                 PSMTXConcat(mA, mB, mB);
                 PSMTXMultVecSR(mB, vsp, vsp);
             } else {
-                f32 mag = lbl_803E49BC * ((f32)(int)randomGetRange(0x14, 0x28) * lbl_803E49C0) + lbl_803E49BC;
+                f32 mag = (f32)(int)randomGetRange(0x14, 0x28) * lbl_803E49C0;
                 u8 idx = i % 4;
+                mag = lbl_803E49BC * mag + lbl_803E49BC;
                 vsp[0] = mag * lbl_80325528[idx * 3];
                 vsp[1] = mag * lbl_80325528[idx * 3 + 1];
                 vsp[2] = mag * lbl_80325528[idx * 3 + 2];
@@ -2753,9 +2755,9 @@ void explosion_init(int obj, int p2)
                 PSMTXConcat(mA, mB, mB);
                 PSMTXMultVecSR(mB, vsp, vsp);
             }
-            *(int *)((char *)p + 0x964) = *(int *)&((GameObject *)obj)->anim.localPosX;
-            *(int *)((char *)p + 0x968) = *(int *)&((GameObject *)obj)->anim.localPosY;
-            *(int *)((char *)p + 0x96c) = *(int *)&((GameObject *)obj)->anim.localPosZ;
+            *(f32 *)((char *)p + 0x964) = ((GameObject *)obj)->anim.localPosX;
+            *(f32 *)((char *)p + 0x968) = ((GameObject *)obj)->anim.localPosY;
+            *(f32 *)((char *)p + 0x96c) = ((GameObject *)obj)->anim.localPosZ;
             *(f32 *)((char *)p + 0x970) = vsp[0];
             *(f32 *)((char *)p + 0x974) = vsp[1];
             *(f32 *)((char *)p + 0x978) = vsp[2];
@@ -2771,7 +2773,7 @@ void explosion_init(int obj, int p2)
     *(int *)((char *)state + 0xa40) = 0;
     if (*(s16 *)((char *)p2 + 0x1c) & 0x20) {
         *(int *)((char *)state + 0xa40) = objCreateLight(0, 1);
-        if (*(int *)((char *)state + 0xa40) != 0) {
+        if (*(void **)((char *)state + 0xa40) != NULL) {
             modelLightStruct_setLightKind(*(int *)((char *)state + 0xa40), 2);
             modelLightStruct_setPosition(*(int *)((char *)state + 0xa40), ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ);
             modelLightStruct_setAffectsAabbLightSelection(*(int *)((char *)state + 0xa40), 1);
@@ -2784,10 +2786,10 @@ void explosion_init(int obj, int p2)
     if (*(s16 *)((char *)p2 + 0x1c) & 8) {
         if (*(u8 *)((char *)state + 0xa5c) == 0) {
         *(u8 *)((char *)state + 0xa59) = 2;
-        *(s16 *)((char *)state + 0xa44) = randomGetRange(0, 0x4000);
-        *(s16 *)((char *)state + 0xa46) = randomGetRange(0, 0x8000);
-        *(s16 *)((char *)state + 0xa48) = *(s16 *)((char *)state + 0xa44) + 0x4000;
-        *(s16 *)((char *)state + 0xa4a) = *(s16 *)((char *)state + 0xa46);
+        *(u16 *)((char *)state + 0xa44) = randomGetRange(0, 0x4000);
+        *(u16 *)((char *)state + 0xa46) = randomGetRange(0, 0x8000);
+        *(u16 *)((char *)state + 0xa48) = *(u16 *)((char *)state + 0xa44) + 0x4000;
+        *(u16 *)((char *)state + 0xa4a) = *(u16 *)((char *)state + 0xa46);
         } else {
             *(u8 *)((char *)state + 0xa59) = 1;
             *(s16 *)((char *)state + 0xa44) = 0;
