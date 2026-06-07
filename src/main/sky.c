@@ -2242,25 +2242,25 @@ void fn_8008BDA8(void)
 #pragma scheduling off
 void skyFn_8008a04c(void)
 {
-    int t2;
-    int c1;
-    int i;
-    int part4;
-    u8 *color;
-    int idx14;
-    int idx7;
-    f32 *pC;
-    f32 *pB;
-    f32 *pA;
-    int iofs;
-    f32 *vec;
-    u8 cA;
-    int cB;
     int cC;
+    int cB;
+    int cA;
+    f32 *vec;
+    int iofs;
+    f32 *pA;
+    f32 *pB;
+    f32 *pC;
+    int idx7;
+    int idx14;
+    u8 *color;
+    int part4;
+    int i;
+    int t2;
+    int blue;
+    int c1;
     int part;
     int red;
     int green;
-    int blue;
     f32 t;
     f32 tc;
     f32 blend;
@@ -2272,8 +2272,8 @@ void skyFn_8008a04c(void)
 
     vec = lbl_8030F2C8;
     if (lbl_803DD12C == NULL) {
-        for (t2 = 0; t2 < 3; t2++) {
-            fn_80089A60(t2, vec[0], vec[1], vec[2], 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
+        for (blue = 0; blue < 3; blue++) {
+            fn_80089A60(blue, vec[0], vec[1], vec[2], 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
         }
     } else {
         t = ((SkyState *)lbl_803DD12C)->timeOfDay / lbl_803DF078;
@@ -2293,9 +2293,9 @@ void skyFn_8008a04c(void)
         }
         iofs = i = 0;
         part4 = part * 4;
-        pA = (f32 *)((u8 *)vec + part4 + 0x40);
-        pB = (f32 *)((u8 *)vec + part4 + 0x18);
-        pC = (f32 *)((u8 *)vec + part4 + 0x2c);
+        pA = (f32 *)&((u8 *)vec)[part4 + 0x40];
+        pB = (f32 *)&((u8 *)vec)[part4 + 0x18];
+        pC = (f32 *)&((u8 *)vec)[part4 + 0x2c];
         idx7 = (part + 7) * 4;
         idx14 = (part + 0xe) * 4;
         color = &gSkyCurrentTextureColor;
@@ -2307,7 +2307,7 @@ void skyFn_8008a04c(void)
                 cB = 0;
                 cC = 0x60;
             } else {
-                cA = (u8)(int)Curve_EvalLinear(pA, frac, 0);
+                cA = (u8)Curve_EvalLinear(pA, frac, 0);
                 cB = (int)Curve_EvalLinear(pB, frac, 0);
                 cC = (int)Curve_EvalLinear(pC, frac, 0);
             }
