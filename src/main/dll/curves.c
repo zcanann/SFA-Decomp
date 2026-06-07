@@ -3889,23 +3889,16 @@ extern SaveData saveData;
 void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
 {
   volatile SaveData *save;
-  u32 registeredDebugOptions;
-  u32 enabledDebugOptions;
-  u32 mask;
 
   save = &saveData;
-  registeredDebugOptions = save->registeredDebugOptions;
-  mask = 1 << (u8)optionIndex;
-  if ((registeredDebugOptions & mask) == 0) {
+  if ((save->registeredDebugOptions & (1 << (u8)optionIndex)) == 0) {
     return;
   }
   if (active != 0) {
-    save->enabledDebugOptions |= mask;
+    save->enabledDebugOptions |= 1 << (u8)optionIndex;
   }
   else {
-    enabledDebugOptions = save->enabledDebugOptions;
-    mask = ~mask;
-    save->enabledDebugOptions = enabledDebugOptions & mask;
+    save->enabledDebugOptions = save->enabledDebugOptions & ~(1 << (u8)optionIndex);
   }
 }
 

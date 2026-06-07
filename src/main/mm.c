@@ -466,11 +466,10 @@ extern MmRegion gMmRegionTable[];
 #pragma dont_inline reset
 
 int mmGetRegionForPtr(u8 *ptr) {
-    u8 *start;
     int i;
     for (i = 0; i < lbl_803DCB42; i++) {
-        start = gMmRegionTable[i].start;
-        if (ptr > start && ptr < start + gMmRegionTable[i].size) {
+        if (ptr > gMmRegionTable[i].start &&
+            ptr < gMmRegionTable[i].start + gMmRegionTable[i].size) {
             return i;
         }
     }
@@ -1106,11 +1105,10 @@ int getHeapItemSize(void *ptr) {
     HeapItem *items = (HeapItem *)gMmRegionTable[i].start;
     int idx = 0;
     for (;;) {
-        HeapItem *item = &items[idx];
-        if (item->key == ptr) {
-            return item->size;
+        if (items[idx].key == ptr) {
+            return items[idx].size;
         }
-        idx = item->next;
+        idx = items[idx].next;
         if (idx == -1) {
             return -1;
         }
