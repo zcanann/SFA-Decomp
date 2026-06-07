@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/magicPlant.h"
 #include "main/dll/baddie_state.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/objhits_types.h"
@@ -1050,7 +1051,8 @@ void fn_8015355C(int obj, int p2)
     if (count != 0 && (((BaddieState *)p2)->controlFlags & 0x40000000) == 0) {
         u8 spawn = count;
         while (spawn != 0) {
-            (*(void(**)(int, int, int, int, int, int))(*gPartfxInterface + 0x8))(obj, 0x802, 0, 2, -1, 0);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)obj, 0x802, NULL, 2,
+                                                                -1, NULL);
             spawn--;
         }
     }

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/shrine1CE.h"
@@ -425,7 +426,7 @@ void dll_19D_free(int obj)
         getLActions(self, self, 1, 0, 0, 0);
         *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 0x2);
     }
-    (*(void (**)(int))((char *)*(int *)gExpgfxInterface + 0x18))(self);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)self);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -493,9 +494,9 @@ void dll_19D_hitDetect(int obj)
     if (linkSubObj == 0) return;
     if (*(short *)((u8 *)linkSubObj + 0x46) == 0x248) return;
 
-    (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
-    (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
-    (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
+    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
+    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
+    ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
     *(short *)(state + 0x32) = 0x32;
 }
 #pragma peephole reset
@@ -535,9 +536,9 @@ void dll_19D_update(int obj)
     linkObj = *(int *)(self + 0x54);
     if (*(s8 *)(linkObj + 0xad) != 0) {
         Sfx_PlayFromObject(self, SFXsc_mpick1_b);
-        (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
-        (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
-        (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
         *(s16 *)(state + 0x32) = 0x32;
     }
 
@@ -562,12 +563,12 @@ void dll_19D_update(int obj)
 
         *(s16 *)(self + 0x0) = (s16)(*(s16 *)(self + 0x0) + *(s16 *)(state + 0x2e) * (u16)framesThisStep);
         *(s16 *)(self + 0x4) = (s16)(*(s16 *)(self + 0x4) + *(s16 *)(state + 0x2c) * (u16)framesThisStep);
-        (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29d, vec, 4, -1, 0);
+        ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)self, 0x29d, vec, 4, -1, NULL);
 
         if ((s16)(*(u16 *)(state + 0x30) -= (u16)framesThisStep) <= 0) {
-            (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29e, vec, 4, -1, 0);
-            (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29f, vec, 4, -1, 0);
-            (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a1, vec, 4, -1, 0);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)self, 0x29e, vec, 4, -1, NULL);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)self, 0x29f, vec, 4, -1, NULL);
+            ((EffectInterface *)*gPartfxInterface)->spawnObject((void *)self, 0x2a1, vec, 4, -1, NULL);
             *(s16 *)(state + 0x30) = 0x32;
         }
 

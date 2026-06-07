@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/dll/WC/WClevcontrol.h"
@@ -944,11 +945,16 @@ void SB_CloudRunner_HandlePriorityHit(int obj, u8 *state) {
                 args.v[1] = 0;
                 args.v[2] = 0;
                 if (*(s16 *)(hitObj + 0x46) == 154) {
-                    (*(void (**)(int, int, struct WCPartfxArgs *, u32, int, int))(*(int *)gPartfxInterface + 8))(obj, 168, &args, 0x200001, -1, 0);
-                    (*(void (**)(int, int, struct WCPartfxArgs *, u32, int, int))(*(int *)gPartfxInterface + 8))(obj, 168, &args, 0x200001, -1, 0);
-                    (*(void (**)(int, int, struct WCPartfxArgs *, u32, int, int))(*(int *)gPartfxInterface + 8))(obj, 168, &args, 0x200001, -1, 0);
+                    (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 168, &args,
+                                                                         0x200001, -1, NULL);
+                    (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 168, &args,
+                                                                         0x200001, -1, NULL);
+                    (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 168, &args,
+                                                                         0x200001, -1, NULL);
                     for (i = 0; i < 10; i++) {
-                        (*(void (**)(int, int, struct WCPartfxArgs *, u32, int, int))(*(int *)gPartfxInterface + 8))(obj, 169, &args, 0x200001, -1, 0);
+                        (*(EffectInterface **)gPartfxInterface)->spawnObject((void *)obj, 169,
+                                                                             &args, 0x200001, -1,
+                                                                             NULL);
                     }
                 }
             }
@@ -1029,7 +1035,7 @@ extern void textureFree(void *tex);
 #pragma peephole off
 void SB_CloudRunner_free(int *obj) {
     int *state = ((GameObject *)obj)->extra;
-    ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
+    ((EffectInterface *)*gExpgfxInterface)->freeObject(obj);
     if (*(void **)((char *)state + 0x18) != NULL) {
         textureFree(*(void **)((char *)state + 0x18));
         *(void **)((char *)state + 0x18) = NULL;
