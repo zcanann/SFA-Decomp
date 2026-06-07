@@ -4802,7 +4802,7 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     extern void GXSetNumTexGens(int n);
     extern int *objCreateLight(int obj, int p2);
     extern void modelLightStruct_setLightKind(int *lt, int v);
-    extern void modelLightStruct_setDirection(f32 x, f32 y, f32 z, int *lt);
+    extern void modelLightStruct_setDirection(int *lt, f32 x, f32 y, f32 z);
     extern void modelLightStruct_setDiffuseColor(int *lt, int r, int g, int b, int a);
     extern void modelLightChannels_reset(int x);
     extern void modelLightChannel_configure(int a, int b, int c);
@@ -4870,7 +4870,8 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     lbl_803DCC3E = 1;
     textureFn_8006c4e0(&texTbl, &texCnt);
     fz = (f32)lbl_803DCC44 / (f32)texCnt;
-    fz = fz * fz * lbl_803DEA28;
+    fz = fz * fz;
+    fz = fz * lbl_803DEA28;
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
     GXSetTexCoordGen2(2, 1, 4, 0x3c, 0, 0x7d);
     GXSetTevDirect(0);
@@ -4881,9 +4882,9 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     GXSetTevColorOp(0, 0, 0, 0, 0, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
     v = *(u8 *)(obj + 0xf1);
-    kc.r = v;
-    kc.g = v;
     kc.b = v;
+    kc.g = v;
+    kc.r = v;
     GXSetTevKColor(0, kc);
     GXSetTevKAlphaSel(1, 0x1c);
     GXSetTevKColorSel(1, 0xc);
@@ -4949,7 +4950,7 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
         lt = objCreateLight(obj, 0);
         if (lt != NULL) {
             modelLightStruct_setLightKind(lt, 4);
-            modelLightStruct_setDirection(lbl_803DEA04, lbl_803DEA34, lbl_803DEA04, lt);
+            modelLightStruct_setDirection(lt, lbl_803DEA04, lbl_803DEA34, *(f32 *)&lbl_803DEA04);
             modelLightStruct_setDiffuseColor(lt, 0xff, 0xff, 0xff, 0xff);
             modelLightChannels_reset(0);
             modelLightChannel_configure(2, 0, 0);
@@ -4963,7 +4964,7 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
         GXSetTevKAlphaSel(5, 0x1c);
         GXSetTevKColorSel(5, 0xc);
         fn_8006C4C0(&a174, &b178, &stk380);
-        selectTexture(*(void **)(a174 + (lbl_803DCC44 + (u32)lbl_803DCC3D * b178 - 0xc) * 4), 5);
+        selectTexture(*(void **)(a174 + ((lbl_803DCC44 - 0xc) + (u32)lbl_803DCC3D * b178) * 4), 5);
         PSMTXScale(mtx5, lbl_803DEA38, *(f32 *)&lbl_803DEA38, lbl_803DEA1C);
         GXLoadTexMtxImm(mtx5, 0x49, 0);
         GXSetTexCoordGen2(5, 1, 4, 0x3c, 1, 0x49);
@@ -5073,13 +5074,11 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     f32 sy;
     int stk348;
     int t160;
-    int stk364;
-    int t170;
     u8 *rop;
     f32 fz;
-    u8 fancy;
     int stage;
     int coord;
+    u8 fancy;
 
     s10 = lbl_803DE9F4;
     mtxA = lbl_802C1B10;
@@ -5130,9 +5129,9 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
     {
         u8 v = *(u8 *)(obj + 0xf1);
+        s10.b = v;
         s10.g = v;
         s10.r = v;
-        s10.b = v;
         s10.a = *(u8 *)(obj + 0x37) - 0xff;
     }
     GXSetTevColorS10(3, s10);
@@ -5149,13 +5148,17 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     GXSetTevAlphaIn(1, 7, 7, 7, 3);
     GXSetTevColorOp(1, 0, 0, 0, 1, 2);
     GXSetTevAlphaOp(1, 0, 0, 0, 0, 0);
-    fancy = 0;
     if (lbl_803DCC5C != 0) {
+        int stk364;
+        int t170;
         modelLightStruct_getProjectionTevModes(lbl_803DCC64, &t170, &stk364);
-        fancy = 1;
         if (t170 != 0) {
-            fancy = 0;
+            goto notfancy;
         }
+        fancy = 1;
+    } else {
+    notfancy:
+        fancy = 0;
     }
     if (fancy) {
         GXSetTevDirect(2);
