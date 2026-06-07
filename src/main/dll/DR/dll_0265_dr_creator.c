@@ -1,5 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 void drcreator_free(void) {}
 
@@ -44,8 +45,8 @@ void drcreator_update(int obj) {
         case 3:
         case 9:
             if (GameBit_Get(*(s16 *)(runtime + 4)) != 0) {
-                (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(
-                    (*(s16 *)(q + 0x1a) == 3) ? 0 : 4, obj, -1);
+                ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                    ->runSequence((*(s16 *)(q + 0x1a) == 3) ? 0 : 4, (void *)obj, -1);
             }
             break;
         case 4:

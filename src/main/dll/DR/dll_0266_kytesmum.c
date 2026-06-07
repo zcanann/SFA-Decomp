@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/objhits_types.h"
+#include "main/objseq.h"
 
 typedef int (*KytesMumUpdateCallback)(int obj);
 
@@ -168,7 +169,7 @@ int kytesmum_spawnInteractionCallback(int obj) {
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         buttonDisable(0, 0x100);
         if ((*(int (**)(void *))((char *)*gGameUIInterface + 0x1c))(*gGameUIInterface) == 0) {
-            (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(0, obj, -1);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         }
         return 0;
     }
@@ -282,7 +283,8 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
             buttonDisable(0, 0x100);
             ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
             ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 4;
-            (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(randomGetRange(0, 1), obj, -1);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                ->runSequence(randomGetRange(0, 1), (void *)obj, -1);
         }
     }
     if ((tricky != 0 && Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)tricky + 0x18)) < lbl_803E6988) ||
@@ -335,7 +337,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg) {
     }
     if (ObjTrigger_IsSet(obj) != 0) {
         ((GameObject *)obj)->animEventCallback = (void *)kytesmum_idleCallback;
-        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(next, obj, -1);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(next, (void *)obj, -1);
     }
     return 0;
 }

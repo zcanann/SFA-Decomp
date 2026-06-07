@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 #define DREARTHCAL_SETUP_YAW 0x18
 #define DREARTHCAL_OBJECT_FLAGS_B0 0xb0
@@ -61,7 +62,7 @@ void drearthcal_update(int obj)
             setAButtonIcon(0x15);
         }
         if (ObjTrigger_IsSet(obj) != 0) {
-            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
         }
     } else {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
@@ -79,7 +80,7 @@ void drearthcal_update(int obj)
             setAButtonIcon(0x14);
         }
         if (ObjTrigger_IsSet(obj) != 0) {
-            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(2, obj, -1);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
         }
     }
     if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {

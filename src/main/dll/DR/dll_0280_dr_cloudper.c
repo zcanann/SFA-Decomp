@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 
 typedef struct DrCloudPerState {
     f32 normalX;
@@ -101,7 +102,7 @@ int drcloudper_setScale(int obj)
     }
     GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
     ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
-    (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(2, obj, -1);
+    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
     return 1;
 }
 #pragma scheduling reset
@@ -115,7 +116,7 @@ int drcloudper_selectActiveCloud(int obj)
     DrCloudPerSetup *setup = (DrCloudPerSetup *)cloud->setup;
 
     GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
-    (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+    ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
     return 0;
 }
 #pragma scheduling reset

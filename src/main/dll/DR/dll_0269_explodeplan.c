@@ -1,5 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 #include "main/audio/sfx_ids.h"
 void explodeplan_free(void) {}
@@ -53,14 +54,14 @@ void explodeplan_update(int obj) {
     }
     if (((BitFlags8 *)(p + 0x4))->b2 != 0) {
         ((BitFlags8 *)(p + 0x4))->b1 = 1;
-        (*(void (**)(int, int))((char *)*gObjectTriggerInterface + 0x54))(obj, 0x76c);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->preempt(obj, 0x76c);
         if (GameBit_Get(0x9f3) != 0) {
-            (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(*(int *)p, obj, 0x60);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(*(int *)p, (void *)obj, 0x60);
         } else {
-            (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(*(int *)p, obj, 0x70);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(*(int *)p, (void *)obj, 0x70);
         }
     } else {
-        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(*(int *)p, obj, -1);
+        ((ObjectTriggerInterface *)*gObjectTriggerInterface)->runSequence(*(int *)p, (void *)obj, -1);
     }
 }
 #pragma peephole reset
