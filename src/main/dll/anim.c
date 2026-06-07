@@ -1612,10 +1612,14 @@ int dbstealerworm_stateHandlerA09(int obj, int p)
     s16 r26 = sub_40c->unk1C;
     if (r26 != -1) {
       int sp_handle;
+      int v2c;
+      int v30;
+      v30 = sub_40c->unk30;
+      v2c = sub_40c->unk2C;
       sp_handle = sub_40c->msgStack;
       frame[0] = sub_40c->unk28;
-      frame[1] = sub_40c->unk2C;
-      frame[2] = sub_40c->unk30;
+      frame[1] = v2c;
+      frame[2] = v30;
       if (Stack_IsFull(sp_handle) == 0) Stack_Push(sp_handle, frame);
       sp_handle = sub_40c->msgStack;
       frame2[0] = 7;
