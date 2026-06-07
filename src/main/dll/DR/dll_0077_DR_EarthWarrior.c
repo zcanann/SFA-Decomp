@@ -280,7 +280,7 @@ void DR_EarthWarrior_func18(int obj, f32 *a, int *b)
 void DR_EarthWarrior_release(void)
 {
     if (lbl_803DE4D0 != NULL) {
-        Resource_Release((int)lbl_803DE4D0);
+        Resource_Release(lbl_803DE4D0);
         lbl_803DE4D0 = NULL;
     }
 }
@@ -337,7 +337,7 @@ void DR_EarthWarrior_initialise(void)
     ((void **)gDREarthWarriorStateHandlers)[3] = (void *)DR_EarthWarrior_stateHandler03;
     gDREarthWarriorDefaultStateHandler = (void *)DR_EarthWarrior_defaultStateHandler;
     if (lbl_803DE4D0 == NULL) {
-        lbl_803DE4D0 = (void *)Resource_Acquire(0x5a, 1);
+        lbl_803DE4D0 = Resource_Acquire(0x5a, 1);
     }
 }
 #pragma peephole reset

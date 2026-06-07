@@ -2,6 +2,7 @@
 #define SFA_DLL_FX_800944A0_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/resource.h"
 
 /* typedefs (verbatim from placeholder_800944A0) */
 typedef struct {
@@ -230,7 +231,6 @@ extern f32 lbl_803DF384;
 extern f32 lbl_803DF3A0;
 extern f32 lbl_803DF3A4;
 extern f32 lbl_803DF3A8;
-extern int *Resource_Acquire(int id, int kind);
 extern f32 lbl_803DF300;
 extern f32 lbl_803DF31C;
 extern f32 lbl_803DF2EC;

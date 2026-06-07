@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
+#include "main/resource.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 
 typedef struct {
@@ -363,7 +364,6 @@ extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
 extern void fn_8003B950(int mtx);
 extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
-extern void Resource_Release(int handle);
 extern u8 framesThisStep;
 extern void *lbl_803DE4D0;
 extern int GameBit_Set(int id, int value);
@@ -377,7 +377,6 @@ extern int DR_CloudRunner_stateHandler03(int obj, int p2);
 extern int DR_CloudRunner_stateHandler04(int obj, int p2);
 extern int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f);
 extern int DR_CloudRunner_stateHandler06(int obj, int p2);
-extern int Resource_Acquire(int id, int kind);
 extern int gDim2PrisonMammothStateHandlers[];
 extern int gDREarthWarriorStateHandlers[];
 extern void *gDim2PrisonMammothDefaultStateHandler;

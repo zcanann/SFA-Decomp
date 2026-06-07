@@ -5,6 +5,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objHitReact.h"
+#include "main/resource.h"
 
 /* Pattern wrappers. */
 extern byte framesThisStep;
@@ -1073,9 +1074,7 @@ extern f32 lbl_803E6C34;
 
 
 extern int *gModgfxInterface;
-extern void Resource_Release(int handle);
-extern int Resource_Acquire(int id, int p2);
-extern int lbl_803DDD80;
+extern void *lbl_803DDD80;
 
 
 

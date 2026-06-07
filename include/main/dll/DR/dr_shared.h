@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/objanim.h"
+#include "main/resource.h"
 
 typedef struct {
     s16 rx;
@@ -195,7 +196,6 @@ extern void *ObjPath_GetPointModelMtx(int obj, int idx);
 extern void mtx44_mult(f32 *dst, f32 *a, f32 *b);
 extern void fn_8003B950(f32 *mtx);
 extern void Stack_Free(void *p);
-extern void Resource_Release(void *p);
 extern s16 lbl_803DC328;
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern int *getTrickyObject(void);
@@ -405,7 +405,6 @@ extern f32 lbl_803E684C;
 extern f32 lbl_803E6850;
 extern f32 lbl_803E67F0;
 extern int allocModelStruct_800139e8(int a, int b);
-extern int Resource_Acquire(int a, int b);
 extern int mapBlockFn_800592e4(void);
 extern void streamFn_8000a380(int a, int b, int c);
 extern f32 lbl_802C2560[];
