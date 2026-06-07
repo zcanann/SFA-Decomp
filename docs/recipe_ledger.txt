@@ -1,0 +1,123 @@
+# Recipe number ledger -- one line per playbook recipe: NUMBER <TAB> landing-SHA <TAB> title (first heading line).
+# RULE: every commit that adds a new numbered recipe to CLAUDE.md MUST append its line here IN THE SAME COMMIT.
+# This serializes numbering at push time: two crackers racing the same number conflict on THIS file and the
+# later lander renumbers BEFORE landing instead of after (ends the #107/#108/#110 collision class).
+# Letter variants (61b/61c/61d) are sub-entries of their base number. SHAs are the commit that introduced the
+# entry text into CLAUDE.md (pickaxe-derived for pre-ledger history; renumbered entries cite their ORIGINAL
+# landing commit -- see the per-entry numbering notes in CLAUDE.md for the collision history).
+1	dc7e2889f	`#pragma peephole off` + `#pragma scheduling off` around the function
+2	dc7e2889f	Replace `& 0xff7f`-style literal with `& ~0x80` for single-bit clears.
+3	dc7e2889f	`*(void **)ptr != NULL` instead of `*(int *)ptr != 0`. The pointer form
+4	dc7e2889f	`if (v > K) v = K; return v;` instead of `if (v <= K) return v; return K;`.
+5	dc7e2889f	Swap local declaration order to control stack offsets. When you take
+6	dc7e2889f	Lift a repeated constant load to a local before multiple stores to force
+7	dc7e2889f	`u8` not `char` for byte arrays you load and assign without arithmetic.
+8	e61725aca	Wrap dead-stored stack locals in a `struct` when only the buffer head is
+9	44a57c3dc	Declare `objRenderFn` (and similar dispatchers) with the full 6-arg
+10	e36801d3a	`(u32)` cast on a u8/u16 before int→f32 conversion forces the unsigned
+11	e36801d3a	`extern int fn(...)` for callees whose return is treated as `int` —
+12	33aec8fd5	Model a single-bit flag as a C bitfield to get `rlwimi` from CLEAN C.
+13	33aec8fd5	Reorder C `case` labels to match target block-address order. For a
+14	33aec8fd5	`int` parameter (not `u32`) for `(arg & bit)` flag tests → `cmpwi`. A
+15	33aec8fd5	`*(s8 *)(p + off)` instead of `(s8)p[off]` to land the byte in the
+16	33aec8fd5	Clean-C local declaration order controls volatile-register coloring.
+17	8b1553ee6	Fold multiple early-return guards into ONE big `||` (with embedded
+18	984794983	Model base+displacement indexed loads as a STRUCT member-array, not
+19	8b1ffe8bf	objdiff cascade-misalign trap: a low fuzzy% with a high instruction-diff%
+20	210330104	Compound-assign a narrow lvalue (`*(s16*)p += K`) instead of the expanded
+21	07caca31e	Invert `if(c){A}else{B}` → `if(!c){B}else{A}` to flip MWCC's then/else
+22	ddfcf8b83	Wrap the whole body in `if (cond) { ... } return 0;` instead of
+23	60102a011	`!!x` for MWCC's double-`cntlzw` `x != 0` materialization; plain `!= 0`
+24	ef4874f1b	Declare single-precision math/helper callees as `f32 fn(f32)`, NOT
+25	40e265f6f	An FP comparison feeding a BRANCH is NOT a cap — write the plain
+26	472196c27	"Floor-first" clamp restructure forces a FRESH callee-saved FP reg (frame
+27	472196c27	Lead an accumulation subterm with the UNARY-NEGATED operand to get
+28	ece50a663	A `li r0,<bit>; li rX,1; slw r0,rX,r0; and` (RUNTIME shift) over apparently
+29	12f7b5bc1	Callee parameter POSITION controls caller's L2R arg-emission order. MWCC
+30	12f7b5bc1	Alias variable `T *base32 = (T *)base;` flips `lwzx`/`lhzx` →
+31	12f7b5bc1	Whole-struct assignment for paired `lwz`/`stw` blob copies. When target
+32	12f7b5bc1	`fr = conv; fr = lbl + fr;` 3-statement form for `fadds` operand order.
+33	12f7b5bc1	`if (cond) { ... } else return 0;` mid-function — keep the constant
+34	12f7b5bc1	Address-taken FP outparam decl-order: first-declared gets the HIGHEST
+35	12f7b5bc1	Typedef'd vtable function-pointer fixes Ghidra's `code` double-deref
+36	12f7b5bc1	`(int)`/`(uint)` casts at call sites INFLATE the cast param's
+37	12f7b5bc1	`(u16)` on the WHOLE OR-expression for single-`clrlwi` combine. When
+38	12f7b5bc1	`(x & N) ? 1 : 0` ternary for branchy bool materialization;
+39	12f7b5bc1	Bitfield struct for byte flags at specific offsets generalizes #12 beyond
+40	12f7b5bc1	Embedded-assignment in `if()` condition avoids `stw`+`lwz` reload. When
+41	12f7b5bc1	`(s32)` cast on `fctiwz` return — `f32 stopped` returned via
+42	12f7b5bc1	Ternary `(cond) ? K1 : K2` into a typed lvalue reproduces per-arm
+43	12f7b5bc1	Comma-init `for (i=0, p=base; ...; ...)` emits `li 0; mr p,base`
+44	12f7b5bc1	`*(u16*)&lbl` pointer-read for `lhz` when a u16 global is passed as a
+45	12f7b5bc1	Loop-invariant single-deref into a local saved-reg for FP constants
+46	12f7b5bc1	Ghidra-import wrong-offset bug class: re-derive struct field offsets from
+47	12f7b5bc1	Inverse-direction sda21 recipe: when the SIZED-array form FAILS for a
+48	12f7b5bc1	"WCTileIface vtbl struct" form documents a CAP, not a fix — `lwz r12,
+49	ae626731b	Switch with case-FALLTHROUGH (case 0→1→2 with no re-tests) reproduces
+50	ae626731b	Nested `vcall(vcall(...))` keeps r3 live across calls — MWCC fetches the
+51	ae626731b	Chained `x = y = z = K;` assignment CSEs ONE constant load across multiple
+52	ae626731b	Ternary `(a >= b) ? b : a` clamp gives `mr+clrlwi` store shape vs.
+53	ae626731b	`(s16)` cast on a compound `-=` SUBTRAHEND drops the spurious `extsh`.
+54	ae626731b	Two locals = SAME base pointer when target holds the pointer in two
+55	ae626731b	Mixed-hoist pattern: target HOISTS a global to a saved reg at prologue
+56	895057608	Duplicate-def reloc-stealing: a same-TU duplicate def of an external
+57	dab96bdca	Block-scope `extern` overrides reconcile decl-namespace conflicts when
+58	a5738dcde	`u16 num = field` keeps the unsigned width for `cmplwi`; `long num =
+59	991dafe30	Defeat MWCC's commutative-FP-reassociation by lifting the LEADING term
+60	3f74f24aa	"99.99% cosmetic" partials can hide REAL behavioral bugs masked by
+61	065503764	Distinct pointer locals (not `p += K`) to keep target's `addi rX,rX,K`
+61b	7d18a80e1	Saved-reg coloring IS often source-flippable: declare a late-used
+61c	d6acac699	Limit of #61b — 2-variable chained-deref pairs (`p = load; q = *(p+off)`)
+61d	2fafee0e2	The @NNN-vs-named conversion-bias cap: MECHANISM + tested negative.
+62	ea5ffec11	`(int)`-cast the store base to defeat address-CSE with a later
+63	ea5ffec11	Ternary `x = (cond) ? x : -x;` reproduces the `bne then; b end; then:
+64	ba9dff0cd	`int` local + `(u32)` cast in the test for a direct saved-reg `lbz` +
+65	3fcf567c4	Allocator SKIPS a low volatile around a call → that reg is a HIDDEN
+66	3fcf567c4	Volatile-pair number swap on two chained loads → give the SECOND
+67	1613bcf9f	Frame-size (stwu/stmw delta) class — diagnose via sp-LAYOUT, not call
+68	a010e9ec1	`mr rS,r3`-copy forward-prop into early derefs is a PEEPHOLE opt —
+69	de0275fd7	`cmpwi` immediate is ASYMMETRIC for mathematically-equivalent int
+70	86713be0f	@NNN-vs-named-lbl SDA21 relocs are SCORE-NEUTRAL — the "pool cap" was a
+71	86713be0f	Literal float constants REMATERIALIZE per use; named `lbl_` externs get
+72	86713be0f	`sum = g + (step = k * timeDelta);` — embedded assignment keeps
+73	86713be0f	dtk FALSE-RELOCATES in-range constants — a `fn_XXXX+0xNNN` reloc on a
+74	41d42f6b6	`LL`-suffixed constants in logical ops force MATERIALIZED-constant
+75	f888fb16c	`union { f32 m[16]; f64 a8; }` 8-ALIGNS a stack array — fixes the
+76	f888fb16c	`int key = id;` (u16 param widened to an int local) fixes BOTH `cmpw`
+77	f888fb16c	Param saved-reg relocation: `void *` params + cast-assigned typed
+78	7c41ba9d0	Triple-multiply REGROUP: `A * lbl * conv` → `A * (lbl * conv)` —
+79	7c41ba9d0	Import-dropped/mangled SWITCH CASES: reconstruct via jump-table
+80	96ef0796f	Saved-reg HOIST-COUNT cap CRACKED — the "one extra saved reg +
+81	c672cc3bb	fcmpo-on-RELOADED-value cap CRACKED — `*(f32 *)&lbl` launder on ONE of
+82	c2039e99c	The "FP volatile reg-number permutation" CAP tier DECOMPOSES — classify
+83	f0aa6c791	Fresh-slot paradox CRACKED (task #151) — MWCC's conversion-temp pool
+84	36b5cbc06	The "const-hoist-above-addr-arg" cap family is largely recipe #29 in
+85	29127a959	Recipe #32's CANONICAL form requires the SELF-REASSIGN chain — a fresh
+86	29127a959	Micro-cap: MWCC emits cheap `mr`/`li` set-ups BEFORE an adjacent
+87	436b639e3	DEFINITION param order controls the prologue param-save emission order
+88	436b639e3	Multi-def web SPLIT flips saved-FP pair coloring where decl-order is
+89	436b639e3	#83 corollary — MIXED if/ternary clamp split when target has if-SHAPE
+90	436b639e3	#81 launder kills the pre-call HOIST of a doubled float arg while
+91	65f4084df	The #25 counter-caveat cap (target has cror-FREE `bge`/`ble` clamps
+92	a1a066e21	CAP — the INT-compare `bge +8; b far` two-branch guard with
+93	058e508da	FbBuf/cmd-list stack-builder family (foodbag/pickup `dll_XX_func03`) —
+94	058e508da	MWCC value-tracks stack addresses through EVERYTHING except CSE-temp
+95	058e508da	`#pragma optimization_level 0-4` IS accepted per-function by GC/2.0
+96	601c86e90	Counter-chain cap CRACKED — repeated `lha; addi rX,rX,1; sth; lha
+97	5673b086f	Conversion-CSE divergence: a LIFTED `f32 x = (f32)intGlobal;` local
+98	c15b72483	`#pragma opt_unroll_loops off` IS functional in GC/2.0 (extends the
+99	49ac5dee2	O0-SHAPED bodies in an -O4 unit = per-fn `#pragma optimization_level 0`
+100	ca635b5bb	MSL/Rare -O0 math units (e_sqrt powfCore*, k_* family): `register`-class
+101	d657f651e	dtk PHANTOM BOUNDARY symbols: a ~50-60% fn whose missing tail is a
+102	d657f651e	Scan-loop found-flag idiom: `found = 1; goto checked;` in-loop +
+103	d657f651e	Repeated branchy ternaries CSE at TREE level -- statement-split
+104	d657f651e	Self-reassign accumulator chains pin FP product groups (#85
+105	3feef4d3a	K&R-style definition for a NARROW (u8/char) param = callee masks at
+106	3feef4d3a	Volatile-STORE spelling keeps every per-iteration store of an
+107	ad276ad90	#61c 2-var pair CRACKED — MWCC colors COMPILER-CREATED temp webs
+108	121e28185	Saved-reg assignment is CLASS-POOLED, not weight-ranked — partial
+109	702977913	s64/fixed-point cap class: three more cracks beyond #98 (task #15;
+110	da10a6db7	GVN chained-constant cap CRACKED — `li rY,K; mr rX,rY` (target
+111	da10a6db7	Member-address reassociation cap CRACKED (the audio memmove NAMED
+112	a9319a3b3	#86's displacement-fold-onto-index cap CRACKED for the non-loop case —
+113	f6cb57505	The SPECULATIVE unroller is a separate pass from opt_unroll_loops —

@@ -27,6 +27,18 @@ Heuristic:
   flag the function so it can be revisited with the next playbook recipe.
   Never asm.
 
+## Recipe numbering & ledger (MANDATORY for new recipes)
+
+Recipe numbers are allocated via `docs/recipe_ledger.txt` (one line per
+number: NUMBER, landing SHA, title). **Every commit that adds a new numbered
+recipe to CLAUDE.md MUST append its ledger line IN THE SAME COMMIT** — take
+the next free number from the ledger, not from a CLAUDE.md grep. This
+serializes numbering at push time: two crackers racing the same number now
+conflict on the ledger file and the later lander renumbers BEFORE landing
+(this ended the #107/#108/#110 collision class; the per-entry numbering
+notes in this file record the historical collisions and which commit-message
+citations map to which renumbered entry).
+
 ## High-impact one-liners (try first when a function is already 80-95%)
 
 1. **`#pragma peephole off` + `#pragma scheduling off`** around the function
@@ -2608,8 +2620,8 @@ bare array's base web is created first regardless of decl position
 #107 (vs the #61c un-naming crack), then as #108 (vs the class-pooled
 allocator model at 121e28185) — and is now #112. Commit messages citing
 "recipe #108 K-grouping" / the #86-fold crack mean THIS entry. A separate
-double-#110 (GVN chained-constant vs speculative-unroller pragmas) is not
-resolved here.)*
+double-#110 (GVN chained-constant vs speculative-unroller pragmas) was
+resolved in the reconciliation pass: GVN keeps #110, unroller -> #113.)*
 
 112. **#86's displacement-fold-onto-index cap CRACKED for the non-loop case —
     the GROUPING POSITION of the constant K in `base + idx + K` picks the
@@ -2788,7 +2800,12 @@ branch-over-branch site in its guard chain — independent residual.)
     reproduces target form" note = this association, fix at O4 with the
     subscript-origin spelling).
 
-110. **The SPECULATIVE unroller is a separate pass from opt_unroll_loops —
+*(Numbering note: the speculative-unroller entry below landed as a second
+#110 (f6cb57505), colliding with the GVN chained-constant entry that landed
+first (da10a6db7) — renumbered to #113. Commits citing "recipe #110
+speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
+
+113. **The SPECULATIVE unroller is a separate pass from opt_unroll_loops —
     and it is pragma-controllable. NEW FUNCTIONAL PRAGMAS (GC/2.0 strings +
     probe-verified): `#pragma ppc_unroll_speculative on|off`,
     `#pragma ppc_unroll_factor_limit N`, `#pragma ppc_unroll_instructions_limit
