@@ -545,14 +545,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
     }
     mag = sqrtf(((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX +
                 ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ);
-    if (!(mag < (spd = lbl_803E83A4))) goto spd_hi;
-    goto spd_done;
-spd_hi:
-    if (!(mag > (spd = lbl_803E83C0))) goto spd_mag;
-    goto spd_done;
-spd_mag:
-    spd = mag;
-spd_done:
+    spd = (mag < lbl_803E83A4) ? lbl_803E83A4 : ((mag > lbl_803E83C0) ? lbl_803E83C0 : mag);
     ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY + (accel = ((grav = lbl_803E83C4) * spd) / lbl_803E83C0);
     ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY - grav;
     if (spd > lbl_803E83A4) {
@@ -699,14 +692,7 @@ spd_done:
         vecE.y = ((GameObject *)obj)->anim.previousLocalPosY - inner->unkAF8;
         vecE.z = ((GameObject *)obj)->anim.previousLocalPosZ - inner->unkAFC;
         dist = sqrtf(vecE.z * vecE.z + (vecE.x * vecE.x + vecE.y * vecE.y));
-        if (!(dist < (t = lbl_803E83A4))) goto d_hi;
-        goto d_done;
-    d_hi:
-        if (!(dist > (t = lbl_803E83DC))) goto d_dist;
-        goto d_done;
-    d_dist:
-        t = dist;
-    d_done:;
+        t = (dist < (t = lbl_803E83A4)) ? t : ((dist > (t = lbl_803E83DC)) ? t : dist);
         Vec3_Normalize(&vecE);
         {
             f32 scale = ((t / lbl_803E83DC) * (lbl_803E83E0 + (mag / lbl_803E83C0) * (mag / lbl_803E83C0))) / f;
@@ -718,11 +704,7 @@ spd_done:
             vecE.y = lbl_803E83A4;
         }
         vecE.y = vecE.y * lbl_803E83E4;
-        t = vecE.y;
-        if (vecE.y >= lbl_803E83A4) {
-        } else {
-            t = -vecE.y;
-        }
+        t = (vecE.y >= lbl_803E83A4) ? vecE.y : -vecE.y;
         t = (lbl_803E83E8 - t) / lbl_803E83E8;
         if (t < lbl_803E83A4) {
             t = lbl_803E83A4;
