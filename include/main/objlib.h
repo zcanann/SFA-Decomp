@@ -13,7 +13,7 @@ extern char sObjMsgOverflowInObjectWarning[];
 
 void ObjHitbox_SetStateIndex(int obj,int hitState,int stateIndex);
 void ObjHits_SetTargetMask(int obj,undefined targetMask);
-void ObjHitbox_SetSphereRadius(int obj,undefined2 radius);
+void ObjHitbox_SetSphereRadius(int obj,s16 radius);
 void ObjHitbox_SetCapsuleBounds(int obj,undefined2 radius,short verticalMin,short verticalMax);
 void ObjHits_ClearHitVolumes(int obj);
 void ObjHits_SetHitVolumeMasks(int obj,int hitVolume,int hitType,int sourceMask);

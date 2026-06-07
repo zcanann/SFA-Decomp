@@ -340,19 +340,18 @@ void ObjHits_SetTargetMask(int objPtr,undefined targetMask)
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjHitbox_SetSphereRadius(int objPtr,undefined2 radius)
+void ObjHitbox_SetSphereRadius(int objPtr,s16 radius)
 {
   ObjAnimComponent *obj;
   ObjHitsPriorityState *hitState;
-  float radiusFloat;
 
   obj = (ObjAnimComponent *)objPtr;
   hitState = (ObjHitsPriorityState *)obj->hitReactState;
   if (hitState != 0) {
     if ((hitState->shapeFlags & OBJHITS_SHAPE_SPHERE) != 0) {
       hitState->primaryRadius = radius;
-      radiusFloat = (float)(s32)hitState->primaryRadius;
-      hitState->primaryRadiusSquared = radiusFloat * radiusFloat;
+      hitState->primaryRadiusSquared =
+          (float)(s32)hitState->primaryRadius * (float)(s32)hitState->primaryRadius;
       hitState->primaryRadiusY = obj->hitboxScale * obj->rootMotionScale;
       if ((float)(s32)hitState->primaryRadius > hitState->primaryRadiusY) {
         hitState->primaryRadiusY = (float)(s32)hitState->primaryRadius;
@@ -374,7 +373,7 @@ void ObjHitbox_SetSphereRadius(int objPtr,undefined2 radius)
       }
     }
     hitState->sweepRadiusX = hitState->primaryRadiusXZ;
-    if (hitState->sweepRadiusX < hitState->secondaryRadiusXZ) {
+    if (hitState->secondaryRadiusXZ > hitState->sweepRadiusX) {
       hitState->sweepRadiusX = hitState->secondaryRadiusXZ;
     }
   }
