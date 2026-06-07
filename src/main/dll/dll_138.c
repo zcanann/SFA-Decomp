@@ -153,9 +153,6 @@ extern f32 lbl_803E3594;
 #pragma scheduling off
 void fn_80174BFC(int obj, int ext)
 {
-    f32 *ptOut;
-    f32 *vel;
-    int extPtr;
     int def;
     int i;
     s8 bits;
@@ -189,9 +186,6 @@ void fn_80174BFC(int obj, int ext)
             break;
         }
         i = 0;
-        ptOut = points;
-        vel = velBase;
-        extPtr = ext;
         for (; i < ((PushableState *)ext)->pointCount; i++) {
             pose.rot[0] = ((GameObject *)obj)->anim.rotX;
             pose.rot[1] = ((GameObject *)obj)->anim.rotY;
@@ -201,10 +195,10 @@ void fn_80174BFC(int obj, int ext)
             pose.y = ((GameObject *)obj)->anim.localPosY;
             pose.z = ((GameObject *)obj)->anim.localPosZ;
             setMatrixFromObjectPos(mtx, (short *)&pose);
-            Matrix_TransformPoint(mtx, vel[0], vel[1], vel[2], ptOut, &points[i * 3 + 1],
-                                  &points[i * 3 + 2]);
+            Matrix_TransformPoint(mtx, velBase[i * 3], velBase[i * 3 + 1], velBase[i * 3 + 2],
+                                  &points[i * 3], &points[i * 3 + 1], &points[i * 3 + 2]);
             if ((1 << i & 0xf) != 0) {
-                if (objBboxFn_800640cc((f32 *)(extPtr + 0x78), ptOut, lbl_803E358C, 1, &hit, obj,
+                if (objBboxFn_800640cc((f32 *)(ext + i * 12 + 0x78), &points[i * 3], lbl_803E358C, 1, &hit, obj,
                                        8, 0xd, (u8)(i + 3), 10) == 0) {
                     bits = (s8)(bits & ~(1 << i));
                 } else {
@@ -275,17 +269,15 @@ void fn_80174BFC(int obj, int ext)
                         ((PushableState *)ext)->flags |= 0x400;
                         ((PushableState *)ext)->pushAmountZ = lbl_803E3528;
                     }
-                    memcpy((void *)(extPtr + 0x78), ptOut, 0xc);
-                    mtx[12] = ptOut[0];
-                    mtx[13] = ptOut[1];
-                    mtx[14] = ptOut[2];
-                    Matrix_TransformPoint(mtx, -vel[0], -vel[1], -vel[2], (f32 *)(obj + 0xc),
+                    memcpy((void *)(ext + i * 12 + 0x78), &points[i * 3], 0xc);
+                    mtx[12] = points[i * 3];
+                    mtx[13] = points[i * 3 + 1];
+                    mtx[14] = points[i * 3 + 2];
+                    Matrix_TransformPoint(mtx, -velBase[i * 3], -velBase[i * 3 + 1],
+                                          -velBase[i * 3 + 2], (f32 *)(obj + 0xc),
                                           (f32 *)(obj + 0x10), (f32 *)(obj + 0x14));
                 }
             }
-            ptOut += 3;
-            vel += 3;
-            extPtr += 0xc;
         }
     }
     memcpy(((PushableState *)ext)->cornerWorld, points, ((PushableState *)ext)->pointCount * 0xc);
