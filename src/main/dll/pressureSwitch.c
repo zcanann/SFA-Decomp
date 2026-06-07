@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/pressureSwitch.h"
+#include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
@@ -679,7 +680,7 @@ extern int lbl_803DBC80;
 extern void *mmAlloc(int size, int heap, int flags);
 extern void *memset(void *dst, int val, u32 n);
 extern int *gRomCurveInterface;
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int lbl_803DBC70;
 extern int lbl_803DDA60;
 extern int lbl_803DDA68;
@@ -1157,8 +1158,8 @@ void swarmbaddie_update(int obj)
                                    lbl_803E26A4) +
             volume,
         obj, 0x40, (int)(lbl_803E26BC * volume));
-    (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 0x336, 0, 2, -1,
-                                                                       (int)&state->hitVolumeEnvelope);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x336, NULL, 2, -1,
+                                     &state->hitVolumeEnvelope);
     state->player = Obj_GetPlayerObject();
     if (*(void **)&state->player != NULL) {
         d[0] = *(f32 *)(state->player + 0x18) - ((GameObject *)obj)->anim.worldPosX;
