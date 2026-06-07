@@ -900,7 +900,7 @@ void FUN_801b45b0(undefined8 param_1,double param_2,double param_3,double param_
     *(float *)(uVar3 + 8) = lbl_803E563C * fVar5 * pfVar9[0x295];
     iVar10 = (int)-(lbl_803E55D0 * fVar5 - lbl_803E55D0);
     local_48 = (double)(longlong)iVar10;
-    *(char *)(uVar3 + 0x36) = (char)iVar10;
+    ((GameObject *)uVar3)->anim.alpha = iVar10;
     if ((*(char *)((int)pfVar9 + 0xa5b) == '\0') && ((int)pfVar9[0x294] >> 1 <= (int)pfVar9[0x293]))
     {
       uVar3 = randomGetRange(0x1000,0x6000);
@@ -1077,7 +1077,7 @@ void FUN_801b4f60(void)
       FUN_8001759c(*(int *)(iVar8 + 0xa40),0xff,0xeb,0xa0,0xff);
     }
   }
-  *(undefined *)(iVar3 + 0x36) = 0xff;
+  ((GameObject *)iVar3)->anim.alpha = 0xff;
   if ((*(ushort *)(iVar2 + 0x1c) & 8) == 0) {
     *(undefined *)(iVar8 + 0xa59) = 0;
   }
@@ -1268,12 +1268,12 @@ void fn_explosion_release_v11_unused(uint param_1)
     }
   }
   else {
-    iVar4 = (uint)*(byte *)(param_1 + 0x36) + (uint)DAT_803dc070 * -0x10;
+    iVar4 = (uint)((GameObject *)param_1)->anim.alpha + (uint)DAT_803dc070 * -0x10;
     if (iVar4 < 0) {
       iVar4 = 0;
     }
     (*(ObjHitsPriorityState **)(param_1 + 0x54))->flags &= ~1;
-    *(char *)(param_1 + 0x36) = (char)iVar4;
+    ((GameObject *)param_1)->anim.alpha = iVar4;
   }
   return;
 }
@@ -1532,7 +1532,7 @@ void FUN_801b5b8c(void)
   }
   uVar5 = FUN_80017944((int)piVar2,0);
   FUN_80242114(uVar5,uVar8 * 6);
-  *(undefined *)(iVar1 + 0x36) = *(undefined *)((int)uVar10 + 0x51);
+  ((GameObject *)iVar1)->anim.alpha = *(u8 *)((int)uVar10 + 0x51);
   FUN_80286880();
   return;
 }
@@ -1885,7 +1885,7 @@ void dimwooddoor2_init(u8* obj, u8* params)
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
         sub->burnState = 0;
         (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
-        *(u8*)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
     }
 }
 #pragma scheduling reset
@@ -1903,7 +1903,7 @@ void dll_1CE_init(u8* obj, u8* params)
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
         sub->igniteCountdown = 0;
         (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
-        *(u8*)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
     }
     sub->openVelocity = lbl_803E49F0;
 }
@@ -2045,11 +2045,11 @@ void dimwooddoor2_update(int* obj)
         }
     }
     if ((s8)sub->burnState <= 0 && *(s16*)q == 0x338 && ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E49DC) {
-        int v = *(u8*)((char*)obj + 0x36) - framesThisStep * 16;
+        int v = ((GameObject *)obj)->anim.alpha - framesThisStep * 16;
         int* q2 = *(int**)&((GameObject *)obj)->anim.hitReactState;
         if (v < 0) v = 0;
         *(s16*)((char*)q2 + 0x60) = (s16)(*(s16*)((char*)q2 + 0x60) & ~1);
-        *(u8*)((char*)obj + 0x36) = (u8)v;
+        ((GameObject *)obj)->anim.alpha = (u8)v;
     } else {
         int found = 0;
         int i;
@@ -2092,7 +2092,7 @@ void dll_1CE_update(int* obj)
 {
     int* q = *(int**)&((GameObject *)obj)->anim.placementData;
     Dll1CEState* sub = ((GameObject *)obj)->extra;
-    if (*(u8*)((char*)obj + 0x36) == 0) return;
+    if (((GameObject *)obj)->anim.alpha == 0) return;
     if ((s8)sub->igniteCountdown <= 0) {
         int* q2 = *(int**)&((GameObject *)obj)->anim.hitReactState;
         *(s16*)((char*)q2 + 0x60) = (s16)(*(s16*)((char*)q2 + 0x60) & ~1);
@@ -2644,7 +2644,7 @@ void explosion_update(int obj)
             {
                 f32 frac = (f32)(int)*(int *)((char *)state + 0xa4c) / (f32)(int)*(int *)((char *)state + 0xa50);
                 ((GameObject *)obj)->anim.rootMotionScale = lbl_803E49A4 * frac * *(f32 *)((char *)state + 0xa54);
-                *(s8 *)((char *)obj + 0x36) = (s8)(int)-(lbl_803E4938 * frac - lbl_803E4938);
+                ((GameObject *)obj)->anim.alpha = (s8)(int)-(lbl_803E4938 * frac - lbl_803E4938);
             }
             if (*(s8 *)((char *)state + 0xa5b) == 0 && (*(int *)((char *)state + 0xa50) >> 1) <= *(int *)((char *)state + 0xa4c)) {
                 u32 k;
@@ -2753,7 +2753,7 @@ void explosion_init(int obj, int p2)
             modelLightStruct_setDiffuseColor(*(int *)((char *)state + 0xa40), 0xff, 0xeb, 0xa0, 0xff);
         }
     }
-    *(u8 *)((char *)obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     if (*(s16 *)((char *)p2 + 0x1c) & 8) {
         if (*(u8 *)((char *)state + 0xa5c) == 0) {
         *(u8 *)((char *)state + 0xa59) = 2;
@@ -2830,7 +2830,7 @@ void dimmagicbridge_updateVertexWave(int obj, u8 *sub)
         }
     }
     DCStoreRange((void *)ObjModel_GetCurrentVertexCoords(model, 0), cnt * 6);
-    *(u8 *)((char *)obj + 0x36) = *(u8 *)(sub + 0x51);
+    ((GameObject *)obj)->anim.alpha = *(u8 *)(sub + 0x51);
 }
 #pragma peephole reset
 #pragma scheduling reset
