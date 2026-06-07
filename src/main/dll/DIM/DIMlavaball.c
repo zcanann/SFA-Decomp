@@ -1527,7 +1527,7 @@ extern void unlockLevel(int, int, int);
 extern f32 lbl_803E44C8;
 extern u8 framesThisStep;
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -1544,7 +1544,7 @@ void mmp_gyservent_update(int obj) {
     if (((GameObject *)obj)->unkF8 <= 0) {
         ((GameObject *)obj)->unkF8 = 0;
     } else {
-        (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x724, 0, 2, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x724, NULL, 2, -1, NULL);
         Sfx_KeepAliveLoopedObjectSound(obj, 0x450);
     }
 }
@@ -1572,9 +1572,9 @@ int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3) {
             }
             break;
         case 2:
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x70B, 0, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x70B, NULL, 2, -1, NULL);
             for (j = 0; j < 0x28; j++) {
-                (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x70C, 0, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x70C, NULL, 2, -1, NULL);
             }
             break;
         }
@@ -2179,7 +2179,8 @@ void mmp_trenchfx_update(int obj) {
         }
         state->emitTimer -= timeDelta;
         if (state->emitTimer > lbl_803E45B0) {
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71F, (int)&state->fxUnk10, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x71F, &state->fxUnk10, 0x200001,
+                                             -1, NULL);
         }
         *(f32 *)(lbl_803AC930 + 8) = lbl_803E45B4;
         *(f32 *)(lbl_803AC930 + 0xC) = (f32)(int)randomGetRange(-(int)state->extentX, state->extentX);
@@ -2189,7 +2190,8 @@ void mmp_trenchfx_update(int obj) {
         *(f32 *)(lbl_803AC930 + 0xC) += ((GameObject *)obj)->anim.localPosX;
         *(f32 *)(lbl_803AC930 + 0x10) += ((GameObject *)obj)->anim.localPosY;
         *(f32 *)(lbl_803AC930 + 0x14) += ((GameObject *)obj)->anim.localPosZ;
-        (*(int (*)(int, int, char *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x720, lbl_803AC930, 0x200001, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x720, lbl_803AC930, 0x200001, -1,
+                                         NULL);
     }
 }
 #pragma peephole reset
@@ -2261,26 +2263,28 @@ void mmp_asteroid_re_update(int obj) {
             *(f32 *)(lbl_803AC900 + 0x10) = state->baseY - lbl_803E4528;
             *(f32 *)(lbl_803AC900 + 0x14) = ((GameObject *)obj)->anim.localPosZ;
             lbl_803DDB30 = (int)(((GameObject *)obj)->anim.localPosY - state->baseY);
-            (*(int (*)(int, int, int, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x722, 0, 2, -1, &lbl_803DDB30);
-            (*(int (*)(int, int, char *, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x723, lbl_803AC900, 0x200001, -1, &lbl_803DDB30);
-            (*(int (*)(int, int, char *, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x723, lbl_803AC900, 0x200001, -1, &lbl_803DDB30);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x722, NULL, 2, -1, &lbl_803DDB30);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x723, lbl_803AC900, 0x200001, -1,
+                                             &lbl_803DDB30);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x723, lbl_803AC900, 0x200001, -1,
+                                             &lbl_803DDB30);
         }
     }
     if (state->eventFlags != 0) {
         if ((state->eventFlags & 1) != 0) {
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x716, 0, 1, -1, 0);
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x716, 0, 1, -1, 0);
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x716, 0, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x716, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x716, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x716, NULL, 1, -1, NULL);
         }
         if ((state->eventFlags & 8) != 0) {
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71A, 0, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x71A, NULL, 2, -1, NULL);
         }
         if ((state->eventFlags & 0x10) != 0) {
             int n;
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71B, 0, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x71B, NULL, 1, -1, NULL);
             n = 0x28;
             do {
-                (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71C, 0, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x71C, NULL, 1, -1, NULL);
                 n--;
             } while (n != 0);
             spawnExplosion(obj, lbl_803E452C, 1, 1, 0, 1, 0, 1, 0);
@@ -2289,14 +2293,14 @@ void mmp_asteroid_re_update(int obj) {
             state->eventFlags &= ~0x10;
         }
         if ((state->eventFlags & 0x20) != 0) {
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71D, 0, 1, -1, 0);
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71D, 0, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x71D, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x71D, NULL, 1, -1, NULL);
         }
         if ((state->eventFlags & 0x40) != 0) {
             state->periodicFxTimer -= timeDelta;
             if (state->periodicFxTimer < lbl_803E4518) {
                 state->periodicFxTimer = (f32)(int)randomGetRange(10, 0x3C);
-                (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71E, 0, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x71E, NULL, 1, -1, NULL);
             }
         }
     }
@@ -2470,7 +2474,7 @@ void mmp_moonrock_update(int obj) {
     *(f32 *)(lbl_803AC918 + 0x10) = state->baseY;
     *(f32 *)(lbl_803AC918 + 0x14) = ((GameObject *)obj)->anim.localPosZ;
     d = (int)(((GameObject *)obj)->anim.localPosY - state->baseY);
-    (*(int (*)(int, int, char *, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x723, lbl_803AC918, 0x200001, -1, &d);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x723, lbl_803AC918, 0x200001, -1, &d);
 }
 #pragma peephole reset
 #pragma scheduling reset
