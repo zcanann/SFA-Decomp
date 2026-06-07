@@ -522,7 +522,7 @@ void MagicPlant_update(int obj)
 
     case MAGICPLANT_MODE_FADE_OUT:
       if (plant->objAnim.currentMoveProgress >= lbl_803E3858) {
-        alpha = *(u8 *)(obj + 0x36);
+        alpha = plant->objAnim.alpha;
         alpha -= framesThisStep * 2;
         if (alpha < 0) {
           alpha = 0;
@@ -533,20 +533,20 @@ void MagicPlant_update(int obj)
           ObjAnim_SetCurrentMove(obj, 0, fz, 0);
           ObjAnim_SetMoveProgress(lbl_803E385C, (ObjAnimComponent *)obj);
         }
-        *(u8 *)(obj + 0x36) = (u8)alpha;
+        plant->objAnim.alpha = (u8)alpha;
       }
       (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
       break;
 
     case MAGICPLANT_MODE_FADE_IN:
-      alpha = *(u8 *)(obj + 0x36);
+      alpha = plant->objAnim.alpha;
       alpha += framesThisStep;
       if (alpha >= 0xff) {
         alpha = 0xff;
         state->mode = MAGICPLANT_MODE_WAIT_FOR_EVENT;
         ((MapEventInterface *)*(int *)gMapEventInterface)->startTimedEvent(setup->eventId, (f32)setup->eventDuration);
       }
-      *(u8 *)(obj + 0x36) = (u8)alpha;
+      plant->objAnim.alpha = (u8)alpha;
       (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
       break;
 
@@ -2272,7 +2272,7 @@ void duster_update(int obj) {
                 ? next
                 : mapState->maxCollectedCount;
         state->complete = 1;
-        *(u8 *)(obj + 0x36) = 1;
+        ((GameObject *)obj)->anim.alpha = 1;
       }
     }
     if (((GameObject *)obj)->anim.hitReactState != NULL) {
@@ -2452,10 +2452,11 @@ void curvefish_update(int obj) {
     /* fall through */
   case 2:
     if (state->phaseTimer <= lbl_803E38EC) {
-      *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E38F4 * (state->phaseTimer / lbl_803E38EC));
+      ((GameObject *)obj)->anim.alpha =
+          (u8)(int)(lbl_803E38F4 * (state->phaseTimer / lbl_803E38EC));
       return;
     }
-    *(u8 *)(obj + 0x36) = 0xff;
+    ((GameObject *)obj)->anim.alpha = 0xff;
     state->mode = 3;
     break;
   case 3:
@@ -2528,7 +2529,7 @@ void curvefish_update(int obj) {
                            (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))()) != 0) {
         state->mode = 0;
         state->phaseTimer = lbl_803E38F0;
-        *(u8 *)(obj + 0x36) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
         return;
       }
     }
