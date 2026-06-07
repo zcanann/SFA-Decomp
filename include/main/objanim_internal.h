@@ -8,6 +8,13 @@
 typedef struct ObjHitReactState ObjHitReactState;
 typedef struct ObjHitReactMoveEntry ObjHitReactMoveEntry;
 
+extern f32 gObjAnimProgressOne;
+extern f32 gObjAnimProgressZero;
+extern f32 gObjAnimEventStepScale;
+extern f32 gObjAnimEventFrameScale;
+extern f32 gObjAnimSetMoveProgressMax;
+extern f32 gObjAnimMoveStepScaleMin;
+
 typedef struct ObjAnimHitReactRow {
   u8 pad00[0x16];
   s8 entryIndex;
@@ -487,12 +494,44 @@ static inline ObjAnimMoveData *ObjAnim_GetMoveData(ObjAnimDef *animDef, ObjAnimS
   return (ObjAnimMoveData *)animDef->moveData[slot];
 }
 
+static inline ObjAnimMoveData *ObjAnim_GetCurrentMoveData(ObjAnimDef *animDef,
+                                                          ObjAnimState *state) {
+  return ObjAnim_GetMoveData(animDef, state, state->moveCacheSlot);
+}
+
 static inline ObjAnimMoveData *ObjAnim_GetBlendMoveData(ObjAnimDef *animDef, ObjAnimState *state,
                                                         u16 slot) {
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     return (ObjAnimMoveData *)(state->blendMoveCache[slot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
   }
   return (ObjAnimMoveData *)animDef->moveData[slot];
+}
+
+static inline ObjAnimMoveData *ObjAnim_GetCurrentBlendMoveData(ObjAnimDef *animDef,
+                                                               ObjAnimState *state) {
+  return ObjAnim_GetBlendMoveData(animDef, state, state->blendCacheSlot);
+}
+
+static inline ObjAnimRootCurve *ObjAnim_GetMoveRootCurve(ObjAnimDef *animDef,
+                                                         ObjAnimState *state) {
+  ObjAnimMoveData *moveData;
+
+  moveData = ObjAnim_GetCurrentMoveData(animDef, state);
+  if (moveData->rootCurveOffset == 0) {
+    return NULL;
+  }
+  return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
+}
+
+static inline ObjAnimRootCurve *ObjAnim_GetBlendMoveRootCurve(ObjAnimDef *animDef,
+                                                              ObjAnimState *state) {
+  ObjAnimMoveData *moveData;
+
+  moveData = ObjAnim_GetCurrentBlendMoveData(animDef, state);
+  if (moveData->rootCurveOffset == 0) {
+    return NULL;
+  }
+  return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
 }
 
 #endif /* MAIN_OBJANIM_INTERNAL_H_ */

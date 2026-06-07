@@ -3,53 +3,6 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 
-extern f32 gObjAnimProgressOne;
-extern f32 gObjAnimProgressZero;
-extern f32 gObjAnimEventStepScale;
-extern f32 gObjAnimEventFrameScale;
-extern f32 gObjAnimSetMoveProgressMax;
-extern f32 gObjAnimMoveStepScaleMin;
-
-static inline ObjAnimMoveData *ObjAnim_GetCurrentMoveData(ObjAnimDef *animDef,ObjAnimState *state)
-{
-  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-    return (ObjAnimMoveData *)(state->moveCache[state->moveCacheSlot] +
-                               OBJANIM_CACHED_MOVE_DATA_OFFSET);
-  }
-  return (ObjAnimMoveData *)animDef->moveData[state->moveCacheSlot];
-}
-
-static inline ObjAnimMoveData *ObjAnim_GetCurrentBlendMoveData(ObjAnimDef *animDef,ObjAnimState *state)
-{
-  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-    return (ObjAnimMoveData *)(state->blendMoveCache[state->blendCacheSlot] +
-                               OBJANIM_CACHED_MOVE_DATA_OFFSET);
-  }
-  return (ObjAnimMoveData *)animDef->moveData[state->blendCacheSlot];
-}
-
-static inline ObjAnimRootCurve *ObjAnim_GetMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state)
-{
-  ObjAnimMoveData *moveData;
-
-  moveData = ObjAnim_GetCurrentMoveData(animDef,state);
-  if (moveData->rootCurveOffset == 0) {
-    return NULL;
-  }
-  return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
-}
-
-static inline ObjAnimRootCurve *ObjAnim_GetBlendMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state)
-{
-  ObjAnimMoveData *moveData;
-
-  moveData = ObjAnim_GetCurrentBlendMoveData(animDef,state);
-  if (moveData->rootCurveOffset == 0) {
-    return NULL;
-  }
-  return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
-}
-
 static inline s16 *ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve *curve)
 {
   s16 *axis;
@@ -1156,15 +1109,7 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
   previousMove = objAnim->currentMove;
   moveChanged = previousMove != requestedMoveId;
   objAnim->currentMove = (s16)requestedMoveId;
-  moveId =
-      animDef->moveGroupBaseIndices[(s32)requestedMoveId >> OBJANIM_MOVE_GROUP_SHIFT] +
-      (requestedMoveId & OBJANIM_MOVE_INDEX_MASK);
-  if (moveId >= animDef->moveCount) {
-    moveId = animDef->moveCount - 1;
-  }
-  if (moveId < 0) {
-    moveId = 0;
-  }
+  moveId = ObjAnim_ResolveMoveIndex(animDef,requestedMoveId);
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
       state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
