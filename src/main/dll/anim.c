@@ -7,6 +7,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 /*
@@ -4183,7 +4184,7 @@ extern void Obj_RemoveFromUpdateList(int *obj);
 #pragma scheduling off
 #pragma peephole off
 void dbholecontrol1_update(int *obj) {
-    extern int *gObjectTriggerInterface;
+    extern ObjectTriggerInterface **gObjectTriggerInterface;
     extern uint GameBit_Get(int);
     u8 *def;
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
@@ -4191,7 +4192,7 @@ void dbholecontrol1_update(int *obj) {
         Obj_RemoveFromUpdateList(obj);
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     } else if (GameBit_Get(*(s16*)(def + 0x20)) != 0) {
-        ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])(*(s8*)(def + 0x19), obj, -1);
+        (*gObjectTriggerInterface)->runSequence(*(s8 *)(def + 0x19), obj, -1);
     }
 }
 #pragma peephole reset
@@ -6333,7 +6334,7 @@ void dbstealerworm_update(u8 *objp)
     extern f32 sqrtf(f32);
     extern int *gMapEventInterface;
     extern void **gBaddieControlInterface;
-    extern int *gObjectTriggerInterface;
+    extern ObjectTriggerInterface **gObjectTriggerInterface;
     extern int *gPlayerInterface;
     extern f32 timeDelta;
     extern f32 lbl_803E62A8;
@@ -6389,7 +6390,7 @@ void dbstealerworm_update(u8 *objp)
             ((GameObject *)obj)->anim.localPosX = *(f32 *)(data + 8);
             ((GameObject *)obj)->anim.localPosY = *(f32 *)(data + 0xc);
             ((GameObject *)obj)->anim.localPosZ = *(f32 *)(data + 0x10);
-            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s8 *)(data + 0x2e), obj, -1);
+            (*gObjectTriggerInterface)->runSequence(*(s8 *)(data + 0x2e), (void *)obj, -1);
             ((GameObject *)obj)->unkF8 = 1;
         } else {
             if (((int (*)(int, int, int))((void **)*gBaddieControlInterface)[12])(obj, blob, 0) == 0) {
@@ -7306,7 +7307,7 @@ void dfpseqpoint_update(int obj)
     extern uint GameBit_Get(int);
     extern void GameBit_Set(int, int);
     extern f32 Vec_distance(int, int);
-    extern int *gObjectTriggerInterface;
+    extern ObjectTriggerInterface **gObjectTriggerInterface;
     int player;
     int blob;
     int h;
@@ -7338,14 +7339,16 @@ void dfpseqpoint_update(int obj)
     switch (((DfpSeqPointState *)blob)->triggerMode) {
     case 0:
         if (Vec_distance(obj + 0x18, player + 0x18) < ((DfpSeqPointState *)blob)->triggerRadius) {
-            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState *)blob)->triggerId,
+                                                    (void *)obj, -1);
             ((DfpSeqPointState *)blob)->doneLatch = 1;
         }
         break;
     case 1:
         h = ((DfpSeqPointState *)blob)->gameBitGate;
         if (h != -1 && GameBit_Get(h) != 0) {
-            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState *)blob)->triggerId,
+                                                    (void *)obj, -1);
             ((DfpSeqPointState *)blob)->doneLatch = 1;
         }
         break;
@@ -7353,7 +7356,8 @@ void dfpseqpoint_update(int obj)
         if (Vec_distance(obj + 0x18, player + 0x18) < ((DfpSeqPointState *)blob)->triggerRadius) {
             h = ((DfpSeqPointState *)blob)->gameBitGate;
             if (h != -1 && GameBit_Get(h) != 0) {
-                ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState *)blob)->triggerId,
+                                                        (void *)obj, -1);
                 ((DfpSeqPointState *)blob)->doneLatch = 1;
             }
         }
@@ -7362,7 +7366,8 @@ void dfpseqpoint_update(int obj)
         if (Vec_distance(obj + 0x18, player + 0x18) < ((DfpSeqPointState *)blob)->triggerRadius) {
             h = ((DfpSeqPointState *)blob)->gameBitGate;
             if (h != -1 && GameBit_Get(h) == 0) {
-                ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState *)blob)->triggerId,
+                                                        (void *)obj, -1);
                 GameBit_Set(((DfpSeqPointState *)blob)->gameBitGate, 1);
                 ((DfpSeqPointState *)blob)->doneLatch = 1;
             }
@@ -7371,7 +7376,8 @@ void dfpseqpoint_update(int obj)
     case 4:
         h = ((DfpSeqPointState *)blob)->gameBitGate;
         if (h != -1 && GameBit_Get(h) == 0) {
-            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState *)blob)->triggerId,
+                                                    (void *)obj, -1);
             GameBit_Set(((DfpSeqPointState *)blob)->gameBitGate, 1);
             ((DfpSeqPointState *)blob)->doneLatch = 1;
         }
@@ -7379,7 +7385,8 @@ void dfpseqpoint_update(int obj)
     case 5:
         h = ((DfpSeqPointState *)blob)->gameBitGate;
         if (h != -1 && GameBit_Get(h) != 0) {
-            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(((DfpSeqPointState *)blob)->triggerId, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState *)blob)->triggerId,
+                                                    (void *)obj, -1);
         }
         break;
     }
