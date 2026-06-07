@@ -2637,7 +2637,7 @@ void dimlogfire_free(int *obj, int mode) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int Sfx_PlayFromObject(int *obj, int sfxId);
 extern void Sfx_StopObjectChannel(int *obj, int channel);
 #pragma scheduling off
@@ -2661,8 +2661,7 @@ int dimlogfire_SeqFn(int *obj, int unused, int *p3) {
         break;
     }
     if (state->smokeToggle != 0) {
-        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
-            obj, 215, 0, 0, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 215, NULL, 0, -1, NULL);
         Sfx_StopObjectChannel(obj, 5);
     } else {
         Sfx_StopObjectChannel(obj, 1);
@@ -2806,7 +2805,7 @@ void lavaball1be_update(s16 *obj) {
         ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.velocityX * timeDelta + ((GameObject *)obj)->anim.localPosX;
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
         ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * timeDelta + ((GameObject *)obj)->anim.localPosZ;
-        (*((void (***)(s16 *, int, int, int, int, int))gPartfxInterface))[2](obj, 0x1f5, 0, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 0x1f5, NULL, 1, -1, NULL);
         obj[0] = obj[0] + framesThisStep * 0x374;
         obj[1] = obj[1] + framesThisStep * 0x12c;
         ((GameObject *)obj)->anim.velocityY = -(lbl_803E47D0 * timeDelta - ((GameObject *)obj)->anim.velocityY);
@@ -2902,11 +2901,11 @@ int imanimspacecraft_SeqFn(int *obj, int unused, u8 *p3) {
         *(f32 *)(lbl_803AC948 + 0xc) = lbl_803E4770;
         *(f32 *)(lbl_803AC948 + 0x10) = lbl_803E4774;
         *(f32 *)(lbl_803AC948 + 0x14) = lbl_803E4778;
-        (*((void (***)(int *, int, char *, int, int, int))gPartfxInterface))[2](obj, 0x133, lbl_803AC948, 4, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 0x133, lbl_803AC948, 4, -1, NULL);
         *(f32 *)(lbl_803AC948 + 0xc) = lbl_803E477C;
         *(f32 *)(lbl_803AC948 + 0x10) = lbl_803E4774;
         *(f32 *)(lbl_803AC948 + 0x14) = lbl_803E4778;
-        (*((void (***)(int *, int, char *, int, int, int))gPartfxInterface))[2](obj, 0x133, lbl_803AC948, 4, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, 0x133, lbl_803AC948, 4, -1, NULL);
     }
     tex = objFindTexture(obj, 0, 0);
     *tex = 0x100;
