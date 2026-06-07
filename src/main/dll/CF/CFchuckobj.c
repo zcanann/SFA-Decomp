@@ -51,7 +51,7 @@ extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
-extern int* gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern int* gObjectTriggerInterface;
 extern int* gRomCurveInterface;
 extern undefined4 DAT_803dda60;
@@ -208,11 +208,9 @@ void areafxemit_emitBurst(AreaFxEmitObject *obj, int count)
           args.vec[0] += obj->objAnim.localPosX;
           args.vec[1] += obj->objAnim.localPosY;
           args.vec[2] += obj->objAnim.localPosZ;
-          (*(void (**)(AreaFxEmitObject *, int, void *, int, int, int))(*gPartfxInterface + 8))(
-              obj, state->effectId, &args, 0x200001, -1, 0);
+          (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 0x200001, -1, NULL);
         } else {
-          (*(void (**)(AreaFxEmitObject *, int, void *, int, int, int))(*gPartfxInterface + 8))(
-              obj, state->effectId, &args, 2, -1, 0);
+          (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 2, -1, NULL);
         }
       }
     }
@@ -990,32 +988,27 @@ void warpPadFn_8019042c(int param_1)
     if ((state->flags & 4) != 0) {
         if (state->pulseTimer < lbl_803E3EB4) {
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0) {
-                (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
-                    param_1, 0x7ca, &fx, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)param_1, 0x7ca, &fx, 2, -1, NULL);
             }
         } else if (state->pulseTimer < lbl_803E3EB8) {
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / lbl_803E3EBC) {
-                (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
-                    param_1, 0x7ca, &fx, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)param_1, 0x7ca, &fx, 2, -1, NULL);
             }
             fx.count = 0x28;
             fx.unk0 = 0;
             fx.scale = lbl_803E3EC0 * ((state->pulseTimer - lbl_803E3EB4) / lbl_803E3EC4);
-            (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
-                param_1, 0x7d2, &fx, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)param_1, 0x7d2, &fx, 2, -1, NULL);
             state->flags = state->flags | 2;
         } else if (state->pulseTimer < lbl_803E3EC8) {
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0) {
-                (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
-                    param_1, 0x7ca, &fx, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)param_1, 0x7ca, &fx, 2, -1, NULL);
             }
             if ((state->flags & 2) != 0) {
                 state->flags = state->flags & ~2;
                 fx.count = 0x46;
                 fx.scale = lbl_803E3ECC;
                 for (i = 0xf; i != 0; i--) {
-                    (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
-                        param_1, 0x7d2, &fx, 2, -1, 0);
+                    (*gPartfxInterface)->spawnObject((void *)param_1, 0x7d2, &fx, 2, -1, NULL);
                 }
             }
         } else if (state->pulseTimer >= lbl_803E3ED0) {
@@ -1056,8 +1049,8 @@ typedef struct CFEmitterFxArgs {
     } while (0)
 
 #define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, arg6) \
-    (*(void (**)(int, int, void*, int, int, int))(*gPartfxInterface + 8))( \
-        (int)(obj), (effectId), (args), (flags), (modelId), (arg6))
+    (*gPartfxInterface)->spawnObject((void *)(obj), (effectId), (args), (flags), (modelId), \
+        (void *)(arg6))
 
 #define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args)            \
     do {                                                          \
