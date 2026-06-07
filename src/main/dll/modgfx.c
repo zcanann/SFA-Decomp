@@ -134,7 +134,16 @@ typedef struct PartfxEffectState {
   f32 sourcePosX;
   f32 sourcePosY;
   f32 sourcePosZ;
-  u8 pad24[0x78 - 0x24];
+  f32 posStepX;
+  f32 posStepY;
+  f32 posStepZ;
+  ModgfxScaleChannel scaleChannels[2];
+  f32 drawPosX;
+  f32 drawPosY;
+  f32 drawPosZ;
+  f32 velocityX;
+  f32 velocityY;
+  f32 velocityZ;
   void *vertexBuffers[3];
   void *colorBuffers[3];
   void *baseVertexBuffer;
@@ -144,7 +153,15 @@ typedef struct PartfxEffectState {
   void *auxAllocation;
   u32 flags;
   s32 initialDelayFrames;
-  u8 padAC[0xE6 - 0xAC];
+  ModgfxAlphaChannel alphaChannels[2];
+  f32 blendColorR;
+  f32 blendColorG;
+  f32 blendColorB;
+  f32 blendColorStepR;
+  f32 blendColorStepG;
+  f32 blendColorStepB;
+  f32 renderScale;
+  u8 padD8[0xE6 - 0xD8];
   s16 soundHandle;
   u8 padE8[0xEA - 0xE8];
   s16 vertexCount;
@@ -191,6 +208,11 @@ STATIC_ASSERT(sizeof(PartfxEffectState) == 0x140);
 STATIC_ASSERT(offsetof(PartfxEffectState, vertexBuffers) == 0x78);
 STATIC_ASSERT(offsetof(PartfxEffectState, textureResource) == 0x98);
 STATIC_ASSERT(offsetof(PartfxEffectState, flags) == 0xA4);
+STATIC_ASSERT(offsetof(PartfxEffectState, drawPosX) == 0x60);
+STATIC_ASSERT(offsetof(PartfxEffectState, velocityX) == 0x6C);
+STATIC_ASSERT(offsetof(PartfxEffectState, alphaChannels) == 0xAC);
+STATIC_ASSERT(offsetof(PartfxEffectState, blendColorR) == 0xBC);
+STATIC_ASSERT(offsetof(PartfxEffectState, renderScale) == 0xD4);
 STATIC_ASSERT(offsetof(PartfxEffectState, vertexCount) == 0xEA);
 STATIC_ASSERT(offsetof(PartfxEffectState, colorVertexCount) == 0xEC);
 STATIC_ASSERT(offsetof(PartfxEffectState, stageDurations) == 0xEE);
@@ -5215,13 +5237,15 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
 void dll_0B_func0E(void)
 {
     int i;
-    for (i = 0; i < 50; i++) {
-        int* e = lbl_8039C1F8[i];
-        int* f;
-        if (e != NULL) {
-            f = *(int**)((char*)e + 4);
-            if (f != NULL && (*(u16*)((char*)f + 0xb0) & 0x800) != 0) {
-                *(u8*)((char*)e + 0x13e) = 1;
+    PartfxEffectState **effects = (PartfxEffectState **)gPartfxActiveEffects;
+
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++) {
+        PartfxEffectState *effect = effects[i];
+        GameObject *sourceObject;
+        if (effect != NULL) {
+            sourceObject = effect->sourceObject;
+            if (sourceObject != NULL && (sourceObject->objectFlags & 0x800) != 0) {
+                effect->frameUpdated = 1;
             }
         }
     }
@@ -14829,10 +14853,10 @@ int dll_0B_func04(void *base, int z, int c, void *b, int e, void *d, int f, void
     effect->currentStage = -1;
     effect->stageFrameCountdown = effect->colorVertexCount;
     effect->flags = *(int *)(st + 0x54);
-    *(f32 *)(((u8 *)effect) + 0x60) = *(f32 *)(st + 0x2c);
-    *(f32 *)(((u8 *)effect) + 0x64) = *(f32 *)(st + 0x30);
-    *(f32 *)(((u8 *)effect) + 0x68) = *(f32 *)(st + 0x34);
-    *(f32 *)(((u8 *)effect) + 0xd4) = *(f32 *)(st + 0x38);
+    effect->drawPosX = *(f32 *)(st + 0x2c);
+    effect->drawPosY = *(f32 *)(st + 0x30);
+    effect->drawPosZ = *(f32 *)(st + 0x34);
+    effect->renderScale = *(f32 *)(st + 0x38);
     if (effect->flags & 1) {
         effect->sourcePosX = *(f32 *)(st + 0x2c);
         effect->sourcePosY = *(f32 *)(st + 0x30);
@@ -14840,40 +14864,40 @@ int dll_0B_func04(void *base, int z, int c, void *b, int e, void *d, int f, void
     }
     fz430 = lbl_803DF430;
     fz434 = lbl_803DF434;
-    *(f32 *)(((u8 *)effect) + 0x24) = fz430;
-    *(f32 *)(((u8 *)effect) + 0x28) = fz430;
-    *(f32 *)(((u8 *)effect) + 0x2c) = fz430;
-    *(f32 *)(((u8 *)effect) + 0x30) = fz434;
-    *(f32 *)(((u8 *)effect) + 0x34) = fz434;
-    *(f32 *)(((u8 *)effect) + 0x38) = fz434;
-    *(f32 *)(((u8 *)effect) + 0x40) = fz430;
-    *(f32 *)(((u8 *)effect) + 0x44) = fz430;
-    *(f32 *)(((u8 *)effect) + 0x3c) = fz430;
-    *(f32 *)(((u8 *)effect) + 0x50) = fz434;
-    *(f32 *)(((u8 *)effect) + 0x48) = fz434;
-    *(f32 *)(((u8 *)effect) + 0x4c) = fz434;
-    *(f32 *)(((u8 *)effect) + 0x5c) = fz430;
-    *(f32 *)(((u8 *)effect) + 0x54) = fz430;
-    *(f32 *)(((u8 *)effect) + 0x58) = fz430;
+    effect->posStepX = fz430;
+    effect->posStepY = fz430;
+    effect->posStepZ = fz430;
+    effect->scaleChannels[0].cur[0] = fz434;
+    effect->scaleChannels[0].cur[1] = fz434;
+    effect->scaleChannels[0].cur[2] = fz434;
+    effect->scaleChannels[0].step[1] = fz430;
+    effect->scaleChannels[0].step[2] = fz430;
+    effect->scaleChannels[0].step[0] = fz430;
+    effect->scaleChannels[1].cur[2] = fz434;
+    effect->scaleChannels[1].cur[0] = fz434;
+    effect->scaleChannels[1].cur[1] = fz434;
+    effect->scaleChannels[1].step[2] = fz430;
+    effect->scaleChannels[1].step[0] = fz430;
+    effect->scaleChannels[1].step[1] = fz430;
     effect->rotOffsetZ = 0;
     effect->rotOffsetY = 0;
     effect->rotOffsetX = 0;
     effect->vec120 = 0;
     effect->vec122 = 0;
     effect->vec124 = 0;
-    *(f32 *)(((u8 *)effect) + 0xac) = fz430;
-    *(f32 *)(((u8 *)effect) + 0xb0) = fz430;
-    *(f32 *)(((u8 *)effect) + 0xb4) = fz430;
-    *(f32 *)(((u8 *)effect) + 0xb8) = fz430;
-    *(f32 *)(((u8 *)effect) + 0xbc) = fz430;
-    *(f32 *)(((u8 *)effect) + 0xc0) = fz430;
-    *(f32 *)(((u8 *)effect) + 0xc4) = fz430;
-    *(f32 *)(((u8 *)effect) + 0xc8) = fz430;
-    *(f32 *)(((u8 *)effect) + 0xcc) = fz430;
-    *(f32 *)(((u8 *)effect) + 0xd0) = fz430;
-    *(f32 *)(((u8 *)effect) + 0x6c) = *(f32 *)(st + 0x20);
-    *(f32 *)(((u8 *)effect) + 0x70) = *(f32 *)(st + 0x24);
-    *(f32 *)(((u8 *)effect) + 0x74) = *(f32 *)(st + 0x28);
+    effect->alphaChannels[0].step = fz430;
+    effect->alphaChannels[0].cur = fz430;
+    effect->alphaChannels[1].step = fz430;
+    effect->alphaChannels[1].cur = fz430;
+    effect->blendColorR = fz430;
+    effect->blendColorG = fz430;
+    effect->blendColorB = fz430;
+    effect->blendColorStepR = fz430;
+    effect->blendColorStepG = fz430;
+    effect->blendColorStepB = fz430;
+    effect->velocityX = *(f32 *)(st + 0x20);
+    effect->velocityY = *(f32 *)(st + 0x24);
+    effect->velocityZ = *(f32 *)(st + 0x28);
     lbl_803DD280 = lbl_803DD280 + 1;
     if (lbl_803DD280 > 0x4e20) {
         lbl_803DD280 = 0;
