@@ -3,6 +3,7 @@
 #include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfprisonuncle.h"
+#include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
@@ -217,7 +218,7 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern s16 lbl_803DBD98[4];
 extern void *gRomCurveInterface;
-extern void *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern void *gMapEventInterface;
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 extern void vecRotateZXY(void *angles,void *outVec);
@@ -290,7 +291,7 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
 
       i = 0x14;
       do {
-        (*(void (**)(int,int,int,int,int,int))(*(int *)gPartfxInterface + 8))(obj, 0x34e, 0, 2, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x34e, NULL, 2, -1, NULL);
         i--;
       } while (i != 0);
 
@@ -2124,12 +2125,9 @@ void duster_update(int obj) {
   while (ObjMsg_Pop(obj, &msg, 0, 0) != 0) {
     if (msg == 0x7000b) {
       Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
-      (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
-          obj, 0x51a, 0, 1, -1, 0);
-      (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
-          obj, 0x51a, 0, 1, -1, 0);
-      (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
-          obj, 0x51a, 0, 1, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x51a, NULL, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x51a, NULL, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x51a, NULL, 1, -1, NULL);
       GameBit_Set(state->completeGameBit, 1);
       mapState = (DusterMapEventState *)(*(int (**)(int))(*(int *)gMapEventInterface + 0x8c))(
           *(int *)gMapEventInterface);
@@ -2189,10 +2187,8 @@ void duster_update(int obj) {
     if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->moveStepScale, timeDelta, NULL) != 0 ||
         state->priorityHit != 0) {
       Sfx_PlayFromObject(obj, SFXen_riverloop11);
-      (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
-          obj, 0x51f, 0, 2, -1, 0);
-      (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
-          obj, 0x51f, 0, 2, -1, 0);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x51f, NULL, 2, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x51f, NULL, 2, -1, NULL);
       state->driftDir = (u8)randomGetRange(0, 4);
       if (state->useLaunchVelocity != 0) {
         ((GameObject *)obj)->anim.velocityX = lbl_803E38C8;
@@ -2258,12 +2254,9 @@ void duster_update(int obj) {
           *(int *)gMapEventInterface);
       if (mapState->collectedCount < mapState->maxCollectedCount) {
         Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
-        (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
-            obj, 0x51a, 0, 1, -1, 0);
-        (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
-            obj, 0x51a, 0, 1, -1, 0);
-        (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
-            obj, 0x51a, 0, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x51a, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x51a, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x51a, NULL, 1, -1, NULL);
         GameBit_Set(state->completeGameBit, 1);
         mapState = (DusterMapEventState *)(*(int (**)(int))(*(int *)gMapEventInterface + 0x8c))(
             *(int *)gMapEventInterface);
