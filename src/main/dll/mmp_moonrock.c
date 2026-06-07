@@ -48,9 +48,10 @@ void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
     void* block;
     int* tables;
     void* tex;
-    int i, j;
-    void* layer;
+    int i;
     void* material;
+    void* layer;
+    int j;
     int t1, t2;
 
     placement = *(int**)(obj + 0x4c);
@@ -69,8 +70,7 @@ void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
 
     for (i = 0; i < (s32)*(u8*)((char*)block + 0xa2); i++) {
         layer = fn_8006070C(block, i);
-        material = layer;
-        for (j = 0; j < (s32)*(u8*)((char*)layer + 0x41); j++) {
+        for (j = 0, material = layer; j < (s32)*(u8*)((char*)layer + 0x41); j++) {
             if (*(void**)((char*)material + 0x24) == tex) {
                 t1 = (s32)(u32)*(u16*)((char*)tex + 0xa) << 6;
                 t2 = (s32)(u32)*(u16*)((char*)tex + 0xc) << 6;
