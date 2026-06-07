@@ -7,6 +7,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 
 static inline int *Transporter_GetActiveModel(void *obj) {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -584,7 +585,7 @@ LAB_80176c2c:
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xef;
   }
   if (((*(byte *)(param_9 + 0xaf) & 4) != 0) && (uVar3 = FUN_80017690(0x913), uVar3 == 0)) {
-    (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_9,0xffffffff);
+    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_9, -1);
     FUN_80017698(0x913,1);
     return;
   }
@@ -773,7 +774,7 @@ void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
       }
       else {
-        (**(code **)(*DAT_803dd6d4 + 0x48))((int)psVar9[2],param_9,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence((int)psVar9[2], (void *)param_9, -1);
         *(undefined *)(psVar9 + 6) = 1;
       }
     }
@@ -819,7 +820,7 @@ void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
         if (((-1 < DAT_803ddb38) && (*(char *)(iVar10 + 0x1c) != '\0')) &&
            ((dVar11 < (double)lbl_803E4270 &&
             (*(int *)(psVar6 + 0x18) == *(int *)(param_9 + 0x30))))) {
-          (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_9,0xffffffff);
+          ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_9, -1);
           DAT_803dda60 = 2;
         }
         if ((((*psVar9 == 0) &&
@@ -827,7 +828,7 @@ void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
                                                         (int)*(char *)(iVar10 + 0x1e) ^ 0x80000000)
                                       - DOUBLE_803e4278))) &&
             (bVar1 = -1 < *(char *)(iVar10 + 0x1a), bVar1)) && (bVar1)) {
-          (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_9,0xffffffff);
+          ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_9, -1);
         }
       }
     }
@@ -871,7 +872,7 @@ void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
           ((dVar11 < (double)*(float *)(psVar9 + 4) &&
            (*(int *)(psVar6 + 0x18) == *(int *)(param_9 + 0x30))))))) {
         FUN_80017698((int)psVar9[1],0);
-        (**(code **)(*DAT_803dd6d4 + 0x48))((int)psVar9[2],param_9,0xffffffff);
+        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence((int)psVar9[2], (void *)param_9, -1);
         *(undefined *)(psVar9 + 6) = 1;
       }
     }
@@ -1547,7 +1548,7 @@ void invhit_init(int *obj, u8 *def) {
 extern void *Obj_GetPlayerObject2(void);
 extern int playerIsDisguised(void *player);
 extern u32 GameBit_Get(int eventId);
-extern int *gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int fn_80295A04(void *player, int a);
 extern void pushable_savePos(int *obj);
 extern int fn_80174668(int *obj, PushableState *state);
@@ -1580,7 +1581,7 @@ void pushable_update(int *obj) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10;
     }
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0 && GameBit_Get(0x913) == 0) {
-        (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         GameBit_Set(0x913, 1);
         return;
     }
@@ -1823,7 +1824,7 @@ void WarpPoint_update(int *obj) {
                     ((MapEventInterface *)*gMapEventInterface)->triggerEvent(
                         (int)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
                 }
-                (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(state[2], obj, -1);
+                (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
                 GameBit_Set(0xd53, 0);
                 lbl_803DCDE0 = 2;
                 *(u8 *)((char *)state + 0xc) = 1;
@@ -1843,12 +1844,12 @@ void WarpPoint_update(int *obj) {
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
         if (lbl_803DCEB8 > -1 && *(s8 *)(def + 0x1c) != 0 && dist < lbl_803E35D8 &&
             *(u32 *)&((GameObject *)player)->anim.parent == *(u32 *)&((GameObject *)obj)->anim.parent) {
-            (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             lbl_803DCDE0 = 2;
         }
         if (*state == 0 && dist < (f32)*(s8 *)(def + 0x1e) && *(s8 *)(def + 0x1a) > -1 &&
             *(s8 *)(def + 0x1a) > -1) {
-            (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
         break;
     }
@@ -1862,7 +1863,7 @@ void WarpPoint_update(int *obj) {
         if (GameBit_Get(state[1]) != 0 && *(u8 *)((char *)state + 0xc) == 0 &&
             *(s8 *)(def + 0x1c) != 0 && dist <= *(f32 *)((char *)state + 8) &&
             *(u32 *)&((GameObject *)player)->anim.parent == *(u32 *)&((GameObject *)obj)->anim.parent) {
-            (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(state[2], obj, -1);
+            (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
             *(u8 *)((char *)state + 0xc) = 1;
         } else {
             if (*(u8 *)((char *)state + 0xc) == 1 && GameBit_Get(state[1]) != 0 && *state == 0 &&
@@ -1881,7 +1882,7 @@ void WarpPoint_update(int *obj) {
             *(s8 *)(def + 0x1c) != 0 && dist < *(f32 *)((char *)state + 8) &&
             *(u32 *)&((GameObject *)player)->anim.parent == *(u32 *)&((GameObject *)obj)->anim.parent) {
             GameBit_Set(state[1], 0);
-            (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(state[2], obj, -1);
+            (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
             *(u8 *)((char *)state + 0xc) = 1;
         }
         break;
@@ -1896,7 +1897,7 @@ void WarpPoint_update(int *obj) {
         if (lbl_803DCEB8 > -1 && *(u8 *)((char *)state + 0xc) == 0 && *(s8 *)(def + 0x1c) != 0 &&
             dist < *(f32 *)((char *)state + 8) &&
             *(u32 *)&((GameObject *)player)->anim.parent == *(u32 *)&((GameObject *)obj)->anim.parent) {
-            (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(state[2], obj, -1);
+            (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
             lbl_803DCDE0 = 2;
             *(u8 *)((char *)state + 0xc) = 1;
         }
