@@ -17,7 +17,7 @@ extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern void* gBaddieControlInterface;
 extern void* gPlayerInterface;
 extern void* gPathControlInterface;
-extern void* gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E2FC8;
 extern f32 lbl_803E2FCC;
 extern f32 lbl_803E2FD0;
@@ -332,7 +332,7 @@ void tumbleweed_updateEffects(int obj) {
         case TUMBLEWEED_TYPE_4:
             i = TUMBLEWEED_EFFECT_SPAWN_COUNT;
             do {
-                (*(EffectInterface **)gPartfxInterface)->spawnObject(
+                (*gPartfxInterface)->spawnObject(
                     (void *)obj, TUMBLEWEED_EFFECT_BURST_SPECIAL, NULL,
                     TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
                 i = i - 1;
@@ -341,7 +341,7 @@ void tumbleweed_updateEffects(int obj) {
         default:
             i = TUMBLEWEED_EFFECT_SPAWN_COUNT;
             do {
-                (*(EffectInterface **)gPartfxInterface)->spawnObject(
+                (*gPartfxInterface)->spawnObject(
                     (void *)obj, TUMBLEWEED_EFFECT_BURST_DEFAULT, NULL,
                     TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
                 i = i - 1;
@@ -357,12 +357,12 @@ void tumbleweed_updateEffects(int obj) {
         case TUMBLEWEED_TYPE_3:
         case TUMBLEWEED_TYPE_1:
         case TUMBLEWEED_TYPE_4:
-            (*(EffectInterface **)gPartfxInterface)->spawnObject(
+            (*gPartfxInterface)->spawnObject(
                 (void *)obj, TUMBLEWEED_EFFECT_PUFF_SPECIAL, NULL,
                 TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
             break;
         default:
-            (*(EffectInterface **)gPartfxInterface)->spawnObject(
+            (*gPartfxInterface)->spawnObject(
                 (void *)obj, TUMBLEWEED_EFFECT_PUFF_DEFAULT, NULL,
                 TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
             break;

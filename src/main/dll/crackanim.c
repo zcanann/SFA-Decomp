@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/crackanim_state.h"
 #include "main/dll/baddie_state.h"
@@ -35,7 +36,7 @@ extern void ObjMsg_AllocQueue(int obj, int capacity);
 extern int *objFindTexture(int obj, int textureId, int modelIdx);
 
 extern undefined4* gSHthorntailAnimationInterface;
-extern undefined4* gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 extern f64 lbl_803E3820;
 extern f32 timeDelta;
 extern f32 lbl_803E37C8;
@@ -129,7 +130,7 @@ void appleontree_update(int param_1)
         iVar8 = *(int *)(puVar2 + 0x5c);
         iVar7 = 0;
         do {
-          (*(void (**)(undefined2 *, int, int, int, int, int))(*gPartfxInterface + 8))(puVar2,0x55a,0,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject(puVar2, 0x55a, NULL, 2, -1, NULL);
           iVar7 = iVar7 + 1;
         } while (iVar7 < 8);
         if (*(void **)(puVar2 + 0x2a) != 0) {
@@ -161,7 +162,7 @@ void appleontree_update(int param_1)
         iVar8 = *(int *)(puVar2 + 0x5c);
         iVar7 = 0;
         do {
-          (*(void (**)(undefined2 *, int, int, int, int, int))(*gPartfxInterface + 8))(puVar2,0x55a,0,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject(puVar2, 0x55a, NULL, 2, -1, NULL);
           iVar7 = iVar7 + 1;
         } while (iVar7 < 8);
         if (*(void **)(puVar2 + 0x2a) != 0) {
@@ -175,7 +176,7 @@ void appleontree_update(int param_1)
         if (fVar13 > ((GroundBaddieState *)iVar8)->baddie.posX) {
           iVar7 = 0;
           do {
-            (*(void (**)(undefined2 *, int, int, int, int, int))(*gPartfxInterface + 8))(puVar2,0x55a,0,2,0xffffffff,0);
+            (*gPartfxInterface)->spawnObject(puVar2, 0x55a, NULL, 2, -1, NULL);
             iVar7 = iVar7 + 1;
           } while (iVar7 < 8);
           *(undefined *)(iVar8 + 0x3a) = 2;

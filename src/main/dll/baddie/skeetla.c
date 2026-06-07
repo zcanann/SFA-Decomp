@@ -3,6 +3,7 @@
  *   python3 tools/function_objdump.py --diff main/main/dll/baddie/skeetla <symbol>
  */
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -969,7 +970,7 @@ typedef struct SkeetlaParticleSpawnArgs {
 #define SKEETLA_PARTICLE_SPAWN_FLAGS 0x200001
 #define SKEETLA_PARTICLE_RANDOM_RATE 4
 
-extern void *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 
 /* skeetla_spawnLinkedSparks  addr=0x8013ADFC  size=0x1E4  linkage=global */
 #pragma scheduling off
@@ -998,12 +999,12 @@ void skeetla_spawnLinkedSparks(u8 *obj)
     }
 
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
-        (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
-            obj, SKEETLA_PARTICLE_SPARK_A, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_A, &args,
+                                         SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
     }
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
-        (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
-            obj, SKEETLA_PARTICLE_SPARK_B, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_B, &args,
+                                         SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
     }
 
     args.x = *(f32 *)(state + 0x3e4);
@@ -1012,12 +1013,12 @@ void skeetla_spawnLinkedSparks(u8 *obj)
     args.objectId = *(s16 *)obj;
 
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
-        (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
-            obj, SKEETLA_PARTICLE_SPARK_A, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_A, &args,
+                                         SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
     }
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
-        (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
-            obj, SKEETLA_PARTICLE_SPARK_B, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, 0);
+        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_B, &args,
+                                         SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
     }
 }
 #pragma peephole reset
