@@ -426,8 +426,8 @@ void DR_CloudRunner_init(int obj, int p2)
     *(s16 *)((char *)inner + 0xbb0) = *(s16 *)((char *)p2 + 0x1a);
     *(s8 *)((char *)inner + 0xbc4) = -1;
     *(f32 *)((char *)inner + 0xb50) = (f32)*(s16 *)((char *)p2 + 0x1c) / lbl_803E8414;
-    if (*(void **)((char *)obj + 0x64) != NULL) {
-        *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0xa10;
+    if (((GameObject *)obj)->anim.modelState != NULL) {
+        ((GameObject *)obj)->anim.modelState->flags |= 0xa10;
     }
     r = GameBit_Get(0x7a9);
     if (r != 0) {

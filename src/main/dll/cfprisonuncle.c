@@ -2325,8 +2325,8 @@ void MagicPlant_init(int obj, MagicPlantSetup *setup) {
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
-    if (*(void **)(obj + 0x64) != NULL) {
-        *(u32 *)(*(int *)(obj + 0x64) + 48) |= 0x810;
+    if (((GameObject *)obj)->anim.modelState != NULL) {
+        ((GameObject *)obj)->anim.modelState->flags |= 0x810;
     }
     plant->seqCallback = (void *)MagicPlant_SeqFn;
 }

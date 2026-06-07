@@ -1256,7 +1256,6 @@ void DIMSnowHorn1_update(int obj)
     char *found;
     int inner;
     char *p2;
-    int p;
     s16 d;
     u32 flip;
     int flags;
@@ -1413,9 +1412,10 @@ void DIMSnowHorn1_update(int obj)
     v.angles[2] = ((GameObject *)obj)->anim.rotZ;
     v.mat[0] = lbl_803E8258;
     setMatrixFromObjectPos(matrix, v.angles);
-    p = *(int *)((char *)obj + 0x64);
     Matrix_TransformPoint(matrix, lbl_803E8234, lbl_803E82AC, lbl_803E82B0,
-                          (f32 *)((char *)p + 0x20), (f32 *)((char *)p + 0x24), (f32 *)((char *)p + 0x28));
+                          &((GameObject *)obj)->anim.modelState->overrideWorldPosX,
+                          &((GameObject *)obj)->anim.modelState->overrideWorldPosY,
+                          &((GameObject *)obj)->anim.modelState->overrideWorldPosZ);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1475,8 +1475,8 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     inner->unkA8C = *(u8 *)((char *)p2 + 0x19);
     inner->unkA86 = 5;
     inner->unkA88 = 0x3e8;
-    if (*(void **)((char *)obj + 0x64) != NULL) {
-        *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0xa10;
+    if (((GameObject *)obj)->anim.modelState != NULL) {
+        ((GameObject *)obj)->anim.modelState->flags |= 0xa10;
     }
     if (((GameObject *)obj)->anim.hitReactState != NULL) {
         *(s16 *)((char *)*(int *)&((GameObject *)obj)->anim.hitReactState + 0xb2) = 9;

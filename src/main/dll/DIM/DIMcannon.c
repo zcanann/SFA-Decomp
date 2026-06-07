@@ -404,9 +404,9 @@ void FUN_801ae378(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_8002fc3c((double)local_34,(double)(float)(local_18 - DOUBLE_803e53e8));
     if (*piVar8 == 0) {
       *(undefined *)(piVar8 + 8) = 0xff;
-      iVar7 = *(int *)(param_9 + 100);
+      iVar7 = (int)((GameObject *)param_9)->anim.modelState;
       if (iVar7 != 0) {
-        *(uint *)(iVar7 + 0x30) = *(uint *)(iVar7 + 0x30) & 0xffffefff;
+        ((GameObject *)param_9)->anim.modelState->flags &= ~0x1000;
       }
     }
     else {
@@ -415,9 +415,9 @@ void FUN_801ae378(undefined8 param_1,double param_2,double param_3,undefined8 pa
       fVar1 = (float)(dVar9 - (double)lbl_803E53F4) / lbl_803E53F8;
       fVar2 = (fVar1 < lbl_803E53E0) ? lbl_803E53E0 : ((fVar1 > lbl_803E53F0) ? lbl_803E53F0 : fVar1);
       *(char *)(piVar8 + 8) = (char)(int)(lbl_803E53FC * (lbl_803E53F0 - fVar2));
-      iVar7 = *(int *)(param_9 + 100);
+      iVar7 = (int)((GameObject *)param_9)->anim.modelState;
       if (iVar7 != 0) {
-        *(uint *)(iVar7 + 0x30) = *(uint *)(iVar7 + 0x30) | 0x1000;
+        ((GameObject *)param_9)->anim.modelState->flags |= 0x1000;
       }
     }
   }
@@ -2778,9 +2778,9 @@ void lavaball1be_init(s16 *obj, u8 *p) {
         if (sub != NULL) {
             *((u8 *)sub + 0x6a) = 0;
         }
-        sub = *(int **)((char *)obj + 0x64);
+        sub = (int *)((GameObject *)obj)->anim.modelState;
         if (sub != NULL) {
-            sub[0x30 / 4] |= 0x810;
+            ((GameObject *)obj)->anim.modelState->flags |= 0x810;
         }
         *(int *)&state->targetObj = ObjList_FindObjectById(state->linkedId);
         state->flags |= 0x10;

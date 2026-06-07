@@ -1097,9 +1097,9 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     (**(code **)(**(int **)(iVar6 + 0x68) + 0x3c))(iVar6,2);
     FUN_800305f8((double)lbl_803E53E0,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  param_9,0x100,1,param_12,param_13,param_14,param_15,param_16);
-    iVar4 = *(int *)(param_9 + 100);
+    iVar4 = (int)((GameObject *)param_9)->anim.modelState;
     if (iVar4 != 0) {
-      *(uint *)(iVar4 + 0x30) = *(uint *)(iVar4 + 0x30) | 0x1000;
+      ((GameObject *)param_9)->anim.modelState->flags |= 0x1000;
     }
     *(ushort *)(param_11 + 0x6e) = *(ushort *)(param_11 + 0x6e) & ~0x4;
     *(undefined *)(param_11 + 0x80) = 0;
@@ -1465,10 +1465,10 @@ int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3) {
 void dll_16C_init(void *obj, void *arg2) {
     Dll16CState *extra;
     ((GameObject *)obj)->animEventCallback = (void *)dll_16C_SeqFn;
-    if (*(void **)((char *)obj + 0x64) != NULL) {
-        *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x4000;
-        *(u8 *)(*(char **)((char *)obj + 0x64) + 0x3a) = 100;
-        *(u8 *)(*(char **)((char *)obj + 0x64) + 0x3b) = 150;
+    if (((GameObject *)obj)->anim.modelState != NULL) {
+        ((GameObject *)obj)->anim.modelState->flags |= 0x4000;
+        ((GameObject *)obj)->anim.modelState->shadowTintA = 100;
+        ((GameObject *)obj)->anim.modelState->shadowTintB = 150;
     }
     extra = *(Dll16CState **)((char *)obj + 0xb8);
     extra->linkedObj = NULL;
@@ -1665,8 +1665,8 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
         *(f32 *)((char *)extra + 0x10) = *(f32 *)((char *)extra + 0x1c);
         (*(void (**)(int *, int))(**(int **)((char *)p + 0x68) + 0x3c))(p, 2);
         ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 1);
-        if (*(void **)((char *)obj + 0x64) != NULL) {
-            *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x1000;
+        if (((GameObject *)obj)->anim.modelState != NULL) {
+            ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
         }
         *(s16 *)((char *)arg3 + 0x6e) &= ~4;
         arg3[0x80] = 0;
@@ -1872,13 +1872,13 @@ void dll_16C_update(int *obj)
                 t = lbl_803E4758;
             }
             extra->opacity = (int)(lbl_803E4764 * (lbl_803E4758 - t));
-            if (*(void **)((char *)obj + 0x64) != NULL) {
-                *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x1000;
+            if (((GameObject *)obj)->anim.modelState != NULL) {
+                ((GameObject *)obj)->anim.modelState->flags |= 0x1000;
             }
         } else {
             extra->opacity = 0xff;
-            if (*(void **)((char *)obj + 0x64) != NULL) {
-                *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) &= ~0x1000;
+            if (((GameObject *)obj)->anim.modelState != NULL) {
+                ((GameObject *)obj)->anim.modelState->flags &= ~0x1000;
             }
         }
     }
@@ -1898,7 +1898,7 @@ void crrockfall_init(int *obj, u8 *params)
 {
     CrRockfallState *extra = *(CrRockfallState **)((char *)obj + 0xb8);
     int *sub;
-    int *p64;
+    ObjModelState *modelState;
 
     extra->mode = 0;
     extra->startY = ((GameObject *)obj)->anim.localPosY;
@@ -1915,13 +1915,13 @@ void crrockfall_init(int *obj, u8 *params)
         ObjHits_DisableObject(obj);
     }
 
-    p64 = *(int **)((char *)obj + 0x64);
-    if (p64 != NULL) {
-        *(u32 *)((char *)p64 + 0x30) |= 0xb0;
-        *(u32 *)((char *)p64 + 0x30) |= 0xc00;
-        *(f32 *)((char *)p64 + 0x20) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)((char *)p64 + 0x28) = ((GameObject *)obj)->anim.localPosZ;
-        *(f32 *)((char *)p64 + 0) = *(f32 *)((char *)p64 + 0) * ((GameObject *)obj)->anim.rootMotionScale;
+    modelState = ((GameObject *)obj)->anim.modelState;
+    if (modelState != NULL) {
+        modelState->flags |= 0xb0;
+        modelState->flags |= 0xc00;
+        modelState->overrideWorldPosX = ((GameObject *)obj)->anim.localPosX;
+        modelState->overrideWorldPosZ = ((GameObject *)obj)->anim.localPosZ;
+        modelState->shadowScale = modelState->shadowScale * ((GameObject *)obj)->anim.rootMotionScale;
     }
 
     if (((GameObject *)obj)->anim.seqId == 1536) {
@@ -1958,7 +1958,7 @@ void crrockfall_update(int *obj)
 {
     CrRockfallState *ex = *(CrRockfallState **)((char *)obj + 0xb8);
     int *s54 = *(int **)((char *)obj + 0x54);
-    int *p64 = *(int **)((char *)obj + 0x64);
+    ObjModelState *modelState = ((GameObject *)obj)->anim.modelState;
     int *p4c = *(int **)((char *)obj + 0x4c);
 
     if (lbl_803DDB40 == 0) {
@@ -1967,12 +1967,12 @@ void crrockfall_update(int *obj)
 
     if (ex->floorFound == 0) {
         ex->floorY = fn_801ACCFC((int)obj);
-        if (ex->floorFound != 0 && p64 != NULL) {
-            *(f32 *)((char *)p64 + 0x24) = ex->floorY;
+        if (ex->floorFound != 0 && modelState != NULL) {
+            modelState->overrideWorldPosY = ex->floorY;
             fn_800628CC(obj);
         }
     } else {
-        if (p64 != NULL) {
+        if (modelState != NULL) {
             f32 frac;
             f32 height;
             f32 dist;
@@ -1999,9 +1999,9 @@ void crrockfall_update(int *obj)
             }
             dist = (dist - lbl_803E4710) / lbl_803E4714;
             n = (int)(lbl_803E4718 * height) + 0x40;
-            *(u8 *)((char *)p64 + 0x40) =
+            modelState->shadowAlpha =
                 (int)(((f32)(u32)*(u8 *)((char *)obj + 0x37) / lbl_803E471C) *
-                      ((f32)n * (lbl_803E4708 - dist)));
+                       ((f32)n * (lbl_803E4708 - dist)));
         }
 
         if (*(s16 *)((char *)p4c + 0x1c) == -1 ||

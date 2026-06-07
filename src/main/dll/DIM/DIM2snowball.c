@@ -1404,9 +1404,9 @@ void dim2snowball_init(int* obj, int* def)
     *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
     *(s8*)((char*)obj + 54) = 0;
     {
-        int* p = *(int**)((char*)obj + 100);
+        ObjModelState* p = ((GameObject *)obj)->anim.modelState;
         if (p != NULL) {
-            *(int*)((char*)p + 48) = *(int*)((char*)p + 48) | 0xA10;
+            p->flags |= 0xA10;
         }
     }
     state->targetObj = (int*)ObjList_FindObjectById(state->targetId);

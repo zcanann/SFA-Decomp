@@ -208,6 +208,8 @@ typedef struct ObjModelState {
   u8 pad38[0x3A - 0x38];
   u8 shadowTintA;
   u8 shadowTintB;
+  u8 pad3C[0x40 - 0x3C];
+  u8 shadowAlpha;
 } ObjModelState;
 
 typedef struct ObjAnimComponent {

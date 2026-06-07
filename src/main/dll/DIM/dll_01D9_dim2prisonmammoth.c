@@ -736,9 +736,9 @@ void dim2prisonmammoth_init(int obj, int p2)
     ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
     ((GameObject *)obj)->animEventCallback = (void *)fn_802BC3F0;
     inner = *(int *)&((GameObject *)obj)->extra;
-    if (*(void **)((char *)obj + 0x64) != NULL) {
-        *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0xa10;
-        *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0x8020;
+    if (((GameObject *)obj)->anim.modelState != NULL) {
+        ((GameObject *)obj)->anim.modelState->flags |= 0xa10;
+        ((GameObject *)obj)->anim.modelState->flags |= 0x8020;
     }
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
     *(u8 *)((char *)inner + 0x25f) = 0;
@@ -757,7 +757,6 @@ int fn_802BC3F0(int obj, int p2, int p3)
     } v;
     f32 matrix[16];
     int inner;
-    int p;
 
     *(u8 *)((char *)p3 + 0x56) = 0;
     *(s16 *)((char *)p3 + 0x6e) = *(s16 *)((char *)p3 + 0x70);
@@ -773,9 +772,10 @@ int fn_802BC3F0(int obj, int p2, int p3)
     v.mat[0] = ((GameObject *)obj)->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, v.angles);
 
-    p = *(int *)((char *)obj + 0x64);
     Matrix_TransformPoint(matrix, lbl_803E82C0, lbl_803E82C0, lbl_803E82C0,
-                          (f32 *)((char *)p + 0x20), (f32 *)((char *)p + 0x24), (f32 *)((char *)p + 0x28));
+                          &((GameObject *)obj)->anim.modelState->overrideWorldPosX,
+                          &((GameObject *)obj)->anim.modelState->overrideWorldPosY,
+                          &((GameObject *)obj)->anim.modelState->overrideWorldPosZ);
     return 0;
 }
 #pragma peephole reset
@@ -791,7 +791,6 @@ void dim2prisonmammoth_update(int obj)
     } v;
     f32 matrix[16];
     int inner = *(int *)&((GameObject *)obj)->extra;
-    int p;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     if (((&lbl_803DC750)[*(s16 *)((char *)inner + 0x274)] & 8) == 0) {
         *(u8 *)((char *)inner + 0x5fc) = ((u8 (*)(int, ObjHitReactEntry *, u32, u32, f32 *))ObjHitReact_Update)(obj, lbl_803351A8, 1, *(u8 *)((char *)inner + 0x5fc), (f32 *)(inner + 0x390));
@@ -810,9 +809,10 @@ void dim2prisonmammoth_update(int obj)
     v.angles[2] = ((GameObject *)obj)->anim.rotZ;
     v.mat[0] = ((GameObject *)obj)->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, v.angles);
-    p = *(int *)((char *)obj + 0x64);
     Matrix_TransformPoint(matrix, lbl_803E82C0, lbl_803E82C0, lbl_803E82C0,
-                          (f32 *)((char *)p + 0x20), (f32 *)((char *)p + 0x24), (f32 *)((char *)p + 0x28));
+                          &((GameObject *)obj)->anim.modelState->overrideWorldPosX,
+                          &((GameObject *)obj)->anim.modelState->overrideWorldPosY,
+                          &((GameObject *)obj)->anim.modelState->overrideWorldPosZ);
     *(u8 *)((char *)inner + 0x354) = 0;
     *(int *)((char *)inner + 0) &= ~0x8000;
     *(f32 *)((char *)inner + 0x290) = lbl_803E82C0;
