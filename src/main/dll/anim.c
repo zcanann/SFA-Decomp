@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
 #include "main/dll/baddie_state.h"
@@ -4365,12 +4366,12 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gExpgfxInterface;
+extern EffectInterface **gExpgfxInterface;
 extern int gDBStealerWormStateHandlersA[];
 #pragma scheduling off
 #pragma peephole off
 void chuka_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
 void chuka_hitDetect(int obj) {
     int *light;
@@ -4482,7 +4483,7 @@ int dbstealerworm_stateHandlerB01(int p1, int p2)
 #pragma scheduling off
 void fn_80204B6C(int p1)
 {
-  (*(void (**)(int))((char *)*gExpgfxInterface + 0x18))(p1);
+  (*gExpgfxInterface)->freeObject((void *)p1);
   getLActions(p1, p1, 0, 0, 0, 0);
 }
 #pragma peephole reset
@@ -4548,7 +4549,7 @@ void dbegg_init(int obj) {
 extern int *gModgfxInterface;
 void DFP_Torch_free(int obj) {
     (*(void (**)(int))(*(int *)gModgfxInterface + 0x18))(obj);
-    (*(void (**)(int))(*(int *)gExpgfxInterface + 0x18))(obj);
+    (*gExpgfxInterface)->freeObject((void *)obj);
 }
 
 void dfpobjcreator_init(int obj, s8 *def) {
@@ -4760,7 +4761,7 @@ void DBstealerwo_setFuncPtrs_80203c78(void)
 #pragma scheduling reset
 
 extern void fn_80202EF0(int obj, int p2);
-extern int *gPartfxInterface;
+extern EffectInterface **gPartfxInterface;
 
 #pragma peephole off
 #pragma scheduling off
@@ -4773,13 +4774,13 @@ void fn_80203000(int obj, int param2)
         fn_80202EF0(obj, param2);
     }
     if (*(u8 *)(state + 0x14) & 2) {
-        (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x345, 0, 2, -1, 0);
-        (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x345, 0, 2, -1, 0);
-        (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x345, 0, 2, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x345, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x345, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x345, NULL, 2, -1, NULL);
     }
     if (*(u8 *)(state + 0x14) & 4) {
         for (i = 0; i < 0xa; i++) {
-            (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x343, 0, 1, -1, 0);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x343, NULL, 1, -1, NULL);
         }
     }
     *(u8 *)(state + 0x14) = 0;
@@ -5642,7 +5643,8 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     fx.col[0] = lbl_803E63D8;
                     fx.col[1] = lbl_803E63DC;
                     fx.col[2] = lbl_803E63D8;
-                    (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x1f7, &fx, 0x12, -1, 0);
+                    (*gPartfxInterface)->spawnObject((void *)obj, 0x1f7, &fx, 0x12, -1,
+                                                     NULL);
                 }
                 state->flickerTimer = (s16)(randomGetRange(-10, 10) + 0x3c);
             }
@@ -7034,9 +7036,9 @@ void DFP_Torch_update(int obj)
     extern int ObjHits_GetPriorityHit(int, int, int, int);
     extern uint GameBit_Get(int);
     extern void GameBit_Set(int, int);
-    extern int *gPartfxInterface;
+    extern EffectInterface **gPartfxInterface;
     extern int *gModgfxInterface;
-    extern int *gExpgfxInterface;
+    extern EffectInterface **gExpgfxInterface;
     extern u8 lbl_803DDCE8;
     extern f32 timeDelta;
     extern f32 lbl_803E63E0;
@@ -7091,7 +7093,8 @@ void DFP_Torch_update(int obj)
                 (*(void (*)(int, int, f32 *, int, int, void *))(*(int *)(*(int *)res + 4)))(obj, 1, buf, 0x10004, -1, &prm);
                 Resource_Release(res);
                 for (i = 0; i < 0x64; i++) {
-                    (**(void (**)(int, int, int, int, int, int))((char *)*gPartfxInterface + 8))(obj, 0x1a3, 0, 0, -1, 0);
+                    (*gPartfxInterface)->spawnObject((void *)obj, 0x1a3, NULL, 0, -1,
+                                                     NULL);
                 }
                 if (blob->gameBit != -1) {
                     if (GameBit_Get(blob->gameBit) == 0) {
@@ -7148,7 +7151,7 @@ void drakorenergy_update(int obj)
     extern void PSVECNormalize(f32 *, f32 *);
     extern void PSVECScale(f32 *, f32 *, f32);
     extern void objfx_spawnFlaggedTrailBurst(int, f32, int, int, int, int);
-    extern int *gPartfxInterface;
+    extern EffectInterface **gPartfxInterface;
     extern f32 timeDelta;
     extern u8 framesThisStep;
     extern f32 lbl_803E627C;
@@ -7200,7 +7203,7 @@ void drakorenergy_update(int obj)
         trio[2] = 0xff;
         trio[1] = 0xff - ((DrakorEnergyState *)blob)->phase % 0x500;
         trio[0] = 0xff;
-        (**(void (**)(int, int, s16 *, int, int, int))((char *)*gPartfxInterface + 8))(obj, 0x357, trio, 0, -1, 0);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x357, trio, 0, -1, NULL);
         break;
     case 2:
         ((GameObject *)obj)->anim.velocityY = lbl_803DC160 * mathSinf(lbl_803E628C * (f32)((DrakorEnergyState *)blob)->phase / lbl_803E6290);
@@ -7513,7 +7516,7 @@ void dbegg_update(int obj)
     extern void ObjHits_DisableObject(int);
     extern int *gWaterfxInterface;
     extern int *gRomCurveInterface;
-    extern int *gPartfxInterface;
+    extern EffectInterface **gPartfxInterface;
     extern f32 timeDelta;
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[];
@@ -7720,7 +7723,7 @@ void dbegg_update(int obj)
             if (GameBit_Get(0x42a) != 0) {
                 dbegg_setupFromDef(obj, (int *)blob);
             } else if (randomGetRange(0, 10) == 0) {
-                (**(void (**)(int, int, int, int, int, int))((char *)*gPartfxInterface + 8))(obj, 0x3be, 0, 0, -1, 0);
+                (*gPartfxInterface)->spawnObject((void *)obj, 0x3be, NULL, 0, -1, NULL);
             }
             break;
         case 0xa:
@@ -7785,7 +7788,7 @@ void dbegg_update(int obj)
             } else {
                 n = (int)(PSVECMag(obj + 0x24) / lbl_803E6260);
                 for (i = 0; i < n; i++) {
-                    (**(void (**)(int, int, int, int, int, int))((char *)*gPartfxInterface + 8))(obj, 0x345, 0, 1, -1, 0);
+                    (*gPartfxInterface)->spawnObject((void *)obj, 0x345, NULL, 1, -1, NULL);
                 }
                 objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta, ((GameObject *)obj)->anim.velocityZ * timeDelta);
             }
