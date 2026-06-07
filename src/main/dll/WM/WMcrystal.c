@@ -243,23 +243,19 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *stat
   s32 angleOffset;
   s8 i;
   s8 orbIndex;
-  f32 angleDivisor;
-  f32 angleScale;
 
   if (Obj_IsLoadingLocked() != 0) {
     i = 0;
     orbIndex = 1;
     angleOffset = 0;
-    angleScale = lbl_803E5640;
-    angleDivisor = lbl_803E5644;
     while (i < SC_TOTEMBOND_ORB_COUNT) {
       definition = obj->definition;
       setup = Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE,SC_TOTEMBOND_ORB_OBJECT_ID);
       *(f32 *)(setup + 0x08) = radius * mathSinf(
-          (angleScale * (f32)(s32)(obj->yaw + angleOffset)) / angleDivisor) + obj->x;
+          (3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->x;
       *(f32 *)(setup + 0x0c) = obj->y;
       *(f32 *)(setup + 0x10) = radius * mathCosf(
-          (angleScale * (f32)(s32)(obj->yaw + angleOffset)) / angleDivisor) + obj->z;
+          (3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->z;
       setup[0x04] = definition[0x04];
       setup[0x05] = (definition[0x05] & ~1) | 4;
       setup[0x06] = definition[0x06];

@@ -3250,6 +3250,43 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     disambiguate sizes. After rejoining, spell tail accesses as
     `arr[k+i]` or via a pointer local per target's addressing.
 
+121. **Preheader-hoist shape `[int li inits][lfd conv-bias + lis][f32 lfs
+    constants]` = the f32 constants were IN-LOOP LITERALS, not preheader
+    named locals — literals LICM across body calls; named extern globals
+    don't.** (task #12; modelCalcVtxGroupMtxs 96.07→98.84,
+    sc_totembond_spawnGameBitOrbs 97.22→99.01, firefly_update 98.29→100.)
+    Mechanism, probe-verified: a `f32 scale = lbl_X;` preheader statement
+    emits its lfs at STATEMENT position (before any compiler hoists, which
+    are appended) and the named global can't be hoisted out of a
+    call-bearing loop (mutable alias); a LITERAL (`0.25f`, `180.0f`,
+    `3.1415927f`) is a compiler-owned pool constant and IS hoisted across
+    body calls — landing exactly in target's after-the-bias position. The
+    @NNN-vs-named reloc difference is score-neutral (#70) as long as the
+    literal's bytes match the original pool value (read them out of the
+    retail dol). Order/coloring rules that fall out (use to fine-tune):
+    - Hoist-web FP coloring is ASCENDING in creation order (bias created
+      first → f29, next const f30, ... — opposite of #45's decl rule,
+      which is for named locals).
+    - Hoist DISCOVERY is per-STATEMENT, and within a statement bottom-up
+      by expression tree with the node's CONSTANT before a conversion's
+      bias (`conv * K` discovers K, then bias; `(K1 * conv) / K2`
+      discovers K1, bias, K2). To get the BIAS hoisted before a
+      multiply's constant (target `lfd bias; lis; lfs K`), SPLIT the
+      conversion into its own statement: `w = (f32)x; w *= K;` — a
+      single-use fresh temp does NOT work (copy-prop folds it back and
+      the discovery reverts; the #85/#94 fold family).
+    - A post-loop use of the same constant CSEs onto the hoisted web
+      (spell it as the same literal — firefly's second `= 180.0f`).
+    - Non-FP constants behave the same: a big case constant inside the
+      loop's switch (firefly 0x7000B) hoists as a GPR web among the same
+      group.
+    Tells: named lfs/lfd AFTER compiler hoists in target's preheader;
+    Ghidra imports systematically name these (`scale = lbl_X;` head
+    statements) because the shared .sdata2 pool labels look like globals.
+    Residual fmuls operand order from the self-accum compound form
+    (`fmuls fD,fD,fK` vs target `fmuls fD,f0,fK`) is canonicalization-
+    internal (operand swap, fresh temps probed inert) — bank it.
+
 **NAMED CAP — branchy-arg pre-eval hoist (the in-place L2R ternary arg).**
 When target evaluates a branchy ternary CALL ARG at its L2R slot (args 1-7
 set up first, the clamp 8th, then 9-10 — ObjHits_CheckSkeletonPair's two

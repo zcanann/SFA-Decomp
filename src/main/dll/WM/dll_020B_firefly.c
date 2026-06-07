@@ -242,17 +242,15 @@ void firefly_update(int obj)
     FireFlyMapData *def;
     int msg[2];
     int isActive;
-    f32 despawnTimer;
 
     state = ((GameObject *)obj)->extra;
     def = *(FireFlyMapData **)&((GameObject *)obj)->anim.placementData;
-    despawnTimer = lbl_803E5EA8;
     while (ObjMsg_Pop(obj, msg, 0, 0) != 0) {
         switch (msg[0]) {
         case FIREFLY_MESSAGE_DESPAWN: {
             FireFlyState *st = ((GameObject *)obj)->extra;
             ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
-            st->despawnTimer = despawnTimer;
+            st->despawnTimer = 180.0f;
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
             Sfx_PlayFromObject(obj, SFXen_treadlpc);
@@ -272,7 +270,7 @@ void firefly_update(int obj)
         }
     } else {
         if (timerCountDown(state->activateDelay) != 0) {
-            state->despawnTimer = lbl_803E5EA8;
+            state->despawnTimer = 180.0f;
         }
         if (state->despawnTimer > lbl_803E5EC4) {
             state->despawnTimer -= timeDelta;

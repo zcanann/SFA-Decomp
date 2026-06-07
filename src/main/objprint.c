@@ -4550,20 +4550,13 @@ void characterDoEyeAnims(int obj, int p2)
 void modelCalcVtxGroupMtxs(int p1, int p2)
 {
     extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
-    extern f32 lbl_803DEA18;
-    extern f32 lbl_803DEA1C;
     f32 ma[12];
     f32 mb[12];
     f32 trans[12];
-    int i;
     int off;
-    f32 scale;
-    f32 one;
+    int i;
 
-    off = 0;
-    scale = lbl_803DEA18;
-    one = lbl_803DEA1C;
-    for (i = 0; i < *(u8 *)(p1 + 0xf4); i++) {
+    for (i = 0, off = 0; i < *(u8 *)(p1 + 0xf4); i++) {
         u8 *grp = (u8 *)(*(int *)(p1 + 0x54) + off);
         f32 *out = (f32 *)ObjModel_GetJointMatrix((int *)p2, i + *(u8 *)(p1 + 0xf3));
         f32 *m1 = (f32 *)ObjModel_GetJointMatrix((int *)p2, grp[0]);
@@ -4572,8 +4565,9 @@ void modelCalcVtxGroupMtxs(int p1, int p2)
         f32 wi;
         char *jd;
 
-        w = (f32)grp[2] * scale;
-        wi = one - w;
+        w = (f32)grp[2];
+        w *= 0.25f;
+        wi = 1.0f - w;
 
         jd = (char *)(*(int *)(p1 + 0x3c) + grp[0] * 0x1c);
         PSMTXTrans(trans, -*(f32 *)(jd + 0x10), -*(f32 *)(jd + 0x14), -*(f32 *)(jd + 0x18));
