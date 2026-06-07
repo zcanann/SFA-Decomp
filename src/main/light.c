@@ -36,7 +36,7 @@ extern uint FUN_8028683c();
 extern undefined4 FUN_80286884();
 extern undefined4 FUN_80286888();
 
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd72c;
@@ -52,6 +52,20 @@ extern f32 lbl_803E6DB0;
 extern f32 lbl_803E6DB4;
 extern f32 lbl_803E6DB8;
 extern f32 lbl_803E6DBC;
+
+/* Per-object extra state for SeqPoint (seqpoint_getExtraSize == 0x10). */
+typedef struct SeqPointState {
+    f32 triggerRadius;
+    s16 conditionBit; /* gamebit gating modes 1-5 */
+    s16 disableBit;   /* gamebit that permanently disables the point */
+    s16 sequenceId;   /* trigger id fired at the player; switched in the SeqFn */
+    u8 pad0A[3];
+    u8 done;
+    u8 mode; /* 0 radius, 1 bit, 2 radius+bit, 3/4 bit-once (sets it), 5 bit repeat */
+    u8 pad0F;
+} SeqPointState;
+
+STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
 
 /*
  * --INFO--
@@ -440,7 +454,7 @@ void FUN_801fc1d8(void)
   if (cVar2 == '\n') {
     uVar6 = FUN_80017690((int)*psVar9);
     if (uVar6 != 0) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))(0,uVar5,0xffffffff);
+      (*gObjectTriggerInterface)->runSequence(0,(void *)uVar5,-1);
     }
   }
   else {
@@ -867,74 +881,74 @@ void FUN_801fd0ec(int param_1)
   byte bVar1;
   int iVar2;
   uint uVar3;
-  float *pfVar4;
+  SeqPointState *state;
   double dVar5;
   
   iVar2 = FUN_80017a98();
-  pfVar4 = *(float **)(param_1 + 0xb8);
-  uVar3 = (uint)*(short *)((int)pfVar4 + 6);
+  state = ((GameObject *)param_1)->extra;
+  uVar3 = (uint)state->disableBit;
   if (uVar3 != 0xffffffff) {
-    if (*(char *)((int)pfVar4 + 0xd) != '\0') {
+    if (state->done != 0) {
       uVar3 = FUN_80017690(uVar3);
       if (uVar3 != 0) {
         return;
       }
-      FUN_80017698((int)*(short *)((int)pfVar4 + 6),1);
-      *(undefined *)((int)pfVar4 + 0xd) = 1;
+      FUN_80017698((int)state->disableBit,1);
+      state->done = 1;
       return;
     }
     uVar3 = FUN_80017690(uVar3);
     if (uVar3 != 0) {
-      *(undefined *)((int)pfVar4 + 0xd) = 1;
+      state->done = 1;
       return;
     }
   }
-  if (*(char *)((int)pfVar4 + 0xd) == '\0') {
-    bVar1 = *(byte *)((int)pfVar4 + 0xe);
+  if (state->done == 0) {
+    bVar1 = state->mode;
     if (bVar1 == 3) {
       dVar5 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
-      if (((dVar5 < (double)*pfVar4) && ((int)*(short *)(pfVar4 + 1) != 0xffffffff)) &&
-         (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 == 0)) {
-        (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
-        FUN_80017698((int)*(short *)(pfVar4 + 1),1);
-        *(undefined *)((int)pfVar4 + 0xd) = 1;
+      if (((dVar5 < (double)state->triggerRadius) && ((int)state->conditionBit != 0xffffffff)) &&
+         (uVar3 = FUN_80017690((int)state->conditionBit), uVar3 == 0)) {
+        (*gObjectTriggerInterface)->runSequence((int)state->sequenceId,(void *)param_1,-1);
+        FUN_80017698((int)state->conditionBit,1);
+        state->done = 1;
       }
     }
     else if (bVar1 < 3) {
       if (bVar1 == 1) {
-        if (((int)*(short *)(pfVar4 + 1) != 0xffffffff) &&
-           (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 != 0)) {
-          (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
-          *(undefined *)((int)pfVar4 + 0xd) = 1;
+        if (((int)state->conditionBit != 0xffffffff) &&
+           (uVar3 = FUN_80017690((int)state->conditionBit), uVar3 != 0)) {
+          (*gObjectTriggerInterface)->runSequence((int)state->sequenceId,(void *)param_1,-1);
+          state->done = 1;
         }
       }
       else if (bVar1 == 0) {
         dVar5 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
-        if (dVar5 < (double)*pfVar4) {
-          (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
-          *(undefined *)((int)pfVar4 + 0xd) = 1;
+        if (dVar5 < (double)state->triggerRadius) {
+          (*gObjectTriggerInterface)->runSequence((int)state->sequenceId,(void *)param_1,-1);
+          state->done = 1;
         }
       }
       else {
         dVar5 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
-        if (((dVar5 < (double)*pfVar4) && ((int)*(short *)(pfVar4 + 1) != 0xffffffff)) &&
-           (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 != 0)) {
-          (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
-          *(undefined *)((int)pfVar4 + 0xd) = 1;
+        if (((dVar5 < (double)state->triggerRadius) && ((int)state->conditionBit != 0xffffffff)) &&
+           (uVar3 = FUN_80017690((int)state->conditionBit), uVar3 != 0)) {
+          (*gObjectTriggerInterface)->runSequence((int)state->sequenceId,(void *)param_1,-1);
+          state->done = 1;
         }
       }
     }
     else if (bVar1 == 5) {
-      if (((int)*(short *)(pfVar4 + 1) != 0xffffffff) &&
-         (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 != 0)) {
-        (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
+      if (((int)state->conditionBit != 0xffffffff) &&
+         (uVar3 = FUN_80017690((int)state->conditionBit), uVar3 != 0)) {
+        (*gObjectTriggerInterface)->runSequence((int)state->sequenceId,(void *)param_1,-1);
       }
     }
-    else if (((bVar1 < 5) && ((int)*(short *)(pfVar4 + 1) != 0xffffffff)) &&
-            (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 == 0)) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(short *)(pfVar4 + 2),param_1,0xffffffff);
-      FUN_80017698((int)*(short *)(pfVar4 + 1),1);
-      *(undefined *)((int)pfVar4 + 0xd) = 1;
+    else if (((bVar1 < 5) && ((int)state->conditionBit != 0xffffffff)) &&
+            (uVar3 = FUN_80017690((int)state->conditionBit), uVar3 == 0)) {
+      (*gObjectTriggerInterface)->runSequence((int)state->sequenceId,(void *)param_1,-1);
+      FUN_80017698((int)state->conditionBit,1);
+      state->done = 1;
     }
   }
   return;
@@ -1138,20 +1152,6 @@ typedef struct VfpDragHeadState {
 
 STATIC_ASSERT(sizeof(VfpDragHeadState) == 0xC);
 
-/* Per-object extra state for SeqPoint (seqpoint_getExtraSize == 0x10). */
-typedef struct SeqPointState {
-    f32 triggerRadius;
-    s16 conditionBit; /* gamebit gating modes 1-5 */
-    s16 disableBit;   /* gamebit that permanently disables the point */
-    s16 sequenceId;   /* trigger id fired at the player; switched in the SeqFn */
-    u8 pad0A[3];
-    u8 done;
-    u8 mode; /* 0 radius, 1 bit, 2 radius+bit, 3/4 bit-once (sets it), 5 bit repeat */
-    u8 pad0F;
-} SeqPointState;
-
-STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
-
 #pragma scheduling off
 #pragma peephole off
 void vfpdraghead_init(int obj, int data) {
@@ -1318,8 +1318,6 @@ void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (vi
 #pragma peephole reset
 #pragma scheduling reset
 
-
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 #pragma scheduling off
 #pragma peephole off
