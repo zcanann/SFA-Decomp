@@ -1,5 +1,6 @@
 #include "main/dll/gcrobotlightbea.h"
 #include "main/game_object.h"
+#include "main/resource.h"
 
 
 #pragma peephole off
@@ -486,7 +487,6 @@ extern void smallbasket_render(int param_1, undefined4 param_2, undefined4 param
                               undefined4 param_5, char param_6);
 extern undefined4* gModgfxInterface;
 extern void* lbl_803DDAC0;
-extern void Resource_Release(void* handle);
 extern void ObjGroup_RemoveObject(int obj, int flag);
 
 /*

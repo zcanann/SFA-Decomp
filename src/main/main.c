@@ -3,6 +3,7 @@
 #include "main/dll/anim_internal.h"
 #include "main/main.h"
 #include "main/objlib.h"
+#include "main/resource.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();
@@ -1304,11 +1305,10 @@ extern void fn_801FD6B4(int obj);
 void VFP_lavapool_update(int obj) { fn_801FD6B4(obj); }
 
 /* fn_X(lbl); lbl = 0; */
-extern u32 lbl_803DDCD8;
-extern void Resource_Release(u32);
+extern void *lbl_803DDCD8;
 #pragma scheduling off
 #pragma peephole off
-void vfplavastar_release(void) { Resource_Release(lbl_803DDCD8); lbl_803DDCD8 = 0; }
+void vfplavastar_release(void) { Resource_Release(lbl_803DDCD8); lbl_803DDCD8 = NULL; }
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1451,11 +1451,10 @@ int dbegg_func0B(int obj, f32 *v) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u32 Resource_Acquire(int id, int mode);
 #pragma scheduling off
 #pragma peephole off
 void vfplavastar_initialise(void) {
-    lbl_803DDCD8 = 0;
+    lbl_803DDCD8 = NULL;
     lbl_803DDCD8 = Resource_Acquire(0xa6, 1);
 }
 #pragma peephole reset

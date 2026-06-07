@@ -1,6 +1,7 @@
 #include "main/dll/CF/dll_165.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
+#include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId,int value);
@@ -240,8 +241,7 @@ void treasurechest_render(void) { objRenderFn_8003b8f4(lbl_803E3C20); }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u32 lbl_803DDAE0;
-extern void Resource_Release(u32);
+extern void *lbl_803DDAE0;
 #pragma scheduling off
 #pragma peephole off
 void treasurechest_free(void) { Resource_Release(lbl_803DDAE0); }

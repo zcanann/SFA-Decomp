@@ -4,6 +4,7 @@
 #include "main/light.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
+#include "main/resource.h"
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -1107,22 +1108,20 @@ void spellStoneUseFn_801fd270(int obj) {
 #pragma scheduling reset
 
 extern int *gModgfxInterface;
-extern u32 lbl_803DDCC0;
-extern void Resource_Release(u32);
+extern void *lbl_803DDCC0;
 #pragma scheduling off
 #pragma peephole off
 void vfpdraghead_free(int obj) {
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
     (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x14)))(obj);
-    if (lbl_803DDCC0 != 0) {
+    if (lbl_803DDCC0 != NULL) {
         Resource_Release(lbl_803DDCC0);
     }
-    lbl_803DDCC0 = 0;
+    lbl_803DDCC0 = NULL;
 }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void *Resource_Acquire(int id, int mode);
 extern f32 lbl_803E6138;
 
 /* Per-object extra state for VFPDragHead (vfpdraghead_getExtraSize == 0xC). */
@@ -1170,7 +1169,7 @@ void vfpdraghead_init(int obj, int data) {
         ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * lbl_803E6138;
     }
     ((GameObject *)obj)->objectFlags |= 0x6000;
-    lbl_803DDCC0 = (u32)Resource_Acquire(0xA5, 1);
+    lbl_803DDCC0 = Resource_Acquire(0xA5, 1);
 }
 #pragma peephole reset
 #pragma scheduling reset
