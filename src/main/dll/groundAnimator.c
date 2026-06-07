@@ -3,6 +3,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/objseq.h"
 
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80017710();
@@ -37,7 +38,7 @@ extern uint playerGetStateFlag310(int obj);
 extern void setAButtonIcon(int param_1);
 extern void dll_115_seqFn(void);
 
-extern undefined4* gObjectTriggerInterface;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* lbl_803DCAC0;
 #define gCarryableInterface lbl_803DCAC0
 extern undefined4* DAT_803dd6d4;
@@ -66,9 +67,7 @@ extern f32 lbl_803E4490;
 extern f32 lbl_803E4494;
 extern f32 lbl_803E4498;
 
-typedef void (*GroundAnimatorActivateFn)(int obj, int eventId);
 typedef void (*GroundAnimatorFreeFn)(int obj);
-typedef void (*GroundAnimatorRefreshFn)(int objectId, int obj, int value);
 typedef int (*GroundAnimatorVisibleFn)(int obj, int visible);
 typedef int (*GroundAnimatorAnimStateFn)(int obj, int state);
 typedef void (*GroundAnimatorSetVisibleFn)(int state, int visible);
@@ -117,9 +116,9 @@ void dll_115_update(int obj)
   }
   switch (state[0]) {
   case 9:
-    (*(GroundAnimatorActivateFn *)(*gObjectTriggerInterface + 0x54))(obj, *(s16 *)(mapData + 0x3c));
-    (*(GroundAnimatorRefreshFn *)(*gObjectTriggerInterface + 0x48))
-        (*(u8 *)(mapData + 0x3a), obj, *(u8 *)(mapData + 0x3b));
+    (*gObjectTriggerInterface)->preempt(obj, *(s16 *)(mapData + 0x3c));
+    (*gObjectTriggerInterface)->runSequence(*(u8 *)(mapData + 0x3a), (void *)obj,
+                                            *(u8 *)(mapData + 0x3b));
     break;
   case 8:
   case 10:
@@ -131,7 +130,7 @@ void dll_115_update(int obj)
     } else if ((u32)GameBit_Get(eventId) != 0) {
       s8 id = (s8)((Dll115MapRow *)(mapData + state[0]))->id40;
       if (id != -1) {
-        (*(GroundAnimatorRefreshFn *)(*gObjectTriggerInterface + 0x48))(id, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(id, (void *)obj, -1);
       }
     }
     break;
@@ -815,7 +814,7 @@ void appleontree_handleCollectableHit(int obj)
     if (!(Vec_distance((float *)(player + 0x18), (float *)(obj + 0x18)) < lbl_803E37F0)) return;
 
     if (GameBit_Get(0x90f) == 0) {
-        (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x7c))(0x444, 0, 0);
+        (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
         *(s16 *)(state + 0x5c) = -1;
         ((AppleOnTreeState *)state)->unk5E = 0;
         ((AppleOnTreeState *)state)->unk60 = lbl_803E37C8;
