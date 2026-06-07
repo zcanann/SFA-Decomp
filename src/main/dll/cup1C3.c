@@ -201,7 +201,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
             Sfx_PlayFromObject((int)obj, 0x1d4);
             state->flags.finished = 0;
             state->flags.active = 1;
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->yield((int)seq, 0xbd);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->yield(seq, 0xbd);
         }
         if ((getButtonsJustPressedIfNotBusy(0) & 0x100) != 0) {
             state->spinSpeed = state->spinSpeed + lbl_803E50E4;
@@ -217,7 +217,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
             state->flags.finished = 1;
             state->flags.active = 1;
             state->spinProgress = 0x7ef4;
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->yield((int)seq, 0xbd);
+            ((ObjectTriggerInterface *)*gObjectTriggerInterface)->yield(seq, 0xbd);
             return 0;
         }
         (*(void (**)(int))(*gObjectTriggerInterface + 0x74))(state->triggerHandle);

@@ -1282,10 +1282,10 @@ int animatedObjGetSeqId(int obj)
 
 #pragma peephole off
 #pragma scheduling off
-void ObjSeq_yield(int obj, int val)
+void ObjSeq_yield(u8 *seq, int value)
 {
-    *(int *)(obj + 0x74) = val;
-    *(u8 *)(obj + 0x90) = (u8)(*(u8 *)(obj + 0x90) | 0x40);
+    *(int *)(seq + 0x74) = value;
+    *(u8 *)(seq + 0x90) = (u8)(*(u8 *)(seq + 0x90) | 0x40);
 }
 #pragma scheduling reset
 #pragma peephole reset
