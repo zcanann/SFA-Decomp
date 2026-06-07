@@ -7,7 +7,7 @@ extern int randomGetRange(int min, int max);
 extern void voxmaps_worldToGrid(void *world, void *grid);
 extern int voxmaps_traceLine(void *from, void *to, void *out, int param4, int param5);
 
-extern undefined4 *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern undefined4 *gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern u8 framesThisStep;
@@ -120,7 +120,7 @@ void dll_19E_render(int param_1, int param_2, int param_3, int param_4,
       voxmaps_worldToGrid(midB, gridB);
       if (voxmaps_traceLine(gridA, gridB, traceOut, 0, 0) == 0) {
         *(u8 *)(state + 0xa) = 0;
-        (*(void (*)(int))(*(int *)(*gExpgfxInterface) + 0x14))(param_1);
+        (*gExpgfxInterface)->freeSource(param_1);
       }
     }
     if (*(s16 *)(state + 4) > 0) {

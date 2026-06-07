@@ -4020,7 +4020,7 @@ extern int waterSpellStone1Fn_8019b4c8();
 void cfguardian_update(void) { waterSpellStone1Fn_8019b4c8(); }
 
 /* Drift-recovery: add new fns with v1.0 names. */
-extern int* gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E4130;
 extern f32 lbl_803E416C;
@@ -4092,7 +4092,7 @@ void cfperch_init(int* obj)
 
 void cfmaincrystal_free(int* obj)
 {
-    ((void(*)(int*))((void**)*gExpgfxInterface)[5])(obj);
+    (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
 void cfperch_free(int* obj)

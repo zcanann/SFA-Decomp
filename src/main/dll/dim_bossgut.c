@@ -351,7 +351,7 @@ extern void Obj_ResetModelColorState(int *obj);
 extern void objLightFn_8009a1dc(int *obj, f32 a, void *vec, int b, int c);
 extern int  Sfx_PlayFromObject(int *obj, int id);
 extern f32  sqrtf(f32 x);
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern u8   framesThisStep;
 extern f32  timeDelta;
 extern f32  playerMapOffsetX;
@@ -534,7 +534,7 @@ void enemymushroom_update(int *obj)
             f32 nv = *(f32 *)(state + 0x0) - timeDelta;
             *(f32 *)(state + 0x0) = nv;
             if (nv <= lbl_803E52FC) {
-                (*(void (**)(int *))(*(int *)gExpgfxInterface + 0x14))(obj);
+                (*gExpgfxInterface)->freeSource((u32)obj);
                 *(u8 *)(state + 0x36) = 0;
                 objFn_8002b67c(obj);
             } else {

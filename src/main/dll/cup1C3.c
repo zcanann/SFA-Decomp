@@ -50,7 +50,7 @@ extern undefined4* DAT_803dd708;
 extern u8 lbl_803DBF68;
 extern int *gObjectTriggerInterface;
 extern int *gModgfxInterface;
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern u8 framesThisStep;
 extern int lbl_802C23C8[];
@@ -654,7 +654,7 @@ void dll_197_update(int obj)
     } else {
         Sfx_StopObjectChannel(obj, 0x7f);
         (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x18)))(obj);
-        (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+        (*gExpgfxInterface)->freeSource(obj);
         if (state->gameBit != -1 && GameBit_Get(state->gameBit) != 0) {
             GameBit_Set(state->gameBit, 0);
         }
@@ -747,7 +747,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         voxmaps_worldToGrid((void *)cameraTrace, endGrid);
         if (voxmaps_traceLine(startGrid, endGrid, traceOut, 0, 0) == 0) {
             state->visibleToCamera = 0;
-            (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+            (*gExpgfxInterface)->freeSource(obj);
         }
     }
 

@@ -514,7 +514,7 @@ typedef struct VortexState {
     u8 pad27;
 } VortexState;
 
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern f32 lbl_803E73E0;
 extern f32 lbl_803E73D0;
 extern f32 lbl_803E73D4;

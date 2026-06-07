@@ -13,7 +13,7 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
 extern u8 framesThisStep;
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern int *gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern s8 lbl_803DDBE8;
@@ -143,7 +143,7 @@ void dll_19E_update(void *obj)
       } else {
         Sfx_StopObjectChannel(obj, 0x40);
         (*(void (*)(void *))(*(int *)(*gModgfxInterface + 0x18)))(obj);
-        (*(void (*)(void *))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+        (*gExpgfxInterface)->freeSource((u32)obj);
         if ((state->gameBitId != -1) && (GameBit_Get(state->gameBitId) != 0)) {
           GameBit_Set(state->gameBitId, 0);
         }

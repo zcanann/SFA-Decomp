@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
@@ -1087,11 +1088,11 @@ int appleontree_getExtraSize(void) { return 0x64; }
 /* Pattern wrappers. */
 u8 appleontree_modelMtxFn(int *obj) { return ((AppleOnTreeState *)((int **)obj)[0xb8/4])->unk3A; }
 
-extern void ***gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void appleontree_free(int *obj) {
-    ((void (*)(int*))(*gExpgfxInterface)[5])(obj);
+    (*gExpgfxInterface)->freeSource((u32)obj);
 }
 void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     AppleOnTreeState *inner = ((GameObject *)obj)->extra;

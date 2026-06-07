@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/enemy_state.h"
 #include "main/dll/projswitch.h"
@@ -553,7 +554,7 @@ void enemy_hitDetect(int obj)
 #pragma scheduling reset
 
 extern void fn_80026C88(int p);
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern void mm_free(int p);
 extern void smallbasket_stopLoopSfx(int obj, u8 *state);
 extern void Obj_FreeObject(int obj);
@@ -600,7 +601,7 @@ void enemy_free(int obj, int flag)
             }
         }
     }
-    (**(void (**)(int))(*gExpgfxInterface + 0x14))(obj);
+    (*gExpgfxInterface)->freeSource(obj);
     ObjGroup_RemoveObject(obj, 3);
 }
 #pragma peephole reset

@@ -2218,7 +2218,7 @@ void wmtorch_update(int obj) {
 #pragma scheduling reset
 
 extern int *gModgfxInterface;
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern void Obj_FreeObject(void *o);
 #pragma scheduling off
 #pragma peephole off
@@ -2228,7 +2228,7 @@ void wmtorch_free(int obj, int mode) {
         Obj_FreeObject(((WmTorchState *)state)->linkedObj);
     }
     (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x18)))(obj);
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+    (*gExpgfxInterface)->freeSource(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2526,7 +2526,7 @@ void lightsource_update(int obj)
     extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
     extern void Sfx_RemoveLoopedObjectSound(int obj, int sfx);
     extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32 *vec);
-    extern int *gExpgfxInterface;
+    extern ExpgfxInterface **gExpgfxInterface;
     extern EffectInterface **gPartfxInterface;
     extern f32 timeDelta;
     extern f32 lbl_803E5E08;
@@ -2562,7 +2562,7 @@ void lightsource_update(int obj)
                 }
                 Sfx_PlayFromObject(obj, 0x80);
             } else {
-                (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+                (*gExpgfxInterface)->freeSource(obj);
                 if (b->gameBit != -1 && GameBit_Get(b->gameBit) != 0) {
                     GameBit_Set(b->gameBit, 0);
                 }

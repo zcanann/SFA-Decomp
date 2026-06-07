@@ -22,13 +22,17 @@ STATIC_ASSERT(offsetof(EffectInterface, freeObject) == 0x18);
 
 typedef int (*ExpgfxSpawnEffectFn)(void *config, int preferredPoolIndex, int sourceId,
                                    int flags);
+typedef void (*ExpgfxFreeSourceFn)(u32 sourceId);
 
 typedef struct ExpgfxInterface {
   u8 pad00[0x08];
   ExpgfxSpawnEffectFn spawnEffect;
+  u8 pad0C[0x14 - 0x0C];
+  ExpgfxFreeSourceFn freeSource;
 } ExpgfxInterface;
 
 STATIC_ASSERT(offsetof(ExpgfxInterface, spawnEffect) == 0x08);
+STATIC_ASSERT(offsetof(ExpgfxInterface, freeSource) == 0x14);
 
 typedef void (*WaterfxSpawnRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags);
 typedef void (*WaterfxSpawnSurfaceRippleFn)(f32 x, f32 y, f32 z, f32 radius, int flags,

@@ -1051,11 +1051,11 @@ void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void shopitem_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+    (*gExpgfxInterface)->freeSource(obj);
     switch (((GameObject *)obj)->anim.seqId) {
     case 0x468:
         ObjGroup_RemoveObject(obj, 0x4F);

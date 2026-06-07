@@ -20,7 +20,7 @@ int arwarwingbo_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void arwarwingbo_free(int obj)
 {
-    (*(void (**)(int))(*gExpgfxInterface + 0x14))(obj);
+    (*gExpgfxInterface)->freeSource(obj);
     ObjGroup_RemoveObject(obj, 0x52);
 }
 #pragma scheduling reset

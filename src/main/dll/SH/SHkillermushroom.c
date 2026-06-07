@@ -63,7 +63,7 @@ extern undefined4 DAT_80327964;
 extern undefined4 DAT_80327968;
 extern u8 framesThisStep;
 extern undefined4* DAT_803dd6d4;
-extern void *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern undefined4* DAT_803dd708;
 extern f32 timeDelta;
 extern f64 DOUBLE_803e5ff8;
@@ -124,7 +124,7 @@ void bombplantspore_free(void *obj)
   void *light;
 
   state = ((GameObject *)obj)->extra;
-  (*(void (***)(void *))gExpgfxInterface)[5](obj);
+  (*gExpgfxInterface)->freeSource((u32)obj);
   light = *(void **)((u8 *)state + 0x270);
   if (light != NULL) {
     ModelLightStruct_free(light);

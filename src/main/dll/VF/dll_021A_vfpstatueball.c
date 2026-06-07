@@ -100,7 +100,7 @@ void vfpstatueball_update(int *obj) {
             state->playActivateSfx = 1;
         } else {
             Sfx_StopObjectChannel((int)obj, 0x40);
-            (*(void (*)(int *))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+            (*gExpgfxInterface)->freeSource((u32)obj);
             if (state->gameBit != -1) {
                 if ((u32)GameBit_Get(state->gameBit) != 0) {
                     GameBit_Set(state->gameBit, 0);
@@ -119,7 +119,7 @@ void vfpstatueball_initialise(void) {}
 #pragma peephole off
 #pragma scheduling off
 void vfpstatueball_free(int obj) {
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+    (*gExpgfxInterface)->freeSource(obj);
 }
 #pragma scheduling reset
 #pragma peephole reset

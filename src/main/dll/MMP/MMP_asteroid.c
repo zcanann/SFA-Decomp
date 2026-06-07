@@ -1451,7 +1451,7 @@ void explodeanimator_free(int x) { ObjGroup_RemoveObject(x, 0x1a); }
 u32 dimbossicesmash_getObjectTypeId(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x18) << 11) | 0x400; }
 
 /* Drift-recovery: add new fns with v1.0 names. */
-extern int* gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern void disableHeavyFog(void);
 
 #pragma scheduling off
@@ -1459,7 +1459,7 @@ extern void disableHeavyFog(void);
 
 void dimbossicesmash_free(int* obj)
 {
-    ((void(*)(int*))((void**)*gExpgfxInterface)[5])(obj);
+    (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
 void fogcontrol_free(int* obj)

@@ -30,7 +30,7 @@ extern void objMove(u8 *obj, f32 vx, f32 vy, f32 vz);
 
 extern int *gRomCurveInterface;
 extern EffectInterface **gPartfxInterface;
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
@@ -296,7 +296,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         ((EdibleMushroomState *)state)->unk124 = t;
         if (t <= lbl_803E5288) {
             ObjHits_SetSourceMask(obj, 1);
-            (*(code *)(*(int *)gExpgfxInterface + 0x14))(obj);
+            (*gExpgfxInterface)->freeSource((u32)obj);
             ((EdibleMushroomState *)state)->unk136 = 0;
             ((EdibleMushroomState *)state)->unk137 &= ~0x10;
         } else {
@@ -315,7 +315,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                 if (!(((GameObject *)player)->objectFlags & 0x1000)) {
                     if (Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(obj + 0x18)) <
                         lbl_803E52A4) {
-                        (*(code *)(*(int *)gExpgfxInterface + 0x14))(obj);
+                        (*gExpgfxInterface)->freeSource((u32)obj);
                         if (((GameObject *)obj)->anim.seqId == 0x658) {
                             *(s16 *)(state + 0x13c) = 0x18a;
                             itemPickupDoParticleFx(obj, lbl_803E52A8, 0xff, 0x28);

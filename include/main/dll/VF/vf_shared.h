@@ -125,7 +125,7 @@ extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern s16 lbl_803DC128;
 extern undefined4 DAT_803de928;
 extern undefined4 DAT_803de92a;

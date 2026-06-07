@@ -1,4 +1,5 @@
 #include "main/dll/ediblemushroom.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
@@ -33,7 +34,7 @@ extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 
 extern undefined4* DAT_803dd71c;
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern f64 DOUBLE_803e5f58;
 extern f32 FLOAT_803e5f20;
 extern f32 FLOAT_803e5f2c;
@@ -231,7 +232,7 @@ int enemymushroom_getObjectTypeId(EnemyMushroomObject *obj)
 
 void enemymushroom_free(EnemyMushroomObject *obj)
 {
-  (*(void (**)(int))(*gExpgfxInterface + 0x14))((int)obj);
+  (*gExpgfxInterface)->freeSource((u32)obj);
   ObjGroup_RemoveObject((int)obj,3);
 }
 

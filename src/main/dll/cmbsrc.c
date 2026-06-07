@@ -74,7 +74,7 @@ void cmbsrc_free(int obj)
 {
     CmbSrcState *state = ((CmbSrcObject *)obj)->state;
 
-    (*(void (**)(int))(*gExpgfxInterface + 0x14))(obj);
+    (*gExpgfxInterface)->freeSource(obj);
     if (state->light != NULL) {
         ModelLightStruct_free(state->light);
     }

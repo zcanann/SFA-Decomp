@@ -12,7 +12,7 @@ typedef struct {
     u8 pad12[2];
 } GreatFoxFxEntry;
 
-extern int *gExpgfxInterface;
+extern ExpgfxInterface **gExpgfxInterface;
 extern void ModelLightStruct_free(int model);
 extern int *gScreenTransitionInterface;
 extern void objRenderFn_8003b8f4(f32 e);
@@ -103,7 +103,7 @@ void worldobj_free(int obj) {
         ModelLightStruct_free(*inner);
         *inner = 0;
     }
-    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+    (*gExpgfxInterface)->freeSource(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset
