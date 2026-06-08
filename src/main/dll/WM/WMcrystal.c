@@ -76,7 +76,7 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gGameUIInterface;
 extern int *gScreenTransitionInterface;
 extern int *gCameraInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern u16 lbl_80327A60[];
 extern u16 lbl_80327A70[];
 extern f32 lbl_803E5640;
@@ -468,7 +468,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
             if (state->completionTimer <= lbl_803E5654) {
                 state->completionTimer = lbl_803E5654;
                 player = Obj_GetPlayerObject();
-                (*(code *)(*gMapEventInterface + 0x2c))();
+                (*(code *)((u8 *)*gMapEventInterface + 0x2c))();
                 (*(code *)(*gCameraInterface + 0x1c))(0x42,0,3,0,0,0,0);
                 obj->mapAlpha = 0xff;
                 fn_80296124(player,NULL,NULL,0);
@@ -527,7 +527,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
     }
 
     if ((state->eventFlags & SC_TOTEMBOND_EVENT_SET_MAP_MODE) != 0) {
-        ((MapEventInterface *)*gMapEventInterface)->setMode(0xe, 6);
+        (*gMapEventInterface)->setMode(0xe, 6);
         state->eventFlags &= ~SC_TOTEMBOND_EVENT_SET_MAP_MODE;
     }
 }
