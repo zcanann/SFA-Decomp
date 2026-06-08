@@ -4196,6 +4196,25 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   divergence (register/value spelling, branch/block layout, stack/temp layout,
   signed compare, loop bound, FP constant ownership, etc.). Use it to choose
   file-wide sweeps; it is a prioritizer, not proof of the exact fix.
+  **The "compare width/sign" bucket is a RELIABLE ~1-build/fn vein (miner-6:
+  9 fns to 100% in one session).** Signature: a single cmpwi-vs-cmplwi (or
+  cmpw/cmplw) diff. A pointer/u32 value compared as int -> add a `(u32)` cast;
+  an int compared unsigned -> `(int)` (recipes #3/#14/#58). The cleanest, highest
+  hit-rate sub-class is a CALL/VTABLE RESULT cast to int then null-checked --
+  `x = (int)getById(...); if (x != 0)` -> `(u32)x != 0` (target cmplwi). Also
+  here: `< 1` vs `<= 0` (#69), and == operand-order via a #66 block-local.
+  SKIP-ON-INSPECT traps that look like this bucket but resist the simple cast
+  (don't grind them): (a) a `*(char*)`/byte-field compare that already reads
+  signed yet emits cmplwi -- a CSE subtlety, not a type bug (scarab fn_8015E8BC);
+  (b) `== key` where the loaded operand is CONDITIONAL -- a #66 block-local
+  HOISTS the load out of the guard and regresses (mapTextureOverrideSetValue);
+  (c) `*(void**)(p+off) != NULL` that emits cmpwi anyway because MWCC CSEs it
+  with an int-typed `p->field` access at the same offset -- the (u32) form is
+  multi-site identical so a replace_all is dangerous, needs surgical line edits
+  (player.c inner+0x7f8). The "off-by-one/immediate" bucket is MOSTLY mislabeled
+  register-coloring + inlining-unroll artifacts (textrender GameText_*, whose
+  standalone getControlCharLen is 100%) -- the "compare width" bucket is the
+  real one.
 - `python3 tools/pragma_audit.py [--max-pct N] [--unit-filter S] [--all]` —
   flag <100% fns whose effective pragma state (stack model, recipe #1) is an
   OUTLIER vs their unit's majority state. THE highest-yield triage signal on
