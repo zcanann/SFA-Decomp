@@ -1,10 +1,10 @@
 #include "main/dll/babycloudrunner.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/obj_placement.h"
 #include "main/objseq.h"
 
 extern void objRenderFn_80041018(void);
-extern int  ObjGroup_FindNearestObject(byte type, int obj, float *dist_out);
 extern u32  GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern u32  randomGetRange(int min, int max);

@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/dll/dim_tricky.h"
 #include "main/effect_interfaces.h"
+#include "main/gameplay_runtime.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
 
@@ -11,8 +12,6 @@ extern void Sfx_PlayFromObject(void *obj, int sfxId);
 extern void Sfx_StopObjectChannel(void *obj, int channel);
 extern void objUpdateOpacity(void *obj);
 extern int ObjHits_GetPriorityHit(void *obj, int a, int b, int c);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 
 extern u8 framesThisStep;
 extern ModgfxInterface **gModgfxInterface;
