@@ -1640,25 +1640,23 @@ void dimtruthhornice_update(int *obj)
         extra->timer = extra->timer + timeDelta;
         if (extra->timer > lbl_803E4A44) {
             int i;
-            f32 scale = lbl_803E4A48;
-            f32 zinit = lbl_803E4A4C;
             extra->phase = 2;
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             Sfx_PlayFromObject((int)obj, 1147);
             for (i = 30; i != 0; i--) {
                 f32 desc[6];
-                desc[3] = scale * (f32)(int)randomGetRange(-100, 100);
-                desc[4] = scale * (f32)(int)randomGetRange(0, 350);
-                desc[5] = scale * (f32)(int)randomGetRange(-100, 100);
-                desc[2] = zinit;
+                desc[3] = 0.1f * (f32)(int)randomGetRange(-100, 100);
+                desc[4] = 0.1f * (f32)(int)randomGetRange(0, 350);
+                desc[5] = 0.1f * (f32)(int)randomGetRange(-100, 100);
+                desc[2] = 1.0f;
                 (*gPartfxInterface)->spawnObject(obj, 2043, desc, 2, -1, NULL);
                 (*gPartfxInterface)->spawnObject(obj, 2044, desc, 2, -1, NULL);
             }
         }
-        desc2[3] = lbl_803E4A48 * (f32)(int)randomGetRange(-100, 100);
-        desc2[4] = lbl_803E4A48 * (f32)(int)randomGetRange(0, 350);
-        desc2[5] = lbl_803E4A48 * (f32)(int)randomGetRange(-100, 100);
-        desc2[2] = lbl_803E4A4C;
+        desc2[3] = 0.1f * (f32)(int)randomGetRange(-100, 100);
+        desc2[4] = 0.1f * (f32)(int)randomGetRange(0, 350);
+        desc2[5] = 0.1f * (f32)(int)randomGetRange(-100, 100);
+        desc2[2] = 1.0f;
         (*gPartfxInterface)->spawnObject(obj, 2044, desc2, 2, -1, NULL);
         break;
     }
