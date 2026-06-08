@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/fireflyLantern.h"
 
 
@@ -25,7 +26,6 @@ extern f32 sqrtf(f32);
 extern f32 fn_80293DA4(f32);
 
 extern undefined4 lbl_803DBCD0;
-extern undefined4* gRomCurveInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E2990;
 extern f32 lbl_803E2994;
@@ -69,9 +69,9 @@ void fn_80154870(int obj, int *state)
     }
     if (((state[0xb7] & 0x2000U) != 0) &&
         ((Curve_AdvanceAlongPath(curve, lbl_803E2990) != 0 || *(int *)(curve + 0x10) != 0) &&
-         ((*(u8 (**)(int))(*gRomCurveInterface + 0x90))(curve) != 0)) &&
-        ((*(u8 (**)(int, int, f32, void *, int))(*gRomCurveInterface + 0x8c))(
-             *state, obj, lbl_803E29B0, &lbl_803DBCD0, -1) != 0)) {
+         ((*gRomCurveInterface)->goNextPoint((void *)curve) != 0)) &&
+        ((*gRomCurveInterface)->initCurve((void *)*state, (void *)obj, lbl_803E29B0,
+                                          (int *)&lbl_803DBCD0, -1) != 0)) {
         *(u32 *)&state[0xb7] &= ~0x2000LL;
     }
     ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);

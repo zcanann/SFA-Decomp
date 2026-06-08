@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/duster.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
@@ -25,7 +26,6 @@ extern u8 objBboxFn_800640cc();
 extern f32 sidekickToy_accelerateTowardTargetXZ(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel, f32 drag);
 extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 extern int Curve_AdvanceAlongPath(int curve, f32 dt);
-extern int* gRomCurveInterface;
 extern char lbl_803DBCD8;
 extern void fn_8014D08C(int, int, int, float, int, int);
 extern void fn_80154D0C(int, int, ushort *, float *);
@@ -881,9 +881,9 @@ void fn_8015652C(uint param_9,int param_10)
   if ((((BaddieState *)param_10)->controlFlags & 0x2000) != 0) {
     if (((Curve_AdvanceAlongPath((int)pfVar6,((BaddieState *)param_10)->pathStep) != 0 ||
           *(int *)(pfVar6 + 4) != 0) &&
-         ((u8(*)(float *))((int *)*gRomCurveInterface)[0x90/4])(pfVar6) != 0) &&
-        ((u8(*)(int, uint, f32, void *, int))((int *)*gRomCurveInterface)[0x8c/4])(
-            *(int *)param_10,param_9,lbl_803E2AE4,&lbl_803DBCD8,-1) != 0) {
+         (*gRomCurveInterface)->goNextPoint(pfVar6) != 0) &&
+        (*gRomCurveInterface)->initCurve(*(void **)param_10, (void *)param_9, lbl_803E2AE4,
+                                         (int *)&lbl_803DBCD8, -1) != 0) {
       ((BaddieState *)param_10)->controlFlags = ((BaddieState *)param_10)->controlFlags & ~0x2000;
     }
     if ((((BaddieState *)param_10)->controlFlags & 0x8000000) != 0) {

@@ -4,6 +4,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/objhits_types.h"
 
 extern undefined4 FUN_800067e8();
@@ -911,7 +912,6 @@ extern f32 lbl_803E28C0;
 extern f32 lbl_803E28C4;
 extern f32 lbl_803E28C8;
 extern f32 lbl_803E28CC;
-extern int* gRomCurveInterface;
 extern int lbl_803DBCB8;
 extern f32 timeDelta;
 extern int Curve_AdvanceAlongPath(int* curve, f32 t);
@@ -935,9 +935,9 @@ void fn_80153040(int obj, int state)
     }
     if ((((BaddieState *)state)->controlFlags & 0x2000) != 0) {
         if (Curve_AdvanceAlongPath(curve, ((BaddieState *)state)->pathStep) != 0 || ((RomCurveWalker *)curve)->unk10 != 0) {
-            if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
-                if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
-                        *(int*)state, obj, lbl_803E28B8, &lbl_803DBCB8, -1, *(void**)gRomCurveInterface) != 0) {
+            if ((*gRomCurveInterface)->goNextPoint(curve) != 0) {
+                if ((*gRomCurveInterface)->initCurve(*(void **)state, (void *)obj, lbl_803E28B8,
+                                                     &lbl_803DBCB8, -1) != 0) {
                     ((BaddieState *)state)->controlFlags = ((BaddieState *)state)->controlFlags & ~0x2000;
                 }
             }
@@ -1173,9 +1173,9 @@ void fn_80153248(int obj, int state)
     if ((((BaddieState *)state)->controlFlags & 0x2000) != 0) {
         if (Curve_AdvanceAlongPath(curve, lbl_803E28D4 * ((BaddieState *)state)->pathStep) != 0
             || ((RomCurveWalker *)curve)->unk10 != 0) {
-            if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
-                if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
-                        *(int*)state, obj, lbl_803E28B8, &lbl_803DBCB8, -1, *(void**)gRomCurveInterface) != 0) {
+            if ((*gRomCurveInterface)->goNextPoint(curve) != 0) {
+                if ((*gRomCurveInterface)->initCurve(*(void **)state, (void *)obj, lbl_803E28B8,
+                                                     &lbl_803DBCB8, -1) != 0) {
                     ((BaddieState *)state)->controlFlags = ((BaddieState *)state)->controlFlags & ~0x2000;
                 }
             }
@@ -1412,9 +1412,9 @@ void fn_80153E0C(int obj, int state)
     *(f32*)(state + 0x328) = lbl_803E294C;
     if ((((BaddieState *)state)->controlFlags & 0x2000) != 0) {
         if (Curve_AdvanceAlongPath(curve, ((BaddieState *)state)->pathStep) != 0 || ((RomCurveWalker *)curve)->unk10 != 0) {
-            if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
-                if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
-                        *(int*)state, obj, lbl_803E2950, &lbl_803DBCC8, -1, *(void**)gRomCurveInterface) != 0) {
+            if ((*gRomCurveInterface)->goNextPoint(curve) != 0) {
+                if ((*gRomCurveInterface)->initCurve(*(void **)state, (void *)obj, lbl_803E2950,
+                                                     &lbl_803DBCC8, -1) != 0) {
                     ((BaddieState *)state)->controlFlags = ((BaddieState *)state)->controlFlags & ~0x2000;
                 }
             }

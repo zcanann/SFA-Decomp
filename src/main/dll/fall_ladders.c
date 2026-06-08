@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/fall_ladders.h"
 #include "main/objhits_types.h"
 
@@ -245,7 +246,6 @@ extern void fn_8014C678(int obj, int p, f32 *vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int p, int c, f32 a, f32 b, int d);
 extern f32 fn_80293DA4(f32 x);
 extern void fn_80154328(int obj, int p);
-extern int *gRomCurveInterface;
 extern f64 lbl_803DBCD0;
 extern f32 timeDelta;
 extern f32 lbl_803E2940;
@@ -334,8 +334,9 @@ void fn_80154584(int obj, int p)
     ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
     if ((*(u32 *)(p + 0x2dc) & 0x2000) != 0) {
         if ((Curve_AdvanceAlongPath(curve, *(f32 *)(p + 0x2fc)) != 0 || *(int *)(curve + 0x10) != 0) &&
-            (**(u8 (**)(int))(*gRomCurveInterface + 0x90))(curve) != 0 &&
-            (**(u8 (**)(int, int, f32, f64 *, int))(*gRomCurveInterface + 0x8c))(*(int *)p, obj, lbl_803E29B0, &lbl_803DBCD0, -1) != 0) {
+            (*gRomCurveInterface)->goNextPoint((void *)curve) != 0 &&
+            (*gRomCurveInterface)->initCurve(*(void **)p, (void *)obj, lbl_803E29B0,
+                                             (int *)&lbl_803DBCD0, -1) != 0) {
             *(u32 *)(p + 0x2dc) &= ~0x2000;
         }
         vec[0] = *(f32 *)(curve + 0x68) - ((GameObject *)obj)->anim.localPosX;
