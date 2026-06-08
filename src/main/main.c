@@ -32,7 +32,6 @@ extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
-extern LaserTriggerInterface **gGameUIInterface;
 extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **gMapEventInterface;
