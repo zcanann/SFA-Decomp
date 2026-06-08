@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
@@ -1231,7 +1232,6 @@ void fn_80185B74(int obj)
     extern void *lbl_803DDAD4;
     extern void *gSHthorntailAnimationInterface;
     extern EffectInterface **gPartfxInterface;
-    extern void *gCameraInterface;
     extern f32 lbl_803E3A58;
     extern f32 lbl_803E3A5C;
     extern f32 lbl_803E3A60;
@@ -1320,7 +1320,7 @@ void fn_80185B74(int obj)
     }
     if (*(s8 *)&state->launchPhase == 0) {
         if (*(s8 *)&state->rideState == 0) {
-            int cam = (*(code *)(*(int *)gCameraInterface + 0x3c))();
+            int cam = (*gCameraInterface)->getOverrideTarget();
             on = 0;
             if ((void *)cam != (void *)obj &&
                 (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0 && ((GameObject *)obj)->unkF8 == 0) {
