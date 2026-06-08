@@ -131,15 +131,13 @@ extern f32 lbl_803E30CC;
 #pragma dont_inline on
 void kaldaChomFn_8016821c(int obj, KaldaChomControl *control)
 {
-  char cVar1;
-  int iVar2;
+  u8 cVar1;
   int iVar3;
+  int iVar2;
 
   iVar3 = *(int *)(obj + 0x4c);
   lbl_803DDA94 =
-       lbl_803E30A0 +
-       (float)((double)CONCAT44(0x43300000,(int)*(char *)(iVar3 + 0x28) ^ 0x80000000) -
-              DOUBLE_803E3070) / lbl_803E30A4;
+       lbl_803E30A0 + (float)(int)*(char *)(iVar3 + 0x28) / lbl_803E30A4;
   control->hitFlashTimer = lbl_803E308C;
   Sfx_PlayFromObject(obj,SFXkr_land2);
   iVar2 = 0x28;
@@ -149,9 +147,9 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl *control)
   } while (iVar2 != 0);
   if ((control->spawnedDustObj == NULL) && (cVar1 = Obj_IsLoadingLocked(), cVar1 != '\0')) {
     iVar2 = Obj_AllocObjectSetup(0x24,0x55e);
-    *(undefined4 *)(iVar2 + 8) = *(undefined4 *)(obj + 0xc);
+    *(f32 *)(iVar2 + 8) = *(f32 *)(obj + 0xc);
     *(float *)(iVar2 + 0xc) = lbl_803E30A8 + *(float *)(obj + 0x10);
-    *(undefined4 *)(iVar2 + 0x10) = *(undefined4 *)(obj + 0x14);
+    *(f32 *)(iVar2 + 0x10) = *(f32 *)(obj + 0x14);
     *(undefined *)(iVar2 + 4) = *(undefined *)(iVar3 + 4);
     *(undefined *)(iVar2 + 5) = *(undefined *)(iVar3 + 5);
     *(undefined *)(iVar2 + 6) = *(undefined *)(iVar3 + 6);
