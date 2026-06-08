@@ -6545,7 +6545,6 @@ int RomCurve_func16(double x, double y, double z) {
 #pragma scheduling reset
 
 /* UIController dispatch through the shared GameUI interface. */
-extern GameUIInterface **gGameUIInterface;
 extern u8 gameTimerIsRunning(void *p, int a, int b);
 extern void hudNumberFn_80014060(void *p);
 extern void gameTimerRun(void *p);

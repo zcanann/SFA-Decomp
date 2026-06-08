@@ -12,6 +12,7 @@ typedef void (*CameraLoadTriggeredActionFn)(int triggerType, int actionNo, int t
 typedef void (*CameraSetFocusFn)(void *target, int unused);
 typedef void (*CameraOverridePosFn)(f32 x, f32 y, f32 z);
 typedef void (*CameraMoveByFn)(f32 x, f32 y, f32 z);
+typedef void (*CameraSetTargetReticleOverrideFn)(int target);
 typedef void (*CameraInitialiseFn)(f32 *dst, f32 numerator, f32 denominator, f32 minValue,
                                    f32 y, f32 z);
 typedef void (*CameraGetRelativePositionFn)(f32 heightOffset, int targetObj, f32 *outX,
@@ -44,7 +45,7 @@ typedef struct CameraInterface {
     CameraGetTargetFn getTarget;
     void (*func13)(void);
     CameraSetTargetFn setTarget;
-    CameraSetTargetFn setTargetReticleOverride;
+    CameraSetTargetReticleOverrideFn setTargetReticleOverride;
     int (*isZooming)(void);
     CameraUpdateTargetFeedbackFn updateTargetFeedback;
     void (*minimapShowHelpTextForTarget)(int textId, int arg1, int arg2, int arg3);
@@ -62,6 +63,7 @@ STATIC_ASSERT(offsetof(CameraInterface, loadTriggeredCamAction) == 0x24);
 STATIC_ASSERT(offsetof(CameraInterface, setFocus) == 0x28);
 STATIC_ASSERT(offsetof(CameraInterface, getRelativePosition) == 0x38);
 STATIC_ASSERT(offsetof(CameraInterface, setTarget) == 0x48);
+STATIC_ASSERT(offsetof(CameraInterface, setTargetReticleOverride) == 0x4C);
 STATIC_ASSERT(offsetof(CameraInterface, updateTargetFeedback) == 0x54);
 STATIC_ASSERT(offsetof(CameraInterface, setLetterbox) == 0x5C);
 STATIC_ASSERT(offsetof(CameraInterface, releaseAction) == 0x60);

@@ -1,4 +1,5 @@
 #include "main/dll/explodable.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -479,11 +480,10 @@ void largecrate_free(int obj) {
     Resource_Release(lbl_803DDAC8);
 }
 
-extern int *gCameraInterface;
 #pragma scheduling off
 int LargeCrate_SeqFn(int *obj) {
     if (((GameObject *)obj)->unkB4 != -1) {
-        ((void (*)(int*))((void**)*gCameraInterface)[19])(obj);
+        (*gCameraInterface)->setTargetReticleOverride((int)obj);
     }
     return 0;
 }

@@ -1089,7 +1089,6 @@ extern u8 lbl_803DCAE4;
 extern u8 lbl_8033C3B8[];
 extern u8 lbl_8033C378[];
 extern char sMainFinishedInitMessage[];
-extern GameUIInterface **gGameUIInterface;
 extern void *lbl_803DCA94;
 extern void *gPlayerInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;

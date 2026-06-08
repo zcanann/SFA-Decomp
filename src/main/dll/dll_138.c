@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/dll_138.h"
 #include "main/dll/pushable.h"
@@ -29,7 +30,6 @@ extern int ObjMsg_Pop(int obj, int *outMessage, int *outSender, int *outParam);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
 
-extern void **gCameraInterface;
 extern f64 DOUBLE_803e4210;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E41C0;
@@ -313,7 +313,7 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
   iVar3 = *(PushableState **)(param_1 + 0x5c);
   iVar3->savePosDelay = 0x3c;
   if (param_1[0x5a] != -1) {
-    (*(void (**)(short *))((char *)*gCameraInterface + 0x4c))(param_1);
+    (*gCameraInterface)->setTargetReticleOverride((int)param_1);
   }
   *(short *)(param_3 + 0x70) = -1;
   if (*(char *)(param_3 + 0x56) != '\0') {
