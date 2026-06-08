@@ -199,7 +199,7 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd720;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803dd968;
 extern undefined4 DAT_803dd96c;
@@ -3814,7 +3814,7 @@ void FUN_801365c4(void)
     uVar4 = ObjGroup_ContainsObject(*piVar2,0x31);
     if ((((((uVar4 == 0) && ((double)FLOAT_803e306c < dVar8)) && (uVar5 == 0)) &&
          ((uVar6 != 0 && (*(short *)(*piVar2 + 0x46) != 0x851)))) &&
-        (iVar3 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(iVar3 + 0x14)), iVar3 != 0)) &&
+        (iVar3 = (*DAT_803dd72c)->isTimedEventActive(*(int *)(iVar3 + 0x14)), iVar3 != 0)) &&
        ((((int)uVar10 != 0 ||
          (((sVar1 = *(short *)(*piVar2 + 0x46), sVar1 != 0x3fe && (sVar1 != 0x4d7)) &&
           ((sVar1 != 0x27c && (sVar1 != 0x251)))))) &&

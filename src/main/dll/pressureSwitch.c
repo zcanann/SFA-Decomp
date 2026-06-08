@@ -40,7 +40,7 @@ extern undefined4 DAT_803dc8d8;
 extern undefined4 DAT_803dc8e0;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de6d0;
 extern undefined4 DAT_803de6d8;
 extern undefined4 DAT_803de6e0;
@@ -365,7 +365,7 @@ void FUN_8014e3a8(ushort *param_1)
   }
   else if ((((int)*(short *)(iVar3 + 0x20) == 0xffffffff) ||
            (uVar1 = GameBit_Get((int)*(short *)(iVar3 + 0x20)), uVar1 == 0)) &&
-          (iVar3 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(iVar3 + 0x14)), iVar3 != 0))
+          (iVar3 = (*DAT_803dd72c)->isTimedEventActive(*(int *)(iVar3 + 0x14)), iVar3 != 0))
   {
     param_1[0x7a] = 0;
     param_1[0x7b] = 0;
