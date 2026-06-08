@@ -14488,7 +14488,7 @@ void boneParticleEffect_spawnAtBones(void *obj, int effectId, void *extraArg, u8
 
   model = Obj_GetActiveModel();
   for (i = 0; i < *(u8 *)(*(int *)model + 0xf3); i++) {
-    if (randomGetRange(1, 0x64) <= prob) {
+    if ((int)randomGetRange(1, 0x64) <= prob) {
       void *mtx;
       data.x = lbl_803DF4A8;
       data.y = lbl_803DF4A8;
