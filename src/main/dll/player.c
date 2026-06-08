@@ -8,6 +8,7 @@
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/screen_transition.h"
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
 #include "main/dll/player_state.h"
@@ -6487,7 +6488,7 @@ int fn_802AD2F4(int obj, int inner, int state)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void Pause_ResetMenuFrameCounter(void);
 extern int getSkyColorFn_80088e30(int idx);
 extern void objAudioFn_8006edcc();
@@ -6701,7 +6702,7 @@ void playerUpdate(int obj)
             fn_802AF7F8(obj, inner);
             playerProcessQueuedItemCommand(obj, inner);
             if (((ByteFlags *)((char *)inner + 0x3f3))->b20 != 0 &&
-                (*(int (*)(void))(*(int *)(*gScreenTransitionInterface + 0x14)))() != 0) {
+                (*gScreenTransitionInterface)->isFinished() != 0) {
                 ((MapEventInterface *)*gMapEventInterface)->finishCurrentEvent(
                     (MapEventInterface *)*gMapEventInterface);
             }
@@ -6713,7 +6714,7 @@ void playerUpdate(int obj)
                         0, (u16)(((PlayerState *)inner)->unk81A == 0 ? 0x2d0 : 0x26));
                 }
                 ((ByteFlags *)((char *)inner + 0x3f3))->b20 = 1;
-                (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0x8)))(0x1e, 1);
+                (*gScreenTransitionInterface)->start(0x1e, 1);
                 Pause_ResetMenuFrameCounter();
             }
             if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0) {

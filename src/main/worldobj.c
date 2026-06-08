@@ -1,6 +1,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/screen_transition.h"
 
 typedef struct {
     f32 f0;
@@ -14,7 +15,7 @@ typedef struct {
 
 extern ExpgfxInterface **gExpgfxInterface;
 extern void ModelLightStruct_free(int model);
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void objRenderFn_8003b8f4(f32 e);
 extern f32 lbl_803E6678;
 extern int randomGetRange(int min, int max);
@@ -464,7 +465,7 @@ void worldobj_update(int obj) {
         }
         if (*(u8 *)(state + 0x27d) != 0) {
             if ((u8)fn_8012DDAC() == 0 &&
-                (*(int (*)(void))(*(int *)(*gScreenTransitionInterface + 0x14)))() != 0 &&
+                (*gScreenTransitionInterface)->isFinished() != 0 &&
                 lbl_803DDD34 == 0) {
                 if (*(void **)state == NULL) {
                     *(int *)state = objCreateLight(obj, 1);
@@ -655,7 +656,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
         break;
     case 0x740:
         if (*(u8 *)((char *)inner + 0x27d) != 0 && (u8)fn_8012DDAC() == 0 &&
-            (*(int (*)(void))(*(int *)(*gScreenTransitionInterface + 0x14)))() != 0) {
+            (*gScreenTransitionInterface)->isFinished() != 0) {
             if (lbl_803DDD34 != 0) {
                 lbl_803DDD34 = lbl_803DDD34 - 1;
             } else {
