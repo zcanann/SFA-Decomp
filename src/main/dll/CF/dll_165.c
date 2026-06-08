@@ -1,4 +1,5 @@
 #include "main/dll/CF/dll_165.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
@@ -12,7 +13,6 @@ extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
 
-extern int *gGameUIInterface;
 extern f32 lbl_803E3BBC;
 extern f32 lbl_803E3BF4;
 extern f32 lbl_803E3BF8;
@@ -178,8 +178,7 @@ int treasurechest_SeqFn(int obj, int unused, u8 *events)
     switch (eventId) {
     case 1:
       if (*(s16 *)(setup + 0x1c) != 0) {
-        (*(void (*)(int, int, int, int))(*(int *)(*gGameUIInterface + 0x38)))(
-            *(s16 *)(setup + 0x1c), 0xc8, 0x8c, 0);
+        (*gGameUIInterface)->showNpcDialogue(*(s16 *)(setup + 0x1c), 0xc8, 0x8c, 0);
       }
       break;
     case 2:

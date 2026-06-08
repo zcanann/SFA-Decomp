@@ -2,6 +2,7 @@
 #include "main/asset_load.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
@@ -211,7 +212,6 @@ extern void gameTextShow(int id);
 extern void Music_Trigger(int id, int value);
 extern void SCGameBitLatch_Update(int *state, int mask, int a, int b, int bit, int value);
 extern MapEventInterface **gMapEventInterface;
-extern int *gGameUIInterface;
 extern int *gSHthorntailAnimationInterface;
 extern f32 lbl_803E4A24;
 extern f32 timeDelta;
@@ -285,7 +285,7 @@ void dim_levelcontrol_update(int obj)
         t2 = GameBit_Get(0x3e3);
         st->unkC = (u8)(t2 & t);
         if (st->unkC != 0) {
-            (*(void (**)(int, int, int, int))(*(int *)gGameUIInterface + 0x38))(0x4ba, 0x14, 0x8c, 1);
+            (*gGameUIInterface)->showNpcDialogue(0x4ba, 0x14, 0x8c, 1);
         }
     }
     t = GameBit_Get(0x3e2);

@@ -173,7 +173,7 @@ void cnthitobjec_update(int obj)
 int mcupgrade_SeqFn(int obj, int p2, int setup)
 {
     if (*(u8 *)(setup + 0x8b) != 0) {
-        (*(void (**)(int, int, int, int))(*gGameUIInterface + 0x38))(
+        (*gGameUIInterface)->showNpcDialogue(
             *(s16 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x1a), 0x14, 0x8c, 0);
     }
     return 0;

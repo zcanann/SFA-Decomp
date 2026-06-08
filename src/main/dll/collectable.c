@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/expgfx.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "dolphin/mtx.h"
 #include "main/dll/collectable.h"
@@ -1217,7 +1218,6 @@ typedef struct {
   u16 b;
 } TrickySfxPair;
 
-extern int *gGameUIInterface;
 extern int lbl_802C21C8[];
 extern TrickySfxPair lbl_803E23C4;
 extern f32 lbl_803E2408;
@@ -1417,10 +1417,10 @@ void Tricky_update(int obj)
     *(int *)&((TrickyState *)state)->unk24 = 0;
   }
   if ((((TrickyState *)state)->unk54 & 0x10) != 0 &&
-      (*(int (**)(int))(*(int *)gGameUIInterface + 0x20))(0xc1) != 0) {
+      (*gGameUIInterface)->isEventReady(0xc1) != 0) {
     cmd = 0;
   } else {
-    cmd = (*(int (**)(void *,int))(*(int *)gGameUIInterface + 0x24))(&cmdQuery,5);
+    cmd = (*gGameUIInterface)->isOneOfItemsBeingUsed((s32 *)&cmdQuery, 5);
   }
   p = state;
   count = ((TrickyState *)state)->unk798;
