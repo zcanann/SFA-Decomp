@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/dll/dim_tricky.h"
 #include "main/effect_interfaces.h"
+#include "main/obj_placement.h"
 #include "main/resource.h"
 
 
@@ -37,13 +38,20 @@ typedef struct Dll19EState {
 } Dll19EState;
 
 typedef struct Dll19ESetup {
-  u8 pad00[0x18];
+  ObjPlacement base;
   s8 objectType;
   u8 mode;
   s16 scaleTimer;
   s16 sequenceIndex;
   s16 gameBitId;
 } Dll19ESetup;
+
+STATIC_ASSERT(sizeof(Dll19ESetup) == 0x20);
+STATIC_ASSERT(offsetof(Dll19ESetup, objectType) == 0x18);
+STATIC_ASSERT(offsetof(Dll19ESetup, mode) == 0x19);
+STATIC_ASSERT(offsetof(Dll19ESetup, scaleTimer) == 0x1A);
+STATIC_ASSERT(offsetof(Dll19ESetup, sequenceIndex) == 0x1C);
+STATIC_ASSERT(offsetof(Dll19ESetup, gameBitId) == 0x1E);
 
 /*
  * --INFO--

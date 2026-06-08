@@ -1,5 +1,6 @@
 #include "main/dll/babycloudrunner.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objseq.h"
 
 extern void objRenderFn_80041018(void);
@@ -12,13 +13,14 @@ extern f32 lbl_803E384C;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 typedef struct BabyCloudRunnerPlacement {
-  u8 pad00[0x18];
+  ObjPlacement base;
   s16 gateGameBit;
   s16 rememberedGameBit;
   u8 targetGroup;
   u8 triggerIdMin;
   u8 triggerIdMax;
   u8 flags;
+  u8 pad20[0x24 - 0x20];
 } BabyCloudRunnerPlacement;
 
 typedef struct BabyCloudRunnerState {
@@ -30,6 +32,7 @@ typedef struct BabyCloudRunnerState {
 } BabyCloudRunnerState;
 
 STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x8);
+STATIC_ASSERT(sizeof(BabyCloudRunnerPlacement) == 0x24);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, gateGameBit) == 0x18);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, rememberedGameBit) == 0x1A);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, targetGroup) == 0x1C);

@@ -2,6 +2,7 @@
 #include "main/dll/DF/DFlantern.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/obj_placement.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
@@ -115,7 +116,7 @@ typedef struct DfshShrineState {
 } DfshShrineState;
 
 typedef struct DfshShrinePlacement {
-    u8 pad00[0x18];
+    ObjPlacement base;
     s8 initialYaw;
     u8 pad19;
     s16 startDelay;
