@@ -4547,9 +4547,9 @@ void dbegg_init(int obj) {
     }
 }
 
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 void DFP_Torch_free(int obj) {
-    ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)obj);
+    (*gModgfxInterface)->detachSource((void *)obj);
     (*gExpgfxInterface)->freeObject((void *)obj);
 }
 
@@ -7038,7 +7038,7 @@ void DFP_Torch_update(int obj)
     extern uint GameBit_Get(int);
     extern void GameBit_Set(int, int);
     extern EffectInterface **gPartfxInterface;
-    extern int *gModgfxInterface;
+    extern ModgfxInterface **gModgfxInterface;
     extern EffectInterface **gExpgfxInterface;
     extern u8 lbl_803DDCE8;
     extern f32 timeDelta;
@@ -7113,7 +7113,7 @@ void DFP_Torch_update(int obj)
                 blob->flickerTimer = 1;
             } else {
                 Sfx_StopObjectChannel(obj, 0x40);
-                ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)obj);
+                (*gModgfxInterface)->detachSource((void *)obj);
                 ((ExpgfxInterface *)*gExpgfxInterface)->freeSource(obj);
                 if (blob->gameBit != -1) {
                     if (GameBit_Get(blob->gameBit) != 0) {

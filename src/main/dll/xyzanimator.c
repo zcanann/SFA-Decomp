@@ -1180,7 +1180,7 @@ void pollenfragment_initialise(void) {}
 void mikabomb_hitDetect(void) {}
 
 extern EffectInterface **gExpgfxInterface;
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern f32 lbl_803E313C;
 #pragma scheduling off
 #pragma peephole off
@@ -1226,7 +1226,7 @@ void mikabomb_free(int obj, int mode) {
         Obj_FreeObject(inner[0]);
         inner[0] = NULL;
     }
-    ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)obj);
+    (*gModgfxInterface)->detachSource((void *)obj);
 }
 #pragma peephole reset
 #pragma scheduling reset

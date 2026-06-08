@@ -28,7 +28,7 @@ extern f32 FLOAT_803e4ae0;
 
 extern void *lbl_803DBDE8;
 extern EffectInterface **gExpgfxInterface;
-extern void *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803E3E48;
@@ -481,7 +481,7 @@ int fxemit_getObjectTypeId(void)
 void fxemit_free(FxEmitObject *obj)
 {
     (*gExpgfxInterface)->freeObject(obj);
-    ((ModgfxInterface *)*(void **)gModgfxInterface)->freeSourceEffects(obj);
+    (*gModgfxInterface)->freeSourceEffects(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset

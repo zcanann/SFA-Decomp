@@ -129,7 +129,7 @@ typedef struct {
 } ScreenAnimTable;
 
 extern u8 lbl_80317BD8[];
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern f32 lbl_803E13A0;
 extern f32 lbl_803E13A4;
 extern f32 lbl_803E13A8;
@@ -343,8 +343,7 @@ void dll_9A_func03(int a, int b, int p, uint flags)
             hdr.bz = hdr.bz + *(f32 *)(p + 0x14);
         }
     }
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&hdr, 0, 3, lbl_80317B98, 1, &lbl_803DB958,
-                                                       0x31, 0);
+    (*gModgfxInterface)->spawnEffect(&hdr, 0, 3, lbl_80317B98, 1, &lbl_803DB958, 0x31, 0);
 }
 
 void dll_9B_func03(int a, int b, int p, uint flags)
@@ -491,8 +490,7 @@ void dll_9B_func03(int a, int b, int p, uint flags)
             hdr.bz = lbl_803E13A0 + *(f32 *)(p + 0x14);
         }
     }
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4,
-                                                       0x156, 0);
+    (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4, 0x156, 0);
 }
 
 /*
@@ -666,8 +664,7 @@ void dll_9C_func03(int a, int b, int p, uint flags)
             hdr.bz = lbl_803E13C8 + *(f32 *)(p + 0x14);
         }
     }
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4,
-                                                       0x154, 0);
+    (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4, 0x154, 0);
 }
 
 

@@ -4471,14 +4471,14 @@ int curve_getObjectTypeId(void) { return 0x0; }
 int dll_F7_getExtraSize(void) { return 0xc; }
 int dll_F7_getObjectTypeId(void) { return 0x2; }
 
-extern void *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDAB0;
 extern void *lbl_803DDAB4;
 
 #pragma scheduling off
 void dll_F7_free(int obj)
 {
-    ((ModgfxInterface *)*(void **)gModgfxInterface)->detachSource((void *)obj);
+    (*gModgfxInterface)->detachSource((void *)obj);
     Resource_Release(lbl_803DDAB0);
     Resource_Release(lbl_803DDAB4);
     lbl_803DDAB0 = NULL;
