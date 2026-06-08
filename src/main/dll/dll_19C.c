@@ -900,8 +900,8 @@ void SpiritPrize_update(int obj)
     u8 *params;
     SpiritPrizeState *state;
     int childObj;
-    int objectIndex;
     int objectCount;
+    int objectIndex;
     int *objects;
     int i;
 
@@ -924,11 +924,11 @@ void SpiritPrize_update(int obj)
 
     objectIndex = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)lbl_803DB411);
     if (objectIndex != 0 && ((GameObject *)obj)->unkB4 == -2) {
-        int prizeId;
         int matchingObj;
+        int prizeId;
         int duplicateCount;
 
-        prizeId = (s8)state->prizeId;
+        prizeId = *(s8 *)((u8 *)state + 0x57);
         matchingObj = 0;
         objects = ObjList_GetObjects(&objectIndex, &objectCount);
         duplicateCount = 0;
@@ -944,7 +944,7 @@ void SpiritPrize_update(int obj)
             }
             objectIndex++;
         }
-        if (duplicateCount < 2 && matchingObj != 0 && *(s16 *)(matchingObj + 0xb4) != -1) {
+        if (duplicateCount <= 1 && (void *)matchingObj != NULL && *(s16 *)(matchingObj + 0xb4) != -1) {
             *(s16 *)(matchingObj + 0xb4) = -1;
             (*gObjectTriggerInterface)->endSequence(prizeId);
         }
@@ -959,7 +959,7 @@ void SpiritPrize_update(int obj)
         player = Obj_GetPlayerObject();
         state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
         if ((s8)*(u8 *)(obj + 0xac) == -1 &&
-            (player == 0 || coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14)) == 0xb)) {
+            ((void *)player == NULL || coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14)) == 0xb)) {
             Sfx_PlayFromObject(obj, 0x4a0);
         }
     }
