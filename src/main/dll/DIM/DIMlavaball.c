@@ -149,7 +149,7 @@ extern undefined4 DAT_803ad580;
 extern undefined4 DAT_803ad584;
 extern undefined4 DAT_803ad588;
 extern undefined4 DAT_803ad58c;
-extern ObjectTriggerInterface **DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
@@ -662,10 +662,10 @@ void FUN_801a77a4(int param_1)
     }
     else {
       uVar1 = (uint)*(byte *)(iVar2 + 0x20);
-      (*DAT_803dd6d4)->preempt(param_1, *(s16 *)(iVar2 + 0x1c));
+      (*gObjectTriggerInterface)->preempt(param_1, *(s16 *)(iVar2 + 0x1c));
     }
     if (*(char *)(iVar2 + 0x1e) != -1) {
-      (*DAT_803dd6d4)->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, uVar1);
+      (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, uVar1);
     }
     pcVar3[1] = pcVar3[1] & 0xfe;
   }
@@ -1497,7 +1497,6 @@ void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 #pragma scheduling off
 #pragma peephole off
 void MoonSeedBush_update(int obj) {

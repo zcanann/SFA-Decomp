@@ -66,7 +66,7 @@ extern short DAT_80323c58;
 extern undefined4 DAT_803dcafc;
 extern undefined4 DAT_803dcb00;
 extern undefined4* DAT_803dd6d0;
-extern ObjectTriggerInterface **DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd708;
 extern MapEventInterface **DAT_803dd72c;
 extern f64 DOUBLE_803e5020;
@@ -750,11 +750,11 @@ void FUN_801a4520(int param_1)
   if (*(int *)(param_1 + 0xf4) == 0) {
     iVar1 = *(int *)(param_1 + 0x4c);
     if ((*(short *)(iVar1 + 0x1c) != 0) && (**(byte **)(param_1 + 0xb8) >> 5 != 0)) {
-      (*DAT_803dd6d4)->preempt(param_1, *(s16 *)(iVar1 + 0x1c));
+      (*gObjectTriggerInterface)->preempt(param_1, *(s16 *)(iVar1 + 0x1c));
     }
     iVar1 = (int)*(char *)(iVar1 + 0x1e);
     if (iVar1 != -1) {
-      (*DAT_803dd6d4)->runSequence(iVar1, (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence(iVar1, (void *)param_1, -1);
     }
     *(undefined4 *)(param_1 + 0xf4) = 1;
   }
@@ -1826,8 +1826,6 @@ int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
     return result;
 }
 #pragma scheduling reset
-extern ObjectTriggerInterface **gObjectTriggerInterface;
-
 /* slidingdoor_update: triggered-once handler. If obj->_f4 is already set,
  * skip. Otherwise: if data->_1c (event id) is non-zero AND obj->_b8->_0
  * bits 5..7 are set, preempt the event. Then if (s8)data->_1e is not -1,
