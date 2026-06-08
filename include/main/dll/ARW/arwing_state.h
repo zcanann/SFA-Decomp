@@ -19,7 +19,7 @@ typedef struct ArwingState {
     f32 unk24;
     f32 unk28;
     f32 camPos[3];       /* 0x02c: pushed to the camera each update */
-    f32 unk38;
+    f32 rootMotionScale;
     f32 velTargetX;      /* 0x03c: (vel - velTarget) * accel integrates vel (fn_8022AECC) */
     f32 velTargetY;
     f32 velTargetZ;
@@ -83,13 +83,13 @@ typedef struct ArwingState {
     f32 rotZBlend;
     f32 rotZBlendRate;
     f32 rotZBlendThreshold;
-    int unk398;
-    f32 unk39C;
-    f32 unk3A0;
-    f32 unk3A4;
-    f32 unk3A8;
-    f32 unk3AC;
-    f32 unk3B0;
+    int barrelRollAngle;
+    f32 barrelRollSpeed;
+    f32 barrelRollDirection;
+    f32 barrelRollDecelRange;
+    f32 barrelRollSpeedScale;
+    f32 barrelRollMaxSpeedScale;
+    f32 barrelRollAccelScale;
     f32 bobSpeedThreshold;
     f32 bobRotZRate;
     f32 bobRotZAmp;
@@ -107,8 +107,8 @@ typedef struct ArwingState {
     f32 bobBlendRate;
     f32 stickX;          /* 0x3e4: padGetStickX(0) normalized */
     f32 stickY;
-    f32 unk3EC;
-    f32 unk3F0;
+    f32 rTriggerTrim;
+    f32 lTriggerTrim;
     u16 inputFlags;      /* 0x3f4: 0x100 fire, 0x400 roll-R, 0x800 roll-L */
     u16 inputFlagsPrev;  /* 0x3f6 */
     u16 inputFlags2;     /* 0x3f8: 0x100 fire held */
@@ -125,17 +125,17 @@ typedef struct ArwingState {
     int thrusterL;       /* 0x418: def 0x6de exhaust objects */
     int thrusterR;       /* 0x41c */
     u8 pad420[0x18];
-    int unk438;
-    u8 unk43C;
+    int activeBombObj;
+    u8 bombVolleyMode;
     u8 bombSide;         /* 0x43d */
     u8 pad43E[2];
-    f32 unk440;
-    s16 unk444;
-    s16 unk446;
-    f32 unk448;
+    f32 bombCooldown;
+    s16 bombFireDelay;
+    s16 bombProjectileParam;
+    f32 bombProjectileLifetime;
     u8 bombCount;        /* 0x44c */
     u8 maxBombCount;     /* 0x44d */
-    u16 unk44E;          /* engine pitch fed to fn_8022F270 */
+    u16 enginePitch;     /* fed to fn_8022F270 */
     void *light;         /* 0x450 */
     int wingVec[4];      /* 0x454: objModelGetVecFn slots 0-3 */
     f32 wingFlexScale;   /* 0x464 */

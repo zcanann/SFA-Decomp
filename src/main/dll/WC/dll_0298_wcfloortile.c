@@ -337,26 +337,26 @@ void fn_8022AECC(int obj, int p)
 
 #pragma scheduling off
 void fn_8022B8A0(int p, int q) {
-    if (*(void * *)&((ArwingState *)q)->unk438 != NULL)
+    if (*(void * *)&((ArwingState *)q)->activeBombObj != NULL)
         return;
     {
-        f32 t = ((ArwingState *)q)->unk440;
+        f32 t = ((ArwingState *)q)->bombCooldown;
         if (t > lbl_803E6ECC) {
-            ((ArwingState *)q)->unk440 = t - timeDelta;
-            if (((ArwingState *)q)->unk440 >= lbl_803E6ECC)
+            ((ArwingState *)q)->bombCooldown = t - timeDelta;
+            if (((ArwingState *)q)->bombCooldown >= lbl_803E6ECC)
                 return;
-            ((ArwingState *)q)->unk440 = lbl_803E6ECC;
+            ((ArwingState *)q)->bombCooldown = lbl_803E6ECC;
         }
     }
     if (((ArwingState *)q)->inputFlags & 0x200) {
-        if ((s8) ((ArwingState *)q)->unk43C == 1) {
+        if ((s8) ((ArwingState *)q)->bombVolleyMode == 1) {
             fn_8022B764(p, q, 0);
             fn_8022B764(p, q, 1);
         } else {
             fn_8022B764(p, q, ((ArwingState *)q)->bombSide);
             ((ArwingState *)q)->bombSide = (((ArwingState *)q)->bombSide ^ 1) & 0xff;
         }
-        ((ArwingState *)q)->unk440 = (f32)(u32) *(u16 *)&((ArwingState *)q)->unk444;
+        ((ArwingState *)q)->bombCooldown = (f32)(u32) *(u16 *)&((ArwingState *)q)->bombFireDelay;
     }
 }
 #pragma scheduling reset
@@ -387,9 +387,9 @@ void fn_8022B764(int p, int q, int idx) {
     *(u8 *)(setup + 0x18) = *(s16 *)(p + 4) >> 8;
     *(u8 *)(setup + 4) = 1;
     *(u8 *)(setup + 5) = 1;
-    ((ArwingState *)q)->unk438 = loadObjectAtObject(p);
-    fn_8022ED74(((ArwingState *)q)->unk438, *(u16 *)&((ArwingState *)q)->unk446);
-    fn_8022ECE0(((ArwingState *)q)->unk438, ((ArwingState *)q)->unk448);
+    ((ArwingState *)q)->activeBombObj = loadObjectAtObject(p);
+    fn_8022ED74(((ArwingState *)q)->activeBombObj, *(u16 *)&((ArwingState *)q)->bombProjectileParam);
+    fn_8022ECE0(((ArwingState *)q)->activeBombObj, ((ArwingState *)q)->bombProjectileLifetime);
     Sfx_PlayFromObject(p, SFXbaddie_rach_call3);
 }
 #pragma scheduling reset
@@ -465,16 +465,16 @@ void fn_8022A670(int obj, int state)
         ((ArwingState *)state)->stickY =
             ((ArwingState *)state)->stickY * (lbl_803E6ED0 - tv) + ny * tv;
     }
-    ((ArwingState *)state)->unk3EC = (f32)(u32)(u8)padGetRTrigger(0) / lbl_803E6ED4;
+    ((ArwingState *)state)->rTriggerTrim = (f32)(u32)(u8)padGetRTrigger(0) / lbl_803E6ED4;
     {
-        f32 rt = ((ArwingState *)state)->unk3EC;
-        ((ArwingState *)state)->unk3EC =
+        f32 rt = ((ArwingState *)state)->rTriggerTrim;
+        ((ArwingState *)state)->rTriggerTrim =
             (rt < lbl_803E6ECC) ? lbl_803E6ECC : ((rt > lbl_803E6ED0) ? lbl_803E6ED0 : rt);
     }
-    ((ArwingState *)state)->unk3F0 = -(f32)(u32)(u8)padGetLTrigger(0) / lbl_803E6ED4;
+    ((ArwingState *)state)->lTriggerTrim = -(f32)(u32)(u8)padGetLTrigger(0) / lbl_803E6ED4;
     {
-        f32 lt = ((ArwingState *)state)->unk3F0;
-        ((ArwingState *)state)->unk3F0 =
+        f32 lt = ((ArwingState *)state)->lTriggerTrim;
+        ((ArwingState *)state)->lTriggerTrim =
             (lt < lbl_803E6ED8) ? lbl_803E6ED8 : ((lt > lbl_803E6ECC) ? lbl_803E6ECC : lt);
     }
     ((ArwingState *)state)->inputFlags = (u16)getButtonsJustPressed(0);
@@ -485,20 +485,20 @@ void fn_8022A670(int obj, int state)
         if ((btn & 0x20) != 0) {
             Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
             ((ArwingState *)state)->mode = 1;
-            ((ArwingState *)state)->unk398 = ((GameObject *)obj)->anim.rotZ;
-            ((ArwingState *)state)->unk3A0 = ((ArwingState *)state)->unk39C;
-            ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
-            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX * ((ArwingState *)state)->unk3AC;
-            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX * ((ArwingState *)state)->unk3B0;
+            ((ArwingState *)state)->barrelRollAngle = ((GameObject *)obj)->anim.rotZ;
+            ((ArwingState *)state)->barrelRollDirection = ((ArwingState *)state)->barrelRollSpeed;
+            ((ArwingState *)state)->barrelRollSpeedScale = lbl_803E6ED0;
+            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX * ((ArwingState *)state)->barrelRollMaxSpeedScale;
+            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX * ((ArwingState *)state)->barrelRollAccelScale;
             arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 1, 0);
         } else if ((btn & 0x40) != 0) {
             Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
             ((ArwingState *)state)->mode = 1;
-            ((ArwingState *)state)->unk398 = ((GameObject *)obj)->anim.rotZ;
-            ((ArwingState *)state)->unk3A0 = -((ArwingState *)state)->unk39C;
-            ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
-            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX * ((ArwingState *)state)->unk3AC;
-            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX * ((ArwingState *)state)->unk3B0;
+            ((ArwingState *)state)->barrelRollAngle = ((GameObject *)obj)->anim.rotZ;
+            ((ArwingState *)state)->barrelRollDirection = -((ArwingState *)state)->barrelRollSpeed;
+            ((ArwingState *)state)->barrelRollSpeedScale = lbl_803E6ED0;
+            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX * ((ArwingState *)state)->barrelRollMaxSpeedScale;
+            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX * ((ArwingState *)state)->barrelRollAccelScale;
             arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 1, 1);
         }
     }
@@ -513,53 +513,53 @@ void fn_8022AB68(int obj, int state)
     int cur;
     int d;
 
-    ((ArwingState *)state)->unk398 =
-        (int)(timeDelta * (((ArwingState *)state)->unk3A0 * ((ArwingState *)state)->unk3A8) +
-              (f32) ((ArwingState *)state)->unk398);
+    ((ArwingState *)state)->barrelRollAngle =
+        (int)(timeDelta * (((ArwingState *)state)->barrelRollDirection * ((ArwingState *)state)->barrelRollSpeedScale) +
+              (f32) ((ArwingState *)state)->barrelRollAngle);
     ((GameObject *)obj)->anim.rotZ =
-        (s16)(int)(timeDelta * (((ArwingState *)state)->unk3A0 * ((ArwingState *)state)->unk3A8) +
+        (s16)(int)(timeDelta * (((ArwingState *)state)->barrelRollDirection * ((ArwingState *)state)->barrelRollSpeedScale) +
                    (f32) * (s16 *)(obj + 4));
-    if (((ArwingState *)state)->unk3A0 > lbl_803E6ECC) {
+    if (((ArwingState *)state)->barrelRollDirection > lbl_803E6ECC) {
         tgt = ((ArwingState *)state)->rotZTrimCur;
-        cur = ((ArwingState *)state)->unk398;
+        cur = ((ArwingState *)state)->barrelRollAngle;
         if (cur > tgt + 0xffff) {
             ((ArwingState *)state)->mode = 0;
-            ((ArwingState *)state)->rotZTrimCur = ((ArwingState *)state)->unk398 - 0xffff;
+            ((ArwingState *)state)->rotZTrimCur = ((ArwingState *)state)->barrelRollAngle - 0xffff;
             ((ArwingState *)state)->rotZBlend = lbl_803E6ECC;
-            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX / ((ArwingState *)state)->unk3AC;
-            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX / ((ArwingState *)state)->unk3B0;
+            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX / ((ArwingState *)state)->barrelRollMaxSpeedScale;
+            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX / ((ArwingState *)state)->barrelRollAccelScale;
             arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
         } else if (cur > tgt + 0x8000) {
             d = cur - (u16)tgt;
             if (d > 0x8000) d -= 0xffff;
             if (d < -0x8000) d += 0xffff;
             if (d < 0) d = -d;
-            ((ArwingState *)state)->unk3A8 = (f32)d / ((ArwingState *)state)->unk3A4;
-            if (((ArwingState *)state)->unk3A8 < lbl_803E6EF8)
-                ((ArwingState *)state)->unk3A8 = lbl_803E6EF8;
-            else if (((ArwingState *)state)->unk3A8 > lbl_803E6ED0)
-                ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
+            ((ArwingState *)state)->barrelRollSpeedScale = (f32)d / ((ArwingState *)state)->barrelRollDecelRange;
+            if (((ArwingState *)state)->barrelRollSpeedScale < lbl_803E6EF8)
+                ((ArwingState *)state)->barrelRollSpeedScale = lbl_803E6EF8;
+            else if (((ArwingState *)state)->barrelRollSpeedScale > lbl_803E6ED0)
+                ((ArwingState *)state)->barrelRollSpeedScale = lbl_803E6ED0;
         }
     } else {
         tgt = ((ArwingState *)state)->rotZTrimCur;
-        cur = ((ArwingState *)state)->unk398;
+        cur = ((ArwingState *)state)->barrelRollAngle;
         if (cur < tgt - 0xffff) {
             ((ArwingState *)state)->mode = 0;
-            ((ArwingState *)state)->rotZTrimCur = ((ArwingState *)state)->unk398 + 0xffff;
+            ((ArwingState *)state)->rotZTrimCur = ((ArwingState *)state)->barrelRollAngle + 0xffff;
             ((ArwingState *)state)->rotZBlend = lbl_803E6ECC;
-            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX / ((ArwingState *)state)->unk3AC;
-            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX / ((ArwingState *)state)->unk3B0;
+            ((ArwingState *)state)->maxSpeedX = ((ArwingState *)state)->maxSpeedX / ((ArwingState *)state)->barrelRollMaxSpeedScale;
+            ((ArwingState *)state)->accelX = ((ArwingState *)state)->accelX / ((ArwingState *)state)->barrelRollAccelScale;
             arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
         } else if (cur > tgt - 0x8000) {
             d = cur - (u16)tgt;
             if (d > 0x8000) d -= 0xffff;
             if (d < -0x8000) d += 0xffff;
             if (d < 0) d = -d;
-            ((ArwingState *)state)->unk3A8 = (f32)d / ((ArwingState *)state)->unk3A4;
-            if (((ArwingState *)state)->unk3A8 < lbl_803E6EF8)
-                ((ArwingState *)state)->unk3A8 = lbl_803E6EF8;
-            else if (((ArwingState *)state)->unk3A8 > lbl_803E6ED0)
-                ((ArwingState *)state)->unk3A8 = lbl_803E6ED0;
+            ((ArwingState *)state)->barrelRollSpeedScale = (f32)d / ((ArwingState *)state)->barrelRollDecelRange;
+            if (((ArwingState *)state)->barrelRollSpeedScale < lbl_803E6EF8)
+                ((ArwingState *)state)->barrelRollSpeedScale = lbl_803E6EF8;
+            else if (((ArwingState *)state)->barrelRollSpeedScale > lbl_803E6ED0)
+                ((ArwingState *)state)->barrelRollSpeedScale = lbl_803E6ED0;
         }
     }
 }

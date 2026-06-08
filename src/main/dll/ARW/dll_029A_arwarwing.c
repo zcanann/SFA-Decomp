@@ -149,7 +149,7 @@ void fn_8022D4CC(int arwing, int in)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D4F8(int arwing) { (*(ArwingState **)(arwing + 0xb8))->unk438 = 0; }
+void fn_8022D4F8(int arwing) { (*(ArwingState **)(arwing + 0xb8))->activeBombObj = 0; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -472,7 +472,7 @@ void arwarwing_update(int obj)
         ((ArwingState *)state)->rotZTarget = (int)(((ArwingState *)state)->stickX * ((ArwingState *)state)->rotZRange);
         ((ArwingState *)state)->rotZTrimTarget =
             (int)(((ArwingState *)state)->rotZTrimRange *
-                  (((ArwingState *)state)->unk3F0 + ((ArwingState *)state)->unk3EC));
+                  (((ArwingState *)state)->lTriggerTrim + ((ArwingState *)state)->rTriggerTrim));
         fn_8022AECC(obj, state);
         arwarwing_updateWeaponFire(obj, state);
         fn_8022B8A0(obj, state);
@@ -643,7 +643,7 @@ void fn_8022C30C(int obj, int state)
         Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
     }
 
-    fn_8022F270(((ArwingState *)state)->escortObj, ((ArwingState *)state)->unk44E);
+    fn_8022F270(((ArwingState *)state)->escortObj, ((ArwingState *)state)->enginePitch);
 
     if (((ArwingState *)state)->rollCooldown <= lbl_803E6ECC) {
         if ((((ArwingState *)state)->flags477 & 0x2) == 0) {
@@ -829,13 +829,13 @@ void fn_8022CDEC(int obj, int state)
         ((ArwingState *)state)->rotZTrimGain = lbl_803E6F9C;
         ((ArwingState *)state)->rotZBlendThreshold = lbl_803E6FA0;
         ((ArwingState *)state)->rotZBlendRate = lbl_803E6FA4;
-        ((ArwingState *)state)->unk39C = lbl_803E6FA8;
+        ((ArwingState *)state)->barrelRollSpeed = lbl_803E6FA8;
         ((ArwingState *)state)->unk3FA = 0x19;
-        ((ArwingState *)state)->unk3A4 = lbl_803E6FAC;
-        ((ArwingState *)state)->unk38 = lbl_803E6FB0;
+        ((ArwingState *)state)->barrelRollDecelRange = lbl_803E6FAC;
+        ((ArwingState *)state)->rootMotionScale = lbl_803E6FB0;
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E6FB0;
-        ((ArwingState *)state)->unk3AC = lbl_803E6FB4;
-        ((ArwingState *)state)->unk3B0 = lbl_803E6FB8;
+        ((ArwingState *)state)->barrelRollMaxSpeedScale = lbl_803E6FB4;
+        ((ArwingState *)state)->barrelRollAccelScale = lbl_803E6FB8;
         ((ArwingState *)state)->speedScaleRollL = lbl_803E6FBC;
         ((ArwingState *)state)->speedScaleRollR = lbl_803E6F64;
         ((ArwingState *)state)->accelZRollL = lbl_803E6FD4;
@@ -856,16 +856,16 @@ void fn_8022CDEC(int obj, int state)
         *(s16 *)&((ArwingState *)state)->projLifetime = 0x28;
         ((ArwingState *)state)->projSpeed = lbl_803E6FE0;
         *(s16 *)&((ArwingState *)state)->fireDelay = 0x6;
-        ((ArwingState *)state)->unk446 = 0x5a;
-        ((ArwingState *)state)->unk448 = lbl_803E6F34;
-        ((ArwingState *)state)->unk444 = 0xc;
+        ((ArwingState *)state)->bombProjectileParam = 0x5a;
+        ((ArwingState *)state)->bombProjectileLifetime = lbl_803E6F34;
+        ((ArwingState *)state)->bombFireDelay = 0xc;
         ((ArwingState *)state)->maxBombCount = 0x3;
         ((ArwingState *)state)->wingVec[0] = objModelGetVecFn_800395d8(obj, 0);
         ((ArwingState *)state)->wingVec[1] = objModelGetVecFn_800395d8(obj, 1);
         ((ArwingState *)state)->wingVec[2] = objModelGetVecFn_800395d8(obj, 2);
         ((ArwingState *)state)->wingVec[3] = objModelGetVecFn_800395d8(obj, 3);
         ((ArwingState *)state)->wingFlexScale = lbl_803E6F64;
-        *(s16 *)&((ArwingState *)state)->unk44E = 0xaf;
+        *(s16 *)&((ArwingState *)state)->enginePitch = 0xaf;
         ((ArwingState *)state)->maxShield = *(u8 *)(mev + 0x1);
         ((ArwingState *)state)->shield = ((ArwingState *)state)->maxShield;
         ((ArwingState *)state)->bobSpeedThreshold = lbl_803E6EF8;
@@ -914,12 +914,12 @@ void fn_8022D308(int obj)
     state->rotZTrimGain = lbl_803E6F9C;
     state->rotZBlendThreshold = lbl_803E6FA0;
     state->rotZBlendRate = lbl_803E6FA4;
-    state->unk39C = lbl_803E6FA8;
+    state->barrelRollSpeed = lbl_803E6FA8;
     state->unk3FA = 0x19;
-    state->unk3A4 = lbl_803E6FAC;
-    state->unk38 = lbl_803E6FB0;
-    state->unk3AC = lbl_803E6FB4;
-    state->unk3B0 = lbl_803E6FB8;
+    state->barrelRollDecelRange = lbl_803E6FAC;
+    state->rootMotionScale = lbl_803E6FB0;
+    state->barrelRollMaxSpeedScale = lbl_803E6FB4;
+    state->barrelRollAccelScale = lbl_803E6FB8;
     state->speedScaleRollL = lbl_803E6FBC;
     state->speedScaleRollR = lbl_803E6F64;
     state->rollEnergy = state->rollEnergyMax;
