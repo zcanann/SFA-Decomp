@@ -1762,7 +1762,7 @@ void Tricky_update(int obj)
     }
     p = p - 8;
   }
-  if (getXZDistance((f32 *)(obj + 0x18),(f32 *)(((TrickyState *)state)->playerObj + 0x18)) >= lbl_803E2538 &&
+  if (getXZDistance(&((GameObject *)obj)->anim.worldPosX,(f32 *)(((TrickyState *)state)->playerObj + 0x18)) >= lbl_803E2538 &&
       GameBit_Get(0x4e4) != 0) {
     ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 | 0x10000;
   }
@@ -2879,7 +2879,7 @@ void Tricky_hitDetect(int obj)
   else {
     firepipeObj = ObjList_FindObjectById(TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID);
     if ((firepipeObj != (void *)0) &&
-        (getXZDistance((f32 *)(obj + 0x18),(f32 *)((int)firepipeObj + 0x18)) < lbl_803E2540)) {
+        (getXZDistance(&((GameObject *)obj)->anim.worldPosX,(f32 *)((int)firepipeObj + 0x18)) < lbl_803E2540)) {
       ((TrickyStatusFlags58 *)&((TrickyState *)state)->unk58)->heightTracking = 1;
       ((TrickyState *)state)->unk5C = TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID;
       ((TrickyState *)state)->unk60 = lbl_803E23DC;
@@ -3856,9 +3856,9 @@ u8 *Tricky_findNearestGroup4BObject(u8 *obj, TrickyState *state) {
 
     result = 0;
     objs = ObjGroup_GetObjects(0x4b, count);
-    d = getXZDistance((f32*)((char*)state->playerObj + 0x18), (f32*)((char*)obj + 0x18));
+    d = getXZDistance((f32*)((char*)state->playerObj + 0x18), &((GameObject *)obj)->anim.worldPosX);
     if ((d >= lbl_803E2538) || (state->unk71C > lbl_803E23DC)) {
-        if (ViewFrustum_IsSphereVisible((f32*)((char*)obj + 0xc), lbl_803E2500) == 0) {
+        if (ViewFrustum_IsSphereVisible(&((GameObject *)obj)->anim.localPosX, lbl_803E2500) == 0) {
             bestD = lbl_803E2418;
             for (i = 0; i < count[0]; i++) {
                 f32 cd = getXZDistance((f32*)((char*)state->playerObj + 0x18), (f32*)((char*)*objs + 0x18));
