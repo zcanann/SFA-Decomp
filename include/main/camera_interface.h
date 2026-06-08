@@ -4,16 +4,19 @@
 #include "global.h"
 
 typedef int (*CameraGetModeFn)(void);
+typedef void *(*CameraGetCurrentViewSlotFn)(void);
 typedef void (*CameraSetModeFn)(int mode, int arg1, int arg2, int flags, void *params,
                                 int blendFrames, int priority);
 
 typedef struct CameraInterface {
-    u8 pad00[0x10];
+    u8 pad00[0x0C];
+    CameraGetCurrentViewSlotFn getCurrentViewSlot;
     CameraGetModeFn getMode;
     u8 pad14[0x1C - 0x14];
     CameraSetModeFn setMode;
 } CameraInterface;
 
+STATIC_ASSERT(offsetof(CameraInterface, getCurrentViewSlot) == 0x0C);
 STATIC_ASSERT(offsetof(CameraInterface, getMode) == 0x10);
 STATIC_ASSERT(offsetof(CameraInterface, setMode) == 0x1C);
 

@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/camera_interface.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
 #include "main/sky_80080E58_shared.h"
@@ -15,7 +16,6 @@ extern char sObjLoadAnimdataNullACRomTabWarning[];
 extern char sSeqAAnimDataTag;
 extern char sSeqBAnimDataTag;
 extern void endObjSequence(int seq);
-extern int *gCameraInterface;
 extern u8 lbl_80399E50[];
 extern int lbl_803DD064;
 extern int lbl_803DD084;
@@ -884,11 +884,10 @@ void ObjSeq_updateCamera(void)
             } else {
                 block.fov = lbl_803DB710;
             }
-            (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                0x4c, 0, 1, 0x144, &block, model[0x24], 0xff);
+            (*gCameraInterface)->setMode(0x4c, 0, 1, 0x144, &block, model[0x24], 0xff);
             lbl_803DD110 = 1;
         } else {
-            camObj = (u8 *)(*(void *(*)(void))(*(int *)(*gCameraInterface + 0xc)))();
+            camObj = (*gCameraInterface)->getCurrentViewSlot();
             *(f32 *)(camObj + 0x18) = x;
             *(f32 *)(camObj + 0x1c) = y;
             *(f32 *)(camObj + 0x20) = z;
@@ -920,8 +919,7 @@ void ObjSeq_updateCamera(void)
                 case 0x47:
                     mode47.mode = lbl_803DD108;
                     mode47.flag = (u8)lbl_803DD104;
-                    (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                        0x47, 1, 3, 8, &mode47, lbl_803DD100, 0xff);
+                    (*gCameraInterface)->setMode(0x47, 1, 3, 8, &mode47, lbl_803DD100, 0xff);
                     break;
                 case 0x48:
                     mode48.mode = lbl_803DD108;
@@ -929,12 +927,10 @@ void ObjSeq_updateCamera(void)
                     if (code == 0) {
                         mode48.flag = 1;
                     }
-                    (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                        0x48, 1, 3, 8, &mode48, code, 0xff);
+                    (*gCameraInterface)->setMode(0x48, 1, 3, 8, &mode48, code, 0xff);
                     break;
                 case 0x4a:
-                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                        0x4a, 1, 0, 0, 0, lbl_803DD100, 0xff);
+                    (*gCameraInterface)->setMode(0x4a, 1, 0, 0, NULL, lbl_803DD100, 0xff);
                     break;
                 case 0x4c:
                     block.posB[0] = lbl_803DD0B0;
@@ -944,52 +940,43 @@ void ObjSeq_updateCamera(void)
                     block.rot[1] = (s16)lbl_803DD09C;
                     block.rot[2] = (s16)lbl_803DD098;
                     block.fov = lbl_803DD0A4;
-                    (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                        0x4c, 1, 0, 0x144, &block, 0, 0xff);
+                    (*gCameraInterface)->setMode(0x4c, 1, 0, 0x144, &block, 0, 0xff);
                     break;
                 case 0x45:
-                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                        0x45, 1, 0, 0, 0, lbl_803DD100, 0xff);
+                    (*gCameraInterface)->setMode(0x45, 1, 0, 0, NULL, lbl_803DD100, 0xff);
                     break;
                 case 0x44:
                     if (lbl_803DD108 != 0) {
                         fblock.a = lbl_803DEFF4;
                         fblock.b = lbl_803DEFF8;
                         fblock.c = 5;
-                        (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                            0x44, 1, 1, 0xc, &fblock, 0, 0xff);
+                        (*gCameraInterface)->setMode(0x44, 1, 1, 0xc, &fblock, 0, 0xff);
                     } else {
                         fblock.a = lbl_803DEFF4;
                         fblock.b = lbl_803DEFF8;
                         fblock.c = 0x1e;
-                        (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                            0x44, 1, 0, 0xc, &fblock, 0, 0xff);
+                        (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &fblock, 0, 0xff);
                     }
                     break;
                 case 0x49:
-                    (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                        0x49, 1, 0, lbl_803DD108, &lbl_803DD104, lbl_803DD100, 0xff);
+                    (*gCameraInterface)->setMode(0x49, 1, 0, lbl_803DD108, &lbl_803DD104, lbl_803DD100, 0xff);
                     break;
                 case 0x53:
-                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                        0x53, 1, 0, 0, 0, 0, 0xff);
+                    (*gCameraInterface)->setMode(0x53, 1, 0, 0, NULL, 0, 0xff);
                     break;
                 case 0x56:
-                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                        0x56, 1, lbl_803DD108, 0, 0, 0, 0);
+                    (*gCameraInterface)->setMode(0x56, 1, lbl_803DD108, 0, NULL, 0, 0);
                     break;
                 case 0x57:
-                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                        0x57, 0, 3, 0, 0, 0, 0);
-                    (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x28)))(
+                    (*gCameraInterface)->setMode(0x57, 0, 3, 0, NULL, 0, 0);
+                    (*(void (*)(int, int))(*(int *)((char *)*gCameraInterface + 0x28)))(
                         *(int *)ObjGroup_GetObjects(0xf, &groupObjs), 0);
                     break;
                 default:
                     if (lbl_803DD108 == 0) {
                         lbl_803DD108 = 1;
                     }
-                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                        0x42, 0, lbl_803DD108, 0, 0, lbl_803DD100, 0xff);
+                    (*gCameraInterface)->setMode(0x42, 0, lbl_803DD108, 0, NULL, lbl_803DD100, 0xff);
                     break;
                 }
             }
@@ -2445,7 +2432,7 @@ int ObjSeq_update(u8 *obj, f32 t)
 
         if (((ObjSeqState *)seq)->targetObj != NULL && *(s16 *)((u8 *)((ObjSeqState *)seq)->targetObj + 0xb4) != -1 &&
             (base[(s8)((ObjSeqState *)seq)->slot + 0x3538] & 0x10) == 0) {
-            (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x5c)))(0x41, 1);
+            (*(void (*)(int, int))(*(int *)((char *)*gCameraInterface + 0x5c)))(0x41, 1);
         }
 
         slot = (s8)((ObjSeqState *)seq)->slot;
@@ -3703,7 +3690,7 @@ int ObjSeq_ResolveAndAssignTargetObject(u8 *obj)
             lbl_803DD064 = 0;
         }
         if ((lbl_80399E50[(s8)seqObj[0x57]] & 0x10) == 0) {
-            (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x5c)))(0x41, 1);
+            (*(void (*)(int, int))(*(int *)((char *)*gCameraInterface + 0x5c)))(0x41, 1);
         }
         break;
     default:
