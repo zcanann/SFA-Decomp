@@ -57,17 +57,15 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
 
     objects = ObjGroup_GetObjects(0x50, &count);
     {
-        f32 strengthDiv = lbl_803E72C0;
-        f32 dyMax = lbl_803E72B4;
     for (i = 0; i < count; i++) {
         f32 objectStrength;
         s16 currentAngle;
 
         other = objects[i];
-        objectStrength = (f32)(u32)(*(u8 **)(other + 0x4c))[0x32] / strengthDiv;
+        objectStrength = (f32)(u32)(*(u8 **)(other + 0x4c))[0x32] / 10.0f;
         anyCurrent = 1;
         dy = *(f32 *)(other + 0x10) - ((GameObject *)obj)->anim.localPosY;
-        if ((dy <= dyMax) && (dy >= lbl_803E72B8)) {
+        if ((dy <= 200.0f) && (dy >= lbl_803E72B8)) {
             dx = *(f32 *)(other + 0xc) - ((GameObject *)obj)->anim.localPosX;
             dz = *(f32 *)(other + 0x14) - ((GameObject *)obj)->anim.localPosZ;
             currentAngle = (s16)(getAngle(dx, dz) + 0x84d0);
