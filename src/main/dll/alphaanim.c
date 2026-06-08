@@ -779,7 +779,8 @@ int immultiseq_SeqFn(int* obj, int* anim, u8* buf) {
                 s16 gbit = def->activeGameBits[next];
                 if (gbit != -1) {
                     int bv = GameBit_Get(gbit);
-                    if ((u32)!((def->polarityMask >> next) & 1) == (u32)bv) {
+                    int nb = !((def->polarityMask >> next) & 1);
+                    if ((u32)nb == (u32)bv) {
                         (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->unkB4);
                     }
                 }
