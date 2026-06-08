@@ -966,7 +966,7 @@ int CCGasVentControl_SeqFn(int obj)
 extern int *ObjGroup_GetObjects(int group, int *count);
 extern f32 lbl_803E4618;
 extern f32 timeDelta;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *gCameraInterface;
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int id);
@@ -1049,12 +1049,11 @@ void ccgasventcontrol_update(int obj)
         }
         break;
     case 4:
-        ((MapEventInterface *)*gMapEventInterface)->finishCurrentEvent(
-            (MapEventInterface *)*gMapEventInterface);
+        (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
         break;
     case 5: {
         int player = Obj_GetPlayerObject();
-        ((MapEventInterface *)*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
+        (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
         *(u8 *)ex = 6;
         break;
     }

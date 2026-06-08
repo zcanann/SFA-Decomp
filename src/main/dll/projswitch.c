@@ -622,7 +622,7 @@ extern void fn_8014BC98(int obj, u8 *state);
 extern void fn_8014B878(int obj, u8 *state);
 extern void objAnimFn_8014a9f0(int obj, u8 *state);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *gPathControlInterface;
 extern f32 lbl_803E2574;
 extern f32 lbl_803E2600;
@@ -735,7 +735,7 @@ void enemy_update(int obj)
             if (*(s16 *)(setup + 0x2c) == 0) {
                 return;
             }
-            if (((MapEventInterface *)*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) != 0) {
+            if ((*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) != 0) {
                 if ((((EnemyState *)state)->controlFlags & 0x800) == 0) {
                     player = Obj_GetPlayerObject();
                     if (player != NULL) {
@@ -846,7 +846,7 @@ void enemy_init(int obj, u8 *setup, int flag)
                 }
                 if (((GameObject *)obj)->unkF4 == 0) {
                     if (*(s16 *)(setup + 0x2c) != 0) {
-                        if (((MapEventInterface *)*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) == 0) {
+                        if ((*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) == 0) {
                             ((GameObject *)obj)->unkF4 = 1;
                         }
                     }
