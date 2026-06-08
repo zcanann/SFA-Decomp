@@ -10186,11 +10186,11 @@ void fn_802B07D8(int obj, int state)
     }
 
     ((PlayerState *)state)->unk7D4 -= lbl_803E7E98 * timeDelta;
-    if (((PlayerState *)state)->unk7D4 < lbl_803E7EA4) {
+    if (((PlayerState *)state)->unk7D4 < *(f32 *)&lbl_803E7EA4) {
         ((PlayerState *)state)->unk7D4 = lbl_803E7EA4;
     }
     ((PlayerState *)state)->unk7D8 -= lbl_803E7E98 * timeDelta;
-    if (((PlayerState *)state)->unk7D8 < lbl_803E7EA4) {
+    if (((PlayerState *)state)->unk7D8 < *(f32 *)&lbl_803E7EA4) {
         ((PlayerState *)state)->unk7D8 = lbl_803E7EA4;
     }
 
