@@ -275,7 +275,7 @@ void fn_80152514(int *obj, u8 *state)
             *(int *)&((GameObject *)obj)->unkC8 = 0;
         }
         *(f32 *)(state + 0x32c) = *(f32 *)(state + 0x32c) - timeDelta;
-        if (*(f32 *)(state + 0x32c) <= lbl_803E2814) {
+        if (*(f32 *)(state + 0x32c) <= *(f32 *)&lbl_803E2814) {
             *(f32 *)(state + 0x32c) = lbl_803E2814;
             *(u32 *)&((BaddieState *)state)->unk2E4 |= 0x20;
             Sfx_StopObjectChannel(obj, 4);

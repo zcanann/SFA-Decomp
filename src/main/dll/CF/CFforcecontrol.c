@@ -1329,7 +1329,7 @@ void deathseq_update(int* obj)
             *tex = 0x200;
         }
         state->timer -= timeDelta;
-        if (state->timer <= lbl_803E3D1C) {
+        if (state->timer <= *(f32 *)&lbl_803E3D1C) {
             state->timer = lbl_803E3D1C;
             if (!state->menuShown) {
                 showDeathMenu();
