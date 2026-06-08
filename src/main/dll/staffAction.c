@@ -47,7 +47,6 @@ extern undefined4 FUN_80293bc4();
 extern undefined4 FUN_80293f80();
 
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd738;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
@@ -125,7 +124,7 @@ FUN_801659b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6c) = 9;
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6d) = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
-  (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,param_9,param_10 + 1);
+  (*gPathControlInterface)->advance(param_9, param_10 + 1, lbl_803DC074);
   if (*(char *)(iVar3 + 0x90) == '\x06') {
     if ((*(byte *)(iVar3 + 0x92) & 1) == 0) {
       uVar2 = 0;
@@ -245,7 +244,7 @@ FUN_80165e74(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6c) = 9;
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6d) = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
-  (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,param_9,param_10 + 1);
+  (*gPathControlInterface)->advance(param_9, param_10 + 1, lbl_803DC074);
   if (*(char *)((int)param_10 + 0x27a) != '\0') {
     if (*(char *)(iVar1 + 0x90) == '\x06') {
       if ((*(byte *)(iVar1 + 0x92) >> 2 & 1) == 0) {

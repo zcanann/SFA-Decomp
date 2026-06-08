@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/gfxemit_state.h"
 #include "main/dll/gfxEmit.h"
 #include "main/objanim_internal.h"
@@ -33,7 +34,6 @@ extern uint countLeadingZeros();
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd728;
 extern EffectInterface **gExpgfxInterface;
 extern f64 DOUBLE_803e40e0;
 extern f64 DOUBLE_803e4108;
@@ -77,7 +77,8 @@ void FUN_801723dc(int param_1)
   double dVar8;
   double dVar9;
   
-  iVar4 = *(int *)(param_1 + 0xb8);
+  GfxEmitState *state = *(GfxEmitState **)(param_1 + 0xb8);
+  iVar4 = (int)state;
   if (*(short *)(param_1 + 0x46) == 0x6a6) {
     FUN_80017a88((double)lbl_803E40F4,
                  (double)(*(float *)(param_1 + 0x28) *
@@ -93,9 +94,9 @@ void FUN_801723dc(int param_1)
                  (double)(*(float *)(param_1 + 0x2c) *
                          (float)((double)CONCAT44(0x43300000,uVar3) - DOUBLE_803e4108)),param_1);
   }
-  (**(code **)(*DAT_803dd728 + 0x10))((double)lbl_803DC074,param_1,iVar4 + 0x50);
-  (**(code **)(*DAT_803dd728 + 0x14))(param_1,iVar4 + 0x50);
-  (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,param_1,iVar4 + 0x50);
+  (*gPathControlInterface)->update((void *)param_1, state->pathState, lbl_803DC074);
+  (*gPathControlInterface)->apply((void *)param_1, state->pathState);
+  (*gPathControlInterface)->advance((void *)param_1, state->pathState, lbl_803DC074);
   if (*(char *)(iVar4 + 0x2b1) == '\0') {
     *(float *)(param_1 + 0x28) = *(float *)(param_1 + 0x28) * lbl_803E4100;
     *(float *)(param_1 + 0x28) = -(lbl_803E4104 * lbl_803DC074 - *(float *)(param_1 + 0x28));

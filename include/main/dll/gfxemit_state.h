@@ -32,7 +32,8 @@ typedef struct GfxEmitState {
     u8 unk3E[0x44 - 0x3E];
     f32 intervalTimer;
     s16 unk48;
-    u8 unk4A[0x2B1 - 0x4A];
+    u8 unk4A[0x50 - 0x4A];
+    u8 pathState[0x2B1 - 0x50];
     u8 unk2B1;
     u8 unk2B2[0x2B8 - 0x2B2];
 } GfxEmitState;
