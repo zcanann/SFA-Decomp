@@ -219,7 +219,7 @@ u8 hwGetTimeOffset(void)
 }
 
 #pragma peephole off
-int hwIsActive(int slot)
+u32 hwIsActive(u32 slot)
 {
     u8 *entry;
     int active;

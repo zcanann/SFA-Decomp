@@ -73,6 +73,7 @@ extern int macStart(u16 id, u8 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
                             u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                             u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 extern u32 vidGetInternalId(u32 handle);
+extern u32 hwIsActive(u32 voice);
 
 typedef struct SynthVoiceLfo {
     s32 time;

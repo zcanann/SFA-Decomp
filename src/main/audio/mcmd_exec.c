@@ -18,7 +18,7 @@ extern u16 seqGetMIDIPriority(u8 slot, u8 event);
 extern u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 streamKind);
 extern void vidRemoveVoice(int state);
 extern u32 vidMakeNew(int state, int returnNewId);
-extern int hwIsActive(int slot);
+extern u32 hwIsActive(u32 slot);
 extern void voiceFree(int state);
 extern void voiceKill(u32 voice);
 extern u32 lbl_803BDA34[];

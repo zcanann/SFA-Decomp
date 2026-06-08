@@ -3362,7 +3362,14 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     mixed structure + stack layout; `track_dolphin.c`, `curves.c`, `model.c`,
     `shader.c`, `objprint.c`, and `modgfx.c` are mostly register/value
     spelling. Detailed snapshot and examples live in
-    `docs/unmatched_failure_categories.md`.
+    `docs/unmatched_failure_categories.md`. **Validation pass:** taking the
+    `compare width/immediate/sign` bucket literally exposed `hwIsActive` as the
+    wrong signed declaration (`int hwIsActive(int)` vs MusyX/reference
+    `u32 hwIsActive(u32)`). Aligning the declaration/definition and making the
+    `synth_voice.c` caller explicit took `EventHandler` 99.40→100 and
+    `macHandle` 99.27→100, while `macStart` improved to 99.99. So the category
+    is actionable: audit callee return/param signedness first, especially when
+    the first diff is `cmpwi 0` vs `cmplwi 0`.
 
 125. **Loop-tail guard polarity controls `cmpwi K; blt` vs `cmpwi K-1; ble`:
     when target increments then continues on `< LIMIT`, spell the positive

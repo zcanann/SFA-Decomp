@@ -84,3 +84,22 @@ These are the largest partial-function clusters and their dominant bucket:
 4. After any fix, trust `report.json`, not a visually clean `--diff`. Refresh
    with the strict build loop from `CLAUDE.md`.
 
+## Validation
+
+This taxonomy has already produced a real sweep win. The
+`compare width/immediate/sign` bucket flagged `EventHandler` as
+`cmplwi r3,0` target vs `cmpwi r3,0` current. The root cause was the
+`hwIsActive` type: MusyX/reference code declares `u32 hwIsActive(u32)`, while
+this repo still had signed declarations in the shared header and one local
+extern. Aligning the declaration/definition, plus adding the explicit unsigned
+declaration to `synth_voice.c`, produced:
+
+| Function | Before | After |
+|---|---:|---:|
+| `EventHandler` | 99.40000 | 100.00000 |
+| `macHandle` | 99.26829 | 100.00000 |
+| `macStart` | 99.37755 | 99.98980 |
+
+Takeaway: for the signedness bucket, first audit shared callee declarations
+against reference SDK/MusyX sources and existing local externs. A single wrong
+return type can affect multiple caller functions.
