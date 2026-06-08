@@ -949,7 +949,7 @@ int Lock_DoorLock_SeqFn(int obj, int p2, int seq)
       GameBit_Set(*(s16 *)(def + 0x1c), 1);
     }
     if ((*(u8 *)(seq + 0x80) == 2) && (*(s16 *)(def + 0x24) != 0)) {
-      (*(code *)(*gObjectTriggerInterface + 0x58))(seq);
+      (*gObjectTriggerInterface)->yield((u8 *)seq, *(s16 *)(def + 0x24));
     }
     *(u8 *)(seq + 0x80) = 0;
   }

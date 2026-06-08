@@ -66,7 +66,7 @@ int suntemple_interactCallback(int obj, int p2, int p3)
             break;
         case 2:
             if (*(s16 *)(setup + 0x24) != 0)
-                (*(void (**)(int))(*gObjectTriggerInterface + 0x58))(p3);
+                (*gObjectTriggerInterface)->yield((u8 *)p3, *(s16 *)(setup + 0x24));
             break;
         case 3:
             if (((ObjAnimComponent *)obj)->bankIndex == 1)
@@ -158,19 +158,15 @@ void suntemple_update(int obj)
                     if (((GameObject *)obj)->anim.seqId == 0x526) {
                         if (*(u8 *)(state + 1) == 1 &&
                             ((u32)GameBit_Get(0x25a) != 0 || (u32)GameBit_Get(0x25b) != 0)) {
-                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
-                                ->runSequence(*(s8 *)(cfg + 0x20) + 2, (void *)obj, -1);
+                            (*gObjectTriggerInterface)->runSequence(*(s8 *)(cfg + 0x20) + 2, (void *)obj, -1);
                         } else if (*(u8 *)(state + 1) == 2 &&
                                    ((u32)GameBit_Get(0x202) != 0 || (u32)GameBit_Get(0x243) != 0)) {
-                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
-                                ->runSequence(*(s8 *)(cfg + 0x20) + 2, (void *)obj, -1);
+                            (*gObjectTriggerInterface)->runSequence(*(s8 *)(cfg + 0x20) + 2, (void *)obj, -1);
                         } else {
-                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
-                                ->runSequence(*(s8 *)(cfg + 0x20), (void *)obj, -1);
+                            (*gObjectTriggerInterface)->runSequence(*(s8 *)(cfg + 0x20), (void *)obj, -1);
                         }
                     } else {
-                        ((ObjectTriggerInterface *)*gObjectTriggerInterface)
-                            ->runSequence(*(s8 *)(cfg + 0x20), (void *)obj, -1);
+                        (*gObjectTriggerInterface)->runSequence(*(s8 *)(cfg + 0x20), (void *)obj, -1);
                     }
                 }
                 if ((*(u8 *)(cfg + 0x1b) & 0x04) == 0) {
@@ -192,7 +188,7 @@ void suntemple_update(int obj)
     } else {
         if (((GameObject *)obj)->unkF4 == 0 && *(s8 *)(cfg + 0x20) != -1 &&
             *(s16 *)(cfg + 0x24) != 0) {
-            (*(void (**)(int))(*gObjectTriggerInterface + 0x54))(obj);
+            (*gObjectTriggerInterface)->preempt(obj, *(s16 *)(cfg + 0x24));
             flags = 1;
             if ((*(u8 *)(cfg + 0x1b) & 0x20) != 0) {
                 flags |= 0x2;
@@ -203,8 +199,7 @@ void suntemple_update(int obj)
             if ((*(u8 *)(cfg + 0x1b) & 0x80) != 0) {
                 flags |= 0x4;
             }
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
-                ->runSequence(*(s8 *)(cfg + 0x20), (void *)obj, flags);
+            (*gObjectTriggerInterface)->runSequence(*(s8 *)(cfg + 0x20), (void *)obj, flags);
         }
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
     }
