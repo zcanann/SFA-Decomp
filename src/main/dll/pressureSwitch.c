@@ -614,7 +614,7 @@ extern void Sfx_StopFromObject(int obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void mm_free(void *p);
 extern void objRenderFn_8003b8f4(f32);
-extern void objParticleFn_80099d84(int obj, int p2, int p3, f32 f1, f32 f2);
+extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern f32 lbl_803E2608;
 extern f32 lbl_803E260C;
 extern f32 lbl_803E2610;
@@ -937,12 +937,12 @@ void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
                 (obj, p2, p3, p4, p5, lbl_803E2650);
             if ((state->flags & 0x10) != 0) {
-                objParticleFn_80099d84(obj, 3, 0, lbl_803E2650,
-                    (f32)(u32)((GameObject *)obj)->anim.alpha / lbl_803E2654);
+                objParticleFn_80099d84(obj, lbl_803E2650, 3,
+                    (f32)(u32)((GameObject *)obj)->anim.alpha / lbl_803E2654, 0);
             }
             if ((state->flags & 0x08) != 0) {
-                objParticleFn_80099d84(obj, 4, 0, lbl_803E2650,
-                    (f32)(u32)((GameObject *)obj)->anim.alpha / lbl_803E2654);
+                objParticleFn_80099d84(obj, lbl_803E2650, 4,
+                    (f32)(u32)((GameObject *)obj)->anim.alpha / lbl_803E2654, 0);
             }
         }
     }
