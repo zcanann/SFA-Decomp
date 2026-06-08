@@ -409,7 +409,7 @@ void arwarwing_update(int obj)
         ((ArwingState *)state)->modeTimer = t;
         if (t <= lbl_803E6ECC) {
             ((ArwingState *)state)->mode = 6;
-            (*(void (**)(int, int))(*gScreenTransitionInterface + 8))(0x14, 1);
+            (*gScreenTransitionInterface)->start(0x14, 1);
             ((ArwingState *)state)->modeTimer = lbl_803E6F34;
         }
         return;

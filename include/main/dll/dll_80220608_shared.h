@@ -8,6 +8,7 @@
 #include "main/objHitReact.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/screen_transition.h"
 
 /* Pattern wrappers. */
 extern byte framesThisStep;
@@ -885,7 +886,7 @@ extern int *gGameUIInterface;
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
 
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern f32 lbl_803E7480;
 extern int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script);
 extern void gf_levelcon_findLinkedObjects(int obj);
@@ -1198,7 +1199,7 @@ extern f32 lbl_803E6F6C;
 extern f32 lbl_803E6EF8;
 extern f32 lbl_803E6FFC;
 extern f32 lbl_803E7000;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int *gCameraInterface;
 extern void unlockLevel(int a, int b, int c);
 extern int mapGetDirIdx(int mapId);

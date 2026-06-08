@@ -6,6 +6,7 @@
 #include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/screen_transition.h"
 
 typedef struct {
     s16 rx;
@@ -464,7 +465,7 @@ extern void **gCameraInterface;
 extern f32 lbl_803E67D8;
 extern f32 lbl_803E67D0;
 extern f32 lbl_803E67D4;
-extern void **gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern void unlockLevel(int a, int b, int c);
 extern f32 lbl_803E67EC;

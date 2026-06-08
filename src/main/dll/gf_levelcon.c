@@ -162,7 +162,7 @@ void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void gf_levelcon_init(int obj)
 {
     setIsOvercast(0);
-    (*(void (**)(int, int))(*gScreenTransitionInterface + 0xc))(0x258, 1);
+    (*gScreenTransitionInterface)->step(0x258, 1);
 }
 #pragma scheduling reset
 #pragma peephole reset

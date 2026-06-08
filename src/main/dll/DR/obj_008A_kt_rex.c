@@ -1564,7 +1564,7 @@ int ktrex_stateHandlerA01(int obj, int runtime) {
     *(f32 *)((char *)gKTRexState + 4) -= timeDelta;
     if (*(f32 *)((char *)gKTRexState + 4) <= lbl_803E67F0) {
         if (((GameObject *)obj)->unkF8 != 3) {
-            (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 8))(30, 1);
+            (*gScreenTransitionInterface)->start(30, 1);
             ((GameObject *)obj)->unkF8 = 3;
         }
     }
