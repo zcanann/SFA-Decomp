@@ -39,12 +39,14 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     s16 objRotY;
     u8 i;
     f32 particleArgs[6];
+    int hudHidden;
 
     if (visible == 0) {
         return;
     }
 
-    if ((u8)getHudHiddenFrameCount() != 0) {
+    hudHidden = (u8)getHudHiddenFrameCount();
+    if (hudHidden != 0) {
         dt = lbl_803E73D0;
     } else {
         dt = timeDelta;
@@ -75,7 +77,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
 
         state->particleTimer = state->particleTimer - dt;
-        if (state->particleTimer <= lbl_803E73D0 && (u8)getHudHiddenFrameCount() == 0) {
+        if (state->particleTimer <= lbl_803E73D0 && hudHidden == 0) {
             state->particleTimer = lbl_803E73D8;
             particleArgs[2] =
                 ((f32)*(s16 *)(setup + 0x1a) / lbl_803E73DC) * ((GameObject *)obj)->anim.rootMotionScale * state->alpha;
@@ -143,7 +145,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
 
         particleArgs[2] = ((GameObject *)obj)->anim.rootMotionScale * state->alpha;
-        if ((u8)getHudHiddenFrameCount() == 0) {
+        if (hudHidden == 0) {
             (*gPartfxInterface)->spawnObject((void *)obj, 0x7c2, particleArgs, 2, -1, NULL);
         }
 
