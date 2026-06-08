@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
@@ -7522,7 +7523,6 @@ void dbegg_update(int obj)
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_DisableObject(int);
     extern WaterfxInterface **gWaterfxInterface;
-    extern int *gRomCurveInterface;
     extern EffectInterface **gPartfxInterface;
     extern f32 timeDelta;
     extern f32 oneOverTimeDelta;
@@ -7737,7 +7737,8 @@ void dbegg_update(int obj)
             }
             break;
         case 0xa:
-            if ((u8)(**(int (**)(int, int, f32, int *, int))((char *)*gRomCurveInterface + 0x8c))(blob + 4, obj, lbl_803E624C, buf2, 2) != 0) {
+            if ((*gRomCurveInterface)->initCurve((void *)(blob + 4), (void *)obj, lbl_803E624C,
+                                                 buf2, 2) != 0) {
                 ((DbEggState *)blob)->mode = 5;
             } else {
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
@@ -7750,7 +7751,7 @@ void dbegg_update(int obj)
             break;
         case 9:
             if (Curve_AdvanceAlongPath(blob + 4, lbl_803E6250) != 0 || ((DbEggState *)blob)->unk14 != 0) {
-                if ((u8)(**(int (**)(int))((char *)*gRomCurveInterface + 0x90))(blob + 4) != 0) {
+                if ((*gRomCurveInterface)->goNextPoint((void *)(blob + 4)) != 0) {
                     ((DbEggState *)blob)->mode = 5;
                 }
             } else {

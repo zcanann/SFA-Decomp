@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/IM/IMspacecraft.h"
@@ -45,7 +46,6 @@ extern void MMP_levelcontrol_update(int obj);
 
 extern int *gCameraInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gRomCurveInterface;
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -237,7 +237,7 @@ void RollingBarrel_init(int obj, int *params)
     ROLLINGBARREL_PITCH_RISING(state) = 1;
     ROLLINGBARREL_TIMER(state) = lbl_803E4468;
 
-    ((void (*)(int *, int, int *, int, f32))((void **)*gRomCurveInterface)[35])(state, obj, tmp, -1, lbl_803E44B8);
+    (*gRomCurveInterface)->initCurve(state, (void *)obj, lbl_803E44B8, tmp, -1);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -425,7 +425,7 @@ void RollingBarrel_update(int obj)
                 while (blocked == 0 && dist_sq < vmax * timeDelta) {
                     blocked = (int)Curve_AdvanceAlongPath(state, ROLLINGBARREL_CURVE_SPEED(state));
                     if (blocked == 0 && *(int *)((char *)state + 0x10) != 0) {
-                        ((void (*)(int *))((void **)*gRomCurveInterface)[36])(state);
+                        (*gRomCurveInterface)->goNextPoint(state);
                     }
                     {
                         f32 dx = *(f32 *)((char *)state + 0x68) - ((GameObject *)obj)->anim.previousLocalPosX;
@@ -436,7 +436,7 @@ void RollingBarrel_update(int obj)
             } else {
                 blocked = (int)Curve_AdvanceAlongPath(state, ROLLINGBARREL_CURVE_SPEED(state));
                 if (blocked == 0 && *(int *)((char *)state + 0x10) != 0) {
-                    ((void (*)(int *))((void **)*gRomCurveInterface)[36])(state);
+                    (*gRomCurveInterface)->goNextPoint(state);
                 }
             }
 

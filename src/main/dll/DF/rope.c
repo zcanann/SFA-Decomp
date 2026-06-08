@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
@@ -154,7 +155,6 @@ extern f32 lbl_803E4D20;
 extern int Curve_AdvanceAlongPath(int a, f32 f);
 extern int getAngle(f32 dx, f32 dy);
 extern int Obj_GetPlayerObject(void);
-extern int *gRomCurveInterface;
 extern f32 lbl_803E4D10;
 extern f32 lbl_803E4D14;
 extern f32 lbl_803E4D18;
@@ -188,7 +188,7 @@ void dimbossgut2_updateTracking(int obj, int state)
   r30v = *(int *)(state + 0x3dc);
   if ((*(u16 *)(state + 0x400) & 8) != 0) {
     if ((Curve_AdvanceAlongPath(r30v, *(f32 *)(curve + 0x10)) != 0) || (*(int *)(r30v + 0x10) != 0)) {
-      if ((u8)(*((u8 (***)(int))gRomCurveInterface))[0x24](r30v) != 0) {
+      if ((*gRomCurveInterface)->goNextPoint((void *)r30v) != 0) {
         *(u16 *)(state + 0x400) = *(u16 *)(state + 0x400) & ~0x8;
       }
     }
