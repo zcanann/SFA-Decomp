@@ -708,7 +708,7 @@ void FUN_8012c1c0(void)
       }
       DAT_803de3db = '\0';
       FUN_800176c8(0);
-      (*(void (**)(int, int, int))((char *)*gCameraInterface + 0x24))(3,0x80,1);
+      (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
       DAT_803de408 = 0x3c;
       FUN_80006824(0,0x418);
     }
@@ -716,7 +716,7 @@ void FUN_8012c1c0(void)
       FUN_80006ba8(0,0x200);
       DAT_803de3db = '\0';
       FUN_800176c8(0);
-      (*(void (**)(int, int, int))((char *)*gCameraInterface + 0x24))(3,0x80,1);
+      (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
       DAT_803de408 = 0x3c;
       FUN_80006824(0,0x419);
     }
@@ -1155,7 +1155,7 @@ void viewFn_80129c74(void)
 void timeListFn_8012df14(void)
 {
     lbl_803DD75B = 1;
-    (*(void(**)(s32, s32, s32))((char*)*gCameraInterface + 0x24))(1, 0x94, 1);
+    (*gCameraInterface)->loadTriggeredCamAction(1, 0x94, 1);
     cutsceneFadeInOut(1);
     setTimeStop(0xff);
 }
@@ -1302,7 +1302,7 @@ void timeListFn_8012be84(void)
         }
         lbl_803DD75B = 0;
         cutsceneFadeInOut(0);
-        (*(void(**)(s32, s32, s32))((char*)*gCameraInterface + 0x24))(3, 0x80, 1);
+        (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
         pauseMenuFrameCounter = 0x3c;
         Sfx_PlayFromObject(0, 0x418);
     }
@@ -1310,7 +1310,7 @@ void timeListFn_8012be84(void)
         buttonDisable(0, 0x200);
         lbl_803DD75B = 0;
         cutsceneFadeInOut(0);
-        (*(void(**)(s32, s32, s32))((char*)*gCameraInterface + 0x24))(3, 0x80, 1);
+        (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
         pauseMenuFrameCounter = 0x3c;
         Sfx_PlayFromObject(0, 0x419);
     }
@@ -1508,7 +1508,7 @@ void npcTalkFn_8012e880(void)
     Obj_GetPlayerObject();
     if ((s8)lbl_803DD7A8 != 0) {
         if (lbl_803DD8C8 != 0) {
-            (*(void(**)(s32, s32))((char*)*gCameraInterface + 0x5c))(0x41, 1);
+            (*gCameraInterface)->setLetterbox(0x41, 1);
         }
         lbl_803DD8D0 = 0xff;
     } else {

@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "dolphin/os/OSFastCast.h"
 #include "main/asset_load.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/expgfx.h"
@@ -1088,7 +1089,6 @@ extern u8 lbl_8033C3B8[];
 extern u8 lbl_8033C378[];
 extern char sMainFinishedInitMessage[];
 extern void *gGameUIInterface;
-extern void *gCameraInterface;
 extern void *lbl_803DCA94;
 extern void *gPlayerInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
@@ -1486,7 +1486,7 @@ void gameUpdate(void)
     lbl_803DCA42 = 0;
     mainLoopDoGameText();
     if (lbl_803DCA3A == 0) {
-        (*(void (**)(void))(*(int *)gCameraInterface + 0x54))();
+        (*gCameraInterface)->updateTargetFeedback();
     }
     uiDll_runFrameStartAndLoadNext();
     camcontrol_playTargetTypeSfx();

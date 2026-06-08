@@ -5475,7 +5475,7 @@ void titlescreen_update(u8 *obj)
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x4b, 0x64, 0x78, 0, 0);
             skyFn_800894a8(7, lbl_803E2318, lbl_803E2388, *(f32 *)&lbl_803E2388);
-            (*(void (**)(u8 *, int))((char *)*gCameraInterface + 0x28))(obj, 0);
+            (*gCameraInterface)->setFocus(obj, 0);
             lbl_803DD992 = 1;
             fn_80131F0C();
         }

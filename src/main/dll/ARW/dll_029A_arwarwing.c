@@ -523,14 +523,14 @@ void arwarwing_update(int obj)
     }
 
     arwarwing_updateRollAndEngine(obj, state);
-    (*(void (**)(void *, int))((char *)*gCameraInterface + 0x60))((void *)(state + 0x2c), 0xc);
+    (*gCameraInterface)->releaseAction((void *)(state + 0x2c), 0xc);
     camRot[0] = ((GameObject *)obj)->anim.rotX;
     camRot[1] = ((GameObject *)obj)->anim.rotY;
     camRot[2] = (s16) ((ArwingState *)state)->rotZCur;
-    (*(void (**)(void *, int))((char *)*gCameraInterface + 0x60))(camRot, 6);
+    (*gCameraInterface)->releaseAction(camRot, 6);
     camPos[0] = ((ArwingState *)state)->maxSpeedZ;
     camPos[1] = ((ArwingState *)state)->velZ;
-    (*(void (**)(void *, int))((char *)*gCameraInterface + 0x60))(camPos, 8);
+    (*gCameraInterface)->releaseAction(camPos, 8);
     arwarwing_handlePathDamage(obj, state);
     arwarwing_handleObjectDamage(obj, state);
     arwarwing_emitDamageEffects(obj, state);
@@ -812,7 +812,7 @@ void arwarwing_initAttachments(int obj, int state)
     }
 
     if (found != 0) {
-        (*(void (**)(int, int))((char *)*gCameraInterface + 0x28))(obj, 0);
+        (*gCameraInterface)->setFocus((void *)obj, 0);
         ((ArwingState *)state)->flags477 |= 1;
         ((ArwingState *)state)->maxSpeedX = lbl_803E6F70;
         ((ArwingState *)state)->accelX = lbl_803E6F74;

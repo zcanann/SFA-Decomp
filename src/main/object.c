@@ -2203,7 +2203,7 @@ void Obj_UpdateAllObjects(u8 flags)
         ObjHits_TickPriorityHitCooldowns();
         (*gObjectTriggerInterface)->run();
         (*gObjectTriggerInterface)->updateCamera();
-        (*(void (**)(u8))*(int *)((char *)*gCameraInterface + 8))(framesThisStep);
+        (*gCameraInterface)->update(framesThisStep);
     }
 }
 #pragma dont_inline reset
@@ -2297,17 +2297,17 @@ void mapSetupPlayer(void)
         *(f32 *)(base + 0x10) = lbl_803DE8BC * mathCosf((lbl_803DE8C0 * (f32)(*(s8 *)((u8 *)pos + 0xc) << 8)) / lbl_803DE8C4) + z;
         uiDll = getCurUiDll();
         if ((u32)(uiDll - 2) <= 4 || uiDll == 7) {
-            (*(void (**)(u8 *, f32, f32, f32))*(int *)((char *)*gCameraInterface + 4))(obj, *(f32 *)(base + 8), *(f32 *)(base + 0xc), *(f32 *)(base + 0x10));
+            (*gCameraInterface)->init(obj, *(f32 *)(base + 8), *(f32 *)(base + 0xc), *(f32 *)(base + 0x10));
             (*gCameraInterface)->setMode(0x57, 0, 3, 0, NULL, 0, 0);
-            (*(void (**)(u8 *, int))*(int *)((char *)*gCameraInterface + 0x28))(obj, 0);
-            (*(void (**)(int))*(int *)((char *)*gCameraInterface + 8))(1);
+            (*gCameraInterface)->setFocus(obj, 0);
+            (*gCameraInterface)->update(1);
         } else {
-            (*(void (**)(u8 *, f32, f32, f32))*(int *)((char *)*gCameraInterface + 4))(obj, *(f32 *)(base + 8), *(f32 *)(base + 0xc), *(f32 *)(base + 0x10));
+            (*gCameraInterface)->init(obj, *(f32 *)(base + 8), *(f32 *)(base + 0xc), *(f32 *)(base + 0x10));
             (*gCameraInterface)->setMode(0x42, 0, 0, 0x20, (u8 *)(int)&lbl_802CABF8, 0, 0xff);
-            (*(void (**)(int))*(int *)((char *)*gCameraInterface + 8))(1);
+            (*gCameraInterface)->update(1);
         }
         vp = Camera_GetCurrentViewSlot();
-        view = (*gCameraInterface)->getCurrentViewSlot();
+        view = (*gCameraInterface)->getCamera();
         *(f32 *)(vp + 0xc) = *(f32 *)(view + 0x18);
         *(f32 *)(vp + 0x10) = *(f32 *)(view + 0x1c);
         *(f32 *)(vp + 0x14) = *(f32 *)(view + 0x20);
@@ -2382,7 +2382,7 @@ void Obj_ResetObjectSystem(void)
     lbl_803DCBC4 = 0;
     ObjGroup_ClearAll();
     ObjHits_ResetWorkBuffers();
-    (*(void (**)(int, int))*(int *)((char *)*gCameraInterface + 0x28))(0, 0);
+    (*gCameraInterface)->setFocus(NULL, 0);
     AudioStream_StopAll();
 }
 #pragma dont_inline reset

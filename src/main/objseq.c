@@ -888,7 +888,7 @@ void ObjSeq_updateCamera(void)
             (*gCameraInterface)->setMode(0x4c, 0, 1, 0x144, &block, model[0x24], 0xff);
             lbl_803DD110 = 1;
         } else {
-            camObj = (*gCameraInterface)->getCurrentViewSlot();
+            camObj = (*gCameraInterface)->getCamera();
             *(f32 *)(camObj + 0x18) = x;
             *(f32 *)(camObj + 0x1c) = y;
             *(f32 *)(camObj + 0x20) = z;
@@ -970,8 +970,7 @@ void ObjSeq_updateCamera(void)
                     break;
                 case 0x57:
                     (*gCameraInterface)->setMode(0x57, 0, 3, 0, NULL, 0, 0);
-                    (*(void (*)(int, int))(*(int *)((char *)*gCameraInterface + 0x28)))(
-                        *(int *)ObjGroup_GetObjects(0xf, &groupObjs), 0);
+                    (*gCameraInterface)->setFocus(*(void **)ObjGroup_GetObjects(0xf, &groupObjs), 0);
                     break;
                 default:
                     if (lbl_803DD108 == 0) {
@@ -2432,7 +2431,7 @@ int ObjSeq_update(u8 *obj, f32 t)
 
         if (((ObjSeqState *)seq)->targetObj != NULL && *(s16 *)((u8 *)((ObjSeqState *)seq)->targetObj + 0xb4) != -1 &&
             (base[(s8)((ObjSeqState *)seq)->slot + 0x3538] & 0x10) == 0) {
-            (*(void (*)(int, int))(*(int *)((char *)*gCameraInterface + 0x5c)))(0x41, 1);
+            (*gCameraInterface)->setLetterbox(0x41, 1);
         }
 
         slot = (s8)((ObjSeqState *)seq)->slot;
@@ -3690,7 +3689,7 @@ int ObjSeq_ResolveAndAssignTargetObject(u8 *obj)
             lbl_803DD064 = 0;
         }
         if ((lbl_80399E50[(s8)seqObj[0x57]] & 0x10) == 0) {
-            (*(void (*)(int, int))(*(int *)((char *)*gCameraInterface + 0x5c)))(0x41, 1);
+            (*gCameraInterface)->setLetterbox(0x41, 1);
         }
         break;
     default:

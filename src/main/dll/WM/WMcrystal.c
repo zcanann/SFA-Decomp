@@ -524,7 +524,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
         state->pitch = obj->pitch;
         state->roll = obj->roll;
         state->cameraDistance = lbl_803E5660;
-        (*(void (*)(void *, int))*(int *)((char *)*gCameraInterface + 0x60))(state,0x18);
+        (*gCameraInterface)->releaseAction(state, 0x18);
     }
 
     if ((state->eventFlags & SC_TOTEMBOND_EVENT_SET_MAP_MODE) != 0) {

@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -1682,7 +1683,6 @@ extern f32 lbl_803E46D0;
 extern void gameTextShow(int textId);
 extern void *getTrickyObject(void);
 extern int *gSHthorntailAnimationInterface;
-extern int *gCameraInterface;
 
 #pragma peephole off
 #pragma scheduling off
@@ -1741,13 +1741,13 @@ void cclevcontrol_update(int obj)
         if (GameBit_Get(0x22d) != 0 || GameBit_Get(0x22e) == 0
             || (*(u16 *)((char *)tricky + 0xb0) & 0x1000) != 0) {
             state[1] &= ~1;
-            (*(void (**)(int, int, int))(*(int *)gCameraInterface + 0x24))(0, 1, 0);
+            (*gCameraInterface)->loadTriggeredCamAction(0, 1, 0);
         }
     } else {
         if (GameBit_Get(0x22d) == 0 && GameBit_Get(0x22a) != 0 && GameBit_Get(0x22e) != 0
             && GameBit_Get(0x160) == 0) {
             state[1] |= 1;
-            (*(void (**)(int, int, int))(*(int *)gCameraInterface + 0x24))(1, 1, 0);
+            (*gCameraInterface)->loadTriggeredCamAction(1, 1, 0);
         }
     }
     a = GameBit_Get(0x3f0);

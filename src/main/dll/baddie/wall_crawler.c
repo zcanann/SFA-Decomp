@@ -218,7 +218,7 @@ void FUN_8012ed00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   else {
     if (DAT_803de548 != '\0') {
-      (*(void (**)(int, int))((char *)*gCameraInterface + 0x5c))(0x41,1);
+      (*gCameraInterface)->setLetterbox(0x41, 1);
     }
     DAT_803de550 = 0xff;
   }

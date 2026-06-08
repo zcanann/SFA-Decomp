@@ -502,7 +502,7 @@ void sfxplayerObj_update(u8 *obj)
     data = *(u8 **)&((GameObject *)obj)->anim.placementData;
     if ((data[0x1c] & 8) != 0) {
         if (getCurSeqNo() != 0) {
-            focusObj = (*gCameraInterface)->getCurrentViewSlot();
+            focusObj = (*gCameraInterface)->getCamera();
             ((void (*)(f32, f32, f32, int, int, u8 *, u8 *, u8 *))(*gRomCurveInterface)->slot20)(
                 *(f32 *)(focusObj + 0x18), *(f32 *)(focusObj + 0x1c), *(f32 *)(focusObj + 0x20),
                 7, (s8)data[0x20], obj + 0x0c, obj + 0x10, obj + 0x14);
@@ -1330,7 +1330,7 @@ void FUN_801986d4(uint param_1)
                  param_1 + 0x10,param_1 + 0x14);
     }
     else {
-      iVar3 = (int)(*gCameraInterface)->getCurrentViewSlot();
+      iVar3 = (int)(*gCameraInterface)->getCamera();
       (**(code **)(*DAT_803dd71c + 0x20))
                 ((double)*(float *)(iVar3 + 0x18),(double)*(float *)(iVar3 + 0x1c),
                  (double)*(float *)(iVar3 + 0x20),7,(int)*(char *)(iVar6 + 0x20),param_1 + 0xc,
