@@ -4,6 +4,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/objanim.h"
+#include "main/objhits_types.h"
 
 typedef struct ObjHitReactState ObjHitReactState;
 typedef struct ObjHitReactMoveEntry ObjHitReactMoveEntry;
@@ -445,6 +446,10 @@ STATIC_ASSERT(offsetof(ObjAnimEventList, triggerCount) == 0x1B);
 
 static inline ObjAnimBank *ObjAnim_GetActiveBank(ObjAnimComponent *objAnim) {
   return objAnim->banks[objAnim->bankIndex];
+}
+
+static inline ObjHitsPriorityState *ObjAnim_GetPriorityHitState(ObjAnimComponent *objAnim) {
+  return (ObjHitsPriorityState *)objAnim->hitReactState;
 }
 
 static inline f64 ObjAnim_U32AsDouble(u32 value) {
