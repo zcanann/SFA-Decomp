@@ -10,6 +10,7 @@
 #include "main/objHitReact.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
@@ -1512,7 +1513,6 @@ extern f32 lbl_803E6EF4;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int *gPathControlInterface;
 extern f32 lbl_803E6F24;
 extern f32 lbl_803E6F28;
 extern f32 lbl_803E6F2C;

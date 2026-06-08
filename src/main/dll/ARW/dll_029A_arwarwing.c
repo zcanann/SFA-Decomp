@@ -951,15 +951,15 @@ void arwarwing_resetFlightState(int obj)
 #pragma scheduling off
 void arwarwing_handlePathDamage(int obj, int state)
 {
-    int sub = state + 0xc0;
+    u8 *pathBlock = ((ArwingState *)state)->pathBlock;
     int dmg;
 
-    (*(void (**)(int, int, f32))(*gPathControlInterface + 0x10))(obj, sub, timeDelta);
-    (*(void (**)(int, int))(*gPathControlInterface + 0x14))(obj, sub);
-    (*(void (**)(int, int, f32))(*gPathControlInterface + 0x18))(obj, sub, timeDelta);
+    (*gPathControlInterface)->update((void *)obj, pathBlock, timeDelta);
+    (*gPathControlInterface)->apply((void *)obj, pathBlock);
+    (*gPathControlInterface)->advance((void *)obj, pathBlock, timeDelta);
 
     if (((ArwingState *)state)->hitShake == 0 || ((ArwingState *)state)->mode == 4) {
-        dmg = (s8)*(u8 *)(sub + 0x260);
+        dmg = (s8)pathBlock[0x260];
         if (dmg == 0)
             return;
         if (((ArwingState *)state)->mode == 4) {
@@ -969,7 +969,7 @@ void arwarwing_handlePathDamage(int obj, int state)
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
             return;
         }
-        if ((dmg & 1) && (s8)*(u8 *)(sub + 0xb8) == 8)
+        if ((dmg & 1) && (s8)pathBlock[0xb8] == 8)
             ((ArwingState *)state)->shield = 0;
         else
             ((ArwingState *)state)->shield = ((ArwingState *)state)->shield - 1;
@@ -993,8 +993,8 @@ void arwarwing_handlePathDamage(int obj, int state)
         ((ArwingState *)state)->hitShake = 1;
         ((ArwingState *)state)->shakeYaw = 0;
         ((ArwingState *)state)->shakePitch = 0;
-        ((ArwingState *)state)->knockVelX = *(f32 *)(sub + 0x1a0);
-        ((ArwingState *)state)->knockVelZ = *(f32 *)(sub + 0x1a4);
+        ((ArwingState *)state)->knockVelX = *(f32 *)(pathBlock + 0x1a0);
+        ((ArwingState *)state)->knockVelZ = *(f32 *)(pathBlock + 0x1a4);
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(lbl_803E6F38);
     } else {
@@ -1213,18 +1213,18 @@ int arwarwing_SeqFn(int obj, int p2, int script)
 void arwarwing_init(int obj)
 {
     int state;
-    int sub;
+    u8 *pathBlock;
     ArwInitCfg cfg;
 
     cfg.a = lbl_802C25E8.a;
     cfg.b = lbl_802C25E8.b;
     cfg.c = lbl_802C25E8.c;
     state = *(int *)&((GameObject *)obj)->extra;
-    sub = state + 0xc0;
+    pathBlock = ((ArwingState *)state)->pathBlock;
     ((GameObject *)obj)->animEventCallback = (void *)arwarwing_SeqFn;
-    (*(void (**)(int, int, int, int))(*gPathControlInterface + 4))(sub, 4, 0x1040006, 1);
-    (*(void (**)(int, int, void *, void *, void *))(*gPathControlInterface + 0xc))(sub, 3, lbl_8032B408, lbl_8032B480, &cfg);
-    (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, sub);
+    (*gPathControlInterface)->init(pathBlock, 4, 0x1040006, 1);
+    (*gPathControlInterface)->setup(pathBlock, 3, lbl_8032B408, lbl_8032B480, &cfg);
+    (*gPathControlInterface)->attachObject((void *)obj, pathBlock);
     ObjGroup_AddObject(obj, 0x26);
     lbl_803DDD88 = obj;
     ObjHits_SetTargetMask(obj, 1);

@@ -462,7 +462,7 @@ void arwarwing_readControls(int obj, int state)
         tv = lbl_8032B4A8[(int)((ArwingState *)state)->damageFlashTimer];
         if (((ArwingState *)state)->damageFlashTimer <= lbl_803E6ECC) {
             ((ArwingState *)state)->hitShake = 0;
-            (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, state + 0xc0);
+            (*gPathControlInterface)->attachObject((void *)obj, ((ArwingState *)state)->pathBlock);
         }
         ((ArwingState *)state)->stickX =
             ((ArwingState *)state)->stickX * (lbl_803E6ED0 - tv) + nx * tv;
