@@ -1041,9 +1041,10 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
         pair[1] = 0x15;
         if (((ObjSeqState *)seq)->curveId < 0) {
             ((ObjSeqState *)seq)->curveId =
-                (*(int (*)(int *, int, int, f32, f32, f32))(*(int *)((char *)*gRomCurveInterface + 0x14)))(
-                    pair, 2, cmdArg, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
-                    ((GameObject *)obj)->anim.localPosZ);
+                (*gRomCurveInterface)->find(pair, 2, cmdArg,
+                                            ((GameObject *)obj)->anim.localPosX,
+                                            ((GameObject *)obj)->anim.localPosY,
+                                            ((GameObject *)obj)->anim.localPosZ);
             if (((ObjSeqState *)seq)->curveId > -1) {
                 if (((ObjSeqState *)seq)->curveInterp != NULL) {
                     mm_free(((ObjSeqState *)seq)->curveInterp);
@@ -4144,7 +4145,7 @@ void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState *state, f32 t) {
 
     node = NULL;
     if (t < state->fromTime) {
-        node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->fromNodeId);
+        node = (RomCurveNode *)(*gRomCurveInterface)->getById(state->fromNodeId);
     }
     if (node != NULL) {
         while (t < (thr = state->fromTime)) {
@@ -4166,11 +4167,11 @@ void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState *state, f32 t) {
             state->toNodeId = state->fromNodeId;
             state->fromNodeId = found;
             prev = node;
-            node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->fromNodeId);
+            node = (RomCurveNode *)(*gRomCurveInterface)->getById(state->fromNodeId);
             RomCurveInterp_BuildSegmentTimeTable(state, node, prev, state->fromTime, 1);
         }
     }
-    node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
+    node = (RomCurveNode *)(*gRomCurveInterface)->getById(state->toNodeId);
     if (node == NULL) {
         return;
     }
@@ -4193,7 +4194,7 @@ void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState *state, f32 t) {
         state->fromNodeId = state->toNodeId;
         state->toNodeId = found;
         prev = node;
-        node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
+        node = (RomCurveNode *)(*gRomCurveInterface)->getById(state->toNodeId);
         RomCurveInterp_BuildSegmentTimeTable(state, prev, node, state->toTime, 0);
     }
 }
@@ -4211,7 +4212,7 @@ void RomCurveInterp_InitFromNode(RomCurveInterpState *out, int id) {
 
     out->fromNodeId = id;
     out->toNodeId = -1;
-    curve = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out->fromNodeId);
+    curve = (RomCurveNode *)(*gRomCurveInterface)->getById(out->fromNodeId);
     mask = 1;
     for (i = 0; i < 4; i++) {
         val = curve->links[i];
@@ -4225,9 +4226,9 @@ void RomCurveInterp_InitFromNode(RomCurveInterpState *out, int id) {
         out->fromNodeId = -1;
     } else {
         out->toNodeId = found;
-        RomCurveInterp_BuildSegmentTimeTable(out, curve,
-                                             (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out->toNodeId),
-                                             lbl_803DEFB0, 0);
+        RomCurveInterp_BuildSegmentTimeTable(
+            out, curve, (RomCurveNode *)(*gRomCurveInterface)->getById(out->toNodeId),
+            lbl_803DEFB0, 0);
     }
 }
 #pragma scheduling reset
@@ -4258,9 +4259,9 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState *state, f32 *offse
 
     t = offset[2];
     RomCurveInterp_UpdateSegmentWindow(state, t);
-    from = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->fromNodeId);
+    from = (RomCurveNode *)(*gRomCurveInterface)->getById(state->fromNodeId);
     if (from != NULL && state->toNodeId > -1) {
-        to = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
+        to = (RomCurveNode *)(*gRomCurveInterface)->getById(state->toNodeId);
         times = &state->fromTime;
         i = 0;
         while (i < 9 && t >= times[i]) {
@@ -4311,7 +4312,7 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState *state, f32 *offse
     }
 
     if (from == NULL) {
-        from = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
+        from = (RomCurveNode *)(*gRomCurveInterface)->getById(state->toNodeId);
     }
     if (from == NULL) {
         return 0;
@@ -4361,7 +4362,7 @@ void ObjSeq_UpdateCurvePosition(u8 *obj, u8 *seq) {
         return;
     }
 
-    node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(((ObjSeqState *)seq)->curveId);
+    node = (RomCurveNode *)(*gRomCurveInterface)->getById(((ObjSeqState *)seq)->curveId);
     if (node == NULL) {
         return;
     }

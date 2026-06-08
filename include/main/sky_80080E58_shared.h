@@ -2,6 +2,7 @@
 #define MAIN_SKY_80080E58_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/newclouds.h"
@@ -4341,7 +4342,6 @@ typedef struct RomCurveInterpState {
 #define ROM_CURVE_NODE_ANGLE(v) ((lbl_803DEFE8 * (f32)((s32)(v) << 8)) / lbl_803DEFEC)
 #define ROM_CURVE_NODE_SCALE(node) (lbl_803DF008 * (f32)(u8)((node)->tangentScale))
 
-extern void **gRomCurveInterface;
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
