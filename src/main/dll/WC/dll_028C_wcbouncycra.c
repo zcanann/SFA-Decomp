@@ -33,10 +33,19 @@ typedef struct WCBlockGridInterface {
 #define WBOUNCY_RESET_COOLDOWN 0x28
 #define WBOUNCY_MAX_BOUNCES 0xa
 
-#define WBOUNCY_HOME_Y(state) (*(f32 *)((state) + WBOUNCY_STATE_HOME_Y))
-#define WBOUNCY_COOLDOWN(state) (*(s16 *)((state) + WBOUNCY_STATE_COOLDOWN))
-#define WBOUNCY_FLAGS(state) (*(u8 *)((state) + WBOUNCY_STATE_FLAGS))
-#define WBOUNCY_BOUNCE_COUNT(state) (*(u8 *)((state) + WBOUNCY_STATE_BOUNCE_COUNT))
+typedef struct WCBouncyCrateState {
+    f32 homeY;
+    u8 pad04[0x08 - 0x04];
+    s16 cooldown;
+    u8 flags;
+    u8 bounceCount;
+} WCBouncyCrateState;
+
+STATIC_ASSERT(sizeof(WCBouncyCrateState) == WBOUNCY_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCBouncyCrateState, homeY) == WBOUNCY_STATE_HOME_Y);
+STATIC_ASSERT(offsetof(WCBouncyCrateState, cooldown) == WBOUNCY_STATE_COOLDOWN);
+STATIC_ASSERT(offsetof(WCBouncyCrateState, flags) == WBOUNCY_STATE_FLAGS);
+STATIC_ASSERT(offsetof(WCBouncyCrateState, bounceCount) == WBOUNCY_STATE_BOUNCE_COUNT);
 
 #pragma peephole on
 #pragma scheduling on
@@ -77,11 +86,11 @@ void wcbouncycra_hitDetect(void) {}
 #pragma scheduling off
 void wcbouncycra_update(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WCBouncyCrateState *state = ((GameObject *)obj)->extra;
 
-    if ((WBOUNCY_FLAGS(state) & WBOUNCY_FLAG_ACTIVE) == 0) {
-        int n = (int)((f32)WBOUNCY_COOLDOWN(state) - timeDelta);
-        WBOUNCY_COOLDOWN(state) = n;
+    if ((state->flags & WBOUNCY_FLAG_ACTIVE) == 0) {
+        int n = (int)((f32)state->cooldown - timeDelta);
+        state->cooldown = n;
         if ((s16)n <= 0) {
             f32 v = lbl_803E6D20;
             f32 dist;
@@ -96,21 +105,21 @@ void wcbouncycra_update(int obj)
                 dist = (lbl_803E6D38 - (v - lbl_803E6D28) / lbl_803E6D34) * lbl_803E6D2C;
             }
             ((GameObject *)obj)->anim.velocityY = dist;
-            WBOUNCY_FLAGS(state) |= WBOUNCY_FLAG_ACTIVE;
-            WBOUNCY_BOUNCE_COUNT(state) = 0;
+            state->flags |= WBOUNCY_FLAG_ACTIVE;
+            state->bounceCount = 0;
         }
     } else {
         ((GameObject *)obj)->anim.velocityY = lbl_803E6D3C * timeDelta + ((GameObject *)obj)->anim.velocityY;
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
-        if (((GameObject *)obj)->anim.localPosY <= WBOUNCY_HOME_Y(state)) {
+        if (((GameObject *)obj)->anim.localPosY <= state->homeY) {
             ((GameObject *)obj)->anim.localPosY =
-                ((GameObject *)obj)->anim.localPosY + (WBOUNCY_HOME_Y(state) - ((GameObject *)obj)->anim.localPosY);
+                ((GameObject *)obj)->anim.localPosY + (state->homeY - ((GameObject *)obj)->anim.localPosY);
             ((GameObject *)obj)->anim.velocityY = lbl_803E6D40 * -((GameObject *)obj)->anim.velocityY;
-            WBOUNCY_BOUNCE_COUNT(state) += 1;
-            if (WBOUNCY_BOUNCE_COUNT(state) > WBOUNCY_MAX_BOUNCES) {
-                WBOUNCY_FLAGS(state) &= ~WBOUNCY_FLAG_ACTIVE;
-                WBOUNCY_COOLDOWN(state) = WBOUNCY_RESET_COOLDOWN;
-                ((GameObject *)obj)->anim.localPosY = WBOUNCY_HOME_Y(state);
+            state->bounceCount += 1;
+            if (state->bounceCount > WBOUNCY_MAX_BOUNCES) {
+                state->flags &= ~WBOUNCY_FLAG_ACTIVE;
+                state->cooldown = WBOUNCY_RESET_COOLDOWN;
+                ((GameObject *)obj)->anim.localPosY = state->homeY;
                 ((GameObject *)obj)->anim.velocityY = lbl_803E6D24;
             }
         }
@@ -123,10 +132,10 @@ void wcbouncycra_update(int obj)
 #pragma scheduling off
 void wcbouncycra_init(int obj, int setup)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WCBouncyCrateState *state = ((GameObject *)obj)->extra;
 
-    WBOUNCY_HOME_Y(state) = *(f32 *)(setup + 0xc);
-    WBOUNCY_COOLDOWN(state) = WBOUNCY_RESET_COOLDOWN;
+    state->homeY = *(f32 *)(setup + 0xc);
+    state->cooldown = WBOUNCY_RESET_COOLDOWN;
 }
 #pragma scheduling reset
 #pragma peephole reset

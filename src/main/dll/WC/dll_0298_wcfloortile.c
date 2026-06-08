@@ -14,6 +14,22 @@ typedef struct WcFloorTileState {
     u8 flags;   /* 0x7: 1|2 done, 4 armed */
 } WcFloorTileState;
 
+typedef struct WcFloorTileSetup {
+    u8 pad00[0x0C];
+    f32 homeY;
+    u8 pad10[0x1A - 0x10];
+    s16 eventId;
+} WcFloorTileSetup;
+
+STATIC_ASSERT(sizeof(WcFloorTileState) == 0x8);
+STATIC_ASSERT(offsetof(WcFloorTileState, shakeTime) == 0x00);
+STATIC_ASSERT(offsetof(WcFloorTileState, shakeMag) == 0x04);
+STATIC_ASSERT(offsetof(WcFloorTileState, phase) == 0x06);
+STATIC_ASSERT(offsetof(WcFloorTileState, flags) == 0x07);
+
+STATIC_ASSERT(offsetof(WcFloorTileSetup, homeY) == 0x0C);
+STATIC_ASSERT(offsetof(WcFloorTileSetup, eventId) == 0x1A);
+
 int wcfloortile_getExtraSize(void) { return 8; }
 #pragma scheduling reset
 #pragma peephole reset
@@ -51,11 +67,11 @@ void wcfloortile_hitDetect(void) {}
 #pragma scheduling off
 void wcfloortile_init(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WcFloorTileState *state = ((GameObject *)obj)->extra;
 
     *(s16 *)obj = -0x4000;
     (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 0x1800;
-    ((WcFloorTileState *)state)->flags |= 2;
+    state->flags |= 2;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -77,45 +93,45 @@ void wcfloortile_initialise(void) {}
 void wcfloortile_update(int obj)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
-    int state = *(int *)&((GameObject *)obj)->extra;
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    WcFloorTileState *state = ((GameObject *)obj)->extra;
+    WcFloorTileSetup *setup = (WcFloorTileSetup *)((GameObject *)obj)->anim.placementData;
 
     if ((u32)GameBit_Get(824) != 0) {
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
-        *(u8 *)(state + 6) = 3;
+        ((GameObject *)obj)->anim.localPosY = setup->homeY;
+        state->phase = 3;
     }
-    switch (*(u8 *)(state + 6)) {
+    switch (state->phase) {
     case 0:
     default:
-        if (*(u8 *)(state + 7) & 4) {
+        if (state->flags & 4) {
             f32 z = lbl_803E6E9C;
             int i, off;
             for (i = 0, off = 0; i < *(s8 *)(*(int *)(obj + 0x58) + 0x10f); i++, off += 4) {
                 int e = *(int *)(*(int *)(obj + 0x58) + off + 0x100);
                 if (*(s16 *)(e + 0x44) == 1) {
                     Sfx_PlayFromObject(obj, SFXsc_strafe_active);
-                    *(u8 *)(state + 6) = 1;
-                    *(f32 *)(state + 0) = z;
+                    state->phase = 1;
+                    state->shakeTime = z;
                     ((GameObject *)obj)->anim.velocityY = z;
                 }
             }
         } else if ((u32)GameBit_Get(613) != 0) {
-            *(u8 *)(state + 7) |= 4;
+            state->flags |= 4;
         }
         break;
     case 1:
-        *(f32 *)(state + 0) = *(f32 *)(state + 0) + timeDelta;
-        if (*(f32 *)(state + 0) > lbl_803E6EA0) {
-            *(u8 *)(state + 7) |= 3;
-            *(f32 *)(state + 0) = lbl_803E6EA0;
+        state->shakeTime = state->shakeTime + timeDelta;
+        if (state->shakeTime > lbl_803E6EA0) {
+            state->flags |= 3;
+            state->shakeTime = lbl_803E6EA0;
             ((GameObject *)obj)->anim.velocityY = lbl_803E6EA4 * timeDelta + ((GameObject *)obj)->anim.velocityY;
         }
-        *(s16 *)(state + 4) = lbl_803E6EA8 * (*(f32 *)(state + 0) / lbl_803E6EA0);
-        ((GameObject *)obj)->anim.rotY = (s16)randomGetRange(-*(s16 *)(state + 4), *(s16 *)(state + 4));
-        ((GameObject *)obj)->anim.rotZ = (s16)randomGetRange(-*(s16 *)(state + 4), *(s16 *)(state + 4));
+        state->shakeMag = lbl_803E6EA8 * (state->shakeTime / lbl_803E6EA0);
+        ((GameObject *)obj)->anim.rotY = (s16)randomGetRange(-state->shakeMag, state->shakeMag);
+        ((GameObject *)obj)->anim.rotZ = (s16)randomGetRange(-state->shakeMag, state->shakeMag);
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
         {
-            f32 d = *(f32 *)(setup + 0xc) - ((GameObject *)obj)->anim.localPosY;
+            f32 d = setup->homeY - ((GameObject *)obj)->anim.localPosY;
             f32 t;
             if (d < lbl_803E6EAC) {
                 t = lbl_803E6EB0;
@@ -133,13 +149,13 @@ void wcfloortile_update(int obj)
             objAnim->alpha = (int)t;
         }
         if (objAnim->alpha == 0) {
-            *(u8 *)(state + 6) = 2;
+            state->phase = 2;
         }
         break;
     case 2:
         objAnim->alpha = 0;
         ObjHits_DisableObject(obj);
-        *(u8 *)(state + 7) |= 3;
+        state->flags |= 3;
         break;
     case 3:
         {
@@ -153,14 +169,13 @@ void wcfloortile_update(int obj)
         break;
     }
     {
-        int setup2 = *(int *)&((GameObject *)obj)->anim.placementData;
         if (fn_80065640() != 0) {
-            *(u8 *)(state + 7) |= 2;
+            state->flags |= 2;
         }
-        if (*(u8 *)(state + 7) & 2) {
+        if (state->flags & 2) {
             if (fn_80065640() == 0) {
-                fn_80065574(*(s16 *)(setup2 + 0x1a), *(int *)&((GameObject *)obj)->anim.parent, *(u8 *)(state + 7) & 1);
-                *(u8 *)(state + 7) &= ~2;
+                fn_80065574(setup->eventId, *(int *)&((GameObject *)obj)->anim.parent, state->flags & 1);
+                state->flags &= ~2;
             }
         }
     }
