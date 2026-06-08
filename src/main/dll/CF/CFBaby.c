@@ -2442,7 +2442,7 @@ void landed_arwing_update(int obj) {
         fn_8022F27C(state->childObject);
     }
 
-    if ((u32)player != 0 && fn_802972A8(player) != 0) {
+    if ((u32)player != 0 && (u32)fn_802972A8(player) != 0) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
     } else {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
@@ -2450,7 +2450,7 @@ void landed_arwing_update(int obj) {
 
     switch (state->sequenceState) {
         case 0:
-            if ((u32)ObjTrigger_IsSet(obj) != 0) {
+            if (ObjTrigger_IsSet(obj) != 0) {
                 def = *(int *)&((GameObject *)obj)->anim.placementData;
                 nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
                 if (*(s8 *)(obj + 0xac) == 0xd && GameBit_Get(0xc92) != 0) {
@@ -2463,7 +2463,7 @@ void landed_arwing_update(int obj) {
             }
             break;
         case 1:
-            if ((u32)ObjTrigger_IsSet(obj) != 0) {
+            if (ObjTrigger_IsSet(obj) != 0) {
                 state->sequenceState = 2;
                 cutSceneFn_8011dd30();
             }
