@@ -261,6 +261,26 @@ citations map to which renumbered entry).
     the result, which target omits. Check the asm — if there's no `clrlwi`
     after the call, the project treats the return as `int`. Picked up
     `MMP_levelcontrol_init` in DIMlavaball via `extern int getSaveGameLoadStatus`.
+    **VTABLE-MEMBER width is the same bug at INTERFACE scale, and one header
+    retype is the wave's single biggest find — but A/B PER-FN, then block-cast
+    the lone regressor.** A shared interface vtable slot declared `u8
+    (*fn)(...)` makes EVERY caller that tests the result emit the spurious
+    `clrlwi r0,r3,24` after the `bctrl`; target uses plain `cmpwi r3,0`.
+    Retyping the slot to `int` return drops it across all callers at once:
+    `MapEventInterface.isTimedEventActive` u8->int gave +4108 matched_code, 18
+    fns improved, 6 to 100% in one line (e3b6dff99). METHOD (gold standard for
+    any shared-header return-width flip): (1) snapshot per-fn fuzzy, retype,
+    full report rebuild, diff per-fn; (2) keep ONLY if net-positive with no
+    real regressions; (3) the one collateral regressor here (hagabon_update, an
+    already-capped #108 coloring fn whose int-width result web perturbed its
+    coloring net-negative) was ISOLATED with a block-scope fn-ptr cast back to
+    the old width — `((u8 (*)(int))(*iface)->fn)(args)` — recipe #57/#35, ->
+    zero regressions. CRITICAL NEGATIVE: most u8 vtable returns are CORRECT
+    (target keeps the clrlwi) — A/B'd rom_curve walker fns (u8->int net -1936,
+    29 regressions) and MapEvent getAnimEvent/getPlayerNo (net -5144); only the
+    one typo flipped positive. NEVER bulk-retype u8 vtable slots; A/B each. The
+    clrlwi-after-bctrl on a tested result is the per-fn TELL that points back to
+    the slot.
 
 12. **Model a single-bit flag as a C bitfield to get `rlwimi` from CLEAN C.**
     (The older asm `rlwimi` workaround has been revoked under the no-asm
