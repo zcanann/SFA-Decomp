@@ -3,6 +3,7 @@
 #include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfprisonuncle.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -216,7 +217,6 @@ extern f32 lbl_803E3898;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern s16 lbl_803DBD98[4];
-extern void *gRomCurveInterface;
 extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **gMapEventInterface;
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
@@ -1934,7 +1934,7 @@ int fn_8017FFD0(int obj, TrickyWarpState *state) {
   if (state->patchGroup == 0) {
     state->patchGroup = (u8)Objfsa_GetWalkGroupIndexAtPoint((f32 *)(obj + 0xc),0);
     if (state->patchGroup != 0) {
-      curveEntries = (*(TrickyWarpCurveEntry **(**)(int *))(*(int *)gRomCurveInterface + 0x10))(&curveCount);
+      curveEntries = (TrickyWarpCurveEntry **)(*gRomCurveInterface)->getCurves(&curveCount);
       n = 0;
       for (i = 0; i < curveCount; i++) {
         entry = curveEntries[i];
@@ -1965,7 +1965,7 @@ int fn_8017FFD0(int obj, TrickyWarpState *state) {
       if (state->curveNodeIds[i] == 0) {
         break;
       }
-      node = (*(TrickyWarpCurveNode *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(state->curveNodeIds[i]);
+      node = (TrickyWarpCurveNode *)(*gRomCurveInterface)->getById(state->curveNodeIds[i]);
       if (node != NULL) {
         if (node->requiredGameBit == -1 || GameBit_Get(node->requiredGameBit) != 0) {
           if (node->forbiddenGameBit == -1 || GameBit_Get(node->forbiddenGameBit) == 0) {
@@ -2389,6 +2389,7 @@ void curvefish_update(int obj) {
   int firstNode;
   int secondNode;
   int thirdNode;
+  int nextNode;
   f32 maxHitSpeed;
   f32 speedThreshold;
   f32 distLimit;
@@ -2425,13 +2426,13 @@ void curvefish_update(int obj) {
     ((GameObject *)obj)->anim.localPosY = setup2->spawnY;
     ((GameObject *)obj)->anim.localPosZ = setup2->spawnZ;
 
-    firstNode = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(
-        (*(int (**)(void *, int, int, f32, f32, f32))(*(int *)gRomCurveInterface + 0x14))(
-            &curveQuery, 1, -1, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ));
-    secondNode = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(
-        (*(int (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(firstNode, 0));
-    thirdNode = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(
-        (*(int (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(secondNode, 0));
+    firstNode = (int)(*gRomCurveInterface)->getById(
+        (*gRomCurveInterface)->find((int *)&curveQuery, 1, -1, ((GameObject *)obj)->anim.localPosX,
+            ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ));
+    secondNode = (int)(*gRomCurveInterface)->getById(
+        ((int (*)(int, int))(*gRomCurveInterface)->slot54)(firstNode, 0));
+    thirdNode = (int)(*gRomCurveInterface)->getById(
+        ((int (*)(int, int))(*gRomCurveInterface)->slot54)(secondNode, 0));
 
     if (fn_800DA980((int)state, firstNode, secondNode, thirdNode) != 0) {
       return;
@@ -2513,9 +2514,8 @@ void curvefish_update(int obj) {
     }
 
     if (state->hasRouteEdge != 0) {
-      (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(state->routeCursor, 0);
-      if (curveFn_800da23c((int)state,
-                           (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))()) != 0) {
+      nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(state->routeCursor, 0);
+      if (curveFn_800da23c((int)state, (int)(*gRomCurveInterface)->getById(nextNode)) != 0) {
         state->mode = 0;
         state->phaseTimer = lbl_803E38F0;
         ((GameObject *)obj)->anim.alpha = 0;

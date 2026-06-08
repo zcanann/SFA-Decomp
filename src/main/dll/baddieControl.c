@@ -4,6 +4,7 @@
 #include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
 typedef struct {
@@ -4262,7 +4263,6 @@ int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
 
 extern int GameBit_Get(int bit);
 extern void voxmaps_allocRouteWork(u8 *work);
-extern void *gRomCurveInterface;
 extern u32 lbl_803E1C28;
 extern f32 lbl_803E1C38;
 extern u8 lbl_8031A054[];
@@ -4374,8 +4374,8 @@ void dll_19_func18(int p1, u8 *p2, u8 *p3, int p4, int p5, int p6, f32 fparam, i
         if (*(int *)(p3 + 988) != 0) {
             memset((void *)*(int *)(p3 + 988), 0, 264);
         }
-        if ((u8)(*(int (**)(int, int, f32, int *, int))(*(int *)gRomCurveInterface + 140))(
-                *(int *)(p3 + 988), p1, (f32)(s32)*(u16 *)(p3 + 1022) - lbl_803E1C38,
+        if ((*gRomCurveInterface)->initCurve((void *)*(int *)(p3 + 988), (void *)p1,
+                (f32)(s32)*(u16 *)(p3 + 1022) - lbl_803E1C38,
                 &curveLocal, -1) == 0) {
             *(s16 *)(p3 + 1024) = *(u16 *)(p3 + 1024) | 8;
         }

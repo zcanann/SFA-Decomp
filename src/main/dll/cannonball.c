@@ -1,5 +1,6 @@
 #include "main/dll/cannonball.h"
 #include "main/game_object.h"
+#include "main/dll/rom_curve_interface.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -32,7 +33,6 @@ extern void trickyAdvanceRouteTargetAhead(int obj, void *route, float speed);
 extern void trickyMove(int obj, void *moveState);
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
 
-extern void *gRomCurveInterface;
 extern f32 timeDelta;
 extern f64 lbl_803E2460;
 extern f32 lbl_803E23DC;
@@ -69,6 +69,7 @@ void trickyFn_80141290(int obj, int ball)
     int curve;
     int fromNode;
     int toNode;
+    int nextNode;
     int candidateNode;
     int targetNode;
     int walkGroup;
@@ -107,12 +108,12 @@ void trickyFn_80141290(int obj, int ball)
         }
 
         if (nodeCount != 0) {
-            targetNode = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(nodeIds[0]);
+            targetNode = (int)(*gRomCurveInterface)->getById(nodeIds[0]);
             bestDistance = getXZDistance((float *)(*(int *)(ball + CANNONBALL_CURRENT_OWNER) + 0x18),
                                          (float *)(targetNode + 8));
 
             for (i = 1; i < nodeCount; i++) {
-                candidateNode = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(nodeIds[i]);
+                candidateNode = (int)(*gRomCurveInterface)->getById(nodeIds[i]);
                 distance = getXZDistance((float *)(*(int *)(ball + CANNONBALL_CURRENT_OWNER) + 0x18),
                                          (float *)(candidateNode + 8));
                 if (distance < bestDistance) {
@@ -170,11 +171,11 @@ void trickyFn_80141290(int obj, int ball)
         if (Objfsa_GetWalkGroupIndexAtPoint((float *)(obj + 0x18), (void *)0) == walkGroup) {
             curve = *(int *)(ball + CANNONBALL_CURVE);
 
-            (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(curve, 0);
-            fromNode = (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))();
+            nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(curve, 0);
+            fromNode = (int)(*gRomCurveInterface)->getById(nextNode);
 
-            (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x60))(curve, 0);
-            toNode = (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))();
+            nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot60)(curve, 0);
+            toNode = (int)(*gRomCurveInterface)->getById(nextNode);
 
             bestDistance = getXZDistance((float *)(*(int *)(ball + CANNONBALL_OWNER_LINK) + 0x18),
                                          (float *)(fromNode + 8));
@@ -182,13 +183,13 @@ void trickyFn_80141290(int obj, int ball)
                                      (float *)(toNode + 8));
 
             if (bestDistance > distance) {
-                (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(fromNode, 0);
-                targetNode = (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))();
+                nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(fromNode, 0);
+                targetNode = (int)(*gRomCurveInterface)->getById(nextNode);
                 *(int *)(ball + CANNONBALL_ROUTE_REVERSING) = 0;
             } else {
                 fromNode = toNode;
-                (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x60))(toNode, 0);
-                targetNode = (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))();
+                nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot60)(toNode, 0);
+                targetNode = (int)(*gRomCurveInterface)->getById(nextNode);
                 *(int *)(ball + CANNONBALL_ROUTE_REVERSING) = 1;
             }
 
