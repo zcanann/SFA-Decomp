@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/worldobj.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -581,7 +582,6 @@ extern int lbl_803DBF9C;
 extern int lbl_803DBFA0;
 extern int lbl_803DBFA4;
 extern int Curve_AdvanceAlongPath(u8 *cv, f32 t);
-extern void *gRomCurveInterface;
 extern int getAngle(f32 a, f32 b);
 extern f32 sqrtf(f32 x);
 
@@ -616,7 +616,7 @@ void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
     {
         u8 *cv = st + 0x5c;
         if (Curve_AdvanceAlongPath(cv, *(f32 *)(st + 0x54)) != 0 || *(int *)(cv + 0x10) != 0) {
-            ((void (*)(u8 *))((void **)*(void **)gRomCurveInterface)[0x90 / 4])(cv);
+            (*gRomCurveInterface)->goNextPoint(cv);
         }
         {
             f32 dx = *(f32 *)(cv + 0x68) - ((GameObject *)obj)->anim.localPosX;

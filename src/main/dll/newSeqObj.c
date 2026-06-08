@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/newSeqObj.h"
 #include "main/objanim.h"
 
@@ -262,7 +263,6 @@ void fn_80150EDC(void *p1, void *p2) {
 
 extern void sidekickToy_updateCurveTargetLatch(int *obj);
 extern int Curve_AdvanceAlongPath(u8 *curve, f32 t);
-extern int *gRomCurveInterface;
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 a, f32 b);
 extern u32 randomGetRange(int min, int max);
@@ -351,7 +351,7 @@ void fn_80150910(int *obj, u8 *state)
             *(f32 *)(state + 0x310) = lbl_803E2780;
         }
         if (Curve_AdvanceAlongPath(path, *(f32 *)(state + 0x310)) != 0 || *(int *)(path + 0x10) != 0) {
-            if ((*(u8 (**)(u8 *))(*(int *)gRomCurveInterface + 0x90))(path) != 0) {
+            if ((*gRomCurveInterface)->goNextPoint(path) != 0) {
                 sidekickToy_updateCurveTargetLatch(obj);
             }
         }

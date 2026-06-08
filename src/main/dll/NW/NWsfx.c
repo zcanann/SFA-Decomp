@@ -3,6 +3,7 @@
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/SH/SHthorntail_internal.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
@@ -29,7 +30,6 @@ extern void itemPickupDoParticleFx(u8 *obj, f32 scale, int mode, int count);
 extern undefined4 ObjMsg_SendToObject(u8 *obj, int msg, u8 *sender, void *data);
 extern void objMove(u8 *obj, f32 vx, f32 vy, f32 vz);
 
-extern int *gRomCurveInterface;
 extern EffectInterface **gPartfxInterface;
 
 extern f32 timeDelta;
@@ -142,7 +142,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                         if (dx * dx + dz * dz < rangeSq) {
                             if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
                                 ((RomCurveWalker *)state)->unk10 != 0) {
-                                (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
+                                (*gRomCurveInterface)->goNextPoint(state);
                             }
                         } else {
                             break;
@@ -214,7 +214,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                             if (dx * dx + dz * dz < rangeSq) {
                                 if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
                                     ((RomCurveWalker *)state)->unk10 != 0) {
-                                    (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
+                                    (*gRomCurveInterface)->goNextPoint(state);
                                 }
                             } else {
                                 break;
@@ -237,7 +237,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                             if (dx * dx + dz * dz < rangeSq) {
                                 if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
                                     ((RomCurveWalker *)state)->unk10 != 0) {
-                                    (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
+                                    (*gRomCurveInterface)->goNextPoint(state);
                                 }
                             } else {
                                 break;
@@ -270,7 +270,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                     if (dx * dx + dz * dz < rangeSq) {
                         if (Curve_AdvanceAlongPath(state, ((EdibleMushroomState *)state)->unk120) != 0 ||
                             ((RomCurveWalker *)state)->unk10 != 0) {
-                            (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
+                            (*gRomCurveInterface)->goNextPoint(state);
                         }
                     } else {
                         break;

@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/seqObj11E.h"
 #include "main/dll/baddie_state.h"
 #include "main/objseq.h"
@@ -218,7 +219,6 @@ extern int fn_80152370(int obj, int p2);
 extern void Obj_FreeObject(int *obj);
 extern void Sfx_StopObjectChannel(int *obj, int channel);
 extern int Curve_AdvanceAlongPath(u8 *curve, f32 t);
-extern int *gRomCurveInterface;
 extern u8 lbl_803DBCA8;
 extern int Sfx_IsPlayingFromObject(int *obj, int sfxId);
 extern int fn_801A0174(int *obj);
@@ -288,9 +288,8 @@ void fn_80152514(int *obj, u8 *state)
         int step;
 
         if (Curve_AdvanceAlongPath(path, ((BaddieState *)state)->pathStep) != 0 || ((RomCurveWalker *)path)->unk10 != 0) {
-            if ((*(u8 (**)(u8 *))(*(int *)gRomCurveInterface + 0x90))(path) != 0) {
-                if ((*(u8 (**)(u8 *, int *, f32, u8 *, int))(*(int *)gRomCurveInterface + 0x8c))(
-                        *(u8 **)state, obj, lbl_803E2824, &lbl_803DBCA8, -1) != 0) {
+            if ((*gRomCurveInterface)->goNextPoint(path) != 0) {
+                if ((*gRomCurveInterface)->initCurve(*(u8 **)state, obj, lbl_803E2824, (int *)&lbl_803DBCA8, -1) != 0) {
                     ((BaddieState *)state)->controlFlags &= ~0x2000;
                 }
             }
@@ -1142,4 +1141,3 @@ void fn_80152040(int *obj, u8 *state)
 }
 #pragma peephole reset
 #pragma scheduling reset
-
