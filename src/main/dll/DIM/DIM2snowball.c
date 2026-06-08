@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/asset_load.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -1676,7 +1677,6 @@ extern int **ObjGroup_GetObjects(int group, int *countOut);
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
-extern int *gRomCurveInterface;
 extern u8 framesThisStep;
 
 #pragma scheduling off
@@ -1697,14 +1697,14 @@ void dim2pathgenerator_update(int *obj)
     if ((((Dim2PathGeneratorState *)extra)->flags & 4) != 0) {
         if ((((Dim2PathGeneratorState *)extra)->flags & 2) == 0) {
             int n = 21;
-            int found = ((int (*)(f32, f32, f32, int *, int, int))((int *)*gRomCurveInterface)[0x14 / 4])(
-                ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
-                ((GameObject *)obj)->anim.localPosZ, &n, 1, 10);
+            int found = (*gRomCurveInterface)->find(&n, 1, 10, ((GameObject *)obj)->anim.localPosX,
+                                                    ((GameObject *)obj)->anim.localPosY,
+                                                    ((GameObject *)obj)->anim.localPosZ);
             if (found != -1) {
-                int *cv = (int *)((int (*)(int))((int *)*gRomCurveInterface)[0x1c / 4])(found);
-                ((void (*)(int))((int *)*gRomCurveInterface)[0x74 / 4])((int)cv);
+                int *cv = (int *)(*gRomCurveInterface)->getById(found);
+                ((void (*)(int))(*gRomCurveInterface)->slot74)((int)cv);
                 ((Dim2PathGeneratorState *)extra)->curveValid =
-                    ((int (*)(int *, void *, void *, void *, void *))((int *)*gRomCurveInterface)[0x78 / 4])(
+                    ((int (*)(int *, void *, void *, void *, void *))(*gRomCurveInterface)->slot78)(
                         cv, (char *)extra + 0xc, (char *)extra + 0x32c, (char *)extra + 0x64c,
                         (char *)extra + 0x96c);
                 ((Dim2PathGeneratorState *)extra)->flags |= 2;
