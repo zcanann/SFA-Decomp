@@ -59,7 +59,7 @@ void sh_levelcontrol_update(int param_1)
   if (*(f32 *)((int)puVar5 + 0xc) > lbl_803E54B4) {
     gameTextShow(0x3f6);
     *(f32 *)((int)puVar5 + 0xc) = *(f32 *)((int)puVar5 + 0xc) - timeDelta;
-    if (*(f32 *)((int)puVar5 + 0xc) < lbl_803E54B4) {
+    if (*(f32 *)((int)puVar5 + 0xc) < *(f32 *)&lbl_803E54B4) {
       *(f32 *)((int)puVar5 + 0xc) = lbl_803E54B4;
     }
   }
