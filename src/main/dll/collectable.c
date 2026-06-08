@@ -230,7 +230,6 @@ extern undefined4 DAT_803dc8a8;
 extern undefined4 DAT_803dc8b0;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
 extern undefined4* DAT_803dd734;
 extern undefined4 DAT_803de6c8;
@@ -3623,11 +3622,11 @@ void FUN_80147d2c(int param_1,int param_2)
       *(undefined *)(param_2 + 0x25f) = 0;
     }
   }
-  (**(code **)(*DAT_803dd728 + 0x10))((double)lbl_803DC074,param_1,param_2 + 4);
+  (*gPathControlInterface)->update((void *)param_1, (void *)(param_2 + 4), lbl_803DC074);
   if ((*(uint *)(param_2 + 0x2e4) & 4) != 0) {
-    (**(code **)(*DAT_803dd728 + 0x14))(param_1,param_2 + 4);
+    (*gPathControlInterface)->apply((void *)param_1, (void *)(param_2 + 4));
   }
-  (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,param_1,param_2 + 4);
+  (*gPathControlInterface)->advance((void *)param_1, (void *)(param_2 + 4), lbl_803DC074);
   if (((*(char *)(param_2 + 0x25f) != '\0') && ((*(uint *)(param_2 + 0x2e4) & 0x28000002) == 0)) &&
      ((*(byte *)(param_2 + 0x264) & 0x10) != 0)) {
     *(float *)(param_1 + 0x28) = lbl_803E31FC;

@@ -40,7 +40,6 @@ extern undefined4 DAT_803dc070;
 extern undefined4 gNewCloudsInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd728;
 extern undefined4 DAT_803de780;
 extern f64 DOUBLE_803e4ca8;
 extern f64 DOUBLE_803e4cc0;
@@ -1095,9 +1094,9 @@ void FUN_80195b9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       local_68 = (double)(longlong)iVar4;
       param_9[2] = (short)iVar4;
       if ((*(byte *)(iVar8 + 0x3c) & 2) != 0) {
-        (**(code **)(*DAT_803dd728 + 0x10))((double)lbl_803DC074,param_9,iVar9);
-        (**(code **)(*DAT_803dd728 + 0x14))(param_9,iVar9);
-        (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,param_9,iVar9);
+        (*gPathControlInterface)->update(param_9, (void *)iVar9, lbl_803DC074);
+        (*gPathControlInterface)->apply(param_9, (void *)iVar9);
+        (*gPathControlInterface)->advance(param_9, (void *)iVar9, lbl_803DC074);
         if (*(char *)(iVar9 + 0x261) != '\0') {
           dVar14 = -(double)*(float *)(param_9 + 0x12);
           dVar13 = -(double)*(float *)(param_9 + 0x14);
@@ -1199,9 +1198,9 @@ void FUN_80196244(undefined2 *param_1,int param_2)
   *(undefined *)(iVar4 + 0x29e) = uVar2;
   DAT_803de780 = 0;
   if ((*(byte *)(param_2 + 0x3c) & 2) != 0) {
-    (**(code **)(*DAT_803dd728 + 4))(iVar4,0,0x40002,1);
-    (**(code **)(*DAT_803dd728 + 0xc))(iVar4,1,&DAT_80322fb8,&gNewCloudsInterface,local_18);
-    (**(code **)(*DAT_803dd728 + 0x20))(param_1,iVar4);
+    (*gPathControlInterface)->init((void *)iVar4, 0, 0x40002, 1);
+    (*gPathControlInterface)->setup((void *)iVar4, 1, &DAT_80322fb8, &gNewCloudsInterface, local_18);
+    (*gPathControlInterface)->attachObject(param_1, (void *)iVar4);
   }
   return;
 }
