@@ -181,7 +181,7 @@ void Obj_SteerVelocityTowardVector(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 
         ang = fn_80291FF4(PSVECDotProduct(n1, n2));
         if (ang > c) {
             PSMTXRotAxisRad(mtx, cross, c * (ang > lbl_803E6C38 ? lbl_803E6C6C : lbl_803E6C70));
-            PSMTXMultVecSR2(mtx, n1, n2);
+            PSMTXMultVecSR(mtx, n1, n2);
         }
     }
     t = mag2 * lbl_803E6C74;
