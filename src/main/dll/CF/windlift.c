@@ -1271,7 +1271,7 @@ void fn_80185B74(int obj)
     state = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
     sub = *(int *)(player + 0xb8);
-    dist = Vec_distance((void *)(player + 0x18), (void *)(obj + 0x18));
+    dist = Vec_distance((void *)(player + 0x18), (void *)&((GameObject *)obj)->anim.worldPosX);
     if (state->liftTimer <= 0) {
         state->ventState = 1;
         state->launchPhase = 0;
@@ -1380,7 +1380,7 @@ void fn_80185B74(int obj)
                 rot.c = 0;
                 rot.b = 0;
                 rot.ang = *(s16 *)player;
-                vecRotateZXY(&rot, (f32 *)(obj + 0x24));
+                vecRotateZXY(&rot, &((GameObject *)obj)->anim.velocityX);
                 Sfx_PlayFromObject(obj, SFXmn_dimbos46);
             } else if ((s8)st21 == 2 && ((GameObject *)obj)->unkF8 == 0) {
                 f32 fz;
@@ -1440,7 +1440,7 @@ void fn_80185B74(int obj)
     ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
     state->unk16 -= framesThisStep;
     if (*(s8 *)&state->rideState != 0) {
-        if (getXZDistance((void *)(obj + 0x18), (void *)(p4c + 8)) >=
+        if (getXZDistance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(p4c + 8)) >=
             (f32)(state->maxDist * state->maxDist)) {
             f32 fz = lbl_803E3A58;
             ((GameObject *)obj)->anim.velocityX = fz;
@@ -1737,7 +1737,7 @@ void fn_801869DC(int obj)
     if (((LFF2 *)&state->modeFlags)->mode == 1) {
         int player = Obj_GetPlayerObject();
         state->speed =
-            lbl_803E3AC4 * Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) + lbl_803E3AC0;
+            lbl_803E3AC4 * Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(player + 0x18)) + lbl_803E3AC0;
     } else {
         state->speed = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
     }
