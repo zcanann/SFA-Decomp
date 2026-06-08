@@ -1004,22 +1004,22 @@ void fn_8014EE8C(int obj, SwarmBaddieState *state)
     ((GameObject *)obj)->anim.velocityY *= step;
     ((GameObject *)obj)->anim.velocityZ *= step;
 
-    if (((GameObject *)obj)->anim.velocityX > lbl_803E2688) {
+    if (((GameObject *)obj)->anim.velocityX > *(f32 *)&lbl_803E2688) {
         ((GameObject *)obj)->anim.velocityX = lbl_803E2688;
     }
-    if (((GameObject *)obj)->anim.velocityY > lbl_803E2688) {
+    if (((GameObject *)obj)->anim.velocityY > *(f32 *)&lbl_803E2688) {
         ((GameObject *)obj)->anim.velocityY = lbl_803E2688;
     }
-    if (((GameObject *)obj)->anim.velocityZ > lbl_803E2688) {
+    if (((GameObject *)obj)->anim.velocityZ > *(f32 *)&lbl_803E2688) {
         ((GameObject *)obj)->anim.velocityZ = lbl_803E2688;
     }
-    if (((GameObject *)obj)->anim.velocityX < lbl_803E268C) {
+    if (((GameObject *)obj)->anim.velocityX < *(f32 *)&lbl_803E268C) {
         ((GameObject *)obj)->anim.velocityX = lbl_803E268C;
     }
-    if (((GameObject *)obj)->anim.velocityY < lbl_803E268C) {
+    if (((GameObject *)obj)->anim.velocityY < *(f32 *)&lbl_803E268C) {
         ((GameObject *)obj)->anim.velocityY = lbl_803E268C;
     }
-    if (((GameObject *)obj)->anim.velocityZ < lbl_803E268C) {
+    if (((GameObject *)obj)->anim.velocityZ < *(f32 *)&lbl_803E268C) {
         ((GameObject *)obj)->anim.velocityZ = lbl_803E268C;
     }
 
@@ -1096,22 +1096,22 @@ void fn_8014F620(int obj, int *state)
     ((GameObject *)obj)->anim.velocityY *= step;
     ((GameObject *)obj)->anim.velocityZ *= step;
 
-    if (((GameObject *)obj)->anim.velocityX > lbl_803E26F8) {
+    if (((GameObject *)obj)->anim.velocityX > *(f32 *)&lbl_803E26F8) {
         ((GameObject *)obj)->anim.velocityX = lbl_803E26F8;
     }
-    if (((GameObject *)obj)->anim.velocityY > lbl_803E26F8) {
+    if (((GameObject *)obj)->anim.velocityY > *(f32 *)&lbl_803E26F8) {
         ((GameObject *)obj)->anim.velocityY = lbl_803E26F8;
     }
-    if (((GameObject *)obj)->anim.velocityZ > lbl_803E26F8) {
+    if (((GameObject *)obj)->anim.velocityZ > *(f32 *)&lbl_803E26F8) {
         ((GameObject *)obj)->anim.velocityZ = lbl_803E26F8;
     }
-    if (((GameObject *)obj)->anim.velocityX < lbl_803E26FC) {
+    if (((GameObject *)obj)->anim.velocityX < *(f32 *)&lbl_803E26FC) {
         ((GameObject *)obj)->anim.velocityX = lbl_803E26FC;
     }
-    if (((GameObject *)obj)->anim.velocityY < lbl_803E26FC) {
+    if (((GameObject *)obj)->anim.velocityY < *(f32 *)&lbl_803E26FC) {
         ((GameObject *)obj)->anim.velocityY = lbl_803E26FC;
     }
-    if (((GameObject *)obj)->anim.velocityZ < lbl_803E26FC) {
+    if (((GameObject *)obj)->anim.velocityZ < *(f32 *)&lbl_803E26FC) {
         ((GameObject *)obj)->anim.velocityZ = lbl_803E26FC;
     }
 
