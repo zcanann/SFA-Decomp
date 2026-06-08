@@ -278,14 +278,10 @@ void firstPersonExit(short *param_1)
   register short *self = param_1;
   float fVar1;
   float fVar2;
-  short sVar3;
+  int sVar3;
   int iVar4;
   float local_24[3];
   undefined auStack_28[4];
-  undefined4 local_18;
-  uint uStack_14;
-  undefined4 local_10;
-  uint uStack_c;
 
   iVar4 = *(int *)(self + 0x52);
   *(float *)(lbl_803DD548 + 0x10) = *(float *)(self + 0xc);
@@ -312,13 +308,10 @@ void firstPersonExit(short *param_1)
   *(undefined4 *)(lbl_803DD548 + 0xf8) = 0;
   *(code **)(lbl_803DD548 + 0x10c) = (code *)Curve_EvalHermite;
   *(void **)(lbl_803DD548 + 0x110) = Curve_BuildHermiteCoeffs;
-  uStack_14 = (int)*self ^ 0x80000000;
-  local_18 = 0x43300000;
-  *(float *)(lbl_803DD548 + 0x40) =
-      (float)((double)CONCAT44(0x43300000,uStack_14) - lbl_803E17D8);
+  *(float *)(lbl_803DD548 + 0x40) = (float)(int)*self;
   sVar3 = getAngle((double)(*(float *)(lbl_803DD548 + 0x14) - *(float *)(iVar4 + 0x18)),
                    (double)(*(float *)(lbl_803DD548 + 0x34) - *(float *)(iVar4 + 0x20)));
-  *(float *)(lbl_803DD548 + 0x44) = (float)(int)(short)(-0x8000 - sVar3);
+  *(float *)(lbl_803DD548 + 0x44) = (float)(int)(short)(0x8000 - sVar3);
   fVar1 = lbl_803E17C4;
   *(float *)(lbl_803DD548 + 0x48) = lbl_803E17C4;
   *(float *)(lbl_803DD548 + 0x4c) = fVar1;
@@ -333,10 +326,7 @@ void firstPersonExit(short *param_1)
       *(float *)(lbl_803DD548 + 0x40) = *(float *)(lbl_803DD548 + 0x40) + lbl_803E17D0;
     }
   }
-  uStack_c = (int)self[1] ^ 0x80000000;
-  local_10 = 0x43300000;
-  *(float *)(lbl_803DD548 + 0x50) =
-      (float)((double)CONCAT44(0x43300000,uStack_c) - lbl_803E17D8);
+  *(float *)(lbl_803DD548 + 0x50) = (float)(int)self[1];
   fVar1 = lbl_803E17C4;
   *(float *)(lbl_803DD548 + 0x54) = lbl_803E17C4;
   *(float *)(lbl_803DD548 + 0x58) = fVar1;
