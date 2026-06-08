@@ -582,7 +582,7 @@ void SB_Propeller_update(int obj) {
             if (((SBPropellerState *)pf)->spinBlend < lbl_803E5814) {
                 ((SBPropellerState *)pf)->spinBlend = -((SBPropellerState *)pf)->spinBlend;
             }
-            if (((SBPropellerState *)pf)->spinBlend < lbl_803E5820) {
+            if (((SBPropellerState *)pf)->spinBlend < *(f32 *)&lbl_803E5820) {
                 ((SBPropellerState *)pf)->spinBlend = lbl_803E5820;
             }
         }

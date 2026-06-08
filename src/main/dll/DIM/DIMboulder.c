@@ -1764,7 +1764,7 @@ void imicemountain_update(int *obj)
         gameTextSetColor(255, 255, 255, 255);
         gameTextShow(0x351);
         extra->warningTextTimer = extra->warningTextTimer - timeDelta;
-        if (extra->warningTextTimer < lbl_803E46DC) {
+        if (extra->warningTextTimer < *(f32 *)&lbl_803E46DC) {
             extra->warningTextTimer = lbl_803E46DC;
         }
     }
