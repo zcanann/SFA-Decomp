@@ -3,11 +3,39 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 
 extern ObjectDescriptor gDoorLockObjDescriptor;
 extern ObjectDescriptor gSeqObjectObjDescriptor;
 extern ObjectDescriptor gSeqObj2ObjDescriptor;
 extern ObjectDescriptor gIMMultiSeqObjDescriptor;
+
+typedef struct SeqObjectPlacement {
+    ObjPlacement base;
+    s16 openGameBit;
+    s16 triggerGameBit;
+    u8 initialYaw;
+    u8 flags;
+    s8 triggerId;
+    u8 modelBankIndex;
+    s16 preemptSequenceId;
+    u16 sequenceParam;
+    u8 warpMapId;
+    u8 pad25[3];
+} SeqObjectPlacement;
+
+typedef struct IMMultiSeqPlacement {
+    ObjPlacement base;
+    s16 completionGameBits[4];
+    s16 activeGameBits[4];
+    u8 initialYaw;
+    u8 pad29;
+    s8 modelBankIndex;
+    u8 pad2B;
+    s8 triggerIds[4];
+    u8 polarityMask;
+    u8 pad31[3];
+} IMMultiSeqPlacement;
 
 int Lock_DoorLock_SeqFn(int obj, int unused, int seq);
 void doorlock_init(short *obj,int config);
@@ -42,7 +70,7 @@ int seqobject_getObjectTypeId(void);
 void seqobject_free(int x);
 void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void seqobject_update(int *obj);
-void seqobject_init(int *obj, u8 *params);
+void seqobject_init(int *obj, SeqObjectPlacement *params);
 
 int seqobj2_getExtraSize(void);
 int seqobj2_getObjectTypeId(void);
@@ -50,7 +78,7 @@ void seqobj2_free(int x);
 void seqobj2_render(void);
 void seqobj2_hitDetect(void);
 void seqobj2_update(int *obj);
-void seqobj2_init(int* obj, int* def);
+void seqobj2_init(int *obj, SeqObjectPlacement *def);
 void SeqObj2_release(void);
 void SeqObj2_initialise(void);
 
@@ -60,7 +88,7 @@ void immultiseq_free(int x);
 void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void immultiseq_hitDetect(void);
 void immultiseq_update(int *obj);
-void immultiseq_init(int *obj, u8 *params);
+void immultiseq_init(int *obj, IMMultiSeqPlacement *params);
 void immultiseq_release(void);
 void immultiseq_initialise(void);
 int immultiseq_SeqFn(int *obj, int *anim, u8 *events);
