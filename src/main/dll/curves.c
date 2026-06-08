@@ -65,6 +65,7 @@ extern f32 sqrtf(f32 x);
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern uint countLeadingZeros();
+extern int __cntlzw(unsigned int value);
 
 /* Hcurves keeps the ROM curve definitions sorted by id for binary searches. */
 extern undefined4 DAT_803dc070;
@@ -1653,7 +1654,7 @@ foundLinkedCurve:
         dx = segment.nearestX - x;
         dy = segment.nearestY - y;
         distance = dz * dz + dx * dx + dy * dy;
-        slot = countLeadingZeros(excludeLinkId - linkId) >> 5;
+        slot = (u32)__cntlzw(excludeLinkId - linkId) >> 5;
         if (bestDistance[slot] < distance) {
           bestDistance[slot] = distance;
           bestLink[slot] = curve->linkIds[linkIndex];
