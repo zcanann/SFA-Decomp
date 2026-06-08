@@ -1,4 +1,5 @@
 #include "main/objanim.h"
+#include "main/game_ui_interface.h"
 #include "main/dll/baddie/swarmBaddie.h"
 
 
@@ -660,7 +661,6 @@ extern void AudioStream_StartPrepared(void);
 extern void AudioStream_Play(int stream, void (*cb)(void));
 extern void gameTextGetBox(int box);
 extern void gameTextFreePhrase(u8 *phrase);
-extern int *gGameUIInterface;
 
 #pragma opt_common_subs off
 void gameTextFn_80125ba4(int idx) {
@@ -680,7 +680,7 @@ void gameTextFn_80125ba4(int idx) {
         {
             u8 *e = &lbl_8031AF34[idx];
             if (e[7] != 0) {
-                (*(void (**)(int, int, int, int))(*(int *)gGameUIInterface + 0x38))(*(u16 *)(e + 4), 0, 0, 0);
+                (*gGameUIInterface)->showNpcDialogue(*(u16 *)(e + 4), 0, 0, 0);
             } else {
                 b = *(u16 *)(e + 8);
                 a = *(u16 *)(e + 4);

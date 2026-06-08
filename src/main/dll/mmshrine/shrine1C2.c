@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_ui_interface.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
@@ -136,7 +137,6 @@ extern void Music_Trigger(int id, int restart);
 extern void GameBit_Set(int bit, int value);
 extern int GameBit_Get(int bit);
 extern int *Obj_GetPlayerObject(void);
-extern int *gGameUIInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern u8 lbl_80326208[];
@@ -192,7 +192,7 @@ void ecsh_shrine_update(s16 *obj)
         gv = GameBit_Get(0x58b);
         sub[0x32] = gv;
         if (sub[0x32] != 0) {
-            (*(void (**)(int, int, int, int))(*(int *)gGameUIInterface + 0x38))(0x285, 0x14, 0x8c, 1);
+            (*gGameUIInterface)->showNpcDialogue(0x285, 0x14, 0x8c, 1);
         }
     }
     if (((GameObject *)obj)->unkF4 != 0) {

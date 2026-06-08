@@ -153,7 +153,7 @@ void suntemple_update(int obj)
 
         if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x1) != 0) {
             if (*(s16 *)(cfg + 0x1e) == -1 ||
-                (*(int (**)(int))(*gGameUIInterface + 0x20))(*(s16 *)(cfg + 0x1e)) != 0) {
+                (*gGameUIInterface)->isEventReady(*(s16 *)(cfg + 0x1e)) != 0) {
                 if (*(s8 *)(cfg + 0x20) != -1) {
                     if (((GameObject *)obj)->anim.seqId == 0x526) {
                         if (*(u8 *)(state + 1) == 1 &&

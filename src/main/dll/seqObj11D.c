@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/seqObj11D.h"
@@ -782,7 +783,6 @@ void fn_80151954(int obj, u8 *state)
 extern int playerGetMoney(u8 *player);
 extern void playerAddMoney(u8 *player, int amount);
 extern void hudFn_8011f38c(int a);
-extern int *gGameUIInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern u16 lbl_803DBCA0[4];
 
@@ -795,7 +795,7 @@ void fn_80151C68(int obj, u8 *state)
 
     player = Obj_GetPlayerObject();
     setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
-    if ((**(int (**)(int))(*gGameUIInterface + 0x20))(446) != 0) {
+    if ((*gGameUIInterface)->isEventReady(446) != 0) {
         if (player != NULL && playerGetMoney(player) >= 25) {
             playerAddMoney(player, -25);
             GameBit_Set(*(s16 *)(setup + 0x1c), 1);

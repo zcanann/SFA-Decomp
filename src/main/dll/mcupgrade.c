@@ -13,7 +13,7 @@ int mcupgradema_SeqFn(int p1, int p2, int setup)
             break;
         case 1:
             fn_80296A9C(Obj_GetPlayerObject(), 0x19);
-            (*(void (**)(int, int, int, int))(*gGameUIInterface + 0x38))(0x468, 0x14, 0x8c, 0);
+            (*gGameUIInterface)->showNpcDialogue(0x468, 0x14, 0x8c, 0);
             break;
         case 2:
             hudFn_8011f38c(0);

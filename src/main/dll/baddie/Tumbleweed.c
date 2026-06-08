@@ -1,6 +1,7 @@
 #include "main/objanim.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/Tumbleweed.h"
@@ -6020,7 +6021,6 @@ extern f32 powfCoreFast(f32 base, f32 exp);
 extern int ObjGroup_FindNearestObject(int type, int obj, f32 *distOut);
 extern s16 *Camera_GetCurrentViewSlot(void);
 extern int getAngle(f32 dx, f32 dz);
-extern int *gGameUIInterface;
 extern u8 lbl_803DD945;
 extern u8 lbl_803DD929;
 extern s8 lbl_803DBBB1;
@@ -6067,7 +6067,7 @@ void fn_8013396C(void)
         if (lbl_803DD928 != 0) {
             lbl_803DD928 = lbl_803DD928 - 1;
         }
-        if ((**(int (**)(int))((char *)(*gGameUIInterface) + 0x20))(0xc8d) != 0) {
+        if ((*gGameUIInterface)->isEventReady(0xc8d) != 0) {
             lbl_803DBBB0 = 1 - lbl_803DBBB0;
             switch (lbl_803DBBB0) {
             case 0:

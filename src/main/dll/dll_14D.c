@@ -1,4 +1,5 @@
 #include "main/dll/dll_14D.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
@@ -22,7 +23,6 @@ extern f32 mathCosf(f32 x);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gGameUIInterface;
 extern f32 lbl_803E3854;
 extern f32 lbl_803E44E4;
 extern f32 lbl_803E3858;
@@ -119,8 +119,8 @@ void dll_14D_update(undefined2 *param_1)
     }
     else if (((*(byte *)((int)param_1 + 0xaf) & 1) != 0) &&
              ((*(s16 *)(iVar5 + 0x1c) == -1) ||
-              (iVar2 = (*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))
-                            (*(s16 *)(iVar5 + 0x1c)), iVar2 != 0))) {
+              (iVar2 = (*gGameUIInterface)->isEventReady(*(s16 *)(iVar5 + 0x1c)),
+               iVar2 != 0))) {
       if ((*(byte *)(iVar5 + 0x23) & 2) != 0) {
         GameBit_Set(*(s16 *)(iVar5 + 0x18),0);
       }

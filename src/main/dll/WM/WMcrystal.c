@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
+#include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/WM/WMcrystal.h"
 #include "main/objseq.h"
@@ -75,7 +76,6 @@ extern int GameBit_Set(int eventId, int value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gGameUIInterface;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern MapEventInterface **gMapEventInterface;
 extern u16 lbl_80327A60[];
@@ -451,7 +451,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
         obj->mapAlpha = 0;
         state->eventFlags &= ~SC_TOTEMBOND_EVENT_START_ORBS;
         state->eventFlags |= SC_TOTEMBOND_EVENT_ORBS_ACTIVE;
-        (*(code *)(*gGameUIInterface + 0x40))(1);
+        (*gGameUIInterface)->setShowWorldMapHud(1);
         hudFn_8011f38c(1);
         (*gScreenTransitionInterface)->step(0x1e, 1);
         state->spawnTimer = lbl_803E563C;

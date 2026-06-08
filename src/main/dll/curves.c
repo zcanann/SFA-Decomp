@@ -1,5 +1,6 @@
 #include "dolphin/os.h"
 #include "main/dll/curves.h"
+#include "main/game_ui_interface.h"
 #include "main/objlib.h"
 #include <string.h>
 #include "main/game_object.h"
@@ -3923,7 +3924,6 @@ extern void setSubtitlesEnabled(u8 enabled);
 extern void setRumbleEnabled(u8 value);
 extern void audioSetSoundMode(u8 mode, u8 secondary);
 extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
-extern void **gGameUIInterface;
 extern void **gCameraInterface;
 
 #pragma scheduling off
@@ -3934,7 +3934,7 @@ void loadSaveSettings(void)
   setSubtitlesEnabled(saveData.subtitlesEnabled);
   setRumbleEnabled(saveData.rumbleEnabled);
   audioSetSoundMode(saveData.soundMode, 0);
-  (*(void (**)(u8))((char *)*gGameUIInterface + 0x50))(saveData.gameUiSetting);
+  (*gGameUIInterface)->setUnusedHudSetting(saveData.gameUiSetting);
   (*(void (**)(u8))((char *)*gCameraInterface + 0x6c))(saveData.cameraSetting);
   audioSetVolumes(saveData.sfxVolume, 10, 0, 1, 0);
   audioSetVolumes(saveData.musicVolume, 10, 1, 0, 0);
