@@ -1,8 +1,9 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 typedef struct ProjectedLightSetup {
-    u8 pad00[0x18];
+    ObjPlacement base;
     u8 rotX;
     u8 rotY;
     u16 distanceNear;
@@ -61,6 +62,7 @@ STATIC_ASSERT(offsetof(ProjectedLightSetup, nearZ) == 0x3B);
 STATIC_ASSERT(offsetof(ProjectedLightSetup, farZ) == 0x3C);
 STATIC_ASSERT(offsetof(ProjectedLightSetup, tevModeB) == 0x3E);
 STATIC_ASSERT(offsetof(ProjectedLightSetup, orthoDepthNibbles) == 0x3F);
+STATIC_ASSERT(sizeof(ProjectedLightSetup) == 0x40);
 
 #pragma peephole on
 #pragma scheduling on

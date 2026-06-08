@@ -1,8 +1,9 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 typedef struct DirectionalLightSetup {
-    u8 pad00[0x18];
+    ObjPlacement base;
     u8 rotX;
     u8 rotY;
     u8 diffuseR;
@@ -58,6 +59,7 @@ STATIC_ASSERT(offsetof(DirectionalLightSetup, colorFadeFrames) == 0x2E);
 STATIC_ASSERT(offsetof(DirectionalLightSetup, enabled) == 0x30);
 STATIC_ASSERT(offsetof(DirectionalLightSetup, rotXSpeed) == 0x32);
 STATIC_ASSERT(offsetof(DirectionalLightSetup, rotYSpeed) == 0x34);
+STATIC_ASSERT(sizeof(DirectionalLightSetup) == 0x38);
 
 #pragma peephole on
 #pragma scheduling on

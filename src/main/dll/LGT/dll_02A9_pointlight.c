@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -10,7 +11,7 @@ typedef struct PointLightState {
 } PointLightState;
 
 typedef struct PointLightSetup {
-    u8 pad00[0x18];
+    ObjPlacement base;
     u8 rotX;
     u8 rotY;
     u8 diffuseR;
@@ -66,6 +67,7 @@ STATIC_ASSERT(offsetof(PointLightSetup, glowTexture) == 0x38);
 STATIC_ASSERT(offsetof(PointLightSetup, glowR) == 0x3A);
 STATIC_ASSERT(offsetof(PointLightSetup, glowEnabled) == 0x3E);
 STATIC_ASSERT(offsetof(PointLightSetup, affectsAabbLightSelection) == 0x3F);
+STATIC_ASSERT(sizeof(PointLightSetup) == 0x40);
 
 int pointlight_getExtraSize(void) { return 8; }
 #pragma scheduling reset

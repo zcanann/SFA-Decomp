@@ -1,8 +1,10 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 typedef struct ControlLightSetup {
-    u8 pad00[0x19];
+    ObjPlacement base;
+    u8 pad18;
     s8 invertMode;
     s16 radius;
     u8 pad1C[0x1E - 0x1C];
@@ -26,6 +28,7 @@ STATIC_ASSERT(offsetof(ControlLightState, lastBit) == 0x09);
 STATIC_ASSERT(offsetof(ControlLightSetup, invertMode) == 0x19);
 STATIC_ASSERT(offsetof(ControlLightSetup, radius) == 0x1A);
 STATIC_ASSERT(offsetof(ControlLightSetup, gameBit) == 0x1E);
+STATIC_ASSERT(sizeof(ControlLightSetup) == 0x20);
 
 #pragma peephole on
 #pragma scheduling on
