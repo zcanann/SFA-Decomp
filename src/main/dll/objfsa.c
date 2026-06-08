@@ -1,9 +1,9 @@
 #include "main/dll/objfsa.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 
 extern void OSReport(const char *fmt, ...);
-typedef struct RomCurveDef RomCurveDef;
 
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
@@ -6014,7 +6014,6 @@ int fn_800DA980(float *state,void *fromCurve,void *toCurve,void *targetCurve)
 }
 #pragma scheduling reset
 
-extern void **gRomCurveInterface;
 extern f32 lbl_803E05F8;
 
 #pragma scheduling off
@@ -6023,7 +6022,7 @@ void *Objfsa_FindNearestCurveType24(int pos, int p4_filter, int p5_filter) {
     int count;
     int *hit;
     int *bestHit;
-    int **list = (int **)(*(void *(**)(int *))((int)*gRomCurveInterface + 0x10))(&count);
+    int **list = (int **)(*gRomCurveInterface)->getCurves(&count);
     f32 minDist = lbl_803E05F8;
     int i;
     bestHit = 0;
@@ -6062,7 +6061,7 @@ void *Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
     int *bestHit;
     s16 gbId;
     f32 minDist;
-    int **tmp = (int **)(*(void *(**)(int *))((int)*gRomCurveInterface + 0x10))(&count);
+    int **tmp = (int **)(*gRomCurveInterface)->getCurves(&count);
     minDist = lbl_803E05F8;
     bestHit = 0;
     i = 0;
@@ -6214,7 +6213,7 @@ void walkgroupFindExitPointFn_800dc398(void)
             scale = lbl_803E0604;
         }
 
-        curveList = (int **)(*(void *(**)(int *))((int)*gRomCurveInterface + 0x10))(&curveCount);
+        curveList = (int **)(*gRomCurveInterface)->getCurves(&curveCount);
         memset((char *)patchBase + OBJFSA_ACTIVE_WALKGROUPS_OFFSET, 0, OBJFSA_WALKGROUP_COUNT);
         sp = patchBase;
         for (pi = 8; pi != 0; pi--) {
@@ -6296,8 +6295,7 @@ void walkgroupFindExitPointFn_800dc398(void)
                 for (slot = 0; slot < 4; slot++) {
                     wg->patchIndices[slot] = 0;
                     if (*(s32 *)(slotPtr + 0x1c) > -1 &&
-                        (linked = (*(int (**)(int))((int)*gRomCurveInterface + 0x1c))(
-                             *(s32 *)(slotPtr + 0x1c))) != 0) {
+                        (linked = (int)(*gRomCurveInterface)->getById(*(s32 *)(slotPtr + 0x1c))) != 0) {
                         ga = *(u8 *)(curve + 3);
                         gb = *(u8 *)(linked + 3);
                         if (ga < gb) {
