@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -2020,10 +2021,9 @@ checked_vine_use:
 #pragma scheduling reset
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
-extern EffectInterface **gExpgfxInterface;
 #pragma scheduling off
 void Fall_Ladders_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 #pragma scheduling reset
 

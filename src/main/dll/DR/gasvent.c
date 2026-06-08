@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gasvent.h"
@@ -389,7 +390,6 @@ int gunpowderbarrel_getExtraSize(void)
 
 extern undefined4* lbl_803DCAC0;
 #define gCarryableInterface lbl_803DCAC0
-extern EffectInterface **gExpgfxInterface;
 extern int Obj_IsObjectAlive(void* obj);
 extern void ObjLink_DetachChild(int obj, void* child);
 
@@ -416,7 +416,7 @@ void gunpowderbarrel_free(int param_1, int param_2)
   ObjGroup_RemoveObject(param_1, 0x19);
   ObjGroup_RemoveObject(param_1, 0x16);
   if (*(unsigned char*)(extra + 0x17) != 0) {
-    (*gExpgfxInterface)->freeObject((void *)param_1);
+    (*gExpgfxInterface)->freeSource2((u32)param_1);
   }
 }
 

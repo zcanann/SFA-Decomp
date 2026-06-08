@@ -770,7 +770,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void dll_197_free(int obj)
 {
     (*gModgfxInterface)->detachSource((void *)obj);
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 extern f32 lbl_803E5118;

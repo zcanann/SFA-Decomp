@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/objhits_types.h"
@@ -31,7 +32,6 @@ extern undefined4 FUN_80286888();
 extern double FUN_80293900();
 
 extern undefined4 DAT_803dc070;
-extern EffectInterface **gExpgfxInterface;
 extern f32 lbl_803E6520;
 extern f32 lbl_803E6524;
 extern f32 lbl_803E6528;
@@ -361,7 +361,7 @@ void SB_CannonBall_free(int obj)
   int state;
 
   state = *(int *)&((GameObject *)obj)->extra;
-  (*gExpgfxInterface)->freeObject((void *)obj);
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   if (*(void **)(state + 0x20) != 0) {
     ModelLightStruct_free(*(void **)(state + 0x20));
     *(undefined4 *)(state + 0x20) = 0;
@@ -375,7 +375,7 @@ int SB_FireBall_getObjectTypeId(void) { return 0x0; }
 
 void SB_FireBall_free(int obj)
 {
-  (*gExpgfxInterface)->freeObject((void *)obj);
+  (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */

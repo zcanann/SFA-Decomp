@@ -2238,7 +2238,7 @@ extern void ModelLightStruct_free(void *light);
 #pragma peephole off
 void lightsource_free(int obj) {
     int state = *(int *)&((GameObject *)obj)->extra;
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
     if (((LightSourceState *)state)->light != 0) {
         ModelLightStruct_free(((LightSourceState *)state)->light);
     }

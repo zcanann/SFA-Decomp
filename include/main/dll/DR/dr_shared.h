@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
@@ -84,7 +85,6 @@ extern f32 lbl_803E6B00;
 extern f32 lbl_803E6B58;
 extern void *gKTRexState;
 extern void *gKTRexRuntime;
-extern undefined4 *gExpgfxInterface;
 extern void ktrex_initialiseStateHandlerTables(void);
 extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 extern void ObjGroup_RemoveObject(int obj, int group);

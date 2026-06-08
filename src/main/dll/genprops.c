@@ -4,6 +4,7 @@
 #include "main/dll/genprops.h"
 #include "main/dll/path_control_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/mapEvent.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
@@ -210,7 +211,6 @@ extern undefined4 DAT_803dc9f0;
 extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
-extern EffectInterface **gExpgfxInterface;
 extern undefined4* DAT_803dd6fc;
 extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd718;
@@ -2509,7 +2509,7 @@ void FUN_8016e858(int param_1)
     puVar2 = puVar2 + 6;
     iVar1 = iVar1 + 1;
   } while (iVar1 < 3);
-  (*gExpgfxInterface)->freeObject((void *)param_1);
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   return;
 }
 
@@ -2824,7 +2824,7 @@ void FUN_8016f038(int param_1)
   if (**(uint **)(param_1 + 0xb8) != 0) {
     FUN_80017620(**(uint **)(param_1 + 0xb8));
   }
-  (*gExpgfxInterface)->freeObject((void *)param_1);
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   ObjGroup_RemoveObject(param_1,2);
   return;
 }
@@ -5255,7 +5255,7 @@ void staff_free(int *obj) {
         mm_free(*(int **)p);
         p += 0x18;
     }
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 void fireball_free(int *obj) {
@@ -5264,7 +5264,7 @@ void fireball_free(int *obj) {
     if (ptr != NULL) {
         ModelLightStruct_free(ptr);
     }
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
     ObjGroup_RemoveObject((int)obj, 2);
 }
 #pragma peephole reset

@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/obj_placement.h"
 #include "main/dll/lightning.h"
 #include "main/dll/path_control_interface.h"
@@ -32,7 +33,6 @@ extern f32 lbl_803E34F0;
 extern f32 lbl_803E34F4;
 extern f32 lbl_803E34F8;
 extern f32 lbl_803E34FC;
-extern EffectInterface **gExpgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E34B0;
@@ -178,7 +178,7 @@ void magicdust_update(int obj)
   while (iVar6 = ObjMsg_Pop(obj,(uint *)local_24,(uint *)0x0,(uint *)0x0), iVar6 != 0) {
     if (local_24[0] == msgId) {
       iVar6 = *(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
-      (*gExpgfxInterface)->freeObject((void *)obj);
+      (*gExpgfxInterface)->freeSource2((u32)obj);
       itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)iVar8)->unk27C,0x28);
       ObjHits_DisableObject(obj);
       Sfx_PlayFromObject(obj,(u16)((MagicDustState *)iVar8)->unk274);
@@ -210,7 +210,7 @@ void magicdust_update(int obj)
   else {
     if (getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18)) >= lbl_803E34B8) {
       ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A & 0xef;
-      (*gExpgfxInterface)->freeObject((void *)obj);
+      (*gExpgfxInterface)->freeSource2((u32)obj);
     }
   }
   if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
@@ -255,7 +255,7 @@ void magicdust_update(int obj)
         ((MagicDustState *)iVar8)->flags27A = bVar3 & 0xfb;
         ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 8;
         ((MagicDustState *)iVar8)->unk26C = lbl_803E34B4;
-        (*gExpgfxInterface)->freeObject((void *)obj);
+        (*gExpgfxInterface)->freeSource2((u32)obj);
         if (*(int *)&((GameObject *)obj)->anim.parent == 0) {
           for (local_27[0] = '\x1e'; local_27[0] != '\0'; local_27[0] = local_27[0] + -1) {
             (*gPartfxInterface)->spawnObject((void *)obj,
@@ -336,7 +336,7 @@ void magicdust_update(int obj)
         }
         else {
           iVar6 = *(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
-          (*gExpgfxInterface)->freeObject((void *)obj);
+          (*gExpgfxInterface)->freeSource2((u32)obj);
           itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)iVar8)->unk27C,0x28);
           ObjHits_DisableObject(obj);
           Sfx_PlayFromObject(obj,(u16)((MagicDustState *)iVar8)->unk274);

@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
@@ -145,7 +146,6 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e4;
 extern undefined4* DAT_803dd6e8;
-extern EffectInterface **gExpgfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de7c0;
 extern f64 DOUBLE_803e5390;
@@ -904,7 +904,7 @@ void FUN_801adb28(undefined8 param_1,double param_2,double param_3,undefined8 pa
       getLActions(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    (uint)*(ushort *)(*(int *)(param_9 + 0xb8) + 8),0,0,0,in_r9,in_r10);
     }
-    (*gExpgfxInterface)->freeObject((void *)param_9);
+    (*gExpgfxInterface)->freeSource2((u32)param_9);
   }
   return;
 }
@@ -1340,7 +1340,7 @@ void magiclight_free(int obj) {
         if ((s8)inner->inRange != 0) {
             getLActions(obj, obj, (u16)inner->leaveAction, 0, 0, 0);
         }
-        (*gExpgfxInterface)->freeObject((void *)obj);
+        (*gExpgfxInterface)->freeSource2((u32)obj);
     }
 }
 void magiclight_update(int obj) {

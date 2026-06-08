@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMcannon.h"
@@ -2027,9 +2028,8 @@ void imanimspacecraft_update(int *obj) {
 }
 
 /* Free: call vtable[6] on obj through global dll-services pointer. */
-extern EffectInterface **gExpgfxInterface;
 void imanimspacecraft_free(int *obj) {
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 extern f32 lbl_803E4784;
@@ -2630,7 +2630,7 @@ void imspacethruster_free(int obj) {
 
 void dimlogfire_free(int *obj, int mode) {
     DimLogFireState *inner = ((GameObject *)obj)->extra;
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
     if ((void *)inner->subObj != NULL && mode == 0) {
         Obj_FreeObject((int *)inner->subObj);
     }

@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
@@ -124,7 +125,6 @@ extern undefined4 DAT_803dcd9c;
 extern undefined4 DAT_803dcdb0;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd72c;
-extern EffectInterface **gExpgfxInterface;
 extern s16 lbl_803DC128;
 extern undefined4 DAT_803de928;
 extern undefined4 DAT_803de92a;

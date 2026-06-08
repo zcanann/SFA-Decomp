@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/light.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
@@ -1037,15 +1038,14 @@ int dll_224_getExtraSize_ret_6(void) { return 0x6; }
 int dll_224_getObjectTypeId(void) { return 0x0; }
 
 /* "tail-call into (**gExpgfxInterface)[6]" free stub. */
-extern EffectInterface **gExpgfxInterface;
 void vfpplatform_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 void vfpdoorswitch_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 void vfpcoreplat_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 #pragma scheduling off
@@ -1128,7 +1128,7 @@ extern void *lbl_803DDCC0;
 #pragma scheduling off
 #pragma peephole off
 void vfpdraghead_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
     ((ModgfxInterface *)*gModgfxInterface)->freeSourceEffects((void *)obj);
     if (lbl_803DDCC0 != NULL) {
         Resource_Release(lbl_803DDCC0);

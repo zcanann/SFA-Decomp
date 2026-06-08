@@ -1,5 +1,6 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 
 /*
  * DLL 0x021E (gVFP_Block1ObjDescriptor) fragment.
@@ -19,7 +20,7 @@ void vfpblock1_hitDetect(void) {}
 #pragma peephole off
 #pragma scheduling off
 void vfpblock1_free(int obj) {
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 #pragma scheduling reset
 #pragma peephole reset

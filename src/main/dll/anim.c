@@ -3,6 +3,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
 #include "main/dll/baddie_state.h"
@@ -4366,13 +4367,11 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-
-extern EffectInterface **gExpgfxInterface;
 extern int gDBStealerWormStateHandlersA[];
 #pragma scheduling off
 #pragma peephole off
 void chuka_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 void chuka_hitDetect(int obj) {
     int *light;
@@ -4484,7 +4483,7 @@ int dbstealerworm_stateHandlerB01(int p1, int p2)
 #pragma scheduling off
 void fn_80204B6C(int p1)
 {
-  (*gExpgfxInterface)->freeObject((void *)p1);
+  (*gExpgfxInterface)->freeSource2((u32)p1);
   getLActions(p1, p1, 0, 0, 0, 0);
 }
 #pragma peephole reset
@@ -4550,7 +4549,7 @@ void dbegg_init(int obj) {
 extern ModgfxInterface **gModgfxInterface;
 void DFP_Torch_free(int obj) {
     (*gModgfxInterface)->detachSource((void *)obj);
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 void dfpobjcreator_init(int obj, s8 *def) {
@@ -7036,7 +7035,6 @@ void DFP_Torch_update(int obj)
     extern uint GameBit_Get(int);
     extern void GameBit_Set(int, int);
     extern ModgfxInterface **gModgfxInterface;
-    extern EffectInterface **gExpgfxInterface;
     extern u8 lbl_803DDCE8;
     extern f32 timeDelta;
     extern f32 lbl_803E63E0;

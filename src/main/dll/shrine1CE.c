@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/shrine1CE.h"
@@ -387,8 +388,6 @@ void dll_19B_init(u8 *obj, u8 *params) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern EffectInterface **gExpgfxInterface;
-
 /*
  * Function: dll_19C_init
  * EN v1.0 Address: 0x801CC950
@@ -426,7 +425,7 @@ void dll_19D_free(int obj)
         getLActions(self, self, 1, 0, 0, 0);
         *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 0x2);
     }
-    (*gExpgfxInterface)->freeObject((void *)self);
+    (*gExpgfxInterface)->freeSource2((u32)self);
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -1,5 +1,6 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -108,7 +109,7 @@ void vfpladders_init(int *obj, u8 *init) {
 #pragma peephole off
 #pragma scheduling off
 void vfpladders_free(int obj) {
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 #pragma scheduling reset
 #pragma peephole reset

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"
@@ -69,7 +70,6 @@ extern undefined4 DAT_803de810;
 extern undefined4 DAT_803de814;
 extern f64 DOUBLE_803e5990;
 extern f64 DOUBLE_803e59f0;
-extern EffectInterface **gExpgfxInterface;
 extern undefined4* gBaddieControlInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DE818;
@@ -574,7 +574,7 @@ void DIMbossspit_free(int param_1)
   if (uVar1 != 0) {
     ModelLightStruct_free((void *)uVar1);
   }
-  (*gExpgfxInterface)->freeObject((void *)obj);
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
 #pragma peephole reset
@@ -853,7 +853,7 @@ void dimbosscrackpar_update(int *obj) {
     }
 }
 void dimbosscrackpar_free(int *obj) {
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void dimbosscrackpar_init(s16 *obj, s8 *def) {
@@ -895,7 +895,7 @@ void dimbossfire_free(int obj)
     ModelLightStruct_free(light);
     *(undefined4 *)(state + 0x10) = 0;
   }
-  (*gExpgfxInterface)->freeObject((void *)o);
+  (*gExpgfxInterface)->freeSource2((u32)o);
 }
 #pragma peephole reset
 #pragma scheduling reset

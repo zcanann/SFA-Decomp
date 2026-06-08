@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/gfxemit_state.h"
@@ -34,7 +35,6 @@ extern uint countLeadingZeros();
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
 extern EffectInterface **gPartfxInterface;
-extern EffectInterface **gExpgfxInterface;
 extern f64 DOUBLE_803e40e0;
 extern f64 DOUBLE_803e4108;
 extern f32 lbl_803DC074;
@@ -468,7 +468,7 @@ LAB_80172f50:
  */
 void collectible_free(int obj)
 {
-  (*gExpgfxInterface)->freeObject((void *)obj);
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   ObjGroup_RemoveObject(obj,4);
   return;
 }

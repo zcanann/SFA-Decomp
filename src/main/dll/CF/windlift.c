@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
@@ -1797,7 +1798,6 @@ void LanternFireFly_setScale(u8* obj, f32* vec) {
  * and dispatch vtable[6] of *gExpgfxInterface. */
 extern void ModelLightStruct_free(void* p);
 extern u8 lbl_803DDAD8;
-extern EffectInterface **gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void LanternFireFly_free(u8* obj, int p2) {
@@ -1810,7 +1810,7 @@ void LanternFireFly_free(u8* obj, int p2) {
         lbl_803DDAD8 = 0;
     }
     ObjGroup_RemoveObject(obj, 0x30);
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 #pragma peephole reset
 #pragma scheduling reset

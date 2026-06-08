@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 
 #pragma peephole on
@@ -18,7 +19,7 @@ int vortex_getObjectTypeId(void) { return 0; }
 #pragma scheduling on
 void vortex_free(int obj)
 {
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 #pragma scheduling reset
 #pragma peephole reset

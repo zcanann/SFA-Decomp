@@ -1,5 +1,6 @@
 #include "main/dll/texframeanimator.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
@@ -170,8 +171,6 @@ void FUN_80173364(short *param_1,int param_2)
 {
 }
 
-extern EffectInterface **gExpgfxInterface;
-
 #pragma scheduling off
 #pragma peephole off
 void magicdust_free(int param_1)
@@ -179,7 +178,7 @@ void magicdust_free(int param_1)
   if (*(uint *)(param_1 + 0xc4) != 0) {
     ObjLink_DetachChild(*(int *)(param_1 + 0xc4), param_1);
   }
-  (*gExpgfxInterface)->freeObject((void *)param_1);
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   return;
 }
 #pragma peephole reset

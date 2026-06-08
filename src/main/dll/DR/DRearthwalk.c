@@ -1,5 +1,6 @@
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
@@ -875,7 +876,6 @@ extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern void Obj_FreeObject(int obj);
 extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d,
                                                        int e, void* f);
-extern EffectInterface **gExpgfxInterface;
 extern f32 lbl_803E5518;
 extern f32 lbl_803E551C;
 extern f32 lbl_803E5520;
@@ -939,7 +939,7 @@ int fn_801DA9CC(int obj)
 void sh_beacon_free(int obj, int param_2)
 {
   int extra = *(int *)&((GameObject *)obj)->extra;
-  (*gExpgfxInterface)->freeObject((void *)obj);
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   if (param_2 == 0) {
     void *p = *(void**)&((ShBeaconState *)extra)->childObj;
     if (p != NULL && (*(unsigned short*)((char*)p + 0xb0) & 0x40) == 0) {

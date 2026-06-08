@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMlavaball.h"
 #include "main/dll/IM/IMspacecraft.h"
@@ -1849,9 +1850,8 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z) {
 }
 
 /* mmp_trenchfx_free: expgfx interface freeObject callback. */
-extern EffectInterface **gExpgfxInterface;
 void mmp_trenchfx_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 extern f32 lbl_803E45C0;

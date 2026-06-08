@@ -1,5 +1,6 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
@@ -61,7 +62,7 @@ void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
 #pragma peephole off
 #pragma scheduling off
 void vfpminifire_free(int obj) {
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 #pragma scheduling reset
 #pragma peephole reset

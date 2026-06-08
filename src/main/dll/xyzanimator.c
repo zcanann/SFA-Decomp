@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/objhits_types.h"
 #include "main/game_object.h"
 
@@ -1178,16 +1179,15 @@ void pollenfragment_release(void) {}
 void pollenfragment_initialise(void) {}
 void mikabomb_hitDetect(void) {}
 
-extern EffectInterface **gExpgfxInterface;
 extern ModgfxInterface **gModgfxInterface;
 extern f32 lbl_803E313C;
 #pragma scheduling off
 #pragma peephole off
 void pinponspike_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 void pollen_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 void pinponspike_init(int obj) {
     ((GameObject *)obj)->unkF4 = 0;
@@ -1217,7 +1217,7 @@ void pollenfragment_free(int obj) {
         ModelLightStruct_free((void *)inner[6]);
         inner[6] = 0;
     }
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 void mikabomb_free(int obj, int mode) {
     void **inner = ((GameObject *)obj)->extra;

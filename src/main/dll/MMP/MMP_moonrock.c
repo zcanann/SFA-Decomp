@@ -1,6 +1,7 @@
 #include "main/dll/MMP/MMP_moonrock.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 
 extern undefined4 FUN_80006810();
@@ -252,11 +253,9 @@ void lightning_init(u8 *obj, u8 *data)
 }
 #pragma peephole reset
 #pragma scheduling reset
-
-extern EffectInterface **gExpgfxInterface;
 void WaterFallSpray_free(u8* obj)
 {
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 typedef struct WaterFallSprayPartfxArgs {

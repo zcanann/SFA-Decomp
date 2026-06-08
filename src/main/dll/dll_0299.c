@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -41,7 +42,7 @@ void dll_299_initialise_nop(void) {}
 #pragma scheduling off
 void dll_299_free(int obj)
 {
-    ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects((void *)obj);
     Resource_Release(lbl_803DDD80);
     lbl_803DDD80 = 0;

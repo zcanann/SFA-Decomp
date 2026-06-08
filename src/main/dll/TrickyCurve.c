@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/trickycurve_state.h"
 #include "main/mapEvent.h"
@@ -48,7 +49,6 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void vecRotateZXY(s16 *rotation, f32 *outVec);
 extern EffectInterface **gPartfxInterface;
-extern EffectInterface **gExpgfxInterface;
 
 extern MapEventInterface **gMapEventInterface;
 extern u32 lbl_803E6450;
@@ -829,7 +829,7 @@ void TrickyCurve_update(int *obj) {
 }
 
 void TrickyCurve_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 void TrickyCurve_init(int *obj, u8 *def) {

@@ -1,5 +1,6 @@
 #include "global.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/WM/wm_shared.h"
 #include "main/audio/sfx_ids.h"
@@ -230,7 +231,7 @@ void firefly_free(int obj)
     FireFlyState *state = ((GameObject *)obj)->extra;
 
     modelLightStruct_freeSlot(state);
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 #pragma scheduling reset
 #pragma peephole reset

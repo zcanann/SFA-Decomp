@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/mapEventTypes.h"
@@ -976,9 +977,8 @@ void SB_Propeller_hitDetect(int param_1) {
 }
 
 /* SB_ShipGun_free: expgfx interface freeObject callback. */
-extern EffectInterface **gExpgfxInterface;
 void SB_ShipGun_free(int param_1) {
-    (*gExpgfxInterface)->freeObject((void *)param_1);
+    (*gExpgfxInterface)->freeSource2((u32)param_1);
 }
 
 /* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */

@@ -4,6 +4,7 @@
 #include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
@@ -1772,7 +1773,6 @@ extern f32 lbl_803E5920;
 extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
-extern EffectInterface **gExpgfxInterface;
 extern ModgfxInterface **gModgfxInterface;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
@@ -2000,7 +2000,7 @@ int fn_801E66EC(int arg1, int arg2)
 void Lamp_free(int* obj)
 {
     Sfx_StopObjectChannel(obj, 64);
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2117,7 +2117,7 @@ void SB_CageKyte_update(int obj)
 void SB_CloudBall_free(int* obj)
 {
     SBCloudBallState* state = ((GameObject *)obj)->extra;
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
     {
         int* child = (int*)state->light;
         if (child != NULL) {
@@ -2418,7 +2418,7 @@ void SB_KyteCage_update(int obj)
 #pragma peephole off
 void SB_MiniFire_free(int* obj)
 {
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->detachSource(obj);
 }
 #pragma peephole reset

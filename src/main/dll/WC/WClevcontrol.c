@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/dll/WC/WClevcontrol.h"
@@ -1028,13 +1029,12 @@ int SB_CloudRunner_SeqFn(int obj, int unused, u8 *setupData) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern EffectInterface **gExpgfxInterface;
 extern void textureFree(void *tex);
 #pragma scheduling off
 #pragma peephole off
 void SB_CloudRunner_free(int *obj) {
     int *state = ((GameObject *)obj)->extra;
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
     if (*(void **)((char *)state + 0x18) != NULL) {
         textureFree(*(void **)((char *)state + 0x18));
         *(void **)((char *)state + 0x18) = NULL;

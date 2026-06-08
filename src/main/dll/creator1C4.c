@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/creator1C4.h"
 #include "main/mapEventTypes.h"
@@ -400,11 +401,10 @@ void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32
 void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5060); }
 #pragma peephole reset
 
-extern EffectInterface **gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void ecsh_cup_free(int *obj) {
-    (*gExpgfxInterface)->freeObject(obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 void gpsh_scene_init(int *obj, int *def) {
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);

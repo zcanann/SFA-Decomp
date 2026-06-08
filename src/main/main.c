@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/anim_internal.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/main.h"
 #include "main/objlib.h"
 #include "main/resource.h"
@@ -1461,12 +1462,11 @@ void vfplavastar_initialise(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern EffectInterface **gExpgfxInterface;
 extern int *gModgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void vfplavastar_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
     ((ModgfxInterface *)*gModgfxInterface)->freeSourceEffects((void *)obj);
 }
 #pragma peephole reset

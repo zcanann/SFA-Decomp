@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
@@ -1229,7 +1230,6 @@ void iceblast_render(int *obj, int a, int b, int c, int d) { objRenderFn_8003b8f
 #pragma peephole reset
 #pragma scheduling reset
 
-extern EffectInterface **gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void WarpPoint_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
@@ -1241,7 +1241,7 @@ void invhit_free(int obj) {
     char *inner = ((GameObject *)obj)->extra;
     switch (*(u8 *)(inner + 8)) {
         case 4:
-            (*gExpgfxInterface)->freeObject((void *)obj);
+            (*gExpgfxInterface)->freeSource2((u32)obj);
             break;
     }
 }

@@ -1,9 +1,9 @@
 #include "main/dll/baddie/chuka.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/chukachuck.h"
 
-extern EffectInterface **gExpgfxInterface;
 extern u8 gChukaModeTable[9];
 extern f32 lbl_803E63F8;
 extern f32 lbl_803E63FC;
@@ -79,7 +79,7 @@ void dfpfloorbar_free(int *obj)
   DfpFloorbarState *state;
 
   state = (DfpFloorbarState *)obj[0x2e];
-  (*gExpgfxInterface)->freeObject(obj);
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   state->linkedObject = NULL;
   return;
 }

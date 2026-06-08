@@ -1,5 +1,6 @@
 #include "main/dll/LGT/LGTpointlight.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 
 
@@ -169,7 +170,6 @@ int wmworm_getObjectTypeId(void) { return 0x0; }
 void wmworm_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 #pragma peephole reset
 
-extern EffectInterface **gExpgfxInterface;
 void wmworm_free(int obj) {
-    (*gExpgfxInterface)->freeObject((void *)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
