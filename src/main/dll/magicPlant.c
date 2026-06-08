@@ -32,7 +32,7 @@ extern uint countLeadingZeros();
 
 extern undefined4 DAT_803dc920;
 extern undefined4 DAT_803dc928;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd71c;
 extern f64 DOUBLE_803e3508;
 extern f64 DOUBLE_803e3530;
@@ -565,7 +565,7 @@ void FUN_80153b00(int param_1,int param_2)
   }
   if ((cVar1 != '\0') && ((*(uint *)(param_2 + 0x2dc) & 0x40000000) == 0)) {
     for (; cVar1 != '\0'; cVar1 = cVar1 + -1) {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x802,0,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x802, NULL, 2, -1, NULL);
     }
   }
   return;
@@ -1022,7 +1022,6 @@ void fn_80152EC0(int obj, int state)
 extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int prio);
 extern void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c);
 extern void fn_8015355C(int obj, int p2);
-extern EffectInterface **gPartfxInterface;
 
 #pragma dont_inline on
 #pragma scheduling off

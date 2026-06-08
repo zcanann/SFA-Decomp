@@ -33,7 +33,7 @@ extern uint countLeadingZeros();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern EffectInterface **gExpgfxInterface;
 extern f64 DOUBLE_803e40e0;
 extern f64 DOUBLE_803e4108;
@@ -217,7 +217,7 @@ void FUN_801726ac(short *param_1)
         }
         uVar3 = randomGetRange(0,10);
         if (uVar3 == 0) {
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x423,0,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x423, NULL, 2, -1, NULL);
         }
         *param_1 = *param_1 + (short)(int)(lbl_803E4118 * lbl_803DC074);
         return;
@@ -321,7 +321,7 @@ void FUN_80172974(undefined4 param_1,undefined4 param_2,int param_3)
         local_3c = (float)dVar8;
         local_38 = (float)dVar8;
         local_34 = (float)dVar8;
-        (**(code **)(*DAT_803dd708 + 8))(iVar3,0x7ef,auStack_48,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar3, 0x7ef, auStack_48, 1, -1, NULL);
         iVar6 = iVar6 + 1;
       } while (iVar6 < 10);
     }
@@ -567,7 +567,6 @@ extern uint GameBit_Get(int);
 extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
-extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E3454;
 extern f32 lbl_803E3458;
 extern f32 lbl_803E345C;

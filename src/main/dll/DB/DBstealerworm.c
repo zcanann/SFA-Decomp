@@ -103,7 +103,7 @@ extern undefined4 DAT_803dccf4;
 extern undefined4 DAT_803dccf8;
 extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6e4;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd72c;
 extern undefined4 DAT_803de898;
 extern undefined4 DAT_803de89c;
@@ -518,7 +518,6 @@ extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern int Obj_GetPlayerObject(void);
-extern EffectInterface **gPartfxInterface;
 extern u8 framesThisStep;
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p);
 extern void spawnExplosion(f32 s, int obj, int a, int b, int c, int d, int e, int f, int g);
@@ -704,7 +703,7 @@ void SB_ShipHead_render(int param_1,int param_2,int param_3,int param_4,int para
       local_18 = local_18 - *(float *)(param_1 + 0x1c);
       local_14[0] = local_14[0] - *(float *)(param_1 + 0x20);
       for (bVar3 = 0; bVar3 < DAT_803dc070; bVar3 = bVar3 + 1) {
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x7aa,auStack_28,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x7aa, auStack_28, 2, -1, NULL);
       }
     }
   }

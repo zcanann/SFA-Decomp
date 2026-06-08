@@ -51,7 +51,7 @@ extern undefined4 FUN_80294da0();
 
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dcb90;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd71c;
 extern f64 DOUBLE_803e57c0;
@@ -985,7 +985,7 @@ void FUN_801ba45c(int param_1)
     fVar1 = *(float *)(iVar4 + 0x24) - lbl_803DC074;
     *(float *)(iVar4 + 0x24) = fVar1;
     if (fVar1 < lbl_803E5834) {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x20d,0,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x20d, NULL, 2, -1, NULL);
       *(float *)(iVar4 + 0x24) = lbl_803E583C;
     }
   }
@@ -1685,7 +1685,6 @@ extern void* objFindTexture(void* obj, int a, int b);
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
-extern EffectInterface **gPartfxInterface;
 #pragma peephole off
 #pragma scheduling off
 void dll_1DF_update(void* obj)

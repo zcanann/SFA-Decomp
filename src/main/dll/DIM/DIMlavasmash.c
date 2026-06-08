@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMlavasmash.h"
 #include "main/dll/DIM/dimlogfire.h"
@@ -50,7 +51,7 @@ extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
 
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern f64 DOUBLE_803e54b0;
 extern f64 DOUBLE_803e54d8;
 extern f32 timeDelta;
@@ -229,7 +230,7 @@ undefined4 FUN_801b09dc(uint param_1,undefined4 param_2,int param_3)
     FUN_8000680c(param_1,1);
   }
   else {
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0xd7,0,0,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 0xd7, NULL, 0, -1, NULL);
     FUN_8000680c(param_1,5);
   }
   *(undefined *)(param_3 + 0x80) = 0;
