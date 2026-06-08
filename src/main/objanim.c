@@ -78,7 +78,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
     state->eventState = 0;
   }
   else {
-    blendFrameLength = (float)state->blendFrameData[1];
+    blendFrameLength = (float)state->blendFrameData[OBJANIM_FRAME_CMD_LENGTH_INDEX];
     if (frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
       blendFrameLength = blendFrameLength - gObjAnimProgressOne;
     }
@@ -428,7 +428,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveCont
   }
   state->moveFrameData = moveData->frameCmd;
   state->frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
-  state->frameLength = (float)state->moveFrameData[1];
+  state->frameLength = (float)state->moveFrameData[OBJANIM_FRAME_CMD_LENGTH_INDEX];
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->frameLength = state->frameLength - gObjAnimProgressOne;
   }
@@ -487,7 +487,7 @@ void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordI
   u16 stateWord;
 
   bank = ObjAnim_GetActiveBank(objAnim);
-  if (bank == (ObjAnimBank *)0x0) {
+  if (bank == NULL) {
     return;
   }
   stateWord = value;
@@ -520,7 +520,7 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount
   float eventCountdownStep;
 
   bank = ObjAnim_GetActiveBank(objAnim);
-  if (bank != (ObjAnimBank *)0x0) {
+  if (bank != NULL) {
     eventCountdownStep = gObjAnimEventStepScale / (float)(s32)frameCount;
     bank->currentState->eventStep = eventCountdownStep;
   }
@@ -1077,7 +1077,7 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
   }
   objAnim->currentMoveProgress = moveProgress;
   bank = ObjAnim_GetActiveBank(objAnim);
-  if (bank == (ObjAnimBank *)0x0) {
+  if (bank == NULL) {
     return 0;
   }
   animDef = bank->animDef;
@@ -1098,11 +1098,11 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
   state->eventState = 0;
   state->lastBlendMoveIndex = OBJANIM_BLEND_MOVE_INDEX_INVALID;
   hitState = objAnim->hitReactState;
-  if ((hitState != (ObjHitReactState *)0x0) && (hitState->entries != (ObjHitReactEntry *)0x0)) {
+  if ((hitState != NULL) && (hitState->entries != NULL)) {
     ObjHitReact_LoadMoveEntries((ObjAnimComponent *)objAnimHandle,bank,(int)objAnim->seqId,
                                 hitState,requestedMoveId,0);
   }
-  if (objAnim->eventTable != (ObjAnimEventTable *)0x0) {
+  if (objAnim->eventTable != NULL) {
     ObjAnim_LoadMoveEvents((u8 *)objAnimHandle,(int)objAnim->seqId,objAnim->eventTable,
                            requestedMoveId,0);
   }
@@ -1131,7 +1131,7 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
   }
   state->moveFrameData = moveData->frameCmd;
   state->frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
-  state->frameLength = (float)state->moveFrameData[1];
+  state->frameLength = (float)state->moveFrameData[OBJANIM_FRAME_CMD_LENGTH_INDEX];
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->frameLength = state->frameLength - gObjAnimProgressOne;
   }
