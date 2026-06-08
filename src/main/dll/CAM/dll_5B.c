@@ -1,5 +1,6 @@
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/audio/sfx.h"
+#include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
@@ -52,7 +53,6 @@ extern undefined4 FUN_80294c64();
 extern undefined4 FUN_80294d00();
 
 extern u8 framesThisStep;
-extern undefined4* gCameraInterface;
 extern undefined4* lbl_803DD548;
 extern f32* lbl_803DD550;
 extern undefined4* lbl_803DD558;
@@ -306,7 +306,7 @@ void CameraModeViewfinder_copyToCurrent(undefined2 *param_1)
   u8 *src = (u8 *)param_1;
   u8 *cur;
 
-  cur = (u8 *)(*(int (**)(void))(*(int *)gCameraInterface + 0xc))();
+  cur = (u8 *)(*gCameraInterface)->getCamera();
   if ((cur != NULL) && (src != NULL)) {
     *(s16 *)(cur + 0) = *(s16 *)(src + 0);
     *(s16 *)(cur + 2) = *(s16 *)(src + 2);
@@ -504,7 +504,7 @@ void CameraModeViewfinder_update(s16 *param_1)
       param_1[1] = param_1[1] + (int)((f32)angleDiff * timeDelta) / 8;
     }
     if (brightness != 0) {
-      ((void (*)(int, int, int, int, int, int, int))*(code **)(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0, 0xff);
+      (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
       targetObj = *(u8 **)(param_1 + 0x52);
       if (targetObj != NULL) {
         ((GameObject *)targetObj)->anim.alpha = 0xff;
@@ -529,7 +529,7 @@ void CameraModeViewfinder_update(s16 *param_1)
     *(f32 *)(param_1 + 0xc) = ((ViewfinderState *)lbl_803DD548)->unk14;
     *(f32 *)(param_1 + 0xe) = ((ViewfinderState *)lbl_803DD548)->unk24;
     *(f32 *)(param_1 + 0x10) = ((ViewfinderState *)lbl_803DD548)->unk34;
-    ((void (*)(int, int, int, int, int, int, int))*(code **)(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0, 0);
+    (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0);
   }
   fn_80137948(&sCam5BYDebugFormat, *(f32 *)(param_1 + 0xe));
   Obj_TransformWorldPointToLocal(*(f32 *)(param_1 + 0xc), *(f32 *)(param_1 + 0xe), *(f32 *)(param_1 + 0x10),
@@ -711,7 +711,7 @@ void CameraModeDebug_update(short *param_1)
   f32 radius;
 
   if ((getButtonsJustPressed(0) & 2) != 0) {
-    (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0, 0xff);
+    (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
     return;
   }
   move = lbl_803E1840;
@@ -870,7 +870,7 @@ void CameraModeStatic_update(short *param_1)
   double dVar7;
   
   if (*(byte *)((int)lbl_803DD558 + 0xf5) != 0) {
-    (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
+    (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
   }
   else {
     iVar3 = *(int *)(param_1 + 0x52);
