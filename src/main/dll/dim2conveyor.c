@@ -54,7 +54,6 @@ extern undefined4 DAT_803dcc20;
 extern undefined4 DAT_803dcc24;
 extern ObjectTriggerInterface **DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd728;
 extern NwMammothGameUiInterface **gGameUIInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern NwMammothPathControlInterface **gPathControlInterface;
@@ -451,7 +450,8 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   iVar6 = *(int *)(param_9 + 0x5c);
   iVar5 = *(int *)(param_9 + 0x26);
   if ((*(byte *)(iVar6 + 0x43c) & 0x20) != 0) {
-    param_1 = (**(code **)(*DAT_803dd728 + 0x20))(param_9,iVar6 + 0x16c);
+    (*gPathControlInterface)->attachObject((NwMammothObject *)param_9,
+                                           ((NwMammothState *)iVar6)->pathState);
     *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) & 0xdf;
   }
   uVar2 = FUN_80017a98();
@@ -555,9 +555,12 @@ LAB_801cf840:
     (*DAT_803dd6d4)->runSequence(*(u8 *)(*(int *)(iVar6 + 0x48) + uVar4), (void *)param_9, -1);
   }
   if ((*(byte *)(iVar6 + 0x43c) & 1) != 0) {
-    (**(code **)(*DAT_803dd728 + 0x10))((double)lbl_803DC074,param_9,iVar6 + 0x16c);
-    (**(code **)(*DAT_803dd728 + 0x14))(param_9,iVar6 + 0x16c);
-    (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,param_9,iVar6 + 0x16c);
+    (*gPathControlInterface)->update((NwMammothObject *)param_9,
+                                     ((NwMammothState *)iVar6)->pathState, lbl_803DC074);
+    (*gPathControlInterface)->apply((NwMammothObject *)param_9,
+                                    ((NwMammothState *)iVar6)->pathState);
+    (*gPathControlInterface)->advance((NwMammothObject *)param_9,
+                                      ((NwMammothState *)iVar6)->pathState, lbl_803DC074);
   }
   return;
 }
