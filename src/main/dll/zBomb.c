@@ -1,4 +1,5 @@
 #include "main/dll/fruit.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/zBomb.h"
 #include "main/objanim_internal.h"
 
@@ -15,7 +16,6 @@ extern void objfx_spawnArcedBurst(int obj,int enabled,f32 radius,int particleKin
                                    int particleId,int lifetime,f32 scaleX,f32 scaleY,
                                    f32 scaleZ,void *args,int arg9);
 
-extern undefined4* gPathControlInterface;
 extern s32 lbl_80329B78[];
 extern f32 timeDelta;
 extern f32 lbl_803E648C;
@@ -84,10 +84,10 @@ void dfptargetblock_update(DfpTargetBlockObject *obj)
           }
         }
       }
-      else if (state->controlId != 0) {
-        (*(code *)(*gPathControlInterface + 0x10))((double)timeDelta,obj);
-        (*(code *)(*gPathControlInterface + 0x14))(obj,state->controlId);
-        (*(code *)(*gPathControlInterface + 0x18))((double)timeDelta,obj,state->controlId);
+      else if (state->pathState != NULL) {
+        (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
+        (*gPathControlInterface)->apply(obj, state->pathState);
+        (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
       }
     }
   }

@@ -12,7 +12,7 @@ typedef struct DfpTargetBlockPoint {
 } DfpTargetBlockPoint;
 
 typedef struct DfpTargetBlockState {
-  u32 controlId;
+  void *pathState;
   DfpTargetBlockPoint floorPoints[8];
   s16 stateSfxId;
   s16 completionSfxId;
