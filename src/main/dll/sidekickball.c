@@ -1,12 +1,12 @@
 #include "main/dll/sidekickball.h"
 #include "main/game_object.h"
+#include "main/dll/path_control_interface.h"
 
 extern f32 timeDelta;
 extern f32 lbl_803E369C;
 extern f32 lbl_803E36A4;
 extern f32 lbl_803E36A8;
 extern f32 lbl_803E36AC;
-extern u8 *gPathControlInterface;
 
 extern int __cntlzw(unsigned int value);
 extern u8 *Obj_GetPlayerObject(void);
@@ -115,12 +115,9 @@ void sidekickball_update(u8 *self)
     break;
   }
 
-  /* vtable calls at +0x10, +0x14, +0x18 */
-  {
-    ((void (*)(u8 *, u8 *, f32))*(void **)(*(int *)gPathControlInterface + 0x10))(self, (u8 *)state, timeDelta);
-    ((void (*)(u8 *, u8 *))*(void **)(*(int *)gPathControlInterface + 0x14))(self, (u8 *)state);
-    ((void (*)(u8 *, u8 *, f32))*(void **)(*(int *)gPathControlInterface + 0x18))(self, (u8 *)state, timeDelta);
-  }
+  (*gPathControlInterface)->update(self, state, timeDelta);
+  (*gPathControlInterface)->apply(self, state);
+  (*gPathControlInterface)->advance(self, state, timeDelta);
 }
 #pragma peephole reset
 #pragma scheduling reset

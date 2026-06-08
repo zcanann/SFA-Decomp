@@ -1,5 +1,6 @@
 #include "main/dll/fogcontrol.h"
 #include "main/game_object.h"
+#include "main/dll/path_control_interface.h"
 
 
 #pragma peephole off
@@ -29,7 +30,6 @@ extern undefined4 sidekickball_init();
 extern uint countLeadingZeros();
 
 extern undefined4* DAT_803dd728;
-extern void *gPathControlInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E369C;
@@ -157,11 +157,9 @@ u8 trickyBallMove(u8 *obj)
 
   objMove((int)obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
           ((GameObject *)obj)->anim.velocityZ * timeDelta);
-  (*(void (**)(u8 *,TrickyBallState *,f32))(*(int *)gPathControlInterface + 0x10))(obj, state,
-                                                                                  timeDelta);
-  (*(void (**)(u8 *,TrickyBallState *))(*(int *)gPathControlInterface + 0x14))(obj, state);
-  (*(void (**)(u8 *,TrickyBallState *,f32))(*(int *)gPathControlInterface + 0x18))(obj, state,
-                                                                                  timeDelta);
+  (*gPathControlInterface)->update(obj, state, timeDelta);
+  (*gPathControlInterface)->apply(obj, state);
+  (*gPathControlInterface)->advance(obj, state, timeDelta);
 
   if (state->hasCollisionNormal != 0) {
     hasCollisionNormal = 1;

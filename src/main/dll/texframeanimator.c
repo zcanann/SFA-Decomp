@@ -5,6 +5,7 @@
  * verified). File rename parked as a repo-owner proposal. */
 #include "main/game_object.h"
 #include "main/dll/collectible_state.h"
+#include "main/dll/path_control_interface.h"
 #include "main/objanim_internal.h"
 
 extern uint GameBit_Get(int eventId);
@@ -42,7 +43,6 @@ extern f32 lbl_803E412C;
 extern f32 lbl_803E4130;
 extern f32 lbl_803E4134;
 extern f32 lbl_803E4138;
-extern void *gPathControlInterface;
 extern u8 lbl_80320C58[];
 extern u32 lbl_803E3440;
 extern u8 lbl_803E3444;
@@ -146,10 +146,9 @@ void collectible_init(int obj,int setup)
         ((CollectibleState *)state)->unk40 = lbl_803E34A0;
         break;
     }
-    (*(void (**)(u8 *,int,int,int))(*(int *)gPathControlInterface + 4))(state + 0x50,0,0x40006,1);
-    (*(void (**)(u8 *,int,u8 *,u32 *,u8 *))(*(int *)gPathControlInterface + 0xc))
-        (state + 0x50,1,lbl_80320C58,&pathWord,&pathByte);
-    (*(void (**)(int,u8 *))(*(int *)gPathControlInterface + 0x20))(obj,state + 0x50);
+    (*gPathControlInterface)->init(state + 0x50, 0, 0x40006, 1);
+    (*gPathControlInterface)->setup(state + 0x50, 1, lbl_80320C58, &pathWord, &pathByte);
+    (*gPathControlInterface)->attachObject((void *)obj, state + 0x50);
   }
 }
 #pragma peephole reset

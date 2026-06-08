@@ -1,5 +1,6 @@
 #include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/tframeanimator_state.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
@@ -10,7 +11,6 @@ extern void GameBit_Set(int gameBit, int value);
 extern u32 GameBit_Get(int gameBit);
 extern int *gameTextGet(int textId);
 
-extern void *gPathControlInterface;
 extern u8 lbl_80320F30[];
 extern f32 lbl_803E369C;
 
@@ -46,12 +46,11 @@ undefined4 sidekickball_init(int obj)
   ((GameObject *)obj)->objectFlags |= 0x2000;
   objDef = *(int *)&((GameObject *)obj)->anim.hitReactState;
   *(f32 *)(state + 0x268) = (f32)*(s16 *)(objDef + 0x5a);
-  (*(void (**)(u8 *, int, int, int))(*(int *)gPathControlInterface + 4))(state, 0, 0x40007, 1);
-  (*(void (**)(u8 *, int, u8 *, u8 *, int))(*(int *)gPathControlInterface + 8))(
+  (*gPathControlInterface)->init(state, 0, 0x40007, 1);
+  ((void (*)(void *, int, void *, void *, int))(*gPathControlInterface)->slot08)(
       state, 1, lbl_80320F30, state + 0x268, 1);
-  (*(void (**)(u8 *, int, u8 *, u8 *, u8 *))(*(int *)gPathControlInterface + 0xc))(
-      state, 1, lbl_80320F30, state + 0x268, &pathFlag);
-  (*(void (**)(int, u8 *))(*(int *)gPathControlInterface + 0x20))(obj, state);
+  (*gPathControlInterface)->setup(state, 1, lbl_80320F30, state + 0x268, &pathFlag);
+  (*gPathControlInterface)->attachObject((void *)obj, state);
   ObjHits_DisableObject(obj);
   state[0x25b] = 0;
   ObjMsg_AllocQueue((void *)obj, 1);
