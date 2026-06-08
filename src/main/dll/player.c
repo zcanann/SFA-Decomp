@@ -1409,23 +1409,23 @@ void playerCalcWaterCurrent(f32 *outX, f32 *outZ, int player)
             f32 dy;
             any = 1;
             dy = *(f32 *)((char *)o + 0x10) - *(f32 *)((char *)player + 0x10);
-            if (dy <= lbl_803E8050 && dy >= lbl_803E80F0) {
+            if (dy <= 200.0f && dy >= -200.0f) {
                 f32 dx = *(f32 *)((char *)o + 0xc) - *(f32 *)((char *)player + 0xc);
                 f32 dz = *(f32 *)((char *)o + 0x14) - *(f32 *)((char *)player + 0x14);
                 f32 dist = sqrtf(dx * dx + dz * dz);
                 f32 thresh =
-                    lbl_803E7FC4 * (f32)(u32) * (u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x19);
+                    1.5f * (f32)(u32) * (u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x19);
                 if (dist < thresh) {
                     f32 ratio = lbl_803E7EA4;
                     if (thresh > lbl_803E7EA4) {
                         ratio = (thresh - dist) / thresh;
                     }
-                    ratio = ratio * (lbl_803E7ED8 * *(f32 *)((char *)o + 0x8));
-                    sumC = ratio * mathSinf(lbl_803E7F94 * (f32)(int)*(s16 *)((char *)o + 0) /
-                                               lbl_803E7F98) +
+                    ratio = ratio * (10.0f * *(f32 *)((char *)o + 0x8));
+                    sumC = ratio * mathSinf(3.1415927f * (f32)(int)*(s16 *)((char *)o + 0) /
+                                               32768.0f) +
                            sumC;
-                    sumS = ratio * mathCosf(lbl_803E7F94 * (f32)(int)*(s16 *)((char *)o + 0) /
-                                       lbl_803E7F98) +
+                    sumS = ratio * mathCosf(3.1415927f * (f32)(int)*(s16 *)((char *)o + 0) /
+                                       32768.0f) +
                            sumS;
                 }
             }
@@ -1435,11 +1435,11 @@ void playerCalcWaterCurrent(f32 *outX, f32 *outZ, int player)
     for (i = 0; i < n; i++) {
         int o = objs[i];
         f32 strength =
-            (f32)(u32) * (u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x32) / lbl_803E7ED8;
+            (f32)(u32) * (u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x32) / 10.0f;
         f32 dy;
         any = 1;
         dy = *(f32 *)((char *)o + 0x10) - *(f32 *)((char *)player + 0x10);
-        if (dy <= lbl_803E8050 && dy >= lbl_803E80F0) {
+        if (dy <= 200.0f && dy >= -200.0f) {
             f32 dx = *(f32 *)((char *)o + 0xc) - *(f32 *)((char *)player + 0xc);
             f32 dz = *(f32 *)((char *)o + 0x14) - *(f32 *)((char *)player + 0x14);
             int a22 = (s16)(getAngle(dx, dz) + 0x84d0);
@@ -1452,7 +1452,7 @@ void playerCalcWaterCurrent(f32 *outX, f32 *outZ, int player)
                     ratio = (thresh - dist) / thresh;
                 }
                 ratio = ratio * strength;
-                angle = lbl_803E7F94 * (f32)(int)a22 / lbl_803E7F98;
+                angle = 3.1415927f * (f32)(int)a22 / 32768.0f;
                 sumC = ratio * mathSinf(angle) + sumC;
                 sumS = ratio * mathCosf(angle) + sumS;
             }
