@@ -219,7 +219,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
             (*gObjectTriggerInterface)->yield(seq, 0xbd);
             return 0;
         }
-        (*(void (**)(int))(*gObjectTriggerInterface + 0x74))(state->triggerHandle);
+        (*gObjectTriggerInterface)->setXrot(state->triggerHandle, 0xbd);
         if (state->spinProgress < 0) {
             state->spinProgress = 0;
             if (state->spinSpeed < lbl_803E50EC) {

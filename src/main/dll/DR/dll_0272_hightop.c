@@ -800,8 +800,7 @@ int hightop_stateHandler04(int obj, int p) {
                 f32 c = *(f32 *)((char *)player + 0x10) - ((GameObject *)obj)->anim.localPosY;
                 f32 ac = c >= lbl_803E6AA8 ? c : -c;
                 if (ac < lbl_803E6AEC) {
-                    (*(void (**)(int, int, int, void *))((char *)*gObjectTriggerInterface + 0x48))(
-                        9, obj, -1, *gObjectTriggerInterface);
+                    (*gObjectTriggerInterface)->runSequence(9, (void *)obj, -1);
                 }
             }
         }
@@ -990,8 +989,7 @@ int hightop_stateHandler09(int obj, int p) {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E6AA8, 0);
         ObjHits_DisableObject(obj);
         fn_8002B6D8(obj, 0, 0, 0, 0, 2);
-        (*(void (**)(int, int, int, void *))((char *)*gObjectTriggerInterface + 0x48))(
-            1, obj, -1, *gObjectTriggerInterface);
+        (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
         return 0;
     }
     if ((s8)*(u8 *)((char *)p + 0x346) != 0) {
@@ -1004,8 +1002,7 @@ int hightop_stateHandler09(int obj, int p) {
     if (fn_80080150((char *)state + 0xc2c) != 0) {
         if (timerCountDown((char *)state + 0xc2c) != 0) {
             state->unkC4B = -1;
-            (*(void (**)(int, int, int, void *))((char *)*gObjectTriggerInterface + 0x48))(
-                lbl_8032AB30[state->unkC42], obj, -1, *gObjectTriggerInterface);
+            (*gObjectTriggerInterface)->runSequence(lbl_8032AB30[state->unkC42], (void *)obj, -1);
         }
     } else {
         if (Vec_distance((f32 *)((char *)Obj_GetPlayerObject() + 0x18), (f32 *)((char *)obj + 0x18)) > lbl_803E6AA4) {
