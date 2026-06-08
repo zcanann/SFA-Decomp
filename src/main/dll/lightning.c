@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/dll/lightning.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/pushable.h"
 #include "main/objanim_internal.h"
 #include "main/game_object.h"
@@ -33,7 +34,6 @@ extern f32 lbl_803E34F8;
 extern f32 lbl_803E34FC;
 extern EffectInterface **gExpgfxInterface;
 extern EffectInterface **gPartfxInterface;
-extern int *gPathControlInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E34B0;
 extern f32 lbl_803E34B4;
@@ -230,7 +230,7 @@ void magicdust_update(int obj)
       if ((uint)iVar5 != 0) {
         ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
       }
-      (*(code *)(*gPathControlInterface + 0x20))(obj,iVar8);
+      (*gPathControlInterface)->attachObject((void *)obj, (void *)iVar8);
       goto LAB_80173f80;
     }
     iVar6 = (int)((GameObject *)obj)->anim.modelState;
@@ -285,9 +285,9 @@ void magicdust_update(int obj)
       }
     }
     if ((((MagicDustState *)iVar8)->flags27A & 3) == 0) {
-      (*(code *)(*gPathControlInterface + 0x10))(timeDelta,obj,iVar8);
-      (*(code *)(*gPathControlInterface + 0x14))(obj,iVar8);
-      (*(code *)(*gPathControlInterface + 0x18))(timeDelta,obj,iVar8);
+      (*gPathControlInterface)->update((void *)obj, (void *)iVar8, timeDelta);
+      (*gPathControlInterface)->apply((void *)obj, (void *)iVar8);
+      (*gPathControlInterface)->advance((void *)obj, (void *)iVar8, timeDelta);
       if (((MagicDustState *)iVar8)->unk261 != '\0') {
         float vx = -((GameObject *)obj)->anim.velocityX;
         float vy = -((GameObject *)obj)->anim.velocityY;
@@ -475,9 +475,9 @@ void magicdust_init(int param_1,int param_2)
   }
   ((MagicDustState *)iVar5)->unk268 = lbl_803E34F8;
   if ((((GameObject *)param_1)->anim.flags & 0x2000) != 0) {
-    (*(code *)(*gPathControlInterface + 4))(iVar5,0,0x40007,0);
-    (*(code *)(*gPathControlInterface + 0xc))(iVar5,1,lbl_80320CB8,iVar5 + 0x268,local_58);
-    (*(code *)(*gPathControlInterface + 0x20))(param_1,iVar5);
+    (*gPathControlInterface)->init((void *)iVar5, 0, 0x40007, 0);
+    (*gPathControlInterface)->setup((void *)iVar5, 1, lbl_80320CB8, (void *)(iVar5 + 0x268), local_58);
+    (*gPathControlInterface)->attachObject((void *)param_1, (void *)iVar5);
   }
   ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x2000;
   if ((((MagicDustState *)iVar5)->flags27A & 1) != 0) {

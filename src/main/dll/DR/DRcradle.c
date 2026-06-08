@@ -1,4 +1,5 @@
 #include "main/dll/DR/DRcradle.h"
+#include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 
@@ -86,7 +87,6 @@ extern f32 lbl_803E5B98;
 extern int GameBit_Set(int bit, int val);
 extern void *mapRomListFindItem(int a, int b, int c, int d, int e);
 extern int lbl_80328590[];
-extern void *gPathControlInterface;
 
 /*
  * --INFO--
@@ -122,7 +122,7 @@ void SnowBike_func15(int obj)
         *(f32 *)(t + 0x494) = zero;
         *(f32 *)(t + 0x498) = zero;
         *(f32 *)(t + 0x49c) = zero;
-        (*(void (**)(int, int))((char *)*(int *)gPathControlInterface + 0x20))(obj, t + 0x178);
+        (*gPathControlInterface)->attachObject((void *)obj, (void *)(t + 0x178));
         {
             ObjHitsPriorityState *hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
             hitState->localPosX = ((GameObject *)obj)->anim.localPosX;

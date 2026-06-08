@@ -1,4 +1,5 @@
 #include "main/dll/DR/DRshackle.h"
+#include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 
 extern f32 sqrtf(f32 x);
@@ -9,7 +10,6 @@ extern int fn_801EC870(int p1, int p2);
 extern void hitDetectFn_800658a4(int p1, f32 x, f32 y, f32 z, f32 *out, int flag);
 
 extern undefined4 *gCheckpointInterface;
-extern undefined4 *gPathControlInterface;
 extern f32 timeDelta;
 
 extern f32 lbl_803E5AE8; /* 0.0f  */
@@ -186,7 +186,7 @@ int drshackle_updateAttachedPosition(int obj, int state)
         ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 0xc);
         ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x10);
         ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x14);
-        (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, state + DRSHACKLE_ATTACHMENT_OFFSET);
+        (*gPathControlInterface)->attachObject((void *)obj, (void *)(state + DRSHACKLE_ATTACHMENT_OFFSET));
         *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x10) = ((GameObject *)obj)->anim.localPosX;
         *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x14) = ((GameObject *)obj)->anim.localPosY;
         *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x18) = ((GameObject *)obj)->anim.localPosZ;
@@ -223,7 +223,7 @@ int drshackle_updateAttachedPosition(int obj, int state)
     ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 0xc);
     ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x10);
     ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x14);
-    (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, state + DRSHACKLE_ATTACHMENT_OFFSET);
+    (*gPathControlInterface)->attachObject((void *)obj, (void *)(state + DRSHACKLE_ATTACHMENT_OFFSET));
     *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x10) = ((GameObject *)obj)->anim.localPosX;
     *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x14) = ((GameObject *)obj)->anim.localPosY;
     *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x18) = ((GameObject *)obj)->anim.localPosZ;

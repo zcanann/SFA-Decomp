@@ -1,6 +1,7 @@
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
+#include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
@@ -1555,7 +1556,6 @@ void xyzanimator_init(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern int *gPathControlInterface;
 extern f32  sqrtf(f32);
 extern void Obj_FreeObject(u8 *obj);
 extern u8   lbl_803DDB00;
@@ -1677,9 +1677,9 @@ void dimbossicesmash_update(u8 *obj)
             ((GameObject *)obj)->anim.rotY = ((DimBossIceSmashState *)state)->unk27C * timeDelta + (f32)((GameObject *)obj)->anim.rotY;
             ((GameObject *)obj)->anim.rotZ = ((DimBossIceSmashState *)state)->unk280 * timeDelta + (f32)((GameObject *)obj)->anim.rotZ;
             if ((*(u8 *)(setup + 0x3c) & 2) != 0) {
-                (*(void (**)(f32, u8 *, u8 *))((char *)(*gPathControlInterface) + 0x10))(timeDelta, obj, state);
-                (*(void (**)(u8 *, u8 *))((char *)(*gPathControlInterface) + 0x14))(obj, state);
-                (*(void (**)(f32, u8 *, u8 *))((char *)(*gPathControlInterface) + 0x18))(timeDelta, obj, state);
+                (*gPathControlInterface)->update(obj, state, timeDelta);
+                (*gPathControlInterface)->apply(obj, state);
+                (*gPathControlInterface)->advance(obj, state, timeDelta);
                 if (((DimBossIceSmashState *)state)->unk261 != 0) {
                     nx = -((GameObject *)obj)->anim.velocityX;
                     ny = -((GameObject *)obj)->anim.velocityY;
@@ -1823,9 +1823,9 @@ void dimbossicesmash_init(u8 *obj, u8 *params)
     state[0x29e] = t;
     lbl_803DDB00 = 0;
     if ((*(u8 *)(params + 0x3c) & 2) != 0) {
-        (*(void (**)(u8 *, int, int, int))((char *)(*gPathControlInterface) + 4))(state, 0, 0x40002, 1);
-        (*(void (**)(u8 *, int, u8 *, u8 *, u8 *))((char *)(*gPathControlInterface) + 0xc))(state, 1, lbl_80322368, lbl_803DBDF8, buf);
-        (*(void (**)(u8 *, u8 *))((char *)(*gPathControlInterface) + 0x20))(obj, state);
+        (*gPathControlInterface)->init(state, 0, 0x40002, 1);
+        (*gPathControlInterface)->setup(state, 1, lbl_80322368, lbl_803DBDF8, buf);
+        (*gPathControlInterface)->attachObject(obj, state);
     }
 }
 
