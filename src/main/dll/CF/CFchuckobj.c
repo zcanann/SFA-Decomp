@@ -1466,7 +1466,7 @@ updateTimer:
         }
     }
     state->cooldownTimer = state->cooldownTimer - timeDelta;
-    if (state->cooldownTimer <= lbl_803E3E98) {
+    if (state->cooldownTimer <= *(f32 *)&lbl_803E3E98) {
         state->cooldownTimer = lbl_803E3E98;
         state->unk0A = -1;
     }
