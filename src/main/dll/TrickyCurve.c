@@ -233,12 +233,12 @@ void TrickyCurve_updateBoundsTrigger(int param_1)
   int iVar5;
   short *psVar6;
   
-  psVar6 = *(short **)(param_1 + 0xb8);
+  psVar6 = ((GameObject *)param_1)->extra;
   iVar4 = FUN_80017a98();
   iVar5 = 0;
-  fVar1 = *(float *)(iVar4 + 0xc) - *(float *)(param_1 + 0xc);
-  fVar2 = *(float *)(iVar4 + 0x10) - *(float *)(param_1 + 0x10);
-  fVar3 = *(float *)(iVar4 + 0x14) - *(float *)(param_1 + 0x14);
+  fVar1 = *(float *)(iVar4 + 0xc) - ((GameObject *)param_1)->anim.localPosX;
+  fVar2 = *(float *)(iVar4 + 0x10) - ((GameObject *)param_1)->anim.localPosY;
+  fVar3 = *(float *)(iVar4 + 0x14) - ((GameObject *)param_1)->anim.localPosZ;
   if ((fVar1 <= lbl_803E6438) &&
      (-(float)((double)CONCAT44(0x43300000,(int)*psVar6 ^ 0x80000000) - DOUBLE_803e70d8) < fVar1)) {
     iVar5 = 1;

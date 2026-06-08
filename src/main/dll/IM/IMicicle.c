@@ -746,9 +746,9 @@ void FUN_801a4520(int param_1)
 {
   int iVar1;
   
-  if (*(int *)(param_1 + 0xf4) == 0) {
-    iVar1 = *(int *)(param_1 + 0x4c);
-    if ((*(short *)(iVar1 + 0x1c) != 0) && (**(byte **)(param_1 + 0xb8) >> 5 != 0)) {
+  if (((GameObject *)param_1)->unkF4 == 0) {
+    iVar1 = *(int *)&((GameObject *)param_1)->anim.placementData;
+    if ((*(short *)(iVar1 + 0x1c) != 0) && (**(byte **)&((GameObject *)param_1)->extra >> 5 != 0)) {
       (*gObjectTriggerInterface)->preempt(param_1, *(s16 *)(iVar1 + 0x1c));
     }
     iVar1 = (int)*(char *)(iVar1 + 0x1e);

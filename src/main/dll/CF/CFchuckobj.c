@@ -702,7 +702,7 @@ void FUN_8018fd48(int param_1)
   double dVar8;
   double dVar9;
   
-  pfVar7 = *(float **)(param_1 + 0xb8);
+  pfVar7 = ((GameObject *)param_1)->extra;
   iVar5 = FUN_80017a98();
   if ((iVar5 != 0) &&
      ((((int)*(short *)((int)pfVar7 + 0xe) == 0xffffffff ||
@@ -713,10 +713,10 @@ void FUN_8018fd48(int param_1)
       *(undefined2 *)((int)pfVar7 + 0x12) = 1;
     }
     sVar1 = *(short *)(pfVar7 + 3);
-    if ((-1 < sVar1) || ((-1 >= sVar1 && (*(int *)(param_1 + 0xf4) < 1)))) {
-      fVar2 = *(float *)(param_1 + 0x18) - *(float *)(iVar5 + 0x18);
-      fVar3 = *(float *)(param_1 + 0x1c) - *(float *)(iVar5 + 0x1c);
-      fVar4 = *(float *)(param_1 + 0x20) - *(float *)(iVar5 + 0x20);
+    if ((-1 < sVar1) || ((-1 >= sVar1 && (((GameObject *)param_1)->unkF4 < 1)))) {
+      fVar2 = ((GameObject *)param_1)->anim.worldPosX - *(float *)(iVar5 + 0x18);
+      fVar3 = ((GameObject *)param_1)->anim.worldPosY - *(float *)(iVar5 + 0x1c);
+      fVar4 = ((GameObject *)param_1)->anim.worldPosZ - *(float *)(iVar5 + 0x20);
       if (sVar1 == 0) {
         *(undefined2 *)((int)pfVar7 + 0x12) = 1;
       }
@@ -729,11 +729,11 @@ void FUN_8018fd48(int param_1)
         }
         FUN_8018f650();
       }
-      *(int *)(param_1 + 0xf4) = -(int)*(short *)(pfVar7 + 3);
+      ((GameObject *)param_1)->unkF4 = -(int)*(short *)(pfVar7 + 3);
       pfVar7[1] = (float)dVar8;
     }
-    else if ((sVar1 < 0) && (0 < *(int *)(param_1 + 0xf4))) {
-      *(uint *)(param_1 + 0xf4) = *(int *)(param_1 + 0xf4) - (uint)DAT_803dc070;
+    else if ((sVar1 < 0) && (0 < ((GameObject *)param_1)->unkF4)) {
+      *(uint *)&((GameObject *)param_1)->unkF4 = ((GameObject *)param_1)->unkF4 - (uint)DAT_803dc070;
     }
   }
   return;
@@ -821,7 +821,7 @@ void FUN_8018ffbc(int param_1)
 {
   uint uVar1;
   
-  uVar1 = *(uint *)(*(int *)(param_1 + 0xb8) + 0x108);
+  uVar1 = *(uint *)(*(int *)&((GameObject *)param_1)->extra + 0x108);
   if (uVar1 != 0) {
     FUN_80017814(uVar1);
   }
@@ -868,9 +868,9 @@ void FUN_80190008(int param_1,int param_2)
   undefined4 local_10;
   uint uStack_c;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   local_18[0] = 0x21;
-  *(float *)(param_1 + 8) = FLOAT_803e4b18 * *(float *)(*(int *)(param_1 + 0x50) + 4);
+  ((GameObject *)param_1)->anim.rootMotionScale = FLOAT_803e4b18 * *(float *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 4);
   *(undefined2 *)(iVar1 + 0x112) = *(undefined2 *)(param_2 + 0x1e);
   *(undefined2 *)(iVar1 + 0x110) = *(undefined2 *)(param_2 + 0x20);
   *(undefined2 *)(iVar1 + 0x114) = 0xfffe;
@@ -929,7 +929,7 @@ void warpPadFn_8019042c(int param_1)
         f32 pos[3];
     } fx;
 
-    state = *(WarpPadState **)(param_1 + 0xb8);
+    state = ((GameObject *)param_1)->extra;
     player = Obj_GetPlayerObject();
     fx.pos[0] = lbl_803E3E98;
     fx.pos[1] = lbl_803E3E9C;
@@ -948,7 +948,7 @@ void warpPadFn_8019042c(int param_1)
             fx.mode = 0;
         }
     } else if ((flags & 8) != 0) {
-        if (vec3f_distanceSquared((f32 *)(param_1 + 0x18), (f32 *)(player + 0x18)) < lbl_803E3EA0) {
+        if (vec3f_distanceSquared(&((GameObject *)param_1)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E3EA0) {
             if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0)) {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
@@ -960,7 +960,7 @@ void warpPadFn_8019042c(int param_1)
         fx.effectId = 0xc0e;
         fx.mode = 1;
     } else if ((flags & 0x10) != 0) {
-        if (vec3f_distanceSquared((f32 *)(param_1 + 0x18), (f32 *)(player + 0x18)) < lbl_803E3EA0) {
+        if (vec3f_distanceSquared(&((GameObject *)param_1)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E3EA0) {
             if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0)) {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
@@ -972,7 +972,7 @@ void warpPadFn_8019042c(int param_1)
         fx.effectId = 0xc7e;
         fx.mode = 2;
     } else {
-        if (vec3f_distanceSquared((f32 *)(param_1 + 0x18), (f32 *)(player + 0x18)) < lbl_803E3EA0) {
+        if (vec3f_distanceSquared(&((GameObject *)param_1)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E3EA0) {
             if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0)) {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);

@@ -365,7 +365,7 @@ FUN_801babd4(int param_1,int param_2,undefined4 param_3,undefined4 param_4,undef
   undefined8 in_f7;
   undefined8 in_f8;
   
-  if (lbl_803E5858 < *(float *)(param_1 + 0x98)) {
+  if (lbl_803E5858 < ((GameObject *)param_1)->anim.currentMoveProgress) {
     DAT_803de800 = DAT_803de800 & 0xffffffdf;
   }
   if (*(char *)(param_2 + 0x27a) != '\0') {
@@ -422,7 +422,7 @@ FUN_801bad7c(int param_1,int param_2,undefined4 param_3,undefined4 param_4,undef
   undefined8 in_f7;
   undefined8 in_f8;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   if (*(char *)(param_2 + 0x27a) != '\0') {
     DAT_803de800 = DAT_803de800 | 0x2000;
     FUN_800069bc();

@@ -501,9 +501,9 @@ void kaldachom_update(int param_1)
   KaldaChomControl *control;
   f32 dVar10;
   
-  iVar9 = *(int *)(param_1 + 0xb8);
-  iVar8 = *(int *)(param_1 + 0x4c);
-  if (*(int *)(param_1 + 0xf4) != 0) {
+  iVar9 = *(int *)&((GameObject *)param_1)->extra;
+  iVar8 = *(int *)&((GameObject *)param_1)->anim.placementData;
+  if (((GameObject *)param_1)->unkF4 != 0) {
     if ((((CampfireState *)iVar9)->unk270 != 3) &&
         (iVar1 = (*gMapEventInterface)->isTimedEventActive(*(int *)(iVar8 + 0x14)), iVar1 != 0))
     {
@@ -513,7 +513,7 @@ void kaldachom_update(int param_1)
       ObjAnim_SetCurrentMove(param_1,4,lbl_803E3060,0x10);
       *(undefined *)(iVar9 + 0x346) = 0;
       ((GameObject *)param_1)->anim.alpha = 0xff;
-      *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+      *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
     }
   }
   else {

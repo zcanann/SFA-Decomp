@@ -372,9 +372,9 @@ void FUN_80144e40(int param_1,int param_2)
       *(float *)(param_2 + 0x720) = fVar1 + lbl_803E30D0;
       if (*(char *)(param_2 + 10) != '\v') {
         if ((*(uint *)(param_2 + 0x54) & 0x10) == 0) {
-          iVar2 = *(int *)(param_1 + 0xb8);
+          iVar2 = *(int *)&((GameObject *)param_1)->extra;
           if ((((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
-              ((0x2f < *(short *)(param_1 + 0xa0) || (*(short *)(param_1 + 0xa0) < 0x29)))) &&
+              ((0x2f < ((GameObject *)param_1)->anim.currentMove || (((GameObject *)param_1)->anim.currentMove < 0x29)))) &&
              (bVar4 = FUN_800067f0(param_1,0x10), !bVar4)) {
             FUN_80039468(param_1,iVar2 + 0x3a8,0x350,0x500,0xffffffff,0);
           }
@@ -382,9 +382,9 @@ void FUN_80144e40(int param_1,int param_2)
           *(uint *)(param_2 + 0x54) = *(uint *)(param_2 + 0x54) | 0x10;
         }
         else if (*(float *)(param_2 + 0x720) <= lbl_803E31C4) {
-          iVar2 = *(int *)(param_1 + 0xb8);
+          iVar2 = *(int *)&((GameObject *)param_1)->extra;
           if ((((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
-              ((0x2f < *(short *)(param_1 + 0xa0) || (*(short *)(param_1 + 0xa0) < 0x29)))) &&
+              ((0x2f < ((GameObject *)param_1)->anim.currentMove || (((GameObject *)param_1)->anim.currentMove < 0x29)))) &&
              (bVar4 = FUN_800067f0(param_1,0x10), !bVar4)) {
             FUN_80039468(param_1,iVar2 + 0x3a8,0x350,0x500,0xffffffff,0);
           }
@@ -410,9 +410,9 @@ void FUN_80144e40(int param_1,int param_2)
               return;
             }
           }
-          iVar2 = *(int *)(param_1 + 0xb8);
+          iVar2 = *(int *)&((GameObject *)param_1)->extra;
           if (((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
-             (((0x2f < *(short *)(param_1 + 0xa0) || (*(short *)(param_1 + 0xa0) < 0x29)) &&
+             (((0x2f < ((GameObject *)param_1)->anim.currentMove || (((GameObject *)param_1)->anim.currentMove < 0x29)) &&
               (bVar4 = FUN_800067f0(param_1,0x10), !bVar4)))) {
             FUN_80039468(param_1,iVar2 + 0x3a8,0x350,0x500,0xffffffff,0);
           }
@@ -421,9 +421,9 @@ void FUN_80144e40(int param_1,int param_2)
     }
     else {
       *(float *)(param_2 + 0x720) = fVar1 + lbl_803E317C;
-      iVar2 = *(int *)(param_1 + 0xb8);
+      iVar2 = *(int *)&((GameObject *)param_1)->extra;
       if ((((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
-          ((0x2f < *(short *)(param_1 + 0xa0) || (*(short *)(param_1 + 0xa0) < 0x29)))) &&
+          ((0x2f < ((GameObject *)param_1)->anim.currentMove || (((GameObject *)param_1)->anim.currentMove < 0x29)))) &&
          (bVar4 = FUN_800067f0(param_1,0x10), !bVar4)) {
         FUN_80039468(param_1,iVar2 + 0x3a8,0x34f,0x500,0xffffffff,0);
       }
@@ -457,9 +457,9 @@ int FUN_80145120(int param_1,int param_2)
   
   iVar3 = 0;
   piVar1 = ObjGroup_GetObjects(0x4b,local_38);
-  dVar4 = FUN_80017708((float *)(*(int *)(param_2 + 4) + 0x18),(float *)(param_1 + 0x18));
+  dVar4 = FUN_80017708((float *)(*(int *)(param_2 + 4) + 0x18),(float *)&((GameObject *)param_1)->anim.worldPosX);
   if ((((double)lbl_803E31C8 <= dVar4) || (lbl_803E306C < *(float *)(param_2 + 0x71c))) &&
-     (iVar2 = FUN_800575b4((double)lbl_803E3190,(float *)(param_1 + 0xc)), iVar2 == 0)) {
+     (iVar2 = FUN_800575b4((double)lbl_803E3190,(float *)&((GameObject *)param_1)->anim.localPosX), iVar2 == 0)) {
     dVar6 = (double)lbl_803E30A8;
     for (iVar2 = 0; iVar2 < local_38[0]; iVar2 = iVar2 + 1) {
       dVar5 = FUN_80017708((float *)(*(int *)(param_2 + 4) + 0x18),(float *)(*piVar1 + 0x18));
@@ -773,7 +773,7 @@ void FUN_80145ea4(int param_1)
   uint uVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   uVar1 = FUN_80017690(0x4e4);
   if (uVar1 != 0) {
     *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) | 0x10000;
@@ -801,7 +801,7 @@ void FUN_80145ee8(int param_1,int param_2,int param_3)
   int iVar3;
   int iVar4;
   
-  iVar4 = *(int *)(param_1 + 0xb8);
+  iVar4 = *(int *)&((GameObject *)param_1)->extra;
   if (param_2 == 0) {
     *(uint *)(iVar4 + 0x54) = *(uint *)(iVar4 + 0x54) | 0x10000;
   }
@@ -3601,22 +3601,22 @@ void FUN_80147d2c(int param_1,int param_2)
     objAnimFn_8014a9f0(param_1,param_2,&local_24,&local_28);
     if ((*(uint *)(param_2 + 0x2e4) & 0x8000000) == 0) {
       if ((*(uint *)(param_2 + 0x2e4) & 0x20000000) == 0) {
-        local_24 = local_24 - *(float *)(param_1 + 0x10);
+        local_24 = local_24 - ((GameObject *)param_1)->anim.localPosY;
         if ((lbl_803E3250 < local_24) && (local_24 < lbl_803E3234)) {
-          *(float *)(param_1 + 0x28) = local_24 * lbl_803DC078;
+          ((GameObject *)param_1)->anim.velocityY = local_24 * lbl_803DC078;
           *(uint *)(param_2 + 0x2dc) = *(uint *)(param_2 + 0x2dc) | 0x100000;
         }
       }
       else {
-        local_24 = local_24 - *(float *)(param_1 + 0x10);
+        local_24 = local_24 - ((GameObject *)param_1)->anim.localPosY;
         if ((lbl_803E3250 < local_24) && (local_24 < lbl_803E3234)) {
-          *(float *)(param_1 + 0x28) = (lbl_803E3254 + local_24) * lbl_803DC078;
+          ((GameObject *)param_1)->anim.velocityY = (lbl_803E3254 + local_24) * lbl_803DC078;
           *(uint *)(param_2 + 0x2dc) = *(uint *)(param_2 + 0x2dc) | 0x8000000;
         }
       }
     }
     else {
-      *(float *)(param_1 + 0x28) = (local_28 - *(float *)(param_1 + 0x10)) * lbl_803DC078;
+      ((GameObject *)param_1)->anim.velocityY = (local_28 - ((GameObject *)param_1)->anim.localPosY) * lbl_803DC078;
     }
     if ((*(uint *)(param_2 + 0x2e4) & 8) == 0) {
       *(undefined *)(param_2 + 0x25f) = 0;
@@ -3629,7 +3629,7 @@ void FUN_80147d2c(int param_1,int param_2)
   (*gPathControlInterface)->advance((void *)param_1, (void *)(param_2 + 4), lbl_803DC074);
   if (((*(char *)(param_2 + 0x25f) != '\0') && ((*(uint *)(param_2 + 0x2e4) & 0x28000002) == 0)) &&
      ((*(byte *)(param_2 + 0x264) & 0x10) != 0)) {
-    *(float *)(param_1 + 0x28) = lbl_803E31FC;
+    ((GameObject *)param_1)->anim.velocityY = lbl_803E31FC;
     *(uint *)(param_2 + 0x2dc) = *(uint *)(param_2 + 0x2dc) | 0x100000;
   }
   if ((*(uint *)(param_2 + 0x2e4) & 0x200000) != 0) {

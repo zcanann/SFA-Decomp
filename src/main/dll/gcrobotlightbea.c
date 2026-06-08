@@ -535,13 +535,13 @@ void objThrowFn_80182504(int param_1)
   } local;
   int extra;
   short* player;
-  extra = *(int*)(param_1 + 0xb8);
+  extra = *(int *)&((GameObject *)param_1)->extra;
   player = (short*)Obj_GetPlayerObject();
   *(char*)(extra + 6) = 0;
   *(char*)(extra + 5) = 0;
   *(char*)(extra + 9) = 1;
-  *(float*)(param_1 + 0x28) = lbl_803E3958;
-  *(float*)(param_1 + 0x2c) = lbl_803E3974;
+  ((GameObject *)param_1)->anim.velocityY = lbl_803E3958;
+  ((GameObject *)param_1)->anim.velocityZ = lbl_803E3974;
   local.f14 = lbl_803E3938;
   local.f18 = lbl_803E3938;
   local.f1c = lbl_803E3938;
@@ -549,7 +549,7 @@ void objThrowFn_80182504(int param_1)
   local.fc = 0;
   local.fa = 0;
   local.f8 = *player;
-  vecRotateZXY(&local.f8, (void*)(param_1 + 0x24));
+  vecRotateZXY(&local.f8, (void*)&((GameObject *)param_1)->anim.velocityX);
 }
 
 /*
@@ -565,16 +565,16 @@ void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, und
   int extra;
   int result;
   short field_a;
-  extra = *(int*)(param_1 + 0xb8);
-  result = (*gMapEventInterface)->isTimedEventActive(*(int*)(*(int*)(param_1 + 0x4c) + 0x14));
+  extra = *(int *)&((GameObject *)param_1)->extra;
+  result = (*gMapEventInterface)->isTimedEventActive(*(int*)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x14));
   if (result == 0) {
-    *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
+    ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
   } else {
     field_a = *(short*)(extra + 0xa);
     if ((field_a != 0 && field_a <= 0x32) || *(int*)(extra + 0x14) != 0) {
-      *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
-    } else if (*(int*)(param_1 + 0xf8) != 0 && param_6 != -1) {
-      *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
+      ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
+    } else if (((GameObject *)param_1)->unkF8 != 0 && param_6 != -1) {
+      ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
     } else {
       objRenderFn_8003b8f4((void*)param_1, param_2, param_3, param_4, param_5,
                             (double)lbl_803E3950);

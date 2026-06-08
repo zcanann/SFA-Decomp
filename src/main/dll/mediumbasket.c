@@ -273,7 +273,7 @@ void FUN_8015b218(int param_1,int param_2)
   ((GroundBaddieState *)param_2)->baddie.unk322 = 7;
   ((GroundBaddieState *)param_2)->baddie.unk31C = fVar1;
   ((GroundBaddieState *)param_2)->baddie.unk33A = 1;
-  uVar2 = countLeadingZeros(0x84b - *(short *)(param_1 + 0x46));
+  uVar2 = countLeadingZeros(0x84b - ((GameObject *)param_1)->anim.seqId);
   *(short *)(param_2 + 0x338) = (short)(uVar2 >> 5);
   return;
 }
@@ -406,7 +406,7 @@ undefined4 FUN_8015b47c(int param_1,int param_2)
   int iVar4;
   undefined8 local_18;
   
-  iVar3 = *(int *)(param_1 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
   if (*(char *)(param_2 + 0x27b) == '\0') {
     if (*(char *)(param_2 + 0x346) == '\0') {
       if ((*(short *)(param_2 + 0x274) == 7) && ((int)*(float *)(param_2 + 0x2c0) < 0x37)) {
@@ -636,7 +636,7 @@ undefined4 FUN_8015bbc8(int param_1,int param_2)
   int iVar1;
   
   if (*(char *)(param_2 + 0x27b) != '\0') {
-    iVar1 = *(int *)(param_1 + 0xb8);
+    iVar1 = *(int *)&((GameObject *)param_1)->extra;
     ((GroundBaddieState *)iVar1)->unk405 = 0;
     GameBit_Set((int)((GroundBaddieState *)iVar1)->gameBitB,0);
     GameBit_Set((int)((GroundBaddieState *)iVar1)->gameBitA,1);
@@ -714,7 +714,7 @@ undefined4 FUN_8015bd9c(int param_1,int param_2)
       if (*(short *)(param_2 + 0x274) != 0xc) {
         return 8;
       }
-      if (*(byte *)(*(int *)(param_1 + 0xb8) + 0x406) < 0x33) {
+      if (*(byte *)(*(int *)&((GameObject *)param_1)->extra + 0x406) < 0x33) {
         (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,1);
       }
       else {
@@ -746,7 +746,7 @@ undefined4 FUN_8015be40(int param_1,int param_2)
   int iVar3;
   
   fVar1 = lbl_803E39AC;
-  iVar3 = *(int *)(param_1 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
   if (*(int *)(param_2 + 0x2d0) != 0) {
     if (*(char *)(param_2 + 0x27b) != '\0') {
       ((GroundBaddieState *)param_2)->baddie.animSpeedB = lbl_803E39AC;

@@ -128,8 +128,8 @@ void FUN_8018af08(int param_1)
  */
 void FUN_8018af28(int param_1)
 {
-  if ((**(byte **)(param_1 + 0xb8) >> 5 & 1) != 0) {
-    FUN_800810ec(param_1,2,*(byte *)(*(int *)(param_1 + 0x4c) + 0x19) + 6 & 0xff,4,0);
+  if ((**(byte **)&((GameObject *)param_1)->extra >> 5 & 1) != 0) {
+    FUN_800810ec(param_1,2,*(byte *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x19) + 6 & 0xff,4,0);
   }
   return;
 }

@@ -1254,7 +1254,7 @@ void FUN_80114920(int param_1)
   int iVar2;
   
   puVar1 = FUN_80039518();
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   (**(code **)(*DAT_803dd6d0 + 0x48))(0);
   *(undefined *)(iVar2 + 0x600) = 0;
   FUN_8003ad08(param_1,puVar1,(uint)*(byte *)(iVar2 + 0x610),iVar2 + 0x1c);

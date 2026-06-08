@@ -260,7 +260,7 @@ void FUN_801695e8(int param_1,byte param_2)
   if (param_1 == 0) {
     return;
   }
-  iVar2 = *(int *)(*(int *)(param_1 + 0x4c) + 0x14);
+  iVar2 = *(int *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x14);
   if (iVar2 == 0x41ccc) {
     iVar2 = FUN_80017af8(0x4b411);
   }
@@ -501,8 +501,8 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
  */
 void FUN_80169c04(int param_1)
 {
-  if (**(uint **)(param_1 + 0xb8) != 0) {
-    FUN_80017620(**(uint **)(param_1 + 0xb8));
+  if (**(uint **)&((GameObject *)param_1)->extra != 0) {
+    FUN_80017620(**(uint **)&((GameObject *)param_1)->extra);
   }
   return;
 }

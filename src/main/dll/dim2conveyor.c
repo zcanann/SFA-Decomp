@@ -1,4 +1,5 @@
 #include "main/dll/creator1D4.h"
+#include "main/game_object.h"
 #include "main/dll/dim2conveyor.h"
 #include "main/dll/ped.h"
 #include "main/gameplay_runtime.h"
@@ -338,7 +339,7 @@ void FUN_801cf0b4(int param_1)
 {
   int iVar1;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   ObjGroup_RemoveObject(param_1,0x4d);
   if ((*(byte *)(iVar1 + 0x43c) & 0x40) != 0) {
     (**(code **)(*DAT_803dd6e8 + 100))();
@@ -400,7 +401,7 @@ void FUN_801cf108(int param_1)
   int iVar2;
   int iVar3;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   FUN_8003b818(param_1);
   iVar2 = 0;
   iVar3 = iVar1;

@@ -482,7 +482,7 @@ void FUN_801ca13c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   float local_1c;
   float local_18;
   
-  iVar5 = *(int *)(param_1 + 0xb8);
+  iVar5 = *(int *)&((GameObject *)param_1)->extra;
   if (visible == 0) {
     *(undefined2 *)(iVar5 + 4) = 0;
     *(undefined *)(iVar5 + 10) = 0;
@@ -490,9 +490,9 @@ void FUN_801ca13c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   else if (*(char *)(iVar5 + 0xc) != '\0') {
     *(undefined *)(iVar5 + 10) = 1;
     puVar2 = FUN_800069a8();
-    local_38 = *(float *)(puVar2 + 6) - *(float *)(param_1 + 0xc);
-    local_34 = *(float *)(puVar2 + 8) - *(float *)(param_1 + 0x10);
-    local_30 = *(float *)(puVar2 + 10) - *(float *)(param_1 + 0x14);
+    local_38 = *(float *)(puVar2 + 6) - ((GameObject *)param_1)->anim.localPosX;
+    local_34 = *(float *)(puVar2 + 8) - ((GameObject *)param_1)->anim.localPosY;
+    local_30 = *(float *)(puVar2 + 10) - ((GameObject *)param_1)->anim.localPosZ;
     dVar6 = FUN_80293900((double)(local_30 * local_30 + local_38 * local_38 + local_34 * local_34));
     if ((double)lbl_803E5DB8 < dVar6) {
       fVar1 = (float)((double)lbl_803E5DBC / dVar6);
@@ -503,9 +503,9 @@ void FUN_801ca13c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
       local_30 = local_30 * fVar1;
       dVar10 = (double)local_30;
       dVar6 = (double)lbl_803E5DC0;
-      local_44 = (float)(dVar6 * dVar12) + *(float *)(param_1 + 0xc);
-      local_40 = (float)(dVar6 * dVar11) + *(float *)(param_1 + 0x10);
-      local_3c = (float)(dVar6 * dVar10) + *(float *)(param_1 + 0x14);
+      local_44 = (float)(dVar6 * dVar12) + ((GameObject *)param_1)->anim.localPosX;
+      local_40 = (float)(dVar6 * dVar11) + ((GameObject *)param_1)->anim.localPosY;
+      local_3c = (float)(dVar6 * dVar10) + ((GameObject *)param_1)->anim.localPosZ;
       dVar6 = (double)lbl_803E5DC4;
       dVar9 = (double)(float)(dVar6 * dVar12);
       dVar8 = (double)(float)(dVar6 * dVar11);

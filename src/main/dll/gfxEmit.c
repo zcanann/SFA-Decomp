@@ -76,34 +76,34 @@ void FUN_801723dc(int param_1)
   double dVar8;
   double dVar9;
   
-  GfxEmitState *state = *(GfxEmitState **)(param_1 + 0xb8);
+  GfxEmitState *state = ((GameObject *)param_1)->extra;
   iVar4 = (int)state;
-  if (*(short *)(param_1 + 0x46) == 0x6a6) {
+  if (((GameObject *)param_1)->anim.seqId == 0x6a6) {
     FUN_80017a88((double)lbl_803E40F4,
-                 (double)(*(float *)(param_1 + 0x28) *
+                 (double)(((GameObject *)param_1)->anim.velocityY *
                          (float)((double)CONCAT44(0x43300000,(uint)DAT_803dc070) - DOUBLE_803e4108))
                  ,(double)lbl_803E40F4,param_1);
   }
   else {
     uVar3 = (uint)DAT_803dc070;
-    FUN_80017a88((double)(*(float *)(param_1 + 0x24) *
+    FUN_80017a88((double)(((GameObject *)param_1)->anim.velocityX *
                          (float)((double)CONCAT44(0x43300000,uVar3) - DOUBLE_803e4108)),
-                 (double)(*(float *)(param_1 + 0x28) *
+                 (double)(((GameObject *)param_1)->anim.velocityY *
                          (float)((double)CONCAT44(0x43300000,uVar3) - DOUBLE_803e4108)),
-                 (double)(*(float *)(param_1 + 0x2c) *
+                 (double)(((GameObject *)param_1)->anim.velocityZ *
                          (float)((double)CONCAT44(0x43300000,uVar3) - DOUBLE_803e4108)),param_1);
   }
   (*gPathControlInterface)->update((void *)param_1, state->pathState, lbl_803DC074);
   (*gPathControlInterface)->apply((void *)param_1, state->pathState);
   (*gPathControlInterface)->advance((void *)param_1, state->pathState, lbl_803DC074);
   if (*(char *)(iVar4 + 0x2b1) == '\0') {
-    *(float *)(param_1 + 0x28) = *(float *)(param_1 + 0x28) * lbl_803E4100;
-    *(float *)(param_1 + 0x28) = -(lbl_803E4104 * lbl_803DC074 - *(float *)(param_1 + 0x28));
+    ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityY * lbl_803E4100;
+    ((GameObject *)param_1)->anim.velocityY = -(lbl_803E4104 * lbl_803DC074 - ((GameObject *)param_1)->anim.velocityY);
   }
   else {
-    dVar8 = -(double)*(float *)(param_1 + 0x24);
-    dVar7 = -(double)*(float *)(param_1 + 0x28);
-    dVar9 = -(double)*(float *)(param_1 + 0x2c);
+    dVar8 = -(double)((GameObject *)param_1)->anim.velocityX;
+    dVar7 = -(double)((GameObject *)param_1)->anim.velocityY;
+    dVar9 = -(double)((GameObject *)param_1)->anim.velocityZ;
     dVar6 = FUN_80293900((double)(float)(dVar9 * dVar9 +
                                         (double)(float)(dVar8 * dVar8 +
                                                        (double)(float)(dVar7 * dVar7))));
@@ -119,23 +119,23 @@ void FUN_801723dc(int param_1)
                     (float)(dVar9 * (double)fVar2 +
                            (double)(float)(dVar8 * (double)*(float *)(iVar4 + 0xb8) +
                                           (double)(float)(dVar7 * (double)fVar1))));
-    *(float *)(param_1 + 0x24) = (float)((double)*(float *)(iVar4 + 0xb8) * dVar5);
-    *(float *)(param_1 + 0x28) = (float)((double)fVar1 * dVar5);
-    *(float *)(param_1 + 0x2c) = (float)((double)fVar2 * dVar5);
-    *(float *)(param_1 + 0x24) = (float)((double)*(float *)(param_1 + 0x24) - dVar8);
-    *(float *)(param_1 + 0x28) = (float)((double)*(float *)(param_1 + 0x28) - dVar7);
-    *(float *)(param_1 + 0x2c) = (float)((double)*(float *)(param_1 + 0x2c) - dVar9);
-    *(float *)(param_1 + 0x28) = (float)((double)*(float *)(param_1 + 0x28) * dVar6);
-    *(float *)(param_1 + 0x28) = *(float *)(param_1 + 0x28) * lbl_803E40FC;
-    *(float *)(param_1 + 0x24) = (float)((double)*(float *)(param_1 + 0x24) * dVar6);
-    *(float *)(param_1 + 0x2c) = (float)((double)*(float *)(param_1 + 0x2c) * dVar6);
+    ((GameObject *)param_1)->anim.velocityX = (float)((double)*(float *)(iVar4 + 0xb8) * dVar5);
+    ((GameObject *)param_1)->anim.velocityY = (float)((double)fVar1 * dVar5);
+    ((GameObject *)param_1)->anim.velocityZ = (float)((double)fVar2 * dVar5);
+    ((GameObject *)param_1)->anim.velocityX = (float)((double)((GameObject *)param_1)->anim.velocityX - dVar8);
+    ((GameObject *)param_1)->anim.velocityY = (float)((double)((GameObject *)param_1)->anim.velocityY - dVar7);
+    ((GameObject *)param_1)->anim.velocityZ = (float)((double)((GameObject *)param_1)->anim.velocityZ - dVar9);
+    ((GameObject *)param_1)->anim.velocityY = (float)((double)((GameObject *)param_1)->anim.velocityY * dVar6);
+    ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityY * lbl_803E40FC;
+    ((GameObject *)param_1)->anim.velocityX = (float)((double)((GameObject *)param_1)->anim.velocityX * dVar6);
+    ((GameObject *)param_1)->anim.velocityZ = (float)((double)((GameObject *)param_1)->anim.velocityZ * dVar6);
     *(char *)(iVar4 + 0x1d) = *(char *)(iVar4 + 0x1d) + -1;
     if (*(char *)(iVar4 + 0x1d) == '\0') {
       ((GfxEmitState *)iVar4)->unk1D = 0;
       fVar1 = lbl_803E40F4;
-      *(float *)(param_1 + 0x24) = lbl_803E40F4;
-      *(float *)(param_1 + 0x28) = fVar1;
-      *(float *)(param_1 + 0x2c) = fVar1;
+      ((GameObject *)param_1)->anim.velocityX = lbl_803E40F4;
+      ((GameObject *)param_1)->anim.velocityY = fVar1;
+      ((GameObject *)param_1)->anim.velocityZ = fVar1;
     }
   }
   return;

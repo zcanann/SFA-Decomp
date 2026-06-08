@@ -1854,7 +1854,7 @@ void FUN_80110a44(int param_1,int param_2)
   DAT_803a5050 = lbl_803E2824;
   DAT_803a5054 = lbl_803E2840;
   DAT_803a5058 = lbl_803E2844;
-  FUN_80247e94((float *)(iVar1 + 0x18),&DAT_803a5050,(float *)(param_1 + 0x18));
+  FUN_80247e94((float *)(iVar1 + 0x18),&DAT_803a5050,(float *)&((GameObject *)param_1)->anim.worldPosX);
   DAT_803a507e = 1;
   DAT_803a5064 = lbl_803E2848;
   DAT_803a5068 = lbl_803E284C;
@@ -1871,7 +1871,7 @@ void FUN_80110a44(int param_1,int param_2)
   DAT_803a5020 = lbl_803E2824;
   *(undefined4 *)(param_1 + 0x18) = *(undefined4 *)(iVar1 + 0x18);
   *(undefined4 *)(param_1 + 0x1c) = *(undefined4 *)(iVar1 + 0x1c);
-  *(float *)(param_1 + 0x20) = *(float *)(iVar1 + 0x20) + DAT_803a5058;
+  ((GameObject *)param_1)->anim.worldPosZ = *(float *)(iVar1 + 0x20) + DAT_803a5058;
   return;
 }
 
@@ -2103,7 +2103,7 @@ undefined4 FUN_801113c0(int param_1)
 {
   short sVar1;
   
-  sVar1 = *(short *)(param_1 + 0x46);
+  sVar1 = ((GameObject *)param_1)->anim.seqId;
   if (sVar1 != 0x2ca) {
     if (sVar1 < 0x2ca) {
       if (sVar1 < 0x24e) {
@@ -2211,9 +2211,9 @@ double FUN_80111558(int param_1)
   uint uVar2;
   uint uVar3;
   
-  uVar3 = (uint)*(byte *)(*(int *)(param_1 + 0x4c) + 0x32);
+  uVar3 = (uint)*(byte *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x32);
   fVar1 = lbl_803E28AC;
-  if ((uVar3 != 0) && (uVar2 = (uint)*(char *)(*(int *)(param_1 + 0xb8) + 0x354), uVar2 != 0)) {
+  if ((uVar3 != 0) && (uVar2 = (uint)*(char *)(*(int *)&((GameObject *)param_1)->extra + 0x354), uVar2 != 0)) {
     fVar1 = (f32)(s32)(uVar2) /
             (float)((double)CONCAT44(0x43300000,uVar3) - DOUBLE_803e28b8);
   }
@@ -3022,8 +3022,8 @@ undefined4 FUN_801127c4(int param_1,int param_2,char param_3)
   
   if (((param_3 == '\0') || ('\0' < *(char *)(param_2 + 0x354))) ||
      (((GameObject *)param_1)->anim.alpha != 0)) {
-    if ((*(int *)(param_1 + 0x30) == 0) &&
-       (iVar2 = FUN_8005b398((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10)),
+    if ((*(int *)&((GameObject *)param_1)->anim.parent == 0) &&
+       (iVar2 = FUN_8005b398((double)((GameObject *)param_1)->anim.localPosX,(double)((GameObject *)param_1)->anim.localPosY),
        iVar2 < 0)) {
       uVar1 = 0;
     }

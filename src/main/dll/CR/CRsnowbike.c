@@ -209,7 +209,7 @@ undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjA
   int iVar3;
   int iVar4;
   
-  iVar4 = *(int *)(param_1 + 0xb8);
+  iVar4 = *(int *)&((GameObject *)param_1)->extra;
   animUpdate->sequenceEventActive = 0;
   for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
     eventId = animUpdate->eventIds[iVar3];
@@ -227,7 +227,7 @@ undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjA
   }
   ((ScLevelControlState *)iVar4)->flags1F = ((ScLevelControlState *)iVar4)->flags1F | 1;
   FUN_80017698(0x60f,0);
-  iVar3 = *(int *)(param_1 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
   FUN_80017a98();
   if (*(char *)(iVar3 + 0x1d) == '\x05') {
     FUN_80017698(0x60f,1);
@@ -264,7 +264,7 @@ void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2)
   char cVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   ((ScLevelControlState *)iVar2)->mode = param_2;
   cVar1 = *(char *)(iVar2 + 0x1d);
   if (cVar1 == '\x02') {

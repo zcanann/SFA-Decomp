@@ -621,9 +621,9 @@ void FUN_801954f4(int param_1)
   int iVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   ObjGroup_AddObject(param_1,0x51);
-  iVar1 = *(int *)(*(int *)(param_1 + 0x4c) + 0x14);
+  iVar1 = *(int *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x14);
   if (iVar1 == 0x49cb7) {
 LAB_80196824:
     *(undefined2 *)(iVar2 + 0x4e) = 0x4b7;
@@ -708,9 +708,9 @@ void FUN_801955c8(int param_1)
   undefined4 local_38;
   uint uStack_34;
   
-  iVar3 = *(int *)(param_1 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
   if ((*(byte *)(iVar3 + 2) & 1) == 0) {
-    iVar2 = *(int *)(param_1 + 0x4c);
+    iVar2 = *(int *)&((GameObject *)param_1)->anim.placementData;
     uVar1 = GameBit_Get((int)*(short *)(iVar2 + 0x34));
     if (uVar1 != 0) {
       GameBit_Set((int)*(short *)(iVar2 + 0x32),1);
@@ -764,7 +764,7 @@ void FUN_80195704(int param_1,int param_2)
   uint uVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x32));
   *(bool *)(iVar2 + 2) = uVar1 != 0;
   ObjGroup_AddObject(param_1,0x1a);
@@ -1248,8 +1248,8 @@ void FUN_80196384(int param_1)
   int iVar4;
   int *piVar5;
   
-  piVar5 = *(int **)(param_1 + 0xb8);
-  iVar4 = *(int *)(param_1 + 0x4c);
+  piVar5 = ((GameObject *)param_1)->extra;
+  iVar4 = *(int *)&((GameObject *)param_1)->anim.placementData;
   if ((((*(byte *)(piVar5 + 5) >> 5 & 1) == 0) &&
       (uVar1 = GameBit_Get((int)*(short *)(iVar4 + 0x20)), uVar1 != 0)) &&
      ((*(byte *)(piVar5 + 5) >> 6 & 1) == 0)) {
@@ -1257,7 +1257,7 @@ void FUN_80196384(int param_1)
     piVar5[4] = 0;
   }
   if (((*(byte *)(piVar5 + 5) >> 5 & 1) != 0) && (*piVar5 != 0)) {
-    iVar2 = FUN_8005b398((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10));
+    iVar2 = FUN_8005b398((double)((GameObject *)param_1)->anim.localPosX,(double)((GameObject *)param_1)->anim.localPosY);
     iVar2 = FUN_8005af70(iVar2);
     if ((iVar2 != 0) &&
        (((*(ushort *)(iVar2 + 4) & 8) != 0 &&

@@ -434,7 +434,7 @@ void FUN_801eefd0(uint param_1,int param_2)
  */
 void FUN_801ef1a4(int param_1)
 {
-  (**(code **)(**(int **)(*(int *)(*(int *)(param_1 + 0xb8) + 0x10) + 0x68) + 0x24))();
+  (**(code **)(**(int **)(*(int *)(*(int *)&((GameObject *)param_1)->extra + 0x10) + 0x68) + 0x24))();
   return;
 }
 
@@ -455,7 +455,7 @@ void FUN_801ef1e0(int param_1,undefined4 *param_2,undefined4 *param_3,undefined4
 {
   int iVar1;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   *param_2 = *(undefined4 *)(iVar1 + 0x4c);
   *param_3 = *(undefined4 *)(iVar1 + 0x50);
   *param_4 = *(undefined4 *)(iVar1 + 0x54);
@@ -501,7 +501,7 @@ void FUN_801ef228(int param_1)
 {
   int iVar1;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   (*gExpgfxInterface)->freeSource2((u32)param_1);
   if (*(int *)(iVar1 + 0x18) != 0) {
     FUN_80053754();
@@ -535,29 +535,29 @@ void FUN_801ef2c0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   float *pfVar1;
   float afStack_48 [16];
   
-  pfVar1 = *(float **)(param_1 + 0xb8);
+  pfVar1 = ((GameObject *)param_1)->extra;
   if (renderState == -1) {
     FUN_8003b818(param_1);
     ObjPath_GetPointWorldPosition(param_1,3,pfVar1,pfVar1 + 1,pfVar1 + 2,0);
-    if (*(int *)(param_1 + 0x30) != 0) {
+    if (*(int *)&((GameObject *)param_1)->anim.parent != 0) {
       *pfVar1 = *pfVar1 - lbl_803DDA58;
       pfVar1[2] = pfVar1[2] - lbl_803DDA5C;
-      FUN_80017a4c(*(short **)(param_1 + 0x30),afStack_48);
+      FUN_80017a4c(*(short **)&((GameObject *)param_1)->anim.parent,afStack_48);
       FUN_80247bf8(afStack_48,pfVar1,pfVar1);
     }
   }
   else if (renderState == 0) {
-    *pfVar1 = *(float *)(param_1 + 0xc);
-    pfVar1[1] = *(float *)(param_1 + 0x10);
-    pfVar1[2] = *(float *)(param_1 + 0x14);
+    *pfVar1 = ((GameObject *)param_1)->anim.localPosX;
+    pfVar1[1] = ((GameObject *)param_1)->anim.localPosY;
+    pfVar1[2] = ((GameObject *)param_1)->anim.localPosZ;
   }
   else {
     FUN_8003b818(param_1);
     ObjPath_GetPointWorldPosition(param_1,3,pfVar1,pfVar1 + 1,pfVar1 + 2,0);
-    if (*(int *)(param_1 + 0x30) != 0) {
+    if (*(int *)&((GameObject *)param_1)->anim.parent != 0) {
       *pfVar1 = *pfVar1 - lbl_803DDA58;
       pfVar1[2] = pfVar1[2] - lbl_803DDA5C;
-      FUN_80017a4c(*(short **)(param_1 + 0x30),afStack_48);
+      FUN_80017a4c(*(short **)&((GameObject *)param_1)->anim.parent,afStack_48);
       FUN_80247bf8(afStack_48,pfVar1,pfVar1);
     }
   }

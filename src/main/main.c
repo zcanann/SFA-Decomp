@@ -273,7 +273,7 @@ void FUN_801fd828(int param_1)
   short *psVar5;
   double dVar6;
   
-  psVar5 = *(short **)(param_1 + 0xb8);
+  psVar5 = ((GameObject *)param_1)->extra;
   sVar4 = 1;
   iVar1 = FUN_80017a98();
   if (iVar1 != 0) {
@@ -283,14 +283,14 @@ void FUN_801fd828(int param_1)
     }
     uVar2 = GameBit_Get((int)*psVar5);
     if ((((short)uVar2 == 0) && (*(char *)(psVar5 + 2) == '\0')) && (sVar4 != 0)) {
-      *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
+      *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 0xf7;
       iVar3 = (*gGameUIInterface)->isEventReady((int)DAT_803de948);
       if ((iVar3 != 0) &&
-         (dVar6 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar1 + 0x18)),
+         (dVar6 = (double)FUN_8001771c((float *)&((GameObject *)param_1)->anim.worldPosX,(float *)(iVar1 + 0x18)),
          dVar6 < (double)lbl_803E6DE8)) {
         GameBit_Set((int)*psVar5,1);
         *(undefined *)(psVar5 + 2) = 1;
-        *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+        *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
       }
     }
   }
@@ -378,14 +378,14 @@ void FUN_801fdae0(int param_1)
   short *psVar4;
   float local_18 [3];
   
-  psVar4 = *(short **)(param_1 + 0xb8);
-  *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+  psVar4 = ((GameObject *)param_1)->extra;
+  *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
   if ((*(char *)((int)psVar4 + 5) < '\0') ||
      (((int)psVar4[1] != 0xffffffff && (uVar1 = GameBit_Get((int)psVar4[1]), uVar1 == 0)))) {
     uVar1 = GameBit_Get((int)*psVar4);
     *(byte *)((int)psVar4 + 5) = (byte)((uVar1 & 1) << 7) | *(byte *)((int)psVar4 + 5) & 0x7f;
     if ((uVar1 & 1) == 0) {
-      *(char *)(psVar4 + 2) = (char)*(undefined2 *)(*(int *)(param_1 + 0x4c) + 0x1a);
+      *(char *)(psVar4 + 2) = (char)*(undefined2 *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x1a);
     }
   }
   else if ((*(char *)(psVar4 + 2) < '\x01') && (-1 < *(char *)((int)psVar4 + 5))) {
@@ -399,10 +399,10 @@ void FUN_801fdae0(int param_1)
     if ((iVar2 != 0) &&
        ((local_18[0] = lbl_803E6DF0, (*(byte *)((int)psVar4 + 5) >> 6 & 1) != 0 ||
         (iVar3 = ObjGroup_FindNearestObject(5,param_1,local_18), iVar3 == 0)))) {
-      if ((*(byte *)(param_1 + 0xaf) & 4) != 0) {
+      if ((*(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 4) != 0) {
         (**(code **)(**(int **)(iVar2 + 0x68) + 0x28))(iVar2,param_1,1,4);
       }
-      *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
+      *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 0xf7;
       FUN_800400b0();
     }
   }
@@ -436,8 +436,8 @@ void FUN_801fdc60(uint param_1)
   undefined8 local_38;
   undefined8 local_30;
   
-  iVar4 = *(int *)(param_1 + 0xb8);
-  iVar3 = *(int *)(param_1 + 0x4c);
+  iVar4 = *(int *)&((GameObject *)param_1)->extra;
+  iVar3 = *(int *)&((GameObject *)param_1)->anim.placementData;
   local_40 = (double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0x36));
   dVar5 = local_40 - DOUBLE_803e6e38;
   *(float *)(iVar4 + 0xc) =
@@ -463,11 +463,11 @@ void FUN_801fdc60(uint param_1)
   local_38 = (double)CONCAT44(0x43300000,(int)(short)(int)*(float *)(iVar4 + 0xc) ^ 0x80000000);
   dVar5 = (double)FUN_80293f90();
   lbl_803DE950 = (float)dVar5;
-  *(float *)(param_1 + 8) =
+  ((GameObject *)param_1)->anim.rootMotionScale =
        lbl_803E6E14 * *(float *)(iVar4 + 8) +
        lbl_803E6E18 * *(float *)(iVar4 + 8) * (float)dVar5;
   if (((lbl_803E6E1C < *(float *)(iVar4 + 0xc)) && (*(float *)(iVar4 + 0xc) < lbl_803E6E20)) &&
-     (local_50 = *(undefined4 *)(iVar4 + 8), (*(ushort *)(param_1 + 0xb0) & 0x800) != 0)) {
+     (local_50 = *(undefined4 *)(iVar4 + 8), (((GameObject *)param_1)->objectFlags & 0x800) != 0)) {
     (*gPartfxInterface)->spawnObject((void *)param_1, 0x3a2, auStack_58, 2, -1, NULL);
   }
   fVar1 = *(float *)(iVar4 + 0xc);
@@ -627,17 +627,17 @@ void FUN_801fe084(int param_1,int param_2)
   uint uVar2;
   float *pfVar3;
   
-  pfVar3 = *(float **)(param_1 + 0xb8);
+  pfVar3 = ((GameObject *)param_1)->extra;
   *(undefined2 *)(pfVar3 + 3) = *(undefined2 *)(param_2 + 0x1e);
   uVar2 = randomGetRange(10,0x19);
   dVar1 = DOUBLE_803e6e50;
   *pfVar3 = lbl_803E6E4C *
             (f32)(s32)(uVar2);
   *(undefined2 *)((int)pfVar3 + 0xe) = 0x14;
-  *(float *)(param_1 + 0x10) =
+  ((GameObject *)param_1)->anim.localPosY =
        *(float *)(param_2 + 0xc) +
        (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1a) ^ 0x80000000) - dVar1);
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
+  ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x2000;
   uVar2 = randomGetRange(0x1e,0x3c);
   pfVar3[1] = (f32)(s32)(uVar2);
   uVar2 = randomGetRange(100,200);
@@ -889,7 +889,7 @@ LAB_801fe91c:
       }
       ObjHits_DisableObject(param_1);
       runtimeState->state = 0xb;
-      *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+      *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
     }
     if ((int)local_34 < 0x12) {
       if (local_34 != 0x10) goto code_r0x801fe7fc;
@@ -903,16 +903,16 @@ LAB_801fe91c:
         FUN_80017688(uVar1);
       }
       FUN_80017ad0(param_1);
-      *(ushort *)(param_1 + 6) = *(ushort *)(param_1 + 6) | 0x4000;
+      *(ushort *)&((GameObject *)param_1)->anim.flags = *(ushort *)&((GameObject *)param_1)->anim.flags | 0x4000;
       ObjGroup_RemoveObject(param_1,0x24);
     }
   }
   goto LAB_801fe8b8;
 code_r0x801fe7fc:
   if (0xf < (int)local_34) {
-    *(float *)(param_1 + 0x24) = runtimeState->reboundVelocityX;
-    *(float *)(param_1 + 0x28) = runtimeState->reboundVelocityY;
-    *(float *)(param_1 + 0x2c) = -runtimeState->reboundVelocityZ;
+    ((GameObject *)param_1)->anim.velocityX = runtimeState->reboundVelocityX;
+    ((GameObject *)param_1)->anim.velocityY = runtimeState->reboundVelocityY;
+    ((GameObject *)param_1)->anim.velocityZ = -runtimeState->reboundVelocityZ;
     local_20 = lbl_803E6E60;
     local_1c = lbl_803E6E60;
     local_18 = lbl_803E6E60;
@@ -925,7 +925,7 @@ LAB_801fe8ac:
     ObjGroup_AddObject(param_1,0x24);
 LAB_801fe8b8:
     runtimeState->state = 5;
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
+    *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 0xf7;
     ObjHits_EnableObject(param_1);
   }
   goto LAB_801fe91c;

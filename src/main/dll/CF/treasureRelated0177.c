@@ -238,7 +238,7 @@ void FUN_8018d064(int param_1)
 {
   uint *puVar1;
   
-  puVar1 = *(uint **)(param_1 + 0xb8);
+  puVar1 = ((GameObject *)param_1)->extra;
   (*gExpgfxInterface)->freeSource2((u32)param_1);
   if (*puVar1 != 0) {
     FUN_80017620(*puVar1);
@@ -264,7 +264,7 @@ void FUN_8018d0b4(int param_1, int param_2, int param_3, int param_4, int param_
   int iVar1;
   int *piVar2;
   
-  piVar2 = *(int **)(param_1 + 0xb8);
+  piVar2 = ((GameObject *)param_1)->extra;
   if (visible != 0) {
     FUN_8003b818(param_1);
     iVar1 = *piVar2;

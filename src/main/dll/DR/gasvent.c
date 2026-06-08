@@ -67,20 +67,20 @@ void FUN_801a1230(int param_1,char param_2)
   int iVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
-  iVar1 = *(int *)(param_1 + 0x54);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
+  iVar1 = *(int *)&((GameObject *)param_1)->anim.hitReactState;
   if (param_2 == '\0') {
-    *(undefined *)(iVar1 + 0x6a) = *(undefined *)(*(int *)(param_1 + 0x50) + 99);
-    *(undefined *)(iVar1 + 0x6b) = *(undefined *)(*(int *)(param_1 + 0x50) + 100);
+    *(undefined *)(iVar1 + 0x6a) = *(undefined *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 99);
+    *(undefined *)(iVar1 + 0x6b) = *(undefined *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 100);
     *(byte *)(iVar2 + 0x4a) = *(byte *)(iVar2 + 0x4a) & 0x7f;
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
+    *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 0xf7;
     ObjHits_ClearFlags(param_1,0x400);
     *(byte *)(iVar2 + 0x49) = *(byte *)(iVar2 + 0x49) | 1;
   }
   else {
     *(undefined *)(iVar1 + 0x6a) = 1;
     *(undefined *)(iVar1 + 0x6b) = 1;
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+    *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
     *(byte *)(iVar2 + 0x4a) = *(byte *)(iVar2 + 0x4a) & 0x7f | 0x80;
     *(byte *)(iVar2 + 0x49) = *(byte *)(iVar2 + 0x49) & 0xfd;
     ObjHits_SetFlags(param_1,0x480);
@@ -108,7 +108,7 @@ void FUN_801a1310(int param_1,float *param_2)
 {
   int iVar1;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   if (*(char *)(iVar1 + 0x15) != '\0') {
     return;
   }
@@ -404,7 +404,7 @@ void gunpowderbarrel_free(int param_1, int param_2)
 {
   int extra;
   void* child;
-  extra = *(int*)(param_1 + 0xb8);
+  extra = *(int *)&((GameObject *)param_1)->extra;
   (*(code*)(*(int *)gCarryableInterface + 0x10))(param_1);
   child = *(void**)(extra + 0x10);
   if (child != 0 && param_2 == 0) {

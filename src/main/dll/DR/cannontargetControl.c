@@ -120,7 +120,7 @@ void gunpowderbarrel_hitDetect(int param_1)
     f32 sp1c[3];
     f32 collision_buf[26];
 
-    p_b8 = *(int *)(param_1 + 0xb8);
+    p_b8 = *(int *)&((GameObject *)param_1)->extra;
 
     if (Obj_IsObjectAlive(*(int *)(p_b8 + 0x10)) == 0) {
         if (*(int *)(p_b8 + 0x10) != 0) {
@@ -146,9 +146,9 @@ void gunpowderbarrel_hitDetect(int param_1)
     }
 
     if ((*(u8 *)(p_b8 + 0x4a) >> 7 & 1) != 0) {
-        sp1c[0] = *(f32 *)(param_1 + 0xc) - *(f32 *)(param_1 + 0x80);
-        sp1c[1] = *(f32 *)(param_1 + 0x10) - *(f32 *)(param_1 + 0x84);
-        sp1c[2] = *(f32 *)(param_1 + 0x14) - *(f32 *)(param_1 + 0x88);
+        sp1c[0] = ((GameObject *)param_1)->anim.localPosX - ((GameObject *)param_1)->anim.previousLocalPosX;
+        sp1c[1] = ((GameObject *)param_1)->anim.localPosY - ((GameObject *)param_1)->anim.previousLocalPosY;
+        sp1c[2] = ((GameObject *)param_1)->anim.localPosZ - ((GameObject *)param_1)->anim.previousLocalPosZ;
         {
             f32 inv = lbl_803E4324 * oneOverTimeDelta;
             sp1c[0] = sp1c[0] * inv;
@@ -192,9 +192,9 @@ void gunpowderbarrel_hitDetect(int param_1)
     Vec3_ReflectAgainstNormal(sp10, (void *)(param_1 + 0x24), (void *)(param_1 + 0x24));
     Vec3_ReflectAgainstNormal(sp10, (void *)(p_b8 + 0x20), (void *)(p_b8 + 0x20));
 
-    *(f32 *)(param_1 + 0x24) = lbl_803E4330 * *(f32 *)(param_1 + 0x24);
-    *(f32 *)(param_1 + 0x28) = lbl_803E4330 * *(f32 *)(param_1 + 0x28);
-    *(f32 *)(param_1 + 0x2c) = lbl_803E4330 * *(f32 *)(param_1 + 0x2c);
+    ((GameObject *)param_1)->anim.velocityX = lbl_803E4330 * ((GameObject *)param_1)->anim.velocityX;
+    ((GameObject *)param_1)->anim.velocityY = lbl_803E4330 * ((GameObject *)param_1)->anim.velocityY;
+    ((GameObject *)param_1)->anim.velocityZ = lbl_803E4330 * ((GameObject *)param_1)->anim.velocityZ;
     *(f32 *)(p_b8 + 0x20) = lbl_803E4330 * *(f32 *)(p_b8 + 0x20);
     *(f32 *)(p_b8 + 0x24) = lbl_803E4330 * *(f32 *)(p_b8 + 0x24);
     *(f32 *)(p_b8 + 0x28) = lbl_803E4330 * *(f32 *)(p_b8 + 0x28);
@@ -209,9 +209,9 @@ void gunpowderbarrel_hitDetect(int param_1)
     }
 
 copy_end:
-    *(f32 *)(param_1 + 0x80) = *(f32 *)(param_1 + 0xc);
-    *(f32 *)(param_1 + 0x84) = *(f32 *)(param_1 + 0x10);
-    *(f32 *)(param_1 + 0x88) = *(f32 *)(param_1 + 0x14);
+    ((GameObject *)param_1)->anim.previousLocalPosX = ((GameObject *)param_1)->anim.localPosX;
+    ((GameObject *)param_1)->anim.previousLocalPosY = ((GameObject *)param_1)->anim.localPosY;
+    ((GameObject *)param_1)->anim.previousLocalPosZ = ((GameObject *)param_1)->anim.localPosZ;
     return;
 }
 #pragma scheduling reset
@@ -235,7 +235,7 @@ void FUN_801a1df8(int param_1,int param_2)
   int iVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   (**(code **)(*DAT_803dd740 + 0x10))();
   if (((*(int *)(iVar2 + 0x10) != 0) && (param_2 == 0)) &&
      (iVar1 = Obj_IsObjectAlive(*(int *)(iVar2 + 0x10)), iVar1 != 0)) {

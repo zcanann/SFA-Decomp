@@ -618,7 +618,7 @@ void FUN_801797bc(int param_1)
   bool bVar2;
   int iVar3;
   
-  iVar3 = *(int *)(param_1 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
   sVar1 = *(short *)(iVar3 + 0x1c);
   if ((sVar1 != 0) && (bVar2 = FUN_800067f8(param_1,sVar1), bVar2)) {
     FUN_80006810(param_1,*(short *)(iVar3 + 0x1c));
@@ -733,7 +733,7 @@ uint FUN_801799c0(int param_1)
 {
   uint uVar1;
   
-  uVar1 = countLeadingZeros((uint)*(byte *)(*(int *)(param_1 + 0xb8) + 0x274));
+  uVar1 = countLeadingZeros((uint)*(byte *)(*(int *)&((GameObject *)param_1)->extra + 0x274));
   return uVar1 >> 5;
 }
 

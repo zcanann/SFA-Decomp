@@ -174,7 +174,7 @@ void FUN_801633ac(void)
  */
 void FUN_801633b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  if ((visible != 0) && (*(int *)(param_1 + 0xf4) == 0)) {
+  if ((visible != 0) && (((GameObject *)param_1)->unkF4 == 0)) {
     FUN_8003b818(param_1);
   }
   return;
@@ -508,7 +508,7 @@ int FUN_80163ac8(float *param_1)
  */
 void FUN_80163b8c(int param_1)
 {
-  *(undefined *)(*(int *)(param_1 + 0xb8) + 0x278) = 7;
+  *(undefined *)(*(int *)&((GameObject *)param_1)->extra + 0x278) = 7;
   return;
 }
 

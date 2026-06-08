@@ -273,7 +273,7 @@ void FUN_80189cc4(int param_1,int param_2)
   undefined4 *puVar3;
   int iVar4;
   
-  iVar4 = *(int *)(param_1 + 0x4c);
+  iVar4 = *(int *)&((GameObject *)param_1)->anim.placementData;
   if ((int)*(short *)(iVar4 + 0x24) != 0xffffffff) {
     uVar2 = GameBit_Get((int)*(short *)(iVar4 + 0x24));
     *(byte *)(param_2 + 0x1d) =
@@ -400,13 +400,13 @@ void FUN_8018a060(int param_1,char param_2)
 {
   int iVar1;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   if (param_2 == '\0') {
-    GameBit_Set((int)*(short *)(*(int *)(param_1 + 0x4c) + 0x24),0);
+    GameBit_Set((int)*(short *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x24),0);
     *(byte *)(iVar1 + 0x1d) = *(byte *)(iVar1 + 0x1d) & 0xdf;
   }
   else {
-    GameBit_Set((int)*(short *)(*(int *)(param_1 + 0x4c) + 0x24),1);
+    GameBit_Set((int)*(short *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x24),1);
     *(byte *)(iVar1 + 0x1d) = *(byte *)(iVar1 + 0x1d) & 0xdf | 0x20;
   }
   return;
@@ -427,7 +427,7 @@ void FUN_8018a060(int param_1,char param_2)
  */
 byte FUN_8018a0d0(int param_1)
 {
-  return *(byte *)(*(int *)(param_1 + 0xb8) + 0x1d) >> 5 & 1;
+  return *(byte *)(*(int *)&((GameObject *)param_1)->extra + 0x1d) >> 5 & 1;
 }
 
 /*

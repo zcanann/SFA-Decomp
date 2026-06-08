@@ -211,7 +211,7 @@ void FUN_801ac24c(int param_1)
   undefined4 uVar2;
   undefined *puVar3;
   
-  puVar3 = *(undefined **)(param_1 + 0xb8);
+  puVar3 = ((GameObject *)param_1)->extra;
   GameBit_Set(0x3a3,0);
   GameBit_Set(0x3a2,0);
   iVar1 = FUN_80017a98();
@@ -428,7 +428,7 @@ undefined4 FUN_801accf4(int param_1,undefined4 param_2,int param_3)
 {
   int iVar1;
   
-  *(uint *)(*(int *)(param_1 + 0xb8) + 4) = *(uint *)(*(int *)(param_1 + 0xb8) + 4) | 1;
+  *(uint *)(*(int *)&((GameObject *)param_1)->extra + 4) = *(uint *)(*(int *)&((GameObject *)param_1)->extra + 4) | 1;
   for (iVar1 = 0; iVar1 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar1 = iVar1 + 1) {
     if (*(char *)(param_3 + iVar1 + 0x81) == '\x02') {
       GameBit_Set(0x378,0);
@@ -577,16 +577,16 @@ double FUN_801ad24c(int param_1)
   int iVar7;
   undefined4 *local_18 [4];
   
-  iVar7 = *(int *)(param_1 + 0xb8);
-  iVar3 = FUN_800632f4((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10),
-                       (double)*(float *)(param_1 + 0x14),param_1,local_18,0,0);
+  iVar7 = *(int *)&((GameObject *)param_1)->extra;
+  iVar3 = FUN_800632f4((double)((GameObject *)param_1)->anim.localPosX,(double)((GameObject *)param_1)->anim.localPosY,
+                       (double)((GameObject *)param_1)->anim.localPosZ,param_1,local_18,0,0);
   iVar6 = -1;
   iVar5 = 0;
   puVar4 = local_18[0];
   fVar1 = lbl_803E5398;
   if (0 < iVar3) {
     do {
-      fVar2 = *(float *)(param_1 + 0x10) - *(float *)*puVar4;
+      fVar2 = ((GameObject *)param_1)->anim.localPosY - *(float *)*puVar4;
       if ((lbl_803E539C < fVar2) && (fVar2 < fVar1)) {
         iVar6 = iVar5;
         fVar1 = fVar2;
@@ -597,7 +597,7 @@ double FUN_801ad24c(int param_1)
     } while (iVar3 != 0);
   }
   if (iVar6 == -1) {
-    fVar1 = *(float *)(param_1 + 0x10);
+    fVar1 = ((GameObject *)param_1)->anim.localPosY;
   }
   else {
     *(undefined *)(iVar7 + 0xe) = 1;
@@ -621,7 +621,7 @@ double FUN_801ad24c(int param_1)
  */
 void FUN_801ad318(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  if ((*(char *)(*(int *)(param_1 + 0xb8) + 0xc) != '\x03') && (visible != 0)) {
+  if ((*(char *)(*(int *)&((GameObject *)param_1)->extra + 0xc) != '\x03') && (visible != 0)) {
     FUN_8003b818(param_1);
   }
   return;
@@ -924,7 +924,7 @@ void FUN_801adb28(undefined8 param_1,double param_2,double param_3,undefined8 pa
  */
 void FUN_801adbec(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  if ((*(short *)(param_1 + 0x46) == 0x172) && (visible != 0)) {
+  if ((((GameObject *)param_1)->anim.seqId == 0x172) && (visible != 0)) {
     FUN_8003b818(param_1);
   }
   return;

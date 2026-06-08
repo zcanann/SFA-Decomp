@@ -264,7 +264,7 @@ undefined4 FUN_801877b0(int param_1,undefined4 param_2,int param_3)
   int *piVar3;
   double dVar4;
   
-  piVar3 = *(int **)(param_1 + 0xb8);
+  piVar3 = ((GameObject *)param_1)->extra;
   for (iVar1 = 0; iVar1 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar1 = iVar1 + 1) {
     if ((*(char *)(param_3 + iVar1 + 0x81) == '\x01') && (*(byte *)(piVar3 + 7) != 0)) {
       if (piVar3[*(byte *)(piVar3 + 7) - 1] != 0) {
@@ -280,9 +280,9 @@ undefined4 FUN_801877b0(int param_1,undefined4 param_2,int param_3)
   piVar2 = piVar3;
   for (iVar1 = 0; iVar1 < (int)(uint)*(byte *)(piVar3 + 7); iVar1 = iVar1 + 1) {
     (**(code **)(**(int **)(*piVar2 + 0x68) + 0x28))
-              ((double)*(float *)(param_1 + 0xc),
-               (double)(float)(dVar4 + (double)*(float *)(param_1 + 0x10)),
-               (double)*(float *)(param_1 + 0x14));
+              ((double)((GameObject *)param_1)->anim.localPosX,
+               (double)(float)(dVar4 + (double)((GameObject *)param_1)->anim.localPosY),
+               (double)((GameObject *)param_1)->anim.localPosZ);
     piVar2 = piVar2 + 1;
   }
   return 0;
@@ -460,8 +460,8 @@ void FUN_80187b64(int param_1)
   byte *pbVar4;
   uint auStack_18 [4];
   
-  pbVar4 = *(byte **)(param_1 + 0xb8);
-  iVar3 = *(int *)(param_1 + 0x4c);
+  pbVar4 = ((GameObject *)param_1)->extra;
+  iVar3 = *(int *)&((GameObject *)param_1)->anim.placementData;
   if (((*pbVar4 & 3) == 0) &&
      (iVar1 = ObjHits_GetPriorityHit(param_1,(undefined4 *)0x0,(int *)0x0,auStack_18), iVar1 == 0x1a)) {
     uVar2 = (uint)*(short *)(iVar3 + 0x1e);
@@ -497,10 +497,10 @@ void FUN_80187bf4(uint param_1)
   int iVar5;
   byte *pbVar6;
   
-  pbVar6 = *(byte **)(param_1 + 0xb8);
-  iVar5 = *(int *)(param_1 + 0x4c);
+  pbVar6 = ((GameObject *)param_1)->extra;
+  iVar5 = *(int *)&((GameObject *)param_1)->anim.placementData;
   iVar3 = FUN_80017a90();
-  *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+  *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
   uVar4 = (uint)*(short *)(iVar5 + 0x20);
   if ((uVar4 == 0xffffffff) ||
      (((uVar4 = GameBit_Get(uVar4), uVar4 != 0 && (iVar3 != 0)) &&
@@ -515,18 +515,18 @@ void FUN_80187bf4(uint param_1)
       ObjHits_SetHitVolumeSlot(param_1,9,1,0);
     }
     ObjHits_EnableObject(param_1);
-    if (*(short *)(param_1 + 0x46) == 0x102) {
+    if (((GameObject *)param_1)->anim.seqId == 0x102) {
       iVar5 = FUN_8012efc4();
       if (iVar5 == -1) {
-        *(undefined *)(*(int *)(*(int *)(param_1 + 0x50) + 0x40) + 0x11) = 0;
+        *(undefined *)(*(int *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 0x40) + 0x11) = 0;
       }
       else {
-        *(undefined *)(*(int *)(*(int *)(param_1 + 0x50) + 0x40) + 0x11) = 0x10;
+        *(undefined *)(*(int *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 0x40) + 0x11) = 0x10;
       }
     }
     if (((iVar3 != 0) && (bVar2)) &&
-       (*(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7,
-       (*(byte *)(param_1 + 0xaf) & 4) != 0)) {
+       (*(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 0xf7,
+       (*(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 4) != 0)) {
       (**(code **)(**(int **)(iVar3 + 0x68) + 0x28))(iVar3,param_1,1,4);
     }
   }
@@ -804,9 +804,9 @@ void FUN_80188470(uint param_1)
   int iVar3;
   int iVar4;
   
-  iVar3 = *(int *)(param_1 + 0x4c);
-  iVar4 = *(int *)(param_1 + 0xb8);
-  if (*(short *)(param_1 + 0x46) == 0x548) {
+  iVar3 = *(int *)&((GameObject *)param_1)->anim.placementData;
+  iVar4 = *(int *)&((GameObject *)param_1)->extra;
+  if (((GameObject *)param_1)->anim.seqId == 0x548) {
     uVar2 = GameBit_Get((int)*(short *)(iVar4 + 6));
     if ((uVar2 != 0) && (uVar2 = GameBit_Get((int)*(short *)(iVar4 + 4)), uVar2 == 0)) {
       (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
@@ -821,16 +821,16 @@ void FUN_80188470(uint param_1)
        (uVar2 = GameBit_Get((int)*(short *)(iVar4 + 6)), uVar2 != 0)) {
       *(undefined2 *)(iVar4 + 10) = 10;
     }
-    if ((*(char *)(iVar4 + 8) == '\x01') && (*(float *)(iVar3 + 0xc) <= *(float *)(param_1 + 0x10)))
+    if ((*(char *)(iVar4 + 8) == '\x01') && (*(float *)(iVar3 + 0xc) <= ((GameObject *)param_1)->anim.localPosY))
     {
-      *(float *)(param_1 + 0x28) = *(float *)(param_1 + 0x28) - FLOAT_803e47e8;
-      *(float *)(param_1 + 0x10) =
-           *(float *)(param_1 + 0x28) * FLOAT_803dc074 + *(float *)(param_1 + 0x10);
+      ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityY - FLOAT_803e47e8;
+      ((GameObject *)param_1)->anim.localPosY =
+           ((GameObject *)param_1)->anim.velocityY * FLOAT_803dc074 + ((GameObject *)param_1)->anim.localPosY;
       fVar1 = *(float *)(iVar3 + 0xc);
-      if (*(float *)(param_1 + 0x10) <= fVar1) {
-        *(float *)(param_1 + 0x10) = fVar1;
-        *(float *)(param_1 + 0x28) = FLOAT_803e47ec * -*(float *)(param_1 + 0x28);
-        fVar1 = *(float *)(param_1 + 0x28);
+      if (((GameObject *)param_1)->anim.localPosY <= fVar1) {
+        ((GameObject *)param_1)->anim.localPosY = fVar1;
+        ((GameObject *)param_1)->anim.velocityY = FLOAT_803e47ec * -((GameObject *)param_1)->anim.velocityY;
+        fVar1 = ((GameObject *)param_1)->anim.velocityY;
         if (fVar1 < FLOAT_803e47f0) {
           fVar1 = -fVar1;
         }
@@ -890,7 +890,7 @@ void FUN_8018866c(int param_1)
   float fVar2;
   float *pfVar3;
   
-  pfVar3 = *(float **)(param_1 + 0xb8);
+  pfVar3 = ((GameObject *)param_1)->extra;
   uVar1 = GameBit_Get(0x1bf);
   if ((uVar1 == 0) || (uVar1 = GameBit_Get(0x1bd), uVar1 != 0)) {
     if (pfVar3[1] == 0.0) {
@@ -957,7 +957,7 @@ void FUN_801887d8(int param_1, int param_2, int param_3, int param_4, int param_
  */
 void FUN_80188800(int param_1)
 {
-  if ((*(byte *)(param_1 + 0xaf) & 1) != 0) {
+  if ((*(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 1) != 0) {
     FUN_80006ba8(0,0x100);
     (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
   }

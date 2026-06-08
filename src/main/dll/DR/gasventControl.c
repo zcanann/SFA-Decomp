@@ -67,7 +67,7 @@ void fn_blasted_init_v11_unused(int param_1,int param_2)
 {
   int iVar1;
 
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   *(byte *)(iVar1 + 7) = *(byte *)(iVar1 + 7) | 2;
   (**(code **)(*DAT_803dd740 + 4))(param_1,iVar1,5);
   ObjGroup_AddObject(param_1,0x19);
@@ -93,16 +93,16 @@ void fn_blasted_init_v11_unused(int param_1,int param_2)
   ObjHits_EnableObject(param_1);
   *(float *)(iVar1 + 0x2c) =
        (float)((double)CONCAT44(0x43300000,
-                                (int)*(short *)(*(int *)(param_1 + 0x54) + 0x5a) ^ 0x80000000) -
+                                (int)*(short *)(*(int *)&((GameObject *)param_1)->anim.hitReactState + 0x5a) ^ 0x80000000) -
               DOUBLE_803e4f98);
   *(byte *)(iVar1 + 0x4a) = *(byte *)(iVar1 + 0x4a) & 0xdf;
   *(float *)(iVar1 + 0x38) = lbl_803E4F58;
   *(undefined4 *)(iVar1 + 0x10) = 0;
   (**(code **)(*DAT_803dd740 + 0x2c))(iVar1,1);
-  if (*(int *)(param_1 + 0x54) != 0) {
-    *(undefined2 *)(*(int *)(param_1 + 0x54) + 0xb2) = 1;
+  if (*(int *)&((GameObject *)param_1)->anim.hitReactState != 0) {
+    *(undefined2 *)(*(int *)&((GameObject *)param_1)->anim.hitReactState + 0xb2) = 1;
   }
-  if (*(short *)(param_1 + 0x46) == 0x754) {
+  if (((GameObject *)param_1)->anim.seqId == 0x754) {
     *(byte *)(iVar1 + 0x4a) = *(byte *)(iVar1 + 0x4a) & 0xfb | 4;
   }
   return;
@@ -131,7 +131,7 @@ undefined4 FUN_801a2cb8(int param_1,uint param_2)
   int iVar6;
   int iVar7;
   
-  iVar1 = FUN_8005b398((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10));
+  iVar1 = FUN_8005b398((double)((GameObject *)param_1)->anim.localPosX,(double)((GameObject *)param_1)->anim.localPosY);
   iVar1 = FUN_8005af70(iVar1);
   if ((iVar1 == 0) || ((*(ushort *)(iVar1 + 4) & 8) == 0)) {
     uVar2 = 0;
@@ -174,7 +174,7 @@ undefined4 FUN_801a2cb8(int param_1,uint param_2)
  */
 void FUN_801a2dc4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  if ((visible != 0) && (*(int *)(*(int *)(param_1 + 0xb8) + 0xc) == 0)) {
+  if ((visible != 0) && (*(int *)(*(int *)&((GameObject *)param_1)->extra + 0xc) == 0)) {
     FUN_8003b818(param_1);
   }
   return;
@@ -443,11 +443,11 @@ void FUN_801a35f8(int param_1,int param_2,int param_3)
   
   FUN_80017748((ushort *)(param_3 + 0x1a),(float *)(param_2 + 0x10));
   *(float *)(param_2 + 0x4c) =
-       *(float *)(param_2 + 0x10) * *(float *)(param_1 + 8) + *(float *)(param_3 + 8);
+       *(float *)(param_2 + 0x10) * ((GameObject *)param_1)->anim.rootMotionScale + *(float *)(param_3 + 8);
   *(float *)(param_2 + 0x50) =
-       *(float *)(param_2 + 0x14) * *(float *)(param_1 + 8) + *(float *)(param_3 + 0xc);
+       *(float *)(param_2 + 0x14) * ((GameObject *)param_1)->anim.rootMotionScale + *(float *)(param_3 + 0xc);
   *(float *)(param_2 + 0x54) =
-       *(float *)(param_2 + 0x18) * *(float *)(param_1 + 8) + *(float *)(param_3 + 0x10);
+       *(float *)(param_2 + 0x18) * ((GameObject *)param_1)->anim.rootMotionScale + *(float *)(param_3 + 0x10);
   *(undefined2 *)(param_2 + 0x68) = *(undefined2 *)(param_3 + 0x1a);
   *(undefined2 *)(param_2 + 0x66) = *(undefined2 *)(param_3 + 0x1c);
   *(undefined2 *)(param_2 + 100) = *(undefined2 *)(param_3 + 0x1e);
@@ -488,10 +488,10 @@ void FUN_801a35f8(int param_1,int param_2,int param_3)
          (f32)(s32)uStack_2c / lbl_803E5014;
     local_28 = (double)CONCAT44(0x43300000,(int)*(short *)(param_3 + 0x30) ^ 0x80000000);
     dVar4 = (double)((float)(local_28 - dVar4) / lbl_803E4FF0);
-    if (lbl_803E5000 < *(float *)(param_1 + 0x24)) {
+    if (lbl_803E5000 < ((GameObject *)param_1)->anim.velocityX) {
       *(byte *)(param_2 + 0x6c) = *(byte *)(param_2 + 0x6c) | 1;
     }
-    if (lbl_803E5000 < *(float *)(param_1 + 0x2c)) {
+    if (lbl_803E5000 < ((GameObject *)param_1)->anim.velocityZ) {
       *(byte *)(param_2 + 0x6c) = *(byte *)(param_2 + 0x6c) | 2;
     }
     if (lbl_803E5000 < *(float *)(param_2 + 0x1c)) {
@@ -638,14 +638,14 @@ extern int fn_801A27B8(int* obj, int v);
 #pragma peephole off
 void blasted_init(int param_1, int param_2)
 {
-    int* state = *(int**)(param_1 + 0xb8);
+    int* state = ((GameObject *)param_1)->extra;
     int* targ;
     s16 gbid;
     u8 v;
 
     state[0xc / 4] = 0;
     objSetSlot((int*)param_1, 0x51);
-    targ = *(int**)(param_1 + 0x54);
+    targ = *(int**)&((GameObject *)param_1)->anim.hitReactState;
     *(s16*)((char*)targ + 0x60) = (s16)(*(s16*)((char*)targ + 0x60) | 1);
     *(u8*)((char*)state + 0x10) = (u8)*(s16*)(param_2 + 0x1a);
     gbid = *(s16*)(param_2 + 0x20);

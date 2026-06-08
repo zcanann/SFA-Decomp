@@ -292,8 +292,8 @@ void LaserBeam_update(int param_1)
     f32 spread;
     f32 fz;
 
-    t = *(char **)(param_1 + 0x4c);
-    b = *(LaserBeamState **)(param_1 + 0xb8);
+    t = *(char **)&((GameObject *)param_1)->anim.placementData;
+    b = ((GameObject *)param_1)->extra;
     b->fireTimer -= framesThisStep;
     if (GameBit_Get(*(s16 *)(t + 0x1e)) == 0) {
         if (b->fireTimer < 0) {
@@ -374,7 +374,7 @@ void LaserBeam_update(int param_1)
     dz2 = dz * dz;
     sinv = mathCosf((lbl_803E5D20 * (f32)(int)*(s16 *)param_1) / lbl_803E5D24);
     cosv = mathSinf((lbl_803E5D20 * (f32)(int)*(s16 *)param_1) / lbl_803E5D24);
-    dot = -(*(f32 *)(param_1 + 0xc) * sinv + *(f32 *)(param_1 + 0x14) * cosv);
+    dot = -(((GameObject *)param_1)->anim.localPosX * sinv + ((GameObject *)param_1)->anim.localPosZ * cosv);
     player = Obj_GetPlayerObject();
     b->unk27 = (s8)(b->unk27 - framesThisStep);
     if (b->unk27 <= 0) {
@@ -410,10 +410,10 @@ void LaserBeam_update(int param_1)
     }
     if (player != NULL && b->unk27 == 0 && b->unk24 == 2) {
         range = lbl_803E5D28 + (f32)(int)*(s8 *)&b->unk26;
-        dy = *(f32 *)(player + 0x10) - *(f32 *)(param_1 + 0x10);
+        dy = *(f32 *)(player + 0x10) - ((GameObject *)param_1)->anim.localPosY;
         if (dy < range && dy > -(lbl_803E5D2C + range)) {
-            dx = *(f32 *)(player + 0xc) - *(f32 *)(param_1 + 0xc);
-            dzp = *(f32 *)(player + 0x14) - *(f32 *)(param_1 + 0x14);
+            dx = *(f32 *)(player + 0xc) - ((GameObject *)param_1)->anim.localPosX;
+            dzp = *(f32 *)(player + 0x14) - ((GameObject *)param_1)->anim.localPosZ;
             if (dx * dx + dzp * dzp < dz2) {
                 lat = dot + (sinv * *(f32 *)(player + 0xc) + cosv * *(f32 *)(player + 0x14));
                 a = lat;
@@ -439,7 +439,7 @@ void LaserBeam_update(int param_1)
                             spread = lbl_803E5D44;
                         }
                         Sfx_PlayAtPositionFromObject(param_1, *(f32 *)(player + 0xc),
-                                                     *(f32 *)(param_1 + 0x10),
+                                                     ((GameObject *)param_1)->anim.localPosY,
                                                      *(f32 *)(player + 0x14), 0x1c9);
                         if (*(s16 *)(*(char **)(player + 0xb8) + 0x81a) == 0) {
                             sfx = 31;
@@ -482,9 +482,9 @@ void LaserBeam_update(int param_1)
     b->beamX2 = b->beamX;
     b->beamZ2 = b->beamZ + dz;
     b->unk26 = 8;
-    *(f32 *)(param_1 + 0x98) = lbl_803E5D48 * timeDelta + *(f32 *)(param_1 + 0x98);
-    if (*(f32 *)(param_1 + 0x98) > lbl_803E5D18) {
-        *(f32 *)(param_1 + 0x98) = *(f32 *)(param_1 + 0x98) - lbl_803E5D18;
+    ((GameObject *)param_1)->anim.currentMoveProgress = lbl_803E5D48 * timeDelta + ((GameObject *)param_1)->anim.currentMoveProgress;
+    if (((GameObject *)param_1)->anim.currentMoveProgress > lbl_803E5D18) {
+        ((GameObject *)param_1)->anim.currentMoveProgress = ((GameObject *)param_1)->anim.currentMoveProgress - lbl_803E5D18;
     }
 }
 
@@ -503,7 +503,7 @@ void LaserBeam_update(int param_1)
  */
 void FUN_801f0cb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  if ((visible != 0) && (*(char *)(*(int *)(param_1 + 0xb8) + 9) == '\0')) {
+  if ((visible != 0) && (*(char *)(*(int *)&((GameObject *)param_1)->extra + 9) == '\0')) {
     FUN_8003b818(param_1);
   }
   return;
@@ -526,7 +526,7 @@ void FUN_801f0cf0(int param_1)
 {
   uint uVar1;
   
-  if ((((*(byte *)(param_1 + 0xaf) & 1) != 0) && (*(short *)(*(int *)(param_1 + 0xb8) + 6) == 2)) &&
+  if ((((*(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 1) != 0) && (*(short *)(*(int *)&((GameObject *)param_1)->extra + 6) == 2)) &&
      (uVar1 = FUN_80017690(0x9ad), uVar1 == 0)) {
     (*gObjectTriggerInterface)->runSequence(4, (void *)param_1, -1);
     FUN_80006ba8(0,0x100);
@@ -574,7 +574,7 @@ void FUN_801f0d90(int param_1)
 {
   int *piVar1;
   
-  piVar1 = *(int **)(param_1 + 0xb8);
+  piVar1 = ((GameObject *)param_1)->extra;
   (*gModgfxInterface)->detachSource((void *)param_1);
   if (*piVar1 != 0) {
     FUN_80053754();
@@ -909,7 +909,7 @@ void FUN_801f15ac(undefined2 *param_1,int param_2)
  */
 void FUN_801f15b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState)
 {
-  if (*(int *)(param_1 + 0xf8) == 0) {
+  if (((GameObject *)param_1)->unkF8 == 0) {
     if (renderState == 0) {
       return;
     }
@@ -918,7 +918,7 @@ void FUN_801f15b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
     return;
   }
   if (((ObjAnimComponent *)param_1)->modelInstance->shadowType == 2) {
-    if (*(short *)(param_1 + 0xb4) == -1) {
+    if (((GameObject *)param_1)->unkB4 == -1) {
       ((ObjAnimComponent *)param_1)->modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
     }
     else {
@@ -1081,8 +1081,8 @@ void FUN_801f195c(int param_1)
   short *psVar3;
   int iVar4;
   
-  iVar4 = *(int *)(param_1 + 0x4c);
-  psVar3 = *(short **)(param_1 + 0xb8);
+  iVar4 = *(int *)&((GameObject *)param_1)->anim.placementData;
+  psVar3 = ((GameObject *)param_1)->extra;
   iVar1 = ObjHits_GetPriorityHit(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
   if (iVar1 != 0) {
     *(undefined *)(psVar3 + 1) = 1;
@@ -1127,7 +1127,7 @@ void FUN_801f1a64(int param_1,int param_2)
   uint uVar1;
   undefined2 *puVar2;
   
-  puVar2 = *(undefined2 **)(param_1 + 0xb8);
+  puVar2 = ((GameObject *)param_1)->extra;
   uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x1e));
   ((ObjAnimComponent *)param_1)->bankIndex = (s8)uVar1;
   *puVar2 = *(undefined2 *)(param_2 + 0x1a);
@@ -1518,8 +1518,8 @@ undefined4 FUN_801f25b4(int param_1,undefined4 param_2,int param_3)
   int iVar4;
   
   iVar2 = FUN_80017a98();
-  iVar4 = *(int *)(param_1 + 0xb8);
-  *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+  iVar4 = *(int *)&((GameObject *)param_1)->extra;
+  *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
   for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar3 = iVar3 + 1) {
     cVar1 = *(char *)(iVar4 + 0x25);
     if (cVar1 == '\x01') {
@@ -1567,11 +1567,11 @@ undefined4 FUN_801f26a8(int param_1,undefined4 param_2,int param_3)
     FUN_801f25b4(param_1,param_2,param_3);
     break;
   case 4:
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+    *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
     break;
   case 6:
-    iVar2 = *(int *)(param_1 + 0xb8);
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+    iVar2 = *(int *)&((GameObject *)param_1)->extra;
+    *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
     for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar3 = iVar3 + 1) {
       if ((*(char *)(param_3 + iVar3 + 0x81) == '\x01') && (1 < *(byte *)(iVar2 + 0x27))) {
         FUN_80017698(0x314,1);
@@ -1750,8 +1750,8 @@ void FUN_801f2904(uint param_1)
   short *psVar7;
   int iVar8;
   
-  iVar8 = *(int *)(param_1 + 0x4c);
-  psVar7 = *(short **)(param_1 + 0xb8);
+  iVar8 = *(int *)&((GameObject *)param_1)->anim.placementData;
+  psVar7 = ((GameObject *)param_1)->extra;
   *(char *)(psVar7 + 1) = *(char *)(psVar7 + 1) + -1;
   if (*(char *)(psVar7 + 1) < '\0') {
     *(undefined *)(psVar7 + 1) = 0;
@@ -1761,7 +1761,7 @@ void FUN_801f2904(uint param_1)
     iVar5 = 0;
     for (iVar6 = 0; iVar6 < *(char *)(*(int *)(param_1 + 0x58) + 0x10f); iVar6 = iVar6 + 1) {
       if (fVar1 < *(float *)(*(int *)(*(int *)(param_1 + 0x58) + iVar5 + 0x100) + 0x10) -
-                  *(float *)(param_1 + 0x10)) {
+                  ((GameObject *)param_1)->anim.localPosY) {
         *(undefined *)(psVar7 + 1) = 0x3c;
       }
       iVar5 = iVar5 + 4;
@@ -1771,31 +1771,31 @@ void FUN_801f2904(uint param_1)
   if ((((int)*psVar7 == 0xffffffff) || (uVar4 = FUN_80017690((int)*psVar7), uVar4 != 0)) &&
      (*(char *)(psVar7 + 1) != '\0')) {
     fVar2 = lbl_803E6A68 + lbl_803E6A6C + *(float *)(iVar8 + 0xc);
-    fVar1 = *(float *)(param_1 + 0x10);
+    fVar1 = ((GameObject *)param_1)->anim.localPosY;
     if (fVar1 <= fVar2) {
-      *(float *)(param_1 + 0x10) = lbl_803E6A74 * lbl_803DC074 + fVar1;
-      if (*(float *)(param_1 + 0x10) <= fVar2) {
+      ((GameObject *)param_1)->anim.localPosY = lbl_803E6A74 * lbl_803DC074 + fVar1;
+      if (((GameObject *)param_1)->anim.localPosY <= fVar2) {
         bVar3 = true;
       }
       else {
-        *(float *)(param_1 + 0x10) = fVar2;
+        ((GameObject *)param_1)->anim.localPosY = fVar2;
       }
     }
     else {
-      *(float *)(param_1 + 0x10) = -(lbl_803E6A70 * lbl_803DC074 - fVar1);
-      if (fVar2 < *(float *)(param_1 + 0x10)) {
-        *(float *)(param_1 + 0x10) = fVar2;
+      ((GameObject *)param_1)->anim.localPosY = -(lbl_803E6A70 * lbl_803DC074 - fVar1);
+      if (fVar2 < ((GameObject *)param_1)->anim.localPosY) {
+        ((GameObject *)param_1)->anim.localPosY = fVar2;
       }
     }
   }
   else {
-    *(float *)(param_1 + 0x10) = -(lbl_803E6A78 * lbl_803DC074 - *(float *)(param_1 + 0x10));
+    ((GameObject *)param_1)->anim.localPosY = -(lbl_803E6A78 * lbl_803DC074 - ((GameObject *)param_1)->anim.localPosY);
     fVar1 = *(float *)(iVar8 + 0xc);
-    if (fVar1 <= *(float *)(param_1 + 0x10)) {
+    if (fVar1 <= ((GameObject *)param_1)->anim.localPosY) {
       bVar3 = true;
     }
     else {
-      *(float *)(param_1 + 0x10) = fVar1;
+      ((GameObject *)param_1)->anim.localPosY = fVar1;
     }
   }
   if (bVar3) {

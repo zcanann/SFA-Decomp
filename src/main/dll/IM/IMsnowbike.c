@@ -55,7 +55,7 @@ void sh_levelcontrol_update(int param_1)
   u8 cVar4;
   u8 *base = lbl_80327618;
 
-  puVar5 = *(uint **)(param_1 + 0xb8);
+  puVar5 = ((GameObject *)param_1)->extra;
   if (*(f32 *)((int)puVar5 + 0xc) > lbl_803E54B4) {
     gameTextShow(0x3f6);
     *(f32 *)((int)puVar5 + 0xc) = *(f32 *)((int)puVar5 + 0xc) - timeDelta;
@@ -243,10 +243,10 @@ void sh_levelcontrol_update(int param_1)
   }
   iVar1 = GameBit_Get(0xd36);
   if (iVar1 != 0) {
-    if (*(int *)(param_1 + 0xf8) != 2) {
+    if (((GameObject *)param_1)->unkF8 != 2) {
       *(undefined4 *)(param_1 + 0xf8) = 2;
       envFxActFn_800887f8(0);
-      if (*(int *)(param_1 + 0xf4) == 2) {
+      if (((GameObject *)param_1)->unkF4 == 2) {
         getEnvfxActImmediately(0, 0, 0x1bf, 0);
         getEnvfxActImmediately(0, 0, 0x231, 0);
         getEnvfxActImmediately(0, 0, 0x232, 0);
@@ -263,9 +263,9 @@ void sh_levelcontrol_update(int param_1)
   else {
     iVar1 = GameBit_Get(0xd35);
     if (iVar1 != 0) {
-      if (*(int *)(param_1 + 0xf8) != 1) {
+      if (((GameObject *)param_1)->unkF8 != 1) {
         *(undefined4 *)(param_1 + 0xf8) = 1;
-        if (*(int *)(param_1 + 0xf4) == 2) {
+        if (((GameObject *)param_1)->unkF4 == 2) {
           envFxActFn_800887f8(0);
           getEnvfxActImmediately(0, 0, 0x1bf, 0);
           getEnvfxActImmediately(0, 0, 0x1be, 0);
@@ -281,9 +281,9 @@ void sh_levelcontrol_update(int param_1)
         }
       }
     }
-    else if (*(int *)(param_1 + 0xf8) != 0) {
+    else if (((GameObject *)param_1)->unkF8 != 0) {
       *(undefined4 *)(param_1 + 0xf8) = 0;
-      if (*(int *)(param_1 + 0xf4) == 2) {
+      if (((GameObject *)param_1)->unkF4 == 2) {
         fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
         envFxActFn_800887f8(0x3f);
         getEnvfxActImmediately(0, 0, 0x244, 0);

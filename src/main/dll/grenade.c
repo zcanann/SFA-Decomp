@@ -948,7 +948,7 @@ undefined4 trickyFn_80143210(int param_1,int *param_2)
   if (iVar2 != 0) {
     return 1;
   }
-  sVar1 = *(short *)(param_1 + 0xa0);
+  sVar1 = ((GameObject *)param_1)->anim.currentMove;
   switch (sVar1) {
   case 0x23:
     if ((param_2[0x15] & 0x8000000U) != 0) {
@@ -990,7 +990,7 @@ undefined4 trickyFn_801432cc(int param_1,int *param_2)
   if (iVar2 != 0) {
     return 1;
   }
-  sVar1 = *(short *)(param_1 + 0xa0);
+  sVar1 = ((GameObject *)param_1)->anim.currentMove;
   switch (sVar1) {
   case 0x21:
     if ((param_2[0x15] & 0x8000000U) != 0) {
@@ -1035,9 +1035,9 @@ undefined4 trickyFn_80143388(int param_1,int *param_2)
   for (iVar1 = 0; iVar1 < *(char *)((int)param_2 + 0x827); iVar1 = iVar1 + 1) {
     iVar3 = iVar1 + 0x81f;
     if (*(char *)((int)param_2 + iVar3) != '\0') continue;
-    iVar3 = *(int *)(param_1 + 0xb8);
+    iVar3 = *(int *)&((GameObject *)param_1)->extra;
     if (((u32)(*(byte *)(iVar3 + 0x58) >> 6 & 1)) != 0U) continue;
-    if (*(short *)(param_1 + 0xa0) >= 0x30 || *(short *)(param_1 + 0xa0) < 0x29) {
+    if (((GameObject *)param_1)->anim.currentMove >= 0x30 || ((GameObject *)param_1)->anim.currentMove < 0x29) {
       if (Sfx_IsPlayingFromObjectChannel(param_1,0x10) == 0) {
         objAudioFn_800393f8(param_1,(void *)(iVar3 + 0x3a8),0x357,0,0xffffffff,0);
       }
@@ -1048,7 +1048,7 @@ undefined4 trickyFn_80143388(int param_1,int *param_2)
     return 1;
   }
   if ((param_2[0x15] & 0x8000000U) != 0) {
-    if (param_2[8] == (int)*(short *)(param_1 + 0xa0)) {
+    if (param_2[8] == (int)((GameObject *)param_1)->anim.currentMove) {
       *(undefined *)((int)param_2 + 10) = 0;
     }
   }
@@ -1091,8 +1091,8 @@ int trickyFn_801434b0(int param_1, int *param_2)
   if (trickyFoodFn_8014460c(param_1, param_2) != 0) {
     return 1;
   }
-  *(u8 *)(param_1 + 0xaf) = *(u8 *)(param_1 + 0xaf) | 0x10;
-  sVar2 = *(short *)(param_1 + 0xa0);
+  *(u8 *)&((GameObject *)param_1)->anim.resetHitboxMode = *(u8 *)&((GameObject *)param_1)->anim.resetHitboxMode | 0x10;
+  sVar2 = ((GameObject *)param_1)->anim.currentMove;
   if (sVar2 == 0x2a) {
     *(float *)(param_2 + 0x1cf) = *(float *)(param_2 + 0x1cf) - timeDelta;
     if (*(float *)(param_2 + 0x1cf) <= lbl_803E23DC) {
@@ -1117,7 +1117,7 @@ int trickyFn_801434b0(int param_1, int *param_2)
     fVar3 = *(float *)(param_2 + 0x1d1) - timeDelta;
     *(float *)(param_2 + 0x1d1) = fVar3;
     if (fVar3 <= lbl_803E23DC) {
-      if ((*(u16 *)(param_1 + 0xb0) & 0x800) != 0) {
+      if ((((GameObject *)param_1)->objectFlags & 0x800) != 0) {
         local_1c = param_2[0x102];
         local_18 = lbl_803E23F8 + *(float *)(param_2 + 0x103);
         local_14 = param_2[0x104];
@@ -1280,7 +1280,7 @@ undefined4 trickyFn_80143b04(int param_1,int *param_2)
     return 1;
   }
   if ((param_2[0x15] & 0x8000000U) != 0) {
-    if (param_2[8] == (int)*(short *)(param_1 + 0xa0)) {
+    if (param_2[8] == (int)((GameObject *)param_1)->anim.currentMove) {
       *(undefined *)((int)param_2 + 10) = 0;
     }
   }
@@ -1457,9 +1457,9 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
   iVar1 = ((int (*)(int))(*(int *)(*DAT_803dd6d8 + 0x24)))(0);
   if ((iVar1 != 0) && ((param_2[0x15] & 0x20000000U) == 0)) {
     param_2[0x15] = param_2[0x15] | 0x20000000;
-    iVar1 = *(int *)(param_1 + 0xb8);
+    iVar1 = *(int *)&((GameObject *)param_1)->extra;
     if (((*(byte *)(iVar1 + 0x58) >> 6 & 1) == 0U) &&
-       ((*(short *)(param_1 + 0xa0) >= 0x30 || (*(short *)(param_1 + 0xa0) < 0x29)) &&
+       ((((GameObject *)param_1)->anim.currentMove >= 0x30 || (((GameObject *)param_1)->anim.currentMove < 0x29)) &&
          !Sfx_IsPlayingFromObjectChannel(param_1,0x10))) {
       objAudioFn_800393f8(param_1,(void *)(iVar1 + 0x3a8),0x353,0x500,0xffffffff,0);
     }
@@ -1495,9 +1495,9 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
       }
     }
     else {
-      iVar1 = *(int *)(param_1 + 0xb8);
+      iVar1 = *(int *)&((GameObject *)param_1)->extra;
       if ((((*(byte *)(iVar1 + 0x58) >> 6 & 1) == 0U) &&
-          (*(short *)(param_1 + 0xa0) >= 0x30 || (*(short *)(param_1 + 0xa0) < 0x29)
+          (((GameObject *)param_1)->anim.currentMove >= 0x30 || (((GameObject *)param_1)->anim.currentMove < 0x29)
            ) && !Sfx_IsPlayingFromObjectChannel(param_1,0x10))) {
         objAudioFn_800393f8(param_1,(void *)(iVar1 + 0x3a8),0x357,0,0xffffffff,0);
       }
@@ -1628,9 +1628,9 @@ void tricky_startRandomIdleMove(int param_1,int param_2)
     *(undefined *)(param_2 + 10) = 2;
     break;
   case 1:
-    iVar3 = *(int *)(param_1 + 0xb8);
+    iVar3 = *(int *)&((GameObject *)param_1)->extra;
     if (((u32)(*(byte *)(iVar3 + 0x58) >> 6 & 1)) == 0U) {
-      if (*(short *)(param_1 + 0xa0) >= 0x30 || *(short *)(param_1 + 0xa0) < 0x29) {
+      if (((GameObject *)param_1)->anim.currentMove >= 0x30 || ((GameObject *)param_1)->anim.currentMove < 0x29) {
         if (Sfx_IsPlayingFromObjectChannel(param_1,0x10) == 0) {
           objAudioFn_800393f8(param_1,(void *)(iVar3 + 0x3a8),0x357,0,0xffffffff,0);
         }

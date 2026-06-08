@@ -499,9 +499,9 @@ void FUN_80175ed4(int param_1)
   int iVar2;
   int iVar3;
   
-  iVar3 = *(int *)(param_1 + 0x4c);
-  iVar2 = *(int *)(param_1 + 0xb8);
-  sVar1 = *(short *)(param_1 + 0x46);
+  iVar3 = *(int *)&((GameObject *)param_1)->anim.placementData;
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
+  sVar1 = ((GameObject *)param_1)->anim.seqId;
   if (sVar1 == 0x411) {
     FUN_80017698((int)*(short *)(iVar2 + 0xac),0);
   }
@@ -911,7 +911,7 @@ void FUN_80177204(short *param_1,int param_2)
  */
 void FUN_80177208(int param_1)
 {
-  if (*(char *)(*(int *)(param_1 + 0xb8) + 8) == '\x04') {
+  if (*(char *)(*(int *)&((GameObject *)param_1)->extra + 8) == '\x04') {
     (*gExpgfxInterface)->freeSource2((u32)param_1);
   }
   return;
@@ -1039,7 +1039,7 @@ void FUN_80177710(ushort *param_1)
  */
 void FUN_80177874(int param_1,int param_2)
 {
-  **(float **)(param_1 + 0xb8) =
+  **(float **)&((GameObject *)param_1)->extra =
        (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1a) ^ 0x80000000) -
               DOUBLE_803e42a8);
   ObjHits_SetTargetMask(param_1,1);
@@ -1061,7 +1061,7 @@ void FUN_80177874(int param_1,int param_2)
  */
 void FUN_801778d0(int param_1)
 {
-  *(undefined *)(*(int *)(param_1 + 0xb8) + 0x10) = 1;
+  *(undefined *)(*(int *)&((GameObject *)param_1)->extra + 0x10) = 1;
   return;
 }
 

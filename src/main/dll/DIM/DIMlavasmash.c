@@ -207,7 +207,7 @@ undefined4 FUN_801b09dc(uint param_1,undefined4 param_2,int param_3)
   byte bVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   if (*(char *)(iVar2 + 0x1a) == '\x01') {
     FUN_80006824(param_1,SFXmn_eggylaugh216);
   }

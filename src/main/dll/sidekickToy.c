@@ -1592,11 +1592,11 @@ uint FUN_8014ca90(int param_1)
   if (param_1 == 0) {
     uVar2 = 0;
   }
-  else if (*(int *)(param_1 + 0xb8) == 0) {
+  else if (*(int *)&((GameObject *)param_1)->extra == 0) {
     uVar2 = 0;
   }
   else {
-    fVar1 = *(float *)(*(int *)(param_1 + 0xb8) + 0x2d8);
+    fVar1 = *(float *)(*(int *)&((GameObject *)param_1)->extra + 0x2d8);
     if (fVar1 == lbl_803E31FC) {
       uVar2 = 0;
     }
@@ -1628,7 +1628,7 @@ void FUN_8014caf4(int param_1,uint *param_2,float *param_3,float *param_4)
   
   dVar2 = DOUBLE_803e3278;
   fVar1 = lbl_803E31FC;
-  if ((param_1 == 0) || (iVar3 = *(int *)(param_1 + 0xb8), iVar3 == 0)) {
+  if ((param_1 == 0) || (iVar3 = *(int *)&((GameObject *)param_1)->extra, iVar3 == 0)) {
     *param_3 = lbl_803E31FC;
     *param_4 = fVar1;
     *param_2 = 0;
@@ -1657,7 +1657,7 @@ void FUN_8014caf4(int param_1,uint *param_2,float *param_3,float *param_4)
  */
 void FUN_8014cbbc(int param_1)
 {
-  *(undefined2 *)(*(int *)(param_1 + 0xb8) + 0x2b0) = 0;
+  *(undefined2 *)(*(int *)&((GameObject *)param_1)->extra + 0x2b0) = 0;
   return;
 }
 
@@ -1679,7 +1679,7 @@ double FUN_8014cbcc(int param_1)
   int iVar1;
   double dVar2;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   if (iVar1 == 0) {
     dVar2 = (double)lbl_803E31FC;
   }
@@ -1713,7 +1713,7 @@ void FUN_8014cc7c(int param_1)
   undefined4 uVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   uVar1 = FUN_80017a98();
   *(undefined4 *)(iVar2 + 0x29c) = uVar1;
   return;
@@ -1734,7 +1734,7 @@ void FUN_8014cc7c(int param_1)
  */
 void FUN_8014ccac(int param_1,undefined4 param_2)
 {
-  *(undefined4 *)(*(int *)(param_1 + 0xb8) + 0x29c) = param_2;
+  *(undefined4 *)(*(int *)&((GameObject *)param_1)->extra + 0x29c) = param_2;
   return;
 }
 

@@ -258,11 +258,11 @@ void FUN_8014d4c8(double param_1,double param_2,double param_3,undefined8 param_
  */
 void FUN_8014d59c(int param_1,undefined4 *param_2)
 {
-  if (*(short *)(param_1 + 0x46) == 0x7c8) {
-    FUN_8001789c(param_2,*param_2,*(int **)(*(int *)(param_1 + 0xb8) + 0x36c),FUN_80159bd0);
+  if (((GameObject *)param_1)->anim.seqId == 0x7c8) {
+    FUN_8001789c(param_2,*param_2,*(int **)(*(int *)&((GameObject *)param_1)->extra + 0x36c),FUN_80159bd0);
   }
   else {
-    FUN_8001789c(param_2,*param_2,*(int **)(*(int *)(param_1 + 0xb8) + 0x36c),(undefined *)0x0);
+    FUN_8001789c(param_2,*param_2,*(int **)(*(int *)&((GameObject *)param_1)->extra + 0x36c),(undefined *)0x0);
   }
   return;
 }
@@ -351,8 +351,8 @@ void FUN_8014d7b8(uint param_1,int param_2,int param_3,int param_4,int param_5,s
   int *piVar2;
   int iVar3;
   
-  iVar3 = *(int *)(param_1 + 0xb8);
-  if ((visible != 0) && (*(int *)(param_1 + 0xf4) == 0)) {
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
+  if ((visible != 0) && (((GameObject *)param_1)->unkF4 == 0)) {
     FUN_8003b818(param_1);
     uVar1 = *(uint *)(iVar3 + 0x2e8);
     if ((uVar1 & 3) != 0) {
@@ -408,20 +408,20 @@ void FUN_8014d924(int param_1)
   int iVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   if ((*(int *)(iVar2 + 0x368) != 0) && (iVar1 = FUN_800175c4(*(int *)(iVar2 + 0x368)), iVar1 == 0))
   {
     FUN_80017620(*(uint *)(iVar2 + 0x368));
     *(undefined4 *)(iVar2 + 0x368) = 0;
   }
-  ((EnemyState *)iVar2)->lastHitObject = (*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject;
-  if ((*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject != 0) {
-    (*(ObjHitsPriorityState **)(param_1 + 0x54))->suppressOutgoingHits = 1;
+  ((EnemyState *)iVar2)->lastHitObject = (*(ObjHitsPriorityState **)&((GameObject *)param_1)->anim.hitReactState)->lastHitObject;
+  if ((*(ObjHitsPriorityState **)&((GameObject *)param_1)->anim.hitReactState)->lastHitObject != 0) {
+    (*(ObjHitsPriorityState **)&((GameObject *)param_1)->anim.hitReactState)->suppressOutgoingHits = 1;
   }
-  if (((*(int *)(param_1 + 200) != 0) &&
-      (iVar1 = *(int *)(*(int *)(param_1 + 200) + 0x54), iVar1 != 0)) &&
+  if (((*(int *)&((GameObject *)param_1)->unkC8 != 0) &&
+      (iVar1 = *(int *)(*(int *)&((GameObject *)param_1)->unkC8 + 0x54), iVar1 != 0)) &&
      (((ObjHitsPriorityState *)iVar1)->lastHitObject != 0)) {
-    (*(ObjHitsPriorityState **)(param_1 + 0x54))->suppressOutgoingHits = 1;
+    (*(ObjHitsPriorityState **)&((GameObject *)param_1)->anim.hitReactState)->suppressOutgoingHits = 1;
   }
   if (((EnemyState *)iVar2)->unk36C != 0) {
     FUN_800178ac(((EnemyState *)iVar2)->unk36C);

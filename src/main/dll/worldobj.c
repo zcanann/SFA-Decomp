@@ -158,7 +158,7 @@ void FUN_801ce188(uint param_1)
   }
   else {
     *(undefined2 *)(param_1 + 6) = 0x4000;
-    *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x8000;
+    ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x8000;
     FUN_800068cc();
     FUN_800068cc();
     ObjHits_DisableObject(param_1);
@@ -182,7 +182,7 @@ void FUN_801ce188(uint param_1)
  */
 int FUN_801ce238(int param_1)
 {
-  return *(int *)(param_1 + 0xb8) + 0xc;
+  return *(int *)&((GameObject *)param_1)->extra + 0xc;
 }
 
 /*
@@ -315,7 +315,7 @@ undefined4 FUN_801ce424(uint param_1,int param_2)
     fVar2 = *(float *)(param_2 + 0x1c) - lbl_803DC074;
     *(float *)(param_2 + 0x1c) = fVar2;
     if (fVar2 <= lbl_803E5EA4) {
-      if ((*(ushort *)(param_1 + 0xb0) & 0x800) != 0) {
+      if ((((GameObject *)param_1)->objectFlags & 0x800) != 0) {
         local_28 = *(undefined4 *)(param_2 + 0xc);
         local_24 = *(undefined4 *)(param_2 + 0x10);
         local_20 = *(undefined4 *)(param_2 + 0x14);

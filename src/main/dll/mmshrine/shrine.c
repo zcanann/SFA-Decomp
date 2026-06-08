@@ -101,9 +101,9 @@ void mmsh_shrine_init(undefined2 *param_1,int param_2)
 void mmsh_scales_free(int param_1,int param_2)
 {
   void *child;
-  (*gObjectTriggerInterface)->freeState(*(u8 **)(param_1 + 0xb8));
+  (*gObjectTriggerInterface)->freeState(((GameObject *)param_1)->extra);
   (*(code *)(*gTitleMenuControlInterface + 8))(param_1,0xffff,0,0,0);
-  child = *(void **)(param_1 + 200);
+  child = ((GameObject *)param_1)->unkC8;
   if ((child != NULL) && (param_2 == 0)) {
     Obj_FreeObject(child);
   }
@@ -130,10 +130,10 @@ void mmsh_scales_update(int param_1)
   int i;
   int count;
 
-  if ((*(void **)(param_1 + 0x4c) != NULL) && (*(short *)(*(int *)(param_1 + 0x4c) + 0x18) != -1)) {
+  if ((((GameObject *)param_1)->anim.placementData != NULL) && (*(short *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x18) != -1)) {
     i = (*gObjectTriggerInterface)->update((u8 *)param_1, (f32)(u32)lbl_803DB411);
-    if ((i != 0) && (*(short *)(param_1 + 0xb4) == -2)) {
-      typeId = *(char *)(*(int *)(param_1 + 0xb8) + 0x57);
+    if ((i != 0) && (((GameObject *)param_1)->unkB4 == -2)) {
+      typeId = *(char *)(*(int *)&((GameObject *)param_1)->extra + 0x57);
       found = 0;
       list = (int *)ObjList_GetObjects(&i, &count);
       n = 0;
@@ -152,7 +152,7 @@ void mmsh_scales_update(int param_1)
         *(s16 *)(found + 0xb4) = -1;
         (*gObjectTriggerInterface)->endSequence(id);
       }
-      *(s16 *)(param_1 + 0xb4) = -1;
+      ((GameObject *)param_1)->unkB4 = -1;
       Obj_FreeObject((void *)param_1);
     }
   }
@@ -459,23 +459,23 @@ void mmsh_waterspike_update(int param_1)
   int *list;
   int state;
 
-  state = *(int *)(param_1 + 0x4c);
+  state = *(int *)&((GameObject *)param_1)->anim.placementData;
   ObjHits_SetHitVolumeSlot(param_1, 9, 1, 0);
-  o = ObjList_FindObjectById(*(int *)(param_1 + 0xf8));
+  o = ObjList_FindObjectById(((GameObject *)param_1)->unkF8);
   if (o != NULL) {
-    dist = objFn_801948c0(o, 3) - *(f32 *)(param_1 + 0x10);
+    dist = objFn_801948c0(o, 3) - ((GameObject *)param_1)->anim.localPosY;
   }
   else {
     fn_80137948(sWaterSpikeInvalidXyzAnimIdWarning, *(int *)(state + 0x14));
-    n = hitDetectFn_80065e50(param_1, *(f32 *)(param_1 + 0xc), *(f32 *)(param_1 + 0x10),
-                             *(f32 *)(param_1 + 0x14), &list, 0, 0);
+    n = hitDetectFn_80065e50(param_1, ((GameObject *)param_1)->anim.localPosX, ((GameObject *)param_1)->anim.localPosY,
+                             ((GameObject *)param_1)->anim.localPosZ, &list, 0, 0);
     if (n != 0) {
       dist = lbl_803E4F80;
       p = list;
       for (i = 0; i < n; i++) {
         obj2 = *p;
         if (*(char *)(obj2 + 0x14) == 0xe) {
-          d = *(f32 *)obj2 - *(f32 *)(param_1 + 0x10);
+          d = *(f32 *)obj2 - ((GameObject *)param_1)->anim.localPosY;
           if (d > dist) {
             dist = d;
           }
@@ -484,20 +484,20 @@ void mmsh_waterspike_update(int param_1)
       }
     }
   }
-  newY = *(f32 *)(param_1 + 0x10) + dist;
+  newY = ((GameObject *)param_1)->anim.localPosY + dist;
   maxY = *(f32 *)(state + 0xc);
   if (newY > maxY) {
-    *(f32 *)(param_1 + 0x10) = maxY;
+    ((GameObject *)param_1)->anim.localPosY = maxY;
   }
   else {
-    *(f32 *)(param_1 + 0x10) = newY;
-    *(int *)(param_1 + 0xf4) = *(int *)(param_1 + 0xf4) - framesThisStep;
-    if (*(int *)(param_1 + 0xf4) <= 0) {
-      *(int *)(param_1 + 0xf4) = randomGetRange(0x3c, 0xf0);
+    ((GameObject *)param_1)->anim.localPosY = newY;
+    ((GameObject *)param_1)->unkF4 = ((GameObject *)param_1)->unkF4 - framesThisStep;
+    if (((GameObject *)param_1)->unkF4 <= 0) {
+      ((GameObject *)param_1)->unkF4 = randomGetRange(0x3c, 0xf0);
       if (lbl_803E4F84 == dist) {
-        (*gWaterfxInterface)->spawnRipple(0, 3, *(f32 *)(param_1 + 0xc),
-                                          *(f32 *)(param_1 + 0x10),
-                                          *(f32 *)(param_1 + 0x14), lbl_803E4F88);
+        (*gWaterfxInterface)->spawnRipple(0, 3, ((GameObject *)param_1)->anim.localPosX,
+                                          ((GameObject *)param_1)->anim.localPosY,
+                                          ((GameObject *)param_1)->anim.localPosZ, lbl_803E4F88);
       }
     }
   }

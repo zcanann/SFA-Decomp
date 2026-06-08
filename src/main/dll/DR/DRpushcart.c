@@ -168,7 +168,7 @@ undefined4 FUN_801e76a0(int param_1)
   undefined4 uVar2;
   int iVar3;
   
-  iVar3 = *(int *)(param_1 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
   uVar1 = GameBit_Get(0xcef);
   if (uVar1 == 0) {
     uVar2 = 0;
@@ -211,7 +211,7 @@ uint FUN_801e7724(int param_1,undefined4 param_2,int param_3)
   char local_18;
   undefined auStack_17 [7];
   
-  iVar7 = *(int *)(param_1 + 0xb8);
+  iVar7 = *(int *)&((GameObject *)param_1)->extra;
   if (param_3 == 0x14) {
     FUN_80006bb4(0,auStack_17,&local_18);
     if (local_18 < '\0') {
@@ -352,7 +352,7 @@ void FUN_801e7b2c(int param_1)
 {
   int iVar1;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   if ((*(byte *)(iVar1 + 0x9d4) & 2) == 0) {
     FUN_8011e800(0);
   }
@@ -603,7 +603,7 @@ extern void Stack_Free();
 
 void shopkeeper_free(int param_1)
 {
-  Stack_Free(*(undefined4 *)(*(int *)(param_1 + 0xb8) + 0x9b0));
+  Stack_Free(*(undefined4 *)(*(int *)&((GameObject *)param_1)->extra + 0x9b0));
   return;
 }
 
@@ -624,7 +624,7 @@ void shopkeeper_free(int param_1)
 #pragma peephole off
 void shopkeeper_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-    int iVar1 = *(int *)(param_1 + 0xb8);
+    int iVar1 = *(int *)&((GameObject *)param_1)->extra;
     float local_18[4];
     local_18[0] = lbl_803E59D8;
     if (*(s16 *)(iVar1 + 0x274) != 7 && visible != 0) {
@@ -859,10 +859,10 @@ void FUN_801e8514(int param_1)
   int iVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   if (((*(byte *)(iVar2 + 0x97) >> 6 & 1) == 0) &&
      (iVar1 = (**(code **)(**(int **)(*(int *)(iVar2 + 0x90) + 0x68) + 0x2c))
-                        (*(int *)(iVar2 + 0x90),*(undefined *)(*(int *)(param_1 + 0x4c) + 0x19)),
+                        (*(int *)(iVar2 + 0x90),*(undefined *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x19)),
      iVar1 != 0)) {
     *(byte *)(iVar2 + 0x97) = *(byte *)(iVar2 + 0x97) & 0x7f | 0x80;
   }
@@ -910,8 +910,8 @@ void FUN_801e85b8(int param_1)
   int iVar3;
   
   (*gExpgfxInterface)->freeSource((u32)param_1);
-  if (*(short *)(param_1 + 0x46) == 0x468) {
-    iVar3 = *(int *)(param_1 + 0xb8);
+  if (((GameObject *)param_1)->anim.seqId == 0x468) {
+    iVar3 = *(int *)&((GameObject *)param_1)->extra;
     for (bVar2 = 0; bVar2 < 10; bVar2 = bVar2 + 1) {
       uVar1 = *(uint *)(iVar3 + (uint)bVar2 * 4 + 0x98);
       if (uVar1 != 0) {
@@ -939,7 +939,7 @@ void FUN_801e85b8(int param_1)
 void FUN_801e8658(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
-    if (*(short *)(param_1 + 0x46) == 0x468) {
+    if (((GameObject *)param_1)->anim.seqId == 0x468) {
       FUN_801e8300();
     }
     else {

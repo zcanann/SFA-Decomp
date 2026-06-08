@@ -103,13 +103,13 @@ void firstperson_updatePosition(int param_1, short *param_2)
   }
   if (dist > lbl_803E1700 * gCamcontrolModeSettings[1]) {
     camcontrol_getTargetPosition(param_1, param_2, (float *)(param_1 + 0x18), (short *)(param_1 + 2));
-    Obj_TransformWorldPointToLocal(*(f32 *)(param_1 + 0x18), *(f32 *)(param_1 + 0x1c),
-                                   *(f32 *)(param_1 + 0x20), (f32 *)(param_1 + 0xc),
+    Obj_TransformWorldPointToLocal(((GameObject *)param_1)->anim.worldPosX, ((GameObject *)param_1)->anim.worldPosY,
+                                   ((GameObject *)param_1)->anim.worldPosZ, (f32 *)(param_1 + 0xc),
                                    (f32 *)(param_1 + 0x10), (f32 *)(param_1 + 0x14),
-                                   *(int *)(param_1 + 0x30));
-    *(f32 *)(param_1 + 0xb8) = *(f32 *)(param_1 + 0x18);
-    *(f32 *)(param_1 + 0xbc) = *(f32 *)(param_1 + 0x1c);
-    *(f32 *)(param_1 + 0xc0) = *(f32 *)(param_1 + 0x20);
+                                   *(int *)&((GameObject *)param_1)->anim.parent);
+    *(f32 *)&((GameObject *)param_1)->extra = ((GameObject *)param_1)->anim.worldPosX;
+    *(f32 *)&((GameObject *)param_1)->animEventCallback = ((GameObject *)param_1)->anim.worldPosY;
+    *(f32 *)&((GameObject *)param_1)->unkC0 = ((GameObject *)param_1)->anim.worldPosZ;
     (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings[0x23], param_1, &dx,
                                              &dz, &dy, &dist, 1);
     dist = dy * dy + (dx * dx + dz * dz);
@@ -135,8 +135,8 @@ void firstperson_updatePosition(int param_1, short *param_2)
     ((CamFlagByte *)((u8 *)gCamcontrolModeSettings + 0xc8))->flag = 0;
   }
 
-  targetX = *(f32 *)(param_1 + 0xc);
-  targetZ = *(f32 *)(param_1 + 0x14);
+  targetX = ((GameObject *)param_1)->anim.localPosX;
+  targetZ = ((GameObject *)param_1)->anim.localPosZ;
   if ((((CamFlagByte *)((u8 *)gCamcontrolModeSettings + 0xc6))->flag == 0) && (clamped != dist) &&
       (lbl_803E16AC != gCamcontrolModeSettings[4])) {
     if (dist < lbl_803E16A4) {
@@ -150,8 +150,8 @@ void firstperson_updatePosition(int param_1, short *param_2)
     }
   }
 
-  dx = targetX - *(f32 *)(param_1 + 0xc);
-  dy = targetZ - *(f32 *)(param_1 + 0x14);
+  dx = targetX - ((GameObject *)param_1)->anim.localPosX;
+  dy = targetZ - ((GameObject *)param_1)->anim.localPosZ;
   dist = sqrtf(dx * dx + dy * dy);
   if (dist > lbl_803E16AC) {
     dx = dx / dist;
@@ -163,12 +163,12 @@ void firstperson_updatePosition(int param_1, short *param_2)
   }
   dist = dist < lbl_803E16AC ? lbl_803E16AC : (dist > speed ? speed : dist);
   dist = dist < lbl_803E16AC ? lbl_803E16AC : (dist > lbl_803E1708 ? lbl_803E1708 : dist);
-  *(f32 *)(param_1 + 0xc) = dx * dist + *(f32 *)(param_1 + 0xc);
-  *(f32 *)(param_1 + 0x14) = dy * dist + *(f32 *)(param_1 + 0x14);
+  ((GameObject *)param_1)->anim.localPosX = dx * dist + ((GameObject *)param_1)->anim.localPosX;
+  ((GameObject *)param_1)->anim.localPosZ = dy * dist + ((GameObject *)param_1)->anim.localPosZ;
 
   if (gCamcontrolModeSettings[3] > gCamcontrolModeSettings[0x27]) {
-    dx = *(f32 *)(param_1 + 0xc) - *(f32 *)(param_2 + 6);
-    dy = *(f32 *)(param_1 + 0x14) - *(f32 *)(param_2 + 10);
+    dx = ((GameObject *)param_1)->anim.localPosX - *(f32 *)(param_2 + 6);
+    dy = ((GameObject *)param_1)->anim.localPosZ - *(f32 *)(param_2 + 10);
     dist = sqrtf(dx * dx + dy * dy);
     if (dist < lbl_803E170C * *gCamcontrolModeSettings) {
       if (dist > lbl_803E16AC) {
@@ -176,8 +176,8 @@ void firstperson_updatePosition(int param_1, short *param_2)
         dy = dy / dist;
       }
       dist = lbl_803E170C * *gCamcontrolModeSettings;
-      *(f32 *)(param_1 + 0xc) = dist * dx + *(f32 *)(param_2 + 6);
-      *(f32 *)(param_1 + 0x14) = dist * dy + *(f32 *)(param_2 + 10);
+      ((GameObject *)param_1)->anim.localPosX = dist * dx + *(f32 *)(param_2 + 6);
+      ((GameObject *)param_1)->anim.localPosZ = dist * dy + *(f32 *)(param_2 + 10);
     }
   }
 }

@@ -293,7 +293,7 @@ void dimbossgut2_render(int param_1,int param_2,int param_3,int param_4,int para
 {
   u8 *light;
 
-  light = *(u8 **)(param_1 + 0xb8);
+  light = ((GameObject *)param_1)->extra;
   if (visible != 0) {
     ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(param_1, param_2, param_3, param_4, param_5, lbl_803E4CF0);
     light = *(u8 **)(*(int *)(light + 0x40c) + 0x18);
@@ -599,7 +599,7 @@ void DIMbossspit_render(int param_1,int param_2,int param_3,int param_4,int para
 {
   u8 *light;
 
-  light = *(u8 **)(param_1 + 0xb8);
+  light = ((GameObject *)param_1)->extra;
   if (visible != 0) {
     ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(param_1, param_2, param_3, param_4, param_5, lbl_803E4D44);
     light = *(u8 **)(light + 4);

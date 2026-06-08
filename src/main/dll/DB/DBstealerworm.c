@@ -644,14 +644,14 @@ void SB_Propeller_init(int param_1,int param_2)
   float *pfVar2;
   
   objAnim = (ObjAnimComponent *)param_1;
-  pfVar2 = *(float **)(param_1 + 0xb8);
+  pfVar2 = ((GameObject *)param_1)->extra;
   uVar1 = randomGetRange(0x5a,0xf0);
   ((SBPropellerState *)pfVar2)->smokeTimer = (f32)(s32)(uVar1);
   ((SBPropellerState *)pfVar2)->spinBlend = lbl_803E64A8;
   ((SBPropellerState *)pfVar2)->spinRate = 1200;
   *(u8 *)&((SBPropellerState *)pfVar2)->health = 4;
   objAnim->bankIndex = (char)*(s16 *)(param_2 + 0x1a);
-  if (*(short *)(param_1 + 0x46) != 0x69c) {
+  if (((GameObject *)param_1)->anim.seqId != 0x69c) {
     DAT_803de8c0 = param_1;
   }
   return;
@@ -683,9 +683,9 @@ void SB_ShipHead_render(int param_1,int param_2,int param_3,int param_4,int para
   float local_14 [3];
   
   if (visible != 0) {
-    iVar2 = *(int *)(param_1 + 0xb8);
+    iVar2 = *(int *)&((GameObject *)param_1)->extra;
     FUN_8003b818(param_1);
-    iVar1 = *(int *)(param_1 + 0x30);
+    iVar1 = *(int *)&((GameObject *)param_1)->anim.parent;
     if ((((iVar1 != 0) && (*(short *)(iVar1 + 0x46) == 0x8e)) &&
         (iVar1 = (**(code **)(**(int **)(iVar1 + 0x68) + 0x2c))(), iVar1 != 0)) && (iVar1 != 2)) {
       ((SBShipHeadState *)iVar2)->swayA = ((SBShipHeadState *)iVar2)->swayA - lbl_803DC074;
@@ -699,9 +699,9 @@ void SB_ShipHead_render(int param_1,int param_2,int param_3,int param_4,int para
       local_20 = lbl_803E64D4;
       local_22 = 0xc0a;
       ObjPath_GetPointWorldPosition(param_1,0xd,&local_1c,&local_18,local_14,0);
-      local_1c = local_1c - *(float *)(param_1 + 0x18);
-      local_18 = local_18 - *(float *)(param_1 + 0x1c);
-      local_14[0] = local_14[0] - *(float *)(param_1 + 0x20);
+      local_1c = local_1c - ((GameObject *)param_1)->anim.worldPosX;
+      local_18 = local_18 - ((GameObject *)param_1)->anim.worldPosY;
+      local_14[0] = local_14[0] - ((GameObject *)param_1)->anim.worldPosZ;
       for (bVar3 = 0; bVar3 < DAT_803dc070; bVar3 = bVar3 + 1) {
         (*gPartfxInterface)->spawnObject((void *)param_1, 0x7aa, auStack_28, 2, -1, NULL);
       }
@@ -971,8 +971,8 @@ void SB_ShipHead_free(int x) { ObjGroup_RemoveObject(x, 0x3); }
 
 /* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
 void SB_Propeller_hitDetect(int param_1) {
-    if (*(s16*)(param_1 + 0x46) != 0x69c) return;
-    *(s16*)(param_1 + 4) = *(s16*)(lbl_803DDC40 + 4);
+    if (((GameObject *)param_1)->anim.seqId != 0x69c) return;
+    ((GameObject *)param_1)->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
 }
 
 /* SB_ShipGun_free: expgfx interface freeObject callback. */

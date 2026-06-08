@@ -703,8 +703,8 @@ void FUN_801da5d4(int param_1,undefined *param_2,int param_3)
   
   iVar1 = FUN_80017a98();
   ObjHits_DisableObject(param_1);
-  *(ushort *)(param_1 + 6) = *(ushort *)(param_1 + 6) | 0x4000;
-  *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+  *(ushort *)&((GameObject *)param_1)->anim.flags = *(ushort *)&((GameObject *)param_1)->anim.flags | 0x4000;
+  *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
   if (param_3 != 0) {
     FUN_80294c30(iVar1,1);
     FUN_80294d18(iVar1,1);
@@ -830,11 +830,11 @@ undefined4 FUN_801da7f8(int param_1)
 {
   int iVar1;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   *(float *)(iVar1 + 4) = *(float *)(iVar1 + 4) + lbl_803DC074;
   if ((lbl_803E61C0 <= *(float *)(iVar1 + 4)) &&
      (*(float *)(iVar1 + 4) = *(float *)(iVar1 + 4) - lbl_803E61C0,
-     (*(ushort *)(param_1 + 0xb0) & 0x800) != 0)) {
+     (((GameObject *)param_1)->objectFlags & 0x800) != 0)) {
     FUN_80081110(param_1,0,2,0,(undefined4 *)0x0);
   }
   return 0;

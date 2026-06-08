@@ -277,7 +277,7 @@ void FUN_801c43b0(int param_1)
 {
   int *piVar1;
   
-  piVar1 = *(int **)(param_1 + 0xb8);
+  piVar1 = ((GameObject *)param_1)->extra;
   (*gModgfxInterface)->detachSource((void *)param_1);
   FUN_80006b0c(DAT_803de838);
   DAT_803de838 = (void*)0x0;

@@ -181,13 +181,13 @@ void FUN_8018bd34(int param_1)
   int *piVar4;
   double dVar5;
   
-  piVar4 = *(int **)(param_1 + 0xb8);
-  iVar3 = *(int *)(param_1 + 0x4c);
+  piVar4 = ((GameObject *)param_1)->extra;
+  iVar3 = *(int *)&((GameObject *)param_1)->anim.placementData;
   iVar1 = FUN_80017a90();
-  *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+  *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
   *(byte *)(piVar4 + 1) = *(byte *)(piVar4 + 1) & 0x7f;
   if ((iVar1 != 0) && (cVar2 = (**(code **)(**(int **)(iVar1 + 0x68) + 0x44))(), cVar2 != '\0')) {
-    dVar5 = (double)FUN_80017710((float *)(param_1 + 0x18),(float *)(iVar1 + 0x18));
+    dVar5 = (double)FUN_80017710((float *)&((GameObject *)param_1)->anim.worldPosX,(float *)(iVar1 + 0x18));
     if (dVar5 < (double)(float)((double)CONCAT44(0x43300000,
                                                  (int)*(short *)(iVar3 + 0x1a) ^ 0x80000000) -
                                DOUBLE_803e4910)) {
@@ -203,10 +203,10 @@ void FUN_8018bd34(int param_1)
   }
   else if ((iVar1 != 0) &&
           (cVar2 = (**(code **)(**(int **)(iVar1 + 0x68) + 0x44))(iVar1), cVar2 == '\0')) {
-    if ((*(byte *)(param_1 + 0xaf) & 4) != 0) {
+    if ((*(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 4) != 0) {
       (**(code **)(**(int **)(iVar1 + 0x68) + 0x28))(iVar1,param_1,1,3);
     }
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
+    *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 0xf7;
     FUN_800400b0();
   }
   GameBit_Set((int)*(short *)(iVar3 + 0x1e),(uint)(*(byte *)(piVar4 + 1) >> 7));
@@ -256,19 +256,19 @@ void FUN_8018bf58(int param_1)
   char cVar2;
   float *pfVar3;
   
-  pfVar3 = *(float **)(param_1 + 0xb8);
+  pfVar3 = ((GameObject *)param_1)->extra;
   iVar1 = ObjTrigger_IsSet(param_1);
   if ((iVar1 != 0) && (cVar2 = FUN_80132034(), cVar2 == '\0')) {
     *pfVar3 = FLOAT_803e4918;
   }
   if (FLOAT_803e491c < *pfVar3) {
-    if ((*(byte *)(param_1 + 0xaf) & 4) == 0) {
+    if ((*(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 4) == 0) {
       *pfVar3 = FLOAT_803e491c;
     }
     else {
       *pfVar3 = *pfVar3 - FLOAT_803dc074;
       FUN_8012f744(*(undefined2 *)
-                    (*(int *)(param_1 + 0x50) + (uint)*(byte *)(*(int *)(param_1 + 0x4c) + 0x19) * 2
+                    (*(int *)&((GameObject *)param_1)->anim.modelInstance + (uint)*(byte *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x19) * 2
                     + 0x7c));
     }
   }
@@ -319,7 +319,7 @@ void FUN_8018c048(int param_1)
   char cVar3;
   float *pfVar4;
   
-  pfVar4 = *(float **)(param_1 + 0xb8);
+  pfVar4 = ((GameObject *)param_1)->extra;
   iVar1 = FUN_80017a98();
   if (*(char *)(pfVar4 + 1) == '\0') {
     bVar2 = FUN_80294c20(iVar1);
@@ -340,13 +340,13 @@ void FUN_8018c048(int param_1)
     *pfVar4 = FLOAT_803e4920;
   }
   if (FLOAT_803e4924 < *pfVar4) {
-    if ((*(byte *)(param_1 + 0xaf) & 4) == 0) {
+    if ((*(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 4) == 0) {
       *pfVar4 = FLOAT_803e4924;
     }
     else {
       *pfVar4 = *pfVar4 - FLOAT_803dc074;
       FUN_8012f744(*(undefined2 *)
-                    (*(int *)(param_1 + 0x50) + (uint)*(byte *)(pfVar4 + 1) * 2 + 0x7c));
+                    (*(int *)&((GameObject *)param_1)->anim.modelInstance + (uint)*(byte *)(pfVar4 + 1) * 2 + 0x7c));
     }
   }
   return;
@@ -370,7 +370,7 @@ void FUN_8018c13c(int param_1)
   byte bVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   bVar1 = *(byte *)(iVar2 + 0xc);
   if (((char)bVar1 < '\0') && ((bVar1 >> 5 & 1) == 0)) {
     FUN_80048000();
@@ -405,8 +405,8 @@ void FUN_8018c1a0(int param_1)
   double dVar7;
   undefined8 local_18;
   
-  iVar6 = *(int *)(param_1 + 0x4c);
-  pfVar5 = *(float **)(param_1 + 0xb8);
+  iVar6 = *(int *)&((GameObject *)param_1)->anim.placementData;
+  pfVar5 = ((GameObject *)param_1)->extra;
   if ((int)*(short *)(iVar6 + 0x1a) == 0xffffffff) {
     uVar2 = 1;
   }
@@ -417,16 +417,16 @@ void FUN_8018c1a0(int param_1)
   if (uVar2 != 0) {
     if (-1 < (char)*(byte *)(pfVar5 + 3)) {
       if ((*(byte *)(pfVar5 + 3) >> 5 & 1) == 0) {
-        FUN_8004800c((double)(FLOAT_803e4928 + *(float *)(param_1 + 0x1c)),
-                     (double)(*(float *)(param_1 + 0x1c) - FLOAT_803e492c),(double)FLOAT_803e4930,
+        FUN_8004800c((double)(FLOAT_803e4928 + ((GameObject *)param_1)->anim.worldPosY),
+                     (double)(((GameObject *)param_1)->anim.worldPosY - FLOAT_803e492c),(double)FLOAT_803e4930,
                      (double)FLOAT_803e4934,(double)FLOAT_803e4938,0);
       }
       *(byte *)(pfVar5 + 3) = *(byte *)(pfVar5 + 3) & 0x7f | 0x80;
     }
     iVar3 = FUN_80017a98();
     bVar4 = FUN_80294c20(iVar3);
-    if (((bVar4 != 0) || (FLOAT_803e493c + *(float *)(param_1 + 0x1c) < *(float *)(iVar3 + 0x1c)))
-       || (dVar7 = (double)FUN_8001771c((float *)(iVar3 + 0x18),(float *)(param_1 + 0x18)),
+    if (((bVar4 != 0) || (FLOAT_803e493c + ((GameObject *)param_1)->anim.worldPosY < *(float *)(iVar3 + 0x1c)))
+       || (dVar7 = (double)FUN_8001771c((float *)(iVar3 + 0x18),(float *)&((GameObject *)param_1)->anim.worldPosX),
           (double)pfVar5[2] < dVar7)) {
       if ((*(byte *)(pfVar5 + 3) >> 6 & 1) != 0) {
         local_18 = (double)CONCAT44(0x43300000,(uint)*(byte *)(iVar6 + 0x19));
@@ -520,7 +520,7 @@ void FUN_8018c528(int param_1)
   byte bVar2;
   int iVar3;
   
-  iVar3 = *(int *)(param_1 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
   for (bVar2 = 0; bVar2 < 10; bVar2 = bVar2 + 1) {
     uVar1 = *(uint *)(iVar3 + (uint)bVar2 * 4 + 8);
     if (uVar1 != 0) {

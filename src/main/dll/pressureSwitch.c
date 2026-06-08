@@ -168,7 +168,7 @@ void FUN_8014e248(int param_1)
   uint uVar1;
   uint *puVar2;
   
-  puVar2 = *(uint **)(param_1 + 0xb8);
+  puVar2 = ((GameObject *)param_1)->extra;
   ObjGroup_RemoveObject(param_1,3);
   FUN_80006810(param_1,SFXstaff_proj_outofmagic);
   uVar1 = *puVar2;
@@ -196,8 +196,8 @@ void FUN_8014e2a8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 {
   int iVar1;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
-  if ((visible != 0) && (*(int *)(param_1 + 0xf4) == 0)) {
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
+  if ((visible != 0) && (((GameObject *)param_1)->unkF4 == 0)) {
     FUN_8003b818(param_1);
     if ((*(byte *)(iVar1 + 0x26) & 0x10) != 0) {
       FUN_8008111c((double)lbl_803E32E8,
@@ -228,7 +228,7 @@ void FUN_8014e2a8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  */
 void FUN_8014e374(uint param_1)
 {
-  if ((*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject != 0) {
+  if ((*(ObjHitsPriorityState **)&((GameObject *)param_1)->anim.hitReactState)->lastHitObject != 0) {
     FUN_80006824(param_1,SFXand_swipe2);
   }
   return;
@@ -398,7 +398,7 @@ void FUN_8014e898(int param_1,int param_2,int param_3)
   int *piVar5;
   
   dVar1 = DOUBLE_803e32e0;
-  piVar5 = *(int **)(param_1 + 0xb8);
+  piVar5 = ((GameObject *)param_1)->extra;
   piVar5[2] = (int)((float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1a) ^ 0x80000000
                                             ) - DOUBLE_803e32e0) / lbl_803E3304);
   piVar5[3] = (int)lbl_803E3308;
@@ -528,7 +528,7 @@ void FUN_8014ed98(int param_1)
   uint uVar1;
   uint *puVar2;
   
-  puVar2 = *(uint **)(param_1 + 0xb8);
+  puVar2 = ((GameObject *)param_1)->extra;
   ObjGroup_RemoveObject(param_1,3);
   uVar1 = *puVar2;
   if (uVar1 != 0) {
@@ -576,7 +576,7 @@ void FUN_8014ede4(uint param_1,int param_2,int param_3)
   int *piVar4;
   
   dVar1 = DOUBLE_803e3340;
-  piVar4 = *(int **)(param_1 + 0xb8);
+  piVar4 = ((GameObject *)param_1)->extra;
   piVar4[2] = (int)((float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1a) ^ 0x80000000
                                             ) - DOUBLE_803e3340) / lbl_803E3364);
   piVar4[5] = (int)(lbl_803E3330 *
@@ -596,7 +596,7 @@ void FUN_8014ede4(uint param_1,int param_2,int param_3)
     }
     FUN_80006824(param_1,SFXfox_treadwater422);
   }
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
+  ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x2000;
   return;
 }
 

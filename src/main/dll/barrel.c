@@ -985,9 +985,9 @@ void FUN_80163220(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   int iVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   iVar1 = *(int *)(iVar2 + 0x40c);
-  if ((visible != 0) && (*(int *)(param_1 + 0xf4) == 0)) {
+  if ((visible != 0) && (((GameObject *)param_1)->unkF4 == 0)) {
     FUN_8003b818(param_1);
     if (lbl_803E3B50 < *(float *)(iVar1 + 0x50)) {
       (**(code **)(*DAT_803dd734 + 0xc))(param_1,0x52a,0,100,0);

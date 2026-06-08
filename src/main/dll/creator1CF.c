@@ -1,4 +1,5 @@
 #include "main/dll/creator1CF.h"
+#include "main/game_object.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 
@@ -78,7 +79,7 @@ void dll_19E_render(int param_1, int param_2, int param_3, int param_4,
   f32 gridB[2];
   int traceOut[2];
 
-  state = *(int *)(param_1 + 0xb8);
+  state = *(int *)&((GameObject *)param_1)->extra;
   if (visible == 0) {
     *(s16 *)(state + 4) = 0;
     *(u8 *)(state + 0xa) = 0;
@@ -86,9 +87,9 @@ void dll_19E_render(int param_1, int param_2, int param_3, int param_4,
   else if (*(u8 *)(state + 0xc) != 0) {
     *(u8 *)(state + 0xa) = 1;
     camera = (u8 *)Camera_GetCurrentViewSlot();
-    stk.delta[0] = *(f32 *)(camera + 0xc) - *(f32 *)(param_1 + 0xc);
-    stk.delta[1] = *(f32 *)(camera + 0x10) - *(f32 *)(param_1 + 0x10);
-    stk.delta[2] = *(f32 *)(camera + 0x14) - *(f32 *)(param_1 + 0x14);
+    stk.delta[0] = *(f32 *)(camera + 0xc) - ((GameObject *)param_1)->anim.localPosX;
+    stk.delta[1] = *(f32 *)(camera + 0x10) - ((GameObject *)param_1)->anim.localPosY;
+    stk.delta[2] = *(f32 *)(camera + 0x14) - ((GameObject *)param_1)->anim.localPosZ;
     dist = sqrtf(stk.delta[2] * stk.delta[2] + (stk.delta[0] * stk.delta[0] + stk.delta[1] * stk.delta[1]));
     if (dist > lbl_803E51C8) {
       invDist = lbl_803E51CC / dist;
@@ -104,9 +105,9 @@ void dll_19E_render(int param_1, int param_2, int param_3, int param_4,
       midA[1] = facy;
       facz = lbl_803E51D0 * nz;
       midA[2] = facz;
-      midA[0] = facx + *(f32 *)(param_1 + 0xc);
-      midA[1] = facy + *(f32 *)(param_1 + 0x10);
-      midA[2] = facz + *(f32 *)(param_1 + 0x14);
+      midA[0] = facx + ((GameObject *)param_1)->anim.localPosX;
+      midA[1] = facy + ((GameObject *)param_1)->anim.localPosY;
+      midA[2] = facz + ((GameObject *)param_1)->anim.localPosZ;
       facx2 = lbl_803E51D4 * nx;
       midB[0] = facx2;
       facy2 = lbl_803E51D4 * ny;

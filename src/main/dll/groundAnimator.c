@@ -628,7 +628,7 @@ void FUN_8017db40(uint param_1,int param_2)
   undefined8 in_f7;
   undefined8 in_f8;
   
-  iVar4 = *(int *)(param_1 + 0xb8);
+  iVar4 = *(int *)&((GameObject *)param_1)->extra;
   if (param_2 == 1) {
     uVar1 = 2;
   }
@@ -655,14 +655,14 @@ LAB_8017de10:
   uVar2 = randomGetRange(0xffff8000,0x7fff);
   *(short *)(iVar4 + 0x4a) = (short)uVar2;
   *(undefined2 *)(iVar4 + 0x4c) = 0x2000;
-  dVar5 = (double)*(float *)(param_1 + 0xc);
-  dVar6 = (double)*(float *)(param_1 + 0x10);
-  dVar7 = (double)*(float *)(param_1 + 0x14);
+  dVar5 = (double)((GameObject *)param_1)->anim.localPosX;
+  dVar6 = (double)((GameObject *)param_1)->anim.localPosY;
+  dVar7 = (double)((GameObject *)param_1)->anim.localPosZ;
   iVar3 = FUN_800632d8(dVar5,dVar6,dVar7,param_1,(float *)(iVar4 + 0x30),0);
   if (iVar3 == 0) {
-    iVar4 = *(int *)(param_1 + 0xb8);
-    if ((*(ushort *)(param_1 + 6) & 0x2000) == 0) {
-      if (*(int *)(param_1 + 0x54) != 0) {
+    iVar4 = *(int *)&((GameObject *)param_1)->extra;
+    if ((*(ushort *)&((GameObject *)param_1)->anim.flags & 0x2000) == 0) {
+      if (*(int *)&((GameObject *)param_1)->anim.hitReactState != 0) {
         ObjHits_DisableObject(param_1);
       }
       *(byte *)(iVar4 + 0x5a) = *(byte *)(iVar4 + 0x5a) | 2;
@@ -704,16 +704,16 @@ LAB_8017de10:
     }
     if ((double)lbl_803E446C < (double)*(float *)(iVar4 + 0x30)) {
       *(undefined4 *)(iVar4 + 0x2c) = *(undefined4 *)(param_1 + 0x10);
-      *(float *)(iVar4 + 0x34) = *(float *)(param_1 + 0x10) - *(float *)(iVar4 + 0x30);
-      if (*(int *)(param_1 + 0x54) != 0) {
+      *(float *)(iVar4 + 0x34) = ((GameObject *)param_1)->anim.localPosY - *(float *)(iVar4 + 0x30);
+      if (*(int *)&((GameObject *)param_1)->anim.hitReactState != 0) {
         ObjHits_DisableObject(param_1);
       }
       FUN_80006824(param_1,SFXen_bridge_stops);
     }
     else {
-      iVar3 = *(int *)(param_1 + 0xb8);
-      if ((*(ushort *)(param_1 + 6) & 0x2000) == 0) {
-        if (*(int *)(param_1 + 0x54) != 0) {
+      iVar3 = *(int *)&((GameObject *)param_1)->extra;
+      if ((*(ushort *)&((GameObject *)param_1)->anim.flags & 0x2000) == 0) {
+        if (*(int *)&((GameObject *)param_1)->anim.hitReactState != 0) {
           ObjHits_DisableObject(param_1);
         }
         *(byte *)(iVar3 + 0x5a) = *(byte *)(iVar3 + 0x5a) | 2;

@@ -1855,7 +1855,7 @@ void FUN_80133640(uint param_1,int param_2)
   int iVar3;
   
   for (iVar3 = 0; iVar3 < *(char *)(param_2 + 0x1b); iVar3 = iVar3 + 1) {
-    sVar2 = *(short *)(param_1 + 0x46);
+    sVar2 = ((GameObject *)param_1)->anim.seqId;
     if (sVar2 == 0x77f) {
       cVar1 = *(char *)(param_2 + iVar3 + 0x13);
       if (cVar1 == '\0') {
@@ -2393,7 +2393,7 @@ void FUN_801348c0(undefined8 param_1,double param_2,double param_3,double param_
  */
 void FUN_801348c4(int param_1)
 {
-  if (*(short *)(param_1 + 0x46) == 0x77d) {
+  if (((GameObject *)param_1)->anim.seqId == 0x77d) {
     FUN_800067c0((int *)0x3a,0);
     DAT_803de613 = 0;
   }
@@ -3375,8 +3375,8 @@ void FUN_80135c48(undefined2 param_1,undefined4 param_2,undefined4 param_3,undef
  */
 void FUN_80135c84(int param_1,uint param_2)
 {
-  *(byte *)(*(int *)(param_1 + 0xb8) + 0x58) =
-       (byte)((param_2 & 0xff) << 6) & 0x40 | *(byte *)(*(int *)(param_1 + 0xb8) + 0x58) & 0xbf;
+  *(byte *)(*(int *)&((GameObject *)param_1)->extra + 0x58) =
+       (byte)((param_2 & 0xff) << 6) & 0x40 | *(byte *)(*(int *)&((GameObject *)param_1)->extra + 0x58) & 0xbf;
   return;
 }
 
@@ -3399,9 +3399,9 @@ undefined4 FUN_80135c9c(int param_1,ushort param_2,short param_3)
   bool bVar2;
   int iVar3;
   
-  iVar3 = *(int *)(param_1 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
   if ((*(byte *)(iVar3 + 0x58) >> 6 & 1) == 0) {
-    if ((*(short *)(param_1 + 0xa0) < 0x30) && (0x28 < *(short *)(param_1 + 0xa0))) {
+    if ((((GameObject *)param_1)->anim.currentMove < 0x30) && (0x28 < ((GameObject *)param_1)->anim.currentMove)) {
       uVar1 = 0;
     }
     else {
@@ -3636,7 +3636,7 @@ void FUN_8013651c(int param_1)
 {
   int iVar1;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   *(uint *)(iVar1 + 0x54) = *(uint *)(iVar1 + 0x54) | 0x80000000;
   *(float *)(iVar1 + 0x808) = FLOAT_803e3098;
   return;
@@ -3661,7 +3661,7 @@ undefined4 FUN_80136538(int param_1)
   undefined4 uVar2;
   int iVar3;
   
-  iVar3 = *(int *)(param_1 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
   uVar1 = FUN_80017690(0x4e4);
   if ((uVar1 == 0) ||
      (*(uint *)(iVar3 + 0x54) = *(uint *)(iVar3 + 0x54) | 0x10000,
@@ -3689,7 +3689,7 @@ undefined4 FUN_80136538(int param_1)
  */
 double FUN_80136594(int param_1)
 {
-  return (double)*(float *)(*(int *)(param_1 + 0xb8) + 0x14);
+  return (double)*(float *)(*(int *)&((GameObject *)param_1)->extra + 0x14);
 }
 
 /*
@@ -3707,7 +3707,7 @@ double FUN_80136594(int param_1)
  */
 undefined4 FUN_801365a0(int param_1)
 {
-  return *(undefined4 *)(*(int *)(param_1 + 0xb8) + 0x24);
+  return *(undefined4 *)(*(int *)&((GameObject *)param_1)->extra + 0x24);
 }
 
 /*
@@ -3725,7 +3725,7 @@ undefined4 FUN_801365a0(int param_1)
  */
 int FUN_801365ac(int param_1)
 {
-  return (int)*(short *)(*(int *)(param_1 + 0xb8) + 0x414);
+  return (int)*(short *)(*(int *)&((GameObject *)param_1)->extra + 0x414);
 }
 
 /*
@@ -3743,7 +3743,7 @@ int FUN_801365ac(int param_1)
  */
 int FUN_801365b8(int param_1)
 {
-  return *(int *)(param_1 + 0xb8) + 0x408;
+  return *(int *)&((GameObject *)param_1)->extra + 0x408;
 }
 
 /*
@@ -3855,9 +3855,9 @@ void FUN_801367b4(undefined2 *param_1,int param_2)
   
   cVar2 = '\x14';
   if ((*(uint *)(param_2 + 0x54) & 0x1800) != 0) {
-    local_1c = *(float *)(param_2 + 0x408) - *(float *)(param_1 + 0xc);
+    local_1c = *(float *)(param_2 + 0x408) - ((GameObject *)param_1)->anim.localPosX;
     local_18 = *(float *)(param_2 + 0x40c) - *(float *)(param_1 + 0xe);
-    local_14 = *(float *)(param_2 + 0x410) - *(float *)(param_1 + 0x10);
+    local_14 = *(float *)(param_2 + 0x410) - ((GameObject *)param_1)->anim.localPosY;
     local_20 = FLOAT_803e3078;
     local_28 = *param_1;
     local_26 = param_1[1];

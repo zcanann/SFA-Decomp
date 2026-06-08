@@ -471,7 +471,7 @@ undefined4 FUN_801ae788(int param_1,undefined4 param_2,int param_3)
   uint uVar6;
   short *psVar7;
   
-  psVar7 = *(short **)(param_1 + 0xb8);
+  psVar7 = ((GameObject *)param_1)->extra;
   piVar3 = (int *)FUN_80039520(param_1,1);
   *piVar3 = (*(byte *)((int)psVar7 + 3) >> 1 & 1 ^ 1) << 8;
   if ((*(byte *)((int)psVar7 + 3) & 2) == 0) {
@@ -601,7 +601,7 @@ void FUN_801aea44(int param_1)
   uint uVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   uVar1 = *(uint *)(iVar2 + 4);
   if (uVar1 != 0) {
     FUN_80017814(uVar1);
@@ -657,8 +657,8 @@ void FUN_801aeab4(int param_1)
   double dVar6;
   double dVar7;
   
-  pbVar5 = *(byte **)(param_1 + 0xb8);
-  iVar3 = *(int *)(param_1 + 0x30);
+  pbVar5 = ((GameObject *)param_1)->extra;
+  iVar3 = *(int *)&((GameObject *)param_1)->anim.parent;
   if (iVar3 != 0) {
     sVar4 = (**(code **)(**(int **)(iVar3 + 0x68) + 0x20))(iVar3,*pbVar5);
     bVar1 = pbVar5[1];
@@ -709,7 +709,7 @@ void FUN_801aeab4(int param_1)
       if ((dVar7 <= dVar6) && (dVar6 = dVar7, dVar7 < (double)lbl_803E5430)) {
         dVar6 = (double)lbl_803E5430;
       }
-      (**(code **)(**(int **)(*(int *)(param_1 + 0x30) + 0x68) + 0x28))(dVar6);
+      (**(code **)(**(int **)(*(int *)&((GameObject *)param_1)->anim.parent + 0x68) + 0x28))(dVar6);
     }
     iVar3 = FUN_80039520(param_1,0);
     sVar4 = -*(short *)(iVar3 + 10) + 0x100;
@@ -891,7 +891,7 @@ void FUN_801af058(undefined2 *param_1,int param_2)
 void FUN_801af0a0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if ((visible != 0) &&
-     ((*(char *)(*(int *)(param_1 + 0xb8) + 8) != '\0' || (((GameObject *)param_1)->anim.alpha != 0)))) {
+     ((*(char *)(*(int *)&((GameObject *)param_1)->extra + 8) != '\0' || (((GameObject *)param_1)->anim.alpha != 0)))) {
     FUN_8003b818(param_1);
   }
   return;
@@ -1280,7 +1280,7 @@ void FUN_801afcf8(int param_1)
   uint uVar3;
   int iVar4;
   
-  iVar4 = *(int *)(param_1 + 0xb8);
+  iVar4 = *(int *)&((GameObject *)param_1)->extra;
   cVar1 = *(char *)(param_1 + 0xac);
   if (cVar1 == 'H') {
     uVar3 = GameBit_Get(0xe1e);
@@ -1478,11 +1478,11 @@ void FUN_801b031c(int param_1)
   undefined *puVar1;
   int iVar2;
   
-  puVar1 = *(undefined **)(param_1 + 0xb8);
+  puVar1 = ((GameObject *)param_1)->extra;
   *puVar1 = 0xff;
   *(undefined4 *)(puVar1 + 4) = 0xffffffff;
   *(undefined4 *)(puVar1 + 8) = 0xffffffff;
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x4000;
+  ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x4000;
   iVar2 = FUN_800e8b98();
   if (iVar2 == 0) {
     *(undefined4 *)(param_1 + 0xf4) = 1;
@@ -1563,7 +1563,7 @@ void FUN_801b050c(int param_1)
   uint uVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_1)->extra;
   uVar1 = *(uint *)(iVar2 + 4);
   if (uVar1 != 0) {
     FUN_80017620(uVar1);

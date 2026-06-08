@@ -295,8 +295,8 @@ uint FUN_801df69c(int param_1,undefined4 param_2,int param_3)
   int iVar5;
   FEseqobjectState *state;
   
-  iVar5 = *(int *)(param_1 + 0x4c);
-  state = *(FEseqobjectState **)(param_1 + 0xb8);
+  iVar5 = *(int *)&((GameObject *)param_1)->anim.placementData;
+  state = ((GameObject *)param_1)->extra;
   iVar2 = FUN_80017a98();
   uVar3 = FUN_80006c00(0);
   if ((uVar3 & 0x100) == 0) {
@@ -366,16 +366,16 @@ void FUN_801df788(int param_1)
   uint uVar2;
   FEseqobjectState *state;
   
-  state = *(FEseqobjectState **)(param_1 + 0xb8);
+  state = ((GameObject *)param_1)->extra;
   bVar1 = state->state;
   if (bVar1 == 1) {
-    if ((*(byte *)(param_1 + 0xaf) & 1) != 0) {
+    if ((*(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 1) != 0) {
       (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
     }
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
+    *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 0xf7;
   }
   else if (bVar1 == 0) {
-    uVar2 = (uint)*(short *)(*(int *)(param_1 + 0x4c) + 0x1e);
+    uVar2 = (uint)*(short *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x1e);
     if ((uVar2 == 0xffffffff) || (uVar2 = GameBit_Get(uVar2), uVar2 == 0)) {
       state->state = 1;
     }
@@ -384,7 +384,7 @@ void FUN_801df788(int param_1)
     }
   }
   else if (bVar1 < 3) {
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+    *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
   }
   state->promptState = 0;
   if (((((ObjAnimComponent *)param_1)->modelInstance->flags & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {

@@ -1243,10 +1243,10 @@ void FUN_8013939c(uint param_1)
   undefined auStack_2c [12];
   float afStack_20 [5];
   
-  iVar3 = *(int *)(param_1 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
   bVar1 = false;
   local_38 = FLOAT_803e30b4;
-  iVar2 = FUN_8005b398((double)*(float *)(param_1 + 0x18),(double)*(float *)(param_1 + 0x1c));
+  iVar2 = FUN_8005b398((double)((GameObject *)param_1)->anim.worldPosX,(double)((GameObject *)param_1)->anim.worldPosY);
   if ((iVar2 == -1) && ((((TrickyState *)iVar3)->unk54 & 0x80000) == 0)) {
     ((TrickyState *)iVar3)->unk353 = 0;
     *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(param_1 + 0x80);
@@ -1264,13 +1264,13 @@ void FUN_8013939c(uint param_1)
     bVar1 = true;
   }
   if (bVar1) {
-    FUN_800632e8((double)*(float *)(param_1 + 0x18),(double)*(float *)(param_1 + 0x1c),
-                 (double)*(float *)(param_1 + 0x20),param_1,&local_30,0);
-    *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) - local_30;
+    FUN_800632e8((double)((GameObject *)param_1)->anim.worldPosX,(double)((GameObject *)param_1)->anim.worldPosY,
+                 (double)((GameObject *)param_1)->anim.worldPosZ,param_1,&local_30,0);
+    ((GameObject *)param_1)->anim.localPosY = ((GameObject *)param_1)->anim.localPosY - local_30;
     ((TrickyState *)iVar3)->unk353 = 0;
   }
   if ((*(char *)(iVar3 + 0x353) == '\0') || ((((TrickyState *)iVar3)->unk58 >> 5 & 1) != 0)) {
-    *(float *)(param_1 + 0x28) = FLOAT_803e306c;
+    ((GameObject *)param_1)->anim.velocityY = FLOAT_803e306c;
   }
   else {
     if (FLOAT_803e306c == ((TrickyState *)iVar3)->unk2AC) {
@@ -1286,17 +1286,17 @@ void FUN_8013939c(uint param_1)
       bVar1 = true;
     }
     if (bVar1) {
-      *(float *)(param_1 + 0x28) = FLOAT_803e306c;
-      *(float *)(param_1 + 0x10) = ((TrickyState *)iVar3)->unk2B4 - FLOAT_803e307c;
+      ((GameObject *)param_1)->anim.velocityY = FLOAT_803e306c;
+      ((GameObject *)param_1)->anim.localPosY = ((TrickyState *)iVar3)->unk2B4 - FLOAT_803e307c;
     }
     else {
-      *(float *)(param_1 + 0x28) = FLOAT_803e30b8 * FLOAT_803dc074 + *(float *)(param_1 + 0x28);
-      *(float *)(param_1 + 0x10) =
-           *(float *)(param_1 + 0x28) * FLOAT_803dc074 + *(float *)(param_1 + 0x10);
+      ((GameObject *)param_1)->anim.velocityY = FLOAT_803e30b8 * FLOAT_803dc074 + ((GameObject *)param_1)->anim.velocityY;
+      ((GameObject *)param_1)->anim.localPosY =
+           ((GameObject *)param_1)->anim.velocityY * FLOAT_803dc074 + ((GameObject *)param_1)->anim.localPosY;
     }
   }
-  local_34 = (*(ObjHitsPriorityState **)(param_1 + 0x54))->lastHitObject;
-  if (((*(ObjHitsPriorityState **)(param_1 + 0x54))->flags & 8) == 0 ||
+  local_34 = (*(ObjHitsPriorityState **)&((GameObject *)param_1)->anim.hitReactState)->lastHitObject;
+  if (((*(ObjHitsPriorityState **)&((GameObject *)param_1)->anim.hitReactState)->flags & 8) == 0 ||
      (*(short *)(local_34 + 0x46) == 0x1f)) {
     local_34 = 0;
   }
@@ -1309,7 +1309,7 @@ void FUN_8013939c(uint param_1)
       if (FLOAT_803e3070 <= ((TrickyState *)iVar3)->contactTimer) {
         ((TrickyState *)iVar3)->contactTimer = ((TrickyState *)iVar3)->contactTimer - FLOAT_803e3070;
         ((TrickyState *)iVar3)->unk54 = ((TrickyState *)iVar3)->unk54 | 8;
-        *(undefined *)(*(int *)(param_1 + 0x50) + 0x71) = 0x7e;
+        *(undefined *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 0x71) = 0x7e;
       }
     }
   }
@@ -1317,10 +1317,10 @@ void FUN_8013939c(uint param_1)
     ((TrickyState *)iVar3)->contactTimer = ((TrickyState *)iVar3)->contactTimer + FLOAT_803dc074;
     if (FLOAT_803e30bc <= ((TrickyState *)iVar3)->contactTimer) {
       iVar2 = FUN_80017a98();
-      dVar4 = FUN_80017714((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
+      dVar4 = FUN_80017714((float *)&((GameObject *)param_1)->anim.worldPosX,(float *)(iVar2 + 0x18));
       if ((double)FLOAT_803e30c0 < dVar4) {
         ((TrickyState *)iVar3)->contactTimer = ((TrickyState *)iVar3)->contactTimer - FLOAT_803e30bc;
-        *(undefined *)(*(int *)(param_1 + 0x50) + 0x71) = 0x7f;
+        *(undefined *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 0x71) = 0x7f;
         ((TrickyState *)iVar3)->unk54 = ((TrickyState *)iVar3)->unk54 & 0xfffffff7;
       }
     }
@@ -1667,7 +1667,7 @@ int FUN_80139ce8(int param_1,int param_2,int param_3)
       return *(int *)(param_1 + 0x6e8);
     }
   }
-  FUN_80046cd0((int *)(param_1 + 0x6b8),param_2,*(int *)(param_1 + 0x28),param_3,
+  FUN_80046cd0((int *)(param_1 + 0x6b8),param_2,*(int *)&((GameObject *)param_1)->anim.velocityY,param_3,
                (byte)*(undefined4 *)(param_1 + 0x4a0));
   iVar3 = fn_8004B394();
   if (iVar3 == 1) {

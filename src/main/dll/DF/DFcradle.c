@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/DF/DFcradle.h"
 #include "main/effect_interfaces.h"
 
@@ -87,8 +88,8 @@ void dimbossfire_update(int param_1)
   byte *pbVar5;
   float fVar6;
   
-  pbVar5 = *(byte **)(param_1 + 0xb8);
-  iVar4 = *(int *)(param_1 + 0x4c);
+  pbVar5 = ((GameObject *)param_1)->extra;
+  iVar4 = *(int *)&((GameObject *)param_1)->anim.placementData;
   if ((int)*(short *)(iVar4 + 0x20) != 0xffffffff) {
     uVar1 = GameBit_Get((int)*(short *)(iVar4 + 0x20));
     if (uVar1 != 0) {
@@ -121,7 +122,7 @@ void dimbossfire_update(int param_1)
       ObjHits_SetHitVolumeSlot(param_1,9,1,0);
       ObjHitbox_SetSphereRadius(param_1,0xf);
       ObjHits_EnableObject(param_1);
-      if ((*(ushort *)(param_1 + 0xb0) & 0x800) != 0) {
+      if ((((GameObject *)param_1)->objectFlags & 0x800) != 0) {
         iVar3 = 0;
         do {
           if (*(short *)(iVar4 + 0x1a) == 0) {
@@ -135,7 +136,7 @@ void dimbossfire_update(int param_1)
       }
       iVar3 = Obj_GetPlayerObject();
       if ((iVar3 != 0) && ((*(ushort *)(iVar3 + 0xb0) & 0x1000) == 0)) {
-        fVar6 = Vec_distance((float *)(param_1 + 0x18),(float *)(iVar3 + 0x18));
+        fVar6 = Vec_distance((float *)&((GameObject *)param_1)->anim.worldPosX,(float *)(iVar3 + 0x18));
         if (fVar6 <= lbl_803E4DA4) {
           fVar6 = lbl_803E4DA8 - fVar6 / lbl_803E4DA4;
           CameraShake_Start(lbl_803E4DAC * fVar6,lbl_803E4DAC,lbl_803E4DB0);

@@ -304,10 +304,10 @@ void FUN_80192640(int param_1)
   uint uVar3;
   int iVar4;
   
-  iVar4 = *(int *)(param_1 + 0xb8);
-  iVar1 = FUN_8005b398((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10));
+  iVar4 = *(int *)&((GameObject *)param_1)->extra;
+  iVar1 = FUN_8005b398((double)((GameObject *)param_1)->anim.localPosX,(double)((GameObject *)param_1)->anim.localPosY);
   iVar1 = FUN_8005af70(iVar1);
-  iVar2 = *(int *)(*(int *)(param_1 + 0x4c) + 0x14);
+  iVar2 = *(int *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x14);
   if ((((iVar2 == 0x49b2f) || (iVar2 == 0x49b67)) && (iVar1 != 0)) &&
      ((uVar3 = GameBit_Get(*(uint *)(iVar4 + 8)), *(uint *)(iVar4 + 0xc) != uVar3 &&
       (*(char *)(iVar4 + 0x10) == '\0')))) {
@@ -343,7 +343,7 @@ void FUN_80192720(int param_1,int param_2,int param_3)
 {
   int iVar1;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
+  iVar1 = *(int *)&((GameObject *)param_1)->extra;
   *(undefined *)(iVar1 + 0x11) = *(undefined *)(param_2 + 0x1e);
   *(undefined *)(iVar1 + 0x12) = *(undefined *)(param_2 + 0x1f);
   *(undefined *)(iVar1 + 0x13) = *(undefined *)(param_2 + 0x1c);
@@ -549,7 +549,7 @@ void FUN_80192b50(int param_1,int param_2)
   float fVar2;
   int *piVar3;
   
-  piVar3 = *(int **)(param_1 + 0xb8);
+  piVar3 = ((GameObject *)param_1)->extra;
   piVar3[6] = (int)*(char *)(param_2 + 0x20);
   *piVar3 = (int)*(short *)(param_2 + 0x18);
   piVar3[1] = (int)*(short *)(param_2 + 0x1a);
@@ -590,7 +590,7 @@ void FUN_80192c90(int param_1)
 {
   uint uVar1;
   
-  uVar1 = *(uint *)(*(int *)(param_1 + 0xb8) + 0x10);
+  uVar1 = *(uint *)(*(int *)&((GameObject *)param_1)->extra + 0x10);
   if (uVar1 != 0) {
     FUN_80017814(uVar1);
   }
@@ -839,8 +839,8 @@ uint FUN_80193378(int param_1)
 {
   return ((uint)(byte)((lbl_803E4C30 *
                         (float)((double)CONCAT44(0x43300000,
-                                                 (uint)*(byte *)(*(int *)(param_1 + 0x4c) + 0x20)) -
-                               DOUBLE_803e4c38) < *(float *)(*(int *)(param_1 + 0xb8) + 0xc)) << 2)
+                                                 (uint)*(byte *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x20)) -
+                               DOUBLE_803e4c38) < *(float *)(*(int *)&((GameObject *)param_1)->extra + 0xc)) << 2)
          << 0x1c) >> 0x1e;
 }
 
@@ -867,15 +867,15 @@ double FUN_801933d8(int param_1,int param_2)
   int iVar6;
   double dVar7;
   
-  iVar5 = *(int *)(param_1 + 0xb8);
-  iVar6 = *(int *)(param_1 + 0x4c);
-  fVar1 = *(float *)(param_2 + 0x10) - *(float *)(param_1 + 0x10);
+  iVar5 = *(int *)&((GameObject *)param_1)->extra;
+  iVar6 = *(int *)&((GameObject *)param_1)->anim.placementData;
+  fVar1 = *(float *)(param_2 + 0x10) - ((GameObject *)param_1)->anim.localPosY;
   if ((fVar1 < lbl_803E4C40) || (lbl_803E4C44 < fVar1)) {
     dVar7 = (double)lbl_803E4C48;
   }
   else {
-    fVar1 = *(float *)(param_2 + 0xc) - *(float *)(param_1 + 0xc);
-    fVar2 = *(float *)(param_2 + 0x14) - *(float *)(param_1 + 0x14);
+    fVar1 = *(float *)(param_2 + 0xc) - ((GameObject *)param_1)->anim.localPosX;
+    fVar2 = *(float *)(param_2 + 0x14) - ((GameObject *)param_1)->anim.localPosZ;
     fVar3 = lbl_803E4C4C + *(float *)(iVar5 + 0x14);
     if (fVar1 * fVar1 + fVar2 * fVar2 <= fVar3 * fVar3) {
       fVar1 = lbl_803E4C30 *
@@ -1179,7 +1179,7 @@ void FUN_80193950(int param_1,int param_2)
   uint uVar2;
   int iVar3;
   
-  iVar3 = *(int *)(param_1 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_1)->extra;
   *(char *)(iVar3 + 0x2b) = (char)*(undefined2 *)(param_2 + 0x1e);
   dVar1 = DOUBLE_803e4c38;
   *(float *)(iVar3 + 0x18) =
@@ -1284,9 +1284,9 @@ void FUN_80193ba8(int param_1)
   byte *pbVar4;
   int iVar5;
   
-  iVar5 = *(int *)(param_1 + 0x4c);
-  pbVar4 = *(byte **)(param_1 + 0xb8);
-  iVar1 = FUN_8005b398((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10));
+  iVar5 = *(int *)&((GameObject *)param_1)->anim.placementData;
+  pbVar4 = ((GameObject *)param_1)->extra;
+  iVar1 = FUN_8005b398((double)((GameObject *)param_1)->anim.localPosX,(double)((GameObject *)param_1)->anim.localPosY);
   iVar1 = FUN_8005af70(iVar1);
   if (iVar1 == 0) {
     pbVar4[1] = pbVar4[1] & 0xfe;
@@ -1314,7 +1314,7 @@ void FUN_80193ba8(int param_1)
         pbVar4[1] = pbVar4[1] | 2;
       }
       if (((pbVar4[1] & 2) != 0) && (iVar3 = FUN_80063298(), iVar3 == 0)) {
-        FUN_800631d4((uint)*(byte *)(iVar5 + 0x1d),*(int *)(param_1 + 0x30),(int)(char)*pbVar4);
+        FUN_800631d4((uint)*(byte *)(iVar5 + 0x1d),*(int *)&((GameObject *)param_1)->anim.parent,(int)(char)*pbVar4);
         pbVar4[1] = pbVar4[1] & 0xfd;
       }
     }

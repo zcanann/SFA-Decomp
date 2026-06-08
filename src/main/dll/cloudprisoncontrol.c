@@ -1,4 +1,5 @@
 #include "main/dll/cloudprisoncontrol.h"
+#include "main/game_object.h"
 
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern int GameBit_Get(int bitId);
@@ -24,19 +25,19 @@ void InvisibleHitSwitch_init(int param_1, u8 *param_2)
 {
   u8 *info;
 
-  info = (u8 *)*(int *)(param_1 + 0xb8);
-  *(u16 *)(param_1 + 0xb0) = (u16)(*(u16 *)(param_1 + 0xb0) | 0x6000);
+  info = (u8 *)*(int *)&((GameObject *)param_1)->extra;
+  ((GameObject *)param_1)->objectFlags = (u16)(((GameObject *)param_1)->objectFlags | 0x6000);
   if (param_2[0x1d] == 0) {
-    *(f32 *)(param_1 + 0x8) = *(f32 *)(*(int *)(param_1 + 0x50) + 4);
+    ((GameObject *)param_1)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 4);
   } else {
     {
-      f32 v = (f32)(u32)param_2[0x1d] * *(f32 *)(*(int *)(param_1 + 0x50) + 4);
-      *(f32 *)(param_1 + 0x8) = v * lbl_803E3750;
+      f32 v = (f32)(u32)param_2[0x1d] * *(f32 *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 4);
+      ((GameObject *)param_1)->anim.rootMotionScale = v * lbl_803E3750;
     }
   }
   ObjHitbox_SetSphereRadius(
       param_1,
-      (s16)((param_2[0x1d] * (int)*(u8 *)(*(int *)(param_1 + 0x50) + 0x62)) / 64));
+      (s16)((param_2[0x1d] * (int)*(u8 *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 0x62)) / 64));
   info[0] = (u8)GameBit_Get(*(s16 *)(param_2 + 0x18));
   switch ((param_2[0x23] & 0xe) >> 1) {
   case 0:

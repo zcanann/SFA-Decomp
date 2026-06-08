@@ -258,7 +258,7 @@ void FUN_8014fd38(int param_1)
   uint uVar1;
   uint *puVar2;
   
-  puVar2 = *(uint **)(param_1 + 0xb8);
+  puVar2 = ((GameObject *)param_1)->extra;
   ObjGroup_RemoveObject(param_1,3);
   uVar1 = *puVar2;
   if (uVar1 != 0) {
@@ -307,7 +307,7 @@ void FUN_8014fd84(uint param_1,int param_2,int param_3)
   int *piVar5;
   
   dVar2 = DOUBLE_803e3398;
-  piVar5 = *(int **)(param_1 + 0xb8);
+  piVar5 = ((GameObject *)param_1)->extra;
   fVar1 = (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1a) ^ 0x80000000) -
                  DOUBLE_803e3398) / lbl_803E33B4;
   piVar5[3] = (int)fVar1;
@@ -329,7 +329,7 @@ void FUN_8014fd84(uint param_1,int param_2,int param_3)
     }
     FUN_80006824(param_1,SFXfox_swimstroke122);
   }
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
+  ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x2000;
   return;
 }
 
