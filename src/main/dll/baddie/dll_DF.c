@@ -1,4 +1,5 @@
 #include "main/dll/baddie/dll_DF.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
@@ -111,7 +112,6 @@ extern f32 lbl_803E24BC;
 extern f32 lbl_803E24C0;
 
 extern char lbl_8031D2E8[];
-extern u8 *gPathControlInterface;
 
 extern int isInWalkGroupOrPatch(f32 *pos);
 extern void ObjHits_SyncObjectPosition(u8 *obj);
@@ -201,7 +201,7 @@ int trickyFn_8013b368(u8 *obj, f32 vel, u8 *state)
 
     moved = 1;
     if ((((TrickyState *)state)->unk09 < 5) && (isInWalkGroupOrPatch((f32 *)(obj + 0x18)) == 0)) {
-        ((void (*)(u8 *, u8 *))*(void **)(*(int *)gPathControlInterface + 0x20))(obj, state + 0xf8);
+        (*gPathControlInterface)->attachObject(obj, state + 0xf8);
         ((GameObject *)obj)->anim.localPosX = ((TrickyState *)state)->homePosX;
         ((GameObject *)obj)->anim.localPosY = ((TrickyState *)state)->homePosY;
         ((GameObject *)obj)->anim.localPosZ = ((TrickyState *)state)->homePosZ;
@@ -1092,7 +1092,7 @@ state_selected:
             ((TrickyState *)state)->homePosY = ((GameObject *)obj)->anim.worldPosY;
             ((TrickyState *)state)->homePosZ = ((GameObject *)obj)->anim.worldPosZ;
         } else {
-            ((void (*)(u8 *, u8 *))*(void **)(*(int *)gPathControlInterface + 0x20))(obj, state + 0xf8);
+            (*gPathControlInterface)->attachObject(obj, state + 0xf8);
             ((GameObject *)obj)->anim.localPosX = ((TrickyState *)state)->homePosX;
             ((GameObject *)obj)->anim.localPosY = ((TrickyState *)state)->homePosY;
             ((GameObject *)obj)->anim.localPosZ = ((TrickyState *)state)->homePosZ;
