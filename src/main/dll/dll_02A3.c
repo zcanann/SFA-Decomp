@@ -3,6 +3,19 @@
 
 #pragma peephole on
 #pragma scheduling on
+typedef struct Dll2A3State {
+    f32 lifetime;
+    s16 rotXSpeed;
+    s16 rotYSpeed;
+    s16 rotZSpeed;
+    u8 pad0A[2];
+} Dll2A3State;
+
+STATIC_ASSERT(sizeof(Dll2A3State) == 0x0c);
+STATIC_ASSERT(offsetof(Dll2A3State, rotXSpeed) == 0x04);
+STATIC_ASSERT(offsetof(Dll2A3State, rotYSpeed) == 0x06);
+STATIC_ASSERT(offsetof(Dll2A3State, rotZSpeed) == 0x08);
+
 int dll_2A3_getExtraSize_ret_12(void) { return 0xc; }
 #pragma scheduling reset
 #pragma peephole reset
@@ -52,12 +65,12 @@ void dll_2A3_update(int obj)
 {
     f32 thr;
     f32 v;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    Dll2A3State *state = ((GameObject *)obj)->extra;
 
-    if (*(f32 *)state > (thr = lbl_803E711C)) {
-        *(f32 *)state -= timeDelta;
-        if (*(f32 *)state <= thr) {
-            *(f32 *)state = thr;
+    if (state->lifetime > (thr = lbl_803E711C)) {
+        state->lifetime -= timeDelta;
+        if (state->lifetime <= thr) {
+            state->lifetime = thr;
             Obj_FreeObject(obj);
             return;
         }
@@ -70,9 +83,9 @@ void dll_2A3_update(int obj)
     }
     ((GameObject *)obj)->anim.alpha = (u8)v;
 
-    ((GameObject *)obj)->anim.rotX = (s16)((f32) * (s16 *)(state + 4) * timeDelta + (f32) * (s16 *)(obj + 0));
-    ((GameObject *)obj)->anim.rotY = (s16)((f32) * (s16 *)(state + 6) * timeDelta + (f32) * (s16 *)(obj + 2));
-    ((GameObject *)obj)->anim.rotZ = (s16)((f32) * (s16 *)(state + 8) * timeDelta + (f32) * (s16 *)(obj + 4));
+    ((GameObject *)obj)->anim.rotX = (s16)((f32)state->rotXSpeed * timeDelta + (f32) * (s16 *)(obj + 0));
+    ((GameObject *)obj)->anim.rotY = (s16)((f32)state->rotYSpeed * timeDelta + (f32) * (s16 *)(obj + 2));
+    ((GameObject *)obj)->anim.rotZ = (s16)((f32)state->rotZSpeed * timeDelta + (f32) * (s16 *)(obj + 4));
 
     objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
             ((GameObject *)obj)->anim.velocityZ * timeDelta);
@@ -88,15 +101,15 @@ void dll_2A3_update(int obj)
 #pragma scheduling off
 void dll_2A3_init(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    Dll2A3State *state = ((GameObject *)obj)->extra;
 
     ((GameObject *)obj)->anim.alpha = 0;
     ((GameObject *)obj)->anim.rotX = randomGetRange(0, 0xffff);
     ((GameObject *)obj)->anim.rotY = randomGetRange(0, 0xffff);
     ((GameObject *)obj)->anim.rotZ = randomGetRange(0, 0xffff);
-    *(s16 *)(state + 4) = randomGetRange(-0x32, 0x32);
-    *(s16 *)(state + 6) = randomGetRange(-0x32, 0x32);
-    *(s16 *)(state + 8) = randomGetRange(-0x32, 0x32);
+    state->rotXSpeed = randomGetRange(-0x32, 0x32);
+    state->rotYSpeed = randomGetRange(-0x32, 0x32);
+    state->rotZSpeed = randomGetRange(-0x32, 0x32);
     lbl_803DDD90 = lbl_803DDD90 + 1;
 }
 #pragma scheduling reset
@@ -115,6 +128,10 @@ void fn_8023137C(int obj, int src)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8023134C(int obj, int v) { *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x0) = (f32)v; }
+void fn_8023134C(int obj, int v)
+{
+    Dll2A3State *state = ((GameObject *)obj)->extra;
+    state->lifetime = (f32)v;
+}
 #pragma scheduling reset
 #pragma peephole reset

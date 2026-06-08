@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -56,6 +57,10 @@ void Dummy29E_initialise(void) {}
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022F558(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
+void fn_8022F558(int obj, int v)
+{
+    ARWBombCollState *state = ((GameObject *)obj)->extra;
+    state->lifetime = (f32)v;
+}
 #pragma scheduling reset
 #pragma peephole reset
