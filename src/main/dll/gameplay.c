@@ -578,7 +578,7 @@ extern undefined4 DAT_803dc538;
 extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd6fc;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de100;
 extern undefined4 DAT_803de104;
@@ -4793,125 +4793,125 @@ void FUN_800eb6f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       case 0x14:
         local_410 = 0x2a;
         for (; uVar3 != 0; uVar3 = uVar3 - 1) {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
         }
         break;
       case 1:
         local_410 = 0x2b;
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
         break;
       case 2:
         local_410 = 0x184;
         for (; uVar3 != 0; uVar3 = uVar3 - 1) {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
         }
         break;
       case 3:
         local_410 = 0x1a1;
         for (; uVar3 != 0; uVar3 = uVar3 - 1) {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
         }
         break;
       case 4:
         local_410 = 0x60;
         for (; uVar3 != 0; uVar3 = uVar3 - 1) {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
         }
         local_410 = 0x159;
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,3,&local_414,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 3, &local_414, 1, -1, NULL);
         break;
       case 5:
         local_410 = 0x60;
         for (; uVar3 != 0; uVar3 = uVar3 - 1) {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
         }
         local_410 = 0x91;
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,3,&local_414,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 3, &local_414, 1, -1, NULL);
         break;
       case 6:
         local_410 = 0x60;
         for (; uVar3 != 0; uVar3 = uVar3 - 1) {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
         }
         local_410 = 0x74;
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,3,&local_414,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 3, &local_414, 1, -1, NULL);
         break;
       default:
         local_410 = 0x2a;
         iVar8 = 5;
         do {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
           iVar8 = iVar8 + -1;
         } while (iVar8 != 0);
         break;
       case 8:
         local_410 = 0x60;
         for (; uVar3 != 0; uVar3 = uVar3 - 1) {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
         }
         iVar8 = 0x14;
         local_410 = 0xdf;
         do {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,7,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 7, &local_414, 1, -1, NULL);
           iVar8 = iVar8 + -1;
         } while (iVar8 != 0);
         local_410 = 0x159;
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,3,&local_414,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 3, &local_414, 1, -1, NULL);
         break;
       case 9:
         local_410 = 0x60;
         for (; uVar3 != 0; uVar3 = uVar3 - 1) {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
         }
         iVar8 = 0x14;
         local_410 = 0xde;
         do {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,7,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 7, &local_414, 1, -1, NULL);
           iVar8 = iVar8 + -1;
         } while (iVar8 != 0);
         local_410 = 0x91;
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,3,&local_414,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 3, &local_414, 1, -1, NULL);
         break;
       case 10:
         local_410 = 0x60;
         for (; uVar3 != 0; uVar3 = uVar3 - 1) {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
         }
         iVar8 = 0x14;
         local_410 = 0x160;
         do {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,7,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 7, &local_414, 1, -1, NULL);
           iVar8 = iVar8 + -1;
         } while (iVar8 != 0);
         local_410 = 0x74;
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,3,&local_414,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 3, &local_414, 1, -1, NULL);
         break;
       case 0xc:
         local_410 = 0x2a;
         break;
       case 0xd:
         local_410 = 0x4c;
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
         break;
       case 0xe:
         local_410 = 0x60;
         for (; uVar3 != 0; uVar3 = uVar3 - 1) {
-          (**(code **)(*DAT_803dd708 + 8))(iVar2,0x135,&local_414,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, 0x135, &local_414, 1, -1, NULL);
         }
         break;
       case 0xf:
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,0x51b,0,2,0xffffffff,0);
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,0x51b,0,2,0xffffffff,0);
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,0x51b,0,2,0xffffffff,0);
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,0x51b,0,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 0x51b, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 0x51b, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 0x51b, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 0x51b, NULL, 2, -1, NULL);
         break;
       case 0x10:
       case 0x11:
         local_410 = 0x4c;
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,5,&local_414,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 5, &local_414, 1, -1, NULL);
       }
     }
   }
@@ -16626,7 +16626,6 @@ void dll_75_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
 
 extern void *textureIdxToPtr(int idx);
 extern void debugPrintf(char *fmt, ...);
-extern EffectInterface **gPartfxInterface;
 extern u8 lbl_80311E30[];
 extern u8 lbl_803DB8B0, lbl_803DB8B4;
 extern u32 lbl_803E0730;
