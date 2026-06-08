@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_80220608_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/mapEventTypes.h"
@@ -367,7 +368,6 @@ extern void modelLightStruct_setupGlow(void *light, u16 a, u8 b, u8 c, u8 d, u8 
 extern void modelLightStruct_setGlowProjectionRadius(void *light, f32 v);
 
 
-extern int *gCameraInterface;
 extern int fn_802969F0(int player);
 extern f32 Camera_GetFovY(void);
 extern void modelLightStruct_setEnabled(void *light, int flag, f32 val);
@@ -1278,7 +1278,6 @@ extern f32 lbl_803E6EF8;
 extern f32 lbl_803E6FFC;
 extern f32 lbl_803E7000;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
-extern int *gCameraInterface;
 extern void unlockLevel(int a, int b, int c);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int idx, int p2);

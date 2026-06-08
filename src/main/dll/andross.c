@@ -1851,7 +1851,7 @@ LAB_8023de5c:
     }
   }
   local_134 = lbl_803E7584 + *(f32 *)(piVar14 + 0x2a);
-  (*(void (*)())*(int *)(*gCameraInterface + 0x60))(&local_134,4);
+  (*(void (*)(void *, int))*(int *)((char *)*gCameraInterface + 0x60))(&local_134,4);
   ((GameObject *)obj)->anim.velocityX =
        *(f32 *)(piVar14 + 0x1d) * (*(f32 *)(piVar14 + 0x33) - ((GameObject *)obj)->anim.localPosX) +
        ((GameObject *)obj)->anim.velocityX;
