@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
 #include "main/dll/baddie/wall_crawler.h"
 
 extern undefined4 FUN_800067c0();
@@ -79,7 +80,6 @@ extern undefined4 DAT_803dc6d4;
 extern undefined4 DAT_803dc6d6;
 extern undefined4 DAT_803dc6d8;
 extern undefined4 DAT_803dc6f8;
-extern undefined4* DAT_803dd6d0;
 extern undefined4 DAT_803de3b0;
 extern undefined4 DAT_803de3db;
 extern undefined4 DAT_803de3f2;
@@ -218,7 +218,7 @@ void FUN_8012ed00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   else {
     if (DAT_803de548 != '\0') {
-      (**(code **)(*DAT_803dd6d0 + 0x5c))(0x41,1);
+      (*(void (**)(int, int))((char *)*gCameraInterface + 0x5c))(0x41,1);
     }
     DAT_803de550 = 0xff;
   }
@@ -516,7 +516,7 @@ void FUN_8012f758(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_8012c1c0();
   }
   iVar7 = FUN_80294dbc(iVar4);
-  if ((((iVar7 == 0) && (iVar7 = (**(code **)(*DAT_803dd6d0 + 0x10))(), iVar7 != 0x44)) &&
+  if ((((iVar7 == 0) && (iVar7 = (*gCameraInterface)->getMode(), iVar7 != 0x44)) &&
       ((*(ushort *)(iVar4 + 0xb0) & 0x1000) == 0)) && (DAT_803de400 == '\0')) {
     if ((int)DAT_803de434 != 0) {
       FUN_80006ba8(0,(int)DAT_803de434);
@@ -530,7 +530,7 @@ void FUN_8012f758(undefined8 param_1,double param_2,double param_3,undefined8 pa
     DAT_803de518 = DAT_803de518 & 0xfff0fff7;
   }
   iVar7 = FUN_80294dbc(iVar4);
-  if (((((iVar7 == 0) && (iVar7 = (**(code **)(*DAT_803dd6d0 + 0x10))(), iVar7 != 0x44)) &&
+  if (((((iVar7 == 0) && (iVar7 = (*gCameraInterface)->getMode(), iVar7 != 0x44)) &&
        (((*(ushort *)(iVar4 + 0xb0) & 0x1000) == 0 &&
         ((DAT_803de434 == '\0' && (DAT_803de400 == '\0')))))) &&
       (iVar7 = FUN_800176d0(), iVar7 == 0)) && (DAT_803de3db == '\0')) {
@@ -760,7 +760,7 @@ LAB_8012f884:
         }
       }
     }
-    iVar4 = (**(code **)(*DAT_803dd6d0 + 0x10))();
+    iVar4 = (*gCameraInterface)->getMode();
     if (iVar4 == 0x4e) {
       DAT_803de415 = '\0';
     }
@@ -810,7 +810,7 @@ LAB_8012fb2c:
   if (2 < DAT_803de528) {
     DAT_803de528 = 2;
   }
-  DAT_803dc6d6 = (**(code **)(*DAT_803dd6d0 + 100))();
+  DAT_803dc6d6 = (*(int (**)(void))((char *)*gCameraInterface + 100))();
   if (DAT_803de512 < 0) {
     if (DAT_803de420 == '\0') {
       if (DAT_803de552 == 0) {
@@ -1249,8 +1249,6 @@ extern int  Sfx_PlayFromObject(int a, int b);
 extern s8   padGetCX(int chan);
 extern s8   padGetCY(int chan);
 extern int  getNextTaskHintText(void);
-extern int *gCameraInterface;
-
 extern s8  cMenuOpen;
 extern u8  cMenuState;
 extern u8  shouldOpenCMenu;
@@ -1287,7 +1285,7 @@ extern s16 lbl_803DD8D2;
 extern s16 lbl_803DD8D6;
 extern f32 lbl_803E21D0;
 
-#define CAM_VTBL(off) (*(int (**)(void))(*(int *)gCameraInterface + (off)))()
+#define CAM_VTBL(off) (*(int (**)(void))((char *)*gCameraInterface + (off)))()
 
 /* EN v1.0 0x8012EF40  size: 2676b  Per-frame UI/pause-menu update + dispatch. */
 #pragma scheduling off
@@ -1327,7 +1325,7 @@ void GameUI_update(void)
     if (player != 0) {
         if (lbl_803DD75B != 0) timeListFn_8012be84();
 
-        if (fn_802972A8(player) != 0 || CAM_VTBL(0x10) == 0x44 ||
+        if (fn_802972A8(player) != 0 || (*gCameraInterface)->getMode() == 0x44 ||
             (*(u16 *)(player + 0xb0) & 0x1000) != 0 || pauseMenuState != 0) {
             buttonDisable(0, 0xf0000);
             lbl_803DD8A4 &= 0xfff0fff7;
@@ -1340,7 +1338,7 @@ void GameUI_update(void)
             }
         }
 
-        if (fn_802972A8(player) != 0 || CAM_VTBL(0x10) == 0x44 ||
+        if (fn_802972A8(player) != 0 || (*gCameraInterface)->getMode() == 0x44 ||
             (*(u16 *)(player + 0xb0) & 0x1000) != 0 || (s8)shouldCloseCMenu != 0 ||
             pauseMenuState != 0 || getHudHiddenFrameCount() != 0 || lbl_803DD75B != 0) {
             f25 = 0;
@@ -1521,7 +1519,7 @@ void GameUI_update(void)
                 }
             }
         camCheck:
-            if (CAM_VTBL(0x10) == 0x4e) cMenuOpen = 0;
+            if ((*gCameraInterface)->getMode() == 0x4e) cMenuOpen = 0;
         }
         afterDispatch:
 
