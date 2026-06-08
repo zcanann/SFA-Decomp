@@ -345,9 +345,9 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
             *(u8 *)((char *)obj + 0x37) = *(u8 *)((char *)inner + 0xa0);
         }
         if (*(u8 *)((char *)obj + 0xeb) == 0 && *(s16 *)((char *)obj + 0x46) == 0x389 &&
-            ((*(u8 *)((char *)inner + 0xaa) >> 7) & 1) != 0) {
+            ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 != 0) {
             near = ObjGroup_FindNearestObject(0x1e, obj, &dist);
-            if (near != 0 &&
+            if ((u32)near != 0 &&
                 (*(int (*)(int))(*(int *)(*(int *)(*(int *)(near + 0x68)) + 0x24)))(near) != 0 &&
                 (*(int (*)(int, int))(*(int *)(*(int *)(*(int *)(near + 0x68)) + 0x20)))(near, 0) != 0) {
                 ObjLink_AttachChild(obj, near, 0);
@@ -356,7 +356,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E670C);
         ObjPath_GetPointWorldPosition(obj, 1, (f32 *)((char *)inner + 0x18), (f32 *)((char *)inner + 0x1c), (f32 *)((char *)inner + 0x20), 0);
         *(u8 *)((char *)obj + 0x37) = oldFlag;
-        if (((*(u8 *)((char *)inner + 0xaa) >> 6) & 1) != 0) {
+        if (((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 != 0) {
             if (*(f32 *)((char *)inner + 0xac) != lbl_803E66F0) {
                 *(f32 *)((char *)inner + 0xac) = lbl_803E670C + (f32)(s32)(0xff - *(u8 *)((char *)obj + 0x36)) / lbl_803E6710;
             } else {
