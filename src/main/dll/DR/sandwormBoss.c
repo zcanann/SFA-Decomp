@@ -3427,7 +3427,7 @@ int cfprisoncage_SeqFn(int* obj, int p2, u8* p3)
     if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
         if (((int (*)(int))((int *)*gGameUIInterface)[0x20 / 4])(0x44) != 0) {
             *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
-            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }
     return 0;
@@ -3472,7 +3472,7 @@ int babycloudrunner_func0B(void* p)
         s16toFloat((int)sub, 0x3c);
         *(int*)((char*)obj + 0xf4) = 1;
         *(s16*)obj = sub->roostYaw;
-        ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(4, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(4, obj, -1);
         sub->unk00 = lbl_803E4244;
         gameBitIncrement(0x901);
         sub->behaviourState = 0xc;
@@ -3629,8 +3629,8 @@ void cfpowerbase_update(int* obj) {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
     }
     if (*(int*)((char*)obj + 0xf4) != 0) {
-        ((void (*)(int *, int))((int *)*gObjectTriggerInterface)[0x54 / 4])(obj, 0xfa);
-        ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(sub->typeIndex, obj, 3);
+        (*gObjectTriggerInterface)->preempt((int)obj, 0xfa);
+        (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, 3);
         *(int*)((char*)obj + 0xf4) = 0;
     }
     if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
@@ -3638,7 +3638,7 @@ void cfpowerbase_update(int* obj) {
             *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
             GameBit_Set(sub->litBit, 0);
             GameBit_Set(0x973, 0);
-            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(sub->typeIndex, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, -1);
         }
     }
 }
@@ -3707,7 +3707,7 @@ void cfprisonguard_update(int *obj) {
     dist = Vec_distance((char*)obj + 0x18, (char*)player + 0x18);
     if (sub->flags == 1) {
         waterfx_consumePendingImpactNearPoint((f32 *)((char*)obj + 0xc), lbl_803E4268);
-        ((void(*)(int, int*, int))((void**)*gObjectTriggerInterface)[18])(0, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         sub->flags = 2;
     }
     if (bit44 == 0) {
@@ -3717,7 +3717,7 @@ void cfprisonguard_update(int *obj) {
             }
         }
         if (objGetAnimState80A(player) != 0x40) {
-            ((void(*)(int, int*, int))((void**)*gObjectTriggerInterface)[18])(1, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, obj, -1);
         }
     }
 }
@@ -3772,7 +3772,7 @@ void cfprisonuncle_update(int* obj)
         if (ObjTrigger_IsSet((int)obj) != 0) {
             fn_8003ADC4(obj, player, (char*)sub + 4, 0x41, 0, 3);
             *(s16*)objModelGetVecFn_800395d8((int)obj, 1) = -0xaaa;
-            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(1, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, obj, -1);
         } else {
             objAnimFn_80038f38((int)obj, (char*)sub + 0x34);
             ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E428C, (f32)(u32)framesThisStep, 0);
@@ -3780,7 +3780,7 @@ void cfprisonuncle_update(int* obj)
     } else {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
         if (*(s16*)((char*)obj + 0xb4) == -1) {
-            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }
 }
@@ -3842,7 +3842,7 @@ void cfprisoncage_update(int *obj) {
         case 0x128:
         default:    v = 1; break;
         }
-        ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])(v, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(v, obj, -1);
         *(int*)((char*)obj + 0xf4) = 0;
     }
 }
@@ -4229,7 +4229,7 @@ void cfprisoncage_init(int *obj, u8 *def) {
         }
     } else {
         if (GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
-            ((void (*)(int *, int))((int *)*gObjectTriggerInterface)[0x54/4])(obj, 60);
+            (*gObjectTriggerInterface)->preempt((int)obj, 60);
         }
     }
 }
@@ -4423,7 +4423,7 @@ int cfpowerbase_SeqFn(int p1, int unused, int p3)
 void cfperch_update(int *obj) {
     if (((GameObject *)obj)->unkF4 != 0) {
         if (GameBit_Get(0x50) == 0) {
-            ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }
     ((GameObject *)obj)->unkF4 = 0;
@@ -5020,7 +5020,7 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
                     *(u8*)((char*)obj + 0xaf) |= 8;
                     sub->guardState = 5;
                     sub->stateTimer = 0x14;
-                    ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(2, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(2, obj, -1);
                     return 4;
                 }
             }
@@ -5443,7 +5443,7 @@ void babycloudrunner_update(int* obj)
         ObjGroup_RemoveObject(obj, 3);
     }
     if (sub->runnerState == 2 && GameBit_Get(0x66) != 0) {
-        ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(6, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(6, obj, -1);
         ((void (*)(void))((int*)*gGameUIInterface)[0x60 / 4])();
     } else if (fn_80080150(sub) != 0) {
         sub->flags22C |= 1;
@@ -5517,7 +5517,7 @@ void babycloudrunner_update(int* obj)
                 radius = (f32)*(s16*)(def + 0x18);
                 if (fn_80080150((char*)sub + 0x238) != 0) {
                     if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0 && timerCountDown((char*)sub + 0x238) != 0) {
-                        ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(6, obj, -1);
+                        (*gObjectTriggerInterface)->runSequence(6, obj, -1);
                         ((void (*)(void))((int*)*gGameUIInterface)[0x60 / 4])();
                         return;
                     }
@@ -5568,7 +5568,7 @@ void babycloudrunner_update(int* obj)
                     ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803DBE44, timeDelta, 0);
                 } else {
                     if (inRange != 0) {
-                        ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(1, obj, -1);
+                        (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                         sub->unkB0 = 1;
                     }
                     sandworm_turnTowardTargetAnim(obj, (int*)Obj_GetPlayerObject(), (u8*)sub, 1);
@@ -5912,7 +5912,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         }
         break;
     case 3:
-        ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(2, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(2, obj, -1);
         GameBit_Set(0x60, 1);
         sub->questState = 2;
         break;
@@ -6109,7 +6109,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         }
         if (GameBit_Get(0x4b7) != 0) {
             ((void (*)(int*))((int*)*gCameraInterface)[0x48 / 4])(obj);
-            ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(0xb, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0xb, obj, -1);
             GameBit_Set(0x4b7, 0);
         }
         if (GameBit_Get(0x49a) != 0) {
@@ -6122,7 +6122,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         }
         if (GameBit_Get(0x4b7) != 0) {
             ((void (*)(int*))((int*)*gCameraInterface)[0x48 / 4])(obj);
-            ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(0xa, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0xa, obj, -1);
             GameBit_Set(0x4b7, 0);
         }
         if (GameBit_Get(0x4aa) != 0) {
@@ -6159,7 +6159,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             sub->chatterPick += 1;
             if (pick != -1) {
                 sub->chatterState = 2;
-                ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(pick, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(pick, obj, -1);
             }
         }
     }
@@ -6167,7 +6167,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         int* tbl2 = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, sub->questState);
         if (tbl2[0] != -1) {
             sub->chatterState = 2;
-            ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(tbl2[0], obj, -1);
+            (*gObjectTriggerInterface)->runSequence(tbl2[0], obj, -1);
             GameBit_Set(0x902, 0);
         }
     }

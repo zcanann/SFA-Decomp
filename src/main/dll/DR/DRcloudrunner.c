@@ -419,7 +419,7 @@ void sc_cloudrunnera_update(int obj)
     sub = ((GameObject *)obj)->anim.placementData;
     if (sub == NULL) return;
     if (*(s16 *)((char *)sub + 0x18) == -1) return;
-    idx = ((int (*)(int, f32))(*(int *)(*gObjectTriggerInterface + 0x14)))(obj, (f32)(u32)lbl_803DB411);
+    idx = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)lbl_803DB411);
     if (idx != 0 && ((GameObject *)obj)->unkB4 == -2) {
         int found;
         s32 mark = *(s8 *)(inner + 0x57);
