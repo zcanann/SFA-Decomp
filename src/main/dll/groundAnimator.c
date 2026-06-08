@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
@@ -1086,7 +1087,6 @@ int appleontree_getExtraSize(void) { return 0x64; }
 /* Pattern wrappers. */
 u8 appleontree_modelMtxFn(int *obj) { return ((AppleOnTreeState *)((int **)obj)[0xb8/4])->unk3A; }
 
-extern ExpgfxInterface **gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void appleontree_free(int *obj) {

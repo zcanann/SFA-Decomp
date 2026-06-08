@@ -2,6 +2,7 @@
 #include "dolphin/os/OSFastCast.h"
 #include "main/asset_load.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -1098,7 +1099,6 @@ extern CloudActionInterface **gCloudActionInterface;
 extern void *gCheckpointInterface;
 extern void *gTitleMenuControlInterface;
 extern void *gTitleMenuControlInterfaceCopy;
-extern ExpgfxInterface **gExpgfxInterface;
 extern void *gModgfxInterface;
 extern ProjgfxInterface **gProjgfxInterface;
 extern void *gPlayerShadowInterface;

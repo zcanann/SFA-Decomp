@@ -1,5 +1,6 @@
 #include "main/dll/creator1CF.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 
 extern void *Camera_GetCurrentViewSlot(void);
 extern float sqrtf(float x);
@@ -7,7 +8,6 @@ extern int randomGetRange(int min, int max);
 extern void voxmaps_worldToGrid(void *world, void *grid);
 extern int voxmaps_traceLine(void *from, void *to, void *out, int param4, int param5);
 
-extern ExpgfxInterface **gExpgfxInterface;
 extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern u8 framesThisStep;

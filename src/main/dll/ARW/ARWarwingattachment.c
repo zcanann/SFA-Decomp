@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
@@ -2219,7 +2220,6 @@ void wmtorch_update(int obj) {
 #pragma scheduling reset
 
 extern ModgfxInterface **gModgfxInterface;
-extern ExpgfxInterface **gExpgfxInterface;
 extern void Obj_FreeObject(void *o);
 #pragma scheduling off
 #pragma peephole off
@@ -2527,7 +2527,6 @@ void lightsource_update(int obj)
     extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
     extern void Sfx_RemoveLoopedObjectSound(int obj, int sfx);
     extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32 *vec);
-    extern ExpgfxInterface **gExpgfxInterface;
     extern EffectInterface **gPartfxInterface;
     extern f32 timeDelta;
     extern f32 lbl_803E5E08;
