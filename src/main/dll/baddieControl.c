@@ -3,6 +3,7 @@
 #include "main/camera_object.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
+#include "main/mapEvent.h"
 #include "main/screen_transition.h"
 
 typedef struct {
@@ -4027,7 +4028,7 @@ int dll_19_func14(u8 *p1, u8 *p2, f32 frange, int p4) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E1C30;
@@ -4068,7 +4069,7 @@ int dll_19_func16(u8 *p1, u8 *p2, int p3, int p4, int *p5, u8 *p6, s16 p7, u8 *p
                 p1[54] = 0;
                 *(int *)(p1 + 244) = 1;
                 *(s16 *)(p1 + 6) = *(s16 *)(p1 + 6) | 0x4000;
-                (*(void (**)(int, f32))(*(int *)gMapEventInterface + 100))(
+                (*gMapEventInterface)->startTimedEvent(
                     *(int *)(other + 20),
                     (f32)(s32)(*(s16 *)(other + 44) * 60) - lbl_803E1C30);
             }
@@ -4346,7 +4347,7 @@ void dll_19_func18(int p1, u8 *p2, u8 *p3, int p4, int p5, int p6, f32 fparam, i
     } else {
         *(int *)(p1 + 244) = 0;
     }
-    if ((*(int (**)(int))(*(int *)gMapEventInterface + 104))(*(int *)(p2 + 20)) == 0) {
+    if ((*gMapEventInterface)->isTimedEventActive(*(int *)(p2 + 20)) == 0) {
         *(int *)(p1 + 244) = 1;
     }
     if (*(int *)(p1 + 244) != 0) {

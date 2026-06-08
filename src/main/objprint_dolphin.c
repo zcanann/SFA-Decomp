@@ -1,5 +1,6 @@
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
+#include "main/mapEvent.h"
 #include "main/model.h"
 #include "main/objprint_dolphin.h"
 #include "main/objanim_internal.h"
@@ -7335,12 +7336,12 @@ int loadMapAndParent(int mapId)
     return idx;
 }
 
-extern void *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void mapLoadDataFile(int mapIdx, int fileType);
 void mapLoadDataFiles(int mapIdx)
 {
     if (sMapFileNameAdjacencyTable[mapIdx] != -1) {
-        int *r = ((int *(*)(void *))((void **)*(void **)gMapEventInterface)[0x90 / 4])(*(void **)gMapEventInterface);
+        int *r = (int *)(*gMapEventInterface)->getWarpPos();
         *(s8 *)((char *)r + 0xe) = (s8)mapIdx;
     }
     mapLoadDataFile(mapIdx, 0x20);
@@ -7389,7 +7390,7 @@ int mapUnload(int mapId, int flags)
     base = lbl_80345E10;
     i = 0;
     needWait = 0;
-    st = ((int *(*)(void *))((void **)*(void **)gMapEventInterface)[0x90 / 4])(*(void **)gMapEventInterface);
+    st = (int *)(*gMapEventInterface)->getWarpPos();
     {
         int pairs[56] = {
             0x2b, 0x1,    0x2a, 0x2,    0x2f, 0x8,    0x30, 0x4,
@@ -7422,7 +7423,7 @@ int mapUnload(int mapId, int flags)
             }
         }
 
-        st = ((int *(*)(void *))((void **)*(void **)gMapEventInterface)[0x90 / 4])(*(void **)gMapEventInterface);
+        st = (int *)(*gMapEventInterface)->getWarpPos();
         {
             int v = *(s8 *)((char *)st + 0xe);
             if (v != lbl_803DB5B0 && v != (&lbl_803DB5B0)[1]) {

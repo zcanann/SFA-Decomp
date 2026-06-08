@@ -41,7 +41,7 @@ extern f32 timeDelta;
 extern const f32 lbl_803E5260;
 extern f32 lbl_803E5264;
 extern f32 lbl_803E5268;
-extern char *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int lbl_802C23E8[];
 
 typedef struct NwTrickyIds {
@@ -145,7 +145,7 @@ void nw_tricky_update(int *obj)
             *(f32 *)(state + 4) += timeDelta;
         }
         if (GameBit_Get(0x4e3) == 1) {
-            if (((MapEventInterface *)*(int *)gMapEventInterface)->getProgressPtr()[0] >= 4) {
+            if ((*gMapEventInterface)->getProgressPtr()[0] >= 4) {
                 GameBit_Set(0x4e3, 0xff);
             }
         }
@@ -153,7 +153,7 @@ void nw_tricky_update(int *obj)
         if (t >= lbl_803E5268) {
             *(f32 *)(state + 4) = t - lbl_803E5268;
             if (GameBit_Get(0x4e3) == 0xff) {
-                if (((MapEventInterface *)*(int *)gMapEventInterface)->getProgressPtr()[0] < 4) {
+                if ((*gMapEventInterface)->getProgressPtr()[0] < 4) {
                     GameBit_Set(0x4e3, 1);
                 }
             }
