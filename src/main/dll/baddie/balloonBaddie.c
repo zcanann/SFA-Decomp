@@ -1,4 +1,5 @@
 #include "main/dll/baddie/balloonBaddie.h"
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 
 extern undefined4 FUN_80006954();
@@ -69,7 +70,6 @@ extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dc698;
 extern undefined4 DAT_803dc6cd;
 extern undefined4 DAT_803dc6ce;
-extern undefined4* DAT_803dd6d0;
 extern undefined4 DAT_803dd970;
 extern undefined4 DAT_803de3b8;
 extern undefined4 DAT_803de3bc;
@@ -674,7 +674,7 @@ void FUN_801249bc(undefined8 param_1,double param_2,double param_3,undefined8 pa
     DAT_803de3bc = (undefined4)((ulonglong)uVar6 >> 0x20);
   }
   FUN_8011f048((int)((ulonglong)uVar6 >> 0x20),(int)uVar6,uVar4,uVar5,in_r7,in_r8,in_r9,in_r10);
-  iVar3 = (**(code **)(*DAT_803dd6d0 + 0x10))();
+  iVar3 = (*gCameraInterface)->getMode();
   if ((((iVar3 != 0x44) && ((*(ushort *)(iVar1 + 0xb0) & 0x1000) == 0)) && (DAT_803de400 == '\0'))
      && ((iVar2 != 0 && (iVar1 = FUN_800176d0(), iVar1 == 0)))) {
     iVar3 = **(int **)(iVar2 + 0x68);
@@ -740,7 +740,6 @@ extern void drawViewFinderHud(void);
 extern int getHudHiddenFrameCount(void);
 extern void textureFree(void);
 extern void drawTexture(void *p, f32 a, f32 b, int c, int d);
-extern int *gCameraInterface;
 extern u8 pauseMenuState;
 extern int hudTextures[];
 extern u8 lbl_803A9398[];
@@ -770,7 +769,7 @@ void drawTrickyHudOverlay(int obj)
         gTrickyHudActionMask = 0;
     }
     drawViewFinderHud();
-    if ((*(int (**)(void))(*(int *)gCameraInterface + 0x10))() != 0x44 &&
+    if ((*gCameraInterface)->getMode() != 0x44 &&
         (*(u16 *)(player + 0xb0) & 0x1000) == 0 &&
         pauseMenuState == 0 &&
         (void *)tricky != 0 &&

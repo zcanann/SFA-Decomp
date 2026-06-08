@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
 #include "main/mapEvent.h"
 #include "main/dll/IM/IMicicle.h"
 #include "main/effect_interfaces.h"
@@ -65,7 +66,6 @@ extern undefined4 DAT_80323b3c;
 extern short DAT_80323c58;
 extern undefined4 DAT_803dcafc;
 extern undefined4 DAT_803dcb00;
-extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern MapEventInterface **gMapEventInterface;
 extern f64 DOUBLE_803e5020;
@@ -1123,7 +1123,7 @@ void FUN_801a494c(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  iVar3,in_r8,in_r9,in_r10);
     FUN_80080f3c((double)lbl_803E5080,1);
   }
-  iVar1 = (**(code **)(*DAT_803dd6d0 + 0x10))();
+  iVar1 = (*gCameraInterface)->getMode();
   if (iVar1 == 0x47) {
     if (*(char *)(iVar9 + 0xd) != 'G') {
       FUN_80017698(0xc0,1);
@@ -1132,7 +1132,7 @@ void FUN_801a494c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   else if (*(char *)(iVar9 + 0xd) == 'G') {
     FUN_80017698(0x1a8,1);
   }
-  uVar8 = (**(code **)(*DAT_803dd6d0 + 0x10))();
+  uVar8 = (*gCameraInterface)->getMode();
   *(undefined *)(iVar9 + 0xd) = uVar8;
   SH_LevelControl_runBloopEvent(iVar9 + 8,4,-1,-1,0x983,(int *)0xb0);
   SH_LevelControl_runBloopEvent(iVar9 + 8,8,-1,-1,0x983,(int *)0x38);
@@ -1522,7 +1522,6 @@ extern void unlockLevel(int a, int b, int c);
 extern int playerIsDisguised(int player);
 extern void fn_80295CF4(int player, int mode);
 extern int getCurMapLayer(void);
-extern int *gCameraInterface;
 extern int lbl_802C22E8[];
 extern f32 lbl_803E43EC;
 extern void SCGameBitLatch_Update(void *latch, int mask, int clearIfSetBit, int clearIfClearBit,
@@ -1622,7 +1621,7 @@ void cflevelcontrol_update(int obj) {
         skyFn_80088e54(1, lbl_803E43E8);
     }
 
-    cameraMode = ((int (*)(void))(*(int *)(*gCameraInterface + 0x10)))();
+    cameraMode = (*gCameraInterface)->getMode();
     if (cameraMode == 0x47) {
         if ((s8)state[0xd] != 0x47) {
             GameBit_Set(0xc0, 1);
@@ -1630,7 +1629,7 @@ void cflevelcontrol_update(int obj) {
     } else if ((s8)state[0xd] == 0x47) {
         GameBit_Set(0x1a8, 1);
     }
-    state[0xd] = (s8)((int (*)(void))(*(int *)(*gCameraInterface + 0x10)))();
+    state[0xd] = (s8)(*gCameraInterface)->getMode();
 
     SCGameBitLatch_Update(state + 8, 4, -1, -1, 0x983, 0xb0);
     SCGameBitLatch_Update(state + 8, 8, -1, -1, 0x983, 0x38);
