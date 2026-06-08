@@ -1,5 +1,6 @@
 #include "main/dll/maybeTemplate.h"
 #include "main/mapEventTypes.h"
+#include "main/screen_transition.h"
 
 
 #pragma peephole off
@@ -516,7 +517,7 @@ void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int *yP
  * PAL Size: TODO
  */
 extern MapEventInterface **gMapEventInterface;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int *gCameraInterface;
 extern int lbl_803A87F0[];
 extern f32 lbl_803DD83C;
@@ -540,7 +541,7 @@ extern f32 lbl_803E1FC8;
 #define PMDS_MAP_EVENT_GET_STATUS() \
   (*gMapEventInterface)->getProgressPtr()
 #define PMDS_SCREEN_GET_FADE() \
-  ((f32 (*)(void))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x18)))()
+  (*gScreenTransitionInterface)->getProgress()
 #define PMDS_CAMERA_GET_STATE() \
   ((int (*)(void))(*(u32 *)((u8 *)*gCameraInterface + 0x10)))()
 

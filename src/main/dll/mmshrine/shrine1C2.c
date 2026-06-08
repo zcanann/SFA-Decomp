@@ -6,6 +6,7 @@
 #include "main/dll/mmshrine/shrine1C2.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/screen_transition.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -139,7 +140,7 @@ extern int GameBit_Get(int bit);
 extern int *Obj_GetPlayerObject(void);
 extern int *gGameUIInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern u8 lbl_80326208[];
 extern int lbl_803E8470;
 extern int lbl_803E8474;
@@ -267,7 +268,7 @@ void ecsh_shrine_update(s16 *obj)
                 Sfx_PlayFromObject(obj, 0x16f);
                 *(f32 *)(sub + 4) = lbl_803E4FCC;
                 GameBit_Set(0xb9d, 1);
-                (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 0xc))(0x78, 1);
+                (*gScreenTransitionInterface)->step(0x78, 1);
             }
             ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             break;
@@ -412,7 +413,7 @@ void ecsh_shrine_update(s16 *obj)
                 case 5:
                     Sfx_KeepAliveLoopedObjectSound(0, 0x3a8);
                     if (*(s16 *)(sub + 0x26) == 0) {
-                        (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 8))(0x1e, 1);
+                        (*gScreenTransitionInterface)->start(0x1e, 1);
                         *(f32 *)(sub + 8) = lbl_803E4FE8;
                         *(s16 *)(sub + 0x24) = 7;
                         Sfx_PlayFromObject(obj, 0x16f);
@@ -442,7 +443,7 @@ void ecsh_shrine_update(s16 *obj)
                             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
                         } else {
                             *(f32 *)(sub + 8) = lbl_803E4FE8;
-                            (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 8))(0x1e, 1);
+                            (*gScreenTransitionInterface)->start(0x1e, 1);
                             sub[0x2f] = 6;
                             *(s16 *)(sub + 0x24) = 3;
                             *(s16 *)(sub + 0x26) = 0;
@@ -454,7 +455,7 @@ void ecsh_shrine_update(s16 *obj)
                         *(f32 *)(sub + 0xc) = *(f32 *)(sub + 0xc) - timeDelta;
                         if (*(f32 *)(sub + 0xc) <= lbl_803E4FCC) {
                             sub[0x2f] = 10;
-                            (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 8))(0x1e, 1);
+                            (*gScreenTransitionInterface)->start(0x1e, 1);
                             *(f32 *)(sub + 8) = lbl_803E4FE8;
                             *(s16 *)(sub + 0x24) = 7;
                             Sfx_PlayFromObject(obj, 0x16f);

@@ -30,6 +30,7 @@
 #include "main/dll/baddie/baby_snowworm.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
+#include "main/screen_transition.h"
 
 
 extern undefined4 FUN_800067c0();
@@ -3158,7 +3159,7 @@ extern int  getCurGameText(void);
 extern int  hintTextMapFn_800ea264(void);
 extern void gameTextLoadDir(int dir);
 extern u8   getCurTaskHintTextMap(void);
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void hintTextFn_800ea174(u8 *buf);
 extern int *textureLoadAsset(int id);
 extern void textureFree(void *tex);
@@ -3296,7 +3297,7 @@ void pauseMenuFn_80129ee0(void)
             }
         }
     }
-    if ((*(f32 (**)(void))(*(int *)gScreenTransitionInterface + 0x18))() == 0.0f) {
+    if ((*gScreenTransitionInterface)->getProgress() == 0.0f) {
         int c = pauseMenuFrameCounter - framesThisStep;
         if (c < 0) {
             c = 0;
@@ -3326,7 +3327,7 @@ void pauseMenuFn_80129ee0(void)
                 canOpen = 0;
             }
             if ((btn & 0x1000) && (s8)pauseMenuFrameCounter == 0 && pauseDisabled == 0 &&
-                (*(f32 (**)(void))(*(int *)gScreenTransitionInterface + 0x18))() == 0.0f &&
+                (*gScreenTransitionInterface)->getProgress() == 0.0f &&
                 canOpen != 0 && lbl_803DD75B == 0 && getHudHiddenFrameCount() == 0) {
                 pauseMenuFrameCounter = 0x3c;
                 cutsceneFadeInOut(1);
@@ -3762,7 +3763,7 @@ void pauseMenuFn_80129ee0(void)
                     pauseMenuSetupTitle(0x2b1, 1, 4, 3);
                     pauseMenuState = 2;
                     pauseMenuFrameCounter = 0x3c;
-                    (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 0x8))(0x14, 1);
+                    (*gScreenTransitionInterface)->start(0x14, 1);
                     lbl_803DD794 = 1;
                     break;
                 }

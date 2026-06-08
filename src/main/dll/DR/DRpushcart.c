@@ -5,6 +5,7 @@
 #include "main/objanim_internal.h"
 #include "main/dll/DR/DRpushcart.h"
 #include "main/objseq.h"
+#include "main/screen_transition.h"
 
 /* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
 typedef struct ShopItemState {
@@ -1380,7 +1381,7 @@ extern int getCurUiDll(void);
 extern int *getDLL16(void);
 extern void playerAddMoney(void *player, int amount);
 extern void *objFindTexture(int obj, int target, int p3);
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int dll_2E_func07(int obj, u8 *data, int p3, int p4, int p5);
 
 #pragma scheduling off
@@ -1403,8 +1404,8 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
     range = lbl_803E59D8;
     ((ShopkeeperState *)state)->flags9D4 &= ~0x20;
     if (((ShopkeeperState *)state)->flags9D4 & 0x10) {
-        if ((*(int (**)(void))(*(int *)gScreenTransitionInterface + 0x14))() != 0) {
-            (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 0xC))(0x1E, 1);
+        if ((*gScreenTransitionInterface)->isFinished() != 0) {
+            (*gScreenTransitionInterface)->step(0x1E, 1);
             (*gObjectTriggerInterface)->endSequence(*(s8 *)(data + 0x57));
         }
         return 0;
