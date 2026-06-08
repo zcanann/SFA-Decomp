@@ -193,7 +193,7 @@ extern undefined4 DAT_803dc79c;
 extern undefined4 DAT_803dc7a0;
 extern undefined4 DAT_803dc7a8;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de3b0;
 extern undefined4 DAT_803de3c0;
 extern undefined4 DAT_803de3da;
@@ -507,7 +507,7 @@ void FUN_8011daf8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   double extraout_f1;
   undefined8 uVar2;
   
-  iVar1 = (**(code **)(*DAT_803dd72c + 0x8c))();
+  iVar1 = (int)(*DAT_803dd72c)->getState(*DAT_803dd72c);
   uVar2 = FUN_8012c894(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
   if (*(char *)(iVar1 + 9) == '\0') {
     if (DAT_803dc084 == '\0') {
@@ -2130,7 +2130,7 @@ extern u8 lbl_803DB424;
 #pragma peephole off
 void showDeathMenu(void) {
     MapEventInterface *mapEvents = *gMapEventInterface;
-    int *r = (int *)(*(int (*)(MapEventInterface *))((u8 *)mapEvents + 0x8c))(mapEvents);
+    int *r = (int *)mapEvents->getState(mapEvents);
     pauseMenuInit();
     if (*((u8 *)r + 9) != 0) {
         pauseMenuState = 8;

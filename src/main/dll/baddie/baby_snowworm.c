@@ -3227,7 +3227,7 @@ void pauseMenuFn_80129ee0(void)
 
     player = (u8 *)Obj_GetPlayerObject();
     objIsCurModelNotZero();
-    mapVal = (*(int (**)(void))(*(int *)((u8 *)*gMapEventInterface + 0x8c)))();
+    mapVal = (int)(*gMapEventInterface)->getState(*gMapEventInterface);
     if (gameTextFn_80019c00() == 0.0f) {
         btn = (u16)getButtonsJustPressed(0);
         getButtonsHeld(0);
