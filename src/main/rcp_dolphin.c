@@ -174,7 +174,7 @@ extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6dc;
 extern undefined4* DAT_803dd6e0;
 extern undefined4* DAT_803dd6e4;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803dd9b0;
 extern undefined4 DAT_803dd9c8;
 extern undefined4 DAT_803dd9c9;
@@ -2153,7 +2153,7 @@ void FUN_80053c9c(undefined8 param_1,double param_2,double param_3,undefined8 pa
         bVar8 = false;
       }
       if (!bVar8) {
-        uVar4 = (**(code **)(*DAT_803dd72c + 0x40))(iVar5);
+        uVar4 = (*gMapEventInterface)->getMode(iVar5);
         uVar4 = uVar4 & 0xff;
         if (uVar4 == 0xffffffff) {
           bVar8 = false;
@@ -2229,7 +2229,7 @@ uint FUN_80053f60(int param_1)
   if ((*(byte *)(iVar12 + 4) & 2) != 0) {
     return 0;
   }
-  uVar10 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_1 + 0xac));
+  uVar10 = (*gMapEventInterface)->getMode((int)*(char *)(param_1 + 0xac));
   uVar10 = uVar10 & 0xff;
   if (uVar10 == 0xffffffff) {
     bVar9 = false;
@@ -2322,8 +2322,8 @@ LAB_80055824:
         }
       }
       else {
-        uVar10 = (**(code **)(*DAT_803dd72c + 0x4c))
-                           ((int)*(char *)(param_1 + 0xac),*(undefined *)(iVar12 + 6));
+        uVar10 = (*gMapEventInterface)->getAnimEvent((int)*(char *)(param_1 + 0xac),
+                           *(undefined *)(iVar12 + 6));
         uVar10 = countLeadingZeros(uVar10 & 0xff);
         uVar10 = uVar10 >> 5;
       }
@@ -3059,7 +3059,6 @@ void textureAnimFn_80053f2c(u8 *def, u32 *node, int *cnt)
 
 extern char lbl_803822C8[];
 extern void *gLoadedRomListPages[];
-extern MapEventInterface **gMapEventInterface;
 extern int *Obj_SetupObject(int *obj, int p1, int p2, int p3, int p4);
 
 #pragma scheduling off

@@ -14,7 +14,6 @@ extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
-extern undefined4* DAT_803dd72c;
 extern f32 timeDelta;
 
 extern ObjectTriggerInterface **gObjectTriggerInterface;

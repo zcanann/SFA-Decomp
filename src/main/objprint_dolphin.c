@@ -275,7 +275,7 @@ extern undefined4 DAT_803dc210;
 extern undefined4 DAT_803dd5d0;
 extern undefined4* DAT_803dd6d0;
 extern EffectInterface **gPartfxInterface;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803dd8a0;
 extern undefined4 DAT_803dd8a4;
 extern undefined4 DAT_803dd8a8;
@@ -3680,7 +3680,7 @@ void FUN_80041c10(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined8 uVar2;
   
   if (*(short *)(&DAT_802cc9d4 + param_9 * 2) != -1) {
-    iVar1 = (**(code **)(*DAT_803dd72c + 0x90))();
+    iVar1 = (int)(*gMapEventInterface)->getWarpPos();
     *(char *)(iVar1 + 0xe) = (char)param_9;
     param_1 = extraout_f1;
   }
@@ -7335,7 +7335,6 @@ int loadMapAndParent(int mapId)
     return idx;
 }
 
-extern MapEventInterface **gMapEventInterface;
 extern void mapLoadDataFile(int mapIdx, int fileType);
 void mapLoadDataFiles(int mapIdx)
 {
