@@ -182,7 +182,7 @@ extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6cc;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd6f8;
+extern ExpgfxInterface **gExpgfxInterface;
 extern undefined4* DAT_803dd6fc;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4* DAT_803de900;
@@ -1832,7 +1832,7 @@ void FUN_801f2ac8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  **(int **)(param_9 + 0xb8));
   }
   (**(code **)(*DAT_803dd6fc + 0x18))(param_9);
-  (**(code **)(*DAT_803dd6f8 + 0x14))(param_9);
+  (*gExpgfxInterface)->freeSource(param_9);
   return;
 }
 

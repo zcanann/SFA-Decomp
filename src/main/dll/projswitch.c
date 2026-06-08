@@ -78,7 +78,7 @@ extern undefined4 DAT_803dc8c0;
 extern undefined4 DAT_803dc8c8;
 extern undefined4 DAT_803dc8cc;
 extern undefined4 DAT_803dc8d0;
-extern undefined4* DAT_803dd6f8;
+extern ExpgfxInterface **gExpgfxInterface;
 extern undefined4* DAT_803dd71c;
 extern undefined4* DAT_803dd72c;
 extern f64 DOUBLE_803e3218;
@@ -327,7 +327,7 @@ void FUN_8014d600(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       FUN_80017ac8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar7);
     }
   }
-  (**(code **)(*DAT_803dd6f8 + 0x14))(iVar3);
+  (*gExpgfxInterface)->freeSource(iVar3);
   ObjGroup_RemoveObject(iVar3,3);
   FUN_8028688c();
   return;

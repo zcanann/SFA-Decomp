@@ -45,7 +45,7 @@ extern f32 Vec_distance(void *a, void *b);
 extern void objUpdateOpacity(int obj);
 
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6f8;
+extern ExpgfxInterface **gExpgfxInterface;
 extern u8 lbl_803DBF68;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern ModgfxInterface **gModgfxInterface;
@@ -519,7 +519,7 @@ void FUN_801ca13c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
                            auStack_68,(undefined *)0x0,0);
       if (iVar3 == 0) {
         *(undefined *)(iVar5 + 10) = 0;
-        (**(code **)(*DAT_803dd6f8 + 0x14))(param_1);
+        (*gExpgfxInterface)->freeSource(param_1);
       }
     }
     if (*(short *)(iVar5 + 4) < 1) {
