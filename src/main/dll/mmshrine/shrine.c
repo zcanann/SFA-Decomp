@@ -38,7 +38,6 @@ extern void GameBit_Set(int eventId,int value);
 extern void Obj_FreeObject(void *obj);
 
 extern undefined4 DAT_803dc071;
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f4;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gTitleMenuControlInterfaceCopy;
@@ -213,8 +212,8 @@ void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 pa
   SH_LevelControl_runBloopEvent(iVar6 + 0x18,0x10,-1,-1,0xcbb,(int *)0xc4);
   bVar1 = *(byte *)(iVar6 + 0x24);
   if (bVar1 == 3) {
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->endSequence((int)(short)param_9[0x5a]);
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(3, param_9, -1);
+    (*gObjectTriggerInterface)->endSequence((int)(short)param_9[0x5a]);
+    (*gObjectTriggerInterface)->runSequence(3, param_9, -1);
     *(undefined *)(iVar6 + 0x24) = 4;
     FUN_80017698(0xae6,0);
   }
@@ -226,7 +225,7 @@ void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 pa
         *(undefined *)(iVar6 + 0x24) = 2;
         *(uint *)(iVar6 + 0x18) = *(uint *)(iVar6 + 0x18) & ~1;
         FUN_80017698(0xae6,1);
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(2, param_9, -1);
+        (*gObjectTriggerInterface)->runSequence(2, param_9, -1);
       }
     }
     else if (bVar1 == 0) {
@@ -240,8 +239,8 @@ void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       if ((*(byte *)((int)param_9 + 0xaf) & 1) != 0) {
         *(undefined *)(iVar6 + 0x24) = 1;
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->setCamVars(0x4c, 0, 0, 0);
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, param_9, -1);
+        (*gObjectTriggerInterface)->setCamVars(0x4c, 0, 0, 0);
+        (*gObjectTriggerInterface)->runSequence(0, param_9, -1);
         FUN_800067c0((int *)0xd8,1);
       }
     }
@@ -249,7 +248,7 @@ void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 pa
       uVar5 = FUN_80294cd0(iVar3,4);
       if (uVar5 == 0) {
         FUN_80006770(3);
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, param_9, -1);
+        (*gObjectTriggerInterface)->runSequence(1, param_9, -1);
       }
       *(undefined *)(iVar6 + 0x24) = 5;
       FUN_80017698(0xae6,0);
@@ -308,7 +307,7 @@ void FUN_801c5920(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 {
   undefined8 uVar1;
   
-  ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState(*(u8 **)(param_9 + 0xb8));
+  (*gObjectTriggerInterface)->freeState(*(u8 **)(param_9 + 0xb8));
   uVar1 = (**(code **)(*DAT_803dd6f4 + 8))(param_9,0xffff,0,0,0);
   if ((*(int *)(param_9 + 200) != 0) && (param_10 == 0)) {
     FUN_80017ac8(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -368,9 +367,9 @@ void FUN_801c5a5c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   if ((*(int *)(param_9 + 0x4c) != 0) && (*(short *)(*(int *)(param_9 + 0x4c) + 0x18) != -1)) {
     local_24[2] = (int)DAT_803dc071;
     local_24[1] = 0x43300000;
-    local_24[0] = (**(code **)(*DAT_803dd6d4 + 0x14))
-                            ((double)(float)((double)CONCAT44(0x43300000,local_24[2]) -
-                                            DOUBLE_803e5c08));
+    local_24[0] = (*gObjectTriggerInterface)->update((u8 *)param_9,
+                            (f32)((double)CONCAT44(0x43300000,local_24[2]) -
+                                  DOUBLE_803e5c08));
     if ((local_24[0] != 0) && (*(short *)(param_9 + 0xb4) == -2)) {
       iVar4 = (int)*(char *)(*(int *)(param_9 + 0xb8) + 0x57);
       iVar5 = 0;
@@ -390,7 +389,8 @@ void FUN_801c5a5c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       }
       if (((iVar3 < 2) && (iVar5 != 0)) && (*(short *)(iVar5 + 0xb4) != -1)) {
         *(undefined2 *)(iVar5 + 0xb4) = 0xffff;
-        uVar6 = (**(code **)(*DAT_803dd6d4 + 0x4c))(iVar4);
+        (*gObjectTriggerInterface)->endSequence(iVar4);
+        uVar6 = extraout_f1;
       }
       *(undefined2 *)(param_9 + 0xb4) = 0xffff;
       FUN_80017ac8(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
