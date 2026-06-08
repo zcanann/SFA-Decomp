@@ -151,7 +151,7 @@ extern undefined4 DAT_803ad588;
 extern undefined4 DAT_803ad58c;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd71c;
 extern undefined4* DAT_803dd72c;
 extern undefined4* DAT_803dd740;
@@ -595,10 +595,10 @@ void FUN_801a764c(undefined4 param_1,undefined4 param_2,int param_3)
   for (iVar5 = 0; iVar5 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar5 = iVar5 + 1) {
     bVar1 = *(byte *)(param_3 + iVar5 + 0x81);
     if (bVar1 == 2) {
-      (**(code **)(*DAT_803dd708 + 8))(iVar2,0x70b,0,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)iVar2, 0x70b, NULL, 2, -1, NULL);
       iVar4 = 0;
       do {
-        (**(code **)(*DAT_803dd708 + 8))(iVar2,0x70c,0,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, 0x70c, NULL, 2, -1, NULL);
         iVar4 = iVar4 + 1;
       } while (iVar4 < 0x28);
     }
@@ -854,27 +854,27 @@ void FUN_801a7a94(undefined8 param_1,double param_2,double param_3,undefined8 pa
       DAT_803ad570 = *(float *)(pbVar4 + 0xc) - lbl_803E51C0;
       DAT_803ad574 = *(undefined4 *)(param_9 + 0x14);
       DAT_803de7b0 = (int)(*(float *)(param_9 + 0x10) - *(float *)(pbVar4 + 0xc));
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x722,0,2,0xffffffff,&DAT_803de7b0);
-      (**(code **)(*DAT_803dd708 + 8))
-                (param_9,0x723,&DAT_803ad560,0x200001,0xffffffff,&DAT_803de7b0);
-      (**(code **)(*DAT_803dd708 + 8))
-                (param_9,0x723,&DAT_803ad560,0x200001,0xffffffff,&DAT_803de7b0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x722, NULL, 2, -1, &DAT_803de7b0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x723, &DAT_803ad560, 0x200001, -1,
+                                       &DAT_803de7b0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x723, &DAT_803ad560, 0x200001, -1,
+                                       &DAT_803de7b0);
     }
   }
   if (*pbVar4 != 0) {
     if ((*pbVar4 & 1) != 0) {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x716,0,1,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x716,0,1,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x716,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x716, NULL, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x716, NULL, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x716, NULL, 1, -1, NULL);
     }
     if ((*pbVar4 & 8) != 0) {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x71a,0,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x71a, NULL, 2, -1, NULL);
     }
     if ((*pbVar4 & 0x10) != 0) {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x71b,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x71b, NULL, 1, -1, NULL);
       iVar3 = 0x28;
       do {
-        (**(code **)(*DAT_803dd708 + 8))(param_9,0x71c,0,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_9, 0x71c, NULL, 1, -1, NULL);
         iVar3 = iVar3 + -1;
       } while (iVar3 != 0);
       FUN_8008112c((double)lbl_803E51C4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -884,8 +884,8 @@ void FUN_801a7a94(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *pbVar4 = *pbVar4 & 0xef;
     }
     if ((*pbVar4 & 0x20) != 0) {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x71d,0,1,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x71d,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x71d, NULL, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x71d, NULL, 1, -1, NULL);
     }
     if (((*pbVar4 & 0x40) != 0) &&
        (*(float *)(pbVar4 + 8) = *(float *)(pbVar4 + 8) - lbl_803DC074,
@@ -893,7 +893,7 @@ void FUN_801a7a94(undefined8 param_1,double param_2,double param_3,undefined8 pa
       uVar2 = randomGetRange(10,0x3c);
       *(float *)(pbVar4 + 8) =
            (f32)(s32)(uVar2);
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x71e,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x71e, NULL, 1, -1, NULL);
     }
   }
   fVar1 = lbl_803E51B0;
@@ -1527,8 +1527,6 @@ extern void unlockLevel(int, int, int);
 extern f32 lbl_803E44C8;
 extern u8 framesThisStep;
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern EffectInterface **gPartfxInterface;
-
 #pragma scheduling off
 #pragma peephole off
 void mmp_gyservent_update(int obj) {
