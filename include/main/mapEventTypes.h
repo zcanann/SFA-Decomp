@@ -23,7 +23,8 @@ typedef struct MapEventInterface {
     f32 (*getTimedEventProgress)(int eventId);
     u8 pad70[0x74 - 0x70];
     u8 (*getPlayerNo)(void);
-    u8 pad78[0x90 - 0x78];
+    u8 pad78[0x8C - 0x78];
+    void *(*getState)(struct MapEventInterface *self);
     u8 *(*getWarpPos)(void);
     u8 *(*getProgressPtr)(void);
 } MapEventInterface;
@@ -41,6 +42,7 @@ STATIC_ASSERT(offsetof(MapEventInterface, startTimedEvent) == 0x64);
 STATIC_ASSERT(offsetof(MapEventInterface, isTimedEventActive) == 0x68);
 STATIC_ASSERT(offsetof(MapEventInterface, getTimedEventProgress) == 0x6C);
 STATIC_ASSERT(offsetof(MapEventInterface, getPlayerNo) == 0x74);
+STATIC_ASSERT(offsetof(MapEventInterface, getState) == 0x8C);
 STATIC_ASSERT(offsetof(MapEventInterface, getWarpPos) == 0x90);
 STATIC_ASSERT(offsetof(MapEventInterface, getProgressPtr) == 0x94);
 

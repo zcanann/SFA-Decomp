@@ -121,7 +121,7 @@ extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803e4580;
 extern f64 DOUBLE_803e44f8;
 extern f64 DOUBLE_803e4500;
@@ -218,7 +218,7 @@ extern u8 framesThisStep;
 extern s16 lbl_803DBD98[4];
 extern void *gRomCurveInterface;
 extern EffectInterface **gPartfxInterface;
-extern void *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 extern void vecRotateZXY(void *angles,void *outVec);
 
@@ -492,12 +492,12 @@ void MagicPlant_update(int obj)
 
   switch (state->mode) {
     case MAGICPLANT_MODE_WAIT_FOR_EVENT:
-      if (((MapEventInterface *)*(int *)gMapEventInterface)->isTimedEventActive(setup->eventId) != 0) {
+      if ((*gMapEventInterface)->isTimedEventActive(setup->eventId) != 0) {
         fn_8017F7B8(obj, lbl_803DBD98[setup->variant & 3]);
         state->mode = MAGICPLANT_MODE_ACTIVE;
         state->idleTimer = (s16)randomGetRange(300, 600);
       } else {
-        progress = ((MapEventInterface *)*(int *)gMapEventInterface)->getTimedEventProgress(setup->eventId);
+        progress = (*gMapEventInterface)->getTimedEventProgress(setup->eventId);
         divisor = setup->eventDuration;
         if (divisor < 100) {
           divisor = 100;
@@ -544,7 +544,7 @@ void MagicPlant_update(int obj)
       if (alpha >= 0xff) {
         alpha = 0xff;
         state->mode = MAGICPLANT_MODE_WAIT_FOR_EVENT;
-        ((MapEventInterface *)*(int *)gMapEventInterface)->startTimedEvent(setup->eventId, (f32)setup->eventDuration);
+        (*gMapEventInterface)->startTimedEvent(setup->eventId, (f32)setup->eventDuration);
       }
       plant->objAnim.alpha = (u8)alpha;
       ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->flags |= 1;
@@ -760,9 +760,9 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       else if (cVar2 < '\x02') {
         if (cVar2 == '\0') {
-          iVar4 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(iVar7 + 0x14));
+          iVar4 = (*DAT_803dd72c)->isTimedEventActive(*(int *)(iVar7 + 0x14));
           if (iVar4 == 0) {
-            dVar9 = (double)(**(code **)(*DAT_803dd72c + 0x6c))(*(undefined4 *)(iVar7 + 0x14));
+            dVar9 = (double)(*DAT_803dd72c)->getTimedEventProgress(*(int *)(iVar7 + 0x14));
             param_2 = DOUBLE_803e44f8;
             uStack_1c = (uint)*(ushort *)(iVar7 + 0x18);
             if (uStack_1c < 100) {
@@ -805,7 +805,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
           *(undefined *)((int)piVar8 + 0xf) = 0;
           uStack_1c = (uint)*(ushort *)(iVar7 + 0x18);
           local_20 = 0x43300000;
-          (**(code **)(*DAT_803dd72c + 100))
+          (*(void (**)(double, undefined4))((u8 *)*DAT_803dd72c + 100))
                     ((double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e4500),
                      *(undefined4 *)(iVar7 + 0x14));
         }
@@ -1183,7 +1183,7 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
       in_r9 = *DAT_803dd708;
       (**(code **)(in_r9 + 8))(puVar2,0x51a,0,1);
       FUN_80017698((int)*(short *)(pfVar10 + 3),1);
-      iVar4 = (**(code **)(*DAT_803dd72c + 0x8c))();
+      iVar4 = (int)(*DAT_803dd72c)->getState(*DAT_803dd72c);
       uVar5 = *(byte *)(iVar4 + 9) + 1;
       if (*(byte *)(iVar4 + 10) < uVar5) {
         uVar5 = (uint)*(byte *)(iVar4 + 10);
@@ -1335,14 +1335,14 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
         FUN_80017698(0xcc0,1);
       }
       else {
-        iVar3 = (**(code **)(*DAT_803dd72c + 0x8c))();
+        iVar3 = (int)(*DAT_803dd72c)->getState(*DAT_803dd72c);
         if (*(byte *)(iVar3 + 9) < *(byte *)(iVar3 + 10)) {
           FUN_80006824((uint)puVar2,SFXen_generic_placeobj);
           (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
           (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
           (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
           FUN_80017698((int)*(short *)(pfVar10 + 3),1);
-          iVar3 = (**(code **)(*DAT_803dd72c + 0x8c))();
+          iVar3 = (int)(*DAT_803dd72c)->getState(*DAT_803dd72c);
           uVar5 = *(byte *)(iVar3 + 9) + 1;
           if (*(byte *)(iVar3 + 10) < uVar5) {
             uVar5 = (uint)*(byte *)(iVar3 + 10);
@@ -2128,8 +2128,7 @@ void duster_update(int obj) {
       (*gPartfxInterface)->spawnObject((void *)obj, 0x51a, NULL, 1, -1, NULL);
       (*gPartfxInterface)->spawnObject((void *)obj, 0x51a, NULL, 1, -1, NULL);
       GameBit_Set(state->completeGameBit, 1);
-      mapState = (DusterMapEventState *)(*(int (**)(int))(*(int *)gMapEventInterface + 0x8c))(
-          *(int *)gMapEventInterface);
+      mapState = (DusterMapEventState *)(*gMapEventInterface)->getState(*gMapEventInterface);
       mapState->collectedCount =
           (mapState->maxCollectedCount >= (next = mapState->collectedCount + 1))
               ? next
@@ -2249,16 +2248,14 @@ void duster_update(int obj) {
       ObjMsg_SendToObject(player, 0x7000a, obj, &state->heldObjectId);
       GameBit_Set(0xcc0, 1);
     } else {
-      mapState = (DusterMapEventState *)(*(int (**)(int))(*(int *)gMapEventInterface + 0x8c))(
-          *(int *)gMapEventInterface);
+      mapState = (DusterMapEventState *)(*gMapEventInterface)->getState(*gMapEventInterface);
       if (mapState->collectedCount < mapState->maxCollectedCount) {
         Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
         (*gPartfxInterface)->spawnObject((void *)obj, 0x51a, NULL, 1, -1, NULL);
         (*gPartfxInterface)->spawnObject((void *)obj, 0x51a, NULL, 1, -1, NULL);
         (*gPartfxInterface)->spawnObject((void *)obj, 0x51a, NULL, 1, -1, NULL);
         GameBit_Set(state->completeGameBit, 1);
-        mapState = (DusterMapEventState *)(*(int (**)(int))(*(int *)gMapEventInterface + 0x8c))(
-            *(int *)gMapEventInterface);
+        mapState = (DusterMapEventState *)(*gMapEventInterface)->getState(*gMapEventInterface);
         mapState->collectedCount =
             (mapState->maxCollectedCount >= (next = mapState->collectedCount + 1))
                 ? next
@@ -2293,9 +2290,9 @@ void MagicPlant_init(int obj, MagicPlantSetup *setup) {
     state = plant->state;
     ObjGroup_AddObject(obj, 52);
     ObjGroup_AddObject(obj, 62);
-    r = ((MapEventInterface *)*(int *)gMapEventInterface)->isTimedEventActive(setup->eventId);
+    r = (*gMapEventInterface)->isTimedEventActive(setup->eventId);
     if (r == 0) {
-        t = ((MapEventInterface *)*(int *)gMapEventInterface)->getTimedEventProgress(setup->eventId);
+        t = (*gMapEventInterface)->getTimedEventProgress(setup->eventId);
         divisor = setup->eventDuration;
         if (divisor < 100) divisor = 100;
         t /= (f32)divisor;
