@@ -435,60 +435,57 @@ void seqObject_update(int param_1)
 {
   uint uVar1;
   byte bVar2;
-  int iVar3;
-  byte *pbVar4;
+  SeqObjectPlacement *def;
+  SeqObjectState *state;
   
-  pbVar4 = *(byte **)(param_1 + 0xb8);
-  iVar3 = *(int *)(param_1 + 0x4c);
-  if ((*pbVar4 & 4) != 0) {
-    bVar2 = *(byte *)(iVar3 + 0x1d);
+  state = ((GameObject *)param_1)->extra;
+  def = (SeqObjectPlacement *)((GameObject *)param_1)->anim.placementData;
+  if ((state->flags & SEQOBJECT_STATE_SEQUENCE_DONE) != 0) {
+    bVar2 = def->flags;
     if ((bVar2 & 1) == 0) {
       if ((bVar2 & 8) != 0) {
-        FUN_80017698((int)*(short *)(iVar3 + 0x18),1);
+        FUN_80017698(def->openGameBit,1);
       }
-      *pbVar4 = *pbVar4 | 1;
+      state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
     }
     else if ((bVar2 & 4) == 0) {
-      FUN_80017698((int)*(short *)(iVar3 + 0x1a),0);
+      FUN_80017698(def->triggerGameBit,0);
     }
-    *pbVar4 = *pbVar4 & 0xfb;
+    state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_SEQUENCE_DONE);
   }
-  if ((*pbVar4 & 1) == 0) {
-    uVar1 = FUN_80017690((int)*(short *)(iVar3 + 0x18));
+  if ((state->flags & SEQOBJECT_STATE_OPEN) == 0) {
+    uVar1 = FUN_80017690(def->openGameBit);
     if (uVar1 != 0) {
-      *pbVar4 = *pbVar4 | 1;
+      state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
     }
-    uVar1 = FUN_80017690((int)*(short *)(iVar3 + 0x1a));
+    uVar1 = FUN_80017690(def->triggerGameBit);
     bVar2 = (byte)uVar1;
-    if ((bVar2 != pbVar4[1]) && (pbVar4[1] = bVar2, bVar2 != 0)) {
-      if (*(char *)(iVar3 + 0x1e) != -1) {
+    if ((bVar2 != state->triggerBitState) && (state->triggerBitState = bVar2, bVar2 != 0)) {
+      if (def->triggerId != -1) {
         (*gObjectTriggerInterface)->setRunSequenceWorldSpace(param_1, 0);
-        (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar3 + 0x1e),
-                                                (void *)param_1, -1);
+        (*gObjectTriggerInterface)->runSequence(def->triggerId, (void *)param_1, -1);
       }
-      if (((*(byte *)(iVar3 + 0x1d) & 1) == 0) && ((*(byte *)(iVar3 + 0x1d) & 10) == 0)) {
-        FUN_80017698((int)*(short *)(iVar3 + 0x18),1);
+      if (((def->flags & 1) == 0) && ((def->flags & 10) == 0)) {
+        FUN_80017698(def->openGameBit,1);
       }
     }
   }
-  else if ((*pbVar4 & 2) == 0) {
-    if (((*(byte *)(iVar3 + 0x1d) & 1) != 0) &&
-       (uVar1 = FUN_80017690((int)*(short *)(iVar3 + 0x18)), uVar1 == 0)) {
-      *pbVar4 = *pbVar4 & 0xfe;
+  else if ((state->flags & SEQOBJECT_STATE_TRIGGER_SEQUENCE) == 0) {
+    if (((def->flags & 1) != 0) &&
+       (uVar1 = FUN_80017690(def->openGameBit), uVar1 == 0)) {
+      state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_OPEN);
     }
   }
   else {
-    (*gObjectTriggerInterface)->preempt(param_1, (int)*(short *)(iVar3 + 0x20));
-    if ((*(byte *)(iVar3 + 0x1d) & 0x10) == 0) {
-      (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar3 + 0x1e),
-                                              (void *)param_1, 1);
+    (*gObjectTriggerInterface)->preempt(param_1, def->preemptSequenceId);
+    if ((def->flags & SEQOBJECT_FLAG_USE_TRIGGER_PARAM) == 0) {
+      (*gObjectTriggerInterface)->runSequence(def->triggerId, (void *)param_1, 1);
     }
     else {
-      (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar3 + 0x1e),
-                                              (void *)param_1,
-                                              *(u16 *)(iVar3 + 0x22));
+      (*gObjectTriggerInterface)->runSequence(def->triggerId, (void *)param_1,
+                                              def->sequenceParam);
     }
-    *pbVar4 = *pbVar4 & 0xfd;
+    state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_TRIGGER_SEQUENCE);
   }
   return;
 }
@@ -527,23 +524,23 @@ undefined4 FUN_8017ca44(int param_1,undefined4 param_2,int param_3)
 {
   char cVar1;
   int iVar2;
-  byte *pbVar3;
-  int iVar4;
+  SeqObjectState *state;
+  SeqObjectPlacement *def;
   
-  iVar4 = *(int *)(param_1 + 0x4c);
-  pbVar3 = *(byte **)(param_1 + 0xb8);
+  def = (SeqObjectPlacement *)((GameObject *)param_1)->anim.placementData;
+  state = ((GameObject *)param_1)->extra;
   for (iVar2 = 0; iVar2 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar2 = iVar2 + 1) {
     cVar1 = *(char *)(param_3 + iVar2 + 0x81);
     if (cVar1 == '\x01') {
-      FUN_80017698((int)*(short *)(iVar4 + 0x18),1);
+      FUN_80017698(def->openGameBit,1);
       FUN_800723a0();
     }
     else if (cVar1 == '\0') {
-      FUN_80017698((int)*(short *)(iVar4 + 0x1a),0);
+      FUN_80017698(def->triggerGameBit,0);
       FUN_800723a0();
     }
   }
-  *pbVar3 = *pbVar3 | 2;
+  state->flags = (u8)(state->flags | SEQOBJECT_STATE_TRIGGER_SEQUENCE);
   return 0;
 }
 
@@ -582,56 +579,54 @@ void seqObj2_free(int param_1)
 void seqObj2_update(int param_1)
 {
   uint uVar1;
-  int iVar2;
-  byte *pbVar3;
+  SeqObjectPlacement *def;
+  SeqObj2State *state;
   
-  pbVar3 = *(byte **)(param_1 + 0xb8);
-  iVar2 = *(int *)(param_1 + 0x4c);
-  if ((*pbVar3 & 1) == 0) {
-    if ((*pbVar3 & 2) == 0) {
-      if ((((int)*(short *)(iVar2 + 0x1a) == 0xffffffff) ||
-          (uVar1 = FUN_80017690((int)*(short *)(iVar2 + 0x1a)), uVar1 != 0)) &&
-         (((int)*(short *)(iVar2 + 0x18) == 0xffffffff ||
-          (uVar1 = FUN_80017690((int)*(short *)(iVar2 + 0x18)), uVar1 == 0)))) {
-        if ((*(byte *)(iVar2 + 0x1d) & 4) != 0) {
-          FUN_80017698((int)*(short *)(iVar2 + 0x1a),0);
+  state = ((GameObject *)param_1)->extra;
+  def = (SeqObjectPlacement *)((GameObject *)param_1)->anim.placementData;
+  if ((state->flags & SEQOBJECT_STATE_OPEN) == 0) {
+    if ((state->flags & SEQOBJECT_STATE_TRIGGER_SEQUENCE) == 0) {
+      if (((def->triggerGameBit == -1) ||
+          (uVar1 = FUN_80017690(def->triggerGameBit), uVar1 != 0)) &&
+         ((def->openGameBit == -1 ||
+          (uVar1 = FUN_80017690(def->openGameBit), uVar1 == 0)))) {
+        if ((def->flags & SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE) != 0) {
+          FUN_80017698(def->triggerGameBit,0);
           FUN_800723a0();
         }
-        if ((*(byte *)(iVar2 + 0x1d) & 0x20) != 0) {
-          FUN_80017698((int)*(short *)(iVar2 + 0x18),1);
+        if ((def->flags & SEQOBJECT_FLAG_UNUSED_20) != 0) {
+          FUN_80017698(def->openGameBit,1);
           FUN_800723a0();
         }
         FUN_800723a0();
-        (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar2 + 0x1e),
-                                                (void *)param_1, -1);
+        (*gObjectTriggerInterface)->runSequence(def->triggerId, (void *)param_1, -1);
       }
     }
     else {
-      if ((*(byte *)(iVar2 + 0x1d) & 2) != 0) {
-        FUN_80017698((int)*(short *)(iVar2 + 0x1a),0);
+      if ((def->flags & SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE) != 0) {
+        FUN_80017698(def->triggerGameBit,0);
         FUN_800723a0();
       }
-      if ((*(byte *)(iVar2 + 0x1d) & 0x10) != 0) {
-        FUN_80017698((int)*(short *)(iVar2 + 0x18),1);
+      if ((def->flags & SEQOBJECT_FLAG_USE_TRIGGER_PARAM) != 0) {
+        FUN_80017698(def->openGameBit,1);
         FUN_800723a0();
       }
-      *pbVar3 = *pbVar3 & 0xfd;
+      state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_TRIGGER_SEQUENCE);
     }
   }
   else {
-    if ((*(byte *)(iVar2 + 0x1d) & 1) != 0) {
-      FUN_80017698((int)*(short *)(iVar2 + 0x1a),0);
+    if ((def->flags & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) != 0) {
+      FUN_80017698(def->triggerGameBit,0);
       FUN_800723a0();
     }
-    if ((*(byte *)(iVar2 + 0x1d) & 8) != 0) {
-      FUN_80017698((int)*(short *)(iVar2 + 0x18),1);
+    if ((def->flags & SEQOBJECT_FLAG_SET_SOURCE_ON_DONE) != 0) {
+      FUN_80017698(def->openGameBit,1);
       FUN_800723a0();
     }
     FUN_800723a0();
-    (*gObjectTriggerInterface)->preempt(param_1, (int)*(short *)(iVar2 + 0x20));
-    (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar2 + 0x1e),
-                                            (void *)param_1, *(u16 *)(iVar2 + 0x22));
-    *pbVar3 = *pbVar3 & 0xfe;
+    (*gObjectTriggerInterface)->preempt(param_1, def->preemptSequenceId);
+    (*gObjectTriggerInterface)->runSequence(def->triggerId, (void *)param_1, def->sequenceParam);
+    state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_OPEN);
   }
   return;
 }
