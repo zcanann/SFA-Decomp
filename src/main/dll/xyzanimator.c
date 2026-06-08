@@ -264,9 +264,9 @@ void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
         FUN_80081110(param_9,1,0,0,(undefined4 *)0x0);
       }
       else {
-        (**(code **)(*DAT_803dd708 + 8))(param_9,0x714,0,2,0xffffffff,param_9 + 0x1b);
-        (**(code **)(*DAT_803dd708 + 8))(param_9,0x715,0,1,0xffffffff,0);
-        (**(code **)(*DAT_803dd708 + 8))(param_9,0x715,0,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_9, 0x714, NULL, 2, -1, param_9 + 0x1b);
+        (*gPartfxInterface)->spawnObject((void *)param_9, 0x715, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)param_9, 0x715, NULL, 1, -1, NULL);
       }
       iVar2 = *piVar4;
       if (((iVar2 != 0) && (*(char *)(iVar2 + 0x2f8) != '\0')) && (*(char *)(iVar2 + 0x4c) != '\0'))
@@ -559,7 +559,7 @@ void FUN_8016a708(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) =
              *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & ~1;
         for (local_58 = 0; local_58 < 0x19; local_58 = local_58 + 1) {
-          (**(code **)(*DAT_803dd708 + 8))(param_9,0x715,0,1,0xffffffff,&local_58);
+          (*gPartfxInterface)->spawnObject((void *)param_9, 0x715, NULL, 1, -1, &local_58);
         }
         FUN_80006824((uint)param_9,SFXsc_attack03);
       }
@@ -571,7 +571,7 @@ void FUN_8016a708(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) =
            *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & ~1;
       for (local_54[0] = 0; local_54[0] < 0x19; local_54[0] = local_54[0] + 1) {
-        (**(code **)(*DAT_803dd708 + 8))(param_9,0x715,0,1,0xffffffff,local_54);
+        (*gPartfxInterface)->spawnObject((void *)param_9, 0x715, NULL, 1, -1, local_54);
       }
       FUN_80006824((uint)param_9,SFXsc_attack03);
     }
@@ -1054,7 +1054,7 @@ void FUN_8016b428(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
         }
       }
       if (*(short *)(piVar5[7] + 10) != -1) {
-        (**(code **)(*DAT_803dd708 + 8))(param_9,(int)*(short *)(piVar5[7] + 10),0,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_9, (int)*(short *)(piVar5[7] + 10), NULL, 1, -1, NULL);
       }
       iVar3 = ObjGroup_FindNearestObject((int)*(short *)(piVar5[7] + 0x10),param_9,(float *)0x0);
       if ((iVar3 != 0) &&
