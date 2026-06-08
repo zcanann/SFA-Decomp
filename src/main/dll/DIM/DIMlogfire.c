@@ -1,6 +1,7 @@
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
@@ -903,7 +904,6 @@ void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
-extern int *gGameUIInterface;
 #pragma scheduling off
 #pragma peephole off
 void animsharpclaw_free(int obj) {
@@ -929,7 +929,7 @@ void ccgasventcontrol_free(int obj) {
     if (t == 3 || t == 4) {
         disableHeavyFog();
     }
-    (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+    (*gGameUIInterface)->airMeterSetShutdown();
 }
 void ccgasventcontrol_init(int obj, u8 *p) {
     char *inner = ((GameObject *)obj)->extra;
@@ -1001,7 +1001,7 @@ void ccgasventcontrol_update(int obj)
         }
         break;
     case 2:
-        (*(void (*)(int, int))(*(int *)(*gGameUIInterface + 0x58)))(6000, 0x603);
+        (*gGameUIInterface)->initAirMeter(6000, 0x603);
         *(f32 *)((char *)ex + 4) = lbl_803E4624;
         *(u8 *)ex = 3;
         *(u8 *)((char *)ex + 0xc) = b;
@@ -1025,9 +1025,9 @@ void ccgasventcontrol_update(int obj)
                            ((GameObject *)obj)->anim.localPosY - lbl_803E4630, lbl_803E4634, lbl_803E4638,
                            lbl_803E463C, 0);
             if (*(f32 *)((char *)ex + 4) >= lbl_803E4640) {
-                (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))((int)*(f32 *)((char *)ex + 4));
+                (*gGameUIInterface)->runAirMeter((int)*(f32 *)((char *)ex + 4));
             } else {
-                (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+                (*gGameUIInterface)->airMeterSetShutdown();
                 ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)player + 0xc);
                 ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)player + 0x10);
                 ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)player + 0x14);
@@ -1041,7 +1041,7 @@ void ccgasventcontrol_update(int obj)
             }
         } else {
             Sfx_PlayFromObject(0, 0x7e);
-            (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+            (*gGameUIInterface)->airMeterSetShutdown();
             GameBit_Set(0xa3, 1);
             GameBit_Set(0x620, 0);
             *(u8 *)ex = 5;
@@ -1165,7 +1165,7 @@ void MoonSeedPlantingSpot_update(int obj)
         break;
     case 1:
         if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) &&
-            (*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x86a) != 0) {
+            (*gGameUIInterface)->isEventReady(0x86a) != 0) {
             int cnt = GameBit_Get(0x86a);
             if (cnt != 0) {
                 ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc);

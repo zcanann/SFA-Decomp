@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/camera_interface.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
@@ -661,7 +662,6 @@ int dimlavasmash_SeqFn(int obj, int p2, int *r5_arg)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gGameUIInterface;
 extern void *lbl_803DDB50;
 
 #pragma scheduling off
@@ -969,11 +969,11 @@ int fn_801B2550(int *obj, int p2, char *p3)
         if (timer > 0) {
             *(s8 *)(state + 0xb0) = (s8)(timer - framesThisStep);
             if (*(s8 *)(state + 0xb0) <= 0) {
-                (*(void (**)(int, int))(*(int *)gGameUIInterface + 0x58))(lbl_803DBF00, 0x5d5);
+                (*gGameUIInterface)->initAirMeter(lbl_803DBF00, 0x5d5);
             }
         } else {
             if (!GameBit_Get(0xdb)) {
-                (*(void (**)(int, int, int, int))(*(int *)gGameUIInterface + 0x38))(0x4b9, 0x14, 0x8c, 1);
+                (*gGameUIInterface)->showNpcDialogue(0x4b9, 0x14, 0x8c, 1);
                 GameBit_Set(0xdb, 1);
             }
             delta = (int)(-lbl_803DBF08 * (f32)padGetStickX(0));
@@ -1024,7 +1024,7 @@ int fn_801B2550(int *obj, int p2, char *p3)
             if (*(u8 *)(state + 0xae) > lbl_803DBF00) {
                 *(u8 *)(state + 0xae) = lbl_803DBF00;
             }
-            (*(void (**)(int))(*(int *)gGameUIInterface + 0x5c))(*(u8 *)(state + 0xae));
+            (*gGameUIInterface)->runAirMeter(*(u8 *)(state + 0xae));
             *(f32 *)(state + 0x98) = (f32)*(u8 *)(state + 0xae) * lbl_803DBEFC + lbl_803DBEF8;
             if ((getButtonsJustPressedIfNotBusy(0) & 0x100) ||
                 *(u8 *)(state + 0xae) == lbl_803DBF00) {
@@ -1053,7 +1053,7 @@ int fn_801B2550(int *obj, int p2, char *p3)
             if (done != 0 || (getButtonsJustPressed(0) & 0x200)) {
                 buttonDisable(0, 0x200);
                 hudFn_8011f38c(0);
-                (*(void (**)(void))(*(int *)gGameUIInterface + 0x60))();
+                (*gGameUIInterface)->airMeterSetShutdown();
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
                 *(u8 *)(state + 0xac) = 5;
                 *(u8 *)(state + 0xb0) = 0x3c;
