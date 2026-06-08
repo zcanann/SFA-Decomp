@@ -1,4 +1,5 @@
 #include "main/objanim.h"
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
@@ -1434,7 +1435,6 @@ f32 dll_2E_func0B(int obj, int arg) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern undefined4 *gCameraInterface;
 extern void *seqFn_800394a0(void);
 extern void objFn_8003acfc(int *obj, int *types, int count, char *out);
 extern void fn_8003A9C0(char *p, int count, s16 a, s16 b);
@@ -1447,7 +1447,7 @@ void fn_80114B1C(int *obj) {
     types = (int *)seqFn_800394a0();
     state = ((GameObject *)obj)->extra;
 
-    (*((void (***)(int))gCameraInterface))[18](0);
+    (*gCameraInterface)->setTarget(0);
 
     *(u8 *)(state + 0x600) = 0;
     objFn_8003acfc(obj, types, *(u8 *)(state + 0x610), state + 0x1c);
