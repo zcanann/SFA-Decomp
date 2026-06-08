@@ -328,7 +328,7 @@ extern undefined4 DAT_803dcde0;
 extern undefined4 DAT_803dcde8;
 extern undefined4 DAT_803dcdea;
 extern undefined4 DAT_803dcdeb;
-extern ObjectTriggerInterface **DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
@@ -2649,7 +2649,7 @@ void FUN_80202b70(undefined8 param_1,double param_2,double param_3,double param_
         *(undefined4 *)(uVar2 + 0xc) = *(undefined4 *)(iVar11 + 8);
         *(undefined4 *)(uVar2 + 0x10) = *(undefined4 *)(iVar11 + 0xc);
         *(undefined4 *)(uVar2 + 0x14) = *(undefined4 *)(iVar11 + 0x10);
-        (*DAT_803dd6d4)->runSequence((int)*(char *)(iVar11 + 0x2e), (void *)uVar2, -1);
+        (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar11 + 0x2e), (void *)uVar2, -1);
         *(undefined4 *)(uVar2 + 0xf8) = 1;
       }
       else {
@@ -2920,7 +2920,7 @@ void FUN_802035f4(int param_1)
   if (uVar1 == 0) {
     uVar1 = FUN_80017690((int)*(short *)(iVar2 + 0x20));
     if (uVar1 != 0) {
-      (*DAT_803dd6d4)->runSequence((int)*(char *)(iVar2 + 0x19), (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar2 + 0x19), (void *)param_1, -1);
     }
   }
   else {
@@ -3820,7 +3820,7 @@ void FUN_80204bdc(int param_1)
       dVar5 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
       if (((dVar5 < (double)*pfVar4) && ((int)*(short *)(pfVar4 + 1) != 0xffffffff)) &&
          (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 == 0)) {
-        (*DAT_803dd6d4)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
+        (*gObjectTriggerInterface)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
         FUN_80017698((int)*(short *)(pfVar4 + 1),1);
         *(undefined *)((int)pfVar4 + 0xd) = 1;
       }
@@ -3829,14 +3829,14 @@ void FUN_80204bdc(int param_1)
       if (bVar1 == 1) {
         if (((int)*(short *)(pfVar4 + 1) != 0xffffffff) &&
            (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 != 0)) {
-          (*DAT_803dd6d4)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
+          (*gObjectTriggerInterface)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
           *(undefined *)((int)pfVar4 + 0xd) = 1;
         }
       }
       else if (bVar1 == 0) {
         dVar5 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
         if (dVar5 < (double)*pfVar4) {
-          (*DAT_803dd6d4)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
+          (*gObjectTriggerInterface)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
           *(undefined *)((int)pfVar4 + 0xd) = 1;
         }
       }
@@ -3844,7 +3844,7 @@ void FUN_80204bdc(int param_1)
         dVar5 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
         if (((dVar5 < (double)*pfVar4) && ((int)*(short *)(pfVar4 + 1) != 0xffffffff)) &&
            (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 != 0)) {
-          (*DAT_803dd6d4)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
+          (*gObjectTriggerInterface)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
           *(undefined *)((int)pfVar4 + 0xd) = 1;
         }
       }
@@ -3852,12 +3852,12 @@ void FUN_80204bdc(int param_1)
     else if (bVar1 == 5) {
       if (((int)*(short *)(pfVar4 + 1) != 0xffffffff) &&
          (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 != 0)) {
-        (*DAT_803dd6d4)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
+        (*gObjectTriggerInterface)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
       }
     }
     else if (((bVar1 < 5) && ((int)*(short *)(pfVar4 + 1) != 0xffffffff)) &&
             (uVar3 = FUN_80017690((int)*(short *)(pfVar4 + 1)), uVar3 == 0)) {
-      (*DAT_803dd6d4)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence((int)*(short *)(pfVar4 + 2), (void *)param_1, -1);
       FUN_80017698((int)*(short *)(pfVar4 + 1),1);
       *(undefined *)((int)pfVar4 + 0xd) = 1;
     }
@@ -4185,7 +4185,6 @@ extern void Obj_RemoveFromUpdateList(int *obj);
 #pragma scheduling off
 #pragma peephole off
 void dbholecontrol1_update(int *obj) {
-    extern ObjectTriggerInterface **gObjectTriggerInterface;
     extern uint GameBit_Get(int);
     u8 *def;
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
@@ -6335,7 +6334,6 @@ void dbstealerworm_update(u8 *objp)
     extern f32 sqrtf(f32);
     extern MapEventInterface **gMapEventInterface;
     extern void **gBaddieControlInterface;
-    extern ObjectTriggerInterface **gObjectTriggerInterface;
     extern int *gPlayerInterface;
     extern f32 timeDelta;
     extern f32 lbl_803E62A8;
@@ -7308,7 +7306,6 @@ void dfpseqpoint_update(int obj)
     extern uint GameBit_Get(int);
     extern void GameBit_Set(int, int);
     extern f32 Vec_distance(int, int);
-    extern ObjectTriggerInterface **gObjectTriggerInterface;
     int player;
     int blob;
     int h;
