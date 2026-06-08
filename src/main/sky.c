@@ -1547,6 +1547,7 @@ void sky2_onMapSetup(void) {
 
 #pragma peephole off
 #pragma scheduling off
+#pragma dont_inline on
 void skyFn_80088c94(int flags, int mode) {
     u8 *env;
     u8 *sky;
@@ -1575,6 +1576,7 @@ void skyFn_80088c94(int flags, int mode) {
         }
     }
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 #pragma peephole reset
 
