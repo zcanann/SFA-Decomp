@@ -75,7 +75,7 @@ extern undefined4 DAT_803ad4e0;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dca70;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e4;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd704;
@@ -312,7 +312,7 @@ code_r0x80199a48:
         case 0xb:
           bVar16 = pbVar21[2];
           if (bVar16 == 2) {
-            dVar22 = (double)(**(code **)(*DAT_803dd6d4 + 0xc))(pbVar21[3],0);
+            (*gObjectTriggerInterface)->setFlag(pbVar21[3], 0);
           }
           else if (bVar16 < 2) {
             if (bVar16 == 0) {
@@ -320,11 +320,12 @@ LAB_80199dec:
               iVar10 = ObjGroup_FindNearestObject(0xf,psVar7,(float *)0x0);
               dVar22 = tmpF1b;
               if (iVar10 != 0) {
-                dVar22 = (double)(**(code **)(*DAT_803dd6d4 + 0x48))(pbVar21[3],iVar10,0xffffffff);
+                (*gObjectTriggerInterface)->runSequence(pbVar21[3], (void *)iVar10, -1);
+                dVar22 = tmpF1b;
               }
             }
             else {
-              dVar22 = (double)(**(code **)(*DAT_803dd6d4 + 0xc))(pbVar21[3],1);
+              (*gObjectTriggerInterface)->setFlag(pbVar21[3], 1);
             }
           }
           else if (bVar16 < 4) goto LAB_80199dec;
@@ -1499,7 +1500,6 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 #pragma scheduling reset
 
 extern int *gCameraInterface;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern CloudActionInterface **gCloudActionInterface;
 extern int *gGameUIInterface;
 extern int *gPlayerShadowInterface;
