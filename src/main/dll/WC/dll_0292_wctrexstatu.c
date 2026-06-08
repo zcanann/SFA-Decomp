@@ -14,8 +14,6 @@
 #define WCTREXSTATU_RENDER_TYPE_BASE 0x400
 #define WCTREXSTATU_RENDER_TYPE_SHIFT 0xb
 #define WCTREXSTATU_TEXTURE_TRIGGERED 0x100
-#define WCTREXSTATU_TRIGGERED_FLAG_OFFSET 0xf4
-
 #define WCTREXSTATU_PARTFX_VARIANT_0 0x73f
 #define WCTREXSTATU_PARTFX_VARIANT_1 0x740
 #define WCTREXSTATU_PARTFX_CHANCE 5
@@ -23,6 +21,18 @@
 #define WCTREXSTATU_PARTFX_INVALID_HANDLE -1
 
 #define WCTREXSTATU_MAPEVENT_RAISED 2
+
+typedef struct WCTrexStatueSetup {
+    u8 pad00[WCTREXSTATU_SETUP_TYPE_OFFSET];
+    s8 type;
+    u8 modelIndex;
+    u8 pad1A[WCTREXSTATU_SETUP_RAISED_BIT_OFFSET - 0x1A];
+    s16 raisedBit;
+} WCTrexStatueSetup;
+
+STATIC_ASSERT(offsetof(WCTrexStatueSetup, type) == WCTREXSTATU_SETUP_TYPE_OFFSET);
+STATIC_ASSERT(offsetof(WCTrexStatueSetup, modelIndex) == WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCTrexStatueSetup, raisedBit) == WCTREXSTATU_SETUP_RAISED_BIT_OFFSET);
 
 #pragma scheduling off
 #pragma opt_strength_reduction off
@@ -37,7 +47,7 @@ int wctrexstatu_interactCallback(int obj, int unused, int callbackData)
             if (texture != NULL) {
                 *texture = WCTREXSTATU_TEXTURE_TRIGGERED;
             }
-            *(int *)(obj + WCTREXSTATU_TRIGGERED_FLAG_OFFSET) = 1;
+            ((GameObject *)obj)->unkF4 = 1;
         }
     }
 
@@ -55,7 +65,7 @@ int wctrexstatu_getExtraSize(void) { return 0; }
 int wctrexstatu_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = *(s8 *)(*(int *)&((GameObject *)obj)->anim.placementData + WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
+    int modelIndex = (s8)((WCTrexStatueSetup *)((GameObject *)obj)->anim.placementData)->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
@@ -88,8 +98,9 @@ void wctrexstatu_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void wctrexstatu_hitDetect(u8 *obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+    GameObject *gameObj = (GameObject *)obj;
 
-    if (*(int *)(obj + WCTREXSTATU_TRIGGERED_FLAG_OFFSET) != 0 && randomGetRange(0, WCTREXSTATU_PARTFX_CHANCE) == 0) {
+    if (gameObj->unkF4 != 0 && randomGetRange(0, WCTREXSTATU_PARTFX_CHANCE) == 0) {
         if (objAnim->bankIndex == 0) {
             (*gPartfxInterface)->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_0, NULL,
                                              WCTREXSTATU_PARTFX_KIND,
@@ -114,26 +125,27 @@ void wctrexstatu_update(void) {}
 void wctrexstatu_init(int obj, int setup, int fromLoad)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+    WCTrexStatueSetup *setupData = (WCTrexStatueSetup *)setup;
     ((GameObject *)obj)->animEventCallback = wctrexstatu_interactCallback;
-    objAnim->bankIndex = *(u8 *)(setup + WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
+    objAnim->bankIndex = setupData->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
 
-    *(s16 *)obj = (s16)((s8)*(u8 *)(setup + WCTREXSTATU_SETUP_TYPE_OFFSET) << 8);
+    *(s16 *)obj = (s16)(setupData->type << 8);
     if (fromLoad == 0) {
         if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == WCTREXSTATU_MAPEVENT_RAISED) {
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + lbl_803E6E14;
         }
     }
 
-    if ((u32)GameBit_Get(*(s16 *)(setup + WCTREXSTATU_SETUP_RAISED_BIT_OFFSET)) != 0) {
+    if ((u32)GameBit_Get(setupData->raisedBit) != 0) {
         int *texture = objFindTexture(obj, 0, 0);
 
         if (texture != NULL) {
             *texture = WCTREXSTATU_TEXTURE_TRIGGERED;
         }
-        *(int *)(obj + WCTREXSTATU_TRIGGERED_FLAG_OFFSET) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
 }
 #pragma scheduling reset

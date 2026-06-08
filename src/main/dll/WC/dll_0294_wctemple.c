@@ -11,8 +11,21 @@
 #define WCTEMPLE_SEQUENCE_SLOT_OPEN 1
 #define WCTEMPLE_SEQUENCE_INVALID_ARG -1
 
-#define WCTEMPLE_TIMER(state) (*(f32 *)((state) + WCTEMPLE_STATE_TIMER))
-#define WCTEMPLE_TRIGGER_SLOT(state) (*(u8 *)((state) + WCTEMPLE_STATE_TRIGGER_SLOT))
+typedef struct WCTempleSetup {
+    u8 pad00[WCTEMPLE_SETUP_TYPE_OFFSET];
+    s8 type;
+} WCTempleSetup;
+
+typedef struct WCTempleState {
+    f32 timer;
+    u8 triggerSlot;
+    u8 pad05[WCTEMPLE_EXTRA_SIZE - 0x05];
+} WCTempleState;
+
+STATIC_ASSERT(sizeof(WCTempleState) == WCTEMPLE_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCTempleState, timer) == WCTEMPLE_STATE_TIMER);
+STATIC_ASSERT(offsetof(WCTempleState, triggerSlot) == WCTEMPLE_STATE_TRIGGER_SLOT);
+STATIC_ASSERT(offsetof(WCTempleSetup, type) == WCTEMPLE_SETUP_TYPE_OFFSET);
 
 #pragma peephole on
 #pragma scheduling on
@@ -53,24 +66,24 @@ void wctemple_hitDetect(void) {}
 #pragma scheduling off
 void wctemple_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    WCTempleState *state = ((GameObject *)obj)->extra;
 
-    WCTEMPLE_TIMER(state) -= timeDelta;
-    if (WCTEMPLE_TIMER(state) < lbl_803E6E24) {
-        WCTEMPLE_TIMER(state) = *(f32 *)&lbl_803E6E24;
+    state->timer -= timeDelta;
+    if (state->timer < lbl_803E6E24) {
+        state->timer = *(f32 *)&lbl_803E6E24;
     }
 
-    if (WCTEMPLE_TRIGGER_SLOT(state) == WCTEMPLE_SEQUENCE_SLOT_CLOSED) {
+    if (state->triggerSlot == WCTEMPLE_SEQUENCE_SLOT_CLOSED) {
         if ((*(u8 *)(obj + 0xaf) & WCTEMPLE_ACTIVATION_FLAG) != 0) {
             (*gObjectTriggerInterface)
                 ->runSequence(WCTEMPLE_SEQUENCE_SLOT_CLOSED, (void *)obj, WCTEMPLE_SEQUENCE_INVALID_ARG);
-            WCTEMPLE_TRIGGER_SLOT(state) = WCTEMPLE_SEQUENCE_SLOT_OPEN;
+            state->triggerSlot = WCTEMPLE_SEQUENCE_SLOT_OPEN;
         }
     } else {
         if ((*(u8 *)(obj + 0xaf) & WCTEMPLE_ACTIVATION_FLAG) != 0) {
             (*gObjectTriggerInterface)
                 ->runSequence(WCTEMPLE_SEQUENCE_SLOT_OPEN, (void *)obj, WCTEMPLE_SEQUENCE_INVALID_ARG);
-            WCTEMPLE_TRIGGER_SLOT(state) = WCTEMPLE_SEQUENCE_SLOT_CLOSED;
+            state->triggerSlot = WCTEMPLE_SEQUENCE_SLOT_CLOSED;
         }
     }
 }
@@ -81,7 +94,8 @@ void wctemple_update(int obj)
 #pragma scheduling on
 void wctemple_init(int obj, int setup)
 {
-    int angle = (s8)*(u8 *)(setup + WCTEMPLE_SETUP_TYPE_OFFSET);
+    WCTempleSetup *setupData = (WCTempleSetup *)setup;
+    int angle = setupData->type;
 
     *(s16 *)obj = (s16)(angle << 8);
 }

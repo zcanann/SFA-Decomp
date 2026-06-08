@@ -28,12 +28,34 @@
 #define WCTEMPLE_DIA_RESET_SFX 0x487
 #define WCTEMPLE_DIA_STAGE_SFX 0x409
 
-#define WCTEMPLE_DIA_SPEED(state) (*(f32 *)((state) + WCTEMPLE_DIA_STATE_CURRENT_SPEED))
-#define WCTEMPLE_DIA_TARGET_SPEED(state) (*(f32 *)((state) + WCTEMPLE_DIA_STATE_TARGET_SPEED))
-#define WCTEMPLE_DIA_STAGE_MASK_BYTE(state) (*(u8 *)((state) + WCTEMPLE_DIA_STATE_STAGE_MASK))
-#define WCTEMPLE_DIA_FLAGS(state) (*(u8 *)((state) + WCTEMPLE_DIA_STATE_FLAGS))
-#define WCTEMPLE_DIA_TARGET_TABLE(state) (*(f32 **)((state) + WCTEMPLE_DIA_STATE_TARGET_TABLE))
-#define WCTEMPLE_DIA_GAMEBITS(state) (*(s16 **)((state) + WCTEMPLE_DIA_STATE_GAMEBITS))
+typedef struct WCTempleDiaSetup {
+    u8 pad00[WCTEMPLE_DIA_SETUP_TYPE_OFFSET];
+    s8 type;
+    u8 modelIndex;
+    u8 pad1A[WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET - 0x1A];
+    s16 solvedBit;
+} WCTempleDiaSetup;
+
+typedef struct WCTempleDiaState {
+    f32 currentSpeed;
+    f32 targetSpeed;
+    u8 stageMask;
+    u8 flags;
+    u8 pad0A[WCTEMPLE_DIA_STATE_TARGET_TABLE - 0x0A];
+    f32 *targetTable;
+    s16 *gamebits;
+} WCTempleDiaState;
+
+STATIC_ASSERT(sizeof(WCTempleDiaState) == WCTEMPLE_DIA_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCTempleDiaState, currentSpeed) == WCTEMPLE_DIA_STATE_CURRENT_SPEED);
+STATIC_ASSERT(offsetof(WCTempleDiaState, targetSpeed) == WCTEMPLE_DIA_STATE_TARGET_SPEED);
+STATIC_ASSERT(offsetof(WCTempleDiaState, stageMask) == WCTEMPLE_DIA_STATE_STAGE_MASK);
+STATIC_ASSERT(offsetof(WCTempleDiaState, flags) == WCTEMPLE_DIA_STATE_FLAGS);
+STATIC_ASSERT(offsetof(WCTempleDiaState, targetTable) == WCTEMPLE_DIA_STATE_TARGET_TABLE);
+STATIC_ASSERT(offsetof(WCTempleDiaState, gamebits) == WCTEMPLE_DIA_STATE_GAMEBITS);
+STATIC_ASSERT(offsetof(WCTempleDiaSetup, type) == WCTEMPLE_DIA_SETUP_TYPE_OFFSET);
+STATIC_ASSERT(offsetof(WCTempleDiaSetup, modelIndex) == WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCTempleDiaSetup, solvedBit) == WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET);
 
 #pragma peephole off
 #pragma scheduling off
@@ -68,10 +90,10 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
 #pragma scheduling off
 int wctempledia_interactCallback(int obj, int p2, int p3)
 {
-    f32 *p = ((GameObject *)obj)->extra;
+    WCTempleDiaState *state = ((GameObject *)obj)->extra;
 
-    *p = lbl_803E6E48 * -*p * timeDelta + *p;
-    ((GameObject *)obj)->anim.rotZ = (int)(timeDelta * *p + (f32)((GameObject *)obj)->anim.rotZ);
+    state->currentSpeed = lbl_803E6E48 * -state->currentSpeed * timeDelta + state->currentSpeed;
+    ((GameObject *)obj)->anim.rotZ = (int)(timeDelta * state->currentSpeed + (f32)((GameObject *)obj)->anim.rotZ);
     *(s8 *)(p3 + WCTEMPLE_DIA_PAYLOAD_SUPPRESS_OFFSET) = 0;
     *(s16 *)(p3 + WCTEMPLE_DIA_PAYLOAD_FLAGS_A) &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
     *(s16 *)(p3 + WCTEMPLE_DIA_PAYLOAD_FLAGS_B) &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
@@ -119,61 +141,60 @@ void wctempledia_hitDetect(void) {}
 #pragma scheduling off
 void wctempledia_update(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    int r4c = *(int *)&((GameObject *)obj)->anim.placementData;
+    WCTempleDiaState *state = ((GameObject *)obj)->extra;
+    WCTempleDiaSetup *setup = (WCTempleDiaSetup *)((GameObject *)obj)->anim.placementData;
     int i;
     int j;
     int k;
 
-    if (WCTEMPLE_DIA_FLAGS(state) & WCTEMPLE_DIA_FLAG_SOLVED) {
-        wctempledia_syncPartVisibility(obj, WCTEMPLE_DIA_STAGE_MASK_BYTE(state));
+    if (state->flags & WCTEMPLE_DIA_FLAG_SOLVED) {
+        wctempledia_syncPartVisibility(obj, state->stageMask);
         return;
     }
-    WCTEMPLE_DIA_SPEED(state) = timeDelta * (lbl_803E6E48 * (WCTEMPLE_DIA_TARGET_SPEED(state) -
-                                                            WCTEMPLE_DIA_SPEED(state))) +
-                                WCTEMPLE_DIA_SPEED(state);
-    ((GameObject *)obj)->anim.rotZ = (int)(timeDelta * WCTEMPLE_DIA_SPEED(state) + (f32)((GameObject *)obj)->anim.rotZ);
+    state->currentSpeed = timeDelta * (lbl_803E6E48 * (state->targetSpeed - state->currentSpeed)) +
+                                state->currentSpeed;
+    ((GameObject *)obj)->anim.rotZ = (int)(timeDelta * state->currentSpeed + (f32)((GameObject *)obj)->anim.rotZ);
     Sfx_KeepAliveLoopedObjectSound(obj, SFXmn_sml_trex_roar);
     {
-        f32 ratio = WCTEMPLE_DIA_SPEED(state) / WCTEMPLE_DIA_TARGET_TABLE(state)[2];
+        f32 ratio = state->currentSpeed / state->targetTable[2];
         Sfx_SetObjectSfxVolume(obj, SFXmn_sml_trex_roar, (u8)(lbl_803E6E60 * ratio + lbl_803E6E5C),
                                lbl_803E6E68 * ratio + lbl_803E6E64);
     }
     for (i = 0; i < WCTEMPLE_DIA_STAGE_COUNT; i++) {
         int bit = 1 << i;
-        if ((WCTEMPLE_DIA_STAGE_MASK_BYTE(state) & bit) == 0 &&
-            GameBit_Get(WCTEMPLE_DIA_GAMEBITS(state)[i]) != 0) {
+        if ((state->stageMask & bit) == 0 &&
+            GameBit_Get(state->gamebits[i]) != 0) {
             int found = 0;
             for (j = 0; j < i; j++) {
-                if ((WCTEMPLE_DIA_STAGE_MASK_BYTE(state) & (1 << j)) == 0) {
+                if ((state->stageMask & (1 << j)) == 0) {
                     found = 1;
                     break;
                 }
             }
             if (found) {
                 for (k = 0; k < WCTEMPLE_DIA_STAGE_COUNT; k++) {
-                    GameBit_Set(WCTEMPLE_DIA_GAMEBITS(state)[k], 0);
+                    GameBit_Set(state->gamebits[k], 0);
                 }
                 Sfx_PlayFromObject(0, WCTEMPLE_DIA_RESET_SFX);
-                WCTEMPLE_DIA_STAGE_MASK_BYTE(state) = 0;
-                WCTEMPLE_DIA_TARGET_SPEED(state) = WCTEMPLE_DIA_TARGET_TABLE(state)[0];
+                state->stageMask = 0;
+                state->targetSpeed = state->targetTable[0];
                 break;
             }
-            WCTEMPLE_DIA_STAGE_MASK_BYTE(state) |= bit;
+            state->stageMask |= bit;
             if (i == 0) {
-                WCTEMPLE_DIA_TARGET_SPEED(state) = WCTEMPLE_DIA_TARGET_TABLE(state)[1];
+                state->targetSpeed = state->targetTable[1];
                 Sfx_PlayFromObject(0, WCTEMPLE_DIA_STAGE_SFX);
             } else if (i == 1) {
-                WCTEMPLE_DIA_TARGET_SPEED(state) = WCTEMPLE_DIA_TARGET_TABLE(state)[2];
+                state->targetSpeed = state->targetTable[2];
                 Sfx_PlayFromObject(0, WCTEMPLE_DIA_STAGE_SFX);
             }
         }
     }
-    wctempledia_syncPartVisibility(obj, WCTEMPLE_DIA_STAGE_MASK_BYTE(state));
-    if (WCTEMPLE_DIA_STAGE_MASK_BYTE(state) == WCTEMPLE_DIA_ALL_STAGES_MASK) {
-        GameBit_Set(*(s16 *)(r4c + WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET), 1);
+    wctempledia_syncPartVisibility(obj, state->stageMask);
+    if (state->stageMask == WCTEMPLE_DIA_ALL_STAGES_MASK) {
+        GameBit_Set(setup->solvedBit, 1);
         Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
-        WCTEMPLE_DIA_FLAGS(state) |= WCTEMPLE_DIA_FLAG_SOLVED;
+        state->flags |= WCTEMPLE_DIA_FLAG_SOLVED;
     }
 }
 #pragma scheduling reset
@@ -184,40 +205,41 @@ void wctempledia_update(int obj)
 void wctempledia_init(int obj, int setup)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WCTempleDiaState *state = ((GameObject *)obj)->extra;
+    WCTempleDiaSetup *setupData = (WCTempleDiaSetup *)setup;
     int i;
 
-    *(s16 *)obj = (s16)((s8)*(u8 *)(setup + WCTEMPLE_DIA_SETUP_TYPE_OFFSET) << 8);
-    objAnim->bankIndex = *(u8 *)(setup + WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET);
+    *(s16 *)obj = (s16)(setupData->type << 8);
+    objAnim->bankIndex = setupData->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
     if (objAnim->bankIndex == 0) {
-        WCTEMPLE_DIA_GAMEBITS(state) = &lbl_803DC3B8;
-        WCTEMPLE_DIA_TARGET_TABLE(state) = lbl_8032B348;
+        state->gamebits = &lbl_803DC3B8;
+        state->targetTable = lbl_8032B348;
     } else {
-        WCTEMPLE_DIA_GAMEBITS(state) = &lbl_803DC3C0;
-        WCTEMPLE_DIA_TARGET_TABLE(state) = lbl_8032B354;
+        state->gamebits = &lbl_803DC3C0;
+        state->targetTable = lbl_8032B354;
     }
     for (i = 0; i < WCTEMPLE_DIA_STAGE_COUNT; i++) {
-        if ((u32)GameBit_Get(WCTEMPLE_DIA_GAMEBITS(state)[i]) != 0) {
-            WCTEMPLE_DIA_STAGE_MASK_BYTE(state) |= (1 << i);
+        if ((u32)GameBit_Get(state->gamebits[i]) != 0) {
+            state->stageMask |= (1 << i);
         }
     }
-    if ((u32)GameBit_Get(*(s16 *)(setup + WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET)) != 0) {
-        WCTEMPLE_DIA_STAGE_MASK_BYTE(state) = WCTEMPLE_DIA_ALL_STAGES_MASK;
-        WCTEMPLE_DIA_FLAGS(state) |= WCTEMPLE_DIA_FLAG_SOLVED;
+    if ((u32)GameBit_Get(setupData->solvedBit) != 0) {
+        state->stageMask = WCTEMPLE_DIA_ALL_STAGES_MASK;
+        state->flags |= WCTEMPLE_DIA_FLAG_SOLVED;
     }
-    if (WCTEMPLE_DIA_STAGE_MASK_BYTE(state) & 2) {
-        WCTEMPLE_DIA_SPEED(state) = WCTEMPLE_DIA_TARGET_TABLE(state)[2];
-    } else if (WCTEMPLE_DIA_STAGE_MASK_BYTE(state) & 1) {
-        WCTEMPLE_DIA_SPEED(state) = WCTEMPLE_DIA_TARGET_TABLE(state)[1];
+    if (state->stageMask & 2) {
+        state->currentSpeed = state->targetTable[2];
+    } else if (state->stageMask & 1) {
+        state->currentSpeed = state->targetTable[1];
     } else {
-        WCTEMPLE_DIA_SPEED(state) = WCTEMPLE_DIA_TARGET_TABLE(state)[0];
+        state->currentSpeed = state->targetTable[0];
     }
-    WCTEMPLE_DIA_TARGET_SPEED(state) = WCTEMPLE_DIA_SPEED(state);
+    state->targetSpeed = state->currentSpeed;
     ((GameObject *)obj)->animEventCallback = (void *)wctempledia_interactCallback;
-    wctempledia_syncPartVisibility(obj, WCTEMPLE_DIA_STAGE_MASK_BYTE(state));
+    wctempledia_syncPartVisibility(obj, state->stageMask);
 }
 #pragma scheduling reset
 #pragma peephole reset
