@@ -89,7 +89,7 @@ extern undefined4 DAT_803ad10c;
 extern undefined4 DAT_803dc958;
 extern undefined4 DAT_803dc960;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd71c;
 extern f64 DOUBLE_803e37b8;
 extern f64 DOUBLE_803e37f0;
@@ -1785,9 +1785,7 @@ void FUN_80159ce0(short *param_1,int *param_2)
   local_44 = lbl_803E38BC;
   local_46 = 0x605;
   if ((param_1[0x58] & 0x800U) != 0) {
-    in_r8 = 0;
-    in_r9 = *DAT_803dd708;
-    (**(code **)(in_r9 + 8))(param_1,1999,auStack_4c,2,0xffffffff);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 1999, auStack_4c, 2, -1, NULL);
     piVar5 = (int *)param_2[0xda];
     if (piVar5 != (int *)0x0) {
       FUN_800175ec((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
@@ -2074,10 +2072,10 @@ void FUN_8015a6c0(uint param_1,int param_2)
   }
   if (bVar1) {
     if (*(short *)(param_2 + 0x338) == 0) {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x809,0,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x809, NULL, 2, -1, NULL);
     }
     else {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x802,0,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x802, NULL, 2, -1, NULL);
     }
   }
   return;
@@ -2163,7 +2161,6 @@ extern int *allocModelStruct2(int p1, int p2);
 extern void tailFn_80026c38(int *p, f32 a, f32 b, f32 c);
 extern int baddieAfterUpdateBonesCb(void);
 extern f32 lbl_803E2CBC;
-extern EffectInterface **gPartfxInterface;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 lbl_8031FD48[];
 
