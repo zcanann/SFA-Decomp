@@ -1,6 +1,7 @@
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
@@ -959,7 +960,6 @@ void sh_emptytumblew_update(int obj)
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
-extern int *gGameUIInterface;
 extern u8 Obj_IsLoadingLocked(void);
 extern int *Obj_AllocObjectSetup(int a, int b);
 extern int loadObjectAtObject(int obj, int *setup);
@@ -1263,7 +1263,7 @@ void sh_beacon_update(int obj)
   switch (((ShBeaconState *)state)->mode) {
   case 0:
     if (((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) &&
-        ((**(int (**)(int))(*gGameUIInterface + 0x20))(0x194) != 0)) {
+        ((*gGameUIInterface)->isEventReady(0x194) != 0)) {
       gameBitDecrement(0x194);
       GameBit_Set(*(s16 *)(def + 0x20), 1);
       if (Obj_IsLoadingLocked() != 0) {

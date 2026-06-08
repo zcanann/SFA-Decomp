@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "global.h"
 #include "main/audio/sfx_ids.h"
@@ -3388,7 +3390,6 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
 #pragma scheduling reset
 #pragma dont_inline reset
 
-extern int *gGameUIInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 /* EN v1.0 0x801A0614  size: 368b  cfprisoncage_SeqFn: drain the object's message
@@ -3421,7 +3422,7 @@ int cfprisoncage_SeqFn(int* obj, int p2, u8* p3)
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
     }
     if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
-        if (((int (*)(int))((int *)*gGameUIInterface)[0x20 / 4])(0x44) != 0) {
+        if ((*gGameUIInterface)->isEventReady(0x44) != 0) {
             *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
@@ -3630,7 +3631,7 @@ void cfpowerbase_update(int* obj) {
         *(int*)((char*)obj + 0xf4) = 0;
     }
     if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
-        if (((int (*)(int))((int *)*gGameUIInterface)[0x20 / 4])(sub->litBit) != 0) {
+        if ((*gGameUIInterface)->isEventReady(sub->litBit) != 0) {
             *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
             GameBit_Set(sub->litBit, 0);
             GameBit_Set(0x973, 0);
@@ -5438,7 +5439,7 @@ void babycloudrunner_update(int* obj)
     }
     if (sub->runnerState == 2 && GameBit_Get(0x66) != 0) {
         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
-        ((void (*)(void))((int*)*gGameUIInterface)[0x60 / 4])();
+        (*gGameUIInterface)->airMeterSetShutdown();
     } else if (fn_80080150(sub) != 0) {
         sub->flags22C |= 1;
         sub->behaviourState = 0;
@@ -5479,7 +5480,7 @@ void babycloudrunner_update(int* obj)
                     if (sub->runnerIndex != -1 && GameBit_Get(sub->runnerIndex + 0xb2a) != 0) {
                         sub->runnerState = 2;
                         GameBit_Set(0x66, 0);
-                        ((void (*)(int, int))((int*)*gGameUIInterface)[0x58 / 4])(lbl_80322B28[sub->runnerIndex], 0x5d1);
+                        (*gGameUIInterface)->initAirMeter(lbl_80322B28[sub->runnerIndex], 0x5d1);
                         s16toFloat((int)((char*)sub + 0x238), (s16)lbl_80322B28[sub->runnerIndex]);
                     }
                     fn_8019E3F4(obj);
@@ -5512,17 +5513,17 @@ void babycloudrunner_update(int* obj)
                 if (fn_80080150((char*)sub + 0x238) != 0) {
                     if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0 && timerCountDown((char*)sub + 0x238) != 0) {
                         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
-                        ((void (*)(void))((int*)*gGameUIInterface)[0x60 / 4])();
+                        (*gGameUIInterface)->airMeterSetShutdown();
                         return;
                     }
-                    ((void (*)(int))((int*)*gGameUIInterface)[0x5c / 4])((int)sub->countdownTimer);
+                    (*gGameUIInterface)->runAirMeter((int)sub->countdownTimer);
                 }
                 if (inRange == 0 && (void*)ObjGroup_FindNearestObject(3, obj, &radius) != NULL) {
                     inRange = 1;
                 }
                 if (GameBit_Get(sub->runnerIndex + 0xb2e) != 0) {
                     sub->runnerState = 3;
-                    ((void (*)(void))((int*)*gGameUIInterface)[0x60 / 4])();
+                    (*gGameUIInterface)->airMeterSetShutdown();
                     Sfx_PlayFromObject((int)obj, SFXsp_lf_mutter4);
                     storeZeroToFloatParam((char*)sub + 0x238);
                 }
@@ -5828,7 +5829,6 @@ extern void dll_2E_func0C(int a, void* p);
 extern void buttonDisable(int a, int b);
 extern void characterDoEyeAnims(int* obj, void* p);
 extern int  hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p);
-extern int* gCameraInterface;
 extern int  lbl_80322954[];
 extern u8   lbl_803DBE20;
 extern f32  oneOverTimeDelta;
@@ -6101,7 +6101,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             sub->chatterState = 1;
         }
         if (GameBit_Get(0x4b7) != 0) {
-            ((void (*)(int*))((int*)*gCameraInterface)[0x48 / 4])(obj);
+            (*gCameraInterface)->setTarget((int)obj);
             (*gObjectTriggerInterface)->runSequence(0xb, obj, -1);
             GameBit_Set(0x4b7, 0);
         }
@@ -6114,7 +6114,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             sub->chatterState = 1;
         }
         if (GameBit_Get(0x4b7) != 0) {
-            ((void (*)(int*))((int*)*gCameraInterface)[0x48 / 4])(obj);
+            (*gCameraInterface)->setTarget((int)obj);
             (*gObjectTriggerInterface)->runSequence(0xa, obj, -1);
             GameBit_Set(0x4b7, 0);
         }
@@ -6136,7 +6136,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
     dll_2E_func03(obj, sub);
     if (ObjTrigger_IsSet(obj) != 0) {
         buttonDisable(0, 0x100);
-        if (((int (*)(int))((int*)*gGameUIInterface)[0x20 / 4])(0x2e8) != 0) {
+        if ((*gGameUIInterface)->isEventReady(0x2e8) != 0) {
             GameBit_Set(0x4ab, 1);
         } else if (sub->chatterState == 1) {
             int* tbl = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, sub->questState);

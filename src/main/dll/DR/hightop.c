@@ -1,6 +1,7 @@
 #include "main/dll/DR/hightop.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -1501,7 +1502,6 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 #pragma scheduling reset
 
 extern CloudActionInterface **gCloudActionInterface;
-extern int *gGameUIInterface;
 extern int *gPlayerShadowInterface;
 extern MapEventInterface **gMapEventInterface;
 extern void OSReport(const char *fmt, ...);
@@ -1977,7 +1977,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                             gameTextFn_80125ba4((u16)((p[2] << 8) | p[3]));
                         }
                     } else {
-                        (*(code *)(*gGameUIInterface + 0x38))((u16)((p[2] << 8) | p[3]), 0x14, 0x8c, 1);
+                        (*gGameUIInterface)->showNpcDialogue((u16)((p[2] << 8) | p[3]), 0x14, 0x8c, 1);
                     }
                     break;
                 }

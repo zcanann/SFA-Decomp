@@ -1439,8 +1439,8 @@ int ktrex_stateHandlerA11(int obj, int runtime) {
 int ktrex_stateHandlerA09(int obj, int runtime) {
     if ((s8)((KTRexRuntime *)runtime)->unk27B != 0) {
         (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 8);
-        if ((*(int (**)(void))((char *)*gCameraInterface + 0x10))() == 66) {
-            (*(void (**)(int, int, int))((char *)*gCameraInterface + 0x24))(2, 0, 0);
+        if ((*gCameraInterface)->getMode() == 66) {
+            (*gCameraInterface)->loadTriggeredCamAction(2, 0, 0);
         }
         return 0;
     }
@@ -1481,7 +1481,7 @@ int ktrex_stateHandlerA10(int obj, int runtime) {
         return 4;
     }
     if ((u8)ktrex_shouldAdvanceArenaPhase() != 0) {
-        (*(void (**)(int, int, int))((char *)*gCameraInterface + 0x24))(3, 0, 0);
+        (*gCameraInterface)->loadTriggeredCamAction(3, 0, 0);
     }
     if (RandomTimer_UpdateRangeTrigger((char *)gKTRexState + 0x190, lbl_803E67C8, lbl_803E67CC) != 0) {
         Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
@@ -1536,7 +1536,7 @@ int ktrex_stateHandlerA10(int obj, int runtime) {
             }
         }
         ktrexlevel_updatePathGameBits();
-        (*(void (**)(int, int, int))((char *)*gCameraInterface + 0x24))(3, 0, 0);
+        (*gCameraInterface)->loadTriggeredCamAction(3, 0, 0);
         GameBit_Set(0x572, ((KTRexArenaState *)gKTRexState)->unk101);
         {
             int popped = 0;

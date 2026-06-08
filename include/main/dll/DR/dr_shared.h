@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
+#include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
@@ -462,7 +463,7 @@ extern void Stack_Push(int stack, int *val);
 extern f32 lbl_803E67C4;
 extern f32 lbl_803E67C8;
 extern f32 lbl_803E67CC;
-extern void **gCameraInterface;
+extern CameraInterface **gCameraInterface;
 extern f32 lbl_803E67D8;
 extern f32 lbl_803E67D0;
 extern f32 lbl_803E67D4;
