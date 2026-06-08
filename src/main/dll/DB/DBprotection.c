@@ -154,7 +154,7 @@ extern f32 lbl_803E57E0;
  */
 extern u8 framesThisStep;
 extern int *gCameraInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 sqrtf(f32 x);
 extern f32 mathCosf(f32 x);
 extern int getAngle(f32 dx, f32 dz);
@@ -229,7 +229,7 @@ extern f32 lbl_803E57B8;
 #define DBPROT_CAMERA_SHAKE(amount, arg) \
   ((void (*)(f32 *, int))(*(u32 *)((u8 *)*gCameraInterface + 0x60)))((amount), (arg))
 #define DBPROT_MAP_EVENT(layer, a, b) \
-  ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((layer), (a), (b))
+  (*gMapEventInterface)->setAnimEvent((layer), (a), (b))
 #define DBPROT_SCREEN_FADE(kind, value) \
   ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x8)))((kind), (value))
 #define DBPROT_CLOUD_SET_A(flag) \

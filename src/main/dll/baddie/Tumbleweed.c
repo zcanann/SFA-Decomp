@@ -4847,7 +4847,7 @@ int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
 {
   extern int dll_19_func1B(int);
   extern int *gBaddieControlInterface;
-  extern int *gMapEventInterface;
+  extern MapEventInterface **gMapEventInterface;
   extern f32 fn_8014C5D0(int);
   extern int *ObjGroup_GetObjects(int, int *);
   extern int ObjGroup_ContainsObject(int, int);
@@ -4898,7 +4898,7 @@ int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
         v1 == 0 &&
         v2 != 0) {
       if (*(s16 *)(*objs + 0x46) != 2129) {
-        if (((MapEventInterface *)*gMapEventInterface)->isTimedEventActive(
+        if ((*gMapEventInterface)->isTimedEventActive(
                 *(int *)((char *)data + 0x14)) != 0) {
           if (p2 == 0) {
             s16 m = *(s16 *)(*objs + 0x46);
@@ -5650,7 +5650,7 @@ extern u8 lbl_803A9DD0[];
 extern WarpstoneEntry lbl_8031CC38[];
 extern int lbl_803A9F38[];
 extern int *gTitleMenuLinkInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 #pragma scheduling off
 void WarpstoneUI_showUI(int param_1)
@@ -5688,7 +5688,7 @@ void WarpstoneUI_showUI(int param_1)
         sel = (**(int (**)(void))((char *)(*gTitleMenuLinkInterface) + 0xc))();
         idx = (**(int (**)(void))((char *)(*gTitleMenuLinkInterface) + 0x14))();
         if (sel > 0) {
-            ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, lbl_8031CC38[lbl_803A9F38[idx]].b2);
+            (*gMapEventInterface)->setMode(0x42, lbl_8031CC38[lbl_803A9F38[idx]].b2);
         }
         (**(void (**)(int))((char *)(*gTitleMenuLinkInterface) + 0x10))(param_1);
         break;
