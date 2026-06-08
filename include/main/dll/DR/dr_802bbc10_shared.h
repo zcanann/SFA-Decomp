@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
@@ -369,7 +370,7 @@ extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
 extern u8 framesThisStep;
 extern void *lbl_803DE4D0;
 extern int GameBit_Set(int id, int value);
-extern int *gGameUIInterface;
+extern GameUIInterface **gGameUIInterface;
 extern int gDRCloudRunnerStateHandlers[];
 extern void *gDRCloudRunnerDefaultStateHandler;
 extern int DR_CloudRunner_stateHandler00(int obj);

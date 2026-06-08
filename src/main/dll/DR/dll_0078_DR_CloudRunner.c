@@ -160,7 +160,7 @@ void DR_CloudRunner_free(int obj)
     GameBit_Set(0x7aa, *(s16 *)((char *)*(int *)&((GameObject *)obj)->extra + 0xbb0));
     ObjGroup_RemoveObject(obj, 0xa);
     ObjGroup_RemoveObject(obj, 0x26);
-    (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+    (*gGameUIInterface)->airMeterSetShutdown();
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -944,7 +944,7 @@ void DR_CloudRunner_hitDetect(int obj)
         }
         inner->unkBB0 -= 1;
         if (inner->unkBB0 <= 0) {
-            (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+            (*gGameUIInterface)->airMeterSetShutdown();
             (*gObjectTriggerInterface)->runSequence(5, (void *)obj, -1);
             inner->unkBB0 = 1;
             (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, (int)inner, 7);
@@ -998,7 +998,7 @@ void fn_802C11BC(int obj, int p2, f32 f)
         fn_802BF4D8(obj);
     }
     if (((ByteFlags *)&inner->flagsBC0)->b02 != 0) {
-        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(inner->unkBB0 - lbl_803DE4D8);
+        (*gGameUIInterface)->runAirMeter(inner->unkBB0 - lbl_803DE4D8);
     }
 }
 #pragma peephole reset
@@ -1168,8 +1168,8 @@ int DR_CloudRunner_stateHandler04(int obj, int p2)
         inner2 = ((GameObject *)obj)->extra;
         q = *(int *)&((GameObject *)obj)->anim.placementData;
         ((ByteFlags *)&inner2->flagsBC0)->b02 = 1;
-        (*(void (*)(int, int))(*(int *)(*gGameUIInterface + 0x58)))(*(s16 *)((char *)q + 0x1a), 0x5de);
-        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(inner2->unkBB0);
+        (*gGameUIInterface)->initAirMeter(*(s16 *)((char *)q + 0x1a), 0x5de);
+        (*gGameUIInterface)->runAirMeter(inner2->unkBB0);
         *(s16 *)((char *)p2 + 0x338) = 0;
         *(f32 *)((char *)p2 + 0x2a0) = lbl_803E83F4;
         *(f32 *)((char *)p2 + 0x2b8) = lbl_803E83F8;

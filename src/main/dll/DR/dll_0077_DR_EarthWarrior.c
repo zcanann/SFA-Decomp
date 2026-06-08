@@ -391,7 +391,7 @@ void DR_EarthWarrior_free(int obj)
     }
     ObjGroup_RemoveObject(obj, 0xa);
     if (((ByteFlags *)&inner->sub.flags994)->b02) {
-        (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+        (*gGameUIInterface)->airMeterSetShutdown();
     }
     if (*(void * *)&inner->unkB54 != NULL) {
         ObjLink_DetachChild(obj, inner->unkB54);
@@ -427,13 +427,13 @@ void DR_EarthWarrior_func17(int obj, int param)
         GameBit_Set(0x7d4, 1);
         inner->unk9FD &= ~1;
         ((ByteFlags *)&inner->sub.flags994)->b02 = 0;
-        (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+        (*gGameUIInterface)->airMeterSetShutdown();
     } else {
         EarthWarriorState *inner2 = ((GameObject *)obj)->extra;
         int p = *(int *)&((GameObject *)obj)->anim.placementData;
         ((ByteFlags *)&inner2->sub.flags994)->b02 = 1;
-        (*(void (*)(int, int))(*(int *)(*gGameUIInterface + 0x58)))(*(s16 *)((char *)p + 0x1a), 0x5cf);
-        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(inner2->sub.health);
+        (*gGameUIInterface)->initAirMeter(*(s16 *)((char *)p + 0x1a), 0x5cf);
+        (*gGameUIInterface)->runAirMeter(inner2->sub.health);
         GameBit_Set(0x7bc, 1);
         GameBit_Set(0x7d4, 0);
     }
@@ -542,7 +542,7 @@ void fn_802BE6E8(int obj, int t, int p3)
     ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + (*(s16 *)((char *)inner + 0x19c) >> 2));
     ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (*(s16 *)((char *)inner + 0x19e) >> 2));
     if (((ByteFlags *)((char *)inner + 0x14ec))->b02) {
-        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(*(s16 *)((char *)inner + 0x14e2));
+        (*gGameUIInterface)->runAirMeter(*(s16 *)((char *)inner + 0x14e2));
     }
     fn_802B1BF8(obj, q, inner, timeDelta);
     fn_802B1B28(obj, timeDelta);
@@ -1156,13 +1156,13 @@ void DR_EarthWarrior_update(int obj)
     dll_2E_func03(obj, (int)((char *)inner + 0x3ec));
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
         ((ByteFlags *)&inner->sub.flags994)->b10 = 1;
-        if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0xc1) != 0) {
+        if ((*gGameUIInterface)->isEventReady(0xc1) != 0) {
             (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
             buttonDisable(0, 0x100);
             inner->sub.health += 4;
             GameBit_Set(0xc1, GameBit_Get(0xc1) - 1);
         } else if (inner->sub.unk99C != -1) {
-            if ((*(int (*)(void))(*(int *)(*gGameUIInterface + 0x1c)))() == 0) {
+            if ((*gGameUIInterface)->isCurrentTriggerClear() == 0) {
                 if (((ByteFlags *)&inner->sub.flags994)->b08 == 0) {
                     (*gObjectTriggerInterface)->runSequence(
                         inner->sub.unk99C, (void *)obj, -1);
