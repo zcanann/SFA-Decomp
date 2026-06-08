@@ -3346,6 +3346,24 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     shape; changing the position-offset adds from `lbl_803E0C54/6C` to the
     earlier `lbl_803E0C4C/64` took both to 100 and fixed the behavior.
 
+124. **Classify partials by first REAL diff before grinding: the current
+    unmatched tail is dominated by value/register spelling, branch/block
+    structure, and stack/temp layout.** Run
+    `python3 tools/categorize_near_misses.py --min-pct 0 --max-size 0 --limit 2500`
+    to bucket every `<100%` function from `report.json` by its first normalized
+    instruction-diff symptom and print dominant categories per source file.
+    Current full-pass counts: `798` GPR register/value spelling, `495`
+    branch-target/block-layout, `320` stack/temp layout, `309` mixed structural
+    drift, `117` register-coloring cascades, `59` off-by-one/immediate
+    constants, then smaller signedness/FP/loop-bound buckets. Sweep order:
+    near-100 exact mistakes first (`off-by-one`, `loop bound`, signed compare,
+    FP constant ownership), then file-wide dominant buckets. Biggest source
+    clusters: `player.c` is register/value + branch/block; `gameplay.c` is
+    mixed structure + stack layout; `track_dolphin.c`, `curves.c`, `model.c`,
+    `shader.c`, `objprint.c`, and `modgfx.c` are mostly register/value
+    spelling. Detailed snapshot and examples live in
+    `docs/unmatched_failure_categories.md`.
+
 **NAMED CAP — branchy-arg pre-eval hoist (the in-place L2R ternary arg).**
 When target evaluates a branchy ternary CALL ARG at its L2R slot (args 1-7
 set up first, the clamp 8th, then 9-10 — ObjHits_CheckSkeletonPair's two
@@ -4001,6 +4019,13 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   swap), grep ALL printed lines, not just per-fn heads — fns whose signature
   sits behind earlier unrelated diffs are otherwise missed (task #162 found
   4 hidden #81 sites this way, all -> 100%).
+- `python3 tools/categorize_near_misses.py [--min-pct N] [--max-size N] [--limit N]` —
+  heuristic taxonomy for every `<100%` function in `report.json`. It resolves
+  report units through `source_path`, objdumps target/current symbols, normalizes
+  object-local branch addresses, and buckets the first real instruction
+  divergence (register/value spelling, branch/block layout, stack/temp layout,
+  signed compare, loop bound, FP constant ownership, etc.). Use it to choose
+  file-wide sweeps; it is a prioritizer, not proof of the exact fix.
 - `python3 tools/pragma_audit.py [--max-pct N] [--unit-filter S] [--all]` —
   flag <100% fns whose effective pragma state (stack model, recipe #1) is an
   OUTLIER vs their unit's majority state. THE highest-yield triage signal on
