@@ -1,6 +1,7 @@
 #include "main/asset_load.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/mapEvent.h"
 #include "main/objseq.h"
 #include "main/shader.h"
 
@@ -278,7 +279,7 @@ extern undefined4 cRam803dc288;
  * PAL Size: TODO
  */
 extern char lbl_8030E4B0[];
-extern int* gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int gMapBlockLayerTables[5];
 extern u8 lbl_80386648[];
 extern f32 playerMapOffsetX;
@@ -317,7 +318,7 @@ int objShouldLoad(int param_1,int param_2,int param_3)
     } else {
         verbose = 0;
     }
-    t = ((u8(*)(int)) * (int*)(*gMapEventInterface + 0x40))(param_3);
+    t = (*gMapEventInterface)->getMode(param_3);
     if (t == -1) {
         ok = 0;
         goto test;
@@ -2574,7 +2575,7 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
     }
     *outMapId = mapId;
     if (mapId != -1) {
-        *outEvent = (s32)*(s8*)((*(int(**)(void))(*gMapEventInterface + 0x90))() + 0xe);
+        *outEvent = (s32)*(s8*)((*gMapEventInterface)->getWarpPos() + 0xe);
     }
 }
 #pragma peephole reset
@@ -2834,9 +2835,9 @@ void mapLoadForObject(int p1, char *p2)
         slot++;
     }
     *(u8 *)(p2 + 0x34) = (u8)slot;
-    (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x48)))(p1, slot);
+    (*gMapEventInterface)->setRomListSlot(p1, slot);
     defStartFn_8005972c((char *)romList, (u32*)&lbl_803822C8[slot * 0x8c], slot, 0);
-    (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x58)))(slot);
+    (*gMapEventInterface)->loadRomListObjects(slot);
     lbl_803DCEC8 = saved;
 }
 #pragma scheduling reset
@@ -3008,7 +3009,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
     *(u8 *)((char *)lbl_803DCEA0 + 0x19) = 0;
     if (flag == 0) {
         defStartFn_8005972c(lbl_803DCEA0, (u32*)&lbl_803822C8[p1 * 0x8c], p1, 0);
-        (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x58)))(p1);
+        (*gMapEventInterface)->loadRomListObjects(p1);
     }
     return (int)lbl_803DCEA0;
 }
@@ -3981,7 +3982,7 @@ void mapLoadUnloadObjects(int flag)
     if (getLoadedFileFlags(lbl_803DCEC8) == 0) {
         for (i = 0; i < 80; i++) {
             if (*(int*)(base + i * 4 + 0x83A8) != 0) {
-                bits = (*(u32 (*)(int))(*(int*)(*gMapEventInterface + 0x5c)))(i);
+                bits = (*gMapEventInterface)->getObjectLoadBits(i);
                 if (bits != 0) {
                     b = 0;
                     while (bits != 0) {
@@ -4055,7 +4056,7 @@ void mapLoadUnloadObjects(int flag)
                     bit = 0;
                     cur = *(u32*)(page2 + 0x20);
                     end = cur + *(int*)(base + mid2 * 0x8C + 0x4290);
-                    bits = (*(u32 (*)(u32))(*(int*)(*gMapEventInterface + 0x5c)))(mid2);
+                    bits = (*gMapEventInterface)->getObjectLoadBits(mid2);
                     if (bits != 0) {
                         b = 0;
                         while (bits != 0) {
@@ -4185,8 +4186,8 @@ void beginLoadingMap(void)
     }
     lbl_803DCE98 = 0;
     lbl_803DCDEC = 0;
-    mapKind = (u8)(*(int (*)(void))(*(int*)(*gMapEventInterface + 0x74)))();
-    p = (f32*)(*(int (*)(void))(*(int*)(*gMapEventInterface + 0x90)))();
+    mapKind = (*gMapEventInterface)->getPlayerNo();
+    p = (f32 *)(*gMapEventInterface)->getWarpPos();
     lbl_803DCDD0 = (int)fastFloorf(p[0] / gMapBlockWorldSize);
     lbl_803DCDD4 = (int)fastFloorf(p[2] / gMapBlockWorldSize);
     *(f32*)(base + 0x8588) = p[0];

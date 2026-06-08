@@ -1148,8 +1148,7 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
         ((SeqByte136 *)(seq + 0x136))->mapEvent = 1;
         break;
     case 36:
-        (*(void (*)(int, int, int, int))(*(int *)(*gMapEventInterface + 0x1c)))(
-            0, 0, 1, getCurMapLayer());
+        (*gMapEventInterface)->triggerEvent(0, 0, 1, getCurMapLayer());
         break;
     case 38:
         playerLock(Obj_GetPlayerObject(), cmdArg);
@@ -1249,16 +1248,13 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
         Obj_SetActiveModelIndex(sourceObj, cmdArg);
         break;
     case 27:
-        (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(
-            *(s8 *)(sourceObj + 0xac), cmdArg, 1);
+        (*gMapEventInterface)->setAnimEvent(*(s8 *)(sourceObj + 0xac), cmdArg, 1);
         break;
     case 28:
-        (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(
-            *(s8 *)(sourceObj + 0xac), cmdArg, 0);
+        (*gMapEventInterface)->setAnimEvent(*(s8 *)(sourceObj + 0xac), cmdArg, 0);
         break;
     case 29:
-        (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x44)))(
-            *(s8 *)(sourceObj + 0xac), cmdArg);
+        (*gMapEventInterface)->setMode(*(s8 *)(sourceObj + 0xac), cmdArg);
         break;
     case 19:
         if (flag != 0) {
@@ -1273,10 +1269,10 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
         base[(s8)((ObjSeqState *)seq)->slot + 0x3538] |= 0x10;
         break;
     case 31:
-        (*(void (*)(void))(*(int *)(*gMapEventInterface + 0x2c)))();
+        (*(void (**)(void))((u8 *)*gMapEventInterface + 0x2c))();
         break;
     case 32:
-        (*(void (*)(void))(*(int *)(*gMapEventInterface + 0x28)))();
+        (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
         break;
     case 39:
         if (lbl_803DB720 == (s8)((ObjSeqState *)seq)->slot) {

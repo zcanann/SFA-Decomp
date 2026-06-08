@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/mapEventTypes.h"
 #include "main/newclouds.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
@@ -87,7 +88,7 @@ extern u8 lbl_8030ECA8[];
 extern u8 lbl_803DB748;
 extern int lbl_803DB720;
 extern int *gGameUIInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern EffectInterface **gPartfxInterface;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern s16 seqGlobal1;

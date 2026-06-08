@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/engine_8001746C_phantoms.h"
+#include "main/mapEvent.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
@@ -1720,7 +1721,7 @@ extern void *gTitleMenuControlInterface;
 extern ExpgfxInterface **gExpgfxInterface;
 extern void *gModgfxInterface;
 extern WaterfxInterface **gWaterfxInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 #pragma push
 #pragma scheduling off
@@ -2260,8 +2261,8 @@ void mapSetupPlayer(void)
         OSReport((char *)(base + 0x70));
         Obj_ResetObjectSystem();
     } else {
-        playerNo = (*(u8 (**)(void))(*gMapEventInterface + 0x74))();
-        pos = (*(f32 *(**)(void))(*gMapEventInterface + 0x90))();
+        playerNo = (*gMapEventInterface)->getPlayerNo();
+        pos = (f32 *)(*gMapEventInterface)->getWarpPos();
         x = pos[0];
         y = pos[1];
         z = pos[2];
