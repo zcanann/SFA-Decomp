@@ -3517,8 +3517,8 @@ checked:
                 *(s16 *)setup = lbl_803DB72C;
             }
             newObj = Obj_SetupObject(setup, 5, -1, -1, parent);
-            *(s16 *)(newObj + 0xb4) = -2;
-            seq = *(u8 **)(newObj + 0xb8);
+            ((GameObject *)newObj)->unkB4 = -2;
+            seq = ((GameObject *)newObj)->extra;
             ((ObjSeqState *)seq)->heading = heading;
             ((ObjSeqState *)seq)->flags = -1;
             ((ObjSeqState *)seq)->flags = ((ObjSeqState *)seq)->flags & ~0x400;
@@ -3568,7 +3568,7 @@ checked:
             if (idx == 0) {
                 st->cmdFlags[((GameObject *)obj)->unkB4] = *(u16 *)(walk2 + 4);
                 st->handles[((GameObject *)obj)->unkB4] =
-                    *(int *)(*(u8 **)(newObj + 0x4c) + 0x14);
+                    *(int *)(*(u8 **)&((GameObject *)newObj)->anim.placementData + 0x14);
                 mapFlags = ((ObjAnimComponent *)obj)->modelInstance->flags;
                 if ((mapFlags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(mapFlags & 0x8000)) {
                     parent = obj;

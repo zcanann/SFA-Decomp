@@ -163,7 +163,7 @@ void WM_ObjCreator_update(int obj) {
                 *(u8 *)(setup + 0x18) = placement->yaw;
                 spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
                 if ((u32)spawned != 0) {
-                    *(int *)(spawned + 0xf4) = 8;
+                    ((GameObject *)spawned)->unkF4 = 8;
                 }
                 ((GameObject *)obj)->unkF8 = 1;
             }
@@ -188,7 +188,7 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
                 spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
                 if ((u32)spawned != 0) {
-                    *(f32 *)(spawned + 0x24) = lbl_803E5CCC + (f32)(int)randomGetRange(0, 10);
+                    ((GameObject *)spawned)->anim.velocityX = lbl_803E5CCC + (f32)(int)randomGetRange(0, 10);
                 }
                 state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
@@ -247,7 +247,7 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
                 spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
                 if ((u32)spawned != 0) {
-                    *(f32 *)(spawned + 0x24) = lbl_803E5CD0 - (f32)(int)randomGetRange(0, 10);
+                    ((GameObject *)spawned)->anim.velocityX = lbl_803E5CD0 - (f32)(int)randomGetRange(0, 10);
                 }
                 state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
@@ -275,17 +275,17 @@ void WM_ObjCreator_update(int obj) {
                     *(u8 *)(setup + 0x24) = 0;
                     spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
                     if ((u32)spawned != 0) {
-                        *(u8 *)(*(int *)(spawned + 0xb8) + 0x120) |= 2;
-                        *(f32 *)(spawned + 0x24) = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
-                        *(f32 *)(spawned + 0x2c) = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
+                        *(u8 *)(*(int *)&((GameObject *)spawned)->extra + 0x120) |= 2;
+                        ((GameObject *)spawned)->anim.velocityX = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
+                        ((GameObject *)spawned)->anim.velocityZ = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
                         vec.pos[2] = lbl_803E5CD8;
-                        *(f32 *)(spawned + 0x28) = lbl_803E5CD8;
+                        ((GameObject *)spawned)->anim.velocityY = lbl_803E5CD8;
                         vec.pos[0] = lbl_803E5CC8;
                         vec.dir[0] = 0;
                         vec.dir[1] = 0;
                         vec.dir[2] = 0;
-                        vec.pos[1] = *(f32 *)(spawned + 0x24);
-                        vec.pos[3] = *(f32 *)(spawned + 0x2c);
+                        vec.pos[1] = ((GameObject *)spawned)->anim.velocityX;
+                        vec.pos[3] = ((GameObject *)spawned)->anim.velocityZ;
                         (*gPartfxInterface)->spawnObject((void *)spawned, 0x1a7, &vec,
                                                                             0x10000, -1, NULL);
                     }

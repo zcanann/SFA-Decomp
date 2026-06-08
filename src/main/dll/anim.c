@@ -4642,10 +4642,10 @@ int dbholecontrol1_SeqFn(int obj, int unused, int p3)
     if (res == NULL) continue;
     newObj = Obj_AllocObjectSetup(56, 1337);
     memcpy(newObj, res, 56);
-    *(f32 *)(newObj + 8) = ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)(newObj + 12) = ((GameObject *)obj)->anim.localPosY;
-    *(f32 *)(newObj + 16) = ((GameObject *)obj)->anim.localPosZ;
-    *(int *)(newObj + 20) = -1;
+    ((GameObject *)newObj)->anim.rootMotionScale = ((GameObject *)obj)->anim.localPosX;
+    ((GameObject *)newObj)->anim.localPosX = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)newObj)->anim.localPosY = ((GameObject *)obj)->anim.localPosZ;
+    *(int *)&((GameObject *)newObj)->anim.localPosZ = -1;
     *(s16 *)(newObj + 26) = 149;
     loadObjectAtObject(obj, newObj);
   }
@@ -4952,10 +4952,10 @@ void fn_80202EF0(int obj, int p2)
         if (newObj != NULL) {
             t = ((BaddieState *)p2)->targetDistance / lbl_803E62B4;
             dur = lbl_803E62B8 * t;
-            *(f32 *)(newObj + 0x24) = (*(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0xc) - ((GameObject *)obj)->anim.localPosX) / dur;
-            *(f32 *)(newObj + 0x28) = ((lbl_803E6380 * t + *(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0x10)) - ((GameObject *)obj)->anim.localPosY) / dur;
-            *(f32 *)(newObj + 0x2c) = (*(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0x14) - ((GameObject *)obj)->anim.localPosZ) / dur;
-            *(int *)(newObj + 0xc4) = obj;
+            ((GameObject *)newObj)->anim.velocityX = (*(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0xc) - ((GameObject *)obj)->anim.localPosX) / dur;
+            ((GameObject *)newObj)->anim.velocityY = ((lbl_803E6380 * t + *(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0x10)) - ((GameObject *)obj)->anim.localPosY) / dur;
+            ((GameObject *)newObj)->anim.velocityZ = (*(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0x14) - ((GameObject *)obj)->anim.localPosZ) / dur;
+            *(int *)&((GameObject *)newObj)->unkC4 = obj;
         }
     }
 }
@@ -5091,7 +5091,7 @@ void dfpobjcreator_update(int obj)
                 *(s16 *)(setup + 0x20) = -1;
                 *(s16 *)(setup + 0x1a) = 0xdc;
                 newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
-                *(int *)(newObj + 0xf4) = *(s8 *)(data + 0x1e);
+                ((GameObject *)newObj)->unkF4 = *(s8 *)(data + 0x1e);
             }
             break;
         }

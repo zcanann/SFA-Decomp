@@ -46,13 +46,13 @@ void drcagewith_hitDetect(int obj) {
             *(u8 *)(spawned + 4) = 2;
             *(u8 *)(spawned + 5) = 1;
             *(u8 *)(spawned + 5) = (u8)(*(u8 *)(spawned + 5) | (*(u8 *)((char *)q + 5) & 0x18));
-            *(f32 *)(spawned + 8) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(spawned + 0xc) = ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(spawned + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+            ((GameObject *)spawned)->anim.rootMotionScale = ((GameObject *)obj)->anim.localPosX;
+            ((GameObject *)spawned)->anim.localPosX = ((GameObject *)obj)->anim.localPosY;
+            ((GameObject *)spawned)->anim.localPosY = ((GameObject *)obj)->anim.localPosZ;
             spawned = Obj_SetupObject(spawned, 5, *(s8 *)((char *)obj + 0xac), -1,
                                       *(int *)&((GameObject *)obj)->anim.parent);
-            *(s16 *)(spawned + 6) |= 0x4000;
-            *(int *)(spawned + 0xf4) = 1;
+            ((GameObject *)spawned)->anim.flags |= 0x4000;
+            ((GameObject *)spawned)->unkF4 = 1;
             *(int *)p = spawned;
             return;
         }

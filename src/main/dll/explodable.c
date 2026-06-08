@@ -103,22 +103,22 @@ int fn_801833E4(int obj, int player, int state)
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 400;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
-        *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
-        *(f32 *)(newObj + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
-        len = *(f32 *)(newObj + 0x24) * *(f32 *)(newObj + 0x24) +
-              *(f32 *)(newObj + 0x2c) * *(f32 *)(newObj + 0x2c);
+        ((GameObject *)newObj)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+        ((GameObject *)newObj)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
+        len = ((GameObject *)newObj)->anim.velocityX * ((GameObject *)newObj)->anim.velocityX +
+              ((GameObject *)newObj)->anim.velocityZ * ((GameObject *)newObj)->anim.velocityZ;
         if (len != lbl_803E39B8) {
             len = sqrtf(len);
-            *(f32 *)(newObj + 0x24) = *(f32 *)(newObj + 0x24) / len;
-            *(f32 *)(newObj + 0x2c) = *(f32 *)(newObj + 0x2c) / len;
+            ((GameObject *)newObj)->anim.velocityX = ((GameObject *)newObj)->anim.velocityX / len;
+            ((GameObject *)newObj)->anim.velocityZ = ((GameObject *)newObj)->anim.velocityZ / len;
         }
-        *(f32 *)(newObj + 0x24) =
-            *(f32 *)(newObj + 0x24) *
+        ((GameObject *)newObj)->anim.velocityX =
+            ((GameObject *)newObj)->anim.velocityX *
             -(lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E39AC);
-        *(f32 *)(newObj + 0x2c) =
-            *(f32 *)(newObj + 0x2c) *
+        ((GameObject *)newObj)->anim.velocityZ =
+            ((GameObject *)newObj)->anim.velocityZ *
             -(lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E39AC);
-        *(f32 *)(newObj + 0x28) = lbl_803E39D8;
+        ((GameObject *)newObj)->anim.velocityY = lbl_803E39D8;
         blk.fy = lbl_803E39B8;
         blk.fz = lbl_803E39B8;
         blk.fw = lbl_803E39B8;
@@ -128,7 +128,7 @@ int fn_801833E4(int obj, int player, int state)
         blk.h0 = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&blk, (f32 *)(newObj + 0x24));
         angle = *(s16 *)newObj -
-                ((int)(s16)getAngle(*(f32 *)(newObj + 0x24), -*(f32 *)(newObj + 0x2c)) & 0xffff);
+                ((int)(s16)getAngle(((GameObject *)newObj)->anim.velocityX, -((GameObject *)newObj)->anim.velocityZ) & 0xffff);
         if (angle > 0x8000) {
             angle = angle - 0xffff;
         }
@@ -145,22 +145,22 @@ int fn_801833E4(int obj, int player, int state)
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 400;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
-        *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
-        *(f32 *)(newObj + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
-        len = *(f32 *)(newObj + 0x24) * *(f32 *)(newObj + 0x24) +
-              *(f32 *)(newObj + 0x2c) * *(f32 *)(newObj + 0x2c);
+        ((GameObject *)newObj)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+        ((GameObject *)newObj)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
+        len = ((GameObject *)newObj)->anim.velocityX * ((GameObject *)newObj)->anim.velocityX +
+              ((GameObject *)newObj)->anim.velocityZ * ((GameObject *)newObj)->anim.velocityZ;
         if (len != lbl_803E39B8) {
             len = sqrtf(len);
-            *(f32 *)(newObj + 0x24) = *(f32 *)(newObj + 0x24) / len;
-            *(f32 *)(newObj + 0x2c) = *(f32 *)(newObj + 0x2c) / len;
+            ((GameObject *)newObj)->anim.velocityX = ((GameObject *)newObj)->anim.velocityX / len;
+            ((GameObject *)newObj)->anim.velocityZ = ((GameObject *)newObj)->anim.velocityZ / len;
         }
-        *(f32 *)(newObj + 0x24) =
-            *(f32 *)(newObj + 0x24) *
+        ((GameObject *)newObj)->anim.velocityX =
+            ((GameObject *)newObj)->anim.velocityX *
             -(lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E39AC);
-        *(f32 *)(newObj + 0x2c) =
-            *(f32 *)(newObj + 0x2c) *
+        ((GameObject *)newObj)->anim.velocityZ =
+            ((GameObject *)newObj)->anim.velocityZ *
             -(lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E39AC);
-        *(f32 *)(newObj + 0x28) = lbl_803E39D8;
+        ((GameObject *)newObj)->anim.velocityY = lbl_803E39D8;
         blk.fy = lbl_803E39B8;
         blk.fz = lbl_803E39B8;
         blk.fw = lbl_803E39B8;
@@ -170,7 +170,7 @@ int fn_801833E4(int obj, int player, int state)
         blk.h0 = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&blk, (f32 *)(newObj + 0x24));
         angle = *(s16 *)newObj -
-                ((int)(s16)getAngle(*(f32 *)(newObj + 0x24), -*(f32 *)(newObj + 0x2c)) & 0xffff);
+                ((int)(s16)getAngle(((GameObject *)newObj)->anim.velocityX, -((GameObject *)newObj)->anim.velocityZ) & 0xffff);
         if (angle > 0x8000) {
             angle = angle - 0xffff;
         }
@@ -187,22 +187,22 @@ int fn_801833E4(int obj, int player, int state)
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 2000;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
-        *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
-        *(f32 *)(newObj + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
-        len = *(f32 *)(newObj + 0x24) * *(f32 *)(newObj + 0x24) +
-              *(f32 *)(newObj + 0x2c) * *(f32 *)(newObj + 0x2c);
+        ((GameObject *)newObj)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+        ((GameObject *)newObj)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
+        len = ((GameObject *)newObj)->anim.velocityX * ((GameObject *)newObj)->anim.velocityX +
+              ((GameObject *)newObj)->anim.velocityZ * ((GameObject *)newObj)->anim.velocityZ;
         if (len != lbl_803E39B8) {
             len = sqrtf(len);
-            *(f32 *)(newObj + 0x24) = *(f32 *)(newObj + 0x24) / len;
-            *(f32 *)(newObj + 0x2c) = *(f32 *)(newObj + 0x2c) / len;
+            ((GameObject *)newObj)->anim.velocityX = ((GameObject *)newObj)->anim.velocityX / len;
+            ((GameObject *)newObj)->anim.velocityZ = ((GameObject *)newObj)->anim.velocityZ / len;
         }
-        *(f32 *)(newObj + 0x24) =
-            *(f32 *)(newObj + 0x24) *
+        ((GameObject *)newObj)->anim.velocityX =
+            ((GameObject *)newObj)->anim.velocityX *
             -(lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E39AC);
-        *(f32 *)(newObj + 0x2c) =
-            *(f32 *)(newObj + 0x2c) *
+        ((GameObject *)newObj)->anim.velocityZ =
+            ((GameObject *)newObj)->anim.velocityZ *
             -(lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E39AC);
-        *(f32 *)(newObj + 0x28) = lbl_803E39D8;
+        ((GameObject *)newObj)->anim.velocityY = lbl_803E39D8;
         blk.fy = lbl_803E39B8;
         blk.fz = lbl_803E39B8;
         blk.fw = lbl_803E39B8;
@@ -212,7 +212,7 @@ int fn_801833E4(int obj, int player, int state)
         blk.h0 = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&blk, (f32 *)(newObj + 0x24));
         angle = *(s16 *)newObj -
-                ((int)(s16)getAngle(*(f32 *)(newObj + 0x24), -*(f32 *)(newObj + 0x2c)) & 0xffff);
+                ((int)(s16)getAngle(((GameObject *)newObj)->anim.velocityX, -((GameObject *)newObj)->anim.velocityZ) & 0xffff);
         if (angle > 0x8000) {
             angle = angle - 0xffff;
         }
@@ -236,7 +236,7 @@ int fn_801833E4(int obj, int player, int state)
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x24) = -1;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
-        (**(void (**)(f32, f32, f32))(**(int **)(newObj + 0x68) + 0x2c))(
+        (**(void (**)(f32, f32, f32))(**(int **)&((GameObject *)newObj)->anim.dll + 0x2c))(
             lbl_803E39B8, lbl_803E39AC, lbl_803E39B8);
         break;
     case 7:

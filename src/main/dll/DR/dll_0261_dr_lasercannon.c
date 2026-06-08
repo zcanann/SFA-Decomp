@@ -448,7 +448,7 @@ void drlasercannon_update(int obj) {
                             inv[3] = hitPos[0];
                             inv[4] = hitPos[1];
                             inv[5] = hitPos[2];
-                            (*(void (**)(int, f32 *, f32 *, f32))(*(int *)(*(int *)((char *)spawned + 0x68)) + 0x24))(
+                            (*(void (**)(int, f32 *, f32 *, f32))(*(int *)(*(int *)&((GameObject *)spawned)->anim.dll) + 0x24))(
                                 spawned, outv, inv,
                                 (f32)*(s16 *)((char *)sub + DR_LASERCANNON_SETUP_BEAM_SPEED) / lbl_803E6908);
                             *(int *)((char *)state + DR_LASERCANNON_STATE_BEAM_OBJECT) = spawned;
@@ -466,12 +466,12 @@ void drlasercannon_update(int obj) {
     }
     spawned = *(int *)((char *)state + DR_LASERCANNON_STATE_FIREPIPE_OBJECT);
     if (spawned != 0) {
-        if ((*(u16 *)((char *)spawned + 0xb0) & 0x40) != 0) {
+        if ((((GameObject *)spawned)->objectFlags & 0x40) != 0) {
             *(int *)((char *)state + DR_LASERCANNON_STATE_FIREPIPE_OBJECT) = 0;
         } else {
             s16 *v = (s16 *)objModelGetVecFn_800395d8(obj, 0xb);
             *(s16 *)spawned = (s16)(int)((f32)*(s16 *)obj + lbl_803DDD68);
-            *(s16 *)((char *)spawned + 0x2) = v[0];
+            ((GameObject *)spawned)->anim.rotY = v[0];
         }
     }
     if (((BitFlags8 *)((char *)state + DR_LASERCANNON_STATE_FLAGS))->b5 != 0) {

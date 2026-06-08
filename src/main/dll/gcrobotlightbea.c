@@ -146,27 +146,27 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
-            *(f32 *)(spawned + 0x24) = sc * lbl_803AC790[0];
-            *(f32 *)(spawned + 0x28) = lbl_803E394C * vel[1];
-            *(f32 *)(spawned + 0x2c) = sc * vel[2];
+            ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject *)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject *)spawned)->anim.velocityZ = sc * vel[2];
         } else {
-            *(f32 *)(spawned + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
-            *(f32 *)(spawned + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
+            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         }
-        mag = *(f32 *)(spawned + 0x24) * *(f32 *)(spawned + 0x24);
-        mag += *(f32 *)(spawned + 0x2c) * *(f32 *)(spawned + 0x2c);
+        mag = ((GameObject *)spawned)->anim.velocityX * ((GameObject *)spawned)->anim.velocityX;
+        mag += ((GameObject *)spawned)->anim.velocityZ * ((GameObject *)spawned)->anim.velocityZ;
         if (mag != lbl_803E3938) {
             mag = sqrtf(mag);
-            *(f32 *)(spawned + 0x24) = *(f32 *)(spawned + 0x24) / mag;
-            *(f32 *)(spawned + 0x2c) = *(f32 *)(spawned + 0x2c) / mag;
+            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)spawned)->anim.velocityX / mag;
+            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)spawned)->anim.velocityZ / mag;
         }
-        *(f32 *)(spawned + 0x24) =
-            *(f32 *)(spawned + 0x24) *
+        ((GameObject *)spawned)->anim.velocityX =
+            ((GameObject *)spawned)->anim.velocityX *
             -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        *(f32 *)(spawned + 0x2c) =
-            *(f32 *)(spawned + 0x2c) *
+        ((GameObject *)spawned)->anim.velocityZ =
+            ((GameObject *)spawned)->anim.velocityZ *
             -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        *(f32 *)(spawned + 0x28) = lbl_803E3958;
+        ((GameObject *)spawned)->anim.velocityY = lbl_803E3958;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
@@ -175,7 +175,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)getAngle(*(f32 *)(spawned + 0x24), -*(f32 *)(spawned + 0x2c));
+        ang = (u16)(s16)getAngle(((GameObject *)spawned)->anim.velocityX, -((GameObject *)spawned)->anim.velocityZ);
         diff = *(s16 *)spawned - ang;
         if (diff > 0x8000) {
             diff -= 0xffff;
@@ -195,27 +195,27 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
-            *(f32 *)(spawned + 0x24) = sc * lbl_803AC790[0];
-            *(f32 *)(spawned + 0x28) = lbl_803E394C * vel[1];
-            *(f32 *)(spawned + 0x2c) = sc * vel[2];
+            ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject *)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject *)spawned)->anim.velocityZ = sc * vel[2];
         } else {
-            *(f32 *)(spawned + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
-            *(f32 *)(spawned + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
+            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         }
-        mag = *(f32 *)(spawned + 0x24) * *(f32 *)(spawned + 0x24);
-        mag += *(f32 *)(spawned + 0x2c) * *(f32 *)(spawned + 0x2c);
+        mag = ((GameObject *)spawned)->anim.velocityX * ((GameObject *)spawned)->anim.velocityX;
+        mag += ((GameObject *)spawned)->anim.velocityZ * ((GameObject *)spawned)->anim.velocityZ;
         if (mag != lbl_803E3938) {
             mag = sqrtf(mag);
-            *(f32 *)(spawned + 0x24) = *(f32 *)(spawned + 0x24) / mag;
-            *(f32 *)(spawned + 0x2c) = *(f32 *)(spawned + 0x2c) / mag;
+            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)spawned)->anim.velocityX / mag;
+            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)spawned)->anim.velocityZ / mag;
         }
-        *(f32 *)(spawned + 0x24) =
-            *(f32 *)(spawned + 0x24) *
+        ((GameObject *)spawned)->anim.velocityX =
+            ((GameObject *)spawned)->anim.velocityX *
             -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        *(f32 *)(spawned + 0x2c) =
-            *(f32 *)(spawned + 0x2c) *
+        ((GameObject *)spawned)->anim.velocityZ =
+            ((GameObject *)spawned)->anim.velocityZ *
             -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        *(f32 *)(spawned + 0x28) = lbl_803E3958;
+        ((GameObject *)spawned)->anim.velocityY = lbl_803E3958;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
@@ -224,7 +224,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)getAngle(*(f32 *)(spawned + 0x24), -*(f32 *)(spawned + 0x2c));
+        ang = (u16)(s16)getAngle(((GameObject *)spawned)->anim.velocityX, -((GameObject *)spawned)->anim.velocityZ);
         diff = *(s16 *)spawned - ang;
         if (diff > 0x8000) {
             diff -= 0xffff;
@@ -244,27 +244,27 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
-            *(f32 *)(spawned + 0x24) = sc * lbl_803AC790[0];
-            *(f32 *)(spawned + 0x28) = lbl_803E394C * vel[1];
-            *(f32 *)(spawned + 0x2c) = sc * vel[2];
+            ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject *)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject *)spawned)->anim.velocityZ = sc * vel[2];
         } else {
-            *(f32 *)(spawned + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
-            *(f32 *)(spawned + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
+            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
+            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         }
-        mag = *(f32 *)(spawned + 0x24) * *(f32 *)(spawned + 0x24);
-        mag += *(f32 *)(spawned + 0x2c) * *(f32 *)(spawned + 0x2c);
+        mag = ((GameObject *)spawned)->anim.velocityX * ((GameObject *)spawned)->anim.velocityX;
+        mag += ((GameObject *)spawned)->anim.velocityZ * ((GameObject *)spawned)->anim.velocityZ;
         if (mag != lbl_803E3938) {
             mag = sqrtf(mag);
-            *(f32 *)(spawned + 0x24) = *(f32 *)(spawned + 0x24) / mag;
-            *(f32 *)(spawned + 0x2c) = *(f32 *)(spawned + 0x2c) / mag;
+            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)spawned)->anim.velocityX / mag;
+            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)spawned)->anim.velocityZ / mag;
         }
-        *(f32 *)(spawned + 0x24) =
-            *(f32 *)(spawned + 0x24) *
+        ((GameObject *)spawned)->anim.velocityX =
+            ((GameObject *)spawned)->anim.velocityX *
             -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        *(f32 *)(spawned + 0x2c) =
-            *(f32 *)(spawned + 0x2c) *
+        ((GameObject *)spawned)->anim.velocityZ =
+            ((GameObject *)spawned)->anim.velocityZ *
             -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        *(f32 *)(spawned + 0x28) = lbl_803E3958;
+        ((GameObject *)spawned)->anim.velocityY = lbl_803E3958;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
@@ -273,7 +273,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)getAngle(*(f32 *)(spawned + 0x24), -*(f32 *)(spawned + 0x2c));
+        ang = (u16)(s16)getAngle(((GameObject *)spawned)->anim.velocityX, -((GameObject *)spawned)->anim.velocityZ);
         diff = *(s16 *)spawned - ang;
         if (diff > 0x8000) {
             diff -= 0xffff;
@@ -308,27 +308,27 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
-            *(f32 *)(spawned + 0x24) = sc * lbl_803AC790[0];
-            *(f32 *)(spawned + 0x28) = lbl_803E394C * vel[1];
-            *(f32 *)(spawned + 0x2c) = sc * vel[2];
+            ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject *)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject *)spawned)->anim.velocityZ = sc * vel[2];
         }
-        mag = *(f32 *)(spawned + 0x24) * *(f32 *)(spawned + 0x24);
-        mag += *(f32 *)(spawned + 0x2c) * *(f32 *)(spawned + 0x2c);
+        mag = ((GameObject *)spawned)->anim.velocityX * ((GameObject *)spawned)->anim.velocityX;
+        mag += ((GameObject *)spawned)->anim.velocityZ * ((GameObject *)spawned)->anim.velocityZ;
         if (mag != lbl_803E3938) {
             mag = sqrtf(mag);
-            *(f32 *)(spawned + 0x24) = *(f32 *)(spawned + 0x24) / (mag = lbl_803E3964 * mag);
-            *(f32 *)(spawned + 0x2c) = *(f32 *)(spawned + 0x2c) / mag;
+            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)spawned)->anim.velocityX / (mag = lbl_803E3964 * mag);
+            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)spawned)->anim.velocityZ / mag;
         }
-        *(f32 *)(spawned + 0x24) =
-            *(f32 *)(spawned + 0x24) *
+        ((GameObject *)spawned)->anim.velocityX =
+            ((GameObject *)spawned)->anim.velocityX *
             -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        *(f32 *)(spawned + 0x2c) =
-            *(f32 *)(spawned + 0x2c) *
+        ((GameObject *)spawned)->anim.velocityZ =
+            ((GameObject *)spawned)->anim.velocityZ *
             -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        *(f32 *)(spawned + 0x28) = lbl_803E3958;
-        (*(code *)(*(int *)*(int *)(spawned + 0x68) + 0x2c))(
-            spawned, *(f32 *)(spawned + 0x24), *(f32 *)(spawned + 0x28),
-            *(f32 *)(spawned + 0x2c));
+        ((GameObject *)spawned)->anim.velocityY = lbl_803E3958;
+        (*(code *)(*(int *)*(int *)&((GameObject *)spawned)->anim.dll + 0x2c))(
+            spawned, ((GameObject *)spawned)->anim.velocityX, ((GameObject *)spawned)->anim.velocityY,
+            ((GameObject *)spawned)->anim.velocityZ);
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
@@ -337,7 +337,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)getAngle(*(f32 *)(spawned + 0x24), -*(f32 *)(spawned + 0x2c));
+        ang = (u16)(s16)getAngle(((GameObject *)spawned)->anim.velocityX, -((GameObject *)spawned)->anim.velocityZ);
         diff = *(s16 *)spawned - ang;
         if (diff > 0x8000) {
             diff -= 0xffff;
