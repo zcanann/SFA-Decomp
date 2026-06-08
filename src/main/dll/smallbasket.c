@@ -2684,7 +2684,7 @@ void fn_80157B58(int* obj, u8* state)
         *(u8*)(setup + 6) = 0xff;
         *(u8*)(setup + 7) = 0xff;
         child = (int)Obj_SetupObject((int*)setup, 5, -1, -1, 0);
-        if (child != 0) {
+        if ((u32)child != 0) {
             f32 dur = lbl_803E2B84 * ((f32)*(u16*)(state + 0x2a4) / ((BaddieState *)state)->unk2A8);
             ((GameObject *)child)->anim.velocityX =
                 (*(f32*)(*(int *)&((BaddieState *)state)->trackedObj + 0xc) - ((GameObject *)setup)->anim.rootMotionScale) / dur;
