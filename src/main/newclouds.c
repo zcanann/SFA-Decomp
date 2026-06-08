@@ -1991,19 +1991,19 @@ void snowCloudUpdateFlakes(u8 *snow) {
     cam = Camera_GetCurrentViewSlot();
     e = snow + 0x1008;
     if (*(int *)(snow + 0x13f4) == 0) {
-        f32 size = lbl_803DF1E8;
+        f32 size = 16.0f;
         f32 negSize = -size;
         for (i = 0; i < 20; i++) {
             m = (f32 *)e;
             m[0] = negSize;
             m[3] = negSize;
-            m[6] = lbl_803DF1A0;
+            m[6] = 0.0f;
             m[1] = size;
             m[4] = negSize;
-            m[7] = lbl_803DF1A0;
-            m[2] = lbl_803DF1A0;
+            m[7] = 0.0f;
+            m[2] = 0.0f;
             m[5] = size;
-            m[8] = lbl_803DF1A0;
+            m[8] = 0.0f;
             *(u16 *)(e + 0x28) =
                 timeDelta * (f32)*(u16 *)(e + 0x24) + (f32)*(u16 *)(e + 0x28);
             *(u16 *)(e + 0x2a) =
