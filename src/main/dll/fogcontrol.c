@@ -29,7 +29,6 @@ extern undefined4 sidekickball_update();
 extern undefined4 sidekickball_init();
 extern uint countLeadingZeros();
 
-extern undefined4* DAT_803dd728;
 extern f32 timeDelta;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E369C;
@@ -347,7 +346,7 @@ LAB_80179e98:
     (*gPathControlInterface)->advance(param_9, (void *)iVar8, lbl_803DC074);
   }
   else {
-    (**(code **)(*DAT_803dd728 + 0x20))(param_9);
+    (*gPathControlInterface)->attachObject(param_9, (void *)iVar8);
   }
   return;
 }
