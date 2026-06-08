@@ -3,6 +3,7 @@
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/enemy_state.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/projswitch.h"
 #include "main/mapEventTypes.h"
@@ -624,7 +625,6 @@ extern void fn_8014B878(int obj, u8 *state);
 extern void objAnimFn_8014a9f0(int obj, u8 *state);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern MapEventInterface **gMapEventInterface;
-extern int *gPathControlInterface;
 extern f32 lbl_803E2574;
 extern f32 lbl_803E2600;
 
@@ -760,7 +760,7 @@ void enemy_update(int obj)
     }
     if ((((EnemyState *)state)->controlFlags & 0x8000) != 0) {
         hudFn_8011f38c(0);
-        (**(void (**)(int, u8 *))(*gPathControlInterface + 0x20))(obj, state + 4);
+        (*gPathControlInterface)->attachObject((void *)obj, state + 4);
         ((EnemyState *)state)->controlFlags &= ~0x8003;
         if ((((EnemyState *)state)->flags2E4 & 0x20000) != 0) {
             s2 = *(u8 **)&((GameObject *)obj)->anim.placementData;
@@ -988,14 +988,15 @@ void enemy_init(int obj, u8 *setup, int flag)
                                              (int *)&lbl_803DBC58, -1) == 0) {
             ((EnemyState *)state)->controlFlags |= 0x2000;
         }
-        (**(void (**)(u8 *, int, int, int))(*gPathControlInterface + 0x4))(state + 4, 0, 422, 1);
+        (*gPathControlInterface)->init(state + 4, 0, 422, 1);
         if ((((EnemyState *)state)->flags2E4 & 8) != 0) {
-            (**(void (**)(u8 *, int, u8 *, f32 *, int))(*gPathControlInterface + 0x8))(state + 4, 1, lbl_8031DBE4, &lbl_803DBC64, 4);
+            ((void (*)(void *, int, void *, void *, int))(*gPathControlInterface)->slot08)(
+                state + 4, 1, lbl_8031DBE4, &lbl_803DBC64, 4);
         }
         if ((((EnemyState *)state)->flags2E4 & 4) != 0) {
-            (**(void (**)(u8 *, int, u8 *, f32 *, f32 *))(*gPathControlInterface + 0xc))(state + 4, 1, lbl_8031DBD8, &lbl_803DBC60, &lbl_803DBC68);
+            (*gPathControlInterface)->setup(state + 4, 1, lbl_8031DBD8, &lbl_803DBC60, &lbl_803DBC68);
         }
-        (**(void (**)(int, u8 *))(*gPathControlInterface + 0x20))(obj, state + 4);
+        (*gPathControlInterface)->attachObject((void *)obj, state + 4);
         if ((((EnemyState *)state)->flags2E4 & 0xc) != 0) {
             state[0x25f] = 1;
         }

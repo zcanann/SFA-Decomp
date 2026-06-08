@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
+#include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 
@@ -42,7 +43,6 @@ extern void bombplantspore_startDriftBurst(void *obj, void *state);
 extern void bombplantspore_updateDrift(void *obj, void *state);
 
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern void *gPathControlInterface;
 extern EffectInterface **gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -181,9 +181,9 @@ void bombplantspore_update(void *obj) {
             objMove(((GameObject *)obj)->anim.velocityX * timeDelta,
                     ((GameObject *)obj)->anim.velocityY * timeDelta,
                     ((GameObject *)obj)->anim.velocityZ * timeDelta, obj);
-            (*(void (***)(f32, void *, void *))gPathControlInterface)[4](timeDelta, obj, (u8 *)state + 4);
-            (*(void (***)(void *, void *))gPathControlInterface)[5](obj, (u8 *)state + 4);
-            (*(void (***)(f32, void *, void *))gPathControlInterface)[6](timeDelta, obj, (u8 *)state + 4);
+            (*gPathControlInterface)->update(obj, (u8 *)state + 4, timeDelta);
+            (*gPathControlInterface)->apply(obj, (u8 *)state + 4);
+            (*gPathControlInterface)->advance(obj, (u8 *)state + 4, timeDelta);
             if (hitObj != NULL &&
                 (hitId = *(s16 *)((u8 *)hitObj + 0x46), hitId != 0x36d) &&
                 hitId != 0x198 && hitId != 0x63c) {
@@ -249,11 +249,9 @@ void bombplantspore_init(void *obj, void *param2) {
     randomPhase = *(f64 *)randAsDouble - lbl_803E53A0;
     state->randomPhase = randomPhase / lbl_803E5390;
 
-    (*(void (***)(void *, int, int, int))gPathControlInterface)[1](
-        state->pathState, 0, 0x40002, 1);
-    (*(void (***)(void *, int, u8 *, u8 *, u8 *))gPathControlInterface)[3](
-        state->pathState, 1, lbl_80326D98, &lbl_803DBFC0, events);
-    (*(void (***)(void *, void *))gPathControlInterface)[8](obj, state->pathState);
+    (*gPathControlInterface)->init(state->pathState, 0, 0x40002, 1);
+    (*gPathControlInterface)->setup(state->pathState, 1, lbl_80326D98, &lbl_803DBFC0, events);
+    (*gPathControlInterface)->attachObject(obj, state->pathState);
     (*gPartfxInterface)->spawnObject(obj, 0x3f1, NULL, 4, -1, NULL);
 
     light = objCreateLight(obj, 1);
