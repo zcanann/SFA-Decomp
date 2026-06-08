@@ -1,5 +1,6 @@
 #include "main/dll/CAM/dll_5F.h"
 #include "main/camera_object.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
@@ -19,7 +20,6 @@ extern void pathcam_findTaggedNodeWindow(int node, int *window, int p3);
 extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int *window);
 extern int fn_8010AEA8(short *cam, int flags);
 extern int getAngle(f32 a, f32 b);
-typedef int (*RomCurveGetNodeFn)(int);
 typedef void (*CameraRequestFn)(int, int, int, int, int, int, int);
 extern undefined4 FUN_8010b218();
 extern undefined8 FUN_8028683c();
@@ -27,11 +27,8 @@ extern undefined4 FUN_80286888();
 extern f32 sqrtf(f32);
 extern void cameraModeTestStrengthFn_8010b238(int camera, f32 *pos, s16 pitch, s16 yaw, s16 roll);
 extern void *memset(void *p, int c, int n);
-typedef int (*RomCurveFindFn)(f32 x, f32 y, f32 z, int *tags, int count, int map);
-
 extern u8 framesThisStep;
 extern int *gCameraInterface;
-extern undefined4* gRomCurveInterface;
 extern undefined4* lbl_803DD560;
 extern f64 lbl_803E18A0;
 extern f32 lbl_803E1888;
@@ -81,8 +78,8 @@ void CameraModeTestStrength_update(short *cam)
   } else {
     obj = *(int *)((char *)cam + 0xa4);
     getButtonsJustPressed(0);
-    node = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
-    node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
+    node = (int)(*gRomCurveInterface)->getById(lbl_803DD560[3]);
+    node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560[2]);
     pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560[1]);
     pathcam_findTaggedNodeWindow(node, w2, lbl_803DD560[1]);
     pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
@@ -90,11 +87,11 @@ void CameraModeTestStrength_update(short *cam)
     if (t2 < lbl_803E1888) {
       if (w2[0] > -1) {
         lbl_803DD560[3] = w2[0];
-        node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
+        node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560[3]);
         pathcam_findTaggedNodeWindow(node2, w2, lbl_803DD560[1]);
         if (w1[0] > -1) {
           lbl_803DD560[2] = w1[0];
-          node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
+          node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560[2]);
           pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560[1]);
           pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
           t2 = fn_8010AC48(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, w2);
@@ -108,11 +105,11 @@ void CameraModeTestStrength_update(short *cam)
     } else if (t2 > lbl_803E188C) {
       if (w2[2] > -1 && w2[3] > -1) {
         lbl_803DD560[3] = w2[2];
-        node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
+        node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560[3]);
         pathcam_findTaggedNodeWindow(node2, w2, lbl_803DD560[1]);
         if (w1[2] > -1 && w1[3] > -1) {
           lbl_803DD560[2] = w1[2];
-          node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
+          node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560[2]);
           pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560[1]);
           pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
           t2 = fn_8010AC48(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, w2);
@@ -130,7 +127,7 @@ void CameraModeTestStrength_update(short *cam)
     ((CameraObject *)cam)->anim.worldPosX = Curve_EvalBSpline(x, t, (f32 *)0);
     ((CameraObject *)cam)->anim.worldPosY = Curve_EvalBSpline(y, t, (f32 *)0);
     ((CameraObject *)cam)->anim.worldPosZ = Curve_EvalBSpline(z, t, (f32 *)0);
-    node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
+    node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560[2]);
     flags = *(u8 *)(node2 + 0x3b);
     m1 = flags & 1;
     if (m1 == 0) {
@@ -245,16 +242,20 @@ void CameraModeTestStrength_init(short *cam, int param2, int *param3)
   *((u8 *)lbl_803DD560 + 0x64) = 1;
   tags[0] = 9;
   tags[1] = 0x1b;
-  lbl_803DD560[3] = (*(RomCurveFindFn *)(*(int *)gRomCurveInterface + 0x14))(
-      ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, tags, 2, lbl_803DD560[1]);
+  lbl_803DD560[3] = (*gRomCurveInterface)->find(tags, 2, lbl_803DD560[1],
+                                                ((GameObject *)obj)->anim.worldPosX,
+                                                ((GameObject *)obj)->anim.worldPosY,
+                                                ((GameObject *)obj)->anim.worldPosZ);
   tags[0] = 8;
   tags[1] = 0x1a;
-  lbl_803DD560[2] = (*(RomCurveFindFn *)(*(int *)gRomCurveInterface + 0x14))(
-      ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, tags, 2, lbl_803DD560[1]);
+  lbl_803DD560[2] = (*gRomCurveInterface)->find(tags, 2, lbl_803DD560[1],
+                                                ((GameObject *)obj)->anim.worldPosX,
+                                                ((GameObject *)obj)->anim.worldPosY,
+                                                ((GameObject *)obj)->anim.worldPosZ);
   fn_8010A104((int *)&lbl_803DD560[3], (int *)&lbl_803DD560[2], ((GameObject *)obj)->anim.worldPosX,
               ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ, lbl_803DD560[1]);
-  romNode = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
-  curveNode2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
+  romNode = (int)(*gRomCurveInterface)->getById(lbl_803DD560[2]);
+  curveNode2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560[3]);
   pathcam_findTaggedNodeWindow(romNode, prevW, lbl_803DD560[1]);
   pathcam_findTaggedNodeWindow(curveNode2, nextW, lbl_803DD560[1]);
   pathcam_buildWindowSamples(prevW, xS, yS, zS, pitchS, yawS, rollS, fovS);
