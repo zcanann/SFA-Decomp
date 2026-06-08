@@ -1250,7 +1250,7 @@ int fn_8015E8BC(int obj, GroundBaddieState *p)
   extern f32 lbl_803E2DF0;
   GroundBaddieState *sub;
   u8 *hit;
-  u32 flags;
+  int flags;
 
   sub = ((GameObject *)obj)->extra;
   hit = *(u8 **)&sub->control;
