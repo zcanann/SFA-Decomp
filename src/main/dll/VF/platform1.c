@@ -389,7 +389,7 @@ void sc_totemstrength_init(int *obj) {
 
 extern void GameBit_Set(int eventId, int value);
 extern u32  GameBit_Get(int eventId);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern u32  getButtonsJustPressed(int pad);
 extern int  playerGetMoney(int player);
 extern void playerAddMoney(int player, int amount);
@@ -416,7 +416,7 @@ void sc_totemstrength_update(u8 *obj)
 
     Obj_GetPlayerObject();
     GameBit_Set(0xf1d, 0);
-    t = ((MapEventInterface *)*gMapEventInterface)->getMode(0xe);
+    t = (*gMapEventInterface)->getMode(0xe);
     if (t == 6) {
         if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0) {
             if (st->loopSfxHandle > 0) {

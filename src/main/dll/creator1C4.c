@@ -82,7 +82,7 @@ extern void audioStopByMask(int mask);
 extern int Music_Trigger(int id, int value);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E503C;
 extern f32 lbl_803E5040;
@@ -242,11 +242,11 @@ void gpsh_shrine_update(int obj)
                     (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                     *(u8 *)((char *)data + 0x14) = 4;
                     GameBit_Set(0x36a, 0);
-                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 0, 1);
-                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 1, 1);
-                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 5, 1);
-                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 10, 1);
-                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 0xb, 1);
+                    (*gMapEventInterface)->setAnimEvent(0xd, 0, 1);
+                    (*gMapEventInterface)->setAnimEvent(0xd, 1, 1);
+                    (*gMapEventInterface)->setAnimEvent(0xd, 5, 1);
+                    (*gMapEventInterface)->setAnimEvent(0xd, 10, 1);
+                    (*gMapEventInterface)->setAnimEvent(0xd, 0xb, 1);
                     GameBit_Set(0xc91, 1);
                     GameBit_Set(0xe05, 0);
                 }

@@ -515,7 +515,7 @@ void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int *yP
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *gScreenTransitionInterface;
 extern int *gCameraInterface;
 extern int lbl_803A87F0[];
@@ -538,7 +538,7 @@ extern f32 lbl_803E1FC4;
 extern f32 lbl_803E1FC8;
 
 #define PMDS_MAP_EVENT_GET_STATUS() \
-  ((MapEventInterface *)*gMapEventInterface)->getProgressPtr()
+  (*gMapEventInterface)->getProgressPtr()
 #define PMDS_SCREEN_GET_FADE() \
   ((f32 (*)(void))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x18)))()
 #define PMDS_CAMERA_GET_STATE() \

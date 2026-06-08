@@ -1778,7 +1778,7 @@ void invhit_update(int *obj) {
 #pragma scheduling reset
 
 extern int getCurMapLayer(void);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 Vec_distance(f32 *a, f32 *b);
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
@@ -1805,7 +1805,7 @@ void WarpPoint_update(int *obj) {
     }
     if (*(u8 *)(def + 0x1f) != 0 && *(u8 *)((char *)state + 0xd) == 0 && lbl_803DCEB8 > -1 &&
         lbl_803DCEB8 == *(s8 *)(def + 0x19)) {
-        ((MapEventInterface *)*gMapEventInterface)->triggerEvent((int)(player + 0xc), *(s16 *)player,
+        (*gMapEventInterface)->triggerEvent((int)(player + 0xc), *(s16 *)player,
                                                                  0, getCurMapLayer());
         *(u8 *)((char *)state + 0xd) = 1;
     }
@@ -1821,7 +1821,7 @@ void WarpPoint_update(int *obj) {
                 *(u32 *)&((GameObject *)player)->anim.parent == *(u32 *)&((GameObject *)obj)->anim.parent) {
                 if (((GameObject *)obj)->anim.seqId == 0x27e) {
                     GameBit_Set(0xd53, 1);
-                    ((MapEventInterface *)*gMapEventInterface)->triggerEvent(
+                    (*gMapEventInterface)->triggerEvent(
                         (int)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
                 }
                 (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);

@@ -453,14 +453,14 @@ void fn_801E7DC8(int p1, int p2, int count)
   extern void hitDetectFn_800658a4(int, int *, int, f32, f32, f32);
   extern int Obj_AllocObjectSetup(int, int);
   extern void Obj_SetupObject(int, int, int, int, int);
-  extern int *gMapEventInterface;
+  extern MapEventInterface **gMapEventInterface;
   int i;
   int local;
   int o;
 
   if (Obj_IsLoadingLocked() == 0) return;
 
-  ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s32)(s8)*(u8 *)(p1 + 0xac), 6, 1);
+  (*gMapEventInterface)->setAnimEvent((s32)(s8)*(u8 *)(p1 + 0xac), 6, 1);
 
   hitDetectFn_800658a4(p1, &local, 0, *(f32 *)(p1 + 0xc), *(f32 *)(p1 + 0x10), *(f32 *)(p1 + 0x14));
 

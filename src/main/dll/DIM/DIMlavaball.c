@@ -2324,7 +2324,7 @@ extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, in
 extern void objParticleFn_80099d84(int obj, f32 a, int c, f32 b, int d);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern u32 playerGetStateFlag310(int player);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern char lbl_803AC918[];
 extern f32 lbl_803E4584;
 extern f32 lbl_803E4588;
@@ -2377,7 +2377,7 @@ void mmp_moonrock_update(int obj) {
     }
     grabbed = 0;
     if ((state->flags & 8) != 0 &&
-        ((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(0x12, 6) == 0) {
+        (*gMapEventInterface)->getAnimEvent(0x12, 6) == 0) {
         state->flags |= 1;
     } else if ((state->flags & 0x400) == 0) {
         if (*(s16 *)(def + 0x20) != -1 && GameBit_Get(*(s16 *)(def + 0x20)) == 0) {
