@@ -193,7 +193,7 @@ void wcpushblock_initialise(void) {}
 void wcpushblock_update(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WCPushBlockRuntimeState *state = ((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
     f32 range = lbl_803E6D58;
     f32 dist;
@@ -216,7 +216,7 @@ void wcpushblock_update(int obj)
             if ((u32)GameBit_Get(WCPUSHBLOCK_GAMEBIT_A_SOLVED) != 0) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_SOLVED;
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x34))(
-                    WCPUSHBLOCK_INITIAL_TILE(state), state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y, WCPUSHBLOCK_IFACE);
+                    WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x20))(
                     obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                     (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
@@ -227,7 +227,7 @@ void wcpushblock_update(int obj)
             if ((u32)GameBit_Get(WCPUSHBLOCK_GAMEBIT_B_SOLVED) != 0) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_SOLVED;
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x50))(
-                    WCPUSHBLOCK_INITIAL_TILE(state), state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y, WCPUSHBLOCK_IFACE);
+                    WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x3c))(
                     obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                     (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
@@ -256,13 +256,13 @@ void wcpushblock_update(int obj)
     case WCPUSHBLOCK_PHASE_INIT_MOVE:
         if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
             (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x30))(
-                WCPUSHBLOCK_INITIAL_TILE(state), state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y, WCPUSHBLOCK_IFACE);
+                WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
             (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x20))(
                 obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                 (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
         } else {
             (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x4c))(
-                WCPUSHBLOCK_INITIAL_TILE(state), state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y, WCPUSHBLOCK_IFACE);
+                WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
             (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x3c))(
                 obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                 (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
@@ -282,51 +282,51 @@ void wcpushblock_update(int obj)
             ((GameObject *)obj)->anim.velocityX = zero;
             ((GameObject *)obj)->anim.velocityZ = zero;
         }
-        if (fn_80296414(player, obj, state + WCPUSHBLOCK_STATE_PUSH_DIR) != 0) {
+        if (fn_80296414(player, obj, (int)&state->pushDir) != 0) {
             u32 dir = WCPUSHBLOCK_PUSH_DIR(state);
             if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
                 if (dir == WCPUSHBLOCK_DIR_POS_X) {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         (*(int (**)(int, int, int, f32 *, f32 *, int, int, int))(WCPUSHBLOCK_IFACE + 0x38))(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                            (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_X), (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_Z), -1, 0, WCPUSHBLOCK_IFACE);
+                            &state->targetX, &state->targetZ, -1, 0, WCPUSHBLOCK_IFACE);
                 } else if (dir == WCPUSHBLOCK_DIR_NEG_X) {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         (*(int (**)(int, int, int, f32 *, f32 *, int, int, int))(WCPUSHBLOCK_IFACE + 0x38))(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                            (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_X), (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_Z), 1, 0, WCPUSHBLOCK_IFACE);
+                            &state->targetX, &state->targetZ, 1, 0, WCPUSHBLOCK_IFACE);
                 } else if (dir == WCPUSHBLOCK_DIR_POS_Z) {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         (*(int (**)(int, int, int, f32 *, f32 *, int, int, int))(WCPUSHBLOCK_IFACE + 0x38))(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                            (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_X), (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_Z), 0, -1, WCPUSHBLOCK_IFACE);
+                            &state->targetX, &state->targetZ, 0, -1, WCPUSHBLOCK_IFACE);
                 } else if (dir == WCPUSHBLOCK_DIR_NEG_Z) {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         (*(int (**)(int, int, int, f32 *, f32 *, int, int, int))(WCPUSHBLOCK_IFACE + 0x38))(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                            (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_X), (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_Z), 0, 1, WCPUSHBLOCK_IFACE);
+                            &state->targetX, &state->targetZ, 0, 1, WCPUSHBLOCK_IFACE);
                 }
             } else {
                 if (dir == WCPUSHBLOCK_DIR_POS_X) {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         (*(int (**)(int, int, int, f32 *, f32 *, int, int, int))(WCPUSHBLOCK_IFACE + 0x54))(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                            (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_X), (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_Z), -1, 0, WCPUSHBLOCK_IFACE);
+                            &state->targetX, &state->targetZ, -1, 0, WCPUSHBLOCK_IFACE);
                 } else if (dir == WCPUSHBLOCK_DIR_NEG_X) {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         (*(int (**)(int, int, int, f32 *, f32 *, int, int, int))(WCPUSHBLOCK_IFACE + 0x54))(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                            (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_X), (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_Z), 1, 0, WCPUSHBLOCK_IFACE);
+                            &state->targetX, &state->targetZ, 1, 0, WCPUSHBLOCK_IFACE);
                 } else if (dir == WCPUSHBLOCK_DIR_POS_Z) {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         (*(int (**)(int, int, int, f32 *, f32 *, int, int, int))(WCPUSHBLOCK_IFACE + 0x54))(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                            (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_X), (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_Z), 0, -1, WCPUSHBLOCK_IFACE);
+                            &state->targetX, &state->targetZ, 0, -1, WCPUSHBLOCK_IFACE);
                 } else if (dir == WCPUSHBLOCK_DIR_NEG_Z) {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         (*(int (**)(int, int, int, f32 *, f32 *, int, int, int))(WCPUSHBLOCK_IFACE + 0x54))(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                            (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_X), (f32 *)(state + WCPUSHBLOCK_STATE_TARGET_Z), 0, 1, WCPUSHBLOCK_IFACE);
+                            &state->targetX, &state->targetZ, 0, 1, WCPUSHBLOCK_IFACE);
                 }
             }
             if (WCPUSHBLOCK_TARGET_X(state) == ((GameObject *)obj)->anim.localPosX &&
@@ -444,7 +444,7 @@ void wcpushblock_update(int obj)
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x28))(
                     0, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, f32, f32, int, int, int))(WCPUSHBLOCK_IFACE + 0x24))(
-                    obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ, state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y,
+                    obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ, (int)&state->tileX, (int)&state->tileY,
                     WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x28))(
                     WCPUSHBLOCK_INITIAL_TILE(state), WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
@@ -453,7 +453,7 @@ void wcpushblock_update(int obj)
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x44))(
                     0, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, f32, f32, int, int, int))(WCPUSHBLOCK_IFACE + 0x40))(
-                    obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ, state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y,
+                    obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ, (int)&state->tileX, (int)&state->tileY,
                     WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x44))(
                     WCPUSHBLOCK_INITIAL_TILE(state), WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
@@ -474,16 +474,16 @@ void wcpushblock_update(int obj)
             objAnim->alpha = a;
         }
         if (objAnim->alpha == 0) {
-            if (wcblock_isPlayerAwayFromStoredCell(obj, state, Obj_GetPlayerObject()) != 0) {
+            if (wcblock_isPlayerAwayFromStoredCell(obj, (int)state, Obj_GetPlayerObject()) != 0) {
                 if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
                     (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x30))(
-                        WCPUSHBLOCK_INITIAL_TILE(state), state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y, WCPUSHBLOCK_IFACE);
+                        WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
                     (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x20))(
                         obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                         (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
                 } else {
                     (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x4c))(
-                        WCPUSHBLOCK_INITIAL_TILE(state), state + WCPUSHBLOCK_STATE_TILE_X, state + WCPUSHBLOCK_STATE_TILE_Y, WCPUSHBLOCK_IFACE);
+                        WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
                     (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x3c))(
                         obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                         (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
