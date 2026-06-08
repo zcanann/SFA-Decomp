@@ -11425,11 +11425,11 @@ void objLoadPlayerFromSave(int obj)
     *(int *)&((GameObject *)obj)->anim.placementData = 0;
     ((PlayerState *)inner)->heldObj = 0;
     ((PlayerState *)inner)->unk35C =
-        (*(int (*)(int))(*(int *)(*gMapEventInterface + 0x8c)))(*gMapEventInterface);
+        (*(int (**)(MapEventInterface *))((u8 *)*gMapEventInterface + 0x8c))(*gMapEventInterface);
     *(u16 *)((char *)inner + 0x81a) =
-        (u8)(*(int (*)(int))(*(int *)(*gMapEventInterface + 0x74)))(*gMapEventInterface);
+        (*gMapEventInterface)->getPlayerNo();
     Obj_SetActiveModelIndex(obj, ((PlayerState *)inner)->unk81A);
-    me = (int)((MapEventInterface *)*gMapEventInterface)->getWarpPos();
+    me = (int)(*gMapEventInterface)->getWarpPos();
     ((GameObject *)obj)->anim.rotX = (s16)(*(s8 *)((char *)me + 0xc) << 8);
     ((PlayerState *)inner)->targetYaw = ((GameObject *)obj)->anim.rotX;
     ((PlayerState *)inner)->yaw = ((GameObject *)obj)->anim.rotX;

@@ -3,6 +3,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
 #include "main/effect_interfaces.h"
+#include "main/mapEvent.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
@@ -5463,7 +5464,7 @@ void staffDoGrowShrinkAnim(int *obj, u8 grow, u8 flag2)
     }
 }
 
-extern void *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 void dll_F7_init(int *obj, int *params)
 {
     int *state = ((GameObject *)obj)->extra;
@@ -5481,7 +5482,7 @@ void dll_F7_init(int *obj, int *params)
     *(u8 *)((char *)state + 0xa) = 2;
     *(u8 *)((char *)state + 0xb) = *(u8 *)((char *)params + 0x19);
     if (*(s8 *)((char *)state + 0xb) == 0) {
-        int r = ((int (*)(int))((int **)*(int **)gMapEventInterface)[0x68 / 4])(*(int *)((char *)params + 0x14));
+        int r = (*gMapEventInterface)->isTimedEventActive(*(int *)((char *)params + 0x14));
         if (r == 0) {
             int *r54 = *(int **)&((GameObject *)obj)->anim.hitReactState;
             *(s16 *)((char *)r54 + 0x60) &= ~1;
@@ -6785,7 +6786,7 @@ void dll_F7_update(int *obj)
     if (*(s8 *)(state + 9) != 0) {
         int *params = *(int **)&((GameObject *)obj)->anim.placementData;
         if (*(s8 *)(state + 0xb) == 0 &&
-            ((int (*)(int))((int *)*(int **)gMapEventInterface)[0x68 / 4])(*(int *)((char *)params + 0x14)) != 0) {
+            (*gMapEventInterface)->isTimedEventActive(*(int *)((char *)params + 0x14)) != 0) {
             *(u8 *)(state + 9) = 0;
             *(u8 *)(state + 8) = 1;
             *(u8 *)(state + 0xa) = 2;
@@ -6817,7 +6818,7 @@ void dll_F7_update(int *obj)
     if (*(s8 *)(state + 0xa) <= 0) {
         int *params = *(int **)&((GameObject *)obj)->anim.placementData;
         if (*(s8 *)(state + 0xb) == 0) {
-            ((void (*)(int, f32))((int *)*(int **)gMapEventInterface)[0x64 / 4])(*(int *)((char *)params + 0x14), lbl_803E340C);
+            (*gMapEventInterface)->startTimedEvent(*(int *)((char *)params + 0x14), lbl_803E340C);
         }
         *(u8 *)(state + 9) = 1;
         *(u8 *)(state + 8) = 0;

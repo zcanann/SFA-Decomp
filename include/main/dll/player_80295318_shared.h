@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -1248,7 +1249,7 @@ extern f32 lbl_803E8218;
 extern f32 lbl_803E821C;
 extern f32 lbl_803E8220;
 extern f32 lbl_803E8224;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *gPathControlInterface;
 extern int allocModelStruct2(int p1, int p2);
 extern void *mmAlloc(int size, int heap, int flags);

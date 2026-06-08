@@ -1,4 +1,5 @@
 #include "main/dll/SC/SClantern.h"
+#include "main/mapEvent.h"
 #include "main/objanim_internal.h"
 
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
@@ -9,7 +10,7 @@ extern undefined4 FUN_8028683c();
 extern undefined4 Obj_GetPlayerObject();
 
 extern ObjAnimEventList gSClanternObjAnimEvents;
-extern undefined4* gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E5498;
 
@@ -125,7 +126,7 @@ undefined4 playerFn_801d6d58(void)
 {
   undefined4 playerObj;
 
-  (*(code *)(*gMapEventInterface + 0x74))();
+  (*gMapEventInterface)->getPlayerNo();
   playerObj = Obj_GetPlayerObject();
   objGetAnimStateFlags(playerObj,0xff);
   return 2;

@@ -1,6 +1,7 @@
 #include "main/dll/gcrobotlightbea.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/mapEvent.h"
 #include "main/resource.h"
 
 
@@ -506,7 +507,7 @@ void smallbasket_free(int param_1)
 }
 #pragma scheduling reset
 
-extern undefined4* gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E3974;
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
                                  undefined4 p5, double scale);
@@ -564,8 +565,7 @@ void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, und
   int result;
   short field_a;
   extra = *(int*)(param_1 + 0xb8);
-  result = (int)(*(code *)(*(int *)gMapEventInterface + 0x68))(
-    *(int*)(*(int*)(param_1 + 0x4c) + 0x14));
+  result = (*gMapEventInterface)->isTimedEventActive(*(int*)(*(int*)(param_1 + 0x4c) + 0x14));
   if (result == 0) {
     *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
   } else {
