@@ -184,7 +184,7 @@ void wcfloortile_update(int obj)
 #pragma peephole reset
 
 #pragma scheduling off
-void fn_8022AE1C(int obj, int bounds) {
+void arwarwing_clampToFlightBounds(int obj, int bounds) {
     f32 cx = *(f32 *)(bounds + 0x14);
     f32 hx = cx + *(f32 *)(bounds + 0x20);
     f32 lx = cx - *(f32 *)(bounds + 0x20);
@@ -213,7 +213,7 @@ void fn_8022AE1C(int obj, int bounds) {
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8022AECC(int obj, int p)
+void arwarwing_updateFlightPhysics(int obj, int p)
 {
     f32 v[3];
     f32 cz;
@@ -285,7 +285,7 @@ void fn_8022AECC(int obj, int p)
     ((GameObject *)obj)->anim.rotX = (s16) * (int *)(p + 0x344);
     ((GameObject *)obj)->anim.rotY = (s16) * (int *)(p + 0x358);
     if (*(u8 *)(p + 0x478) == 1) {
-        fn_8022AB68(obj, p);
+        arwarwing_updateBarrelRoll(obj, p);
     } else {
         ((GameObject *)obj)->anim.rotZ = ((f32) * (int *)(p + 0x36c) * *(f32 *)(p + 0x38c) +
                                         (f32) * (int *)(p + 0x380));
@@ -330,33 +330,34 @@ void fn_8022AECC(int obj, int p)
         (*(f32 *)(p + 0x3c4) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3cc));
     *(u16 *)(p + 0x3d8) =
         (*(f32 *)(p + 0x3d0) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3d8));
-    fn_8022AE1C(obj, p);
+    arwarwing_clampToFlightBounds(obj, p);
 }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling off
-void fn_8022B8A0(int p, int q) {
-    if (*(void * *)&((ArwingState *)q)->activeBombObj != NULL)
+void arwarwing_updateBombFire(int obj, int state) {
+    ArwingState *arwing = (ArwingState *)state;
+    if (*(void * *)&arwing->activeBombObj != NULL)
         return;
     {
-        f32 t = ((ArwingState *)q)->bombCooldown;
+        f32 t = arwing->bombCooldown;
         if (t > lbl_803E6ECC) {
-            ((ArwingState *)q)->bombCooldown = t - timeDelta;
-            if (((ArwingState *)q)->bombCooldown >= lbl_803E6ECC)
+            arwing->bombCooldown = t - timeDelta;
+            if (arwing->bombCooldown >= lbl_803E6ECC)
                 return;
-            ((ArwingState *)q)->bombCooldown = lbl_803E6ECC;
+            arwing->bombCooldown = lbl_803E6ECC;
         }
     }
-    if (((ArwingState *)q)->inputFlags & 0x200) {
-        if ((s8) ((ArwingState *)q)->bombVolleyMode == 1) {
-            fn_8022B764(p, q, 0);
-            fn_8022B764(p, q, 1);
+    if (arwing->inputFlags & 0x200) {
+        if ((s8)arwing->bombVolleyMode == 1) {
+            arwarwing_spawnBomb(obj, state, 0);
+            arwarwing_spawnBomb(obj, state, 1);
         } else {
-            fn_8022B764(p, q, ((ArwingState *)q)->bombSide);
-            ((ArwingState *)q)->bombSide = (((ArwingState *)q)->bombSide ^ 1) & 0xff;
+            arwarwing_spawnBomb(obj, state, arwing->bombSide);
+            arwing->bombSide = (arwing->bombSide ^ 1) & 0xff;
         }
-        ((ArwingState *)q)->bombCooldown = (f32)(u32) *(u16 *)&((ArwingState *)q)->bombFireDelay;
+        arwing->bombCooldown = (f32)(u32) *(u16 *)&arwing->bombFireDelay;
     }
 }
 #pragma scheduling reset
@@ -364,33 +365,34 @@ void fn_8022B8A0(int p, int q) {
 #pragma peephole off
 #pragma scheduling on
 #pragma scheduling off
-void fn_8022B764(int p, int q, int idx) {
+void arwarwing_spawnBomb(int obj, int state, int side) {
+    ArwingState *arwing = (ArwingState *)state;
     f32 pz, py, px;
     int setup;
     u8 cnt;
     if (Obj_IsLoadingLocked() == 0)
         return;
-    cnt = ((ArwingState *)q)->bombCount;
+    cnt = arwing->bombCount;
     if (cnt == 0)
         return;
-    ((ArwingState *)q)->bombCount = cnt - 1;
-    if (idx == 0)
-        ObjPath_GetPointWorldPosition(p, 5, &px, &py, &pz, 0);
+    arwing->bombCount = cnt - 1;
+    if (side == 0)
+        ObjPath_GetPointWorldPosition(obj, 5, &px, &py, &pz, 0);
     else
-        ObjPath_GetPointWorldPosition(p, 6, &px, &py, &pz, 0);
+        ObjPath_GetPointWorldPosition(obj, 6, &px, &py, &pz, 0);
     setup = Obj_AllocObjectSetup(0x20, 0x605);
     *(f32 *)(setup + 8) = px;
     *(f32 *)(setup + 0xc) = py;
     *(f32 *)(setup + 0x10) = pz;
-    *(u8 *)(setup + 0x1a) = *(s16 *)(p + 0) >> 8;
-    *(u8 *)(setup + 0x19) = *(s16 *)(p + 2) >> 8;
-    *(u8 *)(setup + 0x18) = *(s16 *)(p + 4) >> 8;
+    *(u8 *)(setup + 0x1a) = *(s16 *)(obj + 0) >> 8;
+    *(u8 *)(setup + 0x19) = *(s16 *)(obj + 2) >> 8;
+    *(u8 *)(setup + 0x18) = *(s16 *)(obj + 4) >> 8;
     *(u8 *)(setup + 4) = 1;
     *(u8 *)(setup + 5) = 1;
-    ((ArwingState *)q)->activeBombObj = loadObjectAtObject(p);
-    fn_8022ED74(((ArwingState *)q)->activeBombObj, *(u16 *)&((ArwingState *)q)->bombProjectileParam);
-    fn_8022ECE0(((ArwingState *)q)->activeBombObj, ((ArwingState *)q)->bombProjectileLifetime);
-    Sfx_PlayFromObject(p, SFXbaddie_rach_call3);
+    arwing->activeBombObj = loadObjectAtObject(obj);
+    fn_8022ED74(arwing->activeBombObj, *(u16 *)&arwing->bombProjectileParam);
+    fn_8022ECE0(arwing->activeBombObj, arwing->bombProjectileLifetime);
+    Sfx_PlayFromObject(obj, SFXbaddie_rach_call3);
 }
 #pragma scheduling reset
 #pragma scheduling reset
@@ -441,7 +443,7 @@ void fn_8022A9C8(int obj, int state)
 #pragma peephole reset
 
 #pragma scheduling off
-void fn_8022A670(int obj, int state)
+void arwarwing_readControls(int obj, int state)
 {
     f32 nx;
     f32 ny;
@@ -507,7 +509,7 @@ void fn_8022A670(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8022AB68(int obj, int state)
+void arwarwing_updateBarrelRoll(int obj, int state)
 {
     int tgt;
     int cur;

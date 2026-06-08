@@ -1523,7 +1523,7 @@ LAB_8023db24:
     if (moveChanged) {
       GameBit_Set(0x10,0);
       *(s16 *)(piVar14 + 0x26) = 0x1e;
-      fn_8022D308(*piVar14);
+      arwarwing_resetFlightState(*piVar14);
       *(f32 *)(*piVar14 + 0x14) = *(f32 *)(piVar14 + 0x1c);
       *(f32 *)(piVar14 + 0x2a) = lbl_803E74D4;
     }

@@ -20,7 +20,7 @@ typedef struct ArwingState {
     f32 unk28;
     f32 camPos[3];       /* 0x02c: pushed to the camera each update */
     f32 rootMotionScale;
-    f32 velTargetX;      /* 0x03c: (vel - velTarget) * accel integrates vel (fn_8022AECC) */
+    f32 velTargetX;      /* 0x03c: (vel - velTarget) * accel integrates vel */
     f32 velTargetY;
     f32 velTargetZ;
     f32 velX;            /* 0x048 */

@@ -278,7 +278,8 @@ void arwarwing_addShield(int arwing, int p2)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8022BCD0(int p, int q) {
+void arwarwing_emitDamageEffects(int obj, int state) {
+    ArwingState *arwing = (ArwingState *)state;
     u8 flag;
     struct {
         u8 pad[6];
@@ -289,26 +290,26 @@ void fn_8022BCD0(int p, int q) {
         f32 d;
     } emit;
     flag = 0;
-    if ((s8) * (u8 *)(q + 0x468) <= 4) {
-        if ((*(u8 *)(q + 0x476))++ % 2 != 0) {
+    if ((s8)arwing->shield <= 4) {
+        if (arwing->counter476++ % 2 != 0) {
             emit.a = lbl_803E6F08;
             emit.b = lbl_803E6F0C;
             emit.c = lbl_803E6F10;
             emit.d = lbl_803E6F14;
-            if ((s8) * (u8 *)(q + 0x468) <= 2)
+            if ((s8)arwing->shield <= 2)
                 emit.type = 0x61a8;
             else
                 emit.type = -0x63c0;
-            (*gPartfxInterface)->spawnObject((void *)p, 0x7d0, &emit.pad, 4, -1, &flag);
+            (*gPartfxInterface)->spawnObject((void *)obj, 0x7d0, &emit.pad, 4, -1, &flag);
         }
     }
-    if ((s8) * (u8 *)(q + 0x468) <= 2) {
+    if ((s8)arwing->shield <= 2) {
         emit.a = lbl_803E6F18;
         emit.type = 0xc0a;
         emit.b = lbl_803E6ECC;
         emit.c = lbl_803E6F1C;
         emit.d = lbl_803E6F20;
-        (*gPartfxInterface)->spawnObject((void *)p, 0x7d1, &emit.pad, 4, -1, &flag);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x7d1, &emit.pad, 4, -1, &flag);
     }
 }
 #pragma scheduling reset
@@ -316,7 +317,7 @@ void fn_8022BCD0(int p, int q) {
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022C680(int obj) {
+void arwarwing_warpByCourse(int obj) {
     switch ((s8) * (u8 *)(obj + 0xac)) {
     case 0x3a:
         if ((u32)GameBit_Get(0xc85) != 0) {
@@ -400,7 +401,7 @@ void arwarwing_update(int obj)
     f32 throttle;
 
     if ((((ArwingState *)state)->flags477 & 1) == 0) {
-        fn_8022CDEC(obj, state);
+        arwarwing_initAttachments(obj, state);
         return;
     }
     mode = ((ArwingState *)state)->mode;
@@ -444,11 +445,11 @@ void arwarwing_update(int obj)
         ((ArwingState *)state)->velY = ((ArwingState *)state)->velY - lbl_803E6EF8 * timeDelta;
         objMove(obj, ((ArwingState *)state)->velX * timeDelta, ((ArwingState *)state)->velY * timeDelta,
                 ((ArwingState *)state)->velZ * timeDelta);
-        fn_8022AE1C(obj, state);
+        arwarwing_clampToFlightBounds(obj, state);
         ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         ((GameObject *)((ArwingState *)state)->thrusterR)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     } else {
-        fn_8022A670(obj, state);
+        arwarwing_readControls(obj, state);
         if ((((GameObject *)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
             *(s16 *)&((ArwingState *)state)->inputFlags2 = 0;
             *(s16 *)&((ArwingState *)state)->inputFlags = 0;
@@ -473,9 +474,9 @@ void arwarwing_update(int obj)
         ((ArwingState *)state)->rotZTrimTarget =
             (int)(((ArwingState *)state)->rotZTrimRange *
                   (((ArwingState *)state)->lTriggerTrim + ((ArwingState *)state)->rTriggerTrim));
-        fn_8022AECC(obj, state);
+        arwarwing_updateFlightPhysics(obj, state);
         arwarwing_updateWeaponFire(obj, state);
-        fn_8022B8A0(obj, state);
+        arwarwing_updateBombFire(obj, state);
 
         *(s16 *)(((ArwingState *)state)->wingVec[0] + 0) =
             (int)((f32)(-((ArwingState *)state)->rotZCur) * ((ArwingState *)state)->wingFlexScale);
@@ -518,7 +519,7 @@ void arwarwing_update(int obj)
                   (f32) * (s16 *)(((ArwingState *)state)->wingVec[3] + 4));
     }
 
-    fn_8022C30C(obj, state);
+    arwarwing_updateRollAndEngine(obj, state);
     (*(void (**)(void *, int))(*gCameraInterface + 0x60))((void *)(state + 0x2c), 0xc);
     camRot[0] = ((GameObject *)obj)->anim.rotX;
     camRot[1] = ((GameObject *)obj)->anim.rotY;
@@ -527,9 +528,9 @@ void arwarwing_update(int obj)
     camPos[0] = ((ArwingState *)state)->maxSpeedZ;
     camPos[1] = ((ArwingState *)state)->velZ;
     (*(void (**)(void *, int))(*gCameraInterface + 0x60))(camPos, 8);
-    fn_8022BE14(obj, state);
-    fn_8022C0D0(obj, state);
-    fn_8022BCD0(obj, state);
+    arwarwing_handlePathDamage(obj, state);
+    arwarwing_handleObjectDamage(obj, state);
+    arwarwing_emitDamageEffects(obj, state);
 }
 #pragma scheduling reset
 
@@ -629,7 +630,7 @@ int fn_8022D750(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->mode ==
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8022C30C(int obj, int state)
+void arwarwing_updateRollAndEngine(int obj, int state)
 {
     int vec;
     f32 vol;
@@ -734,7 +735,7 @@ void fn_8022C7A4(int obj) { (*(ArwingState **)&((GameObject *)obj)->extra)->aimS
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8022CDEC(int obj, int state)
+void arwarwing_initAttachments(int obj, int state)
 {
     int found;
     int mev;
@@ -889,7 +890,7 @@ void fn_8022CDEC(int obj, int state)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8022D308(int obj)
+void arwarwing_resetFlightState(int obj)
 {
     ArwingState *state = ((GameObject *)obj)->extra;
     f32 v7c = lbl_803E6F7C;
@@ -945,7 +946,7 @@ void fn_8022D308(int obj)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8022BE14(int obj, int state)
+void arwarwing_handlePathDamage(int obj, int state)
 {
     int sub = state + 0xc0;
     int dmg;
@@ -1003,7 +1004,7 @@ void fn_8022BE14(int obj, int state)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8022C0D0(int obj, int state)
+void arwarwing_handleObjectDamage(int obj, int state)
 {
     int hitVol;
     int hitObj;
@@ -1065,10 +1066,10 @@ int arwarwing_SeqFn(int obj, int p2, int script)
     Camera_GetCurrentViewSlot();
     *(int *)(script + 0xe8) = (int)fn_8022C7A4;
     if ((((ArwingState *)state)->flags477 & 1) == 0) {
-        fn_8022CDEC(obj, state);
+        arwarwing_initAttachments(obj, state);
         return 0;
     }
-    fn_8022C30C(obj, state);
+    arwarwing_updateRollAndEngine(obj, state);
     fn_8022A9C8(obj, state);
     if (((ArwingState *)state)->bombObj != 0)
         arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
@@ -1108,7 +1109,7 @@ int arwarwing_SeqFn(int obj, int p2, int script)
             break;
         case 2:
             clearLoadedFileFlags_blocks1();
-            fn_8022C680(obj);
+            arwarwing_warpByCourse(obj);
             break;
         case 0xa:
             if (Obj_IsLoadingLocked()) {
@@ -1126,7 +1127,7 @@ int arwarwing_SeqFn(int obj, int p2, int script)
             break;
         case 0xb:
             ((ArwingState *)state)->bombCount = 1;
-            fn_8022B764(obj, state, ((ArwingState *)state)->bombSide);
+            arwarwing_spawnBomb(obj, state, ((ArwingState *)state)->bombSide);
             ((ArwingState *)state)->bombSide ^= 1;
             break;
         case 0xc:

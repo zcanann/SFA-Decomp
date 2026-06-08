@@ -1206,7 +1206,6 @@ extern f32 lbl_803E70AC;
 
 
 extern f32 lbl_803E6ECC;
-extern void fn_8022B764(int p, int q, int idx);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -1215,7 +1214,6 @@ extern f32 lbl_803E6ED0;
 extern f32 lbl_803E6EFC;
 extern f32 lbl_803E6F00;
 extern f32 mathSinf(f32 x);
-extern void fn_8022AB68(int obj, int p);
 extern void PSVECScale(void *dst, void *src, f32 scale);
 extern void PSVECSubtract(void *a, void *b, void *ab);
 
@@ -1290,11 +1288,6 @@ extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int idx, int p2);
 extern void warpToMap(int map, int p2);
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
-extern void fn_8022CDEC(int obj, int state);
-extern void fn_8022A670(int obj, int state);
-extern void fn_8022C30C(int obj, int state);
-extern void fn_8022BE14(int obj, int state);
-extern void fn_8022C0D0(int obj, int state);
 
 
 
@@ -2364,11 +2357,11 @@ void arwarwing_addShield(int arwing, int p2);
 void arwbombcoll_updateMovingAxis(int obj, RingState *state);
 void arwbombcoll_handleArwingHit(int obj, RingState *state, int arwing);
 int arwbombcoll_checkArwingCollision(int obj, RingState *state, int arwing);
-void fn_8022AE1C(int obj, int bounds);
-void fn_8022AECC(int obj, int p);
-void fn_8022B8A0(int p, int q);
-void fn_8022BCD0(int p, int q);
-void fn_8022C680(int obj);
+void arwarwing_clampToFlightBounds(int obj, int bounds);
+void arwarwing_updateFlightPhysics(int obj, int state);
+void arwarwing_updateBombFire(int obj, int state);
+void arwarwing_emitDamageEffects(int obj, int state);
+void arwarwing_warpByCourse(int obj);
 void arwprojectile_createLinkedEffect(int obj, u8 enable);
 void arwblocker_update(int obj);
 void arwproximit_update(int obj);
@@ -2395,10 +2388,10 @@ void mcstaffeffe_init(int obj, int setup);
 int drcloudper_setScale(int obj);
 int drcloudper_selectActiveCloud(int obj);
 void drcloudper_init(int obj, int setup);
-void fn_8022C30C(int obj, int state);
+void arwarwing_updateRollAndEngine(int obj, int state);
 void fn_8022F270(int obj, int p2);
 void fn_8022C7A4(int obj);
-void fn_8022CDEC(int obj, int state);
+void arwarwing_initAttachments(int obj, int state);
 void arwbombcoll_update(int obj);
 void arwsquadron_init(int obj, int setup);
 void fn_80231058(int obj, int src);
@@ -2411,7 +2404,7 @@ void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
 void fn_802317A8(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
 void fn_8022F27C(int obj);
 void fn_8022ECE0(int obj, f32 param);
-void fn_8022B764(int p, int q, int idx);
+void arwarwing_spawnBomb(int obj, int state, int side);
 void fn_80239DD8(int p1, int p2);
 void fn_80239EAC(int p1, int p2);
 void fn_8023A168(int p1, int p2);
@@ -2421,11 +2414,11 @@ void fn_80239FCC(int p1, int p2);
 int fn_8023A6A4(int p1, f32 a, f32 b, f32 c);
 void fn_8023A3E4(int p1, int p2);
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player);
-void fn_8022D308(int obj);
+void arwarwing_resetFlightState(int obj);
 void arwarwingbo_update(int obj);
 void fn_8022A9C8(int obj, int state);
-void fn_8022BE14(int obj, int state);
-void fn_8022C0D0(int obj, int state);
+void arwarwing_handlePathDamage(int obj, int state);
+void arwarwing_handleObjectDamage(int obj, int state);
 void androsshand_spawnShot(int obj, int hand, int p3);
 int fn_8022C7B4(int obj, int p2, int script);
 void arwarwing_init(int obj);
@@ -2453,7 +2446,7 @@ int fn_80221C18(int obj, f32 dt, int p3, int p4);
 int voxmaps_traceWorldLine(void *p1, void *p2);
 void voxmaps_traceScaledVectorEnd(f32 *p1, void *p2, f32 *p3, f32 scale);
 void ring_update(int obj);
-void fn_8022A670(int obj, int state);
-void fn_8022AB68(int obj, int state);
+void arwarwing_readControls(int obj, int state);
+void arwarwing_updateBarrelRoll(int obj, int state);
 
 #endif
