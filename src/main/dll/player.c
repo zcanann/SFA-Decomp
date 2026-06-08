@@ -1261,7 +1261,7 @@ int fn_802A3B04(int obj, int state)
             shk.a = 0;
             shk.b = 0;
             shk.c = 1;
-            (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            (*gCameraInterface)->setMode(
                 0x43, 1, 0, 4, &shk, 0, 0xff);
         }
         if (*(void **)((char *)inner + 0x4c4) != NULL) {
@@ -2423,8 +2423,8 @@ int fn_802A1CA8(int obj, int state)
                         lbl_803DE43C = *(f32 *)((char *)inner + 0x4e8) + lbl_803DAF88[0];
                         if (*(u8 *)((char *)inner + 0x8c8) != 0x48 &&
                             *(u8 *)((char *)inner + 0x8c8) != 0x47) {
-                            (**(void (**)(int, int, int, int, int, int, int))((char *)(*gCameraInterface) + 0x1c))(
-                                0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                            (*gCameraInterface)->setMode(
+                                0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                         }
                         goto finish;
                     }
@@ -2444,8 +2444,8 @@ int fn_802A1CA8(int obj, int state)
                         if (*(u8 *)((char *)inner + 0x8c8) != 0x48 &&
                             *(u8 *)((char *)inner + 0x8c8) != 0x47 &&
                             *(u8 *)((char *)inner + 0x8c8) != 0x42) {
-                            (**(void (**)(int, int, int, int, int, int, int))((char *)(*gCameraInterface) + 0x1c))(
-                                0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                            (*gCameraInterface)->setMode(
+                                0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                             *(u8 *)((char *)inner + 0x8c8) = 0x42;
                         }
                         if (((u32)*(u8 *)((char *)inner + 0x547) >> 7 & 1) != 0) {
@@ -2605,7 +2605,7 @@ finish:
             y = ((GameObject *)obj)->anim.localPosY;
             break;
         }
-        (**(void (**)(f32, f32, f32))((char *)(*gCameraInterface) + 0x2c))(x, y, zz);
+        (*gCameraInterface)->overridePos(x, y, zz);
     }
     fn_802AB5A4(obj, inner, 5);
     return 0;
@@ -2979,7 +2979,7 @@ store_ph:
     }
     {
         f32 sp = ((GameObject *)obj)->anim.currentMoveProgress;
-        (**(void (**)(f32, f32, f32))((char *)(*gCameraInterface) + 0x2c))(
+        (*gCameraInterface)->overridePos(
             *(f32 *)((char *)inner + 0x564) * sp + ((GameObject *)obj)->anim.localPosX,
             *(f32 *)((char *)inner + 0x560) * sp + ((GameObject *)obj)->anim.localPosY,
             *(f32 *)((char *)inner + 0x568) * sp + ((GameObject *)obj)->anim.localPosZ);
@@ -3210,7 +3210,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             *(s16 *)((char *)seq + 0x70) &= ~0x48;
             ObjHits_EnableObject(obj);
             if (*(f32 *)((char *)seq + 0x4c) >= lbl_803E7EE0 &&
-                (**(int (**)(void))((char *)(*gCameraInterface) + 0x50))() == 0) {
+                (*gCameraInterface)->isZooming() == 0) {
                 *(s16 *)((char *)inner + 0x4d2) = 0;
                 *(s16 *)((char *)inner + 0x4d0) = 0;
                 if ((s8)endFlag == 0) {
@@ -3436,7 +3436,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                         *(u8 *)((char *)inner + 0x6ec) = 4;
                         ObjAnim_SetCurrentMove(obj, 0x7b, lbl_803E7EA4, 1);
                         if ((u32)getSbGalleon() != 0) {
-                            (**(void (**)(int, int))((char *)(*gCameraInterface) + 0x28))(va, 0);
+                            (*gCameraInterface)->setFocus((void *)va, 0);
                             (*gObjectTriggerInterface)
                                 ->setCamVars(0x4a, 1, 0, 0x78);
                         }
@@ -3485,7 +3485,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 break;
             case 4:
                 obj2 = *(int *)((char *)inner + 0x7f0);
-                (**(void (**)(int, int))((char *)(*gCameraInterface) + 0x28))(obj2, 0);
+                (*gCameraInterface)->setFocus((void *)obj2, 0);
                 (*gObjectTriggerInterface)->setCamVars(0x45, 0, 0, 0);
                 *(int *)((char *)inner + 0x6e8) = 0;
                 if ((u32)obj2 != 0 && *(s16 *)(obj2 + 0x46) == 0x22) {
@@ -3501,15 +3501,15 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             case 0xb: {
                 int gb = *(int *)((char *)inner + 0x7f0);
                 if ((u32)gb != 0 && *(s16 *)(gb + 0x46) == 0x416) {
-                    (**(void (**)(int, int))((char *)(*gCameraInterface) + 0x28))(gb, 0);
-                    (**(void (**)(int, int, int))((char *)(*gCameraInterface) + 0x24))(0, 0x69, 0);
+                    (*gCameraInterface)->setFocus((void *)gb, 0);
+                    (*gCameraInterface)->loadTriggeredCamAction(0, 0x69, 0);
                     (*gObjectTriggerInterface)
                         ->setCamVars(0x42, 4, 0, 0);
                 } else if ((u32)gb != 0 && arrayIndexOf((void *)(tbl + 0x160), 4, *(s16 *)(gb + 0x46)) != -1) {
                     (*gObjectTriggerInterface)
                         ->setCamVars(0x53, 0, 0, 0);
                 } else {
-                    (**(void (**)(int, int, int))((char *)(*gCameraInterface) + 0x24))(0, 0x1d, 0);
+                    (*gCameraInterface)->loadTriggeredCamAction(0, 0x1d, 0);
                     (*gObjectTriggerInterface)
                         ->setCamVars(0x42, 4, 0, 0);
                 }
@@ -3669,10 +3669,10 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                     int p1a = *(int *)(*(int *)((char *)inner + 0x684) + 0x50);
                     int snd = *(s16 *)(p1a + 0x7a);
                     if (snd > -1) {
-                        (**(void (**)(int, int, int, int))((char *)(*gGameUIInterface) + 0x38))(
+                        (*gGameUIInterface)->showNpcDialogue(
                             snd, 0x154, 300, 0);
                     } else {
-                        (**(void (**)(int, int, int, int))((char *)(*gGameUIInterface) + 0x38))(
+                        (*gGameUIInterface)->showNpcDialogue(
                             *(s16 *)(p1a + 0x7c), 0x154, 300, 0);
                     }
                 }
@@ -5325,8 +5325,8 @@ int fn_8029EBCC(int obj, int state)
         f32 z = lbl_803E7EA4;
         inner->unk7B8 = z;
         inner->unk7BC = z;
-        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-            0x53, 1, sub != NULL ? 0x12 : -2, 0, 0, 0, 0xff);
+        (*gCameraInterface)->setMode(
+            0x53, 1, sub != NULL ? 0x12 : -2, 0, NULL, 0, 0xff);
         ObjAnim_SetCurrentMove(obj, 0x43e, lbl_803E7EA4, 0);
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7F34;
         inner->unk418 = lbl_803E7EA4;
@@ -5479,10 +5479,10 @@ int fn_8029F108(int obj, int state)
         (*(void (*)(int, void *, void *, void *))(*(int *)(*(int *)*(int *)((char *)sub + 0x68) + 0x28)))(
             sub, (char *)obj + 0xc, (char *)obj + 0x10, (char *)obj + 0x14);
         if (*(s16 *)((char *)sub + 0x46) == 0x38c || *(s16 *)((char *)sub + 0x46) == 0x72) {
-            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                0x42, 0, 1, 0, 0, 0x64, 0xff);
+            (*gCameraInterface)->setMode(
+                0x42, 0, 1, 0, NULL, 0x64, 0xff);
         } else {
-            (*(void (*)(int, int, int))(*(int *)(*gCameraInterface + 0x24)))(0, 1, 0);
+            (*gCameraInterface)->loadTriggeredCamAction(0, 1, 0);
         }
         kind = (*(int (*)(int))(*(int *)(*(int *)*(int *)((char *)sub + 0x68) + 0x30)))(sub);
         (*(void (*)(int, int))(*(int *)(*(int *)*(int *)((char *)sub + 0x68) + 0x3c)))(sub, 3);
@@ -5535,7 +5535,7 @@ int fn_8029F108(int obj, int state)
         f32 cx = w * (inner->unk6B4 - cam[0]) + cam[0];
         f32 cy = w * (inner->unk6B8 - cam[1]) + cam[1];
         f32 cz = w * (inner->unk6BC - cam[2]) + cam[2];
-        (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(cx, cy, cz);
+        (*gCameraInterface)->overridePos(cx, cy, cz);
     }
     if (*(s8 *)((char *)state + 0x27a) == 0 && *(s8 *)((char *)state + 0x346) != 0) {
         if (vec != NULL) {
@@ -5685,8 +5685,8 @@ void fn_8029A420(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     if (inner->curAnimId != 0x42 && getCurSeqNo() == 0) {
-        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-            0x42, 0, 1, 0, 0, 0x3c, 0xfe);
+        (*gCameraInterface)->setMode(
+            0x42, 0, 1, 0, NULL, 0x3c, 0xfe);
     }
     ((ByteFlags *)((char *)inner + 0x3f6))->b40 = 0;
     inner->unk80A = -1;
@@ -5725,8 +5725,8 @@ void fn_8029DAE0(int obj, int *p2)
     *p2 &= ~0x4000;
     c = inner->curAnimId;
     if (c != 0x48 && c != 0x47 && getCurSeqNo() == 0) {
-        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-            0x42, 0, 1, 0, 0, 0x3c, 0xfe);
+        (*gCameraInterface)->setMode(
+            0x42, 0, 1, 0, NULL, 0x3c, 0xfe);
     }
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
@@ -5788,7 +5788,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
         }
         if (inner->curAnimId != 0x48 && inner->curAnimId != 0x47) {
             cameraSetInterpMode(2);
-            (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            (*gCameraInterface)->setMode(
                 0x52, 1, 0, 8, &col, 0x1e, 0xff);
         }
         *(u8 *)((char *)inner + 0x86d) = 0;
@@ -6479,8 +6479,8 @@ int fn_802AD2F4(int obj, int inner, int state)
                 : ((t > *(f32 *)((char *)inner + 0x404)) ? *(f32 *)((char *)inner + 0x404) : t);
     }
     if (*(u8 *)((char *)inner + 0x8c8) == 0x4b) {
-        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-            0x42, 0, 1, 0, 0, 0, 0xff);
+        (*gCameraInterface)->setMode(
+            0x42, 0, 1, 0, NULL, 0, 0xff);
         *(u8 *)((char *)inner + 0x8c8) = 0x42;
     }
     return 0;
@@ -6541,7 +6541,7 @@ void playerUpdate(int obj)
             isInBounds(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ) == 0) {
             *(int *)((char *)inner + 0x2d0) = 0;
             ((PlayerState *)inner)->unk7EC = 0;
-            (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
+            (*gCameraInterface)->setTarget(0);
             {
                 f32 z = lbl_803E7EA4;
                 ((PlayerState *)inner)->baddie.unk294 = z;
@@ -6559,7 +6559,7 @@ void playerUpdate(int obj)
             int v;
             u8 hov;
             UiMsgBlock m;
-            ((PlayerState *)inner)->curAnimId = (*(int (*)(void))(*(int *)(*gCameraInterface + 0x10)))();
+            ((PlayerState *)inner)->curAnimId = (*gCameraInterface)->getMode();
             if (((PlayerState *)inner)->curAnimId == 0x44 && ((PlayerState *)inner)->baddie.controlMode != 1) {
                 (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 1);
                 {
@@ -6645,7 +6645,7 @@ void playerUpdate(int obj)
                     ((GameObject *)obj)->anim.velocityZ * dt);
             *(s16 *)obj = ((PlayerState *)inner)->targetYaw;
             m = *(UiMsgBlock *)lbl_802C2C50;
-            (*(void (*)(void *, int))(*(int *)(*gGameUIInterface + 0x24)))(&m, 6);
+            (*gGameUIInterface)->isOneOfItemsBeingUsed((s32 *)&m, 6);
             fn_802B0920(obj, inner);
             {
                 s16 nv = ((PlayerState *)inner)->unk810 - framesThisStep;
@@ -6740,7 +6740,7 @@ void playerUpdate(int obj)
                     setBButtonIcon(0xc);
                 }
             }
-            (*(void (*)(int))(*(int *)(*gCameraInterface + 0x68)))(((PlayerState *)inner)->unk8C9);
+            (*(void (*)(int))(*(int *)((char *)*gCameraInterface + 0x68)))(((PlayerState *)inner)->unk8C9);
             ((PlayerState *)inner)->unk800 = 0;
             ((PlayerState *)inner)->unk8B8 = 0;
             *(s16 *)obj = ((PlayerState *)inner)->targetYaw;
@@ -6869,7 +6869,7 @@ void fn_802B0EA4(int obj, int inner, int state)
         ((PlayerState *)inner)->unk498 = ((PlayerState *)inner)->unk49C;
     }
     *(int *)((char *)inner + 0x4b8) =
-        (**(int (**)(void))((char *)(*gCameraInterface) + 0x40))();
+        (*gCameraInterface)->getTarget();
     cam = *(char **)((char *)inner + 0x4b8);
     if (cam != NULL) {
         dx = *(f32 *)(cam + 0xc) - ((GameObject *)obj)->anim.localPosX;
@@ -7435,7 +7435,7 @@ void playerDoHitDetection(int obj)
             (*(void (*)(int, f32 *, f32 *, f32 *))(
                 *(int *)(*(int *)(*(int *)(((PlayerState *)inner)->unk7F0 + 0x68)) + 0x34)))(
                 ((PlayerState *)inner)->unk7F0, &x, &y, &z);
-            (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(x, y, z);
+            (*gCameraInterface)->overridePos(x, y, z);
             fn_802A9D0C(obj, inner, ((PlayerState *)inner)->unk7F0, 0, 0, 0, 0, 0);
         }
         if (*(s8 *)((char *)inner + 0x25f) == 1 &&
@@ -8330,8 +8330,8 @@ int fn_8029B6BC(int obj, int state)
         Sfx_PlayFromObject(obj, 0x40b);
         c = inner->curAnimId;
         if (c != 0x42 && c != 0x4c) {
-            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                0x42, 0, 1, 0, 0, 0x3c, 0xfe);
+            (*gCameraInterface)->setMode(
+                0x42, 0, 1, 0, NULL, 0x3c, 0xfe);
         }
     }
     if (*(s8 *)((char *)state + 0x346) != 0) {
@@ -8437,7 +8437,7 @@ int fn_802A1114(int obj, int state)
         pos[1] = inner->unk550;
         ic = inner->curAnimId;
         if (ic != 0x48 && ic != 0x47) {
-            (*(void (*)(int, int, int, int, f32 *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            (*gCameraInterface)->setMode(
                 0x4b, 1, 1, 8, pos, 0, 0);
         }
     } else {
@@ -8448,7 +8448,7 @@ int fn_802A1114(int obj, int state)
     }
     ObjAnim_WriteStateWord((ObjAnimComponent *)obj, OBJANIM_STATE_INDEX_CURRENT,
                            OBJANIM_STATE_WORD_EVENT_STATE, inner->unk5A4);
-    (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(
+    (*gCameraInterface)->overridePos(
         ((GameObject *)obj)->anim.localPosX,
         inner->unk560 * ((GameObject *)obj)->anim.currentMoveProgress + ((GameObject *)obj)->anim.localPosY,
         ((GameObject *)obj)->anim.localPosZ);
@@ -8553,7 +8553,7 @@ int fn_8029F6E4(int obj, int state)
     int d;
     f32 ret;
     int blend;
-    (*(void (*)(int))(*(int *)(*gCameraInterface + 0x68)))(2);
+    (*(void (*)(int))(*(int *)((char *)*gCameraInterface + 0x68)))(2);
     ((PlayerState *)state)->baddie.unk25F = 0;
     *(int *)((char *)state + 0x4) |= 0x100000;
     inner->flags360 &= ~2;
@@ -9058,8 +9058,8 @@ void fn_8029FFD0(int obj, int p2)
     if (v != 0x15 && v != 0x14 && v != 0x12 && v != 0x13 && v != 0xe && v != 0xf && v != 0x10) {
         u8 c = inner->curAnimId;
         if (c != 0x48 && c != 0x47 && c != 0x42 && getCurSeqNo() == 0) {
-            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                0x42, 0, 1, 0, 0, 0, 0xff);
+            (*gCameraInterface)->setMode(
+                0x42, 0, 1, 0, NULL, 0, 0xff);
             inner->curAnimId = 0x42;
         }
         inner->flags360 |= 0x800000;
@@ -9088,8 +9088,8 @@ int fn_802A00E0(int obj, int state)
         ObjHits_MarkObjectPositionDirty(obj);
         ic = inner->curAnimId;
         if (ic != 0x48 && ic != 0x47) {
-            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                0x42, 0, 1, 0, 0, 0x3c, 0xff);
+            (*gCameraInterface)->setMode(
+                0x42, 0, 1, 0, NULL, 0x3c, 0xff);
         }
         ObjAnim_SetCurrentMove(obj, lbl_80332F48[0x13], lbl_803E7EA4, 1);
         Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, lbl_80332F48[0x14], 0);
@@ -9140,7 +9140,7 @@ int fn_802A00E0(int obj, int state)
     t2 = ((GameObject *)obj)->anim.localPosY -
          inner->unk560 * (lbl_803E7EE0 - obj98);
     t3 = inner->unk568 * obj98 + ((GameObject *)obj)->anim.localPosZ;
-    (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(t1, t2, t3);
+    (*gCameraInterface)->overridePos(t1, t2, t3);
     fn_802AB5A4(obj, (int)inner, 5);
     return 0;
 }
@@ -9165,8 +9165,8 @@ int fn_802A03BC(int obj, int state)
         ObjHits_MarkObjectPositionDirty(obj);
         ic = inner->curAnimId;
         if (ic != 0x48 && ic != 0x47) {
-            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                0x42, 0, 1, 0, 0, 0x3c, 0xff);
+            (*gCameraInterface)->setMode(
+                0x42, 0, 1, 0, NULL, 0x3c, 0xff);
         }
         ObjAnim_SetCurrentMove(obj, lbl_80332F48[0x11], lbl_803E7EA4, 1);
         Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, lbl_80332F48[0x12], 0);
@@ -9214,7 +9214,7 @@ int fn_802A03BC(int obj, int state)
     t2 = ((GameObject *)obj)->anim.localPosY -
          inner->unk560 * (lbl_803E7EE0 - obj98);
     t3 = inner->unk568 * obj98 + ((GameObject *)obj)->anim.localPosZ;
-    (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(t1, t2, t3);
+    (*gCameraInterface)->overridePos(t1, t2, t3);
     fn_802AB5A4(obj, (int)inner, 5);
     return 0;
 }
@@ -10145,8 +10145,8 @@ void fn_8029A4A8(int obj, int p2)
 
     if (*(s16 *)((char *)p2 + 0x274) != 0x2b) {
         if (inner->curAnimId != 0x42 && getCurSeqNo() == 0) {
-            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                0x42, 0, 1, 0, 0, 0x3c, 0xfe);
+            (*gCameraInterface)->setMode(
+                0x42, 0, 1, 0, NULL, 0x3c, 0xfe);
         }
         ((ByteFlags *)((char *)inner + 0x3f6))->b40 = 0;
     }
@@ -10255,7 +10255,7 @@ int fn_802957B4(int obj)
     if (obj == 0) {
         return 0;
     }
-    (*(void (*)(int, int, int))(*(int *)(*gCameraInterface + 0x24)))(0, 1, 0);
+    (*gCameraInterface)->loadTriggeredCamAction(0, 1, 0);
     (*gObjectTriggerInterface)->setCamVars(0x42, 4, 0, 0);
 
     sub = inner->unk7F0;
@@ -10263,7 +10263,7 @@ int fn_802957B4(int obj)
         return 0;
     }
     (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68) + 0x3c)))(sub, 0);
-    (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x28)))(obj, 0);
+    (*gCameraInterface)->setFocus((void *)obj, 0);
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags & ~8;
     ((GameObject *)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
     inner->unk7F0 = 0;
@@ -11196,7 +11196,7 @@ void fn_802B4C18(int obj, int state, f32 fv)
     if (fn_802A74A4(obj, state, state, buf, fv, 0x60) == 8) {
         *(int *)((char *)state + 0x2d0) = 0;
         *(u8 *)((char *)state + 0x349) = 0;
-        (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
+        (*gCameraInterface)->setTarget(0);
         if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)state + 0x3f4))->b40) {
             ((PlayerState *)state)->unk8B4 = 1;
             ((ByteFlags *)((char *)state + 0x3f4))->b08 = 1;
@@ -11462,7 +11462,7 @@ void objLoadPlayerFromSave(int obj)
     if (((GameObject *)obj)->anim.modelState != NULL) {
         ((GameObject *)obj)->anim.modelState->flags |= 0x4008;
     }
-    (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x14)))(*gGameUIInterface);
+    (*(void (*)(GameUIInterface *))(*(int *)((char *)*gGameUIInterface + 0x14)))(*gGameUIInterface);
     lbl_803DE444 = NULL;
     ((ByteFlags *)((char *)inner + 0x3f4))->b40 = 1;
     ((PlayerState *)inner)->unk3F8 = (int)((char *)lbl_80332EC0 + 0x190);
@@ -11821,7 +11821,7 @@ int fn_802A14F8(int obj, int state)
         pos[0] = ((PlayerState *)inner)->unk54C;
         pos[1] = ((PlayerState *)inner)->unk550;
         if (((PlayerState *)inner)->curAnimId != 0x48 && ((PlayerState *)inner)->curAnimId != 0x47) {
-            (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            (*gCameraInterface)->setMode(
                 0x4b, 1, 1, 8, pos, 0, 0xff);
         }
         ObjAnim_SetCurrentMove(obj, 0x41a, lbl_803E7EA4, 1);
@@ -12034,7 +12034,7 @@ void fn_802AABE4(int obj)
 #pragma peephole off
 void fn_802B4A9C(int obj, int sA, int sB)
 {
-    int *target = (int *)(*(int (*)(int))(*(int *)(*gCameraInterface + 0x3c)))(*gCameraInterface);
+    int *target = (int *)(*gCameraInterface)->getOverrideTarget();
     u32 v = (*(u8 *)((char *)sA + 0x3f4) >> 6) & 1;
 
     if (v != 0) {
@@ -12660,8 +12660,8 @@ int fn_802A418C(int obj, int state, f32 fv)
     ui_block:
         ((void (*)(int, int *))ObjGroup_GetObjects)(0x20, &cnt20);
         GameBit_Set(0xeb5, !cnt20);
-        if ((*(int (*)(void))(*(int *)(*gGameUIInterface + 0x1c)))() != 0) {
-            if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x1ee) != 0) {
+        if ((*gGameUIInterface)->isCurrentTriggerClear() != 0) {
+            if ((*gGameUIInterface)->isEventReady(0x1ee) != 0) {
                 char *found;
                 s16 *def = NULL;
                 buttonDisable(0, 0x100);
@@ -12676,7 +12676,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                 }
                 return 0;
             }
-            if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x953) != 0 &&
+            if ((*gGameUIInterface)->isEventReady(0x953) != 0 &&
                 lbl_803DE444 == NULL) {
                 int player;
                 void *att;
@@ -12708,8 +12708,8 @@ int fn_802A418C(int obj, int state, f32 fv)
             }
         }
         if (inner->curAnimId != 0x44 &&
-            (*(int (*)(void))(*(int *)(*gGameUIInterface + 0x1c)))() != 0 &&
-            (*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x13e) != 0 &&
+            (*gGameUIInterface)->isCurrentTriggerClear() != 0 &&
+            (*gGameUIInterface)->isEventReady(0x13e) != 0 &&
             (((void (*)(int, int *))ObjGroup_GetObjects)(0x30, &cnt30), cnt30 == 0)) {
             gameBitDecrement(0x13d);
             if (Obj_IsLoadingLocked() != 0) {
@@ -12726,7 +12726,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                 *(u8 *)(setup + 0x19) = 1;
                 Obj_SetupObject((int)setup, 5, -1, -1, *(int *)&((GameObject *)obj)->anim.parent);
             }
-            (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x10)))();
+            (*(void (*)(void))(*(int *)((char *)*gGameUIInterface + 0x10)))();
             return 0;
         }
         {
@@ -13049,7 +13049,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
         }
         if (!((ByteFlags *)((char *)inner + 0x3f1))->b10) {
             cameraSetInterpMode(2);
-            (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            (*gCameraInterface)->setMode(
                 0x52, 1, 0, 8, &camp, 0x1e, 0xff);
             if (lbl_803DE4A8 - lbl_803DE4A0 > 2) {
                 Sfx_PlayFromObject(obj, 0x3e4);
@@ -13068,8 +13068,8 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
         ((ByteFlags *)((char *)inner + 0x3f1))->b20 = 0;
         if (((ByteFlags *)((char *)inner + 0x3f1))->b10 && *(u8 *)((char *)inner + 0x8c8) != 0x48 &&
             *(u8 *)((char *)inner + 0x8c8) != 0x47 && getCurSeqNo() == 0) {
-            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                0x42, 0, 1, 0, 0, 0x1e, 0xff);
+            (*gCameraInterface)->setMode(
+                0x42, 0, 1, 0, NULL, 0x1e, 0xff);
             ((ByteFlags *)((char *)inner + 0x3f1))->b10 = 0;
         }
     }
@@ -13737,7 +13737,7 @@ int fn_802A2918(int obj, int state, f32 fv)
             a8 = inner->unk4E8;
             ac = inner->unk4EC;
             if (inner->curAnimId != 0x48 && inner->curAnimId != 0x47) {
-                (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                (*gCameraInterface)->setMode(
                     0x4b, 1, 1, 8, &a8, 0, 0);
             }
         }
@@ -13772,7 +13772,7 @@ int fn_802A2918(int obj, int state, f32 fv)
          inner->unk544);
     ((int (*)(f32, f32, int, int))Object_ObjAnimAdvanceMove)(
         *(f32 *)((char *)state + 0x2a0), fv, obj, 0);
-    (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(
+    (*gCameraInterface)->overridePos(
         ((GameObject *)obj)->anim.localPosX,
         ((GameObject *)obj)->anim.currentMoveProgress *
                 (inner->unk4F4 - ((GameObject *)obj)->anim.localPosY) +
@@ -13829,26 +13829,26 @@ int fn_8029FA24(int obj, int state, f32 fv)
             if (coordsToMapCell(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ) == 0x13) {
                 GameBit_Set(0xf0a, 1);
             }
-            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                0x45, 1, 0, 0, 0, 0, 0xff);
+            (*gCameraInterface)->setMode(
+                0x45, 1, 0, 0, NULL, 0, 0xff);
             break;
         case 0x38c:
             inner->unk6E8 = (int)(base + 0x3f0);
             inner->unk6EC = 3;
-            (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x28)))(sub, 0);
-            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                0x45, 1, 0, 0, 0, 0, 0xff);
+            (*gCameraInterface)->setFocus((void *)sub, 0);
+            (*gCameraInterface)->setMode(
+                0x45, 1, 0, 0, NULL, 0, 0xff);
             break;
         case 0x419:
             inner->unk6E8 = (int)(base + 0x420);
-            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                0x53, 1, 0, 0, 0, 0x2d, 0xff);
+            (*gCameraInterface)->setMode(
+                0x53, 1, 0, 0, NULL, 0x2d, 0xff);
             break;
         case 0x416:
             inner->unk6E8 = (int)(base + 0x438);
             inner->unk6EC = 8;
-            (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x28)))(sub, 0);
-            (*(void (*)(int, int, int))(*(int *)(*gCameraInterface + 0x24)))(0, 0x69, 0);
+            (*gCameraInterface)->setFocus((void *)sub, 0);
+            (*gCameraInterface)->loadTriggeredCamAction(0, 0x69, 0);
             break;
         case 0x8c:
             inner->unk6E8 = (int)(base + 0x408);
@@ -13857,7 +13857,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
         default:
             inner->unk6E8 = (int)(base + 0x420);
             inner->unk6EC = 4;
-            (*(void (*)(int, int, int))(*(int *)(*gCameraInterface + 0x24)))(0, 0x1d, 0);
+            (*gCameraInterface)->loadTriggeredCamAction(0, 0x1d, 0);
             break;
         }
         {
@@ -13912,7 +13912,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
             inner->unk6BC;
         (*(void (*)(int, void *, void *, void *))(*(int *)(*(int *)((char *)sub + 0x68) + 0x34)))(
             sub, &wpos[0], &wpos[1], &wpos[2]);
-        (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(
+        (*gCameraInterface)->overridePos(
             ((GameObject *)obj)->anim.currentMoveProgress * (wpos[0] - inner->unk6B4) +
                 inner->unk6B4,
             ((GameObject *)obj)->anim.currentMoveProgress * (wpos[1] - inner->unk6B8) +
@@ -14713,7 +14713,7 @@ void fn_802AB38C(int a, int b, int c)
             *(s16 *)((char *)sub + 0x4) = v;
         }
         {
-            void *cam = (*(void *(*)(void))(*(int *)(*gCameraInterface + 0x40)))();
+            void *cam = (void *)(*gCameraInterface)->getTarget();
             if (cam != NULL) {
                 s16 id = *(s16 *)((char *)cam + 0x46);
                 if (id == 0x414 || id == 0x4a9) {
@@ -14776,8 +14776,8 @@ void fn_802A514C(int obj, int state)
             if (((ByteFlags *)((char *)inner + 0x3f1))->b10) {
                 u8 anim = inner->curAnimId;
                 if (anim != 0x48 && anim != 0x47 && getCurSeqNo() == 0) {
-                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                        0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                    (*gCameraInterface)->setMode(
+                        0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                     ((ByteFlags *)((char *)inner + 0x3f1))->b10 = 0;
                 }
             }
@@ -14963,7 +14963,7 @@ int fn_8029B9FC(int obj, int state, f32 fv)
         }
         *(int *)((char *)state + 0x2d0) = 0;
         *(u8 *)((char *)state + 0x349) = 0;
-        (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
+        (*gCameraInterface)->setTarget(0);
         return v;
     }
     if (((PlayerState *)state)->baddie.controlMode == 0x26 || ((ByteFlags *)((char *)inner + 0x3f6))->b20) {
@@ -15281,8 +15281,8 @@ int fn_802A16CC(int obj, int state, f32 fv)
                     u8 anim = inner->curAnimId;
                     f32 v4ec;
                     if (anim != 0x48 && anim != 0x47 && anim != 0x42) {
-                        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                            0x42, 0, 1, 0, 0, 0, 0xff);
+                        (*gCameraInterface)->setMode(
+                            0x42, 0, 1, 0, NULL, 0, 0xff);
                         inner->curAnimId = 0x42;
                     }
                     inner->unk500 = ((GameObject *)obj)->anim.localPosY;
@@ -15398,7 +15398,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
             cy = ((GameObject *)obj)->anim.localPosY;
             break;
         }
-        (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(cx, cy, cz);
+        (*gCameraInterface)->overridePos(cx, cy, cz);
     }
     fn_802AB5A4(obj, (int)inner, 5);
     return 0;
@@ -15560,7 +15560,7 @@ int fn_80298E54(int obj, int state, f32 fv)
             shk.a = 0;
             shk.b = 0;
             shk.c = 1;
-            (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            (*gCameraInterface)->setMode(
                 0x43, 1, 0, 4, &shk, 0, 0xff);
         }
         break;
@@ -15739,7 +15739,7 @@ int fn_802994D0(int obj, int state, f32 fv)
             shk.a = 0;
             shk.b = 0;
             shk.c = 1;
-            (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            (*gCameraInterface)->setMode(
                 0x43, 1, 0, 4, &shk, 0, 0xff);
         }
         break;
@@ -15844,7 +15844,7 @@ int fn_8029E568(int obj, int state, f32 fv)
             anim = inner->curAnimId;
             if (anim != 0x48 && anim != 0x47) {
                 camArg = inner->unk640 < lbl_803E7EA4 ? 0 : 1;
-                (*(void (*)(int *))(*(int *)(*gCameraInterface + 0x60)))(&camArg);
+                (*(void (*)(int *))(*(int *)((char *)*gCameraInterface + 0x60)))(&camArg);
             }
         } else {
             inner->targetYaw =
@@ -15860,8 +15860,8 @@ int fn_8029E568(int obj, int state, f32 fv)
         if (*(s8 *)((char *)state + 0x346) != 0) {
             u8 anim = inner->curAnimId;
             if (anim != 0x48 && anim != 0x47) {
-                (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                    0x42, 1, 1, 0, 0, 0, 0xff);
+                (*gCameraInterface)->setMode(
+                    0x42, 1, 1, 0, NULL, 0, 0xff);
             }
             inner->flags360 |= 0x800000;
             *(int *)((char *)state + 0x308) = (int)fn_802A514C;
@@ -15918,8 +15918,8 @@ int fn_8029E568(int obj, int state, f32 fv)
         {
             u8 anim = inner->curAnimId;
             if (anim != 0x48 && anim != 0x47) {
-                (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                    0x50, 1, 0, 0, 0, 0x28, 0xff);
+                (*gCameraInterface)->setMode(
+                    0x50, 1, 0, 0, NULL, 0x28, 0xff);
             }
         }
         ((PlayerState *)state)->baddie.unk294 = lbl_803E7EA4;
@@ -16297,8 +16297,8 @@ void fn_802AE9C8(int obj, int inner, int state)
     if (((ByteFlags *)((char *)inner + 0x3f1))->b10 &&
         ((PlayerState *)inner)->curAnimId != 0x48 &&
         ((PlayerState *)inner)->curAnimId != 0x47 && getCurSeqNo() == 0) {
-        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-            0x42, 0, 1, 0, 0, 0x1e, 0xff);
+        (*gCameraInterface)->setMode(
+            0x42, 0, 1, 0, NULL, 0x1e, 0xff);
         ((ByteFlags *)((char *)inner + 0x3f1))->b10 = 0;
     }
     {
@@ -16574,14 +16574,14 @@ void playerProcessQueuedItemCommand(int obj, int state)
                 if (f1->b10) {
                     u8 c = ((PlayerState *)state)->curAnimId;
                     if (c != 0x48 && c != 0x47 && getCurSeqNo() == 0) {
-                        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                            0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                        (*gCameraInterface)->setMode(
+                            0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                         f1->b10 = 0;
                     }
                 }
                 cameraSetInterpMode(2);
-                (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
-                    0x52, 1, 0, 0, 0, 0x2d, 0xff);
+                (*gCameraInterface)->setMode(
+                    0x52, 1, 0, 0, NULL, 0x2d, 0xff);
                 ((ByteFlags *)((char *)state + 0x3f6))->b40 = 1;
                 (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0x2a);
                 *(int *)((char *)state + 0x304) = (int)fn_8029A4A8;

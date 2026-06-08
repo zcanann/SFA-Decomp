@@ -465,7 +465,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
         }
     }
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) {
-        if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x170) != 0) {
+        if ((*gGameUIInterface)->isEventReady(0x170) != 0) {
             u8 bit170 = GameBit_Get(0x170);
             if (GameBit_Get(0x28) == 0) {
                 switch (bit170) {
@@ -1193,7 +1193,7 @@ void fn_802BB4B4(int obj, int a, int slot)
         } else {
             state->unkA88 = 0x3e8;
         }
-        (*(void (**)(int))(*(int *)gGameUIInterface + 0x5c))(state->unkA88);
+        (*gGameUIInterface)->runAirMeter(state->unkA88);
         if (GameBit_Get(0x3e9) != 0) {
             GameBit_Set(0x3e9, 0);
             state->unkA88 = 0x3e8;
@@ -1352,7 +1352,7 @@ void DIMSnowHorn1_update(int obj)
                     }
                     if (*(u8 *)((char *)data + 0xa8c) == 3) {
                         *(s16 *)((char *)data + 0xa88) = 1000;
-                        (*(void (*)(int, int))(*(int *)(*gGameUIInterface + 0x58)))(1000, 0x5d0);
+                        (*gGameUIInterface)->initAirMeter(1000, 0x5d0);
                     }
                 }
             }
@@ -1399,7 +1399,7 @@ void DIMSnowHorn1_update(int obj)
                         GameBit_Set(0x5bb, 1);
                     }
                     *(int *)((char *)data + 0x31c) = 0;
-                    (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+                    (*gGameUIInterface)->airMeterSetShutdown();
                     (*(void (*)(void))(*(int *)((u8 *)*gMapEventInterface + 0x2c)))();
                 }
             } else {

@@ -2,8 +2,10 @@
 #define SFA_DLL_PLAYER_80295318_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/camera_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
@@ -853,7 +855,6 @@ extern f32 lbl_803E7EF0;
 extern int getCurSeqNo(void);
 extern void setTimeStop(int x);
 extern void cutsceneEnterExit(int a, int b);
-extern int *gCameraInterface;
 extern f32 lbl_803E8060;
 extern f32 lbl_803E7F4C;
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
@@ -1040,7 +1041,6 @@ extern s16 lbl_80332F2C[];
 extern s16 lbl_80332F48[];
 extern int *gPlayerInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gGameUIInterface;
 extern f32 lbl_803E7F08;
 extern f32 lbl_803E7FD8;
 extern f32 lbl_803E801C;
