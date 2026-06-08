@@ -373,8 +373,7 @@ int DR_CloudRunner_SeqFn(int obj, int p2, int p3)
     for (i = 0; i < *(u8 *)((char *)p3 + 0x8b); i++) {
         int idx = i + 0x81;
         if ((int)*(u8 *)((char *)p3 + idx) == 1) {
-            (*(void (*)(int, int, f32, int *, int))(*(int *)(*gRomCurveInterface + 0x8c)))(
-                (int)((char *)inner + 0x35c), obj, lbl_803E8410, &local, 0xf);
+            (*gRomCurveInterface)->initCurve((char *)inner + 0x35c, (void *)obj, lbl_803E8410, &local, 0xf);
         }
     }
     ((ByteFlags *)&inner->flagsBC1)->b80 = 1;

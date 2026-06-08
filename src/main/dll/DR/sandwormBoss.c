@@ -5,6 +5,7 @@
 #include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
@@ -4308,7 +4309,6 @@ void cfguardian_hitDetect(int *obj) {
     *(f32*)((char*)obj + 0x88) = *(f32*)((char*)obj + 0x14);
 }
 
-extern int *gRomCurveInterface;
 #pragma scheduling off
 #pragma peephole off
 int *findRomCurvePointNearObject(int *obj, int p2, int *outVec, int p4) {
@@ -4324,14 +4324,14 @@ int *findRomCurvePointNearObject(int *obj, int p2, int *outVec, int p4) {
         local[1] = 21;
     }
 
-    found = (*(int (***)(f32, f32, f32, int *, int, int))gRomCurveInterface)[5](
+    found = (*gRomCurveInterface)->find(
+        local, 2, p2,
         ((GameObject *)obj)->anim.localPosX,
         ((GameObject *)obj)->anim.localPosY,
-        ((GameObject *)obj)->anim.localPosZ,
-        local, 2, p2);
+        ((GameObject *)obj)->anim.localPosZ);
 
     if (found > -1) {
-        result = (int *)(*(int *(***)(int))gRomCurveInterface)[7](found);
+        result = (int *)(*gRomCurveInterface)->getById(found);
         if (outVec != NULL) {
             *(f32 *)((char *)outVec + 0) = *(f32 *)((char *)result + 8);
             *(f32 *)((char *)outVec + 4) = *(f32 *)((char *)result + 12);
@@ -5466,7 +5466,7 @@ void babycloudrunner_update(int* obj)
         *(u8*)((char*)obj + 0xaf) |= 8;
         if (sub->runnerState == 0) {
             mode = 0x19;
-            if (((u8 (*)(void*, int*, f32, int*, int))((int*)*gRomCurveInterface)[0x8c / 4])((char*)sub + 0x124, obj, lbl_803E424C, &mode, 0) == 0) {
+            if ((*gRomCurveInterface)->initCurve((char*)sub + 0x124, obj, lbl_803E424C, &mode, 0) == 0) {
                 sub->runnerState = 1;
                 storeZeroToFloatParam((char*)sub + 0x238);
             }

@@ -481,8 +481,8 @@ void drlasercannon_update(int obj) {
             ((GameObject *)obj)->anim.velocityZ * timeDelta);
     } else {
         spawnFlag = 1;
-        if ((u8)(*(int (**)(int, int, f32, int *, int))((char *)*gRomCurveInterface + 0x8c))(
-                (int)((char *)state + DR_LASERCANNON_STATE_CURVE_FOLLOW), obj, lbl_803E691C, &spawnFlag, 0) == 0) {
+        if ((*gRomCurveInterface)->initCurve((char *)state + DR_LASERCANNON_STATE_CURVE_FOLLOW, (void *)obj,
+                lbl_803E691C, &spawnFlag, 0) == 0) {
             ((BitFlags8 *)((char *)state + DR_LASERCANNON_STATE_FLAGS))->b5 = 1;
             ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)state + DR_LASERCANNON_STATE_CURVE_END_X);
             ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)state + DR_LASERCANNON_STATE_CURVE_END_Z);

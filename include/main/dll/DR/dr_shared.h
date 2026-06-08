@@ -7,6 +7,7 @@
 #include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
 typedef struct {
@@ -194,7 +195,6 @@ extern void *lbl_803DDD50;
 extern void *lbl_803DDD48;
 extern int lbl_803DC2A0;
 extern f32 lbl_803AD1C8[];
-extern void **gRomCurveInterface;
 extern void **gBaddieControlInterface;
 extern void *ObjPath_GetPointModelMtx(int obj, int idx);
 extern void mtx44_mult(f32 *dst, f32 *a, f32 *b);

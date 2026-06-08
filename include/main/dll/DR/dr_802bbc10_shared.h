@@ -8,6 +8,7 @@
 #include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 
 typedef struct {
@@ -436,7 +437,6 @@ extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
 extern void *gDIMSnowHorn1Texture;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gRomCurveInterface;
 extern f32 lbl_803E8410;
 extern int *gPlayerInterface;
 extern void setMatrixFromObjectPos(f32 *out, void *vec);

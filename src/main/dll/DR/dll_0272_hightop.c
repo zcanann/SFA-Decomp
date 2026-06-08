@@ -737,7 +737,7 @@ int hightop_stateHandler04(int obj, int p) {
         state->unkC40 |= 0x40;
         state->unkC40 |= 0x20;
         state->flagsC49.b1 = 0;
-        (*(void (**)(void *, int, int, void *))((char *)*gRomCurveInterface + 0xa8))(
+        ((void (*)(void *, int, int, void *))(*gRomCurveInterface)->slotA8)(
             (char *)state + 0xa10, obj, 0x3463a, *gRomCurveInterface);
         state2 = ((GameObject *)obj)->extra;
         state2->flagsC49.b7 = 1;

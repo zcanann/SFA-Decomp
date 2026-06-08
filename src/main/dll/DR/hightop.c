@@ -4,6 +4,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
+#include "main/dll/rom_curve_interface.h"
 
 extern undefined4 getLActions();
 extern undefined8 FUN_80006728();
@@ -1328,7 +1329,6 @@ void fn_8019AE3C(int p1, int p2, s16 *p3)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gRomCurveInterface;
 extern s8 lbl_803DDB08;
 extern s8 lbl_803DDB09;
 extern int lbl_803DDB0C;
@@ -1351,7 +1351,7 @@ void cloudprisoncontrol_update(int obj)
 
     data = 0;
     if (lbl_803DBE08 != 0) {
-        lbl_803DDB0C = (*(code *)(*gRomCurveInterface + 0x40))(8);
+        lbl_803DDB0C = ((int (*)(int))(*gRomCurveInterface)->slot40)(8);
         lbl_803DBE08 = 0;
     }
     lbl_803DDB08 = 0;
@@ -1458,14 +1458,14 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
         if (fn_8019B1D8(obj, &tgt.angle, t, p4) != 0) {
             cmd[0] = 0x19;
             cmd[1] = 0x15;
-            (*(code *)(*gRomCurveInterface + 0x8c))(p2, obj, lbl_803E4120, cmd, sel);
+            (*gRomCurveInterface)->initCurve((void *)p2, (void *)obj, lbl_803E4120, cmd, sel);
             ((GameObject *)obj)->unkF4 = 1;
             moved = 1;
         }
     } else {
         ret = 0;
         if (Curve_AdvanceAlongPath(p2) != 0 || *(int *)(p2 + 0x10) != 0) {
-            ret = (u8)(*(code *)(*gRomCurveInterface + 0x90))(p2);
+            ret = (*gRomCurveInterface)->goNextPoint((void *)p2);
         }
         ((GameObject *)obj)->anim.localPosX = *(f32 *)(p2 + 0x68);
         ((GameObject *)obj)->anim.localPosY = *(f32 *)(p2 + 0x6c);

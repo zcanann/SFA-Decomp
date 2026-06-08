@@ -274,7 +274,7 @@ int drakorhoverpad_update(void *curve, int arg) {
         *(void **)(p + 0xa4) = NULL;
         return 1;
     }
-    *(int *)(p + 0xa4) = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(result);
+    *(void **)(p + 0xa4) = (*gRomCurveInterface)->getById(result);
     if (*(void **)(p + 0xa4) == NULL) {
         return 1;
     }
@@ -347,8 +347,7 @@ void drakorhoverpad_updateMain(int obj) {
         *(f32 *)(p + 0x114) = lbl_803E6A3C;
         if (f->bit20 != 0) {
             curveArg = 0x2a;
-            (*(void (**)(int, int, f32, int *, int))((char *)*gRomCurveInterface + 0x8c))(
-                (int)(p + 4), obj, lbl_803E6A4C, &curveArg, -1);
+            (*gRomCurveInterface)->initCurve(p + 4, (void *)obj, lbl_803E6A4C, &curveArg, -1);
             Curve_AdvanceAlongPath(p + 4, lbl_803E6A50);
             ((GameObject *)obj)->anim.localPosX = *(f32 *)(p + 0x6c);
             ((GameObject *)obj)->anim.localPosY = *(f32 *)(p + 0x70);
@@ -405,9 +404,9 @@ void drakorhoverpad_updateMain(int obj) {
         lbl_803DC2F8 = lbl_803E6A38 * *(f32 *)p;
     }
     if (*(f32 *)(p + 0x110) < lbl_803E6A3C) {
-        (*(void (**)(int, int))((char *)*gRomCurveInterface + 0x94))((int)(p + 4), 1);
+        (*gRomCurveInterface)->setClosed(p + 4, 1);
     } else {
-        (*(void (**)(int, int))((char *)*gRomCurveInterface + 0x94))((int)(p + 4), 0);
+        (*gRomCurveInterface)->setClosed(p + 4, 0);
     }
     *(f32 *)(p + 0x114) = lbl_803E6A3C;
     if (lbl_803E6A3C != *(f32 *)(p + 0x110)) {

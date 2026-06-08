@@ -36,9 +36,9 @@ void ktrexfloorswitch_init(int obj, char *arg) {
     ((GameObject *)obj)->unkF4 = 1;
     ((GameObject *)obj)->unkF8 = 1;
     q = *(int *)&((GameObject *)obj)->anim.placementData;
-    r = (*(int (**)(int, int, int, f32, f32, f32))((char *)*gRomCurveInterface + 0x14))((int)&lbl_803DC2A0, 1, 0, *(f32 *)(q + 0x8), *(f32 *)(q + 0xc), *(f32 *)(q + 0x10));
+    r = (*gRomCurveInterface)->find(&lbl_803DC2A0, 1, 0, *(f32 *)(q + 0x8), *(f32 *)(q + 0xc), *(f32 *)(q + 0x10));
     if (r != -1) {
-        r = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(r);
+        r = (int)(*gRomCurveInterface)->getById(r);
         if (r != 0) {
             ((GameObject *)obj)->anim.localPosX = *(f32 *)(r + 0x8);
             ((GameObject *)obj)->anim.localPosZ = *(f32 *)(r + 0x10);
@@ -112,11 +112,11 @@ void ktrexfloorswitch_update(int obj) {
             int cp;
             *(u8 *)((char *)state + 0x10) |= 0x2;
             ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)sub + 0xc) - (f32)(u32)*(u8 *)((char *)sub + 0x1f);
-            cp = (*(int (**)(int, int, int, f32, f32, f32))((char *)*gRomCurveInterface + 0x14))(
-                (int)&lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1, *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 8),
+            cp = (*gRomCurveInterface)->find(
+                &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1, *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 8),
                 *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0xc), *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x10));
             if (cp != -1) {
-                cp = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(cp);
+                cp = (int)(*gRomCurveInterface)->getById(cp);
                 if (cp != 0) {
                     ((GameObject *)obj)->anim.localPosX = *(f32 *)(cp + 0x8);
                     ((GameObject *)obj)->anim.localPosZ = *(f32 *)(cp + 0x10);
@@ -134,11 +134,11 @@ void ktrexfloorswitch_update(int obj) {
             int cp;
             *(u8 *)((char *)state + 0x10) |= 0x2;
             ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)sub + 0xc) - (f32)(u32)*(u8 *)((char *)sub + 0x1f);
-            cp = (*(int (**)(int, int, int, f32, f32, f32))((char *)*gRomCurveInterface + 0x14))(
-                (int)&lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1, *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 8),
+            cp = (*gRomCurveInterface)->find(
+                &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1, *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 8),
                 *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0xc), *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x10));
             if (cp != -1) {
-                cp = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(cp);
+                cp = (int)(*gRomCurveInterface)->getById(cp);
                 if (cp != 0) {
                     ((GameObject *)obj)->anim.localPosX = *(f32 *)(cp + 0x8);
                     ((GameObject *)obj)->anim.localPosZ = *(f32 *)(cp + 0x10);
