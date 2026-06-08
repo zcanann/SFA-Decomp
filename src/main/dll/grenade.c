@@ -827,11 +827,13 @@ int trickyFn_80142eb0(int obj, int state)
 {
   short sVar;
   int b;
-  u8 auStack_28[8];
-  float local_20;
-  int local_1c;
-  int local_18;
-  int local_14;
+  struct {
+    u8 head[8];
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+  } spawnBuf;
 
   if (trickyFoodFn_8014460c(obj, (int *)state) != 0) {
     return 1;
@@ -844,11 +846,11 @@ int trickyFn_80142eb0(int obj, int state)
          ((TrickyState *)state)->unk720 > lbl_803E23DC)) {
       objAnimFn_8013a3f0(obj, 47, lbl_803E23EC, 0);
     }
-    local_1c = *(int *)&((GameObject *)obj)->anim.worldPosX;
-    local_18 = *(int *)&((GameObject *)obj)->anim.worldPosY;
-    local_14 = *(int *)&((GameObject *)obj)->anim.worldPosZ;
-    local_20 = lbl_803E23F0;
-    (*gPartfxInterface)->spawnObject((void *)obj, 2022, auStack_28, 0x200001, -1, NULL);
+    spawnBuf.x = ((GameObject *)obj)->anim.worldPosX;
+    spawnBuf.y = ((GameObject *)obj)->anim.worldPosY;
+    spawnBuf.z = ((GameObject *)obj)->anim.worldPosZ;
+    spawnBuf.scale = lbl_803E23F0;
+    (*gPartfxInterface)->spawnObject((void *)obj, 2022, &spawnBuf, 0x200001, -1, NULL);
   } else if (sVar < 46) {
     if (43 < sVar && (*(int *)(state + 0x54) & 0x8000000) != 0) {
       objAnimFn_8013a3f0(obj, 46, lbl_803E249C, 0);
