@@ -67,7 +67,6 @@ extern undefined4 DAT_803dcafc;
 extern undefined4 DAT_803dcb00;
 extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern undefined4* DAT_803dd708;
 extern MapEventInterface **DAT_803dd72c;
 extern f64 DOUBLE_803e5020;
 extern f64 DOUBLE_803e5048;
@@ -572,12 +571,12 @@ void FUN_801a3ee8(void)
         local_120 = local_138 + *(float *)(puVar4 + 6);
         local_11c = local_134 + *(float *)(puVar4 + 8);
         local_118 = local_130 + *(float *)(puVar4 + 10);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (puVar4,*puVar10,auStack_12c,0x200001,0xffffffff,puVar4 + 0x12);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (puVar4,*puVar10,auStack_12c,0x200001,0xffffffff,puVar4 + 0x12);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (puVar4,*puVar10,auStack_12c,0x200001,0xffffffff,puVar4 + 0x12);
+        (*gPartfxInterface)->spawnObject((void *)puVar4, *puVar10, auStack_12c, 0x200001, -1,
+                                         puVar4 + 0x12);
+        (*gPartfxInterface)->spawnObject((void *)puVar4, *puVar10, auStack_12c, 0x200001, -1,
+                                         puVar4 + 0x12);
+        (*gPartfxInterface)->spawnObject((void *)puVar4, *puVar10, auStack_12c, 0x200001, -1,
+                                         puVar4 + 0x12);
       }
       uVar5 = FUN_8007f6c8((float *)(pbVar7 + 4));
       if (uVar5 == 0) {
