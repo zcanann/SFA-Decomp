@@ -269,8 +269,7 @@ void SnowBike_init(int obj, u8 *params, int flag)
         curves_setLocalPointCollisionEx((CurvesCollisionState *)path, 1, (f32 *)(base + 0x40),
                                         &lbl_803DC0B8, 8, ((SnowBikeState *)state)->unk065);
     } else {
-        ((void (*)(void *, int, void *, void *, int))(*gPathControlInterface)->slot08)(
-            path, 1, base + 0x40, &lbl_803DC0B8, 8);
+        (*gPathControlInterface)->setLocalPointCollision(path, 1, base + 0x40, &lbl_803DC0B8, 8);
     }
     path[0x264] = lbl_803E5C68 + lbl_803DC0B8;
     (*gPathControlInterface)->attachObject((void *)obj, path);

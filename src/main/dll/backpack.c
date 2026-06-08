@@ -296,8 +296,7 @@ void tumbleweed_init(int obj, int defData) {
     *(u32*)(aux + 0x284) = 0;
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E2FD0;
     (*gPathControlInterface)->init((void *)aux, 0, 0x40000, 1);
-    ((void (*)(void *, int, void *, void *, int))(*gPathControlInterface)->slot08)(
-        (void *)aux, 1, lbl_80320288, lbl_803DBD40, 8);
+    (*gPathControlInterface)->setLocalPointCollision((void *)aux, 1, lbl_80320288, lbl_803DBD40, 8);
     (*gPathControlInterface)->attachObject((void *)obj, (void *)aux);
     ((BackpackState *)aux)->phase = 0;
     ((BackpackState *)aux)->phaseTimer = lbl_803E2FB4 + (f32)(s32)randomGetRange(-0x12c, 0x12c);

@@ -557,8 +557,8 @@ void wmwallcrawler_init(int obj, int spawn)
     if ((*(u16*)(inner + 0x294) & 2) != 0) {
         *(u8*)(inner + 0x25b) = 1;
         (*gPathControlInterface)->init((void *)inner, 0, 0, 1);
-        ((void (*)(void *, int, void *, void *, int))(*gPathControlInterface)->slot08)(
-            (void *)inner, 1, lbl_80328DE0, &lbl_803DC134, 4);
+        (*gPathControlInterface)->setLocalPointCollision((void *)inner, 1, lbl_80328DE0,
+                                                         &lbl_803DC134, 4);
         (*gPathControlInterface)->attachObject((void *)obj, (void *)inner);
         *(u32*)inner |= 0x40008;
     }

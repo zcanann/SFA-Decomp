@@ -4309,8 +4309,7 @@ void dll_19_func18(int p1, u8 *p2, u8 *p3, int p4, int p5, int p6, f32 fparam, i
     } else {
         (*gPathControlInterface)->init(path, 0, 0, 0);
     }
-    ((void (*)(void *, int, void *, u32, int))(*gPathControlInterface)->slot08)(
-        path, 1, lbl_8031A054, lbl_803DB9E0, 4);
+    (*gPathControlInterface)->setLocalPointCollision(path, 1, lbl_8031A054, (void *)lbl_803DB9E0, 4);
     if ((flags & 4) != 0) {
         (*gPathControlInterface)->setup(path, 1, lbl_8031A048, (void *)lbl_803DD5E0, &byteLocal);
     }

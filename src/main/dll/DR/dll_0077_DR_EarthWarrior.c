@@ -471,6 +471,7 @@ void DR_EarthWarrior_func22(int obj, f32 scale)
 int fn_802BDBE8(int obj, int p2, int p3)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
+    u8 *pathState = (u8 *)&inner->baddie + 4;
     int i;
     f32 fz;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -495,7 +496,7 @@ int fn_802BDBE8(int obj, int p2, int p3)
         }
     }
     inner->sub.unk360 |= 0x800000;
-    (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, (int)((char *)inner + 0x4));
+    (*gPathControlInterface)->attachObject((void *)obj, pathState);
     fz = lbl_803E8304;
     inner->baddie.unk294 = fz;
     inner->baddie.animSpeedB = fz;
@@ -513,6 +514,7 @@ int fn_802BDBE8(int obj, int p2, int p3)
 void fn_802BE6E8(int obj, int t, int p3)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
+    u8 *pathState = (u8 *)&((EarthWarriorState *)inner)->baddie + 4;
     int q;
     int slot;
     Obj_GetPlayerObject();
@@ -544,9 +546,9 @@ void fn_802BE6E8(int obj, int t, int p3)
     }
     fn_802B1BF8(obj, q, inner, timeDelta);
     fn_802B1B28(obj, timeDelta);
-    (*(void (*)(int, int, f32))(*(int *)(*gPathControlInterface + 0x10)))(obj, inner + 0x4, timeDelta);
-    (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x14)))(obj, inner + 0x4);
-    (*(void (*)(int, int, f32))(*(int *)(*gPathControlInterface + 0x18)))(obj, inner + 0x4, timeDelta);
+    (*gPathControlInterface)->update((void *)obj, pathState, timeDelta);
+    (*gPathControlInterface)->apply((void *)obj, pathState);
+    (*gPathControlInterface)->advance((void *)obj, pathState, timeDelta);
     ((GameObject *)obj)->anim.rotX = *(s16 *)((char *)q + 0x478);
 }
 #pragma peephole reset
@@ -1223,7 +1225,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     int stk;
     EWPathRange r2;
     EWPathRange r1;
-    int q;
+    u8 *pathState;
     stk = lbl_803E82D8;
     r2 = lbl_802C2CA8;
     r1 = lbl_802C2CB4;
@@ -1236,12 +1238,12 @@ void DR_EarthWarrior_init(int obj, int p2)
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
     *(int *)inner |= 0x4000;
     *(f32 *)((char *)inner + 0x2a4) = lbl_803E8384;
-    q = inner + 0x4;
-    (*(void (*)(int, int, int, int))(*(int *)(*gPathControlInterface + 0x4)))(q, 0, 0x48683, 1);
-    (*(void (*)(int, int, int, int, int *))(*(int *)(*gPathControlInterface + 0xc)))(q, 4, (int)(base + 0xc), (int)(base + 0x3c), &stk);
-    (*(void (*)(int, int, int, int, int))(*(int *)(*gPathControlInterface + 0x8)))(q, 1, (int)(base + 0x4c), (int)(base + 0x64), 8);
-    *(u8 *)((char *)q + 0x264) = 0x28;
-    (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, q);
+    pathState = (u8 *)&((EarthWarriorState *)inner)->baddie + 4;
+    (*gPathControlInterface)->init(pathState, 0, 0x48683, 1);
+    (*gPathControlInterface)->setup(pathState, 4, base + 0xc, base + 0x3c, &stk);
+    (*gPathControlInterface)->setLocalPointCollision(pathState, 1, base + 0x4c, base + 0x64, 8);
+    pathState[0x264] = 0x28;
+    (*gPathControlInterface)->attachObject((void *)obj, pathState);
     ObjHits_EnableObject(obj);
     ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->trackContactMask = 9;
     dll_2E_func05(obj, inner + 0x3ec, -0x2000, 0x31c7, 2);

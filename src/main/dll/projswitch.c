@@ -989,8 +989,8 @@ void enemy_init(int obj, u8 *setup, int flag)
         }
         (*gPathControlInterface)->init(state + 4, 0, 422, 1);
         if ((((EnemyState *)state)->flags2E4 & 8) != 0) {
-            ((void (*)(void *, int, void *, void *, int))(*gPathControlInterface)->slot08)(
-                state + 4, 1, lbl_8031DBE4, &lbl_803DBC64, 4);
+            (*gPathControlInterface)->setLocalPointCollision(state + 4, 1, lbl_8031DBE4,
+                                                             &lbl_803DBC64, 4);
         }
         if ((((EnemyState *)state)->flags2E4 & 4) != 0) {
             (*gPathControlInterface)->setup(state + 4, 1, lbl_8031DBD8, &lbl_803DBC60, &lbl_803DBC68);

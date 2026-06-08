@@ -361,7 +361,7 @@ void hightop_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, unde
 void hightop_init(void *obj, u8 *arg) {
     u8 *base = lbl_8032AAB0;
     HighTopRuntime *runtime = ((GameObject *)obj)->extra;
-    char *pathObj;
+    u8 *pathState;
     int *node;
     HtInitData local1;
     HtInitData local2;
@@ -382,12 +382,12 @@ void hightop_init(void *obj, u8 *arg) {
     ObjGroup_AddObject((int)obj, 10);
     (*(void (**)(void *, char *, int, int))((char *)*gPlayerInterface + 4))(obj, (char *)runtime, 11, 1);
     runtime->baddie.unk2A4 = lbl_803E6B4C;
-    pathObj = (char *)runtime + 4;
-    *(u8 *)(pathObj + 0x25b) = 1;
-    (*(void (**)(char *, int, int, int))((char *)*gPathControlInterface + 4))(pathObj, 3, 1024, 0);
-    (*(void (**)(char *, int, u8 *, int *, int))((char *)*gPathControlInterface + 8))(pathObj, 2, &base[0xe8], &lbl_803DC318, 8);
-    (*(void (**)(char *, int, u8 *, u8 *, int *))((char *)*gPathControlInterface + 12))(pathObj, 4, &base[0xa8], &base[0xd8], &local8);
-    (*(void (**)(void *, char *))((char *)*gPathControlInterface + 32))(obj, pathObj);
+    pathState = (u8 *)&runtime->baddie + 4;
+    pathState[0x25b] = 1;
+    (*gPathControlInterface)->init(pathState, 3, 1024, 0);
+    (*gPathControlInterface)->setLocalPointCollision(pathState, 2, &base[0xe8], &lbl_803DC318, 8);
+    (*gPathControlInterface)->setup(pathState, 4, &base[0xa8], &base[0xd8], &local8);
+    (*gPathControlInterface)->attachObject(obj, pathState);
     dll_2E_func05((int)obj, (char *)runtime->lookController, -4551, 23665, 6);
     dll_2E_func08((char *)runtime->lookController, 300, 120);
     dll_2E_func09((char *)runtime->lookController, &local2, &local1, 6);

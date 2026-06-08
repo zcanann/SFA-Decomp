@@ -759,24 +759,24 @@ void fn_802BF0C8(int obj, int p2, int mode)
 {
     u8 *base = lbl_803356F0;
     int stk = lbl_803E83A0;
-    int q = p2 + 0x4;
+    u8 *pathState = (u8 *)&((CloudRunnerState *)p2)->baddie + 4;
     u32 m;
-    *(u8 *)((char *)q + 0x25b) = 1;
+    pathState[0x25b] = 1;
     m = (u8)mode;
     if (m == 1) {
-        (*(void (*)(int, int, int, int))(*(int *)(*gPathControlInterface + 0x4)))(q, 0, 0x42087, 0);
-        (*(void (*)(int, int, int, int, int))(*(int *)(*gPathControlInterface + 0x8)))(q, 1, (int)(base + 0x18), (int)&lbl_803DC774, 8);
-        (*(void (*)(int, int, int, int, int *))(*(int *)(*gPathControlInterface + 0xc)))(q, 1, (int)(base + 0xc), (int)&lbl_803DC770, &stk);
+        (*gPathControlInterface)->init(pathState, 0, 0x42087, 0);
+        (*gPathControlInterface)->setLocalPointCollision(pathState, 1, base + 0x18, &lbl_803DC774, 8);
+        (*gPathControlInterface)->setup(pathState, 1, base + 0xc, &lbl_803DC770, &stk);
     } else if (m == 2) {
-        (*(void (*)(int, int, int, int))(*(int *)(*gPathControlInterface + 0x4)))(q, 3, 0x42087, 0);
-        (*(void (*)(int, int, int, int, int))(*(int *)(*gPathControlInterface + 0x8)))(q, 2, (int)(base + 0x30), (int)&lbl_803DC77C, 8);
-        (*(void (*)(int, int, int, int, int *))(*(int *)(*gPathControlInterface + 0xc)))(q, 1, (int)(base + 0x24), (int)&lbl_803DC778, &stk);
+        (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
+        (*gPathControlInterface)->setLocalPointCollision(pathState, 2, base + 0x30, &lbl_803DC77C, 8);
+        (*gPathControlInterface)->setup(pathState, 1, base + 0x24, &lbl_803DC778, &stk);
     } else if (m == 0) {
-        (*(void (*)(int, int, int, int))(*(int *)(*gPathControlInterface + 0x4)))(q, 3, 0x42087, 0);
-        (*(void (*)(int, int, int, int, int))(*(int *)(*gPathControlInterface + 0x8)))(q, 2, (int)(base + 0x48), (int)&lbl_803DC784, 8);
-        (*(void (*)(int, int, int, int, int *))(*(int *)(*gPathControlInterface + 0xc)))(q, 1, (int)(base + 0x3c), (int)&lbl_803DC780, &stk);
+        (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
+        (*gPathControlInterface)->setLocalPointCollision(pathState, 2, base + 0x48, &lbl_803DC784, 8);
+        (*gPathControlInterface)->setup(pathState, 1, base + 0x3c, &lbl_803DC780, &stk);
     }
-    (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, q);
+    (*gPathControlInterface)->attachObject((void *)obj, pathState);
 }
 #pragma peephole reset
 #pragma scheduling reset

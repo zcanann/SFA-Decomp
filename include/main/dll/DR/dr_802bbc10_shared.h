@@ -8,6 +8,7 @@
 #include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 
@@ -468,10 +469,8 @@ extern void DIMSnowHorn1_animEventCallback();
 extern int lbl_803E8230;
 extern int lbl_803DC734;
 extern f32 lbl_803E82B8;
-extern int *gPathControlInterface;
 extern void dll_2E_func05(int obj, int q, int a, int b, int c);
 extern int dll_2E_func07(int obj, int p3, void *q, int a, int b);
-extern int *gPathControlInterface;
 extern int dll_2E_func0A(int a, void *out);
 extern void dll_2E_func05(int obj, int q, int a, int b, int c);
 extern void dll_2E_func08(int q, int a, int b);

@@ -47,8 +47,7 @@ undefined4 sidekickball_init(int obj)
   objDef = *(int *)&((GameObject *)obj)->anim.hitReactState;
   *(f32 *)(state + 0x268) = (f32)*(s16 *)(objDef + 0x5a);
   (*gPathControlInterface)->init(state, 0, 0x40007, 1);
-  ((void (*)(void *, int, void *, void *, int))(*gPathControlInterface)->slot08)(
-      state, 1, lbl_80320F30, state + 0x268, 1);
+  (*gPathControlInterface)->setLocalPointCollision(state, 1, lbl_80320F30, state + 0x268, 1);
   (*gPathControlInterface)->setup(state, 1, lbl_80320F30, state + 0x268, &pathFlag);
   (*gPathControlInterface)->attachObject((void *)obj, state);
   ObjHits_DisableObject(obj);

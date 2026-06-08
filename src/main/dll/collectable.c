@@ -1914,8 +1914,8 @@ void Tricky_init(int obj)
   *(u8 *)(*(int *)(model + 0x34) + 8) = ((TrickyState *)state)->modelVariant;
   pathState = (int)&((TrickyState *)state)->pathControlFlags;
   (*gPathControlInterface)->init((void *)pathState, 1, 0xa7, 1);
-  ((void (*)(void *, int, void *, void *, int))(*gPathControlInterface)->slot08)(
-      (void *)pathState, 1, lbl_8031D300, &lbl_803DBC48, 2);
+  (*gPathControlInterface)->setLocalPointCollision((void *)pathState, 1, lbl_8031D300,
+                                                   &lbl_803DBC48, 2);
   (*gPathControlInterface)->setup((void *)pathState, 2, lbl_8031D2E8, &lbl_803DBC40, startPath);
   (*gPathControlInterface)->attachObject((void *)obj, (void *)pathState);
   doNothing_onTrickyInit();

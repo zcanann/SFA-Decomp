@@ -7,6 +7,7 @@
 #include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
@@ -155,7 +156,6 @@ extern void saveFileStruct_unlockCheat(int v);
 extern HtInitData lbl_802C2590;
 extern HtInitData lbl_802C25A4;
 extern int lbl_803E6AA0;
-extern void **gPathControlInterface;
 extern int lbl_803DC318;
 extern f32 lbl_803E6B4C;
 extern f32 lbl_803E6B50;
