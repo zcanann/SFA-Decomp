@@ -546,7 +546,7 @@ void fn_802251B4(int obj, int state)
             GameBit_Set(0x274, 1);
             GameBit_Set(0xef1, 0);
             player = Obj_GetPlayerObject();
-            ((MapEventInterface *)*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
+            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
             *(u16 *)(state + 0x1a) |= 0x40;
             *(u8 *)(state + 0xc) = 0;
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
@@ -647,7 +647,7 @@ void fn_802251B4(int obj, int state)
             GameBit_Set(0xeec, 0);
             GameBit_Set(0xbd0, 0);
             player = Obj_GetPlayerObject();
-            ((MapEventInterface *)*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
+            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             *(u16 *)(state + 0x1a) |= 0x100;
         }
@@ -740,7 +740,7 @@ void wcpushblock_updateLevelControlState(int obj, int state)
             GameBit_Set(0xda9, 0);
             GameBit_Set(0xc37, 1);
             player = Obj_GetPlayerObject();
-            ((MapEventInterface *)*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
+            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
             *(u8 *)(state + 0xc) = 7;
         }
         break;
@@ -783,7 +783,7 @@ int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3)
             int player;
             GameBit_Set(0x7f7, 1);
             player = Obj_GetPlayerObject();
-            ((MapEventInterface *)*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
+            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
         }
     } else if (*(u8 *)(state + 0xd) == 2) {
         f32 t = *(f32 *)(state + 0) - timeDelta;
@@ -792,7 +792,7 @@ int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3)
             int player;
             GameBit_Set(0x802, 1);
             player = Obj_GetPlayerObject();
-            ((MapEventInterface *)*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
+            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
         }
     }
     for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {

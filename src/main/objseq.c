@@ -4433,8 +4433,8 @@ void animatedObjFreeAndSavePlayerPos(u8 *obj, u8 *seqObj, u8 *seq) {
 
     if ((((u32)((ObjSeqState *)seq)->unk136[0] >> 2) & 1U) != 0U) {
         player = Obj_GetPlayerObject();
-        ((MapEventInterface *)*gMapEventInterface)->triggerEvent(
-            (int)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
+        (*gMapEventInterface)->triggerEvent((int)(player + 0xc), *(s16 *)player, 0,
+                                            getCurMapLayer());
         clearBit = 0;
         {
             struct SeqByte136 { u8 b80:1, b40:1, b20:1, b10:1, b08:1, b04:1, b02:1, b01:1; };

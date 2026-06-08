@@ -31,17 +31,17 @@ void fn_801F654C(int obj)
             getEnvfxActImmediately(obj, obj, 0x22c, 0);
             getEnvfxActImmediately(obj, obj, 0x229, 0);
             getEnvfxActImmediately(obj, obj, 0x22a, 0);
-            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
-            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
-            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 0);
+            (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
+            (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
+            (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 0);
         } else if (state->skyWasOn == 0 && skyOn != 0) {
             getEnvfxActImmediately(0, 0, 0x217, 0);
             getEnvfxActImmediately(obj, obj, 0x216, 0);
             getEnvfxActImmediately(obj, obj, 0x84, 0);
             getEnvfxActImmediately(obj, obj, 0x8a, 0);
-            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 0);
-            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 1);
-            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
+            (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 0);
+            (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 1);
+            (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
         }
     }
 }
@@ -95,9 +95,9 @@ int wmseqpoint_SeqFn(int obj, int unused, int actor)
                         getEnvfxActImmediately(obj, obj, 0x216, 0);
                         getEnvfxActImmediately(obj, obj, 0x84, 0);
                         getEnvfxActImmediately(obj, obj, 0x8a, 0);
-                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 0);
-                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 1);
-                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
+                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 0);
+                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 1);
+                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
                     }
                     break;
                 case 0xa:
@@ -106,9 +106,9 @@ int wmseqpoint_SeqFn(int obj, int unused, int actor)
                         getEnvfxActImmediately(obj, obj, 0x22c, 0);
                         getEnvfxActImmediately(obj, obj, 0x229, 0);
                         getEnvfxActImmediately(obj, obj, 0x22a, 0);
-                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
-                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
-                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 0);
+                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
+                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
+                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 0);
                     }
                     break;
                 default:

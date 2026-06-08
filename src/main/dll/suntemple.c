@@ -70,7 +70,7 @@ int suntemple_interactCallback(int obj, int p2, int p3)
             break;
         case 3:
             if (((ObjAnimComponent *)obj)->bankIndex == 1)
-                (*(void (**)(void *, int, int, int))(*gMapEventInterface + 0x24))(
+                (*(void (**)(void *, int, int, int))((u8 *)*gMapEventInterface + 0x24))(
                     &vec, -0x4000, getCurMapLayer(), 0);
             break;
         }
@@ -98,7 +98,7 @@ void suntemple_init(u8 *obj, u8 *setup)
     }
     state = ((GameObject *)obj)->extra;
     state[0] = (u8)GameBit_Get(*(s16 *)(setup + 0x1c));
-    state[1] = ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
+    state[1] = (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     if ((setup[0x1b] & 1) != 0 && state[0] != 0) {
         ((GameObject *)obj)->anim.alpha = 0;
     }

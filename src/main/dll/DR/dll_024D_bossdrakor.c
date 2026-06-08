@@ -599,7 +599,7 @@ void bossdrakor_hitDetect(int obj)
                 GameBit_Set(*(s16 *)((char *)setup + 0x1e), 1);
                 spawnExplosion((int *)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
                 Obj_RemoveFromUpdateList((int *)obj);
-                ((MapEventInterface *)*gMapEventInterface)->setMode(0x1d, 3);
+                (*gMapEventInterface)->setMode(0x1d, 3);
                 GameBit_Set(0x83c, 1);
             } else {
                 Obj_SpawnHitLightAndFade(obj, &hx, lbl_803E6554);
@@ -664,8 +664,8 @@ int bossdrakor_animEventCallback(int obj, int a2, int events)
             break;
         case 8:
             GameBit_Set(0x5db, 0);
-            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(2, 0xf, 1);
-            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(2, 0x10, 1);
+            (*gMapEventInterface)->setAnimEvent(2, 0xf, 1);
+            (*gMapEventInterface)->setAnimEvent(2, 0x10, 1);
             GameBit_Set(0xe7b, 0);
             warpToMap(0x79, 0);
             timeOfDayFn_80055000();

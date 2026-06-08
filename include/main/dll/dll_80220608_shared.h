@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objHitReact.h"
@@ -46,7 +47,7 @@ extern f32 lbl_803E6E18;
 extern f32 lbl_803E6E20;
 extern f32 lbl_803E6E24;
 extern f32 timeDelta;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern EffectInterface **gPartfxInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int isGameTimerDisabled(void);

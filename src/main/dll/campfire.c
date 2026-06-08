@@ -68,7 +68,7 @@ extern void* gKaldaChomStateHandlersB[];
 extern void* gKaldaChomStateHandlersA[];
 extern EffectInterface **gPartfxInterface;
 extern undefined4* gPlayerInterface;
-extern undefined4* gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4* gBaddieControlInterface;
 extern void *lbl_803DDA90;
 extern f64 DOUBLE_803e3d00;
@@ -507,7 +507,7 @@ void kaldachom_update(int param_1)
   iVar8 = *(int *)(param_1 + 0x4c);
   if (*(int *)(param_1 + 0xf4) != 0) {
     if ((((CampfireState *)iVar9)->unk270 != 3) &&
-        (iVar1 = ((MapEventInterface *)*gMapEventInterface)->isTimedEventActive(*(int *)(iVar8 + 0x14)), iVar1 != 0))
+        (iVar1 = (*gMapEventInterface)->isTimedEventActive(*(int *)(iVar8 + 0x14)), iVar1 != 0))
     {
       (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
       *(undefined2 *)(iVar9 + 0x402) = 0;

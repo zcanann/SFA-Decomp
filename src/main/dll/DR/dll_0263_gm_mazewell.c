@@ -68,8 +68,8 @@ void gmmazewell_update(void *obj) {
     if (runtime[1] == 0) {
         player = (u8 *)Obj_GetPlayerObject();
         if (player != 0) {
-            ((MapEventInterface *)*gMapEventInterface)->triggerEvent(
-                (int)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
+            (*gMapEventInterface)->triggerEvent((int)(player + 0xc), *(s16 *)player, 0,
+                                                getCurMapLayer());
             runtime[1] = 1;
         }
     }

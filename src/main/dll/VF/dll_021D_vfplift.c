@@ -38,11 +38,6 @@ typedef struct VFPLiftState {
     u8 flagsPad : 6;
 } VFPLiftState;
 
-typedef struct VFPLiftMapEventInterface {
-    u8 pad00[0x40];
-    u8 (*getMode)(int mapEventNo);
-} VFPLiftMapEventInterface;
-
 extern void buttonDisable(int index,u32 flags);
 extern void Sfx_StopObjectChannel(int obj,int channel);
 extern f32 lbl_803E60E0;
@@ -157,7 +152,7 @@ void vfplift1_updateState(int obj)
     gate1 = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_1);
     gate2 = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_2);
     gate3 = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_3);
-    if (((VFPLiftMapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
+    if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
         gate0 = 1;
         gate3 = gate2 = gate1 = gate0;
     }

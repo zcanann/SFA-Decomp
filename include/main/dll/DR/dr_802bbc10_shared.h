@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/mapEventTypes.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
@@ -523,7 +524,7 @@ extern void fn_80137948(const char *fmt, ...);
 extern char sOnCloudFormat[];
 extern void buttonDisable(int a, int b);
 extern void fn_8003B500(int obj, int q, f32 f);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
 extern f32 lbl_803E8420;

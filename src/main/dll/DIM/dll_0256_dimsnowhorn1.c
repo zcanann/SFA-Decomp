@@ -1334,7 +1334,7 @@ void DIMSnowHorn1_update(int obj)
                 setAButtonIcon(0x14);
                 if (*(u8 *)(found + 0xaf) & 1) {
                     int layer = getCurMapLayer();
-                    (*(void (*)(int, int, int, int))(*(int *)(*gMapEventInterface + 0x24)))(player + 0xc, 0x584, layer, 0);
+                    (*(void (*)(int, int, int, int))(*(int *)((u8 *)*gMapEventInterface + 0x24)))(player + 0xc, 0x584, layer, 0);
                     buttonDisable(0, 0x100);
                     GameBit_Set(0x3e3, 1);
                     d = ((GameObject *)obj)->anim.rotX - (u16)*(s16 *)found;
@@ -1399,7 +1399,7 @@ void DIMSnowHorn1_update(int obj)
                     }
                     *(int *)((char *)data + 0x31c) = 0;
                     (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
-                    (*(void (*)(void))(*(int *)(*gMapEventInterface + 0x2c)))();
+                    (*(void (*)(void))(*(int *)((u8 *)*gMapEventInterface + 0x2c)))();
                 }
             } else {
                 setAButtonIcon(0x13);

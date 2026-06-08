@@ -321,9 +321,9 @@ void fn_8022C680(int obj) {
     case 0x3a:
         if ((u32)GameBit_Get(0xc85) != 0) {
             GameBit_Set(0x405, 0);
-            ((MapEventInterface *)*gMapEventInterface)->setMode(0xb, 5);
-            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xb, 0xa, 1);
-            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xb, 0xb, 1);
+            (*gMapEventInterface)->setMode(0xb, 5);
+            (*gMapEventInterface)->setAnimEvent(0xb, 0xa, 1);
+            (*gMapEventInterface)->setAnimEvent(0xb, 0xb, 1);
             warpToMap(0x22, 0);
         } else {
             warpToMap(0x6c, 0);
@@ -741,7 +741,7 @@ void fn_8022CDEC(int obj, int state)
     f32 radius;
 
     radius = lbl_803E6FC0;
-    mev = (*(int (**)(int))(*gMapEventInterface + 0x8c))(*gMapEventInterface);
+    mev = (int)(*gMapEventInterface)->getState(*gMapEventInterface);
 
     if (*(void **)&((ArwingState *)state)->escortObj == 0) {
         ((ArwingState *)state)->escortObj = ObjList_FindNearestObjectByDefNo(obj, 0x606, &radius);
@@ -1148,29 +1148,29 @@ int arwarwing_SeqFn(int obj, int p2, int script)
             }
             switch ((s8)*(u8 *)(obj + 0xac)) {
             case 0x3b:
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0x13, 0, 1);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0x13, 0x16, 1);
+                (*gMapEventInterface)->setAnimEvent(0x13, 0, 1);
+                (*gMapEventInterface)->setAnimEvent(0x13, 0x16, 1);
                 break;
             case 0x3d:
                 GameBit_Set(0x36a, 0);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 0, 1);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 1, 1);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 5, 1);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 0xa, 1);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xd, 0xb, 1);
+                (*gMapEventInterface)->setAnimEvent(0xd, 0, 1);
+                (*gMapEventInterface)->setAnimEvent(0xd, 1, 1);
+                (*gMapEventInterface)->setAnimEvent(0xd, 5, 1);
+                (*gMapEventInterface)->setAnimEvent(0xd, 0xa, 1);
+                (*gMapEventInterface)->setAnimEvent(0xd, 0xb, 1);
                 GameBit_Set(0xe05, 0);
                 break;
             case 0x3c:
                 GameBit_Set(0x458, 0);
                 GameBit_Set(0x47c, 0);
                 GameBit_Set(0x4a3, 0);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(0xc, 0, 1);
+                (*gMapEventInterface)->setAnimEvent(0xc, 0, 1);
                 GameBit_Set(0xd73, 0);
                 break;
             case 0x3e:
                 GameBit_Set(0x5db, 0);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(2, 0xf, 1);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(2, 0x10, 1);
+                (*gMapEventInterface)->setAnimEvent(2, 0xf, 1);
+                (*gMapEventInterface)->setAnimEvent(2, 0x10, 1);
                 GameBit_Set(0xe7b, 0);
                 GameBit_Set(0x9e9, 0);
                 break;

@@ -1840,7 +1840,7 @@ LAB_8023de5c:
     if (((iVar12 != 0) || (iVar12 = GameBit_Get(3), iVar12 != 0)) ||
        (iVar12 = GameBit_Get(4), iVar12 != 0)) {
       GameBit_Set(0x405,0);
-      ((MapEventInterface *)*gMapEventInterface)->setMode(0xb, 7);
+      (*gMapEventInterface)->setMode(0xb, 7);
       unlockLevel(0,0,1);
       loadMapAndParent(mapGetDirIdx(0xb));
       uVar9 = mapGetDirIdx(0xb);

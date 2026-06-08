@@ -2,6 +2,7 @@
 #include "dolphin/os/OSFastCast.h"
 #include "main/asset_load.h"
 #include "main/effect_interfaces.h"
+#include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
@@ -1107,7 +1108,7 @@ extern WaterfxInterface **gWaterfxInterface;
 extern void *gRomCurveInterface;
 extern void *gTitleMenuLinkInterface;
 extern void *gPathControlInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void *gBaddieControlInterface;
 extern void *gMinimapInterface;
 extern void *lbl_803DCAC0;
@@ -1257,7 +1258,7 @@ void init(void) {
     testAndSet_onlyUseHeap3(0);
     loadAssetFileById((int)&lbl_803DCADC, 0x33);
     lbl_803DCAD8 = (s16)(getDataFileSize(0x33) >> 1);
-    lbl_803DCAE0 = (*(u8 *(**)(void))(*(int *)gMapEventInterface + 0x88))();
+    lbl_803DCAE0 = (*(u8 *(**)(void))((u8 *)*gMapEventInterface + 0x88))();
     lbl_803DCA3F = 1;
     loadUiDll(2);
     doNothing_beforeTitleScreen();
@@ -1498,7 +1499,7 @@ void gameUpdate(void)
         int t;
 
         updateEnvironment(0);
-        (*(void (**)(void))(*(int *)gMapEventInterface + 0x70))();
+        (*(void (**)(void))((u8 *)*gMapEventInterface + 0x70))();
         player = Obj_GetPlayerObject();
         idx = lbl_803DCAD4;
         rec = (u8 *)lbl_8033BFB8 + idx * 16;

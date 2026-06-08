@@ -116,7 +116,7 @@ extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern undefined8 FUN_80294d28();
 extern undefined4 FUN_80294d60();
-extern int* gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void playerAddMoney(int player, int amount);
 extern void playerAddHealth(int player, int amount);
 extern int gameBitIncrement(int bit);
@@ -136,7 +136,7 @@ extern undefined4* DAT_803dd6f4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **DAT_803dd72c;
 extern f64 DOUBLE_803e6558;
 extern f64 DOUBLE_803e65a0;
 extern f64 DOUBLE_803e65d8;
@@ -1663,7 +1663,7 @@ void FUN_801e6558(undefined8 param_1,double param_2,double param_3,undefined8 pa
   
   iVar1 = FUN_80017a98();
   iVar3 = *(int *)(param_9 + 0xb8);
-  iVar2 = (**(code **)(*DAT_803dd72c + 0x8c))();
+  iVar2 = (int)(*DAT_803dd72c)->getState(*DAT_803dd72c);
   uVar4 = FUN_80294d28(iVar1,-param_10);
   switch(*(undefined *)(iVar3 + 1)) {
   case 0:
@@ -2716,7 +2716,7 @@ void shop_buyItem(int obj, int price)
 
     player = (int)Obj_GetPlayerObject();
     state = *(int *)&((GameObject *)obj)->extra;
-    mapEventState = ((int (*)(void))(*(u32 *)(*gMapEventInterface + 0x8c)))();
+    mapEventState = (int)(*gMapEventInterface)->getState(*gMapEventInterface);
     playerAddMoney(player, -price);
 
     switch (*(s8 *)(state + 1)) {
@@ -2924,9 +2924,9 @@ void shop_update(int obj)
     }
 
     if (((GameObject *)obj)->unkF4 == 0) {
-        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0, 1);
-        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 1);
-        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 1);
+        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0, 1);
+        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 1);
+        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 1);
         GameBit_Set(0x617, 1);
         skyFn_80088c94(7, 1);
         ((GameObject *)obj)->unkF4 = 1;

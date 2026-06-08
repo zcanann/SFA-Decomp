@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/mapEventTypes.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 
@@ -177,7 +178,7 @@ extern int Obj_RemoveFromUpdateList(int *obj);
 extern void Obj_SpawnHitLightAndFade(int obj, f32 *pos, f32 v);
 extern int GameBit_Set(int bit, int val);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 timeDelta;
 extern void gameTextShow(int id);
 extern int warpToMap(int id, int flags);

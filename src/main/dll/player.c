@@ -3637,8 +3637,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 loadUiDll(1);
                 break;
             case 0x19:
-                ((MapEventInterface *)*gMapEventInterface)->finishCurrentEvent(
-                    (MapEventInterface *)*gMapEventInterface);
+                (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
                 break;
             case 0x1c:
                 fn_80295CF4(obj, 0);
@@ -3737,7 +3736,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 hudFn_8011f38c(0);
                 break;
             case 0x2a:
-                if (((MapEventInterface *)*gMapEventInterface)->getMode(0xb) == 7) {
+                if ((*gMapEventInterface)->getMode(0xb) == 7) {
                     getEnvfxActImmediately(obj, obj, 0x1fb, 0);
                     getEnvfxActImmediately(obj, obj, 0x1ff, 0);
                     getEnvfxActImmediately(obj, obj, 0x249, 0);
@@ -6703,8 +6702,7 @@ void playerUpdate(int obj)
             playerProcessQueuedItemCommand(obj, inner);
             if (((ByteFlags *)((char *)inner + 0x3f3))->b20 != 0 &&
                 (*gScreenTransitionInterface)->isFinished() != 0) {
-                ((MapEventInterface *)*gMapEventInterface)->finishCurrentEvent(
-                    (MapEventInterface *)*gMapEventInterface);
+                (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
             }
             if (((ByteFlags *)((char *)inner + 0x3f3))->b20 == 0 &&
                 (*(int *)((char *)inner + 0x310) & 1) != 0) {
@@ -11425,7 +11423,7 @@ void objLoadPlayerFromSave(int obj)
     *(int *)&((GameObject *)obj)->anim.placementData = 0;
     ((PlayerState *)inner)->heldObj = 0;
     ((PlayerState *)inner)->unk35C =
-        (*(int (**)(MapEventInterface *))((u8 *)*gMapEventInterface + 0x8c))(*gMapEventInterface);
+        (int)(*gMapEventInterface)->getState(*gMapEventInterface);
     *(u16 *)((char *)inner + 0x81a) =
         (*gMapEventInterface)->getPlayerNo();
     Obj_SetActiveModelIndex(obj, ((PlayerState *)inner)->unk81A);

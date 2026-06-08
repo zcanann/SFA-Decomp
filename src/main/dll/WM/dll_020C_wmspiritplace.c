@@ -100,28 +100,28 @@ int wmspiritplace_SeqFn(int obj, int unused, int actor)
                     case 0x2183:
                         lockLevel(mapGetDirIdx(0x41), 0);
                         lockLevel(mapGetDirIdx(0xb), 1);
-                        (*(void (**)(int))(*gMapEventInterface + 0x78))(1);
+                        (*(void (**)(int))((u8 *)*gMapEventInterface + 0x78))(1);
                         break;
                     case 0x47295:
                         loadMapAndParent(0x42);
                         lockLevel(mapGetDirIdx(0x42), 0);
                         lockLevel(mapGetDirIdx(0xb), 1);
-                        ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
-                        ((MapEventInterface *)*gMapEventInterface)->setMode(7, 4);
+                        (*gMapEventInterface)->setMode(0x42, 3);
+                        (*gMapEventInterface)->setMode(7, 4);
                         break;
                     case 0x49781:
                         loadMapAndParent(0x42);
                         lockLevel(mapGetDirIdx(0x42), 0);
                         lockLevel(mapGetDirIdx(0xb), 1);
-                        ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
-                        ((MapEventInterface *)*gMapEventInterface)->setMode(7, 5);
+                        (*gMapEventInterface)->setMode(0x42, 3);
+                        (*gMapEventInterface)->setMode(7, 5);
                         break;
                     case 0x4a1c0:
                         loadMapAndParent(0x42);
                         lockLevel(mapGetDirIdx(0x42), 0);
                         lockLevel(mapGetDirIdx(0xb), 1);
-                        ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
-                        ((MapEventInterface *)*gMapEventInterface)->setMode(7, 7);
+                        (*gMapEventInterface)->setMode(0x42, 3);
+                        (*gMapEventInterface)->setMode(7, 7);
                         break;
                 }
                 break;
@@ -309,9 +309,9 @@ void wmspiritplace_update(int obj)
                         getEnvfxActImmediately(obj, obj, 0x216, 0);
                         getEnvfxActImmediately(obj, obj, 0x229, 0);
                         getEnvfxActImmediately(obj, obj, 0x22a, 0);
-                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
-                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
-                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
+                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
+                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
+                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
                     }
                 } else {
                     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
@@ -369,7 +369,7 @@ void wmspiritplace_init(int obj, int setup)
     state->setupParam = (s16)*(s8 *)(setup + 0x19);
     state->f80 = 0;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
-    state->mapEventState = ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
+    state->mapEventState = (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
 
     if (*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) == 0x47295) {
         if (GameBit_Get(0x1fc) != 0 || GameBit_Get(0xeaf) != 0 || state->mapEventState > 2) {

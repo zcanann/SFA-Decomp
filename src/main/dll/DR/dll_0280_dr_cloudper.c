@@ -101,7 +101,7 @@ int drcloudper_setScale(int obj)
         return 0;
     }
     GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
+    (*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
     return 1;
 }
@@ -143,7 +143,7 @@ void drcloudper_init(int obj, int setup)
         (state->normalX * cloud->posX + state->normalY * cloud->posY);
     cloud->flagsB0 |= DRCLOUDPER_OBJECT_FLAGS;
     if (setupData->cloudIndex == GameBit_Get(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT)) {
-        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
+        (*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     }
 }
 #pragma scheduling reset

@@ -159,7 +159,7 @@ void wcbeacon_init(u8 *obj, u8 *setup)
     u8 *state = ((GameObject *)obj)->extra;
     s16 objType;
 
-    ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
+    (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     objType = (s16)((s8)setup[WCBEACON_SETUP_TYPE_OFFSET] << 8);
     *(s16 *)obj = objType;
     objAnim->bankIndex = setup[WCBEACON_SETUP_MODEL_INDEX_OFFSET];

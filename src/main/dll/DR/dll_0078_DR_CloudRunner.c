@@ -1046,11 +1046,11 @@ void DR_CloudRunner_update(int obj)
             if (((ByteFlags *)&inner->flagsBC0)->b10) {
                 f32 vec[3];
                 buttonDisable(0, 0x100);
-                if ((*(int (*)(void))(*(int *)(*gMapEventInterface + 0x30)))() == 0) {
+                if ((*(int (*)(void))(*(int *)((u8 *)*gMapEventInterface + 0x30)))() == 0) {
                     vec[0] = lbl_803E8418;
                     vec[1] = lbl_803E841C;
                     vec[2] = lbl_803E8420;
-                    (*(void (*)(f32 *, int, int, int))(*(int *)(*gMapEventInterface + 0x24)))(vec, 0, 0, 0);
+                    (*(void (*)(f32 *, int, int, int))(*(int *)((u8 *)*gMapEventInterface + 0x24)))(vec, 0, 0, 0);
                 }
                 (*gObjectTriggerInterface)->runSequence(4, (void *)obj, -1);
                 inner->unkB04 = 0;

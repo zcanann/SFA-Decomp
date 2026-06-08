@@ -119,7 +119,7 @@ void earthwalker_update(int obj)
             int newState;
             switch (ewState->encounterType) {
             case 0:
-                if (((MapEventInterface *)*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
+                if ((*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
                     if (ewState->lastTriggeredState == 0x14) {
                         newState = 0x15;
                     } else {
@@ -142,7 +142,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 9:
-                if (((MapEventInterface *)*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
+                if ((*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
                     if (ewState->lastTriggeredState == 0x16) {
                         newState = 0x17;
                     } else {
@@ -163,7 +163,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 10:
-                if (((MapEventInterface *)*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
+                if ((*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
                     if (ewState->lastTriggeredState == 0x18) {
                         newState = 0x19;
                     } else if (ewState->lastTriggeredState == 0x19) {
@@ -188,7 +188,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 11:
-                if (((MapEventInterface *)*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
+                if ((*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
                     if (ewState->lastTriggeredState == 0x1c) {
                         newState = 0x1d;
                     } else if (ewState->lastTriggeredState == 0x1d) {
@@ -213,7 +213,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 1:
-                if (((MapEventInterface *)*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
+                if ((*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
                     if (GameBit_Get(0xc92) != 0) {
                         ewObj->statusFlags |= 8;
                         newState = -1;
@@ -458,7 +458,7 @@ void earthwalker_init(int obj, int setup)
     ewState->encounterType = *(u8 *)(setup + 0x19);
     if (ewState->encounterType == 1) {
         if (GameBit_Get(0x7fc) != 0 ||
-            ((MapEventInterface *)*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
+            (*gMapEventInterface)->getMode(ewObj->mapEventId) == 2) {
             ewState->interactionState = 2;
         } else {
             ewState->interactionState = 0;
