@@ -33,7 +33,6 @@ extern u8 gSHthorntailPathData[0x4AC];
 extern undefined4 lbl_803E5410;
 extern EffectInterface **gPartfxInterface;
 extern ObjectTriggerInterface **DAT_803dd6d4;
-extern undefined4* DAT_803dd728;
 extern MapEventInterface **DAT_803dd72c;
 extern SHthorntailPathControlInterface **gPathControlInterface;
 extern f32 timeDelta;
@@ -285,9 +284,9 @@ void SHthorntail_update(SHthorntailObject *obj)
     if (gSHthorntailActiveConfigToken == SHTHORNTAIL_CONFIG_TOKEN_NONE) {
       gSHthorntailActiveConfigToken = config->configToken;
       obj->modelScale = -(lbl_803E544C * timeDelta - obj->modelScale);
-      (*(code *)(*DAT_803dd728 + 0x10))((double)timeDelta,obj,(int)runtime->moveScratch);
-      (*(code *)(*DAT_803dd728 + 0x14))(obj,(int)runtime->moveScratch);
-      (*(code *)(*DAT_803dd728 + 0x18))((double)timeDelta,obj,(int)runtime->moveScratch);
+      (*gSHthorntailPathControlInterface)->advanceControl(obj, runtime->moveScratch, timeDelta);
+      (*gSHthorntailPathControlInterface)->applyControl(obj, runtime->moveScratch);
+      (*gSHthorntailPathControlInterface)->finishControl(obj, runtime->moveScratch, timeDelta);
       obj->pitch = runtime->moveControlPitch;
       obj->roll = runtime->moveControlRoll;
     }
@@ -296,13 +295,13 @@ void SHthorntail_update(SHthorntailObject *obj)
         gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
       }
       if ((runtime->behaviorState < '\x02') || ('\x06' < runtime->behaviorState)) {
-        (*(code *)(*DAT_803dd728 + 0x20))(obj,(int)runtime->moveScratch);
+        (*gSHthorntailPathControlInterface)->bindObject(obj, (int)runtime->moveScratch);
       }
       else {
         obj->modelScale = -(lbl_803E544C * timeDelta - obj->modelScale);
-        (*(code *)(*DAT_803dd728 + 0x10))((double)timeDelta,obj,(int)runtime->moveScratch);
-        (*(code *)(*DAT_803dd728 + 0x14))(obj,(int)runtime->moveScratch);
-        (*(code *)(*DAT_803dd728 + 0x18))((double)timeDelta,obj,(int)runtime->moveScratch);
+        (*gSHthorntailPathControlInterface)->advanceControl(obj, runtime->moveScratch, timeDelta);
+        (*gSHthorntailPathControlInterface)->applyControl(obj, runtime->moveScratch);
+        (*gSHthorntailPathControlInterface)->finishControl(obj, runtime->moveScratch, timeDelta);
         obj->pitch = runtime->moveControlPitch;
         obj->roll = runtime->moveControlRoll;
       }
