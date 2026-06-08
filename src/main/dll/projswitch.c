@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/enemy_state.h"
 #include "main/dll/projswitch.h"
@@ -554,7 +555,6 @@ void enemy_hitDetect(int obj)
 #pragma scheduling reset
 
 extern void fn_80026C88(int p);
-extern ExpgfxInterface **gExpgfxInterface;
 extern void mm_free(int p);
 extern void smallbasket_stopLoopSfx(int obj, u8 *state);
 extern void Obj_FreeObject(int obj);

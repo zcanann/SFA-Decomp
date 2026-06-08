@@ -1,5 +1,6 @@
 #include "main/dll/modelfx.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
@@ -222,7 +223,6 @@ typedef struct EffectSpawnParams {
   u8 srcFlag;
 } EffectSpawnParams;
 
-extern ExpgfxInterface **gExpgfxInterface;
 extern EffectSrcParams lbl_8039C3F8;
 extern void vecRotateZXY(void *params, f32 *vec);
 

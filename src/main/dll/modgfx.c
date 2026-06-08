@@ -5792,8 +5792,6 @@ typedef struct PartFxSpawn {
     u8  f62;
 } PartFxSpawn;
 
-extern ExpgfxInterface **gExpgfxInterface;
-
 extern f32 lbl_803DB7F0;
 extern f32 lbl_803DB7F4;
 extern f32 lbl_803DFC8C;

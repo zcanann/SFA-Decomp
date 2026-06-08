@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim_internal.h"
@@ -1052,7 +1053,6 @@ void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern ExpgfxInterface **gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void shopitem_free(int obj) {
