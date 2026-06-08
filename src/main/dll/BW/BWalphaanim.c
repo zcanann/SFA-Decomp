@@ -1,4 +1,5 @@
 #include "main/dll/BW/BWalphaanim.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/dll/curves.h"
 #include "main/dll/path_control_interface.h"
@@ -83,7 +84,6 @@ extern void Obj_ClearModelSlotIndex(int obj);
 extern void fn_801EC928(int obj, u8 *state);
 extern void SnowBike_animEventCallback();
 extern void ObjGroup_AddObject(int obj, int group);
-extern int *gGameUIInterface;
 extern f32 lbl_803DC0B8;
 extern f32 lbl_803DC0C0;
 extern f32 lbl_803DC0C4;
@@ -146,8 +146,8 @@ void SnowBike_init(int obj, u8 *params, int flag)
             ((SnowBikeState *)state)->unk4C0 = lbl_803E5AEC;
             ((SnowBikeState *)state)->unk4BC = lbl_803E5B94;
             if (((SnowBikeState *)state)->unk421 == 2) {
-                (**(void (**)(int, int))(*gGameUIInterface + 0x58))((int)((SnowBikeState *)state)->unk4B8, 1485);
-                (**(void (**)(f32))(*gGameUIInterface + 0x68))(lbl_803E5B98);
+                (*gGameUIInterface)->initAirMeter((int)((SnowBikeState *)state)->unk4B8, 1485);
+                (*gGameUIInterface)->airMeterSetRatio(lbl_803E5B98);
             }
         }
     }

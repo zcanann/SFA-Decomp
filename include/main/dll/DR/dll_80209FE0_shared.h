@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objHitReact.h"
@@ -243,7 +244,6 @@ extern int ObjPath_GetPointWorldPosition(int obj, int idx, void *x, void *y, voi
 extern f32 sqrtf(f32 x);
 extern int *seqFn_800394a0(void);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern int *gGameUIInterface;
 extern EffectInterface **gPartfxInterface;
 extern int lbl_80329FA4[];
 extern int lbl_80329FB8[];

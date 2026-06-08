@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 #include "main/dll/BW/BWalphaanim.h"
@@ -84,7 +85,6 @@ extern f32 lbl_803E5B88;
 extern f32 lbl_803E5B8C;
 extern f32 lbl_803DC0D8;
 extern f32 lbl_803E5BA0;
-extern void **gGameUIInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void PSVECScale(f32 *dst, f32 *src, f32 s);
 extern void Sfx_KeepAliveLoopedObjectSound(uint obj, int sfxId);
@@ -294,7 +294,7 @@ void fn_801EB0D4(uint param_1,int param_2)
       if (st->unk4BC < lbl_803E5B84) {
         Sfx_KeepAliveLoopedObjectSound(param_1,0x44e);
       }
-      (*(void (**)(int))((char *)*gGameUIInterface + 0x5c))((s32)st->unk4BC);
+      (*gGameUIInterface)->runAirMeter((s32)st->unk4BC);
     }
     else {
       Sfx_StopObjectChannel(param_1,0x7f);
@@ -310,7 +310,7 @@ void fn_801EB0D4(uint param_1,int param_2)
         }
       }
       else {
-        (*(void (**)(void))((char *)*gGameUIInterface + 0x60))();
+        (*gGameUIInterface)->airMeterSetShutdown();
         (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
         fVar2 = lbl_803E5B8C;
         st->unk464 = lbl_803E5B8C;
@@ -410,7 +410,7 @@ undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,int para
       }
       break;
     case 3:
-      (*(code *)((char *)*gGameUIInterface + 0x60))();
+      (*gGameUIInterface)->airMeterSetShutdown();
       break;
     }
   }

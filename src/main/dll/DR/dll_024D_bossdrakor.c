@@ -114,8 +114,8 @@ void bossdrakor_update(int obj)
         ((BossDrakorState *)state)->unk190 = 0;
         state2 = *(int *)&((GameObject *)obj)->extra;
         ((DrakorFlags *)((char *)state2 + 0x198))->b20 = 1;
-        (*(void (**)(int, int))(*gGameUIInterface + 0x58))(((BossDrakorState *)state2)->unk170, 0x63e);
-        (*(void (**)(int))(*gGameUIInterface + 0x5c))(((BossDrakorState *)state2)->unk170);
+        (*gGameUIInterface)->initAirMeter(((BossDrakorState *)state2)->unk170, 0x63e);
+        (*gGameUIInterface)->runAirMeter(((BossDrakorState *)state2)->unk170);
         ((DrakorFlags *)((char *)state + 0x198))->b10 = 0;
         ((BossDrakorState *)state)->lightObj = objCreateLight(0, 1);
         if (*(void * *)&((BossDrakorState *)state)->lightObj != NULL) {
@@ -226,7 +226,7 @@ void bossdrakor_update(int obj)
     }
     objMove(obj, ((GameObject *)obj)->anim.velocityX, ((GameObject *)obj)->anim.velocityY, ((GameObject *)obj)->anim.velocityZ);
     if (((DrakorFlags *)((char *)state + 0x198))->b20) {
-        (*(void (**)(int))(*gGameUIInterface + 0x5c))(((BossDrakorState *)state)->unk170);
+        (*gGameUIInterface)->runAirMeter(((BossDrakorState *)state)->unk170);
     }
     t = lbl_803E6510;
     if (t != ((BossDrakorState *)state)->unk178) {
