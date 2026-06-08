@@ -2463,7 +2463,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm(mE, 0);
                 colA = (colA & 0xffffff00) | *(u8 *)((char *)p + 0x2e);
-                cv = (u32)(lbl_803DDB68 * (lbl_803E4938 * expf((lbl_803E4958 * ((f32)(int)*(int *)((char *)p + 0x14) - (f32)(int)*(int *)((char *)p + 0x10))) / (f32)(int)*(int *)((char *)p + 0x14))));
+                cv = (int)(lbl_803DDB68 * (lbl_803E4938 * expf((lbl_803E4958 * ((f32)(int)*(int *)((char *)p + 0x14) - (f32)(int)*(int *)((char *)p + 0x10))) / (f32)(int)*(int *)((char *)p + 0x14))));
                 colB = (cv & 0xff) | ((u8)cv << 8) | ((u8)cv << 16) | ((u8)cv << 24);
                 fn_801B40B8(*(u8 *)((char *)state + 0xa5d), (u8 *)&colA, (f32)(int)*(int *)((char *)p + 0x10), (f32)(int)*(int *)((char *)p + 0x14));
                 tex = (void **)((int *)lbl_803AC960)[*(u8 *)((char *)state + 0xa5d)];
