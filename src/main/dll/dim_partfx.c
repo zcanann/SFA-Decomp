@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/dll/dim_partfx.h"
 
 
@@ -2229,7 +2230,6 @@ extern f32 lbl_803DB870; extern f32 lbl_803DB874;
 extern f32 lbl_803E02E4; extern f32 lbl_803E02EC;
 extern f32 lbl_803E02F0; extern f32 lbl_803E02F4;
 extern f32 lbl_803E02F8; extern f32 lbl_803E02FC;
-extern ExpgfxInterface **gExpgfxInterface;
 
 extern f32 lbl_803E0180; extern f32 lbl_803E0184;
 extern f32 lbl_803E0188; extern f32 lbl_803E018C;

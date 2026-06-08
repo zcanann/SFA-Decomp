@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "global.h"
 #include "main/audio/sfx_ids.h"
@@ -4021,7 +4022,6 @@ extern int waterSpellStone1Fn_8019b4c8();
 void cfguardian_update(void) { waterSpellStone1Fn_8019b4c8(); }
 
 /* Drift-recovery: add new fns with v1.0 names. */
-extern ExpgfxInterface **gExpgfxInterface;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E4130;
 extern f32 lbl_803E416C;

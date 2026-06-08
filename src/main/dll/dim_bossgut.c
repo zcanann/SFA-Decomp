@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/dll/dim_bossgut.h"
@@ -351,7 +352,6 @@ extern void Obj_ResetModelColorState(int *obj);
 extern void objLightFn_8009a1dc(int *obj, f32 a, void *vec, int b, int c);
 extern int  Sfx_PlayFromObject(int *obj, int id);
 extern f32  sqrtf(f32 x);
-extern ExpgfxInterface **gExpgfxInterface;
 extern u8   framesThisStep;
 extern f32  timeDelta;
 extern f32  playerMapOffsetX;

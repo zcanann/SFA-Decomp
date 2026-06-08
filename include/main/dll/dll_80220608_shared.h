@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
@@ -546,7 +547,6 @@ typedef struct VortexState {
     u8 pad27;
 } VortexState;
 
-extern ExpgfxInterface **gExpgfxInterface;
 extern f32 lbl_803E73E0;
 extern f32 lbl_803E73D0;
 extern f32 lbl_803E73D4;

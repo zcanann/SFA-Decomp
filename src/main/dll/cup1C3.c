@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/cup1C3.h"
 #include "main/objanim.h"
@@ -50,7 +51,6 @@ extern undefined4* DAT_803dd708;
 extern u8 lbl_803DBF68;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern ModgfxInterface **gModgfxInterface;
-extern ExpgfxInterface **gExpgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern u8 framesThisStep;
 extern int lbl_802C23C8[];
