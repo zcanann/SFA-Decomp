@@ -6,6 +6,7 @@
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 #include "main/objanim_update.h"
 
 #define LASER_UNSUPPORTED_DLL_ID 0x0236
@@ -19,7 +20,7 @@ typedef struct LaserState {
 } LaserState;
 
 typedef struct LaserObjectMapData {
-  u8 pad00[0x18];
+  ObjPlacement base;
   s8 modeIndex;
   u8 pad19[0x1E - 0x19];
   s16 primaryGameBit;
@@ -52,6 +53,7 @@ STATIC_ASSERT(offsetof(LaserState, gameBitLatched) == 0x04);
 STATIC_ASSERT(offsetof(LaserObjectMapData, modeIndex) == 0x18);
 STATIC_ASSERT(offsetof(LaserObjectMapData, primaryGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(LaserObjectMapData, secondaryGameBit) == 0x20);
+STATIC_ASSERT(sizeof(LaserObjectMapData) == 0x24);
 
 STATIC_ASSERT(offsetof(LaserObject, modeWord) == 0x00);
 STATIC_ASSERT(offsetof(LaserObject, modeIndex) == 0xAC);
