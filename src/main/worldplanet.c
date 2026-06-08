@@ -1,3 +1,4 @@
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
@@ -210,7 +211,6 @@ extern void AudioStream_StopCurrent(void);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void setIsOvercast(int mode);
 extern u32 getButtonsJustPressed(int controller);
-extern int *gCameraInterface;
 extern EffectInterface **gPartfxInterface;
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -298,12 +298,12 @@ void worldplanet_update(int obj) {
     } else {
         setFrameCountdown_800202c4(1);
         if ((state->flags & 4) == 0) {
-            (*(void (*)(int, int, int, int, int, int, int))*(int *)(*gCameraInterface + 0x1c))(0x4e, 1, 0, 0, 0, 0, 0xff);
-            (*(void (*)(int, int))*(int *)(*gCameraInterface + 0x28))(obj, 0);
+            (*gCameraInterface)->setMode(0x4e, 1, 0, 0, NULL, 0, 0xff);
+            (*(void (*)(int, int))*(int *)((char *)*gCameraInterface + 0x28))(obj, 0);
             state->flags |= 4;
         } else if ((state->flags & 8) == 0) {
             objId = tbl[lbl_803DC1C8[state->selectedPlanet]];
-            (*(void (*)(int *, int))*(int *)(*gCameraInterface + 0x60))(&objId, 2);
+            (*(void (*)(int *, int))*(int *)((char *)*gCameraInterface + 0x60))(&objId, 2);
             state->flags |= 8;
             {
                 int krazoa = ObjList_FindObjectById(0x43077);
@@ -371,7 +371,7 @@ void worldplanet_update(int obj) {
             if (prevPlanet != state->selectedPlanet || ((GameObject *)obj)->unkF4 == 0) {
                 if (((GameObject *)obj)->unkF4 != 0) {
                     objId = tbl[lbl_803DC1C8[state->selectedPlanet]];
-                    (*(void (*)(int *, int))*(int *)(*gCameraInterface + 0x60))(&objId, 1);
+                    (*(void (*)(int *, int))*(int *)((char *)*gCameraInterface + 0x60))(&objId, 1);
                     Sfx_PlayFromObject(0, 0x97);
                 }
                 lbl_803DDD2C = lbl_803E65F8;
@@ -462,9 +462,9 @@ void worldplanet_update(int obj) {
                     if (lbl_803DDD04 < 2) {
                         lbl_803DDD04 = 0;
                         Sfx_PlayFromObject(0, 0x98);
-                        (*(void (*)(int, int))*(int *)(*gCameraInterface + 0x28))(objId, 0x50);
+                        (*(void (*)(int, int))*(int *)((char *)*gCameraInterface + 0x28))(objId, 0x50);
                         state->selectionLocked = 1;
-                        (*(void (*)(s8 *, int))*(int *)(*gCameraInterface + 0x60))(&state->selectionLocked, 0);
+                        (*(void (*)(s8 *, int))*(int *)((char *)*gCameraInterface + 0x60))(&state->selectionLocked, 0);
                         {
                             int krazoa = ObjList_FindObjectById(0x43077);
                             *(u8 *)(*(int *)(krazoa + 0xb8) + 0x27c) = lbl_803DC1E8[state->selectedPlanet];
@@ -489,10 +489,10 @@ void worldplanet_update(int obj) {
                     AudioStream_StopCurrent();
                     Sfx_PlayFromObject(0, 0x99);
                     streamFn_8000a380(2, 2, 1000);
-                    (*(void (*)(int, int))*(int *)(*gCameraInterface + 0x28))(obj, 0x50);
+                    (*(void (*)(int, int))*(int *)((char *)*gCameraInterface + 0x28))(obj, 0x50);
                     state->selectionLocked = 0;
                     lbl_803DDD0C = 0x1e;
-                    (*(void (*)(s8 *, int))*(int *)(*gCameraInterface + 0x60))(&state->selectionLocked, 0);
+                    (*(void (*)(s8 *, int))*(int *)((char *)*gCameraInterface + 0x60))(&state->selectionLocked, 0);
                     unlockLevel(lbl_803DDD28, 1, 0);
                     mapUnload(lbl_803DDD28, 0x20000000);
                     lbl_803DDD0A = 10;

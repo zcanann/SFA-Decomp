@@ -1,4 +1,5 @@
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
@@ -966,7 +967,6 @@ extern int *ObjGroup_GetObjects(int group, int *count);
 extern f32 lbl_803E4618;
 extern f32 timeDelta;
 extern MapEventInterface **gMapEventInterface;
-extern int *gCameraInterface;
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int id);
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
@@ -1032,7 +1032,7 @@ void ccgasventcontrol_update(int obj)
                 ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)player + 0x10);
                 ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)player + 0x14);
                 (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
-                (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                 *(u8 *)ex = 4;
             }
             if (b != *(u8 *)((char *)ex + 0xc)) {
