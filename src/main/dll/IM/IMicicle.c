@@ -1393,7 +1393,7 @@ void cflevelcontrol_initialise(void) {}
 extern void storeZeroToFloatParam(void* p);
 extern void objSetSlot(void *obj, int resourceId);
 extern s16 lbl_80323008[];
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 #pragma peephole off
 #pragma scheduling off
@@ -1424,10 +1424,10 @@ void cflevelcontrol_init(u8* obj, u8* params) {
             p++;
         }
     }
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 4, 0);
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x11, 0);
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x15, 0);
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x16, 0);
+    (*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 4, 0);
+    (*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x11, 0);
+    (*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x15, 0);
+    (*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x16, 0);
     ((LevelControlFlags *)(sub + 0xc))->b5 = (u8)GameBit_Get(0x974);
     ((LevelControlFlags *)(sub + 0xc))->b4 = (u8)GameBit_Get(0x975);
     objSetSlot(obj, 0x51);
@@ -1557,9 +1557,9 @@ void cflevelcontrol_update(int obj) {
         state[0xc] = (u8)(state[0xc] & ~0x08);
     }
 
-    if (((MapEventInterface *)*gMapEventInterface)->getMode(0x1d) == 1 &&
+    if ((*gMapEventInterface)->getMode(0x1d) == 1 &&
         GameBit_Get(0x40) != 0) {
-        ((MapEventInterface *)*gMapEventInterface)->setMode(0x1d, 2);
+        (*gMapEventInterface)->setMode(0x1d, 2);
     }
 
     bit974 = (u8)GameBit_Get(0x974);
@@ -1615,7 +1615,7 @@ void cflevelcontrol_update(int obj) {
     }
 
     if (GameBit_Get(0xd3d) != 0) {
-        ((void (*)(int *, int, int, int))(*(int *)(*gMapEventInterface + 0x24)))(
+        ((void (*)(int *, int, int, int))(*(int *)((u8 *)*gMapEventInterface + 0x24)))(
             triggerPos, 0, getCurMapLayer(), 1);
         GameBit_Set(0xd3d, 0);
         getEnvfxActImmediately((void *)obj, (void *)obj, 0xd, 0);
