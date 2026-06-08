@@ -2021,7 +2021,7 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
 
 
 extern u8  lbl_803DBA94[8];
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 /* EN v1.0 0x8012D96C  size: 936b  World-map HUD voiceover scheduler: rate
  * limits, picks the quest-progress hint stream and starts it. */
@@ -2097,7 +2097,7 @@ void drawWorldMapHud(void)
             } else if (fi == cur && li_ != cur) {
                 hint = lbl_8031B074[cur].hint8;
             } else if (cur == 2) {
-                if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
+                if ((*gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
                     hint = 0x51e5;
                 } else if (fi == li_) {
                     if (GameBit_Get(lbl_8031B074[li_].bit1a)) {
@@ -2109,7 +2109,7 @@ void drawWorldMapHud(void)
                     hint = lbl_8031B074[lbl_803DD77A].hintC;
                 }
             } else if (cur == 0) {
-                if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
+                if ((*gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
                     hint = 0x51e2;
                 } else {
                     hint = lbl_8031B074[lbl_803DD77A].hintC;
@@ -3040,7 +3040,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 } else if (fi == cur && li_ != cur) {
                     hint = lbl_8031B074[cur].hint0;
                 } else if (cur == 2) {
-                    if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
+                    if ((*gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
                         hint = 0x577;
                     } else if (fi == li_) {
                         if (GameBit_Get(lbl_8031B074[li_].bit1a)) {
@@ -3052,7 +3052,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                         hint = lbl_8031B074[lbl_803DD77A].hint2;
                     }
                 } else if (cur == 0) {
-                    if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
+                    if ((*gMapEventInterface)->getMode(0xd) == 2 && lv == 0) {
                         hint = 0x568;
                     } else {
                         hint = lbl_8031B074[lbl_803DD77A].hint2;
@@ -3226,7 +3226,7 @@ void pauseMenuFn_80129ee0(void)
 
     player = (u8 *)Obj_GetPlayerObject();
     objIsCurModelNotZero();
-    mapVal = (*(int (**)(void))(*(int *)gMapEventInterface + 0x8c))();
+    mapVal = (*(int (**)(void))(*(int *)((u8 *)*gMapEventInterface + 0x8c)))();
     if (gameTextFn_80019c00() == 0.0f) {
         btn = (u16)getButtonsJustPressed(0);
         getButtonsHeld(0);
@@ -3259,26 +3259,26 @@ void pauseMenuFn_80129ee0(void)
         }
         lbl_803DD8E0 = cell;
         if (cell == 0x36) {
-            if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(cell) == 1) {
-                if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 0)) {
+            if ((*gMapEventInterface)->getMode(cell) == 1) {
+                if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 0)) {
                     lbl_803DD8E0 = 5;
-                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 1)) {
+                } else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 1)) {
                     lbl_803DD8E0 = 6;
-                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 2)) {
+                } else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 2)) {
                     lbl_803DD8E0 = 0xc;
                 }
-            } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(lbl_803DD8E0) == 2) {
-                if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 0)) {
+            } else if ((*gMapEventInterface)->getMode(lbl_803DD8E0) == 2) {
+                if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 0)) {
                     lbl_803DD8E0 = 6;
-                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 1)) {
+                } else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 1)) {
                     lbl_803DD8E0 = 6;
-                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 2)) {
+                } else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 2)) {
                     lbl_803DD8E0 = 6;
-                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 3)) {
+                } else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 3)) {
                     lbl_803DD8E0 = 0xa;
-                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 4)) {
+                } else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 4)) {
                     lbl_803DD8E0 = 9;
-                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 5)) {
+                } else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 5)) {
                     lbl_803DD8E0 = 3;
                 }
             }
@@ -3715,11 +3715,10 @@ void pauseMenuFn_80129ee0(void)
                     break;
                 case 0xa:
                     Music_Trigger(0x23, 0);
-                    if ((*(int (**)(void))(*(int *)gMapEventInterface + 0x30))() != 0) {
-                        ((MapEventInterface *)*(int *)gMapEventInterface)
-                            ->finishCurrentEvent((MapEventInterface *)*(int *)gMapEventInterface);
+                    if ((*(int (**)(void))(*(int *)((u8 *)*gMapEventInterface + 0x30)))() != 0) {
+                        (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
                     } else {
-                        (*(void (**)(void))(*(int *)gMapEventInterface + 0x20))();
+                        (*(void (**)(void))(*(int *)((u8 *)*gMapEventInterface + 0x20)))();
                     }
                     break;
                 default:
