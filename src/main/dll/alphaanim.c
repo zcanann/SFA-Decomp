@@ -20,7 +20,7 @@ extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 /*
  * --INFO--
@@ -169,8 +169,8 @@ void FUN_8017c29c(int param_1)
           (iVar3 = ObjTrigger_IsSetById(param_1,*(short *)(iVar4 + 0x1e)), iVar3 != 0)) ||
          ((*(short *)(iVar4 + 0x1e) == -1 && (iVar3 = ObjTrigger_IsSet(param_1), iVar3 != 0)))) {
         if (*(char *)(iVar4 + 0x20) != -1) {
-          ((ObjectTriggerInterface *)*DAT_803dd6d4)
-              ->runSequence((int)*(char *)(iVar4 + 0x20), (void *)param_1, -1);
+          (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar4 + 0x20),
+                                                  (void *)param_1, -1);
         }
         if ((*(byte *)(iVar4 + 0x1b) & 4) == 0) {
           FUN_80017698((int)*(short *)(iVar4 + 0x1c),1);
@@ -188,7 +188,7 @@ void FUN_8017c29c(int param_1)
     else {
       if (*(int *)(param_1 + 0xf4) == 0) {
         if ((*(char *)(iVar4 + 0x20) != -1) && (*(short *)(iVar4 + 0x24) != 0)) {
-          ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt(param_1, *(s16 *)(iVar4 + 0x24));
+          (*gObjectTriggerInterface)->preempt(param_1, *(s16 *)(iVar4 + 0x24));
           uVar2 = 1;
           bVar1 = *(byte *)(iVar4 + 0x1b);
           if ((bVar1 & 0x20) != 0) {
@@ -200,8 +200,8 @@ void FUN_8017c29c(int param_1)
           if ((bVar1 & 0x80) != 0) {
             uVar2 = uVar2 | 8;
           }
-          ((ObjectTriggerInterface *)*DAT_803dd6d4)
-              ->runSequence((int)*(char *)(iVar4 + 0x20), (void *)param_1, uVar2);
+          (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar4 + 0x20),
+                                                  (void *)param_1, uVar2);
         }
         *(undefined4 *)(param_1 + 0xf4) = 1;
       }
@@ -214,8 +214,8 @@ void FUN_8017c29c(int param_1)
   }
   else {
     FUN_80006ba8(0,0x100);
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->setRunSequenceWorldSpace(param_1, 0);
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(1, (void *)param_1, -1);
+    (*gObjectTriggerInterface)->setRunSequenceWorldSpace(param_1, 0);
+    (*gObjectTriggerInterface)->runSequence(1, (void *)param_1, -1);
     FUN_80017698(0x930,1);
   }
   return;
@@ -307,8 +307,7 @@ FUN_8017c608(undefined8 param_1,double param_2,double param_3,undefined8 param_4
       else if (bVar1 < 4) {
         iVar2 = 0;
         param_12 = 0;
-        param_13 = *DAT_803dd6d4;
-        param_1 = (**(code **)(param_13 + 0x50))(0x56,1);
+        (*gObjectTriggerInterface)->setCamVars(0x56, 1, 0, 0);
       }
     }
     *pbVar4 = *pbVar4 | 4;
@@ -400,9 +399,9 @@ void seqObject_update(int param_1)
     bVar2 = (byte)uVar1;
     if ((bVar2 != pbVar4[1]) && (pbVar4[1] = bVar2, bVar2 != 0)) {
       if (*(char *)(iVar3 + 0x1e) != -1) {
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->setRunSequenceWorldSpace(param_1, 0);
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)
-            ->runSequence((int)*(char *)(iVar3 + 0x1e), (void *)param_1, -1);
+        (*gObjectTriggerInterface)->setRunSequenceWorldSpace(param_1, 0);
+        (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar3 + 0x1e),
+                                                (void *)param_1, -1);
       }
       if (((*(byte *)(iVar3 + 0x1d) & 1) == 0) && ((*(byte *)(iVar3 + 0x1d) & 10) == 0)) {
         FUN_80017698((int)*(short *)(iVar3 + 0x18),1);
@@ -416,15 +415,15 @@ void seqObject_update(int param_1)
     }
   }
   else {
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt(param_1, (int)*(short *)(iVar3 + 0x20));
+    (*gObjectTriggerInterface)->preempt(param_1, (int)*(short *)(iVar3 + 0x20));
     if ((*(byte *)(iVar3 + 0x1d) & 0x10) == 0) {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)
-          ->runSequence((int)*(char *)(iVar3 + 0x1e), (void *)param_1, 1);
+      (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar3 + 0x1e),
+                                              (void *)param_1, 1);
     }
     else {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)
-          ->runSequence((int)*(char *)(iVar3 + 0x1e), (void *)param_1,
-                        *(u16 *)(iVar3 + 0x22));
+      (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar3 + 0x1e),
+                                              (void *)param_1,
+                                              *(u16 *)(iVar3 + 0x22));
     }
     *pbVar4 = *pbVar4 & 0xfd;
   }
@@ -540,8 +539,8 @@ void seqObj2_update(int param_1)
           FUN_800723a0();
         }
         FUN_800723a0();
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)
-            ->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, -1);
+        (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar2 + 0x1e),
+                                                (void *)param_1, -1);
       }
     }
     else {
@@ -566,9 +565,9 @@ void seqObj2_update(int param_1)
       FUN_800723a0();
     }
     FUN_800723a0();
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->preempt(param_1, (int)*(short *)(iVar2 + 0x20));
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)
-        ->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, *(u16 *)(iVar2 + 0x22));
+    (*gObjectTriggerInterface)->preempt(param_1, (int)*(short *)(iVar2 + 0x20));
+    (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar2 + 0x1e),
+                                            (void *)param_1, *(u16 *)(iVar2 + 0x22));
     *pbVar3 = *pbVar3 & 0xfe;
   }
   return;
@@ -703,7 +702,6 @@ extern const char sSeqObjNeedBitClearDuringSequenceFormat[];
 extern const char lbl_80321208[];
 extern int GameBit_Set(int eventId, int value);
 extern int warpToMap(int id, int flags);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 #define SEQOBJECT_STATE_OPEN 0x01
 #define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02
