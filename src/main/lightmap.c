@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/frustum.h"
@@ -3381,7 +3382,6 @@ extern f32 distortionFilterAngle2;
 extern char distortionFilterColor;
 extern void doDistortionFilter(void *buf, f32 a2, void *color, f32 a1);
 extern void renderGlows(void);
-extern void *gCameraInterface;
 extern u8 bEnableMonochromeFilter;
 extern char colorFilterColor;
 extern void doColorFilter(void *color);
@@ -3537,7 +3537,7 @@ void sceneDraw(void)
                            distortionFilterAngle1);
     }
     renderGlows();
-    (*(void (***)(int, int, int, int))gCameraInterface)[22](0, 0, 0, 0);
+    (*gCameraInterface)->minimapShowHelpTextForTarget(0, 0, 0, 0);
     if (bEnableMonochromeFilter != 0) {
         doColorFilter(&colorFilterColor);
     } else if (bEnableSpiritVision != 0) {
