@@ -6,7 +6,7 @@
 
 void dll_224_hitDetect(void *obj);
 void FUN_801fd6ec(undefined2 *param_1,int param_2);
-void FUN_801fd7d0(void);
+void FUN_801fd7d0(int obj);
 void FUN_801fd804(int param_1);
 void FUN_801fd824(undefined2 *param_1,int param_2);
 void FUN_801fd828(int param_1);

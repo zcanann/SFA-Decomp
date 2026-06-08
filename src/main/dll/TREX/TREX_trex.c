@@ -133,7 +133,6 @@ extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dc071;
 extern undefined4 DAT_803dcd00;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern MapEventInterface **DAT_803dd72c;
 extern int* gTitleMenuControlInterfaceCopy;
@@ -419,9 +418,9 @@ void FUN_801e481c(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e48f4(void)
+void FUN_801e48f4(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
 
@@ -562,7 +561,7 @@ void FUN_801e4c58(int param_1)
   int iVar2;
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   uVar1 = *(uint *)(iVar2 + 0x18);
   if (uVar1 != 0) {
     FUN_80017620(uVar1);
@@ -1014,7 +1013,7 @@ void FUN_801e56ac(int param_1)
  */
 void FUN_801e5734(undefined4 param_1)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   (**(code **)(*DAT_803dd6fc + 0x18))(param_1);
   return;
 }

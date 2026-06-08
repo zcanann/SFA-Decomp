@@ -48,7 +48,6 @@ extern void* SUB42();
 
 extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6d8;
-extern undefined4* DAT_803dd6f8;
 extern u8 framesThisStep;
 extern f64 DOUBLE_803e4a08;
 extern f32 FLOAT_803dc074;
@@ -239,7 +238,7 @@ void FUN_8018d064(int param_1)
   uint *puVar1;
   
   puVar1 = *(uint **)(param_1 + 0xb8);
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   if (*puVar1 != 0) {
     FUN_80017620(*puVar1);
   }

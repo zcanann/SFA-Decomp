@@ -4,21 +4,21 @@
 #include "ghidra_import.h"
 
 void vfpblock1_update(int obj);
-void FUN_801fbcd0(void);
+void FUN_801fbcd0(int obj);
 void FUN_801fbd04(int param_1);
 void FUN_801fbd24(int param_1);
 void FUN_801fbd90(uint param_1);
 void FUN_801fbdf4(undefined2 *param_1,int param_2);
-void FUN_801fbdf8(void);
+void FUN_801fbdf8(int obj);
 void FUN_801fbe2c(uint param_1);
 void FUN_801fbed8(int param_1);
-void FUN_801fc16c(void);
+void FUN_801fc16c(int obj);
 void FUN_801fc1a0(int param_1,int p1,int p2,int p3,int p4,s8 visible);
 void FUN_801fc1d8(void);
 void FUN_801fc75c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
-void FUN_801fc944(void);
+void FUN_801fc944(int obj);
 void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FUN_801fc998(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,

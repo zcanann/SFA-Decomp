@@ -152,7 +152,6 @@ extern undefined4 DAT_803ad5bc;
 extern undefined4 DAT_803dc070;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
-extern undefined4* DAT_803dd6f8;
 extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de7c8;
@@ -539,9 +538,9 @@ undefined4 FUN_801ae788(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ae9e4(void)
+void FUN_801ae9e4(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
 

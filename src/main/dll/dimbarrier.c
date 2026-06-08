@@ -1,5 +1,6 @@
 #include "main/dll/dimbarrier.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
@@ -22,7 +23,6 @@ extern undefined4 FUN_801c7390();
 extern undefined4 DAT_802c2b38;
 extern undefined4 DAT_802c2b3c;
 extern undefined4 DAT_802c2b40;
-extern undefined4* DAT_803dd6f8;
 extern f32 lbl_803DC074;
 
 extern f32 lbl_803E5064;
@@ -344,9 +344,9 @@ void FUN_801c8400(int param_1, int param_2, int param_3, int param_4, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c8428(void)
+void FUN_801c8428(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
 

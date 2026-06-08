@@ -33,7 +33,6 @@ extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
 extern LaserTriggerInterface **DAT_803dd6e8;
-extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **DAT_803dd72c;
@@ -210,9 +209,9 @@ void FUN_801fd6ec(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801fd7d0(void)
+void FUN_801fd7d0(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
 
@@ -587,7 +586,7 @@ void FUN_801fe020(int param_1,int param_2)
  */
 void FUN_801fe024(undefined4 param_1)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   (**(code **)(*DAT_803dd6fc + 0x14))(param_1);
   return;
 }

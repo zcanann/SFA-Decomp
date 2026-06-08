@@ -186,7 +186,7 @@ void FUN_8018f4fc(undefined2 *param_1,int param_2);
 void FUN_8018f500(void);
 void FUN_8018f650(void);
 undefined4 FUN_8018fca4(undefined4 param_1,undefined4 param_2,int param_3);
-void FUN_8018fd14(void);
+void FUN_8018fd14(int obj);
 void FUN_8018fd48(int param_1);
 void FUN_8018fec4(undefined2 *param_1,int param_2);
 void FUN_8018fec8(undefined2 *param_1,undefined2 *param_2);

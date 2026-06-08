@@ -49,7 +49,6 @@ extern f32 sqrtf(f32 value);
 extern undefined4 DAT_803ad410;
 extern undefined4 DAT_803ad41e;
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6f8;
 extern ModgfxInterface **gModgfxInterface;
 extern undefined4* DAT_803dd71c;
 extern EffectInterface **gPartfxInterface;
@@ -235,7 +234,7 @@ void areafxemit_emitBurst(AreaFxEmitObject *obj, int count)
  */
 void FUN_8018f158(undefined4 param_1)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   (*gModgfxInterface)->freeSourceEffects((void *)param_1);
   return;
 }
@@ -672,9 +671,9 @@ undefined4 FUN_8018fca4(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018fd14(void)
+void FUN_8018fd14(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
 

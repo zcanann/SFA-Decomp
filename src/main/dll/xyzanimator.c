@@ -97,7 +97,6 @@ extern void storeZeroToFloatParam(void *timer);
 
 extern undefined4 DAT_803dc070;
 extern EffectInterface **gPartfxInterface;
-extern undefined4* DAT_803dd6f8;
 extern f64 DOUBLE_803e3d80;
 extern f64 DOUBLE_803e3d98;
 extern f64 DOUBLE_803e3dc8;
@@ -482,9 +481,9 @@ void fn_8016A660(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016a6d4(void)
+void FUN_8016a6d4(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
 
@@ -615,9 +614,9 @@ void FUN_8016aa90(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016aae4(void)
+void FUN_8016aae4(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
 
