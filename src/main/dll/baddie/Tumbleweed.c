@@ -1,4 +1,5 @@
 #include "main/objanim.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
@@ -194,7 +195,6 @@ extern undefined4 DAT_803dc888;
 extern undefined4 DAT_803dc890;
 extern undefined4 DAT_803dc898;
 extern undefined4 DAT_803dd5e8;
-extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern EffectInterface **gPartfxInterface;
@@ -485,7 +485,6 @@ extern void  textureFree(void* tex);
 extern void* textureLoadAsset(s32);
 void fn_80133718(void);
 void fn_8013351C(void);
-extern int *gCameraInterface;
 
 extern u8    lbl_803DBBB0;
 extern u8    lbl_803DD7BA;
@@ -653,7 +652,7 @@ int Minimap_update(void)
         if ((lbl_803DBBB0 == 0 && lbl_803DD7BA == 0) || GameBit_Get(0x58d) != 0) {
             marker = 0;
         }
-        if ((**(int (**)(void))((char *)(*gCameraInterface) + 0x10))() == 0x44 ||
+        if ((*gCameraInterface)->getMode() == 0x44 ||
             (lbl_803DBBB0 == 0 && lbl_803DD7BA == 0) ||
             (s16)Camera_GetViewportYOffset() != 0 ||
             (*(u16 *)(player + 0xb0) & 0x1000) != 0 ||
@@ -1242,7 +1241,7 @@ void FUN_80132588(undefined8 param_1,double param_2,double param_3,undefined8 pa
   local_18[0] = FLOAT_803e2f24;
   uVar12 = 0;
   iVar7 = FUN_80017a98();
-  if (((((iVar7 == 0) || (iVar8 = (**(code **)(*DAT_803dd6d0 + 0x10))(), iVar8 == 0x44)) ||
+  if (((((iVar7 == 0) || (iVar8 = (*gCameraInterface)->getMode(), iVar8 == 0x44)) ||
        (iVar8 = FUN_800069c0(), (short)iVar8 != 0)) ||
       (((*(ushort *)(iVar7 + 0xb0) & 0x1000) != 0 || (uVar9 = FUN_80294be4(iVar7), uVar9 == 0)))) ||
      (DAT_803de400 != '\0')) {
@@ -1958,7 +1957,7 @@ void FUN_80133790(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
   }
   else {
-    iVar1 = (**(code **)(*DAT_803dd6d0 + 0x10))();
+    iVar1 = (*gCameraInterface)->getMode();
     if (iVar1 == 0x57) {
       DAT_803de613 = 0;
       FUN_80006b84(4);
@@ -5475,7 +5474,7 @@ void titlescreen_update(u8 *obj)
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x4b, 0x64, 0x78, 0, 0);
             skyFn_800894a8(7, lbl_803E2318, lbl_803E2388, *(f32 *)&lbl_803E2388);
-            (*(void (**)(u8 *, int))((char *)(*gCameraInterface) + 0x28))(obj, 0);
+            (*(void (**)(u8 *, int))((char *)*gCameraInterface + 0x28))(obj, 0);
             lbl_803DD992 = 1;
             fn_80131F0C();
         }
@@ -5592,7 +5591,7 @@ void creditsStart_(void)
 {
     u8 alpha;
     if (lbl_803DD998 >= lbl_803DBC0A) {
-        if ((**(int (**)(void))(*(int*)gCameraInterface + 0x10))() == 0x57) {
+        if ((*gCameraInterface)->getMode() == 0x57) {
             lbl_803DD993 = 0;
             loadUiDll(4);
             TitleMenu_setSelection(4);
@@ -6055,7 +6054,7 @@ void fn_8013396C(void)
     sfx = 0;
     player = (int)Obj_GetPlayerObject();
     if ((void *)player == NULL ||
-        (**(int (**)(void))((char *)(*gCameraInterface) + 0x10))() == 0x44 ||
+        (*gCameraInterface)->getMode() == 0x44 ||
         (s16)Camera_GetViewportYOffset() != 0 ||
         (*(u16 *)(player + 0xb0) & 0x1000) != 0 ||
         objIsCurModelNotZero(player) == 0 ||
