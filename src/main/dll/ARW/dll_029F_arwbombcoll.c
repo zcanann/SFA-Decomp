@@ -3,13 +3,16 @@
 
 #include "main/audio/sfx_ids.h"
 #include "main/objhits_types.h"
+#include "main/obj_placement.h"
 #pragma peephole on
 #pragma scheduling on
 typedef struct ARWBombCollSetup {
-    u8 pad00[0x18];
+    ObjPlacement base;
     s8 rotX;
+    u8 pad19[0x24 - 0x19];
 } ARWBombCollSetup;
 
+STATIC_ASSERT(sizeof(ARWBombCollSetup) == 0x24);
 STATIC_ASSERT(offsetof(ARWBombCollSetup, rotX) == 0x18);
 
 int arwbombcoll_getExtraSize(void) { return 8; }
