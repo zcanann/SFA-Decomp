@@ -31,7 +31,6 @@ extern double FUN_80293900();
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
 extern f64 DOUBLE_803e4d18;
 extern f64 DOUBLE_803e4d30;
@@ -1237,16 +1236,16 @@ void FUN_801983a0(uint param_1)
             uStack_2c = randomGetRange(-(uint)*(byte *)(iVar8 + 0x1e),(uint)*(byte *)(iVar8 + 0x1e));
             local_44 = (float)((double)CONCAT44(0x43300000,uStack_2c) - dVar10);
             if ((*(byte *)(iVar8 + 0x23) & 1) != 0) {
-              (**(code **)(*DAT_803dd708 + 8))(param_1,800,auStack_58,4,0xffffffff,0);
+              (*gPartfxInterface)->spawnObject((void *)param_1, 800, auStack_58, 4, -1, NULL);
             }
             if ((*(byte *)(iVar8 + 0x23) & 2) != 0) {
-              (**(code **)(*DAT_803dd708 + 8))(param_1,0x321,auStack_58,4,0xffffffff,0);
+              (*gPartfxInterface)->spawnObject((void *)param_1, 0x321, auStack_58, 4, -1, NULL);
             }
             if ((*(byte *)(iVar8 + 0x23) & 4) != 0) {
-              (**(code **)(*DAT_803dd708 + 8))(param_1,0x322,auStack_58,4,0xffffffff,0);
+              (*gPartfxInterface)->spawnObject((void *)param_1, 0x322, auStack_58, 4, -1, NULL);
             }
             if ((*(byte *)(iVar8 + 0x23) & 8) != 0) {
-              (**(code **)(*DAT_803dd708 + 8))(param_1,0x351,auStack_58,4,0xffffffff,0);
+              (*gPartfxInterface)->spawnObject((void *)param_1, 0x351, auStack_58, 4, -1, NULL);
             }
           }
         }
