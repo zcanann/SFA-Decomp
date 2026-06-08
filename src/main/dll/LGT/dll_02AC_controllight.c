@@ -1,6 +1,32 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+typedef struct ControlLightSetup {
+    u8 pad00[0x19];
+    s8 invertMode;
+    s16 radius;
+    u8 pad1C[0x1E - 0x1C];
+    s16 gameBit;
+} ControlLightSetup;
+
+typedef struct ControlLightState {
+    s16 gameBit;
+    u8 pad02[2];
+    f32 radius;
+    u8 invertMode;
+    u8 lastBit;
+    u8 pad0A[2];
+} ControlLightState;
+
+STATIC_ASSERT(sizeof(ControlLightState) == 0x0C);
+STATIC_ASSERT(offsetof(ControlLightState, gameBit) == 0x00);
+STATIC_ASSERT(offsetof(ControlLightState, radius) == 0x04);
+STATIC_ASSERT(offsetof(ControlLightState, invertMode) == 0x08);
+STATIC_ASSERT(offsetof(ControlLightState, lastBit) == 0x09);
+STATIC_ASSERT(offsetof(ControlLightSetup, invertMode) == 0x19);
+STATIC_ASSERT(offsetof(ControlLightSetup, radius) == 0x1A);
+STATIC_ASSERT(offsetof(ControlLightSetup, gameBit) == 0x1E);
+
 #pragma peephole on
 #pragma scheduling on
 int controllight_getExtraSize(void) { return 0xc; }
@@ -35,12 +61,13 @@ void controllight_render(void) {}
 #pragma scheduling off
 void controllight_init(int obj, int setup)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    ControlLightSetup *setupData = (ControlLightSetup *)setup;
+    ControlLightState *state = ((GameObject *)obj)->extra;
 
-    *(s16 *)(state + 0) = *(s16 *)(setup + 0x1e);
-    *(f32 *)(state + 4) = (f32)*(s16 *)(setup + 0x1a);
-    *(u8 *)(state + 8) = *(s8 *)(setup + 0x19) % 2;
-    *(u8 *)(state + 9) = 0xff;
+    state->gameBit = setupData->gameBit;
+    state->radius = (f32)setupData->radius;
+    state->invertMode = setupData->invertMode % 2;
+    state->lastBit = 0xff;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -49,13 +76,13 @@ void controllight_init(int obj, int setup)
 #pragma scheduling off
 void controllight_update(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    u8 bit = (u8)GameBit_Get(*(s16 *)(state + 0));
+    ControlLightState *state = ((GameObject *)obj)->extra;
+    u8 bit = (u8)GameBit_Get(state->gameBit);
 
-    if (bit != *(u8 *)(state + 9)) {
-        switch (*(u8 *)(state + 8)) {
+    if (bit != state->lastBit) {
+        switch (state->invertMode) {
         case 0: {
-            f32 radius = *(f32 *)(state + 4);
+            f32 radius = state->radius;
             int count;
             int *objs = ObjGroup_GetObjects(0x35, &count);
             int *p = objs;
@@ -70,7 +97,7 @@ void controllight_update(int obj)
             break;
         }
         case 1: {
-            f32 radius = *(f32 *)(state + 4);
+            f32 radius = state->radius;
             int count;
             int *objs = ObjGroup_GetObjects(0x35, &count);
             int *p = objs;
@@ -87,7 +114,7 @@ void controllight_update(int obj)
         }
     }
 
-    *(u8 *)(state + 9) = bit;
+    state->lastBit = bit;
 }
 #pragma scheduling reset
 #pragma peephole reset
