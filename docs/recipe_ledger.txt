@@ -132,3 +132,4 @@
 122	97970d64c	At 99.9%, one immediate/offset diff is often imported STRUCTURE,
 123	ca63f23f7	FP-register residuals can hide WRONG CONSTANT ownership
 124	863c725cc	Classify partials by first REAL diff before grinding
+125	52d2aa4a8	Loop-tail guard polarity controls cmpwi K; blt vs cmpwi K-1; ble
