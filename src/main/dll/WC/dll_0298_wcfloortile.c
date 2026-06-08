@@ -402,7 +402,7 @@ void arwarwing_spawnBomb(int obj, int state, int side) {
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8022A9C8(int obj, int state)
+void arwarwing_updateThrusters(int obj, int state)
 {
     extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
     int slot;

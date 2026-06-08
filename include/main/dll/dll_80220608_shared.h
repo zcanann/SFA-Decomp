@@ -1265,7 +1265,6 @@ extern f32 lbl_803E7108;
 extern f32 lbl_803E710C;
 
 
-extern void fn_8022A9C8(int obj, int state);
 extern void arwarwing_spawnLaserShot(int obj, int state, int a, int b, int c);
 extern f32 lbl_803E6F04;
 
@@ -2386,7 +2385,7 @@ int drcloudper_selectActiveCloud(int obj);
 void drcloudper_init(int obj, int setup);
 void arwarwing_updateRollAndEngine(int obj, int state);
 void fn_8022F270(int obj, int p2);
-void fn_8022C7A4(int obj);
+void arwarwing_clearAimSnapshot(int obj);
 void arwarwing_initAttachments(int obj, int state);
 void arwbombcoll_update(int obj);
 void arwsquadron_init(int obj, int setup);
@@ -2412,11 +2411,11 @@ void fn_8023A3E4(int p1, int p2);
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player);
 void arwarwing_resetFlightState(int obj);
 void arwarwingbo_update(int obj);
-void fn_8022A9C8(int obj, int state);
+void arwarwing_updateThrusters(int obj, int state);
 void arwarwing_handlePathDamage(int obj, int state);
 void arwarwing_handleObjectDamage(int obj, int state);
 void androsshand_spawnShot(int obj, int hand, int p3);
-int fn_8022C7B4(int obj, int p2, int script);
+int arwarwing_SeqFn(int obj, int p2, int script);
 void arwarwing_init(int obj);
 void Obj_SteerVelocityTowardVector(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 c);
 int Obj_UpdateRomCurveFollowVelocity(int p1, int p2, f32 a, f32 b, f32 c, int flag);

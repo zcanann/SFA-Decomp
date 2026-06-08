@@ -354,7 +354,7 @@ void arwarwing_warpByCourse(int obj) {
 #pragma scheduling off
 void arwarwing_updateWeaponFire(int obj, int state) {
     int fire;
-    fn_8022A9C8(obj, state);
+    arwarwing_updateThrusters(obj, state);
     {
         f32 t = ((ArwingState *)state)->fireCooldown;
         if (t > lbl_803E6ECC) {
@@ -732,7 +732,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022C7A4(int obj) { (*(ArwingState **)&((GameObject *)obj)->extra)->aimSnapshotValid = 0; }
+void arwarwing_clearAimSnapshot(int obj) { (*(ArwingState **)&((GameObject *)obj)->extra)->aimSnapshotValid = 0; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -1067,13 +1067,13 @@ int arwarwing_SeqFn(int obj, int p2, int script)
     int i;
 
     Camera_GetCurrentViewSlot();
-    *(int *)(script + 0xe8) = (int)fn_8022C7A4;
+    *(int *)(script + 0xe8) = (int)arwarwing_clearAimSnapshot;
     if ((((ArwingState *)state)->flags477 & 1) == 0) {
         arwarwing_initAttachments(obj, state);
         return 0;
     }
     arwarwing_updateRollAndEngine(obj, state);
-    fn_8022A9C8(obj, state);
+    arwarwing_updateThrusters(obj, state);
     if (((ArwingState *)state)->bombObj != 0)
         arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
     ((GameObject *)((ArwingState *)state)->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
