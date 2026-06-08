@@ -132,11 +132,12 @@ extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dc071;
 extern undefined4 DAT_803dcd00;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern undefined4* DAT_803dd6f4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern MapEventInterface **DAT_803dd72c;
+extern int* gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern f64 DOUBLE_803e6558;
 extern f64 DOUBLE_803e65a0;
 extern f64 DOUBLE_803e65d8;
@@ -1182,7 +1183,8 @@ void FUN_801e59ec(uint param_1)
 void FUN_801e5afc(int param_1)
 {
   (*gObjectTriggerInterface)->freeState(*(u8 **)(param_1 + 0xb8));
-  (**(code **)(*DAT_803dd6f4 + 8))(param_1,0xffff,0,0,0);
+  (*(void (*)(int, int, int, int, int))(*(int *)(*gTitleMenuControlInterface + 0x8)))
+      (param_1, 0xffff, 0, 0, 0);
   if (*(uint *)(param_1 + 0xf8) != 0) {
     FUN_80017620(*(uint *)(param_1 + 0xf8));
   }
@@ -1772,8 +1774,6 @@ extern f32 lbl_803E5920;
 extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
-extern int* gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern EffectInterface **gExpgfxInterface;
 extern ModgfxInterface **gModgfxInterface;
 extern void Sfx_StopObjectChannel(int* obj, int channel);

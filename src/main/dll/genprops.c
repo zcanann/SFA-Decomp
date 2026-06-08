@@ -209,12 +209,12 @@ extern undefined4 DAT_803dc9f0;
 extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
-extern undefined4* DAT_803dd6f4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd72c;
+extern void **gTitleMenuControlInterfaceCopy;
 extern undefined4* DAT_803de720;
 extern undefined4* DAT_803de724;
 extern undefined4 DAT_803de728;
@@ -995,7 +995,8 @@ void FUN_8016c0a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined8 uVar1;
   
   (*gObjectTriggerInterface)->freeState(*(u8 **)(param_9 + 0xb8));
-  (**(code **)(*DAT_803dd6f4 + 8))(param_9,0xffff,0,0,0);
+  (*(void (*)(int, int, int, int, int))((char *)*gTitleMenuControlInterfaceCopy + 8))
+      (param_9, 0xffff, 0, 0, 0);
   FUN_800068c8(param_9);
   uVar1 = FUN_8000680c(param_9,0x7f);
   if ((*(short *)(param_9 + 0x46) == 0x774) && (*(char *)(param_9 + 0xeb) != '\0')) {
@@ -1304,7 +1305,8 @@ void FUN_8016c8a4(int param_1)
 void FUN_8016ca4c(int param_1)
 {
   (*gObjectTriggerInterface)->freeState(*(u8 **)(param_1 + 0xb8));
-  (**(code **)(*DAT_803dd6f4 + 8))(param_1,0xffff,0,0,0);
+  (*(void (*)(int, int, int, int, int))((char *)*gTitleMenuControlInterfaceCopy + 8))
+      (param_1, 0xffff, 0, 0, 0);
   FUN_8000680c(param_1,0x7f);
   return;
 }
@@ -4490,7 +4492,6 @@ void dll_F7_free(int obj)
 }
 #pragma scheduling reset
 
-extern void *gTitleMenuControlInterfaceCopy;
 extern void Sfx_StopObjectChannel(int *obj, int channel);
 
 #pragma scheduling off

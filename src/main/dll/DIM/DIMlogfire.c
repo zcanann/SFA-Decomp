@@ -40,9 +40,10 @@ extern undefined4 DAT_803ad5a0;
 extern undefined4 DAT_803ad5a4;
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd6f4;
 extern undefined4* DAT_803dd708;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
+extern int *gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern f64 DOUBLE_803e5250;
 extern f64 DOUBLE_803e5268;
 extern f64 DOUBLE_803e5280;
@@ -274,7 +275,8 @@ void FUN_801a9614(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1);
   }
   (*gObjectTriggerInterface)->freeState((u8 *)uVar2);
-  (**(code **)(*DAT_803dd6f4 + 8))(param_9,0xffff,0,0,0);
+  (*(void (*)(int, int, int, int, int))(*(int *)(*gTitleMenuControlInterface + 0x8)))
+      (param_9, 0xffff, 0, 0, 0);
   FUN_8000680c(param_9,0x7f);
   return;
 }
@@ -901,8 +903,6 @@ void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
 extern int *gGameUIInterface;
-extern int *gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 #pragma scheduling off
 #pragma peephole off
 void animsharpclaw_free(int obj) {

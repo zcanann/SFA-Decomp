@@ -38,7 +38,6 @@ extern void GameBit_Set(int eventId,int value);
 extern void Obj_FreeObject(void *obj);
 
 extern undefined4 DAT_803dc071;
-extern undefined4* DAT_803dd6f4;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
@@ -308,7 +307,8 @@ void FUN_801c5920(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined8 uVar1;
   
   (*gObjectTriggerInterface)->freeState(*(u8 **)(param_9 + 0xb8));
-  uVar1 = (**(code **)(*DAT_803dd6f4 + 8))(param_9,0xffff,0,0,0);
+  uVar1 = (*(undefined8 (*)(int, int, int, int, int))(*gTitleMenuControlInterface + 8))
+              (param_9, 0xffff, 0, 0, 0);
   if ((*(int *)(param_9 + 200) != 0) && (param_10 == 0)) {
     FUN_80017ac8(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)(param_9 + 200));
