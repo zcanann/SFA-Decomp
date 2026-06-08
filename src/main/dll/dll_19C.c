@@ -114,6 +114,18 @@ typedef struct DfshShrineState {
     u8 pad1D[0x20 - 0x1D];
 } DfshShrineState;
 
+typedef struct DfshShrinePlacement {
+    u8 pad00[0x18];
+    s8 initialYaw;
+    u8 pad19;
+    s16 startDelay;
+    u8 pad1C[0x24 - 0x1C];
+} DfshShrinePlacement;
+
+STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
+STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
+STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
+
 /*
  * --INFO--
  *
@@ -724,41 +736,28 @@ extern int mapGetDirIdx(int id);
 extern void unlockLevel(int idx, int a, int b);
 extern void *objCreateLight(int *obj, int v);
 
-typedef struct DfshShrineFlags {
-    u8 openedBySequence : 1;
-    u8 unused1 : 1;
-    u8 unused2 : 1;
-    u8 unused3 : 1;
-    u8 unused4 : 1;
-    u8 unused5 : 1;
-    u8 unused6 : 1;
-    u8 unused7 : 1;
-} DfshShrineFlags;
-
 #pragma scheduling off
 #pragma peephole off
-void dfsh_shrine_init(int *obj, u8 *init) {
-    u8 *sub;
-    DfshShrineFlags *flags;
+void dfsh_shrine_init(int *obj, DfshShrinePlacement *init) {
+    DfshShrineState *state;
 
-    sub = ((GameObject *)obj)->extra;
-    flags = (DfshShrineFlags *)(sub + 0x1c);
-    *(s16*)obj = (s16)((s8)init[0x18] << 8);
-    *(s16*)(sub + 0x10) = 0xa;
-    if (*(s16*)(init + 0x1a) > 0) {
-        *(s16*)(sub + 0x10) = (s16)((s32)*(s16*)(init + 0x1a) >> 8);
+    state = ((GameObject *)obj)->extra;
+    *(s16*)obj = (s16)(init->initialYaw << 8);
+    state->startDelayFrames = 0xa;
+    if (init->startDelay > 0) {
+        state->startDelayFrames = (s16)((s32)init->startDelay >> 8);
     }
-    sub[0x1a] = 4;
-    flags->openedBySequence = 0;
-    *(s16*)(sub + 0x12) = 0;
+    state->mode = 4;
+    state->flags &= ~DFSH_SHRINE_FLAG_OPENED_BY_SEQUENCE;
+    state->transitionTimer = 0;
     ((GameObject *)obj)->animEventCallback = (void *)dfsh_shrine_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
-    sub[0x1b] = 0;
-    *(f32*)(sub + 4) = lbl_803E4E8C;
+    state->rewardIndex = 0;
+    state->rewardTimer = lbl_803E4E8C;
     unlockLevel(mapGetDirIdx(0x1f), 1, 0);
-    if (*(void**)sub == NULL) {
-        *(int*)sub = (int)objCreateLight(NULL, 1);
+    if (state->light == NULL) {
+        state->light = objCreateLight(NULL, 1);
     }
     ((GameObject *)obj)->unkF4 = 1;
     GameBit_Set(0xe70, 1);
