@@ -2905,11 +2905,10 @@ void Sky_func03(int a, int b, u8 *cfg)
             skyFn_80088c94(mask, ((Sky2Config *)cfg)->unk5D > 2);
         }
         vis = ((Sky2Config *)cfg)->unk56;
-        if ((mask & 1) != 0) {
-            ((SkyBlendStateFlags *)(lbl_803DD12C + 0xc1))->bit20 = vis;
-        }
-        if ((mask & 2) != 0) {
-            ((SkyBlendStateFlags *)(lbl_803DD12C + 0x165))->bit20 = vis;
+        for (i = 0; i < 2; i++) {
+            if ((mask & (1 << i)) != 0) {
+                ((SkyBlendStateFlags *)(lbl_803DD12C + i * 0xa4 + 0xc1))->bit20 = vis;
+            }
         }
         ((SkyBlendStateFlags *)(lbl_803DD12C + 0x209))->bit20 =
             ((SkyBlendStateFlags *)(lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24C * 0xa4 + 0xc1))->bit20;
@@ -2949,15 +2948,12 @@ void Sky_func03(int a, int b, u8 *cfg)
             ((SkyBlendStateFlags *)(lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24C * 0xa4 + 0xc1))->bit20;
         env2 = saveGameGetEnvState();
         if (getSaveGameLoadStatus() == 0) {
-            if (((SkyBlendStateFlags *)(lbl_803DD12C + 0xc1))->unused80 != 0) {
-                env2[0x40] |= 2;
-            } else {
-                env2[0x40] &= ~2;
-            }
-            if (((SkyBlendStateFlags *)(lbl_803DD12C + 0x165))->unused80 != 0) {
-                env2[0x40] |= 4;
-            } else {
-                env2[0x40] &= ~4;
+            for (i = 0; i < 2; i++) {
+                if (((SkyBlendStateFlags *)(lbl_803DD12C + i * 0xa4 + 0xc1))->unused80 != 0) {
+                    env2[0x40] |= (2 << i);
+                } else {
+                    env2[0x40] &= ~(2 << i);
+                }
             }
         }
     }
