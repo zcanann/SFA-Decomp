@@ -331,7 +331,7 @@ extern undefined4 DAT_803dcdea;
 extern undefined4 DAT_803dcdeb;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd6fc;
+extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd718;
@@ -3896,10 +3896,10 @@ void FUN_80204f1c(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80204f20(undefined4 param_1)
+void FUN_80204f20(int obj)
 {
-  (**(code **)(*DAT_803dd6fc + 0x18))();
-  (*gExpgfxInterface)->freeSource2((u32)param_1);
+  (*gModgfxInterface)->detachSource((void *)obj);
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
 
@@ -4089,7 +4089,7 @@ void FUN_802051e0(uint param_1)
     if (*(char *)((int)puVar4 + 10) != *(char *)(puVar4 + 3)) {
       if (*(char *)((int)puVar4 + 10) == '\0') {
         FUN_8000680c(param_1,0x40);
-        (**(code **)(*DAT_803dd6fc + 0x18))(param_1);
+        (*gModgfxInterface)->detachSource((void *)param_1);
         (*gExpgfxInterface)->freeSource((u32)param_1);
         if ((*puVar4 != 0xffffffff) && (uVar3 = FUN_80017690(*puVar4), uVar3 != 0)) {
           FUN_80017698(*puVar4,0);
@@ -4546,7 +4546,6 @@ void dbegg_init(int obj) {
     }
 }
 
-extern ModgfxInterface **gModgfxInterface;
 void DFP_Torch_free(int obj) {
     (*gModgfxInterface)->detachSource((void *)obj);
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -7034,7 +7033,6 @@ void DFP_Torch_update(int obj)
     extern int ObjHits_GetPriorityHit(int, int, int, int);
     extern uint GameBit_Get(int);
     extern void GameBit_Set(int, int);
-    extern ModgfxInterface **gModgfxInterface;
     extern u8 lbl_803DDCE8;
     extern f32 timeDelta;
     extern f32 lbl_803E63E0;

@@ -183,7 +183,7 @@ extern undefined4* DAT_803dd6cc;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern ExpgfxInterface **gExpgfxInterface;
-extern undefined4* DAT_803dd6fc;
+extern ModgfxInterface **gModgfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4* DAT_803de900;
 extern f64 DOUBLE_803e69e8;
@@ -255,7 +255,6 @@ void LaserBeam_update(int param_1)
     extern f32 mathCosf(f32 x);
     extern f32 mathSinf(f32 x);
     extern int *lbl_803DDC80;
-    extern ModgfxInterface **gModgfxInterface;
     extern EffectInterface **gPartfxInterface;
     extern u8 framesThisStep;
     extern f32 timeDelta;
@@ -577,7 +576,7 @@ void FUN_801f0d90(int param_1)
   int *piVar1;
   
   piVar1 = *(int **)(param_1 + 0xb8);
-  (**(code **)(*DAT_803dd6fc + 0x18))();
+  (*gModgfxInterface)->detachSource((void *)param_1);
   if (*piVar1 != 0) {
     FUN_80053754();
     *piVar1 = 0;
@@ -1831,7 +1830,7 @@ void FUN_801f2ac8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  **(int **)(param_9 + 0xb8));
   }
-  (**(code **)(*DAT_803dd6fc + 0x18))(param_9);
+  (*gModgfxInterface)->detachSource((void *)param_9);
   (*gExpgfxInterface)->freeSource(param_9);
   return;
 }
@@ -2218,7 +2217,6 @@ void wmtorch_update(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern ModgfxInterface **gModgfxInterface;
 extern void Obj_FreeObject(void *o);
 #pragma scheduling off
 #pragma peephole off

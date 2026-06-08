@@ -30,7 +30,6 @@ extern void *Obj_SetupObject(void *setup, int mode, int mapLayer, int objIndex, 
 extern f32 timeDelta;
 
 extern undefined4 DAT_803dc071;
-extern undefined4* DAT_803dd6fc;
 extern void* DAT_803de838;
 extern f64 DOUBLE_803e5b38;
 extern f64 DOUBLE_803e5b40;
@@ -278,7 +277,7 @@ void FUN_801c43b0(int param_1)
   int *piVar1;
   
   piVar1 = *(int **)(param_1 + 0xb8);
-  (**(code **)(*DAT_803dd6fc + 0x18))();
+  (*gModgfxInterface)->detachSource((void *)param_1);
   FUN_80006b0c(DAT_803de838);
   DAT_803de838 = (void*)0x0;
   if (*piVar1 != 0) {

@@ -139,7 +139,7 @@ void FUN_80204834(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_80204bb4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80204bdc(int param_1);
 void FUN_80204f1c(undefined2 *param_1,int param_2);
-void FUN_80204f20(undefined4 param_1);
+void FUN_80204f20(int obj);
 void FUN_80204f7c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_802051e0(uint param_1);
 

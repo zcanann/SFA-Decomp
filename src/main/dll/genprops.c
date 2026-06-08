@@ -211,7 +211,7 @@ extern undefined4 DAT_803dc9f0;
 extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
-extern undefined4* DAT_803dd6fc;
+extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd72c;
@@ -391,7 +391,7 @@ void FUN_8016b2e4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1);
     *piVar2 = 0;
   }
-  (**(code **)(*DAT_803dd6fc + 0x18))(param_9);
+  (*gModgfxInterface)->detachSource((void *)param_9);
   return;
 }
 
@@ -3881,7 +3881,7 @@ void FUN_80170e48(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  */
 void FUN_80170e70(int param_1)
 {
-  (**(code **)(*DAT_803dd6fc + 0x18))();
+  (*gModgfxInterface)->detachSource((void *)param_1);
   FUN_80006b0c(DAT_803de730);
   FUN_80006b0c(DAT_803de734);
   DAT_803de730 = (undefined4*)0x0;
@@ -4470,7 +4470,6 @@ int curve_getObjectTypeId(void) { return 0x0; }
 int dll_F7_getExtraSize(void) { return 0xc; }
 int dll_F7_getObjectTypeId(void) { return 0x2; }
 
-extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDAB0;
 extern void *lbl_803DDAB4;
 
