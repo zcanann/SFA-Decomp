@@ -154,10 +154,10 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole reset
 #pragma scheduling reset
 
-#define DFSH_REWARD_BIT(idx) (lbl_80325F88[(idx)])
-#define DFSH_REWARD_DELAY(idx) (lbl_80325F88[10 + (idx)])
-#define DFSH_REQUIRED_BIT(idx) (lbl_80325F88[20 + (idx)])
-#define DFSH_TARGET_OBJECT(idx) (((int *)((u8 *)lbl_80325F88 + 0x3c))[(idx)])
+#define DFSH_REWARD_BIT(idx) (base[(idx)])
+#define DFSH_REWARD_DELAY(idx) (base[10 + (idx)])
+#define DFSH_REQUIRED_BIT(idx) (base[20 + (idx)])
+#define DFSH_TARGET_OBJECT(idx) (((int *)((u8 *)base + 0x3c))[(idx)])
 
 #define DFSH_SHRINE_FLAG_SUCCESS 0x40
 #define DFSH_SHRINE_FLAG_OPENED_BY_SEQUENCE 0x80
@@ -166,6 +166,7 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole off
 void dfsh_shrine_update(int obj)
 {
+    u16 *base = lbl_80325F88;
     int player;
     DfshShrineState *state;
     s16 i;
