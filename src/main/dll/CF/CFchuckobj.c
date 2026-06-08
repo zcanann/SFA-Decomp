@@ -1,5 +1,6 @@
 #include "main/asset_load.h"
 #include "main/dll/CF/CFchuckobj.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/CF/CFTreasSharpy.h"
@@ -53,7 +54,6 @@ extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
 extern EffectInterface **gPartfxInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int* gRomCurveInterface;
 extern undefined4 DAT_803dda60;
 extern undefined4 DAT_803ddb38;
 extern u8 lbl_803DCDE0;
@@ -1287,8 +1287,7 @@ void lfxemitter_init(LfxEmitterObject *obj, LfxEmitterPlacement *setup)
     if (setup->followCurve != 0) {
         state->flags = state->flags | LFXEMITTER_FLAG_FOLLOW_CURVE;
         state->curveSpeed = (f32)setup->curveSpeed / lbl_803E3E84;
-        (*(void (**)(int, int, f32, int*, int))(*(int*)(*gRomCurveInterface) + 0x8c))(
-            (int)state, (int)obj, lbl_803E3E88, &curveFlags, -1);
+        (*gRomCurveInterface)->initCurve(state, obj, lbl_803E3E88, &curveFlags, -1);
     }
     ObjGroup_AddObject((int)obj, LFXEMITTER_OBJ_GROUP);
 }
@@ -1359,7 +1358,7 @@ void lfxemitter_update(LfxEmitterObject *obj)
     if ((state->flags & LFXEMITTER_FLAG_FOLLOW_CURVE) != 0) {
         if ((Curve_AdvanceAlongPath((int)state, state->curveSpeed) != 0) ||
             (state->curveIdx != 0)) {
-            (*(void (**)(int))(*(int*)(*gRomCurveInterface) + 0x90))((int)state);
+            (*gRomCurveInterface)->goNextPoint(state);
         }
         obj->objAnim.localPosX = state->curveSample[0];
         obj->objAnim.localPosY = state->curveSample[1];

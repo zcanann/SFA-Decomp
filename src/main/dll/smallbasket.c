@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/objanim.h"
@@ -3487,7 +3488,6 @@ typedef struct {
     u8 pad1C[4];
 } BasketDescriptor;
 
-extern int* gRomCurveInterface;
 extern char lbl_803DBCF0;
 extern int Curve_AdvanceAlongPath(int p, f32 v);
 extern u8 lbl_8031FB48[];
@@ -3526,8 +3526,8 @@ void fn_80158494(s16* obj, u8* state)
 
     if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) | 8;
-        if (((u8(*)(int, s16*, f32, void*, int))((int*)*gRomCurveInterface)[0x8c/4])(
-                *(int*)state, obj, lbl_803E2BA8, &lbl_803DBCF0, -1) != 0) {
+        if ((*gRomCurveInterface)->initCurve((void *)*(int *)state, obj, lbl_803E2BA8,
+                                             (int *)&lbl_803DBCF0, -1) != 0) {
             *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~0x2000;
         }
         if (*(u8*)(state + 0x33b) == 0) {
@@ -3588,9 +3588,9 @@ void fn_80158494(s16* obj, u8* state)
                 }
             }
             if ((Curve_AdvanceAlongPath(base, *(f32*)(state + 0x310)) != 0 || *(int*)(base + 0x10) != 0)
-                && ((u8(*)(int))((int*)*gRomCurveInterface)[0x90/4])(base) != 0
-                && ((u8(*)(int, s16*, f32, void*, int))((int*)*gRomCurveInterface)[0x8c/4])(
-                       *(int*)state, obj, lbl_803E2BC0, &lbl_803DBCF0, -1) != 0) {
+                && (*gRomCurveInterface)->goNextPoint((void *)base) != 0
+                && (*gRomCurveInterface)->initCurve((void *)*(int *)state, obj, lbl_803E2BC0,
+                                                    (int *)&lbl_803DBCF0, -1) != 0) {
                 *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~0x2000;
             }
             if ((*(u8*)(state + 0x33d) & 0xa) == 0) {
@@ -3938,9 +3938,9 @@ void fn_80159958(s16* obj, u8* state)
             t = lbl_803E2C3C;
         }
         if ((Curve_AdvanceAlongPath(base, ((BaddieState *)state)->pathStep * t) != 0 || *(int*)(base + 0x10) != 0)
-            && ((u8(*)(int))((int*)*gRomCurveInterface)[0x90/4])(base) != 0
-            && ((u8(*)(int, s16*, f32, void*, int))((int*)*gRomCurveInterface)[0x8c/4])(
-                   *(int*)state, obj, lbl_803E2C44, &lbl_803DBCF8, -1) != 0) {
+            && (*gRomCurveInterface)->goNextPoint((void *)base) != 0
+            && (*gRomCurveInterface)->initCurve((void *)*(int *)state, obj, lbl_803E2C44,
+                                                (int *)&lbl_803DBCF8, -1) != 0) {
             ((BaddieState *)state)->controlFlags = ((BaddieState *)state)->controlFlags & ~0x2000;
         }
         sidekickToy_accelerateTowardTarget3D(obj, *(f32*)(base + 0x68), *(f32*)(base + 0x6c),

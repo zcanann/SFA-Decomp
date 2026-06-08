@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/pressureSwitch.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
@@ -679,7 +680,6 @@ extern int lbl_803DBC78;
 extern int lbl_803DBC80;
 extern void *mmAlloc(int size, int heap, int flags);
 extern void *memset(void *dst, int val, u32 n);
-extern int *gRomCurveInterface;
 extern EffectInterface **gPartfxInterface;
 extern int lbl_803DBC70;
 extern int lbl_803DDA60;
@@ -764,9 +764,9 @@ void fn_8014E1DC(int obj, HagabonState *state) {
 
     if (((Curve_AdvanceAlongPath(curve, state->curveStep) != 0) ||
          (*(int *)(curve + 0x10) != *(int *)&lbl_803DDA58)) &&
-        ((*(int (**)(int))(*(int *)gRomCurveInterface + 0x90))(curve) != 0) &&
-        ((*(int (**)(int, f32, int, int *, int))(*(int *)gRomCurveInterface + 0x8c))
-             (state->curve, lbl_803E2608, obj, &lbl_803DBC70, -1) != 0)) {
+        ((*gRomCurveInterface)->goNextPoint((void *)curve) != 0) &&
+        ((*gRomCurveInterface)->initCurve((void *)state->curve, (void *)obj, lbl_803E2608,
+                                          &lbl_803DBC70, -1) != 0)) {
         *flags &= 0xfe;
     }
 
@@ -901,8 +901,8 @@ void swarmbaddie_init(int obj, int data, int skip_alloc) {
         if (*(void **)&state->curve != NULL) {
             memset(*(void **)&state->curve, 0, 0x108);
         }
-        if ((u8)(*(int (*)(void *, int, f32, void *, int))(*(int *)((int)*gRomCurveInterface + 0x8C)))
-                (*(void **)&state->curve, obj, state->chaseRadius, &lbl_803DBC78, -1) == 0) {
+        if ((*gRomCurveInterface)->initCurve((void *)state->curve, (void *)obj, state->chaseRadius,
+                                             &lbl_803DBC78, -1) == 0) {
             *(u8 *)&state->flags |= 0x1;
         }
         Sfx_PlayFromObject(obj, SFXfox_treadwater422);
@@ -919,8 +919,8 @@ void hagabon_init(int obj, int data, int skip_alloc) {
         if (*(void **)&state->curve != NULL) {
             memset(*(void **)&state->curve, 0, 0x108);
         }
-        if ((u8)(*(int (*)(void *, int, f32, void *, int))(*(int *)((int)*gRomCurveInterface + 0x8C)))
-                (*(void **)&state->curve, obj, state->chaseRadius, &lbl_803DBC70, -1) == 0) {
+        if ((*gRomCurveInterface)->initCurve((void *)state->curve, (void *)obj, state->chaseRadius,
+                                             &lbl_803DBC70, -1) == 0) {
             state->flags |= 0x1;
         }
     }
@@ -976,9 +976,9 @@ void fn_8014EE8C(int obj, SwarmBaddieState *state)
     curve = state->curve;
     done = Curve_AdvanceAlongPath(curve, state->curveStep);
     if (((done != 0) || (*(int *)(curve + 0x10) != lbl_803DDA60)) &&
-        ((*(u8(**)(int))(*gRomCurveInterface + 0x90))(curve) != 0) &&
-        ((*(u8(**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
-             state->curve, obj, lbl_803E2678, &lbl_803DBC78, -1) != 0)) {
+        ((*gRomCurveInterface)->goNextPoint((void *)curve) != 0) &&
+        ((*gRomCurveInterface)->initCurve((void *)state->curve, (void *)obj, lbl_803E2678,
+                                          &lbl_803DBC78, -1) != 0)) {
         state->flags &= ~SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
     }
     lbl_803DDA60 = *(int *)(curve + 0x10);
@@ -1058,9 +1058,9 @@ void fn_8014F620(int obj, int *state)
                                       lbl_803E26E0);
     done = Curve_AdvanceAlongPath(curve, *(f32 *)(state + 2) * wave);
     if (((done != 0) || (*(int *)(curve + 0x10) != lbl_803DDA68)) &&
-        ((*(u8(**)(int))(*gRomCurveInterface + 0x90))(curve) != 0) &&
-        ((*(u8(**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
-             state[0], obj, lbl_803E26E4, &lbl_803DBC80, -1) != 0)) {
+        ((*gRomCurveInterface)->goNextPoint((void *)curve) != 0) &&
+        ((*gRomCurveInterface)->initCurve((void *)state[0], (void *)obj, lbl_803E26E4,
+                                          &lbl_803DBC80, -1) != 0)) {
         *(u8 *)((u8 *)state + 0x24) = *(u8 *)((u8 *)state + 0x24) & ~1;
     }
     lbl_803DDA68 = *(int *)(curve + 0x10);
