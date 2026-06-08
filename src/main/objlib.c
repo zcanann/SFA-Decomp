@@ -1,5 +1,6 @@
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/objHitReact.h"
@@ -103,13 +104,6 @@ struct ObjLibRegionList {
 };
 
 extern ObjContactCallbackEntry lbl_80342D50[];
-typedef struct ObjTriggerInterface {
-  u8 pad00[0x1c];
-  int (*isCurrentTriggerClear)(void);
-  int (*isTriggerSet)(int eventId);
-} ObjTriggerInterface;
-
-extern ObjTriggerInterface **gGameUIInterface;
 extern void *lbl_803DCBD8;
 extern u8 *gObjHitsPriorityHitStates;
 extern u8 gObjGroupObjectCount;
@@ -2519,7 +2513,7 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
   flagEnabled = triggerFlags & OBJTRIGGER_ID_ENABLE_FLAG;
   if (flagEnabled != 0) {
     flagBlocked = triggerFlags & OBJTRIGGER_ID_BLOCK_FLAG;
-    if ((flagBlocked == 0) && (iVar1 = (*gGameUIInterface)->isTriggerSet((int)param_2), iVar1 != 0)) {
+    if ((flagBlocked == 0) && (iVar1 = (*gGameUIInterface)->isEventReady((int)param_2), iVar1 != 0)) {
       iVar1 = objGetAnimState80A(Obj_GetPlayerObject());
       if (iVar1 == OBJTRIGGER_PLAYER_STATE_NONE) {
         buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX,OBJTRIGGER_BUTTON_DISABLE_FLAG);
