@@ -120,11 +120,9 @@ void hightop_modelMtxFn(int obj, f32 *a, f32 *b, f32 *c) {
 #pragma scheduling off
 #pragma peephole off
 void hightop_free(int obj) {
-    void *ui;
     ObjGroup_RemoveObject(obj, 0x26);
     ObjGroup_RemoveObject(obj, 0xa);
-    ui = *gGameUIInterface;
-    (*(void (**)(void *))((char *)ui + 0x60))(ui);
+    (*gGameUIInterface)->airMeterSetShutdown();
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -549,7 +547,7 @@ void hightop_hitDetect(int obj) {
         p->unkC18 -= 1;
         fn_8009A8C8(obj, lbl_803E6B30);
         if (p->unkC18 <= 0) {
-            (*(void (**)(void *))((char *)*gGameUIInterface + 0x60))(*gGameUIInterface);
+            (*gGameUIInterface)->airMeterSetShutdown();
             p->flagsC49.b7 = 0;
             GameBit_Set(0x634, 0);
             if (Obj_IsLoadingLocked() != 0) {
@@ -568,7 +566,7 @@ void hightop_hitDetect(int obj) {
             p->baddie.unk25F = 0;
             *(int *)p |= 0x1000000;
             GameBit_Set(0xb48, 1);
-            (*(void (**)(void *))((char *)*gGameUIInterface + 0x60))(*gGameUIInterface);
+            (*gGameUIInterface)->airMeterSetShutdown();
         }
     } else {
         (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)p, 3);
@@ -629,7 +627,7 @@ void hightop_update(int obj) {
         objSoundFn_800392f0(obj, (int)(p + 0x3bc), &lbl_8032AAB0[randomGetRange(0, 2) * 6], 0);
     }
     if (((BitFlags8 *)(p + 0xc49))->b7 != 0) {
-        (*(void (**)(int, void *))((char *)*gGameUIInterface + 0x5c))(*(s16 *)(p + 0xc18), *gGameUIInterface);
+        (*gGameUIInterface)->runAirMeter(*(s16 *)(p + 0xc18));
         *(f32 *)(p + 0xc38) += timeDelta;
         if (*(f32 *)(p + 0xc38) > lbl_803E6B48) {
             *(f32 *)(p + 0xc38) -= lbl_803E6B48;
@@ -687,7 +685,7 @@ int hightop_stateHandler07(int obj, int p) {
         ((GameObject *)obj)->anim.velocityY = v;
         ((GameObject *)obj)->anim.velocityZ = v;
         ObjHits_SyncObjectPositionIfDirty(obj);
-        (*(void (**)(void))((char *)*gGameUIInterface + 0x60))();
+        (*gGameUIInterface)->airMeterSetShutdown();
         rt->flagsC49.b7 = 0;
         rt->flagsC49.b1 = 0;
         rt->unkC4B = 5;
@@ -741,9 +739,8 @@ int hightop_stateHandler04(int obj, int p) {
             (char *)state + 0xa10, obj, 0x3463a, *gRomCurveInterface);
         state2 = ((GameObject *)obj)->extra;
         state2->flagsC49.b7 = 1;
-        (*(void (**)(int, int, void *))((char *)*gGameUIInterface + 0x58))(lbl_803DC320, 0x5ce, *gGameUIInterface);
-        (*(void (**)(int, void *))((char *)*gGameUIInterface + 0x5c))(
-            state2->unkC18, *gGameUIInterface);
+        (*gGameUIInterface)->initAirMeter(lbl_803DC320, 0x5ce);
+        (*gGameUIInterface)->runAirMeter(state2->unkC18);
         fn_80039264((char *)state + 0xb48);
         return 7;
     }

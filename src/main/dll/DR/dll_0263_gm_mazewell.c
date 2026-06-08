@@ -41,7 +41,7 @@ int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg) {
     int i;
     for (i = 0; i < arg[0x8b]; i++) {
         if (arg[i + 0x81] == 1 && *(int *)(p + 0x4) != -1) {
-            (*(void (**)(int, int, int, int))((char *)*gGameUIInterface + 0x38))(*(int *)(p + 0x4), 0x14, 0x8c, 0);
+            (*gGameUIInterface)->showNpcDialogue(*(int *)(p + 0x4), 0x14, 0x8c, 0);
             *(int *)(p + 0x4) = -1;
         }
     }
@@ -91,7 +91,7 @@ checkValue:
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         int found;
         for (i = 0, p = base; (u32)i < 9; i++) {
-            if ((*(int (**)(int))((char *)*gGameUIInterface + 0x20))(*p) != 0) {
+            if ((*gGameUIInterface)->isEventReady(*p) != 0) {
                 if (lbl_803DC968 != 0) {
                     runtime = ((GameObject *)obj)->extra;
                     switch (i) {

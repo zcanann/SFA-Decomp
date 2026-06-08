@@ -5,6 +5,7 @@
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/camera_interface.h"
+#include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
@@ -96,7 +97,7 @@ extern void Music_Trigger(int trackId, int restart);
 extern void Obj_FreeObject(int obj);
 extern void mm_free(void *ptr);
 extern void storeZeroToFloatParam(void *timer);
-extern void **gGameUIInterface;
+extern GameUIInterface **gGameUIInterface;
 extern int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg);
 extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);

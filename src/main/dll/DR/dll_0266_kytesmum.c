@@ -168,7 +168,7 @@ int kytesmum_spawnInteractionCallback(int obj) {
     Obj_GetPlayerObject();
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         buttonDisable(0, 0x100);
-        if ((*(int (**)(void *))((char *)*gGameUIInterface + 0x1c))(*gGameUIInterface) == 0) {
+        if ((*gGameUIInterface)->isCurrentTriggerClear() == 0) {
             (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
         }
         return 0;
@@ -279,7 +279,7 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
         return 1;
     }
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
-        if ((*(int (**)(void *))((char *)*gGameUIInterface + 0x1c))(*gGameUIInterface) == 0) {
+        if ((*gGameUIInterface)->isCurrentTriggerClear() == 0) {
             buttonDisable(0, 0x100);
             ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
             ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 4;
