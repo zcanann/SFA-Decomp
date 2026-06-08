@@ -2159,7 +2159,7 @@ void Obj_UpdateAllObjects(u8 flags)
                     cb(obj);
                     break;
                 }
-                Obj_GetWorldPosition((u8 *)obj, (u8 *)(obj + 0x18), (u8 *)(obj + 0x1c), (u8 *)(obj + 0x20));
+                Obj_GetWorldPosition((u8 *)obj, (u8 *)&((GameObject *)obj)->anim.worldPosX, (u8 *)&((GameObject *)obj)->anim.worldPosY, (u8 *)&((GameObject *)obj)->anim.worldPosZ);
             }
         next:;
         }
@@ -3009,7 +3009,7 @@ void fn_8002A5DC(u8 *obj)
         vecB[0] = rot[4];
         vecB[1] = rot[5];
         vecB[2] = rot[6];
-        fn_800213D0(vecA, vecB, (s16 *)(obj + 4), (s16 *)(obj + 2), (s16 *)obj);
+        fn_800213D0(vecA, vecB, &((GameObject *)obj)->anim.rotZ, &((GameObject *)obj)->anim.rotY, (s16 *)obj);
     }
 }
 #pragma pop

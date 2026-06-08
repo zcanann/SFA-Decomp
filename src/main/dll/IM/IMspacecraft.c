@@ -292,7 +292,7 @@ void SpiritDoorLock_update(int obj)
     player = Obj_GetPlayerObject();
 
     if (GameBit_Get(SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED) == 0) {
-        if (Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18)) < lbl_803E4444) {
+        if (Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)((char *)player + 0x18)) < lbl_803E4444) {
             if (SPIRITDOORLOCK_ACTIVE(state) != 0) {
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
             }
@@ -351,10 +351,10 @@ void SpiritDoorLock_update(int obj)
         local_58[1] = lbl_803E4454;
         max_dist = lbl_803E4458;
         for (i = 0; i < local_68; i++) {
-            if (Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)((char *)list_ptr[i] + 0x18)) <= max_dist) {
+            if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)((char *)list_ptr[i] + 0x18)) <= max_dist) {
                 ((GameObject *)obj)->anim.rotZ = angle;
                 Obj_TransformLocalVectorByWorldMatrix(obj, local_58, local_5c);
-                PSVECAdd((f32 *)((char *)obj + 0xc), local_5c, (f32 *)((char *)list_ptr[i] + 0xc));
+                PSVECAdd(&((GameObject *)obj)->anim.localPosX, local_5c, (f32 *)((char *)list_ptr[i] + 0xc));
                 *(s16 *)list_ptr[i] = *(s16 *)obj;
                 *(s16 *)((char *)list_ptr[i] + 4) = (s16)(angle + 0x8000);
                 *(f32 *)((char *)list_ptr[i] + 8) = ((GameObject *)obj)->anim.rootMotionScale;
@@ -580,7 +580,7 @@ void fn_801A5D88(int obj, int unused) {
         (s32)(lbl_803E446C * (f32)(u32) * (u8*)(*(int*)(obj + 0x50) + 0x62)));
     player = (int)Obj_GetPlayerObject();
     if ((*(u16*)(player + 0xb0) & 0x1000) == 0) {
-        dist = Vec_distance((f32*)(obj + 0x18), (f32*)(player + 0x18));
+        dist = Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32*)(player + 0x18));
         if (dist <= lbl_803E4470) {
             falloff = lbl_803E4474 - dist / lbl_803E4470;
             CameraShake_Start(obj, lbl_803E4478 * falloff, lbl_803E447C * falloff, lbl_803E4480);

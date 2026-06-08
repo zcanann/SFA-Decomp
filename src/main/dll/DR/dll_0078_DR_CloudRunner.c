@@ -1125,7 +1125,7 @@ void fn_802BF4D8(int obj)
     pos[0] = *(f32 *)((char *)newObj + 0xc) + pos[0];
     pos[1] = *(f32 *)((char *)newObj + 0x10) + pos[1];
     pos[2] = *(f32 *)((char *)newObj + 0x14) + pos[2];
-    voxmaps_worldToGrid((void *)(obj + 0x18), gC);
+    voxmaps_worldToGrid((void *)&((GameObject *)obj)->anim.worldPosX, gC);
     voxmaps_worldToGrid(pos, gB);
     if (voxmaps_traceLine(gC, gB, tr, 0, 0) == 0) {
         voxmaps_gridToWorld(pos, tr);

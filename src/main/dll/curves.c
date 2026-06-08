@@ -2807,12 +2807,12 @@ void curves_preparePointCollisionFrame(int obj,u32 *state)
         matrixSource = *(int *)(*(int *)&((GameObject *)obj)->anim.parent + 0x58);
         Matrix_TransformPoint((f32 *)(matrixSource + ((*(u8 *)(matrixSource + 0x10c) + 2) * 0x40)),
                               ((GameObject *)obj)->anim.localPosX,((GameObject *)obj)->anim.localPosY,((GameObject *)obj)->anim.localPosZ,
-                              (f32 *)(obj + 0x18),(f32 *)(obj + 0x1c),(f32 *)(obj + 0x20));
+                              &((GameObject *)obj)->anim.worldPosX,&((GameObject *)obj)->anim.worldPosY,&((GameObject *)obj)->anim.worldPosZ);
       }
       else {
         Obj_TransformLocalPointToWorld(((GameObject *)obj)->anim.localPosX,((GameObject *)obj)->anim.localPosY,
-                                       ((GameObject *)obj)->anim.localPosZ,(f32 *)(obj + 0x18),
-                                       (f32 *)(obj + 0x1c),(f32 *)(obj + 0x20),
+                                       ((GameObject *)obj)->anim.localPosZ,&((GameObject *)obj)->anim.worldPosX,
+                                       &((GameObject *)obj)->anim.worldPosY,&((GameObject *)obj)->anim.worldPosZ,
                                        *(u32 *)&((GameObject *)obj)->anim.parent);
       }
     }

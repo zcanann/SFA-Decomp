@@ -1494,7 +1494,7 @@ void cfmagicwall_update(int obj) {
             f32 range;
             f32 fadeDistance;
             range = (f32)(s32)*(s16 *)(data + 0x1a);
-            playerDistance = Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18));
+            playerDistance = Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(player + 0x18));
             fadeDistance = Camera_DistanceToCurrentViewPosition(
                 ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
 
@@ -1768,13 +1768,13 @@ int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
     tricky = getTrickyObject();
 
     if (player != NULL) {
-        playerNear = Vec_xzDistance((f32*)(obj + 0x18), (f32*)((u8*)player + 0x18)) < lbl_803E43B8;
+        playerNear = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX, (f32*)((u8*)player + 0x18)) < lbl_803E43B8;
     } else {
         playerNear = 0;
     }
 
     if (tricky != NULL) {
-        trickyNear = Vec_xzDistance((f32*)(obj + 0x18), (f32*)((u8*)tricky + 0x18)) < lbl_803E43B8;
+        trickyNear = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX, (f32*)((u8*)tricky + 0x18)) < lbl_803E43B8;
     } else {
         trickyNear = 0;
     }

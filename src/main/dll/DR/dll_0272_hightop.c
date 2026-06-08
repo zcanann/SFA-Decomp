@@ -1002,7 +1002,7 @@ int hightop_stateHandler09(int obj, int p) {
             (*gObjectTriggerInterface)->runSequence(lbl_8032AB30[state->unkC42], (void *)obj, -1);
         }
     } else {
-        if (Vec_distance((f32 *)((char *)Obj_GetPlayerObject() + 0x18), (f32 *)((char *)obj + 0x18)) > lbl_803E6AA4) {
+        if (Vec_distance((f32 *)((char *)Obj_GetPlayerObject() + 0x18), &((GameObject *)obj)->anim.worldPosX) > lbl_803E6AA4) {
             if (randFn_80080100(0x1f4) != 0) {
                 int roll = randomGetRange(0, 0x64);
                 int idx = 0;
@@ -1040,7 +1040,7 @@ int hightop_stateHandler10(int obj, int p) {
     } else {
         rt->unkC4B = 3;
     }
-    if (Vec_distance((f32 *)((char *)Obj_GetPlayerObject() + 0x18), (f32 *)((char *)obj + 0x18)) > lbl_803E6AA4) {
+    if (Vec_distance((f32 *)((char *)Obj_GetPlayerObject() + 0x18), &((GameObject *)obj)->anim.worldPosX) > lbl_803E6AA4) {
         if (randFn_80080100(500) != 0) {
             int *weights;
             int *weight;

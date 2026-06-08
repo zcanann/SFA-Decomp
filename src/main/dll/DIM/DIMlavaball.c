@@ -1816,7 +1816,7 @@ void fn_801A79E0(int obj) {
     state = ((GameObject *)obj)->extra;
     ret = ObjHits_GetPriorityHit(obj, &local_18, (int *)0, (int *)0);
     if (ret == 0) {
-        ret = objBboxFn_800640cc((int *)(obj + 0x80), (int *)(obj + 0xc), lbl_803E454C, 1, auStack_14, obj, 1, -1, 0xff, 0);
+        ret = objBboxFn_800640cc((int *)&((GameObject *)obj)->anim.previousLocalPosX, (int *)&((GameObject *)obj)->anim.localPosX, lbl_803E454C, 1, auStack_14, obj, 1, -1, 0xff, 0);
     }
     if ((ret != 0) ||
         (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0 && (state->flags & 0x40) != 0) ||

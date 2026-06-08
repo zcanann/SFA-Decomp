@@ -1493,7 +1493,7 @@ int magiclight_SeqFn(int *obj) {
 
     state = ((GameObject *)obj)->extra;
     player = (int *)Obj_GetPlayerObject();
-    dist = Vec_distance((f32 *)((char *)player + 0x18), (f32 *)((char *)obj + 0x18));
+    dist = Vec_distance((f32 *)((char *)player + 0x18), &((GameObject *)obj)->anim.worldPosX);
 
     if (dist < state->triggerRadius && state->inRange == 0) {
         state->inRange = 1;
@@ -1989,7 +1989,7 @@ void crrockfall_update(int *obj)
             height = lbl_803E4708 - frac;
             player = (int *)Obj_GetPlayerObject();
             if (player != NULL) {
-                dist = Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18));
+                dist = Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)((char *)player + 0x18));
                 if (dist > lbl_803E470C) {
                     dist = lbl_803E470C;
                 } else if (dist < lbl_803E4710) {
@@ -2015,7 +2015,7 @@ void crrockfall_update(int *obj)
                     cond = 0;
                 } else {
                     int *def = *(int **)&((GameObject *)obj)->anim.placementData;
-                    f32 xz = Vec_xzDistance((f32 *)((char *)obj + 0x18),
+                    f32 xz = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX,
                                             (f32 *)((char *)player + 0x18));
                     f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)((char *)player + 0x10);
                     if (dy < lbl_803E46E8) {

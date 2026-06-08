@@ -657,7 +657,7 @@ void fn_80172824(int obj, u8 *state)
     if (focus == NULL) {
         focus = player;
     }
-    dist = Vec_xzDistance((f32 *)(obj + 0x18), (f32 *)(focus + 0x18));
+    dist = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(focus + 0x18));
     dy = *(f32 *)(focus + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
     if (dy < lbl_803E345C) {
         dy = -dy;

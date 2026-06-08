@@ -1423,7 +1423,7 @@ int fn_8017805C(int *obj, f32 *state) {
     vec.dir[2] = tricky[2];
     vec.dir[1] = tricky[1];
     vec.dir[0] = tricky[0] + fn_80138F90();
-    vecRotateZXY(&vec, (f32 *)((char *)obj + 0x24));
+    vecRotateZXY(&vec, &((GameObject *)obj)->anim.velocityX);
     if ((((GameObject *)tricky)->objectFlags & 0x800) != 0) {
         pf = trickyGetQueuedPathParticlePos(tricky);
     } else {
@@ -1829,7 +1829,7 @@ void WarpPoint_update(int *obj) {
             }
         }
         if (*(s8 *)(def + 0x1a) > -1) {
-            f32 d2 = Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)(player + 0x18));
+            f32 d2 = Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18));
             if (d2 < *(f32 *)((char *)state + 8)) {
                 warpToMap(*(s8 *)(def + 0x1a), 1);
             }

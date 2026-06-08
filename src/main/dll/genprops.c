@@ -5881,7 +5881,7 @@ void baddieinterestp_update(int *obj)
                 }
                 if (found != 0) {
                     found = 0;
-                    if (vec3f_distanceSquared((f32 *)((char *)obj + 0x18),
+                    if (vec3f_distanceSquared(&((GameObject *)obj)->anim.worldPosX,
                                               (f32 *)((char *)other + 0x18)) < lbl_803E3224) {
                         if (((GameObject *)obj)->unkF4 == 0) {
                             if ((int)randomGetRange(1, 100) <= *(s8 *)((char *)params + 0x19)) {
@@ -6424,7 +6424,7 @@ void fireball_update(int *obj)
         return;
     }
     if (lbl_803E3330 == *(f32 *)((char *)state + 0x34)) {
-        *(f32 *)((char *)state + 0x30) = lbl_803E335C / Vec3_Length((f32 *)((char *)obj + 0x24));
+        *(f32 *)((char *)state + 0x30) = lbl_803E335C / Vec3_Length(&((GameObject *)obj)->anim.velocityX);
     }
     *(f32 *)((char *)state + 0x34) += timeDelta;
     if (*(f32 *)((char *)state + 0x34) > *(f32 *)((char *)state + 0x30)) {

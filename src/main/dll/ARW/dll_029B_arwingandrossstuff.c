@@ -182,7 +182,7 @@ void arwprojectile_placeForward(int obj, f32 dist)
     src.scale = lbl_803E701C;
     setMatrixFromObjectPos(mtx, &src);
     Matrix_TransformPoint(mtx, lbl_803E7008, *(f32 *)&lbl_803E7008, state->deflectSpeedScale,
-                          (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
+                          &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.velocityY, &((GameObject *)obj)->anim.velocityZ);
     *(s16 *)obj += 0x8000;
     ((GameObject *)obj)->anim.rotY = -((GameObject *)obj)->anim.rotY;
 }
@@ -352,7 +352,7 @@ void fn_8022ECE0(int obj, f32 param)
     src.scale = lbl_803E704C;
     setMatrixFromObjectPos(mtx, &src);
     Matrix_TransformPoint(mtx, lbl_803E7044, lbl_803E7044, state->lifetime,
-                          (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
+                          &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.velocityY, &((GameObject *)obj)->anim.velocityZ);
 }
 #pragma peephole reset
 #pragma scheduling reset

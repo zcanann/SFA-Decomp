@@ -2550,7 +2550,7 @@ int fn_801601C4(int obj, GroundBaddieState *p)
     z = lbl_803E2E68;
     p->baddie.unk290 = z;
     p->baddie.unk28C = z;
-    memcpy(wp, (void *)(obj + 0xc), 12);
+    memcpy(wp, (void *)&((GameObject *)obj)->anim.localPosX, 12);
     memcpy((void *)(sub->route35C + 0xc), (void *)(*(int *)&p->baddie.targetObj + 0xc), 12);
     voxmaps_updateRoutePath(wp, (char *)(sub->route35C + 0x28));
     if (p->baddie.targetDistance < lbl_803E2E6C && sub->unk405 == 2) {

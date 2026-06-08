@@ -262,7 +262,7 @@ void wctemplebri_update(int obj)
         ObjHits_DisableObject(obj);
     }
     if ((void *)Obj_GetPlayerObject() != NULL) {
-        if (PSVECDistance((void *)(obj + 0x18), (void *)(Obj_GetPlayerObject() + 0x18)) >
+        if (PSVECDistance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(Obj_GetPlayerObject() + 0x18)) >
             lbl_803E6E94) {
             GameBit_Set(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 0);
         }

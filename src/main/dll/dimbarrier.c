@@ -179,7 +179,7 @@ void ecsh_cup_update(short *obj)
             *(int *)(state + 0x24) = mode;
         } else if (mode == 5) {
             if (player != NULL) {
-                if (Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)(player + 0x18)) < lbl_803E5088) {
+                if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E5088) {
                     (*(void (*)(int))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x30))((u8)*(int *)(state + 0x28));
                     if (*(int *)(state + 0x28) == buf[0]) {
                         (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);

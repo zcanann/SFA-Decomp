@@ -77,10 +77,10 @@ int wmnewcrystal_SeqFn(int *obj, int unused, WmNewCrystalEventData *eventData) {
         switch (eventData->events[i]) {
         case 1:
             PSVECSubtract((f32 *)((char *)Camera_GetCurrentViewSlot() + 0xc),
-                          (f32 *)((char *)obj + 0xc), cameraDelta);
+                          &((GameObject *)obj)->anim.localPosX, cameraDelta);
             PSVECNormalize(cameraDelta, cameraDelta);
             PSVECScale(cameraDelta, cameraDelta, lbl_803E6038);
-            PSVECAdd((f32 *)((char *)obj + 0xc), cameraDelta, (f32 *)((char *)obj + 0xc));
+            PSVECAdd(&((GameObject *)obj)->anim.localPosX, cameraDelta, &((GameObject *)obj)->anim.localPosX);
             ((GameObject *)obj)->anim.worldPosX = *(f32 *)((char *)obj + 0xc);
             ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
             ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;

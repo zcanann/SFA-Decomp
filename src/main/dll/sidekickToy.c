@@ -2218,7 +2218,7 @@ void sidekickToy_updateCurveTargetLatch(int obj) {
     u8* state = ((GameObject *)obj)->extra;
     u8* data = *(u8**)state;
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
-        if ((u8)baddieTargetFn_8014a150(obj, state, (f32*)(obj + 0x18), data + 0x68) != 0) {
+        if ((u8)baddieTargetFn_8014a150(obj, state, &((GameObject *)obj)->anim.worldPosX, data + 0x68) != 0) {
             return;
         }
     }

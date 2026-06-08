@@ -67,7 +67,7 @@ void vfpstatueball_update(int *obj) {
                        (f32)state->particleAlpha, 0, 0);
     }
 
-    Vec_distance((void *)((char *)Obj_GetPlayerObject() + 0x18), (void *)((char *)obj + 0x18));
+    Vec_distance((void *)((char *)Obj_GetPlayerObject() + 0x18), (void *)&((GameObject *)obj)->anim.worldPosX);
     state->prevActive = state->active;
 
     if ((u32)GameBit_Get(state->gameBit) == 0) {

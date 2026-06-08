@@ -193,7 +193,7 @@ void magicdust_update(int obj)
   }
   if ((((MagicDustState *)iVar8)->flags27A & 0x10) == 0) {
     if (((((MagicDustState *)iVar8)->flags27A & 0x40) == 0) &&
-       (getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18)) < lbl_803E34B8)) {
+       (getXZDistance(&((GameObject *)obj)->anim.worldPosX,(f32 *)(iVar5 + 0x18)) < lbl_803E34B8)) {
       ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A | 0x10;
       local_28 = '\0';
       (*gPartfxInterface)->spawnObject((void *)obj,
@@ -207,7 +207,7 @@ void magicdust_update(int obj)
     }
   }
   else {
-    if (getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18)) >= lbl_803E34B8) {
+    if (getXZDistance(&((GameObject *)obj)->anim.worldPosX,(f32 *)(iVar5 + 0x18)) >= lbl_803E34B8) {
       ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A & 0xef;
       (*gExpgfxInterface)->freeSource2((u32)obj);
     }
@@ -322,7 +322,7 @@ void magicdust_update(int obj)
       fVar1 = -fVar1;
     }
     if (fVar1 < lbl_803E34DC) {
-      dist = getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18));
+      dist = getXZDistance(&((GameObject *)obj)->anim.worldPosX,(f32 *)(iVar5 + 0x18));
       fVar1 = lbl_803E34E0 + ((MagicDustState *)iVar8)->unk268;
       if ((dist < fVar1 * fVar1) && (fn_8029622C(iVar5) != 0)) {
         uVar7 = GameBit_Get(0x90d);

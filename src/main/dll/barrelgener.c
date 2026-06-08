@@ -421,7 +421,7 @@ int fn_80221C18(int obj, f32 dt, int p3, int p4)
     int i;
 
     if ((u32)obj != (u32)Obj_GetPlayerObject()) {
-        PSVECSubtract((void *)(obj + 0xc), (void *)(obj + 0x80), vel);
+        PSVECSubtract((void *)&((GameObject *)obj)->anim.localPosX, (void *)&((GameObject *)obj)->anim.previousLocalPosX, vel);
     } else {
         vel[0] = ((GameObject *)obj)->anim.velocityX;
         vel[1] = ((GameObject *)obj)->anim.velocityY;

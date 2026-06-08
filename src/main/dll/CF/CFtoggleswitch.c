@@ -626,7 +626,7 @@ void trickyguardspot_update(TrickyGuardSpotObject *obj) {
     flags->trickyInRange = 0;
     if (tricky != NULL) {
         if ((u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) != 0) {
-            if (Vec_xzDistance((f32 *)((char *)obj + 0x18),
+            if (Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX,
                                (f32 *)((char *)tricky + 0x18)) < (f32)(s32)*(s16 *)(def + 0x1a)) {
                 *(int *)sub = *(int *)sub - framesThisStep;
                 flags->trickyInRange = 1;
@@ -933,7 +933,7 @@ void magiccavetop_update(int *obj) {
             return;
         }
         dirIdx = mapGetDirIdx(def[0x1f]);
-        dist = vec3f_distanceSquared((f32 *)((char *)player + 0x18), (f32 *)((char *)obj + 0x18));
+        dist = vec3f_distanceSquared((f32 *)((char *)player + 0x18), &((GameObject *)obj)->anim.worldPosX);
         gb = GameBit_Get(*(s16 *)(def + 0x1c));
         switch (*sub) {
         case 0:

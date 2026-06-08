@@ -1541,8 +1541,8 @@ void dbegg_hitDetect(int obj) {
         }
     }
     if (state[0x118] != 9) {
-        void *hitFrom = (void *)(obj + 0x80);
-        void *hitTo = (void *)(obj + 0xc);
+        void *hitFrom = (void *)&((GameObject *)obj)->anim.previousLocalPosX;
+        void *hitTo = (void *)&((GameObject *)obj)->anim.localPosX;
         f32 hitRadius = lbl_803E6218;
         if (objBboxFn_800640cc(hitFrom, hitTo, hitRadius, 1, NULL, obj, 8, -1, 0xff, 0) != 0) {
             f32 damping = lbl_803E621C;

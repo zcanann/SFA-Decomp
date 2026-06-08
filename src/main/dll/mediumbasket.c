@@ -2475,7 +2475,7 @@ int mediumbasket_stateHandlerB06(int obj, int state)
     neutralBlend = lbl_803E2D14;
     ((GroundBaddieState *)state)->baddie.unk290 = neutralBlend;
     ((GroundBaddieState *)state)->baddie.unk28C = neutralBlend;
-    memcpy((void *)route, (void *)(obj + 0xc), 0xc);
+    memcpy((void *)route, (void *)&((GameObject *)obj)->anim.localPosX, 0xc);
     memcpy((void *)(sub->route35C + 0xc), (void *)(*(int *)(state + 0x2d0) + 0xc), 0xc);
     voxmaps_updateRoutePath((void *)route, (void *)(sub->route35C + 0x28));
     if (*(u8 *)(route + 0x25) == 0) {

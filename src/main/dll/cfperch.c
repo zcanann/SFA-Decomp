@@ -169,7 +169,7 @@ void fn_80183250(int obj, int def)
                  (SMALLBASKET_ROB_WAVE_ID_65D6 - SMALLBASKET_ROB_WAVE_ID_65D5)) ||
                 (v == SMALLBASKET_ROB_WAVE_DIRECT_ID) || (adj == SMALLBASKET_ROB_WAVE_ID_65D0) ||
                 (adj == SMALLBASKET_ROB_WAVE_ID_65D2)) {
-                if (Vec_distance((f32 *)(player + 0x18), (f32 *)(obj + 0x18)) < lbl_803E39BC) {
+                if (Vec_distance((f32 *)(player + 0x18), &((GameObject *)obj)->anim.worldPosX) < lbl_803E39BC) {
                     if ((u32)GameBit_Get(GAMEBIT_SFX_MUTE) == 0) {
                         Sfx_PlayFromObject(obj, SFXfend_rob_wave);
                     }
@@ -289,7 +289,7 @@ void smallbasket_update(int obj)
         ((GameObject *)obj)->anim.alpha = flag;
         ((CfperchState *)state)->unk14 -= (s16)(int)(timeDelta * animSpeed);
         if (((CfperchState *)state)->unk14 <= 0) {
-            if ((Vec_distance((f32 *)(obj + 0x18), (f32 *)((int)Obj_GetPlayerObject() + 0x18)) > lbl_803E3930) &&
+            if ((Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)((int)Obj_GetPlayerObject() + 0x18)) > lbl_803E3930) &&
                 (((CfperchState *)state)->enableGameBit == -1)) {
                 flag = 1;
             }
@@ -398,7 +398,7 @@ void smallbasket_update(int obj)
                         if (*(void **)(player + 0x30) != NULL) {
                             blk.h0 = blk.h0 + **(s16 **)(player + 0x30);
                         }
-                        vecRotateZXY(&blk, (void *)(obj + 0x24));
+                        vecRotateZXY(&blk, (void *)&((GameObject *)obj)->anim.velocityX);
                         Sfx_PlayFromObject(obj, 0x6b);
                     } else if (fn_802966B4(player) != 0) {
                         *(u8 *)(state + 0x5) = 0;
@@ -422,7 +422,7 @@ void smallbasket_update(int obj)
                         blk.h2 = 0;
                         blk.h1 = 0;
                         blk.h0 = *(s16 *)player;
-                        vecRotateZXY(&blk, (void *)(obj + 0x24));
+                        vecRotateZXY(&blk, (void *)&((GameObject *)obj)->anim.velocityX);
                         Sfx_PlayFromObject(obj, 0x6b);
                         ((CfperchState *)state)->unk6 = 0;
                         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -479,7 +479,7 @@ void smallbasket_update(int obj)
         }
         ((CfperchState *)state)->randomTimer -= framesThisStep;
         if (((CfperchState *)state)->unk5 != 0) {
-            if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(def + 0x8)) >=
+            if (getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(def + 0x8)) >=
                 (f32)(((CfperchState *)state)->unkC * ((CfperchState *)state)->unkC)) {
                 zf = lbl_803E3938;
                 ((GameObject *)obj)->anim.velocityX = zf;

@@ -416,7 +416,7 @@ void enemymushroom_update(int *obj)
             *(f32 *)(state + 0x2c) = lbl_803E531C;
         }
         if (!(*(u8 *)(state + 0x37) & 0x1)) {
-            if (Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)(player + 0x18)) <= *(f32 *)(state + 0x2c) &&
+            if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) <= *(f32 *)(state + 0x2c) &&
                 !EmissionController_IsLingering(player) && !fn_80296448(player) &&
                 !(*(u16 *)(player + 0xb0) & 0x1000)) {
                 ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);
@@ -467,7 +467,7 @@ void enemymushroom_update(int *obj)
         *(f32 *)(state + 0x2c) = lbl_803E5320 * timeDelta + *(f32 *)(state + 0x2c);
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
         if (!(*(u8 *)(state + 0x37) & 0x1)) {
-            if (Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)(player + 0x18)) <= *(f32 *)(state + 0x2c) &&
+            if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) <= *(f32 *)(state + 0x2c) &&
                 !EmissionController_IsLingering(player) && !fn_80296448(player) &&
                 !(*(u16 *)(player + 0xb0) & 0x1000)) {
                 ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);

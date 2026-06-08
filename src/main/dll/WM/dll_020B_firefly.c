@@ -202,7 +202,7 @@ void FireFlyFn_801f4f88(int obj)
         f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)(player + 0x10);
         if ((FIREFLY_FLAGS(state) & FIREFLY_FLAG_PLAYER_TOUCHED) == 0) {
         if (dy < lbl_803E5EEC && dy > lbl_803E5EC4) {
-            if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < lbl_803E5EF0) {
+            if (getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E5EF0) {
                 FIREFLY_FLAGS(state) = (u8)(FIREFLY_FLAGS(state) | FIREFLY_FLAG_PLAYER_TOUCHED);
                 if (GameBit_Get(FIREFLY_FIRST_TOUCH_BIT) == 0) {
                     FIREFLY_MESSAGE_PARAM(state) = -1;

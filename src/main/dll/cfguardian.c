@@ -265,7 +265,7 @@ skip_insert: ;
     if (((((GameObject *)obj)->objectFlags & 0x800) != 0) && ((((SwitchFlags *)(state + 0x84))->latched) == 0) &&
         ((((SwitchFlags *)(state + 0x84))->active) != 0)) {
       tmp = (int)Obj_GetPlayerObject();
-      if (Vec_distance((f32 *)(obj + 0x18), (f32 *)(tmp + 0x18)) < lbl_803E375C) {
+      if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(tmp + 0x18)) < lbl_803E375C) {
         fx.x = lbl_803E3760;
         fx.y = lbl_803E3764;
         fx.z = lbl_803E3760;

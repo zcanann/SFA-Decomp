@@ -1790,7 +1790,7 @@ void carryable_break_respawn_update(int obj) {
         case 2:
             state->timer += timeDelta;
             if (state->timer > lbl_803E3B48) {
-                if (ViewFrustum_IsSphereVisible((f32 *)(obj + 0xc),
+                if (ViewFrustum_IsSphereVisible(&((GameObject *)obj)->anim.localPosX,
                                                 ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale) == 0) {
                     ObjHits_EnableObject(obj);
                     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;

@@ -116,7 +116,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
             int foundState;
             McLightningFlags *ff;
             ((McLightningState *)state)->unk0 =
-                lightningCreate((f32 *)(obj + 0xc), (f32 *)(objs[i] + 0xc), ((McLightningState *)state)->unk8,
+                lightningCreate(&((GameObject *)obj)->anim.localPosX, (f32 *)(objs[i] + 0xc), ((McLightningState *)state)->unk8,
                             ((McLightningState *)state)->unkC, ((McLightningState *)state)->unk18, ((McLightningState *)state)->unk19, 0);
             f->hi = 6;
             ((McLightningState *)state)->unk4 = lbl_803E7450;

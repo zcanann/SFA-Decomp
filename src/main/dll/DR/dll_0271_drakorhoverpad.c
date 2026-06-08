@@ -480,10 +480,10 @@ void drakorhoverpad_updateMain(int obj) {
         }
         ((GameObject *)obj)->anim.rotY = c;
     }
-    PSVECSubtract(curvePos, (f32 *)((char *)obj + 0xc), diff);
-    Obj_SteerVelocityTowardVector(obj, (f32 *)((char *)obj + 0x24), diff, lbl_803DC2F8,
+    PSVECSubtract(curvePos, &((GameObject *)obj)->anim.localPosX, diff);
+    Obj_SteerVelocityTowardVector(obj, &((GameObject *)obj)->anim.velocityX, diff, lbl_803DC2F8,
                 lbl_803DC2F8 / lbl_803E6A98, lbl_803E6A9C);
-    PSVECAdd((f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x24), (f32 *)((char *)obj + 0xc));
+    PSVECAdd(&((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.localPosX);
 }
 #pragma peephole reset
 #pragma scheduling reset

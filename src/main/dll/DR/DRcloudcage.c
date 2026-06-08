@@ -421,7 +421,7 @@ f32 fn_801EA678(int obj, int state)
         (iVar3 = (*(int (**)(int))(*gCheckpointInterface + 0x34))(state + 0x28), lbl_803DC0BC > iVar3)) {
         if (lbl_803DC0BC == -1) {
             iVar3 = Obj_GetPlayerObject();
-            d = Vec_distance((int *)(obj + 0x18), (int *)(iVar3 + 0x18)) * lbl_803E5AF8;
+            d = Vec_distance((int *)&((GameObject *)obj)->anim.worldPosX, (int *)(iVar3 + 0x18)) * lbl_803E5AF8;
         } else {
             v7 = lbl_803E5B48 * (f32)*(s32 *)((u8 *)lbl_803AD088 + 0x1c) +
                  lbl_803E5B48 * *(f32 *)((u8 *)lbl_803AD088 + 0xc);

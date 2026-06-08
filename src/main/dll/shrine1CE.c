@@ -164,7 +164,7 @@ void dll_19B_update(int obj)
         }
         switch (*(u8 *)((char *)st + 0x13)) {
         case 0:
-            if (Vec_distance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < (f32)st[0]) {
+            if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) < (f32)st[0]) {
                 *(u8 *)((char *)st + 0x13) = 1;
                 GameBit_Set(0x129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);

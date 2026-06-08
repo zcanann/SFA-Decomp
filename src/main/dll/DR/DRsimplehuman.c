@@ -97,7 +97,7 @@ void spdrape_update(int obj)
             Sfx_PlayFromObject(obj, 0x13f);
             *(s16 *)((char *)state + 0x14) = randomGetRange(0xb4, 300);
         }
-        if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < lbl_803E5AA4) {
+        if (getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E5AA4) {
             if (player != 0) {
                 if (state[3] + (state[1] * *(f32 *)(player + 0xc) + state[2] * *(f32 *)(player + 0x14)) < lbl_803E5AA0) {
                     *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B0;
@@ -115,7 +115,7 @@ void spdrape_update(int obj)
     case 1:
     case 4:
         if (*(u8 *)((char *)state + 0x16) != 0) {
-            if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) > lbl_803E5AAC) {
+            if (getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) > lbl_803E5AAC) {
                 ObjAnim_SetCurrentMove(obj, (*(u8 **)((char *)state + 0x10))[2], lbl_803E5AA0, 0);
                 Sfx_PlayFromObject(obj, 0x140);
                 *state = lbl_803E5AB0;
@@ -129,7 +129,7 @@ void spdrape_update(int obj)
     case 2:
     case 5:
         Sfx_PlayFromObject(obj, 0x141);
-        if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) > lbl_803E5AAC) {
+        if (getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) > lbl_803E5AAC) {
             ObjAnim_SetCurrentMove(obj, (*(u8 **)((char *)state + 0x10))[2], lbl_803E5AA0, 0);
             Sfx_StopObjectChannel(obj, 0x40);
             Sfx_PlayFromObject(obj, 0x140);
@@ -138,7 +138,7 @@ void spdrape_update(int obj)
         break;
     case 3:
     case 6:
-        if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E5AB8) && (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < lbl_803E5AA4)) {
+        if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E5AB8) && (getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E5AA4)) {
             if (player != 0) {
                 if (state[3] + (state[1] * *(f32 *)(player + 0xc) + state[2] * *(f32 *)(player + 0x14)) < lbl_803E5AA0) {
                     *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B0;

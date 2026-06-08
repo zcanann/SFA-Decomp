@@ -176,7 +176,7 @@ void wmseqpoint_update(int obj)
 
     switch (state->mode) {
         case 0:
-            if (Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) < state->radius) {
+            if (Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(player + 0x18)) < state->radius) {
                 (*gObjectTriggerInterface)->runSequence(state->triggerId, (void *)obj, -1);
                 state->done = 1;
             }
@@ -200,7 +200,7 @@ void wmseqpoint_update(int obj)
             }
             break;
         case 2:
-            if (Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) < state->radius &&
+            if (Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(player + 0x18)) < state->radius &&
                 state->requiredGameBit != -1 && GameBit_Get(state->requiredGameBit) != 0) {
                 if (state->triggerId == 0x21) {
                     GameBit_Set(0xd1b, 0);
@@ -215,7 +215,7 @@ void wmseqpoint_update(int obj)
             }
             break;
         case 3:
-            if (Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) < state->radius &&
+            if (Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(player + 0x18)) < state->radius &&
                 state->requiredGameBit != -1 && GameBit_Get(state->requiredGameBit) == 0) {
                 (*gObjectTriggerInterface)->runSequence(state->triggerId, (void *)obj, -1);
                 GameBit_Set(state->requiredGameBit, 1);

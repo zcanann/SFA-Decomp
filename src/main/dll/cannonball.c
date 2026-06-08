@@ -147,7 +147,7 @@ void trickyFn_80141290(int obj, int ball)
         trickyAdvanceRouteTargetAhead(obj, (void *)(ball + CANNONBALL_ROUTE), *(float *)(ball + CANNONBALL_SPEED));
         trickyMove(obj, (void *)(ball + CANNONBALL_MOVE_STATE));
 
-        if (Objfsa_GetWalkGroupIndexAtPoint((float *)(obj + 0x18), (void *)0) != 0) {
+        if (Objfsa_GetWalkGroupIndexAtPoint((float *)&((GameObject *)obj)->anim.worldPosX, (void *)0) != 0) {
             *(u32 *)(ball + CANNONBALL_FLAGS) &= ~CANNONBALL_HIDE_FLAG;
         } else {
             *(u32 *)(ball + CANNONBALL_FLAGS) |= CANNONBALL_HIDE_FLAG;
@@ -168,7 +168,7 @@ void trickyFn_80141290(int obj, int ball)
         trickyFn_8013b368(obj, ball, lbl_803E2488);
         walkGroup = Objfsa_GetWalkGroupIndexAtPoint((float *)(*(int *)(ball + CANNONBALL_CURVE) + 8), (void *)0);
 
-        if (Objfsa_GetWalkGroupIndexAtPoint((float *)(obj + 0x18), (void *)0) == walkGroup) {
+        if (Objfsa_GetWalkGroupIndexAtPoint((float *)&((GameObject *)obj)->anim.worldPosX, (void *)0) == walkGroup) {
             curve = *(int *)(ball + CANNONBALL_CURVE);
 
             nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(curve, 0);

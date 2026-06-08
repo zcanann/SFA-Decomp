@@ -838,7 +838,7 @@ void dimcannon_update(int *obj)
         if (GameBit_Get(*(s16 *)((char *)src + 0x1a))) {
             ((DimCannonState *)state)->fireState = 5;
         } else if (*(void **)(state + 0x0) != 0 && !GameBit_Get(*(s16 *)((char *)src + 0x1e))) {
-            f32 d = getXZDistance((f32 *)((char *)obj + 0x18),
+            f32 d = getXZDistance(&((GameObject *)obj)->anim.worldPosX,
                                   (f32 *)(*(char **)(state + 0x0) + 0x18));
             int v = *(s16 *)((char *)src + 0x26) * lbl_803DBF10;
             if (d < (f32)v / lbl_803E48EC) {
@@ -885,7 +885,7 @@ void dimcannon_update(int *obj)
         if (((DimCannonState *)state)->aimPitch > 0) {
             ((DimCannonState *)state)->aimPitch -= framesThisStep;
         }
-        *(f32 *)(state + 0x10) = getXZDistance((f32 *)((char *)obj + 0x18),
+        *(f32 *)(state + 0x10) = getXZDistance(&((GameObject *)obj)->anim.worldPosX,
                                                (f32 *)(*(char **)(state + 0x0) + 0x18));
         DIMwooddoor_updateShardAim(obj, *(f32 *)(state + 0x4), *(f32 *)(state + 0x8),
                                    *(f32 *)(state + 0xc), *(f32 *)(state + 0x10));

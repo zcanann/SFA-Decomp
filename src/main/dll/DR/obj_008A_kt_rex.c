@@ -803,7 +803,7 @@ int ktrex_stateHandlerB02(int obj, int runtime) {
     pos.z = lbl_803E67B8;
     setMatrixFromObjectPos(mtx, &pos);
     Matrix_TransformPoint(mtx, ((KTRexRuntime *)runtime)->unk284, lbl_803E67B8, -((KTRexRuntime *)runtime)->unk280,
-                          (f32 *)((char *)obj + 0x24), &tmpY, (f32 *)((char *)obj + 0x2c));
+                          &((GameObject *)obj)->anim.velocityX, &tmpY, &((GameObject *)obj)->anim.velocityZ);
     if (dir != 0) {
         *(s16 *)obj = lbl_803E681C * ((GameObject *)obj)->anim.currentMoveProgress + (f32)(int)((KTRexArenaState *)gKTRexState)->homeYaw;
     } else {

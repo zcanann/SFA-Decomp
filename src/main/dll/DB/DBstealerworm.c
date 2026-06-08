@@ -770,7 +770,7 @@ void SB_ShipHead_update(int obj) {
     if (galleon != 0) {
         state = DBprotection_getCameraState(getSbGalleon());
         if (state == 2) {
-            if (Vec_distance((void *)(player + 0x18), (void *)(obj + 0x18)) < lbl_803E5840) {
+            if (Vec_distance((void *)(player + 0x18), (void *)&((GameObject *)obj)->anim.worldPosX) < lbl_803E5840) {
                 Sfx_PlayFromObject(obj, 0x312);
             }
             else {

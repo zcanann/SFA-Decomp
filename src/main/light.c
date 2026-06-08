@@ -92,7 +92,7 @@ extern f32 lbl_803E6100;
 void vfpblock1_update(int obj)
 {
     int player = (int)Obj_GetPlayerObject();
-    f32 dist = Vec_distance((void *)(player + 0x18), (void *)(obj + 0x18));
+    f32 dist = Vec_distance((void *)(player + 0x18), (void *)&((GameObject *)obj)->anim.worldPosX);
     if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0) {
         if (dist < lbl_803E6100) {
             Sfx_PlayFromObject(obj, SFXsp_guardian_call2);
@@ -1111,7 +1111,7 @@ void spellStoneUseFn_801fd270(int obj) {
     if ((s16)cond == 0) return;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x08;
     if ((*gGameUIInterface)->isEventReady(lbl_803DDCC8) != 0) {
-        if (Vec_distance((void *)(obj + 0x18), (char *)player + 0x18) < lbl_803E6150) {
+        if (Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (char *)player + 0x18) < lbl_803E6150) {
             GameBit_Set(state->completeGameBit, 1);
             state->used = 1;
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;

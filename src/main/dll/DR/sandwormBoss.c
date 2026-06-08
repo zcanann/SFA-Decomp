@@ -3703,14 +3703,14 @@ void cfprisonguard_update(int *obj) {
     bit44 = GameBit_Get(0x44);
     dist = Vec_distance((char*)obj + 0x18, (char*)player + 0x18);
     if (sub->flags == 1) {
-        waterfx_consumePendingImpactNearPoint((f32 *)((char*)obj + 0xc), lbl_803E4268);
+        waterfx_consumePendingImpactNearPoint(&((GameObject *)obj)->anim.localPosX, lbl_803E4268);
         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         sub->flags = 2;
     }
     if (bit44 == 0) {
         if (sub->guardState != 4) {
             if (dist >= (f32)(s32)*(s16*)(def + 0x1a)) {
-                if (waterfx_consumePendingImpactNearPoint((f32 *)((char*)obj + 0xc), lbl_803E4268) == 0) return;
+                if (waterfx_consumePendingImpactNearPoint(&((GameObject *)obj)->anim.localPosX, lbl_803E4268) == 0) return;
             }
         }
         if (objGetAnimState80A(player) != 0x40) {
@@ -5009,7 +5009,7 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
         dist = Vec_distance((char*)obj + 0x18, player + 0x18);
         if (gb48 == 0) {
             if (dist < (f32)*(s16*)(def + 0x1a)
-                || waterfx_consumePendingImpactNearPoint((f32*)((char*)obj + 0xc), lbl_803E4268) != 0) {
+                || waterfx_consumePendingImpactNearPoint(&((GameObject *)obj)->anim.localPosX, lbl_803E4268) != 0) {
                 if (objGetAnimState80A(player) != 0x40) {
                     moved = 1;
                     sub->guardState = 4;

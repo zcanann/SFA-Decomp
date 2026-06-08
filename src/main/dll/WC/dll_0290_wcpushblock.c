@@ -219,7 +219,7 @@ void wcpushblock_update(int obj)
                     WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x20))(
                     obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                    (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
+                    &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosZ, WCPUSHBLOCK_IFACE);
             } else if ((u32)GameBit_Get(WCPUSHBLOCK_GAMEBIT_A_FADE) != 0) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_FADE_OUT;
             }
@@ -230,7 +230,7 @@ void wcpushblock_update(int obj)
                     WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
                 (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x3c))(
                     obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                    (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
+                    &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosZ, WCPUSHBLOCK_IFACE);
             } else if ((u32)GameBit_Get(WCPUSHBLOCK_GAMEBIT_B_FADE) != 0) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_FADE_OUT;
             }
@@ -259,13 +259,13 @@ void wcpushblock_update(int obj)
                 WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
             (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x20))(
                 obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
+                &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosZ, WCPUSHBLOCK_IFACE);
         } else {
             (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x4c))(
                 WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
             (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x3c))(
                 obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
+                &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosZ, WCPUSHBLOCK_IFACE);
         }
         WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_IDLE;
         break;
@@ -480,13 +480,13 @@ void wcpushblock_update(int obj)
                         WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
                     (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x20))(
                         obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                        (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
+                        &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosZ, WCPUSHBLOCK_IFACE);
                 } else {
                     (*(void (**)(int, int, int, int))(WCPUSHBLOCK_IFACE + 0x4c))(
                         WCPUSHBLOCK_INITIAL_TILE(state), (int)&state->tileX, (int)&state->tileY, WCPUSHBLOCK_IFACE);
                     (*(void (**)(int, int, int, f32 *, f32 *, int))(WCPUSHBLOCK_IFACE + 0x3c))(
                         obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                        (f32 *)(obj + 0xc), (f32 *)(obj + 0x14), WCPUSHBLOCK_IFACE);
+                        &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosZ, WCPUSHBLOCK_IFACE);
                 }
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_FADE_IN;
             }

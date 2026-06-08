@@ -562,7 +562,7 @@ void dll_197_update(int obj)
     resourceParams[3] = resourceDefaults[3];
 
     player = Obj_GetPlayerObject();
-    distance = Vec_distance((void *)(player + 0x18), (void *)(obj + 0x18));
+    distance = Vec_distance((void *)(player + 0x18), (void *)&((GameObject *)obj)->anim.worldPosX);
     if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0) {
         if (distance >= lbl_803E5138 && state->active != 0) {
             Sfx_StopObjectChannel(obj, 0x40);

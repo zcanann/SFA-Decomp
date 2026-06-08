@@ -313,7 +313,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
             }
             if (GameBit_Get(0x12e) == 0) {
                 if (!(((GameObject *)player)->objectFlags & 0x1000)) {
-                    if (Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(obj + 0x18)) <
+                    if (Vec_xzDistance((f32 *)(player + 0x18), &((GameObject *)obj)->anim.worldPosX) <
                         lbl_803E52A4) {
                         (*gExpgfxInterface)->freeSource((u32)obj);
                         if (((GameObject *)obj)->anim.seqId == 0x658) {

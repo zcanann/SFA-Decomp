@@ -392,7 +392,7 @@ void drlasercannon_update(int obj) {
     if (target != 0 && (*(s16 *)((char *)state + DR_LASERCANNON_STATE_OPTIONAL_GAMEBIT) == -1 ||
                            GameBit_Get(*(s16 *)((char *)state + DR_LASERCANNON_STATE_OPTIONAL_GAMEBIT)) == 0)) {
         hit = 1;
-        dist = Vec_xzDistance((f32 *)((char *)target + 0x18), (f32 *)((char *)obj + 0x18));
+        dist = Vec_xzDistance((f32 *)((char *)target + 0x18), &((GameObject *)obj)->anim.worldPosX);
         if (dist < (f32)*(s16 *)((char *)sub + DR_LASERCANNON_SETUP_TARGET_RANGE)) {
             hit = drlasercannon_aimAtTarget(obj, target, (int *)((char *)state + DR_LASERCANNON_STATE_AIM),
                 0x168, (f32 *)((char *)state + DR_LASERCANNON_STATE_MUZZLE_X));

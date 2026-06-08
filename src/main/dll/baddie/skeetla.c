@@ -1120,7 +1120,7 @@ void trickyApplyObjectAvoidanceToStep(f32 *start, f32 *end, f32 *guardPoint)
     for (i = 0; i < count; i++) {
         obj = objects[i];
         def = *(u8 **)&((GameObject *)obj)->anim.placementData;
-        trickyAdjustStepAroundPoint(start, end, guardPoint, (f32 *)(obj + 0x18),
+        trickyAdjustStepAroundPoint(start, end, guardPoint, &((GameObject *)obj)->anim.worldPosX,
                     lbl_803E2484 * (f32)*(u16 *)(def + 0x18),
                     lbl_803E2484 * (f32)*(u16 *)(def + 0x1a));
     }
@@ -1133,7 +1133,7 @@ void trickyApplyObjectAvoidanceToStep(f32 *start, f32 *end, f32 *guardPoint)
         if (minRadius != 0) {
             runtime = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
             if ((runtime != NULL) && ((*(u16 *)(runtime + 0x60) & 1) != 0)) {
-                trickyAdjustStepAroundPoint(start, end, guardPoint, (f32 *)(obj + 0x18),
+                trickyAdjustStepAroundPoint(start, end, guardPoint, &((GameObject *)obj)->anim.worldPosX,
                             lbl_803E2484 * (f32)minRadius,
                             lbl_803E2484 * (f32)*(u16 *)(def + 0x86));
             }

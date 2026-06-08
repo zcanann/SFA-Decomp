@@ -315,7 +315,7 @@ void arwarwing_updateFlightPhysics(int obj, int state)
                                        (arwing->bobRotZAmp *
                                         mathSinf(lbl_803E6EFC * (f32)(u32)arwing->bobRotZPhase /
                                                     lbl_803E6F00)) +
-                                   (f32) * (s16 *)(obj + 4));
+                                   (f32) * &((GameObject *)obj)->anim.rotZ);
     ((GameObject *)obj)->anim.localPosX =
         arwing->bobBlend *
             (arwing->bobXAmp *
@@ -522,7 +522,7 @@ void arwarwing_updateBarrelRoll(int obj, int state)
               (f32) ((ArwingState *)state)->barrelRollAngle);
     ((GameObject *)obj)->anim.rotZ =
         (s16)(int)(timeDelta * (((ArwingState *)state)->barrelRollDirection * ((ArwingState *)state)->barrelRollSpeedScale) +
-                   (f32) * (s16 *)(obj + 4));
+                   (f32) * &((GameObject *)obj)->anim.rotZ);
     if (((ArwingState *)state)->barrelRollDirection > lbl_803E6ECC) {
         tgt = ((ArwingState *)state)->rotZTrimCur;
         cur = ((ArwingState *)state)->barrelRollAngle;

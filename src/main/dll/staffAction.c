@@ -1049,7 +1049,7 @@ void dll_D3_render(int obj,int p2,int p3,int p4,int p5,s8 visible)
   if ((visible != 0) && (((GameObject *)obj)->unkF4 == 0)) {
     if ((*(u8 *)(state + 0x90) == 6) && (((*(u8 *)(state + 0x92) >> 3) & 1) != 0)) {
       if (((*(u8 *)(state + 0x92) >> 2) & 1) == 0) {
-        fn_80166E38(slideMtx,(f32 *)(obj + 0x24),(f32 *)(state + 0x7c));
+        fn_80166E38(slideMtx,&((GameObject *)obj)->anim.velocityX,(f32 *)(state + 0x7c));
       }
       scale = ((GameObject *)obj)->anim.rootMotionScale;
       initRotationMtx(mtx,scale,scale,scale);

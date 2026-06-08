@@ -318,7 +318,7 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
     }
   }
 
-  distance = Vec_distance((f32 *)(obj + 0x18), (f32 *)(player + 0x18));
+  distance = Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18));
   if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) == 0) {
     if (distance < lbl_803E3894) {
       Sfx_PlayFromObject(obj, 0x5d);
@@ -1924,7 +1924,7 @@ int fn_8017FFD0(int obj, TrickyWarpState *state) {
     return 0;
   }
   if (state->patchGroup == 0) {
-    state->patchGroup = (u8)Objfsa_GetWalkGroupIndexAtPoint((f32 *)(obj + 0xc),0);
+    state->patchGroup = (u8)Objfsa_GetWalkGroupIndexAtPoint(&((GameObject *)obj)->anim.localPosX,0);
     if (state->patchGroup != 0) {
       curveEntries = (TrickyWarpCurveEntry **)(*gRomCurveInterface)->getCurves(&curveCount);
       n = 0;
@@ -1944,7 +1944,7 @@ int fn_8017FFD0(int obj, TrickyWarpState *state) {
       return 0;
     }
   }
-  if (ViewFrustum_IsSphereVisible((f32 *)(obj + 0xc),lbl_803E38A0) != 0) {
+  if (ViewFrustum_IsSphereVisible(&((GameObject *)obj)->anim.localPosX,lbl_803E38A0) != 0) {
     return 0;
   }
   playerObj = (int)Obj_GetPlayerObject();
@@ -2683,7 +2683,7 @@ void StayPoint_update(int obj) {
         }
         if (setup->requiredGameBit == -1 || GameBit_Get(setup->requiredGameBit) != 0) {
             if (isCurrentStayPoint != 0 &&
-                vec3f_distanceSquared((f32 *)(obj + 0x18),(f32 *)((int)tricky + 0x18)) < lbl_803E38A8) {
+                vec3f_distanceSquared(&((GameObject *)obj)->anim.worldPosX,(f32 *)((int)tricky + 0x18)) < lbl_803E38A8) {
                 if (setup->activeGameBit != -1) {
                     GameBit_Set(setup->activeGameBit,1);
                 }

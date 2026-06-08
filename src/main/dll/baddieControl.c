@@ -3279,7 +3279,7 @@ void CameraModeArwing_init(int *obj, int mode, int unused)
     *p = lbl_803E1BA4;
     *(f32 *)(base + 52) = lbl_803E1BC0;
     *(f32 *)(base + 56) = lbl_803E1BC4;
-    PSVECAdd((f32*)((char*)a4 + 0x18), p, (f32*)((char*)obj + 0x18));
+    PSVECAdd((f32*)((char*)a4 + 0x18), p, &((GameObject *)obj)->anim.worldPosX);
     *(u8*)((char*)lbl_803A43C0 + 0x5E) = 1;
     *(f32*)((char*)lbl_803A43C0 + 68) = lbl_803E1BC8;
     *(f32*)((char*)lbl_803A43C0 + 72) = lbl_803E1BCC;
@@ -3841,7 +3841,7 @@ void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
     ((CameraObject *)obj)->anim.worldPosZ = pos[2];
     ((CameraObject *)obj)->probePosZ = pos[2];
     Obj_TransformWorldPointToLocal(((CameraObject *)obj)->anim.worldPosX, ((CameraObject *)obj)->anim.worldPosY, ((CameraObject *)obj)->anim.worldPosZ,
-                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
                                    *(int *)&((CameraObject *)obj)->anim.parent);
     one = 1;
     ((u8 *)lbl_803DD598)[8] =
@@ -4429,7 +4429,7 @@ void CameraModeCrawl_update(u8 *obj) {
             obj, *(f32 *)(state + 28), v8);
     }
     Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ,
-                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
                                    *(int *)&((GameObject *)obj)->anim.parent);
 }
 #pragma peephole reset
@@ -4521,7 +4521,7 @@ void CameraModeCloudRunner_update(u8 *obj) {
     ((GameObject *)obj)->anim.worldPosY = baseY + ry;
     ((GameObject *)obj)->anim.worldPosZ = baseZ + rz;
     Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ,
-                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
                                    *(int *)&((GameObject *)obj)->anim.parent);
 }
 #pragma peephole reset
@@ -4589,9 +4589,9 @@ void CameraModeForceBehind_update(u8 *obj) {
     *(f32 *)(obj + 24) = baseX + radius * sinPitch * sinYaw;
     *(f32 *)(obj + 28) = baseY + radius * cosPitch;
     *(f32 *)(obj + 32) = baseZ + radius * sinPitch * cosYaw;
-    camcontrol_traceFromTarget((f32 *)(obj + 24), state, (f32 *)(obj + 24), (s16 *)(obj + 2));
+    camcontrol_traceFromTarget(&((GameObject *)obj)->anim.worldPosX, state, &((GameObject *)obj)->anim.worldPosX, &((GameObject *)obj)->anim.rotY);
     Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
-                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
                                    *(int *)(obj + 48));
 }
 #pragma peephole reset
@@ -4703,7 +4703,7 @@ void dll_54_update(u8 *obj) {
             }
         }
         Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ,
-                                       (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                       &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
                                        *(int *)&((GameObject *)obj)->anim.parent);
     }
 }
@@ -5111,7 +5111,7 @@ void CameraModeArwing_update(u8 *obj) {
         ((GameObject *)obj)->anim.rotY = (f32)d * timeDelta * lbl_803E1BAC + (f32)((GameObject *)obj)->anim.rotY;
     }
     Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ,
-                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
                                    *(int *)&((GameObject *)obj)->anim.parent);
 }
 #pragma peephole reset
@@ -5397,7 +5397,7 @@ void CameraModeWorldMap_update(u8 *obj) {
     }
 
     Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ,
-                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
                                    *(int *)&((GameObject *)obj)->anim.parent);
 }
 #pragma peephole reset
@@ -5454,7 +5454,7 @@ void CameraModeNpcSpeak_update(u8 *obj) {
     }
     turnOnBlurFilter(*(f32 *)npc, *(f32 *)&((GameObject *)npc)->anim.rotZ, ((GameObject *)npc)->anim.rootMotionScale, 1, 0);
     Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ,
-                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
                                    *(int *)&((GameObject *)obj)->anim.parent);
 }
 #pragma peephole reset

@@ -1108,7 +1108,7 @@ void modelLightStruct_loadChannelLight(int channel, u8 *light, u8 *obj) {
         lightType = *(int *)(light + 0x50);
         switch (lightType) {
         case 2:
-            PSVECSubtract((f32 *)(obj + 0xc), (f32 *)(light + 0x10), localDir);
+            PSVECSubtract(&((GameObject *)obj)->anim.localPosX, (f32 *)(light + 0x10), localDir);
             PSVECNormalize(localDir, localDir);
             if (*(int *)(light + 0x60) == 0) {
                 PSMTXMultVecSR(view, localDir, viewDir);
@@ -1437,7 +1437,7 @@ f32 modelLightStruct_getObjectIntensity(u8 *light, u8 *obj) {
         obj = ((GameObject *)obj)->unkC4;
     }
 
-    PSVECSubtract((f32 *)(obj + 0x18), (f32 *)(light + 0x10), delta);
+    PSVECSubtract(&((GameObject *)obj)->anim.worldPosX, (f32 *)(light + 0x10), delta);
     dist = PSVECMag(delta) - ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale;
     if (dist > lbl_803DE768 || dist > *(f32 *)(light + 0x144)) {
         return lbl_803DE75C;

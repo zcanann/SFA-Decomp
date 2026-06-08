@@ -189,7 +189,7 @@ void dll_D3_update(int *obj)
         extra->surfaceMode == 6) {
         iVar3 = objBboxFn_800640cc(
             (int)((char *)obj + 0x80),
-            (f32 *)((char *)obj + 0xc),
+            &((GameObject *)obj)->anim.localPosX,
             lbl_803E3030, 0,
             aiStack_80, obj, -0x7c, -1, 0xff, 0);
         if (iVar3 != 0 && local_30 == 13) {

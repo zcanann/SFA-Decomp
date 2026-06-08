@@ -100,7 +100,7 @@ void drakord_thornbush_update(int obj)
             }
             break;
         case 0x709:
-            if (Vec_distance((int *)((char *)Obj_GetPlayerObject() + 0x18), (int *)((char *)obj + 0x18)) <
+            if (Vec_distance((int *)((char *)Obj_GetPlayerObject() + 0x18), (int *)&((GameObject *)obj)->anim.worldPosX) <
                 (f32)(s32)(*(s16 *)((char *)setup + 0x1c) << 1)) {
                 ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), obj, 5, 1, 0);
             }

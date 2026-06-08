@@ -200,7 +200,7 @@ void drshackle_hitDetect(int obj) {
     if (Sfx_IsPlayingFromObjectChannel(obj, 1) == 0 && ((BitFlags8 *)(p + 0x1a))->b0 != 0) {
         f32 vec[3];
         int n;
-        PSVECSubtract((f32 *)((char *)obj + 0xc), (f32 *)(p + 0x8), vec);
+        PSVECSubtract(&((GameObject *)obj)->anim.localPosX, (f32 *)(p + 0x8), vec);
         n = 0xc8 - (int)(lbl_803E6A30 * PSVECMag(vec));
         if ((int)randomGetRange(0, (n < 1) ? 1 : ((n > 0xc8) ? 0xc8 : n)) == 0) {
             Sfx_PlayFromObject(obj, SFXfoot_stone_run_1);

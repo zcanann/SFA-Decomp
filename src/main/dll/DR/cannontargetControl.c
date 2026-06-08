@@ -1042,7 +1042,7 @@ void gunpowderbarrel_update(int obj)
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         timerCountDown((void *)(st + 0x1c));
         memset((void *)(st + 0x20), 0, 0xc);
-        memset((void *)(obj + 0x24), 0, 0xc);
+        memset((void *)&((GameObject *)obj)->anim.velocityX, 0, 0xc);
         return;
     }
     if (((BarrelBits *)(st + 0x4a))->b5 == 0) {
@@ -1130,7 +1130,7 @@ void gunpowderbarrel_update(int obj)
                 return;
             }
             memset((void *)(st + 0x20), 0, 0xc);
-            memset((void *)(obj + 0x24), 0, 0xc);
+            memset((void *)&((GameObject *)obj)->anim.velocityX, 0, 0xc);
             ((GunpowderBarrelState *)st)->flags49 &= ~2;
             ObjHits_RefreshObjectState(obj);
             if (((BarrelBits *)(st + 0x48))->b7 != 0) {

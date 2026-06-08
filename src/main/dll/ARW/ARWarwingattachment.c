@@ -2207,7 +2207,7 @@ void wmtorch_update(int obj) {
     if (((WmTorchState *)state)->torchType == 2) {
         *(s16 *)obj += 0x32;
     }
-    if (Vec_distance((f32 *)(Obj_GetPlayerObject() + 0x18), (f32 *)(obj + 0x18)) < lbl_803E5DE8) {
+    if (Vec_distance((f32 *)(Obj_GetPlayerObject() + 0x18), &((GameObject *)obj)->anim.worldPosX) < lbl_803E5DE8) {
         Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
     } else {
         Sfx_StopObjectChannel(obj, 0x40);

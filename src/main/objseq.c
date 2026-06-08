@@ -1189,7 +1189,7 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
         if (player == NULL) {
             break;
         }
-        dist = Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(obj + 0x18));
+        dist = Vec_xzDistance((f32 *)(player + 0x18), &((GameObject *)obj)->anim.worldPosX);
         strength = lbl_803DF008 * (f32)(cmdArg - 7) + lbl_803DEFC8;
         if (dist < lbl_803DF00C) {
             if (dist > lbl_803DF010) {

@@ -232,7 +232,7 @@ active : {
         }
         objAnim->alpha = v;
         ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ((GameObject *)obj)->anim.rotX = lbl_803E7088 * timeDelta + (f32) * (s16 *)(obj + 0x0);
+        ((GameObject *)obj)->anim.rotX = lbl_803E7088 * timeDelta + (f32) * &((GameObject *)obj)->anim.rotX;
         ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);
         if (flags->b40 != 0) {
             if ((u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 &&

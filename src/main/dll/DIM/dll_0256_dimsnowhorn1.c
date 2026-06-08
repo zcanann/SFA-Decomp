@@ -644,7 +644,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
 
     ((GameObject *)obj)->anim.rotX = (s16)(s32)(
         lbl_803E8250 * ((f32)(s16) * (s16 *)((char *)state + 0x336) * t / lbl_803E8254) +
-        (f32)(s16) * (s16 *)((char *)obj + 0));
+        (f32)(s16) * &((GameObject *)obj)->anim.rotX);
 
     v = *(f32 *)((char *)state + 0x298);
     if (v < lbl_803E8234) {
@@ -666,11 +666,11 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
 
     if (((GameObject *)obj)->anim.rotY > 0) {
         target = target -
-                 lbl_803E8260 * mathSinf(lbl_803E8264 * (f32)(s16) * (s16 *)((char *)obj + 2) /
+                 lbl_803E8260 * mathSinf(lbl_803E8264 * (f32)(s16) * &((GameObject *)obj)->anim.rotY /
                                             lbl_803E8268);
     } else {
         target = target -
-                 lbl_803E826C * mathSinf(lbl_803E8264 * (f32)(s16) * (s16 *)((char *)obj + 2) /
+                 lbl_803E826C * mathSinf(lbl_803E8264 * (f32)(s16) * &((GameObject *)obj)->anim.rotY /
                                             lbl_803E8268);
     }
     if (target < lbl_80335128[2]) {
@@ -1311,7 +1311,7 @@ void DIMSnowHorn1_update(int obj)
         inner = *(int *)&((GameObject *)obj)->extra;
         p2 = (char *)Obj_GetPlayerObject();
         if (p2 != NULL
-            && Vec_distance((void *)((int)p2 + 0x18), (void *)(obj + 0x18)) < lbl_803E8240
+            && Vec_distance((void *)((int)p2 + 0x18), (void *)&((GameObject *)obj)->anim.worldPosX) < lbl_803E8240
             && *(u8 *)((char *)inner + 0xa8a) == 0) {
             *(u8 *)((char *)inner + 0x980) = 1;
             *(f32 *)((char *)inner + 0x984) = *(f32 *)(p2 + 0xc);

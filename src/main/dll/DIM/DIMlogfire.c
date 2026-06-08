@@ -1198,7 +1198,7 @@ void MoonSeedPlantingSpot_update(int obj)
                 }
             }
             player = (void *)Obj_GetPlayerObject();
-            if (player != NULL && getXZDistance((f32 *)((char *)player + 0x18), (f32 *)(obj + 0x18)) <= lbl_803E45FC) {
+            if (player != NULL && getXZDistance((f32 *)((char *)player + 0x18), &((GameObject *)obj)->anim.worldPosX) <= lbl_803E45FC) {
                 objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 5, 1, 0x28, lbl_803E4600, 0, 0);
                 (*(void (*)(int, int, int, int))(*(int *)(*(int *)(*(int *)((char *)tricky + 0x68)) + 0x28)))(tricky, obj, 1, 4);
             } else {
@@ -1216,7 +1216,7 @@ void MoonSeedPlantingSpot_update(int obj)
         int tricky = getTrickyObject();
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc);
-        if (getXZDistance((f32 *)(tricky + 0x18), (f32 *)(obj + 0x18)) <= lbl_803E45FC) {
+        if (getXZDistance((f32 *)(tricky + 0x18), &((GameObject *)obj)->anim.worldPosX) <= lbl_803E45FC) {
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 5, 1, 0x28, lbl_803E4600, 0, 0);
         } else {
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 6, 1, 0x28, lbl_803E4604, 0, 0);

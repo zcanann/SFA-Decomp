@@ -149,12 +149,12 @@ void bossdrakor_update(int obj)
             }
         }
     } else {
-        Obj_SmoothTurnAnglesTowardVelocity(obj, (void *)((char *)obj + 0x24), 0x2d, lbl_803E6548, lbl_803E656C);
+        Obj_SmoothTurnAnglesTowardVelocity(obj, (void *)&((GameObject *)obj)->anim.velocityX, 0x2d, lbl_803E6548, lbl_803E656C);
     }
     if (moveResult != 0) {
         bossdrakor_handleActionEvent(obj, state, moveResult);
     }
-    adv = ((int (*)(f32, int, f32, void *))ObjAnim_AdvanceCurrentMove)(lbl_803E6570 + PSVECMag((f32 *)((char *)obj + 0x24)) / ((BossDrakorState *)state)->unk164, obj, timeDelta, buf);
+    adv = ((int (*)(f32, int, f32, void *))ObjAnim_AdvanceCurrentMove)(lbl_803E6570 + PSVECMag(&((GameObject *)obj)->anim.velocityX) / ((BossDrakorState *)state)->unk164, obj, timeDelta, buf);
     if (adv != 0) {
         if (((BossDrakorState *)state)->moveState == 0) {
             ObjHits_ClearHitVolumes(obj);
@@ -298,7 +298,7 @@ void bossdrakor_updateHeadTracking(int obj, int state)
         v = (s16)-neck[0];
         step = (v < -(framesThisStep << 8)) ? -(framesThisStep << 8) : ((v > (framesThisStep << 8)) ? (framesThisStep << 8) : v);
         neck[0] += (s16)step;
-        PSVECSubtract((f32 *)((char *)state + 0x1c), (f32 *)((char *)obj + 0xc), prm.vec);
+        PSVECSubtract((f32 *)((char *)state + 0x1c), &((GameObject *)obj)->anim.localPosX, prm.vec);
         prm.val = lbl_803E651C;
         if (fn_80080150((int)((char *)state + 0x18)) != 0) {
             vecF = objModelGetVecFn_800395d8(obj, 0xf);
@@ -339,7 +339,7 @@ int bossdrakor_chooseNextMove(int obj, f32 *speedOut)
     f32 dir[3];
 
     state = *(int *)&((GameObject *)obj)->extra;
-    PSVECNormalize((f32 *)((char *)obj + 0x24), dir);
+    PSVECNormalize(&((GameObject *)obj)->anim.velocityX, dir);
     if (((BossDrakorState *)state)->moveState != 0) {
         *speedOut = lbl_803E6534;
         return ((BossDrakorState *)state)->moveState;
@@ -412,7 +412,7 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
                     if ((void *)player != NULL) {
                         missile = loadObjectAtObject(obj, setup);
                         if ((void *)missile != NULL) {
-                            prod = lbl_803DC188 * Vec_distance((int *)((char *)obj + 0x18), (int *)((char *)player + 0x18));
+                            prod = lbl_803DC188 * Vec_distance((int *)&((GameObject *)obj)->anim.worldPosX, (int *)((char *)player + 0x18));
                             lo = (int)-prod;
                             hi = (int)prod;
                             target[0] = *(f32 *)((char *)player + 0xc) + (f32)(s32)randomGetRange(lo, hi);

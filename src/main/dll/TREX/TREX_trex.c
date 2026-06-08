@@ -2099,7 +2099,7 @@ void SB_CageKyte_update(int obj)
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
     *state -= framesThisStep;
     player = (int)Obj_GetPlayerObject();
-    Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18));
+    Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(player + 0x18));
 
     if (*state <= 0) {
         randomGetRange(0, 10);

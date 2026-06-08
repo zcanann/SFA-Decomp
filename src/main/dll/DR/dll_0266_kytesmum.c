@@ -193,7 +193,7 @@ int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8 *arg) {
     KytesMumSetup *setup = ((KytesMumObject *)obj)->setup;
     f32 dist;
     ObjHits_DisableObject(obj);
-    dist = Vec_xzDistance((f32 *)((char *)player + 0x18), (f32 *)((char *)obj + 0x18));
+    dist = Vec_xzDistance((f32 *)((char *)player + 0x18), &((GameObject *)obj)->anim.worldPosX);
     if (dist < (f32)setup->interactionRange) {
         arg[0x90] |= 4;
     } else {
@@ -295,8 +295,8 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
                 ->runSequence(randomGetRange(0, 1), (void *)obj, -1);
         }
     }
-    if ((tricky != 0 && Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)tricky + 0x18)) < lbl_803E6988) ||
-        (player != 0 && Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18)) < lbl_803E6988)) {
+    if ((tricky != 0 && Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)((char *)tricky + 0x18)) < lbl_803E6988) ||
+        (player != 0 && Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)((char *)player + 0x18)) < lbl_803E6988)) {
         if (((GameObject *)obj)->anim.currentMove != 9) {
             ObjAnim_SetCurrentMove(obj, 9, lbl_803E698C, 0);
             runtime->animSpeed = lbl_803E6990;
