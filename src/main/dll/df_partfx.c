@@ -31,7 +31,7 @@ extern undefined4 FUN_80294964();
 extern undefined4 DAT_8039d0b8;
 extern undefined4 DAT_8039d0bc;
 extern undefined4 DAT_803dd5d0;
-extern undefined4* DAT_803dd6cc;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd71c;
 extern undefined4 DAT_803de090;
@@ -1086,7 +1086,7 @@ void FUN_800d79dc(void)
   
   if (DAT_803de0ae == '\0') {
     if ((DAT_803de0af == '\0') && (lbl_803E11E8 <= lbl_803DE0A8)) {
-      (**(code **)(*DAT_803dd6cc + 0xc))(0x1e,DAT_803de0ac);
+      (*gScreenTransitionInterface)->step(0x1e,DAT_803de0ac);
       lbl_803DE0A8 = lbl_803E11E0;
     }
     lbl_803DE0A0 = lbl_803DE0A4 * lbl_803DC074 + lbl_803DE0A0;
@@ -2354,7 +2354,6 @@ typedef struct {
 } HudColor;
 extern u8 gDvdErrorPauseActive;
 extern f32 lbl_803E0568;
-extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void GXGetScissor(int *x, int *y, int *w, int *h);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void hudDrawRect(int x, int y, int w, int h, HudColor col);

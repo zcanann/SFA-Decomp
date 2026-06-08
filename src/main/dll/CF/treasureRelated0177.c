@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
+#include "main/screen_transition.h"
 
 
 #pragma peephole off
@@ -46,7 +47,7 @@ extern byte FUN_80294d90();
 extern undefined4 FUN_80294d98();
 extern void* SUB42();
 
-extern undefined4* DAT_803dd6cc;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern undefined4* DAT_803dd6d8;
 extern u8 framesThisStep;
 extern f64 DOUBLE_803e4a08;
@@ -137,7 +138,7 @@ void FUN_8018cdb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   pfVar3 = *(float **)(param_9 + 0xb8);
   psVar2 = FUN_800069a8();
   FUN_800d7780(1);
-  (**(code **)(*DAT_803dd6cc + 8))(1,1);
+  (*gScreenTransitionInterface)->start(1,1);
   FUN_800305f8((double)FLOAT_803e49b4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                param_9,0x8e,0,param_12,param_13,param_14,param_15,param_16);
   *pfVar3 = FLOAT_803e49f0;

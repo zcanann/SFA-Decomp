@@ -45,7 +45,7 @@ extern undefined4 DAT_80326bdc;
 extern ushort DAT_80326bf0;
 extern int DAT_80326c04;
 extern undefined4 DAT_803dcbc8;
-extern undefined4* DAT_803dd6cc;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern MapEventInterface **gMapEventInterface;
 extern f64 DOUBLE_803e5b18;
@@ -72,7 +72,6 @@ extern u8 lbl_803DBF60;
 extern f64 lbl_803E4E80;
 extern f64 lbl_803E4E90;
 extern u16 lbl_80325F88[];
-extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int Obj_GetPlayerObject(void);
 extern void skyFn_80088c94(int skyId, int enable);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
@@ -614,7 +613,7 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
       break;
     case 5:
       *(undefined2 *)(iVar11 + 0x12) = 0x1f;
-      (**(code **)(*DAT_803dd6cc + 0xc))(0x1e,1);
+      (*gScreenTransitionInterface)->step(0x1e,1);
       *(undefined *)(iVar11 + 0x1a) = 1;
       param_9[3] = param_9[3] | 0x4000;
       break;
@@ -624,7 +623,7 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     case 7:
       *(undefined *)(iVar11 + 0x1a) = 6;
       *(undefined2 *)(iVar11 + 0x12) = 0x23;
-      (**(code **)(*DAT_803dd6cc + 8))(0x1e,1);
+      (*gScreenTransitionInterface)->start(0x1e,1);
     }
   }
   else {

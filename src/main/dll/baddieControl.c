@@ -134,7 +134,7 @@ extern undefined4 DAT_803a5090;
 extern undefined4 DAT_803dc61c;
 extern undefined4 DAT_803dc634;
 extern undefined4 DAT_803dc640;
-extern undefined4* DAT_803dd6cc;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern undefined4* DAT_803dd6d0;
 extern void **gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
@@ -462,9 +462,9 @@ void FUN_8010df40(void)
     psVar10 = (short *)FUN_80017af8(0x43077);
     if (*(char *)((int)DAT_803de200 + 9) == *(char *)(DAT_803de200 + 2)) {
       if ((*(char *)((int)DAT_803de200 + 0x15) < '\0') &&
-         (iVar6 = (**(code **)(*DAT_803dd6cc + 0x14))(), iVar6 != 0)) {
+         (iVar6 = (*gScreenTransitionInterface)->isFinished(), iVar6 != 0)) {
         FUN_8012e0f4('\x01');
-        (**(code **)(*DAT_803dd6cc + 0xc))(0xc,1);
+        (*gScreenTransitionInterface)->step(0xc,1);
         *(byte *)((int)DAT_803de200 + 0x15) = *(byte *)((int)DAT_803de200 + 0x15) & 0x7f;
         iVar6 = FUN_80017af8(0x43077);
         *(undefined *)(*(int *)(iVar6 + 0xb8) + 0x27d) = 1;
@@ -537,7 +537,7 @@ void FUN_8010df40(void)
       }
     }
     else {
-      (**(code **)(*DAT_803dd6cc + 8))(0xc,1);
+      (*gScreenTransitionInterface)->start(0xc,1);
       *(undefined2 *)((int)DAT_803de200 + 10) = 2;
       *(byte *)((int)DAT_803de200 + 0x15) = *(byte *)((int)DAT_803de200 + 0x15) & 0x7f | 0x80;
     }
@@ -545,9 +545,9 @@ void FUN_8010df40(void)
   else if (*(char *)(DAT_803de200 + 2) == '\0') {
     if (*(char *)((int)DAT_803de200 + 9) == '\0') {
       if ((*(char *)((int)DAT_803de200 + 0x15) < '\0') &&
-         (iVar9 = (**(code **)(*DAT_803dd6cc + 0x14))(), iVar9 != 0)) {
+         (iVar9 = (*gScreenTransitionInterface)->isFinished(), iVar9 != 0)) {
         FUN_8012e0f4('\0');
-        (**(code **)(*DAT_803dd6cc + 0xc))(0xc,1);
+        (*gScreenTransitionInterface)->step(0xc,1);
         *(byte *)((int)DAT_803de200 + 0x15) = *(byte *)((int)DAT_803de200 + 0x15) & 0x7f;
         iVar9 = FUN_80017af8(0x43077);
         *(undefined *)(*(int *)(iVar9 + 0xb8) + 0x27d) = 0;
@@ -659,7 +659,7 @@ void FUN_8010df40(void)
     }
     else {
       *(undefined *)(DAT_803de200 + 5) = 1;
-      (**(code **)(*DAT_803dd6cc + 8))(0xc,1);
+      (*gScreenTransitionInterface)->start(0xc,1);
       *(undefined2 *)((int)DAT_803de200 + 10) = 2;
       *(byte *)((int)DAT_803de200 + 0x15) = *(byte *)((int)DAT_803de200 + 0x15) & 0x7f | 0x80;
     }
@@ -5126,7 +5126,6 @@ extern int padGetCX(int pad);
 extern int padGetCY(int pad);
 extern int isWidescreen(void);
 extern void fn_8012DDB8(int mode);
-extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern f32 lbl_80319DF8[];
 extern f32 lbl_803E1A2C;
 extern f32 lbl_803E1A30;

@@ -62,7 +62,7 @@ extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_801da7f8();
 
 extern undefined4 DAT_803dccc8;
-extern undefined4* DAT_803dd6cc;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e8;
 extern MapEventInterface **gMapEventInterface;
@@ -442,7 +442,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
   if ((pfVar8[5] == lbl_803E61F0) || ((*(ushort *)(iVar2 + 0xb0) & 0x1000) != 0)) {
     if ((pfVar8[4] != lbl_803E61F0) && ((*(ushort *)(iVar2 + 0xb0) & 0x1000) == 0)) {
       if (lbl_803E61E8 == pfVar8[4]) {
-        (**(code **)(*DAT_803dd6cc + 8))(0x73,1);
+        (*gScreenTransitionInterface)->start(0x73,1);
       }
       pfVar8[4] = pfVar8[4] - lbl_803DC074;
       if (pfVar8[4] <= lbl_803E61F0) {
@@ -459,7 +459,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
   }
   else {
     if (lbl_803E61E8 == pfVar8[5]) {
-      (**(code **)(*DAT_803dd6cc + 8))(0x73,1);
+      (*gScreenTransitionInterface)->start(0x73,1);
     }
     pfVar8[5] = pfVar8[5] - lbl_803DC074;
     fVar1 = lbl_803E61F0;
@@ -600,7 +600,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
       FUN_80017698(0x85,1);
     }
     pfVar8[4] = lbl_803E61E8;
-    (**(code **)(*DAT_803dd6cc + 8))(0x73,1);
+    (*gScreenTransitionInterface)->start(0x73,1);
     *(undefined *)((int)pfVar8 + 0x1d) = 0;
     FUN_80006824(0,SFXsp_skeep_mumb1);
   }
@@ -989,7 +989,6 @@ extern void skyFn_80088e54(int mode, f32 brightness);
 extern void warpToMap(int mapId, int flag);
 extern void timeListFn_8012df14(void);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
-extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int *gSHthorntailAnimationInterface;
 extern MapEventInterface **gMapEventInterface;
 extern u16  lbl_803DC060[4];

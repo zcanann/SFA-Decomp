@@ -119,7 +119,7 @@ extern undefined4 FUN_80294d28();
 extern uint countLeadingZeros();
 
 extern undefined4 DAT_803adcc8;
-extern undefined4* DAT_803dd6cc;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern undefined4* DAT_803dd70c;
 extern MapEventInterface **gMapEventInterface;
 extern undefined4* DAT_803dd734;
@@ -288,7 +288,7 @@ uint FUN_801e7724(int param_1,undefined4 param_2,int param_3)
     uVar5 = FUN_80006c00(0);
     if ((uVar5 & 0x200) != 0) {
       *(byte *)(iVar7 + 0x9d4) = *(byte *)(iVar7 + 0x9d4) | 0x10;
-      (**(code **)(*DAT_803dd6cc + 8))(0x1e,1);
+      (*gScreenTransitionInterface)->start(0x1e,1);
       return 1;
     }
   }
@@ -1380,7 +1380,6 @@ extern int getCurUiDll(void);
 extern int *getDLL16(void);
 extern void playerAddMoney(void *player, int amount);
 extern void *objFindTexture(int obj, int target, int p3);
-extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int dll_2E_func07(int obj, u8 *data, int p3, int p4, int p5);
 
 #pragma scheduling off
