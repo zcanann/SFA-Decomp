@@ -2,6 +2,7 @@
 #include "main/dll/dll_47.h"
 #include "main/dll/FRONT/frontend_control.h"
 #include "main/dll/FRONT/title_menu.h"
+#include "main/screen_transition.h"
 
 
 
@@ -247,7 +248,7 @@ void saveFileSelect_init(int param_1, int param_2)
   saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
   if (param_1 == 0) {
     Sfx_PlayFromObject(0, SFXsp_snrot1_c);
-    ((void (**)(int, int))gScreenTransitionInterface->vtable)[2](20, 5);
+    ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->start(20, 5);
     lbl_803DD6CF = 0x23;
     lbl_803DD6CC = 1;
   }
@@ -362,7 +363,7 @@ void saveSelectGoToChapterSelect(void)
   else {
     lbl_803DD6CD = 1;
     Sfx_PlayFromObject(0, 0x418);
-    ((void (**)(int, int))gScreenTransitionInterface->vtable)[2](20, 1);
+    ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->start(20, 1);
     ((void (**)(int))gTitleMenuControlInterface->vtable)[7](0);
     ((void (**)(int))gTitleMenuControlInterface->vtable)[7](1);
     ((void (**)(int))gTitleMenuControlInterface->vtable)[7](2);
@@ -576,7 +577,8 @@ void SaveSelectScreen_render(int param)
 
     panel = &lbl_8031A7BC[lbl_803DB9FB];
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
-    v = (int)(lbl_803E1D64 - ((f32 (**)(void))gScreenTransitionInterface->vtable)[6]());
+    v = (int)(lbl_803E1D64 -
+              ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->getProgress());
     if ((u8)v < 0x80) {
         titleScreenPositionElements(lbl_803E1D68, lbl_803E1D6C - (f32)(int)((u8)v * 0x86) * lbl_803E1D70);
         alpha = 0;
@@ -688,7 +690,7 @@ int SaveSelectScreen_run(void)
     if (timer > 0) {
         lbl_803DD6CF -= n;
     }
-    if (((int (**)(void))gScreenTransitionInterface->vtable)[5]() == 0) {
+    if (((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->isFinished() == 0) {
         ((void (**)(void))gTitleMenuLinkInterface->vtable)[13]();
         lbl_803DD6CE = 4;
     }
@@ -736,7 +738,7 @@ int SaveSelectScreen_run(void)
         if (btn & 0x100) {
             saveSelectGoToChapterSelect();
         } else if (btn & 0x200) {
-            ((void (**)(int, int))gScreenTransitionInterface->vtable)[2](0x14, 5);
+            ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->start(0x14, 5);
             lbl_803DD6CF = 0x23;
             lbl_803DD6CC = 1;
         }
@@ -781,7 +783,7 @@ int SaveSelectScreen_run(void)
                     lbl_803DD6CE = 2;
                 } else if (sel == 1) {
                     lbl_803DD6CD = 1;
-                    ((void (**)(int, int))gScreenTransitionInterface->vtable)[2](0x14, 5);
+                    ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->start(0x14, 5);
                     ((void (**)(int))gTitleMenuControlInterface->vtable)[7](0);
                     ((void (**)(int))gTitleMenuControlInterface->vtable)[7](1);
                     ((void (**)(int))gTitleMenuControlInterface->vtable)[7](2);
@@ -821,7 +823,7 @@ void SaveSelectScreen_initialise(void) {
 
     if (getUiDllFn_80014930() != 6) {
         if (getUiDllFn_80014930() != 5) {
-            ((void (**)(int, int))gScreenTransitionInterface->vtable)[3](0x14, 5);
+            ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->step(0x14, 5);
         }
         saveSelectGoToChooseSlot(1);
     } else {

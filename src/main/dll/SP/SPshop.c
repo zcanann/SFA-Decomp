@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
+#include "main/screen_transition.h"
 #include "main/dll/SP/SPshop.h"
 
 
@@ -15,7 +16,7 @@ extern uint countLeadingZeros();
 
 extern undefined4* DAT_803dd6d8;
 extern int *gGameUIInterface;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern s16 lbl_80327618[];
 extern char sSPShopNumBloopsFormat[];
@@ -90,7 +91,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     fn_80137948(sSPShopNumBloopsFormat, bloopsRemaining);
     if (bloopsRemaining == 0) {
       (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x64)))(*gGameUIInterface);
-      (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 8)))(0x14, 1);
+      (*gScreenTransitionInterface)->start(0x14, 1);
       *(u8 *)(state + 6) = 3;
       Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
     } else {
@@ -99,7 +100,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))((int)*(f32 *)(state + 8));
       } else if ((*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0) != 0) {
         (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x64)))(*gGameUIInterface);
-        (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 8)))(0x14, 1);
+        (*gScreenTransitionInterface)->start(0x14, 1);
         *(u8 *)(state + 6) = 5;
       } else {
         *(f32 *)(state + 8) = lbl_803E54B4;
@@ -108,8 +109,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     }
     break;
   case 3:
-    if (((*(int (*)(int))(*(int *)(*gScreenTransitionInterface + 0x14)))(
-             *gScreenTransitionInterface) != 0) &&
+    if (((*gScreenTransitionInterface)->isFinished() != 0) &&
         ((*(u16 *)((int)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0)) {
       GameBit_Set(0x13f, 1);
       (*gObjectTriggerInterface)->runSequence(3, (void *)obj, -1);
@@ -120,8 +120,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     *(u8 *)(state + 6) = 7;
     break;
   case 5:
-    if (((*(int (*)(int))(*(int *)(*gScreenTransitionInterface + 0x14)))(
-             *gScreenTransitionInterface) != 0) &&
+    if (((*gScreenTransitionInterface)->isFinished() != 0) &&
         ((*(u16 *)((int)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0)) {
       (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
       *(u8 *)(state + 6) = 6;

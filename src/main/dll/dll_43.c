@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dll_43.h"
+#include "main/screen_transition.h"
 
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -36,14 +37,14 @@ void saveSelectSetSlot(int param_1, int param_2)
       saveSelectGoToChooseSlot(0);
     } else {
       Sfx_PlayFromObject(0, SFXsp_snrot1_c);
-      ((void (**)(int, int))gScreenTransitionInterface->vtable)[2](0x14, 5);
+      ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->start(0x14, 5);
       lbl_803DD6CF = 0x23;
       lbl_803DD6CC = 1;
     }
   } else {
     lbl_803DD6CD = 1;
     Sfx_PlayFromObject(0, 0x418);
-    ((void (**)(int, int))gScreenTransitionInterface->vtable)[2](0x14, 1);
+    ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->start(0x14, 1);
     ((void (**)(int))gTitleMenuControlInterface->vtable)[7](0);
     ((void (**)(int))gTitleMenuControlInterface->vtable)[7](1);
     ((void (**)(int))gTitleMenuControlInterface->vtable)[7](2);

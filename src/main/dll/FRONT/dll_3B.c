@@ -1,5 +1,6 @@
 #include "main/dll/FRONT/dll_3B.h"
 #include "main/dll/FRONT/dll_39.h"
+#include "main/screen_transition.h"
 #include "dolphin/os.h"
 #include "dolphin/thp/THPAudio.h"
 
@@ -96,10 +97,10 @@ void TitleMenu_initialise(void)
   if ((((mode == 0xd) || (mode = getUiDllFn_80014930(), mode == 7)) ||
        (mode = getUiDllFn_80014930(), mode == 6)) ||
       (mode = getUiDllFn_80014930(), mode == 5)) {
-    ((void (**)(int, int))gScreenTransitionInterface->vtable)[3](0x23,5);
+    ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->step(0x23,5);
   } else {
     audioStopByMask(0xf);
-    ((void (**)(int, int))gScreenTransitionInterface->vtable)[3](0x3c,1);
+    ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->step(0x3c,1);
   }
 
   setLinkIsRotated();

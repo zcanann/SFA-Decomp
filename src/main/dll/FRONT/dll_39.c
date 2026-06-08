@@ -1,6 +1,7 @@
 #include "main/dll/FRONT/dll_39.h"
 #include "main/dll/FRONT/dll_44.h"
 #include "main/dll/FRONT/picmenu.h"
+#include "main/screen_transition.h"
 
 extern undefined4 FUN_80006b1c();
 extern undefined4 FUN_80006b84();
@@ -87,7 +88,7 @@ extern void VIWaitForRetrace(void);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern undefined4 *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern undefined4 *gCameraInterface;
 extern undefined4 *gTitleMenuLinkInterface;
 extern int lbl_803DD5F8;
@@ -162,7 +163,7 @@ int n_rareware_frameStart(void)
     lbl_803DD60A = 1;
   }
   if ((s8)lbl_803DD60A != 0) {
-    (*(code *)(*gScreenTransitionInterface + 8))(0x1e,1);
+    (*gScreenTransitionInterface)->start(0x1e,1);
     lbl_803DD609 = 0x2d;
     lbl_803DD608 = 1;
   }
@@ -432,7 +433,7 @@ void TitleMenu_render(u8 *param_1)
     titleScreenPositionElements(lbl_803E1D10 + (f32)(gTitleMenuSelectionFade * 0x1a4) / lbl_803E1D14,
                 lbl_803E1D18);
     gameTextBoxFn_80134d40(0,0,0);
-    (*(code *)(*gScreenTransitionInterface + 0x18))();
+    (*gScreenTransitionInterface)->getProgress();
     (*(code *)(*gTitleMenuLinkInterface + 0x30))(0xff);
     (*(code *)(*gTitleMenuLinkInterface + 0x10))(param_1);
     gameTextSetDrawFunc(0);
