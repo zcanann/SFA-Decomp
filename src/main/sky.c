@@ -1564,19 +1564,15 @@ void sky2_onMapSetup(void) {
 void skyFn_80088c94(int flags, int mode) {
     u8 *env;
     u8 *sky;
+    int i;
 
-    if ((flags & 1) != 0) {
-        if ((u8)mode != 0) {
-            ((SkyBlendStateFlags *)(lbl_803DD12C + 0xc1))->unused80 = 1;
-        } else {
-            ((SkyBlendStateFlags *)(lbl_803DD12C + 0xc1))->unused80 = 0;
-        }
-    }
-    if ((flags & 2) != 0) {
-        if ((u8)mode != 0) {
-            ((SkyBlendStateFlags *)(lbl_803DD12C + 0x165))->unused80 = 1;
-        } else {
-            ((SkyBlendStateFlags *)(lbl_803DD12C + 0x165))->unused80 = 0;
+    for (i = 0; i < 2; i++) {
+        if ((flags & (1 << i)) != 0) {
+            if ((u8)mode != 0) {
+                ((SkyBlendStateFlags *)(lbl_803DD12C + i * 0xa4 + 0xc1))->unused80 = 1;
+            } else {
+                ((SkyBlendStateFlags *)(lbl_803DD12C + i * 0xa4 + 0xc1))->unused80 = 0;
+            }
         }
     }
     sky = lbl_803DD12C;
@@ -1584,15 +1580,12 @@ void skyFn_80088c94(int flags, int mode) {
         ((SkyBlendStateFlags *)(sky + ((SkyState *)sky)->unk24C * 0xa4 + 0xc1))->unused80;
     env = saveGameGetEnvState();
     if (getSaveGameLoadStatus() == 0) {
-        if (((SkyBlendStateFlags *)(lbl_803DD12C + 0xc1))->unused80 != 0) {
-            env[0x40] |= 2;
-        } else {
-            env[0x40] &= ~2;
-        }
-        if (((SkyBlendStateFlags *)(lbl_803DD12C + 0x165))->unused80 != 0) {
-            env[0x40] |= 4;
-        } else {
-            env[0x40] &= ~4;
+        for (i = 0; i < 2; i++) {
+            if (((SkyBlendStateFlags *)(lbl_803DD12C + i * 0xa4 + 0xc1))->unused80 != 0) {
+                env[0x40] |= (2 << i);
+            } else {
+                env[0x40] &= ~(2 << i);
+            }
         }
     }
 }
