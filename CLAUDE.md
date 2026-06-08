@@ -3874,6 +3874,17 @@ parked delicate -O0 batch. `tools/unrolled_loop_audit.py` is the sibling #28
 detector (target has more runtime `slw` than current = a manual-unroll the
 import should have left as a for-loop; sky skyFn_80088c94 69.8→99.2). Both
 tools carry a STALE-.o caveat — run after a full `ninja`.
+**Three INLINE-CONTROL sub-patterns for call-set mismatches — pick by what
+target does with the same-TU callee:** (1) **block** — target keeps the `bl`,
+ours inlined (TGT-only callee): `#pragma dont_inline on` the callee. (2)
+**enable (source-order-up)** — target INLINES it, ours emits the `bl`
+(CUR-only same-TU callee) because the callee is `static inline` / defined
+AFTER its caller so MWCC can't inline it there: MOVE the callee's definition
+UP before its first caller (the mirror of the dont_inline trap). objfsa
+curves_lengthFn24 70.7→84.52 (moved Objfsa_FindRomCurveById's 28-line
+static-inline def above its first caller → all 3 sites inline). (3)
+**manual-inline** — when neither source-order nor a pragma reproduces target's
+inline/no-inline choice, hand-inline (or hand-call) the body to match.
 
 ## `for (i=0; i<n; i++) { use(*p); p++; }` vs `*p++`
 
