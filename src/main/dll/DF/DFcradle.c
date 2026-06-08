@@ -366,7 +366,7 @@ void ccriverflow_init(CCriverflowObject *obj,CCriverflowMapData *params)
   obj->height = obj->model->baseHeight;
   obj->height = (f32)(u32)params->heightOffset * lbl_803E4DD0 + obj->height;
   if (obj->height < lbl_803E4DD4) {
-    obj->height = lbl_803E4DD4;
+    obj->height = *(f32 *)&lbl_803E4DD4;
   }
   if (params->speedByte == 0) {
     params->speedByte = CCRIVERFLOW_DEFAULT_SPEED;
