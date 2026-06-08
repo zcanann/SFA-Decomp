@@ -32,7 +32,6 @@ extern double FUN_80293900();
 
 extern undefined4 DAT_803dc070;
 extern EffectInterface **gExpgfxInterface;
-extern undefined4* DAT_803dd708;
 extern f32 lbl_803E6520;
 extern f32 lbl_803E6524;
 extern f32 lbl_803E6528;

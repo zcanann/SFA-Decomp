@@ -42,7 +42,6 @@ extern undefined4 DAT_803dc070;
 extern u32 lbl_803DC0F0;
 extern u8 framesThisStep;
 extern s8 lbl_803DDC70;
-extern undefined4* DAT_803dd708;
 extern undefined4 DAT_803de8e8;
 extern int *gScreensInterface;
 extern undefined4 *lbl_803DCA94;

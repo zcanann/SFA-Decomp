@@ -62,7 +62,6 @@ extern undefined4 FUN_80294964();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd71c;
 extern undefined4* DAT_803dd738;

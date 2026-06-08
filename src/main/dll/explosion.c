@@ -39,7 +39,6 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f0;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
-extern undefined4* DAT_803dd708;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de850;
 extern undefined4 DAT_803de858;

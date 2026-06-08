@@ -33,7 +33,6 @@ extern int FUN_80294cb0();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e5fa0;
 extern f64 DOUBLE_803e5fe0;
 extern f32 lbl_803DC074;

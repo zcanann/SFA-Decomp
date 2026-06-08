@@ -69,7 +69,6 @@ extern undefined4 DAT_802c2c30;
 extern undefined4 DAT_802c2c34;
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e6ae0;
 extern f64 DOUBLE_803e6ae8;
 extern MapEventInterface **gMapEventInterface;

@@ -29,7 +29,6 @@ extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286888();
 extern int FUN_80294c0c();
 
-extern undefined4* DAT_803dd708;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f64 DOUBLE_803e4408;
 extern f64 DOUBLE_803e4428;

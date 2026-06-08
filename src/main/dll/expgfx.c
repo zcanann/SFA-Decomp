@@ -81,7 +81,6 @@ extern u32 gExpgfxPoolActiveMasks[];
 extern u32 gExpgfxSlotPoolBases[];
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dd430;
-extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd718;
 extern undefined4 DAT_803dded4;
 extern undefined4 DAT_803dded8;

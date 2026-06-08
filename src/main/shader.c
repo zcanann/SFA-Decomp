@@ -196,7 +196,6 @@ extern undefined4* DAT_803dd6ec;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd700;
-extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd71c;
 extern undefined4* DAT_803dd72c;

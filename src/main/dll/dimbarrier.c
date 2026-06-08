@@ -23,7 +23,6 @@ extern undefined4 DAT_802c2b38;
 extern undefined4 DAT_802c2b3c;
 extern undefined4 DAT_802c2b40;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
 extern f32 lbl_803DC074;
 
 extern f32 lbl_803E5064;

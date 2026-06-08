@@ -62,7 +62,6 @@ extern u8 lbl_803DBFE0;
 extern u8 lbl_803DBFE4;
 extern u8 lbl_803DBFE8;
 extern u8 lbl_803DBFEC;
-extern undefined4* DAT_803dd708;
 extern f32 timeDelta;
 extern f64 DOUBLE_803e6038;
 extern s16 lbl_80326E18[];

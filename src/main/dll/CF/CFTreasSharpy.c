@@ -13,7 +13,6 @@ extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern u32 randomGetRange(int min, int max);
 
 extern undefined4 gCameraInterface;
-extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e4ac0;
 extern f32 FLOAT_803e4a70;
 extern f32 FLOAT_803e4a84;

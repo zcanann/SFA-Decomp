@@ -64,7 +64,6 @@ extern undefined4 DAT_80327960;
 extern undefined4 DAT_80327964;
 extern undefined4 DAT_80327968;
 extern u8 framesThisStep;
-extern undefined4* DAT_803dd708;
 extern f32 timeDelta;
 extern f64 DOUBLE_803e5ff8;
 extern f32 FLOAT_803dc074;

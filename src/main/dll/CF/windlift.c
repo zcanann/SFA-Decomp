@@ -148,7 +148,6 @@ extern char DAT_803dca24;
 extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6fc;
-extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803de750;
 extern undefined4* DAT_803de754;
 extern undefined4 DAT_803e4688;

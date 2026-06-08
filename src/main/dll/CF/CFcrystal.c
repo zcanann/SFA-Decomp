@@ -31,7 +31,6 @@ extern undefined4 FUN_80293f90();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
 extern undefined4 DAT_803de758;
 extern f64 DOUBLE_803e4748;
 extern f32 FLOAT_803dca40;

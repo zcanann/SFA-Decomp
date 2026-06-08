@@ -33,7 +33,6 @@ extern undefined4 DAT_803adcc3;
 extern int lbl_803DC050;
 extern int lbl_803DDBF4;
 extern undefined4 DAT_803dccb8;
-extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd72c;
 extern undefined4 DAT_803de874;
 extern f64 DOUBLE_803e6128;

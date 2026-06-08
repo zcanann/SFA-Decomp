@@ -95,7 +95,6 @@ extern undefined4 DAT_803ad3e8;
 extern undefined4 DAT_803dc070;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd72c;
 extern undefined4 DAT_803dda60;
 extern undefined4 DAT_803ddb38;
