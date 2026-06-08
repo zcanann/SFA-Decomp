@@ -592,6 +592,35 @@ typedef struct RingFlags {
     u8 pad : 4;
 } RingFlags;
 
+typedef struct RingState {
+    u8 mode;
+    u8 route;
+    u16 linkId;
+    f32 pullHeight;
+    f32 origX;
+    f32 origY;
+    f32 arwingYOffset;
+    RingFlags flags;
+    u8 phase;
+    u8 pad16[2];
+    f32 pullTimer;
+    u8 pad1C[4];
+    void *light;
+} RingState;
+
+STATIC_ASSERT(sizeof(RingFlags) == 0x1);
+STATIC_ASSERT(sizeof(RingState) == 0x24);
+STATIC_ASSERT(offsetof(RingState, route) == 0x01);
+STATIC_ASSERT(offsetof(RingState, linkId) == 0x02);
+STATIC_ASSERT(offsetof(RingState, pullHeight) == 0x04);
+STATIC_ASSERT(offsetof(RingState, origX) == 0x08);
+STATIC_ASSERT(offsetof(RingState, origY) == 0x0C);
+STATIC_ASSERT(offsetof(RingState, arwingYOffset) == 0x10);
+STATIC_ASSERT(offsetof(RingState, flags) == 0x14);
+STATIC_ASSERT(offsetof(RingState, phase) == 0x15);
+STATIC_ASSERT(offsetof(RingState, pullTimer) == 0x18);
+STATIC_ASSERT(offsetof(RingState, light) == 0x20);
+
 extern f32 lbl_803E70C4;
 extern f32 lbl_803E70D8;
 
@@ -1369,6 +1398,16 @@ typedef struct {
     u8 b80 : 1;
     u8 b40 : 1;
 } ArwBombFlags;
+
+typedef struct ARWBombCollState {
+    f32 lifetime;
+    ArwBombFlags flags;
+    u8 pad05[3];
+} ARWBombCollState;
+
+STATIC_ASSERT(sizeof(ArwBombFlags) == 0x1);
+STATIC_ASSERT(sizeof(ARWBombCollState) == 0x8);
+STATIC_ASSERT(offsetof(ARWBombCollState, flags) == 0x04);
 
 
 extern int lbl_803E7160;
@@ -2322,9 +2361,9 @@ int fn_8022D5DC(int arwing);
 int arwarwing_incrementCollectedRingCount(int arwing);
 void arwarwing_addMaxShield(int arwing, int p2);
 void arwarwing_addShield(int arwing, int p2);
-void arwbombcoll_updateMovingAxis(int obj, int state);
-void arwbombcoll_handleArwingHit(int obj, int state, int arwing);
-int arwbombcoll_checkArwingCollision(int obj, int state, int arwing);
+void arwbombcoll_updateMovingAxis(int obj, RingState *state);
+void arwbombcoll_handleArwingHit(int obj, RingState *state, int arwing);
+int arwbombcoll_checkArwingCollision(int obj, RingState *state, int arwing);
 void fn_8022AE1C(int obj, int bounds);
 void fn_8022AECC(int obj, int p);
 void fn_8022B8A0(int p, int q);

@@ -5,6 +5,13 @@
 #include "main/objhits_types.h"
 #pragma peephole on
 #pragma scheduling on
+typedef struct ARWBombCollSetup {
+    u8 pad00[0x18];
+    s8 rotX;
+} ARWBombCollSetup;
+
+STATIC_ASSERT(offsetof(ARWBombCollSetup, rotX) == 0x18);
+
 int arwbombcoll_getExtraSize(void) { return 8; }
 #pragma scheduling reset
 #pragma peephole reset
@@ -41,8 +48,9 @@ void arwbombcoll_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 void arwbombcoll_init(int obj, int setup)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
+    ARWBombCollSetup *mapData = (ARWBombCollSetup *)setup;
 
-    ((GameObject *)obj)->anim.rotX = (s16)(*(s8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)(mapData->rotX << 8);
     objAnim->alpha = 0;
 }
 #pragma scheduling reset
@@ -61,39 +69,39 @@ void arwbombcoll_initialise(void) {}
 #pragma peephole reset
 
 #pragma scheduling off
-void arwbombcoll_updateMovingAxis(int obj, int state) {
-    u8 mode = *(u8 *)(state + 1);
-    u16 raw = *(u16 *)(state + 2);
+void arwbombcoll_updateMovingAxis(int obj, RingState *state) {
+    u8 mode = state->route;
+    u16 raw = state->linkId;
     if (mode == 1 || mode == 3) {
         f32 cur, lim, edge;
-        ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 4) * timeDelta + ((GameObject *)obj)->anim.localPosX;
+        ((GameObject *)obj)->anim.localPosX = state->pullHeight * timeDelta + ((GameObject *)obj)->anim.localPosX;
         cur = ((GameObject *)obj)->anim.localPosX;
-        lim = *(f32 *)(state + 8);
+        lim = state->origX;
         edge = lim + (f32)(u32)raw;
         if (cur > edge) {
             ((GameObject *)obj)->anim.localPosX = edge - (cur - edge);
-            *(f32 *)(state + 4) = -*(f32 *)(state + 4);
+            state->pullHeight = -state->pullHeight;
         } else {
             edge = lim - (f32)(u32)raw;
             if (cur < edge) {
                 ((GameObject *)obj)->anim.localPosX = edge - (cur - edge);
-                *(f32 *)(state + 4) = -*(f32 *)(state + 4);
+                state->pullHeight = -state->pullHeight;
             }
         }
     } else if (mode == 4 || mode == 5) {
         f32 cur, lim, edge;
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 4) * timeDelta + ((GameObject *)obj)->anim.localPosY;
+        ((GameObject *)obj)->anim.localPosY = state->pullHeight * timeDelta + ((GameObject *)obj)->anim.localPosY;
         cur = ((GameObject *)obj)->anim.localPosY;
-        lim = *(f32 *)(state + 0xc);
+        lim = state->origY;
         edge = lim + (f32)(u32)raw;
         if (cur > edge) {
             ((GameObject *)obj)->anim.localPosY = edge - (cur - edge);
-            *(f32 *)(state + 4) = -*(f32 *)(state + 4);
+            state->pullHeight = -state->pullHeight;
         } else {
             edge = lim - (f32)(u32)raw;
             if (cur < edge) {
                 ((GameObject *)obj)->anim.localPosY = edge - (cur - edge);
-                *(f32 *)(state + 4) = -*(f32 *)(state + 4);
+                state->pullHeight = -state->pullHeight;
             }
         }
     }
@@ -101,9 +109,9 @@ void arwbombcoll_updateMovingAxis(int obj, int state) {
 #pragma scheduling reset
 
 #pragma scheduling off
-void arwbombcoll_handleArwingHit(int obj, int state, int arwing) {
+void arwbombcoll_handleArwingHit(int obj, RingState *state, int arwing) {
     int setup = *(int *)&((GameObject *)obj)->anim.placementData;
-    u8 mode = *(u8 *)(state + 0);
+    u8 mode = state->mode;
     if (mode == 0) {
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
         if (*(s16 *)(arwing + 0x46) == 0x601) {
@@ -128,22 +136,22 @@ void arwbombcoll_handleArwingHit(int obj, int state, int arwing) {
             arwarwing_addScore(arwing, 0x14);
             seg = arwarwing_getRequiredRingCount(arwing);
             if (arwarwing_getCollectedRingCount(arwing) == seg) {
-                if (((RingFlags *)(state + 0x14))->bit20)
+                if (state->flags.bit20)
                     gameTextFn_80125ba4(7);
             } else {
-                if (((RingFlags *)(state + 0x14))->bit20)
+                if (state->flags.bit20)
                     gameTextFn_80125ba4(9);
             }
         }
     }
-    *(u8 *)(state + 0x15) = 2;
+    state->phase = 2;
 }
 #pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
-int arwbombcoll_checkArwingCollision(int obj, int state, int arwing) {
-    RingFlags *f = (RingFlags *)(state + 0x14);
+int arwbombcoll_checkArwingCollision(int obj, RingState *state, int arwing) {
+    RingFlags *f = &state->flags;
     if (f->bit10) {
         f32 dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)(arwing + 0xc);
         f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)(arwing + 0x10);
@@ -164,7 +172,7 @@ int arwbombcoll_checkArwingCollision(int obj, int state, int arwing) {
             f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)(arwing + 0x10);
             if (sqrtf(dx * dx + dy * dy) < lbl_803E70AC)
                 return 1;
-            if (*(u8 *)(state + 0) == 2 && f->bit20)
+            if (state->mode == 2 && f->bit20)
                 gameTextFn_80125ba4(0xa);
         }
     }
@@ -180,18 +188,18 @@ void arwbombcoll_update(int obj)
     ObjAnimComponent *objAnim;
     ArwBombFlags *flags;
     int arw;
-    int s;
+    ARWBombCollState *state;
     int a2;
     f32 thr;
 
     arw = getArwing();
     objAnim = &((GameObject *)obj)->anim;
-    s = *(int *)&((GameObject *)obj)->extra;
-    flags = (ArwBombFlags *)(s + 0x4);
+    state = ((GameObject *)obj)->extra;
+    flags = &state->flags;
 
-    if (*(f32 *)(s + 0x0) > (thr = lbl_803E707C)) {
-        *(f32 *)(s + 0x0) -= timeDelta;
-        if (*(f32 *)(s + 0x0) <= thr) {
+    if (state->lifetime > (thr = lbl_803E707C)) {
+        state->lifetime -= timeDelta;
+        if (state->lifetime <= thr) {
             Obj_FreeObject(obj);
             return;
         }
