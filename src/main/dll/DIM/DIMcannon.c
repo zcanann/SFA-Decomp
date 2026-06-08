@@ -152,7 +152,7 @@ extern undefined4 DAT_803dc070;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de7c8;
 extern f64 DOUBLE_803e53e8;
@@ -489,11 +489,11 @@ undefined4 FUN_801ae788(int param_1,undefined4 param_2,int param_3)
     DAT_803ad5b4 = lbl_803E5408;
     DAT_803ad5b8 = lbl_803E540C;
     DAT_803ad5bc = lbl_803E5410;
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0x133,&DAT_803ad5a8,4,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 0x133, &DAT_803ad5a8, 4, -1, NULL);
     DAT_803ad5b4 = lbl_803E5414;
     DAT_803ad5b8 = lbl_803E540C;
     DAT_803ad5bc = lbl_803E5410;
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0x133,&DAT_803ad5a8,4,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 0x133, &DAT_803ad5a8, 4, -1, NULL);
   }
   puVar4 = (undefined4 *)FUN_80039520(param_1,0);
   *puVar4 = 0x100;
@@ -1632,7 +1632,7 @@ void FUN_801b05b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     *(float *)(param_9 + 8) = *(float *)(param_9 + 0x14) * lbl_803DC074 + *(float *)(param_9 + 8);
     *(float *)(param_9 + 10) =
          *(float *)(param_9 + 0x16) * lbl_803DC074 + *(float *)(param_9 + 10);
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0x1f5,0,1,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_9, 0x1f5, NULL, 1, -1, NULL);
     *param_9 = *param_9 + (ushort)DAT_803dc070 * 0x374;
     param_9[1] = param_9[1] + (ushort)DAT_803dc070 * 300;
     dVar6 = (double)lbl_803E5468;
@@ -2642,7 +2642,6 @@ void dimlogfire_free(int *obj, int mode) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern EffectInterface **gPartfxInterface;
 extern int Sfx_PlayFromObject(int *obj, int sfxId);
 extern void Sfx_StopObjectChannel(int *obj, int channel);
 #pragma scheduling off

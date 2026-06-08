@@ -144,7 +144,7 @@ extern undefined4 DAT_803dcb80;
 extern undefined4 DAT_803dcb88;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern f64 DOUBLE_803e56e8;
 extern f64 DOUBLE_803e5708;
@@ -559,8 +559,8 @@ void FUN_801b7064(uint param_1)
         uStack_4c = randomGetRange(0xffffff9c,100);
         local_64 = (float)(dVar5 * (double)(float)((double)CONCAT44(0x43300000,uStack_4c) - dVar4));
         local_70 = (float)dVar6;
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x7fb,auStack_78,2,0xffffffff,0);
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x7fc,auStack_78,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x7fb, auStack_78, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x7fc, auStack_78, 2, -1, NULL);
         iVar2 = iVar2 + -1;
       } while (iVar2 != 0);
     }
@@ -571,7 +571,7 @@ void FUN_801b7064(uint param_1)
     uStack_5c = randomGetRange(0xffffff9c,100);
     local_64 = lbl_803E56E0 * (f32)(s32)uStack_5c;
     local_70 = lbl_803E56E4;
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0x7fc,auStack_78,2,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 0x7fc, auStack_78, 2, -1, NULL);
   }
   else if (cVar1 < '\x01') {
     if (-1 < cVar1) {
@@ -1607,7 +1607,6 @@ void dll_1D6_init(int *obj, u8 *params)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E4A40;
 extern f32 lbl_803E4A44;
 extern f32 lbl_803E4A48;
