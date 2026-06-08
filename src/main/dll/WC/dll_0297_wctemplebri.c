@@ -38,16 +38,46 @@
 #define WCTEMPLEBRI_WAVE_B_STEP_SHIFT 7
 #define WCTEMPLEBRI_WAVE_WRAP 0xffff
 
-#define WCTEMPLEBRI_STATE_MAX_Y_VALUE(state) (*(f32 *)((state) + WCTEMPLEBRI_STATE_MAX_Y))
-#define WCTEMPLEBRI_PART_COUNT(state) (*(u8 *)((state) + WCTEMPLEBRI_STATE_PART_COUNT))
-#define WCTEMPLEBRI_ACTIVE(state) (*(u8 *)((state) + WCTEMPLEBRI_STATE_ACTIVE))
-#define WCTEMPLEBRI_WAVE_PHASE_A(state) (*(u16 *)((state) + WCTEMPLEBRI_STATE_WAVE_PHASE_A))
-#define WCTEMPLEBRI_WAVE_PHASE_B(state) (*(u16 *)((state) + WCTEMPLEBRI_STATE_WAVE_PHASE_B))
-#define WCTEMPLEBRI_FLAGS(state) (*(u8 *)((state) + WCTEMPLEBRI_STATE_FLAGS))
+typedef struct WCTempleBriSetup {
+    u8 pad00[WCTEMPLEBRI_SETUP_TYPE_OFFSET];
+    s8 type;
+    u8 modelIndex;
+    u8 pad1A[WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET - 0x1A];
+    s16 solvedBit;
+} WCTempleBriSetup;
+
+typedef struct WCTempleBriState {
+    f32 maxY;
+    f32 sortedOffsets[15];
+    u8 partFlags[15];
+    u8 partCount;
+    u8 partAlpha[15];
+    u8 active;
+    u16 wavePhaseA;
+    u16 wavePhaseB;
+    u8 pad64[WCTEMPLEBRI_STATE_FLAGS - 0x64];
+    u8 flags;
+    u8 pad67;
+} WCTempleBriState;
+
+STATIC_ASSERT(sizeof(WCTempleBriState) == WCTEMPLEBRI_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCTempleBriState, maxY) == WCTEMPLEBRI_STATE_MAX_Y);
+STATIC_ASSERT(offsetof(WCTempleBriState, sortedOffsets) == WCTEMPLEBRI_STATE_SORTED_OFFSETS);
+STATIC_ASSERT(offsetof(WCTempleBriState, partFlags) == WCTEMPLEBRI_STATE_PART_FLAGS);
+STATIC_ASSERT(offsetof(WCTempleBriState, partCount) == WCTEMPLEBRI_STATE_PART_COUNT);
+STATIC_ASSERT(offsetof(WCTempleBriState, partAlpha) == WCTEMPLEBRI_STATE_PART_ALPHA);
+STATIC_ASSERT(offsetof(WCTempleBriState, active) == WCTEMPLEBRI_STATE_ACTIVE);
+STATIC_ASSERT(offsetof(WCTempleBriState, wavePhaseA) == WCTEMPLEBRI_STATE_WAVE_PHASE_A);
+STATIC_ASSERT(offsetof(WCTempleBriState, wavePhaseB) == WCTEMPLEBRI_STATE_WAVE_PHASE_B);
+STATIC_ASSERT(offsetof(WCTempleBriState, flags) == WCTEMPLEBRI_STATE_FLAGS);
+STATIC_ASSERT(offsetof(WCTempleBriSetup, type) == WCTEMPLEBRI_SETUP_TYPE_OFFSET);
+STATIC_ASSERT(offsetof(WCTempleBriSetup, modelIndex) == WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCTempleBriSetup, solvedBit) == WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET);
 
 #pragma scheduling off
 void wctemplebri_updateModelWarp(int obj, int p2)
 {
+    WCTempleBriState *state = (WCTempleBriState *)p2;
     int tex;
     int v;
 
@@ -59,12 +89,12 @@ void wctemplebri_updateModelWarp(int obj, int p2)
     tex = (int)objFindTexture(obj, 1, 0);
     *(s16 *)(tex + 0xa) += WCTEMPLEBRI_UV1_V_STEP;
     if (*(s16 *)(tex + 0xa) > WCTEMPLEBRI_WARP_WRAP) *(s16 *)(tex + 0xa) -= WCTEMPLEBRI_WARP_WRAP;
-    v = WCTEMPLEBRI_WAVE_PHASE_A(p2) + (framesThisStep << WCTEMPLEBRI_WAVE_A_STEP_SHIFT);
+    v = state->wavePhaseA + (framesThisStep << WCTEMPLEBRI_WAVE_A_STEP_SHIFT);
     if (v > WCTEMPLEBRI_WAVE_WRAP) v -= WCTEMPLEBRI_WAVE_WRAP;
-    WCTEMPLEBRI_WAVE_PHASE_A(p2) = (u16)v;
-    v = WCTEMPLEBRI_WAVE_PHASE_B(p2) + (framesThisStep << WCTEMPLEBRI_WAVE_B_STEP_SHIFT);
+    state->wavePhaseA = (u16)v;
+    v = state->wavePhaseB + (framesThisStep << WCTEMPLEBRI_WAVE_B_STEP_SHIFT);
     if (v > WCTEMPLEBRI_WAVE_WRAP) v -= WCTEMPLEBRI_WAVE_WRAP;
-    WCTEMPLEBRI_WAVE_PHASE_B(p2) = (u16)v;
+    state->wavePhaseB = (u16)v;
 }
 #pragma scheduling reset
 
@@ -73,8 +103,8 @@ void wctemplebri_updateModelWarp(int obj, int p2)
 int wctemplebri_interactCallback(int obj, int p2, int p3)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
-    int r4c = *(int *)&((GameObject *)obj)->anim.placementData;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WCTempleBriSetup *setup = (WCTempleBriSetup *)((GameObject *)obj)->anim.placementData;
+    WCTempleBriState *state = ((GameObject *)obj)->extra;
     int model;
     int modelBase;
     int i;
@@ -82,14 +112,14 @@ int wctemplebri_interactCallback(int obj, int p2, int p3)
     *(s8 *)(p3 + WCTEMPLEBRI_PAYLOAD_SUPPRESS_OFFSET) = 0;
     *(s16 *)(p3 + WCTEMPLEBRI_PAYLOAD_FLAGS_A) &= ~WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG;
     *(s16 *)(p3 + WCTEMPLEBRI_PAYLOAD_FLAGS_B) &= ~WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG;
-    wctemplebri_updateModelWarp(obj, state);
+    wctemplebri_updateModelWarp(obj, (int)state);
     if (*(u8 *)(p3 + WCTEMPLEBRI_PAYLOAD_TRIGGER_OFFSET) == WCTEMPLEBRI_PAYLOAD_TRIGGER) {
-        WCTEMPLEBRI_ACTIVE(state) = 1;
+        state->active = 1;
     }
-    if (WCTEMPLEBRI_ACTIVE(state) != 0) {
-        if ((WCTEMPLEBRI_FLAGS(state) & WCTEMPLEBRI_FLAG_SOLVED) == 0) {
-            WCTEMPLEBRI_FLAGS(state) |= WCTEMPLEBRI_FLAG_SOLVED;
-            GameBit_Set(*(s16 *)(r4c + WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET), 1);
+    if (state->active != 0) {
+        if ((state->flags & WCTEMPLEBRI_FLAG_SOLVED) == 0) {
+            state->flags |= WCTEMPLEBRI_FLAG_SOLVED;
+            GameBit_Set(setup->solvedBit, 1);
         }
         {
             int a = (int)((f32)(u32)objAnim->alpha + timeDelta);
@@ -105,8 +135,8 @@ int wctemplebri_interactCallback(int obj, int p2, int p3)
     for (i = 0; i < *(u16 *)(modelBase + 0xe4); i++) {
         int curr = ObjModel_GetCurrentVertexCoords(model, i);
         int base = ObjModel_GetBaseVertexCoords(modelBase, i);
-        int idx = (u16)(int)(lbl_803E6E70 * ((f32)*(s16 *)(curr + 4) / WCTEMPLEBRI_STATE_MAX_Y_VALUE(state))) +
-                  WCTEMPLEBRI_WAVE_PHASE_A(state);
+        int idx = (u16)(int)(lbl_803E6E70 * ((f32)*(s16 *)(curr + 4) / state->maxY)) +
+                  state->wavePhaseA;
         if (*(s16 *)(base + 0) > 0)
             *(s16 *)(curr + 0) =
                 (int)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
@@ -132,7 +162,7 @@ int wctemplebri_getExtraSize(void) { return WCTEMPLEBRI_EXTRA_SIZE; }
 int wctemplebri_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = *(s8 *)(*(int *)&((GameObject *)obj)->anim.placementData + WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
+    int modelIndex = (s8)((WCTempleBriSetup *)((GameObject *)obj)->anim.placementData)->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
@@ -153,10 +183,10 @@ void wctemplebri_free(void) {}
 #pragma scheduling off
 void wctemplebri_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WCTempleBriState *state = ((GameObject *)obj)->extra;
 
     if (visible != 0) {
-        if (WCTEMPLEBRI_ACTIVE(state) != 0) {
+        if (state->active != 0) {
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E90);
         }
     }
@@ -187,22 +217,22 @@ void wctemplebri_initialise(void) {}
 void wctemplebri_update(int obj)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
-    int r4c = *(int *)&((GameObject *)obj)->anim.placementData;
-    int state;
+    WCTempleBriSetup *setup = (WCTempleBriSetup *)((GameObject *)obj)->anim.placementData;
+    WCTempleBriState *state;
     int model;
     int modelBase;
     int i;
 
     Obj_GetPlayerObject();
-    state = *(int *)&((GameObject *)obj)->extra;
-    wctemplebri_updateModelWarp(obj, state);
+    state = ((GameObject *)obj)->extra;
+    wctemplebri_updateModelWarp(obj, (int)state);
     model = Obj_GetActiveModel(obj);
     modelBase = *(int *)model;
     for (i = 0; i < *(u16 *)(modelBase + 0xe4); i++) {
         int curr = ObjModel_GetCurrentVertexCoords(model, i);
         int base = ObjModel_GetBaseVertexCoords(modelBase, i);
-        int idx = (u16)(int)(lbl_803E6E70 * ((f32)*(s16 *)(curr + 4) / WCTEMPLEBRI_STATE_MAX_Y_VALUE(state))) +
-                  WCTEMPLEBRI_WAVE_PHASE_A(state);
+        int idx = (u16)(int)(lbl_803E6E70 * ((f32)*(s16 *)(curr + 4) / state->maxY)) +
+                  state->wavePhaseA;
         if (*(s16 *)(base + 0) > 0)
             *(s16 *)(curr + 0) =
                 (int)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
@@ -212,11 +242,11 @@ void wctemplebri_update(int obj)
                 (int)((f32)*(s16 *)(base + 0) -
                       lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C));
     }
-    if (WCTEMPLEBRI_ACTIVE(state) != 0) {
-        if ((WCTEMPLEBRI_FLAGS(state) & WCTEMPLEBRI_FLAG_SOLVED) == 0) {
+    if (state->active != 0) {
+        if ((state->flags & WCTEMPLEBRI_FLAG_SOLVED) == 0) {
             GameBit_Set(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 1);
-            WCTEMPLEBRI_FLAGS(state) |= WCTEMPLEBRI_FLAG_SOLVED;
-            GameBit_Set(*(s16 *)(r4c + WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET), 1);
+            state->flags |= WCTEMPLEBRI_FLAG_SOLVED;
+            GameBit_Set(setup->solvedBit, 1);
         }
         {
             int a = (int)((f32)(u32)objAnim->alpha + timeDelta);
@@ -246,20 +276,21 @@ void wctemplebri_update(int obj)
 void wctemplebri_init(int obj, int initData)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int state;
+    WCTempleBriState *state;
+    WCTempleBriSetup *setup = (WCTempleBriSetup *)initData;
     int model;
     int i;
     int maxY;
     int modelData;
-    int p, k;
+    int k;
     int done;
 
-    ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(initData + WCTEMPLEBRI_SETUP_TYPE_OFFSET) << 8);
-    objAnim->bankIndex = *(u8 *)(initData + WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
+    ((GameObject *)obj)->anim.rotX = (s16)(setup->type << 8);
+    objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;
     ((GameObject *)obj)->animEventCallback = (void *)wctemplebri_interactCallback;
-    state = *(int *)&((GameObject *)obj)->extra;
+    state = ((GameObject *)obj)->extra;
     maxY = 0;
     model = Obj_GetActiveModel(obj);
     modelData = *(int *)(model + 0);
@@ -271,27 +302,26 @@ void wctemplebri_init(int obj, int initData)
     done = 0;
     while (done == 0) {
         done = 1;
-        for (k = 0, p = state; k < WCTEMPLEBRI_PART_COUNT(state) - 1; k++) {
-            f32 a = *(f32 *)(p + 4);
-            f32 b = *(f32 *)(p + 8);
+        for (k = 0; k < state->partCount - 1; k++) {
+            f32 a = state->sortedOffsets[k];
+            f32 b = state->sortedOffsets[k + 1];
             if (a < b) {
-                *(f32 *)(p + 4) = b;
-                *(f32 *)(p + 8) = (f32)(int)a;
+                state->sortedOffsets[k] = b;
+                state->sortedOffsets[k + 1] = (f32)(int)a;
                 done = 0;
             }
-            p += 4;
         }
     }
-    WCTEMPLEBRI_PART_COUNT(state) = 0xa;
-    WCTEMPLEBRI_STATE_MAX_Y_VALUE(state) = (f32)maxY;
-    if ((u32)GameBit_Get(*(s16 *)(initData + WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET)) != 0) {
-        WCTEMPLEBRI_ACTIVE(state) = 1;
-        WCTEMPLEBRI_FLAGS(state) |= WCTEMPLEBRI_FLAG_SOLVED;
+    state->partCount = 0xa;
+    state->maxY = (f32)maxY;
+    if ((u32)GameBit_Get(setup->solvedBit) != 0) {
+        state->active = 1;
+        state->flags |= WCTEMPLEBRI_FLAG_SOLVED;
     }
-    if (WCTEMPLEBRI_ACTIVE(state) != 0) {
-        for (k = 0; k < WCTEMPLEBRI_PART_COUNT(state); k++) {
-            *(u8 *)(state + k + WCTEMPLEBRI_STATE_PART_ALPHA) = WCTEMPLEBRI_ALPHA_OPAQUE;
-            *(u8 *)(state + k + WCTEMPLEBRI_STATE_PART_FLAGS) = 1;
+    if (state->active != 0) {
+        for (k = 0; k < state->partCount; k++) {
+            state->partAlpha[k] = WCTEMPLEBRI_ALPHA_OPAQUE;
+            state->partFlags[k] = 1;
         }
         objAnim->alpha = WCTEMPLEBRI_ALPHA_OPAQUE;
     } else {
