@@ -4,6 +4,7 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
@@ -2693,7 +2694,6 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
   extern int *gBaddieControlInterface;
   extern ObjectTriggerInterface **gObjectTriggerInterface;
   extern int *gPlayerInterface;
-  extern int *gRomCurveInterface;
   extern void *lbl_803AC5D0[];
   extern void *lbl_803AC5E8[];
   extern f32 lbl_803E2E8C;
@@ -2743,7 +2743,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       path = *(int **)(sub + 0x3dc);
       if ((*(u16 *)(sub + 0x400) & 8) != 0) {
         if ((Curve_AdvanceAlongPath(path, *(f32 *)(sub + 0x280)) != 0 || path[4] != 0) &&
-            (u8)(*(int (**)(int *))(*(int *)gRomCurveInterface + 0x90))(path) != 0) {
+            (*gRomCurveInterface)->goNextPoint(path) != 0) {
           *(u16 *)(sub + 0x400) &= ~8;
         }
         *(f32 *)(sub + 0x280) = lbl_803E2E98;
@@ -4089,7 +4089,6 @@ extern f32 lbl_803E2E98;
 #pragma peephole off
 void dll_CB_update(int *obj) {
     extern int *gBaddieControlInterface;
-    extern int *gRomCurveInterface;
     GroundBaddieState *sub;
     u8 *def;
     int *path;
@@ -4115,7 +4114,7 @@ void dll_CB_update(int *obj) {
     path = *(int **)&sub->path;
     if ((sub->flags400 & 8) == 0) return;
     if (Curve_AdvanceAlongPath(path, sub->baddie.animSpeedA) != 0 || path[4] != 0) {
-        if ((u8)((int(*)(int*))((int**)*(int**)gRomCurveInterface)[36])(path) != 0) {
+        if ((*gRomCurveInterface)->goNextPoint(path) != 0) {
             sub->flags400 = (u16)(sub->flags400 & ~8);
         }
     }

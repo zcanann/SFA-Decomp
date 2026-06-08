@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/seqObj.h"
 #include "main/objanim.h"
 
@@ -96,7 +97,6 @@ extern f32 lbl_803E2760;
 extern f32 lbl_803E2764;
 extern f32 timeDelta;
 extern EffectInterface **gPartfxInterface;
-extern int *gRomCurveInterface;
 extern int lbl_803DBC80;
 extern void* PTR_DAT_8031fdc4;
 extern f32 sqrtf(f32 x);
@@ -230,8 +230,8 @@ void wispbaddie_init(int obj,int setup,int initialised)
     if ((void *)state->curve != NULL) {
       memset((void *)state->curve,0,0x108);
     }
-    if ((*(u8 (**)(int,int,f32,int *,int))(*gRomCurveInterface + 0x8c))
-            (state->curve,obj,state->triggerDistance,&lbl_803DBC80,-1) == 0) {
+    if ((*gRomCurveInterface)->initCurve((void *)state->curve, (void *)obj, state->triggerDistance,
+                                         &lbl_803DBC80, -1) == 0) {
       state->flags = (u8)(state->flags | 1);
     }
     Sfx_PlayFromObject(obj,0x23b);

@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/sidekickToy.h"
 #include "main/dll/mediumbasket.h"
 #include "main/dll/tricky_state.h"
@@ -2202,14 +2203,13 @@ f32 sidekickToy_accelerateTowardTarget3D(int obj, f32 tx, f32 ty, f32 tz, f32 ac
 #pragma scheduling reset
 
 extern u8 baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
-extern void* gRomCurveInterface;
 extern u8 lbl_803DBC58;
 extern f32 lbl_803E25DC;
 
 /* sidekickToy_updateCurveTargetLatch: pre-curve probe + state-bit gate. If state's 0x2000 bit is
  * set, ask baddieTargetFn_8014a150 whether the target is locked on; on hit,
- * leave state[0x2dc] alone. Otherwise dispatch gRomCurveInterface's vtable
- * entry 0x8c with (data, obj, lbl_803E25DC, &lbl_803DBC58, -1) and toggle
+ * leave state[0x2dc] alone. Otherwise initialise the rom-curve walker with
+ * (data, obj, lbl_803E25DC, &lbl_803DBC58, -1) and toggle
  * the 0x2000 bit based on the u8 result. */
 #pragma scheduling off
 #pragma peephole off
@@ -2221,8 +2221,8 @@ void sidekickToy_updateCurveTargetLatch(int obj) {
             return;
         }
     }
-    if ((u8)(*(u8(**)(u8*, int, f32, u8*, int))(*(int*)gRomCurveInterface + 0x8c))(
-            *(u8**)state, obj, lbl_803E25DC, &lbl_803DBC58, -1) != 0) {
+    if ((*gRomCurveInterface)->initCurve(*(u8**)state, (void *)obj, lbl_803E25DC,
+                                         (int *)&lbl_803DBC58, -1) != 0) {
         *(u32*)(state + 0x2dc) &= ~0x2000LL;
     } else {
         *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x2000;

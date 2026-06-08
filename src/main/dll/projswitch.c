@@ -3,6 +3,7 @@
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/enemy_state.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/projswitch.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
@@ -811,7 +812,6 @@ extern void smallbasket_initModelVariantState(int obj, u8 *state);
 extern void smallbasket_initTailModelState(int obj, u8 *state);
 extern void enemy_animEventCallback();
 extern void *memset(void *p, int c, int n);
-extern int *gRomCurveInterface;
 extern f32 lbl_803DBC58;
 extern f32 lbl_803DBC60;
 extern f32 lbl_803DBC64;
@@ -984,7 +984,8 @@ void enemy_init(int obj, u8 *setup, int flag)
         if (*(void **)state != NULL) {
             memset(*(void **)state, 0, 264);
         }
-        if ((u8)(**(int (**)(int, int, f32, f32 *, int))(*gRomCurveInterface + 0x8c))(*(int *)state, obj, ((EnemyState *)state)->unk2AC, &lbl_803DBC58, -1) == 0) {
+        if ((*gRomCurveInterface)->initCurve(*(void **)state, (void *)obj, ((EnemyState *)state)->unk2AC,
+                                             (int *)&lbl_803DBC58, -1) == 0) {
             ((EnemyState *)state)->controlFlags |= 0x2000;
         }
         (**(void (**)(u8 *, int, int, int))(*gPathControlInterface + 0x4))(state + 4, 0, 422, 1);
