@@ -50,7 +50,6 @@ extern undefined4 DAT_803ad41e;
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
 extern ModgfxInterface **gModgfxInterface;
-extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
 extern EffectInterface **gPartfxInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
@@ -418,12 +417,12 @@ void FUN_8018f500(void)
         local_4c = local_4c + *(float *)(iVar1 + 0xc);
         local_48 = local_48 + *(float *)(iVar1 + 0x10);
         local_44 = local_44 + *(float *)(iVar1 + 0x14);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (iVar1,*(undefined2 *)(iVar3 + 10),auStack_58,0x200001,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar1, *(undefined2 *)(iVar3 + 10),
+                                         auStack_58, 0x200001, -1, NULL);
       }
       else {
-        (**(code **)(*DAT_803dd708 + 8))
-                  (iVar1,*(undefined2 *)(iVar3 + 10),auStack_58,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar1, *(undefined2 *)(iVar3 + 10),
+                                         auStack_58, 2, -1, NULL);
       }
     }
   }
@@ -495,8 +494,8 @@ void FUN_8018f650(void)
       local_54 = local_54 + *(float *)(iVar2 + 0xc);
       local_50 = local_50 + *(float *)(iVar2 + 0x10);
       local_4c = local_4c + *(float *)(iVar2 + 0x14);
-      (**(code **)(*DAT_803dd708 + 8))
-                (iVar2,*(undefined2 *)(iVar5 + 10),auStack_60,0x200001,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
+                                       auStack_60, 0x200001, -1, NULL);
     }
     else {
       dVar6 = DOUBLE_803e4af8;
@@ -517,8 +516,8 @@ void FUN_8018f650(void)
         local_54 = local_54 + *(float *)(iVar2 + 0xc);
         local_50 = local_50 + *(float *)(iVar2 + 0x10);
         local_4c = local_4c + *(float *)(iVar2 + 0x14);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (iVar2,*(undefined2 *)(iVar5 + 10),auStack_60,0x200001,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
+                                         auStack_60, 0x200001, -1, NULL);
       }
     }
   }
@@ -561,7 +560,8 @@ void FUN_8018f650(void)
         local_64 = local_64 + *(short *)(*(int *)(iVar2 + 0x30) + 4);
       }
       FUN_80017748(&local_68,&local_54);
-      (**(code **)(*DAT_803dd708 + 8))(iVar2,*(undefined2 *)(iVar5 + 10),auStack_60,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
+                                       auStack_60, 2, -1, NULL);
     }
     else {
       dVar6 = DOUBLE_803e4af8;
@@ -579,8 +579,8 @@ void FUN_8018f650(void)
           local_64 = local_64 + *(short *)(*(int *)(iVar2 + 0x30) + 4);
         }
         FUN_80017748(&local_68,&local_54);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (iVar2,*(undefined2 *)(iVar5 + 10),auStack_60,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
+                                         auStack_60, 2, -1, NULL);
       }
     }
   }
@@ -597,12 +597,12 @@ void FUN_8018f650(void)
         local_54 = local_54 + *(float *)(iVar2 + 0xc);
         local_50 = local_50 + *(float *)(iVar2 + 0x10);
         local_4c = local_4c + *(float *)(iVar2 + 0x14);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (iVar2,*(undefined2 *)(iVar5 + 10),auStack_60,0x200001,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
+                                         auStack_60, 0x200001, -1, NULL);
       }
       else {
-        (**(code **)(*DAT_803dd708 + 8))
-                  (iVar2,*(undefined2 *)(iVar5 + 10),auStack_60,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
+                                         auStack_60, 2, -1, NULL);
       }
     }
     else {
@@ -619,12 +619,12 @@ void FUN_8018f650(void)
           local_54 = local_54 + *(float *)(iVar2 + 0xc);
           local_50 = local_50 + *(float *)(iVar2 + 0x10);
           local_4c = local_4c + *(float *)(iVar2 + 0x14);
-          (**(code **)(*DAT_803dd708 + 8))
-                    (iVar2,*(undefined2 *)(iVar5 + 10),auStack_60,0x200001,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
+                                           auStack_60, 0x200001, -1, NULL);
         }
         else {
-          (**(code **)(*DAT_803dd708 + 8))
-                    (iVar2,*(undefined2 *)(iVar5 + 10),auStack_60,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
+                                           auStack_60, 2, -1, NULL);
         }
       }
     }
