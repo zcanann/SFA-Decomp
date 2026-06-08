@@ -72,7 +72,6 @@ extern f64 lbl_803E4E80;
 extern f64 lbl_803E4E90;
 extern u16 lbl_80325F88[];
 extern void *gScreenTransitionInterface;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int Obj_GetPlayerObject(void);
 extern void skyFn_80088c94(int skyId, int enable);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
@@ -806,7 +805,7 @@ void SpiritPrize_free(int obj)
         state->light = NULL;
         state->useDetachedLight = 0;
     }
-    ((void (*)(SpiritPrizeState *))((void **)*(int *)gObjectTriggerInterface)[9])(state);
+    (*gObjectTriggerInterface)->freeState((u8 *)state);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -831,14 +830,14 @@ void SpiritPrize_init(int *obj, u8 *init) {
     state->triggerHandle = -1;
     if (((GameObject *)obj)->unkF4 == 0) {
         if (*(s16*)(init + 0x18) != 1) {
-            ((void(*)(SpiritPrizeState *))((void**)*(int*)gObjectTriggerInterface)[7])(state);
+            (*gObjectTriggerInterface)->loadAnimData((u8 *)state, init);
             ((GameObject *)obj)->unkF4 = *(s16*)(init + 0x18) + 1;
         }
     } else {
         if (*(s16*)(init + 0x18) != ((GameObject *)obj)->unkF4 - 1) {
-            ((void(*)(SpiritPrizeState *))((void**)*(int*)gObjectTriggerInterface)[9])(state);
+            (*gObjectTriggerInterface)->freeState((u8 *)state);
             if (*(s16*)(init + 0x18) != -1) {
-                ((void(*)(SpiritPrizeState *, u8 *))((void**)*(int*)gObjectTriggerInterface)[7])(state, init);
+                (*gObjectTriggerInterface)->loadAnimData((u8 *)state, init);
             }
             ((GameObject *)obj)->unkF4 = *(s16*)(init + 0x18) + 1;
         }
@@ -923,8 +922,7 @@ void SpiritPrize_update(int obj)
         }
     }
 
-    objectIndex = ((int (*)(int, f32))((void **)*(int *)gObjectTriggerInterface)[5])
-        (obj, (f32)(u32)lbl_803DB411);
+    objectIndex = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)lbl_803DB411);
     if (objectIndex != 0 && ((GameObject *)obj)->unkB4 == -2) {
         int prizeId;
         int matchingObj;
@@ -948,7 +946,7 @@ void SpiritPrize_update(int obj)
         }
         if (duplicateCount < 2 && matchingObj != 0 && *(s16 *)(matchingObj + 0xb4) != -1) {
             *(s16 *)(matchingObj + 0xb4) = -1;
-            ((void (*)(int))((void **)*(int *)gObjectTriggerInterface)[0x13])(prizeId);
+            (*gObjectTriggerInterface)->endSequence(prizeId);
         }
         ((GameObject *)obj)->unkB4 = -1;
         Obj_FreeObject(obj);
