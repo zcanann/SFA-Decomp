@@ -5,6 +5,7 @@
 
 u32 GameBit_Get(int eventId);
 void GameBit_Set(int eventId, int value);
+void objRenderFn_80041018(int obj);
 void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 int Sfx_PlayFromObjectLimited(void *obj, int sfxId, int maxCount);
 void loadUiDll(int index);

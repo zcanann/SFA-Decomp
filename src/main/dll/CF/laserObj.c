@@ -1,8 +1,5 @@
 #include "main/dll/CF/laser.h"
-
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId,int value);
-extern void objRenderFn_80041018(int obj);
+#include "main/gameplay_runtime.h"
 
 extern LaserTriggerInterface **gGameUIInterface;
 extern MapEventInterface **gMapEventInterface;
