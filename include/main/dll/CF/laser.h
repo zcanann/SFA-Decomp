@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
@@ -36,10 +37,7 @@ typedef struct LaserObject {
   LaserState *state;
 } LaserObject;
 
-typedef struct LaserTriggerInterface {
-  u8 pad00[0x20];
-  int (*isEventReady)(int eventId);
-} LaserTriggerInterface;
+typedef GameUIInterface LaserTriggerInterface;
 
 typedef struct LaserReleaseInterface {
   u8 pad00[0x48];
@@ -61,7 +59,6 @@ STATIC_ASSERT(offsetof(LaserObject, statusFlags) == 0xAF);
 STATIC_ASSERT(offsetof(LaserObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(LaserObject, state) == 0xB8);
 
-STATIC_ASSERT(offsetof(LaserTriggerInterface, isEventReady) == 0x20);
 STATIC_ASSERT(offsetof(LaserReleaseInterface, releaseObject) == 0x48);
 
 #define LASER_OBJECT_STATUS_ACTIVE 0x01

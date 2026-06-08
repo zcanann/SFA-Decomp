@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/worldobj.h"
@@ -685,7 +686,6 @@ extern int Sfx_IsPlayingFromObjectChannel(int *obj, int ch);
 extern void fn_80163980(int o);
 extern void Obj_FreeObject(int o);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gGameUIInterface;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 
 #pragma scheduling off
@@ -789,7 +789,7 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
             }
         }
         if (!(st[0x43c] & 0x40)) {
-            (**(void (**)(int, int))((char *)(*gGameUIInterface) + 0x58))(0xc8, 0x5d0);
+            (*gGameUIInterface)->initAirMeter(0xc8, 0x5d0);
             st[0x43c] = (u8)(st[0x43c] | 0x40);
         }
         break;
@@ -832,7 +832,7 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
             st[0x408] = 0x12;
             GameBit_Set(0xd32, 0);
             st[0x43c] = (u8)(st[0x43c] & ~0x40);
-            (**(void (**)(void))((char *)(*gGameUIInterface) + 0x64))();
+            (*gGameUIInterface)->airMeterShutdown();
         }
         break;
     case 0x12:
@@ -863,9 +863,9 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
             *(f32 *)(st + 8) += timeDelta;
         }
         if (*(f32 *)(st + 8) >= lbl_803E5234) {
-            (**(void (**)(int))((char *)(*gGameUIInterface) + 0x5c))(0xc8);
+            (*gGameUIInterface)->runAirMeter(0xc8);
         } else {
-            (**(void (**)(int))((char *)(*gGameUIInterface) + 0x5c))((int)*(f32 *)(st + 8));
+            (*gGameUIInterface)->runAirMeter((int)*(f32 *)(st + 8));
         }
     }
 }

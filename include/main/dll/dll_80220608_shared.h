@@ -5,6 +5,7 @@
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
+#include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
@@ -390,7 +391,6 @@ typedef struct { f32 x, y, z; } SunVec3;
 
 
 extern void buttonDisable(int a, int b);
-extern int *gGameUIInterface;
 
 
 
@@ -964,7 +964,6 @@ extern f32 lbl_803DC52C;
 extern f32 lbl_803E7608;
 extern f32 lbl_803E760C;
 
-extern int *gGameUIInterface;
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
 

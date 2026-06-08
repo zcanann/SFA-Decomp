@@ -1,5 +1,6 @@
 #include "main/asset_load.h"
 #include "main/camera_interface.h"
+#include "main/game_ui_interface.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
 #include "main/sky_80080E58_shared.h"
@@ -561,7 +562,7 @@ void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
     int uiId;
 
     if (lbl_803DD090 != 0 && ((GameObject *)obj)->unkB4 != (s8)((ObjSeqState *)seq)->slot) {
-        (*(void (*)(int, int, int))(*(int *)(*gGameUIInterface + 0x44)))(0, 0, 0);
+        (*gGameUIInterface)->setHudFields(0, 0, 0);
     }
 
     while (lbl_803DD113 > 0) {
@@ -632,7 +633,7 @@ void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
         case 0xd:
             if ((u8)skipSpawns == 0) {
                 uiId = lbl_8030EDA4[cmdParam];
-                (*(void (*)(int, int, int))(*(int *)(*gGameUIInterface + 0x44)))(uiId, 0, 0);
+                (*gGameUIInterface)->setHudFields(uiId, 0, 0);
                 if (lbl_8030EDA4[cmdParam] != -1) {
                     lbl_803DD090 = 1;
                 } else {
@@ -2123,8 +2124,7 @@ int ObjSeq_ExecuteActionCommand(u8 *obj, u8 *action, u8 **cmdPtr, int flags, voi
         if (flag8 != 0) {
             break;
         }
-        (*(void (*)(int, int, int, int))(*(int *)(*gGameUIInterface + 0x38)))(
-            *(s16 *)(cmd + 2), 0x14, 0x8c, 0);
+        (*gGameUIInterface)->showNpcDialogue(*(s16 *)(cmd + 2), 0x14, 0x8c, 0);
         break;
     case 0xd:
         if (noExec != 0) {

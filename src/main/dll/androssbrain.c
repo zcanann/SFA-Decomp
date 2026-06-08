@@ -126,7 +126,7 @@ void androssbrain_update(int obj)
     switch (state->brainState) {
     case 0:
         if (flag != 0) {
-            (*(void (**)(void))(*gGameUIInterface + 0x64))();
+            (*gGameUIInterface)->airMeterShutdown();
         }
         ((GameObject *)obj)->anim.rotX = state->andross->anim.rotX;
         ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -134,9 +134,9 @@ void androssbrain_update(int obj)
     case 1:
         if (flag != 0) {
             state->flashTimer = 0x3c;
-            (*(void (**)(int, int))(*gGameUIInterface + 0x58))(0x50, 0x643);
+            (*gGameUIInterface)->initAirMeter(0x50, 0x643);
         }
-        (*(void (**)(int))(*gGameUIInterface + 0x5c))(state->health);
+        (*gGameUIInterface)->runAirMeter(state->health);
         hit = ObjHits_GetPriorityHit(obj, &hitObj, &sphereIdx, &hitVol);
         t = state->flashTimer - framesThisStep;
         if (t < 0) {
@@ -162,7 +162,7 @@ void androssbrain_update(int obj)
     case 2:
         if (flag != 0) {
             androssligh_setState((int)state->lightning, 2, 0);
-            (*(void (**)(void))(*gGameUIInterface + 0x64))();
+            (*gGameUIInterface)->airMeterShutdown();
         }
         ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         andross_setPartSignal((int)state->andross, 8);

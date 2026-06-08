@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_ui_interface.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -14,7 +15,6 @@ extern undefined4 FUN_80286880();
 extern undefined4 FUN_80286884();
 extern uint countLeadingZeros();
 
-extern int *gGameUIInterface;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern s16 lbl_80327618[];
@@ -57,7 +57,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
   if (((*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0) == 0) &&
       (GameBit_Get(0x13f) == 0)) {
     *(u8 *)(state + 6) = 0;
-    (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x64)))(*gGameUIInterface);
+    (*gGameUIInterface)->airMeterShutdown();
     for (j = 0; j < 0x12; j++) {
       GameBit_Set(lbl_80327618[j], 0);
     }
@@ -76,7 +76,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     if (GameBit_Get(0x124) != 0) {
       (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
       *(f32 *)(state + 8) = lbl_803E54B0;
-      (*(void (*)(int, int))(*(int *)(*gGameUIInterface + 0x58)))(100000, 0x5db);
+      (*gGameUIInterface)->initAirMeter(100000, 0x5db);
       *(u8 *)(state + 6) = 2;
     }
     break;
@@ -89,21 +89,21 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     }
     fn_80137948(sSPShopNumBloopsFormat, bloopsRemaining);
     if (bloopsRemaining == 0) {
-      (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x64)))(*gGameUIInterface);
+      (*gGameUIInterface)->airMeterShutdown();
       (*gScreenTransitionInterface)->start(0x14, 1);
       *(u8 *)(state + 6) = 3;
       Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
     } else {
       *(f32 *)(state + 8) -= (f32)bloopsRemaining * timeDelta;
       if (*(f32 *)(state + 8) >= lbl_803E54B4) {
-        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))((int)*(f32 *)(state + 8));
+        (*gGameUIInterface)->runAirMeter((int)*(f32 *)(state + 8));
       } else if ((*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0) != 0) {
-        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x64)))(*gGameUIInterface);
+        (*gGameUIInterface)->airMeterShutdown();
         (*gScreenTransitionInterface)->start(0x14, 1);
         *(u8 *)(state + 6) = 5;
       } else {
         *(f32 *)(state + 8) = lbl_803E54B4;
-        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(1);
+        (*gGameUIInterface)->runAirMeter(1);
       }
     }
     break;

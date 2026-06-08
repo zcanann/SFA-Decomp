@@ -1,5 +1,6 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/game_ui_interface.h"
 #include "main/mapEvent.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
@@ -1088,7 +1089,6 @@ void vfpcoreplat_init(int obj, int data) {
 }
 
 extern void GameBit_Set(int eventId, int value);
-extern int *gGameUIInterface;
 extern u32 lbl_803DDCC8;
 extern f32 lbl_803E6150;
 
@@ -1110,7 +1110,7 @@ void spellStoneUseFn_801fd270(int obj) {
     if (state->used != 0) return;
     if ((s16)cond == 0) return;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x08;
-    if ((*(int (*)(u32))(*(int *)(*gGameUIInterface + 0x20)))(lbl_803DDCC8) != 0) {
+    if ((*gGameUIInterface)->isEventReady(lbl_803DDCC8) != 0) {
         if (Vec_distance((void *)(obj + 0x18), (char *)player + 0x18) < lbl_803E6150) {
             GameBit_Set(state->completeGameBit, 1);
             state->used = 1;
