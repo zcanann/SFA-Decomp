@@ -9311,7 +9311,7 @@ void fn_802AB5A4(int obj, int p2, int flags)
         *(f32 *)(q + 0x28) = ((GameObject *)obj)->anim.worldPosZ;
     }
     if (f & 4) {
-        ObjHitsPriorityState *hitState = Player_GetObjHitsState(obj);
+        ObjHitsPriorityState *hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
         hitState->localPosX = ((GameObject *)obj)->anim.localPosX;
         hitState->localPosY = ((GameObject *)obj)->anim.localPosY;
         hitState->localPosZ = ((GameObject *)obj)->anim.localPosZ;
