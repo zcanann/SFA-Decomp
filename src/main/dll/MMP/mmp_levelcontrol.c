@@ -42,7 +42,6 @@ extern undefined8 FUN_80286838();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286884();
 
-extern undefined4* DAT_803dd708;
 extern EffectInterface **gPartfxInterface;
 extern f64 DOUBLE_803e4c88;
 extern f32 lbl_803E4C68;
@@ -328,8 +327,8 @@ void FUN_801946b8(void)
     local_90 = *(float *)(puVar3 + 0xc) + local_a8;
     local_8c = (float)(dVar12 + (double)(*(float *)(puVar3 + 0xe) + local_a4));
     local_88 = *(float *)(puVar3 + 0x10) + local_a0;
-    (**(code **)(*DAT_803dd708 + 8))(puVar3,0xca,local_9c,0x200001,0xffffffff,0);
-    (**(code **)(*DAT_803dd708 + 8))(puVar3,0xcb,local_9c,0x200001,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)puVar3, 0xca, local_9c, 0x200001, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)puVar3, 0xcb, local_9c, 0x200001, -1, NULL);
     iVar7 = iVar7 + -1;
   } while (iVar7 != 0);
   puVar6 = *(uint **)(puVar3 + 0x5c);
