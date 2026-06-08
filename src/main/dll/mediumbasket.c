@@ -53,7 +53,7 @@ extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dc990;
 extern undefined4 DAT_803dc994;
 extern undefined4 DAT_803dc998;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
 extern u8 lbl_803DDA78;
@@ -1703,19 +1703,22 @@ void FUN_8015da7c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if (((*(byte *)(iVar7 + 0x44) & 4) != 0) && ((*(byte *)(iVar5 + 0x404) & 0x40) == 0)) {
     iVar4 = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(iVar2,0x56,iVar7 + 0x20,0x200001,0xffffffff,puVar6);
+      (*gPartfxInterface)->spawnObject((void *)iVar2, 0x56, (void *)(iVar7 + 0x20),
+                                       0x200001, -1, puVar6);
       iVar4 = iVar4 + 1;
     } while (iVar4 < 4);
   }
   if (((*(byte *)(iVar7 + 0x44) & 8) != 0) && ((*(byte *)(iVar5 + 0x404) & 0x40) == 0)) {
-    (**(code **)(*DAT_803dd708 + 8))(iVar2,0x57,iVar7 + 0x20,0x200001,0xffffffff,puVar6);
+    (*gPartfxInterface)->spawnObject((void *)iVar2, 0x57, (void *)(iVar7 + 0x20),
+                                     0x200001, -1, puVar6);
   }
   if ((*(byte *)(iVar7 + 0x44) & 0x10) != 0) {
     FUN_800069bc();
     FUN_80006920((double)(float)((double)lbl_803E3A20 * dVar8));
     iVar5 = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(iVar2,0x57,iVar7 + 0x20,0x200001,0xffffffff,puVar6);
+      (*gPartfxInterface)->spawnObject((void *)iVar2, 0x57, (void *)(iVar7 + 0x20),
+                                       0x200001, -1, puVar6);
       iVar5 = iVar5 + 1;
     } while (iVar5 < 0x28);
   }
@@ -1724,12 +1727,14 @@ void FUN_8015da7c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_80006920((double)(float)((double)lbl_803E3A24 * dVar8));
     iVar5 = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(iVar2,0x57,iVar7 + 0x20,0x200001,0xffffffff,puVar6);
+      (*gPartfxInterface)->spawnObject((void *)iVar2, 0x57, (void *)(iVar7 + 0x20),
+                                       0x200001, -1, puVar6);
       iVar5 = iVar5 + 1;
     } while (iVar5 < 0x28);
     iVar5 = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(iVar2,0x58,iVar7 + 0x20,0x200001,0xffffffff,puVar6);
+      (*gPartfxInterface)->spawnObject((void *)iVar2, 0x58, (void *)(iVar7 + 0x20),
+                                       0x200001, -1, puVar6);
       iVar5 = iVar5 + 1;
     } while (iVar5 < 10);
   }
@@ -1962,7 +1967,6 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern int* gPlayerInterface;
 extern int *gBaddieControlInterface;
-extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E2CE8;
 extern f32 lbl_803E2CEC;
 extern f32 lbl_803E2CF0;
