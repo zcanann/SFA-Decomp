@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/baddieControl.h"
 #include "main/camera_object.h"
+#include "main/camera_interface.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -3482,11 +3483,9 @@ void CameraModePerv_free(void) { mm_free(lbl_803DD5C8); lbl_803DD5C8 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
 
-/* vtable[15] singleton call */
-extern void **gCameraInterface;
 void dll_19_func11(void)
 {
-  (*(void (**)(void))((char *)*gCameraInterface + 0x3c))();
+  (void)(*gCameraInterface)->getOverrideTarget();
 }
 
 /* baddie spawn/visibility predicate */
@@ -3821,7 +3820,7 @@ void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
     if (param1 == NULL) {
         return;
     }
-    obj = (*(int (**)(void))((char *)*gCameraInterface + 0xc))();
+    obj = (int)(*gCameraInterface)->getCamera();
     state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
     yaw = *(s16 *)state;
 
@@ -4419,7 +4418,7 @@ void CameraModeCrawl_update(u8 *obj) {
         *(s16 *)obj = (s16)(0x8000 - getAngle(v20, v12));
         ((GameObject *)obj)->anim.rotY = 2048;
     } else {
-        other = (*(int (**)(void))(*(int *)gCameraInterface + 24))();
+        other = (int)(*gCameraInterface)->getDefaultHandlerEntry();
         (*(void (**)(u8 *, f32 *, f32 *, f32 *, f32 *, f32, int))(*(int *)gCameraInterface + 56))(
             obj, &v20, &v16, &v12, &v8, lbl_803E1ADC, 0);
         delta = (0x8000 - (u16)getAngle(v20, v12)) - (u16)*(s16 *)obj;
@@ -4628,8 +4627,7 @@ void dll_54_update(u8 *obj) {
     s16 d;
 
     if (*(u8 *)(lbl_803DD5C0 + 13) != 0) {
-        (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(
-            0x42, 0, 1, 0, 0, 0, 0xff);
+        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
     } else {
         if (*(void **)(lbl_803DD5C0 + 4) == NULL) {
             int *arr = (int *)ObjList_GetObjects(&i, &count);
