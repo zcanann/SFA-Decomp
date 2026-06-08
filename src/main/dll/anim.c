@@ -2053,7 +2053,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
   extern void Obj_FreeObject(int);
   extern void Stack_Pop(int, int *);
   extern int Stack_IsEmpty(int);
-  extern int *gMapEventInterface;
+  extern MapEventInterface **gMapEventInterface;
   extern int *gPlayerInterface;
   extern int lbl_80329634[];
   extern int lbl_80329640[];
@@ -2101,7 +2101,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
       Stack_Pop(sub_40c->msgStack, &local);
     }
     if (*(s16 *)(data + 0x2c) == 0) {
-      ((MapEventInterface *)*gMapEventInterface)->startTimedEvent(*(int *)(data + 0x14), lbl_803E633C);
+      (*gMapEventInterface)->startTimedEvent(*(int *)(data + 0x14), lbl_803E633C);
     }
     sub->configFlags |= *(u8 *)(data + 0x2b);
   }
@@ -4792,7 +4792,7 @@ void fn_80203000(int obj, int param2)
 
 extern void unlockLevel(int a, int b, int c);
 extern void Music_Trigger(int a, int b);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 typedef struct DfpFlags7 {
     u8 b80 : 1;
@@ -4817,7 +4817,7 @@ void dfplevelcontrol_init(int obj, int param2)
     if (v != 0 && v <= 2) {
         state->mode = v;
     }
-    ((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
+    (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     unlockLevel(0, 0, 1);
     ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x4000;
     if (*(s8 *)(obj + 0xac) == 0x15) {
@@ -5463,7 +5463,7 @@ void dfplevelcontrol_update(int obj)
         GameBit_Set(0x5e8, 1);
     }
     coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
-    mode = ((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
+    mode = (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     switch (mode) {
     case 1:
         if (lbl_803DC180 != 0) {
@@ -5712,8 +5712,8 @@ void fn_80204098(int obj)
         }
     }
     if (GameBit_Get(0x7a1) != 0) {
-        if (((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 6) == 0) {
-            ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 1);
+        if ((*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 6) == 0) {
+            (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 1);
         }
     }
 }
@@ -6332,7 +6332,7 @@ void dbstealerworm_update(u8 *objp)
     extern void ObjMsg_SendToObject(int, int, int, int);
     extern void objLightFn_8009a1dc(int, f32, int, int, int);
     extern f32 sqrtf(f32);
-    extern int *gMapEventInterface;
+    extern MapEventInterface **gMapEventInterface;
     extern void **gBaddieControlInterface;
     extern ObjectTriggerInterface **gObjectTriggerInterface;
     extern int *gPlayerInterface;
@@ -6377,7 +6377,7 @@ void dbstealerworm_update(u8 *objp)
     if (GameBit_Get(((GroundBaddieState *)blob)->gameBitC) != 0) {
         if (((GameObject *)obj)->unkF4 != 0) {
             if ((((GroundBaddieState *)blob)->configFlags & 4) == 0 &&
-                ((MapEventInterface *)*(int *)gMapEventInterface)->isTimedEventActive(*(int *)(data + 0x14)) != 0) {
+                (*gMapEventInterface)->isTimedEventActive(*(int *)(data + 0x14)) != 0) {
                 ((void (*)(int, int, int, int, int, int, int, f32))((void **)*gBaddieControlInterface)[22])(obj, data, blob, 0x10, 7, 0x10a, 0x26, lbl_803E62FC);
                 ObjGroup_AddObject(obj, 3);
                 ((GroundBaddieState *)blob)->targetState = 0;
@@ -7254,7 +7254,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
     extern int mapGetDirIdx(int);
     extern void lockLevel(int, int);
     extern void warpToMap(int, int);
-    extern int *gMapEventInterface;
+    extern MapEventInterface **gMapEventInterface;
     int blob = *(int *)&((GameObject *)obj)->extra;
     int data = *(int *)&((GameObject *)obj)->anim.placementData;
     int i;
@@ -7265,14 +7265,14 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
         switch (((DfpSeqPointState *)blob)->triggerId) {
         case 1:
             if (*(u8 *)(p3 + i + 0x81) == 1) {
-                if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1) {
-                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 0);
-                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 0);
-                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 7, 0);
-                } else if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
-                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 0);
-                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 0);
-                    ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 7, 0);
+                if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1) {
+                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 0);
+                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 0);
+                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 7, 0);
+                } else if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
+                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 0);
+                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 0);
+                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 7, 0);
                 }
             }
             break;
@@ -7281,11 +7281,11 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
                 if (*(u32 *)(data + 0x14) == 0x49de8) {
                     ((DfpFlags7 *)&((DfpSeqPointState *)blob)->flags0F)->b80 = 1;
                 } else {
-                    if (((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1 ||
-                        ((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
+                    if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1 ||
+                        (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
                         unlockLevel(0, 0, 1);
                         lockLevel(mapGetDirIdx(0x32), 0);
-                        ((MapEventInterface *)*(int *)gMapEventInterface)->setMode(0x32, 2);
+                        (*gMapEventInterface)->setMode(0x32, 2);
                         warpToMap(0x73, 0);
                     }
                 }
