@@ -1597,37 +1597,34 @@ extern f32 lbl_803E1CCC;
 #pragma peephole off
 void dll_2E_func06(int obj, char *st, int point)
 {
-    f32 z1;
-    f32 y1;
-    f32 x1;
-    f32 z0;
-    f32 y0;
-    f32 x0;
-    s16 ang[3];
+    struct {
+        s16 ang[3];
+        f32 x0, y0, z0, x1, y1, z1;
+    } v;
 
     if (*(u8 *)(st + 0x601) != 0) {
         f32 cA;
         f32 cB;
         fn_8003AC14(obj, seqFn_800394a0(), *(u8 *)(st + 0x610));
-        ObjPath_GetPointWorldPosition(obj, point, &x0, &y0, &z0, 0);
-        ObjPath_GetPointWorldPosition(obj, point + 1, &x1, &y1, &z1, 0);
+        ObjPath_GetPointWorldPosition(obj, point, &v.x0, &v.y0, &v.z0, 0);
+        ObjPath_GetPointWorldPosition(obj, point + 1, &v.x1, &v.y1, &v.z1, 0);
         cA = lbl_803E1CC8;
-        *(f32 *)(st + 0x4) = (cA * x0 + x1) * (cB = lbl_803E1CCC);
-        *(f32 *)(st + 0x8) = y0;
-        *(f32 *)(st + 0xc) = (cA * z0 + z1) * cB;
+        *(f32 *)(st + 0x4) = (cA * v.x0 + v.x1) * (cB = lbl_803E1CCC);
+        *(f32 *)(st + 0x8) = v.y0;
+        *(f32 *)(st + 0xc) = (cA * v.z0 + v.z1) * cB;
         *(f32 *)(st + 0x4) -= ((GameObject *)obj)->anim.localPosX;
         *(f32 *)(st + 0x8) -= ((GameObject *)obj)->anim.localPosY;
         *(f32 *)(st + 0xc) -= ((GameObject *)obj)->anim.localPosZ;
-        ang[0] = (s16)-((GameObject *)obj)->anim.rotZ;
-        ang[1] = (s16)-((GameObject *)obj)->anim.rotY;
-        ang[2] = (s16)-((GameObject *)obj)->anim.rotX;
-        vecRotateZXY(ang, (f32 *)(st + 0x4));
+        v.ang[0] = (s16)-((GameObject *)obj)->anim.rotZ;
+        v.ang[1] = (s16)-((GameObject *)obj)->anim.rotY;
+        v.ang[2] = (s16)-((GameObject *)obj)->anim.rotX;
+        vecRotateZXY(v.ang, (f32 *)(st + 0x4));
         *(u8 *)(st + 0x601) = 0;
     }
-    ObjPath_GetPointWorldPosition(obj, point, &x0, &y0, &z0, 0);
-    *(f32 *)(st + 0x10) = x0;
-    *(f32 *)(st + 0x14) = y0;
-    *(f32 *)(st + 0x18) = z0;
+    ObjPath_GetPointWorldPosition(obj, point, &v.x0, &v.y0, &v.z0, 0);
+    *(f32 *)(st + 0x10) = v.x0;
+    *(f32 *)(st + 0x14) = v.y0;
+    *(f32 *)(st + 0x18) = v.z0;
 }
 #pragma peephole reset
 #pragma scheduling reset

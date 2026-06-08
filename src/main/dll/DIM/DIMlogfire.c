@@ -1334,8 +1334,8 @@ int MoonSeedPlantingSpot_setScale(int *obj, int arg) {
         if (inner[0] == 3) {
             ret = 1;
             if (GameBit_Get(*(s16 *)(inner + 8)) != 0 && GameBit_Get(*(s16 *)(inner + 0xa)) == 0) {
-                inner = ((GameObject *)obj)->extra;
                 sub = *(int **)&((GameObject *)obj)->anim.placementData;
+                inner = ((GameObject *)obj)->extra;
                 if (GameBit_Get(*(s16 *)(inner + 8)) != 0) {
                     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                     GameBit_Set(*(s16 *)(inner + 0xa), 1);
