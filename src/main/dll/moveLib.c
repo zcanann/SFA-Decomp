@@ -1,6 +1,7 @@
 #include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/moveLib.h"
 
 extern undefined4 FUN_80003494();
@@ -1420,14 +1421,13 @@ void dll_2E_func09(int obj, void *src1, void *src2) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gRomCurveInterface;
 extern f32 lbl_803E1C88;
 #pragma scheduling off
 #pragma peephole off
 f32 dll_2E_func0B(int obj, int arg) {
-    int r = (*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x40)))(arg);
+    int r = ((int (*)(int))(*gRomCurveInterface)->slot40)(arg);
     if (r > -1) {
-        return (*(f32 (*)(int, int))(*(int *)(*gRomCurveInterface + 0x24)))(obj, r);
+        return ((f32 (*)(int, int))(*gRomCurveInterface)->slot24)(obj, r);
     }
     return lbl_803E1C88;
 }
@@ -1468,9 +1468,9 @@ int dll_2E_func0A(int idx, char *out)
     if (idx >= 0x1c) {
         return 0;
     }
-    r = (*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x40)))(idx);
+    r = ((int (*)(int))(*gRomCurveInterface)->slot40)(idx);
     if (r > -1) {
-        char *p = (char *)(*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x1c)))(r);
+        char *p = (char *)(*gRomCurveInterface)->getById(r);
         *(f32 *)(out + 0xc) = *(f32 *)(p + 0x8);
         *(f32 *)(out + 0x10) = *(f32 *)(p + 0xc);
         *(f32 *)(out + 0x14) = *(f32 *)(p + 0x10);
@@ -1496,9 +1496,9 @@ int dll_2E_func0C(int idx, char *out)
     int r;
 
     range = lbl_803E1C8C;
-    r = (*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x40)))(idx);
+    r = ((int (*)(int))(*gRomCurveInterface)->slot40)(idx);
     if (r > -1) {
-        char *p = (char *)(*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x1c)))(r);
+        char *p = (char *)(*gRomCurveInterface)->getById(r);
         char *q;
         *(f32 *)(out + 0xc) = *(f32 *)(p + 0x8);
         *(f32 *)(out + 0x10) = *(f32 *)(p + 0xc);
@@ -1777,15 +1777,15 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32 *d, int *fla
         if (fn_80114408(obj, 0, p4, p4 + 0x30, phase) != 0) {
             args[0] = 0x19;
             args[1] = 0x15;
-            (*(int (*)(int, int, f32, int *, u8))(*(int *)(*gRomCurveInterface + 0x8c)))(
-                curve, obj, lbl_803E1CB0, args, (u8)c);
+            (*gRomCurveInterface)->initCurve((void *)curve, (void *)obj, lbl_803E1CB0,
+                                             args, (u8)c);
             *flags |= 8;
             moved = 1;
         }
     } else {
         hit = 0;
         if (Curve_AdvanceAlongPath(curve) != 0 || *(int *)(curve + 0x10) != 0) {
-            hit = (*(u8 (*)(int))(*(int *)(*gRomCurveInterface + 0x90)))(curve);
+            hit = (*gRomCurveInterface)->goNextPoint((void *)curve);
         }
         ((GameObject *)obj)->anim.localPosX = *(f32 *)(curve + 0x68);
         ((GameObject *)obj)->anim.localPosY = *(f32 *)(curve + 0x6c);
