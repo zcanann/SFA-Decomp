@@ -103,20 +103,20 @@ void arwarwing_hitDetect(int obj)
 #pragma scheduling off
 void arwarwing_setFlightHalfWidth(int arwing, f32 width)
 {
-    (*(ArwingState **)(arwing + 0xb8))->flightHalfWidth = width;
+    (*(ArwingState **)&((GameObject *)arwing)->extra)->flightHalfWidth = width;
 }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_getRotY(int arwing) { return (s16)(*(ArwingState **)(arwing + 0xb8))->rotYCur; }
+int arwarwing_getRotY(int arwing) { return (s16)(*(ArwingState **)&((GameObject *)arwing)->extra)->rotYCur; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-void arwarwing_setRotY(int arwing, int rotY) { (*(ArwingState **)(arwing + 0xb8))->rotYCur = (s16)rotY; }
+void arwarwing_setRotY(int arwing, int rotY) { (*(ArwingState **)&((GameObject *)arwing)->extra)->rotYCur = (s16)rotY; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -124,7 +124,7 @@ void arwarwing_setRotY(int arwing, int rotY) { (*(ArwingState **)(arwing + 0xb8)
 #pragma scheduling off
 void arwarwing_getVelocity(int out, int arwing)
 {
-    *(Vec12 *)out = *(Vec12 *)&(*(ArwingState **)(arwing + 0xb8))->velX;
+    *(Vec12 *)out = *(Vec12 *)&(*(ArwingState **)&((GameObject *)arwing)->extra)->velX;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -133,7 +133,7 @@ void arwarwing_getVelocity(int out, int arwing)
 #pragma scheduling off
 void arwarwing_setVelocity(int arwing, int in)
 {
-    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    ArwingState *state = ((GameObject *)arwing)->extra;
     state->velX = *(f32 *)(in + 0);
     state->velY = *(f32 *)(in + 4);
     state->velZ = *(f32 *)(in + 8);
@@ -145,7 +145,7 @@ void arwarwing_setVelocity(int arwing, int in)
 #pragma scheduling off
 void arwarwing_addVelocity(int arwing, int in)
 {
-    int v = *(int *)(arwing + 0xb8) + 0x48;
+    int v = *(int *)&((GameObject *)arwing)->extra + 0x48;
     PSVECAdd(v, in, v);
 }
 #pragma scheduling reset
@@ -153,26 +153,26 @@ void arwarwing_addVelocity(int arwing, int in)
 
 #pragma peephole on
 #pragma scheduling off
-void arwarwing_clearActiveBomb(int arwing) { (*(ArwingState **)(arwing + 0xb8))->activeBombObj = 0; }
+void arwarwing_clearActiveBomb(int arwing) { (*(ArwingState **)&((GameObject *)arwing)->extra)->activeBombObj = 0; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_getRequiredRingCount(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->requiredRings; }
+int arwarwing_getRequiredRingCount(int arwing) { return (*(ArwingState **)&((GameObject *)arwing)->extra)->requiredRings; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_getCollectedRingCount(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->collectedRings; }
+int arwarwing_getCollectedRingCount(int arwing) { return (*(ArwingState **)&((GameObject *)arwing)->extra)->collectedRings; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling off
 void arwarwing_addScore(int arwing, u8 amount)
 {
-    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    ArwingState *state = ((GameObject *)arwing)->extra;
     u16 v;
     state->score = state->score + amount;
     v = state->score;
@@ -186,7 +186,7 @@ void arwarwing_addScore(int arwing, u8 amount)
 #pragma scheduling off
 int arwarwing_getScore(int arwing)
 {
-    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    ArwingState *state = ((GameObject *)arwing)->extra;
     if (state->score > 0x270f) {
         state->score = 0x270f;
     }
@@ -196,50 +196,50 @@ int arwarwing_getScore(int arwing)
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_getBombCount(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->bombCount; }
+int arwarwing_getBombCount(int arwing) { return (*(ArwingState **)&((GameObject *)arwing)->extra)->bombCount; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_getMaxShield(int arwing) { return *(s8 *)&(*(ArwingState **)(arwing + 0xb8))->maxShield; }
+int arwarwing_getMaxShield(int arwing) { return *(s8 *)&(*(ArwingState **)&((GameObject *)arwing)->extra)->maxShield; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_getShield(int arwing) { return *(s8 *)&(*(ArwingState **)(arwing + 0xb8))->shield; }
+int arwarwing_getShield(int arwing) { return *(s8 *)&(*(ArwingState **)&((GameObject *)arwing)->extra)->shield; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_incrementPickup6DACount(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->pickup6DACount)++; }
+int arwarwing_incrementPickup6DACount(int arwing) { return ((*(ArwingState **)&((GameObject *)arwing)->extra)->pickup6DACount)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_incrementPickup6DBCount(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->pickup6DBCount)++; }
+int arwarwing_incrementPickup6DBCount(int arwing) { return ((*(ArwingState **)&((GameObject *)arwing)->extra)->pickup6DBCount)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_incrementPickup6D9Count(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->pickup6D9Count)++; }
+int arwarwing_incrementPickup6D9Count(int arwing) { return ((*(ArwingState **)&((GameObject *)arwing)->extra)->pickup6D9Count)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int arwarwing_incrementPickup6D8Count(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->pickup6D8Count)++; }
+int arwarwing_incrementPickup6D8Count(int arwing) { return ((*(ArwingState **)&((GameObject *)arwing)->extra)->pickup6D8Count)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling off
 int arwarwing_incrementCollectedRingCount(int arwing)
 {
-    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    ArwingState *state = ((GameObject *)arwing)->extra;
     if (state->collectedRings == 9) {
         state->score = state->score + 0x64;
         if (state->score > 0x270f) {
@@ -254,7 +254,7 @@ int arwarwing_incrementCollectedRingCount(int arwing)
 #pragma scheduling off
 void arwarwing_addMaxShield(int arwing, int p2)
 {
-    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    ArwingState *state = ((GameObject *)arwing)->extra;
     *(s8 *)&state->maxShield = state->maxShield + p2;
 }
 #pragma scheduling reset
@@ -263,7 +263,7 @@ void arwarwing_addMaxShield(int arwing, int p2)
 #pragma scheduling off
 void arwarwing_addShield(int arwing, int p2)
 {
-    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    ArwingState *state = ((GameObject *)arwing)->extra;
     s8 v;
 
     *(s8 *)&state->shield = state->shield + p2;
@@ -586,7 +586,7 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
 #pragma scheduling on
 void arwarwing_addBomb(int arwing)
 {
-    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    ArwingState *state = ((GameObject *)arwing)->extra;
     if (state->bombCount < state->maxBombCount) {
         (state->bombCount)++;
     }
@@ -598,7 +598,7 @@ void arwarwing_addBomb(int arwing)
 #pragma scheduling on
 void arwarwing_upgradeLaserLevel(int arwing)
 {
-    ArwingState *state = *(ArwingState **)(arwing + 0xb8);
+    ArwingState *state = ((GameObject *)arwing)->extra;
     if ((s8)state->laserLevel < 2) {
         (state->laserLevel)++;
     }
@@ -611,7 +611,7 @@ void arwarwing_upgradeLaserLevel(int arwing)
 int arwarwing_isExplodingOrWarping(int arwing)
 {
     int result = 0;
-    u32 v = (*(ArwingState **)(arwing + 0xb8))->mode;
+    u32 v = (*(ArwingState **)&((GameObject *)arwing)->extra)->mode;
     if (v == 5 || v == 6) {
         result = 1;
     }
@@ -622,13 +622,13 @@ int arwarwing_isExplodingOrWarping(int arwing)
 
 #pragma peephole on
 #pragma scheduling on
-int arwarwing_isBarrelRolling(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->mode == 1; }
+int arwarwing_isBarrelRolling(int arwing) { return (*(ArwingState **)&((GameObject *)arwing)->extra)->mode == 1; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling on
-int arwarwing_isDead(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->mode == 4; }
+int arwarwing_isDead(int arwing) { return (*(ArwingState **)&((GameObject *)arwing)->extra)->mode == 4; }
 #pragma scheduling reset
 #pragma peephole reset
 

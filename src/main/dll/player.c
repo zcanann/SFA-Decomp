@@ -405,7 +405,7 @@ int fn_80296AE8(int obj)
 #pragma peephole off
 int playerGetMoney(void *player)
 {
-    PlayerState *inner = *(PlayerState **)((char *)player + 0xb8);
+    PlayerState *inner = ((GameObject *)player)->extra;
     return *(u8 *)((char *)inner->unk35C + 8);
 }
 #pragma peephole reset
@@ -1395,7 +1395,7 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
 #pragma peephole off
 void playerCalcWaterCurrent(f32 *outX, f32 *outZ, int player)
 {
-    PlayerState *inner = *(PlayerState **)((char *)player + 0xb8);
+    PlayerState *inner = ((GameObject *)player)->extra;
     f32 sumC = lbl_803E7EA4;
     f32 sumS = lbl_803E7EA4;
     int any = 0;
@@ -1409,10 +1409,10 @@ void playerCalcWaterCurrent(f32 *outX, f32 *outZ, int player)
         if (*(u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x1a) & 2) {
             f32 dy;
             any = 1;
-            dy = *(f32 *)((char *)o + 0x10) - *(f32 *)((char *)player + 0x10);
+            dy = *(f32 *)((char *)o + 0x10) - ((GameObject *)player)->anim.localPosY;
             if (dy <= 200.0f && dy >= -200.0f) {
-                f32 dx = *(f32 *)((char *)o + 0xc) - *(f32 *)((char *)player + 0xc);
-                f32 dz = *(f32 *)((char *)o + 0x14) - *(f32 *)((char *)player + 0x14);
+                f32 dx = *(f32 *)((char *)o + 0xc) - ((GameObject *)player)->anim.localPosX;
+                f32 dz = *(f32 *)((char *)o + 0x14) - ((GameObject *)player)->anim.localPosZ;
                 f32 dist = sqrtf(dx * dx + dz * dz);
                 f32 thresh =
                     1.5f * (f32)(u32) * (u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x19);
@@ -1439,10 +1439,10 @@ void playerCalcWaterCurrent(f32 *outX, f32 *outZ, int player)
             (f32)(u32) * (u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x32) / 10.0f;
         f32 dy;
         any = 1;
-        dy = *(f32 *)((char *)o + 0x10) - *(f32 *)((char *)player + 0x10);
+        dy = *(f32 *)((char *)o + 0x10) - ((GameObject *)player)->anim.localPosY;
         if (dy <= 200.0f && dy >= -200.0f) {
-            f32 dx = *(f32 *)((char *)o + 0xc) - *(f32 *)((char *)player + 0xc);
-            f32 dz = *(f32 *)((char *)o + 0x14) - *(f32 *)((char *)player + 0x14);
+            f32 dx = *(f32 *)((char *)o + 0xc) - ((GameObject *)player)->anim.localPosX;
+            f32 dz = *(f32 *)((char *)o + 0x14) - ((GameObject *)player)->anim.localPosZ;
             int a22 = (s16)(getAngle(dx, dz) + 0x84d0);
             f32 dist = sqrtf(dx * dx + dz * dz);
             f32 thresh = (f32)(int)(*(u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x29) << 3);
@@ -12696,11 +12696,11 @@ int fn_802A418C(int obj, int state, f32 fv)
                     *(u8 *)(setup + 0x6) = 0xff;
                     *(u8 *)(setup + 0x5) = 1;
                     *(u8 *)(setup + 0x7) = 0xff;
-                    *(int *)&((ObjPlacement *)setup)->posX = *(int *)((char *)player + 0xc);
-                    *(int *)&((ObjPlacement *)setup)->posY = *(int *)((char *)player + 0x10);
-                    *(int *)&((ObjPlacement *)setup)->posZ = *(int *)((char *)player + 0x14);
+                    *(int *)&((ObjPlacement *)setup)->posX = *(int *)&((GameObject *)player)->anim.localPosX;
+                    *(int *)&((ObjPlacement *)setup)->posY = *(int *)&((GameObject *)player)->anim.localPosY;
+                    *(int *)&((ObjPlacement *)setup)->posZ = *(int *)&((GameObject *)player)->anim.localPosZ;
                     att = (void *)Obj_SetupObject((int)setup, 4, *(s8 *)((char *)player + 0xac),
-                                                  -1, *(int *)((char *)player + 0x30));
+                                                  -1, *(int *)&((GameObject *)player)->anim.parent);
                     lbl_803DE444 = att;
                 }
                 ((void (*)(int, void *, int))ObjLink_AttachChild)(obj, att, 1);
