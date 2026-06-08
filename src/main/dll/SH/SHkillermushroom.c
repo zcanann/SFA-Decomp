@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/dim_bossgut.h"
 #include "main/dll/SH/SHkillermushroom.h"
@@ -63,7 +64,6 @@ extern undefined4 DAT_80327960;
 extern undefined4 DAT_80327964;
 extern undefined4 DAT_80327968;
 extern u8 framesThisStep;
-extern ExpgfxInterface **gExpgfxInterface;
 extern undefined4* DAT_803dd708;
 extern f32 timeDelta;
 extern f64 DOUBLE_803e5ff8;

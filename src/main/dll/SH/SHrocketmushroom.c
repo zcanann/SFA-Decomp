@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/SH/SHrocketmushroom.h"
@@ -41,7 +42,6 @@ extern void bombplantspore_startDriftBurst(void *obj, void *state);
 extern void bombplantspore_updateDrift(void *obj, void *state);
 
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern ExpgfxInterface **gExpgfxInterface;
 extern void *gPathControlInterface;
 extern EffectInterface **gPartfxInterface;
 extern u8 framesThisStep;

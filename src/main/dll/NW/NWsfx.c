@@ -1,5 +1,6 @@
 #include "main/dll/NW/NWsfx.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/SH/SHthorntail_internal.h"
@@ -30,7 +31,6 @@ extern void objMove(u8 *obj, f32 vx, f32 vy, f32 vz);
 
 extern int *gRomCurveInterface;
 extern EffectInterface **gPartfxInterface;
-extern ExpgfxInterface **gExpgfxInterface;
 
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;

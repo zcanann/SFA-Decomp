@@ -1,5 +1,6 @@
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
@@ -1451,7 +1452,6 @@ void explodeanimator_free(int x) { ObjGroup_RemoveObject(x, 0x1a); }
 u32 dimbossicesmash_getObjectTypeId(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x18) << 11) | 0x400; }
 
 /* Drift-recovery: add new fns with v1.0 names. */
-extern ExpgfxInterface **gExpgfxInterface;
 extern void disableHeavyFog(void);
 
 #pragma scheduling off

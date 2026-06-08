@@ -1,5 +1,6 @@
 #include "main/dll/ediblemushroom.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
@@ -34,7 +35,6 @@ extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 
 extern undefined4* DAT_803dd71c;
-extern ExpgfxInterface **gExpgfxInterface;
 extern f64 DOUBLE_803e5f58;
 extern f32 FLOAT_803e5f20;
 extern f32 FLOAT_803e5f2c;
