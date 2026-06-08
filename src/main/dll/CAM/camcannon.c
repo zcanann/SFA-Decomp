@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camcannon.h"
+#include "main/camera_interface.h"
 #include "main/dll/CAM/camcannon_state.h"
 
 
@@ -9,7 +10,6 @@ extern f32 Curve_EvalHermite(f32 param_1, float *param_2, float *param_3);
 extern undefined4 FUN_80017814();
 extern f32 sqrtf(f32 x);
 
-extern int *gCameraInterface;
 extern undefined4 lbl_803DD560;
 extern f64 lbl_803E18A0;
 extern f32 timeDelta;
@@ -160,9 +160,9 @@ void cameraModeTestStrengthFn_8010b238(f32 param_1, s16 *param_2, f32 *param_3, 
   fVar3 = *(f32 *)(lbl_803DD560 + 0x24) - *(f32 *)(lbl_803DD560 + 0x20);
   *(f32 *)(lbl_803DD560 + 0x60) = sqrtf(fVar1 * fVar1 + fVar2 * fVar2 + fVar3 * fVar3);
   camState = lbl_803DD560;
-  (**(void (**)(int, f64, f64, f64, f64, f64))(*gCameraInterface + 0x34))
-            (camState + 0x48, (f64)*(f32 *)(camState + 0x60), (f64)lbl_803E18B0,
-             (f64)lbl_803E18B4, (f64)lbl_803E18B4, (f64)lbl_803E18B8);
+  (*gCameraInterface)->initialise((f32 *)(camState + 0x48), (f64)*(f32 *)(camState + 0x60),
+                                  (f64)lbl_803E18B0, (f64)lbl_803E18B4,
+                                  (f64)lbl_803E18B4, (f64)lbl_803E18B8);
 }
 
 /*

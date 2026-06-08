@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/CAM/dll_59.h"
 #include "main/mm.h"
@@ -20,7 +21,6 @@ extern f32 mathCosf(f32 angle);
 extern void Curve_EvalBSpline(void);
 extern void Curve_BuildBSplineCoeffs(void);
 
-extern int *gCameraInterface;
 extern u8 *lbl_803DD538;
 extern f32* lbl_803DD540;
 extern f64 lbl_803E1750;
@@ -62,7 +62,6 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
 {
   int cameraObj;
   s16 *target;
-  int iface;
   int view;
   f32 cosFacing;
   f32 sinFacing;
@@ -94,8 +93,7 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   }
   memset(gCamcontrolPathState, 0, 0x1c0);
 
-  iface = *gCameraInterface;
-  view = (*(int (**)(int))(iface + 0x18))(iface);
+  view = (int)(*gCameraInterface)->getDefaultHandlerEntry();
   (*(void (**)(f32 *, f32 *, f32 *, int, f32 *))(**(int **)(view + 4) + 0x20))
       ((f32 *)(gCamcontrolPathState + 4), (f32 *)(gCamcontrolPathState + 8),
        (f32 *)(gCamcontrolPathState + 0xc), 0, (f32 *)(gCamcontrolPathState + 0x10));
@@ -229,9 +227,10 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
       Sfx_PlayFromObject(0, SFXsc_snort03);
     }
 
-    (*(void (**)(f32 *, f32, f32, f32, f32, f32))(*gCameraInterface + 0x34))
-        ((f32 *)(gCamcontrolPathState + 0x10c), *(f32 *)(gCamcontrolPathState + 0x12c),
-         lbl_803E1774, lbl_803E1770, lbl_803E1744, lbl_803E1778);
+    (*gCameraInterface)->initialise((f32 *)(gCamcontrolPathState + 0x10c),
+                                    *(f32 *)(gCamcontrolPathState + 0x12c),
+                                    lbl_803E1774, lbl_803E1770, lbl_803E1744,
+                                    lbl_803E1778);
 
     *(f32 *)(gCamcontrolPathState + 0x14) = lbl_803E1758;
     *(f32 *)(gCamcontrolPathState + 0x18) = lbl_803E175C;
