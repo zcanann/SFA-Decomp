@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/DB/DBprotection.h"
@@ -151,7 +152,6 @@ extern f32 lbl_803E57E0;
  * PAL Size: TODO
  */
 extern u8 framesThisStep;
-extern int *gCameraInterface;
 extern MapEventInterface **gMapEventInterface;
 extern f32 sqrtf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -225,7 +225,7 @@ extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
 #define DBPROT_CAMERA_SHAKE(amount, arg) \
-  ((void (*)(f32 *, int))(*(u32 *)((u8 *)*gCameraInterface + 0x60)))((amount), (arg))
+  (*gCameraInterface)->releaseAction((amount), (arg))
 #define DBPROT_MAP_EVENT(layer, a, b) \
   (*gMapEventInterface)->setAnimEvent((layer), (a), (b))
 #define DBPROT_SCREEN_FADE(kind, value) \
