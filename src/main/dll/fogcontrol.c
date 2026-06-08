@@ -342,9 +342,9 @@ void FUN_80179b34(double param_1,double param_2,double param_3,undefined8 param_
   }
 LAB_80179e98:
   if (*(char *)(*(int *)(param_9 + 0x5c) + 0x25b) == '\x01') {
-    (**(code **)(*DAT_803dd728 + 0x10))((double)lbl_803DC074,param_9,iVar8);
-    (**(code **)(*DAT_803dd728 + 0x14))(param_9,iVar8);
-    (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,param_9,iVar8);
+    (*gPathControlInterface)->update(param_9, (void *)iVar8, lbl_803DC074);
+    (*gPathControlInterface)->apply(param_9, (void *)iVar8);
+    (*gPathControlInterface)->advance(param_9, (void *)iVar8, lbl_803DC074);
   }
   else {
     (**(code **)(*DAT_803dd728 + 0x20))(param_9);
