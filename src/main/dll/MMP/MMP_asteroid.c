@@ -1634,38 +1634,38 @@ void dimbossicesmash_update(u8 *obj)
             ((DimBossIceSmashState *)state)->unk280 =
                 timeDelta * ((DimBossIceSmashState *)state)->unk28C + ((DimBossIceSmashState *)state)->unk280;
             if ((state[0x29f] & 1) != 0) {
-                if (((GameObject *)obj)->anim.velocityX < lbl_803E4034) {
+                if (((GameObject *)obj)->anim.velocityX < *(f32 *)&lbl_803E4034) {
                     ((GameObject *)obj)->anim.velocityX = lbl_803E4034;
                 }
-            } else if (((GameObject *)obj)->anim.velocityX > lbl_803E4034) {
+            } else if (((GameObject *)obj)->anim.velocityX > *(f32 *)&lbl_803E4034) {
                 ((GameObject *)obj)->anim.velocityX = lbl_803E4034;
             }
             if ((state[0x29f] & 2) != 0) {
-                if (((GameObject *)obj)->anim.velocityZ < lbl_803E4034) {
+                if (((GameObject *)obj)->anim.velocityZ < *(f32 *)&lbl_803E4034) {
                     ((GameObject *)obj)->anim.velocityZ = lbl_803E4034;
                 }
-            } else if (((GameObject *)obj)->anim.velocityZ > lbl_803E4034) {
+            } else if (((GameObject *)obj)->anim.velocityZ > *(f32 *)&lbl_803E4034) {
                 ((GameObject *)obj)->anim.velocityZ = lbl_803E4034;
             }
             if ((state[0x29f] & 4) != 0) {
-                if (((DimBossIceSmashState *)state)->unk278 < lbl_803E4034) {
+                if (((DimBossIceSmashState *)state)->unk278 < *(f32 *)&lbl_803E4034) {
                     ((DimBossIceSmashState *)state)->unk278 = lbl_803E4034;
                 }
-            } else if (((DimBossIceSmashState *)state)->unk278 > lbl_803E4034) {
+            } else if (((DimBossIceSmashState *)state)->unk278 > *(f32 *)&lbl_803E4034) {
                 ((DimBossIceSmashState *)state)->unk278 = lbl_803E4034;
             }
             if ((state[0x29f] & 8) != 0) {
-                if (((DimBossIceSmashState *)state)->unk27C < lbl_803E4034) {
+                if (((DimBossIceSmashState *)state)->unk27C < *(f32 *)&lbl_803E4034) {
                     ((DimBossIceSmashState *)state)->unk27C = lbl_803E4034;
                 }
-            } else if (((DimBossIceSmashState *)state)->unk27C > lbl_803E4034) {
+            } else if (((DimBossIceSmashState *)state)->unk27C > *(f32 *)&lbl_803E4034) {
                 ((DimBossIceSmashState *)state)->unk27C = lbl_803E4034;
             }
             if ((state[0x29f] & 0x10) != 0) {
-                if (((DimBossIceSmashState *)state)->unk280 < lbl_803E4034) {
+                if (((DimBossIceSmashState *)state)->unk280 < *(f32 *)&lbl_803E4034) {
                     ((DimBossIceSmashState *)state)->unk280 = lbl_803E4034;
                 }
-            } else if (((DimBossIceSmashState *)state)->unk280 > lbl_803E4034) {
+            } else if (((DimBossIceSmashState *)state)->unk280 > *(f32 *)&lbl_803E4034) {
                 ((DimBossIceSmashState *)state)->unk280 = lbl_803E4034;
             }
             ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.velocityX * timeDelta + ((GameObject *)obj)->anim.localPosX;
