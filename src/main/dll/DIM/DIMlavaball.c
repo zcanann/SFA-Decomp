@@ -825,15 +825,11 @@ void FUN_801a7a94(undefined8 param_1,double param_2,double param_3,undefined8 pa
       dVar5 = DOUBLE_803e51d8;
       *(short *)(pbVar4 + 0x14) =
            (short)(int)(lbl_803E51A4 * lbl_803DC074 +
-                       (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(pbVar4 + 0x14)) -
-                              DOUBLE_803e51d8));
-      local_38 = (double)CONCAT44(0x43300000,(uint)*(ushort *)(pbVar4 + 0x16));
+                       (f32)(u32)*(ushort *)(pbVar4 + 0x14));
       *(short *)(pbVar4 + 0x16) =
-           (short)(int)(lbl_803E51A8 * lbl_803DC074 + (float)(local_38 - dVar5));
+           (short)(int)(lbl_803E51A8 * lbl_803DC074 + (f32)(u32)*(ushort *)(pbVar4 + 0x16));
       *(short *)(pbVar4 + 0x18) =
-           (short)(int)(lbl_803E51AC * lbl_803DC074 +
-                       (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(pbVar4 + 0x18)) - dVar5
-                              ));
+           (short)(int)(lbl_803E51AC * lbl_803DC074 + (f32)(u32)*(ushort *)(pbVar4 + 0x18));
       param_3 = (double)lbl_803E51B0;
       FUN_80017a88(param_3,(double)(*(float *)(param_9 + 0x28) * lbl_803DC074),param_3,param_9);
       dVar5 = (double)FUN_80293f90();
