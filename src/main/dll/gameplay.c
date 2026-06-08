@@ -4065,7 +4065,7 @@ void FUN_800eb464(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     }
   }
   local_334 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0x11,&DAT_803128a8,8,&DAT_80312954,0xc0d,0);
+  (*gModgfxInterface)->spawnEffect(&local_378,0,0x11,&DAT_803128a8,8,&DAT_80312954,0xc0d,0);
   FUN_8028688c();
   return;
 }
@@ -4403,7 +4403,7 @@ void FUN_800eb4d0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     local_44c = iVar6;
     local_40c = (short)uVar22;
     local_3fc = param_4 | 0x2000490;
-    (**(code **)(*DAT_803dd6fc + 8))(&local_450,0,uVar9,puVar10,uVar11,puVar12,0,0);
+    (*gModgfxInterface)->spawnEffect(&local_450,0,uVar9,puVar10,uVar11,puVar12,0,0);
   }
   TRKNubMainLoop();
   return;
@@ -4776,7 +4776,8 @@ void FUN_800eb6f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         local_39f = (char)iVar1 - (char)(iVar1 >> 0x1f);
         local_3fc = &local_39c;
         local_3a8 = param_12 | 0x4000000;
-        (**(code **)(*DAT_803dd6fc + 8))(&local_3fc,0,4,&DAT_80312a80,4,&DAT_80312aa8,0,uVar4);
+        (*gModgfxInterface)->spawnEffect(&local_3fc,0,4,&DAT_80312a80,4,&DAT_80312aa8,0,
+                                         (void *)uVar4);
       }
       uVar3 = randomGetRange(2,6);
       if (uVar6 == 7) {
@@ -5156,7 +5157,7 @@ void FUN_800ec43c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     }
   }
   local_334 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0x15,&DAT_80312b70,0x18,&DAT_80312c44,0x20b,0);
+  (*gModgfxInterface)->spawnEffect(&local_378,0,0x15,&DAT_80312b70,0x18,&DAT_80312c44,0x20b,0);
   FUN_8028688c();
   return;
 }
@@ -5398,7 +5399,7 @@ void FUN_800ec4a8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     }
   }
   local_334 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0x15,&DAT_80312d80,0x18,&DAT_80312e54,0x20b,0);
+  (*gModgfxInterface)->spawnEffect(&local_378,0,0x15,&DAT_80312d80,0x18,&DAT_80312e54,0x20b,0);
   FUN_8028688c();
   return;
 }
@@ -5743,7 +5744,7 @@ void FUN_800eca00(int param_1,undefined2 param_2,int param_3,uint param_4)
   }
   local_374 = param_1;
   local_334 = param_2;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0xe,&DAT_803132a0,0xc,&DAT_8031332c,0x48,0);
+  (*gModgfxInterface)->spawnEffect(&local_378,0,0xe,&DAT_803132a0,0xc,&DAT_8031332c,0x48,0);
   return;
 }
 
@@ -6026,7 +6027,7 @@ void FUN_800eca64(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_398 = &local_338;
   local_394 = iVar2;
   local_354 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_398,0,0xe,&DAT_803133e0,0xc,&DAT_8031346c,0x46,0);
+  (*gModgfxInterface)->spawnEffect(&local_398,0,0xe,&DAT_803133e0,0xc,&DAT_8031346c,0x46,0);
   FUN_80286888();
   return;
 }
@@ -6334,7 +6335,7 @@ void FUN_800ecb04(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_344 = extraout_r4;
   local_2a8 = local_2ac;
   local_2a4 = local_2ac;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,9,&DAT_80313538,8,&DAT_80313594,0x90,0);
+  (*gModgfxInterface)->spawnEffect(&local_388,0,9,&DAT_80313538,8,&DAT_80313594,0x90,0);
   FUN_80286888();
   return;
 }
@@ -6636,7 +6637,7 @@ void FUN_800ecb7c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     }
   }
   local_264 = local_294;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,0x15,&DAT_80313618,0x18,&DAT_803136ec,0x5e0,0);
+  (*gModgfxInterface)->spawnEffect(&local_388,0,0x15,&DAT_80313618,0x18,&DAT_803136ec,0x5e0,0);
   FUN_80286884();
   return;
 }
@@ -7045,7 +7046,7 @@ void FUN_800ecbf8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_304 = local_30c;
   local_2dc = local_2d4;
   local_2c4 = local_2bc;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,0xe,&DAT_80313828,0xc,&DAT_803138b4,0x40,0);
+  (*gModgfxInterface)->spawnEffect(&local_388,0,0xe,&DAT_80313828,0xc,&DAT_803138b4,0x40,0);
   FUN_80286880();
   return;
 }
@@ -7268,7 +7269,7 @@ void FUN_800ecd94(int param_1,int param_2,int param_3,uint param_4)
     }
   }
   local_374 = param_1;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0xe,&DAT_80313968,0xc,&DAT_803139f4,0x5e0,0);
+  (*gModgfxInterface)->spawnEffect(&local_378,0,0xe,&DAT_80313968,0xc,&DAT_803139f4,0x5e0,0);
   return;
 }
 
@@ -7548,7 +7549,7 @@ void FUN_800ece08(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
       local_354 = lbl_803E15B8 + *(float *)(local_384 + 0x20);
     }
   }
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,0xe,&DAT_80313aa8,0xc,&DAT_80313b34,0x40,0);
+  (*gModgfxInterface)->spawnEffect(&local_388,0,0xe,&DAT_80313aa8,0xc,&DAT_80313b34,0x40,0);
   FUN_8028688c();
   return;
 }
@@ -7840,7 +7841,7 @@ void FUN_800ece84(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
       local_354 = lbl_803E15E8 + *(float *)(local_384 + 0x20);
     }
   }
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,0x15,&DAT_80313be8,0x18,&DAT_80313cbc,0x5e0,0);
+  (*gModgfxInterface)->spawnEffect(&local_388,0,0x15,&DAT_80313be8,0x18,&DAT_80313cbc,0x5e0,0);
   FUN_80286884();
   return;
 }
@@ -8190,7 +8191,7 @@ void FUN_800ecef0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     }
   }
   local_344 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,0x15,&DAT_80313df8,0x18,&DAT_80313ecc,0x155,0);
+  (*gModgfxInterface)->spawnEffect(&local_388,0,0x15,&DAT_80313df8,0x18,&DAT_80313ecc,0x155,0);
   FUN_80286884();
   return;
 }
@@ -8371,7 +8372,7 @@ void FUN_800ecf5c(int param_1,undefined2 param_2,int param_3,uint param_4)
   }
   local_374 = param_1;
   local_334 = param_2;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0x15,&DAT_80314008,0x18,&DAT_803140dc,0xe3,0);
+  (*gModgfxInterface)->spawnEffect(&local_378,0,0x15,&DAT_80314008,0x18,&DAT_803140dc,0xe3,0);
   return;
 }
 
@@ -8607,7 +8608,7 @@ void FUN_800ecfc0(int param_1,undefined2 param_2,int param_3,uint param_4)
   }
   local_374 = param_1;
   local_334 = param_2;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0x15,&DAT_80314218,0x18,&DAT_803142ec,0x41,0);
+  (*gModgfxInterface)->spawnEffect(&local_378,0,0x15,&DAT_80314218,0x18,&DAT_803142ec,0x41,0);
   return;
 }
 
@@ -8861,7 +8862,7 @@ void FUN_800ed024(short *param_1,int param_2,int param_3,uint param_4,undefined4
   }
   local_384 = param_1;
   local_30c = local_304;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,8,&DAT_80314448,4,&DAT_80314498,uVar3,0);
+  (*gModgfxInterface)->spawnEffect(&local_388,0,8,&DAT_80314448,4,&DAT_80314498,uVar3,0);
   return;
 }
 
@@ -9100,7 +9101,7 @@ void FUN_800ed228(int param_1,int param_2,int param_3,uint param_4)
     }
   }
   local_384 = param_1;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,0x12,&DAT_803144f0,0x10,&DAT_803145a4,0x3e,0);
+  (*gModgfxInterface)->spawnEffect(&local_388,0,0x12,&DAT_803144f0,0x10,&DAT_803145a4,0x3e,0);
   return;
 }
 
@@ -9266,7 +9267,7 @@ void FUN_800ed2f0(int param_1,undefined2 param_2,int param_3,uint param_4)
   }
   local_364 = param_1;
   local_324 = param_2;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_368,0,0xe,&DAT_80314740,0xc,&DAT_803147cc,0x34,0);
+  (*gModgfxInterface)->spawnEffect(&local_368,0,0xe,&DAT_80314740,0xc,&DAT_803147cc,0x34,0);
   return;
 }
 
@@ -9432,7 +9433,7 @@ void FUN_800ed354(int param_1,undefined2 param_2,int param_3,uint param_4)
   }
   local_364 = param_1;
   local_324 = param_2;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_368,0,5,&DAT_80314880,4,&DAT_803148b4,0x5e,0);
+  (*gModgfxInterface)->spawnEffect(&local_368,0,5,&DAT_80314880,4,&DAT_803148b4,0x5e,0);
   return;
 }
 
@@ -9935,7 +9936,7 @@ void FUN_800ed3b8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     }
   }
   local_354 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_398,0,0x18,&DAT_80314910,0x10,&DAT_80314a00,0x48,0);
+  (*gModgfxInterface)->spawnEffect(&local_398,0,0x18,&DAT_80314910,0x10,&DAT_80314a00,0x48,0);
   FUN_80286870();
   return;
 }
@@ -10397,7 +10398,7 @@ void FUN_800ed424(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     }
   }
   local_354 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_398,0,0x12,&DAT_80314ae8,0x10,&DAT_80314b9c,0x45,0);
+  (*gModgfxInterface)->spawnEffect(&local_398,0,0x12,&DAT_80314ae8,0x10,&DAT_80314b9c,0x45,0);
   FUN_80286870();
   return;
 }
@@ -10681,7 +10682,7 @@ void FUN_800ed490(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     }
   }
   local_344 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,0x15,&DAT_80314cb0,0x18,&DAT_80314d84,0x154,0);
+  (*gModgfxInterface)->spawnEffect(&local_388,0,0x15,&DAT_80314cb0,0x18,&DAT_80314d84,0x154,0);
   FUN_80286884();
   return;
 }
@@ -10908,7 +10909,7 @@ void FUN_800ed4fc(int param_1,undefined2 param_2,int param_3,uint param_4)
   }
   local_374 = param_1;
   local_334 = param_2;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0x15,&DAT_80314ed8,0x18,&DAT_80314fac,0x154,0);
+  (*gModgfxInterface)->spawnEffect(&local_378,0,0x15,&DAT_80314ed8,0x18,&DAT_80314fac,0x154,0);
   return;
 }
 
@@ -11241,7 +11242,7 @@ void FUN_800ed560(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_388 = &local_328;
   local_384 = iVar2;
   local_344 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,0x15,&DAT_80315100,0x18,&DAT_803151d4,0xd9,0);
+  (*gModgfxInterface)->spawnEffect(&local_388,0,0x15,&DAT_80315100,0x18,&DAT_803151d4,0xd9,0);
   FUN_80286888();
   return;
 }
@@ -11481,7 +11482,7 @@ void FUN_800ed68c(int param_1,int param_2,int param_3,uint param_4)
     }
   }
   local_364 = param_1;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_368,0,0,0,0,0,0,0);
+  (*gModgfxInterface)->spawnEffect(&local_368,0,0,0,0,0,0,0);
   return;
 }
 
@@ -11651,7 +11652,7 @@ void FUN_800ed880(int param_1,undefined2 param_2,int param_3,uint param_4)
   }
   local_364 = param_1;
   local_324 = param_2;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_368,0,0,0,0,0,0,0);
+  (*gModgfxInterface)->spawnEffect(&local_368,0,0,0,0,0,0,0);
   return;
 }
 
@@ -11821,7 +11822,7 @@ void FUN_800ed8e4(int param_1,undefined2 param_2,int param_3,uint param_4)
   }
   local_364 = param_1;
   local_324 = param_2;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_368,0,0,0,0,0,0,0);
+  (*gModgfxInterface)->spawnEffect(&local_368,0,0,0,0,0,0,0);
   return;
 }
 
@@ -12107,7 +12108,7 @@ void FUN_800ed948(int param_1,undefined2 param_2,short *param_3,uint param_4)
   local_384 = param_1;
   local_344 = param_2;
   local_2bc = local_2c4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,0xe,&DAT_80315600,0xc,&DAT_8031568c,0x34,0);
+  (*gModgfxInterface)->spawnEffect(&local_388,0,0xe,&DAT_80315600,0xc,&DAT_8031568c,0x34,0);
   return;
 }
 
@@ -12464,17 +12465,17 @@ void FUN_800ed9ac(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_384 = iVar2;
   if (iVar3 == 0) {
     local_330 = 0;
-    (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,9,&DAT_80315740,8,&DAT_8031579c,0x156,0);
+    (*gModgfxInterface)->spawnEffect(&local_388,0,9,&DAT_80315740,8,&DAT_8031579c,0x156,0);
   }
   else if (iVar3 == 1) {
     local_330 = 0;
     local_334 = param_4 | 0x4000004;
-    (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,9,&DAT_80315740,8,&DAT_8031579c,0x89,0);
+    (*gModgfxInterface)->spawnEffect(&local_388,0,9,&DAT_80315740,8,&DAT_8031579c,0x89,0);
   }
   else if (iVar3 == 2) {
     local_330 = 0;
     local_334 = param_4 | 0x4000004;
-    (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,9,&DAT_80315740,8,&DAT_8031579c,0x23b,0);
+    (*gModgfxInterface)->spawnEffect(&local_388,0,9,&DAT_80315740,8,&DAT_8031579c,0x23b,0);
   }
   FUN_80286880();
   return;
@@ -12694,11 +12695,11 @@ void FUN_800ee000(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_3b4 = iVar2;
   if (iVar3 == 0) {
     local_360 = 0;
-    (**(code **)(*DAT_803dd6fc + 8))(&local_3b8,0,9,&DAT_80315820,8,&DAT_8031587c,0x156,0);
+    (*gModgfxInterface)->spawnEffect(&local_3b8,0,9,&DAT_80315820,8,&DAT_8031587c,0x156,0);
   }
   else if (iVar3 == 1) {
     local_360 = 0;
-    (**(code **)(*DAT_803dd6fc + 8))(&local_3b8,0,9,&DAT_80315820,8,&DAT_8031587c,0xc0d,0);
+    (*gModgfxInterface)->spawnEffect(&local_3b8,0,9,&DAT_80315820,8,&DAT_8031587c,0xc0d,0);
   }
   FUN_80286884();
   return;
@@ -12973,7 +12974,7 @@ void FUN_800ee10c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
       local_364 = local_364 + *(float *)(local_394 + 0x20);
     }
   }
-  (**(code **)(*DAT_803dd6fc + 8))(&local_398,0,0xe,&DAT_80315900,0xc,&DAT_8031598c,0x8e,0);
+  (*gModgfxInterface)->spawnEffect(&local_398,0,0xe,&DAT_80315900,0xc,&DAT_8031598c,0x8e,0);
   FUN_80286884();
   return;
 }
