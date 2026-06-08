@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/dll/SC/SCanimobj.h"
 #include "main/dll/SC/SClantern.h"
@@ -276,14 +277,13 @@ int sh_levelcontrol_getExtraSize(void)
 }
 
 extern void envFxActFn_800887f8(int);
-extern void *gGameUIInterface;
 
 #pragma scheduling off
 void sh_levelcontrol_free(void)
 {
     envFxActFn_800887f8(0);
     if (GameBit_Get(0x13F) == 0) {
-        (*(void (***)(void))gGameUIInterface)[0x19]();
+        (*gGameUIInterface)->airMeterShutdown();
     }
     if (GameBit_Get(0x193) != 0) {
         GameBit_Set(0x194, 0);
