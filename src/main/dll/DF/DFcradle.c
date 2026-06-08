@@ -40,7 +40,6 @@ extern undefined4 DAT_8032692e;
 extern undefined4 DAT_80326930;
 extern undefined4 DAT_80326932;
 extern f32 lbl_80325D68[];
-extern undefined4* DAT_803dd6f8;
 extern EffectInterface **gPartfxInterface;
 extern f64 DOUBLE_803e5a28;
 extern f64 lbl_803E4DC8;

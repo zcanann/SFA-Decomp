@@ -33,7 +33,6 @@ extern int FUN_80294dbc();
 extern uint countLeadingZeros();
 
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6f8;
 extern EffectInterface **gPartfxInterface;
 extern f64 DOUBLE_803e40e0;
 extern f64 DOUBLE_803e4108;

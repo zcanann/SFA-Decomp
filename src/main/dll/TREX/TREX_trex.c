@@ -133,7 +133,7 @@ extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dc071;
 extern undefined4 DAT_803dcd00;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern undefined4* DAT_803dd6fc;
+extern ModgfxInterface **gModgfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
@@ -1011,10 +1011,10 @@ void FUN_801e56ac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e5734(undefined4 param_1)
+void FUN_801e5734(int obj)
 {
-  (*gExpgfxInterface)->freeSource2((u32)param_1);
-  (**(code **)(*DAT_803dd6fc + 0x18))(param_1);
+  (*gExpgfxInterface)->freeSource2((u32)obj);
+  (*gModgfxInterface)->detachSource((void *)obj);
   return;
 }
 

@@ -34,7 +34,6 @@ extern undefined4 DAT_80318c48;
 extern undefined4 DAT_803dc5b8;
 extern undefined4 DAT_803dc5c0;
 extern undefined DAT_803dc5c4;
-extern undefined4* DAT_803dd6fc;
 extern f64 DOUBLE_803e2018;
 extern f64 DOUBLE_803e2070;
 extern f32 lbl_803E1FF0;

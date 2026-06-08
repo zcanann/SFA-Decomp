@@ -86,7 +86,6 @@ extern undefined4 DAT_8032267c;
 extern undefined4 DAT_8032267d;
 extern undefined4 DAT_8032267e;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern undefined4* DAT_803dd6f8;
 extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4* DAT_803dd740;

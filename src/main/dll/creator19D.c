@@ -37,7 +37,6 @@ extern f32 timeDelta;
 extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern void *lbl_803DDBB8;
-extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803de838;
 extern f64 DOUBLE_803e5b98;
 extern f32 lbl_803DC074;

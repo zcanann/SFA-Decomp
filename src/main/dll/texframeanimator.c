@@ -30,7 +30,6 @@ extern uint countLeadingZeros();
 
 extern undefined4 DAT_803218a8;
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6f8;
 extern undefined4 DAT_803e40d8;
 extern undefined4 DAT_803e40dc;
 extern f64 DOUBLE_803e40e0;
