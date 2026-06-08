@@ -1197,7 +1197,7 @@ void ObjAnim_LoadMoveEvents(u8 *obj, int dummy, ObjAnimEventTable *eventTable, u
     }
     i = 0;
     while (tbl[i] != -1) {
-        if (tbl[i] == moveId) {
+        if (tbl[i] == (int)moveId) {
             da2 = tbl[i + 1];
             eventTable->byteCount = tbl[i + 2];
             if (eventTable->byteCount > 0x50) {

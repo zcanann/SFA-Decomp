@@ -9534,7 +9534,7 @@ void Lightfoot_UpdateAttachedChild(int obj, int inner)
     if (((GameObject *)obj)->anim.alpha == 0) return;
 
     child = *(int *)&((GameObject *)obj)->unkC8;
-    if (child != 0) {
+    if ((u32)child != 0) {
         ObjLink_DetachChild(obj, child);
         Obj_FreeObject(child);
     }
