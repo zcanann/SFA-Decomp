@@ -115,7 +115,7 @@ extern undefined4 DAT_803ad248;
 extern undefined4 DAT_803dc070;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd71c;
 extern undefined4* DAT_803dd72c;
@@ -1746,7 +1746,6 @@ void dll_CE_update(int obj, int p2, int p3)
   extern MapEventInterface **gMapEventInterface;
   extern ObjectTriggerInterface **gObjectTriggerInterface;
   extern int *gSHthorntailAnimationInterface;
-  extern EffectInterface **gPartfxInterface;
   extern int *gPlayerInterface;
   extern void *lbl_803AC5B0[];
   extern void *lbl_803AC598[];
@@ -2256,7 +2255,6 @@ void FUN_8015fae4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 #pragma dont_inline on
 void fn_8015FBEC(int obj)
 {
-  extern EffectInterface **gPartfxInterface;
   extern void Camera_EnableViewYOffset(void);
   extern void CameraShake_SetAllMagnitudes(f32);
   extern f32 lbl_803E2E50;
@@ -2297,7 +2295,6 @@ void fn_8015FCCC(int obj)
 {
   extern void Camera_EnableViewYOffset(void);
   extern void CameraShake_SetAllMagnitudes(f32);
-  extern EffectInterface **gPartfxInterface;
   extern f32 lbl_803E2E50;
   s16 type;
   int n;
@@ -2788,14 +2785,14 @@ void FUN_801600a8(uint param_1)
   if (sVar1 == 0x2cb) {
     iVar2 = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x342,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x342, NULL, 1, -1, NULL);
       iVar2 = iVar2 + 1;
     } while (iVar2 < 0x19);
   }
   else if ((sVar1 == 100) || (sVar1 == 0x30a)) {
     iVar2 = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x344,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x344, NULL, 1, -1, NULL);
       iVar2 = iVar2 + 1;
     } while (iVar2 < 0x19);
   }
@@ -2859,7 +2856,7 @@ LAB_80160208:
     }
     iVar6 = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x340,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x340, NULL, 1, -1, NULL);
       iVar6 = iVar6 + 1;
     } while (iVar6 < 0x19);
   }
@@ -2885,7 +2882,7 @@ LAB_801602cc:
     }
     iVar6 = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x343,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x343, NULL, 1, -1, NULL);
       iVar6 = iVar6 + 1;
     } while (iVar6 < 0x19);
   }
@@ -2911,7 +2908,7 @@ LAB_80160390:
     }
     iVar6 = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x343,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x343, NULL, 1, -1, NULL);
       iVar6 = iVar6 + 1;
     } while (iVar6 < 0x19);
   }
