@@ -123,7 +123,6 @@ extern undefined4 DAT_803dcd90;
 extern undefined4 DAT_803dcd9c;
 extern undefined4 DAT_803dcdb0;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd72c;
 extern EffectInterface **gExpgfxInterface;
 extern s16 lbl_803DC128;

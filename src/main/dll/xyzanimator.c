@@ -97,7 +97,6 @@ extern void storeZeroToFloatParam(void *timer);
 extern undefined4 DAT_803dc070;
 extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e3d80;
 extern f64 DOUBLE_803e3d98;
 extern f64 DOUBLE_803e3dc8;
@@ -725,7 +724,7 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if ((s8)((GameObject *)param_9)->anim.alpha == -1) {
       iVar2 = 2;
       do {
-        param_1 = (**(code **)(*DAT_803dd708 + 8))(param_9,0x4ba,0,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_9, 0x4ba, NULL, 1, -1, NULL);
         iVar2 = iVar2 + -1;
       } while (iVar2 != -1);
     }
@@ -1038,8 +1037,8 @@ void FUN_8016b428(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
           if (*(char *)(param_9 + 0x1b) == -1) {
             iVar3 = 2;
             do {
-              dVar7 = (double)(**(code **)(*DAT_803dd708 + 8))
-                                        (param_9,(int)*(short *)(piVar5[7] + 8),0,1,0xffffffff,0);
+              (*gPartfxInterface)->spawnObject((void *)param_9, (int)*(short *)(piVar5[7] + 8),
+                                               NULL, 1, -1, NULL);
               iVar3 = iVar3 + -1;
             } while (iVar3 != -1);
           }

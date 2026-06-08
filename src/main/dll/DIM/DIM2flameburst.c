@@ -147,6 +147,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
+extern EffectInterface **gPartfxInterface;
 extern undefined4 FUN_8002fc3c();
 extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
@@ -196,7 +197,6 @@ extern undefined4 DAT_80326170;
 extern int DAT_803ad5c0;
 extern undefined4 DAT_803dc070;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern undefined4* DAT_803dd708;
 extern undefined4 DAT_803de7d8;
 extern undefined4 DAT_803de7f8;
 extern undefined4 DAT_803e55c0;
@@ -890,8 +890,8 @@ void FUN_801b45b0(undefined8 param_1,double param_2,double param_3,double param_
             local_d8 = sVar2;
             local_d2 = 0;
           }
-          dVar12 = (double)(**(code **)(*DAT_803dd708 + 8))
-                                     (uVar3,0x5e,auStack_9c,0x200001,0xffffffff,&local_d8);
+          (*gPartfxInterface)->spawnObject((void *)uVar3, 0x5e, auStack_9c, 0x200001, -1,
+                                           &local_d8);
         }
       }
       else {

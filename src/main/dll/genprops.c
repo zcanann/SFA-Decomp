@@ -66,6 +66,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
+extern int *Obj_SetupObject(void *setup, int mode, int mapLayer, int objIndex, void *parent);
 extern undefined4 FUN_80017b00();
 extern undefined8 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
@@ -211,7 +212,6 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern EffectInterface **gExpgfxInterface;
 extern undefined4* DAT_803dd6fc;
-extern undefined4* DAT_803dd708;
 extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd72c;
@@ -1863,10 +1863,6 @@ void FUN_8016d9a4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   int iVar1;
   uint uVar2;
   undefined2 *puVar3;
-  undefined4 uVar4;
-  int iVar5;
-  undefined4 in_r10;
-  undefined8 uVar6;
   double dVar7;
   double dVar8;
   undefined2 local_28;
@@ -1901,9 +1897,7 @@ void FUN_8016d9a4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     local_28 = 0;
     local_24 = 0;
     local_26 = 0;
-    uVar4 = 0;
-    iVar5 = *DAT_803dd708;
-    uVar6 = (**(code **)(iVar5 + 8))(iVar1,0x565,&local_28,0x200000,0xffffffff);
+    (*gPartfxInterface)->spawnObject((void *)iVar1, 0x565, &local_28, 0x200000, -1, NULL);
     puVar3 = FUN_80017aa4(0x24,0x63c);
     *(undefined *)(puVar3 + 2) = 1;
     *(undefined *)(puVar3 + 3) = 0xff;
@@ -1912,9 +1906,8 @@ void FUN_8016d9a4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     *(undefined4 *)(puVar3 + 4) = DAT_803ad318;
     *(float *)(puVar3 + 6) = DAT_803ad31c;
     *(undefined4 *)(puVar3 + 8) = DAT_803ad320;
-    DAT_803ad334 = FUN_80017ae4(uVar6,dVar7,dVar8,param_4,param_5,param_6,param_7,param_8,puVar3,5,
-                                *(undefined *)(iVar1 + 0xac),0xffffffff,*(uint **)(iVar1 + 0x30),
-                                uVar4,iVar5,in_r10);
+    DAT_803ad334 = (int)Obj_SetupObject(puVar3, 5, *(s8 *)(iVar1 + 0xac), -1,
+                                        *(void **)(iVar1 + 0x30));
     uVar2 = FUN_80017690(0xc55);
     if (uVar2 != 0) {
       ((ObjAnimComponent *)DAT_803ad334)->bankIndex = 1;

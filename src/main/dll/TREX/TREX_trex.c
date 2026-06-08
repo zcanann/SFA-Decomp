@@ -134,7 +134,6 @@ extern undefined4 DAT_803dcd00;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
-extern undefined4* DAT_803dd708;
 extern MapEventInterface **DAT_803dd72c;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
@@ -1063,7 +1062,6 @@ void FUN_801e57e0(short *param_1)
 {
   int iVar1;
   double dVar2;
-  undefined8 uVar3;
   double dVar4;
   double dVar5;
   undefined8 in_f4;
@@ -1117,12 +1115,12 @@ void FUN_801e57e0(short *param_1)
   local_2c = local_2c * lbl_803E65D4;
   local_28 = local_28 * lbl_803E65D4;
   local_24 = local_24 * lbl_803E65D4;
-  uVar3 = (**(code **)(*DAT_803dd708 + 8))(param_1,0xa0,&local_38,1,0xffffffff,0);
+  (*gPartfxInterface)->spawnObject((void *)param_1, 0xa0, &local_38, 1, -1, NULL);
   *param_1 = *param_1 + (ushort)DAT_803dc070 * 0x374;
   param_1[1] = param_1[1] + (ushort)DAT_803dc070 * 300;
   *(uint *)(param_1 + 0x7a) = *(int *)(param_1 + 0x7a) - (uint)DAT_803dc070;
   if (*(int *)(param_1 + 0x7a) < 0) {
-    FUN_80017ac8(uVar3,dVar4,dVar5,in_f4,in_f5,in_f6,in_f7,in_f8,(int)param_1);
+    FUN_80017ac8((int)param_1,dVar4,dVar5,in_f4,in_f5,in_f6,in_f7,in_f8,(int)param_1);
   }
   return;
 }
