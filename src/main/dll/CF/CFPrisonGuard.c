@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/CF/CFPrisonGuard.h"
+#include "main/mapEventTypes.h"
 #include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
@@ -49,7 +50,7 @@ extern const f32 lbl_803E3BDC;
 extern const f32 lbl_803E3BE0;
 extern f64 lbl_803E3BE8;
 extern s16 lbl_803DBDE0[4];
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 #define STAFFACTIVATED_ACTIVE 0x80
 #define STAFFACTIVATED_LOCKED 0x40
@@ -190,10 +191,10 @@ void staffactivated_spawnMapEventDebris(int obj)
   tricky = getTrickyObject();
   state = *(int *)&((GameObject *)obj)->extra;
 
-  if (((int (*)(int))(*(int *)(*gMapEventInterface + 0x68)))(*(int *)(setup + 0x14)) != 0 &&
+  if ((*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) != 0 &&
       Obj_IsLoadingLocked() != 0) {
-    ((void (*)(int, f32))(*(int *)(*gMapEventInterface + 0x64)))(
-        *(int *)(setup + 0x14), lbl_803E3BD8 * (f32)*(u8 *)(setup + 0x20));
+    (*gMapEventInterface)->startTimedEvent(*(int *)(setup + 0x14),
+                                           lbl_803E3BD8 * (f32)*(u8 *)(setup + 0x20));
     if (tricky != 0) {
       trickyImpress(tricky);
     }

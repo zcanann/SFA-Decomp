@@ -1,5 +1,6 @@
 #include "main/dll/laser19F.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
+#include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
 
@@ -29,7 +30,7 @@ extern void fn_80296518(int obj, int arg, int enable);
 
 extern undefined4* DAT_803dd72c;
 extern void* DAT_803de838;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f64 DOUBLE_803e5bd0;
 extern f64 lbl_803E4F38;
@@ -131,10 +132,6 @@ typedef struct MMSHShrineSequenceState {
   u8 commandCount;
 } MMSHShrineSequenceState;
 
-typedef void (*MapEventTriggerFn)(int mapDir, int eventId);
-
-#define MAP_EVENT_FN(offset, type) ((type)(*(u32 *)((u8 *)*gMapEventInterface + (offset))))
-
 /*
  * --INFO--
  *
@@ -172,7 +169,7 @@ int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, int seqArg)
         fn_80296518(playerObj,4,1);
         GameBit_Set(MMSH_SHRINE_SEQ_GB_KRYSTAL,1);
         GameBit_Set(MMSH_SHRINE_SEQ_GB_UNKNOWN_FF,1);
-        MAP_EVENT_FN(0x44,MapEventTriggerFn)(MMSH_SHRINE_SEQ_MAP_DIR,MMSH_SHRINE_SEQ_MAP_EVENT);
+        (*gMapEventInterface)->setMode(MMSH_SHRINE_SEQ_MAP_DIR,MMSH_SHRINE_SEQ_MAP_EVENT);
         break;
       case 0xe:
         obj->flags06 |= MMSH_SHRINE_FLAG_LIT;

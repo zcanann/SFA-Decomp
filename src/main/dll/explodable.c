@@ -3,6 +3,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/explodable_state.h"
+#include "main/mapEventTypes.h"
 #include "main/resource.h"
 
 extern u8 Obj_IsLoadingLocked(void);
@@ -32,7 +33,7 @@ extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *gSHthorntailAnimationInterface;
 extern int *lbl_803DDAC8;
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -304,7 +305,7 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
   s16 timer;
 
   state = *(int *)&((GameObject *)obj)->extra;
-  if (((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14)) == 0) ||
+  if (((*gMapEventInterface)->isTimedEventActive(*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14)) == 0) ||
       (((timer = ((ExplodableState *)state)->explodeTimer) != 0) && (timer <= 0x32)) ||
       (((ExplodableState *)state)->animTimer > lbl_803E39B8)) {
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
@@ -374,7 +375,7 @@ void largecrate_update(int obj)
     if (((GameObject *)obj)->anim.parent != NULL) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
-    if ((**(int (**)(int))(*gMapEventInterface + 0x68))(((ObjPlacement *)def)->mapId) == 0) {
+    if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)def)->mapId) == 0) {
         ObjHits_DisableObject(obj);
     } else {
     if (((ExplodableState *)state)->animTimer > (thresh = lbl_803E39B8)) {
@@ -404,8 +405,7 @@ void largecrate_update(int obj)
             if ((((ExplodableState *)state)->explodeTimer -= framesThisStep) <= 0) {
                 if (*(int *)state > 0) {
                     ((ExplodableState *)state)->animTimer = lbl_803E39AC;
-                    (**(void (**)(int, f32))(*gMapEventInterface + 0x64))(
-                        ((ObjPlacement *)def)->mapId, (f32)*(int *)state);
+                    (*gMapEventInterface)->startTimedEvent(((ObjPlacement *)def)->mapId, (f32)*(int *)state);
                 } else {
                     ((ExplodableState *)state)->animTimer = lbl_803E39AC;
                 }
