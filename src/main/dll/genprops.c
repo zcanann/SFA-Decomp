@@ -5,6 +5,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
+#include "main/camera_interface.h"
 #include "main/mapEvent.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
@@ -6044,7 +6045,6 @@ extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
 extern void PSMTXRotRad(f32 *m, int axis, f32 rad);
 extern void objRenderModel(int *obj);
 extern void objSetMtxFn_800412d4(f32 *m);
-extern int *gCameraInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3230;
@@ -6077,7 +6077,7 @@ void animatedobj_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
                    -*(f32 *)((char *)prm + 0xc),
                    -(*(f32 *)((char *)prm + 0x10) - playerMapOffsetZ));
         PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
-        cam = ((s16 *(*)(void))((int *)*gCameraInterface)[3])();
+        cam = (s16 *)(*gCameraInterface)->getCamera();
         *(s16 *)((char *)cam + 2) += 0x8000;
         *(f32 *)((char *)cam + 8) = lbl_803E3228;
         Obj_BuildWorldTransformMatrix((int *)cam, mCam, 0);
@@ -6217,7 +6217,7 @@ void dim2roofrub_render(int *obj, int p2, int p3, int p4, int p5)
                    -*(f32 *)((char *)prm + 0xc),
                    -(*(f32 *)((char *)prm + 0x10) - playerMapOffsetZ));
         PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
-        cam = ((s16 *(*)(void))((int *)*gCameraInterface)[3])();
+        cam = (s16 *)(*gCameraInterface)->getCamera();
         *(s16 *)((char *)cam + 2) += 0x8000;
         *(f32 *)((char *)cam + 8) = lbl_803E3270;
         Obj_BuildWorldTransformMatrix((int *)cam, mCam, 0);
