@@ -3,6 +3,23 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
 
+typedef struct WmSunState {
+    s16 pad00;
+    s16 riseStep;
+    s16 spinStep;
+    u8 pad06[2];
+    s16 *glareParams;
+    u8 pad0C;
+    u8 renderEnabled;
+    u8 pad0E[2];
+} WmSunState;
+
+STATIC_ASSERT(sizeof(WmSunState) == 0x10);
+STATIC_ASSERT(offsetof(WmSunState, riseStep) == 0x02);
+STATIC_ASSERT(offsetof(WmSunState, spinStep) == 0x04);
+STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
+STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
+
 int fn_801F6E8C(int p1, int p2, int actor)
 {
     int ret;
@@ -26,11 +43,11 @@ void wmsun_initialise(void) {}
 #pragma peephole off
 #pragma scheduling off
 void wmsun_free(int obj) {
-    int *inner = ((GameObject *)obj)->extra;
-    if (*(void **)((char *)inner + 8) != NULL) {
-        mm_free(*(void **)((char *)inner + 8));
+    WmSunState *state = ((GameObject *)obj)->extra;
+    if (state->glareParams != NULL) {
+        mm_free(state->glareParams);
     }
-    *(int *)((char *)inner + 8) = 0;
+    state->glareParams = NULL;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -38,8 +55,8 @@ void wmsun_free(int obj) {
 #pragma peephole off
 #pragma scheduling off
 void wmsun_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
-    int *inner = *(int **)(p1 + 0xb8);
-    if (vis != 0 && *(u8 *)((char *)inner + 0xd) != 0) {
+    WmSunState *state = ((GameObject *)p1)->extra;
+    if (vis != 0 && state->renderEnabled != 0) {
         doNothing_8005D148(p2, 0x10000);
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5F24);
         doNothing_8005D14C(p2, 0x10000);
@@ -60,7 +77,7 @@ extern s16 lbl_803DDCB0;
 void wmsun_init(int obj, int params)
 {
     ObjAnimComponent *objAnim;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WmSunState *state = ((GameObject *)obj)->extra;
     u8 c;
     int c2;
     int j;
@@ -73,12 +90,12 @@ void wmsun_init(int obj, int params)
     if (c == 3 && (u32)GameBit_Get(0x21b) == 0) {
         GameBit_Set(0x21b, 1);
     }
-    *(int *)(state + 8) = 0;
-    *(u8 *)(state + 0xd) = 1;
+    state->glareParams = NULL;
+    state->renderEnabled = 1;
     mode = ((GameObject *)obj)->anim.seqId;
     if (mode == 0x262) {
         *(s16 *)obj = (s16)(*(s8 *)(params + 0x18) << 8);
-        *(s16 *)(state + 2) = 100;
+        state->riseStep = 100;
         if (*(s16 *)(params + 0x1c) >= 1000) {
             ((GameObject *)obj)->anim.rootMotionScale = (f32)*(s16 *)(params + 0x1c) / lbl_803E5F8C;
         } else {
@@ -99,26 +116,26 @@ void wmsun_init(int obj, int params)
         objAnim->bankIndex = *(u8 *)(params + 0x19);
         c2 = objAnim->bankIndex;
         if (c2 == 0) {
-            *(s16 *)(state + 2) = randomGetRange(300, 600);
-            *(s16 *)(state + 4) = randomGetRange(300, 600);
+            state->riseStep = randomGetRange(300, 600);
+            state->spinStep = randomGetRange(300, 600);
         } else if (c2 == 1) {
-            *(s16 *)(state + 2) = randomGetRange(500, 800);
-            *(s16 *)(state + 4) = randomGetRange(500, 800);
+            state->riseStep = randomGetRange(500, 800);
+            state->spinStep = randomGetRange(500, 800);
         } else if (c2 == 2) {
-            *(s16 *)(state + 2) = randomGetRange(700, 1000);
-            *(s16 *)(state + 4) = randomGetRange(700, 1000);
+            state->riseStep = randomGetRange(700, 1000);
+            state->spinStep = randomGetRange(700, 1000);
         }
         objAnim->alpha = 0;
     } else if (mode == 0x2c2) {
-        *(int *)(state + 8) = mmAlloc(0xa0, 0xe, 0);
+        state->glareParams = (s16 *)mmAlloc(0xa0, 0xe, 0);
         i = 0x14;
         j = 0x28;
         while (i != 0) {
             j -= 2;
             i--;
-            *(s16 *)(*(int *)(state + 8) + j + 0x28) = 0;
-            *(s16 *)(*(int *)(state + 8) + j + 0x50) = randomGetRange(10, 0x14);
-            *(s16 *)(*(int *)(state + 8) + j + 0x78) = randomGetRange(0x50, 0xff);
+            *(s16 *)((u8 *)state->glareParams + j + 0x28) = 0;
+            *(s16 *)((u8 *)state->glareParams + j + 0x50) = randomGetRange(10, 0x14);
+            *(s16 *)((u8 *)state->glareParams + j + 0x78) = randomGetRange(0x50, 0xff);
         }
         objAnim->alpha = 0;
         if (*(s16 *)(params + 0x1c) != 0) {
@@ -143,7 +160,7 @@ extern f32 lbl_803E5F88;
 void wmsun_update(int obj)
 {
     ObjAnimComponent *objAnim;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WmSunState *state = ((GameObject *)obj)->extra;
     s16 thresh;
     s16 mult;
     f32 spd;
@@ -187,21 +204,21 @@ void wmsun_update(int obj)
                 mult = 3;
                 spd = lbl_803E5F78;
             }
-            if (*(s16 *)(state + 2) < thresh) {
-                *(s16 *)(state + 2) = *(s16 *)(state + 2) + framesThisStep * mult;
+            if (state->riseStep < thresh) {
+                state->riseStep = state->riseStep + framesThisStep * mult;
                 ((GameObject *)obj)->anim.rootMotionScale = -(spd * timeDelta - ((GameObject *)obj)->anim.rootMotionScale);
                 ((GameObject *)obj)->anim.localPosY = lbl_803E5F7C * (spd * timeDelta) + ((GameObject *)obj)->anim.localPosY;
             } else if (GameBit_Get(0x222) != 0 && GameBit_Get(0x38d) == 0) {
                 GameBit_Set(0x38d, 1);
                 GameBit_Set(0x370, 0);
-                *(u8 *)(state + 0xd) = 0;
+                state->renderEnabled = 0;
             }
-            if (GameBit_Get(0x38d) == 0 && *(s16 *)(state + 2) > 0x960 && (int)randomGetRange(0, 100) == 0) {
-                CameraShake_SetAllMagnitudes(lbl_803E5F80 * ((f32)(*(s16 *)(state + 2) - 0x960) / lbl_803E5F84));
+            if (GameBit_Get(0x38d) == 0 && state->riseStep > 0x960 && (int)randomGetRange(0, 100) == 0) {
+                CameraShake_SetAllMagnitudes(lbl_803E5F80 * ((f32)(state->riseStep - 0x960) / lbl_803E5F84));
                 GameBit_Set(0x370, 1);
             }
-            *(s16 *)obj += *(s16 *)(state + 2);
-            if (*(u8 *)(state + 0xd) == 0) {
+            *(s16 *)obj += state->riseStep;
+            if (state->renderEnabled == 0) {
                 Obj_FreeObject(obj);
             }
         }
@@ -264,8 +281,8 @@ void wmsun_update(int obj)
             fn_801F6EA4(obj);
         }
     } else {
-        ((GameObject *)obj)->anim.rotZ += *(s16 *)(state + 4);
-        *(s16 *)obj += *(s16 *)(state + 2);
+        ((GameObject *)obj)->anim.rotZ += state->spinStep;
+        *(s16 *)obj += state->riseStep;
         if (GameBit_Get(0x38d) != 0 && objAnim->bankIndex == 0) {
             if (lbl_803DDCAA == 0) {
                 if (lbl_803DDCA8 > 600 && (int)randomGetRange(0, 10) == 0) {
