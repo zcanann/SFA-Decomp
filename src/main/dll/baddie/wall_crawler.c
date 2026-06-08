@@ -810,7 +810,7 @@ LAB_8012fb2c:
   if (2 < DAT_803de528) {
     DAT_803de528 = 2;
   }
-  DAT_803dc6d6 = (*(int (**)(void))((char *)*gCameraInterface + 100))();
+  DAT_803dc6d6 = (*gCameraInterface)->getMinimapInfoText();
   if (DAT_803de512 < 0) {
     if (DAT_803de420 == '\0') {
       if (DAT_803de552 == 0) {
@@ -1285,8 +1285,6 @@ extern s16 lbl_803DD8D2;
 extern s16 lbl_803DD8D6;
 extern f32 lbl_803E21D0;
 
-#define CAM_VTBL(off) (*(int (**)(void))((char *)*gCameraInterface + (off)))()
-
 /* EN v1.0 0x8012EF40  size: 2676b  Per-frame UI/pause-menu update + dispatch. */
 #pragma scheduling off
 #pragma peephole off
@@ -1544,7 +1542,7 @@ void GameUI_update(void)
         if (lbl_803DD8A8 > 2) lbl_803DD8A8 = 2;
 
         {
-            int sv = (s16)CAM_VTBL(0x64);
+            int sv = (s16)(*gCameraInterface)->getMinimapInfoText();
             if ((s16)lbl_803DD892 > -1) {
                 sv = lbl_803DD892;
                 lbl_803DBA6A = lbl_803DD88E;
