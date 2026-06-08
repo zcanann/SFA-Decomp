@@ -129,4 +129,4 @@
 119	ad437428d	VARIABLE RECYCLING is a recoverable signature: target reusing a DEAD
 120	ad437428d	Import-SPLIT aggregates: Ghidra routinely splits ONE stack array into
 121	f02cfd197	Preheader-hoist shape: in-loop f32 LITERALS (not named preheader locals) LICM across body calls
-122	PENDING	At 99.9%, one immediate/offset diff is often imported STRUCTURE,
+122	97970d64c	At 99.9%, one immediate/offset diff is often imported STRUCTURE,
