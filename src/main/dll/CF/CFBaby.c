@@ -86,7 +86,7 @@ extern undefined4 DAT_8032267d;
 extern undefined4 DAT_8032267e;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4* DAT_803dd740;
 extern f64 DOUBLE_803e47d0;
@@ -728,8 +728,8 @@ void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
                      *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)(param_9 + 0x30),in_r8,
                      in_r9,in_r10);
       }
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x355,0,0,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x352,0,0,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x355, NULL, 0, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x352, NULL, 0, -1, NULL);
       *(undefined *)(iVar5 + 10) = 1;
     }
   }

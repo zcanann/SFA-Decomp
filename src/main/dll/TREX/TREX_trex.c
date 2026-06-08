@@ -281,12 +281,12 @@ void FUN_801e4378(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       ((GameObject *)param_9)->anim.alpha = 0x19;
       iVar3 = 0x32;
       do {
-        (**(code **)(*DAT_803dd708 + 8))(param_9,0xa7,0,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_9, 0xa7, NULL, 1, -1, NULL);
         iVar3 = iVar3 + -1;
       } while (iVar3 != 0);
       iVar3 = 10;
       do {
-        (**(code **)(*DAT_803dd708 + 8))(param_9,0xab,0,1,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_9, 0xab, NULL, 1, -1, NULL);
         iVar3 = iVar3 + -1;
       } while (iVar3 != 0);
     }
@@ -327,12 +327,12 @@ void FUN_801e451c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_8008110c((double)lbl_803E6554,param_9,4,0x185,5,0);
   }
   else {
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0xaa,0,1,0xffffffff,0);
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0xaa,0,1,0xffffffff,0);
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0xaa,0,1,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_9, 0xaa, NULL, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_9, 0xaa, NULL, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_9, 0xaa, NULL, 1, -1, NULL);
     *(byte *)((int)pfVar3 + 0x1a) = *(byte *)((int)pfVar3 + 0x1a) & 0xfd;
   }
-  (**(code **)(*DAT_803dd708 + 8))(param_9,0xa9,0,1,0xffffffff,0);
+  (*gPartfxInterface)->spawnObject((void *)param_9, 0xa9, NULL, 1, -1, NULL);
   *(short *)(param_9 + 2) = *(short *)(param_9 + 2) + 4000;
   if ((*(byte *)((int)pfVar3 + 0x1a) & 1) == 0) {
     *pfVar3 = *(float *)(param_9 + 0x24);
@@ -468,12 +468,12 @@ void FUN_801e4950(int param_1)
     *(ushort *)(iVar1 + 0x60) = *(ushort *)(iVar1 + 0x60) & ~1;
     iVar1 = 0x32;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0xa7,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0xa7, NULL, 1, -1, NULL);
       iVar1 = iVar1 + -1;
     } while (iVar1 != 0);
     iVar1 = 10;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0xab,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0xab, NULL, 1, -1, NULL);
       iVar1 = iVar1 + -1;
     } while (iVar1 != 0);
   }
@@ -524,7 +524,7 @@ void FUN_801e4a14(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(float *)(param_9 + 10) = (float)piVar1[4] * lbl_803DC074 + *(float *)(param_9 + 10);
       local_20 = lbl_803E6574;
       FUN_8008110c((double)lbl_803E6578,param_9,4,0x185,5,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0xa9,auStack_28,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0xa9, auStack_28, 1, -1, NULL);
       if (*(short *)(piVar1 + 1) < 0x10) {
         *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) =
              *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & ~1;
@@ -706,7 +706,7 @@ void FUN_801e4d6c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_8008110c((double)lbl_803E659C,param_9,2,0x156,0xf,&local_28);
     FUN_8008110c((double)lbl_803E659C,param_9,2,0x156,0xf,&local_28);
     FUN_8008110c((double)lbl_803E659C,param_9,2,0x156,0xf,&local_28);
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0xa8,0,2,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_9, 0xa8, NULL, 2, -1, NULL);
   }
   else {
     pfVar3[8] = (float)(dVar5 - (double)lbl_803DC074);
@@ -1106,14 +1106,14 @@ void FUN_801e57e0(short *param_1)
   local_34 = 0;
   local_36 = 0;
   local_38 = 0;
-  (**(code **)(*DAT_803dd708 + 8))(param_1,0xa0,&local_38,1,0xffffffff,0);
+  (*gPartfxInterface)->spawnObject((void *)param_1, 0xa0, &local_38, 1, -1, NULL);
   dVar4 = (double)(*(float *)(param_1 + 8) - *(float *)(param_1 + 0x42));
   dVar5 = (double)(*(float *)(param_1 + 10) - *(float *)(param_1 + 0x44));
   dVar2 = (double)lbl_803E65D0;
   local_2c = (float)((double)(*(float *)(param_1 + 6) - *(float *)(param_1 + 0x40)) / dVar2);
   local_28 = (float)(dVar4 / dVar2);
   local_24 = (float)(dVar5 / dVar2);
-  (**(code **)(*DAT_803dd708 + 8))(param_1,0xa0,&local_38,1,0xffffffff,0);
+  (*gPartfxInterface)->spawnObject((void *)param_1, 0xa0, &local_38, 1, -1, NULL);
   local_2c = local_2c * lbl_803E65D4;
   local_28 = local_28 * lbl_803E65D4;
   local_24 = local_24 * lbl_803E65D4;
@@ -1410,7 +1410,7 @@ undefined4 FUN_801e5fec(int param_1,undefined4 param_2,int param_3)
     local_18 = local_18 - *(float *)(param_1 + 0x1c);
     local_14 = local_14 - *(float *)(param_1 + 0x20);
     for (iVar2 = 0; iVar2 < (int)(uint)DAT_803dc070; iVar2 = iVar2 + 1) {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7a8,auStack_28,6,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7a8, auStack_28, 6, -1, NULL);
     }
   }
   return 0;
@@ -1488,7 +1488,7 @@ void FUN_801e60cc(uint param_1)
     local_28 = local_28 - fVar2;
     local_2c = local_2c - fVar1;
     for (iVar4 = 0; iVar4 < (int)(uint)DAT_803dc070; iVar4 = iVar4 + 1) {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7c7,auStack_38,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7c7, auStack_38, 2, -1, NULL);
     }
   }
   return;
