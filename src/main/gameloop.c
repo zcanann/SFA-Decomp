@@ -3,6 +3,7 @@
 #include "main/asset_load.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/expgfx.h"
 #include "main/mapEventTypes.h"
@@ -1088,7 +1089,7 @@ extern u8 lbl_803DCAE4;
 extern u8 lbl_8033C3B8[];
 extern u8 lbl_8033C378[];
 extern char sMainFinishedInitMessage[];
-extern void *gGameUIInterface;
+extern GameUIInterface **gGameUIInterface;
 extern void *lbl_803DCA94;
 extern void *gPlayerInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
