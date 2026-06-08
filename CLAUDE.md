@@ -1843,6 +1843,34 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       precolored f1 call-arg web nearby (cfprisonguard_render 99.79) — that's
       the open FP volatile-permutation problem (#82); launders tested inert
       there, re-attack via #82's web-kind classification.
+    **STORE-CLAMP DISCRIMINATOR (~20-AB calibration, miner-4) — the launder
+    is RELIABLE iff the clamp STORES the constant back AND the swap is a CLEAN
+    SAME-REGISTER pair.** This generalizes #81 from the reload case to all FP
+    clamps and tells you up-front whether to bother:
+    - WORKS: a STORE-clamp — `if (x op lbl) x = lbl;`, or decrement/`fmadds`-
+      then-`if (x op lbl) x = lbl;` — where the swapped `fcmpo` is a CLEAN
+      same-register pair (target `f1,f0` vs current `f0,f1`, i.e. `to[-2:] ==
+      co[-2:][::-1]`). Launder ONE reference (compare-side `if (x op *(f32 *)&
+      lbl)` OR store-side `x = *(f32 *)&lbl;`) — A/B both, the winning side
+      varies per fn. Confirmed →100 or +gain on ~15 fns (ccriverflow_init,
+      sh_levelcontrol_update, pinponspike_update, DIMboss_update, fn_8014EE8C,
+      gf_levelcon, fn_801EA240 ×6, dim_levelcontrol_update, …). Multi-clamp
+      blocks with INDEPENDENT constants per clamp (velocity x/y/z to a shared
+      [lo,hi] pair, fn_8014EE8C) launder all-at-once cleanly.
+    - RESIST (bank, don't grind — these need a different lever): (a) named-
+      `lim` embedded-assign clamps `if (x op (lim = lbl)) {…}` — laundering the
+      init or removing the local cascades a whole-fn regression (FireFly,
+      dll_2A3_update); (b) NO-store reload compares (`if (x <= lbl) result=1;`
+      / `Obj_FreeObject` instead of a store — cmbsrc, arwingandrossstuff);
+      (c) COMPUTED-limit compares (`fcmpo x, (base - delta)` — dll_219); (d)
+      whole-register SHIFTS (target `f2,f1` vs current `f1,f0` — NOT a same-
+      register swap; this is the #82 expression-temp tier); (e) AMBIGUOUS
+      multi-clamp blocks where ONE constant is SHARED across swapped AND
+      already-matched clamps (camslide_update lbl_803E16E8 ×4, DBSH_Symbol_SeqFn
+      lbl_803E50EC ×7, fn_8019C784) — laundering the shared constant flips the
+      matched siblings too; high regression risk, only attack with per-site
+      mapping. Tool: `tools/fcmpo_swap_audit.py` enumerates the candidates and
+      flags store-clamps.
 
 82. **The "FP volatile reg-number permutation" tier DECOMPOSES — classify
     by WEB KIND, then attack the right way.** (task #153; 3 more fns to 100%,
