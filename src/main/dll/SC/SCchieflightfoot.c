@@ -267,8 +267,7 @@ void SHthorntail_update(SHthorntailObject *obj)
     if (((runtime->behaviorFlags & 4) == 0) && (iVar6 = ObjTrigger_IsSet((int)obj), iVar6 != 0)) {
       uVar7 = randomGetRange(1,(uint)*runtime->impactSfxTable);
       runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_IMPACT_PENDING;
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)
-          ->runSequence(*(u8 *)(runtime->impactSfxTable + uVar7), obj, -1);
+      (*DAT_803dd6d4)->runSequence(*(u8 *)(runtime->impactSfxTable + uVar7), obj, -1);
     }
     if (config->leashRadiusByte != '\0') {
       leashDistance = getXZDistance(&obj->pos.x,(float *)&config->homePos);

@@ -553,8 +553,7 @@ LAB_801cf840:
   {
     uVar4 = randomGetRange(1,(uint)**(byte **)(iVar6 + 0x48));
     *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) | 4;
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)
-        ->runSequence(*(u8 *)(*(int *)(iVar6 + 0x48) + uVar4), (void *)param_9, -1);
+    (*DAT_803dd6d4)->runSequence(*(u8 *)(*(int *)(iVar6 + 0x48) + uVar4), (void *)param_9, -1);
   }
   if ((*(byte *)(iVar6 + 0x43c) & 1) != 0) {
     (**(code **)(*DAT_803dd728 + 0x10))((double)lbl_803DC074,param_9,iVar6 + 0x16c);
