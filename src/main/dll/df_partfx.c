@@ -1,4 +1,5 @@
 #include "main/dll/df_partfx.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
@@ -1783,7 +1784,6 @@ extern u32 lbl_8039CA98[];
 extern void *lbl_803DD41C;
 extern void *lbl_803DD418;
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern int* gRomCurveInterface;
 extern f32 lbl_803E0588;
 extern f32 lbl_803E0564;
 extern f32 lbl_803E0560;
@@ -1858,13 +1858,11 @@ void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
 
 void player_findCurve(int* obj, int* state, int p3)
 {
-    *(int*)((char*)state + 0x33c) = ((int(*)(f32, f32, f32, int*, int, int))
-        ((void**)*gRomCurveInterface)[5])(
-            ((GameObject *)obj)->anim.localPosX,
-            ((GameObject *)obj)->anim.localPosY,
-            ((GameObject *)obj)->anim.localPosZ,
-            &p3, 1,
-            *(s8*)((char*)state + 0x344));
+    *(int*)((char*)state + 0x33c) =
+        (*gRomCurveInterface)->find(&p3, 1, *(s8*)((char*)state + 0x344),
+                                    ((GameObject *)obj)->anim.localPosX,
+                                    ((GameObject *)obj)->anim.localPosY,
+                                    ((GameObject *)obj)->anim.localPosZ);
 }
 
 void screenTransitionFn_800d7b04(int duration, int type)
@@ -1925,7 +1923,7 @@ void player_updateCurve(int* obj, int* state, f32 t)
     if (idx == -1) {
         *(f32*)((char*)state + 700) = lbl_803E0570;
     } else {
-        int* curve = ((int*(*)(int))((void**)*gRomCurveInterface)[7])(idx);
+        int* curve = (int *)(*gRomCurveInterface)->getById(idx);
         if (curve == NULL) {
             *(f32*)((char*)state + 700) = lbl_803E0570;
         } else {

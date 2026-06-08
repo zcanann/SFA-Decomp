@@ -4,6 +4,7 @@
  */
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -608,8 +609,6 @@ int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern void *gRomCurveInterface;
-
 static void *skeetla_validateRouteEntry(void *entry)
 {
     s16 requiredBit;
@@ -655,7 +654,7 @@ void *trickyFindNearestLinkedRouteEntry(u8 *context, u8 *routeDef, int linkSelec
     while (i < 4) {
         curveId = *(int *)(routeDef + 0x1c + i * 4);
         if ((curveId > -1) && ((((s8)routeDef[0x1b] & mask) ^ routeFlagValue) == 0)) {
-            candidates[count] = (*(void *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(curveId);
+            candidates[count] = (*gRomCurveInterface)->getById(curveId);
             entry = candidates[count];
             if (entry != NULL) {
                 if ((linkSelector == 0) || (routeDef[count + 4] == linkSelector)) {
@@ -877,7 +876,7 @@ void trickyRankLinkedRouteCandidates(u8 *obj, u8 *outRouteFlags, s16 linkSelecto
     u8 *state;
 
     state = ((GameObject *)obj)->extra;
-    curves = (*(void *(**)(int *))(*(int *)gRomCurveInterface + 0x10))(&count);
+    curves = (void **)(*gRomCurveInterface)->getCurves(&count);
 
     init = lbl_803E2418;
     for (i = 0; i < 8; i++) {
@@ -918,7 +917,7 @@ void trickyRankLinkedRouteCandidates(u8 *obj, u8 *outRouteFlags, s16 linkSelecto
                 linkCurveId = *(int *)((u8 *)curve + 0x1c + j * 4);
                 if ((linkCurveId > -1) && (*(u8 *)((u8 *)curve + 4 + j) == linkSelector)) {
                     if (*(s8 *)((u8 *)curve + 0x1a) == 8) {
-                        linkedCurve = (*(void *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(linkCurveId);
+                        linkedCurve = (*gRomCurveInterface)->getById(linkCurveId);
                         if ((linkedCurve != NULL) && (*(s8 *)((u8 *)linkedCurve + 0x1a) == 9)) {
                             continue;
                         }
