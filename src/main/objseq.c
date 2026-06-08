@@ -598,33 +598,27 @@ void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
                 switch (cmdParam & 0x2f) {
                 case 6:
                     transitionSlot = (cmdParam & 0xfc0) >> 4;
-                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0x8)))(
-                        transitionSlot, 3);
+                    (*gScreenTransitionInterface)->start(transitionSlot, 3);
                     break;
                 case 7:
                     transitionSlot = (cmdParam & 0xfc0) >> 4;
-                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(
-                        transitionSlot, 3);
+                    (*gScreenTransitionInterface)->step(transitionSlot, 3);
                     break;
                 case 8:
                     transitionSlot = (cmdParam & 0xfc0) >> 4;
-                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0x8)))(
-                        transitionSlot, 2);
+                    (*gScreenTransitionInterface)->start(transitionSlot, 2);
                     break;
                 case 9:
                     transitionSlot = (cmdParam & 0xfc0) >> 4;
-                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(
-                        transitionSlot, 2);
+                    (*gScreenTransitionInterface)->step(transitionSlot, 2);
                     break;
                 case 0xb:
                     transitionSlot = (cmdParam & 0xfc0) >> 4;
-                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0x8)))(
-                        transitionSlot, 4);
+                    (*gScreenTransitionInterface)->start(transitionSlot, 4);
                     break;
                 case 0xc:
                     transitionSlot = (cmdParam & 0xfc0) >> 4;
-                    (*(void (*)(int, int, f32))(*(int *)(*gScreenTransitionInterface + 0x10)))(
-                        transitionSlot, 4, lbl_803DF028);
+                    (*gScreenTransitionInterface)->stepWithBlend(transitionSlot, 4, lbl_803DF028);
                     break;
                 }
             }
@@ -1089,7 +1083,7 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
             break;
         }
         if ((s8)base[(s8)((ObjSeqState *)seq)->slot + 0x3a40] == 0) {
-            (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0x8)))(cmdArg, 1);
+            (*gScreenTransitionInterface)->start(cmdArg, 1);
         }
         break;
     case 15:
@@ -1097,7 +1091,7 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
             break;
         }
         if ((s8)base[(s8)((ObjSeqState *)seq)->slot + 0x3a40] == 0) {
-            (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(cmdArg, 1);
+            (*gScreenTransitionInterface)->step(cmdArg, 1);
         }
         break;
     case 20:

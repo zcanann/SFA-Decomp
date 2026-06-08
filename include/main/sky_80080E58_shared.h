@@ -5,6 +5,7 @@
 #include "main/effect_interfaces.h"
 #include "main/newclouds.h"
 #include "main/resource.h"
+#include "main/screen_transition.h"
 
 typedef struct ObjSeqBgCmd {
     int object;
@@ -88,7 +89,7 @@ extern int lbl_803DB720;
 extern int *gGameUIInterface;
 extern int *gMapEventInterface;
 extern EffectInterface **gPartfxInterface;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern s16 seqGlobal1;
 extern s16 seqGlobal2;
 extern s8 seqGlobal3;
