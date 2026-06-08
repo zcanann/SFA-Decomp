@@ -3734,14 +3734,14 @@ void allocLotsOfTextures(void) {
 
     {
         u8 *p;
-        for (i = 0, p = (u8 *)g; i < 0x20; i += 0x10) {
+        for (i = 0, p = (u8 *)(int)lbl_8038DF48; i < 0x20; i += 0x10) {
             for (j = 0; j < 0x10; j++) {
                 p[j * 0x14 + 0x10] = 0;
                 p[j * 0x14 + 0x11] = 1;
             }
             p += 0x140;
         }
-        p = (u8 *)g + i * 0x14;
+        p = (u8 *)(int)lbl_8038DF48 + i * 0x14;
         for (; i < 0x21; i++) {
             p[0x10] = 0;
             p[0x11] = 1;
