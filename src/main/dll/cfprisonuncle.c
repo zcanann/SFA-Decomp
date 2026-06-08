@@ -120,7 +120,7 @@ extern undefined4 DAT_803dca00;
 extern undefined4 DAT_803dca08;
 extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd71c;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803e4580;
@@ -217,7 +217,6 @@ extern f32 lbl_803E3898;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern s16 lbl_803DBD98[4];
-extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **gMapEventInterface;
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 extern void vecRotateZXY(void *angles,void *outVec);
@@ -1176,12 +1175,9 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   while (iVar4 = ObjMsg_Pop((int)puVar2,&local_48,(uint *)0x0,(uint *)0x0), iVar4 != 0) {
     if (local_48 == 0x7000b) {
       FUN_80006824((uint)puVar2,SFXen_generic_placeobj);
-      (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
-      in_r7 = 0xffffffff;
-      in_r8 = 0;
-      in_r9 = *DAT_803dd708;
-      (**(code **)(in_r9 + 8))(puVar2,0x51a,0,1);
+      (*gPartfxInterface)->spawnObject((void *)puVar2, 0x51a, NULL, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)puVar2, 0x51a, NULL, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)puVar2, 0x51a, NULL, 1, -1, NULL);
       FUN_80017698((int)*(short *)(pfVar10 + 3),1);
       iVar4 = (int)(*DAT_803dd72c)->getState(*DAT_803dd72c);
       uVar5 = *(byte *)(iVar4 + 9) + 1;
@@ -1256,11 +1252,8 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
       }
       else {
         FUN_80006824((uint)puVar2,SFXen_riverloop11);
-        (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51f,0,2,0xffffffff,0);
-        in_r7 = 0xffffffff;
-        in_r8 = 0;
-        in_r9 = *DAT_803dd708;
-        (**(code **)(in_r9 + 8))(puVar2,0x51f,0,2);
+        (*gPartfxInterface)->spawnObject((void *)puVar2, 0x51f, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)puVar2, 0x51f, NULL, 2, -1, NULL);
         uVar5 = randomGetRange(0,4);
         *(char *)(pfVar10 + 6) = (char)uVar5;
         fVar1 = lbl_803E455C;
@@ -1338,9 +1331,9 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
         iVar3 = (int)(*DAT_803dd72c)->getState(*DAT_803dd72c);
         if (*(byte *)(iVar3 + 9) < *(byte *)(iVar3 + 10)) {
           FUN_80006824((uint)puVar2,SFXen_generic_placeobj);
-          (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
-          (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
-          (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)puVar2, 0x51a, NULL, 1, -1, NULL);
+          (*gPartfxInterface)->spawnObject((void *)puVar2, 0x51a, NULL, 1, -1, NULL);
+          (*gPartfxInterface)->spawnObject((void *)puVar2, 0x51a, NULL, 1, -1, NULL);
           FUN_80017698((int)*(short *)(pfVar10 + 3),1);
           iVar3 = (int)(*DAT_803dd72c)->getState(*DAT_803dd72c);
           uVar5 = *(byte *)(iVar3 + 9) + 1;
