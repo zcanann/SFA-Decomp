@@ -577,7 +577,6 @@ extern undefined DAT_803dc530;
 extern undefined4 DAT_803dc538;
 extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd6fc;
 extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de100;
@@ -5419,68 +5418,55 @@ void FUN_800ec4a8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  */
 void FUN_800ec514(undefined4 param_1,undefined param_2,undefined4 param_3,uint param_4)
 {
-  double dVar1;
-  
-  (**(code **)(*DAT_803dd6fc + 0x34))(param_1,param_2,0x12,3,9);
-  (**(code **)(*DAT_803dd6fc + 0x4c))(&DAT_8031325c);
-  (**(code **)(*DAT_803dd6fc + 0x54))(param_4 | 0x4004484);
-  (**(code **)(*DAT_803dd6fc + 0x38))();
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1440,(double)lbl_803E1444,(double)lbl_803E1440,2,9,&DAT_80313158)
-  ;
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1448,(double)lbl_803E1444,(double)lbl_803E144C,2,9,&DAT_8031316c)
-  ;
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1448,(double)lbl_803E1444,(double)lbl_803E1448,2,9,&DAT_80313180)
-  ;
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1448,(double)lbl_803E1444,(double)lbl_803E1448,2,9,&DAT_80313194)
-  ;
-  dVar1 = (double)lbl_803E1450;
-  (**(code **)(*DAT_803dd6fc + 0x3c))(dVar1,dVar1,dVar1,4,0x24,&DAT_803131f0);
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1454,(double)lbl_803E1458,(double)lbl_803E145C,8,0x24,
-             &DAT_803131f0);
-  (**(code **)(*DAT_803dd6fc + 0x40))();
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1460,(double)lbl_803E1464,(double)lbl_803E1460,2,0,0);
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1450,(double)lbl_803E1468,(double)lbl_803E1450,0x4000,0,0);
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E146C,(double)lbl_803E146C,(double)lbl_803E1470,0x1800000,0x5e0,0)
-  ;
-  (**(code **)(*DAT_803dd6fc + 0x40))();
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1474,(double)lbl_803E1450,(double)lbl_803E1450,4,0x12,
-             &DAT_80313238);
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1450,(double)lbl_803E1468,(double)lbl_803E1450,0x4000,0x24,
-             &DAT_803131f0);
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1450,(double)lbl_803E1450,(double)lbl_803E1478,0x100,0,0);
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E146C,(double)lbl_803E146C,(double)lbl_803E1470,0x1800000,0x5e0,0)
-  ;
-  (**(code **)(*DAT_803dd6fc + 0x40))();
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1450,(double)lbl_803E1468,(double)lbl_803E1450,0x4000,0x24,
-             &DAT_803131f0);
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1450,(double)lbl_803E1450,(double)lbl_803E1478,0x100,0,0);
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E146C,(double)lbl_803E146C,(double)lbl_803E1470,0x1800000,0x5e0,0)
-  ;
-  (**(code **)(*DAT_803dd6fc + 0x40))();
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1450,(double)lbl_803E1468,(double)lbl_803E1450,0x4000,0x24,
-             &DAT_803131f0);
-  (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)lbl_803E1450,(double)lbl_803E1450,(double)lbl_803E1478,0x100,0,0);
-  dVar1 = (double)lbl_803E1450;
-  (**(code **)(*DAT_803dd6fc + 0x3c))(dVar1,dVar1,dVar1,4,0x24,&DAT_803131f0);
-  (**(code **)(*DAT_803dd6fc + 0x50))(param_3,&DAT_80312f90,0x24,&DAT_803130f8,0x10,0x120,0);
-  (**(code **)(*DAT_803dd6fc + 0x58))();
+  (*gModgfxInterface)->beginSequence((void *)param_1,(u8)param_2,0x12,3,9);
+  (*gModgfxInterface)->setSequenceParams(&DAT_8031325c);
+  (*gModgfxInterface)->addSequenceFlags(param_4 | 0x4004484);
+  (*gModgfxInterface)->resetSequenceSpawns();
+  (*gModgfxInterface)->addSequenceSpawn(2,lbl_803E1440,lbl_803E1444,lbl_803E1440,9,
+                                        &DAT_80313158);
+  (*gModgfxInterface)->addSequenceSpawn(2,lbl_803E1448,lbl_803E1444,lbl_803E144C,9,
+                                        &DAT_8031316c);
+  (*gModgfxInterface)->addSequenceSpawn(2,lbl_803E1448,lbl_803E1444,lbl_803E1448,9,
+                                        &DAT_80313180);
+  (*gModgfxInterface)->addSequenceSpawn(2,lbl_803E1448,lbl_803E1444,lbl_803E1448,9,
+                                        &DAT_80313194);
+  (*gModgfxInterface)->addSequenceSpawn(4,lbl_803E1450,lbl_803E1450,lbl_803E1450,0x24,
+                                        &DAT_803131f0);
+  (*gModgfxInterface)->addSequenceSpawn(8,lbl_803E1454,lbl_803E1458,lbl_803E145C,0x24,
+                                        &DAT_803131f0);
+  (*gModgfxInterface)->nextSequenceParam();
+  (*gModgfxInterface)->addSequenceSpawn(2,lbl_803E1460,lbl_803E1464,lbl_803E1460,0,
+                                        (void *)0);
+  (*gModgfxInterface)->addSequenceSpawn(0x4000,lbl_803E1450,lbl_803E1468,lbl_803E1450,0,
+                                        (void *)0);
+  (*gModgfxInterface)->addSequenceSpawn(0x1800000,lbl_803E146C,lbl_803E146C,lbl_803E1470,
+                                        0x5e0,(void *)0);
+  (*gModgfxInterface)->nextSequenceParam();
+  (*gModgfxInterface)->addSequenceSpawn(4,lbl_803E1474,lbl_803E1450,lbl_803E1450,0x12,
+                                        &DAT_80313238);
+  (*gModgfxInterface)->addSequenceSpawn(0x4000,lbl_803E1450,lbl_803E1468,lbl_803E1450,0x24,
+                                        &DAT_803131f0);
+  (*gModgfxInterface)->addSequenceSpawn(0x100,lbl_803E1450,lbl_803E1450,lbl_803E1478,0,
+                                        (void *)0);
+  (*gModgfxInterface)->addSequenceSpawn(0x1800000,lbl_803E146C,lbl_803E146C,lbl_803E1470,
+                                        0x5e0,(void *)0);
+  (*gModgfxInterface)->nextSequenceParam();
+  (*gModgfxInterface)->addSequenceSpawn(0x4000,lbl_803E1450,lbl_803E1468,lbl_803E1450,0x24,
+                                        &DAT_803131f0);
+  (*gModgfxInterface)->addSequenceSpawn(0x100,lbl_803E1450,lbl_803E1450,lbl_803E1478,0,
+                                        (void *)0);
+  (*gModgfxInterface)->addSequenceSpawn(0x1800000,lbl_803E146C,lbl_803E146C,lbl_803E1470,
+                                        0x5e0,(void *)0);
+  (*gModgfxInterface)->nextSequenceParam();
+  (*gModgfxInterface)->addSequenceSpawn(0x4000,lbl_803E1450,lbl_803E1468,lbl_803E1450,0x24,
+                                        &DAT_803131f0);
+  (*gModgfxInterface)->addSequenceSpawn(0x100,lbl_803E1450,lbl_803E1450,lbl_803E1478,0,
+                                        (void *)0);
+  (*gModgfxInterface)->addSequenceSpawn(4,lbl_803E1450,lbl_803E1450,lbl_803E1450,0x24,
+                                        &DAT_803131f0);
+  (*gModgfxInterface)->spawnSequence((void *)param_3,&DAT_80312f90,0x24,&DAT_803130f8,0x10,
+                                     0x120,(void *)0);
+  (*gModgfxInterface)->getLastSpawnHandle();
   return;
 }
 
