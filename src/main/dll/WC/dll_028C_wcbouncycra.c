@@ -153,7 +153,7 @@ void wcbouncycra_initialise(void) {}
 #pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling off
+#pragma scheduling on
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 {
     ObjAnimComponent *objAnim;
