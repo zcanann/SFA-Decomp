@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -887,9 +888,9 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
         *(u8 *)((char *)setup + 7) = 0xff;
         *(u8 *)((char *)setup + 4) = 2;
         *(u8 *)((char *)setup + 5) = 1;
-        *(f32 *)((char *)setup + 8) = inner->unkAE8;
-        *(f32 *)((char *)setup + 0xc) = inner->unkAEC;
-        *(f32 *)((char *)setup + 0x10) = inner->unkAF0;
+        ((ObjPlacement *)setup)->posX = inner->unkAE8;
+        ((ObjPlacement *)setup)->posY = inner->unkAEC;
+        ((ObjPlacement *)setup)->posZ = inner->unkAF0;
         newObj = (void *)Obj_SetupObject(setup, 5, -1, -1, 0);
         if (newObj != NULL) {
             s1.mat[1] = lbl_803E83A4;
@@ -1098,9 +1099,9 @@ void fn_802BF4D8(int obj)
     *(u8 *)((char *)setup + 7) = 0xff;
     *(u8 *)((char *)setup + 4) = 2;
     *(u8 *)((char *)setup + 5) = 1;
-    *(f32 *)((char *)setup + 8) = inner->unkAE8;
-    *(f32 *)((char *)setup + 0xc) = inner->unkAEC;
-    *(f32 *)((char *)setup + 0x10) = inner->unkAF0;
+    ((ObjPlacement *)setup)->posX = inner->unkAE8;
+    ((ObjPlacement *)setup)->posY = inner->unkAEC;
+    ((ObjPlacement *)setup)->posZ = inner->unkAF0;
     newObj = (void *)Obj_SetupObject(setup, 5, -1, -1, 0);
     if (newObj == NULL) {
         return;

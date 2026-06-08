@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/dll_19E.h"
@@ -90,10 +91,10 @@ void dfsh_objcreator_update(int obj)
 
     if (Obj_IsLoadingLocked() != 0 && state->spawnTimer <= 0) {
         spawnSetup = Obj_AllocObjectSetup(0x38, 0x11);
-        *(f32 *)(spawnSetup + 0x08) = *(f32 *)(setup + 0x08);
-        *(f32 *)(spawnSetup + 0x0c) = *(f32 *)(setup + 0x0c);
-        *(f32 *)(spawnSetup + 0x10) = *(f32 *)(setup + 0x10);
-        *(int *)(spawnSetup + 0x14) = *(int *)(setup + 0x14);
+        *(f32 *)(spawnSetup + 0x08) = ((ObjPlacement *)setup)->posX;
+        *(f32 *)(spawnSetup + 0x0c) = ((ObjPlacement *)setup)->posY;
+        *(f32 *)(spawnSetup + 0x10) = ((ObjPlacement *)setup)->posZ;
+        *(int *)(spawnSetup + 0x14) = ((ObjPlacement *)setup)->mapId;
         spawnSetup[0x04] = setup[0x04];
         spawnSetup[0x05] = setup[0x05];
         spawnSetup[0x06] = setup[0x06];

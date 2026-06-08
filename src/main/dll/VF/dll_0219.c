@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
@@ -66,10 +67,10 @@ void dll_219_update(Dll219Object *obj) {
     }
 
     if ((u32)GameBit_Get(state->gameBit) != 0) {
-        loweredTargetX = *(f32 *)(setup + 0x8) - lbl_803E60A8;
+        loweredTargetX = ((ObjPlacement *)setup)->posX - lbl_803E60A8;
         if (obj->x > loweredTargetX) {
             obj->x -= lbl_803E60AC;
-            targetX = *(f32 *)(setup + 0x8) - lbl_803E60A8;
+            targetX = ((ObjPlacement *)setup)->posX - lbl_803E60A8;
             if (obj->x < targetX) {
                 obj->x = targetX;
             }
@@ -77,7 +78,7 @@ void dll_219_update(Dll219Object *obj) {
         }
     }
     if ((u32)GameBit_Get(state->gameBit) == 0) {
-        targetX = *(f32 *)(setup + 0x8);
+        targetX = ((ObjPlacement *)setup)->posX;
         if (obj->x < targetX) {
             obj->x += lbl_803E60B0;
             if (obj->x > targetX) {

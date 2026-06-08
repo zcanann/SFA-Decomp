@@ -1,4 +1,5 @@
 #include "main/dll/LGT/LGTprojectedlight.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
@@ -501,9 +502,9 @@ int wmgeneralscales_SeqFn(int obj, int p2, u8 *seq)
         case 5:
             if (((GameObject *)obj)->unkC8 == NULL && Obj_IsLoadingLocked() != 0) {
                 int setup = Obj_AllocObjectSetup(0x24, 0x1b8);
-                *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-                *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-                *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+                ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+                ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+                ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
                 *(u8 *)(setup + 4) = 0x20;
                 *(u8 *)(setup + 5) = 4;
                 *(u8 *)(setup + 7) = 0xff;

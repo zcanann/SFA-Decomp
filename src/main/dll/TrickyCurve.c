@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
@@ -688,9 +689,9 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         *(u8 *)(setup + 7) = 0xff;
         *(u8 *)(setup + 4) = 2;
         *(u8 *)(setup + 5) = 1;
-        *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x24) = -1;
         *(u8 *)(setup + 0x1a) = 0;
         *(u8 *)(setup + 0x18) = 0;
@@ -723,9 +724,9 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         *(u8 *)(setup + 7) = 0xff;
         *(u8 *)(setup + 4) = 2;
         *(u8 *)(setup + 5) = 1;
-        *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *pair = Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
                                 (s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET), -1,
                                 *(int *)&((GameObject *)obj)->anim.parent);

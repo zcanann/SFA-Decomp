@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/CF/CFPrisonGuard.h"
 #include "main/mapEventTypes.h"
@@ -191,9 +192,9 @@ void staffactivated_spawnMapEventDebris(int obj)
   tricky = getTrickyObject();
   state = *(int *)&((GameObject *)obj)->extra;
 
-  if ((*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) != 0 &&
+  if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)setup)->mapId) != 0 &&
       Obj_IsLoadingLocked() != 0) {
-    (*gMapEventInterface)->startTimedEvent(*(int *)(setup + 0x14),
+    (*gMapEventInterface)->startTimedEvent(((ObjPlacement *)setup)->mapId,
                                            lbl_803E3BD8 * (f32)*(u8 *)(setup + 0x20));
     if (tricky != 0) {
       trickyImpress(tricky);

@@ -464,9 +464,9 @@ void fn_80152B90(int *obj, u8 *state)
                     int *spawned;
 
                     setup = Obj_AllocObjectSetup(0x24, 0x6b5);
-                    *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-                    *(f32 *)(setup + 0xc) = lbl_803E2878 + ((GameObject *)obj)->anim.localPosY;
-                    *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+                    ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+                    ((ObjPlacement *)setup)->posY = lbl_803E2878 + ((GameObject *)obj)->anim.localPosY;
+                    ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
                     *(u8 *)(setup + 4) = 1;
                     *(u8 *)(setup + 5) = 1;
                     *(u8 *)(setup + 6) = 0xff;

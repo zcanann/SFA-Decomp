@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
@@ -7095,9 +7096,9 @@ void superQuakeFn_8016d9fc(f32 *pos)
         *((u8 *)setup + 6) = 0xff;
         *((u8 *)setup + 5) = 2;
         *((u8 *)setup + 7) = 0xff;
-        *(f32 *)((u8 *)setup + 8) = *(f32 *)(lbl_803AC6B8 + 0);
-        *(f32 *)((u8 *)setup + 0xc) = *(f32 *)(lbl_803AC6B8 + 4);
-        *(f32 *)((u8 *)setup + 0x10) = *(f32 *)(lbl_803AC6B8 + 8);
+        ((ObjPlacement *)setup)->posX = *(f32 *)(lbl_803AC6B8 + 0);
+        ((ObjPlacement *)setup)->posY = *(f32 *)(lbl_803AC6B8 + 4);
+        ((ObjPlacement *)setup)->posZ = *(f32 *)(lbl_803AC6B8 + 8);
         *(int **)(lbl_803AC6B8 + 0x1c) = Obj_SetupObject(setup, 5, *(s8 *)((u8 *)player + 0xac), -1, *(void **)((u8 *)player + 0x30));
         if (GameBit_Get(0xc55) != 0) {
             ((ObjAnimComponent *)*(int *)(lbl_803AC6B8 + 0x1c))->bankIndex = 1;

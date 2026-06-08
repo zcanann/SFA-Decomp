@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -152,9 +153,9 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag) {
     ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
     {
         int setup = Obj_AllocObjectSetup(0x20, 0x6ae);
-        *(f32 *)(setup + 8) = px;
-        *(f32 *)(setup + 0xc) = py;
-        *(f32 *)(setup + 0x10) = pz;
+        ((ObjPlacement *)setup)->posX = px;
+        ((ObjPlacement *)setup)->posY = py;
+        ((ObjPlacement *)setup)->posZ = pz;
         *(u8 *)(setup + 0x1a) = (*(s16 *)obj + 0x10000 + angle - 0x8000) >> 8;
         *(u8 *)(setup + 0x19) = -((GameObject *)obj)->anim.rotY >> 8;
         *(u8 *)(setup + 0x18) = 0;

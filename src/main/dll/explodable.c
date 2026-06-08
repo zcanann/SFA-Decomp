@@ -98,9 +98,9 @@ int fn_801833E4(int obj, int player, int state)
     switch (*(u8 *)(state + 0x11)) {
     case 1:
         setup = Obj_AllocObjectSetup(0x24, 0x3d3);
-        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 400;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
@@ -140,9 +140,9 @@ int fn_801833E4(int obj, int player, int state)
     case 2:
         setup = Obj_AllocObjectSetup(0x24, 0x3d4);
         *(s8 *)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
-        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 400;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
@@ -182,9 +182,9 @@ int fn_801833E4(int obj, int player, int state)
     case 3:
         setup = Obj_AllocObjectSetup(0x24, 0x3d5);
         *(s8 *)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
-        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 2000;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         *(f32 *)(newObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
@@ -231,9 +231,9 @@ int fn_801833E4(int obj, int player, int state)
         *(u8 *)(setup + 0x1a) = 0x14;
         *(s16 *)(setup + 0x2c) = -1;
         *(s16 *)(setup + 0x1c) = -1;
-        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(setup + 0xc) = lbl_803E39C0 + ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = lbl_803E39C0 + ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x24) = -1;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
         (**(void (**)(f32, f32, f32))(**(int **)(newObj + 0x68) + 0x2c))(
@@ -246,9 +246,9 @@ int fn_801833E4(int obj, int player, int state)
     case 9:
         if (Obj_IsLoadingLocked() != 0) {
             setup = Obj_AllocObjectSetup(0x24, 0x259);
-            *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(setup + 0xc) = lbl_803E39A8 + ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+            ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+            ((ObjPlacement *)setup)->posY = lbl_803E39A8 + ((GameObject *)obj)->anim.localPosY;
+            ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
             *(u8 *)(setup + 0x4) = 4;
             *(u8 *)(setup + 0x6) = 200;
             *(s16 *)(setup + 0x20) = -1;

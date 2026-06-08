@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
@@ -670,9 +671,9 @@ void enemy_update(int obj)
             return;
         }
         if (setup != NULL && (setup[0x2b] & 8) != 0) {
-            ((GameObject *)obj)->anim.localPosX = *(f32 *)(setup + 8);
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
-            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(setup + 0x10);
+            ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)setup)->posX;
+            ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
+            ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)setup)->posZ;
         }
         (*gObjectTriggerInterface)->runSequence(*(s8 *)(setup + 0x2e), (void *)obj, -1);
         ((EnemyState *)state)->controlFlags |= 2;
@@ -727,13 +728,13 @@ void enemy_update(int obj)
                 return;
             }
         } else {
-            if (*(u32 *)(setup + 0x14) == 0xFFFFFFFF) {
+            if (*(u32 *)&((ObjPlacement *)setup)->mapId == 0xFFFFFFFF) {
                 return;
             }
             if (*(s16 *)(setup + 0x2c) == 0) {
                 return;
             }
-            if ((*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) != 0) {
+            if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)setup)->mapId) != 0) {
                 if ((((EnemyState *)state)->controlFlags & 0x800) == 0) {
                     player = Obj_GetPlayerObject();
                     if (player != NULL) {
@@ -836,14 +837,14 @@ void enemy_init(int obj, u8 *setup, int flag)
                 ((GameObject *)obj)->unkF4 = GameBit_Get(*(s16 *)(setup + 0x1a)) == 0;
             }
         }
-        if (*(u32 *)(setup + 0x14) != 0xFFFFFFFF) {
+        if (*(u32 *)&((ObjPlacement *)setup)->mapId != 0xFFFFFFFF) {
             if (((GameObject *)obj)->unkF4 == 0) {
                 if (*(s16 *)(setup + 0x18) != -1) {
                     ((GameObject *)obj)->unkF4 = GameBit_Get(*(s16 *)(setup + 0x18));
                 }
                 if (((GameObject *)obj)->unkF4 == 0) {
                     if (*(s16 *)(setup + 0x2c) != 0) {
-                        if ((*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) == 0) {
+                        if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)setup)->mapId) == 0) {
                             ((GameObject *)obj)->unkF4 = 1;
                         }
                     }
@@ -863,9 +864,9 @@ void enemy_init(int obj, u8 *setup, int flag)
     *(int *)(state + 0x2dc) = 0;
     ((EnemyState *)state)->initialFlags = *(int *)(state + 0x2dc);
     *(s16 *)obj = *(s8 *)(setup + 0x2a) << 8;
-    ((GameObject *)obj)->anim.localPosX = *(f32 *)(setup + 8);
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(setup + 0x10);
+    ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)setup)->posX;
+    ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
+    ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)setup)->posZ;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     if (flag == 0) {
         *(int *)(state + 0x2e4) = 0;

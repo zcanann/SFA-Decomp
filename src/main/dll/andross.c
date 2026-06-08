@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/andross.h"
 #include "main/mapEventTypes.h"
@@ -84,9 +85,9 @@ void andross_init(int obj, u8 *setup)
     int i;
     int model;
 
-    ((AndrossState *)state)->unk58 = *(f32 *)(setup + 8);
-    ((AndrossState *)state)->unk5C = *(f32 *)(setup + 0xc);
-    ((AndrossState *)state)->unk60 = *(f32 *)(setup + 0x10);
+    ((AndrossState *)state)->unk58 = ((ObjPlacement *)setup)->posX;
+    ((AndrossState *)state)->unk5C = ((ObjPlacement *)setup)->posY;
+    ((AndrossState *)state)->unk60 = ((ObjPlacement *)setup)->posZ;
     ((AndrossState *)state)->unk98 = 0;
     ((AndrossState *)state)->unk88 = 0;
     ((AndrossState *)state)->unk8C = -1;

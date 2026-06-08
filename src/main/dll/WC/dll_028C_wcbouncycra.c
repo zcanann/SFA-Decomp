@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
@@ -134,7 +135,7 @@ void wcbouncycra_init(int obj, int setup)
 {
     WCBouncyCrateState *state = ((GameObject *)obj)->extra;
 
-    state->homeY = *(f32 *)(setup + 0xc);
+    state->homeY = ((ObjPlacement *)setup)->posY;
     state->cooldown = WBOUNCY_RESET_COOLDOWN;
 }
 #pragma scheduling reset

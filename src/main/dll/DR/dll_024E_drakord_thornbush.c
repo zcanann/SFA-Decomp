@@ -1,4 +1,5 @@
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 
 /*
@@ -81,7 +82,7 @@ void drakord_thornbush_update(int obj)
         if (timerCountDown((f32 *)((char *)inner + 0xc)) != 0) {
             ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ((DrakorFlags *)((char *)inner + 0x79))->b80 = 1;
-            if (*(u32 *)((char *)setup + 0x14) == 0xffffffff) {
+            if (*(u32 *)&((ObjPlacement *)setup)->mapId == 0xffffffff) {
                 Obj_FreeObject(obj);
             }
         }
@@ -167,7 +168,7 @@ void drakord_thornbush_hitDetect(int obj)
                 s16toFloat((void *)((char *)inner + 0xc), *(s16 *)((char *)setup + 0x1a));
                 ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
-            } else if (*(u32 *)((char *)setup + 0x14) == 0xffffffff) {
+            } else if (*(u32 *)&((ObjPlacement *)setup)->mapId == 0xffffffff) {
                 Obj_FreeObject(obj);
             } else {
                 Obj_RemoveFromUpdateList((int *)obj);

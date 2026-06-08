@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "global.h"
@@ -553,9 +554,9 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
     }
     {
         int setup = Obj_AllocObjectSetup(0x20, 0x604);
-        *(f32 *)(setup + 8) = px;
-        *(f32 *)(setup + 0xc) = py;
-        *(f32 *)(setup + 0x10) = pz;
+        ((ObjPlacement *)setup)->posX = px;
+        ((ObjPlacement *)setup)->posY = py;
+        ((ObjPlacement *)setup)->posZ = pz;
         *(u8 *)(setup + 0x1a) = *(s16 *)obj >> 8;
         *(u8 *)(setup + 0x19) = ((GameObject *)obj)->anim.rotY >> 8;
         *(u8 *)(setup + 0x18) = 0;
@@ -1118,9 +1119,9 @@ int arwarwing_SeqFn(int obj, int p2, int script)
             if (Obj_IsLoadingLocked()) {
                 int setup = Obj_AllocObjectSetup(0x24, 0x608);
                 int o;
-                *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-                *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-                *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+                ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+                ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+                ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
                 *(u8 *)(setup + 4) = 1;
                 *(u8 *)(setup + 5) = 1;
                 o = loadObjectAtObject(obj);

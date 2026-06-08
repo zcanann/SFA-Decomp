@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 
@@ -376,9 +377,9 @@ void androsshand_spawnShot(int obj, int hand, int p3)
         yaw = (u16)getAngle(dx, dz) + 0x8000;
         lbl_803DDDD0 = (u16)getAngle(pt[1] - *(f32 *)(*(int *)(hand + 4) + 0x10), dist) >> 8;
         setup = Obj_AllocObjectSetup(0x20, 0x7e4);
-        *(f32 *)(setup + 8) = pt[0];
-        *(f32 *)(setup + 0xc) = pt[1];
-        *(f32 *)(setup + 0x10) = pt[2];
+        ((ObjPlacement *)setup)->posX = pt[0];
+        ((ObjPlacement *)setup)->posY = pt[1];
+        ((ObjPlacement *)setup)->posZ = pt[2];
         *(u8 *)(setup + 0x1a) = (*(s16 *)obj + yaw) >> 8;
         *(u8 *)(setup + 0x19) = lbl_803DDDD0;
         *(u8 *)(setup + 0x18) = 0;

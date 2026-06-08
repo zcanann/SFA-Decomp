@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
@@ -3049,7 +3050,7 @@ void lavaball1bf_update(int *obj) {
         *(s8 *)(s + 0x18) = (s8)setup[0x1c];
         *(s16 *)(s + 0x1a) = setup[0x1a];
         *(s16 *)(s + 0x1c) = setup[0x1b];
-        *(int *)(s + 0x14) = *(int *)(setup + 0x14);
+        *(int *)(s + 0x14) = ((ObjPlacement *)setup)->mapId;
         *(int *)&state->spawnedObj = ((int (*)(int, int, int, int, int))Obj_SetupObject)(s, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
     }
     spawned = state->spawnedObj;

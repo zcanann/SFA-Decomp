@@ -1,4 +1,5 @@
 #include "main/dll/DR/DRearthwalk.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_ui_interface.h"
@@ -1213,9 +1214,9 @@ void sh_beacon_init(int obj, int defData)
 
     if (((ShBeaconState *)state)->mode != 0 && Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x20, 0x55);
-        *(f32 *)((char *)setup + 8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)((char *)setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)((char *)setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(u8 *)((char *)setup + 4) = 2;
         *(u8 *)((char *)setup + 5) = *(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 5);
         *(u8 *)((char *)setup + 7) = *(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 7);
@@ -1268,9 +1269,9 @@ void sh_beacon_update(int obj)
       GameBit_Set(*(s16 *)(def + 0x20), 1);
       if (Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x20, 0x55);
-        *(f32 *)((char *)setup + 8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)((char *)setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)((char *)setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(u8 *)((char *)setup + 4) = 2;
         *(u8 *)((char *)setup + 5) = *(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 5);
         *(u8 *)((char *)setup + 7) = *(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 7);

@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/ARW/arwing_state.h"
 
@@ -383,9 +384,9 @@ void arwarwing_spawnBomb(int obj, int state, int side) {
     else
         ObjPath_GetPointWorldPosition(obj, 6, &px, &py, &pz, 0);
     setup = Obj_AllocObjectSetup(0x20, 0x605);
-    *(f32 *)(setup + 8) = px;
-    *(f32 *)(setup + 0xc) = py;
-    *(f32 *)(setup + 0x10) = pz;
+    ((ObjPlacement *)setup)->posX = px;
+    ((ObjPlacement *)setup)->posY = py;
+    ((ObjPlacement *)setup)->posZ = pz;
     *(u8 *)(setup + 0x1a) = *(s16 *)(obj + 0) >> 8;
     *(u8 *)(setup + 0x19) = *(s16 *)(obj + 2) >> 8;
     *(u8 *)(setup + 0x18) = *(s16 *)(obj + 4) >> 8;

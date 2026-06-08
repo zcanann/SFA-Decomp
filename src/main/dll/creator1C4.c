@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
@@ -362,9 +363,9 @@ void gpsh_objcreator_update(int *obj) {
         *(u8*)((char*)setup + 7) = 0xff;
         *(u8*)((char*)setup + 4) = 0x20;
         *(u8*)((char*)setup + 5) = 2;
-        *(f32*)((char*)setup + 8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32*)((char*)setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32*)((char*)setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16*)setup = (s16)(sub[4] + 0x1f4);
         *(u8*)((char*)setup + 0x18) = (u8)((s32)*(s16*)obj >> 8);
         *(s16*)((char*)setup + 0x1a) = lbl_803263B8[sub[4]];

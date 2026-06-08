@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/dll/DIM/DIM2lift.h"
@@ -1029,9 +1030,9 @@ void DIM2icicle_spawnBlueWhiteEffect(int* sourceObj, f32* velocity) {
     void* setup;
     if ((u8)Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(36, 656);
-        *(f32*)((char*)setup + 8) = *(f32*)((char*)sourceObj + 0xc);
-        *(f32*)((char*)setup + 0xc) = *(f32*)((char*)sourceObj + 0x10);
-        *(f32*)((char*)setup + 0x10) = *(f32*)((char*)sourceObj + 0x14);
+        ((ObjPlacement *)setup)->posX = *(f32*)((char*)sourceObj + 0xc);
+        ((ObjPlacement *)setup)->posY = *(f32*)((char*)sourceObj + 0x10);
+        ((ObjPlacement *)setup)->posZ = *(f32*)((char*)sourceObj + 0x14);
         *(u8*)((char*)setup + 4) = 1;
         *(u8*)((char*)setup + 5) = 1;
         *(u8*)((char*)setup + 6) = 255;

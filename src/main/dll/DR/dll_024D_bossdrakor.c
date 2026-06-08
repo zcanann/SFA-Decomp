@@ -1,4 +1,5 @@
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
@@ -402,9 +403,9 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
             if (((DrakorFlags *)((char *)state + 0x198))->b40) {
                 if (Obj_IsLoadingLocked() != 0) {
                     setup = Obj_AllocObjectSetup(0x20, 0x70f);
-                    *(f32 *)(setup + 8) = ((BossDrakorState *)state)->unk1C;
-                    *(f32 *)(setup + 0xc) = ((BossDrakorState *)state)->unk20;
-                    *(f32 *)(setup + 0x10) = ((BossDrakorState *)state)->unk24;
+                    ((ObjPlacement *)setup)->posX = ((BossDrakorState *)state)->unk1C;
+                    ((ObjPlacement *)setup)->posY = ((BossDrakorState *)state)->unk20;
+                    ((ObjPlacement *)setup)->posZ = ((BossDrakorState *)state)->unk24;
                     setup[4] = 1;
                     setup[5] = 1;
                     setup[6] = 0xff;
@@ -447,9 +448,9 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
                     setup[5] = 1;
                     setup[6] = 0xff;
                     setup[7] = 0xff;
-                    *(f32 *)(setup + 8) = ((BossDrakorState *)state)->unk1C;
-                    *(f32 *)(setup + 0xc) = ((BossDrakorState *)state)->unk20;
-                    *(f32 *)(setup + 0x10) = ((BossDrakorState *)state)->unk24;
+                    ((ObjPlacement *)setup)->posX = ((BossDrakorState *)state)->unk1C;
+                    ((ObjPlacement *)setup)->posY = ((BossDrakorState *)state)->unk20;
+                    ((ObjPlacement *)setup)->posZ = ((BossDrakorState *)state)->unk24;
                     *(s16 *)(setup + 0x1a) = 0x3c;
                     *(s16 *)(setup + 0x1c) = lbl_803DC194;
                     *(s8 *)(setup + 0x19) = lbl_803DC190;

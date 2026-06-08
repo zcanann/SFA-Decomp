@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -840,9 +841,9 @@ void SB_ShipHead_update(int obj) {
             setup[7] = 0xff;
             setup[4] = 2;
             setup[5] = 1;
-            *(f32 *)(setup + 8) = px;
-            *(f32 *)(setup + 0xc) = py;
-            *(f32 *)(setup + 0x10) = pz;
+            ((ObjPlacement *)setup)->posX = px;
+            ((ObjPlacement *)setup)->posY = py;
+            ((ObjPlacement *)setup)->posZ = pz;
             proj = Obj_SetupObject(setup, 5, -1, -1, 0);
             ddx = *(f32 *)(player + 0x18) - *(f32 *)(proj + 0xc);
             ddy = (*(f32 *)(player + 0x1c) - lbl_803E5850) - *(f32 *)(proj + 0x10);
@@ -858,9 +859,9 @@ void SB_ShipHead_update(int obj) {
             Sfx_PlayFromObject(obj, 0x38);
             player = Obj_GetPlayerObject();
             setup = Obj_AllocObjectSetup(0x18, 0x138);
-            *(f32 *)(setup + 8) = lbl_803E5854 + *(f32 *)(player + 0x18);
-            *(f32 *)(setup + 0xc) = lbl_803E5848 + (*(f32 *)(player + 0x1c) + (f32)(int)randomGetRange(-6, 6));
-            *(f32 *)(setup + 0x10) = lbl_803E5858 + (*(f32 *)(player + 0x20) + (f32)(int)randomGetRange(-6, 6));
+            ((ObjPlacement *)setup)->posX = lbl_803E5854 + *(f32 *)(player + 0x18);
+            ((ObjPlacement *)setup)->posY = lbl_803E5848 + (*(f32 *)(player + 0x1c) + (f32)(int)randomGetRange(-6, 6));
+            ((ObjPlacement *)setup)->posZ = lbl_803E5858 + (*(f32 *)(player + 0x20) + (f32)(int)randomGetRange(-6, 6));
             setup[4] = 2;
             setup[5] = 1;
             setup[6] = 0xff;

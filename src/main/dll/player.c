@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -1309,9 +1310,9 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
             ObjPath_GetPointWorldPosition(lbl_803DE44C, 0, (f32 *)((char *)setup + 0x8),
                                           (f32 *)((char *)setup + 0xc), (f32 *)((char *)setup + 0x10), 0);
         } else {
-            *(f32 *)((char *)setup + 0x8) = *(f32 *)((char *)slot + 0xc);
-            *(f32 *)((char *)setup + 0xc) = *(f32 *)((char *)slot + 0x10);
-            *(f32 *)((char *)setup + 0x10) = *(f32 *)((char *)slot + 0x14);
+            ((ObjPlacement *)setup)->posX = *(f32 *)((char *)slot + 0xc);
+            ((ObjPlacement *)setup)->posY = *(f32 *)((char *)slot + 0x10);
+            ((ObjPlacement *)setup)->posZ = *(f32 *)((char *)slot + 0x14);
         }
         *(s8 *)((char *)setup + 0x19) = (s8)(*(int (*)(void *))(
             *(int *)((char *)*(int *)(*(int *)((char *)lbl_803DE44C + 0x68)) + 0x44)))(lbl_803DE44C);
@@ -1344,9 +1345,9 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
             Matrix_TransformPoint(mtx, lbl_803E7EA4, lbl_803E7EA4, lbl_803E80DC,
                                   (f32 *)((char *)setup + 0x24), (f32 *)((char *)setup + 0x28),
                                   (f32 *)((char *)setup + 0x2c));
-            *(f32 *)((char *)setup + 0x18) = *(f32 *)((char *)setup + 0xc);
-            *(f32 *)((char *)setup + 0x1c) = *(f32 *)((char *)setup + 0x10);
-            *(f32 *)((char *)setup + 0x20) = *(f32 *)((char *)setup + 0x14);
+            *(f32 *)((char *)setup + 0x18) = ((ObjPlacement *)setup)->posY;
+            *(f32 *)((char *)setup + 0x1c) = ((ObjPlacement *)setup)->posZ;
+            *(f32 *)((char *)setup + 0x20) = *(f32 *)&((ObjPlacement *)setup)->mapId;
             *(s16 *)((char *)setup + 0x0) = inner->targetYaw;
             *(s16 *)((char *)setup + 0x2) = *(s16 *)((char *)slot + 0x2) / 2;
         } else {
@@ -1374,11 +1375,11 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
             *(f32 *)((char *)setup + 0x28) = m * vec[1];
             *(f32 *)((char *)setup + 0x2c) = m * vec[2];
             k = lbl_803E7ED4;
-            *(f32 *)((char *)setup + 0x18) = *(f32 *)((char *)setup + 0xc) =
+            *(f32 *)((char *)setup + 0x18) = ((ObjPlacement *)setup)->posY =
                 k * *(f32 *)((char *)setup + 0x24) + *(f32 *)((char *)slot + 0xc);
-            *(f32 *)((char *)setup + 0x1c) = *(f32 *)((char *)setup + 0x10) =
+            *(f32 *)((char *)setup + 0x1c) = ((ObjPlacement *)setup)->posZ =
                 k * *(f32 *)((char *)setup + 0x28) + *(f32 *)((char *)slot + 0x10);
-            *(f32 *)((char *)setup + 0x20) = *(f32 *)((char *)setup + 0x14) =
+            *(f32 *)((char *)setup + 0x20) = *(f32 *)&((ObjPlacement *)setup)->mapId =
                 k * *(f32 *)((char *)setup + 0x2c) + *(f32 *)((char *)slot + 0x14);
             *(s16 *)((char *)setup + 0x2) = *(s16 *)((char *)slot + 0x2) / 2;
             *(s16 *)((char *)setup + 0x0) = -*(s16 *)((char *)slot + 0x0);
@@ -11966,9 +11967,9 @@ void playerDie(int obj)
     } else {
         setup = Obj_AllocObjectSetup(0x20, 0x887);
     }
-    *(f32 *)((char *)setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)((char *)setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-    *(f32 *)((char *)setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+    ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+    ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+    ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
     inner->unk46C = Obj_SetupObject(setup, 5, -1, -1, 0);
     ((ByteFlags *)((char *)inner + 0x3f3))->b04 = 0;
     ((ByteFlags *)((char *)inner + 0x3f3))->b02 = 1;
@@ -12695,9 +12696,9 @@ int fn_802A418C(int obj, int state, f32 fv)
                     *(u8 *)(setup + 0x6) = 0xff;
                     *(u8 *)(setup + 0x5) = 1;
                     *(u8 *)(setup + 0x7) = 0xff;
-                    *(int *)(setup + 0x8) = *(int *)((char *)player + 0xc);
-                    *(int *)(setup + 0xc) = *(int *)((char *)player + 0x10);
-                    *(int *)(setup + 0x10) = *(int *)((char *)player + 0x14);
+                    *(int *)&((ObjPlacement *)setup)->posX = *(int *)((char *)player + 0xc);
+                    *(int *)&((ObjPlacement *)setup)->posY = *(int *)((char *)player + 0x10);
+                    *(int *)&((ObjPlacement *)setup)->posZ = *(int *)((char *)player + 0x14);
                     att = (void *)Obj_SetupObject((int)setup, 4, *(s8 *)((char *)player + 0xac),
                                                   -1, *(int *)((char *)player + 0x30));
                     lbl_803DE444 = att;
@@ -12720,9 +12721,9 @@ int fn_802A418C(int obj, int state, f32 fv)
                 *(u8 *)(setup + 0x6) = 0xff;
                 *(u8 *)(setup + 0x5) = 1;
                 *(u8 *)(setup + 0x7) = 0xff;
-                *(int *)(setup + 0x8) = *(int *)&((GameObject *)obj)->anim.localPosX;
-                *(f32 *)(setup + 0xc) = lbl_803E7F58 + ((GameObject *)obj)->anim.localPosY;
-                *(int *)(setup + 0x10) = *(int *)&((GameObject *)obj)->anim.localPosZ;
+                *(int *)&((ObjPlacement *)setup)->posX = *(int *)&((GameObject *)obj)->anim.localPosX;
+                ((ObjPlacement *)setup)->posY = lbl_803E7F58 + ((GameObject *)obj)->anim.localPosY;
+                *(int *)&((ObjPlacement *)setup)->posZ = *(int *)&((GameObject *)obj)->anim.localPosZ;
                 *(u8 *)(setup + 0x19) = 1;
                 Obj_SetupObject((int)setup, 5, -1, -1, *(int *)&((GameObject *)obj)->anim.parent);
             }
@@ -14143,9 +14144,9 @@ void fn_802AA014(int obj)
         *(u8 *)((char *)setup + 5) = 1;
         *(u8 *)((char *)setup + 6) = 0xff;
         *(u8 *)((char *)setup + 7) = 0xff;
-        *(f32 *)((char *)setup + 8) = *(f32 *)((char *)slot + 0xc);
-        *(f32 *)((char *)setup + 0xc) = *(f32 *)((char *)slot + 0x10);
-        *(f32 *)((char *)setup + 0x10) = *(f32 *)((char *)slot + 0x14);
+        ((ObjPlacement *)setup)->posX = *(f32 *)((char *)slot + 0xc);
+        ((ObjPlacement *)setup)->posY = *(f32 *)((char *)slot + 0x10);
+        ((ObjPlacement *)setup)->posZ = *(f32 *)((char *)slot + 0x14);
         Sfx_PlayFromObject(obj, SFXmammoth_suck);
         o = (void *)Obj_SetupObject(setup, 5, -1, -1, 0);
         if (o != NULL) {
@@ -14352,9 +14353,9 @@ void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
         *(u8 *)((char *)setup + 6) = 0xff;
         *(u8 *)((char *)setup + 7) = 0xff;
         ObjPath_GetPointWorldPosition((int)lbl_803DE44C, 0, &x0, &y0, &z0, 0);
-        *(f32 *)((char *)setup + 8) = x0 + yoff;
-        *(f32 *)((char *)setup + 0xc) = y0 + yoff;
-        *(f32 *)((char *)setup + 0x10) = z0 + yoff;
+        ((ObjPlacement *)setup)->posX = x0 + yoff;
+        ((ObjPlacement *)setup)->posY = y0 + yoff;
+        ((ObjPlacement *)setup)->posZ = z0 + yoff;
         setup = Obj_SetupObject(setup, 5, -1, -1, 0);
         if (setup != 0) {
             ObjPath_GetPointWorldPosition((int)lbl_803DE44C, 0, &x0, &y0, &z0, 0);
@@ -14368,7 +14369,7 @@ void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
             dz = dz / len;
             *(s16 *)((char *)setup + 0) = (s16)getAngle(dx, dz);
             *(s16 *)((char *)setup + 2) = (s16)(-getAngle(dy, sqrtf(dx * dx + dz * dz)));
-            *(f32 *)((char *)setup + 8) = *(f32 *)((char *)setup + 8) * lbl_803E7EF0;
+            ((ObjPlacement *)setup)->posX = ((ObjPlacement *)setup)->posX * lbl_803E7EF0;
             arwprojectile_placeForward(setup, lbl_803E7ED8);
             arwprojectile_setLifetime(setup, 0x32);
             if (slot == 1) {

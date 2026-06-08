@@ -1,4 +1,5 @@
 #include "main/dll/gcrobotlightbea.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -138,9 +139,9 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
     switch ((s16)mode) {
     case 1:
         setup = Obj_AllocObjectSetup(0x24, 0x3d3);
-        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 0x190;
         spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
@@ -187,9 +188,9 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
     case 2:
         setup = Obj_AllocObjectSetup(0x24, 0x3d4);
         *(s8 *)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
-        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 0x190;
         spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
@@ -236,9 +237,9 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
     case 3:
         setup = Obj_AllocObjectSetup(0x24, 0x3d5);
         *(s8 *)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
-        *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 0x7d0;
         spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
@@ -293,15 +294,15 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         *(s16 *)(setup + 0x2c) = -1;
         *(s16 *)(setup + 0x1c) = -1;
         if ((s8)data[9] != 0) {
-            *(f32 *)(setup + 0x8) =
+            ((ObjPlacement *)setup)->posX =
                 ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-0xf, 0xf);
-            *(f32 *)(setup + 0xc) = lbl_803E395C + ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(setup + 0x10) =
+            ((ObjPlacement *)setup)->posY = lbl_803E395C + ((GameObject *)obj)->anim.localPosY;
+            ((ObjPlacement *)setup)->posZ =
                 ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0xf, 0xf);
         } else {
-            *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(setup + 0xc) = lbl_803E3960 + ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+            ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+            ((ObjPlacement *)setup)->posY = lbl_803E3960 + ((GameObject *)obj)->anim.localPosY;
+            ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         }
         *(s16 *)(setup + 0x24) = -1;
         spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);

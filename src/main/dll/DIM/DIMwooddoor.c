@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMwooddoor.h"
 #include "main/objanim.h"
@@ -93,9 +94,9 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
             setup[6] = config->setup06;
             setup[5] = config->setup05;
             setup[7] = config->setup07;
-            *(f32 *)(setup + 8) = state->targetX;
-            *(f32 *)(setup + 0xc) = state->targetY;
-            *(f32 *)(setup + 0x10) = state->targetZ;
+            ((ObjPlacement *)setup)->posX = state->targetX;
+            ((ObjPlacement *)setup)->posY = state->targetY;
+            ((ObjPlacement *)setup)->posZ = state->targetZ;
 
             shard = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, 0);
             shardState = *(DIMWoodDoorShardState **)(shard + 0xb8);

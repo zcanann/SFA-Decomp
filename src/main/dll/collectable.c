@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -1603,9 +1604,9 @@ void Tricky_update(int obj)
           setup = Obj_AllocObjectSetup(0x18,0x112);
           *(u8 *)(setup + 7) = 0xff;
           *(u8 *)(setup + 4) = 2;
-          *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.worldPosX;
-          *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.worldPosY;
-          *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.worldPosZ;
+          ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.worldPosX;
+          ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.worldPosY;
+          ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.worldPosZ;
           *(int *)&((TrickyState *)state)->unk24 = Obj_SetupObject(setup,5,-1,-1,*(int *)&((GameObject *)obj)->anim.parent);
           target = *(int *)&((TrickyState *)state)->unk24 + 0x18;
           if (*(u32 *)&((TrickyState *)state)->unk28 != target) {
@@ -2045,12 +2046,12 @@ void trickyFn_80148d8c(int obj,int state)
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
     ((GameObject *)obj)->anim.alpha = 0;
     *(u32 *)&((GameObject *)obj)->unkF4 = 1;
-    if (*(int *)(setup + 0x14) == -1) {
+    if (((ObjPlacement *)setup)->mapId == -1) {
       Obj_FreeObject(obj);
     }
     else {
       if (*(s16 *)(setup + 0x2c) != 0) {
-        (*gMapEventInterface)->startTimedEvent(*(int *)(setup + 0x14),
+        (*gMapEventInterface)->startTimedEvent(((ObjPlacement *)setup)->mapId,
                                                lbl_803E2570 * (f32)*(s16 *)(setup + 0x2c));
       }
       ((TrickyState *)state)->flags2DC = ((TrickyState *)state)->flags2DC & 0xfffff7ff;
@@ -2161,9 +2162,9 @@ int collectibleFn_80149cec(int obj,int state,int spawnBits,u32 useAltMode,u32 mo
   *(s16 *)(setup + 0x2c) = -1;
   *(s16 *)(setup + 0x1c) = -1;
   *(s16 *)(setup + 0x24) = -1;
-  *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-  *(f32 *)(setup + 0xc) = lbl_803E2598 + ((GameObject *)obj)->anim.localPosY;
-  *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+  ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+  ((ObjPlacement *)setup)->posY = lbl_803E2598 + ((GameObject *)obj)->anim.localPosY;
+  ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
   if ((useAltMode & 0xff) != 0) {
     *(s16 *)(setup + 0x2e) = 2;
   }

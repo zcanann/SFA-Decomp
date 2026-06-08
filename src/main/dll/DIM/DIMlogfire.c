@@ -1,4 +1,5 @@
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/obj_placement.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
@@ -1144,10 +1145,10 @@ void MoonSeedPlantingSpot_update(int obj)
     switch (*(u8 *)ex) {
     case 0:
         *(u8 *)ex = 1;
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc) - lbl_803E45F0;
+        ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY - lbl_803E45F0;
         if (GameBit_Get(*(s16 *)((char *)ex + 8)) != 0) {
             *(u8 *)ex = 2;
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc);
+            ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
             ((GameObject *)obj)->anim.alpha = 0xff;
         }
         if (GameBit_Get(*(s16 *)((char *)ex + 0xa)) != 0) {
@@ -1168,7 +1169,7 @@ void MoonSeedPlantingSpot_update(int obj)
             (*gGameUIInterface)->isEventReady(0x86a) != 0) {
             int cnt = GameBit_Get(0x86a);
             if (cnt != 0) {
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc);
+                ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
                 ((GameObject *)obj)->anim.alpha = 0;
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 GameBit_Set(0x86a, cnt - 1);
@@ -1183,7 +1184,7 @@ void MoonSeedPlantingSpot_update(int obj)
             void *player;
             if (*(u8 *)((char *)ex + 1) & 4) {
                 ((GameObject *)obj)->anim.localPosY =
-                    *(f32 *)((char *)setup + 0xc) + (f32)(int)randomGetRange(-1, 1);
+                    ((ObjPlacement *)setup)->posY + (f32)(int)randomGetRange(-1, 1);
                 (*gPartfxInterface)->spawnObject((void *)obj, 0x70f, NULL, 2, -1, NULL);
             }
             *(f32 *)((char *)ex + 0x14) = *(f32 *)((char *)ex + 0x14) - timeDelta;
@@ -1215,7 +1216,7 @@ void MoonSeedPlantingSpot_update(int obj)
     case 3: {
         int tricky = getTrickyObject();
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup + 0xc);
+        ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
         if (getXZDistance((f32 *)(tricky + 0x18), &((GameObject *)obj)->anim.worldPosX) <= lbl_803E45FC) {
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 5, 1, 0x28, lbl_803E4600, 0, 0);
         } else {

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"
@@ -4940,9 +4941,9 @@ void fn_80202EF0(int obj, int p2)
 
     if (Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x24, 0x30a);
-        *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-                *(f32 *)(setup + 0xc) = lbl_803E637C + ((GameObject *)obj)->anim.localPosY;
-                *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+                ((ObjPlacement *)setup)->posY = lbl_803E637C + ((GameObject *)obj)->anim.localPosY;
+                ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
                 setup[4] = 1;
                 setup[5] = 1;
                 setup[6] = 0xff;
@@ -5079,9 +5080,9 @@ void dfpobjcreator_update(int obj)
             if (state->spawnTimer <= 0 && GameBit_Get(state->gameBit) != 0) {
                 state->spawnTimer = state->spawnPeriod;
                 setup = Obj_AllocObjectSetup(0x24, 0x71b);
-                *(f32 *)(setup + 0x8) = *(f32 *)(data + 0x8);
-                *(f32 *)(setup + 0xc) = *(f32 *)(data + 0xc);
-                *(f32 *)(setup + 0x10) = *(f32 *)(data + 0x10);
+                ((ObjPlacement *)setup)->posX = *(f32 *)(data + 0x8);
+                ((ObjPlacement *)setup)->posY = *(f32 *)(data + 0xc);
+                ((ObjPlacement *)setup)->posZ = *(f32 *)(data + 0x10);
                 setup[4] = *(u8 *)(data + 4);
                 setup[5] = *(u8 *)(data + 5);
                 setup[6] = *(u8 *)(data + 6);

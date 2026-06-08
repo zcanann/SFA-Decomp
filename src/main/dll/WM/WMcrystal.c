@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
@@ -253,10 +254,10 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *stat
     while (i < SC_TOTEMBOND_ORB_COUNT) {
       definition = obj->definition;
       setup = Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE,SC_TOTEMBOND_ORB_OBJECT_ID);
-      *(f32 *)(setup + 0x08) = radius * mathSinf(
+      ((ObjPlacement *)setup)->posX = radius * mathSinf(
           (3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->x;
-      *(f32 *)(setup + 0x0c) = obj->y;
-      *(f32 *)(setup + 0x10) = radius * mathCosf(
+      ((ObjPlacement *)setup)->posY = obj->y;
+      ((ObjPlacement *)setup)->posZ = radius * mathCosf(
           (3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->z;
       setup[0x04] = definition[0x04];
       setup[0x05] = (definition[0x05] & ~1) | 4;

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
@@ -807,9 +808,9 @@ void magicmaker_update(int obj)
           *(u8 *)(setup + 0x1a) = 0x14;
           *(s16 *)(setup + 0x2c) = -1;
           *(s16 *)(setup + 0x1c) = -1;
-          *(f32 *)(setup + 0x8) = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-0x15e, 0x15e);
-          *(f32 *)(setup + 0xc) = lbl_803E4D8C + ((GameObject *)obj)->anim.localPosY;
-          *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0x15e, 0x15e);
+          ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-0x15e, 0x15e);
+          ((ObjPlacement *)setup)->posY = lbl_803E4D8C + ((GameObject *)obj)->anim.localPosY;
+          ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0x15e, 0x15e);
           *(s16 *)(setup + 0x24) = -1;
           *(u8 *)(setup + 0x4) = *(u8 *)(def + 0x4);
           *(u8 *)(setup + 0x6) = *(u8 *)(def + 0x6);

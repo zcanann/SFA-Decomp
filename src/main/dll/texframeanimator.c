@@ -1,4 +1,5 @@
 #include "main/dll/texframeanimator.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
@@ -100,7 +101,7 @@ void collectible_init(int obj,int setup)
   *(s32 *)(state + 0x18) = -2;
   ((CollectibleState *)state)->unk1D = 0;
   ((CollectibleState *)state)->unk14 = *(s16 *)(setup + 0x24);
-  *(s32 *)(state + 0x20) = *(s32 *)(setup + 0x14);
+  *(s32 *)(state + 0x20) = ((ObjPlacement *)setup)->mapId;
   ((CollectibleState *)state)->basePosX = ((GameObject *)obj)->anim.localPosX;
   ((CollectibleState *)state)->basePosY = ((GameObject *)obj)->anim.localPosY;
   ((CollectibleState *)state)->basePosZ = ((GameObject *)obj)->anim.localPosZ;

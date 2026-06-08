@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -98,7 +99,7 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
             mm_free(*(void **)state);
             *(int *)state = 0;
             ((DrLightBeaFlags *)(state + 4))->bit80 = 0;
-            if (*(u32 *)(setup + 0x14) == 0xffffffff) {
+            if (*(u32 *)&((ObjPlacement *)setup)->mapId == 0xffffffff) {
                 ((DrLightBeaFlags *)(state + 4))->bit40 = 1;
             }
         }

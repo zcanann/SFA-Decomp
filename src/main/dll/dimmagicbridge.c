@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/dimmagicbridge.h"
@@ -332,9 +333,9 @@ void dll_19A_update(int obj)
         }
         if ((*state <= 0) && (Obj_IsLoadingLocked() != 0)) {
             newObj = Obj_AllocObjectSetup(0x38, 0x2d0);
-            *(f32 *)(newObj + 8) = *(f32 *)(setup + 8);
-            *(f32 *)(newObj + 0xc) = *(f32 *)(setup + 0xc);
-            *(f32 *)(newObj + 0x10) = *(f32 *)(setup + 0x10);
+            *(f32 *)(newObj + 8) = ((ObjPlacement *)setup)->posX;
+            *(f32 *)(newObj + 0xc) = ((ObjPlacement *)setup)->posY;
+            *(f32 *)(newObj + 0x10) = ((ObjPlacement *)setup)->posZ;
             *(u8 *)(newObj + 4) = *(u8 *)(setup + 4);
             *(u8 *)(newObj + 5) = *(u8 *)(setup + 5);
             *(u8 *)(newObj + 6) = *(u8 *)(setup + 6);

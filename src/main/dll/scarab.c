@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -228,7 +229,7 @@ void dll_CA_update(int obj, int p2, int p3)
   setup = *(int *)&((GameObject *)obj)->anim.placementData;
   if (((GameObject *)obj)->unkF4 != 0) {
     if ((sub->baddie.unk270 != 3 || (sub->configFlags & 1) != 0) &&
-        (*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) != 0) {
+        (*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)setup)->mapId) != 0) {
       (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                             0x58))(
           obj, setup, (int)sub, 14, 8, 0x102, 0x26, lbl_803E2DB8);
@@ -240,9 +241,9 @@ void dll_CA_update(int obj, int p2, int p3)
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
   } else if (((GameObject *)obj)->unkF8 == 0) {
-    ((GameObject *)obj)->anim.localPosX = *(f32 *)(setup + 8);
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(setup + 0x10);
+    ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)setup)->posX;
+    ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
+    ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)setup)->posZ;
     (*gObjectTriggerInterface)->runSequence(*(s8 *)(setup + 0x2e), (void *)obj, -1);
     ((GameObject *)obj)->unkF8 = 1;
   } else {
@@ -257,7 +258,7 @@ void dll_CA_update(int obj, int p2, int p3)
         mediumbasket_updateTargetMotion(obj, (int)sub, (int)sub);
       }
       if ((sub->configFlags & 2) != 0) {
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) - lbl_803E2D90;
+        ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY - lbl_803E2D90;
       }
     }
   }
@@ -1303,9 +1304,9 @@ void fn_8015EA48(int obj, GroundBaddieState *p)
 
   if (Obj_IsLoadingLocked() == 0) {
     setup = Obj_AllocObjectSetup(36, 778);
-    *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)(setup + 0xc) = lbl_803E2DF4 + ((GameObject *)obj)->anim.localPosY;
-    *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+    ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+    ((ObjPlacement *)setup)->posY = lbl_803E2DF4 + ((GameObject *)obj)->anim.localPosY;
+    ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
     *(s8 *)(setup + 4) = 1;
     *(s8 *)(setup + 5) = 1;
     *(u8 *)(setup + 6) = 0xff;
@@ -1761,7 +1762,7 @@ void dll_CE_update(int obj, int p2, int p3)
   setup = *(int *)&((GameObject *)obj)->anim.placementData;
   if (((GameObject *)obj)->unkF4 != 0) {
     if ((sub->baddie.unk270 != 3 || (sub->configFlags & 1) != 0) &&
-        (*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) != 0) {
+        (*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)setup)->mapId) != 0) {
       (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                             0x58))(
           obj, setup, (int)sub, 7, 6, 0x102, 0x26, lbl_803E2E14);
@@ -1773,9 +1774,9 @@ void dll_CE_update(int obj, int p2, int p3)
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
   } else if (((GameObject *)obj)->unkF8 == 0) {
-    ((GameObject *)obj)->anim.localPosX = *(f32 *)(setup + 8);
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(setup + 0x10);
+    ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)setup)->posX;
+    ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
+    ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)setup)->posZ;
     (*gObjectTriggerInterface)->runSequence(*(s8 *)(setup + 0x2e), (void *)obj, -1);
     ((GameObject *)obj)->unkF8 = 1;
   } else {
@@ -1812,7 +1813,7 @@ void dll_CE_update(int obj, int p2, int p3)
         (*(void (**)(int, int, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(obj, (int)sub, timeDelta, timeDelta, lbl_803AC5B0, lbl_803AC598);
         *(int *)&((GameObject *)obj)->unkC0 = sub->savedObjC0;
       }
-      ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) - lbl_803E2E18;
+      ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY - lbl_803E2E18;
     }
   }
 }
@@ -4174,9 +4175,9 @@ void fn_8015F5B0(short *obj)
   sub = ((GameObject *)obj)->extra;
   if (Obj_IsLoadingLocked() != 0) {
     setup = Obj_AllocObjectSetup(36, 1307);
-    *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)(setup + 0xc) = lbl_803E2E20 + ((GameObject *)obj)->anim.localPosY;
-    *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+    ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+    ((ObjPlacement *)setup)->posY = lbl_803E2E20 + ((GameObject *)obj)->anim.localPosY;
+    ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
     *(s8 *)(setup + 4) = 1;
     *(s8 *)(setup + 5) = 4;
     *(u8 *)(setup + 7) = 0xff;

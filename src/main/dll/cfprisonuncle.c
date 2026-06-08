@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "global.h"
 #include "main/audio/sfx_ids.h"
@@ -2162,7 +2163,7 @@ void duster_update(int obj) {
       ((GameObject *)obj)->anim.velocityY = lbl_803E38C4;
     }
     if (state->flags.floorCached == 0) {
-      state->floorY = *(f32 *)((u8 *)setup + 0xc);
+      state->floorY = ((ObjPlacement *)setup)->posY;
       state->flags.floorCached = 1;
     }
   }

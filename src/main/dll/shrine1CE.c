@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
@@ -324,11 +325,11 @@ void dll_19C_update(int *obj) {
     }
     if (*(s16*)(sub + 4) <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x18, 0x248);
-        *(f32*)((char*)setup + 8) = *(f32*)(def + 8);
-        *(f32*)((char*)setup + 0xc) = lbl_803E51B4 + *(f32*)(def + 0xc);
-        *(f32*)((char*)setup + 0x10) = *(f32*)(def + 0x10);
+        ((ObjPlacement *)setup)->posX = *(f32*)(def + 8);
+        ((ObjPlacement *)setup)->posY = lbl_803E51B4 + *(f32*)(def + 0xc);
+        ((ObjPlacement *)setup)->posZ = *(f32*)(def + 0x10);
         *(s16*)setup = 0x248;
-        *(int*)((char*)setup + 0x14) = -1;
+        ((ObjPlacement *)setup)->mapId = -1;
         *(u8*)((char*)setup + 4) = def[4];
         *(u8*)((char*)setup + 5) = def[5];
         *(u8*)((char*)setup + 6) = def[6];

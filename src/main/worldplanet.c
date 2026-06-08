@@ -1,4 +1,5 @@
 #include "main/camera_interface.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
@@ -274,9 +275,9 @@ void worldplanet_update(int obj) {
             *(u8 *)(setup + 6) = *(u8 *)(def + 6);
             *(u8 *)(setup + 5) = *(u8 *)(def + 5);
             *(u8 *)(setup + 7) = *(u8 *)(def + 7);
-            *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+            ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+            ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+            ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
             Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, 0);
         }
     }

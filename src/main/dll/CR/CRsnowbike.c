@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/CR/CRsnowbike.h"
 #include "main/mapEventTypes.h"
@@ -916,9 +917,9 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
         *(u8 *)(setup + 6) = *(u8 *)(def + 6);
         *(u8 *)(setup + 5) = *(u8 *)(def + 5);
         *(u8 *)(setup + 7) = *(u8 *)(def + 7) - 10;
-        *(f32 *)(setup + 8) = state->pathPoint[idx][0];
-        *(f32 *)(setup + 0xc) = state->pathPoint[idx][1];
-        *(f32 *)(setup + 0x10) = state->pathPoint[idx][2];
+        ((ObjPlacement *)setup)->posX = state->pathPoint[idx][0];
+        ((ObjPlacement *)setup)->posY = state->pathPoint[idx][1];
+        ((ObjPlacement *)setup)->posZ = state->pathPoint[idx][2];
         *(u16 *)(setup + 0x1c) = randomGetRange(0x708, 0x1770);
         *(u16 *)(setup + 0x1e) = 1;
         *(u8 *)(setup + 0x20) = 10;

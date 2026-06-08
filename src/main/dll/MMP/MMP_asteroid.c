@@ -1,4 +1,5 @@
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/dll/path_control_interface.h"
@@ -1745,9 +1746,9 @@ void fn_80196520(u8 *obj, u8 *state, u8 *setup)
     f32 vx, vy, vz;
     f32 spd, len;
 
-    ((GameObject *)obj)->anim.localPosX = ((DimBossIceSmashState *)state)->unk26C * ((GameObject *)obj)->anim.rootMotionScale + *(f32 *)(setup + 8);
-    ((GameObject *)obj)->anim.localPosY = ((DimBossIceSmashState *)state)->unk270 * ((GameObject *)obj)->anim.rootMotionScale + *(f32 *)(setup + 0xc);
-    ((GameObject *)obj)->anim.localPosZ = ((DimBossIceSmashState *)state)->unk274 * ((GameObject *)obj)->anim.rootMotionScale + *(f32 *)(setup + 0x10);
+    ((GameObject *)obj)->anim.localPosX = ((DimBossIceSmashState *)state)->unk26C * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)setup)->posX;
+    ((GameObject *)obj)->anim.localPosY = ((DimBossIceSmashState *)state)->unk270 * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)setup)->posY;
+    ((GameObject *)obj)->anim.localPosZ = ((DimBossIceSmashState *)state)->unk274 * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)setup)->posZ;
     ((GameObject *)obj)->anim.rotX = *(s16 *)(setup + 0x1a);
     ((GameObject *)obj)->anim.rotY = *(s16 *)(setup + 0x1c);
     ((GameObject *)obj)->anim.rotZ = *(s16 *)(setup + 0x1e);

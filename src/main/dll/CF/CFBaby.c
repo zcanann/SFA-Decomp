@@ -1766,9 +1766,9 @@ void carryable_break_respawn_update(int obj) {
                 ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
                 if (Obj_IsLoadingLocked() != 0) {
                     setup = Obj_AllocObjectSetup(0x24, 0x253);
-                    *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-                    *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-                    *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+                    ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+                    ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+                    ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
                     Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
                 }
                 (*gPartfxInterface)->spawnObject((void *)obj, 0x355, NULL, 0, -1, NULL);
@@ -2553,9 +2553,9 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState *state) {
                             yOffset = lbl_803E3BB8;
                             for (i = 0; i < *(u8 *)(def + 0x1f); i++) {
                                 setup = Obj_AllocObjectSetup(0x24, 0x259);
-                                *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-                                *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY + yOffset;
-                                *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+                                ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+                                ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY + yOffset;
+                                ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
                                 *(u8 *)(setup + 4) = 1;
                                 Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1,
                                                 *(int *)&((GameObject *)obj)->anim.parent);

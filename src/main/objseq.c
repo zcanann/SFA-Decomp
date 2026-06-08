@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/obj_placement.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/objseq.h"
@@ -3487,19 +3488,19 @@ checked:
             *(s16 *)(setup + 0x1a) = -1;
             if (idx != 0) {
                 if (lbl_803DD0D9 != 0 && *(s16 *)setup == 0x1e) {
-                    *(f32 *)(setup + 8) = x + *(f32 *)(base + 0x2bd4);
-                    *(f32 *)(setup + 0xc) = y + *(f32 *)(base + 0x2bd8);
-                    *(f32 *)(setup + 0x10) = z + *(f32 *)(base + 0x2bdc);
+                    ((ObjPlacement *)setup)->posX = x + *(f32 *)(base + 0x2bd4);
+                    ((ObjPlacement *)setup)->posY = y + *(f32 *)(base + 0x2bd8);
+                    ((ObjPlacement *)setup)->posZ = z + *(f32 *)(base + 0x2bdc);
                     lbl_803DD0D9 = 0;
                 } else {
-                    *(f32 *)(setup + 8) = x;
-                    *(f32 *)(setup + 0xc) = y;
-                    *(f32 *)(setup + 0x10) = z;
+                    ((ObjPlacement *)setup)->posX = x;
+                    ((ObjPlacement *)setup)->posY = y;
+                    ((ObjPlacement *)setup)->posZ = z;
                 }
             } else {
-                *(f32 *)(setup + 8) = ((GameObject *)obj)->anim.localPosX;
-                *(f32 *)(setup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-                *(f32 *)(setup + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+                ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
+                ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
+                ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
             }
             *(s8 *)(setup + 0x1f) = (s8)slot;
             setup[0x22] = 1;
