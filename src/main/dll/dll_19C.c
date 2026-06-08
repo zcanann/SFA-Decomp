@@ -736,6 +736,17 @@ extern int mapGetDirIdx(int id);
 extern void unlockLevel(int idx, int a, int b);
 extern void *objCreateLight(int *obj, int v);
 
+typedef struct DfshShrineFlags {
+    u8 openedBySequence : 1;
+    u8 unused1 : 1;
+    u8 unused2 : 1;
+    u8 unused3 : 1;
+    u8 unused4 : 1;
+    u8 unused5 : 1;
+    u8 unused6 : 1;
+    u8 unused7 : 1;
+} DfshShrineFlags;
+
 #pragma scheduling off
 #pragma peephole off
 void dfsh_shrine_init(int *obj, DfshShrinePlacement *init) {
@@ -748,7 +759,7 @@ void dfsh_shrine_init(int *obj, DfshShrinePlacement *init) {
         state->startDelayFrames = (s16)((s32)init->startDelay >> 8);
     }
     state->mode = 4;
-    state->flags &= ~DFSH_SHRINE_FLAG_OPENED_BY_SEQUENCE;
+    ((DfshShrineFlags *)&state->flags)->openedBySequence = 0;
     state->transitionTimer = 0;
     ((GameObject *)obj)->animEventCallback = (void *)dfsh_shrine_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
