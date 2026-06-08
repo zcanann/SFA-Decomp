@@ -145,11 +145,11 @@ typedef struct ArwingState {
     f32 modeTimer;       /* 0x46c */
     u8 collectedRings;   /* 0x470 */
     u8 requiredRings;    /* 0x471 */
-    u8 counter472;
-    u8 counter473;
-    u8 counter474;
-    u8 counter475;
-    u8 counter476;
+    u8 pickup6D8Count;
+    u8 pickup6D9Count;
+    u8 pickup6DBCount;
+    u8 pickup6DACount;
+    u8 damageEffectCounter;
     u8 flags477;         /* 1 initialized, 2 roll-left, 4 roll-right */
     u8 mode;             /* 0x478: 4 dead, 5 exploding, 6 warp-out */
     u8 pad479[2];

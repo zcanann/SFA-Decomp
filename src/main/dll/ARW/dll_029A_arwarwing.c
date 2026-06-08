@@ -213,25 +213,25 @@ int arwarwing_getShield(int arwing) { return *(s8 *)&(*(ArwingState **)(arwing +
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D5A0(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->counter475)++; }
+int arwarwing_incrementPickup6DACount(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->pickup6DACount)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D5B4(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->counter474)++; }
+int arwarwing_incrementPickup6DBCount(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->pickup6DBCount)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D5C8(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->counter473)++; }
+int arwarwing_incrementPickup6D9Count(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->pickup6D9Count)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D5DC(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->counter472)++; }
+int arwarwing_incrementPickup6D8Count(int arwing) { return ((*(ArwingState **)(arwing + 0xb8))->pickup6D8Count)++; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -294,7 +294,7 @@ void arwarwing_emitDamageEffects(int obj, int state) {
     } emit;
     flag = 0;
     if ((s8)arwing->shield <= 4) {
-        if (arwing->counter476++ % 2 != 0) {
+        if (arwing->damageEffectCounter++ % 2 != 0) {
             emit.a = lbl_803E6F08;
             emit.b = lbl_803E6F0C;
             emit.c = lbl_803E6F10;
@@ -546,7 +546,7 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
         return;
     if (side == 0) {
         ObjPath_GetPointWorldPosition(obj, 3, &px, &py, &pz, 0);
-        arwarwinggu_setActiveVisible(*(int *)(state + 8), 1, level == 2);
+        arwarwinggu_setActiveVisible(((ArwingState *)state)->gunObjL, 1, level == 2);
     } else {
         ObjPath_GetPointWorldPosition(obj, 4, &px, &py, &pz, 0);
         arwarwinggu_setActiveVisible(((ArwingState *)state)->gunObjR, 1, level == 2);

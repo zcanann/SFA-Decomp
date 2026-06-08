@@ -269,19 +269,19 @@ active : {
                 break;
             case 0x6d8:
                 Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
-                fn_8022D5DC(arw);
+                arwarwing_incrementPickup6D8Count(arw);
                 break;
             case 0x6d9:
                 Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
-                fn_8022D5C8(arw);
+                arwarwing_incrementPickup6D9Count(arw);
                 break;
             case 0x6db:
                 Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
-                fn_8022D5B4(arw);
+                arwarwing_incrementPickup6DBCount(arw);
                 break;
             case 0x6da:
                 Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
-                fn_8022D5A0(arw);
+                arwarwing_incrementPickup6DACount(arw);
                 break;
             }
         }
