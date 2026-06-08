@@ -487,8 +487,8 @@ void CameraModeViewfinder_update(s16 *param_1)
     if (*(f32 *)(param_1 + 0x7a) <= lbl_803E17C4) {
       brightness = 1;
     }
-    ((void (*)(s16 *, f32 *, f32 *, f32 *, f32 *, f32, int))*(code **)(*(int *)gCameraInterface + 0x38))
-              (param_1, &outA, &hitY, &outB, &hitDist, lbl_803E17C4, 0);
+    (*gCameraInterface)->getRelativePosition(lbl_803E17C4, (int)param_1, &outA, &hitY,
+                                             &outB, &hitDist, 0);
     if (hitDist < lbl_803E182C) {
       param_1[1] = 0;
     }

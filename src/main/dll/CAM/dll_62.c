@@ -1,4 +1,5 @@
 #include "main/dll/CAM/dll_62.h"
+#include "main/camera_interface.h"
 #include "main/object_transform.h"
 
 
@@ -7,12 +8,10 @@
 extern uint getAngle(f32 dx, f32 dz);
 extern void camcontrol_traceMove(f32 *from, void *to, f32 *out, void *work, int a, int b, int c, f32 radius);
 
-typedef void (*CameraGetTargetFn)(short *cam, f32 *outX, f32 *outY, f32 *outZ, f32 *outW, f64 dist, int flags);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
 extern u8 framesThisStep;
-extern undefined4* gCameraInterface;
 extern f32* lbl_803DD578;
 extern f64 lbl_803E1990;
 extern f64 lbl_803E1998;
@@ -101,9 +100,9 @@ void CameraModeClimb_update(short *param_1)
   *(f32 *)(param_1 + 0xc) = traceOut[0];
   *(f32 *)(param_1 + 0xe) = traceOut[1];
   *(f32 *)(param_1 + 0x10) = traceOut[2];
-  (*(CameraGetTargetFn *)(*gCameraInterface + 0x38))
-            (param_1,&local_cc,&local_d0,&local_d4,&local_d8,
-             (f64)(f32)(u32)*(u16 *)(lbl_803DD578 + 0xc),0);
+  (*gCameraInterface)->getRelativePosition((f32)(u32)*(u16 *)(lbl_803DD578 + 0xc),
+                                           (int)param_1, &local_cc, &local_d0,
+                                           &local_d4, &local_d8, 0);
   {
     int t = 0x8000 - (u16)getAngle(local_cc,local_d4);
     iVar4 = t - (u16)*param_1;

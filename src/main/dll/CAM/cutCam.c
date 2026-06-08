@@ -226,8 +226,7 @@ undefined camcontrol_getTargetPosition(int arg0,void *arg1,void *arg2,void *arg3
     prev[2] = *(float *)(param_2 + 0x10);
   }
   camcontrol_traceMove(prev,pos,param_3,box,3,'\x01','\x01',lbl_803E1688);
-  (*(void (**)(int, f32 *, f32 *, f32 *, f32 *, f32, int))((char *)*gCameraInterface + 0x38))
-      (param_1, &a, &b, &c, &d2, cameraMtxVar57[0x23], 0);
+  (*gCameraInterface)->getRelativePosition(cameraMtxVar57[0x23], param_1, &a, &b, &c, &d2, 0);
   b = *(float *)(param_1 + 0x1c) -
       (*(float *)(param_2 + 0xe) + cameraMtxVar57[0x23]);
   ang = getAngle(b,d2);
@@ -374,8 +373,8 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
 
   OSGetTick();
   result = 0;
-  (*(void (**)(short *, f32 *, f32 *, f32 *, f32 *, f32, int))((char *)*gCameraInterface + 0x38))
-      (cam, &spinB, &spinC, &spinD, &spinA, *(f32 *)((char *)cameraMtxVar57 + 0x8c), 0);
+  (*gCameraInterface)->getRelativePosition(*(f32 *)((char *)cameraMtxVar57 + 0x8c), (int)cam,
+                                           &spinB, &spinC, &spinD, &spinA, 0);
   tgt0 = *(int *)((char *)cam + 0xa4);
   *(int *)&probe[35] = tgt0;
   probe[1] = ((CameraObject *)cam)->anim.worldPosY;

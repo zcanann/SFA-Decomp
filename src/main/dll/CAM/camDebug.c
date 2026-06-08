@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/camera_interface.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
 
@@ -11,7 +12,6 @@ extern void memset(void *dst, int val, int size);
 
 extern f32 *lbl_803DD578;
 extern f32 *lbl_803DD584;
-extern undefined4 **gCameraInterface;
 
 extern f32 lbl_803E19B8;
 extern f32 lbl_803E19BC;
@@ -56,11 +56,12 @@ void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
     case 1:
     default:
         memset(lbl_803DD578, 0, 0x38);
-        iVar2 = ((code)((*gCameraInterface)[6]))();
+        iVar2 = (int)(*gCameraInterface)->getDefaultHandlerEntry();
         ((code)(*(undefined4 **)((undefined4 *)iVar2)[1])[8])(&local_58, &local_5c, &local_60, &local_64, &local_68);
-        ((code)((*gCameraInterface)[14]))(
-            (f32)*(u16 *)((u8 *)lbl_803DD578 + 0x30),
-            param_1, local_28, local_24, local_20, local_1c, 0);
+        (*gCameraInterface)->getRelativePosition((f32)*(u16 *)((u8 *)lbl_803DD578 + 0x30),
+                                                 (int)param_1, (f32 *)local_28,
+                                                 (f32 *)local_24, (f32 *)local_20,
+                                                 (f32 *)local_1c, 0);
         *(s16 *)((u8 *)lbl_803DD578 + 0x32) = (s16)local_68;
         lbl_803DD578[7] = local_60;
         lbl_803DD578[9] = local_64;

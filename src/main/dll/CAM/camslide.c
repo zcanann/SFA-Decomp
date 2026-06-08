@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camslide.h"
+#include "main/camera_interface.h"
 #include "main/camera_object.h"
 
 #pragma peephole off
@@ -13,7 +14,6 @@ extern f32 mathSinf(f32 x);
 extern f32 fn_802966F4(int obj);
 
 extern u8 framesThisStep;
-extern int *gCameraInterface;
 extern f32 *cameraMtxVar57;
 extern f32 lbl_803E168C;
 extern f32 lbl_803E1690;
@@ -48,8 +48,6 @@ typedef struct CamSlideFlags {
     u8 rest : 6;
 } CamSlideFlags;
 
-typedef void (*CamSlideQueryFn)(int obj, f32 *outX, f32 *outY, f32 *outZ, f32 *outSpeed, f32 range, int arg);
-
 /*
  * --INFO--
  *
@@ -80,7 +78,8 @@ void camslide_update(int param_1, int param_2)
     f32 outY;
     f32 outZ;
 
-    (*(CamSlideQueryFn)*(void **)(*gCameraInterface + 0x38))(param_1, &velX, &step, &velZ, &speed, gCamcontrolModeSettings[0x23], 0);
+    (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings[0x23], param_1, &velX,
+                                             &step, &velZ, &speed, 0);
     speed = velZ * velZ + (velX * velX + step * step);
     if (speed > lbl_803E16AC) {
         speed = sqrtf(speed);

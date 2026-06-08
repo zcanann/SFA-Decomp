@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/object_transform.h"
 
@@ -17,7 +18,6 @@ extern void cameraGetPrevPos2(int obj, float *x, float *y, float *z);
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 
-extern int *gCameraInterface;
 extern u8 *cameraMtxVar57;
 extern f64 lbl_803E1698;
 extern f64 lbl_803E16F8;
@@ -205,10 +205,9 @@ void camstatic_update(short *param_1)
       *(undefined *)(gCamcontrolModeSettings + 0xc3) = 0;
     }
   }
-  (*(void (*)(void *, float *, void *, float *, float *, f32, int))
-      (*(int *)(*gCameraInterface + 0x38)))
-            (param_1,&local_138,auStack_13c,&local_140,&local_144,
-             *(f32 *)(gCamcontrolModeSettings + 0x8c),0);
+  (*gCameraInterface)->getRelativePosition(*(f32 *)(gCamcontrolModeSettings + 0x8c),
+                                           (int)param_1, &local_138, (f32 *)auStack_13c,
+                                           &local_140, &local_144, 0);
   sVar4 = getAngle(local_138,local_140);
   *(undefined2 *)(gCamcontrolModeSettings + 0x80) = 0;
   *param_1 = (-0x8000 - sVar4) - *(short *)(gCamcontrolModeSettings + 0x80);
