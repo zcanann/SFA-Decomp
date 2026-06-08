@@ -212,6 +212,7 @@ extern undefined4* DAT_803dd6d8;
 extern EffectInterface **gExpgfxInterface;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd72c;
 extern void **gTitleMenuControlInterfaceCopy;
@@ -1428,7 +1429,7 @@ void FUN_8016cc88(int param_1)
         local_1c = *(undefined4 *)(param_1 + 0x14);
         iVar4 = 3;
         do {
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x7fe,auStack_30,0x200001,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x7fe, auStack_30, 0x200001, -1, NULL);
           iVar4 = iVar4 + -1;
         } while (iVar4 != 0);
       }
@@ -1659,15 +1660,15 @@ void FUN_8016d188(int param_1,int param_2)
       local_2e = 0x15 - (short)iVar4;
       local_28 = lbl_803E3F3C * (local_54 / lbl_803E3F40 - lbl_803E3F2C);
       local_34 = 0xc94;
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
       local_2e = 9;
       local_2c = lbl_803E3F48 * (local_54 / lbl_803E3F40) + lbl_803E3F44;
       local_24 = lbl_803E3F4C;
       local_34 = 0xc0e;
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b3,&local_34,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b3, &local_34, 2, -1, NULL);
     }
     else if (local_50 < 0x87) {
       if (local_50 == 0x7f) {
@@ -1676,7 +1677,7 @@ void FUN_8016d188(int param_1,int param_2)
         local_24 = lbl_803E3F54;
         local_28 = lbl_803E3F50;
         local_34 = 0xc0e;
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b3,&local_34,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b3, &local_34, 2, -1, NULL);
       }
       else if (local_50 < 0x7f) {
         if ((local_50 == 0x43) && (lbl_803E3F4C < local_54)) {
@@ -1685,13 +1686,13 @@ void FUN_8016d188(int param_1,int param_2)
           local_2e = (short)iVar4 + 6;
           local_28 = lbl_803E3F3C * (local_54 / lbl_803E3F40 - lbl_803E3F2C);
           local_34 = 0xc94;
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b4,&local_34,2,0xffffffff,0);
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b4,&local_34,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b4, &local_34, 2, -1, NULL);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b4, &local_34, 2, -1, NULL);
           local_2e = 9;
           local_2c = lbl_803E3F48 * (local_54 / lbl_803E3F40) + lbl_803E3F44;
           local_24 = lbl_803E3F4C;
           local_34 = 0xc0e;
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b3,&local_34,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b3, &local_34, 2, -1, NULL);
         }
       }
       else if (local_50 == 0x85) {
@@ -1712,10 +1713,10 @@ void FUN_8016d188(int param_1,int param_2)
           local_18 = (longlong)iVar4;
           local_28 = lbl_803E3F5C * (lbl_803E3F28 - fVar1);
           local_2e = 0x15 - local_2e;
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
           local_2e = 9;
           uVar3 = FUN_80017690(0xc55);
           if (uVar3 == 0) {
@@ -1728,7 +1729,7 @@ void FUN_8016d188(int param_1,int param_2)
           }
           local_2c = lbl_803E3F48 * (local_54 / fVar1) + lbl_803E3F44;
           local_24 = lbl_803E3F4C;
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b3,&local_34,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b3, &local_34, 2, -1, NULL);
         }
       }
       else if (0x84 < local_50) {
@@ -1747,7 +1748,7 @@ void FUN_8016d188(int param_1,int param_2)
             local_2e = 9;
             local_2c = lbl_803E3F20;
             local_24 = lbl_803E3F4C;
-            (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b3,&local_34,2,0xffffffff,0);
+            (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b3, &local_34, 2, -1, NULL);
           }
         }
         else {
@@ -1755,7 +1756,7 @@ void FUN_8016d188(int param_1,int param_2)
           local_2e = 9;
           local_2c = lbl_803E3F20;
           local_24 = lbl_803E3F4C;
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b3,&local_34,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b3, &local_34, 2, -1, NULL);
         }
       }
     }
@@ -1769,22 +1770,22 @@ void FUN_8016d188(int param_1,int param_2)
         local_28 = *(float *)(local_58 + 0xc);
         local_24 = *(float *)(local_58 + 0x10);
         local_20 = *(undefined4 *)(local_58 + 0x14);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (*(undefined4 *)(param_1 + 0xc4),0x7b9,&local_34,0x200001,0xffffffff,local_4c);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (*(undefined4 *)(param_1 + 0xc4),0x7b9,&local_34,0x200001,0xffffffff,local_4c);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (*(undefined4 *)(param_1 + 0xc4),0x7b9,&local_34,0x200001,0xffffffff,local_4c);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (*(undefined4 *)(param_1 + 0xc4),0x7b9,&local_34,0x200001,0xffffffff,local_4c);
+        (*gPartfxInterface)->spawnObject((void *)*(int *)(param_1 + 0xc4), 0x7b9, &local_34,
+                                       0x200001, -1, local_4c);
+        (*gPartfxInterface)->spawnObject((void *)*(int *)(param_1 + 0xc4), 0x7b9, &local_34,
+                                       0x200001, -1, local_4c);
+        (*gPartfxInterface)->spawnObject((void *)*(int *)(param_1 + 0xc4), 0x7b9, &local_34,
+                                       0x200001, -1, local_4c);
+        (*gPartfxInterface)->spawnObject((void *)*(int *)(param_1 + 0xc4), 0x7b9, &local_34,
+                                       0x200001, -1, local_4c);
         local_46 = 9;
         local_4c[0] = 0xc95;
         local_44 = lbl_803E3F64 * (local_54 / lbl_803E3F60) + lbl_803E3F44;
         local_28 = *(float *)(local_58 + 0xc);
         local_24 = *(float *)(local_58 + 0x10);
         local_20 = *(undefined4 *)(local_58 + 0x14);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (*(undefined4 *)(param_1 + 0xc4),0x7ba,&local_34,0x200001,0xffffffff,local_4c);
+        (*gPartfxInterface)->spawnObject((void *)*(int *)(param_1 + 0xc4), 0x7ba, &local_34,
+                                       0x200001, -1, local_4c);
       }
     }
     else if (local_50 < 0x468) {
@@ -1793,10 +1794,10 @@ void FUN_8016d188(int param_1,int param_2)
         local_24 = lbl_803E3F4C;
         local_28 = lbl_803E3F50;
         local_34 = 0xc0e;
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b3,&local_34,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b3, &local_34, 2, -1, NULL);
         local_2e = 0x12;
         local_24 = lbl_803E3F54;
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b3,&local_34,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b3, &local_34, 2, -1, NULL);
       }
     }
     else if ((local_50 == 0x46f) && (lbl_803E3F4C < local_54)) {
@@ -1805,15 +1806,15 @@ void FUN_8016d188(int param_1,int param_2)
       local_2e = 0x15 - (short)iVar4;
       local_28 = lbl_803E3F5C * (lbl_803E3F28 - local_54 / lbl_803E3F60);
       local_34 = 0xc94;
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b2,&local_34,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b2, &local_34, 2, -1, NULL);
       local_2e = 9;
       local_2c = lbl_803E3F48 * (local_54 / lbl_803E3F60) + lbl_803E3F44;
       local_24 = lbl_803E3F4C;
       local_34 = 0xc0e;
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7b3,&local_34,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0x7b3, &local_34, 2, -1, NULL);
     }
   }
   return;
@@ -3790,7 +3791,7 @@ void FUN_801709dc(int param_1,int param_2,int param_3,int param_4,int param_5,s8
               local_108 = local_108 + *(float *)(puVar7 + 8);
               local_104 = local_104 + *(float *)(puVar7 + 10);
               local_110 = (float)dVar20;
-              (**(code **)(*DAT_803dd708 + 8))(puVar7,0x7ec,auStack_118,0x200001,0xffffffff,0);
+              (*gPartfxInterface)->spawnObject((void *)puVar7, 0x7ec, auStack_118, 0x200001, -1, NULL);
             }
           }
         }
@@ -6255,8 +6256,6 @@ typedef struct Dim2PartVec {
     f32 y;
     f32 z;
 } Dim2PartVec;
-
-extern EffectInterface **gPartfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
