@@ -126,7 +126,6 @@ extern undefined4 DAT_803dcdb0;
 extern ObjectTriggerInterface **DAT_803dd6d4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
 extern s16 lbl_803DC128;
 extern undefined4 DAT_803de928;

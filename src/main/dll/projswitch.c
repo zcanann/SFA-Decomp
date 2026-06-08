@@ -80,7 +80,6 @@ extern undefined4 DAT_803dc8cc;
 extern undefined4 DAT_803dc8d0;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd71c;
-extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
 extern f64 DOUBLE_803e3218;
 extern f64 DOUBLE_803e3278;

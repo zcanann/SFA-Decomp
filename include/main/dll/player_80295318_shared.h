@@ -500,7 +500,6 @@ extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd71c;
-extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
 extern undefined4* DAT_803dd734;
 extern undefined4* DAT_803dd738;
