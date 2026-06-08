@@ -42,7 +42,6 @@ extern void dll_115_seqFn(void);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* lbl_803DCAC0;
 #define gCarryableInterface lbl_803DCAC0
-extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd740;
 extern f32 lbl_803DC074;
@@ -852,9 +851,9 @@ void appleontree_handleCollectableHit(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017e0f8(void)
+void FUN_8017e0f8(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x14))();
+  (*gExpgfxInterface)->freeSource((u32)obj);
   return;
 }
 

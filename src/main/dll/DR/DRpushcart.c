@@ -120,7 +120,6 @@ extern uint countLeadingZeros();
 
 extern undefined4 DAT_803adcc8;
 extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd70c;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4* DAT_803dd734;
@@ -910,7 +909,7 @@ void FUN_801e85b8(int param_1)
   byte bVar2;
   int iVar3;
   
-  (**(code **)(*DAT_803dd6f8 + 0x14))();
+  (*gExpgfxInterface)->freeSource((u32)param_1);
   if (*(short *)(param_1 + 0x46) == 0x468) {
     iVar3 = *(int *)(param_1 + 0xb8);
     for (bVar2 = 0; bVar2 < 10; bVar2 = bVar2 + 1) {

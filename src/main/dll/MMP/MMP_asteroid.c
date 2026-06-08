@@ -38,7 +38,6 @@ extern double FUN_80293900();
 extern undefined4 DAT_80322fb8;
 extern undefined4 DAT_803dc070;
 extern undefined4 gNewCloudsInterface;
-extern undefined4* DAT_803dd6f8;
 extern EffectInterface **gPartfxInterface;
 extern undefined4 DAT_803de780;
 extern f64 DOUBLE_803e4ca8;
@@ -901,9 +900,9 @@ void FUN_8019575c(undefined2 *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80195b40(void)
+void FUN_80195b40(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x14))();
+  (*gExpgfxInterface)->freeSource((u32)obj);
   return;
 }
 

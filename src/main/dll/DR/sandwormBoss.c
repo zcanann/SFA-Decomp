@@ -151,7 +151,6 @@ extern WaterfxInterface **gWaterfxInterface;
 extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd6f8;
 extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd71c;
 extern undefined4* DAT_803dd740;
@@ -1454,9 +1453,9 @@ void FUN_8019c7cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8019d16c(void)
+void FUN_8019d16c(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x14))();
+  (*gExpgfxInterface)->freeSource((u32)obj);
   return;
 }
 
