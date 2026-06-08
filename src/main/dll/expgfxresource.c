@@ -36,16 +36,14 @@ void expgfx_updateResourceEntries(int unused) {
 #pragma peephole off
 int expgfx_acquireResourceEntry(int resourceId) {
     ExpgfxResourceEntry *entry;
-    ExpgfxResourceEntry *resourceTable;
     ExpgfxResourceHandle *resourceHandle;
     int minEvictionScore;
     int minIndex;
     int i;
 
     i = 0;
-    resourceTable = EXPGFX_RUNTIME_DATA->resourceTable;
     for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        entry = &resourceTable[i];
+        entry = &EXPGFX_RUNTIME_DATA->resourceTable[i];
         if (entry->resource != NULL && resourceId == entry->resourceId) {
             resourceHandle = (ExpgfxResourceHandle *)entry->resource;
             if (resourceHandle != NULL &&
@@ -57,7 +55,7 @@ int expgfx_acquireResourceEntry(int resourceId) {
         }
     }
     for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        entry = &resourceTable[i];
+        entry = &EXPGFX_RUNTIME_DATA->resourceTable[i];
         if (entry->resource == NULL) {
             entry->resource = textureLoadAsset(resourceId);
             resourceHandle = (ExpgfxResourceHandle *)entry->resource;
@@ -85,13 +83,13 @@ int expgfx_acquireResourceEntry(int resourceId) {
     minEvictionScore = EXPGFX_RESOURCE_EVICTION_SCAN_INITIAL;
     minIndex = 0;
     for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        entry = &resourceTable[i];
+        entry = &EXPGFX_RUNTIME_DATA->resourceTable[i];
         if (entry->evictionScore < minEvictionScore) {
             minEvictionScore = entry->evictionScore;
             minIndex = i;
         }
     }
-    entry = &resourceTable[minIndex];
+    entry = &EXPGFX_RUNTIME_DATA->resourceTable[minIndex];
     gExpgfxTextureFreeInProgress = 1;
     resourceHandle = (ExpgfxResourceHandle *)entry->resource;
     if (resourceHandle != NULL) {
