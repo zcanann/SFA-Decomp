@@ -1,6 +1,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 #define VFP_OBJCREATOR_FALLING_MODE 1
 #define VFP_OBJCREATOR_PROJECTILE_MODE 6
@@ -17,14 +18,24 @@ typedef struct VfpObjCreatorState {
 } VfpObjCreatorState;
 
 typedef struct VfpObjCreatorPlacement {
-    u8 pad0[0x18];
+    ObjPlacement base;
     s16 gameBit;
     s16 spawnMode;
     s16 spawnInterval;
     s8 yaw;
     s8 spawnParam;
     u8 spawnRadius;
+    u8 pad21[3];
 } VfpObjCreatorPlacement;
+
+STATIC_ASSERT(sizeof(VfpObjCreatorState) == 0xa);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, gameBit) == 0x18);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnMode) == 0x1A);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnInterval) == 0x1C);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, yaw) == 0x1E);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnParam) == 0x1F);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnRadius) == 0x20);
+STATIC_ASSERT(sizeof(VfpObjCreatorPlacement) == 0x24);
 
 int vfpobjcreator_getExtraSize(void) { return 0xa; }
 
@@ -50,7 +61,7 @@ void vfpobjcreator_initialise(void) {}
 #pragma scheduling off
 void vfpobjcreator_init(int *obj, u8 *init) {
     VfpObjCreatorPlacement *placement = (VfpObjCreatorPlacement *)init;
-    VfpObjCreatorState *state = *(VfpObjCreatorState **)((char *)obj + 0xb8);
+    VfpObjCreatorState *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)(placement->yaw << 8);
     state->gameBit = placement->gameBit;
     state->spawnInterval = placement->spawnInterval;
@@ -78,9 +89,9 @@ extern f32 lbl_803E6078;
 #pragma scheduling off
 void vfpobjcreator_update(int *obj)
 {
-    VfpObjCreatorPlacement *placement = *(VfpObjCreatorPlacement **)((char *)obj + 0x4c);
-    char *setup = (char *)placement;
-    VfpObjCreatorState *state = *(VfpObjCreatorState **)((char *)obj + 0xb8);
+    VfpObjCreatorPlacement *placement =
+        (VfpObjCreatorPlacement *)((GameObject *)obj)->anim.placementData;
+    VfpObjCreatorState *state = ((GameObject *)obj)->extra;
 
     if (Obj_IsLoadingLocked() == 0) {
         return;
@@ -138,13 +149,13 @@ void vfpobjcreator_update(int *obj)
             } m;
             state->spawnTimer = state->spawnInterval;
             o = Obj_AllocObjectSetup(0x24, VFP_OBJCREATOR_PROJECTILE_OBJECT_ID);
-            *(f32 *)(o + 0x8) = *(f32 *)(setup + 0x8);
-            *(f32 *)(o + 0xc) = *(f32 *)(setup + 0xc);
-            *(f32 *)(o + 0x10) = *(f32 *)(setup + 0x10);
-            o[4] = setup[4];
-            o[5] = setup[5];
-            o[6] = setup[6];
-            o[7] = setup[7];
+            *(f32 *)(o + 0x8) = placement->base.posX;
+            *(f32 *)(o + 0xc) = placement->base.posY;
+            *(f32 *)(o + 0x10) = placement->base.posZ;
+            o[4] = placement->base.unk04[0];
+            o[5] = placement->base.unk04[1];
+            o[6] = placement->base.unk04[2];
+            o[7] = placement->base.unk04[3];
             *(s16 *)(o + 0x1e) = -1;
             *(s16 *)(o + 0x20) = -1;
             n = Obj_SetupObject(o, 5, *(s8 *)((char *)obj + 0xac), -1,
