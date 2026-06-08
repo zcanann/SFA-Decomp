@@ -385,7 +385,6 @@ extern char *ObjGroup_FindNearestObject(int group, int obj, f32 *distInOut);
 extern void setMatrixFromObjectPos(f32 *out, void *vec);
 extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
 extern int *gNewCloudsInterface;
-extern int *gGameUIInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803E8234;
 extern f32 lbl_803E8240;

@@ -1,6 +1,7 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 
@@ -6544,15 +6545,15 @@ int RomCurve_func16(double x, double y, double z) {
 #pragma scheduling reset
 
 /* UIController dispatch through the shared GameUI interface. */
-extern int *gGameUIInterface;
+extern GameUIInterface **gGameUIInterface;
 extern u8 gameTimerIsRunning(void *p, int a, int b);
 extern void hudNumberFn_80014060(void *p);
 extern void gameTimerRun(void *p);
 void UIController_frameStart(void) {
-    (**(void (**)(void))(*gGameUIInterface + 0x4))();
+    (*gGameUIInterface)->frameStart();
 }
 void UIController_frameEnd(void) {
-    (**(void (**)(void))(*gGameUIInterface + 0x8))();
+    (*gGameUIInterface)->frameEnd();
 }
 #pragma peephole off
 #pragma scheduling off
@@ -6561,7 +6562,7 @@ void UIController_render(void *p, int a, int b) {
         gameTimerRun(p);
     }
     hudNumberFn_80014060(p);
-    (**(void (**)(void *, int, int))(*gGameUIInterface + 0xc))(p, a, b);
+    (*gGameUIInterface)->render(p, a, b);
 }
 #pragma scheduling on
 

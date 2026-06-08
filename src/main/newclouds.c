@@ -67,7 +67,6 @@ extern int lbl_8030EDA4[];
 extern u8 lbl_8030ECA8[];
 extern u8 lbl_803DB748;
 extern int lbl_803DB720;
-extern int *gGameUIInterface;
 extern int *gPartfxInterface;
 extern int *gScreenTransitionInterface;
 extern s16 seqGlobal1;
