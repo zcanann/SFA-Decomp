@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
@@ -4111,7 +4112,6 @@ extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern Sky2Interface **gSky2Interface;
 extern int* gSHthorntailAnimationInterface;
-extern int* gCameraInterface;
 extern int lbl_803DCDD0;
 extern int lbl_803DCDD4;
 extern int lbl_803DCDC8;
@@ -4240,7 +4240,7 @@ void beginLoadingMap(void)
     if (lbl_803DCEB8 == -2 && player != 0 && (mapKind == 0 || mapKind == 1)) {
         s16 cam2 = SaveGame_getCamActionNo();
         if (cam2 != -1) {
-            (*(void (*)(int, int, int))(*(int*)(*gCameraInterface + 0x24)))(0, cam2, 1);
+            (*gCameraInterface)->loadTriggeredCamAction(0, cam2, 1);
         }
         env = saveGameGetEnvState();
         {

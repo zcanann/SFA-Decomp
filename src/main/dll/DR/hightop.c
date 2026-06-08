@@ -1,4 +1,5 @@
 #include "main/dll/DR/hightop.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
@@ -1499,7 +1500,6 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gCameraInterface;
 extern CloudActionInterface **gCloudActionInterface;
 extern int *gGameUIInterface;
 extern int *gPlayerShadowInterface;
@@ -1634,7 +1634,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 6:
-                    (*(code *)(*gCameraInterface + 0x24))(p[2], p[3], 0);
+                    (*gCameraInterface)->loadTriggeredCamAction(p[2], p[3], 0);
                     break;
                 case 8:
                     switch (p[2]) {
@@ -2067,7 +2067,7 @@ void Trigger_hitDetect(int obj)
                         }
                         break;
                     case 2:
-                        target = (*(code *)(*gCameraInterface + 0xc))();
+                        target = (int)(*gCameraInterface)->getCamera();
                         break;
                     }
                 }

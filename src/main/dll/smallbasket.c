@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
@@ -2597,14 +2598,13 @@ void smallbasket_initModelVariantState(s16* obj, u8* state) {
 
 extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
 extern int lbl_803AC4A8[];
-extern void* gCameraInterface;
 extern f32 lbl_803E2B80;
 
 /* Nearby-object scan. Asks fn_8014C11C for up to 40 objects
  * within lbl_803E2B80, walks the result array of (obj, ?) pairs, and if
  * any entry's modelType is 0x6a3 with state[0x2dc] bit 0x20000000 set
  * AND bits 0x1800 clear, latches "found" and exits. If nothing matched,
- * fires gCameraInterface vtable[0x24/4] with (0, 0, 0). */
+ * loads the default triggered camera action. */
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
@@ -2626,7 +2626,7 @@ void smallbasket_checkNearbyActiveBasket(int obj, u8* state) {
         }
     }
     if (noMatch != 0) {
-        ((void(*)(int, int, int))((int*)*(int*)gCameraInterface)[0x24/4])(0, 0, 0);
+        (*gCameraInterface)->loadTriggeredCamAction(0, 0, 0);
     }
 }
 #pragma peephole reset
@@ -2907,7 +2907,7 @@ void fn_80159284(int* obj, u8* state)
 
     if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
         if (*(u8*)(state + 0x33b) == 0) {
-            ((void(*)(int,int,int))((int*)*(int*)gCameraInterface)[0x24/4])(0, 0x6c, 0);
+            (*gCameraInterface)->loadTriggeredCamAction(0, 0x6c, 0);
         }
         if (*(s16*)((char*)obj + 0x46) == 0x6a2 && *(void**)((char*)obj + 0xc8) != NULL) {
             firepipe_clearLinkedUpdateFlag(*(int*)((char*)obj + 0xc8));
@@ -3706,7 +3706,7 @@ void fn_80158C2C(s16* obj, u8* state)
 
     if ((((BaddieState *)state)->controlFlags & 0x80000000) != 0) {
         if (((BaddieState *)state)->inWhirlpoolGroup == 0) {
-            ((void(*)(int,int,int))((int*)*(int*)gCameraInterface)[0x24/4])(0, 0x6c, 0);
+            (*gCameraInterface)->loadTriggeredCamAction(0, 0x6c, 0);
         }
         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) | 0x10;
         ((BaddieState *)state)->unk33A = 0;
