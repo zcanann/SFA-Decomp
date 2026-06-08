@@ -1224,7 +1224,7 @@ void hagabon_update(int obj)
         if ((*(s16 *)(data + 0x20) != -1) && (GameBit_Get(*(s16 *)(data + 0x20)) != 0)) {
             return;
         }
-        if ((*gMapEventInterface)->isTimedEventActive(*(int *)(data + 0x14)) == 0) {
+        if (((u8 (*)(int))(*gMapEventInterface)->isTimedEventActive)(*(int *)(data + 0x14)) == 0) {
             return;
         }
         ((GameObject *)obj)->unkF4 = 0;

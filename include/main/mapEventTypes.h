@@ -19,7 +19,7 @@ typedef struct MapEventInterface {
     u32 (*getObjectLoadBits)(int mapId);
     u8 pad60[0x64 - 0x60];
     void (*startTimedEvent)(int eventId, f32 duration);
-    u8 (*isTimedEventActive)(int eventId);
+    int (*isTimedEventActive)(int eventId);
     f32 (*getTimedEventProgress)(int eventId);
     u8 pad70[0x74 - 0x70];
     u8 (*getPlayerNo)(void);
