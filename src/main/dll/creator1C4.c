@@ -4,6 +4,7 @@
 #include "main/dll/creator1C4.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/screen_transition.h"
 
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
@@ -81,7 +82,7 @@ extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
 extern int Music_Trigger(int id, int value);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern MapEventInterface **gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E503C;
@@ -174,7 +175,7 @@ void gpsh_shrine_update(int obj)
                 break;
             case 5:
                 *(f32 *)((char *)data + 4) = lbl_803E5040;
-                (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(0x1e, 1);
+                (*gScreenTransitionInterface)->step(0x1e, 1);
                 *(u8 *)((char *)data + 0x14) = 1;
                 ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 break;
@@ -211,7 +212,7 @@ void gpsh_shrine_update(int obj)
                     gameTimerStop();
                     GameBit_Set(0xdd2, 0);
                     *(f32 *)((char *)data + 4) = lbl_803E5040;
-                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 8)))(0x1e, 1);
+                    (*gScreenTransitionInterface)->start(0x1e, 1);
                     Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
                 } else if (isGameTimerDisabled()) {
                     *(u8 *)((char *)data + 0x14) = 7;
@@ -220,7 +221,7 @@ void gpsh_shrine_update(int obj)
                         Obj_FreeObject(objs[count - 1]);
                     }
                     *(f32 *)((char *)data + 4) = lbl_803E5040;
-                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 8)))(0x1e, 1);
+                    (*gScreenTransitionInterface)->start(0x1e, 1);
                 } else {
                     *(u8 *)((char *)data + 0x12) = 0;
                 }

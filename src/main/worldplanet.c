@@ -1,6 +1,7 @@
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
+#include "main/screen_transition.h"
 #include "main/worldplanet.h"
 
 extern void objRenderFn_8003b8f4(double scale);
@@ -28,7 +29,7 @@ extern void Music_Trigger(int track, int arg2);
 extern void mapUnload(int mapId, int flags);
 extern int getCurMapLayer(void);
 extern void envFxActFn_800887f8(int arg);
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int padGetStickX(int controller);
 extern int padGetStickY(int controller);
 extern int getLoadedFileFlags(int file);
@@ -125,7 +126,7 @@ void worldplanet_init(int obj) {
     mapUnload(0x2d, 0x10000000);
     layer = getCurMapLayer();
     (*gMapEventInterface)->triggerEvent(obj + 0xc, 0, 0, layer);
-    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(0x1e, 1);
+    (*gScreenTransitionInterface)->step(0x1e, 1);
     lbl_803DDD0A = 0xa;
     GameBit_Set(lbl_8032A1B4[2], 1);
     state->foxSpawnTimer = 0x78;
@@ -496,7 +497,7 @@ void worldplanet_update(int obj) {
                     mapUnload(lbl_803DDD28, 0x20000000);
                     lbl_803DDD0A = 10;
                 } else if ((buttons & 0x100) != 0) {
-                    (*(void (*)(int, int))*(int *)(*gScreenTransitionInterface + 8))(4, 1);
+                    (*gScreenTransitionInterface)->start(4, 1);
                     streamFn_8000a380(3, 1, 0);
                     AudioStream_StopCurrent();
                     Sfx_PlayFromObject(0, 0x98);

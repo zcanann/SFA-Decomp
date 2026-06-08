@@ -3,6 +3,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/dll/CF/CFforcecontrol.h"
+#include "main/screen_transition.h"
 
 
 #pragma peephole off
@@ -110,7 +111,7 @@ extern f32 FLOAT_803e49a8;
  * PAL Size: TODO
  */
 extern s16* Camera_GetCurrentViewSlot(void);
-extern int* gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
 extern f32 lbl_803E3D1C;
@@ -124,7 +125,7 @@ void deathseq_init(int* obj)
   f32 f;
 
   setScreenTransitionPause(1);
-  ((void(*)(int,int))((void**)*gScreenTransitionInterface)[2])(1, 1);
+  (*gScreenTransitionInterface)->start(1, 1);
   ObjAnim_SetCurrentMove((int)obj, 0x8e, lbl_803E3D1C, 0);
   state[0] = lbl_803E3D58;
   state[1] = *(f32*)((char*)cam + 0xc);
@@ -1301,10 +1302,10 @@ void deathseq_update(int* obj)
         if (*(f32*)((char*)obj + 0x98) >= lbl_803E3D28) {
             if (!state->transitionStarted) {
                 setScreenTransitionPause(0);
-                ((void(*)(int,int))((void**)*gScreenTransitionInterface)[3])(10, 1);
+                (*gScreenTransitionInterface)->step(10, 1);
                 state->transitionStarted = 1;
             }
-            if (((int(*)(void))((void**)*gScreenTransitionInterface)[5])() != 0) {
+            if ((*gScreenTransitionInterface)->isFinished() != 0) {
                 if (player != NULL) {
                     fn_80296C6C(player, 0);
                 }
@@ -1317,7 +1318,7 @@ void deathseq_update(int* obj)
         }
     } else {
         state->distTarget = lbl_803E3D2C;
-        if (((int(*)(void))((void**)*gScreenTransitionInterface)[5])() != 0) {
+        if ((*gScreenTransitionInterface)->isFinished() != 0) {
             ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3D20, timeDelta, NULL);
             ready = 1;
         }

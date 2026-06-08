@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/CR/CRsnowbike.h"
 #include "main/mapEventTypes.h"
+#include "main/screen_transition.h"
 
 #include "global.h"
 
@@ -988,7 +989,7 @@ extern void skyFn_80088e54(int mode, f32 brightness);
 extern void warpToMap(int mapId, int flag);
 extern void timeListFn_8012df14(void);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int *gSHthorntailAnimationInterface;
 extern MapEventInterface **gMapEventInterface;
 extern u16  lbl_803DC060[4];
@@ -1064,7 +1065,7 @@ void sc_levelcontrol_update(int obj)
     if (((ScLevelControlState *)state)->fadeTimer != lbl_803E5558) {
         if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
             if (lbl_803E5550 == ((ScLevelControlState *)state)->fadeTimer) {
-                (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0x8))(0x73, 1);
+                (*gScreenTransitionInterface)->start(0x73, 1);
             }
             ((ScLevelControlState *)state)->fadeTimer -= timeDelta;
             if (((ScLevelControlState *)state)->fadeTimer <= lbl_803E5558) {
@@ -1083,7 +1084,7 @@ void sc_levelcontrol_update(int obj)
     } else if (((ScLevelControlState *)state)->timer10 != lbl_803E5558) {
         if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
             if (lbl_803E5550 == ((ScLevelControlState *)state)->timer10) {
-                (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0x8))(0x73, 1);
+                (*gScreenTransitionInterface)->start(0x73, 1);
             }
             ((ScLevelControlState *)state)->timer10 -= timeDelta;
             if (((ScLevelControlState *)state)->timer10 <= lbl_803E5558) {
@@ -1191,7 +1192,7 @@ void sc_levelcontrol_update(int obj)
                 GameBit_Set(0x85, 1);
             }
             ((ScLevelControlState *)state)->timer10 = lbl_803E5550;
-            (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0x8))(0x73, 1);
+            (*gScreenTransitionInterface)->start(0x73, 1);
             ((ScLevelControlState *)state)->mode = 0;
             Sfx_PlayFromObject(0, 0x10a);
         }
