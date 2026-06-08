@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
@@ -2461,7 +2462,6 @@ extern f32 lbl_803E25EC;
 extern f32 lbl_803E25F0;
 extern f32 lbl_803E25F4;
 
-extern int *gCameraInterface;
 extern int playerIsDisguised(int *p);
 extern void baddieFn_8014a304(int *a, int *s, f32 v);
 extern f32 lbl_803E25D8;
@@ -2480,7 +2480,7 @@ void fn_8014B878(int *arg1, int *sub) {
     if (target != NULL && (*(u32*)((char*)sub + 0x2e4) & 0x10000) == 0 &&
         (target != player || (*(u16*)((char*)player + 0xb0) & 0x1000) == 0)) {
         *(u32*)((char*)sub + 0x2dc) &= 0xff7fffff;
-        camTarget = (int*)(*(int(**)(void))((char*)*gCameraInterface + 0x3c))();
+        camTarget = (int *)(*gCameraInterface)->getOverrideTarget();
         if (camTarget == arg1) {
             *(u32*)((char*)sub + 0x2dc) |= 0x800200;
         }

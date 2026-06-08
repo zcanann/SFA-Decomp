@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -44,7 +45,6 @@ extern int getSaveGameLoadStatus(void);
 extern int getEnvfxAct(int obj, int player, int id, int p);
 extern void MMP_levelcontrol_update(int obj);
 
-extern int *gCameraInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 extern f32 timeDelta;
@@ -341,7 +341,7 @@ void SpiritDoorLock_update(int obj)
         s16 angle;
         s16 stride;
         f32 max_dist;
-        cam_state = ((int (*)(void))((void **)*gCameraInterface)[4])();
+        cam_state = (*gCameraInterface)->getMode();
         if (cam_state != 0x51) {
             Sfx_KeepAliveLoopedObjectSound(obj, SPIRITDOORLOCK_LOOP_SFX);
         }
