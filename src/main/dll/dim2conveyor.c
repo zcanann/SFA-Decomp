@@ -52,7 +52,6 @@ extern undefined4 DAT_803dcbe4;
 extern undefined4 DAT_803dcc1c;
 extern undefined4 DAT_803dcc20;
 extern undefined4 DAT_803dcc24;
-extern ObjectTriggerInterface **DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;
 extern NwMammothGameUiInterface **gGameUIInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
@@ -552,7 +551,8 @@ LAB_801cf840:
   {
     uVar4 = randomGetRange(1,(uint)**(byte **)(iVar6 + 0x48));
     *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) | 4;
-    (*DAT_803dd6d4)->runSequence(*(u8 *)(*(int *)(iVar6 + 0x48) + uVar4), (void *)param_9, -1);
+    (*gObjectTriggerInterface)->runSequence(*(u8 *)(*(int *)(iVar6 + 0x48) + uVar4),
+                                            (void *)param_9, -1);
   }
   if ((*(byte *)(iVar6 + 0x43c) & 1) != 0) {
     (*gPathControlInterface)->update((NwMammothObject *)param_9,

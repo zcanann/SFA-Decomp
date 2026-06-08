@@ -29,8 +29,8 @@ extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286888();
 extern int FUN_80294c0c();
 
-extern ObjectTriggerInterface **DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f64 DOUBLE_803e4408;
 extern f64 DOUBLE_803e4428;
 extern f32 timeDelta;
@@ -470,10 +470,10 @@ void FUN_8017b6dc(int param_1)
     }
     else {
       uVar1 = *(byte *)(iVar2 + 0x20) & 0x7f;
-      (*DAT_803dd6d4)->preempt(param_1, *(s16 *)(iVar2 + 0x1c));
+      (*gObjectTriggerInterface)->preempt(param_1, *(s16 *)(iVar2 + 0x1c));
     }
     if (*(char *)(iVar2 + 0x1e) != -1) {
-      (*DAT_803dd6d4)->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, uVar1);
+      (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, uVar1);
     }
     *(undefined *)(iVar3 + 5) = 0;
   }
@@ -574,7 +574,6 @@ void mmp_bridge_initialise(void) {}
 
 extern f32 lbl_803E3778;
 extern void pressureswitchfb_updateStateMode(int obj, int p2, int stateParam);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 extern void fn_80137948(char *fmt, ...);
 
