@@ -16,6 +16,23 @@ typedef struct WmObjCreatorState {
 } WmObjCreatorState;
 STATIC_ASSERT(sizeof(WmObjCreatorState) == 0x8);
 
+typedef struct WmObjCreatorPlacement {
+    ObjPlacement base;
+    s16 gameBit;
+    s16 spawnMode;
+    s16 spawnPeriod;
+    s8 yaw;
+    s8 spawnJitter;
+    u8 pad20[4];
+} WmObjCreatorPlacement;
+
+STATIC_ASSERT(offsetof(WmObjCreatorPlacement, gameBit) == 0x18);
+STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnMode) == 0x1A);
+STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnPeriod) == 0x1C);
+STATIC_ASSERT(offsetof(WmObjCreatorPlacement, yaw) == 0x1E);
+STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnJitter) == 0x1F);
+STATIC_ASSERT(sizeof(WmObjCreatorPlacement) == 0x24);
+
 /* WM_Galleon_getExtraSize == 0x10. */
 typedef struct WmGalleonState {
     u8 pad00[0xC];
@@ -103,15 +120,15 @@ extern f32 lbl_803E5CD8;
 extern f32 lbl_803E5CDC;
 
 void WM_ObjCreator_update(int obj) {
-    int def;
+    WmObjCreatorPlacement *placement;
     WmObjCreatorState *state;
     int count;
     struct { s16 dir[3]; s16 pad; f32 pos[4]; } vec;
 
-    def = *(int *)&((GameObject *)obj)->anim.placementData;
+    placement = (WmObjCreatorPlacement *)((GameObject *)obj)->anim.placementData;
     state = ((GameObject *)obj)->extra;
     if (Obj_IsLoadingLocked() != 0) {
-        switch (*(s16 *)(def + 0x1a)) {
+        switch (placement->spawnMode) {
         case 0: {
             s8 ok = 0;
             if (((GameObject *)obj)->unkF8 == 0) {
@@ -134,16 +151,16 @@ void WM_ObjCreator_update(int obj) {
             if (ok) {
                 int setup = Obj_AllocObjectSetup(0x24, 0x139);
                 int spawned;
-                *(f32 *)(setup + 8) = ((ObjPlacement *)def)->posX;
-                *(f32 *)(setup + 0xc) = ((ObjPlacement *)def)->posY;
-                *(f32 *)(setup + 0x10) = ((ObjPlacement *)def)->posZ;
-                *(u8 *)(setup + 4) = *(u8 *)(def + 4);
-                *(u8 *)(setup + 5) = *(u8 *)(def + 5);
-                *(u8 *)(setup + 6) = *(u8 *)(def + 6);
-                *(u8 *)(setup + 7) = *(u8 *)(def + 7);
+                *(f32 *)(setup + 8) = placement->base.posX;
+                *(f32 *)(setup + 0xc) = placement->base.posY;
+                *(f32 *)(setup + 0x10) = placement->base.posZ;
+                *(u8 *)(setup + 4) = placement->base.unk04[0];
+                *(u8 *)(setup + 5) = placement->base.unk04[1];
+                *(u8 *)(setup + 6) = placement->base.unk04[2];
+                *(u8 *)(setup + 7) = placement->base.unk04[3];
                 *(s16 *)(setup + 0x1e) = 0xffff;
                 *(s16 *)(setup + 0x1a) = 2;
-                *(u8 *)(setup + 0x18) = *(u8 *)(def + 0x1e);
+                *(u8 *)(setup + 0x18) = placement->yaw;
                 spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
                 if ((u32)spawned != 0) {
                     *(int *)(spawned + 0xf4) = 8;
@@ -220,9 +237,9 @@ void WM_ObjCreator_update(int obj) {
                 int spawned;
                 *(u8 *)(setup + 4) = 4;
                 *(u8 *)(setup + 5) = 2;
-                *(f32 *)(setup + 8) = ((ObjPlacement *)def)->posX;
-                *(f32 *)(setup + 0xc) = ((ObjPlacement *)def)->posY + (f32)(int)randomGetRange(-0x28, 0x28);
-                *(f32 *)(setup + 0x10) = ((ObjPlacement *)def)->posZ + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(f32 *)(setup + 8) = placement->base.posX;
+                *(f32 *)(setup + 0xc) = placement->base.posY + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(f32 *)(setup + 0x10) = placement->base.posZ + (f32)(int)randomGetRange(-0x28, 0x28);
                 *(s16 *)(setup + 0x20) = 100;
                 *(s16 *)(setup + 0x1e) = 0x10f;
                 *(s16 *)(setup + 0x22) = 0xffff;
@@ -282,9 +299,9 @@ void WM_ObjCreator_update(int obj) {
                 int setup = Obj_AllocObjectSetup(0x28, 0x263);
                 *(u8 *)(setup + 4) = 4;
                 *(u8 *)(setup + 5) = 2;
-                *(f32 *)(setup + 8) = ((ObjPlacement *)def)->posX + (f32)(int)randomGetRange(-0x28, 0x28);
-                *(f32 *)(setup + 0xc) = ((ObjPlacement *)def)->posY + (f32)(int)randomGetRange(0, 0x14);
-                *(f32 *)(setup + 0x10) = ((ObjPlacement *)def)->posZ + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(f32 *)(setup + 8) = placement->base.posX + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(f32 *)(setup + 0xc) = placement->base.posY + (f32)(int)randomGetRange(0, 0x14);
+                *(f32 *)(setup + 0x10) = placement->base.posZ + (f32)(int)randomGetRange(-0x28, 0x28);
                 *(s16 *)(setup + 0x20) = 0x1c2;
                 *(s16 *)(setup + 0x1e) = randomGetRange(0, 2) + 0x1cc;
                 *(s16 *)(setup + 0x22) = 0xffff;
@@ -373,12 +390,13 @@ int WM_Galleon_getExtraSize(void) { return 0x10; }
 int WM_Galleon_getObjectTypeId(void) { return 0x0; }
 
 void WM_ObjCreator_init(int *obj, s8 *def) {
+    WmObjCreatorPlacement *placement = (WmObjCreatorPlacement *)def;
     WmObjCreatorState *state = ((GameObject *)obj)->extra;
-    *(s16*)obj = (s16)((s32)def[0x1e] << 8);
-    state->gameBit = *(s16*)((char*)def + 0x18);
-    state->spawnPeriod = *(s16*)((char*)def + 0x1c);
+    *(s16*)obj = (s16)((s32)placement->yaw << 8);
+    state->gameBit = placement->gameBit;
+    state->spawnPeriod = placement->spawnPeriod;
     state->spawnTimer = state->spawnPeriod;
-    state->spawnJitter = (s16)(s32)def[0x1f];
+    state->spawnJitter = (s16)(s32)placement->spawnJitter;
 }
 
 int WM_Galleon_SeqFn(int obj, int unused, u8 *script)
