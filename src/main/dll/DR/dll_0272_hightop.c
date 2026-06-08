@@ -629,7 +629,7 @@ void hightop_update(int obj) {
     if (((BitFlags8 *)(p + 0xc49))->b7 != 0) {
         (*gGameUIInterface)->runAirMeter(*(s16 *)(p + 0xc18));
         *(f32 *)(p + 0xc38) += timeDelta;
-        if (*(f32 *)(p + 0xc38) > lbl_803E6B48) {
+        if (*(f32 *)(p + 0xc38) > *(f32 *)&lbl_803E6B48) {
             *(f32 *)(p + 0xc38) -= lbl_803E6B48;
             Sfx_PlayFromObject(obj, 0x47f);
         }
