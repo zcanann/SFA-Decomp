@@ -1,6 +1,7 @@
 #include "main/dll/WM/wm_shared.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/path_control_interface.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 
@@ -21,7 +22,6 @@ extern int randFn_80080100(int max);
 extern void Vec3_Normalize(f32 *v);
 extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, f32 ***out, int a, int b);
-extern int *gPathControlInterface;
 extern f32 lbl_803DC130;
 extern u8 lbl_803DDCB8;
 extern f32 lbl_803E5FB0;
@@ -186,9 +186,9 @@ void wmwallcrawler_update(s16 *obj)
                     }
                     if (*(s8 *)(st + 0x296) == 5) {
                         if ((*(u16 *)(st + 0x294) & 2) != 0) {
-                            (**(void (**)(s16 *, u8 *, f32))(*gPathControlInterface + 0x10))(obj, st, timeDelta);
-                            (**(void (**)(s16 *, u8 *))(*gPathControlInterface + 0x14))(obj, st);
-                            (**(void (**)(s16 *, u8 *, f32))(*gPathControlInterface + 0x18))(obj, st, timeDelta);
+                            (*gPathControlInterface)->update(obj, st, timeDelta);
+                            (*gPathControlInterface)->apply(obj, st);
+                            (*gPathControlInterface)->advance(obj, st, timeDelta);
                         }
                         sq = *(f32 *)(obj + 0x12) * *(f32 *)(obj + 0x12) + *(f32 *)(obj + 0x16) * *(f32 *)(obj + 0x16);
                         if (lbl_803E5FB0 != sq) {
@@ -266,9 +266,9 @@ void wmwallcrawler_update(s16 *obj)
                             } else if (mode == 3) {
                                 Sfx_PlayFromObject((int)obj, 0x47);
                                 if ((*(u16 *)(st + 0x294) & 2) != 0) {
-                                    (**(void (**)(s16 *, u8 *, f32))(*gPathControlInterface + 0x10))(obj, st, timeDelta);
-                                    (**(void (**)(s16 *, u8 *))(*gPathControlInterface + 0x14))(obj, st);
-                                    (**(void (**)(s16 *, u8 *, f32))(*gPathControlInterface + 0x18))(obj, st, timeDelta);
+                                    (*gPathControlInterface)->update(obj, st, timeDelta);
+                                    (*gPathControlInterface)->apply(obj, st);
+                                    (*gPathControlInterface)->advance(obj, st, timeDelta);
                                 }
                                 if ((*(u16 *)(st + 0x294) & 4) != 0) {
                                     best = lbl_803E5FBC;
@@ -556,9 +556,10 @@ void wmwallcrawler_init(int obj, int spawn)
     *(s16*)(inner + 0x292) = *(s16*)(spawn + 0x1e);
     if ((*(u16*)(inner + 0x294) & 2) != 0) {
         *(u8*)(inner + 0x25b) = 1;
-        (*(void (**)(int, int, int, int))(*(int*)gPathControlInterface + 4))(inner, 0, 0, 1);
-        (*(void (**)(int, int, u8*, u8*, int))(*(int*)gPathControlInterface + 8))(inner, 1, lbl_80328DE0, &lbl_803DC134, 4);
-        (*(void (**)(int, int))(*(int*)gPathControlInterface + 0x20))(obj, inner);
+        (*gPathControlInterface)->init((void *)inner, 0, 0, 1);
+        ((void (*)(void *, int, void *, void *, int))(*gPathControlInterface)->slot08)(
+            (void *)inner, 1, lbl_80328DE0, &lbl_803DC134, 4);
+        (*gPathControlInterface)->attachObject((void *)obj, (void *)inner);
         *(u32*)inner |= 0x40008;
     }
     ((GameObject *)obj)->animEventCallback = (void *)wmwallcrawler_animEventCallback;

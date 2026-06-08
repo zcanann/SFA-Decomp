@@ -5,6 +5,7 @@
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/DR/DRhightop.h"
+#include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 
 extern undefined4 FUN_8000680c();
@@ -324,7 +325,6 @@ void fn_801EB0D4(uint param_1,int param_2)
   return;
 }
 
-extern undefined4 *gPathControlInterface;
 extern f32 lbl_803E5B9C;
 extern f32 lbl_803E5B74;
 
@@ -351,7 +351,7 @@ void fn_801EB334(int *obj) {
         state->unk430 = lbl_803E5B74;
     }
     ObjHits_EnableObject(obj);
-    (*(void (**)(int *, char *))((char *)*gPathControlInterface + 32))(obj, (char *)state + 0x178);
+    (*gPathControlInterface)->attachObject((void *)obj, (char *)state + 0x178);
     {
         ObjHitsPriorityState *hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
         hitState->localPosX = ((GameObject *)obj)->anim.localPosX;
@@ -589,9 +589,9 @@ void fn_801EB940(short *param_1,int param_2)
   int iVar5;
 
   iVar5 = param_2 + 0x178;
-  (*(code *)((char *)*gPathControlInterface + 0x10))((double)timeDelta,param_1,iVar5);
-  (*(code *)((char *)*gPathControlInterface + 0x14))(param_1,iVar5);
-  (*(code *)((char *)*gPathControlInterface + 0x18))((double)timeDelta,param_1,iVar5);
+  (*gPathControlInterface)->update(param_1, (void *)iVar5, timeDelta);
+  (*gPathControlInterface)->apply(param_1, (void *)iVar5);
+  (*gPathControlInterface)->advance(param_1, (void *)iVar5, timeDelta);
   iVar5 = 2;
   if (*(char *)(param_2 + 0x3d9) == '\0') {
     st->unk424 = st->unk424 + timeDelta;
